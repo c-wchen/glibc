@@ -41,30 +41,29 @@ CHAR string1[STRING_SIZE];
 CHAR string2[STRING_SIZE];
 
 __attribute_optimization_barrier__
-static int
-prepare (void)
+static int prepare(void)
 {
-  MEMSET (string1, 'a', STRING_SIZE - 1);
-  MEMSET (string2, 'a', STRING_SIZE - 1);
-  if (STRCMP (string1, string2) == 0)
-    return EXIT_SUCCESS;
-  else
-    return EXIT_FAILURE;
+    MEMSET(string1, 'a', STRING_SIZE - 1);
+    MEMSET(string2, 'a', STRING_SIZE - 1);
+    if (STRCMP(string1, string2) == 0) {
+        return EXIT_SUCCESS;
+    } else {
+        return EXIT_FAILURE;
+    }
 }
 
 __attribute_optimization_barrier__
-static int
-function (void)
+static int function(void)
 {
-  if (STRCMP (string1, string2) == 0)
-    return 0;
-  else
-    return 1;
+    if (STRCMP(string1, string2) == 0) {
+        return 0;
+    } else {
+        return 1;
+    }
 }
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  return do_test_1 (TEST_NAME, LOOP, prepare, function);
+    return do_test_1(TEST_NAME, LOOP, prepare, function);
 }

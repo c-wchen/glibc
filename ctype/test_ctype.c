@@ -24,77 +24,73 @@
 #define TOUPPER(c) (ISLOWER(c) ? 'A' + ((c) - 'a') : (c))
 #define XOR(e,f) (((e) && !(f)) || (!(e) && (f)))
 
-#ifdef	__GNUC__
+#ifdef  __GNUC__
 __inline
 #endif
 static void
-print_char (unsigned char c)
+print_char(unsigned char c)
 {
-  printf("%d/", (int) c);
-  if (isgraph(c))
-    printf("'%c'", c);
-  else
-    printf("'\\%.3o'", c);
+    printf("%d/", (int) c);
+    if (isgraph(c)) {
+        printf("'%c'", c);
+    } else {
+        printf("'\\%.3o'", c);
+    }
 }
 
-int
-main (int argc, char **argv)
+int main(int argc, char **argv)
 {
-  unsigned short int c;
-  int lose = 0;
+    unsigned short int c;
+    int lose = 0;
 
-#define TRYEM do {							      \
-      TRY (isascii);							      \
-      TRY (isalnum);							      \
-      TRY (isalpha);							      \
-      TRY (iscntrl);							      \
-      TRY (isdigit);							      \
-      TRY (isgraph);							      \
-      TRY (islower);							      \
-      TRY (isprint);							      \
-      TRY (ispunct);							      \
-      TRY (isspace);							      \
-      TRY (isupper);							      \
-      TRY (isxdigit);							      \
-      TRY (isblank);							      \
+#define TRYEM do {                                \
+      TRY (isascii);                                  \
+      TRY (isalnum);                                  \
+      TRY (isalpha);                                  \
+      TRY (iscntrl);                                  \
+      TRY (isdigit);                                  \
+      TRY (isgraph);                                  \
+      TRY (islower);                                  \
+      TRY (isprint);                                  \
+      TRY (ispunct);                                  \
+      TRY (isspace);                                  \
+      TRY (isupper);                                  \
+      TRY (isxdigit);                                 \
+      TRY (isblank);                                  \
     } while (0)
 
-  for (c = 0; c <= UCHAR_MAX; ++c)
-    {
-      print_char (c);
+    for (c = 0; c <= UCHAR_MAX; ++c) {
+        print_char(c);
 
-      if (XOR (islower (c), ISLOWER (c)) || toupper (c) != TOUPPER (c))
-	{
-	  fputs (" BOGUS", stdout);
-	  ++lose;
-	}
+        if (XOR(islower(c), ISLOWER(c)) || toupper(c) != TOUPPER(c)) {
+            fputs(" BOGUS", stdout);
+            ++lose;
+        }
 
 #define TRY(isfoo) if (isfoo (c)) fputs (" " #isfoo, stdout)
-      TRYEM;
+        TRYEM;
 #undef TRY
 
-      fputs("; lower = ", stdout);
-      print_char(tolower(c));
-      fputs("; upper = ", stdout);
-      print_char(toupper(c));
-      putchar('\n');
+        fputs("; lower = ", stdout);
+        print_char(tolower(c));
+        fputs("; upper = ", stdout);
+        print_char(toupper(c));
+        putchar('\n');
     }
 
-  fputs ("EOF", stdout);
-  if (tolower (EOF) != EOF)
-    {
-      ++lose;
-      printf (" tolower BOGUS %d;", tolower (EOF));
+    fputs("EOF", stdout);
+    if (tolower(EOF) != EOF) {
+        ++lose;
+        printf(" tolower BOGUS %d;", tolower(EOF));
     }
-  if (toupper (EOF) != EOF)
-    {
-      ++lose;
-      printf (" toupper BOGUS %d;", toupper (EOF));
+    if (toupper(EOF) != EOF) {
+        ++lose;
+        printf(" toupper BOGUS %d;", toupper(EOF));
     }
 
 #define TRY(isfoo) if (isfoo (EOF)) fputs (" " #isfoo, stdout), ++lose
-  TRYEM;
+    TRYEM;
 #undef TRY
 
-  return lose ? EXIT_FAILURE : EXIT_SUCCESS;
+    return lose ? EXIT_FAILURE : EXIT_SUCCESS;
 }

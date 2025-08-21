@@ -32,35 +32,35 @@
   ({ \
     typeof (*mem) __oldval = (oldval); \
     !__atomic_compare_exchange_n (mem, (void *) &__oldval, newval, 0, model, \
-				  __ATOMIC_RELAXED); \
+                  __ATOMIC_RELAXED); \
   })
 
 #define __arch_compare_and_exchange_bool_16_int(mem, newval, oldval, model) \
   ({ \
     typeof (*mem) __oldval = (oldval); \
     !__atomic_compare_exchange_n (mem, (void *) &__oldval, newval, 0, model, \
-				  __ATOMIC_RELAXED); \
+                  __ATOMIC_RELAXED); \
   })
 
 #define __arch_compare_and_exchange_bool_32_int(mem, newval, oldval, model) \
   ({ \
     typeof (*mem) __oldval = (oldval); \
     !__atomic_compare_exchange_n (mem, (void *) &__oldval, newval, 0, model, \
-				  __ATOMIC_RELAXED); \
+                  __ATOMIC_RELAXED); \
   })
 
 #define __arch_compare_and_exchange_bool_64_int(mem, newval, oldval, model) \
   ({ \
     typeof (*mem) __oldval = (oldval); \
     !__atomic_compare_exchange_n (mem, (void *) &__oldval, newval, 0, model, \
-				  __ATOMIC_RELAXED); \
+                  __ATOMIC_RELAXED); \
   })
 
 #define __arch_compare_and_exchange_val_8_int(mem, newval, oldval, model) \
   ({ \
     typeof (*mem) __oldval = (oldval); \
     __atomic_compare_exchange_n (mem, (void *) &__oldval, newval, 0, model, \
-				 __ATOMIC_RELAXED); \
+                 __ATOMIC_RELAXED); \
     __oldval; \
   })
 
@@ -68,7 +68,7 @@
   ({ \
     typeof (*mem) __oldval = (oldval); \
     __atomic_compare_exchange_n (mem, (void *) &__oldval, newval, 0, model, \
-				 __ATOMIC_RELAXED); \
+                 __ATOMIC_RELAXED); \
     __oldval; \
   })
 
@@ -76,7 +76,7 @@
   ({ \
     typeof (*mem) __oldval = (oldval); \
     __atomic_compare_exchange_n (mem, (void *) &__oldval, newval, 0, model, \
-				 __ATOMIC_RELAXED); \
+                 __ATOMIC_RELAXED); \
     __oldval; \
   })
 
@@ -84,7 +84,7 @@
   ({ \
     typeof (*mem) __oldval = (oldval); \
     __atomic_compare_exchange_n (mem, (void *) &__oldval, newval, 0, model, \
-				 __ATOMIC_RELAXED); \
+                 __ATOMIC_RELAXED); \
     __oldval; \
   })
 
@@ -92,15 +92,15 @@
 
 #define atomic_compare_and_exchange_bool_acq(mem, new, old) \
   __atomic_bool_bysize (__arch_compare_and_exchange_bool, int, mem, new, old, \
-			__ATOMIC_ACQUIRE)
+            __ATOMIC_ACQUIRE)
 
 #define atomic_compare_and_exchange_val_acq(mem, new, old) \
   __atomic_val_bysize (__arch_compare_and_exchange_val, int, mem, new, old, \
-		       __ATOMIC_ACQUIRE)
+               __ATOMIC_ACQUIRE)
 
 #define atomic_compare_and_exchange_val_rel(mem, new, old) \
   __atomic_val_bysize (__arch_compare_and_exchange_val, int, mem, new, old, \
-		       __ATOMIC_RELEASE)
+               __ATOMIC_RELEASE)
 
 /* Atomic exchange (without compare).  */
 
@@ -138,10 +138,10 @@
 
 #define atomic_exchange_and_add_acq(mem, value) \
   __atomic_val_bysize (__arch_exchange_and_add, int, mem, value, \
-		       __ATOMIC_ACQUIRE)
+               __ATOMIC_ACQUIRE)
 
 #define atomic_exchange_and_add_rel(mem, value) \
   __atomic_val_bysize (__arch_exchange_and_add, int, mem, value, \
-		       __ATOMIC_RELEASE)
+               __ATOMIC_RELEASE)
 
 #endif /* bits/atomic.h */

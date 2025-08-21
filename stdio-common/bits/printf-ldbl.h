@@ -20,4 +20,4 @@
 # error "Never include <bits/printf-ldbl.h> directly; use <printf.h> instead."
 #endif
 
-__LDBL_REDIR_DECL (printf_size)
+__LDBL_REDIR_DECL(printf_size)

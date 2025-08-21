@@ -20,46 +20,46 @@
 #include <stdint.h>
 
 /* Definitions used in the body of the `gconv' function.  */
-#define CHARSET_NAME		"ISO-8859-1//"
-#define FROM_LOOP		from_iso8859_1
-#define TO_LOOP			to_iso8859_1
-#define DEFINE_INIT		1
-#define DEFINE_FINI		1
-#define MIN_NEEDED_FROM		1
-#define MIN_NEEDED_TO		4
-#define ONE_DIRECTION		0
+#define CHARSET_NAME        "ISO-8859-1//"
+#define FROM_LOOP       from_iso8859_1
+#define TO_LOOP         to_iso8859_1
+#define DEFINE_INIT     1
+#define DEFINE_FINI     1
+#define MIN_NEEDED_FROM     1
+#define MIN_NEEDED_TO       4
+#define ONE_DIRECTION       0
 
 /* First define the conversion function from ISO 8859-1 to UCS4.  */
-#define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
-#define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
-#define LOOPFCT			FROM_LOOP
+#define MIN_NEEDED_INPUT    MIN_NEEDED_FROM
+#define MIN_NEEDED_OUTPUT   MIN_NEEDED_TO
+#define LOOPFCT         FROM_LOOP
 #define BODY \
-  *((uint32_t *) outptr) = *inptr++;					      \
+  *((uint32_t *) outptr) = *inptr++;                          \
   outptr += sizeof (uint32_t);
 #define ONEBYTE_BODY \
-  {									      \
-    return c;								      \
+  {                                       \
+    return c;                                     \
   }
 #include <iconv/loop.c>
 
 
 /* Next, define the other direction.  */
-#define MIN_NEEDED_INPUT	MIN_NEEDED_TO
-#define MIN_NEEDED_OUTPUT	MIN_NEEDED_FROM
-#define LOOPFCT			TO_LOOP
+#define MIN_NEEDED_INPUT    MIN_NEEDED_TO
+#define MIN_NEEDED_OUTPUT   MIN_NEEDED_FROM
+#define LOOPFCT         TO_LOOP
 #define BODY \
-  {									      \
-    uint32_t ch = *((const uint32_t *) inptr);				      \
-    if (__glibc_unlikely (ch > 0xff))					      \
-      {									      \
-	UNICODE_TAG_HANDLER (ch, 4);					      \
-									      \
-	/* We have an illegal character.  */				      \
-	STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
-      }									      \
-    else								      \
-      *outptr++ = (unsigned char) ch;					      \
-    inptr += 4;								      \
+  {                                       \
+    uint32_t ch = *((const uint32_t *) inptr);                    \
+    if (__glibc_unlikely (ch > 0xff))                         \
+      {                                       \
+    UNICODE_TAG_HANDLER (ch, 4);                          \
+                                          \
+    /* We have an illegal character.  */                      \
+    STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
+      }                                       \
+    else                                      \
+      *outptr++ = (unsigned char) ch;                         \
+    inptr += 4;                                   \
   }
 #define LOOP_NEED_FLAGS
 #include <iconv/loop.c>

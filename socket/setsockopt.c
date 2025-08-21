@@ -21,14 +21,13 @@
 /* Set socket FD's option OPTNAME at protocol level LEVEL
    to *OPTVAL (which is OPTLEN bytes long).
    Returns 0 on success, -1 for errors.  */
-int
-__setsockopt (int fd, int level, int optname, const void *optval,
-	      socklen_t optlen)
+int __setsockopt(int fd, int level, int optname, const void *optval,
+                 socklen_t optlen)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-weak_alias (__setsockopt, setsockopt)
+weak_alias(__setsockopt, setsockopt)
 
-stub_warning (setsockopt)
+stub_warning(setsockopt)

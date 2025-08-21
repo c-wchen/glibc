@@ -22,34 +22,33 @@
 #include <stdio.h>
 #include <support/check.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* This conversion needs two steps, from ASCII to INTERNAL to ASCII.  */
-  iconv_t cd = iconv_open ("ASCII//IGNORE", "ASCII");
-  TEST_VERIFY_EXIT (cd != (iconv_t) -1);
+    /* This conversion needs two steps, from ASCII to INTERNAL to ASCII.  */
+    iconv_t cd = iconv_open("ASCII//IGNORE", "ASCII");
+    TEST_VERIFY_EXIT(cd != (iconv_t) -1);
 
-  /* Convert some irreversible sequence, enough to trigger an overflow of
-     the output buffer before the irreversible character in the second
-     step, but after going past the irreversible character in the first
-     step.  */
-  char input[4 + 4] = { '0', '1', '2', '3', '4', '5', '\266', '7' };
-  char *inptr = input;
-  size_t insize = sizeof (input);
-  char output[4];
-  char *outptr = output;
-  size_t outsize = sizeof (output);
+    /* Convert some irreversible sequence, enough to trigger an overflow of
+       the output buffer before the irreversible character in the second
+       step, but after going past the irreversible character in the first
+       step.  */
+    char input[4 + 4] = { '0', '1', '2', '3', '4', '5', '\266', '7' };
+    char *inptr = input;
+    size_t insize = sizeof(input);
+    char output[4];
+    char *outptr = output;
+    size_t outsize = sizeof(output);
 
-  /* The conversion should fail.  */
-  TEST_VERIFY (iconv (cd, &inptr, &insize, &outptr, &outsize) == (size_t) -1);
-  TEST_VERIFY (errno == E2BIG);
-  /* The conversion should not consume more than it was able to store in
-     the output buffer.  */
-  TEST_COMPARE (inptr - input, sizeof (output) - outsize);
+    /* The conversion should fail.  */
+    TEST_VERIFY(iconv(cd, &inptr, &insize, &outptr, &outsize) == (size_t) -1);
+    TEST_VERIFY(errno == E2BIG);
+    /* The conversion should not consume more than it was able to store in
+       the output buffer.  */
+    TEST_COMPARE(inptr - input, sizeof(output) - outsize);
 
-  TEST_VERIFY_EXIT (iconv_close (cd) != -1);
+    TEST_VERIFY_EXIT(iconv_close(cd) != -1);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

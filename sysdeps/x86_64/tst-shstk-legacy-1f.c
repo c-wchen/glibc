@@ -20,10 +20,9 @@
 #include <stdlib.h>
 #include <support/test-driver.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }
 
 #include <support/test-driver.c>

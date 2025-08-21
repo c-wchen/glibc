@@ -21,17 +21,17 @@
 #include <hurd/term.h>
 
 /* Return 1 if FD is a terminal, 0 if not.  */
-int
-__isatty (int fd)
+int __isatty(int fd)
 {
-  error_t err;
-  mach_port_t id;
+    error_t err;
+    mach_port_t id;
 
-  err = HURD_DPORT_USE (fd, __term_getctty (port, &id));
-  if (! err)
-    __mach_port_deallocate (__mach_task_self (), id);
+    err = HURD_DPORT_USE(fd, __term_getctty(port, &id));
+    if (! err) {
+        __mach_port_deallocate(__mach_task_self(), id);
+    }
 
-  return !err;
+    return !err;
 }
 
-weak_alias (__isatty, isatty)
+weak_alias(__isatty, isatty)

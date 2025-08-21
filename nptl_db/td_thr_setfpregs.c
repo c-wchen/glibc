@@ -19,35 +19,36 @@
 #include "thread_dbP.h"
 
 
-td_err_e
-td_thr_setfpregs (const td_thrhandle_t *th, const prfpregset_t *fpregs)
+td_err_e td_thr_setfpregs(const td_thrhandle_t *th, const prfpregset_t *fpregs)
 {
-  psaddr_t cancelhandling, tid;
-  td_err_e err;
+    psaddr_t cancelhandling, tid;
+    td_err_e err;
 
-  LOG ("td_thr_setfpregs");
+    LOG("td_thr_setfpregs");
 
-  if (th->th_unique == NULL)
-    /* Special case for the main thread before initialization.  */
-    return ps_lsetfpregs (th->th_ta_p->ph, ps_getpid (th->th_ta_p->ph),
-			  fpregs) != PS_OK ? TD_ERR : TD_OK;
+    if (th->th_unique == NULL)
+        /* Special case for the main thread before initialization.  */
+        return ps_lsetfpregs(th->th_ta_p->ph, ps_getpid(th->th_ta_p->ph),
+                             fpregs) != PS_OK ? TD_ERR : TD_OK;
 
-  /* We have to get the state and the PID for this thread.  */
-  err = DB_GET_FIELD (cancelhandling, th->th_ta_p, th->th_unique, pthread,
-		      cancelhandling, 0);
-  if (err != TD_OK)
-    return err;
-
-  /* Only set the registers if the thread hasn't yet terminated.  */
-  if ((((int) (uintptr_t) cancelhandling) & TERMINATED_BITMASK) == 0)
-    {
-      err = DB_GET_FIELD (tid, th->th_ta_p, th->th_unique, pthread, tid, 0);
-      if (err != TD_OK)
-	return err;
-
-      if (ps_lsetfpregs (th->th_ta_p->ph, (uintptr_t) tid, fpregs) != PS_OK)
-	return TD_ERR;
+    /* We have to get the state and the PID for this thread.  */
+    err = DB_GET_FIELD(cancelhandling, th->th_ta_p, th->th_unique, pthread,
+                       cancelhandling, 0);
+    if (err != TD_OK) {
+        return err;
     }
 
-  return TD_OK;
+    /* Only set the registers if the thread hasn't yet terminated.  */
+    if ((((int)(uintptr_t) cancelhandling) & TERMINATED_BITMASK) == 0) {
+        err = DB_GET_FIELD(tid, th->th_ta_p, th->th_unique, pthread, tid, 0);
+        if (err != TD_OK) {
+            return err;
+        }
+
+        if (ps_lsetfpregs(th->th_ta_p->ph, (uintptr_t) tid, fpregs) != PS_OK) {
+            return TD_ERR;
+        }
+    }
+
+    return TD_OK;
 }

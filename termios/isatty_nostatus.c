@@ -19,11 +19,10 @@
 #include <unistd.h>
 
 /* Return 1 if FD is a terminal, 0 if not, without changing errno  */
-int
-__isatty_nostatus (int fd)
+int __isatty_nostatus(int fd)
 {
-  int save_errno = errno;
-  int res = __isatty (fd);
-  __set_errno (save_errno);
-  return res;
+    int save_errno = errno;
+    int res = __isatty(fd);
+    __set_errno(save_errno);
+    return res;
 }

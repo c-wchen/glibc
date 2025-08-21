@@ -21,8 +21,7 @@
 #include <libc-lock.h>
 #include <pthreadP.h>
 
-void
-_longjmp_unwind (jmp_buf env, int val)
+void _longjmp_unwind(jmp_buf env, int val)
 {
-  __pthread_cleanup_upto (env->__jmpbuf, CURRENT_STACK_FRAME);
+    __pthread_cleanup_upto(env->__jmpbuf, CURRENT_STACK_FRAME);
 }

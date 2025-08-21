@@ -24,42 +24,43 @@
 /* Make PATH be the root directory (the starting point for absolute
    paths).  Note that while on traditional UNIX systems this call is
    restricted to the super-user, it isn't on the Hurd.  */
-int
-chroot (const char *path)
+int chroot(const char *path)
 {
-  const char *lookup;
-  size_t len;
-  file_t dir, root;
-  error_t err;
+    const char *lookup;
+    size_t len;
+    file_t dir, root;
+    error_t err;
 
-  /* Append trailing "/." to directory name to force ENOTDIR if it's not a
-     directory and EACCES if we don't have search permission.  */
-  len = strlen (path);
-  if (len >= 2 && path[len - 2] == '/' && path[len - 1] == '.')
-    lookup = path;
-  else if (len == 0)
-    /* Special-case empty file name according to POSIX.  */
-    return __hurd_fail (ENOENT);
-  else
+    /* Append trailing "/." to directory name to force ENOTDIR if it's not a
+       directory and EACCES if we don't have search permission.  */
+    len = strlen(path);
+    if (len >= 2 && path[len - 2] == '/' && path[len - 1] == '.') {
+        lookup = path;
+    } else if (len == 0)
+        /* Special-case empty file name according to POSIX.  */
     {
-      char *n = alloca (len + 3);
-      memcpy (n, path, len);
-      n[len] = '/';
-      n[len + 1] = '.';
-      n[len + 2] = '\0';
-      lookup = n;
+        return __hurd_fail(ENOENT);
+    } else {
+        char *n = alloca(len + 3);
+        memcpy(n, path, len);
+        n[len] = '/';
+        n[len + 1] = '.';
+        n[len + 2] = '\0';
+        lookup = n;
     }
 
-  dir = __file_name_lookup (lookup, 0, 0);
-  if (dir == MACH_PORT_NULL)
-    return -1;
+    dir = __file_name_lookup(lookup, 0, 0);
+    if (dir == MACH_PORT_NULL) {
+        return -1;
+    }
 
-  /* Prevent going through DIR's ..  */
-  err = __file_reparent (dir, MACH_PORT_NULL, &root);
-  __mach_port_deallocate (__mach_task_self (), dir);
-  if (err)
-    return __hurd_fail (err);
+    /* Prevent going through DIR's ..  */
+    err = __file_reparent(dir, MACH_PORT_NULL, &root);
+    __mach_port_deallocate(__mach_task_self(), dir);
+    if (err) {
+        return __hurd_fail(err);
+    }
 
-  _hurd_port_set (&_hurd_ports[INIT_PORT_CRDIR], root);
-  return 0;
+    _hurd_port_set(&_hurd_ports[INIT_PORT_CRDIR], root);
+    return 0;
 }

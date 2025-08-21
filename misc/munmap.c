@@ -22,12 +22,11 @@
 /* Deallocate any mapping for the region starting at ADDR and extending LEN
    bytes.  Returns 0 if successful, -1 for errors (and sets errno).  */
 
-int
-__munmap (void *addr, size_t len)
+int __munmap(void *addr, size_t len)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (munmap)
-weak_alias (__munmap, munmap)
+stub_warning(munmap)
+weak_alias(__munmap, munmap)

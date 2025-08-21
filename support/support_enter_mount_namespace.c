@@ -24,24 +24,21 @@
 # include <sys/mount.h>
 #endif /* CLONE_NEWNS */
 
-bool
-support_enter_mount_namespace (void)
+bool support_enter_mount_namespace(void)
 {
 #ifdef CLONE_NEWNS
-  if (unshare (CLONE_NEWNS) == 0)
-    {
-      /* On some systems, / is marked as MS_SHARED, which means that
-         mounts within the namespace leak to the rest of the system,
-         which is not what we want.  */
-      if (mount ("none", "/", NULL, MS_REC | MS_PRIVATE, NULL) != 0)
-        {
-          printf ("warning: making the mount namespace private failed: %m\n");
-          return false;
+    if (unshare(CLONE_NEWNS) == 0) {
+        /* On some systems, / is marked as MS_SHARED, which means that
+           mounts within the namespace leak to the rest of the system,
+           which is not what we want.  */
+        if (mount("none", "/", NULL, MS_REC | MS_PRIVATE, NULL) != 0) {
+            printf("warning: making the mount namespace private failed: %m\n");
+            return false;
         }
-      return true;
+        return true;
+    } else {
+        printf("warning: unshare (CLONE_NEWNS) failed: %m\n");
     }
-  else
-    printf ("warning: unshare (CLONE_NEWNS) failed: %m\n");
 #endif /* CLONE_NEWNS */
-  return false;
+    return false;
 }

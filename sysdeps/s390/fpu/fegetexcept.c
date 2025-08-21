@@ -19,11 +19,10 @@
 #include <fenv_libc.h>
 #include <fpu_control.h>
 
-int
-fegetexcept (void)
+int fegetexcept(void)
 {
-  fexcept_t exc;
+    fexcept_t exc;
 
-  _FPU_GETCW (exc);
-  return ((exc & FPC_EXCEPTION_MASK) >>  FPC_EXCEPTION_MASK_SHIFT);
+    _FPU_GETCW(exc);
+    return ((exc & FPC_EXCEPTION_MASK) >>  FPC_EXCEPTION_MASK_SHIFT);
 }

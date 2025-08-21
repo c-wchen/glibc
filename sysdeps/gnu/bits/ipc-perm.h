@@ -21,13 +21,12 @@
 #endif
 
 /* Data structure used to pass permission information to IPC operations.  */
-struct ipc_perm
-  {
-    __key_t __key;			/* Key.  */
-    __uid_t uid;			/* Owner's user ID.  */
-    __gid_t gid;			/* Owner's group ID.  */
-    __uid_t cuid;			/* Creator's user ID.  */
-    __gid_t cgid;			/* Creator's group ID.  */
-    __mode_t mode;			/* Read/write permission.  */
-    unsigned short int __seq;		/* Sequence number.  */
-  };
+struct ipc_perm {
+    __key_t __key;          /* Key.  */
+    __uid_t uid;            /* Owner's user ID.  */
+    __gid_t gid;            /* Owner's group ID.  */
+    __uid_t cuid;           /* Creator's user ID.  */
+    __gid_t cgid;           /* Creator's group ID.  */
+    __mode_t mode;          /* Read/write permission.  */
+    unsigned short int __seq;       /* Sequence number.  */
+};

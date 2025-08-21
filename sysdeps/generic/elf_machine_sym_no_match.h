@@ -25,10 +25,9 @@
 /* This can be customized to ignore certain symbols during lookup in
    case there are machine-specific rules to disregard some
    symbols.  */
-static inline bool
-elf_machine_sym_no_match (const ElfW(Sym) *sym)
+static inline bool elf_machine_sym_no_match(const ElfW(Sym) *sym)
 {
-  return false;
+    return false;
 }
 
 #endif /* _ELF_MACHINE_SYM_NO_MATCH_H */

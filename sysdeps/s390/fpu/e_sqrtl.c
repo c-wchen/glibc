@@ -19,12 +19,11 @@
 #include <math_private.h>
 #include <libm-alias-finite.h>
 
-long double
-__ieee754_sqrtl (long double x)
+long double __ieee754_sqrtl(long double x)
 {
-  long double res;
+    long double res;
 
-  __asm__ ( "sqxbr %0,%1" : "=f" (res) : "f" (x) );
-  return res;
+    __asm__("sqxbr %0,%1" : "=f"(res) : "f"(x));
+    return res;
 }
-libm_alias_finite (__ieee754_sqrtl, __sqrtl)
+libm_alias_finite(__ieee754_sqrtl, __sqrtl)

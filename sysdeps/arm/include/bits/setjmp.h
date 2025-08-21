@@ -27,10 +27,10 @@
 #ifndef _ISOMAC
 /* Register list for a ldm/stm instruction to load/store
    the general registers from a __jmp_buf.  */
-# define JMP_BUF_REGLIST	{v1-v6, sl, fp}
+# define JMP_BUF_REGLIST    {v1-v6, sl, fp}
 
 /* Index of __jmp_buf where the sp register resides.  */
-# define __JMP_BUF_SP		0
+# define __JMP_BUF_SP       0
 #endif
 
 #endif  /* include/bits/setjmp.h */

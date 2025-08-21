@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _GNU_VERSIONS_H
-#define	_GNU_VERSIONS_H	1
+#define _GNU_VERSIONS_H 1
 
 /* This file exists to define these few macros.  Each specifies a version
    number associated with the library interface of a piece of the C library
@@ -43,10 +43,10 @@
    remember, if any of these versions change, the libc.so major version
    number must change too (so avoid it)!  */
 
-#define _GNU_OBSTACK_INTERFACE_VERSION	1 /* vs malloc/obstack.c */
-#define _GNU_REGEX_INTERFACE_VERSION	1 /* vs posix/regex.c */
-#define _GNU_GLOB_INTERFACE_VERSION	2 /* vs posix/glob.c */
-#define _GNU_GETOPT_INTERFACE_VERSION	2 /* vs posix/getopt.c and
-					     posix/getopt1.c */
+#define _GNU_OBSTACK_INTERFACE_VERSION  1 /* vs malloc/obstack.c */
+#define _GNU_REGEX_INTERFACE_VERSION    1 /* vs posix/regex.c */
+#define _GNU_GLOB_INTERFACE_VERSION 2 /* vs posix/glob.c */
+#define _GNU_GETOPT_INTERFACE_VERSION   2 /* vs posix/getopt.c and
+                         posix/getopt1.c */
 
-#endif	/* gnu-versions.h */
+#endif  /* gnu-versions.h */

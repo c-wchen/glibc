@@ -20,21 +20,20 @@
 #include <strfile.h>
 #include <libioP.h>
 
-extern int
-___ieee128_swscanf (const wchar_t *string, const wchar_t *format, ...)
+extern int ___ieee128_swscanf(const wchar_t *string, const wchar_t *format, ...)
 {
-  va_list ap;
-  int done;
+    va_list ap;
+    int done;
 
-  _IO_strfile sf;
-  struct _IO_wide_data wd;
-  FILE *fp = _IO_strfile_readw (&sf, &wd, string);
+    _IO_strfile sf;
+    struct _IO_wide_data wd;
+    FILE *fp = _IO_strfile_readw(&sf, &wd, string);
 
-  va_start (ap, format);
-  done = __vfwscanf_internal (fp, format, ap,
-			      SCANF_LDBL_USES_FLOAT128);
-  va_end (ap);
+    va_start(ap, format);
+    done = __vfwscanf_internal(fp, format, ap,
+                               SCANF_LDBL_USES_FLOAT128);
+    va_end(ap);
 
-  return done;
+    return done;
 }
-strong_alias (___ieee128_swscanf, __swscanfieee128)
+strong_alias(___ieee128_swscanf, __swscanfieee128)

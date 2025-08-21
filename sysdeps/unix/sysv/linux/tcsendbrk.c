@@ -22,23 +22,23 @@
 #include <sys/ioctl.h>
 
 /* Send zero bits on FD.  */
-int
-tcsendbreak (int fd, int duration)
+int tcsendbreak(int fd, int duration)
 {
-  /* The break lasts 0.25 to 0.5 seconds if DURATION is zero,
-     and an implementation-defined period if DURATION is nonzero.
-     We define a positive DURATION to be number of milliseconds to break.  */
-  if (duration <= 0)
-    return __ioctl (fd, TCSBRK, 0);
+    /* The break lasts 0.25 to 0.5 seconds if DURATION is zero,
+       and an implementation-defined period if DURATION is nonzero.
+       We define a positive DURATION to be number of milliseconds to break.  */
+    if (duration <= 0) {
+        return __ioctl(fd, TCSBRK, 0);
+    }
 
 #ifdef TCSBRKP
-  /* Probably Linux-specific: a positive third TCSBRKP ioctl argument is
-     defined to be the number of 100ms units to break.  */
-  return __ioctl (fd, TCSBRKP, (duration + 99) / 100);
+    /* Probably Linux-specific: a positive third TCSBRKP ioctl argument is
+       defined to be the number of 100ms units to break.  */
+    return __ioctl(fd, TCSBRKP, (duration + 99) / 100);
 #else
-  /* ioctl can't send a break of any other duration for us.
-     This could be changed to use trickery (e.g. lower speed and
-     send a '\0') to send the break, but for now just return an error.  */
-  return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
+    /* ioctl can't send a break of any other duration for us.
+       This could be changed to use trickery (e.g. lower speed and
+       send a '\0') to send the break, but for now just return an error.  */
+    return INLINE_SYSCALL_ERROR_RETURN_VALUE(EINVAL);
 #endif
 }

@@ -28,11 +28,10 @@
 # endif
 #endif
 
-int
-do_test (void)
+int do_test(void)
 {
-  /* This is a compilation test.  */
-  return 0;
+    /* This is a compilation test.  */
+    return 0;
 }
 
 #include <support/test-driver.c>

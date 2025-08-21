@@ -18,9 +18,8 @@
 
 #include <support/xthread.h>
 
-void
-xpthread_cond_signal (pthread_cond_t *cond)
+void xpthread_cond_signal(pthread_cond_t *cond)
 {
-  xpthread_check_return
-    ("pthread_cond_signal", pthread_cond_signal (cond));
+    xpthread_check_return
+    ("pthread_cond_signal", pthread_cond_signal(cond));
 }

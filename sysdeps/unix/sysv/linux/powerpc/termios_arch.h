@@ -27,7 +27,7 @@
    simply consider the kernel ones as the termios2 interface, even
    though the kernel doesn't call it that. */
 
-#define TCGETS2	 _IOR ('t', 19, struct termios2)
-#define TCSETS2	 _IOW ('t', 20, struct termios2)
+#define TCGETS2  _IOR ('t', 19, struct termios2)
+#define TCSETS2  _IOW ('t', 20, struct termios2)
 #define TCSETSW2 _IOW ('t', 21, struct termios2)
 #define TCSETSF2 _IOW ('t', 22, struct termios2)

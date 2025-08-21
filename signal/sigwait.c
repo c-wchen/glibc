@@ -19,12 +19,11 @@
 #include <errno.h>
 #include <signal.h>
 
-int
-__sigwait (const sigset_t *set, int *sig)
+int __sigwait(const sigset_t *set, int *sig)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-weak_alias (__sigwait, sigwait)
+weak_alias(__sigwait, sigwait)
 
-stub_warning (sigwait)
+stub_warning(sigwait)

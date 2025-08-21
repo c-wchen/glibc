@@ -25,31 +25,29 @@
 struct drand48_data __libc_drand48_data;
 
 
-int
-__drand48_iterate (unsigned short int xsubi[3], struct drand48_data *buffer)
+int __drand48_iterate(unsigned short int xsubi[3], struct drand48_data *buffer)
 {
-  uint64_t X;
-  uint64_t result;
+    uint64_t X;
+    uint64_t result;
 
-  /* Initialize buffer, if not yet done.  */
-  if (__glibc_unlikely (!buffer->__init))
-    {
-      buffer->__a = 0x5deece66dull;
-      buffer->__c = 0xb;
-      buffer->__init = 1;
+    /* Initialize buffer, if not yet done.  */
+    if (__glibc_unlikely(!buffer->__init)) {
+        buffer->__a = 0x5deece66dull;
+        buffer->__c = 0xb;
+        buffer->__init = 1;
     }
 
-  /* Do the real work.  We choose a data type which contains at least
-     48 bits.  Because we compute the modulus it does not care how
-     many bits really are computed.  */
+    /* Do the real work.  We choose a data type which contains at least
+       48 bits.  Because we compute the modulus it does not care how
+       many bits really are computed.  */
 
-  X = (uint64_t) xsubi[2] << 32 | (uint32_t) xsubi[1] << 16 | xsubi[0];
+    X = (uint64_t) xsubi[2] << 32 | (uint32_t) xsubi[1] << 16 | xsubi[0];
 
-  result = X * buffer->__a + buffer->__c;
+    result = X * buffer->__a + buffer->__c;
 
-  xsubi[0] = result & 0xffff;
-  xsubi[1] = (result >> 16) & 0xffff;
-  xsubi[2] = (result >> 32) & 0xffff;
+    xsubi[0] = result & 0xffff;
+    xsubi[1] = (result >> 16) & 0xffff;
+    xsubi[2] = (result >> 32) & 0xffff;
 
-  return 0;
+    return 0;
 }

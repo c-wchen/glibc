@@ -20,7 +20,7 @@
 #include <support/check.h>
 #include <support/xdlfcn.h>
 
-static int do_test (void);
+static int do_test(void);
 #include <support/test-driver.c>
 
 /* This hack results in a definition of struct rtld_global_ro.  Do
@@ -30,13 +30,13 @@ static int do_test (void);
 #include <ldsodefs.h>
 
 static
-int do_test (void)
+int do_test(void)
 {
-  /* Avoid introducing a copy relocation due to the hidden alias in
-     ld.so.  */
-  struct rtld_global_ro *glro = xdlsym (NULL, "_rtld_global_ro");
-  printf ("info: _dl_tls_static_surplus: %zu\n", glro->_dl_tls_static_surplus);
-  /* Hisoric value: 16 * 100 + 64.  */
-  TEST_VERIFY (glro->_dl_tls_static_surplus >= 1664);
-  return 0;
+    /* Avoid introducing a copy relocation due to the hidden alias in
+       ld.so.  */
+    struct rtld_global_ro *glro = xdlsym(NULL, "_rtld_global_ro");
+    printf("info: _dl_tls_static_surplus: %zu\n", glro->_dl_tls_static_surplus);
+    /* Hisoric value: 16 * 100 + 64.  */
+    TEST_VERIFY(glro->_dl_tls_static_surplus >= 1664);
+    return 0;
 }

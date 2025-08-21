@@ -18,17 +18,16 @@
 #include "pthreadP.h"
 #include <shlib-compat.h>
 
-int
-__pthread_rwlockattr_destroy (pthread_rwlockattr_t *attr)
+int __pthread_rwlockattr_destroy(pthread_rwlockattr_t *attr)
 {
-  /* Nothing to do.  For now.  */
+    /* Nothing to do.  For now.  */
 
-  return 0;
+    return 0;
 }
-versioned_symbol (libc, __pthread_rwlockattr_destroy,
-                  pthread_rwlockattr_destroy, GLIBC_2_34);
+versioned_symbol(libc, __pthread_rwlockattr_destroy,
+                 pthread_rwlockattr_destroy, GLIBC_2_34);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1, GLIBC_2_34)
-compat_symbol (libpthread, __pthread_rwlockattr_destroy,
-               pthread_rwlockattr_destroy, GLIBC_2_1);
+compat_symbol(libpthread, __pthread_rwlockattr_destroy,
+              pthread_rwlockattr_destroy, GLIBC_2_1);
 #endif

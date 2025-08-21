@@ -23,19 +23,17 @@
 #include <stdint.h>
 #include <stdio.h>
 
-struct test
-{
-  bool sign;
-  uint16_t exponent;
-  bool high;
-  uint64_t mantissa;
-  bool canonical;
+struct test {
+    bool sign;
+    uint16_t exponent;
+    bool high;
+    uint64_t mantissa;
+    bool canonical;
 };
 
 #define M68K_VARIANT (LDBL_MIN_EXP == -16382)
 
-static const struct test tests[] =
-  {
+static const struct test tests[] = {
     { false, 0, true, 0, M68K_VARIANT },
     { true, 0, true, 0, M68K_VARIANT },
     { false, 0, true, 1, M68K_VARIANT },
@@ -84,57 +82,49 @@ static const struct test tests[] =
     { true, 0x7fff, false, 1, M68K_VARIANT },
     { false, 0x7fff, false, 0x100000000ULL, M68K_VARIANT },
     { true, 0x7fff, false, 0x100000000ULL, M68K_VARIANT },
-  };
+};
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int result = 0;
+    int result = 0;
 
-  for (size_t i = 0; i < sizeof (tests) / sizeof (tests[0]); i++)
-    {
-      long double ld;
-      SET_LDOUBLE_WORDS (ld, tests[i].exponent | (tests[i].sign << 15),
-			 (tests[i].mantissa >> 32) | (tests[i].high << 31),
-			 tests[i].mantissa & 0xffffffffULL);
-      bool canonical = iscanonical (ld);
-      if (canonical == tests[i].canonical)
-	{
-	  printf ("PASS: iscanonical test %zu\n", i);
-	  long double ldc = 12345.0L;
-	  bool canonicalize_ret = canonicalizel (&ldc, &ld);
-	  if (canonicalize_ret == !canonical)
-	    {
-	      printf ("PASS: canonicalizel test %zu\n", i);
-	      bool canon_ok;
-	      if (!canonical)
-		canon_ok = ldc == 12345.0L;
-	      else if (isnan (ld))
-		canon_ok = isnan (ldc) && !issignaling (ldc);
-	      else
-		canon_ok = ldc == ld;
-	      if (canon_ok)
-		printf ("PASS: canonicalized value test %zu\n", i);
-	      else
-		{
-		  printf ("FAIL: canonicalized value test %zu\n", i);
-		  result = 1;
-		}
-	    }
-	  else
-	    {
-	      printf ("FAIL: canonicalizel test %zu\n", i);
-	      result = 1;
-	    }
-	}
-      else
-	{
-	  printf ("FAIL: iscanonical test %zu\n", i);
-	  result = 1;
-	}
+    for (size_t i = 0; i < sizeof(tests) / sizeof(tests[0]); i++) {
+        long double ld;
+        SET_LDOUBLE_WORDS(ld, tests[i].exponent | (tests[i].sign << 15),
+                          (tests[i].mantissa >> 32) | (tests[i].high << 31),
+                          tests[i].mantissa & 0xffffffffULL);
+        bool canonical = iscanonical(ld);
+        if (canonical == tests[i].canonical) {
+            printf("PASS: iscanonical test %zu\n", i);
+            long double ldc = 12345.0L;
+            bool canonicalize_ret = canonicalizel(&ldc, &ld);
+            if (canonicalize_ret == !canonical) {
+                printf("PASS: canonicalizel test %zu\n", i);
+                bool canon_ok;
+                if (!canonical) {
+                    canon_ok = ldc == 12345.0L;
+                } else if (isnan(ld)) {
+                    canon_ok = isnan(ldc) && !issignaling(ldc);
+                } else {
+                    canon_ok = ldc == ld;
+                }
+                if (canon_ok) {
+                    printf("PASS: canonicalized value test %zu\n", i);
+                } else {
+                    printf("FAIL: canonicalized value test %zu\n", i);
+                    result = 1;
+                }
+            } else {
+                printf("FAIL: canonicalizel test %zu\n", i);
+                result = 1;
+            }
+        } else {
+            printf("FAIL: iscanonical test %zu\n", i);
+            result = 1;
+        }
     }
 
-  return result;
+    return result;
 }
 
 #define TEST_FUNCTION do_test ()

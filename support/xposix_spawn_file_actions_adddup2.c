@@ -19,12 +19,12 @@
 #include <support/xspawn.h>
 #include <support/check.h>
 
-int
-xposix_spawn_file_actions_adddup2 (posix_spawn_file_actions_t *fa, int fd,
-				   int newfd)
+int xposix_spawn_file_actions_adddup2(posix_spawn_file_actions_t *fa, int fd,
+                                      int newfd)
 {
-  int status = posix_spawn_file_actions_adddup2 (fa, fd, newfd);
-  if (status == -1)
-    FAIL_EXIT1 ("posix_spawn_file_actions_adddup2 failed: %m\n");
-  return status;
+    int status = posix_spawn_file_actions_adddup2(fa, fd, newfd);
+    if (status == -1) {
+        FAIL_EXIT1("posix_spawn_file_actions_adddup2 failed: %m\n");
+    }
+    return status;
 }

@@ -17,29 +17,25 @@
 
 #include <hurd/fd.h>
 
-error_t
-_hurd_fd_close (struct hurd_fd *fd)
+error_t _hurd_fd_close(struct hurd_fd *fd)
 {
-  error_t err;
+    error_t err;
 
-  HURD_CRITICAL_BEGIN;
+    HURD_CRITICAL_BEGIN;
 
-  __spin_lock (&fd->port.lock);
-  if (fd->port.port == MACH_PORT_NULL)
-    {
-      __spin_unlock (&fd->port.lock);
-      err = EBADF;
-    }
-  else
-    {
-      /* Clear the descriptor's port cells.
-	 This deallocates the ports if no one else is still using them.  */
-      _hurd_port_set (&fd->ctty, MACH_PORT_NULL);
-      _hurd_port_locked_set (&fd->port, MACH_PORT_NULL);
-      err = 0;
+    __spin_lock(&fd->port.lock);
+    if (fd->port.port == MACH_PORT_NULL) {
+        __spin_unlock(&fd->port.lock);
+        err = EBADF;
+    } else {
+        /* Clear the descriptor's port cells.
+        This deallocates the ports if no one else is still using them.  */
+        _hurd_port_set(&fd->ctty, MACH_PORT_NULL);
+        _hurd_port_locked_set(&fd->port, MACH_PORT_NULL);
+        err = 0;
     }
 
-  HURD_CRITICAL_END;
+    HURD_CRITICAL_END;
 
-  return err;
+    return err;
 }

@@ -38,116 +38,112 @@
 # define PATH_MAX 1024
 #endif
 
-static struct passwd pwd_table1[] =
-  {
-   PWD_N (1234, "test1"),
-   PWD_N (4321, "test2"),
-   PWD_LAST ()
-  };
+static struct passwd pwd_table1[] = {
+    PWD_N(1234, "test1"),
+    PWD_N(4321, "test2"),
+    PWD_LAST()
+};
 
 static const char *group_4[] = {
-  "alpha", "beta", "gamma", "fred", NULL
+    "alpha", "beta", "gamma", "fred", NULL
 };
 
-static struct group group_table_data1[] =
-  {
-   GRP (4),
-   GRP_LAST ()
-  };
+static struct group group_table_data1[] = {
+    GRP(4),
+    GRP_LAST()
+};
 
-void
-_nss_test1_init_hook (test_tables *t)
+void _nss_test1_init_hook(test_tables *t)
 {
-  t->pwd_table = pwd_table1;
-  t->grp_table = group_table_data1;
+    t->pwd_table = pwd_table1;
+    t->grp_table = group_table_data1;
 }
 
-static struct passwd pwd_table2[] =
-  {
-   PWD_N (5, "test1"),
-   PWD_N (2468, "test2"),
-   PWD_LAST ()
-  };
+static struct passwd pwd_table2[] = {
+    PWD_N(5, "test1"),
+    PWD_N(2468, "test2"),
+    PWD_LAST()
+};
 
 static const char *group_5[] = {
-  "fred", NULL
+    "fred", NULL
 };
 
-static struct group group_table_data2[] =
-  {
-   GRP (5),
-   GRP_LAST ()
-  };
+static struct group group_table_data2[] = {
+    GRP(5),
+    GRP_LAST()
+};
 
-void
-_nss_test2_init_hook (test_tables *t)
+void _nss_test2_init_hook(test_tables *t)
 {
-  t->pwd_table = pwd_table2;
-  t->grp_table = group_table_data2;
+    t->pwd_table = pwd_table2;
+    t->grp_table = group_table_data2;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  struct passwd *pw;
-  struct group *gr;
-  struct hostent *he;
-  char buf1[PATH_MAX];
-  char buf2[PATH_MAX];
+    struct passwd *pw;
+    struct group *gr;
+    struct hostent *he;
+    char buf1[PATH_MAX];
+    char buf2[PATH_MAX];
 
-  support_need_proc ("Our xmkdirp fails if we can't map our uid, which requires /proc.");
+    support_need_proc("Our xmkdirp fails if we can't map our uid, which requires /proc.");
 
-  sprintf (buf1, "/subdir%s", support_slibdir_prefix);
-  xmkdirp (buf1, 0777);
+    sprintf(buf1, "/subdir%s", support_slibdir_prefix);
+    xmkdirp(buf1, 0777);
 
-  /* Copy this DSO into the chroot so it *could* be loaded.  */
-  sprintf (buf1, "%s/libnss_files.so.2", support_slibdir_prefix);
-  sprintf (buf2, "/subdir%s/libnss_files.so.2", support_slibdir_prefix);
-  support_copy_file (buf1, buf2);
+    /* Copy this DSO into the chroot so it *could* be loaded.  */
+    sprintf(buf1, "%s/libnss_files.so.2", support_slibdir_prefix);
+    sprintf(buf2, "/subdir%s/libnss_files.so.2", support_slibdir_prefix);
+    support_copy_file(buf1, buf2);
 
-  /* Check we're using the "outer" nsswitch.conf.  */
+    /* Check we're using the "outer" nsswitch.conf.  */
 
-  /* This uses the test1 DSO.  */
-  pw = getpwnam ("test1");
-  TEST_VERIFY (pw != NULL);
-  if (pw)
-    TEST_COMPARE (pw->pw_uid, 1234);
+    /* This uses the test1 DSO.  */
+    pw = getpwnam("test1");
+    TEST_VERIFY(pw != NULL);
+    if (pw) {
+        TEST_COMPARE(pw->pw_uid, 1234);
+    }
 
-  /* This just loads the test2 DSO.  */
-  gr = getgrgid (5);
-  TEST_VERIFY (gr != NULL);
+    /* This just loads the test2 DSO.  */
+    gr = getgrgid(5);
+    TEST_VERIFY(gr != NULL);
 
 
-  /* Change the root dir.  */
+    /* Change the root dir.  */
 
-  TEST_VERIFY (chroot ("/subdir") == 0);
-  xchdir ("/");
+    TEST_VERIFY(chroot("/subdir") == 0);
+    xchdir("/");
 
-  /* Check we're NOT using the "inner" nsswitch.conf.  */
+    /* Check we're NOT using the "inner" nsswitch.conf.  */
 
-  /* Both DSOs are loaded, which is used?  */
-  pw = getpwnam ("test2");
-  TEST_VERIFY (pw != NULL);
-  if (pw)
-    TEST_VERIFY (pw->pw_uid != 2468);
+    /* Both DSOs are loaded, which is used?  */
+    pw = getpwnam("test2");
+    TEST_VERIFY(pw != NULL);
+    if (pw) {
+        TEST_VERIFY(pw->pw_uid != 2468);
+    }
 
-  /* We should still be using the old configuration.  */
-  pw = getpwnam ("test1");
-  TEST_VERIFY (pw != NULL);
-  if (pw)
-    TEST_COMPARE (pw->pw_uid, 1234);
-  gr = getgrgid (5);
-  TEST_VERIFY (gr != NULL);
-  gr = getgrnam ("name4");
-  TEST_VERIFY (gr == NULL);
+    /* We should still be using the old configuration.  */
+    pw = getpwnam("test1");
+    TEST_VERIFY(pw != NULL);
+    if (pw) {
+        TEST_COMPARE(pw->pw_uid, 1234);
+    }
+    gr = getgrgid(5);
+    TEST_VERIFY(gr != NULL);
+    gr = getgrnam("name4");
+    TEST_VERIFY(gr == NULL);
 
-  /* hosts in the outer nsswitch is files; the inner one is test1.
-     Verify that we're still using the outer nsswitch *and* that we
-     can load the files DSO. */
-  he = gethostbyname ("test2");
-  TEST_VERIFY (he != NULL);
+    /* hosts in the outer nsswitch is files; the inner one is test1.
+       Verify that we're still using the outer nsswitch *and* that we
+       can load the files DSO. */
+    he = gethostbyname("test2");
+    TEST_VERIFY(he != NULL);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

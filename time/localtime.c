@@ -28,9 +28,9 @@ struct tm _tmbuf;
 /* Return the `struct tm' representation of *T in local time,
    using *TP to store the result.  */
 struct tm *
-__localtime64_r (const __time64_t *t, struct tm *tp)
+__localtime64_r(const __time64_t *t, struct tm *tp)
 {
-  return __tz_convert (*t, 1, tp);
+    return __tz_convert(*t, 1, tp);
 }
 
 /* Provide a 32-bit variant if needed.  */
@@ -38,36 +38,36 @@ __localtime64_r (const __time64_t *t, struct tm *tp)
 #if __TIMESIZE != 64
 
 struct tm *
-__localtime_r (const time_t *t, struct tm *tp)
+__localtime_r(const time_t *t, struct tm *tp)
 {
-  __time64_t t64 = *t;
-  return __localtime64_r (&t64, tp);
+    __time64_t t64 = *t;
+    return __localtime64_r(&t64, tp);
 }
-libc_hidden_def (__localtime64_r)
+libc_hidden_def(__localtime64_r)
 
 #endif
 
-weak_alias (__localtime_r, localtime_r)
+weak_alias(__localtime_r, localtime_r)
 
 
 /* Return the `struct tm' representation of *T in local time.  */
 struct tm *
-__localtime64 (const __time64_t *t)
+__localtime64(const __time64_t *t)
 {
-  return __tz_convert (*t, 1, &_tmbuf);
+    return __tz_convert(*t, 1, &_tmbuf);
 }
-libc_hidden_def (__localtime64)
+libc_hidden_def(__localtime64)
 
 /* Provide a 32-bit variant if needed.  */
 
 #if __TIMESIZE != 64
 
 struct tm *
-localtime (const time_t *t)
+localtime(const time_t *t)
 {
-  __time64_t t64 = *t;
-  return __localtime64 (&t64);
+    __time64_t t64 = *t;
+    return __localtime64(&t64);
 }
-libc_hidden_def (localtime)
+libc_hidden_def(localtime)
 
 #endif

@@ -20,12 +20,12 @@
 #include <string.h>
 #include <memcopy.h>
 
-void *
-__memcpy_chk (void *dstpp, const void *srcpp, size_t len, size_t dstlen)
+void *__memcpy_chk(void *dstpp, const void *srcpp, size_t len, size_t dstlen)
 {
-  if (__glibc_unlikely (dstlen < len))
-    __chk_fail ();
+    if (__glibc_unlikely(dstlen < len)) {
+        __chk_fail();
+    }
 
-  return memcpy (dstpp, srcpp, len);
+    return memcpy(dstpp, srcpp, len);
 }
-libc_hidden_builtin_def (__memcpy_chk)
+libc_hidden_builtin_def(__memcpy_chk)

@@ -19,7 +19,7 @@
 #include <stdbit.h>
 
 unsigned short
-(stdc_bit_ceil_us) (unsigned short x)
+(stdc_bit_ceil_us)(unsigned short x)
 {
-  return stdc_bit_ceil_us (x);
+    return stdc_bit_ceil_us(x);
 }

@@ -33,131 +33,115 @@ static pthread_barrier_t bar;
 static int global;
 static int cl_called;
 
-static void
-once_handler1 (void)
+static void once_handler1(void)
 {
-  if (pthread_mutex_lock (&mut) != 0)
-    {
-      puts ("once_handler1: mutex_lock failed");
-      exit (1);
+    if (pthread_mutex_lock(&mut) != 0) {
+        puts("once_handler1: mutex_lock failed");
+        exit(1);
     }
-  puts ("once_handler1: locked");
+    puts("once_handler1: locked");
 
-  int r = pthread_barrier_wait (&bar);
-  if (r != 0 && r!= PTHREAD_BARRIER_SERIAL_THREAD)
-    {
-      puts ("once_handler1: barrier_wait failed");
-      exit (1);
+    int r = pthread_barrier_wait(&bar);
+    if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD) {
+        puts("once_handler1: barrier_wait failed");
+        exit(1);
     }
 
-  puts ("once_handler1: going to wait on cond");
+    puts("once_handler1: going to wait on cond");
 
-  pthread_cond_wait (&cond, &mut);
+    pthread_cond_wait(&cond, &mut);
 
-  /* We should never get here.  */
-  exit (42);
+    /* We should never get here.  */
+    exit(42);
 }
 
-static void
-once_handler2 (void)
+static void once_handler2(void)
 {
-  global = 1;
+    global = 1;
 }
 
 
-static void
-cl (void *arg)
+static void cl(void *arg)
 {
-  cl_called = 1;
+    cl_called = 1;
 }
 
 
-static void *
-tf (void *arg)
+static void *tf(void *arg)
 {
-  pthread_cleanup_push (cl, NULL)
+    pthread_cleanup_push(cl, NULL)
 
-  pthread_once (&once, once_handler1);
+    pthread_once(&once, once_handler1);
 
-  pthread_cleanup_pop (0);
+    pthread_cleanup_pop(0);
 
-  /* We should never get here.  */
-  puts ("pthread_once in tf returned");
-  exit (1);
+    /* We should never get here.  */
+    puts("pthread_once in tf returned");
+    exit(1);
 }
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  pthread_t th;
+    pthread_t th;
 
-  if (pthread_barrier_init (&bar, NULL, 2) != 0)
-    {
-      puts ("barrier_init failed");
-      return 1;
+    if (pthread_barrier_init(&bar, NULL, 2) != 0) {
+        puts("barrier_init failed");
+        return 1;
     }
 
-  if (pthread_create (&th, NULL, tf, NULL) != 0)
-    {
-      puts ("first create failed");
-      return 1;
+    if (pthread_create(&th, NULL, tf, NULL) != 0) {
+        puts("first create failed");
+        return 1;
     }
 
-  int r = pthread_barrier_wait (&bar);
-  if (r != 0 && r!= PTHREAD_BARRIER_SERIAL_THREAD)
-    {
-      puts ("barrier_wait failed");
-      return 1;
+    int r = pthread_barrier_wait(&bar);
+    if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD) {
+        puts("barrier_wait failed");
+        return 1;
     }
 
-  if (pthread_mutex_lock (&mut) != 0)
-    {
-      puts ("mutex_lock failed");
-      return 1;
+    if (pthread_mutex_lock(&mut) != 0) {
+        puts("mutex_lock failed");
+        return 1;
     }
-  /* We unlock the mutex so that we catch the case where the pthread_cond_wait
-     call incorrectly resumes and tries to get the mutex.  */
-  if (pthread_mutex_unlock (&mut) != 0)
-    {
-      puts ("mutex_unlock failed");
-      return 1;
+    /* We unlock the mutex so that we catch the case where the pthread_cond_wait
+       call incorrectly resumes and tries to get the mutex.  */
+    if (pthread_mutex_unlock(&mut) != 0) {
+        puts("mutex_unlock failed");
+        return 1;
     }
 
-  /* Cancel the thread.  */
-  puts ("going to cancel");
-  if (pthread_cancel (th) != 0)
-    {
-      puts ("cancel failed");
-      return 1;
+    /* Cancel the thread.  */
+    puts("going to cancel");
+    if (pthread_cancel(th) != 0) {
+        puts("cancel failed");
+        return 1;
     }
 
-  void *result;
-  pthread_join (th, &result);
-  if (result != PTHREAD_CANCELED)
-    {
-      puts ("join didn't return PTHREAD_CANCELED");
-      return 1;
+    void *result;
+    pthread_join(th, &result);
+    if (result != PTHREAD_CANCELED) {
+        puts("join didn't return PTHREAD_CANCELED");
+        return 1;
     }
-  puts ("joined successfully");
+    puts("joined successfully");
 
-  printf ("once = %d\n", *(int *) &once);
+    printf("once = %d\n", *(int *) &once);
 
-  if (cl_called != 1)
-    {
-      puts ("cleanup handler not called");
-      return 1;
+    if (cl_called != 1) {
+        puts("cleanup handler not called");
+        return 1;
     }
 
-  pthread_once (&once, once_handler2);
+    pthread_once(&once, once_handler2);
 
-  if (global != 1)
-    {
-      puts ("global still 0");
-      return 1;
+    if (global != 1) {
+        puts("global still 0");
+        return 1;
     }
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

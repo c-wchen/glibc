@@ -18,9 +18,9 @@
 
 #include <string.h>
 
-extern __typeof (memcpy) __memcpy_power7 attribute_hidden;
-extern __typeof (strlen) __strlen_power7 attribute_hidden;
-extern __typeof (strcpy) __strcpy_power7 attribute_hidden;
+extern __typeof(memcpy) __memcpy_power7 attribute_hidden;
+extern __typeof(strlen) __strlen_power7 attribute_hidden;
+extern __typeof(strcpy) __strcpy_power7 attribute_hidden;
 
 #define STRCPY __strcpy_power7
 #define memcpy __memcpy_power7

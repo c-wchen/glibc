@@ -20,13 +20,12 @@
 
 /* Read N bytes into BUF from socket FD.
    Returns the number read or -1 for errors.  */
-ssize_t
-__recv (int fd, void *buf, size_t n, int flags)
+ssize_t __recv(int fd, void *buf, size_t n, int flags)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (__recv)
-weak_alias (__recv, recv)
+libc_hidden_def(__recv)
+weak_alias(__recv, recv)
 
-stub_warning (recv)
+stub_warning(recv)

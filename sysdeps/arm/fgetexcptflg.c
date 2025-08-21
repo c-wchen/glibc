@@ -20,13 +20,13 @@
 #include <arm-features.h>
 
 
-int
-fegetexceptflag (fexcept_t *flagp, int excepts)
+int fegetexceptflag(fexcept_t *flagp, int excepts)
 {
-  /* Fail if a VFP unit isn't present.  */
-  if (!ARM_HAVE_VFP)
-    return 1;
+    /* Fail if a VFP unit isn't present.  */
+    if (!ARM_HAVE_VFP) {
+        return 1;
+    }
 
-  *flagp = libc_fetestexcept_vfp (excepts);
-  return 0;
+    *flagp = libc_fetestexcept_vfp(excepts);
+    return 0;
 }

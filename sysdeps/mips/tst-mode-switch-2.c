@@ -31,135 +31,118 @@
 /* This test verifies that all threads in a process see a mode
    change when any thread causes a mode change.  */
 
-static int mode[6] =
-  {
+static int mode[6] = {
     0,
     PR_FP_MODE_FR,
     PR_FP_MODE_FR | PR_FP_MODE_FRE,
     PR_FP_MODE_FR,
     0,
     PR_FP_MODE_FR | PR_FP_MODE_FRE
-  };
+};
 static volatile int current_mode;
 static volatile int finished;
 static pthread_barrier_t barr_ready;
 static pthread_barrier_t barr_cont;
 
-static void *
-thread_function (void * arg __attribute__ ((unused)))
+static void *thread_function(void *arg __attribute__((unused)))
 {
-  while (!finished)
-    {
-      int res = pthread_barrier_wait (&barr_ready);
+    while (!finished) {
+        int res = pthread_barrier_wait(&barr_ready);
 
-      if (res != 0 && res != PTHREAD_BARRIER_SERIAL_THREAD)
-	{
-	  printf ("barrier wait failed: %m\n");
-	  exit (1);
-	}
+        if (res != 0 && res != PTHREAD_BARRIER_SERIAL_THREAD) {
+            printf("barrier wait failed: %m\n");
+            exit(1);
+        }
 
-      int mode = prctl (PR_GET_FP_MODE);
+        int mode = prctl(PR_GET_FP_MODE);
 
-      if (mode != current_mode)
-	{
-	  printf ("unexpected mode: %d != %d\n", mode, current_mode);
-	  exit (1);
-	}
+        if (mode != current_mode) {
+            printf("unexpected mode: %d != %d\n", mode, current_mode);
+            exit(1);
+        }
 
-      res = pthread_barrier_wait (&barr_cont);
+        res = pthread_barrier_wait(&barr_cont);
 
-      if (res != 0 && res != PTHREAD_BARRIER_SERIAL_THREAD)
-	{
-	  printf ("barrier wait failed: %m\n");
-	  exit (1);
-	}
+        if (res != 0 && res != PTHREAD_BARRIER_SERIAL_THREAD) {
+            printf("barrier wait failed: %m\n");
+            exit(1);
+        }
     }
-  return NULL;
+    return NULL;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int count = sysconf (_SC_NPROCESSORS_ONLN);
-  if (count <= 0)
-    count = 1;
-  count *= 4;
+    int count = sysconf(_SC_NPROCESSORS_ONLN);
+    if (count <= 0) {
+        count = 1;
+    }
+    count *= 4;
 
-  pthread_t th[count];
-  int i;
-  int result = 0;
+    pthread_t th[count];
+    int i;
+    int result = 0;
 
-  if (pthread_barrier_init (&barr_ready, NULL, count + 1) != 0)
-    {
-      printf ("failed to initialize barrier: %m\n");
-      exit (1);
+    if (pthread_barrier_init(&barr_ready, NULL, count + 1) != 0) {
+        printf("failed to initialize barrier: %m\n");
+        exit(1);
     }
 
-  if (pthread_barrier_init (&barr_cont, NULL, count + 1) != 0)
-    {
-      printf ("failed to initialize barrier: %m\n");
-      exit (1);
+    if (pthread_barrier_init(&barr_cont, NULL, count + 1) != 0) {
+        printf("failed to initialize barrier: %m\n");
+        exit(1);
     }
 
-  for (i = 0; i < count; ++i)
-    if (pthread_create (&th[i], NULL, thread_function, 0) != 0)
-      {
-	printf ("creation of thread %d failed\n", i);
-	exit (1);
-      }
+    for (i = 0; i < count; ++i)
+        if (pthread_create(&th[i], NULL, thread_function, 0) != 0) {
+            printf("creation of thread %d failed\n", i);
+            exit(1);
+        }
 
-  for (i = 0 ; i < 7 ; i++)
-    {
-      if (prctl (PR_SET_FP_MODE, mode[i % 6]) != 0)
-	{
-	  if (errno != ENOTSUP)
-	    {
-	      printf ("prctl PR_SET_FP_MODE failed: %m");
-	      exit (1);
-	    }
-	}
-      else
-	current_mode = mode[i % 6];
+    for (i = 0 ; i < 7 ; i++) {
+        if (prctl(PR_SET_FP_MODE, mode[i % 6]) != 0) {
+            if (errno != ENOTSUP) {
+                printf("prctl PR_SET_FP_MODE failed: %m");
+                exit(1);
+            }
+        } else {
+            current_mode = mode[i % 6];
+        }
 
 
-      int res = pthread_barrier_wait (&barr_ready);
+        int res = pthread_barrier_wait(&barr_ready);
 
-      if (res != 0 && res != PTHREAD_BARRIER_SERIAL_THREAD)
-	{
-	  printf ("barrier wait failed: %m\n");
-	  exit (1);
-	}
+        if (res != 0 && res != PTHREAD_BARRIER_SERIAL_THREAD) {
+            printf("barrier wait failed: %m\n");
+            exit(1);
+        }
 
-      if (i == 6)
-	finished = 1;
+        if (i == 6) {
+            finished = 1;
+        }
 
-      res = pthread_barrier_wait (&barr_cont);
+        res = pthread_barrier_wait(&barr_cont);
 
-      if (res != 0 && res != PTHREAD_BARRIER_SERIAL_THREAD)
-	{
-	  printf ("barrier wait failed: %m\n");
-	  exit (1);
-	}
+        if (res != 0 && res != PTHREAD_BARRIER_SERIAL_THREAD) {
+            printf("barrier wait failed: %m\n");
+            exit(1);
+        }
     }
 
-  for (i = 0; i < count; ++i)
-    {
-      void *v;
-      if (pthread_join (th[i], &v) != 0)
-	{
-	  printf ("join of thread %d failed\n", i);
-	  result = 1;
-	}
-      else if (v != NULL)
-	{
-	  printf ("join %d successful, but child failed\n", i);
-	  result = 1;
-	}
-      else
-	printf ("join %d successful\n", i);
+    for (i = 0; i < count; ++i) {
+        void *v;
+        if (pthread_join(th[i], &v) != 0) {
+            printf("join of thread %d failed\n", i);
+            result = 1;
+        } else if (v != NULL) {
+            printf("join %d successful, but child failed\n", i);
+            result = 1;
+        } else {
+            printf("join %d successful\n", i);
+        }
     }
 
-  return result;
+    return result;
 }
 
 #define TEST_FUNCTION do_test ()

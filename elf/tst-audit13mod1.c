@@ -19,55 +19,49 @@
 #include <link.h>
 #include <stdlib.h>
 
-unsigned int
-la_version (unsigned int version)
+unsigned int la_version(unsigned int version)
 {
-  /* The audit specification says that a version of 0 or a version
-     greater than any version supported by the dynamic loader shall
-     cause the module to be ignored.  */
-  return 0;
+    /* The audit specification says that a version of 0 or a version
+       greater than any version supported by the dynamic loader shall
+       cause the module to be ignored.  */
+    return 0;
 }
 
-void
-la_activity (uintptr_t *cookie, unsigned int flag)
+void la_activity(uintptr_t *cookie, unsigned int flag)
 {
-  exit (EXIT_FAILURE);
+    exit(EXIT_FAILURE);
 }
 
-char *
-la_objsearch (const char *name, uintptr_t *cookie, unsigned int flag)
+char *la_objsearch(const char *name, uintptr_t *cookie, unsigned int flag)
 {
-  exit (EXIT_FAILURE);
+    exit(EXIT_FAILURE);
 }
 
-unsigned int
-la_objopen (struct link_map *map, Lmid_t lmid, uintptr_t * cookie)
+unsigned int la_objopen(struct link_map *map, Lmid_t lmid, uintptr_t *cookie)
 {
-  exit (EXIT_FAILURE);
+    exit(EXIT_FAILURE);
 }
 
-void
-la_preinit (uintptr_t * cookie)
+void la_preinit(uintptr_t *cookie)
 {
-  exit (EXIT_FAILURE);
+    exit(EXIT_FAILURE);
 }
 
 uintptr_t
 #if __ELF_NATIVE_CLASS == 32
-la_symbind32 (Elf32_Sym *sym, unsigned int ndx, uintptr_t *refcook,
-              uintptr_t *defcook, unsigned int *flags, const char *symname)
+la_symbind32(Elf32_Sym *sym, unsigned int ndx, uintptr_t *refcook,
+             uintptr_t *defcook, unsigned int *flags, const char *symname)
 #else
-la_symbind64 (Elf64_Sym *sym, unsigned int ndx, uintptr_t *refcook,
-              uintptr_t *defcook, unsigned int *flags, const char *symname)
+la_symbind64(Elf64_Sym *sym, unsigned int ndx, uintptr_t *refcook,
+             uintptr_t *defcook, unsigned int *flags, const char *symname)
 #endif
 {
-  exit (EXIT_FAILURE);
+    exit(EXIT_FAILURE);
 }
 
-unsigned int
-la_objclose (uintptr_t * cookie)
+unsigned int la_objclose(uintptr_t *cookie)
 {
-  exit (EXIT_FAILURE);
+    exit(EXIT_FAILURE);
 }
 
 #include <tst-audit.h>
@@ -77,17 +71,16 @@ la_objclose (uintptr_t * cookie)
 #endif
 
 ElfW(Addr)
-pltenter (ElfW(Sym) *sym, unsigned int ndx, uintptr_t *refcook,
-          uintptr_t *defcook, La_regs *regs, unsigned int *flags,
-          const char *symname, long int *framesizep)
+pltenter(ElfW(Sym) *sym, unsigned int ndx, uintptr_t *refcook,
+         uintptr_t *defcook, La_regs *regs, unsigned int *flags,
+         const char *symname, long int *framesizep)
 {
-  exit (EXIT_FAILURE);
+    exit(EXIT_FAILURE);
 }
 
-unsigned int
-pltexit (ElfW(Sym) *sym, unsigned int ndx, uintptr_t *refcook,
-         uintptr_t *defcook, const La_regs *inregs, La_retval *outregs,
-         const char *symname)
+unsigned int pltexit(ElfW(Sym) *sym, unsigned int ndx, uintptr_t *refcook,
+                     uintptr_t *defcook, const La_regs *inregs, La_retval *outregs,
+                     const char *symname)
 {
-  exit (EXIT_FAILURE);
+    exit(EXIT_FAILURE);
 }

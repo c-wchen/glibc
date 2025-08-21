@@ -18,11 +18,10 @@
 #include <errno.h>
 #include <sys/xattr.h>
 
-ssize_t
-llistxattr (const char *__path, char *__list, size_t __size)
+ssize_t llistxattr(const char *__path, char *__list, size_t __size)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (llistxattr)
+stub_warning(llistxattr)

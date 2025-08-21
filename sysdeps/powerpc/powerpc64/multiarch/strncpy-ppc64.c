@@ -28,6 +28,6 @@
   __hidden_ver1(__strncpy_ppc, __GI_strncpy, __strncpy_ppc);
 #endif
 
-extern __typeof (strncpy) __strncpy_ppc attribute_hidden;
+extern __typeof(strncpy) __strncpy_ppc attribute_hidden;
 
 #include <string/strncpy.c>

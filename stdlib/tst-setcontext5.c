@@ -24,65 +24,58 @@
 static ucontext_t ctx[2];
 static volatile int done;
 
-static void f2 (void);
+static void f2(void);
 
 static void
-__attribute_optimization_barrier__
-f1 (void)
+__attribute_optimization_barrier__ f1(void)
 {
-  printf ("start f1\n");
-  f2 ();
+    printf("start f1\n");
+    f2();
 }
 
 static void
-__attribute_optimization_barrier__
-f2 (void)
+__attribute_optimization_barrier__ f2(void)
 {
-  printf ("start f2\n");
-  if (setcontext (&ctx[1]) != 0)
-    {
-      printf ("%s: setcontext: %m\n", __FUNCTION__);
-      exit (EXIT_FAILURE);
+    printf("start f2\n");
+    if (setcontext(&ctx[1]) != 0) {
+        printf("%s: setcontext: %m\n", __FUNCTION__);
+        exit(EXIT_FAILURE);
     }
 }
 
-static void
-f3 (void)
+static void f3(void)
 {
-  printf ("start f3\n");
-  if (done)
-    exit (EXIT_SUCCESS);
-  done = 1;
-  if (setcontext (&ctx[0]) != 0)
-    {
-      printf ("%s: setcontext: %m\n", __FUNCTION__);
-      exit (EXIT_FAILURE);
+    printf("start f3\n");
+    if (done) {
+        exit(EXIT_SUCCESS);
+    }
+    done = 1;
+    if (setcontext(&ctx[0]) != 0) {
+        printf("%s: setcontext: %m\n", __FUNCTION__);
+        exit(EXIT_FAILURE);
     }
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char st1[32768];
+    char st1[32768];
 
-  puts ("making contexts");
-  if (getcontext (&ctx[0]) != 0)
-    {
-      printf ("%s: getcontext: %m\n", __FUNCTION__);
-      exit (EXIT_FAILURE);
+    puts("making contexts");
+    if (getcontext(&ctx[0]) != 0) {
+        printf("%s: getcontext: %m\n", __FUNCTION__);
+        exit(EXIT_FAILURE);
     }
-  if (getcontext (&ctx[1]) != 0)
-    {
-      printf ("%s: getcontext: %m\n", __FUNCTION__);
-      exit (EXIT_FAILURE);
+    if (getcontext(&ctx[1]) != 0) {
+        printf("%s: getcontext: %m\n", __FUNCTION__);
+        exit(EXIT_FAILURE);
     }
-  ctx[1].uc_stack.ss_sp = st1;
-  ctx[1].uc_stack.ss_size = sizeof st1;
-  ctx[1].uc_link = &ctx[0];
-  makecontext (&ctx[1], (void (*) (void)) f3, 0);
-  f1 ();
-  puts ("FAIL: returned from f1 ()");
-  exit (EXIT_FAILURE);
+    ctx[1].uc_stack.ss_sp = st1;
+    ctx[1].uc_stack.ss_size = sizeof st1;
+    ctx[1].uc_link = &ctx[0];
+    makecontext(&ctx[1], (void (*)(void)) f3, 0);
+    f1();
+    puts("FAIL: returned from f1 ()");
+    exit(EXIT_FAILURE);
 }
 
 #include <support/test-driver.c>

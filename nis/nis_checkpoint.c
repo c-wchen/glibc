@@ -22,58 +22,53 @@
 #include "nis_xdr.h"
 #include "nis_intern.h"
 
-nis_result *
-nis_checkpoint (const_nis_name dirname)
+nis_result *nis_checkpoint(const_nis_name dirname)
 {
-  nis_result *res;
+    nis_result *res;
 
-  res = calloc (1, sizeof (nis_result));
-  if (res == NULL)
-    return NULL;
-
-  if (dirname != NULL)
-    {
-      nis_result *res2;
-      u_int i;
-
-      res2 = nis_lookup (dirname, EXPAND_NAME);
-      if (NIS_RES_STATUS (res2) != NIS_SUCCESS)
-	{
-	  free (res);
-	  return res2;
-	}
-
-      /* Check if obj is really a diryectory object */
-      if (__type_of (NIS_RES_OBJECT (res2)) != NIS_DIRECTORY_OBJ)
-	{
-	  nis_freeresult (res2);
-	  NIS_RES_STATUS (res) = NIS_INVALIDOBJ;
-	  return res;
-	}
-
-      for (i = 0;
-	   i < NIS_RES_OBJECT (res2)->DI_data.do_servers.do_servers_len; ++i)
-	{
-	  cp_result cpres;
-
-	  memset (&cpres, '\0', sizeof (cp_result));
-	  if (__do_niscall2 (&NIS_RES_OBJECT(res2)->DI_data.do_servers.do_servers_val[i],
-			     1, NIS_CHECKPOINT, (xdrproc_t) _xdr_nis_name,
-			     (caddr_t) &dirname, (xdrproc_t) _xdr_cp_result,
-			     (caddr_t) &cpres, 0, NULL) != NIS_SUCCESS)
-	    NIS_RES_STATUS (res) = NIS_RPCERROR;
-	  else
-	    {
-	      NIS_RES_STATUS (res) = cpres.cp_status;
-	      res->zticks += cpres.cp_zticks;
-	      res->dticks += cpres.cp_dticks;
-	    }
-	}
-      nis_freeresult (res2);
+    res = calloc(1, sizeof(nis_result));
+    if (res == NULL) {
+        return NULL;
     }
-  else
-    NIS_RES_STATUS (res) = NIS_NOSUCHNAME;
 
-  return res;
+    if (dirname != NULL) {
+        nis_result *res2;
+        u_int i;
+
+        res2 = nis_lookup(dirname, EXPAND_NAME);
+        if (NIS_RES_STATUS(res2) != NIS_SUCCESS) {
+            free(res);
+            return res2;
+        }
+
+        /* Check if obj is really a diryectory object */
+        if (__type_of(NIS_RES_OBJECT(res2)) != NIS_DIRECTORY_OBJ) {
+            nis_freeresult(res2);
+            NIS_RES_STATUS(res) = NIS_INVALIDOBJ;
+            return res;
+        }
+
+        for (i = 0;
+             i < NIS_RES_OBJECT(res2)->DI_data.do_servers.do_servers_len; ++i) {
+            cp_result cpres;
+
+            memset(&cpres, '\0', sizeof(cp_result));
+            if (__do_niscall2(&NIS_RES_OBJECT(res2)->DI_data.do_servers.do_servers_val[i],
+                              1, NIS_CHECKPOINT, (xdrproc_t) _xdr_nis_name,
+                              (caddr_t) &dirname, (xdrproc_t) _xdr_cp_result,
+                              (caddr_t) &cpres, 0, NULL) != NIS_SUCCESS) {
+                NIS_RES_STATUS(res) = NIS_RPCERROR;
+            } else {
+                NIS_RES_STATUS(res) = cpres.cp_status;
+                res->zticks += cpres.cp_zticks;
+                res->dticks += cpres.cp_dticks;
+            }
+        }
+        nis_freeresult(res2);
+    } else {
+        NIS_RES_STATUS(res) = NIS_NOSUCHNAME;
+    }
+
+    return res;
 }
-libnsl_hidden_nolink_def (nis_checkpoint, GLIBC_2_1)
+libnsl_hidden_nolink_def(nis_checkpoint, GLIBC_2_1)

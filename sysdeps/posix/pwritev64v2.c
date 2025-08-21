@@ -21,22 +21,21 @@
 #include <sys/uio.h>
 
 /* Since we define no flags for pwritev2 just route to pwritev.  */
-ssize_t
-pwritev64v2 (int fd, const struct iovec *vector, int count, off64_t offset,
-	     int flags)
+ssize_t pwritev64v2(int fd, const struct iovec *vector, int count, off64_t offset,
+                    int flags)
 {
-  if (flags != 0)
-    {
-      __set_errno (ENOTSUP);
-      return -1;
+    if (flags != 0) {
+        __set_errno(ENOTSUP);
+        return -1;
     }
 
-  if (offset == -1)
-    return __writev (fd, vector, count);
-  else
-    return pwritev64 (fd, vector, count, offset);
+    if (offset == -1) {
+        return __writev(fd, vector, count);
+    } else {
+        return pwritev64(fd, vector, count, offset);
+    }
 }
 
 #ifdef __OFF_T_MATCHES_OFF64_T
-strong_alias (pwritev64v2, pwritev2)
+strong_alias(pwritev64v2, pwritev2)
 #endif

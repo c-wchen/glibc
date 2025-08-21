@@ -21,13 +21,12 @@
 
 /* All syscall handlers land here to avoid generated code bloat due to
    GOT reference  to errno_location or it's equivalent.  */
-long int
-__syscall_error (long int err_no)
+long int __syscall_error(long int err_no)
 {
-  __set_errno (-err_no);
-  return -1;
+    __set_errno(-err_no);
+    return -1;
 }
 
 #if IS_IN (libc)
-hidden_def (__syscall_error)
+hidden_def(__syscall_error)
 #endif

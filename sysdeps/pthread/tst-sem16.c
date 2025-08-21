@@ -25,105 +25,92 @@
 #include <errno.h>
 #include <stdlib.h>
 
-static sem_t sem;	/* Use to sync with thread start.  */
+static sem_t sem;   /* Use to sync with thread start.  */
 static const char pipe_name[] = "/glibc-tst-sem16";
 
-static void
-remove_sem (int status, void *arg)
+static void remove_sem(int status, void *arg)
 {
-  sem_unlink (arg);
+    sem_unlink(arg);
 }
 
-static void *
-tf (void *arg)
+static void *tf(void *arg)
 {
-  pthread_setcancelstate (PTHREAD_CANCEL_DISABLE, 0);
+    pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, 0);
 
-  if (sem_wait (&sem) != 0)
-    {
-      printf ("error: sem_wait failed: %m");
-      exit (1);
+    if (sem_wait(&sem) != 0) {
+        printf("error: sem_wait failed: %m");
+        exit(1);
     }
 
-  if (pthread_setcancelstate (PTHREAD_CANCEL_ENABLE, 0) != 0)
-    {
-      printf ("error: pthread_setcancelstate failed: %m");
-      exit (1);
+    if (pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, 0) != 0) {
+        printf("error: pthread_setcancelstate failed: %m");
+        exit(1);
     }
 
-  /* Neither sem_unlink or sem_open should act on thread cancellation.  */
-  sem_unlink (pipe_name);
-  on_exit (remove_sem, (void *) pipe_name);
+    /* Neither sem_unlink or sem_open should act on thread cancellation.  */
+    sem_unlink(pipe_name);
+    on_exit(remove_sem, (void *) pipe_name);
 
-  sem_t *s = sem_open (pipe_name, O_CREAT, 0600, 1);
-  if (s == SEM_FAILED)
-    {
-      int exit_code;
-      if (errno == ENOSYS || errno == EACCES)
-	exit_code = 77;
-      else
-	exit_code = 1;
-      exit (exit_code);
+    sem_t *s = sem_open(pipe_name, O_CREAT, 0600, 1);
+    if (s == SEM_FAILED) {
+        int exit_code;
+        if (errno == ENOSYS || errno == EACCES) {
+            exit_code = 77;
+        } else {
+            exit_code = 1;
+        }
+        exit(exit_code);
     }
 
-  if (pthread_setcancelstate (PTHREAD_CANCEL_DISABLE, 0) != 0)
-    {
-      printf ("error: pthread_setcancelstate failed: %m");
-      exit (1);
+    if (pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, 0) != 0) {
+        printf("error: pthread_setcancelstate failed: %m");
+        exit(1);
     }
 
-  if (sem_close (s) != 0)
-    {
-      printf ("error: sem_close failed: %m");
-      exit (1);
+    if (sem_close(s) != 0) {
+        printf("error: sem_close failed: %m");
+        exit(1);
     }
 
-  return NULL;
+    return NULL;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  pthread_t td;
+    pthread_t td;
 
-  if (sem_init (&sem, 0, 0))
-    {
-      printf ("error: sem_init failed: %m\n");
-      exit (1);
+    if (sem_init(&sem, 0, 0)) {
+        printf("error: sem_init failed: %m\n");
+        exit(1);
     }
 
-  if (pthread_create (&td, NULL, tf, NULL) != 0)
-    {
-      printf ("error: pthread_create failed: %m\n");
-      exit (1);
+    if (pthread_create(&td, NULL, tf, NULL) != 0) {
+        printf("error: pthread_create failed: %m\n");
+        exit(1);
     }
 
-  if (pthread_cancel (td) != 0)
-    {
-      printf ("error: pthread_cancel failed: %m\n");
-      exit (1);
+    if (pthread_cancel(td) != 0) {
+        printf("error: pthread_cancel failed: %m\n");
+        exit(1);
     }
 
-  if (sem_post (&sem) != 0)
-    {
-      printf ("error: sem_post failed: %m\n");
-      exit (1);
+    if (sem_post(&sem) != 0) {
+        printf("error: sem_post failed: %m\n");
+        exit(1);
     }
 
-  void *r;
-  if (pthread_join (td, &r) != 0)
-    {
-      printf ("error: pthread_join failed: %m\n");
-      exit (1);
+    void *r;
+    if (pthread_join(td, &r) != 0) {
+        printf("error: pthread_join failed: %m\n");
+        exit(1);
     }
 
-  if (r == PTHREAD_CANCELED)
-    {
-      puts ("error: pthread_join returned PTHREAD_CANCELED");
-      exit (1);
+    if (r == PTHREAD_CANCELED) {
+        puts("error: pthread_join returned PTHREAD_CANCELED");
+        exit(1);
     }
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

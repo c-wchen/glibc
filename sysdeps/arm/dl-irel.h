@@ -24,29 +24,26 @@
 #include <unistd.h>
 #include <ldsodefs.h>
 
-#define ELF_MACHINE_IREL	1
+#define ELF_MACHINE_IREL    1
 
-static inline Elf32_Addr
-__attribute ((always_inline))
-elf_ifunc_invoke (Elf32_Addr addr)
+static inline Elf32_Addr __attribute((always_inline))
+elf_ifunc_invoke(Elf32_Addr addr)
 {
-  return ((Elf32_Addr (*) (unsigned long int)) (addr)) (GLRO(dl_hwcap));
+    return ((Elf32_Addr(*)(unsigned long int))(addr))(GLRO(dl_hwcap));
 }
 
-static inline void
-__attribute ((always_inline))
-elf_irel (const Elf32_Rel *reloc)
+static inline void __attribute((always_inline))
+elf_irel(const Elf32_Rel *reloc)
 {
-  Elf32_Addr *const reloc_addr = (void *) reloc->r_offset;
-  const unsigned long int r_type = ELF32_R_TYPE (reloc->r_info);
+    Elf32_Addr *const reloc_addr = (void *) reloc->r_offset;
+    const unsigned long int r_type = ELF32_R_TYPE(reloc->r_info);
 
-  if (__builtin_expect (r_type == R_ARM_IRELATIVE, 1))
-    {
-      Elf32_Addr value = elf_ifunc_invoke (*reloc_addr);
-      *reloc_addr = value;
+    if (__builtin_expect(r_type == R_ARM_IRELATIVE, 1)) {
+        Elf32_Addr value = elf_ifunc_invoke(*reloc_addr);
+        *reloc_addr = value;
+    } else {
+        __libc_fatal("Unexpected reloc type in static binary.\n");
     }
-  else
-    __libc_fatal ("Unexpected reloc type in static binary.\n");
 }
 
 #endif /* dl-irel.h */

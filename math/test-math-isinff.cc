@@ -21,27 +21,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* Verify that isinff, isinfl, isnanf, and isnanlf are defined
-     in the header under C++11 and can be called.  Without the
-     header fix this test will not compile.  */
-  if (isinff (1.0f)
-      || !isinff (INFINITY)
-      || isinfl (1.0L)
-      || !isinfl (INFINITY)
-      || isnanf (2.0f)
-      || !isnanf (NAN)
-      || isnanl (2.0L)
-      || !isnanl (NAN)
-      )
-    {
-      printf ("FAIL: Failed to call is* functions.\n");
-      exit (1);
+    /* Verify that isinff, isinfl, isnanf, and isnanlf are defined
+       in the header under C++11 and can be called.  Without the
+       header fix this test will not compile.  */
+    if (isinff(1.0f)
+        || !isinff(INFINITY)
+        || isinfl(1.0L)
+        || !isinfl(INFINITY)
+        || isnanf(2.0f)
+        || !isnanf(NAN)
+        || isnanl(2.0L)
+        || !isnanl(NAN)
+       ) {
+        printf("FAIL: Failed to call is* functions.\n");
+        exit(1);
     }
-  printf ("PASS: Able to call isinff, isinfl, isnanf, and isnanl.\n");
-  exit (0);
+    printf("PASS: Able to call isinff, isinfl, isnanf, and isnanl.\n");
+    exit(0);
 }
 
 #define TEST_FUNCTION do_test ()

@@ -17,14 +17,14 @@
 #include <pwd.h>
 
 
-#define LOOKUP_TYPE	struct passwd
-#define FUNCTION_NAME	getpwnam
-#define DATABASE_NAME	passwd
-#define ADD_PARAMS	const char *name
-#define ADD_VARIABLES	name
-#define BUFLEN		NSS_BUFLEN_PASSWD
+#define LOOKUP_TYPE struct passwd
+#define FUNCTION_NAME   getpwnam
+#define DATABASE_NAME   passwd
+#define ADD_PARAMS  const char *name
+#define ADD_VARIABLES   name
+#define BUFLEN      NSS_BUFLEN_PASSWD
 
 /* We are nscd, so we don't want to be talking to ourselves.  */
-#undef	USE_NSCD
+#undef  USE_NSCD
 
 #include <nss/getXXbyYY_r.c>

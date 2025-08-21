@@ -18,16 +18,15 @@
 #include "pthreadP.h"
 #include <shlib-compat.h>
 
-int
-__pthread_spin_destroy (pthread_spinlock_t *lock)
+int __pthread_spin_destroy(pthread_spinlock_t *lock)
 {
-  /* Nothing to do.  */
-  return 0;
+    /* Nothing to do.  */
+    return 0;
 }
-versioned_symbol (libc, __pthread_spin_destroy, pthread_spin_destroy,
-                  GLIBC_2_34);
+versioned_symbol(libc, __pthread_spin_destroy, pthread_spin_destroy,
+                 GLIBC_2_34);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
-compat_symbol (libpthread, __pthread_spin_destroy, pthread_spin_destroy,
-               GLIBC_2_2);
+compat_symbol(libpthread, __pthread_spin_destroy, pthread_spin_destroy,
+              GLIBC_2_2);
 #endif

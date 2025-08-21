@@ -19,17 +19,16 @@
 #include <stdarg.h>
 #include <libio/libioP.h>
 
-extern int
-___ieee128_fprintf (FILE *fp, const char *format, ...)
+extern int ___ieee128_fprintf(FILE *fp, const char *format, ...)
 {
-  va_list ap;
-  int done;
+    va_list ap;
+    int done;
 
-  va_start (ap, format);
-  done = __vfprintf_internal (fp, format, ap, PRINTF_LDBL_USES_FLOAT128);
-  va_end (ap);
+    va_start(ap, format);
+    done = __vfprintf_internal(fp, format, ap, PRINTF_LDBL_USES_FLOAT128);
+    va_end(ap);
 
-  return done;
+    return done;
 }
-strong_alias (___ieee128_fprintf, __fprintfieee128)
-hidden_def (___ieee128_fprintf)
+strong_alias(___ieee128_fprintf, __fprintfieee128)
+hidden_def(___ieee128_fprintf)

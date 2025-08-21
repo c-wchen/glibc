@@ -22,8 +22,7 @@
 /* Convert a multi-precision integer of the needed number of bits and an
    integral power of two to a `double'.  */
 
-double
-__mpn_construct_double (mp_srcptr frac_ptr, int expt, int negative)
+double __mpn_construct_double(mp_srcptr frac_ptr, int expt, int negative)
 {
 #error "__mpn_construct_double not implemented for this floating point format"
 }

@@ -21,21 +21,19 @@
 #include <fnmatch.h>
 #include <support/check.h>
 
-static void
-do_test_locale (const char *locale)
+static void do_test_locale(const char *locale)
 {
-  TEST_VERIFY_EXIT (setlocale (LC_ALL, locale) != NULL);
+    TEST_VERIFY_EXIT(setlocale(LC_ALL, locale) != NULL);
 
-  TEST_VERIFY (fnmatch ("[[.ch.]]", "ch", 0) == 0);
+    TEST_VERIFY(fnmatch("[[.ch.]]", "ch", 0) == 0);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  do_test_locale ("cs_CZ.ISO-8859-2");
-  do_test_locale ("cs_CZ.UTF-8");
+    do_test_locale("cs_CZ.ISO-8859-2");
+    do_test_locale("cs_CZ.UTF-8");
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

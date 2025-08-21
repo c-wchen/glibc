@@ -21,4 +21,4 @@
 /* We can use the kernel header.  */
 #include <linux/if_slip.h>
 
-#endif	/* net/if_slip.h.  */
+#endif  /* net/if_slip.h.  */

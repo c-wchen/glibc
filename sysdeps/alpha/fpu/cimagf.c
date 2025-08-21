@@ -25,16 +25,14 @@
 #undef __cimagf
 #undef cimagf
 
-float
-__c1_cimagf (c1_cfloat_decl (z))
+float __c1_cimagf(c1_cfloat_decl(z))
 {
-  return c1_cfloat_imag (z);
+    return c1_cfloat_imag(z);
 }
 
-float
-__c2_cimagf (c2_cfloat_decl (z))
+float __c2_cimagf(c2_cfloat_decl(z))
 {
-  return c2_cfloat_imag (z);
+    return c2_cfloat_imag(z);
 }
 
-cfloat_versions (cimag);
+cfloat_versions(cimag);

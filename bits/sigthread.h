@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _BITS_SIGTHREAD_H
-#define _BITS_SIGTHREAD_H	1
+#define _BITS_SIGTHREAD_H   1
 
 #if !defined _SIGNAL_H && !defined _PTHREAD_H
 # error "Never include this file directly.  Use <signal.h> instead"
@@ -27,8 +27,8 @@
    same meaning as for sigprocmask; in fact, this and sigprocmask might be
    the same function.  We declare this the same on all platforms, since it
    doesn't use any thread-related types.  */
-extern int pthread_sigmask (int __how, const __sigset_t *__newmask,
-			    __sigset_t *__oldmask) __THROW;
+extern int pthread_sigmask(int __how, const __sigset_t *__newmask,
+                           __sigset_t *__oldmask) __THROW;
 
 
-#endif	/* bits/sigthread.h */
+#endif  /* bits/sigthread.h */

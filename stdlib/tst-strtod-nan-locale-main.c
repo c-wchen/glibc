@@ -32,57 +32,54 @@
 #define CONCAT(X, Y) CONCAT_ (X, Y)
 #define FNX(FN) CONCAT (FNPFX, FN)
 
-#define TEST_STRTOD(FSUF, FTYPE, FTOSTR, LSUF, CSUF)			\
-static int								\
-test_strto ## FSUF (const char * loc, CHAR * s)				\
-{									\
-  CHAR *ep;								\
-  FTYPE val = FNX (FSUF) (s, &ep);					\
-  if (isnan (val) && *ep == 0)						\
-    printf ("PASS: %s: " FNPFXS #FSUF " (" SFMT ")\n", loc, s);		\
-  else									\
-    {									\
-      printf ("FAIL: %s: " FNPFXS #FSUF " (" SFMT ")\n", loc, s);	\
-      return 1;							        \
-    }									\
-  return 0;								\
+#define TEST_STRTOD(FSUF, FTYPE, FTOSTR, LSUF, CSUF)            \
+static int                              \
+test_strto ## FSUF (const char * loc, CHAR * s)             \
+{                                   \
+  CHAR *ep;                             \
+  FTYPE val = FNX (FSUF) (s, &ep);                  \
+  if (isnan (val) && *ep == 0)                      \
+    printf ("PASS: %s: " FNPFXS #FSUF " (" SFMT ")\n", loc, s);     \
+  else                                  \
+    {                                   \
+      printf ("FAIL: %s: " FNPFXS #FSUF " (" SFMT ")\n", loc, s);   \
+      return 1;                                 \
+    }                                   \
+  return 0;                             \
 }
-GEN_TEST_STRTOD_FOREACH (TEST_STRTOD)
+GEN_TEST_STRTOD_FOREACH(TEST_STRTOD)
 
 static int
-test_one_locale (const char *loc)
+test_one_locale(const char *loc)
 {
-  if (setlocale (LC_ALL, loc) == NULL)
-    {
-      printf ("setlocale (LC_ALL, \"%s\") failed\n", loc);
-      return 1;
+    if (setlocale(LC_ALL, loc) == NULL) {
+        printf("setlocale (LC_ALL, \"%s\") failed\n", loc);
+        return 1;
     }
-  int result = 0;
-  for (int i = 10; i < 36; i++)
-    {
-      CHAR s[7];
-      s[0] = L_('N');
-      s[1] = L_('A');
-      s[2] = L_('N');
-      s[3] = L_('(');
-      s[4] = L_('A') + i - 10;
-      s[5] = L_(')');
-      s[6] = 0;
-      result |= STRTOD_TEST_FOREACH (test_strto, loc, s);
-      s[4] = L_('a') + i - 10;
-      result |= STRTOD_TEST_FOREACH (test_strto, loc, s);
+    int result = 0;
+    for (int i = 10; i < 36; i++) {
+        CHAR s[7];
+        s[0] = L_('N');
+        s[1] = L_('A');
+        s[2] = L_('N');
+        s[3] = L_('(');
+        s[4] = L_('A') + i - 10;
+        s[5] = L_(')');
+        s[6] = 0;
+        result |= STRTOD_TEST_FOREACH(test_strto, loc, s);
+        s[4] = L_('a') + i - 10;
+        result |= STRTOD_TEST_FOREACH(test_strto, loc, s);
     }
-  return result;
+    return result;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int result = 0;
-  result |= test_one_locale ("C");
-  result |= test_one_locale ("tr_TR.UTF-8");
-  result |= test_one_locale ("tr_TR.ISO-8859-9");
-  return result;
+    int result = 0;
+    result |= test_one_locale("C");
+    result |= test_one_locale("tr_TR.UTF-8");
+    result |= test_one_locale("tr_TR.ISO-8859-9");
+    return result;
 }
 
 #define TEST_FUNCTION do_test ()

@@ -19,12 +19,11 @@
 #include <cpu-features.h>
 #include <elf/dl-hwcaps.h>
 #include <elf/dl-tunables.h>
-extern void TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *) attribute_hidden;
+extern void TUNABLE_CALLBACK(set_hwcaps)(tunable_val_t *) attribute_hidden;
 
-static inline void
-init_cpu_features (struct cpu_features *cpu_features)
+static inline void init_cpu_features(struct cpu_features *cpu_features)
 {
-  GLRO(dl_larch_cpu_features).hwcap = GLRO(dl_hwcap);
-  TUNABLE_GET (glibc, cpu, hwcaps, tunable_val_t *,
-	       TUNABLE_CALLBACK (set_hwcaps));
+    GLRO(dl_larch_cpu_features).hwcap = GLRO(dl_hwcap);
+    TUNABLE_GET(glibc, cpu, hwcaps, tunable_val_t *,
+                TUNABLE_CALLBACK(set_hwcaps));
 }

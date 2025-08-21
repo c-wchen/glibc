@@ -29,109 +29,102 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-static void
-stat_check (int fd, const char *path, struct stat *st)
+static void stat_check(int fd, const char *path, struct stat *st)
 {
-  TEST_COMPARE (stat (path, st), 0);
+    TEST_COMPARE(stat(path, st), 0);
 }
 
-static void
-lstat_check (int fd, const char *path, struct stat *st)
+static void lstat_check(int fd, const char *path, struct stat *st)
 {
-  TEST_COMPARE (lstat (path, st), 0);
+    TEST_COMPARE(lstat(path, st), 0);
 }
 
-static void
-fstat_check (int fd, const char *path, struct stat *st)
+static void fstat_check(int fd, const char *path, struct stat *st)
 {
-  /* Test for invalid fstat input (BZ #27559).  */
-  TEST_COMPARE (fstat (AT_FDCWD, st), -1);
-  TEST_COMPARE (errno, EBADF);
+    /* Test for invalid fstat input (BZ #27559).  */
+    TEST_COMPARE(fstat(AT_FDCWD, st), -1);
+    TEST_COMPARE(errno, EBADF);
 
-  TEST_COMPARE (fstat (fd, st), 0);
+    TEST_COMPARE(fstat(fd, st), 0);
 }
 
-static void
-fstatat_check (int fd, const char *path, struct stat *st)
+static void fstatat_check(int fd, const char *path, struct stat *st)
 {
-  TEST_COMPARE (fstatat (fd, "", st, 0), -1);
-  TEST_COMPARE (errno, ENOENT);
+    TEST_COMPARE(fstatat(fd, "", st, 0), -1);
+    TEST_COMPARE(errno, ENOENT);
 
-  TEST_COMPARE (fstatat (AT_FDCWD, "_non_existing_file", st, 0), -1);
-  TEST_COMPARE (errno, ENOENT);
+    TEST_COMPARE(fstatat(AT_FDCWD, "_non_existing_file", st, 0), -1);
+    TEST_COMPARE(errno, ENOENT);
 
-  TEST_COMPARE (fstatat (fd, path, st, 0), 0);
+    TEST_COMPARE(fstatat(fd, path, st, 0), 0);
 }
 
-static void
-fstatat_link (const char *path, struct stat *st)
+static void fstatat_link(const char *path, struct stat *st)
 {
-  TEST_COMPARE (fstatat (AT_FDCWD, path, st, 0), -1);
-  TEST_COMPARE (errno, ENOENT);
+    TEST_COMPARE(fstatat(AT_FDCWD, path, st, 0), -1);
+    TEST_COMPARE(errno, ENOENT);
 
-  TEST_COMPARE (fstatat (AT_FDCWD, path, st, AT_SYMLINK_NOFOLLOW), 0);
-  TEST_COMPARE (!S_ISLNK(st->st_mode), 0);
+    TEST_COMPARE(fstatat(AT_FDCWD, path, st, AT_SYMLINK_NOFOLLOW), 0);
+    TEST_COMPARE(!S_ISLNK(st->st_mode), 0);
 }
 
 typedef void (*test_t)(int, const char *path, struct stat *);
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char *path;
-  char *tempdir = support_create_temp_directory ("tst-stat-");
-  char *linkname = xasprintf ("%s/tst-fstat.linkname", tempdir);
-  int fd = create_temp_file ("tst-fstat.", &path);
-  TEST_VERIFY_EXIT (fd >= 0);
-  support_write_file_string (path, "abc");
+    char *path;
+    char *tempdir = support_create_temp_directory("tst-stat-");
+    char *linkname = xasprintf("%s/tst-fstat.linkname", tempdir);
+    int fd = create_temp_file("tst-fstat.", &path);
+    TEST_VERIFY_EXIT(fd >= 0);
+    support_write_file_string(path, "abc");
 
-  /* This should help to prevent delayed allocation, which may result
-     in a spurious stx_blocks/st_blocks difference.  */
-  fsync (fd);
+    /* This should help to prevent delayed allocation, which may result
+       in a spurious stx_blocks/st_blocks difference.  */
+    fsync(fd);
 
-  bool check_ns = support_stat_nanoseconds (path);
-  if (!check_ns)
-    printf ("warning: timestamp with nanoseconds not supported\n");
-
-  struct statx stx;
-  struct stat st;
-  TEST_COMPARE (statx (fd, path, 0, STATX_BASIC_STATS, &stx), 0);
-
-  test_t tests[] = { stat_check, lstat_check, fstat_check, fstatat_check };
-
-  for (int i = 0; i < array_length (tests); i++)
-    {
-      tests[i](fd, path, &st);
-
-      TEST_COMPARE (stx.stx_dev_major, major (st.st_dev));
-      TEST_COMPARE (stx.stx_dev_minor, minor (st.st_dev));
-      TEST_COMPARE (stx.stx_ino, st.st_ino);
-      TEST_COMPARE (stx.stx_mode, st.st_mode);
-      TEST_COMPARE (stx.stx_nlink, st.st_nlink);
-      TEST_COMPARE (stx.stx_uid, st.st_uid);
-      TEST_COMPARE (stx.stx_gid, st.st_gid);
-      TEST_COMPARE (stx.stx_rdev_major, major (st.st_rdev));
-      TEST_COMPARE (stx.stx_rdev_minor, minor (st.st_rdev));
-      TEST_COMPARE (stx.stx_blksize, st.st_blksize);
-      TEST_COMPARE (stx.stx_blocks, st.st_blocks);
-
-      TEST_COMPARE (stx.stx_ctime.tv_sec, st.st_ctim.tv_sec);
-      TEST_COMPARE (stx.stx_mtime.tv_sec, st.st_mtim.tv_sec);
-      if (check_ns)
-	{
-	  TEST_COMPARE (stx.stx_ctime.tv_nsec, st.st_ctim.tv_nsec);
-	  TEST_COMPARE (stx.stx_mtime.tv_nsec, st.st_mtim.tv_nsec);
-	}
+    bool check_ns = support_stat_nanoseconds(path);
+    if (!check_ns) {
+        printf("warning: timestamp with nanoseconds not supported\n");
     }
 
-  TEST_COMPARE (symlink ("tst-fstat.target", linkname), 0);
-  add_temp_file (linkname);
-  fstatat_link (linkname, &st);
+    struct statx stx;
+    struct stat st;
+    TEST_COMPARE(statx(fd, path, 0, STATX_BASIC_STATS, &stx), 0);
 
-  free (linkname);
-  free (tempdir);
+    test_t tests[] = { stat_check, lstat_check, fstat_check, fstatat_check };
 
-  return 0;
+    for (int i = 0; i < array_length(tests); i++) {
+        tests[i](fd, path, &st);
+
+        TEST_COMPARE(stx.stx_dev_major, major(st.st_dev));
+        TEST_COMPARE(stx.stx_dev_minor, minor(st.st_dev));
+        TEST_COMPARE(stx.stx_ino, st.st_ino);
+        TEST_COMPARE(stx.stx_mode, st.st_mode);
+        TEST_COMPARE(stx.stx_nlink, st.st_nlink);
+        TEST_COMPARE(stx.stx_uid, st.st_uid);
+        TEST_COMPARE(stx.stx_gid, st.st_gid);
+        TEST_COMPARE(stx.stx_rdev_major, major(st.st_rdev));
+        TEST_COMPARE(stx.stx_rdev_minor, minor(st.st_rdev));
+        TEST_COMPARE(stx.stx_blksize, st.st_blksize);
+        TEST_COMPARE(stx.stx_blocks, st.st_blocks);
+
+        TEST_COMPARE(stx.stx_ctime.tv_sec, st.st_ctim.tv_sec);
+        TEST_COMPARE(stx.stx_mtime.tv_sec, st.st_mtim.tv_sec);
+        if (check_ns) {
+            TEST_COMPARE(stx.stx_ctime.tv_nsec, st.st_ctim.tv_nsec);
+            TEST_COMPARE(stx.stx_mtime.tv_nsec, st.st_mtim.tv_nsec);
+        }
+    }
+
+    TEST_COMPARE(symlink("tst-fstat.target", linkname), 0);
+    add_temp_file(linkname);
+    fstatat_link(linkname, &st);
+
+    free(linkname);
+    free(tempdir);
+
+    return 0;
 }
 
 #include <support/test-driver.c>

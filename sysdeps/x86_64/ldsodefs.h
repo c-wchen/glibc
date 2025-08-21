@@ -17,8 +17,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef	_X86_64_LDSODEFS_H
-#define	_X86_64_LDSODEFS_H	1
+#ifndef _X86_64_LDSODEFS_H
+#define _X86_64_LDSODEFS_H  1
 
 #include <feature-control.h>
 #include_next <ldsodefs.h>

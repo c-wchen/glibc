@@ -20,9 +20,8 @@
 #include <math.h>
 #include <math-narrow.h>
 
-double
-__dsqrtl (long double x)
+double __dsqrtl(long double x)
 {
-  NARROW_SQRT_TRIVIAL (x, double, l);
+    NARROW_SQRT_TRIVIAL(x, double, l);
 }
-libm_alias_double_ldouble (sqrt)
+libm_alias_double_ldouble(sqrt)

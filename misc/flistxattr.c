@@ -18,11 +18,10 @@
 #include <errno.h>
 #include <sys/xattr.h>
 
-ssize_t
-flistxattr (int __fd, char *__list, size_t __size)
+ssize_t flistxattr(int __fd, char *__list, size_t __size)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (flistxattr)
+stub_warning(flistxattr)

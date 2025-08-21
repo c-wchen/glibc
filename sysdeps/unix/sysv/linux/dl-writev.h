@@ -30,8 +30,7 @@
    3. It's not really obliged to deliver a single atomic write
       (though it may be preferable).  */
 
-static inline void
-_dl_writev (int fd, const struct iovec *iov, size_t niov)
+static inline void _dl_writev(int fd, const struct iovec *iov, size_t niov)
 {
-  INTERNAL_SYSCALL_CALL (writev, fd, iov, niov);
+    INTERNAL_SYSCALL_CALL(writev, fd, iov, niov);
 }

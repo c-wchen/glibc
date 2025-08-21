@@ -22,11 +22,11 @@
 #include <sparc-ifunc.h>
 #include <libm-alias-double.h>
 
-extern __typeof (__redirect_fabs) __fabs_vis3 attribute_hidden;
-extern __typeof (__redirect_fabs) __fabs_generic attribute_hidden;
+extern __typeof(__redirect_fabs) __fabs_vis3 attribute_hidden;
+extern __typeof(__redirect_fabs) __fabs_generic attribute_hidden;
 
-sparc_libm_ifunc_redirected (__redirect_fabs, __fabs,
-			     hwcap & HWCAP_SPARC_VIS3
-			     ? __fabs_vis3
-			     : __fabs_generic);
-libm_alias_double (__fabs, fabs)
+sparc_libm_ifunc_redirected(__redirect_fabs, __fabs,
+                            hwcap &HWCAP_SPARC_VIS3
+                            ? __fabs_vis3
+                            : __fabs_generic);
+libm_alias_double(__fabs, fabs)

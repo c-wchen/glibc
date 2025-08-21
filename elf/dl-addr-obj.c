@@ -60,15 +60,15 @@
    of interest i.e. 0 <= addr < p_memsz.
 
 */
-int
-_dl_addr_inside_object (struct link_map *l, const ElfW(Addr) addr)
+int _dl_addr_inside_object(struct link_map *l, const ElfW(Addr) addr)
 {
-  int n = l->l_phnum;
-  const ElfW(Addr) reladdr = addr - l->l_addr;
+    int n = l->l_phnum;
+    const ElfW(Addr) reladdr = addr - l->l_addr;
 
-  while (--n >= 0)
-    if (l->l_phdr[n].p_type == PT_LOAD
-	&& reladdr - l->l_phdr[n].p_vaddr < l->l_phdr[n].p_memsz)
-      return 1;
-  return 0;
+    while (--n >= 0)
+        if (l->l_phdr[n].p_type == PT_LOAD
+            && reladdr - l->l_phdr[n].p_vaddr < l->l_phdr[n].p_memsz) {
+            return 1;
+        }
+    return 0;
 }

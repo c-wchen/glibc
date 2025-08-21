@@ -18,12 +18,11 @@
 
 #include <fenv_libc.h>
 
-int
-fegetexcept (void)
+int fegetexcept(void)
 {
-  unsigned long int exc;
+    unsigned long int exc;
 
-  exc = __ieee_get_fp_control ();
+    exc = __ieee_get_fp_control();
 
-  return (exc & SWCR_ENABLE_MASK) << SWCR_ENABLE_SHIFT;
+    return (exc & SWCR_ENABLE_MASK) << SWCR_ENABLE_SHIFT;
 }

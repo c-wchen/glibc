@@ -20,14 +20,12 @@
 #include <unistd.h>
 
 /* Truncate the file referenced by FD to LENGTH bytes.  */
-int
-__ftruncate64 (int fd, off64_t length)
+int __ftruncate64(int fd, off64_t length)
 {
-  if ((off_t) length != length)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if ((off_t) length != length) {
+        __set_errno(EINVAL);
+        return -1;
     }
-  return __ftruncate (fd, (off_t) length);
+    return __ftruncate(fd, (off_t) length);
 }
-weak_alias (__ftruncate64, ftruncate64)
+weak_alias(__ftruncate64, ftruncate64)

@@ -21,11 +21,10 @@
 /* Revoke access permissions to all processes currently communicating
    with the control terminal, and then send a SIGHUP signal to the process
    group of the control terminal.  */
-int
-vhangup (void)
+int vhangup(void)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (vhangup)
+stub_warning(vhangup)

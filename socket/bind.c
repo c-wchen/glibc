@@ -19,13 +19,12 @@
 #include <sys/socket.h>
 
 /* Give the socket FD the local address ADDR (which is LEN bytes long).  */
-int
-__bind (int fd, __CONST_SOCKADDR_ARG addr, socklen_t len)
+int __bind(int fd, __CONST_SOCKADDR_ARG addr, socklen_t len)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-weak_alias (__bind, bind)
+weak_alias(__bind, bind)
 
-stub_warning (bind)
+stub_warning(bind)

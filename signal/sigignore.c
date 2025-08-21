@@ -20,11 +20,10 @@
 
 
 /* Set the disposition for SIG to SIG_IGN.  */
-int
-sigignore (int sig)
+int sigignore(int sig)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (sigignore)
+stub_warning(sigignore)

@@ -20,11 +20,10 @@
 
 #include <unistd.h>
 
-bool
-__spawn_valid_fd (int fd)
+bool __spawn_valid_fd(int fd)
 {
-  long maxfd = __sysconf (_SC_OPEN_MAX);
-  return __glibc_likely (fd >= 0)
-    && (__glibc_unlikely (maxfd < 0) /* No limit set.  */
-	|| __glibc_likely (fd < maxfd));
+    long maxfd = __sysconf(_SC_OPEN_MAX);
+    return __glibc_likely(fd >= 0)
+           && (__glibc_unlikely(maxfd < 0)  /* No limit set.  */
+               || __glibc_likely(fd < maxfd));
 }

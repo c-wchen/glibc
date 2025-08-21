@@ -12,15 +12,14 @@
 
    As a general rule the Linux kernel is ignoring upper 32 bits of
    tv_nsec field.  */
-struct __timespec64
-{
-  __time64_t tv_sec;         /* Seconds */
+struct __timespec64 {
+    __time64_t tv_sec;         /* Seconds */
 # if BYTE_ORDER == BIG_ENDIAN
-  __int32_t :32;             /* Padding */
-  __int32_t tv_nsec;         /* Nanoseconds */
+    __int32_t : 32;            /* Padding */
+    __int32_t tv_nsec;         /* Nanoseconds */
 # else
-  __int32_t tv_nsec;         /* Nanoseconds */
-  __int32_t :32;             /* Padding */
+    __int32_t tv_nsec;         /* Nanoseconds */
+    __int32_t : 32;            /* Padding */
 # endif
 };
 #endif

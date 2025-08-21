@@ -23,23 +23,25 @@
 
 #define LARGE_PRIME 49999
 
-static int do_test (void)
+static int do_test(void)
 {
-  int i;
+    int i;
 
-  TEST_COMPARE (uabs (INT_MAX), INT_MAX);
-  TEST_COMPARE (uabs (INT_MIN), (unsigned int)INT_MAX + 1);
-  TEST_COMPARE (uabs (-1), 1);
-  TEST_COMPARE (uabs (0), 0);
-  TEST_COMPARE (uabs (1), 1);
+    TEST_COMPARE(uabs(INT_MAX), INT_MAX);
+    TEST_COMPARE(uabs(INT_MIN), (unsigned int)INT_MAX + 1);
+    TEST_COMPARE(uabs(-1), 1);
+    TEST_COMPARE(uabs(0), 0);
+    TEST_COMPARE(uabs(1), 1);
 
-  for (i = INT_MIN + 1; i < 0; i += LARGE_PRIME)
-    TEST_COMPARE (uabs (i), -i);
+    for (i = INT_MIN + 1; i < 0; i += LARGE_PRIME) {
+        TEST_COMPARE(uabs(i), -i);
+    }
 
-  for (i = 0; i < INT_MAX - LARGE_PRIME; i += LARGE_PRIME)
-    TEST_COMPARE (uabs (i), i);
+    for (i = 0; i < INT_MAX - LARGE_PRIME; i += LARGE_PRIME) {
+        TEST_COMPARE(uabs(i), i);
+    }
 
-  return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }
 
 #include <support/test-driver.c>

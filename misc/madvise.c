@@ -23,13 +23,12 @@
 /* Advise the system about particular usage patterns the program follows
    for the region starting at ADDR and extending LEN bytes.  */
 
-int
-__madvise (void *addr, size_t len, int advice)
+int __madvise(void *addr, size_t len, int advice)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (__madvise)
-weak_alias (__madvise, madvise)
+libc_hidden_def(__madvise)
+weak_alias(__madvise, madvise)
 
-stub_warning (madvise)
+stub_warning(madvise)

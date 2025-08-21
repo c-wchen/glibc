@@ -21,33 +21,30 @@ along with the GNU MP Library; see the file COPYING.LIB.  If not, see
 #include <gmp.h>
 #include "gmp-impl.h"
 
-mp_limb_t
-mpn_sub_n (mp_ptr res_ptr, mp_srcptr s1_ptr, mp_srcptr s2_ptr, mp_size_t size)
+mp_limb_t mpn_sub_n(mp_ptr res_ptr, mp_srcptr s1_ptr, mp_srcptr s2_ptr, mp_size_t size)
 {
-  register mp_limb_t x, y, cy;
-  register mp_size_t j;
+    register mp_limb_t x, y, cy;
+    register mp_size_t j;
 
-  /* The loop counter and index J goes from -SIZE to -1.  This way
-     the loop becomes faster.  */
-  j = -size;
+    /* The loop counter and index J goes from -SIZE to -1.  This way
+       the loop becomes faster.  */
+    j = -size;
 
-  /* Offset the base pointers to compensate for the negative indices.  */
-  s1_ptr -= j;
-  s2_ptr -= j;
-  res_ptr -= j;
+    /* Offset the base pointers to compensate for the negative indices.  */
+    s1_ptr -= j;
+    s2_ptr -= j;
+    res_ptr -= j;
 
-  cy = 0;
-  do
-    {
-      y = s2_ptr[j];
-      x = s1_ptr[j];
-      y += cy;			/* add previous carry to subtrahend */
-      cy = (y < cy);		/* get out carry from that addition */
-      y = x - y;		/* main subtract */
-      cy = (y > x) + cy;	/* get out carry from the subtract, combine */
-      res_ptr[j] = y;
-    }
-  while (++j != 0);
+    cy = 0;
+    do {
+        y = s2_ptr[j];
+        x = s1_ptr[j];
+        y += cy;          /* add previous carry to subtrahend */
+        cy = (y < cy);        /* get out carry from that addition */
+        y = x - y;        /* main subtract */
+        cy = (y > x) + cy;    /* get out carry from the subtract, combine */
+        res_ptr[j] = y;
+    } while (++j != 0);
 
-  return cy;
+    return cy;
 }

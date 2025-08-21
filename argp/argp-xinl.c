@@ -26,7 +26,7 @@
 #endif
 
 #ifndef __USE_EXTERN_INLINES
-# define __USE_EXTERN_INLINES	1
+# define __USE_EXTERN_INLINES   1
 #endif
 #define ARGP_EI
 #undef __OPTIMIZE__
@@ -36,8 +36,8 @@
 /* Add weak aliases.  */
 #if _LIBC - 0 && defined (weak_alias)
 
-weak_alias (__argp_usage, argp_usage)
-weak_alias (__option_is_short, _option_is_short)
-weak_alias (__option_is_end, _option_is_end)
+weak_alias(__argp_usage, argp_usage)
+weak_alias(__option_is_short, _option_is_short)
+weak_alias(__option_is_end, _option_is_end)
 
 #endif

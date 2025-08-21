@@ -43,25 +43,24 @@
 /* Compare S1 and S2, ignoring case, returning less than, equal to or
    greater than zero if S1 is lexicographically less than,
    equal to or greater than S2.  */
-int
-__wcscasecmp (const wchar_t *s1, const wchar_t *s2 LOCALE_PARAM)
+int __wcscasecmp(const wchar_t *s1, const wchar_t *s2 LOCALE_PARAM)
 {
-  wint_t c1, c2;
+    wint_t c1, c2;
 
-  if (s1 == s2)
-    return 0;
-
-  do
-    {
-      c1 = TOLOWER (*s1++);
-      c2 = TOLOWER (*s2++);
-      if (c1 == L'\0')
-	break;
+    if (s1 == s2) {
+        return 0;
     }
-  while (c1 == c2);
 
-  return c1 - c2;
+    do {
+        c1 = TOLOWER(*s1++);
+        c2 = TOLOWER(*s2++);
+        if (c1 == L'\0') {
+            break;
+        }
+    } while (c1 == c2);
+
+    return c1 - c2;
 }
 #ifndef __wcscasecmp
-weak_alias (__wcscasecmp, wcscasecmp)
+weak_alias(__wcscasecmp, wcscasecmp)
 #endif

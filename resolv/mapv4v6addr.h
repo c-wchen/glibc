@@ -52,18 +52,18 @@
 #include <string.h>
 #include <arpa/nameser.h>
 
-static void
-map_v4v6_address (const char *src, char *dst)
+static void map_v4v6_address(const char *src, char *dst)
 {
-  u_char *p = (u_char *) dst;
-  int i;
+    u_char *p = (u_char *) dst;
+    int i;
 
-  /* Move the IPv4 part to the right position.  */
-  memcpy (dst + 12, src, INADDRSZ);
+    /* Move the IPv4 part to the right position.  */
+    memcpy(dst + 12, src, INADDRSZ);
 
-  /* Mark this ipv6 addr as a mapped ipv4. */
-  for (i = 0; i < 10; i++)
-    *p++ = 0x00;
-  *p++ = 0xff;
-  *p = 0xff;
+    /* Mark this ipv6 addr as a mapped ipv4. */
+    for (i = 0; i < 10; i++) {
+        *p++ = 0x00;
+    }
+    *p++ = 0xff;
+    *p = 0xff;
 }

@@ -21,8 +21,7 @@
 #undef fdivl
 
 float
-attribute_hidden
-fdivl (double x, double y)
+attribute_hidden fdivl(double x, double y)
 {
-  return fdiv (x, y);
+    return fdiv(x, y);
 }

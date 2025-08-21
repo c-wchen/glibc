@@ -1,14 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void
-fx (void)
+void fx(void)
 {
-  puts ("At exit fx");
+    puts("At exit fx");
 }
 
-void
-foo (void)
+void foo(void)
 {
-  atexit (fx);
+    atexit(fx);
 }

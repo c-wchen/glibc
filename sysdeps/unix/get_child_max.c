@@ -21,16 +21,16 @@
 #include <sys/resource.h>
 
 #ifndef CHILD_MAX
-long int
-__get_child_max (void)
+long int __get_child_max(void)
 {
 # ifdef RLIMIT_NPROC
-  struct rlimit limit;
-  if (__getrlimit (RLIMIT_NPROC, &limit) == 0
-      && limit.rlim_cur != RLIM_INFINITY)
-    return limit.rlim_cur;
+    struct rlimit limit;
+    if (__getrlimit(RLIMIT_NPROC, &limit) == 0
+        && limit.rlim_cur != RLIM_INFINITY) {
+        return limit.rlim_cur;
+    }
 # endif
 
-  return -1;
+    return -1;
 }
 #endif

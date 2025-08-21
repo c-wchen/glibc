@@ -51,7 +51,7 @@
 #endif
 
 #ifndef declare_mgen_alias_narrow
-# define declare_mgen_alias_narrow(from, to)	\
+# define declare_mgen_alias_narrow(from, to)    \
   libm_alias_float128_narrow (from, to)
 #endif
 

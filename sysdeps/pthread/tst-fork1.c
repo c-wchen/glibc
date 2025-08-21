@@ -23,98 +23,86 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-static void *
-thread_function (void * arg)
+static void *thread_function(void *arg)
 {
-  int i = (intptr_t) arg;
-  int status;
-  pid_t pid;
-  pid_t pid2;
+    int i = (intptr_t) arg;
+    int status;
+    pid_t pid;
+    pid_t pid2;
 
-  pid = fork ();
-  switch (pid)
-    {
-    case 0:
-      printf ("%ld for %d\n", (long int) getpid (), i);
-      struct timespec ts = { .tv_sec = 0, .tv_nsec = 100000000 * i };
-      nanosleep (&ts, NULL);
-      _exit (i);
-      break;
-    case -1:
-      printf ("fork: %m\n");
-      return (void *) 1l;
-      break;
+    pid = fork();
+    switch (pid) {
+        case 0:
+            printf("%ld for %d\n", (long int) getpid(), i);
+            struct timespec ts = { .tv_sec = 0, .tv_nsec = 100000000 * i };
+            nanosleep(&ts, NULL);
+            _exit(i);
+            break;
+        case -1:
+            printf("fork: %m\n");
+            return (void *) 1l;
+            break;
     }
 
-  pid2 = TEMP_FAILURE_RETRY (waitpid (pid, &status, 0));
-  if (pid2 != pid)
-    {
-      printf ("waitpid returned %ld, expected %ld\n",
-	      (long int) pid2, (long int) pid);
-      return (void *) 1l;
+    pid2 = TEMP_FAILURE_RETRY(waitpid(pid, &status, 0));
+    if (pid2 != pid) {
+        printf("waitpid returned %ld, expected %ld\n",
+               (long int) pid2, (long int) pid);
+        return (void *) 1l;
     }
 
-  printf ("%ld with %d, expected %d\n",
-	  (long int) pid, WEXITSTATUS (status), i);
+    printf("%ld with %d, expected %d\n",
+           (long int) pid, WEXITSTATUS(status), i);
 
-  return WEXITSTATUS (status) == i ? NULL : (void *) 1l;
+    return WEXITSTATUS(status) == i ? NULL : (void *) 1l;
 }
 
 #define N 5
 static const int t[N] = { 7, 6, 5, 4, 3 };
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  pthread_t th[N];
-  int i;
-  int result = 0;
-  pthread_attr_t at;
+    pthread_t th[N];
+    int i;
+    int result = 0;
+    pthread_attr_t at;
 
-  if (pthread_attr_init (&at) != 0)
-    {
-      puts ("attr_init failed");
-      return 1;
+    if (pthread_attr_init(&at) != 0) {
+        puts("attr_init failed");
+        return 1;
     }
 
-  if (pthread_attr_setstacksize (&at, 1 * 1024 * 1024) != 0)
-    {
-      puts ("attr_setstacksize failed");
-      return 1;
+    if (pthread_attr_setstacksize(&at, 1 * 1024 * 1024) != 0) {
+        puts("attr_setstacksize failed");
+        return 1;
     }
 
-  for (i = 0; i < N; ++i)
-    if (pthread_create (&th[i], NULL, thread_function,
-			(void *) (intptr_t) t[i]) != 0)
-      {
-	printf ("creation of thread %d failed\n", i);
-	exit (1);
-      }
+    for (i = 0; i < N; ++i)
+        if (pthread_create(&th[i], NULL, thread_function,
+                           (void *)(intptr_t) t[i]) != 0) {
+            printf("creation of thread %d failed\n", i);
+            exit(1);
+        }
 
-  if (pthread_attr_destroy (&at) != 0)
-    {
-      puts ("attr_destroy failed");
-      return 1;
+    if (pthread_attr_destroy(&at) != 0) {
+        puts("attr_destroy failed");
+        return 1;
     }
 
-  for (i = 0; i < N; ++i)
-    {
-      void *v;
-      if (pthread_join (th[i], &v) != 0)
-	{
-	  printf ("join of thread %d failed\n", i);
-	  result = 1;
-	}
-      else if (v != NULL)
-	{
-	  printf ("join %d successful, but child failed\n", i);
-	  result = 1;
-	}
-      else
-	printf ("join %d successful\n", i);
+    for (i = 0; i < N; ++i) {
+        void *v;
+        if (pthread_join(th[i], &v) != 0) {
+            printf("join of thread %d failed\n", i);
+            result = 1;
+        } else if (v != NULL) {
+            printf("join %d successful, but child failed\n", i);
+            result = 1;
+        } else {
+            printf("join %d successful\n", i);
+        }
     }
 
-  return result;
+    return result;
 }
 
 #include <support/test-driver.c>

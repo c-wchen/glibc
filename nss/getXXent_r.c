@@ -21,28 +21,28 @@
 #include "nsswitch.h"
 
 /*******************************************************************\
-|* Here we assume several symbols to be defined:		   *|
-|* 								   *|
-|* LOOKUP_TYPE   - the return type of the function		   *|
-|* 								   *|
-|* SETFUNC_NAME  - name of the non-reentrant setXXXent function	   *|
-|* 								   *|
-|* GETFUNC_NAME  - name of the non-reentrant getXXXent function	   *|
-|* 								   *|
-|* ENDFUNC_NAME  - name of the non-reentrant endXXXent function	   *|
-|* 								   *|
-|* DATABASE_NAME - name of the database the function accesses	   *|
-|*		   (e.g., host, services, ...)			   *|
-|* 								   *|
-|* Optionally the following vars can be defined:		   *|
-|* 								   *|
-|* STAYOPEN      - variable declaration for setXXXent function	   *|
-|* 								   *|
-|* STAYOPEN_VAR  - variable name for setXXXent function		   *|
-|* 								   *|
+|* Here we assume several symbols to be defined:           *|
+|*                                 *|
+|* LOOKUP_TYPE   - the return type of the function         *|
+|*                                 *|
+|* SETFUNC_NAME  - name of the non-reentrant setXXXent function    *|
+|*                                 *|
+|* GETFUNC_NAME  - name of the non-reentrant getXXXent function    *|
+|*                                 *|
+|* ENDFUNC_NAME  - name of the non-reentrant endXXXent function    *|
+|*                                 *|
+|* DATABASE_NAME - name of the database the function accesses      *|
+|*         (e.g., host, services, ...)             *|
+|*                                 *|
+|* Optionally the following vars can be defined:           *|
+|*                                 *|
+|* STAYOPEN      - variable declaration for setXXXent function     *|
+|*                                 *|
+|* STAYOPEN_VAR  - variable name for setXXXent function        *|
+|*                                 *|
 |* NEED_H_ERRNO  - an extra parameter will be passed to point to   *|
-|*		   the global `h_errno' variable.		   *|
-|* 								   *|
+|*         the global `h_errno' variable.          *|
+|*                                 *|
 \*******************************************************************/
 
 /* To make the real sources a bit prettier.  */
@@ -108,67 +108,65 @@ static STAYOPEN_TMP;
 #endif
 
 /* Protect above variable against multiple uses at the same time.  */
-__libc_lock_define_initialized (static, lock)
+__libc_lock_define_initialized(static, lock)
 
 /* The lookup function for the first entry of this service.  */
-extern int DB_LOOKUP_FCT (nss_action_list *nip, const char *name,
-			  const char *name2, void **fctp);
-libc_hidden_proto (DB_LOOKUP_FCT)
+extern int DB_LOOKUP_FCT(nss_action_list *nip, const char *name,
+                         const char *name2, void **fctp);
+libc_hidden_proto(DB_LOOKUP_FCT)
 
 void
-SETFUNC_NAME (STAYOPEN)
+SETFUNC_NAME(STAYOPEN)
 {
-  int save;
+    int save;
 
-  __libc_lock_lock (lock);
-  __nss_setent (SETFUNC_NAME_STRING, DB_LOOKUP_FCT, &nip, &startp,
-		&last_nip, STAYOPEN_VAR, STAYOPEN_TMPVAR, NEED__RES);
+    __libc_lock_lock(lock);
+    __nss_setent(SETFUNC_NAME_STRING, DB_LOOKUP_FCT, &nip, &startp,
+                 &last_nip, STAYOPEN_VAR, STAYOPEN_TMPVAR, NEED__RES);
 
-  save = errno;
-  __libc_lock_unlock (lock);
-  __set_errno (save);
+    save = errno;
+    __libc_lock_unlock(lock);
+    __set_errno(save);
 }
 
 
-void
-ENDFUNC_NAME (void)
+void ENDFUNC_NAME(void)
 {
-  int save;
+    int save;
 
-  /* If the service has not been used before do not do anything.  */
-  if (startp != NULL)
-    {
-      __libc_lock_lock (lock);
-      __nss_endent (ENDFUNC_NAME_STRING, DB_LOOKUP_FCT, &nip, &startp,
-		    &last_nip, NEED__RES);
-      save = errno;
-      __libc_lock_unlock (lock);
-      __set_errno (save);
+    /* If the service has not been used before do not do anything.  */
+    if (startp != NULL) {
+        __libc_lock_lock(lock);
+        __nss_endent(ENDFUNC_NAME_STRING, DB_LOOKUP_FCT, &nip, &startp,
+                     &last_nip, NEED__RES);
+        save = errno;
+        __libc_lock_unlock(lock);
+        __set_errno(save);
     }
 }
 
 
 int
-INTERNAL (REENTRANT_GETNAME) (LOOKUP_TYPE *resbuf, char *buffer, size_t buflen,
-			      LOOKUP_TYPE **result H_ERRNO_PARM)
+INTERNAL(REENTRANT_GETNAME)(LOOKUP_TYPE *resbuf, char *buffer, size_t buflen,
+                            LOOKUP_TYPE **result H_ERRNO_PARM)
 {
-  int status;
-  int save;
+    int status;
+    int save;
 
-  __libc_lock_lock (lock);
-  status = __nss_getent_r (GETFUNC_NAME_STRING, SETFUNC_NAME_STRING,
-			   DB_LOOKUP_FCT, &nip, &startp, &last_nip,
-			   STAYOPEN_TMPVAR, NEED__RES, resbuf, buffer,
-			   buflen, (void **) result, H_ERRNO_VAR_P);
-  save = errno;
-  __libc_lock_unlock (lock);
-  __set_errno (save);
-  return status;
+    __libc_lock_lock(lock);
+    status = __nss_getent_r(GETFUNC_NAME_STRING, SETFUNC_NAME_STRING,
+                            DB_LOOKUP_FCT, &nip, &startp, &last_nip,
+                            STAYOPEN_TMPVAR, NEED__RES, resbuf, buffer,
+                            buflen, (void **) result, H_ERRNO_VAR_P);
+    save = errno;
+    __libc_lock_unlock(lock);
+    __set_errno(save);
+    return status;
 }
 
 
 #ifdef NO_COMPAT_NEEDED
-strong_alias (INTERNAL (REENTRANT_GETNAME), REENTRANT_GETNAME);
+strong_alias(INTERNAL(REENTRANT_GETNAME), REENTRANT_GETNAME);
 #else
 # include <shlib-compat.h>
 # if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1_2)
@@ -177,34 +175,35 @@ strong_alias (INTERNAL (REENTRANT_GETNAME), REENTRANT_GETNAME);
 
 int
 attribute_compat_text_section
-OLD (REENTRANT_GETNAME) (LOOKUP_TYPE *resbuf, char *buffer, size_t buflen,
-			 LOOKUP_TYPE **result H_ERRNO_PARM)
+OLD(REENTRANT_GETNAME)(LOOKUP_TYPE *resbuf, char *buffer, size_t buflen,
+                       LOOKUP_TYPE **result H_ERRNO_PARM)
 {
-  int ret = INTERNAL (REENTRANT_GETNAME) (resbuf, buffer, buflen,
-					  result H_ERRNO_VAR);
+    int ret = INTERNAL(REENTRANT_GETNAME)(resbuf, buffer, buflen,
+                                          result H_ERRNO_VAR);
 
-  if (ret != 0)
-    ret = -1;
+    if (ret != 0) {
+        ret = -1;
+    }
 
-  return ret;
+    return ret;
 }
 
 #  define do_symbol_version(real, name, version) \
   compat_symbol (libc, real, name, version)
-do_symbol_version (OLD (REENTRANT_GETNAME), REENTRANT_GETNAME, GLIBC_2_0);
+do_symbol_version(OLD(REENTRANT_GETNAME), REENTRANT_GETNAME, GLIBC_2_0);
 # endif
 
 /* As INTERNAL (REENTRANT_GETNAME) may be hidden, we need an alias
    in between so that the REENTRANT_GETNAME@@GLIBC_2.1.2 is not
    hidden too.  */
-strong_alias (INTERNAL (REENTRANT_GETNAME), NEW (REENTRANT_GETNAME));
+strong_alias(INTERNAL(REENTRANT_GETNAME), NEW(REENTRANT_GETNAME));
 
 # define do_default_symbol_version(real, name, version) \
   versioned_symbol (libc, real, name, version)
-do_default_symbol_version (NEW (REENTRANT_GETNAME),
-			   REENTRANT_GETNAME, GLIBC_2_1_2);
+do_default_symbol_version(NEW(REENTRANT_GETNAME),
+                          REENTRANT_GETNAME, GLIBC_2_1_2);
 #endif
 
-nss_interface_function (SETFUNC_NAME)
-nss_interface_function (ENDFUNC_NAME)
-nss_interface_function (REENTRANT_GETNAME)
+nss_interface_function(SETFUNC_NAME)
+nss_interface_function(ENDFUNC_NAME)
+nss_interface_function(REENTRANT_GETNAME)

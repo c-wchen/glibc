@@ -19,15 +19,15 @@
 #include "thread_dbP.h"
 
 
-td_err_e
-td_ta_get_stats (const td_thragent_t *ta, td_ta_stats_t *statsp)
+td_err_e td_ta_get_stats(const td_thragent_t *ta, td_ta_stats_t *statsp)
 {
-  /* XXX We have to figure out what has to be done.  */
-  LOG ("td_ta_get_stats");
+    /* XXX We have to figure out what has to be done.  */
+    LOG("td_ta_get_stats");
 
-  /* Test whether the TA parameter is ok.  */
-  if (! ta_ok (ta))
-    return TD_BADTA;
+    /* Test whether the TA parameter is ok.  */
+    if (! ta_ok(ta)) {
+        return TD_BADTA;
+    }
 
-  return TD_OK;
+    return TD_OK;
 }

@@ -23,18 +23,16 @@
    dead children (and their dead children) in BUFFER.
    Return the elapsed real time, or (clock_t) -1 for errors.
    All times are in CLK_TCKths of a second.  */
-clock_t
-__times (struct tms *buffer)
+clock_t __times(struct tms *buffer)
 {
-  if (buffer == NULL)
-    {
-      __set_errno (EINVAL);
-      return (clock_t) -1;
+    if (buffer == NULL) {
+        __set_errno(EINVAL);
+        return (clock_t) -1;
     }
 
-  __set_errno (ENOSYS);
-  return (clock_t) -1;
+    __set_errno(ENOSYS);
+    return (clock_t) -1;
 }
-stub_warning (times)
+stub_warning(times)
 
-weak_alias (__times, times)
+weak_alias(__times, times)

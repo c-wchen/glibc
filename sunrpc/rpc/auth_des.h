@@ -16,7 +16,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _RPC_AUTH_DES_H
-#define _RPC_AUTH_DES_H	1
+#define _RPC_AUTH_DES_H 1
 
 #include <sys/cdefs.h>
 #include <rpc/auth.h>
@@ -24,47 +24,41 @@
 __BEGIN_DECLS
 
 /* There are two kinds of "names": fullnames and nicknames */
-enum authdes_namekind
-  {
+enum authdes_namekind {
     ADN_FULLNAME,
     ADN_NICKNAME
-  };
+};
 
 /* A fullname contains the network name of the client,
    a conversation key and the window */
-struct authdes_fullname
-  {
-    char *name;		/* network name of client, up to MAXNETNAMELEN */
-    des_block key;	/* conversation key */
-    uint32_t window;	/* associated window */
-  };
+struct authdes_fullname {
+    char *name;     /* network name of client, up to MAXNETNAMELEN */
+    des_block key;  /* conversation key */
+    uint32_t window;    /* associated window */
+};
 
 /* A credential */
-struct authdes_cred
-  {
+struct authdes_cred {
     enum authdes_namekind adc_namekind;
     struct authdes_fullname adc_fullname;
     uint32_t adc_nickname;
-  };
+};
 
 /* A timeval replacement for !32bit platforms */
-struct rpc_timeval
-  {
+struct rpc_timeval {
     uint32_t tv_sec;            /* Seconds.  */
     uint32_t tv_usec;           /* Microseconds.  */
-  };
+};
 
 /* A des authentication verifier */
-struct authdes_verf
-  {
-    union
-      {
-	struct rpc_timeval adv_ctime;	/* clear time */
-	des_block adv_xtime;		/* crypt time */
-      }
+struct authdes_verf {
+    union {
+        struct rpc_timeval adv_ctime;   /* clear time */
+        des_block adv_xtime;        /* crypt time */
+    }
     adv_time_u;
     uint32_t adv_int_u;
-  };
+};
 
 /* des authentication verifier: client variety
 
@@ -85,25 +79,25 @@ struct authdes_verf
 #define adv_nickname   adv_int_u
 
 /* Map a des credential into a unix cred. */
-extern int authdes_getucred (const struct authdes_cred * __adc,
-			     uid_t * __uid, gid_t * __gid,
-			     short *__grouplen, gid_t * __groups) __THROW;
+extern int authdes_getucred(const struct authdes_cred *__adc,
+                            uid_t *__uid, gid_t *__gid,
+                            short *__grouplen, gid_t *__groups) __THROW;
 
 /* Get the public key for NAME and place it in KEY.  NAME can only be
    up to MAXNETNAMELEN bytes long and the destination buffer KEY should
    have HEXKEYBYTES + 1 bytes long to fit all characters from the key.  */
-extern int getpublickey (const char *__name, char *__key) __THROW;
+extern int getpublickey(const char *__name, char *__key) __THROW;
 
 /* Get the secret key for NAME and place it in KEY.  PASSWD is used to
    decrypt the encrypted key stored in the database.  NAME can only be
    up to MAXNETNAMELEN bytes long and the destination buffer KEY
    should have HEXKEYBYTES + 1 bytes long to fit all characters from
    the key.  */
-extern int getsecretkey (const char *__name, char *__key,
-			 const char *__passwd) __THROW;
+extern int getsecretkey(const char *__name, char *__key,
+                        const char *__passwd) __THROW;
 
-extern int rtime (struct sockaddr_in *__addrp, struct rpc_timeval *__timep,
-		  struct rpc_timeval *__timeout) __THROW;
+extern int rtime(struct sockaddr_in *__addrp, struct rpc_timeval *__timep,
+                 struct rpc_timeval *__timeout) __THROW;
 
 __END_DECLS
 

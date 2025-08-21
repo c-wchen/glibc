@@ -19,8 +19,7 @@
 /* It does not make sense to use the test harness for this test
    because the testing happens in auditors.  */
 
-int
-main (void)
+int main(void)
 {
-  return 0;
+    return 0;
 }

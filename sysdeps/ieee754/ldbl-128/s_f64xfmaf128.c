@@ -27,13 +27,12 @@
 #undef _Float128
 
 #if __HAVE_FLOAT64X_LONG_DOUBLE && __HAVE_DISTINCT_FLOAT128
-_Float64x
-__f64xfmaf128 (_Float128 x, _Float128 y, _Float128 z)
+_Float64x __f64xfmaf128(_Float128 x, _Float128 y, _Float128 z)
 {
-  NARROW_FMA_ROUND_TO_ODD (x, y, z, _Float64x, union ieee854_long_double, l,
-			   mantissa3, TININESS_AFTER_ROUNDING);
+    NARROW_FMA_ROUND_TO_ODD(x, y, z, _Float64x, union ieee854_long_double, l,
+                            mantissa3, TININESS_AFTER_ROUNDING);
 }
-libm_alias_float64x_float128 (fma)
+libm_alias_float64x_float128(fma)
 #else
 /* Defined as an alias of fmal.  */
 #endif

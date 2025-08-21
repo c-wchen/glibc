@@ -26,11 +26,11 @@
 #pragma weak _dl_pthread_threads
 #endif
 
-thrd_t
-thrd_current (void)
+thrd_t thrd_current(void)
 {
-  if (GL (dl_pthread_threads))
-    return (thrd_t) __pthread_self ();
+    if (GL(dl_pthread_threads)) {
+        return (thrd_t) __pthread_self();
+    }
 
-  return (thrd_t) 0;
+    return (thrd_t) 0;
 }

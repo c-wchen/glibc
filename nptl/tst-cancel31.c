@@ -36,65 +36,60 @@
 #include <support/support.h>
 #include <support/descriptors.h>
 
-static void *
-writeopener (void *arg)
+static void *writeopener(void *arg)
 {
-  int fd;
-  for (;;)
-    {
-      fd = open (arg, O_WRONLY);
-      xclose (fd);
+    int fd;
+    for (;;) {
+        fd = open(arg, O_WRONLY);
+        xclose(fd);
     }
-  return NULL;
+    return NULL;
 }
 
-static void *
-leaker (void *arg)
+static void *leaker(void *arg)
 {
-  int fd = open (arg, O_RDONLY);
-  TEST_VERIFY_EXIT (fd > 0);
-  pthread_setcancelstate (PTHREAD_CANCEL_DISABLE, 0);
-  xclose (fd);
-  return NULL;
+    int fd = open(arg, O_RDONLY);
+    TEST_VERIFY_EXIT(fd > 0);
+    pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, 0);
+    xclose(fd);
+    return NULL;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  enum {
-    iter_count = 1000
-  };
+    enum {
+        iter_count = 1000
+    };
 
-  char *dir = support_create_temp_directory ("tst-cancel28");
-  char *name = xasprintf ("%s/fifo", dir);
-  TEST_COMPARE (mkfifo (name, 0600), 0);
-  add_temp_file (name);
+    char *dir = support_create_temp_directory("tst-cancel28");
+    char *name = xasprintf("%s/fifo", dir);
+    TEST_COMPARE(mkfifo(name, 0600), 0);
+    add_temp_file(name);
 
-  struct support_descriptors *descrs = support_descriptors_list ();
+    struct support_descriptors *descrs = support_descriptors_list();
 
-  srand (1);
+    srand(1);
 
-  xpthread_create (NULL, writeopener, name);
-  for (int i = 0; i < iter_count; i++)
-    {
-      pthread_t td = xpthread_create (NULL, leaker, name);
-      struct timespec ts =
-	{ .tv_nsec = rand () % 100000, .tv_sec = 0 };
-      nanosleep (&ts, NULL);
-      /* Ignore pthread_cancel result because it might be the
-	 case when pthread_cancel is called when thread is already
-	 exited.  */
-      pthread_cancel (td);
-      xpthread_join (td);
+    xpthread_create(NULL, writeopener, name);
+    for (int i = 0; i < iter_count; i++) {
+        pthread_t td = xpthread_create(NULL, leaker, name);
+        struct timespec ts =
+        { .tv_nsec = rand() % 100000, .tv_sec = 0 };
+        nanosleep(&ts, NULL);
+        /* Ignore pthread_cancel result because it might be the
+        case when pthread_cancel is called when thread is already
+         exited.  */
+        pthread_cancel(td);
+        xpthread_join(td);
     }
 
-  support_descriptors_check (descrs);
+    support_descriptors_check(descrs);
 
-  support_descriptors_free (descrs);
+    support_descriptors_free(descrs);
 
-  free (name);
+    free(name);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

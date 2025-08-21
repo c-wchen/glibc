@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _SHLIB_COMPAT_H
-#define _SHLIB_COMPAT_H	1
+#define _SHLIB_COMPAT_H 1
 
 # include <abi-versions.h>
 
@@ -36,11 +36,11 @@
    supporting.  If these do not differ, then there is no need to compile in
    extra code to support this version set where it has been superseded by a
    newer version.  */
-#define LIB_COMPAT(lib, introduced, obsoleted)			      	      \
+#define LIB_COMPAT(lib, introduced, obsoleted)                        \
   _LIB_COMPAT (lib, introduced, obsoleted)
-#define _LIB_COMPAT(lib, introduced, obsoleted)			      	      \
-  (IS_IN (lib)								      \
-   && (!(ABI_##lib##_##obsoleted - 0)					      \
+#define _LIB_COMPAT(lib, introduced, obsoleted)                       \
+  (IS_IN (lib)                                    \
+   && (!(ABI_##lib##_##obsoleted - 0)                         \
        || ((ABI_##lib##_##introduced - 0) < (ABI_##lib##_##obsoleted - 0))))
 
 #ifdef SHARED
@@ -50,22 +50,22 @@
    `#if SHLIB_COMPAT (libm, GLIBC_2_0, GLIBC_2_2)' for code introduced
    in the GLIBC_2.0 version and obsoleted in the GLIBC_2.2 version.  */
 
-# define SHLIB_COMPAT(lib, introduced, obsoleted)			      \
+# define SHLIB_COMPAT(lib, introduced, obsoleted)                 \
   _LIB_COMPAT (lib, introduced, obsoleted)
 
 /* Like SHLIB_COMPAT, but it can check versions in other libraries.  It is
    not always false for !IS_IN (LIB).  */
-#define OTHER_SHLIB_COMPAT(lib, introduced, obsoleted)	\
+#define OTHER_SHLIB_COMPAT(lib, introduced, obsoleted)  \
   _OTHER_SHLIB_COMPAT (lib, introduced, obsoleted)
-#define _OTHER_SHLIB_COMPAT(lib, introduced, obsoleted)			\
-  (!(ABI_##lib##_##obsoleted - 0)					\
+#define _OTHER_SHLIB_COMPAT(lib, introduced, obsoleted)         \
+  (!(ABI_##lib##_##obsoleted - 0)                   \
    || ((ABI_##lib##_##introduced - 0) < (ABI_##lib##_##obsoleted - 0)))
 
 /* That header also defines symbols like `VERSION_libm_GLIBC_2_1' to
    the version set name to use for e.g. symbols first introduced into
    libm in the GLIBC_2.1 version.  Definitions of symbols with explicit
    versions should look like:
-	versioned_symbol (libm, new_foo, foo, GLIBC_2_1);
+    versioned_symbol (libm, new_foo, foo, GLIBC_2_1);
    This will define the symbol `foo' with the appropriate default version,
    i.e. either GLIBC_2.1 or the "earliest version" specified in
    shlib-versions if that is newer.  */
@@ -109,8 +109,8 @@
 #else
 
 /* Not compiling ELF shared libraries at all, so never any old versions.  */
-# define SHLIB_COMPAT(lib, introduced, obsoleted)	0
-# define OTHER_SHLIB_COMPAT(lib, introduced, obsoleted)	0
+# define SHLIB_COMPAT(lib, introduced, obsoleted)   0
+# define OTHER_SHLIB_COMPAT(lib, introduced, obsoleted) 0
 
 /* No versions to worry about, just make this the global definition.  */
 # define versioned_symbol(lib, local, symbol, version) \
@@ -144,10 +144,10 @@
    that it does not check IS_IN.  It is used by tests that are testing
    functionality that is only available in specific GLIBC versions.  */
 
-# define TEST_COMPAT(lib, introduced, obsoleted)			      \
+# define TEST_COMPAT(lib, introduced, obsoleted)                  \
   _TEST_COMPAT (lib, introduced, obsoleted)
-# define _TEST_COMPAT(lib, introduced, obsoleted)			      \
-   (!(ABI_##lib##_##obsoleted - 0)					      \
+# define _TEST_COMPAT(lib, introduced, obsoleted)                 \
+   (!(ABI_##lib##_##obsoleted - 0)                        \
        || ((ABI_##lib##_##introduced - 0) < (ABI_##lib##_##obsoleted - 0)))
 
-#endif	/* shlib-compat.h */
+#endif  /* shlib-compat.h */

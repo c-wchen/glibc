@@ -40,32 +40,31 @@
    it may be where R is defined using a macro or it may be where the
    macro is defined.  */
 DIAG_PUSH_NEEDS_COMMENT;
-DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wmaybe-uninitialized");
+DIAG_IGNORE_NEEDS_COMMENT(4.9, "-Wmaybe-uninitialized");
 
 #include "soft-fp.h"
 #include "quad.h"
 
-long double
-__fmal (long double a, long double b, long double c)
+long double __fmal(long double a, long double b, long double c)
 {
-  FP_DECL_EX;
-  FP_DECL_Q (A);
-  FP_DECL_Q (B);
-  FP_DECL_Q (C);
-  FP_DECL_Q (R);
-  long double r;
+    FP_DECL_EX;
+    FP_DECL_Q(A);
+    FP_DECL_Q(B);
+    FP_DECL_Q(C);
+    FP_DECL_Q(R);
+    long double r;
 
-  FP_INIT_ROUNDMODE;
-  FP_UNPACK_Q (A, a);
-  FP_UNPACK_Q (B, b);
-  FP_UNPACK_Q (C, c);
-  FP_FMA_Q (R, A, B, C);
-  FP_PACK_Q (r, R);
-  FP_HANDLE_EXCEPTIONS;
+    FP_INIT_ROUNDMODE;
+    FP_UNPACK_Q(A, a);
+    FP_UNPACK_Q(B, b);
+    FP_UNPACK_Q(C, c);
+    FP_FMA_Q(R, A, B, C);
+    FP_PACK_Q(r, R);
+    FP_HANDLE_EXCEPTIONS;
 
-  return r;
+    return r;
 }
 DIAG_POP_NEEDS_COMMENT;
 
-libm_alias_ldouble (__fma, fma)
-libm_alias_ldouble_narrow (__fma, fma)
+libm_alias_ldouble(__fma, fma)
+libm_alias_ldouble_narrow(__fma, fma)

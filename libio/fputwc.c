@@ -27,16 +27,16 @@
 #include "libioP.h"
 #include <wchar.h>
 
-wint_t
-fputwc (wchar_t wc, FILE *fp)
+wint_t fputwc(wchar_t wc, FILE *fp)
 {
-  wint_t result;
-  CHECK_FILE (fp, EOF);
-  _IO_acquire_lock (fp);
-  if (_IO_fwide (fp, 1) < 0)
-    result = WEOF;
-  else
-    result = _IO_putwc_unlocked (wc, fp);
-  _IO_release_lock (fp);
-  return result;
+    wint_t result;
+    CHECK_FILE(fp, EOF);
+    _IO_acquire_lock(fp);
+    if (_IO_fwide(fp, 1) < 0) {
+        result = WEOF;
+    } else {
+        result = _IO_putwc_unlocked(wc, fp);
+    }
+    _IO_release_lock(fp);
+    return result;
 }

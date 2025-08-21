@@ -40,43 +40,41 @@
 
 #define ATTEMPT(xdr_op) if (!(xdr_op)) return (FALSE)
 
-bool_t
-xdr_authdes_cred (XDR *xdrs, struct authdes_cred *cred)
+bool_t xdr_authdes_cred(XDR *xdrs, struct authdes_cred *cred)
 {
-  /*
-   * Unrolled xdr
-   */
-  ATTEMPT (xdr_enum (xdrs, (enum_t *) & cred->adc_namekind));
-  switch (cred->adc_namekind)
-    {
-    case ADN_FULLNAME:
-      ATTEMPT (xdr_string (xdrs, &cred->adc_fullname.name, MAXNETNAMELEN));
-      ATTEMPT (xdr_opaque (xdrs, (caddr_t) & cred->adc_fullname.key,
-			   sizeof (des_block)));
-      ATTEMPT (xdr_opaque (xdrs, (caddr_t) & cred->adc_fullname.window,
-			   sizeof (cred->adc_fullname.window)));
-      return (TRUE);
-    case ADN_NICKNAME:
-      ATTEMPT (xdr_opaque (xdrs, (caddr_t) & cred->adc_nickname,
-			   sizeof (cred->adc_nickname)));
-      return TRUE;
-    default:
-      return FALSE;
+    /*
+     * Unrolled xdr
+     */
+    ATTEMPT(xdr_enum(xdrs, (enum_t *) & cred->adc_namekind));
+    switch (cred->adc_namekind) {
+        case ADN_FULLNAME:
+            ATTEMPT(xdr_string(xdrs, &cred->adc_fullname.name, MAXNETNAMELEN));
+            ATTEMPT(xdr_opaque(xdrs, (caddr_t) & cred->adc_fullname.key,
+                               sizeof(des_block)));
+            ATTEMPT(xdr_opaque(xdrs, (caddr_t) & cred->adc_fullname.window,
+                               sizeof(cred->adc_fullname.window)));
+            return (TRUE);
+        case ADN_NICKNAME:
+            ATTEMPT(xdr_opaque(xdrs, (caddr_t) & cred->adc_nickname,
+                               sizeof(cred->adc_nickname)));
+            return TRUE;
+        default:
+            return FALSE;
     }
 }
-libc_hidden_nolink_sunrpc (xdr_authdes_cred, GLIBC_2_1)
+libc_hidden_nolink_sunrpc(xdr_authdes_cred, GLIBC_2_1)
 
 
 bool_t
-xdr_authdes_verf (register XDR *xdrs, register struct authdes_verf *verf)
+xdr_authdes_verf(register XDR *xdrs, register struct authdes_verf *verf)
 {
-  /*
-   * Unrolled xdr
-   */
-  ATTEMPT (xdr_opaque (xdrs, (caddr_t) & verf->adv_xtimestamp,
-		       sizeof (des_block)));
-  ATTEMPT (xdr_opaque (xdrs, (caddr_t) & verf->adv_int_u,
-		       sizeof (verf->adv_int_u)));
-  return TRUE;
+    /*
+     * Unrolled xdr
+     */
+    ATTEMPT(xdr_opaque(xdrs, (caddr_t) & verf->adv_xtimestamp,
+                       sizeof(des_block)));
+    ATTEMPT(xdr_opaque(xdrs, (caddr_t) & verf->adv_int_u,
+                       sizeof(verf->adv_int_u)));
+    return TRUE;
 }
-libc_hidden_nolink_sunrpc (xdr_authdes_verf, GLIBC_2_1)
+libc_hidden_nolink_sunrpc(xdr_authdes_verf, GLIBC_2_1)

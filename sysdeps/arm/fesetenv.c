@@ -21,46 +21,45 @@
 #include <arm-features.h>
 
 
-int
-__fesetenv (const fenv_t *envp)
+int __fesetenv(const fenv_t *envp)
 {
-  fpu_control_t fpscr, new_fpscr, updated_fpscr;
+    fpu_control_t fpscr, new_fpscr, updated_fpscr;
 
-  /* Fail if a VFP unit isn't present.  */
-  if (!ARM_HAVE_VFP)
-    return 1;
-
-  _FPU_GETCW (fpscr);
-
-  if ((envp != FE_DFL_ENV) && (envp != FE_NOMASK_ENV))
-    {
-      /* The new FPSCR is valid, so don't merge the reserved flags.  */
-      new_fpscr = envp->__cw;
-
-      /* Write new FPSCR if different (ignoring NZCV flags).  */
-      if (((fpscr ^ new_fpscr) & ~_FPU_MASK_NZCV) != 0)
-	_FPU_SETCW (new_fpscr);
-
-      return 0;
+    /* Fail if a VFP unit isn't present.  */
+    if (!ARM_HAVE_VFP) {
+        return 1;
     }
 
-  /* Preserve the reserved FPSCR flags.  */
-  new_fpscr = fpscr & _FPU_RESERVED;
-  new_fpscr |= (envp == FE_DFL_ENV) ? _FPU_DEFAULT : _FPU_IEEE;
+    _FPU_GETCW(fpscr);
 
-  if (((new_fpscr ^ fpscr) & ~_FPU_MASK_NZCV) != 0)
-    {
-      _FPU_SETCW (new_fpscr);
+    if ((envp != FE_DFL_ENV) && (envp != FE_NOMASK_ENV)) {
+        /* The new FPSCR is valid, so don't merge the reserved flags.  */
+        new_fpscr = envp->__cw;
 
-      /* Not all VFP architectures support trapping exceptions, so
-	 test whether the relevant bits were set and fail if not.  */
-      _FPU_GETCW (updated_fpscr);
+        /* Write new FPSCR if different (ignoring NZCV flags).  */
+        if (((fpscr ^ new_fpscr) & ~_FPU_MASK_NZCV) != 0) {
+            _FPU_SETCW(new_fpscr);
+        }
 
-      return new_fpscr & ~updated_fpscr;
+        return 0;
     }
 
-  return 0;
+    /* Preserve the reserved FPSCR flags.  */
+    new_fpscr = fpscr & _FPU_RESERVED;
+    new_fpscr |= (envp == FE_DFL_ENV) ? _FPU_DEFAULT : _FPU_IEEE;
+
+    if (((new_fpscr ^ fpscr) & ~_FPU_MASK_NZCV) != 0) {
+        _FPU_SETCW(new_fpscr);
+
+        /* Not all VFP architectures support trapping exceptions, so
+        test whether the relevant bits were set and fail if not.  */
+        _FPU_GETCW(updated_fpscr);
+
+        return new_fpscr & ~updated_fpscr;
+    }
+
+    return 0;
 }
-libm_hidden_def (__fesetenv)
-weak_alias (__fesetenv, fesetenv)
-libm_hidden_weak (fesetenv)
+libm_hidden_def(__fesetenv)
+weak_alias(__fesetenv, fesetenv)
+libm_hidden_weak(fesetenv)

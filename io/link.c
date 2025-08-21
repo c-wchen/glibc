@@ -21,18 +21,16 @@
 
 
 /* Make a link to FROM called TO.  */
-int
-__link (const char *from, const char *to)
+int __link(const char *from, const char *to)
 {
-  if (from == NULL || to == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (from == NULL || to == NULL) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (link)
+stub_warning(link)
 
-weak_alias (__link, link)
+weak_alias(__link, link)

@@ -19,4 +19,4 @@
 
 /* Most stubs mustn't be hidden in ld.so on Hurd since they need to be preempted
    by functions from libc.so after bootstrap.  */
-extern __typeof (__profil) __profil attribute_hidden;
+extern __typeof(__profil) __profil attribute_hidden;

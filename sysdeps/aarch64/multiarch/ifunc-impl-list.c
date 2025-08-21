@@ -25,43 +25,42 @@
 #include <init-arch.h>
 #include <stdio.h>
 
-size_t
-__libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
-			size_t max)
+size_t __libc_ifunc_impl_list(const char *name, struct libc_ifunc_impl *array,
+                              size_t max)
 {
-  size_t i = max;
+    size_t i = max;
 
-  INIT_ARCH ();
+    INIT_ARCH();
 
-  /* Support sysdeps/aarch64/multiarch/memcpy.c, memmove.c and memset.c.  */
-  IFUNC_IMPL (i, name, memcpy,
-	      IFUNC_IMPL_ADD (array, i, memcpy, 1, __memcpy_oryon1)
-	      IFUNC_IMPL_ADD (array, i, memcpy, sve, __memcpy_a64fx)
-	      IFUNC_IMPL_ADD (array, i, memcpy, sve, __memcpy_sve)
-	      IFUNC_IMPL_ADD (array, i, memcpy, mops, __memcpy_mops)
-	      IFUNC_IMPL_ADD (array, i, memcpy, 1, __memcpy_generic))
-  IFUNC_IMPL (i, name, memmove,
-	      IFUNC_IMPL_ADD (array, i, memmove, 1, __memmove_oryon1)
-	      IFUNC_IMPL_ADD (array, i, memmove, sve, __memmove_a64fx)
-	      IFUNC_IMPL_ADD (array, i, memmove, sve, __memmove_sve)
-	      IFUNC_IMPL_ADD (array, i, memmove, mops, __memmove_mops)
-	      IFUNC_IMPL_ADD (array, i, memmove, 1, __memmove_generic))
-  IFUNC_IMPL (i, name, memset,
-	      IFUNC_IMPL_ADD (array, i, memset, (zva_size == 64), __memset_zva64)
-	      IFUNC_IMPL_ADD (array, i, memset, (zva_size == 64), __memset_oryon1)
-	      IFUNC_IMPL_ADD (array, i, memset, 1, __memset_emag)
-	      IFUNC_IMPL_ADD (array, i, memset, 1, __memset_kunpeng)
-	      IFUNC_IMPL_ADD (array, i, memset, sve && zva_size == 256, __memset_a64fx)
-	      IFUNC_IMPL_ADD (array, i, memset, sve && zva_size == 64, __memset_sve_zva64)
-	      IFUNC_IMPL_ADD (array, i, memset, mops, __memset_mops)
-	      IFUNC_IMPL_ADD (array, i, memset, 1, __memset_generic))
-  IFUNC_IMPL (i, name, memchr,
-	      IFUNC_IMPL_ADD (array, i, memchr, !mte, __memchr_nosimd)
-	      IFUNC_IMPL_ADD (array, i, memchr, 1, __memchr_generic))
+    /* Support sysdeps/aarch64/multiarch/memcpy.c, memmove.c and memset.c.  */
+    IFUNC_IMPL(i, name, memcpy,
+               IFUNC_IMPL_ADD(array, i, memcpy, 1, __memcpy_oryon1)
+               IFUNC_IMPL_ADD(array, i, memcpy, sve, __memcpy_a64fx)
+               IFUNC_IMPL_ADD(array, i, memcpy, sve, __memcpy_sve)
+               IFUNC_IMPL_ADD(array, i, memcpy, mops, __memcpy_mops)
+               IFUNC_IMPL_ADD(array, i, memcpy, 1, __memcpy_generic))
+    IFUNC_IMPL(i, name, memmove,
+               IFUNC_IMPL_ADD(array, i, memmove, 1, __memmove_oryon1)
+               IFUNC_IMPL_ADD(array, i, memmove, sve, __memmove_a64fx)
+               IFUNC_IMPL_ADD(array, i, memmove, sve, __memmove_sve)
+               IFUNC_IMPL_ADD(array, i, memmove, mops, __memmove_mops)
+               IFUNC_IMPL_ADD(array, i, memmove, 1, __memmove_generic))
+    IFUNC_IMPL(i, name, memset,
+               IFUNC_IMPL_ADD(array, i, memset, (zva_size == 64), __memset_zva64)
+               IFUNC_IMPL_ADD(array, i, memset, (zva_size == 64), __memset_oryon1)
+               IFUNC_IMPL_ADD(array, i, memset, 1, __memset_emag)
+               IFUNC_IMPL_ADD(array, i, memset, 1, __memset_kunpeng)
+               IFUNC_IMPL_ADD(array, i, memset, sve && zva_size == 256, __memset_a64fx)
+               IFUNC_IMPL_ADD(array, i, memset, sve && zva_size == 64, __memset_sve_zva64)
+               IFUNC_IMPL_ADD(array, i, memset, mops, __memset_mops)
+               IFUNC_IMPL_ADD(array, i, memset, 1, __memset_generic))
+    IFUNC_IMPL(i, name, memchr,
+               IFUNC_IMPL_ADD(array, i, memchr, !mte, __memchr_nosimd)
+               IFUNC_IMPL_ADD(array, i, memchr, 1, __memchr_generic))
 
-  IFUNC_IMPL (i, name, strlen,
-	      IFUNC_IMPL_ADD (array, i, strlen, !mte, __strlen_asimd)
-	      IFUNC_IMPL_ADD (array, i, strlen, 1, __strlen_generic))
+    IFUNC_IMPL(i, name, strlen,
+               IFUNC_IMPL_ADD(array, i, strlen, !mte, __strlen_asimd)
+               IFUNC_IMPL_ADD(array, i, strlen, 1, __strlen_generic))
 
-  return 0;
+    return 0;
 }

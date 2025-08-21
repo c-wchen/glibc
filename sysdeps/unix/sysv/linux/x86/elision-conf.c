@@ -28,8 +28,7 @@
 /* Reasonable initial tuning values, may be revised in the future.
    This is a conservative initial value.  */
 
-struct elision_config __elision_aconf =
-  {
+struct elision_config __elision_aconf = {
     /* How often to not attempt to use elision if a transaction aborted
        because the lock is already acquired.  Expressed in number of lock
        acquisition attempts.  */
@@ -44,16 +43,16 @@ struct elision_config __elision_aconf =
     .retry_try_xbegin = 3,
     /* Same as SKIP_LOCK_INTERNAL_ABORT but for trylock.  */
     .skip_trylock_internal_abort = 3,
-  };
+};
 
-static __always_inline void
-do_set_elision_enable (int32_t elision_enable)
+static __always_inline void do_set_elision_enable(int32_t elision_enable)
 {
-  /* Enable elision if it's available in hardware. It's not necessary to check
-     if __libc_enable_secure isn't enabled since elision_enable will be set
-     according to the default, which is disabled.  */
-  if (elision_enable == 1)
-    __pthread_force_elision = CPU_FEATURE_USABLE (RTM) ? 1 : 0;
+    /* Enable elision if it's available in hardware. It's not necessary to check
+       if __libc_enable_secure isn't enabled since elision_enable will be set
+       according to the default, which is disabled.  */
+    if (elision_enable == 1) {
+        __pthread_force_elision = CPU_FEATURE_USABLE(RTM) ? 1 : 0;
+    }
 }
 
 /* The pthread->elision_enable tunable is 0 or 1 indicating that elision
@@ -61,49 +60,49 @@ do_set_elision_enable (int32_t elision_enable)
    if it's supported by the hardware.  */
 
 void
-TUNABLE_CALLBACK (set_elision_enable) (tunable_val_t *valp)
+TUNABLE_CALLBACK(set_elision_enable)(tunable_val_t *valp)
 {
-  int32_t elision_enable = (int32_t) valp->numval;
-  do_set_elision_enable (elision_enable);
+    int32_t elision_enable = (int32_t) valp->numval;
+    do_set_elision_enable(elision_enable);
 }
 
-#define TUNABLE_CALLBACK_FNDECL(__name, __type)			\
-static __always_inline void					\
-do_set_elision_ ## __name (__type value)			\
-{								\
-  __elision_aconf.__name = value;				\
-}								\
-void								\
+#define TUNABLE_CALLBACK_FNDECL(__name, __type)         \
+static __always_inline void                 \
+do_set_elision_ ## __name (__type value)            \
+{                               \
+  __elision_aconf.__name = value;               \
+}                               \
+void                                \
 TUNABLE_CALLBACK (set_elision_ ## __name) (tunable_val_t *valp) \
-{								\
-  __type value = (__type) (valp)->numval;			\
-  do_set_elision_ ## __name (value);				\
+{                               \
+  __type value = (__type) (valp)->numval;           \
+  do_set_elision_ ## __name (value);                \
 }
 
-TUNABLE_CALLBACK_FNDECL (skip_lock_busy, int32_t);
-TUNABLE_CALLBACK_FNDECL (skip_lock_internal_abort, int32_t);
-TUNABLE_CALLBACK_FNDECL (retry_try_xbegin, int32_t);
-TUNABLE_CALLBACK_FNDECL (skip_trylock_internal_abort, int32_t);
+TUNABLE_CALLBACK_FNDECL(skip_lock_busy, int32_t);
+TUNABLE_CALLBACK_FNDECL(skip_lock_internal_abort, int32_t);
+TUNABLE_CALLBACK_FNDECL(retry_try_xbegin, int32_t);
+TUNABLE_CALLBACK_FNDECL(skip_trylock_internal_abort, int32_t);
 
 /* Initialize elision.  */
 
-void
-__lll_elision_init (void)
+void __lll_elision_init(void)
 {
-  /* Elision depends on tunables and must be explicitly turned on by setting
-     the appropriate tunable on a supported platform.  */
+    /* Elision depends on tunables and must be explicitly turned on by setting
+       the appropriate tunable on a supported platform.  */
 
-  TUNABLE_GET (enable, int32_t,
-	       TUNABLE_CALLBACK (set_elision_enable));
-  TUNABLE_GET (skip_lock_busy, int32_t,
-	       TUNABLE_CALLBACK (set_elision_skip_lock_busy));
-  TUNABLE_GET (skip_lock_internal_abort, int32_t,
-	       TUNABLE_CALLBACK (set_elision_skip_lock_internal_abort));
-  TUNABLE_GET (tries, int32_t,
-	       TUNABLE_CALLBACK (set_elision_retry_try_xbegin));
-  TUNABLE_GET (skip_trylock_internal_abort, int32_t,
-	       TUNABLE_CALLBACK (set_elision_skip_trylock_internal_abort));
+    TUNABLE_GET(enable, int32_t,
+                TUNABLE_CALLBACK(set_elision_enable));
+    TUNABLE_GET(skip_lock_busy, int32_t,
+                TUNABLE_CALLBACK(set_elision_skip_lock_busy));
+    TUNABLE_GET(skip_lock_internal_abort, int32_t,
+                TUNABLE_CALLBACK(set_elision_skip_lock_internal_abort));
+    TUNABLE_GET(tries, int32_t,
+                TUNABLE_CALLBACK(set_elision_retry_try_xbegin));
+    TUNABLE_GET(skip_trylock_internal_abort, int32_t,
+                TUNABLE_CALLBACK(set_elision_skip_trylock_internal_abort));
 
-  if (!__pthread_force_elision)
-    __elision_aconf.retry_try_xbegin = 0; /* Disable elision on rwlocks.  */
+    if (!__pthread_force_elision) {
+        __elision_aconf.retry_try_xbegin = 0;    /* Disable elision on rwlocks.  */
+    }
 }

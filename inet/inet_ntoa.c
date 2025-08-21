@@ -26,9 +26,8 @@
 static __thread char buffer[INET_ADDRSTRLEN];
 
 
-char *
-inet_ntoa (struct in_addr in)
+char *inet_ntoa(struct in_addr in)
 {
-  __inet_ntop (AF_INET, &in, buffer, sizeof buffer);
-  return buffer;
+    __inet_ntop(AF_INET, &in, buffer, sizeof buffer);
+    return buffer;
 }

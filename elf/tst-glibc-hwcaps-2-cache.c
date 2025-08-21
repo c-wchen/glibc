@@ -26,20 +26,21 @@
 #include <support/support.h>
 #include <support/capture_subprocess.h>
 
-int
-main (int argc, char **argv)
+int main(int argc, char **argv)
 {
-  /* Run ldconfig to populate the cache.  */
-  char *command = xasprintf ("%s/ldconfig", support_install_rootsbindir);
-  struct support_capture_subprocess result =
-    support_capture_subprogram (command,  &((char *) { NULL }), NULL);
-  support_capture_subprocess_check (&result, "ldconfig", 0, sc_allow_none);
-  free (command);
+    /* Run ldconfig to populate the cache.  */
+    char *command = xasprintf("%s/ldconfig", support_install_rootsbindir);
+    struct support_capture_subprocess result =
+        support_capture_subprogram(command,  &((char *) {
+        NULL
+    }), NULL);
+    support_capture_subprocess_check(&result, "ldconfig", 0, sc_allow_none);
+    free(command);
 
-  /* Reuse tst-glibc-hwcaps.  Since this code is running in a
-     container, we can launch it directly.  */
-  char *path = xasprintf ("%s/elf/tst-glibc-hwcaps-2", support_objdir_root);
-  execv (path, argv);
-  printf ("error: execv of %s failed: %m\n", path);
-  return 1;
+    /* Reuse tst-glibc-hwcaps.  Since this code is running in a
+       container, we can launch it directly.  */
+    char *path = xasprintf("%s/elf/tst-glibc-hwcaps-2", support_objdir_root);
+    execv(path, argv);
+    printf("error: execv of %s failed: %m\n", path);
+    return 1;
 }

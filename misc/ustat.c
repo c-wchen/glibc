@@ -25,20 +25,18 @@
 # include <errno.h>
 # include <sys/types.h>
 
-struct ustat
- {
-   __daddr_t f_tfree;         /* Number of free blocks.  */
-   __ino_t f_tinode;          /* Number of free inodes.  */
-   char f_fname[6];
-   char f_fpack[6];
+struct ustat {
+    __daddr_t f_tfree;         /* Number of free blocks.  */
+    __ino_t f_tinode;          /* Number of free inodes.  */
+    char f_fname[6];
+    char f_fpack[6];
 };
 
-int
-__old_ustat (dev_t dev, struct ustat *ust)
+int __old_ustat(dev_t dev, struct ustat *ust)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (ustat)
-compat_symbol (libc, __old_ustat, ustat, GLIBC_2_0);
+stub_warning(ustat)
+compat_symbol(libc, __old_ustat, ustat, GLIBC_2_0);
 #endif

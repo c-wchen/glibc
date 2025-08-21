@@ -19,7 +19,7 @@
 #include <stdbit.h>
 
 unsigned int
-(stdc_first_leading_one_us) (unsigned short x)
+(stdc_first_leading_one_us)(unsigned short x)
 {
-  return stdc_first_leading_one_us (x);
+    return stdc_first_leading_one_us(x);
 }

@@ -24,15 +24,14 @@
 # define __strnlen STRNLEN
 #endif
 
-size_t
-__strnlen (const char *str, size_t maxlen)
+size_t __strnlen(const char *str, size_t maxlen)
 {
-  const char *found = memchr (str, '\0', maxlen);
-  return found ? found - str : maxlen;
+    const char *found = memchr(str, '\0', maxlen);
+    return found ? found - str : maxlen;
 }
 
 #ifndef STRNLEN
-weak_alias (__strnlen, strnlen)
-libc_hidden_def (__strnlen)
-libc_hidden_def (strnlen)
+weak_alias(__strnlen, strnlen)
+libc_hidden_def(__strnlen)
+libc_hidden_def(strnlen)
 #endif

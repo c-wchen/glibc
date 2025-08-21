@@ -37,47 +37,43 @@
 
 static char MAGIC_ARGUMENT[] = "run-actual-test";
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  if (getenv ("PATH") == NULL)
-    {
-      printf ("PATH not set\n");
-      exit (1);
+    if (getenv("PATH") == NULL) {
+        printf("PATH not set\n");
+        exit(1);
     }
-  if (secure_getenv ("PATH") == NULL)
-    {
-      printf ("PATH not set according to secure_getenv\n");
-      exit (1);
+    if (secure_getenv("PATH") == NULL) {
+        printf("PATH not set according to secure_getenv\n");
+        exit(1);
     }
-  if (strcmp (getenv ("PATH"), secure_getenv ("PATH")) != 0)
-    {
-      printf ("PATH mismatch (%s, %s)\n",
-	      getenv ("PATH"), secure_getenv ("PATH"));
-      exit (1);
+    if (strcmp(getenv("PATH"), secure_getenv("PATH")) != 0) {
+        printf("PATH mismatch (%s, %s)\n",
+               getenv("PATH"), secure_getenv("PATH"));
+        exit(1);
     }
 
-  support_capture_subprogram_self_sgid (MAGIC_ARGUMENT);
+    support_capture_subprogram_self_sgid(MAGIC_ARGUMENT);
 
-  return 0;
+    return 0;
 }
 
-static void
-alternative_main (int argc, char **argv)
+static void alternative_main(int argc, char **argv)
 {
-  if (argc == 2 && strcmp (argv[1], MAGIC_ARGUMENT) == 0)
-    {
-      if (getgid () == getegid ())
-	/* This can happen if the file system is mounted nosuid.  */
-	FAIL_UNSUPPORTED ("SGID failed: GID and EGID match (%jd)\n",
-		   (intmax_t) getgid ());
-      if (getenv ("PATH") == NULL)
-	FAIL_EXIT (3, "PATH variable not present\n");
-      if (secure_getenv ("PATH") != NULL)
-	FAIL_EXIT (4, "PATH variable not filtered out\n");
+    if (argc == 2 && strcmp(argv[1], MAGIC_ARGUMENT) == 0) {
+        if (getgid() == getegid())
+            /* This can happen if the file system is mounted nosuid.  */
+            FAIL_UNSUPPORTED("SGID failed: GID and EGID match (%jd)\n",
+                             (intmax_t) getgid());
+        if (getenv("PATH") == NULL) {
+            FAIL_EXIT(3, "PATH variable not present\n");
+        }
+        if (secure_getenv("PATH") != NULL) {
+            FAIL_EXIT(4, "PATH variable not filtered out\n");
+        }
 
-      support_record_failure_barrier ();
-      exit (EXIT_SUCCESS);
+        support_record_failure_barrier();
+        exit(EXIT_SUCCESS);
     }
 }
 

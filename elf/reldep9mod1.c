@@ -1,21 +1,18 @@
 #include <stdlib.h>
-void
-foo (void)
+void foo(void)
 {
-  exit (0);
+    exit(0);
 }
 
-void
-__attribute__((destructor))
-bar (void)
+void __attribute__((destructor))
+bar(void)
 {
-  foo ();
+    foo();
 }
 
-void
-__attribute__((constructor))
-destr (void)
+void __attribute__((constructor))
+destr(void)
 {
-  extern void baz (void);
-  baz ();
+    extern void baz(void);
+    baz();
 }

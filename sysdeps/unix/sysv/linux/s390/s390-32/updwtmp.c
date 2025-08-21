@@ -27,5 +27,5 @@
 #include "sysdeps/gnu/updwtmp.c"
 
 #if defined SHARED
-default_symbol_version (__updwtmp, updwtmp, UTMP_COMPAT_BASE);
+default_symbol_version(__updwtmp, updwtmp, UTMP_COMPAT_BASE);
 #endif

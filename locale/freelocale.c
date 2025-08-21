@@ -24,30 +24,33 @@
 
 
 /* Lock for protecting global data.  */
-__libc_rwlock_define (extern , __libc_setlocale_lock attribute_hidden)
+__libc_rwlock_define(extern, __libc_setlocale_lock attribute_hidden)
 
 
 void
-__freelocale (locale_t dataset)
+__freelocale(locale_t dataset)
 {
-  int cnt;
+    int cnt;
 
-  /* This static object is returned for newlocale (LC_ALL_MASK, "C").  */
-  if (dataset == _nl_C_locobj_ptr)
-    return;
+    /* This static object is returned for newlocale (LC_ALL_MASK, "C").  */
+    if (dataset == _nl_C_locobj_ptr) {
+        return;
+    }
 
-  /* We modify global data (the usage counts).  */
-  __libc_rwlock_wrlock (__libc_setlocale_lock);
+    /* We modify global data (the usage counts).  */
+    __libc_rwlock_wrlock(__libc_setlocale_lock);
 
-  for (cnt = 0; cnt < __LC_LAST; ++cnt)
-    if (cnt != LC_ALL && dataset->__locales[cnt]->usage_count != UNDELETABLE)
-      /* We can remove the data.  */
-      _nl_remove_locale (cnt, dataset->__locales[cnt]);
+    for (cnt = 0; cnt < __LC_LAST; ++cnt)
+        if (cnt != LC_ALL && dataset->__locales[cnt]->usage_count != UNDELETABLE)
+            /* We can remove the data.  */
+        {
+            _nl_remove_locale(cnt, dataset->__locales[cnt]);
+        }
 
-  /* It's done.  */
-  __libc_rwlock_unlock (__libc_setlocale_lock);
+    /* It's done.  */
+    __libc_rwlock_unlock(__libc_setlocale_lock);
 
-  /* Free the locale_t handle itself.  */
-  free (dataset);
+    /* Free the locale_t handle itself.  */
+    free(dataset);
 }
-weak_alias (__freelocale, freelocale)
+weak_alias(__freelocale, freelocale)

@@ -21,7 +21,7 @@
 #include "tst-filterobj-filtee.h"
 
 /* This is the real implementation that wants to be called */
-const char *get_text (void)
+const char *get_text(void)
 {
-  return "Hello from filtee (PASS)";
+    return "Hello from filtee (PASS)";
 }

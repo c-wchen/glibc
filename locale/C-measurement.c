@@ -22,16 +22,15 @@
 /* This table's entries are taken from ISO 14652, the table in section
    4.12 "LC_MEASUREMENT".  */
 
-const struct __locale_data _nl_C_LC_MEASUREMENT attribute_hidden =
-{
-  _nl_C_name,
-  NULL, 0, 0,			/* no file mapped */
-  NULL,				/* No cached data.  */
-  UNDELETABLE,
-  0,
-  2,
-  {
-    { .string = "\1" },
-    { .string = _nl_C_codeset }
-  }
+const struct __locale_data _nl_C_LC_MEASUREMENT attribute_hidden = {
+    _nl_C_name,
+    NULL, 0, 0,           /* no file mapped */
+    NULL,             /* No cached data.  */
+    UNDELETABLE,
+    0,
+    2,
+    {
+        { .string = "\1" },
+        { .string = _nl_C_codeset }
+    }
 };

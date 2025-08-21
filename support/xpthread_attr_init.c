@@ -18,8 +18,7 @@
 
 #include <support/xthread.h>
 
-void
-xpthread_attr_init (pthread_attr_t *attr)
+void xpthread_attr_init(pthread_attr_t *attr)
 {
-  xpthread_check_return ("pthread_attr_init", pthread_attr_init (attr));
+    xpthread_check_return("pthread_attr_init", pthread_attr_init(attr));
 }

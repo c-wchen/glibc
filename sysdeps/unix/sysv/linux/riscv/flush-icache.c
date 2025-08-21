@@ -28,49 +28,47 @@
 #endif
 #include <sys/syscall.h>
 
-typedef int (*func_type) (void *, void *, unsigned long int);
+typedef int (*func_type)(void *, void *, unsigned long int);
 
-static int
-__riscv_flush_icache_syscall (void *start, void *end, unsigned long int flags)
+static int __riscv_flush_icache_syscall(void *start, void *end, unsigned long int flags)
 {
-  return INLINE_SYSCALL (riscv_flush_icache, 3, start, end, flags);
+    return INLINE_SYSCALL(riscv_flush_icache, 3, start, end, flags);
 }
 
-static func_type
-__lookup_riscv_flush_icache (void)
+static func_type __lookup_riscv_flush_icache(void)
 {
-  func_type func = dl_vdso_vsym ("__vdso_flush_icache");
+    func_type func = dl_vdso_vsym("__vdso_flush_icache");
 
-  /* If there is no vDSO entry then call the system call directly.  All Linux
-     versions provide the vDSO entry, but QEMU's user-mode emulation doesn't
-     provide a vDSO.  */
-  if (!func)
-    func = &__riscv_flush_icache_syscall;
+    /* If there is no vDSO entry then call the system call directly.  All Linux
+       versions provide the vDSO entry, but QEMU's user-mode emulation doesn't
+       provide a vDSO.  */
+    if (!func) {
+        func = &__riscv_flush_icache_syscall;
+    }
 
-  return func;
+    return func;
 }
 
 #ifdef SHARED
 
 # define INIT_ARCH()
-libc_ifunc (__riscv_flush_icache, __lookup_riscv_flush_icache ())
+libc_ifunc(__riscv_flush_icache, __lookup_riscv_flush_icache())
 
 #else
 
 int
-__riscv_flush_icache (void *start, void *end, unsigned long int flags)
+__riscv_flush_icache(void *start, void *end, unsigned long int flags)
 {
-  static volatile func_type cached_func;
+    static volatile func_type cached_func;
 
-  func_type func = atomic_load_relaxed (&cached_func);
+    func_type func = atomic_load_relaxed(&cached_func);
 
-  if (!func)
-    {
-      func = __lookup_riscv_flush_icache ();
-      atomic_store_relaxed (&cached_func, func);
+    if (!func) {
+        func = __lookup_riscv_flush_icache();
+        atomic_store_relaxed(&cached_func, func);
     }
 
-  return func (start, end, flags);
+    return func(start, end, flags);
 }
 
 #endif

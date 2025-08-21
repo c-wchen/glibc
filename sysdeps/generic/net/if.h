@@ -18,7 +18,7 @@
 
 #ifndef _NET_IF_H
 
-#define _NET_IF_H	1
+#define _NET_IF_H   1
 #include <features.h>
 
 
@@ -26,22 +26,21 @@ __BEGIN_DECLS
 
 /* Convert an interface name to an index, and vice versa.  */
 
-extern unsigned int if_nametoindex (const char *__ifname) __THROW;
-extern char *if_indextoname (unsigned int __ifindex, char *__ifname) __THROW;
+extern unsigned int if_nametoindex(const char *__ifname) __THROW;
+extern char *if_indextoname(unsigned int __ifindex, char *__ifname) __THROW;
 
 /* Return a list of all interfaces and their indices.  */
 
-struct if_nameindex
-  {
-    unsigned int if_index;	/* 1, 2, ... */
-    char *if_name;		/* null terminated name: "eth0", ... */
-  };
+struct if_nameindex {
+    unsigned int if_index;  /* 1, 2, ... */
+    char *if_name;      /* null terminated name: "eth0", ... */
+};
 
-extern struct if_nameindex *if_nameindex (void) __THROW;
+extern struct if_nameindex *if_nameindex(void) __THROW;
 
 /* Free the data returned from if_nameindex.  */
 
-extern void if_freenameindex (struct if_nameindex *__ptr) __THROW;
+extern void if_freenameindex(struct if_nameindex *__ptr) __THROW;
 
 __END_DECLS
 

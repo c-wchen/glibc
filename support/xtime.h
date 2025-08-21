@@ -31,23 +31,23 @@ __BEGIN_DECLS
    terminate the process on error.  */
 
 #ifndef __USE_TIME64_REDIRECTS
-void xclock_gettime (clockid_t clock, struct timespec *ts);
-void xclock_settime (clockid_t clock, const struct timespec *ts);
+void xclock_gettime(clockid_t clock, struct timespec *ts);
+void xclock_settime(clockid_t clock, const struct timespec *ts);
 #else
-void __REDIRECT (xclock_gettime, (clockid_t clock, struct timespec *ts),
-		 xclock_gettime_time64);
-void __REDIRECT (xclock_settime, (clockid_t clock, const struct timespec *ts),
-		 xclock_settime_time64);
+void __REDIRECT(xclock_gettime, (clockid_t clock, struct timespec *ts),
+                xclock_gettime_time64);
+void __REDIRECT(xclock_settime, (clockid_t clock, const struct timespec *ts),
+                xclock_settime_time64);
 #endif
 
 /* This helper can often simplify tests by avoiding an explicit
    variable declaration or allowing that declaration to be const. */
 
-static inline struct timespec xclock_now (clockid_t clock)
+static inline struct timespec xclock_now(clockid_t clock)
 {
-  struct timespec ts;
-  xclock_gettime (clock, &ts);
-  return ts;
+    struct timespec ts;
+    xclock_gettime(clock, &ts);
+    return ts;
 }
 
 __END_DECLS

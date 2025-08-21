@@ -26,71 +26,70 @@
 #include <unistd.h>
 
 /* Padding struct to detect unexpected writes.   */
-union
-{
-  struct sched_attr attr;
-  /* Hopefully the kernel will never need as much.  */
-  unsigned char padding[4096];
+union {
+    struct sched_attr attr;
+    /* Hopefully the kernel will never need as much.  */
+    unsigned char padding[4096];
 } u;
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  _Static_assert (SCHED_OTHER == SCHED_NORMAL,
-                  "SCHED_OTHER, SCHED_NORMAL values");
-  TEST_VERIFY (sizeof (struct sched_attr) < sizeof (u));
+    _Static_assert(SCHED_OTHER == SCHED_NORMAL,
+                   "SCHED_OTHER, SCHED_NORMAL values");
+    TEST_VERIFY(sizeof(struct sched_attr) < sizeof(u));
 
-  /* Check that reading and re-applying the current policy works.  */
-  memset (&u, 0xcc, sizeof (u));
-  /* Compiler barrier to bypass write access attribute.  */
-  volatile unsigned int size = sizeof (u);
-  TEST_COMPARE (sched_getattr (0, (struct sched_attr *) &u, size, 0), 0);
-  TEST_COMPARE (sched_setattr (0, &u.attr, 0), 0); /* Apply unchanged.  */
+    /* Check that reading and re-applying the current policy works.  */
+    memset(&u, 0xcc, sizeof(u));
+    /* Compiler barrier to bypass write access attribute.  */
+    volatile unsigned int size = sizeof(u);
+    TEST_COMPARE(sched_getattr(0, (struct sched_attr *) &u, size, 0), 0);
+    TEST_COMPARE(sched_setattr(0, &u.attr, 0), 0);   /* Apply unchanged.  */
 
-  /* Try to switch to the SCHED_OTHER policy.   */
-  memset (&u, 0, sizeof (u));
-  u.attr.size = sizeof (u); /* With padding, kernel should accept zeroes.  */
-  u.attr.sched_policy = SCHED_OTHER; /* Should be the default.  */
-  {
+    /* Try to switch to the SCHED_OTHER policy.   */
+    memset(&u, 0, sizeof(u));
+    u.attr.size = sizeof(u);  /* With padding, kernel should accept zeroes.  */
+    u.attr.sched_policy = SCHED_OTHER; /* Should be the default.  */
+    {
+        errno = 0;
+        int prio = getpriority(PRIO_PROCESS, 0);
+        if (errno != 0) {
+            prio = 0;
+        }
+        u.attr.sched_nice = prio;
+    }
+    TEST_COMPARE(sched_setattr(0, &u.attr, 0), 0);
+
+    /* Non-zero values not known to the kernel result in an E2BIG error.  */
+    memset(&u, 0, sizeof(u));
+    TEST_COMPARE(sched_getattr(0, (struct sched_attr *) &u, size, 0), 0);
+    u.padding[u.attr.size] = 0xcc;
+    u.attr.size = sizeof(u);
     errno = 0;
-    int prio = getpriority (PRIO_PROCESS, 0);
-    if (errno != 0)
-      prio = 0;
-    u.attr.sched_nice = prio;
-  }
-  TEST_COMPARE (sched_setattr (0, &u.attr, 0), 0);
+    TEST_COMPARE(sched_setattr(0, &u.attr, 0), -1);
+    TEST_COMPARE(errno, E2BIG);
 
-  /* Non-zero values not known to the kernel result in an E2BIG error.  */
-  memset (&u, 0, sizeof (u));
-  TEST_COMPARE (sched_getattr (0, (struct sched_attr *) &u, size, 0), 0);
-  u.padding[u.attr.size] = 0xcc;
-  u.attr.size = sizeof (u);
-  errno = 0;
-  TEST_COMPARE (sched_setattr (0, &u.attr, 0), -1);
-  TEST_COMPARE (errno, E2BIG);
+    memset(&u, 0xcc, sizeof(u));
+    TEST_COMPARE(sched_getattr(0, (struct sched_attr *) &u, size, 0), 0);
+    TEST_COMPARE(u.attr.sched_policy, SCHED_OTHER);
 
-  memset (&u, 0xcc, sizeof (u));
-  TEST_COMPARE (sched_getattr (0, (struct sched_attr *) &u, size, 0), 0);
-  TEST_COMPARE (u.attr.sched_policy, SCHED_OTHER);
+    /* Raise the niceless level to 19 and observe its effect.  */
+    TEST_COMPARE(nice(19), 19);
+    TEST_COMPARE(sched_getattr(0, &u.attr, sizeof(u.attr), 0), 0);
+    TEST_COMPARE(u.attr.sched_policy, SCHED_OTHER);
+    TEST_COMPARE(u.attr.sched_nice, 19);
 
-  /* Raise the niceless level to 19 and observe its effect.  */
-  TEST_COMPARE (nice (19), 19);
-  TEST_COMPARE (sched_getattr (0, &u.attr, sizeof (u.attr), 0), 0);
-  TEST_COMPARE (u.attr.sched_policy, SCHED_OTHER);
-  TEST_COMPARE (u.attr.sched_nice, 19);
+    /* Invalid buffer arguments result in EINVAL (not EFAULT).  */
+    {
+        errno = 0;
+        void *volatile null_pointer = NULL; /* compiler barrier.  */
+        TEST_COMPARE(sched_setattr(0, null_pointer, 0), -1);
+        TEST_COMPARE(errno, EINVAL);
+        errno = 0;
+        TEST_COMPARE(sched_getattr(0, null_pointer, size, 0), -1);
+        TEST_COMPARE(errno, EINVAL);
+    }
 
-  /* Invalid buffer arguments result in EINVAL (not EFAULT).  */
-  {
-    errno = 0;
-    void *volatile null_pointer = NULL; /* compiler barrier.  */
-    TEST_COMPARE (sched_setattr (0, null_pointer, 0), -1);
-    TEST_COMPARE (errno, EINVAL);
-    errno = 0;
-    TEST_COMPARE (sched_getattr (0, null_pointer, size, 0), -1);
-    TEST_COMPARE (errno, EINVAL);
-  }
-
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

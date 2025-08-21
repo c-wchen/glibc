@@ -2,8 +2,7 @@
 #include <complex.h>
 
 double
-attribute_hidden
-cargl (double _Complex x)
+attribute_hidden cargl(double _Complex x)
 {
-  return carg (x);
+    return carg(x);
 }

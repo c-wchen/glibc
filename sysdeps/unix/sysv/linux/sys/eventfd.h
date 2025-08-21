@@ -15,8 +15,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef	_SYS_EVENTFD_H
-#define	_SYS_EVENTFD_H	1
+#ifndef _SYS_EVENTFD_H
+#define _SYS_EVENTFD_H  1
 
 #include <stdint.h>
 
@@ -31,13 +31,13 @@ __BEGIN_DECLS
 
 /* Return file descriptor for generic event channel.  Set initial
    value to COUNT.  */
-extern int eventfd (unsigned int __count, int __flags) __THROW;
+extern int eventfd(unsigned int __count, int __flags) __THROW;
 
 /* Read event counter and possibly wait for events.  */
-extern int eventfd_read (int __fd, eventfd_t *__value);
+extern int eventfd_read(int __fd, eventfd_t *__value);
 
 /* Increment event counter.  */
-extern int eventfd_write (int __fd, eventfd_t __value);
+extern int eventfd_write(int __fd, eventfd_t __value);
 
 __END_DECLS
 

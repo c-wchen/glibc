@@ -30,4 +30,4 @@
 /* This is defined nonzero by a machine-specific sysdeps file if
    _Unwind_Resume is provided separately and thus the generic C
    version should not be defined.  */
-#define HAVE_ARCH_UNWIND_RESUME		0
+#define HAVE_ARCH_UNWIND_RESUME     0

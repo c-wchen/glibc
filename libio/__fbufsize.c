@@ -17,11 +17,11 @@
 
 #include <stdio_ext.h>
 
-size_t
-__fbufsize (FILE *fp)
+size_t __fbufsize(FILE *fp)
 {
-  if (fp->_mode > 0)
-    return fp->_wide_data->_IO_buf_end - fp->_wide_data->_IO_buf_base;
-  else
-    return fp->_IO_buf_end - fp->_IO_buf_base;
+    if (fp->_mode > 0) {
+        return fp->_wide_data->_IO_buf_end - fp->_wide_data->_IO_buf_base;
+    } else {
+        return fp->_IO_buf_end - fp->_IO_buf_base;
+    }
 }

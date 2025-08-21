@@ -20,18 +20,17 @@
 
 /* Write formatted output to D, according to the format string FORMAT.  */
 /* VARARGS2 */
-int
-__dprintf (int d, const char *format, ...)
+int __dprintf(int d, const char *format, ...)
 {
-  va_list arg;
-  int done;
+    va_list arg;
+    int done;
 
-  va_start (arg, format);
-  done = __vdprintf_internal (d, format, arg, 0);
-  va_end (arg);
+    va_start(arg, format);
+    done = __vdprintf_internal(d, format, arg, 0);
+    va_end(arg);
 
-  return done;
+    return done;
 }
-libc_hidden_def (__dprintf)
-ldbl_hidden_def (__dprintf, dprintf)
-ldbl_weak_alias (__dprintf, dprintf)
+libc_hidden_def(__dprintf)
+ldbl_hidden_def(__dprintf, dprintf)
+ldbl_weak_alias(__dprintf, dprintf)

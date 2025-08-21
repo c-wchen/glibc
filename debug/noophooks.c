@@ -18,8 +18,7 @@
 
 #include <libc-internal.h>
 
-void
-__cyg_profile_func_enter (void *this_fn, void *call_site)
+void __cyg_profile_func_enter(void *this_fn, void *call_site)
 {
 }
-strong_alias (__cyg_profile_func_enter, __cyg_profile_func_exit)
+strong_alias(__cyg_profile_func_enter, __cyg_profile_func_exit)

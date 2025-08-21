@@ -27,24 +27,22 @@
 
 /* Open FILE with access OFLAG.  If O_CREAT or O_TMPFILE is in OFLAG,
    a third argument is the file protection.  */
-int
-__libc_open (const char *file, int oflag, ...)
+int __libc_open(const char *file, int oflag, ...)
 {
-  int mode = 0;
+    int mode = 0;
 
-  if (__OPEN_NEEDS_MODE (oflag))
-    {
-      va_list arg;
-      va_start (arg, oflag);
-      mode = va_arg (arg, int);
-      va_end (arg);
+    if (__OPEN_NEEDS_MODE(oflag)) {
+        va_list arg;
+        va_start(arg, oflag);
+        mode = va_arg(arg, int);
+        va_end(arg);
     }
 
-  return SYSCALL_CANCEL (openat, AT_FDCWD, file, oflag, mode);
+    return SYSCALL_CANCEL(openat, AT_FDCWD, file, oflag, mode);
 }
-libc_hidden_def (__libc_open)
+libc_hidden_def(__libc_open)
 
-weak_alias (__libc_open, __open)
-libc_hidden_weak (__open)
-weak_alias (__libc_open, open)
+weak_alias(__libc_open, __open)
+libc_hidden_weak(__open)
+weak_alias(__libc_open, open)
 #endif

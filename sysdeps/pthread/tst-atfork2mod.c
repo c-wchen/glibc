@@ -24,33 +24,28 @@
 extern int val;
 
 
-static void
-prepare (void)
+static void prepare(void)
 {
-  ++val;
+    ++val;
 }
 
-static void
-parent (void)
+static void parent(void)
 {
-  val *= 4;
+    val *= 4;
 }
 
-static void
-child (void)
+static void child(void)
 {
-  val *= 8;
+    val *= 8;
 }
 
-static void
-__attribute__ ((constructor))
-init (void)
+static void __attribute__((constructor))
+init(void)
 {
-  printf ("dsohandle = %p\n", __dso_handle);
+    printf("dsohandle = %p\n", __dso_handle);
 
-  if (pthread_atfork (prepare, parent, child) != 0)
-    {
-      puts ("init: atfork failed");
-      exit (1);
+    if (pthread_atfork(prepare, parent, child) != 0) {
+        puts("init: atfork failed");
+        exit(1);
     }
 }

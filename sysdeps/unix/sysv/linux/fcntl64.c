@@ -33,34 +33,34 @@
 # define FCNTL_ADJUST_CMD(__cmd) __cmd
 #endif
 
-int
-__libc_fcntl64 (int fd, int cmd, ...)
+int __libc_fcntl64(int fd, int cmd, ...)
 {
-  va_list ap;
-  void *arg;
+    va_list ap;
+    void *arg;
 
-  va_start (ap, cmd);
-  arg = va_arg (ap, void *);
-  va_end (ap);
+    va_start(ap, cmd);
+    arg = va_arg(ap, void *);
+    va_end(ap);
 
-  cmd = FCNTL_ADJUST_CMD (cmd);
+    cmd = FCNTL_ADJUST_CMD(cmd);
 
-  if (cmd == F_SETLKW || cmd == F_SETLKW64 || cmd == F_OFD_SETLKW)
-    return SYSCALL_CANCEL (fcntl64, fd, cmd, arg);
+    if (cmd == F_SETLKW || cmd == F_SETLKW64 || cmd == F_OFD_SETLKW) {
+        return SYSCALL_CANCEL(fcntl64, fd, cmd, arg);
+    }
 
-  return __fcntl64_nocancel_adjusted (fd, cmd, arg);
+    return __fcntl64_nocancel_adjusted(fd, cmd, arg);
 }
-libc_hidden_def (__libc_fcntl64)
-weak_alias (__libc_fcntl64, __fcntl64)
-libc_hidden_weak (__fcntl64)
-weak_alias (__libc_fcntl64, fcntl64)
+libc_hidden_def(__libc_fcntl64)
+weak_alias(__libc_fcntl64, __fcntl64)
+libc_hidden_weak(__fcntl64)
+weak_alias(__libc_fcntl64, fcntl64)
 #if __TIMESIZE != 64
-weak_alias (__libc_fcntl64, __fcntl_time64)
+weak_alias(__libc_fcntl64, __fcntl_time64)
 #endif
 
 #ifdef __OFF_T_MATCHES_OFF64_T
-weak_alias (__libc_fcntl64, __libc_fcntl)
-weak_alias (__libc_fcntl64, __fcntl)
-weak_alias (__libc_fcntl64, __GI___fcntl)
-weak_alias (__libc_fcntl64, fcntl)
+weak_alias(__libc_fcntl64, __libc_fcntl)
+weak_alias(__libc_fcntl64, __fcntl)
+weak_alias(__libc_fcntl64, __GI___fcntl)
+weak_alias(__libc_fcntl64, fcntl)
 #endif

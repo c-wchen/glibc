@@ -24,30 +24,29 @@ char string1[STRING_SIZE];
 char string2[STRING_SIZE];
 
 __attribute_optimization_barrier__
-static int
-prepare (void)
+static int prepare(void)
 {
-  memset (string1, 'a', STRING_SIZE);
-  if (memmove (string2, string1, STRING_SIZE) == string2
-      && memcmp (string2, string1, STRING_SIZE) == 0)
-    return EXIT_SUCCESS;
-  else
-    return EXIT_FAILURE;
+    memset(string1, 'a', STRING_SIZE);
+    if (memmove(string2, string1, STRING_SIZE) == string2
+        && memcmp(string2, string1, STRING_SIZE) == 0) {
+        return EXIT_SUCCESS;
+    } else {
+        return EXIT_FAILURE;
+    }
 }
 
 __attribute_optimization_barrier__
-static int
-function (void)
+static int function(void)
 {
-  if (memmove (string2, string1, STRING_SIZE) == string2
-      && memcmp (string2, string1, STRING_SIZE) == 0)
-    return 0;
-  else
-    return 1;
+    if (memmove(string2, string1, STRING_SIZE) == string2
+        && memcmp(string2, string1, STRING_SIZE) == 0) {
+        return 0;
+    } else {
+        return 1;
+    }
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  return do_test_1 ("memmove", LOOP, prepare, function);
+    return do_test_1("memmove", LOOP, prepare, function);
 }

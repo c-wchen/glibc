@@ -22,9 +22,9 @@
 #include <stdlib.h>
 #include <support/check.h>
 
-void
-xconnect (int fd, const struct sockaddr *sa, socklen_t sa_len)
+void xconnect(int fd, const struct sockaddr *sa, socklen_t sa_len)
 {
-  if (connect (fd, sa, sa_len) != 0)
-    FAIL_EXIT1 ("connect (%d), family %d: %m", fd, sa->sa_family);
+    if (connect(fd, sa, sa_len) != 0) {
+        FAIL_EXIT1("connect (%d), family %d: %m", fd, sa->sa_family);
+    }
 }

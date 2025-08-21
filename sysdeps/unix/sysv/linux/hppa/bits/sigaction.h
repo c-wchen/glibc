@@ -26,20 +26,18 @@
 #include <bits/wordsize.h>
 
 /* Structure describing the action to be taken when a signal arrives.  */
-struct sigaction
-  {
+struct sigaction {
     /* Signal handler.  */
 #if defined __USE_POSIX199309 || defined __USE_XOPEN_EXTENDED
-    union
-      {
-	/* Used if SA_SIGINFO is not set.  */
-	__sighandler_t sa_handler;
-	/* Used if SA_SIGINFO is set.  */
-	void (*sa_sigaction) (int, siginfo_t *, void *);
-      }
+    union {
+        /* Used if SA_SIGINFO is not set.  */
+        __sighandler_t sa_handler;
+        /* Used if SA_SIGINFO is set.  */
+        void (*sa_sigaction)(int, siginfo_t *, void *);
+    }
     __sigaction_handler;
-# define sa_handler	__sigaction_handler.sa_handler
-# define sa_sigaction	__sigaction_handler.sa_sigaction
+# define sa_handler __sigaction_handler.sa_handler
+# define sa_sigaction   __sigaction_handler.sa_sigaction
 #else
     __sighandler_t sa_handler;
 #endif
@@ -52,21 +50,21 @@ struct sigaction
 
     /* Additional set of signals to be blocked.  */
     __sigset_t sa_mask;
-  };
+};
 
 /* Bits in `sa_flags'.  */
 
 #define SA_NOCLDSTOP  0x00000008  /* Don't send SIGCHLD when children stop.  */
 #define SA_NOCLDWAIT  0x00000080  /* Don't create zombie on child death.  */
 #define SA_SIGINFO    0x00000010  /* Invoke signal-catching function with
-				     three arguments instead of one.  */
+                     three arguments instead of one.  */
 #if defined __USE_XOPEN_EXTENDED || defined __USE_MISC
 # define SA_ONSTACK   0x00000001 /* Use signal stack by using `sa_restorer'. */
 #endif
 #if defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K8
 # define SA_RESETHAND 0x00000004 /* Reset to SIG_DFL on entry to handler.  */
 # define SA_NODEFER   0x00000020 /* Don't automatically block the signal
-				    when its handler is being executed.  */
+                    when its handler is being executed.  */
 # define SA_RESTART   0x00000040 /* Restart syscall on signal return.  */
 #endif
 #ifdef __USE_MISC
@@ -79,8 +77,8 @@ struct sigaction
 #endif
 
 /* Values for the HOW argument to `sigprocmask'.  */
-#define SIG_BLOCK          0	/* for blocking signals */
-#define SIG_UNBLOCK        1	/* for unblocking signals */
-#define SIG_SETMASK        2	/* for setting the signal mask */
+#define SIG_BLOCK          0    /* for blocking signals */
+#define SIG_UNBLOCK        1    /* for unblocking signals */
+#define SIG_SETMASK        2    /* for setting the signal mask */
 
 #endif

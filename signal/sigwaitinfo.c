@@ -19,13 +19,12 @@
 #include <errno.h>
 #include <signal.h>
 
-int
-__sigwaitinfo (const sigset_t *set, siginfo_t *info)
+int __sigwaitinfo(const sigset_t *set, siginfo_t *info)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (__sigwaitinfo)
-weak_alias (__sigwaitinfo, sigwaitinfo)
+libc_hidden_def(__sigwaitinfo)
+weak_alias(__sigwaitinfo, sigwaitinfo)
 
-stub_warning (sigwaitinfo)
+stub_warning(sigwaitinfo)

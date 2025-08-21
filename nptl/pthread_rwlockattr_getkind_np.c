@@ -18,17 +18,16 @@
 #include "pthreadP.h"
 #include <shlib-compat.h>
 
-int
-__pthread_rwlockattr_getkind_np (const pthread_rwlockattr_t *attr, int *pref)
+int __pthread_rwlockattr_getkind_np(const pthread_rwlockattr_t *attr, int *pref)
 {
-  *pref = ((const struct pthread_rwlockattr *) attr)->lockkind;
+    *pref = ((const struct pthread_rwlockattr *) attr)->lockkind;
 
-  return 0;
+    return 0;
 }
-versioned_symbol (libc, __pthread_rwlockattr_getkind_np,
-                  pthread_rwlockattr_getkind_np, GLIBC_2_34);
+versioned_symbol(libc, __pthread_rwlockattr_getkind_np,
+                 pthread_rwlockattr_getkind_np, GLIBC_2_34);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1, GLIBC_2_34)
-compat_symbol (libpthread, __pthread_rwlockattr_getkind_np,
-               pthread_rwlockattr_getkind_np, GLIBC_2_1);
+compat_symbol(libpthread, __pthread_rwlockattr_getkind_np,
+              pthread_rwlockattr_getkind_np, GLIBC_2_1);
 #endif

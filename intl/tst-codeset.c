@@ -23,31 +23,30 @@
 #include <string.h>
 #include <support/check.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  unsetenv ("LANGUAGE");
-  unsetenv ("OUTPUT_CHARSET");
-  setlocale (LC_ALL, "de_DE.ISO-8859-1");
-  textdomain ("codeset");
-  bindtextdomain ("codeset", OBJPFX "domaindir");
+    unsetenv("LANGUAGE");
+    unsetenv("OUTPUT_CHARSET");
+    setlocale(LC_ALL, "de_DE.ISO-8859-1");
+    textdomain("codeset");
+    bindtextdomain("codeset", OBJPFX "domaindir");
 
-  /* Here we expect output in ISO-8859-1.  */
-  TEST_COMPARE_STRING (gettext ("cheese"), "K\344se");
+    /* Here we expect output in ISO-8859-1.  */
+    TEST_COMPARE_STRING(gettext("cheese"), "K\344se");
 
-  /* Here we expect output in UTF-8.  */
-  bind_textdomain_codeset ("codeset", "UTF-8");
-  TEST_COMPARE_STRING (gettext ("cheese"), "K\303\244se");
+    /* Here we expect output in UTF-8.  */
+    bind_textdomain_codeset("codeset", "UTF-8");
+    TEST_COMPARE_STRING(gettext("cheese"), "K\303\244se");
 
-  /* `a with umlaut' is transliterated to `ae'.  */
-  bind_textdomain_codeset ("codeset", "ASCII//TRANSLIT");
-  TEST_COMPARE_STRING (gettext ("cheese"), "Kaese");
+    /* `a with umlaut' is transliterated to `ae'.  */
+    bind_textdomain_codeset("codeset", "ASCII//TRANSLIT");
+    TEST_COMPARE_STRING(gettext("cheese"), "Kaese");
 
-  /* Transliteration also works by default even if not set.  */
-  bind_textdomain_codeset ("codeset", "ASCII");
-  TEST_COMPARE_STRING (gettext ("cheese"), "Kaese");
+    /* Transliteration also works by default even if not set.  */
+    bind_textdomain_codeset("codeset", "ASCII");
+    TEST_COMPARE_STRING(gettext("cheese"), "Kaese");
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

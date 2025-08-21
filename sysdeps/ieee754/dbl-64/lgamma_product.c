@@ -26,27 +26,25 @@
    X_EPS / X is small enough that factors quadratic in it can be
    neglected.  */
 
-double
-__lgamma_product (double t, double x, double x_eps, int n)
+double __lgamma_product(double t, double x, double x_eps, int n)
 {
-  double ret = 0, ret_eps = 0;
-  for (int i = 0; i < n; i++)
-    {
-      double xi = x + i;
-      double quot = t / xi;
-      double mhi, mlo;
-      mul_split (&mhi, &mlo, quot, xi);
-      double quot_lo = (t - mhi - mlo) / xi - t * x_eps / (xi * xi);
-      /* We want (1 + RET + RET_EPS) * (1 + QUOT + QUOT_LO) - 1.  */
-      double rhi, rlo;
-      mul_split (&rhi, &rlo, ret, quot);
-      double rpq = ret + quot;
-      double rpq_eps = (ret - rpq) + quot;
-      double nret = rpq + rhi;
-      double nret_eps = (rpq - nret) + rhi;
-      ret_eps += (rpq_eps + nret_eps + rlo + ret_eps * quot
-		  + quot_lo + quot_lo * (ret + ret_eps));
-      ret = nret;
+    double ret = 0, ret_eps = 0;
+    for (int i = 0; i < n; i++) {
+        double xi = x + i;
+        double quot = t / xi;
+        double mhi, mlo;
+        mul_split(&mhi, &mlo, quot, xi);
+        double quot_lo = (t - mhi - mlo) / xi - t * x_eps / (xi * xi);
+        /* We want (1 + RET + RET_EPS) * (1 + QUOT + QUOT_LO) - 1.  */
+        double rhi, rlo;
+        mul_split(&rhi, &rlo, ret, quot);
+        double rpq = ret + quot;
+        double rpq_eps = (ret - rpq) + quot;
+        double nret = rpq + rhi;
+        double nret_eps = (rpq - nret) + rhi;
+        ret_eps += (rpq_eps + nret_eps + rlo + ret_eps * quot
+                    + quot_lo + quot_lo * (ret + ret_eps));
+        ret = nret;
     }
-  return ret + ret_eps;
+    return ret + ret_eps;
 }

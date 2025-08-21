@@ -26,9 +26,8 @@
    the caller, not the state of this `setjmp' frame which then
    immediate unwinds.  */
 
-int
-_setjmp (jmp_buf env)
+int _setjmp(jmp_buf env)
 {
-  return __sigsetjmp (env, 0);
+    return __sigsetjmp(env, 0);
 }
-libc_hidden_def (_setjmp)
+libc_hidden_def(_setjmp)

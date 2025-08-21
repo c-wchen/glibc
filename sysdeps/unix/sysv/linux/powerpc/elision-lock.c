@@ -36,46 +36,40 @@
    By default the lock region is run as a transaction, and when it
    aborts or the lock is busy the lock adapts itself.  */
 
-int
-__lll_lock_elision (int *lock, short *adapt_count, EXTRAARG int pshared)
+int __lll_lock_elision(int *lock, short *adapt_count, EXTRAARG int pshared)
 {
-  /* adapt_count is accessed concurrently but is just a hint.  Thus,
-     use atomic accesses but relaxed MO is sufficient.  */
-  if (atomic_load_relaxed (adapt_count) > 0)
-    {
-      goto use_lock;
+    /* adapt_count is accessed concurrently but is just a hint.  Thus,
+       use atomic accesses but relaxed MO is sufficient.  */
+    if (atomic_load_relaxed(adapt_count) > 0) {
+        goto use_lock;
     }
 
-  for (int i = aconf.try_tbegin; i > 0; i--)
-    {
-      if (__libc_tbegin (0))
-	{
-	  if (*lock == 0)
-	    return 0;
-	  /* Lock was busy.  Fall back to normal locking.  */
-	  __libc_tabort (_ABORT_LOCK_BUSY);
-	}
-      else
-	{
-	  /* A persistent failure indicates that a retry will probably
-	     result in another failure.  Use normal locking now and
-	     for the next couple of calls.  */
-	  if (_TEXASRU_FAILURE_PERSISTENT (__builtin_get_texasru ()))
-	    {
-	      if (aconf.skip_lock_internal_abort > 0)
-		atomic_store_relaxed (adapt_count,
-				      aconf.skip_lock_internal_abort);
-	      goto use_lock;
-	    }
-	}
-     }
+    for (int i = aconf.try_tbegin; i > 0; i--) {
+        if (__libc_tbegin(0)) {
+            if (*lock == 0) {
+                return 0;
+            }
+            /* Lock was busy.  Fall back to normal locking.  */
+            __libc_tabort(_ABORT_LOCK_BUSY);
+        } else {
+            /* A persistent failure indicates that a retry will probably
+               result in another failure.  Use normal locking now and
+               for the next couple of calls.  */
+            if (_TEXASRU_FAILURE_PERSISTENT(__builtin_get_texasru())) {
+                if (aconf.skip_lock_internal_abort > 0)
+                    atomic_store_relaxed(adapt_count,
+                                         aconf.skip_lock_internal_abort);
+                goto use_lock;
+            }
+        }
+    }
 
-  /* Fall back to locks for a bit if retries have been exhausted */
-  if (aconf.try_tbegin > 0 && aconf.skip_lock_out_of_tbegin_retries > 0)
-    atomic_store_relaxed (adapt_count,
-			  aconf.skip_lock_out_of_tbegin_retries);
+    /* Fall back to locks for a bit if retries have been exhausted */
+    if (aconf.try_tbegin > 0 && aconf.skip_lock_out_of_tbegin_retries > 0)
+        atomic_store_relaxed(adapt_count,
+                             aconf.skip_lock_out_of_tbegin_retries);
 
 use_lock:
-  return LLL_LOCK ((*lock), pshared);
+    return LLL_LOCK((*lock), pshared);
 }
-libc_hidden_def (__lll_lock_elision)
+libc_hidden_def(__lll_lock_elision)

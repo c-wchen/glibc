@@ -1,8 +1,7 @@
-extern void foo (void);
-extern void bar (void);
+extern void foo(void);
+extern void bar(void);
 
-void
-bar (void)
+void bar(void)
 {
-  foo ();
+    foo();
 }

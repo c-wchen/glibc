@@ -18,12 +18,12 @@
 #include <sys/poll.h>
 
 
-int
-__ppoll_chk (struct pollfd *fds, nfds_t nfds, const struct timespec *timeout,
-	     const __sigset_t *ss, __SIZE_TYPE__ fdslen)
+int __ppoll_chk(struct pollfd *fds, nfds_t nfds, const struct timespec *timeout,
+                const __sigset_t *ss, __SIZE_TYPE__ fdslen)
 {
-  if (fdslen / sizeof (*fds) < nfds)
-    __chk_fail ();
+    if (fdslen / sizeof(*fds) < nfds) {
+        __chk_fail();
+    }
 
-  return ppoll (fds, nfds, timeout, ss);
+    return ppoll(fds, nfds, timeout, ss);
 }

@@ -32,49 +32,48 @@
 #define TEST_MOD  "tst-audit25"
 #define TEST_FUNC "tst_audit25"
 
-unsigned int
-la_version (unsigned int version)
+unsigned int la_version(unsigned int version)
 {
-  return LAV_CURRENT;
+    return LAV_CURRENT;
 }
 
-unsigned int
-la_objopen (struct link_map *map, Lmid_t lmid, uintptr_t *cookie)
+unsigned int la_objopen(struct link_map *map, Lmid_t lmid, uintptr_t *cookie)
 {
-  const char *p = strrchr (map->l_name, '/');
-  const char *l_name = p == NULL ? TEST_NAME : p + 1;
+    const char *p = strrchr(map->l_name, '/');
+    const char *l_name = p == NULL ? TEST_NAME : p + 1;
 
-  uintptr_t ck = -1;
-  if (strcmp (l_name, TEST_MOD "mod1.so") == 0)
-    ck = AUDIT25MOD1_COOKIE;
-  else if (strcmp (l_name, TEST_MOD "mod2.so") == 0)
-    ck = AUDIT25MOD2_COOKIE;
-  else if (strcmp (l_name, TEST_MOD "mod3.so") == 0)
-    ck = AUDIT25MOD3_COOKIE;
-  else if (strcmp (l_name, TEST_MOD "mod4.so") == 0)
-    ck = AUDIT25MOD4_COOKIE;
-  else if (strncmp (l_name, TEST_NAME, strlen (TEST_NAME)) == 0)
-    ck = AUDIT25_COOKIE;
+    uintptr_t ck = -1;
+    if (strcmp(l_name, TEST_MOD "mod1.so") == 0) {
+        ck = AUDIT25MOD1_COOKIE;
+    } else if (strcmp(l_name, TEST_MOD "mod2.so") == 0) {
+        ck = AUDIT25MOD2_COOKIE;
+    } else if (strcmp(l_name, TEST_MOD "mod3.so") == 0) {
+        ck = AUDIT25MOD3_COOKIE;
+    } else if (strcmp(l_name, TEST_MOD "mod4.so") == 0) {
+        ck = AUDIT25MOD4_COOKIE;
+    } else if (strncmp(l_name, TEST_NAME, strlen(TEST_NAME)) == 0) {
+        ck = AUDIT25_COOKIE;
+    }
 
-  *cookie = ck;
-  return ck == -1 ? 0 : LA_FLG_BINDFROM | LA_FLG_BINDTO;
+    *cookie = ck;
+    return ck == -1 ? 0 : LA_FLG_BINDFROM | LA_FLG_BINDTO;
 }
 
 #if __ELF_NATIVE_CLASS == 64
 uintptr_t
-la_symbind64 (Elf64_Sym *sym, unsigned int ndx,
-	      uintptr_t *refcook, uintptr_t *defcook,
-	      unsigned int *flags, const char *symname)
+la_symbind64(Elf64_Sym *sym, unsigned int ndx,
+             uintptr_t *refcook, uintptr_t *defcook,
+             unsigned int *flags, const char *symname)
 #else
 uintptr_t
-la_symbind32 (Elf32_Sym *sym, unsigned int ndx,
-	      uintptr_t *refcook, uintptr_t *defcook,
-	      unsigned int *flags, const char *symname)
+la_symbind32(Elf32_Sym *sym, unsigned int ndx,
+             uintptr_t *refcook, uintptr_t *defcook,
+             unsigned int *flags, const char *symname)
 #endif
 {
-  if (*refcook != -1 && *defcook != -1 && symname[0] != '\0'
-      && (*flags & LA_SYMB_DLSYM) == 0)
-    fprintf (stderr, "la_symbind: %s %u\n", symname,
-	     *flags & (LA_SYMB_NOPLTENTER | LA_SYMB_NOPLTEXIT) ? 1 : 0);
-  return sym->st_value;
+    if (*refcook != -1 && *defcook != -1 && symname[0] != '\0'
+        && (*flags & LA_SYMB_DLSYM) == 0)
+        fprintf(stderr, "la_symbind: %s %u\n", symname,
+                *flags & (LA_SYMB_NOPLTENTER | LA_SYMB_NOPLTEXIT) ? 1 : 0);
+    return sym->st_value;
 }

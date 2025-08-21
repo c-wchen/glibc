@@ -20,5 +20,5 @@
 
 /* Lower-case digits.  */
 const char _itoa_lower_digits[36]
-	= "0123456789abcdefghijklmnopqrstuvwxyz";
-libc_hidden_data_def (_itoa_lower_digits)
+    = "0123456789abcdefghijklmnopqrstuvwxyz";
+libc_hidden_data_def(_itoa_lower_digits)

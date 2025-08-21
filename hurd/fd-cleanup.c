@@ -22,12 +22,12 @@
 /* We were cancelled while using an fd, and called from the cleanup unwinding.
  */
 
-void
-_hurd_fd_port_use_cleanup (void *arg)
+void _hurd_fd_port_use_cleanup(void *arg)
 {
-  struct _hurd_fd_port_use_data *data = arg;
+    struct _hurd_fd_port_use_data *data = arg;
 
-  _hurd_port_free (&data->d->port, &data->ulink, data->port);
-  if (data->ctty != MACH_PORT_NULL)
-    _hurd_port_free (&data->d->ctty, &data->ctty_ulink, data->ctty);
+    _hurd_port_free(&data->d->port, &data->ulink, data->port);
+    if (data->ctty != MACH_PORT_NULL) {
+        _hurd_port_free(&data->d->ctty, &data->ctty_ulink, data->ctty);
+    }
 }

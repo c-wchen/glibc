@@ -26,33 +26,34 @@
 # include <string.h>
 # include <init-arch.h>
 
-extern __typeof (__redirect_memmove) __libc_memmove;
+extern __typeof(__redirect_memmove) __libc_memmove;
 
-extern __typeof (__redirect_memmove) __memmove_generic attribute_hidden;
-extern __typeof (__redirect_memmove) __memmove_a64fx attribute_hidden;
-extern __typeof (__redirect_memmove) __memmove_sve attribute_hidden;
-extern __typeof (__redirect_memmove) __memmove_mops attribute_hidden;
+extern __typeof(__redirect_memmove) __memmove_generic attribute_hidden;
+extern __typeof(__redirect_memmove) __memmove_a64fx attribute_hidden;
+extern __typeof(__redirect_memmove) __memmove_sve attribute_hidden;
+extern __typeof(__redirect_memmove) __memmove_mops attribute_hidden;
 
-static inline __typeof (__redirect_memmove) *
-select_memmove_ifunc (void)
+static inline __typeof(__redirect_memmove) *
+select_memmove_ifunc(void)
 {
-  INIT_ARCH ();
+    INIT_ARCH();
 
-  if (mops)
-    return __memmove_mops;
-
-  if (sve)
-    {
-      if (IS_A64FX (midr))
-	return __memmove_a64fx;
-      return prefer_sve_ifuncs ? __memmove_sve : __memmove_generic;
+    if (mops) {
+        return __memmove_mops;
     }
 
-  return __memmove_generic;
+    if (sve) {
+        if (IS_A64FX(midr)) {
+            return __memmove_a64fx;
+        }
+        return prefer_sve_ifuncs ? __memmove_sve : __memmove_generic;
+    }
+
+    return __memmove_generic;
 }
 
-libc_ifunc (__libc_memmove, select_memmove_ifunc ());
+libc_ifunc(__libc_memmove, select_memmove_ifunc());
 
 # undef memmove
-strong_alias (__libc_memmove, memmove);
+strong_alias(__libc_memmove, memmove);
 #endif

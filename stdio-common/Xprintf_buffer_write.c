@@ -21,24 +21,25 @@
 #include <assert.h>
 #include <string.h>
 
-void
-Xprintf_buffer_write (struct Xprintf_buffer *buf,
-                        const CHAR_T *s, size_t count)
+void Xprintf_buffer_write(struct Xprintf_buffer *buf,
+                          const CHAR_T *s, size_t count)
 {
-  if (__glibc_unlikely (Xprintf_buffer_has_failed (buf)))
-    return;
-
-  while (count > 0)
-    {
-      if (buf->write_ptr == buf->write_end && !Xprintf_buffer_flush (buf))
+    if (__glibc_unlikely(Xprintf_buffer_has_failed(buf))) {
         return;
-      assert (buf->write_ptr != buf->write_end);
-      size_t to_copy = buf->write_end - buf->write_ptr;
-      if (to_copy > count)
-        to_copy = count;
-      MEMCPY (buf->write_ptr, s, to_copy);
-      buf->write_ptr += to_copy;
-      s += to_copy;
-      count -= to_copy;
+    }
+
+    while (count > 0) {
+        if (buf->write_ptr == buf->write_end && !Xprintf_buffer_flush(buf)) {
+            return;
+        }
+        assert(buf->write_ptr != buf->write_end);
+        size_t to_copy = buf->write_end - buf->write_ptr;
+        if (to_copy > count) {
+            to_copy = count;
+        }
+        MEMCPY(buf->write_ptr, s, to_copy);
+        buf->write_ptr += to_copy;
+        s += to_copy;
+        count -= to_copy;
     }
 }

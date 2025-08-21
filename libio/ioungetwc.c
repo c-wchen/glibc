@@ -27,17 +27,17 @@
 #include "libioP.h"
 #include <wchar.h>
 
-wint_t
-ungetwc (wint_t c, FILE *fp)
+wint_t ungetwc(wint_t c, FILE *fp)
 {
-  wint_t result;
-  CHECK_FILE (fp, WEOF);
-  _IO_acquire_lock (fp);
-  _IO_fwide (fp, 1);
-  if (c == WEOF)
-    result = WEOF;
-  else
-    result = _IO_sputbackwc (fp, c);
-  _IO_release_lock (fp);
-  return result;
+    wint_t result;
+    CHECK_FILE(fp, WEOF);
+    _IO_acquire_lock(fp);
+    _IO_fwide(fp, 1);
+    if (c == WEOF) {
+        result = WEOF;
+    } else {
+        result = _IO_sputbackwc(fp, c);
+    }
+    _IO_release_lock(fp);
+    return result;
 }

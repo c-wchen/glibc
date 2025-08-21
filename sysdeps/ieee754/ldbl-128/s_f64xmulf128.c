@@ -26,14 +26,13 @@
    type.  */
 #undef _Float128
 
-_Float64x
-__f64xmulf128 (_Float128 x, _Float128 y)
+_Float64x __f64xmulf128(_Float128 x, _Float128 y)
 {
 #if __HAVE_FLOAT64X_LONG_DOUBLE && __HAVE_DISTINCT_FLOAT128
-  NARROW_MUL_ROUND_TO_ODD (x, y, _Float64x, union ieee854_long_double, l,
-			   mantissa3, TININESS_AFTER_ROUNDING);
+    NARROW_MUL_ROUND_TO_ODD(x, y, _Float64x, union ieee854_long_double, l,
+                            mantissa3, TININESS_AFTER_ROUNDING);
 #else
-  NARROW_MUL_TRIVIAL (x, y, _Float64x);
+    NARROW_MUL_TRIVIAL(x, y, _Float64x);
 #endif
 }
-libm_alias_float64x_float128 (mul)
+libm_alias_float64x_float128(mul)

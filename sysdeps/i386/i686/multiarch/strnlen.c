@@ -28,7 +28,7 @@
 # define SYMBOL_NAME strnlen
 # include "ifunc-sse2.h"
 
-libc_ifunc_redirected (__redirect_strnlen, __strnlen, IFUNC_SELECTOR ());
+libc_ifunc_redirected(__redirect_strnlen, __strnlen, IFUNC_SELECTOR());
 
-weak_alias (__strnlen, strnlen);
+weak_alias(__strnlen, strnlen);
 #endif

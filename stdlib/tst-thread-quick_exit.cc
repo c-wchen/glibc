@@ -21,45 +21,43 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct A
-{
-  ~A () { abort (); }
+struct A {
+    ~A()
+    {
+        abort();
+    }
 };
 
 thread_local A a1;
 thread_local A a2;
 
 void
-__attribute_optimization_barrier__
-optimization_barrier (A &)
+__attribute_optimization_barrier__ optimization_barrier(A &)
 {
 }
 
 /* Call std::quick_exit from a non-main thread.  */
-void *
-non_main_thread (void *)
+void *non_main_thread(void *)
 {
-  optimization_barrier (a1);
-  /* The C++11 standard in 18.5.12 says:
-     "Objects shall not be destroyed as a result of calling
-      quick_exit."
-     If quick_exit calls the destructors the test aborts.  */
-  quick_exit (0);
+    optimization_barrier(a1);
+    /* The C++11 standard in 18.5.12 says:
+       "Objects shall not be destroyed as a result of calling
+        quick_exit."
+       If quick_exit calls the destructors the test aborts.  */
+    quick_exit(0);
 }
 
-static int
-do_test()
+static int do_test()
 {
-  optimization_barrier (a2);
-  pthread_t thr;
-  int ret = pthread_create (&thr, NULL, non_main_thread, NULL);
-  if (ret != 0)
-    {
-      errno = ret;
-      printf ("error: pthread_create: %m\n");
+    optimization_barrier(a2);
+    pthread_t thr;
+    int ret = pthread_create(&thr, NULL, non_main_thread, NULL);
+    if (ret != 0) {
+        errno = ret;
+        printf("error: pthread_create: %m\n");
     }
-  pthread_join (thr, NULL);
-  return 1;
+    pthread_join(thr, NULL);
+    return 1;
 }
 
 #define TEST_FUNCTION do_test ()

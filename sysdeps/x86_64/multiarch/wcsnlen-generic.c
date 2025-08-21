@@ -26,7 +26,7 @@
 #  define WCSNLEN __wcsnlen_generic
 # endif
 
-extern __typeof (wcsnlen) __wcsnlen_generic;
+extern __typeof(wcsnlen) __wcsnlen_generic;
 
 # include "wcsmbs/wcsnlen.c"
 

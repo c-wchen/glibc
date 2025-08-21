@@ -19,35 +19,34 @@
 #include <malloc.h>
 #include <string.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* Do two allocation of any size that fit in tcache, and one that
-     doesn't.  */
-  int ** volatile a = malloc (32);
-  int ** volatile b = malloc (32);
-  /* This is just under the mmap threshold.  */
-  int ** volatile c = malloc (127 * 1024);
+    /* Do two allocation of any size that fit in tcache, and one that
+       doesn't.  */
+    int **volatile a = malloc(32);
+    int **volatile b = malloc(32);
+    /* This is just under the mmap threshold.  */
+    int **volatile c = malloc(127 * 1024);
 
-  /* The invalid "tcache bucket" we might dereference will likely end
-     up somewhere within this memory block, so make all the accidental
-     "next" pointers cause segfaults.  BZ #23907.  */
-  memset (c, 0xff, 127 * 1024);
+    /* The invalid "tcache bucket" we might dereference will likely end
+       up somewhere within this memory block, so make all the accidental
+       "next" pointers cause segfaults.  BZ #23907.  */
+    memset(c, 0xff, 127 * 1024);
 
-  free (a); // puts in tcache
+    free(a);  // puts in tcache
 
-  /* A is now free and contains the key we use to detect in-tcache.
-     Copy the key to the other chunks.  */
-  memcpy (b, a, 32);
-  memcpy (c, a, 32);
+    /* A is now free and contains the key we use to detect in-tcache.
+       Copy the key to the other chunks.  */
+    memcpy(b, a, 32);
+    memcpy(c, a, 32);
 
-  /* This free tests the "are we in the tcache already" loop with a
-     VALID bin but "coincidental" matching key.  */
-  free (b); // should NOT abort
-  /* This free tests the "is it a valid tcache bin" test.  */
-  free (c); // should NOT abort
+    /* This free tests the "are we in the tcache already" loop with a
+       VALID bin but "coincidental" matching key.  */
+    free(b);  // should NOT abort
+    /* This free tests the "is it a valid tcache bin" test.  */
+    free(c);  // should NOT abort
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

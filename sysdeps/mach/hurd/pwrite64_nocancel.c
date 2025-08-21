@@ -22,14 +22,14 @@
 #include <hurd/fd.h>
 #include <not-cancel.h>
 
-ssize_t
-__pwrite64_nocancel (int fd, const void *buf, size_t nbytes, off64_t offset)
+ssize_t __pwrite64_nocancel(int fd, const void *buf, size_t nbytes, off64_t offset)
 {
-  error_t err;
-  if (offset < 0)
-    err = EINVAL;
-  else
-    err = HURD_FD_USE (fd, _hurd_fd_write (descriptor, buf, &nbytes, offset));
-  return err ? __hurd_dfail (fd, err) : nbytes;
+    error_t err;
+    if (offset < 0) {
+        err = EINVAL;
+    } else {
+        err = HURD_FD_USE(fd, _hurd_fd_write(descriptor, buf, &nbytes, offset));
+    }
+    return err ? __hurd_dfail(fd, err) : nbytes;
 }
-libc_hidden_weak (__pwrite64_nocancel)
+libc_hidden_weak(__pwrite64_nocancel)

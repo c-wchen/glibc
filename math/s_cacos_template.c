@@ -20,35 +20,33 @@
 #include <math.h>
 
 CFLOAT
-M_DECL_FUNC (__cacos) (CFLOAT x)
+M_DECL_FUNC(__cacos)(CFLOAT x)
 {
-  CFLOAT y;
-  CFLOAT res;
-  int rcls = fpclassify (__real__ x);
-  int icls = fpclassify (__imag__ x);
+    CFLOAT y;
+    CFLOAT res;
+    int rcls = fpclassify(__real__ x);
+    int icls = fpclassify(__imag__ x);
 
-  if (rcls <= FP_INFINITE || icls <= FP_INFINITE
-      || (rcls == FP_ZERO && icls == FP_ZERO))
-    {
-      y = M_SUF (__casin) (x);
+    if (rcls <= FP_INFINITE || icls <= FP_INFINITE
+        || (rcls == FP_ZERO && icls == FP_ZERO)) {
+        y = M_SUF(__casin)(x);
 
-      __real__ res = M_MLIT (M_PI_2) - __real__ y;
-      if (__real__ res == 0)
-	__real__ res = 0;
-      __imag__ res = -__imag__ y;
-    }
-  else
-    {
-      __real__ y = -__imag__ x;
-      __imag__ y = __real__ x;
+        __real__ res = M_MLIT(M_PI_2) - __real__ y;
+        if (__real__ res == 0) {
+            __real__ res = 0;
+        }
+        __imag__ res = -__imag__ y;
+    } else {
+        __real__ y = -__imag__ x;
+        __imag__ y = __real__ x;
 
-      y = M_SUF (__kernel_casinh) (y, 1);
+        y = M_SUF(__kernel_casinh)(y, 1);
 
-      __real__ res = __imag__ y;
-      __imag__ res = __real__ y;
+        __real__ res = __imag__ y;
+        __imag__ res = __real__ y;
     }
 
-  return res;
+    return res;
 }
 
-declare_mgen_alias (__cacos, cacos);
+declare_mgen_alias(__cacos, cacos);

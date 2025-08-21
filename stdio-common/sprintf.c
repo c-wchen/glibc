@@ -20,18 +20,17 @@
 
 /* Write formatted output into S, according to the format string FORMAT.  */
 /* VARARGS2 */
-int
-__sprintf (char *s, const char *format, ...)
+int __sprintf(char *s, const char *format, ...)
 {
-  va_list arg;
-  int done;
+    va_list arg;
+    int done;
 
-  va_start (arg, format);
-  done = __vsprintf_internal (s, -1, format, arg, 0);
-  va_end (arg);
+    va_start(arg, format);
+    done = __vsprintf_internal(s, -1, format, arg, 0);
+    va_end(arg);
 
-  return done;
+    return done;
 }
-ldbl_hidden_def (__sprintf, sprintf)
-ldbl_strong_alias (__sprintf, sprintf)
-ldbl_strong_alias (__sprintf, _IO_sprintf)
+ldbl_hidden_def(__sprintf, sprintf)
+ldbl_strong_alias(__sprintf, sprintf)
+ldbl_strong_alias(__sprintf, _IO_sprintf)

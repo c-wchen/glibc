@@ -22,8 +22,7 @@
 #include <sys/syscall.h>
 
 /* Call kernel with additional two arguments the syscall requires.  */
-int
-reboot (int howto)
+int reboot(int howto)
 {
-  return INLINE_SYSCALL (reboot, 3, (int) 0xfee1dead, 672274793, howto);
+    return INLINE_SYSCALL(reboot, 3, (int) 0xfee1dead, 672274793, howto);
 }

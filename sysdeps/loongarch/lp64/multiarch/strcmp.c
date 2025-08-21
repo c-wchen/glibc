@@ -26,10 +26,10 @@
 # define SYMBOL_NAME strcmp
 # include "ifunc-strcmp.h"
 
-libc_ifunc_redirected (__redirect_strcmp, strcmp, IFUNC_SELECTOR ());
+libc_ifunc_redirected(__redirect_strcmp, strcmp, IFUNC_SELECTOR());
 
 # ifdef SHARED
-__hidden_ver1 (strcmp, __GI_strcmp, __redirect_strcmp)
-  __attribute__ ((visibility ("hidden"))) __attribute_copy__ (strcmp);
+__hidden_ver1(strcmp, __GI_strcmp, __redirect_strcmp)
+__attribute__((visibility("hidden"))) __attribute_copy__(strcmp);
 # endif
 #endif

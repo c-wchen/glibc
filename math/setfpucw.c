@@ -19,18 +19,17 @@
 #include <math.h>
 #include <fpu_control.h>
 
-void
-__setfpucw (fpu_control_t set)
+void __setfpucw(fpu_control_t set)
 {
-  fpu_control_t cw;
+    fpu_control_t cw;
 
-  /* Fetch the current control word.  */
-  _FPU_GETCW (cw);
+    /* Fetch the current control word.  */
+    _FPU_GETCW(cw);
 
-  /* Preserve the reserved bits, and set the rest as the user
-     specified (or the default, if the user gave zero).  */
-  cw &= _FPU_RESERVED;
-  cw |= set & ~_FPU_RESERVED;
+    /* Preserve the reserved bits, and set the rest as the user
+       specified (or the default, if the user gave zero).  */
+    cw &= _FPU_RESERVED;
+    cw |= set & ~_FPU_RESERVED;
 
-  _FPU_SETCW (cw);
+    _FPU_SETCW(cw);
 }

@@ -22,34 +22,31 @@
 #include <string.h>
 
 /* Return 0 if the test passed, 1 for failed.  */
-static int
-test_locale (char *locale, char *paramstr, int param, char *expected)
+static int test_locale(char *locale, char *paramstr, int param, char *expected)
 {
-  char *actual;
-  locale_t loc;
-  int result = 0;
+    char *actual;
+    locale_t loc;
+    int result = 0;
 
-  loc = newlocale (LC_ALL_MASK, locale, 0);
-  if (loc == NULL)
-    {
-      puts (": failed to create new locale");
-      return 1;
+    loc = newlocale(LC_ALL_MASK, locale, 0);
+    if (loc == NULL) {
+        puts(": failed to create new locale");
+        return 1;
     }
 
-  printf ("nl_langinfo_l(%s, %s [%p])", paramstr, locale, loc);
-  actual = nl_langinfo_l(param, loc);
-  printf (" = \"%s\", ", actual);
+    printf("nl_langinfo_l(%s, %s [%p])", paramstr, locale, loc);
+    actual = nl_langinfo_l(param, loc);
+    printf(" = \"%s\", ", actual);
 
-  if (strcmp (actual, expected) == 0)
-    puts ("OK");
-  else
-    {
-      printf ("FAILED (expected: %s)\n", expected);
-      result = 1;
+    if (strcmp(actual, expected) == 0) {
+        puts("OK");
+    } else {
+        printf("FAILED (expected: %s)\n", expected);
+        result = 1;
     }
 
-  freelocale (loc);
-  return result;
+    freelocale(loc);
+    return result;
 }
 
 #include <tst-langinfo.c>

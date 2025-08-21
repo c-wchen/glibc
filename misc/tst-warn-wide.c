@@ -37,52 +37,50 @@
   "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 
 
-static void
-one_test (const char *message, int error_code, const wchar_t *expected)
+static void one_test(const char *message, int error_code, const wchar_t *expected)
 {
-  wchar_t *buffer = NULL;
-  size_t length = 0;
-  FILE *fp = open_wmemstream (&buffer, &length);
-  TEST_VERIFY_EXIT (fp != NULL);
-  FILE *old_stderr = stderr;
-  stderr = fp;
-  errno = error_code;
-  switch (error_code)
-    {
-    case E2BIG:
-      warn ("%s with padding " PADDING, message);
-      break;
-    case EAGAIN:
-      warn ("%s", message);
-      break;
-    case -1:
-      warnx ("%s", message);
-      break;
-    case -2:
-      warnx ("%s with padding " PADDING, message);
-      break;
+    wchar_t *buffer = NULL;
+    size_t length = 0;
+    FILE *fp = open_wmemstream(&buffer, &length);
+    TEST_VERIFY_EXIT(fp != NULL);
+    FILE *old_stderr = stderr;
+    stderr = fp;
+    errno = error_code;
+    switch (error_code) {
+        case E2BIG:
+            warn("%s with padding " PADDING, message);
+            break;
+        case EAGAIN:
+            warn("%s", message);
+            break;
+        case -1:
+            warnx("%s", message);
+            break;
+        case -2:
+            warnx("%s with padding " PADDING, message);
+            break;
     }
-  stderr = old_stderr;
-  TEST_VERIFY_EXIT (!ferror (fp));
-  TEST_COMPARE (fclose (fp), 0);
-  if (wcscmp (buffer, expected) != 0)
-    FAIL_EXIT1 ("unexpected output: %ls", buffer);
-  free (buffer);
+    stderr = old_stderr;
+    TEST_VERIFY_EXIT(!ferror(fp));
+    TEST_COMPARE(fclose(fp), 0);
+    if (wcscmp(buffer, expected) != 0) {
+        FAIL_EXIT1("unexpected output: %ls", buffer);
+    }
+    free(buffer);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  one_test ("no errno", -1,
-            L"tst-warn-wide: no errno\n");
-  one_test ("no errno", -2,
-            L"tst-warn-wide: no errno with padding " PADDING "\n");
-  one_test ("with errno", EAGAIN,
-            L"tst-warn-wide: with errno: Resource temporarily unavailable\n");
-  one_test ("with errno", E2BIG,
-            L"tst-warn-wide: with errno with padding " PADDING
-            ": Argument list too long\n");
-  return 0;
+    one_test("no errno", -1,
+             L"tst-warn-wide: no errno\n");
+    one_test("no errno", -2,
+             L"tst-warn-wide: no errno with padding " PADDING "\n");
+    one_test("with errno", EAGAIN,
+             L"tst-warn-wide: with errno: Resource temporarily unavailable\n");
+    one_test("with errno", E2BIG,
+             L"tst-warn-wide: with errno with padding " PADDING
+             ": Argument list too long\n");
+    return 0;
 }
 
 #include <support/test-driver.c>

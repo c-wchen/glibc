@@ -44,9 +44,8 @@
 #define IMPL_NAME        _IMPL_NAME(FUNC_NAME, impl)
 #include <w_ilogb-impl.h>
 
-RET_TYPE
-DECL_NAME (double x)
+RET_TYPE DECL_NAME(double x)
 {
-  return IMPL_NAME (x);
+    return IMPL_NAME(x);
 }
-libm_alias_double (DECL_NAME, FUNC_NAME)
+libm_alias_double(DECL_NAME, FUNC_NAME)

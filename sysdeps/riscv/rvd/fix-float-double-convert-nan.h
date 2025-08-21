@@ -23,15 +23,13 @@
 
 /* RISC-V rvd instructions do not preserve the signbit of NAN
    when converting from float to double.  */
-static inline double
-keep_sign_conversion (float flt)
+static inline double keep_sign_conversion(float flt)
 {
-  if (__glibc_unlikely (isnan (flt)))
-  {
-    float x = copysignf (1.f, flt);
-    return copysign ((double) flt, (double) x);
-  }
-  return flt;
+    if (__glibc_unlikely(isnan(flt))) {
+        float x = copysignf(1.f, flt);
+        return copysign((double) flt, (double) x);
+    }
+    return flt;
 }
 
 #endif

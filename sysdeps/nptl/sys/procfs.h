@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _SYS_PROCFS_H
-#define _SYS_PROCFS_H	1
+#define _SYS_PROCFS_H   1
 
 #include <sys/types.h>
 

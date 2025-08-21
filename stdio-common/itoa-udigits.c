@@ -20,5 +20,5 @@
 
 /* Upper-case digits.  */
 const char _itoa_upper_digits[36]
-	= "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-libc_hidden_data_def (_itoa_upper_digits)
+    = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+libc_hidden_data_def(_itoa_upper_digits)

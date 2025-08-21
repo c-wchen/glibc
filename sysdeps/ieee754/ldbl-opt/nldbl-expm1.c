@@ -1,8 +1,7 @@
 #include "nldbl-compat.h"
 
 double
-attribute_hidden
-expm1l (double x)
+attribute_hidden expm1l(double x)
 {
-  return expm1 (x);
+    return expm1(x);
 }

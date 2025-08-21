@@ -20,10 +20,11 @@
 #include <math.h>
 
 FLOAT
-M_DECL_FUNC (__rsqrt) (FLOAT x)
+M_DECL_FUNC(__rsqrt)(FLOAT x)
 {
-  if (islessequal (x, M_LIT (0.0)))
-    __set_errno (x < 0 ? EDOM : ERANGE);
-  return M_LIT (1.0) / M_SQRT (x);
+    if (islessequal(x, M_LIT(0.0))) {
+        __set_errno(x < 0 ? EDOM : ERANGE);
+    }
+    return M_LIT(1.0) / M_SQRT(x);
 }
-declare_mgen_alias (__rsqrt, rsqrt);
+declare_mgen_alias(__rsqrt, rsqrt);

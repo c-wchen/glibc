@@ -19,57 +19,51 @@
 #include <tls.h>
 #include <libc-lock.h>
 
-void
-__libc_cleanup_push_defer (struct _pthread_cleanup_buffer *buffer)
+void __libc_cleanup_push_defer(struct _pthread_cleanup_buffer *buffer)
 {
-  struct pthread *self = THREAD_SELF;
+    struct pthread *self = THREAD_SELF;
 
-  buffer->__prev = THREAD_GETMEM (self, cleanup);
+    buffer->__prev = THREAD_GETMEM(self, cleanup);
 
-  int cancelhandling = atomic_load_relaxed (&self->cancelhandling);
+    int cancelhandling = atomic_load_relaxed(&self->cancelhandling);
 
-  /* Disable asynchronous cancellation for now.  */
-  if (__glibc_unlikely (cancelhandling & CANCELTYPE_BITMASK))
-    {
-      int newval;
-      do
-	{
-	  newval = cancelhandling & ~CANCELTYPE_BITMASK;
-	}
-      while (!atomic_compare_exchange_weak_acquire (&self->cancelhandling,
-						    &cancelhandling,
-						    newval));
+    /* Disable asynchronous cancellation for now.  */
+    if (__glibc_unlikely(cancelhandling & CANCELTYPE_BITMASK)) {
+        int newval;
+        do {
+            newval = cancelhandling & ~CANCELTYPE_BITMASK;
+        } while (!atomic_compare_exchange_weak_acquire(&self->cancelhandling,
+                 &cancelhandling,
+                 newval));
     }
 
-  buffer->__canceltype = (cancelhandling & CANCELTYPE_BITMASK
-			  ? PTHREAD_CANCEL_ASYNCHRONOUS
-			  : PTHREAD_CANCEL_DEFERRED);
+    buffer->__canceltype = (cancelhandling & CANCELTYPE_BITMASK
+                            ? PTHREAD_CANCEL_ASYNCHRONOUS
+                            : PTHREAD_CANCEL_DEFERRED);
 
-  THREAD_SETMEM (self, cleanup, buffer);
+    THREAD_SETMEM(self, cleanup, buffer);
 }
-libc_hidden_def (__libc_cleanup_push_defer)
+libc_hidden_def(__libc_cleanup_push_defer)
 
 void
-__libc_cleanup_pop_restore (struct _pthread_cleanup_buffer *buffer)
+__libc_cleanup_pop_restore(struct _pthread_cleanup_buffer *buffer)
 {
-  struct pthread *self = THREAD_SELF;
+    struct pthread *self = THREAD_SELF;
 
-  THREAD_SETMEM (self, cleanup, buffer->__prev);
+    THREAD_SETMEM(self, cleanup, buffer->__prev);
 
-  int cancelhandling = atomic_load_relaxed (&self->cancelhandling);
-  if (buffer->__canceltype != PTHREAD_CANCEL_DEFERRED
-      && (cancelhandling & CANCELTYPE_BITMASK) == 0)
-    {
-      int newval;
-      do
-	{
-	  newval = cancelhandling | CANCELTYPE_BITMASK;
-	}
-      while (!atomic_compare_exchange_weak_acquire (&self->cancelhandling,
-						    &cancelhandling, newval));
+    int cancelhandling = atomic_load_relaxed(&self->cancelhandling);
+    if (buffer->__canceltype != PTHREAD_CANCEL_DEFERRED
+        && (cancelhandling & CANCELTYPE_BITMASK) == 0) {
+        int newval;
+        do {
+            newval = cancelhandling | CANCELTYPE_BITMASK;
+        } while (!atomic_compare_exchange_weak_acquire(&self->cancelhandling,
+                 &cancelhandling, newval));
 
-      if (cancel_enabled_and_canceled (cancelhandling))
-	__do_cancel (PTHREAD_CANCELED);
+        if (cancel_enabled_and_canceled(cancelhandling)) {
+            __do_cancel(PTHREAD_CANCELED);
+        }
     }
 }
-libc_hidden_def (__libc_cleanup_pop_restore)
+libc_hidden_def(__libc_cleanup_pop_restore)

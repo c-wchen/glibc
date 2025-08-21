@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _HURD_THREADVAR_H
-#define	_HURD_THREADVAR_H
+#define _HURD_THREADVAR_H
 
 #include <features.h>
 #include <tls.h>
@@ -29,4 +29,4 @@
 extern unsigned long int __hurd_sigthread_stack_base;
 extern unsigned long int __hurd_sigthread_stack_end;
 
-#endif	/* hurd/threadvar.h */
+#endif  /* hurd/threadvar.h */

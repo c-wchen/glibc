@@ -22,26 +22,25 @@
 #include <sys/stat.h>
 #include <sys/time.h>
 
-static int
-test_futimens_helper (const char *file, int fd, const struct timeval *tv)
+static int test_futimens_helper(const char *file, int fd, const struct timeval *tv)
 {
-  int r = futimes (fd, tv);
-  TEST_VERIFY_EXIT (r == 0);
+    int r = futimes(fd, tv);
+    TEST_VERIFY_EXIT(r == 0);
 
-  struct statx st;
-  xstatx (fd, "", AT_EMPTY_PATH, STATX_BASIC_STATS, &st);
+    struct statx st;
+    xstatx(fd, "", AT_EMPTY_PATH, STATX_BASIC_STATS, &st);
 
-  /* Check if seconds for atime match */
-  TEST_COMPARE (st.stx_atime.tv_sec, tv[0].tv_sec);
+    /* Check if seconds for atime match */
+    TEST_COMPARE(st.stx_atime.tv_sec, tv[0].tv_sec);
 
-  /* Check if seconds for mtime match */
-  TEST_COMPARE (st.stx_mtime.tv_sec, tv[1].tv_sec);
+    /* Check if seconds for mtime match */
+    TEST_COMPARE(st.stx_mtime.tv_sec, tv[1].tv_sec);
 
-  return 0;
+    return 0;
 }
 
 #define TEST_CALL(fname, fd, lname, v1, v2) \
   test_futimens_helper (fname, fd, (struct timeval[]) { { v1, 0 }, \
-							{ v2, 0 } })
+                            { v2, 0 } })
 
 #include "tst-utimensat-skeleton.c"

@@ -20,13 +20,13 @@
 #if MINIMUM_X86_ISA_LEVEL < AVX2_X86_ISA_LEVEL
 # include <libm-alias-double.h>
 
-extern double __redirect_tan (double);
+extern double __redirect_tan(double);
 
 # define SYMBOL_NAME tan
 # include "ifunc-avx-fma4.h"
 
-libc_ifunc_redirected (__redirect_tan, __tan, IFUNC_SELECTOR ());
-libm_alias_double (__tan, tan)
+libc_ifunc_redirected(__redirect_tan, __tan, IFUNC_SELECTOR());
+libm_alias_double(__tan, tan)
 
 # define __tan __tan_sse2
 #endif

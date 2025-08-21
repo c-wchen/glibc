@@ -19,28 +19,26 @@
 #ifndef _THREAD_MUTEX_INTERNAL_H
 #define _THREAD_MUTEX_INTERNAL_H 1
 
-struct __pthread_mutex_s
-{
-  int __lock;
-  unsigned int __count;
-  int __owner;
+struct __pthread_mutex_s {
+    int __lock;
+    unsigned int __count;
+    int __owner;
 #if _MIPS_SIM == _ABI64
-  unsigned int __nusers;
+    unsigned int __nusers;
 #endif
-  /* KIND must stay at this position in the structure to maintain
-     binary compatibility with static initializers.  */
-  int __kind;
+    /* KIND must stay at this position in the structure to maintain
+       binary compatibility with static initializers.  */
+    int __kind;
 #if _MIPS_SIM == _ABI64
-  int __spins;
-  __pthread_list_t __list;
+    int __spins;
+    __pthread_list_t __list;
 # define __PTHREAD_MUTEX_HAVE_PREV      1
 #else
-  unsigned int __nusers;
-  __extension__ union
-  {
-    int __spins;
-    __pthread_slist_t __list;
-  };
+    unsigned int __nusers;
+    __extension__ union {
+        int __spins;
+        __pthread_slist_t __list;
+    };
 # define __PTHREAD_MUTEX_HAVE_PREV      0
 #endif
 };

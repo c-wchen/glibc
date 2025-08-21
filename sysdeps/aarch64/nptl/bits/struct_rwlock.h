@@ -20,19 +20,18 @@
 #ifndef _RWLOCK_INTERNAL_H
 #define _RWLOCK_INTERNAL_H
 
-struct __pthread_rwlock_arch_t
-{
-  unsigned int __readers;
-  unsigned int __writers;
-  unsigned int __wrphase_futex;
-  unsigned int __writers_futex;
-  unsigned int __pad3;
-  unsigned int __pad4;
-  int __cur_writer;
-  int __shared;
-  unsigned long int __pad1;
-  unsigned long int __pad2;
-  unsigned int __flags;
+struct __pthread_rwlock_arch_t {
+    unsigned int __readers;
+    unsigned int __writers;
+    unsigned int __wrphase_futex;
+    unsigned int __writers_futex;
+    unsigned int __pad3;
+    unsigned int __pad4;
+    int __cur_writer;
+    int __shared;
+    unsigned long int __pad1;
+    unsigned long int __pad2;
+    unsigned int __flags;
 };
 
 #define __PTHREAD_RWLOCK_INITIALIZER(__flags) \

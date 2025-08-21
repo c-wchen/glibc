@@ -18,7 +18,6 @@
 
 #include <dl-diagnostics.h>
 
-void
-_dl_diagnostics_kernel (void)
+void _dl_diagnostics_kernel(void)
 {
 }

@@ -19,8 +19,7 @@
 #include <string.h>
 #include <support/support.h>
 
-char *
-support_quote_string (const char *str)
+char *support_quote_string(const char *str)
 {
-  return support_quote_blob (str, strlen (str));
+    return support_quote_blob(str, strlen(str));
 }

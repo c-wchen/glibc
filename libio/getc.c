@@ -29,26 +29,26 @@
 
 #undef _IO_getc
 
-int
-_IO_getc (FILE *fp)
+int _IO_getc(FILE *fp)
 {
-  int result;
-  CHECK_FILE (fp, EOF);
-  if (!_IO_need_lock (fp))
-    return _IO_getc_unlocked (fp);
-  _IO_acquire_lock (fp);
-  result = _IO_getc_unlocked (fp);
-  _IO_release_lock (fp);
-  return result;
+    int result;
+    CHECK_FILE(fp, EOF);
+    if (!_IO_need_lock(fp)) {
+        return _IO_getc_unlocked(fp);
+    }
+    _IO_acquire_lock(fp);
+    result = _IO_getc_unlocked(fp);
+    _IO_release_lock(fp);
+    return result;
 }
 
 #undef getc
 
-weak_alias (_IO_getc, getc)
-weak_alias (_IO_getc, fgetc)
+weak_alias(_IO_getc, getc)
+weak_alias(_IO_getc, fgetc)
 
 #ifndef _IO_MTSAFE_IO
 #undef getc_unlocked
-weak_alias (_IO_getc, getc_unlocked)
-weak_alias (_IO_getc, fgetc_unlocked)
+weak_alias(_IO_getc, getc_unlocked)
+weak_alias(_IO_getc, fgetc_unlocked)
 #endif

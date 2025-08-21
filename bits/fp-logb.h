@@ -24,5 +24,5 @@
    it is -INT_MAX.  __FP_LOGBNAN_IS_MIN is defined to 1 if FP_ILOGBNAN
    is INT_MIN, and 0 if it is INT_MAX.  */
 
-#define __FP_LOGB0_IS_MIN	0
-#define __FP_LOGBNAN_IS_MIN	0
+#define __FP_LOGB0_IS_MIN   0
+#define __FP_LOGBNAN_IS_MIN 0

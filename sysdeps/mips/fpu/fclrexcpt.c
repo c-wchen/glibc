@@ -20,27 +20,26 @@
 #include <fenv_libc.h>
 #include <fpu_control.h>
 
-int
-feclearexcept (int excepts)
+int feclearexcept(int excepts)
 {
-  int cw;
+    int cw;
 
-  /* Mask out unsupported bits/exceptions.  */
-  excepts &= FE_ALL_EXCEPT;
+    /* Mask out unsupported bits/exceptions.  */
+    excepts &= FE_ALL_EXCEPT;
 
-  /* Read the complete control word.  */
-  _FPU_GETCW (cw);
+    /* Read the complete control word.  */
+    _FPU_GETCW(cw);
 
-  /* Clear exception flag bits and cause bits. If the cause bit is not
-     cleared, the next CTC instruction (just below) will re-generate the
-     exception.  */
+    /* Clear exception flag bits and cause bits. If the cause bit is not
+       cleared, the next CTC instruction (just below) will re-generate the
+       exception.  */
 
-  cw &= ~(excepts | (excepts << CAUSE_SHIFT));
+    cw &= ~(excepts | (excepts << CAUSE_SHIFT));
 
-  /* Put the new data in effect.  */
-  _FPU_SETCW (cw);
+    /* Put the new data in effect.  */
+    _FPU_SETCW(cw);
 
-  /* Success.  */
-  return 0;
+    /* Success.  */
+    return 0;
 }
-libm_hidden_def (feclearexcept)
+libm_hidden_def(feclearexcept)

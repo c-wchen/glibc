@@ -22,18 +22,18 @@
 #include <sysdeps/generic/sysdep.h>
 
 /* The extended state feature IDs in the state component bitmap.  */
-#define X86_XSTATE_X87_ID	0
-#define X86_XSTATE_SSE_ID	1
-#define X86_XSTATE_AVX_ID	2
-#define X86_XSTATE_BNDREGS_ID	3
-#define X86_XSTATE_BNDCFG_ID	4
-#define X86_XSTATE_K_ID		5
-#define X86_XSTATE_ZMM_H_ID	6
-#define X86_XSTATE_ZMM_ID	7
-#define X86_XSTATE_PKRU_ID	9
-#define X86_XSTATE_TILECFG_ID	17
-#define X86_XSTATE_TILEDATA_ID	18
-#define X86_XSTATE_APX_F_ID	19
+#define X86_XSTATE_X87_ID   0
+#define X86_XSTATE_SSE_ID   1
+#define X86_XSTATE_AVX_ID   2
+#define X86_XSTATE_BNDREGS_ID   3
+#define X86_XSTATE_BNDCFG_ID    4
+#define X86_XSTATE_K_ID     5
+#define X86_XSTATE_ZMM_H_ID 6
+#define X86_XSTATE_ZMM_ID   7
+#define X86_XSTATE_PKRU_ID  9
+#define X86_XSTATE_TILECFG_ID   17
+#define X86_XSTATE_TILEDATA_ID  18
+#define X86_XSTATE_APX_F_ID 19
 
 #ifdef __x86_64__
 /* Offset for fxsave/xsave area used by _dl_runtime_resolve.  Also need
@@ -93,24 +93,24 @@
 
 /* Save SSE, AVX, AVX512, mask, bound and APX registers.  Bound and APX
    registers are mutually exclusive.  */
-# define STATE_SAVE_MASK		\
-  ((1 << X86_XSTATE_SSE_ID)		\
-   | (1 << X86_XSTATE_AVX_ID)		\
-   | (1 << X86_XSTATE_BNDREGS_ID)	\
-   | (1 << X86_XSTATE_K_ID)		\
-   | (1 << X86_XSTATE_ZMM_H_ID) 	\
-   | (1 << X86_XSTATE_ZMM_ID)		\
+# define STATE_SAVE_MASK        \
+  ((1 << X86_XSTATE_SSE_ID)     \
+   | (1 << X86_XSTATE_AVX_ID)       \
+   | (1 << X86_XSTATE_BNDREGS_ID)   \
+   | (1 << X86_XSTATE_K_ID)     \
+   | (1 << X86_XSTATE_ZMM_H_ID)     \
+   | (1 << X86_XSTATE_ZMM_ID)       \
    | (1 << X86_XSTATE_APX_F_ID))
 
 /* The maximum supported xstate ID.  */
-# define X86_XSTATE_MAX_ID	X86_XSTATE_APX_F_ID
+# define X86_XSTATE_MAX_ID  X86_XSTATE_APX_F_ID
 
 /* AMX state mask.  */
-# define AMX_STATE_SAVE_MASK		\
+# define AMX_STATE_SAVE_MASK        \
   ((1 << X86_XSTATE_TILECFG_ID) | (1 << X86_XSTATE_TILEDATA_ID))
 
 /* States to be included in xsave_state_full_size.  */
-# define FULL_STATE_SAVE_MASK		\
+# define FULL_STATE_SAVE_MASK       \
   (STATE_SAVE_MASK | AMX_STATE_SAVE_MASK)
 #else
 /* Offset for fxsave/xsave area used by _dl_tlsdesc_dynamic.  Since i386
@@ -119,33 +119,33 @@
 # define TLSDESC_CALL_REGISTER_SAVE_AREA 0
 
 /* Save SSE, AVX, AXV512, mask and bound registers.   */
-# define STATE_SAVE_MASK		\
-  ((1 << X86_XSTATE_SSE_ID)		\
-   | (1 << X86_XSTATE_AVX_ID)		\
-   | (1 << X86_XSTATE_BNDREGS_ID)	\
-   | (1 << X86_XSTATE_K_ID)		\
+# define STATE_SAVE_MASK        \
+  ((1 << X86_XSTATE_SSE_ID)     \
+   | (1 << X86_XSTATE_AVX_ID)       \
+   | (1 << X86_XSTATE_BNDREGS_ID)   \
+   | (1 << X86_XSTATE_K_ID)     \
    | (1 << X86_XSTATE_ZMM_H_ID))
 
 /* The maximum supported xstate ID.  */
-# define X86_XSTATE_MAX_ID	X86_XSTATE_ZMM_H_ID
+# define X86_XSTATE_MAX_ID  X86_XSTATE_ZMM_H_ID
 
 /* States to be included in xsave_state_size.  */
-# define FULL_STATE_SAVE_MASK		STATE_SAVE_MASK
+# define FULL_STATE_SAVE_MASK       STATE_SAVE_MASK
 #endif
 
 /* States which should be saved for TLSDESC_CALL and TLS_DESC_CALL.
    Compiler assumes that all registers, including AMX and x87 FPU
    stack registers, are unchanged after CALL, except for EFLAGS and
    RAX/EAX.  */
-#define TLSDESC_CALL_STATE_SAVE_MASK	\
+#define TLSDESC_CALL_STATE_SAVE_MASK    \
   (FULL_STATE_SAVE_MASK | (1 << X86_XSTATE_X87_ID))
 
 /* Constants for bits in __x86_string_control:  */
 
 /* Avoid short distance REP MOVSB.  */
-#define X86_STRING_CONTROL_AVOID_SHORT_DISTANCE_REP_MOVSB	(1 << 0)
+#define X86_STRING_CONTROL_AVOID_SHORT_DISTANCE_REP_MOVSB   (1 << 0)
 
-#ifdef	__ASSEMBLER__
+#ifdef  __ASSEMBLER__
 
 /* Syntactic details of assembler.  */
 
@@ -156,9 +156,9 @@
 /* Common entry 16 byte aligns.  */
 #define ENTRY(name) ENTRY_P2ALIGN (name, 4)
 
-#undef	END
-#define END(name)							      \
-  cfi_endproc;								      \
+#undef  END
+#define END(name)                                 \
+  cfi_endproc;                                    \
   ASM_SIZE_DIRECTIVE(name)
 
 #define ENTRY_CHK(name) ENTRY (name)
@@ -167,18 +167,18 @@
 /* Since C identifiers are not normally prefixed with an underscore
    on this system, the asm identifier `syscall_error' intrudes on the
    C name space.  Make sure we use an innocuous name.  */
-#define	syscall_error	__syscall_error
-#define mcount		_mcount
+#define syscall_error   __syscall_error
+#define mcount      _mcount
 
-#undef	PSEUDO_END
-#define	PSEUDO_END(name)						      \
+#undef  PSEUDO_END
+#define PSEUDO_END(name)                              \
   END (name)
 
 /* Local label name for asm code. */
 #ifndef L
 /* ELF-like local names start with `.L'.  */
 # define LOCAL_LABEL(name) .L##name
-# define L(name)	LOCAL_LABEL(name)
+# define L(name)    LOCAL_LABEL(name)
 #endif
 
 #define atom_text_section .section ".text.atom", "ax"
@@ -206,6 +206,6 @@
   (STATE_SAVE_ALIGNMENT > DL_STACK_ALIGNMENT \
    || MINIMUM_ALIGNMENT > DL_STACK_ALIGNMENT)
 
-#endif	/* __ASSEMBLER__ */
+#endif  /* __ASSEMBLER__ */
 
-#endif	/* _X86_SYSDEP_H */
+#endif  /* _X86_SYSDEP_H */

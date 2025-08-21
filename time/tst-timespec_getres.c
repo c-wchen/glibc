@@ -19,33 +19,32 @@
 #include <time.h>
 #include <support/check.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  {
-    struct timespec ts;
-    TEST_COMPARE (timespec_getres (&ts, 0), 0);
-    TEST_COMPARE (timespec_getres (NULL, 0), 0);
-  }
+    {
+        struct timespec ts;
+        TEST_COMPARE(timespec_getres(&ts, 0), 0);
+        TEST_COMPARE(timespec_getres(NULL, 0), 0);
+    }
 
-  {
-    struct timespec ts;
-    TEST_COMPARE (timespec_getres (&ts, TIME_UTC), TIME_UTC);
-    /* Expect all supported systems to support TIME_UTC with
-       resolution better than one second.  */
-    TEST_VERIFY (ts.tv_sec == 0);
-    TEST_VERIFY (ts.tv_nsec > 0);
-    TEST_VERIFY (ts.tv_nsec < 1000000000);
-    TEST_COMPARE (timespec_getres (NULL, TIME_UTC), TIME_UTC);
-    /* Expect the resolution to be the same as that reported for
-       CLOCK_REALTIME with clock_getres.  */
-    struct timespec cts;
-    TEST_COMPARE (clock_getres (CLOCK_REALTIME, &cts), 0);
-    TEST_COMPARE (ts.tv_sec, cts.tv_sec);
-    TEST_COMPARE (ts.tv_nsec, cts.tv_nsec);
-  }
+    {
+        struct timespec ts;
+        TEST_COMPARE(timespec_getres(&ts, TIME_UTC), TIME_UTC);
+        /* Expect all supported systems to support TIME_UTC with
+           resolution better than one second.  */
+        TEST_VERIFY(ts.tv_sec == 0);
+        TEST_VERIFY(ts.tv_nsec > 0);
+        TEST_VERIFY(ts.tv_nsec < 1000000000);
+        TEST_COMPARE(timespec_getres(NULL, TIME_UTC), TIME_UTC);
+        /* Expect the resolution to be the same as that reported for
+           CLOCK_REALTIME with clock_getres.  */
+        struct timespec cts;
+        TEST_COMPARE(clock_getres(CLOCK_REALTIME, &cts), 0);
+        TEST_COMPARE(ts.tv_sec, cts.tv_sec);
+        TEST_COMPARE(ts.tv_nsec, cts.tv_nsec);
+    }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -25,7 +25,7 @@
 #undef __cexpf
 #undef cexpf
 
-static _Complex float internal_cexpf (_Complex float x);
+static _Complex float internal_cexpf(_Complex float x);
 
 #define M_DECL_FUNC(f) internal_cexpf
 #include <math-type-macros-float.h>
@@ -37,18 +37,16 @@ static _Complex float internal_cexpf (_Complex float x);
 #include <math/s_cexp_template.c>
 #include "cfloat-compat.h"
 
-c1_cfloat_rettype
-__c1_cexpf (c1_cfloat_decl (x))
+c1_cfloat_rettype __c1_cexpf(c1_cfloat_decl(x))
 {
-  _Complex float r = internal_cexpf (c1_cfloat_value (x));
-  return c1_cfloat_return (r);
+    _Complex float r = internal_cexpf(c1_cfloat_value(x));
+    return c1_cfloat_return(r);
 }
 
-c2_cfloat_rettype
-__c2_cexpf (c2_cfloat_decl (x))
+c2_cfloat_rettype __c2_cexpf(c2_cfloat_decl(x))
 {
-  _Complex float r = internal_cexpf (c2_cfloat_value (x));
-  return c2_cfloat_return (r);
+    _Complex float r = internal_cexpf(c2_cfloat_value(x));
+    return c2_cfloat_return(r);
 }
 
-cfloat_versions (cexp);
+cfloat_versions(cexp);

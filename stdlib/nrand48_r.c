@@ -17,20 +17,21 @@
 
 #include <stdlib.h>
 
-int
-__nrand48_r (unsigned short int xsubi[3], struct drand48_data *buffer,
-	     long int *result)
+int __nrand48_r(unsigned short int xsubi[3], struct drand48_data *buffer,
+                long int *result)
 {
-  /* Compute next state.  */
-  if (__drand48_iterate (xsubi, buffer) < 0)
-    return -1;
+    /* Compute next state.  */
+    if (__drand48_iterate(xsubi, buffer) < 0) {
+        return -1;
+    }
 
-  /* Store the result.  */
-  if (sizeof (unsigned short int) == 2)
-    *result = xsubi[2] << 15 | xsubi[1] >> 1;
-  else
-    *result = xsubi[2] >> 1;
+    /* Store the result.  */
+    if (sizeof(unsigned short int) == 2) {
+        *result = xsubi[2] << 15 | xsubi[1] >> 1;
+    } else {
+        *result = xsubi[2] >> 1;
+    }
 
-  return 0;
+    return 0;
 }
-weak_alias (__nrand48_r, nrand48_r)
+weak_alias(__nrand48_r, nrand48_r)

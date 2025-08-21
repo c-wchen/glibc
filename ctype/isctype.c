@@ -19,10 +19,9 @@
 
 #undef __isctype
 
-int
-__isctype (int ch, int mask)
+int __isctype(int ch, int mask)
 {
-  return (((uint16_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_CLASS) + 128)
-	  [(int) (ch)] & mask);
+    return (((uint16_t *) _NL_CURRENT(LC_CTYPE, _NL_CTYPE_CLASS) + 128)
+            [(int)(ch)] & mask);
 }
-weak_alias (__isctype, isctype)
+weak_alias(__isctype, isctype)

@@ -18,10 +18,9 @@
 
 #include <support/xthread.h>
 
-void
-xpthread_attr_setdetachstate (pthread_attr_t *attr, int detachstate)
+void xpthread_attr_setdetachstate(pthread_attr_t *attr, int detachstate)
 {
-  xpthread_check_return ("pthread_attr_setdetachstate",
-			 pthread_attr_setdetachstate (attr,
-						      detachstate));
+    xpthread_check_return("pthread_attr_setdetachstate",
+                          pthread_attr_setdetachstate(attr,
+                                  detachstate));
 }

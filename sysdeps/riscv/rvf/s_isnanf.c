@@ -19,10 +19,9 @@
 #include <math.h>
 #include <fenv_private.h>
 
-int
-__isnanf (float x)
+int __isnanf(float x)
 {
-  return (_FCLASS (x) & _FCLASS_NAN) != 0;
+    return (_FCLASS(x) & _FCLASS_NAN) != 0;
 }
-hidden_def (__isnanf)
-weak_alias (__isnanf, isnanf)
+hidden_def(__isnanf)
+weak_alias(__isnanf, isnanf)

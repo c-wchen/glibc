@@ -20,8 +20,7 @@
 #include <sys/uio.h>
 #include <sysdep-cancel.h>
 
-ssize_t
-vmsplice (int fd, const struct iovec *iov, size_t count, unsigned int flags)
+ssize_t vmsplice(int fd, const struct iovec *iov, size_t count, unsigned int flags)
 {
-  return SYSCALL_CANCEL (vmsplice, fd, iov, count, flags);
+    return SYSCALL_CANCEL(vmsplice, fd, iov, count, flags);
 }

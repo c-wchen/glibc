@@ -21,33 +21,32 @@
 #include <stdio.h>
 #include <support/check.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  iconv_t cd = iconv_open ("UTF-8//IGNORE", "EUC-KR");
-  TEST_VERIFY_EXIT (cd != (iconv_t) -1);
+    iconv_t cd = iconv_open("UTF-8//IGNORE", "EUC-KR");
+    TEST_VERIFY_EXIT(cd != (iconv_t) -1);
 
-  /* 0xfe (->0x7e : row 94) and 0xc9 (->0x49 : row 41) are user-defined
-     areas, which are not allowed and should be skipped over due to
-     //IGNORE.  The trailing 0xfe also is an incomplete sequence, which
-     should be checked first.  */
-  char input[4] = { '\xc9', '\xa1', '\0', '\xfe' };
-  char *inptr = input;
-  size_t insize = sizeof (input);
-  char output[4];
-  char *outptr = output;
-  size_t outsize = sizeof (output);
+    /* 0xfe (->0x7e : row 94) and 0xc9 (->0x49 : row 41) are user-defined
+       areas, which are not allowed and should be skipped over due to
+       //IGNORE.  The trailing 0xfe also is an incomplete sequence, which
+       should be checked first.  */
+    char input[4] = { '\xc9', '\xa1', '\0', '\xfe' };
+    char *inptr = input;
+    size_t insize = sizeof(input);
+    char output[4];
+    char *outptr = output;
+    size_t outsize = sizeof(output);
 
-  /* This used to crash due to buffer overrun.  */
-  TEST_VERIFY (iconv (cd, &inptr, &insize, &outptr, &outsize) == (size_t) -1);
-  TEST_VERIFY (errno == EINVAL);
-  /* The conversion should produce one character, the converted null
-     character.  */
-  TEST_VERIFY (sizeof (output) - outsize == 1);
+    /* This used to crash due to buffer overrun.  */
+    TEST_VERIFY(iconv(cd, &inptr, &insize, &outptr, &outsize) == (size_t) -1);
+    TEST_VERIFY(errno == EINVAL);
+    /* The conversion should produce one character, the converted null
+       character.  */
+    TEST_VERIFY(sizeof(output) - outsize == 1);
 
-  TEST_VERIFY_EXIT (iconv_close (cd) != -1);
+    TEST_VERIFY_EXIT(iconv_close(cd) != -1);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

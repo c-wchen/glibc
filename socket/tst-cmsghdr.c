@@ -31,26 +31,25 @@
 #include "tst-cmsghdr-skeleton.c"
 #undef CMSG_NXTHDR_IMPL
 
-static struct cmsghdr * (* cmsg_nxthdr) (struct msghdr *, struct cmsghdr *);
+static struct cmsghdr *(* cmsg_nxthdr)(struct msghdr *, struct cmsghdr *);
 
 #define CMSG_NXTHDR_IMPL cmsg_nxthdr
 #include "tst-cmsghdr-skeleton.c"
 #undef CMSG_NXTHDR_IMPL
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  static void *handle;
+    static void *handle;
 
-  run_test_CMSG_NXTHDR ();
+    run_test_CMSG_NXTHDR();
 
-  handle = xdlopen (LIBC_SO, RTLD_LAZY);
-  cmsg_nxthdr = (struct cmsghdr * (*) (struct msghdr *, struct cmsghdr *))
-                  xdlsym (handle, "__cmsg_nxthdr");
+    handle = xdlopen(LIBC_SO, RTLD_LAZY);
+    cmsg_nxthdr = (struct cmsghdr * (*)(struct msghdr *, struct cmsghdr *))
+                  xdlsym(handle, "__cmsg_nxthdr");
 
-  run_test_cmsg_nxthdr ();
+    run_test_cmsg_nxthdr();
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

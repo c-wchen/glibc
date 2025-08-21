@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 1988, 1993
- *	The Regents of the University of California.  All rights reserved.
+ *  The Regents of the University of California.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -37,36 +37,38 @@ static char sccsid[] = "@(#)ttyslot.c	8.1 (Berkeley) 6/4/93";
 #include <string.h>
 #include <unistd.h>
 
-int
-ttyslot (void)
+int ttyslot(void)
 {
-	struct ttyent *ttyp;
-	int slot;
-	char *p;
-	int cnt;
-	size_t buflen = __sysconf (_SC_TTY_NAME_MAX) + 1;
-	char *name;
+    struct ttyent *ttyp;
+    int slot;
+    char *p;
+    int cnt;
+    size_t buflen = __sysconf(_SC_TTY_NAME_MAX) + 1;
+    char *name;
 
-	if (buflen == 0)
-	  /* This should be enough if no fixed value is given.  */
-	  buflen = 32;
+    if (buflen == 0)
+        /* This should be enough if no fixed value is given.  */
+    {
+        buflen = 32;
+    }
 
-	name = __alloca (buflen);
+    name = __alloca(buflen);
 
-	__setttyent();
-	for (cnt = 0; cnt < 3; ++cnt)
-		if (__ttyname_r (cnt, name, buflen) == 0) {
-			if ((p = strrchr (name, '/')))
-				++p;
-			else
-				p = name;
-			for (slot = 1; (ttyp = __getttyent()); ++slot)
-				if (!strcmp(ttyp->ty_name, p)) {
-					__endttyent();
-					return(slot);
-				}
-			break;
-		}
-	__endttyent();
-	return(0);
+    __setttyent();
+    for (cnt = 0; cnt < 3; ++cnt)
+        if (__ttyname_r(cnt, name, buflen) == 0) {
+            if ((p = strrchr(name, '/'))) {
+                ++p;
+            } else {
+                p = name;
+            }
+            for (slot = 1; (ttyp = __getttyent()); ++slot)
+                if (!strcmp(ttyp->ty_name, p)) {
+                    __endttyent();
+                    return (slot);
+                }
+            break;
+        }
+    __endttyent();
+    return (0);
 }

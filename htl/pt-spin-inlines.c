@@ -21,13 +21,13 @@
    not possible.  */
 
 #define _FORCE_INLINES
-#define __PT_SPIN_INLINE	/* empty */
+#define __PT_SPIN_INLINE    /* empty */
 
 #include <pthread.h>
 
 /* Weak aliases for the spin lock functions.  */
-weak_alias (__pthread_spin_destroy, pthread_spin_destroy);
-weak_alias (__pthread_spin_init, pthread_spin_init);
-weak_alias (__pthread_spin_trylock, pthread_spin_trylock);
-weak_alias (__pthread_spin_lock, pthread_spin_lock);
-weak_alias (__pthread_spin_unlock, pthread_spin_unlock);
+weak_alias(__pthread_spin_destroy, pthread_spin_destroy);
+weak_alias(__pthread_spin_init, pthread_spin_init);
+weak_alias(__pthread_spin_trylock, pthread_spin_trylock);
+weak_alias(__pthread_spin_lock, pthread_spin_lock);
+weak_alias(__pthread_spin_unlock, pthread_spin_unlock);

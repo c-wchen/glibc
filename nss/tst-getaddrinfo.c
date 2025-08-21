@@ -22,46 +22,39 @@
 #include <netinet/in.h>
 #include <netdb.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  const int family[2] = { AF_INET, AF_INET6 };
-  int result = 0;
-  int gaierr;
-  size_t index;
-  struct addrinfo hints, *ai, *aitop;
+    const int family[2] = { AF_INET, AF_INET6 };
+    int result = 0;
+    int gaierr;
+    size_t index;
+    struct addrinfo hints, *ai, *aitop;
 
-  for (index = 0; index < sizeof (family) / sizeof (family[0]); ++index)
-    {
-      memset (&hints, '\0', sizeof (hints));
-      hints.ai_family = family[index];
-      hints.ai_socktype = SOCK_STREAM;
+    for (index = 0; index < sizeof(family) / sizeof(family[0]); ++index) {
+        memset(&hints, '\0', sizeof(hints));
+        hints.ai_family = family[index];
+        hints.ai_socktype = SOCK_STREAM;
 
-      gaierr = getaddrinfo (NULL, "54321", &hints, &aitop);
-      if (gaierr != 0)
-	{
-	  gai_strerror (gaierr);
-	  result = 1;
-	}
-      else
-	{
-	  for (ai = aitop; ai != NULL; ai = ai->ai_next)
-	    {
-	      printf ("Should return family: %d. Returned: %d\n",
-		      family[index], ai->ai_family);
-	      result |= family[index] != ai->ai_family;
-	    }
+        gaierr = getaddrinfo(NULL, "54321", &hints, &aitop);
+        if (gaierr != 0) {
+            gai_strerror(gaierr);
+            result = 1;
+        } else {
+            for (ai = aitop; ai != NULL; ai = ai->ai_next) {
+                printf("Should return family: %d. Returned: %d\n",
+                       family[index], ai->ai_family);
+                result |= family[index] != ai->ai_family;
+            }
 
-	  while (aitop != NULL)
-	    {
-	      ai = aitop;
-	      aitop = aitop->ai_next;
-	      freeaddrinfo (ai);
-	    }
-	}
+            while (aitop != NULL) {
+                ai = aitop;
+                aitop = aitop->ai_next;
+                freeaddrinfo(ai);
+            }
+        }
     }
 
-  return result;
+    return result;
 }
 #define TEST_FUNCTION do_test ()
 

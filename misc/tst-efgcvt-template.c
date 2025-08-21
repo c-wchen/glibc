@@ -35,7 +35,7 @@
      cannot be represented generically.  */
 
 #ifndef _GNU_SOURCE
-# define _GNU_SOURCE	1
+# define _GNU_SOURCE    1
 #endif
 
 #include <math.h>
@@ -48,188 +48,177 @@
 #define NAME(x) NAMEX(x)
 #define NAMEX(x) #x
 
-typedef struct
-{
-  FLOAT value;
-  int ndigit;
-  int decpt;
-  char result[30];
+typedef struct {
+    FLOAT value;
+    int ndigit;
+    int decpt;
+    char result[30];
 } testcase;
 
-typedef char * ((*efcvt_func) (FLOAT, int, int *, int *));
+typedef char *((*efcvt_func)(FLOAT, int, int *, int *));
 
-typedef int ((*efcvt_r_func) (FLOAT, int, int *, int *, char *, size_t));
+typedef int ((*efcvt_r_func)(FLOAT, int, int *, int *, char *, size_t));
 
 
-static testcase ecvt_tests[] =
-{
-  { 0.0, 0, 1, "" },
-  { 10.0, 0, 2, "" },
-  { 10.0, 1, 2, "1" },
-  { 10.0, 5, 2, "10000" },
-  { -12.0, 5, 2, "12000" },
-  { 0.2, 4, 0, "2000" },
-  { 0.02, 4, -1, "2000" },
-  { 5.5, 1, 1, "6" },
-  { 1.0, -1, 1, "" },
-  { 0.01, 2, -1, "10" },
-  { 100.0, -2, 3, "" },
-  { 100.0, -5, 3, "" },
-  { 100.0, -4, 3, "" },
-  { 100.01, -4, 3, "" },
-  { 123.01, -4, 3, "" },
-  { 126.71, -4, 3, "" },
-  { 0.0, 4, 1, "0000" },
-  EXTRA_ECVT_TESTS
-  /* -1.0 is end marker.  */
-  { -1.0, 0, 0, "" }
+static testcase ecvt_tests[] = {
+    { 0.0, 0, 1, "" },
+    { 10.0, 0, 2, "" },
+    { 10.0, 1, 2, "1" },
+    { 10.0, 5, 2, "10000" },
+    { -12.0, 5, 2, "12000" },
+    { 0.2, 4, 0, "2000" },
+    { 0.02, 4, -1, "2000" },
+    { 5.5, 1, 1, "6" },
+    { 1.0, -1, 1, "" },
+    { 0.01, 2, -1, "10" },
+    { 100.0, -2, 3, "" },
+    { 100.0, -5, 3, "" },
+    { 100.0, -4, 3, "" },
+    { 100.01, -4, 3, "" },
+    { 123.01, -4, 3, "" },
+    { 126.71, -4, 3, "" },
+    { 0.0, 4, 1, "0000" },
+    EXTRA_ECVT_TESTS
+    /* -1.0 is end marker.  */
+    { -1.0, 0, 0, "" }
 };
 
-static testcase fcvt_tests[] =
-{
-  { 0.0, 0, 1, "0" },
-  { 10.0, 0, 2, "10" },
-  { 10.0, 1, 2, "100" },
-  { 10.0, 4, 2, "100000" },
-  { -12.0, 5, 2, "1200000" },
-  { 0.2, 4, 0, "2000" },
-  { 0.02, 4, -1, "200" },
-  { 5.5, 1, 1, "55" },
-  { 5.5, 0, 1, "6" },
-  { 0.01, 2, -1, "1" },
-  { 100.0, -2, 3, "100" },
-  { 100.0, -5, 3, "100" },
-  { 100.0, -4, 3, "100" },
-  { 100.01, -4, 3, "100" },
-  { 123.01, -4, 3, "100" },
-  { 126.71, -4, 3, "100" },
-  { 322.5, 16, 3, "3225000000000000000" },
-  /* -1.0 is end marker.  */
-  { -1.0, 0, 0, "" }
+static testcase fcvt_tests[] = {
+    { 0.0, 0, 1, "0" },
+    { 10.0, 0, 2, "10" },
+    { 10.0, 1, 2, "100" },
+    { 10.0, 4, 2, "100000" },
+    { -12.0, 5, 2, "1200000" },
+    { 0.2, 4, 0, "2000" },
+    { 0.02, 4, -1, "200" },
+    { 5.5, 1, 1, "55" },
+    { 5.5, 0, 1, "6" },
+    { 0.01, 2, -1, "1" },
+    { 100.0, -2, 3, "100" },
+    { 100.0, -5, 3, "100" },
+    { 100.0, -4, 3, "100" },
+    { 100.01, -4, 3, "100" },
+    { 123.01, -4, 3, "100" },
+    { 126.71, -4, 3, "100" },
+    { 322.5, 16, 3, "3225000000000000000" },
+    /* -1.0 is end marker.  */
+    { -1.0, 0, 0, "" }
 };
 
-static void
-output_error (const char *name, FLOAT value, int ndigit,
-	      const char *exp_p, int exp_decpt, int exp_sign,
-	      char *res_p, int res_decpt, int res_sign)
+static void output_error(const char *name, FLOAT value, int ndigit,
+                         const char *exp_p, int exp_decpt, int exp_sign,
+                         char *res_p, int res_decpt, int res_sign)
 {
-  printf ("%s returned wrong result for value: " PRINTF_CONVERSION
-	  ", ndigits: %d\n",
-	  name, value, ndigit);
-  printf ("Result was p: \"%s\", decpt: %d, sign: %d\n",
-	  res_p, res_decpt, res_sign);
-  printf ("Should be  p: \"%s\", decpt: %d, sign: %d\n",
-	  exp_p, exp_decpt, exp_sign);
-  support_record_failure ();
+    printf("%s returned wrong result for value: " PRINTF_CONVERSION
+           ", ndigits: %d\n",
+           name, value, ndigit);
+    printf("Result was p: \"%s\", decpt: %d, sign: %d\n",
+           res_p, res_decpt, res_sign);
+    printf("Should be  p: \"%s\", decpt: %d, sign: %d\n",
+           exp_p, exp_decpt, exp_sign);
+    support_record_failure();
 }
 
 
-static void
-output_r_error (const char *name, FLOAT value, int ndigit,
-		const char *exp_p, int exp_decpt, int exp_sign, int exp_return,
-		char *res_p, int res_decpt, int res_sign, int res_return)
+static void output_r_error(const char *name, FLOAT value, int ndigit,
+                           const char *exp_p, int exp_decpt, int exp_sign, int exp_return,
+                           char *res_p, int res_decpt, int res_sign, int res_return)
 {
-  printf ("%s returned wrong result for value: " PRINTF_CONVERSION
-	  ", ndigits: %d\n",
-	  name, value, ndigit);
-  printf ("Result was buf: \"%s\", decpt: %d, sign: %d return value: %d\n",
-	  res_p, res_decpt, res_sign, res_return);
-  printf ("Should be  buf: \"%s\", decpt: %d, sign: %d\n",
-	  exp_p, exp_decpt, exp_sign);
-  support_record_failure ();
+    printf("%s returned wrong result for value: " PRINTF_CONVERSION
+           ", ndigits: %d\n",
+           name, value, ndigit);
+    printf("Result was buf: \"%s\", decpt: %d, sign: %d return value: %d\n",
+           res_p, res_decpt, res_sign, res_return);
+    printf("Should be  buf: \"%s\", decpt: %d, sign: %d\n",
+           exp_p, exp_decpt, exp_sign);
+    support_record_failure();
 }
 
-static void
-test (testcase tests[], efcvt_func efcvt, const char *name)
+static void test(testcase tests[], efcvt_func efcvt, const char *name)
 {
-  int no = 0;
-  int decpt, sign;
-  char *p;
+    int no = 0;
+    int decpt, sign;
+    char *p;
 
-  while (tests[no].value != -1.0)
-    {
-      p = efcvt (tests[no].value, tests[no].ndigit, &decpt, &sign);
-      if (decpt != tests[no].decpt
-	  || sign != (tests[no].value < 0)
-	  || strcmp (p, tests[no].result) != 0)
-	output_error (name, tests[no].value, tests[no].ndigit,
-		      tests[no].result, tests[no].decpt,
-		      (tests[no].value < 0),
-		      p, decpt, sign);
-      ++no;
+    while (tests[no].value != -1.0) {
+        p = efcvt(tests[no].value, tests[no].ndigit, &decpt, &sign);
+        if (decpt != tests[no].decpt
+            || sign != (tests[no].value < 0)
+            || strcmp(p, tests[no].result) != 0)
+            output_error(name, tests[no].value, tests[no].ndigit,
+                         tests[no].result, tests[no].decpt,
+                         (tests[no].value < 0),
+                         p, decpt, sign);
+        ++no;
     }
 }
 
-static void
-test_r (testcase tests[], efcvt_r_func efcvt_r, const char *name)
+static void test_r(testcase tests[], efcvt_r_func efcvt_r, const char *name)
 {
-  int no = 0;
-  int decpt, sign, res;
-  char buf [1024];
+    int no = 0;
+    int decpt, sign, res;
+    char buf [1024];
 
 
-  while (tests[no].value != -1.0)
-    {
-      res = efcvt_r (tests[no].value, tests[no].ndigit, &decpt, &sign,
-		     buf, sizeof (buf));
-      if (res != 0
-	  || decpt != tests[no].decpt
-	  || sign != (tests[no].value < 0)
-	  || strcmp (buf, tests[no].result) != 0)
-	output_r_error (name, tests[no].value, tests[no].ndigit,
-			tests[no].result, tests[no].decpt, 0,
-			(tests[no].value < 0),
-			buf, decpt, sign, res);
-      ++no;
+    while (tests[no].value != -1.0) {
+        res = efcvt_r(tests[no].value, tests[no].ndigit, &decpt, &sign,
+                      buf, sizeof(buf));
+        if (res != 0
+            || decpt != tests[no].decpt
+            || sign != (tests[no].value < 0)
+            || strcmp(buf, tests[no].result) != 0)
+            output_r_error(name, tests[no].value, tests[no].ndigit,
+                           tests[no].result, tests[no].decpt, 0,
+                           (tests[no].value < 0),
+                           buf, decpt, sign, res);
+        ++no;
     }
 }
 
-static void
-special (void)
+static void special(void)
 {
-  int decpt, sign, res;
-  char *p;
-  char buf [1024];
+    int decpt, sign, res;
+    char *p;
+    char buf [1024];
 
-  p = ECVT (NAN, 10, &decpt, &sign);
-  if (sign != 0 || strcmp (p, "nan") != 0)
-    output_error (NAME (ECVT), NAN, 10, "nan", 0, 0, p, decpt, sign);
-
-  p = ECVT (INFINITY, 10, &decpt, &sign);
-  if (sign != 0 || strcmp (p, "inf") != 0)
-    output_error (NAME (ECVT), INFINITY, 10, "inf", 0, 0, p, decpt, sign);
-
-  /* Simply make sure these calls with large NDIGITs don't crash.  */
-  p = ECVT (123.456, 10000, &decpt, &sign);
-  p = FCVT (123.456, 10000, &decpt, &sign);
-
-  /* Some tests for the reentrant functions.  */
-  /* Use a too small buffer.  */
-  res = ECVT_R (123.456, 10, &decpt, &sign, buf, 1);
-  if (res == 0)
-    {
-      printf (NAME (ECVT_R) " with a too small buffer was successful.\n");
-      support_record_failure ();
+    p = ECVT(NAN, 10, &decpt, &sign);
+    if (sign != 0 || strcmp(p, "nan") != 0) {
+        output_error(NAME(ECVT), NAN, 10, "nan", 0, 0, p, decpt, sign);
     }
-  res = FCVT_R (123.456, 10, &decpt, &sign, buf, 1);
-  if (res == 0)
-    {
-      printf (NAME (FCVT_R) " with a too small buffer was successful.\n");
-      support_record_failure ();
+
+    p = ECVT(INFINITY, 10, &decpt, &sign);
+    if (sign != 0 || strcmp(p, "inf") != 0) {
+        output_error(NAME(ECVT), INFINITY, 10, "inf", 0, 0, p, decpt, sign);
+    }
+
+    /* Simply make sure these calls with large NDIGITs don't crash.  */
+    p = ECVT(123.456, 10000, &decpt, &sign);
+    p = FCVT(123.456, 10000, &decpt, &sign);
+
+    /* Some tests for the reentrant functions.  */
+    /* Use a too small buffer.  */
+    res = ECVT_R(123.456, 10, &decpt, &sign, buf, 1);
+    if (res == 0) {
+        printf(NAME(ECVT_R) " with a too small buffer was successful.\n");
+        support_record_failure();
+    }
+    res = FCVT_R(123.456, 10, &decpt, &sign, buf, 1);
+    if (res == 0) {
+        printf(NAME(FCVT_R) " with a too small buffer was successful.\n");
+        support_record_failure();
     }
 }
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  test (ecvt_tests, ECVT, NAME (ECVT));
-  test (fcvt_tests, FCVT, NAME (FCVT));
-  test_r (ecvt_tests, ECVT_R, NAME (ECVT_R));
-  test_r (fcvt_tests, FCVT_R, NAME (FCVT_R));
-  special ();
+    test(ecvt_tests, ECVT, NAME(ECVT));
+    test(fcvt_tests, FCVT, NAME(FCVT));
+    test_r(ecvt_tests, ECVT_R, NAME(ECVT_R));
+    test_r(fcvt_tests, FCVT_R, NAME(FCVT_R));
+    special();
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

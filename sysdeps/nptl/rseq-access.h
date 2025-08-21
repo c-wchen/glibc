@@ -30,27 +30,27 @@
    current architecture.  */
 #if __HAVE_64B_ATOMICS
 #define __RSEQ_ASSERT_ATOMIC(member) \
-   _Static_assert (sizeof (RSEQ_SELF()->member) == 1			      \
-		   || sizeof (RSEQ_SELF()->member) == 4			      \
-		   || sizeof (RSEQ_SELF()->member) == 8,		      \
-		   "size of rseq data")
+   _Static_assert (sizeof (RSEQ_SELF()->member) == 1                  \
+           || sizeof (RSEQ_SELF()->member) == 4               \
+           || sizeof (RSEQ_SELF()->member) == 8,              \
+           "size of rseq data")
 #else
 #define __RSEQ_ASSERT_ATOMIC(member) \
-   _Static_assert (sizeof (RSEQ_SELF()->member) == 1			      \
-		   || sizeof (RSEQ_SELF()->member) == 4,		      \
-		   "size of rseq data")
+   _Static_assert (sizeof (RSEQ_SELF()->member) == 1                  \
+           || sizeof (RSEQ_SELF()->member) == 4,              \
+           "size of rseq data")
 #endif
 
 /* Read member of the RSEQ area directly, with single-copy atomicity semantics.  */
 #define RSEQ_GETMEM_ONCE(member) \
-  ({									      \
-     __RSEQ_ASSERT_ATOMIC(member);					      \
+  ({                                          \
+     __RSEQ_ASSERT_ATOMIC(member);                        \
      (*(volatile __typeof (RSEQ_SELF()->member) *)&RSEQ_SELF()->member);      \
   })
 
 /* Set member of the RSEQ area directly, with single-copy atomicity semantics.  */
 #define RSEQ_SETMEM_ONCE(member, value) \
-  ({									      \
-     __RSEQ_ASSERT_ATOMIC(member);					      \
+  ({                                          \
+     __RSEQ_ASSERT_ATOMIC(member);                        \
      (*(volatile __typeof (RSEQ_SELF()->member) *)&RSEQ_SELF()->member = (value)); \
   })

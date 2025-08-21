@@ -16,21 +16,21 @@
    along with this program; if not, see <https://www.gnu.org/licenses/>.  */
 
 #ifndef _XMALLOC_H
-#define _XMALLOC_H	1
+#define _XMALLOC_H  1
 
 #include <sys/cdefs.h>
 #include <stddef.h>
 
 /* Prototypes for a few program-wide used functions.  */
-extern void *xmalloc (size_t n)
-  __attribute_malloc__ __attribute_alloc_size__ ((1)) __attr_dealloc_free
-  __returns_nonnull;
-extern void *xcalloc (size_t n, size_t s)
-  __attribute_malloc__ __attribute_alloc_size__ ((1, 2)) __attr_dealloc_free
-  __returns_nonnull;
-extern void *xrealloc (void *o, size_t n)
-  __attribute_malloc__ __attribute_alloc_size__ ((2)) __attr_dealloc_free;
-extern char *xstrdup (const char *) __attribute_malloc__ __attr_dealloc_free
-  __returns_nonnull;
+extern void *xmalloc(size_t n)
+__attribute_malloc__ __attribute_alloc_size__((1)) __attr_dealloc_free
+__returns_nonnull;
+extern void *xcalloc(size_t n, size_t s)
+__attribute_malloc__ __attribute_alloc_size__((1, 2)) __attr_dealloc_free
+__returns_nonnull;
+extern void *xrealloc(void *o, size_t n)
+__attribute_malloc__ __attribute_alloc_size__((2)) __attr_dealloc_free;
+extern char *xstrdup(const char *) __attribute_malloc__ __attr_dealloc_free
+__returns_nonnull;
 
 #endif /* xmalloc.h */

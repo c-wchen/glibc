@@ -25,11 +25,10 @@
 
 void
 attribute_compat_text_section
-__attribute_used__
-__libanl_version_placeholder_1 (void)
+__attribute_used__ __libanl_version_placeholder_1(void)
 {
 }
 
-compat_symbol (libanl, __libanl_version_placeholder_1,
-               __libanl_version_placeholder, GLIBC_2_2_3);
+compat_symbol(libanl, __libanl_version_placeholder_1,
+              __libanl_version_placeholder, GLIBC_2_2_3);
 #endif

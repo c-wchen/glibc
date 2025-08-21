@@ -19,16 +19,16 @@
 
 #include <init-arch.h>
 
-extern __typeof (REDIRECT_NAME) OPTIMIZE (ia32) attribute_hidden;
-extern __typeof (REDIRECT_NAME) OPTIMIZE (sse2) attribute_hidden;
+extern __typeof(REDIRECT_NAME) OPTIMIZE(ia32) attribute_hidden;
+extern __typeof(REDIRECT_NAME) OPTIMIZE(sse2) attribute_hidden;
 
-static inline void *
-IFUNC_SELECTOR (void)
+static inline void *IFUNC_SELECTOR(void)
 {
-  const struct cpu_features* cpu_features = __get_cpu_features ();
+    const struct cpu_features *cpu_features = __get_cpu_features();
 
-  if (CPU_FEATURE_USABLE_P (cpu_features, SSE2))
-    return OPTIMIZE (sse2);
+    if (CPU_FEATURE_USABLE_P(cpu_features, SSE2)) {
+        return OPTIMIZE(sse2);
+    }
 
-  return OPTIMIZE (ia32);
+    return OPTIMIZE(ia32);
 }

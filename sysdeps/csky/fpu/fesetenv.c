@@ -19,41 +19,35 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-int
-__fesetenv (const fenv_t *envp)
+int __fesetenv(const fenv_t *envp)
 {
-  unsigned int fpcr;
-  unsigned int fpsr;
+    unsigned int fpcr;
+    unsigned int fpsr;
 
-  _FPU_GETCW (fpcr);
-  _FPU_GETFPSR (fpsr);
+    _FPU_GETCW(fpcr);
+    _FPU_GETFPSR(fpsr);
 
-  fpcr &= _FPU_RESERVED;
-  fpsr &= _FPU_FPSR_RESERVED;
+    fpcr &= _FPU_RESERVED;
+    fpsr &= _FPU_FPSR_RESERVED;
 
-  if (envp == FE_DFL_ENV)
-    {
-      fpcr |= _FPU_DEFAULT;
-      fpsr |= _FPU_FPSR_DEFAULT;
-    }
-  else if (envp == FE_NOMASK_ENV)
-    {
-      fpcr |= _FPU_FPCR_IEEE;
-      fpsr |= _FPU_FPSR_IEEE;
-    }
-  else
-    {
-      fpcr |= envp->__fpcr & ~_FPU_RESERVED;
-      fpsr |= envp->__fpsr & ~_FPU_FPSR_RESERVED;
+    if (envp == FE_DFL_ENV) {
+        fpcr |= _FPU_DEFAULT;
+        fpsr |= _FPU_FPSR_DEFAULT;
+    } else if (envp == FE_NOMASK_ENV) {
+        fpcr |= _FPU_FPCR_IEEE;
+        fpsr |= _FPU_FPSR_IEEE;
+    } else {
+        fpcr |= envp->__fpcr & ~_FPU_RESERVED;
+        fpsr |= envp->__fpsr & ~_FPU_FPSR_RESERVED;
     }
 
-  _FPU_SETFPSR (fpsr);
+    _FPU_SETFPSR(fpsr);
 
-  _FPU_SETCW (fpcr);
+    _FPU_SETCW(fpcr);
 
-  /* Success.  */
-  return 0;
+    /* Success.  */
+    return 0;
 }
-libm_hidden_def (__fesetenv)
-weak_alias (__fesetenv, fesetenv)
-libm_hidden_weak (fesetenv)
+libm_hidden_def(__fesetenv)
+weak_alias(__fesetenv, fesetenv)
+libm_hidden_weak(fesetenv)

@@ -23,30 +23,33 @@
 
 #include <support/check.h>
 
-static int
-detach_thrd (void *arg)
+static int detach_thrd(void *arg)
 {
-  if (thrd_detach (thrd_current ()) != thrd_success)
-    FAIL_EXIT1 ("thrd_detach failed");
-  thrd_exit (thrd_success);
+    if (thrd_detach(thrd_current()) != thrd_success) {
+        FAIL_EXIT1("thrd_detach failed");
+    }
+    thrd_exit(thrd_success);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  thrd_t id;
+    thrd_t id;
 
-  /* Create new thread.  */
-  if (thrd_create (&id, detach_thrd, NULL) != thrd_success)
-    FAIL_EXIT1 ("thrd_create failed");
+    /* Create new thread.  */
+    if (thrd_create(&id, detach_thrd, NULL) != thrd_success) {
+        FAIL_EXIT1("thrd_create failed");
+    }
 
-  /* Give some time so the thread can finish.  */
-  thrd_sleep (&(struct timespec) {.tv_sec = 2}, NULL);
+    /* Give some time so the thread can finish.  */
+    thrd_sleep(&(struct timespec) {
+        .tv_sec = 2
+    }, NULL);
 
-  if (thrd_join (id, NULL) == thrd_success)
-    FAIL_EXIT1 ("thrd_join succeed where it should fail");
+    if (thrd_join(id, NULL) == thrd_success) {
+        FAIL_EXIT1("thrd_join succeed where it should fail");
+    }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

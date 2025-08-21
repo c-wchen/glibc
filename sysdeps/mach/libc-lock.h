@@ -25,11 +25,10 @@
 #include <lowlevellock.h>
 
 typedef unsigned int __libc_lock_t;
-typedef struct
-{
-  __libc_lock_t lock;
-  int cnt;
-  void *owner;
+typedef struct {
+    __libc_lock_t lock;
+    int cnt;
+    void *owner;
 } __libc_lock_recursive_t;
 
 typedef __libc_lock_recursive_t __rtld_lock_recursive_t;
@@ -146,28 +145,27 @@ typedef struct __libc_lock_recursive_opaque__ __libc_lock_recursive_t;
   __libc_lock_unlock_recursive (NAME)
 
 /* XXX for now */
-#define __libc_rwlock_define		__libc_lock_define
+#define __libc_rwlock_define        __libc_lock_define
 #define __libc_rwlock_define_initialized __libc_lock_define_initialized
-#define __libc_rwlock_init		__libc_lock_init
-#define __libc_rwlock_fini		__libc_lock_fini
-#define __libc_rwlock_rdlock		__libc_lock_lock
-#define __libc_rwlock_wrlock		__libc_lock_lock
-#define __libc_rwlock_tryrdlock		__libc_lock_trylock
-#define __libc_rwlock_trywrlock		__libc_lock_trylock
-#define __libc_rwlock_unlock		__libc_lock_unlock
+#define __libc_rwlock_init      __libc_lock_init
+#define __libc_rwlock_fini      __libc_lock_fini
+#define __libc_rwlock_rdlock        __libc_lock_lock
+#define __libc_rwlock_wrlock        __libc_lock_lock
+#define __libc_rwlock_tryrdlock     __libc_lock_trylock
+#define __libc_rwlock_trywrlock     __libc_lock_trylock
+#define __libc_rwlock_unlock        __libc_lock_unlock
 
-struct __libc_cleanup_frame
-{
-  void (*__fct) (void *);
-  void *__argp;
-  int __doit;
+struct __libc_cleanup_frame {
+    void (*__fct)(void *);
+    void *__argp;
+    int __doit;
 };
 
-__extern_inline void
-__libc_cleanup_fct (struct __libc_cleanup_frame *framep)
+__extern_inline void __libc_cleanup_fct(struct __libc_cleanup_frame *framep)
 {
-  if (framep->__doit)
-    framep->__fct (framep->__argp);
+    if (framep->__doit) {
+        framep->__fct(framep->__argp);
+    }
 }
 
 /* Start a critical region with a cleanup function */
@@ -191,27 +189,26 @@ __libc_cleanup_fct (struct __libc_cleanup_frame *framep)
 
 /* Use mutexes as once control variables.  */
 
-struct __libc_once
-  {
+struct __libc_once {
     __libc_lock_t lock;
     int done;
-  };
+};
 
 #define __libc_once_define(CLASS,NAME) \
   CLASS struct __libc_once NAME = { _LIBC_LOCK_INITIALIZER, 0 }
 
 /* Call handler iff the first call.  */
 #define __libc_once(ONCE_CONTROL, INIT_FUNCTION) \
-  do {									      \
-    __libc_lock_lock (ONCE_CONTROL.lock);				      \
-    if (!ONCE_CONTROL.done)						      \
-      (INIT_FUNCTION) ();						      \
-    ONCE_CONTROL.done = 1;						      \
-    __libc_lock_unlock (ONCE_CONTROL.lock);				      \
+  do {                                        \
+    __libc_lock_lock (ONCE_CONTROL.lock);                     \
+    if (!ONCE_CONTROL.done)                           \
+      (INIT_FUNCTION) ();                             \
+    ONCE_CONTROL.done = 1;                            \
+    __libc_lock_unlock (ONCE_CONTROL.lock);                   \
   } while (0)
 
 /* Get once control variable.  */
-#define __libc_once_get(ONCE_CONTROL)	((ONCE_CONTROL).done != 0)
+#define __libc_once_get(ONCE_CONTROL)   ((ONCE_CONTROL).done != 0)
 
 #ifdef _LIBC
 /* We need portable names for some functions.  E.g., when they are
@@ -223,4 +220,4 @@ struct __libc_once
 # include <libc-lockP.h>
 #endif
 
-#endif	/* libc-lock.h */
+#endif  /* libc-lock.h */

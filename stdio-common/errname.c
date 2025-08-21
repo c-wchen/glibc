@@ -25,37 +25,35 @@
 # define ERR_MAP(n) n
 #endif
 
-static const union sys_errname_t
-{
-  struct
-  {
+static const union sys_errname_t {
+    struct {
 #define MSGSTRFIELD1(line) str##line
 #define MSGSTRFIELD(line)  MSGSTRFIELD1(line)
 #define _S(n, str)         char MSGSTRFIELD(__LINE__)[sizeof(#n)];
 #include <errlist.h>
 #undef _S
-  };
-  char str[0];
+    };
+    char str[0];
 } _sys_errname = { {
 #define _S(n, s) #n,
 #include <errlist.h>
 #undef _S
-} };
+    }
+};
 
-static const unsigned short _sys_errnameidx[] =
-{
+static const unsigned short _sys_errnameidx[] = {
 #define _S(n, s) \
   [ERR_MAP(n)] = offsetof(union sys_errname_t, MSGSTRFIELD(__LINE__)),
 #include <errlist.h>
 #undef _S
 };
 
-const char *
-__get_errname (int errnum)
+const char *__get_errname(int errnum)
 {
-  int mapped = ERR_MAP (errnum);
-  if (mapped < 0 || mapped >= array_length (_sys_errnameidx)
-      || (mapped > 0 && _sys_errnameidx[mapped] == 0))
-    return NULL;
-  return _sys_errname.str + _sys_errnameidx[mapped];
+    int mapped = ERR_MAP(errnum);
+    if (mapped < 0 || mapped >= array_length(_sys_errnameidx)
+        || (mapped > 0 && _sys_errnameidx[mapped] == 0)) {
+        return NULL;
+    }
+    return _sys_errname.str + _sys_errnameidx[mapped];
 }

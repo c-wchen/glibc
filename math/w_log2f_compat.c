@@ -24,24 +24,19 @@
 
 #if LIBM_SVID_COMPAT && SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_27)
 /* wrapper log2f(x) */
-float
-__log2f_compat (float x)
+float __log2f_compat(float x)
 {
-  if (__builtin_expect (islessequal (x, 0.0f), 0) && _LIB_VERSION != _IEEE_)
-    {
-      if (x == 0.0)
-	{
-	  feraiseexcept (FE_DIVBYZERO);
-	  return __kernel_standard_f (x, x, 148); /* log2(0) */
-	}
-      else
-	{
-	  feraiseexcept (FE_INVALID);
-	  return __kernel_standard_f (x, x, 149); /* log2(x<0) */
-	}
+    if (__builtin_expect(islessequal(x, 0.0f), 0) && _LIB_VERSION != _IEEE_) {
+        if (x == 0.0) {
+            feraiseexcept(FE_DIVBYZERO);
+            return __kernel_standard_f(x, x, 148);  /* log2(0) */
+        } else {
+            feraiseexcept(FE_INVALID);
+            return __kernel_standard_f(x, x, 149);  /* log2(x<0) */
+        }
     }
 
-  return  __ieee754_log2f (x);
+    return  __ieee754_log2f(x);
 }
-compat_symbol (libm, __log2f_compat, log2f, GLIBC_2_1);
+compat_symbol(libm, __log2f_compat, log2f, GLIBC_2_1);
 #endif

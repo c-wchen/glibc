@@ -16,7 +16,7 @@
 
 /*
  * This is derived from the Berkeley source:
- *	@(#)random.c	5.5 (Berkeley) 7/6/88
+ *  @(#)random.c    5.5 (Berkeley) 7/6/88
  * It was reworked for the GNU C Library by Roland McGrath.
  * Rewritten to use reentrant functions by Ulrich Drepper, 1995.
  */
@@ -99,53 +99,52 @@
    separation between the two lower order coefficients of the trinomial.  */
 
 /* Linear congruential.  */
-#define	TYPE_0		0
-#define	BREAK_0		8
-#define	DEG_0		0
-#define	SEP_0		0
+#define TYPE_0      0
+#define BREAK_0     8
+#define DEG_0       0
+#define SEP_0       0
 
 /* x**7 + x**3 + 1.  */
-#define	TYPE_1		1
-#define	BREAK_1		32
-#define	DEG_1		7
-#define	SEP_1		3
+#define TYPE_1      1
+#define BREAK_1     32
+#define DEG_1       7
+#define SEP_1       3
 
 /* x**15 + x + 1.  */
-#define	TYPE_2		2
-#define	BREAK_2		64
-#define	DEG_2		15
-#define	SEP_2		1
+#define TYPE_2      2
+#define BREAK_2     64
+#define DEG_2       15
+#define SEP_2       1
 
 /* x**31 + x**3 + 1.  */
-#define	TYPE_3		3
-#define	BREAK_3		128
-#define	DEG_3		31
-#define	SEP_3		3
+#define TYPE_3      3
+#define BREAK_3     128
+#define DEG_3       31
+#define SEP_3       3
 
 /* x**63 + x + 1.  */
-#define	TYPE_4		4
-#define	BREAK_4		256
-#define	DEG_4		63
-#define	SEP_4		1
+#define TYPE_4      4
+#define BREAK_4     256
+#define DEG_4       63
+#define SEP_4       1
 
 
 /* Array versions of the above information to make code run faster.
    Relies on fact that TYPE_i == i.  */
 
-#define	MAX_TYPES	5	/* Max number of types above.  */
+#define MAX_TYPES   5   /* Max number of types above.  */
 
 
 /* Initially, everything is set up as if from:
-	initstate(1, randtbl, 128);
+    initstate(1, randtbl, 128);
    Note that this initialization takes advantage of the fact that srandom
    advances the front and rear pointers 10*rand_deg times, and hence the
    rear pointer which starts at 0 will also end up at zero; thus the zeroth
    element of the state information, which contains info about the current
    position of the rear pointer is just
-	(MAX_TYPES * (rptr - state)) + TYPE_3 == TYPE_3.  */
+    (MAX_TYPES * (rptr - state)) + TYPE_3 == TYPE_3.  */
 
-static int32_t randtbl[DEG_3 + 1] =
-  {
+static int32_t randtbl[DEG_3 + 1] = {
     TYPE_3,
 
     -1726662223, 379960547, 1735697613, 1040273694, 1313901226,
@@ -155,33 +154,32 @@ static int32_t randtbl[DEG_3 + 1] =
     -1009028674, 968117788, -123449607, 1284210865, 435012392,
     -2017506339, -911064859, -370259173, 1132637927, 1398500161,
     -205601318,
-  };
+};
 
 
-static struct random_data unsafe_state =
-  {
-/* FPTR and RPTR are two pointers into the state info, a front and a rear
-   pointer.  These two pointers are always rand_sep places apart, as they
-   cycle through the state information.  (Yes, this does mean we could get
-   away with just one pointer, but the code for random is more efficient
-   this way).  The pointers are left positioned as they would be from the call:
-	initstate(1, randtbl, 128);
-   (The position of the rear pointer, rptr, is really 0 (as explained above
-   in the initialization of randtbl) because the state table pointer is set
-   to point to randtbl[1] (as explained below).)  */
+static struct random_data unsafe_state = {
+    /* FPTR and RPTR are two pointers into the state info, a front and a rear
+       pointer.  These two pointers are always rand_sep places apart, as they
+       cycle through the state information.  (Yes, this does mean we could get
+       away with just one pointer, but the code for random is more efficient
+       this way).  The pointers are left positioned as they would be from the call:
+        initstate(1, randtbl, 128);
+       (The position of the rear pointer, rptr, is really 0 (as explained above
+       in the initialization of randtbl) because the state table pointer is set
+       to point to randtbl[1] (as explained below).)  */
 
     .fptr = &randtbl[SEP_3 + 1],
     .rptr = &randtbl[1],
 
-/* The following things are the pointer to the state information table,
-   the type of the current generator, the degree of the current polynomial
-   being used, and the separation between the two pointers.
-   Note that for efficiency of random, we remember the first location of
-   the state information, not the zeroth.  Hence it is valid to access
-   state[-1], which is used to store the type of the R.N.G.
-   Also, we remember the last location, since this is more efficient than
-   indexing every time to find the address of the last element to see if
-   the front and rear pointers have wrapped.  */
+    /* The following things are the pointer to the state information table,
+       the type of the current generator, the degree of the current polynomial
+       being used, and the separation between the two pointers.
+       Note that for efficiency of random, we remember the first location of
+       the state information, not the zeroth.  Hence it is valid to access
+       state[-1], which is used to store the type of the R.N.G.
+       Also, we remember the last location, since this is more efficient than
+       indexing every time to find the address of the last element to see if
+       the front and rear pointers have wrapped.  */
 
     .state = &randtbl[1],
 
@@ -189,13 +187,13 @@ static struct random_data unsafe_state =
     .rand_deg = DEG_3,
     .rand_sep = SEP_3,
 
-    .end_ptr = &randtbl[sizeof (randtbl) / sizeof (randtbl[0])]
+    .end_ptr = &randtbl[sizeof(randtbl) / sizeof(randtbl[0])]
 };
 
 /* POSIX.1c requires that there is mutual exclusion for the `rand' and
    `srand' functions to prevent concurrent calls from modifying common
    data.  */
-__libc_lock_define_initialized (static, lock)
+__libc_lock_define_initialized(static, lock)
 
 /* Initialize the random number generator based on the given seed.  If the
    type is the trivial no-state-information type, just remember the seed.
@@ -206,15 +204,15 @@ __libc_lock_define_initialized (static, lock)
    introduced by the L.C.R.N.G.  Note that the initialization of randtbl[]
    for default usage relies on values produced by this routine.  */
 void
-__srandom (unsigned int x)
+__srandom(unsigned int x)
 {
-  __libc_lock_lock (lock);
-  (void) __srandom_r (x, &unsafe_state);
-  __libc_lock_unlock (lock);
+    __libc_lock_lock(lock);
+    (void) __srandom_r(x, &unsafe_state);
+    __libc_lock_unlock(lock);
 }
 
-weak_alias (__srandom, srandom)
-weak_alias (__srandom, srand)
+weak_alias(__srandom, srandom)
+weak_alias(__srandom, srand)
 
 /* Initialize the state information in the given array of N bytes for
    future random number generation.  Based on the number of bytes we
@@ -228,23 +226,23 @@ weak_alias (__srandom, srand)
    setstate so that it doesn't matter when initstate is called.
    Returns a pointer to the old state.  */
 char *
-__initstate (unsigned int seed, char *arg_state, size_t n)
+__initstate(unsigned int seed, char *arg_state, size_t n)
 {
-  int32_t *ostate;
-  int ret;
+    int32_t *ostate;
+    int ret;
 
-  __libc_lock_lock (lock);
+    __libc_lock_lock(lock);
 
-  ostate = &unsafe_state.state[-1];
+    ostate = &unsafe_state.state[-1];
 
-  ret = __initstate_r (seed, arg_state, n, &unsafe_state);
+    ret = __initstate_r(seed, arg_state, n, &unsafe_state);
 
-  __libc_lock_unlock (lock);
+    __libc_lock_unlock(lock);
 
-  return ret == -1 ? NULL : (char *) ostate;
+    return ret == -1 ? NULL : (char *) ostate;
 }
 
-weak_alias (__initstate, initstate)
+weak_alias(__initstate, initstate)
 
 /* Restore the state from the given state array.
    Note: It is important that we also remember the locations of the pointers
@@ -255,23 +253,24 @@ weak_alias (__initstate, initstate)
    same state as the current state
    Returns a pointer to the old state information.  */
 char *
-__setstate (char *arg_state)
+__setstate(char *arg_state)
 {
-  int32_t *ostate;
+    int32_t *ostate;
 
-  __libc_lock_lock (lock);
+    __libc_lock_lock(lock);
 
-  ostate = &unsafe_state.state[-1];
+    ostate = &unsafe_state.state[-1];
 
-  if (__setstate_r (arg_state, &unsafe_state) < 0)
-    ostate = NULL;
+    if (__setstate_r(arg_state, &unsafe_state) < 0) {
+        ostate = NULL;
+    }
 
-  __libc_lock_unlock (lock);
+    __libc_lock_unlock(lock);
 
-  return (char *) ostate;
+    return (char *) ostate;
 }
 
-weak_alias (__setstate, setstate)
+weak_alias(__setstate, setstate)
 
 /* If we are using the trivial TYPE_0 R.N.G., just do the old linear
    congruential bit.  Otherwise, we do our fancy trinomial stuff, which is the
@@ -285,23 +284,22 @@ weak_alias (__setstate, setstate)
    pointer if the front one has wrapped.  Returns a 31-bit random number.  */
 
 long int
-__random (void)
+__random(void)
 {
-  int32_t retval;
+    int32_t retval;
 
-  if (SINGLE_THREAD_P)
-    {
-      (void) __random_r (&unsafe_state, &retval);
-      return retval;
+    if (SINGLE_THREAD_P) {
+        (void) __random_r(&unsafe_state, &retval);
+        return retval;
     }
 
-  __libc_lock_lock (lock);
+    __libc_lock_lock(lock);
 
-  (void) __random_r (&unsafe_state, &retval);
+    (void) __random_r(&unsafe_state, &retval);
 
-  __libc_lock_unlock (lock);
+    __libc_lock_unlock(lock);
 
-  return retval;
+    return retval;
 }
 
-weak_alias (__random, random)
+weak_alias(__random, random)

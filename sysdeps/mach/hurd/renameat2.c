@@ -21,51 +21,52 @@
 #include <hurd/fd.h>
 
 /* Rename the file OLD relative to OLDFD to NEW relative to NEWFD.  */
-int
-__renameat2 (int oldfd, const char *old, int newfd, const char *new,
-             unsigned int flags)
+int __renameat2(int oldfd, const char *old, int newfd, const char *new,
+                unsigned int flags)
 {
-  error_t err;
-  file_t olddir, newdir;
-  const char *oldname, *newname;
-  int excl = 0;
+    error_t err;
+    file_t olddir, newdir;
+    const char *oldname, *newname;
+    int excl = 0;
 
-  if ((flags & (RENAME_EXCHANGE | RENAME_NOREPLACE)) == (RENAME_EXCHANGE | RENAME_NOREPLACE))
-    return __hurd_fail (EINVAL);
-  if (flags & (RENAME_EXCHANGE | RENAME_WHITEOUT))
-    return __hurd_fail (ENOSYS);
-  if (flags & RENAME_NOREPLACE)
-    excl = 1;
-
-  olddir = __file_name_split_at (oldfd, old, (char **) &oldname);
-  if (olddir == MACH_PORT_NULL)
-    return -1;
-  if (!*oldname)
-    {
-      /* Trailing slash.  */
-      __mach_port_deallocate (__mach_task_self (), olddir);
-      return __hurd_fail (ENOTDIR);
+    if ((flags & (RENAME_EXCHANGE | RENAME_NOREPLACE)) == (RENAME_EXCHANGE | RENAME_NOREPLACE)) {
+        return __hurd_fail(EINVAL);
     }
-  newdir = __file_name_split_at (newfd, new, (char **) &newname);
-  if (newdir == MACH_PORT_NULL)
-    {
-      __mach_port_deallocate (__mach_task_self (), olddir);
-      return -1;
+    if (flags & (RENAME_EXCHANGE | RENAME_WHITEOUT)) {
+        return __hurd_fail(ENOSYS);
     }
-  if (!*newname)
-    {
-      /* Trailing slash.  */
-      __mach_port_deallocate (__mach_task_self (), olddir);
-      __mach_port_deallocate (__mach_task_self (), newdir);
-      return __hurd_fail (ENOTDIR);
+    if (flags & RENAME_NOREPLACE) {
+        excl = 1;
     }
 
-  err = __dir_rename (olddir, oldname, newdir, newname, excl);
-  __mach_port_deallocate (__mach_task_self (), olddir);
-  __mach_port_deallocate (__mach_task_self (), newdir);
-  if (err)
-    return __hurd_fail (err);
-  return 0;
+    olddir = __file_name_split_at(oldfd, old, (char **) &oldname);
+    if (olddir == MACH_PORT_NULL) {
+        return -1;
+    }
+    if (!*oldname) {
+        /* Trailing slash.  */
+        __mach_port_deallocate(__mach_task_self(), olddir);
+        return __hurd_fail(ENOTDIR);
+    }
+    newdir = __file_name_split_at(newfd, new, (char **) &newname);
+    if (newdir == MACH_PORT_NULL) {
+        __mach_port_deallocate(__mach_task_self(), olddir);
+        return -1;
+    }
+    if (!*newname) {
+        /* Trailing slash.  */
+        __mach_port_deallocate(__mach_task_self(), olddir);
+        __mach_port_deallocate(__mach_task_self(), newdir);
+        return __hurd_fail(ENOTDIR);
+    }
+
+    err = __dir_rename(olddir, oldname, newdir, newname, excl);
+    __mach_port_deallocate(__mach_task_self(), olddir);
+    __mach_port_deallocate(__mach_task_self(), newdir);
+    if (err) {
+        return __hurd_fail(err);
+    }
+    return 0;
 }
-libc_hidden_def (__renameat2)
-weak_alias (__renameat2, renameat2)
+libc_hidden_def(__renameat2)
+weak_alias(__renameat2, renameat2)

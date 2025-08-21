@@ -19,4 +19,4 @@
 
 #include <stdlib/llabs.c>
 
-weak_alias (llabs, imaxabs)
+weak_alias(llabs, imaxabs)

@@ -23,22 +23,21 @@
 #include <support/check.h>
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* Check if the interface allows getting the amount of time remaining
-     from any previous adjustment that has not yet been completed.  This
-     is a non-privileged function of adjtime.  */
-  struct timeval tv;
-  int r = adjtime (NULL, &tv);
-  if (r == -1)
-    {
-      if (errno == ENOSYS)
-	FAIL_UNSUPPORTED ("adjtime unsupported");
-      FAIL_EXIT1 ("adjtime (NULL, ...) failed: %m");
+    /* Check if the interface allows getting the amount of time remaining
+       from any previous adjustment that has not yet been completed.  This
+       is a non-privileged function of adjtime.  */
+    struct timeval tv;
+    int r = adjtime(NULL, &tv);
+    if (r == -1) {
+        if (errno == ENOSYS) {
+            FAIL_UNSUPPORTED("adjtime unsupported");
+        }
+        FAIL_EXIT1("adjtime (NULL, ...) failed: %m");
     }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

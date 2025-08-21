@@ -15,11 +15,10 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-void hello (void);
+void hello(void);
 
-int
-main (void)
+int main(void)
 {
-  hello ();
-  return 0;
+    hello();
+    return 0;
 }

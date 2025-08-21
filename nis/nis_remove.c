@@ -21,38 +21,36 @@
 #include "nis_xdr.h"
 #include "nis_intern.h"
 
-nis_result *
-nis_remove (const_nis_name name, const nis_object *obj)
+nis_result *nis_remove(const_nis_name name, const nis_object *obj)
 {
-  nis_result *res;
-  nis_error status;
-  struct ns_request req;
+    nis_result *res;
+    nis_error status;
+    struct ns_request req;
 
-  res = calloc (1, sizeof (nis_result));
-  if (res == NULL)
-    return NULL;
-
-  req.ns_name = (char *)name;
-
-  if (obj != NULL)
-    {
-      req.ns_object.ns_object_len = 1;
-      req.ns_object.ns_object_val = nis_clone_object (obj, NULL);
-    }
-  else
-    {
-      req.ns_object.ns_object_len = 0;
-      req.ns_object.ns_object_val = NULL;
+    res = calloc(1, sizeof(nis_result));
+    if (res == NULL) {
+        return NULL;
     }
 
-  if ((status = __do_niscall (name, NIS_REMOVE, (xdrproc_t) _xdr_ns_request,
-			      (caddr_t) &req, (xdrproc_t) _xdr_nis_result,
-			      (caddr_t) res, MASTER_ONLY,
-			      NULL)) != NIS_SUCCESS)
-    NIS_RES_STATUS (res) = status;
+    req.ns_name = (char *)name;
 
-  nis_destroy_object (req.ns_object.ns_object_val);
+    if (obj != NULL) {
+        req.ns_object.ns_object_len = 1;
+        req.ns_object.ns_object_val = nis_clone_object(obj, NULL);
+    } else {
+        req.ns_object.ns_object_len = 0;
+        req.ns_object.ns_object_val = NULL;
+    }
 
-  return res;
+    if ((status = __do_niscall(name, NIS_REMOVE, (xdrproc_t) _xdr_ns_request,
+                               (caddr_t) &req, (xdrproc_t) _xdr_nis_result,
+                               (caddr_t) res, MASTER_ONLY,
+                               NULL)) != NIS_SUCCESS) {
+        NIS_RES_STATUS(res) = status;
+    }
+
+    nis_destroy_object(req.ns_object.ns_object_val);
+
+    return res;
 }
-libnsl_hidden_nolink_def (nis_remove, GLIBC_2_1)
+libnsl_hidden_nolink_def(nis_remove, GLIBC_2_1)

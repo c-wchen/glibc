@@ -24,35 +24,33 @@
 #include <not-cancel.h>
 
 
-DIR *
-__fdopendir (int fd)
+DIR *__fdopendir(int fd)
 {
-  struct __stat64_t64 statbuf;
+    struct __stat64_t64 statbuf;
 
-  if (__glibc_unlikely (__fstat64_time64 (fd, &statbuf) < 0))
-    return NULL;
-  if (__glibc_unlikely (! S_ISDIR (statbuf.st_mode)))
-    {
-      __set_errno (ENOTDIR);
-      return NULL;
+    if (__glibc_unlikely(__fstat64_time64(fd, &statbuf) < 0)) {
+        return NULL;
+    }
+    if (__glibc_unlikely(! S_ISDIR(statbuf.st_mode))) {
+        __set_errno(ENOTDIR);
+        return NULL;
     }
 
-  int flags = __fcntl64_nocancel (fd, F_GETFL);
-  if (__glibc_unlikely (flags == -1))
-    return NULL;
-  /* Fail early for descriptors opened with O_PATH.  */
-  if (__glibc_unlikely (flags & O_PATH))
-    {
-      __set_errno (EBADF);
-      return NULL;
+    int flags = __fcntl64_nocancel(fd, F_GETFL);
+    if (__glibc_unlikely(flags == -1)) {
+        return NULL;
     }
-  /* Make sure the descriptor allows for reading.  */
-  if (__glibc_unlikely ((flags & O_ACCMODE) == O_WRONLY))
-    {
-      __set_errno (EINVAL);
-      return NULL;
+    /* Fail early for descriptors opened with O_PATH.  */
+    if (__glibc_unlikely(flags & O_PATH)) {
+        __set_errno(EBADF);
+        return NULL;
+    }
+    /* Make sure the descriptor allows for reading.  */
+    if (__glibc_unlikely((flags & O_ACCMODE) == O_WRONLY)) {
+        __set_errno(EINVAL);
+        return NULL;
     }
 
-  return __alloc_dir (fd, false, flags, &statbuf);
+    return __alloc_dir(fd, false, flags, &statbuf);
 }
-weak_alias (__fdopendir, fdopendir)
+weak_alias(__fdopendir, fdopendir)

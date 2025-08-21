@@ -23,56 +23,48 @@
 static pthread_mutex_t m = PTHREAD_MUTEX_INITIALIZER;
 
 
-static void
-cl (void *p)
+static void cl(void *p)
 {
-  pthread_mutex_unlock (&m);
+    pthread_mutex_unlock(&m);
 }
 
 
-static void *
-tf (void *arg)
+static void *tf(void *arg)
 {
-  if (pthread_mutex_lock (&m) != 0)
-    {
-      puts ("2nd mutex_lock failed");
-      exit (1);
+    if (pthread_mutex_lock(&m) != 0) {
+        puts("2nd mutex_lock failed");
+        exit(1);
     }
 
-  exit (0);
+    exit(0);
 }
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  pthread_key_t k;
-  if (pthread_key_create (&k, cl) != 0)
-    {
-      puts ("key_create failed");
-      return 1;
+    pthread_key_t k;
+    if (pthread_key_create(&k, cl) != 0) {
+        puts("key_create failed");
+        return 1;
     }
-  /* Use an arbitrary but valid pointer as the value.  */
-  if (pthread_setspecific (k, (void *) &k) != 0)
-    {
-      puts ("setspecific failed");
-      return 1;
+    /* Use an arbitrary but valid pointer as the value.  */
+    if (pthread_setspecific(k, (void *) &k) != 0) {
+        puts("setspecific failed");
+        return 1;
     }
 
-  if (pthread_mutex_lock (&m) != 0)
-    {
-      puts ("1st mutex_lock failed");
-      return 1;
+    if (pthread_mutex_lock(&m) != 0) {
+        puts("1st mutex_lock failed");
+        return 1;
     }
 
-  pthread_t th;
-  if (pthread_create (&th, NULL, tf, NULL) != 0)
-    {
-      puts ("create failed");
-      return 1;
+    pthread_t th;
+    if (pthread_create(&th, NULL, tf, NULL) != 0) {
+        puts("create failed");
+        return 1;
     }
 
-  pthread_exit (NULL);
+    pthread_exit(NULL);
 }
 
 

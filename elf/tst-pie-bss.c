@@ -18,13 +18,12 @@
 
 #include <stdio.h>
 
-char bss[0xb5dce8] __attribute__ ((aligned (65536)));
+char bss[0xb5dce8] __attribute__((aligned(65536)));
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  printf ("Hello\n");
-  return 0;
+    printf("Hello\n");
+    return 0;
 }
 
 #include <support/test-driver.c>

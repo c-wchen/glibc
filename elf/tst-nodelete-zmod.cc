@@ -1,6 +1,6 @@
-extern int not_exist (void);
+extern int not_exist(void);
 
-int foo (void)
+int foo(void)
 {
-  return not_exist ();
+    return not_exist();
 }

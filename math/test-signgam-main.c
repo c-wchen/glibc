@@ -30,39 +30,38 @@ TYPE signgam = INITVAL;
 TYPE signgam;
 #endif
 
-#define RUN_TESTS(FUNC, TYPE)					\
-  do								\
-    {								\
-      volatile TYPE a, b, c __attribute__ ((unused));		\
-      a = 0.5;							\
-      b = -0.5;							\
-      signgam = INITVAL;					\
-      c = FUNC (a);						\
-      if (signgam == INITVAL)					\
-	puts ("PASS: " #FUNC " (0.5) setting signgam");		\
-      else							\
-	{							\
-	  puts ("FAIL: " #FUNC " (0.5) setting signgam");	\
-	  result = 1;						\
-	}							\
-      signgam = INITVAL;					\
-      c = FUNC (b);						\
-      if (signgam == INITVAL)					\
-	puts ("PASS: " #FUNC " (-0.5) setting signgam");	\
-      else							\
-	{							\
-	  puts ("FAIL: " #FUNC " (-0.5) setting signgam");	\
-	  result = 1;						\
-	}							\
-    }								\
+#define RUN_TESTS(FUNC, TYPE)                   \
+  do                                \
+    {                               \
+      volatile TYPE a, b, c __attribute__ ((unused));       \
+      a = 0.5;                          \
+      b = -0.5;                         \
+      signgam = INITVAL;                    \
+      c = FUNC (a);                     \
+      if (signgam == INITVAL)                   \
+    puts ("PASS: " #FUNC " (0.5) setting signgam");     \
+      else                          \
+    {                           \
+      puts ("FAIL: " #FUNC " (0.5) setting signgam");   \
+      result = 1;                       \
+    }                           \
+      signgam = INITVAL;                    \
+      c = FUNC (b);                     \
+      if (signgam == INITVAL)                   \
+    puts ("PASS: " #FUNC " (-0.5) setting signgam");    \
+      else                          \
+    {                           \
+      puts ("FAIL: " #FUNC " (-0.5) setting signgam");  \
+      result = 1;                       \
+    }                           \
+    }                               \
   while (0)
 
-int
-main (void)
+int main(void)
 {
-  int result = 0;
-  RUN_TESTS (lgammaf, float);
-  RUN_TESTS (lgamma, double);
-  RUN_TESTS (lgammal, long double);
-  return result;
+    int result = 0;
+    RUN_TESTS(lgammaf, float);
+    RUN_TESTS(lgamma, double);
+    RUN_TESTS(lgammal, long double);
+    return result;
 }

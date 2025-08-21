@@ -20,21 +20,19 @@
 #define _ARCH_PKEY_H
 
 /* Return the value of the PKRU register.  */
-static inline unsigned int
-pkey_read (void)
+static inline unsigned int pkey_read(void)
 {
-  unsigned int result;
-  __asm__ volatile (".byte 0x0f, 0x01, 0xee"
-                    : "=a" (result) : "c" (0) : "rdx");
-  return result;
+    unsigned int result;
+    __asm__ volatile(".byte 0x0f, 0x01, 0xee"
+                     : "=a"(result) : "c"(0) : "rdx");
+    return result;
 }
 
 /* Overwrite the PKRU register with VALUE.  */
-static inline void
-pkey_write (unsigned int value)
+static inline void pkey_write(unsigned int value)
 {
-  __asm__ volatile (".byte 0x0f, 0x01, 0xef"
-                    : : "a" (value), "c" (0), "d" (0));
+    __asm__ volatile(".byte 0x0f, 0x01, 0xef"
+                     : : "a"(value), "c"(0), "d"(0));
 }
 
 #endif /* _ARCH_PKEY_H */

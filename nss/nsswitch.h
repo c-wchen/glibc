@@ -16,7 +16,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _NSSWITCH_H
-#define _NSSWITCH_H	1
+#define _NSSWITCH_H 1
 
 /* This is an *internal* header.  */
 
@@ -29,33 +29,30 @@
 #include <stdbool.h>
 
 /* Actions performed after lookup finished.  */
-typedef enum
-{
-  NSS_ACTION_CONTINUE,
-  NSS_ACTION_RETURN,
-  NSS_ACTION_MERGE
+typedef enum {
+    NSS_ACTION_CONTINUE,
+    NSS_ACTION_RETURN,
+    NSS_ACTION_MERGE
 } lookup_actions;
 
 struct nss_action;
 
-typedef struct service_library
-{
-  /* Name of service (`files', `dns', `nis', ...).  */
-  const char *name;
-  /* Pointer to the loaded shared library.  */
-  void *lib_handle;
-  /* And the link to the next entry.  */
-  struct service_library *next;
+typedef struct service_library {
+    /* Name of service (`files', `dns', `nis', ...).  */
+    const char *name;
+    /* Pointer to the loaded shared library.  */
+    void *lib_handle;
+    /* And the link to the next entry.  */
+    struct service_library *next;
 } service_library;
 
 
 /* For mapping a function name to a function pointer.  It is known in
    nsswitch.c:nss_lookup_function that a string pointer for the lookup key
    is the first member.  */
-typedef struct
-{
-  const char *fct_name;
-  void *fct_ptr;
+typedef struct {
+    const char *fct_name;
+    void *fct_ptr;
 } known_function;
 
 
@@ -65,13 +62,12 @@ typedef struct
 
 #ifdef USE_NSCD
 /* Indices into DATABASES in nsswitch.c and __NSS_DATABASE_CUSTOM.  */
-enum
-  {
+enum {
 # define DEFINE_DATABASE(arg) NSS_DBSIDX_##arg,
 # include "databases.def"
 # undef DEFINE_DATABASE
     NSS_DBSIDX_max
-  };
+};
 
 /* Flags whether custom rules for database is set.  */
 extern bool __nss_database_custom[NSS_DBSIDX_max] attribute_hidden;
@@ -91,9 +87,9 @@ extern bool __nss_database_custom[NSS_DBSIDX_max] attribute_hidden;
 /* Put first function with name FCT_NAME for SERVICE in FCTP.  The
    position is remembered in NI.  The function returns a value < 0 if
    an error occurred or no such function exists.  */
-extern int __nss_lookup (struct nss_action **ni, const char *fct_name,
-			 const char *fct2_name, void **fctp);
-libc_hidden_proto (__nss_lookup)
+extern int __nss_lookup(struct nss_action **ni, const char *fct_name,
+                        const char *fct2_name, void **fctp);
+libc_hidden_proto(__nss_lookup)
 
 /* Determine the next step in the lookup process according to the
    result STATUS of the call to the last function returned by
@@ -108,86 +104,86 @@ libc_hidden_proto (__nss_lookup)
    services.  In other words, only if all four lookup results have
    the action RETURN associated the lookup process stops before the
    natural end.  */
-extern int __nss_next2 (struct nss_action **ni, const char *fct_name,
-			const char *fct2_name, void **fctp, int status,
-			int all_values) attribute_hidden;
-libc_hidden_proto (__nss_next2)
-extern int __nss_next (struct nss_action **ni, const char *fct_name, void **fctp,
-		       int status, int all_values);
+extern int __nss_next2(struct nss_action **ni, const char *fct_name,
+                       const char *fct2_name, void **fctp, int status,
+                       int all_values) attribute_hidden;
+libc_hidden_proto(__nss_next2)
+extern int __nss_next(struct nss_action **ni, const char *fct_name, void **fctp,
+                      int status, int all_values);
 
 /* Search for the service described in NI for a function named FCT_NAME
    and return a pointer to this function if successful.  */
-extern void *__nss_lookup_function (struct nss_action *ni, const char *fct_name);
-libc_hidden_proto (__nss_lookup_function)
+extern void *__nss_lookup_function(struct nss_action *ni, const char *fct_name);
+libc_hidden_proto(__nss_lookup_function)
 
 
 /* Called by NSCD to disable recursive calls and enable special handling
    when used in nscd.  */
 struct traced_file;
-extern void __nss_disable_nscd (void (*) (size_t, struct traced_file *));
+extern void __nss_disable_nscd(void (*)(size_t, struct traced_file *));
 
 
-typedef int (*db_lookup_function) (struct nss_action **, const char *, const char *,
-				   void **);
-typedef enum nss_status (*setent_function) (int);
-typedef enum nss_status (*endent_function) (void);
-typedef enum nss_status (*getent_function) (void *, char *, size_t,
-					    int *, int *);
-typedef int (*getent_r_function) (void *, char *, size_t,
-				  void **result, int *);
+typedef int (*db_lookup_function)(struct nss_action **, const char *, const char *,
+                                  void **);
+typedef enum nss_status(*setent_function)(int);
+typedef enum nss_status(*endent_function)(void);
+typedef enum nss_status(*getent_function)(void *, char *, size_t,
+        int *, int *);
+typedef int (*getent_r_function)(void *, char *, size_t,
+                                 void **result, int *);
 
-extern void __nss_setent (const char *func_name,
-			  db_lookup_function lookup_fct,
-			  struct nss_action **nip, struct nss_action **startp,
-			  struct nss_action **last_nip, int stayon,
-			  int *stayon_tmp, int res)
-     attribute_hidden;
-extern void __nss_endent (const char *func_name,
-			  db_lookup_function lookup_fct,
-			  struct nss_action **nip, struct nss_action **startp,
-			  struct nss_action **last_nip, int res)
-     attribute_hidden;
-extern int __nss_getent_r (const char *getent_func_name,
-			   const char *setent_func_name,
-			   db_lookup_function lookup_fct,
-			   struct nss_action **nip, struct nss_action **startp,
-			   struct nss_action **last_nip, int *stayon_tmp,
-			   int res,
-			   void *resbuf, char *buffer, size_t buflen,
-			   void **result, int *h_errnop)
-     attribute_hidden;
-extern void *__nss_getent (getent_r_function func,
-			   void **resbuf, char **buffer, size_t buflen,
-			   size_t *buffer_size, int *h_errnop)
-     attribute_hidden;
+extern void __nss_setent(const char *func_name,
+                         db_lookup_function lookup_fct,
+                         struct nss_action **nip, struct nss_action **startp,
+                         struct nss_action **last_nip, int stayon,
+                         int *stayon_tmp, int res)
+attribute_hidden;
+extern void __nss_endent(const char *func_name,
+                         db_lookup_function lookup_fct,
+                         struct nss_action **nip, struct nss_action **startp,
+                         struct nss_action **last_nip, int res)
+attribute_hidden;
+extern int __nss_getent_r(const char *getent_func_name,
+                          const char *setent_func_name,
+                          db_lookup_function lookup_fct,
+                          struct nss_action **nip, struct nss_action **startp,
+                          struct nss_action **last_nip, int *stayon_tmp,
+                          int res,
+                          void *resbuf, char *buffer, size_t buflen,
+                          void **result, int *h_errnop)
+attribute_hidden;
+extern void *__nss_getent(getent_r_function func,
+                          void **resbuf, char **buffer, size_t buflen,
+                          size_t *buffer_size, int *h_errnop)
+attribute_hidden;
 struct resolv_context;
 struct hostent;
-extern int __nss_hostname_digits_dots_context (struct resolv_context *,
-					       const char *name,
-					       struct hostent *resbuf,
-					       char **buffer,
-					       size_t *buffer_size,
-					       size_t buflen,
-					       struct hostent **result,
-					       enum nss_status *status, int af,
-					       int *h_errnop) attribute_hidden;
-extern int __nss_hostname_digits_dots (const char *name,
-				       struct hostent *resbuf, char **buffer,
-				       size_t *buffer_size, size_t buflen,
-				       struct hostent **result,
-				       enum nss_status *status, int af,
-				       int *h_errnop);
-libc_hidden_proto (__nss_hostname_digits_dots)
+extern int __nss_hostname_digits_dots_context(struct resolv_context *,
+        const char *name,
+        struct hostent *resbuf,
+        char **buffer,
+        size_t *buffer_size,
+        size_t buflen,
+        struct hostent **result,
+        enum nss_status *status, int af,
+        int *h_errnop) attribute_hidden;
+extern int __nss_hostname_digits_dots(const char *name,
+                                      struct hostent *resbuf, char **buffer,
+                                      size_t *buffer_size, size_t buflen,
+                                      struct hostent **result,
+                                      enum nss_status *status, int af,
+                                      int *h_errnop);
+libc_hidden_proto(__nss_hostname_digits_dots)
 
 /* Maximum number of aliases we allow.  */
 #define MAX_NR_ALIASES  48
 #define MAX_NR_ADDRS    48
 
 /* Prototypes for __nss_*_lookup2 functions.  */
-#define DEFINE_DATABASE(arg)						      \
-  extern struct nss_action *__nss_##arg##_database attribute_hidden;		      \
-  int __nss_##arg##_lookup2 (struct nss_action **, const char *,		      \
-			     const char *, void **);			      \
+#define DEFINE_DATABASE(arg)                              \
+  extern struct nss_action *__nss_##arg##_database attribute_hidden;              \
+  int __nss_##arg##_lookup2 (struct nss_action **, const char *,              \
+                 const char *, void **);                  \
   libc_hidden_proto (__nss_##arg##_lookup2)
 #include "databases.def"
 #undef DEFINE_DATABASE
@@ -196,4 +192,4 @@ libc_hidden_proto (__nss_hostname_digits_dots)
 #include <nss/nss_action.h>
 #include <nss/nss_database.h>
 
-#endif	/* nsswitch.h */
+#endif  /* nsswitch.h */

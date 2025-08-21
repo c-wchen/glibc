@@ -18,28 +18,27 @@
 
 #include <fenv_libc.h>
 
-int
-__fesetexceptflag (const fexcept_t *flagp, int excepts)
+int __fesetexceptflag(const fexcept_t *flagp, int excepts)
 {
-  unsigned long int tmp;
+    unsigned long int tmp;
 
-  /* Get the current exception state.  */
-  tmp = __ieee_get_fp_control ();
+    /* Get the current exception state.  */
+    tmp = __ieee_get_fp_control();
 
-  /* Set all the bits that were called for.  */
-  tmp ^= (tmp ^ *flagp) & excepts & SWCR_STATUS_MASK;
+    /* Set all the bits that were called for.  */
+    tmp ^= (tmp ^ *flagp) & excepts & SWCR_STATUS_MASK;
 
-  /* And store it back.  */
-  __ieee_set_fp_control (tmp);
+    /* And store it back.  */
+    __ieee_set_fp_control(tmp);
 
-  /* Success.  */
-  return 0;
+    /* Success.  */
+    return 0;
 }
 
 #include <shlib-compat.h>
 #if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
-strong_alias (__fesetexceptflag, __old_fesetexceptflag)
-compat_symbol (libm, __old_fesetexceptflag, fesetexceptflag, GLIBC_2_1);
+strong_alias(__fesetexceptflag, __old_fesetexceptflag)
+compat_symbol(libm, __old_fesetexceptflag, fesetexceptflag, GLIBC_2_1);
 #endif
 
-versioned_symbol (libm, __fesetexceptflag, fesetexceptflag, GLIBC_2_2);
+versioned_symbol(libm, __fesetexceptflag, fesetexceptflag, GLIBC_2_2);

@@ -39,49 +39,48 @@ char utf8_in[] = { 0xe0, 0xa0, 0x80, 0x0 };
    so we get default_missing used which is '?'.  */
 char default_missing_exp[] = { 0x3f, 0x0 };
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char ascii_out[5];
-  iconv_t cd;
-  char *inbuf;
-  char *outbuf;
-  size_t inbytes;
-  size_t outbytes;
-  size_t n;
+    char ascii_out[5];
+    iconv_t cd;
+    char *inbuf;
+    char *outbuf;
+    size_t inbytes;
+    size_t outbytes;
+    size_t n;
 
-  /* The C.UTF-8 locale should include translit_combining, which provides
-     the transliteration for "LATIN SMALL LETTER U WITH DIAERESIS" which
-     is not provided by locale/C-translit.h.in.  */
-  xsetlocale (LC_ALL, "C.UTF-8");
+    /* The C.UTF-8 locale should include translit_combining, which provides
+       the transliteration for "LATIN SMALL LETTER U WITH DIAERESIS" which
+       is not provided by locale/C-translit.h.in.  */
+    xsetlocale(LC_ALL, "C.UTF-8");
 
-  /* From ISO-8859-1 to ASCII.  */
-  cd = iconv_open ("ASCII//TRANSLIT,IGNORE", "ISO-8859-1");
-  TEST_VERIFY (cd != (iconv_t) -1);
-  inbuf = iso88591_in;
-  inbytes = 3;
-  outbuf = ascii_out;
-  outbytes = 3;
-  n = iconv (cd, &inbuf, &inbytes, &outbuf, &outbytes);
-  TEST_VERIFY (n != -1);
-  *outbuf = '\0';
-  TEST_COMPARE_BLOB (ascii_out, 3, ascii_exp, 3);
-  TEST_VERIFY (iconv_close (cd) == 0);
+    /* From ISO-8859-1 to ASCII.  */
+    cd = iconv_open("ASCII//TRANSLIT,IGNORE", "ISO-8859-1");
+    TEST_VERIFY(cd != (iconv_t) -1);
+    inbuf = iso88591_in;
+    inbytes = 3;
+    outbuf = ascii_out;
+    outbytes = 3;
+    n = iconv(cd, &inbuf, &inbytes, &outbuf, &outbytes);
+    TEST_VERIFY(n != -1);
+    *outbuf = '\0';
+    TEST_COMPARE_BLOB(ascii_out, 3, ascii_exp, 3);
+    TEST_VERIFY(iconv_close(cd) == 0);
 
-  /* From UTF-8 to ASCII.  */
-  cd = iconv_open ("ASCII//TRANSLIT,IGNORE", "UTF-8");
-  TEST_VERIFY (cd != (iconv_t) -1);
-  inbuf = utf8_in;
-  inbytes = 3;
-  outbuf = ascii_out;
-  outbytes = 3;
-  n = iconv (cd, &inbuf, &inbytes, &outbuf, &outbytes);
-  TEST_VERIFY (n != -1);
-  *outbuf = '\0';
-  TEST_COMPARE_BLOB (ascii_out, 1, default_missing_exp, 1);
-  TEST_VERIFY (iconv_close (cd) == 0);
+    /* From UTF-8 to ASCII.  */
+    cd = iconv_open("ASCII//TRANSLIT,IGNORE", "UTF-8");
+    TEST_VERIFY(cd != (iconv_t) -1);
+    inbuf = utf8_in;
+    inbytes = 3;
+    outbuf = ascii_out;
+    outbytes = 3;
+    n = iconv(cd, &inbuf, &inbytes, &outbuf, &outbytes);
+    TEST_VERIFY(n != -1);
+    *outbuf = '\0';
+    TEST_COMPARE_BLOB(ascii_out, 1, default_missing_exp, 1);
+    TEST_VERIFY(iconv_close(cd) == 0);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

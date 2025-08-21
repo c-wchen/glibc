@@ -27,82 +27,81 @@
 #include <support/check.h>
 #include <support/support.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  mtrace ();
+    mtrace();
 
-  /* For 's' conversion specifier with 'l' modifier the array must be
-     converted to multibyte characters up to the precision specific
-     value.  */
-  {
-    /* The input size value is to force a heap allocation on temporary
-       buffer (in the old implementation).  */
-    const size_t winputsize = 64 * 1024 + 1;
-    wchar_t *winput = xmalloc (winputsize * sizeof (wchar_t));
-    wmemset (winput, L'a', winputsize - 1);
-    winput[winputsize - 1] = L'\0';
+    /* For 's' conversion specifier with 'l' modifier the array must be
+       converted to multibyte characters up to the precision specific
+       value.  */
+    {
+        /* The input size value is to force a heap allocation on temporary
+           buffer (in the old implementation).  */
+        const size_t winputsize = 64 * 1024 + 1;
+        wchar_t *winput = xmalloc(winputsize * sizeof(wchar_t));
+        wmemset(winput, L'a', winputsize - 1);
+        winput[winputsize - 1] = L'\0';
 
-    char result[9];
-    const char expected[] = "aaaaaaaa";
-    int ret;
+        char result[9];
+        const char expected[] = "aaaaaaaa";
+        int ret;
 
-    ret = snprintf (result, sizeof (result), "%.65537ls", winput);
-    TEST_COMPARE (ret, winputsize - 1);
-    TEST_COMPARE_BLOB (result, sizeof (result), expected, sizeof (expected));
+        ret = snprintf(result, sizeof(result), "%.65537ls", winput);
+        TEST_COMPARE(ret, winputsize - 1);
+        TEST_COMPARE_BLOB(result, sizeof(result), expected, sizeof(expected));
 
-    ret = snprintf (result, sizeof (result), "%ls", winput);
-    TEST_COMPARE (ret, winputsize - 1);
-    TEST_COMPARE_BLOB (result, sizeof (result), expected, sizeof (expected));
+        ret = snprintf(result, sizeof(result), "%ls", winput);
+        TEST_COMPARE(ret, winputsize - 1);
+        TEST_COMPARE_BLOB(result, sizeof(result), expected, sizeof(expected));
 
-    free (winput);
-  }
+        free(winput);
+    }
 
-  /* For 's' conversion specifier the array is interpreted as a multibyte
-     character sequence and converted to wide characters up to the precision
-     specific value.  */
-  {
-    /* The input size value is to force a heap allocation on temporary
-       buffer (in the old implementation).  */
-    const size_t mbssize = 32 * 1024;
-    char *mbs = xmalloc (mbssize);
-    memset (mbs, 'a', mbssize - 1);
-    mbs[mbssize - 1] = '\0';
+    /* For 's' conversion specifier the array is interpreted as a multibyte
+       character sequence and converted to wide characters up to the precision
+       specific value.  */
+    {
+        /* The input size value is to force a heap allocation on temporary
+           buffer (in the old implementation).  */
+        const size_t mbssize = 32 * 1024;
+        char *mbs = xmalloc(mbssize);
+        memset(mbs, 'a', mbssize - 1);
+        mbs[mbssize - 1] = '\0';
 
-    const size_t expectedsize = 32 * 1024;
-    wchar_t *expected = xmalloc (expectedsize * sizeof (wchar_t));
-    wmemset (expected, L'a', expectedsize - 1);
-    expected[expectedsize-1] = L'\0';
+        const size_t expectedsize = 32 * 1024;
+        wchar_t *expected = xmalloc(expectedsize * sizeof(wchar_t));
+        wmemset(expected, L'a', expectedsize - 1);
+        expected[expectedsize - 1] = L'\0';
 
-    const size_t resultsize = mbssize * sizeof (wchar_t);
-    wchar_t *result = xmalloc (resultsize);
-    int ret;
+        const size_t resultsize = mbssize * sizeof(wchar_t);
+        wchar_t *result = xmalloc(resultsize);
+        int ret;
 
-    ret = swprintf (result, mbssize, L"%.65537s", mbs);
-    TEST_COMPARE (ret, mbssize - 1);
-    TEST_COMPARE_BLOB (result, (ret + 1) * sizeof (wchar_t),
-		       expected, expectedsize * sizeof (wchar_t));
+        ret = swprintf(result, mbssize, L"%.65537s", mbs);
+        TEST_COMPARE(ret, mbssize - 1);
+        TEST_COMPARE_BLOB(result, (ret + 1) * sizeof(wchar_t),
+                          expected, expectedsize * sizeof(wchar_t));
 
-    ret = swprintf (result, mbssize, L"%1$.65537s", mbs);
-    TEST_COMPARE (ret, mbssize - 1);
-    TEST_COMPARE_BLOB (result, (ret + 1) * sizeof (wchar_t),
-		       expected, expectedsize * sizeof (wchar_t));
+        ret = swprintf(result, mbssize, L"%1$.65537s", mbs);
+        TEST_COMPARE(ret, mbssize - 1);
+        TEST_COMPARE_BLOB(result, (ret + 1) * sizeof(wchar_t),
+                          expected, expectedsize * sizeof(wchar_t));
 
-    /* Same test, but with an invalid multibyte sequence.  */
-    mbs[mbssize - 2] = 0xff;
+        /* Same test, but with an invalid multibyte sequence.  */
+        mbs[mbssize - 2] = 0xff;
 
-    ret = swprintf (result, mbssize, L"%.65537s", mbs);
-    TEST_COMPARE (ret, -1);
+        ret = swprintf(result, mbssize, L"%.65537s", mbs);
+        TEST_COMPARE(ret, -1);
 
-    ret = swprintf (result, mbssize, L"%1$.65537s", mbs);
-    TEST_COMPARE (ret, -1);
+        ret = swprintf(result, mbssize, L"%1$.65537s", mbs);
+        TEST_COMPARE(ret, -1);
 
-    free (mbs);
-    free (result);
-    free (expected);
-  }
+        free(mbs);
+        free(result);
+        free(expected);
+    }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

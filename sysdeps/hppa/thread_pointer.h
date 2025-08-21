@@ -19,22 +19,20 @@
 #ifndef _SYS_THREAD_POINTER_H
 #define _SYS_THREAD_POINTER_H
 
-static inline void *
-__thread_pointer (void)
+static inline void *__thread_pointer(void)
 {
-  void *__thread_register;
-  __asm__ ("mfctl %%cr27, %0" : "=r" (__thread_register));
-  return __thread_register;
+    void *__thread_register;
+    __asm__("mfctl %%cr27, %0" : "=r"(__thread_register));
+    return __thread_register;
 }
 
 /* We write to cr27, clobber r26 as the input argument, and clobber
    r31 as the link register.  */
-static inline void
-__set_thread_pointer(void *__thread_pointer)
+static inline void __set_thread_pointer(void *__thread_pointer)
 {
-  asm ( "ble	0xe0(%%sr2, %%r0)\n\t"
-	"copy	%0, %%r26"
-	: : "r" (__thread_pointer) : "r26", "r31" );
+    asm("ble	0xe0(%%sr2, %%r0)\n\t"
+        "copy	%0, %%r26"
+        : : "r"(__thread_pointer) : "r26", "r31");
 }
 
 #endif /* _SYS_THREAD_POINTER_H */

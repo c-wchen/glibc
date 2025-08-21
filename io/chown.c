@@ -21,19 +21,17 @@
 #include <sys/types.h>
 
 /* Change the owner and group of FILE.  */
-int
-__chown (const char *file, uid_t owner, gid_t group)
+int __chown(const char *file, uid_t owner, gid_t group)
 {
-  if (file == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (file == NULL) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (__chown)
-stub_warning (chown)
+libc_hidden_def(__chown)
+stub_warning(chown)
 
-weak_alias (__chown, chown)
+weak_alias(__chown, chown)

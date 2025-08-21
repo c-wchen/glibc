@@ -22,10 +22,10 @@
 /* This function aims to work around conversions of float -NAN
    to double returning NAN instead of the correct -NAN in some
    architectures.  */
-static inline double __attribute__ ((always_inline))
-keep_sign_conversion (float flt)
+static inline double __attribute__((always_inline))
+keep_sign_conversion(float flt)
 {
-  return flt;
+    return flt;
 }
 
 #endif

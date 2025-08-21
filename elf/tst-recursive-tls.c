@@ -24,37 +24,36 @@
 /* Defined in tst-recursive-tlsmallocmod.so.  */
 extern __thread unsigned int malloc_subsytem_counter;
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* 16 is large enough to exercise the DTV resizing case.  */
-  void *handles[16];
+    /* 16 is large enough to exercise the DTV resizing case.  */
+    void *handles[16];
 
-  for (unsigned int i = 0; i < array_length (handles); ++i)
-    {
-      /* Re-use the TLS slot for module 0.  */
-      if (i > 0)
-        xdlclose (handles[0]);
+    for (unsigned int i = 0; i < array_length(handles); ++i) {
+        /* Re-use the TLS slot for module 0.  */
+        if (i > 0) {
+            xdlclose(handles[0]);
+        }
 
-      char soname[30];
-      snprintf (soname, sizeof (soname), "tst-recursive-tlsmod%u.so", i);
-      handles[i] = xdlopen (soname, RTLD_NOW);
+        char soname[30];
+        snprintf(soname, sizeof(soname), "tst-recursive-tlsmod%u.so", i);
+        handles[i] = xdlopen(soname, RTLD_NOW);
 
-      if (i > 0)
-        {
-          handles[0] = xdlopen ("tst-recursive-tlsmod0.so", RTLD_NOW);
-          int (*fptr) (void) = xdlsym (handles[0], "get_threadvar_0");
-          /* May trigger TLS storage allocation using malloc.  */
-          TEST_COMPARE (fptr (), 0);
+        if (i > 0) {
+            handles[0] = xdlopen("tst-recursive-tlsmod0.so", RTLD_NOW);
+            int (*fptr)(void) = xdlsym(handles[0], "get_threadvar_0");
+            /* May trigger TLS storage allocation using malloc.  */
+            TEST_COMPARE(fptr(), 0);
         }
     }
 
-  for (unsigned int i = 0; i < array_length (handles); ++i)
-    xdlclose (handles[i]);
+    for (unsigned int i = 0; i < array_length(handles); ++i) {
+        xdlclose(handles[i]);
+    }
 
-  printf ("info: malloc subsystem calls: %u\n", malloc_subsytem_counter);
-  TEST_VERIFY (malloc_subsytem_counter > 0);
-  return 0;
+    printf("info: malloc subsystem calls: %u\n", malloc_subsytem_counter);
+    TEST_VERIFY(malloc_subsytem_counter > 0);
+    return 0;
 }
 
 #include <support/test-driver.c>

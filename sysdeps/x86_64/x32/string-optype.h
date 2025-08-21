@@ -19,6 +19,6 @@
 #ifndef _STRING_OPTYPE_H
 #define _STRING_OPTYPE_H 1
 
-typedef unsigned long long int __attribute__ ((__may_alias__)) op_t;
+typedef unsigned long long int __attribute__((__may_alias__)) op_t;
 
 #endif /* string-optype.h */

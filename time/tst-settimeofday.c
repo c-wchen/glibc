@@ -25,31 +25,32 @@
 #define TIMESPEC_SEC_Y2038_OV 0x7FFFFFFF
 #define FUTURE_TIME (TIMESPEC_SEC_Y2038_OV - 10)
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  const struct timeval tv = { FUTURE_TIME, 0};
-  struct timespec tv_future, tv_now;
+    const struct timeval tv = { FUTURE_TIME, 0};
+    struct timespec tv_future, tv_now;
 
-  /* Check if altering target time is allowed.  */
-  if (getenv (SETTIME_ENV_NAME) == NULL)
-    FAIL_UNSUPPORTED ("settimeofday is executed only when "\
-                      SETTIME_ENV_NAME" is set\n");
+    /* Check if altering target time is allowed.  */
+    if (getenv(SETTIME_ENV_NAME) == NULL)
+        FAIL_UNSUPPORTED("settimeofday is executed only when "\
+                         SETTIME_ENV_NAME" is set\n");
 
-  tv_now = xclock_now (CLOCK_REALTIME);
-  int ret = settimeofday (&tv, NULL);
-  if (ret == -1)
-    FAIL_EXIT1 ("settimeofday failed: %m\n");
+    tv_now = xclock_now(CLOCK_REALTIME);
+    int ret = settimeofday(&tv, NULL);
+    if (ret == -1) {
+        FAIL_EXIT1("settimeofday failed: %m\n");
+    }
 
-  tv_future = xclock_now (CLOCK_REALTIME);
+    tv_future = xclock_now(CLOCK_REALTIME);
 
-  /* Restore old time value on target machine.  */
-  xclock_settime (CLOCK_REALTIME, (const struct timespec*) &tv_now);
+    /* Restore old time value on target machine.  */
+    xclock_settime(CLOCK_REALTIME, (const struct timespec *) &tv_now);
 
-  if (tv_future.tv_sec < tv.tv_sec)
-    FAIL_EXIT1 ("settimeofday set wrong time!\n");
+    if (tv_future.tv_sec < tv.tv_sec) {
+        FAIL_EXIT1("settimeofday set wrong time!\n");
+    }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

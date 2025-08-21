@@ -30,27 +30,26 @@
 _Bool __libc_initial;
 #endif
 
-void
-__libc_early_init (_Bool initial)
+void __libc_early_init(_Bool initial)
 {
-  /* Initialize ctype data.  */
-  __ctype_init ();
+    /* Initialize ctype data.  */
+    __ctype_init();
 
-  /* Only the outer namespace is marked as single-threaded.  */
-  __libc_single_threaded = initial;
+    /* Only the outer namespace is marked as single-threaded.  */
+    __libc_single_threaded = initial;
 
 #ifdef SHARED
-  __libc_single_threaded_internal = __libc_initial = initial;
+    __libc_single_threaded_internal = __libc_initial = initial;
 #endif
 
-  __pthread_early_init ();
+    __pthread_early_init();
 
-  __getrandom_early_init (initial);
+    __getrandom_early_init(initial);
 
 #if ENABLE_ELISION_SUPPORT
-  __lll_elision_init ();
+    __lll_elision_init();
 #endif
 
-  /* Initialize system malloc (needs __libc_initial to be set).  */
-  call_function_static_weak (__ptmalloc_init);
+    /* Initialize system malloc (needs __libc_initial to be set).  */
+    call_function_static_weak(__ptmalloc_init);
 }

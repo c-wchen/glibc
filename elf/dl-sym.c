@@ -41,156 +41,144 @@
 
 /* Return the symbol address given the map of the module it is in and
    the symbol record.  This is used in dl-sym.c.  */
-static void *
-_dl_tls_symaddr (struct link_map *map, const ElfW(Sym) *ref)
+static void *_dl_tls_symaddr(struct link_map *map, const ElfW(Sym) *ref)
 {
 # ifndef DONT_USE_TLS_INDEX
-  tls_index tmp =
-    {
-      .ti_module = map->l_tls_modid,
-      .ti_offset = ref->st_value
+    tls_index tmp = {
+        .ti_module = map->l_tls_modid,
+        .ti_offset = ref->st_value
     };
 
-  return __TLS_GET_ADDR (&tmp);
+    return __TLS_GET_ADDR(&tmp);
 # else
-  return __TLS_GET_ADDR (map->l_tls_modid, ref->st_value);
+    return __TLS_GET_ADDR(map->l_tls_modid, ref->st_value);
 # endif
 }
 #endif
 
 
-struct call_dl_lookup_args
-{
-  /* Arguments to do_dlsym.  */
-  struct link_map *map;
-  const char *name;
-  struct r_found_version *vers;
-  int flags;
+struct call_dl_lookup_args {
+    /* Arguments to do_dlsym.  */
+    struct link_map *map;
+    const char *name;
+    struct r_found_version *vers;
+    int flags;
 
-  /* Return values of do_dlsym.  */
-  lookup_t loadbase;
-  const ElfW(Sym) **refp;
+    /* Return values of do_dlsym.  */
+    lookup_t loadbase;
+    const ElfW(Sym) **refp;
 };
 
-static void
-call_dl_lookup (void *ptr)
+static void call_dl_lookup(void *ptr)
 {
-  struct call_dl_lookup_args *args = (struct call_dl_lookup_args *) ptr;
-  args->map = GLRO(dl_lookup_symbol_x) (args->name, args->map, args->refp,
-					args->map->l_scope, args->vers, 0,
-					args->flags, NULL);
+    struct call_dl_lookup_args *args = (struct call_dl_lookup_args *) ptr;
+    args->map = GLRO(dl_lookup_symbol_x)(args->name, args->map, args->refp,
+                                         args->map->l_scope, args->vers, 0,
+                                         args->flags, NULL);
 }
 
-static void *
-do_sym (void *handle, const char *name, void *who,
-	struct r_found_version *vers, int flags)
+static void *do_sym(void *handle, const char *name, void *who,
+                    struct r_found_version *vers, int flags)
 {
-  const ElfW(Sym) *ref = NULL;
-  lookup_t result;
-  ElfW(Addr) caller = (ElfW(Addr)) who;
+    const ElfW(Sym) *ref = NULL;
+    lookup_t result;
+    ElfW(Addr) caller = (ElfW(Addr)) who;
 
-  /* Link map of the caller if needed.  */
-  struct link_map *match = NULL;
+    /* Link map of the caller if needed.  */
+    struct link_map *match = NULL;
 
-  if (handle == RTLD_DEFAULT)
-    {
-      match = _dl_sym_find_caller_link_map (caller);
+    if (handle == RTLD_DEFAULT) {
+        match = _dl_sym_find_caller_link_map(caller);
 
-      /* Search the global scope.  We have the simple case where
-	 we look up in the scope of an object which was part of
-	 the initial binary.  And then the more complex part
-	 where the object is dynamically loaded and the scope
-	 array can change.  */
-      if (RTLD_SINGLE_THREAD_P)
-	result = GLRO(dl_lookup_symbol_x) (name, match, &ref,
-					   match->l_scope, vers, 0,
-					   flags | DL_LOOKUP_ADD_DEPENDENCY,
-					   NULL);
-      else
-	{
-	  struct call_dl_lookup_args args;
-	  args.name = name;
-	  args.map = match;
-	  args.vers = vers;
-	  args.flags
-	    = flags | DL_LOOKUP_ADD_DEPENDENCY | DL_LOOKUP_GSCOPE_LOCK;
-	  args.refp = &ref;
+        /* Search the global scope.  We have the simple case where
+        we look up in the scope of an object which was part of
+         the initial binary.  And then the more complex part
+         where the object is dynamically loaded and the scope
+         array can change.  */
+        if (RTLD_SINGLE_THREAD_P)
+            result = GLRO(dl_lookup_symbol_x)(name, match, &ref,
+                                              match->l_scope, vers, 0,
+                                              flags | DL_LOOKUP_ADD_DEPENDENCY,
+                                              NULL);
+        else {
+            struct call_dl_lookup_args args;
+            args.name = name;
+            args.map = match;
+            args.vers = vers;
+            args.flags
+                = flags | DL_LOOKUP_ADD_DEPENDENCY | DL_LOOKUP_GSCOPE_LOCK;
+            args.refp = &ref;
 
-	  THREAD_GSCOPE_SET_FLAG ();
-	  struct dl_exception exception;
-	  int err = _dl_catch_exception (&exception, call_dl_lookup, &args);
-	  THREAD_GSCOPE_RESET_FLAG ();
-	  if (__glibc_unlikely (exception.errstring != NULL))
-	    _dl_signal_exception (err, &exception, NULL);
+            THREAD_GSCOPE_SET_FLAG();
+            struct dl_exception exception;
+            int err = _dl_catch_exception(&exception, call_dl_lookup, &args);
+            THREAD_GSCOPE_RESET_FLAG();
+            if (__glibc_unlikely(exception.errstring != NULL)) {
+                _dl_signal_exception(err, &exception, NULL);
+            }
 
-	  result = args.map;
-	}
-    }
-  else if (handle == RTLD_NEXT)
-    {
-      match = _dl_sym_find_caller_link_map (caller);
+            result = args.map;
+        }
+    } else if (handle == RTLD_NEXT) {
+        match = _dl_sym_find_caller_link_map(caller);
 
-      if (__glibc_unlikely (match == GL(dl_ns)[LM_ID_BASE]._ns_loaded))
-	{
-	  if (match == NULL
-	      || caller < match->l_map_start
-	      || caller >= match->l_map_end)
-	    _dl_signal_error (0, NULL, NULL, N_("\
+        if (__glibc_unlikely(match == GL(dl_ns)[LM_ID_BASE]._ns_loaded)) {
+            if (match == NULL
+                || caller < match->l_map_start
+                || caller >= match->l_map_end)
+                _dl_signal_error(0, NULL, NULL, N_("\
 RTLD_NEXT used in code not dynamically loaded"));
-	}
+        }
 
-      struct link_map *l = match;
-      while (l->l_loader != NULL)
-	l = l->l_loader;
+        struct link_map *l = match;
+        while (l->l_loader != NULL) {
+            l = l->l_loader;
+        }
 
-      result = GLRO(dl_lookup_symbol_x) (name, match, &ref, l->l_local_scope,
-					 vers, 0, flags, match);
+        result = GLRO(dl_lookup_symbol_x)(name, match, &ref, l->l_local_scope,
+                                          vers, 0, flags, match);
+    } else {
+        /* Search the scope of the given object.  */
+        struct link_map *map = handle;
+        result = GLRO(dl_lookup_symbol_x)(name, map, &ref, map->l_local_scope,
+                                          vers, 0, flags, NULL);
     }
-  else
-    {
-      /* Search the scope of the given object.  */
-      struct link_map *map = handle;
-      result = GLRO(dl_lookup_symbol_x) (name, map, &ref, map->l_local_scope,
-					 vers, 0, flags, NULL);
-    }
 
-  if (ref != NULL)
-    {
-      void *value;
+    if (ref != NULL) {
+        void *value;
 
 #ifdef SHARED
-      if (ELFW(ST_TYPE) (ref->st_info) == STT_TLS)
-	/* The found symbol is a thread-local storage variable.
-	   Return the address for to the current thread.  */
-	value = _dl_tls_symaddr (result, ref);
-      else
+        if (ELFW(ST_TYPE)(ref->st_info) == STT_TLS)
+            /* The found symbol is a thread-local storage variable.
+               Return the address for to the current thread.  */
+        {
+            value = _dl_tls_symaddr(result, ref);
+        } else
 #endif
-	value = DL_SYMBOL_ADDRESS (result, ref);
+            value = DL_SYMBOL_ADDRESS(result, ref);
 
-      return _dl_sym_post (result, ref, value, caller, match);
+        return _dl_sym_post(result, ref, value, caller, match);
     }
 
-  return NULL;
+    return NULL;
 }
 
 
-void *
-_dl_vsym (void *handle, const char *name, const char *version, void *who)
+void *_dl_vsym(void *handle, const char *name, const char *version, void *who)
 {
-  struct r_found_version vers;
+    struct r_found_version vers;
 
-  /* Compute hash value to the version string.  */
-  vers.name = version;
-  vers.hidden = 1;
-  vers.hash = _dl_elf_hash (version);
-  /* We don't have a specific file where the symbol can be found.  */
-  vers.filename = NULL;
+    /* Compute hash value to the version string.  */
+    vers.name = version;
+    vers.hidden = 1;
+    vers.hash = _dl_elf_hash(version);
+    /* We don't have a specific file where the symbol can be found.  */
+    vers.filename = NULL;
 
-  return do_sym (handle, name, who, &vers, 0);
+    return do_sym(handle, name, who, &vers, 0);
 }
 
-void *
-_dl_sym (void *handle, const char *name, void *who)
+void *_dl_sym(void *handle, const char *name, void *who)
 {
-  return do_sym (handle, name, who, NULL, DL_LOOKUP_RETURN_NEWEST);
+    return do_sym(handle, name, who, NULL, DL_LOOKUP_RETURN_NEWEST);
 }

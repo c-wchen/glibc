@@ -20,24 +20,22 @@
 #include <shlib-compat.h>
 #include <pt-internal.h>
 
-int
-__pthread_attr_setinheritsched (pthread_attr_t *attr, int inheritsched)
+int __pthread_attr_setinheritsched(pthread_attr_t *attr, int inheritsched)
 {
-  switch (inheritsched)
-    {
-    case PTHREAD_INHERIT_SCHED:
-    case PTHREAD_EXPLICIT_SCHED:
-      attr->__inheritsched = inheritsched;
-      break;
-    default:
-      return EINVAL;
+    switch (inheritsched) {
+        case PTHREAD_INHERIT_SCHED:
+        case PTHREAD_EXPLICIT_SCHED:
+            attr->__inheritsched = inheritsched;
+            break;
+        default:
+            return EINVAL;
     }
 
-  return 0;
+    return 0;
 }
 
-versioned_symbol (libc, __pthread_attr_setinheritsched, pthread_attr_setinheritsched, GLIBC_2_21);
+versioned_symbol(libc, __pthread_attr_setinheritsched, pthread_attr_setinheritsched, GLIBC_2_21);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_21)
-compat_symbol (libc, __pthread_attr_setinheritsched, pthread_attr_setinheritsched, GLIBC_2_12);
+compat_symbol(libc, __pthread_attr_setinheritsched, pthread_attr_setinheritsched, GLIBC_2_12);
 #endif

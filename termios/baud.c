@@ -23,34 +23,33 @@
 #include <errno.h>
 #include <termios.h>
 
-baud_t
-__cfgetobaud (const struct termios *termios_p)
+baud_t __cfgetobaud(const struct termios *termios_p)
 {
-  return __cfgetospeed (termios_p);
+    return __cfgetospeed(termios_p);
 }
-libc_hidden_def (__cfgetobaud)
-weak_alias (__cfgetobaud, cfgetobaud)
+libc_hidden_def(__cfgetobaud)
+weak_alias(__cfgetobaud, cfgetobaud)
 
 baud_t
-__cfgetibaud (const struct termios *termios_p)
+__cfgetibaud(const struct termios *termios_p)
 {
-  return __cfgetispeed (termios_p);
+    return __cfgetispeed(termios_p);
 }
-libc_hidden_def (__cfgetibaud)
-weak_alias (__cfgetibaud, cfgetibaud)
+libc_hidden_def(__cfgetibaud)
+weak_alias(__cfgetibaud, cfgetibaud)
 
 int
-__cfsetobaud (struct termios *termios_p, baud_t baud)
+__cfsetobaud(struct termios *termios_p, baud_t baud)
 {
-  return __cfsetospeed (termios_p, baud);
+    return __cfsetospeed(termios_p, baud);
 }
-libc_hidden_def (__cfsetobaud)
-weak_alias (__cfsetobaud, cfsetobaud)
+libc_hidden_def(__cfsetobaud)
+weak_alias(__cfsetobaud, cfsetobaud)
 
 int
-__cfsetibaud (struct termios *termios_p, baud_t baud)
+__cfsetibaud(struct termios *termios_p, baud_t baud)
 {
-  return __cfsetispeed (termios_p, baud);
+    return __cfsetispeed(termios_p, baud);
 }
-libc_hidden_def (__cfsetibaud)
-weak_alias (__cfsetibaud, cfsetibaud)
+libc_hidden_def(__cfsetibaud)
+weak_alias(__cfsetibaud, cfsetibaud)

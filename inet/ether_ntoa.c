@@ -19,10 +19,9 @@
 #include <netinet/if_ether.h>
 
 
-char *
-ether_ntoa (const struct ether_addr *addr)
+char *ether_ntoa(const struct ether_addr *addr)
 {
-  static char asc[18];
+    static char asc[18];
 
-  return ether_ntoa_r (addr, asc);
+    return ether_ntoa_r(addr, asc);
 }

@@ -3,8 +3,7 @@
 #undef strtold
 
 double
-attribute_hidden
-strtold (const char *nptr, char **endptr)
+attribute_hidden strtold(const char *nptr, char **endptr)
 {
-  return strtod (nptr, endptr);
+    return strtod(nptr, endptr);
 }

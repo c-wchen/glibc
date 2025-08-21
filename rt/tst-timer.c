@@ -20,14 +20,13 @@
 
 /* This file is only used if there is no other implementation and it should
    means that there is no implementation of POSIX timers.  */
-static int
-do_test (void)
+static int do_test(void)
 {
 #ifdef _POSIX_TIMERS
-  /* There should be a test.  */
-  return 1;
+    /* There should be a test.  */
+    return 1;
 #else
-  return 0;
+    return 0;
 #endif
 }
 

@@ -19,100 +19,98 @@
 #include "thread_dbP.h"
 #include <stdbool.h>
 
-td_err_e
-__td_ta_stack_user (td_thragent_t *ta, psaddr_t *plist)
+td_err_e __td_ta_stack_user(td_thragent_t *ta, psaddr_t *plist)
 {
-  if (__td_ta_rtld_global (ta))
-    return DB_GET_FIELD_ADDRESS (*plist, ta, ta->ta_addr__rtld_global,
-				 rtld_global, _dl_stack_user, 0);
-  else
-    {
-      if (ta->ta_addr__dl_stack_user == NULL
-	  && td_mod_lookup (ta->ph, NULL, SYM__dl_stack_user,
-			    &ta->ta_addr__dl_stack_user) != PS_OK)
-	return TD_ERR;
-      *plist = ta->ta_addr__dl_stack_user;
-      return TD_OK;
+    if (__td_ta_rtld_global(ta))
+        return DB_GET_FIELD_ADDRESS(*plist, ta, ta->ta_addr__rtld_global,
+                                    rtld_global, _dl_stack_user, 0);
+    else {
+        if (ta->ta_addr__dl_stack_user == NULL
+            && td_mod_lookup(ta->ph, NULL, SYM__dl_stack_user,
+                             &ta->ta_addr__dl_stack_user) != PS_OK) {
+            return TD_ERR;
+        }
+        *plist = ta->ta_addr__dl_stack_user;
+        return TD_OK;
     }
 }
 
-td_err_e
-__td_ta_stack_used (td_thragent_t *ta, psaddr_t *plist)
+td_err_e __td_ta_stack_used(td_thragent_t *ta, psaddr_t *plist)
 {
 
-  if (__td_ta_rtld_global (ta))
-    return DB_GET_FIELD_ADDRESS (*plist, ta, ta->ta_addr__rtld_global,
-				 rtld_global, _dl_stack_used, 0);
-  else
-    {
-      if (ta->ta_addr__dl_stack_used == NULL
-	  && td_mod_lookup (ta->ph, NULL, SYM__dl_stack_used,
-			    &ta->ta_addr__dl_stack_used) != PS_OK)
-	return TD_ERR;
-      *plist = ta->ta_addr__dl_stack_used;
-      return TD_OK;
+    if (__td_ta_rtld_global(ta))
+        return DB_GET_FIELD_ADDRESS(*plist, ta, ta->ta_addr__rtld_global,
+                                    rtld_global, _dl_stack_used, 0);
+    else {
+        if (ta->ta_addr__dl_stack_used == NULL
+            && td_mod_lookup(ta->ph, NULL, SYM__dl_stack_used,
+                             &ta->ta_addr__dl_stack_used) != PS_OK) {
+            return TD_ERR;
+        }
+        *plist = ta->ta_addr__dl_stack_used;
+        return TD_OK;
     }
 }
 
-static td_err_e
-check_thread_list (const td_thrhandle_t *th, psaddr_t head, bool *uninit)
+static td_err_e check_thread_list(const td_thrhandle_t *th, psaddr_t head, bool *uninit)
 {
-  td_err_e err;
-  psaddr_t next, ofs;
+    td_err_e err;
+    psaddr_t next, ofs;
 
-  err = DB_GET_FIELD (next, th->th_ta_p, head, list_t, next, 0);
-  if (err == TD_OK)
-    {
-      if (next == NULL)
-	{
-	  *uninit = true;
-	  return TD_NOTHR;
-	}
-      err = DB_GET_FIELD_ADDRESS (ofs, th->th_ta_p, NULL, pthread, list, 0);
+    err = DB_GET_FIELD(next, th->th_ta_p, head, list_t, next, 0);
+    if (err == TD_OK) {
+        if (next == NULL) {
+            *uninit = true;
+            return TD_NOTHR;
+        }
+        err = DB_GET_FIELD_ADDRESS(ofs, th->th_ta_p, NULL, pthread, list, 0);
     }
 
-  while (err == TD_OK)
-    {
-      if (next == head)
-	return TD_NOTHR;
+    while (err == TD_OK) {
+        if (next == head) {
+            return TD_NOTHR;
+        }
 
-      if (next - (ofs - (psaddr_t) 0) == th->th_unique)
-	return TD_OK;
+        if (next - (ofs - (psaddr_t) 0) == th->th_unique) {
+            return TD_OK;
+        }
 
-      err = DB_GET_FIELD (next, th->th_ta_p, next, list_t, next, 0);
+        err = DB_GET_FIELD(next, th->th_ta_p, next, list_t, next, 0);
     }
 
-  return err;
+    return err;
 }
 
 
-td_err_e
-td_thr_validate (const td_thrhandle_t *th)
+td_err_e td_thr_validate(const td_thrhandle_t *th)
 {
-  td_err_e err;
-  psaddr_t list;
+    td_err_e err;
+    psaddr_t list;
 
-  LOG ("td_thr_validate");
+    LOG("td_thr_validate");
 
-  /* First check the list with threads using user allocated stacks.  */
-  bool uninit = false;
-  err = __td_ta_stack_user (th->th_ta_p, &list);
-  if (err == TD_OK)
-    err = check_thread_list (th, list, &uninit);
-
-  /* If our thread is not on this list search the list with stack
-     using implementation allocated stacks.  */
-  if (err == TD_NOTHR)
-    {
-      err = __td_ta_stack_used (th->th_ta_p, &list);
-      if (err == TD_OK)
-	err = check_thread_list (th, list, &uninit);
-
-      if (err == TD_NOTHR && uninit && th->th_unique == NULL)
-	/* __pthread_initialize_minimal has not run yet.
-	   There is only the special case thread handle.  */
-	err = TD_OK;
+    /* First check the list with threads using user allocated stacks.  */
+    bool uninit = false;
+    err = __td_ta_stack_user(th->th_ta_p, &list);
+    if (err == TD_OK) {
+        err = check_thread_list(th, list, &uninit);
     }
 
-  return err;
+    /* If our thread is not on this list search the list with stack
+       using implementation allocated stacks.  */
+    if (err == TD_NOTHR) {
+        err = __td_ta_stack_used(th->th_ta_p, &list);
+        if (err == TD_OK) {
+            err = check_thread_list(th, list, &uninit);
+        }
+
+        if (err == TD_NOTHR && uninit && th->th_unique == NULL)
+            /* __pthread_initialize_minimal has not run yet.
+               There is only the special case thread handle.  */
+        {
+            err = TD_OK;
+        }
+    }
+
+    return err;
 }

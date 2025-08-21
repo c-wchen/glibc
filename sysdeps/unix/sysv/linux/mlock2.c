@@ -19,20 +19,21 @@
 #include <errno.h>
 #include <sysdep.h>
 
-int
-mlock2 (const void *addr, size_t length, unsigned int flags)
+int mlock2(const void *addr, size_t length, unsigned int flags)
 {
 #ifdef __ASSUME_MLOCK2
-  return INLINE_SYSCALL_CALL (mlock2, addr, length, flags);
+    return INLINE_SYSCALL_CALL(mlock2, addr, length, flags);
 #else
-  if (flags == 0)
-    return INLINE_SYSCALL_CALL (mlock, addr, length);
-  int ret = INLINE_SYSCALL_CALL (mlock2, addr, length, flags);
-  if (ret == 0 || errno != ENOSYS)
-    return ret;
-  /* Treat the missing system call as an invalid (non-zero) flag
-     argument.  */
-  __set_errno (EINVAL);
-  return -1;
+    if (flags == 0) {
+        return INLINE_SYSCALL_CALL(mlock, addr, length);
+    }
+    int ret = INLINE_SYSCALL_CALL(mlock2, addr, length, flags);
+    if (ret == 0 || errno != ENOSYS) {
+        return ret;
+    }
+    /* Treat the missing system call as an invalid (non-zero) flag
+       argument.  */
+    __set_errno(EINVAL);
+    return -1;
 #endif /* __ASSUME_MLOCK2 */
 }

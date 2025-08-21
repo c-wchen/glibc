@@ -20,25 +20,23 @@
 #include <pt-internal.h>
 #include <hurd/signal.h>
 
-error_t
-__pthread_sigstate_init (struct __pthread *thread)
+error_t __pthread_sigstate_init(struct __pthread *thread)
 {
-  static int do_init_global;
+    static int do_init_global;
 
-  /* Mark the thread as a global signal receiver so as to conform with
-     the pthread semantics.  However, we must be careful.  The first
-     pthread created is the main thread, during libpthread initialization.
-     We must not mark it, otherwise the sigprocmask call in
-     __pthread_create would try to access _hurd_global_sigstate,
-     which is not initialized yet.  When glibc runs _hurdsig_init later
-     on, the message thread is created, which must not be marked either.  */
-  if (do_init_global)
-    {
-      struct hurd_sigstate *ss = _hurd_thread_sigstate (thread->kernel_thread);
-      _hurd_sigstate_set_global_rcv (ss);
+    /* Mark the thread as a global signal receiver so as to conform with
+       the pthread semantics.  However, we must be careful.  The first
+       pthread created is the main thread, during libpthread initialization.
+       We must not mark it, otherwise the sigprocmask call in
+       __pthread_create would try to access _hurd_global_sigstate,
+       which is not initialized yet.  When glibc runs _hurdsig_init later
+       on, the message thread is created, which must not be marked either.  */
+    if (do_init_global) {
+        struct hurd_sigstate *ss = _hurd_thread_sigstate(thread->kernel_thread);
+        _hurd_sigstate_set_global_rcv(ss);
+    } else if (GL(dl_pthread_num_threads) >= 2) {
+        do_init_global = 1;
     }
-  else if (GL (dl_pthread_num_threads) >= 2)
-    do_init_global = 1;
 
-  return 0;
+    return 0;
 }

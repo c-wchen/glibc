@@ -17,8 +17,7 @@
 
 #include <stdio_ext.h>
 
-int
-__fwritable (FILE *fp)
+int __fwritable(FILE *fp)
 {
-  return (fp->_flags & _IO_NO_WRITES) == 0;
+    return (fp->_flags & _IO_NO_WRITES) == 0;
 }

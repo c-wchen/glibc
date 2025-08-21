@@ -20,16 +20,16 @@
 #include <wchar.h>
 
 
-size_t
-__wcstombs_chk (char *dst, const wchar_t *src, size_t len, size_t dstlen)
+size_t __wcstombs_chk(char *dst, const wchar_t *src, size_t len, size_t dstlen)
 {
-  if (__glibc_unlikely (dstlen < len))
-    __chk_fail ();
+    if (__glibc_unlikely(dstlen < len)) {
+        __chk_fail();
+    }
 
-  mbstate_t state;
+    mbstate_t state;
 
-  memset (&state, '\0', sizeof state);
+    memset(&state, '\0', sizeof state);
 
-  /* Return how many we wrote (or maybe an error).  */
-  return __wcsrtombs (dst, &src, len, &state);
+    /* Return how many we wrote (or maybe an error).  */
+    return __wcsrtombs(dst, &src, len, &state);
 }

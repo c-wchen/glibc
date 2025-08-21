@@ -23,15 +23,14 @@
 #undef FP_ROUNDMODE
 #define FP_ROUNDMODE  FP_RND_ZERO
 
-void
-_OtsCvtQUX (unsigned long a)
+void _OtsCvtQUX(unsigned long a)
 {
-  FP_DECL_EX;
-  FP_DECL_Q(C);
-  AXP_DECL_RETURN_Q(c);
+    FP_DECL_EX;
+    FP_DECL_Q(C);
+    AXP_DECL_RETURN_Q(c);
 
-  FP_FROM_INT_Q(C, a, 64, unsigned long);
-  AXP_PACK_RAW_Q(c, C);
+    FP_FROM_INT_Q(C, a, 64, unsigned long);
+    AXP_PACK_RAW_Q(c, C);
 
-  AXP_RETURN_Q(c);
+    AXP_RETURN_Q(c);
 }

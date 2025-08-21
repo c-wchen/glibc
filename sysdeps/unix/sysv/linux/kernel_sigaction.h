@@ -6,16 +6,15 @@
 #endif
 
 /* This is the sigaction structure from the Linux 3.2 kernel.  */
-struct kernel_sigaction
-{
-  __sighandler_t k_sa_handler;
-  unsigned long sa_flags;
+struct kernel_sigaction {
+    __sighandler_t k_sa_handler;
+    unsigned long sa_flags;
 #ifdef HAS_SA_RESTORER
-  void (*sa_restorer) (void);
+    void (*sa_restorer)(void);
 #endif
-  /* glibc sigset is larger than kernel expected one, however sigaction
-     passes the kernel expected size on rt_sigaction syscall.  */
-  sigset_t sa_mask;
+    /* glibc sigset is larger than kernel expected one, however sigaction
+       passes the kernel expected size on rt_sigaction syscall.  */
+    sigset_t sa_mask;
 };
 
 #ifndef SET_SA_RESTORER

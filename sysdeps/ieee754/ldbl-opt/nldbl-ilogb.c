@@ -1,8 +1,7 @@
 #include "nldbl-compat.h"
 
 int
-attribute_hidden
-ilogbl (double x)
+attribute_hidden ilogbl(double x)
 {
-  return ilogb (x);
+    return ilogb(x);
 }

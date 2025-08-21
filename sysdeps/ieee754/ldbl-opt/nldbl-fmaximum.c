@@ -19,8 +19,7 @@
 #include "nldbl-compat.h"
 
 double
-attribute_hidden
-fmaximuml (double x, double y)
+attribute_hidden fmaximuml(double x, double y)
 {
-  return fmaximum (x, y);
+    return fmaximum(x, y);
 }

@@ -18,16 +18,18 @@
 
 #include <fenv.h>
 
-int
-fetestexcept (int excepts)
+int fetestexcept(int excepts)
 {
-  union { unsigned long long l; unsigned int sw[2]; } s;
+    union {
+        unsigned long long l;
+        unsigned int sw[2];
+    } s;
 
-  /* Get the current status word. */
-  __asm__ ("fstd %%fr0,0(%1)	\n\t"
-           "fldd 0(%1),%%fr0	\n\t"
-	   : "=m" (s.l) : "r" (&s.l));
+    /* Get the current status word. */
+    __asm__("fstd %%fr0,0(%1)	\n\t"
+            "fldd 0(%1),%%fr0	\n\t"
+            : "=m"(s.l) : "r"(&s.l));
 
-  return (s.sw[0] >> 27) & excepts & FE_ALL_EXCEPT;
+    return (s.sw[0] >> 27) & excepts & FE_ALL_EXCEPT;
 }
-libm_hidden_def (fetestexcept)
+libm_hidden_def(fetestexcept)

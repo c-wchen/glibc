@@ -22,35 +22,33 @@
 #include <string.h>
 #include <support/check.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  TEST_VERIFY_EXIT (setenv ("TZ", "PST8PDT,M3.2.0,M11.1.0", 1) == 0);
-  tzset ();
-  if (sizeof (time_t) > 4)
-    {
-      time_t ouch = (time_t) 2187810000LL;
-      char buf[500];
-      struct tm *tm = localtime (&ouch);
-      TEST_VERIFY_EXIT (tm != NULL);
-      TEST_VERIFY_EXIT (strftime (buf, sizeof buf, "%Y-%m-%d %H:%M:%S %Z", tm)
-			> 0);
-      puts (buf);
-      TEST_VERIFY (strcmp (buf, "2039-04-30 14:00:00 PDT") == 0);
+    TEST_VERIFY_EXIT(setenv("TZ", "PST8PDT,M3.2.0,M11.1.0", 1) == 0);
+    tzset();
+    if (sizeof(time_t) > 4) {
+        time_t ouch = (time_t) 2187810000LL;
+        char buf[500];
+        struct tm *tm = localtime(&ouch);
+        TEST_VERIFY_EXIT(tm != NULL);
+        TEST_VERIFY_EXIT(strftime(buf, sizeof buf, "%Y-%m-%d %H:%M:%S %Z", tm)
+                         > 0);
+        puts(buf);
+        TEST_VERIFY(strcmp(buf, "2039-04-30 14:00:00 PDT") == 0);
 
-      /* Same as before but for localtime_r.  */
-      struct tm tmd;
-      tm = localtime_r (&ouch, &tmd);
-      TEST_VERIFY_EXIT (tm == &tmd);
+        /* Same as before but for localtime_r.  */
+        struct tm tmd;
+        tm = localtime_r(&ouch, &tmd);
+        TEST_VERIFY_EXIT(tm == &tmd);
 
-      TEST_VERIFY_EXIT (strftime (buf, sizeof buf, "%Y-%m-%d %H:%M:%S %Z", tm)
-			> 0);
-      puts (buf);
-      TEST_VERIFY (strcmp (buf, "2039-04-30 14:00:00 PDT") == 0);
+        TEST_VERIFY_EXIT(strftime(buf, sizeof buf, "%Y-%m-%d %H:%M:%S %Z", tm)
+                         > 0);
+        puts(buf);
+        TEST_VERIFY(strcmp(buf, "2039-04-30 14:00:00 PDT") == 0);
+    } else {
+        FAIL_UNSUPPORTED("32-bit time_t");
     }
-  else
-    FAIL_UNSUPPORTED ("32-bit time_t");
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

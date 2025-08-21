@@ -30,30 +30,28 @@
    page to know more about overcommit behavior.
 
    Other than that, we also force an unmap in a secure exec.  */
-static inline bool
-check_may_shrink_heap (void)
+static inline bool check_may_shrink_heap(void)
 {
-  static int may_shrink_heap = -1;
+    static int may_shrink_heap = -1;
 
-  if (__builtin_expect (may_shrink_heap >= 0, 1))
-    return may_shrink_heap;
-
-  may_shrink_heap = __libc_enable_secure;
-
-  if (__builtin_expect (may_shrink_heap == 0, 1))
-    {
-      int fd = __open_nocancel ("/proc/sys/vm/overcommit_memory",
-				O_RDONLY | O_CLOEXEC);
-      if (fd >= 0)
-	{
-	  char val;
-	  ssize_t n = __read_nocancel (fd, &val, 1);
-	  may_shrink_heap = n > 0 && val == '2';
-	  __close_nocancel_nostatus (fd);
-	}
+    if (__builtin_expect(may_shrink_heap >= 0, 1)) {
+        return may_shrink_heap;
     }
 
-  return may_shrink_heap;
+    may_shrink_heap = __libc_enable_secure;
+
+    if (__builtin_expect(may_shrink_heap == 0, 1)) {
+        int fd = __open_nocancel("/proc/sys/vm/overcommit_memory",
+                                 O_RDONLY | O_CLOEXEC);
+        if (fd >= 0) {
+            char val;
+            ssize_t n = __read_nocancel(fd, &val, 1);
+            may_shrink_heap = n > 0 && val == '2';
+            __close_nocancel_nostatus(fd);
+        }
+    }
+
+    return may_shrink_heap;
 }
 
 #define HAVE_MREMAP 1

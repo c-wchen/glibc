@@ -22,11 +22,10 @@
 
 
 /* Get the parent process ID of the calling process.  */
-pid_t
-__getppid (void)
+pid_t __getppid(void)
 {
-  /* Assumes atomic word fetch and store, so doesn't lock _hurd_pid_lock.  */
-  return _hurd_ppid;
+    /* Assumes atomic word fetch and store, so doesn't lock _hurd_pid_lock.  */
+    return _hurd_ppid;
 }
 
-weak_alias (__getppid, getppid)
+weak_alias(__getppid, getppid)

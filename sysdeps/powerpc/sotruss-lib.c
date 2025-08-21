@@ -42,28 +42,27 @@
 #endif
 
 ElfW(Addr)
-LA_PPC_GNU_PLTENTER (ElfW(Sym) *sym __attribute__ ((unused)),
-		     unsigned int ndx __attribute__ ((unused)),
-		     uintptr_t *refcook, uintptr_t *defcook,
-		     LA_PPC_REGS *regs, unsigned int *flags,
-		     const char *symname, long int *framesizep)
+LA_PPC_GNU_PLTENTER(ElfW(Sym) *sym __attribute__((unused)),
+                    unsigned int ndx __attribute__((unused)),
+                    uintptr_t *refcook, uintptr_t *defcook,
+                    LA_PPC_REGS *regs, unsigned int *flags,
+                    const char *symname, long int *framesizep)
 {
-  print_enter (refcook, defcook, symname,
-	       regs->lr_reg[0], regs->lr_reg[1], regs->lr_reg[2], *flags);
+    print_enter(refcook, defcook, symname,
+                regs->lr_reg[0], regs->lr_reg[1], regs->lr_reg[2], *flags);
 
-  /* No need to copy anything, we will not need the parameters in any case.  */
-  *framesizep = 0;
+    /* No need to copy anything, we will not need the parameters in any case.  */
+    *framesizep = 0;
 
-  return sym->st_value;
+    return sym->st_value;
 }
 
-unsigned int
-LA_PPC_GNU_PLTEXIT (ElfW(Sym) *sym, unsigned int ndx, uintptr_t *refcook,
-		    uintptr_t *defcook,
-		    const struct LA_PPC_REGS *inregs,
-		    struct LA_PPC_RETVAL *outregs, const char *symname)
+unsigned int LA_PPC_GNU_PLTEXIT(ElfW(Sym) *sym, unsigned int ndx, uintptr_t *refcook,
+                                uintptr_t *defcook,
+                                const struct LA_PPC_REGS *inregs,
+                                struct LA_PPC_RETVAL *outregs, const char *symname)
 {
-  print_exit (refcook, defcook, symname, outregs->lrv_r3);
+    print_exit(refcook, defcook, symname, outregs->lrv_r3);
 
-  return 0;
+    return 0;
 }

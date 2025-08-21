@@ -19,24 +19,23 @@
 #include <stdarg.h>
 #include <libio/libioP.h>
 
-int
-__ieee128_obstack_vprintf (struct obstack *obstack, const char *format,
-			   va_list ap)
+int __ieee128_obstack_vprintf(struct obstack *obstack, const char *format,
+                              va_list ap)
 {
-  return __obstack_vprintf_internal (obstack, format, ap,
-				     PRINTF_LDBL_USES_FLOAT128);
+    return __obstack_vprintf_internal(obstack, format, ap,
+                                      PRINTF_LDBL_USES_FLOAT128);
 }
-strong_alias (__ieee128_obstack_vprintf, __obstack_vprintfieee128)
+strong_alias(__ieee128_obstack_vprintf, __obstack_vprintfieee128)
 
 int
-__ieee128_obstack_printf (struct obstack *obstack, const char *format, ...)
+__ieee128_obstack_printf(struct obstack *obstack, const char *format, ...)
 {
-  int result;
-  va_list ap;
-  va_start (ap, format);
-  result = __obstack_vprintf_internal (obstack, format, ap,
-				       PRINTF_LDBL_USES_FLOAT128);
-  va_end (ap);
-  return result;
+    int result;
+    va_list ap;
+    va_start(ap, format);
+    result = __obstack_vprintf_internal(obstack, format, ap,
+                                        PRINTF_LDBL_USES_FLOAT128);
+    va_end(ap);
+    return result;
 }
-strong_alias (__ieee128_obstack_printf, __obstack_printfieee128)
+strong_alias(__ieee128_obstack_printf, __obstack_printfieee128)

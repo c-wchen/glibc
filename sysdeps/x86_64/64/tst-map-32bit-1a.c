@@ -20,15 +20,14 @@
 #include <stdint.h>
 #include <support/check.h>
 
-extern void dso_check_map_32bit (void);
+extern void dso_check_map_32bit(void);
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  printf ("do_test: %p\n", do_test);
-  TEST_VERIFY ((uintptr_t) do_test < 0xffffffffUL);
-  dso_check_map_32bit ();
-  return 0;
+    printf("do_test: %p\n", do_test);
+    TEST_VERIFY((uintptr_t) do_test < 0xffffffffUL);
+    dso_check_map_32bit();
+    return 0;
 }
 
 #include <support/test-driver.c>

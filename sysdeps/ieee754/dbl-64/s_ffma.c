@@ -26,10 +26,9 @@
 
 #include <math-narrow.h>
 
-float
-__ffma (double x, double y, double z)
+float __ffma(double x, double y, double z)
 {
-  NARROW_FMA_ROUND_TO_ODD (x, y, z, float, union ieee754_double, , mantissa1,
-			   false);
+    NARROW_FMA_ROUND_TO_ODD(x, y, z, float, union ieee754_double,, mantissa1,
+                            false);
 }
-libm_alias_float_double (fma)
+libm_alias_float_double(fma)

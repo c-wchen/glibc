@@ -21,8 +21,7 @@
 #undef faddl
 
 float
-attribute_hidden
-faddl (double x, double y)
+attribute_hidden faddl(double x, double y)
 {
-  return fadd (x, y);
+    return fadd(x, y);
 }

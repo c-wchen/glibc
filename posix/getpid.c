@@ -19,14 +19,13 @@
 #include <unistd.h>
 
 /* Get the process ID of the calling process.  */
-int
-__getpid (void)
+int __getpid(void)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (__getpid)
-stub_warning (getpid)
+libc_hidden_def(__getpid)
+stub_warning(getpid)
 
-weak_alias (__getpid, getpid)
-libc_hidden_weak (getpid)
+weak_alias(__getpid, getpid)
+libc_hidden_weak(getpid)

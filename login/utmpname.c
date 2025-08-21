@@ -30,46 +30,45 @@ static const char default_file_name[] = _PATH_UTMP;
 const char *__libc_utmp_file_name = (const char *) default_file_name;
 
 /* We have to use the lock in getutent_r.c.  */
-__libc_lock_define (extern, __libc_utmp_lock attribute_hidden)
+__libc_lock_define(extern, __libc_utmp_lock attribute_hidden)
 
 
 int
-__utmpname (const char *file)
+__utmpname(const char *file)
 {
-  int result = -1;
+    int result = -1;
 
-  __libc_lock_lock (__libc_utmp_lock);
+    __libc_lock_lock(__libc_utmp_lock);
 
-  /* Close the old file.  */
-  __libc_endutent ();
+    /* Close the old file.  */
+    __libc_endutent();
 
-  if (strcmp (file, __libc_utmp_file_name) != 0)
-    {
-      if (strcmp (file, default_file_name) == 0)
-	{
-	  free ((char *) __libc_utmp_file_name);
+    if (strcmp(file, __libc_utmp_file_name) != 0) {
+        if (strcmp(file, default_file_name) == 0) {
+            free((char *) __libc_utmp_file_name);
 
-	  __libc_utmp_file_name = default_file_name;
-	}
-      else
-	{
-	  char *file_name = __strdup (file);
-	  if (file_name == NULL)
-	    /* Out of memory.  */
-	    goto done;
+            __libc_utmp_file_name = default_file_name;
+        } else {
+            char *file_name = __strdup(file);
+            if (file_name == NULL)
+                /* Out of memory.  */
+            {
+                goto done;
+            }
 
-	  if (__libc_utmp_file_name != default_file_name)
-	    free ((char *) __libc_utmp_file_name);
+            if (__libc_utmp_file_name != default_file_name) {
+                free((char *) __libc_utmp_file_name);
+            }
 
-	  __libc_utmp_file_name = file_name;
-	}
+            __libc_utmp_file_name = file_name;
+        }
     }
 
-  result = 0;
+    result = 0;
 
 done:
-  __libc_lock_unlock (__libc_utmp_lock);
-  return result;
+    __libc_lock_unlock(__libc_utmp_lock);
+    return result;
 }
-libc_hidden_def (__utmpname)
-weak_alias (__utmpname, utmpname)
+libc_hidden_def(__utmpname)
+weak_alias(__utmpname, utmpname)

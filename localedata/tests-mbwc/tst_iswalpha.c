@@ -7,4 +7,4 @@
 #include "tsp_common.c"
 #include "dat_iswalpha.c"
 
-TST_FUNC_ISW (ALPHA, alpha);
+TST_FUNC_ISW(ALPHA, alpha);

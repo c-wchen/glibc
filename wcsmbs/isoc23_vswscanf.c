@@ -18,13 +18,12 @@
 #include <wchar.h>
 #include <libio/strfile.h>
 
-int
-__isoc23_vswscanf (const wchar_t *string, const wchar_t *format, va_list args)
+int __isoc23_vswscanf(const wchar_t *string, const wchar_t *format, va_list args)
 {
-  _IO_strfile sf;
-  struct _IO_wide_data wd;
-  FILE *f = _IO_strfile_readw (&sf, &wd, string);
-  return __vfwscanf_internal (f, format, args,
-			      SCANF_ISOC99_A | SCANF_ISOC23_BIN_CST);
+    _IO_strfile sf;
+    struct _IO_wide_data wd;
+    FILE *f = _IO_strfile_readw(&sf, &wd, string);
+    return __vfwscanf_internal(f, format, args,
+                               SCANF_ISOC99_A | SCANF_ISOC23_BIN_CST);
 }
-libc_hidden_def (__isoc23_vswscanf)
+libc_hidden_def(__isoc23_vswscanf)

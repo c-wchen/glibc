@@ -42,34 +42,33 @@
    it may be where R is defined using a macro or it may be where the
    macro is defined.  */
 DIAG_PUSH_NEEDS_COMMENT;
-DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wmaybe-uninitialized");
+DIAG_IGNORE_NEEDS_COMMENT(4.9, "-Wmaybe-uninitialized");
 
 #include "soft-fp.h"
 #include "double.h"
 
-double
-__fma (double a, double b, double c)
+double __fma(double a, double b, double c)
 {
-  FP_DECL_EX;
-  FP_DECL_D (A);
-  FP_DECL_D (B);
-  FP_DECL_D (C);
-  FP_DECL_D (R);
-  double r;
+    FP_DECL_EX;
+    FP_DECL_D(A);
+    FP_DECL_D(B);
+    FP_DECL_D(C);
+    FP_DECL_D(R);
+    double r;
 
-  FP_INIT_ROUNDMODE;
-  FP_UNPACK_D (A, a);
-  FP_UNPACK_D (B, b);
-  FP_UNPACK_D (C, c);
-  FP_FMA_D (R, A, B, C);
-  FP_PACK_D (r, R);
-  FP_HANDLE_EXCEPTIONS;
+    FP_INIT_ROUNDMODE;
+    FP_UNPACK_D(A, a);
+    FP_UNPACK_D(B, b);
+    FP_UNPACK_D(C, c);
+    FP_FMA_D(R, A, B, C);
+    FP_PACK_D(r, R);
+    FP_HANDLE_EXCEPTIONS;
 
-  return r;
+    return r;
 }
 DIAG_POP_NEEDS_COMMENT;
 
 #ifndef __fma
-libm_alias_double (__fma, fma)
-libm_alias_double_narrow (__fma, fma)
+libm_alias_double(__fma, fma)
+libm_alias_double_narrow(__fma, fma)
 #endif

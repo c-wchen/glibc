@@ -18,17 +18,17 @@
 #include <sys/ipc.h>
 #include <sys/stat.h>
 
-key_t
-ftok (const char *pathname, int proj_id)
+key_t ftok(const char *pathname, int proj_id)
 {
-  struct __stat64_t64 st;
-  key_t key;
+    struct __stat64_t64 st;
+    key_t key;
 
-  if (__stat64_time64 (pathname, &st) < 0)
-    return (key_t) -1;
+    if (__stat64_time64(pathname, &st) < 0) {
+        return (key_t) -1;
+    }
 
-  key = ((st.st_ino & 0xffff) | ((st.st_dev & 0xff) << 16)
-	 | ((proj_id & 0xff) << 24));
+    key = ((st.st_ino & 0xffff) | ((st.st_dev & 0xff) << 16)
+           | ((proj_id & 0xff) << 24));
 
-  return key;
+    return key;
 }

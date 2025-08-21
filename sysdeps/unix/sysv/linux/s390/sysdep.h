@@ -19,23 +19,23 @@
 #ifndef __ASSEMBLY__
 
 #undef SYS_ify
-#define SYS_ify(syscall_name)	__NR_##syscall_name
+#define SYS_ify(syscall_name)   __NR_##syscall_name
 
 #undef INTERNAL_SYSCALL_NCS
-#define INTERNAL_SYSCALL_NCS(no, nr, args...)				      \
-  ({									      \
-    DECLARGS_##nr(args)							      \
+#define INTERNAL_SYSCALL_NCS(no, nr, args...)                     \
+  ({                                          \
+    DECLARGS_##nr(args)                               \
     register unsigned long int _nr __asm__("1") = (unsigned long int)(no);    \
-    register long int _ret __asm__("2");				      \
-    __asm__ __volatile__ (						      \
-			  "svc    0\n\t"				      \
-			  : "=d" (_ret)					      \
-			  : "d" (_nr) ASMFMT_##nr			      \
-			  : "memory" );					      \
+    register long int _ret __asm__("2");                      \
+    __asm__ __volatile__ (                            \
+              "svc    0\n\t"                      \
+              : "=d" (_ret)                       \
+              : "d" (_nr) ASMFMT_##nr                 \
+              : "memory" );                       \
     _ret; })
 
 #undef INTERNAL_SYSCALL
-#define INTERNAL_SYSCALL(name, nr, args...)				\
+#define INTERNAL_SYSCALL(name, nr, args...)             \
   INTERNAL_SYSCALL_NCS(__NR_##name, nr, args)
 
 #define DECLARGS_0()
@@ -70,15 +70,15 @@
 
 /* List of system calls which are supported as vsyscalls.  */
 #ifdef __s390x__
-#define HAVE_CLOCK_GETRES64_VSYSCALL	"__kernel_clock_getres"
-#define HAVE_CLOCK_GETTIME64_VSYSCALL	"__kernel_clock_gettime"
-#define HAVE_GETRANDOM_VSYSCALL		"__kernel_getrandom"
+#define HAVE_CLOCK_GETRES64_VSYSCALL    "__kernel_clock_getres"
+#define HAVE_CLOCK_GETTIME64_VSYSCALL   "__kernel_clock_gettime"
+#define HAVE_GETRANDOM_VSYSCALL     "__kernel_getrandom"
 #else
-#define HAVE_CLOCK_GETRES_VSYSCALL	"__kernel_clock_getres"
-#define HAVE_CLOCK_GETTIME_VSYSCALL	"__kernel_clock_gettime"
+#define HAVE_CLOCK_GETRES_VSYSCALL  "__kernel_clock_getres"
+#define HAVE_CLOCK_GETTIME_VSYSCALL "__kernel_clock_gettime"
 #endif
-#define HAVE_GETTIMEOFDAY_VSYSCALL	"__kernel_gettimeofday"
-#define HAVE_GETCPU_VSYSCALL		"__kernel_getcpu"
+#define HAVE_GETTIMEOFDAY_VSYSCALL  "__kernel_gettimeofday"
+#define HAVE_GETCPU_VSYSCALL        "__kernel_getcpu"
 
-#define HAVE_CLONE3_WRAPPER		1
+#define HAVE_CLONE3_WRAPPER     1
 #endif

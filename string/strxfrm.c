@@ -24,8 +24,7 @@
 # define STRXFRM_L __strxfrm_l
 #endif
 
-size_t
-STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n)
+size_t STRXFRM(STRING_TYPE *dest, const STRING_TYPE *src, size_t n)
 {
-  return STRXFRM_L (dest, src, n, _NL_CURRENT_LOCALE);
+    return STRXFRM_L(dest, src, n, _NL_CURRENT_LOCALE);
 }

@@ -19,11 +19,10 @@
 #include <netdb.h>
 #include <nss.h>
 
-void
-call_gethostbyname (void)
+void call_gethostbyname(void)
 {
-  __nss_configure_lookup ("hosts", "files");
-  /* This should not terminate the process due to a missing
-     _nss_files_getcanonname_r symbol.  */
-  gethostbyname ("localhost");
+    __nss_configure_lookup("hosts", "files");
+    /* This should not terminate the process due to a missing
+       _nss_files_getcanonname_r symbol.  */
+    gethostbyname("localhost");
 }

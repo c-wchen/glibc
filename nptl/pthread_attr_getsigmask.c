@@ -18,21 +18,17 @@
 
 #include <pthreadP.h>
 
-int
-__pthread_attr_getsigmask_np (const pthread_attr_t *attr, sigset_t *sigmask)
+int __pthread_attr_getsigmask_np(const pthread_attr_t *attr, sigset_t *sigmask)
 {
-  struct pthread_attr *iattr = (struct pthread_attr *) attr;
+    struct pthread_attr *iattr = (struct pthread_attr *) attr;
 
-  if (iattr->extension == NULL || !iattr->extension->sigmask_set)
-    {
-      __sigemptyset (sigmask);
-      return PTHREAD_ATTR_NO_SIGMASK_NP;
-    }
-  else
-    {
-      *sigmask = iattr->extension->sigmask;
-      return 0;
+    if (iattr->extension == NULL || !iattr->extension->sigmask_set) {
+        __sigemptyset(sigmask);
+        return PTHREAD_ATTR_NO_SIGMASK_NP;
+    } else {
+        *sigmask = iattr->extension->sigmask;
+        return 0;
     }
 }
-libc_hidden_def (__pthread_attr_getsigmask_np)
-weak_alias (__pthread_attr_getsigmask_np, pthread_attr_getsigmask_np)
+libc_hidden_def(__pthread_attr_getsigmask_np)
+weak_alias(__pthread_attr_getsigmask_np, pthread_attr_getsigmask_np)

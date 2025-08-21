@@ -18,8 +18,7 @@
 
 #include <errno.h>
 
-static int
-__rtld_execve (const char *path, char *const *argv, char *const *envp)
+static int __rtld_execve(const char *path, char *const *argv, char *const *envp)
 {
-  return ENOSYS;
+    return ENOSYS;
 }

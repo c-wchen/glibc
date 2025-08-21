@@ -23,57 +23,56 @@
 
 /* Read a directory entry from DIRP.  */
 struct dirent *
-__readdir_unlocked (DIR *dirp)
+__readdir_unlocked(DIR *dirp)
 {
-  struct dirent *dp;
-  int saved_errno = errno;
+    struct dirent *dp;
+    int saved_errno = errno;
 
-  if (dirp->offset >= dirp->size)
-    {
-      /* We've emptied out our buffer.  Refill it.  */
+    if (dirp->offset >= dirp->size) {
+        /* We've emptied out our buffer.  Refill it.  */
 
-      size_t maxread = dirp->allocation;
-      ssize_t bytes;
+        size_t maxread = dirp->allocation;
+        ssize_t bytes;
 
-      bytes = __getdents (dirp->fd, dirp->data, maxread);
-      if (bytes <= 0)
-	{
-	  /* Linux may fail with ENOENT on some file systems if the
-	     directory inode is marked as dead (deleted).  POSIX
-	     treats this as a regular end-of-directory condition, so
-	     do not set errno in that case, to indicate success.  */
-	  if (bytes == 0 || errno == ENOENT)
-	    __set_errno (saved_errno);
-	  return NULL;
-	}
-      dirp->size = (size_t) bytes;
+        bytes = __getdents(dirp->fd, dirp->data, maxread);
+        if (bytes <= 0) {
+            /* Linux may fail with ENOENT on some file systems if the
+               directory inode is marked as dead (deleted).  POSIX
+               treats this as a regular end-of-directory condition, so
+               do not set errno in that case, to indicate success.  */
+            if (bytes == 0 || errno == ENOENT) {
+                __set_errno(saved_errno);
+            }
+            return NULL;
+        }
+        dirp->size = (size_t) bytes;
 
-      /* Reset the offset into the buffer.  */
-      dirp->offset = 0;
+        /* Reset the offset into the buffer.  */
+        dirp->offset = 0;
     }
 
-  dp = (struct dirent *) &dirp->data[dirp->offset];
-  dirp->offset += dp->d_reclen;
-  dirp->filepos = dp->d_off;
+    dp = (struct dirent *) &dirp->data[dirp->offset];
+    dirp->offset += dp->d_reclen;
+    dirp->filepos = dp->d_off;
 
-  return dp;
+    return dp;
 }
 
 struct dirent *
-__readdir (DIR *dirp)
+__readdir(DIR *dirp)
 {
-  struct dirent *dp;
+    struct dirent *dp;
 
 #if IS_IN (libc)
-  __libc_lock_lock (dirp->lock);
+    __libc_lock_lock(dirp->lock);
 #endif
-  dp = __readdir_unlocked (dirp);
+    dp = __readdir_unlocked(dirp);
 #if IS_IN (libc)
-  __libc_lock_unlock (dirp->lock);
+    __libc_lock_unlock(dirp->lock);
 #endif
 
-  return dp;
+    return dp;
 }
-weak_alias (__readdir, readdir)
+weak_alias(__readdir, readdir)
 
 #endif

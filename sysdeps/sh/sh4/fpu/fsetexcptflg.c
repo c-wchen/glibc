@@ -20,20 +20,19 @@
 #include <math.h>
 #include <fpu_control.h>
 
-int
-fesetexceptflag (const fexcept_t *flagp, int excepts)
+int fesetexceptflag(const fexcept_t *flagp, int excepts)
 {
-  fpu_control_t temp;
+    fpu_control_t temp;
 
-  /* Get the current environment.  */
-  _FPU_GETCW (temp);
+    /* Get the current environment.  */
+    _FPU_GETCW(temp);
 
-  /* Set the desired exception mask.  */
-  temp &= ~(excepts & FE_ALL_EXCEPT);
-  temp |= (*flagp & excepts & FE_ALL_EXCEPT);
+    /* Set the desired exception mask.  */
+    temp &= ~(excepts & FE_ALL_EXCEPT);
+    temp |= (*flagp & excepts & FE_ALL_EXCEPT);
 
-  /* Save state back to the FPU.  */
-  _FPU_SETCW (temp);
+    /* Save state back to the FPU.  */
+    _FPU_SETCW(temp);
 
-  return 0;
+    return 0;
 }

@@ -23,41 +23,42 @@
 
 #if LIBM_SVID_COMPAT && SHLIB_COMPAT (libm, GLIBC_2_0, GLIBC_2_27)
 /* wrapper powf */
-float
-__powf_compat (float x, float y)
+float __powf_compat(float x, float y)
 {
-  float z = __ieee754_powf (x, y);
-  if (__glibc_unlikely (!isfinite (z)))
+    float z = __ieee754_powf(x, y);
+    if (__glibc_unlikely(!isfinite(z))) {
+        if (_LIB_VERSION != _IEEE_) {
+            if (isfinite(x) && isfinite(y)) {
+                if (isnan(z))
+                    /* pow neg**non-int */
+                {
+                    return __kernel_standard_f(x, y, 124);
+                } else if (x == 0.0f && y < 0.0f) {
+                    if (signbit(x) && signbit(z))
+                        /* pow(-0.0,negative) */
+                    {
+                        return __kernel_standard_f(x, y, 123);
+                    } else
+                        /* pow(+0.0,negative) */
+                    {
+                        return __kernel_standard_f(x, y, 143);
+                    }
+                } else
+                    /* pow overflow */
+                {
+                    return __kernel_standard_f(x, y, 121);
+                }
+            }
+        }
+    } else if (__builtin_expect(z == 0.0f, 0)
+               && isfinite(x) && x != 0 && isfinite(y)
+               && _LIB_VERSION != _IEEE_)
+        /* pow underflow */
     {
-      if (_LIB_VERSION != _IEEE_)
-	{
-	  if (isfinite (x) && isfinite (y))
-	    {
-	      if (isnan (z))
-		/* pow neg**non-int */
-		return __kernel_standard_f (x, y, 124);
-	      else if (x == 0.0f && y < 0.0f)
-		{
-		  if (signbit (x) && signbit (z))
-		    /* pow(-0.0,negative) */
-		    return __kernel_standard_f (x, y, 123);
-		  else
-		    /* pow(+0.0,negative) */
-		    return __kernel_standard_f (x, y, 143);
-		}
-	      else
-		/* pow overflow */
-		return __kernel_standard_f (x, y, 121);
-	    }
-	}
+        return __kernel_standard_f(x, y, 122);
     }
-  else if (__builtin_expect (z == 0.0f, 0)
-	   && isfinite (x) && x != 0 && isfinite (y)
-	   && _LIB_VERSION != _IEEE_)
-    /* pow underflow */
-    return __kernel_standard_f (x, y, 122);
 
-  return z;
+    return z;
 }
-compat_symbol (libm, __powf_compat, powf, GLIBC_2_0);
+compat_symbol(libm, __powf_compat, powf, GLIBC_2_0);
 #endif

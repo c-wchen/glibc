@@ -17,25 +17,24 @@
 
 #include <hurd/fd.h>
 #include <stdlib.h>
-#include "hurdmalloc.h"		/* XXX */
+#include "hurdmalloc.h"     /* XXX */
 
 /* Allocate a new file descriptor structure
    and initialize it with PORT and CTTY.  */
 
 struct hurd_fd *
-_hurd_new_fd (io_t port, io_t ctty)
+_hurd_new_fd(io_t port, io_t ctty)
 {
-  struct hurd_fd *d = malloc (sizeof (struct hurd_fd));
+    struct hurd_fd *d = malloc(sizeof(struct hurd_fd));
 
-  if (d != NULL)
-    {
-      /* Initialize the port cells.  */
-      _hurd_port_init (&d->port, port);
-      _hurd_port_init (&d->ctty, ctty);
+    if (d != NULL) {
+        /* Initialize the port cells.  */
+        _hurd_port_init(&d->port, port);
+        _hurd_port_init(&d->ctty, ctty);
 
-      /* And the fcntl flags.  */
-      d->flags = 0;
+        /* And the fcntl flags.  */
+        d->flags = 0;
     }
 
-  return d;
+    return d;
 }

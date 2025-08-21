@@ -20,28 +20,27 @@
 #include <fenv_libc.h>
 #include <fpu_control.h>
 
-int
-__feraiseexcept (int excepts)
+int __feraiseexcept(int excepts)
 {
-  fpu_control_t cw;
+    fpu_control_t cw;
 
-  /* Get current state.  */
-  _FPU_GETCW (cw);
+    /* Get current state.  */
+    _FPU_GETCW(cw);
 
-  /* Set flag bits (which are accumulative), and *also* set the
-     cause bits. The setting of the cause bits is what actually causes
-     the hardware to generate the exception, if the corresponding enable
-     bit is set as well.  */
+    /* Set flag bits (which are accumulative), and *also* set the
+       cause bits. The setting of the cause bits is what actually causes
+       the hardware to generate the exception, if the corresponding enable
+       bit is set as well.  */
 
-  excepts &= FE_ALL_EXCEPT;
-  cw |= excepts | (excepts << CAUSE_SHIFT);
+    excepts &= FE_ALL_EXCEPT;
+    cw |= excepts | (excepts << CAUSE_SHIFT);
 
-  /* Set new state.  */
-  _FPU_SETCW (cw);
+    /* Set new state.  */
+    _FPU_SETCW(cw);
 
-  return 0;
+    return 0;
 }
 
-libm_hidden_def (__feraiseexcept)
-weak_alias (__feraiseexcept, feraiseexcept)
-libm_hidden_weak (feraiseexcept)
+libm_hidden_def(__feraiseexcept)
+weak_alias(__feraiseexcept, feraiseexcept)
+libm_hidden_weak(feraiseexcept)

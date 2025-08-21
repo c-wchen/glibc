@@ -21,17 +21,15 @@
 #include <internal-signals.h>
 
 /* Add SIGNO to SET.  */
-int
-sigaddset (sigset_t *set, int signo)
+int sigaddset(sigset_t *set, int signo)
 {
-  if (set == NULL || signo <= 0 || signo >= NSIG
-      || is_internal_signal (signo))
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (set == NULL || signo <= 0 || signo >= NSIG
+        || is_internal_signal(signo)) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  __sigaddset (set, signo);
-  return 0;
+    __sigaddset(set, signo);
+    return 0;
 }
-libc_hidden_def (sigaddset)
+libc_hidden_def(sigaddset)

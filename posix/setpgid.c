@@ -21,13 +21,12 @@
 /* Set the process group ID of the process matching PID to PGID.
    If PID is zero, the current process's process group ID is set.
    If PGID is zero, the process ID of the process is used.  */
-int
-__setpgid (int pid, int pgid)
+int __setpgid(int pid, int pgid)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (__setpgid)
-stub_warning (setpgid)
+libc_hidden_def(__setpgid)
+stub_warning(setpgid)
 
-weak_alias (__setpgid, setpgid)
+weak_alias(__setpgid, setpgid)

@@ -18,11 +18,11 @@
 #include <pwd.h>
 
 
-#define LOOKUP_TYPE	struct passwd
-#define SETFUNC_NAME	setpwent
-#define	GETFUNC_NAME	getpwent
-#define	ENDFUNC_NAME	endpwent
-#define DATABASE_NAME	passwd
-#define BUFLEN		NSS_BUFLEN_PASSWD
+#define LOOKUP_TYPE struct passwd
+#define SETFUNC_NAME    setpwent
+#define GETFUNC_NAME    getpwent
+#define ENDFUNC_NAME    endpwent
+#define DATABASE_NAME   passwd
+#define BUFLEN      NSS_BUFLEN_PASSWD
 
 #include "../nss/getXXent.c"

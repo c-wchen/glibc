@@ -24,26 +24,26 @@
 # include <sys/prctl.h>
 #endif
 
-bool
-support_set_vma_name_supported (void)
+bool support_set_vma_name_supported(void)
 {
 #ifdef __linux__
-  size_t size = sysconf (_SC_PAGESIZE);
-  if (size == -1)
-    FAIL_EXIT1 ("sysconf (_SC_PAGESIZE): %m\n");
+    size_t size = sysconf(_SC_PAGESIZE);
+    if (size == -1) {
+        FAIL_EXIT1("sysconf (_SC_PAGESIZE): %m\n");
+    }
 
-  void *vma = xmmap (NULL,
-		     size,
-		     PROT_NONE,
-		     MAP_PRIVATE|MAP_ANONYMOUS|MAP_NORESERVE,
-		     -1);
+    void *vma = xmmap(NULL,
+                      size,
+                      PROT_NONE,
+                      MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE,
+                      -1);
 
-  int r = prctl (PR_SET_VMA, PR_SET_VMA_ANON_NAME, vma, size, "vmaname");
+    int r = prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, vma, size, "vmaname");
 
-  xmunmap (vma, size);
+    xmunmap(vma, size);
 
-  return r == 0;
+    return r == 0;
 #else
-  return false;
+    return false;
 #endif
 }

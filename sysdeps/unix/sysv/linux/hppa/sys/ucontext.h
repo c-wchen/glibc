@@ -18,7 +18,7 @@
 /* Don't rely on this, the interface is currently messed up and may need to
    be broken to be fixed.  */
 #ifndef _SYS_UCONTEXT_H
-#define _SYS_UCONTEXT_H	1
+#define _SYS_UCONTEXT_H 1
 
 #include <features.h>
 
@@ -37,45 +37,41 @@
 typedef unsigned long int greg_t;
 
 /* Number of general registers.  */
-# define NGREG	80
-# define NFPREG	32
+# define NGREG  80
+# define NFPREG 32
 
 /* Container for all general registers.  */
-typedef struct gregset
-  {
+typedef struct gregset {
     greg_t g_regs[32];
     greg_t sr_regs[8];
     greg_t cr_regs[24];
     greg_t g_pad[16];
-  } gregset_t;
+} gregset_t;
 
 /* Container for all FPU registers.  */
-typedef struct
-  {
+typedef struct {
     double fp_dregs[32];
-  } fpregset_t;
+} fpregset_t;
 #endif
 
 /* Context to describe whole processor state.  */
-typedef struct
-  {
+typedef struct {
     unsigned long int __ctx(sc_flags);
     unsigned long int __ctx(sc_gr)[32];
     unsigned long long int __ctx(sc_fr)[32];
     unsigned long int __ctx(sc_iasq)[2];
     unsigned long int __ctx(sc_iaoq)[2];
     unsigned long int __ctx(sc_sar);
-  } mcontext_t;
+} mcontext_t;
 
 /* Userlevel context.  */
-typedef struct ucontext_t
-  {
+typedef struct ucontext_t {
     unsigned long int __ctx(uc_flags);
     struct ucontext_t *uc_link;
     stack_t uc_stack;
     mcontext_t uc_mcontext;
     sigset_t uc_sigmask;
-  } ucontext_t;
+} ucontext_t;
 
 #undef __ctx
 

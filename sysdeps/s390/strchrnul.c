@@ -25,17 +25,17 @@
 # include <ifunc-resolve.h>
 
 # if HAVE_STRCHRNUL_C
-extern __typeof (__redirect_strchrnul) STRCHRNUL_C attribute_hidden;
+extern __typeof(__redirect_strchrnul) STRCHRNUL_C attribute_hidden;
 # endif
 
 # if HAVE_STRCHRNUL_Z13
-extern __typeof (__redirect_strchrnul) STRCHRNUL_Z13 attribute_hidden;
+extern __typeof(__redirect_strchrnul) STRCHRNUL_Z13 attribute_hidden;
 # endif
 
-s390_libc_ifunc_expr (__redirect_strchrnul, __strchrnul,
-		      (HAVE_STRCHRNUL_Z13 && (hwcap & HWCAP_S390_VX))
-		      ? STRCHRNUL_Z13
-		      : STRCHRNUL_DEFAULT
-		      )
-weak_alias (__strchrnul, strchrnul)
+s390_libc_ifunc_expr(__redirect_strchrnul, __strchrnul,
+                     (HAVE_STRCHRNUL_Z13 &&(hwcap &HWCAP_S390_VX))
+                     ? STRCHRNUL_Z13
+                     : STRCHRNUL_DEFAULT
+                    )
+weak_alias(__strchrnul, strchrnul)
 #endif /* HAVE_STRCHRNUL_IFUNC  */

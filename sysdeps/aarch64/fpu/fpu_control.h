@@ -29,29 +29,29 @@
 # define _FPU_GETFPSR(fpsr) (fpsr = __builtin_aarch64_get_fpsr ())
 # define _FPU_SETFPSR(fpsr) __builtin_aarch64_set_fpsr (fpsr)
 #else
-# define _FPU_GETCW(fpcr)					\
-  ({ 								\
-   __uint64_t __fpcr;						\
-   __asm__ __volatile__ ("mrs	%0, fpcr" : "=r" (__fpcr));	\
-   fpcr = __fpcr;						\
+# define _FPU_GETCW(fpcr)                   \
+  ({                                \
+   __uint64_t __fpcr;                       \
+   __asm__ __volatile__ ("mrs	%0, fpcr" : "=r" (__fpcr));   \
+   fpcr = __fpcr;                       \
   })
 
-# define _FPU_SETCW(fpcr)					\
-  ({								\
-   __uint64_t __fpcr = fpcr;					\
+# define _FPU_SETCW(fpcr)                   \
+  ({                                \
+   __uint64_t __fpcr = fpcr;                    \
    __asm__ __volatile__ ("msr	fpcr, %0" : : "r" (__fpcr));    \
   })
 
-# define _FPU_GETFPSR(fpsr)					\
-  ({								\
-   __uint64_t __fpsr;						\
-   __asm__ __volatile__ ("mrs	%0, fpsr" : "=r" (__fpsr));	\
-   fpsr = __fpsr;						\
+# define _FPU_GETFPSR(fpsr)                 \
+  ({                                \
+   __uint64_t __fpsr;                       \
+   __asm__ __volatile__ ("mrs	%0, fpsr" : "=r" (__fpsr));   \
+   fpsr = __fpsr;                       \
   })
 
-# define _FPU_SETFPSR(fpsr)					\
-  ({								\
-   __uint64_t __fpsr = fpsr;					\
+# define _FPU_SETFPSR(fpsr)                 \
+  ({                                \
+   __uint64_t __fpsr = fpsr;                    \
    __asm__ __volatile__ ("msr	fpsr, %0" : : "r" (__fpsr));    \
   })
 #endif
@@ -60,11 +60,11 @@
    contents. These two masks indicate which bits in each of FPCR and
    FPSR should not be changed.  */
 
-#define _FPU_RESERVED		0xfe0fe0f8
-#define _FPU_FPSR_RESERVED	0x0fffffe0
+#define _FPU_RESERVED       0xfe0fe0f8
+#define _FPU_FPSR_RESERVED  0x0fffffe0
 
-#define _FPU_DEFAULT		0x00000000
-#define _FPU_FPSR_DEFAULT	0x00000000
+#define _FPU_DEFAULT        0x00000000
+#define _FPU_FPSR_DEFAULT   0x00000000
 
 /* Layout of FPCR and FPSR:
 
@@ -89,7 +89,7 @@
 #define _FPU_FPCR_MASK_IOE 0x0100
 
 #define _FPU_FPCR_IEEE                       \
-  (_FPU_DEFAULT  | _FPU_FPCR_MASK_IXE	     \
+  (_FPU_DEFAULT  | _FPU_FPCR_MASK_IXE        \
    | _FPU_FPCR_MASK_UFE | _FPU_FPCR_MASK_OFE \
    | _FPU_FPCR_MASK_DZE | _FPU_FPCR_MASK_IOE)
 

@@ -27,111 +27,99 @@
 
 /* Return the first invalid SysV IPC command from common shared
    between message queue, shared memory, and semaphore.  */
-static inline int
-first_common_invalid_cmd (void)
+static inline int first_common_invalid_cmd(void)
 {
-  const int common_cmds[] = {
-    IPC_RMID,
-    IPC_SET,
-    IPC_STAT,
-    IPC_INFO,
-  };
+    const int common_cmds[] = {
+        IPC_RMID,
+        IPC_SET,
+        IPC_STAT,
+        IPC_INFO,
+    };
 
-  int invalid = 0;
-  for (int i = 0; i < array_length (common_cmds); i++)
-    {
-      if (invalid == common_cmds[i])
-	{
-	  invalid++;
-	  i = 0;
+    int invalid = 0;
+    for (int i = 0; i < array_length(common_cmds); i++) {
+        if (invalid == common_cmds[i]) {
+            invalid++;
+            i = 0;
         }
     }
 
-  return invalid;
+    return invalid;
 }
 
 /* Return the first invalid SysV IPC command for semaphore.  */
-static inline int
-first_sem_invalid_cmd (void)
+static inline int first_sem_invalid_cmd(void)
 {
-  const int sem_cmds[] = {
-    GETPID,
-    GETVAL,
-    GETALL,
-    GETNCNT,
-    GETZCNT,
-    SETVAL,
-    SETALL,
-    SEM_STAT,
-    SEM_INFO,
+    const int sem_cmds[] = {
+        GETPID,
+        GETVAL,
+        GETALL,
+        GETNCNT,
+        GETZCNT,
+        SETVAL,
+        SETALL,
+        SEM_STAT,
+        SEM_INFO,
 #ifdef SEM_STAT_ANY
-    SEM_STAT_ANY,
+        SEM_STAT_ANY,
 #endif
-  };
+    };
 
-  int invalid = first_common_invalid_cmd ();
-  for (int i = 0; i < array_length (sem_cmds); i++)
-    {
-      if (invalid == sem_cmds[i])
-	{
-	  invalid++;
-	  i = 0;
-	}
+    int invalid = first_common_invalid_cmd();
+    for (int i = 0; i < array_length(sem_cmds); i++) {
+        if (invalid == sem_cmds[i]) {
+            invalid++;
+            i = 0;
+        }
     }
 
-  return invalid;
+    return invalid;
 }
 
 /* Return the first invalid SysV IPC command for message queue.  */
-static inline int
-first_msg_invalid_cmd (void)
+static inline int first_msg_invalid_cmd(void)
 {
-  const int msg_cmds[] = {
-    MSG_STAT,
-    MSG_INFO,
+    const int msg_cmds[] = {
+        MSG_STAT,
+        MSG_INFO,
 #ifdef MSG_STAT_ANY
-    MSG_STAT_ANY,
+        MSG_STAT_ANY,
 #endif
-  };
+    };
 
-  int invalid = first_common_invalid_cmd ();
-  for (int i = 0; i < array_length (msg_cmds); i++)
-    {
-      if (invalid == msg_cmds[i])
-	{
-	  invalid++;
-	  i = 0;
-	}
+    int invalid = first_common_invalid_cmd();
+    for (int i = 0; i < array_length(msg_cmds); i++) {
+        if (invalid == msg_cmds[i]) {
+            invalid++;
+            i = 0;
+        }
     }
 
-  return invalid;
+    return invalid;
 }
 
 /* Return the first invalid SysV IPC command for shared memory.  */
-static inline int
-first_shm_invalid_cmd (void)
+static inline int first_shm_invalid_cmd(void)
 {
-  const int shm_cmds[] = {
-    SHM_STAT,
-    SHM_INFO,
+    const int shm_cmds[] = {
+        SHM_STAT,
+        SHM_INFO,
 #ifdef SHM_STAT_ANY
-    SHM_STAT_ANY,
+        SHM_STAT_ANY,
 #endif
-    SHM_LOCK,
-    SHM_UNLOCK
-  };
+        SHM_LOCK,
+        SHM_UNLOCK
+    };
 
-  int invalid = first_common_invalid_cmd ();
-  for (int i = 0; i < array_length (shm_cmds); i++)
-    {
-      if (invalid == shm_cmds[i])
-	{
-	  invalid++;
-	  i = 0;
-	}
+    int invalid = first_common_invalid_cmd();
+    for (int i = 0; i < array_length(shm_cmds); i++) {
+        if (invalid == shm_cmds[i]) {
+            invalid++;
+            i = 0;
+        }
     }
 
-  return invalid;
+    return invalid;
 }
 
 #endif /* _TEST_SYSV_H  */

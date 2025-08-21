@@ -26,5 +26,5 @@
 # define SYMBOL_NAME memset
 # include "ifunc-memset.h"
 
-libc_ifunc_redirected (__redirect_memset, memset, IFUNC_SELECTOR ());
+libc_ifunc_redirected(__redirect_memset, memset, IFUNC_SELECTOR());
 #endif

@@ -26,14 +26,14 @@
 # define wcstof32 __hide_wcstof32
 #endif
 
-#define	FLOAT		float
-#define	FLT		FLT
+#define FLOAT       float
+#define FLT     FLT
 #ifdef USE_WIDE_CHAR
-#define STRTOF		wcstof
-#define STRTOF_L	__wcstof_l
+#define STRTOF      wcstof
+#define STRTOF_L    __wcstof_l
 #else
-# define STRTOF		strtof
-# define STRTOF_L	__strtof_l
+# define STRTOF     strtof
+# define STRTOF_L   __strtof_l
 #endif
 
 
@@ -43,8 +43,8 @@
 # undef strtof32
 # undef wcstof32
 # ifdef USE_WIDE_CHAR
-weak_alias (wcstof, wcstof32)
+weak_alias(wcstof, wcstof32)
 # else
-weak_alias (strtof, strtof32)
+weak_alias(strtof, strtof32)
 # endif
 #endif

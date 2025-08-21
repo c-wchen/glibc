@@ -20,38 +20,35 @@
 #include <time.h>
 #include <fcntl.h>
 
-int
-__utime64 (const char *file, const struct __utimbuf64 *times)
+int __utime64(const char *file, const struct __utimbuf64 *times)
 {
-  struct __timespec64 ts64[2];
+    struct __timespec64 ts64[2];
 
-  if (times != NULL)
-    {
-      ts64[0].tv_sec = times->actime;
-      ts64[0].tv_nsec = 0LL;
-      ts64[1].tv_sec = times->modtime;
-      ts64[1].tv_nsec = 0LL;
+    if (times != NULL) {
+        ts64[0].tv_sec = times->actime;
+        ts64[0].tv_nsec = 0LL;
+        ts64[1].tv_sec = times->modtime;
+        ts64[1].tv_nsec = 0LL;
     }
 
-  return __utimensat64_helper (AT_FDCWD, file, times ? ts64 : NULL, 0);
+    return __utimensat64_helper(AT_FDCWD, file, times ? ts64 : NULL, 0);
 }
 
 #if __TIMESIZE != 64
-libc_hidden_def (__utime64)
+libc_hidden_def(__utime64)
 
 int
-__utime (const char *file, const struct utimbuf *times)
+__utime(const char *file, const struct utimbuf *times)
 {
-  struct __utimbuf64 utb64;
+    struct __utimbuf64 utb64;
 
-  if (times != NULL)
-    {
-      utb64.actime = (__time64_t) times->actime;
-      utb64.modtime = (__time64_t) times->modtime;
+    if (times != NULL) {
+        utb64.actime = (__time64_t) times->actime;
+        utb64.modtime = (__time64_t) times->modtime;
     }
 
-  return __utime64 (file, times ? &utb64 : NULL);
+    return __utime64(file, times ? &utb64 : NULL);
 }
 #endif
-strong_alias (__utime, utime)
-libc_hidden_def (utime)
+strong_alias(__utime, utime)
+libc_hidden_def(utime)

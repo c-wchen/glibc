@@ -24,11 +24,10 @@
    describes which message is returned in MSGFLG describes the behaviour
    in buffer overflow or queue underflow.  */
 
-ssize_t
-msgrcv (int msqid, void *msgp, size_t msgsz, long msgtyp, int msgflg)
+ssize_t msgrcv(int msqid, void *msgp, size_t msgsz, long msgtyp, int msgflg)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (msgrcv)
+stub_warning(msgrcv)

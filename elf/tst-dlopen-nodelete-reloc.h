@@ -26,9 +26,8 @@
    definition.  */
 
 template <int modid>
-struct unique_symbol
-{
-  static int value;
+struct unique_symbol {
+    static int value;
 };
 
 template <int modid>

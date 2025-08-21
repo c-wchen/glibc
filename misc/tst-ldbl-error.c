@@ -25,100 +25,91 @@
 #include <support/capture_subprocess.h>
 #include <support/check.h>
 
-struct tests
-{
-  void *callback;
-  const char *expected;
+struct tests {
+    void *callback;
+    const char *expected;
 };
 
 va_list args;
 
-static void
-callback_err (void *closure)
+static void callback_err(void *closure)
 {
-  errno = 0;
-  err (0, "%Lf", (long double) -1);
+    errno = 0;
+    err(0, "%Lf", (long double) -1);
 }
 
-static void
-callback_errx (void *closure)
+static void callback_errx(void *closure)
 {
-  errno = 0;
-  errx (0, "%Lf", (long double) -1);
+    errno = 0;
+    errx(0, "%Lf", (long double) -1);
 }
 
-static void
-callback_verr (void *closure)
+static void callback_verr(void *closure)
 {
-  errno = 0;
-  verr (0, "%Lf", args);
+    errno = 0;
+    verr(0, "%Lf", args);
 }
 
-static void
-callback_verrx (void *closure)
+static void callback_verrx(void *closure)
 {
-  errno = 0;
-  verrx (0, "%Lf", args);
+    errno = 0;
+    verrx(0, "%Lf", args);
 }
 
-static void
-callback_error (void *closure)
+static void callback_error(void *closure)
 {
-  errno = 0;
-  error (0, 0, "%Lf", (long double) -1);
+    errno = 0;
+    error(0, 0, "%Lf", (long double) -1);
 }
 
-static void
-callback_error_at_line (void *closure)
+static void callback_error_at_line(void *closure)
 {
-  errno = 0;
-  error_at_line (0, 0, "", 0, "%Lf", (long double) -1);
+    errno = 0;
+    error_at_line(0, 0, "", 0, "%Lf", (long double) -1);
 }
 
-static void
-do_one_test (void *callback, const char *expected, ...)
+static void do_one_test(void *callback, const char *expected, ...)
 {
-  struct support_capture_subprocess result;
+    struct support_capture_subprocess result;
 
-  va_start (args, expected);
+    va_start(args, expected);
 
-  /* Call 'callback', which fills in the output and error buffers.  */
-  result = support_capture_subprocess (callback, NULL);
+    /* Call 'callback', which fills in the output and error buffers.  */
+    result = support_capture_subprocess(callback, NULL);
 
-  /* Filter out the name of the program (which should always end with
-     -error), so that the test case can be reused by ldbl-opt and
-     ldbl-128ibm-compat.  */
-  const char *needle = "-error:";
-  char *message;
-  message = strstr (result.err.buffer, needle);
-  if (message == NULL)
-    FAIL_EXIT1 ("test case error");
-  message += strlen (needle);
+    /* Filter out the name of the program (which should always end with
+       -error), so that the test case can be reused by ldbl-opt and
+       ldbl-128ibm-compat.  */
+    const char *needle = "-error:";
+    char *message;
+    message = strstr(result.err.buffer, needle);
+    if (message == NULL) {
+        FAIL_EXIT1("test case error");
+    }
+    message += strlen(needle);
 
-  /* Verify that the output message is as expected.  */
-  TEST_COMPARE_STRING (message, expected);
+    /* Verify that the output message is as expected.  */
+    TEST_COMPARE_STRING(message, expected);
 
-  va_end (args);
+    va_end(args);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  struct tests tests[] = {
-    { &callback_err, " -1.000000: Success\n" },
-    { &callback_errx, " -1.000000\n" },
-    { &callback_verr, " -1.000000: Success\n" },
-    { &callback_verrx, " -1.000000\n" },
-    { &callback_error, " -1.000000\n" },
-    { &callback_error_at_line, ":0: -1.000000\n" }
-  };
+    struct tests tests[] = {
+        { &callback_err, " -1.000000: Success\n" },
+        { &callback_errx, " -1.000000\n" },
+        { &callback_verr, " -1.000000: Success\n" },
+        { &callback_verrx, " -1.000000\n" },
+        { &callback_error, " -1.000000\n" },
+        { &callback_error_at_line, ":0: -1.000000\n" }
+    };
 
-  for (int i = 0; i < sizeof (tests) / sizeof (tests[0]); i++)
-    {
-      do_one_test (tests[i].callback, tests[i].expected, (long double) -1);
+    for (int i = 0; i < sizeof(tests) / sizeof(tests[0]); i++) {
+        do_one_test(tests[i].callback, tests[i].expected, (long double) -1);
     }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

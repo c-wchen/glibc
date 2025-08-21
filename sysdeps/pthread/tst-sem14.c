@@ -27,64 +27,53 @@ sem_t sem;
 int c;
 volatile int thread_fail;
 
-static void *
-tf (void *arg)
+static void *tf(void *arg)
 {
-  for (int i = 0; i < NITER; i++)
-    {
-      if (sem_wait (&sem) != 0)
-	{
-	  perror ("sem_wait");
-	  thread_fail = 1;
-	}
-      ++c;
-      if (sem_post (&sem) != 0)
-	{
-	  perror ("sem_post");
-	  thread_fail = 1;
-	}
+    for (int i = 0; i < NITER; i++) {
+        if (sem_wait(&sem) != 0) {
+            perror("sem_wait");
+            thread_fail = 1;
+        }
+        ++c;
+        if (sem_post(&sem) != 0) {
+            perror("sem_post");
+            thread_fail = 1;
+        }
     }
-  return NULL;
+    return NULL;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  if (sem_init (&sem, 0, 0) != 0)
-    {
-      perror ("sem_init");
-      return 1;
+    if (sem_init(&sem, 0, 0) != 0) {
+        perror("sem_init");
+        return 1;
     }
 
-  pthread_t th[NTHREADS];
-  for (int i = 0; i < NTHREADS; i++)
-    {
-      if (pthread_create (&th[i], NULL, tf, NULL) != 0)
-	{
-	  puts ("pthread_create failed");
-	  return 1;
-	}
+    pthread_t th[NTHREADS];
+    for (int i = 0; i < NTHREADS; i++) {
+        if (pthread_create(&th[i], NULL, tf, NULL) != 0) {
+            puts("pthread_create failed");
+            return 1;
+        }
     }
 
-  if (sem_post (&sem) != 0)
-    {
-      perror ("sem_post");
-      return 1;
+    if (sem_post(&sem) != 0) {
+        perror("sem_post");
+        return 1;
     }
 
-  for (int i = 0; i < NTHREADS; i++)
-    if (pthread_join (th[i], NULL) != 0)
-      {
-	puts ("pthread_join failed");
-	return 1;
-      }
+    for (int i = 0; i < NTHREADS; i++)
+        if (pthread_join(th[i], NULL) != 0) {
+            puts("pthread_join failed");
+            return 1;
+        }
 
-  if (c != NTHREADS * NITER)
-    {
-      printf ("c = %d, should be %d\n", c, NTHREADS * NITER);
-      return 1;
+    if (c != NTHREADS * NITER) {
+        printf("c = %d, should be %d\n", c, NTHREADS * NITER);
+        return 1;
     }
-  return thread_fail;
+    return thread_fail;
 }
 
 #define TEST_FUNCTION do_test ()

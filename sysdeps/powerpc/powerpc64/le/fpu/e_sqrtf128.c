@@ -40,24 +40,23 @@
 #include <soft-fp.h>
 #include <quad.h>
 
-__float128
-__ieee754_sqrtf128 (__float128 a)
+__float128 __ieee754_sqrtf128(__float128 a)
 {
-  __float128 r;
-  /* For multiarch builds, this will be built twice. */
+    __float128 r;
+    /* For multiarch builds, this will be built twice. */
 #ifndef _ARCH_PWR9
-  FP_DECL_EX;
-  FP_DECL_Q (A);
-  FP_DECL_Q (R);
+    FP_DECL_EX;
+    FP_DECL_Q(A);
+    FP_DECL_Q(R);
 
-  FP_INIT_ROUNDMODE;
-  FP_UNPACK_Q (A, a);
-  FP_SQRT_Q (R, A);
-  FP_PACK_Q (r, R);
-  FP_HANDLE_EXCEPTIONS;
+    FP_INIT_ROUNDMODE;
+    FP_UNPACK_Q(A, a);
+    FP_SQRT_Q(R, A);
+    FP_PACK_Q(r, R);
+    FP_HANDLE_EXCEPTIONS;
 #else
-  asm ("xssqrtqp %0,%1" : "=v" (r) : "v" (a));
+    asm("xssqrtqp %0,%1" : "=v"(r) : "v"(a));
 #endif
-  return r;
+    return r;
 }
-libm_alias_finite (__ieee754_sqrtf128, __sqrtf128)
+libm_alias_finite(__ieee754_sqrtf128, __sqrtf128)

@@ -21,23 +21,24 @@
 #include <arm-features.h>
 
 
-void
-__setfpucw (fpu_control_t set)
+void __setfpucw(fpu_control_t set)
 {
-  fpu_control_t fpscr, new_fpscr;
+    fpu_control_t fpscr, new_fpscr;
 
-  /* Do nothing if a VFP unit isn't present.  */
-  if (!ARM_HAVE_VFP)
-    return;
+    /* Do nothing if a VFP unit isn't present.  */
+    if (!ARM_HAVE_VFP) {
+        return;
+    }
 
-  _FPU_GETCW (fpscr);
+    _FPU_GETCW(fpscr);
 
-  /* Preserve the reserved bits, and set the rest as the user
-     specified (or the default, if the user gave zero).  */
-  new_fpscr = fpscr & _FPU_RESERVED;
-  new_fpscr |= set & ~_FPU_RESERVED;
+    /* Preserve the reserved bits, and set the rest as the user
+       specified (or the default, if the user gave zero).  */
+    new_fpscr = fpscr & _FPU_RESERVED;
+    new_fpscr |= set & ~_FPU_RESERVED;
 
-  /* Write FPSCR if changed.  */
-  if (new_fpscr != fpscr)
-    _FPU_SETCW (fpscr);
+    /* Write FPSCR if changed.  */
+    if (new_fpscr != fpscr) {
+        _FPU_SETCW(fpscr);
+    }
 }

@@ -18,8 +18,7 @@
 
 #include <stdio.h>
 
-const char *
-strerrorname_np (int errnum)
+const char *strerrorname_np(int errnum)
 {
-  return __get_errname (errnum);
+    return __get_errname(errnum);
 }

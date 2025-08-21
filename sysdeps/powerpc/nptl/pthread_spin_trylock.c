@@ -19,30 +19,29 @@
 #include "pthreadP.h"
 #include <shlib-compat.h>
 
-int
-__pthread_spin_trylock (pthread_spinlock_t *lock)
+int __pthread_spin_trylock(pthread_spinlock_t *lock)
 {
-  unsigned int old;
-  int err = EBUSY;
+    unsigned int old;
+    int err = EBUSY;
 
-  asm ("1:	lwarx	%0,0,%2" MUTEX_HINT_ACQ "\n"
-       "	cmpwi	0,%0,0\n"
-       "	bne	2f\n"
-       "	stwcx.	%3,0,%2\n"
-       "	bne-	1b\n"
-       "	li	%1,0\n"
-                __ARCH_ACQ_INSTR "\n"
-       "2:	"
-       : "=&r" (old), "=&r" (err)
-       : "r" (lock), "r" (1), "1" (err)
-       : "cr0", "memory");
+    asm("1:	lwarx	%0,0,%2" MUTEX_HINT_ACQ "\n"
+        "	cmpwi	0,%0,0\n"
+        "	bne	2f\n"
+        "	stwcx.	%3,0,%2\n"
+        "	bne-	1b\n"
+        "	li	%1,0\n"
+        __ARCH_ACQ_INSTR "\n"
+        "2:	"
+        : "=&r"(old), "=&r"(err)
+        : "r"(lock), "r"(1), "1"(err)
+        : "cr0", "memory");
 
-  return err;
+    return err;
 }
-versioned_symbol (libc, __pthread_spin_trylock, pthread_spin_trylock,
-		  GLIBC_2_34);
+versioned_symbol(libc, __pthread_spin_trylock, pthread_spin_trylock,
+                 GLIBC_2_34);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
-compat_symbol (libpthread, __pthread_spin_trylock, pthread_spin_trylock,
-	       GLIBC_2_2);
+compat_symbol(libpthread, __pthread_spin_trylock, pthread_spin_trylock,
+              GLIBC_2_2);
 #endif

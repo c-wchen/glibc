@@ -28,37 +28,35 @@
 #include <support/xunistd.h>
 #include <support/check.h>
 
-static int
-f (void *arg)
+static int f(void *arg)
 {
-  puts ("in f");
+    puts("in f");
 
-  return TEST_STACK_ALIGN () ? 1 : 0;
+    return TEST_STACK_ALIGN() ? 1 : 0;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  puts ("in main");
+    puts("in main");
 
-  if (TEST_STACK_ALIGN ())
-    FAIL_EXIT1 ("stack alignment failed");
+    if (TEST_STACK_ALIGN()) {
+        FAIL_EXIT1("stack alignment failed");
+    }
 
 #define STACK_SIZE 128 * 1024
-  char st[STACK_SIZE] __attribute__ ((aligned));
-  struct clone_args clone_args =
-    {
-      .stack = (uintptr_t) st,
-      .stack_size = sizeof (st),
+    char st[STACK_SIZE] __attribute__((aligned));
+    struct clone_args clone_args = {
+        .stack = (uintptr_t) st,
+        .stack_size = sizeof(st),
     };
-  pid_t p = __clone_internal (&clone_args, f, 0);
-  TEST_VERIFY (p != -1);
+    pid_t p = __clone_internal(&clone_args, f, 0);
+    TEST_VERIFY(p != -1);
 
-  int e;
-  xwaitpid (p, &e, __WCLONE);
-  TEST_VERIFY (WIFEXITED (e));
-  TEST_COMPARE (WEXITSTATUS (e), 0);
-  return 0;
+    int e;
+    xwaitpid(p, &e, __WCLONE);
+    TEST_VERIFY(WIFEXITED(e));
+    TEST_COMPARE(WEXITSTATUS(e), 0);
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -21,15 +21,14 @@
 
 #include <support/check.h>
 
-int
-do_test (void)
+int do_test(void)
 {
-  sem_unlink ("/glibc-tst-sem18");
-  errno = 0;
-  sem_t *s = sem_open ("/glibc-tst-sem18", 0);
-  TEST_VERIFY (s == SEM_FAILED);
-  TEST_COMPARE (errno, ENOENT);
-  return 0;
+    sem_unlink("/glibc-tst-sem18");
+    errno = 0;
+    sem_t *s = sem_open("/glibc-tst-sem18", 0);
+    TEST_VERIFY(s == SEM_FAILED);
+    TEST_COMPARE(errno, ENOENT);
+    return 0;
 }
 
 #include <support/test-driver.c>

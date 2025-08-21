@@ -24,15 +24,14 @@
 #ifndef __OFF_T_MATCHES_OFF64_T
 
 /* Create FILE with protections MODE.  */
-int
-__creat (const char *file, mode_t mode)
+int __creat(const char *file, mode_t mode)
 {
 # ifdef __NR_creat
-  return SYSCALL_CANCEL (creat, file, mode);
+    return SYSCALL_CANCEL(creat, file, mode);
 # else
-  return __open (file, O_WRONLY | O_CREAT | O_TRUNC, mode);
+    return __open(file, O_WRONLY | O_CREAT | O_TRUNC, mode);
 # endif
 }
-weak_alias (__creat, creat)
+weak_alias(__creat, creat)
 
 #endif

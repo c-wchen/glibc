@@ -20,10 +20,9 @@
 #define _DL_TLS_H
 
 /* Type used for the representation of TLS information in the GOT.  */
-typedef struct dl_tls_index
-{
-  unsigned long int ti_module;
-  unsigned long int ti_offset;
+typedef struct dl_tls_index {
+    unsigned long int ti_module;
+    unsigned long int ti_offset;
 } tls_index;
 
 /* Dynamic thread vector pointers point to the start of each
@@ -35,8 +34,8 @@ typedef struct dl_tls_index
 
 #ifdef SHARED
 /* This is the prototype for the GNU version.  */
-extern void *___tls_get_addr (tls_index *ti)
-     __attribute__ ((__regparm__ (1)));
+extern void *___tls_get_addr(tls_index *ti)
+__attribute__((__regparm__(1)));
 # if IS_IN (rtld)
 /* Prepare using the definition of __tls_get_addr in the generic
    version of this file.  */

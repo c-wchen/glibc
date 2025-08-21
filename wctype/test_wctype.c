@@ -20,63 +20,61 @@
 #include <stdlib.h>
 #include <wctype.h>
 
-int
-main (int argc, char *argv[])
+int main(int argc, char *argv[])
 {
-  int result = 0;
-  wctype_t bit_alnum = wctype ("alnum");
-  wctype_t bit_alpha = wctype ("alpha");
-  wctype_t bit_cntrl = wctype ("cntrl");
-  wctype_t bit_digit = wctype ("digit");
-  wctype_t bit_graph = wctype ("graph");
-  wctype_t bit_lower = wctype ("lower");
-  wctype_t bit_print = wctype ("print");
-  wctype_t bit_punct = wctype ("punct");
-  wctype_t bit_space = wctype ("space");
-  wctype_t bit_upper = wctype ("upper");
-  wctype_t bit_xdigit = wctype ("xdigit");
-  int ch;
+    int result = 0;
+    wctype_t bit_alnum = wctype("alnum");
+    wctype_t bit_alpha = wctype("alpha");
+    wctype_t bit_cntrl = wctype("cntrl");
+    wctype_t bit_digit = wctype("digit");
+    wctype_t bit_graph = wctype("graph");
+    wctype_t bit_lower = wctype("lower");
+    wctype_t bit_print = wctype("print");
+    wctype_t bit_punct = wctype("punct");
+    wctype_t bit_space = wctype("space");
+    wctype_t bit_upper = wctype("upper");
+    wctype_t bit_xdigit = wctype("xdigit");
+    int ch;
 
-  if (wctype ("does not exist") != 0)
-    {
-      puts ("wctype return value != 0 for non existing property");
-      result = 1;
+    if (wctype("does not exist") != 0) {
+        puts("wctype return value != 0 for non existing property");
+        result = 1;
     }
 
-  for (ch = 0; ch < 256; ++ch)
-    {
+    for (ch = 0; ch < 256; ++ch) {
 #define TEST(test) \
-      do								      \
-	{								      \
-	  if ((is##test (ch) == 0) != (iswctype (ch, bit_##test) == 0))	      \
-	    {								      \
-	      printf ("`iswctype' class `%s' test "			      \
-		      "for character \\%o failed\n", #test, ch);	      \
-	      result = 1;						      \
-	    }								      \
-	  if ((is##test (ch) == 0) != (isw##test (ch) == 0))		      \
-	    {								      \
-	      printf ("`isw%s' test for character \\%o failed\n",	      \
-		      #test, ch);					      \
-	      result = 1;						      \
-	    }								      \
-	 }								      \
+      do                                      \
+    {                                     \
+      if ((is##test (ch) == 0) != (iswctype (ch, bit_##test) == 0))       \
+        {                                     \
+          printf ("`iswctype' class `%s' test "               \
+              "for character \\%o failed\n", #test, ch);          \
+          result = 1;                             \
+        }                                     \
+      if ((is##test (ch) == 0) != (isw##test (ch) == 0))              \
+        {                                     \
+          printf ("`isw%s' test for character \\%o failed\n",         \
+              #test, ch);                         \
+          result = 1;                             \
+        }                                     \
+     }                                    \
       while (0)
 
-      TEST (alnum);
-      TEST (alpha);
-      TEST (cntrl);
-      TEST (digit);
-      TEST (graph);
-      TEST (lower);
-      TEST (print);
-      TEST (punct);
-      TEST (space);
-      TEST (upper);
-      TEST (xdigit);
+        TEST(alnum);
+        TEST(alpha);
+        TEST(cntrl);
+        TEST(digit);
+        TEST(graph);
+        TEST(lower);
+        TEST(print);
+        TEST(punct);
+        TEST(space);
+        TEST(upper);
+        TEST(xdigit);
     }
 
-  if (result == 0)
-    puts ("All test successful!");
-  return result;
+    if (result == 0) {
+        puts("All test successful!");
+    }
+    return result;
 }

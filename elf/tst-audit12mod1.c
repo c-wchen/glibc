@@ -16,9 +16,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-extern int f2 (void);
-int
-f1 (void)
+extern int f2(void);
+int f1(void)
 {
-  return f2 ();
+    return f2();
 }

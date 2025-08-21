@@ -33,112 +33,109 @@
 #define ELF_MACHINE_IRELATIVE       R_390_IRELATIVE
 
 /* This is an older, now obsolete value.  */
-#define EM_S390_OLD	0xA390
+#define EM_S390_OLD 0xA390
 
 /* Return nonzero iff E_MACHINE is compatible with the running host.  */
-static inline int
-elf_machine_matches_host (const Elf64_Ehdr *ehdr)
+static inline int elf_machine_matches_host(const Elf64_Ehdr *ehdr)
 {
-  return (ehdr->e_machine == EM_S390 || ehdr->e_machine == EM_S390_OLD)
-	 && ehdr->e_ident[EI_CLASS] == ELFCLASS64;
+    return (ehdr->e_machine == EM_S390 || ehdr->e_machine == EM_S390_OLD)
+           && ehdr->e_ident[EI_CLASS] == ELFCLASS64;
 }
 
 /* Return the run-time load address of the shared object.  */
-static inline Elf64_Addr
-elf_machine_load_address (void)
+static inline Elf64_Addr elf_machine_load_address(void)
 {
-  /* Starting from binutils-2.23, the linker will define the magic symbol
-     __ehdr_start to point to our own ELF header.  */
-  extern const ElfW(Ehdr) __ehdr_start attribute_hidden;
-  return (ElfW(Addr)) &__ehdr_start;
+    /* Starting from binutils-2.23, the linker will define the magic symbol
+       __ehdr_start to point to our own ELF header.  */
+    extern const ElfW(Ehdr) __ehdr_start attribute_hidden;
+    return (ElfW(Addr)) &__ehdr_start;
 }
 
 /* Return the link-time address of _DYNAMIC.  */
-static inline Elf64_Addr
-elf_machine_dynamic (void)
+static inline Elf64_Addr elf_machine_dynamic(void)
 {
-  extern ElfW(Dyn) _DYNAMIC[] attribute_hidden;
-  return (ElfW(Addr)) _DYNAMIC - elf_machine_load_address ();
+    extern ElfW(Dyn) _DYNAMIC[] attribute_hidden;
+    return (ElfW(Addr)) _DYNAMIC - elf_machine_load_address();
 }
 
 /* Set up the loaded object described by L so its unrelocated PLT
    entries will jump to the on-demand fixup code in dl-runtime.c.  */
 
-static inline int __attribute__ ((unused))
-elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
-			   int lazy, int profile)
+static inline int __attribute__((unused))
+elf_machine_runtime_setup(struct link_map *l, struct r_scope_elem *scope[],
+                          int lazy, int profile)
 {
-  extern void _dl_runtime_resolve (Elf64_Word);
-  extern void _dl_runtime_profile (Elf64_Word);
+    extern void _dl_runtime_resolve(Elf64_Word);
+    extern void _dl_runtime_profile(Elf64_Word);
 #if defined HAVE_S390_VX_ASM_SUPPORT
-  extern void _dl_runtime_resolve_vx (Elf64_Word);
-  extern void _dl_runtime_profile_vx (Elf64_Word);
+    extern void _dl_runtime_resolve_vx(Elf64_Word);
+    extern void _dl_runtime_profile_vx(Elf64_Word);
 #endif
 
-  if (l->l_info[DT_JMPREL] && lazy)
-    {
-      /* The GOT entries for functions in the PLT have not yet been filled
-	 in.  Their initial contents will arrange when called to push an
-	 offset into the .rela.plt section, push _GLOBAL_OFFSET_TABLE_[1],
-	 and then jump to _GLOBAL_OFFSET_TABLE[2].  */
-      Elf64_Addr *got;
-      got = (Elf64_Addr *) D_PTR (l, l_info[DT_PLTGOT]);
-      /* If a library is prelinked but we have to relocate anyway,
-	 we have to be able to undo the prelinking of .got.plt.
-	 The prelinker saved us here address of .plt + 0x2e.  */
-      if (got[1])
-	{
-	  l->l_mach.plt = got[1] + l->l_addr;
-	  l->l_mach.jmprel = (const Elf64_Rela *) D_PTR (l, l_info[DT_JMPREL]);
-	}
-      got[1] = (Elf64_Addr) l;	/* Identify this shared object.	 */
+    if (l->l_info[DT_JMPREL] && lazy) {
+        /* The GOT entries for functions in the PLT have not yet been filled
+        in.  Their initial contents will arrange when called to push an
+         offset into the .rela.plt section, push _GLOBAL_OFFSET_TABLE_[1],
+         and then jump to _GLOBAL_OFFSET_TABLE[2].  */
+        Elf64_Addr *got;
+        got = (Elf64_Addr *) D_PTR(l, l_info[DT_PLTGOT]);
+        /* If a library is prelinked but we have to relocate anyway,
+        we have to be able to undo the prelinking of .got.plt.
+         The prelinker saved us here address of .plt + 0x2e.  */
+        if (got[1]) {
+            l->l_mach.plt = got[1] + l->l_addr;
+            l->l_mach.jmprel = (const Elf64_Rela *) D_PTR(l, l_info[DT_JMPREL]);
+        }
+        got[1] = (Elf64_Addr) l;  /* Identify this shared object.  */
 
-      /* The got[2] entry contains the address of a function which gets
-	 called to get the address of a so far unresolved function and
-	 jump to it.  The profiling extension of the dynamic linker allows
-	 to intercept the calls to collect information.	 In this case we
-	 don't store the address in the GOT so that all future calls also
-	 end in this function.	*/
+        /* The got[2] entry contains the address of a function which gets
+        called to get the address of a so far unresolved function and
+         jump to it.  The profiling extension of the dynamic linker allows
+         to intercept the calls to collect information.    In this case we
+         don't store the address in the GOT so that all future calls also
+         end in this function.    */
 #ifdef SHARED
-      if (__glibc_unlikely (profile))
-	{
+        if (__glibc_unlikely(profile)) {
 # if defined HAVE_S390_VX_ASM_SUPPORT
-	  if (GLRO(dl_hwcap) & HWCAP_S390_VX)
-	    got[2] = (Elf64_Addr) &_dl_runtime_profile_vx;
-	  else
-	    got[2] = (Elf64_Addr) &_dl_runtime_profile;
+            if (GLRO(dl_hwcap) & HWCAP_S390_VX) {
+                got[2] = (Elf64_Addr) &_dl_runtime_profile_vx;
+            } else {
+                got[2] = (Elf64_Addr) &_dl_runtime_profile;
+            }
 # else
-	  got[2] = (Elf64_Addr) &_dl_runtime_profile;
+            got[2] = (Elf64_Addr) &_dl_runtime_profile;
 # endif
 
-	  if (GLRO(dl_profile) != NULL
-	      && _dl_name_match_p (GLRO(dl_profile), l))
-	    /* This is the object we are looking for.  Say that we really
-	       want profiling and the timers are started.  */
-	    GL(dl_profile_map) = l;
-	}
-      else
+            if (GLRO(dl_profile) != NULL
+                && _dl_name_match_p(GLRO(dl_profile), l))
+                /* This is the object we are looking for.  Say that we really
+                   want profiling and the timers are started.  */
+            {
+                GL(dl_profile_map) = l;
+            }
+        } else
 #endif
-	{
-	  /* This function will get called to fix up the GOT entry indicated by
-	     the offset on the stack, and then jump to the resolved address.  */
+        {
+            /* This function will get called to fix up the GOT entry indicated by
+               the offset on the stack, and then jump to the resolved address.  */
 #if defined HAVE_S390_VX_ASM_SUPPORT
-	  if (GLRO(dl_hwcap) & HWCAP_S390_VX)
-	    got[2] = (Elf64_Addr) &_dl_runtime_resolve_vx;
-	  else
-	    got[2] = (Elf64_Addr) &_dl_runtime_resolve;
+            if (GLRO(dl_hwcap) & HWCAP_S390_VX) {
+                got[2] = (Elf64_Addr) &_dl_runtime_resolve_vx;
+            } else {
+                got[2] = (Elf64_Addr) &_dl_runtime_resolve;
+            }
 #else
-	  got[2] = (Elf64_Addr) &_dl_runtime_resolve;
+            got[2] = (Elf64_Addr) &_dl_runtime_resolve;
 #endif
-	}
+        }
     }
 
-  return lazy;
+    return lazy;
 }
 
 /* Initial entry point code for the dynamic linker.
    The C function `_dl_start' is the real entry point;
-   its return value is the user program's entry point.	*/
+   its return value is the user program's entry point.  */
 
 #define RTLD_START __asm__ ("\n\
 .text\n\
@@ -193,48 +190,48 @@ _dl_start_user:\n\
    ELF_RTYPE_CLASS_COPY iff TYPE should not be allowed to resolve to one
    of the main executable's symbols, as for a COPY reloc.  */
 #define elf_machine_type_class(type) \
-  ((((type) == R_390_JMP_SLOT || (type) == R_390_TLS_DTPMOD		      \
-     || (type) == R_390_TLS_DTPOFF || (type) == R_390_TLS_TPOFF)	      \
-    * ELF_RTYPE_CLASS_PLT)						      \
+  ((((type) == R_390_JMP_SLOT || (type) == R_390_TLS_DTPMOD           \
+     || (type) == R_390_TLS_DTPOFF || (type) == R_390_TLS_TPOFF)          \
+    * ELF_RTYPE_CLASS_PLT)                            \
    | (((type) == R_390_COPY) * ELF_RTYPE_CLASS_COPY))
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
-#define ELF_MACHINE_JMP_SLOT	R_390_JMP_SLOT
+#define ELF_MACHINE_JMP_SLOT    R_390_JMP_SLOT
 
 /* We define an initialization functions.  This is called very early in
    _dl_sysdep_start.  */
 #define DL_PLATFORM_INIT dl_platform_init ()
 
-static inline void __attribute__ ((unused))
-dl_platform_init (void)
+static inline void __attribute__((unused))
+dl_platform_init(void)
 {
-  if (GLRO(dl_platform) != NULL && *GLRO(dl_platform) == '\0')
-    /* Avoid an empty string which would disturb us.  */
-    GLRO(dl_platform) = NULL;
+    if (GLRO(dl_platform) != NULL && *GLRO(dl_platform) == '\0')
+        /* Avoid an empty string which would disturb us.  */
+    {
+        GLRO(dl_platform) = NULL;
+    }
 
 #ifdef SHARED
-  /* init_cpu_features has been called early from __libc_start_main in
-     static executable.  */
-  init_cpu_features (&GLRO(dl_s390_cpu_features));
+    /* init_cpu_features has been called early from __libc_start_main in
+       static executable.  */
+    init_cpu_features(&GLRO(dl_s390_cpu_features));
 #endif
 
 }
 
-static inline Elf64_Addr
-elf_machine_fixup_plt (struct link_map *map, lookup_t t,
-		       const ElfW(Sym) *refsym, const ElfW(Sym) *sym,
-		       const Elf64_Rela *reloc,
-		       Elf64_Addr *reloc_addr, Elf64_Addr value)
+static inline Elf64_Addr elf_machine_fixup_plt(struct link_map *map, lookup_t t,
+        const ElfW(Sym) *refsym, const ElfW(Sym) *sym,
+        const Elf64_Rela *reloc,
+        Elf64_Addr *reloc_addr, Elf64_Addr value)
 {
-  return *reloc_addr = value;
+    return *reloc_addr = value;
 }
 
-/* Return the final value of a plt relocation.	*/
-static inline Elf64_Addr
-elf_machine_plt_value (struct link_map *map, const Elf64_Rela *reloc,
-		       Elf64_Addr value)
+/* Return the final value of a plt relocation.  */
+static inline Elf64_Addr elf_machine_plt_value(struct link_map *map, const Elf64_Rela *reloc,
+        Elf64_Addr value)
 {
-  return value;
+    return value;
 }
 
 /* Names of the architecture-specific auditing callback functions.  */
@@ -248,192 +245,190 @@ elf_machine_plt_value (struct link_map *map, const Elf64_Rela *reloc,
 /* Perform the relocation specified by RELOC and SYM (which is fully resolved).
    MAP is the object containing the reloc.  */
 
-static inline void
-__attribute__ ((always_inline))
-elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
-		  const Elf64_Rela *reloc, const Elf64_Sym *sym,
-		  const struct r_found_version *version,
-		  void *const reloc_addr_arg, int skip_ifunc)
+static inline void __attribute__((always_inline))
+elf_machine_rela(struct link_map *map, struct r_scope_elem *scope[],
+                 const Elf64_Rela *reloc, const Elf64_Sym *sym,
+                 const struct r_found_version *version,
+                 void *const reloc_addr_arg, int skip_ifunc)
 {
-  Elf64_Addr *const reloc_addr = reloc_addr_arg;
-  const unsigned int r_type = ELF64_R_TYPE (reloc->r_info);
+    Elf64_Addr *const reloc_addr = reloc_addr_arg;
+    const unsigned int r_type = ELF64_R_TYPE(reloc->r_info);
 
 #if !defined RTLD_BOOTSTRAP
-  if (__glibc_unlikely (r_type == R_390_RELATIVE))
-    *reloc_addr = map->l_addr + reloc->r_addend;
-  else
+    if (__glibc_unlikely(r_type == R_390_RELATIVE)) {
+        *reloc_addr = map->l_addr + reloc->r_addend;
+    } else
 #endif
-  if (__glibc_unlikely (r_type == R_390_NONE))
-    return;
-  else
-    {
+        if (__glibc_unlikely(r_type == R_390_NONE)) {
+            return;
+        } else {
 #if !defined RTLD_BOOTSTRAP
-      /* Only needed for R_390_COPY below.  */
-      const Elf64_Sym *const refsym = sym;
+            /* Only needed for R_390_COPY below.  */
+            const Elf64_Sym *const refsym = sym;
 #endif
-      struct link_map *sym_map = RESOLVE_MAP (map, scope, &sym, version,
-					      r_type);
-      Elf64_Addr value = SYMBOL_ADDRESS (sym_map, sym, true);
+            struct link_map *sym_map = RESOLVE_MAP(map, scope, &sym, version,
+                                                   r_type);
+            Elf64_Addr value = SYMBOL_ADDRESS(sym_map, sym, true);
 
-      if (sym != NULL
-	  && __builtin_expect (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC,
-			       0)
-	  && __builtin_expect (sym->st_shndx != SHN_UNDEF, 1)
-	  && __builtin_expect (!skip_ifunc, 1))
-	value = elf_ifunc_invoke (value);
+            if (sym != NULL
+                && __builtin_expect(ELFW(ST_TYPE)(sym->st_info) == STT_GNU_IFUNC,
+                                    0)
+                && __builtin_expect(sym->st_shndx != SHN_UNDEF, 1)
+                && __builtin_expect(!skip_ifunc, 1)) {
+                value = elf_ifunc_invoke(value);
+            }
 
-      switch (r_type)
-	{
-	case R_390_IRELATIVE:
-	  value = map->l_addr + reloc->r_addend;
-	  if (__glibc_likely (!skip_ifunc))
-	    value = elf_ifunc_invoke (value);
-	  *reloc_addr = value;
-	  break;
-	case R_390_GLOB_DAT:
-	case R_390_JMP_SLOT:
-	  *reloc_addr = value + reloc->r_addend;
-	  break;
+            switch (r_type) {
+                case R_390_IRELATIVE:
+                    value = map->l_addr + reloc->r_addend;
+                    if (__glibc_likely(!skip_ifunc)) {
+                        value = elf_ifunc_invoke(value);
+                    }
+                    *reloc_addr = value;
+                    break;
+                case R_390_GLOB_DAT:
+                case R_390_JMP_SLOT:
+                    *reloc_addr = value + reloc->r_addend;
+                    break;
 
-	case R_390_TLS_DTPMOD:
+                case R_390_TLS_DTPMOD:
 #ifdef RTLD_BOOTSTRAP
-	  /* During startup the dynamic linker is always the module
-	     with index 1.
-	     XXX If this relocation is necessary move before RESOLVE
-	     call.  */
-	  *reloc_addr = 1;
+                    /* During startup the dynamic linker is always the module
+                       with index 1.
+                       XXX If this relocation is necessary move before RESOLVE
+                       call.  */
+                    *reloc_addr = 1;
 #else
-	  /* Get the information from the link map returned by the
-	     resolv function.  */
-	  if (sym_map != NULL)
-	    *reloc_addr = sym_map->l_tls_modid;
+                    /* Get the information from the link map returned by the
+                       resolv function.  */
+                    if (sym_map != NULL) {
+                        *reloc_addr = sym_map->l_tls_modid;
+                    }
 #endif
-	  break;
-	case R_390_TLS_DTPOFF:
+                    break;
+                case R_390_TLS_DTPOFF:
 #ifndef RTLD_BOOTSTRAP
-	  /* During relocation all TLS symbols are defined and used.
-	     Therefore the offset is already correct.  */
-	  if (sym != NULL)
-	    *reloc_addr = sym->st_value + reloc->r_addend;
+                    /* During relocation all TLS symbols are defined and used.
+                       Therefore the offset is already correct.  */
+                    if (sym != NULL) {
+                        *reloc_addr = sym->st_value + reloc->r_addend;
+                    }
 #endif
-	  break;
-	case R_390_TLS_TPOFF:
-	  /* The offset is negative, forward from the thread pointer.  */
+                    break;
+                case R_390_TLS_TPOFF:
+                    /* The offset is negative, forward from the thread pointer.  */
 #ifdef RTLD_BOOTSTRAP
-	  *reloc_addr = sym->st_value + reloc->r_addend - map->l_tls_offset;
+                    *reloc_addr = sym->st_value + reloc->r_addend - map->l_tls_offset;
 #else
-	  /* We know the offset of the object the symbol is contained in.
-	     It is a negative value which will be added to the
-	     thread pointer.  */
-	  if (sym != NULL)
-	    {
-	      CHECK_STATIC_TLS (map, sym_map);
-	      *reloc_addr = (sym->st_value + reloc->r_addend
-			     - sym_map->l_tls_offset);
-	    }
+                    /* We know the offset of the object the symbol is contained in.
+                       It is a negative value which will be added to the
+                       thread pointer.  */
+                    if (sym != NULL) {
+                        CHECK_STATIC_TLS(map, sym_map);
+                        *reloc_addr = (sym->st_value + reloc->r_addend
+                                       - sym_map->l_tls_offset);
+                    }
 #endif
-	  break;
+                    break;
 
 #ifndef RTLD_BOOTSTRAP
-	/* Not needed for dl-conflict.c.  */
-	case R_390_COPY:
-	  if (sym == NULL)
-	    /* This can happen in trace mode if an object could not be
-	       found.  */
-	    break;
-	  if (__builtin_expect (sym->st_size > refsym->st_size, 0)
-	      || (__builtin_expect (sym->st_size < refsym->st_size, 0)
-		  && __builtin_expect (GLRO(dl_verbose), 0)))
-	    {
-	      const char *strtab;
+                /* Not needed for dl-conflict.c.  */
+                case R_390_COPY:
+                    if (sym == NULL)
+                        /* This can happen in trace mode if an object could not be
+                           found.  */
+                    {
+                        break;
+                    }
+                    if (__builtin_expect(sym->st_size > refsym->st_size, 0)
+                        || (__builtin_expect(sym->st_size < refsym->st_size, 0)
+                            && __builtin_expect(GLRO(dl_verbose), 0))) {
+                        const char *strtab;
 
-	      strtab = (const char *) D_PTR (map,l_info[DT_STRTAB]);
-	      _dl_error_printf ("\
+                        strtab = (const char *) D_PTR(map, l_info[DT_STRTAB]);
+                        _dl_error_printf("\
 %s: Symbol `%s' has different size in shared object, consider re-linking\n",
-				RTLD_PROGNAME, strtab + refsym->st_name);
-	    }
-	  memcpy (reloc_addr_arg, (void *) value,
-		  MIN (sym->st_size, refsym->st_size));
-	  break;
-	case R_390_64:
-	  *reloc_addr = value + reloc->r_addend;
-	  break;
-	case R_390_32:
-	  *(unsigned int *) reloc_addr = value + reloc->r_addend;
-	  break;
-	case R_390_16:
-	  *(unsigned short *) reloc_addr = value + reloc->r_addend;
-	  break;
-	case R_390_8:
-	  *(char *) reloc_addr = value + reloc->r_addend;
-	  break;
-	case R_390_PC64:
-	  *reloc_addr = value +reloc->r_addend - (Elf64_Addr) reloc_addr;
-	  break;
-	case R_390_PC32DBL:
-	  *(unsigned int *) reloc_addr = (unsigned int)
-	    ((int) (value + reloc->r_addend - (Elf64_Addr) reloc_addr) >> 1);
-	  break;
-	case R_390_PC32:
-	  *(unsigned int *) reloc_addr =
-	    value + reloc->r_addend - (Elf64_Addr) reloc_addr;
-	  break;
-	case R_390_PC16DBL:
-	  *(unsigned short *) reloc_addr = (unsigned short)
-	    ((short) (value + reloc->r_addend - (Elf64_Addr) reloc_addr) >> 1);
-	  break;
-	case R_390_PC16:
-	  *(unsigned short *) reloc_addr =
-	    value + reloc->r_addend - (Elf64_Addr) reloc_addr;
-	  break;
-	case R_390_NONE:
-	  break;
+                                         RTLD_PROGNAME, strtab + refsym->st_name);
+                    }
+                    memcpy(reloc_addr_arg, (void *) value,
+                           MIN(sym->st_size, refsym->st_size));
+                    break;
+                case R_390_64:
+                    *reloc_addr = value + reloc->r_addend;
+                    break;
+                case R_390_32:
+                    *(unsigned int *) reloc_addr = value + reloc->r_addend;
+                    break;
+                case R_390_16:
+                    *(unsigned short *) reloc_addr = value + reloc->r_addend;
+                    break;
+                case R_390_8:
+                    *(char *) reloc_addr = value + reloc->r_addend;
+                    break;
+                case R_390_PC64:
+                    *reloc_addr = value + reloc->r_addend - (Elf64_Addr) reloc_addr;
+                    break;
+                case R_390_PC32DBL:
+                    *(unsigned int *) reloc_addr = (unsigned int)
+                                                   ((int)(value + reloc->r_addend - (Elf64_Addr) reloc_addr) >> 1);
+                    break;
+                case R_390_PC32:
+                    *(unsigned int *) reloc_addr =
+                        value + reloc->r_addend - (Elf64_Addr) reloc_addr;
+                    break;
+                case R_390_PC16DBL:
+                    *(unsigned short *) reloc_addr = (unsigned short)
+                                                     ((short)(value + reloc->r_addend - (Elf64_Addr) reloc_addr) >> 1);
+                    break;
+                case R_390_PC16:
+                    *(unsigned short *) reloc_addr =
+                        value + reloc->r_addend - (Elf64_Addr) reloc_addr;
+                    break;
+                case R_390_NONE:
+                    break;
 #endif
 #if !defined(RTLD_BOOTSTRAP) || defined(_NDEBUG)
-	default:
-	  /* We add these checks in the version to relocate ld.so only
-	     if we are still debugging.	 */
-	  _dl_reloc_bad_type (map, r_type, 0);
-	  break;
+                default:
+                    /* We add these checks in the version to relocate ld.so only
+                       if we are still debugging.  */
+                    _dl_reloc_bad_type(map, r_type, 0);
+                    break;
 #endif
-	}
-    }
+            }
+        }
 }
 
-static inline void
-__attribute__ ((always_inline))
-elf_machine_rela_relative (Elf64_Addr l_addr, const Elf64_Rela *reloc,
-			   void *const reloc_addr_arg)
+static inline void __attribute__((always_inline))
+elf_machine_rela_relative(Elf64_Addr l_addr, const Elf64_Rela *reloc,
+                          void *const reloc_addr_arg)
 {
-  Elf64_Addr *const reloc_addr = reloc_addr_arg;
-  *reloc_addr = l_addr + reloc->r_addend;
+    Elf64_Addr *const reloc_addr = reloc_addr_arg;
+    *reloc_addr = l_addr + reloc->r_addend;
 }
 
-static inline void
-__attribute__ ((always_inline))
-elf_machine_lazy_rel (struct link_map *map, struct r_scope_elem *scope[],
-		      Elf64_Addr l_addr, const Elf64_Rela *reloc,
-		      int skip_ifunc)
+static inline void __attribute__((always_inline))
+elf_machine_lazy_rel(struct link_map *map, struct r_scope_elem *scope[],
+                     Elf64_Addr l_addr, const Elf64_Rela *reloc,
+                     int skip_ifunc)
 {
-  Elf64_Addr *const reloc_addr = (void *) (l_addr + reloc->r_offset);
-  const unsigned int r_type = ELF64_R_TYPE (reloc->r_info);
-  /* Check for unexpected PLT reloc type.  */
-  if (__glibc_likely (r_type == R_390_JMP_SLOT))
-    {
-      if (__builtin_expect (map->l_mach.plt, 0) == 0)
-	*reloc_addr += l_addr;
-      else
-	*reloc_addr = map->l_mach.plt + (reloc - map->l_mach.jmprel) * 32;
+    Elf64_Addr *const reloc_addr = (void *)(l_addr + reloc->r_offset);
+    const unsigned int r_type = ELF64_R_TYPE(reloc->r_info);
+    /* Check for unexpected PLT reloc type.  */
+    if (__glibc_likely(r_type == R_390_JMP_SLOT)) {
+        if (__builtin_expect(map->l_mach.plt, 0) == 0) {
+            *reloc_addr += l_addr;
+        } else {
+            *reloc_addr = map->l_mach.plt + (reloc - map->l_mach.jmprel) * 32;
+        }
+    } else if (__glibc_likely(r_type == R_390_IRELATIVE)) {
+        Elf64_Addr value = map->l_addr + reloc->r_addend;
+        if (__glibc_likely(!skip_ifunc)) {
+            value = elf_ifunc_invoke(value);
+        }
+        *reloc_addr = value;
+    } else {
+        _dl_reloc_bad_type(map, r_type, 1);
     }
-  else if (__glibc_likely (r_type == R_390_IRELATIVE))
-    {
-      Elf64_Addr value = map->l_addr + reloc->r_addend;
-      if (__glibc_likely (!skip_ifunc))
-	value = elf_ifunc_invoke (value);
-      *reloc_addr = value;
-    }
-  else
-    _dl_reloc_bad_type (map, r_type, 1);
 }
 
 #endif /* RESOLVE_MAP */

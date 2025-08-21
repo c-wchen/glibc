@@ -2,8 +2,7 @@
 #include <complex.h>
 
 double _Complex
-attribute_hidden
-csinl (double _Complex x)
+attribute_hidden csinl(double _Complex x)
 {
-  return csin (x);
+    return csin(x);
 }

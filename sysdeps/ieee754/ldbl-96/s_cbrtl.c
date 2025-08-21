@@ -20,49 +20,48 @@
 #include <libm-alias-ldouble.h>
 
 
-#define CBRT2 1.2599210498948731648		/* 2^(1/3) */
-#define SQR_CBRT2 1.5874010519681994748		/* 2^(2/3) */
+#define CBRT2 1.2599210498948731648     /* 2^(1/3) */
+#define SQR_CBRT2 1.5874010519681994748     /* 2^(2/3) */
 
 /* We don't use long double values here since U need not be computed
    with full precision.  */
-static const double factor[5] =
-{
-  1.0 / SQR_CBRT2,
-  1.0 / CBRT2,
-  1.0,
-  CBRT2,
-  SQR_CBRT2
+static const double factor[5] = {
+    1.0 / SQR_CBRT2,
+    1.0 / CBRT2,
+    1.0,
+    CBRT2,
+    SQR_CBRT2
 };
 
 static const long double third = 0.3333333333333333333333333L;
 
-long double
-__cbrtl (long double x)
+long double __cbrtl(long double x)
 {
-  long double xm, u;
-  int xe;
+    long double xm, u;
+    int xe;
 
-  /* Reduce X.  XM now is an range 1.0 to 0.5.  */
-  xm = __frexpl (fabsl (x), &xe);
+    /* Reduce X.  XM now is an range 1.0 to 0.5.  */
+    xm = __frexpl(fabsl(x), &xe);
 
-  /* If X is not finite or is null return it (with raising exceptions
-     if necessary.
-     Note: *Our* version of `frexp' sets XE to zero if the argument is
-     Inf or NaN.  This is not portable but faster.  */
-  if (xe == 0 && fpclassify (x) <= FP_ZERO)
-    return x + x;
+    /* If X is not finite or is null return it (with raising exceptions
+       if necessary.
+       Note: *Our* version of `frexp' sets XE to zero if the argument is
+       Inf or NaN.  This is not portable but faster.  */
+    if (xe == 0 && fpclassify(x) <= FP_ZERO) {
+        return x + x;
+    }
 
-  u = (((-1.34661104733595206551E-1 * xm
-	  + 5.46646013663955245034E-1) * xm
-	 - 9.54382247715094465250E-1) * xm
-	+ 1.13999833547172932737E0) * xm
-       + 4.02389795645447521269E-1;
+    u = (((-1.34661104733595206551E-1 * xm
+           + 5.46646013663955245034E-1) * xm
+          - 9.54382247715094465250E-1) * xm
+         + 1.13999833547172932737E0) * xm
+        + 4.02389795645447521269E-1;
 
-  u *= factor[2 + xe % 3];
-  u = __ldexpl (x > 0.0 ? u : -u, xe / 3);
+    u *= factor[2 + xe % 3];
+    u = __ldexpl(x > 0.0 ? u : -u, xe / 3);
 
-  u -= (u - (x / (u * u))) * third;
-  u -= (u - (x / (u * u))) * third;
-  return u;
+    u -= (u - (x / (u * u))) * third;
+    u -= (u - (x / (u * u))) * third;
+    return u;
 }
-libm_alias_ldouble (__cbrt, cbrt)
+libm_alias_ldouble(__cbrt, cbrt)

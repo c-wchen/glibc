@@ -16,9 +16,9 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef	_MACH_H
+#ifndef _MACH_H
 
-#define	_MACH_H	1
+#define _MACH_H 1
 
 #include <features.h>
 
@@ -45,42 +45,39 @@
 /* Receive RPC request messages on RCV_NAME and pass them to DEMUX, which
    decodes them and produces reply messages.  MAX_SIZE is the maximum size
    (in bytes) of the request and reply buffers.  */
-extern mach_msg_return_t
-__mach_msg_server (boolean_t (*__demux) (mach_msg_header_t *__request,
-					 mach_msg_header_t *__reply),
-		   mach_msg_size_t __max_size,
-		   mach_port_t __rcv_name),
-mach_msg_server (boolean_t (*__demux) (mach_msg_header_t *__request,
-				       mach_msg_header_t *__reply),
-		 mach_msg_size_t __max_size,
-		 mach_port_t __rcv_name);
+extern mach_msg_return_t __mach_msg_server(boolean_t (*__demux)(mach_msg_header_t *__request,
+        mach_msg_header_t *__reply),
+        mach_msg_size_t __max_size,
+        mach_port_t __rcv_name),
+                    mach_msg_server(boolean_t (*__demux)(mach_msg_header_t *__request,
+                                    mach_msg_header_t *__reply),
+                                    mach_msg_size_t __max_size,
+                                    mach_port_t __rcv_name);
 
 /* Just like `mach_msg_server', but the OPTION and TIMEOUT parameters are
    passed on to `mach_msg'.  */
-extern mach_msg_return_t
-__mach_msg_server_timeout (boolean_t (*__demux) (mach_msg_header_t *__request,
-						 mach_msg_header_t *__reply),
-			   mach_msg_size_t __max_size,
-			   mach_port_t __rcv_name,
-			   mach_msg_option_t __option,
-			   mach_msg_timeout_t __timeout),
-mach_msg_server_timeout (boolean_t (*__demux) (mach_msg_header_t *__request,
-					       mach_msg_header_t *__reply),
-			 mach_msg_size_t __max_size,
-			 mach_port_t __rcv_name,
-			 mach_msg_option_t __option,
-			 mach_msg_timeout_t __timeout);
+extern mach_msg_return_t __mach_msg_server_timeout(boolean_t (*__demux)(mach_msg_header_t *__request,
+        mach_msg_header_t *__reply),
+        mach_msg_size_t __max_size,
+        mach_port_t __rcv_name,
+        mach_msg_option_t __option,
+        mach_msg_timeout_t __timeout),
+                           mach_msg_server_timeout(boolean_t (*__demux)(mach_msg_header_t *__request,
+                                   mach_msg_header_t *__reply),
+                                   mach_msg_size_t __max_size,
+                                   mach_port_t __rcv_name,
+                                   mach_msg_option_t __option,
+                                   mach_msg_timeout_t __timeout);
 
 
 /* Deallocate all port rights and out-of-line memory in MSG. */
-extern void
-__mach_msg_destroy (mach_msg_header_t *msg),
-mach_msg_destroy (mach_msg_header_t *msg);
+extern void __mach_msg_destroy(mach_msg_header_t *msg),
+       mach_msg_destroy(mach_msg_header_t *msg);
 
 #include <bits/types/FILE.h>
 
 /* Open a stream on a Mach device.  */
-extern FILE *mach_open_devstream (mach_port_t device_port, const char *mode);
+extern FILE *mach_open_devstream(mach_port_t device_port, const char *mode);
 
 /* Give THREAD a stack and set it to run at PC when resumed.
    If *STACK_SIZE is nonzero, that size of stack is allocated.
@@ -93,15 +90,15 @@ extern FILE *mach_open_devstream (mach_port_t device_port, const char *mode);
    Mote: this function is unsuitable for setting up the thread to call a
    function at PC, since the architecture ABI may impose additional
    requirements beyond setting PC and stack.  */
-kern_return_t __mach_setup_thread (task_t task, thread_t thread, void *pc,
-				   vm_address_t *stack_base,
-				   vm_size_t *stack_size);
-kern_return_t mach_setup_thread (task_t task, thread_t thread, void *pc,
-				 vm_address_t *stack_base,
-				 vm_size_t *stack_size);
+kern_return_t __mach_setup_thread(task_t task, thread_t thread, void *pc,
+                                  vm_address_t *stack_base,
+                                  vm_size_t *stack_size);
+kern_return_t mach_setup_thread(task_t task, thread_t thread, void *pc,
+                                vm_address_t *stack_base,
+                                vm_size_t *stack_size);
 
 /* Give THREAD a TLS area.  */
-kern_return_t __mach_setup_tls (thread_t thread);
-kern_return_t mach_setup_tls (thread_t thread);
+kern_return_t __mach_setup_tls(thread_t thread);
+kern_return_t mach_setup_tls(thread_t thread);
 
-#endif	/* mach.h */
+#endif  /* mach.h */

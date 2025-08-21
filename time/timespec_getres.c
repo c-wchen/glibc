@@ -20,13 +20,11 @@
 
 
 /* Set TS to resolution of time base BASE.  */
-int
-timespec_getres (struct timespec *ts, int base)
+int timespec_getres(struct timespec *ts, int base)
 {
-  if (base == TIME_UTC)
-    {
-      __clock_getres (CLOCK_REALTIME, ts);
-      return base;
+    if (base == TIME_UTC) {
+        __clock_getres(CLOCK_REALTIME, ts);
+        return base;
     }
-  return 0;
+    return 0;
 }

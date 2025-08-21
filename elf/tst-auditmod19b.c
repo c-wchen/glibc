@@ -20,27 +20,25 @@
 #include <string.h>
 #include <stdio.h>
 
-unsigned int
-la_version (unsigned int version)
+unsigned int la_version(unsigned int version)
 {
-  return LAV_CURRENT;
+    return LAV_CURRENT;
 }
 
-unsigned int
-la_objopen (struct link_map *map, Lmid_t lmid, uintptr_t *cookie)
+unsigned int la_objopen(struct link_map *map, Lmid_t lmid, uintptr_t *cookie)
 {
-  return LA_FLG_BINDTO | LA_FLG_BINDFROM;
+    return LA_FLG_BINDTO | LA_FLG_BINDFROM;
 }
 
 uintptr_t
 #if __ELF_NATIVE_CLASS == 32
-la_symbind32 (Elf32_Sym *sym, unsigned int ndx, uintptr_t *refcook,
-	      uintptr_t *defcook, unsigned int *flags, const char *symname)
+la_symbind32(Elf32_Sym *sym, unsigned int ndx, uintptr_t *refcook,
+             uintptr_t *defcook, unsigned int *flags, const char *symname)
 #else
-la_symbind64 (Elf64_Sym *sym, unsigned int ndx, uintptr_t *refcook,
-	      uintptr_t *defcook, unsigned int *flags, const char *symname)
+la_symbind64(Elf64_Sym *sym, unsigned int ndx, uintptr_t *refcook,
+             uintptr_t *defcook, unsigned int *flags, const char *symname)
 #endif
 {
-  fprintf (stderr, "la_symbind: %s\n", symname);
-  return sym->st_value;
+    fprintf(stderr, "la_symbind: %s\n", symname);
+    return sym->st_value;
 }

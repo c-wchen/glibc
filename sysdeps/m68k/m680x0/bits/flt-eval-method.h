@@ -22,4 +22,4 @@
 
 /* The m68k FPUs evaluate all values in the 96-bit floating-point
    format which is also available for the user as 'long double'.  */
-#define __GLIBC_FLT_EVAL_METHOD	2
+#define __GLIBC_FLT_EVAL_METHOD 2

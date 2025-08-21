@@ -22,25 +22,25 @@
 # include <shlib-compat.h>
 # include "init-arch.h"
 
-extern __typeof (strcat) __strcat_ppc attribute_hidden;
-extern __typeof (strcat) __strcat_power7 attribute_hidden;
-extern __typeof (strcat) __strcat_power8 attribute_hidden;
+extern __typeof(strcat) __strcat_ppc attribute_hidden;
+extern __typeof(strcat) __strcat_power7 attribute_hidden;
+extern __typeof(strcat) __strcat_power8 attribute_hidden;
 #ifdef __LITTLE_ENDIAN__
-extern __typeof (strcat) __strcat_power10 attribute_hidden;
+extern __typeof(strcat) __strcat_power10 attribute_hidden;
 #endif
 # undef strcat
 
-libc_ifunc_redirected (__redirect_strcat, strcat,
+libc_ifunc_redirected(__redirect_strcat, strcat,
 #ifdef __LITTLE_ENDIAN__
-			(hwcap2 & PPC_FEATURE2_ARCH_3_1
-			 && hwcap & PPC_FEATURE_HAS_VSX)
-			? __strcat_power10 :
+                      (hwcap2 &PPC_FEATURE2_ARCH_3_1
+                       &&hwcap &PPC_FEATURE_HAS_VSX)
+                      ? __strcat_power10 :
 #endif
-			  (hwcap2 & PPC_FEATURE2_ARCH_2_07
-			   && hwcap & PPC_FEATURE_HAS_VSX)
-			  ? __strcat_power8
-			   : (hwcap & PPC_FEATURE_ARCH_2_06
-			      && hwcap & PPC_FEATURE_HAS_VSX)
-			     ? __strcat_power7
-			     : __strcat_ppc);
+                      (hwcap2 &PPC_FEATURE2_ARCH_2_07
+                       &&hwcap &PPC_FEATURE_HAS_VSX)
+                      ? __strcat_power8
+                      : (hwcap &PPC_FEATURE_ARCH_2_06
+                         &&hwcap &PPC_FEATURE_HAS_VSX)
+                      ? __strcat_power7
+                      : __strcat_ppc);
 #endif

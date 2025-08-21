@@ -25,20 +25,23 @@
    follow the official Tru64 ABI, which passes the components of a complex
    as separate parameters.  */
 
-typedef union { double d; _Complex float cf; } c1_compat;
-# define c1_cfloat_decl(x)	double x
-# define c1_cfloat_real(x)	__real__ c1_cfloat_value (x)
-# define c1_cfloat_imag(x)	__imag__ c1_cfloat_value (x)
-# define c1_cfloat_value(x)	(((c1_compat *)(void *)&x)->cf)
-# define c1_cfloat_rettype	double
-# define c1_cfloat_return(x)	({ c1_compat _; _.cf = (x); _.d; })
+typedef union {
+    double d;
+    _Complex float cf;
+} c1_compat;
+# define c1_cfloat_decl(x)  double x
+# define c1_cfloat_real(x)  __real__ c1_cfloat_value (x)
+# define c1_cfloat_imag(x)  __imag__ c1_cfloat_value (x)
+# define c1_cfloat_value(x) (((c1_compat *)(void *)&x)->cf)
+# define c1_cfloat_rettype  double
+# define c1_cfloat_return(x)    ({ c1_compat _; _.cf = (x); _.d; })
 
-# define c2_cfloat_decl(x)	_Complex float x
-# define c2_cfloat_real(x)	__real__ x
-# define c2_cfloat_imag(x)	__imag__ x
-# define c2_cfloat_value(x)	x
-# define c2_cfloat_rettype	_Complex float
-# define c2_cfloat_return(x)	x
+# define c2_cfloat_decl(x)  _Complex float x
+# define c2_cfloat_real(x)  __real__ x
+# define c2_cfloat_imag(x)  __imag__ x
+# define c2_cfloat_value(x) x
+# define c2_cfloat_rettype  _Complex float
+# define c2_cfloat_return(x)    x
 
 /* Get the proper symbol versions defined for each function.  */
 

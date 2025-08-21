@@ -21,23 +21,23 @@
 #include <time.h>
 #include <unistd.h>
 
-int
-do_test (void)
+int do_test(void)
 {
 #if defined CLOCK_MONOTONIC && defined _POSIX_MONOTONIC_CLOCK
-  if (sysconf (_SC_MONOTONIC_CLOCK) <= 0)
-    FAIL_UNSUPPORTED ("_SC_MONOTONIC_CLOCK not supported");
+    if (sysconf(_SC_MONOTONIC_CLOCK) <= 0) {
+        FAIL_UNSUPPORTED("_SC_MONOTONIC_CLOCK not supported");
+    }
 
-  struct timespec ts;
-  TEST_COMPARE (clock_gettime (CLOCK_MONOTONIC, &ts), 0);
+    struct timespec ts;
+    TEST_COMPARE(clock_gettime(CLOCK_MONOTONIC, &ts), 0);
 
-  /* Setting the monotonic clock must fail.  */
-  TEST_VERIFY (clock_settime (CLOCK_MONOTONIC, &ts) == -1);
-  TEST_VERIFY (errno == EINVAL || errno == EPERM);
+    /* Setting the monotonic clock must fail.  */
+    TEST_VERIFY(clock_settime(CLOCK_MONOTONIC, &ts) == -1);
+    TEST_VERIFY(errno == EINVAL || errno == EPERM);
 
-  return 0;
+    return 0;
 #else
-  return EXIT_UNSUPPORTED;
+    return EXIT_UNSUPPORTED;
 #endif
 }
 

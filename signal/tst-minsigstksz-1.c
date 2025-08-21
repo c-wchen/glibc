@@ -51,81 +51,82 @@
 
 static volatile sig_atomic_t signal_flag = 0;
 static volatile sig_atomic_t signal_err = 0;
-static void
-handler_set_flag (int unused)
+static void handler_set_flag(int unused)
 {
-  signal_flag = 1;
+    signal_flag = 1;
 }
 
-static void
-handler_set_flag_once (int sig)
+static void handler_set_flag_once(int sig)
 {
-  signal_flag = 1;
-  if (signal (sig, SIG_IGN) == SIG_ERR)
-    /* It is not safe to call FAIL_EXIT1 here.  Set another flag instead.  */
-    signal_err = 1;
+    signal_flag = 1;
+    if (signal(sig, SIG_IGN) == SIG_ERR)
+        /* It is not safe to call FAIL_EXIT1 here.  Set another flag instead.  */
+    {
+        signal_err = 1;
+    }
 }
 
 #if TEST_ATOMIC_OPS
 static atomic_uint signal_count = 0;
-static void
-handler_count_up_1 (int unused)
+static void handler_count_up_1(int unused)
 {
-  atomic_fetch_add (&signal_count, 1);
+    atomic_fetch_add(&signal_count, 1);
 }
 #endif
 
-int
-do_test (void)
+int do_test(void)
 {
-  void *sstk = xalloc_sigstack (0);
-  struct sigaction sa;
+    void *sstk = xalloc_sigstack(0);
+    struct sigaction sa;
 
-  /* Test 1: setting a volatile sig_atomic_t flag.  */
-  sa.sa_handler = handler_set_flag;
-  sa.sa_flags   = SA_RESTART | SA_ONSTACK;
-  sigfillset (&sa.sa_mask);
-  if (sigaction (SIGUSR1, &sa, 0))
-    FAIL_EXIT1 ("sigaction (SIGUSR1, handler_set_flag): %m\n");
+    /* Test 1: setting a volatile sig_atomic_t flag.  */
+    sa.sa_handler = handler_set_flag;
+    sa.sa_flags   = SA_RESTART | SA_ONSTACK;
+    sigfillset(&sa.sa_mask);
+    if (sigaction(SIGUSR1, &sa, 0)) {
+        FAIL_EXIT1("sigaction (SIGUSR1, handler_set_flag): %m\n");
+    }
 
-  TEST_VERIFY_EXIT (signal_flag == 0);
-  raise (SIGUSR1);
-  TEST_VERIFY_EXIT (signal_flag == 1);
-  signal_flag = 0;
-  raise (SIGUSR1);
-  TEST_VERIFY_EXIT (signal_flag == 1);
-  signal_flag = 0;
+    TEST_VERIFY_EXIT(signal_flag == 0);
+    raise(SIGUSR1);
+    TEST_VERIFY_EXIT(signal_flag == 1);
+    signal_flag = 0;
+    raise(SIGUSR1);
+    TEST_VERIFY_EXIT(signal_flag == 1);
+    signal_flag = 0;
 
-  /* Test 1: setting a volatile sig_atomic_t flag and then ignoring
-     further delivery of the signal. */
-  sa.sa_handler = handler_set_flag_once;
-  if (sigaction (SIGUSR1, &sa, 0))
-    FAIL_EXIT1 ("sigaction (SIGUSR1, handler_set_flag_once): %m\n");
+    /* Test 1: setting a volatile sig_atomic_t flag and then ignoring
+       further delivery of the signal. */
+    sa.sa_handler = handler_set_flag_once;
+    if (sigaction(SIGUSR1, &sa, 0)) {
+        FAIL_EXIT1("sigaction (SIGUSR1, handler_set_flag_once): %m\n");
+    }
 
-  raise (SIGUSR1);
-  TEST_VERIFY_EXIT (signal_flag == 1);
-  /* Note: if signal_err is 1, a system call failed, but we can't
-     report the error code because errno is indeterminate.  */
-  TEST_VERIFY_EXIT (signal_err == 0);
+    raise(SIGUSR1);
+    TEST_VERIFY_EXIT(signal_flag == 1);
+    /* Note: if signal_err is 1, a system call failed, but we can't
+       report the error code because errno is indeterminate.  */
+    TEST_VERIFY_EXIT(signal_err == 0);
 
-  signal_flag = 0;
-  raise (SIGUSR1);
-  TEST_VERIFY_EXIT (signal_flag == 0);
-  TEST_VERIFY_EXIT (signal_err == 0);
+    signal_flag = 0;
+    raise(SIGUSR1);
+    TEST_VERIFY_EXIT(signal_flag == 0);
+    TEST_VERIFY_EXIT(signal_err == 0);
 
 #if TEST_ATOMIC_OPS
-  sa.sa_handler = handler_count_up_1;
-  if (sigaction (SIGUSR1, &sa, 0))
-    FAIL_EXIT1 ("sigaction (SIGUSR1, handler_count_up_1): %m\n");
+    sa.sa_handler = handler_count_up_1;
+    if (sigaction(SIGUSR1, &sa, 0)) {
+        FAIL_EXIT1("sigaction (SIGUSR1, handler_count_up_1): %m\n");
+    }
 
-  raise (SIGUSR1);
-  TEST_VERIFY_EXIT (atomic_load (&signal_count) == 1);
-  raise (SIGUSR1);
-  TEST_VERIFY_EXIT (atomic_load (&signal_count) == 2);
+    raise(SIGUSR1);
+    TEST_VERIFY_EXIT(atomic_load(&signal_count) == 1);
+    raise(SIGUSR1);
+    TEST_VERIFY_EXIT(atomic_load(&signal_count) == 2);
 #endif
 
-  xfree_sigstack (sstk);
-  return 0;
+    xfree_sigstack(sstk);
+    return 0;
 }
 
 #include <support/test-driver.c>

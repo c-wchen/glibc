@@ -19,10 +19,9 @@
 #ifndef _TLS_INTERNAL_STRUCT_H
 #define _TLS_INTERNAL_STRUCT_H 1
 
-struct tls_internal_t
-{
-  char *strsignal_buf;
-  char *strerror_l_buf;
+struct tls_internal_t {
+    char *strsignal_buf;
+    char *strerror_l_buf;
 };
 
 #endif

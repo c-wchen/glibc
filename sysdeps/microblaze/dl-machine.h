@@ -27,57 +27,54 @@
 #include <dl-machine-rel.h>
 
 /* Return nonzero iff ELF header is compatible with the running host.  */
-static inline int
-elf_machine_matches_host (const Elf32_Ehdr *ehdr)
+static inline int elf_machine_matches_host(const Elf32_Ehdr *ehdr)
 {
-  return (ehdr->e_machine == EM_MICROBLAZE);
+    return (ehdr->e_machine == EM_MICROBLAZE);
 }
 
 /* Return the link-time address of _DYNAMIC.  Conveniently, this is the
    first element of the GOT.  This must be inlined in a function which
    uses global data.  */
-static inline Elf32_Addr
-elf_machine_dynamic (void)
+static inline Elf32_Addr elf_machine_dynamic(void)
 {
-  /* This produces a GOTOFF reloc that resolves to zero at link time, so in
-     fact just loads from the GOT register directly.  By doing it without
-     an asm we can let the compiler choose any register.  */
+    /* This produces a GOTOFF reloc that resolves to zero at link time, so in
+       fact just loads from the GOT register directly.  By doing it without
+       an asm we can let the compiler choose any register.  */
 
-  Elf32_Addr got_entry_0;
-  __asm__ __volatile__(
-    "lwi %0,r20,0"
-    :"=r"(got_entry_0)
+    Elf32_Addr got_entry_0;
+    __asm__ __volatile__(
+        "lwi %0,r20,0"
+        :"=r"(got_entry_0)
     );
-  return got_entry_0;
+    return got_entry_0;
 }
 
 /* Return the run-time load address of the shared object.  */
-static inline Elf32_Addr
-elf_machine_load_address (void)
+static inline Elf32_Addr elf_machine_load_address(void)
 {
-  /* Compute the difference between the runtime address of _DYNAMIC as seen
-     by a GOTOFF reference, and the link-time address found in the special
-     unrelocated first GOT entry.  */
+    /* Compute the difference between the runtime address of _DYNAMIC as seen
+       by a GOTOFF reference, and the link-time address found in the special
+       unrelocated first GOT entry.  */
 
-  Elf32_Addr dyn;
-  __asm__ __volatile__ (
-    "addik %0,r20,_DYNAMIC@GOTOFF"
-    : "=r"(dyn)
+    Elf32_Addr dyn;
+    __asm__ __volatile__(
+        "addik %0,r20,_DYNAMIC@GOTOFF"
+        : "=r"(dyn)
     );
-  return dyn - elf_machine_dynamic ();
+    return dyn - elf_machine_dynamic();
 }
 
 /* Set up the loaded object described by L so its unrelocated PLT
    entries will jump to the on-demand fixup code in dl-runtime.c.  */
 
-static inline int __attribute__ ((always_inline))
-elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
-			   int lazy, int profile)
+static inline int __attribute__((always_inline))
+elf_machine_runtime_setup(struct link_map *l, struct r_scope_elem *scope[],
+                          int lazy, int profile)
 {
-  extern void _dl_runtime_resolve (Elf32_Word);
-  extern void _dl_runtime_profile (Elf32_Word);
+    extern void _dl_runtime_resolve(Elf32_Word);
+    extern void _dl_runtime_profile(Elf32_Word);
 
-  return lazy;
+    return lazy;
 }
 
 /* The PLT uses Elf32_Rela relocs.  */
@@ -85,7 +82,7 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
 
 /* Mask identifying addresses reserved for the user program,
    where the dynamic linker should not map anything.  */
-#define ELF_MACHINE_USER_ADDRESS_MASK	0x80000000UL
+#define ELF_MACHINE_USER_ADDRESS_MASK   0x80000000UL
 
 /* Initial entry point code for the dynamic linker.
    The C function `_dl_start' is the real entry point;
@@ -164,23 +161,21 @@ _dl_start_user:\n\
 #endif
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
-#define ELF_MACHINE_JMP_SLOT	R_MICROBLAZE_JUMP_SLOT
+#define ELF_MACHINE_JMP_SLOT    R_MICROBLAZE_JUMP_SLOT
 
-static inline Elf32_Addr
-elf_machine_fixup_plt (struct link_map *map, lookup_t t,
-		       const ElfW(Sym) *refsym, const ElfW(Sym) *sym,
-		       const Elf32_Rela *reloc,
-		       Elf32_Addr *reloc_addr, Elf32_Addr value)
+static inline Elf32_Addr elf_machine_fixup_plt(struct link_map *map, lookup_t t,
+        const ElfW(Sym) *refsym, const ElfW(Sym) *sym,
+        const Elf32_Rela *reloc,
+        Elf32_Addr *reloc_addr, Elf32_Addr value)
 {
-  return *reloc_addr = value;
+    return *reloc_addr = value;
 }
 
 /* Return the final value of a plt relocation. Ignore the addend.  */
-static inline Elf32_Addr
-elf_machine_plt_value (struct link_map *map, const Elf32_Rela *reloc,
-		       Elf32_Addr value)
+static inline Elf32_Addr elf_machine_plt_value(struct link_map *map, const Elf32_Rela *reloc,
+        Elf32_Addr value)
 {
-  return value;
+    return value;
 }
 
 #endif /* !dl_machine_h.  */
@@ -201,96 +196,83 @@ elf_machine_plt_value (struct link_map *map, const Elf32_Rela *reloc,
     ((unsigned short *)(rel_addr))[3] = (val) & 0xffff; \
   } while (0)
 
-static inline void __attribute__ ((always_inline))
-elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
-		  const Elf32_Rela *reloc, const Elf32_Sym *sym,
-		  const struct r_found_version *version,
-		  void *const reloc_addr_arg, int skip_ifunc)
+static inline void __attribute__((always_inline))
+elf_machine_rela(struct link_map *map, struct r_scope_elem *scope[],
+                 const Elf32_Rela *reloc, const Elf32_Sym *sym,
+                 const struct r_found_version *version,
+                 void *const reloc_addr_arg, int skip_ifunc)
 {
-  Elf32_Addr *const reloc_addr = reloc_addr_arg;
-  const int r_type = ELF32_R_TYPE (reloc->r_info);
+    Elf32_Addr *const reloc_addr = reloc_addr_arg;
+    const int r_type = ELF32_R_TYPE(reloc->r_info);
 
-  if (__builtin_expect (r_type == R_MICROBLAZE_64_PCREL, 0))
-    PUT_REL_64 (reloc_addr, map->l_addr + reloc->r_addend);
-  else if (r_type == R_MICROBLAZE_REL)
-    *reloc_addr = map->l_addr + reloc->r_addend;
-  else
-    {
-      const Elf32_Sym *const refsym = sym;
-      struct link_map *sym_map = RESOLVE_MAP (map, scope, &sym, version,
-					      r_type);
-      Elf32_Addr value = SYMBOL_ADDRESS (sym_map, sym, true);
+    if (__builtin_expect(r_type == R_MICROBLAZE_64_PCREL, 0)) {
+        PUT_REL_64(reloc_addr, map->l_addr + reloc->r_addend);
+    } else if (r_type == R_MICROBLAZE_REL) {
+        *reloc_addr = map->l_addr + reloc->r_addend;
+    } else {
+        const Elf32_Sym *const refsym = sym;
+        struct link_map *sym_map = RESOLVE_MAP(map, scope, &sym, version,
+                                               r_type);
+        Elf32_Addr value = SYMBOL_ADDRESS(sym_map, sym, true);
 
-      value += reloc->r_addend;
-      if (r_type == R_MICROBLAZE_GLOB_DAT
-          || r_type == R_MICROBLAZE_JUMP_SLOT
-          || r_type == R_MICROBLAZE_32)
-	{
-	  *reloc_addr = value;
-	}
-      else if (r_type == R_MICROBLAZE_COPY)
-	{
-	  if (sym != NULL && (sym->st_size > refsym->st_size
-	      || (sym->st_size < refsym->st_size && GLRO (dl_verbose))) )
-	    {
-	      const char *strtab;
+        value += reloc->r_addend;
+        if (r_type == R_MICROBLAZE_GLOB_DAT
+            || r_type == R_MICROBLAZE_JUMP_SLOT
+            || r_type == R_MICROBLAZE_32) {
+            *reloc_addr = value;
+        } else if (r_type == R_MICROBLAZE_COPY) {
+            if (sym != NULL && (sym->st_size > refsym->st_size
+                                || (sym->st_size < refsym->st_size && GLRO(dl_verbose)))) {
+                const char *strtab;
 
-	      strtab = (const void *) D_PTR (map, l_info[DT_STRTAB]);
-	      _dl_error_printf ("\
+                strtab = (const void *) D_PTR(map, l_info[DT_STRTAB]);
+                _dl_error_printf("\
 %s: Symbol `%s' has different size in shared object, consider re-linking\n",
-				RTLD_PROGNAME, strtab + refsym->st_name);
-	    }
-	  memcpy (reloc_addr_arg, (void *) value,
-		  MIN (sym->st_size, refsym->st_size));
-	}
-      else if (r_type == R_MICROBLAZE_NONE)
-	{
-	}
+                                 RTLD_PROGNAME, strtab + refsym->st_name);
+            }
+            memcpy(reloc_addr_arg, (void *) value,
+                   MIN(sym->st_size, refsym->st_size));
+        } else if (r_type == R_MICROBLAZE_NONE) {
+        }
 #if !defined RTLD_BOOTSTRAP
-      else if (r_type == R_MICROBLAZE_TLSDTPMOD32)
-	{
-	  if (sym_map != NULL)
-	    *reloc_addr = sym_map->l_tls_modid;
-	}
-      else if (r_type == R_MICROBLAZE_TLSDTPREL32)
-	{
-	  if (sym != NULL)
-	    *reloc_addr = sym->st_value + reloc->r_addend;
-	}
-      else if (r_type == R_MICROBLAZE_TLSTPREL32)
-	{
-	  if (sym != NULL)
-	    {
-	      CHECK_STATIC_TLS (map, sym_map);
-	      *reloc_addr = sym->st_value + sym_map->l_tls_offset + reloc->r_addend;
-	    }
-	}
+        else if (r_type == R_MICROBLAZE_TLSDTPMOD32) {
+            if (sym_map != NULL) {
+                *reloc_addr = sym_map->l_tls_modid;
+            }
+        } else if (r_type == R_MICROBLAZE_TLSDTPREL32) {
+            if (sym != NULL) {
+                *reloc_addr = sym->st_value + reloc->r_addend;
+            }
+        } else if (r_type == R_MICROBLAZE_TLSTPREL32) {
+            if (sym != NULL) {
+                CHECK_STATIC_TLS(map, sym_map);
+                *reloc_addr = sym->st_value + sym_map->l_tls_offset + reloc->r_addend;
+            }
+        }
 #endif
-      else
-	{
-	  _dl_reloc_bad_type (map, r_type, 0);
-	}
+        else {
+            _dl_reloc_bad_type(map, r_type, 0);
+        }
     }
 }
 
-static inline void
-elf_machine_rela_relative (Elf32_Addr l_addr, const Elf32_Rela *reloc,
-			   void *const reloc_addr_arg)
+static inline void elf_machine_rela_relative(Elf32_Addr l_addr, const Elf32_Rela *reloc,
+        void *const reloc_addr_arg)
 {
-  Elf32_Addr *const reloc_addr = reloc_addr_arg;
-  PUT_REL_64 (reloc_addr, l_addr + reloc->r_addend);
+    Elf32_Addr *const reloc_addr = reloc_addr_arg;
+    PUT_REL_64(reloc_addr, l_addr + reloc->r_addend);
 }
 
-static inline void
-elf_machine_lazy_rel (struct link_map *map, struct r_scope_elem *scope[],
-		      Elf32_Addr l_addr, const Elf32_Rela *reloc,
-		      int skip_ifunc)
+static inline void elf_machine_lazy_rel(struct link_map *map, struct r_scope_elem *scope[],
+                                        Elf32_Addr l_addr, const Elf32_Rela *reloc,
+                                        int skip_ifunc)
 {
-  Elf32_Addr *const reloc_addr = (void *) (l_addr + reloc->r_offset);
-  if (ELF32_R_TYPE (reloc->r_info) == R_MICROBLAZE_JUMP_SLOT)
-    *reloc_addr += l_addr;
-  else
-    _dl_reloc_bad_type (map, ELF32_R_TYPE (reloc->r_info), 1);
+    Elf32_Addr *const reloc_addr = (void *)(l_addr + reloc->r_offset);
+    if (ELF32_R_TYPE(reloc->r_info) == R_MICROBLAZE_JUMP_SLOT) {
+        *reloc_addr += l_addr;
+    } else {
+        _dl_reloc_bad_type(map, ELF32_R_TYPE(reloc->r_info), 1);
+    }
 }
 
 #endif /* RESOLVE_MAP.  */

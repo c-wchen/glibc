@@ -19,8 +19,7 @@
 
 #include <unistd.h>
 
-int
-my_getpagesize (void)
+int my_getpagesize(void)
 {
-  return getpagesize ();
+    return getpagesize();
 }

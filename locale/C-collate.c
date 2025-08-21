@@ -21,52 +21,51 @@
 
 #include "C-collate-seq.c"
 
-const struct __locale_data _nl_C_LC_COLLATE attribute_hidden =
-{
-  _nl_C_name,
-  NULL, 0, 0,			/* no file mapped */
-  NULL,				/* No cached data.  */
-  UNDELETABLE,
-  0,
-  19,
-  {
-    /* _NL_COLLATE_NRULES */
-    { .word = 0 },
-    /* _NL_COLLATE_RULESETS */
-    { .string = NULL },
-    /* _NL_COLLATE_TABLEMB */
-    { .string = NULL },
-    /* _NL_COLLATE_WEIGHTMB */
-    { .string = NULL },
-    /* _NL_COLLATE_EXTRAMB */
-    { .string = NULL },
-    /* _NL_COLLATE_INDIRECTMB */
-    { .string = NULL },
-    /* _NL_COLLATE_GAP1 */
-    { .string = NULL },
-    /* _NL_COLLATE_GAP2 */
-    { .string = NULL },
-    /* _NL_COLLATE_GAP3 */
-    { .string = NULL },
-    /* _NL_COLLATE_TABLEWC */
-    { .string = NULL },
-    /* _NL_COLLATE_WEIGHTWC */
-    { .string = NULL },
-    /* _NL_COLLATE_EXTRAWC */
-    { .string = NULL },
-    /* _NL_COLLATE_INDIRECTWC */
-    { .string = NULL },
-    /* _NL_COLLATE_SYMB_HASH_SIZEMB */
-    { .string = NULL },
-    /* _NL_COLLATE_SYMB_TABLEMB */
-    { .string = NULL },
-    /* _NL_COLLATE_SYMB_EXTRAMB */
-    { .string = NULL },
-    /* _NL_COLLATE_COLLSEQMB */
-    { .string = collseqmb },
-    /* _NL_COLLATE_COLLSEQWC */
-    { .string = (const char *) collseqwc },
-    /* _NL_COLLATE_CODESET */
-    { .string = _nl_C_codeset }
-  }
+const struct __locale_data _nl_C_LC_COLLATE attribute_hidden = {
+    _nl_C_name,
+    NULL, 0, 0,           /* no file mapped */
+    NULL,             /* No cached data.  */
+    UNDELETABLE,
+    0,
+    19,
+    {
+        /* _NL_COLLATE_NRULES */
+        { .word = 0 },
+        /* _NL_COLLATE_RULESETS */
+        { .string = NULL },
+        /* _NL_COLLATE_TABLEMB */
+        { .string = NULL },
+        /* _NL_COLLATE_WEIGHTMB */
+        { .string = NULL },
+        /* _NL_COLLATE_EXTRAMB */
+        { .string = NULL },
+        /* _NL_COLLATE_INDIRECTMB */
+        { .string = NULL },
+        /* _NL_COLLATE_GAP1 */
+        { .string = NULL },
+        /* _NL_COLLATE_GAP2 */
+        { .string = NULL },
+        /* _NL_COLLATE_GAP3 */
+        { .string = NULL },
+        /* _NL_COLLATE_TABLEWC */
+        { .string = NULL },
+        /* _NL_COLLATE_WEIGHTWC */
+        { .string = NULL },
+        /* _NL_COLLATE_EXTRAWC */
+        { .string = NULL },
+        /* _NL_COLLATE_INDIRECTWC */
+        { .string = NULL },
+        /* _NL_COLLATE_SYMB_HASH_SIZEMB */
+        { .string = NULL },
+        /* _NL_COLLATE_SYMB_TABLEMB */
+        { .string = NULL },
+        /* _NL_COLLATE_SYMB_EXTRAMB */
+        { .string = NULL },
+        /* _NL_COLLATE_COLLSEQMB */
+        { .string = collseqmb },
+        /* _NL_COLLATE_COLLSEQWC */
+        { .string = (const char *) collseqwc },
+        /* _NL_COLLATE_CODESET */
+        { .string = _nl_C_codeset }
+    }
 };

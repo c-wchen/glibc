@@ -24,64 +24,71 @@
 
 /* Change the set of blocked signals to SET,
    wait until a signal arrives, and restore the set of blocked signals.  */
-int
-__sigsuspend (const sigset_t *set)
+int __sigsuspend(const sigset_t *set)
 {
-  struct hurd_sigstate *ss;
-  sigset_t newmask, oldmask, pending;
-  mach_port_t wait;
-  mach_msg_header_t msg;
-  int cancel_oldtype;
+    struct hurd_sigstate *ss;
+    sigset_t newmask, oldmask, pending;
+    mach_port_t wait;
+    mach_msg_header_t msg;
+    int cancel_oldtype;
 
-  if (set != NULL)
-    /* Crash before locking.  */
-    newmask = *set;
+    if (set != NULL)
+        /* Crash before locking.  */
+    {
+        newmask = *set;
+    }
 
-  /* Get a fresh port we will wait on.  */
-  wait = __mach_reply_port ();
+    /* Get a fresh port we will wait on.  */
+    wait = __mach_reply_port();
 
-  ss = _hurd_self_sigstate ();
+    ss = _hurd_self_sigstate();
 
-  _hurd_sigstate_lock (ss);
+    _hurd_sigstate_lock(ss);
 
-  oldmask = ss->blocked;
-  if (set != NULL)
-    /* Change to the new blocked signal mask.  */
-    ss->blocked = newmask & ~_SIG_CANT_MASK;
+    oldmask = ss->blocked;
+    if (set != NULL)
+        /* Change to the new blocked signal mask.  */
+    {
+        ss->blocked = newmask & ~_SIG_CANT_MASK;
+    }
 
-  /* Notice if any pending signals just became unblocked.  */
-  pending = _hurd_sigstate_pending (ss) & ~ss->blocked;
+    /* Notice if any pending signals just became unblocked.  */
+    pending = _hurd_sigstate_pending(ss) & ~ss->blocked;
 
-  /* Tell the signal thread to message us when a signal arrives.  */
-  ss->suspended = wait;
-  _hurd_sigstate_unlock (ss);
+    /* Tell the signal thread to message us when a signal arrives.  */
+    ss->suspended = wait;
+    _hurd_sigstate_unlock(ss);
 
-  if (pending)
-    /* Tell the signal thread to check for pending signals.  */
-    __msg_sig_post (_hurd_msgport, 0, 0, __mach_task_self ());
+    if (pending)
+        /* Tell the signal thread to check for pending signals.  */
+    {
+        __msg_sig_post(_hurd_msgport, 0, 0, __mach_task_self());
+    }
 
-  /* Wait for the signal thread's message.  */
+    /* Wait for the signal thread's message.  */
 
-  cancel_oldtype = LIBC_CANCEL_ASYNC();
-  __mach_msg (&msg, MACH_RCV_MSG, 0, sizeof (msg), wait,
-	      MACH_MSG_TIMEOUT_NONE, MACH_PORT_NULL);
-  LIBC_CANCEL_RESET (cancel_oldtype);
-  __mach_port_destroy (__mach_task_self (), wait);
+    cancel_oldtype = LIBC_CANCEL_ASYNC();
+    __mach_msg(&msg, MACH_RCV_MSG, 0, sizeof(msg), wait,
+               MACH_MSG_TIMEOUT_NONE, MACH_PORT_NULL);
+    LIBC_CANCEL_RESET(cancel_oldtype);
+    __mach_port_destroy(__mach_task_self(), wait);
 
-  /* Restore the old mask and check for pending signals again.  */
-  _hurd_sigstate_lock (ss);
-  ss->blocked = oldmask;
-  pending = _hurd_sigstate_pending(ss) & ~ss->blocked;
-  _hurd_sigstate_unlock (ss);
+    /* Restore the old mask and check for pending signals again.  */
+    _hurd_sigstate_lock(ss);
+    ss->blocked = oldmask;
+    pending = _hurd_sigstate_pending(ss) & ~ss->blocked;
+    _hurd_sigstate_unlock(ss);
 
-  if (pending)
-    /* Tell the signal thread to check for pending signals.  */
-    __msg_sig_post (_hurd_msgport, 0, 0, __mach_task_self ());
+    if (pending)
+        /* Tell the signal thread to check for pending signals.  */
+    {
+        __msg_sig_post(_hurd_msgport, 0, 0, __mach_task_self());
+    }
 
-  /* We've been interrupted!  And a good thing, too.
-     Otherwise we'd never return.
-     That's right; this function always returns an error.  */
-  return __hurd_fail (EINTR);
+    /* We've been interrupted!  And a good thing, too.
+       Otherwise we'd never return.
+       That's right; this function always returns an error.  */
+    return __hurd_fail(EINTR);
 }
-libc_hidden_def (__sigsuspend)
-weak_alias (__sigsuspend, sigsuspend)
+libc_hidden_def(__sigsuspend)
+weak_alias(__sigsuspend, sigsuspend)

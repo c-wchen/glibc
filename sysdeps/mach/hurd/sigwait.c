@@ -19,21 +19,22 @@
 #include <hurd.h>
 
 /* Select any of pending signals from SET or wait for any to arrive.  */
-int
-__sigwait (const sigset_t *set, int *sig)
+int __sigwait(const sigset_t *set, int *sig)
 {
-  int ret;
+    int ret;
 
-  ret = __sigtimedwait (set, NULL, NULL);
+    ret = __sigtimedwait(set, NULL, NULL);
 
-  if (ret < 0)
-    return -1;
+    if (ret < 0) {
+        return -1;
+    }
 
-  if (!ret)
-    return __hurd_fail(EAGAIN);
+    if (!ret) {
+        return __hurd_fail(EAGAIN);
+    }
 
-  *sig = ret;
-  return 0;
+    *sig = ret;
+    return 0;
 }
-libc_hidden_def (__sigwait)
-weak_alias (__sigwait, sigwait)
+libc_hidden_def(__sigwait)
+weak_alias(__sigwait, sigwait)

@@ -21,16 +21,15 @@
 #include <wchar.h>
 
 /* Read formatted input from STREAM according to the format string FORMAT.  */
-int
-__isoc23_fwscanf (FILE *stream, const wchar_t *format, ...)
+int __isoc23_fwscanf(FILE *stream, const wchar_t *format, ...)
 {
-  va_list arg;
-  int done;
+    va_list arg;
+    int done;
 
-  va_start (arg, format);
-  done = __vfwscanf_internal (stream, format, arg,
-			      SCANF_ISOC99_A | SCANF_ISOC23_BIN_CST);
-  va_end (arg);
+    va_start(arg, format);
+    done = __vfwscanf_internal(stream, format, arg,
+                               SCANF_ISOC99_A | SCANF_ISOC23_BIN_CST);
+    va_end(arg);
 
-  return done;
+    return done;
 }

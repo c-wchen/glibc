@@ -18,15 +18,15 @@
 
 #include <tst-gnu2-tls2.h>
 
-__thread struct tls tls_var1[100] __attribute__ ((visibility ("hidden")));
+__thread struct tls tls_var1[100] __attribute__((visibility("hidden")));
 
 struct tls *
-apply_tls (struct tls *p)
+apply_tls(struct tls *p)
 {
-  INIT_TLSDESC_CALL ();
-  BEFORE_TLSDESC_CALL ();
-  tls_var1[1] = *p;
-  struct tls *ret = &tls_var1[1];
-  AFTER_TLSDESC_CALL ();
-  return ret;
+    INIT_TLSDESC_CALL();
+    BEFORE_TLSDESC_CALL();
+    tls_var1[1] = *p;
+    struct tls *ret = &tls_var1[1];
+    AFTER_TLSDESC_CALL();
+    return ret;
 }

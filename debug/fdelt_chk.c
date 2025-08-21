@@ -19,13 +19,13 @@
 #include <sys/select.h>
 
 
-long int
-__fdelt_chk (long int d)
+long int __fdelt_chk(long int d)
 {
-  if (d < 0 || d >= FD_SETSIZE)
-    __fortify_fail ("bit out of range 0 - FD_SETSIZE on fd_set");
+    if (d < 0 || d >= FD_SETSIZE) {
+        __fortify_fail("bit out of range 0 - FD_SETSIZE on fd_set");
+    }
 
-  return d / __NFDBITS;
+    return d / __NFDBITS;
 }
-strong_alias (__fdelt_chk, __fdelt_warn)
-libc_hidden_def (__fdelt_chk)
+strong_alias(__fdelt_chk, __fdelt_warn)
+libc_hidden_def(__fdelt_chk)

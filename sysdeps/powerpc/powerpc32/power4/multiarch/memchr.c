@@ -25,17 +25,17 @@
 # include <string.h>
 # include "init-arch.h"
 
-extern __typeof (__redirect_memchr) __memchr_ppc attribute_hidden;
-extern __typeof (__redirect_memchr) __memchr_power7 attribute_hidden;
+extern __typeof(__redirect_memchr) __memchr_ppc attribute_hidden;
+extern __typeof(__redirect_memchr) __memchr_power7 attribute_hidden;
 
-extern __typeof (__redirect_memchr) __libc_memchr;
+extern __typeof(__redirect_memchr) __libc_memchr;
 
-libc_ifunc (__libc_memchr,
-	    (hwcap & PPC_FEATURE_HAS_VSX)
-            ? __memchr_power7
-            : __memchr_ppc);
+libc_ifunc(__libc_memchr,
+           (hwcap &PPC_FEATURE_HAS_VSX)
+           ? __memchr_power7
+           : __memchr_ppc);
 #undef memchr
-weak_alias (__libc_memchr, memchr)
+weak_alias(__libc_memchr, memchr)
 #else
 #include <string/memchr.c>
 #endif

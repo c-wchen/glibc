@@ -22,34 +22,33 @@
 #include <float.h>
 
 FLOAT
-M_DECL_FUNC (__ieee754_exp2) (FLOAT x)
+M_DECL_FUNC(__ieee754_exp2)(FLOAT x)
 {
-  if (__glibc_likely (isless (x, (FLOAT) M_MAX_EXP)))
+    if (__glibc_likely(isless(x, (FLOAT) M_MAX_EXP))) {
+        if (__builtin_expect(isgreaterequal(x, (FLOAT)(M_MIN_EXP - M_MANT_DIG
+                                            - 1)), 1)) {
+            int intx = (int) x;
+            FLOAT fractx = x - intx;
+            FLOAT result;
+            if (M_FABS(fractx) < M_EPSILON / 4) {
+                result = M_SCALBN(1 + fractx, intx);
+            } else {
+                result = M_SCALBN(M_EXP(M_MLIT(M_LN2) * fractx), intx);
+            }
+            math_check_force_underflow_nonneg(result);
+            return result;
+        } else {
+            /* Underflow or exact zero.  */
+            if (isinf(x)) {
+                return 0;
+            } else {
+                return M_MIN * M_MIN;
+            }
+        }
+    } else
+        /* Infinity, NaN or overflow.  */
     {
-      if (__builtin_expect (isgreaterequal (x, (FLOAT) (M_MIN_EXP - M_MANT_DIG
-							- 1)), 1))
-	{
-	  int intx = (int) x;
-	  FLOAT fractx = x - intx;
-	  FLOAT result;
-	  if (M_FABS (fractx) < M_EPSILON / 4)
-	    result = M_SCALBN (1 + fractx, intx);
-	  else
-	    result = M_SCALBN (M_EXP (M_MLIT (M_LN2) * fractx), intx);
-	  math_check_force_underflow_nonneg (result);
-	  return result;
-	}
-      else
-	{
-	  /* Underflow or exact zero.  */
-	  if (isinf (x))
-	    return 0;
-	  else
-	    return M_MIN * M_MIN;
-	}
+        return M_MAX * x;
     }
-  else
-    /* Infinity, NaN or overflow.  */
-    return M_MAX * x;
 }
-declare_mgen_finite_alias (__ieee754_exp2, __exp2)
+declare_mgen_finite_alias(__ieee754_exp2, __exp2)

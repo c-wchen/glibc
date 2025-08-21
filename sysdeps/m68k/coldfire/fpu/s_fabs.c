@@ -17,10 +17,9 @@
 
 #include <libm-alias-double.h>
 
-double
-__fabs (double x)
+double __fabs(double x)
 {
-  asm ("fdabs.d %1,%0" : "=f" (x) : "fm" (x));
-  return x;
+    asm("fdabs.d %1,%0" : "=f"(x) : "fm"(x));
+    return x;
 }
-libm_alias_double (__fabs, fabs)
+libm_alias_double(__fabs, fabs)

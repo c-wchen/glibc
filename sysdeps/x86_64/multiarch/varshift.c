@@ -21,11 +21,9 @@
 
 # include <stdint.h>
 
-const int8_t ___m128i_shift_right[31] attribute_hidden
-    __attribute__((aligned(32))) =
-  {
+const int8_t ___m128i_shift_right[31] attribute_hidden __attribute__((aligned(32))) = {
     0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15,
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1
-  };
+};
 
 #endif

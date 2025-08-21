@@ -20,14 +20,14 @@
 #include <fpu_control.h>
 #include <fenv_libc.h>
 
-int
-fesetexcept (int excepts)
+int fesetexcept(int excepts)
 {
-  fpu_control_t fpsr, new_fpsr;
-  _FPU_GETFPSR (fpsr);
-  new_fpsr = fpsr | ((excepts & FE_ALL_EXCEPT) << CAUSE_SHIFT);
-  if (new_fpsr != fpsr)
-    _FPU_SETFPSR (new_fpsr);
+    fpu_control_t fpsr, new_fpsr;
+    _FPU_GETFPSR(fpsr);
+    new_fpsr = fpsr | ((excepts & FE_ALL_EXCEPT) << CAUSE_SHIFT);
+    if (new_fpsr != fpsr) {
+        _FPU_SETFPSR(new_fpsr);
+    }
 
-  return 0;
+    return 0;
 }

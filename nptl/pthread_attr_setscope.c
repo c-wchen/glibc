@@ -19,27 +19,25 @@
 #include "pthreadP.h"
 
 
-int
-__pthread_attr_setscope (pthread_attr_t *attr, int scope)
+int __pthread_attr_setscope(pthread_attr_t *attr, int scope)
 {
-  struct pthread_attr *iattr;
+    struct pthread_attr *iattr;
 
-  iattr = (struct pthread_attr *) attr;
+    iattr = (struct pthread_attr *) attr;
 
-  /* Catch invalid values.  */
-  switch (scope)
-    {
-    case PTHREAD_SCOPE_SYSTEM:
-      iattr->flags &= ~ATTR_FLAG_SCOPEPROCESS;
-      break;
+    /* Catch invalid values.  */
+    switch (scope) {
+        case PTHREAD_SCOPE_SYSTEM:
+            iattr->flags &= ~ATTR_FLAG_SCOPEPROCESS;
+            break;
 
-    case PTHREAD_SCOPE_PROCESS:
-      return ENOTSUP;
+        case PTHREAD_SCOPE_PROCESS:
+            return ENOTSUP;
 
-    default:
-      return EINVAL;
+        default:
+            return EINVAL;
     }
 
-  return 0;
+    return 0;
 }
-strong_alias (__pthread_attr_setscope, pthread_attr_setscope)
+strong_alias(__pthread_attr_setscope, pthread_attr_setscope)

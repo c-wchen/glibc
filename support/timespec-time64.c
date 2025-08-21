@@ -23,8 +23,8 @@
 #include <intprops.h>
 
 #if __TIMESIZE != 64
-struct __timespec64 timespec_sub_time64 (struct __timespec64,
-					 struct __timespec64);
+struct __timespec64 timespec_sub_time64(struct __timespec64,
+                                        struct __timespec64);
 
 #define test_timespec_before_impl          test_timespec_before_impl_time64
 #define test_timespec_equal_or_after_impl  \

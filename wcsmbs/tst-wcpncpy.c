@@ -19,59 +19,52 @@
 #include <wchar.h>
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int result = 0;
+    int result = 0;
 
-  const wchar_t src[] = L"0";
-  wchar_t dest[21];
-  wmemset (dest, L'\0', 10);
-  wchar_t *endp = wcpncpy (dest, src, 2);
-  if (wcscmp (dest, src) != 0)
-    {
-      result = 1;
-      puts ("L\"0\" string test failed");
+    const wchar_t src[] = L"0";
+    wchar_t dest[21];
+    wmemset(dest, L'\0', 10);
+    wchar_t *endp = wcpncpy(dest, src, 2);
+    if (wcscmp(dest, src) != 0) {
+        result = 1;
+        puts("L\"0\" string test failed");
     }
-  if (endp != dest + 1)
-    {
-      result = 1;
-      puts ("return value of L\"0\" string call incorrect");
+    if (endp != dest + 1) {
+        result = 1;
+        puts("return value of L\"0\" string call incorrect");
     }
 
-  const wchar_t src2[] = L"abc";
-  endp = wcpncpy (dest, src2, 2);
-  if (endp != dest + 2)
-    {
-      result = 1;
-      puts ("return value of limited call incorrect");
+    const wchar_t src2[] = L"abc";
+    endp = wcpncpy(dest, src2, 2);
+    if (endp != dest + 2) {
+        result = 1;
+        puts("return value of limited call incorrect");
     }
 
-  const wchar_t src3[] = L"";
-  endp = wcpncpy (dest, src3, 2);
-  if (endp != dest)
-    {
-      result = 1;
-      puts ("return value of empty string call incorrect");
+    const wchar_t src3[] = L"";
+    endp = wcpncpy(dest, src3, 2);
+    if (endp != dest) {
+        result = 1;
+        puts("return value of empty string call incorrect");
     }
 
-  const wchar_t src4[] = L"abcdefghijklmnopqrstuvwxyz";
-  endp = wcpncpy (dest, src4, 2);
-  if (endp != dest + 2)
-    {
-      result = 1;
-      puts ("return value of long string call incorrect");
+    const wchar_t src4[] = L"abcdefghijklmnopqrstuvwxyz";
+    endp = wcpncpy(dest, src4, 2);
+    if (endp != dest + 2) {
+        result = 1;
+        puts("return value of long string call incorrect");
     }
 
-  const wchar_t src5[] = L"ab";
-  endp = wcpncpy (dest, src5, 20);
-  if (endp != dest + 2)
-    {
-      result = 1;
-      puts ("return value of large limit call incorrect");
+    const wchar_t src5[] = L"ab";
+    endp = wcpncpy(dest, src5, 20);
+    if (endp != dest + 2) {
+        result = 1;
+        puts("return value of large limit call incorrect");
     }
 
-  return result;
+    return result;
 }
 
 #include <support/test-driver.c>

@@ -17,7 +17,7 @@
 
 #ifndef _SYS_VM86_H
 
-#define _SYS_VM86_H	1
+#define _SYS_VM86_H 1
 #include <features.h>
 
 #ifdef __x86_64__
@@ -29,10 +29,10 @@
 __BEGIN_DECLS
 
 /* Enter virtual 8086 mode.  */
-extern int vm86 (unsigned long int __subfunction,
-		 struct vm86plus_struct *__info) __THROW;
+extern int vm86(unsigned long int __subfunction,
+                struct vm86plus_struct *__info) __THROW;
 
 __END_DECLS
 # endif
 
-#endif	/* _SYS_VM86_H */
+#endif  /* _SYS_VM86_H */

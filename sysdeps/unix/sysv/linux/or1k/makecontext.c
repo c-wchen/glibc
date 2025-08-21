@@ -25,11 +25,11 @@
 /* makecontext sets up a stack and the registers for the
    user context.  The stack looks like this:
 
-		+-----------------------+
-		| padding as required   |
-		+-----------------------+
+        +-----------------------+
+        | padding as required   |
+        +-----------------------+
     sp ->       | parameters 7 to n     |
-		+-----------------------+
+        +-----------------------+
 
    The registers are set up like this:
      r3-r8  : parameters 1 to 6
@@ -37,52 +37,51 @@
      r1     : stack pointer
      r2     : frame pointer, set to NULL
 */
-static void
-do_makecontext (ucontext_t *ucp, void (*startcontext) (void),
-		void (*func) (void), int argc, va_list ap)
+static void do_makecontext(ucontext_t *ucp, void (*startcontext)(void),
+                           void (*func)(void), int argc, va_list ap)
 {
-  unsigned long int *sp;
-  int i;
+    unsigned long int *sp;
+    int i;
 
-  sp = (unsigned long int *)
-    ((uintptr_t) ucp->uc_stack.ss_sp + ucp->uc_stack.ss_size);
+    sp = (unsigned long int *)
+         ((uintptr_t) ucp->uc_stack.ss_sp + ucp->uc_stack.ss_size);
 
-  /* Allocate stack arguments.  */
-  sp -= argc < 6 ? 0 : argc - 6;
+    /* Allocate stack arguments.  */
+    sp -= argc < 6 ? 0 : argc - 6;
 
-  /* Keep the stack aligned.  */
-  sp = (unsigned long int *) (((uintptr_t) sp) & -4L);
+    /* Keep the stack aligned.  */
+    sp = (unsigned long int *)(((uintptr_t) sp) & -4L);
 
-  /* Keep uc_link in r14.  */
-  ucp->uc_mcontext.__gprs[14] = (uintptr_t) ucp->uc_link;
-  /* Return address points to function startcontext.  */
-  ucp->uc_mcontext.__gprs[9] = (uintptr_t) startcontext;
-  /* Frame pointer is null.  */
-  ucp->uc_mcontext.__gprs[2] = (uintptr_t) 0;
-  /* Restart in user-space starting at 'func'.  */
-  ucp->uc_mcontext.__gprs[11] = (uintptr_t) func;
-  /* Set stack pointer.  */
-  ucp->uc_mcontext.__gprs[1] = (uintptr_t) sp;
+    /* Keep uc_link in r14.  */
+    ucp->uc_mcontext.__gprs[14] = (uintptr_t) ucp->uc_link;
+    /* Return address points to function startcontext.  */
+    ucp->uc_mcontext.__gprs[9] = (uintptr_t) startcontext;
+    /* Frame pointer is null.  */
+    ucp->uc_mcontext.__gprs[2] = (uintptr_t) 0;
+    /* Restart in user-space starting at 'func'.  */
+    ucp->uc_mcontext.__gprs[11] = (uintptr_t) func;
+    /* Set stack pointer.  */
+    ucp->uc_mcontext.__gprs[1] = (uintptr_t) sp;
 
-  for (i = 0; i < argc; ++i)
-    if (i < 6)
-      ucp->uc_mcontext.__gprs[i + 3] = va_arg (ap, unsigned long int);
-    else
-      sp[i - 6] = va_arg (ap, unsigned long int);
+    for (i = 0; i < argc; ++i)
+        if (i < 6) {
+            ucp->uc_mcontext.__gprs[i + 3] = va_arg(ap, unsigned long int);
+        } else {
+            sp[i - 6] = va_arg(ap, unsigned long int);
+        }
 }
 
-void
-__makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
+void __makecontext(ucontext_t *ucp, void (*func)(void), int argc, ...)
 {
-  extern void __startcontext (void);
-  va_list ap;
+    extern void __startcontext(void);
+    va_list ap;
 
-  va_start (ap, argc);
-  do_makecontext (ucp, &__startcontext, func, argc, ap);
-  va_end (ap);
+    va_start(ap, argc);
+    do_makecontext(ucp, &__startcontext, func, argc, ap);
+    va_end(ap);
 }
 
-versioned_symbol (libc, __makecontext, makecontext, GLIBC_2_40);
+versioned_symbol(libc, __makecontext, makecontext, GLIBC_2_40);
 
 #if SHLIB_COMPAT (libc, GLIBC_2_35, GLIBC_2_40)
 
@@ -94,17 +93,16 @@ versioned_symbol (libc, __makecontext, makecontext, GLIBC_2_40);
    allow getcontext, setcontext and swapcontext to work in older
    binaries.  */
 
-void
-__makecontext_nofpcsr (ucontext_t *ucp, void (*func) (void), int argc, ...)
+void __makecontext_nofpcsr(ucontext_t *ucp, void (*func)(void), int argc, ...)
 {
-  extern void __startcontext_nofpcsr (void);
-  va_list ap;
+    extern void __startcontext_nofpcsr(void);
+    va_list ap;
 
-  va_start (ap, argc);
-  do_makecontext (ucp, &__startcontext_nofpcsr, func, argc, ap);
-  va_end (ap);
+    va_start(ap, argc);
+    do_makecontext(ucp, &__startcontext_nofpcsr, func, argc, ap);
+    va_end(ap);
 }
 
-compat_symbol (libc, __makecontext_nofpcsr, makecontext, GLIBC_2_35);
+compat_symbol(libc, __makecontext_nofpcsr, makecontext, GLIBC_2_35);
 
 #endif

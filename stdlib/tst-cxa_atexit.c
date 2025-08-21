@@ -16,7 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-extern int __cxa_atexit (void (*func) (void *), void *arg, void *d);
+extern int __cxa_atexit(void (*func)(void *), void *arg, void *d);
 
 #define ATEXIT(fn) __cxa_atexit ((void (*) (void *)) fn, (void *) 0, (void *) 0)
 #define EXIT(x) exit (x)

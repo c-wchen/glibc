@@ -40,92 +40,95 @@ static char *spargs[8];
 static int fc;
 
 /* Called on process re-execution.  */
-_Noreturn static void
-handle_restart (int argc, char *argv[])
+_Noreturn static void handle_restart(int argc, char *argv[])
 {
-  TEST_VERIFY_EXIT (argc == 1);
-  const char *funcname = argv[0];
+    TEST_VERIFY_EXIT(argc == 1);
+    const char *funcname = argv[0];
 
-  struct libc_ifunc_impl impls[32];
-  int cnt = __libc_ifunc_impl_list ("memcpy", impls, array_length (impls));
-  if (cnt == 0)
-    _exit (EXIT_SUCCESS);
-  TEST_VERIFY_EXIT (cnt >= 1);
-  for (int i = 0; i < cnt; i++) {
-    if (strcmp (impls[i].name, funcname) == 0)
-      {
-	TEST_COMPARE (impls[i].usable, false);
-	break;
-      }
-  }
+    struct libc_ifunc_impl impls[32];
+    int cnt = __libc_ifunc_impl_list("memcpy", impls, array_length(impls));
+    if (cnt == 0) {
+        _exit(EXIT_SUCCESS);
+    }
+    TEST_VERIFY_EXIT(cnt >= 1);
+    for (int i = 0; i < cnt; i++) {
+        if (strcmp(impls[i].name, funcname) == 0) {
+            TEST_COMPARE(impls[i].usable, false);
+            break;
+        }
+    }
 
-  _exit (EXIT_SUCCESS);
+    _exit(EXIT_SUCCESS);
 }
 
-static void
-run_test (const char *filter, const char *funcname)
+static void run_test(const char *filter, const char *funcname)
 {
-  printf ("info: checking filter %s (expect %s ifunc selection to be removed)\n",
-	  filter, funcname);
-  char *tunable = xasprintf ("GLIBC_TUNABLES=glibc.cpu.hwcaps=%s", filter);
-  char *const newenvs[] = { (char*) tunable, NULL };
-  spargs[fc] = (char *) funcname;
+    printf("info: checking filter %s (expect %s ifunc selection to be removed)\n",
+           filter, funcname);
+    char *tunable = xasprintf("GLIBC_TUNABLES=glibc.cpu.hwcaps=%s", filter);
+    char *const newenvs[] = { (char *) tunable, NULL };
+    spargs[fc] = (char *) funcname;
 
-  pid_t pid;
-  TEST_COMPARE (posix_spawn (&pid, spargs[0], NULL, NULL, spargs, newenvs), 0);
-  int status;
-  TEST_COMPARE (xwaitpid (pid, &status, 0), pid);
-  TEST_VERIFY (WIFEXITED (status));
-  TEST_VERIFY (!WIFSIGNALED (status));
-  TEST_COMPARE (WEXITSTATUS (status), 0);
+    pid_t pid;
+    TEST_COMPARE(posix_spawn(&pid, spargs[0], NULL, NULL, spargs, newenvs), 0);
+    int status;
+    TEST_COMPARE(xwaitpid(pid, &status, 0), pid);
+    TEST_VERIFY(WIFEXITED(status));
+    TEST_VERIFY(!WIFSIGNALED(status));
+    TEST_COMPARE(WEXITSTATUS(status), 0);
 
-  free (tunable);
+    free(tunable);
 }
 
-static int
-do_test (int argc, char *argv[])
+static int do_test(int argc, char *argv[])
 {
-  if (restart)
-    handle_restart (argc - 1, &argv[1]);
-
-  TEST_VERIFY_EXIT (argc == 2 || argc == 5);
-
-  int i;
-  for (i = 0; i < argc - 1; i++)
-    spargs[i] = argv[i + 1];
-  spargs[i++] = (char *) "--direct";
-  spargs[i++] = (char *) "--restart";
-  fc = i++;
-  spargs[i] = NULL;
-
-  unsigned long int hwcap = getauxval (AT_HWCAP);
-  unsigned long int hwcap2 = getauxval (AT_HWCAP2);
-  if (__WORDSIZE == 64)
-    {
-      if (hwcap2 & PPC_FEATURE2_ARCH_3_1)
-	run_test ("-arch_3_1", "__memcpy_power10");
-      if (hwcap2 & PPC_FEATURE2_ARCH_2_07)
-	run_test ("-arch_2_07", "__memcpy_power8_cached");
-      if (hwcap & PPC_FEATURE_ARCH_2_06)
-	run_test ("-arch_2_06", "__memcpy_power7");
-      if (hwcap & PPC_FEATURE_ARCH_2_05)
-	run_test ("-arch_2_06,-arch_2_05","__memcpy_power6");
-      run_test ("-arch_2_06,-arch_2_05,-power5+,-power5,-power4",
-		"__memcpy_power4");
-      /* Also run with valid, but empty settings.  */
-      run_test (",-,-arch_2_06,-arch_2_05,-power5+,-power5,,-power4,-",
-		"__memcpy_power4");
+    if (restart) {
+        handle_restart(argc - 1, &argv[1]);
     }
-  else
-    {
-      if (hwcap & PPC_FEATURE_HAS_VSX)
-	run_test ("-vsx", "__memcpy_power7");
-      if (hwcap & PPC_FEATURE_ARCH_2_06)
-	run_test ("-arch_2_06", "__memcpy_a2");
-      if (hwcap & PPC_FEATURE_ARCH_2_05)
-	run_test ("-arch_2_05", "__memcpy_power6");
+
+    TEST_VERIFY_EXIT(argc == 2 || argc == 5);
+
+    int i;
+    for (i = 0; i < argc - 1; i++) {
+        spargs[i] = argv[i + 1];
     }
-  return 0;
+    spargs[i++] = (char *) "--direct";
+    spargs[i++] = (char *) "--restart";
+    fc = i++;
+    spargs[i] = NULL;
+
+    unsigned long int hwcap = getauxval(AT_HWCAP);
+    unsigned long int hwcap2 = getauxval(AT_HWCAP2);
+    if (__WORDSIZE == 64) {
+        if (hwcap2 & PPC_FEATURE2_ARCH_3_1) {
+            run_test("-arch_3_1", "__memcpy_power10");
+        }
+        if (hwcap2 & PPC_FEATURE2_ARCH_2_07) {
+            run_test("-arch_2_07", "__memcpy_power8_cached");
+        }
+        if (hwcap & PPC_FEATURE_ARCH_2_06) {
+            run_test("-arch_2_06", "__memcpy_power7");
+        }
+        if (hwcap & PPC_FEATURE_ARCH_2_05) {
+            run_test("-arch_2_06,-arch_2_05", "__memcpy_power6");
+        }
+        run_test("-arch_2_06,-arch_2_05,-power5+,-power5,-power4",
+                 "__memcpy_power4");
+        /* Also run with valid, but empty settings.  */
+        run_test(",-,-arch_2_06,-arch_2_05,-power5+,-power5,,-power4,-",
+                 "__memcpy_power4");
+    } else {
+        if (hwcap & PPC_FEATURE_HAS_VSX) {
+            run_test("-vsx", "__memcpy_power7");
+        }
+        if (hwcap & PPC_FEATURE_ARCH_2_06) {
+            run_test("-arch_2_06", "__memcpy_a2");
+        }
+        if (hwcap & PPC_FEATURE_ARCH_2_05) {
+            run_test("-arch_2_05", "__memcpy_power6");
+        }
+    }
+    return 0;
 }
 
 #define TEST_FUNCTION_ARGV do_test

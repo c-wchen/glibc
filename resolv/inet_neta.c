@@ -33,44 +33,45 @@
 /*
  * char *
  * inet_neta(src, dst, size)
- *	format a u_long network number into presentation format.
+ *  format a u_long network number into presentation format.
  * return:
- *	pointer to dst, or NULL if an error occurred (check errno).
+ *  pointer to dst, or NULL if an error occurred (check errno).
  * note:
- *	format of ``src'' is as for inet_network().
+ *  format of ``src'' is as for inet_network().
  * author:
- *	Paul Vixie (ISC), July 1996
+ *  Paul Vixie (ISC), July 1996
  */
-char *
-inet_neta (uint32_t src, char *dst, size_t size)
+char *inet_neta(uint32_t src, char *dst, size_t size)
 {
-	char *odst = dst;
-	char *tp;
+    char *odst = dst;
+    char *tp;
 
-	while (src & 0xffffffff) {
-		u_char b = (src & 0xff000000) >> 24;
+    while (src & 0xffffffff) {
+        u_char b = (src & 0xff000000) >> 24;
 
-		src <<= 8;
-		if (b) {
-			if (size < sizeof "255.")
-				goto emsgsize;
-			tp = dst;
-			dst += SPRINTF((dst, "%u", b));
-			if (src != 0L) {
-				*dst++ = '.';
-				*dst = '\0';
-			}
-			size -= (size_t)(dst - tp);
-		}
-	}
-	if (dst == odst) {
-		if (size < sizeof "0.0.0.0")
-			goto emsgsize;
-		strcpy(dst, "0.0.0.0");
-	}
-	return (odst);
+        src <<= 8;
+        if (b) {
+            if (size < sizeof "255.") {
+                goto emsgsize;
+            }
+            tp = dst;
+            dst += SPRINTF((dst, "%u", b));
+            if (src != 0L) {
+                *dst++ = '.';
+                *dst = '\0';
+            }
+            size -= (size_t)(dst - tp);
+        }
+    }
+    if (dst == odst) {
+        if (size < sizeof "0.0.0.0") {
+            goto emsgsize;
+        }
+        strcpy(dst, "0.0.0.0");
+    }
+    return (odst);
 
- emsgsize:
-	__set_errno (EMSGSIZE);
-	return (NULL);
+emsgsize:
+    __set_errno(EMSGSIZE);
+    return (NULL);
 }

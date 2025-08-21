@@ -19,8 +19,7 @@
 #include "localeinfo.h"
 
 attribute_hidden
-const char *
-__current_locale_name (int category)
+const char *__current_locale_name(int category)
 {
-  return _NL_CURRENT_LOCALE->__names[category];
+    return _NL_CURRENT_LOCALE->__names[category];
 }

@@ -16,31 +16,30 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _ULIMIT_H
-#define _ULIMIT_H	1
+#define _ULIMIT_H   1
 
 #include <features.h>
 
 /* Constants used as the first parameter for `ulimit'.  They denote limits
    which can be set or retrieved using this function.  */
-enum
-{
-  UL_GETFSIZE = 1,			/* Return limit on the size of a file,
-					   in units of 512 bytes.  */
-#define UL_GETFSIZE	UL_GETFSIZE
-  UL_SETFSIZE,				/* Set limit on the size of a file to
-					   second argument.  */
-#define UL_SETFSIZE	UL_SETFSIZE
-  __UL_GETMAXBRK,			/* Return the maximum possible address
-					   of the data segment.  */
-  __UL_GETOPENMAX			/* Return the maximum number of files
-					   that the calling process can open.*/
+enum {
+    UL_GETFSIZE = 1,          /* Return limit on the size of a file,
+                       in units of 512 bytes.  */
+#define UL_GETFSIZE UL_GETFSIZE
+    UL_SETFSIZE,              /* Set limit on the size of a file to
+                       second argument.  */
+#define UL_SETFSIZE UL_SETFSIZE
+    __UL_GETMAXBRK,           /* Return the maximum possible address
+                       of the data segment.  */
+    __UL_GETOPENMAX           /* Return the maximum number of files
+                       that the calling process can open.*/
 };
 
 
 __BEGIN_DECLS
 
 /* Control process limits according to CMD.  */
-extern long int ulimit (int __cmd, ...) __THROW;
+extern long int ulimit(int __cmd, ...) __THROW;
 
 __END_DECLS
 

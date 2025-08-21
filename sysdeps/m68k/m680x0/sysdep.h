@@ -36,9 +36,9 @@
 #define PCREL_OP(OP, SRC, DST, TMP, PC) \
   OP " " SRC "(" PC "), " DST
 
-#endif	/* __ASSEMBLER__ */
+#endif  /* __ASSEMBLER__ */
 
-# if defined __mc68020__ || defined __mc68030__ || defined __mc68040__	      \
+# if defined __mc68020__ || defined __mc68030__ || defined __mc68040__        \
      || defined __mc68060__
 #  define M68K_SCALE_AVAILABLE 1
 # else

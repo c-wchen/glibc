@@ -21,31 +21,30 @@
 
 /* Increment the scheduling priority of the calling process by INCR.
    The superuser may use a negative INCR to decrement the priority.  */
-int
-nice (int incr)
+int nice(int incr)
 {
-  int save;
-  int prio;
-  int result;
+    int save;
+    int prio;
+    int result;
 
-  /* -1 is a valid priority, so we use errno to check for an error.  */
-  save = errno;
-  __set_errno (0);
-  prio = __getpriority (PRIO_PROCESS, 0);
-  if (prio == -1)
-    {
-      if (errno != 0)
-	return -1;
+    /* -1 is a valid priority, so we use errno to check for an error.  */
+    save = errno;
+    __set_errno(0);
+    prio = __getpriority(PRIO_PROCESS, 0);
+    if (prio == -1) {
+        if (errno != 0) {
+            return -1;
+        }
     }
 
-  result = __setpriority (PRIO_PROCESS, 0, prio + incr);
-  if (result == -1)
-    {
-      if (errno == EACCES)
-	__set_errno (EPERM);
-      return -1;
+    result = __setpriority(PRIO_PROCESS, 0, prio + incr);
+    if (result == -1) {
+        if (errno == EACCES) {
+            __set_errno(EPERM);
+        }
+        return -1;
     }
 
-  __set_errno (save);
-  return __getpriority (PRIO_PROCESS, 0);
+    __set_errno(save);
+    return __getpriority(PRIO_PROCESS, 0);
 }

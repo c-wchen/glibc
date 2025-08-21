@@ -17,13 +17,13 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _HP_TIMING_H
-#define _HP_TIMING_H	1
+#define _HP_TIMING_H    1
 
 #include <isa.h>
 
 #if MINIMUM_ISA == 686 || MINIMUM_ISA == 8664
 /* We indeed have inlined functions.  */
-# define HP_TIMING_INLINE	(1)
+# define HP_TIMING_INLINE   (1)
 
 /* We use 64bit values for the times.  */
 typedef unsigned long long int hp_timing_t;
@@ -42,9 +42,9 @@ typedef unsigned long long int hp_timing_t;
    RDTSC doesn't wait until all previous instructions have been executed
    before reading the counter.  */
 #  define HP_TIMING_NOW(Var) \
-  (__extension__ ({				\
-    unsigned int __aux;				\
-    (Var) = __builtin_ia32_rdtscp (&__aux);	\
+  (__extension__ ({             \
+    unsigned int __aux;             \
+    (Var) = __builtin_ia32_rdtscp (&__aux); \
   }))
 # else
 #  define HP_TIMING_NOW(Var) ((Var) = __builtin_ia32_rdtsc ())

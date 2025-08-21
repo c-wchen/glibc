@@ -21,11 +21,11 @@
 #include <support/check.h>
 #include <stdlib.h>
 
-FILE *
-xfreopen (const char *path, const char *mode, FILE *stream)
+FILE *xfreopen(const char *path, const char *mode, FILE *stream)
 {
-  FILE *fp = freopen (path, mode, stream);
-  if (fp == NULL)
-    FAIL_EXIT1 ("could not open %s (mode \"%s\"): %m", path, mode);
-  return fp;
+    FILE *fp = freopen(path, mode, stream);
+    if (fp == NULL) {
+        FAIL_EXIT1("could not open %s (mode \"%s\"): %m", path, mode);
+    }
+    return fp;
 }

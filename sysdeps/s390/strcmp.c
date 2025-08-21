@@ -27,16 +27,16 @@
 # undef strcmp
 
 # if HAVE_STRCMP_Z900_G5
-extern __typeof (__redirect_strcmp) STRCMP_Z900_G5 attribute_hidden;
+extern __typeof(__redirect_strcmp) STRCMP_Z900_G5 attribute_hidden;
 # endif
 
 # if HAVE_STRCMP_Z13
-extern __typeof (__redirect_strcmp) STRCMP_Z13 attribute_hidden;
+extern __typeof(__redirect_strcmp) STRCMP_Z13 attribute_hidden;
 # endif
 
-s390_libc_ifunc_expr (__redirect_strcmp, strcmp,
-		      (HAVE_STRCMP_Z13 && (hwcap & HWCAP_S390_VX))
-		      ? STRCMP_Z13
-		      : STRCMP_DEFAULT
-		      )
+s390_libc_ifunc_expr(__redirect_strcmp, strcmp,
+                     (HAVE_STRCMP_Z13 &&(hwcap &HWCAP_S390_VX))
+                     ? STRCMP_Z13
+                     : STRCMP_DEFAULT
+                    )
 #endif

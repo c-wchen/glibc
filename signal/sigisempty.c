@@ -20,14 +20,12 @@
 #include <sigsetops.h>
 
 /* Test whether SET is empty.  */
-int
-sigisemptyset (const sigset_t *set)
+int sigisemptyset(const sigset_t *set)
 {
-  if (!set)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (!set) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  return __sigisemptyset (set);
+    return __sigisemptyset(set);
 }

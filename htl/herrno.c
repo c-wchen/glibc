@@ -27,8 +27,7 @@ extern __thread int __h_errno;
 
 
 /* When threaded, h_errno may be a per-thread variable.  */
-int *
-__h_errno_location (void)
+int *__h_errno_location(void)
 {
-  return &__h_errno;
+    return &__h_errno;
 }

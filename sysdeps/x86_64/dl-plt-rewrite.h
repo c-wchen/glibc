@@ -18,8 +18,7 @@
 #include <stdbool.h>
 #include <sys/mman.h>
 
-static __always_inline bool
-dl_plt_rewrite_supported (void)
+static __always_inline bool dl_plt_rewrite_supported(void)
 {
-  return true;
+    return true;
 }

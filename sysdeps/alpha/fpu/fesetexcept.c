@@ -18,14 +18,13 @@
 
 #include <fenv_libc.h>
 
-int
-fesetexcept (int excepts)
+int fesetexcept(int excepts)
 {
-  unsigned long int tmp;
+    unsigned long int tmp;
 
-  tmp = __ieee_get_fp_control ();
-  tmp |= excepts & SWCR_STATUS_MASK;
-  __ieee_set_fp_control (tmp);
+    tmp = __ieee_get_fp_control();
+    tmp |= excepts & SWCR_STATUS_MASK;
+    __ieee_set_fp_control(tmp);
 
-  return 0;
+    return 0;
 }

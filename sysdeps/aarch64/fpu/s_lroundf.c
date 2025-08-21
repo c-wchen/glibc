@@ -19,10 +19,9 @@
 #include <math.h>
 #include <libm-alias-float.h>
 
-long int
-__lroundf (float x)
+long int __lroundf(float x)
 {
-  return __builtin_lroundf (x);
+    return __builtin_lroundf(x);
 }
 
-libm_alias_float (__lround, lround)
+libm_alias_float(__lround, lround)

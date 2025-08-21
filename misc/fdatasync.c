@@ -20,9 +20,8 @@
 
 /* Synchronize at least the data part of a file with the underlying
    media.  */
-int
-fdatasync (int fildes)
+int fdatasync(int fildes)
 {
-  return fsync (fildes);
+    return fsync(fildes);
 }
-libc_hidden_def (fdatasync)
+libc_hidden_def(fdatasync)

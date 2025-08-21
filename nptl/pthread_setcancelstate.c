@@ -20,41 +20,41 @@
 #include <atomic.h>
 #include <libc-lockP.h>
 
-int
-__pthread_setcancelstate (int state, int *oldstate)
+int __pthread_setcancelstate(int state, int *oldstate)
 {
-  volatile struct pthread *self;
+    volatile struct pthread *self;
 
-  if (state < PTHREAD_CANCEL_ENABLE || state > PTHREAD_CANCEL_DISABLE)
-    return EINVAL;
-
-  self = THREAD_SELF;
-
-  int oldval = atomic_load_relaxed (&self->cancelhandling);
-  while (1)
-    {
-      int newval = (state == PTHREAD_CANCEL_DISABLE
-		    ? oldval | CANCELSTATE_BITMASK
-		    : oldval & ~CANCELSTATE_BITMASK);
-
-      if (oldstate != NULL)
-	*oldstate = ((oldval & CANCELSTATE_BITMASK)
-		     ? PTHREAD_CANCEL_DISABLE : PTHREAD_CANCEL_ENABLE);
-
-      if (oldval == newval)
-	break;
-
-      if (atomic_compare_exchange_weak_acquire (&self->cancelhandling,
-						&oldval, newval))
-	{
-	  if (cancel_enabled_and_canceled_and_async (newval))
-	    __do_cancel (PTHREAD_CANCELED);
-
-	  break;
-	}
+    if (state < PTHREAD_CANCEL_ENABLE || state > PTHREAD_CANCEL_DISABLE) {
+        return EINVAL;
     }
 
-  return 0;
+    self = THREAD_SELF;
+
+    int oldval = atomic_load_relaxed(&self->cancelhandling);
+    while (1) {
+        int newval = (state == PTHREAD_CANCEL_DISABLE
+                      ? oldval | CANCELSTATE_BITMASK
+                      : oldval & ~CANCELSTATE_BITMASK);
+
+        if (oldstate != NULL)
+            *oldstate = ((oldval & CANCELSTATE_BITMASK)
+                         ? PTHREAD_CANCEL_DISABLE : PTHREAD_CANCEL_ENABLE);
+
+        if (oldval == newval) {
+            break;
+        }
+
+        if (atomic_compare_exchange_weak_acquire(&self->cancelhandling,
+                &oldval, newval)) {
+            if (cancel_enabled_and_canceled_and_async(newval)) {
+                __do_cancel(PTHREAD_CANCELED);
+            }
+
+            break;
+        }
+    }
+
+    return 0;
 }
-libc_hidden_def (__pthread_setcancelstate)
-weak_alias (__pthread_setcancelstate, pthread_setcancelstate)
+libc_hidden_def(__pthread_setcancelstate)
+weak_alias(__pthread_setcancelstate, pthread_setcancelstate)

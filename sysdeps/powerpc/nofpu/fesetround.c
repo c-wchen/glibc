@@ -19,17 +19,17 @@
 #include "soft-fp.h"
 #include "soft-supp.h"
 
-int
-__fesetround (int round)
+int __fesetround(int round)
 {
-  if ((unsigned int) round > FE_DOWNWARD)
-    return 1;
+    if ((unsigned int) round > FE_DOWNWARD) {
+        return 1;
+    }
 
-  __sim_round_mode_thread = round;
-  SIM_SET_GLOBAL (__sim_round_mode_global, __sim_round_mode_thread);
+    __sim_round_mode_thread = round;
+    SIM_SET_GLOBAL(__sim_round_mode_global, __sim_round_mode_thread);
 
-  return 0;
+    return 0;
 }
-libm_hidden_def (__fesetround)
-weak_alias (__fesetround, fesetround)
-libm_hidden_weak (fesetround)
+libm_hidden_def(__fesetround)
+weak_alias(__fesetround, fesetround)
+libm_hidden_weak(fesetround)

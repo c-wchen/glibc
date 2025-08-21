@@ -19,11 +19,11 @@
    processor.  Default to a non executable stack that grows downwards.  */
 
 #ifndef _STACKINFO_H
-#define _STACKINFO_H	1
+#define _STACKINFO_H    1
 
 #include <elf.h>
 
-#define _STACK_GROWS_DOWN	1
-#define DEFAULT_STACK_PERMS	(PF_R|PF_W)
+#define _STACK_GROWS_DOWN   1
+#define DEFAULT_STACK_PERMS (PF_R|PF_W)
 
 #endif

@@ -26,29 +26,29 @@
 
 /* Change the access time of FD to TVP[0] and
    the modification time of FD to TVP[1].  */
-int
-__futimes (int fd, const struct timeval tvp[2])
+int __futimes(int fd, const struct timeval tvp[2])
 {
-  struct timespec atime, mtime;
-  error_t err;
+    struct timespec atime, mtime;
+    error_t err;
 
-  err = utime_ts_from_tval (tvp, &atime, &mtime);
-  if (err)
-    return err;
-
-  err = HURD_DPORT_USE (fd, __file_utimens (port, atime, mtime));
-
-  if (err == EMIG_BAD_ID || err == EOPNOTSUPP)
-    {
-      time_value_t atim, mtim;
-
-      err = utime_tvalue_from_tval (tvp, &atim, &mtim);
-      if (err)
-	return err;
-
-      err = HURD_DPORT_USE (fd, __file_utimes (port, atim, mtim));
+    err = utime_ts_from_tval(tvp, &atime, &mtime);
+    if (err) {
+        return err;
     }
 
-  return err ? __hurd_dfail (fd, err) : 0;
+    err = HURD_DPORT_USE(fd, __file_utimens(port, atime, mtime));
+
+    if (err == EMIG_BAD_ID || err == EOPNOTSUPP) {
+        time_value_t atim, mtim;
+
+        err = utime_tvalue_from_tval(tvp, &atim, &mtim);
+        if (err) {
+            return err;
+        }
+
+        err = HURD_DPORT_USE(fd, __file_utimes(port, atim, mtim));
+    }
+
+    return err ? __hurd_dfail(fd, err) : 0;
 }
-weak_alias (__futimes, futimes)
+weak_alias(__futimes, futimes)

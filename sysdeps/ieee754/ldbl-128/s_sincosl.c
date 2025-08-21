@@ -22,51 +22,47 @@
 #include <math_private.h>
 #include <libm-alias-ldouble.h>
 
-void
-__sincosl (_Float128 x, _Float128 *sinx, _Float128 *cosx)
+void __sincosl(_Float128 x, _Float128 *sinx, _Float128 *cosx)
 {
-  int64_t ix;
+    int64_t ix;
 
-  /* High word of x. */
-  GET_LDOUBLE_MSW64 (ix, x);
+    /* High word of x. */
+    GET_LDOUBLE_MSW64(ix, x);
 
-  /* |x| ~< pi/4 */
-  ix &= 0x7fffffffffffffffLL;
-  if (ix <= 0x3ffe921fb54442d1LL)
-    __kernel_sincosl (x, 0, sinx, cosx, 0);
-  else if (ix >= 0x7fff000000000000LL)
-    {
-      /* sin(Inf or NaN) is NaN */
-      *sinx = *cosx = x - x;
-      if (isinf (x))
-	__set_errno (EDOM);
-    }
-  else
-    {
-      /* Argument reduction needed.  */
-      _Float128 y[2];
-      int n;
+    /* |x| ~< pi/4 */
+    ix &= 0x7fffffffffffffffLL;
+    if (ix <= 0x3ffe921fb54442d1LL) {
+        __kernel_sincosl(x, 0, sinx, cosx, 0);
+    } else if (ix >= 0x7fff000000000000LL) {
+        /* sin(Inf or NaN) is NaN */
+        *sinx = *cosx = x - x;
+        if (isinf(x)) {
+            __set_errno(EDOM);
+        }
+    } else {
+        /* Argument reduction needed.  */
+        _Float128 y[2];
+        int n;
 
-      n = __ieee754_rem_pio2l (x, y);
-      switch (n & 3)
-	{
-	case 0:
-	  __kernel_sincosl (y[0], y[1], sinx, cosx, 1);
-	  break;
-	case 1:
-	  __kernel_sincosl (y[0], y[1], cosx, sinx, 1);
-	  *cosx = -*cosx;
-	  break;
-	case 2:
-	  __kernel_sincosl (y[0], y[1], sinx, cosx, 1);
-	  *sinx = -*sinx;
-	  *cosx = -*cosx;
-	  break;
-	default:
-	  __kernel_sincosl (y[0], y[1], cosx, sinx, 1);
-	  *sinx = -*sinx;
-	  break;
-	}
+        n = __ieee754_rem_pio2l(x, y);
+        switch (n & 3) {
+            case 0:
+                __kernel_sincosl(y[0], y[1], sinx, cosx, 1);
+                break;
+            case 1:
+                __kernel_sincosl(y[0], y[1], cosx, sinx, 1);
+                *cosx = -*cosx;
+                break;
+            case 2:
+                __kernel_sincosl(y[0], y[1], sinx, cosx, 1);
+                *sinx = -*sinx;
+                *cosx = -*cosx;
+                break;
+            default:
+                __kernel_sincosl(y[0], y[1], cosx, sinx, 1);
+                *sinx = -*sinx;
+                break;
+        }
     }
 }
-libm_alias_ldouble (__sincos, sincos)
+libm_alias_ldouble(__sincos, sincos)

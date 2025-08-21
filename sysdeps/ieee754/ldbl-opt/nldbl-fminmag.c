@@ -19,8 +19,7 @@
 #include "nldbl-compat.h"
 
 double
-attribute_hidden
-fminmagl (double x, double y)
+attribute_hidden fminmagl(double x, double y)
 {
-  return fminmag (x, y);
+    return fminmag(x, y);
 }

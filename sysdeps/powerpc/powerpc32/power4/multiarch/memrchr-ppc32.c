@@ -19,17 +19,17 @@
 #if IS_IN (libc)
 # define MEMRCHR  __memrchr_ppc
 # include <string.h>
-extern void *__memrchr_ppc (const void *, int, size_t);
+extern void *__memrchr_ppc(const void *, int, size_t);
 #endif
 
 #include <string/memrchr.c>
 # if IS_IN (libc)
 # undef __memrchr
 # ifdef SHARED
-__hidden_ver1 (__memrchr_ppc, __GI___memrchr, __memrchr_ppc);
-strong_alias (__memrchr_ppc, __memrchr_ppc1);
-__hidden_ver1 (__memrchr_ppc1, __memrchr, __memrchr_ppc1);
+__hidden_ver1(__memrchr_ppc, __GI___memrchr, __memrchr_ppc);
+strong_alias(__memrchr_ppc, __memrchr_ppc1);
+__hidden_ver1(__memrchr_ppc1, __memrchr, __memrchr_ppc1);
 # else
-strong_alias (__memrchr_ppc, __memrchr)
+strong_alias(__memrchr_ppc, __memrchr)
 # endif
 #endif

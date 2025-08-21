@@ -25,19 +25,18 @@
 #include <support/format_nss.h>
 #include <support/run_diff.h>
 
-void
-check_addrinfo (const char *query_description, struct addrinfo *ai, int ret,
-                const char *expected)
+void check_addrinfo(const char *query_description, struct addrinfo *ai, int ret,
+                    const char *expected)
 {
-  char *formatted = support_format_addrinfo (ai, ret);
-  if (strcmp (formatted, expected) != 0)
-    {
-      support_record_failure ();
-      printf ("error: addrinfo comparison failure\n");
-      if (query_description != NULL)
-        printf ("query: %s\n", query_description);
-      support_run_diff ("expected", expected,
-                        "actual", formatted);
+    char *formatted = support_format_addrinfo(ai, ret);
+    if (strcmp(formatted, expected) != 0) {
+        support_record_failure();
+        printf("error: addrinfo comparison failure\n");
+        if (query_description != NULL) {
+            printf("query: %s\n", query_description);
+        }
+        support_run_diff("expected", expected,
+                         "actual", formatted);
     }
-  free (formatted);
+    free(formatted);
 }

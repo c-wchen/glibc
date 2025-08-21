@@ -8,7 +8,7 @@
 
    The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
@@ -18,25 +18,24 @@
 #include "pthread_rwlock_common.c"
 
 /* See pthread_rwlock_common.c.  */
-int
-___pthread_rwlock_wrlock (pthread_rwlock_t *rwlock)
+int ___pthread_rwlock_wrlock(pthread_rwlock_t *rwlock)
 {
-  LIBC_PROBE (wrlock_entry, 1, rwlock);
+    LIBC_PROBE(wrlock_entry, 1, rwlock);
 
-  int result = __pthread_rwlock_wrlock_full64 (rwlock, CLOCK_REALTIME, NULL);
-  LIBC_PROBE (wrlock_acquire_write, 1, rwlock);
-  return result;
+    int result = __pthread_rwlock_wrlock_full64(rwlock, CLOCK_REALTIME, NULL);
+    LIBC_PROBE(wrlock_acquire_write, 1, rwlock);
+    return result;
 }
-versioned_symbol (libc, ___pthread_rwlock_wrlock, pthread_rwlock_wrlock,
-		  GLIBC_2_34);
-strong_alias (___pthread_rwlock_wrlock, __pthread_rwlock_wrlock)
-libc_hidden_ver (___pthread_rwlock_wrlock, __pthread_rwlock_wrlock)
+versioned_symbol(libc, ___pthread_rwlock_wrlock, pthread_rwlock_wrlock,
+                 GLIBC_2_34);
+strong_alias(___pthread_rwlock_wrlock, __pthread_rwlock_wrlock)
+libc_hidden_ver(___pthread_rwlock_wrlock, __pthread_rwlock_wrlock)
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1, GLIBC_2_34)
-compat_symbol (libpthread, ___pthread_rwlock_wrlock, pthread_rwlock_wrlock,
-	       GLIBC_2_1);
+compat_symbol(libpthread, ___pthread_rwlock_wrlock, pthread_rwlock_wrlock,
+              GLIBC_2_1);
 #endif
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
-compat_symbol (libpthread, ___pthread_rwlock_wrlock, __pthread_rwlock_wrlock,
-	       GLIBC_2_2);
+compat_symbol(libpthread, ___pthread_rwlock_wrlock, __pthread_rwlock_wrlock,
+              GLIBC_2_2);
 #endif

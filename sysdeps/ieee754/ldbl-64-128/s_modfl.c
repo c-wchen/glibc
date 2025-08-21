@@ -6,5 +6,5 @@
 #endif
 #include <sysdeps/ieee754/ldbl-128/s_modfl.c>
 #if IS_IN (libc) && defined SHARED
-long_double_symbol (libc, __modfl, modfl);
+long_double_symbol(libc, __modfl, modfl);
 #endif

@@ -21,74 +21,73 @@
 #include <float.h>
 #include <stdint.h>
 
-int
-__feraiseexcept (int excepts)
+int __feraiseexcept(int excepts)
 {
-  uint64_t fpsr;
-  const float fp_zero = 0.0;
-  const float fp_one = 1.0;
-  const float fp_max = FLT_MAX;
-  const float fp_min = FLT_MIN;
-  const float fp_1e32 = 1.0e32f;
-  const float fp_two = 2.0;
-  const float fp_three = 3.0;
+    uint64_t fpsr;
+    const float fp_zero = 0.0;
+    const float fp_one = 1.0;
+    const float fp_max = FLT_MAX;
+    const float fp_min = FLT_MIN;
+    const float fp_1e32 = 1.0e32f;
+    const float fp_two = 2.0;
+    const float fp_three = 3.0;
 
-  /* Raise exceptions represented by EXCEPTS.  But we must raise only
-     one signal at a time.  It is important that if the OVERFLOW or
-     UNDERFLOW exception and the inexact exception are given at the
-     same time, the OVERFLOW or UNDERFLOW exception precedes the
-     INEXACT exception.
+    /* Raise exceptions represented by EXCEPTS.  But we must raise only
+       one signal at a time.  It is important that if the OVERFLOW or
+       UNDERFLOW exception and the inexact exception are given at the
+       same time, the OVERFLOW or UNDERFLOW exception precedes the
+       INEXACT exception.
 
-     After each exception we read from the FPSR, to force the
-     exception to be raised immediately.  */
+       After each exception we read from the FPSR, to force the
+       exception to be raised immediately.  */
 
-  if (FE_INVALID & excepts)
-    __asm__ __volatile__ (
-			  "ldr	s0, %1\n\t"
-			  "fdiv	s0, s0, s0\n\t"
-			  "mrs	%0, fpsr" : "=r" (fpsr)
-			  : "m" (fp_zero)
-			  : "d0");
+    if (FE_INVALID & excepts)
+        __asm__ __volatile__(
+            "ldr	s0, %1\n\t"
+            "fdiv	s0, s0, s0\n\t"
+            "mrs	%0, fpsr" : "=r"(fpsr)
+            : "m"(fp_zero)
+            : "d0");
 
-  if (FE_DIVBYZERO & excepts)
-    __asm__ __volatile__ (
-			  "ldr	s0, %1\n\t"
-			  "ldr	s1, %2\n\t"
-			  "fdiv	s0, s0, s1\n\t"
-			  "mrs	%0, fpsr" : "=r" (fpsr)
-			  : "m" (fp_one), "m" (fp_zero)
-			  : "d0", "d1");
+    if (FE_DIVBYZERO & excepts)
+        __asm__ __volatile__(
+            "ldr	s0, %1\n\t"
+            "ldr	s1, %2\n\t"
+            "fdiv	s0, s0, s1\n\t"
+            "mrs	%0, fpsr" : "=r"(fpsr)
+            : "m"(fp_one), "m"(fp_zero)
+            : "d0", "d1");
 
-  if (FE_OVERFLOW & excepts)
-    /* There's no way to raise overflow without also raising inexact.  */
-    __asm__ __volatile__ (
-			  "ldr	s0, %1\n\t"
-			  "ldr	s1, %2\n\t"
-			  "fadd s0, s0, s1\n\t"
-			  "mrs	%0, fpsr" : "=r" (fpsr)
-			  : "m" (fp_max), "m" (fp_1e32)
-			  : "d0", "d1");
+    if (FE_OVERFLOW & excepts)
+        /* There's no way to raise overflow without also raising inexact.  */
+        __asm__ __volatile__(
+            "ldr	s0, %1\n\t"
+            "ldr	s1, %2\n\t"
+            "fadd s0, s0, s1\n\t"
+            "mrs	%0, fpsr" : "=r"(fpsr)
+            : "m"(fp_max), "m"(fp_1e32)
+            : "d0", "d1");
 
-  if (FE_UNDERFLOW & excepts)
-    __asm__ __volatile__ (
-			  "ldr	s0, %1\n\t"
-			  "ldr	s1, %2\n\t"
-			  "fdiv s0, s0, s1\n\t"
-			  "mrs	%0, fpsr" : "=r" (fpsr)
-			  : "m" (fp_min), "m" (fp_three)
-			  : "d0", "d1");
+    if (FE_UNDERFLOW & excepts)
+        __asm__ __volatile__(
+            "ldr	s0, %1\n\t"
+            "ldr	s1, %2\n\t"
+            "fdiv s0, s0, s1\n\t"
+            "mrs	%0, fpsr" : "=r"(fpsr)
+            : "m"(fp_min), "m"(fp_three)
+            : "d0", "d1");
 
-  if (FE_INEXACT & excepts)
-    __asm__ __volatile__ (
-			  "ldr	s0, %1\n\t"
-			  "ldr	s1, %2\n\t"
-			  "fdiv s0, s0, s1\n\t"
-			  "mrs	%0, fpsr" : "=r" (fpsr)
-			  : "m" (fp_two), "m" (fp_three)
-			  : "d0", "d1");
+    if (FE_INEXACT & excepts)
+        __asm__ __volatile__(
+            "ldr	s0, %1\n\t"
+            "ldr	s1, %2\n\t"
+            "fdiv s0, s0, s1\n\t"
+            "mrs	%0, fpsr" : "=r"(fpsr)
+            : "m"(fp_two), "m"(fp_three)
+            : "d0", "d1");
 
-  return 0;
+    return 0;
 }
-libm_hidden_def (__feraiseexcept)
-weak_alias (__feraiseexcept, feraiseexcept)
-libm_hidden_weak (feraiseexcept)
+libm_hidden_def(__feraiseexcept)
+weak_alias(__feraiseexcept, feraiseexcept)
+libm_hidden_weak(feraiseexcept)

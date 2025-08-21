@@ -22,12 +22,11 @@
 
 /* Change the access time of FILE to TVP[0] and
    the modification time of FILE to TVP[1], but do not follow symlinks.  */
-int
-__lutimes (const char *file, const struct timeval tvp[2])
+int __lutimes(const char *file, const struct timeval tvp[2])
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-weak_alias (__lutimes, lutimes)
+weak_alias(__lutimes, lutimes)
 
-stub_warning (lutimes)
+stub_warning(lutimes)

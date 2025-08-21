@@ -23,9 +23,8 @@
 
 #include <sys/gmon.h>
 
-int
-main (void)
+int main(void)
 {
-  _mcleanup();
-  return 0;
+    _mcleanup();
+    return 0;
 }

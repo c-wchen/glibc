@@ -21,20 +21,25 @@
 #include <utmp-size.h>
 
 /* Undefined.  Used to check that the conditions below are optimized away.  */
-void link_failure_utmp (void);
-void link_failure_utmpx (void);
-void link_failure_lastlog (void);
+void link_failure_utmp(void);
+void link_failure_utmpx(void);
+void link_failure_lastlog(void);
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  if ((struct utmp) { .ut_tv = { 0x80000000U, }, }.ut_tv.tv_sec <= 0)
-    link_failure_utmp ();
-  if ((struct utmpx) { .ut_tv = { 0x80000000U, }, }.ut_tv.tv_sec <= 0)
-    link_failure_utmpx ();
-  if ((struct lastlog) { .ll_time = 0x80000000U, }.ll_time <= 0)
-    link_failure_lastlog ();
-  return 0;
+    if ((struct utmp) {
+    .ut_tv = { 0x80000000U, },
+} .ut_tv.tv_sec <= 0)
+    link_failure_utmp();
+    if ((struct utmpx) {
+    .ut_tv = { 0x80000000U, },
+} .ut_tv.tv_sec <= 0)
+    link_failure_utmpx();
+    if ((struct lastlog) {
+    .ll_time = 0x80000000U,
+} .ll_time <= 0)
+    link_failure_lastlog();
+    return 0;
 }
 
 #include <support/test-driver.c>

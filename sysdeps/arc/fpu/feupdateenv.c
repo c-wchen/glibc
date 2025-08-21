@@ -20,32 +20,28 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-int
-__feupdateenv (const fenv_t *envp)
+int __feupdateenv(const fenv_t *envp)
 {
-  unsigned int fpcr;
-  unsigned int fpsr;
+    unsigned int fpcr;
+    unsigned int fpsr;
 
-  _FPU_GETS (fpsr);
+    _FPU_GETS(fpsr);
 
-  if (envp == FE_DFL_ENV)
-    {
-      fpcr = _FPU_DEFAULT;
-    }
-  else
-    {
-      fpcr = envp->__fpcr;
+    if (envp == FE_DFL_ENV) {
+        fpcr = _FPU_DEFAULT;
+    } else {
+        fpcr = envp->__fpcr;
 
-      /* currently raised exceptions need to be preserved.  */
-      fpsr |= envp->__fpsr;
+        /* currently raised exceptions need to be preserved.  */
+        fpsr |= envp->__fpsr;
     }
 
-  _FPU_SETCW (fpcr);
-  _FPU_SETS (fpsr);
+    _FPU_SETCW(fpcr);
+    _FPU_SETS(fpsr);
 
-  /* Success.  */
-  return 0;
+    /* Success.  */
+    return 0;
 }
-libm_hidden_def (__feupdateenv)
-weak_alias (__feupdateenv, feupdateenv)
-libm_hidden_weak (feupdateenv)
+libm_hidden_def(__feupdateenv)
+weak_alias(__feupdateenv, feupdateenv)
+libm_hidden_weak(feupdateenv)

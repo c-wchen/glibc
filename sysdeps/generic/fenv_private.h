@@ -28,10 +28,9 @@
    define additional interfaces.  By default they refer to the normal
    interfaces.  */
 
-static __always_inline void
-default_libc_feholdexcept (fenv_t *e)
+static __always_inline void default_libc_feholdexcept(fenv_t *e)
 {
-  (void) __feholdexcept (e);
+    (void) __feholdexcept(e);
 }
 
 #ifndef libc_feholdexcept
@@ -44,10 +43,9 @@ default_libc_feholdexcept (fenv_t *e)
 # define libc_feholdexceptl default_libc_feholdexcept
 #endif
 
-static __always_inline void
-default_libc_fesetround (int r)
+static __always_inline void default_libc_fesetround(int r)
 {
-  (void) __fesetround (r);
+    (void) __fesetround(r);
 }
 
 #ifndef libc_fesetround
@@ -60,11 +58,10 @@ default_libc_fesetround (int r)
 # define libc_fesetroundl default_libc_fesetround
 #endif
 
-static __always_inline void
-default_libc_feholdexcept_setround (fenv_t *e, int r)
+static __always_inline void default_libc_feholdexcept_setround(fenv_t *e, int r)
 {
-  __feholdexcept (e);
-  __fesetround (r);
+    __feholdexcept(e);
+    __fesetround(r);
 }
 
 #ifndef libc_feholdexcept_setround
@@ -91,10 +88,9 @@ default_libc_feholdexcept_setround (fenv_t *e, int r)
 # define libc_fetestexceptl fetestexcept
 #endif
 
-static __always_inline void
-default_libc_fesetenv (fenv_t *e)
+static __always_inline void default_libc_fesetenv(fenv_t *e)
 {
-  (void) __fesetenv (e);
+    (void) __fesetenv(e);
 }
 
 #ifndef libc_fesetenv
@@ -107,10 +103,9 @@ default_libc_fesetenv (fenv_t *e)
 # define libc_fesetenvl default_libc_fesetenv
 #endif
 
-static __always_inline void
-default_libc_feupdateenv (fenv_t *e)
+static __always_inline void default_libc_feupdateenv(fenv_t *e)
 {
-  (void) __feupdateenv (e);
+    (void) __feupdateenv(e);
 }
 
 #ifndef libc_feupdateenv
@@ -127,12 +122,11 @@ default_libc_feupdateenv (fenv_t *e)
 # define libc_feresetround_53bit libc_feresetround
 #endif
 
-static __always_inline int
-default_libc_feupdateenv_test (fenv_t *e, int ex)
+static __always_inline int default_libc_feupdateenv_test(fenv_t *e, int ex)
 {
-  int ret = fetestexcept (ex);
-  __feupdateenv (e);
-  return ret;
+    int ret = fetestexcept(ex);
+    __feupdateenv(e);
+    return ret;
 }
 
 #ifndef libc_feupdateenv_test
@@ -194,45 +188,42 @@ default_libc_feupdateenv_test (fenv_t *e, int ex)
    current rounding mode.  Note the use of __glibc_unlikely is
    important for performance.  */
 
-static __always_inline void
-default_libc_feholdsetround_ctx (struct rm_ctx *ctx, int round)
+static __always_inline void default_libc_feholdsetround_ctx(struct rm_ctx *ctx, int round)
 {
-  ctx->updated_status = false;
+    ctx->updated_status = false;
 
-  /* Update rounding mode only if different.  */
-  if (__glibc_unlikely (round != get_rounding_mode ()))
-    {
-      ctx->updated_status = true;
-      __fegetenv (&ctx->env);
-      __fesetround (round);
+    /* Update rounding mode only if different.  */
+    if (__glibc_unlikely(round != get_rounding_mode())) {
+        ctx->updated_status = true;
+        __fegetenv(&ctx->env);
+        __fesetround(round);
     }
 }
 
-static __always_inline void
-default_libc_feresetround_ctx (struct rm_ctx *ctx)
+static __always_inline void default_libc_feresetround_ctx(struct rm_ctx *ctx)
 {
-  /* Restore the rounding mode if updated.  */
-  if (__glibc_unlikely (ctx->updated_status))
-    __feupdateenv (&ctx->env);
+    /* Restore the rounding mode if updated.  */
+    if (__glibc_unlikely(ctx->updated_status)) {
+        __feupdateenv(&ctx->env);
+    }
 }
 
-static __always_inline void
-default_libc_feholdsetround_noex_ctx (struct rm_ctx *ctx, int round)
+static __always_inline void default_libc_feholdsetround_noex_ctx(struct rm_ctx *ctx, int round)
 {
-  /* Save exception flags and rounding mode, and disable exception
-     traps.  */
-  __feholdexcept (&ctx->env);
+    /* Save exception flags and rounding mode, and disable exception
+       traps.  */
+    __feholdexcept(&ctx->env);
 
-  /* Update rounding mode only if different.  */
-  if (__glibc_unlikely (round != get_rounding_mode ()))
-    __fesetround (round);
+    /* Update rounding mode only if different.  */
+    if (__glibc_unlikely(round != get_rounding_mode())) {
+        __fesetround(round);
+    }
 }
 
-static __always_inline void
-default_libc_feresetround_noex_ctx (struct rm_ctx *ctx)
+static __always_inline void default_libc_feresetround_noex_ctx(struct rm_ctx *ctx)
 {
-  /* Restore exception flags and rounding mode.  */
-  __fesetenv (&ctx->env);
+    /* Restore exception flags and rounding mode.  */
+    __fesetenv(&ctx->env);
 }
 
 #if HAVE_RM_CTX
@@ -311,17 +302,17 @@ default_libc_feresetround_noex_ctx (struct rm_ctx *ctx)
 
 #define SET_RESTORE_ROUND_NOEX(RM) \
   SET_RESTORE_ROUND_GENERIC (RM, libc_feholdsetround_noex, \
-			     libc_feresetround_noex)
+                 libc_feresetround_noex)
 #define SET_RESTORE_ROUND_NOEXF(RM) \
   SET_RESTORE_ROUND_GENERIC (RM, libc_feholdsetround_noexf, \
-			     libc_feresetround_noexf)
+                 libc_feresetround_noexf)
 #define SET_RESTORE_ROUND_NOEXL(RM) \
   SET_RESTORE_ROUND_GENERIC (RM, libc_feholdsetround_noexl, \
-			     libc_feresetround_noexl)
+                 libc_feresetround_noexl)
 
 /* Like SET_RESTORE_ROUND, but also set rounding precision to 53 bits.  */
 #define SET_RESTORE_ROUND_53BIT(RM) \
-  SET_RESTORE_ROUND_GENERIC (RM, libc_feholdsetround_53bit,	      \
-			     libc_feresetround_53bit)
+  SET_RESTORE_ROUND_GENERIC (RM, libc_feholdsetround_53bit,       \
+                 libc_feresetround_53bit)
 
 #endif /* fenv_private.h.  */

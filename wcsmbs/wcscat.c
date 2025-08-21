@@ -22,12 +22,11 @@
 #endif
 
 /* Append SRC on the end of DEST.  */
-wchar_t *
-__wcscat (wchar_t *dest, const wchar_t *src)
+wchar_t *__wcscat(wchar_t *dest, const wchar_t *src)
 {
-  __wcscpy (dest + __wcslen (dest), src);
-  return dest;
+    __wcscpy(dest + __wcslen(dest), src);
+    return dest;
 }
 #ifndef WCSCAT
-weak_alias (__wcscat, wcscat)
+weak_alias(__wcscat, wcscat)
 #endif

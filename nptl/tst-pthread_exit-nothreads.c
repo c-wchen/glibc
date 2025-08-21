@@ -18,11 +18,10 @@
 
 #include <pthread.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  pthread_exit (NULL);
-  return 1;                     /* Not reached.  */
+    pthread_exit(NULL);
+    return 1;                     /* Not reached.  */
 }
 
 #include <support/test-driver.c>

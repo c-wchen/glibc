@@ -3,12 +3,10 @@
 #include <string.h>
 
 
-static const struct
-{
-  const char *str;
-  const char *expected;
-} tests[] =
-  {
+static const struct {
+    const char *str;
+    const char *expected;
+} tests[] = {
     { "1e308", "1e+308" },
     { "100000000e300", "1e+308" },
     { "0x1p1023", "8.98847e+307" },
@@ -27,28 +25,25 @@ static const struct
     { "0x10000p-1037", "4.45015e-308" },
     { "0x0.001p-1009", "4.45015e-308" },
     { "0x0.0001p-1005", "4.45015e-308" },
-  };
+};
 #define NTESTS (sizeof (tests) / sizeof (tests[0]))
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int status = 0;
+    int status = 0;
 
-  for (int i = 0; i < NTESTS; ++i)
-    {
-      char buf[100];
-      snprintf (buf, sizeof (buf), "%g", atof (tests[i].str));
-      if (strcmp (buf, tests[i].expected) != 0)
-	{
-	  printf ("%d: got \"%s\", expected \"%s\"\n",
-		  i, buf, tests[i].expected);
-	  status = 1;
-	}
+    for (int i = 0; i < NTESTS; ++i) {
+        char buf[100];
+        snprintf(buf, sizeof(buf), "%g", atof(tests[i].str));
+        if (strcmp(buf, tests[i].expected) != 0) {
+            printf("%d: got \"%s\", expected \"%s\"\n",
+                   i, buf, tests[i].expected);
+            status = 1;
+        }
     }
 
-  return status;
+    return status;
 }
 
 #define TEST_FUNCTION do_test ()

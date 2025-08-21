@@ -31,78 +31,74 @@ SOFTWARE.
 #include "math_config.h"
 #include "e_sincoshf_data.h"
 
-float
-__ieee754_sinhf (float x)
+float __ieee754_sinhf(float x)
 {
-  static const struct
-  {
-    uint32_t uarg;
-    float rh, rl;
-  } st = { 0x74250bfeu, 0x1.250bfep-11, 0x1p-36 };
-  const double iln2 = 0x1.71547652b82fep+5;
-  double z = x;
-  uint32_t ux = asuint (x) << 1;
-  if (__glibc_unlikely (ux > 0x8565a9f8u))
-    { /* |x| >~ 89.4 */
-      float sgn = copysignf (2.0f, x);
-      if (ux >= 0xff000000u)
-	{
-	  if (ux << 8)
-	    return x + x;			    /* nan */
-	  return copysignf (INFINITY, x); /* +-inf */
-	}
-      float r = math_narrow_eval (sgn * 0x1.fffffep127f);
-      return r;
+    static const struct {
+        uint32_t uarg;
+        float rh, rl;
+    } st = { 0x74250bfeu, 0x1.250bfep - 11, 0x1p - 36 };
+    const double iln2 = 0x1.71547652b82fep + 5;
+    double z = x;
+    uint32_t ux = asuint(x) << 1;
+    if (__glibc_unlikely(ux > 0x8565a9f8u)) {
+        /* |x| >~ 89.4 */
+        float sgn = copysignf(2.0f, x);
+        if (ux >= 0xff000000u) {
+            if (ux << 8) {
+                return x + x;    /* nan */
+            }
+            return copysignf(INFINITY, x);  /* +-inf */
+        }
+        float r = math_narrow_eval(sgn * 0x1.fffffep127f);
+        return r;
     }
-  if (__glibc_unlikely (ux < 0x7c000000u))
-    { /* |x| < 0.125 */
-      if (__glibc_unlikely (ux <= 0x74250bfeu))
-	{					   /* |x| <= 0x1.250bfep-11 */
-	  if (__glibc_unlikely (ux < 0x66000000u)) /* |x| < 0x1p-24 */
-	    return fmaf (x, fabsf (x), x);
-	  if (__glibc_unlikely (st.uarg == ux))
-	    {
-	      float sgn = copysignf (1.0f, x);
-	      return sgn * st.rh + sgn * st.rl;
-	    }
-	  return (x * 0x1.555556p-3f) * (x * x) + x;
-	}
-      static const double cp[] =
-	{
-	  0x1.5555555555555p-3,  0x1.11111111146e1p-7,
-	  0x1.a01a00930dda6p-13, 0x1.71f92198aa6e9p-19
-	};
-      double z2 = z * z;
-      double z4 = z2 * z2;
-      return z + (z2 * z)
-	* ((cp[0] + z2 * cp[1]) + z4 * (cp[2] + z2 * (cp[3])));
+    if (__glibc_unlikely(ux < 0x7c000000u)) {
+        /* |x| < 0.125 */
+        if (__glibc_unlikely(ux <= 0x74250bfeu)) {
+            /* |x| <= 0x1.250bfep-11 */
+            if (__glibc_unlikely(ux < 0x66000000u)) { /* |x| < 0x1p-24 */
+                return fmaf(x, fabsf(x), x);
+            }
+            if (__glibc_unlikely(st.uarg == ux)) {
+                float sgn = copysignf(1.0f, x);
+                return sgn * st.rh + sgn * st.rl;
+            }
+            return (x * 0x1.555556p - 3f) * (x * x) + x;
+        }
+        static const double cp[] = {
+            0x1.5555555555555p - 3,  0x1.11111111146e1p - 7,
+            0x1.a01a00930dda6p - 13, 0x1.71f92198aa6e9p - 19
+        };
+        double z2 = z * z;
+        double z4 = z2 * z2;
+        return z + (z2 * z)
+               * ((cp[0] + z2 * cp[1]) + z4 * (cp[2] + z2 * (cp[3])));
     }
-  double a = iln2 * z;
-  double ia = roundeven_finite (a);
-  double h = a - ia;
-  double h2 = h * h;
-  int64_t jp = asuint64 (ia + 0x1.8p52);
-  int64_t jm = -jp;
-  double sp = asdouble (TB[jp & 31] + ((uint64_t)(jp >> 5) << 52));
-  double sm = asdouble (TB[jm & 31] + ((uint64_t)(jm >> 5) << 52));
-  double te = C[0] + h2 * C[2];
-  double to = (C[1] + h2 * C[3]);
-  double rp = sp * (te + h * to);
-  double rm = sm * (te - h * to);
-  double r = rp - rm;
-  float ub = r;
-  double lb = r - 1.52e-10 * r;
-  if (__glibc_unlikely (ub != lb))
-    {
-      const double iln2h = 0x1.7154765p+5;
-      const double iln2l = 0x1.5c17f0bbbe88p-26;
-      h = (iln2h * z - ia) + iln2l * z;
-      h2 = h * h;
-      te = CH[0] + h2 * CH[2] + (h2 * h2) * (CH[4] + h2 * CH[6]);
-      to = CH[1] + h2 * (CH[3] + h2 * CH[5]);
-      r = sp * (te + h * to) - sm * (te - h * to);
-      ub = r;
+    double a = iln2 * z;
+    double ia = roundeven_finite(a);
+    double h = a - ia;
+    double h2 = h * h;
+    int64_t jp = asuint64(ia + 0x1.8p52);
+    int64_t jm = -jp;
+    double sp = asdouble(TB[jp & 31] + ((uint64_t)(jp >> 5) << 52));
+    double sm = asdouble(TB[jm & 31] + ((uint64_t)(jm >> 5) << 52));
+    double te = C[0] + h2 * C[2];
+    double to = (C[1] + h2 * C[3]);
+    double rp = sp * (te + h * to);
+    double rm = sm * (te - h * to);
+    double r = rp - rm;
+    float ub = r;
+    double lb = r - 1.52e-10 * r;
+    if (__glibc_unlikely(ub != lb)) {
+        const double iln2h = 0x1.7154765p + 5;
+        const double iln2l = 0x1.5c17f0bbbe88p - 26;
+        h = (iln2h * z - ia) + iln2l * z;
+        h2 = h * h;
+        te = CH[0] + h2 * CH[2] + (h2 * h2) * (CH[4] + h2 * CH[6]);
+        to = CH[1] + h2 * (CH[3] + h2 * CH[5]);
+        r = sp * (te + h * to) - sm * (te - h * to);
+        ub = r;
     }
-  return ub;
+    return ub;
 }
-libm_alias_finite (__ieee754_sinhf, __sinhf)
+libm_alias_finite(__ieee754_sinhf, __sinhf)

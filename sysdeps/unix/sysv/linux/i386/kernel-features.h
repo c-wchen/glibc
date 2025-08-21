@@ -47,4 +47,4 @@
 #endif
 
 #undef __ASSUME_CLONE_DEFAULT
-#define __ASSUME_CLONE_BACKWARDS	1
+#define __ASSUME_CLONE_BACKWARDS    1

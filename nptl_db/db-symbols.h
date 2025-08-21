@@ -16,12 +16,12 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define DOT(x)	x		/* No prefix.  */
+#define DOT(x)  x       /* No prefix.  */
 
-#define STRINGIFY(name)		STRINGIFY_1(name)
-#define STRINGIFY_1(name)	#name
+#define STRINGIFY(name)     STRINGIFY_1(name)
+#define STRINGIFY_1(name)   #name
 
-#define DB_STRUCT(type)	\
+#define DB_STRUCT(type) \
   DB_LOOKUP_NAME (SYM_SIZEOF_##type, _thread_db_sizeof_##type)
 #define DB_STRUCT_FIELD(type, field) \
   DB_LOOKUP_NAME (SYM_##type##_FIELD_##field, _thread_db_##type##_##field)
@@ -44,11 +44,11 @@
 # undef DB_VARIABLE
 # undef DOT
 
-DB_LOOKUP_NAME_TH_UNIQUE (SYM_TH_UNIQUE_REGISTER64, _thread_db_register64)
-DB_LOOKUP_NAME_TH_UNIQUE (SYM_TH_UNIQUE_REGISTER32, _thread_db_register32)
-DB_LOOKUP_NAME_TH_UNIQUE (SYM_TH_UNIQUE_CONST_THREAD_AREA,
-			  _thread_db_const_thread_area)
-DB_LOOKUP_NAME_TH_UNIQUE (SYM_TH_UNIQUE_REGISTER32_THREAD_AREA,
-			  _thread_db_register32_thread_area)
-DB_LOOKUP_NAME_TH_UNIQUE (SYM_TH_UNIQUE_REGISTER64_THREAD_AREA,
-			  _thread_db_register64_thread_area)
+DB_LOOKUP_NAME_TH_UNIQUE(SYM_TH_UNIQUE_REGISTER64, _thread_db_register64)
+DB_LOOKUP_NAME_TH_UNIQUE(SYM_TH_UNIQUE_REGISTER32, _thread_db_register32)
+DB_LOOKUP_NAME_TH_UNIQUE(SYM_TH_UNIQUE_CONST_THREAD_AREA,
+                         _thread_db_const_thread_area)
+DB_LOOKUP_NAME_TH_UNIQUE(SYM_TH_UNIQUE_REGISTER32_THREAD_AREA,
+                         _thread_db_register32_thread_area)
+DB_LOOKUP_NAME_TH_UNIQUE(SYM_TH_UNIQUE_REGISTER64_THREAD_AREA,
+                         _thread_db_register64_thread_area)

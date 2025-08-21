@@ -22,6 +22,6 @@
 
 /* Trapping exceptions are optional on ARC
    and not supported in Linux kernel just yet.  */
-#define EXCEPTION_ENABLE_SUPPORTED(EXCEPT)	((EXCEPT) == 0)
+#define EXCEPTION_ENABLE_SUPPORTED(EXCEPT)  ((EXCEPT) == 0)
 
 #endif /* math-tests-trap.h.  */

@@ -25,16 +25,15 @@
    without temporary buffer copy.  However, since glibc defines the MODE
    field as mode_t per POSIX definition (BZ#18231), it omits the __PAD1 field
    (since glibc does not export mode_t as 16-bit for any architecture).  */
-struct ipc_perm
-{
-  __key_t __key;				/* Key.  */
-  __uid_t uid;					/* Owner's user ID.  */
-  __gid_t gid;					/* Owner's group ID.  */
-  __uid_t cuid;					/* Creator's user ID.  */
-  __gid_t cgid;					/* Creator's group ID.  */
-  __mode_t mode;				/* Read/write permission.  */
-  unsigned short int __seq;			/* Sequence number.  */
-  unsigned short int __pad2;
-  __syscall_ulong_t __glibc_reserved1;
-  __syscall_ulong_t __glibc_reserved2;
+struct ipc_perm {
+    __key_t __key;                /* Key.  */
+    __uid_t uid;                  /* Owner's user ID.  */
+    __gid_t gid;                  /* Owner's group ID.  */
+    __uid_t cuid;                 /* Creator's user ID.  */
+    __gid_t cgid;                 /* Creator's group ID.  */
+    __mode_t mode;                /* Read/write permission.  */
+    unsigned short int __seq;         /* Sequence number.  */
+    unsigned short int __pad2;
+    __syscall_ulong_t __glibc_reserved1;
+    __syscall_ulong_t __glibc_reserved2;
 };

@@ -29,168 +29,145 @@
 
 int raise_fail;
 
-static void
-alrm (int sig)
+static void alrm(int sig)
 {
-  if (raise (SIGUSR1) < 0)
-    raise_fail = 1;
+    if (raise(SIGUSR1) < 0) {
+        raise_fail = 1;
+    }
 }
 
 /* This test relies on non-POSIX functionality since the child
    processes call write, nanosleep and getpid.  */
-static int
-do_test (void)
+static int do_test(void)
 {
-  int result = 0;
-  int fd[2];
+    int result = 0;
+    int fd[2];
 
-  signal (SIGUSR1, SIG_IGN);
+    signal(SIGUSR1, SIG_IGN);
 
-  struct sigaction sa;
-  sa.sa_handler = alrm;
-  sigemptyset (&sa.sa_mask);
-  sa.sa_flags = 0;
-  if (sigaction (SIGALRM, &sa, NULL) < 0)
-    {
-      puts ("couldn't set up SIGALRM handler");
-      return 1;
+    struct sigaction sa;
+    sa.sa_handler = alrm;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+    if (sigaction(SIGALRM, &sa, NULL) < 0) {
+        puts("couldn't set up SIGALRM handler");
+        return 1;
     }
 
-  if (pipe (fd) == -1)
-    {
-      puts ("pipe failed");
-      return 1;
+    if (pipe(fd) == -1) {
+        puts("pipe failed");
+        return 1;
     }
 
-  struct itimerval it;
-  it.it_value.tv_sec = 0;
-  it.it_value.tv_usec = 200 * 1000;
-  it.it_interval = it.it_value;
-  if (setitimer (ITIMER_REAL, &it, NULL) < 0)
-    {
-      puts ("couldn't set up timer");
-      return 1;
+    struct itimerval it;
+    it.it_value.tv_sec = 0;
+    it.it_value.tv_usec = 200 * 1000;
+    it.it_interval = it.it_value;
+    if (setitimer(ITIMER_REAL, &it, NULL) < 0) {
+        puts("couldn't set up timer");
+        return 1;
     }
 
-  /* First vfork() without previous getpid().  */
-  pid_t p1;
-  if ((p1 = vfork ()) == 0)
-    {
-      pid_t p = getpid ();
+    /* First vfork() without previous getpid().  */
+    pid_t p1;
+    if ((p1 = vfork()) == 0) {
+        pid_t p = getpid();
 
-      struct timespec ts;
-      ts.tv_sec = 1;
-      ts.tv_nsec = 0;
-      TEMP_FAILURE_RETRY (nanosleep (&ts, &ts));
-      _exit (TEMP_FAILURE_RETRY (write (fd[1], &p, sizeof (p))) != sizeof (p));
-    }
-  else if (p1 == -1)
-    {
-      puts ("1st vfork failed");
-      result = 1;
+        struct timespec ts;
+        ts.tv_sec = 1;
+        ts.tv_nsec = 0;
+        TEMP_FAILURE_RETRY(nanosleep(&ts, &ts));
+        _exit(TEMP_FAILURE_RETRY(write(fd[1], &p, sizeof(p))) != sizeof(p));
+    } else if (p1 == -1) {
+        puts("1st vfork failed");
+        result = 1;
     }
 
-  memset (&it, 0, sizeof (it));
-  setitimer (ITIMER_REAL, &it, NULL);
+    memset(&it, 0, sizeof(it));
+    setitimer(ITIMER_REAL, &it, NULL);
 
-  pid_t p2 = 0;
-  if (TEMP_FAILURE_RETRY (read (fd[0], &p2, sizeof (pid_t))) != sizeof (pid_t))
-    {
-      puts ("1st read failed");
-      result = 1;
+    pid_t p2 = 0;
+    if (TEMP_FAILURE_RETRY(read(fd[0], &p2, sizeof(pid_t))) != sizeof(pid_t)) {
+        puts("1st read failed");
+        result = 1;
     }
-  int r;
-  if (TEMP_FAILURE_RETRY (waitpid (p1, &r, 0)) != p1)
-    {
-      puts ("1st waitpid failed");
-      result = 1;
-    }
-  else if (r != 0)
-    {
-      puts ("write in 1st child failed");
-      result = 1;
+    int r;
+    if (TEMP_FAILURE_RETRY(waitpid(p1, &r, 0)) != p1) {
+        puts("1st waitpid failed");
+        result = 1;
+    } else if (r != 0) {
+        puts("write in 1st child failed");
+        result = 1;
     }
 
-  /* Main process' ID.  */
-  pid_t p0 = getpid ();
+    /* Main process' ID.  */
+    pid_t p0 = getpid();
 
-  /* vfork() again, but after a getpid() in the main process.  */
-  pid_t p3;
-  if ((p3 = vfork ()) == 0)
-    {
-      pid_t p = getpid ();
-      _exit (TEMP_FAILURE_RETRY (write (fd[1], &p, sizeof (p))) != sizeof (p));
-    }
-  else if (p1 == -1)
-    {
-      puts ("2nd vfork failed");
-      result = 1;
+    /* vfork() again, but after a getpid() in the main process.  */
+    pid_t p3;
+    if ((p3 = vfork()) == 0) {
+        pid_t p = getpid();
+        _exit(TEMP_FAILURE_RETRY(write(fd[1], &p, sizeof(p))) != sizeof(p));
+    } else if (p1 == -1) {
+        puts("2nd vfork failed");
+        result = 1;
     }
 
-  pid_t p4;
-  if (TEMP_FAILURE_RETRY (read (fd[0], &p4, sizeof (pid_t))) != sizeof (pid_t))
-    {
-      puts ("2nd read failed");
-      result = 1;
+    pid_t p4;
+    if (TEMP_FAILURE_RETRY(read(fd[0], &p4, sizeof(pid_t))) != sizeof(pid_t)) {
+        puts("2nd read failed");
+        result = 1;
     }
-  if (TEMP_FAILURE_RETRY (waitpid (p3, &r, 0)) != p3)
-    {
-      puts ("2nd waitpid failed");
-      result = 1;
-    }
-  else if (r != 0)
-    {
-      puts ("write in 2nd child failed");
-      result = 1;
+    if (TEMP_FAILURE_RETRY(waitpid(p3, &r, 0)) != p3) {
+        puts("2nd waitpid failed");
+        result = 1;
+    } else if (r != 0) {
+        puts("write in 2nd child failed");
+        result = 1;
     }
 
-  /* And getpid in the main process again.  */
-  pid_t p5 = getpid ();
+    /* And getpid in the main process again.  */
+    pid_t p5 = getpid();
 
-  /* Analysis of the results.  */
-  if (p0 != p5)
-    {
-      printf ("p0(%ld) != p5(%ld)\n", (long int) p0, (long int) p5);
-      result = 1;
+    /* Analysis of the results.  */
+    if (p0 != p5) {
+        printf("p0(%ld) != p5(%ld)\n", (long int) p0, (long int) p5);
+        result = 1;
     }
 
-  if (p0 == p1)
-    {
-      printf ("p0(%ld) == p1(%ld)\n", (long int) p0, (long int) p1);
-      result = 1;
+    if (p0 == p1) {
+        printf("p0(%ld) == p1(%ld)\n", (long int) p0, (long int) p1);
+        result = 1;
     }
 
-  if (p1 != p2)
-    {
-      printf ("p1(%ld) != p2(%ld)\n", (long int) p1, (long int) p2);
-      result = 1;
+    if (p1 != p2) {
+        printf("p1(%ld) != p2(%ld)\n", (long int) p1, (long int) p2);
+        result = 1;
     }
 
-  if (p0 == p3)
-    {
-      printf ("p0(%ld) == p3(%ld)\n", (long int) p0, (long int) p3);
-      result = 1;
+    if (p0 == p3) {
+        printf("p0(%ld) == p3(%ld)\n", (long int) p0, (long int) p3);
+        result = 1;
     }
 
-  if (p3 != p4)
-    {
-      printf ("p3(%ld) != p4(%ld)\n", (long int) p3, (long int) p4);
-      result = 1;
+    if (p3 != p4) {
+        printf("p3(%ld) != p4(%ld)\n", (long int) p3, (long int) p4);
+        result = 1;
     }
 
-  close (fd[0]);
-  close (fd[1]);
+    close(fd[0]);
+    close(fd[1]);
 
-  if (raise_fail)
-    {
-      puts ("raise failed");
-      result = 1;
+    if (raise_fail) {
+        puts("raise failed");
+        result = 1;
     }
 
-  if (result == 0)
-    puts ("All OK");
+    if (result == 0) {
+        puts("All OK");
+    }
 
-  return result;
+    return result;
 }
 
 #define TEST_FUNCTION do_test ()

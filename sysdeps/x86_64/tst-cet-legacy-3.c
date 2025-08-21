@@ -19,18 +19,16 @@
 
 #include <stdio.h>
 
-int
-test (void)
+int test(void)
 {
-  printf ("PASS\n");
-  return 0;
+    printf("PASS\n");
+    return 0;
 }
 
 #ifndef TEST_MODULE
-static int
-do_test (void)
+static int do_test(void)
 {
-  return test ();
+    return test();
 }
 
 #include <support/test-driver.c>

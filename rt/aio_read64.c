@@ -23,19 +23,18 @@
 # include <aio_misc.h>
 # include <shlib-compat.h>
 
-int
-__aio_read64 (struct aiocb64 *aiocbp)
+int __aio_read64(struct aiocb64 *aiocbp)
 {
-  return (__aio_enqueue_request ((aiocb_union *) aiocbp, LIO_READ64) == NULL
-	  ? -1 : 0);
+    return (__aio_enqueue_request((aiocb_union *) aiocbp, LIO_READ64) == NULL
+            ? -1 : 0);
 }
 
 # if PTHREAD_IN_LIBC
-versioned_symbol (libc, __aio_read64, aio_read64, GLIBC_2_34);
+versioned_symbol(libc, __aio_read64, aio_read64, GLIBC_2_34);
 #  if OTHER_SHLIB_COMPAT (librt, GLIBC_2_1, GLIBC_2_34)
-compat_symbol (librt, __aio_read64, aio_read64, GLIBC_2_1);
+compat_symbol(librt, __aio_read64, aio_read64, GLIBC_2_1);
 #  endif
 # else /* !PTHREAD_IN_LIBC */
-strong_alias (__aio_read64, aio_read64)
+strong_alias(__aio_read64, aio_read64)
 # endif
 #endif /* __WORDSIZE != 64 */

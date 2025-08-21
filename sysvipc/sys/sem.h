@@ -16,7 +16,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _SYS_SEM_H
-#define _SYS_SEM_H	1
+#define _SYS_SEM_H  1
 
 #include <features.h>
 
@@ -37,11 +37,10 @@
    handling.  The definition is found in XPG2.  */
 
 /* Structure used for argument to `semop' to describe operations.  */
-struct sembuf
-{
-  unsigned short int sem_num;	/* semaphore number */
-  short int sem_op;		/* semaphore operation */
-  short int sem_flg;		/* operation flag */
+struct sembuf {
+    unsigned short int sem_num;   /* semaphore number */
+    short int sem_op;     /* semaphore operation */
+    short int sem_flg;        /* operation flag */
 };
 
 
@@ -49,34 +48,34 @@ __BEGIN_DECLS
 
 /* Semaphore control operation.  */
 #ifndef __USE_TIME64_REDIRECTS
-extern int semctl (int __semid, int __semnum, int __cmd, ...) __THROW;
+extern int semctl(int __semid, int __semnum, int __cmd, ...) __THROW;
 #else
 # ifdef __REDIRECT_NTH
-extern int __REDIRECT_NTH (semctl,
-                           (int __semid, int __semnum, int __cmd, ...),
-                           __semctl64);
+extern int __REDIRECT_NTH(semctl,
+                          (int __semid, int __semnum, int __cmd, ...),
+                          __semctl64);
 # else
 #  define semctl __semctl64
 # endif
 #endif
 
 /* Get semaphore.  */
-extern int semget (key_t __key, int __nsems, int __semflg) __THROW;
+extern int semget(key_t __key, int __nsems, int __semflg) __THROW;
 
 /* Operate on semaphore.  */
-extern int semop (int __semid, struct sembuf *__sops, size_t __nsops) __THROW;
+extern int semop(int __semid, struct sembuf *__sops, size_t __nsops) __THROW;
 
 #ifdef __USE_GNU
 /* Operate on semaphore with timeout.  */
 # ifndef __USE_TIME64_REDIRECTS
-extern int semtimedop (int __semid, struct sembuf *__sops, size_t __nsops,
-		       const struct timespec *__timeout) __THROW;
+extern int semtimedop(int __semid, struct sembuf *__sops, size_t __nsops,
+                      const struct timespec *__timeout) __THROW;
 # else
 #  ifdef __REDIRECT_NTH
-extern int __REDIRECT_NTH (semtimedop, (int __semid, struct sembuf *__sops,
-                                        size_t __nsops,
-                                        const struct timespec *__timeout),
-                           __semtimedop64);
+extern int __REDIRECT_NTH(semtimedop, (int __semid, struct sembuf *__sops,
+                                       size_t __nsops,
+                                       const struct timespec *__timeout),
+                          __semtimedop64);
 #  else
 #   define semtimedop __semtimedop64
 #  endif

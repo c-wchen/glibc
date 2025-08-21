@@ -25,7 +25,7 @@
 # include <sysdeps/unix/sysv/linux/setrlimit64.c>
 # undef setrlimit64
 
-versioned_symbol (libc, __new_setrlimit64, setrlimit64, GLIBC_2_19);
+versioned_symbol(libc, __new_setrlimit64, setrlimit64, GLIBC_2_19);
 
 # if SHLIB_COMPAT (libc, GLIBC_2_2, GLIBC_2_19)
 
@@ -35,28 +35,29 @@ versioned_symbol (libc, __new_setrlimit64, setrlimit64, GLIBC_2_19);
    the wrong constant value are in the wild, provide a wrapper function
    fixing the value before the syscall.  */
 
-#  define OLD_RLIM64_INFINITY		0x7fffffffffffffffULL
+#  define OLD_RLIM64_INFINITY       0x7fffffffffffffffULL
 
 int
-attribute_compat_text_section
-__old_setrlimit64 (enum __rlimit_resource resource,
-		   const struct rlimit64 *rlimits)
+attribute_compat_text_section __old_setrlimit64(enum __rlimit_resource resource,
+        const struct rlimit64 *rlimits)
 {
-  struct rlimit64 krlimits;
+    struct rlimit64 krlimits;
 
-  if (rlimits->rlim_cur == OLD_RLIM64_INFINITY)
-    krlimits.rlim_cur = RLIM64_INFINITY;
-  else
-    krlimits.rlim_cur = rlimits->rlim_cur;
-  if (rlimits->rlim_max == OLD_RLIM64_INFINITY)
-    krlimits.rlim_max = RLIM64_INFINITY;
-  else
-    krlimits.rlim_max = rlimits->rlim_max;
+    if (rlimits->rlim_cur == OLD_RLIM64_INFINITY) {
+        krlimits.rlim_cur = RLIM64_INFINITY;
+    } else {
+        krlimits.rlim_cur = rlimits->rlim_cur;
+    }
+    if (rlimits->rlim_max == OLD_RLIM64_INFINITY) {
+        krlimits.rlim_max = RLIM64_INFINITY;
+    } else {
+        krlimits.rlim_max = rlimits->rlim_max;
+    }
 
-  return __new_setrlimit64 (resource, &krlimits);
+    return __new_setrlimit64(resource, &krlimits);
 }
 
-compat_symbol (libc, __old_setrlimit64, setrlimit64, GLIBC_2_2);
+compat_symbol(libc, __old_setrlimit64, setrlimit64, GLIBC_2_2);
 # endif
 
 #else /* !_ABI_O32 && !_ABI_N32 */

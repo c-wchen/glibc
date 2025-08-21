@@ -19,15 +19,15 @@
 #include "thread_dbP.h"
 
 
-td_err_e
-td_ta_enable_stats (const td_thragent_t *ta, int enable)
+td_err_e td_ta_enable_stats(const td_thragent_t *ta, int enable)
 {
-  /* XXX We have to figure out what has to be done.  */
-  LOG ("td_ta_enable_stats");
+    /* XXX We have to figure out what has to be done.  */
+    LOG("td_ta_enable_stats");
 
-  /* Test whether the TA parameter is ok.  */
-  if (! ta_ok (ta))
-    return TD_BADTA;
+    /* Test whether the TA parameter is ok.  */
+    if (! ta_ok(ta)) {
+        return TD_BADTA;
+    }
 
-  return TD_OK;
+    return TD_OK;
 }

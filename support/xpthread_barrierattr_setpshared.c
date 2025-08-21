@@ -18,9 +18,8 @@
 
 #include <support/xthread.h>
 
-void
-xpthread_barrierattr_setpshared (pthread_barrierattr_t *attr, int pshared)
+void xpthread_barrierattr_setpshared(pthread_barrierattr_t *attr, int pshared)
 {
-  xpthread_check_return ("pthread_barrierattr_setpshared",
-                         pthread_barrierattr_setpshared (attr, pshared));
+    xpthread_check_return("pthread_barrierattr_setpshared",
+                          pthread_barrierattr_setpshared(attr, pshared));
 }

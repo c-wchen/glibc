@@ -15,8 +15,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef	_SYS_IOCTL_H
-#define	_SYS_IOCTL_H	1
+#ifndef _SYS_IOCTL_H
+#define _SYS_IOCTL_H    1
 
 #include <features.h>
 
@@ -39,13 +39,13 @@ __BEGIN_DECLS
    One argument may follow; its presence and type depend on REQUEST.
    Return value depends on REQUEST.  Usually -1 indicates error.  */
 #ifndef __USE_TIME64_REDIRECTS
-extern int ioctl (int __fd, unsigned long int __request, ...) __THROW;
+extern int ioctl(int __fd, unsigned long int __request, ...) __THROW;
 #else
 # ifdef __REDIRECT
-extern int __REDIRECT_NTH (ioctl, (int __fd, unsigned long int __request, ...),
-			   __ioctl_time64);
+extern int __REDIRECT_NTH(ioctl, (int __fd, unsigned long int __request, ...),
+                          __ioctl_time64);
 # else
-extern int __ioctl_time64 (int __fd, unsigned long int __request, ...) __THROW;
+extern int __ioctl_time64(int __fd, unsigned long int __request, ...) __THROW;
 #  define ioctl __ioctl_time64
 # endif
 #endif

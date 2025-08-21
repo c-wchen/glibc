@@ -22,27 +22,26 @@
 /* This table's entries are taken from ISO 14652, the table in section
    4.10 "LC_ADDRESS".  */
 
-const struct __locale_data _nl_C_LC_ADDRESS attribute_hidden =
-{
-  _nl_C_name,
-  NULL, 0, 0,			/* no file mapped */
-  NULL,				/* No cached data.  */
-  UNDELETABLE,
-  0,
-  13,
-  {
-    { .string = "%a%N%f%N%d%N%b%N%s %h %e %r%N%C-%z %T%N%c%N" },
-    { .string = "" },
-    { .string = "" },
-    { .string = "" },
-    { .string = "" },
-    { .string = "" },
-    { .word = 0 },
-    { .string = "" },
-    { .string = "" },
-    { .string = "" },
-    { .string = "" },
-    { .string = "" },
-    { .string = _nl_C_codeset }
-  }
+const struct __locale_data _nl_C_LC_ADDRESS attribute_hidden = {
+    _nl_C_name,
+    NULL, 0, 0,           /* no file mapped */
+    NULL,             /* No cached data.  */
+    UNDELETABLE,
+    0,
+    13,
+    {
+        { .string = "%a%N%f%N%d%N%b%N%s %h %e %r%N%C-%z %T%N%c%N" },
+        { .string = "" },
+        { .string = "" },
+        { .string = "" },
+        { .string = "" },
+        { .string = "" },
+        { .word = 0 },
+        { .string = "" },
+        { .string = "" },
+        { .string = "" },
+        { .string = "" },
+        { .string = "" },
+        { .string = _nl_C_codeset }
+    }
 };

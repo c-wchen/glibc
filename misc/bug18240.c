@@ -24,73 +24,66 @@
 #include <stdlib.h>
 #include <sys/resource.h>
 
-static void
-test_size (size_t size)
+static void test_size(size_t size)
 {
-  int res = hcreate (size);
-  if (res == 0)
-    {
-      if (errno == ENOMEM)
-        return;
-      printf ("error: hcreate (%zu): %m\n", size);
-      exit (1);
-    }
-  char *keys[100];
-  for (int i = 0; i < 100; ++i)
-    {
-      if (asprintf (keys + i, "%d", i) < 0)
-        {
-          printf ("error: asprintf: %m\n");
-          exit (1);
+    int res = hcreate(size);
+    if (res == 0) {
+        if (errno == ENOMEM) {
+            return;
         }
-      ENTRY e = { keys[i], (char *) "value" };
-      if (hsearch (e, ENTER) == NULL)
-        {
-          printf ("error: hsearch (\"%s\"): %m\n", keys[i]);
-          exit (1);
+        printf("error: hcreate (%zu): %m\n", size);
+        exit(1);
+    }
+    char *keys[100];
+    for (int i = 0; i < 100; ++i) {
+        if (asprintf(keys + i, "%d", i) < 0) {
+            printf("error: asprintf: %m\n");
+            exit(1);
+        }
+        ENTRY e = { keys[i], (char *) "value" };
+        if (hsearch(e, ENTER) == NULL) {
+            printf("error: hsearch (\"%s\"): %m\n", keys[i]);
+            exit(1);
         }
     }
-  hdestroy ();
+    hdestroy();
 
-  for (int i = 0; i < 100; ++i)
-    free (keys[i]);
+    for (int i = 0; i < 100; ++i) {
+        free(keys[i]);
+    }
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* Limit the size of the process, so that memory allocation will
-     fail without impacting the entire system.  */
-  {
-    struct rlimit limit;
-    if (getrlimit (RLIMIT_AS, &limit) != 0)
-      {
-        printf ("getrlimit (RLIMIT_AS) failed: %m\n");
-        return 1;
-      }
-    long target = 100 * 1024 * 1024;
-    if (limit.rlim_cur == RLIM_INFINITY || limit.rlim_cur > target)
-      {
-        limit.rlim_cur = target;
-        if (setrlimit (RLIMIT_AS, &limit) != 0)
-          {
-            printf ("setrlimit (RLIMIT_AS) failed: %m\n");
+    /* Limit the size of the process, so that memory allocation will
+       fail without impacting the entire system.  */
+    {
+        struct rlimit limit;
+        if (getrlimit(RLIMIT_AS, &limit) != 0) {
+            printf("getrlimit (RLIMIT_AS) failed: %m\n");
             return 1;
-          }
-      }
-  }
+        }
+        long target = 100 * 1024 * 1024;
+        if (limit.rlim_cur == RLIM_INFINITY || limit.rlim_cur > target) {
+            limit.rlim_cur = target;
+            if (setrlimit(RLIMIT_AS, &limit) != 0) {
+                printf("setrlimit (RLIMIT_AS) failed: %m\n");
+                return 1;
+            }
+        }
+    }
 
-  test_size (500);
-  test_size (-1);
-  test_size (-3);
-  test_size (INT_MAX - 2);
-  test_size (INT_MAX - 1);
-  test_size (INT_MAX);
-  test_size (((unsigned) INT_MAX) + 1);
-  test_size (UINT_MAX - 2);
-  test_size (UINT_MAX - 1);
-  test_size (UINT_MAX);
-  return 0;
+    test_size(500);
+    test_size(-1);
+    test_size(-3);
+    test_size(INT_MAX - 2);
+    test_size(INT_MAX - 1);
+    test_size(INT_MAX);
+    test_size(((unsigned) INT_MAX) + 1);
+    test_size(UINT_MAX - 2);
+    test_size(UINT_MAX - 1);
+    test_size(UINT_MAX);
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

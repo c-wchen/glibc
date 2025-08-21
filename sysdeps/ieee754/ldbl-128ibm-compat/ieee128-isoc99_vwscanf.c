@@ -18,10 +18,9 @@
 
 #include <libioP.h>
 
-extern int
-___ieee128_isoc99_vwscanf (const wchar_t *format, va_list ap)
+extern int ___ieee128_isoc99_vwscanf(const wchar_t *format, va_list ap)
 {
-  int mode_flags = SCANF_ISOC99_A | SCANF_LDBL_USES_FLOAT128;
-  return __vfwscanf_internal (stdin, format, ap, mode_flags);
+    int mode_flags = SCANF_ISOC99_A | SCANF_LDBL_USES_FLOAT128;
+    return __vfwscanf_internal(stdin, format, ap, mode_flags);
 }
-strong_alias (___ieee128_isoc99_vwscanf, __isoc99_vwscanfieee128)
+strong_alias(___ieee128_isoc99_vwscanf, __isoc99_vwscanfieee128)

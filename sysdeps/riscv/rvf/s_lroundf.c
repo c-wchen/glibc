@@ -28,12 +28,11 @@
 # error Unsupported
 #endif
 
-long int
-__lroundf (float x)
+long int __lroundf(float x)
 {
-  long int res;
-  asm (OP "\t%0, %1, rmm" : "=r" (res) : "f" (x));
-  return res;
+    long int res;
+    asm(OP "\t%0, %1, rmm" : "=r"(res) : "f"(x));
+    return res;
 }
 
-libm_alias_float (__lround, lround)
+libm_alias_float(__lround, lround)

@@ -46,29 +46,29 @@
 /* If compiled for profiling, call `mcount' at the start of each function.  */
 #ifdef  PROF
 # ifdef __PIC__
-#  define CALL_MCOUNT						\
-	l.addi	r1, r1, -8;					\
-	l.sw	0(r1), r9;					\
-	l.sw	4(r1), r3;					\
-	l.ori	r3, r9, 0;					\
-	l.j	plt(_mcount);					\
-	 l.nop;							\
-	l.lwz	r9, 0(r1);					\
-	l.lwz	r3, 4(r1);					\
-	l.addi	r1, r1, 8;
+#  define CALL_MCOUNT                       \
+    l.addi  r1, r1, -8;                 \
+    l.sw    0(r1), r9;                  \
+    l.sw    4(r1), r3;                  \
+    l.ori   r3, r9, 0;                  \
+    l.j plt(_mcount);                   \
+     l.nop;                         \
+    l.lwz   r9, 0(r1);                  \
+    l.lwz   r3, 4(r1);                  \
+    l.addi  r1, r1, 8;
 # else
-#  define CALL_MCOUNT						\
-	l.addi	r1, r1, -8;					\
-	l.sw	0(r1), r9;					\
-	l.sw	4(r1), r3;					\
-	l.ori	r3, r9, 0;					\
-	l.movhi r15, hi(_mcount);				\
-	l.ori	r15, r15, lo(_mcount);				\
-	l.jr	r15;						\
-	 l.nop;							\
-	l.lwz	r9, 0(r1);					\
-	l.lwz	r3, 4(r1);					\
-	l.addi	r1, r1, 8;
+#  define CALL_MCOUNT                       \
+    l.addi  r1, r1, -8;                 \
+    l.sw    0(r1), r9;                  \
+    l.sw    4(r1), r3;                  \
+    l.ori   r3, r9, 0;                  \
+    l.movhi r15, hi(_mcount);               \
+    l.ori   r15, r15, lo(_mcount);              \
+    l.jr    r15;                        \
+     l.nop;                         \
+    l.lwz   r9, 0(r1);                  \
+    l.lwz   r3, 4(r1);                  \
+    l.addi  r1, r1, 8;
 # endif
 #else
 # define CALL_MCOUNT             /* Do nothing.  */

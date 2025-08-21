@@ -18,9 +18,8 @@
 
 #include <support/xthread.h>
 
-void
-xpthread_attr_destroy (pthread_attr_t *attr)
+void xpthread_attr_destroy(pthread_attr_t *attr)
 {
-  xpthread_check_return ("pthread_attr_destroy",
-			 pthread_attr_destroy (attr));
+    xpthread_check_return("pthread_attr_destroy",
+                          pthread_attr_destroy(attr));
 }

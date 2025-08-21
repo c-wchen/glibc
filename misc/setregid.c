@@ -21,12 +21,11 @@
 
 /* Set the real group ID of the calling process to RGID,
    and the effective group ID of the calling process to EGID.  */
-int
-__setregid (gid_t effective_gid, gid_t real_gid)
+int __setregid(gid_t effective_gid, gid_t real_gid)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (setregid)
+stub_warning(setregid)
 
-weak_alias (__setregid, setregid)
+weak_alias(__setregid, setregid)

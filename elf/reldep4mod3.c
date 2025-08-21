@@ -1,7 +1,7 @@
-int foo (void);
+int foo(void);
 
-int foo (void)
+int foo(void)
 {
-  return 0;
+    return 0;
 }
 

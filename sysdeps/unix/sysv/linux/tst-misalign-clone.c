@@ -29,57 +29,58 @@
 #include <support/xunistd.h>
 #include <support/check.h>
 
-static int
-check_stack_alignment (void *arg)
+static int check_stack_alignment(void *arg)
 {
-  bool ok = true;
+    bool ok = true;
 
-  puts ("in f");
+    puts("in f");
 
-  if (TEST_STACK_ALIGN ())
-    ok = false;
+    if (TEST_STACK_ALIGN()) {
+        ok = false;
+    }
 
-  return ok ? 0 : 1;
+    return ok ? 0 : 1;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  puts ("in do_test");
+    puts("in do_test");
 
-  if (TEST_STACK_ALIGN ())
-    FAIL_EXIT1 ("stack isn't aligned\n");
+    if (TEST_STACK_ALIGN()) {
+        FAIL_EXIT1("stack isn't aligned\n");
+    }
 
 # define STACK_SIZE (128 * 1024)
 
-  char st[STACK_SIZE + 1];
-  /* NB: Align child stack to 1 byte.  */
-  char *stack = PTR_ALIGN_UP (&st[0], 2) + 1;
+    char st[STACK_SIZE + 1];
+    /* NB: Align child stack to 1 byte.  */
+    char *stack = PTR_ALIGN_UP(&st[0], 2) + 1;
 
 #if _STACK_GROWS_DOWN
-  pid_t p = clone (check_stack_alignment, stack + STACK_SIZE, 0, 0);
+    pid_t p = clone(check_stack_alignment, stack + STACK_SIZE, 0, 0);
 #elif _STACK_GROWS_UP
-  pid_t p = clone (check_stack_alignment, stack, 0, 0);
+    pid_t p = clone(check_stack_alignment, stack, 0, 0);
 #else
 # error "Define either _STACK_GROWS_DOWN or _STACK_GROWS_UP"
 #endif
 
-  /* Clone must not fail.  */
-  TEST_VERIFY_EXIT (p != -1);
+    /* Clone must not fail.  */
+    TEST_VERIFY_EXIT(p != -1);
 
-  int e;
-  xwaitpid (p, &e, __WCLONE);
-  if (!WIFEXITED (e))
-    {
-      if (WIFSIGNALED (e))
-	printf ("died from signal %s\n", strsignal (WTERMSIG (e)));
-     FAIL_EXIT1 ("process did not terminate correctly");
+    int e;
+    xwaitpid(p, &e, __WCLONE);
+    if (!WIFEXITED(e)) {
+        if (WIFSIGNALED(e)) {
+            printf("died from signal %s\n", strsignal(WTERMSIG(e)));
+        }
+        FAIL_EXIT1("process did not terminate correctly");
     }
 
-  if (WEXITSTATUS (e) != 0)
-    FAIL_EXIT1 ("exit code %d", WEXITSTATUS (e));
+    if (WEXITSTATUS(e) != 0) {
+        FAIL_EXIT1("exit code %d", WEXITSTATUS(e));
+    }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

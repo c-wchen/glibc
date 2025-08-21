@@ -22,20 +22,18 @@
 #include <shlib-compat.h>
 #include <pt-internal.h>
 
-int
-__pthread_attr_setschedparam (pthread_attr_t *attr,
-			      const struct sched_param *param)
+int __pthread_attr_setschedparam(pthread_attr_t *attr,
+                                 const struct sched_param *param)
 {
-  if (param->sched_priority == __pthread_default_attr.__schedparam.__sched_priority)
-    {
-      attr->__schedparam.__sched_priority = param->sched_priority;
-      return 0;
+    if (param->sched_priority == __pthread_default_attr.__schedparam.__sched_priority) {
+        attr->__schedparam.__sched_priority = param->sched_priority;
+        return 0;
     }
 
-  return ENOTSUP;
+    return ENOTSUP;
 }
-versioned_symbol (libc, __pthread_attr_setschedparam, pthread_attr_setschedparam, GLIBC_2_21);
+versioned_symbol(libc, __pthread_attr_setschedparam, pthread_attr_setschedparam, GLIBC_2_21);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_21)
-compat_symbol (libc, __pthread_attr_setschedparam, pthread_attr_setschedparam, GLIBC_2_12);
+compat_symbol(libc, __pthread_attr_setschedparam, pthread_attr_setschedparam, GLIBC_2_12);
 #endif

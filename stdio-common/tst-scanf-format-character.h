@@ -40,91 +40,90 @@
 static struct support_next_to_fault ntf;
 
 #define PREPARE initialize_value_init
-static void
-initialize_value_init (int argc, char **argv)
+static void initialize_value_init(int argc, char **argv)
 {
-  ntf = support_next_to_fault_allocate (SCANF_BUFFER_SIZE);
+    ntf = support_next_to_fault_allocate(SCANF_BUFFER_SIZE);
 }
 
-static void __attribute__ ((destructor))
-initialize_value_fini (void)
+static void __attribute__((destructor))
+initialize_value_fini(void)
 {
-  support_next_to_fault_free (&ntf);
+    support_next_to_fault_free(&ntf);
 }
 
 #define pointer_to_value(val) (val)
 
-#define initialize_value(val)						\
-do									\
-  {									\
-    val = ntf.buffer;							\
-    memset (val, 0xa5, SCANF_BUFFER_SIZE);				\
-  }									\
+#define initialize_value(val)                       \
+do                                  \
+  {                                 \
+    val = ntf.buffer;                           \
+    memset (val, 0xa5, SCANF_BUFFER_SIZE);              \
+  }                                 \
 while (0)
 
-#define verify_input(f, val, count, errp)				\
-({									\
-  __label__ out, skip;							\
-  bool match = true;							\
-  int err = 0;								\
-  size_t i;								\
-  int ch;								\
-									\
-  for (i = 0; i < count; i++)						\
-    {									\
-      ch = read_input ();						\
-      if (ch < 0)							\
-	{								\
-	  err = ch;							\
-	  goto out;							\
-	}								\
-      if (ch == ':' && val[i] == '\0' && f == 's')			\
-	goto skip;							\
-      if (ch != val[i])							\
-	{								\
-	  match = false;						\
-	  goto out;							\
-	}								\
-    }									\
-  ch = read_input ();							\
-  if (ch < 0)								\
-    {									\
-      err = ch;								\
-      goto out;								\
-    }									\
-									\
-skip:									\
-  if (f != 'c' && val[i++] != '\0')					\
-    {									\
-      err = OUTPUT_TERM;						\
-      goto out;								\
-    }									\
-  if (val[i] != '\xa5')							\
-    {									\
-      err = OUTPUT_OVERRUN;						\
-      goto out;								\
-    }									\
-									\
-  while (ch != ':')							\
-    {									\
-      ch = read_input ();						\
-      if (ch < 0)							\
-	{								\
-	  err = ch;							\
-	  goto out;							\
-	}								\
-      match = false;							\
-    }									\
-									\
-out:									\
-  if (err || !match)							\
-    {									\
-      printf ("error: %s:%d: input buffer: `", __FILE__, __LINE__);	\
-      for (size_t j = 0; j <= i; j++)					\
-	printf ("%c", val[j]);						\
-      printf ("'\n");							\
-    }									\
-									\
-  *errp = err;								\
-  match;								\
+#define verify_input(f, val, count, errp)               \
+({                                  \
+  __label__ out, skip;                          \
+  bool match = true;                            \
+  int err = 0;                              \
+  size_t i;                             \
+  int ch;                               \
+                                    \
+  for (i = 0; i < count; i++)                       \
+    {                                   \
+      ch = read_input ();                       \
+      if (ch < 0)                           \
+    {                               \
+      err = ch;                         \
+      goto out;                         \
+    }                               \
+      if (ch == ':' && val[i] == '\0' && f == 's')          \
+    goto skip;                          \
+      if (ch != val[i])                         \
+    {                               \
+      match = false;                        \
+      goto out;                         \
+    }                               \
+    }                                   \
+  ch = read_input ();                           \
+  if (ch < 0)                               \
+    {                                   \
+      err = ch;                             \
+      goto out;                             \
+    }                                   \
+                                    \
+skip:                                   \
+  if (f != 'c' && val[i++] != '\0')                 \
+    {                                   \
+      err = OUTPUT_TERM;                        \
+      goto out;                             \
+    }                                   \
+  if (val[i] != '\xa5')                         \
+    {                                   \
+      err = OUTPUT_OVERRUN;                     \
+      goto out;                             \
+    }                                   \
+                                    \
+  while (ch != ':')                         \
+    {                                   \
+      ch = read_input ();                       \
+      if (ch < 0)                           \
+    {                               \
+      err = ch;                         \
+      goto out;                         \
+    }                               \
+      match = false;                            \
+    }                                   \
+                                    \
+out:                                    \
+  if (err || !match)                            \
+    {                                   \
+      printf ("error: %s:%d: input buffer: `", __FILE__, __LINE__); \
+      for (size_t j = 0; j <= i; j++)                   \
+    printf ("%c", val[j]);                      \
+      printf ("'\n");                           \
+    }                                   \
+                                    \
+  *errp = err;                              \
+  match;                                \
 })

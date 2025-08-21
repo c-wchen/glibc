@@ -18,13 +18,12 @@
 
 #include <fenv_libc.h>
 
-int
-__fegetexcept (void)
+int __fegetexcept(void)
 {
-  fenv_union_t fe;
+    fenv_union_t fe;
 
-  fe.fenv = fegetenv_control ();
+    fe.fenv = fegetenv_control();
 
-  return fenv_reg_to_exceptions (fe.l);
+    return fenv_reg_to_exceptions(fe.l);
 }
-weak_alias (__fegetexcept, fegetexcept)
+weak_alias(__fegetexcept, fegetexcept)

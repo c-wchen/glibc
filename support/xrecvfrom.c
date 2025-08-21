@@ -22,12 +22,12 @@
 #include <stdlib.h>
 #include <support/check.h>
 
-size_t
-xrecvfrom (int fd, void *buf, size_t buflen, int flags,
-           struct sockaddr *sa, socklen_t *salen)
+size_t xrecvfrom(int fd, void *buf, size_t buflen, int flags,
+                 struct sockaddr *sa, socklen_t *salen)
 {
-  ssize_t ret = recvfrom (fd, buf, buflen, flags, sa, salen);
-  if (ret < 0)
-    FAIL_EXIT1 ("error: recvfrom (%d), %zu bytes buffer: %m", fd, buflen);
-  return ret;
+    ssize_t ret = recvfrom(fd, buf, buflen, flags, sa, salen);
+    if (ret < 0) {
+        FAIL_EXIT1("error: recvfrom (%d), %zu bytes buffer: %m", fd, buflen);
+    }
+    return ret;
 }

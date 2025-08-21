@@ -19,13 +19,12 @@
 #include <sys/socket.h>
 
 /* Put the local address of FD into *ADDR and its length in *LEN.  */
-int
-__getsockname (int fd, __SOCKADDR_ARG addr, socklen_t *len)
+int __getsockname(int fd, __SOCKADDR_ARG addr, socklen_t *len)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-weak_alias (__getsockname, getsockname)
+weak_alias(__getsockname, getsockname)
 
-stub_warning (getsockname)
+stub_warning(getsockname)

@@ -17,11 +17,11 @@
 
 /*
  *      ISO C11 Standard: 7.28
- *	Unicode utilities	<uchar.h>
+ *  Unicode utilities   <uchar.h>
  */
 
 #ifndef _UCHAR_H
-#define _UCHAR_H	1
+#define _UCHAR_H    1
 
 #include <features.h>
 
@@ -60,37 +60,37 @@ __BEGIN_DECLS
 #if __GLIBC_USE (ISOC23) || defined __cpp_char8_t
 /* Write char8_t representation of multibyte character pointed
    to by S to PC8.  */
-extern size_t mbrtoc8  (char8_t *__restrict __pc8,
-			const char *__restrict __s, size_t __n,
-			mbstate_t *__restrict __p) __THROW;
+extern size_t mbrtoc8(char8_t *__restrict __pc8,
+                      const char *__restrict __s, size_t __n,
+                      mbstate_t *__restrict __p) __THROW;
 
 /* Write multibyte representation of char8_t C8 to S.  */
-extern size_t c8rtomb  (char *__restrict __s, char8_t __c8,
-			mbstate_t *__restrict __ps) __THROW;
+extern size_t c8rtomb(char *__restrict __s, char8_t __c8,
+                      mbstate_t *__restrict __ps) __THROW;
 #endif
 
 /* Write char16_t representation of multibyte character pointed
    to by S to PC16.  */
-extern size_t mbrtoc16 (char16_t *__restrict __pc16,
-			const char *__restrict __s, size_t __n,
-			mbstate_t *__restrict __p) __THROW;
+extern size_t mbrtoc16(char16_t *__restrict __pc16,
+                       const char *__restrict __s, size_t __n,
+                       mbstate_t *__restrict __p) __THROW;
 
 /* Write multibyte representation of char16_t C16 to S.  */
-extern size_t c16rtomb (char *__restrict __s, char16_t __c16,
-			mbstate_t *__restrict __ps) __THROW;
+extern size_t c16rtomb(char *__restrict __s, char16_t __c16,
+                       mbstate_t *__restrict __ps) __THROW;
 
 
 
 /* Write char32_t representation of multibyte character pointed
    to by S to PC32.  */
-extern size_t mbrtoc32 (char32_t *__restrict __pc32,
-			const char *__restrict __s, size_t __n,
-			mbstate_t *__restrict __p) __THROW;
+extern size_t mbrtoc32(char32_t *__restrict __pc32,
+                       const char *__restrict __s, size_t __n,
+                       mbstate_t *__restrict __p) __THROW;
 
 /* Write multibyte representation of char32_t C32 to S.  */
-extern size_t c32rtomb (char *__restrict __s, char32_t __c32,
-			mbstate_t *__restrict __ps) __THROW;
+extern size_t c32rtomb(char *__restrict __s, char32_t __c32,
+                       mbstate_t *__restrict __ps) __THROW;
 
 __END_DECLS
 
-#endif	/* uchar.h */
+#endif  /* uchar.h */

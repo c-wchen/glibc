@@ -26,16 +26,14 @@
 #undef __cabsf
 #undef cabsf
 
-float
-__c1_cabsf (c1_cfloat_decl (z))
+float __c1_cabsf(c1_cfloat_decl(z))
 {
-  return __hypotf (c1_cfloat_real (z), c1_cfloat_imag (z));
+    return __hypotf(c1_cfloat_real(z), c1_cfloat_imag(z));
 }
 
-float
-__c2_cabsf (c2_cfloat_decl (z))
+float __c2_cabsf(c2_cfloat_decl(z))
 {
-  return __hypotf (c2_cfloat_real (z), c2_cfloat_imag (z));
+    return __hypotf(c2_cfloat_real(z), c2_cfloat_imag(z));
 }
 
-cfloat_versions (cabs);
+cfloat_versions(cabs);

@@ -21,9 +21,8 @@
 
 #include "statx_generic.c"
 
-int
-statx (int fd, const char *path, int flags,
-       unsigned int mask, struct statx *buf)
+int statx(int fd, const char *path, int flags,
+          unsigned int mask, struct statx *buf)
 {
-  return statx_generic (fd, path, flags, mask, buf);
+    return statx_generic(fd, path, flags, mask, buf);
 }

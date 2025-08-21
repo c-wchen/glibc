@@ -26,32 +26,28 @@
 #include <stdio.h>
 #include <support/check.h>
 
-static __thread char thread_var __attribute__ ((tls_model ("initial-exec")));
+static __thread char thread_var __attribute__((tls_model("initial-exec")));
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  printf ("thread variable address: %p\n", &thread_var);
-  printf ("thread pointer address: %p\n", __thread_pointer ());
-  printf ("pthread_self address: %p\n", (void *) pthread_self ());
-  ptrdiff_t block_offset = ((struct link_map *) _r_debug.r_map)->l_tls_offset;
-  printf ("main program TLS block offset: %td\n", block_offset);
+    printf("thread variable address: %p\n", &thread_var);
+    printf("thread pointer address: %p\n", __thread_pointer());
+    printf("pthread_self address: %p\n", (void *) pthread_self());
+    ptrdiff_t block_offset = ((struct link_map *) _r_debug.r_map)->l_tls_offset;
+    printf("main program TLS block offset: %td\n", block_offset);
 
-  if ((uintptr_t) &thread_var < (uintptr_t) THREAD_SELF)
-    {
-      puts("TLS variables are located before struct pthread.");
-      TEST_COMPARE (((intptr_t) __thread_pointer () - block_offset)
-                    - (intptr_t) &thread_var,
-                    TLS_TP_OFFSET);
+    if ((uintptr_t) &thread_var < (uintptr_t) THREAD_SELF) {
+        puts("TLS variables are located before struct pthread.");
+        TEST_COMPARE(((intptr_t) __thread_pointer() - block_offset)
+                     - (intptr_t) &thread_var,
+                     TLS_TP_OFFSET);
+    } else {
+        puts("TLS variables are located after struct pthread.");
+        TEST_COMPARE(((intptr_t) __thread_pointer() + block_offset)
+                     - (intptr_t) &thread_var,
+                     TLS_TP_OFFSET);
     }
-  else
-    {
-      puts("TLS variables are located after struct pthread.");
-      TEST_COMPARE (((intptr_t) __thread_pointer () + block_offset)
-                    - (intptr_t) &thread_var,
-                    TLS_TP_OFFSET);
-    }
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

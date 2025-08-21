@@ -23,11 +23,11 @@
 
 long double _Q_utoq(const unsigned int a)
 {
-  FP_DECL_Q(C);
-  long double c;
-  unsigned int b = a;
+    FP_DECL_Q(C);
+    long double c;
+    unsigned int b = a;
 
-  FP_FROM_INT_Q(C, b, 32, unsigned int);
-  FP_PACK_RAW_Q(c, C);
-  return c;
+    FP_FROM_INT_Q(C, b, 32, unsigned int);
+    FP_PACK_RAW_Q(c, C);
+    return c;
 }

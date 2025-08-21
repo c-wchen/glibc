@@ -20,42 +20,40 @@
 #include <shlib-compat.h>
 
 void
-__cleanup_fct_attribute
-___pthread_register_cancel (__pthread_unwind_buf_t *buf)
+__cleanup_fct_attribute ___pthread_register_cancel(__pthread_unwind_buf_t *buf)
 {
-  struct pthread_unwind_buf *ibuf = (struct pthread_unwind_buf *) buf;
-  struct pthread *self = THREAD_SELF;
+    struct pthread_unwind_buf *ibuf = (struct pthread_unwind_buf *) buf;
+    struct pthread *self = THREAD_SELF;
 
-  /* Store old info.  */
-  ibuf->priv.data.prev = THREAD_GETMEM (self, cleanup_jmp_buf);
-  ibuf->priv.data.cleanup = THREAD_GETMEM (self, cleanup);
+    /* Store old info.  */
+    ibuf->priv.data.prev = THREAD_GETMEM(self, cleanup_jmp_buf);
+    ibuf->priv.data.cleanup = THREAD_GETMEM(self, cleanup);
 
-  /* Store the new cleanup handler info.  */
-  THREAD_SETMEM (self, cleanup_jmp_buf, (struct pthread_unwind_buf *) buf);
+    /* Store the new cleanup handler info.  */
+    THREAD_SETMEM(self, cleanup_jmp_buf, (struct pthread_unwind_buf *) buf);
 }
-versioned_symbol (libc, ___pthread_register_cancel,
-                  __pthread_register_cancel, GLIBC_2_34);
-libc_hidden_ver (___pthread_register_cancel, __pthread_register_cancel)
+versioned_symbol(libc, ___pthread_register_cancel,
+                 __pthread_register_cancel, GLIBC_2_34);
+libc_hidden_ver(___pthread_register_cancel, __pthread_register_cancel)
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_3_3, GLIBC_2_34)
-compat_symbol (libpthread, ___pthread_register_cancel,
-               __pthread_register_cancel, GLIBC_2_3_3);
+compat_symbol(libpthread, ___pthread_register_cancel,
+              __pthread_register_cancel, GLIBC_2_3_3);
 #endif
 
 
 void
-__cleanup_fct_attribute
-___pthread_unregister_cancel (__pthread_unwind_buf_t *buf)
+__cleanup_fct_attribute ___pthread_unregister_cancel(__pthread_unwind_buf_t *buf)
 {
-  struct pthread_unwind_buf *ibuf = (struct pthread_unwind_buf *) buf;
+    struct pthread_unwind_buf *ibuf = (struct pthread_unwind_buf *) buf;
 
-  THREAD_SETMEM (THREAD_SELF, cleanup_jmp_buf, ibuf->priv.data.prev);
+    THREAD_SETMEM(THREAD_SELF, cleanup_jmp_buf, ibuf->priv.data.prev);
 }
-versioned_symbol (libc, ___pthread_unregister_cancel,
-                  __pthread_unregister_cancel, GLIBC_2_34);
-libc_hidden_ver (___pthread_unregister_cancel, __pthread_unregister_cancel)
+versioned_symbol(libc, ___pthread_unregister_cancel,
+                 __pthread_unregister_cancel, GLIBC_2_34);
+libc_hidden_ver(___pthread_unregister_cancel, __pthread_unregister_cancel)
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_3_3, GLIBC_2_34)
-compat_symbol (libpthread, ___pthread_unregister_cancel,
-               __pthread_unregister_cancel, GLIBC_2_3_3);
+compat_symbol(libpthread, ___pthread_unregister_cancel,
+              __pthread_unregister_cancel, GLIBC_2_3_3);
 #endif

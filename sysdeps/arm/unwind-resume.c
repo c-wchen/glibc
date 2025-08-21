@@ -18,8 +18,7 @@
 
 #include <sysdeps/generic/unwind-resume.c>
 
-void *
-__unwind_link_get_resume (void)
+void *__unwind_link_get_resume(void)
 {
-  return UNWIND_LINK_PTR (link (), _Unwind_Resume);
+    return UNWIND_LINK_PTR(link(), _Unwind_Resume);
 }

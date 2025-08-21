@@ -5,40 +5,35 @@
 
 int win = 0;
 
-static void
-handler (int sig)
+static void handler(int sig)
 {
-  printf ("Received signal %d (%s).\n", sig, strsignal(sig));
-  win = 1;
+    printf("Received signal %d (%s).\n", sig, strsignal(sig));
+    win = 1;
 }
 
-int
-main (void)
+int main(void)
 {
-  if (signal (SIGTERM, handler) == SIG_ERR)
-    {
-      perror ("signal: SIGTERM");
-      exit (EXIT_FAILURE);
+    if (signal(SIGTERM, handler) == SIG_ERR) {
+        perror("signal: SIGTERM");
+        exit(EXIT_FAILURE);
     }
 
-  puts ("Set handler.");
+    puts("Set handler.");
 
-  printf ("Sending myself signal %d.\n", SIGTERM);
-  fflush (stdout);
+    printf("Sending myself signal %d.\n", SIGTERM);
+    fflush(stdout);
 
-  if (raise (SIGTERM) < 0)
-    {
-      perror ("raise: SIGTERM");
-      exit (EXIT_FAILURE);
+    if (raise(SIGTERM) < 0) {
+        perror("raise: SIGTERM");
+        exit(EXIT_FAILURE);
     }
 
-  if (!win)
-    {
-      puts ("Didn't get any signal.  Test FAILED!");
-      exit (EXIT_FAILURE);
+    if (!win) {
+        puts("Didn't get any signal.  Test FAILED!");
+        exit(EXIT_FAILURE);
     }
 
-  puts ("Got a signal.  Test succeeded.");
+    puts("Got a signal.  Test succeeded.");
 
-  return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }

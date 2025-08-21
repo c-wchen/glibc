@@ -26,12 +26,11 @@
 
 #include <libio/libioP.h>
 
-int
-__vasprintf_chk (char **result_ptr, int flag, const char *format, va_list ap)
+int __vasprintf_chk(char **result_ptr, int flag, const char *format, va_list ap)
 {
-  /* For flag > 0 (i.e. __USE_FORTIFY_LEVEL > 1) request that %n
-     can only come from read-only format strings.  */
-  unsigned int mode = (flag > 0) ? PRINTF_FORTIFY : 0;
+    /* For flag > 0 (i.e. __USE_FORTIFY_LEVEL > 1) request that %n
+       can only come from read-only format strings.  */
+    unsigned int mode = (flag > 0) ? PRINTF_FORTIFY : 0;
 
-  return __vasprintf_internal (result_ptr, format, ap, mode);
+    return __vasprintf_internal(result_ptr, format, ap, mode);
 }

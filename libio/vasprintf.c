@@ -34,109 +34,96 @@
 #include <string.h>
 #include <printf_buffer.h>
 
-struct __printf_buffer_asprintf
-{
-  /* base.write_base points either to a heap-allocated buffer, or to
-     the direct array below.  */
-  struct __printf_buffer base;
+struct __printf_buffer_asprintf {
+    /* base.write_base points either to a heap-allocated buffer, or to
+       the direct array below.  */
+    struct __printf_buffer base;
 
-  /* Initial allocation.  200 should be large enough to copy almost
-     all asprintf usages with just a single (final, correctly sized)
-     heap allocation.  */
-  char direct[PRINTF_BUFFER_SIZE_ASPRINTF];
+    /* Initial allocation.  200 should be large enough to copy almost
+       all asprintf usages with just a single (final, correctly sized)
+       heap allocation.  */
+    char direct[PRINTF_BUFFER_SIZE_ASPRINTF];
 };
 
-void
-__printf_buffer_flush_asprintf (struct __printf_buffer_asprintf *buf)
+void __printf_buffer_flush_asprintf(struct __printf_buffer_asprintf *buf)
 {
-  size_t current_pos = buf->base.write_ptr - buf->base.write_base;
-  if (current_pos >= INT_MAX)
-    {
-      /* The result is not representable.  No need to continue.  */
-      __set_errno (EOVERFLOW);
-      __printf_buffer_mark_failed (&buf->base);
-      return;
+    size_t current_pos = buf->base.write_ptr - buf->base.write_base;
+    if (current_pos >= INT_MAX) {
+        /* The result is not representable.  No need to continue.  */
+        __set_errno(EOVERFLOW);
+        __printf_buffer_mark_failed(&buf->base);
+        return;
     }
 
-  size_t current_size = buf->base.write_end - buf->base.write_base;
-  /* Implement an exponentiation sizing policy.  Keep the size
-     congruent 8 (mod 16), to account for the footer in glibc
-     malloc.  */
-  size_t new_size = ALIGN_UP (current_size + current_size / 2, 16) | 8;
-  char *new_buffer;
-  if (buf->base.write_base == buf->direct)
-    {
-      new_buffer = malloc (new_size);
-      if (new_buffer == NULL)
-	{
-	  __printf_buffer_mark_failed (&buf->base);
-	  return;
-	}
-      memcpy (new_buffer, buf->direct, current_pos);
-    }
-  else
-    {
-      new_buffer = realloc (buf->base.write_base, new_size);
-      if (new_buffer == NULL)
-	{
-	  __printf_buffer_mark_failed (&buf->base);
-	  return;
-	}
+    size_t current_size = buf->base.write_end - buf->base.write_base;
+    /* Implement an exponentiation sizing policy.  Keep the size
+       congruent 8 (mod 16), to account for the footer in glibc
+       malloc.  */
+    size_t new_size = ALIGN_UP(current_size + current_size / 2, 16) | 8;
+    char *new_buffer;
+    if (buf->base.write_base == buf->direct) {
+        new_buffer = malloc(new_size);
+        if (new_buffer == NULL) {
+            __printf_buffer_mark_failed(&buf->base);
+            return;
+        }
+        memcpy(new_buffer, buf->direct, current_pos);
+    } else {
+        new_buffer = realloc(buf->base.write_base, new_size);
+        if (new_buffer == NULL) {
+            __printf_buffer_mark_failed(&buf->base);
+            return;
+        }
     }
 
-  /* Set up the new write area.  */
-  buf->base.write_base = new_buffer;
-  buf->base.write_ptr = new_buffer + current_pos;
-  buf->base.write_end = new_buffer + new_size;
+    /* Set up the new write area.  */
+    buf->base.write_base = new_buffer;
+    buf->base.write_ptr = new_buffer + current_pos;
+    buf->base.write_end = new_buffer + new_size;
 }
 
 
-int
-__vasprintf_internal (char **result, const char *format, va_list args,
-		      unsigned int mode_flags)
+int __vasprintf_internal(char **result, const char *format, va_list args,
+                         unsigned int mode_flags)
 {
-  struct __printf_buffer_asprintf buf;
-  __printf_buffer_init (&buf.base, buf.direct, array_length (buf.direct),
-			__printf_buffer_mode_asprintf);
+    struct __printf_buffer_asprintf buf;
+    __printf_buffer_init(&buf.base, buf.direct, array_length(buf.direct),
+                         __printf_buffer_mode_asprintf);
 
-  __printf_buffer (&buf.base, format, args, mode_flags);
-  int done = __printf_buffer_done (&buf.base);
-  if (done < 0)
-    {
-      if (buf.base.write_base != buf.direct)
-	free (buf.base.write_base);
-      *result = NULL;
-      return done;
+    __printf_buffer(&buf.base, format, args, mode_flags);
+    int done = __printf_buffer_done(&buf.base);
+    if (done < 0) {
+        if (buf.base.write_base != buf.direct) {
+            free(buf.base.write_base);
+        }
+        *result = NULL;
+        return done;
     }
 
-  /* Transfer to the final buffer.  */
-  size_t size = buf.base.write_ptr - buf.base.write_base;
-  if (buf.base.write_base == buf.direct)
-    {
-      *result = malloc (size + 1);
-      if (*result == NULL)
-	return -1;
-      memcpy (*result, buf.direct, size);
-    }
-  else
-    {
-      *result = realloc (buf.base.write_base, size + 1);
-      if (*result == NULL)
-	{
-	  free (buf.base.write_base);
-	  return -1;
-	}
+    /* Transfer to the final buffer.  */
+    size_t size = buf.base.write_ptr - buf.base.write_base;
+    if (buf.base.write_base == buf.direct) {
+        *result = malloc(size + 1);
+        if (*result == NULL) {
+            return -1;
+        }
+        memcpy(*result, buf.direct, size);
+    } else {
+        *result = realloc(buf.base.write_base, size + 1);
+        if (*result == NULL) {
+            free(buf.base.write_base);
+            return -1;
+        }
     }
 
-  /* Add NUL termination.  */
-  (*result)[size] = '\0';
+    /* Add NUL termination.  */
+    (*result)[size] = '\0';
 
-  return done;
+    return done;
 }
 
-int
-__vasprintf (char **result_ptr, const char *format, va_list args)
+int __vasprintf(char **result_ptr, const char *format, va_list args)
 {
-  return __vasprintf_internal (result_ptr, format, args, 0);
+    return __vasprintf_internal(result_ptr, format, args, 0);
 }
-ldbl_weak_alias (__vasprintf, vasprintf)
+ldbl_weak_alias(__vasprintf, vasprintf)

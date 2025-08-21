@@ -26,7 +26,7 @@
    (this can be determined by checking the return value of
    feenableexcept).  This enables skipping of tests which use traps.
    By default traps are supported unless overridden.  */
-#define EXCEPTION_ENABLE_SUPPORTED(EXCEPT)		\
+#define EXCEPTION_ENABLE_SUPPORTED(EXCEPT)      \
   (EXCEPTION_TESTS_float || EXCEPTION_TESTS_double)
 
 #endif /* math-tests-trap.h.  */

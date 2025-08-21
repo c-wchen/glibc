@@ -32,43 +32,41 @@
    written in the order specified.  Operates just like 'write' (see
    <unistd.h>) except that the data are taken from IOVEC instead of a
    contiguous buffer.  */
-ssize_t
-PWRITEV (int fd, const struct iovec *vector, int count, OFF_T offset)
+ssize_t PWRITEV(int fd, const struct iovec *vector, int count, OFF_T offset)
 {
-  /* Find the total number of bytes to be read.  */
-  size_t bytes = 0;
-  for (int i = 0; i < count; ++i)
-    {
-      /* Check for ssize_t overflow.  */
-      if (SSIZE_MAX - bytes < vector[i].iov_len)
-	{
-	  __set_errno (EINVAL);
-	  return -1;
-	}
-      bytes += vector[i].iov_len;
+    /* Find the total number of bytes to be read.  */
+    size_t bytes = 0;
+    for (int i = 0; i < count; ++i) {
+        /* Check for ssize_t overflow.  */
+        if (SSIZE_MAX - bytes < vector[i].iov_len) {
+            __set_errno(EINVAL);
+            return -1;
+        }
+        bytes += vector[i].iov_len;
     }
 
-  /* Allocate a temporary buffer to hold the data.  It could be done with a
-     stack allocation, but due limitations on some system (Linux with
-     O_DIRECT) it aligns the buffer to pagesize.  A possible optimization
-     would be querying if the syscall would impose any alignment constraint,
-     but 1. it is system specific (not meant in generic implementation), and
-     2. it would make the implementation more complex, and 3. it will require
-     another syscall (fcntl).  */
-  void *buffer = __mmap (NULL, bytes, PROT_READ | PROT_WRITE,
-		         MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-  if (__glibc_unlikely (buffer == MAP_FAILED))
-    return -1;
+    /* Allocate a temporary buffer to hold the data.  It could be done with a
+       stack allocation, but due limitations on some system (Linux with
+       O_DIRECT) it aligns the buffer to pagesize.  A possible optimization
+       would be querying if the syscall would impose any alignment constraint,
+       but 1. it is system specific (not meant in generic implementation), and
+       2. it would make the implementation more complex, and 3. it will require
+       another syscall (fcntl).  */
+    void *buffer = __mmap(NULL, bytes, PROT_READ | PROT_WRITE,
+                          MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    if (__glibc_unlikely(buffer == MAP_FAILED)) {
+        return -1;
+    }
 
-  /* Copy the data from BUFFER into the memory specified by VECTOR.  */
-  char *ptr = buffer;
-  for (int i = 0; i < count; ++i)
-    ptr = __mempcpy ((void *) ptr, (void *) vector[i].iov_base,
-		     vector[i].iov_len);
+    /* Copy the data from BUFFER into the memory specified by VECTOR.  */
+    char *ptr = buffer;
+    for (int i = 0; i < count; ++i)
+        ptr = __mempcpy((void *) ptr, (void *) vector[i].iov_base,
+                        vector[i].iov_len);
 
-  ssize_t ret = PWRITE (fd, buffer, bytes, offset);
+    ssize_t ret = PWRITE(fd, buffer, bytes, offset);
 
-  __munmap (buffer, bytes);
+    __munmap(buffer, bytes);
 
-  return ret;
+    return ret;
 }

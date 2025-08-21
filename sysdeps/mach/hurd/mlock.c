@@ -25,23 +25,24 @@
 /* Guarantee all whole pages mapped by the range [ADDR,ADDR+LEN) to
    be memory resident.  */
 
-int
-mlock (const void *addr, size_t len)
+int mlock(const void *addr, size_t len)
 {
-  mach_port_t host;
-  vm_address_t page;
-  error_t err;
+    mach_port_t host;
+    vm_address_t page;
+    error_t err;
 
-  err = __get_privileged_ports (&host, NULL);
-  if (err)
-    host = __mach_host_self();
+    err = __get_privileged_ports(&host, NULL);
+    if (err) {
+        host = __mach_host_self();
+    }
 
-  page = trunc_page ((vm_address_t) addr);
-  len = round_page ((vm_address_t) addr + len) - page;
+    page = trunc_page((vm_address_t) addr);
+    len = round_page((vm_address_t) addr + len) - page;
 
-  err = __vm_wire (host, __mach_task_self (), page, len, VM_PROT_READ);
-  if (host != __mach_host_self())
-    __mach_port_deallocate (__mach_task_self (), host);
+    err = __vm_wire(host, __mach_task_self(), page, len, VM_PROT_READ);
+    if (host != __mach_host_self()) {
+        __mach_port_deallocate(__mach_task_self(), host);
+    }
 
-  return err ? __hurd_fail (err) : 0;
+    return err ? __hurd_fail(err) : 0;
 }

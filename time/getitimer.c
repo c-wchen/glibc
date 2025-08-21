@@ -21,18 +21,16 @@
 
 /* Set *VALUE to the current setting of timer WHICH.
    Return 0 on success, -1 on errors.  */
-int
-__getitimer (enum __itimer_which which, struct itimerval *value)
+int __getitimer(enum __itimer_which which, struct itimerval *value)
 {
-  if (value == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (value == NULL) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (getitimer)
+stub_warning(getitimer)
 
-weak_alias (__getitimer, getitimer)
+weak_alias(__getitimer, getitimer)

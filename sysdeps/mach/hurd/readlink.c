@@ -24,9 +24,8 @@
 /* Read the contents of the symbolic link FILE_NAME into no more than
    LEN bytes of BUF.  The contents are not null-terminated.
    Returns the number of characters read, or -1 for errors.  */
-ssize_t
-__readlink (const char *file_name, char *buf, size_t len)
+ssize_t __readlink(const char *file_name, char *buf, size_t len)
 {
-  return __readlinkat (AT_FDCWD, file_name, buf, len);
+    return __readlinkat(AT_FDCWD, file_name, buf, len);
 }
-weak_alias (__readlink, readlink)
+weak_alias(__readlink, readlink)

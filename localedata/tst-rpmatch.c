@@ -20,16 +20,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int
-main (int argc, char* argv[])
+int main(int argc, char *argv[])
 {
-  setlocale (LC_ALL, argv[1]);
+    setlocale(LC_ALL, argv[1]);
 
-  if (rpmatch (argv[2]) != atol (argv[3]))
-    {
-      fprintf (stderr,"Failed: Locale %s, String %s, Exp: %s, got %d\n",
-	       argv[1], argv[2], argv[3], rpmatch (argv[2]));
-      exit (EXIT_FAILURE);
+    if (rpmatch(argv[2]) != atol(argv[3])) {
+        fprintf(stderr, "Failed: Locale %s, String %s, Exp: %s, got %d\n",
+                argv[1], argv[2], argv[3], rpmatch(argv[2]));
+        exit(EXIT_FAILURE);
     }
-  return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }

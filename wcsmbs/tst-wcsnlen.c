@@ -19,33 +19,32 @@
 #include <wchar.h>
 
 #define TEST(Str, Max, Exp) \
-  n = wcsnlen (L##Str, Max);						      \
-  if (n != Exp)								      \
-    {									      \
-      result = 1;							      \
+  n = wcsnlen (L##Str, Max);                              \
+  if (n != Exp)                                   \
+    {                                         \
+      result = 1;                                 \
       printf ("wcsnlen (L\"%s\", %d) = %d, not %d\n", Str, Max, n, Exp);      \
     }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int result = 0;
-  int n;
+    int result = 0;
+    int n;
 
-  TEST ("0123456789", 0, 0);
-  TEST ("0123456789", 1, 1);
-  TEST ("0123456789", 2, 2);
-  TEST ("0123456789", 3, 3);
-  TEST ("0123456789", 4, 4);
-  TEST ("0123456789", 5, 5);
-  TEST ("0123456789", 6, 6);
-  TEST ("0123456789", 7, 7);
-  TEST ("0123456789", 8, 8);
-  TEST ("0123456789", 9, 9);
+    TEST("0123456789", 0, 0);
+    TEST("0123456789", 1, 1);
+    TEST("0123456789", 2, 2);
+    TEST("0123456789", 3, 3);
+    TEST("0123456789", 4, 4);
+    TEST("0123456789", 5, 5);
+    TEST("0123456789", 6, 6);
+    TEST("0123456789", 7, 7);
+    TEST("0123456789", 8, 8);
+    TEST("0123456789", 9, 9);
 
-  TEST ("01234", 9, 5);
+    TEST("01234", 9, 5);
 
-  return result;
+    return result;
 }
 
 #include <support/test-driver.c>

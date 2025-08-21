@@ -23,11 +23,10 @@
 /* A PowerPC64 function descriptor.  The .plt (procedure linkage
    table) and .opd (official procedure descriptor) sections are
    arrays of these.  */
-typedef struct
-{
-  Elf64_Addr fd_func;
-  Elf64_Addr fd_toc;
-  Elf64_Addr fd_aux;
+typedef struct {
+    Elf64_Addr fd_func;
+    Elf64_Addr fd_toc;
+    Elf64_Addr fd_aux;
 } Elf64_FuncDesc;
 #endif
 

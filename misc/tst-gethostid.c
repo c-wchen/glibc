@@ -31,78 +31,76 @@
 
 /* Initial test is run outside a chroot, to increase the likelihood of
    success.  */
-static void
-outside_chroot (void *closure)
+static void outside_chroot(void *closure)
 {
-  long id = gethostid ();
-  printf ("info: host ID outside chroot: 0x%lx\n", id);
+    long id = gethostid();
+    printf("info: host ID outside chroot: 0x%lx\n", id);
 }
 
 /* The same, but this time perform a chroot operation.  */
-static void
-in_chroot (void *closure)
+static void in_chroot(void *closure)
 {
-  const char *chroot_path = closure;
-  xchroot (chroot_path);
-  long id = gethostid ();
-  printf ("info: host ID in chroot: 0x%lx\n", id);
+    const char *chroot_path = closure;
+    xchroot(chroot_path);
+    long id = gethostid();
+    printf("info: host ID in chroot: 0x%lx\n", id);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  support_isolate_in_subprocess (outside_chroot, NULL);
+    support_isolate_in_subprocess(outside_chroot, NULL);
 
-  /* Now run the test inside a chroot.  */
-  support_become_root ();
-  if (!support_can_chroot ())
-    /* Cannot perform further tests.  */
+    /* Now run the test inside a chroot.  */
+    support_become_root();
+    if (!support_can_chroot())
+        /* Cannot perform further tests.  */
+    {
+        return 0;
+    }
+
+    /* Only use nss_files.  */
+    __nss_configure_lookup("hosts", "files");
+
+    /* Load the DSO outside of the chroot.  */
+    xdlopen(LIBNSS_FILES_SO, RTLD_LAZY);
+
+    char *chroot_dir = support_create_temp_directory("tst-gethostid-");
+    support_isolate_in_subprocess(in_chroot, chroot_dir);
+
+    /* Tests with /etc/hosts in the chroot.  */
+    {
+        char *path = xasprintf("%s/etc", chroot_dir);
+        add_temp_file(path);
+        xmkdir(path, 0777);
+        free(path);
+        path = xasprintf("%s/etc/hosts", chroot_dir);
+        add_temp_file(path);
+
+        FILE *fp = xfopen(path, "w");
+        xfclose(fp);
+        printf("info: chroot test with an empty /etc/hosts file\n");
+        support_isolate_in_subprocess(in_chroot, chroot_dir);
+
+        char hostname[1024];
+        int ret = gethostname(hostname, sizeof(hostname));
+        if (ret < 0) {
+            printf("warning: invalid result from gethostname: %d\n", ret);
+        } else if (strlen(hostname) == 0) {
+            puts("warning: gethostname returned empty string");
+        } else {
+            printf("info: chroot test with IPv6 address in /etc/hosts for: %s\n",
+                   hostname);
+            fp = xfopen(path, "w");
+            /* Use an IPv6 address to induce another lookup failure.  */
+            fprintf(fp, "2001:db8::1 %s\n", hostname);
+            xfclose(fp);
+            support_isolate_in_subprocess(in_chroot, chroot_dir);
+        }
+        free(path);
+    }
+    free(chroot_dir);
+
     return 0;
-
-  /* Only use nss_files.  */
-  __nss_configure_lookup ("hosts", "files");
-
-  /* Load the DSO outside of the chroot.  */
-  xdlopen (LIBNSS_FILES_SO, RTLD_LAZY);
-
-  char *chroot_dir = support_create_temp_directory ("tst-gethostid-");
-  support_isolate_in_subprocess (in_chroot, chroot_dir);
-
-  /* Tests with /etc/hosts in the chroot.  */
-  {
-    char *path = xasprintf ("%s/etc", chroot_dir);
-    add_temp_file (path);
-    xmkdir (path, 0777);
-    free (path);
-    path = xasprintf ("%s/etc/hosts", chroot_dir);
-    add_temp_file (path);
-
-    FILE *fp = xfopen (path, "w");
-    xfclose (fp);
-    printf ("info: chroot test with an empty /etc/hosts file\n");
-    support_isolate_in_subprocess (in_chroot, chroot_dir);
-
-    char hostname[1024];
-    int ret = gethostname (hostname, sizeof (hostname));
-    if (ret < 0)
-      printf ("warning: invalid result from gethostname: %d\n", ret);
-    else if (strlen (hostname) == 0)
-      puts ("warning: gethostname returned empty string");
-    else
-      {
-        printf ("info: chroot test with IPv6 address in /etc/hosts for: %s\n",
-                hostname);
-        fp = xfopen (path, "w");
-        /* Use an IPv6 address to induce another lookup failure.  */
-        fprintf (fp, "2001:db8::1 %s\n", hostname);
-        xfclose (fp);
-        support_isolate_in_subprocess (in_chroot, chroot_dir);
-      }
-    free (path);
-  }
-  free (chroot_dir);
-
-  return 0;
 }
 
 #include <support/test-driver.c>

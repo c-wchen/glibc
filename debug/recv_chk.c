@@ -19,11 +19,11 @@
 #include <sys/socket.h>
 
 
-ssize_t
-__recv_chk (int fd, void *buf, size_t n, size_t buflen, int flags)
+ssize_t __recv_chk(int fd, void *buf, size_t n, size_t buflen, int flags)
 {
-  if (n > buflen)
-    __chk_fail ();
+    if (n > buflen) {
+        __chk_fail();
+    }
 
-  return __recv (fd, buf, n, flags);
+    return __recv(fd, buf, n, flags);
 }

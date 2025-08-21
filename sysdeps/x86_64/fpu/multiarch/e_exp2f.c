@@ -21,22 +21,22 @@
 # include <libm-alias-float.h>
 # include <libm-alias-finite.h>
 
-extern float __redirect_exp2f (float);
+extern float __redirect_exp2f(float);
 
 # define SYMBOL_NAME exp2f
 # include "ifunc-fma.h"
 
-libc_ifunc_redirected (__redirect_exp2f, __exp2f, IFUNC_SELECTOR ());
+libc_ifunc_redirected(__redirect_exp2f, __exp2f, IFUNC_SELECTOR());
 
 # ifdef SHARED
-versioned_symbol (libm, __ieee754_exp2f, exp2f, GLIBC_2_27);
-libm_alias_float_other (__exp2, exp2)
+versioned_symbol(libm, __ieee754_exp2f, exp2f, GLIBC_2_27);
+libm_alias_float_other(__exp2, exp2)
 # else
-libm_alias_float (__exp2, exp2)
+libm_alias_float(__exp2, exp2)
 # endif
 
-strong_alias (__exp2f, __ieee754_exp2f)
-libm_alias_finite (__exp2f, __exp2f)
+strong_alias(__exp2f, __ieee754_exp2f)
+libm_alias_finite(__exp2f, __exp2f)
 
 # define __exp2f __exp2f_sse2
 #endif

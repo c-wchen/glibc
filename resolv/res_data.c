@@ -37,18 +37,18 @@
 
 /* This function belongs to libresolv, which is why it is not included
    in res-close.c.  */
-void
-__res_close (void)
+void __res_close(void)
 {
-  /* Some programs call res_close before res_init.  Since _res._vcsock
-     isn't explicitly initialized, these means that we could call
-     close (0), which might lead to some security problems.  Therefore
-     we check if res_init was called before by looking at the RES_INIT
-     bit in _res.options.  If it hasn't been set we bail out
-     early.  */
-  if ((_res.options & RES_INIT) == 0)
-    return;
-  /* We don't free the name server addresses because we never did it
-     and it would be done implicitly on shutdown.  */
-  __res_iclose (&_res, false);
+    /* Some programs call res_close before res_init.  Since _res._vcsock
+       isn't explicitly initialized, these means that we could call
+       close (0), which might lead to some security problems.  Therefore
+       we check if res_init was called before by looking at the RES_INIT
+       bit in _res.options.  If it hasn't been set we bail out
+       early.  */
+    if ((_res.options & RES_INIT) == 0) {
+        return;
+    }
+    /* We don't free the name server addresses because we never did it
+       and it would be done implicitly on shutdown.  */
+    __res_iclose(&_res, false);
 }

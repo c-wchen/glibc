@@ -21,9 +21,8 @@
 #include <ldsodefs.h>
 
 
-int
-__profile_frequency (void)
+int __profile_frequency(void)
 {
-  return GLRO(dl_clktck);
+    return GLRO(dl_clktck);
 }
-libc_hidden_def (__profile_frequency)
+libc_hidden_def(__profile_frequency)

@@ -24,19 +24,17 @@
 
 /* Change the access time of FILE relative to FD to TVP[0] and
    the modification time of FILE to TVP[1].  */
-int
-futimesat (int fd, const char *file, const struct timeval tvp[2])
+int futimesat(int fd, const char *file, const struct timeval tvp[2])
 {
-  if (fd < 0
-      && (file == NULL
-          || (fd != AT_FDCWD && file[0] != '/')))
-    {
-      __set_errno (EBADF);
-      return -1;
+    if (fd < 0
+        && (file == NULL
+            || (fd != AT_FDCWD && file[0] != '/'))) {
+        __set_errno(EBADF);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (futimesat)
+stub_warning(futimesat)

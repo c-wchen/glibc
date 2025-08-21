@@ -18,12 +18,11 @@
 #include <signal.h>
 #include <errno.h>
 
-int
-__sigreturn (struct sigcontext *context)
+int __sigreturn(struct sigcontext *context)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (sigreturn)
+stub_warning(sigreturn)
 
-weak_alias (__sigreturn, sigreturn)
+weak_alias(__sigreturn, sigreturn)

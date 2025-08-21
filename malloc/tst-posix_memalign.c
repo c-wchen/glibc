@@ -25,103 +25,111 @@
 
 static int errors = 0;
 
-static void
-merror (const char *msg)
+static void merror(const char *msg)
 {
-  ++errors;
-  printf ("Error: %s\n", msg);
+    ++errors;
+    printf("Error: %s\n", msg);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  void *p;
-  int ret;
-  unsigned long pagesize = getpagesize ();
-  unsigned long ptrval;
+    void *p;
+    int ret;
+    unsigned long pagesize = getpagesize();
+    unsigned long ptrval;
 
-  p = NULL;
+    p = NULL;
 
-  DIAG_PUSH_NEEDS_COMMENT;
+    DIAG_PUSH_NEEDS_COMMENT;
 #if __GNUC_PREREQ (7, 0)
-  /* GCC 7 warns about too-large allocations; here we want to test
-     that they fail.  */
-  DIAG_IGNORE_NEEDS_COMMENT (7, "-Walloc-size-larger-than=");
+    /* GCC 7 warns about too-large allocations; here we want to test
+       that they fail.  */
+    DIAG_IGNORE_NEEDS_COMMENT(7, "-Walloc-size-larger-than=");
 #endif
-  /* An attempt to allocate a huge value should return ENOMEM and
-     p should remain NULL.  */
-  ret = posix_memalign (&p, sizeof (void *), -1);
+    /* An attempt to allocate a huge value should return ENOMEM and
+       p should remain NULL.  */
+    ret = posix_memalign(&p, sizeof(void *), -1);
 #if __GNUC_PREREQ (7, 0)
-  DIAG_POP_NEEDS_COMMENT;
+    DIAG_POP_NEEDS_COMMENT;
 #endif
 
-  if (ret != ENOMEM)
-    merror ("posix_memalign (&p, sizeof (void *), -1) succeeded.");
+    if (ret != ENOMEM) {
+        merror("posix_memalign (&p, sizeof (void *), -1) succeeded.");
+    }
 
-  if (ret == ENOMEM && p != NULL)
-    merror ("returned an error but pointer was modified");
+    if (ret == ENOMEM && p != NULL) {
+        merror("returned an error but pointer was modified");
+    }
 
-  free (p);
+    free(p);
 
-  p = NULL;
+    p = NULL;
 
-  /* Test to expose integer overflow in malloc internals from BZ #15857.  */
-  ret = posix_memalign (&p, pagesize, -pagesize);
+    /* Test to expose integer overflow in malloc internals from BZ #15857.  */
+    ret = posix_memalign(&p, pagesize, -pagesize);
 
-  if (ret != ENOMEM)
-    merror ("posix_memalign (&p, pagesize, -pagesize) succeeded.");
+    if (ret != ENOMEM) {
+        merror("posix_memalign (&p, pagesize, -pagesize) succeeded.");
+    }
 
-  free (p);
+    free(p);
 
-  p = NULL;
+    p = NULL;
 
-  /* Test to expose integer overflow in malloc internals from BZ #16038.  */
-  ret = posix_memalign (&p, -1, pagesize);
+    /* Test to expose integer overflow in malloc internals from BZ #16038.  */
+    ret = posix_memalign(&p, -1, pagesize);
 
-  if (ret != EINVAL)
-    merror ("posix_memalign (&p, -1, pagesize) succeeded.");
+    if (ret != EINVAL) {
+        merror("posix_memalign (&p, -1, pagesize) succeeded.");
+    }
 
-  free (p);
+    free(p);
 
-  p = NULL;
+    p = NULL;
 
-  /* A zero-sized allocation should succeed with glibc, returning zero
-     and setting p to a non-NULL value.  */
-  ret = posix_memalign (&p, sizeof (void *), 0);
+    /* A zero-sized allocation should succeed with glibc, returning zero
+       and setting p to a non-NULL value.  */
+    ret = posix_memalign(&p, sizeof(void *), 0);
 
-  if (ret != 0 || p == NULL)
-    merror ("posix_memalign (&p, sizeof (void *), 0) failed.");
+    if (ret != 0 || p == NULL) {
+        merror("posix_memalign (&p, sizeof (void *), 0) failed.");
+    }
 
-  free (p);
+    free(p);
 
-  ret = posix_memalign (&p, 0x300, 10);
+    ret = posix_memalign(&p, 0x300, 10);
 
-  if (ret != EINVAL)
-    merror ("posix_memalign (&p, 0x300, 10) succeeded.");
+    if (ret != EINVAL) {
+        merror("posix_memalign (&p, 0x300, 10) succeeded.");
+    }
 
-  ret = posix_memalign (&p, 0, 10);
+    ret = posix_memalign(&p, 0, 10);
 
-  if (ret != EINVAL)
-    merror ("posix_memalign (&p, 0, 10) succeeded.");
+    if (ret != EINVAL) {
+        merror("posix_memalign (&p, 0, 10) succeeded.");
+    }
 
-  p = NULL;
+    p = NULL;
 
-  ret = posix_memalign (&p, 0x100, 10);
+    ret = posix_memalign(&p, 0x100, 10);
 
-  if (ret != 0)
-    merror ("posix_memalign (&p, 0x100, 10) failed.");
+    if (ret != 0) {
+        merror("posix_memalign (&p, 0x100, 10) failed.");
+    }
 
-  if (ret == 0 && p == NULL)
-    merror ("returned success but pointer is NULL");
+    if (ret == 0 && p == NULL) {
+        merror("returned success but pointer is NULL");
+    }
 
-  ptrval = (unsigned long) p;
+    ptrval = (unsigned long) p;
 
-  if (ret == 0 && (ptrval & 0xff) != 0)
-    merror ("pointer is not aligned to 0x100");
+    if (ret == 0 && (ptrval & 0xff) != 0) {
+        merror("pointer is not aligned to 0x100");
+    }
 
-  free (p);
+    free(p);
 
-  return errors != 0;
+    return errors != 0;
 }
 
 #define TEST_FUNCTION do_test ()

@@ -18,16 +18,16 @@
 #include <stdlib.h>
 #include <stringtable.h>
 
-void
-stringtable_free (struct stringtable *table)
+void stringtable_free(struct stringtable *table)
 {
-  for (uint32_t i = 0; i < table->allocated; ++i)
-    for (struct stringtable_entry *e = table->entries[i]; e != NULL; )
-      {
-        struct stringtable_entry *next = e->next;
-        free (e);
-        e = next;
-      }
-  free (table->entries);
-  *table = (struct stringtable) { 0, };
+    for (uint32_t i = 0; i < table->allocated; ++i)
+        for (struct stringtable_entry *e = table->entries[i]; e != NULL;) {
+            struct stringtable_entry *next = e->next;
+            free(e);
+            e = next;
+        }
+    free(table->entries);
+    *table = (struct stringtable) {
+        0,
+    };
 }

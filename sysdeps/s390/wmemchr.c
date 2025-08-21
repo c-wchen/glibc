@@ -27,17 +27,17 @@
 # include <ifunc-resolve.h>
 
 # if HAVE_WMEMCHR_C
-extern __typeof (__redirect___wmemchr) WMEMCHR_C attribute_hidden;
+extern __typeof(__redirect___wmemchr) WMEMCHR_C attribute_hidden;
 # endif
 
 # if HAVE_WMEMCHR_Z13
-extern __typeof (__redirect___wmemchr) WMEMCHR_Z13 attribute_hidden;
+extern __typeof(__redirect___wmemchr) WMEMCHR_Z13 attribute_hidden;
 # endif
 
-s390_libc_ifunc_expr (__redirect___wmemchr, __wmemchr,
-		      (HAVE_WMEMCHR_Z13 && (hwcap & HWCAP_S390_VX))
-		      ? WMEMCHR_Z13
-		      : WMEMCHR_DEFAULT
-		      )
-weak_alias (__wmemchr, wmemchr)
+s390_libc_ifunc_expr(__redirect___wmemchr, __wmemchr,
+                     (HAVE_WMEMCHR_Z13 &&(hwcap &HWCAP_S390_VX))
+                     ? WMEMCHR_Z13
+                     : WMEMCHR_DEFAULT
+                    )
+weak_alias(__wmemchr, wmemchr)
 #endif

@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _FPU_CONTROL_H
-#define _FPU_CONTROL_H	1
+#define _FPU_CONTROL_H  1
 
 
 #include <features.h>
@@ -62,7 +62,7 @@ typedef unsigned long int fpu_control_t;
 # define _FPU_SETCW(cw) __asm__ __volatile__ ("ldx %0,%%fsr" : : "m" (*&cw))
 #else
 # ifdef __leon__
-   /* Prevent stfsr from being placed directly after other fp instruction.  */
+/* Prevent stfsr from being placed directly after other fp instruction.  */
 #  define _FPU_GETCW(cw) __asm__ __volatile__ ("nop; st %%fsr,%0" : "=m" (*&cw))
 # else
 #  define _FPU_GETCW(cw) __asm__ __volatile__ ("st %%fsr,%0" : "=m" (*&cw))
@@ -73,4 +73,4 @@ typedef unsigned long int fpu_control_t;
 /* Default control word set at startup.  */
 extern fpu_control_t __fpu_control;
 
-#endif	/* fpu_control.h */
+#endif  /* fpu_control.h */

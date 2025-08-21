@@ -26,144 +26,126 @@
 
 #include <support/temp_file.h>
 
-static int
-do_seek_end (FILE *fp)
+static int do_seek_end(FILE *fp)
 {
-  long save;
+    long save;
 
-  if (fputws (L"abc\n", fp) == -1)
-    {
-      printf ("do_seek_end: fputws: %s\n", strerror (errno));
-      return 1;
+    if (fputws(L"abc\n", fp) == -1) {
+        printf("do_seek_end: fputws: %s\n", strerror(errno));
+        return 1;
     }
 
-  save = ftell (fp);
-  rewind (fp);
+    save = ftell(fp);
+    rewind(fp);
 
-  if (fseek (fp, 0, SEEK_END) == -1)
-    {
-      printf ("do_seek_end: fseek: %s\n", strerror (errno));
-      return 1;
+    if (fseek(fp, 0, SEEK_END) == -1) {
+        printf("do_seek_end: fseek: %s\n", strerror(errno));
+        return 1;
     }
 
-  if (save != ftell (fp))
-    {
-      printf ("save = %ld, ftell = %ld\n", save, ftell (fp));
-      return 1;
+    if (save != ftell(fp)) {
+        printf("save = %ld, ftell = %ld\n", save, ftell(fp));
+        return 1;
     }
 
-  return 0;
+    return 0;
 }
 
-int
-do_seek_set (FILE *fp)
+int do_seek_set(FILE *fp)
 {
-  long save1, save2;
+    long save1, save2;
 
-  if (fputws (L"ゅう\n", fp) == -1)
-    {
-      printf ("seek_set: fputws(1): %s\n", strerror (errno));
-      return 1;
+    if (fputws(L"ゅう\n", fp) == -1) {
+        printf("seek_set: fputws(1): %s\n", strerror(errno));
+        return 1;
     }
 
-  save1 = ftell (fp);
+    save1 = ftell(fp);
 
-  if (fputws (L"ゅう\n", fp) == -1)
-    {
-      printf ("seek_set: fputws(2): %s\n", strerror (errno));
-      return 1;
+    if (fputws(L"ゅう\n", fp) == -1) {
+        printf("seek_set: fputws(2): %s\n", strerror(errno));
+        return 1;
     }
 
-  save2 = ftell (fp);
+    save2 = ftell(fp);
 
-  if (fputws (L"ゅう\n", fp) == -1)
-    {
-      printf ("seek_set: fputws(3): %s\n", strerror (errno));
-      return 1;
+    if (fputws(L"ゅう\n", fp) == -1) {
+        printf("seek_set: fputws(3): %s\n", strerror(errno));
+        return 1;
     }
 
-  if (fseek (fp, save1, SEEK_SET) == -1)
-    {
-      printf ("seek_set: fseek(1): %s\n", strerror (errno));
-      return 1;
+    if (fseek(fp, save1, SEEK_SET) == -1) {
+        printf("seek_set: fseek(1): %s\n", strerror(errno));
+        return 1;
     }
 
-  if (save1 != ftell (fp))
-    {
-      printf ("save1 = %ld, ftell = %ld\n", save1, ftell (fp));
-      return 1;
+    if (save1 != ftell(fp)) {
+        printf("save1 = %ld, ftell = %ld\n", save1, ftell(fp));
+        return 1;
     }
 
-  if (fseek (fp, save2, SEEK_SET) == -1)
-    {
-      printf ("seek_set: fseek(2): %s\n", strerror (errno));
-      return 1;
+    if (fseek(fp, save2, SEEK_SET) == -1) {
+        printf("seek_set: fseek(2): %s\n", strerror(errno));
+        return 1;
     }
 
-  if (save2 != ftell (fp))
-    {
-      printf ("save2 = %ld, ftell = %ld\n", save2, ftell (fp));
-      return 1;
+    if (save2 != ftell(fp)) {
+        printf("save2 = %ld, ftell = %ld\n", save2, ftell(fp));
+        return 1;
     }
 
-  return 0;
+    return 0;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  if (setlocale (LC_ALL, "ja_JP.UTF-8") == NULL)
-    {
-      printf ("Cannot set ja_JP.UTF-8 locale.\n");
-      exit (1);
+    if (setlocale(LC_ALL, "ja_JP.UTF-8") == NULL) {
+        printf("Cannot set ja_JP.UTF-8 locale.\n");
+        exit(1);
     }
 
-  /* Retain messages in English.  */
-  if (setlocale (LC_MESSAGES, "en_US.ISO-8859-1") == NULL)
-    {
-      printf ("Cannot set LC_MESSAGES to en_US.ISO-8859-1 locale.\n");
-      exit (1);
+    /* Retain messages in English.  */
+    if (setlocale(LC_MESSAGES, "en_US.ISO-8859-1") == NULL) {
+        printf("Cannot set LC_MESSAGES to en_US.ISO-8859-1 locale.\n");
+        exit(1);
     }
 
-  int ret = 0;
-  char *filename;
-  int fd = create_temp_file ("tst-fseek.out", &filename);
+    int ret = 0;
+    char *filename;
+    int fd = create_temp_file("tst-fseek.out", &filename);
 
-  if (fd == -1)
-    return 1;
-
-  FILE *fp = fdopen (fd, "w+");
-  if (fp == NULL)
-    {
-      printf ("seek_set: fopen: %s\n", strerror (errno));
-      close (fd);
-      return 1;
+    if (fd == -1) {
+        return 1;
     }
 
-  if (do_seek_set (fp))
-    {
-      printf ("SEEK_SET test failed\n");
-      ret = 1;
+    FILE *fp = fdopen(fd, "w+");
+    if (fp == NULL) {
+        printf("seek_set: fopen: %s\n", strerror(errno));
+        close(fd);
+        return 1;
     }
 
-  /* Reopen the file.  */
-  fclose (fp);
-  fp = fopen (filename, "w+");
-  if (fp == NULL)
-    {
-      printf ("seek_end: fopen: %s\n", strerror (errno));
-      return 1;
+    if (do_seek_set(fp)) {
+        printf("SEEK_SET test failed\n");
+        ret = 1;
     }
 
-  if (do_seek_end (fp))
-    {
-      printf ("SEEK_END test failed\n");
-      ret = 1;
+    /* Reopen the file.  */
+    fclose(fp);
+    fp = fopen(filename, "w+");
+    if (fp == NULL) {
+        printf("seek_end: fopen: %s\n", strerror(errno));
+        return 1;
     }
 
-  fclose (fp);
+    if (do_seek_end(fp)) {
+        printf("SEEK_END test failed\n");
+        ret = 1;
+    }
 
-  return ret;
+    fclose(fp);
+
+    return ret;
 }
 
 #include <support/test-driver.c>

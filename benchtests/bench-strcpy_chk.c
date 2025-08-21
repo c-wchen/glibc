@@ -25,13 +25,13 @@
 /* This test case implicitly tests the availability of the __chk_fail
    symbol, which is part of the public ABI and may be used
    externally. */
-extern void __attribute__ ((noreturn)) __chk_fail (void);
-extern char *normal_strcpy (char *, const char *, size_t)
-  __asm ("strcpy");
-extern char *__strcpy_chk (char *, const char *, size_t);
+extern void __attribute__((noreturn)) __chk_fail(void);
+extern char *normal_strcpy(char *, const char *, size_t)
+__asm("strcpy");
+extern char *__strcpy_chk(char *, const char *, size_t);
 
-IMPL (normal_strcpy, 1)
-IMPL (__strcpy_chk, 2)
+IMPL(normal_strcpy, 1)
+IMPL(__strcpy_chk, 2)
 
 #endif
 
@@ -45,187 +45,174 @@ IMPL (__strcpy_chk, 2)
 volatile int chk_fail_ok;
 jmp_buf chk_fail_buf;
 
-static void
-handler (int sig)
+static void handler(int sig)
 {
-  if (chk_fail_ok)
-    {
-      chk_fail_ok = 0;
-      longjmp (chk_fail_buf, 1);
+    if (chk_fail_ok) {
+        chk_fail_ok = 0;
+        longjmp(chk_fail_buf, 1);
+    } else {
+        _exit(127);
     }
-  else
-    _exit (127);
 }
 
-typedef char *(*proto_t) (char *, const char *, size_t);
+typedef char *(*proto_t)(char *, const char *, size_t);
 
-static void
-do_one_test (impl_t *impl, char *dst, const char *src,
-	     size_t len, size_t dlen)
+static void do_one_test(impl_t *impl, char *dst, const char *src,
+                        size_t len, size_t dlen)
 {
-  char *res;
-  size_t i, iters = INNER_LOOP_ITERS_LARGE;
-  timing_t start, stop, cur;
+    char *res;
+    size_t i, iters = INNER_LOOP_ITERS_LARGE;
+    timing_t start, stop, cur;
 
-  if (dlen <= len)
-    {
-      if (impl->test == 1)
-	return;
+    if (dlen <= len) {
+        if (impl->test == 1) {
+            return;
+        }
 
-      chk_fail_ok = 1;
-      if (setjmp (chk_fail_buf) == 0)
-	{
-	  res = CALL (impl, dst, src, dlen);
-	  printf ("*** Function %s (%zd; %zd) did not __chk_fail\n",
-		  impl->name, len, dlen);
-	  chk_fail_ok = 0;
-	  ret = 1;
-	}
-      return;
-    }
-  else
-    res = CALL (impl, dst, src, dlen);
-
-  if (res != STRCPY_RESULT (dst, len))
-    {
-      printf ("Wrong result in function %s %p %p\n", impl->name,
-	      res, STRCPY_RESULT (dst, len));
-      ret = 1;
-      return;
+        chk_fail_ok = 1;
+        if (setjmp(chk_fail_buf) == 0) {
+            res = CALL(impl, dst, src, dlen);
+            printf("*** Function %s (%zd; %zd) did not __chk_fail\n",
+                   impl->name, len, dlen);
+            chk_fail_ok = 0;
+            ret = 1;
+        }
+        return;
+    } else {
+        res = CALL(impl, dst, src, dlen);
     }
 
-  if (strcmp (dst, src) != 0)
-    {
-      printf ("Wrong result in function %s dst \"%s\" src \"%s\"\n",
-	      impl->name, dst, src);
-      ret = 1;
-      return;
+    if (res != STRCPY_RESULT(dst, len)) {
+        printf("Wrong result in function %s %p %p\n", impl->name,
+               res, STRCPY_RESULT(dst, len));
+        ret = 1;
+        return;
     }
 
-  TIMING_NOW (start);
-  for (i = 0; i < iters; ++i)
-    {
-      CALL (impl, dst, src, dlen);
+    if (strcmp(dst, src) != 0) {
+        printf("Wrong result in function %s dst \"%s\" src \"%s\"\n",
+               impl->name, dst, src);
+        ret = 1;
+        return;
     }
-  TIMING_NOW (stop);
 
-  TIMING_DIFF (cur, start, stop);
+    TIMING_NOW(start);
+    for (i = 0; i < iters; ++i) {
+        CALL(impl, dst, src, dlen);
+    }
+    TIMING_NOW(stop);
 
-  TIMING_PRINT_MEAN ((double) cur, (double) iters);
+    TIMING_DIFF(cur, start, stop);
+
+    TIMING_PRINT_MEAN((double) cur, (double) iters);
 }
 
-static void
-do_test (size_t align1, size_t align2, size_t len, size_t dlen, int max_char)
+static void do_test(size_t align1, size_t align2, size_t len, size_t dlen, int max_char)
 {
-  size_t i;
-  char *s1, *s2;
+    size_t i;
+    char *s1, *s2;
 
-  align1 &= 7;
-  if (align1 + len >= page_size)
-    return;
+    align1 &= 7;
+    if (align1 + len >= page_size) {
+        return;
+    }
 
-  align2 &= 7;
-  if (align2 + len >= page_size)
-    return;
+    align2 &= 7;
+    if (align2 + len >= page_size) {
+        return;
+    }
 
-  s1 = (char *) buf1 + align1;
-  s2 = (char *) buf2 + align2;
+    s1 = (char *) buf1 + align1;
+    s2 = (char *) buf2 + align2;
 
-  for (i = 0; i < len; i++)
-    s1[i] = 32 + 23 * i % (max_char - 32);
-  s1[len] = 0;
+    for (i = 0; i < len; i++) {
+        s1[i] = 32 + 23 * i % (max_char - 32);
+    }
+    s1[len] = 0;
 
-  if (dlen > len)
-    printf ("Length %4zd, alignment %2zd/%2zd:", len, align1, align2);
+    if (dlen > len) {
+        printf("Length %4zd, alignment %2zd/%2zd:", len, align1, align2);
+    }
 
-  FOR_EACH_IMPL (impl, 0)
-    do_one_test (impl, s2, s1, len, dlen);
+    FOR_EACH_IMPL(impl, 0)
+    do_one_test(impl, s2, s1, len, dlen);
 
-  if (dlen > len)
-    putchar ('\n');
+    if (dlen > len) {
+        putchar('\n');
+    }
 }
 
-static int
-test_main (void)
+static int test_main(void)
 {
-  size_t i;
+    size_t i;
 
-  set_fortify_handler (handler);
+    set_fortify_handler(handler);
 
-  test_init ();
+    test_init();
 
-  printf ("%23s", "");
-  FOR_EACH_IMPL (impl, 0)
-    printf ("\t%s", impl->name);
-  putchar ('\n');
+    printf("%23s", "");
+    FOR_EACH_IMPL(impl, 0)
+    printf("\t%s", impl->name);
+    putchar('\n');
 
-  for (i = 0; i < 16; ++i)
-    {
-      do_test (0, 0, i, i + 1, 127);
-      do_test (0, 0, i, i + 1, 255);
-      do_test (0, i, i, i + 1, 127);
-      do_test (i, 0, i, i + 1, 255);
+    for (i = 0; i < 16; ++i) {
+        do_test(0, 0, i, i + 1, 127);
+        do_test(0, 0, i, i + 1, 255);
+        do_test(0, i, i, i + 1, 127);
+        do_test(i, 0, i, i + 1, 255);
     }
 
-  for (i = 1; i < 8; ++i)
-    {
-      do_test (0, 0, 8 << i, (8 << i) + 1, 127);
-      do_test (8 - i, 2 * i, (8 << i), (8 << i) + 1, 127);
+    for (i = 1; i < 8; ++i) {
+        do_test(0, 0, 8 << i, (8 << i) + 1, 127);
+        do_test(8 - i, 2 * i, (8 << i), (8 << i) + 1, 127);
     }
 
-  for (i = 1; i < 8; ++i)
-    {
-      do_test (i, 2 * i, (8 << i), (8 << i) + 1, 127);
-      do_test (2 * i, i, (8 << i), (8 << i) + 1, 255);
-      do_test (i, i, (8 << i), (8 << i) + 1, 127);
-      do_test (i, i, (8 << i), (8 << i) + 1, 255);
+    for (i = 1; i < 8; ++i) {
+        do_test(i, 2 * i, (8 << i), (8 << i) + 1, 127);
+        do_test(2 * i, i, (8 << i), (8 << i) + 1, 255);
+        do_test(i, i, (8 << i), (8 << i) + 1, 127);
+        do_test(i, i, (8 << i), (8 << i) + 1, 255);
     }
 
-  for (i = 0; i < 16; ++i)
-    {
-      do_test (0, 0, i, i + 256, 127);
-      do_test (0, 0, i, i + 256, 255);
-      do_test (0, i, i, i + 256, 127);
-      do_test (i, 0, i, i + 256, 255);
+    for (i = 0; i < 16; ++i) {
+        do_test(0, 0, i, i + 256, 127);
+        do_test(0, 0, i, i + 256, 255);
+        do_test(0, i, i, i + 256, 127);
+        do_test(i, 0, i, i + 256, 255);
     }
 
-  for (i = 1; i < 8; ++i)
-    {
-      do_test (0, 0, 8 << i, (8 << i) + 256, 127);
-      do_test (8 - i, 2 * i, (8 << i), (8 << i) + 256, 127);
+    for (i = 1; i < 8; ++i) {
+        do_test(0, 0, 8 << i, (8 << i) + 256, 127);
+        do_test(8 - i, 2 * i, (8 << i), (8 << i) + 256, 127);
     }
 
-  for (i = 1; i < 8; ++i)
-    {
-      do_test (i, 2 * i, (8 << i), (8 << i) + 256, 127);
-      do_test (2 * i, i, (8 << i), (8 << i) + 256, 255);
-      do_test (i, i, (8 << i), (8 << i) + 256, 127);
-      do_test (i, i, (8 << i), (8 << i) + 256, 255);
+    for (i = 1; i < 8; ++i) {
+        do_test(i, 2 * i, (8 << i), (8 << i) + 256, 127);
+        do_test(2 * i, i, (8 << i), (8 << i) + 256, 255);
+        do_test(i, i, (8 << i), (8 << i) + 256, 127);
+        do_test(i, i, (8 << i), (8 << i) + 256, 255);
     }
 
-  for (i = 0; i < 16; ++i)
-    {
-      do_test (0, 0, i, i, 127);
-      do_test (0, 0, i, i + 2, 255);
-      do_test (0, i, i, i + 3, 127);
-      do_test (i, 0, i, i + 4, 255);
+    for (i = 0; i < 16; ++i) {
+        do_test(0, 0, i, i, 127);
+        do_test(0, 0, i, i + 2, 255);
+        do_test(0, i, i, i + 3, 127);
+        do_test(i, 0, i, i + 4, 255);
     }
 
-  for (i = 1; i < 8; ++i)
-    {
-      do_test (0, 0, 8 << i, (8 << i) - 15, 127);
-      do_test (8 - i, 2 * i, (8 << i), (8 << i) + 5, 127);
+    for (i = 1; i < 8; ++i) {
+        do_test(0, 0, 8 << i, (8 << i) - 15, 127);
+        do_test(8 - i, 2 * i, (8 << i), (8 << i) + 5, 127);
     }
 
-  for (i = 1; i < 8; ++i)
-    {
-      do_test (i, 2 * i, (8 << i), (8 << i) + i, 127);
-      do_test (2 * i, i, (8 << i), (8 << i) + (i - 1), 255);
-      do_test (i, i, (8 << i), (8 << i) + i + 2, 127);
-      do_test (i, i, (8 << i), (8 << i) + i + 3, 255);
+    for (i = 1; i < 8; ++i) {
+        do_test(i, 2 * i, (8 << i), (8 << i) + i, 127);
+        do_test(2 * i, i, (8 << i), (8 << i) + (i - 1), 255);
+        do_test(i, i, (8 << i), (8 << i) + i + 2, 127);
+        do_test(i, i, (8 << i), (8 << i) + i + 3, 255);
     }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

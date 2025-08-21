@@ -29,12 +29,12 @@ __BEGIN_DECLS
    returned buffer.  For NULL pointers or failure status arguments,
    error variables such as h_errno and errno are included in the
    result.  */
-char *support_format_address_family (int);
-char *support_format_addrinfo (struct addrinfo *, int ret);
-char *support_format_dns_packet (const unsigned char *buffer, size_t length);
-char *support_format_herrno (int);
-char *support_format_hostent (struct hostent *);
-char *support_format_netent (struct netent *);
+char *support_format_address_family(int);
+char *support_format_addrinfo(struct addrinfo *, int ret);
+char *support_format_dns_packet(const unsigned char *buffer, size_t length);
+char *support_format_herrno(int);
+char *support_format_hostent(struct hostent *);
+char *support_format_netent(struct netent *);
 
 __END_DECLS
 

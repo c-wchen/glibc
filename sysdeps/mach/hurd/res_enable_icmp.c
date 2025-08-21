@@ -20,8 +20,7 @@
 
 #include <resolv.h>
 
-int
-__res_enable_icmp (int family, int fd)
+int __res_enable_icmp(int family, int fd)
 {
-  return 0;
+    return 0;
 }

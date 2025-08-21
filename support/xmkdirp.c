@@ -27,40 +27,40 @@
 /* Equivalent of "mkdir -p".  Any failures cause FAIL_EXIT1 so no
    return code is needed.  */
 
-void
-xmkdirp (const char *path, mode_t mode)
+void xmkdirp(const char *path, mode_t mode)
 {
-  struct stat s;
-  const char *slash_p;
-  int rv;
+    struct stat s;
+    const char *slash_p;
+    int rv;
 
-  if (path[0] == 0)
+    if (path[0] == 0) {
+        return;
+    }
+
+    if (stat(path, &s) == 0) {
+        if (S_ISDIR(s.st_mode)) {
+            return;
+        }
+        errno = EEXIST;
+        FAIL_EXIT1("mkdir_p (\"%s\", 0%o): %m", path, mode);
+    }
+
+    slash_p = strrchr(path, '/');
+    if (slash_p != NULL) {
+        while (slash_p > path && slash_p[-1] == '/') {
+            --slash_p;
+        }
+        if (slash_p > path) {
+            char *parent = xstrndup(path, slash_p - path);
+            xmkdirp(parent, mode);
+            free(parent);
+        }
+    }
+
+    rv = mkdir(path, mode);
+    if (rv != 0) {
+        FAIL_EXIT1("mkdir_p (\"%s\", 0%o): %m", path, mode);
+    }
+
     return;
-
-  if (stat (path, &s) == 0)
-    {
-      if (S_ISDIR (s.st_mode))
-	return;
-      errno = EEXIST;
-      FAIL_EXIT1 ("mkdir_p (\"%s\", 0%o): %m", path, mode);
-    }
-
-  slash_p = strrchr (path, '/');
-  if (slash_p != NULL)
-    {
-      while (slash_p > path && slash_p[-1] == '/')
-	--slash_p;
-      if (slash_p > path)
-	{
-	  char *parent = xstrndup (path, slash_p - path);
-	  xmkdirp (parent, mode);
-	  free (parent);
-	}
-    }
-
-  rv = mkdir (path, mode);
-  if (rv != 0)
-    FAIL_EXIT1 ("mkdir_p (\"%s\", 0%o): %m", path, mode);
-
-  return;
 }

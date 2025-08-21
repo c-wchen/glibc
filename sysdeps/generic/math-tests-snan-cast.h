@@ -21,6 +21,6 @@
 
 /* Indicate whether to run tests involving type casts of sNaN values.
    These are run unless overridden.  */
-#define SNAN_TESTS_TYPE_CAST	1
+#define SNAN_TESTS_TYPE_CAST    1
 
 #endif /* math-tests-snan-cast.h.  */

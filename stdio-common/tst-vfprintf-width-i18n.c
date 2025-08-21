@@ -25,79 +25,78 @@
 #include <support/check.h>
 #include <libc-diag.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char buf[40];
+    char buf[40];
 
-  xsetlocale (LC_ALL, "hi_IN.UTF-8");
+    xsetlocale(LC_ALL, "hi_IN.UTF-8");
 
-  /* Ungrouped, not translated.  */
-  TEST_COMPARE (sprintf (buf, "%7d", 12345), 7);
-  TEST_COMPARE_STRING (buf, "  12345");
-  TEST_COMPARE (sprintf (buf, "%10.2f", 12345.67), 10);
-  TEST_COMPARE_STRING (buf, "  12345.67");
-  TEST_COMPARE (strfmon (buf, sizeof (buf), "%^13i", 12345.67), 13);
-  TEST_COMPARE_STRING (buf, "  INR12345.67");
+    /* Ungrouped, not translated.  */
+    TEST_COMPARE(sprintf(buf, "%7d", 12345), 7);
+    TEST_COMPARE_STRING(buf, "  12345");
+    TEST_COMPARE(sprintf(buf, "%10.2f", 12345.67), 10);
+    TEST_COMPARE_STRING(buf, "  12345.67");
+    TEST_COMPARE(strfmon(buf, sizeof(buf), "%^13i", 12345.67), 13);
+    TEST_COMPARE_STRING(buf, "  INR12345.67");
 
-  /* Grouped.  */
-  TEST_COMPARE (sprintf (buf, "%'8d", 12345), 8);
-  TEST_COMPARE_STRING (buf, "  12,345");
-  TEST_COMPARE (sprintf (buf, "%'11.2f", 12345.67), 11);
-  TEST_COMPARE_STRING (buf, "  12,345.67");
-  TEST_COMPARE (strfmon (buf, sizeof (buf), "%13i", 12345.67), 13);
-  TEST_COMPARE_STRING (buf, " INR12,345.67");
+    /* Grouped.  */
+    TEST_COMPARE(sprintf(buf, "%'8d", 12345), 8);
+    TEST_COMPARE_STRING(buf, "  12,345");
+    TEST_COMPARE(sprintf(buf, "%'11.2f", 12345.67), 11);
+    TEST_COMPARE_STRING(buf, "  12,345.67");
+    TEST_COMPARE(strfmon(buf, sizeof(buf), "%13i", 12345.67), 13);
+    TEST_COMPARE_STRING(buf, " INR12,345.67");
 
-  /* Translated.  */
-  /* clang does not know about the GNU extension 'I'.  */
-  DIAG_PUSH_NEEDS_COMMENT_CLANG;
-  DIAG_IGNORE_NEEDS_COMMENT_CLANG (14, "-Wformat-invalid-specifier");
-  TEST_COMPARE (sprintf (buf, "%I16d", 12345), 16);
-  TEST_COMPARE_STRING (buf, " १२३४५");
-  TEST_COMPARE (sprintf (buf, "%I12.2f", 12345.67), 26);
-  TEST_COMPARE_STRING (buf, "    १२३४५.६७");
+    /* Translated.  */
+    /* clang does not know about the GNU extension 'I'.  */
+    DIAG_PUSH_NEEDS_COMMENT_CLANG;
+    DIAG_IGNORE_NEEDS_COMMENT_CLANG(14, "-Wformat-invalid-specifier");
+    TEST_COMPARE(sprintf(buf, "%I16d", 12345), 16);
+    TEST_COMPARE_STRING(buf, " १२३४५");
+    TEST_COMPARE(sprintf(buf, "%I12.2f", 12345.67), 26);
+    TEST_COMPARE_STRING(buf, "    १२३४५.६७");
 
-  /* Translated and grouped.  */
-  TEST_COMPARE (sprintf (buf, "%'I17d", 12345), 17);
-  TEST_COMPARE_STRING (buf, " १२,३४५");
-  TEST_COMPARE (sprintf (buf, "%'I12.2f", 12345.67), 26);
-  TEST_COMPARE_STRING (buf, "   १२,३४५.६७");
-  DIAG_POP_NEEDS_COMMENT_CLANG;
+    /* Translated and grouped.  */
+    TEST_COMPARE(sprintf(buf, "%'I17d", 12345), 17);
+    TEST_COMPARE_STRING(buf, " १२,३४५");
+    TEST_COMPARE(sprintf(buf, "%'I12.2f", 12345.67), 26);
+    TEST_COMPARE_STRING(buf, "   १२,३४५.६७");
+    DIAG_POP_NEEDS_COMMENT_CLANG;
 
-  xsetlocale (LC_ALL, "ps_AF.UTF-8");
+    xsetlocale(LC_ALL, "ps_AF.UTF-8");
 
-  /* Ungrouped, not translated.  */
-  TEST_COMPARE (sprintf (buf, "%7d", 12345), 7);
-  TEST_COMPARE_STRING (buf, "  12345");
-  TEST_COMPARE (sprintf (buf, "%10.2f", 12345.67), 11);
-  TEST_COMPARE_STRING (buf, "  12345٫67");
-  TEST_COMPARE (strfmon (buf, sizeof (buf), "%^13i", 12345.67), 13);
-  TEST_COMPARE_STRING (buf, "    12346 AFN");
+    /* Ungrouped, not translated.  */
+    TEST_COMPARE(sprintf(buf, "%7d", 12345), 7);
+    TEST_COMPARE_STRING(buf, "  12345");
+    TEST_COMPARE(sprintf(buf, "%10.2f", 12345.67), 11);
+    TEST_COMPARE_STRING(buf, "  12345٫67");
+    TEST_COMPARE(strfmon(buf, sizeof(buf), "%^13i", 12345.67), 13);
+    TEST_COMPARE_STRING(buf, "    12346 AFN");
 
-  /* Grouped.  */
-  TEST_COMPARE (sprintf (buf, "%'8d", 12345), 8);
-  TEST_COMPARE_STRING (buf, " 12٬345");
-  TEST_COMPARE (sprintf (buf, "%'11.2f", 12345.67), 13);
-  TEST_COMPARE_STRING (buf, "  12٬345٫67"); /* Counts characters.  */
-  TEST_COMPARE (strfmon (buf, sizeof (buf), "%13i", 12345.67), 13);
-  TEST_COMPARE_STRING (buf, "  12٬346 AFN"); /* Counts bytes.   */
+    /* Grouped.  */
+    TEST_COMPARE(sprintf(buf, "%'8d", 12345), 8);
+    TEST_COMPARE_STRING(buf, " 12٬345");
+    TEST_COMPARE(sprintf(buf, "%'11.2f", 12345.67), 13);
+    TEST_COMPARE_STRING(buf, "  12٬345٫67");  /* Counts characters.  */
+    TEST_COMPARE(strfmon(buf, sizeof(buf), "%13i", 12345.67), 13);
+    TEST_COMPARE_STRING(buf, "  12٬346 AFN");  /* Counts bytes.   */
 
-  /* Translated.  */
-  DIAG_PUSH_NEEDS_COMMENT_CLANG;
-  DIAG_IGNORE_NEEDS_COMMENT_CLANG (14, "-Wformat-invalid-specifier");
-  TEST_COMPARE (sprintf (buf, "%I11d", 12345), 11);
-  TEST_COMPARE_STRING (buf, " ١٢٣۴٥");
-  TEST_COMPARE (sprintf (buf, "%I12.2f", 12345.67), 20);
-  TEST_COMPARE_STRING (buf, "    ١٢٣۴٥٫٦٧");
+    /* Translated.  */
+    DIAG_PUSH_NEEDS_COMMENT_CLANG;
+    DIAG_IGNORE_NEEDS_COMMENT_CLANG(14, "-Wformat-invalid-specifier");
+    TEST_COMPARE(sprintf(buf, "%I11d", 12345), 11);
+    TEST_COMPARE_STRING(buf, " ١٢٣۴٥");
+    TEST_COMPARE(sprintf(buf, "%I12.2f", 12345.67), 20);
+    TEST_COMPARE_STRING(buf, "    ١٢٣۴٥٫٦٧");
 
-  /* Translated and grouped.  */
-  TEST_COMPARE (sprintf (buf, "%'I13d", 12345), 13);
-  TEST_COMPARE_STRING (buf, " ١٢٬٣۴٥");
-  TEST_COMPARE (sprintf (buf, "%'I12.2f", 12345.67), 21);
-  TEST_COMPARE_STRING (buf, "   ١٢٬٣۴٥٫٦٧");
-  DIAG_POP_NEEDS_COMMENT_CLANG;
+    /* Translated and grouped.  */
+    TEST_COMPARE(sprintf(buf, "%'I13d", 12345), 13);
+    TEST_COMPARE_STRING(buf, " ١٢٬٣۴٥");
+    TEST_COMPARE(sprintf(buf, "%'I12.2f", 12345.67), 21);
+    TEST_COMPARE_STRING(buf, "   ١٢٬٣۴٥٫٦٧");
+    DIAG_POP_NEEDS_COMMENT_CLANG;
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

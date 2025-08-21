@@ -23,33 +23,37 @@
 
 #define LARGE_PRIME 49999
 
-static int do_test (void)
+static int do_test(void)
 {
-  long long int i;
+    long long int i;
 
-  TEST_COMPARE (ullabs (LLONG_MAX), LLONG_MAX);
-  TEST_COMPARE (ullabs (LLONG_MIN), (unsigned long long int)LLONG_MAX + 1);
-  TEST_COMPARE (ullabs (0x00000000ffffffffL), 0x00000000ffffffffL);
-  TEST_COMPARE (ullabs (0x0000000100000000L), 0x0000000100000000L);
-  TEST_COMPARE (ullabs (0x80000000ffffffffL), 0x7fffffff00000001L);
-  TEST_COMPARE (ullabs (0x8000000100000000L), 0x7fffffff00000000L);
-  TEST_COMPARE (ullabs (-1), 1);
-  TEST_COMPARE (ullabs (0), 0);
-  TEST_COMPARE (ullabs (1), 1);
+    TEST_COMPARE(ullabs(LLONG_MAX), LLONG_MAX);
+    TEST_COMPARE(ullabs(LLONG_MIN), (unsigned long long int)LLONG_MAX + 1);
+    TEST_COMPARE(ullabs(0x00000000ffffffffL), 0x00000000ffffffffL);
+    TEST_COMPARE(ullabs(0x0000000100000000L), 0x0000000100000000L);
+    TEST_COMPARE(ullabs(0x80000000ffffffffL), 0x7fffffff00000001L);
+    TEST_COMPARE(ullabs(0x8000000100000000L), 0x7fffffff00000000L);
+    TEST_COMPARE(ullabs(-1), 1);
+    TEST_COMPARE(ullabs(0), 0);
+    TEST_COMPARE(ullabs(1), 1);
 
-  for (i = LLONG_MIN + 1; i < LLONG_MIN + INT_MAX; i += LARGE_PRIME)
-    TEST_COMPARE (ullabs (i), -i);
+    for (i = LLONG_MIN + 1; i < LLONG_MIN + INT_MAX; i += LARGE_PRIME) {
+        TEST_COMPARE(ullabs(i), -i);
+    }
 
-  for (i = LLONG_MAX - INT_MAX; i < LLONG_MAX - LARGE_PRIME; i += LARGE_PRIME)
-    TEST_COMPARE (ullabs (i), i);
+    for (i = LLONG_MAX - INT_MAX; i < LLONG_MAX - LARGE_PRIME; i += LARGE_PRIME) {
+        TEST_COMPARE(ullabs(i), i);
+    }
 
-  for (i = INT_MIN + 1; i < 0; i += LARGE_PRIME)
-    TEST_COMPARE (ullabs (i), -i);
+    for (i = INT_MIN + 1; i < 0; i += LARGE_PRIME) {
+        TEST_COMPARE(ullabs(i), -i);
+    }
 
-  for (i = 0; i < INT_MAX; i += LARGE_PRIME)
-    TEST_COMPARE (ullabs (i), i);
+    for (i = 0; i < INT_MAX; i += LARGE_PRIME) {
+        TEST_COMPARE(ullabs(i), i);
+    }
 
-  return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }
 
 #include <support/test-driver.c>

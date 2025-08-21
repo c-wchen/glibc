@@ -31,9 +31,9 @@
 # define SYMBOL_NAME mempcpy
 # include "ifunc-memcpy.h"
 
-sparc_libc_ifunc_redirected (__redirect_mempcpy, __mempcpy, IFUNC_SELECTOR)
+sparc_libc_ifunc_redirected(__redirect_mempcpy, __mempcpy, IFUNC_SELECTOR)
 
-sparc_ifunc_redirected_hidden_def (__redirect___mempcpy, __mempcpy)
-weak_alias (__mempcpy, mempcpy)
-sparc_ifunc_redirected_hidden_def (__redirect_mempcpy, mempcpy)
+sparc_ifunc_redirected_hidden_def(__redirect___mempcpy, __mempcpy)
+weak_alias(__mempcpy, mempcpy)
+sparc_ifunc_redirected_hidden_def(__redirect_mempcpy, mempcpy)
 #endif

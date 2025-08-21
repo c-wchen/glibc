@@ -25,7 +25,7 @@
 #undef __cpowf
 #undef cpowf
 
-static _Complex float internal_cpowf (_Complex float x, _Complex float c);
+static _Complex float internal_cpowf(_Complex float x, _Complex float c);
 
 #define M_DECL_FUNC(f) internal_cpowf
 #include <math-type-macros-float.h>
@@ -37,18 +37,16 @@ static _Complex float internal_cpowf (_Complex float x, _Complex float c);
 #include <math/s_cpow_template.c>
 #include "cfloat-compat.h"
 
-c1_cfloat_rettype
-__c1_cpowf (c1_cfloat_decl (x), c1_cfloat_decl (c))
+c1_cfloat_rettype __c1_cpowf(c1_cfloat_decl(x), c1_cfloat_decl(c))
 {
-  _Complex float r = internal_cpowf (c1_cfloat_value (x), c1_cfloat_value (c));
-  return c1_cfloat_return (r);
+    _Complex float r = internal_cpowf(c1_cfloat_value(x), c1_cfloat_value(c));
+    return c1_cfloat_return(r);
 }
 
-c2_cfloat_rettype
-__c2_cpowf (c2_cfloat_decl (x), c2_cfloat_decl (c))
+c2_cfloat_rettype __c2_cpowf(c2_cfloat_decl(x), c2_cfloat_decl(c))
 {
-  _Complex float r = internal_cpowf (c2_cfloat_value (x), c2_cfloat_value (c));
-  return c2_cfloat_return (r);
+    _Complex float r = internal_cpowf(c2_cfloat_value(x), c2_cfloat_value(c));
+    return c2_cfloat_return(r);
 }
 
-cfloat_versions (cpow);
+cfloat_versions(cpow);

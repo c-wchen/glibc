@@ -22,21 +22,19 @@
     - @plt0: runtime pc of first plt entry (DT_PLTGOT)
     - @pltn: runtime pc of plt entry being resolved
     - @size: size of .plt.rela entry (unused).  */
-static inline uintptr_t
-reloc_index (uintptr_t plt0, uintptr_t pltn, size_t size)
+static inline uintptr_t reloc_index(uintptr_t plt0, uintptr_t pltn, size_t size)
 {
-  unsigned long int idx = pltn - plt0;
+    unsigned long int idx = pltn - plt0;
 
-  /* PLT trampoline is 16 bytes.  */
-  idx /= 16;
+    /* PLT trampoline is 16 bytes.  */
+    idx /= 16;
 
-  /* Exclude PLT0 and PLT1.  */
-  return idx - 2;
+    /* Exclude PLT0 and PLT1.  */
+    return idx - 2;
 }
 
-static inline uintptr_t
-reloc_offset (uintptr_t plt0, uintptr_t pltn)
+static inline uintptr_t reloc_offset(uintptr_t plt0, uintptr_t pltn)
 {
-  size_t sz = sizeof (ElfW(Rela));
-  return reloc_index (plt0, pltn, sz) * sz;
+    size_t sz = sizeof(ElfW(Rela));
+    return reloc_index(plt0, pltn, sz) * sz;
 }

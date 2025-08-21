@@ -20,9 +20,8 @@
 #include <math.h>
 #include <math-narrow.h>
 
-float
-__fsqrtl (long double x)
+float __fsqrtl(long double x)
 {
-  NARROW_SQRT_TRIVIAL (x, float, l);
+    NARROW_SQRT_TRIVIAL(x, float, l);
 }
-libm_alias_float_ldouble (sqrt)
+libm_alias_float_ldouble(sqrt)

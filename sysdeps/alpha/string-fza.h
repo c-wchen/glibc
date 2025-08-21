@@ -28,33 +28,29 @@
    returned by __builtin_alpha_cmpbge.  */
 typedef op_t find_t;
 
-static __always_inline find_t
-find_zero_all (op_t x)
+static __always_inline find_t find_zero_all(op_t x)
 {
-  return __builtin_alpha_cmpbge (0, x);
+    return __builtin_alpha_cmpbge(0, x);
 }
 
-static __always_inline find_t
-find_eq_all (op_t x1, op_t x2)
+static __always_inline find_t find_eq_all(op_t x1, op_t x2)
 {
-  return find_zero_all (x1 ^ x2);
+    return find_zero_all(x1 ^ x2);
 }
 
-static __always_inline find_t
-find_zero_eq_all (op_t x1, op_t x2)
+static __always_inline find_t find_zero_eq_all(op_t x1, op_t x2)
 {
-  return find_zero_all (x1) | find_zero_all (x1 ^ x2);
+    return find_zero_all(x1) | find_zero_all(x1 ^ x2);
 }
 
-static __always_inline find_t
-find_zero_ne_all (op_t x1, op_t x2)
+static __always_inline find_t find_zero_ne_all(op_t x1, op_t x2)
 {
-  return find_zero_all (x1) | (find_zero_all (x1 ^ x2) ^ 0xff);
+    return find_zero_all(x1) | (find_zero_all(x1 ^ x2) ^ 0xff);
 }
 
 /* Define the "inexact" versions in terms of the exact versions.  */
-#define find_zero_low		find_zero_all
-#define find_eq_low		find_eq_all
-#define find_zero_eq_low	find_zero_eq_all
+#define find_zero_low       find_zero_all
+#define find_eq_low     find_eq_all
+#define find_zero_eq_low    find_zero_eq_all
 
 #endif /* _STRING_FZA_H */

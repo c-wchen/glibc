@@ -19,14 +19,14 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-int
-fesetmode (const femode_t *modep)
+int fesetmode(const femode_t *modep)
 {
-  femode_t mode;
-  if (modep == FE_DFL_MODE)
-    mode = _FPU_DEFAULT;
-  else
-    mode = *modep;
-  _FPU_SETCW (mode);
-  return 0;
+    femode_t mode;
+    if (modep == FE_DFL_MODE) {
+        mode = _FPU_DEFAULT;
+    } else {
+        mode = *modep;
+    }
+    _FPU_SETCW(mode);
+    return 0;
 }

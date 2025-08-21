@@ -18,7 +18,6 @@
 
 #include <dl-diagnostics.h>
 
-void
-_dl_diagnostics_cpu (void)
+void _dl_diagnostics_cpu(void)
 {
 }

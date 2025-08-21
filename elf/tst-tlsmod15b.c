@@ -2,8 +2,7 @@
 
 __thread int mod15b_var __attribute__((tls_model("initial-exec")));
 
-int
-in_dso (void)
+int in_dso(void)
 {
-  return mod15b_var;
+    return mod15b_var;
 }

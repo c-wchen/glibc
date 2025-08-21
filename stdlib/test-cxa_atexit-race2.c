@@ -34,76 +34,72 @@
 static atomic_int registered;
 static atomic_int todo = 100000;
 
-static void
-atexit_cb (void *arg)
+static void atexit_cb(void *arg)
 {
-  atomic_fetch_sub (&registered, 1);
-  static void *prev;
-  if (arg == prev)
-    FAIL_EXIT1 ("%s: %p\n", __func__, arg);
-  prev = arg;
+    atomic_fetch_sub(&registered, 1);
+    static void *prev;
+    if (arg == prev) {
+        FAIL_EXIT1("%s: %p\n", __func__, arg);
+    }
+    prev = arg;
 
-  while (atomic_load (&todo) > 0 && atomic_load (&registered) < 100)
-    ;
+    while (atomic_load(&todo) > 0 && atomic_load(&registered) < 100)
+        ;
 }
 
-int __cxa_atexit (void (*func) (void *), void *arg, void *d);
+int __cxa_atexit(void (*func)(void *), void *arg, void *d);
 
-static void *
-thread_func (void *arg)
+static void *thread_func(void *arg)
 {
-  void *cb_arg = NULL;
-  while (atomic_load (&todo) > 0)
-    {
-      if (atomic_load (&registered) < 10000)
-        {
-          int n = 10;
-          for (int i = 0; i < n; ++i)
-            __cxa_atexit (&atexit_cb, ++cb_arg, 0);
-          atomic_fetch_add (&registered, n);
-          atomic_fetch_sub (&todo, n);
+    void *cb_arg = NULL;
+    while (atomic_load(&todo) > 0) {
+        if (atomic_load(&registered) < 10000) {
+            int n = 10;
+            for (int i = 0; i < n; ++i) {
+                __cxa_atexit(&atexit_cb, ++cb_arg, 0);
+            }
+            atomic_fetch_add(&registered, n);
+            atomic_fetch_sub(&todo, n);
         }
     }
 
-  return NULL;
+    return NULL;
 }
 
-_Noreturn static void
-test_and_exit (void)
+_Noreturn static void test_and_exit(void)
 {
-  pthread_attr_t attr;
+    pthread_attr_t attr;
 
-  xpthread_attr_init (&attr);
-  xpthread_attr_setdetachstate (&attr, 1);
+    xpthread_attr_init(&attr);
+    xpthread_attr_setdetachstate(&attr, 1);
 
-  xpthread_create (&attr, thread_func, NULL);
-  xpthread_attr_destroy (&attr);
+    xpthread_create(&attr, thread_func, NULL);
+    xpthread_attr_destroy(&attr);
 
-  while (atomic_load (&registered) == 0)
-    ;
-  exit (0);
+    while (atomic_load(&registered) == 0)
+        ;
+    exit(0);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  for (int i = 0; i < 20; ++i)
-    {
-      for (int i = 0; i < 10; ++i)
-        if (xfork () == 0)
-          test_and_exit ();
+    for (int i = 0; i < 20; ++i) {
+        for (int i = 0; i < 10; ++i)
+            if (xfork() == 0) {
+                test_and_exit();
+            }
 
-      for (int i = 0; i < 10; ++i)
-        {
-          int status;
-          xwaitpid (0, &status, 0);
-          if (!WIFEXITED (status))
-            FAIL_EXIT1 ("Failed iterations %d", i);
-          TEST_COMPARE (WEXITSTATUS (status), 0);
+        for (int i = 0; i < 10; ++i) {
+            int status;
+            xwaitpid(0, &status, 0);
+            if (!WIFEXITED(status)) {
+                FAIL_EXIT1("Failed iterations %d", i);
+            }
+            TEST_COMPARE(WEXITSTATUS(status), 0);
         }
     }
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test

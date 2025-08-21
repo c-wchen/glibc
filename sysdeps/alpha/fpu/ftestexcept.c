@@ -18,14 +18,13 @@
 
 #include <fenv_libc.h>
 
-int
-fetestexcept (int excepts)
+int fetestexcept(int excepts)
 {
-  unsigned long tmp;
+    unsigned long tmp;
 
-  /* Get current exceptions.  */
-  tmp = __ieee_get_fp_control();
+    /* Get current exceptions.  */
+    tmp = __ieee_get_fp_control();
 
-  return tmp & excepts & SWCR_STATUS_MASK;
+    return tmp & excepts & SWCR_STATUS_MASK;
 }
-libm_hidden_def (fetestexcept)
+libm_hidden_def(fetestexcept)

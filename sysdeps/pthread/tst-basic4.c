@@ -24,75 +24,65 @@
 #include <sys/wait.h>
 
 
-static void
-final_test (void)
+static void final_test(void)
 {
-  puts ("final_test has been called");
+    puts("final_test has been called");
 
 #define THE_SIGNAL SIGUSR1
-  kill (getpid (), SIGUSR1);
+    kill(getpid(), SIGUSR1);
 }
 
 
-static void *
-tf (void *a)
+static void *tf(void *a)
 {
-  pid_t pid = fork ();
-  if (pid == -1)
-    {
-      puts ("fork failed");
-      exit (1);
+    pid_t pid = fork();
+    if (pid == -1) {
+        puts("fork failed");
+        exit(1);
     }
 
-  if (pid == 0)
-    {
-      atexit (final_test);
+    if (pid == 0) {
+        atexit(final_test);
 
-      pthread_exit (NULL);
+        pthread_exit(NULL);
     }
 
-  int r;
-  int e = TEMP_FAILURE_RETRY (waitpid (pid, &r, 0));
-  if (e != pid)
-    {
-      puts ("waitpid failed");
-      exit (1);
+    int r;
+    int e = TEMP_FAILURE_RETRY(waitpid(pid, &r, 0));
+    if (e != pid) {
+        puts("waitpid failed");
+        exit(1);
     }
 
-  if (! WIFSIGNALED (r))
-    {
-      puts ("child not signled");
-      exit (1);
+    if (! WIFSIGNALED(r)) {
+        puts("child not signled");
+        exit(1);
     }
 
-  if (WTERMSIG (r) != THE_SIGNAL)
-    {
-      puts ("child's termination signal wrong");
-      exit (1);
+    if (WTERMSIG(r) != THE_SIGNAL) {
+        puts("child's termination signal wrong");
+        exit(1);
     }
 
-  return NULL;
+    return NULL;
 }
 
 
-int
-do_test (void)
+int do_test(void)
 {
-  pthread_t th;
+    pthread_t th;
 
-  if (pthread_create (&th, NULL, tf, NULL) != 0)
-    {
-      puts ("create failed");
-      _exit (1);
+    if (pthread_create(&th, NULL, tf, NULL) != 0) {
+        puts("create failed");
+        _exit(1);
     }
 
-  if (pthread_join (th, NULL) != 0)
-    {
-      puts ("join failed");
-      exit (1);
+    if (pthread_join(th, NULL) != 0) {
+        puts("join failed");
+        exit(1);
     }
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

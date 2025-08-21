@@ -19,25 +19,25 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-int
-fesetexceptflag (const fexcept_t *flagp, int excepts)
+int fesetexceptflag(const fexcept_t *flagp, int excepts)
 {
-  fpu_control_t cw;
-  fpu_control_t cw_new;
+    fpu_control_t cw;
+    fpu_control_t cw_new;
 
-  /* Get the current exceptions.  */
-  _FPU_GETCW (cw);
+    /* Get the current exceptions.  */
+    _FPU_GETCW(cw);
 
-  /* Make sure the flags we want restored are legal.  */
-  excepts &= FE_ALL_EXCEPT;
+    /* Make sure the flags we want restored are legal.  */
+    excepts &= FE_ALL_EXCEPT;
 
-  /* Now set selected bits from flagp. Note that we ignore all non-flag
-     bits from *flagp, so they don't matter.  */
-  cw_new = (cw & ~excepts) | (*flagp & excepts);
+    /* Now set selected bits from flagp. Note that we ignore all non-flag
+       bits from *flagp, so they don't matter.  */
+    cw_new = (cw & ~excepts) | (*flagp & excepts);
 
-  if (cw != cw_new)
-    _FPU_SETCW (cw_new);
+    if (cw != cw_new) {
+        _FPU_SETCW(cw_new);
+    }
 
-  /* Success.  */
-  return 0;
+    /* Success.  */
+    return 0;
 }

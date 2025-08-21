@@ -20,24 +20,22 @@
 #include <regex.h>
 #include <stdio.h>
 
-int main (void)
+int main(void)
 {
-  regex_t re;
-  int i;
-  int ret = 0;
+    regex_t re;
+    int i;
+    int ret = 0;
 
-  mtrace ();
+    mtrace();
 
-  for (i = 0; i < 32; ++i)
-    {
-      if (regcomp (&re, "X-.+:.+Y=\".*\\.(A|B|C|D|E|F|G|H|I",
-		   REG_EXTENDED | REG_ICASE) == 0)
-	{
-	  puts ("regcomp unexpectedly succeeded");
-	  ret = 1;
-	}
-      else
-	regfree (&re);
+    for (i = 0; i < 32; ++i) {
+        if (regcomp(&re, "X-.+:.+Y=\".*\\.(A|B|C|D|E|F|G|H|I",
+                    REG_EXTENDED | REG_ICASE) == 0) {
+            puts("regcomp unexpectedly succeeded");
+            ret = 1;
+        } else {
+            regfree(&re);
+        }
     }
-  return ret;
+    return ret;
 }

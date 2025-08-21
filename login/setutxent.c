@@ -18,8 +18,7 @@
 #include <utmp.h>
 #include <utmpx.h>
 
-void
-setutxent (void)
+void setutxent(void)
 {
-  return __setutent ();
+    return __setutent();
 }

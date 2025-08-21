@@ -26,45 +26,43 @@
 # define SHADOW_STACK_SET_MARKER (1UL << 1)
 #endif
 
-static void *
-map_shadow_stack (void *addr, size_t size, unsigned long flags)
+static void *map_shadow_stack(void *addr, size_t size, unsigned long flags)
 {
-  return (void *) INLINE_SYSCALL_CALL (map_shadow_stack, addr, size, flags);
+    return (void *) INLINE_SYSCALL_CALL(map_shadow_stack, addr, size, flags);
 }
 
 #define GCS_MAX_SIZE (1UL << 31)
 #define GCS_ALTSTACK_RESERVE 160
 
-void *
-__alloc_gcs (size_t stack_size, struct gcs_record *gcs)
+void *__alloc_gcs(size_t stack_size, struct gcs_record *gcs)
 {
-  size_t size = (stack_size / 2 + GCS_ALTSTACK_RESERVE) & -8UL;
-  if (size > GCS_MAX_SIZE)
-    size = GCS_MAX_SIZE;
-
-  unsigned long flags = SHADOW_STACK_SET_MARKER | SHADOW_STACK_SET_TOKEN;
-  void *base = map_shadow_stack (NULL, size, flags);
-  if (base == MAP_FAILED)
-    return NULL;
-
-  uint64_t *gcsp = (uint64_t *) ((char *) base + size);
-  /* Skip end of GCS token.  */
-  gcsp--;
-  /* Verify GCS cap token.  */
-  gcsp--;
-  if (((uint64_t)gcsp & 0xfffffffffffff000) + 1 != *gcsp)
-    {
-      __munmap (base, size);
-      return NULL;
+    size_t size = (stack_size / 2 + GCS_ALTSTACK_RESERVE) & -8UL;
+    if (size > GCS_MAX_SIZE) {
+        size = GCS_MAX_SIZE;
     }
 
-  if (gcs != NULL)
-    {
-      gcs->gcs_base = base;
-      gcs->gcs_token = gcsp;
-      gcs->gcs_size = size;
+    unsigned long flags = SHADOW_STACK_SET_MARKER | SHADOW_STACK_SET_TOKEN;
+    void *base = map_shadow_stack(NULL, size, flags);
+    if (base == MAP_FAILED) {
+        return NULL;
     }
 
-  /* Return the target GCS pointer for context switch.  */
-  return gcsp + 1;
+    uint64_t *gcsp = (uint64_t *)((char *) base + size);
+    /* Skip end of GCS token.  */
+    gcsp--;
+    /* Verify GCS cap token.  */
+    gcsp--;
+    if (((uint64_t)gcsp & 0xfffffffffffff000) + 1 != *gcsp) {
+        __munmap(base, size);
+        return NULL;
+    }
+
+    if (gcs != NULL) {
+        gcs->gcs_base = base;
+        gcs->gcs_token = gcsp;
+        gcs->gcs_size = size;
+    }
+
+    /* Return the target GCS pointer for context switch.  */
+    return gcsp + 1;
 }

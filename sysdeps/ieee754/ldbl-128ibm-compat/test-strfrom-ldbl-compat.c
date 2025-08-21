@@ -20,30 +20,31 @@
 
 #include <support/check.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int written;
-  char buffer[64];
-  char *bufptr = buffer;
-  const char *expected = "-1.0000000000";
-  long double read;
+    int written;
+    char buffer[64];
+    char *bufptr = buffer;
+    const char *expected = "-1.0000000000";
+    long double read;
 
-  /* Write to the buffer.  */
-  written = strfroml (bufptr, 64, "%.10f", (long double) -1);
-  if (written < 0)
-    support_record_failure ();
+    /* Write to the buffer.  */
+    written = strfroml(bufptr, 64, "%.10f", (long double) -1);
+    if (written < 0) {
+        support_record_failure();
+    }
 
-  /* Compare against the expected output.  */
-  TEST_COMPARE_STRING (expected, buffer);
+    /* Compare against the expected output.  */
+    TEST_COMPARE_STRING(expected, buffer);
 
-  /* Read from the buffer.  */
-  read = strtold (expected, NULL);
+    /* Read from the buffer.  */
+    read = strtold(expected, NULL);
 
-  if (read != -1.0L)
-    support_record_failure ();
+    if (read != -1.0L) {
+        support_record_failure();
+    }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

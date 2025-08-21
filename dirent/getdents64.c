@@ -20,11 +20,10 @@
 #include <sys/types.h>
 #include <dirent.h>
 
-ssize_t
-getdirentries64 (int fd, char *buf, size_t nbytes, off64_t *basep)
+ssize_t getdirentries64(int fd, char *buf, size_t nbytes, off64_t *basep)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (getdirentries64)
+stub_warning(getdirentries64)

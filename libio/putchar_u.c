@@ -20,9 +20,8 @@
 
 #undef putchar_unlocked
 
-int
-putchar_unlocked (int c)
+int putchar_unlocked(int c)
 {
-  CHECK_FILE (stdout, EOF);
-  return _IO_putc_unlocked (c, stdout);
+    CHECK_FILE(stdout, EOF);
+    return _IO_putc_unlocked(c, stdout);
 }

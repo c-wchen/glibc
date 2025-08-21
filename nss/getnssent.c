@@ -20,38 +20,35 @@
 #include <netdb.h>
 #include "nsswitch.h"
 
-void *
-__nss_getent (getent_r_function func, void **resbuf, char **buffer,
-	      size_t buflen, size_t *buffer_size, int *h_errnop)
+void *__nss_getent(getent_r_function func, void **resbuf, char **buffer,
+                   size_t buflen, size_t *buffer_size, int *h_errnop)
 {
-  void *result;
+    void *result;
 
-  if (*buffer == NULL)
-    {
-      *buffer_size = buflen;
-      *buffer = malloc (*buffer_size);
+    if (*buffer == NULL) {
+        *buffer_size = buflen;
+        *buffer = malloc(*buffer_size);
     }
 
-  while (*buffer != NULL
-	 && func (resbuf, *buffer, *buffer_size, &result, h_errnop) == ERANGE
-	 && (h_errnop == NULL || *h_errnop == NETDB_INTERNAL))
-    {
-      char *new_buf;
-      *buffer_size *= 2;
-      new_buf = realloc (*buffer, *buffer_size);
-      if (new_buf == NULL)
-	{
-	  /* We are out of memory.  Free the current buffer so that the
-	     process gets a chance for a normal termination.  */
-	  int save = errno;
-	  free (*buffer);
-	  __set_errno (save);
-	}
-      *buffer = new_buf;
+    while (*buffer != NULL
+           && func(resbuf, *buffer, *buffer_size, &result, h_errnop) == ERANGE
+           && (h_errnop == NULL || *h_errnop == NETDB_INTERNAL)) {
+        char *new_buf;
+        *buffer_size *= 2;
+        new_buf = realloc(*buffer, *buffer_size);
+        if (new_buf == NULL) {
+            /* We are out of memory.  Free the current buffer so that the
+               process gets a chance for a normal termination.  */
+            int save = errno;
+            free(*buffer);
+            __set_errno(save);
+        }
+        *buffer = new_buf;
     }
 
-  if (*buffer == NULL)
-    result = NULL;
+    if (*buffer == NULL) {
+        result = NULL;
+    }
 
-  return result;
+    return result;
 }

@@ -18,7 +18,6 @@
 
 #include <pt-internal.h>
 
-void
-__pthread_startup (void)
+void __pthread_startup(void)
 {
 }

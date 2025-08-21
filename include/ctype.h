@@ -4,15 +4,15 @@
 
 #ifndef _ISOMAC
 /* Initialize ctype locale data.  */
-extern void __ctype_init (void);
-libc_hidden_proto (__ctype_init)
+extern void __ctype_init(void);
+libc_hidden_proto(__ctype_init)
 
 /* ctype/ctype.h defined this as a macro and we don't want to #undef it.
    So defeat macro expansion with parens for this declaration.  */
-extern int (__isctype) (int __c, int __mask);
+extern int (__isctype)(int __c, int __mask);
 
-libc_hidden_proto (tolower)
-libc_hidden_proto (toupper)
+libc_hidden_proto(tolower)
+libc_hidden_proto(toupper)
 
 # if IS_IN (libc)
 
@@ -25,34 +25,34 @@ libc_hidden_proto (toupper)
 
 #  include "../locale/localeinfo.h"
 
-#  ifndef CTYPE_EXTERN_INLINE	/* Used by ctype/ctype-info.c, which see.  */
+#  ifndef CTYPE_EXTERN_INLINE   /* Used by ctype/ctype-info.c, which see.  */
 #   define CTYPE_EXTERN_INLINE extern inline
 #  endif
 
-extern __thread const uint16_t * __libc_tsd_CTYPE_B
-  attribute_hidden attribute_tls_model_ie;
-extern __thread const int32_t * __libc_tsd_CTYPE_TOUPPER
-  attribute_hidden attribute_tls_model_ie;
-extern __thread const int32_t * __libc_tsd_CTYPE_TOLOWER
-  attribute_hidden attribute_tls_model_ie;
+extern __thread const uint16_t *__libc_tsd_CTYPE_B
+attribute_hidden attribute_tls_model_ie;
+extern __thread const int32_t *__libc_tsd_CTYPE_TOUPPER
+attribute_hidden attribute_tls_model_ie;
+extern __thread const int32_t *__libc_tsd_CTYPE_TOLOWER
+attribute_hidden attribute_tls_model_ie;
 
 
-CTYPE_EXTERN_INLINE const uint16_t ** __attribute__ ((const))
-__ctype_b_loc (void)
+CTYPE_EXTERN_INLINE const uint16_t **__attribute__((const))
+__ctype_b_loc(void)
 {
-  return &__libc_tsd_CTYPE_B;
+    return &__libc_tsd_CTYPE_B;
 }
 
-CTYPE_EXTERN_INLINE const int32_t ** __attribute__ ((const))
-__ctype_toupper_loc (void)
+CTYPE_EXTERN_INLINE const int32_t **__attribute__((const))
+__ctype_toupper_loc(void)
 {
-  return &__libc_tsd_CTYPE_TOUPPER;
+    return &__libc_tsd_CTYPE_TOUPPER;
 }
 
-CTYPE_EXTERN_INLINE const int32_t ** __attribute__ ((const))
-__ctype_tolower_loc (void)
+CTYPE_EXTERN_INLINE const int32_t **__attribute__((const))
+__ctype_tolower_loc(void)
 {
-  return &__libc_tsd_CTYPE_TOLOWER;
+    return &__libc_tsd_CTYPE_TOLOWER;
 }
 
 #  ifndef __NO_CTYPE
@@ -71,7 +71,7 @@ extern const char _nl_C_LC_CTYPE_class[] attribute_hidden;
 extern const uint32_t _nl_C_LC_CTYPE_toupper[] attribute_hidden;
 extern const uint32_t _nl_C_LC_CTYPE_tolower[] attribute_hidden;
 
-# endif	/* IS_IN (libc).  */
+# endif /* IS_IN (libc).  */
 #endif  /* Not _ISOMAC.  */
 
 #endif /* ctype.h */

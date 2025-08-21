@@ -20,8 +20,7 @@
 
 /* Return the greatest floating-point number less than X.  */
 double
-attribute_hidden
-nextdownl (double x)
+attribute_hidden nextdownl(double x)
 {
-  return nextdown (x);
+    return nextdown(x);
 }

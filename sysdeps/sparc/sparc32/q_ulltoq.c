@@ -23,11 +23,11 @@
 
 long double _Q_ulltoq(const unsigned long long a)
 {
-  FP_DECL_Q(C);
-  long double c;
-  unsigned long long b = a;
+    FP_DECL_Q(C);
+    long double c;
+    unsigned long long b = a;
 
-  FP_FROM_INT_Q(C, b, 64, unsigned long long);
-  FP_PACK_RAW_Q(c, C);
-  return c;
+    FP_FROM_INT_Q(C, b, 64, unsigned long long);
+    FP_PACK_RAW_Q(c, C);
+    return c;
 }

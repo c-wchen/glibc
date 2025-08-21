@@ -24,54 +24,54 @@
 #include <support/xmemstream.h>
 
 /* Returns a printable ASCII character based on INDEX.   */
-static inline char
-char_from_index (unsigned int index)
+static inline char char_from_index(unsigned int index)
 {
-  return ' ' + (index % 95);
+    return ' ' + (index % 95);
 }
 
 enum { result_size = 25000 };
 
-static void
-run_one_size (unsigned int chunk_size)
+static void run_one_size(unsigned int chunk_size)
 {
-  char *chunk = xmalloc (chunk_size + 1);
+    char *chunk = xmalloc(chunk_size + 1);
 
-  struct xmemstream mem;
-  xopen_memstream (&mem);
-  unsigned int written = 0;
-  for (unsigned int i = 0; i < result_size; )
-    {
-      unsigned int to_print = result_size - i;
-      if (to_print > chunk_size)
-        to_print = chunk_size;
-      for (unsigned int j = 0; j < to_print; ++j)
-        chunk[j] = char_from_index(i + j);
-      chunk[to_print] = '\0';
-      fprintf (mem.out, "%s", chunk); /* Needs -fno-builtin-fprintf.  */
-      i += to_print;
-      written += strlen(chunk);
+    struct xmemstream mem;
+    xopen_memstream(&mem);
+    unsigned int written = 0;
+    for (unsigned int i = 0; i < result_size;) {
+        unsigned int to_print = result_size - i;
+        if (to_print > chunk_size) {
+            to_print = chunk_size;
+        }
+        for (unsigned int j = 0; j < to_print; ++j) {
+            chunk[j] = char_from_index(i + j);
+        }
+        chunk[to_print] = '\0';
+        fprintf(mem.out, "%s", chunk);  /* Needs -fno-builtin-fprintf.  */
+        i += to_print;
+        written += strlen(chunk);
     }
-  xfclose_memstream (&mem);
+    xfclose_memstream(&mem);
 
-  TEST_COMPARE (written, result_size);
-  TEST_COMPARE (mem.length, result_size);
-  TEST_COMPARE (strlen (mem.buffer), result_size);
+    TEST_COMPARE(written, result_size);
+    TEST_COMPARE(mem.length, result_size);
+    TEST_COMPARE(strlen(mem.buffer), result_size);
 
-  for (unsigned int i = 0; i < result_size; ++i)
-    TEST_COMPARE (mem.buffer[i], char_from_index (i));
+    for (unsigned int i = 0; i < result_size; ++i) {
+        TEST_COMPARE(mem.buffer[i], char_from_index(i));
+    }
 
-  free (mem.buffer);
-  free (chunk);
+    free(mem.buffer);
+    free(chunk);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  for (unsigned int chunk_size = 1; chunk_size <= 30; ++ chunk_size)
-    run_one_size (chunk_size);
+    for (unsigned int chunk_size = 1; chunk_size <= 30; ++ chunk_size) {
+        run_one_size(chunk_size);
+    }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

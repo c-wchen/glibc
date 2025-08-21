@@ -25,25 +25,25 @@
 # include <ifunc-resolve.h>
 
 # if HAVE_MEMCPY_Z900_G5
-extern __typeof (__redirect_memcpy) MEMCPY_Z900_G5 attribute_hidden;
+extern __typeof(__redirect_memcpy) MEMCPY_Z900_G5 attribute_hidden;
 # endif
 
 # if HAVE_MEMCPY_Z10
-extern __typeof (__redirect_memcpy) MEMCPY_Z10 attribute_hidden;
+extern __typeof(__redirect_memcpy) MEMCPY_Z10 attribute_hidden;
 # endif
 
 # if HAVE_MEMCPY_Z196
-extern __typeof (__redirect_memcpy) MEMCPY_Z196 attribute_hidden;
+extern __typeof(__redirect_memcpy) MEMCPY_Z196 attribute_hidden;
 # endif
 
-s390_libc_ifunc_expr (__redirect_memcpy, memcpy,
-		      ({
-			s390_libc_ifunc_expr_stfle_init ();
-			(HAVE_MEMCPY_Z196 && S390_IS_Z196 (stfle_bits))
-			  ? MEMCPY_Z196
-			  : (HAVE_MEMCPY_Z10 && S390_IS_Z10 (stfle_bits))
-			  ? MEMCPY_Z10
-			  : MEMCPY_DEFAULT;
-		      })
-		      )
+s390_libc_ifunc_expr(__redirect_memcpy, memcpy,
+({
+    s390_libc_ifunc_expr_stfle_init();
+    (HAVE_MEMCPY_Z196 &&S390_IS_Z196(stfle_bits))
+    ? MEMCPY_Z196
+    : (HAVE_MEMCPY_Z10 &&S390_IS_Z10(stfle_bits))
+    ? MEMCPY_Z10
+    : MEMCPY_DEFAULT;
+})
+                    )
 #endif

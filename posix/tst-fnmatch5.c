@@ -26,21 +26,20 @@
 
 static char pattern[LENGTH + 7];
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  TEST_VERIFY_EXIT (setlocale (LC_ALL, "en_US.UTF-8") != NULL);
+    TEST_VERIFY_EXIT(setlocale(LC_ALL, "en_US.UTF-8") != NULL);
 
-  pattern[0] = '[';
-  pattern[1] = '[';
-  pattern[2] = '.';
-  memset (pattern + 3, 'a', LENGTH);
-  pattern[LENGTH + 3] = '.';
-  pattern[LENGTH + 4] = ']';
-  pattern[LENGTH + 5] = ']';
-  TEST_VERIFY (fnmatch (pattern, "a", 0) != 0);
+    pattern[0] = '[';
+    pattern[1] = '[';
+    pattern[2] = '.';
+    memset(pattern + 3, 'a', LENGTH);
+    pattern[LENGTH + 3] = '.';
+    pattern[LENGTH + 4] = ']';
+    pattern[LENGTH + 5] = ']';
+    TEST_VERIFY(fnmatch(pattern, "a", 0) != 0);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

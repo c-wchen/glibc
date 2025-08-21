@@ -22,10 +22,9 @@
 
 #include <math-narrow.h>
 
-float
-__fdivl (long double x, long double y)
+float __fdivl(long double x, long double y)
 {
-  NARROW_DIV_ROUND_TO_ODD (x, y, float, union ieee854_long_double, l,
-			   mantissa1, false);
+    NARROW_DIV_ROUND_TO_ODD(x, y, float, union ieee854_long_double, l,
+                            mantissa1, false);
 }
-libm_alias_float_ldouble (div)
+libm_alias_float_ldouble(div)

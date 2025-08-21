@@ -24,53 +24,48 @@
 #include <netinet/in.h>
 #include <netdb.h>
 
-#define PORT		5555
-#define MESSAGE		"Yow!!! Are we having fun yet?!?"
-#define SERVERHOST 	"www.gnu.org"
+#define PORT        5555
+#define MESSAGE     "Yow!!! Are we having fun yet?!?"
+#define SERVERHOST  "www.gnu.org"
 
-void
-write_to_server (int filedes)
+void write_to_server(int filedes)
 {
-  int nbytes;
+    int nbytes;
 
-  nbytes = write (filedes, MESSAGE, strlen (MESSAGE) + 1);
-  if (nbytes < 0)
-    {
-      perror ("write");
-      exit (EXIT_FAILURE);
+    nbytes = write(filedes, MESSAGE, strlen(MESSAGE) + 1);
+    if (nbytes < 0) {
+        perror("write");
+        exit(EXIT_FAILURE);
     }
 }
 
 
-int
-main (void)
+int main(void)
 {
-  extern void init_sockaddr (struct sockaddr_in *name,
-			     const char *hostname,
-			     uint16_t port);
-  int sock;
-  struct sockaddr_in servername;
+    extern void init_sockaddr(struct sockaddr_in * name,
+                              const char *hostname,
+                              uint16_t port);
+    int sock;
+    struct sockaddr_in servername;
 
-  /* Create the socket.  */
-  sock = socket (PF_INET, SOCK_STREAM, 0);
-  if (sock < 0)
-    {
-      perror ("socket (client)");
-      exit (EXIT_FAILURE);
+    /* Create the socket.  */
+    sock = socket(PF_INET, SOCK_STREAM, 0);
+    if (sock < 0) {
+        perror("socket (client)");
+        exit(EXIT_FAILURE);
     }
 
-  /* Connect to the server.  */
-  init_sockaddr (&servername, SERVERHOST, PORT);
-  if (0 > connect (sock,
-		   (struct sockaddr *) &servername,
-		   sizeof (servername)))
-    {
-      perror ("connect (client)");
-      exit (EXIT_FAILURE);
+    /* Connect to the server.  */
+    init_sockaddr(&servername, SERVERHOST, PORT);
+    if (0 > connect(sock,
+                    (struct sockaddr *) &servername,
+                    sizeof(servername))) {
+        perror("connect (client)");
+        exit(EXIT_FAILURE);
     }
 
-  /* Send data to the server.  */
-  write_to_server (sock);
-  close (sock);
-  exit (EXIT_SUCCESS);
+    /* Send data to the server.  */
+    write_to_server(sock);
+    close(sock);
+    exit(EXIT_SUCCESS);
 }

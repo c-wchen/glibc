@@ -19,21 +19,19 @@
 #include <fenv.h>
 #include <fenv_private.h>
 
-int
-__fesetround (int round)
+int __fesetround(int round)
 {
-  switch (round)
-    {
-    case FE_TONEAREST:
-    case FE_TOWARDZERO:
-    case FE_DOWNWARD:
-    case FE_UPWARD:
-      riscv_setround (round);
-      return 0;
-    default:
-      return round; /* A nonzero value.  */
+    switch (round) {
+        case FE_TONEAREST:
+        case FE_TOWARDZERO:
+        case FE_DOWNWARD:
+        case FE_UPWARD:
+            riscv_setround(round);
+            return 0;
+        default:
+            return round; /* A nonzero value.  */
     }
 }
-libm_hidden_def (__fesetround)
-weak_alias (__fesetround, fesetround)
-libm_hidden_weak (fesetround)
+libm_hidden_def(__fesetround)
+weak_alias(__fesetround, fesetround)
+libm_hidden_weak(fesetround)

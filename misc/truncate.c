@@ -19,12 +19,11 @@
 #include <errno.h>
 
 /* Truncate PATH to LENGTH bytes.  */
-int
-__truncate (const char *path, off_t length)
+int __truncate(const char *path, off_t length)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-weak_alias (__truncate, truncate)
+weak_alias(__truncate, truncate)
 
-stub_warning (truncate)
+stub_warning(truncate)

@@ -26,13 +26,12 @@
 extern int mod1_status;
 extern int mod2_status;
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  TEST_COMPARE (mod1_status, 1);
-  TEST_COMPARE (mod2_status, 1);
-  TEST_COMPARE_STRING (getenv ("mod2_status"), "constructed");
-  return 0;
+    TEST_COMPARE(mod1_status, 1);
+    TEST_COMPARE(mod2_status, 1);
+    TEST_COMPARE_STRING(getenv("mod2_status"), "constructed");
+    return 0;
 }
 
 #include <support/test-driver.c>

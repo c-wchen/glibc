@@ -21,11 +21,10 @@
 /* Turn accounting on if NAME is an existing file.  The system will then write
    a record for each process as it terminates, to this file.  If NAME is NULL,
    turn accounting off.  This call is restricted to the super-user.  */
-int
-acct (const char *name)
+int acct(const char *name)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (acct)
+stub_warning(acct)

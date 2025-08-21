@@ -21,13 +21,12 @@
 #include <sysdep.h>
 
 /* Remove the link named NAME.  */
-int
-__unlink (const char *name)
+int __unlink(const char *name)
 {
 #ifdef __NR_unlink
-  return INLINE_SYSCALL_CALL (unlink, name);
+    return INLINE_SYSCALL_CALL(unlink, name);
 #else
-  return INLINE_SYSCALL_CALL (unlinkat, AT_FDCWD, name, 0);
+    return INLINE_SYSCALL_CALL(unlinkat, AT_FDCWD, name, 0);
 #endif
 }
-weak_alias (__unlink, unlink)
+weak_alias(__unlink, unlink)

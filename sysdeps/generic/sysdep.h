@@ -19,7 +19,7 @@
 #ifndef C_LABEL
 
 /* Define a macro we can use to construct the asm name for a C symbol.  */
-# define C_LABEL(name)	name##:
+# define C_LABEL(name)  name##:
 
 #endif
 
@@ -31,39 +31,39 @@
 # endif
 
 # ifndef JUMPTARGET
-#  define JUMPTARGET(sym)	sym
+#  define JUMPTARGET(sym)   sym
 # endif
 #endif
 
 /* Macros to generate eh_frame unwind information.  */
 #ifdef __ASSEMBLER__
-# define cfi_startproc			.cfi_startproc
-# define cfi_endproc			.cfi_endproc
-# define cfi_def_cfa(reg, off)		.cfi_def_cfa reg, off
-# define cfi_def_cfa_register(reg)	.cfi_def_cfa_register reg
-# define cfi_def_cfa_offset(off)	.cfi_def_cfa_offset off
-# define cfi_adjust_cfa_offset(off)	.cfi_adjust_cfa_offset off
-# define cfi_offset(reg, off)		.cfi_offset reg, off
-# define cfi_rel_offset(reg, off)	.cfi_rel_offset reg, off
-# define cfi_val_offset(reg, off)	.cfi_val_offset reg, off
-# define cfi_register(r1, r2)		.cfi_register r1, r2
-# define cfi_return_column(reg)	.cfi_return_column reg
-# define cfi_restore(reg)		.cfi_restore reg
-# define cfi_same_value(reg)		.cfi_same_value reg
-# define cfi_undefined(reg)		.cfi_undefined reg
-# define cfi_remember_state		.cfi_remember_state
-# define cfi_restore_state		.cfi_restore_state
-# define cfi_window_save		.cfi_window_save
-# define cfi_personality(enc, exp)	.cfi_personality enc, exp
-# define cfi_lsda(enc, exp)		.cfi_lsda enc, exp
+# define cfi_startproc          .cfi_startproc
+# define cfi_endproc            .cfi_endproc
+# define cfi_def_cfa(reg, off)      .cfi_def_cfa reg, off
+# define cfi_def_cfa_register(reg)  .cfi_def_cfa_register reg
+# define cfi_def_cfa_offset(off)    .cfi_def_cfa_offset off
+# define cfi_adjust_cfa_offset(off) .cfi_adjust_cfa_offset off
+# define cfi_offset(reg, off)       .cfi_offset reg, off
+# define cfi_rel_offset(reg, off)   .cfi_rel_offset reg, off
+# define cfi_val_offset(reg, off)   .cfi_val_offset reg, off
+# define cfi_register(r1, r2)       .cfi_register r1, r2
+# define cfi_return_column(reg) .cfi_return_column reg
+# define cfi_restore(reg)       .cfi_restore reg
+# define cfi_same_value(reg)        .cfi_same_value reg
+# define cfi_undefined(reg)     .cfi_undefined reg
+# define cfi_remember_state     .cfi_remember_state
+# define cfi_restore_state      .cfi_restore_state
+# define cfi_window_save        .cfi_window_save
+# define cfi_personality(enc, exp)  .cfi_personality enc, exp
+# define cfi_lsda(enc, exp)     .cfi_lsda enc, exp
 
 #else /* ! ASSEMBLER */
 
 # define CFI_STRINGIFY(Name) CFI_STRINGIFY2 (Name)
 # define CFI_STRINGIFY2(Name) #Name
-# define CFI_STARTPROC	".cfi_startproc"
-# define CFI_ENDPROC	".cfi_endproc"
-# define CFI_DEF_CFA(reg, off)	\
+# define CFI_STARTPROC  ".cfi_startproc"
+# define CFI_ENDPROC    ".cfi_endproc"
+# define CFI_DEF_CFA(reg, off)  \
    ".cfi_def_cfa " CFI_STRINGIFY(reg) "," CFI_STRINGIFY(off)
 # define CFI_DEF_CFA_REGISTER(reg) \
    ".cfi_def_cfa_register " CFI_STRINGIFY(reg)

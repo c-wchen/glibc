@@ -20,10 +20,9 @@
 #define __sigstack_defined 1
 
 /* Structure describing a signal stack (obsolete).  */
-struct sigstack
-  {
-    void *ss_sp;		/* Signal stack pointer.  */
-    int ss_onstack;		/* Nonzero if executing on this stack.  */
-  };
+struct sigstack {
+    void *ss_sp;        /* Signal stack pointer.  */
+    int ss_onstack;     /* Nonzero if executing on this stack.  */
+};
 
 #endif

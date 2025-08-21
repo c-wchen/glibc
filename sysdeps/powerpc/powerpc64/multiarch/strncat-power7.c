@@ -19,10 +19,10 @@
 
 #define STRNCAT __strncat_power7
 
-extern __typeof (strncat) __strncat_power7 attribute_hidden;
-extern __typeof (strlen) __strlen_power7 attribute_hidden;
-extern __typeof (strnlen) __strnlen_power7 attribute_hidden;
-extern __typeof (memcpy) __memcpy_power7 attribute_hidden;
+extern __typeof(strncat) __strncat_power7 attribute_hidden;
+extern __typeof(strlen) __strlen_power7 attribute_hidden;
+extern __typeof(strnlen) __strnlen_power7 attribute_hidden;
+extern __typeof(memcpy) __memcpy_power7 attribute_hidden;
 
 #define strlen    __strlen_power7
 #define __strnlen __strnlen_power7

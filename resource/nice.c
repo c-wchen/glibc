@@ -20,11 +20,10 @@
 
 /* Increment the scheduling priority of the calling process by INCR.
    The superuser may use a negative INCR to decrement the priority.  */
-int
-nice (int incr)
+int nice(int incr)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (nice)
+stub_warning(nice)

@@ -24,67 +24,59 @@
 volatile float fa = 1.0f, fb = 0.0f, fc = FLT_MAX, fr;
 volatile long double lda = 1.0L, ldb = 0.0L, ldc = LDBL_MAX, ldr;
 
-static void
-raise_exceptions (void)
+static void raise_exceptions(void)
 {
-  /* Raise exceptions both with feraiseexcept and arithmetic to allow
-     for case of multiple floating-point units with separate
-     exceptions state.  */
-  feraiseexcept (FE_ALL_EXCEPT);
-  fr = fb / fb;
-  fr = fa / fb;
-  fr = fc * fc;
-  fr = fa / fc / fc;
-  ldr = ldb / ldb;
-  ldr = lda / ldb;
-  ldr = ldc * ldc;
-  ldr = lda / ldc / ldc;
+    /* Raise exceptions both with feraiseexcept and arithmetic to allow
+       for case of multiple floating-point units with separate
+       exceptions state.  */
+    feraiseexcept(FE_ALL_EXCEPT);
+    fr = fb / fb;
+    fr = fa / fb;
+    fr = fc * fc;
+    fr = fa / fc / fc;
+    ldr = ldb / ldb;
+    ldr = lda / ldb;
+    ldr = ldc * ldc;
+    ldr = lda / ldc / ldc;
 }
 
-static __attribute__ ((noinline)) int
-run_tests (void)
+static __attribute__((noinline)) int
+run_tests(void)
 {
-  int result = 0;
-  raise_exceptions ();
-  if (fesetenv (FE_DFL_ENV) == 0)
-    {
-      puts ("PASS: fesetenv (FE_DFL_ENV)");
-      if (fetestexcept (FE_ALL_EXCEPT) == 0)
-	puts ("PASS: fesetenv (FE_DFL_ENV) clearing exceptions");
-      else
-	{
-	  puts ("FAIL: fesetenv (FE_DFL_ENV) clearing exceptions");
-	  result = 1;
-	}
-    }
-  else
-    {
-      puts ("FAIL: fesetenv (FE_DFL_ENV)");
-      result = 1;
+    int result = 0;
+    raise_exceptions();
+    if (fesetenv(FE_DFL_ENV) == 0) {
+        puts("PASS: fesetenv (FE_DFL_ENV)");
+        if (fetestexcept(FE_ALL_EXCEPT) == 0) {
+            puts("PASS: fesetenv (FE_DFL_ENV) clearing exceptions");
+        } else {
+            puts("FAIL: fesetenv (FE_DFL_ENV) clearing exceptions");
+            result = 1;
+        }
+    } else {
+        puts("FAIL: fesetenv (FE_DFL_ENV)");
+        result = 1;
     }
 #ifdef FE_NOMASK_ENV
-  raise_exceptions ();
-  if (fesetenv (FE_NOMASK_ENV) == 0)
-    {
-      if (fetestexcept (FE_ALL_EXCEPT) == 0)
-	puts ("PASS: fesetenv (FE_NOMASK_ENV) clearing exceptions");
-      else
-	{
-	  puts ("FAIL: fesetenv (FE_NOMASK_ENV) clearing exceptions");
-	  result = 1;
-	}
+    raise_exceptions();
+    if (fesetenv(FE_NOMASK_ENV) == 0) {
+        if (fetestexcept(FE_ALL_EXCEPT) == 0) {
+            puts("PASS: fesetenv (FE_NOMASK_ENV) clearing exceptions");
+        } else {
+            puts("FAIL: fesetenv (FE_NOMASK_ENV) clearing exceptions");
+            result = 1;
+        }
+    } else {
+        puts("fesetenv (FE_NOMASK_ENV) failed, cannot test");
     }
-  else
-    puts ("fesetenv (FE_NOMASK_ENV) failed, cannot test");
 #endif
-  return result;
+    return result;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  CHECK_CAN_TEST;
-  return run_tests ();
+    CHECK_CAN_TEST;
+    return run_tests();
 }
 
 #define TEST_FUNCTION do_test ()

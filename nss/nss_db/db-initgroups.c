@@ -31,110 +31,109 @@
 /* The hashing function we use.  */
 #include "../intl/hash-string.h"
 
-enum nss_status
-_nss_db_initgroups_dyn (const char *user, gid_t group, long int *start,
-			long int *size, gid_t **groupsp, long int limit,
-			int *errnop)
-{
-  struct nss_db_map state = { NULL, 0 };
-  enum nss_status status = internal_setent (_PATH_VARDB "group.db", &state);
-  if (status != NSS_STATUS_SUCCESS)
+enum nss_status _nss_db_initgroups_dyn(const char *user, gid_t group, long int *start,
+                                       long int *size, gid_t **groupsp, long int limit,
+                                       int *errnop) {
+    struct nss_db_map state = { NULL, 0 };
+    enum nss_status status = internal_setent(_PATH_VARDB "group.db", &state);
+    if (status != NSS_STATUS_SUCCESS)
     {
-      *errnop = errno;
-      return status;
+        *errnop = errno;
+        return status;
     }
 
-  const struct nss_db_header *header = state.header;
-  int i;
-  for (i = 0; i < header->ndbs; ++i)
-    if (header->dbs[i].id == ':')
-      break;
-  if (i == header->ndbs)
+    const struct nss_db_header *header = state.header;
+    int i;
+    for (i = 0; i < header->ndbs; ++i)
+        if (header->dbs[i].id == ':')
+        {
+            break;
+        }
+    if (i == header->ndbs)
     {
-      status = NSS_STATUS_UNAVAIL;
-      goto out;
+        status = NSS_STATUS_UNAVAIL;
+        goto out;
     }
 
-  const stridx_t *hashtable
-    = (const stridx_t *) ((const char *) header
-			  + header->dbs[i].hashoffset);
-  const char *valstrtab = (const char *) header + header->valstroffset;
-  size_t userlen = strlen (user);
-  uint32_t hashval = __hash_string (user);
-  size_t hidx = hashval % header->dbs[i].hashsize;
-  size_t hval2 = 1 + hashval % (header->dbs[i].hashsize - 2);
+    const stridx_t *hashtable
+        = (const stridx_t *)((const char *) header
+                             + header->dbs[i].hashoffset);
+    const char *valstrtab = (const char *) header + header->valstroffset;
+    size_t userlen = strlen(user);
+    uint32_t hashval = __hash_string(user);
+    size_t hidx = hashval % header->dbs[i].hashsize;
+    size_t hval2 = 1 + hashval % (header->dbs[i].hashsize - 2);
 
-  gid_t *groups = *groupsp;
+    gid_t *groups = *groupsp;
 
-  status = NSS_STATUS_NOTFOUND;
-  while (hashtable[hidx] != ~((stridx_t) 0))
+    status = NSS_STATUS_NOTFOUND;
+    while (hashtable[hidx] != ~((stridx_t) 0))
     {
-      const char *valstr = valstrtab + hashtable[hidx];
-      while (isblank (*valstr))
-	++valstr;
+        const char *valstr = valstrtab + hashtable[hidx];
+        while (isblank(*valstr)) {
+            ++valstr;
+        }
 
-      if (strncmp (valstr, user, userlen) == 0 && isblank (valstr[userlen]))
-	{
-	  valstr += userlen + 1;
-	  while (isblank (*valstr))
-	    ++valstr;
+        if (strncmp(valstr, user, userlen) == 0 && isblank(valstr[userlen])) {
+            valstr += userlen + 1;
+            while (isblank(*valstr)) {
+                ++valstr;
+            }
 
-	  while (*valstr != '\0')
-	    {
-	      errno = 0;
-	      char *endp;
-	      unsigned long int n = strtoul (valstr, &endp, 10);
-	      if (*endp != ',' && *endp != '\0')
-		break;
-	      valstr = *endp == '\0' ? endp : endp + 1;
+            while (*valstr != '\0') {
+                errno = 0;
+                char *endp;
+                unsigned long int n = strtoul(valstr, &endp, 10);
+                if (*endp != ',' && *endp != '\0') {
+                    break;
+                }
+                valstr = *endp == '\0' ? endp : endp + 1;
 
-	      if (n != ULONG_MAX || errno != ERANGE)
-		{
-		  /* Insert the group.  */
-		  if (*start == *size)
-		    {
-		      /* Need a bigger buffer.  */
-		      if (limit > 0 && *size == limit)
-			{
-			  /* We reached the maximum.  */
-			  status = NSS_STATUS_SUCCESS;
-			  goto out;
-			}
+                if (n != ULONG_MAX || errno != ERANGE) {
+                    /* Insert the group.  */
+                    if (*start == *size) {
+                        /* Need a bigger buffer.  */
+                        if (limit > 0 && *size == limit) {
+                            /* We reached the maximum.  */
+                            status = NSS_STATUS_SUCCESS;
+                            goto out;
+                        }
 
-		      long int newsize;
-		      if (limit <= 0)
-			newsize = 2 * *size;
-		      else
-			newsize = MIN (limit, 2 * *size);
+                        long int newsize;
+                        if (limit <= 0) {
+                            newsize = 2 * *size;
+                        } else {
+                            newsize = MIN(limit, 2 * *size);
+                        }
 
-		      gid_t *newgroups = realloc (groups,
-						  newsize * sizeof (*groups));
-		      if (newgroups == NULL)
-			{
-			  *errnop = ENOMEM;
-			  status = NSS_STATUS_TRYAGAIN;
-			  goto out;
-			}
+                        gid_t *newgroups = realloc(groups,
+                                                   newsize * sizeof(*groups));
+                        if (newgroups == NULL) {
+                            *errnop = ENOMEM;
+                            status = NSS_STATUS_TRYAGAIN;
+                            goto out;
+                        }
 
-		      *groupsp = groups = newgroups;
-		      *size = newsize;
-		    }
+                        *groupsp = groups = newgroups;
+                        *size = newsize;
+                    }
 
-		  groups[*start] = n;
-		  *start += 1;
-		}
-	    }
+                    groups[*start] = n;
+                    *start += 1;
+                }
+            }
 
-	  status = NSS_STATUS_SUCCESS;
-	  break;
-	}
+            status = NSS_STATUS_SUCCESS;
+            break;
+        }
 
-      if ((hidx += hval2) >= header->dbs[i].hashsize)
-	hidx -= header->dbs[i].hashsize;
+        if ((hidx += hval2) >= header->dbs[i].hashsize) {
+            hidx -= header->dbs[i].hashsize;
+        }
     }
 
- out:
-  internal_endent (&state);
+out:
+    internal_endent(&state);
 
-  return status;
+    return status;
 }

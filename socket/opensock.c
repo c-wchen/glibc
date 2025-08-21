@@ -21,22 +21,24 @@
 
 /* Return a socket of any type.  The socket can be used in subsequent
    ioctl calls to talk to the kernel.  */
-int
-__opensock (void)
+int __opensock(void)
 {
-  /* SOCK_DGRAM is supported by all address families.  */
-  int type = SOCK_DGRAM | SOCK_CLOEXEC;
-  int fd;
+    /* SOCK_DGRAM is supported by all address families.  */
+    int type = SOCK_DGRAM | SOCK_CLOEXEC;
+    int fd;
 
-  fd = __socket (AF_UNIX, type, 0);
-  if (fd >= 0)
+    fd = __socket(AF_UNIX, type, 0);
+    if (fd >= 0) {
+        return fd;
+    }
+    fd = __socket(AF_INET, type, 0);
+    if (fd >= 0) {
+        return fd;
+    }
+    fd = __socket(AF_INET6, type, 0);
+    if (fd >= 0) {
+        return fd;
+    }
+    __set_errno(ENOENT);
     return fd;
-  fd = __socket (AF_INET, type, 0);
-  if (fd >= 0)
-    return fd;
-  fd = __socket (AF_INET6, type, 0);
-  if (fd >= 0)
-    return fd;
-  __set_errno (ENOENT);
-  return fd;
 }

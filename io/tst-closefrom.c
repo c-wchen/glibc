@@ -30,114 +30,110 @@
 
 #define NFDS 100
 
-static int
-closefrom_test (void)
+static int closefrom_test(void)
 {
-  struct support_descriptors *descrs = support_descriptors_list ();
+    struct support_descriptors *descrs = support_descriptors_list();
 
-  int lowfd = support_open_dev_null_range (NFDS, O_RDONLY, 0600);
+    int lowfd = support_open_dev_null_range(NFDS, O_RDONLY, 0600);
 
-  const int maximum_fd = lowfd + NFDS - 1;
-  const int half_fd = lowfd + NFDS / 2;
-  const int gap = lowfd + NFDS / 4;
+    const int maximum_fd = lowfd + NFDS - 1;
+    const int half_fd = lowfd + NFDS / 2;
+    const int gap = lowfd + NFDS / 4;
 
-  /* Close half of the descriptors and check result.  */
-  closefrom (half_fd);
+    /* Close half of the descriptors and check result.  */
+    closefrom(half_fd);
 
-  for (int i = half_fd; i <= maximum_fd; i++)
-    {
-      TEST_COMPARE (fcntl (i, F_GETFL), -1);
-      TEST_COMPARE (errno, EBADF);
+    for (int i = half_fd; i <= maximum_fd; i++) {
+        TEST_COMPARE(fcntl(i, F_GETFL), -1);
+        TEST_COMPARE(errno, EBADF);
     }
-  for (int i = lowfd; i < half_fd; i++)
-    TEST_VERIFY (fcntl (i, F_GETFL) > -1);
-
-  /* Create some gaps, close up to a threshold, and check result.  */
-  xclose (lowfd + 35);
-  xclose (lowfd + 38);
-  xclose (lowfd + 42);
-  xclose (lowfd + 46);
-
-  /* Close half of the descriptors and check result.  */
-  closefrom (gap);
-  for (int i = gap + 1; i < maximum_fd; i++)
-    {
-      TEST_COMPARE (fcntl (i, F_GETFL), -1);
-      TEST_COMPARE (errno, EBADF);
+    for (int i = lowfd; i < half_fd; i++) {
+        TEST_VERIFY(fcntl(i, F_GETFL) > -1);
     }
-  for (int i = lowfd; i < gap; i++)
-    TEST_VERIFY (fcntl (i, F_GETFL) > -1);
 
-  /* Close the remmaining but the last one.  */
-  closefrom (lowfd + 1);
-  for (int i = lowfd + 1; i <= maximum_fd; i++)
-    {
-      TEST_COMPARE (fcntl (i, F_GETFL), -1);
-      TEST_COMPARE (errno, EBADF);
+    /* Create some gaps, close up to a threshold, and check result.  */
+    xclose(lowfd + 35);
+    xclose(lowfd + 38);
+    xclose(lowfd + 42);
+    xclose(lowfd + 46);
+
+    /* Close half of the descriptors and check result.  */
+    closefrom(gap);
+    for (int i = gap + 1; i < maximum_fd; i++) {
+        TEST_COMPARE(fcntl(i, F_GETFL), -1);
+        TEST_COMPARE(errno, EBADF);
     }
-  TEST_VERIFY (fcntl (lowfd, F_GETFL) > -1);
+    for (int i = lowfd; i < gap; i++) {
+        TEST_VERIFY(fcntl(i, F_GETFL) > -1);
+    }
 
-  /* Close the last one.  */
-  closefrom (lowfd);
-  TEST_COMPARE (fcntl (lowfd, F_GETFL), -1);
-  TEST_COMPARE (errno, EBADF);
+    /* Close the remmaining but the last one.  */
+    closefrom(lowfd + 1);
+    for (int i = lowfd + 1; i <= maximum_fd; i++) {
+        TEST_COMPARE(fcntl(i, F_GETFL), -1);
+        TEST_COMPARE(errno, EBADF);
+    }
+    TEST_VERIFY(fcntl(lowfd, F_GETFL) > -1);
 
-  /* Double check by check the /proc.  */
-  support_descriptors_check (descrs);
-  support_descriptors_free (descrs);
+    /* Close the last one.  */
+    closefrom(lowfd);
+    TEST_COMPARE(fcntl(lowfd, F_GETFL), -1);
+    TEST_COMPARE(errno, EBADF);
 
-  return 0;
+    /* Double check by check the /proc.  */
+    support_descriptors_check(descrs);
+    support_descriptors_free(descrs);
+
+    return 0;
 }
 
 /* Check if closefrom works even when no new file descriptors can be
    created.  */
-static int
-closefrom_test_file_desc_limit (void)
+static int closefrom_test_file_desc_limit(void)
 {
-  int max_fd = NFDS;
-  {
-    struct rlimit rl;
-    if (getrlimit (RLIMIT_NOFILE, &rl) == -1)
-      FAIL_EXIT1 ("getrlimit (RLIMIT_NOFILE): %m");
-
-    max_fd = (rl.rlim_cur < max_fd ? rl.rlim_cur : max_fd);
-    rl.rlim_cur = max_fd;
-
-    if (setrlimit (RLIMIT_NOFILE, &rl) == 1)
-      FAIL_EXIT1 ("setrlimit (RLIMIT_NOFILE): %m");
-  }
-
-  /* Exhauste the file descriptor limit.  */
-  int lowfd = xopen ("/dev/null", O_RDONLY, 0600);
-  for (;;)
+    int max_fd = NFDS;
     {
-      int fd = open ("/dev/null", O_RDONLY, 0600);
-      if (fd == -1)
-	{
-	  if (errno != EMFILE)
-	    FAIL_EXIT1 ("open: %m");
-	  break;
-	}
-      TEST_VERIFY_EXIT (fd < max_fd);
+        struct rlimit rl;
+        if (getrlimit(RLIMIT_NOFILE, &rl) == -1) {
+            FAIL_EXIT1("getrlimit (RLIMIT_NOFILE): %m");
+        }
+
+        max_fd = (rl.rlim_cur < max_fd ? rl.rlim_cur : max_fd);
+        rl.rlim_cur = max_fd;
+
+        if (setrlimit(RLIMIT_NOFILE, &rl) == 1) {
+            FAIL_EXIT1("setrlimit (RLIMIT_NOFILE): %m");
+        }
     }
 
-  closefrom (lowfd);
-  for (int i = lowfd; i < NFDS; i++)
-    {
-      TEST_COMPARE (fcntl (i, F_GETFL), -1);
-      TEST_COMPARE (errno, EBADF);
+    /* Exhauste the file descriptor limit.  */
+    int lowfd = xopen("/dev/null", O_RDONLY, 0600);
+    for (;;) {
+        int fd = open("/dev/null", O_RDONLY, 0600);
+        if (fd == -1) {
+            if (errno != EMFILE) {
+                FAIL_EXIT1("open: %m");
+            }
+            break;
+        }
+        TEST_VERIFY_EXIT(fd < max_fd);
     }
 
-  return 0;
+    closefrom(lowfd);
+    for (int i = lowfd; i < NFDS; i++) {
+        TEST_COMPARE(fcntl(i, F_GETFL), -1);
+        TEST_COMPARE(errno, EBADF);
+    }
+
+    return 0;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  closefrom_test ();
-  closefrom_test_file_desc_limit ();
+    closefrom_test();
+    closefrom_test_file_desc_limit();
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

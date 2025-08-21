@@ -19,13 +19,12 @@
 #include <errno.h>
 
 /* Raise the signal SIG.  */
-int
-raise (int sig)
+int raise(int sig)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-weak_alias (raise, gsignal)
+weak_alias(raise, gsignal)
 
-stub_warning (raise)
-stub_warning (gsignal)
+stub_warning(raise)
+stub_warning(gsignal)

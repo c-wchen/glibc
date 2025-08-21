@@ -18,58 +18,58 @@
 
 #include "local-soft-fp.h"
 
-static long
-internal_compare (long al, long ah, long bl, long bh)
+static long internal_compare(long al, long ah, long bl, long bh)
 {
-  FP_DECL_EX;
-  FP_DECL_Q(A); FP_DECL_Q(B);
-  long r;
+    FP_DECL_EX;
+    FP_DECL_Q(A);
+    FP_DECL_Q(B);
+    long r;
 
-  AXP_UNPACK_RAW_Q(A, a);
-  AXP_UNPACK_RAW_Q(B, b);
-  FP_CMP_Q (r, A, B, 2, 2);
+    AXP_UNPACK_RAW_Q(A, a);
+    AXP_UNPACK_RAW_Q(B, b);
+    FP_CMP_Q(r, A, B, 2, 2);
 
-  FP_HANDLE_EXCEPTIONS;
+    FP_HANDLE_EXCEPTIONS;
 
-  return r;
+    return r;
 }
 
-long
-_OtsLssX (long al, long ah, long bl, long bh)
+long _OtsLssX(long al, long ah, long bl, long bh)
 {
-  long r = internal_compare (al, ah, bl, bh);
-  if (r == 2)
-    return -1;
-  else
-    return r < 0;
+    long r = internal_compare(al, ah, bl, bh);
+    if (r == 2) {
+        return -1;
+    } else {
+        return r < 0;
+    }
 }
 
-long
-_OtsLeqX (long al, long ah, long bl, long bh)
+long _OtsLeqX(long al, long ah, long bl, long bh)
 {
-  long r = internal_compare (al, ah, bl, bh);
-  if (r == 2)
-    return -1;
-  else
-    return r <= 0;
+    long r = internal_compare(al, ah, bl, bh);
+    if (r == 2) {
+        return -1;
+    } else {
+        return r <= 0;
+    }
 }
 
-long
-_OtsGtrX (long al, long ah, long bl, long bh)
+long _OtsGtrX(long al, long ah, long bl, long bh)
 {
-  long r = internal_compare (al, ah, bl, bh);
-  if (r == 2)
-    return -1;
-  else
-    return r > 0;
+    long r = internal_compare(al, ah, bl, bh);
+    if (r == 2) {
+        return -1;
+    } else {
+        return r > 0;
+    }
 }
 
-long
-_OtsGeqX (long al, long ah, long bl, long bh)
+long _OtsGeqX(long al, long ah, long bl, long bh)
 {
-  long r = internal_compare (al, ah, bl, bh);
-  if (r == 2)
-    return -1;
-  else
-    return r >= 0;
+    long r = internal_compare(al, ah, bl, bh);
+    if (r == 2) {
+        return -1;
+    } else {
+        return r >= 0;
+    }
 }

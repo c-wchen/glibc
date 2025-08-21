@@ -27,34 +27,35 @@ static char rcsid[] = "$NetBSD: $";
 #include <libm-alias-ldouble.h>
 #include <math-use-builtins.h>
 
-_Float128
-__logbl (_Float128 x)
+_Float128 __logbl(_Float128 x)
 {
 #if USE_LOGBL_BUILTIN
-  return __builtin_logbl (x);
+    return __builtin_logbl(x);
 #else
-  /* Use generic implementation.  */
-  int64_t lx, hx, ex;
+    /* Use generic implementation.  */
+    int64_t lx, hx, ex;
 
-  GET_LDOUBLE_WORDS64 (hx, lx, x);
-  hx &= 0x7fffffffffffffffLL;	/* high |x| */
-  if ((hx | lx) == 0)
-    return -1.0 / fabsl (x);
-  if (hx >= 0x7fff000000000000LL)
-    return x * x;
-  if ((ex = hx >> 48) == 0)	/* IEEE 754 logb */
-    {
-      /* POSIX specifies that denormal number is treated as
-         though it were normalized.  */
-      int ma;
-      if (hx == 0)
-	ma = __builtin_clzll (lx) + 64;
-      else
-	ma = __builtin_clzll (hx);
-      ex -= ma - 16;
+    GET_LDOUBLE_WORDS64(hx, lx, x);
+    hx &= 0x7fffffffffffffffLL;   /* high |x| */
+    if ((hx | lx) == 0) {
+        return -1.0 / fabsl(x);
     }
-  return (_Float128) (ex - 16383);
+    if (hx >= 0x7fff000000000000LL) {
+        return x * x;
+    }
+    if ((ex = hx >> 48) == 0) { /* IEEE 754 logb */
+        /* POSIX specifies that denormal number is treated as
+           though it were normalized.  */
+        int ma;
+        if (hx == 0) {
+            ma = __builtin_clzll(lx) + 64;
+        } else {
+            ma = __builtin_clzll(hx);
+        }
+        ex -= ma - 16;
+    }
+    return (_Float128)(ex - 16383);
 #endif /* ! USE_LOGBL_BUILTIN  */
 }
 
-libm_alias_ldouble (__logb, logb)
+libm_alias_ldouble(__logb, logb)

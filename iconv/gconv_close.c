@@ -21,28 +21,26 @@
 #include <gconv_int.h>
 
 
-int
-__gconv_close (__gconv_t cd)
+int __gconv_close(__gconv_t cd)
 {
-  struct __gconv_step *srunp;
-  struct __gconv_step_data *drunp;
-  size_t nsteps;
+    struct __gconv_step *srunp;
+    struct __gconv_step_data *drunp;
+    size_t nsteps;
 
-  /* Free all resources by calling destructor functions and release
-     the implementations.  */
-  srunp = cd->__steps;
-  nsteps = cd->__nsteps;
-  drunp = cd->__data;
-  do
-    {
-      if (!(drunp->__flags & __GCONV_IS_LAST) && drunp->__outbuf != NULL)
-	free (drunp->__outbuf);
-    }
-  while (!((drunp++)->__flags & __GCONV_IS_LAST));
+    /* Free all resources by calling destructor functions and release
+       the implementations.  */
+    srunp = cd->__steps;
+    nsteps = cd->__nsteps;
+    drunp = cd->__data;
+    do {
+        if (!(drunp->__flags & __GCONV_IS_LAST) && drunp->__outbuf != NULL) {
+            free(drunp->__outbuf);
+        }
+    } while (!((drunp++)->__flags & __GCONV_IS_LAST));
 
-  /* Free the data allocated for the descriptor.  */
-  free (cd);
+    /* Free the data allocated for the descriptor.  */
+    free(cd);
 
-  /* Close the participating modules.  */
-  return __gconv_close_transform (srunp, nsteps);
+    /* Close the participating modules.  */
+    return __gconv_close_transform(srunp, nsteps);
 }

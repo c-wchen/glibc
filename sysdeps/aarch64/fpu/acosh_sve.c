@@ -23,29 +23,29 @@
 #define One (0x3ff0000000000000)
 #define Thres (0x1ff0000000000000) /* asuint64 (0x1p511) - One.  */
 
-static svfloat64_t NOINLINE
-special_case (svfloat64_t x, svfloat64_t y, svbool_t special)
+static svfloat64_t NOINLINE special_case(svfloat64_t x, svfloat64_t y, svbool_t special)
 {
-  return sv_call_f64 (acosh, x, y, special);
+    return sv_call_f64(acosh, x, y, special);
 }
 
 /* SVE approximation for double-precision acosh, based on log1p.
    The largest observed error is 3.14 ULP in the region where the
    argument to log1p falls in the k=0 interval, i.e. x close to 1:
    SV_NAME_D1 (acosh)(0x1.1e80ed12f0ad1p+0) got 0x1.ef0cee7c33ce1p-2
-					   want 0x1.ef0cee7c33ce4p-2.  */
-svfloat64_t SV_NAME_D1 (acosh) (svfloat64_t x, const svbool_t pg)
+                       want 0x1.ef0cee7c33ce4p-2.  */
+svfloat64_t SV_NAME_D1(acosh)(svfloat64_t x, const svbool_t pg)
 {
-  /* (ix - One) >= (BigBound - One).  */
-  svuint64_t ix = svreinterpret_u64 (x);
-  svbool_t special = svcmpge (pg, svsub_x (pg, ix, One), Thres);
+    /* (ix - One) >= (BigBound - One).  */
+    svuint64_t ix = svreinterpret_u64(x);
+    svbool_t special = svcmpge(pg, svsub_x(pg, ix, One), Thres);
 
-  svfloat64_t xm1 = svsub_x (pg, x, 1.0);
-  svfloat64_t u = svmul_x (pg, xm1, svadd_x (pg, x, 1.0));
-  svfloat64_t y = svadd_x (pg, xm1, svsqrt_x (pg, u));
+    svfloat64_t xm1 = svsub_x(pg, x, 1.0);
+    svfloat64_t u = svmul_x(pg, xm1, svadd_x(pg, x, 1.0));
+    svfloat64_t y = svadd_x(pg, xm1, svsqrt_x(pg, u));
 
-  /* Fall back to scalar routine for special lanes.  */
-  if (__glibc_unlikely (svptest_any (pg, special)))
-    return special_case (x, sv_log1p_inline (y, pg), special);
-  return sv_log1p_inline (y, pg);
+    /* Fall back to scalar routine for special lanes.  */
+    if (__glibc_unlikely(svptest_any(pg, special))) {
+        return special_case(x, sv_log1p_inline(y, pg), special);
+    }
+    return sv_log1p_inline(y, pg);
 }

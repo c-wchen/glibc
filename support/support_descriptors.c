@@ -27,22 +27,20 @@
 #include <sys/sysmacros.h>
 #include <xunistd.h>
 
-struct procfs_descriptor
-{
-  int fd;
-  char *link_target;
-  dev_t dev;
-  ino64_t ino;
+struct procfs_descriptor {
+    int fd;
+    char *link_target;
+    dev_t dev;
+    ino64_t ino;
 };
 
 /* Used with qsort.  */
-static int
-descriptor_compare (const void *l, const void *r)
+static int descriptor_compare(const void *l, const void *r)
 {
-  const struct procfs_descriptor *left = l;
-  const struct procfs_descriptor *right = r;
-  /* Cannot overflow due to limited file descriptor range.  */
-  return left->fd - right->fd;
+    const struct procfs_descriptor *left = l;
+    const struct procfs_descriptor *right = r;
+    /* Cannot overflow due to limited file descriptor range.  */
+    return left->fd - right->fd;
 }
 
 #define DYNARRAY_STRUCT descriptor_list
@@ -52,224 +50,210 @@ descriptor_compare (const void *l, const void *r)
 #define DYNARRAY_INITIAL_SIZE 0
 #include <malloc/dynarray-skeleton.c>
 
-struct support_descriptors
-{
-  struct descriptor_list list;
+struct support_descriptors {
+    struct descriptor_list list;
 };
 
 struct support_descriptors *
-support_descriptors_list (void)
+support_descriptors_list(void)
 {
-  struct support_descriptors *result = xmalloc (sizeof (*result));
-  descriptor_list_init (&result->list);
+    struct support_descriptors *result = xmalloc(sizeof(*result));
+    descriptor_list_init(&result->list);
 
-  DIR *fds = opendir ("/proc/self/fd");
-  if (fds == NULL)
-    FAIL_EXIT1 ("opendir (\"/proc/self/fd\"): %m");
+    DIR *fds = opendir("/proc/self/fd");
+    if (fds == NULL) {
+        FAIL_EXIT1("opendir (\"/proc/self/fd\"): %m");
+    }
 
-  while (true)
-    {
-      errno = 0;
-      struct dirent64 *e = readdir64 (fds);
-      if (e == NULL)
-        {
-          if (errno != 0)
-            FAIL_EXIT1 ("readdir: %m");
-          break;
+    while (true) {
+        errno = 0;
+        struct dirent64 *e = readdir64(fds);
+        if (e == NULL) {
+            if (errno != 0) {
+                FAIL_EXIT1("readdir: %m");
+            }
+            break;
         }
 
-      if (e->d_name[0] == '.')
-        continue;
+        if (e->d_name[0] == '.') {
+            continue;
+        }
 
-      char *endptr;
-      long int fd = strtol (e->d_name, &endptr, 10);
-      if (*endptr != '\0' || fd < 0 || fd > INT_MAX)
-        FAIL_EXIT1 ("readdir: invalid file descriptor name: /proc/self/fd/%s",
-                    e->d_name);
+        char *endptr;
+        long int fd = strtol(e->d_name, &endptr, 10);
+        if (*endptr != '\0' || fd < 0 || fd > INT_MAX)
+            FAIL_EXIT1("readdir: invalid file descriptor name: /proc/self/fd/%s",
+                       e->d_name);
 
-      /* Skip the descriptor which is used to enumerate the
-         descriptors.  */
-      if (fd == dirfd (fds))
-        continue;
+        /* Skip the descriptor which is used to enumerate the
+           descriptors.  */
+        if (fd == dirfd(fds)) {
+            continue;
+        }
 
-      char *target;
-      {
-        char *path = xasprintf ("/proc/self/fd/%ld", fd);
-        target = xreadlink (path);
-        free (path);
-      }
-      struct stat64 st;
-      if (fstat64 (fd, &st) != 0)
-        FAIL_EXIT1 ("readdir: fstat64 (%ld) failed: %m", fd);
+        char *target;
+        {
+            char *path = xasprintf("/proc/self/fd/%ld", fd);
+            target = xreadlink(path);
+            free(path);
+        }
+        struct stat64 st;
+        if (fstat64(fd, &st) != 0) {
+            FAIL_EXIT1("readdir: fstat64 (%ld) failed: %m", fd);
+        }
 
-      struct procfs_descriptor *item = descriptor_list_emplace (&result->list);
-      if (item == NULL)
-        FAIL_EXIT1 ("descriptor_list_emplace: %m");
-      item->fd = fd;
-      item->link_target = target;
-      item->dev = st.st_dev;
-      item->ino = st.st_ino;
+        struct procfs_descriptor *item = descriptor_list_emplace(&result->list);
+        if (item == NULL) {
+            FAIL_EXIT1("descriptor_list_emplace: %m");
+        }
+        item->fd = fd;
+        item->link_target = target;
+        item->dev = st.st_dev;
+        item->ino = st.st_ino;
     }
 
-  closedir (fds);
+    closedir(fds);
 
-  /* Perform a merge join between descrs and current.  This assumes
-     that the arrays are sorted by file descriptor.  */
+    /* Perform a merge join between descrs and current.  This assumes
+       that the arrays are sorted by file descriptor.  */
 
-  qsort (descriptor_list_begin (&result->list),
-         descriptor_list_size (&result->list),
-         sizeof (struct procfs_descriptor), descriptor_compare);
+    qsort(descriptor_list_begin(&result->list),
+          descriptor_list_size(&result->list),
+          sizeof(struct procfs_descriptor), descriptor_compare);
 
-  return result;
+    return result;
 }
 
-void
-support_descriptors_free (struct support_descriptors *descrs)
+void support_descriptors_free(struct support_descriptors *descrs)
 {
-  descriptor_list_free (&descrs->list);
-  free (descrs);
+    descriptor_list_free(&descrs->list);
+    free(descrs);
 }
 
-void
-support_descriptors_dump (struct support_descriptors *descrs,
-                          const char *prefix, FILE *fp)
+void support_descriptors_dump(struct support_descriptors *descrs,
+                              const char *prefix, FILE *fp)
 {
-  struct procfs_descriptor *end = descriptor_list_end (&descrs->list);
-  for (struct procfs_descriptor *d = descriptor_list_begin (&descrs->list);
-       d != end; ++d)
-    {
-      char *quoted = support_quote_string (d->link_target);
-      fprintf (fp, "%s%d: target=\"%s\" major=%lld minor=%lld ino=%lld\n",
-               prefix, d->fd, quoted,
-               (long long int) major (d->dev),
-               (long long int) minor (d->dev),
-               (long long int) d->ino);
-      free (quoted);
+    struct procfs_descriptor *end = descriptor_list_end(&descrs->list);
+    for (struct procfs_descriptor *d = descriptor_list_begin(&descrs->list);
+         d != end; ++d) {
+        char *quoted = support_quote_string(d->link_target);
+        fprintf(fp, "%s%d: target=\"%s\" major=%lld minor=%lld ino=%lld\n",
+                prefix, d->fd, quoted,
+                (long long int) major(d->dev),
+                (long long int) minor(d->dev),
+                (long long int) d->ino);
+        free(quoted);
     }
 }
 
-static void
-dump_mismatch (bool *first,
-               struct support_descriptors *descrs,
-               struct support_descriptors *current)
-{
-  if (*first)
-    *first = false;
-  else
-    return;
-
-  puts ("error: Differences found in descriptor set");
-  puts ("Reference descriptor set:");
-  support_descriptors_dump (descrs, "  ", stdout);
-  puts ("Current descriptor set:");
-  support_descriptors_dump (current, "  ", stdout);
-  puts ("Differences:");
-}
-
-static void
-report_closed_descriptor (bool *first,
+static void dump_mismatch(bool *first,
                           struct support_descriptors *descrs,
-                          struct support_descriptors *current,
-                          struct procfs_descriptor *left)
+                          struct support_descriptors *current)
 {
-  support_record_failure ();
-  dump_mismatch (first, descrs, current);
-  printf ("error: descriptor %d was closed\n", left->fd);
+    if (*first) {
+        *first = false;
+    } else {
+        return;
+    }
+
+    puts("error: Differences found in descriptor set");
+    puts("Reference descriptor set:");
+    support_descriptors_dump(descrs, "  ", stdout);
+    puts("Current descriptor set:");
+    support_descriptors_dump(current, "  ", stdout);
+    puts("Differences:");
 }
 
-static void
-report_opened_descriptor (bool *first,
-                          struct support_descriptors *descrs,
-                          struct support_descriptors *current,
-                          struct procfs_descriptor *right)
+static void report_closed_descriptor(bool *first,
+                                     struct support_descriptors *descrs,
+                                     struct support_descriptors *current,
+                                     struct procfs_descriptor *left)
 {
-  support_record_failure ();
-  dump_mismatch (first, descrs, current);
-  char *quoted = support_quote_string (right->link_target);
-  printf ("error: descriptor %d was opened (\"%s\")\n", right->fd, quoted);
-  free (quoted);
+    support_record_failure();
+    dump_mismatch(first, descrs, current);
+    printf("error: descriptor %d was closed\n", left->fd);
 }
 
-void
-support_descriptors_check (struct support_descriptors *descrs)
+static void report_opened_descriptor(bool *first,
+                                     struct support_descriptors *descrs,
+                                     struct support_descriptors *current,
+                                     struct procfs_descriptor *right)
 {
-  struct support_descriptors *current = support_descriptors_list ();
+    support_record_failure();
+    dump_mismatch(first, descrs, current);
+    char *quoted = support_quote_string(right->link_target);
+    printf("error: descriptor %d was opened (\"%s\")\n", right->fd, quoted);
+    free(quoted);
+}
 
-  /* Perform a merge join between descrs and current.  This assumes
-     that the arrays are sorted by file descriptor.  */
+void support_descriptors_check(struct support_descriptors *descrs)
+{
+    struct support_descriptors *current = support_descriptors_list();
 
-  struct procfs_descriptor *left = descriptor_list_begin (&descrs->list);
-  struct procfs_descriptor *left_end = descriptor_list_end (&descrs->list);
-  struct procfs_descriptor *right = descriptor_list_begin (&current->list);
-  struct procfs_descriptor *right_end = descriptor_list_end (&current->list);
+    /* Perform a merge join between descrs and current.  This assumes
+       that the arrays are sorted by file descriptor.  */
 
-  bool first = true;
-  while (left != left_end && right != right_end)
-    {
-      if (left->fd == right->fd)
-        {
-          if (strcmp (left->link_target, right->link_target) != 0)
-            {
-              support_record_failure ();
-              char *left_quoted = support_quote_string (left->link_target);
-              char *right_quoted = support_quote_string (right->link_target);
-              dump_mismatch (&first, descrs, current);
-              printf ("error: descriptor %d changed from \"%s\" to \"%s\"\n",
-                      left->fd, left_quoted, right_quoted);
-              free (left_quoted);
-              free (right_quoted);
+    struct procfs_descriptor *left = descriptor_list_begin(&descrs->list);
+    struct procfs_descriptor *left_end = descriptor_list_end(&descrs->list);
+    struct procfs_descriptor *right = descriptor_list_begin(&current->list);
+    struct procfs_descriptor *right_end = descriptor_list_end(&current->list);
+
+    bool first = true;
+    while (left != left_end && right != right_end) {
+        if (left->fd == right->fd) {
+            if (strcmp(left->link_target, right->link_target) != 0) {
+                support_record_failure();
+                char *left_quoted = support_quote_string(left->link_target);
+                char *right_quoted = support_quote_string(right->link_target);
+                dump_mismatch(&first, descrs, current);
+                printf("error: descriptor %d changed from \"%s\" to \"%s\"\n",
+                       left->fd, left_quoted, right_quoted);
+                free(left_quoted);
+                free(right_quoted);
             }
-          if (left->dev != right->dev)
-            {
-              support_record_failure ();
-              dump_mismatch (&first, descrs, current);
-              printf ("error: descriptor %d changed device"
-                      " from %lld:%lld to %lld:%lld\n",
-                      left->fd,
-                      (long long int) major (left->dev),
-                      (long long int) minor (left->dev),
-                      (long long int) major (right->dev),
-                      (long long int) minor (right->dev));
+            if (left->dev != right->dev) {
+                support_record_failure();
+                dump_mismatch(&first, descrs, current);
+                printf("error: descriptor %d changed device"
+                       " from %lld:%lld to %lld:%lld\n",
+                       left->fd,
+                       (long long int) major(left->dev),
+                       (long long int) minor(left->dev),
+                       (long long int) major(right->dev),
+                       (long long int) minor(right->dev));
             }
-          if (left->ino != right->ino)
-            {
-              support_record_failure ();
-              dump_mismatch (&first, descrs, current);
-              printf ("error: descriptor %d changed ino from %lld to %lld\n",
-                      left->fd,
-                      (long long int) left->ino, (long long int) right->ino);
+            if (left->ino != right->ino) {
+                support_record_failure();
+                dump_mismatch(&first, descrs, current);
+                printf("error: descriptor %d changed ino from %lld to %lld\n",
+                       left->fd,
+                       (long long int) left->ino, (long long int) right->ino);
             }
-          ++left;
-          ++right;
-        }
-      else if (left->fd < right->fd)
-        {
-          /* Gap on the right.  */
-          report_closed_descriptor (&first, descrs, current, left);
-          ++left;
-        }
-      else
-        {
-          /* Gap on the left.  */
-          TEST_VERIFY_EXIT (left->fd > right->fd);
-          report_opened_descriptor (&first, descrs, current, right);
-          ++right;
+            ++left;
+            ++right;
+        } else if (left->fd < right->fd) {
+            /* Gap on the right.  */
+            report_closed_descriptor(&first, descrs, current, left);
+            ++left;
+        } else {
+            /* Gap on the left.  */
+            TEST_VERIFY_EXIT(left->fd > right->fd);
+            report_opened_descriptor(&first, descrs, current, right);
+            ++right;
         }
     }
 
-  while (left != left_end)
-    {
-      /* Closed descriptors (more descriptors on the left).  */
-      report_closed_descriptor (&first, descrs, current, left);
-      ++left;
+    while (left != left_end) {
+        /* Closed descriptors (more descriptors on the left).  */
+        report_closed_descriptor(&first, descrs, current, left);
+        ++left;
     }
 
-  while (right != right_end)
-    {
-      /* Opened descriptors (more descriptors on the right).  */
-      report_opened_descriptor (&first, descrs, current, right);
-      ++right;
+    while (right != right_end) {
+        /* Opened descriptors (more descriptors on the right).  */
+        report_opened_descriptor(&first, descrs, current, right);
+        ++right;
     }
 
-  support_descriptors_free (current);
+    support_descriptors_free(current);
 }

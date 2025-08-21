@@ -23,24 +23,25 @@
 #include <nss.h>
 #include <support/check.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int ret;
+    int ret;
 
-  /* Run getent to fetch the IPv4 address for host test4.  This forces
-     /etc/hosts to be parsed.  Use --no-addrconfig to return addresses
-     even in an IPv6-only environment.  */
-  ret = system("getent --no-addrconfig ahostsv4 test4");
-  if (ret != 0)
-    FAIL_EXIT1("ahostsv4 failed");
+    /* Run getent to fetch the IPv4 address for host test4.  This forces
+       /etc/hosts to be parsed.  Use --no-addrconfig to return addresses
+       even in an IPv6-only environment.  */
+    ret = system("getent --no-addrconfig ahostsv4 test4");
+    if (ret != 0) {
+        FAIL_EXIT1("ahostsv4 failed");
+    }
 
-  /* Likewise for IPv6.  */
-  ret = system("getent --no-addrconfig  ahostsv6 test6");
-  if (ret != 0)
-    FAIL_EXIT1("ahostsv6 failed");
+    /* Likewise for IPv6.  */
+    ret = system("getent --no-addrconfig  ahostsv6 test6");
+    if (ret != 0) {
+        FAIL_EXIT1("ahostsv6 failed");
+    }
 
-  exit (0);
+    exit(0);
 }
 
 #include <support/test-driver.c>

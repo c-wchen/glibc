@@ -28,46 +28,46 @@
 
 #define call_str(f, name) f(name, #name)
 
-long
-do_sysconf (int name, const char * str)
+long do_sysconf(int name, const char *str)
 {
-  int rc = 0;
-  long val;
-  errno = 0;
-  val = sysconf (name);
-  if (val == -1) {
-    if (errno != EINVAL) {
-      printf("error: sysconf(%s): unexpected errno(%d)\n", str, errno);
-      exit (1);
+    int rc = 0;
+    long val;
+    errno = 0;
+    val = sysconf(name);
+    if (val == -1) {
+        if (errno != EINVAL) {
+            printf("error: sysconf(%s): unexpected errno(%d)\n", str, errno);
+            exit(1);
+        }
+        printf("info: sysconf(%s): unsupported\n", str);
+        rc = 1;
+    } else {
+        printf("sysconf(%s) = 0x%lx (%ld)\n", str, val, val);
     }
-    printf ("info: sysconf(%s): unsupported\n", str);
-    rc = 1;
-  } else
-    printf ("sysconf(%s) = 0x%lx (%ld)\n", str, val, val);
-  return rc;
+    return rc;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int rc = 0;
+    int rc = 0;
 
-  rc += call_str (do_sysconf, _SC_LEVEL1_ICACHE_SIZE);
-  rc += call_str (do_sysconf, _SC_LEVEL1_ICACHE_ASSOC);
-  rc += call_str (do_sysconf, _SC_LEVEL1_ICACHE_LINESIZE);
-  rc += call_str (do_sysconf, _SC_LEVEL1_DCACHE_SIZE);
-  rc += call_str (do_sysconf, _SC_LEVEL1_DCACHE_ASSOC);
-  rc += call_str (do_sysconf, _SC_LEVEL1_DCACHE_LINESIZE);
-  rc += call_str (do_sysconf, _SC_LEVEL2_CACHE_SIZE);
-  rc += call_str (do_sysconf, _SC_LEVEL2_CACHE_ASSOC);
-  rc += call_str (do_sysconf, _SC_LEVEL2_CACHE_LINESIZE);
-  rc += call_str (do_sysconf, _SC_LEVEL3_CACHE_SIZE);
-  rc += call_str (do_sysconf, _SC_LEVEL3_CACHE_ASSOC);
-  rc += call_str (do_sysconf, _SC_LEVEL3_CACHE_LINESIZE);
+    rc += call_str(do_sysconf, _SC_LEVEL1_ICACHE_SIZE);
+    rc += call_str(do_sysconf, _SC_LEVEL1_ICACHE_ASSOC);
+    rc += call_str(do_sysconf, _SC_LEVEL1_ICACHE_LINESIZE);
+    rc += call_str(do_sysconf, _SC_LEVEL1_DCACHE_SIZE);
+    rc += call_str(do_sysconf, _SC_LEVEL1_DCACHE_ASSOC);
+    rc += call_str(do_sysconf, _SC_LEVEL1_DCACHE_LINESIZE);
+    rc += call_str(do_sysconf, _SC_LEVEL2_CACHE_SIZE);
+    rc += call_str(do_sysconf, _SC_LEVEL2_CACHE_ASSOC);
+    rc += call_str(do_sysconf, _SC_LEVEL2_CACHE_LINESIZE);
+    rc += call_str(do_sysconf, _SC_LEVEL3_CACHE_SIZE);
+    rc += call_str(do_sysconf, _SC_LEVEL3_CACHE_ASSOC);
+    rc += call_str(do_sysconf, _SC_LEVEL3_CACHE_LINESIZE);
 
-  if (rc)
-    return EXIT_UNSUPPORTED;
-  return 0;
+    if (rc) {
+        return EXIT_UNSUPPORTED;
+    }
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -23,25 +23,25 @@
 # include <shlib-compat.h>
 # include "init-arch.h"
 
-extern __typeof (__stpncpy) __stpncpy_ppc attribute_hidden;
-extern __typeof (__stpncpy) __stpncpy_power7 attribute_hidden;
-extern __typeof (__stpncpy) __stpncpy_power8 attribute_hidden;
+extern __typeof(__stpncpy) __stpncpy_ppc attribute_hidden;
+extern __typeof(__stpncpy) __stpncpy_power7 attribute_hidden;
+extern __typeof(__stpncpy) __stpncpy_power8 attribute_hidden;
 # ifdef __LITTLE_ENDIAN__
-extern __typeof (__stpncpy) __stpncpy_power9 attribute_hidden;
+extern __typeof(__stpncpy) __stpncpy_power9 attribute_hidden;
 # endif
 # undef stpncpy
 # undef __stpncpy
 
-libc_ifunc_redirected (__redirect___stpncpy, __stpncpy,
+libc_ifunc_redirected(__redirect___stpncpy, __stpncpy,
 # ifdef __LITTLE_ENDIAN__
-		     (hwcap2 & PPC_FEATURE2_ARCH_3_00) &&
-		     (hwcap & PPC_FEATURE_HAS_VSX)
-		     ? __stpncpy_power9 :
+                      (hwcap2 &PPC_FEATURE2_ARCH_3_00) &&
+                      (hwcap &PPC_FEATURE_HAS_VSX)
+                      ? __stpncpy_power9 :
 # endif
-		       (hwcap2 & PPC_FEATURE2_ARCH_2_07)
-		       ? __stpncpy_power8
-		       : (hwcap & PPC_FEATURE_ARCH_2_06)
-			 ? __stpncpy_power7
-			 : __stpncpy_ppc);
-weak_alias (__stpncpy, stpncpy)
+                      (hwcap2 &PPC_FEATURE2_ARCH_2_07)
+                      ? __stpncpy_power8
+                      : (hwcap &PPC_FEATURE_ARCH_2_06)
+                      ? __stpncpy_power7
+                      : __stpncpy_ppc);
+weak_alias(__stpncpy, stpncpy)
 #endif

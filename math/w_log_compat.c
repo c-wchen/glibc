@@ -23,39 +23,34 @@
 
 
 #if LIBM_SVID_COMPAT && (SHLIB_COMPAT (libm, GLIBC_2_0, GLIBC_2_29) \
-			 || defined NO_LONG_DOUBLE \
-			 || defined LONG_DOUBLE_COMPAT)
+             || defined NO_LONG_DOUBLE \
+             || defined LONG_DOUBLE_COMPAT)
 /* wrapper log(x) */
-double
-__log_compat (double x)
+double __log_compat(double x)
 {
-  if (__builtin_expect (islessequal (x, 0.0), 0) && _LIB_VERSION != _IEEE_)
-    {
-      if (x == 0.0)
-	{
-	  __feraiseexcept (FE_DIVBYZERO);
-	  return __kernel_standard (x, x, 16); /* log(0) */
-	}
-      else
-	{
-	  __feraiseexcept (FE_INVALID);
-	  return __kernel_standard (x, x, 17); /* log(x<0) */
-	}
+    if (__builtin_expect(islessequal(x, 0.0), 0) && _LIB_VERSION != _IEEE_) {
+        if (x == 0.0) {
+            __feraiseexcept(FE_DIVBYZERO);
+            return __kernel_standard(x, x, 16);  /* log(0) */
+        } else {
+            __feraiseexcept(FE_INVALID);
+            return __kernel_standard(x, x, 17);  /* log(x<0) */
+        }
     }
 
-  return  __ieee754_log (x);
+    return  __ieee754_log(x);
 }
 # if SHLIB_COMPAT (libm, GLIBC_2_0, GLIBC_2_29)
-compat_symbol (libm, __log_compat, log, GLIBC_2_0);
+compat_symbol(libm, __log_compat, log, GLIBC_2_0);
 # endif
 # ifdef NO_LONG_DOUBLE
-weak_alias (__log_compat, logl)
+weak_alias(__log_compat, logl)
 # endif
 # ifdef LONG_DOUBLE_COMPAT
 /* Work around gas bug "multiple versions for symbol".  */
-weak_alias (__log_compat, __log_compat_alias)
+weak_alias(__log_compat, __log_compat_alias)
 
-LONG_DOUBLE_COMPAT_CHOOSE_libm_logl (
-  compat_symbol (libm, __log_compat_alias, logl, FIRST_VERSION_libm_logl), );
+LONG_DOUBLE_COMPAT_CHOOSE_libm_logl(
+    compat_symbol(libm, __log_compat_alias, logl, FIRST_VERSION_libm_logl),);
 # endif
 #endif

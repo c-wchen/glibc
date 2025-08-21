@@ -21,12 +21,11 @@
 #include <stddef.h>
 
 /* Return information about the filesystem on which FILE resides.  */
-int
-__statvfs (const char *file, struct statvfs *buf)
+int __statvfs(const char *file, struct statvfs *buf)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-weak_alias (__statvfs, statvfs)
-libc_hidden_weak (statvfs)
-stub_warning (statvfs)
+weak_alias(__statvfs, statvfs)
+libc_hidden_weak(statvfs)
+stub_warning(statvfs)

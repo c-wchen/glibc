@@ -20,9 +20,8 @@
 #include <sysdep-cancel.h>
 #include <not-cancel.h>
 
-void
-__close_nocancel_nostatus (int fd)
+void __close_nocancel_nostatus(int fd)
 {
-  INTERNAL_SYSCALL_CALL (close, fd);
+    INTERNAL_SYSCALL_CALL(close, fd);
 }
-libc_hidden_def (__close_nocancel_nostatus)
+libc_hidden_def(__close_nocancel_nostatus)

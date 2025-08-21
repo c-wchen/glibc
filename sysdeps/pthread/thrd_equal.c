@@ -18,8 +18,7 @@
 
 #include "thrd_priv.h"
 
-int
-thrd_equal (thrd_t lhs, thrd_t rhs)
+int thrd_equal(thrd_t lhs, thrd_t rhs)
 {
-  return lhs == rhs;
+    return lhs == rhs;
 }

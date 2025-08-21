@@ -28,32 +28,31 @@
 #include <stdio.h>
 #include <sys/param.h>
 
-char *
-__fgets_unlocked_chk (char *buf, size_t size, int n, FILE *fp)
+char *__fgets_unlocked_chk(char *buf, size_t size, int n, FILE *fp)
 {
-  size_t count;
-  char *result;
-  CHECK_FILE (fp, NULL);
-  if (n <= 0)
-    return NULL;
-  /* This is very tricky since a file descriptor may be in the
-     non-blocking mode. The error flag doesn't mean much in this
-     case. We return an error only when there is a new error. */
-  int old_error = fp->_flags & _IO_ERR_SEEN;
-  fp->_flags &= ~_IO_ERR_SEEN;
-  count = _IO_getline (fp, buf, MIN ((size_t) n - 1, size), '\n', 1);
-  /* If we read in some bytes and errno is EAGAIN, that error will
-     be reported for next read. */
-  if (count == 0 || ((fp->_flags & _IO_ERR_SEEN) && errno != EAGAIN))
-    result = NULL;
-  else if (count >= size)
-    __chk_fail ();
-  else
-    {
-      buf[count] = '\0';
-      result = buf;
+    size_t count;
+    char *result;
+    CHECK_FILE(fp, NULL);
+    if (n <= 0) {
+        return NULL;
     }
-  fp->_flags |= old_error;
-  return result;
+    /* This is very tricky since a file descriptor may be in the
+       non-blocking mode. The error flag doesn't mean much in this
+       case. We return an error only when there is a new error. */
+    int old_error = fp->_flags & _IO_ERR_SEEN;
+    fp->_flags &= ~_IO_ERR_SEEN;
+    count = _IO_getline(fp, buf, MIN((size_t) n - 1, size), '\n', 1);
+    /* If we read in some bytes and errno is EAGAIN, that error will
+       be reported for next read. */
+    if (count == 0 || ((fp->_flags & _IO_ERR_SEEN) && errno != EAGAIN)) {
+        result = NULL;
+    } else if (count >= size) {
+        __chk_fail();
+    } else {
+        buf[count] = '\0';
+        result = buf;
+    }
+    fp->_flags |= old_error;
+    return result;
 }
-libc_hidden_builtin_def (__fgets_unlocked_chk)
+libc_hidden_builtin_def(__fgets_unlocked_chk)

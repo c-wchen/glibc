@@ -18,16 +18,15 @@
 
 #include <fenv.h>
 
-int
-__fesetround (int round)
+int __fesetround(int round)
 {
 #ifdef FE_TONEAREST
-  return (round == FE_TONEAREST) ? 0 : 1;
+    return (round == FE_TONEAREST) ? 0 : 1;
 #else
-  return 1;	/* Signal we are unable to set the direction.  */
+    return 1; /* Signal we are unable to set the direction.  */
 #endif
 }
-libm_hidden_def (__fesetround)
-weak_alias (__fesetround, fesetround)
-libm_hidden_weak (fesetround)
-stub_warning (fesetround)
+libm_hidden_def(__fesetround)
+weak_alias(__fesetround, fesetround)
+libm_hidden_weak(fesetround)
+stub_warning(fesetround)

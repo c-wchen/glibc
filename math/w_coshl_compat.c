@@ -22,15 +22,15 @@
 #include <libm-alias-ldouble.h>
 
 #if LIBM_SVID_COMPAT
-long double
-__coshl (long double x)
+long double __coshl(long double x)
 {
-	long double z = __ieee754_coshl (x);
-	if (__builtin_expect (!isfinite (z), 0) && isfinite (x)
-	    && _LIB_VERSION != _IEEE_)
-		return __kernel_standard_l (x, x, 205); /* cosh overflow */
+    long double z = __ieee754_coshl(x);
+    if (__builtin_expect(!isfinite(z), 0) && isfinite(x)
+        && _LIB_VERSION != _IEEE_) {
+        return __kernel_standard_l(x, x, 205);    /* cosh overflow */
+    }
 
-	return z;
+    return z;
 }
-libm_alias_ldouble (__cosh, cosh)
+libm_alias_ldouble(__cosh, cosh)
 #endif

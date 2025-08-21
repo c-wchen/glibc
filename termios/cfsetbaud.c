@@ -20,10 +20,9 @@
 #include <stddef.h>
 
 /* Set both the input and output baud rates stored in *TERMIOS_P to BAUD.  */
-int
-__cfsetbaud (struct termios *termios_p, baud_t baud)
+int __cfsetbaud(struct termios *termios_p, baud_t baud)
 {
-  return __cfsetspeed (termios_p, baud);
+    return __cfsetspeed(termios_p, baud);
 }
-libc_hidden_def (__cfsetbaud)
-weak_alias (__cfsetbaud, cfsetbaud)
+libc_hidden_def(__cfsetbaud)
+weak_alias(__cfsetbaud, cfsetbaud)

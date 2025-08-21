@@ -23,28 +23,25 @@
 #include <support/check.h>
 #include <support/xstdio.h>
 
-int
-do_test (void)
+int do_test(void)
 {
-  for (int do_ftello = 0; do_ftello < 2; ++do_ftello)
-    {
-      FILE *fp = xfopen ("/dev/zero", "r");
-      char buf[17];
-      memset (buf, 0xcc, sizeof (buf));
-      xfread (buf, 1, sizeof (buf), fp);
-      static const char zeros[sizeof (buf)] = { 0 };
-      TEST_COMPARE_BLOB (buf, sizeof (buf), zeros, sizeof (zeros));
-      if (do_ftello)
-        {
-          errno = 0;
-          TEST_COMPARE (ftello (fp), -1);
-          TEST_COMPARE (errno, ESPIPE);
+    for (int do_ftello = 0; do_ftello < 2; ++do_ftello) {
+        FILE *fp = xfopen("/dev/zero", "r");
+        char buf[17];
+        memset(buf, 0xcc, sizeof(buf));
+        xfread(buf, 1, sizeof(buf), fp);
+        static const char zeros[sizeof(buf)] = { 0 };
+        TEST_COMPARE_BLOB(buf, sizeof(buf), zeros, sizeof(zeros));
+        if (do_ftello) {
+            errno = 0;
+            TEST_COMPARE(ftello(fp), -1);
+            TEST_COMPARE(errno, ESPIPE);
         }
-      /* Do not use xfclose because it flushes first.  */
-      TEST_COMPARE (fclose (fp), 0);
+        /* Do not use xfclose because it flushes first.  */
+        TEST_COMPARE(fclose(fp), 0);
     }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

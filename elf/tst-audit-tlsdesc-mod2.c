@@ -18,16 +18,14 @@
 
 __thread int global2;
 
-int *
-get_global2 (void)
+int *get_global2(void)
 {
-  return &global2;
+    return &global2;
 }
 
 static __thread int local2;
 
-void *
-get_local2 (void)
+void *get_local2(void)
 {
-  return &local2;
+    return &local2;
 }

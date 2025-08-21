@@ -23,24 +23,21 @@
 #include <limits.h>
 
 
-int
-do_test (void)
+int do_test(void)
 {
-  /* XXX This test might require architecture and system specific changes.
-     There is no guarantee that this signal number is invalid.  */
-  int e = pthread_kill (pthread_self (), INT_MAX);
-  if (e == 0)
-    {
-      puts ("kill didn't failed");
-      exit (1);
+    /* XXX This test might require architecture and system specific changes.
+       There is no guarantee that this signal number is invalid.  */
+    int e = pthread_kill(pthread_self(), INT_MAX);
+    if (e == 0) {
+        puts("kill didn't failed");
+        exit(1);
     }
-  if (e != EINVAL)
-    {
-      puts ("error not EINVAL");
-      exit (1);
+    if (e != EINVAL) {
+        puts("error not EINVAL");
+        exit(1);
     }
 
-  return 0;
+    return 0;
 }
 
 

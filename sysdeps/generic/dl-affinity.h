@@ -25,30 +25,27 @@
 /* On success, write the current CPU ID to *CPU, and the current node
    ID to *NODE, and return 0.  Return a negative error code on
    failure.  */
-static inline int
-_dl_getcpu (unsigned int *cpu, unsigned int *node)
+static inline int _dl_getcpu(unsigned int *cpu, unsigned int *node)
 {
-  return -ENOSYS;
+    return -ENOSYS;
 }
 
 /* On success, write CPU ID affinity bits for the current thread to
    *BITS, which must be SIZE bytes long, and return the number of
    bytes updated, a multiple of sizeof (unsigned long int).  On
    failure, return a negative error code.  */
-static int
-_dl_getaffinity (unsigned long int *bits, size_t size)
+static int _dl_getaffinity(unsigned long int *bits, size_t size)
 {
-  return -ENOSYS;
+    return -ENOSYS;
 }
 
 /* Set the CPU affinity mask for the current thread to *BITS, using
    the SIZE bytes from that array, which should be a multiple of
    sizeof (unsigned long int).  Return 0 on success, and a negative
    error code on failure.  */
-static int
-_dl_setaffinity (const unsigned long int *bits, size_t size)
+static int _dl_setaffinity(const unsigned long int *bits, size_t size)
 {
-  return -ENOSYS;
+    return -ENOSYS;
 }
 
 #endif /* DL_AFFINITY_H */

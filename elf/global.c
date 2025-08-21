@@ -1,7 +1,6 @@
-extern int test (void);
+extern int test(void);
 
-int
-main (void)
+int main(void)
 {
-  return test ();
+    return test();
 }

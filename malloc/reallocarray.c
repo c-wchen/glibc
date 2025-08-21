@@ -20,17 +20,15 @@
 #include <stdlib.h>
 #include <malloc.h>
 
-void *
-__libc_reallocarray (void *optr, size_t nmemb, size_t elem_size)
+void *__libc_reallocarray(void *optr, size_t nmemb, size_t elem_size)
 {
-  size_t bytes;
-  if (__builtin_mul_overflow (nmemb, elem_size, &bytes))
-    {
-      __set_errno (ENOMEM);
-      return NULL;
+    size_t bytes;
+    if (__builtin_mul_overflow(nmemb, elem_size, &bytes)) {
+        __set_errno(ENOMEM);
+        return NULL;
     }
-  return realloc (optr, bytes);
+    return realloc(optr, bytes);
 }
-libc_hidden_def (__libc_reallocarray)
+libc_hidden_def(__libc_reallocarray)
 
-weak_alias (__libc_reallocarray, reallocarray)
+weak_alias(__libc_reallocarray, reallocarray)

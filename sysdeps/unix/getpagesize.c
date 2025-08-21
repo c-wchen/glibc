@@ -19,21 +19,20 @@
 #include <sys/param.h>
 
 /* Return the system page size.  */
-int
-__getpagesize (void)
+int __getpagesize(void)
 {
-#ifdef	EXEC_PAGESIZE
-  return EXEC_PAGESIZE;
-#else	/* No EXEC_PAGESIZE.  */
-#ifdef	NBPG
-#ifndef	CLSIZE
-#define	CLSIZE	1
-#endif	/* No CLSIZE.  */
-  return NBPG * CLSIZE;
-#else	/* No NBPG.  */
-  return NBPC;
-#endif	/* NBPG.  */
-#endif	/* EXEC_PAGESIZE.  */
+#ifdef  EXEC_PAGESIZE
+    return EXEC_PAGESIZE;
+#else   /* No EXEC_PAGESIZE.  */
+#ifdef  NBPG
+#ifndef CLSIZE
+#define CLSIZE  1
+#endif  /* No CLSIZE.  */
+    return NBPG * CLSIZE;
+#else   /* No NBPG.  */
+    return NBPC;
+#endif  /* NBPG.  */
+#endif  /* EXEC_PAGESIZE.  */
 }
-libc_hidden_def (__getpagesize)
-weak_alias (__getpagesize, getpagesize)
+libc_hidden_def(__getpagesize)
+weak_alias(__getpagesize, getpagesize)

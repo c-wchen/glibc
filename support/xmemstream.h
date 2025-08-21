@@ -25,24 +25,23 @@
 __BEGIN_DECLS
 
 /* Wrappers for other libc functions.  */
-struct xmemstream
-{
-  FILE *out;
-  char *buffer;
-  size_t length;
+struct xmemstream {
+    FILE *out;
+    char *buffer;
+    size_t length;
 };
 
 /* Create a new in-memory stream.  Initializes *STREAM.  After this
    function returns, STREAM->out is a file descriptor open for
    writing.  errno is preserved, so that the %m format specifier can
    be used for writing to STREAM->out.  */
-void xopen_memstream (struct xmemstream *stream);
+void xopen_memstream(struct xmemstream *stream);
 
 /* Closes STREAM->OUT.  After this function returns, STREAM->buffer
    and STREAM->length denote a memory range which contains the bytes
    written to the output stream.  The caller should free
    STREAM->buffer.  */
-void xfclose_memstream (struct xmemstream *stream);
+void xfclose_memstream(struct xmemstream *stream);
 
 __END_DECLS
 

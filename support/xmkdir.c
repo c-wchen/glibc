@@ -20,9 +20,9 @@
 #include <support/xunistd.h>
 #include <sys/stat.h>
 
-void
-xmkdir (const char *path, mode_t mode)
+void xmkdir(const char *path, mode_t mode)
 {
-  if (mkdir (path, mode) != 0)
-    FAIL_EXIT1 ("mkdir (\"%s\", 0%o): %m", path, mode);
+    if (mkdir(path, mode) != 0) {
+        FAIL_EXIT1("mkdir (\"%s\", 0%o): %m", path, mode);
+    }
 }

@@ -42,27 +42,27 @@
 # define MMAP_PREPARE(addr, len, prot, flags, fd, offset)
 #endif
 
-void *
-__mmap64 (void *addr, size_t len, int prot, int flags, int fd, off64_t offset)
+void *__mmap64(void *addr, size_t len, int prot, int flags, int fd, off64_t offset)
 {
-  MMAP_CHECK_PAGE_UNIT ();
+    MMAP_CHECK_PAGE_UNIT();
 
-  if (offset & MMAP_OFF_MASK)
-    return (void *) INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
+    if (offset & MMAP_OFF_MASK) {
+        return (void *) INLINE_SYSCALL_ERROR_RETURN_VALUE(EINVAL);
+    }
 
-  MMAP_PREPARE (addr, len, prot, flags, fd, offset);
+    MMAP_PREPARE(addr, len, prot, flags, fd, offset);
 #ifdef __NR_mmap2
-  return (void *) MMAP_CALL (mmap2, addr, len, prot, flags, fd,
-			     (off_t) (offset / MMAP2_PAGE_UNIT));
+    return (void *) MMAP_CALL(mmap2, addr, len, prot, flags, fd,
+                              (off_t)(offset / MMAP2_PAGE_UNIT));
 #else
-  return (void *) MMAP_CALL (mmap, addr, len, prot, flags, fd, offset);
+    return (void *) MMAP_CALL(mmap, addr, len, prot, flags, fd, offset);
 #endif
 }
-weak_alias (__mmap64, mmap64)
-libc_hidden_def (__mmap64)
+weak_alias(__mmap64, mmap64)
+libc_hidden_def(__mmap64)
 
 #ifdef __OFF_T_MATCHES_OFF64_T
-weak_alias (__mmap64, mmap)
-weak_alias (__mmap64, __mmap)
-libc_hidden_def (__mmap)
+weak_alias(__mmap64, mmap)
+weak_alias(__mmap64, __mmap)
+libc_hidden_def(__mmap)
 #endif

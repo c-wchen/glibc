@@ -22,13 +22,13 @@
 #include <hurd/fd.h>
 
 /* Truncate the file referenced by FD to LENGTH bytes.  */
-int
-__ftruncate64 (int fd, off64_t length)
+int __ftruncate64(int fd, off64_t length)
 {
-  error_t err;
-  if (err = HURD_DPORT_USE (fd, __file_set_size (port, length)))
-    return __hurd_dfail (fd, err);
-  return 0;
+    error_t err;
+    if (err = HURD_DPORT_USE(fd, __file_set_size(port, length))) {
+        return __hurd_dfail(fd, err);
+    }
+    return 0;
 }
 
-weak_alias (__ftruncate64, ftruncate64)
+weak_alias(__ftruncate64, ftruncate64)

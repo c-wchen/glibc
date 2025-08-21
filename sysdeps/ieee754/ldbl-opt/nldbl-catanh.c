@@ -2,8 +2,7 @@
 #include <complex.h>
 
 double _Complex
-attribute_hidden
-catanhl (double _Complex x)
+attribute_hidden catanhl(double _Complex x)
 {
-  return catanh (x);
+    return catanh(x);
 }

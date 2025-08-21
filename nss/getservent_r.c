@@ -18,12 +18,12 @@
 #include <netdb.h>
 
 
-#define LOOKUP_TYPE		struct servent
-#define SETFUNC_NAME		setservent
-#define	GETFUNC_NAME		getservent
-#define	ENDFUNC_NAME		endservent
-#define DATABASE_NAME		services
-#define STAYOPEN		int stayopen
-#define STAYOPEN_VAR		stayopen
+#define LOOKUP_TYPE     struct servent
+#define SETFUNC_NAME        setservent
+#define GETFUNC_NAME        getservent
+#define ENDFUNC_NAME        endservent
+#define DATABASE_NAME       services
+#define STAYOPEN        int stayopen
+#define STAYOPEN_VAR        stayopen
 
 #include "../nss/getXXent_r.c"

@@ -21,44 +21,40 @@
 
 __thread unsigned int malloc_subsytem_counter;
 
-static __typeof (malloc) *malloc_fptr;
-static __typeof (free) *free_fptr;
-static __typeof (calloc) *calloc_fptr;
-static __typeof (realloc) *realloc_fptr;
+static __typeof(malloc) *malloc_fptr;
+static __typeof(free) *free_fptr;
+static __typeof(calloc) *calloc_fptr;
+static __typeof(realloc) *realloc_fptr;
 
-static void __attribute__ ((constructor))
-init (void)
+static void __attribute__((constructor))
+init(void)
 {
-  malloc_fptr = dlsym (RTLD_NEXT, "malloc");
-  free_fptr = dlsym (RTLD_NEXT, "free");
-  calloc_fptr = dlsym (RTLD_NEXT, "calloc");
-  realloc_fptr = dlsym (RTLD_NEXT, "realloc");
+    malloc_fptr = dlsym(RTLD_NEXT, "malloc");
+    free_fptr = dlsym(RTLD_NEXT, "free");
+    calloc_fptr = dlsym(RTLD_NEXT, "calloc");
+    realloc_fptr = dlsym(RTLD_NEXT, "realloc");
 }
 
-void *
-malloc (size_t size)
+void *malloc(size_t size)
 {
-  ++malloc_subsytem_counter;
-  return malloc_fptr (size);
+    ++malloc_subsytem_counter;
+    return malloc_fptr(size);
 }
 
-void
-free (void *ptr)
+void free(void *ptr)
 {
-  ++malloc_subsytem_counter;
-  return free_fptr (ptr);
+    ++malloc_subsytem_counter;
+    return free_fptr(ptr);
 }
 
-void *
-calloc (size_t a, size_t b)
+void *calloc(size_t a, size_t b)
 {
-  ++malloc_subsytem_counter;
-  return calloc_fptr (a, b);
+    ++malloc_subsytem_counter;
+    return calloc_fptr(a, b);
 }
 
-void *
-realloc (void *ptr, size_t size)
+void *realloc(void *ptr, size_t size)
 {
-  ++malloc_subsytem_counter;
-  return realloc_fptr (ptr, size);
+    ++malloc_subsytem_counter;
+    return realloc_fptr(ptr, size);
 }

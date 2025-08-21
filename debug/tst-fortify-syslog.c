@@ -33,90 +33,84 @@ static char buf2[10] = "%s";
 static volatile int chk_fail_ok;
 static jmp_buf chk_fail_buf;
 
-static void
-handler (int sig)
+static void handler(int sig)
 {
-  if (chk_fail_ok)
-    {
-      chk_fail_ok = 0;
-      longjmp (chk_fail_buf, 1);
+    if (chk_fail_ok) {
+        chk_fail_ok = 0;
+        longjmp(chk_fail_buf, 1);
+    } else {
+        _exit(127);
     }
-  else
-    _exit (127);
 }
 
-#define CHK_FAIL_START					\
-  chk_fail_ok = 1;					\
-  if (! setjmp (chk_fail_buf))				\
+#define CHK_FAIL_START                  \
+  chk_fail_ok = 1;                  \
+  if (! setjmp (chk_fail_buf))              \
     {
-#define CHK_FAIL_END					\
-      chk_fail_ok = 0;					\
-      FAIL ("not supposed to reach here");		\
+#define CHK_FAIL_END                    \
+      chk_fail_ok = 0;                  \
+      FAIL ("not supposed to reach here");      \
     }
 
-static void
-call_vsyslog (int priority, const char *format, ...)
+static void call_vsyslog(int priority, const char *format, ...)
 {
-  va_list va;
-  va_start (va, format);
-  vsyslog (priority, format, va);
-  va_end (va);
+    va_list va;
+    va_start(va, format);
+    vsyslog(priority, format, va);
+    va_end(va);
 }
 
-static void
-run_syslog_chk (void *closure)
+static void run_syslog_chk(void *closure)
 {
-  int n1;
-  CHK_FAIL_START
-  syslog (LOG_USER | LOG_DEBUG, buf2, str2, &n1, str2, &n1);
-  CHK_FAIL_END
+    int n1;
+    CHK_FAIL_START
+    syslog(LOG_USER | LOG_DEBUG, buf2, str2, &n1, str2, &n1);
+    CHK_FAIL_END
 }
 
-static void
-run_vsyslog_chk (void *closure)
+static void run_vsyslog_chk(void *closure)
 {
-  int n1;
-  CHK_FAIL_START
-  call_vsyslog (LOG_USER | LOG_DEBUG, buf2, str2, &n1, str2, &n1);
-  CHK_FAIL_END
+    int n1;
+    CHK_FAIL_START
+    call_vsyslog(LOG_USER | LOG_DEBUG, buf2, str2, &n1, str2, &n1);
+    CHK_FAIL_END
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  set_fortify_handler (handler);
+    set_fortify_handler(handler);
 
-  int n1, n2;
+    int n1, n2;
 
-  n1 = n2 = 0;
-  syslog (LOG_USER | LOG_DEBUG, "%s%n%s%n", str2, &n1, str2, &n2);
-  TEST_COMPARE (n1, 1);
-  TEST_COMPARE (n2, 2);
+    n1 = n2 = 0;
+    syslog(LOG_USER | LOG_DEBUG, "%s%n%s%n", str2, &n1, str2, &n2);
+    TEST_COMPARE(n1, 1);
+    TEST_COMPARE(n2, 2);
 
-  n1 = n2 = 0;
-  call_vsyslog (LOG_USER | LOG_DEBUG, "%s%n%s%n", str2, &n1, str2, &n2);
-  TEST_COMPARE (n1, 1);
-  TEST_COMPARE (n2, 2);
+    n1 = n2 = 0;
+    call_vsyslog(LOG_USER | LOG_DEBUG, "%s%n%s%n", str2, &n1, str2, &n2);
+    TEST_COMPARE(n1, 1);
+    TEST_COMPARE(n2, 2);
 
-  strcpy (buf2 + 2, "%n%s%n");
+    strcpy(buf2 + 2, "%n%s%n");
 
-  /* The wrapper tests need to be in a subprocess because the abort called by
-     printf does not unlock the internal syslog lock.  */
-  {
-    struct support_capture_subprocess result
-      = support_capture_subprocess (run_syslog_chk, NULL);
-    support_capture_subprocess_check (&result, "syslog", 0, sc_allow_stderr);
-    support_capture_subprocess_free (&result);
-  }
+    /* The wrapper tests need to be in a subprocess because the abort called by
+       printf does not unlock the internal syslog lock.  */
+    {
+        struct support_capture_subprocess result
+            = support_capture_subprocess(run_syslog_chk, NULL);
+        support_capture_subprocess_check(&result, "syslog", 0, sc_allow_stderr);
+        support_capture_subprocess_free(&result);
+    }
 
-  {
-    struct support_capture_subprocess result
-      = support_capture_subprocess (run_vsyslog_chk, NULL);
-    support_capture_subprocess_check (&result, "syslog", 0, sc_allow_stderr);
-    support_capture_subprocess_free (&result);
-  }
+    {
+        struct support_capture_subprocess result
+            = support_capture_subprocess(run_vsyslog_chk, NULL);
+        support_capture_subprocess_check(&result, "syslog", 0, sc_allow_stderr);
+        support_capture_subprocess_free(&result);
+    }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

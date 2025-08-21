@@ -23,77 +23,79 @@
 #include <string.h>
 #include "libio/libioP.h"
 
-enum readonly_error_type
-__readonly_area_fallback (const void *ptr, size_t size)
-{
-  const void *ptr_end = ptr + size;
+enum readonly_error_type __readonly_area_fallback(const void *ptr, size_t size) {
+    const void *ptr_end = ptr + size;
 
-  FILE *fp = fopen ("/proc/self/maps", "rce");
-  if (fp == NULL)
+    FILE *fp = fopen("/proc/self/maps", "rce");
+    if (fp == NULL)
     {
-      /* It is the system administrator's choice to not have /proc
-	 available to this process (e.g., because it runs in a chroot
-	 environment.  Don't fail in this case.  */
-      if (errno == ENOENT
-	  /* The kernel has a bug in that a process is denied access
-	     to the /proc filesystem if it is set[ug]id.  There has
-	     been no willingness to change this in the kernel so
-	     far.  */
-	  || errno == EACCES)
-	return readonly_procfs_inaccessible;
-      /* Process has reached the maximum number of open files or another
-	 unusual error.  */
-      return readonly_procfs_open_fail;
+        /* It is the system administrator's choice to not have /proc
+        available to this process (e.g., because it runs in a chroot
+         environment.  Don't fail in this case.  */
+        if (errno == ENOENT
+            /* The kernel has a bug in that a process is denied access
+               to the /proc filesystem if it is set[ug]id.  There has
+               been no willingness to change this in the kernel so
+               far.  */
+            || errno == EACCES) {
+            return readonly_procfs_inaccessible;
+        }
+        /* Process has reached the maximum number of open files or another
+        unusual error.  */
+        return readonly_procfs_open_fail;
     }
 
-  /* We need no locking.  */
-  __fsetlocking (fp, FSETLOCKING_BYCALLER);
+    /* We need no locking.  */
+    __fsetlocking(fp, FSETLOCKING_BYCALLER);
 
-  char *line = NULL;
-  size_t linelen = 0;
+    char *line = NULL;
+    size_t linelen = 0;
 
-  while (! __feof_unlocked (fp))
+    while (! __feof_unlocked(fp))
     {
-      if (__getdelim (&line, &linelen, '\n', fp) <= 0)
-	break;
+        if (__getdelim(&line, &linelen, '\n', fp) <= 0) {
+            break;
+        }
 
-      char *p;
-      uintptr_t from = strtoul (line, &p, 16);
+        char *p;
+        uintptr_t from = strtoul(line, &p, 16);
 
-      if (p == line || *p++ != '-')
-	break;
+        if (p == line || *p++ != '-') {
+            break;
+        }
 
-      char *q;
-      uintptr_t to = strtoul (p, &q, 16);
+        char *q;
+        uintptr_t to = strtoul(p, &q, 16);
 
-      if (q == p || *q++ != ' ')
-	break;
+        if (q == p || *q++ != ' ') {
+            break;
+        }
 
-      if (from < (uintptr_t) ptr_end && to > (uintptr_t) ptr)
-	{
-	  /* Found an entry that at least partially covers the area.  */
-	  if (*q++ != 'r' || *q++ != '-')
-	    break;
+        if (from < (uintptr_t) ptr_end && to > (uintptr_t) ptr) {
+            /* Found an entry that at least partially covers the area.  */
+            if (*q++ != 'r' || *q++ != '-') {
+                break;
+            }
 
-	  if (from <= (uintptr_t) ptr && to >= (uintptr_t) ptr_end)
-	    {
-	      size = 0;
-	      break;
-	    }
-	  else if (from <= (uintptr_t) ptr)
-	    size -= to - (uintptr_t) ptr;
-	  else if (to >= (uintptr_t) ptr_end)
-	    size -= (uintptr_t) ptr_end - from;
-	  else
-	    size -= to - from;
+            if (from <= (uintptr_t) ptr && to >= (uintptr_t) ptr_end) {
+                size = 0;
+                break;
+            } else if (from <= (uintptr_t) ptr) {
+                size -= to - (uintptr_t) ptr;
+            } else if (to >= (uintptr_t) ptr_end) {
+                size -= (uintptr_t) ptr_end - from;
+            } else {
+                size -= to - from;
+            }
 
-	  if (!size)
-	    break;
-	}
+            if (!size) {
+                break;
+            }
+        }
     }
 
-  fclose (fp);
-  free (line);
+    fclose(fp);
+    free(line);
 
-  return size == 0 ? readonly_noerror : readonly_area_writable;
+    return size == 0 ? readonly_noerror : readonly_area_writable;
 }

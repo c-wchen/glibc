@@ -23,8 +23,7 @@
 #if __TIMESIZE == 64
 # define __semid64_ds semid_ds
 #else
-struct __semid64_ds
-{
+struct __semid64_ds {
 # include <bits/types/struct_semid64_ds_helper.h>
 };
 #endif

@@ -22,24 +22,22 @@
 #include <features.h>
 #include <threads.h>
 #include <errno.h>
-#include "pthreadP.h"	/* For pthread_{mutex,cond}_t definitions.  */
+#include "pthreadP.h"   /* For pthread_{mutex,cond}_t definitions.  */
 
-static __always_inline int
-thrd_err_map (int err_code)
+static __always_inline int thrd_err_map(int err_code)
 {
-  switch (err_code)
-  {
-    case 0:
-      return thrd_success;
-    case ENOMEM:
-      return thrd_nomem;
-    case ETIMEDOUT:
-      return thrd_timedout;
-    case EBUSY:
-      return thrd_busy;
-    default:
-      return thrd_error;
-  }
+    switch (err_code) {
+        case 0:
+            return thrd_success;
+        case ENOMEM:
+            return thrd_nomem;
+        case ETIMEDOUT:
+            return thrd_timedout;
+        case EBUSY:
+            return thrd_busy;
+        default:
+            return thrd_error;
+    }
 }
 
 #endif

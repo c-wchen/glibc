@@ -29,35 +29,31 @@
 # if LIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_33)
 
 /* Get information about the file FD in BUF.  */
-int
-__fxstat (int vers, int fd, struct stat *buf)
+int __fxstat(int vers, int fd, struct stat *buf)
 {
-  switch (vers)
-    {
-    case _STAT_VER_KERNEL:
-      {
+    switch (vers) {
+        case _STAT_VER_KERNEL: {
 # if STAT_IS_KERNEL_STAT
-	/* New kABIs which uses generic pre 64-bit time Linux ABI,
-	   e.g. csky */
-	int r = INLINE_SYSCALL_CALL (fstat64, fd, buf);
-	return r ?: stat_overflow (buf);
+            /* New kABIs which uses generic pre 64-bit time Linux ABI,
+               e.g. csky */
+            int r = INLINE_SYSCALL_CALL(fstat64, fd, buf);
+            return r ? : stat_overflow(buf);
 # else
-	/* Old kABIs with old non-LFS support, e.g. arm, i386, hppa, m68k,
-	   microblaze, s390, sh, powerpc, and sparc.  */
-	return INLINE_SYSCALL_CALL (fstat, fd, buf);
+            /* Old kABIs with old non-LFS support, e.g. arm, i386, hppa, m68k,
+               microblaze, s390, sh, powerpc, and sparc.  */
+            return INLINE_SYSCALL_CALL(fstat, fd, buf);
 # endif
-      }
+        }
 
-    default:
-      {
+        default: {
 # if STAT_IS_KERNEL_STAT
-	return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
+            return INLINE_SYSCALL_ERROR_RETURN_VALUE(EINVAL);
 # else
-	struct stat64 buf64;
-	int r = INLINE_SYSCALL_CALL (fstat64, fd, &buf64);
-	return r ?: __xstat32_conv (vers, &buf64, buf);
+            struct stat64 buf64;
+            int r = INLINE_SYSCALL_CALL(fstat64, fd, &buf64);
+            return r ? : __xstat32_conv(vers, &buf64, buf);
 #endif
-      }
+        }
     }
 }
 

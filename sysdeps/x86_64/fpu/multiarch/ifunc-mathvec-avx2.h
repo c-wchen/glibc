@@ -20,20 +20,20 @@
 #include <init-arch.h>
 
 #undef PASTER2
-#define PASTER2(x,y)	x##_##y
+#define PASTER2(x,y)    x##_##y
 
-extern void REDIRECT_NAME (void);
-extern __typeof (REDIRECT_NAME) OPTIMIZE (sse_wrapper) attribute_hidden;
-extern __typeof (REDIRECT_NAME) OPTIMIZE (avx2) attribute_hidden;
+extern void REDIRECT_NAME(void);
+extern __typeof(REDIRECT_NAME) OPTIMIZE(sse_wrapper) attribute_hidden;
+extern __typeof(REDIRECT_NAME) OPTIMIZE(avx2) attribute_hidden;
 
-static inline void *
-IFUNC_SELECTOR (void)
+static inline void *IFUNC_SELECTOR(void)
 {
-  const struct cpu_features* cpu_features = __get_cpu_features ();
+    const struct cpu_features *cpu_features = __get_cpu_features();
 
-  if (CPU_FEATURE_USABLE_P (cpu_features, FMA)
-      && CPU_FEATURE_USABLE_P (cpu_features, AVX2))
-    return OPTIMIZE (avx2);
+    if (CPU_FEATURE_USABLE_P(cpu_features, FMA)
+        && CPU_FEATURE_USABLE_P(cpu_features, AVX2)) {
+        return OPTIMIZE(avx2);
+    }
 
-  return OPTIMIZE (sse_wrapper);
+    return OPTIMIZE(sse_wrapper);
 }

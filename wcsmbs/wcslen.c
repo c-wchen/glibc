@@ -22,24 +22,25 @@
 # define __wcslen WCSLEN
 #endif
 
-size_t
-__wcslen (const wchar_t *s)
+size_t __wcslen(const wchar_t *s)
 {
-  size_t len = 0;
+    size_t len = 0;
 
-  while (s[len] != L'\0')
-    {
-      if (s[++len] == L'\0')
-	return len;
-      if (s[++len] == L'\0')
-	return len;
-      if (s[++len] == L'\0')
-	return len;
-      ++len;
+    while (s[len] != L'\0') {
+        if (s[++len] == L'\0') {
+            return len;
+        }
+        if (s[++len] == L'\0') {
+            return len;
+        }
+        if (s[++len] == L'\0') {
+            return len;
+        }
+        ++len;
     }
 
-  return len;
+    return len;
 }
 #ifndef WCSLEN
-weak_alias (__wcslen, wcslen)
+weak_alias(__wcslen, wcslen)
 #endif

@@ -21,16 +21,16 @@
 #include "init-arch.h"
 
 #undef strcspn
-extern __typeof (strcspn) __libc_strcspn;
+extern __typeof(strcspn) __libc_strcspn;
 
-extern __typeof (strcspn) __strcspn_ppc attribute_hidden;
-extern __typeof (strcspn) __strcspn_power8 attribute_hidden;
+extern __typeof(strcspn) __strcspn_ppc attribute_hidden;
+extern __typeof(strcspn) __strcspn_power8 attribute_hidden;
 
-libc_ifunc (__libc_strcspn,
-	    (hwcap2 & PPC_FEATURE2_ARCH_2_07
-	     && hwcap & PPC_FEATURE_HAS_VSX)
-	    ? __strcspn_power8
-	    : __strcspn_ppc);
+libc_ifunc(__libc_strcspn,
+           (hwcap2 &PPC_FEATURE2_ARCH_2_07
+            &&hwcap &PPC_FEATURE_HAS_VSX)
+           ? __strcspn_power8
+           : __strcspn_ppc);
 
-weak_alias (__libc_strcspn, strcspn)
-libc_hidden_builtin_def (strcspn)
+weak_alias(__libc_strcspn, strcspn)
+libc_hidden_builtin_def(strcspn)

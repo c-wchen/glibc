@@ -36,11 +36,10 @@
    was created by popen().  Instead we rely on _IO_SYSCLOSE to call
    _proc_close when appropriate.  */
 int
-attribute_compat_text_section
-__old_pclose (FILE *fp)
+attribute_compat_text_section __old_pclose(FILE *fp)
 {
-  return _IO_old_fclose (fp);
+    return _IO_old_fclose(fp);
 }
 
-compat_symbol (libc, __old_pclose, pclose, GLIBC_2_0);
+compat_symbol(libc, __old_pclose, pclose, GLIBC_2_0);
 #endif

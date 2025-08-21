@@ -22,39 +22,35 @@
 #include <stdio.h>
 #include <sys/fanotify.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int fd, ret;
+    int fd, ret;
 
-  fd = fanotify_init (0, 0);
-  if (fd < 0)
-    {
-      switch (errno)
-	{
-	case ENOSYS:
-	  puts ("SKIP: missing support for fanotify (check CONFIG_FANOTIFY=y)");
-	  return 0;
-	case EPERM:
-	  puts ("SKIP: missing proper permissions for runtime test");
-	  return 0;
-	}
+    fd = fanotify_init(0, 0);
+    if (fd < 0) {
+        switch (errno) {
+            case ENOSYS:
+                puts("SKIP: missing support for fanotify (check CONFIG_FANOTIFY=y)");
+                return 0;
+            case EPERM:
+                puts("SKIP: missing proper permissions for runtime test");
+                return 0;
+        }
 
-      perror ("fanotify_init (0, 0) failed");
-      return 1;
+        perror("fanotify_init (0, 0) failed");
+        return 1;
     }
 
-  ret = fanotify_mark (fd, FAN_MARK_ADD | FAN_MARK_MOUNT, FAN_ACCESS
-		       | FAN_MODIFY | FAN_OPEN | FAN_CLOSE | FAN_ONDIR
-		       | FAN_EVENT_ON_CHILD, AT_FDCWD, ".");
-  if (ret)
-    {
-      perror ("fanotify_mark (...) failed");
-      return 1;
+    ret = fanotify_mark(fd, FAN_MARK_ADD | FAN_MARK_MOUNT, FAN_ACCESS
+                        | FAN_MODIFY | FAN_OPEN | FAN_CLOSE | FAN_ONDIR
+                        | FAN_EVENT_ON_CHILD, AT_FDCWD, ".");
+    if (ret) {
+        perror("fanotify_mark (...) failed");
+        return 1;
     }
 
-  puts ("All OK");
-  return 0;
+    puts("All OK");
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

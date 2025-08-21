@@ -22,30 +22,32 @@
 #include <shlib-compat.h>
 #include <pt-internal.h>
 
-int
-__pthread_cond_init (pthread_cond_t *cond, const pthread_condattr_t * attr)
+int __pthread_cond_init(pthread_cond_t *cond, const pthread_condattr_t *attr)
 {
-  ASSERT_TYPE_SIZE (pthread_cond_t, __SIZEOF_PTHREAD_COND_T);
+    ASSERT_TYPE_SIZE(pthread_cond_t, __SIZEOF_PTHREAD_COND_T);
 
-  *cond = (pthread_cond_t) __PTHREAD_COND_INITIALIZER;
+    *cond = (pthread_cond_t) __PTHREAD_COND_INITIALIZER;
 
-  if (attr == NULL
-      || memcmp (attr, &__pthread_default_condattr, sizeof (*attr)) == 0)
-    /* Use the default attributes.  */
+    if (attr == NULL
+        || memcmp(attr, &__pthread_default_condattr, sizeof(*attr)) == 0)
+        /* Use the default attributes.  */
+    {
+        return 0;
+    }
+
+    /* Non-default attributes.  */
+
+    cond->__attr = malloc(sizeof * attr);
+    if (cond->__attr == NULL) {
+        return ENOMEM;
+    }
+
+    *cond->__attr = *attr;
     return 0;
-
-  /* Non-default attributes.  */
-
-  cond->__attr = malloc (sizeof *attr);
-  if (cond->__attr == NULL)
-    return ENOMEM;
-
-  *cond->__attr = *attr;
-  return 0;
 }
-libc_hidden_def (__pthread_cond_init)
-versioned_symbol (libc, __pthread_cond_init, pthread_cond_init, GLIBC_2_21);
+libc_hidden_def(__pthread_cond_init)
+versioned_symbol(libc, __pthread_cond_init, pthread_cond_init, GLIBC_2_21);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_21)
-compat_symbol (libc, __pthread_cond_init, pthread_cond_init, GLIBC_2_12);
+compat_symbol(libc, __pthread_cond_init, pthread_cond_init, GLIBC_2_12);
 #endif

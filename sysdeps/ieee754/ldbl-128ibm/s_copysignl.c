@@ -28,13 +28,14 @@ static char rcsid[] = "$NetBSD: $";
 
 long double __copysignl(long double x, long double y)
 {
-  if (signbit (x) != signbit (y))
-    x = -x;
-  return x;
+    if (signbit(x) != signbit(y)) {
+        x = -x;
+    }
+    return x;
 }
 
 #if IS_IN (libm)
-long_double_symbol (libm, __copysignl, copysignl);
+long_double_symbol(libm, __copysignl, copysignl);
 #else
-long_double_symbol (libc, __copysignl, copysignl);
+long_double_symbol(libc, __copysignl, copysignl);
 #endif

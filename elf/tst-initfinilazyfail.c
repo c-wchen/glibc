@@ -22,63 +22,62 @@
 #include <support/check.h>
 #include <support/xdlfcn.h>
 
-static void
-test_constructor (void *closure)
+static void test_constructor(void *closure)
 {
-  void *handle = dlopen ("tst-initlazyfailmod.so", RTLD_LAZY);
-  if (handle == NULL)
-    FAIL_EXIT (2, "dlopen did not terminate the process: %s", dlerror ());
-  else
-    FAIL_EXIT (2, "dlopen did not terminate the process (%p)", handle);
+    void *handle = dlopen("tst-initlazyfailmod.so", RTLD_LAZY);
+    if (handle == NULL) {
+        FAIL_EXIT(2, "dlopen did not terminate the process: %s", dlerror());
+    } else {
+        FAIL_EXIT(2, "dlopen did not terminate the process (%p)", handle);
+    }
 }
 
-static void
-test_destructor (void *closure)
+static void test_destructor(void *closure)
 {
-  void *handle = xdlopen ("tst-finilazyfailmod.so", RTLD_LAZY);
-  int ret = dlclose (handle);
-  const char *message = dlerror ();
-  if (message != NULL)
-    FAIL_EXIT (2, "dlclose did not terminate the process: %d, %s",
-               ret, message);
-  else
-    FAIL_EXIT (2, "dlopen did not terminate the process: %d", ret);
+    void *handle = xdlopen("tst-finilazyfailmod.so", RTLD_LAZY);
+    int ret = dlclose(handle);
+    const char *message = dlerror();
+    if (message != NULL)
+        FAIL_EXIT(2, "dlclose did not terminate the process: %d, %s",
+                  ret, message);
+    else {
+        FAIL_EXIT(2, "dlopen did not terminate the process: %d", ret);
+    }
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  {
-    struct support_capture_subprocess proc
-      = support_capture_subprocess (test_constructor, NULL);
-    support_capture_subprocess_check (&proc, "constructor", 127,
-                                      sc_allow_stderr);
-    printf ("info: constructor failure output: [[%s]]\n", proc.err.buffer);
-    TEST_VERIFY (strstr (proc.err.buffer,
-                         "tst-initfinilazyfail: symbol lookup error: ")
-                 != NULL);
-    TEST_VERIFY (strstr (proc.err.buffer,
-                         "tst-initlazyfailmod.so: undefined symbol:"
-                         " undefined_function\n") != NULL);
-    support_capture_subprocess_free (&proc);
-  }
+    {
+        struct support_capture_subprocess proc
+            = support_capture_subprocess(test_constructor, NULL);
+        support_capture_subprocess_check(&proc, "constructor", 127,
+                                         sc_allow_stderr);
+        printf("info: constructor failure output: [[%s]]\n", proc.err.buffer);
+        TEST_VERIFY(strstr(proc.err.buffer,
+                           "tst-initfinilazyfail: symbol lookup error: ")
+                    != NULL);
+        TEST_VERIFY(strstr(proc.err.buffer,
+                           "tst-initlazyfailmod.so: undefined symbol:"
+                           " undefined_function\n") != NULL);
+        support_capture_subprocess_free(&proc);
+    }
 
-  {
-    struct support_capture_subprocess proc
-      = support_capture_subprocess (test_destructor, NULL);
-    support_capture_subprocess_check (&proc, "destructor", 127,
-                                      sc_allow_stderr);
-    printf ("info: destructor failure output: [[%s]]\n", proc.err.buffer);
-    TEST_VERIFY (strstr (proc.err.buffer,
-                         "tst-initfinilazyfail: symbol lookup error: ")
-                 != NULL);
-    TEST_VERIFY (strstr (proc.err.buffer,
-                         "tst-finilazyfailmod.so: undefined symbol:"
-                         " undefined_function\n") != NULL);
-    support_capture_subprocess_free (&proc);
-  }
+    {
+        struct support_capture_subprocess proc
+            = support_capture_subprocess(test_destructor, NULL);
+        support_capture_subprocess_check(&proc, "destructor", 127,
+                                         sc_allow_stderr);
+        printf("info: destructor failure output: [[%s]]\n", proc.err.buffer);
+        TEST_VERIFY(strstr(proc.err.buffer,
+                           "tst-initfinilazyfail: symbol lookup error: ")
+                    != NULL);
+        TEST_VERIFY(strstr(proc.err.buffer,
+                           "tst-finilazyfailmod.so: undefined symbol:"
+                           " undefined_function\n") != NULL);
+        support_capture_subprocess_free(&proc);
+    }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

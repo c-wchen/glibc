@@ -40,46 +40,44 @@
  * floor(x)
  * Return x rounded toward -inf to integral value
  * Method:
- *	Bit twiddling.
+ *  Bit twiddling.
  */
 
 
-double
-__floor (double x)
+double __floor(double x)
 {
 #if USE_FLOOR_BUILTIN
-  return __builtin_floor (x);
+    return __builtin_floor(x);
 #else
-  /* Use generic implementation.  */
-  int64_t i0;
-  EXTRACT_WORDS64 (i0, x);
-  int32_t j0 = ((i0 >> 52) & 0x7ff) - 0x3ff;
-  if (__glibc_likely (j0 < 52))
-    {
-      if (j0 < 0)
-	{
-	  /* return 0 * sign (x) if |x| < 1  */
-	  if (i0 >= 0)
-	    i0 = 0;
-	  else if ((i0 & 0x7fffffffffffffffl) != 0)
-	    i0 = 0xbff0000000000000l;
-	}
-      else
-	{
-	  uint64_t i = 0x000fffffffffffffl >> j0;
-	  if ((i0 & i) == 0)
-	    return x;			 /* x is integral */
-	  if (i0 < 0)
-	    i0 += 0x0010000000000000l >> j0;
-	  i0 &= ~i;
-	}
-      INSERT_WORDS64 (x, i0);
+    /* Use generic implementation.  */
+    int64_t i0;
+    EXTRACT_WORDS64(i0, x);
+    int32_t j0 = ((i0 >> 52) & 0x7ff) - 0x3ff;
+    if (__glibc_likely(j0 < 52)) {
+        if (j0 < 0) {
+            /* return 0 * sign (x) if |x| < 1  */
+            if (i0 >= 0) {
+                i0 = 0;
+            } else if ((i0 & 0x7fffffffffffffffl) != 0) {
+                i0 = 0xbff0000000000000l;
+            }
+        } else {
+            uint64_t i = 0x000fffffffffffffl >> j0;
+            if ((i0 & i) == 0) {
+                return x;    /* x is integral */
+            }
+            if (i0 < 0) {
+                i0 += 0x0010000000000000l >> j0;
+            }
+            i0 &= ~i;
+        }
+        INSERT_WORDS64(x, i0);
+    } else if (j0 == 0x400) {
+        return x + x;    /* inf or NaN */
     }
-  else if (j0 == 0x400)
-    return x + x;			/* inf or NaN */
-  return x;
+    return x;
 #endif /* ! USE_FLOOR_BUILTIN  */
 }
 #ifndef __floor
-libm_alias_double (__floor, floor)
+libm_alias_double(__floor, floor)
 #endif

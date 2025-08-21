@@ -21,18 +21,16 @@
 #include <sys/types.h>
 
 /* Change the permissions of the file referenced by FD to MODE.  */
-int
-__fchmod (int fd, mode_t mode)
+int __fchmod(int fd, mode_t mode)
 {
-  if (fd < 0)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (fd < 0) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (fchmod)
+stub_warning(fchmod)
 
-weak_alias (__fchmod, fchmod)
+weak_alias(__fchmod, fchmod)

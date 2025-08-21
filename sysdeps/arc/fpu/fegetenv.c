@@ -19,19 +19,18 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-int
-__fegetenv (fenv_t *envp)
+int __fegetenv(fenv_t *envp)
 {
-  unsigned int fpcr;
-  unsigned int fpsr;
+    unsigned int fpcr;
+    unsigned int fpsr;
 
-  _FPU_GETCW (fpcr);
-  _FPU_GETS (fpsr);
-  envp->__fpcr = fpcr;
-  envp->__fpsr = fpsr;
+    _FPU_GETCW(fpcr);
+    _FPU_GETS(fpsr);
+    envp->__fpcr = fpcr;
+    envp->__fpsr = fpsr;
 
-  return 0;
+    return 0;
 }
-libm_hidden_def (__fegetenv)
-weak_alias (__fegetenv, fegetenv)
-libm_hidden_weak (fegetenv)
+libm_hidden_def(__fegetenv)
+weak_alias(__fegetenv, fegetenv)
+libm_hidden_weak(fegetenv)

@@ -19,18 +19,17 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-int
-feclearexcept (int excepts)
+int feclearexcept(int excepts)
 {
-  unsigned int fpsr;
+    unsigned int fpsr;
 
-  _FPU_GETS (fpsr);
+    _FPU_GETS(fpsr);
 
-  /* Clear the relevant bits, FWE is preserved.  */
-  fpsr &= ~excepts;
+    /* Clear the relevant bits, FWE is preserved.  */
+    fpsr &= ~excepts;
 
-  _FPU_SETS (fpsr);
+    _FPU_SETS(fpsr);
 
-  return 0;
+    return 0;
 }
-libm_hidden_def (feclearexcept)
+libm_hidden_def(feclearexcept)

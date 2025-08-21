@@ -27,60 +27,60 @@
 /* Return the pathname of the pseudo terminal slave associated with
    the master FD is open on, or NULL on errors.
    The returned storage is good until the next call to this function.  */
-char *
-ptsname (int fd)
+char *ptsname(int fd)
 {
-  static string_t peername;
-  error_t err;
+    static string_t peername;
+    error_t err;
 
-  err = __ptsname_r (fd, peername, sizeof (peername));
+    err = __ptsname_r(fd, peername, sizeof(peername));
 
-  return err ? NULL : peername;
+    return err ? NULL : peername;
 }
 
 
 /* We don't need STP, but fill it for conformity with the Linux version...  */
-int
-__ptsname_internal (int fd, char *buf, size_t buflen, struct stat64 *stp)
+int __ptsname_internal(int fd, char *buf, size_t buflen, struct stat64 *stp)
 {
-  string_t peername;
-  size_t len;
-  error_t err;
-  int ttype;
+    string_t peername;
+    size_t len;
+    error_t err;
+    int ttype;
 
-  if (HURD_DPORT_USE (fd, __term_get_bottom_type (port, &ttype)) == 0)
-    /* get_bottom_type succeeded, this is the slave side.  */
-    return __hurd_fail (ENOTTY), ENOTTY;
-
-  if (err = HURD_DPORT_USE (fd, __term_get_peername (port, peername)))
+    if (HURD_DPORT_USE(fd, __term_get_bottom_type(port, &ttype)) == 0)
+        /* get_bottom_type succeeded, this is the slave side.  */
     {
-      if (err == EMIG_BAD_ID || err == EOPNOTSUPP)
-	err = ENOTTY;
-      return __hurd_dfail (fd, err), errno;
+        return __hurd_fail(ENOTTY), ENOTTY;
     }
 
-  len = __strnlen (peername, sizeof peername - 1) + 1;
-  if (len > buflen)
-    return __hurd_fail (ERANGE), ERANGE;
-
-  if (stp)
-    {
-      if (__stat64 (peername, stp) < 0)
-	return errno;
+    if (err = HURD_DPORT_USE(fd, __term_get_peername(port, peername))) {
+        if (err == EMIG_BAD_ID || err == EOPNOTSUPP) {
+            err = ENOTTY;
+        }
+        return __hurd_dfail(fd, err), errno;
     }
 
-  memcpy (buf, peername, len);
-  return 0;
+    len = __strnlen(peername, sizeof peername - 1) + 1;
+    if (len > buflen) {
+        return __hurd_fail(ERANGE), ERANGE;
+    }
+
+    if (stp) {
+        if (__stat64(peername, stp) < 0) {
+            return errno;
+        }
+    }
+
+    memcpy(buf, peername, len);
+    return 0;
 }
 
 
 /* Store at most BUFLEN characters of the pathname of the slave pseudo
    terminal associated with the master FD is open on in BUF.
    Return 0 on success, otherwise an error number.  */
-int
-__ptsname_r (int fd, char *buf, size_t buflen)
+int __ptsname_r(int fd, char *buf, size_t buflen)
 {
-  return __ptsname_internal (fd, buf, buflen, NULL);
+    return __ptsname_internal(fd, buf, buflen, NULL);
 }
-libc_hidden_def (__ptsname_r)
-weak_alias (__ptsname_r, ptsname_r)
+libc_hidden_def(__ptsname_r)
+weak_alias(__ptsname_r, ptsname_r)

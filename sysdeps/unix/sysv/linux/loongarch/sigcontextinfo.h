@@ -23,10 +23,9 @@
 #include <stdint.h>
 #include <sys/ucontext.h>
 
-static inline uintptr_t
-sigcontext_get_pc (const ucontext_t *ctx)
+static inline uintptr_t sigcontext_get_pc(const ucontext_t *ctx)
 {
-  return ctx->uc_mcontext.__pc;
+    return ctx->uc_mcontext.__pc;
 }
 
 #endif

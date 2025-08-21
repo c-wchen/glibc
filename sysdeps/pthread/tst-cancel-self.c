@@ -23,24 +23,22 @@
 #include "tst-cancel-self-cleanup.c"
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int ret = 0, should_fail = 0;
+    int ret = 0, should_fail = 0;
 
-  pthread_cleanup_push (cleanup, &should_fail);
-  if ((ret = pthread_cancel (pthread_self ())) != 0)
-    {
-      printf ("cancel failed: %s\n", strerror (ret));
-      exit (1);
+    pthread_cleanup_push(cleanup, &should_fail);
+    if ((ret = pthread_cancel(pthread_self())) != 0) {
+        printf("cancel failed: %s\n", strerror(ret));
+        exit(1);
     }
 
-  /* The write syscall within this printf should give us our cancellation
-     point.  */
-  printf ("Could not cancel self.\n");
-  pthread_cleanup_pop (0);
+    /* The write syscall within this printf should give us our cancellation
+       point.  */
+    printf("Could not cancel self.\n");
+    pthread_cleanup_pop(0);
 
-  return 1;
+    return 1;
 }
 
 

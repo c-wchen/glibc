@@ -15,49 +15,43 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef	_EXIT_H
+#ifndef _EXIT_H
 #define _EXIT_H 1
 
 #include <stdbool.h>
 #include <stdint.h>
 #include <libc-lock.h>
 
-enum
-{
-  ef_free,	/* `ef_free' MUST be zero!  */
-  ef_us,
-  ef_on,
-  ef_at,
-  ef_cxa
+enum {
+    ef_free,  /* `ef_free' MUST be zero!  */
+    ef_us,
+    ef_on,
+    ef_at,
+    ef_cxa
 };
 
-struct exit_function
-  {
+struct exit_function {
     /* `flavour' should be of type of the `enum' above but since we need
        this element in an atomic operation we have to use `long int'.  */
     long int flavor;
-    union
-      {
-	void (*at) (void);
-	struct
-	  {
-	    void (*fn) (int status, void *arg);
-	    void *arg;
-	  } on;
-	struct
-	  {
-	    void (*fn) (void *arg, int status);
-	    void *arg;
-	    void *dso_handle;
-	  } cxa;
-      } func;
-  };
-struct exit_function_list
-  {
+    union {
+        void (*at)(void);
+        struct {
+            void (*fn)(int status, void *arg);
+            void *arg;
+        } on;
+        struct {
+            void (*fn)(void *arg, int status);
+            void *arg;
+            void *dso_handle;
+        } cxa;
+    } func;
+};
+struct exit_function_list {
     struct exit_function_list *next;
     size_t idx;
     struct exit_function fns[32];
-  };
+};
 
 extern struct exit_function_list *__exit_funcs attribute_hidden;
 extern struct exit_function_list *__quick_exit_funcs attribute_hidden;
@@ -74,21 +68,21 @@ extern bool __exit_funcs_done attribute_hidden;
    exit handlers.  See BZ#14333.  Note: for lists, the entire list, and
    each associated entry in the list, is protected for all access by this
    lock.  */
-__libc_lock_define (extern, __exit_funcs_lock);
+__libc_lock_define(extern, __exit_funcs_lock);
 
 
-extern struct exit_function *__new_exitfn (struct exit_function_list **listp)
-  attribute_hidden;
+extern struct exit_function *__new_exitfn(struct exit_function_list **listp)
+attribute_hidden;
 
-extern void __run_exit_handlers (int status,
-				 struct exit_function_list **listp,
-				 bool run_list_atexit, bool run_dtors)
-  attribute_hidden __attribute__ ((__noreturn__));
+extern void __run_exit_handlers(int status,
+                                struct exit_function_list **listp,
+                                bool run_list_atexit, bool run_dtors)
+attribute_hidden __attribute__((__noreturn__));
 
-extern int __internal_atexit (void (*func) (void *), void *arg, void *d,
-			      struct exit_function_list **listp)
-  attribute_hidden;
-extern int __cxa_at_quick_exit (void (*func) (void *), void *d);
+extern int __internal_atexit(void (*func)(void *), void *arg, void *d,
+                             struct exit_function_list **listp)
+attribute_hidden;
+extern int __cxa_at_quick_exit(void (*func)(void *), void *d);
 
 
-#endif	/* exit.h  */
+#endif  /* exit.h  */

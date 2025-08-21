@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _ITOWA_H
-#define _ITOWA_H	1
+#define _ITOWA_H    1
 #include <features.h>
 #include <wchar.h>
 #include <_itoa.h>
@@ -27,38 +27,36 @@
    Return the address of the first (left-to-right) character in the number.
    Use upper case letters iff UPPER_CASE is nonzero.  */
 
-extern wchar_t *_itowa (unsigned long long int value, wchar_t *buflim,
-			unsigned int base, int upper_case);
+extern wchar_t *_itowa(unsigned long long int value, wchar_t *buflim,
+                       unsigned int base, int upper_case);
 
-static inline wchar_t *
-__attribute__ ((unused, always_inline))
-_itowa_word (_ITOA_WORD_TYPE value, wchar_t *buflim,
-	     unsigned int base, int upper_case)
+static inline wchar_t *__attribute__((unused, always_inline))
+_itowa_word(_ITOA_WORD_TYPE value, wchar_t *buflim,
+            unsigned int base, int upper_case)
 {
-  extern const wchar_t _itowa_upper_digits[] attribute_hidden;
-  extern const wchar_t _itowa_lower_digits[] attribute_hidden;
-  const wchar_t *digits = (upper_case
-			   ? _itowa_upper_digits : _itowa_lower_digits);
-  wchar_t *bp = buflim;
+    extern const wchar_t _itowa_upper_digits[] attribute_hidden;
+    extern const wchar_t _itowa_lower_digits[] attribute_hidden;
+    const wchar_t *digits = (upper_case
+                             ? _itowa_upper_digits : _itowa_lower_digits);
+    wchar_t *bp = buflim;
 
-  switch (base)
-    {
-#define SPECIAL(Base)							      \
-    case Base:								      \
-      do								      \
-	*--bp = digits[value % Base];					      \
-      while ((value /= Base) != 0);					      \
+    switch (base) {
+#define SPECIAL(Base)                                 \
+    case Base:                                    \
+      do                                      \
+    *--bp = digits[value % Base];                         \
+      while ((value /= Base) != 0);                       \
       break
 
-      SPECIAL (10);
-      SPECIAL (16);
-      SPECIAL (8);
-    default:
-      do
-	*--bp = digits[value % base];
-      while ((value /= base) != 0);
+            SPECIAL(10);
+            SPECIAL(16);
+            SPECIAL(8);
+        default:
+            do {
+                *--bp = digits[value % base];
+            } while ((value /= base) != 0);
     }
-  return bp;
+    return bp;
 }
 #undef SPECIAL
 
@@ -68,4 +66,4 @@ _itowa_word (_ITOA_WORD_TYPE value, wchar_t *buflim,
   _itowa_word (value, buf, base, upper_case)
 #endif
 
-#endif	/* itowa.h */
+#endif  /* itowa.h */

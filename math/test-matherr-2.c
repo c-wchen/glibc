@@ -27,32 +27,29 @@
 
 # undef matherr
 # undef _LIB_VERSION
-compat_symbol_reference (libm, matherr, matherr, GLIBC_2_0);
-compat_symbol_reference (libm, _LIB_VERSION, _LIB_VERSION, GLIBC_2_0);
+compat_symbol_reference(libm, matherr, matherr, GLIBC_2_0);
+compat_symbol_reference(libm, _LIB_VERSION, _LIB_VERSION, GLIBC_2_0);
 
 _LIB_VERSION_TYPE _LIB_VERSION = _SVID_;
 
 static int fail = 1;
 
-int
-matherr (struct exception *s)
+int matherr(struct exception *s)
 {
-  printf ("matherr is working\n");
-  fail = 0;
-  return 1;
+    printf("matherr is working\n");
+    fail = 0;
+    return 1;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  acos (2.0);
-  return fail;
+    acos(2.0);
+    return fail;
 }
 #else
-static int
-do_test (void)
+static int do_test(void)
 {
-  return 77;
+    return 77;
 }
 #endif
 

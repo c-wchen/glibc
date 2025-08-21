@@ -19,6 +19,6 @@
    <https://www.gnu.org/licenses/>.  */
 
 #define TEST_FUNCTION lib_main ()
-extern int lib_main (void);
+extern int lib_main(void);
 
 #include "../test-skeleton.c"

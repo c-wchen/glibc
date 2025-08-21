@@ -26,4 +26,4 @@
 #include "login/updwtmpx.c"
 #undef updwtmpx
 
-default_symbol_version (__updwtmpx, updwtmpx, UTMP_COMPAT_BASE);
+default_symbol_version(__updwtmpx, updwtmpx, UTMP_COMPAT_BASE);

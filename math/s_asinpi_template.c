@@ -23,23 +23,24 @@
 #include <math-underflow.h>
 
 FLOAT
-M_DECL_FUNC (__asinpi) (FLOAT x)
+M_DECL_FUNC(__asinpi)(FLOAT x)
 {
-  if (__glibc_unlikely (!islessequal (M_FABS (x), M_LIT (1.0))))
-    {
-      if (!isnan (x))
-	__set_errno (EDOM);
-      return (x - x) / (x - x);
+    if (__glibc_unlikely(!islessequal(M_FABS(x), M_LIT(1.0)))) {
+        if (!isnan(x)) {
+            __set_errno(EDOM);
+        }
+        return (x - x) / (x - x);
     }
-  FLOAT ret = math_narrow_eval (M_SUF (__ieee754_asin) (x) / M_MLIT (M_PI));
-  math_check_force_underflow (ret);
-  if (x != 0 && ret == 0)
-    __set_errno (ERANGE);
-  /* Ensure that rounding away from zero for both asin and the
-     division cannot yield a return value from asinpi with absolute
-     value greater than 0.5.  */
-  return (isgreater (M_FABS (ret), M_LIT (0.5))
-	  ? M_COPYSIGN (M_LIT (0.5), ret)
-	  : ret);
+    FLOAT ret = math_narrow_eval(M_SUF(__ieee754_asin)(x) / M_MLIT(M_PI));
+    math_check_force_underflow(ret);
+    if (x != 0 && ret == 0) {
+        __set_errno(ERANGE);
+    }
+    /* Ensure that rounding away from zero for both asin and the
+       division cannot yield a return value from asinpi with absolute
+       value greater than 0.5.  */
+    return (isgreater(M_FABS(ret), M_LIT(0.5))
+            ? M_COPYSIGN(M_LIT(0.5), ret)
+            : ret);
 }
-declare_mgen_alias (__asinpi, asinpi);
+declare_mgen_alias(__asinpi, asinpi);

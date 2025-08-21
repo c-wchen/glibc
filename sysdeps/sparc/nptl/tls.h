@@ -29,21 +29,20 @@
 # include <kernel-features.h>
 # include <dl-dtv.h>
 
-typedef struct
-{
-  void *tcb;		/* Pointer to the TCB.  Not necessary the
-			   thread descriptor used by libpthread.  */
-  dtv_t *dtv;
-  void *self;
-  int multiple_threads;
+typedef struct {
+    void *tcb;        /* Pointer to the TCB.  Not necessary the
+               thread descriptor used by libpthread.  */
+    dtv_t *dtv;
+    void *self;
+    int multiple_threads;
 #if __WORDSIZE == 64
-  int gscope_flag;
+    int gscope_flag;
 #endif
-  uintptr_t sysinfo;
-  uintptr_t stack_guard;
-  uintptr_t pointer_guard;
+    uintptr_t sysinfo;
+    uintptr_t stack_guard;
+    uintptr_t pointer_guard;
 #if __WORDSIZE != 64
-  int gscope_flag;
+    int gscope_flag;
 #endif
 } tcbhead_t;
 
@@ -68,8 +67,8 @@ register struct pthread *__thread_self __asm__("%g7");
 
 /* The TCB can have any size and the memory following the address the
    thread pointer points to is unspecified.  Allocate the TCB there.  */
-# define TLS_TCB_AT_TP	1
-# define TLS_DTV_AT_TP	0
+# define TLS_TCB_AT_TP  1
+# define TLS_DTV_AT_TP  0
 
 /* Get the thread descriptor definition.  */
 # include <nptl/descr.h>
@@ -128,22 +127,22 @@ register struct pthread *__thread_self __asm__("%g7");
 #define THREAD_GSCOPE_FLAG_USED   1
 #define THREAD_GSCOPE_FLAG_WAIT   2
 #define THREAD_GSCOPE_RESET_FLAG() \
-  do									     \
-    { int __res								     \
-	= atomic_exchange_release (&THREAD_SELF->header.gscope_flag,	     \
-			       THREAD_GSCOPE_FLAG_UNUSED);		     \
-      if (__res == THREAD_GSCOPE_FLAG_WAIT)				     \
-	lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1, LLL_PRIVATE);   \
-    }									     \
+  do                                         \
+    { int __res                                  \
+    = atomic_exchange_release (&THREAD_SELF->header.gscope_flag,         \
+                   THREAD_GSCOPE_FLAG_UNUSED);           \
+      if (__res == THREAD_GSCOPE_FLAG_WAIT)                  \
+    lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1, LLL_PRIVATE);   \
+    }                                        \
   while (0)
 #define THREAD_GSCOPE_SET_FLAG() \
-  do									     \
-    {									     \
-      THREAD_SELF->header.gscope_flag = THREAD_GSCOPE_FLAG_USED;	     \
-      atomic_write_barrier ();						     \
-    }									     \
+  do                                         \
+    {                                        \
+      THREAD_SELF->header.gscope_flag = THREAD_GSCOPE_FLAG_USED;         \
+      atomic_write_barrier ();                           \
+    }                                        \
   while (0)
 
 #endif /* !ASSEMBLER */
 
-#endif	/* tls.h */
+#endif  /* tls.h */

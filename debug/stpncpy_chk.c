@@ -22,11 +22,11 @@
 
 /* Copy no more than N characters of SRC to DEST, returning the address of
    the terminating '\0' in DEST, if any, or else DEST + N.  */
-char *
-__stpncpy_chk (char *dest, const char *src, size_t n, size_t destlen)
+char *__stpncpy_chk(char *dest, const char *src, size_t n, size_t destlen)
 {
-  if (__builtin_expect (destlen < n, 0))
-    __chk_fail ();
+    if (__builtin_expect(destlen < n, 0)) {
+        __chk_fail();
+    }
 
-  return __stpncpy (dest, src, n);
+    return __stpncpy(dest, src, n);
 }

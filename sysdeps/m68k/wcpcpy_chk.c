@@ -22,13 +22,13 @@
 
 /* Copy SRC to DEST, returning the address of the terminating L'\0' in
    DEST.  Check for overflows.  */
-wchar_t *
-__wcpcpy_chk (wchar_t *dest, const wchar_t *src, size_t destlen)
+wchar_t *__wcpcpy_chk(wchar_t *dest, const wchar_t *src, size_t destlen)
 {
-  do
-    if (destlen-- == 0)
-      __chk_fail ();
-  while ((*dest++ = *src++));
+    do
+        if (destlen-- == 0) {
+            __chk_fail();
+        }
+    while ((*dest++ = *src++));
 
-  return dest - 1;
+    return dest - 1;
 }

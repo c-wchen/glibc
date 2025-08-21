@@ -49,60 +49,58 @@ pthread_rwlock_t onelock;
 
 _Atomic int do_exit;
 
-void *
-run_loop (void *arg)
+void *run_loop(void *arg)
 {
-  int i = 0, ret;
-  while (!do_exit)
-    {
-      /* Arbitrarily choose if we are the writer or reader.  Choose a
-	 high enough ratio of readers to writers to make it likely
-	 that readers block (and eventually are susceptable to
-	 stalling).
+    int i = 0, ret;
+    while (!do_exit) {
+        /* Arbitrarily choose if we are the writer or reader.  Choose a
+        high enough ratio of readers to writers to make it likely
+         that readers block (and eventually are susceptable to
+         stalling).
 
-         If we are a writer, take the write lock, and then unlock.
-	 If we are a reader, try the lock, then lock, then unlock.  */
-      if ((i % 8) != 0)
-	{
-	  if ((ret = pthread_rwlock_trywrlock (&onelock)) != 0)
-	    {
-	      if (ret == EBUSY)
-		xpthread_rwlock_wrlock (&onelock);
-	      else
-		exit (EXIT_FAILURE);
-	    }
-	}
-      else
-	xpthread_rwlock_rdlock (&onelock);
-      /* Thread does some work and then unlocks.  */
-      xpthread_rwlock_unlock (&onelock);
-      i++;
+               If we are a writer, take the write lock, and then unlock.
+         If we are a reader, try the lock, then lock, then unlock.  */
+        if ((i % 8) != 0) {
+            if ((ret = pthread_rwlock_trywrlock(&onelock)) != 0) {
+                if (ret == EBUSY) {
+                    xpthread_rwlock_wrlock(&onelock);
+                } else {
+                    exit(EXIT_FAILURE);
+                }
+            }
+        } else {
+            xpthread_rwlock_rdlock(&onelock);
+        }
+        /* Thread does some work and then unlocks.  */
+        xpthread_rwlock_unlock(&onelock);
+        i++;
     }
-  return NULL;
+    return NULL;
 }
 
-int
-do_test (void)
+int do_test(void)
 {
-  int i;
-  pthread_t tids[NTHREADS];
-  xpthread_rwlock_init (&onelock, NULL);
-  for (i = 0; i < NTHREADS; i++)
-    tids[i] = xpthread_create (NULL, run_loop, NULL);
-  /* Run for some amount of time.  The pthread_rwlock_tryrwlock stall
-     is very easy to trigger and happens in seconds under the test
-     conditions.  */
-  sleep (10);
-  /* Then exit.  */
-  printf ("INFO: Exiting...\n");
-  do_exit = 1;
-  /* If any readers stalled then we will timeout waiting for them.  */
-  for (i = 0; i < NTHREADS; i++)
-    xpthread_join (tids[i]);
-  printf ("INFO: Done.\n");
-  xpthread_rwlock_destroy (&onelock);
-  printf ("PASS: No pthread_rwlock_tryrwlock stalls detected.\n");
-  return 0;
+    int i;
+    pthread_t tids[NTHREADS];
+    xpthread_rwlock_init(&onelock, NULL);
+    for (i = 0; i < NTHREADS; i++) {
+        tids[i] = xpthread_create(NULL, run_loop, NULL);
+    }
+    /* Run for some amount of time.  The pthread_rwlock_tryrwlock stall
+       is very easy to trigger and happens in seconds under the test
+       conditions.  */
+    sleep(10);
+    /* Then exit.  */
+    printf("INFO: Exiting...\n");
+    do_exit = 1;
+    /* If any readers stalled then we will timeout waiting for them.  */
+    for (i = 0; i < NTHREADS; i++) {
+        xpthread_join(tids[i]);
+    }
+    printf("INFO: Done.\n");
+    xpthread_rwlock_destroy(&onelock);
+    printf("PASS: No pthread_rwlock_tryrwlock stalls detected.\n");
+    return 0;
 }
 
 #include <support/test-driver.c>

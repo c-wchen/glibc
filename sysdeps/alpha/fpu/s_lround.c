@@ -15,24 +15,23 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define __llround	not___llround
-#define llround		not_llround
+#define __llround   not___llround
+#define llround     not_llround
 #include <math.h>
 #include <math_ldbl_opt.h>
 #include <libm-alias-double.h>
 #undef __llround
 #undef llround
 
-long int
-__lround (double x)
+long int __lround(double x)
 {
-  double adj, y;
+    double adj, y;
 
-  adj = copysign (0.5, x);
-  asm("addt/suc %1,%2,%0" : "=&f"(y) : "f"(x), "f"(adj));
-  return y;
+    adj = copysign(0.5, x);
+    asm("addt/suc %1,%2,%0" : "=&f"(y) : "f"(x), "f"(adj));
+    return y;
 }
 
-strong_alias (__lround, __llround)
-libm_alias_double (__lround, lround)
-libm_alias_double (__llround, llround)
+strong_alias(__lround, __llround)
+libm_alias_double(__lround, lround)
+libm_alias_double(__llround, llround)

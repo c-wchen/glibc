@@ -40,11 +40,11 @@
    array_foreach_const (PTR, ARRAY) does the same, but *PTR is declared
    const even if the array is not. */
 #define array_foreach(ptr, array)                                      \
-  for (__typeof ((array)[0]) *ptr = (array) ;			       \
+  for (__typeof ((array)[0]) *ptr = (array) ;                  \
        ptr < array_end (array) ; ptr++)
 
 #define array_foreach_const(ptr, array)                                \
-  for (const __typeof ((array)[0]) *ptr = (array) ;		       \
+  for (const __typeof ((array)[0]) *ptr = (array) ;            \
        ptr < array_end (array) ; ptr++)
 
 #endif /* _ARRAY_LENGTH_H */

@@ -72,18 +72,18 @@ __BEGIN_DECLS
 
 
 
-int support_print_failure_impl (const char *file, int line,
-                                const char *format, ...)
-  __attribute__ ((nonnull (1), format (printf, 3, 4)));
-void support_exit_failure_impl (int exit_status,
-                                const char *file, int line,
-                                const char *format, ...)
-  __attribute__ ((noreturn, nonnull (2), format (printf, 4, 5)));
-void support_test_verify_impl (const char *file, int line,
-                               const char *expr);
-void support_test_verify_exit_impl (int status, const char *file, int line,
-                                    const char *expr)
-  __attribute__ ((noreturn));
+int support_print_failure_impl(const char *file, int line,
+                               const char *format, ...)
+__attribute__((nonnull(1), format(printf, 3, 4)));
+void support_exit_failure_impl(int exit_status,
+                               const char *file, int line,
+                               const char *format, ...)
+__attribute__((noreturn, nonnull(2), format(printf, 4, 5)));
+void support_test_verify_impl(const char *file, int line,
+                              const char *expr);
+void support_test_verify_exit_impl(int status, const char *file, int line,
+                                   const char *expr)
+__attribute__((noreturn));
 
 /* Record a test failure.  This function returns and does not
    terminate the process.  The failure counter is stored in a shared
@@ -92,7 +92,7 @@ void support_test_verify_exit_impl (int status, const char *file, int line,
    depends on initialization by an ELF constructor, so it can only be
    invoked after the test driver has run.  Note that this function
    does not support reporting failures from a DSO.  */
-void support_record_failure (void);
+void support_record_failure(void);
 
 /* Static assertion, under a common name for both C++ and C11.  */
 #ifdef __cplusplus
@@ -138,15 +138,15 @@ void support_record_failure (void);
    RIGHT_VALUE, and the function can still print the original value.
    LEFT_SIZE and RIGHT_SIZE specify the size of the argument in bytes,
    for hexadecimal formatting.  */
-void support_test_compare_failure (const char *file, int line,
-                                   const char *left_expr,
-                                   long long left_value,
-                                   int left_positive,
-                                   int left_size,
-                                   const char *right_expr,
-                                   long long right_value,
-                                   int right_positive,
-                                   int right_size);
+void support_test_compare_failure(const char *file, int line,
+                                  const char *left_expr,
+                                  long long left_value,
+                                  int left_positive,
+                                  int left_size,
+                                  const char *right_expr,
+                                  long long right_value,
+                                  int right_positive,
+                                  int right_size);
 
 
 /* Compare [LEFT, LEFT + LEFT_LENGTH) with [RIGHT, RIGHT +
@@ -160,14 +160,14 @@ void support_test_compare_failure (const char *file, int line,
                               __FILE__, __LINE__,                       \
                               #left, #left_length, #right, #right_length))
 
-void support_test_compare_blob (const void *left,
-                                unsigned long int left_length,
-                                const void *right,
-                                unsigned long int right_length,
-                                const char *file, int line,
-                                const char *left_exp, const char *left_len_exp,
-                                const char *right_exp,
-                                const char *right_len_exp);
+void support_test_compare_blob(const void *left,
+                               unsigned long int left_length,
+                               const void *right,
+                               unsigned long int right_length,
+                               const char *file, int line,
+                               const char *left_exp, const char *left_len_exp,
+                               const char *right_exp,
+                               const char *right_len_exp);
 
 /* Compare the strings LEFT and RIGHT and report a test failure if
    they are different.  Also report failure if one of the arguments is
@@ -183,32 +183,32 @@ void support_test_compare_blob (const void *left,
    reasonably short because on mismatch, both are printed.  */
 #define TEST_COMPARE_STRING_WIDE(left, right)                         \
   (support_test_compare_string_wide (left, right, __FILE__, __LINE__, \
-				     #left, #right))
+                     #left, #right))
 
-void support_test_compare_string (const char *left, const char *right,
-                                  const char *file, int line,
-                                  const char *left_expr,
-                                  const char *right_expr);
+void support_test_compare_string(const char *left, const char *right,
+                                 const char *file, int line,
+                                 const char *left_expr,
+                                 const char *right_expr);
 
-void support_test_compare_string_wide (const wchar_t *left,
-				       const wchar_t *right,
-				       const char *file, int line,
-				       const char *left_expr,
-				       const char *right_expr);
+void support_test_compare_string_wide(const wchar_t *left,
+                                      const wchar_t *right,
+                                      const char *file, int line,
+                                      const char *left_expr,
+                                      const char *right_expr);
 
 /* Internal function called by the test driver.  */
-int support_report_failure (int status)
-  __attribute__ ((weak, warn_unused_result));
+int support_report_failure(int status)
+__attribute__((weak, warn_unused_result));
 
 /* Internal function used to test the failure recording framework.  */
-void support_record_failure_reset (void);
+void support_record_failure_reset(void);
 
 /* Returns true or false depending on whether there have been test
    failures or not.  */
-int support_record_failure_is_failed (void);
+int support_record_failure_is_failed(void);
 
 /* Terminate the process if any failures have been encountered so far.  */
-void support_record_failure_barrier (void);
+void support_record_failure_barrier(void);
 
 __END_DECLS
 

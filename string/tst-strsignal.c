@@ -27,38 +27,41 @@
 #include <support/support.h>
 #include <support/check.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  unsetenv ("LANGUAGE");
+    unsetenv("LANGUAGE");
 
-  xsetlocale (LC_ALL, "C");
+    xsetlocale(LC_ALL, "C");
 
-  TEST_COMPARE_STRING (strsignal (SIGINT),     "Interrupt");
-  TEST_COMPARE_STRING (strsignal (-1),         "Unknown signal -1");
+    TEST_COMPARE_STRING(strsignal(SIGINT),     "Interrupt");
+    TEST_COMPARE_STRING(strsignal(-1),         "Unknown signal -1");
 #ifdef SIGRTMIN
-  if (SIGRTMIN < SIGRTMAX)
-    TEST_COMPARE_STRING (strsignal (SIGRTMIN),   "Real-time signal 0");
+    if (SIGRTMIN < SIGRTMAX) {
+        TEST_COMPARE_STRING(strsignal(SIGRTMIN),   "Real-time signal 0");
+    }
 #endif
 #ifdef SIGRTMAX
-  if (SIGRTMAX == 64)
-    TEST_COMPARE_STRING (strsignal (SIGRTMAX+1), "Unknown signal 65");
+    if (SIGRTMAX == 64) {
+        TEST_COMPARE_STRING(strsignal(SIGRTMAX + 1), "Unknown signal 65");
+    }
 #endif
 
-  xsetlocale (LC_ALL, "pt_BR.UTF-8");
+    xsetlocale(LC_ALL, "pt_BR.UTF-8");
 
-  TEST_COMPARE_STRING (strsignal (SIGINT),    "Interrup\xc3\xa7\xc3\xa3\x6f");
-  TEST_COMPARE_STRING (strsignal (-1),        "Sinal desconhecido -1");
+    TEST_COMPARE_STRING(strsignal(SIGINT),    "Interrup\xc3\xa7\xc3\xa3\x6f");
+    TEST_COMPARE_STRING(strsignal(-1),        "Sinal desconhecido -1");
 #ifdef SIGRTMI
-  if (SIGRTMIN < SIGRTMAX)
-    TEST_COMPARE_STRING (strsignal (SIGRTMIN),  "Sinal de tempo-real 0");
+    if (SIGRTMIN < SIGRTMAX) {
+        TEST_COMPARE_STRING(strsignal(SIGRTMIN),  "Sinal de tempo-real 0");
+    }
 #endif
 #ifdef SIGRTMAX
-  if (SIGRTMAX == 64)
-    TEST_COMPARE_STRING (strsignal (SIGRTMAX+1), "Sinal desconhecido 65");
+    if (SIGRTMAX == 64) {
+        TEST_COMPARE_STRING(strsignal(SIGRTMAX + 1), "Sinal desconhecido 65");
+    }
 #endif
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

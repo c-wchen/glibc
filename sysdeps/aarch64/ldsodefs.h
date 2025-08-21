@@ -27,22 +27,22 @@ struct La_aarch64_retval;
 
 #define ARCH_PLTENTER_MEMBERS \
     ElfW(Addr) (*aarch64_gnu_pltenter) (ElfW(Sym) *,                    \
-					unsigned int,			\
-                                        uintptr_t *,			\
-					uintptr_t *,                    \
-					struct La_aarch64_regs *,	\
-					unsigned int *,			\
-					const char *,			\
-					long int *)
+                    unsigned int,           \
+                                        uintptr_t *,            \
+                    uintptr_t *,                    \
+                    struct La_aarch64_regs *,   \
+                    unsigned int *,         \
+                    const char *,           \
+                    long int *)
 
 #define ARCH_PLTEXIT_MEMBERS \
     ElfW(Addr) (*aarch64_gnu_pltexit) (ElfW(Sym) *,                     \
-				       unsigned int,                    \
-				       uintptr_t *,			\
-				       uintptr_t *,			\
-				       const struct La_aarch64_regs *,	\
-				       struct La_aarch64_retval *,	\
-				       const char *)
+                       unsigned int,                    \
+                       uintptr_t *,         \
+                       uintptr_t *,         \
+                       const struct La_aarch64_regs *,  \
+                       struct La_aarch64_retval *,  \
+                       const char *)
 
 #include_next <ldsodefs.h>
 

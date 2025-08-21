@@ -90,7 +90,7 @@ extern fpu_control_t __fpu_control;
 #define _FPU_RC_UP      0x2
 #define _FPU_RC_DOWN    0x3
 /* Mask for rounding control.  */
-#define _FPU_RC_MASK	0x3
+#define _FPU_RC_MASK    0x3
 
 #define _FPU_RESERVED 0xfe8c0000  /* Reserved bits in cw, incl ABS/NAN2008.  */
 
@@ -111,11 +111,11 @@ extern fpu_control_t __fpu_control;
 #endif
 
 /* Type of the control word.  */
-typedef unsigned int fpu_control_t __attribute__ ((__mode__ (__SI__)));
+typedef unsigned int fpu_control_t __attribute__((__mode__(__SI__)));
 
 /* Macros for accessing the hardware control word.  */
-extern fpu_control_t __mips_fpu_getcw (void) __THROW;
-extern void __mips_fpu_setcw (fpu_control_t) __THROW;
+extern fpu_control_t __mips_fpu_getcw(void) __THROW;
+extern void __mips_fpu_setcw(fpu_control_t) __THROW;
 #ifdef __mips16
 # define _FPU_GETCW(cw) do { (cw) = __mips_fpu_getcw (); } while (0)
 # define _FPU_SETCW(cw) __mips_fpu_setcw (cw)
@@ -129,4 +129,4 @@ extern fpu_control_t __fpu_control;
 
 #endif /* __mips_soft_float */
 
-#endif	/* fpu_control.h */
+#endif  /* fpu_control.h */

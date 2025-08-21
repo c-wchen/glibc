@@ -21,14 +21,15 @@
 #include <sys/syscall.h>
 #include <sysdep.h>
 
-int
-__pkey_mprotect (void *addr, size_t len, int prot, int pkey)
+int __pkey_mprotect(void *addr, size_t len, int prot, int pkey)
 {
-  if (pkey == -1)
-    /* If the key is -1, the system call is precisely equivalent to
-       mprotect.  */
-    return __mprotect (addr, len, prot);
-  return INLINE_SYSCALL_CALL (pkey_mprotect, addr, len, prot, pkey);
+    if (pkey == -1)
+        /* If the key is -1, the system call is precisely equivalent to
+           mprotect.  */
+    {
+        return __mprotect(addr, len, prot);
+    }
+    return INLINE_SYSCALL_CALL(pkey_mprotect, addr, len, prot, pkey);
 }
-libc_hidden_def (__pkey_mprotect)
-weak_alias (__pkey_mprotect, pkey_mprotect)
+libc_hidden_def(__pkey_mprotect)
+weak_alias(__pkey_mprotect, pkey_mprotect)

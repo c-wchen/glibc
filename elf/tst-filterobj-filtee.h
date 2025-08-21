@@ -18,7 +18,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-const char *get_text (void);
+const char *get_text(void);
 
 /* For testing auxiliary filter object.  */
-const char *get_text2 (void);
+const char *get_text2(void);

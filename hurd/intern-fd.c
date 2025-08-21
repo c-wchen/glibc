@@ -23,28 +23,26 @@
 
    If the descriptor table is full, set errno, and return -1.
    If DEALLOC is nonzero, deallocate PORT first.  */
-int
-_hurd_intern_fd (io_t port, int flags, int dealloc)
+int _hurd_intern_fd(io_t port, int flags, int dealloc)
 {
-  int fd;
-  struct hurd_fd *d;
+    int fd;
+    struct hurd_fd *d;
 
-  HURD_CRITICAL_BEGIN;
-  d = _hurd_alloc_fd (&fd, 0);
-  if (d != NULL)
-    {
-      _hurd_port2fd (d, port, flags);
-      __spin_unlock (&d->port.lock);
+    HURD_CRITICAL_BEGIN;
+    d = _hurd_alloc_fd(&fd, 0);
+    if (d != NULL) {
+        _hurd_port2fd(d, port, flags);
+        __spin_unlock(&d->port.lock);
     }
-  HURD_CRITICAL_END;
+    HURD_CRITICAL_END;
 
-  if (d == NULL)
-    {
-      if (dealloc)
-	__mach_port_deallocate (__mach_task_self (), port);
-      return -1;
+    if (d == NULL) {
+        if (dealloc) {
+            __mach_port_deallocate(__mach_task_self(), port);
+        }
+        return -1;
     }
 
-  return fd;
+    return fd;
 }
-libc_hidden_def (_hurd_intern_fd)
+libc_hidden_def(_hurd_intern_fd)

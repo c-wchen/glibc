@@ -24,13 +24,12 @@
    The buffers are filled in the order specified.
    Operates just like `read' (see <unistd.h>) except that data are
    put in VECTOR instead of a contiguous buffer.  */
-ssize_t
-__readv (int fd, const struct iovec *vector, int count)
+ssize_t __readv(int fd, const struct iovec *vector, int count)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (__readv)
-weak_alias (__readv, readv)
+libc_hidden_def(__readv)
+weak_alias(__readv, readv)
 
-stub_warning (readv)
+stub_warning(readv)

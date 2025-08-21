@@ -23,59 +23,54 @@
 #include <stdint.h>
 #include <stdio.h>
 
-static const uint64_t tests[] =
-  {
+static const uint64_t tests[] = {
     0, 1, 0x4000000000000000ULL, 0x4000000000000001ULL,
     0x7fffffffffffffffULL
-  };
+};
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int result = 0;
+    int result = 0;
 
-  if (LDBL_MIN_EXP == -16382)
-    for (size_t i = 0; i < sizeof (tests) / sizeof (tests[0]); i++)
-      {
-	long double ldx, ldy, ldnx, ldny;
-	/* Verify that the high bit of the mantissa is ignored for
-	   infinities and NaNs for the M68K variant of this
-	   format.  */
-	SET_LDOUBLE_WORDS (ldx, 0x7fff,
-			   tests[i] >> 32, tests[i] & 0xffffffffULL);
-	SET_LDOUBLE_WORDS (ldy, 0x7fff,
-			   (tests[i] >> 32) | 0x80000000,
-			   tests[i] & 0xffffffffULL);
-	SET_LDOUBLE_WORDS (ldnx, -1,
-			   tests[i] >> 32, tests[i] & 0xffffffffULL);
-	SET_LDOUBLE_WORDS (ldny, -1,
-			   (tests[i] >> 32) | 0x80000000,
-			   tests[i] & 0xffffffffULL);
-	bool to1 = totalorderl (&ldx, &ldy);
-	bool to2 = totalorderl (&ldy, &ldx);
-	bool to3 = totalorderl (&ldnx, &ldny);
-	bool to4 = totalorderl (&ldny, &ldnx);
-	if (to1 && to2 && to3 && to4)
-	  printf ("PASS: test %zu\n", i);
-	else
-	  {
-	    printf ("FAIL: test %zu\n", i);
-	    result = 1;
-	  }
-	to1 = totalordermagl (&ldx, &ldy);
-	to2 = totalordermagl (&ldy, &ldx);
-	to3 = totalordermagl (&ldnx, &ldny);
-	to4 = totalordermagl (&ldny, &ldnx);
-	if (to1 && to2 && to3 && to4)
-	  printf ("PASS: test %zu (totalordermagl)\n", i);
-	else
-	  {
-	    printf ("FAIL: test %zu (totalordermagl)\n", i);
-	    result = 1;
-	  }
-      }
+    if (LDBL_MIN_EXP == -16382)
+        for (size_t i = 0; i < sizeof(tests) / sizeof(tests[0]); i++) {
+            long double ldx, ldy, ldnx, ldny;
+            /* Verify that the high bit of the mantissa is ignored for
+               infinities and NaNs for the M68K variant of this
+               format.  */
+            SET_LDOUBLE_WORDS(ldx, 0x7fff,
+                              tests[i] >> 32, tests[i] & 0xffffffffULL);
+            SET_LDOUBLE_WORDS(ldy, 0x7fff,
+                              (tests[i] >> 32) | 0x80000000,
+                              tests[i] & 0xffffffffULL);
+            SET_LDOUBLE_WORDS(ldnx, -1,
+                              tests[i] >> 32, tests[i] & 0xffffffffULL);
+            SET_LDOUBLE_WORDS(ldny, -1,
+                              (tests[i] >> 32) | 0x80000000,
+                              tests[i] & 0xffffffffULL);
+            bool to1 = totalorderl(&ldx, &ldy);
+            bool to2 = totalorderl(&ldy, &ldx);
+            bool to3 = totalorderl(&ldnx, &ldny);
+            bool to4 = totalorderl(&ldny, &ldnx);
+            if (to1 && to2 && to3 && to4) {
+                printf("PASS: test %zu\n", i);
+            } else {
+                printf("FAIL: test %zu\n", i);
+                result = 1;
+            }
+            to1 = totalordermagl(&ldx, &ldy);
+            to2 = totalordermagl(&ldy, &ldx);
+            to3 = totalordermagl(&ldnx, &ldny);
+            to4 = totalordermagl(&ldny, &ldnx);
+            if (to1 && to2 && to3 && to4) {
+                printf("PASS: test %zu (totalordermagl)\n", i);
+            } else {
+                printf("FAIL: test %zu (totalordermagl)\n", i);
+                result = 1;
+            }
+        }
 
-  return result;
+    return result;
 }
 
 #define TEST_FUNCTION do_test ()

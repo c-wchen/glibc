@@ -22,22 +22,20 @@
 #include <stdbool.h>
 #include <sched.h>
 
-static int
-getaffinity (size_t size, cpu_set_t *set)
+static int getaffinity(size_t size, cpu_set_t *set)
 {
-  return sched_getaffinity (0, size, set);
+    return sched_getaffinity(0, size, set);
 }
 
-static int
-setaffinity (size_t size, const cpu_set_t *set)
+static int setaffinity(size_t size, const cpu_set_t *set)
 {
-  return sched_setaffinity (0, size, set);
+    return sched_setaffinity(0, size, set);
 }
 
 struct conf;
-static bool early_test (struct conf *unused)
+static bool early_test(struct conf *unused)
 {
-  return true;
+    return true;
 }
 
 #include "tst-skeleton-affinity.c"

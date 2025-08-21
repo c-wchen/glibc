@@ -19,22 +19,21 @@
 #ifndef _LOONGARCH_BITS_SETJMP_H
 #define _LOONGARCH_BITS_SETJMP_H
 
-typedef struct __jmp_buf_internal_tag
-{
-  /* Program counter.  */
-  long int __pc;
-  /* Stack pointer.  */
-  long int __sp;
-  /* Reserved */
-  long int __x;
-  /* Frame pointer.  */
-  long int __fp;
-  /* Callee-saved registers.  */
-  long int __regs[9];
+typedef struct __jmp_buf_internal_tag {
+    /* Program counter.  */
+    long int __pc;
+    /* Stack pointer.  */
+    long int __sp;
+    /* Reserved */
+    long int __x;
+    /* Frame pointer.  */
+    long int __fp;
+    /* Callee-saved registers.  */
+    long int __regs[9];
 
 #ifndef __loongarch_soft_float
-  /* Callee-saved floating point registers.  */
-  double __fpregs[8];
+    /* Callee-saved floating point registers.  */
+    double __fpregs[8];
 #endif
 
 } __jmp_buf[1];

@@ -26,23 +26,21 @@
 # include <dl-vdso.h>
 # include <libc-vdso.h>
 
-static time_t
-time_syscall (time_t *t)
+static time_t time_syscall(time_t *t)
 {
-  return INLINE_SYSCALL_CALL (time, t);
+    return INLINE_SYSCALL_CALL(time, t);
 }
 
 # undef INIT_ARCH
 # define INIT_ARCH()
-libc_ifunc (time,
-	    GLRO(dl_vdso_time) != NULL ? VDSO_IFUNC_RET (GLRO(dl_vdso_time))
-				       : (void *) time_syscall);
+libc_ifunc(time,
+           GLRO(dl_vdso_time) != NULL ? VDSO_IFUNC_RET(GLRO(dl_vdso_time))
+           : (void *) time_syscall);
 
 # else
-time_t
-time (time_t *t)
+time_t time(time_t *t)
 {
-  return INLINE_VSYSCALL (time, 1, t);
+    return INLINE_VSYSCALL(time, 1, t);
 }
 # endif /* !SHARED */
 #else /* USE_IFUNC_TIME  */
@@ -52,35 +50,35 @@ time (time_t *t)
 
 /* Return the time now, and store it in *TIMER if not NULL.  */
 
-__time64_t
-__time64 (__time64_t *timer)
+__time64_t __time64(__time64_t *timer)
 {
-  struct __timespec64 ts;
-  __clock_gettime64 (TIME_CLOCK_GETTIME_CLOCKID, &ts);
+    struct __timespec64 ts;
+    __clock_gettime64(TIME_CLOCK_GETTIME_CLOCKID, &ts);
 
-  if (timer != NULL)
-    *timer = ts.tv_sec;
-  return ts.tv_sec;
+    if (timer != NULL) {
+        *timer = ts.tv_sec;
+    }
+    return ts.tv_sec;
 }
 
 # if __TIMESIZE != 64
-libc_hidden_def (__time64)
+libc_hidden_def(__time64)
 
 time_t
-__time (time_t *timer)
+__time(time_t *timer)
 {
-  __time64_t t = __time64 (NULL);
+    __time64_t t = __time64(NULL);
 
-  if (! in_time_t_range (t))
-    {
-      __set_errno (EOVERFLOW);
-      return -1;
+    if (! in_time_t_range(t)) {
+        __set_errno(EOVERFLOW);
+        return -1;
     }
 
-  if (timer != NULL)
-    *timer = t;
-  return t;
+    if (timer != NULL) {
+        *timer = t;
+    }
+    return t;
 }
 # endif
-weak_alias (__time, time)
+weak_alias(__time, time)
 #endif

@@ -18,8 +18,7 @@
 
 #include <support/xthread.h>
 
-void
-xpthread_mutex_unlock (pthread_mutex_t *mutex)
+void xpthread_mutex_unlock(pthread_mutex_t *mutex)
 {
-  xpthread_check_return ("pthread_mutex_unlock", pthread_mutex_unlock (mutex));
+    xpthread_check_return("pthread_mutex_unlock", pthread_mutex_unlock(mutex));
 }

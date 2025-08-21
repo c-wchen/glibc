@@ -22,59 +22,60 @@
 #include <list.h>
 #include <lowlevellock.h>
 
-void
-__thread_gscope_wait (void)
+void __thread_gscope_wait(void)
 {
-  lll_lock (GL (dl_stack_cache_lock), LLL_PRIVATE);
+    lll_lock(GL(dl_stack_cache_lock), LLL_PRIVATE);
 
-  struct pthread *self = THREAD_SELF;
+    struct pthread *self = THREAD_SELF;
 
-  /* Iterate over the list with system-allocated threads first.  */
-  list_t *runp;
-  list_for_each (runp, &GL (dl_stack_used))
-    {
-      struct pthread *t = list_entry (runp, struct pthread, list);
-      if (t == self || t->header.gscope_flag == THREAD_GSCOPE_FLAG_UNUSED)
-        continue;
+    /* Iterate over the list with system-allocated threads first.  */
+    list_t *runp;
+    list_for_each(runp, &GL(dl_stack_used)) {
+        struct pthread *t = list_entry(runp, struct pthread, list);
+        if (t == self || t->header.gscope_flag == THREAD_GSCOPE_FLAG_UNUSED) {
+            continue;
+        }
 
-      int *const gscope_flagp = &t->header.gscope_flag;
+        int *const gscope_flagp = &t->header.gscope_flag;
 
-      /* We have to wait until this thread is done with the global
-         scope.  First tell the thread that we are waiting and
-         possibly have to be woken.  */
-      if (atomic_compare_and_exchange_bool_acq (gscope_flagp,
-                                                THREAD_GSCOPE_FLAG_WAIT,
-                                                THREAD_GSCOPE_FLAG_USED))
-        continue;
+        /* We have to wait until this thread is done with the global
+           scope.  First tell the thread that we are waiting and
+           possibly have to be woken.  */
+        if (atomic_compare_and_exchange_bool_acq(gscope_flagp,
+                THREAD_GSCOPE_FLAG_WAIT,
+                THREAD_GSCOPE_FLAG_USED)) {
+            continue;
+        }
 
-      do
-        futex_wait_simple ((unsigned int *) gscope_flagp,
-                           THREAD_GSCOPE_FLAG_WAIT, FUTEX_PRIVATE);
-      while (*gscope_flagp == THREAD_GSCOPE_FLAG_WAIT);
+        do
+            futex_wait_simple((unsigned int *) gscope_flagp,
+                              THREAD_GSCOPE_FLAG_WAIT, FUTEX_PRIVATE);
+        while (*gscope_flagp == THREAD_GSCOPE_FLAG_WAIT);
     }
 
-  /* Now the list with threads using user-allocated stacks.  */
-  list_for_each (runp, &GL (dl_stack_user))
-    {
-      struct pthread *t = list_entry (runp, struct pthread, list);
-      if (t == self || t->header.gscope_flag == THREAD_GSCOPE_FLAG_UNUSED)
-        continue;
+    /* Now the list with threads using user-allocated stacks.  */
+    list_for_each(runp, &GL(dl_stack_user)) {
+        struct pthread *t = list_entry(runp, struct pthread, list);
+        if (t == self || t->header.gscope_flag == THREAD_GSCOPE_FLAG_UNUSED) {
+            continue;
+        }
 
-      int *const gscope_flagp = &t->header.gscope_flag;
+        int *const gscope_flagp = &t->header.gscope_flag;
 
-      /* We have to wait until this thread is done with the global
-         scope.  First tell the thread that we are waiting and
-         possibly have to be woken.  */
-      if (atomic_compare_and_exchange_bool_acq (gscope_flagp,
-                                                THREAD_GSCOPE_FLAG_WAIT,
-                                                THREAD_GSCOPE_FLAG_USED))
-        continue;
+        /* We have to wait until this thread is done with the global
+           scope.  First tell the thread that we are waiting and
+           possibly have to be woken.  */
+        if (atomic_compare_and_exchange_bool_acq(gscope_flagp,
+                THREAD_GSCOPE_FLAG_WAIT,
+                THREAD_GSCOPE_FLAG_USED)) {
+            continue;
+        }
 
-      do
-        futex_wait_simple ((unsigned int *) gscope_flagp,
-                           THREAD_GSCOPE_FLAG_WAIT, FUTEX_PRIVATE);
-      while (*gscope_flagp == THREAD_GSCOPE_FLAG_WAIT);
+        do
+            futex_wait_simple((unsigned int *) gscope_flagp,
+                              THREAD_GSCOPE_FLAG_WAIT, FUTEX_PRIVATE);
+        while (*gscope_flagp == THREAD_GSCOPE_FLAG_WAIT);
     }
 
-  lll_unlock (GL (dl_stack_cache_lock), LLL_PRIVATE);
+    lll_unlock(GL(dl_stack_cache_lock), LLL_PRIVATE);
 }

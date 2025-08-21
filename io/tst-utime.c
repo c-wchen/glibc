@@ -22,22 +22,21 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 
-static int
-test_utime_helper (const char *file, int fd, const struct utimbuf *ut)
+static int test_utime_helper(const char *file, int fd, const struct utimbuf *ut)
 {
-  int result = utime (file, ut);
-  TEST_VERIFY_EXIT (result == 0);
+    int result = utime(file, ut);
+    TEST_VERIFY_EXIT(result == 0);
 
-  struct statx st;
-  xstatx (fd, "", AT_EMPTY_PATH, STATX_BASIC_STATS, &st);
+    struct statx st;
+    xstatx(fd, "", AT_EMPTY_PATH, STATX_BASIC_STATS, &st);
 
-  /* Check if seconds for actime match */
-  TEST_COMPARE (st.stx_atime.tv_sec, ut->actime);
+    /* Check if seconds for actime match */
+    TEST_COMPARE(st.stx_atime.tv_sec, ut->actime);
 
-  /* Check if seconds for modtime match */
-  TEST_COMPARE (st.stx_mtime.tv_sec, ut->modtime);
+    /* Check if seconds for modtime match */
+    TEST_COMPARE(st.stx_mtime.tv_sec, ut->modtime);
 
-  return 0;
+    return 0;
 }
 
 #define TEST_CALL(fname, fd, lname, v1, v2) \

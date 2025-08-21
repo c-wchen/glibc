@@ -16,11 +16,10 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define	__NO_CTYPE
+#define __NO_CTYPE
 #include <ctype.h>
 
-int
-isblank (int c)
+int isblank(int c)
 {
-  return __isctype (c, _ISblank);
+    return __isctype(c, _ISblank);
 }

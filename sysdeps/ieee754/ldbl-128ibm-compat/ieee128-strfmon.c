@@ -20,16 +20,15 @@
 #include <stdarg.h>
 #include <locale/localeinfo.h>
 
-ssize_t
-___ieee128_strfmon (char *s, size_t maxsize, const char *format, ...)
+ssize_t ___ieee128_strfmon(char *s, size_t maxsize, const char *format, ...)
 {
-  va_list ap;
-  ssize_t res;
+    va_list ap;
+    ssize_t res;
 
-  va_start (ap, format);
-  res = __vstrfmon_l_internal (s, maxsize, _NL_CURRENT_LOCALE,
-                               format, ap, STRFMON_LDBL_USES_FLOAT128);
-  va_end (ap);
-  return res;
+    va_start(ap, format);
+    res = __vstrfmon_l_internal(s, maxsize, _NL_CURRENT_LOCALE,
+                                format, ap, STRFMON_LDBL_USES_FLOAT128);
+    va_end(ap);
+    return res;
 }
-weak_alias (___ieee128_strfmon, __strfmonieee128)
+weak_alias(___ieee128_strfmon, __strfmonieee128)

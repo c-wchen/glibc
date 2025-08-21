@@ -26,9 +26,8 @@
 
 #include <math-narrow.h>
 
-float
-__fsub (double x, double y)
+float __fsub(double x, double y)
 {
-  NARROW_SUB_ROUND_TO_ODD (x, y, float, union ieee754_double, , mantissa1);
+    NARROW_SUB_ROUND_TO_ODD(x, y, float, union ieee754_double,, mantissa1);
 }
-libm_alias_float_double (sub)
+libm_alias_float_double(sub)

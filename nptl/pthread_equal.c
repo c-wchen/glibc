@@ -18,9 +18,8 @@
 #include "pthreadP.h"
 
 
-int
-__pthread_equal (pthread_t thread1, pthread_t thread2)
+int __pthread_equal(pthread_t thread1, pthread_t thread2)
 {
-  return thread1 == thread2;
+    return thread1 == thread2;
 }
-weak_alias (__pthread_equal, pthread_equal)
+weak_alias(__pthread_equal, pthread_equal)

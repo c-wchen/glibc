@@ -24,16 +24,15 @@
 
 /* Set up STATE to do the equivalent of `longjmp (ENV, VAL);'.  */
 
-void
-_hurd_longjmp_thread_state (void *state, jmp_buf env, int val)
+void _hurd_longjmp_thread_state(void *state, jmp_buf env, int val)
 {
-  struct i386_thread_state *ts = state;
+    struct i386_thread_state *ts = state;
 
-  ts->ebx = env[0].__jmpbuf[JB_BX];
-  ts->esi = env[0].__jmpbuf[JB_SI];
-  ts->edi = env[0].__jmpbuf[JB_DI];
-  ts->ebp = env[0].__jmpbuf[JB_BP];
-  ts->uesp = env[0].__jmpbuf[JB_SP];
-  ts->eip = env[0].__jmpbuf[JB_PC];
-  ts->eax = val ?: 1;
+    ts->ebx = env[0].__jmpbuf[JB_BX];
+    ts->esi = env[0].__jmpbuf[JB_SI];
+    ts->edi = env[0].__jmpbuf[JB_DI];
+    ts->ebp = env[0].__jmpbuf[JB_BP];
+    ts->uesp = env[0].__jmpbuf[JB_SP];
+    ts->eip = env[0].__jmpbuf[JB_PC];
+    ts->eax = val ? : 1;
 }

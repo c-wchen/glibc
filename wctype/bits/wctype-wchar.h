@@ -16,8 +16,8 @@
    <https://www.gnu.org/licenses/>.  */
 
 /*
- *	ISO C99 Standard: 7.25
- *	Wide character classification and mapping utilities  <wctype.h>
+ *  ISO C99 Standard: 7.25
+ *  Wide character classification and mapping utilities  <wctype.h>
  */
 
 #ifndef _BITS_WCTYPE_WCHAR_H
@@ -44,42 +44,41 @@ typedef unsigned long int wctype_t;
 
 #  include <bits/endian.h>
 #  if __BYTE_ORDER == __BIG_ENDIAN
-#   define _ISwbit(bit)	(1 << (bit))
+#   define _ISwbit(bit) (1 << (bit))
 #  else /* __BYTE_ORDER == __LITTLE_ENDIAN */
-#   define _ISwbit(bit)	\
-	((bit) < 8 ? (int) ((1UL << (bit)) << 24)			      \
-	 : ((bit) < 16 ? (int) ((1UL << (bit)) << 8)			      \
-	    : ((bit) < 24 ? (int) ((1UL << (bit)) >> 8)			      \
-	       : (int) ((1UL << (bit)) >> 24))))
+#   define _ISwbit(bit) \
+    ((bit) < 8 ? (int) ((1UL << (bit)) << 24)                 \
+     : ((bit) < 16 ? (int) ((1UL << (bit)) << 8)                  \
+        : ((bit) < 24 ? (int) ((1UL << (bit)) >> 8)               \
+           : (int) ((1UL << (bit)) >> 24))))
 #  endif
 
-enum
-{
-  __ISwupper = 0,			/* UPPERCASE.  */
-  __ISwlower = 1,			/* lowercase.  */
-  __ISwalpha = 2,			/* Alphabetic.  */
-  __ISwdigit = 3,			/* Numeric.  */
-  __ISwxdigit = 4,			/* Hexadecimal numeric.  */
-  __ISwspace = 5,			/* Whitespace.  */
-  __ISwprint = 6,			/* Printing.  */
-  __ISwgraph = 7,			/* Graphical.  */
-  __ISwblank = 8,			/* Blank (usually SPC and TAB).  */
-  __ISwcntrl = 9,			/* Control character.  */
-  __ISwpunct = 10,			/* Punctuation.  */
-  __ISwalnum = 11,			/* Alphanumeric.  */
+enum {
+    __ISwupper = 0,           /* UPPERCASE.  */
+    __ISwlower = 1,           /* lowercase.  */
+    __ISwalpha = 2,           /* Alphabetic.  */
+    __ISwdigit = 3,           /* Numeric.  */
+    __ISwxdigit = 4,          /* Hexadecimal numeric.  */
+    __ISwspace = 5,           /* Whitespace.  */
+    __ISwprint = 6,           /* Printing.  */
+    __ISwgraph = 7,           /* Graphical.  */
+    __ISwblank = 8,           /* Blank (usually SPC and TAB).  */
+    __ISwcntrl = 9,           /* Control character.  */
+    __ISwpunct = 10,          /* Punctuation.  */
+    __ISwalnum = 11,          /* Alphanumeric.  */
 
-  _ISwupper = _ISwbit (__ISwupper),	/* UPPERCASE.  */
-  _ISwlower = _ISwbit (__ISwlower),	/* lowercase.  */
-  _ISwalpha = _ISwbit (__ISwalpha),	/* Alphabetic.  */
-  _ISwdigit = _ISwbit (__ISwdigit),	/* Numeric.  */
-  _ISwxdigit = _ISwbit (__ISwxdigit),	/* Hexadecimal numeric.  */
-  _ISwspace = _ISwbit (__ISwspace),	/* Whitespace.  */
-  _ISwprint = _ISwbit (__ISwprint),	/* Printing.  */
-  _ISwgraph = _ISwbit (__ISwgraph),	/* Graphical.  */
-  _ISwblank = _ISwbit (__ISwblank),	/* Blank (usually SPC and TAB).  */
-  _ISwcntrl = _ISwbit (__ISwcntrl),	/* Control character.  */
-  _ISwpunct = _ISwbit (__ISwpunct),	/* Punctuation.  */
-  _ISwalnum = _ISwbit (__ISwalnum)	/* Alphanumeric.  */
+    _ISwupper = _ISwbit(__ISwupper),  /* UPPERCASE.  */
+    _ISwlower = _ISwbit(__ISwlower),  /* lowercase.  */
+    _ISwalpha = _ISwbit(__ISwalpha),  /* Alphabetic.  */
+    _ISwdigit = _ISwbit(__ISwdigit),  /* Numeric.  */
+    _ISwxdigit = _ISwbit(__ISwxdigit),    /* Hexadecimal numeric.  */
+    _ISwspace = _ISwbit(__ISwspace),  /* Whitespace.  */
+    _ISwprint = _ISwbit(__ISwprint),  /* Printing.  */
+    _ISwgraph = _ISwbit(__ISwgraph),  /* Graphical.  */
+    _ISwblank = _ISwbit(__ISwblank),  /* Blank (usually SPC and TAB).  */
+    _ISwcntrl = _ISwbit(__ISwcntrl),  /* Control character.  */
+    _ISwpunct = _ISwbit(__ISwpunct),  /* Punctuation.  */
+    _ISwalnum = _ISwbit(__ISwalnum)   /* Alphanumeric.  */
 };
 # endif /* Not _ISwbit  */
 
@@ -92,58 +91,58 @@ __BEGIN_DECLS
 
 /* Test for any wide character for which `iswalpha' or `iswdigit' is
    true.  */
-extern int iswalnum (wint_t __wc) __THROW;
+extern int iswalnum(wint_t __wc) __THROW;
 
 /* Test for any wide character for which `iswupper' or 'iswlower' is
    true, or any wide character that is one of a locale-specific set of
    wide-characters for which none of `iswcntrl', `iswdigit',
    `iswpunct', or `iswspace' is true.  */
-extern int iswalpha (wint_t __wc) __THROW;
+extern int iswalpha(wint_t __wc) __THROW;
 
 /* Test for any control wide character.  */
-extern int iswcntrl (wint_t __wc) __THROW;
+extern int iswcntrl(wint_t __wc) __THROW;
 
 /* Test for any wide character that corresponds to a decimal-digit
    character.  */
-extern int iswdigit (wint_t __wc) __THROW;
+extern int iswdigit(wint_t __wc) __THROW;
 
 /* Test for any wide character for which `iswprint' is true and
    `iswspace' is false.  */
-extern int iswgraph (wint_t __wc) __THROW;
+extern int iswgraph(wint_t __wc) __THROW;
 
 /* Test for any wide character that corresponds to a lowercase letter
    or is one of a locale-specific set of wide characters for which
    none of `iswcntrl', `iswdigit', `iswpunct', or `iswspace' is true.  */
-extern int iswlower (wint_t __wc) __THROW;
+extern int iswlower(wint_t __wc) __THROW;
 
 /* Test for any printing wide character.  */
-extern int iswprint (wint_t __wc) __THROW;
+extern int iswprint(wint_t __wc) __THROW;
 
 /* Test for any printing wide character that is one of a
    locale-specific et of wide characters for which neither `iswspace'
    nor `iswalnum' is true.  */
-extern int iswpunct (wint_t __wc) __THROW;
+extern int iswpunct(wint_t __wc) __THROW;
 
 /* Test for any wide character that corresponds to a locale-specific
    set of wide characters for which none of `iswalnum', `iswgraph', or
    `iswpunct' is true.  */
-extern int iswspace (wint_t __wc) __THROW;
+extern int iswspace(wint_t __wc) __THROW;
 
 /* Test for any wide character that corresponds to an uppercase letter
    or is one of a locale-specific set of wide character for which none
    of `iswcntrl', `iswdigit', `iswpunct', or `iswspace' is true.  */
-extern int iswupper (wint_t __wc) __THROW;
+extern int iswupper(wint_t __wc) __THROW;
 
 /* Test for any wide character that corresponds to a hexadecimal-digit
    character equivalent to that performed be the functions described
    in the previous subclause.  */
-extern int iswxdigit (wint_t __wc) __THROW;
+extern int iswxdigit(wint_t __wc) __THROW;
 
 /* Test for any wide character that corresponds to a standard blank
    wide character or a locale-specific set of wide characters for
    which `iswalnum' is false.  */
 # ifdef __USE_ISOC99
-extern int iswblank (wint_t __wc) __THROW;
+extern int iswblank(wint_t __wc) __THROW;
 # endif
 
 /*
@@ -152,21 +151,21 @@ extern int iswblank (wint_t __wc) __THROW;
 
 /* Construct value that describes a class of wide characters identified
    by the string argument PROPERTY.  */
-extern wctype_t wctype (const char *__property) __THROW;
+extern wctype_t wctype(const char *__property) __THROW;
 
 /* Determine whether the wide-character WC has the property described by
    DESC.  */
-extern int iswctype (wint_t __wc, wctype_t __desc) __THROW;
+extern int iswctype(wint_t __wc, wctype_t __desc) __THROW;
 
 /*
  * Wide-character case-mapping functions: 7.15.3.1.
  */
 
 /* Converts an uppercase letter to the corresponding lowercase letter.  */
-extern wint_t towlower (wint_t __wc) __THROW;
+extern wint_t towlower(wint_t __wc) __THROW;
 
 /* Converts an lowercase letter to the corresponding uppercase letter.  */
-extern wint_t towupper (wint_t __wc) __THROW;
+extern wint_t towupper(wint_t __wc) __THROW;
 
 __END_DECLS
 

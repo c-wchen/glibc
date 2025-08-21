@@ -27,82 +27,73 @@
 static pthread_barrier_t b;
 
 
-static void
-thrfct (sigval_t arg)
+static void thrfct(sigval_t arg)
 {
-  int e = pthread_barrier_wait (&b);
-  if (e != 0 && e != PTHREAD_BARRIER_SERIAL_THREAD)
-    {
-      puts ("child: barrier_wait failed");
-      exit (1);
+    int e = pthread_barrier_wait(&b);
+    if (e != 0 && e != PTHREAD_BARRIER_SERIAL_THREAD) {
+        puts("child: barrier_wait failed");
+        exit(1);
     }
 }
 
 
-static int
-do_test (int argc, char *argv[])
+static int do_test(int argc, char *argv[])
 {
-  char name[] = "/tmp/aio3.XXXXXX";
-  int fd;
-  struct aiocb *arr[1];
-  struct aiocb cb;
-  static const char buf[] = "Hello World\n";
+    char name[] = "/tmp/aio3.XXXXXX";
+    int fd;
+    struct aiocb *arr[1];
+    struct aiocb cb;
+    static const char buf[] = "Hello World\n";
 
-  fd = mkstemp (name);
-  if (fd == -1)
-    {
-      printf ("cannot open temp name: %m\n");
-      return 1;
+    fd = mkstemp(name);
+    if (fd == -1) {
+        printf("cannot open temp name: %m\n");
+        return 1;
     }
 
-  unlink (name);
+    unlink(name);
 
-  if (pthread_barrier_init (&b, NULL, 2) != 0)
-    {
-      puts ("barrier_init failed");
-      return 1;
+    if (pthread_barrier_init(&b, NULL, 2) != 0) {
+        puts("barrier_init failed");
+        return 1;
     }
 
-  arr[0] = &cb;
+    arr[0] = &cb;
 
-  cb.aio_fildes = fd;
-  cb.aio_lio_opcode = LIO_WRITE;
-  cb.aio_reqprio = 0;
-  cb.aio_buf = (void *) buf;
-  cb.aio_nbytes = sizeof (buf) - 1;
-  cb.aio_offset = 0;
-  cb.aio_sigevent.sigev_notify = SIGEV_THREAD;
-  cb.aio_sigevent.sigev_notify_function = thrfct;
-  cb.aio_sigevent.sigev_notify_attributes = NULL;
-  cb.aio_sigevent.sigev_value.sival_ptr = NULL;
+    cb.aio_fildes = fd;
+    cb.aio_lio_opcode = LIO_WRITE;
+    cb.aio_reqprio = 0;
+    cb.aio_buf = (void *) buf;
+    cb.aio_nbytes = sizeof(buf) - 1;
+    cb.aio_offset = 0;
+    cb.aio_sigevent.sigev_notify = SIGEV_THREAD;
+    cb.aio_sigevent.sigev_notify_function = thrfct;
+    cb.aio_sigevent.sigev_notify_attributes = NULL;
+    cb.aio_sigevent.sigev_value.sival_ptr = NULL;
 
-  if (lio_listio (LIO_NOWAIT, arr, 1, NULL) < 0)
-    {
-      if (errno == ENOSYS)
-	{
-	  puts ("no aio support in this configuration");
-	  return 0;
-	}
-      printf ("lio_listio failed: %m\n");
-      return 1;
+    if (lio_listio(LIO_NOWAIT, arr, 1, NULL) < 0) {
+        if (errno == ENOSYS) {
+            puts("no aio support in this configuration");
+            return 0;
+        }
+        printf("lio_listio failed: %m\n");
+        return 1;
     }
 
-  if (aio_suspend ((const struct aiocb *const *) arr, 1, NULL) < 0)
-    {
-      printf ("aio_suspend failed: %m\n");
-      return 1;
+    if (aio_suspend((const struct aiocb * const *) arr, 1, NULL) < 0) {
+        printf("aio_suspend failed: %m\n");
+        return 1;
     }
 
-  int e = pthread_barrier_wait (&b);
-  if (e != 0 && e != PTHREAD_BARRIER_SERIAL_THREAD)
-    {
-      puts ("parent: barrier_wait failed");
-      return 1;
+    int e = pthread_barrier_wait(&b);
+    if (e != 0 && e != PTHREAD_BARRIER_SERIAL_THREAD) {
+        puts("parent: barrier_wait failed");
+        return 1;
     }
 
-  puts ("all OK");
+    puts("all OK");
 
-  return 0;
+    return 0;
 }
 
 #include "../test-skeleton.c"

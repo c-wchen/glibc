@@ -19,30 +19,26 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-int
-__fesetenv (const fenv_t *envp)
+int __fesetenv(const fenv_t *envp)
 {
-  unsigned int fpcr;
-  unsigned int fpsr;
+    unsigned int fpcr;
+    unsigned int fpsr;
 
-  if (envp == FE_DFL_ENV)
-    {
-      fpcr = _FPU_DEFAULT;
-      fpsr = _FPU_FPSR_DEFAULT;
-    }
-  else
-    {
-      /* No need to mask out reserved bits as they are IoW.  */
-      fpcr = envp->__fpcr;
-      fpsr = envp->__fpsr;
+    if (envp == FE_DFL_ENV) {
+        fpcr = _FPU_DEFAULT;
+        fpsr = _FPU_FPSR_DEFAULT;
+    } else {
+        /* No need to mask out reserved bits as they are IoW.  */
+        fpcr = envp->__fpcr;
+        fpsr = envp->__fpsr;
     }
 
-  _FPU_SETCW (fpcr);
-  _FPU_SETS (fpsr);
+    _FPU_SETCW(fpcr);
+    _FPU_SETS(fpsr);
 
-  /* Success.  */
-  return 0;
+    /* Success.  */
+    return 0;
 }
-libm_hidden_def (__fesetenv)
-weak_alias (__fesetenv, fesetenv)
-libm_hidden_weak (fesetenv)
+libm_hidden_def(__fesetenv)
+weak_alias(__fesetenv, fesetenv)
+libm_hidden_weak(fesetenv)

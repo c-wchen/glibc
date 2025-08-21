@@ -39,125 +39,130 @@ static int dir_fd;
 uid_t users[3];
 gid_t groups[3];
 
-struct test_case
-{
-  int mode;
-  uid_t uid;
-  uid_t euid;
-  gid_t gid;
-  gid_t egid;
-  int flags;
-  bool succeeds;
+struct test_case {
+    int mode;
+    uid_t uid;
+    uid_t euid;
+    gid_t gid;
+    gid_t egid;
+    int flags;
+    bool succeeds;
 };
 
-static void
-run_one_test_child (void *in)
+static void run_one_test_child(void *in)
 {
-  struct test_case *t = (struct test_case *) in;
+    struct test_case *t = (struct test_case *) in;
 
-  printf ("TEST: MODE=%s, UID=%d, EUID=%d, GID=%d, EGID=%d, FLAGS=%s: ",
-	  t->mode == R_OK ? "R_OK" : "W_OK", t->uid, t->euid, t->gid, t->egid,
-	  t->flags ? "AT_EACCESS" : "0");
+    printf("TEST: MODE=%s, UID=%d, EUID=%d, GID=%d, EGID=%d, FLAGS=%s: ",
+           t->mode == R_OK ? "R_OK" : "W_OK", t->uid, t->euid, t->gid, t->egid,
+           t->flags ? "AT_EACCESS" : "0");
 
-  if (setregid (t->gid, t->egid) != 0)
-    FAIL_EXIT1 ("Could not change group: %m\n");
-  if (setreuid (t->uid, t->euid) != 0)
-    FAIL_EXIT1 ("Could not change user: %m\n");
+    if (setregid(t->gid, t->egid) != 0) {
+        FAIL_EXIT1("Could not change group: %m\n");
+    }
+    if (setreuid(t->uid, t->euid) != 0) {
+        FAIL_EXIT1("Could not change user: %m\n");
+    }
 
-  if (faccessat (dir_fd, SOMEFILE, t->mode, t->flags) != 0 && t->succeeds)
-    FAIL_EXIT1 ("faccessat failed: %m\n");
+    if (faccessat(dir_fd, SOMEFILE, t->mode, t->flags) != 0 && t->succeeds) {
+        FAIL_EXIT1("faccessat failed: %m\n");
+    }
 
-  if (!t->succeeds && errno != EACCES)
-    FAIL_EXIT1 ("Unexpected faccessat failure: %m\n");
+    if (!t->succeeds && errno != EACCES) {
+        FAIL_EXIT1("Unexpected faccessat failure: %m\n");
+    }
 
-  printf ("OK%s\n", !t->succeeds ? " (FAILED with EACCES)" : "");
+    printf("OK%s\n", !t->succeeds ? " (FAILED with EACCES)" : "");
 }
 
-static void
-run_one_test (int mode, int u, int eu, int g, int eg, int flags, bool succeeds)
+static void run_one_test(int mode, int u, int eu, int g, int eg, int flags, bool succeeds)
 {
-  struct test_case t =
+    struct test_case t =
     {mode, users[u], users[eu], groups[g], groups[eg], flags, succeeds};
-  support_isolate_in_subprocess (run_one_test_child, &t);
+    support_isolate_in_subprocess(run_one_test_child, &t);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
 
-  /* We need to start as root.  */
-  if (getuid () != 0)
-    FAIL_UNSUPPORTED ("Test needs to be run as root (UID 0)\n");
-
-  /* Collect 3 distinct users and groups to test with.  */
-  struct passwd *ent = NULL;
-  int count = 0;
-  while ((ent = getpwent ()) != NULL && count < 3)
-    {
-      if (ent->pw_uid == 0 || ent->pw_gid == 0)
-	continue;
-
-      int i = count;
-      bool skip = false;
-      while (i > 0)
-	if (groups[--i] == ent->pw_gid)
-	  skip = true;
-
-      if (skip)
-	continue;
-
-      users[count] = ent->pw_uid;
-      groups[count++] = ent->pw_gid;
+    /* We need to start as root.  */
+    if (getuid() != 0) {
+        FAIL_UNSUPPORTED("Test needs to be run as root (UID 0)\n");
     }
 
-  if (count < 3)
-    FAIL_UNSUPPORTED ("Not enough users in the system to do this test\n");
+    /* Collect 3 distinct users and groups to test with.  */
+    struct passwd *ent = NULL;
+    int count = 0;
+    while ((ent = getpwent()) != NULL && count < 3) {
+        if (ent->pw_uid == 0 || ent->pw_gid == 0) {
+            continue;
+        }
 
-  printf ("Testing with UID/GID:\n");
-  while (--count >= 0)
-    printf ("    UID: %d, GID: %d\n", users[count], groups[count]);
-  printf ("\n");
+        int i = count;
+        bool skip = false;
+        while (i > 0)
+            if (groups[--i] == ent->pw_gid) {
+                skip = true;
+            }
 
-  char *tempdir = support_create_temp_directory ("tst-faccessat-setuid.");
-  dir_fd = xopen (tempdir, O_RDONLY | O_DIRECTORY, 0);
+        if (skip) {
+            continue;
+        }
 
-  xfchmod (dir_fd, 0777);
-
-  /* Now, create a file in it, which will be our test case.  */
-
-  int fd = openat (dir_fd, SOMEFILE, O_CREAT|O_RDWR|O_EXCL, 0640);
-  if (fd == -1)
-    {
-      if (errno == ENOSYS)
-	FAIL_UNSUPPORTED ("*at functions not supported");
-
-      FAIL_EXIT1 ("file creation failed");
+        users[count] = ent->pw_uid;
+        groups[count++] = ent->pw_gid;
     }
-  xwrite (fd, "hello", 5);
 
-  if (fchown (fd, users[0], groups[1]) == -1)
-    FAIL_EXIT1 ("fchown failed: %m\n");
-  xclose (fd);
+    if (count < 3) {
+        FAIL_UNSUPPORTED("Not enough users in the system to do this test\n");
+    }
 
-  char *somefile = xasprintf ("%s/" SOMEFILE, tempdir);
-  add_temp_file (somefile);
+    printf("Testing with UID/GID:\n");
+    while (--count >= 0) {
+        printf("    UID: %d, GID: %d\n", users[count], groups[count]);
+    }
+    printf("\n");
 
-  /* Finally, run through the combinations.  */
-  for (int u = 0; u < 3; u++)
-    for (int eu = 0; eu < 3; eu++)
-      for (int g = 0; g < 3; g++)
-	for (int eg = 0; eg < 3; eg++)
-	  {
-	    run_one_test (R_OK, u, eu, g, eg, 0, u == 0 || g == 1);
-	    run_one_test (W_OK, u, eu, g, eg, 0, u == 0);
-	    run_one_test (R_OK, u, eu, g, eg, AT_EACCESS, eu == 0 || eg == 1);
-	    run_one_test (W_OK, u, eu, g, eg, AT_EACCESS, eu == 0);
-	  }
+    char *tempdir = support_create_temp_directory("tst-faccessat-setuid.");
+    dir_fd = xopen(tempdir, O_RDONLY | O_DIRECTORY, 0);
 
-  xclose (dir_fd);
-  free (tempdir);
-  free (somefile);
+    xfchmod(dir_fd, 0777);
 
-  return 0;
+    /* Now, create a file in it, which will be our test case.  */
+
+    int fd = openat(dir_fd, SOMEFILE, O_CREAT | O_RDWR | O_EXCL, 0640);
+    if (fd == -1) {
+        if (errno == ENOSYS) {
+            FAIL_UNSUPPORTED("*at functions not supported");
+        }
+
+        FAIL_EXIT1("file creation failed");
+    }
+    xwrite(fd, "hello", 5);
+
+    if (fchown(fd, users[0], groups[1]) == -1) {
+        FAIL_EXIT1("fchown failed: %m\n");
+    }
+    xclose(fd);
+
+    char *somefile = xasprintf("%s/" SOMEFILE, tempdir);
+    add_temp_file(somefile);
+
+    /* Finally, run through the combinations.  */
+    for (int u = 0; u < 3; u++)
+        for (int eu = 0; eu < 3; eu++)
+            for (int g = 0; g < 3; g++)
+                for (int eg = 0; eg < 3; eg++) {
+                    run_one_test(R_OK, u, eu, g, eg, 0, u == 0 || g == 1);
+                    run_one_test(W_OK, u, eu, g, eg, 0, u == 0);
+                    run_one_test(R_OK, u, eu, g, eg, AT_EACCESS, eu == 0 || eg == 1);
+                    run_one_test(W_OK, u, eu, g, eg, AT_EACCESS, eu == 0);
+                }
+
+    xclose(dir_fd);
+    free(tempdir);
+    free(somefile);
+
+    return 0;
 }
 #include <support/test-driver.c>

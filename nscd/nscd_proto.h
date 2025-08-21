@@ -23,7 +23,7 @@
 #include <pwd.h>
 
 /* Interval in which we transfer retry to contact the NSCD.  */
-#define NSS_NSCD_RETRY	100
+#define NSS_NSCD_RETRY  100
 
 /* Type needed in the interfaces.  */
 struct nscd_ai_result;
@@ -36,51 +36,51 @@ extern int __nss_not_use_nscd_hosts attribute_hidden;
 extern int __nss_not_use_nscd_services attribute_hidden;
 extern int __nss_not_use_nscd_netgroup attribute_hidden;
 
-extern int __nscd_getpwnam_r (const char *name, struct passwd *resultbuf,
-			      char *buffer, size_t buflen,
-			      struct passwd **result) attribute_hidden;
-extern int __nscd_getpwuid_r (uid_t uid, struct passwd *resultbuf,
-			      char *buffer,  size_t buflen,
-			      struct passwd **result) attribute_hidden;
-extern int __nscd_getgrnam_r (const char *name, struct group *resultbuf,
-			      char *buffer, size_t buflen,
-			      struct group **result) attribute_hidden;
-extern int __nscd_getgrgid_r (gid_t gid, struct group *resultbuf,
-			      char *buffer,  size_t buflen,
-			      struct group **result) attribute_hidden;
-extern int __nscd_gethostbyname_r (const char *name,
-				   struct hostent *resultbuf,
-				   char *buffer, size_t buflen,
-				   struct hostent **result, int *h_errnop)
-     attribute_hidden;
-extern int __nscd_gethostbyname2_r (const char *name, int af,
-				    struct hostent *resultbuf,
-				    char *buffer, size_t buflen,
-				    struct hostent **result, int *h_errnop)
-     attribute_hidden;
-extern int __nscd_gethostbyaddr_r (const void *addr, socklen_t len, int type,
-				   struct hostent *resultbuf,
-				   char *buffer, size_t buflen,
-				   struct hostent **result, int *h_errnop)
-     attribute_hidden;
-extern int __nscd_getai (const char *key, struct nscd_ai_result **result,
-			 int *h_errnop) attribute_hidden;
-extern int __nscd_getgrouplist (const char *user, gid_t group, long int *size,
-				gid_t **groupsp, long int limit)
-     attribute_hidden;
-extern int __nscd_getservbyname_r (const char *name, const char *proto,
-				   struct servent *result_buf, char *buf,
-				   size_t buflen, struct servent **result)
-     attribute_hidden;
-extern int __nscd_getservbyport_r (int port, const char *proto,
-				   struct servent *result_buf, char *buf,
-				   size_t buflen, struct servent **result)
-     attribute_hidden;
-extern int __nscd_innetgr (const char *netgroup, const char *host,
-			   const char *user, const char *domain)
-     attribute_hidden;
-extern int __nscd_setnetgrent (const char *group, struct __netgrent *datap)
-     attribute_hidden;
+extern int __nscd_getpwnam_r(const char *name, struct passwd *resultbuf,
+                             char *buffer, size_t buflen,
+                             struct passwd **result) attribute_hidden;
+extern int __nscd_getpwuid_r(uid_t uid, struct passwd *resultbuf,
+                             char *buffer,  size_t buflen,
+                             struct passwd **result) attribute_hidden;
+extern int __nscd_getgrnam_r(const char *name, struct group *resultbuf,
+                             char *buffer, size_t buflen,
+                             struct group **result) attribute_hidden;
+extern int __nscd_getgrgid_r(gid_t gid, struct group *resultbuf,
+                             char *buffer,  size_t buflen,
+                             struct group **result) attribute_hidden;
+extern int __nscd_gethostbyname_r(const char *name,
+                                  struct hostent *resultbuf,
+                                  char *buffer, size_t buflen,
+                                  struct hostent **result, int *h_errnop)
+attribute_hidden;
+extern int __nscd_gethostbyname2_r(const char *name, int af,
+                                   struct hostent *resultbuf,
+                                   char *buffer, size_t buflen,
+                                   struct hostent **result, int *h_errnop)
+attribute_hidden;
+extern int __nscd_gethostbyaddr_r(const void *addr, socklen_t len, int type,
+                                  struct hostent *resultbuf,
+                                  char *buffer, size_t buflen,
+                                  struct hostent **result, int *h_errnop)
+attribute_hidden;
+extern int __nscd_getai(const char *key, struct nscd_ai_result **result,
+                        int *h_errnop) attribute_hidden;
+extern int __nscd_getgrouplist(const char *user, gid_t group, long int *size,
+                               gid_t **groupsp, long int limit)
+attribute_hidden;
+extern int __nscd_getservbyname_r(const char *name, const char *proto,
+                                  struct servent *result_buf, char *buf,
+                                  size_t buflen, struct servent **result)
+attribute_hidden;
+extern int __nscd_getservbyport_r(int port, const char *proto,
+                                  struct servent *result_buf, char *buf,
+                                  size_t buflen, struct servent **result)
+attribute_hidden;
+extern int __nscd_innetgr(const char *netgroup, const char *host,
+                          const char *user, const char *domain)
+attribute_hidden;
+extern int __nscd_setnetgrent(const char *group, struct __netgrent *datap)
+attribute_hidden;
 
 
 #endif /* _NSCD_PROTO_H */

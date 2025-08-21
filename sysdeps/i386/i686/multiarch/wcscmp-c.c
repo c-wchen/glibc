@@ -9,6 +9,6 @@
 #undef weak_alias
 #define weak_alias(name, alias)
 
-extern __typeof (wcscmp) __wcscmp_ia32;
+extern __typeof(wcscmp) __wcscmp_ia32;
 
 #include "wcsmbs/wcscmp.c"

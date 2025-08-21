@@ -21,14 +21,13 @@
 
 /* Set the handler for the signal SIG to HANDLER,
    returning the old handler, or SIG_ERR on error.  */
-__sighandler_t
-signal (int sig, __sighandler_t handler)
+__sighandler_t signal(int sig, __sighandler_t handler)
 {
-  __set_errno (ENOSYS);
-  return SIG_ERR;
+    __set_errno(ENOSYS);
+    return SIG_ERR;
 }
 
-weak_alias (signal, ssignal)
+weak_alias(signal, ssignal)
 
-stub_warning (signal)
-stub_warning (ssignal)
+stub_warning(signal)
+stub_warning(ssignal)

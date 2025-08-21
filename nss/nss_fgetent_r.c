@@ -20,37 +20,36 @@
 #include <nss_files.h>
 #include <stdbool.h>
 
-int
-__nss_fgetent_r (FILE *fp, void *result, char *buffer, size_t buffer_length,
-                 nss_files_parse_line parser)
+int __nss_fgetent_r(FILE *fp, void *result, char *buffer, size_t buffer_length,
+                    nss_files_parse_line parser)
 {
-  int ret;
+    int ret;
 
-  _IO_flockfile (fp);
+    _IO_flockfile(fp);
 
-  while (true)
-    {
-      off64_t original_offset;
-      ret = __nss_readline (fp, buffer, buffer_length, &original_offset);
-      if (ret == 0)
-        {
-          /* Parse the line into *RESULT.  */
-          ret = parser (buffer, result,
-                        (struct parser_data *) buffer, buffer_length, &errno);
+    while (true) {
+        off64_t original_offset;
+        ret = __nss_readline(fp, buffer, buffer_length, &original_offset);
+        if (ret == 0) {
+            /* Parse the line into *RESULT.  */
+            ret = parser(buffer, result,
+                         (struct parser_data *) buffer, buffer_length, &errno);
 
-          /* Translate the result code from the parser into an errno
-             value.  Also seeks back to the start of the line if
-             necessary.  */
-          ret = __nss_parse_line_result (fp, original_offset, ret);
+            /* Translate the result code from the parser into an errno
+               value.  Also seeks back to the start of the line if
+               necessary.  */
+            ret = __nss_parse_line_result(fp, original_offset, ret);
 
-          if (ret == EINVAL)
-            /* Skip over malformed lines.  */
-            continue;
+            if (ret == EINVAL)
+                /* Skip over malformed lines.  */
+            {
+                continue;
+            }
         }
-      break;
+        break;
     }
 
-  _IO_funlockfile (fp);
+    _IO_funlockfile(fp);
 
-  return ret;
+    return ret;
 }

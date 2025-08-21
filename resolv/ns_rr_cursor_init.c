@@ -21,42 +21,38 @@
 #include <stdbool.h>
 #include <string.h>
 
-bool
-__ns_rr_cursor_init (struct ns_rr_cursor *c,
-                     const unsigned char *buf, size_t len)
+bool __ns_rr_cursor_init(struct ns_rr_cursor *c,
+                         const unsigned char *buf, size_t len)
 {
-  c->begin = buf;
-  c->end = buf + len;
+    c->begin = buf;
+    c->end = buf + len;
 
-  /* Check for header size and 16-bit question count value (it must be 1).  */
-  if (len < 12 || buf[4] != 0 || buf[5] != 1)
-    {
-      __set_errno (EMSGSIZE);
-      c->current = c->end;
-      return false;
+    /* Check for header size and 16-bit question count value (it must be 1).  */
+    if (len < 12 || buf[4] != 0 || buf[5] != 1) {
+        __set_errno(EMSGSIZE);
+        c->current = c->end;
+        return false;
     }
-  c->current = buf + 12;
+    c->current = buf + 12;
 
-  int consumed = __ns_name_length_uncompressed (c->current, c->end);
-  if (consumed < 0)
-    {
-      __set_errno (EMSGSIZE);
-      c->current = c->end;
-      c->first_rr = NULL;
-      return false;
+    int consumed = __ns_name_length_uncompressed(c->current, c->end);
+    if (consumed < 0) {
+        __set_errno(EMSGSIZE);
+        c->current = c->end;
+        c->first_rr = NULL;
+        return false;
     }
-  c->current += consumed;
+    c->current += consumed;
 
-  /* Ensure there is room for question type and class.  */
-  if (c->end - c->current < 4)
-    {
-      __set_errno (EMSGSIZE);
-      c->current = c->end;
-      c->first_rr = NULL;
-      return false;
+    /* Ensure there is room for question type and class.  */
+    if (c->end - c->current < 4) {
+        __set_errno(EMSGSIZE);
+        c->current = c->end;
+        c->first_rr = NULL;
+        return false;
     }
-  c->current += 4;
-  c->first_rr = c->current;
+    c->current += 4;
+    c->first_rr = c->current;
 
-  return true;
+    return true;
 }

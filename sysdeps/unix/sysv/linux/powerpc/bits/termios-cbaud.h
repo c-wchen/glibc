@@ -21,7 +21,7 @@
 #endif
 
 #ifdef __USE_MISC
-# define CBAUD	    000000377
+# define CBAUD      000000377
 # define CBAUDEX    000000020
 # define CIBAUD     077600000
 # define IBSHIFT    16

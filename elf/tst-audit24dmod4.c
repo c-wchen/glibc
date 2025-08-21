@@ -18,8 +18,7 @@
 
 #include <stdlib.h>
 
-_Noreturn int
-tst_audit24dmod4_func1 (void)
+_Noreturn int tst_audit24dmod4_func1(void)
 {
-  abort ();
+    abort();
 }

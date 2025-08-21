@@ -22,10 +22,9 @@
 
 
 /* Remove the link named NAME.  */
-int
-__unlink (const char *name)
+int __unlink(const char *name)
 {
-  return __unlinkat (AT_FDCWD, name, 0);
+    return __unlinkat(AT_FDCWD, name, 0);
 }
 
-weak_alias (__unlink, unlink)
+weak_alias(__unlink, unlink)

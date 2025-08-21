@@ -20,18 +20,16 @@
 #include <ldsodefs.h>
 #include <cpu-features.h>
 
-static void
-print_cpu_features_value (const char *label, uint64_t value)
+static void print_cpu_features_value(const char *label, uint64_t value)
 {
-  _dl_printf ("s390.cpu_features.");
-  _dl_diagnostics_print_labeled_value (label, value);
+    _dl_printf("s390.cpu_features.");
+    _dl_diagnostics_print_labeled_value(label, value);
 }
 
-void
-_dl_diagnostics_cpu (void)
+void _dl_diagnostics_cpu(void)
 {
-  const struct cpu_features *cpu_features = &GLRO(dl_s390_cpu_features);
-  print_cpu_features_value ("hwcap", cpu_features->hwcap);
-  print_cpu_features_value ("stfle_orig", cpu_features->stfle_orig);
-  print_cpu_features_value ("stfle_filtered", cpu_features->stfle_filtered);
+    const struct cpu_features *cpu_features = &GLRO(dl_s390_cpu_features);
+    print_cpu_features_value("hwcap", cpu_features->hwcap);
+    print_cpu_features_value("stfle_orig", cpu_features->stfle_orig);
+    print_cpu_features_value("stfle_filtered", cpu_features->stfle_filtered);
 }

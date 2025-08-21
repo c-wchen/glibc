@@ -26,10 +26,9 @@
    The last six characters of TEMPLATE must be "XXXXXX";
    they are replaced with a string that makes the filename unique.
    Then open the file and return a fd. */
-int
-mkstemp64 (char *template)
+int mkstemp64(char *template)
 {
-  return __gen_tempname (template, 0, O_LARGEFILE, __GT_FILE);
+    return __gen_tempname(template, 0, O_LARGEFILE, __GT_FILE);
 }
 
 #endif

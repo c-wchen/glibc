@@ -20,16 +20,15 @@
 #include <math-barriers.h>
 #include <libm-alias-double.h>
 
-long long int
-__llrint (double x)
+long long int __llrint(double x)
 {
-  double r = __builtin_rint (x);
+    double r = __builtin_rint(x);
 
-  /* Prevent gcc from calling llrint directly when compiled with
-     -fno-math-errno by inserting a barrier.  */
+    /* Prevent gcc from calling llrint directly when compiled with
+       -fno-math-errno by inserting a barrier.  */
 
-  math_opt_barrier (r);
-  return r;
+    math_opt_barrier(r);
+    return r;
 }
 
-libm_alias_double (__llrint, llrint)
+libm_alias_double(__llrint, llrint)

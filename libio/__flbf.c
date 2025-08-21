@@ -17,8 +17,7 @@
 
 #include <stdio_ext.h>
 
-int
-__flbf (FILE *fp)
+int __flbf(FILE *fp)
 {
-  return fp->_flags & _IO_LINE_BUF;
+    return fp->_flags & _IO_LINE_BUF;
 }

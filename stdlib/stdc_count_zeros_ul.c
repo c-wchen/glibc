@@ -19,7 +19,7 @@
 #include <stdbit.h>
 
 unsigned int
-(stdc_count_zeros_ul) (unsigned long int x)
+(stdc_count_zeros_ul)(unsigned long int x)
 {
-  return stdc_count_zeros_ul (x);
+    return stdc_count_zeros_ul(x);
 }

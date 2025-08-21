@@ -26,148 +26,150 @@
 
 
 #define TEST_FUNCTION do_test ()
-static int
-do_test (void)
+static int do_test(void)
 {
-  int result = 0;
-  int piped[2];
+    int result = 0;
+    int piped[2];
 
-  /* Make a pipe that we will never write to, so we can block reading it.  */
-  if (pipe (piped) < 0)
-    {
-      perror ("pipe");
-      return 1;
+    /* Make a pipe that we will never write to, so we can block reading it.  */
+    if (pipe(piped) < 0) {
+        perror("pipe");
+        return 1;
     }
 
-  /* Test for aio_cancel() detecting invalid file descriptor.  */
-  {
-    struct aiocb cb;
-    int fd = -1;
+    /* Test for aio_cancel() detecting invalid file descriptor.  */
+    {
+        struct aiocb cb;
+        int fd = -1;
 
-    cb.aio_fildes = fd;
-    cb.aio_offset = 0;
-    cb.aio_buf = NULL;
-    cb.aio_nbytes = 0;
-    cb.aio_reqprio = 0;
-    cb.aio_sigevent.sigev_notify = SIGEV_NONE;
+        cb.aio_fildes = fd;
+        cb.aio_offset = 0;
+        cb.aio_buf = NULL;
+        cb.aio_nbytes = 0;
+        cb.aio_reqprio = 0;
+        cb.aio_sigevent.sigev_notify = SIGEV_NONE;
 
-    errno = 0;
+        errno = 0;
 
-    /* Case one: invalid fds that match.  */
-    if (aio_cancel (fd, &cb) != -1 || errno != EBADF)
-      {
-	if (errno == ENOSYS)
-	  {
-	    puts ("no aio support in this configuration");
-	    return 0;
-	  }
+        /* Case one: invalid fds that match.  */
+        if (aio_cancel(fd, &cb) != -1 || errno != EBADF) {
+            if (errno == ENOSYS) {
+                puts("no aio support in this configuration");
+                return 0;
+            }
 
-	puts ("aio_cancel( -1, {-1..} ) did not return -1 or errno != EBADF");
-	++result;
-      }
+            puts("aio_cancel( -1, {-1..} ) did not return -1 or errno != EBADF");
+            ++result;
+        }
 
-    cb.aio_fildes = -2;
-    errno = 0;
+        cb.aio_fildes = -2;
+        errno = 0;
 
-    /* Case two: invalid fds that do not match; just print warning.  */
-    if (aio_cancel (fd, &cb) != -1 || errno != EBADF)
-      puts ("aio_cancel( -1, {-2..} ) did not return -1 or errno != EBADF");
-  }
+        /* Case two: invalid fds that do not match; just print warning.  */
+        if (aio_cancel(fd, &cb) != -1 || errno != EBADF) {
+            puts("aio_cancel( -1, {-2..} ) did not return -1 or errno != EBADF");
+        }
+    }
 
-  /* Test for aio_fsync() detecting bad fd.  */
-  {
-    struct aiocb cb;
-    int fd = -1;
+    /* Test for aio_fsync() detecting bad fd.  */
+    {
+        struct aiocb cb;
+        int fd = -1;
 
-    cb.aio_fildes = fd;
-    cb.aio_offset = 0;
-    cb.aio_buf = NULL;
-    cb.aio_nbytes = 0;
-    cb.aio_reqprio = 0;
-    cb.aio_sigevent.sigev_notify = SIGEV_NONE;
+        cb.aio_fildes = fd;
+        cb.aio_offset = 0;
+        cb.aio_buf = NULL;
+        cb.aio_nbytes = 0;
+        cb.aio_reqprio = 0;
+        cb.aio_sigevent.sigev_notify = SIGEV_NONE;
 
-    errno = 0;
+        errno = 0;
 
-    /* Case one: invalid fd.  */
-    if (aio_fsync (O_SYNC, &cb) != -1 || errno != EBADF)
-      {
-	puts ("aio_fsync( op, {-1..} ) did not return -1 or errno != EBADF");
-	++result;
-      }
-  }
+        /* Case one: invalid fd.  */
+        if (aio_fsync(O_SYNC, &cb) != -1 || errno != EBADF) {
+            puts("aio_fsync( op, {-1..} ) did not return -1 or errno != EBADF");
+            ++result;
+        }
+    }
 
-  /* Test for aio_suspend() suspending even if completed elements in list.  */
-  {
+    /* Test for aio_suspend() suspending even if completed elements in list.  */
+    {
 #define BYTES 8
-    const int ELEMS = 2;
-    int i, r, fd;
-    static char buff[BYTES];
-    char name[] = "/tmp/aio7.XXXXXX";
-    struct timespec timeout;
-    static struct aiocb cb0, cb1;
-    struct aiocb *list[ELEMS];
+        const int ELEMS = 2;
+        int i, r, fd;
+        static char buff[BYTES];
+        char name[] = "/tmp/aio7.XXXXXX";
+        struct timespec timeout;
+        static struct aiocb cb0, cb1;
+        struct aiocb *list[ELEMS];
 
-    fd = mkstemp (name);
-    if (fd < 0)
-      error (1, errno, "creating temp file");
+        fd = mkstemp(name);
+        if (fd < 0) {
+            error(1, errno, "creating temp file");
+        }
 
-    if (unlink (name))
-      error (1, errno, "unlinking temp file");
+        if (unlink(name)) {
+            error(1, errno, "unlinking temp file");
+        }
 
-    if (write (fd, "01234567", BYTES) != BYTES)
-      error (1, errno, "writing to temp file");
+        if (write(fd, "01234567", BYTES) != BYTES) {
+            error(1, errno, "writing to temp file");
+        }
 
-    cb0.aio_fildes = fd;
-    cb0.aio_offset = 0;
-    cb0.aio_buf = buff;
-    cb0.aio_nbytes = BYTES;
-    cb0.aio_reqprio = 0;
-    cb0.aio_sigevent.sigev_notify = SIGEV_NONE;
+        cb0.aio_fildes = fd;
+        cb0.aio_offset = 0;
+        cb0.aio_buf = buff;
+        cb0.aio_nbytes = BYTES;
+        cb0.aio_reqprio = 0;
+        cb0.aio_sigevent.sigev_notify = SIGEV_NONE;
 
-    r = aio_read (&cb0);
-    if (r != 0)
-      error (1, errno, "reading from file");
+        r = aio_read(&cb0);
+        if (r != 0) {
+            error(1, errno, "reading from file");
+        }
 
-    while (aio_error (&(cb0)) == EINPROGRESS)
-      usleep (10);
+        while (aio_error(&(cb0)) == EINPROGRESS) {
+            usleep(10);
+        }
 
-    for (i = 0; i < BYTES; i++)
-      printf ("%c ", buff[i]);
-    printf ("\n");
+        for (i = 0; i < BYTES; i++) {
+            printf("%c ", buff[i]);
+        }
+        printf("\n");
 
-    /* At this point, the first read is completed, so start another one on
-       the read half of a pipe on which nothing will be written.  */
-    cb1.aio_fildes = piped[0];
-    cb1.aio_offset = 0;
-    cb1.aio_buf = buff;
-    cb1.aio_nbytes = BYTES;
-    cb1.aio_reqprio = 0;
-    cb1.aio_sigevent.sigev_notify = SIGEV_NONE;
+        /* At this point, the first read is completed, so start another one on
+           the read half of a pipe on which nothing will be written.  */
+        cb1.aio_fildes = piped[0];
+        cb1.aio_offset = 0;
+        cb1.aio_buf = buff;
+        cb1.aio_nbytes = BYTES;
+        cb1.aio_reqprio = 0;
+        cb1.aio_sigevent.sigev_notify = SIGEV_NONE;
 
-    r = aio_read (&cb1);
-    if (r != 0)
-      error (1, errno, "reading from file");
+        r = aio_read(&cb1);
+        if (r != 0) {
+            error(1, errno, "reading from file");
+        }
 
-    /* Now call aio_suspend() with the two reads.  It should return
-     * immediately according to the POSIX spec.
-     */
-    list[0] = &cb0;
-    list[1] = &cb1;
-    timeout.tv_sec = 3;
-    timeout.tv_nsec = 0;
-    r = aio_suspend ((const struct aiocb * const *) list, ELEMS, &timeout);
+        /* Now call aio_suspend() with the two reads.  It should return
+         * immediately according to the POSIX spec.
+         */
+        list[0] = &cb0;
+        list[1] = &cb1;
+        timeout.tv_sec = 3;
+        timeout.tv_nsec = 0;
+        r = aio_suspend((const struct aiocb * const *) list, ELEMS, &timeout);
 
-    if (r == -1 && errno == EAGAIN)
-      {
-	puts ("aio_suspend([done,blocked],2,3) suspended thread");
-	++result;
-      }
+        if (r == -1 && errno == EAGAIN) {
+            puts("aio_suspend([done,blocked],2,3) suspended thread");
+            ++result;
+        }
 
-    /* Note that CB1 is still pending, and so cannot be an auto variable.
-       Thus we also test that exiting with an outstanding request works.  */
-  }
+        /* Note that CB1 is still pending, and so cannot be an auto variable.
+           Thus we also test that exiting with an outstanding request works.  */
+    }
 
-  return result;
+    return result;
 }
 
 #include "../test-skeleton.c"

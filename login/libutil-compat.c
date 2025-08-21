@@ -24,10 +24,9 @@
 
 void
 attribute_compat_text_section
-__attribute_used__
-__libutil_version_placeholder_1 (void)
+__attribute_used__ __libutil_version_placeholder_1(void)
 {
 }
 
-compat_symbol (libutil, __libutil_version_placeholder_1,
-               __libutil_version_placeholder, GLIBC_2_0);
+compat_symbol(libutil, __libutil_version_placeholder_1,
+              __libutil_version_placeholder, GLIBC_2_0);

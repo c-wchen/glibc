@@ -24,17 +24,24 @@
 #include <pt-internal.h>
 
 struct __pthread_attr __pthread_default_attr = {
-  __schedparam: { __sched_priority: 0 },
-  __stacksize: 0,
-  __stackaddr: NULL,
+__schedparam:
+    { __sched_priority: 0 },
+    __stacksize: 0,
+__stackaddr:
+    NULL,
 #ifdef PAGESIZE
-  __guardsize: PAGESIZE,
+__guardsize:
+    PAGESIZE,
 #else
-  __guardsize: 1,
+    __guardsize: 1,
 #endif /* PAGESIZE */
-  __detachstate: PTHREAD_CREATE_JOINABLE,
-  __inheritsched: PTHREAD_EXPLICIT_SCHED,
-  __contentionscope: PTHREAD_SCOPE_SYSTEM,
-  __schedpolicy: SCHED_OTHER
+__detachstate:
+    PTHREAD_CREATE_JOINABLE,
+__inheritsched:
+    PTHREAD_EXPLICIT_SCHED,
+__contentionscope:
+    PTHREAD_SCOPE_SYSTEM,
+__schedpolicy:
+    SCHED_OTHER
 };
-libc_hidden_data_def (__pthread_default_attr)
+libc_hidden_data_def(__pthread_default_attr)

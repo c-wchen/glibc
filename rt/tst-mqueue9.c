@@ -25,70 +25,61 @@
 #include "tst-mqueue.h"
 
 #define TEST_FUNCTION do_test ()
-static int
-do_test (void)
+static int do_test(void)
 {
-  if (geteuid () != 0)
-    {
-      puts ("this test requires root");
-      return 0;
+    if (geteuid() != 0) {
+        puts("this test requires root");
+        return 0;
     }
 
-  char name[sizeof "/tst-mqueue9-" + sizeof (pid_t) * 3];
-  snprintf (name, sizeof (name), "/tst-mqueue9-%u", getpid ());
+    char name[sizeof "/tst-mqueue9-" + sizeof(pid_t) * 3];
+    snprintf(name, sizeof(name), "/tst-mqueue9-%u", getpid());
 
-  struct mq_attr attr = { .mq_maxmsg = 1, .mq_msgsize = 1 };
-  mqd_t q = mq_open (name, O_CREAT | O_EXCL | O_RDWR, 0600, &attr);
+    struct mq_attr attr = { .mq_maxmsg = 1, .mq_msgsize = 1 };
+    mqd_t q = mq_open(name, O_CREAT | O_EXCL | O_RDWR, 0600, &attr);
 
-  if (q == (mqd_t) -1)
-    {
-      if (errno == ENOSYS)
-	FAIL_UNSUPPORTED ("mq_open not supported");
+    if (q == (mqd_t) -1) {
+        if (errno == ENOSYS) {
+            FAIL_UNSUPPORTED("mq_open not supported");
+        }
 
-      printf ("mq_open failed with: %m\n");
-      return 1;
+        printf("mq_open failed with: %m\n");
+        return 1;
     }
 
-  add_temp_mq (name);
+    add_temp_mq(name);
 
-  if (seteuid (1) != 0)
-    {
-      printf ("failed to seteuid (1): %m\n");
-      mq_unlink (name);
-      return 0;
+    if (seteuid(1) != 0) {
+        printf("failed to seteuid (1): %m\n");
+        mq_unlink(name);
+        return 0;
     }
 
-  int result = 0;
-  if (mq_unlink (name) == 0)
-    {
-      puts ("mq_unlink unexpectedly succeeded");
-      result = 1;
-    }
-  else if (errno != EACCES)
-    {
-      printf ("mq_unlink did not fail with EACCES: %m\n");
-      result = 1;;
+    int result = 0;
+    if (mq_unlink(name) == 0) {
+        puts("mq_unlink unexpectedly succeeded");
+        result = 1;
+    } else if (errno != EACCES) {
+        printf("mq_unlink did not fail with EACCES: %m\n");
+        result = 1;;
     }
 
-  if (seteuid (0) != 0)
-    {
-      printf ("failed to seteuid (0): %m\n");
-      result = 1;
+    if (seteuid(0) != 0) {
+        printf("failed to seteuid (0): %m\n");
+        result = 1;
     }
 
-  if (mq_unlink (name) != 0)
-    {
-      printf ("mq_unlink failed with: %m\n");
-      result = 1;
+    if (mq_unlink(name) != 0) {
+        printf("mq_unlink failed with: %m\n");
+        result = 1;
     }
 
-  if (mq_close (q) != 0)
-    {
-      printf ("mq_close failed with: %m\n");
-      result = 1;
+    if (mq_close(q) != 0) {
+        printf("mq_close failed with: %m\n");
+        result = 1;
     }
 
-  return result;
+    return result;
 }
 
 #include "../test-skeleton.c"

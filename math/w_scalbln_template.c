@@ -20,17 +20,19 @@
 #include <math.h>
 
 FLOAT
-M_DECL_FUNC (__w_scalbln) (FLOAT x, long int n)
+M_DECL_FUNC(__w_scalbln)(FLOAT x, long int n)
 {
-  if (!isfinite (x) || x == 0)
-    return x + x;
+    if (!isfinite(x) || x == 0) {
+        return x + x;
+    }
 
-  x = M_SUF (__scalbln) (x, n);
+    x = M_SUF(__scalbln)(x, n);
 
-  if (!isfinite (x) || x == 0)
-    __set_errno (ERANGE);
+    if (!isfinite(x) || x == 0) {
+        __set_errno(ERANGE);
+    }
 
-  return x;
+    return x;
 }
 
-declare_mgen_alias (__w_scalbln, scalbln)
+declare_mgen_alias(__w_scalbln, scalbln)

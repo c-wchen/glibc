@@ -137,9 +137,9 @@
       register long int __a7 asm ("$a7") = number; \
       register long int __a0 asm ("$a0"); \
       __asm__ volatile ("syscall 0\n\t" \
-		       : "=r"(__a0) \
-		       : "r"(__a7) \
-		       : __SYSCALL_CLOBBERS); \
+               : "=r"(__a0) \
+               : "r"(__a7) \
+               : __SYSCALL_CLOBBERS); \
       _sys_result = __a0; \
     } \
     _sys_result; \
@@ -154,9 +154,9 @@
       register long int __a7 asm ("$a7") = number; \
       register long int __a0 asm ("$a0") = _arg0; \
       __asm__ volatile ("syscall 0\n\t" \
-		       : "+r"(__a0) \
-		       : "r"(__a7) \
-		       : __SYSCALL_CLOBBERS); \
+               : "+r"(__a0) \
+               : "r"(__a7) \
+               : __SYSCALL_CLOBBERS); \
       _sys_result = __a0; \
     } \
     _sys_result; \
@@ -173,9 +173,9 @@
       register long int __a0 asm ("$a0") = _arg0; \
       register long int __a1 asm ("$a1") = _arg1; \
       __asm__ volatile ("syscall 0\n\t" \
-		       : "+r"(__a0) \
-		       : "r"(__a7), "r"(__a1) \
-		       : __SYSCALL_CLOBBERS); \
+               : "+r"(__a0) \
+               : "r"(__a7), "r"(__a1) \
+               : __SYSCALL_CLOBBERS); \
       _sys_result = __a0; \
     } \
     _sys_result; \
@@ -194,9 +194,9 @@
       register long int __a1 asm ("$a1") = _arg1; \
       register long int __a2 asm ("$a2") = _arg2; \
       __asm__ volatile ("syscall 0\n\t" \
-		       : "+r"(__a0) \
-		       : "r"(__a7), "r"(__a1), "r"(__a2) \
-		       : __SYSCALL_CLOBBERS); \
+               : "+r"(__a0) \
+               : "r"(__a7), "r"(__a1), "r"(__a2) \
+               : __SYSCALL_CLOBBERS); \
       _sys_result = __a0; \
     } \
     _sys_result; \
@@ -217,9 +217,9 @@
       register long int __a2 asm ("$a2") = _arg2; \
       register long int __a3 asm ("$a3") = _arg3; \
       __asm__ volatile ("syscall 0\n\t" \
-		       : "+r"(__a0) \
-		       : "r"(__a7), "r"(__a1), "r"(__a2), "r"(__a3) \
-		       : __SYSCALL_CLOBBERS); \
+               : "+r"(__a0) \
+               : "r"(__a7), "r"(__a1), "r"(__a2), "r"(__a3) \
+               : __SYSCALL_CLOBBERS); \
       _sys_result = __a0; \
     } \
     _sys_result; \
@@ -242,10 +242,10 @@
       register long int __a3 asm ("$a3") = _arg3; \
       register long int __a4 asm ("$a4") = _arg4; \
       __asm__ volatile ("syscall 0\n\t" \
-		       : "+r"(__a0) \
-		       : "r"(__a7), "r"(__a1), "r"(__a2), \
-			 "r"(__a3), "r"(__a4) \
-		       : __SYSCALL_CLOBBERS); \
+               : "+r"(__a0) \
+               : "r"(__a7), "r"(__a1), "r"(__a2), \
+             "r"(__a3), "r"(__a4) \
+               : __SYSCALL_CLOBBERS); \
       _sys_result = __a0; \
     } \
     _sys_result; \
@@ -270,10 +270,10 @@
       register long int __a4 asm ("$a4") = _arg4; \
       register long int __a5 asm ("$a5") = _arg5; \
       __asm__ volatile ("syscall 0\n\t" \
-		       : "+r"(__a0) \
-		       : "r"(__a7), "r"(__a1), "r"(__a2), "r"(__a3), \
-			 "r"(__a4), "r"(__a5) \
-		       : __SYSCALL_CLOBBERS); \
+               : "+r"(__a0) \
+               : "r"(__a7), "r"(__a1), "r"(__a2), "r"(__a3), \
+             "r"(__a4), "r"(__a5) \
+               : __SYSCALL_CLOBBERS); \
       _sys_result = __a0; \
     } \
     _sys_result; \
@@ -300,10 +300,10 @@
       register long int __a5 asm ("$a5") = _arg5; \
       register long int __a6 asm ("$a6") = _arg6; \
       __asm__ volatile ("syscall 0\n\t" \
-		       : "+r"(__a0) \
-		       : "r"(__a7), "r"(__a1), "r"(__a2), "r"(__a3), \
-			 "r"(__a4), "r"(__a5), "r"(__a6) \
-		       : __SYSCALL_CLOBBERS); \
+               : "+r"(__a0) \
+               : "r"(__a7), "r"(__a1), "r"(__a2), "r"(__a3), \
+             "r"(__a4), "r"(__a5), "r"(__a6) \
+               : __SYSCALL_CLOBBERS); \
       _sys_result = __a0; \
     } \
     _sys_result; \
@@ -312,7 +312,7 @@
 #define __SYSCALL_CLOBBERS \
   "$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$t8", "memory"
 
-extern long int __syscall_error (long int neg_errno);
+extern long int __syscall_error(long int neg_errno);
 
 #endif /* ! __ASSEMBLER__ */
 

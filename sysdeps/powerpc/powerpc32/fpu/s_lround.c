@@ -24,54 +24,53 @@
 #include <libm-alias-float.h>
 #include <libm-alias-double.h>
 
-long int
-__lround (double x)
+long int __lround(double x)
 {
 #ifdef _ARCH_PWR5X
-  x = round (x);
+    x = round(x);
 #else
-  /* Ieee 1003.1 lround function.  ieee specifies "round to the nearest
-     integer value, rounding halfway cases away from zero, regardless of
-     the current rounding mode."  however powerpc architecture defines
-     "round to nearest" as "choose the best approximation. in case of a
-     tie, choose the one that is even (least significant bit o).".
-     so we can't use the powerpc "round to nearest" mode. instead we set
-     "round toward zero" mode and round by adding +-0.5 before rounding
-     to the integer value.  it is necessary to detect when x is
-     (+-)0x1.fffffffffffffp-2 because adding +-0.5 in this case will
-     cause an erroneous shift, carry and round.  we simply return 0 if
-     0.5 > x > -0.5.  */
+    /* Ieee 1003.1 lround function.  ieee specifies "round to the nearest
+       integer value, rounding halfway cases away from zero, regardless of
+       the current rounding mode."  however powerpc architecture defines
+       "round to nearest" as "choose the best approximation. in case of a
+       tie, choose the one that is even (least significant bit o).".
+       so we can't use the powerpc "round to nearest" mode. instead we set
+       "round toward zero" mode and round by adding +-0.5 before rounding
+       to the integer value.  it is necessary to detect when x is
+       (+-)0x1.fffffffffffffp-2 because adding +-0.5 in this case will
+       cause an erroneous shift, carry and round.  we simply return 0 if
+       0.5 > x > -0.5.  */
 
-  double ax = fabs (x);
+    double ax = fabs(x);
 
-  if (ax < 0.5)
-    return 0;
+    if (ax < 0.5) {
+        return 0;
+    }
 
-  if (x >= 0x7fffffff.8p0 || x <= -0x80000000.8p0)
-    x = (x < 0.0) ? -0x1p+52 : 0x1p+52;
-  else
-    {
-      /* Test whether an integer to avoid spurious "inexact".  */
-      double t = ax + 0x1p+52;
-      t = t - 0x1p+52;
-      if (ax != t)
-        {
-	  ax = ax + 0.5;
-	  if (x < 0.0)
-	    ax = -fabs (ax);
-	  x = ax;
+    if (x >= 0x7fffffff.8p0 || x <= -0x80000000.8p0) {
+        x = (x < 0.0) ? -0x1p + 52 : 0x1p + 52;
+    } else {
+        /* Test whether an integer to avoid spurious "inexact".  */
+        double t = ax + 0x1p + 52;
+        t = t - 0x1p + 52;
+        if (ax != t) {
+            ax = ax + 0.5;
+            if (x < 0.0) {
+                ax = -fabs(ax);
+            }
+            x = ax;
         }
     }
 #endif
-  /* Force evaluation of values larger than long int, so invalid
-     exceptions are raise.  */
-  long long int ret;
-  asm ("fctiwz %0, %1" : "=d" (ret) : "d" (x));
-  return ret;
+    /* Force evaluation of values larger than long int, so invalid
+       exceptions are raise.  */
+    long long int ret;
+    asm("fctiwz %0, %1" : "=d"(ret) : "d"(x));
+    return ret;
 }
 #ifndef __lround
-libm_alias_double (__lround, lround)
+libm_alias_double(__lround, lround)
 
-strong_alias (__lround, __lroundf)
-libm_alias_float (__lround, lround)
+strong_alias(__lround, __lroundf)
+libm_alias_float(__lround, lround)
 #endif

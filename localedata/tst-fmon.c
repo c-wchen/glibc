@@ -36,31 +36,27 @@
 #define EXIT_SETLOCALE 2
 #define EXIT_STRFMON 3
 
-int
-main (int argc, char *argv[])
+int main(int argc, char *argv[])
 {
-  char s[200];
+    char s[200];
 
-  if (setlocale (LC_MONETARY, argv[1]) == NULL)
-    {
-      fprintf (stderr, "setlocale(LC_MONETARY, \"%s\"): %m\n", argv[1]);
-      exit (EXIT_SETLOCALE);
+    if (setlocale(LC_MONETARY, argv[1]) == NULL) {
+        fprintf(stderr, "setlocale(LC_MONETARY, \"%s\"): %m\n", argv[1]);
+        exit(EXIT_SETLOCALE);
     }
 
-  if (strfmon (s, sizeof (s), argv[2], (double) atof (argv[3])) == -1)
-    {
-      perror ("strfmon");
-      exit (EXIT_STRFMON);
+    if (strfmon(s, sizeof(s), argv[2], (double) atof(argv[3])) == -1) {
+        perror("strfmon");
+        exit(EXIT_STRFMON);
     }
 
-  if (strcmp (s, argv[4]) != 0)
-    {
-      printf ("\
+    if (strcmp(s, argv[4]) != 0) {
+        printf("\
 Locale: \"%s\" Format: \"%s\" Value: \"%s\" Received: \"%s\" Expected: \"%s\" => %s\n",
-	      argv[1], argv[2], argv[3], s, argv[4],
-	      strcmp (s, argv[4]) != 0 ? "false" : "correct");
-      exit (EXIT_FAILURE);
+               argv[1], argv[2], argv[3], s, argv[4],
+               strcmp(s, argv[4]) != 0 ? "false" : "correct");
+        exit(EXIT_FAILURE);
     }
 
-  return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }

@@ -22,9 +22,8 @@
 /* This is the private state used if PS is NULL.  */
 static mbstate_t state;
 
-size_t
-__mbsrtowcs (wchar_t *dst, const char **src, size_t len, mbstate_t *ps)
+size_t __mbsrtowcs(wchar_t *dst, const char **src, size_t len, mbstate_t *ps)
 {
-  return __mbsrtowcs_l (dst, src, len, ps ?: &state, _NL_CURRENT_LOCALE);
+    return __mbsrtowcs_l(dst, src, len, ps ? : &state, _NL_CURRENT_LOCALE);
 }
-weak_alias (__mbsrtowcs, mbsrtowcs)
+weak_alias(__mbsrtowcs, mbsrtowcs)

@@ -23,36 +23,36 @@
 /* We need to go through the POSIX-mandated dance to switch between
    handles on an open file description.  */
 
-#define printf_under_test(...)						\
-({									\
-  __label__ out;							\
-  int result;								\
-									\
-  result = fflush (stdout);						\
-  if (result == EOF)							\
-    {									\
-      perror ("fflush");						\
-      goto out;								\
-    }									\
-  result = lseek (STDOUT_FILENO, 0, SEEK_END);				\
-  if (result < 0 && errno == ESPIPE)					\
-    result = 0;								\
-  if (result < 0)							\
-    {									\
-      perror ("lseek");							\
-      goto out;								\
-    }									\
-  result = dprintf (STDOUT_FILENO, __VA_ARGS__);			\
-  if (result < 0)							\
-    {									\
-      perror ("dprintf");						\
-      goto out;								\
-    }									\
-  result = fseek (stdout, 0, SEEK_END);					\
-  if (result < 0 && errno == ESPIPE)					\
-    result = 0;								\
-  if (result < 0)							\
-    perror ("fseek");							\
-out:									\
-  result;								\
+#define printf_under_test(...)                      \
+({                                  \
+  __label__ out;                            \
+  int result;                               \
+                                    \
+  result = fflush (stdout);                     \
+  if (result == EOF)                            \
+    {                                   \
+      perror ("fflush");                        \
+      goto out;                             \
+    }                                   \
+  result = lseek (STDOUT_FILENO, 0, SEEK_END);              \
+  if (result < 0 && errno == ESPIPE)                    \
+    result = 0;                             \
+  if (result < 0)                           \
+    {                                   \
+      perror ("lseek");                         \
+      goto out;                             \
+    }                                   \
+  result = dprintf (STDOUT_FILENO, __VA_ARGS__);            \
+  if (result < 0)                           \
+    {                                   \
+      perror ("dprintf");                       \
+      goto out;                             \
+    }                                   \
+  result = fseek (stdout, 0, SEEK_END);                 \
+  if (result < 0 && errno == ESPIPE)                    \
+    result = 0;                             \
+  if (result < 0)                           \
+    perror ("fseek");                           \
+out:                                    \
+  result;                               \
 })

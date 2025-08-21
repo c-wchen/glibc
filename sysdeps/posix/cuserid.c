@@ -24,24 +24,24 @@
 /* Return the username of the caller.
    If S is not NULL, it points to a buffer of at least L_cuserid bytes
    into which the name is copied; otherwise, a static buffer is used.  */
-char *
-cuserid (char *s)
+char *cuserid(char *s)
 {
-  static char name[L_cuserid];
-  char buf[NSS_BUFLEN_PASSWD];
-  struct passwd pwent;
-  struct passwd *pwptr;
+    static char name[L_cuserid];
+    char buf[NSS_BUFLEN_PASSWD];
+    struct passwd pwent;
+    struct passwd *pwptr;
 
-  if (__getpwuid_r (__geteuid (), &pwent, buf, sizeof (buf), &pwptr)
-      || pwptr == NULL)
-    {
-      if (s != NULL)
-	s[0] = '\0';
-      return s;
+    if (__getpwuid_r(__geteuid(), &pwent, buf, sizeof(buf), &pwptr)
+        || pwptr == NULL) {
+        if (s != NULL) {
+            s[0] = '\0';
+        }
+        return s;
     }
 
-  if (s == NULL)
-    s = name;
-  s[L_cuserid - 1] = '\0';
-  return strncpy (s, pwptr->pw_name, L_cuserid - 1);
+    if (s == NULL) {
+        s = name;
+    }
+    s[L_cuserid - 1] = '\0';
+    return strncpy(s, pwptr->pw_name, L_cuserid - 1);
 }

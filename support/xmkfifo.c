@@ -20,10 +20,10 @@
 #include <support/xunistd.h>
 #include <sys/stat.h>
 
-void
-xmkfifo (const char *pathname, mode_t mode)
+void xmkfifo(const char *pathname, mode_t mode)
 {
-  int r = mkfifo (pathname, mode);
-  if (r < 0)
-    FAIL_EXIT1 ("mkfifo (%s, 0%o): %m", pathname, mode);
+    int r = mkfifo(pathname, mode);
+    if (r < 0) {
+        FAIL_EXIT1("mkfifo (%s, 0%o): %m", pathname, mode);
+    }
 }

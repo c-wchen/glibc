@@ -26,57 +26,50 @@ static ucontext_t ctx[3];
 static atomic_int done;
 
 static void
-__attribute_optimization_barrier__
-f2 (void)
+__attribute_optimization_barrier__ f2(void)
 {
-  printf ("start f2\n");
-  done++;
-  if (setcontext (&ctx[2]) != 0)
-    {
-      printf ("%s: setcontext: %m\n", __FUNCTION__);
-      exit (EXIT_FAILURE);
+    printf("start f2\n");
+    done++;
+    if (setcontext(&ctx[2]) != 0) {
+        printf("%s: setcontext: %m\n", __FUNCTION__);
+        exit(EXIT_FAILURE);
     }
 }
 
-static void
-f1 (void)
+static void f1(void)
 {
-  printf ("start f1\n");
-  if (getcontext (&ctx[2]) != 0)
-    {
-      printf ("%s: getcontext: %m\n", __FUNCTION__);
-      exit (EXIT_FAILURE);
+    printf("start f1\n");
+    if (getcontext(&ctx[2]) != 0) {
+        printf("%s: getcontext: %m\n", __FUNCTION__);
+        exit(EXIT_FAILURE);
     }
-  if (done)
-    exit (EXIT_SUCCESS);
-  f2 ();
+    if (done) {
+        exit(EXIT_SUCCESS);
+    }
+    f2();
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char st1[32768];
-  puts ("making contexts");
-  if (getcontext (&ctx[0]) != 0)
-    {
-      printf ("%s: getcontext: %m\n", __FUNCTION__);
-      exit (EXIT_FAILURE);
+    char st1[32768];
+    puts("making contexts");
+    if (getcontext(&ctx[0]) != 0) {
+        printf("%s: getcontext: %m\n", __FUNCTION__);
+        exit(EXIT_FAILURE);
     }
-  if (getcontext (&ctx[1]) != 0)
-    {
-      printf ("%s: getcontext: %m\n", __FUNCTION__);
-      exit (EXIT_FAILURE);
+    if (getcontext(&ctx[1]) != 0) {
+        printf("%s: getcontext: %m\n", __FUNCTION__);
+        exit(EXIT_FAILURE);
     }
-  ctx[1].uc_stack.ss_sp = st1;
-  ctx[1].uc_stack.ss_size = sizeof st1;
-  ctx[1].uc_link = &ctx[0];
-  makecontext (&ctx[1], (void (*) (void)) f1, 0);
-  if (setcontext (&ctx[1]) != 0)
-    {
-      printf ("%s: setcontext: %m\n", __FUNCTION__);
-      exit (EXIT_FAILURE);
+    ctx[1].uc_stack.ss_sp = st1;
+    ctx[1].uc_stack.ss_size = sizeof st1;
+    ctx[1].uc_link = &ctx[0];
+    makecontext(&ctx[1], (void (*)(void)) f1, 0);
+    if (setcontext(&ctx[1]) != 0) {
+        printf("%s: setcontext: %m\n", __FUNCTION__);
+        exit(EXIT_FAILURE);
     }
-  exit (EXIT_FAILURE);
+    exit(EXIT_FAILURE);
 }
 
 #include <support/test-driver.c>

@@ -22,15 +22,13 @@
 #ifdef SA_SIGINFO
 #include <sigcontextinfo.h>
 
-static void
-__profil_counter (int signr, siginfo_t *info, void *ctx)
+static void __profil_counter(int signr, siginfo_t *info, void *ctx)
 {
-  profil_count (sigcontext_get_pc (ctx));
+    profil_count(sigcontext_get_pc(ctx));
 }
 #else
-static void
-__profil_counter (int signr, int code, struct sigcontext *scp)
+static void __profil_counter(int signr, int code, struct sigcontext *scp)
 {
-  profil_count ((uintptr_t) scp->sc_pc);
+    profil_count((uintptr_t) scp->sc_pc);
 }
 #endif

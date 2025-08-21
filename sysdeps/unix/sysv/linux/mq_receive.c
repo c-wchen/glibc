@@ -23,13 +23,12 @@
 
 /* Receive the oldest from highest priority messages in message queue
    MQDES.  */
-ssize_t
-__mq_receive (mqd_t mqdes, char *msg_ptr, size_t msg_len,
-	      unsigned int *msg_prio)
+ssize_t __mq_receive(mqd_t mqdes, char *msg_ptr, size_t msg_len,
+                     unsigned int *msg_prio)
 {
-  return __mq_timedreceive (mqdes, msg_ptr, msg_len, msg_prio, NULL);
+    return __mq_timedreceive(mqdes, msg_ptr, msg_len, msg_prio, NULL);
 }
-versioned_symbol (libc, __mq_receive, mq_receive, GLIBC_2_34);
+versioned_symbol(libc, __mq_receive, mq_receive, GLIBC_2_34);
 #if OTHER_SHLIB_COMPAT (librt, GLIBC_2_3_4, GLIBC_2_34)
-compat_symbol (librt, __mq_receive, mq_receive, GLIBC_2_3_4);
+compat_symbol(librt, __mq_receive, mq_receive, GLIBC_2_3_4);
 #endif

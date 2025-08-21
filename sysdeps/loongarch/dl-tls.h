@@ -20,13 +20,12 @@
 #define _DL_TLS_H
 
 /* Type used for the representation of TLS information in the GOT.  */
-typedef struct
-{
-  unsigned long int ti_module;
-  unsigned long int ti_offset;
+typedef struct {
+    unsigned long int ti_module;
+    unsigned long int ti_offset;
 } tls_index;
 
-extern void *__tls_get_addr (tls_index *ti);
+extern void *__tls_get_addr(tls_index *ti);
 
 /* The thread pointer points to the first static TLS block.  */
 #define TLS_TP_OFFSET 0

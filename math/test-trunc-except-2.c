@@ -24,44 +24,43 @@
 # define FE_INEXACT 0
 #endif
 
-#define TEST_FUNC(NAME, FLOAT, SUFFIX)					\
-static int								\
-NAME (void)								\
-{									\
-  int result = 0;							\
-  volatile FLOAT a, b __attribute__ ((unused));				\
-  a = 1.5;								\
-  /* trunc must work when traps on "inexact" are enabled.  */	\
-  b = trunc ## SUFFIX (a);						\
-  /* And it must have left those traps enabled.  */			\
-  if (fegetexcept () == FE_INEXACT)					\
-    puts ("PASS: " #FLOAT);						\
-  else									\
-    {									\
-      puts ("FAIL: " #FLOAT);						\
-      result = 1;							\
-    }									\
-  return result;							\
+#define TEST_FUNC(NAME, FLOAT, SUFFIX)                  \
+static int                              \
+NAME (void)                             \
+{                                   \
+  int result = 0;                           \
+  volatile FLOAT a, b __attribute__ ((unused));             \
+  a = 1.5;                              \
+  /* trunc must work when traps on "inexact" are enabled.  */   \
+  b = trunc ## SUFFIX (a);                      \
+  /* And it must have left those traps enabled.  */         \
+  if (fegetexcept () == FE_INEXACT)                 \
+    puts ("PASS: " #FLOAT);                     \
+  else                                  \
+    {                                   \
+      puts ("FAIL: " #FLOAT);                       \
+      result = 1;                           \
+    }                                   \
+  return result;                            \
 }
 
-TEST_FUNC (float_test, float, f)
-TEST_FUNC (double_test, double, )
-TEST_FUNC (ldouble_test, long double, l)
+TEST_FUNC(float_test, float, f)
+TEST_FUNC(double_test, double,)
+TEST_FUNC(ldouble_test, long double, l)
 
 static int
-do_test (void)
+do_test(void)
 {
-  if (feenableexcept (FE_INEXACT) == -1)
-    {
-      puts ("enabling FE_INEXACT traps failed, cannot test");
-      return 77;
+    if (feenableexcept(FE_INEXACT) == -1) {
+        puts("enabling FE_INEXACT traps failed, cannot test");
+        return 77;
     }
-  int result = float_test ();
-  feenableexcept (FE_INEXACT);
-  result |= double_test ();
-  feenableexcept (FE_INEXACT);
-  result |= ldouble_test ();
-  return result;
+    int result = float_test();
+    feenableexcept(FE_INEXACT);
+    result |= double_test();
+    feenableexcept(FE_INEXACT);
+    result |= ldouble_test();
+    return result;
 }
 
 #include <support/test-driver.c>

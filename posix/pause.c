@@ -22,11 +22,10 @@
 /* Suspend the process until a signal arrives.
    This is supposed to always return -1 and set errno to EINTR,
    but rules were meant to be broken.  */
-int
-pause (void)
+int pause(void)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (pause)
+stub_warning(pause)

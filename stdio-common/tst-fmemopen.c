@@ -28,136 +28,121 @@
 
 static char *test_file;
 
-static void
-do_prepare (int argc, char *argv[])
+static void do_prepare(int argc, char *argv[])
 {
-  /* Construct the test file name based on ARGV[0], which will be
-     an absolute file name in the build directory.  Don't touch the
-     source directory, which might be read-only.  */
-  if (asprintf (&test_file, "%s.test", argv[0]) < 0)
-    {
-      puts ("asprintf failed\n");
-      exit (EXIT_FAILURE);
+    /* Construct the test file name based on ARGV[0], which will be
+       an absolute file name in the build directory.  Don't touch the
+       source directory, which might be read-only.  */
+    if (asprintf(&test_file, "%s.test", argv[0]) < 0) {
+        puts("asprintf failed\n");
+        exit(EXIT_FAILURE);
     }
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  const char blah[] = "BLAH";
-  FILE *fp;
-  char *mmap_data;
-  int ch, fd;
-  struct stat fs;
-  const char *cp;
+    const char blah[] = "BLAH";
+    FILE *fp;
+    char *mmap_data;
+    int ch, fd;
+    struct stat fs;
+    const char *cp;
 
-  /* setup the physical file, and use it */
-  if ((fp = fopen (test_file, "w+")) == NULL)
-    return 1;
-  if (fwrite (blah, 1, strlen (blah), fp) != strlen (blah))
-    {
-      fclose (fp);
-      return 2;
+    /* setup the physical file, and use it */
+    if ((fp = fopen(test_file, "w+")) == NULL) {
+        return 1;
+    }
+    if (fwrite(blah, 1, strlen(blah), fp) != strlen(blah)) {
+        fclose(fp);
+        return 2;
     }
 
-  rewind (fp);
-  printf ("file: ");
-  cp = blah;
-  while ((ch = getc (fp)) != EOF)
-    {
-      fputc (ch, stdout);
-      if (ch != *cp)
-	{
-	  printf ("\ncharacter %td: '%c' instead of '%c'\n",
-		  cp - blah, ch, *cp);
-	  fclose (fp);
-	  return 1;
-	}
-      ++cp;
+    rewind(fp);
+    printf("file: ");
+    cp = blah;
+    while ((ch = getc(fp)) != EOF) {
+        fputc(ch, stdout);
+        if (ch != *cp) {
+            printf("\ncharacter %td: '%c' instead of '%c'\n",
+                   cp - blah, ch, *cp);
+            fclose(fp);
+            return 1;
+        }
+        ++cp;
     }
-  fputc ('\n', stdout);
-  if (ferror (fp))
-    {
-      puts ("fp: error");
-      fclose (fp);
-      return 1;
+    fputc('\n', stdout);
+    if (ferror(fp)) {
+        puts("fp: error");
+        fclose(fp);
+        return 1;
     }
-  if (feof (fp))
-    printf ("fp: EOF\n");
-  else
-    {
-      puts ("not EOF");
-      fclose (fp);
-      return 1;
+    if (feof(fp)) {
+        printf("fp: EOF\n");
+    } else {
+        puts("not EOF");
+        fclose(fp);
+        return 1;
     }
-  fclose (fp);
+    fclose(fp);
 
-  /* Now, mmap the file into a buffer, and do that too */
-  if ((fd = open (test_file, O_RDONLY)) == -1)
-    {
-      printf ("open (%s, O_RDONLY) failed\n", test_file);
-      return 3;
+    /* Now, mmap the file into a buffer, and do that too */
+    if ((fd = open(test_file, O_RDONLY)) == -1) {
+        printf("open (%s, O_RDONLY) failed\n", test_file);
+        return 3;
     }
-  if (fstat (fd, &fs) == -1)
-    {
-      printf ("stat (%i)\n", fd);
-      return 4;
+    if (fstat(fd, &fs) == -1) {
+        printf("stat (%i)\n", fd);
+        return 4;
     }
 
-  if ((mmap_data = (char *) mmap (NULL, fs.st_size, PROT_READ,
-				  MAP_SHARED, fd, 0)) == MAP_FAILED)
-    {
-      printf ("mmap (NULL, %zu, PROT_READ, MAP_SHARED, %i, 0) failed\n",
-	      (size_t) fs.st_size, fd);
-      return 5;
+    if ((mmap_data = (char *) mmap(NULL, fs.st_size, PROT_READ,
+                                   MAP_SHARED, fd, 0)) == MAP_FAILED) {
+        printf("mmap (NULL, %zu, PROT_READ, MAP_SHARED, %i, 0) failed\n",
+               (size_t) fs.st_size, fd);
+        return 5;
     }
 
-  if ((fp = fmemopen (mmap_data, fs.st_size, "r")) == NULL)
-    {
-      printf ("fmemopen (%p, %zu) failed\n", mmap_data, (size_t) fs.st_size);
-      return 1;
+    if ((fp = fmemopen(mmap_data, fs.st_size, "r")) == NULL) {
+        printf("fmemopen (%p, %zu) failed\n", mmap_data, (size_t) fs.st_size);
+        return 1;
     }
 
-  printf ("mem: ");
-  cp = blah;
-  while ((ch = getc (fp)) != EOF)
-    {
-      fputc (ch, stdout);
-      if (ch != *cp)
-	{
-	  printf ("%td character: '%c' instead of '%c'\n",
-		  cp - blah, ch, *cp);
-	  fclose (fp);
-	  return 1;
-	}
-      ++cp;
+    printf("mem: ");
+    cp = blah;
+    while ((ch = getc(fp)) != EOF) {
+        fputc(ch, stdout);
+        if (ch != *cp) {
+            printf("%td character: '%c' instead of '%c'\n",
+                   cp - blah, ch, *cp);
+            fclose(fp);
+            return 1;
+        }
+        ++cp;
     }
 
-  fputc ('\n', stdout);
+    fputc('\n', stdout);
 
-  if (ferror (fp))
-    {
-      puts ("fp: error");
-      fclose (fp);
-      return 1;
+    if (ferror(fp)) {
+        puts("fp: error");
+        fclose(fp);
+        return 1;
     }
-  if (feof (fp))
-    printf ("fp: EOF\n");
-  else
-    {
-      puts ("not EOF");
-      fclose (fp);
-      return 1;
+    if (feof(fp)) {
+        printf("fp: EOF\n");
+    } else {
+        puts("not EOF");
+        fclose(fp);
+        return 1;
     }
 
-  fclose (fp);
+    fclose(fp);
 
-  munmap (mmap_data, fs.st_size);
+    munmap(mmap_data, fs.st_size);
 
-  unlink (test_file);
-  free (test_file);
+    unlink(test_file);
+    free(test_file);
 
-  return 0;
+    return 0;
 }
 
 #define PREPARE(argc, argv) do_prepare (argc, argv)

@@ -21,7 +21,7 @@
 #include <scratch_buffer.h>
 
 #define STATIC static
-static int getlogin_r_fd0 (char *name, size_t namesize);
+static int getlogin_r_fd0(char *name, size_t namesize);
 #define __getlogin_r getlogin_r_fd0
 #include <sysdeps/unix/getlogin_r.c>
 #undef __getlogin_r
@@ -32,71 +32,69 @@ static int getlogin_r_fd0 (char *name, size_t namesize);
    Otherwise return the error number.  */
 
 int
-attribute_hidden
-__getlogin_r_loginuid (char *name, size_t namesize)
+attribute_hidden __getlogin_r_loginuid(char *name, size_t namesize)
 {
-  int fd = __open_nocancel ("/proc/self/loginuid", O_RDONLY);
-  if (fd == -1)
-    return -1;
-
-  /* We are reading a 32-bit number.  12 bytes are enough for the text
-     representation.  If not, something is wrong.  */
-  char uidbuf[12];
-  ssize_t n = TEMP_FAILURE_RETRY (__read_nocancel (fd, uidbuf,
-						   sizeof (uidbuf)));
-  __close_nocancel_nostatus (fd);
-
-  uid_t uid;
-  char *endp;
-  if (n <= 0
-      || n == sizeof (uidbuf)
-      || (uidbuf[n] = '\0',
-	  uid = strtoul (uidbuf, &endp, 10),
-	  endp == uidbuf || *endp != '\0'))
-    return -1;
-
-  /* If there is no login uid, linux sets /proc/self/loginid to the sentinel
-     value of, (uid_t) -1, so check if that value is set and return early to
-     avoid making unneeded nss lookups. */
-  if (uid == (uid_t) -1)
-    return -1;
-
-  struct passwd pwd;
-  struct passwd *tpwd;
-  int result = 0;
-  int res;
-  struct scratch_buffer tmpbuf;
-  scratch_buffer_init (&tmpbuf);
-
-  while ((res =  __getpwuid_r (uid, &pwd,
-			       tmpbuf.data, tmpbuf.length, &tpwd)) == ERANGE)
-    {
-      if (!scratch_buffer_grow (&tmpbuf))
-	{
-	  result = ENOMEM;
-	  goto out;
-	}
+    int fd = __open_nocancel("/proc/self/loginuid", O_RDONLY);
+    if (fd == -1) {
+        return -1;
     }
 
-  if (res != 0 || tpwd == NULL)
-    {
-      result = -1;
-      goto out;
+    /* We are reading a 32-bit number.  12 bytes are enough for the text
+       representation.  If not, something is wrong.  */
+    char uidbuf[12];
+    ssize_t n = TEMP_FAILURE_RETRY(__read_nocancel(fd, uidbuf,
+                                   sizeof(uidbuf)));
+    __close_nocancel_nostatus(fd);
+
+    uid_t uid;
+    char *endp;
+    if (n <= 0
+        || n == sizeof(uidbuf)
+        || (uidbuf[n] = '\0',
+            uid = strtoul(uidbuf, &endp, 10),
+            endp == uidbuf || *endp != '\0')) {
+        return -1;
     }
 
-  size_t needed = strlen (pwd.pw_name) + 1;
-  if (needed > namesize)
-    {
-      __set_errno (ERANGE);
-      result = ERANGE;
-      goto out;
+    /* If there is no login uid, linux sets /proc/self/loginid to the sentinel
+       value of, (uid_t) -1, so check if that value is set and return early to
+       avoid making unneeded nss lookups. */
+    if (uid == (uid_t) -1) {
+        return -1;
     }
 
-  memcpy (name, pwd.pw_name, needed);
+    struct passwd pwd;
+    struct passwd *tpwd;
+    int result = 0;
+    int res;
+    struct scratch_buffer tmpbuf;
+    scratch_buffer_init(&tmpbuf);
 
- out:
-  scratch_buffer_free (&tmpbuf);
-  return result;
+    while ((res =  __getpwuid_r(uid, &pwd,
+                                tmpbuf.data, tmpbuf.length, &tpwd)) == ERANGE) {
+        if (!scratch_buffer_grow(&tmpbuf)) {
+            result = ENOMEM;
+            goto out;
+        }
+    }
+
+    if (res != 0 || tpwd == NULL) {
+        result = -1;
+        goto out;
+    }
+
+    size_t needed = strlen(pwd.pw_name) + 1;
+    if (needed > namesize) {
+        __set_errno(ERANGE);
+        result = ERANGE;
+        goto out;
+    }
+
+    memcpy(name, pwd.pw_name, needed);
+
+out:
+    scratch_buffer_free(&tmpbuf);
+    return result;
 }
 
 
@@ -104,15 +102,15 @@ __getlogin_r_loginuid (char *name, size_t namesize)
    If it cannot be determined or some other error occurred, return the error
    code.  Otherwise return 0.  */
 
-int
-__getlogin_r (char *name, size_t namesize)
+int __getlogin_r(char *name, size_t namesize)
 {
-  int res = __getlogin_r_loginuid (name, namesize);
-  if (res >= 0)
-    return res;
+    int res = __getlogin_r_loginuid(name, namesize);
+    if (res >= 0) {
+        return res;
+    }
 
-  return getlogin_r_fd0 (name, namesize);
+    return getlogin_r_fd0(name, namesize);
 }
-libc_hidden_def (__getlogin_r)
-weak_alias (__getlogin_r, getlogin_r)
-libc_hidden_weak (getlogin_r)
+libc_hidden_def(__getlogin_r)
+weak_alias(__getlogin_r, getlogin_r)
+libc_hidden_weak(getlogin_r)

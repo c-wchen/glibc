@@ -22,11 +22,10 @@
    segment of the calling process.  SHMADDR and SHMFLG determine how
    and where the segment is attached.  */
 
-void *
-shmat (int shmid, const void *shmaddr, int shmflg)
+void *shmat(int shmid, const void *shmaddr, int shmflg)
 {
-  __set_errno (ENOSYS);
-  return (void *) -1;
+    __set_errno(ENOSYS);
+    return (void *) -1;
 }
 
-stub_warning (shmat)
+stub_warning(shmat)

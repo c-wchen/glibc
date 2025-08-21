@@ -22,14 +22,14 @@
 #include <hurd/xattr.h>
 #include <fcntl.h>
 
-ssize_t
-lgetxattr (const char *path, const char *name, void *value, size_t size)
+ssize_t lgetxattr(const char *path, const char *name, void *value, size_t size)
 {
-  error_t err;
-  file_t port = __file_name_lookup (path, O_NOLINK, 0);
-  if (port == MACH_PORT_NULL)
-    return -1;
-  err = _hurd_xattr_get (port, name, value, &size);
-  __mach_port_deallocate (__mach_task_self (), port);
-  return err ? __hurd_fail (err) : size;
+    error_t err;
+    file_t port = __file_name_lookup(path, O_NOLINK, 0);
+    if (port == MACH_PORT_NULL) {
+        return -1;
+    }
+    err = _hurd_xattr_get(port, name, value, &size);
+    __mach_port_deallocate(__mach_task_self(), port);
+    return err ? __hurd_fail(err) : size;
 }

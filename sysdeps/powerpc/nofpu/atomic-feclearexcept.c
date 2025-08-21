@@ -19,10 +19,9 @@
 #include "soft-fp.h"
 #include "soft-supp.h"
 
-void
-__atomic_feclearexcept (void)
+void __atomic_feclearexcept(void)
 {
-  /* This function postdates the global variables being turned into
-     compat symbols, so no need to set them.  */
-  __sim_exceptions_thread = 0;
+    /* This function postdates the global variables being turned into
+       compat symbols, so no need to set them.  */
+    __sim_exceptions_thread = 0;
 }

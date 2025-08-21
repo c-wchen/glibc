@@ -23,16 +23,16 @@
 
 
 #if LIBM_SVID_COMPAT
-long double
-__hypotl(long double x, long double y)
+long double __hypotl(long double x, long double y)
 {
-	long double z;
-	z = __ieee754_hypotl(x,y);
-	if(__builtin_expect(!isfinite(z), 0)
-	   && isfinite(x) && isfinite(y) && _LIB_VERSION != _IEEE_)
-	    return __kernel_standard_l(x, y, 204); /* hypot overflow */
+    long double z;
+    z = __ieee754_hypotl(x, y);
+    if (__builtin_expect(!isfinite(z), 0)
+        && isfinite(x) && isfinite(y) && _LIB_VERSION != _IEEE_) {
+        return __kernel_standard_l(x, y, 204);    /* hypot overflow */
+    }
 
-	return z;
+    return z;
 }
-libm_alias_ldouble (__hypot, hypot)
+libm_alias_ldouble(__hypot, hypot)
 #endif

@@ -19,17 +19,17 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-int
-fesetexcept (int excepts)
+int fesetexcept(int excepts)
 {
-  fpu_control_t fpsr;
-  fpu_control_t fpsr_new;
+    fpu_control_t fpsr;
+    fpu_control_t fpsr_new;
 
-  _FPU_GETCW (fpsr);
-  excepts &= FE_ALL_EXCEPT;
-  fpsr_new = fpsr | (excepts << _FPU_HPPA_SHIFT_FLAGS);
-  if (fpsr != fpsr_new)
-    _FPU_SETCW (fpsr_new);
+    _FPU_GETCW(fpsr);
+    excepts &= FE_ALL_EXCEPT;
+    fpsr_new = fpsr | (excepts << _FPU_HPPA_SHIFT_FLAGS);
+    if (fpsr != fpsr_new) {
+        _FPU_SETCW(fpsr_new);
+    }
 
-  return 0;
+    return 0;
 }

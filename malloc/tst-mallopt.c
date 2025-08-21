@@ -21,54 +21,59 @@
 
 static int errors = 0;
 
-static void
-merror (const char *msg)
+static void merror(const char *msg)
 {
-  ++errors;
-  printf ("Error: %s\n", msg);
+    ++errors;
+    printf("Error: %s\n", msg);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int ret;
+    int ret;
 
-  ret = mallopt(M_CHECK_ACTION, 1);
+    ret = mallopt(M_CHECK_ACTION, 1);
 
-  if (ret != 1)
-    merror ("mallopt (M_CHECK_ACTION, 1) failed.");
+    if (ret != 1) {
+        merror("mallopt (M_CHECK_ACTION, 1) failed.");
+    }
 
-  ret = mallopt(M_MMAP_MAX, 64*1024);
+    ret = mallopt(M_MMAP_MAX, 64 * 1024);
 
-  if (ret != 1)
-    merror ("mallopt (M_MMAP_MAX, 64*1024) failed.");
+    if (ret != 1) {
+        merror("mallopt (M_MMAP_MAX, 64*1024) failed.");
+    }
 
-  ret = mallopt(M_MMAP_THRESHOLD, 64*1024);
+    ret = mallopt(M_MMAP_THRESHOLD, 64 * 1024);
 
-  if (ret != 1)
-    merror ("mallopt (M_MMAP_THRESHOLD, 64*1024) failed.");
+    if (ret != 1) {
+        merror("mallopt (M_MMAP_THRESHOLD, 64*1024) failed.");
+    }
 
-  ret = mallopt(M_MXFAST, 0);
+    ret = mallopt(M_MXFAST, 0);
 
-  if (ret != 1)
-    merror ("mallopt (M_MXFAST, 0) failed.");
+    if (ret != 1) {
+        merror("mallopt (M_MXFAST, 0) failed.");
+    }
 
-  ret = mallopt(M_PERTURB, 0xa5);
+    ret = mallopt(M_PERTURB, 0xa5);
 
-  if (ret != 1)
-    merror ("mallopt (M_PERTURB, 0xa5) failed.");
+    if (ret != 1) {
+        merror("mallopt (M_PERTURB, 0xa5) failed.");
+    }
 
-  ret = mallopt(M_TOP_PAD, 64*1024);
+    ret = mallopt(M_TOP_PAD, 64 * 1024);
 
-  if (ret != 1)
-    merror ("mallopt (M_TOP_PAD, 64*1024) failed.");
+    if (ret != 1) {
+        merror("mallopt (M_TOP_PAD, 64*1024) failed.");
+    }
 
-  ret = mallopt(M_TRIM_THRESHOLD, -1);
+    ret = mallopt(M_TRIM_THRESHOLD, -1);
 
-  if (ret != 1)
-    merror ("mallopt (M_TRIM_THRESHOLD, -1) failed.");
+    if (ret != 1) {
+        merror("mallopt (M_TRIM_THRESHOLD, -1) failed.");
+    }
 
-  return errors != 0;
+    return errors != 0;
 }
 
 #define TEST_FUNCTION do_test ()

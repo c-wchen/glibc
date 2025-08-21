@@ -26,9 +26,9 @@
 # define SYMBOL_NAME memcmp
 # include "ifunc-ssse3-sse4_2.h"
 
-libc_ifunc_redirected (__redirect_memcmp, memcmp, IFUNC_SELECTOR ());
+libc_ifunc_redirected(__redirect_memcmp, memcmp, IFUNC_SELECTOR());
 
-weak_alias (memcmp, bcmp)
-strong_alias (memcmp, __memcmpeq)
-libc_hidden_def (__memcmpeq)
+weak_alias(memcmp, bcmp)
+strong_alias(memcmp, __memcmpeq)
+libc_hidden_def(__memcmpeq)
 #endif

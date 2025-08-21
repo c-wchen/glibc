@@ -18,8 +18,7 @@
 
 #include "thrd_priv.h"
 
-void
-thrd_yield (void)
+void thrd_yield(void)
 {
-  INTERNAL_SYSCALL_CALL (sched_yield);
+    INTERNAL_SYSCALL_CALL(sched_yield);
 }

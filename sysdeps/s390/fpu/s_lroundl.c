@@ -31,17 +31,16 @@
 #  define INSN "cfxbra"
 # endif
 
-long int
-__lroundl (_Float128 x)
+long int __lroundl(_Float128 x)
 {
-  long int y;
-  /* The z196 zarch "convert to fixed" (cgxbra) instruction is rounding
-     x to the nearest integer with "ties away from 0" rounding mode
-     (M3-field: 1) where inexact exceptions are suppressed (M4-field: 4).  */
-  __asm__ (INSN " %0,1,%1,4" : "=d" (y) : "f" (x) : "cc");
-  return y;
+    long int y;
+    /* The z196 zarch "convert to fixed" (cgxbra) instruction is rounding
+       x to the nearest integer with "ties away from 0" rounding mode
+       (M3-field: 1) where inexact exceptions are suppressed (M4-field: 4).  */
+    __asm__(INSN " %0,1,%1,4" : "=d"(y) : "f"(x) : "cc");
+    return y;
 }
-libm_alias_ldouble (__lround, lround)
+libm_alias_ldouble(__lround, lround)
 
 #else
 # include <sysdeps/ieee754/ldbl-128/s_lroundl.c>

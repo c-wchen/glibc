@@ -21,34 +21,33 @@
 #include <sys/personality.h>
 #include <support/check.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  unsigned int test_persona = -EINVAL;
-  unsigned int saved_persona;
+    unsigned int test_persona = -EINVAL;
+    unsigned int saved_persona;
 
-  errno = 0xdefaced;
-  saved_persona = personality (0xffffffff);
+    errno = 0xdefaced;
+    saved_persona = personality(0xffffffff);
 
-  unsigned int r = personality (test_persona);
-  if (r == -1)
-    {
-      /* The syscall argument might be filtered by kernel, so the
-        test can not check for the bug issue.  */
-      if (errno == EPERM)
-       FAIL_UNSUPPORTED ("personality syscall argument are filtered");
-      FAIL_EXIT1 ("personality (%#x) failed: %m", test_persona);
+    unsigned int r = personality(test_persona);
+    if (r == -1) {
+        /* The syscall argument might be filtered by kernel, so the
+          test can not check for the bug issue.  */
+        if (errno == EPERM) {
+            FAIL_UNSUPPORTED("personality syscall argument are filtered");
+        }
+        FAIL_EXIT1("personality (%#x) failed: %m", test_persona);
     }
 
-  TEST_COMPARE (r, saved_persona);
-  TEST_VERIFY (personality (0xffffffff) != -1);
-  TEST_VERIFY (personality (PER_LINUX) != -1);
-  TEST_COMPARE (personality (0xffffffff), PER_LINUX);
-  TEST_COMPARE (0xdefaced, errno);
+    TEST_COMPARE(r, saved_persona);
+    TEST_VERIFY(personality(0xffffffff) != -1);
+    TEST_VERIFY(personality(PER_LINUX) != -1);
+    TEST_COMPARE(personality(0xffffffff), PER_LINUX);
+    TEST_COMPARE(0xdefaced, errno);
 
-  personality (saved_persona);
+    personality(saved_persona);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -22,23 +22,25 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-int
-__iscanonicall (long double x)
+int __iscanonicall(long double x)
 {
-  uint32_t se, i0, i1 __attribute__ ((unused));
+    uint32_t se, i0, i1 __attribute__((unused));
 
-  GET_LDOUBLE_WORDS (se, i0, i1, x);
-  int32_t ix = se & 0x7fff;
-  bool mant_high = (i0 & 0x80000000) != 0;
+    GET_LDOUBLE_WORDS(se, i0, i1, x);
+    int32_t ix = se & 0x7fff;
+    bool mant_high = (i0 & 0x80000000) != 0;
 
-  if (LDBL_MIN_EXP == -16381)
-    /* Intel variant: the high mantissa bit should have a value
-       determined by the exponent.  */
-    return ix > 0 ? mant_high : !mant_high;
-  else
-    /* M68K variant: both values of the high bit are valid for the
-       greatest and smallest exponents, while other exponents require
-       the high bit to be set.  */
-    return ix == 0 || ix == 0x7fff || mant_high;
+    if (LDBL_MIN_EXP == -16381)
+        /* Intel variant: the high mantissa bit should have a value
+           determined by the exponent.  */
+    {
+        return ix > 0 ? mant_high : !mant_high;
+    } else
+        /* M68K variant: both values of the high bit are valid for the
+           greatest and smallest exponents, while other exponents require
+           the high bit to be set.  */
+    {
+        return ix == 0 || ix == 0x7fff || mant_high;
+    }
 }
-libm_hidden_def (__iscanonicall)
+libm_hidden_def(__iscanonicall)

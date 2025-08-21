@@ -1,7 +1,6 @@
-void
-__attribute__((constructor))
-xxx (void)
+void __attribute__((constructor))
+xxx(void)
 {
-  extern void baz (void);
-  baz ();
+    extern void baz(void);
+    baz();
 }

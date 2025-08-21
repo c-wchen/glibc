@@ -19,12 +19,11 @@
 #include <termios.h>
 
 /* Return 1 if FD is a terminal, 0 if not.  */
-int
-__isatty (int fd)
+int __isatty(int fd)
 {
-  struct termios term;
+    struct termios term;
 
-  return __tcgetattr (fd, &term) == 0;
+    return __tcgetattr(fd, &term) == 0;
 }
 
-weak_alias (__isatty, isatty)
+weak_alias(__isatty, isatty)

@@ -18,10 +18,9 @@
 #include "pthreadP.h"
 
 
-int
-__pthread_condattr_destroy (pthread_condattr_t *attr)
+int __pthread_condattr_destroy(pthread_condattr_t *attr)
 {
-  /* Nothing to be done.  */
-  return 0;
+    /* Nothing to be done.  */
+    return 0;
 }
-strong_alias (__pthread_condattr_destroy, pthread_condattr_destroy)
+strong_alias(__pthread_condattr_destroy, pthread_condattr_destroy)

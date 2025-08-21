@@ -29,85 +29,81 @@
 
 static struct sockaddr_in server_address;
 
-int
-open_socket_inet_tcp (void)
+int open_socket_inet_tcp(void)
 {
-  int fd = socket (AF_INET, SOCK_STREAM, IPPROTO_TCP);
-  if (fd < 0)
-    {
-      if (errno == EAFNOSUPPORT)
-        FAIL_UNSUPPORTED ("The host does not support IPv4");
-      else
-        FAIL_EXIT1 ("socket (AF_INET, SOCK_STREAM, IPPROTO_TCP): %m\n");
+    int fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    if (fd < 0) {
+        if (errno == EAFNOSUPPORT) {
+            FAIL_UNSUPPORTED("The host does not support IPv4");
+        } else {
+            FAIL_EXIT1("socket (AF_INET, SOCK_STREAM, IPPROTO_TCP): %m\n");
+        }
     }
-  return fd;
+    return fd;
 }
 
-static pid_t
-start_server (void)
+static pid_t start_server(void)
 {
-  server_address.sin_family = AF_INET;
-  server_address.sin_port = 0;
-  server_address.sin_addr.s_addr = htonl (INADDR_LOOPBACK);
+    server_address.sin_family = AF_INET;
+    server_address.sin_port = 0;
+    server_address.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
 
-  int server_sock = open_socket_inet_tcp ();
+    int server_sock = open_socket_inet_tcp();
 
-  xbind (server_sock, (struct sockaddr *) &server_address,
-         sizeof (server_address));
+    xbind(server_sock, (struct sockaddr *) &server_address,
+          sizeof(server_address));
 
-  socklen_t sa_len = sizeof (server_address);
-  xgetsockname (server_sock, (struct sockaddr *) &server_address, &sa_len);
-  xlisten (server_sock, 5);
+    socklen_t sa_len = sizeof(server_address);
+    xgetsockname(server_sock, (struct sockaddr *) &server_address, &sa_len);
+    xlisten(server_sock, 5);
 
-  pid_t my_pid = xfork ();
-  if (my_pid > 0)
-    {
-      xclose (server_sock);
-      return my_pid;
+    pid_t my_pid = xfork();
+    if (my_pid > 0) {
+        xclose(server_sock);
+        return my_pid;
     }
 
-  struct sockaddr_in client_address;
-  socklen_t ca_len = sizeof (server_address);
-  int client_sock = xaccept (server_sock, (struct sockaddr *) &client_address,
-                             &ca_len);
-  printf ("socket accepted %d\n", client_sock);
+    struct sockaddr_in client_address;
+    socklen_t ca_len = sizeof(server_address);
+    int client_sock = xaccept(server_sock, (struct sockaddr *) &client_address,
+                              &ca_len);
+    printf("socket accepted %d\n", client_sock);
 
-  _exit (0);
+    _exit(0);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  pid_t serv_pid;
-  struct sockaddr_in peer;
-  socklen_t peer_len;
+    pid_t serv_pid;
+    struct sockaddr_in peer;
+    socklen_t peer_len;
 
-  serv_pid = start_server ();
-  int client_sock = open_socket_inet_tcp ();
-  xconnect (client_sock, (const struct sockaddr *) &server_address,
-            sizeof (server_address));
+    serv_pid = start_server();
+    int client_sock = open_socket_inet_tcp();
+    xconnect(client_sock, (const struct sockaddr *) &server_address,
+             sizeof(server_address));
 
-  /* A second connect with same arguments should fail with EISCONN.  */
-  int result = connect (client_sock,
-                        (const struct sockaddr *) &server_address,
-                        sizeof (server_address));
-  if (result == 0 || errno != EISCONN)
-    FAIL_EXIT1 ("Second connect (%d), should fail with EISCONN: %m",
-                client_sock);
+    /* A second connect with same arguments should fail with EISCONN.  */
+    int result = connect(client_sock,
+                         (const struct sockaddr *) &server_address,
+                         sizeof(server_address));
+    if (result == 0 || errno != EISCONN)
+        FAIL_EXIT1("Second connect (%d), should fail with EISCONN: %m",
+                   client_sock);
 
-  peer_len = sizeof (peer);
-  xgetpeername (client_sock, (struct sockaddr *) &peer, &peer_len);
-  TEST_COMPARE (peer_len, sizeof (peer));
-  TEST_COMPARE (peer.sin_port, server_address.sin_port);
-  TEST_COMPARE_BLOB (&peer.sin_addr, sizeof (peer.sin_addr),
-                     &server_address.sin_addr,
-                     sizeof (server_address.sin_addr));
+    peer_len = sizeof(peer);
+    xgetpeername(client_sock, (struct sockaddr *) &peer, &peer_len);
+    TEST_COMPARE(peer_len, sizeof(peer));
+    TEST_COMPARE(peer.sin_port, server_address.sin_port);
+    TEST_COMPARE_BLOB(&peer.sin_addr, sizeof(peer.sin_addr),
+                      &server_address.sin_addr,
+                      sizeof(server_address.sin_addr));
 
-  int status;
-  xwaitpid (serv_pid, &status, 0);
-  TEST_COMPARE (status, 0);
+    int status;
+    xwaitpid(serv_pid, &status, 0);
+    TEST_COMPARE(status, 0);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

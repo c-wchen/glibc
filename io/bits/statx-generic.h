@@ -62,8 +62,8 @@
 __BEGIN_DECLS
 
 /* Fill *BUF with information about PATH in DIRFD.  */
-int statx (int __dirfd, const char *__restrict __path, int __flags,
-           unsigned int __mask, struct statx *__restrict __buf)
-  __THROW __nonnull ((5));
+int statx(int __dirfd, const char *__restrict __path, int __flags,
+          unsigned int __mask, struct statx *__restrict __buf)
+__THROW __nonnull((5));
 
 __END_DECLS

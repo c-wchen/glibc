@@ -1,2 +1,2 @@
-#define COMPILE_WPRINTF	1
+#define COMPILE_WPRINTF 1
 #include "printf-parsemb.c"

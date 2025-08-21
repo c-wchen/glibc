@@ -18,12 +18,11 @@
 
 /* Return sysconf (_SC_THREAD_STACK_MIN).  */
 
-static inline long int
-__get_pthread_stack_min (void)
+static inline long int __get_pthread_stack_min(void)
 {
-#ifdef	PTHREAD_STACK_MIN
-      return PTHREAD_STACK_MIN;
+#ifdef  PTHREAD_STACK_MIN
+    return PTHREAD_STACK_MIN;
 #else
-      return -1;
+    return -1;
 #endif
 }

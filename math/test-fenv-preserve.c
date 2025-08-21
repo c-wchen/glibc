@@ -19,38 +19,32 @@
 #include <fenv.h>
 #include <stdio.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
 #if FE_ALL_EXCEPT
-  fenv_t env;
+    fenv_t env;
 
-  if (feenableexcept (FE_INVALID) != 0)
-    {
-      puts ("feenableexcept (FE_INVALID) failed, cannot test");
-      return 0;
+    if (feenableexcept(FE_INVALID) != 0) {
+        puts("feenableexcept (FE_INVALID) failed, cannot test");
+        return 0;
     }
 
-  if (fegetenv (&env) != 0)
-    {
-      puts ("fegetenv failed, cannot test");
-      return 0;
+    if (fegetenv(&env) != 0) {
+        puts("fegetenv failed, cannot test");
+        return 0;
     }
 
-  int ret = fegetexcept ();
-  if (ret == FE_INVALID)
-    {
-      puts ("fegetenv preserved exception mask, OK");
-      return 0;
-    }
-  else
-    {
-      printf ("fegetexcept returned %d, expected %d\n", ret, FE_INVALID);
-      return 1;
+    int ret = fegetexcept();
+    if (ret == FE_INVALID) {
+        puts("fegetenv preserved exception mask, OK");
+        return 0;
+    } else {
+        printf("fegetexcept returned %d, expected %d\n", ret, FE_INVALID);
+        return 1;
     }
 #else
-  puts ("No exceptions defined, cannot test");
-  return 0;
+    puts("No exceptions defined, cannot test");
+    return 0;
 #endif
 }
 

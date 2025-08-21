@@ -31,29 +31,28 @@
 #if SHLIB_COMPAT (libc, GLIBC_2_1, GLIBC_2_2)
 
 int
-attribute_compat_text_section
-_IO_old_fsetpos64 (FILE *fp, const __fpos64_t *posp)
+attribute_compat_text_section _IO_old_fsetpos64(FILE *fp, const __fpos64_t *posp)
 {
-  int result;
-  CHECK_FILE (fp, EOF);
-  _IO_acquire_lock (fp);
-  if (_IO_seekpos_unlocked (fp, posp->__pos, _IOS_INPUT|_IOS_OUTPUT)
-      == _IO_pos_BAD)
-    {
-      /* ANSI explicitly requires setting errno to a positive value on
-	 failure.  */
-      if (errno == 0)
-	__set_errno (EIO);
-      result = EOF;
+    int result;
+    CHECK_FILE(fp, EOF);
+    _IO_acquire_lock(fp);
+    if (_IO_seekpos_unlocked(fp, posp->__pos, _IOS_INPUT | _IOS_OUTPUT)
+        == _IO_pos_BAD) {
+        /* ANSI explicitly requires setting errno to a positive value on
+        failure.  */
+        if (errno == 0) {
+            __set_errno(EIO);
+        }
+        result = EOF;
+    } else {
+        result = 0;
     }
-  else
-    result = 0;
-  _IO_release_lock (fp);
-  return result;
+    _IO_release_lock(fp);
+    return result;
 }
 
-compat_symbol (libc, _IO_old_fsetpos64, _IO_fsetpos64, GLIBC_2_1);
-strong_alias (_IO_old_fsetpos64, __old_fsetpos64)
-compat_symbol (libc, __old_fsetpos64, fsetpos64, GLIBC_2_1);
+compat_symbol(libc, _IO_old_fsetpos64, _IO_fsetpos64, GLIBC_2_1);
+strong_alias(_IO_old_fsetpos64, __old_fsetpos64)
+compat_symbol(libc, __old_fsetpos64, fsetpos64, GLIBC_2_1);
 
 #endif

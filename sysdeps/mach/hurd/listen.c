@@ -25,13 +25,13 @@
    N connection requests will be queued before further requests are refused.
    Returns 0 on success, -1 for errors.  */
 
-int
-__listen (int fd, int n)
+int __listen(int fd, int n)
 {
-  error_t err = HURD_DPORT_USE (fd, __socket_listen (port, n));
-  if (err)
-    return __hurd_dfail (fd, err);
-  return 0;
+    error_t err = HURD_DPORT_USE(fd, __socket_listen(port, n));
+    if (err) {
+        return __hurd_dfail(fd, err);
+    }
+    return 0;
 }
 
-weak_alias (__listen, listen)
+weak_alias(__listen, listen)

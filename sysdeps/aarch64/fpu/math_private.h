@@ -25,16 +25,14 @@
 /* Use inline round and lround instructions.  */
 #define TOINT_INTRINSICS 1
 
-static inline double_t
-roundtoint (double_t x)
+static inline double_t roundtoint(double_t x)
 {
-  return round (x);
+    return round(x);
 }
 
-static inline int32_t
-converttoint (double_t x)
+static inline int32_t converttoint(double_t x)
 {
-  return lround (x);
+    return lround(x);
 }
 
 #include_next <math_private.h>

@@ -26,5 +26,5 @@ static char rcsid[] = "$NetBSD: s_lib_version.c,v 1.6 1995/05/10 20:47:44 jtc Ex
 #undef _LIB_VERSION
 #if LIBM_SVID_COMPAT
 _LIB_VERSION_TYPE _LIB_VERSION_INTERNAL = _POSIX_;
-compat_symbol (libm, _LIB_VERSION_INTERNAL, _LIB_VERSION, GLIBC_2_0);
+compat_symbol(libm, _LIB_VERSION_INTERNAL, _LIB_VERSION, GLIBC_2_0);
 #endif

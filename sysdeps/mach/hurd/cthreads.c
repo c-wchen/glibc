@@ -23,26 +23,23 @@
 
 /* Placeholder for key creation routine from Hurd cthreads library.  */
 int
-weak_function
-__cthread_keycreate (__cthread_key_t *key)
+weak_function __cthread_keycreate(__cthread_key_t *key)
 {
-  *key = -1;
-  return __hurd_fail (ENOSYS);
+    *key = -1;
+    return __hurd_fail(ENOSYS);
 }
 
 /* Placeholder for key retrieval routine from Hurd cthreads library.  */
 int
-weak_function
-__cthread_getspecific (__cthread_key_t key, void **pval)
+weak_function __cthread_getspecific(__cthread_key_t key, void **pval)
 {
-  *pval = NULL;
-  return __hurd_fail (ENOSYS);
+    *pval = NULL;
+    return __hurd_fail(ENOSYS);
 }
 
 /* Placeholder for key setting routine from Hurd cthreads library.  */
 int
-weak_function
-__cthread_setspecific (__cthread_key_t key, void *val)
+weak_function __cthread_setspecific(__cthread_key_t key, void *val)
 {
-  return __hurd_fail (ENOSYS);
+    return __hurd_fail(ENOSYS);
 }

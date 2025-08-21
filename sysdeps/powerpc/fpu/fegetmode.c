@@ -18,9 +18,8 @@
 
 #include <fenv_libc.h>
 
-int
-fegetmode (femode_t *modep)
+int fegetmode(femode_t *modep)
 {
-  *modep = fegetenv_control ();
-  return 0;
+    *modep = fegetenv_control();
+    return 0;
 }

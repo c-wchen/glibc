@@ -21,16 +21,15 @@
 #include <math_private.h>
 
 FLOAT
-M_DECL_FUNC (__acospi) (FLOAT x)
+M_DECL_FUNC(__acospi)(FLOAT x)
 {
-  if (__glibc_unlikely (isgreater (M_FABS (x), M_LIT (1.0))))
-    {
-      __set_errno (EDOM);
-      return (x - x) / (x - x);
+    if (__glibc_unlikely(isgreater(M_FABS(x), M_LIT(1.0)))) {
+        __set_errno(EDOM);
+        return (x - x) / (x - x);
     }
-  FLOAT ret = M_SUF (__ieee754_acos) (x) / M_MLIT (M_PI);
-  /* Ensure that rounding upward for both acos and the division cannot
-     yield a return value from acospi greater than 1.  */
-  return isgreater (ret, M_LIT (1.0)) ? M_LIT (1.0) : ret;
+    FLOAT ret = M_SUF(__ieee754_acos)(x) / M_MLIT(M_PI);
+    /* Ensure that rounding upward for both acos and the division cannot
+       yield a return value from acospi greater than 1.  */
+    return isgreater(ret, M_LIT(1.0)) ? M_LIT(1.0) : ret;
 }
-declare_mgen_alias (__acospi, acospi);
+declare_mgen_alias(__acospi, acospi);

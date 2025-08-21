@@ -21,11 +21,10 @@
 #include <hurd/port.h>
 
 /* Change the current directory to FILE_NAME.  */
-int
-__chdir (const char *file_name)
+int __chdir(const char *file_name)
 {
-  return _hurd_change_directory_port_from_name (&_hurd_ports[INIT_PORT_CWDIR],
-						file_name);
+    return _hurd_change_directory_port_from_name(&_hurd_ports[INIT_PORT_CWDIR],
+            file_name);
 }
 
-weak_alias (__chdir, chdir)
+weak_alias(__chdir, chdir)

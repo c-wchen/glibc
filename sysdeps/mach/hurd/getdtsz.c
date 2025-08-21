@@ -23,21 +23,20 @@
 
 /* Return the maximum number of file descriptors the current process
    could possibly have (until it raises the resource limit).  */
-int
-__getdtablesize (void)
+int __getdtablesize(void)
 {
-  rlim_t limit;
+    rlim_t limit;
 
-  HURD_CRITICAL_BEGIN;
-  __mutex_lock (&_hurd_rlimit_lock);
-  limit = _hurd_rlimits[RLIMIT_NOFILE].rlim_cur;
-  __mutex_unlock (&_hurd_rlimit_lock);
-  HURD_CRITICAL_END;
+    HURD_CRITICAL_BEGIN;
+    __mutex_lock(&_hurd_rlimit_lock);
+    limit = _hurd_rlimits[RLIMIT_NOFILE].rlim_cur;
+    __mutex_unlock(&_hurd_rlimit_lock);
+    HURD_CRITICAL_END;
 
-  /* RLIM_INFINITY is not meaningful to our caller.  -1 is a good choice
-     because `sysconf (_SC_OPEN_MAX)' calls us, and -1 from sysconf means
-     "no determinable limit".  */
-  return limit == RLIM_INFINITY ? -1 : (int) limit;
+    /* RLIM_INFINITY is not meaningful to our caller.  -1 is a good choice
+       because `sysconf (_SC_OPEN_MAX)' calls us, and -1 from sysconf means
+       "no determinable limit".  */
+    return limit == RLIM_INFINITY ? -1 : (int) limit;
 }
 
-weak_alias (__getdtablesize, getdtablesize)
+weak_alias(__getdtablesize, getdtablesize)

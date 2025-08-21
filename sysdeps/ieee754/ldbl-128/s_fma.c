@@ -34,34 +34,35 @@
    See a paper by Boldo and Melquiond:
    http://www.lri.fr/~melquion/doc/08-tc.pdf  */
 
-double
-__fma (double x, double y, double z)
+double __fma(double x, double y, double z)
 {
 #if USE_FMA_BUILTIN
-  return __builtin_fma (x, y, z);
+    return __builtin_fma(x, y, z);
 #else
-  fenv_t env;
-  /* Multiplication is always exact.  */
-  long double temp = (long double) x * (long double) y;
+    fenv_t env;
+    /* Multiplication is always exact.  */
+    long double temp = (long double) x * (long double) y;
 
-  /* Ensure correct sign of an exact zero result by performing the
-     addition in the original rounding mode in that case.  */
-  if (temp == -z)
-    return (double) temp + z;
+    /* Ensure correct sign of an exact zero result by performing the
+       addition in the original rounding mode in that case.  */
+    if (temp == -z) {
+        return (double) temp + z;
+    }
 
-  union ieee854_long_double u;
-  feholdexcept (&env);
-  fesetround (FE_TOWARDZERO);
-  /* Perform addition with round to odd.  */
-  u.d = temp + (long double) z;
-  if ((u.ieee.mantissa3 & 1) == 0 && u.ieee.exponent != 0x7fff)
-    u.ieee.mantissa3 |= fetestexcept (FE_INEXACT) != 0;
-  feupdateenv (&env);
-  /* And finally truncation with round to nearest.  */
-  return (double) u.d;
+    union ieee854_long_double u;
+    feholdexcept(&env);
+    fesetround(FE_TOWARDZERO);
+    /* Perform addition with round to odd.  */
+    u.d = temp + (long double) z;
+    if ((u.ieee.mantissa3 & 1) == 0 && u.ieee.exponent != 0x7fff) {
+        u.ieee.mantissa3 |= fetestexcept(FE_INEXACT) != 0;
+    }
+    feupdateenv(&env);
+    /* And finally truncation with round to nearest.  */
+    return (double) u.d;
 #endif /* ! USE_FMA_BUILTIN  */
 }
 #ifndef __fma
-libm_alias_double (__fma, fma)
-libm_alias_double_narrow (__fma, fma)
+libm_alias_double(__fma, fma)
+libm_alias_double_narrow(__fma, fma)
 #endif

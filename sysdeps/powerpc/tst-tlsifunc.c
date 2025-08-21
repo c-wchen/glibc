@@ -23,14 +23,14 @@
 #include <libc-symbols.h>
 
 __thread int bar;
-extern __thread int bar_gd asm ("bar") __attribute__ ((tls_model("global-dynamic")));
+extern __thread int bar_gd asm("bar") __attribute__((tls_model("global-dynamic")));
 static int *bar_ptr = NULL;
 
 static uint32_t resolver_platform = 0;
 
-int foo (void);
+int foo(void);
 
-int tcb_test (void);
+int tcb_test(void);
 
 /* Offsets copied from tcb-offsets.h.  */
 #ifdef __powerpc64__
@@ -41,92 +41,83 @@ int tcb_test (void);
 # define __ATPLATOFF -28724
 #endif
 
-uint32_t
-get_platform (void)
+uint32_t get_platform(void)
 {
-  register unsigned long tp __asm__ (__TPREG);
-  uint32_t tmp;
+    register unsigned long tp __asm__(__TPREG);
+    uint32_t tmp;
 
-  __asm__  ("lwz %0,%1(%2)\n"
-	    : "=r" (tmp)
-	    : "n" (__ATPLATOFF), "b" (tp));
+    __asm__("lwz %0,%1(%2)\n"
+            : "=r"(tmp)
+            : "n"(__ATPLATOFF), "b"(tp));
 
-  return tmp;
+    return tmp;
 }
 
-void
-init_foo (void)
+void init_foo(void)
 {
-  bar_ptr = &bar_gd;
+    bar_ptr = &bar_gd;
 }
 
-int
-my_foo (void)
+int my_foo(void)
 {
-  printf ("&bar = %p and bar_ptr = %p.\n", &bar, bar_ptr);
-  return bar_ptr != NULL;
+    printf("&bar = %p and bar_ptr = %p.\n", &bar, bar_ptr);
+    return bar_ptr != NULL;
 }
 
-__ifunc (foo, foo, my_foo, void, init_foo);
+__ifunc(foo, foo, my_foo, void, init_foo);
 
-void
-init_tcb_test (void)
+void init_tcb_test(void)
 {
-  resolver_platform = get_platform ();
+    resolver_platform = get_platform();
 }
 
-int
-my_tcb_test (void)
+int my_tcb_test(void)
 {
-  printf ("resolver_platform = 0x%"PRIx32
-	  " and current platform = 0x%"PRIx32".\n",
-	  resolver_platform, get_platform ());
-  return resolver_platform != 0;
+    printf("resolver_platform = 0x%"PRIx32
+           " and current platform = 0x%"PRIx32".\n",
+           resolver_platform, get_platform());
+    return resolver_platform != 0;
 }
 
-__ifunc (tcb_test, tcb_test, my_tcb_test, void, init_tcb_test);
+__ifunc(tcb_test, tcb_test, my_tcb_test, void, init_tcb_test);
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int ret = 0;
+    int ret = 0;
 
-  if (foo ())
-    printf ("PASS: foo IFUNC resolver called once.\n");
-  else
-    {
-      printf ("FAIL: foo IFUNC resolver not called once.\n");
-      ret = 1;
+    if (foo()) {
+        printf("PASS: foo IFUNC resolver called once.\n");
+    } else {
+        printf("FAIL: foo IFUNC resolver not called once.\n");
+        ret = 1;
     }
 
-  if (&bar == bar_ptr)
-    printf ("PASS: bar address read from IFUNC resolver is correct.\n");
+    if (&bar == bar_ptr) {
+        printf("PASS: bar address read from IFUNC resolver is correct.\n");
+    }
 #if !defined TST_TLSIFUNC_STATIC || !defined PIC \
     || defined HIDDEN_VAR_NEEDS_DYNAMIC_RELOC
-  else
-    {
-      printf ("FAIL: bar address read from IFUNC resolver is incorrect.\n");
-      ret = 1;
+    else {
+        printf("FAIL: bar address read from IFUNC resolver is incorrect.\n");
+        ret = 1;
     }
 #endif
 
-  if (tcb_test ())
-    printf ("PASS: tcb_test IFUNC resolver called once.\n");
-  else
-    {
-      printf ("FAIL: tcb_test IFUNC resolver not called once.\n");
-      ret = 1;
+    if (tcb_test()) {
+        printf("PASS: tcb_test IFUNC resolver called once.\n");
+    } else {
+        printf("FAIL: tcb_test IFUNC resolver not called once.\n");
+        ret = 1;
     }
 
-  if (resolver_platform == get_platform ())
-    printf ("PASS: platform read from IFUNC resolver is correct.\n");
-  else
-    {
-      printf ("FAIL: platform read from IFUNC resolver is incorrect.\n");
-      ret = 1;
+    if (resolver_platform == get_platform()) {
+        printf("PASS: platform read from IFUNC resolver is correct.\n");
+    } else {
+        printf("FAIL: platform read from IFUNC resolver is incorrect.\n");
+        ret = 1;
     }
 
-  return ret;
+    return ret;
 }
 
 #include <support/test-driver.c>

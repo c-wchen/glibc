@@ -20,10 +20,9 @@
 #include <wchar.h>
 
 /* Read formatted input from STREAM according to the format string FORMAT.  */
-int
-__isoc23_vfwscanf (FILE *stream, const wchar_t *format, va_list args)
+int __isoc23_vfwscanf(FILE *stream, const wchar_t *format, va_list args)
 {
-  return __vfwscanf_internal (stream, format, args,
-			      SCANF_ISOC99_A | SCANF_ISOC23_BIN_CST);
+    return __vfwscanf_internal(stream, format, args,
+                               SCANF_ISOC99_A | SCANF_ISOC23_BIN_CST);
 }
-libc_hidden_def (__isoc23_vfwscanf)
+libc_hidden_def(__isoc23_vfwscanf)

@@ -68,121 +68,116 @@ inline
 #endif
 #endif
 static unsigned int
-hash (register const char *str, register size_t len)
+hash(register const char *str, register size_t len)
 {
-  static const unsigned char asso_values[] =
-    {
-      36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
-      36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
-      36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
-      36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
-      36, 36, 36, 36, 36, 36, 36, 36, 25, 20,
-      15, 10, 36, 36, 36, 36, 36, 36, 36, 36,
-      36, 36, 36, 36, 36, 36, 36,  5,  0,  0,
-       5, 36,  0,  0, 36, 36, 36,  5,  0, 36,
-       0, 36,  0, 36,  0, 36, 36,  0, 36, 36,
-      36, 36, 36, 36, 36,  0, 36,  5,  0,  0,
-       5,  0, 36,  5,  0,  0, 36, 36, 36,  0,
-       0,  0,  0,  0,  0,  0,  0,  0, 36, 36,
-       0, 36, 36, 36, 36, 36, 36, 36, 36, 36,
-      36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
-      36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
-      36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
-      36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
-      36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
-      36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
-      36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
-      36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
-      36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
-      36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
-      36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
-      36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
-      36, 36, 36, 36, 36, 36
+    static const unsigned char asso_values[] = {
+        36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
+        36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
+        36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
+        36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
+        36, 36, 36, 36, 36, 36, 36, 36, 25, 20,
+        15, 10, 36, 36, 36, 36, 36, 36, 36, 36,
+        36, 36, 36, 36, 36, 36, 36,  5,  0,  0,
+        5, 36,  0,  0, 36, 36, 36,  5,  0, 36,
+        0, 36,  0, 36,  0, 36, 36,  0, 36, 36,
+        36, 36, 36, 36, 36,  0, 36,  5,  0,  0,
+        5,  0, 36,  5,  0,  0, 36, 36, 36,  0,
+        0,  0,  0,  0,  0,  0,  0,  0, 36, 36,
+        0, 36, 36, 36, 36, 36, 36, 36, 36, 36,
+        36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
+        36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
+        36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
+        36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
+        36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
+        36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
+        36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
+        36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
+        36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
+        36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
+        36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
+        36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
+        36, 36, 36, 36, 36, 36
     };
-  register unsigned int hval = len;
+    register unsigned int hval = len;
 
-  switch (hval)
-    {
-      default:
-        hval += asso_values[(unsigned char)str[8]];
-      /*FALLTHROUGH*/
-      case 8:
-      case 7:
-      case 6:
-      case 5:
-        hval += asso_values[(unsigned char)str[4]];
-      /*FALLTHROUGH*/
-      case 4:
-      case 3:
-      case 2:
-        hval += asso_values[(unsigned char)str[1]];
-      /*FALLTHROUGH*/
-      case 1:
-        hval += asso_values[(unsigned char)str[0]];
-        break;
+    switch (hval) {
+        default:
+            hval += asso_values[(unsigned char)str[8]];
+        /*FALLTHROUGH*/
+        case 8:
+        case 7:
+        case 6:
+        case 5:
+            hval += asso_values[(unsigned char)str[4]];
+        /*FALLTHROUGH*/
+        case 4:
+        case 3:
+        case 2:
+            hval += asso_values[(unsigned char)str[1]];
+        /*FALLTHROUGH*/
+        case 1:
+            hval += asso_values[(unsigned char)str[0]];
+            break;
     }
-  return hval + asso_values[(unsigned char)str[len - 1]];
+    return hval + asso_values[(unsigned char)str[len - 1]];
 }
 
-const struct keyword_t *
-charmap_hash (register const char *str, register size_t len)
+const struct keyword_t *charmap_hash(register const char *str, register size_t len)
 {
-  static const struct keyword_t wordlist[] =
-    {
-      {""}, {""}, {""},
+    static const struct keyword_t wordlist[] = {
+        {""}, {""}, {""},
 #line 38 "charmap-kw.gperf"
-      {"END",             tok_end,             0},
-      {""},
+        {"END",             tok_end,             0},
+        {""},
 #line 39 "charmap-kw.gperf"
-      {"WIDTH",           tok_width,           0},
+        {"WIDTH",           tok_width,           0},
 #line 34 "charmap-kw.gperf"
-      {"escseq",          tok_escseq,          1},
+        {"escseq",          tok_escseq,          1},
 #line 36 "charmap-kw.gperf"
-      {"include",         tok_include,         1},
-      {""}, {""},
+        {"include",         tok_include,         1},
+        {""}, {""},
 #line 27 "charmap-kw.gperf"
-      {"mb_cur_min",      tok_mb_cur_min,      1},
+        {"mb_cur_min",      tok_mb_cur_min,      1},
 #line 28 "charmap-kw.gperf"
-      {"escape_char",     tok_escape_char,     1},
+        {"escape_char",     tok_escape_char,     1},
 #line 29 "charmap-kw.gperf"
-      {"comment_char",    tok_comment_char,    1},
+        {"comment_char",    tok_comment_char,    1},
 #line 25 "charmap-kw.gperf"
-      {"code_set_name",   tok_code_set_name,   1},
+        {"code_set_name",   tok_code_set_name,   1},
 #line 40 "charmap-kw.gperf"
-      {"WIDTH_VARIABLE",  tok_width_variable,  0},
+        {"WIDTH_VARIABLE",  tok_width_variable,  0},
 #line 26 "charmap-kw.gperf"
-      {"mb_cur_max",      tok_mb_cur_max,      1},
+        {"mb_cur_max",      tok_mb_cur_max,      1},
 #line 35 "charmap-kw.gperf"
-      {"addset",          tok_addset,          1},
+        {"addset",          tok_addset,          1},
 #line 37 "charmap-kw.gperf"
-      {"CHARMAP",         tok_charmap,         0},
+        {"CHARMAP",         tok_charmap,         0},
 #line 41 "charmap-kw.gperf"
-      {"WIDTH_DEFAULT",   tok_width_default,   0},
-      {""},
+        {"WIDTH_DEFAULT",   tok_width_default,   0},
+        {""},
 #line 33 "charmap-kw.gperf"
-      {"g3esc",           tok_g3esc,           1},
-      {""}, {""}, {""}, {""},
+        {"g3esc",           tok_g3esc,           1},
+        {""}, {""}, {""}, {""},
 #line 32 "charmap-kw.gperf"
-      {"g2esc",           tok_g2esc,           1},
-      {""}, {""}, {""}, {""},
+        {"g2esc",           tok_g2esc,           1},
+        {""}, {""}, {""}, {""},
 #line 31 "charmap-kw.gperf"
-      {"g1esc",           tok_g1esc,           1},
-      {""}, {""}, {""}, {""},
+        {"g1esc",           tok_g1esc,           1},
+        {""}, {""}, {""}, {""},
 #line 30 "charmap-kw.gperf"
-      {"g0esc",           tok_g0esc,           1}
+        {"g0esc",           tok_g0esc,           1}
     };
 
-  if (len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH)
-    {
-      register unsigned int key = hash (str, len);
+    if (len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH) {
+        register unsigned int key = hash(str, len);
 
-      if (key <= MAX_HASH_VALUE)
-        {
-          register const char *s = wordlist[key].name;
+        if (key <= MAX_HASH_VALUE) {
+            register const char *s = wordlist[key].name;
 
-          if (*str == *s && !strncmp (str + 1, s + 1, len - 1) && s[len] == '\0')
-            return &wordlist[key];
+            if (*str == *s && !strncmp(str + 1, s + 1, len - 1) && s[len] == '\0') {
+                return &wordlist[key];
+            }
         }
     }
-  return 0;
+    return 0;
 }

@@ -21,15 +21,17 @@
 #include <math-narrow-eval.h>
 
 FLOAT
-M_DECL_FUNC (__fdim) (FLOAT x, FLOAT y)
+M_DECL_FUNC(__fdim)(FLOAT x, FLOAT y)
 {
-  if (islessequal (x, y))
-    return 0;
+    if (islessequal(x, y)) {
+        return 0;
+    }
 
-  FLOAT r = math_narrow_eval (x - y);
-  if (isinf (r) && !isinf (x) && !isinf (y))
-    __set_errno (ERANGE);
+    FLOAT r = math_narrow_eval(x - y);
+    if (isinf(r) && !isinf(x) && !isinf(y)) {
+        __set_errno(ERANGE);
+    }
 
-  return r;
+    return r;
 }
-declare_mgen_alias (__fdim, fdim);
+declare_mgen_alias(__fdim, fdim);

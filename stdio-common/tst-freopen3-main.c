@@ -30,63 +30,62 @@
 #include <support/test-driver.h>
 #include <support/xstdio.h>
 
-#define START_TEST(DESC)			\
-  do						\
-    {						\
-      fds = support_descriptors_list ();	\
-      verbose_printf (DESC);			\
-    }						\
+#define START_TEST(DESC)            \
+  do                        \
+    {                       \
+      fds = support_descriptors_list ();    \
+      verbose_printf (DESC);            \
+    }                       \
   while (0)
 
-#define END_TEST				\
-  do						\
-    {						\
-      support_descriptors_check (fds);		\
-      support_descriptors_free (fds);		\
-    }						\
+#define END_TEST                \
+  do                        \
+    {                       \
+      support_descriptors_check (fds);      \
+      support_descriptors_free (fds);       \
+    }                       \
   while (0)
 
-int
-do_test (void)
+int do_test(void)
 {
-  mtrace ();
-  struct support_descriptors *fds;
-  char *temp_dir = support_create_temp_directory ("tst-freopen3");
-  char *file1 = xasprintf ("%s/file1", temp_dir);
-  support_write_file_string (file1, "file1");
-  add_temp_file (file1);
-  char *file2 = xasprintf ("%s/file2", temp_dir);
-  support_write_file_string (file2, "file2");
-  add_temp_file (file2);
-  char *file_nodir = xasprintf ("%s/nodir/file", temp_dir);
-  FILE *fp;
-  int ret;
-  int fd;
+    mtrace();
+    struct support_descriptors *fds;
+    char *temp_dir = support_create_temp_directory("tst-freopen3");
+    char *file1 = xasprintf("%s/file1", temp_dir);
+    support_write_file_string(file1, "file1");
+    add_temp_file(file1);
+    char *file2 = xasprintf("%s/file2", temp_dir);
+    support_write_file_string(file2, "file2");
+    add_temp_file(file2);
+    char *file_nodir = xasprintf("%s/nodir/file", temp_dir);
+    FILE *fp;
+    int ret;
+    int fd;
 
-  START_TEST ("Testing w -> wx (file exists)\n");
-  fp = xfopen (file1, "w");
-  fp = FREOPEN (file2, "wx", fp);
-  TEST_VERIFY (fp == NULL);
-  END_TEST;
+    START_TEST("Testing w -> wx (file exists)\n");
+    fp = xfopen(file1, "w");
+    fp = FREOPEN(file2, "wx", fp);
+    TEST_VERIFY(fp == NULL);
+    END_TEST;
 
-  /* Test old file is closed even when opening the new file fails.  */
+    /* Test old file is closed even when opening the new file fails.  */
 
-  START_TEST ("testing r -> r (opening new file fails)\n");
-  fp = xfopen (file1, "r");
-  fd = fileno (fp);
-  fp = FREOPEN (file_nodir, "r", fp);
-  TEST_VERIFY (fp == NULL);
-  errno = 0;
-  ret = fcntl (fd, F_GETFL);
-  TEST_COMPARE (ret, -1);
-  TEST_COMPARE (errno, EBADF);
-  END_TEST;
+    START_TEST("testing r -> r (opening new file fails)\n");
+    fp = xfopen(file1, "r");
+    fd = fileno(fp);
+    fp = FREOPEN(file_nodir, "r", fp);
+    TEST_VERIFY(fp == NULL);
+    errno = 0;
+    ret = fcntl(fd, F_GETFL);
+    TEST_COMPARE(ret, -1);
+    TEST_COMPARE(errno, EBADF);
+    END_TEST;
 
-  free (temp_dir);
-  free (file1);
-  free (file2);
-  free (file_nodir);
-  return 0;
+    free(temp_dir);
+    free(file1);
+    free(file2);
+    free(file_nodir);
+    return 0;
 }
 
 #include <support/test-driver.c>

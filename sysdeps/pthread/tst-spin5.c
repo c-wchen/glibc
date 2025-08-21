@@ -25,58 +25,52 @@
 
 pthread_spinlock_t lock;
 
-void *
-thread (void *arg)
+void *thread(void *arg)
 {
-  int ret;
-  int thr_id = *(int *) arg;
+    int ret;
+    int thr_id = *(int *) arg;
 
-  ret = pthread_spin_trylock (&lock);
-  if (thr_id == 1)
-    /* thread with already acquired lock.  */
+    ret = pthread_spin_trylock(&lock);
+    if (thr_id == 1)
+        /* thread with already acquired lock.  */
     {
-      if (ret != EBUSY)
-        {
-          FAIL_EXIT1 ("pthread_spin_trylock should fail with EBUSY");
+        if (ret != EBUSY) {
+            FAIL_EXIT1("pthread_spin_trylock should fail with EBUSY");
+        }
+    } else if (thr_id == 2)
+        /* thread with released spin lock.  */
+    {
+        if (ret != 0) {
+            FAIL_EXIT1("pthread_spin_trylock should be able to acquire lock");
         }
     }
-  else if (thr_id == 2)
-    /* thread with released spin lock.  */
-    {
-      if (ret != 0)
-        {
-          FAIL_EXIT1 ("pthread_spin_trylock should be able to acquire lock");
-        }
-    }
-  return NULL;
+    return NULL;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  pthread_t thr1, thr2;
-  int ret;
-  int thr1_id = 1, thr2_id = 2;
+    pthread_t thr1, thr2;
+    int ret;
+    int thr1_id = 1, thr2_id = 2;
 
-  pthread_spin_init (&lock, PTHREAD_PROCESS_PRIVATE);
-  /* lock spin in main thread.  */
-  ret = pthread_spin_trylock (&lock);
-  if (ret != 0)
-    {
-      FAIL_EXIT1 ("Main thread should be able to acquire spin lock");
+    pthread_spin_init(&lock, PTHREAD_PROCESS_PRIVATE);
+    /* lock spin in main thread.  */
+    ret = pthread_spin_trylock(&lock);
+    if (ret != 0) {
+        FAIL_EXIT1("Main thread should be able to acquire spin lock");
     }
 
-  /* create first thread to try locking already acquired spin lock.  */
-  thr1 = xpthread_create (NULL, thread, &thr1_id);
-  xpthread_join (thr1);
+    /* create first thread to try locking already acquired spin lock.  */
+    thr1 = xpthread_create(NULL, thread, &thr1_id);
+    xpthread_join(thr1);
 
-  /* release spin lock and create thread to acquire released spin lock.  */
-  pthread_spin_unlock (&lock);
-  thr2 = xpthread_create (NULL, thread, &thr2_id);
-  xpthread_join (thr2);
+    /* release spin lock and create thread to acquire released spin lock.  */
+    pthread_spin_unlock(&lock);
+    thr2 = xpthread_create(NULL, thread, &thr2_id);
+    xpthread_join(thr2);
 
-  pthread_spin_destroy (&lock);
-  return 0;
+    pthread_spin_destroy(&lock);
+    return 0;
 }
 
 #include <support/test-driver.c>

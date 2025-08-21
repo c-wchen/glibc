@@ -19,30 +19,29 @@
 #include "thread_dbP.h"
 
 
-td_err_e
-td_thr_event_enable (const td_thrhandle_t *th, int onoff)
+td_err_e td_thr_event_enable(const td_thrhandle_t *th, int onoff)
 {
-  LOG ("td_thr_event_enable");
+    LOG("td_thr_event_enable");
 
-  if (th->th_unique != NULL)
-    {
-      /* Write the new value into the thread data structure.  */
-      td_err_e err = DB_PUT_FIELD (th->th_ta_p, th->th_unique, pthread,
-				   report_events, 0,
-				   (psaddr_t) 0 + (onoff != 0));
-      if (err != TD_OK)
-	return err;
+    if (th->th_unique != NULL) {
+        /* Write the new value into the thread data structure.  */
+        td_err_e err = DB_PUT_FIELD(th->th_ta_p, th->th_unique, pthread,
+                                    report_events, 0,
+                                    (psaddr_t) 0 + (onoff != 0));
+        if (err != TD_OK) {
+            return err;
+        }
 
-      /* Just in case we are in the window between initializing __stack_user
-	 and copying from __nptl_initial_report_events, we set it too.
-	 It doesn't hurt to do this for non-initial threads, since it
-	 won't be consulted again anyway.  It would take another fetch
-	 to get the tid and determine this isn't the initial thread,
-	 so just do it always.  */
+        /* Just in case we are in the window between initializing __stack_user
+        and copying from __nptl_initial_report_events, we set it too.
+         It doesn't hurt to do this for non-initial threads, since it
+         won't be consulted again anyway.  It would take another fetch
+         to get the tid and determine this isn't the initial thread,
+         so just do it always.  */
     }
 
-  /* We are faking it for the initial thread before its thread
-     descriptor is set up.  */
-  return DB_PUT_VALUE (th->th_ta_p, __nptl_initial_report_events, 0,
-		       (psaddr_t) 0 + (onoff != 0));
+    /* We are faking it for the initial thread before its thread
+       descriptor is set up.  */
+    return DB_PUT_VALUE(th->th_ta_p, __nptl_initial_report_events, 0,
+                        (psaddr_t) 0 + (onoff != 0));
 }

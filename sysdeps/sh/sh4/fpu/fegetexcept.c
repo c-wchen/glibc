@@ -19,13 +19,12 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-int
-fegetexcept (void)
+int fegetexcept(void)
 {
-  fpu_control_t temp;
+    fpu_control_t temp;
 
-  /* Get current exceptions.  */
-  _FPU_GETCW (temp);
+    /* Get current exceptions.  */
+    _FPU_GETCW(temp);
 
-  return (temp >> 5) & FE_ALL_EXCEPT;
+    return (temp >> 5) & FE_ALL_EXCEPT;
 }

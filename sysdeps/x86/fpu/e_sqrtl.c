@@ -19,9 +19,8 @@
 #include <math.h>
 #include <libm-alias-finite.h>
 
-long double
-__ieee754_sqrtl (long double x)
+long double __ieee754_sqrtl(long double x)
 {
-  return __builtin_sqrtl (x);
+    return __builtin_sqrtl(x);
 }
-libm_alias_finite (__ieee754_sqrtl, __sqrtl)
+libm_alias_finite(__ieee754_sqrtl, __sqrtl)

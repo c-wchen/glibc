@@ -4,6 +4,6 @@
 # define WCSLEN  __wcslen_ia32
 #endif
 
-extern __typeof (wcslen) __wcslen_ia32;
+extern __typeof(wcslen) __wcslen_ia32;
 
 #include "wcsmbs/wcslen.c"

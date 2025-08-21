@@ -28,22 +28,22 @@ DIAG_PUSH_NEEDS_COMMENT;
 #if __GNUC_PREREQ (7, 0)
 /* GCC 8 warns about the size passed to memchr being larger than
    PTRDIFF_MAX; the use of SIZE_MAX is deliberate here.  */
-DIAG_IGNORE_NEEDS_COMMENT (8, "-Wstringop-overflow=");
+DIAG_IGNORE_NEEDS_COMMENT(8, "-Wstringop-overflow=");
 #endif
 #if __GNUC_PREREQ (11, 0)
 /* Likewise GCC 11, with a different warning option.  */
-DIAG_IGNORE_NEEDS_COMMENT (11, "-Wstringop-overread");
+DIAG_IGNORE_NEEDS_COMMENT(11, "-Wstringop-overread");
 #endif
 
 /* Find the first occurrence of C in S.  */
-void *
-RAWMEMCHR (const void *s, int c)
+void *RAWMEMCHR(const void *s, int c)
 {
-  if ((unsigned char) c != '\0')
-    return memchr (s, c, (size_t)-1);
-  return (char *)s + strlen (s);
+    if ((unsigned char) c != '\0') {
+        return memchr(s, c, (size_t) -1);
+    }
+    return (char *)s + strlen(s);
 }
-libc_hidden_def (__rawmemchr)
-weak_alias (__rawmemchr, rawmemchr)
+libc_hidden_def(__rawmemchr)
+weak_alias(__rawmemchr, rawmemchr)
 
 DIAG_POP_NEEDS_COMMENT;

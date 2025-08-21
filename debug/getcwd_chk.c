@@ -20,11 +20,11 @@
 #include <sys/param.h>
 
 
-char *
-__getcwd_chk (char *buf, size_t size, size_t buflen)
+char *__getcwd_chk(char *buf, size_t size, size_t buflen)
 {
-  if (size > buflen)
-    __chk_fail ();
+    if (size > buflen) {
+        __chk_fail();
+    }
 
-  return __getcwd (buf, size);
+    return __getcwd(buf, size);
 }

@@ -32,31 +32,29 @@ static pthread_barrier_t barrier;
 /* Invoke getenv for a nonexisting environment variable in a loop.
    This checks that concurrent setenv does not invalidate the
    environment array while getenv reads it.  */
-static void *
-getenv_thread (void *ignored)
+static void *getenv_thread(void *ignored)
 {
-  xpthread_barrier_wait (&barrier);
-  while (__atomic_load_n (&running, __ATOMIC_RELAXED))
-    TEST_VERIFY (getenv ("unset_variable") == NULL);
-  return NULL;
+    xpthread_barrier_wait(&barrier);
+    while (__atomic_load_n(&running, __ATOMIC_RELAXED)) {
+        TEST_VERIFY(getenv("unset_variable") == NULL);
+    }
+    return NULL;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  xpthread_barrier_init (&barrier, NULL, 2);
-  pthread_t thr = xpthread_create (NULL, getenv_thread, NULL);
-  xpthread_barrier_wait (&barrier);
-  for (int i = 0; i < 1000; ++i)
-    {
-      char buf[30];
-      snprintf (buf, sizeof (buf), "V%d", i);
-      TEST_COMPARE (setenv (buf, buf + 1, 1), 0);
+    xpthread_barrier_init(&barrier, NULL, 2);
+    pthread_t thr = xpthread_create(NULL, getenv_thread, NULL);
+    xpthread_barrier_wait(&barrier);
+    for (int i = 0; i < 1000; ++i) {
+        char buf[30];
+        snprintf(buf, sizeof(buf), "V%d", i);
+        TEST_COMPARE(setenv(buf, buf + 1, 1), 0);
     }
-  __atomic_store_n (&running, false, __ATOMIC_RELAXED);
-  xpthread_join (thr);
-  xpthread_barrier_destroy (&barrier);
-  return 0;
+    __atomic_store_n(&running, false, __ATOMIC_RELAXED);
+    xpthread_join(thr);
+    xpthread_barrier_destroy(&barrier);
+    return 0;
 }
 
 #include <support/test-driver.c>

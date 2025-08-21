@@ -45,13 +45,13 @@ int
 /* Don't mark the compatibility function as hidden.  */
 attribute_hidden
 #endif
-__pthread_atfork (void (*prepare) (void), void (*parent) (void),
-		  void (*child) (void))
+__pthread_atfork(void (*prepare)(void), void (*parent)(void),
+                 void (*child)(void))
 {
-  return __register_atfork (prepare, parent, child, __dso_handle);
+    return __register_atfork(prepare, parent, child, __dso_handle);
 }
 #ifndef __pthread_atfork
-extern int pthread_atfork (void (*prepare) (void), void (*parent) (void),
-			   void (*child) (void)) attribute_hidden;
-weak_alias (__pthread_atfork, pthread_atfork)
+extern int pthread_atfork(void (*prepare)(void), void (*parent)(void),
+                          void (*child)(void)) attribute_hidden;
+weak_alias(__pthread_atfork, pthread_atfork)
 #endif

@@ -21,15 +21,15 @@
 #include <hurd.h>
 #include <hurd/xattr.h>
 
-int
-setxattr (const char *path, const char *name, const void *value, size_t size,
-	  int flags)
+int setxattr(const char *path, const char *name, const void *value, size_t size,
+             int flags)
 {
-  error_t err;
-  file_t port = __file_name_lookup (path, 0, 0);
-  if (port == MACH_PORT_NULL)
-    return -1;
-  err = _hurd_xattr_set (port, name, value, size, flags);
-  __mach_port_deallocate (__mach_task_self (), port);
-  return __hurd_fail (err);
+    error_t err;
+    file_t port = __file_name_lookup(path, 0, 0);
+    if (port == MACH_PORT_NULL) {
+        return -1;
+    }
+    err = _hurd_xattr_set(port, name, value, size, flags);
+    __mach_port_deallocate(__mach_task_self(), port);
+    return __hurd_fail(err);
 }

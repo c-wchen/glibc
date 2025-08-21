@@ -24,12 +24,12 @@
 # define MEMMOVE_CHK __memmove_chk
 #endif
 
-void *
-MEMMOVE_CHK (void *dest, const void *src, size_t len, size_t destlen)
+void *MEMMOVE_CHK(void *dest, const void *src, size_t len, size_t destlen)
 {
-  if (__glibc_unlikely (destlen < len))
-    __chk_fail ();
+    if (__glibc_unlikely(destlen < len)) {
+        __chk_fail();
+    }
 
-  return memmove (dest, src, len);
+    return memmove(dest, src, len);
 }
-libc_hidden_builtin_def (MEMMOVE_CHK)
+libc_hidden_builtin_def(MEMMOVE_CHK)

@@ -22,41 +22,40 @@
 
 #include <support/check.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  struct sockaddr_un sun;
+    struct sockaddr_un sun;
 
-  memset (&sun, 0xcc, sizeof (sun));
-  __sockaddr_un_set (&sun, "");
-  TEST_COMPARE (sun.sun_family, AF_UNIX);
-  TEST_COMPARE (__sockaddr_un_set (&sun, ""), 0);
+    memset(&sun, 0xcc, sizeof(sun));
+    __sockaddr_un_set(&sun, "");
+    TEST_COMPARE(sun.sun_family, AF_UNIX);
+    TEST_COMPARE(__sockaddr_un_set(&sun, ""), 0);
 
-  memset (&sun, 0xcc, sizeof (sun));
-  TEST_COMPARE (__sockaddr_un_set (&sun, "/example"), 0);
-  TEST_COMPARE_STRING (sun.sun_path, "/example");
+    memset(&sun, 0xcc, sizeof(sun));
+    TEST_COMPARE(__sockaddr_un_set(&sun, "/example"), 0);
+    TEST_COMPARE_STRING(sun.sun_path, "/example");
 
-  {
-    char pathname[108];         /* Length of sun_path (ABI constant).  */
-    memset (pathname, 'x', sizeof (pathname));
-    pathname[sizeof (pathname) - 1] = '\0';
-    memset (&sun, 0xcc, sizeof (sun));
-    TEST_COMPARE (__sockaddr_un_set (&sun, pathname), 0);
-    TEST_COMPARE (sun.sun_family, AF_UNIX);
-    TEST_COMPARE_STRING (sun.sun_path, pathname);
-  }
+    {
+        char pathname[108];         /* Length of sun_path (ABI constant).  */
+        memset(pathname, 'x', sizeof(pathname));
+        pathname[sizeof(pathname) - 1] = '\0';
+        memset(&sun, 0xcc, sizeof(sun));
+        TEST_COMPARE(__sockaddr_un_set(&sun, pathname), 0);
+        TEST_COMPARE(sun.sun_family, AF_UNIX);
+        TEST_COMPARE_STRING(sun.sun_path, pathname);
+    }
 
-  {
-    char pathname[109];
-    memset (pathname, 'x', sizeof (pathname));
-    pathname[sizeof (pathname) - 1] = '\0';
-    memset (&sun, 0xcc, sizeof (sun));
-    errno = 0;
-    TEST_COMPARE (__sockaddr_un_set (&sun, pathname), -1);
-    TEST_COMPARE (errno, EINVAL);
-  }
+    {
+        char pathname[109];
+        memset(pathname, 'x', sizeof(pathname));
+        pathname[sizeof(pathname) - 1] = '\0';
+        memset(&sun, 0xcc, sizeof(sun));
+        errno = 0;
+        TEST_COMPARE(__sockaddr_un_set(&sun, pathname), -1);
+        TEST_COMPARE(errno, EINVAL);
+    }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

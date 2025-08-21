@@ -30,25 +30,23 @@
 __BEGIN_DECLS
 
 /* Possible results of lookup using a nss_* function.  */
-enum nss_status
-{
-  NSS_STATUS_TRYAGAIN = -2,
-  NSS_STATUS_UNAVAIL,
-  NSS_STATUS_NOTFOUND,
-  NSS_STATUS_SUCCESS,
-  NSS_STATUS_RETURN
+enum nss_status {
+    NSS_STATUS_TRYAGAIN = -2,
+    NSS_STATUS_UNAVAIL,
+    NSS_STATUS_NOTFOUND,
+    NSS_STATUS_SUCCESS,
+    NSS_STATUS_RETURN
 };
 
 
 /* Data structure used for the 'gethostbyname4_r' function.  */
-struct gaih_addrtuple
-  {
+struct gaih_addrtuple {
     struct gaih_addrtuple *next;
     char *name;
     int family;
     uint32_t addr[4];
     uint32_t scopeid;
-  };
+};
 
 
 /* Overwrite service selection for database DBNAME using specification
@@ -57,8 +55,8 @@ struct gaih_addrtuple
    work around non-existing services (e.e., while booting).
    Attention: Using this function repeatedly will slowly eat up the
    whole memory since previous selection data cannot be freed.  */
-extern int __nss_configure_lookup (const char *__dbname,
-                                   const char *__string) __THROW;
+extern int __nss_configure_lookup(const char *__dbname,
+                                  const char *__string) __THROW;
 
 /* NSS-related types.  */
 struct __netgrent;
@@ -77,117 +75,117 @@ struct spwd;
 struct traced_file;
 
 /* Types of functions exported from NSS service modules.  */
-typedef enum nss_status nss_endaliasent (void);
-typedef enum nss_status nss_endetherent (void);
-typedef enum nss_status nss_endgrent (void);
-typedef enum nss_status nss_endhostent (void);
-typedef enum nss_status nss_endnetent (void);
-typedef enum nss_status nss_endnetgrent (struct __netgrent *);
-typedef enum nss_status nss_endprotoent (void);
-typedef enum nss_status nss_endpwent (void);
-typedef enum nss_status nss_endrpcent (void);
-typedef enum nss_status nss_endservent (void);
-typedef enum nss_status nss_endsgent (void);
-typedef enum nss_status nss_endspent (void);
-typedef enum nss_status nss_getaliasbyname_r (const char *, struct aliasent *,
-                                              char *, size_t, int *);
-typedef enum nss_status nss_getaliasent_r (struct aliasent *,
-                                           char *, size_t, int *);
-typedef enum nss_status nss_getcanonname_r (const char *, char *, size_t,
-                                            char **, int *, int *);
-typedef enum nss_status nss_getetherent_r (struct etherent *,
-                                           char *, size_t, int *);
-typedef enum nss_status nss_getgrent_r (struct group *, char *, size_t, int *);
-typedef enum nss_status nss_getgrgid_r (__gid_t, struct group *,
+typedef enum nss_status nss_endaliasent(void);
+typedef enum nss_status nss_endetherent(void);
+typedef enum nss_status nss_endgrent(void);
+typedef enum nss_status nss_endhostent(void);
+typedef enum nss_status nss_endnetent(void);
+typedef enum nss_status nss_endnetgrent(struct __netgrent *);
+typedef enum nss_status nss_endprotoent(void);
+typedef enum nss_status nss_endpwent(void);
+typedef enum nss_status nss_endrpcent(void);
+typedef enum nss_status nss_endservent(void);
+typedef enum nss_status nss_endsgent(void);
+typedef enum nss_status nss_endspent(void);
+typedef enum nss_status nss_getaliasbyname_r(const char *, struct aliasent *,
+        char *, size_t, int *);
+typedef enum nss_status nss_getaliasent_r(struct aliasent *,
+        char *, size_t, int *);
+typedef enum nss_status nss_getcanonname_r(const char *, char *, size_t,
+        char **, int *, int *);
+typedef enum nss_status nss_getetherent_r(struct etherent *,
+        char *, size_t, int *);
+typedef enum nss_status nss_getgrent_r(struct group *, char *, size_t, int *);
+typedef enum nss_status nss_getgrgid_r(__gid_t, struct group *,
+                                       char *, size_t, int *);
+typedef enum nss_status nss_getgrnam_r(const char *, struct group *,
+                                       char *, size_t, int *);
+typedef enum nss_status nss_gethostbyaddr2_r(const void *, __socklen_t, int,
+        struct hostent *, char *, size_t,
+        int *, int *, int32_t *);
+typedef enum nss_status nss_gethostbyaddr_r(const void *, __socklen_t, int,
+        struct hostent *, char *, size_t,
+        int *, int *);
+typedef enum nss_status nss_gethostbyname2_r(const char *, int,
+        struct hostent *, char *, size_t,
+        int *, int *);
+typedef enum nss_status nss_gethostbyname3_r(const char *, int,
+        struct hostent *, char *, size_t,
+        int *, int *, int32_t *,
+        char **);
+typedef enum nss_status nss_gethostbyname4_r(const char *,
+        struct gaih_addrtuple **,
+        char *, size_t,
+        int *, int *, int32_t *);
+typedef enum nss_status nss_gethostbyname_r(const char *, struct hostent *,
+        char *, size_t, int *, int *);
+typedef enum nss_status nss_gethostent_r(struct hostent *, char *, size_t,
+        int *, int *);
+typedef enum nss_status nss_gethostton_r(const char *, struct etherent *,
+        char *, size_t, int *);
+typedef enum nss_status nss_getnetbyaddr_r(uint32_t, int, struct netent *,
+        char *, size_t, int *, int *);
+typedef enum nss_status nss_getnetbyname_r(const char *, struct netent *,
+        char *, size_t, int *, int *);
+typedef enum nss_status nss_getnetent_r(struct netent *,
+                                        char *, size_t, int *, int *);
+typedef enum nss_status nss_getnetgrent_r(struct __netgrent *,
+        char *, size_t, int *);
+typedef enum nss_status nss_getntohost_r(const struct ether_addr *,
+        struct etherent *, char *, size_t,
+        int *);
+typedef enum nss_status nss_getprotobyname_r(const char *, struct protoent *,
+        char *, size_t, int *);
+typedef enum nss_status nss_getprotobynumber_r(int, struct protoent *,
+        char *, size_t, int *);
+typedef enum nss_status nss_getprotoent_r(struct protoent *,
+        char *, size_t, int *);
+typedef enum nss_status nss_getpublickey(const char *, char *, int *);
+typedef enum nss_status nss_getpwent_r(struct passwd *,
+                                       char *, size_t, int *);
+typedef enum nss_status nss_getpwnam_r(const char *, struct passwd *,
+                                       char *, size_t, int *);
+typedef enum nss_status nss_getpwuid_r(__uid_t, struct passwd *,
+                                       char *, size_t, int *);
+typedef enum nss_status nss_getrpcbyname_r(const char *, struct rpcent *,
+        char *, size_t, int *);
+typedef enum nss_status nss_getrpcbynumber_r(int, struct rpcent *,
+        char *, size_t, int *);
+typedef enum nss_status nss_getrpcent_r(struct rpcent *,
                                         char *, size_t, int *);
-typedef enum nss_status nss_getgrnam_r (const char *, struct group *,
-                                        char *, size_t, int *);
-typedef enum nss_status nss_gethostbyaddr2_r (const void *, __socklen_t, int,
-                                              struct hostent *, char *, size_t,
-                                              int *, int *, int32_t *);
-typedef enum nss_status nss_gethostbyaddr_r (const void *, __socklen_t, int,
-                                             struct hostent *, char *, size_t,
-                                             int *, int *);
-typedef enum nss_status nss_gethostbyname2_r (const char *, int,
-                                              struct hostent *, char *, size_t,
-                                              int *, int *);
-typedef enum nss_status nss_gethostbyname3_r (const char *, int,
-                                              struct hostent *, char *, size_t,
-                                              int *, int *, int32_t *,
-                                              char **);
-typedef enum nss_status nss_gethostbyname4_r (const char *,
-                                              struct gaih_addrtuple **,
-                                              char *, size_t,
-                                              int *, int *, int32_t *);
-typedef enum nss_status nss_gethostbyname_r (const char *, struct hostent *,
-                                             char *, size_t, int *, int *);
-typedef enum nss_status nss_gethostent_r (struct hostent *, char *, size_t,
-                                          int *, int *);
-typedef enum nss_status nss_gethostton_r (const char *, struct etherent *,
-                                          char *, size_t, int *);
-typedef enum nss_status nss_getnetbyaddr_r (uint32_t, int, struct netent *,
-                                            char *, size_t, int *, int *);
-typedef enum nss_status nss_getnetbyname_r (const char *, struct netent *,
-                                            char *, size_t, int *, int *);
-typedef enum nss_status nss_getnetent_r (struct netent *,
-                                         char *, size_t, int *, int *);
-typedef enum nss_status nss_getnetgrent_r (struct __netgrent *,
-                                           char *, size_t, int *);
-typedef enum nss_status nss_getntohost_r (const struct ether_addr *,
-                                          struct etherent *, char *, size_t,
-                                          int *);
-typedef enum nss_status nss_getprotobyname_r (const char *, struct protoent *,
-                                              char *, size_t, int *);
-typedef enum nss_status nss_getprotobynumber_r (int, struct protoent *,
-                                                char *, size_t, int *);
-typedef enum nss_status nss_getprotoent_r (struct protoent *,
-                                           char *, size_t, int *);
-typedef enum nss_status nss_getpublickey (const char *, char *, int *);
-typedef enum nss_status nss_getpwent_r (struct passwd *,
-                                        char *, size_t, int *);
-typedef enum nss_status nss_getpwnam_r (const char *, struct passwd *,
-                                        char *, size_t, int *);
-typedef enum nss_status nss_getpwuid_r (__uid_t, struct passwd *,
-                                        char *, size_t, int *);
-typedef enum nss_status nss_getrpcbyname_r (const char *, struct rpcent *,
-                                            char *, size_t, int *);
-typedef enum nss_status nss_getrpcbynumber_r (int, struct rpcent *,
-                                              char *, size_t, int *);
-typedef enum nss_status nss_getrpcent_r (struct rpcent *,
-                                         char *, size_t, int *);
-typedef enum nss_status nss_getsecretkey (const char *, char *, char *, int *);
-typedef enum nss_status nss_getservbyname_r (const char *, const char *,
-                                             struct servent *, char *, size_t,
-                                             int *);
-typedef enum nss_status nss_getservbyport_r (int, const char *,
-                                             struct servent *, char *, size_t,
-                                             int *);
-typedef enum nss_status nss_getservent_r (struct servent *, char *, size_t,
-                                          int *);
-typedef enum nss_status nss_getsgent_r (struct sgrp *, char *, size_t, int *);
-typedef enum nss_status nss_getsgnam_r (const char *, struct sgrp *,
-                                        char *, size_t, int *);
-typedef enum nss_status nss_getspent_r (struct spwd *, char *, size_t, int *);
-typedef enum nss_status nss_getspnam_r (const char *, struct spwd *,
-                                        char *, size_t, int *);
-typedef void nss_init (void (*) (size_t, struct traced_file *));
-typedef enum nss_status nss_initgroups_dyn (const char *, __gid_t, long int *,
-                                            long int *, __gid_t **, long int,
-                                            int *);
-typedef enum nss_status nss_netname2user (char [], __uid_t *, __gid_t *,
-                                          int *, __gid_t *, int *);
-typedef enum nss_status nss_setaliasent (void);
-typedef enum nss_status nss_setetherent (int);
-typedef enum nss_status nss_setgrent (int);
-typedef enum nss_status nss_sethostent (int);
-typedef enum nss_status nss_setnetent (int);
-typedef enum nss_status nss_setnetgrent (const char *, struct __netgrent *);
-typedef enum nss_status nss_setprotoent (int);
-typedef enum nss_status nss_setpwent (int);
-typedef enum nss_status nss_setrpcent (int);
-typedef enum nss_status nss_setservent (int);
-typedef enum nss_status nss_setsgent (int);
-typedef enum nss_status nss_setspent (int);
+typedef enum nss_status nss_getsecretkey(const char *, char *, char *, int *);
+typedef enum nss_status nss_getservbyname_r(const char *, const char *,
+        struct servent *, char *, size_t,
+        int *);
+typedef enum nss_status nss_getservbyport_r(int, const char *,
+        struct servent *, char *, size_t,
+        int *);
+typedef enum nss_status nss_getservent_r(struct servent *, char *, size_t,
+        int *);
+typedef enum nss_status nss_getsgent_r(struct sgrp *, char *, size_t, int *);
+typedef enum nss_status nss_getsgnam_r(const char *, struct sgrp *,
+                                       char *, size_t, int *);
+typedef enum nss_status nss_getspent_r(struct spwd *, char *, size_t, int *);
+typedef enum nss_status nss_getspnam_r(const char *, struct spwd *,
+                                       char *, size_t, int *);
+typedef void nss_init(void (*)(size_t, struct traced_file *));
+typedef enum nss_status nss_initgroups_dyn(const char *, __gid_t, long int *,
+        long int *, __gid_t **, long int,
+        int *);
+typedef enum nss_status nss_netname2user(char [], __uid_t *, __gid_t *,
+        int *, __gid_t *, int *);
+typedef enum nss_status nss_setaliasent(void);
+typedef enum nss_status nss_setetherent(int);
+typedef enum nss_status nss_setgrent(int);
+typedef enum nss_status nss_sethostent(int);
+typedef enum nss_status nss_setnetent(int);
+typedef enum nss_status nss_setnetgrent(const char *, struct __netgrent *);
+typedef enum nss_status nss_setprotoent(int);
+typedef enum nss_status nss_setpwent(int);
+typedef enum nss_status nss_setrpcent(int);
+typedef enum nss_status nss_setservent(int);
+typedef enum nss_status nss_setsgent(int);
+typedef enum nss_status nss_setspent(int);
 
 /* Declare all NSS functions for MODULE.  */
 #define NSS_DECLARE_MODULE_FUNCTIONS(module)                            \

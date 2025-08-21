@@ -26,62 +26,56 @@
 static int the_sig;
 
 
-static void
-eintr_handler (int sig)
+static void eintr_handler(int sig)
 {
-  if (sig != the_sig)
-    {
-      /* empty if statement avoids warn unused result */
-      if (write (STDOUT_FILENO,
-		 "eintr_handler: signal number wrong\n", 35) < 35) {};
-      _exit (1);
+    if (sig != the_sig) {
+        /* empty if statement avoids warn unused result */
+        if (write(STDOUT_FILENO,
+                  "eintr_handler: signal number wrong\n", 35) < 35) {};
+        _exit(1);
     }
-  if (write (STDOUT_FILENO, ".", 1)) {/* Avoid warn unused result */};
+    if (write(STDOUT_FILENO, ".", 1)) {/* Avoid warn unused result */};
 }
 
 
-static void *
-eintr_source (void *arg)
+static void *eintr_source(void *arg)
 {
-  struct timespec ts = { .tv_sec = 0, .tv_nsec = 500000 };
+    struct timespec ts = { .tv_sec = 0, .tv_nsec = 500000 };
 
-  if (arg == NULL)
-    {
-      sigset_t ss;
-      sigemptyset (&ss);
-      sigaddset (&ss, the_sig);
-      xpthread_sigmask (SIG_BLOCK, &ss, NULL);
+    if (arg == NULL) {
+        sigset_t ss;
+        sigemptyset(&ss);
+        sigaddset(&ss, the_sig);
+        xpthread_sigmask(SIG_BLOCK, &ss, NULL);
     }
 
-  while (1)
-    {
-      if (arg != NULL)
-	pthread_kill (*(pthread_t *) arg, the_sig);
-      else
-	kill (getpid (), the_sig);
+    while (1) {
+        if (arg != NULL) {
+            pthread_kill(*(pthread_t *) arg, the_sig);
+        } else {
+            kill(getpid(), the_sig);
+        }
 
-      nanosleep (&ts, NULL);
+        nanosleep(&ts, NULL);
     }
 
-  /* NOTREACHED */
-  return NULL;
+    /* NOTREACHED */
+    return NULL;
 }
 
 
-static void
-setup_eintr (int sig, pthread_t *thp)
+static void setup_eintr(int sig, pthread_t *thp)
 {
-  struct sigaction sa;
-  sigemptyset (&sa.sa_mask);
-  sa.sa_flags = 0;
-  sa.sa_handler = eintr_handler;
-  if (sigaction (sig, &sa, NULL) != 0)
-    {
-      puts ("setup_eintr: sigaction failed");
-      exit (1);
+    struct sigaction sa;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+    sa.sa_handler = eintr_handler;
+    if (sigaction(sig, &sa, NULL) != 0) {
+        puts("setup_eintr: sigaction failed");
+        exit(1);
     }
-  the_sig = sig;
+    the_sig = sig;
 
-  /* Create the thread which will fire off the signals.  */
-  xpthread_create (NULL, eintr_source, thp);
+    /* Create the thread which will fire off the signals.  */
+    xpthread_create(NULL, eintr_source, thp);
 }

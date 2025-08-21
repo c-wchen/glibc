@@ -86,45 +86,49 @@
 #include <resolv/resolv-internal.h>
 
 /* Author: paul vixie, 29may94.  */
-int
-__libc_res_queriesmatch (const unsigned char *buf1, const unsigned char *eom1,
-                         const unsigned char *buf2, const unsigned char *eom2)
+int __libc_res_queriesmatch(const unsigned char *buf1, const unsigned char *eom1,
+                            const unsigned char *buf2, const unsigned char *eom2)
 {
-  if (eom1 - buf1 < HFIXEDSZ || eom2 - buf2 < HFIXEDSZ)
-    return -1;
-
-  /* Only header section present in replies to dynamic update
-     packets.  */
-  if ((((UHEADER *) buf1)->opcode == ns_o_update) &&
-      (((UHEADER *) buf2)->opcode == ns_o_update))
-    return 1;
-
-  /* Note that we initially do not convert QDCOUNT to the host byte
-     order.  We can compare it with the second buffer's QDCOUNT
-     value without doing this.  */
-  int qdcount = ((UHEADER *) buf1)->qdcount;
-  if (qdcount != ((UHEADER *) buf2)->qdcount)
-    return 0;
-
-  qdcount = htons (qdcount);
-  const unsigned char *cp = buf1 + HFIXEDSZ;
-
-  while (qdcount-- > 0)
-    {
-      char tname[MAXDNAME+1];
-      int n, ttype, tclass;
-
-      n = __libc_dn_expand (buf1, eom1, cp, tname, sizeof tname);
-      if (n < 0)
+    if (eom1 - buf1 < HFIXEDSZ || eom2 - buf2 < HFIXEDSZ) {
         return -1;
-      cp += n;
-      if (eom1 - cp < 4)
-        return -1;
-      NS_GET16 (ttype, cp);
-      NS_GET16 (tclass, cp);
-      if (!__libc_res_nameinquery (tname, ttype, tclass, buf2, eom2))
+    }
+
+    /* Only header section present in replies to dynamic update
+       packets.  */
+    if ((((UHEADER *) buf1)->opcode == ns_o_update) &&
+        (((UHEADER *) buf2)->opcode == ns_o_update)) {
+        return 1;
+    }
+
+    /* Note that we initially do not convert QDCOUNT to the host byte
+       order.  We can compare it with the second buffer's QDCOUNT
+       value without doing this.  */
+    int qdcount = ((UHEADER *) buf1)->qdcount;
+    if (qdcount != ((UHEADER *) buf2)->qdcount) {
         return 0;
     }
-  return 1;
+
+    qdcount = htons(qdcount);
+    const unsigned char *cp = buf1 + HFIXEDSZ;
+
+    while (qdcount-- > 0) {
+        char tname[MAXDNAME + 1];
+        int n, ttype, tclass;
+
+        n = __libc_dn_expand(buf1, eom1, cp, tname, sizeof tname);
+        if (n < 0) {
+            return -1;
+        }
+        cp += n;
+        if (eom1 - cp < 4) {
+            return -1;
+        }
+        NS_GET16(ttype, cp);
+        NS_GET16(tclass, cp);
+        if (!__libc_res_nameinquery(tname, ttype, tclass, buf2, eom2)) {
+            return 0;
+        }
+    }
+    return 1;
 }
-libc_hidden_def (__libc_res_queriesmatch)
+libc_hidden_def(__libc_res_queriesmatch)

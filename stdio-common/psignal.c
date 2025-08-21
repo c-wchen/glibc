@@ -24,29 +24,27 @@
 /* Print out on stderr a line consisting of the test in S, a colon, a space,
    a message describing the meaning of the signal number SIG and a newline.
    If S is NULL or "", the colon and space are omitted.  */
-void
-psignal (int sig, const char *s)
+void psignal(int sig, const char *s)
 {
-  const char *colon, *desc;
+    const char *colon, *desc;
 
-  if (s == NULL || *s == '\0')
-    s = colon = "";
-  else
-    colon = ": ";
+    if (s == NULL || *s == '\0') {
+        s = colon = "";
+    } else {
+        colon = ": ";
+    }
 
-  if (sig >= 0 && sig < NSIG && (desc = __sys_siglist[sig]) != NULL)
-    (void) __fxprintf (NULL, "%s%s%s\n", s, colon, _(desc));
-  else
-    {
-      char *buf;
+    if (sig >= 0 && sig < NSIG && (desc = __sys_siglist[sig]) != NULL) {
+        (void) __fxprintf(NULL, "%s%s%s\n", s, colon, _(desc));
+    } else {
+        char *buf;
 
-      if (__asprintf (&buf, _("%s%sUnknown signal %d\n"), s, colon, sig) < 0)
-	(void) __fxprintf (NULL, "%s%s%s\n", s, colon, _("Unknown signal"));
-      else
-	{
-	  (void) __fxprintf (NULL, "%s", buf);
+        if (__asprintf(&buf, _("%s%sUnknown signal %d\n"), s, colon, sig) < 0) {
+            (void) __fxprintf(NULL, "%s%s%s\n", s, colon, _("Unknown signal"));
+        } else {
+            (void) __fxprintf(NULL, "%s", buf);
 
-	  free (buf);
-	}
+            free(buf);
+        }
     }
 }

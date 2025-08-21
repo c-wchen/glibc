@@ -21,11 +21,10 @@
 #include <not-cancel.h>
 
 /* Close the file descriptor FD.  */
-int
-__close (int fd)
+int __close(int fd)
 {
-  return SYSCALL_CANCEL (close, fd);
+    return SYSCALL_CANCEL(close, fd);
 }
-libc_hidden_def (__close)
-strong_alias (__close, __libc_close)
-weak_alias (__close, close)
+libc_hidden_def(__close)
+strong_alias(__close, __libc_close)
+weak_alias(__close, close)

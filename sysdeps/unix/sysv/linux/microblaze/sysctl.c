@@ -23,7 +23,7 @@
 
 # include <sysdeps/unix/sysv/linux/sysctl.c>
 
-strong_alias (___sysctl, ___sysctl2)
-compat_symbol (libc, ___sysctl2, __sysctl, GLIBC_2_2);
+strong_alias(___sysctl, ___sysctl2)
+compat_symbol(libc, ___sysctl2, __sysctl, GLIBC_2_2);
 
 #endif

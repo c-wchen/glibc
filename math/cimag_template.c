@@ -19,9 +19,9 @@
 #include <complex.h>
 
 FLOAT
-M_DECL_FUNC (__cimag) (CFLOAT z)
+M_DECL_FUNC(__cimag)(CFLOAT z)
 {
-  return __imag__ z;
+    return __imag__ z;
 }
 
-declare_mgen_alias (__cimag, cimag)
+declare_mgen_alias(__cimag, cimag)

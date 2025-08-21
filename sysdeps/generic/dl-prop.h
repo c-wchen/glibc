@@ -26,35 +26,35 @@
    for hooking in various checks related to ABI tags or implementing
    "flag day" ABI transitions.  */
 
-static inline void __attribute__ ((always_inline))
-_rtld_main_check (struct link_map *m, const char *program)
+static inline void __attribute__((always_inline))
+_rtld_main_check(struct link_map *m, const char *program)
 {
 }
 
-static inline void __attribute__ ((always_inline))
-_dl_open_check (struct link_map *m)
+static inline void __attribute__((always_inline))
+_dl_open_check(struct link_map *m)
 {
 }
 
-static inline void __attribute__ ((always_inline))
-_dl_process_pt_note (struct link_map *l, int fd, const ElfW(Phdr) *ph)
+static inline void __attribute__((always_inline))
+_dl_process_pt_note(struct link_map *l, int fd, const ElfW(Phdr) *ph)
 {
 }
 
 /* Called for each property in the NT_GNU_PROPERTY_TYPE_0 note of L,
    processing of the properties continues until this returns 0.  */
-static inline int __attribute__ ((always_inline))
-_dl_process_gnu_property (struct link_map *l, int fd, uint32_t type,
-			  uint32_t datasz, void *data)
+static inline int __attribute__((always_inline))
+_dl_process_gnu_property(struct link_map *l, int fd, uint32_t type,
+                         uint32_t datasz, void *data)
 {
-  /* Continue until GNU_PROPERTY_1_NEEDED is found.  */
-  if (type == GNU_PROPERTY_1_NEEDED)
-    {
-      if (datasz == 4)
-	l->l_1_needed = *(unsigned int *) data;
-      return 0;
+    /* Continue until GNU_PROPERTY_1_NEEDED is found.  */
+    if (type == GNU_PROPERTY_1_NEEDED) {
+        if (datasz == 4) {
+            l->l_1_needed = *(unsigned int *) data;
+        }
+        return 0;
     }
-  return 1;
+    return 1;
 }
 
 #endif /* _DL_PROP_H */

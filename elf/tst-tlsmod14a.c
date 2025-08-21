@@ -2,10 +2,9 @@
 #include <stdio.h>
 
 #define AL 4096
-struct foo
-{
-  int i;
-} __attribute ((aligned (AL)));
+struct foo {
+    int i;
+} __attribute((aligned(AL)));
 
 static __thread struct foo f;
 static struct foo g;
@@ -16,20 +15,19 @@ static struct foo g;
 #endif
 
 
-int
-FCT (void)
+int FCT(void)
 {
-  puts (__func__);
+    puts(__func__);
 
-  int result = 0;
+    int result = 0;
 
-  int fail = (((uintptr_t) &f) & (AL - 1)) != 0;
-  printf ("&f = %p %s\n", &f, fail ? "FAIL" : "OK");
-  result |= fail;
+    int fail = (((uintptr_t) &f) & (AL - 1)) != 0;
+    printf("&f = %p %s\n", &f, fail ? "FAIL" : "OK");
+    result |= fail;
 
-  fail = (((uintptr_t) &g) & (AL - 1)) != 0;
-  printf ("&g = %p %s\n", &g, fail ? "FAIL" : "OK");
-  result |= fail;
+    fail = (((uintptr_t) &g) & (AL - 1)) != 0;
+    printf("&g = %p %s\n", &g, fail ? "FAIL" : "OK");
+    result |= fail;
 
-  return result;
+    return result;
 }

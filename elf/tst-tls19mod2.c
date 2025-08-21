@@ -1,13 +1,11 @@
-static int __thread tbar __attribute__ ((tls_model ("initial-exec"))) = 666;
+static int __thread tbar __attribute__((tls_model("initial-exec"))) = 666;
 
-void
-setter (int a)
+void setter(int a)
 {
-  tbar = a;
+    tbar = a;
 }
 
-int
-bar (void)
+int bar(void)
 {
-  return tbar;
+    return tbar;
 }

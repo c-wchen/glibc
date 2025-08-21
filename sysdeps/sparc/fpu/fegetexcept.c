@@ -19,11 +19,10 @@
 #include <fenv.h>
 #include <fenv_private.h>
 
-int
-fegetexcept (void)
+int fegetexcept(void)
 {
-  fenv_t exc;
-  __fenv_stfsr (exc);
+    fenv_t exc;
+    __fenv_stfsr(exc);
 
-  return (exc >> 18) & FE_ALL_EXCEPT;
+    return (exc >> 18) & FE_ALL_EXCEPT;
 }

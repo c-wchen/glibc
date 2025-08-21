@@ -23,42 +23,43 @@
 
 /* Perform *SET = MASK.  Unused bits of *SET are set to 0.
    Returns zero for success or -1 for errors (from sigaddset/sigemptyset).  */
-static inline int __attribute__ ((unused))
-sigset_set_old_mask (sigset_t *set, int mask)
+static inline int __attribute__((unused))
+sigset_set_old_mask(sigset_t *set, int mask)
 {
-  if (sizeof (__sigset_t) == sizeof (unsigned int))
-    *set = (unsigned int) mask;
-  else
-    {
-      unsigned int __sig;
+    if (sizeof(__sigset_t) == sizeof(unsigned int)) {
+        *set = (unsigned int) mask;
+    } else {
+        unsigned int __sig;
 
-      if (__sigemptyset (set) < 0)
-	return -1;
+        if (__sigemptyset(set) < 0) {
+            return -1;
+        }
 
-      for (__sig = 1; __sig < NSIG && __sig <= sizeof (mask) * 8; __sig++)
-	if (mask & __sigmask (__sig))
-	  if (__sigaddset (set, __sig) < 0)
-	    return -1;
+        for (__sig = 1; __sig < NSIG && __sig <= sizeof(mask) * 8; __sig++)
+            if (mask & __sigmask(__sig))
+                if (__sigaddset(set, __sig) < 0) {
+                    return -1;
+                }
     }
-  return 0;
+    return 0;
 }
 
 /* Return the sigmask corresponding to *SET.
    Unused bits of *SET are thrown away.  */
-static inline int __attribute__ ((unused))
-sigset_get_old_mask (const sigset_t *set)
+static inline int __attribute__((unused))
+sigset_get_old_mask(const sigset_t *set)
 {
-  if (sizeof (sigset_t) == sizeof (unsigned int))
-    return (unsigned int) *set;
-  else
-    {
-      unsigned int mask = 0;
-      unsigned int sig;
+    if (sizeof(sigset_t) == sizeof(unsigned int)) {
+        return (unsigned int) * set;
+    } else {
+        unsigned int mask = 0;
+        unsigned int sig;
 
-      for (sig = 1; sig < NSIG && sig <= sizeof (mask) * 8; sig++)
-	if (__sigismember (set, sig))
-	  mask |= __sigmask (sig);
+        for (sig = 1; sig < NSIG && sig <= sizeof(mask) * 8; sig++)
+            if (__sigismember(set, sig)) {
+                mask |= __sigmask(sig);
+            }
 
-      return mask;
+        return mask;
     }
 }

@@ -20,22 +20,21 @@
 #include <strfile.h>
 #include <libioP.h>
 
-extern int
-___ieee128_isoc23_sscanf (const char *string, const char *format, ...)
+extern int ___ieee128_isoc23_sscanf(const char *string, const char *format, ...)
 {
-  va_list arg;
-  int done;
-  int mode_flags =
-    SCANF_ISOC99_A | SCANF_ISOC23_BIN_CST | SCANF_LDBL_USES_FLOAT128;
+    va_list arg;
+    int done;
+    int mode_flags =
+        SCANF_ISOC99_A | SCANF_ISOC23_BIN_CST | SCANF_LDBL_USES_FLOAT128;
 
-  _IO_strfile sf;
-  FILE *fp = _IO_strfile_read (&sf, string);
+    _IO_strfile sf;
+    FILE *fp = _IO_strfile_read(&sf, string);
 
-  va_start (arg, format);
-  done = __vfscanf_internal (fp, format, arg, mode_flags);
-  va_end (arg);
+    va_start(arg, format);
+    done = __vfscanf_internal(fp, format, arg, mode_flags);
+    va_end(arg);
 
-  return done;
+    return done;
 }
-strong_alias (___ieee128_isoc23_sscanf, __isoc23_sscanfieee128)
-hidden_def (___ieee128_isoc23_sscanf)
+strong_alias(___ieee128_isoc23_sscanf, __isoc23_sscanfieee128)
+hidden_def(___ieee128_isoc23_sscanf)

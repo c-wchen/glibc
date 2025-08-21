@@ -22,28 +22,26 @@
 #include <limits.h>
 
 #ifndef NGROUPS_MAX
-#define NGROUPS_MAX	16	/* First guess.  */
+#define NGROUPS_MAX 16  /* First guess.  */
 #endif
 
-int
-__group_member (gid_t gid)
+int __group_member(gid_t gid)
 {
-  int n, size;
-  gid_t *groups;
+    int n, size;
+    gid_t *groups;
 
-  size = NGROUPS_MAX;
-  do
-    {
-      groups = __alloca (size * sizeof *groups);
-      n = __getgroups (size, groups);
-      size *= 2;
-    }
-  while (n == size / 2);
+    size = NGROUPS_MAX;
+    do {
+        groups = __alloca(size * sizeof * groups);
+        n = __getgroups(size, groups);
+        size *= 2;
+    } while (n == size / 2);
 
-  while (n-- > 0)
-    if (groups[n] == gid)
-      return 1;
+    while (n-- > 0)
+        if (groups[n] == gid) {
+            return 1;
+        }
 
-  return 0;
+    return 0;
 }
-weak_alias (__group_member, group_member)
+weak_alias(__group_member, group_member)

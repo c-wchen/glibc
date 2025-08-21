@@ -18,11 +18,10 @@
 #include <sys/mman.h>
 #include <errno.h>
 
-int
-mincore (void *__start, size_t __len, unsigned char *__vec)
+int mincore(void *__start, size_t __len, unsigned char *__vec)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (mincore)
+stub_warning(mincore)

@@ -20,25 +20,25 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-int
-feclearexcept (int excepts)
+int feclearexcept(int excepts)
 {
-  fpu_control_t cw;
-  fpu_control_t cw_new;
+    fpu_control_t cw;
+    fpu_control_t cw_new;
 
-  /* Mask out unsupported bits/exceptions.  */
-  excepts &= FE_ALL_EXCEPT;
+    /* Mask out unsupported bits/exceptions.  */
+    excepts &= FE_ALL_EXCEPT;
 
-  /* Read the complete control word.  */
-  _FPU_GETCW (cw);
+    /* Read the complete control word.  */
+    _FPU_GETCW(cw);
 
-  cw_new = cw & ~excepts;
+    cw_new = cw & ~excepts;
 
-  /* Put the new data in effect.  */
-  if (cw != cw_new)
-    _FPU_SETCW (cw_new);
+    /* Put the new data in effect.  */
+    if (cw != cw_new) {
+        _FPU_SETCW(cw_new);
+    }
 
-  /* Success.  */
-  return 0;
+    /* Success.  */
+    return 0;
 }
-libm_hidden_def (feclearexcept)
+libm_hidden_def(feclearexcept)

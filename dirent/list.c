@@ -22,54 +22,50 @@
 #include <dirent.h>
 
 
-static int
-test (const char *name)
+static int test(const char *name)
 {
-  DIR *dirp;
-  struct dirent *entp;
-  int retval = 0;
+    DIR *dirp;
+    struct dirent *entp;
+    int retval = 0;
 
-  puts (name);
+    puts(name);
 
-  dirp = opendir (name);
-  if (dirp == NULL)
-    {
-      perror ("opendir");
-      return 1;
+    dirp = opendir(name);
+    if (dirp == NULL) {
+        perror("opendir");
+        return 1;
     }
 
-  errno = 0;
-  while ((entp = readdir (dirp)) != NULL)
-    printf ("%s\tfile number %lu\n",
-	    entp->d_name, (unsigned long int) entp->d_fileno);
+    errno = 0;
+    while ((entp = readdir(dirp)) != NULL)
+        printf("%s\tfile number %lu\n",
+               entp->d_name, (unsigned long int) entp->d_fileno);
 
-  if (errno)
-    {
-      perror ("readdir");
-      retval = 1;
+    if (errno) {
+        perror("readdir");
+        retval = 1;
     }
 
-  if (closedir (dirp) < 0)
-    {
-      perror ("closedir");
-      retval = 1;
+    if (closedir(dirp) < 0) {
+        perror("closedir");
+        retval = 1;
     }
 
-  return retval;
+    return retval;
 }
 
-int
-main (int argc, char **argv)
+int main(int argc, char **argv)
 {
-  int retval = 0;
-  --argc;
-  ++argv;
+    int retval = 0;
+    --argc;
+    ++argv;
 
-  if (argc == 0)
-    retval = test (".");
-  else
-    while (argc-- > 0)
-      retval |= test (*argv++);
+    if (argc == 0) {
+        retval = test(".");
+    } else
+        while (argc-- > 0) {
+            retval |= test(*argv++);
+        }
 
-  return retval;
+    return retval;
 }

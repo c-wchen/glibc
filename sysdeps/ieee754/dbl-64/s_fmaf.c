@@ -31,42 +31,43 @@
    See a paper by Boldo and Melquiond:
    http://www.lri.fr/~melquion/doc/08-tc.pdf  */
 
-float
-__fmaf (float x, float y, float z)
+float __fmaf(float x, float y, float z)
 {
 #if USE_FMAF_BUILTIN
-  return __builtin_fmaf (x, y, z);
+    return __builtin_fmaf(x, y, z);
 #else
-  /* Use generic implementation.  */
-  fenv_t env;
+    /* Use generic implementation.  */
+    fenv_t env;
 
-  /* Multiplication is always exact.  */
-  double temp = (double) x * (double) y;
+    /* Multiplication is always exact.  */
+    double temp = (double) x * (double) y;
 
-  /* Ensure correct sign of an exact zero result by performing the
-     addition in the original rounding mode in that case.  */
-  if (temp == -z)
-    return (float) temp + z;
+    /* Ensure correct sign of an exact zero result by performing the
+       addition in the original rounding mode in that case.  */
+    if (temp == -z) {
+        return (float) temp + z;
+    }
 
-  union ieee754_double u;
+    union ieee754_double u;
 
-  libc_feholdexcept_setround (&env, FE_TOWARDZERO);
+    libc_feholdexcept_setround(&env, FE_TOWARDZERO);
 
-  /* Perform addition with round to odd.  */
-  u.d = temp + (double) z;
-  /* Ensure the addition is not scheduled after fetestexcept call.  */
-  math_force_eval (u.d);
+    /* Perform addition with round to odd.  */
+    u.d = temp + (double) z;
+    /* Ensure the addition is not scheduled after fetestexcept call.  */
+    math_force_eval(u.d);
 
-  /* Reset rounding mode and test for inexact simultaneously.  */
-  int j = libc_feupdateenv_test (&env, FE_INEXACT) != 0;
+    /* Reset rounding mode and test for inexact simultaneously.  */
+    int j = libc_feupdateenv_test(&env, FE_INEXACT) != 0;
 
-  if ((u.ieee.mantissa1 & 1) == 0 && u.ieee.exponent != 0x7ff)
-    u.ieee.mantissa1 |= j;
+    if ((u.ieee.mantissa1 & 1) == 0 && u.ieee.exponent != 0x7ff) {
+        u.ieee.mantissa1 |= j;
+    }
 
-  /* And finally truncation with round to nearest.  */
-  return (float) u.d;
+    /* And finally truncation with round to nearest.  */
+    return (float) u.d;
 #endif /* ! USE_FMAF_BUILTIN  */
 }
 #ifndef __fmaf
-libm_alias_float (__fma, fma)
+libm_alias_float(__fma, fma)
 #endif

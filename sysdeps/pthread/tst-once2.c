@@ -27,74 +27,65 @@ static pthread_once_t once = PTHREAD_ONCE_INIT;
 
 static int global;
 
-static void
-once_handler (void)
+static void once_handler(void)
 {
-  struct timespec ts;
+    struct timespec ts;
 
-  ++global;
+    ++global;
 
-  ts.tv_sec = 2;
-  ts.tv_nsec = 0;
-  nanosleep (&ts, NULL);
+    ts.tv_sec = 2;
+    ts.tv_nsec = 0;
+    nanosleep(&ts, NULL);
 }
 
 
-static void *
-tf (void *arg)
+static void *tf(void *arg)
 {
-  pthread_once (&once, once_handler);
+    pthread_once(&once, once_handler);
 
-  if (global != 1)
-    {
-      printf ("thread %ld: global == %d\n", (long int) arg, global);
-      exit (1);
+    if (global != 1) {
+        printf("thread %ld: global == %d\n", (long int) arg, global);
+        exit(1);
     }
 
-  return NULL;
+    return NULL;
 }
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  pthread_attr_t at;
-  pthread_t th[N];
-  int cnt;
+    pthread_attr_t at;
+    pthread_t th[N];
+    int cnt;
 
-  if (pthread_attr_init (&at) != 0)
-    {
-      puts ("attr_init failed");
-      return 1;
+    if (pthread_attr_init(&at) != 0) {
+        puts("attr_init failed");
+        return 1;
     }
 
-  if (pthread_attr_setstacksize (&at, 1 * 1024 * 1024) != 0)
-    {
-      puts ("attr_setstacksize failed");
-      return 1;
+    if (pthread_attr_setstacksize(&at, 1 * 1024 * 1024) != 0) {
+        puts("attr_setstacksize failed");
+        return 1;
     }
 
-  for (cnt = 0; cnt < N; ++cnt)
-    if (pthread_create (&th[cnt], &at, tf, (void *) (long int) cnt) != 0)
-      {
-	printf ("creation of thread %d failed\n", cnt);
-	return 1;
-      }
+    for (cnt = 0; cnt < N; ++cnt)
+        if (pthread_create(&th[cnt], &at, tf, (void *)(long int) cnt) != 0) {
+            printf("creation of thread %d failed\n", cnt);
+            return 1;
+        }
 
-  if (pthread_attr_destroy (&at) != 0)
-    {
-      puts ("attr_destroy failed");
-      return 1;
+    if (pthread_attr_destroy(&at) != 0) {
+        puts("attr_destroy failed");
+        return 1;
     }
 
-  for (cnt = 0; cnt < N; ++cnt)
-    if (pthread_join (th[cnt], NULL) != 0)
-      {
-	printf ("join of thread %d failed\n", cnt);
-	return 1;
-      }
+    for (cnt = 0; cnt < N; ++cnt)
+        if (pthread_join(th[cnt], NULL) != 0) {
+            printf("join of thread %d failed\n", cnt);
+            return 1;
+        }
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

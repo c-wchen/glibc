@@ -21,19 +21,19 @@
 #include <support/check.h>
 #include <support/xunistd.h>
 
-void
-support_write_file_string (const char *path, const char *contents)
+void support_write_file_string(const char *path, const char *contents)
 {
-  int fd = xopen (path, O_CREAT | O_TRUNC | O_WRONLY, 0666);
-  const char *end = contents + strlen (contents);
-  for (const char *p = contents; p < end; )
-    {
-      ssize_t ret = write (fd, p, end - p);
-      if (ret < 0)
-        FAIL_EXIT1 ("cannot write to \"%s\": %m", path);
-      if (ret == 0)
-        FAIL_EXIT1 ("zero-length write to \"%s\"", path);
-      p += ret;
+    int fd = xopen(path, O_CREAT | O_TRUNC | O_WRONLY, 0666);
+    const char *end = contents + strlen(contents);
+    for (const char *p = contents; p < end;) {
+        ssize_t ret = write(fd, p, end - p);
+        if (ret < 0) {
+            FAIL_EXIT1("cannot write to \"%s\": %m", path);
+        }
+        if (ret == 0) {
+            FAIL_EXIT1("zero-length write to \"%s\"", path);
+        }
+        p += ret;
     }
-  xclose (fd);
+    xclose(fd);
 }

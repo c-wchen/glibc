@@ -28,95 +28,89 @@
 #define AUDIT24MOD3_COOKIE 0x3
 #define AUDIT24MOD4_COOKIE 0x4
 
-unsigned int
-la_version (unsigned int version)
+unsigned int la_version(unsigned int version)
 {
-  return LAV_CURRENT;
+    return LAV_CURRENT;
 }
 
-unsigned int
-la_objopen (struct link_map *map, Lmid_t lmid, uintptr_t *cookie)
+unsigned int la_objopen(struct link_map *map, Lmid_t lmid, uintptr_t *cookie)
 {
-  const char *p = strrchr (map->l_name, '/');
-  const char *l_name = p == NULL ? "tst-audit24d" : p + 1;
+    const char *p = strrchr(map->l_name, '/');
+    const char *l_name = p == NULL ? "tst-audit24d" : p + 1;
 
-  uintptr_t ck = -1;
-  if (strcmp (l_name, "tst-audit24dmod1.so") == 0)
-    ck = AUDIT24MOD1_COOKIE;
-  else if (strcmp (l_name, "tst-audit24dmod2.so") == 0)
-    ck = AUDIT24MOD2_COOKIE;
-  else if (strcmp (l_name, "tst-audit24dmod3.so") == 0)
-    ck = AUDIT24MOD3_COOKIE;
-  else if (strcmp (l_name, "tst-audit24dmod.so") == 0)
-    ck = AUDIT24MOD4_COOKIE;
-  else if (strcmp (l_name, "tst-audit24d") == 0)
-    ck = AUDIT24_COOKIE;
+    uintptr_t ck = -1;
+    if (strcmp(l_name, "tst-audit24dmod1.so") == 0) {
+        ck = AUDIT24MOD1_COOKIE;
+    } else if (strcmp(l_name, "tst-audit24dmod2.so") == 0) {
+        ck = AUDIT24MOD2_COOKIE;
+    } else if (strcmp(l_name, "tst-audit24dmod3.so") == 0) {
+        ck = AUDIT24MOD3_COOKIE;
+    } else if (strcmp(l_name, "tst-audit24dmod.so") == 0) {
+        ck = AUDIT24MOD4_COOKIE;
+    } else if (strcmp(l_name, "tst-audit24d") == 0) {
+        ck = AUDIT24_COOKIE;
+    }
 
-  *cookie = ck;
-  return ck == -1 ? 0 : LA_FLG_BINDFROM | LA_FLG_BINDTO;
+    *cookie = ck;
+    return ck == -1 ? 0 : LA_FLG_BINDFROM | LA_FLG_BINDTO;
 }
 
-static int
-tst_audit24dmod1_func1 (void)
+static int tst_audit24dmod1_func1(void)
 {
-  return 1;
+    return 1;
 }
 
-static int
-tst_audit24dmod2_func1 (void)
+static int tst_audit24dmod2_func1(void)
 {
-  return 10;
+    return 10;
 }
 
-static int
-tst_audit24dmod3_func1 (void)
+static int tst_audit24dmod3_func1(void)
 {
-  return 30;
+    return 30;
 }
 
 #include <stdio.h>
 
 #if __ELF_NATIVE_CLASS == 64
 uintptr_t
-la_symbind64 (Elf64_Sym *sym, unsigned int ndx,
-	      uintptr_t *refcook, uintptr_t *defcook,
-	      unsigned int *flags, const char *symname)
+la_symbind64(Elf64_Sym *sym, unsigned int ndx,
+             uintptr_t *refcook, uintptr_t *defcook,
+             unsigned int *flags, const char *symname)
 #else
 uintptr_t
-la_symbind32 (Elf32_Sym *sym, unsigned int ndx,
-	      uintptr_t *refcook, uintptr_t *defcook,
-	      unsigned int *flags, const char *symname)
+la_symbind32(Elf32_Sym *sym, unsigned int ndx,
+             uintptr_t *refcook, uintptr_t *defcook,
+             unsigned int *flags, const char *symname)
 #endif
 {
-  if (*refcook == AUDIT24_COOKIE)
-    {
-      if (*defcook == AUDIT24MOD1_COOKIE)
-	  {
-	    if (strcmp (symname, "tst_audit24dmod1_func1") == 0)
-	      return (uintptr_t) tst_audit24dmod1_func1;
-	    else if (strcmp (symname, "tst_audit24dmod1_func2") == 0)
-	      return sym->st_value;
-	    abort ();
-	  }
-      if (*defcook == AUDIT24MOD2_COOKIE
-	  && (strcmp (symname, "tst_audit24dmod2_func1") == 0))
-	return (uintptr_t) tst_audit24dmod2_func1;
+    if (*refcook == AUDIT24_COOKIE) {
+        if (*defcook == AUDIT24MOD1_COOKIE) {
+            if (strcmp(symname, "tst_audit24dmod1_func1") == 0) {
+                return (uintptr_t) tst_audit24dmod1_func1;
+            } else if (strcmp(symname, "tst_audit24dmod1_func2") == 0) {
+                return sym->st_value;
+            }
+            abort();
+        }
+        if (*defcook == AUDIT24MOD2_COOKIE
+            && (strcmp(symname, "tst_audit24dmod2_func1") == 0)) {
+            return (uintptr_t) tst_audit24dmod2_func1;
+        }
 
-      /* malloc functions.  */
-      return sym->st_value;
-    }
-  else if (*refcook == AUDIT24MOD1_COOKIE)
-    {
-      if (*defcook == AUDIT24MOD3_COOKIE
-	  && strcmp (symname, "tst_audit24dmod3_func1") == 0)
-	{
-	  test_symbind_flags (*flags);
+        /* malloc functions.  */
+        return sym->st_value;
+    } else if (*refcook == AUDIT24MOD1_COOKIE) {
+        if (*defcook == AUDIT24MOD3_COOKIE
+            && strcmp(symname, "tst_audit24dmod3_func1") == 0) {
+            test_symbind_flags(*flags);
 
-	  return (uintptr_t) tst_audit24dmod3_func1;
-	}
+            return (uintptr_t) tst_audit24dmod3_func1;
+        }
     }
 
-  if (symname[0] != '\0')
-    abort ();
-  return sym->st_value;
+    if (symname[0] != '\0') {
+        abort();
+    }
+    return sym->st_value;
 }

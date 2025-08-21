@@ -18,11 +18,10 @@
 
 #include <stdlib.h>
 
-int tst_audit24dmod4_func1 (void);
+int tst_audit24dmod4_func1(void);
 
-_Noreturn int
-tst_audit24dmod2_func1 (void)
+_Noreturn int tst_audit24dmod2_func1(void)
 {
-  tst_audit24dmod4_func1 ();
-  abort ();
+    tst_audit24dmod4_func1();
+    abort();
 }

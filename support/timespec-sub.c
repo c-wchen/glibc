@@ -26,39 +26,37 @@
 #include "intprops.h"
 
 struct timespec
-timespec_sub (struct timespec a, struct timespec b)
+timespec_sub(struct timespec a, struct timespec b)
 {
-  time_t rs = a.tv_sec;
-  time_t bs = b.tv_sec;
-  int ns = a.tv_nsec - b.tv_nsec;
-  int rns = ns;
+    time_t rs = a.tv_sec;
+    time_t bs = b.tv_sec;
+    int ns = a.tv_nsec - b.tv_nsec;
+    int rns = ns;
 
-  if (ns < 0)
-    {
-      rns = ns + TIMESPEC_HZ;
-      time_t bs1;
-      if (!INT_ADD_WRAPV (bs, 1, &bs1))
-        bs = bs1;
-      else if (- TYPE_SIGNED (time_t) < rs)
-        rs--;
-      else
-        goto low_overflow;
-    }
-
-  if (INT_SUBTRACT_WRAPV (rs, bs, &rs))
-    {
-      if (0 < bs)
-        {
-        low_overflow:
-          rs = TYPE_MINIMUM (time_t);
-          rns = 0;
-        }
-      else
-        {
-          rs = TYPE_MAXIMUM (time_t);
-          rns = TIMESPEC_HZ - 1;
+    if (ns < 0) {
+        rns = ns + TIMESPEC_HZ;
+        time_t bs1;
+        if (!INT_ADD_WRAPV(bs, 1, &bs1)) {
+            bs = bs1;
+        } else if (- TYPE_SIGNED(time_t) < rs) {
+            rs--;
+        } else {
+            goto low_overflow;
         }
     }
 
-  return (struct timespec) { .tv_sec = rs, .tv_nsec = rns };
+    if (INT_SUBTRACT_WRAPV(rs, bs, &rs)) {
+        if (0 < bs) {
+low_overflow:
+            rs = TYPE_MINIMUM(time_t);
+            rns = 0;
+        } else {
+            rs = TYPE_MAXIMUM(time_t);
+            rns = TIMESPEC_HZ - 1;
+        }
+    }
+
+    return (struct timespec) {
+        .tv_sec = rs, .tv_nsec = rns
+    };
 }

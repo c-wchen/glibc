@@ -19,14 +19,13 @@
 #include <fenv.h>
 #include <fenv_private.h>
 
-int
-__fegetround (void)
+int __fegetround(void)
 {
-  unsigned int fpcr;
-  _FPU_GETCW (fpcr);
+    unsigned int fpcr;
+    _FPU_GETCW(fpcr);
 
-  return (fpcr >> __FPU_RND_SHIFT) & __FPU_RND_MASK;
+    return (fpcr >> __FPU_RND_SHIFT) & __FPU_RND_MASK;
 }
-libm_hidden_def (__fegetround)
-weak_alias (__fegetround, fegetround)
-libm_hidden_weak (fegetround)
+libm_hidden_def(__fegetround)
+weak_alias(__fegetround, fegetround)
+libm_hidden_weak(fegetround)

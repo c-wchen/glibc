@@ -25,18 +25,17 @@
    glibc the argument counts of individual options (including ones
    that are added to the kernel in the future).  */
 
-int
-__prctl (int option, ...)
+int __prctl(int option, ...)
 {
-  va_list arg;
-  va_start (arg, option);
-  unsigned long int arg2 = va_arg (arg, unsigned long int);
-  unsigned long int arg3 = va_arg (arg, unsigned long int);
-  unsigned long int arg4 = va_arg (arg, unsigned long int);
-  unsigned long int arg5 = va_arg (arg, unsigned long int);
-  va_end (arg);
-  return INLINE_SYSCALL_CALL (prctl, option, arg2, arg3, arg4, arg5);
+    va_list arg;
+    va_start(arg, option);
+    unsigned long int arg2 = va_arg(arg, unsigned long int);
+    unsigned long int arg3 = va_arg(arg, unsigned long int);
+    unsigned long int arg4 = va_arg(arg, unsigned long int);
+    unsigned long int arg5 = va_arg(arg, unsigned long int);
+    va_end(arg);
+    return INLINE_SYSCALL_CALL(prctl, option, arg2, arg3, arg4, arg5);
 }
 
-libc_hidden_def (__prctl)
-weak_alias (__prctl, prctl)
+libc_hidden_def(__prctl)
+weak_alias(__prctl, prctl)

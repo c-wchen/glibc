@@ -33,7 +33,7 @@
 # define TLS_INIT_TCB_SIZE sizeof (tcbhead_t)
 
 /* This is the size of the TCB.  */
-# define TLS_TCB_SIZE TLS_INIT_TCB_SIZE	/* XXX */
+# define TLS_TCB_SIZE TLS_INIT_TCB_SIZE /* XXX */
 
 /* Install the dtv pointer.  The pointer passed is to the element with
    index -1 which contain the length.  */

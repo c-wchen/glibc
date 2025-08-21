@@ -22,15 +22,15 @@
 #include <libm-alias-ldouble.h>
 
 #if LIBM_SVID_COMPAT
-long double
-__sinhl (long double x)
+long double __sinhl(long double x)
 {
-	long double z = __ieee754_sinhl (x);
-	if (__builtin_expect (!isfinite (z), 0) && isfinite (x)
-	    && _LIB_VERSION != _IEEE_)
-	    return __kernel_standard_l (x, x, 225); /* sinh overflow */
+    long double z = __ieee754_sinhl(x);
+    if (__builtin_expect(!isfinite(z), 0) && isfinite(x)
+        && _LIB_VERSION != _IEEE_) {
+        return __kernel_standard_l(x, x, 225);    /* sinh overflow */
+    }
 
-	return z;
+    return z;
 }
-libm_alias_ldouble (__sinh, sinh)
+libm_alias_ldouble(__sinh, sinh)
 #endif

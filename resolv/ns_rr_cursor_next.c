@@ -21,54 +21,49 @@
 #include <stdbool.h>
 #include <string.h>
 
-bool
-__ns_rr_cursor_next (struct ns_rr_cursor *c, struct ns_rr_wire *rr)
+bool __ns_rr_cursor_next(struct ns_rr_cursor *c, struct ns_rr_wire *rr)
 {
-  rr->rdata = NULL;
+    rr->rdata = NULL;
 
-  /* Extract the record owner name.  */
-  int consumed = __ns_name_unpack (c->begin, c->end, c->current,
-                                   rr->rname, sizeof (rr->rname));
-  if (consumed < 0)
-    {
-      memset (rr, 0, sizeof (*rr));
-      __set_errno (EMSGSIZE);
-      return false;
+    /* Extract the record owner name.  */
+    int consumed = __ns_name_unpack(c->begin, c->end, c->current,
+                                    rr->rname, sizeof(rr->rname));
+    if (consumed < 0) {
+        memset(rr, 0, sizeof(*rr));
+        __set_errno(EMSGSIZE);
+        return false;
     }
-  c->current += consumed;
+    c->current += consumed;
 
-  /* Extract the metadata.  */
-  struct
-  {
-    uint16_t rtype;
-    uint16_t rclass;
-    uint32_t ttl;
-    uint16_t rdlength;
-  } __attribute__ ((packed)) metadata;
-  _Static_assert (sizeof (metadata) == 10, "sizeof metadata");
-  if (c->end - c->current < sizeof (metadata))
-    {
-      memset (rr, 0, sizeof (*rr));
-      __set_errno (EMSGSIZE);
-      return false;
+    /* Extract the metadata.  */
+    struct {
+        uint16_t rtype;
+        uint16_t rclass;
+        uint32_t ttl;
+        uint16_t rdlength;
+    } __attribute__((packed)) metadata;
+    _Static_assert(sizeof(metadata) == 10, "sizeof metadata");
+    if (c->end - c->current < sizeof(metadata)) {
+        memset(rr, 0, sizeof(*rr));
+        __set_errno(EMSGSIZE);
+        return false;
     }
-  memcpy (&metadata, c->current, sizeof (metadata));
-  c->current += sizeof (metadata);
-  /* Endianness conversion.  */
-  rr->rtype = ntohs (metadata.rtype);
-  rr->rclass = ntohs (metadata.rclass);
-  rr->ttl = ntohl (metadata.ttl);
-  rr->rdlength = ntohs (metadata.rdlength);
+    memcpy(&metadata, c->current, sizeof(metadata));
+    c->current += sizeof(metadata);
+    /* Endianness conversion.  */
+    rr->rtype = ntohs(metadata.rtype);
+    rr->rclass = ntohs(metadata.rclass);
+    rr->ttl = ntohl(metadata.ttl);
+    rr->rdlength = ntohs(metadata.rdlength);
 
-  /* Extract record data.  */
-  if (c->end - c->current < rr->rdlength)
-    {
-      memset (rr, 0, sizeof (*rr));
-      __set_errno (EMSGSIZE);
-      return false;
+    /* Extract record data.  */
+    if (c->end - c->current < rr->rdlength) {
+        memset(rr, 0, sizeof(*rr));
+        __set_errno(EMSGSIZE);
+        return false;
     }
-  rr->rdata = c->current;
-  c->current += rr->rdlength;
+    rr->rdata = c->current;
+    c->current += rr->rdlength;
 
-  return true;
+    return true;
 }

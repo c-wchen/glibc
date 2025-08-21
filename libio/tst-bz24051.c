@@ -37,49 +37,46 @@
 #undef putchar
 #undef putwchar
 
-static int
-do_test_narrow (void)
+static int do_test_narrow(void)
 {
-  char buf[100];
-  int fd = create_temp_file ("tst-bz24051", NULL);
-  stdout = fdopen (fd, "w+");
-  TEST_VERIFY_EXIT (stdout != NULL);
+    char buf[100];
+    int fd = create_temp_file("tst-bz24051", NULL);
+    stdout = fdopen(fd, "w+");
+    TEST_VERIFY_EXIT(stdout != NULL);
 
-  printf ("ab%s", "cd");
-  putchar ('e');
-  putchar_unlocked ('f');
-  puts ("ghi");
+    printf("ab%s", "cd");
+    putchar('e');
+    putchar_unlocked('f');
+    puts("ghi");
 
-  rewind (stdout);
-  TEST_VERIFY_EXIT (fgets (buf, sizeof (buf), stdout) != NULL);
-  TEST_VERIFY (strcmp (buf, "abcdefghi\n") == 0);
+    rewind(stdout);
+    TEST_VERIFY_EXIT(fgets(buf, sizeof(buf), stdout) != NULL);
+    TEST_VERIFY(strcmp(buf, "abcdefghi\n") == 0);
 
-  return 0;
+    return 0;
 }
 
-static int
-do_test_wide (void)
+static int do_test_wide(void)
 {
-  wchar_t buf[100];
-  int fd = create_temp_file ("tst-bz24051w", NULL);
-  stdout = fdopen (fd, "w+");
-  TEST_VERIFY_EXIT (stdout != NULL);
+    wchar_t buf[100];
+    int fd = create_temp_file("tst-bz24051w", NULL);
+    stdout = fdopen(fd, "w+");
+    TEST_VERIFY_EXIT(stdout != NULL);
 
-  wprintf (L"ab%ls", L"cd");
-  putwchar (L'e');
-  putwchar_unlocked (L'f');
+    wprintf(L"ab%ls", L"cd");
+    putwchar(L'e');
+    putwchar_unlocked(L'f');
 
-  rewind (stdout);
-  TEST_VERIFY_EXIT (fgetws (buf, array_length (buf), stdout) != NULL);
-  TEST_VERIFY (wcscmp (buf, L"abcdef") == 0);
+    rewind(stdout);
+    TEST_VERIFY_EXIT(fgetws(buf, array_length(buf), stdout) != NULL);
+    TEST_VERIFY(wcscmp(buf, L"abcdef") == 0);
 
-  return 0;
+    return 0;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  return do_test_narrow () + do_test_wide ();
+    return do_test_narrow() + do_test_wide();
 }
 
 #include <support/test-driver.c>

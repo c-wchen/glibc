@@ -25,120 +25,114 @@
 /* Acquire the rwlock *RWLOCK for reading blocking until *ABSTIME if
    it is already held.  As a GNU extension, if TIMESPEC is NULL then
    wait forever.  */
-int
-__pthread_rwlock_timedrdlock_internal (struct __pthread_rwlock *rwlock,
-				       clockid_t clockid,
-				       const struct timespec *abstime)
+int __pthread_rwlock_timedrdlock_internal(struct __pthread_rwlock *rwlock,
+        clockid_t clockid,
+        const struct timespec *abstime)
 {
-  error_t err;
-  int drain;
-  struct __pthread *self;
+    error_t err;
+    int drain;
+    struct __pthread *self;
 
-  __pthread_spin_wait (&rwlock->__lock);
-  if (__pthread_spin_trylock (&rwlock->__held) == 0)
-    /* Successfully acquired the lock.  */
+    __pthread_spin_wait(&rwlock->__lock);
+    if (__pthread_spin_trylock(&rwlock->__held) == 0)
+        /* Successfully acquired the lock.  */
     {
-      assert (rwlock->__readerqueue == 0);
-      assert (rwlock->__writerqueue == 0);
-      assert (rwlock->__readers == 0);
+        assert(rwlock->__readerqueue == 0);
+        assert(rwlock->__writerqueue == 0);
+        assert(rwlock->__readers == 0);
 
-      rwlock->__readers = 1;
-      __pthread_spin_unlock (&rwlock->__lock);
-      return 0;
-    }
-  else
-    /* Lock is held, but is held by a reader?  */
-  if (rwlock->__readers > 0)
-    /* Just add ourself to number of readers.  */
-    {
-      assert (rwlock->__readerqueue == 0);
-      rwlock->__readers++;
-      __pthread_spin_unlock (&rwlock->__lock);
-      return 0;
-    }
+        rwlock->__readers = 1;
+        __pthread_spin_unlock(&rwlock->__lock);
+        return 0;
+    } else
+        /* Lock is held, but is held by a reader?  */
+        if (rwlock->__readers > 0)
+            /* Just add ourself to number of readers.  */
+        {
+            assert(rwlock->__readerqueue == 0);
+            rwlock->__readers++;
+            __pthread_spin_unlock(&rwlock->__lock);
+            return 0;
+        }
 
-  /* The lock is busy.  */
+    /* The lock is busy.  */
 
-  /* Better be blocked by a writer.  */
-  assert (rwlock->__readers == 0);
+    /* Better be blocked by a writer.  */
+    assert(rwlock->__readers == 0);
 
-  if (abstime != NULL && ! valid_nanoseconds (abstime->tv_nsec))
-    {
-      __pthread_spin_unlock (&rwlock->__lock);
-      return EINVAL;
+    if (abstime != NULL && ! valid_nanoseconds(abstime->tv_nsec)) {
+        __pthread_spin_unlock(&rwlock->__lock);
+        return EINVAL;
     }
 
-  self = _pthread_self ();
+    self = _pthread_self();
 
-  /* Add ourself to the queue.  */
-  __pthread_enqueue (&rwlock->__readerqueue, self);
-  __pthread_spin_unlock (&rwlock->__lock);
+    /* Add ourself to the queue.  */
+    __pthread_enqueue(&rwlock->__readerqueue, self);
+    __pthread_spin_unlock(&rwlock->__lock);
 
-  /* Block the thread.  */
-  if (abstime != NULL)
-    err = __pthread_timedblock (self, abstime, clockid);
-  else
-    {
-      err = 0;
-      __pthread_block (self);
+    /* Block the thread.  */
+    if (abstime != NULL) {
+        err = __pthread_timedblock(self, abstime, clockid);
+    } else {
+        err = 0;
+        __pthread_block(self);
     }
 
-  __pthread_spin_wait (&rwlock->__lock);
-  if (self->prevp == NULL)
-    /* Another thread removed us from the queue, which means a wakeup message
-       has been sent.  It was either consumed while we were blocking, or
-       queued after we timed out and before we acquired the rwlock lock, in
-       which case the message queue must be drained.  */
-    drain = err ? 1 : 0;
-  else
+    __pthread_spin_wait(&rwlock->__lock);
+    if (self->prevp == NULL)
+        /* Another thread removed us from the queue, which means a wakeup message
+           has been sent.  It was either consumed while we were blocking, or
+           queued after we timed out and before we acquired the rwlock lock, in
+           which case the message queue must be drained.  */
     {
-      /* We're still in the queue.  No one attempted to wake us up, i.e. we
-         timed out.  */
-      __pthread_dequeue (self);
-      drain = 0;
+        drain = err ? 1 : 0;
+    } else {
+        /* We're still in the queue.  No one attempted to wake us up, i.e. we
+           timed out.  */
+        __pthread_dequeue(self);
+        drain = 0;
     }
-  __pthread_spin_unlock (&rwlock->__lock);
+    __pthread_spin_unlock(&rwlock->__lock);
 
-  if (drain)
-    __pthread_block (self);
-
-  if (err)
-    {
-      assert (err == ETIMEDOUT);
-      return err;
+    if (drain) {
+        __pthread_block(self);
     }
 
-  /* The reader count has already been increment by whoever woke us
-     up.  */
+    if (err) {
+        assert(err == ETIMEDOUT);
+        return err;
+    }
 
-  assert (rwlock->__readers > 0);
+    /* The reader count has already been increment by whoever woke us
+       up.  */
 
-  return 0;
+    assert(rwlock->__readers > 0);
+
+    return 0;
 }
 
-int
-__pthread_rwlock_timedrdlock (struct __pthread_rwlock *rwlock,
-			      const struct timespec *abstime)
+int __pthread_rwlock_timedrdlock(struct __pthread_rwlock *rwlock,
+                                 const struct timespec *abstime)
 {
-  return __pthread_rwlock_timedrdlock_internal (rwlock, CLOCK_REALTIME, abstime);
+    return __pthread_rwlock_timedrdlock_internal(rwlock, CLOCK_REALTIME, abstime);
 }
-libc_hidden_def (__pthread_rwlock_timedrdlock)
-versioned_symbol (libc, __pthread_rwlock_timedrdlock, pthread_rwlock_timedrdlock, GLIBC_2_42);
+libc_hidden_def(__pthread_rwlock_timedrdlock)
+versioned_symbol(libc, __pthread_rwlock_timedrdlock, pthread_rwlock_timedrdlock, GLIBC_2_42);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_42)
-compat_symbol (libpthread, __pthread_rwlock_timedrdlock, pthread_rwlock_timedrdlock, GLIBC_2_12);
+compat_symbol(libpthread, __pthread_rwlock_timedrdlock, pthread_rwlock_timedrdlock, GLIBC_2_12);
 #endif
 
-int
-__pthread_rwlock_clockrdlock (struct __pthread_rwlock *rwlock,
-			      clockid_t clockid,
-			      const struct timespec *abstime)
+int __pthread_rwlock_clockrdlock(struct __pthread_rwlock *rwlock,
+                                 clockid_t clockid,
+                                 const struct timespec *abstime)
 {
-  return __pthread_rwlock_timedrdlock_internal (rwlock, clockid, abstime);
+    return __pthread_rwlock_timedrdlock_internal(rwlock, clockid, abstime);
 }
-libc_hidden_def (__pthread_rwlock_clockrdlock)
-versioned_symbol (libc, __pthread_rwlock_clockrdlock, pthread_rwlock_clockrdlock, GLIBC_2_42);
+libc_hidden_def(__pthread_rwlock_clockrdlock)
+versioned_symbol(libc, __pthread_rwlock_clockrdlock, pthread_rwlock_clockrdlock, GLIBC_2_42);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_32, GLIBC_2_42)
-compat_symbol (libpthread, __pthread_rwlock_clockrdlock, pthread_rwlock_clockrdlock, GLIBC_2_32);
+compat_symbol(libpthread, __pthread_rwlock_clockrdlock, pthread_rwlock_clockrdlock, GLIBC_2_32);
 #endif

@@ -20,17 +20,15 @@
 #include <stddef.h>
 
 /* Fill in *PARAMS with terminal parameters associated with FD.  */
-int
-gtty (int fd, struct sgttyb *params)
+int gtty(int fd, struct sgttyb *params)
 {
-  if (params == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (params == NULL) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (gtty)
+stub_warning(gtty)

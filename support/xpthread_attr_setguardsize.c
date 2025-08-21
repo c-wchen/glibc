@@ -18,9 +18,8 @@
 
 #include <support/xthread.h>
 
-void
-xpthread_attr_setguardsize (pthread_attr_t *attr, size_t guardsize)
+void xpthread_attr_setguardsize(pthread_attr_t *attr, size_t guardsize)
 {
-  xpthread_check_return ("pthread_attr_setguardize",
-			 pthread_attr_setguardsize (attr, guardsize));
+    xpthread_check_return("pthread_attr_setguardize",
+                          pthread_attr_setguardsize(attr, guardsize));
 }

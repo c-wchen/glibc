@@ -21,18 +21,16 @@
 #include <dirent.h>
 
 /* Return the current position of DIRP.  */
-long int
-telldir (DIR *dirp)
+long int telldir(DIR *dirp)
 {
-  if (dirp == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1l;
+    if (dirp == NULL) {
+        __set_errno(EINVAL);
+        return -1l;
     }
 
-  __set_errno (ENOSYS);
-  return -1l;
+    __set_errno(ENOSYS);
+    return -1l;
 }
 
 
-stub_warning (telldir)
+stub_warning(telldir)

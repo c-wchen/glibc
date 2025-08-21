@@ -20,17 +20,15 @@
 #include <sys/types.h>
 #include <errno.h>
 
-off_t
-__lseek (int fd, off_t offset, int whence)
+off_t __lseek(int fd, off_t offset, int whence)
 {
-  off64_t res = __lseek64 (fd, offset, whence);
-  if (res != (off_t) res)
-    {
-      __set_errno (EOVERFLOW);
-      return (off_t) -1;
+    off64_t res = __lseek64(fd, offset, whence);
+    if (res != (off_t) res) {
+        __set_errno(EOVERFLOW);
+        return (off_t) -1;
     }
-  return (off_t) res;
+    return (off_t) res;
 }
-libc_hidden_def (__lseek)
-weak_alias (__lseek, lseek)
-strong_alias (__lseek, __libc_lseek)
+libc_hidden_def(__lseek)
+weak_alias(__lseek, lseek)
+strong_alias(__lseek, __libc_lseek)

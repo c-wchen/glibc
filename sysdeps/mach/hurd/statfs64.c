@@ -19,19 +19,20 @@
 #include <hurd.h>
 
 /* Return information about the filesystem on which FILE resides.  */
-int
-__statfs64 (const char *file, struct statfs64 *buf)
+int __statfs64(const char *file, struct statfs64 *buf)
 {
-  error_t err;
-  file_t port;
+    error_t err;
+    file_t port;
 
-  port = __file_name_lookup (file, 0, 0);
-  if (port == MACH_PORT_NULL)
-    return -1;
-  err = __file_statfs (port, buf);
-  __mach_port_deallocate (__mach_task_self (), port);
-  if (err)
-    return __hurd_fail (err);
-  return 0;
+    port = __file_name_lookup(file, 0, 0);
+    if (port == MACH_PORT_NULL) {
+        return -1;
+    }
+    err = __file_statfs(port, buf);
+    __mach_port_deallocate(__mach_task_self(), port);
+    if (err) {
+        return __hurd_fail(err);
+    }
+    return 0;
 }
-weak_alias (__statfs64, statfs64)
+weak_alias(__statfs64, statfs64)

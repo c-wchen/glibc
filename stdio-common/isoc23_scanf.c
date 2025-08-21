@@ -20,16 +20,15 @@
 #include <libioP.h>
 
 /* Read formatted input from stdin according to the format string FORMAT.  */
-int
-__isoc23_scanf (const char *format, ...)
+int __isoc23_scanf(const char *format, ...)
 {
-  va_list arg;
-  int done;
+    va_list arg;
+    int done;
 
-  va_start (arg, format);
-  done = __vfscanf_internal (stdin, format, arg,
-			     SCANF_ISOC99_A | SCANF_ISOC23_BIN_CST);
-  va_end (arg);
+    va_start(arg, format);
+    done = __vfscanf_internal(stdin, format, arg,
+                              SCANF_ISOC99_A | SCANF_ISOC23_BIN_CST);
+    va_end(arg);
 
-  return done;
+    return done;
 }

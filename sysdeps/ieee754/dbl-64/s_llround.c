@@ -28,57 +28,51 @@
 #include <libm-alias-double.h>
 #include <fix-fp-int-convert-overflow.h>
 
-long long int
-__llround (double x)
+long long int __llround(double x)
 {
-  int32_t j0;
-  int64_t i0;
-  long long int result;
-  int sign;
+    int32_t j0;
+    int64_t i0;
+    long long int result;
+    int sign;
 
-  EXTRACT_WORDS64 (i0, x);
-  j0 = ((i0 >> 52) & 0x7ff) - 0x3ff;
-  sign = i0 < 0 ? -1 : 1;
-  i0 &= UINT64_C(0xfffffffffffff);
-  i0 |= UINT64_C(0x10000000000000);
+    EXTRACT_WORDS64(i0, x);
+    j0 = ((i0 >> 52) & 0x7ff) - 0x3ff;
+    sign = i0 < 0 ? -1 : 1;
+    i0 &= UINT64_C(0xfffffffffffff);
+    i0 |= UINT64_C(0x10000000000000);
 
-  if (j0 < (int32_t) (8 * sizeof (long long int)) - 1)
-    {
-      if (j0 < 0)
-	return j0 < -1 ? 0 : sign;
-      else if (j0 >= 52)
-	result = i0 << (j0 - 52);
-      else
-	{
-	  i0 += UINT64_C(0x8000000000000) >> j0;
+    if (j0 < (int32_t)(8 * sizeof(long long int)) - 1) {
+        if (j0 < 0) {
+            return j0 < -1 ? 0 : sign;
+        } else if (j0 >= 52) {
+            result = i0 << (j0 - 52);
+        } else {
+            i0 += UINT64_C(0x8000000000000) >> j0;
 
-	  result = i0 >> (52 - j0);
-	}
-    }
-  else
-    {
+            result = i0 >> (52 - j0);
+        }
+    } else {
 #ifdef FE_INVALID
-      /* The number is too large.  Unless it rounds to LLONG_MIN,
-	 FE_INVALID must be raised and the return value is
-	 unspecified.  */
-      if (FIX_DBL_LLONG_CONVERT_OVERFLOW && x != (double) LLONG_MIN)
-	{
-	  feraiseexcept (FE_INVALID);
-	  return sign == 1 ? LLONG_MAX : LLONG_MIN;
-	}
+        /* The number is too large.  Unless it rounds to LLONG_MIN,
+        FE_INVALID must be raised and the return value is
+         unspecified.  */
+        if (FIX_DBL_LLONG_CONVERT_OVERFLOW && x != (double) LLONG_MIN) {
+            feraiseexcept(FE_INVALID);
+            return sign == 1 ? LLONG_MAX : LLONG_MIN;
+        }
 #endif
-      return (long long int) x;
+        return (long long int) x;
     }
 
-  return sign * result;
+    return sign * result;
 }
 
-libm_alias_double (__llround, llround)
+libm_alias_double(__llround, llround)
 
 /* long has the same width as long long on LP64 machines, so use an alias.  */
 #undef lround
 #undef __lround
 #ifdef _LP64
-strong_alias (__llround, __lround)
-libm_alias_double (__lround, lround)
+strong_alias(__llround, __lround)
+libm_alias_double(__lround, lround)
 #endif

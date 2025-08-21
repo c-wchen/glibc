@@ -21,7 +21,7 @@
 /* Specify the conversion table.  */
 #define TABLES <koi8-t.h>
 
-#define CHARSET_NAME	"KOI8-T//"
-#define HAS_HOLES	1	/* Not all 256 character are defined.  */
+#define CHARSET_NAME    "KOI8-T//"
+#define HAS_HOLES   1   /* Not all 256 character are defined.  */
 
 #include <8bit-gap.c>

@@ -22,14 +22,15 @@
 
 int _Q_fge(const long double a, const long double b)
 {
-  FP_DECL_EX;
-  FP_DECL_Q(A); FP_DECL_Q(B);
-  int r;
+    FP_DECL_EX;
+    FP_DECL_Q(A);
+    FP_DECL_Q(B);
+    int r;
 
-  FP_UNPACK_RAW_Q(A, a);
-  FP_UNPACK_RAW_Q(B, b);
-  FP_CMP_Q(r, B, A, 3, 2);
-  FP_HANDLE_EXCEPTIONS;
+    FP_UNPACK_RAW_Q(A, a);
+    FP_UNPACK_RAW_Q(B, b);
+    FP_CMP_Q(r, B, A, 3, 2);
+    FP_HANDLE_EXCEPTIONS;
 
-  return (r <= 0);
+    return (r <= 0);
 }

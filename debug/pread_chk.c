@@ -19,11 +19,11 @@
 #include <sys/param.h>
 
 
-ssize_t
-__pread_chk (int fd, void *buf, size_t nbytes, off_t offset, size_t buflen)
+ssize_t __pread_chk(int fd, void *buf, size_t nbytes, off_t offset, size_t buflen)
 {
-  if (nbytes > buflen)
-    __chk_fail ();
+    if (nbytes > buflen) {
+        __chk_fail();
+    }
 
-  return __pread (fd, buf, nbytes, offset);
+    return __pread(fd, buf, nbytes, offset);
 }

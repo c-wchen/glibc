@@ -22,14 +22,14 @@
 
 /* Return the login name of the user, or NULL if it can't be determined.
    The returned pointer, if not NULL, is good only until the next call.  */
-char *
-getlogin (void)
+char *getlogin(void)
 {
-  static string_t login;
-  error_t err;
+    static string_t login;
+    error_t err;
 
-  if (err = __USEPORT (PROC, __proc_getlogin (port, login)))
-    return __hurd_fail (err), NULL;
+    if (err = __USEPORT(PROC, __proc_getlogin(port, login))) {
+        return __hurd_fail(err), NULL;
+    }
 
-  return login;
+    return login;
 }

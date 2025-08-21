@@ -25,22 +25,23 @@ static struct utmp *buffer;
 
 
 struct utmp *
-__getutline (const struct utmp *line)
+__getutline(const struct utmp *line)
 {
-  struct utmp *result;
+    struct utmp *result;
 
-  if (buffer == NULL)
-    {
-      buffer = (struct utmp *) malloc (sizeof (struct utmp));
-      if (buffer == NULL)
+    if (buffer == NULL) {
+        buffer = (struct utmp *) malloc(sizeof(struct utmp));
+        if (buffer == NULL) {
+            return NULL;
+        }
+    }
+    if (__getutline_r(line, buffer, &result) < 0) {
         return NULL;
     }
-  if (__getutline_r (line, buffer, &result) < 0)
-    return NULL;
 
-  return result;
+    return result;
 }
-libc_hidden_def (__getutline)
-weak_alias (__getutline, getutline)
+libc_hidden_def(__getutline)
+weak_alias(__getutline, getutline)
 
-weak_alias (buffer, __libc_getutline_freemem_ptr)
+weak_alias(buffer, __libc_getutline_freemem_ptr)

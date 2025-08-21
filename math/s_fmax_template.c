@@ -20,20 +20,21 @@
 #include <math-use-builtins.h>
 
 FLOAT
-M_DECL_FUNC (__fmax) (FLOAT x, FLOAT y)
+M_DECL_FUNC(__fmax)(FLOAT x, FLOAT y)
 {
 #if M_USE_BUILTIN (FMAX)
-  return M_SUF (__builtin_fmax) (x, y);
+    return M_SUF(__builtin_fmax)(x, y);
 #else
-  if (isgreaterequal (x, y))
-    return x;
-  else if (isless (x, y))
-    return y;
-  else if (issignaling (x) || issignaling (y))
-    return x + y;
-  else
-    return isnan (y) ? x : y;
+    if (isgreaterequal(x, y)) {
+        return x;
+    } else if (isless(x, y)) {
+        return y;
+    } else if (issignaling(x) || issignaling(y)) {
+        return x + y;
+    } else {
+        return isnan(y) ? x : y;
+    }
 #endif
 }
 
-declare_mgen_alias (__fmax, fmax);
+declare_mgen_alias(__fmax, fmax);

@@ -18,12 +18,11 @@
 
 #include <stdlib.h>
 
-#undef	llabs
+#undef  llabs
 
 
 /* Return the absolute value of I.  */
-long long int
-llabs (long long int i)
+long long int llabs(long long int i)
 {
-  return i < 0 ? -i : i;
+    return i < 0 ? -i : i;
 }

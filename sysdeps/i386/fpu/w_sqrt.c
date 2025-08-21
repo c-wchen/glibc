@@ -7,6 +7,6 @@
 #undef f32xsqrtf64
 #include <math_private.h>
 #undef __ieee754_sqrt
-extern double __ieee754_sqrt (double);
+extern double __ieee754_sqrt(double);
 #include <math-type-macros-double.h>
 #include <w_sqrt_template.c>

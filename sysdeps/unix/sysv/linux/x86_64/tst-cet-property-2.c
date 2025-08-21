@@ -22,42 +22,41 @@
 #include <signal.h>
 #include <support/check.h>
 
-extern void bar (void);
+extern void bar(void);
 
 void
-__attribute_optimization_barrier__
-test (void (*func_p) (void))
+__attribute_optimization_barrier__ test(void (*func_p)(void))
 {
-  func_p ();
+    func_p();
 }
 
 /* bar contains an IBT violation if it is called indirectly via a
    function pointer.  On IBT machines, it should lead to segfault
    unless IBT is disabled by error.  */
 
-static void
-sig_handler (int signo)
+static void sig_handler(int signo)
 {
-  exit (EXIT_SUCCESS);
+    exit(EXIT_SUCCESS);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char buf[4];
+    char buf[4];
 
-  if (scanf ("%3s", buf) != 1)
-    FAIL_UNSUPPORTED ("IBT not supported");
+    if (scanf("%3s", buf) != 1) {
+        FAIL_UNSUPPORTED("IBT not supported");
+    }
 
-  if (strcmp (buf, "IBT") != 0)
-    FAIL_UNSUPPORTED ("IBT not supported");
+    if (strcmp(buf, "IBT") != 0) {
+        FAIL_UNSUPPORTED("IBT not supported");
+    }
 
-  TEST_VERIFY_EXIT (signal (SIGSEGV, &sig_handler) != SIG_ERR);
+    TEST_VERIFY_EXIT(signal(SIGSEGV, &sig_handler) != SIG_ERR);
 
-  /* Call bar via a function pointer to force an IBT violation.  */
-  test (bar);
+    /* Call bar via a function pointer to force an IBT violation.  */
+    test(bar);
 
-  return EXIT_FAILURE;
+    return EXIT_FAILURE;
 }
 
 #include <support/test-driver.c>

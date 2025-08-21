@@ -21,32 +21,30 @@
 /* This program does not use the test harness because we want tight
    control over the call graph.  */
 
-__attribute__ ((weak)) __attribute_optimization_barrier__ void
-f1 (void)
+__attribute__((weak)) __attribute_optimization_barrier__ void
+f1(void)
 {
 }
 
-__attribute__ ((weak)) __attribute_optimization_barrier__ void
-f2 (void)
+__attribute__((weak)) __attribute_optimization_barrier__ void
+f2(void)
 {
-  f1 ();
-  /* Prevent tail call.  */
-  asm volatile ("");
+    f1();
+    /* Prevent tail call.  */
+    asm volatile("");
 }
 
-__attribute__ ((weak)) __attribute_optimization_barrier__ void
-f3 (int count)
+__attribute__((weak)) __attribute_optimization_barrier__ void
+f3(int count)
 {
-  for (int i = 0; i < count; ++i)
-    {
-      f1 ();
-      f2 ();
+    for (int i = 0; i < count; ++i) {
+        f1();
+        f2();
     }
 }
 
-int
-main (void)
+int main(void)
 {
-  f3 (1000);
-  return 0;
+    f3(1000);
+    return 0;
 }

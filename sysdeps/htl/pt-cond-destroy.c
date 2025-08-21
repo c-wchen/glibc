@@ -20,33 +20,30 @@
 #include <pt-internal.h>
 #include <shlib-compat.h>
 
-int
-__pthread_cond_destroy (pthread_cond_t *cond)
+int __pthread_cond_destroy(pthread_cond_t *cond)
 {
-  /* Set the wake request flag. */
-  unsigned int wrefs = atomic_fetch_or_acquire (&cond->__wrefs, 1);
+    /* Set the wake request flag. */
+    unsigned int wrefs = atomic_fetch_or_acquire(&cond->__wrefs, 1);
 
-  __pthread_spin_wait (&cond->__lock);
-  if (cond->__queue)
-    {
-      __pthread_spin_unlock (&cond->__lock);
-      return EBUSY;
+    __pthread_spin_wait(&cond->__lock);
+    if (cond->__queue) {
+        __pthread_spin_unlock(&cond->__lock);
+        return EBUSY;
     }
-  __pthread_spin_unlock (&cond->__lock);
+    __pthread_spin_unlock(&cond->__lock);
 
-  while (wrefs >> 1 != 0)
-    {
-      __gsync_wait (__mach_task_self (), (vm_offset_t) &cond->__wrefs, wrefs,
-		  0, 0, 0);
-      wrefs = atomic_load_acquire (&cond->__wrefs);
+    while (wrefs >> 1 != 0) {
+        __gsync_wait(__mach_task_self(), (vm_offset_t) &cond->__wrefs, wrefs,
+                     0, 0, 0);
+        wrefs = atomic_load_acquire(&cond->__wrefs);
     }
-  /* The memory the condvar occupies can now be reused.  */
+    /* The memory the condvar occupies can now be reused.  */
 
-  return 0;
+    return 0;
 }
-libc_hidden_def (__pthread_cond_destroy)
-versioned_symbol (libc, __pthread_cond_destroy, pthread_cond_destroy, GLIBC_2_21);
+libc_hidden_def(__pthread_cond_destroy)
+versioned_symbol(libc, __pthread_cond_destroy, pthread_cond_destroy, GLIBC_2_21);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_21)
-compat_symbol (libc, __pthread_cond_destroy, pthread_cond_destroy, GLIBC_2_12);
+compat_symbol(libc, __pthread_cond_destroy, pthread_cond_destroy, GLIBC_2_12);
 #endif

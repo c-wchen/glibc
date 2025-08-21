@@ -19,9 +19,9 @@
 #define SYMBOL_NAME _ZGVbN2v_tanh
 #include "ifunc-mathvec-sse4_1.h"
 
-libc_ifunc_redirected (REDIRECT_NAME, SYMBOL_NAME, IFUNC_SELECTOR ());
+libc_ifunc_redirected(REDIRECT_NAME, SYMBOL_NAME, IFUNC_SELECTOR());
 
 #ifdef SHARED
-__hidden_ver1 (_ZGVbN2v_tanh, __GI__ZGVbN2v_tanh, __redirect__ZGVbN2v_tanh)
-  __attribute__ ((visibility ("hidden")));
+__hidden_ver1(_ZGVbN2v_tanh, __GI__ZGVbN2v_tanh, __redirect__ZGVbN2v_tanh)
+__attribute__((visibility("hidden")));
 #endif

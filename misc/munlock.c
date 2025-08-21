@@ -22,11 +22,10 @@
 
 /* Undo the effects on these whole pages of any prior mlock calls.  */
 
-int
-munlock (const void *addr, size_t len)
+int munlock(const void *addr, size_t len)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (munlock)
+stub_warning(munlock)

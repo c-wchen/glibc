@@ -22,13 +22,12 @@
 /* Send signal SIG to process number PID.  If PID is zero,
    send SIG to all processes in the current process's process group.
    If PID is < -1, send SIG to all processes in process group - PID.  */
-int
-__kill (int pid, int sig)
+int __kill(int pid, int sig)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (kill)
+stub_warning(kill)
 
-libc_hidden_def (__kill)
-weak_alias (__kill, kill)
+libc_hidden_def(__kill)
+weak_alias(__kill, kill)

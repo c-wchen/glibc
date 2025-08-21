@@ -25,22 +25,19 @@
 #include <stddef.h>
 #include <unistd.h>
 
-static inline int
-_dl_getcpu (unsigned int *cpu, unsigned int *node)
+static inline int _dl_getcpu(unsigned int *cpu, unsigned int *node)
 {
-  return INTERNAL_SYSCALL_CALL (getcpu, cpu, node);
+    return INTERNAL_SYSCALL_CALL(getcpu, cpu, node);
 }
 
-static int
-_dl_getaffinity (unsigned long int *bits, size_t size)
+static int _dl_getaffinity(unsigned long int *bits, size_t size)
 {
-  return INTERNAL_SYSCALL_CALL (sched_getaffinity, /* TID */ 0, size, bits);
+    return INTERNAL_SYSCALL_CALL(sched_getaffinity, /* TID */ 0, size, bits);
 }
 
-static int
-_dl_setaffinity (const unsigned long int *bits, size_t size)
+static int _dl_setaffinity(const unsigned long int *bits, size_t size)
 {
-  return INTERNAL_SYSCALL_CALL (sched_setaffinity, /* TID */ 0, size, bits);
+    return INTERNAL_SYSCALL_CALL(sched_setaffinity, /* TID */ 0, size, bits);
 }
 
 #endif /* DL_AFFINITY_H */

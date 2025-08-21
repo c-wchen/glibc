@@ -45,149 +45,146 @@ static char *utmp_file;
 static pthread_barrier_t *barrier;
 
 /* setutxent with error checking.  */
-static void
-xsetutxent (void)
+static void xsetutxent(void)
 {
-  errno = 0;
-  setutxent ();
-  TEST_COMPARE (errno, 0);
+    errno = 0;
+    setutxent();
+    TEST_COMPARE(errno, 0);
 }
 
 /* getutxent with error checking.  */
-static struct utmpx *
-xgetutxent (void)
+static struct utmpx *xgetutxent(void)
 {
-  errno = 0;
-  struct utmpx *result = getutxent ();
-  if (result == NULL)
-    FAIL_EXIT1 ("getutxent: %m");
-  return result;
+    errno = 0;
+    struct utmpx *result = getutxent();
+    if (result == NULL) {
+        FAIL_EXIT1("getutxent: %m");
+    }
+    return result;
 }
 
-static void
-put_entry (const char *id, pid_t pid, const char *user, const char *line)
+static void put_entry(const char *id, pid_t pid, const char *user, const char *line)
 {
-  struct utmpx ut =
-    {
-     .ut_type = LOGIN_PROCESS,
-     .ut_pid = pid,
-     .ut_host = "localhost",
+    struct utmpx ut = {
+        .ut_type = LOGIN_PROCESS,
+        .ut_pid = pid,
+        .ut_host = "localhost",
     };
-  strcpy (ut.ut_id, id);
-  strncpy (ut.ut_user, user, sizeof (ut.ut_user));
-  strncpy (ut.ut_line, line, sizeof (ut.ut_line));
-  TEST_VERIFY (pututxline (&ut) != NULL);
+    strcpy(ut.ut_id, id);
+    strncpy(ut.ut_user, user, sizeof(ut.ut_user));
+    strncpy(ut.ut_line, line, sizeof(ut.ut_line));
+    TEST_VERIFY(pututxline(&ut) != NULL);
 }
 
 /* Use two cooperating subprocesses to avoid issues related to
    unlock-on-close semantics of POSIX advisory locks.  */
 
-static __attribute__ ((noreturn)) void
-process1 (void)
+static __attribute__((noreturn)) void
+process1(void)
 {
-  TEST_COMPARE (utmpname (utmp_file), 0);
+    TEST_COMPARE(utmpname(utmp_file), 0);
 
-  /* Create an entry.  */
-  xsetutxent ();
-  put_entry ("1", 101, "root", "process1");
+    /* Create an entry.  */
+    xsetutxent();
+    put_entry("1", 101, "root", "process1");
 
-  /* Retrieve the entry.  This will fill the internal cache.  */
-  {
-    errno = 0;
-    setutxent ();
-    TEST_COMPARE (errno, 0);
-    struct utmpx ut =
-      {
-       .ut_type = LOGIN_PROCESS,
-       .ut_line = "process1",
-      };
-    struct utmpx *result = getutxline (&ut);
-    if (result == NULL)
-      FAIL_EXIT1 ("getutxline (\"process1\"): %m");
-    TEST_COMPARE (result->ut_pid, 101);
-  }
+    /* Retrieve the entry.  This will fill the internal cache.  */
+    {
+        errno = 0;
+        setutxent();
+        TEST_COMPARE(errno, 0);
+        struct utmpx ut = {
+            .ut_type = LOGIN_PROCESS,
+            .ut_line = "process1",
+        };
+        struct utmpx *result = getutxline(&ut);
+        if (result == NULL) {
+            FAIL_EXIT1("getutxline (\"process1\"): %m");
+        }
+        TEST_COMPARE(result->ut_pid, 101);
+    }
 
-  /* Signal the other process to overwrite the entry.  */
-  xpthread_barrier_wait (barrier);
+    /* Signal the other process to overwrite the entry.  */
+    xpthread_barrier_wait(barrier);
 
-  /* Wait for the other process to complete the write operation.  */
-  xpthread_barrier_wait (barrier);
+    /* Wait for the other process to complete the write operation.  */
+    xpthread_barrier_wait(barrier);
 
-  /* Add another entry.  Note: This time, there is no setutxent call.  */
-  put_entry ("1", 103, "root", "process1");
+    /* Add another entry.  Note: This time, there is no setutxent call.  */
+    put_entry("1", 103, "root", "process1");
 
-  _exit (0);
+    _exit(0);
 }
 
-static void
-process2 (void *closure)
+static void process2(void *closure)
 {
-  /* Wait for the first process to write its entry.  */
-  xpthread_barrier_wait (barrier);
+    /* Wait for the first process to write its entry.  */
+    xpthread_barrier_wait(barrier);
 
-  /* Truncate the file.  The glibc interface does not support
-     re-purposing records, but an external expiration mechanism may
-     trigger this.  */
-  TEST_COMPARE (truncate64 (utmp_file, 0), 0);
+    /* Truncate the file.  The glibc interface does not support
+       re-purposing records, but an external expiration mechanism may
+       trigger this.  */
+    TEST_COMPARE(truncate64(utmp_file, 0), 0);
 
-  /* Write the replacement entry.  */
-  TEST_COMPARE (utmpname (utmp_file), 0);
-  xsetutxent ();
-  put_entry ("2", 102, "user", "process2");
+    /* Write the replacement entry.  */
+    TEST_COMPARE(utmpname(utmp_file), 0);
+    xsetutxent();
+    put_entry("2", 102, "user", "process2");
 
-  /* Signal the other process that the entry has been replaced.  */
-  xpthread_barrier_wait (barrier);
+    /* Signal the other process that the entry has been replaced.  */
+    xpthread_barrier_wait(barrier);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  xclose (create_temp_file ("tst-tumpx-cache-write-", &utmp_file));
-  {
-    pthread_barrierattr_t attr;
-    xpthread_barrierattr_init (&attr);
-    xpthread_barrierattr_setpshared (&attr, PTHREAD_SCOPE_PROCESS);
-    barrier = support_shared_allocate (sizeof (*barrier));
-    xpthread_barrier_init (barrier, &attr, 2);
-  }
+    xclose(create_temp_file("tst-tumpx-cache-write-", &utmp_file));
+    {
+        pthread_barrierattr_t attr;
+        xpthread_barrierattr_init(&attr);
+        xpthread_barrierattr_setpshared(&attr, PTHREAD_SCOPE_PROCESS);
+        barrier = support_shared_allocate(sizeof(*barrier));
+        xpthread_barrier_init(barrier, &attr, 2);
+    }
 
-  /* Run both subprocesses in parallel.  */
-  {
-    pid_t pid1 = xfork ();
-    if (pid1 == 0)
-      process1 ();
-    support_isolate_in_subprocess (process2, NULL);
-    int status;
-    xwaitpid (pid1, &status, 0);
-    TEST_COMPARE (status, 0);
-  }
+    /* Run both subprocesses in parallel.  */
+    {
+        pid_t pid1 = xfork();
+        if (pid1 == 0) {
+            process1();
+        }
+        support_isolate_in_subprocess(process2, NULL);
+        int status;
+        xwaitpid(pid1, &status, 0);
+        TEST_COMPARE(status, 0);
+    }
 
-  /* Check that the utmpx database contains the expected records.  */
-  {
-    TEST_COMPARE (utmpname (utmp_file), 0);
-    xsetutxent ();
+    /* Check that the utmpx database contains the expected records.  */
+    {
+        TEST_COMPARE(utmpname(utmp_file), 0);
+        xsetutxent();
 
-    struct utmpx *ut = xgetutxent ();
-    TEST_COMPARE_STRING (ut->ut_id, "2");
-    TEST_COMPARE (ut->ut_pid, 102);
-    TEST_COMPARE_STRING (ut->ut_user, "user");
-    TEST_COMPARE_STRING (ut->ut_line, "process2");
+        struct utmpx *ut = xgetutxent();
+        TEST_COMPARE_STRING(ut->ut_id, "2");
+        TEST_COMPARE(ut->ut_pid, 102);
+        TEST_COMPARE_STRING(ut->ut_user, "user");
+        TEST_COMPARE_STRING(ut->ut_line, "process2");
 
-    ut = xgetutxent ();
-    TEST_COMPARE_STRING (ut->ut_id, "1");
-    TEST_COMPARE (ut->ut_pid, 103);
-    TEST_COMPARE_STRING (ut->ut_user, "root");
-    TEST_COMPARE_STRING (ut->ut_line, "process1");
+        ut = xgetutxent();
+        TEST_COMPARE_STRING(ut->ut_id, "1");
+        TEST_COMPARE(ut->ut_pid, 103);
+        TEST_COMPARE_STRING(ut->ut_user, "root");
+        TEST_COMPARE_STRING(ut->ut_line, "process1");
 
-    if (getutxent () != NULL)
-      FAIL_EXIT1 ("additional utmpx entry");
-  }
+        if (getutxent() != NULL) {
+            FAIL_EXIT1("additional utmpx entry");
+        }
+    }
 
-  xpthread_barrier_destroy (barrier);
-  support_shared_free (barrier);
-  free (utmp_file);
+    xpthread_barrier_destroy(barrier);
+    support_shared_free(barrier);
+    free(utmp_file);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

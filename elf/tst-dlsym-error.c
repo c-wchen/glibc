@@ -25,88 +25,77 @@
 /* Used to disambiguate symbol names.  */
 static int counter;
 
-static void
-test_one (void *handle, const char *name, void *(func) (void *, const char *),
-          const char *suffix)
+static void test_one(void *handle, const char *name, void *(func)(void *, const char *),
+                     const char *suffix)
 {
-  ++counter;
-  char symbol[32];
-  snprintf (symbol, sizeof (symbol), "no_such_symbol_%d", counter);
-  char *expected_message;
-  if (asprintf (&expected_message, ": undefined symbol: %s%s",
-                symbol, suffix) < 0)
-    {
-      printf ("error: asprintf: %m\n");
-      abort ();
+    ++counter;
+    char symbol[32];
+    snprintf(symbol, sizeof(symbol), "no_such_symbol_%d", counter);
+    char *expected_message;
+    if (asprintf(&expected_message, ": undefined symbol: %s%s",
+                 symbol, suffix) < 0) {
+        printf("error: asprintf: %m\n");
+        abort();
     }
 
-  void *addr = func (handle, symbol);
-  if (addr != NULL)
-    {
-      printf ("error: %s: found symbol \"no_such_symbol\"\n", name);
-      abort ();
+    void *addr = func(handle, symbol);
+    if (addr != NULL) {
+        printf("error: %s: found symbol \"no_such_symbol\"\n", name);
+        abort();
     }
-  const char *message = dlerror ();
-  if (message == NULL)
-    {
-      printf ("error: %s: missing error message\n", name);
-      abort ();
+    const char *message = dlerror();
+    if (message == NULL) {
+        printf("error: %s: missing error message\n", name);
+        abort();
     }
-  const char *message_without_path = strchrnul (message, ':');
-  if (strcmp (message_without_path, expected_message) != 0)
-    {
-      printf ("error: %s: unexpected error message: %s\n", name, message);
-      abort ();
+    const char *message_without_path = strchrnul(message, ':');
+    if (strcmp(message_without_path, expected_message) != 0) {
+        printf("error: %s: unexpected error message: %s\n", name, message);
+        abort();
     }
-  free (expected_message);
+    free(expected_message);
 
-  message = dlerror ();
-  if (message != NULL)
-    {
-      printf ("error: %s: unexpected error message: %s\n", name, message);
-      abort ();
+    message = dlerror();
+    if (message != NULL) {
+        printf("error: %s: unexpected error message: %s\n", name, message);
+        abort();
     }
 }
 
-static void
-test_handles (const char *name, void *(func) (void *, const char *),
-              const char *suffix)
+static void test_handles(const char *name, void *(func)(void *, const char *),
+                         const char *suffix)
 {
-  test_one (RTLD_DEFAULT, name, func, suffix);
-  test_one (RTLD_NEXT, name, func, suffix);
+    test_one(RTLD_DEFAULT, name, func, suffix);
+    test_one(RTLD_NEXT, name, func, suffix);
 
-  void *handle = dlopen (LIBC_SO, RTLD_LAZY);
-  if (handle == NULL)
-    {
-      printf ("error: cannot dlopen %s: %s\n", LIBC_SO, dlerror ());
-      abort ();
+    void *handle = dlopen(LIBC_SO, RTLD_LAZY);
+    if (handle == NULL) {
+        printf("error: cannot dlopen %s: %s\n", LIBC_SO, dlerror());
+        abort();
     }
-  test_one (handle, name, func, suffix);
-  dlclose (handle);
+    test_one(handle, name, func, suffix);
+    dlclose(handle);
 }
 
-static void *
-dlvsym_no_such_version (void *handle, const char *name)
+static void *dlvsym_no_such_version(void *handle, const char *name)
 {
-  return dlvsym (handle, name, "NO_SUCH_VERSION");
+    return dlvsym(handle, name, "NO_SUCH_VERSION");
 }
 
-static void *
-dlvsym_glibc_private (void *handle, const char *name)
+static void *dlvsym_glibc_private(void *handle, const char *name)
 {
-  return dlvsym (handle, name, "GLIBC_PRIVATE");
+    return dlvsym(handle, name, "GLIBC_PRIVATE");
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  test_handles ("dlsym", dlsym, "");
-  test_handles ("dlvsym", dlvsym_no_such_version,
-                ", version NO_SUCH_VERSION");
-  test_handles ("dlvsym", dlvsym_glibc_private,
-                ", version GLIBC_PRIVATE");
+    test_handles("dlsym", dlsym, "");
+    test_handles("dlvsym", dlvsym_no_such_version,
+                 ", version NO_SUCH_VERSION");
+    test_handles("dlvsym", dlvsym_glibc_private,
+                 ", version GLIBC_PRIVATE");
 
-  return 0;
+    return 0;
 }
 
 

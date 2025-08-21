@@ -19,10 +19,9 @@
 #include "thread_dbP.h"
 
 
-td_err_e
-td_thr_setprio (const td_thrhandle_t *th, int prio)
+td_err_e td_thr_setprio(const td_thrhandle_t *th, int prio)
 {
-  /* XXX We have to figure out what has to be done.  */
-  LOG ("td_thr_setprio");
-  return TD_OK;
+    /* XXX We have to figure out what has to be done.  */
+    LOG("td_thr_setprio");
+    return TD_OK;
 }

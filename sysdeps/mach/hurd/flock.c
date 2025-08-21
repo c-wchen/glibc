@@ -22,15 +22,15 @@
 
 /* Apply or remove an advisory lock, according to OPERATION,
    on the file FD refers to.  */
-int
-__flock (int fd, int operation)
+int __flock(int fd, int operation)
 {
-  error_t err;
+    error_t err;
 
-  if (err = HURD_DPORT_USE (fd, __file_lock (port, operation)))
-    return __hurd_dfail (fd, err);
+    if (err = HURD_DPORT_USE(fd, __file_lock(port, operation))) {
+        return __hurd_dfail(fd, err);
+    }
 
-  return 0;
+    return 0;
 }
 
-weak_alias (__flock, flock)
+weak_alias(__flock, flock)

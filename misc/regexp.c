@@ -32,12 +32,12 @@
 /* Define the variables used for the interface.  */
 char *loc1;
 char *loc2;
-compat_symbol (libc, loc1, loc1, GLIBC_2_0);
-compat_symbol (libc, loc2, loc2, GLIBC_2_0);
+compat_symbol(libc, loc1, loc1, GLIBC_2_0);
+compat_symbol(libc, loc2, loc2, GLIBC_2_0);
 
 /* Although we do not support the use we define this variable as well.  */
 char *locs;
-compat_symbol (libc, locs, locs, GLIBC_2_0);
+compat_symbol(libc, locs, locs, GLIBC_2_0);
 
 
 /* Find the next match in STRING.  The compiled regular expression is
@@ -45,48 +45,48 @@ compat_symbol (libc, locs, locs, GLIBC_2_0);
    first character matched and `loc2' points to the next unmatched
    character.  */
 int
-weak_function attribute_compat_text_section
-step (const char *string, const char *expbuf)
+weak_function attribute_compat_text_section step(const char *string, const char *expbuf)
 {
-  regmatch_t match;	/* We only need info about the full match.  */
+    regmatch_t match; /* We only need info about the full match.  */
 
-  expbuf += __alignof (regex_t *);
-  expbuf -= ((uintptr_t) expbuf) % __alignof__ (regex_t *);
+    expbuf += __alignof(regex_t *);
+    expbuf -= ((uintptr_t) expbuf) % __alignof__(regex_t *);
 
-  if (__regexec ((const regex_t *) expbuf, string, 1, &match, REG_NOTEOL)
-      == REG_NOMATCH)
-    return 0;
+    if (__regexec((const regex_t *) expbuf, string, 1, &match, REG_NOTEOL)
+        == REG_NOMATCH) {
+        return 0;
+    }
 
-  loc1 = (char *) string + match.rm_so;
-  loc2 = (char *) string + match.rm_eo;
-  return 1;
+    loc1 = (char *) string + match.rm_so;
+    loc2 = (char *) string + match.rm_eo;
+    return 1;
 }
-compat_symbol (libc, step, step, GLIBC_2_0);
+compat_symbol(libc, step, step, GLIBC_2_0);
 
 
 /* Match the beginning of STRING with the compiled regular expression
    in EXPBUF.  If the match is successful `loc2' will contain the
    position of the first unmatched character.  */
 int
-weak_function attribute_compat_text_section
-advance (const char *string, const char *expbuf)
+weak_function attribute_compat_text_section advance(const char *string, const char *expbuf)
 {
-  regmatch_t match;	/* We only need info about the full match.  */
+    regmatch_t match; /* We only need info about the full match.  */
 
-  expbuf += __alignof__ (regex_t *);
-  expbuf -= ((uintptr_t) expbuf) % __alignof__ (regex_t *);
+    expbuf += __alignof__(regex_t *);
+    expbuf -= ((uintptr_t) expbuf) % __alignof__(regex_t *);
 
-  if (__regexec ((const regex_t *) expbuf, string, 1, &match, REG_NOTEOL)
-      == REG_NOMATCH
-      /* We have to check whether the check is at the beginning of the
-	 buffer.  */
-      || match.rm_so != 0)
-    return 0;
+    if (__regexec((const regex_t *) expbuf, string, 1, &match, REG_NOTEOL)
+        == REG_NOMATCH
+        /* We have to check whether the check is at the beginning of the
+        buffer.  */
+        || match.rm_so != 0) {
+        return 0;
+    }
 
-  loc2 = (char *) string + match.rm_eo;
-  return 1;
+    loc2 = (char *) string + match.rm_eo;
+    return 1;
 }
-compat_symbol (libc, advance, advance, GLIBC_2_0);
+compat_symbol(libc, advance, advance, GLIBC_2_0);
 
 
 #endif /* SHLIB_COMPAT (2.0, 2.23) */

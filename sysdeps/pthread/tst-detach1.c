@@ -21,33 +21,29 @@
 #include <unistd.h>
 
 
-static void *
-tf (void *arg)
+static void *tf(void *arg)
 {
-  return NULL;
+    return NULL;
 }
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  pthread_t th;
-  if (pthread_create (&th, NULL, tf, (void *) pthread_self ()) != 0)
-    {
-      puts ("create failed");
-      exit (1);
+    pthread_t th;
+    if (pthread_create(&th, NULL, tf, (void *) pthread_self()) != 0) {
+        puts("create failed");
+        exit(1);
     }
 
-  /* Give the child a chance to finish.  */
-  sleep (1);
+    /* Give the child a chance to finish.  */
+    sleep(1);
 
-  if (pthread_detach (th) != 0)
-    {
-      puts ("detach failed");
-      exit (1);
+    if (pthread_detach(th) != 0) {
+        puts("detach failed");
+        exit(1);
     }
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

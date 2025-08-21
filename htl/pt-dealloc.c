@@ -30,42 +30,42 @@ extern pthread_mutex_t __pthread_free_threads_lock;
 
 
 /* Deallocate the content of the thread structure for PTHREAD.  */
-void
-__pthread_dealloc (struct __pthread *pthread)
+void __pthread_dealloc(struct __pthread *pthread)
 {
-  if (atomic_fetch_add_relaxed (&pthread->nr_refs, -1) != 1)
-    return;
+    if (atomic_fetch_add_relaxed(&pthread->nr_refs, -1) != 1) {
+        return;
+    }
 
-  /* Withdraw this thread from the thread ID lookup table.  */
-  __pthread_setid (pthread->thread, NULL);
+    /* Withdraw this thread from the thread ID lookup table.  */
+    __pthread_setid(pthread->thread, NULL);
 
-  /* Mark the thread as terminated.  We broadcast the condition
-     here to prevent pthread_join from waiting for this thread to
-     exit where it was never really started.  Such a call to
-     pthread_join is completely bogus, but unfortunately allowed
-     by the standards.  */
-  __pthread_mutex_lock (&pthread->state_lock);
-  if (pthread->state != PTHREAD_EXITED)
-    __pthread_cond_broadcast (&pthread->state_cond);
-  __pthread_mutex_unlock (&pthread->state_lock);
+    /* Mark the thread as terminated.  We broadcast the condition
+       here to prevent pthread_join from waiting for this thread to
+       exit where it was never really started.  Such a call to
+       pthread_join is completely bogus, but unfortunately allowed
+       by the standards.  */
+    __pthread_mutex_lock(&pthread->state_lock);
+    if (pthread->state != PTHREAD_EXITED) {
+        __pthread_cond_broadcast(&pthread->state_cond);
+    }
+    __pthread_mutex_unlock(&pthread->state_lock);
 
-  /* We do not actually deallocate the thread structure, but add it to
-     a list of re-usable thread structures.  */
-  __pthread_mutex_lock (&__pthread_free_threads_lock);
-  __pthread_enqueue (&__pthread_free_threads, pthread);
-  __pthread_mutex_unlock (&__pthread_free_threads_lock);
+    /* We do not actually deallocate the thread structure, but add it to
+       a list of re-usable thread structures.  */
+    __pthread_mutex_lock(&__pthread_free_threads_lock);
+    __pthread_enqueue(&__pthread_free_threads, pthread);
+    __pthread_mutex_unlock(&__pthread_free_threads_lock);
 }
 
 /* Confirm deallocation of the thread structure for PTHREAD.  */
-void
-__pthread_dealloc_finish (struct __pthread *pthread)
+void __pthread_dealloc_finish(struct __pthread *pthread)
 {
-  /* Setting PTHREAD->TERMINATED makes this TCB
-     available for reuse.  After that point, we can no longer assume
-     that PTHREAD is valid.
+    /* Setting PTHREAD->TERMINATED makes this TCB
+       available for reuse.  After that point, we can no longer assume
+       that PTHREAD is valid.
 
-     Note that it is safe to not lock this update to PTHREAD->STATE:
-     the only way that it can now be accessed is in __pthread_alloc,
-     which reads this variable.  */
-  pthread->terminated = TRUE;
+       Note that it is safe to not lock this update to PTHREAD->STATE:
+       the only way that it can now be accessed is in __pthread_alloc,
+       which reads this variable.  */
+    pthread->terminated = TRUE;
 }

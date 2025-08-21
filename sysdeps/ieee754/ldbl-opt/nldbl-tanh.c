@@ -1,8 +1,7 @@
 #include "nldbl-compat.h"
 
 double
-attribute_hidden
-tanhl (double x)
+attribute_hidden tanhl(double x)
 {
-  return tanh (x);
+    return tanh(x);
 }

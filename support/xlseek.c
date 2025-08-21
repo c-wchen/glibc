@@ -19,11 +19,11 @@
 #include <support/check.h>
 #include <support/xunistd.h>
 
-long long
-xlseek (int fd, long long offset, int whence)
+long long xlseek(int fd, long long offset, int whence)
 {
-  long long result = lseek64 (fd, offset, whence);
-  if (result < 0)
-    FAIL_EXIT1 ("lseek64 (%d, %lld, %d): %m", fd, offset, whence);
-  return result;
+    long long result = lseek64(fd, offset, whence);
+    if (result < 0) {
+        FAIL_EXIT1("lseek64 (%d, %lld, %d): %m", fd, offset, whence);
+    }
+    return result;
 }

@@ -37,33 +37,32 @@
    it may be where R is defined using a macro or it may be where the
    macro is defined.  */
 DIAG_PUSH_NEEDS_COMMENT;
-DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wmaybe-uninitialized");
+DIAG_IGNORE_NEEDS_COMMENT(4.9, "-Wmaybe-uninitialized");
 
 #include "soft-fp.h"
 #include "single.h"
 
-float
-__fmaf (float a, float b, float c)
+float __fmaf(float a, float b, float c)
 {
-  FP_DECL_EX;
-  FP_DECL_S (A);
-  FP_DECL_S (B);
-  FP_DECL_S (C);
-  FP_DECL_S (R);
-  float r;
+    FP_DECL_EX;
+    FP_DECL_S(A);
+    FP_DECL_S(B);
+    FP_DECL_S(C);
+    FP_DECL_S(R);
+    float r;
 
-  FP_INIT_ROUNDMODE;
-  FP_UNPACK_S (A, a);
-  FP_UNPACK_S (B, b);
-  FP_UNPACK_S (C, c);
-  FP_FMA_S (R, A, B, C);
-  FP_PACK_S (r, R);
-  FP_HANDLE_EXCEPTIONS;
+    FP_INIT_ROUNDMODE;
+    FP_UNPACK_S(A, a);
+    FP_UNPACK_S(B, b);
+    FP_UNPACK_S(C, c);
+    FP_FMA_S(R, A, B, C);
+    FP_PACK_S(r, R);
+    FP_HANDLE_EXCEPTIONS;
 
-  return r;
+    return r;
 }
 DIAG_POP_NEEDS_COMMENT;
 
 #ifndef __fmaf
-libm_alias_float (__fma, fma)
+libm_alias_float(__fma, fma)
 #endif

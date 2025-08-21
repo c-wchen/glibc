@@ -19,15 +19,15 @@
 #include <sys/inotify.h>
 #include <sysdep.h>
 
-libc_hidden_proto (inotify_init)
+libc_hidden_proto(inotify_init)
 
 int
-inotify_init (void)
+inotify_init(void)
 {
 #ifdef __NR_inotify_init
-  return INLINE_SYSCALL_CALL (inotify_init);
+    return INLINE_SYSCALL_CALL(inotify_init);
 #else
-  return INLINE_SYSCALL_CALL (inotify_init1, 0);
+    return INLINE_SYSCALL_CALL(inotify_init1, 0);
 #endif
 }
-libc_hidden_def (inotify_init)
+libc_hidden_def(inotify_init)

@@ -22,29 +22,28 @@
 #include <stdio.h>
 #include <support/check.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  iconv_t cd = iconv_open ("UTF-8//IGNORE", "ISO-10646/UCS4/");
-  TEST_VERIFY_EXIT (cd != (iconv_t) -1);
+    iconv_t cd = iconv_open("UTF-8//IGNORE", "ISO-10646/UCS4/");
+    TEST_VERIFY_EXIT(cd != (iconv_t) -1);
 
-  /*
-   * Convert sequence beginning with an irreversible character into buffer that
-   * is too small.
-   */
-  char input[12] = "\xe1\x80\xa1" "AAAAAAAAA";
-  char *inptr = input;
-  size_t insize = sizeof (input);
-  char output[6];
-  char *outptr = output;
-  size_t outsize = sizeof (output);
+    /*
+     * Convert sequence beginning with an irreversible character into buffer that
+     * is too small.
+     */
+    char input[12] = "\xe1\x80\xa1" "AAAAAAAAA";
+    char *inptr = input;
+    size_t insize = sizeof(input);
+    char output[6];
+    char *outptr = output;
+    size_t outsize = sizeof(output);
 
-  TEST_VERIFY (iconv (cd, &inptr, &insize, &outptr, &outsize) == -1);
-  TEST_VERIFY (errno == E2BIG);
+    TEST_VERIFY(iconv(cd, &inptr, &insize, &outptr, &outsize) == -1);
+    TEST_VERIFY(errno == E2BIG);
 
-  TEST_VERIFY_EXIT (iconv_close (cd) != -1);
+    TEST_VERIFY_EXIT(iconv_close(cd) != -1);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -29,28 +29,27 @@
 #include <single.h>
 #include <double.h>
 
-float
-__fmul (double x, double y)
+float __fmul(double x, double y)
 {
-  FP_DECL_EX;
-  FP_DECL_D (X);
-  FP_DECL_D (Y);
-  FP_DECL_D (R);
-  FP_DECL_S (RN);
-  float ret;
+    FP_DECL_EX;
+    FP_DECL_D(X);
+    FP_DECL_D(Y);
+    FP_DECL_D(R);
+    FP_DECL_S(RN);
+    float ret;
 
-  FP_INIT_ROUNDMODE;
-  FP_UNPACK_D (X, x);
-  FP_UNPACK_D (Y, y);
-  FP_MUL_D (R, X, Y);
+    FP_INIT_ROUNDMODE;
+    FP_UNPACK_D(X, x);
+    FP_UNPACK_D(Y, y);
+    FP_MUL_D(R, X, Y);
 #if _FP_W_TYPE_SIZE < _FP_FRACBITS_D
-  FP_TRUNC_COOKED (S, D, 1, 2, RN, R);
+    FP_TRUNC_COOKED(S, D, 1, 2, RN, R);
 #else
-  FP_TRUNC_COOKED (S, D, 1, 1, RN, R);
+    FP_TRUNC_COOKED(S, D, 1, 1, RN, R);
 #endif
-  FP_PACK_S (ret, RN);
-  FP_HANDLE_EXCEPTIONS;
-  CHECK_NARROW_MUL (ret, x, y);
-  return ret;
+    FP_PACK_S(ret, RN);
+    FP_HANDLE_EXCEPTIONS;
+    CHECK_NARROW_MUL(ret, x, y);
+    return ret;
 }
-libm_alias_float_double (mul)
+libm_alias_float_double(mul)

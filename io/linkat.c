@@ -22,23 +22,20 @@
 
 
 /* Make a link to FROM relative to FROMFD called TO relative to TOFD.  */
-int
-linkat (int fromfd, const char *from, int tofd, const char *to, int flags)
+int linkat(int fromfd, const char *from, int tofd, const char *to, int flags)
 {
-  if (from == NULL || to == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (from == NULL || to == NULL) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  if ((tofd != AT_FDCWD && tofd < 0 && *to != '/')
-      || (fromfd != AT_FDCWD && fromfd < 0 && *from != '/'))
-    {
-      __set_errno (EBADF);
-      return -1;
+    if ((tofd != AT_FDCWD && tofd < 0 && *to != '/')
+        || (fromfd != AT_FDCWD && fromfd < 0 && *from != '/')) {
+        __set_errno(EBADF);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (linkat)
+stub_warning(linkat)

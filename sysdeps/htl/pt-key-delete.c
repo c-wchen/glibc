@@ -22,58 +22,55 @@
 #include <shlib-compat.h>
 #include <ldsodefs.h>
 
-int
-__pthread_key_delete (pthread_key_t key)
+int __pthread_key_delete(pthread_key_t key)
 {
-  error_t err = 0;
+    error_t err = 0;
 
-  __pthread_key_lock_ready ();
+    __pthread_key_lock_ready();
 
-  __pthread_mutex_lock (&__pthread_key_lock);
+    __pthread_mutex_lock(&__pthread_key_lock);
 
-  if (key < 0 || key >= __pthread_key_count
-      || __pthread_key_destructors[key] == PTHREAD_KEY_INVALID)
-    err = EINVAL;
-  else
-    {
-      int i;
+    if (key < 0 || key >= __pthread_key_count
+        || __pthread_key_destructors[key] == PTHREAD_KEY_INVALID) {
+        err = EINVAL;
+    } else {
+        int i;
 
-      __pthread_key_destructors[key] = PTHREAD_KEY_INVALID;
-      __pthread_key_invalid_count++;
+        __pthread_key_destructors[key] = PTHREAD_KEY_INVALID;
+        __pthread_key_invalid_count++;
 
-      __libc_rwlock_rdlock (GL (dl_pthread_threads_lock));
-      for (i = 0; i < GL (dl_pthread_num_threads); ++i)
-	{
-	  struct __pthread *t;
+        __libc_rwlock_rdlock(GL(dl_pthread_threads_lock));
+        for (i = 0; i < GL(dl_pthread_num_threads); ++i) {
+            struct __pthread *t;
 
-	  t = GL (dl_pthread_threads)[i];
+            t = GL(dl_pthread_threads)[i];
 
-	  if (t == NULL)
-	    continue;
+            if (t == NULL) {
+                continue;
+            }
 
-	  /* Just remove the key, no need to care whether it was
-	     already there. */
-	  if (t->thread_specifics == NULL)
-	    {
-	      if (key < PTHREAD_STATIC_KEYS)
-		t->static_thread_specifics[key] = 0;
-	    }
-	  else
-	    {
-	      if (key < t->thread_specifics_size)
-		t->thread_specifics[key] = 0;
-	    }
-	}
-      __libc_rwlock_unlock (GL (dl_pthread_threads_lock));
+            /* Just remove the key, no need to care whether it was
+               already there. */
+            if (t->thread_specifics == NULL) {
+                if (key < PTHREAD_STATIC_KEYS) {
+                    t->static_thread_specifics[key] = 0;
+                }
+            } else {
+                if (key < t->thread_specifics_size) {
+                    t->thread_specifics[key] = 0;
+                }
+            }
+        }
+        __libc_rwlock_unlock(GL(dl_pthread_threads_lock));
     }
 
-  __pthread_mutex_unlock (&__pthread_key_lock);
+    __pthread_mutex_unlock(&__pthread_key_lock);
 
-  return err;
+    return err;
 }
-libc_hidden_def (__pthread_key_delete)
-versioned_symbol (libc, __pthread_key_delete, pthread_key_delete, GLIBC_2_42);
+libc_hidden_def(__pthread_key_delete)
+versioned_symbol(libc, __pthread_key_delete, pthread_key_delete, GLIBC_2_42);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_42)
-compat_symbol (libpthread, __pthread_key_delete, pthread_key_delete, GLIBC_2_12);
+compat_symbol(libpthread, __pthread_key_delete, pthread_key_delete, GLIBC_2_12);
 #endif

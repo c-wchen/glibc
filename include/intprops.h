@@ -403,7 +403,7 @@
       && !defined __ICC)
 #  define INT_MULTIPLY_WRAPV(a, b, r) __builtin_mul_overflow (a, b, r)
 # else
-   /* Work around GCC bug 91450.  */
+/* Work around GCC bug 91450.  */
 #  define INT_MULTIPLY_WRAPV(a, b, r) \
     ((!_GL_SIGNED_TYPE_OR_EXPR (*(r)) && EXPR_SIGNED (a) && EXPR_SIGNED (b) \
       && _GL_INT_MULTIPLY_RANGE_OVERFLOW (a, b, 0, (__typeof__ (*(r))) -1)) \

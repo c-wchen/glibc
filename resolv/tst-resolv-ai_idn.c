@@ -22,33 +22,34 @@
 #include <locale.h>
 #include <support/xdlfcn.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  void *handle = dlopen (LIBIDN2_SONAME, RTLD_LAZY);
-  if (handle == NULL)
-    FAIL_UNSUPPORTED ("libidn2 not installed");
-  void *check_ver_sym = xdlsym (handle, "idn2_check_version");
-  const char *check_res
-    = ((const char *(*) (const char *)) check_ver_sym) ("2.0.5");
-  if (check_res == NULL)
-    FAIL_UNSUPPORTED ("libidn2 too old");
+    void *handle = dlopen(LIBIDN2_SONAME, RTLD_LAZY);
+    if (handle == NULL) {
+        FAIL_UNSUPPORTED("libidn2 not installed");
+    }
+    void *check_ver_sym = xdlsym(handle, "idn2_check_version");
+    const char *check_res
+        = ((const char *(*)(const char *)) check_ver_sym)("2.0.5");
+    if (check_res == NULL) {
+        FAIL_UNSUPPORTED("libidn2 too old");
+    }
 
-  if (setlocale (LC_CTYPE, "en_US.UTF-8") == NULL)
-    FAIL_EXIT1 ("setlocale: %m");
+    if (setlocale(LC_CTYPE, "en_US.UTF-8") == NULL) {
+        FAIL_EXIT1("setlocale: %m");
+    }
 
-  struct resolv_test *aux = resolv_test_start
-    ((struct resolv_redirect_config)
-     {
-       .response_callback = response,
-     });
+    struct resolv_test *aux = resolv_test_start
+                              ((struct resolv_redirect_config) {
+        .response_callback = response,
+    });
 
-  gai_tests_with_libidn2 ();
-  gni_tests_with_libidn2 ();
+    gai_tests_with_libidn2();
+    gni_tests_with_libidn2();
 
-  resolv_test_end (aux);
-  xdlclose (handle);
-  return 0;
+    resolv_test_end(aux);
+    xdlclose(handle);
+    return 0;
 }
 
 #include <support/test-driver.c>

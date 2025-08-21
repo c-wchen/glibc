@@ -22,7 +22,7 @@
 # define __need_NULL
 # include <stddef.h>
 #else
-# include <stdlib.h>		/* Just for NULL.  */
+# include <stdlib.h>        /* Just for NULL.  */
 #endif
 
 #include "gettextP.h"
@@ -51,13 +51,12 @@
 /* Look up MSGID in the current default message catalog for the current
    LC_MESSAGES locale.  If not found, returns MSGID itself (the default
    text).  */
-char *
-NGETTEXT (const char *msgid1, const char *msgid2, unsigned long int n)
+char *NGETTEXT(const char *msgid1, const char *msgid2, unsigned long int n)
 {
-  return DCNGETTEXT (NULL, msgid1, msgid2, n, LC_MESSAGES);
+    return DCNGETTEXT(NULL, msgid1, msgid2, n, LC_MESSAGES);
 }
 
 #ifdef _LIBC
 /* Alias for function name in GNU C Library.  */
-weak_alias (__ngettext, ngettext);
+weak_alias(__ngettext, ngettext);
 #endif

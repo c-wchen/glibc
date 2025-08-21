@@ -19,8 +19,7 @@
 #include "nldbl-compat.h"
 
 double
-attribute_hidden
-totalorderl (const double *x, const double *y)
+attribute_hidden totalorderl(const double *x, const double *y)
 {
-  return totalorder (x, y);
+    return totalorder(x, y);
 }

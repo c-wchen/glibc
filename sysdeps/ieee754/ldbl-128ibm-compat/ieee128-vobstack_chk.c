@@ -18,14 +18,14 @@
 
 #include <libio/libioP.h>
 
-extern int
-___ieee128__obstack_vprintf_chk  (struct obstack *obstack, int flag,
-				  const char *format, va_list ap)
+extern int ___ieee128__obstack_vprintf_chk(struct obstack *obstack, int flag,
+        const char *format, va_list ap)
 {
-  unsigned int mode = PRINTF_LDBL_USES_FLOAT128;
-  if (flag > 0)
-    mode |= PRINTF_FORTIFY;
+    unsigned int mode = PRINTF_LDBL_USES_FLOAT128;
+    if (flag > 0) {
+        mode |= PRINTF_FORTIFY;
+    }
 
-  return __obstack_vprintf_internal (obstack, format, ap, mode);
+    return __obstack_vprintf_internal(obstack, format, ap, mode);
 }
-strong_alias (___ieee128__obstack_vprintf_chk, __obstack_vprintf_chkieee128)
+strong_alias(___ieee128__obstack_vprintf_chk, __obstack_vprintf_chkieee128)

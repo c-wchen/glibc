@@ -24,10 +24,9 @@
 #endif
 
 /* Append SRC on the end of DEST.  */
-char *
-STRCAT (char *dest, const char *src)
+char *STRCAT(char *dest, const char *src)
 {
-  strcpy (dest + strlen (dest), src);
-  return dest;
+    strcpy(dest + strlen(dest), src);
+    return dest;
 }
-libc_hidden_builtin_def (strcat)
+libc_hidden_builtin_def(strcat)

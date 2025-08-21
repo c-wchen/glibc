@@ -22,76 +22,74 @@
 
 /* Add message pointed by MSG_PTR to message queue MQDES, stop blocking
    on full message queue if ABS_TIMEOUT expires.  */
-int
-___mq_timedsend_time64 (mqd_t mqdes, const char *msg_ptr, size_t msg_len,
-			unsigned int msg_prio,
-			const struct __timespec64 *abs_timeout)
+int ___mq_timedsend_time64(mqd_t mqdes, const char *msg_ptr, size_t msg_len,
+                           unsigned int msg_prio,
+                           const struct __timespec64 *abs_timeout)
 {
 # ifndef __NR_mq_timedsend_time64
 #  define __NR_mq_timedsend_time64 __NR_mq_timedsend
 # endif
 
 #ifdef __ASSUME_TIME64_SYSCALLS
-  return SYSCALL_CANCEL (mq_timedsend_time64, mqdes, msg_ptr, msg_len,
-			 msg_prio, abs_timeout);
+    return SYSCALL_CANCEL(mq_timedsend_time64, mqdes, msg_ptr, msg_len,
+                          msg_prio, abs_timeout);
 #else
-  bool need_time64 = abs_timeout != NULL
-		     && !in_int32_t_range (abs_timeout->tv_sec);
-  if (need_time64)
-    {
-      int r = SYSCALL_CANCEL (mq_timedsend_time64, mqdes, msg_ptr, msg_len,
-			      msg_prio, abs_timeout);
-      if (r == 0 || errno != ENOSYS)
-	return r;
-      __set_errno (EOVERFLOW);
-      return -1;
+    bool need_time64 = abs_timeout != NULL
+                       && !in_int32_t_range(abs_timeout->tv_sec);
+    if (need_time64) {
+        int r = SYSCALL_CANCEL(mq_timedsend_time64, mqdes, msg_ptr, msg_len,
+                               msg_prio, abs_timeout);
+        if (r == 0 || errno != ENOSYS) {
+            return r;
+        }
+        __set_errno(EOVERFLOW);
+        return -1;
     }
 
-  struct timespec ts32, *pts32 = NULL;
-  if (abs_timeout != NULL)
-    {
-      ts32 = valid_timespec64_to_timespec (*abs_timeout);
-      pts32 = &ts32;
+    struct timespec ts32, *pts32 = NULL;
+    if (abs_timeout != NULL) {
+        ts32 = valid_timespec64_to_timespec(*abs_timeout);
+        pts32 = &ts32;
     }
 
-  return SYSCALL_CANCEL (mq_timedsend, mqdes, msg_ptr, msg_len, msg_prio,
-			 pts32);
+    return SYSCALL_CANCEL(mq_timedsend, mqdes, msg_ptr, msg_len, msg_prio,
+                          pts32);
 #endif
 }
 
 #if __TIMESIZE == 64
-versioned_symbol (libc, ___mq_timedsend_time64, mq_timedsend, GLIBC_2_34);
-libc_hidden_ver (___mq_timedsend_time64, __mq_timedsend)
+versioned_symbol(libc, ___mq_timedsend_time64, mq_timedsend, GLIBC_2_34);
+libc_hidden_ver(___mq_timedsend_time64, __mq_timedsend)
 # ifndef SHARED
-strong_alias (___mq_timedsend_time64, __mq_timedsend)
+strong_alias(___mq_timedsend_time64, __mq_timedsend)
 # endif
 # if OTHER_SHLIB_COMPAT (librt, GLIBC_2_3_4, GLIBC_2_34)
-compat_symbol (librt, ___mq_timedsend_time64, mq_timedsend, GLIBC_2_3_4);
+compat_symbol(librt, ___mq_timedsend_time64, mq_timedsend, GLIBC_2_3_4);
 # endif
 
 #else /* __TIMESIZE != 64 */
-libc_hidden_ver (___mq_timedsend_time64, __mq_timedsend_time64)
-versioned_symbol (libc, ___mq_timedsend_time64, __mq_timedsend_time64,
-		  GLIBC_2_34);
+libc_hidden_ver(___mq_timedsend_time64, __mq_timedsend_time64)
+versioned_symbol(libc, ___mq_timedsend_time64, __mq_timedsend_time64,
+                 GLIBC_2_34);
 
-int
-___mq_timedsend (mqd_t mqdes, const char *msg_ptr, size_t msg_len,
-                unsigned int msg_prio, const struct timespec *abs_timeout)
+int ___mq_timedsend(mqd_t mqdes, const char *msg_ptr, size_t msg_len,
+                    unsigned int msg_prio, const struct timespec *abs_timeout)
 {
-  struct __timespec64 ts64;
-  if (abs_timeout != NULL)
-    ts64 = valid_timespec_to_timespec64 (*abs_timeout);
+    struct __timespec64 ts64;
+    if (abs_timeout != NULL) {
+        ts64 = valid_timespec_to_timespec64(*abs_timeout);
+    }
 
-  return __mq_timedsend_time64 (mqdes, msg_ptr, msg_len, msg_prio,
-                                abs_timeout != NULL ? &ts64 : NULL);
+    return __mq_timedsend_time64(mqdes, msg_ptr, msg_len, msg_prio,
+                                 abs_timeout != NULL ? &ts64 : NULL);
 }
-versioned_symbol (libc, ___mq_timedsend, mq_timedsend, GLIBC_2_34);
-libc_hidden_ver (___mq_timedsend, __mq_timedsend)
+versioned_symbol(libc, ___mq_timedsend, mq_timedsend, GLIBC_2_34);
+libc_hidden_ver(___mq_timedsend, __mq_timedsend)
 # ifndef SHARED
-strong_alias (___mq_timedsend, __mq_timedsend)
+strong_alias(___mq_timedsend, __mq_timedsend)
 # endif
 # if OTHER_SHLIB_COMPAT (librt, GLIBC_2_3_4, GLIBC_2_34)
-compat_symbol (librt, ___mq_timedsend, mq_timedsend, GLIBC_2_3_4);
+compat_symbol(librt, ___mq_timedsend, mq_timedsend, GLIBC_2_3_4);
 # endif
 
 #endif /* __TIMESIZE != 64 */

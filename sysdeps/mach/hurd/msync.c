@@ -27,68 +27,72 @@
    file it maps.  Filesystem operations on a file being mapped are
    unpredictable before this is done.  */
 
-int
-msync (void *addr, size_t length, int flags)
+int msync(void *addr, size_t length, int flags)
 {
-  boolean_t should_flush = flags & MS_INVALIDATE ? 1 : 0;
-  boolean_t should_iosync = flags & MS_ASYNC ? 0 : 1;
+    boolean_t should_flush = flags & MS_INVALIDATE ? 1 : 0;
+    boolean_t should_iosync = flags & MS_ASYNC ? 0 : 1;
 
-  vm_address_t cur = (vm_address_t) addr;
-  vm_address_t target = cur + length;
+    vm_address_t cur = (vm_address_t) addr;
+    vm_address_t target = cur + length;
 
-  vm_size_t len;
-  vm_prot_t prot;
-  vm_prot_t max_prot;
-  vm_inherit_t inherit;
-  boolean_t shared;
-  memory_object_name_t obj;
-  vm_offset_t offset;
+    vm_size_t len;
+    vm_prot_t prot;
+    vm_prot_t max_prot;
+    vm_inherit_t inherit;
+    boolean_t shared;
+    memory_object_name_t obj;
+    vm_offset_t offset;
 
-  kern_return_t err;
-  int cancel_oldtype;
+    kern_return_t err;
+    int cancel_oldtype;
 
-  while (cur < target)
-    {
-      vm_address_t begin = cur;
+    while (cur < target) {
+        vm_address_t begin = cur;
 
-      err = __vm_region (__mach_task_self (),
-			 &begin, &len, &prot, &max_prot, &inherit,
-			 &shared, &obj, &offset);
+        err = __vm_region(__mach_task_self(),
+                          &begin, &len, &prot, &max_prot, &inherit,
+                          &shared, &obj, &offset);
 
-      if (err != KERN_SUCCESS)
-	return __hurd_fail (err);
+        if (err != KERN_SUCCESS) {
+            return __hurd_fail(err);
+        }
 
-      if (begin > cur)
-	/* We were given an address before the first region,
-	   or we found a hole.  */
-	cur = begin;
+        if (begin > cur)
+            /* We were given an address before the first region,
+               or we found a hole.  */
+        {
+            cur = begin;
+        }
 
-      if (cur >= target)
-	/* We were given an ending address within a hole. */
-	break;
+        if (cur >= target)
+            /* We were given an ending address within a hole. */
+        {
+            break;
+        }
 
-      if (MACH_PORT_VALID (obj))
-	{
-	  vm_size_t sync_len;
+        if (MACH_PORT_VALID(obj)) {
+            vm_size_t sync_len;
 
-	  if (begin + len > target)
-	    sync_len = target - begin;
-	  else
-	    sync_len = len;
+            if (begin + len > target) {
+                sync_len = target - begin;
+            } else {
+                sync_len = len;
+            }
 
-	  cancel_oldtype = LIBC_CANCEL_ASYNC();
-	  err = __vm_object_sync (obj, cur - begin + offset, sync_len,
-				  should_flush, 1, should_iosync);
-	  LIBC_CANCEL_RESET (cancel_oldtype);
-	  __mach_port_deallocate (__mach_task_self (), obj);
+            cancel_oldtype = LIBC_CANCEL_ASYNC();
+            err = __vm_object_sync(obj, cur - begin + offset, sync_len,
+                                   should_flush, 1, should_iosync);
+            LIBC_CANCEL_RESET(cancel_oldtype);
+            __mach_port_deallocate(__mach_task_self(), obj);
 
-	  if (err)
-	    return __hurd_fail (err);
+            if (err) {
+                return __hurd_fail(err);
+            }
 
-	}
+        }
 
-      cur = begin + len;
+        cur = begin + len;
     }
 
-  return 0;
+    return 0;
 }

@@ -41,14 +41,13 @@
 
 /* Look up MSGID in the DOMAINNAME message catalog for the current CATEGORY
    locale.  */
-char *
-DCGETTEXT (const char *domainname, const char *msgid, int category)
+char *DCGETTEXT(const char *domainname, const char *msgid, int category)
 {
-  return DCIGETTEXT (domainname, msgid, NULL, 0, 0, category);
+    return DCIGETTEXT(domainname, msgid, NULL, 0, 0, category);
 }
 
 #ifdef _LIBC
 /* Alias for function name in GNU C Library.  */
-weak_alias (__dcgettext, dcgettext);
-libc_hidden_def (__dcgettext)
+weak_alias(__dcgettext, dcgettext);
+libc_hidden_def(__dcgettext)
 #endif

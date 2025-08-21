@@ -22,60 +22,55 @@
 #include <unistd.h>
 
 
-static int do_test (void);
+static int do_test(void);
 
 #define TEST_FUNCTION do_test ()
 #include "../test-skeleton.c"
 
-static void *tf (void *a)
+static void *tf(void *a)
 {
-  puts ("start tf");
+    puts("start tf");
 
-  /* Multiple locking, implicitly or explicitly, must be possible.  */
-  flockfile (stdout);
+    /* Multiple locking, implicitly or explicitly, must be possible.  */
+    flockfile(stdout);
 
-  puts ("after first flockfile");
+    puts("after first flockfile");
 
-  flockfile (stdout);
+    flockfile(stdout);
 
-  puts ("foo");
+    puts("foo");
 
-  funlockfile (stdout);
+    funlockfile(stdout);
 
-  puts ("after first funlockfile");
+    puts("after first funlockfile");
 
-  funlockfile (stdout);
+    funlockfile(stdout);
 
-  puts ("all done");
+    puts("all done");
 
-  return a;
+    return a;
 }
 
 
-int
-do_test (void)
+int do_test(void)
 {
-  pthread_t th;
+    pthread_t th;
 
-  if (pthread_create (&th, NULL, tf, NULL) != 0)
-    {
-      write_message ("create failed\n");
-      _exit (1);
+    if (pthread_create(&th, NULL, tf, NULL) != 0) {
+        write_message("create failed\n");
+        _exit(1);
     }
 
-  void *result;
-  if (pthread_join (th, &result) != 0)
-    {
-      puts ("join failed");
-      exit (1);
-    }
-  else if (result != NULL)
-    {
-      printf ("wrong return value: %p, expected %p\n", result, NULL);
-      exit (1);
+    void *result;
+    if (pthread_join(th, &result) != 0) {
+        puts("join failed");
+        exit(1);
+    } else if (result != NULL) {
+        printf("wrong return value: %p, expected %p\n", result, NULL);
+        exit(1);
     }
 
-  puts ("join returned successfully");
+    puts("join returned successfully");
 
-  return 0;
+    return 0;
 }

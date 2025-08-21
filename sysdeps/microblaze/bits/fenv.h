@@ -21,14 +21,13 @@
 
 /* MicroBlaze supports only round-to-nearest.  The software
    floating-point support also acts this way.  */
-enum
-  {
+enum {
     __FE_UNDEFINED = 0,
 
     FE_TONEAREST =
-#define FE_TONEAREST	0x1
-    FE_TONEAREST,
-  };
+#define FE_TONEAREST    0x1
+        FE_TONEAREST,
+};
 
 #define FE_ALL_EXCEPT 0
 
@@ -39,12 +38,12 @@ typedef unsigned int fexcept_t;
 typedef unsigned int fenv_t;
 
 /* If the default argument is used we use this value.  */
-#define FE_DFL_ENV	((const fenv_t *) -1l)
+#define FE_DFL_ENV  ((const fenv_t *) -1l)
 
 #if __GLIBC_USE (IEC_60559_BFP_EXT_C23)
 /* Type representing floating-point control modes.  */
 typedef unsigned int femode_t;
 
 /* Default floating-point control modes.  */
-# define FE_DFL_MODE	((const femode_t *) -1L)
+# define FE_DFL_MODE    ((const femode_t *) -1L)
 #endif

@@ -15,8 +15,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef	_SYS_EPOLL_H
-#define	_SYS_EPOLL_H	1
+#ifndef _SYS_EPOLL_H
+#define _SYS_EPOLL_H    1
 
 #include <stdint.h>
 #include <sys/ioctl.h>
@@ -33,8 +33,7 @@
 #endif
 
 
-enum EPOLL_EVENTS
-  {
+enum EPOLL_EVENTS {
     EPOLLIN = 0x001,
 #define EPOLLIN EPOLLIN
     EPOLLPRI = 0x002,
@@ -65,37 +64,34 @@ enum EPOLL_EVENTS
 #define EPOLLONESHOT EPOLLONESHOT
     EPOLLET = 1u << 31
 #define EPOLLET EPOLLET
-  };
+};
 
 
 /* Valid opcodes ( "op" parameter ) to issue to epoll_ctl().  */
-#define EPOLL_CTL_ADD 1	/* Add a file descriptor to the interface.  */
-#define EPOLL_CTL_DEL 2	/* Remove a file descriptor from the interface.  */
-#define EPOLL_CTL_MOD 3	/* Change file descriptor epoll_event structure.  */
+#define EPOLL_CTL_ADD 1 /* Add a file descriptor to the interface.  */
+#define EPOLL_CTL_DEL 2 /* Remove a file descriptor from the interface.  */
+#define EPOLL_CTL_MOD 3 /* Change file descriptor epoll_event structure.  */
 
 
-typedef union epoll_data
-{
-  void *ptr;
-  int fd;
-  uint32_t u32;
-  uint64_t u64;
+typedef union epoll_data {
+    void *ptr;
+    int fd;
+    uint32_t u32;
+    uint64_t u64;
 } epoll_data_t;
 
-struct epoll_event
-{
-  uint32_t events;	/* Epoll events */
-  epoll_data_t data;	/* User data variable */
+struct epoll_event {
+    uint32_t events;  /* Epoll events */
+    epoll_data_t data;    /* User data variable */
 } __EPOLL_PACKED;
 
-struct epoll_params
-{
-  uint32_t busy_poll_usecs;
-  uint16_t busy_poll_budget;
-  uint8_t prefer_busy_poll;
+struct epoll_params {
+    uint32_t busy_poll_usecs;
+    uint16_t busy_poll_budget;
+    uint8_t prefer_busy_poll;
 
-  /* pad the struct to a multiple of 64bits */
-  uint8_t __pad;
+    /* pad the struct to a multiple of 64bits */
+    uint8_t __pad;
 };
 
 #define EPOLL_IOC_TYPE 0x8A
@@ -108,11 +104,11 @@ __BEGIN_DECLS
    The "size" parameter is a hint specifying the number of file
    descriptors to be associated with the new instance.  The fd
    returned by epoll_create() should be closed with close().  */
-extern int epoll_create (int __size) __THROW;
+extern int epoll_create(int __size) __THROW;
 
 /* Same as epoll_create but with an FLAGS parameter.  The unused SIZE
    parameter has been dropped.  */
-extern int epoll_create1 (int __flags) __THROW;
+extern int epoll_create1(int __flags) __THROW;
 
 
 /* Manipulate an epoll instance "epfd". Returns 0 in case of success,
@@ -121,8 +117,8 @@ extern int epoll_create1 (int __flags) __THROW;
    constants defined above. The "fd" parameter is the target of the
    operation. The "event" parameter describes which events the caller
    is interested in and any associated user data.  */
-extern int epoll_ctl (int __epfd, int __op, int __fd,
-		      struct epoll_event *__event) __THROW;
+extern int epoll_ctl(int __epfd, int __op, int __fd,
+                     struct epoll_event *__event) __THROW;
 
 
 /* Wait for events on an epoll instance "epfd". Returns the number of
@@ -135,9 +131,9 @@ extern int epoll_ctl (int __epfd, int __op, int __fd,
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
-extern int epoll_wait (int __epfd, struct epoll_event *__events,
-		       int __maxevents, int __timeout)
-	__attr_access ((__write_only__, 2, 3)) __nonnull ((2));
+extern int epoll_wait(int __epfd, struct epoll_event *__events,
+                      int __maxevents, int __timeout)
+__attr_access((__write_only__, 2, 3)) __nonnull((2));
 
 
 /* Same as epoll_wait, but the thread's signal mask is temporarily
@@ -145,28 +141,28 @@ extern int epoll_wait (int __epfd, struct epoll_event *__events,
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
-extern int epoll_pwait (int __epfd, struct epoll_event *__events,
-			int __maxevents, int __timeout,
-			const __sigset_t *__ss)
-	__attr_access ((__write_only__, 2, 3)) __nonnull ((2));
+extern int epoll_pwait(int __epfd, struct epoll_event *__events,
+                       int __maxevents, int __timeout,
+                       const __sigset_t *__ss)
+__attr_access((__write_only__, 2, 3)) __nonnull((2));
 
 /* Same as epoll_pwait, but the timeout as a timespec.
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
 #ifndef __USE_TIME64_REDIRECTS
-extern int epoll_pwait2 (int __epfd, struct epoll_event *__events,
-			 int __maxevents, const struct timespec *__timeout,
-			 const __sigset_t *__ss)
-	__attr_access ((__write_only__, 2, 3)) __nonnull ((2));
+extern int epoll_pwait2(int __epfd, struct epoll_event *__events,
+                        int __maxevents, const struct timespec *__timeout,
+                        const __sigset_t *__ss)
+__attr_access((__write_only__, 2, 3)) __nonnull((2));
 #else
 # ifdef __REDIRECT
-extern int __REDIRECT (epoll_pwait2, (int __epfd, struct epoll_event *__ev,
-				      int __maxevs,
-				      const struct timespec *__timeout,
-				      const __sigset_t *__ss),
-		       __epoll_pwait2_time64)
-	__attr_access ((__write_only__, 2, 3)) __nonnull ((2));
+extern int __REDIRECT(epoll_pwait2, (int __epfd, struct epoll_event *__ev,
+                                     int __maxevs,
+                                     const struct timespec *__timeout,
+                                     const __sigset_t *__ss),
+                      __epoll_pwait2_time64)
+__attr_access((__write_only__, 2, 3)) __nonnull((2));
 # else
 #  define epoll_pwait2 __epoll_pwait2_time64
 # endif

@@ -23,49 +23,49 @@
 #include <string.h>
 
 /* Set the effective user ID of the calling process to GID.  */
-int
-setegid (gid_t gid)
+int setegid(gid_t gid)
 {
-  auth_t newauth;
-  error_t err;
+    auth_t newauth;
+    error_t err;
 
 retry:
-  HURD_CRITICAL_BEGIN;
-  __mutex_lock (&_hurd_id.lock);
-  err = _hurd_check_ids ();
+    HURD_CRITICAL_BEGIN;
+    __mutex_lock(&_hurd_id.lock);
+    err = _hurd_check_ids();
 
-  if (!err)
-    {
-      /* Make a new auth handle which has EGID as the first element in the
-         list of effective gids.  */
+    if (!err) {
+        /* Make a new auth handle which has EGID as the first element in the
+           list of effective gids.  */
 
-      if (_hurd_id.gen.ngids > 0)
-	{
-	  _hurd_id.gen.gids[0] = gid;
-	  _hurd_id.valid = 0;
-	}
+        if (_hurd_id.gen.ngids > 0) {
+            _hurd_id.gen.gids[0] = gid;
+            _hurd_id.valid = 0;
+        }
 
-      err = __USEPORT (AUTH, __auth_makeauth
-		       (port, NULL, MACH_MSG_TYPE_COPY_SEND, 0,
-			_hurd_id.gen.uids, _hurd_id.gen.nuids,
-			_hurd_id.aux.uids, _hurd_id.aux.nuids,
-			_hurd_id.gen.ngids ? _hurd_id.gen.gids : &gid,
-			_hurd_id.gen.ngids ?: 1,
-			_hurd_id.aux.gids, _hurd_id.aux.ngids,
-			&newauth));
+        err = __USEPORT(AUTH, __auth_makeauth
+                        (port, NULL, MACH_MSG_TYPE_COPY_SEND, 0,
+                         _hurd_id.gen.uids, _hurd_id.gen.nuids,
+                         _hurd_id.aux.uids, _hurd_id.aux.nuids,
+                         _hurd_id.gen.ngids ? _hurd_id.gen.gids : &gid,
+                         _hurd_id.gen.ngids ? : 1,
+                         _hurd_id.aux.gids, _hurd_id.aux.ngids,
+                         &newauth));
     }
-  __mutex_unlock (&_hurd_id.lock);
-  HURD_CRITICAL_END;
-  if (err == EINTR)
-    /* Got a signal while inside an RPC of the critical section, retry again */
-    goto retry;
+    __mutex_unlock(&_hurd_id.lock);
+    HURD_CRITICAL_END;
+    if (err == EINTR)
+        /* Got a signal while inside an RPC of the critical section, retry again */
+    {
+        goto retry;
+    }
 
-  if (err)
-    return __hurd_fail (err);
+    if (err) {
+        return __hurd_fail(err);
+    }
 
-  /* Install the new handle and reauthenticate everything.  */
-  err = __setauth (newauth);
-  __mach_port_deallocate (__mach_task_self (), newauth);
-  return err;
+    /* Install the new handle and reauthenticate everything.  */
+    err = __setauth(newauth);
+    __mach_port_deallocate(__mach_task_self(), newauth);
+    return err;
 }
-libc_hidden_def (setegid)
+libc_hidden_def(setegid)

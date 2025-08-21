@@ -23,10 +23,10 @@
 /* This is the private state used if PS is NULL.  */
 static mbstate_t state;
 
-size_t
-mbrtoc32 (char32_t *pc32, const char *s, size_t n, mbstate_t *ps)
+size_t mbrtoc32(char32_t *pc32, const char *s, size_t n, mbstate_t *ps)
 {
-  if (ps == NULL)
-    ps = &state;
-  return mbrtowc ((wchar_t *) pc32, s, n, ps);
+    if (ps == NULL) {
+        ps = &state;
+    }
+    return mbrtowc((wchar_t *) pc32, s, n, ps);
 }

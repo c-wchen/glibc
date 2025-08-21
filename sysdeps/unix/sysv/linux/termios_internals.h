@@ -38,21 +38,20 @@
    same as the termios structure we use in the libc.  Therefore we
    must translate it here.  */
 
-struct termios2
-{
-  tcflag_t c_iflag;		/* input mode flags */
-  tcflag_t c_oflag;		/* output mode flags */
-  tcflag_t c_cflag;		/* control mode flags */
-  tcflag_t c_lflag;		/* local mode flags */
+struct termios2 {
+    tcflag_t c_iflag;     /* input mode flags */
+    tcflag_t c_oflag;     /* output mode flags */
+    tcflag_t c_cflag;     /* control mode flags */
+    tcflag_t c_lflag;     /* local mode flags */
 #if _HAVE_TERMIOS2_C_CC_BEFORE_C_LINE
-  cc_t c_cc[_TERMIOS2_NCCS];	/* control characters */
-  cc_t c_line;			/* line discipline */
+    cc_t c_cc[_TERMIOS2_NCCS];    /* control characters */
+    cc_t c_line;          /* line discipline */
 #else
-  cc_t c_line;			/* line discipline */
-  cc_t c_cc[_TERMIOS2_NCCS];	/* control characters */
+    cc_t c_line;          /* line discipline */
+    cc_t c_cc[_TERMIOS2_NCCS];    /* control characters */
 #endif
-  speed_t c_ispeed;		/* input speed */
-  speed_t c_ospeed;		/* output speed */
+    speed_t c_ispeed;     /* input speed */
+    speed_t c_ospeed;     /* output speed */
 };
 
 /* Alpha got termios2 late, but TCGETS has exactly the same structure
@@ -104,40 +103,36 @@ typedef struct termios old_termios_t;
  * Copy a set of c_cc fields of possibly different width. If the target
  * field is longer, then fill with _POSIX_VDISABLE == -1.
  */
-static inline void
-copy_c_cc (cc_t *to, size_t nto, const cc_t *from, size_t nfrom)
+static inline void copy_c_cc(cc_t *to, size_t nto, const cc_t *from, size_t nfrom)
 {
-  if (nto < nfrom)
-    nfrom = nto;
+    if (nto < nfrom) {
+        nfrom = nto;
+    }
 
-  to = __mempcpy (to, from, nfrom * sizeof(cc_t));
-  if (nto > nfrom)
-    memset (to, _POSIX_VDISABLE, (nto - nfrom) * sizeof(cc_t));
+    to = __mempcpy(to, from, nfrom * sizeof(cc_t));
+    if (nto > nfrom) {
+        memset(to, _POSIX_VDISABLE, (nto - nfrom) * sizeof(cc_t));
+    }
 }
 
 /* Extract the output and input legacy speed fields from c_cflag. */
-static inline tcflag_t
-cbaud (tcflag_t c_cflag)
+static inline tcflag_t cbaud(tcflag_t c_cflag)
 {
-  return c_cflag & CBAUD;
+    return c_cflag & CBAUD;
 }
 
-static inline tcflag_t
-cibaud (tcflag_t c_cflag)
+static inline tcflag_t cibaud(tcflag_t c_cflag)
 {
-  return cbaud (c_cflag >> IBSHIFT);
+    return cbaud(c_cflag >> IBSHIFT);
 }
 
-extern speed_t
-___cbaud_to_speed (tcflag_t c_cflag, speed_t other)
-    __attribute_const__ attribute_hidden;
+extern speed_t ___cbaud_to_speed(tcflag_t c_cflag, speed_t other)
+__attribute_const__ attribute_hidden;
 
-extern tcflag_t
-___speed_to_cbaud (speed_t speed)
-    __attribute_const__ attribute_hidden;
+extern tcflag_t ___speed_to_cbaud(speed_t speed)
+__attribute_const__ attribute_hidden;
 
-extern void
-___termios2_canonicalize_speeds (struct termios2 *k_termios_p)
-    attribute_hidden;
+extern void ___termios2_canonicalize_speeds(struct termios2 *k_termios_p)
+attribute_hidden;
 
 #endif /* TERMIOS_INTERNALS_H */

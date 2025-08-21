@@ -32,36 +32,34 @@
    database once, gets to the end, and then attempts a second
    iteration to look for crashes.  */
 
-static void
-try_it (void)
+static void try_it(void)
 {
-  struct passwd *pw;
+    struct passwd *pw;
 
-  /* setpwent is intentionally omitted here.  The first call to
-     getpwent detects that it's first and initializes.  The second
-     time try_it is called, this "first call" was not detected before
-     the fix, and getpwent would crash.  */
+    /* setpwent is intentionally omitted here.  The first call to
+       getpwent detects that it's first and initializes.  The second
+       time try_it is called, this "first call" was not detected before
+       the fix, and getpwent would crash.  */
 
-  while ((pw = getpwent ()) != NULL)
-    ;
+    while ((pw = getpwent()) != NULL)
+        ;
 
-  /* We only care if this segfaults or not.  */
-  endpwent ();
+    /* We only care if this segfaults or not.  */
+    endpwent();
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char *cmd;
+    char *cmd;
 
-  cmd = xasprintf ("%s/makedb -o /var/db/passwd.db /var/db/passwd.in",
-		   support_bindir_prefix);
-  xsystem (cmd);
-  free (cmd);
+    cmd = xasprintf("%s/makedb -o /var/db/passwd.db /var/db/passwd.in",
+                    support_bindir_prefix);
+    xsystem(cmd);
+    free(cmd);
 
-  try_it ();
-  try_it ();
+    try_it();
+    try_it();
 
-  return 0;
+    return 0;
 }
 #include <support/test-driver.c>

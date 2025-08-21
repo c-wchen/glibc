@@ -35,14 +35,13 @@
 #define DSO_DIR "/tmp/tst-ldconfig"
 
 
-static void
-run_ldconfig (void *x __attribute__((unused)))
+static void run_ldconfig(void *x __attribute__((unused)))
 {
-  char *prog = xasprintf ("%s/ldconfig", support_install_rootsbindir);
-  char *args[] = { prog, NULL };
+    char *prog = xasprintf("%s/ldconfig", support_install_rootsbindir);
+    char *args[] = { prog, NULL };
 
-  execv (args[0], args);
-  FAIL_EXIT1 ("execv: %m");
+    execv(args[0], args);
+    FAIL_EXIT1("execv: %m");
 }
 
 
@@ -58,63 +57,65 @@ run_ldconfig (void *x __attribute__((unused)))
    (The loader does not read /etc/ld.so.conf, only /etc/ld.so.cache.)
    Run ldconfig.
    Try to dlopen it again.  This should finally succeed.  */
-static int
-do_test (void)
+static int do_test(void)
 {
-  struct support_capture_subprocess result;
+    struct support_capture_subprocess result;
 
-  char *conf_path = xasprintf ("%s/ld.so.conf", support_sysconfdir_prefix);
+    char *conf_path = xasprintf("%s/ld.so.conf", support_sysconfdir_prefix);
 
-  /* Create the needed directories.  */
-  xmkdirp ("/var/cache/ldconfig", 0777);
-  xmkdirp (DSO_DIR, 0777);
+    /* Create the needed directories.  */
+    xmkdirp("/var/cache/ldconfig", 0777);
+    xmkdirp(DSO_DIR, 0777);
 
-  /* Rename the DSO to start with "lib" because there's an undocumented
-     filter in ldconfig where it ignores any file that doesn't start with
-     "lib" (for regular shared libraries) or "ld-" (for ld-linux-*).  */
-  char *mod_src_path = xasprintf ("%s/tst-ldconfig-ld-mod.so",
-				  support_libdir_prefix);
-  if (rename (mod_src_path, "/tmp/tst-ldconfig/libldconfig-ld-mod.so"))
-    FAIL_EXIT1 ("Renaming/moving the DSO failed: %m");
-  free (mod_src_path);
+    /* Rename the DSO to start with "lib" because there's an undocumented
+       filter in ldconfig where it ignores any file that doesn't start with
+       "lib" (for regular shared libraries) or "ld-" (for ld-linux-*).  */
+    char *mod_src_path = xasprintf("%s/tst-ldconfig-ld-mod.so",
+                                   support_libdir_prefix);
+    if (rename(mod_src_path, "/tmp/tst-ldconfig/libldconfig-ld-mod.so")) {
+        FAIL_EXIT1("Renaming/moving the DSO failed: %m");
+    }
+    free(mod_src_path);
 
 
-  /* Open the DSO.  We expect this to fail - tst-ldconfig directory
-     is not searched.  */
-  TEST_VERIFY_EXIT (dlopen (DSO, RTLD_NOW | RTLD_GLOBAL) == NULL);
+    /* Open the DSO.  We expect this to fail - tst-ldconfig directory
+       is not searched.  */
+    TEST_VERIFY_EXIT(dlopen(DSO, RTLD_NOW | RTLD_GLOBAL) == NULL);
 
-  FILE *fp = xfopen (conf_path, "a+");
-  if (!fp)
-    FAIL_EXIT1 ("creating %s failed: %m", conf_path);
-  xfclose (fp);
+    FILE *fp = xfopen(conf_path, "a+");
+    if (!fp) {
+        FAIL_EXIT1("creating %s failed: %m", conf_path);
+    }
+    xfclose(fp);
 
-  /* Run ldconfig.  */
-  result = support_capture_subprocess (run_ldconfig, NULL);
-  support_capture_subprocess_check (&result, "execv", 0, sc_allow_none);
+    /* Run ldconfig.  */
+    result = support_capture_subprocess(run_ldconfig, NULL);
+    support_capture_subprocess_check(&result, "execv", 0, sc_allow_none);
 
-  /* Try to dlopen the same DSO again, we expect this to fail again.  */
-  TEST_VERIFY_EXIT (dlopen (DSO, RTLD_NOW | RTLD_GLOBAL) == NULL);
+    /* Try to dlopen the same DSO again, we expect this to fail again.  */
+    TEST_VERIFY_EXIT(dlopen(DSO, RTLD_NOW | RTLD_GLOBAL) == NULL);
 
-  /* Add tst-ldconfig directory to /etc/ld.so.conf.  */
-  fp = xfopen (conf_path, "w");
-  if (!(fwrite (DSO_DIR, 1, sizeof (DSO_DIR), fp)))
-    FAIL_EXIT1 ("updating %s failed: %m", conf_path);
-  xfclose (fp);
+    /* Add tst-ldconfig directory to /etc/ld.so.conf.  */
+    fp = xfopen(conf_path, "w");
+    if (!(fwrite(DSO_DIR, 1, sizeof(DSO_DIR), fp))) {
+        FAIL_EXIT1("updating %s failed: %m", conf_path);
+    }
+    xfclose(fp);
 
-  /* Try to dlopen the same DSO again, we expect this to still fail.  */
-  TEST_VERIFY_EXIT (dlopen (DSO, RTLD_NOW | RTLD_GLOBAL) == NULL);
+    /* Try to dlopen the same DSO again, we expect this to still fail.  */
+    TEST_VERIFY_EXIT(dlopen(DSO, RTLD_NOW | RTLD_GLOBAL) == NULL);
 
-  /* Run ldconfig again.  */
-  result = support_capture_subprocess (run_ldconfig, NULL);
-  support_capture_subprocess_check (&result, "execv", 0, sc_allow_none);
-  support_capture_subprocess_free (&result);
+    /* Run ldconfig again.  */
+    result = support_capture_subprocess(run_ldconfig, NULL);
+    support_capture_subprocess_check(&result, "execv", 0, sc_allow_none);
+    support_capture_subprocess_free(&result);
 
-  /* Finally, we expect dlopen to pass now.  */
-  TEST_VERIFY_EXIT (dlopen (DSO, RTLD_NOW | RTLD_GLOBAL) != NULL);
+    /* Finally, we expect dlopen to pass now.  */
+    TEST_VERIFY_EXIT(dlopen(DSO, RTLD_NOW | RTLD_GLOBAL) != NULL);
 
-  free (conf_path);
+    free(conf_path);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

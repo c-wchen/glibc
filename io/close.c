@@ -19,19 +19,17 @@
 #include <unistd.h>
 
 /* Close the file descriptor FD.  */
-int
-__close (int fd)
+int __close(int fd)
 {
-  if (fd < 0)
-    {
-      __set_errno (EBADF);
-      return -1;
+    if (fd < 0) {
+        __set_errno(EBADF);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (__close)
-stub_warning (close)
+libc_hidden_def(__close)
+stub_warning(close)
 
-weak_alias (__close, close)
+weak_alias(__close, close)

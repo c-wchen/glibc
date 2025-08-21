@@ -15,17 +15,15 @@
 static jmp_buf b;
 
 
-static void
-__attribute__ ((noinline))
-f (void)
+static void __attribute__((noinline))
+f(void)
 {
-  char buf[1000];
-  asm volatile ("" : "=m" (buf));
+    char buf[1000];
+    asm volatile("" : "=m"(buf));
 
-  if (setjmp (b) != 0)
-    {
-      puts ("second longjmp succeeded");
-      exit (1);
+    if (setjmp(b) != 0) {
+        puts("second longjmp succeeded");
+        exit(1);
     }
 }
 
@@ -33,44 +31,40 @@ f (void)
 static bool expected_to_fail;
 
 
-static void
-handler (int sig)
+static void handler(int sig)
 {
-  if (expected_to_fail)
-    _exit (0);
-  else
-    {
-      static const char msg[] = "unexpected longjmp failure\n";
-      TEMP_FAILURE_RETRY (write (STDOUT_FILENO, msg, sizeof (msg) - 1));
-      _exit (1);
+    if (expected_to_fail) {
+        _exit(0);
+    } else {
+        static const char msg[] = "unexpected longjmp failure\n";
+        TEMP_FAILURE_RETRY(write(STDOUT_FILENO, msg, sizeof(msg) - 1));
+        _exit(1);
     }
 }
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  set_fortify_handler (handler);
+    set_fortify_handler(handler);
 
 
-  expected_to_fail = false;
+    expected_to_fail = false;
 
-  if (setjmp (b) == 0)
-    {
-      longjmp (b, 1);
-      /* NOTREACHED */
-      printf ("first longjmp returned\n");
-      return 1;
+    if (setjmp(b) == 0) {
+        longjmp(b, 1);
+        /* NOTREACHED */
+        printf("first longjmp returned\n");
+        return 1;
     }
 
 
-  expected_to_fail = true;
+    expected_to_fail = true;
 
-  f ();
-  longjmp (b, 1);
+    f();
+    longjmp(b, 1);
 
-  puts ("second longjmp returned");
-  return 1;
+    puts("second longjmp returned");
+    return 1;
 }
 
 #include <support/test-driver.c>

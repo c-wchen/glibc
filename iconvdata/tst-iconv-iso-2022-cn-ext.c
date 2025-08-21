@@ -37,92 +37,88 @@
    character sets and may run out of buffer space while doing the
    operation.  */
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  iconv_t cd = iconv_open ("ISO-2022-CN-EXT", "UTF-8");
-  TEST_VERIFY_EXIT (cd != (iconv_t) -1);
+    iconv_t cd = iconv_open("ISO-2022-CN-EXT", "UTF-8");
+    TEST_VERIFY_EXIT(cd != (iconv_t) -1);
 
-  char *ntf;
-  size_t ntfsize;
-  char *outbufbase;
-  {
-    int pgz = getpagesize ();
-    TEST_VERIFY_EXIT (pgz > 0);
-    ntfsize = 2 * pgz;
+    char *ntf;
+    size_t ntfsize;
+    char *outbufbase;
+    {
+        int pgz = getpagesize();
+        TEST_VERIFY_EXIT(pgz > 0);
+        ntfsize = 2 * pgz;
 
-    ntf = xmmap (NULL, ntfsize, PROT_READ | PROT_WRITE, MAP_PRIVATE
-		 | MAP_ANONYMOUS, -1);
-    xmprotect (ntf + pgz, pgz, PROT_NONE);
+        ntf = xmmap(NULL, ntfsize, PROT_READ | PROT_WRITE, MAP_PRIVATE
+                    | MAP_ANONYMOUS, -1);
+        xmprotect(ntf + pgz, pgz, PROT_NONE);
 
-    outbufbase = ntf + pgz;
-  }
+        outbufbase = ntf + pgz;
+    }
 
-  /* Check if SOdesignation escape sequence does not trigger an OOB write.  */
-  {
-    char inbuf[] = "\xe4\xba\xa4\xe6\x8d\xa2";
+    /* Check if SOdesignation escape sequence does not trigger an OOB write.  */
+    {
+        char inbuf[] = "\xe4\xba\xa4\xe6\x8d\xa2";
 
-    for (int i = 0; i < 9; i++)
-      {
-	char *inp = inbuf;
-	size_t inleft = sizeof (inbuf) - 1;
+        for (int i = 0; i < 9; i++) {
+            char *inp = inbuf;
+            size_t inleft = sizeof(inbuf) - 1;
 
-	char *outp = outbufbase - i;
-	size_t outleft = i;
+            char *outp = outbufbase - i;
+            size_t outleft = i;
 
-	TEST_VERIFY_EXIT (iconv (cd, &inp, &inleft, &outp, &outleft)
-			  == (size_t) -1);
-	TEST_COMPARE (errno, E2BIG);
+            TEST_VERIFY_EXIT(iconv(cd, &inp, &inleft, &outp, &outleft)
+                             == (size_t) -1);
+            TEST_COMPARE(errno, E2BIG);
 
-	TEST_VERIFY_EXIT (iconv (cd, NULL, NULL, NULL, NULL) == 0);
-      }
-  }
+            TEST_VERIFY_EXIT(iconv(cd, NULL, NULL, NULL, NULL) == 0);
+        }
+    }
 
-  /* Same as before for SS2designation.  */
-  {
-    char inbuf[] = "㴽 \xe3\xb4\xbd";
+    /* Same as before for SS2designation.  */
+    {
+        char inbuf[] = "㴽 \xe3\xb4\xbd";
 
-    for (int i = 0; i < 14; i++)
-      {
-	char *inp = inbuf;
-	size_t inleft = sizeof (inbuf) - 1;
+        for (int i = 0; i < 14; i++) {
+            char *inp = inbuf;
+            size_t inleft = sizeof(inbuf) - 1;
 
-	char *outp = outbufbase - i;
-	size_t outleft = i;
+            char *outp = outbufbase - i;
+            size_t outleft = i;
 
-	TEST_VERIFY_EXIT (iconv (cd, &inp, &inleft, &outp, &outleft)
-			  == (size_t) -1);
-	TEST_COMPARE (errno, E2BIG);
+            TEST_VERIFY_EXIT(iconv(cd, &inp, &inleft, &outp, &outleft)
+                             == (size_t) -1);
+            TEST_COMPARE(errno, E2BIG);
 
-	TEST_VERIFY_EXIT (iconv (cd, NULL, NULL, NULL, NULL) == 0);
-      }
-  }
+            TEST_VERIFY_EXIT(iconv(cd, NULL, NULL, NULL, NULL) == 0);
+        }
+    }
 
-  /* Same as before for SS3designation.  */
-  {
-    char inbuf[] = "劄 \xe5\x8a\x84";
+    /* Same as before for SS3designation.  */
+    {
+        char inbuf[] = "劄 \xe5\x8a\x84";
 
-    for (int i = 0; i < 14; i++)
-      {
-	char *inp = inbuf;
-	size_t inleft = sizeof (inbuf) - 1;
+        for (int i = 0; i < 14; i++) {
+            char *inp = inbuf;
+            size_t inleft = sizeof(inbuf) - 1;
 
-	char *outp = outbufbase - i;
-	size_t outleft = i;
+            char *outp = outbufbase - i;
+            size_t outleft = i;
 
-	TEST_VERIFY_EXIT (iconv (cd, &inp, &inleft, &outp, &outleft)
-			  == (size_t) -1);
-	TEST_COMPARE (errno, E2BIG);
+            TEST_VERIFY_EXIT(iconv(cd, &inp, &inleft, &outp, &outleft)
+                             == (size_t) -1);
+            TEST_COMPARE(errno, E2BIG);
 
-	TEST_VERIFY_EXIT (iconv (cd, NULL, NULL, NULL, NULL) == 0);
-      }
-  }
+            TEST_VERIFY_EXIT(iconv(cd, NULL, NULL, NULL, NULL) == 0);
+        }
+    }
 
-  TEST_VERIFY_EXIT (iconv_close (cd) != -1);
+    TEST_VERIFY_EXIT(iconv_close(cd) != -1);
 
-  xmunmap (ntf, ntfsize);
+    xmunmap(ntf, ntfsize);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

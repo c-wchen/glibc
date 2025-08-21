@@ -21,41 +21,38 @@
 #include <sys/syscall.h>
 
 
-int
-sigstack (struct sigstack *ss, struct sigstack *oss)
+int sigstack(struct sigstack *ss, struct sigstack *oss)
 {
-  stack_t sas;
-  stack_t *sasp = NULL;
-  stack_t osas;
-  stack_t *osasp = oss == NULL ? NULL : &osas;
-  int result;
+    stack_t sas;
+    stack_t *sasp = NULL;
+    stack_t osas;
+    stack_t *osasp = oss == NULL ? NULL : &osas;
+    int result;
 
-  if (ss != NULL)
-    {
-      /* We have to convert the information.  */
-      sas.ss_sp = ss->ss_sp;
-      sas.ss_flags = ss->ss_onstack ? SS_ONSTACK : 0;
+    if (ss != NULL) {
+        /* We have to convert the information.  */
+        sas.ss_sp = ss->ss_sp;
+        sas.ss_flags = ss->ss_onstack ? SS_ONSTACK : 0;
 
-      /* For the size of the stack we have no value we can pass to the
-	 kernel.  This is why this function should not be used.  We simply
-	 assume that all the memory down to address zero (in case the stack
-	 grows down) is available.  */
-      sas.ss_size = ss->ss_sp - NULL;
+        /* For the size of the stack we have no value we can pass to the
+        kernel.  This is why this function should not be used.  We simply
+         assume that all the memory down to address zero (in case the stack
+         grows down) is available.  */
+        sas.ss_size = ss->ss_sp - NULL;
 
-      sasp = &sas;
+        sasp = &sas;
     }
 
-  /* Call the kernel.  */
-  result = __sigaltstack (sasp, osasp);
+    /* Call the kernel.  */
+    result = __sigaltstack(sasp, osasp);
 
-  /* Convert the result, if wanted and possible.  */
-  if (result == 0 && oss != NULL)
-    {
-      oss->ss_sp = osas.ss_sp;
-      oss->ss_onstack = (osas.ss_flags & SS_ONSTACK) != 0;
+    /* Convert the result, if wanted and possible.  */
+    if (result == 0 && oss != NULL) {
+        oss->ss_sp = osas.ss_sp;
+        oss->ss_onstack = (osas.ss_flags & SS_ONSTACK) != 0;
     }
 
-  return result;
+    return result;
 }
 
-link_warning (sigstack, "the `sigstack' function is dangerous.  `sigaltstack' should be used instead.")
+link_warning(sigstack, "the `sigstack' function is dangerous.  `sigaltstack' should be used instead.")

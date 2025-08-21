@@ -95,102 +95,110 @@
 #include <shlib-compat.h>
 #include <random-bits.h>
 
-int
-__res_context_mkquery (struct resolv_context *ctx, int op, const char *dname,
-                       int class, int type, const unsigned char *data,
-                       unsigned char *buf, int buflen)
+int __res_context_mkquery(struct resolv_context *ctx, int op, const char *dname,
+                          int class, int type, const unsigned char *data,
+                          unsigned char *buf, int buflen)
 {
-  UHEADER *hp;
-  unsigned char *cp;
-  int n;
-  unsigned char *dnptrs[20], **dpp, **lastdnptr;
+    UHEADER *hp;
+    unsigned char *cp;
+    int n;
+    unsigned char *dnptrs[20], **dpp, **lastdnptr;
 
-  if (class < 0 || class > 65535 || type < 0 || type > 65535)
-    return -1;
-
-  /* Initialize header fields.  */
-  if ((buf == NULL) || (buflen < HFIXEDSZ))
-    return -1;
-  memset (buf, 0, HFIXEDSZ);
-  hp = (UHEADER *) buf;
-  /* We randomize the IDs every time.  The old code just incremented
-     by one after the initial randomization which still predictable if
-     the application does multiple requests.  */
-  hp->id = random_bits ();
-  hp->opcode = op;
-  if (ctx->resp->options & RES_TRUSTAD)
-    hp->ad = 1;
-  hp->rd = (ctx->resp->options & RES_RECURSE) != 0;
-  hp->rcode = NOERROR;
-  cp = buf + HFIXEDSZ;
-  buflen -= HFIXEDSZ;
-  dpp = dnptrs;
-  *dpp++ = buf;
-  *dpp++ = NULL;
-  lastdnptr = dnptrs + sizeof dnptrs / sizeof dnptrs[0];
-
-  /* Perform opcode specific processing.  */
-  switch (op)
-    {
-    case NS_NOTIFY_OP:
-      if ((buflen -= QFIXEDSZ + (data == NULL ? 0 : RRFIXEDSZ)) < 0)
+    if (class < 0 || class > 65535 || type < 0 || type > 65535) {
         return -1;
-      goto compose;
-
-    case QUERY:
-      if ((buflen -= QFIXEDSZ) < 0)
-        return -1;
-    compose:
-      n = __ns_name_compress (dname, cp, buflen,
-                              (const unsigned char **) dnptrs,
-                              (const unsigned char **) lastdnptr);
-      if (n < 0)
-        return -1;
-      cp += n;
-      buflen -= n;
-      NS_PUT16 (type, cp);
-      NS_PUT16 (class, cp);
-      hp->qdcount = htons (1);
-      if (op == QUERY || data == NULL)
-        break;
-
-      /* Make an additional record for completion domain.  */
-      n = __ns_name_compress ((char *)data, cp, buflen,
-                              (const unsigned char **) dnptrs,
-                              (const unsigned char **) lastdnptr);
-      if (__glibc_unlikely (n < 0))
-        return -1;
-      cp += n;
-      buflen -= n;
-      NS_PUT16 (T_NULL, cp);
-      NS_PUT16 (class, cp);
-      NS_PUT32 (0, cp);
-      NS_PUT16 (0, cp);
-      hp->arcount = htons (1);
-      break;
-
-    default:
-      return -1;
     }
-  return cp - buf;
+
+    /* Initialize header fields.  */
+    if ((buf == NULL) || (buflen < HFIXEDSZ)) {
+        return -1;
+    }
+    memset(buf, 0, HFIXEDSZ);
+    hp = (UHEADER *) buf;
+    /* We randomize the IDs every time.  The old code just incremented
+       by one after the initial randomization which still predictable if
+       the application does multiple requests.  */
+    hp->id = random_bits();
+    hp->opcode = op;
+    if (ctx->resp->options & RES_TRUSTAD) {
+        hp->ad = 1;
+    }
+    hp->rd = (ctx->resp->options & RES_RECURSE) != 0;
+    hp->rcode = NOERROR;
+    cp = buf + HFIXEDSZ;
+    buflen -= HFIXEDSZ;
+    dpp = dnptrs;
+    *dpp++ = buf;
+    *dpp++ = NULL;
+    lastdnptr = dnptrs + sizeof dnptrs / sizeof dnptrs[0];
+
+    /* Perform opcode specific processing.  */
+    switch (op) {
+        case NS_NOTIFY_OP:
+            if ((buflen -= QFIXEDSZ + (data == NULL ? 0 : RRFIXEDSZ)) < 0) {
+                return -1;
+            }
+            goto compose;
+
+        case QUERY:
+            if ((buflen -= QFIXEDSZ) < 0) {
+                return -1;
+            }
+compose:
+            n = __ns_name_compress(dname, cp, buflen,
+                                   (const unsigned char **) dnptrs,
+                                   (const unsigned char **) lastdnptr);
+            if (n < 0) {
+                return -1;
+            }
+            cp += n;
+            buflen -= n;
+            NS_PUT16(type, cp);
+            NS_PUT16(class, cp);
+            hp->qdcount = htons(1);
+            if (op == QUERY || data == NULL) {
+                break;
+            }
+
+            /* Make an additional record for completion domain.  */
+            n = __ns_name_compress((char *)data, cp, buflen,
+                                   (const unsigned char **) dnptrs,
+                                   (const unsigned char **) lastdnptr);
+            if (__glibc_unlikely(n < 0)) {
+                return -1;
+            }
+            cp += n;
+            buflen -= n;
+            NS_PUT16(T_NULL, cp);
+            NS_PUT16(class, cp);
+            NS_PUT32(0, cp);
+            NS_PUT16(0, cp);
+            hp->arcount = htons(1);
+            break;
+
+        default:
+            return -1;
+    }
+    return cp - buf;
 }
-libc_hidden_def (__res_context_mkquery)
+libc_hidden_def(__res_context_mkquery)
 
 /* Common part of res_nmkquery and res_mkquery.  */
 static int
-context_mkquery_common (struct resolv_context *ctx,
-                        int op, const char *dname, int class, int type,
-                        const unsigned char *data,
-                        unsigned char *buf, int buflen)
+context_mkquery_common(struct resolv_context *ctx,
+                       int op, const char *dname, int class, int type,
+                       const unsigned char *data,
+                       unsigned char *buf, int buflen)
 {
-  if (ctx == NULL)
-    return -1;
-  int result = __res_context_mkquery
-    (ctx, op, dname, class, type, data, buf, buflen);
-  if (result >= 2)
-    memcpy (&ctx->resp->id, buf, 2);
-  __resolv_context_put (ctx);
-  return result;
+    if (ctx == NULL) {
+        return -1;
+    }
+    int result = __res_context_mkquery
+                 (ctx, op, dname, class, type, data, buf, buflen);
+    if (result >= 2) {
+        memcpy(&ctx->resp->id, buf, 2);
+    }
+    __resolv_context_put(ctx);
+    return result;
 }
 
 /* Form all types of queries.  Returns the size of the result or -1 on
@@ -203,38 +211,36 @@ context_mkquery_common (struct resolv_context *ctx,
    NS_NOTIFY_OP).  BUF must point to the out buffer of BUFLEN bytes.
 
    DATALEN and NEWRR_IN are currently ignored.  */
-int
-___res_nmkquery (res_state statp, int op, const char *dname,
-                 int class, int type,
-                 const unsigned char *data, int datalen,
-                 const unsigned char *newrr_in,
-                 unsigned char *buf, int buflen)
+int ___res_nmkquery(res_state statp, int op, const char *dname,
+                    int class, int type,
+                    const unsigned char *data, int datalen,
+                    const unsigned char *newrr_in,
+                    unsigned char *buf, int buflen)
 {
-  return context_mkquery_common
-    (__resolv_context_get_override (statp),
-     op, dname, class, type, data, buf, buflen);
+    return context_mkquery_common
+           (__resolv_context_get_override(statp),
+            op, dname, class, type, data, buf, buflen);
 }
-versioned_symbol (libc, ___res_nmkquery, res_nmkquery, GLIBC_2_34);
+versioned_symbol(libc, ___res_nmkquery, res_nmkquery, GLIBC_2_34);
 #if OTHER_SHLIB_COMPAT (libresolv, GLIBC_2_2, GLIBC_2_34)
-compat_symbol (libresolv, ___res_nmkquery, __res_nmkquery, GLIBC_2_2);
+compat_symbol(libresolv, ___res_nmkquery, __res_nmkquery, GLIBC_2_2);
 #endif
 
-int
-___res_mkquery (int op, const char *dname, int class, int type,
-                const unsigned char *data, int datalen,
-                const unsigned char *newrr_in,
-                unsigned char *buf, int buflen)
+int ___res_mkquery(int op, const char *dname, int class, int type,
+                   const unsigned char *data, int datalen,
+                   const unsigned char *newrr_in,
+                   unsigned char *buf, int buflen)
 {
-  return context_mkquery_common
-    (__resolv_context_get_preinit (),
-     op, dname, class, type, data, buf, buflen);
+    return context_mkquery_common
+           (__resolv_context_get_preinit(),
+            op, dname, class, type, data, buf, buflen);
 }
-versioned_symbol (libc, ___res_mkquery, res_mkquery, GLIBC_2_34);
+versioned_symbol(libc, ___res_mkquery, res_mkquery, GLIBC_2_34);
 #if OTHER_SHLIB_COMPAT (libresolv, GLIBC_2_0, GLIBC_2_2)
-compat_symbol (libresolv, ___res_mkquery, res_mkquery, GLIBC_2_0);
+compat_symbol(libresolv, ___res_mkquery, res_mkquery, GLIBC_2_0);
 #endif
 #if OTHER_SHLIB_COMPAT (libresolv, GLIBC_2_2, GLIBC_2_34)
-compat_symbol (libresolv, ___res_mkquery, __res_mkquery, GLIBC_2_2);
+compat_symbol(libresolv, ___res_mkquery, __res_mkquery, GLIBC_2_2);
 #endif
 
 /* Create an OPT resource record.  Return the length of the final
@@ -245,56 +251,58 @@ compat_symbol (libresolv, ___res_mkquery, __res_mkquery, GLIBC_2_2);
    aller).  BUF is the packet being constructed.  The array it
    pointers to must be BUFLEN bytes long.  ANSLEN is the advertised
    EDNS buffer size (to be included in the OPT resource record).  */
-int
-__res_nopt (struct resolv_context *ctx,
-            int n0, unsigned char *buf, int buflen, int anslen)
+int __res_nopt(struct resolv_context *ctx,
+               int n0, unsigned char *buf, int buflen, int anslen)
 {
-  uint16_t flags = 0;
-  UHEADER *hp = (UHEADER *) buf;
-  unsigned char *cp = buf + n0;
-  unsigned char *ep = buf + buflen;
+    uint16_t flags = 0;
+    UHEADER *hp = (UHEADER *) buf;
+    unsigned char *cp = buf + n0;
+    unsigned char *ep = buf + buflen;
 
-  if ((ep - cp) < 1 + RRFIXEDSZ)
-    return -1;
+    if ((ep - cp) < 1 + RRFIXEDSZ) {
+        return -1;
+    }
 
-  /* Add the root label.  */
-  *cp++ = 0;
+    /* Add the root label.  */
+    *cp++ = 0;
 
-  NS_PUT16 (T_OPT, cp);         /* Record type.  */
+    NS_PUT16(T_OPT, cp);          /* Record type.  */
 
-  /* Lowering the advertised buffer size based on the actual
-     answer buffer size is desirable because the server will
-     minimize the reply to fit into the UDP packet (and A
-     non-minimal response might not fit the buffer).
+    /* Lowering the advertised buffer size based on the actual
+       answer buffer size is desirable because the server will
+       minimize the reply to fit into the UDP packet (and A
+       non-minimal response might not fit the buffer).
 
-     The RESOLV_EDNS_BUFFER_SIZE limit could still result in TCP
-     fallback and a non-minimal response which has to be
-     hard-truncated in the stub resolver, but this is price to
-     pay for avoiding fragmentation.  (This issue does not
-     affect the nss_dns functions because they use the stub
-     resolver in such a way that it allocates a properly sized
-     response buffer.)  */
-  {
-    uint16_t buffer_size;
-    if (anslen < 512)
-      buffer_size = 512;
-    else if (anslen > RESOLV_EDNS_BUFFER_SIZE)
-      buffer_size = RESOLV_EDNS_BUFFER_SIZE;
-    else
-      buffer_size = anslen;
-    NS_PUT16 (buffer_size, cp);
-  }
+       The RESOLV_EDNS_BUFFER_SIZE limit could still result in TCP
+       fallback and a non-minimal response which has to be
+       hard-truncated in the stub resolver, but this is price to
+       pay for avoiding fragmentation.  (This issue does not
+       affect the nss_dns functions because they use the stub
+       resolver in such a way that it allocates a properly sized
+       response buffer.)  */
+    {
+        uint16_t buffer_size;
+        if (anslen < 512) {
+            buffer_size = 512;
+        } else if (anslen > RESOLV_EDNS_BUFFER_SIZE) {
+            buffer_size = RESOLV_EDNS_BUFFER_SIZE;
+        } else {
+            buffer_size = anslen;
+        }
+        NS_PUT16(buffer_size, cp);
+    }
 
-  *cp++ = NOERROR;              /* Extended RCODE.  */
-  *cp++ = 0;                    /* EDNS version.  */
+    *cp++ = NOERROR;              /* Extended RCODE.  */
+    *cp++ = 0;                    /* EDNS version.  */
 
-  if (ctx->resp->options & RES_USE_DNSSEC)
-    flags |= NS_OPT_DNSSEC_OK;
+    if (ctx->resp->options & RES_USE_DNSSEC) {
+        flags |= NS_OPT_DNSSEC_OK;
+    }
 
-  NS_PUT16 (flags, cp);
-  NS_PUT16 (0, cp);       /* RDATA length (no options are preent).  */
-  hp->arcount = htons (ntohs (hp->arcount) + 1);
+    NS_PUT16(flags, cp);
+    NS_PUT16(0, cp);        /* RDATA length (no options are preent).  */
+    hp->arcount = htons(ntohs(hp->arcount) + 1);
 
-  return cp - buf;
+    return cp - buf;
 }
-libc_hidden_def (__res_nopt)
+libc_hidden_def(__res_nopt)

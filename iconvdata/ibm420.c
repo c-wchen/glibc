@@ -21,7 +21,7 @@
 /* Get the conversion table.  */
 #define TABLES <ibm420.h>
 
-#define CHARSET_NAME	"IBM420//"
-#define HAS_HOLES	1	/* Not all 256 character are defined.  */
+#define CHARSET_NAME    "IBM420//"
+#define HAS_HOLES   1   /* Not all 256 character are defined.  */
 
 #include <8bit-gap.c>

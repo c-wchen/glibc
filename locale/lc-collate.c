@@ -20,4 +20,4 @@
 #include <endian.h>
 
 
-_NL_CURRENT_DEFINE (LC_COLLATE);
+_NL_CURRENT_DEFINE(LC_COLLATE);

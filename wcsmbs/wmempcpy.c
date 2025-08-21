@@ -19,10 +19,9 @@
 #include <string.h>
 
 
-wchar_t *
-__wmempcpy (wchar_t *s1, const wchar_t *s2, size_t n)
+wchar_t *__wmempcpy(wchar_t *s1, const wchar_t *s2, size_t n)
 {
-  return (wchar_t *) __mempcpy ((char *) s1, (char *) s2,
-				n * sizeof (wchar_t));
+    return (wchar_t *) __mempcpy((char *) s1, (char *) s2,
+                                 n * sizeof(wchar_t));
 }
-weak_alias (__wmempcpy, wmempcpy)
+weak_alias(__wmempcpy, wmempcpy)

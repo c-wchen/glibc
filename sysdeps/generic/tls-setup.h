@@ -16,7 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-static inline void __attribute__ ((always_inline))
-tls_setup_tcbhead (struct pthread *pd)
+static inline void __attribute__((always_inline))
+tls_setup_tcbhead(struct pthread *pd)
 {
 }

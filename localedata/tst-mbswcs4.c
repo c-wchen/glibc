@@ -22,43 +22,42 @@
 #include <locale.h>
 
 #define show(expr, nexp, wcexp, end) \
-  n = expr;								\
-  printf (#expr " -> %zu", n);						\
-  printf (", wc = %lu, src = buf+%td", (unsigned long int) wc,		\
-	  src - (const char *) buf);					\
-  if (n != (size_t) nexp || wc != wcexp || src != (const char *) (end))	\
-    {									\
-      printf (", expected %zu and %lu and buf+%td", (size_t) nexp,	\
-	      (unsigned long int) wcexp, (end) - buf);			\
-      result = 1;							\
-    }									\
+  n = expr;                             \
+  printf (#expr " -> %zu", n);                      \
+  printf (", wc = %lu, src = buf+%td", (unsigned long int) wc,      \
+      src - (const char *) buf);                    \
+  if (n != (size_t) nexp || wc != wcexp || src != (const char *) (end)) \
+    {                                   \
+      printf (", expected %zu and %lu and buf+%td", (size_t) nexp,  \
+          (unsigned long int) wcexp, (end) - buf);          \
+      result = 1;                           \
+    }                                   \
   putc ('\n', stdout)
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  unsigned char buf[6] = { 0x25,  0xe2, 0x82, 0xac,  0xce, 0xbb };
-  mbstate_t state;
-  const char *src;
-  wchar_t wc = 42;
-  size_t n;
-  int result = 0;
-  const char *used_locale;
+    unsigned char buf[6] = { 0x25,  0xe2, 0x82, 0xac,  0xce, 0xbb };
+    mbstate_t state;
+    const char *src;
+    wchar_t wc = 42;
+    size_t n;
+    int result = 0;
+    const char *used_locale;
 
-  setlocale (LC_CTYPE,"de_DE.UTF-8");
-  /* Double check.  */
-  used_locale = setlocale (LC_CTYPE, NULL);
-  printf ("used locale: \"%s\"\n", used_locale);
-  result = strcmp (used_locale, "de_DE.UTF-8");
+    setlocale(LC_CTYPE, "de_DE.UTF-8");
+    /* Double check.  */
+    used_locale = setlocale(LC_CTYPE, NULL);
+    printf("used locale: \"%s\"\n", used_locale);
+    result = strcmp(used_locale, "de_DE.UTF-8");
 
-  memset (&state, '\0', sizeof (state));
+    memset(&state, '\0', sizeof(state));
 
-  src = (const char *) buf;
-  show (mbsrtowcs (&wc, &src, 1, &state), 1, 37, buf + 1);
-  show (mbsrtowcs (&wc, &src, 1, &state), 1, 8364, buf + 4);
-  show (mbsrtowcs (&wc, &src, 1, &state), 1, 955, buf + 6);
+    src = (const char *) buf;
+    show(mbsrtowcs(&wc, &src, 1, &state), 1, 37, buf + 1);
+    show(mbsrtowcs(&wc, &src, 1, &state), 1, 8364, buf + 4);
+    show(mbsrtowcs(&wc, &src, 1, &state), 1, 955, buf + 6);
 
-  return result;
+    return result;
 }
 
 #define TEST_FUNCTION do_test ()

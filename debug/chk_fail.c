@@ -21,10 +21,9 @@
 
 extern char **__libc_argv attribute_hidden;
 
-void
-__attribute__ ((noreturn))
-__chk_fail (void)
+void __attribute__((noreturn))
+__chk_fail(void)
 {
-  __fortify_fail ("buffer overflow detected");
+    __fortify_fail("buffer overflow detected");
 }
-libc_hidden_def (__chk_fail)
+libc_hidden_def(__chk_fail)

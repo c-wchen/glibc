@@ -20,16 +20,15 @@
 
 
 /* Save the current program position in ENV and return 0.  */
-int
-__libc_sigsetjmp (jmp_buf env, int savemask)
+int __libc_sigsetjmp(jmp_buf env, int savemask)
 {
-  /* Save the signal mask if requested.  */
-  __sigjmp_save (env, savemask);
+    /* Save the signal mask if requested.  */
+    __sigjmp_save(env, savemask);
 
-  __set_errno (ENOSYS);
-  /* No way to signal failure.	*/
-  return 0;
+    __set_errno(ENOSYS);
+    /* No way to signal failure.  */
+    return 0;
 }
 
-weak_alias (__libc_sigsetjmp, __sigsetjmp)
-stub_warning (__sigsetjmp)
+weak_alias(__libc_sigsetjmp, __sigsetjmp)
+stub_warning(__sigsetjmp)

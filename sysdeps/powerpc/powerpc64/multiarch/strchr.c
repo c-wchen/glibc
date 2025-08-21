@@ -25,19 +25,19 @@
 # include <shlib-compat.h>
 # include "init-arch.h"
 
-extern __typeof (strchr) __strchr_ppc attribute_hidden;
-extern __typeof (strchr) __strchr_power7 attribute_hidden;
-extern __typeof (strchr) __strchr_power8 attribute_hidden;
+extern __typeof(strchr) __strchr_ppc attribute_hidden;
+extern __typeof(strchr) __strchr_power7 attribute_hidden;
+extern __typeof(strchr) __strchr_power8 attribute_hidden;
 # undef strchr
 
 /* Avoid DWARF definition DIE on ifunc symbol so that GDB can handle
    ifunc symbol properly.  */
-libc_ifunc_redirected (__redirect_strchr, strchr,
-		       (hwcap2 & PPC_FEATURE2_ARCH_2_07
-			&& hwcap & PPC_FEATURE_HAS_ALTIVEC)
-		       ? __strchr_power8 :
-		       (hwcap & PPC_FEATURE_ARCH_2_06)
-		       ? __strchr_power7
-		       : __strchr_ppc);
-weak_alias (strchr, index)
+libc_ifunc_redirected(__redirect_strchr, strchr,
+                      (hwcap2 &PPC_FEATURE2_ARCH_2_07
+                       &&hwcap &PPC_FEATURE_HAS_ALTIVEC)
+                      ? __strchr_power8 :
+                      (hwcap &PPC_FEATURE_ARCH_2_06)
+                      ? __strchr_power7
+                      : __strchr_ppc);
+weak_alias(strchr, index)
 #endif

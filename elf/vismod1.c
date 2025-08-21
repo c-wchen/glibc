@@ -17,87 +17,78 @@
 
 #include "vismod.h"
 
-int
-protlocal (void)
+int protlocal(void)
 {
-  return 0x4;
+    return 0x4;
 }
-asm (".protected protlocal");
+asm(".protected protlocal");
 
 
-int
-calllocal1 (void)
+int calllocal1(void)
 {
-  return protlocal () + 0x10;
+    return protlocal() + 0x10;
 }
 
 int
-(*getlocal1 (void)) (void)
+(*getlocal1(void))(void)
 {
-  return protlocal;
+    return protlocal;
+}
+
+int protinmod(void)
+{
+    return 0x400;
+}
+asm(".protected protinmod");
+
+int callinmod1(void)
+{
+    return protinmod() + 0x1000;
 }
 
 int
-protinmod (void)
+(*getinmod1(void))(void)
 {
-  return 0x400;
-}
-asm (".protected protinmod");
-
-int
-callinmod1 (void)
-{
-  return protinmod () + 0x1000;
+    return protinmod;
 }
 
-int
-(*getinmod1 (void)) (void)
+int protitcpt(void)
 {
-  return protinmod;
+    return 0x40000;
+}
+asm(".protected protitcpt");
+
+int callitcpt1(void)
+{
+    return protitcpt() + 0x100000;
 }
 
 int
-protitcpt (void)
+(*getitcpt1(void))(void)
 {
-  return 0x40000;
-}
-asm (".protected protitcpt");
-
-int
-callitcpt1 (void)
-{
-  return protitcpt () + 0x100000;
-}
-
-int
-(*getitcpt1 (void)) (void)
-{
-  return protitcpt;
+    return protitcpt;
 }
 
 const char *protvarlocal = __FILE__;
-asm (".protected protvarlocal");
+asm(".protected protvarlocal");
 
-const char **
-getvarlocal1 (void)
+const char **getvarlocal1(void)
 {
-  return &protvarlocal;
+    return &protvarlocal;
 }
 
 const char *protvarinmod = __FILE__;
-asm (".protected protvarinmod");
+asm(".protected protvarinmod");
 
-const char **
-getvarinmod1 (void)
+const char **getvarinmod1(void)
 {
-  return &protvarinmod;
+    return &protvarinmod;
 }
 
 const char *protvaritcpt = __FILE__;
-asm (".protected protvaritcpt");
+asm(".protected protvaritcpt");
 
-const char **
-getvaritcpt1 (void)
+const char **getvaritcpt1(void)
 {
-  return &protvaritcpt;
+    return &protvaritcpt;
 }

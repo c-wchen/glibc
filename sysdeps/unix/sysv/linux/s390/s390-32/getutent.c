@@ -25,8 +25,8 @@
 # define weak_alias(n,a)
 #endif
 #include "login/getutent.c"
-_weak_alias (buffer, __libc_getutent_freemem_ptr)
+_weak_alias(buffer, __libc_getutent_freemem_ptr)
 
 #if defined SHARED
-default_symbol_version (__getutent, getutent, UTMP_COMPAT_BASE);
+default_symbol_version(__getutent, getutent, UTMP_COMPAT_BASE);
 #endif

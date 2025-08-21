@@ -23,17 +23,17 @@
 #include <math.h>
 
 FLOAT
-M_DECL_FUNC (__fminimum_mag) (FLOAT x, FLOAT y)
+M_DECL_FUNC(__fminimum_mag)(FLOAT x, FLOAT y)
 {
-  FLOAT a, b;
-  asm("fcmp.cor." INSN_FMT "\t$fcc0, %2, %2\n\t"
-      "fcmp.cor." INSN_FMT "\t$fcc1, %3, %3\n\t"
-      "fsel"		   "\t%0, %2, %3, $fcc0\n\t"
-      "fsel"		   "\t%1, %3, %2, $fcc1\n\t"
-      "fmina."	  INSN_FMT "\t%1, %0, %1"
-      : "=&f" (a), "=f" (b) : "f" (x), "f" (y) : "fcc0", "fcc1");
-  return b;
+    FLOAT a, b;
+    asm("fcmp.cor." INSN_FMT "\t$fcc0, %2, %2\n\t"
+        "fcmp.cor." INSN_FMT "\t$fcc1, %3, %3\n\t"
+        "fsel"           "\t%0, %2, %3, $fcc0\n\t"
+        "fsel"           "\t%1, %3, %2, $fcc1\n\t"
+        "fmina."    INSN_FMT "\t%1, %0, %1"
+        : "=&f"(a), "=f"(b) : "f"(x), "f"(y) : "fcc0", "fcc1");
+    return b;
 }
-declare_mgen_alias (__fminimum_mag, fminimum_mag);
+declare_mgen_alias(__fminimum_mag, fminimum_mag);
 
 #endif

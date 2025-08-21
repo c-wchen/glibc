@@ -19,7 +19,7 @@
 #include <wctype.h>
 
 #define USE_IN_EXTENDED_LOCALE_MODEL 1
-#define COMPILE_WIDE	1
+#define COMPILE_WIDE    1
 #include "strftime_l.c"
 
-weak_alias (__wcsftime_l, wcsftime_l)
+weak_alias(__wcsftime_l, wcsftime_l)

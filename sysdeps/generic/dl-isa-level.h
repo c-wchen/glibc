@@ -18,8 +18,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 /* Return true if the ISA level in ENTRY is compatible with CPU.  */
-static inline bool
-dl_cache_hwcap_isa_level_compatible (struct file_entry_new *entry)
+static inline bool dl_cache_hwcap_isa_level_compatible(struct file_entry_new *entry)
 {
-  return true;
+    return true;
 }

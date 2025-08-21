@@ -27,38 +27,36 @@
 #define obstack_chunk_alloc malloc
 #define obstack_chunk_free free
 
-static void
-do_test_call (void *last, ...)
+static void do_test_call(void *last, ...)
 {
-  const char *expected = "-1.000000000000000000000000000000";
-  char *actual = NULL;
-  long double ld = -1;
-  struct obstack ob;
-  va_list ap;
+    const char *expected = "-1.000000000000000000000000000000";
+    char *actual = NULL;
+    long double ld = -1;
+    struct obstack ob;
+    va_list ap;
 
-  obstack_init (&ob);
-  OBSTACK_FUNCTION OBSTACK_FUNCTION_PARAMS;
-  actual = (char *) obstack_finish (&ob);
-  TEST_VERIFY (strncmp (expected, actual, 33) == 0);
-  obstack_free (&ob, NULL);
-  actual = NULL;
+    obstack_init(&ob);
+    OBSTACK_FUNCTION OBSTACK_FUNCTION_PARAMS;
+    actual = (char *) obstack_finish(&ob);
+    TEST_VERIFY(strncmp(expected, actual, 33) == 0);
+    obstack_free(&ob, NULL);
+    actual = NULL;
 
-  obstack_init (&ob);
-  va_start (ap, last);
-  VOBSTACK_FUNCTION VOBSTACK_FUNCTION_PARAMS;
-  va_end (ap);
-  actual = (char *) obstack_finish (&ob);
-  TEST_VERIFY (strncmp (expected, actual, 33) == 0);
-  obstack_free (&ob, NULL);
-  actual = NULL;
+    obstack_init(&ob);
+    va_start(ap, last);
+    VOBSTACK_FUNCTION VOBSTACK_FUNCTION_PARAMS;
+    va_end(ap);
+    actual = (char *) obstack_finish(&ob);
+    TEST_VERIFY(strncmp(expected, actual, 33) == 0);
+    obstack_free(&ob, NULL);
+    actual = NULL;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  long double ld = -1;
-  do_test_call (NULL, ld);
-  return 0;
+    long double ld = -1;
+    do_test_call(NULL, ld);
+    return 0;
 }
 
 #include <support/test-driver.c>

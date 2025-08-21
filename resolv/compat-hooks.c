@@ -40,17 +40,17 @@
 #if SHLIB_COMPAT (libresolv, GLIBC_2_0, GLIBC_2_25)
 
 void
-attribute_compat_text_section
-res_send_setqhook(void *hook) {
-  _res.__glibc_unused_qhook = hook;
+attribute_compat_text_section res_send_setqhook(void *hook)
+{
+    _res.__glibc_unused_qhook = hook;
 }
-compat_symbol (libresolv, res_send_setqhook, res_send_setqhook, GLIBC_2_0);
+compat_symbol(libresolv, res_send_setqhook, res_send_setqhook, GLIBC_2_0);
 
 void
-attribute_compat_text_section
-res_send_setrhook(void *hook) {
-  _res.__glibc_unused_rhook = hook;
+attribute_compat_text_section res_send_setrhook(void *hook)
+{
+    _res.__glibc_unused_rhook = hook;
 }
-compat_symbol (libresolv, res_send_setrhook, res_send_setrhook, GLIBC_2_0);
+compat_symbol(libresolv, res_send_setrhook, res_send_setrhook, GLIBC_2_0);
 
 #endif

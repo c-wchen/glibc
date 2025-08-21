@@ -25,98 +25,92 @@
 #include <hurd/version.h>
 #include <sysdep-cancel.h>
 
-int
-__waitid (idtype_t idtype, id_t id, siginfo_t *infop, int options)
+int __waitid(idtype_t idtype, id_t id, siginfo_t *infop, int options)
 {
-  struct rusage ignored;
-  error_t err;
-  pid_t pid, child;
-  int sigcode;
-  int status;
-  int cancel_oldtype;
+    struct rusage ignored;
+    error_t err;
+    pid_t pid, child;
+    int sigcode;
+    int status;
+    int cancel_oldtype;
 
-  switch (idtype)
-    {
-    case P_PID:
-      if (id <= 0)
-	goto invalid;
-      pid = (pid_t) id;
-      break;
-    case P_PGID:
-      if (id < 0 || id == 1)
-	goto invalid;
-      pid = (pid_t) -id;
-      break;
-    case P_ALL:
-      pid = -1;
-      break;
-    default:
-    invalid:
-      return __hurd_fail (EINVAL);
+    switch (idtype) {
+        case P_PID:
+            if (id <= 0) {
+                goto invalid;
+            }
+            pid = (pid_t) id;
+            break;
+        case P_PGID:
+            if (id < 0 || id == 1) {
+                goto invalid;
+            }
+            pid = (pid_t) - id;
+            break;
+        case P_ALL:
+            pid = -1;
+            break;
+        default:
+invalid:
+            return __hurd_fail(EINVAL);
     }
 
-  /* Technically we're supposed to return EFAULT if infop is bogus,
-     but that would involve mucking with signals, which is
-     too much hassle.  User will have to deal with SIGSEGV/SIGBUS.
-     We just check for a null pointer. */
+    /* Technically we're supposed to return EFAULT if infop is bogus,
+       but that would involve mucking with signals, which is
+       too much hassle.  User will have to deal with SIGSEGV/SIGBUS.
+       We just check for a null pointer. */
 
-  if (infop == NULL)
-    return __hurd_fail (EFAULT);
+    if (infop == NULL) {
+        return __hurd_fail(EFAULT);
+    }
 
-  cancel_oldtype = LIBC_CANCEL_ASYNC();
+    cancel_oldtype = LIBC_CANCEL_ASYNC();
 #if HURD_INTERFACE_VERSION >= 20201227
-  err = __USEPORT_CANCEL (PROC, __proc_waitid (port, pid, options,
-					       &status, &sigcode,
-					       &ignored, &child));
-  if (err == MIG_BAD_ID || err == EOPNOTSUPP)
+    err = __USEPORT_CANCEL(PROC, __proc_waitid(port, pid, options,
+                           &status, &sigcode,
+                           &ignored, &child));
+    if (err == MIG_BAD_ID || err == EOPNOTSUPP)
 #endif
-    err = __USEPORT_CANCEL (PROC, __proc_wait (port, pid, options,
-					       &status, &sigcode,
-					       &ignored, &child));
-  LIBC_CANCEL_RESET (cancel_oldtype);
+        err = __USEPORT_CANCEL(PROC, __proc_wait(port, pid, options,
+                               &status, &sigcode,
+                               &ignored, &child));
+    LIBC_CANCEL_RESET(cancel_oldtype);
 
-  if (err == EAGAIN)
-    {
-      /* POSIX.1-2008, Technical Corrigendum 1 XSH/TC1-2008/0713 [153] states
-	 that if waitid returns because WNOHANG was specified and status is
-	 not available for any process specified by idtype and id, then the
-	 si_signo and si_pid members of the structure pointed to by infop
-	 shall be set to zero.  */
-      infop->si_signo = 0;
-      infop->si_code = 0;
-      return 0;
+    if (err == EAGAIN) {
+        /* POSIX.1-2008, Technical Corrigendum 1 XSH/TC1-2008/0713 [153] states
+        that if waitid returns because WNOHANG was specified and status is
+         not available for any process specified by idtype and id, then the
+         si_signo and si_pid members of the structure pointed to by infop
+         shall be set to zero.  */
+        infop->si_signo = 0;
+        infop->si_code = 0;
+        return 0;
     }
 
-  if (err != 0)
-    return __hurd_fail (err);
-
-  /* Decode the status field and set infop members... */
-  infop->si_signo = SIGCHLD;
-  infop->si_pid = child;
-  infop->si_errno = 0;
-
-  if (WIFEXITED (status))
-    {
-      infop->si_code = CLD_EXITED;
-      infop->si_status = WEXITSTATUS (status);
-    }
-  else if (WIFSIGNALED (status))
-    {
-      infop->si_code = WCOREDUMP (status) ? CLD_DUMPED : CLD_KILLED;
-      infop->si_status = WTERMSIG (status);
-    }
-  else if (WIFSTOPPED (status))
-    {
-      infop->si_code = CLD_STOPPED;
-      infop->si_status = WSTOPSIG (status);
-    }
-  else if (WIFCONTINUED (status))
-    {
-      infop->si_code = CLD_CONTINUED;
-      infop->si_status = SIGCONT;
+    if (err != 0) {
+        return __hurd_fail(err);
     }
 
-  return 0;
+    /* Decode the status field and set infop members... */
+    infop->si_signo = SIGCHLD;
+    infop->si_pid = child;
+    infop->si_errno = 0;
+
+    if (WIFEXITED(status)) {
+        infop->si_code = CLD_EXITED;
+        infop->si_status = WEXITSTATUS(status);
+    } else if (WIFSIGNALED(status)) {
+        infop->si_code = WCOREDUMP(status) ? CLD_DUMPED : CLD_KILLED;
+        infop->si_status = WTERMSIG(status);
+    } else if (WIFSTOPPED(status)) {
+        infop->si_code = CLD_STOPPED;
+        infop->si_status = WSTOPSIG(status);
+    } else if (WIFCONTINUED(status)) {
+        infop->si_code = CLD_CONTINUED;
+        infop->si_status = SIGCONT;
+    }
+
+    return 0;
 }
-weak_alias (__waitid, waitid)
-strong_alias (__waitid, __libc_waitid)
+weak_alias(__waitid, waitid)
+strong_alias(__waitid, __libc_waitid)

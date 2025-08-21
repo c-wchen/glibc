@@ -25,8 +25,8 @@
    build itself.  */
 #if !defined __ASSEMBLER__ && !defined in_divdi3_c && IS_IN (libc) \
     && defined SHARED && !defined LIBC_NONSHARED
-asm ("__divdi3 = __divdi3_internal");
-asm ("__udivdi3 = __udivdi3_internal");
-asm ("__moddi3 = __moddi3_internal");
-asm ("__umoddi3 = __umoddi3_internal");
+asm("__divdi3 = __divdi3_internal");
+asm("__udivdi3 = __udivdi3_internal");
+asm("__moddi3 = __moddi3_internal");
+asm("__umoddi3 = __umoddi3_internal");
 #endif

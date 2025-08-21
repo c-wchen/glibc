@@ -21,11 +21,10 @@
 
 #include <support/xmemstream.h>
 
-struct support_capture_subprocess
-{
-  struct xmemstream out;
-  struct xmemstream err;
-  int status;
+struct support_capture_subprocess {
+    struct xmemstream out;
+    struct xmemstream err;
+    int status;
 };
 
 /* Invoke CALLBACK (CLOSURE) in a subprocess and capture standard
@@ -33,34 +32,33 @@ struct support_capture_subprocess
    err.buffer members in the result are null-terminated strings which
    can be examined by the caller (out.out and err.out are NULL).  */
 struct support_capture_subprocess support_capture_subprocess
-  (void (*callback) (void *), void *closure);
+(void (*callback)(void *), void *closure);
 
 /* Issue FILE with ARGV arguments and ENVP environments by using posix_spawn
    and capture standard output, standard error, and the exit status.  If
    ENVP is NULL the current environment variable is used.  The out.buffer and
    err.buffer are handle by support_capture_subprocess.  */
 struct support_capture_subprocess support_capture_subprogram
-  (const char *file, char *const argv[], char *const envp[]);
+(const char *file, char *const argv[], char *const envp[]);
 
 /* Copy the running program into a setgid binary and run it with
    CHILD_ID argument.  If the program exits with a non-zero status,
    exit with that exit status (or status 1 if the program did not exit
    normally).  If the test cannot be performed, exit with
    EXIT_UNSUPPORTED.  */
-void support_capture_subprogram_self_sgid (const char *child_id);
+void support_capture_subprogram_self_sgid(const char *child_id);
 
 /* Deallocate the subprocess data captured by
    support_capture_subprocess.  */
-void support_capture_subprocess_free (struct support_capture_subprocess *);
+void support_capture_subprocess_free(struct support_capture_subprocess *);
 
-enum support_capture_allow
-{
-  /* No output is allowed.  */
-  sc_allow_none = 0x01,
-  /* Output to stdout is permitted.  */
-  sc_allow_stdout = 0x02,
-  /* Output to standard error is permitted.  */
-  sc_allow_stderr = 0x04,
+enum support_capture_allow {
+    /* No output is allowed.  */
+    sc_allow_none = 0x01,
+    /* Output to stdout is permitted.  */
+    sc_allow_stdout = 0x02,
+    /* Output to standard error is permitted.  */
+    sc_allow_stderr = 0x04,
 };
 
 /* Check that the subprocess exited and that only the allowed outputs
@@ -70,9 +68,9 @@ enum support_capture_allow
    termination signal, as returned by WTERMSIG.  ALLOWED is a
    combination of support_capture_allow flags.  Report errors under
    the CONTEXT message.  */
-void support_capture_subprocess_check (struct support_capture_subprocess *,
-                                       const char *context,
-                                       int status_or_signal, int allowed)
-  __attribute__ ((nonnull (1, 2)));
+void support_capture_subprocess_check(struct support_capture_subprocess *,
+                                      const char *context,
+                                      int status_or_signal, int allowed)
+__attribute__((nonnull(1, 2)));
 
 #endif /* SUPPORT_CAPTURE_SUBPROCESS_H */

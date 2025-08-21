@@ -29,45 +29,45 @@
 
 #ifdef __ARM_PCS_VFP
 # define VALID_FLOAT_ABI(x) \
-  ((EF_ARM_EABI_VERSION ((x)) != EF_ARM_EABI_VER5)	\
+  ((EF_ARM_EABI_VERSION ((x)) != EF_ARM_EABI_VER5)  \
    || !((x) & EF_ARM_ABI_FLOAT_SOFT))
 #else
 # define VALID_FLOAT_ABI(x) \
-  ((EF_ARM_EABI_VERSION ((x)) != EF_ARM_EABI_VER5)	\
+  ((EF_ARM_EABI_VERSION ((x)) != EF_ARM_EABI_VER5)  \
    || !((x) & EF_ARM_ABI_FLOAT_HARD))
 #endif
 
 #undef VALID_ELF_HEADER
-#define VALID_ELF_HEADER(hdr,exp,size)		\
-  ((memcmp (hdr, exp, size) == 0		\
-    || memcmp (hdr, expected2, size) == 0	\
-    || memcmp (hdr, expected3, size) == 0)	\
+#define VALID_ELF_HEADER(hdr,exp,size)      \
+  ((memcmp (hdr, exp, size) == 0        \
+    || memcmp (hdr, expected2, size) == 0   \
+    || memcmp (hdr, expected3, size) == 0)  \
    && VALID_FLOAT_ABI (ehdr->e_flags))
-#define VALID_ELF_OSABI(osabi)		(osabi == ELFOSABI_SYSV		\
-					 || osabi == ELFOSABI_GNU	\
-					 || osabi == EXTRA_OSABI)
-#define MORE_ELF_HEADER_DATA				\
-  static const unsigned char expected2[EI_PAD] =	\
-  {							\
-    [EI_MAG0] = ELFMAG0,				\
-    [EI_MAG1] = ELFMAG1,				\
-    [EI_MAG2] = ELFMAG2,				\
-    [EI_MAG3] = ELFMAG3,				\
-    [EI_CLASS] = ELFW(CLASS),				\
-    [EI_DATA] = byteorder,				\
-    [EI_VERSION] = EV_CURRENT,				\
-    [EI_OSABI] = ELFOSABI_GNU				\
-  };							\
-  static const unsigned char expected3[EI_PAD] =	\
-  {							\
-    [EI_MAG0] = ELFMAG0,				\
-    [EI_MAG1] = ELFMAG1,				\
-    [EI_MAG2] = ELFMAG2,				\
-    [EI_MAG3] = ELFMAG3,				\
-    [EI_CLASS] = ELFW(CLASS),				\
-    [EI_DATA] = byteorder,				\
-    [EI_VERSION] = EV_CURRENT,				\
-    [EI_OSABI] = EXTRA_OSABI				\
+#define VALID_ELF_OSABI(osabi)      (osabi == ELFOSABI_SYSV     \
+                     || osabi == ELFOSABI_GNU   \
+                     || osabi == EXTRA_OSABI)
+#define MORE_ELF_HEADER_DATA                \
+  static const unsigned char expected2[EI_PAD] =    \
+  {                         \
+    [EI_MAG0] = ELFMAG0,                \
+    [EI_MAG1] = ELFMAG1,                \
+    [EI_MAG2] = ELFMAG2,                \
+    [EI_MAG3] = ELFMAG3,                \
+    [EI_CLASS] = ELFW(CLASS),               \
+    [EI_DATA] = byteorder,              \
+    [EI_VERSION] = EV_CURRENT,              \
+    [EI_OSABI] = ELFOSABI_GNU               \
+  };                            \
+  static const unsigned char expected3[EI_PAD] =    \
+  {                         \
+    [EI_MAG0] = ELFMAG0,                \
+    [EI_MAG1] = ELFMAG1,                \
+    [EI_MAG2] = ELFMAG2,                \
+    [EI_MAG3] = ELFMAG3,                \
+    [EI_CLASS] = ELFW(CLASS),               \
+    [EI_DATA] = byteorder,              \
+    [EI_VERSION] = EV_CURRENT,              \
+    [EI_OSABI] = EXTRA_OSABI                \
   }
 
 #endif

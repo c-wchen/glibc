@@ -26,25 +26,24 @@
       foo.. -> foo.
       foo\. -> foo\..
       foo\\. -> foo\\.  */
-int
-__libc_ns_makecanon (const char *src, char *dst, size_t dstsize)
+int __libc_ns_makecanon(const char *src, char *dst, size_t dstsize)
 {
-  size_t n = strlen (src);
+    size_t n = strlen(src);
 
-  if (n + sizeof "." > dstsize) /* sizeof == 2.  */
-    {
-      __set_errno (EMSGSIZE);
-      return -1;
+    if (n + sizeof "." > dstsize) { /* sizeof == 2.  */
+        __set_errno(EMSGSIZE);
+        return -1;
     }
-  strcpy (dst, src);
-  while (n >= 1U && dst[n - 1] == '.')   /* Ends in ".".  */
-    if (n >= 2U && dst[n - 2] == '\\' && /* Ends in "\.".  */
-        (n < 3U || dst[n - 3] != '\\'))  /* But not "\\.".  */
-      break;
-    else
-      dst[--n] = '\0';
-  dst[n++] = '.';
-  dst[n] = '\0';
-  return 0;
+    strcpy(dst, src);
+    while (n >= 1U && dst[n - 1] == '.')   /* Ends in ".".  */
+        if (n >= 2U && dst[n - 2] == '\\' && /* Ends in "\.".  */
+            (n < 3U || dst[n - 3] != '\\')) { /* But not "\\.".  */
+            break;
+        } else {
+            dst[--n] = '\0';
+        }
+    dst[n++] = '.';
+    dst[n] = '\0';
+    return 0;
 }
-libc_hidden_def (__libc_ns_makecanon)
+libc_hidden_def(__libc_ns_makecanon)

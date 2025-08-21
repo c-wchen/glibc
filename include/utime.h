@@ -3,7 +3,7 @@
 #include <io/utime.h>
 
 #ifndef _ISOMAC
-libc_hidden_proto (utime)
+libc_hidden_proto(utime)
 #endif
 
 #endif /* utime.h */

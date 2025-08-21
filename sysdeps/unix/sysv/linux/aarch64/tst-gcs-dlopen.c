@@ -21,42 +21,39 @@
 #include <dlfcn.h>
 #include <string.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* Check if GCS could possible by enabled.  */
-  if (!(getauxval (AT_HWCAP) & HWCAP_GCS))
-    {
-      puts ("kernel or CPU does not support GCS");
-      return EXIT_UNSUPPORTED;
+    /* Check if GCS could possible by enabled.  */
+    if (!(getauxval(AT_HWCAP) & HWCAP_GCS)) {
+        puts("kernel or CPU does not support GCS");
+        return EXIT_UNSUPPORTED;
     }
-  /* The tst-gcs-mod2.so test library does not have GCS marking.  */
-  void *h = dlopen ("tst-gcs-mod2.so", RTLD_NOW);
-  const char *err = dlerror ();
+    /* The tst-gcs-mod2.so test library does not have GCS marking.  */
+    void *h = dlopen("tst-gcs-mod2.so", RTLD_NOW);
+    const char *err = dlerror();
 
 #if TEST_GCS_EXPECT_DLOPEN
-  TEST_VERIFY (h != NULL);
+    TEST_VERIFY(h != NULL);
 #else
-  TEST_VERIFY (h == NULL);
-  /* Only accept expected GCS-related errors.  */
-  TEST_VERIFY (strstr (err, "not GCS compatible") != NULL);
+    TEST_VERIFY(h == NULL);
+    /* Only accept expected GCS-related errors.  */
+    TEST_VERIFY(strstr(err, "not GCS compatible") != NULL);
 #endif
 
 #if TEST_GCS_EXPECT_ENABLED
-  TEST_VERIFY (__check_gcs_status ());
+    TEST_VERIFY(__check_gcs_status());
 #else
-  TEST_VERIFY (!__check_gcs_status ());
+    TEST_VERIFY(!__check_gcs_status());
 #endif
 
-  if (h == NULL)
-    printf ("dlopen error: %s\n", err);
-  else
-    {
-      puts ("library loaded normally");
-      dlclose (h);
+    if (h == NULL) {
+        printf("dlopen error: %s\n", err);
+    } else {
+        puts("library loaded normally");
+        dlclose(h);
     }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

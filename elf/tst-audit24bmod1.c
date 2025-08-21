@@ -16,16 +16,14 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-int tst_audit24bmod2_func1 (void);
+int tst_audit24bmod2_func1(void);
 
-int
-tst_audit24bmod1_func1 (void)
+int tst_audit24bmod1_func1(void)
 {
-  return -1;
+    return -1;
 }
 
-int
-tst_audit24bmod1_func2 (void)
+int tst_audit24bmod1_func2(void)
 {
-  return tst_audit24bmod2_func1 ();
+    return tst_audit24bmod2_func1();
 }

@@ -19,11 +19,10 @@
 #include <unistd.h>
 
 /* Make all changes done to all files actually appear on disk.  */
-void
-sync (void)
+void sync(void)
 {
-  __set_errno (ENOSYS);
+    __set_errno(ENOSYS);
 }
 
 
-stub_warning (sync)
+stub_warning(sync)

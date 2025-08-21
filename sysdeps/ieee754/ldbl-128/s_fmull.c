@@ -24,10 +24,9 @@
 
 #include <math-narrow.h>
 
-float
-__fmull (_Float128 x, _Float128 y)
+float __fmull(_Float128 x, _Float128 y)
 {
-  NARROW_MUL_ROUND_TO_ODD (x, y, float, union ieee854_long_double, l,
-			   mantissa3, false);
+    NARROW_MUL_ROUND_TO_ODD(x, y, float, union ieee854_long_double, l,
+                            mantissa3, false);
 }
-libm_alias_float_ldouble (mul)
+libm_alias_float_ldouble(mul)

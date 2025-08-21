@@ -27,35 +27,34 @@
 #include <support/descriptors.h>
 #include <support/support.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  struct support_descriptors *descrs = support_descriptors_list ();
+    struct support_descriptors *descrs = support_descriptors_list();
 
-  /* Prepare a name which is just as long as required for trigging the
-     bug.  */
-  char name[IFNAMSIZ + 1];
-  memset (name, 'A', IFNAMSIZ);
-  name[IFNAMSIZ] = '\0';
-  TEST_COMPARE (strlen (name), IFNAMSIZ);
-  struct ifreq ifr;
-  TEST_COMPARE (strlen (name), sizeof (ifr.ifr_name));
+    /* Prepare a name which is just as long as required for trigging the
+       bug.  */
+    char name[IFNAMSIZ + 1];
+    memset(name, 'A', IFNAMSIZ);
+    name[IFNAMSIZ] = '\0';
+    TEST_COMPARE(strlen(name), IFNAMSIZ);
+    struct ifreq ifr;
+    TEST_COMPARE(strlen(name), sizeof(ifr.ifr_name));
 
-  /* Test directly via if_nametoindex.  */
-  TEST_COMPARE (if_nametoindex (name), 0);
-  TEST_COMPARE (errno, ENODEV);
-  support_descriptors_check (descrs);
+    /* Test directly via if_nametoindex.  */
+    TEST_COMPARE(if_nametoindex(name), 0);
+    TEST_COMPARE(errno, ENODEV);
+    support_descriptors_check(descrs);
 
-  /* Same test via getaddrinfo.  */
-  char *host = xasprintf ("fea0::%%%s", name);
-  struct addrinfo hints = { .ai_flags = AI_NUMERICHOST, };
-  struct addrinfo *ai;
-  TEST_COMPARE (getaddrinfo (host, NULL, &hints, &ai), EAI_NONAME);
-  support_descriptors_check (descrs);
+    /* Same test via getaddrinfo.  */
+    char *host = xasprintf("fea0::%%%s", name);
+    struct addrinfo hints = { .ai_flags = AI_NUMERICHOST, };
+    struct addrinfo *ai;
+    TEST_COMPARE(getaddrinfo(host, NULL, &hints, &ai), EAI_NONAME);
+    support_descriptors_check(descrs);
 
-  support_descriptors_free (descrs);
+    support_descriptors_free(descrs);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -1,8 +1,7 @@
 #include "nldbl-compat.h"
 
 double
-attribute_hidden
-sinl (double x)
+attribute_hidden sinl(double x)
 {
-  return sin (x);
+    return sin(x);
 }

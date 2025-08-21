@@ -27,54 +27,53 @@
 
 /* Defined in brk.c.  */
 extern void *__curbrk;
-extern int __brk (void *addr);
+extern int __brk(void *addr);
 
 /* Extend the process's data space by INCREMENT.
    If INCREMENT is negative, shrink data space by - INCREMENT.
    Return start of new space allocated, or -1 for errors.  */
-void *
-__sbrk (intptr_t increment)
+void *__sbrk(intptr_t increment)
 {
-  /* Controls whether __brk (0) is called to read the brk value from
-     the kernel.  */
-  bool update_brk = __curbrk == NULL;
+    /* Controls whether __brk (0) is called to read the brk value from
+       the kernel.  */
+    bool update_brk = __curbrk == NULL;
 
 #if defined (SHARED) && ! IS_IN (rtld)
-  if (!__libc_initial)
-    {
-      if (increment != 0)
-	{
-	  /* Do not allow changing the brk from an inner libc because
-	     it cannot be synchronized with the outer libc's brk.  */
-	  __set_errno (ENOMEM);
-	  return (void *) -1;
-	}
-      /* Querying the kernel's brk value from an inner namespace is
-	 fine.  */
-      update_brk = true;
+    if (!__libc_initial) {
+        if (increment != 0) {
+            /* Do not allow changing the brk from an inner libc because
+               it cannot be synchronized with the outer libc's brk.  */
+            __set_errno(ENOMEM);
+            return (void *) -1;
+        }
+        /* Querying the kernel's brk value from an inner namespace is
+        fine.  */
+        update_brk = true;
     }
 #endif
 
-  if (update_brk)
-    if (__brk (NULL) < 0)		/* Initialize the break.  */
-      return (void *) -1;
+    if (update_brk)
+        if (__brk(NULL) < 0) {      /* Initialize the break.  */
+            return (void *) -1;
+        }
 
-  if (increment == 0)
-    return __curbrk;
-
-  void *oldbrk = __curbrk;
-  if (increment > 0
-      ? ((uintptr_t) oldbrk + (uintptr_t) increment < (uintptr_t) oldbrk)
-      : ((uintptr_t) oldbrk < (uintptr_t) -increment))
-    {
-      __set_errno (ENOMEM);
-      return (void *) -1;
+    if (increment == 0) {
+        return __curbrk;
     }
 
-  if (__brk (oldbrk + increment) < 0)
-    return (void *) -1;
+    void *oldbrk = __curbrk;
+    if (increment > 0
+        ? ((uintptr_t) oldbrk + (uintptr_t) increment < (uintptr_t) oldbrk)
+        : ((uintptr_t) oldbrk < (uintptr_t) - increment)) {
+        __set_errno(ENOMEM);
+        return (void *) -1;
+    }
 
-  return oldbrk;
+    if (__brk(oldbrk + increment) < 0) {
+        return (void *) -1;
+    }
+
+    return oldbrk;
 }
-libc_hidden_def (__sbrk)
-weak_alias (__sbrk, sbrk)
+libc_hidden_def(__sbrk)
+weak_alias(__sbrk, sbrk)

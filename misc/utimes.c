@@ -22,19 +22,17 @@
 
 /* Change the access time of FILE to TVP[0] and
    the modification time of FILE to TVP[1].  */
-int
-__utimes (const char *file, const struct timeval tvp[2])
+int __utimes(const char *file, const struct timeval tvp[2])
 {
-  if (file == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (file == NULL) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-weak_alias (__utimes, utimes)
+weak_alias(__utimes, utimes)
 
-stub_warning (utimes)
+stub_warning(utimes)

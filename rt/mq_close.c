@@ -20,10 +20,9 @@
 
 /* Removes the association between message queue descriptor MQDES and its
    message queue.  */
-int
-mq_close (mqd_t mqdes)
+int mq_close(mqd_t mqdes)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (mq_close)
+stub_warning(mq_close)

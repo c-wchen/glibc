@@ -22,25 +22,23 @@
 #include <sysdep-cancel.h>
 #include <sys/syscall.h>
 
-int
-__poll (struct pollfd *fds, nfds_t nfds, int timeout)
+int __poll(struct pollfd *fds, nfds_t nfds, int timeout)
 {
 #ifdef __NR_poll
-  return SYSCALL_CANCEL (poll, fds, nfds, timeout);
+    return SYSCALL_CANCEL(poll, fds, nfds, timeout);
 #else
-  struct timespec timeout_ts;
-  struct timespec *timeout_ts_p = NULL;
+    struct timespec timeout_ts;
+    struct timespec *timeout_ts_p = NULL;
 
-  if (timeout >= 0)
-    {
-      timeout_ts.tv_sec = timeout / 1000;
-      timeout_ts.tv_nsec = (timeout % 1000) * 1000000;
-      timeout_ts_p = &timeout_ts;
+    if (timeout >= 0) {
+        timeout_ts.tv_sec = timeout / 1000;
+        timeout_ts.tv_nsec = (timeout % 1000) * 1000000;
+        timeout_ts_p = &timeout_ts;
     }
 
-  return SYSCALL_CANCEL (ppoll, fds, nfds, timeout_ts_p, NULL, 0);
+    return SYSCALL_CANCEL(ppoll, fds, nfds, timeout_ts_p, NULL, 0);
 #endif
 }
-libc_hidden_def (__poll)
-weak_alias (__poll, poll)
-strong_alias (__poll, __libc_poll)
+libc_hidden_def(__poll)
+weak_alias(__poll, poll)
+strong_alias(__poll, __libc_poll)

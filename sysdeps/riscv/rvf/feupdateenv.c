@@ -19,12 +19,11 @@
 #include <fenv.h>
 #include <fenv_private.h>
 
-int
-__feupdateenv (const fenv_t *envp)
+int __feupdateenv(const fenv_t *envp)
 {
-  libc_feupdateenv_riscv (envp);
-  return 0;
+    libc_feupdateenv_riscv(envp);
+    return 0;
 }
-libm_hidden_def (__feupdateenv)
-weak_alias (__feupdateenv, feupdateenv)
-libm_hidden_weak (feupdateenv)
+libm_hidden_def(__feupdateenv)
+weak_alias(__feupdateenv, feupdateenv)
+libm_hidden_weak(feupdateenv)

@@ -18,7 +18,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _POWERPC_NOFPU_GET_ROUNDING_MODE_H
-#define _POWERPC_NOFPU_GET_ROUNDING_MODE_H	1
+#define _POWERPC_NOFPU_GET_ROUNDING_MODE_H  1
 
 #include <fenv.h>
 
@@ -26,10 +26,9 @@
 
 /* Return the floating-point rounding mode.  */
 
-static inline int
-get_rounding_mode (void)
+static inline int get_rounding_mode(void)
 {
-  return __sim_round_mode_thread;
+    return __sim_round_mode_thread;
 }
 
 #endif /* get-rounding-mode.h */

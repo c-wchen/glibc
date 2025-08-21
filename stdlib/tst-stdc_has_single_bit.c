@@ -18,8 +18,7 @@
 
 #include <tst-stdbit.h>
 
-static const struct stdbit_test inputs[] =
-  {
+static const struct stdbit_test inputs[] = {
     { 0ULL, false, false, false, false },
     { 0x1ULL, true, true, true, true },
     { 0x2ULL, true, true, true, true },
@@ -74,15 +73,14 @@ static const struct stdbit_test inputs[] =
     { 0x8000000000000001ULL, true, true, true, false },
     { 0xfffffffffffffffeULL, false, false, false, false },
     { 0xffffffffffffffffULL, false, false, false, false },
-  };
+};
 
-TEST_STDBIT_BOOL_TOPLEVEL (stdc_has_single_bit);
+TEST_STDBIT_BOOL_TOPLEVEL(stdc_has_single_bit);
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  TEST_STDBIT_BOOL (stdc_has_single_bit, inputs);
-  return 0;
+    TEST_STDBIT_BOOL(stdc_has_single_bit, inputs);
+    return 0;
 }
 
 #include <support/test-driver.c>

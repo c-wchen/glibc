@@ -38,41 +38,40 @@
 #endif /* WIDE */
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* Open an unbuffered stream to /dev/full.  */
-  FILE *fp = fopen ("/dev/full", "w");
-  TEST_VERIFY_EXIT (fp != NULL);
-  int ret = setvbuf (fp, NULL, _IONBF, 0);
-  TEST_VERIFY_EXIT (ret == 0);
+    /* Open an unbuffered stream to /dev/full.  */
+    FILE *fp = fopen("/dev/full", "w");
+    TEST_VERIFY_EXIT(fp != NULL);
+    int ret = setvbuf(fp, NULL, _IONBF, 0);
+    TEST_VERIFY_EXIT(ret == 0);
 
-  /* Output a long string. */
-  const int sz = 4096;
-  CHAR *buff = calloc (sz+1, sizeof *buff);
-  for (int i=0; i < sz; i++)
-    buff[i] = (CHAR) 'x';
-  buff[sz] = (CHAR) '\0';
-  errno = 0;
-  ret = FPUTS (buff, fp);
-  TEST_VERIFY (ret == EOF);
-  TEST_VERIFY (errno == ENOSPC);
-  free (buff);
-
-  /* Output shorter strings.   */
-  for (int i=0; i < 1024; i++)
-    {
-      errno = 0;
-      ret = FPUTS (TEXT, fp);
-      TEST_VERIFY (ret == EOF);
-      TEST_VERIFY (errno == ENOSPC);
-
-      /* Call malloc, triggering a crash if its
-         function pointers have been overwritten.  */
-      void *volatile ptr = malloc (1);
-      free (ptr);
+    /* Output a long string. */
+    const int sz = 4096;
+    CHAR *buff = calloc(sz + 1, sizeof * buff);
+    for (int i = 0; i < sz; i++) {
+        buff[i] = (CHAR) 'x';
     }
-  return 0;
+    buff[sz] = (CHAR) '\0';
+    errno = 0;
+    ret = FPUTS(buff, fp);
+    TEST_VERIFY(ret == EOF);
+    TEST_VERIFY(errno == ENOSPC);
+    free(buff);
+
+    /* Output shorter strings.   */
+    for (int i = 0; i < 1024; i++) {
+        errno = 0;
+        ret = FPUTS(TEXT, fp);
+        TEST_VERIFY(ret == EOF);
+        TEST_VERIFY(errno == ENOSPC);
+
+        /* Call malloc, triggering a crash if its
+           function pointers have been overwritten.  */
+        void *volatile ptr = malloc(1);
+        free(ptr);
+    }
+    return 0;
 }
 
 #include <support/test-driver.c>

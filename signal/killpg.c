@@ -22,11 +22,10 @@
 /* Send SIG to all processes in process group PGRP.
    If PGRP is zero, send SIG to all processes in
    the current process's process group.  */
-int
-killpg (__pid_t pgrp, int sig)
+int killpg(__pid_t pgrp, int sig)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (killpg)
+stub_warning(killpg)

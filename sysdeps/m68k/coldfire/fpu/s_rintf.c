@@ -18,11 +18,10 @@
 #define NO_MATH_REDIRECT
 #include <libm-alias-float.h>
 
-float
-__rintf (float x)
+float __rintf(float x)
 {
-  double result;
-  asm ("fint.s %1,%0" : "=f" (result) : "dm" (x));
-  return (float) result;
+    double result;
+    asm("fint.s %1,%0" : "=f"(result) : "dm"(x));
+    return (float) result;
 }
-libm_alias_float (__rint, rint)
+libm_alias_float(__rint, rint)

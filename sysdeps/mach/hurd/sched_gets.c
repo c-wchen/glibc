@@ -22,10 +22,9 @@
 
 
 /* Retrieve scheduling algorithm for a particular purpose.  */
-int
-__sched_getscheduler (pid_t pid)
+int __sched_getscheduler(pid_t pid)
 {
-  return SCHED_OTHER;
+    return SCHED_OTHER;
 }
-libc_hidden_def (__sched_getscheduler)
-weak_alias (__sched_getscheduler, sched_getscheduler)
+libc_hidden_def(__sched_getscheduler)
+weak_alias(__sched_getscheduler, sched_getscheduler)

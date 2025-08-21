@@ -19,7 +19,7 @@
 /* System V/OpenRISC compliant context switching support.  */
 
 #ifndef _SYS_UCONTEXT_H
-#define _SYS_UCONTEXT_H	1
+#define _SYS_UCONTEXT_H 1
 
 #include <features.h>
 
@@ -27,28 +27,26 @@
 #include <bits/types/stack_t.h>
 
 /* Number of general registers.  */
-#define __NGREG	32
+#define __NGREG 32
 #ifdef __USE_MISC
-# define NGREG	__NGREG
+# define NGREG  __NGREG
 #endif
 
 /* Context to describe whole processor state.  */
-typedef struct
-  {
+typedef struct {
     unsigned long int __gprs[__NGREG];
     unsigned long int __pc;
     unsigned long int __sr;
     unsigned long int __fpcsr;
-  } mcontext_t;
+} mcontext_t;
 
 /* Userlevel context.  */
-typedef struct ucontext_t
-  {
+typedef struct ucontext_t {
     unsigned long int __uc_flags;
     struct ucontext_t *uc_link;
     stack_t uc_stack;
     mcontext_t uc_mcontext;
     sigset_t uc_sigmask;
-  } ucontext_t;
+} ucontext_t;
 
 #endif /* sys/ucontext.h */

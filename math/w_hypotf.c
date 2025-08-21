@@ -4,5 +4,5 @@
 #undef declare_mgen_alias
 #define declare_mgen_alias(a, b)
 #include <w_hypot_template.c>
-versioned_symbol (libm, __hypotf, hypotf, GLIBC_2_35);
-libm_alias_float_other (__hypotf, hypotf)
+versioned_symbol(libm, __hypotf, hypotf, GLIBC_2_35);
+libm_alias_float_other(__hypotf, hypotf)

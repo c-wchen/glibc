@@ -28,13 +28,13 @@
 
 #define VAR CONCAT (var, N)
 
-__attribute__ ((aligned (8), tls_model (MODEL)))
+__attribute__((aligned(8), tls_model(MODEL)))
 __thread char VAR[SIZE];
 
 void
-CONCAT (access, N) (void)
+CONCAT(access, N)(void)
 {
-  printf (STR (VAR) "[%d]:\t %p .. %p " MODEL "\n", SIZE, VAR, VAR + SIZE);
-  fflush (stdout);
-  memset (VAR, 1, SIZE);
+    printf(STR(VAR) "[%d]:\t %p .. %p " MODEL "\n", SIZE, VAR, VAR + SIZE);
+    fflush(stdout);
+    memset(VAR, 1, SIZE);
 }

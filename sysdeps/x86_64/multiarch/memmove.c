@@ -26,12 +26,12 @@
 # define SYMBOL_NAME memmove
 # include "ifunc-memmove.h"
 
-libc_ifunc_redirected (__redirect_memmove, __libc_memmove,
-		       IFUNC_SELECTOR ());
+libc_ifunc_redirected(__redirect_memmove, __libc_memmove,
+                      IFUNC_SELECTOR());
 
-strong_alias (__libc_memmove, memmove);
+strong_alias(__libc_memmove, memmove);
 # ifdef SHARED
-__hidden_ver1 (__libc_memmove, __GI_memmove, __redirect_memmove)
-  __attribute__ ((visibility ("hidden")));
+__hidden_ver1(__libc_memmove, __GI_memmove, __redirect_memmove)
+__attribute__((visibility("hidden")));
 # endif
 #endif

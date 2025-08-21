@@ -19,17 +19,16 @@
 
 #include <support/test-driver.h>
 
-extern void call_system (void);
+extern void call_system(void);
 
-int
-do_test (void)
+int do_test(void)
 {
-  /* Calling the system function from a shared library that is not linked
-     against libpthread, when the main program is linked against
-     libpthread, should not crash.  */
-  call_system ();
+    /* Calling the system function from a shared library that is not linked
+       against libpthread, when the main program is linked against
+       libpthread, should not crash.  */
+    call_system();
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

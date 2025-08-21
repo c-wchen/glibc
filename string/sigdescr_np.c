@@ -20,15 +20,15 @@
 #include <signal.h>
 #include <array_length.h>
 
-const char *
-__sigdescr_np (int signum)
+const char *__sigdescr_np(int signum)
 {
-  const char *descr = NULL;
+    const char *descr = NULL;
 
-  if (signum >= 0 && signum <= NSIG && signum < array_length (__sys_siglist))
-    descr = __sys_siglist[signum];
+    if (signum >= 0 && signum <= NSIG && signum < array_length(__sys_siglist)) {
+        descr = __sys_siglist[signum];
+    }
 
-  return descr;
+    return descr;
 }
-libc_hidden_def (__sigdescr_np)
-weak_alias (__sigdescr_np, sigdescr_np)
+libc_hidden_def(__sigdescr_np)
+weak_alias(__sigdescr_np, sigdescr_np)

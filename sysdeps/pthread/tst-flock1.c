@@ -28,64 +28,57 @@ static pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 static int fd;
 
 
-static void *
-tf (void *arg)
+static void *tf(void *arg)
 {
-  if (flock (fd, LOCK_SH | LOCK_NB) != 0)
-    {
-      puts ("second flock failed");
-      exit (1);
+    if (flock(fd, LOCK_SH | LOCK_NB) != 0) {
+        puts("second flock failed");
+        exit(1);
     }
 
-  pthread_mutex_unlock (&lock);
+    pthread_mutex_unlock(&lock);
 
-  return NULL;
+    return NULL;
 }
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char tmp[] = "/tmp/tst-flock1-XXXXXX";
+    char tmp[] = "/tmp/tst-flock1-XXXXXX";
 
-  fd = mkstemp (tmp);
-  if (fd == -1)
-    {
-      puts ("mkstemp failed");
-      exit (1);
+    fd = mkstemp(tmp);
+    if (fd == -1) {
+        puts("mkstemp failed");
+        exit(1);
     }
 
-  unlink (tmp);
+    unlink(tmp);
 
-  xwrite (fd, "foobar xyzzy", 12);
+    xwrite(fd, "foobar xyzzy", 12);
 
-  if (flock (fd, LOCK_EX | LOCK_NB) != 0)
-    {
-      puts ("first flock failed");
-      exit (1);
+    if (flock(fd, LOCK_EX | LOCK_NB) != 0) {
+        puts("first flock failed");
+        exit(1);
     }
 
-  pthread_mutex_lock (&lock);
+    pthread_mutex_lock(&lock);
 
-  pthread_t th;
-  if (pthread_create (&th, NULL, tf, NULL) != 0)
-    {
-      puts ("pthread_create failed");
-      exit (1);
+    pthread_t th;
+    if (pthread_create(&th, NULL, tf, NULL) != 0) {
+        puts("pthread_create failed");
+        exit(1);
     }
 
-  pthread_mutex_lock (&lock);
+    pthread_mutex_lock(&lock);
 
-  void *result;
-  if (pthread_join (th, &result) != 0)
-    {
-      puts ("pthread_join failed");
-      exit (1);
+    void *result;
+    if (pthread_join(th, &result) != 0) {
+        puts("pthread_join failed");
+        exit(1);
     }
 
-  close (fd);
+    close(fd);
 
-  return result != NULL;
+    return result != NULL;
 }
 
 #define TEST_FUNCTION do_test ()

@@ -19,4 +19,4 @@
 
 /* __open can't be hidden in ld.so on Hurd since it will be preempted by the
    one in libc.so after bootstrap.  */
-extern __typeof (__fcntl) __fcntl attribute_hidden;
+extern __typeof(__fcntl) __fcntl attribute_hidden;

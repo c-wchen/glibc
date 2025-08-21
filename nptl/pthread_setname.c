@@ -27,44 +27,47 @@
 #include <not-cancel.h>
 
 
-int
-__pthread_setname_np (pthread_t th, const char *name)
+int __pthread_setname_np(pthread_t th, const char *name)
 {
-  const struct pthread *pd = (const struct pthread *) th;
+    const struct pthread *pd = (const struct pthread *) th;
 
-  /* Unfortunately the kernel headers do not export the TASK_COMM_LEN
-     macro.  So we have to define it here.  */
+    /* Unfortunately the kernel headers do not export the TASK_COMM_LEN
+       macro.  So we have to define it here.  */
 #define TASK_COMM_LEN 16
-  size_t name_len = strlen (name);
-  if (name_len >= TASK_COMM_LEN)
-    return ERANGE;
+    size_t name_len = strlen(name);
+    if (name_len >= TASK_COMM_LEN) {
+        return ERANGE;
+    }
 
-  if (pd == THREAD_SELF)
-    return __prctl (PR_SET_NAME, name) ? errno : 0;
+    if (pd == THREAD_SELF) {
+        return __prctl(PR_SET_NAME, name) ? errno : 0;
+    }
 
 #define FMT "/proc/self/task/%u/comm"
-  char fname[sizeof (FMT) + 8];
-  sprintf (fname, FMT, (unsigned int) pd->tid);
+    char fname[sizeof(FMT) + 8];
+    sprintf(fname, FMT, (unsigned int) pd->tid);
 
-  int fd = __open64_nocancel (fname, O_RDWR);
-  if (fd == -1)
-    return errno;
+    int fd = __open64_nocancel(fname, O_RDWR);
+    if (fd == -1) {
+        return errno;
+    }
 
-  int res = 0;
-  ssize_t n = TEMP_FAILURE_RETRY (__write_nocancel (fd, name, name_len));
-  if (n < 0)
-    res = errno;
-  else if (n != name_len)
-    res = EIO;
+    int res = 0;
+    ssize_t n = TEMP_FAILURE_RETRY(__write_nocancel(fd, name, name_len));
+    if (n < 0) {
+        res = errno;
+    } else if (n != name_len) {
+        res = EIO;
+    }
 
-  __close_nocancel_nostatus (fd);
+    __close_nocancel_nostatus(fd);
 
-  return res;
+    return res;
 }
-versioned_symbol (libc, __pthread_setname_np, pthread_setname_np,
-                  GLIBC_2_34);
+versioned_symbol(libc, __pthread_setname_np, pthread_setname_np,
+                 GLIBC_2_34);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_34)
-compat_symbol (libpthread, __pthread_setname_np, pthread_setname_np,
-               GLIBC_2_12);
+compat_symbol(libpthread, __pthread_setname_np, pthread_setname_np,
+              GLIBC_2_12);
 #endif

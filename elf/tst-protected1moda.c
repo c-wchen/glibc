@@ -24,69 +24,59 @@ static int expected_protected2 = 4;
 int protected3 = 5;
 static int expected_protected3 = 5;
 
-asm (".protected protected1");
-asm (".protected protected2");
-asm (".protected protected3");
+asm(".protected protected1");
+asm(".protected protected2");
+asm(".protected protected3");
 
-void
-set_protected1a (int i)
+void set_protected1a(int i)
 {
-  protected1 = i;
-  set_expected_protected1 (i);
+    protected1 = i;
+    set_expected_protected1(i);
 }
 
-void
-set_expected_protected1 (int i)
+void set_expected_protected1(int i)
 {
-  expected_protected1 = i;
+    expected_protected1 = i;
 }
 
-int *
-protected1a_p (void)
+int *protected1a_p(void)
 {
-  return &protected1;
+    return &protected1;
 }
 
-int
-check_protected1 (void)
+int check_protected1(void)
 {
-  return protected1 == expected_protected1;
+    return protected1 == expected_protected1;
 }
 
-void
-set_protected2 (int i)
+void set_protected2(int i)
 {
-  protected2 = i;
-  expected_protected2 = i;
+    protected2 = i;
+    expected_protected2 = i;
 }
 
-int
-check_protected2 (void)
+int check_protected2(void)
 {
-  return protected2 == expected_protected2;
+    return protected2 == expected_protected2;
 }
 
-void
-set_expected_protected3a (int i)
+void set_expected_protected3a(int i)
 {
-  expected_protected3 = i;
+    expected_protected3 = i;
 }
 
-void
-set_protected3a (int i)
+void set_protected3a(int i)
 {
-  protected3 = i;
-  set_expected_protected3a (i);
+    protected3 = i;
+    set_expected_protected3a(i);
 }
 
-int
-check_protected3a (void)
+int check_protected3a(void)
 {
-  return protected3 == expected_protected3;
+    return protected3 == expected_protected3;
 }
 
-int *
-protected3a_p (void)
+int *protected3a_p(void)
 {
-  return &protected3;
+    return &protected3;
 }

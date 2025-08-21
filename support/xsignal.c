@@ -19,11 +19,11 @@
 #include <support/check.h>
 #include <support/xsignal.h>
 
-sighandler_t
-xsignal (int sig, sighandler_t handler)
+sighandler_t xsignal(int sig, sighandler_t handler)
 {
-  sighandler_t result = signal (sig, handler);
-  if (result == SIG_ERR)
-    FAIL_EXIT1 ("signal (%d, %p): %m", sig, handler);
-  return result;
+    sighandler_t result = signal(sig, handler);
+    if (result == SIG_ERR) {
+        FAIL_EXIT1("signal (%d, %p): %m", sig, handler);
+    }
+    return result;
 }

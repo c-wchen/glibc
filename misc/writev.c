@@ -24,13 +24,12 @@
    The data is written in the order specified.
    Operates just like `write' (see <unistd.h>) except that the data
    are taken from VECTOR instead of a contiguous buffer.  */
-ssize_t
-__writev (int fd, const struct iovec *vector, int count)
+ssize_t __writev(int fd, const struct iovec *vector, int count)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (__writev)
-weak_alias (__writev, writev)
+libc_hidden_def(__writev)
+weak_alias(__writev, writev)
 
-stub_warning (writev)
+stub_warning(writev)

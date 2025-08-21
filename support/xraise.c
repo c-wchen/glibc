@@ -19,9 +19,9 @@
 #include <support/check.h>
 #include <support/xsignal.h>
 
-void
-xraise (int sig)
+void xraise(int sig)
 {
-  if (raise (sig) != 0)
-    FAIL_EXIT1 ("raise (%d): %m" , sig);
+    if (raise(sig) != 0) {
+        FAIL_EXIT1("raise (%d): %m", sig);
+    }
 }

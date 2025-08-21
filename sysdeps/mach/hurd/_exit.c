@@ -21,38 +21,37 @@
 #include <sysdep.h>
 #include <sys/wait.h>
 
-void
-_hurd_exit (int status)
+void _hurd_exit(int status)
 {
-  if (_hurd_ports != NULL)
-    /* Give the proc server our exit status.  */
-    __USEPORT (PROC, __proc_mark_exit (port, status, 0));
-
-  /* Commit suicide.  */
-  __task_terminate (__mach_task_self ());
-
-  /* Perhaps the cached mach_task_self was bogus.  */
-  __task_terminate ((__mach_task_self) ());
-
-  /* This sucker really doesn't want to die.  */
-  while (1)
+    if (_hurd_ports != NULL)
+        /* Give the proc server our exit status.  */
     {
+        __USEPORT(PROC, __proc_mark_exit(port, status, 0));
+    }
+
+    /* Commit suicide.  */
+    __task_terminate(__mach_task_self());
+
+    /* Perhaps the cached mach_task_self was bogus.  */
+    __task_terminate((__mach_task_self)());
+
+    /* This sucker really doesn't want to die.  */
+    while (1) {
 #ifdef LOSE
-      LOSE;
+        LOSE;
 #else
-      volatile const int zero = 0, one = 1;
-      volatile int lossage = one / zero;
+        volatile const int zero = 0, one = 1;
+        volatile int lossage = one / zero;
 #endif
     }
 }
 
-void
-_exit (int status)
+void _exit(int status)
 {
-  _hurd_exit (W_EXITCODE (status, 0));
+    _hurd_exit(W_EXITCODE(status, 0));
 }
-libc_hidden_def (_exit)
+libc_hidden_def(_exit)
 #ifndef NO_RTLD_HIDDEN
-rtld_hidden_def (_exit)
+rtld_hidden_def(_exit)
 #endif
-weak_alias (_exit, _Exit)
+weak_alias(_exit, _Exit)

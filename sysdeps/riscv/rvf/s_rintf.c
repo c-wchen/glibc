@@ -22,32 +22,31 @@
 #include <libm-alias-float.h>
 #include <stdint.h>
 
-float
-__rintf (float x)
+float __rintf(float x)
 {
-  bool nan;
-  float mag;
+    bool nan;
+    float mag;
 
-  nan = isnan (x);
-  mag = fabsf (x);
+    nan = isnan(x);
+    mag = fabsf(x);
 
-  if (nan)
-    return x + x;
-
-  if (mag < (1 << __FLT_MANT_DIG__))
-    {
-      int32_t i;
-      float new_x;
-
-      asm ("fcvt.w.s %0, %1" : "=r" (i) : "f" (x));
-      asm ("fcvt.s.w %0, %1" : "=f" (new_x) : "r" (i));
-
-      /* rint(-0) == -0, and in general we'll always have the same
-	 sign as our input.  */
-      x = copysignf (new_x, x);
+    if (nan) {
+        return x + x;
     }
 
-  return x;
+    if (mag < (1 << __FLT_MANT_DIG__)) {
+        int32_t i;
+        float new_x;
+
+        asm("fcvt.w.s %0, %1" : "=r"(i) : "f"(x));
+        asm("fcvt.s.w %0, %1" : "=f"(new_x) : "r"(i));
+
+        /* rint(-0) == -0, and in general we'll always have the same
+        sign as our input.  */
+        x = copysignf(new_x, x);
+    }
+
+    return x;
 }
 
-libm_alias_float (__rint, rint)
+libm_alias_float(__rint, rint)

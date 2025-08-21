@@ -37,38 +37,35 @@
 
 static int previous = 0;
 
-unsigned int
-la_version (unsigned int ver)
+unsigned int la_version(unsigned int ver)
 {
-  return 1;
+    return 1;
 }
 
-unsigned int
-la_objopen (struct link_map *map, Lmid_t lmid, uintptr_t *cookie)
+unsigned int la_objopen(struct link_map *map, Lmid_t lmid, uintptr_t *cookie)
 {
-  return LA_FLG_BINDTO | LA_FLG_BINDFROM;
+    return LA_FLG_BINDTO | LA_FLG_BINDFROM;
 }
 
 uintptr_t
-CONCATX(la_symbind, __ELF_NATIVE_CLASS) (ElfW(Sym) *sym,
-					unsigned int ndx,
-					uintptr_t *refcook,
-					uintptr_t *defcook,
-					unsigned int *flags,
-					const char *symname)
+CONCATX(la_symbind, __ELF_NATIVE_CLASS)(ElfW(Sym) *sym,
+                                        unsigned int ndx,
+                                        uintptr_t *refcook,
+                                        uintptr_t *defcook,
+                                        unsigned int *flags,
+                                        const char *symname)
 {
-  const char * retnum = "retNum";
-  char * num = strstr (symname, retnum);
-  int n;
-  /* Validate if the symbols are getting called in the correct order.
-     This code is here to verify binutils does not optimize out the PLT
-     entries that require the symbol binding.  */
-  if (num != NULL)
-    {
-      n = atoi (num);
-      assert (n >= previous);
-      assert (n <= CALLNUM);
-      previous = n;
+    const char *retnum = "retNum";
+    char *num = strstr(symname, retnum);
+    int n;
+    /* Validate if the symbols are getting called in the correct order.
+       This code is here to verify binutils does not optimize out the PLT
+       entries that require the symbol binding.  */
+    if (num != NULL) {
+        n = atoi(num);
+        assert(n >= previous);
+        assert(n <= CALLNUM);
+        previous = n;
     }
-  return sym->st_value;
+    return sym->st_value;
 }

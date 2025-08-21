@@ -26,44 +26,42 @@
 #include <support/xdlfcn.h>
 #include <support/xunistd.h>
 
-static void
-in_chroot (void *closure)
+static void in_chroot(void *closure)
 {
-  struct support_chroot *chroot_env = closure;
-  xchroot (chroot_env->path_chroot);
+    struct support_chroot *chroot_env = closure;
+    xchroot(chroot_env->path_chroot);
 
-  struct aliasent *e = getaliasbyname ("user1");
-  TEST_VERIFY_EXIT (e != NULL);
-  TEST_COMPARE_STRING (e->alias_name, "user1");
-  TEST_COMPARE (e->alias_members_len, 1);
-  TEST_VERIFY_EXIT (e->alias_members != NULL);
-  TEST_COMPARE_STRING (e->alias_members[0], "alias1");
-  TEST_VERIFY (e->alias_local);
+    struct aliasent *e = getaliasbyname("user1");
+    TEST_VERIFY_EXIT(e != NULL);
+    TEST_COMPARE_STRING(e->alias_name, "user1");
+    TEST_COMPARE(e->alias_members_len, 1);
+    TEST_VERIFY_EXIT(e->alias_members != NULL);
+    TEST_COMPARE_STRING(e->alias_members[0], "alias1");
+    TEST_VERIFY(e->alias_local);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* Make sure we don't try to load the module in the chroot.  */
-  xdlopen (LIBNSS_FILES_SO, RTLD_NOW);
+    /* Make sure we don't try to load the module in the chroot.  */
+    xdlopen(LIBNSS_FILES_SO, RTLD_NOW);
 
-  __nss_configure_lookup ("aliases", "files");
+    __nss_configure_lookup("aliases", "files");
 
-  support_become_root ();
-  if (!support_can_chroot ())
-    return EXIT_UNSUPPORTED;
+    support_become_root();
+    if (!support_can_chroot()) {
+        return EXIT_UNSUPPORTED;
+    }
 
-  struct support_chroot *chroot_env = support_chroot_create
-    ((struct support_chroot_configuration)
-     {
-       .aliases = "user1: alias1,\n"
-        " "              /* Continuation line, but no \n.  */
-     });
+    struct support_chroot *chroot_env = support_chroot_create
+                                        ((struct support_chroot_configuration) {
+        .aliases = "user1: alias1,\n"
+                   " "              /* Continuation line, but no \n.  */
+    });
 
-  support_isolate_in_subprocess (in_chroot, chroot_env);
+    support_isolate_in_subprocess(in_chroot, chroot_env);
 
-  support_chroot_free (chroot_env);
-  return 0;
+    support_chroot_free(chroot_env);
+    return 0;
 }
 
 #include <support/test-driver.c>

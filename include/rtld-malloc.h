@@ -28,53 +28,49 @@
 
 #if IS_IN (rtld)
 
-extern __typeof (calloc) *__rtld_calloc attribute_hidden;
-extern __typeof (free) *__rtld_free attribute_hidden;
-extern __typeof (malloc) *__rtld_malloc attribute_hidden;
-extern __typeof (realloc) *__rtld_realloc attribute_hidden;
+extern __typeof(calloc) *__rtld_calloc attribute_hidden;
+extern __typeof(free) *__rtld_free attribute_hidden;
+extern __typeof(malloc) *__rtld_malloc attribute_hidden;
+extern __typeof(realloc) *__rtld_realloc attribute_hidden;
 
 /* Wrapper functions which call through the function pointers above.
    Note that it is not supported to take the address of those
    functions.  Instead the function pointers must be used
    directly.  */
 
-__extern_inline void *
-calloc (size_t a, size_t b)
+__extern_inline void *calloc(size_t a, size_t b)
 {
-  return __rtld_calloc (a, b);
+    return __rtld_calloc(a, b);
 }
 
-__extern_inline void
-free (void *ptr)
+__extern_inline void free(void *ptr)
 {
-   __rtld_free (ptr);
+    __rtld_free(ptr);
 }
 
-__extern_inline void *
-malloc (size_t size)
+__extern_inline void *malloc(size_t size)
 {
-  return __rtld_malloc (size);
+    return __rtld_malloc(size);
 }
 
-__extern_inline void *
-realloc (void *ptr, size_t size)
+__extern_inline void *realloc(void *ptr, size_t size)
 {
-  return __rtld_realloc (ptr, size);
+    return __rtld_realloc(ptr, size);
 }
 
 /* Called after the first self-relocation to activate the minimal malloc
    implementation.  */
-void __rtld_malloc_init_stubs (void) attribute_hidden;
+void __rtld_malloc_init_stubs(void) attribute_hidden;
 
 /* Return false if the active malloc is the ld.so minimal malloc, true
    if it is the full implementation from libc.so.  */
-_Bool __rtld_malloc_is_complete (void) attribute_hidden;
+_Bool __rtld_malloc_is_complete(void) attribute_hidden;
 
 /* Called shortly before the final self-relocation (when RELRO
    variables are still writable) to activate the real malloc
    implementation.  MAIN_MAP is the link map of the executable.  */
 struct link_map;
-void __rtld_malloc_init_real (struct link_map *main_map) attribute_hidden;
+void __rtld_malloc_init_real(struct link_map *main_map) attribute_hidden;
 
 #else /* !IS_IN (rtld) */
 

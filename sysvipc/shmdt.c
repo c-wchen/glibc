@@ -21,11 +21,10 @@
 /* Detach shared memory segment starting at address specified by SHMADDR
    from the caller's data segment.  */
 
-int
-shmdt (const void *shmaddr)
+int shmdt(const void *shmaddr)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (shmdt)
+stub_warning(shmdt)

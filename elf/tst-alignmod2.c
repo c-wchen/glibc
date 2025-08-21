@@ -24,35 +24,32 @@ static int res, *fdp;
 static bool *test_destructorsp;
 
 static void __attribute__((constructor))
-con (void)
+con(void)
 {
-  res = TEST_STACK_ALIGN () ? -1 : 1;
+    res = TEST_STACK_ALIGN() ? -1 : 1;
 }
 
-void
-in_dso (int *result, bool *test_destructors, int *fd)
+void in_dso(int *result, bool *test_destructors, int *fd)
 {
-  if (!res)
-    {
-      puts ("constructor has not been run");
-      *result = 1;
-    }
-  else if (res != 1)
-    {
-      puts ("constructor has been run without sufficient alignment");
-      *result = 1;
+    if (!res) {
+        puts("constructor has not been run");
+        *result = 1;
+    } else if (res != 1) {
+        puts("constructor has been run without sufficient alignment");
+        *result = 1;
     }
 
-  test_destructorsp = test_destructors;
-  fdp = fd;
+    test_destructorsp = test_destructors;
+    fdp = fd;
 }
 
 static void __attribute__((destructor))
-des (void)
+des(void)
 {
-  if (!test_destructorsp || !*test_destructorsp)
-    return;
+    if (!test_destructorsp || !*test_destructorsp) {
+        return;
+    }
 
-  char c = TEST_STACK_ALIGN () ? 'D' : 'C';
-  write (*fdp, &c, 1);
+    char c = TEST_STACK_ALIGN() ? 'D' : 'C';
+    write(*fdp, &c, 1);
 }

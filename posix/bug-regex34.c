@@ -22,24 +22,22 @@
 #include <locale.h>
 #include <regex.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  struct re_pattern_buffer r;
-  /* ကျွန်ုပ်x */
-  const char *s = "\xe1\x80\x80\xe1\x80\xbb\xe1\x80\xbd\xe1\x80\x94\xe1\x80\xba\xe1\x80\xaf\xe1\x80\x95\xe1\x80\xbax";
+    struct re_pattern_buffer r;
+    /* ကျွန်ုပ်x */
+    const char *s = "\xe1\x80\x80\xe1\x80\xbb\xe1\x80\xbd\xe1\x80\x94\xe1\x80\xba\xe1\x80\xaf\xe1\x80\x95\xe1\x80\xbax";
 
-  if (setlocale (LC_ALL, "en_US.UTF-8") == NULL)
-    {
-      puts ("setlocale failed");
-      return 1;
+    if (setlocale(LC_ALL, "en_US.UTF-8") == NULL) {
+        puts("setlocale failed");
+        return 1;
     }
-  memset (&r, 0, sizeof (r));
+    memset(&r, 0, sizeof(r));
 
-  re_compile_pattern ("[^x]x", 5, &r);
-  /* This was triggering a buffer overflow.  */
-  re_search (&r, s, strlen (s), 0, strlen (s), 0);
-  return 0;
+    re_compile_pattern("[^x]x", 5, &r);
+    /* This was triggering a buffer overflow.  */
+    re_search(&r, s, strlen(s), 0, strlen(s), 0);
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

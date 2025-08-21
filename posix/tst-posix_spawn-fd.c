@@ -36,129 +36,113 @@ static bool errors;
 
 static posix_spawn_file_actions_t actions;
 
-static void
-one_test (const char *name, int (*func) (int), int fd,
-          bool expect_success)
+static void one_test(const char *name, int (*func)(int), int fd,
+                     bool expect_success)
 {
-  int ret = func (fd);
-  if (expect_success)
-    {
-      if (ret != 0)
-        {
-          errno = ret;
-          printf ("error: posix_spawn_file_actions_%s (%d): %m\n", name, fd);
-          errors = true;
+    int ret = func(fd);
+    if (expect_success) {
+        if (ret != 0) {
+            errno = ret;
+            printf("error: posix_spawn_file_actions_%s (%d): %m\n", name, fd);
+            errors = true;
         }
-    }
-  else if (ret != EBADF)
-    {
-      if (ret == 0)
-          printf ("error: posix_spawn_file_actions_%s (%d):"
-                  " unexpected success\n", name, fd);
-      else
-        {
-          errno = ret;
-          printf ("error: posix_spawn_file_actions_%s (%d): %m\n", name, fd);
+    } else if (ret != EBADF) {
+        if (ret == 0)
+            printf("error: posix_spawn_file_actions_%s (%d):"
+                   " unexpected success\n", name, fd);
+        else {
+            errno = ret;
+            printf("error: posix_spawn_file_actions_%s (%d): %m\n", name, fd);
         }
-      errors = true;
+        errors = true;
     }
 }
 
-static void
-all_tests (const char *name, int (*func) (int))
+static void all_tests(const char *name, int (*func)(int))
 {
-  one_test (name, func, 0, true);
-  one_test (name, func, invalid_fd, true);
-  one_test (name, func, -1, false);
-  one_test (name, func, -2, false);
-  if (maxfd >= 0)
-    one_test (name, func, maxfd, false);
+    one_test(name, func, 0, true);
+    one_test(name, func, invalid_fd, true);
+    one_test(name, func, -1, false);
+    one_test(name, func, -2, false);
+    if (maxfd >= 0) {
+        one_test(name, func, maxfd, false);
+    }
 }
 
-static int
-addopen (int fd)
+static int addopen(int fd)
 {
-  return posix_spawn_file_actions_addopen
-    (&actions, fd, "/dev/null", O_RDONLY, 0);
+    return posix_spawn_file_actions_addopen
+           (&actions, fd, "/dev/null", O_RDONLY, 0);
 }
 
-static int
-adddup2 (int fd)
+static int adddup2(int fd)
 {
-  return posix_spawn_file_actions_adddup2 (&actions, fd, 1);
+    return posix_spawn_file_actions_adddup2(&actions, fd, 1);
 }
 
-static int
-adddup2_reverse (int fd)
+static int adddup2_reverse(int fd)
 {
-  return posix_spawn_file_actions_adddup2 (&actions, 1, fd);
+    return posix_spawn_file_actions_adddup2(&actions, 1, fd);
 }
 
-static int
-addclose (int fd)
+static int addclose(int fd)
 {
-  return posix_spawn_file_actions_addclose (&actions, fd);
+    return posix_spawn_file_actions_addclose(&actions, fd);
 }
 
-static void
-all_functions (void)
+static void all_functions(void)
 {
-  all_tests ("addopen", addopen);
-  all_tests ("adddup2", adddup2);
-  all_tests ("adddup2", adddup2_reverse);
-  all_tests ("adddup2", addclose);
+    all_tests("addopen", addopen);
+    all_tests("adddup2", adddup2);
+    all_tests("adddup2", adddup2_reverse);
+    all_tests("adddup2", addclose);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* Try to eliminate the file descriptor limit.  */
-  {
-    struct rlimit limit;
-    if (getrlimit (RLIMIT_NOFILE, &limit) < 0)
-      {
-        printf ("error: getrlimit: %m\n");
+    /* Try to eliminate the file descriptor limit.  */
+    {
+        struct rlimit limit;
+        if (getrlimit(RLIMIT_NOFILE, &limit) < 0) {
+            printf("error: getrlimit: %m\n");
+            return 1;
+        }
+        limit.rlim_cur = RLIM_INFINITY;
+        if (setrlimit(RLIMIT_NOFILE, &limit) < 0) {
+            printf("warning: setrlimit: %m\n");
+        }
+    }
+
+    maxfd = sysconf(_SC_OPEN_MAX);
+    printf("info: _SC_OPEN_MAX: %ld\n", maxfd);
+
+    invalid_fd = dup(0);
+    if (invalid_fd < 0) {
+        printf("error: dup: %m\n");
         return 1;
-      }
-    limit.rlim_cur = RLIM_INFINITY;
-    if (setrlimit (RLIMIT_NOFILE, &limit) < 0)
-      printf ("warning: setrlimit: %m\n");
-  }
-
-  maxfd = sysconf (_SC_OPEN_MAX);
-  printf ("info: _SC_OPEN_MAX: %ld\n", maxfd);
-
-  invalid_fd = dup (0);
-  if (invalid_fd < 0)
-    {
-      printf ("error: dup: %m\n");
-      return 1;
     }
-  if (close (invalid_fd) < 0)
-    {
-      printf ("error: close: %m\n");
-      return 1;
+    if (close(invalid_fd) < 0) {
+        printf("error: close: %m\n");
+        return 1;
     }
 
-  int ret = posix_spawn_file_actions_init (&actions);
-  if (ret != 0)
-    {
-      errno = ret;
-      printf ("error: posix_spawn_file_actions_init: %m\n");
-      return 1;
+    int ret = posix_spawn_file_actions_init(&actions);
+    if (ret != 0) {
+        errno = ret;
+        printf("error: posix_spawn_file_actions_init: %m\n");
+        return 1;
     }
 
-  all_functions ();
+    all_functions();
 
-  ret = posix_spawn_file_actions_destroy (&actions);
-  if (ret != 0)
-    {
-      errno = ret;
-      printf ("error: posix_spawn_file_actions_destroy: %m\n");
-      return 1;
+    ret = posix_spawn_file_actions_destroy(&actions);
+    if (ret != 0) {
+        errno = ret;
+        printf("error: posix_spawn_file_actions_destroy: %m\n");
+        return 1;
     }
 
-  return errors;
+    return errors;
 }
 
 #define TEST_FUNCTION do_test ()

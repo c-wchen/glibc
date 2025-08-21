@@ -18,10 +18,9 @@
 #include <mach.h>
 
 /* Called by MiG to deallocate space.  */
-void
-__mig_deallocate (vm_address_t addr,
-		  vm_size_t size)
+void __mig_deallocate(vm_address_t addr,
+                      vm_size_t size)
 {
-  (void) __vm_deallocate (__mach_task_self (), addr, size);
+    (void) __vm_deallocate(__mach_task_self(), addr, size);
 }
-weak_alias (__mig_deallocate, mig_deallocate)
+weak_alias(__mig_deallocate, mig_deallocate)

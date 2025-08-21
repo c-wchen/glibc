@@ -23,18 +23,17 @@
 #include <pt-internal.h>
 
 /* Implemented in pt-hurd-cond-timedwait.c.  */
-extern int __pthread_hurd_cond_timedwait_internal (pthread_cond_t *cond,
-						   pthread_mutex_t *mutex,
-						   const struct timespec
-						   *abstime);
+extern int __pthread_hurd_cond_timedwait_internal(pthread_cond_t *cond,
+        pthread_mutex_t *mutex,
+        const struct timespec
+        *abstime);
 
-int
-__pthread_hurd_cond_wait_np (pthread_cond_t *cond, pthread_mutex_t *mutex)
+int __pthread_hurd_cond_wait_np(pthread_cond_t *cond, pthread_mutex_t *mutex)
 {
-  error_t err;
+    error_t err;
 
-  err = __pthread_hurd_cond_timedwait_internal (cond, mutex, NULL);
-  return err == EINTR;
+    err = __pthread_hurd_cond_timedwait_internal(cond, mutex, NULL);
+    return err == EINTR;
 }
 
-strong_alias (__pthread_hurd_cond_wait_np, pthread_hurd_cond_wait_np);
+strong_alias(__pthread_hurd_cond_wait_np, pthread_hurd_cond_wait_np);

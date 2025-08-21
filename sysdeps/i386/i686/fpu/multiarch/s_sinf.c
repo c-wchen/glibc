@@ -20,10 +20,10 @@
 #include <libm-alias-float.h>
 #include <math.h>
 
-extern float __sinf_sse2 (float);
-extern float __sinf_ia32 (float);
+extern float __sinf_sse2(float);
+extern float __sinf_ia32(float);
 
-libm_ifunc (__sinf, CPU_FEATURE_USABLE (SSE2) ? __sinf_sse2 : __sinf_ia32);
-libm_alias_float (__sin, sin);
+libm_ifunc(__sinf, CPU_FEATURE_USABLE(SSE2) ? __sinf_sse2 : __sinf_ia32);
+libm_alias_float(__sin, sin);
 #define SINF __sinf_ia32
 #include <sysdeps/ieee754/flt-32/s_sinf.c>

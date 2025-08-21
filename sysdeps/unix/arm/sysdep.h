@@ -23,7 +23,7 @@
 
 #ifdef __ASSEMBLER__
 
-#define ret		DO_RET (r14)
-#define MOVE(a,b)	mov b,a
+#define ret     DO_RET (r14)
+#define MOVE(a,b)   mov b,a
 
 #endif

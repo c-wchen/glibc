@@ -31,27 +31,26 @@
 
 #ifndef __OFF_T_MATCHES_OFF64_T
 
-off64_t
-__ftello64 (FILE *fp)
+off64_t __ftello64(FILE *fp)
 {
-  off64_t pos;
-  CHECK_FILE (fp, -1L);
-  _IO_acquire_lock (fp);
-  pos = _IO_seekoff_unlocked (fp, 0, _IO_seek_cur, 0);
-  if (_IO_in_backup (fp) && pos != _IO_pos_BAD)
-    {
-      if (fp->_mode <= 0)
-	pos -= fp->_IO_save_end - fp->_IO_save_base;
+    off64_t pos;
+    CHECK_FILE(fp, -1L);
+    _IO_acquire_lock(fp);
+    pos = _IO_seekoff_unlocked(fp, 0, _IO_seek_cur, 0);
+    if (_IO_in_backup(fp) && pos != _IO_pos_BAD) {
+        if (fp->_mode <= 0) {
+            pos -= fp->_IO_save_end - fp->_IO_save_base;
+        }
     }
-  _IO_release_lock (fp);
-  if (pos == _IO_pos_BAD)
-    {
-      if (errno == 0)
-	__set_errno (EIO);
-      return -1L;
+    _IO_release_lock(fp);
+    if (pos == _IO_pos_BAD) {
+        if (errno == 0) {
+            __set_errno(EIO);
+        }
+        return -1L;
     }
-  return pos;
+    return pos;
 }
-libc_hidden_def (__ftello64)
-weak_alias (__ftello64, ftello64)
+libc_hidden_def(__ftello64)
+weak_alias(__ftello64, ftello64)
 #endif

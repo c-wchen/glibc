@@ -20,9 +20,8 @@
 #include <sysdep-cancel.h>
 #include <not-cancel.h>
 
-ssize_t
-__write_nocancel (int fd, const void *buf, size_t nbytes)
+ssize_t __write_nocancel(int fd, const void *buf, size_t nbytes)
 {
-  return INLINE_SYSCALL_CALL (write, fd, buf, nbytes);
+    return INLINE_SYSCALL_CALL(write, fd, buf, nbytes);
 }
-hidden_def (__write_nocancel)
+hidden_def(__write_nocancel)

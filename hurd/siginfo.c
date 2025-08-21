@@ -19,9 +19,8 @@
 #include <stdio.h>
 #include <libioP.h>
 
-void
-_hurd_siginfo_handler (int signo)
+void _hurd_siginfo_handler(int signo)
 {
-  /* XXX */
-  _IO_puts ("got a SIGINFO");
+    /* XXX */
+    _IO_puts("got a SIGINFO");
 }

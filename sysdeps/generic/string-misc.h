@@ -25,21 +25,20 @@
 
 /* Extract the byte at index IDX from word X, with index 0 being the
    least significant byte.  */
-static __always_inline unsigned char
-extractbyte (op_t x, unsigned int idx)
+static __always_inline unsigned char extractbyte(op_t x, unsigned int idx)
 {
-  if (__BYTE_ORDER == __LITTLE_ENDIAN)
-    return x >> (idx * CHAR_BIT);
-  else
-    return x >> (sizeof (x) - 1 - idx) * CHAR_BIT;
+    if (__BYTE_ORDER == __LITTLE_ENDIAN) {
+        return x >> (idx * CHAR_BIT);
+    } else {
+        return x >> (sizeof(x) - 1 - idx) * CHAR_BIT;
+    }
 }
 
 /* Setup an word with each byte being c_in.  For instance, on a 64 bits
    machine with input as 0xce the functions returns 0xcececececececece.  */
-static __always_inline op_t
-repeat_bytes (unsigned char c_in)
+static __always_inline op_t repeat_bytes(unsigned char c_in)
 {
-  return ((op_t)-1 / 0xff) * c_in;
+    return ((op_t) -1 / 0xff) * c_in;
 }
 
 #endif /* _STRING_MISC_H */

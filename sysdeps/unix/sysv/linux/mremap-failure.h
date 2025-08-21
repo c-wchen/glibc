@@ -20,11 +20,11 @@
 
 /* Return exit value on mremap failure with errno ERR.  */
 
-static int
-mremap_failure_exit (int err)
+static int mremap_failure_exit(int err)
 {
-  if (err != EINVAL)
-    return EXIT_FAILURE;
+    if (err != EINVAL) {
+        return EXIT_FAILURE;
+    }
 
-  return EXIT_UNSUPPORTED;
+    return EXIT_UNSUPPORTED;
 }

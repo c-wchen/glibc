@@ -22,26 +22,26 @@
 
 /* If ACT is not NULL, change the action for SIG to *ACT.
    If OACT is not NULL, put the old action for SIG in *OACT.  */
-int
-__sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
+int __sigaction(int sig, const struct sigaction *act, struct sigaction *oact)
 {
-  if (sig <= 0 || sig >= NSIG || is_internal_signal (sig))
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (sig <= 0 || sig >= NSIG || is_internal_signal(sig)) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  internal_sigset_t set;
+    internal_sigset_t set;
 
-  if (sig == SIGABRT)
-    __abort_lock_wrlock (&set);
+    if (sig == SIGABRT) {
+        __abort_lock_wrlock(&set);
+    }
 
-  int r = __libc_sigaction (sig, act, oact);
+    int r = __libc_sigaction(sig, act, oact);
 
-  if (sig == SIGABRT)
-    __abort_lock_unlock (&set);
+    if (sig == SIGABRT) {
+        __abort_lock_unlock(&set);
+    }
 
-  return r;
+    return r;
 }
-libc_hidden_def (__sigaction)
-weak_alias (__sigaction, sigaction)
+libc_hidden_def(__sigaction)
+weak_alias(__sigaction, sigaction)

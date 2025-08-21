@@ -19,11 +19,11 @@
 #include <stdio.h>
 
 /* Force linking against tst-dlopenfailnodelmod.so.  */
-void no_delete_mod_function (void);
+void no_delete_mod_function(void);
 void *function_reference = no_delete_mod_function;
 
-static void __attribute__ ((constructor))
-init (void)
+static void __attribute__((constructor))
+init(void)
 {
-  puts ("info: tst-dlopenfailmod2.so constructor invoked");
+    puts("info: tst-dlopenfailmod2.so constructor invoked");
 }

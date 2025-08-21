@@ -18,8 +18,7 @@
 
 #include "thrd_priv.h"
 
-thrd_t
-thrd_current (void)
+thrd_t thrd_current(void)
 {
-  return (thrd_t) THREAD_SELF;
+    return (thrd_t) THREAD_SELF;
 }

@@ -23,12 +23,12 @@
 #include "init-arch.h"
 #include <libm-alias-double.h>
 
-extern __typeof (__round) __round_ppc64 attribute_hidden;
-extern __typeof (__round) __round_power5plus attribute_hidden;
+extern __typeof(__round) __round_ppc64 attribute_hidden;
+extern __typeof(__round) __round_power5plus attribute_hidden;
 
-libc_ifunc (__round,
-	    (hwcap & PPC_FEATURE_POWER5_PLUS)
-	    ? __round_power5plus
-            : __round_ppc64);
+libc_ifunc(__round,
+           (hwcap &PPC_FEATURE_POWER5_PLUS)
+           ? __round_power5plus
+           : __round_ppc64);
 
-libm_alias_double (__round, round)
+libm_alias_double(__round, round)

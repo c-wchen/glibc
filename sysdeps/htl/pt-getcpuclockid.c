@@ -21,15 +21,14 @@
 
 #include <pt-internal.h>
 
-int
-pthread_getcpuclockid (pthread_t thread, clockid_t *clock)
+int pthread_getcpuclockid(pthread_t thread, clockid_t *clock)
 {
 #ifdef CLOCK_THREAD_CPUTIME_ID
-  *clock = CLOCK_THREAD_CPUTIME_ID;
-  return 0;
+    *clock = CLOCK_THREAD_CPUTIME_ID;
+    return 0;
 #else
-  return ENOSYS;
+    return ENOSYS;
 #endif
 }
 
-stub_warning (pthread_getcpuclockid)
+stub_warning(pthread_getcpuclockid)

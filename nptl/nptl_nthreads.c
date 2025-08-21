@@ -20,4 +20,4 @@
 
 /* Number of threads running.  */
 unsigned int __nptl_nthreads = 1;
-libc_hidden_data_def (__nptl_nthreads)
+libc_hidden_data_def(__nptl_nthreads)

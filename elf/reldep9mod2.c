@@ -1,3 +1,3 @@
-void baz (void)
+void baz(void)
 {
 }

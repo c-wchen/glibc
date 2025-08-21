@@ -26,13 +26,12 @@
    object as NODELETE dynamically, during initially relocation.  */
 extern bool may_finalize_mod1;
 
-static void __attribute__ ((destructor))
-fini (void)
+static void __attribute__((destructor))
+fini(void)
 {
-  if (!may_finalize_mod1)
-    {
-      puts ("error: tst-dlopen-nodelete-reloc-mod2.so destructor"
-            " called too early");
-      _exit (1);
+    if (!may_finalize_mod1) {
+        puts("error: tst-dlopen-nodelete-reloc-mod2.so destructor"
+             " called too early");
+        _exit(1);
     }
 }

@@ -27,63 +27,55 @@
 static char *buf;
 static jmp_buf jb;
 
-static void
-handler (int sig)
+static void handler(int sig)
 {
-  if (sig == SIGUSR1)
-    {
-      if (setjmp (jb) != 0)
-	{
-	  puts ("setjmp should not have been called");
-	  kill (getpid (), SIGTERM);
-	}
-    }
-  else if (sig == SIGABRT)
-    {
-      /* Yeah it worked.  */
-      _exit (0);
+    if (sig == SIGUSR1) {
+        if (setjmp(jb) != 0) {
+            puts("setjmp should not have been called");
+            kill(getpid(), SIGTERM);
+        }
+    } else if (sig == SIGABRT) {
+        /* Yeah it worked.  */
+        _exit(0);
     }
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  stack_t ss;
+    stack_t ss;
 
-  set_fortify_handler (handler);
+    set_fortify_handler(handler);
 
-  /* Create a valid signal stack and enable it.  */
-  size_t bufsize = SIGSTKSZ * 4;
-  buf = xmalloc (bufsize);
-  ss.ss_sp = buf;
-  ss.ss_size = bufsize;
-  ss.ss_flags = 0;
-  if (sigaltstack (&ss, NULL) < 0)
-    {
-      printf ("first sigaltstack failed: %m\n");
-      return 1;
+    /* Create a valid signal stack and enable it.  */
+    size_t bufsize = SIGSTKSZ * 4;
+    buf = xmalloc(bufsize);
+    ss.ss_sp = buf;
+    ss.ss_size = bufsize;
+    ss.ss_flags = 0;
+    if (sigaltstack(&ss, NULL) < 0) {
+        printf("first sigaltstack failed: %m\n");
+        return 1;
     }
 
-  /* Trigger the signal handler which will create a jmpbuf that points to the
-     end of the signal stack.  */
-  signal (SIGUSR1, handler);
-  kill (getpid (), SIGUSR1);
+    /* Trigger the signal handler which will create a jmpbuf that points to the
+       end of the signal stack.  */
+    signal(SIGUSR1, handler);
+    kill(getpid(), SIGUSR1);
 
-  /* Shrink the signal stack so the jmpbuf is now invalid.
-     We adjust the start & end to handle stacks that grow up & down.  */
-  ss.ss_sp = buf + bufsize / 2;
-  ss.ss_size = bufsize / 4;
-  if (sigaltstack (&ss, NULL) < 0)
-    {
-      printf ("second sigaltstack failed: %m\n");
-      return 1;
+    /* Shrink the signal stack so the jmpbuf is now invalid.
+       We adjust the start & end to handle stacks that grow up & down.  */
+    ss.ss_sp = buf + bufsize / 2;
+    ss.ss_size = bufsize / 4;
+    if (sigaltstack(&ss, NULL) < 0) {
+        printf("second sigaltstack failed: %m\n");
+        return 1;
     }
 
-  /* This should fail.  */
-  longjmp (jb, 1);
+    /* This should fail.  */
+    longjmp(jb, 1);
 
-  puts ("longjmp returned and shouldn't");
-  return 1;
+    puts("longjmp returned and shouldn't");
+    return 1;
 }
 
 #include <support/test-driver.c>

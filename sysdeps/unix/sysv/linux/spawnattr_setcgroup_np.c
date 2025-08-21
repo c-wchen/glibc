@@ -18,10 +18,9 @@
 #include <spawn.h>
 
 /* Store scheduling policy in the attribute structure.  */
-int
-posix_spawnattr_setcgroup_np (posix_spawnattr_t *attr, int cgroup)
+int posix_spawnattr_setcgroup_np(posix_spawnattr_t *attr, int cgroup)
 {
-  attr->__cgroup = cgroup;
+    attr->__cgroup = cgroup;
 
-  return 0;
+    return 0;
 }

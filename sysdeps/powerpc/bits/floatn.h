@@ -79,7 +79,7 @@ typedef long double _Float128;
 typedef __float128 _Float128;
 /* Add a typedef for older GCC and C++ compilers which don't natively support
    _Complex _Float128.  */
-typedef _Complex float __cfloat128 __attribute__ ((__mode__ (__KC__)));
+typedef _Complex float __cfloat128 __attribute__((__mode__(__KC__)));
 #   define __CFLOAT128 __cfloat128
 #  else
 #   define __CFLOAT128 _Complex _Float128

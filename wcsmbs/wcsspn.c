@@ -23,24 +23,24 @@
 
 /* Return the length of the maximum initial segment
    of WCS which contains only wide-characters in ACCEPT.  */
-size_t
-wcsspn (const wchar_t *wcs, const wchar_t *accept)
+size_t wcsspn(const wchar_t *wcs, const wchar_t *accept)
 {
-  const wchar_t *p;
-  const wchar_t *a;
-  size_t count = 0;
+    const wchar_t *p;
+    const wchar_t *a;
+    size_t count = 0;
 
-  for (p = wcs; *p != L'\0'; ++p)
-    {
-      for (a = accept; *a != L'\0'; ++a)
-	if (*p == *a)
-	  break;
-      if (*a == L'\0')
-	return count;
-      else
-	++count;
+    for (p = wcs; *p != L'\0'; ++p) {
+        for (a = accept; *a != L'\0'; ++a)
+            if (*p == *a) {
+                break;
+            }
+        if (*a == L'\0') {
+            return count;
+        } else {
+            ++count;
+        }
     }
 
-  return count;
+    return count;
 }
-libc_hidden_def (wcsspn)
+libc_hidden_def(wcsspn)

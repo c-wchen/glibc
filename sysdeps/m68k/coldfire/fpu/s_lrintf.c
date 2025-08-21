@@ -17,11 +17,10 @@
 
 #include <libm-alias-float.h>
 
-long int
-__lrintf (float x)
+long int __lrintf(float x)
 {
-  long int result;
-  asm ("fmove.l %1,%0" : "=dm" (result) : "f" (x));
-  return result;
+    long int result;
+    asm("fmove.l %1,%0" : "=dm"(result) : "f"(x));
+    return result;
 }
-libm_alias_float (__lrint, lrint)
+libm_alias_float(__lrint, lrint)

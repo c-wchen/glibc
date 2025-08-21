@@ -22,12 +22,11 @@
 #include <hurd/xattr.h>
 #include <hurd/fd.h>
 
-int
-fsetxattr (int fd, const char *name, const void *value, size_t size, int flags)
+int fsetxattr(int fd, const char *name, const void *value, size_t size, int flags)
 {
-  error_t err;
+    error_t err;
 
-  err = HURD_DPORT_USE (fd, _hurd_xattr_set (port, name, value, size, flags));
+    err = HURD_DPORT_USE(fd, _hurd_xattr_set(port, name, value, size, flags));
 
-  return err ? __hurd_dfail (fd, err) : 0;
+    return err ? __hurd_dfail(fd, err) : 0;
 }

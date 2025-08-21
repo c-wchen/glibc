@@ -4,6 +4,6 @@
 # define WMEMCMP  __wmemcmp_ia32
 #endif
 
-extern __typeof (wmemcmp) __wmemcmp_ia32;
+extern __typeof(wmemcmp) __wmemcmp_ia32;
 
 #include "wcsmbs/wmemcmp.c"

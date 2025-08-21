@@ -31,53 +31,48 @@
 
 struct _IO_jump_t;
 
-struct _IO_FILE_plus
-{
-  FILE file;
-  const struct _IO_jump_t *vtable;
+struct _IO_FILE_plus {
+    FILE file;
+    const struct _IO_jump_t *vtable;
 };
 
 extern struct _IO_FILE_plus _IO_stderr_;
-compat_symbol_reference (libc, _IO_stderr_, _IO_stderr_, GLIBC_2_0);
-compat_symbol_reference (libc, fopen, fopen, GLIBC_2_0);
-compat_symbol_reference (libc, fclose, fclose, GLIBC_2_0);
+compat_symbol_reference(libc, _IO_stderr_, _IO_stderr_, GLIBC_2_0);
+compat_symbol_reference(libc, fopen, fopen, GLIBC_2_0);
+compat_symbol_reference(libc, fclose, fclose, GLIBC_2_0);
 
-static int
-do_test (int argc, char *argv[])
+static int do_test(int argc, char *argv[])
 {
-  static char filename[PATH_MAX + 1];
-  struct stat st;
-  char *name = NULL;
-  int i;
+    static char filename[PATH_MAX + 1];
+    struct stat st;
+    char *name = NULL;
+    int i;
 
-  /* Try to trigger copy relocation.  */
-  TEST_VERIFY_EXIT (_IO_stderr_.file._fileno == STDERR_FILENO);
+    /* Try to trigger copy relocation.  */
+    TEST_VERIFY_EXIT(_IO_stderr_.file._fileno == STDERR_FILENO);
 
-  for (i = 1; i < argc; i++)
-    {
-      name = argv[i];
-      if (stat (name, &st) == 0)
-	{
-	  TEST_VERIFY_EXIT (strlen (name) <= PATH_MAX);
-	  break;
-	}
+    for (i = 1; i < argc; i++) {
+        name = argv[i];
+        if (stat(name, &st) == 0) {
+            TEST_VERIFY_EXIT(strlen(name) <= PATH_MAX);
+            break;
+        }
     }
-  TEST_VERIFY_EXIT (name != NULL);
+    TEST_VERIFY_EXIT(name != NULL);
 
-  strcpy (filename, name);
-  FILE *fp = fopen (filename, "r");
-  TEST_VERIFY_EXIT (strcmp (filename, name) == 0);
-  TEST_VERIFY_EXIT (fp != NULL);
-  TEST_VERIFY_EXIT (fclose (fp) == 0);
-  return 0;
+    strcpy(filename, name);
+    FILE *fp = fopen(filename, "r");
+    TEST_VERIFY_EXIT(strcmp(filename, name) == 0);
+    TEST_VERIFY_EXIT(fp != NULL);
+    TEST_VERIFY_EXIT(fclose(fp) == 0);
+    return 0;
 }
 #else
 # include <support/test-driver.h>
 
-static int
-do_test (int argc, char *argv[])
+static int do_test(int argc, char *argv[])
 {
-  return EXIT_UNSUPPORTED;
+    return EXIT_UNSUPPORTED;
 }
 #endif
 

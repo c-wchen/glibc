@@ -22,25 +22,26 @@
 
 #include "spawn_int.h"
 
-int
-posix_spawn_file_actions_addfchdir_np (posix_spawn_file_actions_t *actions,
-                                       int fd)
+int posix_spawn_file_actions_addfchdir_np(posix_spawn_file_actions_t *actions,
+        int fd)
 {
-  struct __spawn_action *rec;
+    struct __spawn_action *rec;
 
-  /* Allocate more memory if needed.  */
-  if (actions->__used == actions->__allocated
-      && __posix_spawn_file_actions_realloc (actions) != 0)
-    /* This can only mean we ran out of memory.  */
-    return ENOMEM;
+    /* Allocate more memory if needed.  */
+    if (actions->__used == actions->__allocated
+        && __posix_spawn_file_actions_realloc(actions) != 0)
+        /* This can only mean we ran out of memory.  */
+    {
+        return ENOMEM;
+    }
 
-  /* Add the new value.  */
-  rec = &actions->__actions[actions->__used];
-  rec->tag = spawn_do_fchdir;
-  rec->action.fchdir_action.fd = fd;
+    /* Add the new value.  */
+    rec = &actions->__actions[actions->__used];
+    rec->tag = spawn_do_fchdir;
+    rec->action.fchdir_action.fd = fd;
 
-  /* Account for the new entry.  */
-  ++actions->__used;
+    /* Account for the new entry.  */
+    ++actions->__used;
 
-  return 0;
+    return 0;
 }

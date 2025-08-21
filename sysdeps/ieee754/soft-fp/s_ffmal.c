@@ -33,38 +33,37 @@
    it may be where R is defined using a macro or it may be where the
    macro is defined.  */
 DIAG_PUSH_NEEDS_COMMENT;
-DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wmaybe-uninitialized");
+DIAG_IGNORE_NEEDS_COMMENT(4.9, "-Wmaybe-uninitialized");
 
 #include <soft-fp.h>
 #include <single.h>
 #include <quad.h>
 
-float
-__ffmal (_Float128 x, _Float128 y, _Float128 z)
+float __ffmal(_Float128 x, _Float128 y, _Float128 z)
 {
-  FP_DECL_EX;
-  FP_DECL_Q (X);
-  FP_DECL_Q (Y);
-  FP_DECL_Q (Z);
-  FP_DECL_Q (R);
-  FP_DECL_S (RN);
-  float ret;
+    FP_DECL_EX;
+    FP_DECL_Q(X);
+    FP_DECL_Q(Y);
+    FP_DECL_Q(Z);
+    FP_DECL_Q(R);
+    FP_DECL_S(RN);
+    float ret;
 
-  FP_INIT_ROUNDMODE;
-  FP_UNPACK_Q (X, x);
-  FP_UNPACK_Q (Y, y);
-  FP_UNPACK_Q (Z, z);
-  FP_FMA_Q (R, X, Y, Z);
+    FP_INIT_ROUNDMODE;
+    FP_UNPACK_Q(X, x);
+    FP_UNPACK_Q(Y, y);
+    FP_UNPACK_Q(Z, z);
+    FP_FMA_Q(R, X, Y, Z);
 #if _FP_W_TYPE_SIZE < 64
-  FP_TRUNC_COOKED (S, Q, 1, 4, RN, R);
+    FP_TRUNC_COOKED(S, Q, 1, 4, RN, R);
 #else
-  FP_TRUNC_COOKED (S, Q, 1, 2, RN, R);
+    FP_TRUNC_COOKED(S, Q, 1, 2, RN, R);
 #endif
-  FP_PACK_S (ret, RN);
-  FP_HANDLE_EXCEPTIONS;
-  CHECK_NARROW_FMA (ret, x, y, z);
-  return ret;
+    FP_PACK_S(ret, RN);
+    FP_HANDLE_EXCEPTIONS;
+    CHECK_NARROW_FMA(ret, x, y, z);
+    return ret;
 }
 DIAG_POP_NEEDS_COMMENT;
 
-libm_alias_float_ldouble (fma)
+libm_alias_float_ldouble(fma)

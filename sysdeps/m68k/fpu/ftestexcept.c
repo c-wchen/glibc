@@ -18,14 +18,13 @@
 
 #include <fenv.h>
 
-int
-fetestexcept (int excepts)
+int fetestexcept(int excepts)
 {
-  fexcept_t fpsr;
+    fexcept_t fpsr;
 
-  /* Get current exceptions.  */
-  __asm__ ("fmove%.l %/fpsr,%0" : "=dm" (fpsr));
+    /* Get current exceptions.  */
+    __asm__("fmove%.l %/fpsr,%0" : "=dm"(fpsr));
 
-  return fpsr & excepts & FE_ALL_EXCEPT;
+    return fpsr & excepts & FE_ALL_EXCEPT;
 }
-libm_hidden_def (fetestexcept)
+libm_hidden_def(fetestexcept)

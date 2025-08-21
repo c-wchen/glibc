@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _MATH_UNDERFLOW_H
-#define _MATH_UNDERFLOW_H	1
+#define _MATH_UNDERFLOW_H   1
 
 #include <float.h>
 #include <math.h>
@@ -38,42 +38,42 @@
 
 /* If X (which is not a NaN) is subnormal, force an underflow
    exception.  */
-#define math_check_force_underflow(x)				\
-  do								\
-    {								\
-      __typeof (x) force_underflow_tmp = (x);			\
-      if (fabs_tg (force_underflow_tmp)				\
-	  < min_of_type (force_underflow_tmp))			\
-	{							\
-	  __typeof (force_underflow_tmp) force_underflow_tmp2	\
-	    = force_underflow_tmp * force_underflow_tmp;	\
-	  math_force_eval (force_underflow_tmp2);		\
-	}							\
-    }								\
+#define math_check_force_underflow(x)               \
+  do                                \
+    {                               \
+      __typeof (x) force_underflow_tmp = (x);           \
+      if (fabs_tg (force_underflow_tmp)             \
+      < min_of_type (force_underflow_tmp))          \
+    {                           \
+      __typeof (force_underflow_tmp) force_underflow_tmp2   \
+        = force_underflow_tmp * force_underflow_tmp;    \
+      math_force_eval (force_underflow_tmp2);       \
+    }                           \
+    }                               \
   while (0)
 /* Likewise, but X is also known to be nonnegative.  */
-#define math_check_force_underflow_nonneg(x)			\
-  do								\
-    {								\
-      __typeof (x) force_underflow_tmp = (x);			\
-      if (force_underflow_tmp					\
-	  < min_of_type (force_underflow_tmp))			\
-	{							\
-	  __typeof (force_underflow_tmp) force_underflow_tmp2	\
-	    = force_underflow_tmp * force_underflow_tmp;	\
-	  math_force_eval (force_underflow_tmp2);		\
-	}							\
-    }								\
+#define math_check_force_underflow_nonneg(x)            \
+  do                                \
+    {                               \
+      __typeof (x) force_underflow_tmp = (x);           \
+      if (force_underflow_tmp                   \
+      < min_of_type (force_underflow_tmp))          \
+    {                           \
+      __typeof (force_underflow_tmp) force_underflow_tmp2   \
+        = force_underflow_tmp * force_underflow_tmp;    \
+      math_force_eval (force_underflow_tmp2);       \
+    }                           \
+    }                               \
   while (0)
 /* Likewise, for both real and imaginary parts of a complex
    result.  */
-#define math_check_force_underflow_complex(x)				\
-  do									\
-    {									\
-      __typeof (x) force_underflow_complex_tmp = (x);			\
+#define math_check_force_underflow_complex(x)               \
+  do                                    \
+    {                                   \
+      __typeof (x) force_underflow_complex_tmp = (x);           \
       math_check_force_underflow (__real__ force_underflow_complex_tmp); \
       math_check_force_underflow (__imag__ force_underflow_complex_tmp); \
-    }									\
+    }                                   \
   while (0)
 
 #endif /* math-underflow.h */

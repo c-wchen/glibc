@@ -20,15 +20,14 @@
 #include <shlib-compat.h>
 #include <pt-internal.h>
 
-int
-__pthread_attr_getstacksize (const pthread_attr_t *attr, size_t * stacksize)
+int __pthread_attr_getstacksize(const pthread_attr_t *attr, size_t *stacksize)
 {
-  *stacksize = attr->__stacksize;
-  return 0;
+    *stacksize = attr->__stacksize;
+    return 0;
 }
-libc_hidden_def (__pthread_attr_getstacksize)
-versioned_symbol (libc, __pthread_attr_getstacksize, pthread_attr_getstacksize, GLIBC_2_41);
+libc_hidden_def(__pthread_attr_getstacksize)
+versioned_symbol(libc, __pthread_attr_getstacksize, pthread_attr_getstacksize, GLIBC_2_41);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_41)
-compat_symbol (libpthread, __pthread_attr_getstacksize,pthread_attr_getstacksize, GLIBC_2_12);
+compat_symbol(libpthread, __pthread_attr_getstacksize, pthread_attr_getstacksize, GLIBC_2_12);
 #endif

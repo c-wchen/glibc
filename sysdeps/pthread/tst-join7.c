@@ -30,16 +30,16 @@
    arbitrary variable being accessed and constructed within such a thread still
    exists but this test case does not verify that.  */
 
-int
-do_test (void)
+int do_test(void)
 {
-  void *f = dlopen ("tst-join7mod.so", RTLD_NOW | RTLD_GLOBAL);
-  if (f)
-    dlclose (f);
-  else
-    return 1;
+    void *f = dlopen("tst-join7mod.so", RTLD_NOW | RTLD_GLOBAL);
+    if (f) {
+        dlclose(f);
+    } else {
+        return 1;
+    }
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

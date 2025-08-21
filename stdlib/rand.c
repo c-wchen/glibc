@@ -17,12 +17,11 @@
 
 #include <stdlib.h>
 
-#undef	rand
+#undef  rand
 
 
 /* Return a random integer between 0 and RAND_MAX.  */
-int
-rand (void)
+int rand(void)
 {
-  return (int) __random ();
+    return (int) __random();
 }

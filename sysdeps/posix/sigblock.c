@@ -21,19 +21,20 @@
 #include <sigset-cvt-mask.h>
 
 /* Block signals in MASK, returning the old mask.  */
-int
-__sigblock (int mask)
+int __sigblock(int mask)
 {
-  sigset_t set, oset;
+    sigset_t set, oset;
 
-  if (sigset_set_old_mask (&set, mask) < 0)
-    return -1;
+    if (sigset_set_old_mask(&set, mask) < 0) {
+        return -1;
+    }
 
-  if (__sigprocmask (SIG_BLOCK, &set, &oset) < 0)
-    return -1;
+    if (__sigprocmask(SIG_BLOCK, &set, &oset) < 0) {
+        return -1;
+    }
 
-  return sigset_get_old_mask (&oset);
+    return sigset_get_old_mask(&oset);
 }
 
-libc_hidden_def (__sigblock)
-weak_alias (__sigblock, sigblock)
+libc_hidden_def(__sigblock)
+weak_alias(__sigblock, sigblock)

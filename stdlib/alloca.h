@@ -15,24 +15,24 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef	_ALLOCA_H
-#define	_ALLOCA_H	1
+#ifndef _ALLOCA_H
+#define _ALLOCA_H   1
 
 #include <features.h>
 
-#define	__need_size_t
+#define __need_size_t
 #include <stddef.h>
 
 __BEGIN_DECLS
 
 /* Remove any previous definition.  */
-#undef	alloca
+#undef  alloca
 
 /* Allocate a block that will be freed when the calling function exits.  */
-extern void *alloca (size_t __size) __THROW;
+extern void *alloca(size_t __size) __THROW;
 
-#ifdef	__GNUC__
-# define alloca(size)	__builtin_alloca (size)
+#ifdef  __GNUC__
+# define alloca(size)   __builtin_alloca (size)
 #endif /* GCC.  */
 
 __END_DECLS

@@ -24,10 +24,9 @@
 
 #include <math-narrow.h>
 
-double
-__dmull (long double x, long double y)
+double __dmull(long double x, long double y)
 {
-  NARROW_MUL_ROUND_TO_ODD (x, y, double, union ieee854_long_double, l,
-			   mantissa1, false);
+    NARROW_MUL_ROUND_TO_ODD(x, y, double, union ieee854_long_double, l,
+                            mantissa1, false);
 }
-libm_alias_double_ldouble (mul)
+libm_alias_double_ldouble(mul)

@@ -21,14 +21,14 @@
 
 /* Jump to the position specified by ENV, causing the
    setjmp call there to return VAL, or 1 if VAL is 0.  */
-void
-__longjmp (__jmp_buf env, int val)
+void __longjmp(__jmp_buf env, int val)
 {
-  if (val == 0)
-    val = 1;
+    if (val == 0) {
+        val = 1;
+    }
 
-  __set_errno (ENOSYS);
-  /* No way to signal failure.	*/
+    __set_errno(ENOSYS);
+    /* No way to signal failure.  */
 }
 
-stub_warning (longjmp)
+stub_warning(longjmp)

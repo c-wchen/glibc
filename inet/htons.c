@@ -17,18 +17,17 @@
 
 #include <netinet/in.h>
 
-#undef	htons
-#undef	ntohs
+#undef  htons
+#undef  ntohs
 
-uint16_t
-htons (uint16_t x)
+uint16_t htons(uint16_t x)
 {
 #if BYTE_ORDER == BIG_ENDIAN
-  return x;
+    return x;
 #elif BYTE_ORDER == LITTLE_ENDIAN
-  return __bswap_16 (x);
+    return __bswap_16(x);
 #else
 # error "What kind of system is this?"
 #endif
 }
-weak_alias (htons, ntohs)
+weak_alias(htons, ntohs)

@@ -20,16 +20,16 @@
 #include <arm-features.h>
 
 
-int
-__feholdexcept (fenv_t *envp)
+int __feholdexcept(fenv_t *envp)
 {
-  /* Fail if a VFP unit isn't present.  */
-  if (!ARM_HAVE_VFP)
-    return 1;
+    /* Fail if a VFP unit isn't present.  */
+    if (!ARM_HAVE_VFP) {
+        return 1;
+    }
 
-  libc_feholdexcept_vfp (envp);
-  return 0;
+    libc_feholdexcept_vfp(envp);
+    return 0;
 }
-libm_hidden_def (__feholdexcept)
-weak_alias (__feholdexcept, feholdexcept)
-libm_hidden_weak (feholdexcept)
+libm_hidden_def(__feholdexcept)
+weak_alias(__feholdexcept, feholdexcept)
+libm_hidden_weak(feholdexcept)

@@ -22,8 +22,7 @@
 
 const char _dl_hwcaps_subdirs[] = "";
 
-uint32_t
-_dl_hwcaps_subdirs_active (void)
+uint32_t _dl_hwcaps_subdirs_active(void)
 {
-  return 0;
+    return 0;
 }

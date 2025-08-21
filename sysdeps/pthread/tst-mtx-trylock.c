@@ -30,61 +30,62 @@ static char shrd_counter;
 
 /* Function to choose an action to do, depending on mtx_trylock
    return value.  */
-static inline void
-choose_action (int action, char* thread_name)
+static inline void choose_action(int action, char *thread_name)
 {
-  switch (action)
-    {
-      case thrd_success:
-        ++shrd_counter;
+    switch (action) {
+        case thrd_success:
+            ++shrd_counter;
 
-	if (mtx_unlock (&mutex) != thrd_success)
-	  FAIL_EXIT1 ("mtx_unlock failed");
-      break;
+            if (mtx_unlock(&mutex) != thrd_success) {
+                FAIL_EXIT1("mtx_unlock failed");
+            }
+            break;
 
-      case thrd_busy:
-        break;
+        case thrd_busy:
+            break;
 
-      case thrd_error:
-	FAIL_EXIT1 ("%s lock error", thread_name);
-        break;
+        case thrd_error:
+            FAIL_EXIT1("%s lock error", thread_name);
+            break;
     }
 }
 
-static int
-child_add (void *arg)
+static int child_add(void *arg)
 {
-  char child_name[] = "child";
+    char child_name[] = "child";
 
-  /* Try to lock mutex.  */
-  choose_action (mtx_trylock (&mutex), child_name);
+    /* Try to lock mutex.  */
+    choose_action(mtx_trylock(&mutex), child_name);
 
-  thrd_exit (thrd_success);
+    thrd_exit(thrd_success);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  thrd_t id;
-  char parent_name[] = "parent";
+    thrd_t id;
+    char parent_name[] = "parent";
 
-  if (mtx_init (&mutex, mtx_timed) != thrd_success)
-    FAIL_EXIT1 ("mtx_init failed");
+    if (mtx_init(&mutex, mtx_timed) != thrd_success) {
+        FAIL_EXIT1("mtx_init failed");
+    }
 
-  if (thrd_create (&id, child_add, NULL) != thrd_success)
-    FAIL_EXIT1 ("thrd_create failed");
+    if (thrd_create(&id, child_add, NULL) != thrd_success) {
+        FAIL_EXIT1("thrd_create failed");
+    }
 
-  choose_action (mtx_trylock (&mutex), parent_name);
+    choose_action(mtx_trylock(&mutex), parent_name);
 
-  if (thrd_join (id, NULL) != thrd_success)
-    FAIL_EXIT1 ("thrd_join failed");
+    if (thrd_join(id, NULL) != thrd_success) {
+        FAIL_EXIT1("thrd_join failed");
+    }
 
-  if (shrd_counter != 2 && shrd_counter != 1)
-    FAIL_EXIT1 ("shrd_counter != {1,2} (%d)", shrd_counter);
+    if (shrd_counter != 2 && shrd_counter != 1) {
+        FAIL_EXIT1("shrd_counter != {1,2} (%d)", shrd_counter);
+    }
 
-  mtx_destroy (&mutex);
+    mtx_destroy(&mutex);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

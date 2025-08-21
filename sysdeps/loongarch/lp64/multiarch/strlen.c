@@ -27,11 +27,11 @@
 # define SYMBOL_NAME strlen
 # include "ifunc-strlen.h"
 
-libc_ifunc_redirected (__redirect_strlen, strlen, IFUNC_SELECTOR ());
+libc_ifunc_redirected(__redirect_strlen, strlen, IFUNC_SELECTOR());
 
 # ifdef SHARED
-__hidden_ver1 (strlen, __GI_strlen, __redirect_strlen)
-  __attribute__ ((visibility ("hidden"))) __attribute_copy__ (strlen);
+__hidden_ver1(strlen, __GI_strlen, __redirect_strlen)
+__attribute__((visibility("hidden"))) __attribute_copy__(strlen);
 # endif
 
 #endif

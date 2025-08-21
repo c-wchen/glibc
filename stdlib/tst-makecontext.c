@@ -31,79 +31,70 @@ __thread int thr;
 int somevar = -76;
 long othervar = -78L;
 
-struct trace_arg
-{
-  int cnt, size;
+struct trace_arg {
+    int cnt, size;
 };
 
-static _Unwind_Reason_Code
-backtrace_helper (struct _Unwind_Context *ctx, void *a)
+static _Unwind_Reason_Code backtrace_helper(struct _Unwind_Context *ctx, void *a)
 {
-  struct trace_arg *arg = a;
-  if (++arg->cnt == arg->size)
-    return _URC_END_OF_STACK;
-  return _URC_NO_REASON;
+    struct trace_arg *arg = a;
+    if (++arg->cnt == arg->size) {
+        return _URC_END_OF_STACK;
+    }
+    return _URC_NO_REASON;
 }
 
-void
-cf (int i)
+void cf(int i)
 {
-  struct trace_arg arg = { .size = 100, .cnt = -1 };
-  void *handle;
-  _Unwind_Reason_Code (*unwind_backtrace) (_Unwind_Trace_Fn, void *);
+    struct trace_arg arg = { .size = 100, .cnt = -1 };
+    void *handle;
+    _Unwind_Reason_Code(*unwind_backtrace)(_Unwind_Trace_Fn, void *);
 
-  if (i != othervar || thr != 94)
-    {
-      printf ("i %d thr %d\n", i, thr);
-      exit (1);
+    if (i != othervar || thr != 94) {
+        printf("i %d thr %d\n", i, thr);
+        exit(1);
     }
 
-  /* Test if callback function of _Unwind_Backtrace is not called infinitely
-     times. See Bug 18508 or gcc bug "Bug 66303 - runtime.Caller() returns
-     infinitely deep stack frames on s390x.".
-     The go runtime calls backtrace_full() in
-     <gcc-src>/libbacktrace/backtrace.c, which uses _Unwind_Backtrace().  */
-  handle = dlopen (LIBGCC_S_SO, RTLD_LAZY);
-  if (handle != NULL)
-    {
-      unwind_backtrace = dlsym (handle, "_Unwind_Backtrace");
-      if (unwind_backtrace != NULL)
-	{
-	  unwind_backtrace (backtrace_helper, &arg);
-	  assert (arg.cnt != -1 && arg.cnt < 100);
-	}
-      dlclose (handle);
+    /* Test if callback function of _Unwind_Backtrace is not called infinitely
+       times. See Bug 18508 or gcc bug "Bug 66303 - runtime.Caller() returns
+       infinitely deep stack frames on s390x.".
+       The go runtime calls backtrace_full() in
+       <gcc-src>/libbacktrace/backtrace.c, which uses _Unwind_Backtrace().  */
+    handle = dlopen(LIBGCC_S_SO, RTLD_LAZY);
+    if (handle != NULL) {
+        unwind_backtrace = dlsym(handle, "_Unwind_Backtrace");
+        if (unwind_backtrace != NULL) {
+            unwind_backtrace(backtrace_helper, &arg);
+            assert(arg.cnt != -1 && arg.cnt < 100);
+        }
+        dlclose(handle);
     }
 
-  /* Since uc_link below has been set to NULL, setcontext is supposed to
-     terminate the process normally after this function returns.  */
+    /* Since uc_link below has been set to NULL, setcontext is supposed to
+       terminate the process normally after this function returns.  */
 }
 
-int
-do_test (void)
+int do_test(void)
 {
-  if (getcontext (&ucp) != 0)
-    {
-      if (errno == ENOSYS)
-	{
-	  puts ("context handling not supported");
-	  return 0;
-	}
+    if (getcontext(&ucp) != 0) {
+        if (errno == ENOSYS) {
+            puts("context handling not supported");
+            return 0;
+        }
 
-      puts ("getcontext failed");
-      return 1;
+        puts("getcontext failed");
+        return 1;
     }
-  thr = 94;
-  ucp.uc_link = NULL;
-  ucp.uc_stack.ss_sp = st1;
-  ucp.uc_stack.ss_size = sizeof st1;
-  makecontext (&ucp, (void (*) (void)) cf, 1, somevar - 2);
-  if (setcontext (&ucp) != 0)
-    {
-      puts ("setcontext failed");
-      return 1;
+    thr = 94;
+    ucp.uc_link = NULL;
+    ucp.uc_stack.ss_sp = st1;
+    ucp.uc_stack.ss_size = sizeof st1;
+    makecontext(&ucp, (void (*)(void)) cf, 1, somevar - 2);
+    if (setcontext(&ucp) != 0) {
+        puts("setcontext failed");
+        return 1;
     }
-  return 2;
+    return 2;
 }
 
 #define TEST_FUNCTION do_test ()

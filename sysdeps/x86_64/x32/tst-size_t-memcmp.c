@@ -36,41 +36,37 @@
 # define CHAR char
 #endif
 
-IMPL (MEMCMP, 1)
+IMPL(MEMCMP, 1)
 
-typedef int (*proto_t) (const CHAR *, const CHAR *, size_t);
+typedef int (*proto_t)(const CHAR *, const CHAR *, size_t);
 
-static int
-__attribute__ ((noinline, noclone))
-do_memcmp (parameter_t a, parameter_t b)
+static int __attribute__((noinline, noclone))
+do_memcmp(parameter_t a, parameter_t b)
 {
-  return CALL (&b, a.p, b.p, a.len);
+    return CALL(&b, a.p, b.p, a.len);
 }
 
-static int
-test_main (void)
+static int test_main(void)
 {
-  test_init ();
+    test_init();
 
-  parameter_t dest = { { page_size / sizeof (CHAR) }, buf1 };
-  parameter_t src = { { 0 }, buf2 };
+    parameter_t dest = { { page_size / sizeof(CHAR) }, buf1 };
+    parameter_t src = { { 0 }, buf2 };
 
-  memcpy (buf1, buf2, page_size);
+    memcpy(buf1, buf2, page_size);
 
-  int ret = 0;
-  FOR_EACH_IMPL (impl, 0)
-    {
-      src.fn = impl->fn;
-      int res = do_memcmp (dest, src);
-      if (res)
-	{
-	  error (0, 0, "Wrong result in function %s: %i != 0",
-		 impl->name, res);
-	  ret = 1;
-	}
+    int ret = 0;
+    FOR_EACH_IMPL(impl, 0) {
+        src.fn = impl->fn;
+        int res = do_memcmp(dest, src);
+        if (res) {
+            error(0, 0, "Wrong result in function %s: %i != 0",
+                  impl->name, res);
+            ret = 1;
+        }
     }
 
-  return ret ? EXIT_FAILURE : EXIT_SUCCESS;
+    return ret ? EXIT_FAILURE : EXIT_SUCCESS;
 }
 
 #include <support/test-driver.c>

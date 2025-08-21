@@ -19,31 +19,30 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void
-exported_function (int ignored)
+void exported_function(int ignored)
 {
-  /* This function is interposed from tst-dlclose-lazy-mod1.so and
-     thus never called.  */
-  abort ();
+    /* This function is interposed from tst-dlclose-lazy-mod1.so and
+       thus never called.  */
+    abort();
 }
 
-static void __attribute__ ((constructor))
-init (void)
+static void __attribute__((constructor))
+init(void)
 {
-  puts ("info: tst-dlclose-lazy-mod2.so constructor called");
+    puts("info: tst-dlclose-lazy-mod2.so constructor called");
 
-  /* Trigger lazy binding to the definition in
-     tst-dlclose-lazy-mod1.so, but not for
-     lazily_bound_exported_function in that module.  */
-  exported_function (0);
+    /* Trigger lazy binding to the definition in
+       tst-dlclose-lazy-mod1.so, but not for
+       lazily_bound_exported_function in that module.  */
+    exported_function(0);
 }
 
-static void __attribute__ ((destructor))
-fini (void)
+static void __attribute__((destructor))
+fini(void)
 {
-  puts ("info: tst-dlclose-lazy-mod2.so destructor called");
+    puts("info: tst-dlclose-lazy-mod2.so destructor called");
 
-  /* Trigger the lazily_bound_exported_function call in
-     exported_function in tst-dlclose-lazy-mod1.so.  */
-  exported_function (1);
+    /* Trigger the lazily_bound_exported_function call in
+       exported_function in tst-dlclose-lazy-mod1.so.  */
+    exported_function(1);
 }

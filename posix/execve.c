@@ -22,18 +22,16 @@
 
 /* Replace the current process, executing PATH with arguments ARGV and
    environment ENVP.  ARGV and ENVP are terminated by NULL pointers.  */
-int
-__execve (const char *path, char *const argv[], char *const envp[])
+int __execve(const char *path, char *const argv[], char *const envp[])
 {
-  if (path == NULL || argv == NULL || envp == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (path == NULL || argv == NULL || envp == NULL) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (execve)
+stub_warning(execve)
 
-weak_alias (__execve, execve)
+weak_alias(__execve, execve)

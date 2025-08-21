@@ -21,17 +21,16 @@
 #include <shlib-compat.h>
 #include <pthreadP.h>
 
-int
-__pthread_attr_getstack (const pthread_attr_t *attr,
-			 void **stackaddr, size_t * stacksize)
+int __pthread_attr_getstack(const pthread_attr_t *attr,
+                            void **stackaddr, size_t *stacksize)
 {
-  __pthread_attr_getstackaddr (attr, stackaddr);
-  __pthread_attr_getstacksize (attr, stacksize);
-  return 0;
+    __pthread_attr_getstackaddr(attr, stackaddr);
+    __pthread_attr_getstacksize(attr, stacksize);
+    return 0;
 }
-libc_hidden_def (__pthread_attr_getstack)
-versioned_symbol (libpthread, __pthread_attr_getstack, pthread_attr_getstack, GLIBC_2_41);
+libc_hidden_def(__pthread_attr_getstack)
+versioned_symbol(libpthread, __pthread_attr_getstack, pthread_attr_getstack, GLIBC_2_41);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_41)
-compat_symbol (libpthread, __pthread_attr_getstack, pthread_attr_getstack, GLIBC_2_12);
+compat_symbol(libpthread, __pthread_attr_getstack, pthread_attr_getstack, GLIBC_2_12);
 #endif

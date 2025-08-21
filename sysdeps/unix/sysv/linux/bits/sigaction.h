@@ -24,20 +24,18 @@
 #endif
 
 /* Structure describing the action to be taken when a signal arrives.  */
-struct sigaction
-  {
+struct sigaction {
     /* Signal handler.  */
 #if defined __USE_POSIX199309 || defined __USE_XOPEN_EXTENDED
-    union
-      {
-	/* Used if SA_SIGINFO is not set.  */
-	__sighandler_t sa_handler;
-	/* Used if SA_SIGINFO is set.  */
-	void (*sa_sigaction) (int, siginfo_t *, void *);
-      }
+    union {
+        /* Used if SA_SIGINFO is not set.  */
+        __sighandler_t sa_handler;
+        /* Used if SA_SIGINFO is set.  */
+        void (*sa_sigaction)(int, siginfo_t *, void *);
+    }
     __sigaction_handler;
-# define sa_handler	__sigaction_handler.sa_handler
-# define sa_sigaction	__sigaction_handler.sa_sigaction
+# define sa_handler __sigaction_handler.sa_handler
+# define sa_sigaction   __sigaction_handler.sa_sigaction
 #else
     __sighandler_t sa_handler;
 #endif
@@ -49,21 +47,21 @@ struct sigaction
     int sa_flags;
 
     /* Restore handler.  */
-    void (*sa_restorer) (void);
-  };
+    void (*sa_restorer)(void);
+};
 
 /* Bits in `sa_flags'.  */
-#define	SA_NOCLDSTOP  1		 /* Don't send SIGCHLD when children stop.  */
-#define SA_NOCLDWAIT  2		 /* Don't create zombie on child death.  */
-#define SA_SIGINFO    4		 /* Invoke signal-catching function with
-				    three arguments instead of one.  */
+#define SA_NOCLDSTOP  1      /* Don't send SIGCHLD when children stop.  */
+#define SA_NOCLDWAIT  2      /* Don't create zombie on child death.  */
+#define SA_SIGINFO    4      /* Invoke signal-catching function with
+                    three arguments instead of one.  */
 #if defined __USE_XOPEN_EXTENDED || defined __USE_MISC
 # define SA_ONSTACK   0x08000000 /* Use signal stack by using `sa_restorer'. */
 #endif
 #if defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K8
 # define SA_RESTART   0x10000000 /* Restart syscall on signal return.  */
 # define SA_NODEFER   0x40000000 /* Don't automatically block the signal when
-				    its handler is being executed.  */
+                    its handler is being executed.  */
 # define SA_RESETHAND 0x80000000 /* Reset to SIG_DFL on entry to handler.  */
 #endif
 #ifdef __USE_MISC
@@ -76,8 +74,8 @@ struct sigaction
 #endif
 
 /* Values for the HOW argument to `sigprocmask'.  */
-#define	SIG_BLOCK     0		 /* Block signals.  */
-#define	SIG_UNBLOCK   1		 /* Unblock signals.  */
-#define	SIG_SETMASK   2		 /* Set the set of blocked signals.  */
+#define SIG_BLOCK     0      /* Block signals.  */
+#define SIG_UNBLOCK   1      /* Unblock signals.  */
+#define SIG_SETMASK   2      /* Set the set of blocked signals.  */
 
 #endif

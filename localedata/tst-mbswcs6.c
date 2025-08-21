@@ -23,50 +23,48 @@
 #include <wchar.h>
 
 
-static int
-do_test (const char *loc)
+static int do_test(const char *loc)
 {
-  char buf[100];
-  size_t n;
-  mbstate_t state;
-  const char *nloc;
-  int res;
+    char buf[100];
+    size_t n;
+    mbstate_t state;
+    const char *nloc;
+    int res;
 
-  nloc = setlocale (LC_ALL, loc);
-  if (nloc == NULL)
-    {
-      printf ("could not set locale \"%s\"\n", loc);
-      return 1;
+    nloc = setlocale(LC_ALL, loc);
+    if (nloc == NULL) {
+        printf("could not set locale \"%s\"\n", loc);
+        return 1;
     }
-  printf ("new locale: %s\n", nloc);
+    printf("new locale: %s\n", nloc);
 
-  memset (&state, '\0', sizeof (state));
-  errno = 0;
-  n = wcrtomb (buf, (wchar_t) -15l, &state);
+    memset(&state, '\0', sizeof(state));
+    errno = 0;
+    n = wcrtomb(buf, (wchar_t) -15l, &state);
 
-  printf ("n = %zd, errno = %d (%s)\n", n, errno, strerror (errno));
+    printf("n = %zd, errno = %d (%s)\n", n, errno, strerror(errno));
 
-  res = n != (size_t) -1 || errno != EILSEQ;
-  if (res)
-    puts ("*** FAIL");
-  putchar ('\n');
+    res = n != (size_t) -1 || errno != EILSEQ;
+    if (res) {
+        puts("*** FAIL");
+    }
+    putchar('\n');
 
-  return res;
+    return res;
 }
 
 
-int
-main (void)
+int main(void)
 {
-  int res;
+    int res;
 
-  res = do_test ("C");
-  res |= do_test ("de_DE.ISO-8859-1");
-  res |= do_test ("de_DE.UTF-8");
-  res |= do_test ("en_US.ANSI_X3.4-1968");
-  res |= do_test ("ja_JP.EUC-JP");
-  res |= do_test ("hr_HR.ISO-8859-2");
-  //res |= do_test ("ru_RU.KOI8-R");
+    res = do_test("C");
+    res |= do_test("de_DE.ISO-8859-1");
+    res |= do_test("de_DE.UTF-8");
+    res |= do_test("en_US.ANSI_X3.4-1968");
+    res |= do_test("ja_JP.EUC-JP");
+    res |= do_test("hr_HR.ISO-8859-2");
+    //res |= do_test ("ru_RU.KOI8-R");
 
-  return res;
+    return res;
 }

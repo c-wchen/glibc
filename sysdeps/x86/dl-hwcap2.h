@@ -15,7 +15,6 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-static inline void
-dl_check_hwcap2 (struct cpu_features *cpu_features)
+static inline void dl_check_hwcap2(struct cpu_features *cpu_features)
 {
 }

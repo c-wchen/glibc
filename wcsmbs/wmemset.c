@@ -21,36 +21,33 @@
 # define __wmemset WMEMSET
 #endif
 
-wchar_t *
-__wmemset (wchar_t *s, wchar_t c, size_t n)
+wchar_t *__wmemset(wchar_t *s, wchar_t c, size_t n)
 {
-  wchar_t *wp = s;
+    wchar_t *wp = s;
 
-  while (n >= 4)
-    {
-      wp[0] = c;
-      wp[1] = c;
-      wp[2] = c;
-      wp[3] = c;
-      wp += 4;
-      n -= 4;
+    while (n >= 4) {
+        wp[0] = c;
+        wp[1] = c;
+        wp[2] = c;
+        wp[3] = c;
+        wp += 4;
+        n -= 4;
     }
 
-  if (n > 0)
-    {
-      wp[0] = c;
+    if (n > 0) {
+        wp[0] = c;
 
-      if (n > 1)
-	{
-	  wp[1] = c;
+        if (n > 1) {
+            wp[1] = c;
 
-	  if (n > 2)
-	    wp[2] = c;
-	}
+            if (n > 2) {
+                wp[2] = c;
+            }
+        }
     }
 
-  return s;
+    return s;
 }
-libc_hidden_def (__wmemset)
-weak_alias (__wmemset, wmemset)
-libc_hidden_weak (wmemset)
+libc_hidden_def(__wmemset)
+weak_alias(__wmemset, wmemset)
+libc_hidden_weak(wmemset)

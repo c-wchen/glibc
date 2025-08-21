@@ -20,29 +20,26 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static int
-printf_under_test (const char *restrict fmt, ...)
+static int printf_under_test(const char *restrict fmt, ...)
 {
-  va_list ap;
-  int result;
-  char *str;
+    va_list ap;
+    int result;
+    char *str;
 
-  va_start (ap, fmt);
-  result = vasprintf (&str, fmt, ap);
-  va_end (ap);
-  if (result < 0)
-    {
-      perror ("vasprintf");
-      goto out;
+    va_start(ap, fmt);
+    result = vasprintf(&str, fmt, ap);
+    va_end(ap);
+    if (result < 0) {
+        perror("vasprintf");
+        goto out;
     }
-  if (fwrite (str, sizeof (*str), result, stdout) != result)
-    {
-      perror ("fwrite");
-      result = -1;
+    if (fwrite(str, sizeof(*str), result, stdout) != result) {
+        perror("fwrite");
+        result = -1;
     }
-  free (str);
+    free(str);
 out:
-  return result;
+    return result;
 }
 
 #ifndef TIMEOUT

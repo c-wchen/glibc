@@ -20,13 +20,12 @@
 
 /* Send a message described MESSAGE on socket FD.
    Returns the number of bytes sent, or -1 for errors.  */
-ssize_t
-__sendmsg (int fd, const struct msghdr *message, int flags)
+ssize_t __sendmsg(int fd, const struct msghdr *message, int flags)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-weak_alias (__sendmsg, sendmsg)
+weak_alias(__sendmsg, sendmsg)
 
-stub_warning (sendmsg)
+stub_warning(sendmsg)

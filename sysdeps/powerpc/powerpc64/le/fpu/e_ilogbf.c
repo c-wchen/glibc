@@ -21,21 +21,21 @@
 #include <stdbit.h>
 #include "sysdeps/ieee754/flt-32/math_config.h"
 
-int
-__ieee754_ilogbf (float x)
+int __ieee754_ilogbf(float x)
 {
-  uint32_t ux = asuint (x);
-  int ex = (ux & ~SIGN_MASK) >> MANTISSA_WIDTH;
-  if (ex == 0) /* zero or subnormal */
-    {
-      /* Clear sign and exponent.  */
-      ux <<= 1 + EXPONENT_WIDTH;
-      if (ux == 0)
-	return FP_ILOGB0;
-      /* sbunormal */
-      return -127 - stdc_leading_zeros (ux);
+    uint32_t ux = asuint(x);
+    int ex = (ux & ~SIGN_MASK) >> MANTISSA_WIDTH;
+    if (ex == 0) { /* zero or subnormal */
+        /* Clear sign and exponent.  */
+        ux <<= 1 + EXPONENT_WIDTH;
+        if (ux == 0) {
+            return FP_ILOGB0;
+        }
+        /* sbunormal */
+        return -127 - stdc_leading_zeros(ux);
     }
-  if (ex == EXPONENT_MASK >> MANTISSA_WIDTH) /* NaN or Inf */
-    return ux << (1 + EXPONENT_WIDTH) ? FP_ILOGBNAN : INT_MAX;
-  return ex - 127;
+    if (ex == EXPONENT_MASK >> MANTISSA_WIDTH) { /* NaN or Inf */
+        return ux << (1 + EXPONENT_WIDTH) ? FP_ILOGBNAN : INT_MAX;
+    }
+    return ex - 127;
 }

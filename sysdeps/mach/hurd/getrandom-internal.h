@@ -19,12 +19,12 @@
 #ifndef _GETRANDOM_INTERNAL_H
 #define _GETRANDOM_INTERNAL_H
 
-extern void __mach_init (void);
+extern void __mach_init(void);
 
-static inline void __getrandom_early_init (_Bool initial)
+static inline void __getrandom_early_init(_Bool initial)
 {
-  /* getrandom needs RPCs for time etc.  */
-  __mach_init ();
+    /* getrandom needs RPCs for time etc.  */
+    __mach_init();
 }
 
 #endif

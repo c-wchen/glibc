@@ -16,9 +16,9 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef	_HURD_USERLINK_H
+#ifndef _HURD_USERLINK_H
 
-#define	_HURD_USERLINK_H	1
+#define _HURD_USERLINK_H    1
 #include <features.h>
 
 #define __need_NULL
@@ -59,18 +59,16 @@
    their own.  Also important: the longjmp cleanup relies on all userlink
    structures residing on the stack of the using thread.  */
 
-struct hurd_userlink
-  {
-    struct
-      {
-	struct hurd_userlink *next, **prevp;
-      } resource, thread;
+struct hurd_userlink {
+    struct {
+        struct hurd_userlink *next, * *prevp;
+    } resource, thread;
 
     /* This function is called when a non-local exit
        unwinds the frame containing this link.  */
-    void (*cleanup) (void *cleanup_data, jmp_buf env, int val);
+    void (*cleanup)(void *cleanup_data, jmp_buf env, int val);
     void *cleanup_data;
-  };
+};
 
 
 #ifndef _HURD_USERLINK_H_EXTERN_INLINE
@@ -80,33 +78,32 @@ struct hurd_userlink
 
 /* Attach LINK to the chain of users at *CHAINP.  */
 
-extern void
-_hurd_userlink_link (struct hurd_userlink **chainp,
-		     struct hurd_userlink *link);
+extern void _hurd_userlink_link(struct hurd_userlink **chainp,
+                                struct hurd_userlink *link);
 
 #if defined __USE_EXTERN_INLINES && defined _LIBC
 # if IS_IN (libc)
-_HURD_USERLINK_H_EXTERN_INLINE void
-_hurd_userlink_link (struct hurd_userlink **chainp,
-		     struct hurd_userlink *link)
+_HURD_USERLINK_H_EXTERN_INLINE void _hurd_userlink_link(struct hurd_userlink **chainp,
+        struct hurd_userlink *link)
 {
-  struct hurd_userlink **thread_chainp;
+    struct hurd_userlink **thread_chainp;
 
-  link->resource.next = *chainp;
-  if (link->resource.next)
-    link->resource.next->resource.prevp = &link->resource.next;
-  link->resource.prevp = chainp;
-  *chainp = link;
+    link->resource.next = *chainp;
+    if (link->resource.next) {
+        link->resource.next->resource.prevp = &link->resource.next;
+    }
+    link->resource.prevp = chainp;
+    *chainp = link;
 
-  if (!__LIBC_NO_TLS ())
-    {
-      /* Also chain it on the current thread's list of active resources.  */
-      thread_chainp = &_hurd_self_sigstate ()->active_resources;
-      link->thread.next = *thread_chainp;
-      if (link->thread.next)
-	link->thread.next->thread.prevp = &link->thread.next;
-      link->thread.prevp = thread_chainp;
-      *thread_chainp = link;
+    if (!__LIBC_NO_TLS()) {
+        /* Also chain it on the current thread's list of active resources.  */
+        thread_chainp = &_hurd_self_sigstate()->active_resources;
+        link->thread.next = *thread_chainp;
+        if (link->thread.next) {
+            link->thread.next->thread.prevp = &link->thread.next;
+        }
+        link->thread.prevp = thread_chainp;
+        *thread_chainp = link;
     }
 }
 # endif
@@ -116,34 +113,35 @@ _hurd_userlink_link (struct hurd_userlink **chainp,
 /* Detach LINK from its chain.  Returns nonzero iff this was the
    last user of the resource and it should be deallocated.  */
 
-extern int _hurd_userlink_unlink (struct hurd_userlink *link);
+extern int _hurd_userlink_unlink(struct hurd_userlink *link);
 
 #if defined __USE_EXTERN_INLINES && defined _LIBC
 # if IS_IN (libc)
-_HURD_USERLINK_H_EXTERN_INLINE int
-_hurd_userlink_unlink (struct hurd_userlink *link)
+_HURD_USERLINK_H_EXTERN_INLINE int _hurd_userlink_unlink(struct hurd_userlink *link)
 {
-  /* We should deallocate the resource used if this chain has been detached
-     from the cell (and thus has a nil `prevp'), and there is no next link
-     representing another user reference to the same resource. */
-  int dealloc = ! link->resource.next && ! link->resource.prevp;
+    /* We should deallocate the resource used if this chain has been detached
+       from the cell (and thus has a nil `prevp'), and there is no next link
+       representing another user reference to the same resource. */
+    int dealloc = ! link->resource.next && ! link->resource.prevp;
 
-  /* Remove our link from the chain of current users.  */
-  if (link->resource.prevp)
-    *link->resource.prevp = link->resource.next;
-  if (link->resource.next)
-    link->resource.next->resource.prevp = link->resource.prevp;
-
-  if (!__LIBC_NO_TLS ())
-    {
-      /* Remove our link from the chain of currently active resources
-	 for this thread.  */
-      *link->thread.prevp = link->thread.next;
-      if (link->thread.next)
-	link->thread.next->thread.prevp = link->thread.prevp;
+    /* Remove our link from the chain of current users.  */
+    if (link->resource.prevp) {
+        *link->resource.prevp = link->resource.next;
+    }
+    if (link->resource.next) {
+        link->resource.next->resource.prevp = link->resource.prevp;
     }
 
-  return dealloc;
+    if (!__LIBC_NO_TLS()) {
+        /* Remove our link from the chain of currently active resources
+        for this thread.  */
+        *link->thread.prevp = link->thread.next;
+        if (link->thread.next) {
+            link->thread.next->thread.prevp = link->thread.prevp;
+        }
+    }
+
+    return dealloc;
 }
 # endif
 #endif
@@ -151,26 +149,26 @@ _hurd_userlink_unlink (struct hurd_userlink *link)
 /* Relocate LINK to NEW_LINK.
    To be used when e.g. reallocating a link array.  */
 
-extern void _hurd_userlink_move (struct hurd_userlink *new_link,
+extern void _hurd_userlink_move(struct hurd_userlink *new_link,
                                 struct hurd_userlink *link);
 
 #if defined __USE_EXTERN_INLINES && defined _LIBC
 # if IS_IN (libc)
-_HURD_USERLINK_H_EXTERN_INLINE void
-_hurd_userlink_move (struct hurd_userlink *new_link,
-                     struct hurd_userlink *link)
+_HURD_USERLINK_H_EXTERN_INLINE void _hurd_userlink_move(struct hurd_userlink *new_link,
+        struct hurd_userlink *link)
 {
-  *new_link = *link;
+    *new_link = *link;
 
-  if (new_link->resource.next != NULL)
-    new_link->resource.next->resource.prevp = &new_link->resource.next;
-  *new_link->resource.prevp = new_link;
+    if (new_link->resource.next != NULL) {
+        new_link->resource.next->resource.prevp = &new_link->resource.next;
+    }
+    *new_link->resource.prevp = new_link;
 
-  if (!__LIBC_NO_TLS ())
-    {
-      if (new_link->thread.next != NULL)
-	new_link->thread.next->thread.prevp = &new_link->thread.next;
-      *new_link->thread.prevp = new_link;
+    if (!__LIBC_NO_TLS()) {
+        if (new_link->thread.next != NULL) {
+            new_link->thread.next->thread.prevp = &new_link->thread.next;
+        }
+        *new_link->thread.prevp = new_link;
     }
 }
 # endif
@@ -182,23 +180,23 @@ _hurd_userlink_move (struct hurd_userlink *new_link,
    value is zero, someone is still using the resource and they will
    deallocate it when they are finished.  */
 
-extern int _hurd_userlink_clear (struct hurd_userlink **chainp);
+extern int _hurd_userlink_clear(struct hurd_userlink **chainp);
 
 #if defined __USE_EXTERN_INLINES && defined _LIBC
 # if IS_IN (libc)
-_HURD_USERLINK_H_EXTERN_INLINE int
-_hurd_userlink_clear (struct hurd_userlink **chainp)
+_HURD_USERLINK_H_EXTERN_INLINE int _hurd_userlink_clear(struct hurd_userlink **chainp)
 {
-  if (*chainp == NULL)
-    return 1;
+    if (*chainp == NULL) {
+        return 1;
+    }
 
-  /* Detach the chain of current users from the cell.  The last user to
-     remove his link from that chain will deallocate the old resource.  */
-  (*chainp)->resource.prevp = NULL;
-  *chainp = NULL;
-  return 0;
+    /* Detach the chain of current users from the cell.  The last user to
+       remove his link from that chain will deallocate the old resource.  */
+    (*chainp)->resource.prevp = NULL;
+    *chainp = NULL;
+    return 0;
 }
 # endif
 #endif
 
-#endif	/* hurd/userlink.h */
+#endif  /* hurd/userlink.h */

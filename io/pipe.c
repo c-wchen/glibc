@@ -23,19 +23,17 @@
    If successful, two file descriptors are stored in PIPEDES;
    bytes written on PIPEDES[1] can be read from PIPEDES[0].
    Returns 0 if successful, -1 if not.  */
-int
-__pipe (int __pipedes[2])
+int __pipe(int __pipedes[2])
 {
-  if (__pipedes == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (__pipedes == NULL) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (__pipe)
-stub_warning (pipe)
+libc_hidden_def(__pipe)
+stub_warning(pipe)
 
-weak_alias (__pipe, pipe)
+weak_alias(__pipe, pipe)

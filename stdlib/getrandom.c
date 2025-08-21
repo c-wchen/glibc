@@ -21,13 +21,12 @@
 
 /* Write up to LENGTH bytes of randomness starting at BUFFER.
    Return the number of bytes written, or -1 on error.  */
-ssize_t
-__getrandom (void *buffer, size_t length, unsigned int flags)
+ssize_t __getrandom(void *buffer, size_t length, unsigned int flags)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (getrandom)
+stub_warning(getrandom)
 
-libc_hidden_def (__getrandom)
-weak_alias (__getrandom, getrandom)
+libc_hidden_def(__getrandom)
+weak_alias(__getrandom, getrandom)

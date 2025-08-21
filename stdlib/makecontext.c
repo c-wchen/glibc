@@ -18,11 +18,10 @@
 #include <errno.h>
 #include <ucontext.h>
 
-void
-makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
+void makecontext(ucontext_t *ucp, void (*func)(void), int argc, ...)
 {
-  __set_errno (ENOSYS);
+    __set_errno(ENOSYS);
 }
 
 
-stub_warning (makecontext)
+stub_warning(makecontext)

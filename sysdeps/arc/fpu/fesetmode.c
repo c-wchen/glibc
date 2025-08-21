@@ -19,22 +19,18 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-int
-fesetmode (const femode_t *modep)
+int fesetmode(const femode_t *modep)
 {
-  unsigned int fpcr;
+    unsigned int fpcr;
 
-  if (modep == FE_DFL_MODE)
-    {
-      fpcr = _FPU_DEFAULT;
-    }
-  else
-    {
-      /* No need to mask out reserved bits as they are IoW.  */
-      fpcr = *modep;
+    if (modep == FE_DFL_MODE) {
+        fpcr = _FPU_DEFAULT;
+    } else {
+        /* No need to mask out reserved bits as they are IoW.  */
+        fpcr = *modep;
     }
 
-  _FPU_SETCW (fpcr);
+    _FPU_SETCW(fpcr);
 
-  return 0;
+    return 0;
 }

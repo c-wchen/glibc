@@ -23,13 +23,13 @@
    name is copied into it (it should be at least L_ctermid bytes
    long), otherwise we return a pointer to a non-const but read-only
    string literal, that POSIX states the caller must not modify.  */
-char *
-ctermid (char *s)
+char *ctermid(char *s)
 {
-  char *name = (char /*drop const*/ *) "/dev/tty";
+    char *name = (char /*drop const*/ *) "/dev/tty";
 
-  if (s == NULL)
-    return name;
+    if (s == NULL) {
+        return name;
+    }
 
-  return strcpy (s, name);
+    return strcpy(s, name);
 }

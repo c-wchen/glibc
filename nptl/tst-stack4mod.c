@@ -19,10 +19,10 @@
 /* 256 is arbitrary here and is known to trigger PR 13862.  */
 __thread int var[256] attribute_hidden = {0};
 
-void
-function (void)
+void function(void)
 {
-  int i;
-  for (i = 0; i < sizeof (var) / sizeof (int); i++)
-    var[i] = i;
+    int i;
+    for (i = 0; i < sizeof(var) / sizeof(int); i++) {
+        var[i] = i;
+    }
 }

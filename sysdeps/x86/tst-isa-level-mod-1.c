@@ -18,8 +18,7 @@
 
 #include <isa-level.c>
 
-int
-test (void)
+int test(void)
 {
-  return 0;
+    return 0;
 }

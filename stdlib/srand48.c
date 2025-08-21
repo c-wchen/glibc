@@ -18,8 +18,7 @@
 #include <stdlib.h>
 
 
-void
-srand48 (long seedval)
+void srand48(long seedval)
 {
-  (void) __srand48_r (seedval, &__libc_drand48_data);
+    (void) __srand48_r(seedval, &__libc_drand48_data);
 }

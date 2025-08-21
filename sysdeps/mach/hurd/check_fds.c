@@ -32,74 +32,70 @@
 # define ABORT_INSTRUCTION
 #endif
 
-static void
-check_one_fd (int fd, int mode)
+static void check_one_fd(int fd, int mode)
 {
-  struct hurd_fd *d;
+    struct hurd_fd *d;
 
-  d = _hurd_fd_get (fd);
-  if (d == NULL)
-    {
-      /* This descriptor hasn't been opened.  We try to allocate the
-         descriptor and open /dev/null on it so that the SUID program
-         we are about to start does not accidentally use this
-         descriptor.  */
-      d = _hurd_alloc_fd (NULL, fd);
-      if (d != NULL)
-	{
-	  mach_port_t port;
+    d = _hurd_fd_get(fd);
+    if (d == NULL) {
+        /* This descriptor hasn't been opened.  We try to allocate the
+           descriptor and open /dev/null on it so that the SUID program
+           we are about to start does not accidentally use this
+           descriptor.  */
+        d = _hurd_alloc_fd(NULL, fd);
+        if (d != NULL) {
+            mach_port_t port;
 
-	  port = __file_name_lookup (_PATH_DEVNULL, mode, 0);
-	  if (port)
-	    {
-	      /* Since /dev/null isn't supposed to be a terminal, we
-		 avoid any ctty magic.  */
-	      d->port.port = port;
-	      d->flags = 0;
+            port = __file_name_lookup(_PATH_DEVNULL, mode, 0);
+            if (port) {
+                /* Since /dev/null isn't supposed to be a terminal, we
+                avoid any ctty magic.  */
+                d->port.port = port;
+                d->flags = 0;
 
-	      __spin_unlock (&d->port.lock);
-	      return;
-	    }
-	}
+                __spin_unlock(&d->port.lock);
+                return;
+            }
+        }
 
-      /* We cannot even give an error message here since it would run
-	 into the same problems.  */
-      while (1)
-	/* Try for ever and ever.  */
-	ABORT_INSTRUCTION;
+        /* We cannot even give an error message here since it would run
+        into the same problems.  */
+        while (1)
+            /* Try for ever and ever.  */
+        {
+            ABORT_INSTRUCTION;
+        }
     }
 }
 
-static void
-check_standard_fds (void)
+static void check_standard_fds(void)
 {
-  /* Check all three standard file descriptors.  */
-  check_one_fd (STDIN_FILENO, O_RDONLY);
-  check_one_fd (STDOUT_FILENO, O_RDWR);
-  check_one_fd (STDERR_FILENO, O_RDWR);
+    /* Check all three standard file descriptors.  */
+    check_one_fd(STDIN_FILENO, O_RDONLY);
+    check_one_fd(STDOUT_FILENO, O_RDWR);
+    check_one_fd(STDERR_FILENO, O_RDWR);
 }
 
-static void attribute_used_retain
-init_standard_fds (void)
+static void attribute_used_retain init_standard_fds(void)
 {
-  /* Now that we have FDs, make sure that, if this is a SUID program,
-     FDs 0, 1 and 2 are allocated.  If necessary we'll set them up
-     ourselves.  If that's not possible we stop the program.  */
-  if (__builtin_expect (__libc_enable_secure, 0))
-    check_standard_fds ();
+    /* Now that we have FDs, make sure that, if this is a SUID program,
+       FDs 0, 1 and 2 are allocated.  If necessary we'll set them up
+       ourselves.  If that's not possible we stop the program.  */
+    if (__builtin_expect(__libc_enable_secure, 0)) {
+        check_standard_fds();
+    }
 }
-SET_RELHOOK (_hurd_fd_subinit, init_standard_fds);
+SET_RELHOOK(_hurd_fd_subinit, init_standard_fds);
 
 
 #ifndef SHARED
-void
-__libc_check_standard_fds (void)
+void __libc_check_standard_fds(void)
 {
-  /* We don't check the standard file descriptors here.  They will be
-     checked when we initialize the file descriptor table, as part of
-     the _hurd_fd_subinit hook.
+    /* We don't check the standard file descriptors here.  They will be
+       checked when we initialize the file descriptor table, as part of
+       the _hurd_fd_subinit hook.
 
-     This function is only present to make sure that this module gets
-     linked in when part of the static libc.  */
+       This function is only present to make sure that this module gets
+       linked in when part of the static libc.  */
 }
 #endif

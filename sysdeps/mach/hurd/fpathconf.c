@@ -22,16 +22,16 @@
 #include <hurd/fd.h>
 
 /* Get file-specific information about descriptor FD.  */
-long int
-__fpathconf (int fd, int name)
+long int __fpathconf(int fd, int name)
 {
-  error_t err;
-  int value;
+    error_t err;
+    int value;
 
-  if (err = HURD_DPORT_USE (fd, __io_pathconf (port, name, &value)))
-    return __hurd_dfail (fd, err), -1L;
+    if (err = HURD_DPORT_USE(fd, __io_pathconf(port, name, &value))) {
+        return __hurd_dfail(fd, err), -1L;
+    }
 
-  return value;
+    return value;
 }
 
-weak_alias (__fpathconf, fpathconf)
+weak_alias(__fpathconf, fpathconf)

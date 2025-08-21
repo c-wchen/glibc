@@ -23,32 +23,32 @@
 #include "ttyname.h"
 
 static char *ttyname_buf = NULL;
-weak_alias (ttyname_buf, __ttyname_freemem_ptr)
+weak_alias(ttyname_buf, __ttyname_freemem_ptr)
 
 /* Return the pathname of the terminal FD is open on, or NULL on errors.
    The returned storage is good only until the next call to this function.  */
 char *
-ttyname (int fd)
+ttyname(int fd)
 {
-  /* isatty check, tcgetattr is used because it sets the correct
-     errno (EBADF resp. ENOTTY) on error.  Fast error path to avoid the
-     allocation  */
-  struct termios term;
-  if (__glibc_unlikely (__tcgetattr (fd, &term) < 0))
-    return NULL;
-
-  if (ttyname_buf == NULL)
-    {
-      ttyname_buf = malloc (PATH_MAX);
-      if (ttyname_buf == NULL)
-	return NULL;
+    /* isatty check, tcgetattr is used because it sets the correct
+       errno (EBADF resp. ENOTTY) on error.  Fast error path to avoid the
+       allocation  */
+    struct termios term;
+    if (__glibc_unlikely(__tcgetattr(fd, &term) < 0)) {
+        return NULL;
     }
 
-  int result = __ttyname_r (fd, ttyname_buf, PATH_MAX);
-  if (result != 0)
-    {
-      __set_errno (result);
-      return NULL;
+    if (ttyname_buf == NULL) {
+        ttyname_buf = malloc(PATH_MAX);
+        if (ttyname_buf == NULL) {
+            return NULL;
+        }
     }
-  return ttyname_buf;
+
+    int result = __ttyname_r(fd, ttyname_buf, PATH_MAX);
+    if (result != 0) {
+        __set_errno(result);
+        return NULL;
+    }
+    return ttyname_buf;
 }

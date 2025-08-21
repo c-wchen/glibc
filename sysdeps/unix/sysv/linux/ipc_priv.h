@@ -32,15 +32,14 @@
 # define __OLD_IPC_MODE_TYPE unsigned short int
 #endif
 
-struct __old_ipc_perm
-{
-  __key_t __key;			/* Key.  */
-  __OLD_IPC_ID_TYPE uid;		/* Owner's user ID.  */
-  __OLD_IPC_ID_TYPE gid;		/* Owner's group ID.  */
-  __OLD_IPC_ID_TYPE cuid;		/* Creator's user ID.  */
-  __OLD_IPC_ID_TYPE cgid;		/* Creator's group ID.  */
-  __OLD_IPC_MODE_TYPE mode;		/* Read/write permission.  */
-  unsigned short int __seq;		/* Sequence number.  */
+struct __old_ipc_perm {
+    __key_t __key;            /* Key.  */
+    __OLD_IPC_ID_TYPE uid;        /* Owner's user ID.  */
+    __OLD_IPC_ID_TYPE gid;        /* Owner's group ID.  */
+    __OLD_IPC_ID_TYPE cuid;       /* Creator's user ID.  */
+    __OLD_IPC_ID_TYPE cgid;       /* Creator's group ID.  */
+    __OLD_IPC_MODE_TYPE mode;     /* Read/write permission.  */
+    unsigned short int __seq;     /* Sequence number.  */
 };
 
 #define SEMCTL_ARG_ADDRESS(__arg) &__arg.array

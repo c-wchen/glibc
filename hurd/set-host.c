@@ -20,30 +20,31 @@
 #include <hurd.h>
 #include "hurdhost.h"
 
-ssize_t
-_hurd_set_host_config (const char *item, const char *value, size_t valuelen)
+ssize_t _hurd_set_host_config(const char *item, const char *value, size_t valuelen)
 {
-  error_t err;
-  vm_size_t nwrote;
-  file_t new, dir;
-  char *name;
+    error_t err;
+    vm_size_t nwrote;
+    file_t new, dir;
+    char *name;
 
-  dir = __file_name_split (item, &name);
-  if (dir == MACH_PORT_NULL)
-    return -1;
-
-  /* Create a new node.  */
-  err = __dir_mkfile (dir, O_WRONLY, 0644, &new);
-  if (! err)
-    {
-      /* Write the contents.  */
-      err = __io_write (new, value, valuelen, 0, &nwrote);
-      if (! err)
-	/* Atomically link the new node onto the name.  */
-	err = __dir_link (dir, new, name, 0);
-      __mach_port_deallocate (__mach_task_self (), new);
+    dir = __file_name_split(item, &name);
+    if (dir == MACH_PORT_NULL) {
+        return -1;
     }
-  __mach_port_deallocate (__mach_task_self (), dir);
 
-  return err ? __hurd_fail (err) : nwrote;
+    /* Create a new node.  */
+    err = __dir_mkfile(dir, O_WRONLY, 0644, &new);
+    if (! err) {
+        /* Write the contents.  */
+        err = __io_write(new, value, valuelen, 0, &nwrote);
+        if (! err)
+            /* Atomically link the new node onto the name.  */
+        {
+            err = __dir_link(dir, new, name, 0);
+        }
+        __mach_port_deallocate(__mach_task_self(), new);
+    }
+    __mach_port_deallocate(__mach_task_self(), dir);
+
+    return err ? __hurd_fail(err) : nwrote;
 }

@@ -17,7 +17,6 @@
    <https://www.gnu.org/licenses/>.  */
 
 /* Testing happens before main.  */
-int
-main (void)
+int main(void)
 {
 }

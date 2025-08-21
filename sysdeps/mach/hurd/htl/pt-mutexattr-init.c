@@ -24,19 +24,18 @@
 #include <hurdlock.h>
 
 static const pthread_mutexattr_t dfl_attr = {
-  .__prioceiling = 0,
-  .__protocol = PTHREAD_PRIO_NONE,
-  .__pshared = PTHREAD_PROCESS_PRIVATE,
-  .__mutex_type = __PTHREAD_MUTEX_TIMED
+    .__prioceiling = 0,
+    .__protocol = PTHREAD_PRIO_NONE,
+    .__pshared = PTHREAD_PROCESS_PRIVATE,
+    .__mutex_type = __PTHREAD_MUTEX_TIMED
 };
 
-int
-__pthread_mutexattr_init (pthread_mutexattr_t *attrp)
+int __pthread_mutexattr_init(pthread_mutexattr_t *attrp)
 {
-  ASSERT_TYPE_SIZE (pthread_mutexattr_t, __SIZEOF_PTHREAD_MUTEXATTR_T);
+    ASSERT_TYPE_SIZE(pthread_mutexattr_t, __SIZEOF_PTHREAD_MUTEXATTR_T);
 
-  *attrp = dfl_attr;
-  return 0;
+    *attrp = dfl_attr;
+    return 0;
 }
-hidden_def (__pthread_mutexattr_init)
-weak_alias (__pthread_mutexattr_init, pthread_mutexattr_init)
+hidden_def(__pthread_mutexattr_init)
+weak_alias(__pthread_mutexattr_init, pthread_mutexattr_init)

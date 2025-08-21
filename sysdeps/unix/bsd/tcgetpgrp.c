@@ -21,13 +21,13 @@
 #include <sys/types.h>
 
 /* Return the foreground process group ID of FD.  */
-pid_t
-tcgetpgrp (int fd)
+pid_t tcgetpgrp(int fd)
 {
-  int pgrp;
+    int pgrp;
 
-  if (__ioctl (fd, TIOCGPGRP, &pgrp) < 0)
-    return (pid_t) -1;
-  return (pid_t) pgrp;
+    if (__ioctl(fd, TIOCGPGRP, &pgrp) < 0) {
+        return (pid_t) -1;
+    }
+    return (pid_t) pgrp;
 }
-libc_hidden_def (tcgetpgrp)
+libc_hidden_def(tcgetpgrp)

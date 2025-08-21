@@ -29,100 +29,85 @@ static pthread_key_t key2;
 static int left;
 
 
-static void
-destr1 (void *arg)
+static void destr1(void *arg)
 {
-  if (--left > 0)
-    {
-      puts ("set key2");
+    if (--left > 0) {
+        puts("set key2");
 
-      /* Use an arbitrary but valid pointer to avoid GCC warnings.  */
-      if (pthread_setspecific (key2, (void *) &left) != 0)
-	{
-	  puts ("destr1: setspecific failed");
-	  exit (1);
-	}
+        /* Use an arbitrary but valid pointer to avoid GCC warnings.  */
+        if (pthread_setspecific(key2, (void *) &left) != 0) {
+            puts("destr1: setspecific failed");
+            exit(1);
+        }
     }
 }
 
 
-static void
-destr2 (void *arg)
+static void destr2(void *arg)
 {
-  if (--left > 0)
-    {
-      puts ("set key1");
+    if (--left > 0) {
+        puts("set key1");
 
-      /* Use an arbitrary but valid pointer to avoid GCC warnings.  */
-      if (pthread_setspecific (key1, (void *) &left) != 0)
-	{
-	  puts ("destr2: setspecific failed");
-	  exit (1);
-	}
+        /* Use an arbitrary but valid pointer to avoid GCC warnings.  */
+        if (pthread_setspecific(key1, (void *) &left) != 0) {
+            puts("destr2: setspecific failed");
+            exit(1);
+        }
     }
 }
 
 
-static void *
-tf (void *arg)
+static void *tf(void *arg)
 {
-  /* Let the destructors work.  */
-  left = 7;
+    /* Let the destructors work.  */
+    left = 7;
 
-  /* Use an arbitrary but valid pointer to avoid GCC warnings.  */
-  if (pthread_setspecific (key1, (void *) &left) != 0
-      || pthread_setspecific (key2, (void *) &left) != 0)
-    {
-      puts ("tf: setspecific failed");
-      exit (1);
+    /* Use an arbitrary but valid pointer to avoid GCC warnings.  */
+    if (pthread_setspecific(key1, (void *) &left) != 0
+        || pthread_setspecific(key2, (void *) &left) != 0) {
+        puts("tf: setspecific failed");
+        exit(1);
     }
 
-  return NULL;
+    return NULL;
 }
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* Allocate two keys, both with destructors.  */
-  if (pthread_key_create (&key1, destr1) != 0
-      || pthread_key_create (&key2, destr2) != 0)
-    {
-      puts ("key_create failed");
-      return 1;
+    /* Allocate two keys, both with destructors.  */
+    if (pthread_key_create(&key1, destr1) != 0
+        || pthread_key_create(&key2, destr2) != 0) {
+        puts("key_create failed");
+        return 1;
     }
 
-  pthread_t th;
-  if (pthread_create (&th, NULL, tf, NULL) != 0)
-    {
-      puts ("create failed");
-      return 1;
+    pthread_t th;
+    if (pthread_create(&th, NULL, tf, NULL) != 0) {
+        puts("create failed");
+        return 1;
     }
 
-  if (pthread_join (th, NULL) != 0)
-    {
-      puts ("join failed");
-      return 1;
+    if (pthread_join(th, NULL) != 0) {
+        puts("join failed");
+        return 1;
     }
 
-  if (left != 0)
-    {
-      printf ("left == %d\n", left);
-      return 1;
+    if (left != 0) {
+        printf("left == %d\n", left);
+        return 1;
     }
 
-  if (pthread_getspecific (key1) != NULL)
-    {
-      puts ("key1 data != NULL");
-      return 1;
+    if (pthread_getspecific(key1) != NULL) {
+        puts("key1 data != NULL");
+        return 1;
     }
-  if (pthread_getspecific (key2) != NULL)
-    {
-      puts ("key2 data != NULL");
-      return 1;
+    if (pthread_getspecific(key2) != NULL) {
+        puts("key2 data != NULL");
+        return 1;
     }
 
-  return 0;
+    return 0;
 }
 
 

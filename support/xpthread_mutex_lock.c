@@ -18,8 +18,7 @@
 
 #include <support/xthread.h>
 
-void
-xpthread_mutex_lock (pthread_mutex_t *mutex)
+void xpthread_mutex_lock(pthread_mutex_t *mutex)
 {
-  xpthread_check_return ("pthread_mutex_lock", pthread_mutex_lock (mutex));
+    xpthread_check_return("pthread_mutex_lock", pthread_mutex_lock(mutex));
 }

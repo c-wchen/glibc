@@ -21,7 +21,7 @@
 #endif
 
 /* Make sure we test the optimized inline functions.  */
-#define __USE_STRING_INLINES	1
+#define __USE_STRING_INLINES    1
 
 #include <errno.h>
 #include <stdio.h>
@@ -31,54 +31,46 @@
 #include <fcntl.h>
 
 
-int
-do_test (void)
+int do_test(void)
 {
-  int status;
-  int errors = 0;
-  char buf1[1000];
-  char *cp;
-  char ch;
+    int status;
+    int errors = 0;
+    char buf1[1000];
+    char *cp;
+    char ch;
 
-  cp = strcpy (buf1, "hello world");
-  if (strcmp ("hello world", cp++) != 0)
-    {
-      puts ("strcmp test 1 failed");
-      ++errors;
-    }
-
-  cp = buf1;
-  if (strcmp (cp++, "hello world") != 0)
-    {
-      puts ("strcmp test 2 failed");
-      ++errors;
+    cp = strcpy(buf1, "hello world");
+    if (strcmp("hello world", cp++) != 0) {
+        puts("strcmp test 1 failed");
+        ++errors;
     }
 
-  ch = 'h';
-  if (strchr ("hello world", ch++) == NULL)
-    {
-      puts ("strchr test 1 failed");
-      ++errors;
+    cp = buf1;
+    if (strcmp(cp++, "hello world") != 0) {
+        puts("strcmp test 2 failed");
+        ++errors;
     }
 
-  const char * const hw = "hello world";
-  if (strpbrk (hw, "o") - hw != 4)
-    {
-      puts ("strpbrk test 1 failed");
-      ++errors;
+    ch = 'h';
+    if (strchr("hello world", ch++) == NULL) {
+        puts("strchr test 1 failed");
+        ++errors;
     }
 
-  if (errors == 0)
-    {
-      status = EXIT_SUCCESS;
-      puts ("No errors.");
+    const char *const hw = "hello world";
+    if (strpbrk(hw, "o") - hw != 4) {
+        puts("strpbrk test 1 failed");
+        ++errors;
     }
-  else
-    {
-      status = EXIT_FAILURE;
-      printf ("%d errors.\n", errors);
+
+    if (errors == 0) {
+        status = EXIT_SUCCESS;
+        puts("No errors.");
+    } else {
+        status = EXIT_FAILURE;
+        printf("%d errors.\n", errors);
     }
-  return status;
+    return status;
 }
 
 #include <support/test-driver.c>

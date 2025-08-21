@@ -22,15 +22,15 @@
 #include <libm-alias-float.h>
 
 #if LIBM_SVID_COMPAT
-float
-__sinhf (float x)
+float __sinhf(float x)
 {
-	float z = __ieee754_sinhf (x);
-	if (__builtin_expect (!isfinite (z), 0) && isfinite (x)
-	    && _LIB_VERSION != _IEEE_)
-	    return __kernel_standard_f (x, x, 125); /* sinhf overflow */
+    float z = __ieee754_sinhf(x);
+    if (__builtin_expect(!isfinite(z), 0) && isfinite(x)
+        && _LIB_VERSION != _IEEE_) {
+        return __kernel_standard_f(x, x, 125);    /* sinhf overflow */
+    }
 
-	return z;
+    return z;
 }
-libm_alias_float (__sinh, sinh)
+libm_alias_float(__sinh, sinh)
 #endif

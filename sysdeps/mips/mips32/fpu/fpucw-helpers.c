@@ -18,17 +18,15 @@
 
 #include <fpu_control.h>
 
-fpu_control_t
-__mips_fpu_getcw (void)
+fpu_control_t __mips_fpu_getcw(void)
 {
-  fpu_control_t cw;
+    fpu_control_t cw;
 
-  _FPU_GETCW (cw);
-  return cw;
+    _FPU_GETCW(cw);
+    return cw;
 }
 
-void
-__mips_fpu_setcw (fpu_control_t cw)
+void __mips_fpu_setcw(fpu_control_t cw)
 {
-  _FPU_SETCW (cw);
+    _FPU_SETCW(cw);
 }

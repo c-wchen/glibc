@@ -23,25 +23,22 @@
 /* Deallocate any mapping for the region starting at ADDR and extending LEN
    bytes.  Returns 0 if successful, -1 for errors (and sets errno).  */
 
-int
-__munmap (void *addr, size_t len)
+int __munmap(void *addr, size_t len)
 {
-  kern_return_t err;
+    kern_return_t err;
 
-  if (addr == 0)
-    {
-      errno = EINVAL;
-      return -1;
+    if (addr == 0) {
+        errno = EINVAL;
+        return -1;
     }
 
-  if (err = __vm_deallocate (__mach_task_self (),
-			     (vm_address_t) addr, (vm_size_t) len))
-    {
-      errno = err;
-      return -1;
+    if (err = __vm_deallocate(__mach_task_self(),
+                              (vm_address_t) addr, (vm_size_t) len)) {
+        errno = err;
+        return -1;
     }
-  return 0;
+    return 0;
 }
 
-libc_hidden_def (__munmap)
-weak_alias (__munmap, munmap)
+libc_hidden_def(__munmap)
+weak_alias(__munmap, munmap)

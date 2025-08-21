@@ -23,29 +23,30 @@
 
 #include <support/check.h>
 
-static int
-sleep_thrd (void *arg)
+static int sleep_thrd(void *arg)
 {
-  struct timespec const *tl = (struct timespec const *) arg;
-  if (thrd_sleep (tl, NULL) != 0)
-    FAIL_EXIT1 ("thrd_sleep failed");
+    struct timespec const *tl = (struct timespec const *) arg;
+    if (thrd_sleep(tl, NULL) != 0) {
+        FAIL_EXIT1("thrd_sleep failed");
+    }
 
-  thrd_exit (thrd_success);
+    thrd_exit(thrd_success);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  thrd_t id;
-  struct timespec wait_time = {.tv_sec = 3};
+    thrd_t id;
+    struct timespec wait_time = {.tv_sec = 3};
 
-  if (thrd_create (&id, sleep_thrd, (void *) (&wait_time)) != thrd_success)
-    FAIL_EXIT1 ("thrd_create failed");
+    if (thrd_create(&id, sleep_thrd, (void *)(&wait_time)) != thrd_success) {
+        FAIL_EXIT1("thrd_create failed");
+    }
 
-  if (thrd_join (id, NULL) != thrd_success)
-    FAIL_EXIT1 ("thrd failed");
+    if (thrd_join(id, NULL) != thrd_success) {
+        FAIL_EXIT1("thrd failed");
+    }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

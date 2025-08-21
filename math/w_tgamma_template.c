@@ -30,26 +30,29 @@
 #define M_CALL_FUNC(x) M_CALL_FUNC_X (x)
 
 FLOAT
-M_DECL_FUNC (__tgamma) (FLOAT x)
+M_DECL_FUNC(__tgamma)(FLOAT x)
 {
-  int local_signgam;
-  FLOAT y = M_CALL_FUNC (M_SUF (__ieee754_gamma)) (x, &local_signgam);
+    int local_signgam;
+    FLOAT y = M_CALL_FUNC(M_SUF(__ieee754_gamma))(x, &local_signgam);
 
-  if (__glibc_unlikely (!isfinite (y) || y == 0)
-      && (isfinite (x) || (isinf (x) && x < 0)))
-    {
-      if (x == 0)
-	/* Pole error: tgamma(x=0).  */
-	__set_errno (ERANGE);
-      else if (M_SUF (floor) (x) == x && x < 0)
-	/* Domain error: tgamma(integer x<0).  */
-	__set_errno (EDOM);
-      else
-	/* Overflow or underflow.  */
-	__set_errno (ERANGE);
+    if (__glibc_unlikely(!isfinite(y) || y == 0)
+        && (isfinite(x) || (isinf(x) && x < 0))) {
+        if (x == 0)
+            /* Pole error: tgamma(x=0).  */
+        {
+            __set_errno(ERANGE);
+        } else if (M_SUF(floor)(x) == x && x < 0)
+            /* Domain error: tgamma(integer x<0).  */
+        {
+            __set_errno(EDOM);
+        } else
+            /* Overflow or underflow.  */
+        {
+            __set_errno(ERANGE);
+        }
     }
-  return local_signgam < 0 ? -y : y;
+    return local_signgam < 0 ? -y : y;
 }
-declare_mgen_alias (__tgamma, tgamma)
+declare_mgen_alias(__tgamma, tgamma)
 
 #endif /* __USE_WRAPPER_TEMPLATE.  */

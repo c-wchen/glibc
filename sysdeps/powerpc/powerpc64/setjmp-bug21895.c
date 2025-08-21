@@ -21,31 +21,29 @@
 #include <setjmp.h>
 
 /* Copy r1 address to a local variable.  */
-#define GET_STACK_POINTER(sp)	  \
-  ({				  \
+#define GET_STACK_POINTER(sp)     \
+  ({                  \
     asm volatile ("mr %0, 1\n\t"  \
-		  : "=r" (sp));	  \
+          : "=r" (sp));   \
   })
 
 jmp_buf jb;
 void (*bar)(jmp_buf, unsigned long);
 
-void
-lbar (unsigned long sp)
+void lbar(unsigned long sp)
 {
-  bar(jb, sp);
-  for(;;);
+    bar(jb, sp);
+    for (;;);
 }
 
-void
-foo (void)
+void foo(void)
 {
-  unsigned long sp;
-  /* Copy r1 (stack pointer) to sp. It will be use later to get
-     TOC area.  */
-  GET_STACK_POINTER(sp);
-  setjmp(jb);
-  lbar(sp);
+    unsigned long sp;
+    /* Copy r1 (stack pointer) to sp. It will be use later to get
+       TOC area.  */
+    GET_STACK_POINTER(sp);
+    setjmp(jb);
+    lbar(sp);
 
-  for(;;);
+    for (;;);
 }

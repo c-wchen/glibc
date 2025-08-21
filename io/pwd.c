@@ -20,23 +20,21 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-int
-main (void)
+int main(void)
 {
-  char *dir;
+    char *dir;
 
-  /* Let this program be used for debugging.  */
-  mtrace ();
+    /* Let this program be used for debugging.  */
+    mtrace();
 
-  dir = getcwd ((char *) NULL, 0);
+    dir = getcwd((char *) NULL, 0);
 
-  if (dir == NULL)
-    perror ("getcwd");
-  else
-    {
-      puts (dir);
-      free (dir);
+    if (dir == NULL) {
+        perror("getcwd");
+    } else {
+        puts(dir);
+        free(dir);
     }
 
-  return (dir == NULL ? EXIT_FAILURE : EXIT_SUCCESS);
+    return (dir == NULL ? EXIT_FAILURE : EXIT_SUCCESS);
 }

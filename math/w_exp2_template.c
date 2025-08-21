@@ -27,14 +27,16 @@
 # include <math_private.h>
 
 FLOAT
-M_DECL_FUNC (__exp2) (FLOAT x)
+M_DECL_FUNC(__exp2)(FLOAT x)
 {
-  FLOAT z = M_SUF (__ieee754_exp2) (x);
-  if (__glibc_unlikely (!isfinite (z) || z == 0) && isfinite (x))
-    /* Overflow or underflow.  */
-    __set_errno (ERANGE);
-  return z;
+    FLOAT z = M_SUF(__ieee754_exp2)(x);
+    if (__glibc_unlikely(!isfinite(z) || z == 0) && isfinite(x))
+        /* Overflow or underflow.  */
+    {
+        __set_errno(ERANGE);
+    }
+    return z;
 }
-declare_mgen_alias (__exp2, exp2)
+declare_mgen_alias(__exp2, exp2)
 
 #endif /* __USE_WRAPPER_TEMPLATE.  */

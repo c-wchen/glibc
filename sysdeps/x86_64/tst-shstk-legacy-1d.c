@@ -22,26 +22,23 @@
 
 /* Check that legacy shadow stack code in init_array won't trigger
    segfault.  */
-extern void legacy (void);
+extern void legacy(void);
 int done;
 
-void
-legacy_1 (void)
+void legacy_1(void)
 {
-  legacy ();
-  done = 1;
+    legacy();
+    done = 1;
 }
 
-void (*init_array []) (void)
-     __attribute__ ((section (".init_array"), aligned (sizeof (void *)))) =
-{
-  &legacy_1
+void (*init_array [])(void)
+__attribute__((section(".init_array"), aligned(sizeof(void *)))) = {
+    &legacy_1
 };
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }
 
 #include <support/test-driver.c>

@@ -33,33 +33,32 @@
    versions of GCC, it may be where R is defined using a macro or it
    may be where the macro is defined.  This happens only with -O1.  */
 DIAG_PUSH_NEEDS_COMMENT;
-DIAG_IGNORE_NEEDS_COMMENT (8, "-Wmaybe-uninitialized");
+DIAG_IGNORE_NEEDS_COMMENT(8, "-Wmaybe-uninitialized");
 #include <soft-fp.h>
 #include <single.h>
 #include <double.h>
 
-float
-__fsqrt (double x)
+float __fsqrt(double x)
 {
-  FP_DECL_EX;
-  FP_DECL_D (X);
-  FP_DECL_D (R);
-  FP_DECL_S (RN);
-  float ret;
+    FP_DECL_EX;
+    FP_DECL_D(X);
+    FP_DECL_D(R);
+    FP_DECL_S(RN);
+    float ret;
 
-  FP_INIT_ROUNDMODE;
-  FP_UNPACK_D (X, x);
-  FP_SQRT_D (R, X);
+    FP_INIT_ROUNDMODE;
+    FP_UNPACK_D(X, x);
+    FP_SQRT_D(R, X);
 #if _FP_W_TYPE_SIZE < _FP_FRACBITS_D
-  FP_TRUNC_COOKED (S, D, 1, 2, RN, R);
+    FP_TRUNC_COOKED(S, D, 1, 2, RN, R);
 #else
-  FP_TRUNC_COOKED (S, D, 1, 1, RN, R);
+    FP_TRUNC_COOKED(S, D, 1, 1, RN, R);
 #endif
-  FP_PACK_S (ret, RN);
-  FP_HANDLE_EXCEPTIONS;
-  CHECK_NARROW_SQRT (ret, x);
-  return ret;
+    FP_PACK_S(ret, RN);
+    FP_HANDLE_EXCEPTIONS;
+    CHECK_NARROW_SQRT(ret, x);
+    return ret;
 }
 DIAG_POP_NEEDS_COMMENT;
 
-libm_alias_float_double (sqrt)
+libm_alias_float_double(sqrt)

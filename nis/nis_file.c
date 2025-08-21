@@ -22,84 +22,81 @@
 #include <shlib-compat.h>
 #include "nis_xdr.h"
 
-typedef bool_t (*iofct_t) (XDR *, void *);
-typedef void (*freefct_t) (void *);
+typedef bool_t (*iofct_t)(XDR *, void *);
+typedef void (*freefct_t)(void *);
 
 
-static void *
-read_nis_obj (const char *name, iofct_t readfct, freefct_t freefct,
-	      size_t objsize)
+static void *read_nis_obj(const char *name, iofct_t readfct, freefct_t freefct,
+                          size_t objsize)
 {
-  FILE *in = fopen (name, "rce");
-  if (in == NULL)
-    return NULL;
-
-  void *obj = calloc (1, objsize);
-
-  if (obj != NULL)
-    {
-      XDR xdrs;
-      xdrstdio_create (&xdrs, in, XDR_DECODE);
-      bool_t status = readfct (&xdrs, obj);
-      xdr_destroy (&xdrs);
-
-      if (!status)
-	{
-	  freefct (obj);
-	  obj = NULL;
-	}
+    FILE *in = fopen(name, "rce");
+    if (in == NULL) {
+        return NULL;
     }
 
-  fclose (in);
+    void *obj = calloc(1, objsize);
 
-  return obj;
+    if (obj != NULL) {
+        XDR xdrs;
+        xdrstdio_create(&xdrs, in, XDR_DECODE);
+        bool_t status = readfct(&xdrs, obj);
+        xdr_destroy(&xdrs);
+
+        if (!status) {
+            freefct(obj);
+            obj = NULL;
+        }
+    }
+
+    fclose(in);
+
+    return obj;
 }
 
-static bool_t
-write_nis_obj (const char *name, const void *obj, iofct_t writefct)
+static bool_t write_nis_obj(const char *name, const void *obj, iofct_t writefct)
 {
-  FILE *out = fopen (name, "wce");
-  if (out == NULL)
-    return FALSE;
+    FILE *out = fopen(name, "wce");
+    if (out == NULL) {
+        return FALSE;
+    }
 
-  XDR xdrs;
-  xdrstdio_create (&xdrs, out, XDR_ENCODE);
-  bool_t status = writefct (&xdrs, (void *) obj);
-  xdr_destroy (&xdrs);
-  fclose (out);
+    XDR xdrs;
+    xdrstdio_create(&xdrs, out, XDR_ENCODE);
+    bool_t status = writefct(&xdrs, (void *) obj);
+    xdr_destroy(&xdrs);
+    fclose(out);
 
-  return status;
+    return status;
 }
 
 
 static const char cold_start_file[] = "/var/nis/NIS_COLD_START";
 
-directory_obj *
-readColdStartFile (void)
+directory_obj *readColdStartFile(void)
 {
-  return read_nis_obj (cold_start_file, (iofct_t) _xdr_directory_obj,
-		       (freefct_t) nis_free_directory, sizeof (directory_obj));
+    return read_nis_obj(cold_start_file, (iofct_t) _xdr_directory_obj,
+                        (freefct_t) nis_free_directory, sizeof(directory_obj));
 }
-libnsl_hidden_nolink_def (readColdStartFile, GLIBC_2_1)
+libnsl_hidden_nolink_def(readColdStartFile, GLIBC_2_1)
 
 bool_t
-writeColdStartFile (const directory_obj *obj)
+writeColdStartFile(const directory_obj *obj)
 {
-  return write_nis_obj (cold_start_file, obj, (iofct_t) _xdr_directory_obj);
+    return write_nis_obj(cold_start_file, obj, (iofct_t) _xdr_directory_obj);
 }
-libnsl_hidden_nolink_def (writeColdStartFile, GLIBC_2_1)
+libnsl_hidden_nolink_def(writeColdStartFile, GLIBC_2_1)
 
 nis_object *
-nis_read_obj (const char *name)
+nis_read_obj(const char *name)
 {
-  return read_nis_obj (name, (iofct_t) _xdr_nis_object,
-		       (freefct_t) nis_free_object, sizeof (nis_object));
+    return read_nis_obj(name, (iofct_t) _xdr_nis_object,
+                        (freefct_t) nis_free_object, sizeof(nis_object));
 }
-libnsl_hidden_nolink_def (nis_read_obj, GLIBC_2_1)
+libnsl_hidden_nolink_def(nis_read_obj, GLIBC_2_1)
 
 bool_t
-nis_write_obj (const char *name, const nis_object *obj)
+nis_write_obj(const char *name, const nis_object *obj)
 {
-  return write_nis_obj (name, obj, (iofct_t) _xdr_nis_object);
+    return write_nis_obj(name, obj, (iofct_t) _xdr_nis_object);
 }
-libnsl_hidden_nolink_def (nis_write_obj, GLIBC_2_1)
+libnsl_hidden_nolink_def(nis_write_obj, GLIBC_2_1)

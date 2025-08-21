@@ -18,10 +18,9 @@
 
 #include <fenv.h>
 
-int
-fegetmode (femode_t *modep)
+int fegetmode(femode_t *modep)
 {
-  /* Nothing to do.  */
-  return 0;
+    /* Nothing to do.  */
+    return 0;
 }
-stub_warning (fegetmode)
+stub_warning(fegetmode)

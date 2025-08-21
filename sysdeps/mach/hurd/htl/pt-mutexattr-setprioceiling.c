@@ -24,17 +24,16 @@
 #include <hurdlock.h>
 #include <shlib-compat.h>
 
-int
-__pthread_mutexattr_setprioceiling (pthread_mutexattr_t *attrp, int cl)
+int __pthread_mutexattr_setprioceiling(pthread_mutexattr_t *attrp, int cl)
 {
-  (void) attrp;
-  (void) cl;
-  return ENOSYS;
+    (void) attrp;
+    (void) cl;
+    return ENOSYS;
 }
-libc_hidden_def (__pthread_mutexattr_setprioceiling)
-versioned_symbol (libc, __pthread_mutexattr_setprioceiling, pthread_mutexattr_setprioceiling, GLIBC_2_41);
+libc_hidden_def(__pthread_mutexattr_setprioceiling)
+versioned_symbol(libc, __pthread_mutexattr_setprioceiling, pthread_mutexattr_setprioceiling, GLIBC_2_41);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_41)
-compat_symbol (libpthread, __pthread_mutexattr_setprioceiling,pthread_mutexattr_setprioceiling, GLIBC_2_12);
+compat_symbol(libpthread, __pthread_mutexattr_setprioceiling, pthread_mutexattr_setprioceiling, GLIBC_2_12);
 #endif
-stub_warning (pthread_mutexattr_setprioceiling)
+stub_warning(pthread_mutexattr_setprioceiling)

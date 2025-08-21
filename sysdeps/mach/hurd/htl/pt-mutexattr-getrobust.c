@@ -24,18 +24,17 @@
 #include <hurdlock.h>
 #include <shlib-compat.h>
 
-int
-__pthread_mutexattr_getrobust (const pthread_mutexattr_t *attrp, int *outp)
+int __pthread_mutexattr_getrobust(const pthread_mutexattr_t *attrp, int *outp)
 {
-  *outp = ((attrp->__prioceiling & PTHREAD_MUTEX_ROBUST)
-	   ? PTHREAD_MUTEX_ROBUST : PTHREAD_MUTEX_STALLED);
-  return 0;
+    *outp = ((attrp->__prioceiling & PTHREAD_MUTEX_ROBUST)
+             ? PTHREAD_MUTEX_ROBUST : PTHREAD_MUTEX_STALLED);
+    return 0;
 }
-libc_hidden_def (__pthread_mutexattr_getrobust)
-versioned_symbol (libc, __pthread_mutexattr_getrobust, pthread_mutexattr_getrobust, GLIBC_2_41);
-versioned_symbol (libc, __pthread_mutexattr_getrobust, pthread_mutexattr_getrobust_np, GLIBC_2_41);
+libc_hidden_def(__pthread_mutexattr_getrobust)
+versioned_symbol(libc, __pthread_mutexattr_getrobust, pthread_mutexattr_getrobust, GLIBC_2_41);
+versioned_symbol(libc, __pthread_mutexattr_getrobust, pthread_mutexattr_getrobust_np, GLIBC_2_41);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_32, GLIBC_2_41)
-compat_symbol (libpthread, __pthread_mutexattr_getrobust,pthread_mutexattr_getrobust, GLIBC_2_32);
-compat_symbol (libpthread, __pthread_mutexattr_getrobust,pthread_mutexattr_getrobust_np, GLIBC_2_32);
+compat_symbol(libpthread, __pthread_mutexattr_getrobust, pthread_mutexattr_getrobust, GLIBC_2_32);
+compat_symbol(libpthread, __pthread_mutexattr_getrobust, pthread_mutexattr_getrobust_np, GLIBC_2_32);
 #endif

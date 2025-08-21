@@ -21,10 +21,10 @@
 
 #include <sys/stat.h>
 
-void
-xchmod (const char *pathname, mode_t mode)
+void xchmod(const char *pathname, mode_t mode)
 {
-  int r = chmod (pathname, mode);
-  if (r < 0)
-    FAIL_EXIT1 ("chmod (%s, %d): %m", pathname, mode);
+    int r = chmod(pathname, mode);
+    if (r < 0) {
+        FAIL_EXIT1("chmod (%s, %d): %m", pathname, mode);
+    }
 }

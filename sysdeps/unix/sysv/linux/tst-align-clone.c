@@ -25,62 +25,61 @@
 #include <tst-stack-align.h>
 #include <stackinfo.h>
 
-static int
-f (void *arg)
+static int f(void *arg)
 {
-  bool ok = true;
+    bool ok = true;
 
-  puts ("in f");
+    puts("in f");
 
-  if (TEST_STACK_ALIGN ())
-    ok = false;
+    if (TEST_STACK_ALIGN()) {
+        ok = false;
+    }
 
-  return ok ? 0 : 1;
+    return ok ? 0 : 1;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  bool ok = true;
+    bool ok = true;
 
-  puts ("in main");
+    puts("in main");
 
-  if (TEST_STACK_ALIGN ())
-    ok = false;
+    if (TEST_STACK_ALIGN()) {
+        ok = false;
+    }
 
-  char st[128 * 1024] __attribute__ ((aligned));
+    char st[128 * 1024] __attribute__((aligned));
 #if _STACK_GROWS_DOWN
-  pid_t p = clone (f, st + sizeof (st), 0, 0);
+    pid_t p = clone(f, st + sizeof(st), 0, 0);
 #elif _STACK_GROWS_UP
-  pid_t p = clone (f, st, 0, 0);
+    pid_t p = clone(f, st, 0, 0);
 #else
 # error "Define either _STACK_GROWS_DOWN or _STACK_GROWS_UP"
 #endif
-  if (p == -1)
-    {
-      printf("clone failed: %m\n");
-      return 1;
+    if (p == -1) {
+        printf("clone failed: %m\n");
+        return 1;
     }
 
-  int e;
-  if (waitpid (p, &e, __WCLONE) != p)
-    {
-      puts ("waitpid failed");
-      kill (p, SIGKILL);
-      return 1;
+    int e;
+    if (waitpid(p, &e, __WCLONE) != p) {
+        puts("waitpid failed");
+        kill(p, SIGKILL);
+        return 1;
     }
-  if (!WIFEXITED (e))
-    {
-      if (WIFSIGNALED (e))
-	printf ("died from signal %s\n", strsignal (WTERMSIG (e)));
-      else
-	puts ("did not terminate correctly");
-      return 1;
+    if (!WIFEXITED(e)) {
+        if (WIFSIGNALED(e)) {
+            printf("died from signal %s\n", strsignal(WTERMSIG(e)));
+        } else {
+            puts("did not terminate correctly");
+        }
+        return 1;
     }
-  if (WEXITSTATUS (e) != 0)
-    ok = false;
+    if (WEXITSTATUS(e) != 0) {
+        ok = false;
+    }
 
-  return ok ? 0 : 1;
+    return ok ? 0 : 1;
 }
 
 #define TEST_FUNCTION do_test ()

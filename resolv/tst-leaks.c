@@ -22,22 +22,21 @@
 #include <mcheck.h>
 
 /* Prototype for our test function.  */
-extern int do_test (int argc, char *argv[]);
+extern int do_test(int argc, char *argv[]);
 
 /* This defines the `main' function and some more.  */
 #define TIMEOUT 40
 #include <test-skeleton.c>
 
-int
-do_test (int argc, char *argv[])
+int do_test(int argc, char *argv[])
 {
-  unsigned char buf[256];
+    unsigned char buf[256];
 
-  mtrace();
+    mtrace();
 
-  /* This will allocate some memory, which should be automatically
-     freed at exit.  */
-  res_query ("1.0.0.127.in-addr.arpa.", C_ANY, T_ANY, buf, 256);
+    /* This will allocate some memory, which should be automatically
+       freed at exit.  */
+    res_query("1.0.0.127.in-addr.arpa.", C_ANY, T_ANY, buf, 256);
 
-  return 0;
+    return 0;
 }

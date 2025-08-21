@@ -20,17 +20,16 @@
 #include <support/check.h>
 #include <support/xdlfcn.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  puts ("info: about to dlopen tst-dlopen-auditdupmod.so");
-  fflush (stdout);
-  void *handle = xdlopen ("tst-dlopen-auditdupmod.so", RTLD_NOW);
-  int *status = xdlsym (handle, "auditdupmod_status");
-  printf ("info: auditdupmod_status == %d (from main)\n", *status);
-  TEST_COMPARE (*status, 2);
-  xdlclose (handle);
-  return 0;
+    puts("info: about to dlopen tst-dlopen-auditdupmod.so");
+    fflush(stdout);
+    void *handle = xdlopen("tst-dlopen-auditdupmod.so", RTLD_NOW);
+    int *status = xdlsym(handle, "auditdupmod_status");
+    printf("info: auditdupmod_status == %d (from main)\n", *status);
+    TEST_COMPARE(*status, 2);
+    xdlclose(handle);
+    return 0;
 }
 
 #include <support/test-driver.c>

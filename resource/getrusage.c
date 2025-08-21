@@ -20,12 +20,11 @@
 
 /* Return resource usage information on process indicated by WHO
    and put it in *USAGE.  Returns 0 for success, -1 for failure.  */
-int
-__getrusage (enum __rusage_who who, struct rusage *usage)
+int __getrusage(enum __rusage_who who, struct rusage *usage)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (getrusage)
+stub_warning(getrusage)
 
-weak_alias (__getrusage, getrusage)
+weak_alias(__getrusage, getrusage)

@@ -45,15 +45,15 @@
 # define NDIGIT_MAX (lrint (ceil (M_LN2 / M_LN10 * LDBL_MANT_DIG + 1.0)))
 #endif
 #if LDBL_MIN_10_EXP == -37
-# define FLOAT_MIN_10_NORM	1.0e-37L
+# define FLOAT_MIN_10_NORM  1.0e-37L
 #elif LDBL_MIN_10_EXP == -291
-# define FLOAT_MIN_10_NORM	1.0e-291L
+# define FLOAT_MIN_10_NORM  1.0e-291L
 #elif LDBL_MIN_10_EXP == -307
-# define FLOAT_MIN_10_NORM	1.0e-307L
+# define FLOAT_MIN_10_NORM  1.0e-307L
 #elif LDBL_MIN_10_EXP == -4931
-# define FLOAT_MIN_10_NORM	1.0e-4931L
+# define FLOAT_MIN_10_NORM  1.0e-4931L
 #else
 /* libc can't depend on libm.  */
 # error "FLOAT_MIN_10_NORM must be precomputed"
-# define FLOAT_MIN_10_NORM	exp10l (LDBL_MIN_10_EXP)
+# define FLOAT_MIN_10_NORM  exp10l (LDBL_MIN_10_EXP)
 #endif

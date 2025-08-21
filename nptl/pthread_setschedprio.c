@@ -23,48 +23,49 @@
 #include <lowlevellock.h>
 #include <shlib-compat.h>
 
-int
-__pthread_setschedprio (pthread_t threadid, int prio)
+int __pthread_setschedprio(pthread_t threadid, int prio)
 {
-  struct pthread *pd = (struct pthread *) threadid;
+    struct pthread *pd = (struct pthread *) threadid;
 
-  /* Make sure the descriptor is valid.  */
-  if (INVALID_TD_P (pd))
-    /* Not a valid thread handle.  */
-    return ESRCH;
-
-  int result = 0;
-  struct sched_param param;
-  param.sched_priority = prio;
-
-  /* See CREATE THREAD NOTES in nptl/pthread_create.c.  */
-  lll_lock (pd->lock, LLL_PRIVATE);
-
-  /* If the thread should have higher priority because of some
-     PTHREAD_PRIO_PROTECT mutexes it holds, adjust the priority.  */
-  if (__builtin_expect (pd->tpp != NULL, 0) && pd->tpp->priomax > prio)
-    param.sched_priority = pd->tpp->priomax;
-
-  /* Try to set the scheduler information.  */
-  if (__glibc_unlikely (__sched_setparam (pd->tid, &param) == -1))
-    result = errno;
-  else
+    /* Make sure the descriptor is valid.  */
+    if (INVALID_TD_P(pd))
+        /* Not a valid thread handle.  */
     {
-      /* We succeeded changing the kernel information.  Reflect this
-	 change in the thread descriptor.  */
-      param.sched_priority = prio;
-      memcpy (&pd->schedparam, &param, sizeof (struct sched_param));
-      pd->flags |= ATTR_FLAG_SCHED_SET;
+        return ESRCH;
     }
 
-  lll_unlock (pd->lock, LLL_PRIVATE);
+    int result = 0;
+    struct sched_param param;
+    param.sched_priority = prio;
 
-  return result;
+    /* See CREATE THREAD NOTES in nptl/pthread_create.c.  */
+    lll_lock(pd->lock, LLL_PRIVATE);
+
+    /* If the thread should have higher priority because of some
+       PTHREAD_PRIO_PROTECT mutexes it holds, adjust the priority.  */
+    if (__builtin_expect(pd->tpp != NULL, 0) && pd->tpp->priomax > prio) {
+        param.sched_priority = pd->tpp->priomax;
+    }
+
+    /* Try to set the scheduler information.  */
+    if (__glibc_unlikely(__sched_setparam(pd->tid, &param) == -1)) {
+        result = errno;
+    } else {
+        /* We succeeded changing the kernel information.  Reflect this
+        change in the thread descriptor.  */
+        param.sched_priority = prio;
+        memcpy(&pd->schedparam, &param, sizeof(struct sched_param));
+        pd->flags |= ATTR_FLAG_SCHED_SET;
+    }
+
+    lll_unlock(pd->lock, LLL_PRIVATE);
+
+    return result;
 }
-versioned_symbol (libc, __pthread_setschedprio, pthread_setschedprio,
-		  GLIBC_2_34);
+versioned_symbol(libc, __pthread_setschedprio, pthread_setschedprio,
+                 GLIBC_2_34);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_3_4, GLIBC_2_34)
-compat_symbol (libpthread, __pthread_setschedprio, pthread_setschedprio,
-	       GLIBC_2_3_4);
+compat_symbol(libpthread, __pthread_setschedprio, pthread_setschedprio,
+              GLIBC_2_3_4);
 #endif

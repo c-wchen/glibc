@@ -34,48 +34,43 @@
 # define CHAR char
 #endif /* WIDE */
 
-IMPL (STRLEN, 1)
+IMPL(STRLEN, 1)
 
-typedef size_t (*proto_t) (const CHAR *);
+typedef size_t (*proto_t)(const CHAR *);
 
-typedef struct
-{
-  void (*fn) (void);
+typedef struct {
+    void (*fn)(void);
 } parameter_t;
 
-size_t
-__attribute__ ((weak)) __attribute_optimization_barrier__
-do_strlen (parameter_t *a, int zero, const CHAR *str)
+size_t __attribute__((weak)) __attribute_optimization_barrier__
+do_strlen(parameter_t *a, int zero, const CHAR *str)
 {
-  return CALL (a, str);
+    return CALL(a, str);
 }
 
-static int
-test_main (void)
+static int test_main(void)
 {
-  test_init ();
+    test_init();
 
-  size_t size = page_size / sizeof (CHAR) - 1;
-  CHAR *buf = (CHAR *) buf2;
-  buf[size] = 0;
+    size_t size = page_size / sizeof(CHAR) - 1;
+    CHAR *buf = (CHAR *) buf2;
+    buf[size] = 0;
 
-  parameter_t a;
+    parameter_t a;
 
-  int ret = 0;
-  FOR_EACH_IMPL (impl, 0)
-    {
-      a.fn = impl->fn;
-      /* NB: Pass 0 in RSI.  */
-      size_t res = do_strlen (&a, 0, buf);
-      if (res != size)
-	{
-	  error (0, 0, "Wrong result in function %s: %zu != %zu",
-		 impl->name, res, size);
-	  ret = 1;
-	}
+    int ret = 0;
+    FOR_EACH_IMPL(impl, 0) {
+        a.fn = impl->fn;
+        /* NB: Pass 0 in RSI.  */
+        size_t res = do_strlen(&a, 0, buf);
+        if (res != size) {
+            error(0, 0, "Wrong result in function %s: %zu != %zu",
+                  impl->name, res, size);
+            ret = 1;
+        }
     }
 
-  return ret ? EXIT_FAILURE : EXIT_SUCCESS;
+    return ret ? EXIT_FAILURE : EXIT_SUCCESS;
 }
 
 #include <support/test-driver.c>

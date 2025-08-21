@@ -24,31 +24,33 @@
    extending LEN bytes to PROT.  Returns 0 if successful, -1 for errors
    (and sets errno).  */
 
-int
-__mprotect (void *addr, size_t len, int prot)
+int __mprotect(void *addr, size_t len, int prot)
 {
-  kern_return_t err;
-  vm_prot_t vmprot;
+    kern_return_t err;
+    vm_prot_t vmprot;
 
-  vmprot = VM_PROT_NONE;
-  if (prot & PROT_READ)
-    vmprot |= VM_PROT_READ;
-  if (prot & PROT_WRITE)
-    vmprot |= VM_PROT_WRITE;
-  if (prot & PROT_EXEC)
-    vmprot |= VM_PROT_EXECUTE;
-
-  if (err = __vm_protect (__mach_task_self (),
-			  (vm_address_t) addr, (vm_size_t) len,
-			  0, vmprot))
-    {
-      if (err == KERN_PROTECTION_FAILURE)
-        err = EACCES;
-
-      errno = err;
-      return -1;
+    vmprot = VM_PROT_NONE;
+    if (prot & PROT_READ) {
+        vmprot |= VM_PROT_READ;
     }
-  return 0;
+    if (prot & PROT_WRITE) {
+        vmprot |= VM_PROT_WRITE;
+    }
+    if (prot & PROT_EXEC) {
+        vmprot |= VM_PROT_EXECUTE;
+    }
+
+    if (err = __vm_protect(__mach_task_self(),
+                           (vm_address_t) addr, (vm_size_t) len,
+                           0, vmprot)) {
+        if (err == KERN_PROTECTION_FAILURE) {
+            err = EACCES;
+        }
+
+        errno = err;
+        return -1;
+    }
+    return 0;
 }
-libc_hidden_def (__mprotect)
-weak_alias (__mprotect, mprotect)
+libc_hidden_def(__mprotect)
+weak_alias(__mprotect, mprotect)

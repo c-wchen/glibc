@@ -23,52 +23,50 @@
 
 /* Get the value of the system variable NAME.  */
 long int
-attribute_hidden
-__cache_sysconf (int name)
+attribute_hidden __cache_sysconf(int name)
 {
-  const struct cpu_features *cpu_features = __get_cpu_features ();
-  switch (name)
-    {
-    case _SC_LEVEL1_ICACHE_SIZE:
-      return cpu_features->level1_icache_size;
+    const struct cpu_features *cpu_features = __get_cpu_features();
+    switch (name) {
+        case _SC_LEVEL1_ICACHE_SIZE:
+            return cpu_features->level1_icache_size;
 
-    case _SC_LEVEL1_ICACHE_LINESIZE:
-      return cpu_features->level1_icache_linesize;
+        case _SC_LEVEL1_ICACHE_LINESIZE:
+            return cpu_features->level1_icache_linesize;
 
-    case _SC_LEVEL1_DCACHE_SIZE:
-      return cpu_features->level1_dcache_size;
+        case _SC_LEVEL1_DCACHE_SIZE:
+            return cpu_features->level1_dcache_size;
 
-    case _SC_LEVEL1_DCACHE_ASSOC:
-      return cpu_features->level1_dcache_assoc;
+        case _SC_LEVEL1_DCACHE_ASSOC:
+            return cpu_features->level1_dcache_assoc;
 
-    case _SC_LEVEL1_DCACHE_LINESIZE:
-      return cpu_features->level1_dcache_linesize;
+        case _SC_LEVEL1_DCACHE_LINESIZE:
+            return cpu_features->level1_dcache_linesize;
 
-    case _SC_LEVEL2_CACHE_SIZE:
-      return cpu_features->level2_cache_size;
+        case _SC_LEVEL2_CACHE_SIZE:
+            return cpu_features->level2_cache_size;
 
-    case _SC_LEVEL2_CACHE_ASSOC:
-      return cpu_features->level2_cache_assoc;
+        case _SC_LEVEL2_CACHE_ASSOC:
+            return cpu_features->level2_cache_assoc;
 
-    case _SC_LEVEL2_CACHE_LINESIZE:
-      return cpu_features->level2_cache_linesize;
+        case _SC_LEVEL2_CACHE_LINESIZE:
+            return cpu_features->level2_cache_linesize;
 
-    case _SC_LEVEL3_CACHE_SIZE:
-      return cpu_features->level3_cache_size;
+        case _SC_LEVEL3_CACHE_SIZE:
+            return cpu_features->level3_cache_size;
 
-    case _SC_LEVEL3_CACHE_ASSOC:
-      return cpu_features->level3_cache_assoc;
+        case _SC_LEVEL3_CACHE_ASSOC:
+            return cpu_features->level3_cache_assoc;
 
-    case _SC_LEVEL3_CACHE_LINESIZE:
-      return cpu_features->level3_cache_linesize;
+        case _SC_LEVEL3_CACHE_LINESIZE:
+            return cpu_features->level3_cache_linesize;
 
-    case _SC_LEVEL4_CACHE_SIZE:
-      return cpu_features->level4_cache_size;
+        case _SC_LEVEL4_CACHE_SIZE:
+            return cpu_features->level4_cache_size;
 
-    default:
-      break;
+        default:
+            break;
     }
-  return -1;
+    return -1;
 }
 
 # ifdef SHARED
@@ -79,10 +77,10 @@ __cache_sysconf (int name)
 # include <cacheinfo.h>
 # include <ifunc-init.h>
 
-extern void __x86_cacheinfo (void) attribute_hidden;
-void (*const __x86_cacheinfo_p) (void) attribute_hidden
-  = __x86_cacheinfo;
+extern void __x86_cacheinfo(void) attribute_hidden;
+void (*const __x86_cacheinfo_p)(void) attribute_hidden
+    = __x86_cacheinfo;
 
-__ifunc (__x86_cacheinfo, __x86_cacheinfo, NULL, void, init_cacheinfo);
+__ifunc(__x86_cacheinfo, __x86_cacheinfo, NULL, void, init_cacheinfo);
 # endif
 #endif

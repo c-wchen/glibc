@@ -18,15 +18,14 @@
 
 #include <fenv.h>
 
-int
-__fegetround (void)
+int __fegetround(void)
 {
-  int cw;
+    int cw;
 
-  __asm__ ("fnstcw %0" : "=m" (*&cw));
+    __asm__("fnstcw %0" : "=m"( *&cw));
 
-  return cw & 0xc00;
+    return cw & 0xc00;
 }
-libm_hidden_def (__fegetround)
-weak_alias (__fegetround, fegetround)
-libm_hidden_weak (fegetround)
+libm_hidden_def(__fegetround)
+weak_alias(__fegetround, fegetround)
+libm_hidden_weak(fegetround)

@@ -20,17 +20,15 @@
 #include <stddef.h>
 
 /* Set the terminal parameters associated with FD to *PARAMS.  */
-int
-stty (int fd, const struct sgttyb *params)
+int stty(int fd, const struct sgttyb *params)
 {
-  if (params == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (params == NULL) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (stty)
+stub_warning(stty)

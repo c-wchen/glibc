@@ -19,21 +19,20 @@
 #include <syslog.h>
 #include <string.h>
 
-extern char * __progname;
+extern char *__progname;
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char long_progname[2048];
+    char long_progname[2048];
 
-  memset (long_progname, 'X', sizeof (long_progname) - 1);
-  long_progname[sizeof (long_progname) - 1] = '\0';
+    memset(long_progname, 'X', sizeof(long_progname) - 1);
+    long_progname[sizeof(long_progname) - 1] = '\0';
 
-  __progname = long_progname;
+    __progname = long_progname;
 
-  syslog (LOG_INFO, "Hello, World!");
+    syslog(LOG_INFO, "Hello, World!");
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

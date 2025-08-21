@@ -32,35 +32,32 @@
 #include <aio_misc.h>
 #include <shlib-compat.h>
 
-int
-__aio_fsync (int op, struct aiocb *aiocbp)
+int __aio_fsync(int op, struct aiocb *aiocbp)
 {
-  if (op != O_DSYNC && __builtin_expect (op != O_SYNC, 0))
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (op != O_DSYNC && __builtin_expect(op != O_SYNC, 0)) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  /* Verify that this is an open file descriptor.  */
-  if (__glibc_unlikely (__fcntl (aiocbp->aio_fildes, F_GETFL) == -1))
-    {
-      __set_errno (EBADF);
-      return -1;
+    /* Verify that this is an open file descriptor.  */
+    if (__glibc_unlikely(__fcntl(aiocbp->aio_fildes, F_GETFL) == -1)) {
+        __set_errno(EBADF);
+        return -1;
     }
 
-  return (__aio_enqueue_request ((aiocb_union *) aiocbp,
-				 op == O_SYNC ? LIO_SYNC : LIO_DSYNC) == NULL
-	  ? -1 : 0);
+    return (__aio_enqueue_request((aiocb_union *) aiocbp,
+                                  op == O_SYNC ? LIO_SYNC : LIO_DSYNC) == NULL
+            ? -1 : 0);
 }
 
 #if PTHREAD_IN_LIBC
-versioned_symbol (libc, __aio_fsync, aio_fsync, GLIBC_2_34);
-versioned_symbol (libc, __aio_fsync, aio_fsync64, GLIBC_2_34);
+versioned_symbol(libc, __aio_fsync, aio_fsync, GLIBC_2_34);
+versioned_symbol(libc, __aio_fsync, aio_fsync64, GLIBC_2_34);
 # if OTHER_SHLIB_COMPAT (librt, GLIBC_2_1, GLIBC_2_34)
-compat_symbol (librt, __aio_fsync, aio_fsync, GLIBC_2_1);
-compat_symbol (librt, __aio_fsync, aio_fsync64, GLIBC_2_1);
+compat_symbol(librt, __aio_fsync, aio_fsync, GLIBC_2_1);
+compat_symbol(librt, __aio_fsync, aio_fsync64, GLIBC_2_1);
 # endif
 #else /* !PTHREAD_IN_LIBC */
-strong_alias (__aio_fsync, aio_fsync)
-weak_alias (__aio_fsync, aio_fsync64)
+strong_alias(__aio_fsync, aio_fsync)
+weak_alias(__aio_fsync, aio_fsync64)
 #endif /* !PTHREAD_IN_LIBC */

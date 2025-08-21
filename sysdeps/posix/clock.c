@@ -19,13 +19,13 @@
 #include <time.h>
 
 /* Return the time used by the program so far (user time + system time).  */
-clock_t
-clock (void)
+clock_t clock(void)
 {
-  struct tms buf;
+    struct tms buf;
 
-  if (__times (&buf) < 0)
-    return (clock_t) -1;
+    if (__times(&buf) < 0) {
+        return (clock_t) -1;
+    }
 
-  return buf.tms_utime + buf.tms_stime;
+    return buf.tms_utime + buf.tms_stime;
 }

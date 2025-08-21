@@ -23,9 +23,8 @@
    set *ADDRARG (which is *ADDR_LEN bytes long) to the address of the connecting
    peer and *ADDR_LEN to the address's actual length, and return the
    new socket's descriptor, or -1 for errors.  */
-int
-accept (int fd, __SOCKADDR_ARG addrarg, socklen_t *addr_len)
+int accept(int fd, __SOCKADDR_ARG addrarg, socklen_t *addr_len)
 {
-  return __libc_accept4 (fd, addrarg, addr_len, 0);
+    return __libc_accept4(fd, addrarg, addr_len, 0);
 }
-libc_hidden_def (accept)
+libc_hidden_def(accept)

@@ -21,8 +21,7 @@
 #include <sysdep.h>
 
 
-int
-signalfd (int fd, const sigset_t *mask, int flags)
+int signalfd(int fd, const sigset_t *mask, int flags)
 {
-  return INLINE_SYSCALL (signalfd4, 4, fd, mask, __NSIG_BYTES, flags);
+    return INLINE_SYSCALL(signalfd4, 4, fd, mask, __NSIG_BYTES, flags);
 }

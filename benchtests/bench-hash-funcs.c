@@ -38,106 +38,103 @@
 #include <stdlib.h>
 #include <string.h>
 
-enum
-{
-  NFIXED_ITERS = 1048576,
-  NRAND_BUFS = 16384,
-  NRAND_ITERS = 256,
-  RAND_BENCH_MAX_LEN = 128
+enum {
+    NFIXED_ITERS = 1048576,
+    NRAND_BUFS = 16384,
+    NRAND_ITERS = 256,
+    RAND_BENCH_MAX_LEN = 128
 };
 
 #include "bench-hash-funcs-kernel.h"
 #define SIMPLE
 #include "bench-hash-funcs-kernel.h"
 
-static void
-do_one_test (json_ctx_t *json_ctx, size_t len)
+static void do_one_test(json_ctx_t *json_ctx, size_t len)
 {
-  char buf[len + 1];
-  memset (buf, -1, len);
-  buf[len] = '\0';
+    char buf[len + 1];
+    memset(buf, -1, len);
+    buf[len] = '\0';
 
-  json_element_object_begin (json_ctx);
+    json_element_object_begin(json_ctx);
 
-  json_attr_string (json_ctx, "type", "fixed");
-  json_attr_uint (json_ctx, "length", len);
-  json_attr_double (json_ctx, "time_simple", do_one_test_kernel_simple (buf, len));
-  json_attr_double (json_ctx, "time_optimized", do_one_test_kernel_optimized (buf, len));
+    json_attr_string(json_ctx, "type", "fixed");
+    json_attr_uint(json_ctx, "length", len);
+    json_attr_double(json_ctx, "time_simple", do_one_test_kernel_simple(buf, len));
+    json_attr_double(json_ctx, "time_optimized", do_one_test_kernel_optimized(buf, len));
 
-  json_element_object_end (json_ctx);
+    json_element_object_end(json_ctx);
 }
 
-static void __attribute_optimization_barrier__
-do_rand_test (json_ctx_t *json_ctx)
+static void __attribute_optimization_barrier__ do_rand_test(json_ctx_t *json_ctx)
 {
-  size_t i, sz, offset;
-  char *bufs;
-  unsigned int *sizes;
+    size_t i, sz, offset;
+    char *bufs;
+    unsigned int *sizes;
 
-  bufs = (char *) calloc (NRAND_BUFS, RAND_BENCH_MAX_LEN);
-  sizes = (unsigned int *) calloc (NRAND_BUFS, sizeof (unsigned int));
-  if (bufs == NULL || sizes == NULL)
-    {
-      fprintf (stderr, "Failed to allocate bufs for random test\n");
-      goto done;
+    bufs = (char *) calloc(NRAND_BUFS, RAND_BENCH_MAX_LEN);
+    sizes = (unsigned int *) calloc(NRAND_BUFS, sizeof(unsigned int));
+    if (bufs == NULL || sizes == NULL) {
+        fprintf(stderr, "Failed to allocate bufs for random test\n");
+        goto done;
     }
 
-  for (sz = 2; sz <= RAND_BENCH_MAX_LEN; sz += sz)
-    {
-      json_element_object_begin (json_ctx);
-      json_attr_string (json_ctx, "type", "random");
-      json_attr_uint (json_ctx, "length", sz);
+    for (sz = 2; sz <= RAND_BENCH_MAX_LEN; sz += sz) {
+        json_element_object_begin(json_ctx);
+        json_attr_string(json_ctx, "type", "random");
+        json_attr_uint(json_ctx, "length", sz);
 
-      for (i = 0, offset = 0; i < NRAND_BUFS;
-	   ++i, offset += RAND_BENCH_MAX_LEN)
-	{
-	  sizes[i] = random () % sz;
-	  memset (bufs + offset, -1, sizes[i]);
-	  bufs[offset + sizes[i]] = '\0';
-	}
+        for (i = 0, offset = 0; i < NRAND_BUFS;
+             ++i, offset += RAND_BENCH_MAX_LEN) {
+            sizes[i] = random() % sz;
+            memset(bufs + offset, -1, sizes[i]);
+            bufs[offset + sizes[i]] = '\0';
+        }
 
-      json_attr_double (json_ctx, "time_simple",
-			do_rand_test_kernel_simple (bufs, sizes));
-      json_attr_double (json_ctx, "time_optimized",
-			do_rand_test_kernel_optimized (bufs, sizes));
-      json_element_object_end (json_ctx);
+        json_attr_double(json_ctx, "time_simple",
+                         do_rand_test_kernel_simple(bufs, sizes));
+        json_attr_double(json_ctx, "time_optimized",
+                         do_rand_test_kernel_optimized(bufs, sizes));
+        json_element_object_end(json_ctx);
     }
 
 done:
-  if (bufs)
-    free (bufs);
+    if (bufs) {
+        free(bufs);
+    }
 
-  if (sizes)
-    free (sizes);
+    if (sizes) {
+        free(sizes);
+    }
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int i;
-  json_ctx_t json_ctx;
+    int i;
+    json_ctx_t json_ctx;
 
-  json_init (&json_ctx, 0, stdout);
-  json_document_begin (&json_ctx);
-  json_attr_string (&json_ctx, "timing_type", TIMING_TYPE);
-  json_attr_object_begin (&json_ctx, "functions");
-  json_attr_object_begin (&json_ctx, TEST_NAME);
-  json_array_begin (&json_ctx, "results");
+    json_init(&json_ctx, 0, stdout);
+    json_document_begin(&json_ctx);
+    json_attr_string(&json_ctx, "timing_type", TIMING_TYPE);
+    json_attr_object_begin(&json_ctx, "functions");
+    json_attr_object_begin(&json_ctx, TEST_NAME);
+    json_array_begin(&json_ctx, "results");
 
-  for (i = 0; i < 16; ++i)
-    do_one_test (&json_ctx, i);
+    for (i = 0; i < 16; ++i) {
+        do_one_test(&json_ctx, i);
+    }
 
-  for (i = 16; i <= 256; i += i)
-    do_one_test (&json_ctx, i);
+    for (i = 16; i <= 256; i += i) {
+        do_one_test(&json_ctx, i);
+    }
 
-  do_rand_test (&json_ctx);
+    do_rand_test(&json_ctx);
 
-  json_array_end (&json_ctx);
-  json_attr_object_end (&json_ctx);
-  json_attr_object_end (&json_ctx);
-  json_document_end (&json_ctx);
+    json_array_end(&json_ctx);
+    json_attr_object_end(&json_ctx);
+    json_attr_object_end(&json_ctx);
+    json_document_end(&json_ctx);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

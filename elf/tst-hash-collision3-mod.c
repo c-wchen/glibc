@@ -16,73 +16,63 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-int
-foo1 (void)
+int foo1(void)
 {
-  return 1;
+    return 1;
 }
 
-int
-foo2 (void)
+int foo2(void)
 {
-  return 2;
+    return 2;
 }
 
-int
-foo3 (void)
+int foo3(void)
 {
-  return 3;
+    return 3;
 }
 
-int
-foo4 (void)
+int foo4(void)
 {
-  return 4;
+    return 4;
 }
 
-int
-foo5 (void)
+int foo5(void)
 {
-  return 5;
+    return 5;
 }
 
-int
-bar1 (void)
+int bar1(void)
 {
-  return 6;
+    return 6;
 }
 
-int
-bar2 (void)
+int bar2(void)
 {
-  return 7;
+    return 7;
 }
 
-int
-bar3 (void)
+int bar3(void)
 {
-  return 8;
+    return 8;
 }
 
-int
-bar4 (void)
+int bar4(void)
 {
-  return 9;
+    return 9;
 }
 
-int
-bar5 (void)
+int bar5(void)
 {
-  return 10;
+    return 10;
 }
 
-symbol_version (foo1, foo, Hxxxyoa);
-symbol_version (foo2, foo, HxxxypQ);
-symbol_version (foo3, foo, HxxxyqA);
-symbol_version (foo4, foo, HxxxzaA);
-symbol_version (foo5, foo, Hxxxz_a);
-symbol_version (bar1, bar, Hxxxyob);
-symbol_version (bar2, bar, HxxxypR);
-symbol_version (bar3, bar, HxxxyqB);
-symbol_version (bar4, bar, HxxxzaB);
-symbol_version (bar5, bar, Hxxxz_b);
+symbol_version(foo1, foo, Hxxxyoa);
+symbol_version(foo2, foo, HxxxypQ);
+symbol_version(foo3, foo, HxxxyqA);
+symbol_version(foo4, foo, HxxxzaA);
+symbol_version(foo5, foo, Hxxxz_a);
+symbol_version(bar1, bar, Hxxxyob);
+symbol_version(bar2, bar, HxxxypR);
+symbol_version(bar3, bar, HxxxyqB);
+symbol_version(bar4, bar, HxxxzaB);
+symbol_version(bar5, bar, Hxxxz_b);

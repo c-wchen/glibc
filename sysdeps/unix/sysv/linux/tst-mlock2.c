@@ -22,45 +22,47 @@
 #include <sys/mman.h>
 
 /* Allocate a page using mmap.  */
-static void *
-get_page (void)
+static void *get_page(void)
 {
-  return xmmap (NULL, 1, PROT_READ | PROT_WRITE,
-                MAP_ANONYMOUS | MAP_PRIVATE, -1);
+    return xmmap(NULL, 1, PROT_READ | PROT_WRITE,
+                 MAP_ANONYMOUS | MAP_PRIVATE, -1);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* Current kernels have a small reserve of locked memory, so this
-     test does not need any privileges to run.  */
+    /* Current kernels have a small reserve of locked memory, so this
+       test does not need any privileges to run.  */
 
-  void *page = get_page ();
-  if (mlock (page, 1) != 0)
-    FAIL_EXIT1 ("mlock: %m\n");
-  xmunmap (page, 1);
-
-  page = get_page ();
-  if (mlock2 (page, 1, 0) != 0)
-    /* Should be implemented using mlock if necessary.  */
-    FAIL_EXIT1 ("mlock2 (0): %m\n");
-  xmunmap (page, 1);
-
-  page = get_page ();
-  int ret = mlock2 (page, 1, MLOCK_ONFAULT);
-  if (ret != 0)
-    {
-      TEST_VERIFY (ret == -1);
-      if (errno != EINVAL)
-        /* EINVAL means the system does not support the mlock2 system
-           call.  */
-        FAIL_EXIT1 ("mlock2 (0): %m\n");
-      else
-        puts ("warning: mlock2 system call not supported");
+    void *page = get_page();
+    if (mlock(page, 1) != 0) {
+        FAIL_EXIT1("mlock: %m\n");
     }
-  xmunmap (page, 1);
+    xmunmap(page, 1);
 
-  return 0;
+    page = get_page();
+    if (mlock2(page, 1, 0) != 0)
+        /* Should be implemented using mlock if necessary.  */
+    {
+        FAIL_EXIT1("mlock2 (0): %m\n");
+    }
+    xmunmap(page, 1);
+
+    page = get_page();
+    int ret = mlock2(page, 1, MLOCK_ONFAULT);
+    if (ret != 0) {
+        TEST_VERIFY(ret == -1);
+        if (errno != EINVAL)
+            /* EINVAL means the system does not support the mlock2 system
+               call.  */
+        {
+            FAIL_EXIT1("mlock2 (0): %m\n");
+        } else {
+            puts("warning: mlock2 system call not supported");
+        }
+    }
+    xmunmap(page, 1);
+
+    return 0;
 }
 
 #include <support/test-driver.c>

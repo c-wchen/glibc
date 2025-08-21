@@ -19,18 +19,19 @@
 #include <stdlib.h>
 #include "tst-audit3.h"
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  long long ll = audit1_test (1, 2, 3);
-  if (ll != 30)
-    abort ();
+    long long ll = audit1_test(1, 2, 3);
+    if (ll != 30) {
+        abort();
+    }
 
-  float f = audit2_test (1, 2, 3);
-  if (f != 30)
-    abort ();
+    float f = audit2_test(1, 2, 3);
+    if (f != 30) {
+        abort();
+    }
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

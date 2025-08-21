@@ -19,27 +19,27 @@
 #include <pthreadP.h>
 #include <internal-signals.h>
 
-int
-__pthread_attr_setsigmask_internal (pthread_attr_t *attr,
-                                    const sigset_t *sigmask)
+int __pthread_attr_setsigmask_internal(pthread_attr_t *attr,
+                                       const sigset_t *sigmask)
 {
-  struct pthread_attr *iattr = (struct pthread_attr *) attr;
+    struct pthread_attr *iattr = (struct pthread_attr *) attr;
 
-  if (sigmask == NULL)
-    {
-      /* Mark the signal mask as unset if it is present.  */
-      if (iattr->extension != NULL)
-        iattr->extension->sigmask_set = false;
-      return 0;
+    if (sigmask == NULL) {
+        /* Mark the signal mask as unset if it is present.  */
+        if (iattr->extension != NULL) {
+            iattr->extension->sigmask_set = false;
+        }
+        return 0;
     }
 
-  int ret = __pthread_attr_extension (iattr);
-  if (ret != 0)
-    return ret;
+    int ret = __pthread_attr_extension(iattr);
+    if (ret != 0) {
+        return ret;
+    }
 
-  iattr->extension->sigmask = *sigmask;
-  iattr->extension->sigmask_set = true;
+    iattr->extension->sigmask = *sigmask;
+    iattr->extension->sigmask_set = true;
 
-  return 0;
+    return 0;
 }
-libc_hidden_def (__pthread_attr_setsigmask_internal)
+libc_hidden_def(__pthread_attr_setsigmask_internal)

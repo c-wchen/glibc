@@ -20,12 +20,11 @@
 #include <sys/platform/x86.h>
 
 /* Return true if the ISA level in ENTRY is compatible with CPU.  */
-static inline bool
-dl_cache_hwcap_isa_level_compatible (struct file_entry_new *entry)
+static inline bool dl_cache_hwcap_isa_level_compatible(struct file_entry_new *entry)
 {
-  const struct cpu_features *cpu_features = __get_cpu_features ();
-  unsigned int isa_level
-    = 1 << ((entry->hwcap >> 32) & DL_CACHE_HWCAP_ISA_LEVEL_MASK);
+    const struct cpu_features *cpu_features = __get_cpu_features();
+    unsigned int isa_level
+        = 1 << ((entry->hwcap >> 32) & DL_CACHE_HWCAP_ISA_LEVEL_MASK);
 
-  return (isa_level & cpu_features->isa_1) == isa_level;
+    return (isa_level & cpu_features->isa_1) == isa_level;
 }

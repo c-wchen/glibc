@@ -18,4 +18,4 @@
 
 #define BSD__SETJMP
 #include <sysdeps/m68k/setjmp.c>
-libc_hidden_def (_setjmp)
+libc_hidden_def(_setjmp)

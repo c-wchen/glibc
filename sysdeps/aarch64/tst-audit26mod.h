@@ -21,30 +21,31 @@
 
 #include <array_length.h>
 
-struct large_struct
-{
-  char a[16];
-  short b[8];
-  long int c[4];
+struct large_struct {
+    char a[16];
+    short b[8];
+    long int c[4];
 };
 
-static inline struct large_struct
-set_large_struct (char a, short b, long int c)
+static inline struct large_struct set_large_struct(char a, short b, long int c)
 {
-  struct large_struct r;
-  for (int i = 0; i < array_length (r.a); i++)
-    r.a[i] = a;
-  for (int i = 0; i < array_length (r.b); i++)
-    r.b[i] = b;
-  for (int i = 0; i < array_length (r.c); i++)
-    r.c[i] = c;
-  return r;
+    struct large_struct r;
+    for (int i = 0; i < array_length(r.a); i++) {
+        r.a[i] = a;
+    }
+    for (int i = 0; i < array_length(r.b); i++) {
+        r.b[i] = b;
+    }
+    for (int i = 0; i < array_length(r.c); i++) {
+        r.c[i] = c;
+    }
+    return r;
 }
 
 #define ARG1 0x12
 #define ARG2 0x1234
 #define ARG3 0x12345678
 
-struct large_struct tst_audit26_func (char a, short b, long int c);
+struct large_struct tst_audit26_func(char a, short b, long int c);
 
 #endif

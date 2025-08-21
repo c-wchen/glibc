@@ -21,12 +21,11 @@
 
 #include <bits/types.h>  /* for __fsid_t and __fsblkcnt_t*/
 
-struct statfs
-  {
+struct statfs {
     long int f_type;
 #define f_fstyp f_type
     long int f_bsize;
-    long int f_frsize;	/* Fragment size - unsupported */
+    long int f_frsize;  /* Fragment size - unsupported */
 #ifndef __USE_FILE_OFFSET64
     __fsblkcnt_t f_blocks;
     __fsblkcnt_t f_bfree;
@@ -41,32 +40,31 @@ struct statfs
     __fsblkcnt64_t f_bavail;
 #endif
 
-	/* Linux specials */
+    /* Linux specials */
     __fsid_t f_fsid;
     long int f_namelen;
     long int f_flags;
     long int f_spare[5];
-  };
+};
 
 #ifdef __USE_LARGEFILE64
-struct statfs64
-  {
+struct statfs64 {
     long int f_type;
 #define f_fstyp f_type
     long int f_bsize;
-    long int f_frsize;	/* Fragment size - unsupported */
+    long int f_frsize;  /* Fragment size - unsupported */
     __fsblkcnt64_t f_blocks;
     __fsblkcnt64_t f_bfree;
     __fsblkcnt64_t f_files;
     __fsblkcnt64_t f_ffree;
     __fsblkcnt64_t f_bavail;
 
-	/* Linux specials */
+    /* Linux specials */
     __fsid_t f_fsid;
     long int f_namelen;
     long int f_flags;
     long int f_spare[5];
-  };
+};
 #endif
 
 /* Tell code we have these members.  */

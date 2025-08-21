@@ -25,42 +25,35 @@
 #include <cpu-features.h>
 #include <support/check.h>
 
-static uint32_t
-get_sse_mxcsr (void)
+static uint32_t get_sse_mxcsr(void)
 {
-  uint32_t temp;
-  __asm__ __volatile__ ("stmxcsr %0" : "=m" (temp));
-  return temp;
+    uint32_t temp;
+    __asm__ __volatile__("stmxcsr %0" : "=m"(temp));
+    return temp;
 }
 
-static void
-set_sse_mxcsr (uint32_t val)
+static void set_sse_mxcsr(uint32_t val)
 {
-  __asm__ __volatile__ ("ldmxcsr %0" : : "m" (val));
+    __asm__ __volatile__("ldmxcsr %0" : : "m"(val));
 }
 
-static void
-set_sse_mxcsr_bits (uint32_t mask, uint32_t bits)
+static void set_sse_mxcsr_bits(uint32_t mask, uint32_t bits)
 {
-  uint32_t mxcsr = get_sse_mxcsr ();
-  mxcsr = (mxcsr & ~mask) | bits;
-  set_sse_mxcsr (mxcsr);
+    uint32_t mxcsr = get_sse_mxcsr();
+    mxcsr = (mxcsr & ~mask) | bits;
+    set_sse_mxcsr(mxcsr);
 }
 
-static int
-test_sse_mxcsr_bits (const char *test, uint32_t mask, uint32_t bits)
+static int test_sse_mxcsr_bits(const char *test, uint32_t mask, uint32_t bits)
 {
-  uint32_t mxcsr = get_sse_mxcsr ();
-  printf ("Testing %s: mxcsr = %x\n", test, mxcsr);
-  if ((mxcsr & mask) == bits)
-    {
-      printf ("PASS: %s\n", test);
-      return 0;
-    }
-  else
-    {
-      printf ("FAIL: %s\n", test);
-      return 1;
+    uint32_t mxcsr = get_sse_mxcsr();
+    printf("Testing %s: mxcsr = %x\n", test, mxcsr);
+    if ((mxcsr & mask) == bits) {
+        printf("PASS: %s\n", test);
+        return 0;
+    } else {
+        printf("FAIL: %s\n", test);
+        return 1;
     }
 }
 
@@ -69,95 +62,95 @@ test_sse_mxcsr_bits (const char *test, uint32_t mask, uint32_t bits)
 #define MXCSR_DE 0x2
 #define MXCSR_DM 0x100
 
-static __attribute__ ((noinline)) int
-sse_tests (void)
+static __attribute__((noinline)) int
+sse_tests(void)
 {
-  int result = 0;
-  fenv_t env1, env2;
-  /* Test FZ bit.  */
-  fegetenv (&env1);
-  set_sse_mxcsr_bits (MXCSR_FZ, MXCSR_FZ);
-  fegetenv (&env2);
-  fesetenv (&env1);
-  result |= test_sse_mxcsr_bits ("fesetenv FZ restoration",
-				 MXCSR_FZ, 0);
-  set_sse_mxcsr_bits (MXCSR_FZ, 0);
-  fesetenv (&env2);
-  result |= test_sse_mxcsr_bits ("fesetenv FZ restoration 2",
-				 MXCSR_FZ, MXCSR_FZ);
-  set_sse_mxcsr_bits (MXCSR_FZ, MXCSR_FZ);
-  fesetenv (FE_NOMASK_ENV);
-  result |= test_sse_mxcsr_bits ("fesetenv (FE_NOMASK_ENV) FZ restoration",
-				 MXCSR_FZ, 0);
-  set_sse_mxcsr_bits (MXCSR_FZ, MXCSR_FZ);
-  fesetenv (FE_DFL_ENV);
-  result |= test_sse_mxcsr_bits ("fesetenv (FE_DFL_ENV) FZ restoration",
-				 MXCSR_FZ, 0);
-  /* Test DAZ bit.  */
-  set_sse_mxcsr_bits (MXCSR_DAZ, MXCSR_DAZ);
-  fegetenv (&env2);
-  fesetenv (&env1);
-  result |= test_sse_mxcsr_bits ("fesetenv DAZ restoration",
-				 MXCSR_DAZ, 0);
-  set_sse_mxcsr_bits (MXCSR_DAZ, 0);
-  fesetenv (&env2);
-  result |= test_sse_mxcsr_bits ("fesetenv DAZ restoration 2",
-				 MXCSR_DAZ, MXCSR_DAZ);
-  set_sse_mxcsr_bits (MXCSR_DAZ, MXCSR_DAZ);
-  fesetenv (FE_NOMASK_ENV);
-  result |= test_sse_mxcsr_bits ("fesetenv (FE_NOMASK_ENV) DAZ restoration",
-				 MXCSR_DAZ, 0);
-  set_sse_mxcsr_bits (MXCSR_DAZ, MXCSR_DAZ);
-  fesetenv (FE_DFL_ENV);
-  result |= test_sse_mxcsr_bits ("fesetenv (FE_DFL_ENV) DAZ restoration",
-				 MXCSR_DAZ, 0);
-  /* Test DM bit.  */
-  set_sse_mxcsr_bits (MXCSR_DM, 0);
-  fegetenv (&env2);
-  fesetenv (&env1);
-  result |= test_sse_mxcsr_bits ("fesetenv DM restoration",
-				 MXCSR_DM, MXCSR_DM);
-  set_sse_mxcsr_bits (MXCSR_DM, MXCSR_DM);
-  fesetenv (&env2);
-  result |= test_sse_mxcsr_bits ("fesetenv DM restoration 2",
-				 MXCSR_DM, 0);
-  set_sse_mxcsr_bits (MXCSR_DM, 0);
-  /* Presume FE_NOMASK_ENV should leave the "denormal operand"
-     exception masked, as not a standard exception.  */
-  fesetenv (FE_NOMASK_ENV);
-  result |= test_sse_mxcsr_bits ("fesetenv (FE_NOMASK_ENV) DM restoration",
-				 MXCSR_DM, MXCSR_DM);
-  set_sse_mxcsr_bits (MXCSR_DM, 0);
-  fesetenv (FE_DFL_ENV);
-  result |= test_sse_mxcsr_bits ("fesetenv (FE_DFL_ENV) DM restoration",
-				 MXCSR_DM, MXCSR_DM);
-  /* Test DE bit.  */
-  set_sse_mxcsr_bits (MXCSR_DE, MXCSR_DE);
-  fegetenv (&env2);
-  fesetenv (&env1);
-  result |= test_sse_mxcsr_bits ("fesetenv DE restoration",
-				 MXCSR_DE, 0);
-  set_sse_mxcsr_bits (MXCSR_DE, 0);
-  fesetenv (&env2);
-  result |= test_sse_mxcsr_bits ("fesetenv DE restoration 2",
-				 MXCSR_DE, MXCSR_DE);
-  set_sse_mxcsr_bits (MXCSR_DE, MXCSR_DE);
-  fesetenv (FE_NOMASK_ENV);
-  result |= test_sse_mxcsr_bits ("fesetenv (FE_NOMASK_ENV) DE restoration",
-				 MXCSR_DE, 0);
-  set_sse_mxcsr_bits (MXCSR_DE, MXCSR_DE);
-  fesetenv (FE_DFL_ENV);
-  result |= test_sse_mxcsr_bits ("fesetenv (FE_DFL_ENV) DE restoration",
-				 MXCSR_DE, 0);
-  return result;
+    int result = 0;
+    fenv_t env1, env2;
+    /* Test FZ bit.  */
+    fegetenv(&env1);
+    set_sse_mxcsr_bits(MXCSR_FZ, MXCSR_FZ);
+    fegetenv(&env2);
+    fesetenv(&env1);
+    result |= test_sse_mxcsr_bits("fesetenv FZ restoration",
+                                  MXCSR_FZ, 0);
+    set_sse_mxcsr_bits(MXCSR_FZ, 0);
+    fesetenv(&env2);
+    result |= test_sse_mxcsr_bits("fesetenv FZ restoration 2",
+                                  MXCSR_FZ, MXCSR_FZ);
+    set_sse_mxcsr_bits(MXCSR_FZ, MXCSR_FZ);
+    fesetenv(FE_NOMASK_ENV);
+    result |= test_sse_mxcsr_bits("fesetenv (FE_NOMASK_ENV) FZ restoration",
+                                  MXCSR_FZ, 0);
+    set_sse_mxcsr_bits(MXCSR_FZ, MXCSR_FZ);
+    fesetenv(FE_DFL_ENV);
+    result |= test_sse_mxcsr_bits("fesetenv (FE_DFL_ENV) FZ restoration",
+                                  MXCSR_FZ, 0);
+    /* Test DAZ bit.  */
+    set_sse_mxcsr_bits(MXCSR_DAZ, MXCSR_DAZ);
+    fegetenv(&env2);
+    fesetenv(&env1);
+    result |= test_sse_mxcsr_bits("fesetenv DAZ restoration",
+                                  MXCSR_DAZ, 0);
+    set_sse_mxcsr_bits(MXCSR_DAZ, 0);
+    fesetenv(&env2);
+    result |= test_sse_mxcsr_bits("fesetenv DAZ restoration 2",
+                                  MXCSR_DAZ, MXCSR_DAZ);
+    set_sse_mxcsr_bits(MXCSR_DAZ, MXCSR_DAZ);
+    fesetenv(FE_NOMASK_ENV);
+    result |= test_sse_mxcsr_bits("fesetenv (FE_NOMASK_ENV) DAZ restoration",
+                                  MXCSR_DAZ, 0);
+    set_sse_mxcsr_bits(MXCSR_DAZ, MXCSR_DAZ);
+    fesetenv(FE_DFL_ENV);
+    result |= test_sse_mxcsr_bits("fesetenv (FE_DFL_ENV) DAZ restoration",
+                                  MXCSR_DAZ, 0);
+    /* Test DM bit.  */
+    set_sse_mxcsr_bits(MXCSR_DM, 0);
+    fegetenv(&env2);
+    fesetenv(&env1);
+    result |= test_sse_mxcsr_bits("fesetenv DM restoration",
+                                  MXCSR_DM, MXCSR_DM);
+    set_sse_mxcsr_bits(MXCSR_DM, MXCSR_DM);
+    fesetenv(&env2);
+    result |= test_sse_mxcsr_bits("fesetenv DM restoration 2",
+                                  MXCSR_DM, 0);
+    set_sse_mxcsr_bits(MXCSR_DM, 0);
+    /* Presume FE_NOMASK_ENV should leave the "denormal operand"
+       exception masked, as not a standard exception.  */
+    fesetenv(FE_NOMASK_ENV);
+    result |= test_sse_mxcsr_bits("fesetenv (FE_NOMASK_ENV) DM restoration",
+                                  MXCSR_DM, MXCSR_DM);
+    set_sse_mxcsr_bits(MXCSR_DM, 0);
+    fesetenv(FE_DFL_ENV);
+    result |= test_sse_mxcsr_bits("fesetenv (FE_DFL_ENV) DM restoration",
+                                  MXCSR_DM, MXCSR_DM);
+    /* Test DE bit.  */
+    set_sse_mxcsr_bits(MXCSR_DE, MXCSR_DE);
+    fegetenv(&env2);
+    fesetenv(&env1);
+    result |= test_sse_mxcsr_bits("fesetenv DE restoration",
+                                  MXCSR_DE, 0);
+    set_sse_mxcsr_bits(MXCSR_DE, 0);
+    fesetenv(&env2);
+    result |= test_sse_mxcsr_bits("fesetenv DE restoration 2",
+                                  MXCSR_DE, MXCSR_DE);
+    set_sse_mxcsr_bits(MXCSR_DE, MXCSR_DE);
+    fesetenv(FE_NOMASK_ENV);
+    result |= test_sse_mxcsr_bits("fesetenv (FE_NOMASK_ENV) DE restoration",
+                                  MXCSR_DE, 0);
+    set_sse_mxcsr_bits(MXCSR_DE, MXCSR_DE);
+    fesetenv(FE_DFL_ENV);
+    result |= test_sse_mxcsr_bits("fesetenv (FE_DFL_ENV) DE restoration",
+                                  MXCSR_DE, 0);
+    return result;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  if (!CPU_FEATURE_USABLE (SSE2))
-    FAIL_UNSUPPORTED ("CPU does not support SSE2");
-  return sse_tests ();
+    if (!CPU_FEATURE_USABLE(SSE2)) {
+        FAIL_UNSUPPORTED("CPU does not support SSE2");
+    }
+    return sse_tests();
 }
 
 #include <support/test-driver.c>

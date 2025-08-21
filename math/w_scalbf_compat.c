@@ -22,57 +22,51 @@
 
 
 #if LIBM_SVID_COMPAT
-static float
-__attribute__ ((noinline))
-sysv_scalbf (float x, float fn)
+static float __attribute__((noinline))
+sysv_scalbf(float x, float fn)
 {
-  float z = __ieee754_scalbf (x, fn);
+    float z = __ieee754_scalbf(x, fn);
 
-  if (__glibc_unlikely (isinf (z)))
-    {
-      if (isfinite (x))
-	return __kernel_standard_f (x, fn, 132); /* scalb overflow */
-      else
-	__set_errno (ERANGE);
+    if (__glibc_unlikely(isinf(z))) {
+        if (isfinite(x)) {
+            return __kernel_standard_f(x, fn, 132);    /* scalb overflow */
+        } else {
+            __set_errno(ERANGE);
+        }
+    } else if (__builtin_expect(z == 0.0f, 0) && z != x) {
+        return __kernel_standard_f(x, fn, 133);    /* scalb underflow */
     }
-  else if (__builtin_expect (z == 0.0f, 0) && z != x)
-    return __kernel_standard_f (x, fn, 133); /* scalb underflow */
 
-  return z;
+    return z;
 }
 
 
 /* Wrapper scalbf */
-float
-__scalbf (float x, float fn)
+float __scalbf(float x, float fn)
 {
-  if (__glibc_unlikely (_LIB_VERSION == _SVID_))
-    return sysv_scalbf (x, fn);
-  else
-    {
-      float z = __ieee754_scalbf (x, fn);
+    if (__glibc_unlikely(_LIB_VERSION == _SVID_)) {
+        return sysv_scalbf(x, fn);
+    } else {
+        float z = __ieee754_scalbf(x, fn);
 
-      if (__glibc_unlikely (!isfinite (z) || z == 0.0f))
-	{
-	  if (isnan (z))
-	    {
-	      if (!isnan (x) && !isnan (fn))
-		__set_errno (EDOM);
-	    }
-	  else if (isinf (z))
-	    {
-	      if (!isinf (x) && !isinf (fn))
-		__set_errno (ERANGE);
-	    }
-	  else
-	    {
-	      /* z == 0.  */
-	      if (x != 0.0f && !isinf (fn))
-		__set_errno (ERANGE);
-	    }
-	}
-      return z;
+        if (__glibc_unlikely(!isfinite(z) || z == 0.0f)) {
+            if (isnan(z)) {
+                if (!isnan(x) && !isnan(fn)) {
+                    __set_errno(EDOM);
+                }
+            } else if (isinf(z)) {
+                if (!isinf(x) && !isinf(fn)) {
+                    __set_errno(ERANGE);
+                }
+            } else {
+                /* z == 0.  */
+                if (x != 0.0f && !isinf(fn)) {
+                    __set_errno(ERANGE);
+                }
+            }
+        }
+        return z;
     }
 }
-weak_alias (__scalbf, scalbf)
+weak_alias(__scalbf, scalbf)
 #endif

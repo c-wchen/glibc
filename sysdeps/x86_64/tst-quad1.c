@@ -15,11 +15,10 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-extern void foo (void);
+extern void foo(void);
 
-int
-main (void)
+int main(void)
 {
-  foo ();
-  return 0;
+    foo();
+    return 0;
 }

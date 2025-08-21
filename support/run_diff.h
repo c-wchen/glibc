@@ -25,7 +25,7 @@
 
    This function assumes that LEFT and RIGHT are different
    strings.  */
-void support_run_diff (const char *left_label, const char *left,
-                       const char *right_label, const char *right);
+void support_run_diff(const char *left_label, const char *left,
+                      const char *right_label, const char *right);
 
 #endif /* SUPPORT_RUN_DIFF_H */

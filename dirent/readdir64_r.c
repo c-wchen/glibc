@@ -21,11 +21,10 @@
 
 /* Read a directory entry from DIRP, store result in ENTRY and return
    pointer to result in *RESULT.  */
-int
-readdir64_r (DIR *dirp, struct dirent64 *entry, struct dirent64 **result)
+int readdir64_r(DIR *dirp, struct dirent64 *entry, struct dirent64 **result)
 {
-  __set_errno (ENOSYS);
-  *result = NULL;
-  return -1;
+    __set_errno(ENOSYS);
+    *result = NULL;
+    return -1;
 }
-stub_warning (readdir64_r)
+stub_warning(readdir64_r)

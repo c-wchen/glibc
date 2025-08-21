@@ -20,12 +20,11 @@
 #include <signal.h>
 #include <sys/types.h>
 
-int
-__sigqueue (pid_t pid, int sig, const union sigval val)
+int __sigqueue(pid_t pid, int sig, const union sigval val)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-weak_alias (__sigqueue, sigqueue)
+weak_alias(__sigqueue, sigqueue)
 
-stub_warning (sigqueue)
+stub_warning(sigqueue)

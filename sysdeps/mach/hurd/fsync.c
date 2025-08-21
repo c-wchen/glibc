@@ -22,23 +22,23 @@
 #include <sysdep-cancel.h>
 
 /* Make all changes done to FD actually appear on disk.  */
-int
-fsync (int fd)
+int fsync(int fd)
 {
-  error_t err;
-  int cancel_oldtype;
+    error_t err;
+    int cancel_oldtype;
 
-  cancel_oldtype = LIBC_CANCEL_ASYNC();
-  err = HURD_DPORT_USE_CANCEL (fd, __file_sync (port, 1, 0));
-  LIBC_CANCEL_RESET (cancel_oldtype);
-  if (err)
-    {
-      if (err == EOPNOTSUPP)
-	/* If the file descriptor does not support sync, return EINVAL
-	   as POSIX specifies.  */
-	err = EINVAL;
-      return __hurd_dfail (fd, err);
+    cancel_oldtype = LIBC_CANCEL_ASYNC();
+    err = HURD_DPORT_USE_CANCEL(fd, __file_sync(port, 1, 0));
+    LIBC_CANCEL_RESET(cancel_oldtype);
+    if (err) {
+        if (err == EOPNOTSUPP)
+            /* If the file descriptor does not support sync, return EINVAL
+               as POSIX specifies.  */
+        {
+            err = EINVAL;
+        }
+        return __hurd_dfail(fd, err);
     }
-  return 0;
+    return 0;
 }
-libc_hidden_def (fsync)
+libc_hidden_def(fsync)

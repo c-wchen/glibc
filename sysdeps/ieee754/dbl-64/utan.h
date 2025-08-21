@@ -27,19 +27,19 @@
 #define UTAN_H
 
 #ifdef BIG_ENDI
-  static const mynumber
-  /* polynomial I */
+static const mynumber
+/* polynomial I */
 /**/ d3             = {{0x3FD55555, 0x55555555} }, /*  0.333... */
 /**/ d5             = {{0x3FC11111, 0x111107C6} }, /*  0.133... */
 /**/ d7             = {{0x3FABA1BA, 0x1CDB8745} }, /*    .      */
 /**/ d9             = {{0x3F9664ED, 0x49CFC666} }, /*    .      */
 /**/ d11            = {{0x3F82385A, 0x3CF2E4EA} }, /*    .      */
-  /* polynomial II */
-  /* polynomial III */
+/* polynomial II */
+/* polynomial III */
 /**/ e0             = {{0x3FD55555, 0x55554DBD} }, /*    .      */
 /**/ e1             = {{0x3FC11112, 0xE0A6B45F} }, /*    .      */
 
-  /* constants    */
+/* constants    */
 /**/ mfftnhf        = {{0xc02f0000, 0x00000000} }, /*-15.5      */
 
 /**/ g1             = {{0x3e4b096c, 0x00000000} }, /* 1.259e-8  */
@@ -60,19 +60,19 @@
 #else
 #ifdef LITTLE_ENDI
 
-  static const mynumber
-  /* polynomial I */
+static const mynumber
+/* polynomial I */
 /**/ d3             = {{0x55555555, 0x3FD55555} }, /*  0.333... */
 /**/ d5             = {{0x111107C6, 0x3FC11111} }, /*  0.133... */
 /**/ d7             = {{0x1CDB8745, 0x3FABA1BA} }, /*    .      */
 /**/ d9             = {{0x49CFC666, 0x3F9664ED} }, /*    .      */
 /**/ d11            = {{0x3CF2E4EA, 0x3F82385A} }, /*    .      */
-  /* polynomial II */
-  /* polynomial III */
+/* polynomial II */
+/* polynomial III */
 /**/ e0             = {{0x55554DBD, 0x3FD55555} }, /*    .      */
 /**/ e1             = {{0xE0A6B45F, 0x3FC11112} }, /*    .      */
 
-  /* constants    */
+/* constants    */
 /**/ mfftnhf        = {{0x00000000, 0xc02f0000} }, /*-15.5      */
 
 /**/ g1             = {{0x00000000, 0x3e4b096c} }, /* 1.259e-8  */

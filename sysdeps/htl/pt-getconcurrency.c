@@ -19,8 +19,7 @@
 #include <pthread.h>
 #include <pt-internal.h>
 
-int
-pthread_getconcurrency (void)
+int pthread_getconcurrency(void)
 {
-  return __pthread_concurrency;
+    return __pthread_concurrency;
 }

@@ -24,7 +24,7 @@
 
 __BEGIN_DECLS
 
-void xsystem (const char *cmd);
+void xsystem(const char *cmd);
 
 __END_DECLS
 

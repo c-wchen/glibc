@@ -21,49 +21,42 @@
 #include <stdio.h>
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  pthread_barrier_t b;
-  int e;
-  int cnt;
+    pthread_barrier_t b;
+    int e;
+    int cnt;
 
-  e = pthread_barrier_init (&b, NULL, 0);
-  if (e == 0)
-    {
-      puts ("barrier_init with count 0 succeeded");
-      return 1;
+    e = pthread_barrier_init(&b, NULL, 0);
+    if (e == 0) {
+        puts("barrier_init with count 0 succeeded");
+        return 1;
     }
-  if (e != EINVAL)
-    {
-      puts ("barrier_init with count 0 didn't return EINVAL");
-      return 1;
+    if (e != EINVAL) {
+        puts("barrier_init with count 0 didn't return EINVAL");
+        return 1;
     }
 
-  if (pthread_barrier_init (&b, NULL, 1) != 0)
-    {
-      puts ("real barrier_init failed");
-      return 1;
+    if (pthread_barrier_init(&b, NULL, 1) != 0) {
+        puts("real barrier_init failed");
+        return 1;
     }
 
-  for (cnt = 0; cnt < 10; ++cnt)
-    {
-      e = pthread_barrier_wait (&b);
+    for (cnt = 0; cnt < 10; ++cnt) {
+        e = pthread_barrier_wait(&b);
 
-      if (e != PTHREAD_BARRIER_SERIAL_THREAD)
-	{
-	  puts ("barrier_wait didn't return PTHREAD_BARRIER_SERIAL_THREAD");
-	  return 1;
-	}
+        if (e != PTHREAD_BARRIER_SERIAL_THREAD) {
+            puts("barrier_wait didn't return PTHREAD_BARRIER_SERIAL_THREAD");
+            return 1;
+        }
     }
 
-  if (pthread_barrier_destroy (&b) != 0)
-    {
-      puts ("barrier_destroy failed");
-      return 1;
+    if (pthread_barrier_destroy(&b) != 0) {
+        puts("barrier_destroy failed");
+        return 1;
     }
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

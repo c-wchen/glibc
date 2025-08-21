@@ -19,29 +19,28 @@
 #include <arpa/inet.h>
 #include <support/check.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  struct in_addr addr = { };
+    struct in_addr addr = { };
 
-  TEST_COMPARE (__inet_aton_exact ("192.0.2.1", &addr), 1);
-  TEST_COMPARE (ntohl (addr.s_addr), 0xC0000201);
+    TEST_COMPARE(__inet_aton_exact("192.0.2.1", &addr), 1);
+    TEST_COMPARE(ntohl(addr.s_addr), 0xC0000201);
 
-  TEST_COMPARE (__inet_aton_exact ("192.000.002.010", &addr), 1);
-  TEST_COMPARE (ntohl (addr.s_addr), 0xC0000208);
-  TEST_COMPARE (__inet_aton_exact ("0xC0000234", &addr), 1);
-  TEST_COMPARE (ntohl (addr.s_addr), 0xC0000234);
+    TEST_COMPARE(__inet_aton_exact("192.000.002.010", &addr), 1);
+    TEST_COMPARE(ntohl(addr.s_addr), 0xC0000208);
+    TEST_COMPARE(__inet_aton_exact("0xC0000234", &addr), 1);
+    TEST_COMPARE(ntohl(addr.s_addr), 0xC0000234);
 
-  /* Trailing content is not accepted.  */
-  TEST_COMPARE (__inet_aton_exact ("192.0.2.2X", &addr), 0);
-  TEST_COMPARE (__inet_aton_exact ("192.0.2.3 Y", &addr), 0);
-  TEST_COMPARE (__inet_aton_exact ("192.0.2.4\nZ", &addr), 0);
-  TEST_COMPARE (__inet_aton_exact ("192.0.2.5\tT", &addr), 0);
-  TEST_COMPARE (__inet_aton_exact ("192.0.2.6 Y", &addr), 0);
-  TEST_COMPARE (__inet_aton_exact ("192.0.2.7\n", &addr), 0);
-  TEST_COMPARE (__inet_aton_exact ("192.0.2.8\t", &addr), 0);
+    /* Trailing content is not accepted.  */
+    TEST_COMPARE(__inet_aton_exact("192.0.2.2X", &addr), 0);
+    TEST_COMPARE(__inet_aton_exact("192.0.2.3 Y", &addr), 0);
+    TEST_COMPARE(__inet_aton_exact("192.0.2.4\nZ", &addr), 0);
+    TEST_COMPARE(__inet_aton_exact("192.0.2.5\tT", &addr), 0);
+    TEST_COMPARE(__inet_aton_exact("192.0.2.6 Y", &addr), 0);
+    TEST_COMPARE(__inet_aton_exact("192.0.2.7\n", &addr), 0);
+    TEST_COMPARE(__inet_aton_exact("192.0.2.8\t", &addr), 0);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

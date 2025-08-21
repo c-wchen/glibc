@@ -34,67 +34,65 @@ static int *shared_errno;
 static char *path;
 
 /* Try to obtain an exclusive lock on the file at path.  */
-static void
-subprocess (void *closure)
+static void subprocess(void *closure)
 {
-  int fd = xopen (path, O_RDWR, 0);
-  struct flock64 lock = { .l_type = F_WRLCK, };
-  int ret = fcntl64 (fd, F_SETLK, &lock);
-  if (ret == 0)
-    *shared_errno = 0;
-  else
-    *shared_errno = errno;
-  xclose (fd);
+    int fd = xopen(path, O_RDWR, 0);
+    struct flock64 lock = { .l_type = F_WRLCK, };
+    int ret = fcntl64(fd, F_SETLK, &lock);
+    if (ret == 0) {
+        *shared_errno = 0;
+    } else {
+        *shared_errno = errno;
+    }
+    xclose(fd);
 }
 
 /* Return true if the file at path is currently locked, false if
    not.  */
-static bool
-probe_lock (void)
+static bool probe_lock(void)
 {
-  *shared_errno = -1;
-  support_isolate_in_subprocess (subprocess, NULL);
-  if (*shared_errno == 0)
-    /* Lock was acquired by the subprocess, so this process has not
-       locked it.  */
-    return false;
-  else
+    *shared_errno = -1;
+    support_isolate_in_subprocess(subprocess, NULL);
+    if (*shared_errno == 0)
+        /* Lock was acquired by the subprocess, so this process has not
+           locked it.  */
     {
-      /* POSIX allows both EACCES and EAGAIN.  Linux use EACCES.  */
-      TEST_COMPARE (*shared_errno, EAGAIN);
-      return true;
+        return false;
+    } else {
+        /* POSIX allows both EACCES and EAGAIN.  Linux use EACCES.  */
+        TEST_COMPARE(*shared_errno, EAGAIN);
+        return true;
     }
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  shared_errno = support_shared_allocate (sizeof (*shared_errno));
-  int fd = create_temp_file ("tst-o_path-locks-", &path);
+    shared_errno = support_shared_allocate(sizeof(*shared_errno));
+    int fd = create_temp_file("tst-o_path-locks-", &path);
 
-  /* The file is not locked initially.  */
-  TEST_VERIFY (!probe_lock ());
+    /* The file is not locked initially.  */
+    TEST_VERIFY(!probe_lock());
 
-  struct flock64 lock = { .l_type = F_WRLCK, };
-  TEST_COMPARE (fcntl64 (fd, F_SETLK, &lock), 0);
+    struct flock64 lock = { .l_type = F_WRLCK, };
+    TEST_COMPARE(fcntl64(fd, F_SETLK, &lock), 0);
 
-  /* The lock has been acquired.  */
-  TEST_VERIFY (probe_lock ());
+    /* The lock has been acquired.  */
+    TEST_VERIFY(probe_lock());
 
-  /* Closing the same file via a different descriptor releases the
-     lock.  */
-  xclose (xopen (path, O_RDONLY, 0));
-  TEST_VERIFY (!probe_lock ());
+    /* Closing the same file via a different descriptor releases the
+       lock.  */
+    xclose(xopen(path, O_RDONLY, 0));
+    TEST_VERIFY(!probe_lock());
 
-  /* But not if it is an O_PATH descriptor.  */
-  TEST_COMPARE (fcntl64 (fd, F_SETLK, &lock), 0);
-  xclose (xopen (path, O_PATH, 0));
-  TEST_VERIFY (probe_lock ());
+    /* But not if it is an O_PATH descriptor.  */
+    TEST_COMPARE(fcntl64(fd, F_SETLK, &lock), 0);
+    xclose(xopen(path, O_PATH, 0));
+    TEST_VERIFY(probe_lock());
 
-  xclose (fd);
-  free (path);
-  support_shared_free (shared_errno);
-  return 0;
+    xclose(fd);
+    free(path);
+    support_shared_free(shared_errno);
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -21,9 +21,9 @@ static char rcsid[] = "$NetBSD: $";
  * Return x rounded to integral value according to the prevailing
  * rounding mode.
  * Method:
- *	Using floating addition.
+ *  Using floating addition.
  * Exception:
- *	Inexact flag raised if x not equal to rintl(x).
+ *  Inexact flag raised if x not equal to rintl(x).
  */
 
 #define NO_MATH_REDIRECT
@@ -32,44 +32,40 @@ static char rcsid[] = "$NetBSD: $";
 #include <libm-alias-ldouble.h>
 #include <math-use-builtins.h>
 
-_Float128
-__rintl (_Float128 x)
+_Float128 __rintl(_Float128 x)
 {
 #if USE_RINTL_BUILTIN
-  return __builtin_rintl (x);
+    return __builtin_rintl(x);
 #else
-  /* Use generic implementation.  */
-  static const _Float128
+    /* Use generic implementation.  */
+    static const _Float128
     TWO112[2] = {
-		 5.19229685853482762853049632922009600E+33L, /* 0x406F000000000000, 0 */
-		 -5.19229685853482762853049632922009600E+33L  /* 0xC06F000000000000, 0 */
-  };
-  int64_t i0, j0, sx;
-  uint64_t i1 __attribute__ ((unused));
-  _Float128 w, t;
-  GET_LDOUBLE_WORDS64 (i0, i1, x);
-  sx = (((uint64_t) i0) >> 63);
-  j0 = ((i0 >> 48) & 0x7fff) - 0x3fff;
-  if (j0 < 112)
-    {
-      if (j0 < 0)
-	{
-	  w = TWO112[sx] + x;
-	  t = w - TWO112[sx];
-	  GET_LDOUBLE_MSW64 (i0, t);
-	  SET_LDOUBLE_MSW64 (t, (i0 & 0x7fffffffffffffffLL) | (sx << 63));
-	  return t;
-	}
+        5.19229685853482762853049632922009600E+33L, /* 0x406F000000000000, 0 */
+        -5.19229685853482762853049632922009600E+33L  /* 0xC06F000000000000, 0 */
+    };
+    int64_t i0, j0, sx;
+    uint64_t i1 __attribute__((unused));
+    _Float128 w, t;
+    GET_LDOUBLE_WORDS64(i0, i1, x);
+    sx = (((uint64_t) i0) >> 63);
+    j0 = ((i0 >> 48) & 0x7fff) - 0x3fff;
+    if (j0 < 112) {
+        if (j0 < 0) {
+            w = TWO112[sx] + x;
+            t = w - TWO112[sx];
+            GET_LDOUBLE_MSW64(i0, t);
+            SET_LDOUBLE_MSW64(t, (i0 & 0x7fffffffffffffffLL) | (sx << 63));
+            return t;
+        }
+    } else {
+        if (j0 == 0x4000) {
+            return x + x;    /* inf or NaN  */
+        } else {
+            return x;    /* x is integral  */
+        }
     }
-  else
-    {
-      if (j0 == 0x4000)
-	return x + x;		/* inf or NaN  */
-      else
-	return x;		/* x is integral  */
-    }
-  w = TWO112[sx] + x;
-  return w - TWO112[sx];
+    w = TWO112[sx] + x;
+    return w - TWO112[sx];
 #endif /* ! USE_RINTL_BUILTIN  */
 }
-libm_alias_ldouble (__rint, rint)
+libm_alias_ldouble(__rint, rint)

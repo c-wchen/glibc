@@ -42,53 +42,53 @@
 
 static volatile bool loopflag = true;
 
-void handler (int signum, siginfo_t *info, void *context)
+void handler(int signum, siginfo_t *info, void *context)
 {
-  char buf3[XSTATE_BUFFER_SIZE];
-  memset (buf3, 0x77, XSTATE_BUFFER_SIZE);
-  SET_XSTATE (buf3);
-  printf ("signal %d setting a different CPU state\n", signum);
-  loopflag = false;
+    char buf3[XSTATE_BUFFER_SIZE];
+    memset(buf3, 0x77, XSTATE_BUFFER_SIZE);
+    SET_XSTATE(buf3);
+    printf("signal %d setting a different CPU state\n", signum);
+    loopflag = false;
 }
 
 /* Helper thread to send a signal to the main thread  */
-void* signal_sender (void *arg)
+void *signal_sender(void *arg)
 {
-  sigset_t ss;
-  assert (! sigemptyset (&ss));
-  assert (! sigaddset (&ss, SIGUSR1));
-  assert (! sigprocmask (SIG_BLOCK, &ss, NULL));
+    sigset_t ss;
+    assert(! sigemptyset(&ss));
+    assert(! sigaddset(&ss, SIGUSR1));
+    assert(! sigprocmask(SIG_BLOCK, &ss, NULL));
 
-  TEST_COMPARE (kill (getpid (), SIGUSR1), 0);
+    TEST_COMPARE(kill(getpid(), SIGUSR1), 0);
 
-  return NULL;
+    return NULL;
 }
 
-static int do_test (void)
+static int do_test(void)
 {
 #if ! XSTATE_HELPERS_SUPPORTED
-  FAIL_UNSUPPORTED ("Test not supported on this arch.");
+    FAIL_UNSUPPORTED("Test not supported on this arch.");
 #endif
 
-  struct sigaction act = { 0 };
-  act.sa_sigaction = &handler;
-  TEST_COMPARE (sigaction (SIGUSR1, &act, NULL), 0);
+    struct sigaction act = { 0 };
+    act.sa_sigaction = &handler;
+    TEST_COMPARE(sigaction(SIGUSR1, &act, NULL), 0);
 
-  pthread_t thsender = xpthread_create (NULL, signal_sender, NULL);
+    pthread_t thsender = xpthread_create(NULL, signal_sender, NULL);
 
-  char buf1[XSTATE_BUFFER_SIZE], buf2[XSTATE_BUFFER_SIZE];
-  memset (buf1, 0x33, XSTATE_BUFFER_SIZE);
+    char buf1[XSTATE_BUFFER_SIZE], buf2[XSTATE_BUFFER_SIZE];
+    memset(buf1, 0x33, XSTATE_BUFFER_SIZE);
 
-  SET_XSTATE (buf1);
+    SET_XSTATE(buf1);
 
-  while (loopflag)
-    ;
+    while (loopflag)
+        ;
 
-  GET_XSTATE (buf2);
-  TEST_COMPARE_BLOB (buf1, sizeof (buf1), buf2, sizeof (buf2));
+    GET_XSTATE(buf2);
+    TEST_COMPARE_BLOB(buf1, sizeof(buf1), buf2, sizeof(buf2));
 
-  xpthread_join (thsender);
-  return EXIT_SUCCESS;
+    xpthread_join(thsender);
+    return EXIT_SUCCESS;
 }
 
 #include <support/test-driver.c>

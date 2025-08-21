@@ -21,17 +21,15 @@
 
 
 /* Store in SET all signals that are blocked and pending.  */
-int
-sigpending (sigset_t *set)
+int sigpending(sigset_t *set)
 {
-  if (set == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (set == NULL) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (sigpending)
+stub_warning(sigpending)

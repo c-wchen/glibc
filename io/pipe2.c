@@ -23,17 +23,15 @@
    two file descriptors are stored in PIPEDES; bytes written on
    PIPEDES[1] can be read from PIPEDES[0].  Apply FLAGS to the new
    file descriptors.  Returns 0 if successful, -1 if not.  */
-int
-__pipe2 (int pipedes[2], int flags)
+int __pipe2(int pipedes[2], int flags)
 {
-  if (pipedes == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (pipedes == NULL) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-weak_alias (__pipe2, pipe2)
-stub_warning (pipe2)
+weak_alias(__pipe2, pipe2)
+stub_warning(pipe2)

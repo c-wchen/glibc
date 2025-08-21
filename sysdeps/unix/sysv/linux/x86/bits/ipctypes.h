@@ -21,7 +21,7 @@
 #endif
 
 #ifndef _BITS_IPCTYPES_H
-#define _BITS_IPCTYPES_H	1
+#define _BITS_IPCTYPES_H    1
 
 /* Used in `struct shmid_ds'.  */
 # ifdef __x86_64__

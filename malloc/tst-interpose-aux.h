@@ -22,9 +22,9 @@
 #include <stddef.h>
 
 /* Return the number of allocations performed.  */
-size_t malloc_allocation_count (void);
+size_t malloc_allocation_count(void);
 
 /* Return the number of deallocations performed.  */
-size_t malloc_deallocation_count (void);
+size_t malloc_deallocation_count(void);
 
 #endif /* TST_INTERPOSE_AUX_H */

@@ -18,27 +18,27 @@
 
 #include <fenv_libc.h>
 
-int
-fesetmode (const femode_t *modep)
+int fesetmode(const femode_t *modep)
 {
-  unsigned long int fpcr;
-  unsigned long int swcr;
-  femode_t mode;
+    unsigned long int fpcr;
+    unsigned long int swcr;
+    femode_t mode;
 
-  /* As in fesetenv.  */
-  if ((long int) modep >= 0)
-    mode = *modep;
-  else
-    mode = (unsigned long int) modep;
+    /* As in fesetenv.  */
+    if ((long int) modep >= 0) {
+        mode = *modep;
+    } else {
+        mode = (unsigned long int) modep;
+    }
 
-  __asm__ __volatile__ ("excb; mf_fpcr %0" : "=f" (fpcr));
-  fpcr = (fpcr & ~FPCR_ROUND_MASK) | (mode & FPCR_ROUND_MASK);
-  __asm__ __volatile__ ("mt_fpcr %0" : : "f" (fpcr));
+    __asm__ __volatile__("excb; mf_fpcr %0" : "=f"(fpcr));
+    fpcr = (fpcr & ~FPCR_ROUND_MASK) | (mode & FPCR_ROUND_MASK);
+    __asm__ __volatile__("mt_fpcr %0" : : "f"(fpcr));
 
-  swcr = __ieee_get_fp_control ();
-  swcr = ((mode & SWCR_ALL_MASK & ~SWCR_STATUS_MASK)
-	  | (swcr & SWCR_STATUS_MASK));
-  __ieee_set_fp_control (swcr);
+    swcr = __ieee_get_fp_control();
+    swcr = ((mode & SWCR_ALL_MASK & ~SWCR_STATUS_MASK)
+            | (swcr & SWCR_STATUS_MASK));
+    __ieee_set_fp_control(swcr);
 
-  return 0;
+    return 0;
 }

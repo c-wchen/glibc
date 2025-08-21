@@ -22,36 +22,35 @@
 #include <libc-diag.h>
 
 /* The sighold and sigrelse functions are deprecated.  */
-DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wdeprecated-declarations");
+DIAG_IGNORE_NEEDS_COMMENT(4.9, "-Wdeprecated-declarations");
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int result = 0;
-  int e;
+    int result = 0;
+    int e;
 
 #define RUN(test) \
-  errno = 0;								      \
-  e = test;								      \
-  if (e != -1)								      \
-    {									      \
-      printf ("%s returned %d\n", #test, e);				      \
-      result = 1;							      \
-    }									      \
-  else if (errno != EINVAL)						      \
-    {									      \
-      printf ("%s didn't set errno to EINVAL (%s instead)\n",		      \
-	      #test, strerror (errno));					      \
-      result = 1;							      \
+  errno = 0;                                      \
+  e = test;                                   \
+  if (e != -1)                                    \
+    {                                         \
+      printf ("%s returned %d\n", #test, e);                      \
+      result = 1;                                 \
+    }                                         \
+  else if (errno != EINVAL)                           \
+    {                                         \
+      printf ("%s didn't set errno to EINVAL (%s instead)\n",             \
+          #test, strerror (errno));                       \
+      result = 1;                                 \
     }
 
-  RUN (sighold (-1));
-  RUN (sighold (_NSIG + 100));
+    RUN(sighold(-1));
+    RUN(sighold(_NSIG + 100));
 
-  RUN (sigrelse (-1));
-  RUN (sigrelse (_NSIG + 100));
+    RUN(sigrelse(-1));
+    RUN(sigrelse(_NSIG + 100));
 
-  return result;
+    return result;
 }
 
 #define TEST_FUNCTION do_test ()

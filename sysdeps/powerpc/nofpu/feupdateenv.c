@@ -21,32 +21,32 @@
 #include "soft-supp.h"
 #include <signal.h>
 
-int
-__feupdateenv (const fenv_t *envp)
+int __feupdateenv(const fenv_t *envp)
 {
-  int saved_exceptions;
+    int saved_exceptions;
 
-  /* Save currently set exceptions.  */
-  saved_exceptions = __sim_exceptions_thread;
+    /* Save currently set exceptions.  */
+    saved_exceptions = __sim_exceptions_thread;
 
-  /* Set environment.  */
-  __fesetenv (envp);
+    /* Set environment.  */
+    __fesetenv(envp);
 
-  /* Raise old exceptions.  */
-  __sim_exceptions_thread |= saved_exceptions;
-  SIM_SET_GLOBAL (__sim_exceptions_global, __sim_exceptions_thread);
-  if (saved_exceptions & ~__sim_disabled_exceptions_thread)
-    raise (SIGFPE);
+    /* Raise old exceptions.  */
+    __sim_exceptions_thread |= saved_exceptions;
+    SIM_SET_GLOBAL(__sim_exceptions_global, __sim_exceptions_thread);
+    if (saved_exceptions & ~__sim_disabled_exceptions_thread) {
+        raise(SIGFPE);
+    }
 
-  return 0;
+    return 0;
 }
 
 #include <shlib-compat.h>
 #if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
-strong_alias (__feupdateenv, __old_feupdateenv)
-compat_symbol (libm, __old_feupdateenv, feupdateenv, GLIBC_2_1);
+strong_alias(__feupdateenv, __old_feupdateenv)
+compat_symbol(libm, __old_feupdateenv, feupdateenv, GLIBC_2_1);
 #endif
 
-libm_hidden_def (__feupdateenv)
-libm_hidden_ver (__feupdateenv, feupdateenv)
-versioned_symbol (libm, __feupdateenv, feupdateenv, GLIBC_2_2);
+libm_hidden_def(__feupdateenv)
+libm_hidden_ver(__feupdateenv, feupdateenv)
+versioned_symbol(libm, __feupdateenv, feupdateenv, GLIBC_2_2);

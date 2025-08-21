@@ -21,32 +21,31 @@
 #include <obstack.h>
 #include <stdint.h>
 
-typedef struct hash_table
-{
-  unsigned long int size;
-  unsigned long int filled;
-  void *first;
-  void *table;
-  struct obstack mem_pool;
+typedef struct hash_table {
+    unsigned long int size;
+    unsigned long int filled;
+    void *first;
+    void *table;
+    struct obstack mem_pool;
 }
 hash_table;
 
 
-extern int init_hash (hash_table *htab, unsigned long int init_size) __THROW;
-extern int delete_hash (hash_table *htab) __THROW;
-extern int insert_entry (hash_table *htab, const void *key, size_t keylen,
-			 void *data) __THROW;
-extern int find_entry (const hash_table *htab, const void *key, size_t keylen,
-		       void **result) __THROW;
-extern int set_entry (hash_table *htab, const void *key, size_t keylen,
-		      void *newval) __THROW;
+extern int init_hash(hash_table *htab, unsigned long int init_size) __THROW;
+extern int delete_hash(hash_table *htab) __THROW;
+extern int insert_entry(hash_table *htab, const void *key, size_t keylen,
+                        void *data) __THROW;
+extern int find_entry(const hash_table *htab, const void *key, size_t keylen,
+                      void **result) __THROW;
+extern int set_entry(hash_table *htab, const void *key, size_t keylen,
+                     void *newval) __THROW;
 
-extern int iterate_table (const hash_table *htab, void **ptr,
-			  const void **key, size_t *keylen, void **data)
-     __THROW;
+extern int iterate_table(const hash_table *htab, void **ptr,
+                         const void **key, size_t *keylen, void **data)
+__THROW;
 
-extern uint32_t compute_hashval (const void *key, size_t keylen)
-     __THROW;
-extern unsigned long int next_prime (unsigned long int seed) __THROW;
+extern uint32_t compute_hashval(const void *key, size_t keylen)
+__THROW;
+extern unsigned long int next_prime(unsigned long int seed) __THROW;
 
 #endif /* simple-hash.h */

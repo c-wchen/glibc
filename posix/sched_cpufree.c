@@ -19,8 +19,7 @@
 #include <stdlib.h>
 
 
-void
-__sched_cpufree (cpu_set_t *set)
+void __sched_cpufree(cpu_set_t *set)
 {
-  free (set);
+    free(set);
 }

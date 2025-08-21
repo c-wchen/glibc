@@ -24,14 +24,13 @@
    (if not NULL) for exceptional conditions.  If TIMEOUT is not NULL, time out
    after waiting the interval specified therein.  Returns the number of ready
    descriptors, or -1 for errors.  */
-int
-__select (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
-	  struct timeval *timeout)
+int __select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
+             struct timeval *timeout)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (__select)
-stub_warning (select)
+libc_hidden_def(__select)
+stub_warning(select)
 
-weak_alias (__select, select)
+weak_alias(__select, select)

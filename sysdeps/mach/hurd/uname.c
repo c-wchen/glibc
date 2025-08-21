@@ -20,28 +20,29 @@
 #include <hurd.h>
 #include <hurd/startup.h>
 
-int
-__uname (struct utsname *uname)
+int __uname(struct utsname *uname)
 {
-  error_t err;
+    error_t err;
 
-  if (err = __USEPORT (PROC, __proc_uname (port, uname)))
-    return __hurd_fail (err);
-
-  /* Fill in the hostname, which the proc server doesn't know.  */
-  err = errno;
-  if (__gethostname (uname->nodename, sizeof uname->nodename) < 0)
-    {
-      if (errno == ENAMETOOLONG)
-	/* Ignore the error of the buffer being too small.
-	   It is of fixed size, nothing to do about it.  */
-	errno = err;
-      else
-	return -1;
+    if (err = __USEPORT(PROC, __proc_uname(port, uname))) {
+        return __hurd_fail(err);
     }
 
-  return 0;
+    /* Fill in the hostname, which the proc server doesn't know.  */
+    err = errno;
+    if (__gethostname(uname->nodename, sizeof uname->nodename) < 0) {
+        if (errno == ENAMETOOLONG)
+            /* Ignore the error of the buffer being too small.
+               It is of fixed size, nothing to do about it.  */
+        {
+            errno = err;
+        } else {
+            return -1;
+        }
+    }
+
+    return 0;
 }
-weak_alias (__uname, uname)
-libc_hidden_def (__uname)
-libc_hidden_def (uname)
+weak_alias(__uname, uname)
+libc_hidden_def(__uname)
+libc_hidden_def(uname)

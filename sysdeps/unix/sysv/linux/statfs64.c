@@ -25,19 +25,18 @@
 #undef statfs
 
 /* Return information about the filesystem on which FILE resides.  */
-int
-__statfs64 (const char *file, struct statfs64 *buf)
+int __statfs64(const char *file, struct statfs64 *buf)
 {
 #ifdef __NR_statfs64
-  return INLINE_SYSCALL_CALL (statfs64, file, sizeof (*buf), buf);
+    return INLINE_SYSCALL_CALL(statfs64, file, sizeof(*buf), buf);
 #else
-  return INLINE_SYSCALL_CALL (statfs, file, buf);
+    return INLINE_SYSCALL_CALL(statfs, file, buf);
 #endif
 }
-weak_alias (__statfs64, statfs64)
+weak_alias(__statfs64, statfs64)
 
 #if STATFS_IS_STATFS64
-weak_alias (__statfs64, __statfs)
-weak_alias (__statfs64, statfs)
-libc_hidden_ver (__statfs64, __statfs)
+weak_alias(__statfs64, __statfs)
+weak_alias(__statfs64, statfs)
+libc_hidden_ver(__statfs64, __statfs)
 #endif

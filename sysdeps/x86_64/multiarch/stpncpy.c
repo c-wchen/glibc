@@ -28,11 +28,11 @@
 # define SYMBOL_NAME stpncpy
 # include "ifunc-strncpy.h"
 
-libc_ifunc_redirected (__redirect_stpncpy, __stpncpy, IFUNC_SELECTOR ());
+libc_ifunc_redirected(__redirect_stpncpy, __stpncpy, IFUNC_SELECTOR());
 
-weak_alias (__stpncpy, stpncpy)
+weak_alias(__stpncpy, stpncpy)
 # ifdef SHARED
-__hidden_ver1 (__stpncpy, __GI___stpncpy, __redirect___stpncpy)
-  __attribute__ ((visibility ("hidden")));
+__hidden_ver1(__stpncpy, __GI___stpncpy, __redirect___stpncpy)
+__attribute__((visibility("hidden")));
 # endif
 #endif

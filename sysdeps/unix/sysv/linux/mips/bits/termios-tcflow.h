@@ -21,6 +21,6 @@
 #endif
 
 /* tcsetattr uses these */
-#define	TCSANOW		0x540e	/* Same as TCSETS; change immediately.  */
-#define	TCSADRAIN	0x540f	/* Same as TCSETSW; change when pending output is written.  */
-#define	TCSAFLUSH	0x5410	/* Same as TCSETSF; flush pending input before changing.  */
+#define TCSANOW     0x540e  /* Same as TCSETS; change immediately.  */
+#define TCSADRAIN   0x540f  /* Same as TCSETSW; change when pending output is written.  */
+#define TCSAFLUSH   0x5410  /* Same as TCSETSF; flush pending input before changing.  */

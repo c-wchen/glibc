@@ -20,20 +20,18 @@
 
 #include <support/check.h>
 
-void
-xwrite (int fd, const void *buffer, size_t length)
+void xwrite(int fd, const void *buffer, size_t length)
 {
-  const char *p = buffer;
-  const char *end = p + length;
-  while (p < end)
-    {
-      ssize_t ret = write (fd, p, end - p);
-      if (ret < 0)
-        FAIL_EXIT1 ("write of %zu bytes failed after %td: %m",
-                    length, p - (const char *) buffer);
-      if (ret == 0)
-        FAIL_EXIT1 ("write return 0 after writing %td bytes of %zu",
-                    p - (const char *) buffer, length);
-      p += ret;
+    const char *p = buffer;
+    const char *end = p + length;
+    while (p < end) {
+        ssize_t ret = write(fd, p, end - p);
+        if (ret < 0)
+            FAIL_EXIT1("write of %zu bytes failed after %td: %m",
+                       length, p - (const char *) buffer);
+        if (ret == 0)
+            FAIL_EXIT1("write return 0 after writing %td bytes of %zu",
+                       p - (const char *) buffer, length);
+        p += ret;
     }
 }

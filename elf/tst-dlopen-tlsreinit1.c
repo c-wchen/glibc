@@ -21,20 +21,19 @@
 #include <support/xdlfcn.h>
 #include <ctype.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  void *handle = xdlopen ("tst-dlopen-tlsreinitmod1.so", RTLD_NOW);
+    void *handle = xdlopen("tst-dlopen-tlsreinitmod1.so", RTLD_NOW);
 
-  bool *tlsreinitmod3_tested = xdlsym (handle, "tlsreinitmod3_tested");
-  TEST_VERIFY (*tlsreinitmod3_tested);
+    bool *tlsreinitmod3_tested = xdlsym(handle, "tlsreinitmod3_tested");
+    TEST_VERIFY(*tlsreinitmod3_tested);
 
-  xdlclose (handle);
+    xdlclose(handle);
 
-  /* This crashes if the libc.so.6 TLS image has been reverted.  */
-  TEST_VERIFY (!isupper ('@'));
+    /* This crashes if the libc.so.6 TLS image has been reverted.  */
+    TEST_VERIFY(!isupper('@'));
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

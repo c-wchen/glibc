@@ -20,8 +20,7 @@
 
 #include <linux/uio.h>
 
-long
-uio_maxiov_value (void)
+long uio_maxiov_value(void)
 {
-  return UIO_MAXIOV;
+    return UIO_MAXIOV;
 }

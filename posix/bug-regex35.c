@@ -21,31 +21,27 @@
 #include <locale.h>
 #include <regex.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  regex_t r;
+    regex_t r;
 
-  if (setlocale (LC_ALL, "cs_CZ.UTF-8") == NULL)
-    {
-      puts ("setlocale failed");
-      return 1;
+    if (setlocale(LC_ALL, "cs_CZ.UTF-8") == NULL) {
+        puts("setlocale failed");
+        return 1;
     }
 
-  if (regcomp (&r, "[[.ch.]]", REG_NOSUB) != 0)
-    {
-      puts ("regcomp failed");
-      return 1;
+    if (regcomp(&r, "[[.ch.]]", REG_NOSUB) != 0) {
+        puts("regcomp failed");
+        return 1;
     }
 
-  if (regexec (&r, "ch", 0, 0, 0) != 0)
-    {
-      puts ("regexec failed");
-      return 1;
+    if (regexec(&r, "ch", 0, 0, 0) != 0) {
+        puts("regexec failed");
+        return 1;
     }
 
-  regfree (&r);
-  return 0;
+    regfree(&r);
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

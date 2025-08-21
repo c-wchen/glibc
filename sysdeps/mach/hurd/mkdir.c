@@ -22,11 +22,10 @@
 #include <string.h>
 
 /* Create a directory named FILE_NAME with protections MODE.  */
-int
-__mkdir (const char *file_name, mode_t mode)
+int __mkdir(const char *file_name, mode_t mode)
 {
-  return __mkdirat (AT_FDCWD, file_name, mode);
+    return __mkdirat(AT_FDCWD, file_name, mode);
 }
 
-libc_hidden_def (__mkdir)
-weak_alias (__mkdir, mkdir)
+libc_hidden_def(__mkdir)
+weak_alias(__mkdir, mkdir)

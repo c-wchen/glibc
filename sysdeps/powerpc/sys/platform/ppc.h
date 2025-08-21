@@ -17,35 +17,35 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _SYS_PLATFORM_PPC_H
-#define _SYS_PLATFORM_PPC_H	1
+#define _SYS_PLATFORM_PPC_H 1
 
 #include <features.h>
 #include <stdint.h>
 #include <bits/ppc.h>
 
 /* Read the Time Base Register.   */
-static __inline__ uint64_t
-__ppc_get_timebase (void)
+static __inline__ uint64_t __ppc_get_timebase(void)
 {
 #if __GNUC_PREREQ (4, 8)
-  return __builtin_ppc_get_timebase ();
+    return __builtin_ppc_get_timebase();
 #else
 # ifdef __powerpc64__
-  uint64_t __tb;
-  /* "volatile" is necessary here, because the user expects this assembly
-     isn't moved after an optimization.  */
-  __asm__ volatile ("mfspr %0, 268" : "=r" (__tb));
-  return __tb;
+    uint64_t __tb;
+    /* "volatile" is necessary here, because the user expects this assembly
+       isn't moved after an optimization.  */
+    __asm__ volatile("mfspr %0, 268" : "=r"(__tb));
+    return __tb;
 # else  /* not __powerpc64__ */
-  uint32_t __tbu, __tbl, __tmp; \
-  __asm__ volatile ("0:\n\t"
-		    "mftbu %0\n\t"
-		    "mftbl %1\n\t"
-		    "mftbu %2\n\t"
-		    "cmpw %0, %2\n\t"
-		    "bne- 0b"
-		    : "=r" (__tbu), "=r" (__tbl), "=r" (__tmp));
-  return (((uint64_t) __tbu << 32) | __tbl);
+    uint32_t __tbu, __tbl, __tmp;
+    \
+    __asm__ volatile("0:\n\t"
+                     "mftbu %0\n\t"
+                     "mftbl %1\n\t"
+                     "mftbu %2\n\t"
+                     "cmpw %0, %2\n\t"
+                     "bne- 0b"
+                     : "=r"(__tbu), "=r"(__tbl), "=r"(__tmp));
+    return (((uint64_t) __tbu << 32) | __tbl);
 # endif  /* not __powerpc64__ */
 #endif
 }
@@ -56,30 +56,27 @@ __ppc_get_timebase (void)
 /* Provides a hint that performance will probably be improved if shared
    resources dedicated to the executing processor are released for use by other
    processors.  */
-static __inline__ void
-__ppc_yield (void)
+static __inline__ void __ppc_yield(void)
 {
-  __asm__ volatile ("or 27,27,27");
+    __asm__ volatile("or 27,27,27");
 }
 
 /* Provides a hint that performance will probably be improved if shared
    resources dedicated to the executing processor are released until
    all outstanding storage accesses to caching-inhibited storage have been
    completed.  */
-static __inline__ void
-__ppc_mdoio (void)
+static __inline__ void __ppc_mdoio(void)
 {
-  __asm__ volatile ("or 29,29,29");
+    __asm__ volatile("or 29,29,29");
 }
 
 /* Provides a hint that performance will probably be improved if shared
    resources dedicated to the executing processor are released until all
    outstanding storage accesses to cacheable storage for which the data is not
    in the cache have been completed.  */
-static __inline__ void
-__ppc_mdoom (void)
+static __inline__ void __ppc_mdoom(void)
 {
-  __asm__ volatile ("or 30,30,30");
+    __asm__ volatile("or 30,30,30");
 }
 
 
@@ -94,22 +91,19 @@ __ppc_mdoom (void)
    use unguarded. The default value is 'medium'.
  */
 
-static __inline__ void
-__ppc_set_ppr_med (void)
+static __inline__ void __ppc_set_ppr_med(void)
 {
-  __asm__ volatile ("or 2,2,2");
+    __asm__ volatile("or 2,2,2");
 }
 
-static __inline__ void
-__ppc_set_ppr_med_low (void)
+static __inline__ void __ppc_set_ppr_med_low(void)
 {
-  __asm__ volatile ("or 6,6,6");
+    __asm__ volatile("or 6,6,6");
 }
 
-static __inline__ void
-__ppc_set_ppr_low (void)
+static __inline__ void __ppc_set_ppr_low(void)
 {
-  __asm__ volatile ("or 1,1,1");
+    __asm__ volatile("or 1,1,1");
 }
 
 /* Power ISA 2.07 (Book II, Chapter 3) extends the priorities that can be set
@@ -129,16 +123,14 @@ __ppc_set_ppr_low (void)
 
 #ifdef _ARCH_PWR8
 
-static __inline__ void
-__ppc_set_ppr_very_low (void)
+static __inline__ void __ppc_set_ppr_very_low(void)
 {
-  __asm__ volatile ("or 31,31,31");
+    __asm__ volatile("or 31,31,31");
 }
 
-static __inline__ void
-__ppc_set_ppr_med_high (void)
+static __inline__ void __ppc_set_ppr_med_high(void)
 {
-  __asm__ volatile ("or 5,5,5");
+    __asm__ volatile("or 5,5,5");
 }
 
 #endif

@@ -30,17 +30,16 @@
 #  define INSN "cfebra"
 # endif
 
-long int
-__lroundf (float x)
+long int __lroundf(float x)
 {
-  long int y;
-  /* The z196 zarch "convert to fixed" (cgebra) instruction is rounding
-     x to the nearest integer with "ties away from 0" rounding mode
-     (M3-field: 1) where inexact exceptions are suppressed (M4-field: 4).  */
-  __asm__ (INSN " %0,1,%1,4" : "=d" (y) : "f" (x) : "cc");
-  return y;
+    long int y;
+    /* The z196 zarch "convert to fixed" (cgebra) instruction is rounding
+       x to the nearest integer with "ties away from 0" rounding mode
+       (M3-field: 1) where inexact exceptions are suppressed (M4-field: 4).  */
+    __asm__(INSN " %0,1,%1,4" : "=d"(y) : "f"(x) : "cc");
+    return y;
 }
-libm_alias_float (__lround, lround)
+libm_alias_float(__lround, lround)
 
 #else
 # include <sysdeps/ieee754/flt-32/s_lroundf.c>

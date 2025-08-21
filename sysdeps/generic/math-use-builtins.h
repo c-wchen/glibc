@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef MATH_USE_BUILTINS_H
-#define MATH_USE_BUILTINS_H	1
+#define MATH_USE_BUILTINS_H 1
 
 #include <features.h> /* For __GNUC_PREREQ.  */
 

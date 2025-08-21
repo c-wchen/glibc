@@ -31,76 +31,75 @@
 
 /* Measure the overhead of __libc_lock_lock and __libc_lock_unlock by
    calling random ().  */
-static void
-bench_random_lock (json_ctx_t *json_ctx, size_t iters)
+static void bench_random_lock(json_ctx_t *json_ctx, size_t iters)
 {
-  timing_t start, stop, total;
+    timing_t start, stop, total;
 
-  srandom (0);
+    srandom(0);
 
-  /* Warmup to reduce variations due to frequency scaling.  */
-  for (int i = 0; i < iters / 4; i++)
-    (void) random ();
+    /* Warmup to reduce variations due to frequency scaling.  */
+    for (int i = 0; i < iters / 4; i++) {
+        (void) random();
+    }
 
-  TIMING_NOW (start);
+    TIMING_NOW(start);
 
-  for (int i = 0; i < iters; i++)
-    (void) random ();
+    for (int i = 0; i < iters; i++) {
+        (void) random();
+    }
 
-  TIMING_NOW (stop);
+    TIMING_NOW(stop);
 
-  TIMING_DIFF (total, start, stop);
+    TIMING_DIFF(total, start, stop);
 
-  json_element_double (json_ctx, (double) total / (double) iters);
+    json_element_double(json_ctx, (double) total / (double) iters);
 }
 
-static void *
-thread_start (void *p)
+static void *thread_start(void *p)
 {
-  return p;
+    return p;
 }
 
-int
-test_main (void)
+int test_main(void)
 {
-  json_ctx_t json_ctx;
+    json_ctx_t json_ctx;
 
-  json_init (&json_ctx, 0, stdout);
+    json_init(&json_ctx, 0, stdout);
 
-  json_document_begin (&json_ctx);
+    json_document_begin(&json_ctx);
 
-  json_attr_string (&json_ctx, "timing_type", TIMING_TYPE);
-  json_attr_object_begin (&json_ctx, "functions");
-  json_attr_object_begin (&json_ctx, "random");
-  json_attr_string (&json_ctx, "bench-variant", "single-threaded");
-  json_array_begin (&json_ctx, "results");
+    json_attr_string(&json_ctx, "timing_type", TIMING_TYPE);
+    json_attr_object_begin(&json_ctx, "functions");
+    json_attr_object_begin(&json_ctx, "random");
+    json_attr_string(&json_ctx, "bench-variant", "single-threaded");
+    json_array_begin(&json_ctx, "results");
 
-  /* Run benchmark single threaded.  */
-  bench_random_lock (&json_ctx, NUM_ITERS);
+    /* Run benchmark single threaded.  */
+    bench_random_lock(&json_ctx, NUM_ITERS);
 
-  json_array_end (&json_ctx);
-  json_attr_object_end (&json_ctx);
+    json_array_end(&json_ctx);
+    json_attr_object_end(&json_ctx);
 
-  json_attr_object_begin (&json_ctx, "random");
-  json_attr_string (&json_ctx, "bench-variant", "multi-threaded");
-  json_array_begin (&json_ctx, "results");
+    json_attr_object_begin(&json_ctx, "random");
+    json_attr_string(&json_ctx, "bench-variant", "multi-threaded");
+    json_array_begin(&json_ctx, "results");
 
-  /* Start a short thread to force SINGLE_THREAD_P == false.  This relies on
-     the runtime disabling single-threaded optimizations when multiple
-     threads are used, even after they finish.  */
+    /* Start a short thread to force SINGLE_THREAD_P == false.  This relies on
+       the runtime disabling single-threaded optimizations when multiple
+       threads are used, even after they finish.  */
 
-  pthread_t t;
-  pthread_create (&t, NULL, thread_start, NULL);
-  pthread_join (t, NULL);
+    pthread_t t;
+    pthread_create(&t, NULL, thread_start, NULL);
+    pthread_join(t, NULL);
 
-  /* Repeat benchmark with single-threaded optimizations disabled.  */
-  bench_random_lock (&json_ctx, NUM_ITERS);
+    /* Repeat benchmark with single-threaded optimizations disabled.  */
+    bench_random_lock(&json_ctx, NUM_ITERS);
 
-  json_array_end (&json_ctx);
-  json_attr_object_end (&json_ctx);
-  json_attr_object_end (&json_ctx);
-  json_document_end (&json_ctx);
-  return 0;
+    json_array_end(&json_ctx);
+    json_attr_object_end(&json_ctx);
+    json_attr_object_end(&json_ctx);
+    json_document_end(&json_ctx);
+    return 0;
 }
 
 #include "support/test-driver.c"

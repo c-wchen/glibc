@@ -19,8 +19,7 @@
 #include "nldbl-compat.h"
 
 double
-attribute_hidden
-totalordermagl (const double *x, const double *y)
+attribute_hidden totalordermagl(const double *x, const double *y)
 {
-  return totalordermag (x, y);
+    return totalordermag(x, y);
 }

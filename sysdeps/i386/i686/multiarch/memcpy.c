@@ -28,5 +28,5 @@
 # define SYMBOL_NAME memcpy
 # include "ifunc-memmove.h"
 
-libc_ifunc_redirected (__redirect_memcpy, memcpy, IFUNC_SELECTOR ());
+libc_ifunc_redirected(__redirect_memcpy, memcpy, IFUNC_SELECTOR());
 #endif

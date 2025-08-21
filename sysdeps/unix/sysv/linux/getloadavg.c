@@ -29,18 +29,19 @@
 
 #define SYSINFO_LOADS_SCALE (1 << SI_LOAD_SHIFT)
 
-int
-getloadavg (double loadavg[], int nelem)
+int getloadavg(double loadavg[], int nelem)
 {
-  struct sysinfo info;
+    struct sysinfo info;
 
-  if (__sysinfo (&info) != 0)
-    return -1;
+    if (__sysinfo(&info) != 0) {
+        return -1;
+    }
 
-  nelem = CLAMP (nelem, 0, array_length (info.loads));
+    nelem = CLAMP(nelem, 0, array_length(info.loads));
 
-  for (int i = 0; i < nelem; i++)
-    loadavg[i] = (double) info.loads[i] / SYSINFO_LOADS_SCALE;
+    for (int i = 0; i < nelem; i++) {
+        loadavg[i] = (double) info.loads[i] / SYSINFO_LOADS_SCALE;
+    }
 
-  return nelem;
+    return nelem;
 }

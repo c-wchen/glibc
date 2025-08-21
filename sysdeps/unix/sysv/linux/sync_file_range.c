@@ -19,15 +19,14 @@
 #include <fcntl.h>
 #include <sysdep-cancel.h>
 
-int
-sync_file_range (int fd, __off64_t offset, __off64_t len, unsigned int flags)
+int sync_file_range(int fd, __off64_t offset, __off64_t len, unsigned int flags)
 {
 #if defined (__NR_sync_file_range2)
-  return SYSCALL_CANCEL (sync_file_range2, fd, flags, SYSCALL_LL64 (offset),
-			 SYSCALL_LL64 (len));
+    return SYSCALL_CANCEL(sync_file_range2, fd, flags, SYSCALL_LL64(offset),
+                          SYSCALL_LL64(len));
 #elif defined (__NR_sync_file_range)
-  return SYSCALL_CANCEL (sync_file_range, fd,
-			 __ALIGNMENT_ARG SYSCALL_LL64 (offset),
-			 SYSCALL_LL64 (len), flags);
+    return SYSCALL_CANCEL(sync_file_range, fd,
+                          __ALIGNMENT_ARG SYSCALL_LL64(offset),
+                          SYSCALL_LL64(len), flags);
 #endif
 }

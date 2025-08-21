@@ -21,41 +21,43 @@
 
 /* Run signals handlers on the stack specified by SS (if not NULL).
    If OSS is not NULL, it is filled in with the old signal stack status.  */
-int
-__sigaltstack (const stack_t *argss, stack_t *oss)
+int __sigaltstack(const stack_t *argss, stack_t *oss)
 {
-  struct hurd_sigstate *s;
-  stack_t ss, old;
+    struct hurd_sigstate *s;
+    stack_t ss, old;
 
-  /* Fault before taking any locks.  */
-  if (argss != NULL)
-    ss = *argss;
-  if (oss != NULL)
-    *(volatile stack_t *) oss = *oss;
-
-  s = _hurd_self_sigstate ();
-  __spin_lock (&s->lock);
-
-  if (argss != NULL
-      && (ss.ss_flags & SS_DISABLE)
-      && (s->sigaltstack.ss_flags & SS_ONSTACK))
-    {
-      /* Can't disable a stack that is in use.  */
-      __spin_unlock (&s->lock);
-      return __hurd_fail (EINVAL);
+    /* Fault before taking any locks.  */
+    if (argss != NULL) {
+        ss = *argss;
+    }
+    if (oss != NULL) {
+        *(volatile stack_t *) oss = *oss;
     }
 
-  old = s->sigaltstack;
+    s = _hurd_self_sigstate();
+    __spin_lock(&s->lock);
 
-  if (argss != NULL)
-    s->sigaltstack = ss;
+    if (argss != NULL
+        && (ss.ss_flags & SS_DISABLE)
+        && (s->sigaltstack.ss_flags & SS_ONSTACK)) {
+        /* Can't disable a stack that is in use.  */
+        __spin_unlock(&s->lock);
+        return __hurd_fail(EINVAL);
+    }
 
-  __spin_unlock (&s->lock);
+    old = s->sigaltstack;
 
-  if (oss != NULL)
-    *oss = old;
+    if (argss != NULL) {
+        s->sigaltstack = ss;
+    }
 
-  return 0;
+    __spin_unlock(&s->lock);
+
+    if (oss != NULL) {
+        *oss = old;
+    }
+
+    return 0;
 }
-libc_hidden_def (__sigaltstack)
-weak_alias (__sigaltstack, sigaltstack)
+libc_hidden_def(__sigaltstack)
+weak_alias(__sigaltstack, sigaltstack)

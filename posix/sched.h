@@ -16,8 +16,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef	_SCHED_H
-#define	_SCHED_H	1
+#ifndef _SCHED_H
+#define _SCHED_H    1
 
 #include <features.h>
 
@@ -51,36 +51,36 @@ typedef __pid_t pid_t;
 __BEGIN_DECLS
 
 /* Set scheduling parameters for a process.  */
-extern int sched_setparam (__pid_t __pid, const struct sched_param *__param)
-     __THROW;
+extern int sched_setparam(__pid_t __pid, const struct sched_param *__param)
+__THROW;
 
 /* Retrieve scheduling parameters for a particular process.  */
-extern int sched_getparam (__pid_t __pid, struct sched_param *__param) __THROW;
+extern int sched_getparam(__pid_t __pid, struct sched_param *__param) __THROW;
 
 /* Set scheduling algorithm and/or parameters for a process.  */
-extern int sched_setscheduler (__pid_t __pid, int __policy,
-			       const struct sched_param *__param) __THROW;
+extern int sched_setscheduler(__pid_t __pid, int __policy,
+                              const struct sched_param *__param) __THROW;
 
 /* Retrieve scheduling algorithm for a particular purpose.  */
-extern int sched_getscheduler (__pid_t __pid) __THROW;
+extern int sched_getscheduler(__pid_t __pid) __THROW;
 
 /* Yield the processor.  */
-extern int sched_yield (void) __THROW;
+extern int sched_yield(void) __THROW;
 
 /* Get maximum priority value for a scheduler.  */
-extern int sched_get_priority_max (int __algorithm) __THROW;
+extern int sched_get_priority_max(int __algorithm) __THROW;
 
 /* Get minimum priority value for a scheduler.  */
-extern int sched_get_priority_min (int __algorithm) __THROW;
+extern int sched_get_priority_min(int __algorithm) __THROW;
 
 /* Get the SCHED_RR interval for the named process.  */
 #ifndef __USE_TIME64_REDIRECTS
-extern int sched_rr_get_interval (__pid_t __pid, struct timespec *__t) __THROW;
+extern int sched_rr_get_interval(__pid_t __pid, struct timespec *__t) __THROW;
 #else
 # ifdef __REDIRECT_NTH
-extern int __REDIRECT_NTH (sched_rr_get_interval,
-                           (__pid_t __pid, struct timespec *__t),
-                           __sched_rr_get_interval64);
+extern int __REDIRECT_NTH(sched_rr_get_interval,
+                          (__pid_t __pid, struct timespec *__t),
+                          __sched_rr_get_interval64);
 # else
 #  define sched_rr_get_interval __sched_rr_get_interval64
 # endif
@@ -89,19 +89,19 @@ extern int __REDIRECT_NTH (sched_rr_get_interval,
 #ifdef __USE_GNU
 /* Access macros for `cpu_set'.  */
 # define CPU_SETSIZE __CPU_SETSIZE
-# define CPU_SET(cpu, cpusetp)	 __CPU_SET_S (cpu, sizeof (cpu_set_t), cpusetp)
-# define CPU_CLR(cpu, cpusetp)	 __CPU_CLR_S (cpu, sizeof (cpu_set_t), cpusetp)
+# define CPU_SET(cpu, cpusetp)   __CPU_SET_S (cpu, sizeof (cpu_set_t), cpusetp)
+# define CPU_CLR(cpu, cpusetp)   __CPU_CLR_S (cpu, sizeof (cpu_set_t), cpusetp)
 # define CPU_ISSET(cpu, cpusetp) __CPU_ISSET_S (cpu, sizeof (cpu_set_t), \
-						cpusetp)
-# define CPU_ZERO(cpusetp)	 __CPU_ZERO_S (sizeof (cpu_set_t), cpusetp)
-# define CPU_COUNT(cpusetp)	 __CPU_COUNT_S (sizeof (cpu_set_t), cpusetp)
+                        cpusetp)
+# define CPU_ZERO(cpusetp)   __CPU_ZERO_S (sizeof (cpu_set_t), cpusetp)
+# define CPU_COUNT(cpusetp)  __CPU_COUNT_S (sizeof (cpu_set_t), cpusetp)
 
 # define CPU_SET_S(cpu, setsize, cpusetp)   __CPU_SET_S (cpu, setsize, cpusetp)
 # define CPU_CLR_S(cpu, setsize, cpusetp)   __CPU_CLR_S (cpu, setsize, cpusetp)
 # define CPU_ISSET_S(cpu, setsize, cpusetp) __CPU_ISSET_S (cpu, setsize, \
-							   cpusetp)
-# define CPU_ZERO_S(setsize, cpusetp)	    __CPU_ZERO_S (setsize, cpusetp)
-# define CPU_COUNT_S(setsize, cpusetp)	    __CPU_COUNT_S (setsize, cpusetp)
+                               cpusetp)
+# define CPU_ZERO_S(setsize, cpusetp)       __CPU_ZERO_S (setsize, cpusetp)
+# define CPU_COUNT_S(setsize, cpusetp)      __CPU_COUNT_S (setsize, cpusetp)
 
 # define CPU_EQUAL(cpusetp1, cpusetp2) \
   __CPU_EQUAL_S (sizeof (cpu_set_t), cpusetp1, cpusetp2)
@@ -127,12 +127,12 @@ extern int __REDIRECT_NTH (sched_rr_get_interval,
 
 
 /* Set the CPU affinity for a task */
-extern int sched_setaffinity (__pid_t __pid, size_t __cpusetsize,
-			      const cpu_set_t *__cpuset) __THROW;
+extern int sched_setaffinity(__pid_t __pid, size_t __cpusetsize,
+                             const cpu_set_t *__cpuset) __THROW;
 
 /* Get the CPU affinity for a task */
-extern int sched_getaffinity (__pid_t __pid, size_t __cpusetsize,
-			      cpu_set_t *__cpuset) __THROW;
+extern int sched_getaffinity(__pid_t __pid, size_t __cpusetsize,
+                             cpu_set_t *__cpuset) __THROW;
 #endif
 
 __END_DECLS

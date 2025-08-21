@@ -22,15 +22,14 @@
 #include <hurd/signal.h>
 #include <pt-internal.h>
 
-int
-__pthread_sigmask (int how, const sigset_t *set, sigset_t *oset)
+int __pthread_sigmask(int how, const sigset_t *set, sigset_t *oset)
 {
-  /* Do not clear SELF's pending signals.  */
-  return __sigthreadmask (_hurd_self_sigstate (), how, set, oset, 0);
+    /* Do not clear SELF's pending signals.  */
+    return __sigthreadmask(_hurd_self_sigstate(), how, set, oset, 0);
 }
-libc_hidden_def (__pthread_sigmask)
-versioned_symbol (libc, __pthread_sigmask, pthread_sigmask, GLIBC_2_41);
+libc_hidden_def(__pthread_sigmask)
+versioned_symbol(libc, __pthread_sigmask, pthread_sigmask, GLIBC_2_41);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_41)
-compat_symbol (libpthread, __pthread_sigmask, pthread_sigmask, GLIBC_2_12);
+compat_symbol(libpthread, __pthread_sigmask, pthread_sigmask, GLIBC_2_12);
 #endif

@@ -25,41 +25,38 @@
 #include "simple-hash.h"
 
 
-struct width_rule
-{
-  struct charseq *from;
-  struct charseq *to;
-  unsigned int width;
+struct width_rule {
+    struct charseq *from;
+    struct charseq *to;
+    unsigned int width;
 };
 
 
-struct charmap_t
-{
-  const char *code_set_name;
-  const char *repertoiremap;
-  int mb_cur_min;
-  int mb_cur_max;
+struct charmap_t {
+    const char *code_set_name;
+    const char *repertoiremap;
+    int mb_cur_min;
+    int mb_cur_max;
 
-  struct width_rule *width_rules;
-  size_t nwidth_rules;
-  size_t nwidth_rules_max;
-  unsigned int width_default;
+    struct width_rule *width_rules;
+    size_t nwidth_rules;
+    size_t nwidth_rules_max;
+    unsigned int width_default;
 
-  struct obstack mem_pool;
-  hash_table char_table;
-  hash_table byte_table;
-  hash_table ucs4_table;
+    struct obstack mem_pool;
+    hash_table char_table;
+    hash_table byte_table;
+    hash_table ucs4_table;
 };
 
 
 /* This is the structure used for entries in the hash table.  It represents
    the sequence of bytes used for the coded character.  */
-struct charseq
-{
-  const char *name;
-  uint32_t ucs4;
-  int nbytes;
-  unsigned char bytes[];
+struct charseq {
+    const char *name;
+    uint32_t ucs4;
+    int nbytes;
+    unsigned char bytes[];
 };
 
 
@@ -68,16 +65,16 @@ extern bool enc_not_ascii_compatible;
 
 
 /* Prototypes for charmap handling functions.  */
-extern struct charmap_t *charmap_read (const char *filename, int verbose,
-				       int error_not_found, int be_quiet,
-				       int use_default);
+extern struct charmap_t *charmap_read(const char *filename, int verbose,
+                                      int error_not_found, int be_quiet,
+                                      int use_default);
 
 /* Return the value stored under the given key in the hashing table.  */
-extern struct charseq *charmap_find_value (const struct charmap_t *charmap,
-					   const char *name, size_t len);
+extern struct charseq *charmap_find_value(const struct charmap_t *charmap,
+        const char *name, size_t len);
 
 /* Return symbol for given multibyte sequence.  */
-extern struct charseq *charmap_find_symbol (const struct charmap_t *charmap,
-					    const char *name, size_t len);
+extern struct charseq *charmap_find_symbol(const struct charmap_t *charmap,
+        const char *name, size_t len);
 
 #endif /* charmap.h */

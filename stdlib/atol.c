@@ -17,12 +17,11 @@
 
 #include <stdlib.h>
 
-#undef	atol
+#undef  atol
 
 
 /* Convert a string to a long int.  */
-long int
-atol (const char *nptr)
+long int atol(const char *nptr)
 {
-  return strtol (nptr, (char **) NULL, 10);
+    return strtol(nptr, (char **) NULL, 10);
 }

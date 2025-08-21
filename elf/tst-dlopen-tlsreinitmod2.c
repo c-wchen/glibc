@@ -20,11 +20,11 @@
 
 /* Defined in tst-dlopen-tlsreinitmod3.so.  This an underlinked symbol
    dependency.  */
-extern void call_tlsreinitmod3 (void);
+extern void call_tlsreinitmod3(void);
 
-static void __attribute__ ((constructor))
-tlsreinitmod2_init (void)
+static void __attribute__((constructor))
+tlsreinitmod2_init(void)
 {
-  puts ("info: constructor of tst-dlopen-tlsreinitmod2.so invoked");
-  call_tlsreinitmod3 ();
+    puts("info: constructor of tst-dlopen-tlsreinitmod2.so invoked");
+    call_tlsreinitmod3();
 }

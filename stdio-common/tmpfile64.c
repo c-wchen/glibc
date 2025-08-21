@@ -22,7 +22,7 @@
    does the job and it gets tmpfile64 as an alias.  */
 
 #if defined O_LARGEFILE && O_LARGEFILE != 0
-# define FLAGS		O_LARGEFILE
-# define tmpfile	tmpfile64
+# define FLAGS      O_LARGEFILE
+# define tmpfile    tmpfile64
 # include <tmpfile.c>
 #endif

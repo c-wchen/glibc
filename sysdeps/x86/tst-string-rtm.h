@@ -22,51 +22,48 @@
 #include <support/check.h>
 #include <support/test-driver.h>
 
-static int
-do_test_1 (const char *name, unsigned int loop, int (*prepare) (void),
-	   int (*function) (void))
+static int do_test_1(const char *name, unsigned int loop, int (*prepare)(void),
+                     int (*function)(void))
 {
-  if (!CPU_FEATURE_ACTIVE (RTM))
-    return EXIT_UNSUPPORTED;
-
-  int status = prepare ();
-  if (status != EXIT_SUCCESS)
-    return status;
-
-  unsigned int i;
-  unsigned int naborts = 0;
-  unsigned int failed = 0;
-  for (i = 0; i < loop; i++)
-    {
-      failed |= function ();
-      if (_xbegin() == _XBEGIN_STARTED)
-	{
-	  failed |= function ();
-	  _xend();
-	}
-      else
-	{
-	  failed |= function ();
-	  ++naborts;
-	}
+    if (!CPU_FEATURE_ACTIVE(RTM)) {
+        return EXIT_UNSUPPORTED;
     }
 
-  if (failed)
-    FAIL_EXIT1 ("%s() failed", name);
-
-  if (naborts)
-    {
-      /* NB: Low single digit (<= 5%) noise-level aborts are normal for
-	 TSX.  */
-      double rate = 100 * ((double) naborts) / ((double) loop);
-      if (rate > 5)
-	FAIL_EXIT1 ("TSX abort rate: %.2f%% (%d out of %d)",
-		    rate, naborts, loop);
+    int status = prepare();
+    if (status != EXIT_SUCCESS) {
+        return status;
     }
 
-  return EXIT_SUCCESS;
+    unsigned int i;
+    unsigned int naborts = 0;
+    unsigned int failed = 0;
+    for (i = 0; i < loop; i++) {
+        failed |= function();
+        if (_xbegin() == _XBEGIN_STARTED) {
+            failed |= function();
+            _xend();
+        } else {
+            failed |= function();
+            ++naborts;
+        }
+    }
+
+    if (failed) {
+        FAIL_EXIT1("%s() failed", name);
+    }
+
+    if (naborts) {
+        /* NB: Low single digit (<= 5%) noise-level aborts are normal for
+        TSX.  */
+        double rate = 100 * ((double) naborts) / ((double) loop);
+        if (rate > 5)
+            FAIL_EXIT1("TSX abort rate: %.2f%% (%d out of %d)",
+                       rate, naborts, loop);
+    }
+
+    return EXIT_SUCCESS;
 }
 
-static int do_test (void);
+static int do_test(void);
 
 #include <support/test-driver.c>

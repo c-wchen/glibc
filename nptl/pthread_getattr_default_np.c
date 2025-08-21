@@ -19,22 +19,21 @@
 #include <pthreadP.h>
 #include <shlib-compat.h>
 
-int
-___pthread_getattr_default_np (pthread_attr_t *out)
+int ___pthread_getattr_default_np(pthread_attr_t *out)
 {
-  lll_lock (__default_pthread_attr_lock, LLL_PRIVATE);
-  int ret = __pthread_attr_copy (out, &__default_pthread_attr.external);
-  lll_unlock (__default_pthread_attr_lock, LLL_PRIVATE);
-  return ret;
+    lll_lock(__default_pthread_attr_lock, LLL_PRIVATE);
+    int ret = __pthread_attr_copy(out, &__default_pthread_attr.external);
+    lll_unlock(__default_pthread_attr_lock, LLL_PRIVATE);
+    return ret;
 }
-versioned_symbol (libc, ___pthread_getattr_default_np,
-                  pthread_getattr_default_np, GLIBC_2_34);
-libc_hidden_ver (___pthread_getattr_default_np, __pthread_getattr_default_np)
+versioned_symbol(libc, ___pthread_getattr_default_np,
+                 pthread_getattr_default_np, GLIBC_2_34);
+libc_hidden_ver(___pthread_getattr_default_np, __pthread_getattr_default_np)
 #ifndef SHARED
-strong_alias (___pthread_getattr_default_np, __pthread_getattr_default_np)
+strong_alias(___pthread_getattr_default_np, __pthread_getattr_default_np)
 #endif
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_18, GLIBC_2_34)
-compat_symbol (libpthread, ___pthread_getattr_default_np,
-               pthread_getattr_default_np, GLIBC_2_18);
+compat_symbol(libpthread, ___pthread_getattr_default_np,
+              pthread_getattr_default_np, GLIBC_2_18);
 #endif

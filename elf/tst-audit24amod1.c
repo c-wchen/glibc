@@ -18,14 +18,12 @@
 
 #include <stdlib.h>
 
-_Noreturn int
-tst_audit24amod1_func1 (void)
+_Noreturn int tst_audit24amod1_func1(void)
 {
-  abort ();
+    abort();
 }
 
-int
-tst_audit24amod1_func2 (void)
+int tst_audit24amod1_func2(void)
 {
-  return 2;
+    return 2;
 }

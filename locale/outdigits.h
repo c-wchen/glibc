@@ -25,19 +25,19 @@
    -1 this means it is not yet decided which form it is and we have to
    search through all available digits.  Otherwise we know which script
    the digits are from.  */
-static inline char *
-outdigit_value (char *s, int n)
+static inline char *outdigit_value(char *s, int n)
 {
-  const char *outdigit;
-  size_t dlen;
+    const char *outdigit;
+    size_t dlen;
 
-  assert (0 <= n && n <= 9);
-  outdigit = _NL_CURRENT (LC_CTYPE, _NL_CTYPE_OUTDIGIT0_MB + n);
-  dlen = strlen (outdigit);
+    assert(0 <= n && n <= 9);
+    outdigit = _NL_CURRENT(LC_CTYPE, _NL_CTYPE_OUTDIGIT0_MB + n);
+    dlen = strlen(outdigit);
 
-  s -= dlen;
-  while (dlen-- > 0)
-    s[dlen] = outdigit[dlen];
+    s -= dlen;
+    while (dlen-- > 0) {
+        s[dlen] = outdigit[dlen];
+    }
 
-  return s;
+    return s;
 }

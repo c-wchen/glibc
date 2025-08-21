@@ -19,12 +19,11 @@
 #include <string.h>
 
 /* Store scheduling parameters in the attribute structure.  */
-int
-posix_spawnattr_setschedparam (posix_spawnattr_t *attr,
-			       const struct sched_param *schedparam)
+int posix_spawnattr_setschedparam(posix_spawnattr_t *attr,
+                                  const struct sched_param *schedparam)
 {
-  /* Store the scheduling parameters.  */
-  attr->__sp = *schedparam;
+    /* Store the scheduling parameters.  */
+    attr->__sp = *schedparam;
 
-  return 0;
+    return 0;
 }

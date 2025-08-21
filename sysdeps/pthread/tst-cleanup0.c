@@ -24,48 +24,45 @@
 static int global;
 
 
-static void
-ch (void *arg)
+static void ch(void *arg)
 {
-  int val = (long int) arg;
+    int val = (long int) arg;
 
-  printf ("ch (%d)\n", val);
+    printf("ch (%d)\n", val);
 
-  global *= val;
-  global += val;
+    global *= val;
+    global += val;
 }
 
 
-static void
-endfct (void)
+static void endfct(void)
 {
-  /* We force exit right here.  */
-  _exit (global);
+    /* We force exit right here.  */
+    _exit(global);
 }
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  atexit (endfct);
+    atexit(endfct);
 
-  pthread_cancel (pthread_self ());
+    pthread_cancel(pthread_self());
 
-  pthread_cleanup_push (ch, (void *) 1l);
+    pthread_cleanup_push(ch, (void *) 1l);
 
-  pthread_cleanup_push (ch, (void *) 2l);
+    pthread_cleanup_push(ch, (void *) 2l);
 
-  pthread_cleanup_push (ch, (void *) 3l);
+    pthread_cleanup_push(ch, (void *) 3l);
 
-  pthread_setcanceltype (PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
+    pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
 
-  pthread_cleanup_pop (1);
+    pthread_cleanup_pop(1);
 
-  pthread_cleanup_pop (1);
+    pthread_cleanup_pop(1);
 
-  pthread_cleanup_pop (1);
+    pthread_cleanup_pop(1);
 
-  return 100;
+    return 100;
 }
 
 

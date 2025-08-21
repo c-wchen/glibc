@@ -21,13 +21,11 @@
 #include <sys/resource.h>
 
 
-static struct
-{
-  const char *name;
-  int resource;
-  bool required;
-} tests[] =
-  {
+static struct {
+    const char *name;
+    int resource;
+    bool required;
+} tests[] = {
     /* The following 7 limits are part of POSIX and must exist.  */
     { "RLIMIT_CORE", RLIMIT_CORE, true },
     { "RLIMIT_CPU", RLIMIT_CPU, true },
@@ -59,70 +57,59 @@ static struct
 #ifdef RLIMIT_RTPRIO
     { "RLIMIT_RTPRIO", RLIMIT_RTPRIO, false },
 #endif
-  };
+};
 #define ntests (sizeof (tests) / sizeof (tests[0]))
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int status = 0;
+    int status = 0;
 
-  for (int i = 0; i < ntests; ++i)
-    {
-      bool this_ok = true;
+    for (int i = 0; i < ntests; ++i) {
+        bool this_ok = true;
 
-      struct rlimit r;
-      int res = getrlimit (tests[i].resource, &r);
-      if (res == -1)
-	{
-	  if (errno == EINVAL)
-	    {
-	      if (tests[i].required)
-		{
-		  printf ("limit %s expectedly not available for getrlimit\n",
-			  tests[i].name);
-		  status = 1;
-		  this_ok = false;
-		}
-	    }
-	  else
-	    {
-	      printf ("getrlimit for %s returned unexpected error: %m\n",
-		      tests[i].name);
-	      status = 1;
-	      this_ok = false;
-	    }
-	}
+        struct rlimit r;
+        int res = getrlimit(tests[i].resource, &r);
+        if (res == -1) {
+            if (errno == EINVAL) {
+                if (tests[i].required) {
+                    printf("limit %s expectedly not available for getrlimit\n",
+                           tests[i].name);
+                    status = 1;
+                    this_ok = false;
+                }
+            } else {
+                printf("getrlimit for %s returned unexpected error: %m\n",
+                       tests[i].name);
+                status = 1;
+                this_ok = false;
+            }
+        }
 
-      struct rlimit64 r64;
-      res = getrlimit64 (tests[i].resource, &r64);
-      if (res == -1)
-	{
-	  if (errno == EINVAL)
-	    {
-	      if (tests[i].required)
-		{
-		  printf ("limit %s expectedly not available for getrlimit64"
-			  "\n", tests[i].name);
-		  status = 1;
-		  this_ok = false;
-		}
-	    }
-	  else
-	    {
-	      printf ("getrlimit64 for %s returned unexpected error: %m\n",
-		      tests[i].name);
-	      status = 1;
-	      this_ok = false;
-	    }
-	}
+        struct rlimit64 r64;
+        res = getrlimit64(tests[i].resource, &r64);
+        if (res == -1) {
+            if (errno == EINVAL) {
+                if (tests[i].required) {
+                    printf("limit %s expectedly not available for getrlimit64"
+                           "\n", tests[i].name);
+                    status = 1;
+                    this_ok = false;
+                }
+            } else {
+                printf("getrlimit64 for %s returned unexpected error: %m\n",
+                       tests[i].name);
+                status = 1;
+                this_ok = false;
+            }
+        }
 
-      if (this_ok)
-	printf ("limit %s OK\n", tests[i].name);
+        if (this_ok) {
+            printf("limit %s OK\n", tests[i].name);
+        }
     }
 
-  return status;
+    return status;
 }
 
 #define TEST_FUNCTION do_test ()

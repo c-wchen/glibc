@@ -35,55 +35,48 @@ extern int nsigs;
 extern sem_t s;
 
 
-static __thread void (*fp) (void);
+static __thread void (*fp)(void);
 
 
 #define THE_SIG SIGUSR1
-void
-handler (int sig)
+void handler(int sig)
 {
-  if (sig != THE_SIG)
-    {
-      xwrite (STDOUT_FILENO, "wrong signal\n", 13);
-      _exit (1);
+    if (sig != THE_SIG) {
+        xwrite(STDOUT_FILENO, "wrong signal\n", 13);
+        _exit(1);
     }
 
-  fp ();
+    fp();
 
-  if (sem_post (&s) != 0)
-    {
-      xwrite (STDOUT_FILENO, "sem_post failed\n", 16);
-      _exit (1);
+    if (sem_post(&s) != 0) {
+        xwrite(STDOUT_FILENO, "sem_post failed\n", 16);
+        _exit(1);
     }
 }
 
 
-void *
-tf (void *arg)
+void *tf(void *arg)
 {
-  if ((uintptr_t) pthread_self () & (TCB_ALIGNMENT - 1))
-    {
-      puts ("thread's struct pthread not aligned enough");
-      exit (1);
+    if ((uintptr_t) pthread_self() & (TCB_ALIGNMENT - 1)) {
+        puts("thread's struct pthread not aligned enough");
+        exit(1);
     }
 
-  if (fp != NULL)
-    {
-      puts ("fp not initially NULL");
-      exit (1);
+    if (fp != NULL) {
+        puts("fp not initially NULL");
+        exit(1);
     }
 
-  fp = arg;
+    fp = arg;
 
-  pthread_barrier_wait (&b);
+    pthread_barrier_wait(&b);
 
-  pthread_barrier_wait (&b);
+    pthread_barrier_wait(&b);
 
-  if (nsigs != TOTAL_SIGS)
-    {
-      puts ("barrier_wait prematurely returns");
-      exit (1);
+    if (nsigs != TOTAL_SIGS) {
+        puts("barrier_wait prematurely returns");
+        exit(1);
     }
 
-  return NULL;
+    return NULL;
 }

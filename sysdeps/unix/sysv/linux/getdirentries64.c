@@ -21,19 +21,19 @@
 #undef getdirentries
 #include <unistd.h>
 
-ssize_t
-getdirentries64 (int fd, char *buf, size_t nbytes, off64_t *basep)
+ssize_t getdirentries64(int fd, char *buf, size_t nbytes, off64_t *basep)
 {
-  off64_t base = __lseek64 (fd, (off_t) 0, SEEK_CUR);
+    off64_t base = __lseek64(fd, (off_t) 0, SEEK_CUR);
 
-  ssize_t result = __getdents64 (fd, buf, nbytes);
+    ssize_t result = __getdents64(fd, buf, nbytes);
 
-  if (result != -1)
-    *basep = base;
+    if (result != -1) {
+        *basep = base;
+    }
 
-  return result;
+    return result;
 }
 
 #if _DIRENT_MATCHES_DIRENT64
-weak_alias (getdirentries64, getdirentries)
+weak_alias(getdirentries64, getdirentries)
 #endif

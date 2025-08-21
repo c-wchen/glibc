@@ -8,7 +8,7 @@
 #   error "dl-sysdep.h must define RTLD_PRIVATE_ERRNO!"
 #  endif
 # else
-#  define RTLD_PRIVATE_ERRNO	0
+#  define RTLD_PRIVATE_ERRNO    0
 # endif
 
 # if RTLD_PRIVATE_ERRNO
@@ -26,20 +26,20 @@ extern int rtld_errno attribute_hidden;
 #  if IS_IN (libc)
 #   define errno __libc_errno
 #  else
-#   define errno errno		/* For #ifndef errno tests.  */
+#   define errno errno      /* For #ifndef errno tests.  */
 #  endif
 extern __thread int errno attribute_tls_model_ie;
 
-# endif	/* IS_IN_LIB */
+# endif /* IS_IN_LIB */
 
 # define __set_errno(val) (errno = (val))
 
-extern int *__errno_location (void) __THROW __attribute_const__
+extern int *__errno_location(void) __THROW __attribute_const__
 #  if RTLD_PRIVATE_ERRNO
-     attribute_hidden
+attribute_hidden
 #  endif
 ;
-libc_hidden_proto (__errno_location)
+libc_hidden_proto(__errno_location)
 
 #endif /* !_ISOMAC && !__ASSEMBLER__ */
 #endif /* !_ERRNO_H */

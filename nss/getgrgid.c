@@ -18,11 +18,11 @@
 #include <grp.h>
 
 
-#define LOOKUP_TYPE	struct group
-#define FUNCTION_NAME	getgrgid
-#define DATABASE_NAME	group
-#define ADD_PARAMS	gid_t gid
-#define ADD_VARIABLES	gid
-#define BUFLEN		NSS_BUFLEN_GROUP
+#define LOOKUP_TYPE struct group
+#define FUNCTION_NAME   getgrgid
+#define DATABASE_NAME   group
+#define ADD_PARAMS  gid_t gid
+#define ADD_VARIABLES   gid
+#define BUFLEN      NSS_BUFLEN_GROUP
 
 #include "../nss/getXXbyYY.c"

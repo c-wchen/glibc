@@ -19,13 +19,12 @@
 #include <math.h>
 #include <fenv_private.h>
 
-int
-__isnan (double x)
+int __isnan(double x)
 {
-  int x_cond;
-  asm volatile ("fclass.d \t%0, %1" : "=f" (x_cond) : "f" (x));
+    int x_cond;
+    asm volatile("fclass.d \t%0, %1" : "=f"(x_cond) : "f"(x));
 
-  return (x_cond & _FCLASS_NAN) != 0;
+    return (x_cond & _FCLASS_NAN) != 0;
 }
-hidden_def (__isnan)
-weak_alias (__isnan, isnan)
+hidden_def(__isnan)
+weak_alias(__isnan, isnan)

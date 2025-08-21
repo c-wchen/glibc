@@ -19,54 +19,52 @@
 #include <hurd/id.h>
 #include <string.h>
 
-int
-geteuids (int n, uid_t *uidset)
+int geteuids(int n, uid_t *uidset)
 {
-  error_t err;
-  int nuids;
-  void *crit;
+    error_t err;
+    int nuids;
+    void *crit;
 
 retry:
-  crit = _hurd_critical_section_lock ();
-  __mutex_lock (&_hurd_id.lock);
+    crit = _hurd_critical_section_lock();
+    __mutex_lock(&_hurd_id.lock);
 
-  if (err = _hurd_check_ids ())
-    {
-      __mutex_unlock (&_hurd_id.lock);
-      _hurd_critical_section_unlock (crit);
-      if (err == EINTR)
-	/* Got a signal while inside an RPC of the critical section, retry again */
-	goto retry;
-      return __hurd_fail (err);
+    if (err = _hurd_check_ids()) {
+        __mutex_unlock(&_hurd_id.lock);
+        _hurd_critical_section_unlock(crit);
+        if (err == EINTR)
+            /* Got a signal while inside an RPC of the critical section, retry again */
+        {
+            goto retry;
+        }
+        return __hurd_fail(err);
     }
 
-  nuids = _hurd_id.gen.nuids;
+    nuids = _hurd_id.gen.nuids;
 
-  if (n != 0)
-    {
-      /* Copy the uids onto stack storage and then release the idlock.  */
-      uid_t uids[nuids];
-      memcpy (uids, _hurd_id.gen.uids, sizeof (uids));
-      __mutex_unlock (&_hurd_id.lock);
-      _hurd_critical_section_unlock (crit);
+    if (n != 0) {
+        /* Copy the uids onto stack storage and then release the idlock.  */
+        uid_t uids[nuids];
+        memcpy(uids, _hurd_id.gen.uids, sizeof(uids));
+        __mutex_unlock(&_hurd_id.lock);
+        _hurd_critical_section_unlock(crit);
 
-      /* Now that the lock is released, we can safely copy the
-	 uid set into the user's array, which might fault.  */
-      if (nuids > n)
-	nuids = n;
-      memcpy (uidset, uids, nuids * sizeof (uid_t));
-    }
-  else
-    {
-      __mutex_unlock (&_hurd_id.lock);
-      _hurd_critical_section_unlock (crit);
+        /* Now that the lock is released, we can safely copy the
+        uid set into the user's array, which might fault.  */
+        if (nuids > n) {
+            nuids = n;
+        }
+        memcpy(uidset, uids, nuids * sizeof(uid_t));
+    } else {
+        __mutex_unlock(&_hurd_id.lock);
+        _hurd_critical_section_unlock(crit);
     }
 
-  return nuids;
+    return nuids;
 }
 
 /* XXX Remove this alias when we bump the libc soname.  */
 
 #ifdef SHARED
-weak_alias (geteuids, __getuids)
+weak_alias(geteuids, __getuids)
 #endif

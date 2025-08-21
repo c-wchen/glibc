@@ -20,17 +20,18 @@
 #include "v_math.h"
 #include "poly_advsimd_f32.h"
 
-static const struct data
-{
-  float32x4_t poly[5];
-  float32x4_t pi_over_2f, pif;
+static const struct data {
+    float32x4_t poly[5];
+    float32x4_t pi_over_2f, pif;
 } data = {
-  /* Polynomial approximation of  (asin(sqrt(x)) - sqrt(x)) / (x * sqrt(x))  on
-     [ 0x1p-24 0x1p-2 ] order = 4 rel error: 0x1.00a23bbp-29 .  */
-  .poly = { V4 (0x1.55555ep-3), V4 (0x1.33261ap-4), V4 (0x1.70d7dcp-5),
-	    V4 (0x1.b059dp-6), V4 (0x1.3af7d8p-5) },
-  .pi_over_2f = V4 (0x1.921fb6p+0f),
-  .pif = V4 (0x1.921fb6p+1f),
+    /* Polynomial approximation of  (asin(sqrt(x)) - sqrt(x)) / (x * sqrt(x))  on
+       [ 0x1p-24 0x1p-2 ] order = 4 rel error: 0x1.00a23bbp-29 .  */
+    .poly = {
+        V4(0x1.55555ep - 3), V4(0x1.33261ap - 4), V4(0x1.70d7dcp - 5),
+        V4(0x1.b059dp - 6), V4(0x1.3af7d8p - 5)
+    },
+    .pi_over_2f = V4(0x1.921fb6p + 0f),
+    .pif = V4(0x1.921fb6p + 1f),
 };
 
 #define AbsMask 0x7fffffff
@@ -39,10 +40,9 @@ static const struct data
 #define Small 0x32800000 /* 2^-26.  */
 
 #if WANT_SIMD_EXCEPT
-static float32x4_t VPCS_ATTR NOINLINE
-special_case (float32x4_t x, float32x4_t y, uint32x4_t special)
+static float32x4_t VPCS_ATTR NOINLINE special_case(float32x4_t x, float32x4_t y, uint32x4_t special)
 {
-  return v_call_f32 (acosf, x, y, special);
+    return v_call_f32(acosf, x, y, special);
 }
 #endif
 
@@ -67,49 +67,50 @@ special_case (float32x4_t x, float32x4_t y, uint32x4_t special)
 
    The largest observed error in this region is 1.32 ulps,
    _ZGVnN4v_acosf (0x1.15ba56p-1) got 0x1.feb33p-1
-			   want 0x1.feb32ep-1.  */
-float32x4_t VPCS_ATTR NOINLINE V_NAME_F1 (acos) (float32x4_t x)
+               want 0x1.feb32ep-1.  */
+float32x4_t VPCS_ATTR NOINLINE V_NAME_F1(acos)(float32x4_t x)
 {
-  const struct data *d = ptr_barrier (&data);
+    const struct data *d = ptr_barrier(&data);
 
-  uint32x4_t ix = vreinterpretq_u32_f32 (x);
-  uint32x4_t ia = vandq_u32 (ix, v_u32 (AbsMask));
+    uint32x4_t ix = vreinterpretq_u32_f32(x);
+    uint32x4_t ia = vandq_u32(ix, v_u32(AbsMask));
 
 #if WANT_SIMD_EXCEPT
-  /* A single comparison for One, Small and QNaN.  */
-  uint32x4_t special
-      = vcgtq_u32 (vsubq_u32 (ia, v_u32 (Small)), v_u32 (One - Small));
-  if (__glibc_unlikely (v_any_u32 (special)))
-    return special_case (x, x, v_u32 (0xffffffff));
+    /* A single comparison for One, Small and QNaN.  */
+    uint32x4_t special
+        = vcgtq_u32(vsubq_u32(ia, v_u32(Small)), v_u32(One - Small));
+    if (__glibc_unlikely(v_any_u32(special))) {
+        return special_case(x, x, v_u32(0xffffffff));
+    }
 #endif
 
-  float32x4_t ax = vreinterpretq_f32_u32 (ia);
-  uint32x4_t a_le_half = vcleq_u32 (ia, v_u32 (Half));
+    float32x4_t ax = vreinterpretq_f32_u32(ia);
+    uint32x4_t a_le_half = vcleq_u32(ia, v_u32(Half));
 
-  /* Evaluate polynomial Q(x) = z + z * z2 * P(z2) with
-     z2 = x ^ 2         and z = |x|     , if |x| < 0.5
-     z2 = (1 - |x|) / 2 and z = sqrt(z2), if |x| >= 0.5.  */
-  float32x4_t z2 = vbslq_f32 (a_le_half, vmulq_f32 (x, x),
-			      vfmsq_n_f32 (v_f32 (0.5), ax, 0.5));
-  float32x4_t z = vbslq_f32 (a_le_half, ax, vsqrtq_f32 (z2));
+    /* Evaluate polynomial Q(x) = z + z * z2 * P(z2) with
+       z2 = x ^ 2         and z = |x|     , if |x| < 0.5
+       z2 = (1 - |x|) / 2 and z = sqrt(z2), if |x| >= 0.5.  */
+    float32x4_t z2 = vbslq_f32(a_le_half, vmulq_f32(x, x),
+                               vfmsq_n_f32(v_f32(0.5), ax, 0.5));
+    float32x4_t z = vbslq_f32(a_le_half, ax, vsqrtq_f32(z2));
 
-  /* Use a single polynomial approximation P for both intervals.  */
-  float32x4_t p = v_horner_4_f32 (z2, d->poly);
-  /* Finalize polynomial: z + z * z2 * P(z2).  */
-  p = vfmaq_f32 (z, vmulq_f32 (z, z2), p);
+    /* Use a single polynomial approximation P for both intervals.  */
+    float32x4_t p = v_horner_4_f32(z2, d->poly);
+    /* Finalize polynomial: z + z * z2 * P(z2).  */
+    p = vfmaq_f32(z, vmulq_f32(z, z2), p);
 
-  /* acos(|x|) = pi/2 - sign(x) * Q(|x|), for  |x| < 0.5
-	       = 2 Q(|x|)               , for  0.5 < x < 1.0
-	       = pi - 2 Q(|x|)          , for -1.0 < x < -0.5.  */
-  float32x4_t y = vbslq_f32 (v_u32 (AbsMask), p, x);
+    /* acos(|x|) = pi/2 - sign(x) * Q(|x|), for  |x| < 0.5
+           = 2 Q(|x|)               , for  0.5 < x < 1.0
+           = pi - 2 Q(|x|)          , for -1.0 < x < -0.5.  */
+    float32x4_t y = vbslq_f32(v_u32(AbsMask), p, x);
 
-  uint32x4_t is_neg = vcltzq_f32 (x);
-  float32x4_t off = vreinterpretq_f32_u32 (
-      vandq_u32 (vreinterpretq_u32_f32 (d->pif), is_neg));
-  float32x4_t mul = vbslq_f32 (a_le_half, v_f32 (-1.0), v_f32 (2.0));
-  float32x4_t add = vbslq_f32 (a_le_half, d->pi_over_2f, off);
+    uint32x4_t is_neg = vcltzq_f32(x);
+    float32x4_t off = vreinterpretq_f32_u32(
+                          vandq_u32(vreinterpretq_u32_f32(d->pif), is_neg));
+    float32x4_t mul = vbslq_f32(a_le_half, v_f32(-1.0), v_f32(2.0));
+    float32x4_t add = vbslq_f32(a_le_half, d->pi_over_2f, off);
 
-  return vfmaq_f32 (add, mul, y);
+    return vfmaq_f32(add, mul, y);
 }
-libmvec_hidden_def (V_NAME_F1(acos))
-HALF_WIDTH_ALIAS_F1 (acos)
+libmvec_hidden_def(V_NAME_F1(acos))
+HALF_WIDTH_ALIAS_F1(acos)

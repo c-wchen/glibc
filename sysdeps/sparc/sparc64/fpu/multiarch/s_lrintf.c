@@ -28,13 +28,13 @@
 #include <sparc-ifunc.h>
 #include <libm-alias-float.h>
 
-extern __typeof (__redirect_lrintf) __lrintf_vis3 attribute_hidden;
-extern __typeof (__redirect_lrintf) __lrintf_generic attribute_hidden;
+extern __typeof(__redirect_lrintf) __lrintf_vis3 attribute_hidden;
+extern __typeof(__redirect_lrintf) __lrintf_generic attribute_hidden;
 
-sparc_libm_ifunc_redirected (__redirect_lrintf, __lrintf,
-			     hwcap & HWCAP_SPARC_VIS3
-			     ? __lrintf_vis3
-			     : __lrintf_generic);
-libm_alias_float (__lrint, lrint)
-strong_alias (__lrintf, __llrintf)
-libm_alias_float (__llrint, llrint)
+sparc_libm_ifunc_redirected(__redirect_lrintf, __lrintf,
+                            hwcap &HWCAP_SPARC_VIS3
+                            ? __lrintf_vis3
+                            : __lrintf_generic);
+libm_alias_float(__lrint, lrint)
+strong_alias(__lrintf, __llrintf)
+libm_alias_float(__llrint, llrint)

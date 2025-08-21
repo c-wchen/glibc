@@ -28,22 +28,23 @@
 #include <stdio.h>
 #include <wchar.h>
 
-int
-fwide (FILE *fp, int mode)
+int fwide(FILE *fp, int mode)
 {
-  int result;
+    int result;
 
-  /* Normalize the value.  */
-  mode = mode < 0 ? -1 : (mode == 0 ? 0 : 1);
+    /* Normalize the value.  */
+    mode = mode < 0 ? -1 : (mode == 0 ? 0 : 1);
 
-  if (mode == 0 || fp->_mode != 0)
-    /* The caller simply wants to know about the current orientation
-       or the orientation already has been determined.  */
-    return fp->_mode;
+    if (mode == 0 || fp->_mode != 0)
+        /* The caller simply wants to know about the current orientation
+           or the orientation already has been determined.  */
+    {
+        return fp->_mode;
+    }
 
-  _IO_acquire_lock (fp);
-  result = _IO_fwide (fp, mode);
-  _IO_release_lock (fp);
+    _IO_acquire_lock(fp);
+    result = _IO_fwide(fp, mode);
+    _IO_release_lock(fp);
 
-  return result;
+    return result;
 }

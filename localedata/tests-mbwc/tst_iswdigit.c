@@ -8,4 +8,4 @@
 #include "tsp_common.c"
 #include "dat_iswdigit.c"
 
-TST_FUNC_ISW (DIGIT, digit);
+TST_FUNC_ISW(DIGIT, digit);

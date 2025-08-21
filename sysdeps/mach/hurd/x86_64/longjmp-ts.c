@@ -24,18 +24,17 @@
 
 /* Set up STATE to do the equivalent of `longjmp (ENV, VAL);'.  */
 
-void
-_hurd_longjmp_thread_state (void *state, jmp_buf env, int val)
+void _hurd_longjmp_thread_state(void *state, jmp_buf env, int val)
 {
-  struct i386_thread_state *ts = state;
+    struct i386_thread_state *ts = state;
 
-  ts->rbx = env[0].__jmpbuf[JB_RBX];
-  ts->rbp = env[0].__jmpbuf[JB_RBP];
-  ts->r12 = env[0].__jmpbuf[JB_R12];
-  ts->r13 = env[0].__jmpbuf[JB_R13];
-  ts->r14 = env[0].__jmpbuf[JB_R14];
-  ts->r15 = env[0].__jmpbuf[JB_R15];
-  ts->ursp = env[0].__jmpbuf[JB_RSP];
-  ts->rip = env[0].__jmpbuf[JB_PC];
-  ts->rax = val ?: 1;
+    ts->rbx = env[0].__jmpbuf[JB_RBX];
+    ts->rbp = env[0].__jmpbuf[JB_RBP];
+    ts->r12 = env[0].__jmpbuf[JB_R12];
+    ts->r13 = env[0].__jmpbuf[JB_R13];
+    ts->r14 = env[0].__jmpbuf[JB_R14];
+    ts->r15 = env[0].__jmpbuf[JB_R15];
+    ts->ursp = env[0].__jmpbuf[JB_RSP];
+    ts->rip = env[0].__jmpbuf[JB_PC];
+    ts->rax = val ? : 1;
 }

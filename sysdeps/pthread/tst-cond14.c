@@ -26,88 +26,76 @@ static pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
 static pthread_mutex_t mut = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
 static pthread_mutex_t mut2 = PTHREAD_MUTEX_INITIALIZER;
 
-static void *
-tf (void *p)
+static void *tf(void *p)
 {
-  if (pthread_mutex_lock (&mut) != 0)
-    {
-      printf ("%s: 1st mutex_lock failed\n", __func__);
-      exit (1);
+    if (pthread_mutex_lock(&mut) != 0) {
+        printf("%s: 1st mutex_lock failed\n", __func__);
+        exit(1);
     }
-  if (pthread_mutex_lock (&mut) != 0)
-    {
-      printf ("%s: 2nd mutex_lock failed\n", __func__);
-      exit (1);
+    if (pthread_mutex_lock(&mut) != 0) {
+        printf("%s: 2nd mutex_lock failed\n", __func__);
+        exit(1);
     }
-  if (pthread_mutex_lock (&mut) != 0)
-    {
-      printf ("%s: 3rd mutex_lock failed\n", __func__);
-      exit (1);
+    if (pthread_mutex_lock(&mut) != 0) {
+        printf("%s: 3rd mutex_lock failed\n", __func__);
+        exit(1);
     }
 
-  if (pthread_mutex_unlock (&mut2) != 0)
-    {
-      printf ("%s: mutex_unlock failed\n", __func__);
-      exit (1);
+    if (pthread_mutex_unlock(&mut2) != 0) {
+        printf("%s: mutex_unlock failed\n", __func__);
+        exit(1);
     }
 
-  if (pthread_cond_wait (&cond, &mut) != 0)
-    {
-      printf ("%s: cond_wait failed\n", __func__);
-      exit (1);
+    if (pthread_cond_wait(&cond, &mut) != 0) {
+        printf("%s: cond_wait failed\n", __func__);
+        exit(1);
     }
 
-  puts ("child: done");
+    puts("child: done");
 
-  return NULL;
+    return NULL;
 }
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  if (pthread_mutex_lock (&mut2) != 0)
-    {
-      puts ("1st mutex_lock failed");
-      return 1;
+    if (pthread_mutex_lock(&mut2) != 0) {
+        puts("1st mutex_lock failed");
+        return 1;
     }
 
-  puts ("parent: create child");
+    puts("parent: create child");
 
-  pthread_t th;
-  int err = pthread_create (&th, NULL, tf, NULL);
-  if (err != 0)
-    {
-      printf ("parent: cannot create thread: %s\n", strerror (err));
-      return 1;
+    pthread_t th;
+    int err = pthread_create(&th, NULL, tf, NULL);
+    if (err != 0) {
+        printf("parent: cannot create thread: %s\n", strerror(err));
+        return 1;
     }
 
-  /* We have to synchronize with the child.  */
-  if (pthread_mutex_lock (&mut2) != 0)
-    {
-      puts ("2nd mutex_lock failed");
-      return 1;
+    /* We have to synchronize with the child.  */
+    if (pthread_mutex_lock(&mut2) != 0) {
+        puts("2nd mutex_lock failed");
+        return 1;
     }
 
-  /* Give the child to reach to pthread_cond_wait.  */
-  sleep (1);
+    /* Give the child to reach to pthread_cond_wait.  */
+    sleep(1);
 
-  if (pthread_cond_signal (&cond) != 0)
-    {
-      puts ("cond_signal failed");
-      return 1;
+    if (pthread_cond_signal(&cond) != 0) {
+        puts("cond_signal failed");
+        return 1;
     }
 
-  err = pthread_join (th, NULL);
-  if (err != 0)
-    {
-      printf ("parent: failed to join: %s\n", strerror (err));
-      return 1;
+    err = pthread_join(th, NULL);
+    if (err != 0) {
+        printf("parent: failed to join: %s\n", strerror(err));
+        return 1;
     }
 
-  puts ("done");
+    puts("done");
 
-  return 0;
+    return 0;
 }
 
 

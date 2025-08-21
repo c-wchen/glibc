@@ -22,40 +22,35 @@
 # include <mcheck.h>
 #endif
 
-void
-mcheck_check_all (void)
+void mcheck_check_all(void)
 {
 #if !IS_IN (libc)
-  __mcheck_checkptr (NULL);
+    __mcheck_checkptr(NULL);
 #endif
 }
 
-int
-mcheck (void (*func) (enum mcheck_status))
+int mcheck(void (*func)(enum mcheck_status))
 {
 #if IS_IN (libc)
-  return -1;
+    return -1;
 #else
-  return __mcheck_initialize (func, false);
+    return __mcheck_initialize(func, false);
 #endif
 }
 
-int
-mcheck_pedantic (void (*func) (enum mcheck_status))
+int mcheck_pedantic(void (*func)(enum mcheck_status))
 {
 #if IS_IN (libc)
-  return -1;
+    return -1;
 #else
-  return __mcheck_initialize (func, true);
+    return __mcheck_initialize(func, true);
 #endif
 }
 
-enum mcheck_status
-mprobe (void *ptr)
-{
+enum mcheck_status mprobe(void *ptr) {
 #if IS_IN (libc)
-  return MCHECK_DISABLED;
+    return MCHECK_DISABLED;
 #else
-  return __mcheck_checkptr (ptr);
+    return __mcheck_checkptr(ptr);
 #endif
 }

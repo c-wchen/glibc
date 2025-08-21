@@ -18,27 +18,26 @@
 #include <pthreadP.h>
 #include <shlib-compat.h>
 
-int
-__pthread_mutexattr_gettype (const pthread_mutexattr_t *attr, int *kind)
+int __pthread_mutexattr_gettype(const pthread_mutexattr_t *attr, int *kind)
 {
-  const struct pthread_mutexattr *iattr;
+    const struct pthread_mutexattr *iattr;
 
-  iattr = (const struct pthread_mutexattr *) attr;
+    iattr = (const struct pthread_mutexattr *) attr;
 
-  *kind = (iattr->mutexkind & ~PTHREAD_MUTEXATTR_FLAG_BITS
-	   & ~PTHREAD_MUTEX_NO_ELISION_NP);
+    *kind = (iattr->mutexkind & ~PTHREAD_MUTEXATTR_FLAG_BITS
+             & ~PTHREAD_MUTEX_NO_ELISION_NP);
 
-  return 0;
+    return 0;
 }
-versioned_symbol (libc, __pthread_mutexattr_gettype,
-		  pthread_mutexattr_gettype, GLIBC_2_34);
+versioned_symbol(libc, __pthread_mutexattr_gettype,
+                 pthread_mutexattr_gettype, GLIBC_2_34);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_34)
-compat_symbol (libpthread, __pthread_mutexattr_gettype,
-	       pthread_mutexattr_getkind_np, GLIBC_2_0);
+compat_symbol(libpthread, __pthread_mutexattr_gettype,
+              pthread_mutexattr_getkind_np, GLIBC_2_0);
 #endif
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1, GLIBC_2_34)
-compat_symbol (libpthread, __pthread_mutexattr_gettype,
-	       pthread_mutexattr_gettype, GLIBC_2_1);
+compat_symbol(libpthread, __pthread_mutexattr_gettype,
+              pthread_mutexattr_gettype, GLIBC_2_1);
 #endif

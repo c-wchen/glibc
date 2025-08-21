@@ -21,14 +21,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void
-hook (void)
+void hook(void)
 {
-  puts ("hello");
+    puts("hello");
 }
 
-int
-main (void)
+int main(void)
 {
-  atexit (hook);
+    atexit(hook);
 }

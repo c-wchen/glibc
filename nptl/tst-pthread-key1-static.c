@@ -21,17 +21,16 @@
 
 pthread_key_t k;
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int rc;
+    int rc;
 
-  rc = pthread_key_create (&k, NULL);
-  TEST_VERIFY (rc == 0);
-  rc = pthread_setspecific (k, NULL);
-  TEST_VERIFY (rc == 0);
+    rc = pthread_key_create(&k, NULL);
+    TEST_VERIFY(rc == 0);
+    rc = pthread_setspecific(k, NULL);
+    TEST_VERIFY(rc == 0);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

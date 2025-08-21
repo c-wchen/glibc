@@ -22,26 +22,25 @@
 #include <support/xthread.h>
 #include <sys/random.h>
 
-static __typeof (getrandom) *getrandom_ptr;
+static __typeof(getrandom) *getrandom_ptr;
 
-static void *
-threadfunc (void *ignored)
+static void *threadfunc(void *ignored)
 {
-  char buffer;
-  TEST_COMPARE (getrandom_ptr (&buffer, 1, 0), 1);
-  return NULL;
+    char buffer;
+    TEST_COMPARE(getrandom_ptr(&buffer, 1, 0), 1);
+    return NULL;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* Check if issuing getrandom in the secondary libc.so works when
-     the vDSO might be potentially used.  */
-  void *handle = xdlmopen (LM_ID_NEWLM, LIBC_SO, RTLD_NOW);
-  getrandom_ptr = xdlsym (handle, "getrandom");
-  for (int i = 0; i < 1000; ++i)
-    xpthread_join (xpthread_create (NULL, threadfunc, NULL));
-  return 0;
+    /* Check if issuing getrandom in the secondary libc.so works when
+       the vDSO might be potentially used.  */
+    void *handle = xdlmopen(LM_ID_NEWLM, LIBC_SO, RTLD_NOW);
+    getrandom_ptr = xdlsym(handle, "getrandom");
+    for (int i = 0; i < 1000; ++i) {
+        xpthread_join(xpthread_create(NULL, threadfunc, NULL));
+    }
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -38,35 +38,32 @@
 
 /* If ACT is not NULL, change the action for SIG to *ACT.
    If OACT is not NULL, put the old action for SIG in *OACT.  */
-int
-__libc_sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
+int __libc_sigaction(int sig, const struct sigaction *act, struct sigaction *oact)
 {
-  int result;
+    int result;
 
-  struct kernel_sigaction kact, koact;
+    struct kernel_sigaction kact, koact;
 
-  if (act)
-    {
-      kact.k_sa_handler = act->sa_handler;
-      memcpy (&kact.sa_mask, &act->sa_mask, sizeof (sigset_t));
-      kact.sa_flags = (unsigned int) act->sa_flags;
-      SET_SA_RESTORER (&kact, act);
+    if (act) {
+        kact.k_sa_handler = act->sa_handler;
+        memcpy(&kact.sa_mask, &act->sa_mask, sizeof(sigset_t));
+        kact.sa_flags = (unsigned int) act->sa_flags;
+        SET_SA_RESTORER(&kact, act);
     }
 
-  /* XXX The size argument hopefully will have to be changed to the
-     real size of the user-level sigset_t.  */
-  result = INLINE_SYSCALL_CALL (rt_sigaction, sig,
-				act ? &kact : NULL,
-				oact ? &koact : NULL, STUB (act,
-							    __NSIG_BYTES));
+    /* XXX The size argument hopefully will have to be changed to the
+       real size of the user-level sigset_t.  */
+    result = INLINE_SYSCALL_CALL(rt_sigaction, sig,
+                                 act ? &kact : NULL,
+                                 oact ? &koact : NULL, STUB(act,
+                                         __NSIG_BYTES));
 
-  if (oact && result >= 0)
-    {
-      oact->sa_handler = koact.k_sa_handler;
-      memcpy (&oact->sa_mask, &koact.sa_mask, sizeof (sigset_t));
-      oact->sa_flags = koact.sa_flags;
-      RESET_SA_RESTORER (oact, &koact);
+    if (oact && result >= 0) {
+        oact->sa_handler = koact.k_sa_handler;
+        memcpy(&oact->sa_mask, &koact.sa_mask, sizeof(sigset_t));
+        oact->sa_flags = koact.sa_flags;
+        RESET_SA_RESTORER(oact, &koact);
     }
-  return result;
+    return result;
 }
-libc_hidden_def (__libc_sigaction)
+libc_hidden_def(__libc_sigaction)

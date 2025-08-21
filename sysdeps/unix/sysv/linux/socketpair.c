@@ -18,13 +18,12 @@
 #include <sys/socket.h>
 #include <socketcall.h>
 
-int
-__socketpair (int domain, int type, int protocol, int sv[2])
+int __socketpair(int domain, int type, int protocol, int sv[2])
 {
 #ifdef __ASSUME_SOCKETPAIR_SYSCALL
-  return INLINE_SYSCALL_CALL (socketpair, domain, type, protocol, &sv[0]);
+    return INLINE_SYSCALL_CALL(socketpair, domain, type, protocol, &sv[0]);
 #else
-  return SOCKETCALL (socketpair, domain, type, protocol, sv);
+    return SOCKETCALL(socketpair, domain, type, protocol, sv);
 #endif
 }
-weak_alias (__socketpair, socketpair)
+weak_alias(__socketpair, socketpair)

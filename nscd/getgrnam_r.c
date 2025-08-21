@@ -18,16 +18,16 @@
 
 #include <grp-merge.h>
 
-#define LOOKUP_TYPE	struct group
-#define FUNCTION_NAME	getgrnam
-#define DATABASE_NAME	group
-#define ADD_PARAMS	const char *name
-#define ADD_VARIABLES	name
+#define LOOKUP_TYPE struct group
+#define FUNCTION_NAME   getgrnam
+#define DATABASE_NAME   group
+#define ADD_PARAMS  const char *name
+#define ADD_VARIABLES   name
 
-#define DEEPCOPY_FN	__copy_grp
-#define MERGE_FN	__merge_grp
+#define DEEPCOPY_FN __copy_grp
+#define MERGE_FN    __merge_grp
 
 /* We are nscd, so we don't want to be talking to ourselves.  */
-#undef	USE_NSCD
+#undef  USE_NSCD
 
 #include <nss/getXXbyYY_r.c>

@@ -27,69 +27,70 @@
 #define PASS 0
 #define FAIL 1
 
-static int condvar_reinit (pthread_cond_t *condvar,
-			   const pthread_condattr_t *attr);
-static int test_setclock (pthread_cond_t *condvar, pthread_condattr_t *attr);
-static int test_setpshared (pthread_cond_t *condvar, pthread_condattr_t *attr);
+static int condvar_reinit(pthread_cond_t *condvar,
+                          const pthread_condattr_t *attr);
+static int test_setclock(pthread_cond_t *condvar, pthread_condattr_t *attr);
+static int test_setpshared(pthread_cond_t *condvar, pthread_condattr_t *attr);
 
 /* Need these so we don't have lines longer than 79 chars.  */
 #define SET_SHARED(attr, shared) pthread_condattr_setpshared (attr, shared)
 
-int
-main (void)
+int main(void)
 {
-  pthread_cond_t condvar;
-  pthread_condattr_t attr;
-  int result = FAIL;
+    pthread_cond_t condvar;
+    pthread_condattr_t attr;
+    int result = FAIL;
 
-  if (pthread_condattr_init (&attr) == 0
-      && pthread_cond_init (&condvar, NULL) == 0
-      && test_setclock (&condvar, &attr) == PASS
-      && test_setpshared (&condvar, &attr) == PASS)
-    result = PASS;
-  /* Else, one of the pthread_cond* functions failed.  */
+    if (pthread_condattr_init(&attr) == 0
+        && pthread_cond_init(&condvar, NULL) == 0
+        && test_setclock(&condvar, &attr) == PASS
+        && test_setpshared(&condvar, &attr) == PASS) {
+        result = PASS;
+    }
+    /* Else, one of the pthread_cond* functions failed.  */
 
-  return result;
+    return result;
 }
 
 /* Destroys CONDVAR and re-initializes it using ATTR.  */
-static int
-condvar_reinit (pthread_cond_t *condvar, const pthread_condattr_t *attr)
+static int condvar_reinit(pthread_cond_t *condvar, const pthread_condattr_t *attr)
 {
-  int result = FAIL;
+    int result = FAIL;
 
-  if (pthread_cond_destroy (condvar) == 0
-      && pthread_cond_init (condvar, attr) == 0)
-    result = PASS;
+    if (pthread_cond_destroy(condvar) == 0
+        && pthread_cond_init(condvar, attr) == 0) {
+        result = PASS;
+    }
 
-  return result;
+    return result;
 }
 
 /* Tests setting the clock ID attribute.  */
-__attribute__ ((noinline))
+__attribute__((noinline))
 static int
-test_setclock (pthread_cond_t *condvar, pthread_condattr_t *attr)
+test_setclock(pthread_cond_t *condvar, pthread_condattr_t *attr)
 {
-  int result = FAIL;
+    int result = FAIL;
 
-  if (pthread_condattr_setclock (attr, CLOCK_REALTIME) == 0 /* Set clock.  */
-      && condvar_reinit (condvar, attr) == PASS)
-    result = PASS;
+    if (pthread_condattr_setclock(attr, CLOCK_REALTIME) == 0  /* Set clock.  */
+        && condvar_reinit(condvar, attr) == PASS) {
+        result = PASS;
+    }
 
-  return result;
+    return result;
 }
 
 /* Tests setting whether the condvar can be shared between processes.  */
-static int
-test_setpshared (pthread_cond_t *condvar, pthread_condattr_t *attr)
+static int test_setpshared(pthread_cond_t *condvar, pthread_condattr_t *attr)
 {
-  int result = FAIL;
+    int result = FAIL;
 
-  if (SET_SHARED (attr, PTHREAD_PROCESS_SHARED) == 0 /* Set shared.  */
-      && condvar_reinit (condvar, attr) == PASS
-      && SET_SHARED (attr, PTHREAD_PROCESS_PRIVATE) == 0
-      && condvar_reinit (condvar, attr) == PASS)
-    result = PASS;
+    if (SET_SHARED(attr, PTHREAD_PROCESS_SHARED) == 0  /* Set shared.  */
+        && condvar_reinit(condvar, attr) == PASS
+        && SET_SHARED(attr, PTHREAD_PROCESS_PRIVATE) == 0
+        && condvar_reinit(condvar, attr) == PASS) {
+        result = PASS;
+    }
 
-  return result;
+    return result;
 }

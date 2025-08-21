@@ -20,15 +20,15 @@
 #include "lowlevellock.h"
 #include "hle.h"
 
-int
-__lll_unlock_elision(int *lock, int private)
+int __lll_unlock_elision(int *lock, int private)
 {
-  /* When the lock was free we're in a transaction.
-     When you crash here you unlocked a free lock.  */
-  if (*lock == 0)
-    _xend();
-  else
-    lll_unlock ((*lock), private);
-  return 0;
+    /* When the lock was free we're in a transaction.
+       When you crash here you unlocked a free lock.  */
+    if (*lock == 0) {
+        _xend();
+    } else {
+        lll_unlock((*lock), private);
+    }
+    return 0;
 }
-libc_hidden_def (__lll_unlock_elision)
+libc_hidden_def(__lll_unlock_elision)

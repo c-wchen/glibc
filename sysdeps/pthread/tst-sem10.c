@@ -24,62 +24,54 @@
 #include <sys/time.h>
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  sem_t s;
-  if (sem_init (&s, 0, 0) == -1)
-    {
-      puts ("sem_init failed");
-      return 1;
+    sem_t s;
+    if (sem_init(&s, 0, 0) == -1) {
+        puts("sem_init failed");
+        return 1;
     }
 
-  struct timeval tv;
-  if (gettimeofday (&tv, NULL) != 0)
-    {
-      puts ("gettimeofday failed");
-      return 1;
+    struct timeval tv;
+    if (gettimeofday(&tv, NULL) != 0) {
+        puts("gettimeofday failed");
+        return 1;
     }
 
-  struct timespec ts;
-  TIMEVAL_TO_TIMESPEC (&tv, &ts);
+    struct timespec ts;
+    TIMEVAL_TO_TIMESPEC(&tv, &ts);
 
-  /* Set ts to yesterday.  */
-  ts.tv_sec -= 86400;
+    /* Set ts to yesterday.  */
+    ts.tv_sec -= 86400;
 
-  int type_before;
-  if (pthread_setcanceltype (PTHREAD_CANCEL_DEFERRED, &type_before) != 0)
-    {
-      puts ("first pthread_setcanceltype failed");
-      return 1;
+    int type_before;
+    if (pthread_setcanceltype(PTHREAD_CANCEL_DEFERRED, &type_before) != 0) {
+        puts("first pthread_setcanceltype failed");
+        return 1;
     }
 
-  errno = 0;
-  if (TEMP_FAILURE_RETRY (sem_timedwait (&s, &ts)) != -1)
-    {
-      puts ("sem_timedwait succeeded");
-      return 1;
+    errno = 0;
+    if (TEMP_FAILURE_RETRY(sem_timedwait(&s, &ts)) != -1) {
+        puts("sem_timedwait succeeded");
+        return 1;
     }
-  if (errno != ETIMEDOUT)
-    {
-      printf ("sem_timedwait return errno = %d instead of ETIMEDOUT\n",
-	      errno);
-      return 1;
+    if (errno != ETIMEDOUT) {
+        printf("sem_timedwait return errno = %d instead of ETIMEDOUT\n",
+               errno);
+        return 1;
     }
 
-  int type_after;
-  if (pthread_setcanceltype (PTHREAD_CANCEL_DEFERRED, &type_after) != 0)
-    {
-      puts ("second pthread_setcanceltype failed");
-      return 1;
+    int type_after;
+    if (pthread_setcanceltype(PTHREAD_CANCEL_DEFERRED, &type_after) != 0) {
+        puts("second pthread_setcanceltype failed");
+        return 1;
     }
-  if (type_after != PTHREAD_CANCEL_DEFERRED)
-    {
-      puts ("sem_timedwait changed cancellation type");
-      return 1;
+    if (type_after != PTHREAD_CANCEL_DEFERRED) {
+        puts("sem_timedwait changed cancellation type");
+        return 1;
     }
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

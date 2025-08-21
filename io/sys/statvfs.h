@@ -16,8 +16,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef	_SYS_STATVFS_H
-#define	_SYS_STATVFS_H	1
+#ifndef _SYS_STATVFS_H
+#define _SYS_STATVFS_H  1
 
 #include <features.h>
 
@@ -48,43 +48,43 @@ __BEGIN_DECLS
 
 /* Return information about the filesystem on which FILE resides.  */
 #ifndef __USE_FILE_OFFSET64
-extern int statvfs (const char *__restrict __file,
-		    struct statvfs *__restrict __buf)
-     __THROW __nonnull ((1, 2));
+extern int statvfs(const char *__restrict __file,
+                   struct statvfs *__restrict __buf)
+__THROW __nonnull((1, 2));
 #else
 # ifdef __REDIRECT_NTH
-extern int __REDIRECT_NTH (statvfs,
-			   (const char *__restrict __file,
-			    struct statvfs *__restrict __buf), statvfs64)
-     __nonnull ((1, 2));
+extern int __REDIRECT_NTH(statvfs,
+                          (const char *__restrict __file,
+                           struct statvfs *__restrict __buf), statvfs64)
+__nonnull((1, 2));
 # else
 #  define statvfs statvfs64
 # endif
 #endif
 #ifdef __USE_LARGEFILE64
-extern int statvfs64 (const char *__restrict __file,
-		      struct statvfs64 *__restrict __buf)
-     __THROW __nonnull ((1, 2));
+extern int statvfs64(const char *__restrict __file,
+                     struct statvfs64 *__restrict __buf)
+__THROW __nonnull((1, 2));
 #endif
 
 /* Return information about the filesystem containing the file FILDES
    refers to.  */
 #ifndef __USE_FILE_OFFSET64
-extern int fstatvfs (int __fildes, struct statvfs *__buf)
-     __THROW __nonnull ((2));
+extern int fstatvfs(int __fildes, struct statvfs *__buf)
+__THROW __nonnull((2));
 #else
 # ifdef __REDIRECT_NTH
-extern int __REDIRECT_NTH (fstatvfs, (int __fildes, struct statvfs *__buf),
-			   fstatvfs64) __nonnull ((2));
+extern int __REDIRECT_NTH(fstatvfs, (int __fildes, struct statvfs *__buf),
+                          fstatvfs64) __nonnull((2));
 # else
 #  define fstatvfs fstatvfs64
 # endif
 #endif
 #ifdef __USE_LARGEFILE64
-extern int fstatvfs64 (int __fildes, struct statvfs64 *__buf)
-     __THROW __nonnull ((2));
+extern int fstatvfs64(int __fildes, struct statvfs64 *__buf)
+__THROW __nonnull((2));
 #endif
 
 __END_DECLS
 
-#endif	/* sys/statvfs.h */
+#endif  /* sys/statvfs.h */

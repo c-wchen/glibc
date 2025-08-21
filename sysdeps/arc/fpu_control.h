@@ -59,19 +59,19 @@ extern fpu_control_t __fpu_control;
 
 #else
 
-#define _FPU_RESERVED		0
+#define _FPU_RESERVED       0
 
 /* The fdlibm code requires strict IEEE double precision arithmetic,
    and no interrupts for exceptions, rounding to nearest.
    So only RM set to b'01.  */
-# define _FPU_DEFAULT		0x00000100
+# define _FPU_DEFAULT       0x00000100
 
 /* Actually default needs to have FWE bit as 1 but that is already
    ingrained into _FPU_SETS macro below.  */
-#define  _FPU_FPSR_DEFAULT	0x00000000
+#define  _FPU_FPSR_DEFAULT  0x00000000
 
-#define __FPU_RND_SHIFT		8
-#define __FPU_RND_MASK		0x3
+#define __FPU_RND_SHIFT     8
+#define __FPU_RND_MASK      0x3
 
 /* Type of the control word.  */
 typedef unsigned int fpu_control_t;
@@ -86,15 +86,15 @@ typedef unsigned int fpu_control_t;
     That is done in the macro here to keeps callers agnostic of this detail.
     And given FWE is write-only and RAZ, no need to "clear" it in _FPU_GETS
     macro.  */
-#  define _FPU_GETS(cw)				\
-    __asm__ volatile ("lr   %0, [0x301]	\r\n" 	\
+#  define _FPU_GETS(cw)             \
+    __asm__ volatile ("lr   %0, [0x301]	\r\n"   \
                       : "=r" (cw))
 
-#  define _FPU_SETS(cw)				\
-    do {					\
-      unsigned int __fwe = 0x80000000 | (cw);	\
-      __asm__ volatile ("sr  %0, [0x301] \r\n" 	\
-                        : : "r" (__fwe));	\
+#  define _FPU_SETS(cw)             \
+    do {                    \
+      unsigned int __fwe = 0x80000000 | (cw);   \
+      __asm__ volatile ("sr  %0, [0x301] \r\n"  \
+                        : : "r" (__fwe));   \
     } while (0)
 
 /* Default control word set at startup.  */

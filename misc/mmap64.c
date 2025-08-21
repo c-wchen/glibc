@@ -28,21 +28,19 @@
    for errors (in which case `errno' is set).  A successful `mmap' call
    deallocates any previous mapping for the affected region.  */
 
-void *
-__mmap64 (void *addr, size_t len, int prot, int flags, int fd,
-	  __off64_t offset)
+void *__mmap64(void *addr, size_t len, int prot, int flags, int fd,
+               __off64_t offset)
 {
-  off_t small_offset = (off_t) offset;
+    off_t small_offset = (off_t) offset;
 
-  if (small_offset != offset)
-    {
-      /* We cannot do this since the offset is too large.  */
-      __set_errno (EOVERFLOW);
-      return MAP_FAILED;
+    if (small_offset != offset) {
+        /* We cannot do this since the offset is too large.  */
+        __set_errno(EOVERFLOW);
+        return MAP_FAILED;
     }
 
-  return __mmap (addr, len, prot, flags, fd, small_offset);
+    return __mmap(addr, len, prot, flags, fd, small_offset);
 }
 
-weak_alias (__mmap64, mmap64)
-libc_hidden_def (__mmap64)
+weak_alias(__mmap64, mmap64)
+libc_hidden_def(__mmap64)

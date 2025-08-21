@@ -24,67 +24,58 @@
 #include <stdio.h>
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  pthread_rwlock_t r;
-  int e;
+    pthread_rwlock_t r;
+    int e;
 
-  if (pthread_rwlock_init (&r, NULL) != 0)
-    {
-      puts ("rwlock_init failed");
-      return 1;
+    if (pthread_rwlock_init(&r, NULL) != 0) {
+        puts("rwlock_init failed");
+        return 1;
     }
-  puts ("rwlock_init succeeded");
+    puts("rwlock_init succeeded");
 
-  if (pthread_rwlock_trywrlock (&r) != 0)
-    {
-      puts ("rwlock_trywrlock on unlocked rwlock failed");
-      return 1;
+    if (pthread_rwlock_trywrlock(&r) != 0) {
+        puts("rwlock_trywrlock on unlocked rwlock failed");
+        return 1;
     }
-  puts ("rwlock_trywrlock on unlocked rwlock succeeded");
+    puts("rwlock_trywrlock on unlocked rwlock succeeded");
 
-  e = pthread_rwlock_rdlock (&r);
-  if (e == 0)
-    {
-      puts ("rwlock_rdlock on rwlock with writer succeeded");
-      return 1;
+    e = pthread_rwlock_rdlock(&r);
+    if (e == 0) {
+        puts("rwlock_rdlock on rwlock with writer succeeded");
+        return 1;
     }
-  if (e != EDEADLK)
-    {
-      puts ("rwlock_rdlock on rwlock with writer failed != EDEADLK");
-      return 1;
+    if (e != EDEADLK) {
+        puts("rwlock_rdlock on rwlock with writer failed != EDEADLK");
+        return 1;
     }
-  puts ("rwlock_rdlock on rwlock with writer failed with EDEADLK");
+    puts("rwlock_rdlock on rwlock with writer failed with EDEADLK");
 
-  e = pthread_rwlock_wrlock (&r);
-  if (e == 0)
-    {
-      puts ("rwlock_wrlock on rwlock with writer succeeded");
-      return 1;
+    e = pthread_rwlock_wrlock(&r);
+    if (e == 0) {
+        puts("rwlock_wrlock on rwlock with writer succeeded");
+        return 1;
     }
-  if (e != EDEADLK)
-    {
-      puts ("rwlock_wrlock on rwlock with writer failed != EDEADLK");
-      return 1;
+    if (e != EDEADLK) {
+        puts("rwlock_wrlock on rwlock with writer failed != EDEADLK");
+        return 1;
     }
-  puts ("rwlock_wrlock on rwlock with writer failed with EDEADLK");
+    puts("rwlock_wrlock on rwlock with writer failed with EDEADLK");
 
-  if (pthread_rwlock_unlock (&r) != 0)
-    {
-      puts ("rwlock_unlock failed");
-      return 1;
+    if (pthread_rwlock_unlock(&r) != 0) {
+        puts("rwlock_unlock failed");
+        return 1;
     }
-  puts ("rwlock_unlock succeeded");
+    puts("rwlock_unlock succeeded");
 
-  if (pthread_rwlock_destroy (&r) != 0)
-    {
-      puts ("rwlock_destroy failed");
-      return 1;
+    if (pthread_rwlock_destroy(&r) != 0) {
+        puts("rwlock_destroy failed");
+        return 1;
     }
-  puts ("rwlock_destroy succeeded");
+    puts("rwlock_destroy succeeded");
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

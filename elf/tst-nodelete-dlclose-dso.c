@@ -30,61 +30,57 @@
 /* Plugin to load.  */
 static void *plugin_lib = NULL;
 /* Plugin function.  */
-static void (*plugin_func) (void);
+static void (*plugin_func)(void);
 #define LIB_PLUGIN "tst-nodelete-dlclose-plugin.so"
 
 /* This function is never called but the plugin references it.
    We do this to avoid any future --as-needed from removing the
    plugin's DT_NEEDED on this DSO (required for the test).  */
-void
-primary_reference (void)
+void primary_reference(void)
 {
-  printf ("INFO: Called primary_reference function.\n");
+    printf("INFO: Called primary_reference function.\n");
 }
 
-void
-primary (void)
+void primary(void)
 {
-  char *error;
+    char *error;
 
-  plugin_lib = dlopen (LIB_PLUGIN, RTLD_NOW | RTLD_LOCAL | RTLD_NODELETE);
-  if (plugin_lib == NULL)
-    {
-      printf ("ERROR: Unable to load plugin library.\n");
-      exit (EXIT_FAILURE);
+    plugin_lib = dlopen(LIB_PLUGIN, RTLD_NOW | RTLD_LOCAL | RTLD_NODELETE);
+    if (plugin_lib == NULL) {
+        printf("ERROR: Unable to load plugin library.\n");
+        exit(EXIT_FAILURE);
     }
-  dlerror ();
+    dlerror();
 
-  plugin_func = (void (*) (void)) dlsym (plugin_lib, "plugin_func");
-  error = dlerror ();
-  if (error != NULL)
-    {
-      printf ("ERROR: Unable to find symbol with error \"%s\".",
-	      error);
-      exit (EXIT_FAILURE);
+    plugin_func = (void (*)(void)) dlsym(plugin_lib, "plugin_func");
+    error = dlerror();
+    if (error != NULL) {
+        printf("ERROR: Unable to find symbol with error \"%s\".",
+               error);
+        exit(EXIT_FAILURE);
     }
 
-  return;
-}
-
-__attribute__ ((destructor))
-static void
-primary_dtor (void)
-{
-  int ret;
-
-  printf ("INFO: Calling primary destructor.\n");
-
-  /* The destructor runs in the test driver also, which
-     hasn't called primary, in that case do nothing.  */
-  if (plugin_lib == NULL)
     return;
+}
 
-  ret = dlclose (plugin_lib);
-  if (ret != 0)
-    {
-      printf ("ERROR: Calling dlclose failed with \"%s\"\n",
-	      dlerror ());
-      exit (EXIT_FAILURE);
+__attribute__((destructor))
+static void
+primary_dtor(void)
+{
+    int ret;
+
+    printf("INFO: Calling primary destructor.\n");
+
+    /* The destructor runs in the test driver also, which
+       hasn't called primary, in that case do nothing.  */
+    if (plugin_lib == NULL) {
+        return;
+    }
+
+    ret = dlclose(plugin_lib);
+    if (ret != 0) {
+        printf("ERROR: Calling dlclose failed with \"%s\"\n",
+               dlerror());
+        exit(EXIT_FAILURE);
     }
 }

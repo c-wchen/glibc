@@ -22,62 +22,62 @@
 /* Call *RPC on PORT and/or CTTY.  If a call on CTTY returns EBACKGROUND,
    generate SIGTTIN or EIO as appropriate.  */
 
-error_t
-_hurd_ctty_input (io_t port, io_t ctty, error_t (*rpc) (io_t))
+error_t _hurd_ctty_input(io_t port, io_t ctty, error_t (*rpc)(io_t))
 {
-  error_t err;
+    error_t err;
 
-  if (ctty == MACH_PORT_NULL)
-    return (*rpc) (port);
+    if (ctty == MACH_PORT_NULL) {
+        return (*rpc)(port);
+    }
 
-  do
-    {
-      err = (*rpc) (ctty);
-      if (err == EBACKGROUND)
-	{
-	  /* We are a background job and tried to read from the tty.
-	     We should probably get a SIGTTIN signal.  */
-	  if (_hurd_orphaned)
-	    /* Our process group is orphaned.  Don't stop; just fail.  */
-	    err = EIO;
-	  else
-	    {
-	      struct hurd_sigstate *ss = _hurd_self_sigstate ();
-	      struct sigaction *actions;
+    do {
+        err = (*rpc)(ctty);
+        if (err == EBACKGROUND) {
+            /* We are a background job and tried to read from the tty.
+               We should probably get a SIGTTIN signal.  */
+            if (_hurd_orphaned)
+                /* Our process group is orphaned.  Don't stop; just fail.  */
+            {
+                err = EIO;
+            } else {
+                struct hurd_sigstate *ss = _hurd_self_sigstate();
+                struct sigaction *actions;
 
-	      _hurd_sigstate_lock (ss);
-	      actions = _hurd_sigstate_actions (ss);
-	      if (__sigismember (&ss->blocked, SIGTTIN)
-		  || actions[SIGTTIN].sa_handler == SIG_IGN)
-		/* We are blocking or ignoring SIGTTIN.  Just fail.  */
-		err = EIO;
-	      _hurd_sigstate_unlock (ss);
+                _hurd_sigstate_lock(ss);
+                actions = _hurd_sigstate_actions(ss);
+                if (__sigismember(&ss->blocked, SIGTTIN)
+                    || actions[SIGTTIN].sa_handler == SIG_IGN)
+                    /* We are blocking or ignoring SIGTTIN.  Just fail.  */
+                {
+                    err = EIO;
+                }
+                _hurd_sigstate_unlock(ss);
 
-	      if (err == EBACKGROUND)
-		{
-		  /* Send a SIGTTIN signal to our process group.
+                if (err == EBACKGROUND) {
+                    /* Send a SIGTTIN signal to our process group.
 
-		     We must remember here not to clobber ERR, since
-		     the loop condition below uses it to recall that
-		  we should retry after a stop.  */
+                       We must remember here not to clobber ERR, since
+                       the loop condition below uses it to recall that
+                    we should retry after a stop.  */
 
-		  __USEPORT (CTTYID, _hurd_sig_post (0, SIGTTIN, port));
-		  /* XXX what to do if error here? */
+                    __USEPORT(CTTYID, _hurd_sig_post(0, SIGTTIN, port));
+                    /* XXX what to do if error here? */
 
-		  /* At this point we should have just run the handler for
-		     SIGTTIN or resumed after being stopped.  Now this is
-		     still a "system call", so check to see if we should
-		  restart it.  */
-		  _hurd_sigstate_lock (ss);
-		  actions = _hurd_sigstate_actions (ss);
-		  if (!(actions[SIGTTIN].sa_flags & SA_RESTART))
-		    err = EINTR;
-		  _hurd_sigstate_unlock (ss);
-		}
-	    }
-	}
-      /* If the last RPC generated a SIGTTIN, loop to try it again.  */
+                    /* At this point we should have just run the handler for
+                       SIGTTIN or resumed after being stopped.  Now this is
+                       still a "system call", so check to see if we should
+                    restart it.  */
+                    _hurd_sigstate_lock(ss);
+                    actions = _hurd_sigstate_actions(ss);
+                    if (!(actions[SIGTTIN].sa_flags & SA_RESTART)) {
+                        err = EINTR;
+                    }
+                    _hurd_sigstate_unlock(ss);
+                }
+            }
+        }
+        /* If the last RPC generated a SIGTTIN, loop to try it again.  */
     } while (err == EBACKGROUND);
 
-  return err;
+    return err;
 }

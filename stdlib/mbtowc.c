@@ -30,43 +30,39 @@
    The interface is completely stupid.  The state is shared between
    all conversion functions.  You should use instead the restartable
    version `mbrtowc'.  */
-int
-mbtowc (wchar_t *pwc, const char *s, size_t n)
+int mbtowc(wchar_t *pwc, const char *s, size_t n)
 {
-  int result;
-  static mbstate_t state;
+    int result;
+    static mbstate_t state;
 
-  /* If S is NULL the function has to return null or not null
-     depending on the encoding having a state depending encoding or
-     not.  */
-  if (s == NULL)
-    {
-      const struct gconv_fcts *fcts;
+    /* If S is NULL the function has to return null or not null
+       depending on the encoding having a state depending encoding or
+       not.  */
+    if (s == NULL) {
+        const struct gconv_fcts *fcts;
 
-      /* Get the conversion functions.  */
-      fcts = get_gconv_fcts (_NL_CURRENT_DATA (LC_CTYPE));
+        /* Get the conversion functions.  */
+        fcts = get_gconv_fcts(_NL_CURRENT_DATA(LC_CTYPE));
 
-      /* This is an extension in the Unix standard which does not directly
-	 violate ISO C.  */
-      memset (&state, '\0', sizeof state);
+        /* This is an extension in the Unix standard which does not directly
+        violate ISO C.  */
+        memset(&state, '\0', sizeof state);
 
-      result = fcts->towc->__stateful;
-    }
-  else if (*s == '\0')
-    {
-      if (pwc != NULL)
-	*pwc = L'\0';
-      result = 0;
-    }
-  else
-    {
-      result = __mbrtowc (pwc, s, n, &state);
+        result = fcts->towc->__stateful;
+    } else if (*s == '\0') {
+        if (pwc != NULL) {
+            *pwc = L'\0';
+        }
+        result = 0;
+    } else {
+        result = __mbrtowc(pwc, s, n, &state);
 
-      /* The `mbrtowc' functions tell us more than we need.  Fold the -1
-	 and -2 result into -1.  */
-      if (result < 0)
-	result = -1;
+        /* The `mbrtowc' functions tell us more than we need.  Fold the -1
+        and -2 result into -1.  */
+        if (result < 0) {
+            result = -1;
+        }
     }
 
-  return result;
+    return result;
 }

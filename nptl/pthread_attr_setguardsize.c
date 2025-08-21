@@ -18,23 +18,22 @@
 #include "pthreadP.h"
 #include <shlib-compat.h>
 
-int
-__pthread_attr_setguardsize (pthread_attr_t *attr, size_t guardsize)
+int __pthread_attr_setguardsize(pthread_attr_t *attr, size_t guardsize)
 {
-  struct pthread_attr *iattr;
+    struct pthread_attr *iattr;
 
-  iattr = (struct pthread_attr *) attr;
+    iattr = (struct pthread_attr *) attr;
 
-  /* Note that we don't round the value here.  The standard requires
-     that subsequent pthread_attr_getguardsize calls return the value
-     set by the user.  */
-  iattr->guardsize = guardsize;
+    /* Note that we don't round the value here.  The standard requires
+       that subsequent pthread_attr_getguardsize calls return the value
+       set by the user.  */
+    iattr->guardsize = guardsize;
 
-  return 0;
+    return 0;
 }
-versioned_symbol (libpthread, __pthread_attr_setguardsize,
-                  pthread_attr_setguardsize, GLIBC_2_34);
+versioned_symbol(libpthread, __pthread_attr_setguardsize,
+                 pthread_attr_setguardsize, GLIBC_2_34);
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1, GLIBC_2_34)
-compat_symbol (libpthread, __pthread_attr_setguardsize,
-               pthread_attr_setguardsize, GLIBC_2_1);
+compat_symbol(libpthread, __pthread_attr_setguardsize,
+              pthread_attr_setguardsize, GLIBC_2_1);
 #endif

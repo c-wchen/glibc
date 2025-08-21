@@ -19,23 +19,25 @@
 #include <sys/platform/x86.h>
 #include <support/test-driver.h>
 
-extern int test_vector_abi (void);
+extern int test_vector_abi(void);
 
-static int
-do_test (void)
+static int do_test(void)
 {
 #if defined REQUIRE_AVX
-  if (!CPU_FEATURE_ACTIVE (AVX))
-    return EXIT_UNSUPPORTED;
+    if (!CPU_FEATURE_ACTIVE(AVX)) {
+        return EXIT_UNSUPPORTED;
+    }
 #elif defined REQUIRE_AVX2
-  if (!CPU_FEATURE_ACTIVE (AVX2))
-    return EXIT_UNSUPPORTED;
+    if (!CPU_FEATURE_ACTIVE(AVX2)) {
+        return EXIT_UNSUPPORTED;
+    }
 #elif defined REQUIRE_AVX512F
-  if (!CPU_FEATURE_ACTIVE (AVX512F))
-    return EXIT_UNSUPPORTED;
+    if (!CPU_FEATURE_ACTIVE(AVX512F)) {
+        return EXIT_UNSUPPORTED;
+    }
 #endif
 
-  return test_vector_abi ();
+    return test_vector_abi();
 }
 
 #include <support/test-driver.c>

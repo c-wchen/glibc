@@ -26,7 +26,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef SOFT_FP_H
-#define SOFT_FP_H	1
+#define SOFT_FP_H   1
 
 #ifdef _LIBC
 # include <sfp-machine.h>
@@ -49,21 +49,21 @@
 
 /* For unreachable default cases in switch statements over bitwise OR
    of FP_CLS_* values.  */
-#if (defined __GNUC__							\
+#if (defined __GNUC__                           \
      && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 5)))
-# define _FP_UNREACHABLE	__builtin_unreachable ()
+# define _FP_UNREACHABLE    __builtin_unreachable ()
 #else
-# define _FP_UNREACHABLE	abort ()
+# define _FP_UNREACHABLE    abort ()
 #endif
 
-#if ((defined __GNUC__							\
-      && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)))	\
+#if ((defined __GNUC__                          \
+      && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)))  \
      || (defined __STDC_VERSION__ && __STDC_VERSION__ >= 201112L))
-# define _FP_STATIC_ASSERT(expr, msg)		\
+# define _FP_STATIC_ASSERT(expr, msg)       \
   _Static_assert ((expr), msg)
 #else
-# define _FP_STATIC_ASSERT(expr, msg)					\
-  extern int (*__Static_assert_function (void))				\
+# define _FP_STATIC_ASSERT(expr, msg)                   \
+  extern int (*__Static_assert_function (void))             \
     [!!sizeof (struct { int __error_if_negative: (expr) ? 2 : -1; })]
 #endif
 
@@ -73,83 +73,83 @@
    the compiler that variables from _FP_DECL and _FP_FRAC_DECL_*
    macros are only used in cases where they were initialized.  */
 #ifdef __KERNEL__
-# define _FP_ZERO_INIT		= 0
+# define _FP_ZERO_INIT      = 0
 #else
 # define _FP_ZERO_INIT
 #endif
 
-#define _FP_WORKBITS		3
-#define _FP_WORK_LSB		((_FP_W_TYPE) 1 << 3)
-#define _FP_WORK_ROUND		((_FP_W_TYPE) 1 << 2)
-#define _FP_WORK_GUARD		((_FP_W_TYPE) 1 << 1)
-#define _FP_WORK_STICKY		((_FP_W_TYPE) 1 << 0)
+#define _FP_WORKBITS        3
+#define _FP_WORK_LSB        ((_FP_W_TYPE) 1 << 3)
+#define _FP_WORK_ROUND      ((_FP_W_TYPE) 1 << 2)
+#define _FP_WORK_GUARD      ((_FP_W_TYPE) 1 << 1)
+#define _FP_WORK_STICKY     ((_FP_W_TYPE) 1 << 0)
 
 #ifndef FP_RND_NEAREST
-# define FP_RND_NEAREST		0
-# define FP_RND_ZERO		1
-# define FP_RND_PINF		2
-# define FP_RND_MINF		3
+# define FP_RND_NEAREST     0
+# define FP_RND_ZERO        1
+# define FP_RND_PINF        2
+# define FP_RND_MINF        3
 #endif
 #ifndef FP_ROUNDMODE
-# define FP_ROUNDMODE		FP_RND_NEAREST
+# define FP_ROUNDMODE       FP_RND_NEAREST
 #endif
 
 /* By default don't care about exceptions.  */
 #ifndef FP_EX_INVALID
-# define FP_EX_INVALID		0
+# define FP_EX_INVALID      0
 #endif
 #ifndef FP_EX_OVERFLOW
-# define FP_EX_OVERFLOW		0
+# define FP_EX_OVERFLOW     0
 #endif
 #ifndef FP_EX_UNDERFLOW
-# define FP_EX_UNDERFLOW	0
+# define FP_EX_UNDERFLOW    0
 #endif
 #ifndef FP_EX_DIVZERO
-# define FP_EX_DIVZERO		0
+# define FP_EX_DIVZERO      0
 #endif
 #ifndef FP_EX_INEXACT
-# define FP_EX_INEXACT		0
+# define FP_EX_INEXACT      0
 #endif
 #ifndef FP_EX_DENORM
-# define FP_EX_DENORM		0
+# define FP_EX_DENORM       0
 #endif
 
 /* Sub-exceptions of "invalid".  */
 /* Signaling NaN operand.  */
 #ifndef FP_EX_INVALID_SNAN
-# define FP_EX_INVALID_SNAN	0
+# define FP_EX_INVALID_SNAN 0
 #endif
 /* Inf * 0.  */
 #ifndef FP_EX_INVALID_IMZ
-# define FP_EX_INVALID_IMZ	0
+# define FP_EX_INVALID_IMZ  0
 #endif
 /* fma (Inf, 0, c).  */
 #ifndef FP_EX_INVALID_IMZ_FMA
-# define FP_EX_INVALID_IMZ_FMA	0
+# define FP_EX_INVALID_IMZ_FMA  0
 #endif
 /* Inf - Inf.  */
 #ifndef FP_EX_INVALID_ISI
-# define FP_EX_INVALID_ISI	0
+# define FP_EX_INVALID_ISI  0
 #endif
 /* 0 / 0.  */
 #ifndef FP_EX_INVALID_ZDZ
-# define FP_EX_INVALID_ZDZ	0
+# define FP_EX_INVALID_ZDZ  0
 #endif
 /* Inf / Inf.  */
 #ifndef FP_EX_INVALID_IDI
-# define FP_EX_INVALID_IDI	0
+# define FP_EX_INVALID_IDI  0
 #endif
 /* sqrt (negative).  */
 #ifndef FP_EX_INVALID_SQRT
-# define FP_EX_INVALID_SQRT	0
+# define FP_EX_INVALID_SQRT 0
 #endif
 /* Invalid conversion to integer.  */
 #ifndef FP_EX_INVALID_CVI
-# define FP_EX_INVALID_CVI	0
+# define FP_EX_INVALID_CVI  0
 #endif
 /* Invalid comparison.  */
 #ifndef FP_EX_INVALID_VC
-# define FP_EX_INVALID_VC	0
+# define FP_EX_INVALID_VC   0
 #endif
 
 /* _FP_STRUCT_LAYOUT may be defined as an attribute to determine the
@@ -163,8 +163,8 @@
 #endif
 
 #ifdef _FP_DECL_EX
-# define FP_DECL_EX					\
-  int _fex = 0;						\
+# define FP_DECL_EX                 \
+  int _fex = 0;                     \
   _FP_DECL_EX
 #else
 # define FP_DECL_EX int _fex = 0
@@ -205,10 +205,10 @@
 # define FP_INHIBIT_RESULTS 0
 #endif
 
-#define FP_SET_EXCEPTION(ex)				\
+#define FP_SET_EXCEPTION(ex)                \
   _fex |= (ex)
 
-#define FP_CUR_EXCEPTIONS				\
+#define FP_CUR_EXCEPTIONS               \
   (_fex)
 
 #ifndef FP_TRAPPING_EXCEPTIONS
@@ -252,63 +252,63 @@
 # define FP_TRAPPING_EXCEPTIONS 0
 #endif
 
-#define _FP_ROUND_NEAREST(wc, X)				\
-  do								\
-    {								\
-      if ((_FP_FRAC_LOW_##wc (X) & 15) != _FP_WORK_ROUND)	\
-	_FP_FRAC_ADDI_##wc (X, _FP_WORK_ROUND);			\
-    }								\
+#define _FP_ROUND_NEAREST(wc, X)                \
+  do                                \
+    {                               \
+      if ((_FP_FRAC_LOW_##wc (X) & 15) != _FP_WORK_ROUND)   \
+    _FP_FRAC_ADDI_##wc (X, _FP_WORK_ROUND);         \
+    }                               \
   while (0)
 
-#define _FP_ROUND_ZERO(wc, X)		(void) 0
+#define _FP_ROUND_ZERO(wc, X)       (void) 0
 
-#define _FP_ROUND_PINF(wc, X)				\
-  do							\
-    {							\
-      if (!X##_s && (_FP_FRAC_LOW_##wc (X) & 7))	\
-	_FP_FRAC_ADDI_##wc (X, _FP_WORK_LSB);		\
-    }							\
+#define _FP_ROUND_PINF(wc, X)               \
+  do                            \
+    {                           \
+      if (!X##_s && (_FP_FRAC_LOW_##wc (X) & 7))    \
+    _FP_FRAC_ADDI_##wc (X, _FP_WORK_LSB);       \
+    }                           \
   while (0)
 
-#define _FP_ROUND_MINF(wc, X)			\
-  do						\
-    {						\
-      if (X##_s && (_FP_FRAC_LOW_##wc (X) & 7))	\
-	_FP_FRAC_ADDI_##wc (X, _FP_WORK_LSB);	\
-    }						\
+#define _FP_ROUND_MINF(wc, X)           \
+  do                        \
+    {                       \
+      if (X##_s && (_FP_FRAC_LOW_##wc (X) & 7)) \
+    _FP_FRAC_ADDI_##wc (X, _FP_WORK_LSB);   \
+    }                       \
   while (0)
 
-#define _FP_ROUND(wc, X)			\
-  do						\
-    {						\
-      if (_FP_FRAC_LOW_##wc (X) & 7)		\
-	{					\
-	  FP_SET_EXCEPTION (FP_EX_INEXACT);	\
-	  switch (FP_ROUNDMODE)			\
-	    {					\
-	    case FP_RND_NEAREST:		\
-	      _FP_ROUND_NEAREST (wc, X);	\
-	      break;				\
-	    case FP_RND_ZERO:			\
-	      _FP_ROUND_ZERO (wc, X);		\
-	      break;				\
-	    case FP_RND_PINF:			\
-	      _FP_ROUND_PINF (wc, X);		\
-	      break;				\
-	    case FP_RND_MINF:			\
-	      _FP_ROUND_MINF (wc, X);		\
-	      break;				\
-	    }					\
-	}					\
-    }						\
+#define _FP_ROUND(wc, X)            \
+  do                        \
+    {                       \
+      if (_FP_FRAC_LOW_##wc (X) & 7)        \
+    {                   \
+      FP_SET_EXCEPTION (FP_EX_INEXACT); \
+      switch (FP_ROUNDMODE)         \
+        {                   \
+        case FP_RND_NEAREST:        \
+          _FP_ROUND_NEAREST (wc, X);    \
+          break;                \
+        case FP_RND_ZERO:           \
+          _FP_ROUND_ZERO (wc, X);       \
+          break;                \
+        case FP_RND_PINF:           \
+          _FP_ROUND_PINF (wc, X);       \
+          break;                \
+        case FP_RND_MINF:           \
+          _FP_ROUND_MINF (wc, X);       \
+          break;                \
+        }                   \
+    }                   \
+    }                       \
   while (0)
 
-#define FP_CLS_NORMAL		0
-#define FP_CLS_ZERO		1
-#define FP_CLS_INF		2
-#define FP_CLS_NAN		3
+#define FP_CLS_NORMAL       0
+#define FP_CLS_ZERO     1
+#define FP_CLS_INF      2
+#define FP_CLS_NAN      3
 
-#define _FP_CLS_COMBINE(x, y)	(((x) << 2) | (y))
+#define _FP_CLS_COMBINE(x, y)   (((x) << 2) | (y))
 
 #include "op-1.h"
 #include "op-2.h"
@@ -317,27 +317,27 @@
 #include "op-common.h"
 
 /* Sigh.  Silly things longlong.h needs.  */
-#define UWtype		_FP_W_TYPE
-#define W_TYPE_SIZE	_FP_W_TYPE_SIZE
+#define UWtype      _FP_W_TYPE
+#define W_TYPE_SIZE _FP_W_TYPE_SIZE
 
-typedef int QItype __attribute__ ((mode (QI)));
-typedef int SItype __attribute__ ((mode (SI)));
-typedef int DItype __attribute__ ((mode (DI)));
-typedef unsigned int UQItype __attribute__ ((mode (QI)));
-typedef unsigned int USItype __attribute__ ((mode (SI)));
-typedef unsigned int UDItype __attribute__ ((mode (DI)));
+typedef int QItype __attribute__((mode(QI)));
+typedef int SItype __attribute__((mode(SI)));
+typedef int DItype __attribute__((mode(DI)));
+typedef unsigned int UQItype __attribute__((mode(QI)));
+typedef unsigned int USItype __attribute__((mode(SI)));
+typedef unsigned int UDItype __attribute__((mode(DI)));
 #if _FP_W_TYPE_SIZE == 32
-typedef unsigned int UHWtype __attribute__ ((mode (HI)));
+typedef unsigned int UHWtype __attribute__((mode(HI)));
 #elif _FP_W_TYPE_SIZE == 64
 typedef USItype UHWtype;
 #endif
 
 #ifndef CMPtype
-# define CMPtype	int
+# define CMPtype    int
 #endif
 
-#define SI_BITS		(__CHAR_BIT__ * (int) sizeof (SItype))
-#define DI_BITS		(__CHAR_BIT__ * (int) sizeof (DItype))
+#define SI_BITS     (__CHAR_BIT__ * (int) sizeof (SItype))
+#define DI_BITS     (__CHAR_BIT__ * (int) sizeof (DItype))
 
 #ifndef umul_ppmm
 # ifdef _LIBC

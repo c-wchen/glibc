@@ -23,110 +23,96 @@
 
 #include <support/xstdio.h>
 
-int
-main (int argc, char **argv)
+int main(int argc, char **argv)
 {
-  static const char hello[] = "Hello, world.\n";
-  static const char replace[] = "Hewwo, world.\n";
-  static const size_t replace_from = 2, replace_to = 4;
-  char filename[FILENAME_MAX];
-  char *name = strrchr (*argv, '/');
-  char buf[BUFSIZ];
-  FILE *f;
-  int lose = 0;
+    static const char hello[] = "Hello, world.\n";
+    static const char replace[] = "Hewwo, world.\n";
+    static const size_t replace_from = 2, replace_to = 4;
+    char filename[FILENAME_MAX];
+    char *name = strrchr(*argv, '/');
+    char buf[BUFSIZ];
+    FILE *f;
+    int lose = 0;
 
-  if (name != NULL)
-    ++name;
-  else
-    name = *argv;
-
-  (void) sprintf (filename, OBJPFX "%s.test", name);
-
-  f = fopen (filename, "w+");
-  if (f == NULL)
-    {
-      perror (filename);
-      exit (1);
+    if (name != NULL) {
+        ++name;
+    } else {
+        name = *argv;
     }
 
-  (void) fputs (hello, f);
-  rewind (f);
-  xfgets (buf, sizeof (buf), f);
-  rewind (f);
-  (void) fputs (buf, f);
-  rewind (f);
+    (void) sprintf(filename, OBJPFX "%s.test", name);
 
-  /* clang do not handle %Z format.  */
-  DIAG_PUSH_NEEDS_COMMENT_CLANG;
-  DIAG_IGNORE_NEEDS_COMMENT_CLANG (13, "-Wformat-invalid-specifier");
-  DIAG_IGNORE_NEEDS_COMMENT_CLANG (13, "-Wformat-extra-args");
-  {
-    size_t i;
-    for (i = 0; i < replace_from; ++i)
-      {
-	int c = getc (f);
-	if (c == EOF)
-	  {
-	    printf ("EOF at %Zu.\n", i);
-	    lose = 1;
-	    break;
-	  }
-	else if (c != hello[i])
-	  {
-	    printf ("Got '%c' instead of '%c' at %Zu.\n",
-		    (unsigned char) c, hello[i], i);
-	    lose = 1;
-	    break;
-	  }
-      }
-  }
-
-  {
-    long int where = ftell (f);
-    if (where == (long int) replace_from)
-      {
-	size_t i;
-	for (i = replace_from; i < replace_to; ++i)
-	  if (putc(replace[i], f) == EOF)
-	    {
-	      printf ("putc('%c') got %s at %Zu.\n",
-		      replace[i], strerror (errno), i);
-	      lose = 1;
-	      break;
-	    }
-      }
-    else if (where == -1L)
-      {
-	printf ("ftell got %s (should be at %Zu).\n",
-		strerror (errno), replace_from);
-	lose = 1;
-      }
-    else
-      {
-	printf ("ftell returns %lu; should be %Zu.\n", where, replace_from);
-	lose = 1;
-      }
-  }
-  DIAG_POP_NEEDS_COMMENT_CLANG;
-
-  if (!lose)
-    {
-      rewind (f);
-      xfgets (buf, sizeof (buf), f);
-      if (strcmp (buf, replace))
-	{
-	  printf ("Read \"%s\" instead of \"%s\".\n", buf, replace);
-	  lose = 1;
-	}
+    f = fopen(filename, "w+");
+    if (f == NULL) {
+        perror(filename);
+        exit(1);
     }
 
-  if (lose)
-    printf ("Test FAILED!  Losing file is \"%s\".\n", filename);
-  else
+    (void) fputs(hello, f);
+    rewind(f);
+    xfgets(buf, sizeof(buf), f);
+    rewind(f);
+    (void) fputs(buf, f);
+    rewind(f);
+
+    /* clang do not handle %Z format.  */
+    DIAG_PUSH_NEEDS_COMMENT_CLANG;
+    DIAG_IGNORE_NEEDS_COMMENT_CLANG(13, "-Wformat-invalid-specifier");
+    DIAG_IGNORE_NEEDS_COMMENT_CLANG(13, "-Wformat-extra-args");
     {
-      (void) remove (filename);
-      puts ("Test succeeded.");
+        size_t i;
+        for (i = 0; i < replace_from; ++i) {
+            int c = getc(f);
+            if (c == EOF) {
+                printf("EOF at %Zu.\n", i);
+                lose = 1;
+                break;
+            } else if (c != hello[i]) {
+                printf("Got '%c' instead of '%c' at %Zu.\n",
+                       (unsigned char) c, hello[i], i);
+                lose = 1;
+                break;
+            }
+        }
     }
 
-  return lose ? EXIT_FAILURE : EXIT_SUCCESS;
+    {
+        long int where = ftell(f);
+        if (where == (long int) replace_from) {
+            size_t i;
+            for (i = replace_from; i < replace_to; ++i)
+                if (putc(replace[i], f) == EOF) {
+                    printf("putc('%c') got %s at %Zu.\n",
+                           replace[i], strerror(errno), i);
+                    lose = 1;
+                    break;
+                }
+        } else if (where == -1L) {
+            printf("ftell got %s (should be at %Zu).\n",
+                   strerror(errno), replace_from);
+            lose = 1;
+        } else {
+            printf("ftell returns %lu; should be %Zu.\n", where, replace_from);
+            lose = 1;
+        }
+    }
+    DIAG_POP_NEEDS_COMMENT_CLANG;
+
+    if (!lose) {
+        rewind(f);
+        xfgets(buf, sizeof(buf), f);
+        if (strcmp(buf, replace)) {
+            printf("Read \"%s\" instead of \"%s\".\n", buf, replace);
+            lose = 1;
+        }
+    }
+
+    if (lose) {
+        printf("Test FAILED!  Losing file is \"%s\".\n", filename);
+    } else {
+        (void) remove(filename);
+        puts("Test succeeded.");
+    }
+
+    return lose ? EXIT_FAILURE : EXIT_SUCCESS;
 }

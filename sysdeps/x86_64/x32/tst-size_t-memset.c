@@ -33,41 +33,37 @@
 # define CHAR char
 #endif /* WIDE */
 
-IMPL (MEMSET, 1)
+IMPL(MEMSET, 1)
 
-typedef CHAR *(*proto_t) (CHAR *, int, size_t);
+typedef CHAR *(*proto_t)(CHAR *, int, size_t);
 
-static void *
-__attribute__ ((noinline, noclone))
-do_memset (parameter_t a, parameter_t b)
+static void *__attribute__((noinline, noclone))
+do_memset(parameter_t a, parameter_t b)
 {
-  return CALL (&b, a.p, (uintptr_t) b.p, a.len);
+    return CALL(&b, a.p, (uintptr_t) b.p, a.len);
 }
 
-static int
-test_main (void)
+static int test_main(void)
 {
-  test_init ();
+    test_init();
 
-  CHAR ch = 0x23;
-  parameter_t src = { { page_size / sizeof (CHAR) }, buf2 };
-  parameter_t c = { { 0 }, (void *) (uintptr_t) ch };
+    CHAR ch = 0x23;
+    parameter_t src = { { page_size / sizeof(CHAR) }, buf2 };
+    parameter_t c = { { 0 }, (void *)(uintptr_t) ch };
 
-  int ret = 0;
-  FOR_EACH_IMPL (impl, 0)
-    {
-      c.fn = impl->fn;
-      CHAR *p = (CHAR *) do_memset (src, c);
-      size_t i;
-      for (i = 0; i < src.len; i++)
-	if (p[i] != ch)
-	  {
-	    error (0, 0, "Wrong result in function %s", impl->name);
-	    ret = 1;
-	  }
+    int ret = 0;
+    FOR_EACH_IMPL(impl, 0) {
+        c.fn = impl->fn;
+        CHAR *p = (CHAR *) do_memset(src, c);
+        size_t i;
+        for (i = 0; i < src.len; i++)
+            if (p[i] != ch) {
+                error(0, 0, "Wrong result in function %s", impl->name);
+                ret = 1;
+            }
     }
 
-  return ret ? EXIT_FAILURE : EXIT_SUCCESS;
+    return ret ? EXIT_FAILURE : EXIT_SUCCESS;
 }
 
 #include <support/test-driver.c>

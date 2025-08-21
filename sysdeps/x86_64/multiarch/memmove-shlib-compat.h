@@ -20,7 +20,7 @@
 # if SHLIB_COMPAT(libc, GLIBC_2_2_5, GLIBC_2_14)
 /* Use __memmove_{isa_level}_unaligned to support overlapping
    addresses.  */
-compat_symbol (libc, MEMMOVE_SYMBOL (__memmove, unaligned), memcpy,
-	       GLIBC_2_2_5);
+compat_symbol(libc, MEMMOVE_SYMBOL(__memmove, unaligned), memcpy,
+              GLIBC_2_2_5);
 # endif
 #endif

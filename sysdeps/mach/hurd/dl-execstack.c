@@ -25,24 +25,25 @@ extern struct hurd_startup_data *_dl_hurd_data attribute_hidden;
 /* There is no portable way to know the bounds of the initial thread's stack
    so as to mprotect it.  */
 
-int
-_dl_make_stack_executable (const void *stack_endp)
+int _dl_make_stack_executable(const void *stack_endp)
 {
-  /* Challenge the caller.  */
-  if (__glibc_unlikely (stack_endp != __libc_stack_end))
-    return EPERM;
+    /* Challenge the caller.  */
+    if (__glibc_unlikely(stack_endp != __libc_stack_end)) {
+        return EPERM;
+    }
 
 #if IS_IN (rtld)
-  if (__mprotect ((void *)_dl_hurd_data->stack_base, _dl_hurd_data->stack_size,
-		  PROT_READ|PROT_WRITE|PROT_EXEC) != 0)
-    return errno;
+    if (__mprotect((void *)_dl_hurd_data->stack_base, _dl_hurd_data->stack_size,
+                   PROT_READ | PROT_WRITE | PROT_EXEC) != 0) {
+        return errno;
+    }
 
-  /* Remember that we changed the permission.  */
-  GL(dl_stack_flags) |= PF_X;
+    /* Remember that we changed the permission.  */
+    GL(dl_stack_flags) |= PF_X;
 
-  return 0;
+    return 0;
 #else
-  /* We don't bother to implement this for static linking.  */
-  return ENOSYS;
+    /* We don't bother to implement this for static linking.  */
+    return ENOSYS;
 #endif
 }

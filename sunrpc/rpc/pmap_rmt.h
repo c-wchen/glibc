@@ -33,7 +33,7 @@
  */
 
 #ifndef _RPC_PMAP_RMT_H
-#define _RPC_PMAP_RMT_H	1
+#define _RPC_PMAP_RMT_H 1
 
 #include <features.h>
 #include <sys/types.h>
@@ -43,22 +43,22 @@
 __BEGIN_DECLS
 
 struct rmtcallargs {
-	u_long prog, vers, proc, arglen;
-	caddr_t args_ptr;
-	xdrproc_t xdr_args;
+    u_long prog, vers, proc, arglen;
+    caddr_t args_ptr;
+    xdrproc_t xdr_args;
 };
 
-extern bool_t xdr_rmtcall_args (XDR *__xdrs, struct rmtcallargs *__crp)
-     __THROW;
+extern bool_t xdr_rmtcall_args(XDR *__xdrs, struct rmtcallargs *__crp)
+__THROW;
 
 struct rmtcallres {
-	u_long *port_ptr;
-	u_long resultslen;
-	caddr_t results_ptr;
-	xdrproc_t xdr_results;
+    u_long *port_ptr;
+    u_long resultslen;
+    caddr_t results_ptr;
+    xdrproc_t xdr_results;
 };
 
-extern bool_t xdr_rmtcallres (XDR *__xdrs, struct rmtcallres *__crp) __THROW;
+extern bool_t xdr_rmtcallres(XDR *__xdrs, struct rmtcallres *__crp) __THROW;
 
 __END_DECLS
 

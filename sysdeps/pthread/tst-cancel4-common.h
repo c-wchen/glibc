@@ -64,26 +64,24 @@ static pthread_barrier_t b2;
 
 /* Set the send buffer of socket S to 1 byte so any send operation
    done with WRITE_BUFFER_SIZE bytes will force syscall blocking.  */
-static void
-set_socket_buffer (int s)
+static void set_socket_buffer(int s)
 {
-  int val = 1;
-  socklen_t len = sizeof (val);
+    int val = 1;
+    socklen_t len = sizeof(val);
 
-  TEST_VERIFY_EXIT (setsockopt (s, SOL_SOCKET, SO_SNDBUF, &val,
-		    sizeof (val)) == 0);
-  TEST_VERIFY_EXIT (getsockopt (s, SOL_SOCKET, SO_SNDBUF, &val, &len) == 0);
-  TEST_VERIFY_EXIT (val < WRITE_BUFFER_SIZE);
-  printf("got size %d\n", val);
+    TEST_VERIFY_EXIT(setsockopt(s, SOL_SOCKET, SO_SNDBUF, &val,
+                                sizeof(val)) == 0);
+    TEST_VERIFY_EXIT(getsockopt(s, SOL_SOCKET, SO_SNDBUF, &val, &len) == 0);
+    TEST_VERIFY_EXIT(val < WRITE_BUFFER_SIZE);
+    printf("got size %d\n", val);
 }
 
 /* Cleanup handling test.  */
 static int cl_called;
 
-static void
-cl (void *arg)
+static void cl(void *arg)
 {
-  ++cl_called;
+    ++cl_called;
 }
 
 /* Named pipe used to check for blocking open.  It should be closed
@@ -91,22 +89,20 @@ cl (void *arg)
 static char fifoname[] = "/tmp/tst-cancel4-fifo-XXXXXX";
 static int fifofd;
 
-static void
-__attribute__ ((used))
-cl_fifo (void *arg)
+static void __attribute__((used))
+cl_fifo(void *arg)
 {
-  ++cl_called;
+    ++cl_called;
 
-  unlink (fifoname);
-  close (fifofd);
-  fifofd = -1;
+    unlink(fifoname);
+    close(fifofd);
+    fifofd = -1;
 }
 
-struct cancel_tests
-{
-  const char *name;
-  void *(*tf) (void *);
-  int nb;
-  int only_early;
+struct cancel_tests {
+    const char *name;
+    void *(*tf)(void *);
+    int nb;
+    int only_early;
 };
 #define ADD_TEST(name, nbar, early) { #name, tf_##name, nbar, early }

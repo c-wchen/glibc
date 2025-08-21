@@ -23,50 +23,43 @@
 #include <support/xunistd.h>
 
 
-static void *
-tf (void *arg)
+static void *tf(void *arg)
 {
-  int fds[2];
-  if (pipe (fds) != 0)
-    {
-      puts ("pipe failed");
-      exit (1);
+    int fds[2];
+    if (pipe(fds) != 0) {
+        puts("pipe failed");
+        exit(1);
     }
 
-  char buf[10];
-  xread (fds[0], buf, sizeof (buf));
+    char buf[10];
+    xread(fds[0], buf, sizeof(buf));
 
-  puts ("read returned");
-  exit (1);
+    puts("read returned");
+    exit(1);
 }
 
 static pthread_t th;
 
-static void
-__attribute ((destructor))
-dest (void)
+static void __attribute((destructor))
+dest(void)
 {
-  if (pthread_cancel (th) != 0)
-    {
-      puts ("cancel failed");
-      _exit (1);
+    if (pthread_cancel(th) != 0) {
+        puts("cancel failed");
+        _exit(1);
     }
-  void *r;
-  if (pthread_join (th, &r) != 0)
-    {
-      puts ("join failed");
-      _exit (1);
+    void *r;
+    if (pthread_join(th, &r) != 0) {
+        puts("join failed");
+        _exit(1);
     }
-  /* Exit successfully.  */
-  _exit (0);
+    /* Exit successfully.  */
+    _exit(0);
 }
 
-void
-m (void)
+void m(void)
 {
-  if (pthread_create (&th, NULL, tf, NULL) != 0)
-    {
-      puts ("create failed");
-      _exit (1);
+    if (pthread_create(&th, NULL, tf, NULL) != 0) {
+        puts("create failed");
+        _exit(1);
     }
 }

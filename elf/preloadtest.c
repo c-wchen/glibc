@@ -2,18 +2,16 @@
 
 #include "testobj.h"
 
-int
-main (void)
+int main(void)
 {
-  int res = preload (42);
+    int res = preload(42);
 
-  printf ("preload (42) = %d, %s\n", res, res == 92 ? "ok" : "wrong");
+    printf("preload (42) = %d, %s\n", res, res == 92 ? "ok" : "wrong");
 
-  return res != 92;
+    return res != 92;
 }
 
-int
-foo (int a)
+int foo(int a)
 {
-  return a;
+    return a;
 }

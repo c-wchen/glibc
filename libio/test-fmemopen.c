@@ -24,75 +24,68 @@ static char buffer[] = "foobar";
 #include <errno.h>
 #include <mcheck.h>
 
-static int
-do_bz18820 (void)
+static int do_bz18820(void)
 {
-  char ch;
-  FILE *stream;
+    char ch;
+    FILE *stream;
 
-  errno = 0;
-  stream = fmemopen (&ch, 1, "?");
-  if (stream)
-    {
-      printf ("fmemopen: expected NULL, got %p\n", stream);
-      fclose (stream);
-      return 1;
+    errno = 0;
+    stream = fmemopen(&ch, 1, "?");
+    if (stream) {
+        printf("fmemopen: expected NULL, got %p\n", stream);
+        fclose(stream);
+        return 1;
     }
-  if (errno != EINVAL)
-    {
-      printf ("fmemopen: got %i, expected EINVAL (%i)\n", errno, EINVAL);
-      return 10;
+    if (errno != EINVAL) {
+        printf("fmemopen: got %i, expected EINVAL (%i)\n", errno, EINVAL);
+        return 10;
     }
 
-  stream = fmemopen (NULL, 42, "?");
-  if (stream)
-    {
-      printf ("fmemopen: expected NULL, got %p\n", stream);
-      fclose (stream);
-      return 2;
+    stream = fmemopen(NULL, 42, "?");
+    if (stream) {
+        printf("fmemopen: expected NULL, got %p\n", stream);
+        fclose(stream);
+        return 2;
     }
 
-  errno = 0;
-  stream = fmemopen (NULL, ~0, "w");
-  if (stream)
-    {
-      printf ("fmemopen: expected NULL, got %p\n", stream);
-      fclose (stream);
-      return 3;
+    errno = 0;
+    stream = fmemopen(NULL, ~0, "w");
+    if (stream) {
+        printf("fmemopen: expected NULL, got %p\n", stream);
+        fclose(stream);
+        return 3;
     }
-  if (errno != ENOMEM)
-    {
-      printf ("fmemopen: got %i, expected ENOMEM (%i)\n", errno, ENOMEM);
-      return 20;
+    if (errno != ENOMEM) {
+        printf("fmemopen: got %i, expected ENOMEM (%i)\n", errno, ENOMEM);
+        return 20;
     }
 
-  return 0;
+    return 0;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int ch;
-  FILE *stream;
-  int ret = 0;
+    int ch;
+    FILE *stream;
+    int ret = 0;
 
-  mtrace ();
+    mtrace();
 
-  stream = fmemopen (buffer, strlen (buffer), "r+");
+    stream = fmemopen(buffer, strlen(buffer), "r+");
 
-  while ((ch = fgetc (stream)) != EOF)
-    printf ("Got %c\n", ch);
-
-  fputc ('1', stream);
-  if (fflush (stream) != EOF || errno != ENOSPC)
-    {
-      printf ("fflush didn't fail with ENOSPC\n");
-      ret = 1;
+    while ((ch = fgetc(stream)) != EOF) {
+        printf("Got %c\n", ch);
     }
 
-  fclose (stream);
+    fputc('1', stream);
+    if (fflush(stream) != EOF || errno != ENOSPC) {
+        printf("fflush didn't fail with ENOSPC\n");
+        ret = 1;
+    }
 
-  return ret + do_bz18820 ();
+    fclose(stream);
+
+    return ret + do_bz18820();
 }
 
 #define TEST_FUNCTION do_test ()

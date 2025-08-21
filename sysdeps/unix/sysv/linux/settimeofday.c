@@ -22,37 +22,33 @@
 
 /* Set the current time of day and timezone information.
    This call is restricted to the super-user.  */
-int
-__settimeofday64 (const struct __timeval64 *tv, const struct timezone *tz)
+int __settimeofday64(const struct __timeval64 *tv, const struct timezone *tz)
 {
-  /* Backwards compatibility for setting the UTC offset.  */
-  if (__glibc_unlikely (tz != NULL))
-    {
-      if (tv != NULL)
-	{
-	  __set_errno (EINVAL);
-	  return -1;
-	}
-      return __settimezone (tz);
+    /* Backwards compatibility for setting the UTC offset.  */
+    if (__glibc_unlikely(tz != NULL)) {
+        if (tv != NULL) {
+            __set_errno(EINVAL);
+            return -1;
+        }
+        return __settimezone(tz);
     }
 
-  struct __timespec64 ts = timeval64_to_timespec64 (*tv);
-  return __clock_settime64 (CLOCK_REALTIME, &ts);
+    struct __timespec64 ts = timeval64_to_timespec64(*tv);
+    return __clock_settime64(CLOCK_REALTIME, &ts);
 }
 
 #if __TIMESIZE != 64
-libc_hidden_def (__settimeofday64)
+libc_hidden_def(__settimeofday64)
 
 int
-__settimeofday (const struct timeval *tv, const struct timezone *tz)
+__settimeofday(const struct timeval *tv, const struct timezone *tz)
 {
-  if (__glibc_unlikely (tv == NULL))
-    return __settimeofday64 (NULL, tz);
-  else
-    {
-      struct __timeval64 tv64 = valid_timeval_to_timeval64 (*tv);
-      return __settimeofday64 (&tv64, tz);
+    if (__glibc_unlikely(tv == NULL)) {
+        return __settimeofday64(NULL, tz);
+    } else {
+        struct __timeval64 tv64 = valid_timeval_to_timeval64(*tv);
+        return __settimeofday64(&tv64, tz);
     }
 }
 #endif
-weak_alias (__settimeofday, settimeofday);
+weak_alias(__settimeofday, settimeofday);

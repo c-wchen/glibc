@@ -16,7 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef	_LDSODEFS_H
+#ifndef _LDSODEFS_H
 
 /* We have the auxiliary vector.  */
 #define HAVE_AUX_VECTOR

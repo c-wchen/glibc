@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _CLONE3_H
-#define _CLONE3_H	1
+#define _CLONE3_H   1
 
 #include <features.h>
 #include <stddef.h>
@@ -26,41 +26,40 @@
 
 /* Flags for the clone3 syscall.  */
 #define CLONE_CLEAR_SIGHAND 0x100000000ULL /* Clear any signal handler and
-					      reset to SIG_DFL.  */
+                          reset to SIG_DFL.  */
 #define CLONE_INTO_CGROUP 0x200000000ULL /* Clone into a specific cgroup given
-					    the right permissions.  */
+                        the right permissions.  */
 
 /* The unsigned 64-bit and 8-byte aligned integer type.  */
-typedef __U64_TYPE __aligned_uint64_t __attribute__ ((__aligned__ (8)));
+typedef __U64_TYPE __aligned_uint64_t __attribute__((__aligned__(8)));
 
 /* This struct should only be used in an argument to the clone3 system
    call (along with its size argument).  It may be extended with new
    fields in the future.  */
 
-struct clone_args
-{
-  /* Flags bit mask.  */
-  __aligned_uint64_t flags;
-  /* Where to store PID file descriptor (pid_t *).  */
-  __aligned_uint64_t pidfd;
-  /* Where to store child TID, in child's memory (pid_t *).  */
-  __aligned_uint64_t child_tid;
-  /* Where to store child TID, in parent's memory (int *). */
-  __aligned_uint64_t parent_tid;
-  /* Signal to deliver to parent on child termination */
-  __aligned_uint64_t exit_signal;
-  /* The lowest address of stack.  */
-  __aligned_uint64_t stack;
-  /* Size of stack.  */
-  __aligned_uint64_t stack_size;
-  /* Location of new TLS.  */
-  __aligned_uint64_t tls;
-  /* Pointer to a pid_t array (since Linux 5.5).  */
-  __aligned_uint64_t set_tid;
-  /* Number of elements in set_tid (since Linux 5.5). */
-  __aligned_uint64_t set_tid_size;
-  /* File descriptor for target cgroup of child (since Linux 5.7).  */
-  __aligned_uint64_t cgroup;
+struct clone_args {
+    /* Flags bit mask.  */
+    __aligned_uint64_t flags;
+    /* Where to store PID file descriptor (pid_t *).  */
+    __aligned_uint64_t pidfd;
+    /* Where to store child TID, in child's memory (pid_t *).  */
+    __aligned_uint64_t child_tid;
+    /* Where to store child TID, in parent's memory (int *). */
+    __aligned_uint64_t parent_tid;
+    /* Signal to deliver to parent on child termination */
+    __aligned_uint64_t exit_signal;
+    /* The lowest address of stack.  */
+    __aligned_uint64_t stack;
+    /* Size of stack.  */
+    __aligned_uint64_t stack_size;
+    /* Location of new TLS.  */
+    __aligned_uint64_t tls;
+    /* Pointer to a pid_t array (since Linux 5.5).  */
+    __aligned_uint64_t set_tid;
+    /* Number of elements in set_tid (since Linux 5.5). */
+    __aligned_uint64_t set_tid_size;
+    /* File descriptor for target cgroup of child (since Linux 5.7).  */
+    __aligned_uint64_t cgroup;
 };
 
 #endif /* clone3.h */

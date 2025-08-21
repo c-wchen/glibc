@@ -22,14 +22,13 @@
 #include <string.h>
 #include <_itoa.h>
 
-char *
-__fd_to_filename (int descriptor, struct fd_to_filename *storage)
+char *__fd_to_filename(int descriptor, struct fd_to_filename *storage)
 {
-  assert (descriptor >= 0);
+    assert(descriptor >= 0);
 
-  char *p = mempcpy (storage->buffer, FD_TO_FILENAME_PREFIX,
-                     strlen (FD_TO_FILENAME_PREFIX));
-  *_fitoa_word (descriptor, p, 10, 0) = '\0';
+    char *p = mempcpy(storage->buffer, FD_TO_FILENAME_PREFIX,
+                      strlen(FD_TO_FILENAME_PREFIX));
+    *_fitoa_word(descriptor, p, 10, 0) = '\0';
 
-  return storage->buffer;
+    return storage->buffer;
 }

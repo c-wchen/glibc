@@ -23,13 +23,11 @@
 
 /* Duplicate a grp struct (and its members). When no longer needed, the
    calling function must free(newbuf).  */
-int
-__copy_grp (const struct group srcgrp, const size_t buflen,
-	    struct group *destgrp, char *destbuf, char **endptr);
+int __copy_grp(const struct group srcgrp, const size_t buflen,
+               struct group *destgrp, char *destbuf, char **endptr);
 
 /* Merge the member lists of two grp structs together.  */
-int
-__merge_grp (struct group *savedgrp, char *savedbuf, char *savedend,
-	     size_t buflen, struct group *mergegrp, char *mergebuf);
+int __merge_grp(struct group *savedgrp, char *savedbuf, char *savedend,
+                size_t buflen, struct group *mergegrp, char *mergebuf);
 
 #endif /* _GRP_MERGE_H */

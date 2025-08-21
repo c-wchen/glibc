@@ -25,18 +25,17 @@
    This is not part of the fclose external contract but there are
    dependencies on this behaviour.  */
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  TEST_COMPARE (fclose (stdin), 0);
+    TEST_COMPARE(fclose(stdin), 0);
 
-  /* Attempt to close the unopened file and verify that EOF is returned.
-     Calling fclose on a file twice normally causes a use-after-free bug,
-     however the standard streams are an exception since they are not
-     deallocated by fclose.  */
-  TEST_COMPARE (fclose (stdin), EOF);
+    /* Attempt to close the unopened file and verify that EOF is returned.
+       Calling fclose on a file twice normally causes a use-after-free bug,
+       however the standard streams are an exception since they are not
+       deallocated by fclose.  */
+    TEST_COMPARE(fclose(stdin), EOF);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

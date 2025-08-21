@@ -15,8 +15,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef	_SYS_UN_H
-#define	_SYS_UN_H	1
+#ifndef _SYS_UN_H
+#define _SYS_UN_H   1
 
 #include <sys/cdefs.h>
 
@@ -26,22 +26,21 @@
 __BEGIN_DECLS
 
 /* Structure describing the address of an AF_LOCAL (aka AF_UNIX) socket.  */
-struct __attribute_struct_may_alias__ sockaddr_un
-  {
-    __SOCKADDR_COMMON (sun_);
-    char sun_path[108];		/* Path name.  */
-  };
+struct __attribute_struct_may_alias__ sockaddr_un {
+    __SOCKADDR_COMMON(sun_);
+    char sun_path[108];     /* Path name.  */
+};
 
 
 #ifdef __USE_MISC
 # include <stddef.h>
-# include <string.h>		/* For prototype of `strlen'.  */
+# include <string.h>        /* For prototype of `strlen'.  */
 
 /* Evaluate to actual length of the `sockaddr_un' structure.  */
-# define SUN_LEN(ptr) (offsetof (struct sockaddr_un, sun_path)		      \
-		      + strlen ((ptr)->sun_path))
+# define SUN_LEN(ptr) (offsetof (struct sockaddr_un, sun_path)            \
+              + strlen ((ptr)->sun_path))
 #endif
 
 __END_DECLS
 
-#endif	/* sys/un.h  */
+#endif  /* sys/un.h  */

@@ -25,7 +25,7 @@ __BEGIN_DECLS
 
 /* Return the current YAMA mode set on the machine (0 to 3) or -1
    if YAMA is not supported.  */
-int support_ptrace_scope (void);
+int support_ptrace_scope(void);
 
 __END_DECLS
 

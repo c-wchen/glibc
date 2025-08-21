@@ -30,25 +30,25 @@
    not set errno. In the case of the db service it is not an error to close
    the service and so it should not set errno.  */
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* Just make sure it's not there, although usually it won't be.  */
-  unlink ("/var/db/group.db");
+    /* Just make sure it's not there, although usually it won't be.  */
+    unlink("/var/db/group.db");
 
-  /* This, in conjunction with the testroot's nsswitch.conf, causes
-     the nss_db module to be "connected" and initialized - but the
-     testroot has no group.db, so no mapping will be created.  */
-  getgrent ();
+    /* This, in conjunction with the testroot's nsswitch.conf, causes
+       the nss_db module to be "connected" and initialized - but the
+       testroot has no group.db, so no mapping will be created.  */
+    getgrent();
 
-  errno = 0;
+    errno = 0;
 
-  /* Before the fix, this would call munmap (NULL) and set errno.  */
-  endgrent ();
+    /* Before the fix, this would call munmap (NULL) and set errno.  */
+    endgrent();
 
-  if (errno != 0)
-    FAIL_EXIT1 ("endgrent set errno to %d\n", errno);
+    if (errno != 0) {
+        FAIL_EXIT1("endgrent set errno to %d\n", errno);
+    }
 
-  return 0;
+    return 0;
 }
 #include <support/test-driver.c>

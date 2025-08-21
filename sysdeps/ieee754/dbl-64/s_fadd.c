@@ -26,9 +26,8 @@
 
 #include <math-narrow.h>
 
-float
-__fadd (double x, double y)
+float __fadd(double x, double y)
 {
-  NARROW_ADD_ROUND_TO_ODD (x, y, float, union ieee754_double, , mantissa1);
+    NARROW_ADD_ROUND_TO_ODD(x, y, float, union ieee754_double,, mantissa1);
 }
-libm_alias_float_double (add)
+libm_alias_float_double(add)

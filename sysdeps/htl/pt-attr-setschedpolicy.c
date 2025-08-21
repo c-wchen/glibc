@@ -20,28 +20,26 @@
 #include <shlib-compat.h>
 #include <pt-internal.h>
 
-int
-__pthread_attr_setschedpolicy (pthread_attr_t *attr, int policy)
+int __pthread_attr_setschedpolicy(pthread_attr_t *attr, int policy)
 {
-  switch (policy)
-    {
-    case SCHED_OTHER:
-      attr->__schedpolicy = policy;
-      break;
+    switch (policy) {
+        case SCHED_OTHER:
+            attr->__schedpolicy = policy;
+            break;
 
-    case SCHED_FIFO:
-    case SCHED_RR:
-      return ENOTSUP;
+        case SCHED_FIFO:
+        case SCHED_RR:
+            return ENOTSUP;
 
-    default:
-      return EINVAL;
+        default:
+            return EINVAL;
     }
 
-  return 0;
+    return 0;
 }
 
-versioned_symbol (libc, __pthread_attr_setschedpolicy, pthread_attr_setschedpolicy, GLIBC_2_21);
+versioned_symbol(libc, __pthread_attr_setschedpolicy, pthread_attr_setschedpolicy, GLIBC_2_21);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_21)
-compat_symbol (libc, __pthread_attr_setschedpolicy, pthread_attr_setschedpolicy, GLIBC_2_12);
+compat_symbol(libc, __pthread_attr_setschedpolicy, pthread_attr_setschedpolicy, GLIBC_2_12);
 #endif

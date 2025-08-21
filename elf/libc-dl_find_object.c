@@ -19,8 +19,7 @@
 #include <ldsodefs.h>
 #include <dlfcn.h>
 
-int
-_dl_find_object (void *address, struct dl_find_object *result)
+int _dl_find_object(void *address, struct dl_find_object *result)
 {
-  return GLRO (dl_find_object) (address, result);
+    return GLRO(dl_find_object)(address, result);
 }

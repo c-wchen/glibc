@@ -21,20 +21,18 @@
 #include "soft-fp.h"
 #include "soft-supp.h"
 
-int
-__flt_rounds (void)
+int __flt_rounds(void)
 {
-  switch (__sim_round_mode_thread)
-    {
-    case FP_RND_ZERO:
-      return 0;
-    case FP_RND_NEAREST:
-      return 1;
-    case FP_RND_PINF:
-      return 2;
-    case FP_RND_MINF:
-      return 3;
-    default:
-      abort ();
+    switch (__sim_round_mode_thread) {
+        case FP_RND_ZERO:
+            return 0;
+        case FP_RND_NEAREST:
+            return 1;
+        case FP_RND_PINF:
+            return 2;
+        case FP_RND_MINF:
+            return 3;
+        default:
+            abort();
     }
 }

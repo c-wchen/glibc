@@ -27,17 +27,17 @@
    keeps using the generic check.  */
 #ifdef __mips_nan2008
 # if _MIPS_SIM == _ABIO32
-#  define _DL_CACHE_DEFAULT_ID	(FLAG_MIPS_LIB32_NAN2008 | FLAG_ELF_LIBC6)
+#  define _DL_CACHE_DEFAULT_ID  (FLAG_MIPS_LIB32_NAN2008 | FLAG_ELF_LIBC6)
 # elif _MIPS_SIM == _ABI64
-#  define _DL_CACHE_DEFAULT_ID	(FLAG_MIPS64_LIBN64_NAN2008 | FLAG_ELF_LIBC6)
+#  define _DL_CACHE_DEFAULT_ID  (FLAG_MIPS64_LIBN64_NAN2008 | FLAG_ELF_LIBC6)
 # elif _MIPS_SIM == _ABIN32
-#  define _DL_CACHE_DEFAULT_ID	(FLAG_MIPS64_LIBN32_NAN2008 | FLAG_ELF_LIBC6)
+#  define _DL_CACHE_DEFAULT_ID  (FLAG_MIPS64_LIBN32_NAN2008 | FLAG_ELF_LIBC6)
 # endif
 #else
 # if _MIPS_SIM == _ABI64
-#  define _DL_CACHE_DEFAULT_ID	(FLAG_MIPS64_LIBN64 | FLAG_ELF_LIBC6)
+#  define _DL_CACHE_DEFAULT_ID  (FLAG_MIPS64_LIBN64 | FLAG_ELF_LIBC6)
 # elif _MIPS_SIM == _ABIN32
-#  define _DL_CACHE_DEFAULT_ID	(FLAG_MIPS64_LIBN32 | FLAG_ELF_LIBC6)
+#  define _DL_CACHE_DEFAULT_ID  (FLAG_MIPS64_LIBN32 | FLAG_ELF_LIBC6)
 # endif
 #endif
 
@@ -47,26 +47,26 @@
 #endif
 
 #define add_system_dir(dir) \
-  do								\
-    {								\
-      size_t len = strlen (dir);				\
-      char path[len + 3];					\
-      memcpy (path, dir, len + 1);				\
-      if (len >= 6						\
-	  && (! memcmp (path + len - 6, "/lib64", 6)		\
-	      || ! memcmp (path + len - 6, "/lib32", 6)))	\
-	{							\
-	  len -= 2;						\
-	  path[len] = '\0';					\
-	}							\
-      add_dir (path);						\
-      if (len >= 4 && ! memcmp (path + len - 4, "/lib", 4))	\
-	{							\
-	  memcpy (path + len, "32", 3);				\
-	  add_dir (path);					\
-	  memcpy (path + len, "64", 3);				\
-	  add_dir (path);					\
-	}							\
+  do                                \
+    {                               \
+      size_t len = strlen (dir);                \
+      char path[len + 3];                   \
+      memcpy (path, dir, len + 1);              \
+      if (len >= 6                      \
+      && (! memcmp (path + len - 6, "/lib64", 6)        \
+          || ! memcmp (path + len - 6, "/lib32", 6)))   \
+    {                           \
+      len -= 2;                     \
+      path[len] = '\0';                 \
+    }                           \
+      add_dir (path);                       \
+      if (len >= 4 && ! memcmp (path + len - 4, "/lib", 4)) \
+    {                           \
+      memcpy (path + len, "32", 3);             \
+      add_dir (path);                   \
+      memcpy (path + len, "64", 3);             \
+      add_dir (path);                   \
+    }                           \
     } while (0)
 
 #include_next <dl-cache.h>

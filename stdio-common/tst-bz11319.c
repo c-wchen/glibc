@@ -26,24 +26,23 @@
 #include <support/temp_file.h>
 #include <support/xunistd.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char *tempfile;
-  int fd;
+    char *tempfile;
+    int fd;
 
-  /* Create a temporary file and open it in read-only mode.  */
-  TEST_VERIFY_EXIT (create_temp_file ("tst-bz11319", &tempfile));
-  fd = xopen (tempfile, O_RDONLY, 0660);
+    /* Create a temporary file and open it in read-only mode.  */
+    TEST_VERIFY_EXIT(create_temp_file("tst-bz11319", &tempfile));
+    fd = xopen(tempfile, O_RDONLY, 0660);
 
-  /* Try and write to the temporary file to intentionally fail, then
-     check that dprintf (or __dprintf_chk) return EOF.  */
-  TEST_COMPARE (dprintf (fd, "%d", 0), EOF);
+    /* Try and write to the temporary file to intentionally fail, then
+       check that dprintf (or __dprintf_chk) return EOF.  */
+    TEST_COMPARE(dprintf(fd, "%d", 0), EOF);
 
-  xclose (fd);
-  free (tempfile);
+    xclose(fd);
+    free(tempfile);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -21,16 +21,16 @@
 #include <support/check.h>
 #include "tst-filterobj-filtee.h"
 
-static int do_test (void)
+static int do_test(void)
 {
-  const char* text = get_text ();
+    const char *text = get_text();
 
-  printf ("%s\n", text);
+    printf("%s\n", text);
 
-  /* Verify the text matches what we expect from the filtee */
-  TEST_COMPARE_STRING (text, "Hello from filtee (PASS)");
+    /* Verify the text matches what we expect from the filtee */
+    TEST_COMPARE_STRING(text, "Hello from filtee (PASS)");
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -20,19 +20,19 @@
 #include <support/support.h>
 #include <support/test-driver.h>
 
-void *get_absolute (void);
+void *get_absolute(void);
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  void *ref = (void *) 0;
-  void *ptr;
+    void *ref = (void *) 0;
+    void *ptr;
 
-  ptr = get_absolute ();
-  if (ptr != ref)
-    FAIL_EXIT1 ("Got %p, expected %p\n", ptr, ref);
+    ptr = get_absolute();
+    if (ptr != ref) {
+        FAIL_EXIT1("Got %p, expected %p\n", ptr, ref);
+    }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

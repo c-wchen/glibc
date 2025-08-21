@@ -16,8 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-struct kernel_stat
-  {
+struct kernel_stat {
     unsigned int st_dev;
     unsigned int st_ino;
     unsigned int st_mode;
@@ -35,7 +34,7 @@ struct kernel_stat
 #define _HAVE___UNUSED4
     unsigned long int __glibc_reserved5;
 #define _HAVE___UNUSED5
-  };
+};
 
 #define _HAVE_STAT___UNUSED4
 #define _HAVE_STAT___UNUSED5

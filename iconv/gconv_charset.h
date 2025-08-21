@@ -52,37 +52,37 @@
    'wp' while dropping all other characters.  In the process, it converts all
    alphabetical characters to upper case.  It then appends up to two '/'
    characters so that the total number of '/'es in the destination is 2.  */
-static inline void __attribute__ ((unused, always_inline))
-strip (char *wp, const char *s)
+static inline void __attribute__((unused, always_inline))
+strip(char *wp, const char *s)
 {
-  int slash_count = 0;
+    int slash_count = 0;
 
-  while (*s != '\0')
-    {
-      if (__isalnum_l (*s, _nl_C_locobj_ptr)
-	  || *s == '_' || *s == '-' || *s == '.' || *s == ',' || *s == ':')
-	*wp++ = __toupper_l (*s, _nl_C_locobj_ptr);
-      else if (*s == '/')
-	{
-	  if (++slash_count == 3)
-	    break;
-	  *wp++ = '/';
-	}
-      ++s;
+    while (*s != '\0') {
+        if (__isalnum_l(*s, _nl_C_locobj_ptr)
+            || *s == '_' || *s == '-' || *s == '.' || *s == ',' || *s == ':') {
+            *wp++ = __toupper_l(*s, _nl_C_locobj_ptr);
+        } else if (*s == '/') {
+            if (++slash_count == 3) {
+                break;
+            }
+            *wp++ = '/';
+        }
+        ++s;
     }
 
-  while (slash_count++ < 2)
-    *wp++ = '/';
+    while (slash_count++ < 2) {
+        *wp++ = '/';
+    }
 
-  *wp = '\0';
+    *wp = '\0';
 }
 
 
-static inline char * __attribute__ ((unused, always_inline))
-upstr (char *dst, const char *str)
+static inline char *__attribute__((unused, always_inline))
+upstr(char *dst, const char *str)
 {
-  char *cp = dst;
-  while ((*cp++ = __toupper_l (*str++, _nl_C_locobj_ptr)) != '\0')
-    /* nothing */;
-  return dst;
+    char *cp = dst;
+    while ((*cp++ = __toupper_l(*str++, _nl_C_locobj_ptr)) != '\0')
+        /* nothing */;
+    return dst;
 }

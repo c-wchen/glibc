@@ -18,9 +18,8 @@
 
 #include <stdio.h>
 
-int
-__gen_tempfd (int flags)
+int __gen_tempfd(int flags)
 {
-  return -1;
+    return -1;
 }
-libc_hidden_def (__gen_tempfd)
+libc_hidden_def(__gen_tempfd)

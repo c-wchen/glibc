@@ -64,12 +64,12 @@
 
 
 FLOAT
-INTERNAL (STRTOF) (const STRING_TYPE *nptr, STRING_TYPE **endptr, int group)
+INTERNAL(STRTOF)(const STRING_TYPE *nptr, STRING_TYPE **endptr, int group)
 {
-  return INTERNAL(STRTOF_L) (nptr, endptr, group, _NL_CURRENT_LOCALE);
+    return INTERNAL(STRTOF_L)(nptr, endptr, group, _NL_CURRENT_LOCALE);
 }
 #if defined _LIBC
-libc_hidden_def (INTERNAL (STRTOF))
+libc_hidden_def(INTERNAL(STRTOF))
 #endif
 
 
@@ -77,22 +77,22 @@ FLOAT
 #ifdef weak_function
 weak_function
 #endif
-STRTOF (const STRING_TYPE *nptr, STRING_TYPE **endptr)
+STRTOF(const STRING_TYPE *nptr, STRING_TYPE **endptr)
 {
-  return INTERNAL(STRTOF_L) (nptr, endptr, 0, _NL_CURRENT_LOCALE);
+    return INTERNAL(STRTOF_L)(nptr, endptr, 0, _NL_CURRENT_LOCALE);
 }
 #if defined _LIBC
-libc_hidden_def (STRTOF)
+libc_hidden_def(STRTOF)
 #endif
 
 #ifdef LONG_DOUBLE_COMPAT
 # if LONG_DOUBLE_COMPAT(libc, GLIBC_2_0)
 #  ifdef USE_WIDE_CHAR
-compat_symbol (libc, wcstod, wcstold, GLIBC_2_0);
-compat_symbol (libc, __wcstod_internal, __wcstold_internal, GLIBC_2_0);
+compat_symbol(libc, wcstod, wcstold, GLIBC_2_0);
+compat_symbol(libc, __wcstod_internal, __wcstold_internal, GLIBC_2_0);
 #  else
-compat_symbol (libc, strtod, strtold, GLIBC_2_0);
-compat_symbol (libc, __strtod_internal, __strtold_internal, GLIBC_2_0);
+compat_symbol(libc, strtod, strtold, GLIBC_2_0);
+compat_symbol(libc, __strtod_internal, __strtold_internal, GLIBC_2_0);
 #  endif
 # endif
 #endif
@@ -102,18 +102,18 @@ compat_symbol (libc, __strtod_internal, __strtold_internal, GLIBC_2_0);
 #  undef strtof64
 #  undef wcstof64
 #  ifdef USE_WIDE_CHAR
-weak_alias (wcstod, wcstof64)
+weak_alias(wcstod, wcstof64)
 #  else
-weak_alias (strtod, strtof64)
+weak_alias(strtod, strtof64)
 #  endif
 # endif
 # if __HAVE_FLOAT32X && !__HAVE_DISTINCT_FLOAT32X
 #  undef strtof32x
 #  undef wcstof32x
 #  ifdef USE_WIDE_CHAR
-weak_alias (wcstod, wcstof32x)
+weak_alias(wcstod, wcstof32x)
 #  else
-weak_alias (strtod, strtof32x)
+weak_alias(strtod, strtof32x)
 #  endif
 # endif
 #endif

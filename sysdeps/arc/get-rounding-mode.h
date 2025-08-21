@@ -17,21 +17,20 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _ARC_GET_ROUNDING_MODE_H
-#define _ARC_GET_ROUNDING_MODE_H	1
+#define _ARC_GET_ROUNDING_MODE_H    1
 
 #include <fenv.h>
 #include <fpu_control.h>
 
-static inline int
-get_rounding_mode (void)
+static inline int get_rounding_mode(void)
 {
 #if defined(__ARC_FPU_SP__) ||  defined(__ARC_FPU_DP__)
-  unsigned int fpcr;
-  _FPU_GETCW (fpcr);
+    unsigned int fpcr;
+    _FPU_GETCW(fpcr);
 
-  return (fpcr >> __FPU_RND_SHIFT) & __FPU_RND_MASK;
+    return (fpcr >> __FPU_RND_SHIFT) & __FPU_RND_MASK;
 #else
-  return FE_TONEAREST;
+    return FE_TONEAREST;
 #endif
 }
 

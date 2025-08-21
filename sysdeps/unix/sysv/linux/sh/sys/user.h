@@ -16,7 +16,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _SYS_USER_H
-#define _SYS_USER_H	1
+#define _SYS_USER_H 1
 
 #include <asm/ptrace.h>
 #include <stddef.h>
@@ -29,25 +29,23 @@
 #undef PTRACE_GETFDPIC
 #undef PTRACE_GETFDPIC_EXEC
 #undef PTRACE_GETFDPIC_INTERP
-#undef	PTRACE_GETDSPREGS
-#undef	PTRACE_SETDSPREGS
+#undef  PTRACE_GETDSPREGS
+#undef  PTRACE_SETDSPREGS
 
 typedef unsigned long elf_greg_t;
 
 #define ELF_NGREG (sizeof (struct pt_regs) / sizeof (elf_greg_t))
 typedef elf_greg_t elf_gregset_t[ELF_NGREG];
 
-struct user_fpu_struct
-  {
+struct user_fpu_struct {
     unsigned long fp_regs[16];
     unsigned long xfp_regs[16];
     unsigned long fpscr;
     unsigned long fpul;
-  };
+};
 typedef struct user_fpu_struct elf_fpregset_t;
 
-struct user
-  {
+struct user {
     struct pt_regs regs;
     struct user_fpu_struct fpu;
     int u_fpvalid;
@@ -62,6 +60,6 @@ struct user
     struct user_fpu_struct *u_fpstate;
     unsigned long magic;
     char u_comm[32];
-  };
+};
 
 #endif  /* sys/user.h */

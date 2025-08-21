@@ -17,7 +17,7 @@
 /* Don't rely on this, the interface is currently messed up and may need to
    be broken to be fixed.  */
 #ifndef _SYS_UCONTEXT_H
-#define _SYS_UCONTEXT_H	1
+#define _SYS_UCONTEXT_H 1
 
 #include <features.h>
 
@@ -32,11 +32,11 @@
 __extension__ typedef unsigned long long int greg_t;
 
 /* Number of general registers.  */
-#define __NGREG	32
-#define __NFPREG	32
+#define __NGREG 32
+#define __NFPREG    32
 #ifdef __USE_MISC
-# define NGREG	__NGREG
-# define NFPREG	__NFPREG
+# define NGREG  __NGREG
+# define NFPREG __NFPREG
 #endif
 
 /* Container for all general registers.  */
@@ -50,13 +50,13 @@ typedef greg_t gregset_t[__NGREG];
 
 /* Container for all FPU registers.  */
 typedef struct {
-	union {
-		double	__ctx(fp_dregs)[__NFPREG];
-		struct {
-			float		_fp_fregs;
-			unsigned int	_fp_pad;
-		} __ctx(fp_fregs)[__NFPREG];
-	} __ctx(fp_r);
+    union {
+        double  __ctx(fp_dregs)[__NFPREG];
+        struct {
+            float       _fp_fregs;
+            unsigned int    _fp_pad;
+        } __ctx(fp_fregs)[__NFPREG];
+    } __ctx(fp_r);
 } fpregset_t;
 
 
@@ -67,8 +67,7 @@ typedef struct {
    corresponding kernel data structure.  Fortunately, makecontext,
    [gs]etcontext et all were not implemented back then, so this can
    still be rectified.  */
-typedef struct
-  {
+typedef struct {
     unsigned int __ctx(regmask);
     unsigned int __ctx(status);
     greg_t __ctx(pc);
@@ -87,10 +86,9 @@ typedef struct
     unsigned long __ctx(lo2);
     unsigned long __ctx(hi3);
     unsigned long __ctx(lo3);
-  } mcontext_t;
+} mcontext_t;
 #else
-typedef struct
-  {
+typedef struct {
     gregset_t __ctx(gregs);
     fpregset_t __ctx(fpregs);
     greg_t __ctx(mdhi);
@@ -106,18 +104,17 @@ typedef struct
     unsigned int __ctx(used_math);
     unsigned int __ctx(dsp);
     unsigned int __glibc_reserved1;
-  } mcontext_t;
+} mcontext_t;
 #endif
 
 /* Userlevel context.  */
-typedef struct ucontext_t
-  {
+typedef struct ucontext_t {
     unsigned long int __ctx(uc_flags);
     struct ucontext_t *uc_link;
     stack_t uc_stack;
     mcontext_t uc_mcontext;
     sigset_t uc_sigmask;
-  } ucontext_t;
+} ucontext_t;
 
 #undef __ctx
 

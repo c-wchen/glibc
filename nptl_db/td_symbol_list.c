@@ -19,32 +19,29 @@
 #include <assert.h>
 #include "thread_dbP.h"
 
-static const char *symbol_list_arr[] =
-{
-# define DB_LOOKUP_NAME(idx, name)		[idx] = STRINGIFY (name),
-# define DB_LOOKUP_NAME_TH_UNIQUE(idx, name)	[idx] = STRINGIFY (name),
+static const char *symbol_list_arr[] = {
+# define DB_LOOKUP_NAME(idx, name)      [idx] = STRINGIFY (name),
+# define DB_LOOKUP_NAME_TH_UNIQUE(idx, name)    [idx] = STRINGIFY (name),
 # include "db-symbols.h"
-# undef	DB_LOOKUP_NAME
-# undef	DB_LOOKUP_NAME_TH_UNIQUE
+# undef DB_LOOKUP_NAME
+# undef DB_LOOKUP_NAME_TH_UNIQUE
 
-  [SYM_NUM_MESSAGES] = NULL
+    [SYM_NUM_MESSAGES] = NULL
 };
 
 
-const char **
-td_symbol_list (void)
+const char **td_symbol_list(void)
 {
-  return symbol_list_arr;
+    return symbol_list_arr;
 }
 
 
-ps_err_e
-td_mod_lookup (struct ps_prochandle *ps, const char *mod,
-	       int idx, psaddr_t *sym_addr)
+ps_err_e td_mod_lookup(struct ps_prochandle *ps, const char *mod,
+                       int idx, psaddr_t *sym_addr)
 {
-  ps_err_e result;
-  assert (idx >= 0 && idx < SYM_NUM_MESSAGES);
-  result = ps_pglobal_lookup (ps, mod, symbol_list_arr[idx], sym_addr);
+    ps_err_e result;
+    assert(idx >= 0 && idx < SYM_NUM_MESSAGES);
+    result = ps_pglobal_lookup(ps, mod, symbol_list_arr[idx], sym_addr);
 
-  return result;
+    return result;
 }

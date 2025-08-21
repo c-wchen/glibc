@@ -23,8 +23,7 @@
 #if __TIMESIZE == 64
 # define __msqid64_ds msqid_ds
 #else
-struct __msqid64_ds
-{
+struct __msqid64_ds {
 # include <bits/types/struct_msqid64_ds_helper.h>
 };
 #endif

@@ -20,36 +20,33 @@
 #include <stdlib.h>
 
 /* Obtain a backtrace and print it to @code{stdout}. */
-void
-print_trace (void)
+void print_trace(void)
 {
-  void *array[10];
-  char **strings;
-  int size, i;
+    void *array[10];
+    char **strings;
+    int size, i;
 
-  size = backtrace (array, 10);
-  strings = backtrace_symbols (array, size);
-  if (strings != NULL)
-  {
+    size = backtrace(array, 10);
+    strings = backtrace_symbols(array, size);
+    if (strings != NULL) {
 
-    printf ("Obtained %d stack frames.\n", size);
-    for (i = 0; i < size; i++)
-      printf ("%s\n", strings[i]);
-  }
+        printf("Obtained %d stack frames.\n", size);
+        for (i = 0; i < size; i++) {
+            printf("%s\n", strings[i]);
+        }
+    }
 
-  free (strings);
+    free(strings);
 }
 
 /* A dummy function to make the backtrace more interesting. */
-void
-dummy_function (void)
+void dummy_function(void)
 {
-  print_trace ();
+    print_trace();
 }
 
-int
-main (void)
+int main(void)
 {
-  dummy_function ();
-  return 0;
+    dummy_function();
+    return 0;
 }

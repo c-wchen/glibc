@@ -40,79 +40,75 @@ static bool run_dlclose_prepare;
 static bool run_dlclose_parent;
 static bool run_dlclose_child;
 
-static void
-prepare (void)
+static void prepare(void)
 {
-  if (run_dlclose_prepare)
-    xdlclose (handler);
+    if (run_dlclose_prepare) {
+        xdlclose(handler);
+    }
 }
 
-static void
-parent (void)
+static void parent(void)
 {
-  if (run_dlclose_parent)
-    xdlclose (handler);
+    if (run_dlclose_parent) {
+        xdlclose(handler);
+    }
 }
 
-static void
-child (void)
+static void child(void)
 {
-  if (run_dlclose_child)
-    xdlclose (handler);
+    if (run_dlclose_child) {
+        xdlclose(handler);
+    }
 }
 
-static void
-proc_func (void *closure)
+static void proc_func(void *closure)
 {
 }
 
-static void
-do_test_generic (bool dlclose_prepare, bool dlclose_parent, bool dlclose_child)
+static void do_test_generic(bool dlclose_prepare, bool dlclose_parent, bool dlclose_child)
 {
-  run_dlclose_prepare = dlclose_prepare;
-  run_dlclose_parent = dlclose_parent;
-  run_dlclose_child = dlclose_child;
+    run_dlclose_prepare = dlclose_prepare;
+    run_dlclose_parent = dlclose_parent;
+    run_dlclose_child = dlclose_child;
 
-  handler = xdlopen ("tst-atfork3mod.so", RTLD_NOW);
+    handler = xdlopen("tst-atfork3mod.so", RTLD_NOW);
 
-  int (*atfork3mod_func)(void);
-  atfork3mod_func = xdlsym (handler, "atfork3mod_func");
+    int (*atfork3mod_func)(void);
+    atfork3mod_func = xdlsym(handler, "atfork3mod_func");
 
-  atfork3mod_func ();
+    atfork3mod_func();
 
-  struct support_capture_subprocess proc
-    = support_capture_subprocess (proc_func, NULL);
-  support_capture_subprocess_check (&proc, "tst-atfork3", 0, sc_allow_none);
+    struct support_capture_subprocess proc
+        = support_capture_subprocess(proc_func, NULL);
+    support_capture_subprocess_check(&proc, "tst-atfork3", 0, sc_allow_none);
 
-  handler = atfork3mod_func = NULL;
+    handler = atfork3mod_func = NULL;
 
-  support_capture_subprocess_free (&proc);
+    support_capture_subprocess_free(&proc);
 }
 
-static void *
-thread_func (void *closure)
+static void *thread_func(void *closure)
 {
-  return NULL;
+    return NULL;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  {
-    /* Make the process acts as multithread.  */
-    pthread_attr_t attr;
-    xpthread_attr_init (&attr);
-    xpthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
-    xpthread_create (&attr, thread_func, NULL);
-  }
+    {
+        /* Make the process acts as multithread.  */
+        pthread_attr_t attr;
+        xpthread_attr_init(&attr);
+        xpthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+        xpthread_create(&attr, thread_func, NULL);
+    }
 
-  TEST_COMPARE (pthread_atfork (prepare, parent, child), 0);
+    TEST_COMPARE(pthread_atfork(prepare, parent, child), 0);
 
-  do_test_generic (true  /* prepare */, false /* parent */, false /* child */);
-  do_test_generic (false /* prepare */, true  /* parent */, false /* child */);
-  do_test_generic (false /* prepare */, false /* parent */, true  /* child */);
+    do_test_generic(true  /* prepare */, false /* parent */, false /* child */);
+    do_test_generic(false /* prepare */, true  /* parent */, false /* child */);
+    do_test_generic(false /* prepare */, false /* parent */, true  /* child */);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -20,12 +20,11 @@
 #include <sys/types.h>
 
 /* Get the real group ID of the calling process.  */
-gid_t
-__getgid (void)
+gid_t __getgid(void)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (getgid)
+stub_warning(getgid)
 
-weak_alias (__getgid, getgid)
+weak_alias(__getgid, getgid)

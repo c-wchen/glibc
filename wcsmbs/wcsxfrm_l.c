@@ -30,4 +30,4 @@
 
 #include "../string/strxfrm_l.c"
 
-weak_alias (__wcsxfrm_l, wcsxfrm_l)
+weak_alias(__wcsxfrm_l, wcsxfrm_l)

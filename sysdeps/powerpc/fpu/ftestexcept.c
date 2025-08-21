@@ -18,16 +18,15 @@
 
 #include <fenv_libc.h>
 
-int
-fetestexcept (int excepts)
+int fetestexcept(int excepts)
 {
-  fenv_union_t u;
+    fenv_union_t u;
 
-  /* Get the current state.  */
-  u.fenv = fegetenv_register ();
+    /* Get the current state.  */
+    u.fenv = fegetenv_register();
 
-  /* The FE_INVALID bit is dealt with correctly by the hardware, so we can
-     just:  */
-  return u.l & excepts;
+    /* The FE_INVALID bit is dealt with correctly by the hardware, so we can
+       just:  */
+    return u.l & excepts;
 }
-libm_hidden_def (fetestexcept)
+libm_hidden_def(fetestexcept)

@@ -18,10 +18,9 @@
 
 #include <fenv.h>
 
-int
-fesetexcept (int excepts)
+int fesetexcept(int excepts)
 {
-  /* This always fails unless nothing needs to be done.  */
-  return (excepts != 0);
+    /* This always fails unless nothing needs to be done.  */
+    return (excepts != 0);
 }
-stub_warning (fesetexcept)
+stub_warning(fesetexcept)

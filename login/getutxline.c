@@ -19,7 +19,7 @@
 #include <utmpx.h>
 
 struct utmpx *
-getutxline (const struct utmpx *line)
+getutxline(const struct utmpx *line)
 {
-  return (struct utmpx *) __getutline ((const struct utmp *) line);
+    return (struct utmpx *) __getutline((const struct utmp *) line);
 }

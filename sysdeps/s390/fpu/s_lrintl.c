@@ -31,25 +31,24 @@
 #  define INSN "cfxbra"
 # endif
 
-long int
-__lrintl (_Float128 x)
+long int __lrintl(_Float128 x)
 {
-  long int y;
-  /* The z196 zarch "convert to fixed" (cgxbra) instruction is rounding
-     according to current rounding mode (M3-field: 0).
-     First convert x with suppressed inexact exception and check if the
-     resulting value is beyond the target limits (indicated by cc=3;
-     Note: a nan is also indicated by cc=3).
-     If the resulting value is within the target limits, redo
-     without suppressing the inexact exception.  */
-  __asm__ (INSN " %0,0,%1,4 \n\t"
-	   "jo 1f \n\t"
-	   INSN " %0,0,%1,0 \n\t"
-	   "1:"
-	   : "=&d" (y) : "f" (x) : "cc");
-  return y;
+    long int y;
+    /* The z196 zarch "convert to fixed" (cgxbra) instruction is rounding
+       according to current rounding mode (M3-field: 0).
+       First convert x with suppressed inexact exception and check if the
+       resulting value is beyond the target limits (indicated by cc=3;
+       Note: a nan is also indicated by cc=3).
+       If the resulting value is within the target limits, redo
+       without suppressing the inexact exception.  */
+    __asm__(INSN " %0,0,%1,4 \n\t"
+            "jo 1f \n\t"
+            INSN " %0,0,%1,0 \n\t"
+            "1:"
+            : "=&d"(y) : "f"(x) : "cc");
+    return y;
 }
-libm_alias_ldouble (__lrint, lrint)
+libm_alias_ldouble(__lrint, lrint)
 
 #else
 # include <sysdeps/ieee754/ldbl-128/s_lrintl.c>

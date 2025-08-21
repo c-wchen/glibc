@@ -23,59 +23,51 @@
 #include <unistd.h>
 
 
-static void
-remove_sem (int status, void *arg)
+static void remove_sem(int status, void *arg)
 {
-  sem_unlink (arg);
+    sem_unlink(arg);
 }
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  sem_t *s;
-  int i;
+    sem_t *s;
+    int i;
 
-  on_exit (remove_sem, (void *) "/glibc-tst-sem9");
+    on_exit(remove_sem, (void *) "/glibc-tst-sem9");
 
-  for (i = 0; i < 3; ++i)
-    {
-      s = sem_open ("/glibc-tst-sem9", O_CREAT, 0600, 1);
-      if (s == SEM_FAILED)
-	{
-	  if (errno == ENOSYS)
-	    {
-	      puts ("sem_open not supported.  Oh well.");
-	      return 0;
-	    }
+    for (i = 0; i < 3; ++i) {
+        s = sem_open("/glibc-tst-sem9", O_CREAT, 0600, 1);
+        if (s == SEM_FAILED) {
+            if (errno == ENOSYS) {
+                puts("sem_open not supported.  Oh well.");
+                return 0;
+            }
 
-	  /* Maybe the shm filesystem has strict permissions.  */
-	  if (errno == EACCES)
-	    {
-	      puts ("sem_open not allowed.  Oh well.");
-	      return 0;
-	    }
+            /* Maybe the shm filesystem has strict permissions.  */
+            if (errno == EACCES) {
+                puts("sem_open not allowed.  Oh well.");
+                return 0;
+            }
 
-	  printf ("sem_open: %m\n");
-	  return 1;
-	}
+            printf("sem_open: %m\n");
+            return 1;
+        }
 
-      /* Now close the handle.  */
-      if (sem_close (s) != 0)
-	{
-	  puts ("sem_close failed");
-	  return 1;
-	}
+        /* Now close the handle.  */
+        if (sem_close(s) != 0) {
+            puts("sem_close failed");
+            return 1;
+        }
 
-      /* And remove it.  */
-      if (sem_unlink ("/glibc-tst-sem9") != 0)
-	{
-	  puts ("sem_unlink failed");
-	  return 1;
-	}
+        /* And remove it.  */
+        if (sem_unlink("/glibc-tst-sem9") != 0) {
+            puts("sem_unlink failed");
+            return 1;
+        }
     }
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

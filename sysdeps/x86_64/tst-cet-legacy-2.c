@@ -21,44 +21,39 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-extern int in_dso_2 (void);
+extern int in_dso_2(void);
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  static const char modname[] = "tst-cet-legacy-mod-1.so";
-  int (*fp) (void);
-  void *h;
+    static const char modname[] = "tst-cet-legacy-mod-1.so";
+    int (*fp)(void);
+    void *h;
 
-  h = dlopen (modname, RTLD_LAZY);
-  if (h == NULL)
-    {
-      printf ("cannot open '%s': %s\n", modname, dlerror ());
-      exit (1);
+    h = dlopen(modname, RTLD_LAZY);
+    if (h == NULL) {
+        printf("cannot open '%s': %s\n", modname, dlerror());
+        exit(1);
     }
 
-  fp = dlsym (h, "in_dso_1");
-  if (fp == NULL)
-    {
-      printf ("cannot get symbol 'in_dso': %s\n", dlerror ());
-      exit (1);
+    fp = dlsym(h, "in_dso_1");
+    if (fp == NULL) {
+        printf("cannot get symbol 'in_dso': %s\n", dlerror());
+        exit(1);
     }
 
-  if (fp () != 0x1234678)
-    {
-      puts ("in_dso_1 () != 0x1234678");
-      exit (1);
+    if (fp() != 0x1234678) {
+        puts("in_dso_1 () != 0x1234678");
+        exit(1);
     }
 
-  if (in_dso_2 () != 0xbadbeef)
-    {
-      puts ("in_dso_2 () != 0xbadbeef");
-      exit (1);
+    if (in_dso_2() != 0xbadbeef) {
+        puts("in_dso_2 () != 0xbadbeef");
+        exit(1);
     }
 
-  dlclose (h);
+    dlclose(h);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

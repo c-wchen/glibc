@@ -20,60 +20,58 @@
 #include <support/check.h>
 #include <support/xdlfcn.h>
 
-void *
-xdlopen (const char *filename, int flags)
+void *xdlopen(const char *filename, int flags)
 {
-  void *dso = dlopen (filename, flags);
+    void *dso = dlopen(filename, flags);
 
-  if (dso == NULL)
-    FAIL_EXIT1 ("error: dlopen: %s\n", dlerror ());
-
-  return dso;
-}
-
-void *
-xdlsym (void *handle, const char *symbol)
-{
-  /* Clear any pending errors.  */
-  dlerror ();
-
-  void *sym = dlsym (handle, symbol);
-
-  if (sym == NULL)
-    {
-      const char *error = dlerror ();
-      if (error != NULL)
-        FAIL_EXIT1 ("error: dlsym: %s\n", error);
-      /* If there was no error, we found a NULL symbol.  Return the
-         NULL value in this case.  */
+    if (dso == NULL) {
+        FAIL_EXIT1("error: dlopen: %s\n", dlerror());
     }
 
-  return sym;
+    return dso;
 }
 
-void *
-xdlvsym (void *handle, const char *symbol, const char *version)
+void *xdlsym(void *handle, const char *symbol)
 {
-  /* Clear any pending errors.  */
-  dlerror ();
+    /* Clear any pending errors.  */
+    dlerror();
 
-  void *sym = dlvsym (handle, symbol, version);
+    void *sym = dlsym(handle, symbol);
 
-  if (sym == NULL)
-    {
-      const char *error = dlerror ();
-      if (error != NULL)
-        FAIL_EXIT1 ("error: dlvsym: %s\n", error);
-      /* If there was no error, we found a NULL symbol.  Return the
-         NULL value in this case.  */
+    if (sym == NULL) {
+        const char *error = dlerror();
+        if (error != NULL) {
+            FAIL_EXIT1("error: dlsym: %s\n", error);
+        }
+        /* If there was no error, we found a NULL symbol.  Return the
+           NULL value in this case.  */
     }
 
-  return sym;
+    return sym;
 }
 
-void
-xdlclose (void *handle)
+void *xdlvsym(void *handle, const char *symbol, const char *version)
 {
-  if (dlclose (handle) != 0)
-    FAIL_EXIT1 ("error: dlclose: %s\n", dlerror ());
+    /* Clear any pending errors.  */
+    dlerror();
+
+    void *sym = dlvsym(handle, symbol, version);
+
+    if (sym == NULL) {
+        const char *error = dlerror();
+        if (error != NULL) {
+            FAIL_EXIT1("error: dlvsym: %s\n", error);
+        }
+        /* If there was no error, we found a NULL symbol.  Return the
+           NULL value in this case.  */
+    }
+
+    return sym;
+}
+
+void xdlclose(void *handle)
+{
+    if (dlclose(handle) != 0) {
+        FAIL_EXIT1("error: dlclose: %s\n", dlerror());
+    }
 }

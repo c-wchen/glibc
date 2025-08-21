@@ -21,19 +21,18 @@
 #include <shlib-compat.h>
 
 /* Get resolution of clock.  */
-int
-__clock_getres (clockid_t clock_id, struct timespec *res)
+int __clock_getres(clockid_t clock_id, struct timespec *res)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (__clock_getres)
+libc_hidden_def(__clock_getres)
 
-versioned_symbol (libc, __clock_getres, clock_getres, GLIBC_2_17);
+versioned_symbol(libc, __clock_getres, clock_getres, GLIBC_2_17);
 /* clock_getres moved to libc in version 2.17;
    old binaries may expect the symbol version it had in librt.  */
 #if SHLIB_COMPAT (libc, GLIBC_2_2, GLIBC_2_17)
-compat_symbol (libc, __clock_getres, clock_getres, GLIBC_2_2);
+compat_symbol(libc, __clock_getres, clock_getres, GLIBC_2_2);
 #endif
 
-stub_warning (clock_getres)
+stub_warning(clock_getres)

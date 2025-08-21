@@ -18,22 +18,24 @@
 #include <fcntl.h>
 #include <sysdep.h>
 
-extern int __posix_fallocate64_l64 (int fd, __off64_t offset, __off64_t len);
-libc_hidden_proto (__posix_fallocate64_l64)
+extern int __posix_fallocate64_l64(int fd, __off64_t offset, __off64_t len);
+libc_hidden_proto(__posix_fallocate64_l64)
 #define __posix_fallocate64_l64 static internal_fallocate64
 #include <sysdeps/posix/posix_fallocate64.c>
 #undef __posix_fallocate64_l64
 
 /* Reserve storage for the data of the file associated with FD.  */
 int
-__posix_fallocate64_l64 (int fd, __off64_t offset, __off64_t len)
+__posix_fallocate64_l64(int fd, __off64_t offset, __off64_t len)
 {
-  int res = INTERNAL_SYSCALL_CALL (fallocate, fd, 0,
-				   SYSCALL_LL64 (offset), SYSCALL_LL64 (len));
-  if (! INTERNAL_SYSCALL_ERROR_P (res))
-    return 0;
-  if (INTERNAL_SYSCALL_ERRNO (res) != EOPNOTSUPP)
-    return INTERNAL_SYSCALL_ERRNO (res);
-  return internal_fallocate64 (fd, offset, len);
+    int res = INTERNAL_SYSCALL_CALL(fallocate, fd, 0,
+                                    SYSCALL_LL64(offset), SYSCALL_LL64(len));
+    if (! INTERNAL_SYSCALL_ERROR_P(res)) {
+        return 0;
+    }
+    if (INTERNAL_SYSCALL_ERRNO(res) != EOPNOTSUPP) {
+        return INTERNAL_SYSCALL_ERRNO(res);
+    }
+    return internal_fallocate64(fd, offset, len);
 }
-libc_hidden_def (__posix_fallocate64_l64)
+libc_hidden_def(__posix_fallocate64_l64)

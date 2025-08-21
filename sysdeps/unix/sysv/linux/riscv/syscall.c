@@ -18,17 +18,17 @@
 
 #include <sysdep.h>
 
-long int
-syscall (long int syscall_number, long int arg1, long int arg2, long int arg3,
-	 long int arg4, long int arg5, long int arg6, long int arg7)
+long int syscall(long int syscall_number, long int arg1, long int arg2, long int arg3,
+                 long int arg4, long int arg5, long int arg6, long int arg7)
 {
-  long int ret;
+    long int ret;
 
-  ret = INTERNAL_SYSCALL_NCS_CALL (syscall_number, arg1, arg2, arg3, arg4,
-				   arg5, arg6, arg7);
+    ret = INTERNAL_SYSCALL_NCS_CALL(syscall_number, arg1, arg2, arg3, arg4,
+                                    arg5, arg6, arg7);
 
-  if (INTERNAL_SYSCALL_ERROR_P (ret))
-    return __syscall_error (ret);
+    if (INTERNAL_SYSCALL_ERROR_P(ret)) {
+        return __syscall_error(ret);
+    }
 
-  return ret;
+    return ret;
 }

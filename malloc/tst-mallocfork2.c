@@ -52,7 +52,9 @@ enum { iterations = 10000 };
 /* Barrier for synchronization with the processes sending SIGUSR1
    signals, to make it more likely that the signals arrive during a
    fork/free/malloc call.  */
-static struct { pthread_barrier_t barrier; } *shared;
+static struct {
+    pthread_barrier_t barrier;
+} *shared;
 
 /* Set to 1 if SIGUSR1 is received.  Used to detect a signal during
    fork/free/malloc.  */
@@ -65,66 +67,62 @@ static volatile sig_atomic_t progress_indicator = 1;
 /* Set to 1 if an error occurs in the signal handler.  */
 static volatile sig_atomic_t error_indicator = 0;
 
-static void
-sigusr1_handler (int signo)
+static void sigusr1_handler(int signo)
 {
-  sigusr1_received = 1;
+    sigusr1_received = 1;
 
-  /* Perform a fork with a trivial subprocess.  */
-  pid_t pid = fork ();
-  if (pid == -1)
-    {
-      write_message ("error: fork\n");
-      error_indicator = 1;
-      return;
+    /* Perform a fork with a trivial subprocess.  */
+    pid_t pid = fork();
+    if (pid == -1) {
+        write_message("error: fork\n");
+        error_indicator = 1;
+        return;
     }
-  if (pid == 0)
-    _exit (0);
-  int status;
-  int ret = TEMP_FAILURE_RETRY (waitpid (pid, &status, 0));
-  if (ret < 0)
-    {
-      write_message ("error: waitpid\n");
-      error_indicator = 1;
-      return;
+    if (pid == 0) {
+        _exit(0);
     }
-  if (status != 0)
-    {
-      write_message ("error: unexpected exit status from subprocess\n");
-      error_indicator = 1;
-      return;
+    int status;
+    int ret = TEMP_FAILURE_RETRY(waitpid(pid, &status, 0));
+    if (ret < 0) {
+        write_message("error: waitpid\n");
+        error_indicator = 1;
+        return;
+    }
+    if (status != 0) {
+        write_message("error: unexpected exit status from subprocess\n");
+        error_indicator = 1;
+        return;
     }
 }
 
-static void
-liveness_signal_handler (int signo)
+static void liveness_signal_handler(int signo)
 {
-  if (progress_indicator)
-    progress_indicator = 0;
-  else
-    write_message ("warning: process seems to be stuck\n");
+    if (progress_indicator) {
+        progress_indicator = 0;
+    } else {
+        write_message("warning: process seems to be stuck\n");
+    }
 }
 
 /* Send SIGNO to the parent process.  If SLEEP, wait a second between
    signals, otherwise use barriers to delay sending signals.  */
-static void
-__attribute__ ((noreturn))
-signal_sender (int signo, bool sleep)
+static void __attribute__((noreturn))
+signal_sender(int signo, bool sleep)
 {
-  pid_t target = getppid ();
-  while (true)
-    {
-      if (!sleep)
-        xpthread_barrier_wait (&shared->barrier);
-      if (kill (target, signo) != 0)
-        {
-          dprintf (STDOUT_FILENO, "error: kill: %m\n");
-          abort ();
+    pid_t target = getppid();
+    while (true) {
+        if (!sleep) {
+            xpthread_barrier_wait(&shared->barrier);
         }
-      if (sleep)
-        usleep (1 * 1000 * 1000);
-      else
-        xpthread_barrier_wait (&shared->barrier);
+        if (kill(target, signo) != 0) {
+            dprintf(STDOUT_FILENO, "error: kill: %m\n");
+            abort();
+        }
+        if (sleep) {
+            usleep(1 * 1000 * 1000);
+        } else {
+            xpthread_barrier_wait(&shared->barrier);
+        }
     }
 }
 
@@ -132,129 +130,131 @@ signal_sender (int signo, bool sleep)
 static pid_t sigusr1_sender_pids[5] = { 0 };
 static pid_t sigusr2_sender_pid = 0;
 
-static void
-kill_children (void)
+static void kill_children(void)
 {
-  for (size_t i = 0; i < array_length (sigusr1_sender_pids); ++i)
-    if (sigusr1_sender_pids[i] > 0)
-      kill (sigusr1_sender_pids[i], SIGKILL);
-  if (sigusr2_sender_pid > 0)
-    kill (sigusr2_sender_pid, SIGKILL);
+    for (size_t i = 0; i < array_length(sigusr1_sender_pids); ++i)
+        if (sigusr1_sender_pids[i] > 0) {
+            kill(sigusr1_sender_pids[i], SIGKILL);
+        }
+    if (sigusr2_sender_pid > 0) {
+        kill(sigusr2_sender_pid, SIGKILL);
+    }
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  atexit (kill_children);
+    atexit(kill_children);
 
-  /* shared->barrier is initialized along with sigusr1_sender_pids
-     below.  */
-  shared = support_shared_allocate (sizeof (*shared));
+    /* shared->barrier is initialized along with sigusr1_sender_pids
+       below.  */
+    shared = support_shared_allocate(sizeof(*shared));
 
-  struct sigaction action =
-    {
-      .sa_handler = sigusr1_handler,
+    struct sigaction action = {
+        .sa_handler = sigusr1_handler,
     };
-  sigemptyset (&action.sa_mask);
+    sigemptyset(&action.sa_mask);
 
-  if (sigaction (SIGUSR1, &action, NULL) != 0)
-    {
-      printf ("error: sigaction: %m");
-      return 1;
+    if (sigaction(SIGUSR1, &action, NULL) != 0) {
+        printf("error: sigaction: %m");
+        return 1;
     }
 
-  action.sa_handler = liveness_signal_handler;
-  if (sigaction (SIGUSR2, &action, NULL) != 0)
-    {
-      printf ("error: sigaction: %m");
-      return 1;
+    action.sa_handler = liveness_signal_handler;
+    if (sigaction(SIGUSR2, &action, NULL) != 0) {
+        printf("error: sigaction: %m");
+        return 1;
     }
 
-  sigusr2_sender_pid = xfork ();
-  if (sigusr2_sender_pid == 0)
-    signal_sender (SIGUSR2, true);
-
-  /* Send SIGUSR1 signals from several processes.  Hopefully, one
-     signal will hit one of the critical functions.  Use a barrier to
-     avoid sending signals while not running fork/free/malloc.  */
-  {
-    pthread_barrierattr_t attr;
-    xpthread_barrierattr_init (&attr);
-    xpthread_barrierattr_setpshared (&attr, PTHREAD_PROCESS_SHARED);
-    xpthread_barrier_init (&shared->barrier, &attr,
-                           array_length (sigusr1_sender_pids) + 1);
-    xpthread_barrierattr_destroy (&attr);
-  }
-  for (size_t i = 0; i < array_length (sigusr1_sender_pids); ++i)
-    {
-      sigusr1_sender_pids[i] = xfork ();
-      if (sigusr1_sender_pids[i] == 0)
-        signal_sender (SIGUSR1, false);
+    sigusr2_sender_pid = xfork();
+    if (sigusr2_sender_pid == 0) {
+        signal_sender(SIGUSR2, true);
     }
 
-  void *objects[malloc_objects] = {};
-  unsigned int fork_signals = 0;
-  unsigned int free_signals = 0;
-  unsigned int malloc_signals = 0;
-  unsigned seed = 1;
-  for (int i = 0; i < iterations; ++i)
+    /* Send SIGUSR1 signals from several processes.  Hopefully, one
+       signal will hit one of the critical functions.  Use a barrier to
+       avoid sending signals while not running fork/free/malloc.  */
     {
-      progress_indicator = 1;
-      int slot = rand_r (&seed) % malloc_objects;
-      size_t size = rand_r (&seed) % malloc_maximum_size;
-
-      /* Occasionally do a fork first, to catch deadlocks there as
-         well (see bug 24161).  */
-      bool do_fork = (rand_r (&seed) % 7) == 0;
-
-      xpthread_barrier_wait (&shared->barrier);
-      if (do_fork)
-        {
-          sigusr1_received = 0;
-          pid_t pid = xfork ();
-          if (sigusr1_received)
-            ++fork_signals;
-          if (pid == 0)
-            _exit (0);
-          int status;
-          int ret = TEMP_FAILURE_RETRY (waitpid (pid, &status, 0));
-          if (ret < 0)
-            FAIL_EXIT1 ("waitpid: %m");
-          TEST_COMPARE (status, 0);
-        }
-      sigusr1_received = 0;
-      free (objects[slot]);
-      if (sigusr1_received)
-        ++free_signals;
-      sigusr1_received = 0;
-      objects[slot] = malloc (size);
-      if (sigusr1_received)
-        ++malloc_signals;
-      xpthread_barrier_wait (&shared->barrier);
-
-      if (objects[slot] == NULL || error_indicator != 0)
-        {
-          printf ("error: malloc: %m\n");
-          for (size_t i = 0; i < array_length (sigusr1_sender_pids); ++i)
-            kill (sigusr1_sender_pids[i], SIGKILL);
-          kill (sigusr2_sender_pid, SIGKILL);
-          return 1;
+        pthread_barrierattr_t attr;
+        xpthread_barrierattr_init(&attr);
+        xpthread_barrierattr_setpshared(&attr, PTHREAD_PROCESS_SHARED);
+        xpthread_barrier_init(&shared->barrier, &attr,
+                              array_length(sigusr1_sender_pids) + 1);
+        xpthread_barrierattr_destroy(&attr);
+    }
+    for (size_t i = 0; i < array_length(sigusr1_sender_pids); ++i) {
+        sigusr1_sender_pids[i] = xfork();
+        if (sigusr1_sender_pids[i] == 0) {
+            signal_sender(SIGUSR1, false);
         }
     }
 
-  /* Clean up allocations.  */
-  for (int slot = 0; slot < malloc_objects; ++slot)
-    free (objects[slot]);
+    void *objects[malloc_objects] = {};
+    unsigned int fork_signals = 0;
+    unsigned int free_signals = 0;
+    unsigned int malloc_signals = 0;
+    unsigned seed = 1;
+    for (int i = 0; i < iterations; ++i) {
+        progress_indicator = 1;
+        int slot = rand_r(&seed) % malloc_objects;
+        size_t size = rand_r(&seed) % malloc_maximum_size;
 
-  printf ("info: signals received during fork: %u\n", fork_signals);
-  printf ("info: signals received during free: %u\n", free_signals);
-  printf ("info: signals received during malloc: %u\n", malloc_signals);
+        /* Occasionally do a fork first, to catch deadlocks there as
+           well (see bug 24161).  */
+        bool do_fork = (rand_r(&seed) % 7) == 0;
 
-  /* Do not destroy the barrier because of the SIGKILL above, which
-     may have left the barrier in an inconsistent state.  */
-  support_shared_free (shared);
+        xpthread_barrier_wait(&shared->barrier);
+        if (do_fork) {
+            sigusr1_received = 0;
+            pid_t pid = xfork();
+            if (sigusr1_received) {
+                ++fork_signals;
+            }
+            if (pid == 0) {
+                _exit(0);
+            }
+            int status;
+            int ret = TEMP_FAILURE_RETRY(waitpid(pid, &status, 0));
+            if (ret < 0) {
+                FAIL_EXIT1("waitpid: %m");
+            }
+            TEST_COMPARE(status, 0);
+        }
+        sigusr1_received = 0;
+        free(objects[slot]);
+        if (sigusr1_received) {
+            ++free_signals;
+        }
+        sigusr1_received = 0;
+        objects[slot] = malloc(size);
+        if (sigusr1_received) {
+            ++malloc_signals;
+        }
+        xpthread_barrier_wait(&shared->barrier);
 
-  return 0;
+        if (objects[slot] == NULL || error_indicator != 0) {
+            printf("error: malloc: %m\n");
+            for (size_t i = 0; i < array_length(sigusr1_sender_pids); ++i) {
+                kill(sigusr1_sender_pids[i], SIGKILL);
+            }
+            kill(sigusr2_sender_pid, SIGKILL);
+            return 1;
+        }
+    }
+
+    /* Clean up allocations.  */
+    for (int slot = 0; slot < malloc_objects; ++slot) {
+        free(objects[slot]);
+    }
+
+    printf("info: signals received during fork: %u\n", fork_signals);
+    printf("info: signals received during free: %u\n", free_signals);
+    printf("info: signals received during malloc: %u\n", malloc_signals);
+
+    /* Do not destroy the barrier because of the SIGKILL above, which
+       may have left the barrier in an inconsistent state.  */
+    support_shared_free(shared);
+
+    return 0;
 }
 
 #define TIMEOUT 100

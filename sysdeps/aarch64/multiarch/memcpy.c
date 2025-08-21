@@ -27,37 +27,39 @@
 # include <string.h>
 # include <init-arch.h>
 
-extern __typeof (__redirect_memcpy) __libc_memcpy;
+extern __typeof(__redirect_memcpy) __libc_memcpy;
 
-extern __typeof (__redirect_memcpy) __memcpy_generic attribute_hidden;
-extern __typeof (__redirect_memcpy) __memcpy_a64fx attribute_hidden;
-extern __typeof (__redirect_memcpy) __memcpy_sve attribute_hidden;
-extern __typeof (__redirect_memcpy) __memcpy_mops attribute_hidden;
-extern __typeof (__redirect_memcpy) __memcpy_oryon1 attribute_hidden;
+extern __typeof(__redirect_memcpy) __memcpy_generic attribute_hidden;
+extern __typeof(__redirect_memcpy) __memcpy_a64fx attribute_hidden;
+extern __typeof(__redirect_memcpy) __memcpy_sve attribute_hidden;
+extern __typeof(__redirect_memcpy) __memcpy_mops attribute_hidden;
+extern __typeof(__redirect_memcpy) __memcpy_oryon1 attribute_hidden;
 
-static inline __typeof (__redirect_memcpy) *
-select_memcpy_ifunc (void)
+static inline __typeof(__redirect_memcpy) *
+select_memcpy_ifunc(void)
 {
-  INIT_ARCH ();
+    INIT_ARCH();
 
-  if (mops)
-    return __memcpy_mops;
-
-  if (sve)
-    {
-      if (IS_A64FX (midr))
-	return __memcpy_a64fx;
-      return prefer_sve_ifuncs ? __memcpy_sve : __memcpy_generic;
+    if (mops) {
+        return __memcpy_mops;
     }
 
-  if (IS_ORYON1 (midr))
-    return __memcpy_oryon1;
+    if (sve) {
+        if (IS_A64FX(midr)) {
+            return __memcpy_a64fx;
+        }
+        return prefer_sve_ifuncs ? __memcpy_sve : __memcpy_generic;
+    }
 
-  return __memcpy_generic;
+    if (IS_ORYON1(midr)) {
+        return __memcpy_oryon1;
+    }
+
+    return __memcpy_generic;
 }
 
-libc_ifunc (__libc_memcpy, select_memcpy_ifunc ());
+libc_ifunc(__libc_memcpy, select_memcpy_ifunc());
 
 # undef memcpy
-strong_alias (__libc_memcpy, memcpy);
+strong_alias(__libc_memcpy, memcpy);
 #endif

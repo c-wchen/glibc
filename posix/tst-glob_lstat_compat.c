@@ -32,14 +32,14 @@
 #include <support/check.h>
 #include <support/temp_file.h>
 
-__typeof (glob) glob;
+__typeof(glob) glob;
 /* On alpha glob exists in version GLIBC_2_0, GLIBC_2_1, and GLIBC_2_27.
    This test needs to access the version prior to GLIBC_2_27, which is
    GLIBC_2_1 on alpha, GLIBC_2_0 elsewhere.  */
 #ifdef __alpha__
-compat_symbol_reference (libc, glob, glob, GLIBC_2_1);
+compat_symbol_reference(libc, glob, glob, GLIBC_2_1);
 #else
-compat_symbol_reference (libc, glob, glob, GLIBC_2_0);
+compat_symbol_reference(libc, glob, glob, GLIBC_2_0);
 #endif
 
 /* Compat glob should not call gl_lstat since for some old binaries it
@@ -48,211 +48,206 @@ compat_symbol_reference (libc, glob, glob, GLIBC_2_0);
 static bool stat_called;
 static bool lstat_called;
 
-static struct
-{
-  const char *name;
-  int level;
-  int type;
-} filesystem[] =
-{
-  { ".", 1, DT_DIR },
-  { "..", 1, DT_DIR },
-  { "dir1lev1", 1, DT_UNKNOWN },
+static struct {
+    const char *name;
+    int level;
+    int type;
+} filesystem[] = {
+    { ".", 1, DT_DIR },
+    { "..", 1, DT_DIR },
+    { "dir1lev1", 1, DT_UNKNOWN },
     { ".", 2, DT_DIR },
     { "..", 2, DT_DIR },
     { "file1lev2", 2, DT_REG },
     { "file2lev2", 2, DT_REG },
 };
-static const size_t nfiles = sizeof (filesystem) / sizeof (filesystem [0]);
+static const size_t nfiles = sizeof(filesystem) / sizeof(filesystem [0]);
 
-typedef struct
-{
-  int level;
-  int idx;
-  struct dirent d;
-  char room_for_dirent[NAME_MAX];
+typedef struct {
+    int level;
+    int idx;
+    struct dirent d;
+    char room_for_dirent[NAME_MAX];
 } my_DIR;
 
-static long int
-find_file (const char *s)
+static long int find_file(const char *s)
 {
-  int level = 1;
-  long int idx = 0;
+    int level = 1;
+    long int idx = 0;
 
-  while (s[0] == '/')
-    {
-      if (s[1] == '\0')
-	{
-	  s = ".";
-	  break;
-	}
-      ++s;
+    while (s[0] == '/') {
+        if (s[1] == '\0') {
+            s = ".";
+            break;
+        }
+        ++s;
     }
 
-  if (strcmp (s, ".") == 0)
-    return 0;
-
-  if (s[0] == '.' && s[1] == '/')
-    s += 2;
-
-  while (*s != '\0')
-    {
-      char *endp = strchrnul (s, '/');
-
-      while (idx < nfiles && filesystem[idx].level >= level)
-	{
-	  if (filesystem[idx].level == level
-	      && memcmp (s, filesystem[idx].name, endp - s) == 0
-	      && filesystem[idx].name[endp - s] == '\0')
-	    break;
-	  ++idx;
-	}
-
-      if (idx == nfiles || filesystem[idx].level < level)
-	{
-	  errno = ENOENT;
-	  return -1;
-	}
-
-      if (*endp == '\0')
-	return idx + 1;
-
-      if (filesystem[idx].type != DT_DIR
-	  && (idx + 1 >= nfiles
-	      || filesystem[idx].level >= filesystem[idx + 1].level))
-	{
-	  errno = ENOTDIR;
-	  return -1;
-	}
-
-      ++idx;
-
-      s = endp + 1;
-      ++level;
+    if (strcmp(s, ".") == 0) {
+        return 0;
     }
 
-  errno = ENOENT;
-  return -1;
+    if (s[0] == '.' && s[1] == '/') {
+        s += 2;
+    }
+
+    while (*s != '\0') {
+        char *endp = strchrnul(s, '/');
+
+        while (idx < nfiles && filesystem[idx].level >= level) {
+            if (filesystem[idx].level == level
+                && memcmp(s, filesystem[idx].name, endp - s) == 0
+                && filesystem[idx].name[endp - s] == '\0') {
+                break;
+            }
+            ++idx;
+        }
+
+        if (idx == nfiles || filesystem[idx].level < level) {
+            errno = ENOENT;
+            return -1;
+        }
+
+        if (*endp == '\0') {
+            return idx + 1;
+        }
+
+        if (filesystem[idx].type != DT_DIR
+            && (idx + 1 >= nfiles
+                || filesystem[idx].level >= filesystem[idx + 1].level)) {
+            errno = ENOTDIR;
+            return -1;
+        }
+
+        ++idx;
+
+        s = endp + 1;
+        ++level;
+    }
+
+    errno = ENOENT;
+    return -1;
 }
 
-static void *
-my_opendir (const char *s)
+static void *my_opendir(const char *s)
 {
-  long int idx = find_file (s);
-  if (idx == -1 || filesystem[idx].type != DT_DIR)
-    return NULL;
+    long int idx = find_file(s);
+    if (idx == -1 || filesystem[idx].type != DT_DIR) {
+        return NULL;
+    }
 
-  my_DIR *dir = malloc (sizeof (my_DIR));
-  if (dir == NULL)
-    FAIL_EXIT1 ("cannot allocate directory handle");
+    my_DIR *dir = malloc(sizeof(my_DIR));
+    if (dir == NULL) {
+        FAIL_EXIT1("cannot allocate directory handle");
+    }
 
-  dir->level = filesystem[idx].level;
-  dir->idx = idx;
+    dir->level = filesystem[idx].level;
+    dir->idx = idx;
 
-  return dir;
+    return dir;
 }
 
-static struct dirent *
-my_readdir (void *gdir)
+static struct dirent *my_readdir(void *gdir)
 {
-  my_DIR *dir = gdir;
+    my_DIR *dir = gdir;
 
-  if (dir->idx == -1)
-    return NULL;
+    if (dir->idx == -1) {
+        return NULL;
+    }
 
-  while (dir->idx < nfiles && filesystem[dir->idx].level > dir->level)
+    while (dir->idx < nfiles && filesystem[dir->idx].level > dir->level) {
+        ++dir->idx;
+    }
+
+    if (dir->idx == nfiles || filesystem[dir->idx].level < dir->level) {
+        dir->idx = -1;
+        return NULL;
+    }
+
+    dir->d.d_ino = 1;     /* glob should not skip this entry.  */
+
+    dir->d.d_type = filesystem[dir->idx].type;
+
+    __builtin___strcpy_chk(dir->d.d_name, filesystem[dir->idx].name,
+                           NAME_MAX);
+
     ++dir->idx;
 
-  if (dir->idx == nfiles || filesystem[dir->idx].level < dir->level)
-    {
-      dir->idx = -1;
-      return NULL;
+    return &dir->d;
+}
+
+static void my_closedir(void *dir)
+{
+    free(dir);
+}
+
+static int my_stat(const char *name, struct stat *st)
+{
+    stat_called = true;
+
+    long int idx = find_file(name);
+    if (idx == -1) {
+        return -1;
     }
 
-  dir->d.d_ino = 1;		/* glob should not skip this entry.  */
+    memset(st, '\0', sizeof(*st));
 
-  dir->d.d_type = filesystem[dir->idx].type;
-
-  __builtin___strcpy_chk (dir->d.d_name, filesystem[dir->idx].name,
-			  NAME_MAX);
-
-  ++dir->idx;
-
-  return &dir->d;
+    if (filesystem[idx].type == DT_UNKNOWN)
+        st->st_mode = DTTOIF(idx + 1 < nfiles
+                             && filesystem[idx].level < filesystem[idx + 1].level
+                             ? DT_DIR : DT_REG) | 0777;
+    else {
+        st->st_mode = DTTOIF(filesystem[idx].type) | 0777;
+    }
+    return 0;
 }
 
-static void
-my_closedir (void *dir)
+static int my_lstat(const char *name, struct stat *st)
 {
-  free (dir);
+    lstat_called = true;
+
+    long int idx = find_file(name);
+    if (idx == -1) {
+        return -1;
+    }
+
+    memset(st, '\0', sizeof(*st));
+
+    if (filesystem[idx].type == DT_UNKNOWN)
+        st->st_mode = DTTOIF(idx + 1 < nfiles
+                             && filesystem[idx].level < filesystem[idx + 1].level
+                             ? DT_DIR : DT_REG) | 0777;
+    else {
+        st->st_mode = DTTOIF(filesystem[idx].type) | 0777;
+    }
+    return 0;
 }
 
-static int
-my_stat (const char *name, struct stat *st)
+static int do_test(void)
 {
-  stat_called = true;
+    glob_t gl;
 
-  long int idx = find_file (name);
-  if (idx == -1)
-    return -1;
+    memset(&gl, '\0', sizeof(gl));
 
-  memset (st, '\0', sizeof (*st));
+    gl.gl_closedir = my_closedir;
+    gl.gl_readdir = my_readdir;
+    gl.gl_opendir = my_opendir;
+    gl.gl_lstat = my_lstat;
+    gl.gl_stat = my_stat;
 
-  if (filesystem[idx].type == DT_UNKNOWN)
-    st->st_mode = DTTOIF (idx + 1 < nfiles
-			  && filesystem[idx].level < filesystem[idx + 1].level
-			  ? DT_DIR : DT_REG) | 0777;
-  else
-    st->st_mode = DTTOIF (filesystem[idx].type) | 0777;
-  return 0;
-}
+    int flags = GLOB_ALTDIRFUNC;
 
-static int
-my_lstat (const char *name, struct stat *st)
-{
-  lstat_called = true;
+    stat_called = false;
+    lstat_called = false;
 
-  long int idx = find_file (name);
-  if (idx == -1)
-    return -1;
+    TEST_VERIFY_EXIT(glob("*/file1lev2", flags, NULL, &gl) == 0);
+    TEST_VERIFY_EXIT(gl.gl_pathc == 1);
+    TEST_VERIFY_EXIT(strcmp(gl.gl_pathv[0], "dir1lev1/file1lev2") == 0);
 
-  memset (st, '\0', sizeof (*st));
+    TEST_VERIFY_EXIT(stat_called == true);
+    TEST_VERIFY_EXIT(lstat_called == false);
 
-  if (filesystem[idx].type == DT_UNKNOWN)
-    st->st_mode = DTTOIF (idx + 1 < nfiles
-			  && filesystem[idx].level < filesystem[idx + 1].level
-			  ? DT_DIR : DT_REG) | 0777;
-  else
-    st->st_mode = DTTOIF (filesystem[idx].type) | 0777;
-  return 0;
-}
-
-static int
-do_test (void)
-{
-  glob_t gl;
-
-  memset (&gl, '\0', sizeof (gl));
-
-  gl.gl_closedir = my_closedir;
-  gl.gl_readdir = my_readdir;
-  gl.gl_opendir = my_opendir;
-  gl.gl_lstat = my_lstat;
-  gl.gl_stat = my_stat;
-
-  int flags = GLOB_ALTDIRFUNC;
-
-  stat_called = false;
-  lstat_called = false;
-
-  TEST_VERIFY_EXIT (glob ("*/file1lev2", flags, NULL, &gl) == 0);
-  TEST_VERIFY_EXIT (gl.gl_pathc == 1);
-  TEST_VERIFY_EXIT (strcmp (gl.gl_pathv[0], "dir1lev1/file1lev2") == 0);
-
-  TEST_VERIFY_EXIT (stat_called == true);
-  TEST_VERIFY_EXIT (lstat_called == false);
-
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

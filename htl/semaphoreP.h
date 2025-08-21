@@ -20,8 +20,8 @@
 
 #define SEM_SHM_PREFIX  "sem."
 
-static inline void __new_sem_open_init (struct new_sem *sem, unsigned value)
+static inline void __new_sem_open_init(struct new_sem *sem, unsigned value)
 {
-  /* This always is a shared semaphore.  */
-  *sem = (struct new_sem) __SEMAPHORE_INITIALIZER (1, value);
+    /* This always is a shared semaphore.  */
+    *sem = (struct new_sem) __SEMAPHORE_INITIALIZER(1, value);
 }

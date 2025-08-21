@@ -25,10 +25,9 @@
    We could theoretically provide an equivalent implementation but
    this is not necessary since the kernel already does a much better
    job than we ever could.  */
-void
-__pthread_kill_other_threads_np (void)
+void __pthread_kill_other_threads_np(void)
 {
 }
-compat_symbol (libpthread, __pthread_kill_other_threads_np,
-	       pthread_kill_other_threads_np, GLIBC_2_0);
+compat_symbol(libpthread, __pthread_kill_other_threads_np,
+              pthread_kill_other_threads_np, GLIBC_2_0);
 #endif

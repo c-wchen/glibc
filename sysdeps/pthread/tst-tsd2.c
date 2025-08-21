@@ -23,72 +23,69 @@
 static int result;
 
 
-static void
-destr (void *arg)
+static void destr(void *arg)
 {
-  if (arg != (void *) &result)
-    result = 2;
-  else
-    result = 0;
+    if (arg != (void *) &result) {
+        result = 2;
+    } else {
+        result = 0;
+    }
 }
 
 
-static void *
-tf (void *arg)
+static void *tf(void *arg)
 {
-  pthread_key_t key = (pthread_key_t) (long int) arg;
-  int err;
+    pthread_key_t key = (pthread_key_t)(long int) arg;
+    int err;
 
-  /* Use an arbitrary but valid pointer to avoid GCC warnings.  */
-  err = pthread_setspecific (key, &result);
-  if (err != 0)
-    result = 3;
+    /* Use an arbitrary but valid pointer to avoid GCC warnings.  */
+    err = pthread_setspecific(key, &result);
+    if (err != 0) {
+        result = 3;
+    }
 
-  return NULL;
+    return NULL;
 }
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  pthread_key_t key;
-  pthread_t th;
-  int err;
+    pthread_key_t key;
+    pthread_t th;
+    int err;
 
-  err = pthread_key_create (&key, destr);
-  if (err != 0)
-    {
-      printf ("key_create failed: %s\n", strerror (err));
-      return 1;
+    err = pthread_key_create(&key, destr);
+    if (err != 0) {
+        printf("key_create failed: %s\n", strerror(err));
+        return 1;
     }
 
-  result = 1;
+    result = 1;
 
-  err = pthread_create (&th, NULL, tf, (void *) (long int) key);
-  if (err != 0)
-    {
-      printf ("create failed: %s\n", strerror (err));
-      return 1;
+    err = pthread_create(&th, NULL, tf, (void *)(long int) key);
+    if (err != 0) {
+        printf("create failed: %s\n", strerror(err));
+        return 1;
     }
 
-  /* Wait for the thread to terminate.  */
-  err = pthread_join (th, NULL);
-  if (err != 0)
-    {
-      printf ("join failed: %s\n", strerror (err));
-      return 1;
+    /* Wait for the thread to terminate.  */
+    err = pthread_join(th, NULL);
+    if (err != 0) {
+        printf("join failed: %s\n", strerror(err));
+        return 1;
     }
 
-  if (result == 1)
-    puts ("destructor not called");
-  else if (result == 2)
-    puts ("destructor got passed a wrong value");
-  else if (result == 3)
-    puts ("setspecific in child failed");
-  else if (result != 0)
-    puts ("result != 0");
+    if (result == 1) {
+        puts("destructor not called");
+    } else if (result == 2) {
+        puts("destructor got passed a wrong value");
+    } else if (result == 3) {
+        puts("setspecific in child failed");
+    } else if (result != 0) {
+        puts("result != 0");
+    }
 
-  return result;
+    return result;
 }
 
 

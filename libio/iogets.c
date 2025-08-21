@@ -27,46 +27,42 @@
 #include "libioP.h"
 #include <limits.h>
 
-char *
-_IO_gets (char *buf)
+char *_IO_gets(char *buf)
 {
-  size_t count;
-  int ch;
-  char *retval;
+    size_t count;
+    int ch;
+    char *retval;
 
-  _IO_acquire_lock (stdin);
-  ch = _IO_getc_unlocked (stdin);
-  if (ch == EOF)
-    {
-      retval = NULL;
-      goto unlock_return;
+    _IO_acquire_lock(stdin);
+    ch = _IO_getc_unlocked(stdin);
+    if (ch == EOF) {
+        retval = NULL;
+        goto unlock_return;
     }
-  if (ch == '\n')
-    count = 0;
-  else
-    {
-      /* This is very tricky since a file descriptor may be in the
-	 non-blocking mode. The error flag doesn't mean much in this
-	 case. We return an error only when there is a new error. */
-      int old_error = stdin->_flags & _IO_ERR_SEEN;
-      stdin->_flags &= ~_IO_ERR_SEEN;
-      buf[0] = (char) ch;
-      count = _IO_getline (stdin, buf + 1, INT_MAX, '\n', 0) + 1;
-      if (stdin->_flags & _IO_ERR_SEEN)
-	{
-	  retval = NULL;
-	  goto unlock_return;
-	}
-      else
-	stdin->_flags |= old_error;
+    if (ch == '\n') {
+        count = 0;
+    } else {
+        /* This is very tricky since a file descriptor may be in the
+        non-blocking mode. The error flag doesn't mean much in this
+         case. We return an error only when there is a new error. */
+        int old_error = stdin->_flags & _IO_ERR_SEEN;
+        stdin->_flags &= ~_IO_ERR_SEEN;
+        buf[0] = (char) ch;
+        count = _IO_getline(stdin, buf + 1, INT_MAX, '\n', 0) + 1;
+        if (stdin->_flags & _IO_ERR_SEEN) {
+            retval = NULL;
+            goto unlock_return;
+        } else {
+            stdin->_flags |= old_error;
+        }
     }
-  buf[count] = 0;
-  retval = buf;
+    buf[count] = 0;
+    retval = buf;
 unlock_return:
-  _IO_release_lock (stdin);
-  return retval;
+    _IO_release_lock(stdin);
+    return retval;
 }
 
-weak_alias (_IO_gets, gets)
+weak_alias(_IO_gets, gets)
 
-link_warning (gets, "the `gets' function is dangerous and should not be used.")
+link_warning(gets, "the `gets' function is dangerous and should not be used.")

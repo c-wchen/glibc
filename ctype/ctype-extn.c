@@ -15,7 +15,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define	__NO_CTYPE
+#define __NO_CTYPE
 #include <ctype.h>
 
 #define __ctype_tolower \
@@ -25,27 +25,24 @@
 
 /* Real function versions of the non-ANSI ctype functions.  */
 
-int
-_tolower (int c)
+int _tolower(int c)
 {
-  return __ctype_tolower[c];
+    return __ctype_tolower[c];
 }
-int
-_toupper (int c)
+int _toupper(int c)
 {
-  return __ctype_toupper[c];
+    return __ctype_toupper[c];
 }
 
-int
-toascii (int c)
+int toascii(int c)
 {
-  return __toascii (c);
+    return __toascii(c);
 }
-weak_alias (toascii, __toascii_l)
+weak_alias(toascii, __toascii_l)
 
 int
-isascii (int c)
+isascii(int c)
 {
-  return __isascii (c);
+    return __isascii(c);
 }
-weak_alias (isascii, __isascii_l)
+weak_alias(isascii, __isascii_l)

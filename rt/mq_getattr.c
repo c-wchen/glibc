@@ -19,10 +19,9 @@
 #include <mqueue.h>
 
 /* Query status and attributes of message queue MQDES.  */
-int
-mq_getattr (mqd_t mqdes, struct mq_attr *mqstat)
+int mq_getattr(mqd_t mqdes, struct mq_attr *mqstat)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (mq_getattr)
+stub_warning(mq_getattr)

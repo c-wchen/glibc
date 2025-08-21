@@ -22,61 +22,55 @@
 
 
 #if LIBM_SVID_COMPAT
-static double
-__attribute__ ((noinline))
-sysv_scalb (double x, double fn)
+static double __attribute__((noinline))
+sysv_scalb(double x, double fn)
 {
-  double z = __ieee754_scalb (x, fn);
+    double z = __ieee754_scalb(x, fn);
 
-  if (__glibc_unlikely (isinf (z)))
-    {
-      if (isfinite (x))
-	return __kernel_standard (x, fn, 32); /* scalb overflow */
-      else
-	__set_errno (ERANGE);
+    if (__glibc_unlikely(isinf(z))) {
+        if (isfinite(x)) {
+            return __kernel_standard(x, fn, 32);    /* scalb overflow */
+        } else {
+            __set_errno(ERANGE);
+        }
+    } else if (__builtin_expect(z == 0.0, 0) && z != x) {
+        return __kernel_standard(x, fn, 33);    /* scalb underflow */
     }
-  else if (__builtin_expect (z == 0.0, 0) && z != x)
-    return __kernel_standard (x, fn, 33); /* scalb underflow */
 
-  return z;
+    return z;
 }
 
 
 /* Wrapper scalb */
-double
-__scalb (double x, double fn)
+double __scalb(double x, double fn)
 {
-  if (__glibc_unlikely (_LIB_VERSION == _SVID_))
-    return sysv_scalb (x, fn);
-  else
-    {
-      double z = __ieee754_scalb (x, fn);
+    if (__glibc_unlikely(_LIB_VERSION == _SVID_)) {
+        return sysv_scalb(x, fn);
+    } else {
+        double z = __ieee754_scalb(x, fn);
 
-      if (__glibc_unlikely (!isfinite (z) || z == 0.0))
-	{
-	  if (isnan (z))
-	    {
-	      if (!isnan (x) && !isnan (fn))
-		__set_errno (EDOM);
-	    }
-	  else if (isinf (z))
-	    {
-	      if (!isinf (x) && !isinf (fn))
-		__set_errno (ERANGE);
-	    }
-	  else
-	    {
-	      /* z == 0.  */
-	      if (x != 0.0 && !isinf (fn))
-		__set_errno (ERANGE);
-	    }
-	}
-      return z;
+        if (__glibc_unlikely(!isfinite(z) || z == 0.0)) {
+            if (isnan(z)) {
+                if (!isnan(x) && !isnan(fn)) {
+                    __set_errno(EDOM);
+                }
+            } else if (isinf(z)) {
+                if (!isinf(x) && !isinf(fn)) {
+                    __set_errno(ERANGE);
+                }
+            } else {
+                /* z == 0.  */
+                if (x != 0.0 && !isinf(fn)) {
+                    __set_errno(ERANGE);
+                }
+            }
+        }
+        return z;
     }
 }
-weak_alias (__scalb, scalb)
+weak_alias(__scalb, scalb)
 # ifdef NO_LONG_DOUBLE
-strong_alias (__scalb, __scalbl)
-weak_alias (__scalb, scalbl)
+strong_alias(__scalb, __scalbl)
+weak_alias(__scalb, scalbl)
 # endif
 #endif

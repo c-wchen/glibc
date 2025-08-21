@@ -7,4 +7,4 @@
 #include "tsp_common.c"
 #include "dat_iswgraph.c"
 
-TST_FUNC_ISW (GRAPH, graph);
+TST_FUNC_ISW(GRAPH, graph);

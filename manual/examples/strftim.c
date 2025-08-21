@@ -18,33 +18,33 @@
 #include <time.h>
 #include <stdio.h>
 
-int
-main (void)
+int main(void)
 {
-  /* This buffer is big enough that the strftime calls
-     below cannot possibly exhaust it.  */
-  char buf[256];
+    /* This buffer is big enough that the strftime calls
+       below cannot possibly exhaust it.  */
+    char buf[256];
 
-  /* Get the current time. */
-  time_t curtime = time (NULL);
+    /* Get the current time. */
+    time_t curtime = time(NULL);
 
-  /* Convert it to local time representation. */
-  struct tm *lt = localtime (&curtime);
-  if (!lt)
-    return 1;
+    /* Convert it to local time representation. */
+    struct tm *lt = localtime(&curtime);
+    if (!lt) {
+        return 1;
+    }
 
-  /* Print the date and time in a simple format
-     that is independent of locale. */
-  strftime (buf, sizeof buf, "%Y-%m-%d %H:%M:%S", lt);
-  puts (buf);
+    /* Print the date and time in a simple format
+       that is independent of locale. */
+    strftime(buf, sizeof buf, "%Y-%m-%d %H:%M:%S", lt);
+    puts(buf);
 
-/*@group*/
-  /* Print it in a nicer English format. */
-  strftime (buf, sizeof buf, "Today is %A, %B %d.", lt);
-  puts (buf);
-  strftime (buf, sizeof buf, "The time is %I:%M %p.", lt);
-  puts (buf);
+    /*@group*/
+    /* Print it in a nicer English format. */
+    strftime(buf, sizeof buf, "Today is %A, %B %d.", lt);
+    puts(buf);
+    strftime(buf, sizeof buf, "The time is %I:%M %p.", lt);
+    puts(buf);
 
-  return 0;
+    return 0;
 }
 /*@end group*/

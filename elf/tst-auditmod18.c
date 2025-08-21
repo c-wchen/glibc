@@ -19,55 +19,49 @@
 #include <stdio.h>
 #include <link.h>
 
-unsigned int
-la_version (unsigned int version)
+unsigned int la_version(unsigned int version)
 {
-  fprintf (stderr, "%s\n", __func__);
-  return LAV_CURRENT;
+    fprintf(stderr, "%s\n", __func__);
+    return LAV_CURRENT;
 }
 
-char *
-la_objsearch (const char *name, uintptr_t *cookie, unsigned int flag)
+char *la_objsearch(const char *name, uintptr_t *cookie, unsigned int flag)
 {
-  fprintf (stderr, "%s\n", __func__);
-  return (char *) name;
+    fprintf(stderr, "%s\n", __func__);
+    return (char *) name;
 }
 
-void
-la_activity (uintptr_t *cookie, unsigned int flag)
+void la_activity(uintptr_t *cookie, unsigned int flag)
 {
-  fprintf (stderr, "%s\n", __func__);
+    fprintf(stderr, "%s\n", __func__);
 }
 
-unsigned int
-la_objopen (struct link_map *map, Lmid_t lmid, uintptr_t *cookie)
+unsigned int la_objopen(struct link_map *map, Lmid_t lmid, uintptr_t *cookie)
 {
-  fprintf (stderr, "%s\n", __func__);
-  return LA_FLG_BINDTO | LA_FLG_BINDFROM;
+    fprintf(stderr, "%s\n", __func__);
+    return LA_FLG_BINDTO | LA_FLG_BINDFROM;
 }
 
-unsigned int
-la_objclose (uintptr_t *cookie)
+unsigned int la_objclose(uintptr_t *cookie)
 {
-  fprintf (stderr, "%s\n", __func__);
-  return 0;
+    fprintf(stderr, "%s\n", __func__);
+    return 0;
 }
 
-void
-la_preinit (uintptr_t *cookie)
+void la_preinit(uintptr_t *cookie)
 {
-  fprintf (stderr, "%s\n", __func__);
+    fprintf(stderr, "%s\n", __func__);
 }
 
 uintptr_t
 #if __ELF_NATIVE_CLASS == 32
-la_symbind32 (Elf32_Sym *sym, unsigned int ndx, uintptr_t *refcook,
-              uintptr_t *defcook, unsigned int *flags, const char *symname)
+la_symbind32(Elf32_Sym *sym, unsigned int ndx, uintptr_t *refcook,
+             uintptr_t *defcook, unsigned int *flags, const char *symname)
 #else
-la_symbind64 (Elf64_Sym *sym, unsigned int ndx, uintptr_t *refcook,
-              uintptr_t *defcook, unsigned int *flags, const char *symname)
+la_symbind64(Elf64_Sym *sym, unsigned int ndx, uintptr_t *refcook,
+             uintptr_t *defcook, unsigned int *flags, const char *symname)
 #endif
 {
-  fprintf (stderr, "%s\n", __func__);
-  return sym->st_value;
+    fprintf(stderr, "%s\n", __func__);
+    return sym->st_value;
 }

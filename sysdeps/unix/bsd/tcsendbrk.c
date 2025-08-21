@@ -26,28 +26,29 @@
 #include <sys/types.h>
 
 /* Send zero bits on FD.  */
-int
-tcsendbreak (int fd, int duration)
+int tcsendbreak(int fd, int duration)
 {
-  struct timeval delay;
+    struct timeval delay;
 
-  /* The break lasts 0.25 to 0.5 seconds if DURATION is zero,
-     and an implementation-defined period if DURATION is nonzero.
-     We define a positive DURATION to be number of microseconds to break.  */
-  if (duration <= 0)
-    duration = 400000;
+    /* The break lasts 0.25 to 0.5 seconds if DURATION is zero,
+       and an implementation-defined period if DURATION is nonzero.
+       We define a positive DURATION to be number of microseconds to break.  */
+    if (duration <= 0) {
+        duration = 400000;
+    }
 
-  delay.tv_sec = 0;
-  delay.tv_usec = duration;
+    delay.tv_sec = 0;
+    delay.tv_usec = duration;
 
-  /* Starting sending break.  */
-  if (__ioctl (fd, TIOCSBRK, (void *) NULL) < 0)
-    return -1;
+    /* Starting sending break.  */
+    if (__ioctl(fd, TIOCSBRK, (void *) NULL) < 0) {
+        return -1;
+    }
 
-  /* Wait DURATION microseconds.  */
-  (void) __select (0, (fd_set *) NULL, (fd_set *) NULL, (fd_set *) NULL,
-		   &delay);
+    /* Wait DURATION microseconds.  */
+    (void) __select(0, (fd_set *) NULL, (fd_set *) NULL, (fd_set *) NULL,
+                    &delay);
 
-  /* Turn off the break.  */
-  return __ioctl (fd, TIOCCBRK, (void *) NULL);
+    /* Turn off the break.  */
+    return __ioctl(fd, TIOCCBRK, (void *) NULL);
 }

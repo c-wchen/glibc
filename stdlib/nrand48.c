@@ -18,12 +18,11 @@
 #include <stdlib.h>
 
 
-long int
-nrand48 (unsigned short int xsubi[3])
+long int nrand48(unsigned short int xsubi[3])
 {
-  long int result;
+    long int result;
 
-  (void) __nrand48_r (xsubi, &__libc_drand48_data, &result);
+    (void) __nrand48_r(xsubi, &__libc_drand48_data, &result);
 
-  return result;
+    return result;
 }

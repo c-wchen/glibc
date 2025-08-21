@@ -21,22 +21,20 @@
 #include <hurd/port.h>
 
 /* Get the process group ID of process PID.  */
-int
-__getpgid (pid_t pid)
+int __getpgid(pid_t pid)
 {
-  error_t err;
-  pid_t pgrp;
+    error_t err;
+    pid_t pgrp;
 
-  if (pid == 0)
-    {
-      /* Assume atomic word fetch and store, so don't lock _hurd_pid_lock.  */
-      pgrp = _hurd_pgrp;
-      err = 0;
+    if (pid == 0) {
+        /* Assume atomic word fetch and store, so don't lock _hurd_pid_lock.  */
+        pgrp = _hurd_pgrp;
+        err = 0;
+    } else {
+        err = __USEPORT(PROC, __proc_getpgrp(port, pid, &pgrp));
     }
-  else
-    err = __USEPORT (PROC, __proc_getpgrp (port, pid, &pgrp));
 
-  return err ? __hurd_fail (err) : pgrp;
+    return err ? __hurd_fail(err) : pgrp;
 }
-libc_hidden_def (__getpgid)
-weak_alias (__getpgid, getpgid)
+libc_hidden_def(__getpgid)
+weak_alias(__getpgid, getpgid)

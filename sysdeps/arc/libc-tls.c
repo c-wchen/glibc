@@ -19,9 +19,8 @@
 #include <csu/libc-tls.c>
 #include <dl-tls.h>
 
-void *
-__tls_get_addr (tls_index *ti)
+void *__tls_get_addr(tls_index *ti)
 {
-  dtv_t *dtv = THREAD_DTV ();
-  return (char *) dtv[1].pointer.val + ti->ti_offset;
+    dtv_t *dtv = THREAD_DTV();
+    return (char *) dtv[1].pointer.val + ti->ti_offset;
 }

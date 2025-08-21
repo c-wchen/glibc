@@ -18,11 +18,10 @@
 
 #include <math.h>
 
-static long double
-wrap_remquol (long double x, long double y)
+static long double wrap_remquol(long double x, long double y)
 {
-  int quo;
-  return remquol (x, y, &quo);
+    int quo;
+    return remquol(x, y, &quo);
 }
 
 #define FUNC wrap_remquol

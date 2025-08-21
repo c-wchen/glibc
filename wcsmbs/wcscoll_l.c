@@ -24,10 +24,10 @@
 #define STRCOLL __wcscoll_l
 #define STRCMP __wcscmp
 #define WEIGHT_H "../locale/weightwc.h"
-#define SUFFIX	WC
+#define SUFFIX  WC
 #define L(arg) L##arg
 #define WIDE_CHAR_VERSION 1
 
 #include "../string/strcoll_l.c"
 
-weak_alias (__wcscoll_l, wcscoll_l)
+weak_alias(__wcscoll_l, wcscoll_l)

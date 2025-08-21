@@ -23,19 +23,18 @@
 #include <resolv.h>
 #include <support/check.h>
 
-void __libc_freeres (void);
+void __libc_freeres(void);
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  mtrace ();
-  for (int i = 0; i < 20; ++i)
-    {
-      TEST_VERIFY_EXIT (res_init () == 0);
-      if (gethostbyname ("www.gnu.org") == NULL)
-	FAIL_EXIT1 ("%s\n", hstrerror (h_errno));
+    mtrace();
+    for (int i = 0; i < 20; ++i) {
+        TEST_VERIFY_EXIT(res_init() == 0);
+        if (gethostbyname("www.gnu.org") == NULL) {
+            FAIL_EXIT1("%s\n", hstrerror(h_errno));
+        }
     }
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

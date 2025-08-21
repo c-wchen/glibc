@@ -26,17 +26,17 @@
    until unlocked by a call to the `munlockall', until the process exits,
    or until the process calls `execve'.  */
 
-int
-mlockall (int flags)
+int mlockall(int flags)
 {
-  mach_port_t host;
-  error_t err;
+    mach_port_t host;
+    error_t err;
 
-  err = __get_privileged_ports (&host, NULL);
-  if (err)
-    return __hurd_fail (err);
+    err = __get_privileged_ports(&host, NULL);
+    if (err) {
+        return __hurd_fail(err);
+    }
 
-  err = __vm_wire_all (host, __mach_task_self (), flags);
-  __mach_port_deallocate (__mach_task_self (), host);
-  return err ? __hurd_fail (err) : 0;
+    err = __vm_wire_all(host, __mach_task_self(), flags);
+    __mach_port_deallocate(__mach_task_self(), host);
+    return err ? __hurd_fail(err) : 0;
 }

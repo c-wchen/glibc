@@ -19,14 +19,14 @@
 #include <errno.h>
 #include <stdio.h>
 
-int
-__renameat2 (int oldfd, const char *old, int newfd, const char *new,
-           unsigned int flags)
+int __renameat2(int oldfd, const char *old, int newfd, const char *new,
+                unsigned int flags)
 {
-  if (flags == 0)
-    return __renameat (oldfd, old, newfd, new);
-  __set_errno (EINVAL);
-  return -1;
+    if (flags == 0) {
+        return __renameat(oldfd, old, newfd, new);
+    }
+    __set_errno(EINVAL);
+    return -1;
 }
-libc_hidden_def (__renameat2)
-weak_alias (__renameat2, renameat2)
+libc_hidden_def(__renameat2)
+weak_alias(__renameat2, renameat2)

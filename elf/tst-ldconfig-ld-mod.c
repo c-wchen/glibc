@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void
-bar (void)
+void bar(void)
 {
-  printf ("Called DSO.\n");
+    printf("Called DSO.\n");
 }

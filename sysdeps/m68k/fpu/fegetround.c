@@ -18,15 +18,14 @@
 
 #include <fenv.h>
 
-int
-__fegetround (void)
+int __fegetround(void)
 {
-  int fpcr;
+    int fpcr;
 
-  __asm__ ("fmove%.l %!,%0" : "=dm" (fpcr));
+    __asm__("fmove%.l %!,%0" : "=dm"(fpcr));
 
-  return fpcr & FE_UPWARD;
+    return fpcr & FE_UPWARD;
 }
-libm_hidden_def (__fegetround)
-weak_alias (__fegetround, fegetround)
-libm_hidden_weak (fegetround)
+libm_hidden_def(__fegetround)
+weak_alias(__fegetround, fegetround)
+libm_hidden_weak(fegetround)

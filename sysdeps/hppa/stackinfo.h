@@ -19,7 +19,7 @@
    of the processor.  */
 
 #ifndef _STACKINFO_H
-#define _STACKINFO_H	1
+#define _STACKINFO_H    1
 
 #include <elf.h>
 
@@ -28,6 +28,6 @@
 #define DEFAULT_STACK_PERMS (PF_R|PF_W|PF_X)
 
 /* On PA the stack grows up.  */
-#define _STACK_GROWS_UP	1
+#define _STACK_GROWS_UP 1
 
-#endif	/* stackinfo.h */
+#endif  /* stackinfo.h */

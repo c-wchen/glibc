@@ -18,14 +18,13 @@
 
 #include <fenv.h>
 
-int
-fesetexcept (int excepts)
+int fesetexcept(int excepts)
 {
-  unsigned int mxcsr;
+    unsigned int mxcsr;
 
-  __asm__ ("stmxcsr %0" : "=m" (*&mxcsr));
-  mxcsr |= excepts & FE_ALL_EXCEPT;
-  __asm__ ("ldmxcsr %0" : : "m" (*&mxcsr));
+    __asm__("stmxcsr %0" : "=m"( *&mxcsr));
+    mxcsr |= excepts & FE_ALL_EXCEPT;
+    __asm__("ldmxcsr %0" : : "m"( *&mxcsr));
 
-  return 0;
+    return 0;
 }

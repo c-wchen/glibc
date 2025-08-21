@@ -18,8 +18,7 @@
 
 #include "tst-truncate-common.c"
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  return do_test_with_offset (0);
+    return do_test_with_offset(0);
 }

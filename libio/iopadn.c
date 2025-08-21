@@ -28,42 +28,40 @@
 
 #define PADSIZE 16
 static char const blanks[PADSIZE] =
-{' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '};
+{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '};
 static char const zeroes[PADSIZE] =
-{'0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'};
+{'0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'};
 
-ssize_t
-_IO_padn (FILE *fp, int pad, ssize_t count)
+ssize_t _IO_padn(FILE *fp, int pad, ssize_t count)
 {
-  char padbuf[PADSIZE];
-  const char *padptr;
-  int i;
-  size_t written = 0;
-  size_t w;
+    char padbuf[PADSIZE];
+    const char *padptr;
+    int i;
+    size_t written = 0;
+    size_t w;
 
-  if (pad == ' ')
-    padptr = blanks;
-  else if (pad == '0')
-    padptr = zeroes;
-  else
-    {
-      for (i = PADSIZE; --i >= 0; )
-	padbuf[i] = pad;
-      padptr = padbuf;
+    if (pad == ' ') {
+        padptr = blanks;
+    } else if (pad == '0') {
+        padptr = zeroes;
+    } else {
+        for (i = PADSIZE; --i >= 0;) {
+            padbuf[i] = pad;
+        }
+        padptr = padbuf;
     }
-  for (i = count; i >= PADSIZE; i -= PADSIZE)
-    {
-      w = _IO_sputn (fp, padptr, PADSIZE);
-      written += w;
-      if (w != PADSIZE)
-	return written;
+    for (i = count; i >= PADSIZE; i -= PADSIZE) {
+        w = _IO_sputn(fp, padptr, PADSIZE);
+        written += w;
+        if (w != PADSIZE) {
+            return written;
+        }
     }
 
-  if (i > 0)
-    {
-      w = _IO_sputn (fp, padptr, i);
-      written += w;
+    if (i > 0) {
+        w = _IO_sputn(fp, padptr, i);
+        written += w;
     }
-  return written;
+    return written;
 }
-libc_hidden_def (_IO_padn)
+libc_hidden_def(_IO_padn)

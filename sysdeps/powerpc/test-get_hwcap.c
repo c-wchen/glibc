@@ -49,129 +49,125 @@
 # define __ATPLATOFF -28724
 #endif
 
-uint64_t check_tcbhwcap (long tid)
+uint64_t check_tcbhwcap(long tid)
 {
 
-  uint32_t tcb_at_platform, at_platform;
-  uint64_t hwcap, hwcap2, tcb_hwcap;
-  const char *at_platform_string;
+    uint32_t tcb_at_platform, at_platform;
+    uint64_t hwcap, hwcap2, tcb_hwcap;
+    const char *at_platform_string;
 
-  /* Testing if the hwcap/hwcap2 data is correctly initialized by
-     TLS_TP_INIT.  */
+    /* Testing if the hwcap/hwcap2 data is correctly initialized by
+       TLS_TP_INIT.  */
 
-  register unsigned long __tp __asm__ (__TPREG);
+    register unsigned long __tp __asm__(__TPREG);
 
 #ifdef __powerpc64__
-  __asm__  ("ld %0,%1(%2)\n"
-	    : "=r" (tcb_hwcap)
-	    : "n" (__HWCAPOFF), "b" (__tp));
+    __asm__("ld %0,%1(%2)\n"
+            : "=r"(tcb_hwcap)
+            : "n"(__HWCAPOFF), "b"(__tp));
 #else
-  uint64_t h1, h2;
+    uint64_t h1, h2;
 
-  __asm__ ("lwz %0,%1(%2)\n"
-      : "=r" (h1)
-      : "n" (__HWCAPOFF), "b" (__tp));
-  __asm__ ("lwz %0,%1(%2)\n"
-      : "=r" (h2)
-      : "n" (__HWCAP2OFF), "b" (__tp));
-  tcb_hwcap = (h1 >> 32) << 32 | (h2 >> 32);
+    __asm__("lwz %0,%1(%2)\n"
+            : "=r"(h1)
+            : "n"(__HWCAPOFF), "b"(__tp));
+    __asm__("lwz %0,%1(%2)\n"
+            : "=r"(h2)
+            : "n"(__HWCAP2OFF), "b"(__tp));
+    tcb_hwcap = (h1 >> 32) << 32 | (h2 >> 32);
 #endif
 
-  hwcap = getauxval (AT_HWCAP);
-  hwcap2 = getauxval (AT_HWCAP2);
+    hwcap = getauxval(AT_HWCAP);
+    hwcap2 = getauxval(AT_HWCAP2);
 
-  /* hwcap contains only the latest supported ISA, the code checks which is
-     and fills the previous supported ones.  This is necessary because the
-     same is done in hwcapinfo.c when setting the values that are copied to
-     the TCB.  */
+    /* hwcap contains only the latest supported ISA, the code checks which is
+       and fills the previous supported ones.  This is necessary because the
+       same is done in hwcapinfo.c when setting the values that are copied to
+       the TCB.  */
 
-  if (hwcap2 & PPC_FEATURE2_ARCH_2_07)
-    hwcap |= PPC_FEATURE_ARCH_2_06
-	  | PPC_FEATURE_ARCH_2_05
-	  | PPC_FEATURE_POWER5_PLUS
-	  | PPC_FEATURE_POWER5
-	  | PPC_FEATURE_POWER4;
-  else if (hwcap & PPC_FEATURE_ARCH_2_06)
-    hwcap |= PPC_FEATURE_ARCH_2_05
-	  | PPC_FEATURE_POWER5_PLUS
-	  | PPC_FEATURE_POWER5
-	  | PPC_FEATURE_POWER4;
-  else if (hwcap & PPC_FEATURE_ARCH_2_05)
-    hwcap |= PPC_FEATURE_POWER5_PLUS
-	  | PPC_FEATURE_POWER5
-	  | PPC_FEATURE_POWER4;
-  else if (hwcap & PPC_FEATURE_POWER5_PLUS)
-    hwcap |= PPC_FEATURE_POWER5
-	  | PPC_FEATURE_POWER4;
-  else if (hwcap & PPC_FEATURE_POWER5)
-    hwcap |= PPC_FEATURE_POWER4;
-
-  hwcap = (hwcap << 32) + hwcap2;
-
-  if ( tcb_hwcap != hwcap )
-    {
-      printf ("FAIL: __ppc_get_hwcap() - HWCAP is %" PRIx64 ". Should be %"
-	      PRIx64 " for thread %ld.\n", tcb_hwcap, hwcap, tid);
-      return 1;
+    if (hwcap2 & PPC_FEATURE2_ARCH_2_07)
+        hwcap |= PPC_FEATURE_ARCH_2_06
+                 | PPC_FEATURE_ARCH_2_05
+                 | PPC_FEATURE_POWER5_PLUS
+                 | PPC_FEATURE_POWER5
+                 | PPC_FEATURE_POWER4;
+    else if (hwcap & PPC_FEATURE_ARCH_2_06)
+        hwcap |= PPC_FEATURE_ARCH_2_05
+                 | PPC_FEATURE_POWER5_PLUS
+                 | PPC_FEATURE_POWER5
+                 | PPC_FEATURE_POWER4;
+    else if (hwcap & PPC_FEATURE_ARCH_2_05)
+        hwcap |= PPC_FEATURE_POWER5_PLUS
+                 | PPC_FEATURE_POWER5
+                 | PPC_FEATURE_POWER4;
+    else if (hwcap & PPC_FEATURE_POWER5_PLUS)
+        hwcap |= PPC_FEATURE_POWER5
+                 | PPC_FEATURE_POWER4;
+    else if (hwcap & PPC_FEATURE_POWER5) {
+        hwcap |= PPC_FEATURE_POWER4;
     }
 
-  /* Same test for the platform number.  */
-  __asm__  ("lwz %0,%1(%2)\n"
-	    : "=r" (tcb_at_platform)
-	    : "n" (__ATPLATOFF), "b" (__tp));
+    hwcap = (hwcap << 32) + hwcap2;
 
-  at_platform_string = (const char *) getauxval (AT_PLATFORM);
-  at_platform = _dl_string_platform (at_platform_string);
-
-  if ( tcb_at_platform != at_platform )
-    {
-      printf ("FAIL: __ppc_get_at_platform() - AT_PLATFORM is %x. Should be %x"
-	     " for thread %ld\n", tcb_at_platform, at_platform, tid);
-      return 1;
+    if (tcb_hwcap != hwcap) {
+        printf("FAIL: __ppc_get_hwcap() - HWCAP is %" PRIx64 ". Should be %"
+               PRIx64 " for thread %ld.\n", tcb_hwcap, hwcap, tid);
+        return 1;
     }
 
-  return 0;
+    /* Same test for the platform number.  */
+    __asm__("lwz %0,%1(%2)\n"
+            : "=r"(tcb_at_platform)
+            : "n"(__ATPLATOFF), "b"(__tp));
+
+    at_platform_string = (const char *) getauxval(AT_PLATFORM);
+    at_platform = _dl_string_platform(at_platform_string);
+
+    if (tcb_at_platform != at_platform) {
+        printf("FAIL: __ppc_get_at_platform() - AT_PLATFORM is %x. Should be %x"
+               " for thread %ld\n", tcb_at_platform, at_platform, tid);
+        return 1;
+    }
+
+    return 0;
 }
 
-void *t1 (void *tid)
+void *t1(void *tid)
 {
-  if (check_tcbhwcap ((long) tid))
-    {
-      pthread_exit (tid);
+    if (check_tcbhwcap((long) tid)) {
+        pthread_exit(tid);
     }
 
-  pthread_exit (NULL);
+    pthread_exit(NULL);
 
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
 
-  pthread_t threads[2];
-  pthread_attr_t attr;
-  pthread_attr_init (&attr);
-  pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_JOINABLE);
+    pthread_t threads[2];
+    pthread_attr_t attr;
+    pthread_attr_init(&attr);
+    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 
-  long i = 0;
+    long i = 0;
 
-  /* Check for main.  */
-  if (check_tcbhwcap (i))
-    {
-      return 1;
+    /* Check for main.  */
+    if (check_tcbhwcap(i)) {
+        return 1;
     }
 
-  /* Check for other thread.  */
-  i++;
-  threads[i] = xpthread_create (&attr, t1, (void *)i);
+    /* Check for other thread.  */
+    i++;
+    threads[i] = xpthread_create(&attr, t1, (void *)i);
 
-  pthread_attr_destroy (&attr);
-  TEST_VERIFY_EXIT (xpthread_join (threads[i]) == NULL);
+    pthread_attr_destroy(&attr);
+    TEST_VERIFY_EXIT(xpthread_join(threads[i]) == NULL);
 
-  printf("PASS: HWCAP, HWCAP2 and AT_PLATFORM are correctly set in the TCB for"
-	 " all threads.\n");
+    printf("PASS: HWCAP, HWCAP2 and AT_PLATFORM are correctly set in the TCB for"
+           " all threads.\n");
 
-  pthread_exit (NULL);
+    pthread_exit(NULL);
 
 }
 

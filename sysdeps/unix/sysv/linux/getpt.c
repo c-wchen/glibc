@@ -24,18 +24,17 @@
 #define _PATH_DEVPTMX _PATH_DEV "ptmx"
 
 /* Open a master pseudo terminal and return its file descriptor.  */
-int
-__posix_openpt (int oflag)
+int __posix_openpt(int oflag)
 {
-  return __open (_PATH_DEVPTMX, oflag);
+    return __open(_PATH_DEVPTMX, oflag);
 }
-weak_alias (__posix_openpt, posix_openpt)
+weak_alias(__posix_openpt, posix_openpt)
 
 
 int
-__getpt (void)
+__getpt(void)
 {
-  return __posix_openpt (O_RDWR);
+    return __posix_openpt(O_RDWR);
 }
-libc_hidden_def (__getpt)
-weak_alias (__getpt, getpt)
+libc_hidden_def(__getpt)
+weak_alias(__getpt, getpt)

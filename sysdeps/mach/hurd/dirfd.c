@@ -22,23 +22,24 @@
 #include <hurd/fd.h>
 #include <errno.h>
 
-int
-__dirfd (DIR *dirp)
+int __dirfd(DIR *dirp)
 {
-  int fd;
+    int fd;
 
-  HURD_CRITICAL_BEGIN;
-  __mutex_lock (&_hurd_dtable_lock);
-  for (fd = 0; fd < _hurd_dtablesize; ++fd)
-    if (_hurd_dtable[fd] == dirp->__fd)
-      break;
-  if (fd == _hurd_dtablesize)
-    fd = __hurd_fail (EINVAL);
-  __mutex_unlock (&_hurd_dtable_lock);
-  HURD_CRITICAL_END;
+    HURD_CRITICAL_BEGIN;
+    __mutex_lock(&_hurd_dtable_lock);
+    for (fd = 0; fd < _hurd_dtablesize; ++fd)
+        if (_hurd_dtable[fd] == dirp->__fd) {
+            break;
+        }
+    if (fd == _hurd_dtablesize) {
+        fd = __hurd_fail(EINVAL);
+    }
+    __mutex_unlock(&_hurd_dtable_lock);
+    HURD_CRITICAL_END;
 
-  return fd;
+    return fd;
 }
 
-weak_alias (__dirfd, dirfd)
-libc_hidden_def (dirfd)
+weak_alias(__dirfd, dirfd)
+libc_hidden_def(dirfd)

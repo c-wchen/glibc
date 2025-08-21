@@ -17,21 +17,22 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifdef __SOFTFP__
-__typeof (REDIRECT_NAME) OPTIMIZE (arm) attribute_hidden;
+__typeof(REDIRECT_NAME) OPTIMIZE(arm) attribute_hidden;
 #endif
-__typeof (REDIRECT_NAME) OPTIMIZE (vfp) attribute_hidden;
-__typeof (REDIRECT_NAME) OPTIMIZE (neon) attribute_hidden;
+__typeof(REDIRECT_NAME) OPTIMIZE(vfp) attribute_hidden;
+__typeof(REDIRECT_NAME) OPTIMIZE(neon) attribute_hidden;
 
-static inline void *
-IFUNC_SELECTOR (int hwcap)
+static inline void *IFUNC_SELECTOR(int hwcap)
 {
-  if (hwcap & HWCAP_ARM_NEON)
-    return OPTIMIZE (neon);
+    if (hwcap & HWCAP_ARM_NEON) {
+        return OPTIMIZE(neon);
+    }
 #ifdef __SOFTFP__
-  if (hwcap & HWCAP_ARM_VFP)
-    return OPTIMIZE (vfp);
-  return OPTIMIZE (arm);
+    if (hwcap & HWCAP_ARM_VFP) {
+        return OPTIMIZE(vfp);
+    }
+    return OPTIMIZE(arm);
 #else
-  return OPTIMIZE (vfp);
+    return OPTIMIZE(vfp);
 #endif
 }

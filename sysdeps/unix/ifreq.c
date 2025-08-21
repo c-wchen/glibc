@@ -18,61 +18,59 @@
 #include "ifreq.h"
 
 
-void
-__ifreq (struct ifreq **ifreqs, int *num_ifs, int sockfd)
+void __ifreq(struct ifreq **ifreqs, int *num_ifs, int sockfd)
 {
-  int fd = sockfd;
-  struct ifconf ifc;
-  int rq_len;
-  int nifs;
-# define RQ_IFS	4
+    int fd = sockfd;
+    struct ifconf ifc;
+    int rq_len;
+    int nifs;
+# define RQ_IFS 4
 
-  if (fd < 0)
-    fd = __opensock ();
-  if (fd < 0)
-    {
-      *num_ifs = 0;
-      *ifreqs = NULL;
-      return;
+    if (fd < 0) {
+        fd = __opensock();
+    }
+    if (fd < 0) {
+        *num_ifs = 0;
+        *ifreqs = NULL;
+        return;
     }
 
-  ifc.ifc_buf = NULL;
-  rq_len = RQ_IFS * sizeof (struct ifreq) / 2; /* Doubled in the loop.  */
-  do
-    {
-      ifc.ifc_len = rq_len *= 2;
-      void *newp = realloc (ifc.ifc_buf, ifc.ifc_len);
-      if (newp == NULL || __ioctl (fd, SIOCGIFCONF, &ifc) < 0)
-	{
-	  free (ifc.ifc_buf);
+    ifc.ifc_buf = NULL;
+    rq_len = RQ_IFS * sizeof(struct ifreq) / 2;  /* Doubled in the loop.  */
+    do {
+        ifc.ifc_len = rq_len *= 2;
+        void *newp = realloc(ifc.ifc_buf, ifc.ifc_len);
+        if (newp == NULL || __ioctl(fd, SIOCGIFCONF, &ifc) < 0) {
+            free(ifc.ifc_buf);
 
-	  if (fd != sockfd)
-	    __close (fd);
-	  *num_ifs = 0;
-	  *ifreqs = NULL;
-	  return;
-	}
-      ifc.ifc_buf = newp;
+            if (fd != sockfd) {
+                __close(fd);
+            }
+            *num_ifs = 0;
+            *ifreqs = NULL;
+            return;
+        }
+        ifc.ifc_buf = newp;
+    } while (rq_len < sizeof(struct ifreq) + ifc.ifc_len);
+
+    if (fd != sockfd) {
+        __close(fd);
     }
-  while (rq_len < sizeof (struct ifreq) + ifc.ifc_len);
-
-  if (fd != sockfd)
-    __close (fd);
 
 #ifdef _HAVE_SA_LEN
-  struct ifreq *ifr = *ifreqs;
-  nifs = 0;
-  while ((char *) ifr < ifc.ifc_buf + ifc.ifc_len)
-    {
-      ++nifs;
-      ifr = __if_nextreq (ifr);
-      if (ifr == NULL)
-	break;
+    struct ifreq *ifr = *ifreqs;
+    nifs = 0;
+    while ((char *) ifr < ifc.ifc_buf + ifc.ifc_len) {
+        ++nifs;
+        ifr = __if_nextreq(ifr);
+        if (ifr == NULL) {
+            break;
+        }
     }
 #else
-  nifs = ifc.ifc_len / sizeof (struct ifreq);
+    nifs = ifc.ifc_len / sizeof(struct ifreq);
 #endif
 
-  *num_ifs = nifs;
-  *ifreqs = realloc (ifc.ifc_buf, nifs * sizeof (struct ifreq));
+    *num_ifs = nifs;
+    *ifreqs = realloc(ifc.ifc_buf, nifs * sizeof(struct ifreq));
 }

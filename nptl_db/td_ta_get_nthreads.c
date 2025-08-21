@@ -18,23 +18,24 @@
 
 #include "thread_dbP.h"
 
-td_err_e
-td_ta_get_nthreads (const td_thragent_t *ta_arg, int *np)
+td_err_e td_ta_get_nthreads(const td_thragent_t *ta_arg, int *np)
 {
-  td_thragent_t *const ta = (td_thragent_t *) ta_arg;
-  td_err_e err;
-  psaddr_t n;
+    td_thragent_t *const ta = (td_thragent_t *) ta_arg;
+    td_err_e err;
+    psaddr_t n;
 
-  LOG ("td_ta_get_nthreads");
+    LOG("td_ta_get_nthreads");
 
-  /* Test whether the TA parameter is ok.  */
-  if (! ta_ok (ta))
-    return TD_BADTA;
+    /* Test whether the TA parameter is ok.  */
+    if (! ta_ok(ta)) {
+        return TD_BADTA;
+    }
 
-  /* Access the variable in the inferior that tells us.  */
-  err = DB_GET_VALUE (n, ta, __nptl_nthreads, 0);
-  if (err == TD_OK)
-    *np = (uintptr_t) n;
+    /* Access the variable in the inferior that tells us.  */
+    err = DB_GET_VALUE(n, ta, __nptl_nthreads, 0);
+    if (err == TD_OK) {
+        *np = (uintptr_t) n;
+    }
 
-  return err;
+    return err;
 }

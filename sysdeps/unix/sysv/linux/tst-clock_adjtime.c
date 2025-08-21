@@ -26,36 +26,38 @@
 # define ADJTIME_CALL(__clock, __timex) clock_adjtime (__clock, __timex)
 #endif
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  struct timespec tv_then, tv_now;
-  struct timex delta;
+    struct timespec tv_then, tv_now;
+    struct timex delta;
 
-  /* Check if altering target time is allowed.  */
-  if (getenv (SETTIME_ENV_NAME) == NULL)
-    FAIL_UNSUPPORTED ("clock_adjtime is executed only when "\
-                      SETTIME_ENV_NAME" is set\n");
+    /* Check if altering target time is allowed.  */
+    if (getenv(SETTIME_ENV_NAME) == NULL)
+        FAIL_UNSUPPORTED("clock_adjtime is executed only when "\
+                         SETTIME_ENV_NAME" is set\n");
 
-  tv_then = xclock_now (CLOCK_REALTIME);
+    tv_then = xclock_now(CLOCK_REALTIME);
 
-  /* Setup time value to adjust - 1 sec. */
-  delta.time.tv_sec = 1;
-  delta.time.tv_usec = 0;
-  delta.modes = ADJ_SETOFFSET;
+    /* Setup time value to adjust - 1 sec. */
+    delta.time.tv_sec = 1;
+    delta.time.tv_usec = 0;
+    delta.modes = ADJ_SETOFFSET;
 
-  int ret = ADJTIME_CALL (CLOCK_REALTIME, &delta);
-  if (ret == -1)
-    FAIL_EXIT1 ("clock_adjtime failed: %m\n");
+    int ret = ADJTIME_CALL(CLOCK_REALTIME, &delta);
+    if (ret == -1) {
+        FAIL_EXIT1("clock_adjtime failed: %m\n");
+    }
 
-  tv_now = xclock_now (CLOCK_REALTIME);
+    tv_now = xclock_now(CLOCK_REALTIME);
 
-  /* Check if clock_adjtime adjusted the system time.  */
-  struct timespec r = timespec_sub (tv_now, tv_then);
-  TEST_COMPARE (support_timespec_check_in_range
-                ((struct timespec) { 1, 0 }, r, 0.9, 1.1), 1);
+    /* Check if clock_adjtime adjusted the system time.  */
+    struct timespec r = timespec_sub(tv_now, tv_then);
+    TEST_COMPARE(support_timespec_check_in_range
+    ((struct timespec) {
+        1, 0
+    }, r, 0.9, 1.1), 1);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

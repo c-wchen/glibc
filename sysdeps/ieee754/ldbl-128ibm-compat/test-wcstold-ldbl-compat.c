@@ -20,17 +20,17 @@
 
 #include <support/check.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  const wchar_t *input = L"-1.0000000000";
-  long double read;
+    const wchar_t *input = L"-1.0000000000";
+    long double read;
 
-  read = wcstold (input, NULL);
-  if (read != -1.0L)
-    support_record_failure ();
+    read = wcstold(input, NULL);
+    if (read != -1.0L) {
+        support_record_failure();
+    }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -19,15 +19,15 @@
 #include <spawn.h>
 
 /* Store scheduling policy in the attribute structure.  */
-int
-posix_spawnattr_setschedpolicy (posix_spawnattr_t *attr, int schedpolicy)
+int posix_spawnattr_setschedpolicy(posix_spawnattr_t *attr, int schedpolicy)
 {
-  if (schedpolicy != SCHED_OTHER && schedpolicy != SCHED_FIFO
-      && schedpolicy != SCHED_RR)
-    return EINVAL;
+    if (schedpolicy != SCHED_OTHER && schedpolicy != SCHED_FIFO
+        && schedpolicy != SCHED_RR) {
+        return EINVAL;
+    }
 
-  /* Store the policy.  */
-  attr->__policy = schedpolicy;
+    /* Store the policy.  */
+    attr->__policy = schedpolicy;
 
-  return 0;
+    return 0;
 }

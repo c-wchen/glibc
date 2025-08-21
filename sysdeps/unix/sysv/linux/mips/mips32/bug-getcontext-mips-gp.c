@@ -29,35 +29,31 @@
 
 #define SP_REG 29
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  ucontext_t ctx;
-  memset (&ctx, 0, sizeof (ctx));
-  int status = getcontext (&ctx);
-  if (status)
-    {
-      printf ("\ngetcontext() failed, errno: %d.\n", errno);
-      return 1;
+    ucontext_t ctx;
+    memset(&ctx, 0, sizeof(ctx));
+    int status = getcontext(&ctx);
+    if (status) {
+        printf("\ngetcontext() failed, errno: %d.\n", errno);
+        return 1;
     }
 
-  if (ctx.uc_mcontext.gregs[SP_REG] == 0
-      || ctx.uc_mcontext.gregs[SP_REG] > 0xffffffff)
-    {
-      printf ("\nError getcontext(): invalid $sp = 0x%llx.\n",
-              ctx.uc_mcontext.gregs[SP_REG]);
-      return 1;
+    if (ctx.uc_mcontext.gregs[SP_REG] == 0
+        || ctx.uc_mcontext.gregs[SP_REG] > 0xffffffff) {
+        printf("\nError getcontext(): invalid $sp = 0x%llx.\n",
+               ctx.uc_mcontext.gregs[SP_REG]);
+        return 1;
     }
 
-  if (ctx.uc_mcontext.pc == 0
-      || ctx.uc_mcontext.pc > 0xffffffff)
-    {
-      printf ("\nError getcontext(): invalid ctx.uc_mcontext.pc = 0x%llx.\n",
-              ctx.uc_mcontext.pc);
-      return 1;
+    if (ctx.uc_mcontext.pc == 0
+        || ctx.uc_mcontext.pc > 0xffffffff) {
+        printf("\nError getcontext(): invalid ctx.uc_mcontext.pc = 0x%llx.\n",
+               ctx.uc_mcontext.pc);
+        return 1;
     }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

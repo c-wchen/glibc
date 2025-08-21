@@ -19,13 +19,13 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-int
-fesetmode (const femode_t *modep)
+int fesetmode(const femode_t *modep)
 {
-  asm volatile ("csrc fcsr, %0" : : "r" (~FE_ALL_EXCEPT));
+    asm volatile("csrc fcsr, %0" : : "r"(~FE_ALL_EXCEPT));
 
-  if (modep != FE_DFL_MODE)
-    asm volatile ("csrs fcsr, %0" : : "r" (*modep & ~FE_ALL_EXCEPT));
+    if (modep != FE_DFL_MODE) {
+        asm volatile("csrs fcsr, %0" : : "r"(*modep & ~FE_ALL_EXCEPT));
+    }
 
-  return 0;
+    return 0;
 }

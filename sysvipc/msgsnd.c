@@ -24,11 +24,10 @@
    of the text.  The MSGFLG parameter describes the action taken
    when the limit of the message queue length is reached.  */
 
-int
-msgsnd (int msqid, const void *msgp, size_t msgsz, int msgflg)
+int msgsnd(int msqid, const void *msgp, size_t msgsz, int msgflg)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (msgsnd)
+stub_warning(msgsnd)

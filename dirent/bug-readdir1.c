@@ -7,32 +7,30 @@
 #include <sys/types.h>
 
 
-int
-main (void)
+int main(void)
 {
-  DIR *dirp;
-  struct dirent* ent;
+    DIR *dirp;
+    struct dirent *ent;
 
-  /* open a dir stream */
-  dirp = opendir ("/tmp");
-  if (dirp == NULL)
-    {
-      if (errno == ENOENT)
-	exit (0);
+    /* open a dir stream */
+    dirp = opendir("/tmp");
+    if (dirp == NULL) {
+        if (errno == ENOENT) {
+            exit(0);
+        }
 
-      perror ("opendir");
-      exit (1);
+        perror("opendir");
+        exit(1);
     }
 
-  /* close the directory file descriptor, making it invalid */
-  if (close (dirfd (dirp)) != 0)
-    {
-      puts ("could not close directory file descriptor");
-      /* This is not an error.  It is not guaranteed this is possible.  */
-      return 0;
+    /* close the directory file descriptor, making it invalid */
+    if (close(dirfd(dirp)) != 0) {
+        puts("could not close directory file descriptor");
+        /* This is not an error.  It is not guaranteed this is possible.  */
+        return 0;
     }
 
-  ent = readdir (dirp);
+    ent = readdir(dirp);
 
-  return ent != NULL || errno != EBADF;
+    return ent != NULL || errno != EBADF;
 }

@@ -37,64 +37,62 @@
 /* Set up the stack for THREAD, such that it appears as if
    START_ROUTINE and ARG were passed to the new thread's entry-point.
    Return the stack pointer for the new thread.  */
-static void *
-stack_setup (struct __pthread *thread,
-	     void *(*start_routine) (void *), void *arg)
+static void *stack_setup(struct __pthread *thread,
+                         void *(*start_routine)(void *), void *arg)
 {
-  error_t err;
-  uintptr_t *bottom, *top;
+    error_t err;
+    uintptr_t *bottom, *top;
 
-  /* Calculate the top of the new stack.  */
-  bottom = thread->stackaddr;
-  top = (uintptr_t *) ((uintptr_t) bottom + thread->stacksize
-		       + ((thread->guardsize + __vm_page_size - 1)
-			  / __vm_page_size) * __vm_page_size);
+    /* Calculate the top of the new stack.  */
+    bottom = thread->stackaddr;
+    top = (uintptr_t *)((uintptr_t) bottom + thread->stacksize
+                        + ((thread->guardsize + __vm_page_size - 1)
+                           / __vm_page_size) * __vm_page_size);
 
-  if (start_routine != NULL)
-    {
-      /* And then the call frame.  */
-      top -= 3;
-      top = (uintptr_t *) ((uintptr_t) top & ~0xf);
-      top[2] = (uintptr_t) arg;	/* Argument to START_ROUTINE.  */
-      top[1] = (uintptr_t) start_routine;
-      top[0] = (uintptr_t) thread;
-      *--top = 0;		/* Fake return address.  */
+    if (start_routine != NULL) {
+        /* And then the call frame.  */
+        top -= 3;
+        top = (uintptr_t *)((uintptr_t) top & ~0xf);
+        top[2] = (uintptr_t) arg; /* Argument to START_ROUTINE.  */
+        top[1] = (uintptr_t) start_routine;
+        top[0] = (uintptr_t) thread;
+        *--top = 0;       /* Fake return address.  */
     }
 
-  if (thread->guardsize)
-    {
-      err = __vm_protect (__mach_task_self (), (vm_address_t) bottom,
-			  thread->guardsize, 0, 0);
-      assert_perror (err);
+    if (thread->guardsize) {
+        err = __vm_protect(__mach_task_self(), (vm_address_t) bottom,
+                           thread->guardsize, 0, 0);
+        assert_perror(err);
     }
 
-  return top;
+    return top;
 }
 
-int
-__pthread_setup (struct __pthread *thread,
-		 void (*entry_point) (struct __pthread *, void *(*)(void *),
-				      void *), void *(*start_routine) (void *),
-		 void *arg)
+int __pthread_setup(struct __pthread *thread,
+                    void (*entry_point)(struct __pthread *, void *(*)(void *),
+                                        void *), void *(*start_routine)(void *),
+                    void *arg)
 {
-  error_t err;
+    error_t err;
 
-  if (thread->kernel_thread == __hurd_thread_self ())
-    /* Fix up the TCB for the main thread.  The C library has already
-       installed a TCB, which we want to keep using.  This TCB must not
-       be freed so don't register it in the thread structure.  On the
-       other hand, it's not yet possible to reliably release a TCB.
-       Leave the unused one registered so that it doesn't leak.  */
+    if (thread->kernel_thread == __hurd_thread_self())
+        /* Fix up the TCB for the main thread.  The C library has already
+           installed a TCB, which we want to keep using.  This TCB must not
+           be freed so don't register it in the thread structure.  On the
+           other hand, it's not yet possible to reliably release a TCB.
+           Leave the unused one registered so that it doesn't leak.  */
+    {
+        return 0;
+    }
+
+    thread->mcontext.pc = entry_point;
+    thread->mcontext.sp = stack_setup(thread, start_routine, arg);
+
+    err = __thread_set_pcsptp(thread->kernel_thread,
+                              1, thread->mcontext.pc,
+                              1, thread->mcontext.sp,
+                              1, thread->tcb);
+    assert_perror(err);
+
     return 0;
-
-  thread->mcontext.pc = entry_point;
-  thread->mcontext.sp = stack_setup (thread, start_routine, arg);
-
-  err = __thread_set_pcsptp (thread->kernel_thread,
-			     1, thread->mcontext.pc,
-			     1, thread->mcontext.sp,
-			     1, thread->tcb);
-  assert_perror (err);
-
-  return 0;
 }

@@ -20,13 +20,12 @@
 #include <support/test-driver.h>
 
 /* Check that legacy shadow stack code won't trigger segfault.  */
-extern void legacy (void);
+extern void legacy(void);
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  legacy ();
-  return EXIT_SUCCESS;
+    legacy();
+    return EXIT_SUCCESS;
 }
 
 #include <support/test-driver.c>

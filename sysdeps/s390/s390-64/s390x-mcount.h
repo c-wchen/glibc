@@ -59,36 +59,36 @@
 #define xglue(x, y) x ## y
 #define glue(x, y) xglue(x, y)
 
-	.globl C_SYMBOL_NAME(MCOUNT_SYMBOL)
-	.type C_SYMBOL_NAME(MCOUNT_SYMBOL), @function
-	cfi_startproc
-	.align ALIGNARG(4)
+.globl C_SYMBOL_NAME(MCOUNT_SYMBOL)
+.type C_SYMBOL_NAME(MCOUNT_SYMBOL), @function
+cfi_startproc
+.align ALIGNARG(4)
 C_LABEL(MCOUNT_SYMBOL)
-	cfi_return_column (glue(r, MCOUNT_CALLEE_REG))
-	/* Save the caller-clobbered registers.  */
-	aghi  %r15,-224
-	cfi_adjust_cfa_offset (224)
-	cfi_val_offset (r15, -160)
-	stmg  %r14,%r5,160(%r15)
-	cfi_offset (r14, -224)
-	cfi_offset (r0, -224+16)
-	lg    %r2,MCOUNT_CALLER_OFF(%r15)	# callers address  = 1st param
-	lgr   %r3,glue(%r, MCOUNT_CALLEE_REG)	# callees address  = 2nd param
+cfi_return_column(glue(r, MCOUNT_CALLEE_REG))
+/* Save the caller-clobbered registers.  */
+aghi  % r15, -224
+cfi_adjust_cfa_offset(224)
+cfi_val_offset(r15, -160)
+stmg  % r14, % r5, 160( % r15)
+cfi_offset(r14, -224)
+cfi_offset(r0, -224 + 16)
+lg    % r2, MCOUNT_CALLER_OFF( % r15)   # callers address  = 1st param
+        lgr   % r3, glue( % r, MCOUNT_CALLEE_REG)   # callees address  = 2nd param
 
 #ifdef PIC
-	brasl %r14,__mcount_internal@PLT
+                brasl % r14, __mcount_internal@PLT
 #else
-	brasl %r14,__mcount_internal
+                brasl % r14, __mcount_internal
 #endif
 
-	/* Pop the saved registers.  Please note that `mcount' has no
-	   return value.  */
-	lmg   %r14,%r5,160(%r15)
-	aghi  %r15,224
-	cfi_adjust_cfa_offset (-224)
+                /* Pop the saved registers.  Please note that `mcount' has no
+                   return value.  */
+                lmg   % r14, % r5, 160( % r15)
+                aghi  % r15, 224
+                cfi_adjust_cfa_offset(-224)
 #if MCOUNT_RETURN_REG != MCOUNT_CALLEE_REG
-	lgr   glue(%r, MCOUNT_RETURN_REG),glue(%r, MCOUNT_CALLEE_REG)
+                lgr   glue( % r, MCOUNT_RETURN_REG), glue( % r, MCOUNT_CALLEE_REG)
 #endif
-	br    glue(%r, MCOUNT_RETURN_REG)
-	cfi_endproc
-	ASM_SIZE_DIRECTIVE(C_SYMBOL_NAME(MCOUNT_SYMBOL))
+                br    glue( % r, MCOUNT_RETURN_REG)
+                cfi_endproc
+                ASM_SIZE_DIRECTIVE(C_SYMBOL_NAME(MCOUNT_SYMBOL))

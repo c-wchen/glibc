@@ -24,78 +24,73 @@
 #include <stdlib.h>
 #include <string.h>
 
-static void
-check_packet (const void *buffer, size_t length,
-              const char *name, const char *expected)
+static void check_packet(const void *buffer, size_t length,
+                         const char *name, const char *expected)
 {
-  char *actual = support_format_dns_packet (buffer, length);
-  if (strcmp (actual, expected) != 0)
-    {
-      support_record_failure ();
-      printf ("error: formatted packet does not match: %s\n", name);
-      support_run_diff ("expected", expected,
-                        "actual", actual);
+    char *actual = support_format_dns_packet(buffer, length);
+    if (strcmp(actual, expected) != 0) {
+        support_record_failure();
+        printf("error: formatted packet does not match: %s\n", name);
+        support_run_diff("expected", expected,
+                         "actual", actual);
     }
-  free (actual);
+    free(actual);
 }
 
-static void
-test_aaaa_length (void)
+static void test_aaaa_length(void)
 {
-  static const char packet[] =
-    /* Header: Response with two records.  */
-    "\x12\x34\x80\x00\x00\x01\x00\x02\x00\x00\x00\x00"
-    /* Question section.  www.example/IN/AAAA.  */
-    "\x03www\x07""example\x00\x00\x1c\x00\x01"
-    /* Answer section.  www.example AAAA [corrupted].  */
-    "\xc0\x0c"
-    "\x00\x1c\x00\x01\x00\x00\x00\x00\x00\x10"
-    "\x20\x01\x0d\xb8\x05\x06\x07\x08"
-    "\x11\x12\x13\x14\x15\x16\x17\x18"
-    /* www.example AAAA [corrupted].  */
-    "\xc0\x0c"
-    "\x00\x1c\x00\x01\x00\x00\x00\x00\x00\x11"
-    "\x01\x02\x03\x04\x05\x06\x07\x08"
-    "\x11\x12\x13\x14\x15\x16\x17\x18" "\xff";
-  check_packet (packet, sizeof (packet) - 1, __func__,
-                "name: www.example\n"
-                "address: 2001:db8:506:708:1112:1314:1516:1718\n"
-                "error: AAAA record of size 17: www.example\n");
+    static const char packet[] =
+        /* Header: Response with two records.  */
+        "\x12\x34\x80\x00\x00\x01\x00\x02\x00\x00\x00\x00"
+        /* Question section.  www.example/IN/AAAA.  */
+        "\x03www\x07""example\x00\x00\x1c\x00\x01"
+        /* Answer section.  www.example AAAA [corrupted].  */
+        "\xc0\x0c"
+        "\x00\x1c\x00\x01\x00\x00\x00\x00\x00\x10"
+        "\x20\x01\x0d\xb8\x05\x06\x07\x08"
+        "\x11\x12\x13\x14\x15\x16\x17\x18"
+        /* www.example AAAA [corrupted].  */
+        "\xc0\x0c"
+        "\x00\x1c\x00\x01\x00\x00\x00\x00\x00\x11"
+        "\x01\x02\x03\x04\x05\x06\x07\x08"
+        "\x11\x12\x13\x14\x15\x16\x17\x18" "\xff";
+    check_packet(packet, sizeof(packet) - 1, __func__,
+                 "name: www.example\n"
+                 "address: 2001:db8:506:708:1112:1314:1516:1718\n"
+                 "error: AAAA record of size 17: www.example\n");
 }
 
-static void
-test_multiple_cnames (void)
+static void test_multiple_cnames(void)
 {
-  static const char packet[] =
-    /* Header: Response with three records.  */
-    "\x12\x34\x80\x00\x00\x01\x00\x03\x00\x00\x00\x00"
-    /* Question section.  www.example/IN/A.  */
-    "\x03www\x07""example\x00\x00\x01\x00\x01"
-    /* Answer section.  www.example CNAME www1.example.  */
-    "\xc0\x0c"
-    "\x00\x05\x00\x01\x00\x00\x00\x00\x00\x07"
-    "\x04www1\xc0\x10"
-    /* www1 CNAME www2.  */
-    "\x04www1\xc0\x10"
-    "\x00\x05\x00\x01\x00\x00\x00\x00\x00\x07"
-    "\x04www2\xc0\x10"
-    /* www2 A 192.0.2.1.  */
-    "\x04www2\xc0\x10"
-    "\x00\x01\x00\x01\x00\x00\x00\x00\x00\x04"
-    "\xc0\x00\x02\x01";
-  check_packet (packet, sizeof (packet) - 1, __func__,
-                "name: www.example\n"
-                "data: www.example CNAME www1.example\n"
-                "data: www1.example CNAME www2.example\n"
-                "address: 192.0.2.1\n");
+    static const char packet[] =
+        /* Header: Response with three records.  */
+        "\x12\x34\x80\x00\x00\x01\x00\x03\x00\x00\x00\x00"
+        /* Question section.  www.example/IN/A.  */
+        "\x03www\x07""example\x00\x00\x01\x00\x01"
+        /* Answer section.  www.example CNAME www1.example.  */
+        "\xc0\x0c"
+        "\x00\x05\x00\x01\x00\x00\x00\x00\x00\x07"
+        "\x04www1\xc0\x10"
+        /* www1 CNAME www2.  */
+        "\x04www1\xc0\x10"
+        "\x00\x05\x00\x01\x00\x00\x00\x00\x00\x07"
+        "\x04www2\xc0\x10"
+        /* www2 A 192.0.2.1.  */
+        "\x04www2\xc0\x10"
+        "\x00\x01\x00\x01\x00\x00\x00\x00\x00\x04"
+        "\xc0\x00\x02\x01";
+    check_packet(packet, sizeof(packet) - 1, __func__,
+                 "name: www.example\n"
+                 "data: www.example CNAME www1.example\n"
+                 "data: www1.example CNAME www2.example\n"
+                 "address: 192.0.2.1\n");
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  test_aaaa_length ();
-  test_multiple_cnames ();
-  return 0;
+    test_aaaa_length();
+    test_multiple_cnames();
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -21,77 +21,73 @@
 #include <ldsodefs.h>
 #include <sys/auxv.h>
 
-static void
-print_hwcap_value (const char *label, int hwcap, unsigned long int value)
+static void print_hwcap_value(const char *label, int hwcap, unsigned long int value)
 {
-  _dl_printf ("powerpc.cpu_features.%s=\"", label);
-  size_t offset = 0;
-  for (int i = 0; i < __dl_hwcap_info_size; ++i)
-    {
-      const char *hwcap_name = __dl_hwcap_names + offset;
-      size_t hwcap_name_len = strlen (hwcap_name);
-      if (hwcap == __dl_hwcap_info[i].hwcap
-	  && value & __dl_hwcap_info[i].value)
-	_dl_printf ("%s ", hwcap_name);
-      offset += hwcap_name_len + 1;
+    _dl_printf("powerpc.cpu_features.%s=\"", label);
+    size_t offset = 0;
+    for (int i = 0; i < __dl_hwcap_info_size; ++i) {
+        const char *hwcap_name = __dl_hwcap_names + offset;
+        size_t hwcap_name_len = strlen(hwcap_name);
+        if (hwcap == __dl_hwcap_info[i].hwcap
+            && value & __dl_hwcap_info[i].value) {
+            _dl_printf("%s ", hwcap_name);
+        }
+        offset += hwcap_name_len + 1;
     }
-  _dl_printf ("\"\n");
+    _dl_printf("\"\n");
 }
 
-static void
-print_cache_geometry_value (const char *label, unsigned long int geometry)
+static void print_cache_geometry_value(const char *label, unsigned long int geometry)
 {
-  unsigned long int assocty, line;
+    unsigned long int assocty, line;
 
-  _dl_printf ("powerpc.cpu_features.%s=\"", label);
+    _dl_printf("powerpc.cpu_features.%s=\"", label);
 
-  line = geometry & 0xffff;
-  assocty = (geometry >> 16) & 0xffff;
+    line = geometry & 0xffff;
+    assocty = (geometry >> 16) & 0xffff;
 
-  if (line == 0)
-    _dl_printf ("Unknown line size, ");
-  else
-    _dl_printf ("%luB line size, ", line);
-
-  switch (assocty)
-    {
-    case 0:
-      _dl_printf ("Unknown associativity");
-      break;
-    case 1:
-      _dl_printf ("Directly mapped");
-      break;
-    case 0xffff:
-      _dl_printf ("Fully associative");
-      break;
-    default:
-      _dl_printf ("%lu-way set associative", assocty);
+    if (line == 0) {
+        _dl_printf("Unknown line size, ");
+    } else {
+        _dl_printf("%luB line size, ", line);
     }
-  _dl_printf ("\"\n");
+
+    switch (assocty) {
+        case 0:
+            _dl_printf("Unknown associativity");
+            break;
+        case 1:
+            _dl_printf("Directly mapped");
+            break;
+        case 0xffff:
+            _dl_printf("Fully associative");
+            break;
+        default:
+            _dl_printf("%lu-way set associative", assocty);
+    }
+    _dl_printf("\"\n");
 }
 
-void
-_dl_diagnostics_cpu (void)
+void _dl_diagnostics_cpu(void)
 {
-  print_hwcap_value ("hwcap", AT_HWCAP, GLRO(dl_hwcap));
-  print_hwcap_value ("hwcap2", AT_HWCAP2, GLRO(dl_hwcap2));
-  print_hwcap_value ("hwcap3", AT_HWCAP3, GLRO(dl_hwcap3));
-  print_hwcap_value ("hwcap4", AT_HWCAP4, GLRO(dl_hwcap4));
+    print_hwcap_value("hwcap", AT_HWCAP, GLRO(dl_hwcap));
+    print_hwcap_value("hwcap2", AT_HWCAP2, GLRO(dl_hwcap2));
+    print_hwcap_value("hwcap3", AT_HWCAP3, GLRO(dl_hwcap3));
+    print_hwcap_value("hwcap4", AT_HWCAP4, GLRO(dl_hwcap4));
 
-  for (ElfW(auxv_t) *av = GLRO(dl_auxv); av->a_type != AT_NULL; ++av)
-    switch (av->a_type)
-      {
-      case AT_L1I_CACHEGEOMETRY:
-        print_cache_geometry_value ("l1i_cachegeometry", av->a_un.a_val);
-        break;
-      case AT_L1D_CACHEGEOMETRY:
-        print_cache_geometry_value ("l1d_cachegeometry", av->a_un.a_val);
-        break;
-      case AT_L2_CACHEGEOMETRY:
-        print_cache_geometry_value ("l2_cachegeometry", av->a_un.a_val);
-        break;
-      case AT_L3_CACHEGEOMETRY:
-        print_cache_geometry_value ("l3_cachegeometry", av->a_un.a_val);
-        break;
-      }
+    for (ElfW(auxv_t) *av = GLRO(dl_auxv); av->a_type != AT_NULL; ++av)
+        switch (av->a_type) {
+            case AT_L1I_CACHEGEOMETRY:
+                print_cache_geometry_value("l1i_cachegeometry", av->a_un.a_val);
+                break;
+            case AT_L1D_CACHEGEOMETRY:
+                print_cache_geometry_value("l1d_cachegeometry", av->a_un.a_val);
+                break;
+            case AT_L2_CACHEGEOMETRY:
+                print_cache_geometry_value("l2_cachegeometry", av->a_un.a_val);
+                break;
+            case AT_L3_CACHEGEOMETRY:
+                print_cache_geometry_value("l3_cachegeometry", av->a_un.a_val);
+                break;
+        }
 }

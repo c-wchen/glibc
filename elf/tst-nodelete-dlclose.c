@@ -21,15 +21,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-extern void primary (void);
+extern void primary(void);
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  printf ("INFO: Starting application.\n");
-  primary ();
-  printf ("INFO: Exiting application.\n");
-  return 0;
+    printf("INFO: Starting application.\n");
+    primary();
+    printf("INFO: Exiting application.\n");
+    return 0;
 }
 
 #include <support/test-driver.c>

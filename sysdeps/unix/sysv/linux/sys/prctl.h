@@ -16,7 +16,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _SYS_PRCTL_H
-#define _SYS_PRCTL_H	1
+#define _SYS_PRCTL_H    1
 
 #include <features.h>
 #include <linux/prctl.h>  /*  The magic values come from here  */
@@ -26,25 +26,25 @@
 
 /* Memory tagging control operations (for AArch64).  */
 #ifndef PR_MTE_TCF_SHIFT
-# define PR_MTE_TCF_SHIFT	1
-# define PR_MTE_TCF_NONE	(0UL << PR_MTE_TCF_SHIFT)
-# define PR_MTE_TCF_SYNC	(1UL << PR_MTE_TCF_SHIFT)
-# define PR_MTE_TCF_ASYNC	(2UL << PR_MTE_TCF_SHIFT)
-# define PR_MTE_TCF_MASK	(3UL << PR_MTE_TCF_SHIFT)
-# define PR_MTE_TAG_SHIFT	3
-# define PR_MTE_TAG_MASK	(0xffffUL << PR_MTE_TAG_SHIFT)
+# define PR_MTE_TCF_SHIFT   1
+# define PR_MTE_TCF_NONE    (0UL << PR_MTE_TCF_SHIFT)
+# define PR_MTE_TCF_SYNC    (1UL << PR_MTE_TCF_SHIFT)
+# define PR_MTE_TCF_ASYNC   (2UL << PR_MTE_TCF_SHIFT)
+# define PR_MTE_TCF_MASK    (3UL << PR_MTE_TCF_SHIFT)
+# define PR_MTE_TAG_SHIFT   3
+# define PR_MTE_TAG_MASK    (0xffffUL << PR_MTE_TAG_SHIFT)
 #endif
 
 __BEGIN_DECLS
 
 /* Control process execution.  */
 #ifndef __USE_TIME64_REDIRECTS
-extern int prctl (int __option, ...) __THROW;
+extern int prctl(int __option, ...) __THROW;
 #else
 # ifdef __REDIRECT
-extern int __REDIRECT_NTH (prctl, (int __option, ...), __prctl_time64);
+extern int __REDIRECT_NTH(prctl, (int __option, ...), __prctl_time64);
 # else
-extern int __prctl_time64 (int __option,d ...) __THROW;
+extern int __prctl_time64(int __option, d ...) __THROW;
 #  define ioctl __prctl_time64
 # endif
 #endif

@@ -20,15 +20,15 @@
 #include "tst-ifunc-isa.h"
 #include <support/test-driver.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* CPU must support SSE2.  */
-  if (!__builtin_cpu_supports ("sse2"))
-    return EXIT_UNSUPPORTED;
-  enum isa value = foo ();
-  /* All ISAs, but SSE2, are disabled by tunables.  */
-  return value == sse2 ? EXIT_SUCCESS : EXIT_FAILURE;
+    /* CPU must support SSE2.  */
+    if (!__builtin_cpu_supports("sse2")) {
+        return EXIT_UNSUPPORTED;
+    }
+    enum isa value = foo();
+    /* All ISAs, but SSE2, are disabled by tunables.  */
+    return value == sse2 ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
 #include <support/test-driver.c>

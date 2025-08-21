@@ -35,110 +35,111 @@ static int sockets[2];
 
 static long int page_size;
 
-static void
-exit_subprocess (int dummy)
+static void exit_subprocess(int dummy)
 {
-  exit (EXIT_FAILURE);
+    exit(EXIT_FAILURE);
 }
 
-static void
-subprocess (void)
+static void subprocess(void)
 {
-  /* In case something goes wrong with parent before pidfd_send_signal.  */
-  support_create_timer (5, 0, false, exit_subprocess);
+    /* In case something goes wrong with parent before pidfd_send_signal.  */
+    support_create_timer(5, 0, false, exit_subprocess);
 
-  void *p1 = xmmap (NULL, page_size * 2, PROT_READ | PROT_WRITE,
-		    MAP_PRIVATE | MAP_ANONYMOUS, -1);
+    void *p1 = xmmap(NULL, page_size * 2, PROT_READ | PROT_WRITE,
+                     MAP_PRIVATE | MAP_ANONYMOUS, -1);
 
-  void *p2 = xmmap (NULL, page_size, PROT_READ | PROT_WRITE,
-		    MAP_PRIVATE | MAP_ANONYMOUS, -1);
-  xmunmap(p2, page_size);
+    void *p2 = xmmap(NULL, page_size, PROT_READ | PROT_WRITE,
+                     MAP_PRIVATE | MAP_ANONYMOUS, -1);
+    xmunmap(p2, page_size);
 
-  xsendto (sockets[1], &(struct iovec) { p1, page_size * 2 },
-	   sizeof (struct iovec), 0, NULL, 0);
+    xsendto(sockets[1], &(struct iovec) {
+        p1, page_size * 2
+    },
+    sizeof(struct iovec), 0, NULL, 0);
 
-  xsendto (sockets[1], &(struct iovec) { p2, page_size },
-	   sizeof (struct iovec), 0, NULL, 0);
+    xsendto(sockets[1], &(struct iovec) {
+        p2, page_size
+    },
+    sizeof(struct iovec), 0, NULL, 0);
 
-  pause ();
+    pause();
 
-  _exit (0);
+    _exit(0);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  page_size = sysconf (_SC_PAGE_SIZE);
+    page_size = sysconf(_SC_PAGE_SIZE);
 
-  {
-    int r = pidfd_open (-1, 0);
-    TEST_COMPARE (r, -1);
-    if (errno == ENOSYS)
-      FAIL_UNSUPPORTED ("kernel does not support pidfd_open, skipping test");
-
-    TEST_COMPARE (errno, EINVAL);
-  }
-
-  TEST_COMPARE (socketpair (AF_UNIX, SOCK_STREAM, 0, sockets), 0);
-
-  pid_t pid = xfork ();
-  if (pid == 0)
     {
-      xclose (sockets[0]);
-      subprocess ();
+        int r = pidfd_open(-1, 0);
+        TEST_COMPARE(r, -1);
+        if (errno == ENOSYS) {
+            FAIL_UNSUPPORTED("kernel does not support pidfd_open, skipping test");
+        }
+
+        TEST_COMPARE(errno, EINVAL);
     }
-  xclose (sockets[1]);
 
-  int pidfd = pidfd_open (pid, 0);
-  TEST_VERIFY (pidfd != -1);
+    TEST_COMPARE(socketpair(AF_UNIX, SOCK_STREAM, 0, sockets), 0);
 
-  /* The target process is going to send us two iovec's.  The first one points
-     to a valid mapping, the other points to a previously valid mapping which
-     has now been unmapped.  */
-  {
-    struct iovec iv;
-    xrecvfrom (sockets[0], &iv, sizeof (iv), 0, NULL, 0);
+    pid_t pid = xfork();
+    if (pid == 0) {
+        xclose(sockets[0]);
+        subprocess();
+    }
+    xclose(sockets[1]);
 
-    /* We expect this to succeed in the target process because the mapping
-       is valid.  */
-    ssize_t ret = process_madvise (pidfd, &iv, 1, MADV_COLD, 0);
-    if (ret == -1 && errno == ENOSYS)
-      FAIL_UNSUPPORTED ("kernel does not support process_madvise, skipping"
-			"test");
-    TEST_COMPARE (ret, 2 * page_size);
-  }
+    int pidfd = pidfd_open(pid, 0);
+    TEST_VERIFY(pidfd != -1);
 
-  {
-    struct iovec iv;
-    xrecvfrom (sockets[0], &iv, sizeof (iv), 0, NULL, 0);
+    /* The target process is going to send us two iovec's.  The first one points
+       to a valid mapping, the other points to a previously valid mapping which
+       has now been unmapped.  */
+    {
+        struct iovec iv;
+        xrecvfrom(sockets[0], &iv, sizeof(iv), 0, NULL, 0);
 
-    /* We expect this to fail in the target process because the second iovec
-       points to an unmapped region.  The target process arranges for this to
-       be the case.  */
-    TEST_COMPARE (process_madvise (pidfd, &iv, 1, MADV_COLD, 0), -1);
-    TEST_COMPARE (errno, ENOMEM);
-  }
+        /* We expect this to succeed in the target process because the mapping
+           is valid.  */
+        ssize_t ret = process_madvise(pidfd, &iv, 1, MADV_COLD, 0);
+        if (ret == -1 && errno == ENOSYS)
+            FAIL_UNSUPPORTED("kernel does not support process_madvise, skipping"
+                             "test");
+        TEST_COMPARE(ret, 2 * page_size);
+    }
 
-  {
-    struct iovec iv[IOV_MAX + 1];
-    TEST_COMPARE (process_madvise (pidfd, iv, array_length (iv), MADV_COLD,
-				   0), -1);
-    TEST_COMPARE (errno, EINVAL);
-  }
+    {
+        struct iovec iv;
+        xrecvfrom(sockets[0], &iv, sizeof(iv), 0, NULL, 0);
 
-  TEST_COMPARE (pidfd_send_signal (pidfd, SIGKILL, NULL, 0), 0);
-  {
-    siginfo_t info;
-    int r = waitid (P_PIDFD, pidfd, &info, WEXITED);
-    TEST_COMPARE (r, 0);
-    TEST_COMPARE (info.si_status, SIGKILL);
-    TEST_COMPARE (info.si_code, CLD_KILLED);
-  }
+        /* We expect this to fail in the target process because the second iovec
+           points to an unmapped region.  The target process arranges for this to
+           be the case.  */
+        TEST_COMPARE(process_madvise(pidfd, &iv, 1, MADV_COLD, 0), -1);
+        TEST_COMPARE(errno, ENOMEM);
+    }
 
-  TEST_COMPARE (pidfd_send_signal (pidfd, SIGKILL, NULL, 0), -1);
-  TEST_COMPARE (errno, ESRCH);
+    {
+        struct iovec iv[IOV_MAX + 1];
+        TEST_COMPARE(process_madvise(pidfd, iv, array_length(iv), MADV_COLD,
+                                     0), -1);
+        TEST_COMPARE(errno, EINVAL);
+    }
 
-  return 0;
+    TEST_COMPARE(pidfd_send_signal(pidfd, SIGKILL, NULL, 0), 0);
+    {
+        siginfo_t info;
+        int r = waitid(P_PIDFD, pidfd, &info, WEXITED);
+        TEST_COMPARE(r, 0);
+        TEST_COMPARE(info.si_status, SIGKILL);
+        TEST_COMPARE(info.si_code, CLD_KILLED);
+    }
+
+    TEST_COMPARE(pidfd_send_signal(pidfd, SIGKILL, NULL, 0), -1);
+    TEST_COMPARE(errno, ESRCH);
+
+    return 0;
 }
 
 #include <support/test-driver.c>

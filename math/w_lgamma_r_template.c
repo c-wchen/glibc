@@ -35,14 +35,16 @@
 #define M_CALL_FUNC_R(x) M_CALL_FUNC_R_S (M_SUF (x))
 
 FLOAT
-M_DECL_FUNC_R (__lgamma) (FLOAT x, int *signgamp)
+M_DECL_FUNC_R(__lgamma)(FLOAT x, int *signgamp)
 {
-  FLOAT y = M_CALL_FUNC_R (__ieee754_lgamma) (x, signgamp);
-  if (__glibc_unlikely (!isfinite (y)) && isfinite (x))
-    /* Pole error: lgamma_r(integer x<0).  Or overflow.  */
-    __set_errno (ERANGE);
-  return y;
+    FLOAT y = M_CALL_FUNC_R(__ieee754_lgamma)(x, signgamp);
+    if (__glibc_unlikely(!isfinite(y)) && isfinite(x))
+        /* Pole error: lgamma_r(integer x<0).  Or overflow.  */
+    {
+        __set_errno(ERANGE);
+    }
+    return y;
 }
-declare_mgen_alias_r (__lgamma, lgamma)
+declare_mgen_alias_r(__lgamma, lgamma)
 
 #endif /* __USE_WRAPPER_TEMPLATE.  */

@@ -25,52 +25,45 @@
 static pthread_barrier_t b;
 
 
-static void *
-tf (void *arg)
+static void *tf(void *arg)
 {
-  int r = pthread_barrier_wait (&b);
-  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
-    {
-      puts ("barrier_wait failed");
-      exit (1);
+    int r = pthread_barrier_wait(&b);
+    if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD) {
+        puts("barrier_wait failed");
+        exit(1);
     }
 
-  exit (0);
+    exit(0);
 }
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  if (pthread_barrier_init (&b, NULL, 2) != 0)
-    {
-      puts ("barrier_init failed");
-      exit (1);
+    if (pthread_barrier_init(&b, NULL, 2) != 0) {
+        puts("barrier_init failed");
+        exit(1);
     }
 
-  pthread_t th;
-  if (pthread_create (&th, NULL, tf, NULL) != 0)
-    {
-      puts ("create failed");
-      exit (1);
+    pthread_t th;
+    if (pthread_create(&th, NULL, tf, NULL) != 0) {
+        puts("create failed");
+        exit(1);
     }
 
-  int r = pthread_barrier_wait (&b);
-  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
-    {
-      puts ("barrier_wait failed");
-      exit (1);
+    int r = pthread_barrier_wait(&b);
+    if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD) {
+        puts("barrier_wait failed");
+        exit(1);
     }
 
-  /* Do nothing.  */
-  if (pthread_join (th, NULL) == 0)
-    {
-      puts ("join succeeded!?");
-      exit (1);
+    /* Do nothing.  */
+    if (pthread_join(th, NULL) == 0) {
+        puts("join succeeded!?");
+        exit(1);
     }
 
-  puts ("join returned!?");
-  exit (1);
+    puts("join returned!?");
+    exit(1);
 }
 
 #define TEST_FUNCTION do_test ()

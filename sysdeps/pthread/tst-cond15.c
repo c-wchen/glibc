@@ -28,128 +28,111 @@ static pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
 static pthread_mutex_t mut = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
 static pthread_mutex_t mut2 = PTHREAD_MUTEX_INITIALIZER;
 
-static void *
-tf (void *p)
+static void *tf(void *p)
 {
-  if (pthread_mutex_lock (&mut) != 0)
-    {
-      printf ("%s: 1st mutex_lock failed\n", __func__);
-      exit (1);
+    if (pthread_mutex_lock(&mut) != 0) {
+        printf("%s: 1st mutex_lock failed\n", __func__);
+        exit(1);
     }
-  if (pthread_mutex_lock (&mut) != 0)
-    {
-      printf ("%s: 2nd mutex_lock failed\n", __func__);
-      exit (1);
+    if (pthread_mutex_lock(&mut) != 0) {
+        printf("%s: 2nd mutex_lock failed\n", __func__);
+        exit(1);
     }
-  if (pthread_mutex_lock (&mut) != 0)
-    {
-      printf ("%s: 3rd mutex_lock failed\n", __func__);
-      exit (1);
+    if (pthread_mutex_lock(&mut) != 0) {
+        printf("%s: 3rd mutex_lock failed\n", __func__);
+        exit(1);
     }
 
-  if (pthread_mutex_unlock (&mut2) != 0)
-    {
-      printf ("%s: mutex_unlock failed\n", __func__);
-      exit (1);
+    if (pthread_mutex_unlock(&mut2) != 0) {
+        printf("%s: mutex_unlock failed\n", __func__);
+        exit(1);
     }
 
-  struct timeval tv;
-  gettimeofday (&tv, NULL);
-  struct timespec ts;
-  TIMEVAL_TO_TIMESPEC (&tv, &ts);
-  ts.tv_sec += p == NULL ? 100 : 1;
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    struct timespec ts;
+    TIMEVAL_TO_TIMESPEC(&tv, &ts);
+    ts.tv_sec += p == NULL ? 100 : 1;
 
-  int err = pthread_cond_timedwait (&cond, &mut, &ts);
-  if ((err != 0 && p == NULL) || (err != ETIMEDOUT && p != NULL))
-    {
-      printf ("%s: cond_wait failed\n", __func__);
-      exit (1);
+    int err = pthread_cond_timedwait(&cond, &mut, &ts);
+    if ((err != 0 && p == NULL) || (err != ETIMEDOUT && p != NULL)) {
+        printf("%s: cond_wait failed\n", __func__);
+        exit(1);
     }
 
-  if (pthread_mutex_unlock (&mut) != 0)
-    {
-      printf ("%s: 1st mutex_unlock failed\n", __func__);
-      exit (1);
+    if (pthread_mutex_unlock(&mut) != 0) {
+        printf("%s: 1st mutex_unlock failed\n", __func__);
+        exit(1);
     }
-  if (pthread_mutex_unlock (&mut) != 0)
-    {
-      printf ("%s: 2nd mutex_unlock failed\n", __func__);
-      exit (1);
+    if (pthread_mutex_unlock(&mut) != 0) {
+        printf("%s: 2nd mutex_unlock failed\n", __func__);
+        exit(1);
     }
-  if (pthread_mutex_unlock (&mut) != 0)
-    {
-      printf ("%s: 3rd mutex_unlock failed\n", __func__);
-      exit (1);
+    if (pthread_mutex_unlock(&mut) != 0) {
+        printf("%s: 3rd mutex_unlock failed\n", __func__);
+        exit(1);
     }
 
-  puts ("child: done");
+    puts("child: done");
 
-  return NULL;
+    return NULL;
 }
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  if (pthread_mutex_lock (&mut2) != 0)
-    {
-      puts ("1st mutex_lock failed");
-      return 1;
+    if (pthread_mutex_lock(&mut2) != 0) {
+        puts("1st mutex_lock failed");
+        return 1;
     }
 
-  puts ("parent: create 1st child");
+    puts("parent: create 1st child");
 
-  pthread_t th;
-  int err = pthread_create (&th, NULL, tf, NULL);
-  if (err != 0)
-    {
-      printf ("parent: cannot 1st create thread: %s\n", strerror (err));
-      return 1;
+    pthread_t th;
+    int err = pthread_create(&th, NULL, tf, NULL);
+    if (err != 0) {
+        printf("parent: cannot 1st create thread: %s\n", strerror(err));
+        return 1;
     }
 
-  /* We have to synchronize with the child.  */
-  if (pthread_mutex_lock (&mut2) != 0)
-    {
-      puts ("2nd mutex_lock failed");
-      return 1;
+    /* We have to synchronize with the child.  */
+    if (pthread_mutex_lock(&mut2) != 0) {
+        puts("2nd mutex_lock failed");
+        return 1;
     }
 
-  /* Give the child to reach to pthread_cond_wait.  */
-  sleep (1);
+    /* Give the child to reach to pthread_cond_wait.  */
+    sleep(1);
 
-  if (pthread_cond_signal (&cond) != 0)
-    {
-      puts ("cond_signal failed");
-      return 1;
+    if (pthread_cond_signal(&cond) != 0) {
+        puts("cond_signal failed");
+        return 1;
     }
 
-  err = pthread_join (th, NULL);
-  if (err != 0)
-    {
-      printf ("parent: failed to join: %s\n", strerror (err));
-      return 1;
+    err = pthread_join(th, NULL);
+    if (err != 0) {
+        printf("parent: failed to join: %s\n", strerror(err));
+        return 1;
     }
 
 
-  puts ("parent: create 2nd child");
+    puts("parent: create 2nd child");
 
-  err = pthread_create (&th, NULL, tf, (void *) 1l);
-  if (err != 0)
-    {
-      printf ("parent: cannot 2nd create thread: %s\n", strerror (err));
-      return 1;
+    err = pthread_create(&th, NULL, tf, (void *) 1l);
+    if (err != 0) {
+        printf("parent: cannot 2nd create thread: %s\n", strerror(err));
+        return 1;
     }
 
-  err = pthread_join (th, NULL);
-  if (err != 0)
-    {
-      printf ("parent: failed to join: %s\n", strerror (err));
-      return 1;
+    err = pthread_join(th, NULL);
+    if (err != 0) {
+        printf("parent: failed to join: %s\n", strerror(err));
+        return 1;
     }
 
-  puts ("done");
+    puts("done");
 
-  return 0;
+    return 0;
 }
 
 

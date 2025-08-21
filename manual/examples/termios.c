@@ -24,53 +24,49 @@
 
 struct termios saved_attributes;
 
-void
-reset_input_mode (void)
+void reset_input_mode(void)
 {
-  tcsetattr (STDIN_FILENO, TCSANOW, &saved_attributes);
+    tcsetattr(STDIN_FILENO, TCSANOW, &saved_attributes);
 }
 
-void
-set_input_mode (void)
+void set_input_mode(void)
 {
-  struct termios tattr;
+    struct termios tattr;
 
-  /* Make sure stdin is a terminal. */
-  if (!isatty (STDIN_FILENO))
-    {
-      fprintf (stderr, "Not a terminal.\n");
-      exit (EXIT_FAILURE);
+    /* Make sure stdin is a terminal. */
+    if (!isatty(STDIN_FILENO)) {
+        fprintf(stderr, "Not a terminal.\n");
+        exit(EXIT_FAILURE);
     }
 
-  /* Save the terminal attributes so we can restore them later. */
-  tcgetattr (STDIN_FILENO, &saved_attributes);
-  atexit (reset_input_mode);
+    /* Save the terminal attributes so we can restore them later. */
+    tcgetattr(STDIN_FILENO, &saved_attributes);
+    atexit(reset_input_mode);
 
-/*@group*/
-  /* Set the funny terminal modes. */
-  tcgetattr (STDIN_FILENO, &tattr);
-  tattr.c_lflag &= ~(ICANON|ECHO); /* Clear ICANON and ECHO.  */
-  tattr.c_cc[VMIN] = 1;
-  tattr.c_cc[VTIME] = 0;
-  tcsetattr (STDIN_FILENO, TCSAFLUSH, &tattr);
+    /*@group*/
+    /* Set the funny terminal modes. */
+    tcgetattr(STDIN_FILENO, &tattr);
+    tattr.c_lflag &= ~(ICANON | ECHO); /* Clear ICANON and ECHO.  */
+    tattr.c_cc[VMIN] = 1;
+    tattr.c_cc[VTIME] = 0;
+    tcsetattr(STDIN_FILENO, TCSAFLUSH, &tattr);
 }
 /*@end group*/
 
-int
-main (void)
+int main(void)
 {
-  char c;
+    char c;
 
-  set_input_mode ();
+    set_input_mode();
 
-  while (1)
-    {
-      read (STDIN_FILENO, &c, 1);
-      if (c == '\004')		/* @kbd{C-d} */
-	break;
-      else
-	write (STDOUT_FILENO, &c, 1);
+    while (1) {
+        read(STDIN_FILENO, &c, 1);
+        if (c == '\004') {    /* @kbd{C-d} */
+            break;
+        } else {
+            write(STDOUT_FILENO, &c, 1);
+        }
     }
 
-  return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }

@@ -18,18 +18,17 @@
 
 #include <fenv.h>
 
-int
-__fegetenv (fenv_t *envp)
+int __fegetenv(fenv_t *envp)
 {
-  __asm__ ("fnstenv %0\n"
-	   /* fnstenv changes the exception mask, so load back the
-	      stored environment.  */
-	   "fldenv %0\n"
-	   "stmxcsr %1" : "=m" (*envp), "=m" (envp->__mxcsr));
+    __asm__("fnstenv %0\n"
+            /* fnstenv changes the exception mask, so load back the
+               stored environment.  */
+            "fldenv %0\n"
+            "stmxcsr %1" : "=m"(*envp), "=m"(envp->__mxcsr));
 
-  /* Success.  */
-  return 0;
+    /* Success.  */
+    return 0;
 }
-libm_hidden_def (__fegetenv)
-weak_alias (__fegetenv, fegetenv)
-libm_hidden_weak (fegetenv)
+libm_hidden_def(__fegetenv)
+weak_alias(__fegetenv, fegetenv)
+libm_hidden_weak(fegetenv)

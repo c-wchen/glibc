@@ -16,7 +16,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _SYS_UCONTEXT_H
-#define _SYS_UCONTEXT_H	1
+#define _SYS_UCONTEXT_H 1
 
 #include <features.h>
 
@@ -34,9 +34,9 @@
 typedef long int greg_t;
 
 /* Number of general registers.  */
-#define __NGREG	33
+#define __NGREG 33
 #ifdef __USE_MISC
-# define NGREG	__NGREG
+# define NGREG  __NGREG
 #endif
 
 /* Container for all general registers.  */
@@ -46,9 +46,9 @@ typedef greg_t gregset_t[__NGREG];
 typedef long int fpreg_t;
 
 /* Number of general registers.  */
-#define __NFPREG	32
+#define __NFPREG    32
 #ifdef __USE_MISC
-# define NFPREG	__NFPREG
+# define NFPREG __NFPREG
 #endif
 
 /* Container for all general registers.  */
@@ -56,8 +56,7 @@ typedef fpreg_t fpregset_t[__NFPREG];
 
 
 /* A machine context is exactly a sigcontext.  */
-typedef struct
-  {
+typedef struct {
     long int __ctx(sc_onstack);
     long int __ctx(sc_mask);
     long int __ctx(sc_pc);
@@ -76,18 +75,17 @@ typedef struct
     unsigned long int __ctx(sc_fp_trap_pc);
     unsigned long int __ctx(sc_fp_trigger_sum);
     unsigned long int __ctx(sc_fp_trigger_inst);
-  } mcontext_t;
+} mcontext_t;
 
 /* Userlevel context.  */
-typedef struct ucontext_t
-  {
+typedef struct ucontext_t {
     unsigned long int __ctx(uc_flags);
     struct ucontext_t *uc_link;
     unsigned long __uc_osf_sigmask;
     stack_t uc_stack;
     mcontext_t uc_mcontext;
     sigset_t uc_sigmask;
-  } ucontext_t;
+} ucontext_t;
 
 #undef __ctx
 

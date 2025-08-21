@@ -23,41 +23,39 @@
 #include <errorlib.h>
 
 /* Return a string describing the errno code in ERRNUM.  */
-char *
-__strerror_r (int errnum, char *buf, size_t buflen)
+char *__strerror_r(int errnum, char *buf, size_t buflen)
 {
-  int system;
-  int sub;
-  int code;
-  const struct error_system *es;
-  extern void __mach_error_map_compat (int *);
+    int system;
+    int sub;
+    int code;
+    const struct error_system *es;
+    extern void __mach_error_map_compat(int *);
 
-  __mach_error_map_compat (&errnum);
+    __mach_error_map_compat(&errnum);
 
-  system = err_get_system (errnum);
-  sub = err_get_sub (errnum);
-  code = err_get_code (errnum);
+    system = err_get_system(errnum);
+    sub = err_get_sub(errnum);
+    code = err_get_code(errnum);
 
-  if (system > err_max_system || ! __mach_error_systems[system].bad_sub)
-    {
-      __snprintf (buf, buflen, "%s%X", _("Error in unknown error system: "),
-		  errnum);
-      return buf;
+    if (system > err_max_system || ! __mach_error_systems[system].bad_sub) {
+        __snprintf(buf, buflen, "%s%X", _("Error in unknown error system: "),
+                   errnum);
+        return buf;
     }
 
-  es = &__mach_error_systems[system];
+    es = &__mach_error_systems[system];
 
-  if (sub >= es->max_sub)
-    return (char *) es->bad_sub;
-
-  if (code >= es->subsystem[sub].max_code)
-    {
-      __snprintf (buf, buflen, "%s%s %d", _("Unknown error "),
-		  es->subsystem[sub].subsys_name, errnum);
-      return buf;
+    if (sub >= es->max_sub) {
+        return (char *) es->bad_sub;
     }
 
-  return (char *) _(es->subsystem[sub].codes[code]);
+    if (code >= es->subsystem[sub].max_code) {
+        __snprintf(buf, buflen, "%s%s %d", _("Unknown error "),
+                   es->subsystem[sub].subsys_name, errnum);
+        return buf;
+    }
+
+    return (char *) _(es->subsystem[sub].codes[code]);
 }
-libc_hidden_def (__strerror_r)
-weak_alias (__strerror_r, strerror_r)
+libc_hidden_def(__strerror_r)
+weak_alias(__strerror_r, strerror_r)

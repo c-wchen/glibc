@@ -21,11 +21,10 @@
 #include "statfsconv.c"
 
 /* Return information about the filesystem on which FILE resides.  */
-int
-__statfs (const char *file, struct statfs *buf)
+int __statfs(const char *file, struct statfs *buf)
 {
-  struct statfs64 buf64;
-  return __statfs64 (file, &buf64) ?: statfs64_conv (buf, &buf64);
+    struct statfs64 buf64;
+    return __statfs64(file, &buf64) ? : statfs64_conv(buf, &buf64);
 }
-libc_hidden_def (__statfs)
-weak_alias (__statfs, statfs)
+libc_hidden_def(__statfs)
+weak_alias(__statfs, statfs)

@@ -19,27 +19,27 @@
 
 #include <init-arch.h>
 
-extern __typeof (REDIRECT_NAME) OPTIMIZE (ia32) attribute_hidden;
-extern __typeof (REDIRECT_NAME) OPTIMIZE (sse2_unaligned)
-  attribute_hidden;
-extern __typeof (REDIRECT_NAME) OPTIMIZE (ssse3) attribute_hidden;
-extern __typeof (REDIRECT_NAME) OPTIMIZE (ssse3_rep) attribute_hidden;
+extern __typeof(REDIRECT_NAME) OPTIMIZE(ia32) attribute_hidden;
+extern __typeof(REDIRECT_NAME) OPTIMIZE(sse2_unaligned)
+attribute_hidden;
+extern __typeof(REDIRECT_NAME) OPTIMIZE(ssse3) attribute_hidden;
+extern __typeof(REDIRECT_NAME) OPTIMIZE(ssse3_rep) attribute_hidden;
 
-static inline void *
-IFUNC_SELECTOR (void)
+static inline void *IFUNC_SELECTOR(void)
 {
-  const struct cpu_features* cpu_features = __get_cpu_features ();
+    const struct cpu_features *cpu_features = __get_cpu_features();
 
-  if (CPU_FEATURES_ARCH_P (cpu_features, Fast_Unaligned_Load))
-    return OPTIMIZE (sse2_unaligned);
-
-  if (CPU_FEATURE_USABLE_P (cpu_features, SSSE3))
-    {
-      if (CPU_FEATURES_ARCH_P (cpu_features, Fast_Rep_String))
-	return OPTIMIZE (ssse3_rep);
-
-      return OPTIMIZE (ssse3);
+    if (CPU_FEATURES_ARCH_P(cpu_features, Fast_Unaligned_Load)) {
+        return OPTIMIZE(sse2_unaligned);
     }
 
-  return OPTIMIZE (ia32);
+    if (CPU_FEATURE_USABLE_P(cpu_features, SSSE3)) {
+        if (CPU_FEATURES_ARCH_P(cpu_features, Fast_Rep_String)) {
+            return OPTIMIZE(ssse3_rep);
+        }
+
+        return OPTIMIZE(ssse3);
+    }
+
+    return OPTIMIZE(ia32);
 }

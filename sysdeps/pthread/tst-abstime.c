@@ -29,44 +29,42 @@ static pthread_rwlock_t rw1 = PTHREAD_RWLOCK_INITIALIZER;
 static pthread_rwlock_t rw2 = PTHREAD_RWLOCK_INITIALIZER;
 static sem_t sem;
 
-static void *
-th (void *arg)
+static void *th(void *arg)
 {
-  struct timespec t = { -2, 0 };
+    struct timespec t = { -2, 0 };
 
-  TEST_COMPARE (pthread_mutex_timedlock (&m1, &t), ETIMEDOUT);
-  TEST_COMPARE (pthread_mutex_clocklock (&m1, CLOCK_REALTIME, &t), ETIMEDOUT);
-  TEST_COMPARE (pthread_mutex_clocklock (&m1, CLOCK_MONOTONIC, &t), ETIMEDOUT);
-  TEST_COMPARE (pthread_rwlock_timedrdlock (&rw1, &t), ETIMEDOUT);
-  TEST_COMPARE (pthread_rwlock_timedwrlock (&rw2, &t), ETIMEDOUT);
-  TEST_COMPARE (pthread_rwlock_clockrdlock (&rw1, CLOCK_REALTIME, &t),
-                ETIMEDOUT);
-  TEST_COMPARE (pthread_rwlock_clockwrlock (&rw2, CLOCK_REALTIME, &t),
-                ETIMEDOUT);
-  TEST_COMPARE (pthread_rwlock_clockrdlock (&rw1, CLOCK_MONOTONIC, &t),
-                ETIMEDOUT);
-  TEST_COMPARE (pthread_rwlock_clockwrlock (&rw2, CLOCK_MONOTONIC, &t),
-                ETIMEDOUT);
-  return NULL;
+    TEST_COMPARE(pthread_mutex_timedlock(&m1, &t), ETIMEDOUT);
+    TEST_COMPARE(pthread_mutex_clocklock(&m1, CLOCK_REALTIME, &t), ETIMEDOUT);
+    TEST_COMPARE(pthread_mutex_clocklock(&m1, CLOCK_MONOTONIC, &t), ETIMEDOUT);
+    TEST_COMPARE(pthread_rwlock_timedrdlock(&rw1, &t), ETIMEDOUT);
+    TEST_COMPARE(pthread_rwlock_timedwrlock(&rw2, &t), ETIMEDOUT);
+    TEST_COMPARE(pthread_rwlock_clockrdlock(&rw1, CLOCK_REALTIME, &t),
+                 ETIMEDOUT);
+    TEST_COMPARE(pthread_rwlock_clockwrlock(&rw2, CLOCK_REALTIME, &t),
+                 ETIMEDOUT);
+    TEST_COMPARE(pthread_rwlock_clockrdlock(&rw1, CLOCK_MONOTONIC, &t),
+                 ETIMEDOUT);
+    TEST_COMPARE(pthread_rwlock_clockwrlock(&rw2, CLOCK_MONOTONIC, &t),
+                 ETIMEDOUT);
+    return NULL;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  struct timespec t = { -2, 0 };
+    struct timespec t = { -2, 0 };
 
-  sem_init (&sem, 0, 0);
-  TEST_COMPARE (sem_timedwait (&sem, &t), -1);
-  TEST_COMPARE (errno, ETIMEDOUT);
+    sem_init(&sem, 0, 0);
+    TEST_COMPARE(sem_timedwait(&sem, &t), -1);
+    TEST_COMPARE(errno, ETIMEDOUT);
 
-  xpthread_mutex_lock (&m1);
-  xpthread_rwlock_wrlock (&rw1);
-  xpthread_rwlock_rdlock (&rw2);
-  xpthread_mutex_lock (&m2);
-  pthread_t pth = xpthread_create (0, th, 0);
-  TEST_COMPARE (pthread_cond_timedwait (&c, &m2, &t), ETIMEDOUT);
-  xpthread_join (pth);
-  return 0;
+    xpthread_mutex_lock(&m1);
+    xpthread_rwlock_wrlock(&rw1);
+    xpthread_rwlock_rdlock(&rw2);
+    xpthread_mutex_lock(&m2);
+    pthread_t pth = xpthread_create(0, th, 0);
+    TEST_COMPARE(pthread_cond_timedwait(&c, &m2, &t), ETIMEDOUT);
+    xpthread_join(pth);
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -26,11 +26,11 @@
 
 #if DL_RUNTIME_RESOLVE_REALIGN_STACK
 /* Local stack area before jumping to function address: RBX.  */
-# define LOCAL_STORAGE_AREA	8
-# define BASE			rbx
+# define LOCAL_STORAGE_AREA 8
+# define BASE           rbx
 # ifdef USE_FXSAVE
 /* Use fxsave to save XMM registers.  */
-#  define REGISTER_SAVE_AREA	(512 + STATE_SAVE_OFFSET)
+#  define REGISTER_SAVE_AREA    (512 + STATE_SAVE_OFFSET)
 #  if (REGISTER_SAVE_AREA % 16) != 0
 #   error REGISTER_SAVE_AREA must be multiple of 16
 #  endif
@@ -40,11 +40,11 @@
 #  error USE_FXSAVE must be defined
 # endif
 /* Use fxsave to save XMM registers.  */
-# define REGISTER_SAVE_AREA	(512 + STATE_SAVE_OFFSET + 8)
+# define REGISTER_SAVE_AREA (512 + STATE_SAVE_OFFSET + 8)
 /* Local stack area before jumping to function address:  All saved
    registers.  */
-# define LOCAL_STORAGE_AREA	REGISTER_SAVE_AREA
-# define BASE			rsp
+# define LOCAL_STORAGE_AREA REGISTER_SAVE_AREA
+# define BASE           rsp
 # if (REGISTER_SAVE_AREA % 16) != 8
 #  error REGISTER_SAVE_AREA must be odd multiple of 8
 # endif

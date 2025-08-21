@@ -19,20 +19,20 @@
 /* Before including this file, you need to include <string.h> (and
    <config.h> before that, if not part of libc), and define:
      AVAILABLE(h, h_l, j, n_l)
-			     A macro that returns nonzero if there are
-			     at least N_L characters left starting at H[J].
-			     H is 'wchar_t *', H_L, J, and N_L are 'size_t';
-			     H_L is an lvalue.  For NUL-terminated searches,
-			     H_L can be modified each iteration to avoid
-			     having to compute the end of H up front.
+                 A macro that returns nonzero if there are
+                 at least N_L characters left starting at H[J].
+                 H is 'wchar_t *', H_L, J, and N_L are 'size_t';
+                 H_L is an lvalue.  For NUL-terminated searches,
+                 H_L can be modified each iteration to avoid
+                 having to compute the end of H up front.
 
   For case-insensitivity, you may optionally define:
      CMP_FUNC(p1, p2, l)     A macro that returns 0 iff the first L
-			     characters of P1 and P2 are equal.
+                 characters of P1 and P2 are equal.
      CANON_ELEMENT(c)        A macro that canonicalizes an element right after
-			     it has been fetched from one of the two strings.
-			     The argument is an 'wchar_t'; the result must
-			     be an 'wchar_t' as well.
+                 it has been fetched from one of the two strings.
+                 The argument is an 'wchar_t'; the result must
+                 be an 'wchar_t' as well.
 */
 
 #include <limits.h>
@@ -76,109 +76,94 @@
    larger of two ordered maximal suffixes.  The ordered maximal
    suffixes are determined by lexicographic comparison of
    periodicity.  */
-static size_t
-critical_factorization (const wchar_t *needle, size_t needle_len,
-			size_t *period)
+static size_t critical_factorization(const wchar_t *needle, size_t needle_len,
+                                     size_t *period)
 {
-  /* Index of last character of left half, or SIZE_MAX.  */
-  size_t max_suffix, max_suffix_rev;
-  size_t j; /* Index into NEEDLE for current candidate suffix.  */
-  size_t k; /* Offset into current period.  */
-  size_t p; /* Intermediate period.  */
-  wchar_t a, b; /* Current comparison bytes.  */
+    /* Index of last character of left half, or SIZE_MAX.  */
+    size_t max_suffix, max_suffix_rev;
+    size_t j; /* Index into NEEDLE for current candidate suffix.  */
+    size_t k; /* Offset into current period.  */
+    size_t p; /* Intermediate period.  */
+    wchar_t a, b; /* Current comparison bytes.  */
 
-  /* Special case NEEDLE_LEN of 1 or 2 (all callers already filtered
-     out 0-length needles.  */
-  if (needle_len < 3)
-    {
-      *period = 1;
-      return needle_len - 1;
+    /* Special case NEEDLE_LEN of 1 or 2 (all callers already filtered
+       out 0-length needles.  */
+    if (needle_len < 3) {
+        *period = 1;
+        return needle_len - 1;
     }
 
-  /* Invariants:
-     0 <= j < NEEDLE_LEN - 1
-     -1 <= max_suffix{,_rev} < j (treating SIZE_MAX as if it were signed)
-     min(max_suffix, max_suffix_rev) < global period of NEEDLE
-     1 <= p <= global period of NEEDLE
-     p == global period of the substring NEEDLE[max_suffix{,_rev}+1...j]
-     1 <= k <= p
-  */
+    /* Invariants:
+       0 <= j < NEEDLE_LEN - 1
+       -1 <= max_suffix{,_rev} < j (treating SIZE_MAX as if it were signed)
+       min(max_suffix, max_suffix_rev) < global period of NEEDLE
+       1 <= p <= global period of NEEDLE
+       p == global period of the substring NEEDLE[max_suffix{,_rev}+1...j]
+       1 <= k <= p
+    */
 
-  /* Perform lexicographic search.  */
-  max_suffix = SIZE_MAX;
-  j = 0;
-  k = p = 1;
-  while (j + k < needle_len)
-    {
-      a = CANON_ELEMENT (needle[j + k]);
-      b = CANON_ELEMENT (needle[max_suffix + k]);
-      if (a < b)
-	{
-	  /* Suffix is smaller, period is entire prefix so far.  */
-	  j += k;
-	  k = 1;
-	  p = j - max_suffix;
-	}
-      else if (a == b)
-	{
-	  /* Advance through repetition of the current period.  */
-	  if (k != p)
-	    ++k;
-	  else
-	    {
-	      j += p;
-	      k = 1;
-	    }
-	}
-      else /* b < a */
-	{
-	  /* Suffix is larger, start over from current location.  */
-	  max_suffix = j++;
-	  k = p = 1;
-	}
+    /* Perform lexicographic search.  */
+    max_suffix = SIZE_MAX;
+    j = 0;
+    k = p = 1;
+    while (j + k < needle_len) {
+        a = CANON_ELEMENT(needle[j + k]);
+        b = CANON_ELEMENT(needle[max_suffix + k]);
+        if (a < b) {
+            /* Suffix is smaller, period is entire prefix so far.  */
+            j += k;
+            k = 1;
+            p = j - max_suffix;
+        } else if (a == b) {
+            /* Advance through repetition of the current period.  */
+            if (k != p) {
+                ++k;
+            } else {
+                j += p;
+                k = 1;
+            }
+        } else { /* b < a */
+            /* Suffix is larger, start over from current location.  */
+            max_suffix = j++;
+            k = p = 1;
+        }
     }
-  *period = p;
+    *period = p;
 
-  /* Perform reverse lexicographic search.  */
-  max_suffix_rev = SIZE_MAX;
-  j = 0;
-  k = p = 1;
-  while (j + k < needle_len)
-    {
-      a = CANON_ELEMENT (needle[j + k]);
-      b = CANON_ELEMENT (needle[max_suffix_rev + k]);
-      if (b < a)
-	{
-	  /* Suffix is smaller, period is entire prefix so far.  */
-	  j += k;
-	  k = 1;
-	  p = j - max_suffix_rev;
-	}
-      else if (a == b)
-	{
-	  /* Advance through repetition of the current period.  */
-	  if (k != p)
-	    ++k;
-	  else
-	    {
-	      j += p;
-	      k = 1;
-	    }
-	}
-      else /* a < b */
-	{
-	  /* Suffix is larger, start over from current location.  */
-	  max_suffix_rev = j++;
-	  k = p = 1;
-	}
+    /* Perform reverse lexicographic search.  */
+    max_suffix_rev = SIZE_MAX;
+    j = 0;
+    k = p = 1;
+    while (j + k < needle_len) {
+        a = CANON_ELEMENT(needle[j + k]);
+        b = CANON_ELEMENT(needle[max_suffix_rev + k]);
+        if (b < a) {
+            /* Suffix is smaller, period is entire prefix so far.  */
+            j += k;
+            k = 1;
+            p = j - max_suffix_rev;
+        } else if (a == b) {
+            /* Advance through repetition of the current period.  */
+            if (k != p) {
+                ++k;
+            } else {
+                j += p;
+                k = 1;
+            }
+        } else { /* a < b */
+            /* Suffix is larger, start over from current location.  */
+            max_suffix_rev = j++;
+            k = p = 1;
+        }
     }
 
-  /* Choose the shorter suffix.  Return the first character of the right
-     half, rather than the last character of the left half.  */
-  if (max_suffix_rev + 1 < max_suffix + 1)
-    return max_suffix + 1;
-  *period = p;
-  return max_suffix_rev + 1;
+    /* Choose the shorter suffix.  Return the first character of the right
+       half, rather than the last character of the left half.  */
+    if (max_suffix_rev + 1 < max_suffix + 1) {
+        return max_suffix + 1;
+    }
+    *period = p;
+    return max_suffix_rev + 1;
 }
 
 /* Return the first location of non-empty NEEDLE within HAYSTACK, or
@@ -188,123 +173,118 @@ critical_factorization (const wchar_t *needle, size_t needle_len,
    most 2 * HAYSTACK_LEN - NEEDLE_LEN comparisons occur in searching.
    If AVAILABLE modifies HAYSTACK_LEN (as in strstr), then at most 3 *
    HAYSTACK_LEN - NEEDLE_LEN comparisons occur in searching.  */
-static inline wchar_t *
-two_way_short_needle (const wchar_t *haystack, size_t haystack_len,
-		      const wchar_t *needle, size_t needle_len)
+static inline wchar_t *two_way_short_needle(const wchar_t *haystack, size_t haystack_len,
+        const wchar_t *needle, size_t needle_len)
 {
-  size_t i; /* Index into current character of NEEDLE.  */
-  size_t j; /* Index into current window of HAYSTACK.  */
-  size_t period; /* The period of the right half of needle.  */
-  size_t suffix; /* The index of the right half of needle.  */
+    size_t i; /* Index into current character of NEEDLE.  */
+    size_t j; /* Index into current window of HAYSTACK.  */
+    size_t period; /* The period of the right half of needle.  */
+    size_t suffix; /* The index of the right half of needle.  */
 
-  /* Factor the needle into two halves, such that the left half is
-     smaller than the global period, and the right half is
-     periodic (with a period as large as NEEDLE_LEN - suffix).  */
-  suffix = critical_factorization (needle, needle_len, &period);
+    /* Factor the needle into two halves, such that the left half is
+       smaller than the global period, and the right half is
+       periodic (with a period as large as NEEDLE_LEN - suffix).  */
+    suffix = critical_factorization(needle, needle_len, &period);
 
-  /* Perform the search.  Each iteration compares the right half
-     first.  */
-  if (CMP_FUNC (needle, needle + period, suffix) == 0)
-    {
-      /* Entire needle is periodic; a mismatch can only advance by the
-	 period, so use memory to avoid rescanning known occurrences
-	 of the period.  */
-      size_t memory = 0;
-      j = 0;
-      while (AVAILABLE (haystack, haystack_len, j, needle_len))
-	{
-	  const wchar_t *pneedle;
-	  const wchar_t *phaystack;
+    /* Perform the search.  Each iteration compares the right half
+       first.  */
+    if (CMP_FUNC(needle, needle + period, suffix) == 0) {
+        /* Entire needle is periodic; a mismatch can only advance by the
+        period, so use memory to avoid rescanning known occurrences
+         of the period.  */
+        size_t memory = 0;
+        j = 0;
+        while (AVAILABLE(haystack, haystack_len, j, needle_len)) {
+            const wchar_t *pneedle;
+            const wchar_t *phaystack;
 
-	  /* Scan for matches in right half.  */
-	  i = MAX (suffix, memory);
-	  pneedle = &needle[i];
-	  phaystack = &haystack[i + j];
-	  while (i < needle_len && (CANON_ELEMENT (*pneedle++)
-				    == CANON_ELEMENT (*phaystack++)))
-	    ++i;
-	  if (needle_len <= i)
-	    {
-	      /* Scan for matches in left half.  */
-	      i = suffix - 1;
-	      pneedle = &needle[i];
-	      phaystack = &haystack[i + j];
-	      while (memory < i + 1 && (CANON_ELEMENT (*pneedle--)
-					== CANON_ELEMENT (*phaystack--)))
-		--i;
-	      if (i + 1 < memory + 1)
-		return (wchar_t *) (haystack + j);
-	      /* No match, so remember how many repetitions of period
-		 on the right half were scanned.  */
-	      j += period;
-	      memory = needle_len - period;
-	    }
-	  else
-	    {
-	      j += i - suffix + 1;
-	      memory = 0;
-	    }
-	}
+            /* Scan for matches in right half.  */
+            i = MAX(suffix, memory);
+            pneedle = &needle[i];
+            phaystack = &haystack[i + j];
+            while (i < needle_len && (CANON_ELEMENT(*pneedle++)
+                                      == CANON_ELEMENT(*phaystack++))) {
+                ++i;
+            }
+            if (needle_len <= i) {
+                /* Scan for matches in left half.  */
+                i = suffix - 1;
+                pneedle = &needle[i];
+                phaystack = &haystack[i + j];
+                while (memory < i + 1 && (CANON_ELEMENT(*pneedle--)
+                                          == CANON_ELEMENT(*phaystack--))) {
+                    --i;
+                }
+                if (i + 1 < memory + 1) {
+                    return (wchar_t *)(haystack + j);
+                }
+                /* No match, so remember how many repetitions of period
+                on the right half were scanned.  */
+                j += period;
+                memory = needle_len - period;
+            } else {
+                j += i - suffix + 1;
+                memory = 0;
+            }
+        }
+    } else {
+        const wchar_t *phaystack;
+        /* The comparison always starts from needle[suffix], so cache it
+        and use an optimized first-character loop.  */
+        wchar_t needle_suffix = CANON_ELEMENT(needle[suffix]);
+
+        /* The two halves of needle are distinct; no extra memory is
+        required, and any mismatch results in a maximal shift.  */
+        period = MAX(suffix, needle_len - suffix) + 1;
+        j = 0;
+        while (AVAILABLE(haystack, haystack_len, j, needle_len)) {
+            wchar_t haystack_char;
+            const wchar_t *pneedle;
+
+            phaystack = &haystack[suffix + j];
+
+            while (needle_suffix
+                   != (haystack_char = CANON_ELEMENT(*phaystack++))) {
+                ++j;
+                if (!AVAILABLE(haystack, haystack_len, j, needle_len)) {
+                    goto ret0;
+                }
+            }
+
+            /* Scan for matches in right half.  */
+            i = suffix + 1;
+            pneedle = &needle[i];
+            while (i < needle_len) {
+                if (CANON_ELEMENT(*pneedle++)
+                    != (haystack_char = CANON_ELEMENT(*phaystack++))) {
+                    break;
+                }
+                ++i;
+            }
+            if (needle_len <= i) {
+                /* Scan for matches in left half.  */
+                i = suffix - 1;
+                pneedle = &needle[i];
+                phaystack = &haystack[i + j];
+                while (i != SIZE_MAX) {
+                    if (CANON_ELEMENT(*pneedle--)
+                        != (haystack_char = CANON_ELEMENT(*phaystack--))) {
+                        break;
+                    }
+                    --i;
+                }
+                if (i == SIZE_MAX) {
+                    return (wchar_t *)(haystack + j);
+                }
+                j += period;
+            } else {
+                j += i - suffix + 1;
+            }
+        }
     }
-  else
-    {
-      const wchar_t *phaystack;
-      /* The comparison always starts from needle[suffix], so cache it
-	 and use an optimized first-character loop.  */
-      wchar_t needle_suffix = CANON_ELEMENT (needle[suffix]);
-
-      /* The two halves of needle are distinct; no extra memory is
-	 required, and any mismatch results in a maximal shift.  */
-      period = MAX (suffix, needle_len - suffix) + 1;
-      j = 0;
-      while (AVAILABLE (haystack, haystack_len, j, needle_len))
-	{
-	  wchar_t haystack_char;
-	  const wchar_t *pneedle;
-
-	  phaystack = &haystack[suffix + j];
-
-	  while (needle_suffix
-	      != (haystack_char = CANON_ELEMENT (*phaystack++)))
-	    {
-	      ++j;
-	      if (!AVAILABLE (haystack, haystack_len, j, needle_len))
-		goto ret0;
-	    }
-
-	  /* Scan for matches in right half.  */
-	  i = suffix + 1;
-	  pneedle = &needle[i];
-	  while (i < needle_len)
-	    {
-	      if (CANON_ELEMENT (*pneedle++)
-		  != (haystack_char = CANON_ELEMENT (*phaystack++)))
-		break;
-	      ++i;
-	    }
-	  if (needle_len <= i)
-	    {
-	      /* Scan for matches in left half.  */
-	      i = suffix - 1;
-	      pneedle = &needle[i];
-	      phaystack = &haystack[i + j];
-	      while (i != SIZE_MAX)
-		{
-		  if (CANON_ELEMENT (*pneedle--)
-		      != (haystack_char = CANON_ELEMENT (*phaystack--)))
-		    break;
-		  --i;
-		}
-	      if (i == SIZE_MAX)
-		return (wchar_t *) (haystack + j);
-	      j += period;
-	    }
-	  else
-	    j += i - suffix + 1;
-	}
-    }
-ret0: __attribute__ ((unused))
-  return NULL;
+ret0:
+    __attribute__((unused))
+    return NULL;
 }
 
 #undef AVAILABLE

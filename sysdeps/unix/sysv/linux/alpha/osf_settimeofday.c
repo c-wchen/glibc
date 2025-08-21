@@ -28,23 +28,20 @@
 /* Set the current time of day and timezone information.
    This call is restricted to the super-user.  */
 int
-attribute_compat_text_section
-__settimeofday_tv32 (const struct __timeval32 *tv32,
-                     const struct timezone *tz)
+attribute_compat_text_section __settimeofday_tv32(const struct __timeval32 *tv32,
+        const struct timezone *tz)
 {
-  if (__glibc_unlikely (tz != 0))
-    {
-      if (tv32 != 0)
-	{
-	  __set_errno (EINVAL);
-	  return -1;
-	}
-      return __settimezone (tz);
+    if (__glibc_unlikely(tz != 0)) {
+        if (tv32 != 0) {
+            __set_errno(EINVAL);
+            return -1;
+        }
+        return __settimezone(tz);
     }
 
-  struct timespec ts = valid_timeval32_to_timespec (*tv32);
-  return __clock_settime (CLOCK_REALTIME, &ts);
+    struct timespec ts = valid_timeval32_to_timespec(*tv32);
+    return __clock_settime(CLOCK_REALTIME, &ts);
 }
 
-compat_symbol (libc, __settimeofday_tv32, settimeofday, GLIBC_2_0);
+compat_symbol(libc, __settimeofday_tv32, settimeofday, GLIBC_2_0);
 #endif

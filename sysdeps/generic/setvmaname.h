@@ -25,14 +25,13 @@
  * not support VMA name. */
 #define ANON_VMA_NAME_MAX_LEN 16
 
-static inline bool
-__is_decorate_maps_enabled (void)
+static inline bool __is_decorate_maps_enabled(void)
 {
-  return false;
+    return false;
 }
 
 static inline
-void __set_vma_name (void *start, size_t len, const char *name)
+void __set_vma_name(void *start, size_t len, const char *name)
 {
 }
 

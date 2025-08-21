@@ -41,58 +41,60 @@ CHAR string1[STRING_SIZE];
 CHAR string2[STRING_SIZE];
 
 __attribute_optimization_barrier__
-static int
-prepare (void)
+static int prepare(void)
 {
-  MEMSET (string1, 'a', STRING_SIZE - 1);
-  MEMSET (string2, 'a', STRING_SIZE - 1);
-  if (STRNCMP (string1, string2, STRING_SIZE) == 0)
-    return EXIT_SUCCESS;
-  else
-    return EXIT_FAILURE;
+    MEMSET(string1, 'a', STRING_SIZE - 1);
+    MEMSET(string2, 'a', STRING_SIZE - 1);
+    if (STRNCMP(string1, string2, STRING_SIZE) == 0) {
+        return EXIT_SUCCESS;
+    } else {
+        return EXIT_FAILURE;
+    }
 }
 
 __attribute_optimization_barrier__
-static int
-function (void)
+static int function(void)
 {
-  if (STRNCMP (string1, string2, STRING_SIZE) == 0)
-    return 0;
-  else
-    return 1;
+    if (STRNCMP(string1, string2, STRING_SIZE) == 0) {
+        return 0;
+    } else {
+        return 1;
+    }
 }
 
 __attribute_optimization_barrier__
-static int
-function_overflow (void)
+static int function_overflow(void)
 {
-  if (STRNCMP (string1, string2, SIZE_MAX) == 0)
-    return 0;
-  else
-    return 1;
+    if (STRNCMP(string1, string2, SIZE_MAX) == 0) {
+        return 0;
+    } else {
+        return 1;
+    }
 }
 
 __attribute_optimization_barrier__
-static int
-function_overflow2 (void)
+static int function_overflow2(void)
 {
-  if (STRNCMP (string1, string2, SIZE_MAX >> 4) == 0)
-    return 0;
-  else
-    return 1;
+    if (STRNCMP(string1, string2, SIZE_MAX >> 4) == 0) {
+        return 0;
+    } else {
+        return 1;
+    }
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int status = do_test_1 (TEST_NAME, LOOP, prepare, function);
-  if (status != EXIT_SUCCESS)
+    int status = do_test_1(TEST_NAME, LOOP, prepare, function);
+    if (status != EXIT_SUCCESS) {
+        return status;
+    }
+    status = do_test_1(TEST_NAME, LOOP, prepare, function_overflow);
+    if (status != EXIT_SUCCESS) {
+        return status;
+    }
+    status = do_test_1(TEST_NAME, LOOP, prepare, function_overflow2);
+    if (status != EXIT_SUCCESS) {
+        return status;
+    }
     return status;
-  status = do_test_1 (TEST_NAME, LOOP, prepare, function_overflow);
-  if (status != EXIT_SUCCESS)
-    return status;
-  status = do_test_1 (TEST_NAME, LOOP, prepare, function_overflow2);
-  if (status != EXIT_SUCCESS)
-    return status;
-  return status;
 }

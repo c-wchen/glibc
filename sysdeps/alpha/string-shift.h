@@ -25,20 +25,19 @@
 
 /* Return the mask WORD shifted based on S_INT address value, to ignore
    values not presented in the aligned word read.  */
-static __always_inline find_t
-shift_find (find_t word, uintptr_t s)
+static __always_inline find_t shift_find(find_t word, uintptr_t s)
 {
-  return word >> (s % sizeof (op_t));
+    return word >> (s % sizeof(op_t));
 }
 
 /* Mask off the bits defined the the S alignment value.  */
-static __always_inline find_t
-shift_find_last (find_t word, uintptr_t s)
+static __always_inline find_t shift_find_last(find_t word, uintptr_t s)
 {
-  s = s % sizeof (op_t);
-  if (s == 0)
-    return word;
-  return word & ~((op_t)-1 << s);
+    s = s % sizeof(op_t);
+    if (s == 0) {
+        return word;
+    }
+    return word & ~((op_t) -1 << s);
 }
 
 #endif /* _STRING_SHIFT_H */

@@ -17,8 +17,7 @@
 
 #include <hurd.h>
 
-mode_t
-getumask (void)
+mode_t getumask(void)
 {
-  return _hurd_umask;
+    return _hurd_umask;
 }

@@ -20,29 +20,27 @@
 #include <unistd.h>
 #include <ldsodefs.h>
 
-int
-__feholdexcept (fenv_t *envp)
+int __feholdexcept(fenv_t *envp)
 {
-  /* Store the environment.  Recall that fnstenv has a side effect of
-     masking all exceptions.  Then clear all exceptions.  */
-  __asm__ volatile ("fnstenv %0; fnclex" : "=m" (*envp));
+    /* Store the environment.  Recall that fnstenv has a side effect of
+       masking all exceptions.  Then clear all exceptions.  */
+    __asm__ volatile("fnstenv %0; fnclex" : "=m"(*envp));
 
-  /* If the CPU supports SSE we set the MXCSR as well.  */
-  if (CPU_FEATURE_USABLE (SSE))
-    {
-      unsigned int xwork;
+    /* If the CPU supports SSE we set the MXCSR as well.  */
+    if (CPU_FEATURE_USABLE(SSE)) {
+        unsigned int xwork;
 
-      /* Get the current control word.  */
-      __asm__ ("stmxcsr %0" : "=m" (envp->__eip));
+        /* Get the current control word.  */
+        __asm__("stmxcsr %0" : "=m"(envp->__eip));
 
-      /* Set all exceptions to non-stop and clear them.  */
-      xwork = (envp->__eip | 0x1f80) & ~0x3f;
+        /* Set all exceptions to non-stop and clear them.  */
+        xwork = (envp->__eip | 0x1f80) & ~0x3f;
 
-      __asm__ ("ldmxcsr %0" : : "m" (*&xwork));
+        __asm__("ldmxcsr %0" : : "m"( *&xwork));
     }
 
-  return 0;
+    return 0;
 }
-libm_hidden_def (__feholdexcept)
-weak_alias (__feholdexcept, feholdexcept)
-libm_hidden_weak (feholdexcept)
+libm_hidden_def(__feholdexcept)
+weak_alias(__feholdexcept, feholdexcept)
+libm_hidden_weak(feholdexcept)

@@ -19,24 +19,24 @@
 #include "pthreadP.h"
 
 
-int
-__pthread_attr_setschedpolicy (pthread_attr_t *attr, int policy)
+int __pthread_attr_setschedpolicy(pthread_attr_t *attr, int policy)
 {
-  struct pthread_attr *iattr;
+    struct pthread_attr *iattr;
 
-  iattr = (struct pthread_attr *) attr;
+    iattr = (struct pthread_attr *) attr;
 
-  /* Catch invalid values.  */
-  int ret = check_sched_policy_attr (policy);
-  if (ret)
-    return ret;
+    /* Catch invalid values.  */
+    int ret = check_sched_policy_attr(policy);
+    if (ret) {
+        return ret;
+    }
 
-  /* Store the new values.  */
-  iattr->schedpolicy = policy;
+    /* Store the new values.  */
+    iattr->schedpolicy = policy;
 
-  /* Remember we set the value.  */
-  iattr->flags |= ATTR_FLAG_POLICY_SET;
+    /* Remember we set the value.  */
+    iattr->flags |= ATTR_FLAG_POLICY_SET;
 
-  return 0;
+    return 0;
 }
-strong_alias (__pthread_attr_setschedpolicy, pthread_attr_setschedpolicy)
+strong_alias(__pthread_attr_setschedpolicy, pthread_attr_setschedpolicy)

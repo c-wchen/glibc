@@ -16,12 +16,13 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
-static inline void *
-__brk_call (void *addr)
+static inline void *__brk_call(void *addr)
 {
-  unsigned long int result = INTERNAL_SYSCALL_CALL (brk, addr);
-  if (result == -ENOMEM)
-    /* Mimic the generic error reporting behavior.  */
-    result = INTERNAL_SYSCALL_CALL (brk, 0);
-  return (void *) result;
+    unsigned long int result = INTERNAL_SYSCALL_CALL(brk, addr);
+    if (result == -ENOMEM)
+        /* Mimic the generic error reporting behavior.  */
+    {
+        result = INTERNAL_SYSCALL_CALL(brk, 0);
+    }
+    return (void *) result;
 }

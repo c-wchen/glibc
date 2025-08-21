@@ -16,7 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef	_BITS_SIGNUM_GENERIC_H
+#ifndef _BITS_SIGNUM_GENERIC_H
 #define _BITS_SIGNUM_GENERIC_H 1
 
 #ifndef _SIGNAL_H
@@ -25,12 +25,12 @@
 
 /* Fake signal functions.  */
 
-#define	SIG_ERR	 ((__sighandler_t) -1)	/* Error return.  */
-#define	SIG_DFL	 ((__sighandler_t)  0)	/* Default action.  */
-#define	SIG_IGN	 ((__sighandler_t)  1)	/* Ignore signal.  */
+#define SIG_ERR  ((__sighandler_t) -1)  /* Error return.  */
+#define SIG_DFL  ((__sighandler_t)  0)  /* Default action.  */
+#define SIG_IGN  ((__sighandler_t)  1)  /* Ignore signal.  */
 
 #ifdef __USE_XOPEN
-# define SIG_HOLD ((__sighandler_t) 2)	/* Add signal to hold mask.  */
+# define SIG_HOLD ((__sighandler_t) 2)  /* Add signal to hold mask.  */
 #endif
 
 /* We define here all the signal names listed in POSIX (1003.1-2008);
@@ -45,25 +45,25 @@
    a process exists without sending it a signal.  */
 
 /* ISO C99 signals.  */
-#define	SIGINT		2	/* Interactive attention signal.  */
-#define	SIGILL		4	/* Illegal instruction.  */
-#define	SIGABRT		6	/* Abnormal termination.  */
-#define	SIGFPE		8	/* Erroneous arithmetic operation.  */
-#define	SIGSEGV		11	/* Invalid access to storage.  */
-#define	SIGTERM		15	/* Termination request.  */
+#define SIGINT      2   /* Interactive attention signal.  */
+#define SIGILL      4   /* Illegal instruction.  */
+#define SIGABRT     6   /* Abnormal termination.  */
+#define SIGFPE      8   /* Erroneous arithmetic operation.  */
+#define SIGSEGV     11  /* Invalid access to storage.  */
+#define SIGTERM     15  /* Termination request.  */
 
 /* Historical signals specified by POSIX. */
-#define	SIGHUP		1	/* Hangup.  */
-#define	SIGQUIT		3	/* Quit.  */
-#define	SIGTRAP		5	/* Trace/breakpoint trap.  */
-#define	SIGKILL		9	/* Killed.  */
-#define	SIGPIPE		13	/* Broken pipe.  */
-#define	SIGALRM		14	/* Alarm clock.  */
+#define SIGHUP      1   /* Hangup.  */
+#define SIGQUIT     3   /* Quit.  */
+#define SIGTRAP     5   /* Trace/breakpoint trap.  */
+#define SIGKILL     9   /* Killed.  */
+#define SIGPIPE     13  /* Broken pipe.  */
+#define SIGALRM     14  /* Alarm clock.  */
 
 /* Archaic names for compatibility.  */
-#define	SIGIO		SIGPOLL	/* I/O now possible (4.2 BSD).  */
-#define	SIGIOT		SIGABRT	/* IOT instruction, abort() on a PDP-11.  */
-#define	SIGCLD		SIGCHLD	/* Old System V name */
+#define SIGIO       SIGPOLL /* I/O now possible (4.2 BSD).  */
+#define SIGIOT      SIGABRT /* IOT instruction, abort() on a PDP-11.  */
+#define SIGCLD      SIGCHLD /* Old System V name */
 
 /* Not all systems support real-time signals.  bits/signum.h indicates
    that they are supported by overriding __SIGRTMAX to a value greater
@@ -76,6 +76,6 @@
 #include <bits/signum-arch.h>
 
 /* Biggest signal number + 1 (including real-time signals).  */
-#define _NSIG		(__SIGRTMAX + 1)
+#define _NSIG       (__SIGRTMAX + 1)
 
 #endif /* bits/signum-generic.h.  */

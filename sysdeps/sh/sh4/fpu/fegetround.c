@@ -19,16 +19,15 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-int
-__fegetround (void)
+int __fegetround(void)
 {
-  fpu_control_t cw;
+    fpu_control_t cw;
 
-  /* Get control word.  */
-  _FPU_GETCW (cw);
+    /* Get control word.  */
+    _FPU_GETCW(cw);
 
-  return cw & 0x1;
+    return cw & 0x1;
 }
-libm_hidden_def (__fegetround)
-weak_alias (__fegetround, fegetround)
-libm_hidden_weak (fegetround)
+libm_hidden_def(__fegetround)
+weak_alias(__fegetround, fegetround)
+libm_hidden_weak(fegetround)

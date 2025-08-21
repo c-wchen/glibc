@@ -18,10 +18,9 @@
 
 #include <fenv.h>
 
-int
-fetestexcept (int excepts)
+int fetestexcept(int excepts)
 {
-  return 0;
+    return 0;
 }
-libm_hidden_def (fetestexcept)
-stub_warning (fetestexcept)
+libm_hidden_def(fetestexcept)
+stub_warning(fetestexcept)

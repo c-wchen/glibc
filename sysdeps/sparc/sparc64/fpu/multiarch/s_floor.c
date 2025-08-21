@@ -21,11 +21,11 @@
 #include <math.h>
 #include <libm-alias-double.h>
 
-extern __typeof (floor) __floor_vis3 attribute_hidden;
-extern __typeof (floor) __floor_generic attribute_hidden;
+extern __typeof(floor) __floor_vis3 attribute_hidden;
+extern __typeof(floor) __floor_generic attribute_hidden;
 
-sparc_libm_ifunc (__floor,
-		  hwcap & HWCAP_SPARC_VIS3
-		  ? __floor_vis3
-		  : __floor_generic);
-libm_alias_double (__floor, floor)
+sparc_libm_ifunc(__floor,
+                 hwcap &HWCAP_SPARC_VIS3
+                 ? __floor_vis3
+                 : __floor_generic);
+libm_alias_double(__floor, floor)

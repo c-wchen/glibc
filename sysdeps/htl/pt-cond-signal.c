@@ -22,25 +22,26 @@
 
 /* Unblock at least one of the threads that are blocked on condition
    variable COND.  */
-int
-__pthread_cond_signal (pthread_cond_t *cond)
+int __pthread_cond_signal(pthread_cond_t *cond)
 {
-  struct __pthread *wakeup;
+    struct __pthread *wakeup;
 
-  __pthread_spin_wait (&cond->__lock);
-  wakeup = cond->__queue;
-  if (wakeup != NULL)
-    __pthread_dequeue (wakeup);
-  __pthread_spin_unlock (&cond->__lock);
+    __pthread_spin_wait(&cond->__lock);
+    wakeup = cond->__queue;
+    if (wakeup != NULL) {
+        __pthread_dequeue(wakeup);
+    }
+    __pthread_spin_unlock(&cond->__lock);
 
-  if (wakeup != NULL)
-    __pthread_wakeup (wakeup);
+    if (wakeup != NULL) {
+        __pthread_wakeup(wakeup);
+    }
 
-  return 0;
+    return 0;
 }
-libc_hidden_def (__pthread_cond_signal)
-versioned_symbol (libc, __pthread_cond_signal, pthread_cond_signal, GLIBC_2_21);
+libc_hidden_def(__pthread_cond_signal)
+versioned_symbol(libc, __pthread_cond_signal, pthread_cond_signal, GLIBC_2_21);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_21)
-compat_symbol (libc, __pthread_cond_signal, pthread_cond_signal, GLIBC_2_12);
+compat_symbol(libc, __pthread_cond_signal, pthread_cond_signal, GLIBC_2_12);
 #endif

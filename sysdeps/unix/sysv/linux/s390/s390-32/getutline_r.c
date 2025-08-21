@@ -29,5 +29,5 @@
 #include "login/getutline_r.c"
 
 #if defined SHARED
-default_symbol_version (__getutline_r, getutline_r, UTMP_COMPAT_BASE);;
+default_symbol_version(__getutline_r, getutline_r, UTMP_COMPAT_BASE);;
 #endif

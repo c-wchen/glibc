@@ -21,9 +21,9 @@
 
 #include <pthreadP.h>
 
-extern void __getrandom_early_init (_Bool) attribute_hidden;
+extern void __getrandom_early_init(_Bool) attribute_hidden;
 
-extern void __getrandom_fork_subprocess (void) attribute_hidden;
-extern void __getrandom_vdso_release (struct pthread *curp) attribute_hidden;
-extern void __getrandom_reset_state (struct pthread *curp) attribute_hidden;
+extern void __getrandom_fork_subprocess(void) attribute_hidden;
+extern void __getrandom_vdso_release(struct pthread *curp) attribute_hidden;
+extern void __getrandom_reset_state(struct pthread *curp) attribute_hidden;
 #endif

@@ -1,8 +1,7 @@
 #include "nldbl-compat.h"
 
 long int
-attribute_hidden
-lroundl (double x)
+attribute_hidden lroundl(double x)
 {
-  return lround (x);
+    return lround(x);
 }

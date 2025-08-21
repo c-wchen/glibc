@@ -20,5 +20,5 @@
 # error "Never include <bits/argp-ldbl.h> directly; use <argp.h> instead."
 #endif
 
-__LDBL_REDIR_DECL (argp_error)
-__LDBL_REDIR_DECL (argp_failure)
+__LDBL_REDIR_DECL(argp_error)
+__LDBL_REDIR_DECL(argp_failure)

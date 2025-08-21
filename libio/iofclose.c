@@ -29,52 +29,52 @@
 #include "../iconv/gconv_int.h"
 #include <shlib-compat.h>
 
-int
-_IO_new_fclose (FILE *fp)
+int _IO_new_fclose(FILE *fp)
 {
-  int status;
+    int status;
 
-  CHECK_FILE(fp, EOF);
+    CHECK_FILE(fp, EOF);
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
-  /* We desperately try to help programs which are using streams in a
-     strange way and mix old and new functions.  Detect old streams
-     here.  */
-  if (_IO_vtable_offset (fp) != 0)
-    return _IO_old_fclose (fp);
+    /* We desperately try to help programs which are using streams in a
+       strange way and mix old and new functions.  Detect old streams
+       here.  */
+    if (_IO_vtable_offset(fp) != 0) {
+        return _IO_old_fclose(fp);
+    }
 #endif
 
-  /* First unlink the stream.  */
-  if (fp->_flags & _IO_IS_FILEBUF)
-    _IO_un_link ((struct _IO_FILE_plus *) fp);
-
-  _IO_acquire_lock (fp);
-  if (fp->_flags & _IO_IS_FILEBUF)
-    status = _IO_file_close_it (fp);
-  else
-    status = fp->_flags & _IO_ERR_SEEN ? -1 : 0;
-  _IO_release_lock (fp);
-  _IO_FINISH (fp);
-  if (fp->_mode > 0)
-    {
-      /* This stream has a wide orientation.  This means we have to free
-	 the conversion functions.  */
-      struct _IO_codecvt *cc = fp->_codecvt;
-
-      __libc_lock_lock (__gconv_lock);
-      __gconv_release_step (cc->__cd_in.step);
-      __gconv_release_step (cc->__cd_out.step);
-      __libc_lock_unlock (__gconv_lock);
+    /* First unlink the stream.  */
+    if (fp->_flags & _IO_IS_FILEBUF) {
+        _IO_un_link((struct _IO_FILE_plus *) fp);
     }
-  else
-    {
-      if (_IO_have_backup (fp))
-	_IO_free_backup_area (fp);
+
+    _IO_acquire_lock(fp);
+    if (fp->_flags & _IO_IS_FILEBUF) {
+        status = _IO_file_close_it(fp);
+    } else {
+        status = fp->_flags & _IO_ERR_SEEN ? -1 : 0;
     }
-  _IO_deallocate_file (fp);
-  return status;
+    _IO_release_lock(fp);
+    _IO_FINISH(fp);
+    if (fp->_mode > 0) {
+        /* This stream has a wide orientation.  This means we have to free
+        the conversion functions.  */
+        struct _IO_codecvt *cc = fp->_codecvt;
+
+        __libc_lock_lock(__gconv_lock);
+        __gconv_release_step(cc->__cd_in.step);
+        __gconv_release_step(cc->__cd_out.step);
+        __libc_lock_unlock(__gconv_lock);
+    } else {
+        if (_IO_have_backup(fp)) {
+            _IO_free_backup_area(fp);
+        }
+    }
+    _IO_deallocate_file(fp);
+    return status;
 }
 
-versioned_symbol (libc, _IO_new_fclose, _IO_fclose, GLIBC_2_1);
-strong_alias (_IO_new_fclose, __new_fclose)
-versioned_symbol (libc, __new_fclose, fclose, GLIBC_2_1);
+versioned_symbol(libc, _IO_new_fclose, _IO_fclose, GLIBC_2_1);
+strong_alias(_IO_new_fclose, __new_fclose)
+versioned_symbol(libc, __new_fclose, fclose, GLIBC_2_1);

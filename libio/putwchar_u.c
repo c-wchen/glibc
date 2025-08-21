@@ -18,9 +18,8 @@
 #include "libioP.h"
 #include <wchar.h>
 
-wint_t
-putwchar_unlocked (wchar_t wc)
+wint_t putwchar_unlocked(wchar_t wc)
 {
-  CHECK_FILE (stdout, WEOF);
-  return _IO_putwc_unlocked (wc, stdout);
+    CHECK_FILE(stdout, WEOF);
+    return _IO_putwc_unlocked(wc, stdout);
 }

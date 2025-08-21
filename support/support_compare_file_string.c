@@ -21,8 +21,7 @@
 
 #include <support/file_contents.h>
 
-int
-support_compare_file_string (FILE *fp, const char *contents)
+int support_compare_file_string(FILE *fp, const char *contents)
 {
-  return support_compare_file_bytes (fp, contents, strlen (contents));
+    return support_compare_file_bytes(fp, contents, strlen(contents));
 }

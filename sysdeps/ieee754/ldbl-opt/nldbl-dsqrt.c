@@ -21,8 +21,7 @@
 #undef dsqrtl
 
 double
-attribute_hidden
-dsqrtl (double x)
+attribute_hidden dsqrtl(double x)
 {
-  return sqrt (x);
+    return sqrt(x);
 }

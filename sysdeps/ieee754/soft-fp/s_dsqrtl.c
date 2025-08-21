@@ -35,33 +35,32 @@
    does not see that they are set in all cases where they are used,
    resulting in warnings that they may be used uninitialized.  */
 DIAG_PUSH_NEEDS_COMMENT;
-DIAG_IGNORE_NEEDS_COMMENT (7, "-Wmaybe-uninitialized");
+DIAG_IGNORE_NEEDS_COMMENT(7, "-Wmaybe-uninitialized");
 #include <soft-fp.h>
 #include <double.h>
 #include <quad.h>
 
-double
-__dsqrtl (_Float128 x)
+double __dsqrtl(_Float128 x)
 {
-  FP_DECL_EX;
-  FP_DECL_Q (X);
-  FP_DECL_Q (R);
-  FP_DECL_D (RN);
-  double ret;
+    FP_DECL_EX;
+    FP_DECL_Q(X);
+    FP_DECL_Q(R);
+    FP_DECL_D(RN);
+    double ret;
 
-  FP_INIT_ROUNDMODE;
-  FP_UNPACK_Q (X, x);
-  FP_SQRT_Q (R, X);
+    FP_INIT_ROUNDMODE;
+    FP_UNPACK_Q(X, x);
+    FP_SQRT_Q(R, X);
 #if _FP_W_TYPE_SIZE < 64
-  FP_TRUNC_COOKED (D, Q, 2, 4, RN, R);
+    FP_TRUNC_COOKED(D, Q, 2, 4, RN, R);
 #else
-  FP_TRUNC_COOKED (D, Q, 1, 2, RN, R);
+    FP_TRUNC_COOKED(D, Q, 1, 2, RN, R);
 #endif
-  FP_PACK_D (ret, RN);
-  FP_HANDLE_EXCEPTIONS;
-  CHECK_NARROW_SQRT (ret, x);
-  return ret;
+    FP_PACK_D(ret, RN);
+    FP_HANDLE_EXCEPTIONS;
+    CHECK_NARROW_SQRT(ret, x);
+    return ret;
 }
 DIAG_POP_NEEDS_COMMENT;
 
-libm_alias_double_ldouble (sqrt)
+libm_alias_double_ldouble(sqrt)

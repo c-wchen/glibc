@@ -20,9 +20,9 @@
 
 #include <support/check.h>
 
-void
-xclosedir (DIR *dir)
+void xclosedir(DIR *dir)
 {
-  if (closedir (dir) != 0)
-    FAIL_EXIT1 ("closedir: %m");
+    if (closedir(dir) != 0) {
+        FAIL_EXIT1("closedir: %m");
+    }
 }

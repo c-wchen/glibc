@@ -19,30 +19,29 @@
 #include <fenv_libc.h>
 #include <fpu_control.h>
 
-int
-__fesetenv (const fenv_t *envp)
+int __fesetenv(const fenv_t *envp)
 {
-  fenv_union_t old, new;
+    fenv_union_t old, new;
 
-  /* get the currently set exceptions.  */
-  new.fenv = *envp;
-  old.fenv = fegetenv_control ();
+    /* get the currently set exceptions.  */
+    new.fenv = *envp;
+    old.fenv = fegetenv_control();
 
-  __TEST_AND_EXIT_NON_STOP (old.l, new.l);
-  __TEST_AND_ENTER_NON_STOP (old.l, new.l);
+    __TEST_AND_EXIT_NON_STOP(old.l, new.l);
+    __TEST_AND_ENTER_NON_STOP(old.l, new.l);
 
-  fesetenv_register (new.fenv);
+    fesetenv_register(new.fenv);
 
-  /* Success.  */
-  return 0;
+    /* Success.  */
+    return 0;
 }
 
 #include <shlib-compat.h>
 #if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
-strong_alias (__fesetenv, __old_fesetenv)
-compat_symbol (libm, __old_fesetenv, fesetenv, GLIBC_2_1);
+strong_alias(__fesetenv, __old_fesetenv)
+compat_symbol(libm, __old_fesetenv, fesetenv, GLIBC_2_1);
 #endif
 
-libm_hidden_def (__fesetenv)
-libm_hidden_ver (__fesetenv, fesetenv)
-versioned_symbol (libm, __fesetenv, fesetenv, GLIBC_2_2);
+libm_hidden_def(__fesetenv)
+libm_hidden_ver(__fesetenv, fesetenv)
+versioned_symbol(libm, __fesetenv, fesetenv, GLIBC_2_2);

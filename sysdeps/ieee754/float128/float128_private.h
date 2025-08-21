@@ -57,7 +57,7 @@
 
 #ifdef libc_feholdexcept_setroundf128
 # undef libc_feholdexcept_setroundl
-# define libc_feholdexcept_setroundl(ENV, RM)	\
+# define libc_feholdexcept_setroundl(ENV, RM)   \
   libc_feholdexcept_setroundf128 (ENV, RM)
 #endif
 
@@ -139,7 +139,7 @@
 #undef libm_alias_double_ldouble
 #define libm_alias_double_ldouble(func) libm_alias_float64_float128 (func)
 #undef libm_alias_ldouble_narrow
-#define libm_alias_ldouble_narrow(from, to)	\
+#define libm_alias_ldouble_narrow(from, to) \
   libm_alias_float128_narrow (from, to)
 
 #include <math-use-builtins.h>
@@ -416,24 +416,23 @@
 /* Get the constant suffix from bits/floatn-compat.h.  */
 #define L(x) __f128 (x)
 
-static inline void
-mul_splitf128 (_Float128 *hi, _Float128 *lo, _Float128 x, _Float128 y)
+static inline void mul_splitf128(_Float128 *hi, _Float128 *lo, _Float128 x, _Float128 y)
 {
 #ifdef __FP_FAST_FMAF128
-  /* Fast built-in fused multiply-add.  */
-  *hi = x * y;
-  *lo = __builtin_fmal (x, y, -*hi);
+    /* Fast built-in fused multiply-add.  */
+    *hi = x * y;
+    *lo = __builtin_fmal(x, y, -*hi);
 #else
-  /* Apply Dekker's algorithm.  */
-  *hi = x * y;
+    /* Apply Dekker's algorithm.  */
+    *hi = x * y;
 # define C ((1LL << (FLT128_MANT_DIG + 1) / 2) + 1)
-  _Float128 x1 = x * C;
-  _Float128 y1 = y * C;
+    _Float128 x1 = x * C;
+    _Float128 y1 = y * C;
 # undef C
-  x1 = (x - x1) + x1;
-  y1 = (y - y1) + y1;
-  _Float128 x2 = x - x1;
-  _Float128 y2 = y - y1;
-  *lo = (((x1 * y1 - *hi) + x1 * y2) + x2 * y1) + x2 * y2;
+    x1 = (x - x1) + x1;
+    y1 = (y - y1) + y1;
+    _Float128 x2 = x - x1;
+    _Float128 y2 = y - y1;
+    *lo = (((x1 * y1 - *hi) + x1 * y2) + x2 * y1) + x2 * y2;
 #endif
 }

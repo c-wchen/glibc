@@ -19,7 +19,7 @@
 #include <stdbit.h>
 
 unsigned int
-(stdc_first_trailing_zero_ui) (unsigned int x)
+(stdc_first_trailing_zero_ui)(unsigned int x)
 {
-  return stdc_first_trailing_zero_ui (x);
+    return stdc_first_trailing_zero_ui(x);
 }

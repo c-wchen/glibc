@@ -26,19 +26,18 @@
 
 #if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_40)
 attribute_compat_text_section
-void
-_dl_mcount_wrapper (void *selfpc)
+void _dl_mcount_wrapper(void *selfpc)
 {
-  GLRO(dl_mcount) ((ElfW(Addr)) RETURN_ADDRESS (0), (ElfW(Addr)) selfpc);
+    GLRO(dl_mcount)((ElfW(Addr)) RETURN_ADDRESS(0), (ElfW(Addr)) selfpc);
 }
 
-compat_symbol (libc, _dl_mcount_wrapper, _dl_mcount_wrapper, GLIBC_2_1);
+compat_symbol(libc, _dl_mcount_wrapper, _dl_mcount_wrapper, GLIBC_2_1);
 #endif
 
-void
-_dl_mcount_wrapper_check (void *selfpc)
+void _dl_mcount_wrapper_check(void *selfpc)
 {
-  if (GL(dl_profile_map) != NULL)
-    GLRO(dl_mcount) ((ElfW(Addr)) RETURN_ADDRESS (0), (ElfW(Addr)) selfpc);
+    if (GL(dl_profile_map) != NULL) {
+        GLRO(dl_mcount)((ElfW(Addr)) RETURN_ADDRESS(0), (ElfW(Addr)) selfpc);
+    }
 }
-libc_hidden_def (_dl_mcount_wrapper_check)
+libc_hidden_def(_dl_mcount_wrapper_check)

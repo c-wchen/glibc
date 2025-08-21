@@ -20,11 +20,10 @@
 
 /* Set the name of the current YP domain to NAME, which is LEN bytes long.
    This call is restricted to the super-user.  */
-int
-setdomainname (const char *name, size_t len)
+int setdomainname(const char *name, size_t len)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (setdomainname)
+stub_warning(setdomainname)

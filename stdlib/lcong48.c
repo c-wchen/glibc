@@ -18,8 +18,7 @@
 #include <stdlib.h>
 
 
-void
-lcong48 (unsigned short int param[7])
+void lcong48(unsigned short int param[7])
 {
-  (void) __lcong48_r (param, &__libc_drand48_data);
+    (void) __lcong48_r(param, &__libc_drand48_data);
 }

@@ -19,8 +19,7 @@
 #include <sched.h>
 #include <sysdep.h>
 
-int
-sched_setattr (pid_t pid, struct sched_attr *attr, unsigned int flags)
+int sched_setattr(pid_t pid, struct sched_attr *attr, unsigned int flags)
 {
-  return INLINE_SYSCALL_CALL (sched_setattr, pid, attr, flags);
+    return INLINE_SYSCALL_CALL(sched_setattr, pid, attr, flags);
 }

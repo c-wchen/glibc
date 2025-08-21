@@ -27,27 +27,27 @@
 #include "libioP.h"
 #include <string.h>
 
-int
-_IO_fputs (const char *str, FILE *fp)
+int _IO_fputs(const char *str, FILE *fp)
 {
-  size_t len = strlen (str);
-  int result = EOF;
-  CHECK_FILE (fp, EOF);
-  _IO_acquire_lock (fp);
-  if ((_IO_vtable_offset (fp) != 0 || _IO_fwide (fp, -1) == -1)
-      && _IO_sputn (fp, str, len) == len)
-    result = 1;
-  _IO_release_lock (fp);
-  return result;
+    size_t len = strlen(str);
+    int result = EOF;
+    CHECK_FILE(fp, EOF);
+    _IO_acquire_lock(fp);
+    if ((_IO_vtable_offset(fp) != 0 || _IO_fwide(fp, -1) == -1)
+        && _IO_sputn(fp, str, len) == len) {
+        result = 1;
+    }
+    _IO_release_lock(fp);
+    return result;
 }
-libc_hidden_def (_IO_fputs)
+libc_hidden_def(_IO_fputs)
 
-weak_alias (_IO_fputs, fputs)
-libc_hidden_weak (fputs)
+weak_alias(_IO_fputs, fputs)
+libc_hidden_weak(fputs)
 
 # ifndef _IO_MTSAFE_IO
-strong_alias (_IO_fputs, __fputs_unlocked)
-libc_hidden_def (__fputs_unlocked)
-weak_alias (_IO_fputs, fputs_unlocked)
-libc_hidden_ver (_IO_fputs, fputs_unlocked)
+strong_alias(_IO_fputs, __fputs_unlocked)
+libc_hidden_def(__fputs_unlocked)
+weak_alias(_IO_fputs, fputs_unlocked)
+libc_hidden_ver(_IO_fputs, fputs_unlocked)
 # endif

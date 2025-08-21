@@ -32,6 +32,6 @@
 #undef __glob64
 
 #if XSTAT_IS_XSTAT64
-strong_alias (__glob, __glob64)
-versioned_symbol (libc, __glob64, glob64, GLIBC_2_27);
+strong_alias(__glob, __glob64)
+versioned_symbol(libc, __glob64, glob64, GLIBC_2_27);
 #endif

@@ -37,18 +37,18 @@
 #endif
 
 /* Block THREAD.  */
-RETTYPE
-__pthread_block (struct __pthread *thread)
+RETTYPE __pthread_block(struct __pthread *thread)
 {
-  mach_msg_header_t msg;
-  error_t err;
+    mach_msg_header_t msg;
+    error_t err;
 
-  err = __mach_msg (&msg, MACH_RCV_MSG | MSG_OPTIONS, 0, sizeof msg,
-		    thread->wakeupmsg.msgh_remote_port,
-		    MACH_MSG_TIMEOUT_NONE, MACH_PORT_NULL);
-  if ((MSG_OPTIONS & MACH_RCV_INTERRUPT) && err == MACH_RCV_INTERRUPTED)
-    RETURN(EINTR);
-  assert_perror (err);
-  RETURN(0);
+    err = __mach_msg(&msg, MACH_RCV_MSG | MSG_OPTIONS, 0, sizeof msg,
+                     thread->wakeupmsg.msgh_remote_port,
+                     MACH_MSG_TIMEOUT_NONE, MACH_PORT_NULL);
+    if ((MSG_OPTIONS & MACH_RCV_INTERRUPT) && err == MACH_RCV_INTERRUPTED) {
+        RETURN(EINTR);
+    }
+    assert_perror(err);
+    RETURN(0);
 }
-libc_hidden_def (__pthread_block)
+libc_hidden_def(__pthread_block)

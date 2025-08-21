@@ -18,18 +18,18 @@
 #include <ctype.h>
 #include <wctype.h>
 
-#define USE_IN_EXTENDED_LOCALE_MODEL	1
+#define USE_IN_EXTENDED_LOCALE_MODEL    1
 #include "wchar-lookup.h"
 
 
-int
-__iswctype_l (wint_t wc, wctype_t desc, locale_t locale)
+int __iswctype_l(wint_t wc, wctype_t desc, locale_t locale)
 {
-  /* If the user passes in an invalid DESC valid (the one returned from
-     `__wctype_l' in case of an error) simply return 0.  */
-  if (desc == (wctype_t) 0)
-    return 0;
+    /* If the user passes in an invalid DESC valid (the one returned from
+       `__wctype_l' in case of an error) simply return 0.  */
+    if (desc == (wctype_t) 0) {
+        return 0;
+    }
 
-  return wctype_table_lookup ((const char *) desc, wc);
+    return wctype_table_lookup((const char *) desc, wc);
 }
-weak_alias (__iswctype_l, iswctype_l)
+weak_alias(__iswctype_l, iswctype_l)

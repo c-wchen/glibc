@@ -23,10 +23,9 @@
 
 /* Replace the current process, executing FILE_NAME with arguments ARGV and
    environment ENVP.  ARGV and ENVP are terminated by NULL pointers.  */
-int
-__execve (const char *file_name, char *const argv[], char *const envp[])
+int __execve(const char *file_name, char *const argv[], char *const envp[])
 {
-  return __execveat (AT_FDCWD, file_name, argv, envp, 0);
+    return __execveat(AT_FDCWD, file_name, argv, envp, 0);
 }
 
-weak_alias (__execve, execve)
+weak_alias(__execve, execve)

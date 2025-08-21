@@ -16,9 +16,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-inline char *
-third_function_with_local_static (void)
+inline char *third_function_with_local_static(void)
 {
-  static char local;
-  return &local;
+    static char local;
+    return &local;
 }

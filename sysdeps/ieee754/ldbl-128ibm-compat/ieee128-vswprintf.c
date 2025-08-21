@@ -18,11 +18,10 @@
 
 #include <libio/libioP.h>
 
-extern int
-___ieee128_vswprintf (wchar_t *string, size_t maxlen,
-		     const wchar_t *format, va_list ap)
+extern int ___ieee128_vswprintf(wchar_t *string, size_t maxlen,
+                                const wchar_t *format, va_list ap)
 {
-  return __vswprintf_internal (string, maxlen, format, ap,
-			       PRINTF_LDBL_USES_FLOAT128);
+    return __vswprintf_internal(string, maxlen, format, ap,
+                                PRINTF_LDBL_USES_FLOAT128);
 }
-strong_alias (___ieee128_vswprintf, __vswprintfieee128)
+strong_alias(___ieee128_vswprintf, __vswprintfieee128)

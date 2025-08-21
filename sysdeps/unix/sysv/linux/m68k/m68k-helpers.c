@@ -18,8 +18,7 @@
 
 #include <sysdep.h>
 
-void *
-__m68k_read_tp (void)
+void *__m68k_read_tp(void)
 {
-  return (void*) INTERNAL_SYSCALL_CALL (get_thread_area);
+    return (void *) INTERNAL_SYSCALL_CALL(get_thread_area);
 }

@@ -22,12 +22,11 @@
    If OLDDELTA is not NULL, it is filled in with the amount
    of time adjustment remaining to be done from the last `__adjtime' call.
    This call is restricted to the super-user.  */
-int
-__adjtime (const struct timeval *delta, struct timeval *olddelta)
+int __adjtime(const struct timeval *delta, struct timeval *olddelta)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (adjtime)
+stub_warning(adjtime)
 
-weak_alias (__adjtime, adjtime)
+weak_alias(__adjtime, adjtime)

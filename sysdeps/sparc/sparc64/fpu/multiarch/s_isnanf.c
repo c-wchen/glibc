@@ -21,13 +21,13 @@
 #undef __isnanf
 #include <sparc-ifunc.h>
 
-extern __typeof (isnanf) __isnanf_vis3 attribute_hidden;
-extern __typeof (isnanf) __isnanf_generic attribute_hidden;
+extern __typeof(isnanf) __isnanf_vis3 attribute_hidden;
+extern __typeof(isnanf) __isnanf_generic attribute_hidden;
 
-sparc_libm_ifunc_redirected (__redirect___isnanf, __isnanf,
-			     hwcap & HWCAP_SPARC_VIS3
-			     ? __isnanf_vis3
-			     : __isnanf_generic);
+sparc_libm_ifunc_redirected(__redirect___isnanf, __isnanf,
+                            hwcap &HWCAP_SPARC_VIS3
+                            ? __isnanf_vis3
+                            : __isnanf_generic);
 
-sparc_ifunc_redirected_hidden_def (__redirect___isnanf,__isnanf)
-weak_alias (__isnanf, isnanf)
+sparc_ifunc_redirected_hidden_def(__redirect___isnanf, __isnanf)
+weak_alias(__isnanf, isnanf)

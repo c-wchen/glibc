@@ -18,21 +18,20 @@
 #include "pthreadP.h"
 #include <shlib-compat.h>
 
-int
-__pthread_barrierattr_init (pthread_barrierattr_t *attr)
+int __pthread_barrierattr_init(pthread_barrierattr_t *attr)
 {
-  ASSERT_TYPE_SIZE (pthread_barrierattr_t, __SIZEOF_PTHREAD_BARRIERATTR_T);
-  ASSERT_PTHREAD_INTERNAL_SIZE (pthread_barrierattr_t,
-				struct pthread_barrierattr);
+    ASSERT_TYPE_SIZE(pthread_barrierattr_t, __SIZEOF_PTHREAD_BARRIERATTR_T);
+    ASSERT_PTHREAD_INTERNAL_SIZE(pthread_barrierattr_t,
+                                 struct pthread_barrierattr);
 
-  ((struct pthread_barrierattr *) attr)->pshared = PTHREAD_PROCESS_PRIVATE;
+    ((struct pthread_barrierattr *) attr)->pshared = PTHREAD_PROCESS_PRIVATE;
 
-  return 0;
+    return 0;
 }
-versioned_symbol (libc, __pthread_barrierattr_init,
-                  pthread_barrierattr_init, GLIBC_2_34);
+versioned_symbol(libc, __pthread_barrierattr_init,
+                 pthread_barrierattr_init, GLIBC_2_34);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
-compat_symbol (libpthread, __pthread_barrierattr_init,
-               pthread_barrierattr_init, GLIBC_2_2);
+compat_symbol(libpthread, __pthread_barrierattr_init,
+              pthread_barrierattr_init, GLIBC_2_2);
 #endif

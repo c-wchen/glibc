@@ -26,51 +26,48 @@
    given that |X| >= |Y| and the values are small enough that no
    overflow occurs.  */
 
-static inline void
-add_split (long double *hi, long double *lo, long double x, long double y)
+static inline void add_split(long double *hi, long double *lo, long double x, long double y)
 {
-  /* Apply Dekker's algorithm.  */
-  *hi = x + y;
-  *lo = (x - *hi) + y;
+    /* Apply Dekker's algorithm.  */
+    *hi = x + y;
+    *lo = (x - *hi) + y;
 }
 
 /* Compare absolute values of floating-point values pointed to by P
    and Q for qsort.  */
 
-static int
-compare (const void *p, const void *q)
+static int compare(const void *p, const void *q)
 {
-  long double pld = fabsl (*(const long double *) p);
-  long double qld = fabsl (*(const long double *) q);
-  if (pld < qld)
-    return -1;
-  else if (pld == qld)
-    return 0;
-  else
-    return 1;
+    long double pld = fabsl(*(const long double *) p);
+    long double qld = fabsl(*(const long double *) q);
+    if (pld < qld) {
+        return -1;
+    } else if (pld == qld) {
+        return 0;
+    } else {
+        return 1;
+    }
 }
 
 /* Return X^2 + Y^2 - 1, computed without large cancellation error.
    It is given that 1 > X >= Y >= epsilon / 2, and that X^2 + Y^2 >=
    0.5.  */
 
-long double
-__x2y2m1l (long double x, long double y)
+long double __x2y2m1l(long double x, long double y)
 {
-  long double vals[5];
-  SET_RESTORE_ROUNDL (FE_TONEAREST);
-  mul_splitl (&vals[1], &vals[0], x, x);
-  mul_splitl (&vals[3], &vals[2], y, y);
-  vals[4] = -1.0L;
-  qsort (vals, 5, sizeof (long double), compare);
-  /* Add up the values so that each element of VALS has absolute value
-     at most equal to the last set bit of the next nonzero
-     element.  */
-  for (size_t i = 0; i <= 3; i++)
-    {
-      add_split (&vals[i + 1], &vals[i], vals[i + 1], vals[i]);
-      qsort (vals + i + 1, 4 - i, sizeof (long double), compare);
+    long double vals[5];
+    SET_RESTORE_ROUNDL(FE_TONEAREST);
+    mul_splitl(&vals[1], &vals[0], x, x);
+    mul_splitl(&vals[3], &vals[2], y, y);
+    vals[4] = -1.0L;
+    qsort(vals, 5, sizeof(long double), compare);
+    /* Add up the values so that each element of VALS has absolute value
+       at most equal to the last set bit of the next nonzero
+       element.  */
+    for (size_t i = 0; i <= 3; i++) {
+        add_split(&vals[i + 1], &vals[i], vals[i + 1], vals[i]);
+        qsort(vals + i + 1, 4 - i, sizeof(long double), compare);
     }
-  /* Now any error from this addition will be small.  */
-  return vals[4] + vals[3] + vals[2] + vals[1] + vals[0];
+    /* Now any error from this addition will be small.  */
+    return vals[4] + vals[3] + vals[2] + vals[1] + vals[0];
 }

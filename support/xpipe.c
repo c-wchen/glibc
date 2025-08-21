@@ -20,9 +20,9 @@
 
 #include <support/check.h>
 
-void
-xpipe (int fds[2])
+void xpipe(int fds[2])
 {
-  if (pipe (fds) < 0)
-    FAIL_EXIT1 ("pipe: %m");
+    if (pipe(fds) < 0) {
+        FAIL_EXIT1("pipe: %m");
+    }
 }

@@ -23,10 +23,10 @@
 /* This is the private state used if PS is NULL.  */
 static mbstate_t state;
 
-size_t
-c32rtomb (char *s, char32_t c32, mbstate_t *ps)
+size_t c32rtomb(char *s, char32_t c32, mbstate_t *ps)
 {
-  if (ps == NULL)
-    ps = &state;
-  return wcrtomb (s, c32, ps);
+    if (ps == NULL) {
+        ps = &state;
+    }
+    return wcrtomb(s, c32, ps);
 }

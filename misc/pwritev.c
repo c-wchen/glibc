@@ -25,11 +25,10 @@
    written in the order specified.  Operates just like 'pwrite' (see
    <unistd.h>) except that the data are taken from VECTOR instead of a
    contiguous buffer.  */
-ssize_t
-pwritev (int fd, const struct iovec *vector, int count, off_t offset)
+ssize_t pwritev(int fd, const struct iovec *vector, int count, off_t offset)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (pwritev)
+stub_warning(pwritev)

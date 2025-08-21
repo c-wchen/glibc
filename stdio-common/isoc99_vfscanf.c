@@ -19,9 +19,8 @@
 #include <stdio.h>
 
 /* Read formatted input from STREAM according to the format string FORMAT.  */
-int
-__isoc99_vfscanf (FILE *stream, const char *format, va_list args)
+int __isoc99_vfscanf(FILE *stream, const char *format, va_list args)
 {
-  return __vfscanf_internal (stream, format, args, SCANF_ISOC99_A);
+    return __vfscanf_internal(stream, format, args, SCANF_ISOC99_A);
 }
-libc_hidden_def (__isoc99_vfscanf)
+libc_hidden_def(__isoc99_vfscanf)

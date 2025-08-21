@@ -6,7 +6,7 @@
 /* GCC warns about strncat truncating output; this is deliberately
    tested here.  If fortify is enabled, it is also triggered by the
    wrappers. */
-DIAG_IGNORE_NEEDS_COMMENT (8, "-Wstringop-truncation");
+DIAG_IGNORE_NEEDS_COMMENT(8, "-Wstringop-truncation");
 #endif
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,27 +14,23 @@ DIAG_IGNORE_NEEDS_COMMENT (8, "-Wstringop-truncation");
 
 char d[3] = "\0\1\2";
 
-int
-main (void)
+int main(void)
 {
-  DIAG_PUSH_NEEDS_COMMENT;
-  strncat (d, "\5\6", 1);
-  DIAG_POP_NEEDS_COMMENT;
-  if (d[0] != '\5')
-    {
-      puts ("d[0] != '\\5'");
-      exit (1);
+    DIAG_PUSH_NEEDS_COMMENT;
+    strncat(d, "\5\6", 1);
+    DIAG_POP_NEEDS_COMMENT;
+    if (d[0] != '\5') {
+        puts("d[0] != '\\5'");
+        exit(1);
     }
-  if (d[1] != '\0')
-    {
-      puts ("d[1] != '\\0'");
-      exit (1);
+    if (d[1] != '\0') {
+        puts("d[1] != '\\0'");
+        exit(1);
     }
-  if (d[2] != '\2')
-    {
-      puts ("d[2] != '\\2'");
-      exit (1);
+    if (d[2] != '\2') {
+        puts("d[2] != '\\2'");
+        exit(1);
     }
 
-  return 0;
+    return 0;
 }

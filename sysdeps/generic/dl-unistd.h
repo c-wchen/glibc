@@ -17,14 +17,14 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-extern __typeof (__access) __access attribute_hidden;
-extern __typeof (__brk) __brk attribute_hidden;
-extern __typeof (__close) __close attribute_hidden;
-extern __typeof (__getcwd) __getcwd attribute_hidden;
-extern __typeof (__getpid) __getpid attribute_hidden;
-extern __typeof (__libc_read) __libc_read attribute_hidden;
-extern __typeof (__libc_write) __libc_write attribute_hidden;
-extern __typeof (__lseek) __lseek attribute_hidden;
-extern __typeof (__profil) __profil attribute_hidden;
-extern __typeof (__read) __read attribute_hidden;
-extern __typeof (__sbrk) __sbrk attribute_hidden;
+extern __typeof(__access) __access attribute_hidden;
+extern __typeof(__brk) __brk attribute_hidden;
+extern __typeof(__close) __close attribute_hidden;
+extern __typeof(__getcwd) __getcwd attribute_hidden;
+extern __typeof(__getpid) __getpid attribute_hidden;
+extern __typeof(__libc_read) __libc_read attribute_hidden;
+extern __typeof(__libc_write) __libc_write attribute_hidden;
+extern __typeof(__lseek) __lseek attribute_hidden;
+extern __typeof(__profil) __profil attribute_hidden;
+extern __typeof(__read) __read attribute_hidden;
+extern __typeof(__sbrk) __sbrk attribute_hidden;

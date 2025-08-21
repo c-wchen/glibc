@@ -34,8 +34,7 @@
    identically to `struct statfs', so they can be used interchangeably.
    Any changes made here must also be made in that file.  */
 
-struct statfs
-  {
+struct statfs {
     unsigned int f_type;
     unsigned long int f_bsize;
 #ifndef __USE_FILE_OFFSET64
@@ -61,11 +60,10 @@ struct statfs
     unsigned long int f_frsize;
     unsigned long int f_flag;
     unsigned int f_spare[3];
-  };
+};
 
 #ifdef __USE_LARGEFILE64
-struct statfs64
-  {
+struct statfs64 {
     unsigned int f_type;
     unsigned long int f_bsize;
     __fsblkcnt64_t f_blocks;
@@ -79,7 +77,7 @@ struct statfs64
     unsigned long int f_frsize;
     unsigned long int f_flag;
     unsigned int f_spare[3];
-  };
+};
 #endif
 
 /* Tell code we have this member.  */

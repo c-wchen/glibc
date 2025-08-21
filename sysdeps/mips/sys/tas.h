@@ -23,8 +23,8 @@
 
 __BEGIN_DECLS
 
-extern int _test_and_set (int *__p, int __v)
-     __THROW __attribute__ ((__nomips16__));
+extern int _test_and_set(int *__p, int __v)
+__THROW __attribute__((__nomips16__));
 
 #ifdef __USE_EXTERN_INLINES
 
@@ -32,13 +32,13 @@ extern int _test_and_set (int *__p, int __v)
 #  define _EXTERN_INLINE __extern_inline
 # endif
 
-_EXTERN_INLINE int __attribute__ ((__nomips16__))
-__NTH (_test_and_set (int *__p, int __v))
+_EXTERN_INLINE int __attribute__((__nomips16__))
+__NTH(_test_and_set(int *__p, int __v))
 {
-  int __r, __t;
+    int __r, __t;
 
-  /* The R5900 reports itself as MIPS III but it does not have LL/SC.  */
-  __asm__ __volatile__
+    /* The R5900 reports itself as MIPS III but it does not have LL/SC.  */
+    __asm__ __volatile__
     ("/* Inline test and set */\n"
      ".set	push\n\t"
 #if _MIPS_SIM == _ABIO32 && (__mips < 2 || defined (_MIPS_ARCH_R5900))
@@ -55,11 +55,11 @@ __NTH (_test_and_set (int *__p, int __v))
      ".set	pop\n\t"
      "2:\n\t"
      "/* End test and set */"
-     : "=&r" (__r), "=&r" (__t), "=m" (*__p)
-     : "m" (*__p), "r" (__v)
+     : "=&r"(__r), "=&r"(__t), "=m"(*__p)
+     : "m"(*__p), "r"(__v)
      : "memory");
 
-  return __r;
+    return __r;
 }
 
 #endif /* __USE_EXTERN_INLINES */

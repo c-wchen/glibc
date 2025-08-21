@@ -25,54 +25,54 @@
 #define PASS 0
 #define FAIL 1
 
-static int test_locking_reader (pthread_rwlock_t *rwlock);
-static int test_locking_writer (pthread_rwlock_t *rwlock);
+static int test_locking_reader(pthread_rwlock_t *rwlock);
+static int test_locking_writer(pthread_rwlock_t *rwlock);
 
-int
-main (void)
+int main(void)
 {
-  pthread_rwlock_t rwlock;
+    pthread_rwlock_t rwlock;
 
-  int result = FAIL;
+    int result = FAIL;
 
-  if (test_locking_reader (&rwlock) == PASS
-      && test_locking_writer (&rwlock) == PASS)
-    result = PASS;
-  /* Else, one of the pthread_rwlock* functions failed.  */
+    if (test_locking_reader(&rwlock) == PASS
+        && test_locking_writer(&rwlock) == PASS) {
+        result = PASS;
+    }
+    /* Else, one of the pthread_rwlock* functions failed.  */
 
-  return result;
+    return result;
 }
 
 /* Tests locking the rwlock multiple times as a reader.  */
-static int
-test_locking_reader (pthread_rwlock_t *rwlock)
+static int test_locking_reader(pthread_rwlock_t *rwlock)
 {
-  int result = FAIL;
+    int result = FAIL;
 
-  if (pthread_rwlock_init (rwlock, NULL) == 0
-      && pthread_rwlock_rdlock (rwlock) == 0 /* Test locking (reader).  */
-      && pthread_rwlock_rdlock (rwlock) == 0
-      && pthread_rwlock_rdlock (rwlock) == 0
-      && pthread_rwlock_unlock (rwlock) == 0
-      && pthread_rwlock_unlock (rwlock) == 0
-      && pthread_rwlock_unlock (rwlock) == 0
-      && pthread_rwlock_destroy (rwlock) == 0)
-    result = PASS;
+    if (pthread_rwlock_init(rwlock, NULL) == 0
+        && pthread_rwlock_rdlock(rwlock) == 0  /* Test locking (reader).  */
+        && pthread_rwlock_rdlock(rwlock) == 0
+        && pthread_rwlock_rdlock(rwlock) == 0
+        && pthread_rwlock_unlock(rwlock) == 0
+        && pthread_rwlock_unlock(rwlock) == 0
+        && pthread_rwlock_unlock(rwlock) == 0
+        && pthread_rwlock_destroy(rwlock) == 0) {
+        result = PASS;
+    }
 
-  return result;
+    return result;
 }
 
 /* Tests locking the rwlock as a writer.  */
-static int
-test_locking_writer (pthread_rwlock_t *rwlock)
+static int test_locking_writer(pthread_rwlock_t *rwlock)
 {
-  int result = FAIL;
+    int result = FAIL;
 
-  if (pthread_rwlock_init (rwlock, NULL) == 0
-      && pthread_rwlock_wrlock (rwlock) == 0 /* Test locking (writer).  */
-      && pthread_rwlock_unlock (rwlock) == 0
-      && pthread_rwlock_destroy (rwlock) == 0)
-    result = PASS;
+    if (pthread_rwlock_init(rwlock, NULL) == 0
+        && pthread_rwlock_wrlock(rwlock) == 0  /* Test locking (writer).  */
+        && pthread_rwlock_unlock(rwlock) == 0
+        && pthread_rwlock_destroy(rwlock) == 0) {
+        result = PASS;
+    }
 
-  return result;
+    return result;
 }

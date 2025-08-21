@@ -20,17 +20,16 @@
 
 /* Straightforward implementation so tst-memstream3 could use check
    fwrite on open_memstream.  */
-static size_t
-fwwrite (const void *ptr, size_t size, size_t nmemb, FILE *arq)
+static size_t fwwrite(const void *ptr, size_t size, size_t nmemb, FILE *arq)
 {
-  const wchar_t *wcs = (const wchar_t*) (ptr);
-  for (size_t s = 0; s < size; s++)
-    {
-      for (size_t n = 0; n < nmemb; n++)
-        if (fputwc (wcs[n], arq) == WEOF)
-          return n;
+    const wchar_t *wcs = (const wchar_t *)(ptr);
+    for (size_t s = 0; s < size; s++) {
+        for (size_t n = 0; n < nmemb; n++)
+            if (fputwc(wcs[n], arq) == WEOF) {
+                return n;
+            }
     }
-  return size * nmemb;
+    return size * nmemb;
 }
 
 #define CHAR_T wchar_t

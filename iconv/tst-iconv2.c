@@ -24,77 +24,69 @@
 #include <string.h>
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char buf[3];
-  const wchar_t wc[1] = L"a";
-  iconv_t cd;
-  char *inptr;
-  size_t inlen;
-  char *outptr;
-  size_t outlen;
-  size_t n;
-  int e;
-  int result = 0;
+    char buf[3];
+    const wchar_t wc[1] = L"a";
+    iconv_t cd;
+    char *inptr;
+    size_t inlen;
+    char *outptr;
+    size_t outlen;
+    size_t n;
+    int e;
+    int result = 0;
 
-  mtrace ();
+    mtrace();
 
-  cd = iconv_open ("UCS4", "WCHAR_T");
-  if (cd == (iconv_t) -1)
-    {
-      printf ("cannot convert from wchar_t to UCS4: %m\n");
-      exit (1);
+    cd = iconv_open("UCS4", "WCHAR_T");
+    if (cd == (iconv_t) -1) {
+        printf("cannot convert from wchar_t to UCS4: %m\n");
+        exit(1);
     }
 
-  inptr = (char *) wc;
-  inlen = sizeof (wchar_t);
-  outptr = buf;
-  outlen = 3;
+    inptr = (char *) wc;
+    inlen = sizeof(wchar_t);
+    outptr = buf;
+    outlen = 3;
 
-  n = iconv (cd, &inptr, &inlen, &outptr, &outlen);
-  e = errno;
+    n = iconv(cd, &inptr, &inlen, &outptr, &outlen);
+    e = errno;
 
-  if (n != (size_t) -1)
-    {
-      printf ("incorrect iconv() return value: %zd, expected -1\n", n);
-      result = 1;
+    if (n != (size_t) -1) {
+        printf("incorrect iconv() return value: %zd, expected -1\n", n);
+        result = 1;
     }
 
-  if (e != E2BIG)
-    {
-      printf ("incorrect error value: %s, expected %s\n",
-	      strerror (e), strerror (E2BIG));
-      result = 1;
+    if (e != E2BIG) {
+        printf("incorrect error value: %s, expected %s\n",
+               strerror(e), strerror(E2BIG));
+        result = 1;
     }
 
-  if (inptr != (char *) wc)
-    {
-      puts ("inptr changed");
-      result = 1;
+    if (inptr != (char *) wc) {
+        puts("inptr changed");
+        result = 1;
     }
 
-  if (inlen != sizeof (wchar_t))
-    {
-      puts ("inlen changed");
-      result = 1;
+    if (inlen != sizeof(wchar_t)) {
+        puts("inlen changed");
+        result = 1;
     }
 
-  if (outptr != buf)
-    {
-      puts ("outptr changed");
-      result = 1;
+    if (outptr != buf) {
+        puts("outptr changed");
+        result = 1;
     }
 
-  if (outlen != 3)
-    {
-      puts ("outlen changed");
-      result = 1;
+    if (outlen != 3) {
+        puts("outlen changed");
+        result = 1;
     }
 
-  iconv_close (cd);
+    iconv_close(cd);
 
-  return result;
+    return result;
 }
 
 #define TEST_FUNCTION do_test ()

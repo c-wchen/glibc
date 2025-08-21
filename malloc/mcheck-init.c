@@ -22,12 +22,11 @@
 #include <mcheck.h>
 #include <shlib-compat.h>
 
-static void
-turn_on_mcheck (void)
+static void turn_on_mcheck(void)
 {
-  mcheck (NULL);
+    mcheck(NULL);
 }
 
-void (*__malloc_initialize_hook) (void) = turn_on_mcheck;
-compat_symbol_reference (libc, __malloc_initialize_hook,
-                         __malloc_initialize_hook, GLIBC_2_0);
+void (*__malloc_initialize_hook)(void) = turn_on_mcheck;
+compat_symbol_reference(libc, __malloc_initialize_hook,
+                        __malloc_initialize_hook, GLIBC_2_0);

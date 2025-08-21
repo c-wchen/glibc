@@ -21,40 +21,34 @@
 # define _ARM_DL_TLSDESC_H 1
 
 /* Type used to represent a TLS descriptor in the GOT.  */
-struct tlsdesc
-{
-  union
-    {
-      void *pointer;
-      long value;
+struct tlsdesc {
+    union {
+        void *pointer;
+        long value;
     } argument;
-  ptrdiff_t (*entry)(struct tlsdesc *);
+    ptrdiff_t (*entry)(struct tlsdesc *);
 };
 
 
-typedef struct dl_tls_index
-{
-  unsigned long int ti_module;
-  unsigned long int ti_offset;
+typedef struct dl_tls_index {
+    unsigned long int ti_module;
+    unsigned long int ti_offset;
 } tls_index;
 
 /* Type used as the argument in a TLS descriptor for a symbol that
    needs dynamic TLS offsets.  */
-struct tlsdesc_dynamic_arg
-{
-  tls_index tlsinfo;
-  size_t gen_count;
+struct tlsdesc_dynamic_arg {
+    tls_index tlsinfo;
+    size_t gen_count;
 };
 
-extern ptrdiff_t attribute_hidden
-  _dl_tlsdesc_return(struct tlsdesc *),
-  _dl_tlsdesc_undefweak(struct tlsdesc *);
+extern ptrdiff_t attribute_hidden _dl_tlsdesc_return(struct tlsdesc *),
+       _dl_tlsdesc_undefweak(struct tlsdesc *);
 
 # ifdef SHARED
-extern void *_dl_make_tlsdesc_dynamic (struct link_map *map, size_t ti_offset);
+extern void *_dl_make_tlsdesc_dynamic(struct link_map *map, size_t ti_offset);
 
-extern ptrdiff_t attribute_hidden
-  _dl_tlsdesc_dynamic(struct tlsdesc *);
+extern ptrdiff_t attribute_hidden _dl_tlsdesc_dynamic(struct tlsdesc *);
 # endif
 
 #endif

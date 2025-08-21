@@ -25,19 +25,18 @@
 #include <support/support.h>
 #include <support/check.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  unsetenv ("LANGUAGE");
+    unsetenv("LANGUAGE");
 
-  xsetlocale (LC_ALL, "C");
+    xsetlocale(LC_ALL, "C");
 
-  TEST_COMPARE_STRING (gai_strerror (1), "Unknown error");
-  TEST_COMPARE_STRING (gai_strerror (0), "Success");
-  TEST_COMPARE_STRING (gai_strerror (EAI_OVERFLOW),
-                       "Result too large for supplied buffer");
+    TEST_COMPARE_STRING(gai_strerror(1), "Unknown error");
+    TEST_COMPARE_STRING(gai_strerror(0), "Success");
+    TEST_COMPARE_STRING(gai_strerror(EAI_OVERFLOW),
+                        "Result too large for supplied buffer");
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

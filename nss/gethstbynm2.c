@@ -23,15 +23,15 @@
 #include <netinet/in.h>
 
 
-#define LOOKUP_TYPE	struct hostent
-#define FUNCTION_NAME	gethostbyname2
-#define DATABASE_NAME	hosts
-#define ADD_PARAMS	const char *name, int af
-#define ADD_VARIABLES	name, af
-#define BUFLEN		1024
-#define NEED_H_ERRNO	1
+#define LOOKUP_TYPE struct hostent
+#define FUNCTION_NAME   gethostbyname2
+#define DATABASE_NAME   hosts
+#define ADD_PARAMS  const char *name, int af
+#define ADD_VARIABLES   name, af
+#define BUFLEN      1024
+#define NEED_H_ERRNO    1
 
-#define HANDLE_DIGITS_DOTS	1
-#define HAVE_AF			1
+#define HANDLE_DIGITS_DOTS  1
+#define HAVE_AF         1
 
 #include "../nss/getXXbyYY.c"

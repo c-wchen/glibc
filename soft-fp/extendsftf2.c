@@ -31,23 +31,22 @@
 #include "single.h"
 #include "quad.h"
 
-TFtype
-__extendsftf2 (SFtype a)
+TFtype __extendsftf2(SFtype a)
 {
-  FP_DECL_EX;
-  FP_DECL_S (A);
-  FP_DECL_Q (R);
-  TFtype r;
+    FP_DECL_EX;
+    FP_DECL_S(A);
+    FP_DECL_Q(R);
+    TFtype r;
 
-  FP_INIT_EXCEPTIONS;
-  FP_UNPACK_RAW_S (A, a);
+    FP_INIT_EXCEPTIONS;
+    FP_UNPACK_RAW_S(A, a);
 #if _FP_W_TYPE_SIZE < 64
-  FP_EXTEND (Q, S, 4, 1, R, A);
+    FP_EXTEND(Q, S, 4, 1, R, A);
 #else
-  FP_EXTEND (Q, S, 2, 1, R, A);
+    FP_EXTEND(Q, S, 2, 1, R, A);
 #endif
-  FP_PACK_RAW_Q (r, R);
-  FP_HANDLE_EXCEPTIONS;
+    FP_PACK_RAW_Q(r, R);
+    FP_HANDLE_EXCEPTIONS;
 
-  return r;
+    return r;
 }

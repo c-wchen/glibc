@@ -19,11 +19,10 @@
 #include "thread_dbP.h"
 
 
-td_err_e
-td_thr_setsigpending (const td_thrhandle_t *th, unsigned char n,
-		      const sigset_t *ss)
+td_err_e td_thr_setsigpending(const td_thrhandle_t *th, unsigned char n,
+                              const sigset_t *ss)
 {
-  /* XXX We have to figure out what has to be done.  */
-  LOG ("td_thr_setsigpending");
-  return TD_OK;
+    /* XXX We have to figure out what has to be done.  */
+    LOG("td_thr_setsigpending");
+    return TD_OK;
 }

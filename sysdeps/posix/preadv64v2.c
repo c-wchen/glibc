@@ -20,22 +20,21 @@
 #include <unistd.h>
 #include <sys/uio.h>
 
-ssize_t
-preadv64v2 (int fd, const struct iovec *vector, int count, off64_t offset,
-	    int flags)
+ssize_t preadv64v2(int fd, const struct iovec *vector, int count, off64_t offset,
+                   int flags)
 {
-  if (flags != 0)
-    {
-      __set_errno (ENOTSUP);
-      return -1;
+    if (flags != 0) {
+        __set_errno(ENOTSUP);
+        return -1;
     }
 
-  if (offset == -1)
-    return __readv (fd, vector, count);
-  else
-    return preadv64 (fd, vector, count, offset);
+    if (offset == -1) {
+        return __readv(fd, vector, count);
+    } else {
+        return preadv64(fd, vector, count, offset);
+    }
 }
 
 #ifdef __OFF_T_MATCHES_OFF64_T
-strong_alias (preadv64v2, preadv2)
+strong_alias(preadv64v2, preadv2)
 #endif

@@ -16,7 +16,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _REGEXP_H
-#define _REGEXP_H	1
+#define _REGEXP_H   1
 
 /* The contents of this header file were originally standardized in
    the Single Unix Specification, Issue 3 (1992).  In Issue 4 (1994)

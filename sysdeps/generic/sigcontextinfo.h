@@ -20,10 +20,9 @@
 
 /* In general we cannot provide any information.  */
 #define SIGCONTEXT struct sigcontext *
-static inline uintptr_t
-sigcontext_get_pc (const struct sigcontext *ctx)
+static inline uintptr_t sigcontext_get_pc(const struct sigcontext *ctx)
 {
-  return 0;
+    return 0;
 }
 
 #endif

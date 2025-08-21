@@ -23,18 +23,15 @@
    not contain ATTR_FLAG_SCHED_SET, and set it.  It won't be called at all
    if both bits are already set.  */
 
-static void
-collect_default_sched (struct pthread *pd)
+static void collect_default_sched(struct pthread *pd)
 {
-  if ((pd->flags & ATTR_FLAG_POLICY_SET) == 0)
-    {
-      pd->schedpolicy = INTERNAL_SYSCALL_CALL (sched_getscheduler, 0);
-      pd->flags |= ATTR_FLAG_POLICY_SET;
+    if ((pd->flags & ATTR_FLAG_POLICY_SET) == 0) {
+        pd->schedpolicy = INTERNAL_SYSCALL_CALL(sched_getscheduler, 0);
+        pd->flags |= ATTR_FLAG_POLICY_SET;
     }
 
-  if ((pd->flags & ATTR_FLAG_SCHED_SET) == 0)
-    {
-      INTERNAL_SYSCALL_CALL (sched_getparam, 0, &pd->schedparam);
-      pd->flags |= ATTR_FLAG_SCHED_SET;
+    if ((pd->flags & ATTR_FLAG_SCHED_SET) == 0) {
+        INTERNAL_SYSCALL_CALL(sched_getparam, 0, &pd->schedparam);
+        pd->flags |= ATTR_FLAG_SCHED_SET;
     }
 }

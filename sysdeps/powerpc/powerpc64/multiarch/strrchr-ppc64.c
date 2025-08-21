@@ -28,6 +28,6 @@
   __hidden_ver1(__strrchr_ppc, __GI_strrchr, __strrchr_ppc);
 #endif
 
-extern __typeof (strrchr) __strrchr_ppc attribute_hidden;
+extern __typeof(strrchr) __strrchr_ppc attribute_hidden;
 
 #include <string/strrchr.c>

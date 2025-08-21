@@ -18,8 +18,7 @@
 
 /* Return exit value on mremap failure with errno ERR.  */
 
-static int
-mremap_failure_exit (int err)
+static int mremap_failure_exit(int err)
 {
-  return EXIT_FAILURE;
+    return EXIT_FAILURE;
 }

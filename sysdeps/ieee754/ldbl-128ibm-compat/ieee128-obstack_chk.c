@@ -19,21 +19,21 @@
 #include <stdarg.h>
 #include <libio/libioP.h>
 
-extern int
-___ieee128_obstack_printf_chk (struct obstack *obstack, int flag,
-			       const char *format, ...)
+extern int ___ieee128_obstack_printf_chk(struct obstack *obstack, int flag,
+        const char *format, ...)
 {
-  va_list ap;
-  int done;
+    va_list ap;
+    int done;
 
-  unsigned int mode = PRINTF_LDBL_USES_FLOAT128;
-  if (flag > 0)
-    mode |= PRINTF_FORTIFY;
+    unsigned int mode = PRINTF_LDBL_USES_FLOAT128;
+    if (flag > 0) {
+        mode |= PRINTF_FORTIFY;
+    }
 
-  va_start (ap, format);
-  done = __obstack_vprintf_internal (obstack, format, ap, mode);
-  va_end (ap);
+    va_start(ap, format);
+    done = __obstack_vprintf_internal(obstack, format, ap, mode);
+    va_end(ap);
 
-  return done;
+    return done;
 }
-strong_alias (___ieee128_obstack_printf_chk, __obstack_printf_chkieee128)
+strong_alias(___ieee128_obstack_printf_chk, __obstack_printf_chkieee128)

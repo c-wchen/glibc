@@ -18,9 +18,8 @@
 
 #include <alloca.h>
 
-int
-__libc_alloca_cutoff (size_t size)
+int __libc_alloca_cutoff(size_t size)
 {
-  return size <= 65536;
+    return size <= 65536;
 }
-libc_hidden_def (__libc_alloca_cutoff)
+libc_hidden_def(__libc_alloca_cutoff)

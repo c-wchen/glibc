@@ -30,12 +30,11 @@
 #include <mach/machine/fp_reg.h>
 
 /* State of this thread when the signal was taken.  */
-struct sigcontext
-  {
+struct sigcontext {
     /* These first members are machine-independent.  */
 
-    int sc_onstack;		/* Nonzero if running on sigstack.  */
-    __sigset_t sc_mask;		/* Blocked signals to restore.  */
+    int sc_onstack;     /* Nonzero if running on sigstack.  */
+    __sigset_t sc_mask;     /* Blocked signals to restore.  */
 
     /* MiG reply port this thread is using.  */
     unsigned int sc_reply_port;
@@ -49,8 +48,8 @@ struct sigcontext
     /* All following members are machine-dependent.  The rest of this
        structure is written to be laid out identically to:
        {
-	 struct i386_thread_state basic;
-	 struct i386_float_state fpu;
+     struct i386_thread_state basic;
+     struct i386_float_state fpu;
        }
        trampoline.c knows this, so it must be changed if this changes.  */
 
@@ -66,37 +65,37 @@ struct sigcontext
     int sc_edi;
     int sc_esi;
     int sc_ebp;
-    int sc_esp;			/* Not used; sc_uesp is used instead.  */
+    int sc_esp;         /* Not used; sc_uesp is used instead.  */
     int sc_ebx;
     int sc_edx;
     int sc_ecx;
     int sc_eax;
 
-    int sc_eip;			/* Instruction pointer.  */
-    int sc_cs;			/* Code segment register.  */
+    int sc_eip;         /* Instruction pointer.  */
+    int sc_cs;          /* Code segment register.  */
 
-    int sc_efl;			/* Processor flags.  */
+    int sc_efl;         /* Processor flags.  */
 
-    int sc_uesp;		/* This stack pointer is used.  */
-    int sc_ss;			/* Stack segment register.  */
+    int sc_uesp;        /* This stack pointer is used.  */
+    int sc_ss;          /* Stack segment register.  */
 
     /* Following mimics struct i386_float_state.  Structures and symbolic
        values can be found in <mach/i386/fp_reg.h>.  */
 #define sc_i386_float_state sc_fpkind
-    int sc_fpkind;		/* FP_NO, FP_387, etc.  */
-    int sc_fpused;		/* If zero, ignore rest of float state.  */
+    int sc_fpkind;      /* FP_NO, FP_387, etc.  */
+    int sc_fpused;      /* If zero, ignore rest of float state.  */
     struct i386_fp_save sc_fpsave;
     struct i386_fp_regs sc_fpregs;
-    int sc_fpexcsr;		/* FPSR including exception bits.  */
+    int sc_fpexcsr;     /* FPSR including exception bits.  */
 
     struct i386_xfloat_state *xstate;
-  };
+};
 
 /* Traditional BSD names for some members.  */
-#define sc_sp	sc_uesp		/* Stack pointer.  */
-#define sc_fp	sc_ebp		/* Frame pointer.  */
-#define sc_pc	sc_eip		/* Process counter.  */
-#define sc_ps	sc_efl
+#define sc_sp   sc_uesp     /* Stack pointer.  */
+#define sc_fp   sc_ebp      /* Frame pointer.  */
+#define sc_pc   sc_eip      /* Process counter.  */
+#define sc_ps   sc_efl
 
 
 /* The deprecated sigcode values below are passed as an extra, non-portable
@@ -104,24 +103,24 @@ struct sigcontext
    instead, which use the standard POSIX signal codes.  */
 
 /* Codes for SIGFPE.  */
-#define FPE_INTOVF_TRAP		0x1 /* integer overflow */
-#define FPE_INTDIV_FAULT	0x2 /* integer divide by zero */
-#define FPE_FLTOVF_FAULT	0x3 /* floating overflow */
-#define FPE_FLTDIV_FAULT	0x4 /* floating divide by zero */
-#define FPE_FLTUND_FAULT	0x5 /* floating underflow */
-#define FPE_SUBRNG_FAULT	0x7 /* BOUNDS instruction failed */
-#define FPE_FLTDNR_FAULT	0x8 /* denormalized operand */
-#define FPE_FLTINX_FAULT	0x9 /* floating loss of precision */
-#define FPE_EMERR_FAULT		0xa /* mysterious emulation error 33 */
-#define FPE_EMBND_FAULT		0xb /* emulation BOUNDS instruction failed */
+#define FPE_INTOVF_TRAP     0x1 /* integer overflow */
+#define FPE_INTDIV_FAULT    0x2 /* integer divide by zero */
+#define FPE_FLTOVF_FAULT    0x3 /* floating overflow */
+#define FPE_FLTDIV_FAULT    0x4 /* floating divide by zero */
+#define FPE_FLTUND_FAULT    0x5 /* floating underflow */
+#define FPE_SUBRNG_FAULT    0x7 /* BOUNDS instruction failed */
+#define FPE_FLTDNR_FAULT    0x8 /* denormalized operand */
+#define FPE_FLTINX_FAULT    0x9 /* floating loss of precision */
+#define FPE_EMERR_FAULT     0xa /* mysterious emulation error 33 */
+#define FPE_EMBND_FAULT     0xb /* emulation BOUNDS instruction failed */
 
 /* Codes for SIGILL.  */
-#define ILL_INVOPR_FAULT	0x1 /* invalid operation */
-#define ILL_STACK_FAULT		0x2 /* fault on microkernel stack access */
-#define ILL_FPEOPR_FAULT	0x3 /* invalid floating operation */
+#define ILL_INVOPR_FAULT    0x1 /* invalid operation */
+#define ILL_STACK_FAULT     0x2 /* fault on microkernel stack access */
+#define ILL_FPEOPR_FAULT    0x3 /* invalid floating operation */
 
 /* Codes for SIGTRAP.  */
-#define DBG_SINGLE_TRAP		0x1 /* single step */
-#define DBG_BRKPNT_FAULT	0x2 /* breakpoint instruction */
+#define DBG_SINGLE_TRAP     0x1 /* single step */
+#define DBG_BRKPNT_FAULT    0x2 /* breakpoint instruction */
 
 #endif /* bits/sigcontext.h */

@@ -18,22 +18,21 @@
 #include <pthreadP.h>
 #include <shlib-compat.h>
 
-int
-__pthread_mutexattr_getpshared (const pthread_mutexattr_t *attr, int *pshared)
+int __pthread_mutexattr_getpshared(const pthread_mutexattr_t *attr, int *pshared)
 {
-  const struct pthread_mutexattr *iattr;
+    const struct pthread_mutexattr *iattr;
 
-  iattr = (const struct pthread_mutexattr *) attr;
+    iattr = (const struct pthread_mutexattr *) attr;
 
-  *pshared = ((iattr->mutexkind & PTHREAD_MUTEXATTR_FLAG_PSHARED) != 0
-	      ? PTHREAD_PROCESS_SHARED : PTHREAD_PROCESS_PRIVATE);
+    *pshared = ((iattr->mutexkind & PTHREAD_MUTEXATTR_FLAG_PSHARED) != 0
+                ? PTHREAD_PROCESS_SHARED : PTHREAD_PROCESS_PRIVATE);
 
-  return 0;
+    return 0;
 }
-versioned_symbol (libc, __pthread_mutexattr_getpshared,
-		  pthread_mutexattr_getpshared, GLIBC_2_34);
+versioned_symbol(libc, __pthread_mutexattr_getpshared,
+                 pthread_mutexattr_getpshared, GLIBC_2_34);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
-compat_symbol (libpthread, __pthread_mutexattr_getpshared,
-               pthread_mutexattr_getpshared, GLIBC_2_2);
+compat_symbol(libpthread, __pthread_mutexattr_getpshared,
+              pthread_mutexattr_getpshared, GLIBC_2_2);
 #endif

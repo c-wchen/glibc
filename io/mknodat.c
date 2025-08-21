@@ -18,13 +18,12 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-int
-__mknodat (int fd, const char *path, mode_t mode, dev_t dev)
+int __mknodat(int fd, const char *path, mode_t mode, dev_t dev)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (__mknodat)
-weak_alias (__mknodat, mknodat)
+libc_hidden_def(__mknodat)
+weak_alias(__mknodat, mknodat)
 
-stub_warning (mknodat)
+stub_warning(mknodat)

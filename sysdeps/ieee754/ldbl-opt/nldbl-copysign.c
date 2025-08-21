@@ -1,8 +1,7 @@
 #include "nldbl-compat.h"
 
 double
-attribute_hidden
-copysignl (double x, double y)
+attribute_hidden copysignl(double x, double y)
 {
-  return copysign (x, y);
+    return copysign(x, y);
 }

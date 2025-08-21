@@ -21,25 +21,26 @@
 #include <arm-features.h>
 
 
-int
-fesetexceptflag (const fexcept_t *flagp, int excepts)
+int fesetexceptflag(const fexcept_t *flagp, int excepts)
 {
-  fpu_control_t fpscr, new_fpscr;
+    fpu_control_t fpscr, new_fpscr;
 
-  /* Fail if a VFP unit isn't present unless nothing needs to be done.  */
-  if (!ARM_HAVE_VFP)
-    return (excepts != 0);
+    /* Fail if a VFP unit isn't present unless nothing needs to be done.  */
+    if (!ARM_HAVE_VFP) {
+        return (excepts != 0);
+    }
 
-  _FPU_GETCW (fpscr);
-  excepts &= FE_ALL_EXCEPT;
+    _FPU_GETCW(fpscr);
+    excepts &= FE_ALL_EXCEPT;
 
-  /* Set the desired exception mask.  */
-  new_fpscr = fpscr & ~excepts;
-  new_fpscr |= *flagp & excepts;
+    /* Set the desired exception mask.  */
+    new_fpscr = fpscr & ~excepts;
+    new_fpscr |= *flagp & excepts;
 
-  /* Write new exception flags if changed.  */
-  if (new_fpscr != fpscr)
-    _FPU_SETCW (new_fpscr);
+    /* Write new exception flags if changed.  */
+    if (new_fpscr != fpscr) {
+        _FPU_SETCW(new_fpscr);
+    }
 
-  return 0;
+    return 0;
 }

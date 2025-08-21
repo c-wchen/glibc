@@ -21,9 +21,8 @@
 #include <libm-alias-float.h>
 #include <round_to_integer.h>
 
-float
-__rintf (float x)
+float __rintf(float x)
 {
-  return round_to_integer_float (RINT, x);
+    return round_to_integer_float(RINT, x);
 }
-libm_alias_float (__rint, rint)
+libm_alias_float(__rint, rint)

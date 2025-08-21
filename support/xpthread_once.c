@@ -18,8 +18,7 @@
 
 #include <support/xthread.h>
 
-void
-xpthread_once (pthread_once_t *guard, void (*func) (void))
+void xpthread_once(pthread_once_t *guard, void (*func)(void))
 {
-  xpthread_check_return ("pthread_once", pthread_once (guard, func));
+    xpthread_check_return("pthread_once", pthread_once(guard, func));
 }

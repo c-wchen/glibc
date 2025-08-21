@@ -43,116 +43,117 @@
 #define CONTENT_SZ_MAX 32
 #define TEST_FILE_COUNT 10
 
-struct file_tracking
-{
-  FILE *file;
-  char *name;
-  int fd;
-  char *mfile;
+struct file_tracking {
+    FILE *file;
+    char *name;
+    int fd;
+    char *mfile;
 } files[TEST_FILE_COUNT];
 
-static void
-file_init (int file)
+static void file_init(int file)
 {
-  int fd = -1;
+    int fd = -1;
 
-  assert (file < TEST_FILE_COUNT);
+    assert(file < TEST_FILE_COUNT);
 
-  files[file] = (struct file_tracking) { .fd = -1, };
+    files[file] = (struct file_tracking) {
+        .fd = -1,
+    };
 
-  xclose (create_temp_file ("tst-fflush", &files[file].name));
+    xclose(create_temp_file("tst-fflush", &files[file].name));
 
-  fd = xopen (files[file].name, O_RDONLY, 0);
-  files[file].mfile = xmmap (NULL, CONTENT_SZ_MAX, PROT_READ, MAP_SHARED, fd);
-  xclose (fd);
+    fd = xopen(files[file].name, O_RDONLY, 0);
+    files[file].mfile = xmmap(NULL, CONTENT_SZ_MAX, PROT_READ, MAP_SHARED, fd);
+    xclose(fd);
 }
 
-static void
-file_cleanup (int file)
+static void file_cleanup(int file)
 {
-  free (files[file].name);
-  xmunmap (files[file].mfile, CONTENT_SZ_MAX);
-  files[file] = (struct file_tracking) { .fd = -1, };
+    free(files[file].name);
+    xmunmap(files[file].mfile, CONTENT_SZ_MAX);
+    files[file] = (struct file_tracking) {
+        .fd = -1,
+    };
 }
 
-static void
-file_changed (int to_check, const char *mode)
+static void file_changed(int to_check, const char *mode)
 {
-  struct stat stats = { };
-  char expected[CONTENT_SZ_MAX] = { };
+    struct stat stats = { };
+    char expected[CONTENT_SZ_MAX] = { };
 
-  verbose_printf ("Check that %s (%d) exactly contains the data we put in\n",
-		  files[to_check].name, to_check);
+    verbose_printf("Check that %s (%d) exactly contains the data we put in\n",
+                   files[to_check].name, to_check);
 
-  /* File should contain "N:M" where both N and M are one digit exactly.  */
-  snprintf (expected, sizeof (expected), "%d:%d", FILE_FLUSH_TYPE, to_check);
-  TEST_COMPARE_BLOB (files[to_check].mfile, sizeof (expected),
-		     expected, sizeof (expected));
+    /* File should contain "N:M" where both N and M are one digit exactly.  */
+    snprintf(expected, sizeof(expected), "%d:%d", FILE_FLUSH_TYPE, to_check);
+    TEST_COMPARE_BLOB(files[to_check].mfile, sizeof(expected),
+                      expected, sizeof(expected));
 
-  TEST_VERIFY (fstat (files[to_check].fd, &stats) >= 0);
-  TEST_VERIFY (stats.st_size == 3);
-  /* In read mode we expect to be at position 1, in write mode at position 3 */
-  TEST_COMPARE (lseek (files[to_check].fd, 0, SEEK_CUR),
-		mode[0] == 'r' ? 1 : 3);
+    TEST_VERIFY(fstat(files[to_check].fd, &stats) >= 0);
+    TEST_VERIFY(stats.st_size == 3);
+    /* In read mode we expect to be at position 1, in write mode at position 3 */
+    TEST_COMPARE(lseek(files[to_check].fd, 0, SEEK_CUR),
+                 mode[0] == 'r' ? 1 : 3);
 
-  if (support_record_failure_is_failed ())
-    FAIL_EXIT1 ("exiting due to previous failure");
-
-  /* Not reached if the data doesn't match.  */
-}
-
-static void
-file_flush (const char *mode)
-{
-  for (int i = 0; i < TEST_FILE_COUNT; i++)
-    {
-      files[i].file = xfopen (files[i].name, mode);
-      files[i].fd = fileno (files[i].file);
+    if (support_record_failure_is_failed()) {
+        FAIL_EXIT1("exiting due to previous failure");
     }
 
-  /* Print a unique identifier in each file, that is not too long nor contain
-     new line to not trigger _IO_OVERFLOW/_IO_SYNC.  */
-  for (int i = 0; i < TEST_FILE_COUNT; i++)
-    {
-      if (mode[0] == 'r')
-	fgetc (files[i].file);
-      else
-	fprintf (files[i].file, "%d:%d", FILE_FLUSH_TYPE, i);
-    }
-
-  if (!FILE_FLUSH_TYPE)
-    TEST_VERIFY (fflush (NULL) == 0);
-  else
-    for (int i = 0; i < TEST_FILE_COUNT; i++)
-      TEST_VERIFY (fflush (files[i].file) == 0);
-
-  for (int i = 0; i < TEST_FILE_COUNT; i++)
-    {
-      verbose_printf ("Check that file %s has been modified after fflush\n",
-		      files[i].name);
-      file_changed (i, mode);
-    }
-
-  for (int i = 0; i < TEST_FILE_COUNT; i++)
-    xfclose (files[i].file);
+    /* Not reached if the data doesn't match.  */
 }
 
-static int
-do_test (void)
+static void file_flush(const char *mode)
 {
-  for (int i = 0; i < TEST_FILE_COUNT; i++)
-    file_init (i);
+    for (int i = 0; i < TEST_FILE_COUNT; i++) {
+        files[i].file = xfopen(files[i].name, mode);
+        files[i].fd = fileno(files[i].file);
+    }
 
-  verbose_printf ("Checking fflush(" S_FLUSH_TYPE "), WRITE mode\n");
-  file_flush ("w");
+    /* Print a unique identifier in each file, that is not too long nor contain
+       new line to not trigger _IO_OVERFLOW/_IO_SYNC.  */
+    for (int i = 0; i < TEST_FILE_COUNT; i++) {
+        if (mode[0] == 'r') {
+            fgetc(files[i].file);
+        } else {
+            fprintf(files[i].file, "%d:%d", FILE_FLUSH_TYPE, i);
+        }
+    }
 
-  verbose_printf ("Checking fflush(" S_FLUSH_TYPE "), READWRITE mode\n");
-  file_flush ("r+");
+    if (!FILE_FLUSH_TYPE) {
+        TEST_VERIFY(fflush(NULL) == 0);
+    } else
+        for (int i = 0; i < TEST_FILE_COUNT; i++) {
+            TEST_VERIFY(fflush(files[i].file) == 0);
+        }
 
-  for (int i = 0; i < TEST_FILE_COUNT; i++)
-    file_cleanup (i);
+    for (int i = 0; i < TEST_FILE_COUNT; i++) {
+        verbose_printf("Check that file %s has been modified after fflush\n",
+                       files[i].name);
+        file_changed(i, mode);
+    }
 
-  return 0;
+    for (int i = 0; i < TEST_FILE_COUNT; i++) {
+        xfclose(files[i].file);
+    }
+}
+
+static int do_test(void)
+{
+    for (int i = 0; i < TEST_FILE_COUNT; i++) {
+        file_init(i);
+    }
+
+    verbose_printf("Checking fflush(" S_FLUSH_TYPE "), WRITE mode\n");
+    file_flush("w");
+
+    verbose_printf("Checking fflush(" S_FLUSH_TYPE "), READWRITE mode\n");
+    file_flush("r+");
+
+    for (int i = 0; i < TEST_FILE_COUNT; i++) {
+        file_cleanup(i);
+    }
+
+    return 0;
 }
 
 #include <support/test-driver.c>

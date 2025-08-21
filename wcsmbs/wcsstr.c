@@ -19,9 +19,9 @@
 #include <wchar.h>
 #include <string.h>
 
-#define AVAILABLE(h, h_l, j, n_l)					\
-  (((j) + (n_l) <= (h_l))						\
-   || ((h_l) += __wcsnlen ((void*)((h) + (h_l)), (n_l) + 128),		\
+#define AVAILABLE(h, h_l, j, n_l)                   \
+  (((j) + (n_l) <= (h_l))                       \
+   || ((h_l) += __wcsnlen ((void*)((h) + (h_l)), (n_l) + 128),      \
        (j) + (n_l) <= (h_l)))
 #include "wcs-two-way.h"
 
@@ -29,24 +29,25 @@
 # define WCSSTR wcsstr
 #endif
 
-wchar_t *
-WCSSTR (const wchar_t *haystack, const wchar_t *needle)
+wchar_t *WCSSTR(const wchar_t *haystack, const wchar_t *needle)
 {
-  /* Ensure haystack length is at least as long as needle length.
-     Since a match may occur early on in a huge haystack, use strnlen
-     and read ahead a few cachelines for improved performance.  */
-  size_t ne_len = __wcslen (needle);
-  size_t hs_len = __wcsnlen (haystack, ne_len | 128);
-  if (hs_len < ne_len)
-    return NULL;
+    /* Ensure haystack length is at least as long as needle length.
+       Since a match may occur early on in a huge haystack, use strnlen
+       and read ahead a few cachelines for improved performance.  */
+    size_t ne_len = __wcslen(needle);
+    size_t hs_len = __wcsnlen(haystack, ne_len | 128);
+    if (hs_len < ne_len) {
+        return NULL;
+    }
 
-  /* Check whether we have a match.  This improves performance since we
-     avoid initialization overheads.  */
-  if (__wmemcmp (haystack, needle, ne_len) == 0)
-    return (wchar_t *) haystack;
+    /* Check whether we have a match.  This improves performance since we
+       avoid initialization overheads.  */
+    if (__wmemcmp(haystack, needle, ne_len) == 0) {
+        return (wchar_t *) haystack;
+    }
 
-  return two_way_short_needle (haystack, hs_len, needle, ne_len);
+    return two_way_short_needle(haystack, hs_len, needle, ne_len);
 }
 /* This alias is for backward compatibility with drafts of the ISO C
    standard.  Unfortunately the Unix(TM) standard requires this name.  */
-weak_alias (wcsstr, wcswcs)
+weak_alias(wcsstr, wcswcs)

@@ -23,22 +23,21 @@
 
 /* Make sure blank lines don't trigger memory corruption.  This doesn't happen
    for all targets though, so it's a best effort test BZ #18887.  */
-static int
-do_test (void)
+static int do_test(void)
 {
-  FILE *fp;
+    FILE *fp;
 
-  fp = tmpfile ();
-  fputs ("\n \n/foo\\040dir /bar\\040dir auto bind \t \n", fp);
-  rewind (fp);
+    fp = tmpfile();
+    fputs("\n \n/foo\\040dir /bar\\040dir auto bind \t \n", fp);
+    rewind(fp);
 
-  /* The corruption happens here ...  */
-  getmntent (fp);
-  /* ... but triggers here.  */
-  endmntent (fp);
+    /* The corruption happens here ...  */
+    getmntent(fp);
+    /* ... but triggers here.  */
+    endmntent(fp);
 
-  /* If the test failed, we would crash, and not hit this point.  */
-  return 0;
+    /* If the test failed, we would crash, and not hit this point.  */
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

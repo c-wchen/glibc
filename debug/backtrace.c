@@ -24,13 +24,12 @@
 #include <sframe.h>
 #endif
 
-struct trace_arg
-{
-  void **array;
-  struct unwind_link *unwind_link;
-  _Unwind_Word cfa;
-  int cnt;
-  int size;
+struct trace_arg {
+    void **array;
+    struct unwind_link *unwind_link;
+    _Unwind_Word cfa;
+    int cnt;
+    int size;
 };
 
 #if ENABLE_SFRAME
@@ -58,81 +57,83 @@ struct trace_arg
    __builtin_frame_address and the __getXX helper functions will not
    return the right addresses.  */
 
-static inline int __attribute__ ((always_inline))
-do_sframe_backtrace (void **array, int size)
+static inline int __attribute__((always_inline))
+do_sframe_backtrace(void **array, int size)
 {
-  frame frame;
-  frame.pc = __getPC ();
-  frame.sp = __getSP ();
-  frame.fp = (_Unwind_Ptr) __builtin_frame_address (0);
-  return __stacktrace_sframe (array, size, &frame);
+    frame frame;
+    frame.pc = __getPC();
+    frame.sp = __getSP();
+    frame.fp = (_Unwind_Ptr) __builtin_frame_address(0);
+    return __stacktrace_sframe(array, size, &frame);
 }
 #endif
 
-static _Unwind_Reason_Code
-backtrace_helper (struct _Unwind_Context *ctx, void *a)
+static _Unwind_Reason_Code backtrace_helper(struct _Unwind_Context *ctx, void *a)
 {
-  struct trace_arg *arg = a;
+    struct trace_arg *arg = a;
 
-  /* We are first called with address in the __backtrace function.
-     Skip it.  */
-  if (arg->cnt != -1)
-    {
-      arg->array[arg->cnt]
-	= (void *) UNWIND_LINK_PTR (arg->unwind_link, _Unwind_GetIP) (ctx);
-      if (arg->cnt > 0)
-	arg->array[arg->cnt]
-	  = unwind_arch_adjustment (arg->array[arg->cnt - 1],
-				    arg->array[arg->cnt]);
+    /* We are first called with address in the __backtrace function.
+       Skip it.  */
+    if (arg->cnt != -1) {
+        arg->array[arg->cnt]
+            = (void *) UNWIND_LINK_PTR(arg->unwind_link, _Unwind_GetIP)(ctx);
+        if (arg->cnt > 0)
+            arg->array[arg->cnt]
+                = unwind_arch_adjustment(arg->array[arg->cnt - 1],
+                                         arg->array[arg->cnt]);
 
-      /* Check whether we make any progress.  */
-      _Unwind_Word cfa
-	= UNWIND_LINK_PTR (arg->unwind_link, _Unwind_GetCFA) (ctx);
+        /* Check whether we make any progress.  */
+        _Unwind_Word cfa
+            = UNWIND_LINK_PTR(arg->unwind_link, _Unwind_GetCFA)(ctx);
 
-      if (arg->cnt > 0 && arg->array[arg->cnt - 1] == arg->array[arg->cnt]
-	 && cfa == arg->cfa)
-       return _URC_END_OF_STACK;
-      arg->cfa = cfa;
+        if (arg->cnt > 0 && arg->array[arg->cnt - 1] == arg->array[arg->cnt]
+            && cfa == arg->cfa) {
+            return _URC_END_OF_STACK;
+        }
+        arg->cfa = cfa;
     }
-  if (++arg->cnt == arg->size)
-    return _URC_END_OF_STACK;
-  return _URC_NO_REASON;
+    if (++arg->cnt == arg->size) {
+        return _URC_END_OF_STACK;
+    }
+    return _URC_NO_REASON;
 }
 
-int
-__backtrace (void **array, int size)
+int __backtrace(void **array, int size)
 {
-  struct trace_arg arg =
-    {
-     .array = array,
-     .unwind_link = __libc_unwind_link_get (),
-     .cfa = 0,
-     .size = size,
-     .cnt = -1
+    struct trace_arg arg = {
+        .array = array,
+        .unwind_link = __libc_unwind_link_get(),
+        .cfa = 0,
+        .size = size,
+        .cnt = -1
     };
 
-  if (size <= 0)
-    return 0;
+    if (size <= 0) {
+        return 0;
+    }
 
 #if ENABLE_SFRAME
-  /* Try first the SFrame backtracer.  */
-  int cnt = do_sframe_backtrace (array, size);
-  if (cnt > 1)
-    return cnt;
+    /* Try first the SFrame backtracer.  */
+    int cnt = do_sframe_backtrace(array, size);
+    if (cnt > 1) {
+        return cnt;
+    }
 #endif
 
-  /* Try the dwarf unwinder.  */
-  if (arg.unwind_link == NULL)
-    return 0;
+    /* Try the dwarf unwinder.  */
+    if (arg.unwind_link == NULL) {
+        return 0;
+    }
 
-  UNWIND_LINK_PTR (arg.unwind_link, _Unwind_Backtrace)
+    UNWIND_LINK_PTR(arg.unwind_link, _Unwind_Backtrace)
     (backtrace_helper, &arg);
 
-  /* _Unwind_Backtrace seems to put NULL address above
-     _start.  Fix it up here.  */
-  if (arg.cnt > 1 && arg.array[arg.cnt - 1] == NULL)
-    --arg.cnt;
-  return arg.cnt != -1 ? arg.cnt : 0;
+    /* _Unwind_Backtrace seems to put NULL address above
+       _start.  Fix it up here.  */
+    if (arg.cnt > 1 && arg.array[arg.cnt - 1] == NULL) {
+        --arg.cnt;
+    }
+    return arg.cnt != -1 ? arg.cnt : 0;
 }
-weak_alias (__backtrace, backtrace)
-libc_hidden_def (__backtrace)
+weak_alias(__backtrace, backtrace)
+libc_hidden_def(__backtrace)

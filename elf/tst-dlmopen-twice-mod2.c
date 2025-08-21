@@ -19,32 +19,30 @@
 #include <ctype.h>
 #include <stdio.h>
 
-static void __attribute__ ((constructor))
-init (void)
+static void __attribute__((constructor))
+init(void)
 {
-  puts ("info: tst-dlmopen-twice-mod2.so loaded");
-  fflush (stdout);
+    puts("info: tst-dlmopen-twice-mod2.so loaded");
+    fflush(stdout);
 }
 
-static void __attribute__ ((destructor))
-fini (void)
+static void __attribute__((destructor))
+fini(void)
 {
-  puts ("info: tst-dlmopen-twice-mod2.so about to be unloaded");
-  fflush (stdout);
+    puts("info: tst-dlmopen-twice-mod2.so about to be unloaded");
+    fflush(stdout);
 }
 
-int
-run_check (void)
+int run_check(void)
 {
-  puts ("info: about to call isalpha");
-  fflush (stdout);
+    puts("info: about to call isalpha");
+    fflush(stdout);
 
-  volatile char ch = 'a';
-  if (!isalpha (ch))
-    {
-      puts ("error: isalpha ('a') is not true");
-      fflush (stdout);
-      return 1;
+    volatile char ch = 'a';
+    if (!isalpha(ch)) {
+        puts("error: isalpha ('a') is not true");
+        fflush(stdout);
+        return 1;
     }
-  return 0;
+    return 0;
 }

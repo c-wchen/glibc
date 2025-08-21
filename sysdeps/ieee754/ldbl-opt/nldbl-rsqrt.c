@@ -1,8 +1,7 @@
 #include "nldbl-compat.h"
 
 double
-attribute_hidden
-rsqrtl (double x)
+attribute_hidden rsqrtl(double x)
 {
-  return rsqrt (x);
+    return rsqrt(x);
 }

@@ -31,7 +31,7 @@
    uniquely identifies a thread only while this thread is running; a
    TID can be reused once a thread has exited, even if the thread is
    not detached and has not been joined.  */
-extern __pid_t gettid (void) __THROW;
+extern __pid_t gettid(void) __THROW;
 
 #ifdef __has_include
 # if __has_include ("linux/close_range.h")

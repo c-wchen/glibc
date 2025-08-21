@@ -20,10 +20,10 @@
 #include <fpu_control.h>
 #include <arm-features.h>
 
-int
-fegetmode (femode_t *modep)
+int fegetmode(femode_t *modep)
 {
-  if (ARM_HAVE_VFP)
-    _FPU_GETCW (*modep);
-  return 0;
+    if (ARM_HAVE_VFP) {
+        _FPU_GETCW(*modep);
+    }
+    return 0;
 }

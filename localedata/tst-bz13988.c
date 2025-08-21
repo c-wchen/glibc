@@ -25,29 +25,29 @@
 
 #define PD "\xd9\xab"
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  if (setlocale (LC_ALL, "fa_IR.UTF-8") == NULL)
-    FAIL_EXIT1 ("setlocale (LC_ALL, \"fa_IR.UTF-8\")");
+    if (setlocale(LC_ALL, "fa_IR.UTF-8") == NULL) {
+        FAIL_EXIT1("setlocale (LC_ALL, \"fa_IR.UTF-8\")");
+    }
 
-  char s[] = "+" PD "e";
-  FILE *f = fmemopen (s, strlen (s), "r");
+    char s[] = "+" PD "e";
+    FILE *f = fmemopen(s, strlen(s), "r");
 
-  /* Avoid: "warning: 'I' flag used with '%f' gnu_scanf format [-Wformat=]";
-     cf. GCC PR c/119514.  */
-  DIAG_PUSH_NEEDS_COMMENT;
-  DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wformat");
+    /* Avoid: "warning: 'I' flag used with '%f' gnu_scanf format [-Wformat=]";
+       cf. GCC PR c/119514.  */
+    DIAG_PUSH_NEEDS_COMMENT;
+    DIAG_IGNORE_NEEDS_COMMENT(4.9, "-Wformat");
 
-  /* This should fail to parse a floating-point number, and leave 'e' in the
-     input.  */
-  double d;
-  TEST_VERIFY_EXIT (fscanf (f, "%Ilf", &d) == 0);
-  TEST_VERIFY_EXIT (fgetc (f) == 'e');
+    /* This should fail to parse a floating-point number, and leave 'e' in the
+       input.  */
+    double d;
+    TEST_VERIFY_EXIT(fscanf(f, "%Ilf", &d) == 0);
+    TEST_VERIFY_EXIT(fgetc(f) == 'e');
 
-  DIAG_POP_NEEDS_COMMENT;
+    DIAG_POP_NEEDS_COMMENT;
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

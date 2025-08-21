@@ -32,154 +32,146 @@
 
 #if __GNUC_PREREQ (5, 0)
 /* Called by large_buffer_checks below.  */
-static void
-large_buffer_check (int fd, char *large_buffer, size_t large_buffer_size)
+static void large_buffer_check(int fd, char *large_buffer, size_t large_buffer_size)
 {
-  xlseek (fd, 0, SEEK_SET);
-  ssize_t ret = getdents64 (fd, large_buffer, large_buffer_size);
-  if (ret < 0)
-    FAIL_EXIT1 ("getdents64 for buffer of %zu bytes failed: %m",
-                large_buffer_size);
-  if (ret < offsetof (struct dirent64, d_name))
-    FAIL_EXIT1 ("getdents64 for buffer of %zu returned small value %zd",
-                large_buffer_size, ret);
+    xlseek(fd, 0, SEEK_SET);
+    ssize_t ret = getdents64(fd, large_buffer, large_buffer_size);
+    if (ret < 0)
+        FAIL_EXIT1("getdents64 for buffer of %zu bytes failed: %m",
+                   large_buffer_size);
+    if (ret < offsetof(struct dirent64, d_name))
+        FAIL_EXIT1("getdents64 for buffer of %zu returned small value %zd",
+                   large_buffer_size, ret);
 }
 
 /* Bug 24740: Make sure that the system call argument is adjusted
    properly for the int type.  A large value should stay a large
    value, and not wrap around to something small, causing the system
    call to fail with EINVAL.  */
-static void
-large_buffer_checks (int fd)
+static void large_buffer_checks(int fd)
 {
-  size_t large_buffer_size;
-  if (!__builtin_add_overflow (UINT_MAX, 2, &large_buffer_size))
-    {
-      int flags = MAP_ANONYMOUS | MAP_PRIVATE;
+    size_t large_buffer_size;
+    if (!__builtin_add_overflow(UINT_MAX, 2, &large_buffer_size)) {
+        int flags = MAP_ANONYMOUS | MAP_PRIVATE;
 #ifdef MAP_NORESERVE
-      flags |= MAP_NORESERVE;
+        flags |= MAP_NORESERVE;
 #endif
-      void *large_buffer = mmap (NULL, large_buffer_size,
-                                 PROT_READ | PROT_WRITE, flags, -1, 0);
-      if (large_buffer == MAP_FAILED)
-        printf ("warning: could not allocate %zu bytes of memory,"
-                " subtests skipped\n", large_buffer_size);
-      else
-        {
-          large_buffer_check (fd, large_buffer, INT_MAX);
-          large_buffer_check (fd, large_buffer, (size_t) INT_MAX + 1);
-          large_buffer_check (fd, large_buffer, (size_t) INT_MAX + 2);
-          large_buffer_check (fd, large_buffer, UINT_MAX);
-          large_buffer_check (fd, large_buffer, (size_t) UINT_MAX + 1);
-          large_buffer_check (fd, large_buffer, (size_t) UINT_MAX + 2);
-          xmunmap (large_buffer, large_buffer_size);
+        void *large_buffer = mmap(NULL, large_buffer_size,
+                                  PROT_READ | PROT_WRITE, flags, -1, 0);
+        if (large_buffer == MAP_FAILED)
+            printf("warning: could not allocate %zu bytes of memory,"
+                   " subtests skipped\n", large_buffer_size);
+        else {
+            large_buffer_check(fd, large_buffer, INT_MAX);
+            large_buffer_check(fd, large_buffer, (size_t) INT_MAX + 1);
+            large_buffer_check(fd, large_buffer, (size_t) INT_MAX + 2);
+            large_buffer_check(fd, large_buffer, UINT_MAX);
+            large_buffer_check(fd, large_buffer, (size_t) UINT_MAX + 1);
+            large_buffer_check(fd, large_buffer, (size_t) UINT_MAX + 2);
+            xmunmap(large_buffer, large_buffer_size);
         }
     }
 }
 
-static void
-do_test_large_size (void)
+static void do_test_large_size(void)
 {
-  int fd = xopen (".", O_RDONLY | O_DIRECTORY, 0);
-  TEST_VERIFY (fd >= 0);
-  large_buffer_checks (fd);
+    int fd = xopen(".", O_RDONLY | O_DIRECTORY, 0);
+    TEST_VERIFY(fd >= 0);
+    large_buffer_checks(fd);
 
-  xclose (fd);
+    xclose(fd);
 }
 #else
-static void
-do_test_large_size (void)
+static void do_test_large_size(void)
 {
 }
 #endif
 
-static void
-do_test_by_size (size_t buffer_size)
+static void do_test_by_size(size_t buffer_size)
 {
-  /* The test compares the iteration order with readdir64.  */
-  DIR *reference = opendir (".");
-  TEST_VERIFY_EXIT (reference != NULL);
+    /* The test compares the iteration order with readdir64.  */
+    DIR *reference = opendir(".");
+    TEST_VERIFY_EXIT(reference != NULL);
 
-  int fd = xopen (".", O_RDONLY | O_DIRECTORY, 0);
-  TEST_VERIFY (fd >= 0);
+    int fd = xopen(".", O_RDONLY | O_DIRECTORY, 0);
+    TEST_VERIFY(fd >= 0);
 
-  char *data = xposix_memalign (_Alignof (struct dirent64), buffer_size);
+    char *data = xposix_memalign(_Alignof(struct dirent64), buffer_size);
 
-  /* Perform two passes, with a rewind operating between passes.  */
-  for (int pass = 0; pass < 2; ++pass)
-    {
-      /* Check that we need to fill the buffer multiple times.  */
-      int read_count = 0;
+    /* Perform two passes, with a rewind operating between passes.  */
+    for (int pass = 0; pass < 2; ++pass) {
+        /* Check that we need to fill the buffer multiple times.  */
+        int read_count = 0;
 
-      while (true)
-        {
-          ssize_t ret = getdents64 (fd, data, buffer_size);
-          if (ret < 0)
-            FAIL_EXIT1 ("getdents64: %m");
-          if (ret == 0)
-            break;
-          ++read_count;
+        while (true) {
+            ssize_t ret = getdents64(fd, data, buffer_size);
+            if (ret < 0) {
+                FAIL_EXIT1("getdents64: %m");
+            }
+            if (ret == 0) {
+                break;
+            }
+            ++read_count;
 
-          char *current = data;
-          char *end = data + ret;
-          while (current != end)
-            {
-              struct dirent64 entry;
-              memcpy (&entry, current, sizeof (entry));
-              /* Truncate overlong strings.  */
-              entry.d_name[sizeof (entry.d_name) - 1] = '\0';
-              TEST_VERIFY (strlen (entry.d_name) < sizeof (entry.d_name) - 1);
+            char *current = data;
+            char *end = data + ret;
+            while (current != end) {
+                struct dirent64 entry;
+                memcpy(&entry, current, sizeof(entry));
+                /* Truncate overlong strings.  */
+                entry.d_name[sizeof(entry.d_name) - 1] = '\0';
+                TEST_VERIFY(strlen(entry.d_name) < sizeof(entry.d_name) - 1);
 
-              errno = 0;
-              struct dirent64 *refentry = readdir64 (reference);
-              if (refentry == NULL && errno == 0)
-                FAIL_EXIT1 ("readdir64 failed too early, at: %s",
-                            entry.d_name);
-              else if (refentry == NULL)
-                FAIL_EXIT1 ("readdir64: %m");
+                errno = 0;
+                struct dirent64 *refentry = readdir64(reference);
+                if (refentry == NULL && errno == 0)
+                    FAIL_EXIT1("readdir64 failed too early, at: %s",
+                               entry.d_name);
+                else if (refentry == NULL) {
+                    FAIL_EXIT1("readdir64: %m");
+                }
 
-              TEST_COMPARE_STRING (entry.d_name, refentry->d_name);
-              TEST_COMPARE (entry.d_ino, refentry->d_ino);
-              TEST_COMPARE (entry.d_off, refentry->d_off);
-              TEST_COMPARE (entry.d_type, refentry->d_type);
+                TEST_COMPARE_STRING(entry.d_name, refentry->d_name);
+                TEST_COMPARE(entry.d_ino, refentry->d_ino);
+                TEST_COMPARE(entry.d_off, refentry->d_off);
+                TEST_COMPARE(entry.d_type, refentry->d_type);
 
-              /* Offset zero is reserved for the first entry.  */
-              TEST_VERIFY (entry.d_off != 0);
+                /* Offset zero is reserved for the first entry.  */
+                TEST_VERIFY(entry.d_off != 0);
 
-              TEST_VERIFY_EXIT (entry.d_reclen <= end - current);
-              current += entry.d_reclen;
+                TEST_VERIFY_EXIT(entry.d_reclen <= end - current);
+                current += entry.d_reclen;
             }
         }
 
-      /* We expect to have reached the end of the stream.  */
-      errno = 0;
-      TEST_VERIFY (readdir64 (reference) == NULL);
-      TEST_COMPARE (errno, 0);
+        /* We expect to have reached the end of the stream.  */
+        errno = 0;
+        TEST_VERIFY(readdir64(reference) == NULL);
+        TEST_COMPARE(errno, 0);
 
-      /* direntries_read has been called more than once.  */
-      TEST_VERIFY (read_count > 0);
+        /* direntries_read has been called more than once.  */
+        TEST_VERIFY(read_count > 0);
 
-      /* Rewind both directory streams.  */
-      xlseek (fd, 0, SEEK_SET);
-      rewinddir (reference);
+        /* Rewind both directory streams.  */
+        xlseek(fd, 0, SEEK_SET);
+        rewinddir(reference);
     }
 
-  free (data);
+    free(data);
 
-  xclose (fd);
-  closedir (reference);
+    xclose(fd);
+    closedir(reference);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  do_test_by_size (512);
-  do_test_by_size (1024);
-  do_test_by_size (4096);
+    do_test_by_size(512);
+    do_test_by_size(1024);
+    do_test_by_size(4096);
 
-  do_test_large_size ();
+    do_test_large_size();
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

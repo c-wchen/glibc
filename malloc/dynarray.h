@@ -98,27 +98,24 @@
 #include <stddef.h>
 #include <string.h>
 
-struct dynarray_header
-{
-  size_t used;
-  size_t allocated;
-  void *array;
+struct dynarray_header {
+    size_t used;
+    size_t allocated;
+    void *array;
 };
 
 /* Marker used in the allocated member to indicate that an error was
    encountered.  */
-static inline size_t
-__dynarray_error_marker (void)
+static inline size_t __dynarray_error_marker(void)
 {
-  return -1;
+    return -1;
 }
 
 /* Internal function.  See the has_failed function in
    dynarray-skeleton.c.  */
-static inline bool
-__dynarray_error (struct dynarray_header *list)
+static inline bool __dynarray_error(struct dynarray_header *list)
 {
-  return list->allocated == __dynarray_error_marker ();
+    return list->allocated == __dynarray_error_marker();
 }
 
 /* Internal function.  Enlarge the dynamically allocated area of the
@@ -126,8 +123,8 @@ __dynarray_error (struct dynarray_header *list)
    the scratch area (which is not heap-allocated and must not be
    freed).  ELEMENT_SIZE is the size, in bytes, of one element.
    Return false on failure, true on success.  */
-bool __libc_dynarray_emplace_enlarge (struct dynarray_header *,
-                                      void *scratch, size_t element_size);
+bool __libc_dynarray_emplace_enlarge(struct dynarray_header *,
+                                     void *scratch, size_t element_size);
 
 /* Internal function.  Enlarge the dynamically allocated area of the
    array to make room for at least SIZE elements (which must be larger
@@ -135,19 +132,18 @@ bool __libc_dynarray_emplace_enlarge (struct dynarray_header *,
    pointer to the scratch area (which is not heap-allocated and must
    not be freed).  ELEMENT_SIZE is the size, in bytes, of one element.
    Return false on failure, true on success.  */
-bool __libc_dynarray_resize (struct dynarray_header *, size_t size,
-                             void *scratch, size_t element_size);
+bool __libc_dynarray_resize(struct dynarray_header *, size_t size,
+                            void *scratch, size_t element_size);
 
 /* Internal function.  Like __libc_dynarray_resize, but clear the new
    part of the dynamic array.  */
-bool __libc_dynarray_resize_clear (struct dynarray_header *, size_t size,
-                                   void *scratch, size_t element_size);
+bool __libc_dynarray_resize_clear(struct dynarray_header *, size_t size,
+                                  void *scratch, size_t element_size);
 
 /* Internal type.  */
-struct dynarray_finalize_result
-{
-  void *array;
-  size_t length;
+struct dynarray_finalize_result {
+    void *array;
+    size_t length;
 };
 
 /* Internal function.  Copy the dynamically-allocated area to an
@@ -157,22 +153,22 @@ struct dynarray_finalize_result
    are written to *RESULT.  On failure, false is returned.  The caller
    has to take care of some of the memory management; this function is
    expected to be called from dynarray-skeleton.c.  */
-bool __libc_dynarray_finalize (struct dynarray_header *list, void *scratch,
-                               size_t element_size,
-                               struct dynarray_finalize_result *result);
+bool __libc_dynarray_finalize(struct dynarray_header *list, void *scratch,
+                              size_t element_size,
+                              struct dynarray_finalize_result *result);
 
 
 /* Internal function.  Terminate the process after an index error.
    SIZE is the number of elements of the dynamic array.  INDEX is the
    lookup index which triggered the failure.  */
-_Noreturn void __libc_dynarray_at_failure (size_t size, size_t index);
+_Noreturn void __libc_dynarray_at_failure(size_t size, size_t index);
 
 #ifndef _ISOMAC
-libc_hidden_proto (__libc_dynarray_emplace_enlarge)
-libc_hidden_proto (__libc_dynarray_resize)
-libc_hidden_proto (__libc_dynarray_resize_clear)
-libc_hidden_proto (__libc_dynarray_finalize)
-libc_hidden_proto (__libc_dynarray_at_failure)
+libc_hidden_proto(__libc_dynarray_emplace_enlarge)
+libc_hidden_proto(__libc_dynarray_resize)
+libc_hidden_proto(__libc_dynarray_resize_clear)
+libc_hidden_proto(__libc_dynarray_finalize)
+libc_hidden_proto(__libc_dynarray_at_failure)
 #endif
 
 #endif /* _DYNARRAY_H */

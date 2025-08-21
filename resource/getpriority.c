@@ -22,13 +22,12 @@
    (see <sys/resource.h>); if WHO is zero, the current process, process group,
    or user (as specified by WHO) is used.  A lower priority number means higher
    priority.  Priorities range from PRIO_MIN to PRIO_MAX.  */
-int
-__getpriority (enum __priority_which which, id_t who)
+int __getpriority(enum __priority_which which, id_t who)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (__getpriority)
-weak_alias (__getpriority, getpriority)
+libc_hidden_def(__getpriority)
+weak_alias(__getpriority, getpriority)
 
-stub_warning (getpriority)
+stub_warning(getpriority)

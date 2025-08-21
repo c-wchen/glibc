@@ -20,9 +20,9 @@
 #include <math.h>
 
 FLOAT
-M_DECL_FUNC (__carg) (CFLOAT x)
+M_DECL_FUNC(__carg)(CFLOAT x)
 {
-  return M_SUF (__atan2) (__imag__ x, __real__ x);
+    return M_SUF(__atan2)(__imag__ x, __real__ x);
 }
 
-declare_mgen_alias (__carg, carg)
+declare_mgen_alias(__carg, carg)

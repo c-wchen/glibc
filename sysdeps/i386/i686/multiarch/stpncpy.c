@@ -28,7 +28,7 @@
 # define SYMBOL_NAME stpncpy
 # include "ifunc-sse2-ssse3.h"
 
-libc_ifunc_redirected (__redirect_stpncpy, __stpncpy, IFUNC_SELECTOR ());
+libc_ifunc_redirected(__redirect_stpncpy, __stpncpy, IFUNC_SELECTOR());
 
-weak_alias (__stpncpy, stpncpy)
+weak_alias(__stpncpy, stpncpy)
 #endif

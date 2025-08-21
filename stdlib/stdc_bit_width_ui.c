@@ -19,7 +19,7 @@
 #include <stdbit.h>
 
 unsigned int
-(stdc_bit_width_ui) (unsigned int x)
+(stdc_bit_width_ui)(unsigned int x)
 {
-  return stdc_bit_width_ui (x);
+    return stdc_bit_width_ui(x);
 }

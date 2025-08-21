@@ -19,29 +19,31 @@
 #define _FILE_OFFSET_BITS 64
 #include "tst-fallocate-common.c"
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  ssize_t ret;
+    ssize_t ret;
 
-  ret = do_test_with_offset (0);
-  if (ret == 1)
-    return 1;
+    ret = do_test_with_offset(0);
+    if (ret == 1) {
+        return 1;
+    }
 
-  off_t base_offset = UINT32_MAX + 2048LL;
-  ret = do_test_with_offset (base_offset);
-  if (ret == 1)
-    return 1;
+    off_t base_offset = UINT32_MAX + 2048LL;
+    ret = do_test_with_offset(base_offset);
+    if (ret == 1) {
+        return 1;
+    }
 
-  struct stat st;
-  if (fstat (temp_fd, &st) == -1)
-    FAIL_EXIT1 ("fstat on temporary file failed: %m");
+    struct stat st;
+    if (fstat(temp_fd, &st) == -1) {
+        FAIL_EXIT1("fstat on temporary file failed: %m");
+    }
 
-  /* The file size should >= base_offset plus bytes written.  */
-  off_t expected_value = base_offset + ret;
-  if (st.st_size < expected_value)
-    FAIL_EXIT1 ("file size less than expected (%jd > %jd)",
-		(intmax_t) expected_value, (intmax_t) st.st_size);
+    /* The file size should >= base_offset plus bytes written.  */
+    off_t expected_value = base_offset + ret;
+    if (st.st_size < expected_value)
+        FAIL_EXIT1("file size less than expected (%jd > %jd)",
+                   (intmax_t) expected_value, (intmax_t) st.st_size);
 
-  return 0;
+    return 0;
 }

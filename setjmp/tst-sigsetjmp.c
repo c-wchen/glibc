@@ -21,23 +21,21 @@
 #include <signal.h>
 #include <setjmp.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  sigjmp_buf sj;
-  sigset_t m;
+    sigjmp_buf sj;
+    sigset_t m;
 
-  sigemptyset (&m);
-  sigprocmask (SIG_SETMASK, &m, NULL);
-  if (sigsetjmp (sj, 0) == 0)
-    {
-      sigaddset (&m, SIGUSR1);
-      sigprocmask (SIG_SETMASK, &m, NULL);
-      siglongjmp (sj, 1);
-      return EXIT_FAILURE;
+    sigemptyset(&m);
+    sigprocmask(SIG_SETMASK, &m, NULL);
+    if (sigsetjmp(sj, 0) == 0) {
+        sigaddset(&m, SIGUSR1);
+        sigprocmask(SIG_SETMASK, &m, NULL);
+        siglongjmp(sj, 1);
+        return EXIT_FAILURE;
     }
-  sigprocmask (SIG_SETMASK, NULL, &m);
-  return sigismember (&m, SIGUSR1) ? EXIT_SUCCESS : EXIT_FAILURE;
+    sigprocmask(SIG_SETMASK, NULL, &m);
+    return sigismember(&m, SIGUSR1) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
 #define TEST_FUNCTION do_test ()

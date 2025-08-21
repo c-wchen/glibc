@@ -38,143 +38,121 @@ static pthread_cond_t cv = PTHREAD_COND_INITIALIZER;
 static sem_t stop;
 static int consumer_stop = 0;
 
-static void *
-writer (void *arg)
+static void *writer(void *arg)
 {
-  int s;
+    int s;
 
-  do
-    {
-      if (pthread_rwlock_wrlock (&r) != 0)
-	{
-	  puts ("wrlock failed");
-	  exit (EXIT_FAILURE);
-	}
-      if (pthread_rwlock_unlock (&r) != 0)
-	{
-	  puts ("unlock failed");
-	  exit (EXIT_FAILURE);
-	}
-      sem_getvalue (&stop, &s);
-    }
-  while (s == 0);
-  return NULL;
+    do {
+        if (pthread_rwlock_wrlock(&r) != 0) {
+            puts("wrlock failed");
+            exit(EXIT_FAILURE);
+        }
+        if (pthread_rwlock_unlock(&r) != 0) {
+            puts("unlock failed");
+            exit(EXIT_FAILURE);
+        }
+        sem_getvalue(&stop, &s);
+    } while (s == 0);
+    return NULL;
 }
 
-static void *
-reader_producer (void *arg)
+static void *reader_producer(void *arg)
 {
-  int s;
+    int s;
 
-  do
-    {
-      if (pthread_rwlock_rdlock (&r) != 0)
-	{
-	  puts ("rdlock reader failed");
-	  exit (EXIT_FAILURE);
-	}
+    do {
+        if (pthread_rwlock_rdlock(&r) != 0) {
+            puts("rdlock reader failed");
+            exit(EXIT_FAILURE);
+        }
 
-      sem_getvalue (&stop, &s);
+        sem_getvalue(&stop, &s);
 
-      pthread_mutex_lock (&m);
-      if (s != 0)
-	consumer_stop = 1;
-      pthread_cond_signal (&cv);
-      pthread_mutex_unlock (&m);
+        pthread_mutex_lock(&m);
+        if (s != 0) {
+            consumer_stop = 1;
+        }
+        pthread_cond_signal(&cv);
+        pthread_mutex_unlock(&m);
 
-      if (pthread_rwlock_unlock (&r) != 0)
-	{
-	  puts ("unlock reader failed");
-	  exit (EXIT_FAILURE);
-	}
-    }
-  while (s == 0);
-  puts ("producer finished");
-  return NULL;
+        if (pthread_rwlock_unlock(&r) != 0) {
+            puts("unlock reader failed");
+            exit(EXIT_FAILURE);
+        }
+    } while (s == 0);
+    puts("producer finished");
+    return NULL;
 }
 
-static void *
-reader_consumer (void *arg)
+static void *reader_consumer(void *arg)
 {
-  int s;
+    int s;
 
-  do
-    {
-      if (pthread_rwlock_rdlock (&r) != 0)
-	{
-	  puts ("rdlock reader failed");
-	  exit (EXIT_FAILURE);
-	}
+    do {
+        if (pthread_rwlock_rdlock(&r) != 0) {
+            puts("rdlock reader failed");
+            exit(EXIT_FAILURE);
+        }
 
-      pthread_mutex_lock (&m);
-      s = consumer_stop;
-      if (s == 0)
-	pthread_cond_wait (&cv, &m);
-      pthread_mutex_unlock (&m);
+        pthread_mutex_lock(&m);
+        s = consumer_stop;
+        if (s == 0) {
+            pthread_cond_wait(&cv, &m);
+        }
+        pthread_mutex_unlock(&m);
 
-      if (pthread_rwlock_unlock (&r) != 0)
-	{
-	  puts ("unlock reader failed");
-	  exit (EXIT_FAILURE);
-	}
-    }
-  while (s == 0);
-    puts ("consumer finished");
-  return NULL;
+        if (pthread_rwlock_unlock(&r) != 0) {
+            puts("unlock reader failed");
+            exit(EXIT_FAILURE);
+        }
+    } while (s == 0);
+    puts("consumer finished");
+    return NULL;
 }
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  pthread_t w1, w2, rp, rc;
+    pthread_t w1, w2, rp, rc;
 
-  if (pthread_create (&w1, NULL, writer, NULL) != 0)
-    {
-      puts ("create failed");
-      return 1;
+    if (pthread_create(&w1, NULL, writer, NULL) != 0) {
+        puts("create failed");
+        return 1;
     }
-  if (pthread_create (&w2, NULL, writer, NULL) != 0)
-    {
-      puts ("create failed");
-      return 1;
+    if (pthread_create(&w2, NULL, writer, NULL) != 0) {
+        puts("create failed");
+        return 1;
     }
-  if (pthread_create (&rc, NULL, reader_consumer, NULL) != 0)
-    {
-      puts ("create failed");
-      return 1;
+    if (pthread_create(&rc, NULL, reader_consumer, NULL) != 0) {
+        puts("create failed");
+        return 1;
     }
-  if (pthread_create (&rp, NULL, reader_producer, NULL) != 0)
-    {
-      puts ("create failed");
-      return 1;
+    if (pthread_create(&rp, NULL, reader_producer, NULL) != 0) {
+        puts("create failed");
+        return 1;
     }
 
-  sleep (2);
-  sem_post (&stop);
+    sleep(2);
+    sem_post(&stop);
 
-  if (pthread_join (w1, NULL) != 0)
-    {
-      puts ("w1 join failed");
-      return 1;
+    if (pthread_join(w1, NULL) != 0) {
+        puts("w1 join failed");
+        return 1;
     }
-  if (pthread_join (w2, NULL) != 0)
-    {
-      puts ("w2 join failed");
-      return 1;
+    if (pthread_join(w2, NULL) != 0) {
+        puts("w2 join failed");
+        return 1;
     }
-  if (pthread_join (rp, NULL) != 0)
-    {
-      puts ("reader_producer join failed");
-      return 1;
+    if (pthread_join(rp, NULL) != 0) {
+        puts("reader_producer join failed");
+        return 1;
     }
-  if (pthread_join (rc, NULL) != 0)
-    {
-      puts ("reader_consumer join failed");
-      return 1;
+    if (pthread_join(rc, NULL) != 0) {
+        puts("reader_consumer join failed");
+        return 1;
     }
 
-  return 0;
+    return 0;
 }
 
 

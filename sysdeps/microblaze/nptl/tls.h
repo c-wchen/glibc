@@ -40,10 +40,9 @@
 /* Get the thread descriptor definition.  */
 # include <nptl/descr.h>
 
-typedef struct
-{
-  dtv_t *dtv;
-  void *private;
+typedef struct {
+    dtv_t *dtv;
+    void *private;
 } tcbhead_t;
 
 #define READ_THREAD_POINTER() \

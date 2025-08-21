@@ -33,40 +33,36 @@
 # define CHAR char
 #endif /* WIDE */
 
-IMPL (STRNLEN, 1)
+IMPL(STRNLEN, 1)
 
-typedef size_t (*proto_t) (const CHAR *, size_t);
+typedef size_t (*proto_t)(const CHAR *, size_t);
 
-static size_t
-__attribute__ ((noinline, noclone))
-do_strnlen (parameter_t a, parameter_t b)
+static size_t __attribute__((noinline, noclone))
+do_strnlen(parameter_t a, parameter_t b)
 {
-  return CALL (&a, a.p, b.len);
+    return CALL(&a, a.p, b.len);
 }
 
-static int
-test_main (void)
+static int test_main(void)
 {
-  test_init ();
+    test_init();
 
-  size_t size = page_size / sizeof (CHAR);
-  parameter_t src = { { 0 }, buf2 };
-  parameter_t c = { { size }, (void *) (uintptr_t) 'a' };
+    size_t size = page_size / sizeof(CHAR);
+    parameter_t src = { { 0 }, buf2 };
+    parameter_t c = { { size }, (void *)(uintptr_t) 'a' };
 
-  int ret = 0;
-  FOR_EACH_IMPL (impl, 0)
-    {
-      src.fn = impl->fn;
-      size_t res = do_strnlen (src, c);
-      if (res != size)
-	{
-	  error (0, 0, "Wrong result in function %s: 0x%x != 0x%x",
-		 impl->name, res, size);
-	  ret = 1;
-	}
+    int ret = 0;
+    FOR_EACH_IMPL(impl, 0) {
+        src.fn = impl->fn;
+        size_t res = do_strnlen(src, c);
+        if (res != size) {
+            error(0, 0, "Wrong result in function %s: 0x%x != 0x%x",
+                  impl->name, res, size);
+            ret = 1;
+        }
     }
 
-  return ret ? EXIT_FAILURE : EXIT_SUCCESS;
+    return ret ? EXIT_FAILURE : EXIT_SUCCESS;
 }
 
 #include <support/test-driver.c>

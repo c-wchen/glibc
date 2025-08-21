@@ -16,9 +16,9 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef	_HURD_SIGNAL_H
+#ifndef _HURD_SIGNAL_H
 
-#define	_HURD_SIGNAL_H	1
+#define _HURD_SIGNAL_H  1
 #include <features.h>
 
 #define __need_size_t
@@ -37,14 +37,13 @@
 #include <bits/sigaction.h>
 #include <hurd/msg.h>
 
-#include <setjmp.h>		/* For `jmp_buf'.  */
+#include <setjmp.h>     /* For `jmp_buf'.  */
 #include <spin-lock.h>
-struct hurd_signal_preemptor;	/* <hurd/sigpreempt.h> */
+struct hurd_signal_preemptor;   /* <hurd/sigpreempt.h> */
 
 
 /* Full details of a signal.  */
-struct hurd_signal_detail
-  {
+struct hurd_signal_detail {
     /* Codes from origination Mach exception_raise message.  */
     integer_t exc, exc_code;
     long_integer_t exc_subcode;
@@ -52,24 +51,23 @@ struct hurd_signal_detail
     long_integer_t code;
     /* Error code as passed or extracted from exception codes.  */
     error_t error;
-  };
+};
 
 
 /* Per-thread signal state.  */
 
-struct hurd_sigstate
-  {
+struct hurd_sigstate {
     spin_lock_t critical_section_lock; /* Held if in critical section.  */
 
-    spin_lock_t lock;		/* Locks most of the rest of the structure.  */
+    spin_lock_t lock;       /* Locks most of the rest of the structure.  */
 
     /* The signal state holds a reference on the thread port.  */
     thread_t thread;
 
     struct hurd_sigstate *next; /* Linked-list of thread sigstates.  */
 
-    sigset_t blocked;		/* What signals are blocked.  */
-    sigset_t pending;		/* Pending signals, possibly blocked.  */
+    sigset_t blocked;       /* What signals are blocked.  */
+    sigset_t pending;       /* Pending signals, possibly blocked.  */
 
     /* Signal handlers.  ACTIONS[0] is used to mark the threads with POSIX
        semantics: if sa_handler is SIG_IGN instead of SIG_DFL, this thread
@@ -109,9 +107,9 @@ struct hurd_sigstate
     struct hurd_userlink *active_resources;
 
     /* These are locked normally.  */
-    int cancel;			/* Flag set by hurd_thread_cancel.  */
-    void (*cancel_hook) (void);	/* Called on cancellation.  */
-  };
+    int cancel;         /* Flag set by hurd_thread_cancel.  */
+    void (*cancel_hook)(void);  /* Called on cancellation.  */
+};
 
 /* Linked list of states of all threads whose state has been asked for.  */
 
@@ -121,16 +119,16 @@ extern struct hurd_sigstate *_hurd_sigstates;
    the thread, one is created, and the thread gains a reference.  If
    the given thread is MACH_PORT_NULL, return the global sigstate.  */
 
-extern struct hurd_sigstate *_hurd_thread_sigstate (thread_t);
+extern struct hurd_sigstate *_hurd_thread_sigstate(thread_t);
 
 /* Get the sigstate of the current thread.
    This uses a per-thread variable to optimize the lookup.  */
 
-extern struct hurd_sigstate *_hurd_self_sigstate (void)
-     /* This declaration tells the compiler that the value is constant.
-	We assume this won't be called twice from the same stack frame
-	by different threads.  */
-     __attribute__ ((__const__));
+extern struct hurd_sigstate *_hurd_self_sigstate(void)
+/* This declaration tells the compiler that the value is constant.
+We assume this won't be called twice from the same stack frame
+by different threads.  */
+__attribute__((__const__));
 
 /* Process-wide signal state.  */
 
@@ -138,25 +136,24 @@ extern struct hurd_sigstate *_hurd_global_sigstate;
 
 /* Mark the given thread as a process-wide signal receiver.  */
 
-extern void _hurd_sigstate_set_global_rcv (struct hurd_sigstate *ss);
+extern void _hurd_sigstate_set_global_rcv(struct hurd_sigstate *ss);
 
 /* A thread can either use its own action vector and pending signal set
    or use the global ones, depending on whether it has been marked as a
    global receiver. The accessors below take that into account.  */
 
-extern void _hurd_sigstate_lock (struct hurd_sigstate *ss);
-extern struct sigaction *_hurd_sigstate_actions (struct hurd_sigstate *ss);
-extern sigset_t _hurd_sigstate_pending (const struct hurd_sigstate *ss);
-extern void _hurd_sigstate_unlock (struct hurd_sigstate *ss);
+extern void _hurd_sigstate_lock(struct hurd_sigstate *ss);
+extern struct sigaction *_hurd_sigstate_actions(struct hurd_sigstate *ss);
+extern sigset_t _hurd_sigstate_pending(const struct hurd_sigstate *ss);
+extern void _hurd_sigstate_unlock(struct hurd_sigstate *ss);
 
 /* Used by libpthread to remove stale sigstate structures.  */
-extern void _hurd_sigstate_delete (thread_t thread);
+extern void _hurd_sigstate_delete(thread_t thread);
 
 struct machine_thread_all_state;
-extern mach_port_t
-_hurdsig_abort_rpcs (struct hurd_sigstate *ss, int signo, int sigthread,
-		     struct machine_thread_all_state *state, int *state_change,
-		     void (*reply) (void));
+extern mach_port_t _hurdsig_abort_rpcs(struct hurd_sigstate *ss, int signo, int sigthread,
+                                       struct machine_thread_all_state *state, int *state_change,
+                                       void (*reply)(void));
 
 /* Thread listening on our message port; also called the "signal thread".  */
 
@@ -182,8 +179,8 @@ extern int _hurd_core_limit;
    that the handler can run, and the whole critical section be tried again, to
    avoid unexpectingly exposing EINTR to the application.  */
 
-extern void *_hurd_critical_section_lock (void);
-extern void _hurd_critical_section_unlock (void *our_lock);
+extern void *_hurd_critical_section_lock(void);
+extern void _hurd_critical_section_unlock(void *our_lock);
 
 /* Convenient macros for simple uses of critical sections.
    These two must be used as a pair at the same C scoping level.  */
@@ -200,28 +197,28 @@ extern void _hurd_critical_section_unlock (void *our_lock);
 /* Initialize the signal code, and start the signal thread.
    Arguments give the "init ints" from exec_startup.  */
 
-extern void _hurdsig_init (const int *intarray, size_t intarraysize);
+extern void _hurdsig_init(const int *intarray, size_t intarraysize);
 
 /* Initialize proc server-assisted fault recovery for the signal thread.  */
 
-extern void _hurdsig_fault_init (void);
+extern void _hurdsig_fault_init(void);
 
 /* Raise a signal as described by SIGNO an DETAIL, on the thread whose
    sigstate SS points to.  If SS is a null pointer, this instead affects
    the calling thread.  */
 
-extern int _hurd_raise_signal (struct hurd_sigstate *ss, int signo,
-			       const struct hurd_signal_detail *detail);
+extern int _hurd_raise_signal(struct hurd_sigstate *ss, int signo,
+                              const struct hurd_signal_detail *detail);
 
 /* Translate a Mach exception into a signal (machine-dependent).  */
 
-extern void _hurd_exception2signal (struct hurd_signal_detail *detail,
-				    int *signo);
+extern void _hurd_exception2signal(struct hurd_signal_detail *detail,
+                                   int *signo);
 
 /* Translate a Mach exception into a signal with a legacy sigcode.  */
 
-extern void _hurd_exception2signal_legacy (struct hurd_signal_detail *detail,
-					   int *signo);
+extern void _hurd_exception2signal_legacy(struct hurd_signal_detail *detail,
+        int *signo);
 
 
 /* Make the thread described by SS take the signal described by SIGNO and
@@ -230,12 +227,12 @@ extern void _hurd_exception2signal_legacy (struct hurd_signal_detail *detail,
    considered delivered, sends a sig_post reply message on REPLY_PORT
    indicating success.  SS is not locked.  */
 
-extern void _hurd_internal_post_signal (struct hurd_sigstate *ss,
-					int signo,
-					struct hurd_signal_detail *detail,
-					mach_port_t reply_port,
-					mach_msg_type_name_t reply_port_type,
-					int untraced);
+extern void _hurd_internal_post_signal(struct hurd_sigstate *ss,
+                                       int signo,
+                                       struct hurd_signal_detail *detail,
+                                       mach_port_t reply_port,
+                                       mach_msg_type_name_t reply_port_type,
+                                       int untraced);
 
 /* Set up STATE and SS to handle signal SIGNO by running HANDLER.  If
    RPC_WAIT is nonzero, the thread needs to wait for a pending RPC to
@@ -244,41 +241,40 @@ extern void _hurd_internal_post_signal (struct hurd_sigstate *ss,
    stack the handler will use, and which describes the state of the thread
    encoded in STATE before running the handler).  */
 
-extern struct sigcontext *
-_hurd_setup_sighandler (struct hurd_sigstate *ss, const struct sigaction *action,
-			__sighandler_t handler,
-			int signo, struct hurd_signal_detail *detail,
-			int rpc_wait, struct machine_thread_all_state *state);
+extern struct sigcontext *_hurd_setup_sighandler(struct hurd_sigstate *ss, const struct sigaction *action,
+        __sighandler_t handler,
+        int signo, struct hurd_signal_detail *detail,
+        int rpc_wait, struct machine_thread_all_state *state);
 
 /* Function run by the signal thread to receive from the signal port.  */
 
-extern void *_hurd_msgport_receive (void *arg);
+extern void *_hurd_msgport_receive(void *arg);
 
 /* Set up STATE with a thread state that, when resumed, is
    like `longjmp (_hurd_sigthread_fault_env, 1)'.  */
 
-extern void _hurd_initialize_fault_recovery_state (void *state);
+extern void _hurd_initialize_fault_recovery_state(void *state);
 
 /* Set up STATE to do the equivalent of `longjmp (ENV, VAL);'.  */
 
-extern void _hurd_longjmp_thread_state (void *state, jmp_buf env, int value);
+extern void _hurd_longjmp_thread_state(void *state, jmp_buf env, int value);
 
 /* Function run for SIGINFO when its action is SIG_DFL and the current
    process is the session leader.  */
 
-extern void _hurd_siginfo_handler (int);
+extern void _hurd_siginfo_handler(int);
 
 /* Replacement for mach_msg used in RPCs to provide Hurd interruption
    semantics.  Args are all the same as for mach_msg.  intr-rpc.h arranges
    for this version to be used automatically by the RPC stubs the library
    builds in place of the normal mach_msg. */
-error_t _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
-				 mach_msg_option_t option,
-				 mach_msg_size_t send_size,
-				 mach_msg_size_t rcv_size,
-				 mach_port_t rcv_name,
-				 mach_msg_timeout_t timeout,
-				 mach_port_t notify);
+error_t _hurd_intr_rpc_mach_msg(mach_msg_header_t *msg,
+                                mach_msg_option_t option,
+                                mach_msg_size_t send_size,
+                                mach_msg_size_t rcv_size,
+                                mach_port_t rcv_name,
+                                mach_msg_timeout_t timeout,
+                                mach_port_t notify);
 
 
 /* Milliseconds to wait for an interruptible RPC to return after
@@ -288,7 +284,7 @@ extern mach_msg_timeout_t _hurd_interrupted_rpc_timeout;
 
 
 /* Mask of signals that cannot be caught, blocked, or ignored.  */
-#define	_SIG_CANT_MASK	(__sigmask (SIGSTOP) | __sigmask (SIGKILL))
+#define _SIG_CANT_MASK  (__sigmask (SIGSTOP) | __sigmask (SIGKILL))
 
 /* Do an RPC to a process's message port.
 
@@ -313,34 +309,34 @@ extern mach_msg_timeout_t _hurd_interrupted_rpc_timeout;
    either of these cases, we retry the entire operation, discarding the old
    message and reference ports and fetch them anew.  */
 
-#define HURD_MSGPORT_RPC(fetch_msgport_expr,				      \
-			 fetch_refport_expr, dealloc_refport,		      \
-			 rpc_expr) 					      \
-({									      \
-    error_t __err;							      \
-    mach_port_t msgport, refport = MACH_PORT_NULL;			      \
-    do									      \
-      {									      \
-	/* Get the message port.  */					      \
-	__err = (error_t) (fetch_msgport_expr);				      \
-	if (__err)							      \
-	  break;							      \
-	/* Get the reference port.  */					      \
-	__err = (error_t) (fetch_refport_expr);				      \
-	if (__err)							      \
-	  {								      \
-	    /* Couldn't get it; deallocate MSGPORT and fail.  */	      \
-	    __mach_port_deallocate (__mach_task_self (), msgport);	      \
-	    break;							      \
-	  }								      \
-	__err = (error_t) (rpc_expr);					      \
-	__mach_port_deallocate (__mach_task_self (), msgport);		      \
-	if ((dealloc_refport) && refport != MACH_PORT_NULL)		      \
-	  __mach_port_deallocate (__mach_task_self (), refport);    	      \
-      } while (__err == MACH_SEND_INVALID_DEST				      \
-	       || __err == MIG_SERVER_DIED);				      \
-    __err;								      \
+#define HURD_MSGPORT_RPC(fetch_msgport_expr,                      \
+             fetch_refport_expr, dealloc_refport,             \
+             rpc_expr)                        \
+({                                        \
+    error_t __err;                                \
+    mach_port_t msgport, refport = MACH_PORT_NULL;                \
+    do                                        \
+      {                                       \
+    /* Get the message port.  */                          \
+    __err = (error_t) (fetch_msgport_expr);                   \
+    if (__err)                                \
+      break;                                  \
+    /* Get the reference port.  */                        \
+    __err = (error_t) (fetch_refport_expr);                   \
+    if (__err)                                \
+      {                                   \
+        /* Couldn't get it; deallocate MSGPORT and fail.  */          \
+        __mach_port_deallocate (__mach_task_self (), msgport);        \
+        break;                                \
+      }                                   \
+    __err = (error_t) (rpc_expr);                         \
+    __mach_port_deallocate (__mach_task_self (), msgport);            \
+    if ((dealloc_refport) && refport != MACH_PORT_NULL)           \
+      __mach_port_deallocate (__mach_task_self (), refport);              \
+      } while (__err == MACH_SEND_INVALID_DEST                    \
+           || __err == MIG_SERVER_DIED);                      \
+    __err;                                    \
 })
 
 
-#endif	/* hurd/signal.h */
+#endif  /* hurd/signal.h */

@@ -20,32 +20,31 @@
 #include <fenv_private.h>
 #include <shlib-compat.h>
 
-int
-__feupdateenv (const fenv_t *envp)
+int __feupdateenv(const fenv_t *envp)
 {
-  fexcept_t tmp;
+    fexcept_t tmp;
 
-  /* Save current exceptions.  */
-  __fenv_stfsr (tmp);
-  tmp &= FE_ALL_EXCEPT;
+    /* Save current exceptions.  */
+    __fenv_stfsr(tmp);
+    tmp &= FE_ALL_EXCEPT;
 
-  /* Install new environment.  */
-  __fesetenv (envp);
+    /* Install new environment.  */
+    __fesetenv(envp);
 
-  /* Raise the saved exception.  Incidentally for us the implementation
-     defined format of the values in objects of type fexcept_t is the
-     same as the ones specified using the FE_* constants.  */
-  __feraiseexcept ((int) tmp);
+    /* Raise the saved exception.  Incidentally for us the implementation
+       defined format of the values in objects of type fexcept_t is the
+       same as the ones specified using the FE_* constants.  */
+    __feraiseexcept((int) tmp);
 
-  /* Success.  */
-  return 0;
+    /* Success.  */
+    return 0;
 }
 
 #if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
-strong_alias (__feupdateenv, __old_feupdateenv)
-compat_symbol (libm, __old_feupdateenv, feupdateenv, GLIBC_2_1);
+strong_alias(__feupdateenv, __old_feupdateenv)
+compat_symbol(libm, __old_feupdateenv, feupdateenv, GLIBC_2_1);
 #endif
 
-libm_hidden_def (__feupdateenv)
-libm_hidden_ver (__feupdateenv, feupdateenv)
-versioned_symbol (libm, __feupdateenv, feupdateenv, GLIBC_2_2);
+libm_hidden_def(__feupdateenv)
+libm_hidden_ver(__feupdateenv, feupdateenv)
+versioned_symbol(libm, __feupdateenv, feupdateenv, GLIBC_2_2);

@@ -27,27 +27,24 @@
    | MREMAP_FIXED \
    | MREMAP_DONTUNMAP)
 
-void *
-__mremap (void *addr, size_t old_len, size_t new_len, int flags, ...)
+void *__mremap(void *addr, size_t old_len, size_t new_len, int flags, ...)
 {
-  va_list va;
-  void *new_addr = NULL;
+    va_list va;
+    void *new_addr = NULL;
 
-  if (flags & ~(MREMAP_KNOWN_BITS))
-    {
-      __set_errno (EINVAL);
-      return MAP_FAILED;
+    if (flags & ~(MREMAP_KNOWN_BITS)) {
+        __set_errno(EINVAL);
+        return MAP_FAILED;
     }
 
-  if (flags & (MREMAP_FIXED | MREMAP_DONTUNMAP))
-    {
-      va_start (va, flags);
-      new_addr = va_arg (va, void *);
-      va_end (va);
+    if (flags & (MREMAP_FIXED | MREMAP_DONTUNMAP)) {
+        va_start(va, flags);
+        new_addr = va_arg(va, void *);
+        va_end(va);
     }
 
-  return (void *) INLINE_SYSCALL_CALL (mremap, addr, old_len, new_len, flags,
-				       new_addr);
+    return (void *) INLINE_SYSCALL_CALL(mremap, addr, old_len, new_len, flags,
+                                        new_addr);
 }
-libc_hidden_def (__mremap)
-weak_alias (__mremap, mremap)
+libc_hidden_def(__mremap)
+weak_alias(__mremap, mremap)

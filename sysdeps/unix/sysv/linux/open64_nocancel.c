@@ -23,26 +23,24 @@
 
 #include <not-cancel.h>
 
-int
-__open64_nocancel (const char *file, int oflag, ...)
+int __open64_nocancel(const char *file, int oflag, ...)
 {
-  int mode = 0;
+    int mode = 0;
 
-  if (__OPEN_NEEDS_MODE (oflag))
-    {
-      va_list arg;
-      va_start (arg, oflag);
-      mode = va_arg (arg, int);
-      va_end (arg);
+    if (__OPEN_NEEDS_MODE(oflag)) {
+        va_list arg;
+        va_start(arg, oflag);
+        mode = va_arg(arg, int);
+        va_end(arg);
     }
 
-  return INLINE_SYSCALL_CALL (openat, AT_FDCWD, file, oflag | O_LARGEFILE,
-			      mode);
+    return INLINE_SYSCALL_CALL(openat, AT_FDCWD, file, oflag | O_LARGEFILE,
+                               mode);
 }
 
-hidden_def (__open64_nocancel)
+hidden_def(__open64_nocancel)
 
 #ifdef __OFF_T_MATCHES_OFF64_T
-strong_alias (__open64_nocancel, __open_nocancel)
-hidden_def (__open_nocancel)
+strong_alias(__open64_nocancel, __open_nocancel)
+hidden_def(__open_nocancel)
 #endif

@@ -19,34 +19,31 @@
 #include <stdlib.h>
 #include <string.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  const char *name;
-  int retval = 0;
+    const char *name;
+    int retval = 0;
 
-  /* Set TMPDIR to a value other than the traditional /tmp.  */
-  setenv ("TMPDIR", "/usr", 1);
+    /* Set TMPDIR to a value other than the traditional /tmp.  */
+    setenv("TMPDIR", "/usr", 1);
 
-  name = tmpnam (NULL);
+    name = tmpnam(NULL);
 
-  printf ("name = %s\n", name);
+    printf("name = %s\n", name);
 
-  /* Make sure the name is not based on the value in TMPDIR.  */
-  if (strncmp (name, "/usr", 4) == 0)
-    {
-      puts ("error: `tmpnam' used TMPDIR value");
-      retval = 1;
+    /* Make sure the name is not based on the value in TMPDIR.  */
+    if (strncmp(name, "/usr", 4) == 0) {
+        puts("error: `tmpnam' used TMPDIR value");
+        retval = 1;
     }
 
-  /* Test that it is in the directory denoted by P_tmpdir.  */
-  if (strncmp (name, P_tmpdir, sizeof (P_tmpdir) - 1) != 0)
-    {
-      puts ("error: `tmpnam' return value not in P_tmpdir directory");
-      retval = 1;
+    /* Test that it is in the directory denoted by P_tmpdir.  */
+    if (strncmp(name, P_tmpdir, sizeof(P_tmpdir) - 1) != 0) {
+        puts("error: `tmpnam' return value not in P_tmpdir directory");
+        retval = 1;
     }
 
-  return retval;
+    return retval;
 }
 
 #define TEST_FUNCTION do_test ()

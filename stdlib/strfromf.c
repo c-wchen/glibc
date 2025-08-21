@@ -18,8 +18,8 @@
 
 #include <bits/floatn.h>
 
-#define FLOAT		float
-#define STRFROM		strfromf
+#define FLOAT       float
+#define STRFROM     strfromf
 
 #if __HAVE_FLOAT32 && !__HAVE_DISTINCT_FLOAT32
 # define strfromf32 __hide_strfromf32
@@ -34,5 +34,5 @@
 #include "strfrom-skeleton.c"
 
 #if __HAVE_FLOAT32 && !__HAVE_DISTINCT_FLOAT32
-weak_alias (strfromf, strfromf32)
+weak_alias(strfromf, strfromf32)
 #endif

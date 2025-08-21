@@ -25,18 +25,17 @@
 /* The directory that contains shared POSIX objects.  */
 #define SHMDIR _PATH_DEV "shm/"
 
-struct shmdir_name
-{
-  /* The combined prefix/name.  The sizeof includes the terminating
-     NUL byte.  4 bytes are needed for the optional "sem." prefix.  */
-  char name[sizeof (SHMDIR) + 4 + NAME_MAX];
+struct shmdir_name {
+    /* The combined prefix/name.  The sizeof includes the terminating
+       NUL byte.  4 bytes are needed for the optional "sem." prefix.  */
+    char name[sizeof(SHMDIR) + 4 + NAME_MAX];
 };
 
 /* Sets RESULT->name to the constructed name and returns 0 on success,
    or -1 on failure.  Includes the "sem." prefix in the name if
    SEM_PREFIX is true.  */
-int __shm_get_name (struct shmdir_name *result, const char *name,
-		    bool sem_prefix);
-libc_hidden_proto (__shm_get_name)
+int __shm_get_name(struct shmdir_name *result, const char *name,
+                   bool sem_prefix);
+libc_hidden_proto(__shm_get_name)
 
 #endif  /* shm-directory.h */

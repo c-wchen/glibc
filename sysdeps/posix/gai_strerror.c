@@ -24,46 +24,39 @@
 
 #define MSGSTRFIELD(line) MSGSTRFIELD1 (line)
 #define MSGSTRFIELD1(line) str##line
-static const union msgstr_t
-{
-  struct
-  {
+static const union msgstr_t {
+    struct {
 #define _S(n, s) char MSGSTRFIELD(__LINE__)[sizeof (s)];
 #include "gai_strerror-strs.h"
 #undef _S
-  };
-  char str[0];
-} msgstr =
-  {
+    };
+    char str[0];
+} msgstr = {
     {
 #define _S(n, s) s,
 #include "gai_strerror-strs.h"
 #undef _S
     }
-  };
-static const struct
-{
-  int16_t code;
-  uint16_t idx;
-} msgidx[] =
-  {
+};
+static const struct {
+    int16_t code;
+    uint16_t idx;
+} msgidx[] = {
 #define _S(n, s) { n, offsetof (union msgstr_t, MSGSTRFIELD (__LINE__)) },
 #include "gai_strerror-strs.h"
 #undef _S
-  };
+};
 
 
-const char *
-gai_strerror (int code)
+const char *gai_strerror(int code)
 {
-  const char *result = "Unknown error";
-  for (size_t i = 0; i < sizeof (msgidx) / sizeof (msgidx[0]); ++i)
-    if (msgidx[i].code == code)
-      {
-	result = msgstr.str + msgidx[i].idx;
-	break;
-      }
+    const char *result = "Unknown error";
+    for (size_t i = 0; i < sizeof(msgidx) / sizeof(msgidx[0]); ++i)
+        if (msgidx[i].code == code) {
+            result = msgstr.str + msgidx[i].idx;
+            break;
+        }
 
-  return _(result);
+    return _(result);
 }
-libc_hidden_def (gai_strerror)
+libc_hidden_def(gai_strerror)

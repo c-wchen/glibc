@@ -18,12 +18,12 @@
 
 #include <stdio.h>
 
-#define scanf_under_test(...)						\
-({									\
-  int result = scanf (__VA_ARGS__);					\
-  if (ferror (stdin))							\
-    result = INPUT_ERROR;						\
-  else if (result == EOF)						\
-    result = INPUT_EOF;							\
-  result;								\
+#define scanf_under_test(...)                       \
+({                                  \
+  int result = scanf (__VA_ARGS__);                 \
+  if (ferror (stdin))                           \
+    result = INPUT_ERROR;                       \
+  else if (result == EOF)                       \
+    result = INPUT_EOF;                         \
+  result;                               \
 })

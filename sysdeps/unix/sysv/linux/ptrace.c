@@ -25,29 +25,28 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
-long int
-ptrace (enum __ptrace_request request, ...)
+long int ptrace(enum __ptrace_request request, ...)
 {
-  long int res, ret;
-  va_list ap;
-  pid_t pid;
-  void *addr, *data;
+    long int res, ret;
+    va_list ap;
+    pid_t pid;
+    void *addr, *data;
 
-  va_start (ap, request);
-  pid = va_arg (ap, pid_t);
-  addr = va_arg (ap, void *);
-  data = va_arg (ap, void *);
-  va_end (ap);
+    va_start(ap, request);
+    pid = va_arg(ap, pid_t);
+    addr = va_arg(ap, void *);
+    data = va_arg(ap, void *);
+    va_end(ap);
 
-  if (request > 0 && request < 4)
-    data = &ret;
-
-  res = INLINE_SYSCALL (ptrace, 4, request, pid, addr, data);
-  if (res >= 0 && request > 0 && request < 4)
-    {
-      __set_errno (0);
-      return ret;
+    if (request > 0 && request < 4) {
+        data = &ret;
     }
 
-  return res;
+    res = INLINE_SYSCALL(ptrace, 4, request, pid, addr, data);
+    if (res >= 0 && request > 0 && request < 4) {
+        __set_errno(0);
+        return ret;
+    }
+
+    return res;
 }

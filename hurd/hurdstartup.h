@@ -33,8 +33,7 @@
 
 */
 
-struct hurd_startup_data
-  {
+struct hurd_startup_data {
     int flags;
     mach_port_t *dtable;
     mach_msg_type_number_t dtablesize;
@@ -47,7 +46,7 @@ struct hurd_startup_data
     vm_address_t phdr;
     vm_size_t phdrsz;
     vm_address_t user_entry;
-  };
+};
 
 
 /* Initialize Mach RPCs; do initial handshake with the exec server (or
@@ -57,7 +56,7 @@ struct hurd_startup_data
    of the entry point function that is called with the stack exactly as the
    exec server or kernel sets it.  */
 
-extern void _hurd_startup (void **argptr, void (*main) (intptr_t *data));
+extern void _hurd_startup(void **argptr, void (*main)(intptr_t *data));
 
 
-#endif	/* hurdstartup.h */
+#endif  /* hurdstartup.h */

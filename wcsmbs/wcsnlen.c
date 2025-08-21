@@ -22,14 +22,14 @@
 #endif
 
 /* Return length of string S at most maxlen.  */
-size_t
-__wcsnlen (const wchar_t *s, size_t maxlen)
+size_t __wcsnlen(const wchar_t *s, size_t maxlen)
 {
-  const wchar_t *ret = __wmemchr (s, L'\0', maxlen);
-  if (ret)
-    maxlen = ret - s;
-  return maxlen;
+    const wchar_t *ret = __wmemchr(s, L'\0', maxlen);
+    if (ret) {
+        maxlen = ret - s;
+    }
+    return maxlen;
 }
 #ifndef WCSNLEN
-weak_alias (__wcsnlen, wcsnlen)
+weak_alias(__wcsnlen, wcsnlen)
 #endif

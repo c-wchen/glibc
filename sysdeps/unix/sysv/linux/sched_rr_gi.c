@@ -22,48 +22,47 @@
 #include <sysdep.h>
 #include <kernel-features.h>
 
-int
-__sched_rr_get_interval64 (pid_t pid, struct __timespec64 *tp)
+int __sched_rr_get_interval64(pid_t pid, struct __timespec64 *tp)
 {
 #ifndef __NR_sched_rr_get_interval_time64
 # define __NR_sched_rr_get_interval_time64 __NR_sched_rr_get_interval
 #endif
-  int ret = INLINE_SYSCALL_CALL (sched_rr_get_interval_time64, pid, tp);
+    int ret = INLINE_SYSCALL_CALL(sched_rr_get_interval_time64, pid, tp);
 #ifndef __ASSUME_TIME64_SYSCALLS
-  if (ret == 0 || errno != ENOSYS)
-    return ret;
+    if (ret == 0 || errno != ENOSYS) {
+        return ret;
+    }
 
-  struct timespec tp32;
-  ret = INLINE_SYSCALL_CALL (sched_rr_get_interval, pid, &tp32);
-  if (ret == 0)
-    *tp = valid_timespec_to_timespec64 (tp32);
+    struct timespec tp32;
+    ret = INLINE_SYSCALL_CALL(sched_rr_get_interval, pid, &tp32);
+    if (ret == 0) {
+        *tp = valid_timespec_to_timespec64(tp32);
+    }
 #endif
-  return ret;
+    return ret;
 }
 
 #if __TIMESIZE != 64
-libc_hidden_def (__sched_rr_get_interval64)
+libc_hidden_def(__sched_rr_get_interval64)
 
 int
-__sched_rr_get_interval (pid_t pid, struct timespec *tp)
+__sched_rr_get_interval(pid_t pid, struct timespec *tp)
 {
-  int ret;
-  struct __timespec64 tp64;
+    int ret;
+    struct __timespec64 tp64;
 
-  ret = __sched_rr_get_interval64 (pid, &tp64);
+    ret = __sched_rr_get_interval64(pid, &tp64);
 
-  if (ret == 0)
-    {
-      if (! in_time_t_range (tp64.tv_sec))
-        {
-          __set_errno (EOVERFLOW);
-          return -1;
+    if (ret == 0) {
+        if (! in_time_t_range(tp64.tv_sec)) {
+            __set_errno(EOVERFLOW);
+            return -1;
         }
 
-      *tp = valid_timespec64_to_timespec (tp64);
+        *tp = valid_timespec64_to_timespec(tp64);
     }
 
-  return ret;
+    return ret;
 }
 #endif
-strong_alias (__sched_rr_get_interval, sched_rr_get_interval)
+strong_alias(__sched_rr_get_interval, sched_rr_get_interval)

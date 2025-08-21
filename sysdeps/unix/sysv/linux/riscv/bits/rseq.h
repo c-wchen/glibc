@@ -38,7 +38,7 @@
    exception when executed in all modes.  */
 
 #if __BYTE_ORDER == __LITTLE_ENDIAN
-#define RSEQ_SIG	0xf1401073
+#define RSEQ_SIG    0xf1401073
 #else
 /* RSEQ is currently only supported on Little-Endian.  */
 #endif

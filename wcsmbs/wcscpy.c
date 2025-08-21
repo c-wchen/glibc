@@ -24,30 +24,30 @@
 #endif
 
 /* Copy SRC to DEST.  */
-wchar_t *
-__wcscpy (wchar_t *dest, const wchar_t *src)
+wchar_t *__wcscpy(wchar_t *dest, const wchar_t *src)
 {
 #ifndef UNROLL_NTIMES
-  return __wmemcpy (dest, src, __wcslen (src) + 1);
+    return __wmemcpy(dest, src, __wcslen(src) + 1);
 #else
-  /* Some architectures might have costly tail function call (powerpc
-     for instance) where wmemcpy call overhead for smalls sizes might
-     be more costly than just unrolling the main loop.  */
-  wchar_t *wcp = dest;
+    /* Some architectures might have costly tail function call (powerpc
+       for instance) where wmemcpy call overhead for smalls sizes might
+       be more costly than just unrolling the main loop.  */
+    wchar_t *wcp = dest;
 
-#define ITERATION(index)		\
-  ({					\
-     wchar_t c = *src++;		\
-     *wcp++ = c;			\
-     c != L'\0';			\
+#define ITERATION(index)        \
+  ({                    \
+     wchar_t c = *src++;        \
+     *wcp++ = c;            \
+     c != L'\0';            \
   })
 
-  while (1)
-    UNROLL_REPEAT(UNROLL_NTIMES, ITERATION);
-  return dest;
+    while (1) {
+        UNROLL_REPEAT(UNROLL_NTIMES, ITERATION);
+    }
+    return dest;
 #endif
 }
 #ifndef WCSCPY
-weak_alias (__wcscpy, wcscpy)
-libc_hidden_def (__wcscpy)
+weak_alias(__wcscpy, wcscpy)
+libc_hidden_def(__wcscpy)
 #endif

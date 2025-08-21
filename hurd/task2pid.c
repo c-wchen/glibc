@@ -17,13 +17,12 @@
 
 #include <hurd.h>
 
-pid_t
-__task2pid (task_t task)
+pid_t __task2pid(task_t task)
 {
-  error_t err;
-  pid_t pid;
-  err = __USEPORT (PROC, __proc_task2pid (port, task, &pid));
-  return err ? (pid_t) __hurd_fail (err) : pid;
+    error_t err;
+    pid_t pid;
+    err = __USEPORT(PROC, __proc_task2pid(port, task, &pid));
+    return err ? (pid_t) __hurd_fail(err) : pid;
 }
 
-weak_alias (__task2pid, task2pid)
+weak_alias(__task2pid, task2pid)

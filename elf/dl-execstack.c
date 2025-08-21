@@ -22,9 +22,8 @@
 /* There is no portable way to know the bounds of the initial thread's stack
    so as to mprotect it.  */
 
-int
-_dl_make_stack_executable (const void *stack_endp)
+int _dl_make_stack_executable(const void *stack_endp)
 {
-  return ENOSYS;
+    return ENOSYS;
 }
-rtld_hidden_def (_dl_make_stack_executable)
+rtld_hidden_def(_dl_make_stack_executable)

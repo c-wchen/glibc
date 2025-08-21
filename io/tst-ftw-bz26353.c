@@ -28,43 +28,38 @@
 #include <support/capture_subprocess.h>
 #include <support/check.h>
 
-static int
-my_func (const char *file, const struct stat *sb, int flag)
+static int my_func(const char *file, const struct stat *sb, int flag)
 {
-  return 0;
+    return 0;
 }
 
-static int
-get_large_nopenfd (void)
+static int get_large_nopenfd(void)
 {
-  struct rlimit r;
-  TEST_COMPARE (getrlimit (RLIMIT_STACK, &r), 0);
-  if (r.rlim_cur == RLIM_INFINITY)
-    {
-      r.rlim_cur = 8 * 1024 * 1024;
-      TEST_COMPARE (setrlimit (RLIMIT_STACK, &r), 0);
+    struct rlimit r;
+    TEST_COMPARE(getrlimit(RLIMIT_STACK, &r), 0);
+    if (r.rlim_cur == RLIM_INFINITY) {
+        r.rlim_cur = 8 * 1024 * 1024;
+        TEST_COMPARE(setrlimit(RLIMIT_STACK, &r), 0);
     }
-  return (int) r.rlim_cur;
+    return (int) r.rlim_cur;
 }
 
-static void
-do_ftw (void *unused)
+static void do_ftw(void *unused)
 {
-  char *tempdir = support_create_temp_directory ("tst-bz26353");
-  int large_nopenfd = get_large_nopenfd ();
-  TEST_COMPARE (ftw (tempdir, my_func, large_nopenfd), 0);
-  free (tempdir);
+    char *tempdir = support_create_temp_directory("tst-bz26353");
+    int large_nopenfd = get_large_nopenfd();
+    TEST_COMPARE(ftw(tempdir, my_func, large_nopenfd), 0);
+    free(tempdir);
 }
 
 /* Check whether stack overflow occurs.  */
-static int
-do_test (void)
+static int do_test(void)
 {
-  struct support_capture_subprocess result;
-  result = support_capture_subprocess (do_ftw, NULL);
-  support_capture_subprocess_check (&result, "bz26353", 0, sc_allow_none);
-  support_capture_subprocess_free (&result);
-  return 0;
+    struct support_capture_subprocess result;
+    result = support_capture_subprocess(do_ftw, NULL);
+    support_capture_subprocess_check(&result, "bz26353", 0, sc_allow_none);
+    support_capture_subprocess_free(&result);
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -23,32 +23,32 @@
 
 /* Call dlopen and check that fails with an error message indicating
    an attempt to open an ET_EXEC or PIE object.  */
-static void
-check_dlopen_failure (const char *path)
+static void check_dlopen_failure(const char *path)
 {
-  void *handle = dlopen (path, RTLD_LAZY);
-  if (handle != NULL)
-    FAIL_EXIT1 ("dlopen succeeded unexpectedly: %s", path);
+    void *handle = dlopen(path, RTLD_LAZY);
+    if (handle != NULL) {
+        FAIL_EXIT1("dlopen succeeded unexpectedly: %s", path);
+    }
 
-  const char *message = dlerror ();
-  TEST_VERIFY_EXIT (message != NULL);
-  if ((strstr (message,
-	       "cannot dynamically load position-independent executable")
-       == NULL)
-      && strstr (message, "cannot dynamically load executable") == NULL)
-    FAIL_EXIT1 ("invalid dlopen error message: \"%s\"", message);
+    const char *message = dlerror();
+    TEST_VERIFY_EXIT(message != NULL);
+    if ((strstr(message,
+                "cannot dynamically load position-independent executable")
+         == NULL)
+        && strstr(message, "cannot dynamically load executable") == NULL) {
+        FAIL_EXIT1("invalid dlopen error message: \"%s\"", message);
+    }
 }
 
-static int
-do_test (int argc, char *argv[])
+static int do_test(int argc, char *argv[])
 {
-  check_dlopen_failure (argv[0]);
+    check_dlopen_failure(argv[0]);
 
-  char *full_path = realpath (argv[0], NULL);
-  check_dlopen_failure  (full_path);
-  free (full_path);
+    char *full_path = realpath(argv[0], NULL);
+    check_dlopen_failure(full_path);
+    free(full_path);
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION_ARGV do_test

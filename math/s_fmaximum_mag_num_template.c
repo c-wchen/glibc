@@ -19,17 +19,18 @@
 #include <math.h>
 
 FLOAT
-M_DECL_FUNC (__fmaximum_mag_num) (FLOAT x, FLOAT y)
+M_DECL_FUNC(__fmaximum_mag_num)(FLOAT x, FLOAT y)
 {
-  FLOAT ax = M_FABS (x);
-  FLOAT ay = M_FABS (y);
-  if (isgreater (ax, ay))
-    return x;
-  else if (isless (ax, ay))
-    return y;
-  else if (ax == ay)
-    return (M_COPYSIGN (1, x) >= M_COPYSIGN (1, y) ? x : y);
-  else
-    return isnan (y) ? (isnan (x) ? x + y : x) : y;
+    FLOAT ax = M_FABS(x);
+    FLOAT ay = M_FABS(y);
+    if (isgreater(ax, ay)) {
+        return x;
+    } else if (isless(ax, ay)) {
+        return y;
+    } else if (ax == ay) {
+        return (M_COPYSIGN(1, x) >= M_COPYSIGN(1, y) ? x : y);
+    } else {
+        return isnan(y) ? (isnan(x) ? x + y : x) : y;
+    }
 }
-declare_mgen_alias (__fmaximum_mag_num, fmaximum_mag_num);
+declare_mgen_alias(__fmaximum_mag_num, fmaximum_mag_num);

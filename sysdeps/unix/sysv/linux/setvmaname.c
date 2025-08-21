@@ -23,30 +23,27 @@
 #include <elf/dl-tunables.h>
 
 static enum {
-  decorate_unknown = -1,
-  decorate_off,
-  decorate_on
+    decorate_unknown = -1,
+    decorate_off,
+    decorate_on
 } decorate_maps = decorate_unknown;
 
-bool
-__is_decorate_maps_enabled (void)
+bool __is_decorate_maps_enabled(void)
 {
-  switch (atomic_load_relaxed (&decorate_maps))
-    {
-    case decorate_unknown:
-      if (TUNABLE_GET (glibc, mem, decorate_maps, int32_t, NULL) != 0)
-        {
-          atomic_store_relaxed (&decorate_maps, decorate_on);
-          return true;
-        }
-      atomic_store_relaxed (&decorate_maps, decorate_off);
-      return false;
-    case decorate_off:
-      return false;
-    case decorate_on:
-      return true;
+    switch (atomic_load_relaxed(&decorate_maps)) {
+        case decorate_unknown:
+            if (TUNABLE_GET(glibc, mem, decorate_maps, int32_t, NULL) != 0) {
+                atomic_store_relaxed(&decorate_maps, decorate_on);
+                return true;
+            }
+            atomic_store_relaxed(&decorate_maps, decorate_off);
+            return false;
+        case decorate_off:
+            return false;
+        case decorate_on:
+            return true;
     }
-  __builtin_unreachable ();
+    __builtin_unreachable();
 }
 
 /* If PR_SET_VMA_ANON_NAME is not supported by the kernel, prctl returns
@@ -55,16 +52,15 @@ __is_decorate_maps_enabled (void)
    aligned START, with (START, START+LEN) being a valid memory range,
    and NAME with a limit of 80 characters without invalid one ("\\`$[]").  */
 
-void
-__set_vma_name (void *start, size_t len, const char *name)
+void __set_vma_name(void *start, size_t len, const char *name)
 {
-  if (__is_decorate_maps_enabled ())
-    {
-      int r = INTERNAL_SYSCALL_CALL (prctl, PR_SET_VMA, PR_SET_VMA_ANON_NAME,
-                                     start, len, name);
+    if (__is_decorate_maps_enabled()) {
+        int r = INTERNAL_SYSCALL_CALL(prctl, PR_SET_VMA, PR_SET_VMA_ANON_NAME,
+                                      start, len, name);
 
-      /* Disable further attempts if not supported by the kernel.  */
-      if (r == -EINVAL)
-        atomic_store_relaxed (&decorate_maps, decorate_off);
+        /* Disable further attempts if not supported by the kernel.  */
+        if (r == -EINVAL) {
+            atomic_store_relaxed(&decorate_maps, decorate_off);
+        }
     }
 }

@@ -28,10 +28,10 @@
 
 # include "ifunc-wcs.h"
 
-libc_ifunc_redirected (__redirect_wcpcpy, __wcpcpy, IFUNC_SELECTOR ());
-weak_alias (__wcpcpy, wcpcpy)
+libc_ifunc_redirected(__redirect_wcpcpy, __wcpcpy, IFUNC_SELECTOR());
+weak_alias(__wcpcpy, wcpcpy)
 # ifdef SHARED
-__hidden_ver1 (__wcpcpy, __GI___wcpcpy, __redirect_wcpcpy)
-  __attribute__((visibility ("hidden"))) __attribute_copy__ (wcpcpy);
+__hidden_ver1(__wcpcpy, __GI___wcpcpy, __redirect_wcpcpy)
+__attribute__((visibility("hidden"))) __attribute_copy__(wcpcpy);
 # endif
 #endif

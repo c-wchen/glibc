@@ -19,9 +19,8 @@
 #include <math.h>
 #include <math-narrow.h>
 
-float
-__fmull (long double x, long double y)
+float __fmull(long double x, long double y)
 {
-  NARROW_MUL_TRIVIAL (x, y, float);
+    NARROW_MUL_TRIVIAL(x, y, float);
 }
-libm_alias_float_ldouble (mul)
+libm_alias_float_ldouble(mul)

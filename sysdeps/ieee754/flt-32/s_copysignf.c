@@ -26,9 +26,8 @@ static char rcsid[] = "$NetBSD: s_copysignf.c,v 1.4 1995/05/10 20:46:59 jtc Exp 
 #include <math.h>
 #include <libm-alias-float.h>
 
-float
-__copysignf (float x, float y)
+float __copysignf(float x, float y)
 {
-  return __builtin_copysignf (x, y);
+    return __builtin_copysignf(x, y);
 }
-libm_alias_float (__copysign, copysign)
+libm_alias_float(__copysign, copysign)

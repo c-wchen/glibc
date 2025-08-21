@@ -24,8 +24,8 @@
 #  define CHECK_ARCH_EXT                                                      \
     do                                                                        \
       {                                                                       \
-	if (!(getauxval (AT_HWCAP) & HWCAP_SVE))                              \
-	  return;                                                             \
+    if (!(getauxval (AT_HWCAP) & HWCAP_SVE))                              \
+      return;                                                             \
       }                                                                       \
     while (0)
 

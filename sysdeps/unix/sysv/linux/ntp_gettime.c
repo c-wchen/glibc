@@ -34,36 +34,35 @@
 /* clock_adjtime64 with CLOCK_REALTIME does not trigger EINVAL,
    ENODEV, or EOPNOTSUPP.  It might still trigger EPERM.  */
 
-int
-__ntp_gettime64 (struct __ntptimeval64 *ntv)
+int __ntp_gettime64(struct __ntptimeval64 *ntv)
 {
-  struct __timex64 tntx;
-  int result;
+    struct __timex64 tntx;
+    int result;
 
-  tntx.modes = 0;
-  result = __clock_adjtime64 (CLOCK_REALTIME, &tntx);
-  ntv->time = tntx.time;
-  ntv->maxerror = tntx.maxerror;
-  ntv->esterror = tntx.esterror;
+    tntx.modes = 0;
+    result = __clock_adjtime64(CLOCK_REALTIME, &tntx);
+    ntv->time = tntx.time;
+    ntv->maxerror = tntx.maxerror;
+    ntv->esterror = tntx.esterror;
 
-  return result;
+    return result;
 }
 
 #if __TIMESIZE != 64
-libc_hidden_def (__ntp_gettime64)
+libc_hidden_def(__ntp_gettime64)
 
 int
-__ntp_gettime (struct ntptimeval *ntv)
+__ntp_gettime(struct ntptimeval *ntv)
 {
-  struct __ntptimeval64 ntv64;
-  int result;
+    struct __ntptimeval64 ntv64;
+    int result;
 
-  result = __ntp_gettime64 (&ntv64);
-  ntv->time = valid_timeval64_to_timeval (ntv64.time);
-  ntv->maxerror = ntv64.maxerror;
-  ntv->esterror = ntv64.esterror;
+    result = __ntp_gettime64(&ntv64);
+    ntv->time = valid_timeval64_to_timeval(ntv64.time);
+    ntv->maxerror = ntv64.maxerror;
+    ntv->esterror = ntv64.esterror;
 
-  return result;
+    return result;
 }
 #endif
-strong_alias (__ntp_gettime, ntp_gettime)
+strong_alias(__ntp_gettime, ntp_gettime)

@@ -19,10 +19,9 @@
 #include "thread_dbP.h"
 
 
-td_err_e
-td_thr_getxregsize (const td_thrhandle_t *th, int *sizep)
+td_err_e td_thr_getxregsize(const td_thrhandle_t *th, int *sizep)
 {
-  /* XXX This might be platform specific.  */
-  LOG ("td_thr_getxregsize");
-  return TD_NOXREGS;
+    /* XXX This might be platform specific.  */
+    LOG("td_thr_getxregsize");
+    return TD_NOXREGS;
 }

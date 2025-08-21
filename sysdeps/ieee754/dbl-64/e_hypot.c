@@ -50,98 +50,95 @@
 #define TINY_VAL  0x1p-459
 #define EPS       0x1p-54
 
-static inline double
-handle_errno (double r)
+static inline double handle_errno(double r)
 {
-  if (isinf (r))
-    __set_errno (ERANGE);
-  return r;
+    if (isinf(r)) {
+        __set_errno(ERANGE);
+    }
+    return r;
 }
 
 /* Hypot kernel. The inputs must be adjusted so that ax >= ay >= 0
    and squaring ax, ay and (ax - ay) does not overflow or underflow.  */
-static inline double
-kernel (double ax, double ay)
+static inline double kernel(double ax, double ay)
 {
-  double t1, t2;
+    double t1, t2;
 #ifdef __FP_FAST_FMA
-  t1 = ay + ay;
-  t2 = ax - ay;
+    t1 = ay + ay;
+    t2 = ax - ay;
 
-  if (t1 >= ax)
-    return sqrt (fma (t1, ax, t2 * t2));
-  else
-    return sqrt (fma (ax, ax, ay * ay));
+    if (t1 >= ax) {
+        return sqrt(fma(t1, ax, t2 * t2));
+    } else {
+        return sqrt(fma(ax, ax, ay * ay));
+    }
 
 #else
-  double h = sqrt (ax * ax + ay * ay);
-  if (h <= 2.0 * ay)
-    {
-      double delta = h - ay;
-      t1 = ax * (2.0 * delta - ax);
-      t2 = (delta - 2.0 * (ax - ay)) * delta;
-    }
-  else
-    {
-      double delta = h - ax;
-      t1 = 2.0 * delta * (ax - 2.0 * ay);
-      t2 = (4.0 * delta - ay) * ay + delta * delta;
+    double h = sqrt(ax * ax + ay * ay);
+    if (h <= 2.0 * ay) {
+        double delta = h - ay;
+        t1 = ax * (2.0 * delta - ax);
+        t2 = (delta - 2.0 * (ax - ay)) * delta;
+    } else {
+        double delta = h - ax;
+        t1 = 2.0 * delta * (ax - 2.0 * ay);
+        t2 = (4.0 * delta - ay) * ay + delta * delta;
     }
 
-  h -= (t1 + t2) / (2.0 * h);
-  return h;
+    h -= (t1 + t2) / (2.0 * h);
+    return h;
 #endif
 }
 
-double
-__hypot (double x, double y)
+double __hypot(double x, double y)
 {
-  if (!isfinite(x) || !isfinite(y))
-    {
-      if ((isinf (x) || isinf (y))
-	  && !issignaling_inline (x) && !issignaling_inline (y))
-	return INFINITY;
-      return x + y;
+    if (!isfinite(x) || !isfinite(y)) {
+        if ((isinf(x) || isinf(y))
+            && !issignaling_inline(x) && !issignaling_inline(y)) {
+            return INFINITY;
+        }
+        return x + y;
     }
 
-  x = fabs (x);
-  y = fabs (y);
+    x = fabs(x);
+    y = fabs(y);
 
-  double ax = USE_FMAX_BUILTIN ? fmax (x, y) : (x < y ? y : x);
-  double ay = USE_FMIN_BUILTIN ? fmin (x, y) : (x < y ? x : y);
+    double ax = USE_FMAX_BUILTIN ? fmax(x, y) : (x < y ? y : x);
+    double ay = USE_FMIN_BUILTIN ? fmin(x, y) : (x < y ? x : y);
 
-  /* If ax is huge, scale both inputs down.  */
-  if (__glibc_unlikely (ax > LARGE_VAL))
-    {
-      if (__glibc_unlikely (ay <= ax * EPS))
-	return handle_errno (math_narrow_eval (ax + ay));
+    /* If ax is huge, scale both inputs down.  */
+    if (__glibc_unlikely(ax > LARGE_VAL)) {
+        if (__glibc_unlikely(ay <= ax * EPS)) {
+            return handle_errno(math_narrow_eval(ax + ay));
+        }
 
-      return handle_errno (math_narrow_eval (kernel (ax * SCALE, ay * SCALE)
-					     / SCALE));
+        return handle_errno(math_narrow_eval(kernel(ax * SCALE, ay * SCALE)
+                                             / SCALE));
     }
 
-  /* If ay is tiny, scale both inputs up.  */
-  if (__glibc_unlikely (ay < TINY_VAL))
-    {
-      if (__glibc_unlikely (ax >= ay / EPS))
-	return math_narrow_eval (ax + ay);
+    /* If ay is tiny, scale both inputs up.  */
+    if (__glibc_unlikely(ay < TINY_VAL)) {
+        if (__glibc_unlikely(ax >= ay / EPS)) {
+            return math_narrow_eval(ax + ay);
+        }
 
-      ax = math_narrow_eval (kernel (ax / SCALE, ay / SCALE) * SCALE);
-      math_check_force_underflow_nonneg (ax);
-      return ax;
+        ax = math_narrow_eval(kernel(ax / SCALE, ay / SCALE) * SCALE);
+        math_check_force_underflow_nonneg(ax);
+        return ax;
     }
 
-  /* Common case: ax is not huge and ay is not tiny.  */
-  if (__glibc_unlikely (ay <= ax * EPS))
-    return ax + ay;
+    /* Common case: ax is not huge and ay is not tiny.  */
+    if (__glibc_unlikely(ay <= ax * EPS)) {
+        return ax + ay;
+    }
 
-  return kernel (ax, ay);
+    return kernel(ax, ay);
 }
-strong_alias (__hypot, __ieee754_hypot)
-libm_alias_finite (__ieee754_hypot, __hypot)
+strong_alias(__hypot, __ieee754_hypot)
+libm_alias_finite(__ieee754_hypot, __hypot)
 #if LIBM_SVID_COMPAT
-versioned_symbol (libm, __hypot, hypot, GLIBC_2_35);
-libm_alias_double_other (__hypot, hypot)
+versioned_symbol(libm, __hypot, hypot, GLIBC_2_35);
+libm_alias_double_other(__hypot, hypot)
 #else
-libm_alias_double (__hypot, hypot)
+libm_alias_double(__hypot, hypot)
 #endif

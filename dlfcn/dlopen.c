@@ -23,15 +23,14 @@
 #include <ldsodefs.h>
 #include <shlib-compat.h>
 
-struct dlopen_args
-{
-  /* The arguments for dlopen_doit.  */
-  const char *file;
-  int mode;
-  /* The return value of dlopen_doit.  */
-  void *new;
-  /* Address of the caller.  */
-  const void *caller;
+struct dlopen_args {
+    /* The arguments for dlopen_doit.  */
+    const char *file;
+    int mode;
+    /* The return value of dlopen_doit.  */
+    void *new;
+    /* Address of the caller.  */
+    const void *caller;
 };
 
 
@@ -43,61 +42,58 @@ struct dlopen_args
 #endif
 
 
-static void
-dlopen_doit (void *a)
+static void dlopen_doit(void *a)
 {
-  struct dlopen_args *args = (struct dlopen_args *) a;
+    struct dlopen_args *args = (struct dlopen_args *) a;
 
-  if (args->mode & ~(RTLD_BINDING_MASK | RTLD_NOLOAD | RTLD_DEEPBIND
-		     | RTLD_GLOBAL | RTLD_LOCAL | RTLD_NODELETE
-		     | __RTLD_SPROF))
-    _dl_signal_error (0, NULL, NULL, _("invalid mode parameter"));
+    if (args->mode & ~(RTLD_BINDING_MASK | RTLD_NOLOAD | RTLD_DEEPBIND
+                       | RTLD_GLOBAL | RTLD_LOCAL | RTLD_NODELETE
+                       | __RTLD_SPROF)) {
+        _dl_signal_error(0, NULL, NULL, _("invalid mode parameter"));
+    }
 
-  args->new = GLRO(dl_open) (args->file ?: "", args->mode | __RTLD_DLOPEN,
-			     args->caller,
-			     args->file == NULL ? LM_ID_BASE : NS,
-			     __libc_argc, __libc_argv, __environ);
+    args->new = GLRO(dl_open)(args->file ? : "", args->mode | __RTLD_DLOPEN,
+                              args->caller,
+                              args->file == NULL ? LM_ID_BASE : NS,
+                              __libc_argc, __libc_argv, __environ);
 }
 
 
-static void *
-dlopen_implementation (const char *file, int mode, void *dl_caller)
+static void *dlopen_implementation(const char *file, int mode, void *dl_caller)
 {
-  struct dlopen_args args;
-  args.file = file;
-  args.mode = mode;
-  args.caller = dl_caller;
+    struct dlopen_args args;
+    args.file = file;
+    args.mode = mode;
+    args.caller = dl_caller;
 
-  return _dlerror_run (dlopen_doit, &args) ? NULL : args.new;
+    return _dlerror_run(dlopen_doit, &args) ? NULL : args.new;
 }
 
 #ifdef SHARED
-void *
-___dlopen (const char *file, int mode)
+void *___dlopen(const char *file, int mode)
 {
-  if (GLRO (dl_dlfcn_hook) != NULL)
-    return GLRO (dl_dlfcn_hook)->dlopen (file, mode, RETURN_ADDRESS (0));
-  else
-    return dlopen_implementation (file, mode, RETURN_ADDRESS (0));
+    if (GLRO(dl_dlfcn_hook) != NULL) {
+        return GLRO(dl_dlfcn_hook)->dlopen(file, mode, RETURN_ADDRESS(0));
+    } else {
+        return dlopen_implementation(file, mode, RETURN_ADDRESS(0));
+    }
 }
-versioned_symbol (libc, ___dlopen, dlopen, GLIBC_2_34);
+versioned_symbol(libc, ___dlopen, dlopen, GLIBC_2_34);
 
 # if OTHER_SHLIB_COMPAT (libdl, GLIBC_2_1, GLIBC_2_34)
-compat_symbol (libdl, ___dlopen, dlopen, GLIBC_2_1);
+compat_symbol(libdl, ___dlopen, dlopen, GLIBC_2_1);
 # endif
 #else /* !SHARED */
 /* Also used with _dlfcn_hook.  */
-void *
-__dlopen (const char *file, int mode, void *dl_caller)
+void *__dlopen(const char *file, int mode, void *dl_caller)
 {
-  return dlopen_implementation (file, mode, dl_caller);
+    return dlopen_implementation(file, mode, dl_caller);
 }
 
-void *
-___dlopen (const char *file, int mode)
+void *___dlopen(const char *file, int mode)
 {
-  return __dlopen (file, mode, RETURN_ADDRESS (0));
+    return __dlopen(file, mode, RETURN_ADDRESS(0));
 }
-weak_alias (___dlopen, dlopen)
-static_link_warning (dlopen)
+weak_alias(___dlopen, dlopen)
+static_link_warning(dlopen)
 #endif /* !SHARED */

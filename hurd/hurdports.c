@@ -19,33 +19,32 @@
 #include <hurd/port.h>
 
 
-static inline mach_port_t
-get (const int idx)
+static inline mach_port_t get(const int idx)
 {
-  mach_port_t result;
-  error_t err = _hurd_ports_get (idx, &result);
+    mach_port_t result;
+    error_t err = _hurd_ports_get(idx, &result);
 
-  if (err)
-    return __hurd_fail (err), MACH_PORT_NULL;
-  return result;
+    if (err) {
+        return __hurd_fail(err), MACH_PORT_NULL;
+    }
+    return result;
 }
-#define	GET(type, what, idx) \
+#define GET(type, what, idx) \
   type get##what (void) { return get (INIT_PORT_##idx); }
 
-static inline int
-set (const int idx, mach_port_t new)
+static inline int set(const int idx, mach_port_t new)
 {
-  error_t err = _hurd_ports_set (idx, new);
-  return err ? __hurd_fail (err) : 0;
+    error_t err = _hurd_ports_set(idx, new);
+    return err ? __hurd_fail(err) : 0;
 }
 #define SET(type, what, idx) \
   int set##what (type new) { return set (INIT_PORT_##idx, new); }
 
-#define	GETSET(type, what, idx) \
+#define GETSET(type, what, idx) \
   GET (type, what, idx) SET (type, what, idx)
 
-GETSET (process_t, proc, PROC)
-GETSET (mach_port_t, cttyid, CTTYID)
-GETSET (file_t, cwdir, CWDIR)
-GETSET (file_t, crdir, CRDIR)
-GETSET (auth_t, auth, AUTH)
+GETSET(process_t, proc, PROC)
+GETSET(mach_port_t, cttyid, CTTYID)
+GETSET(file_t, cwdir, CWDIR)
+GETSET(file_t, crdir, CRDIR)
+GETSET(auth_t, auth, AUTH)

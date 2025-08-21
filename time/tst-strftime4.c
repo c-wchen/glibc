@@ -22,31 +22,29 @@
 #include <string.h>
 #include <support/check.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  TEST_VERIFY_EXIT (setenv ("TZ", "UTC0", 1) == 0);
-  tzset ();
-  if (sizeof (time_t) > 4)
-    {
-      time_t wrap = (time_t) 2147483648LL;
-      char buf[80];
-      struct tm *tm = gmtime (&wrap);
-      TEST_VERIFY_EXIT (tm != NULL);
-      TEST_VERIFY_EXIT (strftime (buf, sizeof buf, "%s", tm) > 0);
-      puts (buf);
-      TEST_VERIFY (strcmp (buf, "2147483648") == 0);
+    TEST_VERIFY_EXIT(setenv("TZ", "UTC0", 1) == 0);
+    tzset();
+    if (sizeof(time_t) > 4) {
+        time_t wrap = (time_t) 2147483648LL;
+        char buf[80];
+        struct tm *tm = gmtime(&wrap);
+        TEST_VERIFY_EXIT(tm != NULL);
+        TEST_VERIFY_EXIT(strftime(buf, sizeof buf, "%s", tm) > 0);
+        puts(buf);
+        TEST_VERIFY(strcmp(buf, "2147483648") == 0);
 
-      struct tm tm2;
-      char *p = strptime (buf, "%s", &tm2);
-      TEST_VERIFY_EXIT (p != NULL && *p == '\0');
-      time_t t = mktime (&tm2);
-      printf ("%lld\n", (long long) t);
-      TEST_VERIFY (t == wrap);
+        struct tm tm2;
+        char *p = strptime(buf, "%s", &tm2);
+        TEST_VERIFY_EXIT(p != NULL && *p == '\0');
+        time_t t = mktime(&tm2);
+        printf("%lld\n", (long long) t);
+        TEST_VERIFY(t == wrap);
+    } else {
+        FAIL_UNSUPPORTED("32-bit time_t");
     }
-  else
-    FAIL_UNSUPPORTED ("32-bit time_t");
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

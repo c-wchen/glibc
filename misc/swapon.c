@@ -21,11 +21,10 @@
 
 /* Make the block special device PATH available to the system for swapping.
    This call is restricted to the super-user.  */
-int
-swapon (const char *path, int flags)
+int swapon(const char *path, int flags)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (swapon)
+stub_warning(swapon)

@@ -19,19 +19,18 @@
 #include <stdlib.h>
 #include <time.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  struct random_data rand_state = { .state = NULL };
-  _Alignas (double) char buf[128 + sizeof (int32_t)];
+    struct random_data rand_state = { .state = NULL };
+    _Alignas(double) char buf[128 + sizeof(int32_t)];
 
-  /* Test initstate_r with an unaligned `state` array.  */
-  initstate_r (time (NULL), buf + 1, sizeof buf, &rand_state);
+    /* Test initstate_r with an unaligned `state` array.  */
+    initstate_r(time(NULL), buf + 1, sizeof buf, &rand_state);
 
-  /* Ditto initstate.  */
-  initstate (time (NULL), buf + 1, sizeof buf);
+    /* Ditto initstate.  */
+    initstate(time(NULL), buf + 1, sizeof buf);
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

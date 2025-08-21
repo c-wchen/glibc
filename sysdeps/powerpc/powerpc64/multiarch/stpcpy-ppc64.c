@@ -18,9 +18,9 @@
 
 #include <string.h>
 
-extern __typeof (memcpy) __memcpy_ppc attribute_hidden;
-extern __typeof (strlen) __strlen_ppc attribute_hidden;
-extern __typeof (stpcpy) __stpcpy_ppc attribute_hidden;
+extern __typeof(memcpy) __memcpy_ppc attribute_hidden;
+extern __typeof(strlen) __strlen_ppc attribute_hidden;
+extern __typeof(stpcpy) __stpcpy_ppc attribute_hidden;
 
 #define STPCPY __stpcpy_ppc
 #define memcpy __memcpy_ppc

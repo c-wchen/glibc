@@ -52,52 +52,47 @@
  * Avoid loopback interfaces.  We return information from a loopback
  * interface only if there are no other possible interfaces.
  */
-void
-get_myaddress (struct sockaddr_in *addr)
+void get_myaddress(struct sockaddr_in *addr)
 {
-  struct ifaddrs *ifa;
+    struct ifaddrs *ifa;
 
-  if (getifaddrs (&ifa) != 0)
-    {
-      perror ("get_myaddress: getifaddrs");
-      exit (1);
+    if (getifaddrs(&ifa) != 0) {
+        perror("get_myaddress: getifaddrs");
+        exit(1);
     }
 
-  int loopback = 0;
-  struct ifaddrs *run;
+    int loopback = 0;
+    struct ifaddrs *run;
 
- again:
-  run = ifa;
-  while (run != NULL)
-    {
-      if ((run->ifa_flags & IFF_UP)
-	  && run->ifa_addr != NULL
-	  && run->ifa_addr->sa_family == AF_INET
-	  && (!(run->ifa_flags & IFF_LOOPBACK)
-	      || (loopback == 1 && (run->ifa_flags & IFF_LOOPBACK))))
-	{
-	  *addr = *((struct sockaddr_in *) run->ifa_addr);
-	  addr->sin_port = htons (PMAPPORT);
-	  goto out;
-	}
+again:
+    run = ifa;
+    while (run != NULL) {
+        if ((run->ifa_flags & IFF_UP)
+            && run->ifa_addr != NULL
+            && run->ifa_addr->sa_family == AF_INET
+            && (!(run->ifa_flags & IFF_LOOPBACK)
+                || (loopback == 1 && (run->ifa_flags & IFF_LOOPBACK)))) {
+            *addr = *((struct sockaddr_in *) run->ifa_addr);
+            addr->sin_port = htons(PMAPPORT);
+            goto out;
+        }
 
-      run = run->ifa_next;
+        run = run->ifa_next;
     }
 
-  if (loopback == 0)
-    {
-      loopback = 1;
-      goto again;
+    if (loopback == 0) {
+        loopback = 1;
+        goto again;
     }
- out:
-  freeifaddrs (ifa);
+out:
+    freeifaddrs(ifa);
 
-  /* The function is horribly specified.  It does not return any error
-     if no interface is up.  Probably this won't happen (at least
-     loopback is there) but still...  */
+    /* The function is horribly specified.  It does not return any error
+       if no interface is up.  Probably this won't happen (at least
+       loopback is there) but still...  */
 }
 #ifdef EXPORT_RPC_SYMBOLS
-libc_hidden_def (get_myaddress)
+libc_hidden_def(get_myaddress)
 #else
-libc_hidden_nolink_sunrpc (get_myaddress, GLIBC_2_0)
+libc_hidden_nolink_sunrpc(get_myaddress, GLIBC_2_0)
 #endif

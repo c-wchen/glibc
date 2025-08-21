@@ -20,16 +20,16 @@
 
 
 /* Execute LINE as a shell command.  */
-int
-__libc_system (const char *line)
+int __libc_system(const char *line)
 {
-  if (line == NULL)
-    return 0;			/* This indicates no command processor.  */
+    if (line == NULL) {
+        return 0;    /* This indicates no command processor.  */
+    }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-weak_alias (__libc_system, system)
+weak_alias(__libc_system, system)
 
 
-stub_warning (system)
+stub_warning(system)

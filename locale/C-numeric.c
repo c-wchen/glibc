@@ -19,20 +19,19 @@
 
 /* This table's entries are taken from POSIX.2 Table 2-10
    ``LC_NUMERIC Category Definition in the POSIX Locale''.  */
-const struct __locale_data _nl_C_LC_NUMERIC attribute_hidden =
-{
-  _nl_C_name,
-  NULL, 0, 0,			/* no file mapped */
-  NULL, 			/* No cached data.  */
-  UNDELETABLE,
-  0,
-  6,
-  {
-    { .string = "." },
-    { .string = "" },
-    { .string = "" },
-    { .word = (unsigned int) L'.' },
-    { .word = (unsigned int) L'\0' },
-    { .string = _nl_C_codeset }
-  }
+const struct __locale_data _nl_C_LC_NUMERIC attribute_hidden = {
+    _nl_C_name,
+    NULL, 0, 0,           /* no file mapped */
+    NULL,             /* No cached data.  */
+    UNDELETABLE,
+    0,
+    6,
+    {
+        { .string = "." },
+        { .string = "" },
+        { .string = "" },
+        { .word = (unsigned int) L'.' },
+        { .word = (unsigned int) L'\0' },
+        { .string = _nl_C_codeset }
+    }
 };

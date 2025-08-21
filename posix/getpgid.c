@@ -19,12 +19,11 @@
 #include <sys/types.h>
 
 /* Get the process group ID of process PID.  */
-pid_t
-__getpgid (pid_t pid)
+pid_t __getpgid(pid_t pid)
 {
-  return pid;
+    return pid;
 }
-libc_hidden_def (__getpgid)
-weak_alias (__getpgid, getpgid)
+libc_hidden_def(__getpgid)
+weak_alias(__getpgid, getpgid)
 
-stub_warning (getpgid)
+stub_warning(getpgid)

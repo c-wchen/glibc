@@ -19,26 +19,24 @@
 #ifndef TST_TLS_MANYDYNAMIC_H
 #define TST_TLS_MANYDYNAMIC_H
 
-enum
-  {
+enum {
     /* This many TLS variables (and modules) are defined.  */
     COUNT = 100,
 
     /* Number of elements in the TLS variable.  */
     PER_VALUE_COUNT = 1,
-  };
+};
 
 /* The TLS variables are of this type.  We use a larger type to ensure
    that we can reach the static TLS limit with COUNT variables.  */
-struct value
-{
-  int num[PER_VALUE_COUNT];
+struct value {
+    int num[PER_VALUE_COUNT];
 };
 
 /* Set the TLS variable defined in the module.  */
-typedef void (*set_value_func) (const struct value *);
+typedef void (*set_value_func)(const struct value *);
 
 /* Read the TLS variable defined in the module.  */
-typedef void (*get_value_func) (struct value *);
+typedef void (*get_value_func)(struct value *);
 
 #endif /* TST_TLS_MANYDYNAMICMOD_H */

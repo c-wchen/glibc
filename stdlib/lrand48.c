@@ -18,12 +18,11 @@
 #include <stdlib.h>
 
 
-long int
-lrand48 (void)
+long int lrand48(void)
 {
-  long int result;
+    long int result;
 
-  (void) __nrand48_r (__libc_drand48_data.__x, &__libc_drand48_data, &result);
+    (void) __nrand48_r(__libc_drand48_data.__x, &__libc_drand48_data, &result);
 
-  return result;
+    return result;
 }

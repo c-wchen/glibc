@@ -20,14 +20,13 @@
 #include <utmpx.h>
 #include <utmp-size.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  _Static_assert (sizeof (struct utmp) == UTMP_SIZE, "struct utmp size");
-  _Static_assert (sizeof (struct utmpx) == UTMP_SIZE, "struct utmpx size");
-  _Static_assert (sizeof (struct lastlog) == LASTLOG_SIZE,
-                  "struct lastlog size");
-  return 0;
+    _Static_assert(sizeof(struct utmp) == UTMP_SIZE, "struct utmp size");
+    _Static_assert(sizeof(struct utmpx) == UTMP_SIZE, "struct utmpx size");
+    _Static_assert(sizeof(struct lastlog) == LASTLOG_SIZE,
+                   "struct lastlog size");
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -21,36 +21,34 @@
 #include <hurd/fd.h>
 #include <string.h>
 
-error_t
-_hurd_fd_read (struct hurd_fd *fd, void *buf, size_t *nbytes, loff_t offset)
+error_t _hurd_fd_read(struct hurd_fd *fd, void *buf, size_t *nbytes, loff_t offset)
 {
-  error_t err;
-  char *data;
-  mach_msg_type_number_t nread;
+    error_t err;
+    char *data;
+    mach_msg_type_number_t nread;
 
-  error_t readfd (io_t port)
-    {
-      return __io_read (port, &data, &nread, offset, *nbytes);
+    error_t readfd(io_t port) {
+        return __io_read(port, &data, &nread, offset, *nbytes);
     }
 
-  data = buf;
-  nread = *nbytes;
-  if (err = HURD_FD_PORT_USE_CANCEL (fd, _hurd_ctty_input (port, ctty, readfd)))
-    return err;
-
-  if (__glibc_unlikely (nread > *nbytes))	/* Sanity check for bogus server.  */
-    {
-      if (data != buf)
-	__vm_deallocate (__mach_task_self (), (vm_address_t) data, nread);
-      return EGRATUITOUS;
+    data = buf;
+    nread = *nbytes;
+    if (err = HURD_FD_PORT_USE_CANCEL(fd, _hurd_ctty_input(port, ctty, readfd))) {
+        return err;
     }
 
-  if (data != buf)
-    {
-      memcpy (buf, data, nread);
-      __vm_deallocate (__mach_task_self (), (vm_address_t) data, nread);
+    if (__glibc_unlikely(nread > *nbytes)) {  /* Sanity check for bogus server.  */
+        if (data != buf) {
+            __vm_deallocate(__mach_task_self(), (vm_address_t) data, nread);
+        }
+        return EGRATUITOUS;
     }
 
-  *nbytes = nread;
-  return 0;
+    if (data != buf) {
+        memcpy(buf, data, nread);
+        __vm_deallocate(__mach_task_self(), (vm_address_t) data, nread);
+    }
+
+    *nbytes = nread;
+    return 0;
 }

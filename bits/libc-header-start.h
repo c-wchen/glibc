@@ -35,7 +35,7 @@
 /* ISO/IEC TR 24731-2:2010 defines the __STDC_WANT_LIB_EXT2__
    macro.  */
 #undef __GLIBC_USE_LIB_EXT2
-#if (defined __USE_GNU							\
+#if (defined __USE_GNU                          \
      || (defined __STDC_WANT_LIB_EXT2__ && __STDC_WANT_LIB_EXT2__ > 0))
 # define __GLIBC_USE_LIB_EXT2 1
 #else

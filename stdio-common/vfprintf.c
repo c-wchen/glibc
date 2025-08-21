@@ -17,11 +17,10 @@
 
 #include <libio/libioP.h>
 
-extern int
-__vfprintf (FILE *fp, const char *format, va_list ap)
+extern int __vfprintf(FILE *fp, const char *format, va_list ap)
 {
-  return __vfprintf_internal (fp, format, ap, 0);
+    return __vfprintf_internal(fp, format, ap, 0);
 }
-ldbl_strong_alias (__vfprintf, _IO_vfprintf);
-ldbl_strong_alias (__vfprintf, vfprintf);
-ldbl_hidden_def (__vfprintf, vfprintf)
+ldbl_strong_alias(__vfprintf, _IO_vfprintf);
+ldbl_strong_alias(__vfprintf, vfprintf);
+ldbl_hidden_def(__vfprintf, vfprintf)

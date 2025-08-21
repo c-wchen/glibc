@@ -24,11 +24,10 @@
    old process.
    Different than fork, this functions is marked as async-signal-safe by
    POSIX (by Austin Group issue 62).  */
-pid_t
-_Fork (void)
+pid_t _Fork(void)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (_Fork)
-stub_warning (_Fork)
+libc_hidden_def(_Fork)
+stub_warning(_Fork)

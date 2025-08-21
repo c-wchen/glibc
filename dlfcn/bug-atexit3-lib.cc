@@ -3,24 +3,22 @@
 
 #include <support/support.h>
 
-struct statclass
-{
-  statclass()
-  {
-    write_message ("statclass\n");
-  }
-  ~statclass()
-  {
-    write_message ("~statclass\n");
-  }
+struct statclass {
+    statclass()
+    {
+        write_message("statclass\n");
+    }
+    ~statclass()
+    {
+        write_message("~statclass\n");
+    }
 };
 
-struct extclass
-{
-  ~extclass()
-  {
-    static statclass var;
-  }
+struct extclass {
+    ~extclass()
+    {
+        static statclass var;
+    }
 };
 
 extclass globvar;

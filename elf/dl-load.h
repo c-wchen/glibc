@@ -18,7 +18,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _DL_LOAD_H
-#define _DL_LOAD_H	1
+#define _DL_LOAD_H  1
 
 #include <link.h>
 #include <sys/mman.h>
@@ -73,28 +73,26 @@ ELF_PREFERRED_ADDRESS_DATA;
 
 /* This structure describes one PT_LOAD command.
    Its details have been expanded out and converted.  */
-struct loadcmd
-{
-  ElfW(Addr) mapstart, mapend, dataend, allocend, mapalign;
-  ElfW(Off) mapoff;
-  int prot;                             /* PROT_* bits.  */
+struct loadcmd {
+    ElfW(Addr) mapstart, mapend, dataend, allocend, mapalign;
+    ElfW(Off) mapoff;
+    int prot;                             /* PROT_* bits.  */
 };
 
 
 /* This is a subroutine of _dl_map_segments.  It should be called for each
    load command, some time after L->l_addr has been set correctly.  It is
    responsible for setting the l_phdr fields  */
-static __always_inline void
-_dl_postprocess_loadcmd (struct link_map *l, const ElfW(Ehdr) *header,
-                         const struct loadcmd *c)
+static __always_inline void _dl_postprocess_loadcmd(struct link_map *l, const ElfW(Ehdr) *header,
+        const struct loadcmd *c)
 {
-  if (l->l_phdr == NULL
-      && c->mapoff <= header->e_phoff
-      && ((size_t) (c->mapend - c->mapstart + c->mapoff)
-          >= header->e_phoff + header->e_phnum * sizeof (ElfW(Phdr))))
-    /* Found the program header in this segment.  */
-    l->l_phdr = (void *) (uintptr_t) (c->mapstart + header->e_phoff
-                                      - c->mapoff);
+    if (l->l_phdr == NULL
+        && c->mapoff <= header->e_phoff
+        && ((size_t)(c->mapend - c->mapstart + c->mapoff)
+            >= header->e_phoff + header->e_phnum * sizeof(ElfW(Phdr))))
+        /* Found the program header in this segment.  */
+        l->l_phdr = (void *)(uintptr_t)(c->mapstart + header->e_phoff
+                                        - c->mapoff);
 }
 
 
@@ -110,13 +108,13 @@ _dl_postprocess_loadcmd (struct link_map *l, const ElfW(Ehdr) *header,
    The file <dl-map-segments.h> defines this function.  The canonical
    implementation in elf/dl-map-segments.h might be replaced by a sysdeps
    version.  */
-static const char *_dl_map_segments (struct link_map *l, int fd,
-                                     const ElfW(Ehdr) *header, int type,
-                                     const struct loadcmd loadcmds[],
-                                     size_t nloadcmds,
-                                     const size_t maplength,
-                                     bool has_holes,
-                                     struct link_map *loader);
+static const char *_dl_map_segments(struct link_map *l, int fd,
+                                    const ElfW(Ehdr) *header, int type,
+                                    const struct loadcmd loadcmds[],
+                                    size_t nloadcmds,
+                                    const size_t maplength,
+                                    bool has_holes,
+                                    struct link_map *loader);
 
 /* All the error message strings _dl_map_segments might return are
    listed here so that different implementations in different sysdeps
@@ -130,4 +128,4 @@ static const char *_dl_map_segments (struct link_map *l, int fd,
   N_("cannot map zero-fill pages")
 
 
-#endif	/* dl-load.h */
+#endif  /* dl-load.h */

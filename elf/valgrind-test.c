@@ -26,24 +26,25 @@
 
 #include <support/support.h>
 
-int
-main (int argc, char **argv)
+int main(int argc, char **argv)
 {
-  /* Do some non-trivial stuff that has been known to trigger
-     issues under valgrind in the past.
-     Setting up the locale textdomain makes sure to test some
-     string/path comparisons, file search and library loading. */
-  xsetlocale (LC_ALL, "");
-  if (bindtextdomain ("translit", "") == NULL)
-      return errno;
-  if (textdomain ("translit") == NULL)
-      return errno;
+    /* Do some non-trivial stuff that has been known to trigger
+       issues under valgrind in the past.
+       Setting up the locale textdomain makes sure to test some
+       string/path comparisons, file search and library loading. */
+    xsetlocale(LC_ALL, "");
+    if (bindtextdomain("translit", "") == NULL) {
+        return errno;
+    }
+    if (textdomain("translit") == NULL) {
+        return errno;
+    }
 
-  /* Show what we are executing and how...  */
-  char *me = realpath (argv[0], NULL);
-  printf ("bin: %s\n", me);
-  printf ("ld.so: %s\n", argv[1]);
-  free (me);
+    /* Show what we are executing and how...  */
+    char *me = realpath(argv[0], NULL);
+    printf("bin: %s\n", me);
+    printf("ld.so: %s\n", argv[1]);
+    free(me);
 
-  return 0;
+    return 0;
 }

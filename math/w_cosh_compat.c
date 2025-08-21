@@ -20,15 +20,15 @@
 #include <libm-alias-double.h>
 
 #if LIBM_SVID_COMPAT
-double
-__cosh (double x)
+double __cosh(double x)
 {
-	double z = __ieee754_cosh (x);
-	if (__builtin_expect (!isfinite (z), 0) && isfinite (x)
-	    && _LIB_VERSION != _IEEE_)
-		return __kernel_standard (x, x, 5); /* cosh overflow */
+    double z = __ieee754_cosh(x);
+    if (__builtin_expect(!isfinite(z), 0) && isfinite(x)
+        && _LIB_VERSION != _IEEE_) {
+        return __kernel_standard(x, x, 5);    /* cosh overflow */
+    }
 
-	return z;
+    return z;
 }
-libm_alias_double (__cosh, cosh)
+libm_alias_double(__cosh, cosh)
 #endif

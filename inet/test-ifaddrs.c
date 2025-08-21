@@ -26,73 +26,68 @@
 
 static int failures;
 
-static const char *
-addr_string (struct sockaddr *sa, char *buf, size_t size)
+static const char *addr_string(struct sockaddr *sa, char *buf, size_t size)
 {
-  if (sa == NULL)
-    return "<none>";
+    if (sa == NULL) {
+        return "<none>";
+    }
 
-  switch (sa->sa_family)
-    {
-    case AF_INET:
-      return inet_ntop (AF_INET, &((struct sockaddr_in *) sa)->sin_addr,
-			buf, size);
-    case AF_INET6:
-      return inet_ntop (AF_INET6, &((struct sockaddr_in6 *) sa)->sin6_addr,
-			buf, size);
+    switch (sa->sa_family) {
+        case AF_INET:
+            return inet_ntop(AF_INET, &((struct sockaddr_in *) sa)->sin_addr,
+                             buf, size);
+        case AF_INET6:
+            return inet_ntop(AF_INET6, &((struct sockaddr_in6 *) sa)->sin6_addr,
+                             buf, size);
 #ifdef AF_LINK
-    case AF_LINK:
-      return "<link>";
+        case AF_LINK:
+            return "<link>";
 #endif
-    case AF_UNSPEC:
-      return "---";
+        case AF_UNSPEC:
+            return "---";
 
 #ifdef AF_PACKET
-    case AF_PACKET:
-      return "<packet>";
+        case AF_PACKET:
+            return "<packet>";
 #endif
 
-    default:
-      ++failures;
-      printf ("sa_family=%d %08x\n", sa->sa_family,
-	      *(int*)&((struct sockaddr_in *) sa)->sin_addr.s_addr);
-      return "<unexpected sockaddr family>";
+        default:
+            ++failures;
+            printf("sa_family=%d %08x\n", sa->sa_family,
+                   *(int *) & ((struct sockaddr_in *) sa)->sin_addr.s_addr);
+            return "<unexpected sockaddr family>";
     }
 }
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  struct ifaddrs *ifaces, *ifa;
+    struct ifaddrs *ifaces, *ifa;
 
-  if (getifaddrs (&ifaces) < 0)
-    {
-      if (errno != ENOSYS)
-	{
-	  printf ("Couldn't get any interfaces: %s.\n", strerror (errno));
-	  exit (1);
-	}
-      /* The function is simply not implemented.  */
-      exit (0);
+    if (getifaddrs(&ifaces) < 0) {
+        if (errno != ENOSYS) {
+            printf("Couldn't get any interfaces: %s.\n", strerror(errno));
+            exit(1);
+        }
+        /* The function is simply not implemented.  */
+        exit(0);
     }
 
-  puts ("\
+    puts("\
 Name           Flags   Address         Netmask         Broadcast/Destination");
 
-  for (ifa = ifaces; ifa != NULL; ifa = ifa->ifa_next)
-    {
-      char abuf[64], mbuf[64], dbuf[64];
-      printf ("%-15s%#.4x  %-15s %-15s %-15s\n",
-	      ifa->ifa_name, ifa->ifa_flags,
-	      addr_string (ifa->ifa_addr, abuf, sizeof (abuf)),
-	      addr_string (ifa->ifa_netmask, mbuf, sizeof (mbuf)),
-	      addr_string (ifa->ifa_broadaddr, dbuf, sizeof (dbuf)));
+    for (ifa = ifaces; ifa != NULL; ifa = ifa->ifa_next) {
+        char abuf[64], mbuf[64], dbuf[64];
+        printf("%-15s%#.4x  %-15s %-15s %-15s\n",
+               ifa->ifa_name, ifa->ifa_flags,
+               addr_string(ifa->ifa_addr, abuf, sizeof(abuf)),
+               addr_string(ifa->ifa_netmask, mbuf, sizeof(mbuf)),
+               addr_string(ifa->ifa_broadaddr, dbuf, sizeof(dbuf)));
     }
 
-  freeifaddrs (ifaces);
+    freeifaddrs(ifaces);
 
-  return failures ? 1 : 0;
+    return failures ? 1 : 0;
 }
 
 #define TEST_FUNCTION do_test ()

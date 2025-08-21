@@ -20,22 +20,21 @@
    on Sun's Solaris OS.  */
 
 #ifndef _STDIO_EXT_H
-#define _STDIO_EXT_H	1
+#define _STDIO_EXT_H    1
 
 #include <stdio.h>
 
-enum
-{
-  /* Query current state of the locking status.  */
-  FSETLOCKING_QUERY = 0,
-#define FSETLOCKING_QUERY	FSETLOCKING_QUERY
-  /* The library protects all uses of the stream functions, except for
-     uses of the *_unlocked functions, by calls equivalent to flockfile().  */
-  FSETLOCKING_INTERNAL,
-#define FSETLOCKING_INTERNAL	FSETLOCKING_INTERNAL
-  /* The user will take care of locking.  */
-  FSETLOCKING_BYCALLER
-#define FSETLOCKING_BYCALLER	FSETLOCKING_BYCALLER
+enum {
+    /* Query current state of the locking status.  */
+    FSETLOCKING_QUERY = 0,
+#define FSETLOCKING_QUERY   FSETLOCKING_QUERY
+    /* The library protects all uses of the stream functions, except for
+       uses of the *_unlocked functions, by calls equivalent to flockfile().  */
+    FSETLOCKING_INTERNAL,
+#define FSETLOCKING_INTERNAL    FSETLOCKING_INTERNAL
+    /* The user will take care of locking.  */
+    FSETLOCKING_BYCALLER
+#define FSETLOCKING_BYCALLER    FSETLOCKING_BYCALLER
 };
 
 
@@ -43,44 +42,44 @@ __BEGIN_DECLS
 
 /* Return the size of the buffer of FP in bytes currently in use by
    the given stream.  */
-extern size_t __fbufsize (FILE *__fp) __THROW __nonnull ((1));
+extern size_t __fbufsize(FILE *__fp) __THROW __nonnull((1));
 
 
 /* Return non-zero value iff the stream FP is opened readonly, or if the
    last operation on the stream was a read operation.  */
-extern int __freading (FILE *__fp) __THROW __nonnull ((1));
+extern int __freading(FILE *__fp) __THROW __nonnull((1));
 
 /* Return non-zero value iff the stream FP is opened write-only or
    append-only, or if the last operation on the stream was a write
    operation.  */
-extern int __fwriting (FILE *__fp) __THROW __nonnull ((1));
+extern int __fwriting(FILE *__fp) __THROW __nonnull((1));
 
 
 /* Return non-zero value iff stream FP is not opened write-only or
    append-only.  */
-extern int __freadable (FILE *__fp) __THROW __nonnull ((1));
+extern int __freadable(FILE *__fp) __THROW __nonnull((1));
 
 /* Return non-zero value iff stream FP is not opened read-only.  */
-extern int __fwritable (FILE *__fp) __THROW __nonnull ((1));
+extern int __fwritable(FILE *__fp) __THROW __nonnull((1));
 
 
 /* Return non-zero value iff the stream FP is line-buffered.  */
-extern int __flbf (FILE *__fp) __THROW __nonnull ((1));
+extern int __flbf(FILE *__fp) __THROW __nonnull((1));
 
 
 /* Discard all pending buffered I/O on the stream FP.  */
-extern void __fpurge (FILE *__fp) __THROW __nonnull ((1));
+extern void __fpurge(FILE *__fp) __THROW __nonnull((1));
 
 /* Return amount of output in bytes pending on a stream FP.  */
-extern size_t __fpending (FILE *__fp) __THROW __nonnull ((1));
+extern size_t __fpending(FILE *__fp) __THROW __nonnull((1));
 
 /* Flush all line-buffered files.  */
-extern void _flushlbf (void);
+extern void _flushlbf(void);
 
 
 /* Set locking status of stream FP to TYPE.  */
-extern int __fsetlocking (FILE *__fp, int __type) __THROW __nonnull ((1));
+extern int __fsetlocking(FILE *__fp, int __type) __THROW __nonnull((1));
 
 __END_DECLS
 
-#endif	/* stdio_ext.h */
+#endif  /* stdio_ext.h */

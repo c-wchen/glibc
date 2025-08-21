@@ -29,52 +29,56 @@
    with all kinds of WRONG WRONG WRONG semantics,
    by using flock.  This is definitely the Wrong Thing,
    but it might be better than nothing (?).  */
-int
-__f_setlk (int fd, int type, int whence, __off64_t start, __off64_t len, int wait)
+int __f_setlk(int fd, int type, int whence, __off64_t start, __off64_t len, int wait)
 {
-  int cmd = 0;
+    int cmd = 0;
 
-  switch (type)
-    {
-    case F_RDLCK: cmd = LOCK_SH; break;
-    case F_WRLCK: cmd = LOCK_EX; break;
-    case F_UNLCK: cmd = LOCK_UN; break;
-    default:
-      return __hurd_fail (EINVAL);
+    switch (type) {
+        case F_RDLCK:
+            cmd = LOCK_SH;
+            break;
+        case F_WRLCK:
+            cmd = LOCK_EX;
+            break;
+        case F_UNLCK:
+            cmd = LOCK_UN;
+            break;
+        default:
+            return __hurd_fail(EINVAL);
     }
 
-  if (cmd != LOCK_UN && wait == 0)
-    cmd |= LOCK_NB;
-
-  if (whence == SEEK_CUR)
-    {
-      /* In case the target position is 0, we can support it below.  */
-      __off64_t cur = __lseek64 (fd, 0, SEEK_CUR);
-
-      if (cur >= 0)
-	{
-	  start = cur + start;
-	  whence = SEEK_SET;
-	}
+    if (cmd != LOCK_UN && wait == 0) {
+        cmd |= LOCK_NB;
     }
 
-  switch (whence)
-    {
-    case SEEK_SET:
-      if (start == 0 && len == 0) /* Whole file request.  */
-	break;
-      /* It seems to be common for applications to lock the first
-	 byte of the file when they are really doing whole-file locking.
-	 So, since it's so wrong already, might as well do that too.  */
-      if (start == 0 && len == 1)
-	break;
-      /* FALLTHROUGH */
-    case SEEK_CUR:
-    case SEEK_END:
-      return __hurd_fail (ENOTSUP);
-    default:
-      return __hurd_fail (EINVAL);
+    if (whence == SEEK_CUR) {
+        /* In case the target position is 0, we can support it below.  */
+        __off64_t cur = __lseek64(fd, 0, SEEK_CUR);
+
+        if (cur >= 0) {
+            start = cur + start;
+            whence = SEEK_SET;
+        }
     }
 
-  return __flock (fd, cmd);
+    switch (whence) {
+        case SEEK_SET:
+            if (start == 0 && len == 0) { /* Whole file request.  */
+                break;
+            }
+            /* It seems to be common for applications to lock the first
+            byte of the file when they are really doing whole-file locking.
+             So, since it's so wrong already, might as well do that too.  */
+            if (start == 0 && len == 1) {
+                break;
+            }
+        /* FALLTHROUGH */
+        case SEEK_CUR:
+        case SEEK_END:
+            return __hurd_fail(ENOTSUP);
+        default:
+            return __hurd_fail(EINVAL);
+    }
+
+    return __flock(fd, cmd);
 }

@@ -20,11 +20,11 @@
 # error "Never include <bits/err-ldbl.h> directly; use <err.h> instead."
 #endif
 
-__LDBL_REDIR_DECL (warn)
-__LDBL_REDIR_DECL (vwarn)
-__LDBL_REDIR_DECL (warnx)
-__LDBL_REDIR_DECL (vwarnx)
-__LDBL_REDIR_DECL (err)
-__LDBL_REDIR_DECL (verr)
-__LDBL_REDIR_DECL (errx)
-__LDBL_REDIR_DECL (verrx)
+__LDBL_REDIR_DECL(warn)
+__LDBL_REDIR_DECL(vwarn)
+__LDBL_REDIR_DECL(warnx)
+__LDBL_REDIR_DECL(vwarnx)
+__LDBL_REDIR_DECL(err)
+__LDBL_REDIR_DECL(verr)
+__LDBL_REDIR_DECL(errx)
+__LDBL_REDIR_DECL(verrx)

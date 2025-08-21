@@ -4,15 +4,15 @@
 #include "tst-array1.c"
 #undef main
 
-int
-main (void)
+int main(void)
 {
-  void *handle = dlopen ("tst-array2dep.so", RTLD_LAZY);
+    void *handle = dlopen("tst-array2dep.so", RTLD_LAZY);
 
-  array1_main ();
+    array1_main();
 
-  if (handle != NULL)
-    dlclose (handle);
+    if (handle != NULL) {
+        dlclose(handle);
+    }
 
-  return 0;
+    return 0;
 }

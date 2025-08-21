@@ -21,17 +21,16 @@
 #include <dlfcn.h>
 #include <assert.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  void *handle = dlopen ("libtest.so", RTLD_LAZY);
-  TEST_VERIFY_EXIT (handle != NULL);
-  typedef const char *(test_func_t) (void);
-  test_func_t *func = dlsym (handle, "test_func");
-  assert (func != NULL);
-  TEST_COMPARE_STRING (func (), "Success");
-  dlclose (handle);
-  return 0;
+    void *handle = dlopen("libtest.so", RTLD_LAZY);
+    TEST_VERIFY_EXIT(handle != NULL);
+    typedef const char *(test_func_t)(void);
+    test_func_t *func = dlsym(handle, "test_func");
+    assert(func != NULL);
+    TEST_COMPARE_STRING(func(), "Success");
+    dlclose(handle);
+    return 0;
 }
 
 #include <support/test-driver.c>

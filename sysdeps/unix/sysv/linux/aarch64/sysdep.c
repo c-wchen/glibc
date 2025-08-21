@@ -19,15 +19,15 @@
 #include <sysdep.h>
 #include <errno.h>
 
-long __syscall_error (long err);
-hidden_proto (__syscall_error)
+long __syscall_error(long err);
+hidden_proto(__syscall_error)
 
 /* This routine is jumped to by all the syscall handlers, to stash
    an error number into errno.  */
 long
-__syscall_error (long err)
+__syscall_error(long err)
 {
-  __set_errno (- err);
-  return -1;
+    __set_errno(- err);
+    return -1;
 }
-hidden_def (__syscall_error)
+hidden_def(__syscall_error)

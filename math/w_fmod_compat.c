@@ -22,22 +22,23 @@
 
 #if LIBM_SVID_COMPAT && SHLIB_COMPAT (libm, GLIBC_2_0, GLIBC_2_38)
 /* wrapper fmod */
-double
-__fmod_compat (double x, double y)
+double __fmod_compat(double x, double y)
 {
-  if (__builtin_expect (isinf (x) || y == 0.0, 0)
-      && _LIB_VERSION != _IEEE_ && !isnan (y) && !isnan (x))
-    /* fmod(+-Inf,y) or fmod(x,0) */
-    return __kernel_standard (x, y, 27);
+    if (__builtin_expect(isinf(x) || y == 0.0, 0)
+        && _LIB_VERSION != _IEEE_ && !isnan(y) && !isnan(x))
+        /* fmod(+-Inf,y) or fmod(x,0) */
+    {
+        return __kernel_standard(x, y, 27);
+    }
 
-  return __ieee754_fmod (x, y);
+    return __ieee754_fmod(x, y);
 }
-compat_symbol (libm, __fmod_compat, fmod, GLIBC_2_0);
+compat_symbol(libm, __fmod_compat, fmod, GLIBC_2_0);
 # ifdef NO_LONG_DOUBLE
-weak_alias (__fmod_compat, fmodl)
+weak_alias(__fmod_compat, fmodl)
 # endif
 # ifdef LONG_DOUBLE_COMPAT
-LONG_DOUBLE_COMPAT_CHOOSE_libm_fmodl (
-  compat_symbol (libm, __fmod_compat, fmodl, FIRST_VERSION_libm_fmodl), );
+LONG_DOUBLE_COMPAT_CHOOSE_libm_fmodl(
+    compat_symbol(libm, __fmod_compat, fmodl, FIRST_VERSION_libm_fmodl),);
 # endif
 #endif

@@ -18,4 +18,4 @@
 
 #define FUNC significand
 #include <s_log1p.c>
-weak_alias (__significand, significand)
+weak_alias(__significand, significand)

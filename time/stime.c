@@ -24,15 +24,14 @@
 /* Set the system clock to *WHEN.  */
 
 int
-attribute_compat_text_section
-__stime (const time_t *when)
+attribute_compat_text_section __stime(const time_t *when)
 {
-  struct timespec ts;
-  ts.tv_sec = *when;
-  ts.tv_nsec = 0;
+    struct timespec ts;
+    ts.tv_sec = *when;
+    ts.tv_nsec = 0;
 
-  return __clock_settime (CLOCK_REALTIME, &ts);
+    return __clock_settime(CLOCK_REALTIME, &ts);
 }
 
-compat_symbol (libc, __stime, stime, GLIBC_2_0);
+compat_symbol(libc, __stime, stime, GLIBC_2_0);
 #endif

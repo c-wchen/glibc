@@ -23,31 +23,30 @@
 #include <inttypes.h>
 #include <stdio.h>
 
-struct json_ctx
-{
-  FILE *fp;
-  unsigned int indent_level;
-  bool first_element;
+struct json_ctx {
+    FILE *fp;
+    unsigned int indent_level;
+    bool first_element;
 };
 
 typedef struct json_ctx json_ctx_t;
 
-void json_init (json_ctx_t *ctx, unsigned int indent_level, FILE *fp);
-void json_document_begin (json_ctx_t *ctx);
-void json_document_end (json_ctx_t *ctx);
-void json_attr_object_begin (json_ctx_t *ctx, const char *name);
-void json_attr_object_end (json_ctx_t *ctx);
-void json_attr_string (json_ctx_t *ctx, const char *name, const char *s);
-void json_attr_int (json_ctx_t *ctx, const char *name, int64_t d);
-void json_attr_uint (json_ctx_t *ctx, const char *name, uint64_t d);
-void json_attr_double (json_ctx_t *ctx, const char *name, double d);
-void json_array_begin (json_ctx_t *ctx, const char *name);
-void json_array_end (json_ctx_t *ctx);
-void json_element_string (json_ctx_t *ctx, const char *s);
-void json_element_int (json_ctx_t *ctx, int64_t d);
-void json_element_uint (json_ctx_t *ctx, uint64_t d);
-void json_element_double (json_ctx_t *ctx, double d);
-void json_element_object_begin (json_ctx_t *ctx);
-void json_element_object_end (json_ctx_t *ctx);
+void json_init(json_ctx_t *ctx, unsigned int indent_level, FILE *fp);
+void json_document_begin(json_ctx_t *ctx);
+void json_document_end(json_ctx_t *ctx);
+void json_attr_object_begin(json_ctx_t *ctx, const char *name);
+void json_attr_object_end(json_ctx_t *ctx);
+void json_attr_string(json_ctx_t *ctx, const char *name, const char *s);
+void json_attr_int(json_ctx_t *ctx, const char *name, int64_t d);
+void json_attr_uint(json_ctx_t *ctx, const char *name, uint64_t d);
+void json_attr_double(json_ctx_t *ctx, const char *name, double d);
+void json_array_begin(json_ctx_t *ctx, const char *name);
+void json_array_end(json_ctx_t *ctx);
+void json_element_string(json_ctx_t *ctx, const char *s);
+void json_element_int(json_ctx_t *ctx, int64_t d);
+void json_element_uint(json_ctx_t *ctx, uint64_t d);
+void json_element_double(json_ctx_t *ctx, double d);
+void json_element_object_begin(json_ctx_t *ctx);
+void json_element_object_end(json_ctx_t *ctx);
 
 #endif

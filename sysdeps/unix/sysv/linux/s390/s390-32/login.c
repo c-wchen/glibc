@@ -32,4 +32,4 @@
 
 /* Compatibility symbol as formerly found in libutil.  login@GLIBC_2.0
    is supplied by login32.c.  */
-symbol_version (__login, login, UTMP_COMPAT_BASE);
+symbol_version(__login, login, UTMP_COMPAT_BASE);

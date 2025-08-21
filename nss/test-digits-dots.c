@@ -23,17 +23,16 @@
 
 #include <support/support.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char buf[32];
-  struct hostent *result = NULL;
-  struct hostent ret;
-  int h_err = 0;
-  int err;
+    char buf[32];
+    struct hostent *result = NULL;
+    struct hostent ret;
+    int h_err = 0;
+    int err;
 
-  err = gethostbyname_r ("1.2.3.4", &ret, buf, sizeof (buf), &result, &h_err);
-  return err == ERANGE && h_err == NETDB_INTERNAL ? EXIT_SUCCESS : EXIT_FAILURE;
+    err = gethostbyname_r("1.2.3.4", &ret, buf, sizeof(buf), &result, &h_err);
+    return err == ERANGE && h_err == NETDB_INTERNAL ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
 #include <support/test-driver.c>

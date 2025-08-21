@@ -28,46 +28,51 @@ static mtx_t mutex;
 /* Shared counter to check possible race conditions.  */
 static int counter;
 
-static int
-child_add (void *arg)
+static int child_add(void *arg)
 {
-  if (mtx_lock (&mutex) != thrd_success)
-    FAIL_EXIT1 ("mtx_lock failed");
+    if (mtx_lock(&mutex) != thrd_success) {
+        FAIL_EXIT1("mtx_lock failed");
+    }
 
-  counter++;
+    counter++;
 
-  if (mtx_unlock (&mutex) != thrd_success)
-    FAIL_EXIT1 ("mtx_unlock failed");
+    if (mtx_unlock(&mutex) != thrd_success) {
+        FAIL_EXIT1("mtx_unlock failed");
+    }
 
-  thrd_exit (thrd_success);
+    thrd_exit(thrd_success);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  mtx_init (&mutex, mtx_plain);
+    mtx_init(&mutex, mtx_plain);
 
-  thrd_t id;
-  if (thrd_create (&id, child_add, NULL) != thrd_success)
-    FAIL_EXIT1 ("thrd_create failed");
+    thrd_t id;
+    if (thrd_create(&id, child_add, NULL) != thrd_success) {
+        FAIL_EXIT1("thrd_create failed");
+    }
 
-  if (mtx_lock (&mutex) != thrd_success)
-    FAIL_EXIT1 ("mtx_lock failed");
+    if (mtx_lock(&mutex) != thrd_success) {
+        FAIL_EXIT1("mtx_lock failed");
+    }
 
-  counter++;
+    counter++;
 
-  if (mtx_unlock (&mutex) != thrd_success)
-    FAIL_EXIT1 ("mtx_unlock failed");
+    if (mtx_unlock(&mutex) != thrd_success) {
+        FAIL_EXIT1("mtx_unlock failed");
+    }
 
-  if (thrd_join (id, NULL) != thrd_success)
-    FAIL_EXIT1 ("thrd_join failed");
+    if (thrd_join(id, NULL) != thrd_success) {
+        FAIL_EXIT1("thrd_join failed");
+    }
 
-  if (counter != 2)
-    FAIL_EXIT1 ("counter (%d) != 2", counter);
+    if (counter != 2) {
+        FAIL_EXIT1("counter (%d) != 2", counter);
+    }
 
-  mtx_destroy (&mutex);
+    mtx_destroy(&mutex);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

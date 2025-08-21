@@ -21,7 +21,7 @@
 /* Get the conversion table.  */
 #define TABLES <ibm273.h>
 
-#define CHARSET_NAME	"IBM273//"
-#define HAS_HOLES	0
+#define CHARSET_NAME    "IBM273//"
+#define HAS_HOLES   0
 
 #include <8bit-gap.c>

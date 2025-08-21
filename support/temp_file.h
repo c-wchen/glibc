@@ -24,34 +24,34 @@
 __BEGIN_DECLS
 
 /* Schedule a temporary file for deletion on exit.  */
-void add_temp_file (const char *name);
+void add_temp_file(const char *name);
 
 /* Create a temporary file.  Return the opened file descriptor on
    success, or -1 on failure.  Write the file name to *FILENAME if
    FILENAME is not NULL.  In this case, the caller is expected to free
    *FILENAME.  */
-int create_temp_file (const char *base, char **filename);
+int create_temp_file(const char *base, char **filename);
 
 /* Create a temporary file in directory DIR.  Return the opened file
    descriptor on success, or -1 on failure.  Write the file name to
    *FILENAME if FILENAME is not NULL.  In this case, the caller is
    expected to free *FILENAME.  */
-int create_temp_file_in_dir (const char *base, const char *dir,
-			     char **filename);
+int create_temp_file_in_dir(const char *base, const char *dir,
+                            char **filename);
 
 /* Create a temporary directory and schedule it for deletion.  BASE is
    used as a prefix for the unique directory name, which the function
    returns.  The caller should free this string.  */
-char *support_create_temp_directory (const char *base);
+char *support_create_temp_directory(const char *base);
 
 /* Create a temporary directory tree that is longer than PATH_MAX and schedule
    it for deletion.  BASENAME is used as a prefix for the unique directory
    name, which the function returns.  The caller should free this string.  */
-char *support_create_and_chdir_toolong_temp_directory (const char *basename);
+char *support_create_and_chdir_toolong_temp_directory(const char *basename);
 
 /* Change into the innermost directory of the directory tree BASE, which was
    created using support_create_and_chdir_toolong_temp_directory.  */
-void support_chdir_toolong_temp_directory (const char *base);
+void support_chdir_toolong_temp_directory(const char *base);
 
 __END_DECLS
 

@@ -21,13 +21,15 @@
 #include <support/check.h>
 #include <stdlib.h>
 
-void
-xfclose (FILE *fp)
+void xfclose(FILE *fp)
 {
-  if (ferror (fp))
-    FAIL_EXIT1 ("stdio stream closed with pending errors");
-  if (fflush (fp) != 0)
-    FAIL_EXIT1 ("fflush: %m");
-  if (fclose (fp) != 0)
-    FAIL_EXIT1 ("fclose: %m");
+    if (ferror(fp)) {
+        FAIL_EXIT1("stdio stream closed with pending errors");
+    }
+    if (fflush(fp) != 0) {
+        FAIL_EXIT1("fflush: %m");
+    }
+    if (fclose(fp) != 0) {
+        FAIL_EXIT1("fclose: %m");
+    }
 }

@@ -29,52 +29,47 @@ static pthread_barrier_t barrier;
 
 static pid_t thread_tid;
 
-static void *
-thread_func (void *ignored)
+static void *thread_func(void *ignored)
 {
-  thread_tid = gettid ();
-  TEST_VERIFY (thread_tid != getpid ());
-  TEST_COMPARE (thread_tid, pthread_gettid_np (pthread_self ()));
-  xpthread_barrier_wait (&barrier);
-  /* The main thread calls pthread_gettid_np here.  */
-  xpthread_barrier_wait (&barrier);
-  return NULL;
+    thread_tid = gettid();
+    TEST_VERIFY(thread_tid != getpid());
+    TEST_COMPARE(thread_tid, pthread_gettid_np(pthread_self()));
+    xpthread_barrier_wait(&barrier);
+    /* The main thread calls pthread_gettid_np here.  */
+    xpthread_barrier_wait(&barrier);
+    return NULL;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  TEST_COMPARE (pthread_gettid_np (pthread_self ()), getpid ());
-  TEST_COMPARE (pthread_gettid_np (pthread_self ()), gettid ());
+    TEST_COMPARE(pthread_gettid_np(pthread_self()), getpid());
+    TEST_COMPARE(pthread_gettid_np(pthread_self()), gettid());
 
-  xpthread_barrier_init (&barrier, NULL, 2);
+    xpthread_barrier_init(&barrier, NULL, 2);
 
-  pthread_t thr = xpthread_create (NULL, thread_func, NULL);
-  xpthread_barrier_wait (&barrier);
-  TEST_COMPARE (thread_tid, pthread_gettid_np (thr));
-  xpthread_barrier_wait (&barrier);
+    pthread_t thr = xpthread_create(NULL, thread_func, NULL);
+    xpthread_barrier_wait(&barrier);
+    TEST_COMPARE(thread_tid, pthread_gettid_np(thr));
+    xpthread_barrier_wait(&barrier);
 
-  while (true)
-    {
-      /* Check if the kernel thread is still running.  */
-      if (tgkill (getpid (), thread_tid, 0))
-        {
-          TEST_COMPARE (errno, ESRCH);
-          break;
+    while (true) {
+        /* Check if the kernel thread is still running.  */
+        if (tgkill(getpid(), thread_tid, 0)) {
+            TEST_COMPARE(errno, ESRCH);
+            break;
         }
 
-      pid_t tid = pthread_gettid_np (thr);
-      if (tid != thread_tid)
-        {
-          TEST_COMPARE (tid, -1);
-          break;
+        pid_t tid = pthread_gettid_np(thr);
+        if (tid != thread_tid) {
+            TEST_COMPARE(tid, -1);
+            break;
         }
-      TEST_COMPARE (sched_yield (), 0);
+        TEST_COMPARE(sched_yield(), 0);
     }
 
-  TEST_VERIFY (xpthread_join (thr) == NULL);
+    TEST_VERIFY(xpthread_join(thr) == NULL);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

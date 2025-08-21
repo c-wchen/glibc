@@ -28,37 +28,34 @@
 
 
 /* Read a directory entry from DIRP.  */
-int
-__readdir_r (DIR *dirp, struct dirent *entry, struct dirent **result)
+int __readdir_r(DIR *dirp, struct dirent *entry, struct dirent **result)
 {
-  if (sizeof (struct dirent64) == sizeof (struct dirent))
-    /* We should in fact just be an alias to readdir64_r on this machine.  */
-    return __readdir64_r (dirp,
-			  (struct dirent64 *) entry,
-			  (struct dirent64 **) result);
+    if (sizeof(struct dirent64) == sizeof(struct dirent))
+        /* We should in fact just be an alias to readdir64_r on this machine.  */
+        return __readdir64_r(dirp,
+                             (struct dirent64 *) entry,
+                             (struct dirent64 **) result);
 
-  struct dirent64 *result64;
-  union
-  {
-    struct dirent64 d;
-    char b[offsetof (struct dirent64, d_name) + UCHAR_MAX + 1];
-  } u;
-  int err;
+    struct dirent64 *result64;
+    union {
+        struct dirent64 d;
+        char b[offsetof(struct dirent64, d_name) + UCHAR_MAX + 1];
+    } u;
+    int err;
 
-  err = __readdir64_r (dirp, &u.d, &result64);
-  if (result64)
-    {
-      entry->d_fileno = result64->d_fileno;
-      entry->d_reclen = result64->d_reclen;
-      entry->d_type = result64->d_type;
-      entry->d_namlen = result64->d_namlen;
-      memcpy (entry->d_name, result64->d_name, result64->d_namlen + 1);
-      *result = entry;
+    err = __readdir64_r(dirp, &u.d, &result64);
+    if (result64) {
+        entry->d_fileno = result64->d_fileno;
+        entry->d_reclen = result64->d_reclen;
+        entry->d_type = result64->d_type;
+        entry->d_namlen = result64->d_namlen;
+        memcpy(entry->d_name, result64->d_name, result64->d_namlen + 1);
+        *result = entry;
+    } else {
+        *result = NULL;
     }
-  else
-    *result = NULL;
 
-  return err;
+    return err;
 }
 
-weak_alias (__readdir_r, readdir_r)
+weak_alias(__readdir_r, readdir_r)

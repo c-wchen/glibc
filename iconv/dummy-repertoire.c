@@ -21,16 +21,14 @@
 #include <repertoire.h>
 
 
-uint32_t
-repertoire_find_value (const struct repertoire_t *repertoire, const char *name,
-		       size_t len)
+uint32_t repertoire_find_value(const struct repertoire_t *repertoire, const char *name,
+                               size_t len)
 {
-  return ILLEGAL_CHAR_VALUE;
+    return ILLEGAL_CHAR_VALUE;
 }
 
 
-const char *
-repertoire_find_symbol (const struct repertoire_t *repertoire, uint32_t ucs)
+const char *repertoire_find_symbol(const struct repertoire_t *repertoire, uint32_t ucs)
 {
-  return NULL;
+    return NULL;
 }

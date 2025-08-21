@@ -24,5 +24,5 @@
 #define RTLD_PRIVATE_ERRNO 0
 
 #ifndef __ASSEMBLER__
-void _dl_init_first (void *data);
+void _dl_init_first(void *data);
 #endif

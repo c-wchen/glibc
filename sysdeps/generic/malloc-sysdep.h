@@ -21,8 +21,7 @@
 
 /* Force an unmap when the heap shrinks in a secure exec.  This ensures that
    the old data pages immediately cease to be accessible.  */
-static inline bool
-check_may_shrink_heap (void)
+static inline bool check_may_shrink_heap(void)
 {
-  return __libc_enable_secure;
+    return __libc_enable_secure;
 }

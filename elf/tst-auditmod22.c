@@ -23,29 +23,27 @@
 #include <stdio.h>
 #include <sys/auxv.h>
 
-static inline bool
-startswith (const char *str, const char *pre)
+static inline bool startswith(const char *str, const char *pre)
 {
-  size_t lenpre = strlen (pre);
-  size_t lenstr = strlen (str);
-  return lenstr < lenpre ? false : memcmp (pre, str, lenpre) == 0;
+    size_t lenpre = strlen(pre);
+    size_t lenstr = strlen(str);
+    return lenstr < lenpre ? false : memcmp(pre, str, lenpre) == 0;
 }
 
-unsigned int
-la_version (unsigned int version)
+unsigned int la_version(unsigned int version)
 {
-  return LAV_CURRENT;
+    return LAV_CURRENT;
 }
 
-unsigned int
-la_objopen (struct link_map *map, Lmid_t lmid, uintptr_t *cookie)
+unsigned int la_objopen(struct link_map *map, Lmid_t lmid, uintptr_t *cookie)
 {
-  /* The linux-gate.so is placed at a fixed address, thus l_addr being 0,
-     and it might be the value reported as the AT_SYSINFO_EHDR.  */
-  if (map->l_addr == 0 && startswith (map->l_name, "linux-gate.so"))
-    fprintf (stderr, "vdso found: %p\n", NULL);
-  else if (map->l_addr == getauxval (AT_SYSINFO_EHDR))
-    fprintf (stderr, "vdso found: %p\n", (void*) map->l_addr);
+    /* The linux-gate.so is placed at a fixed address, thus l_addr being 0,
+       and it might be the value reported as the AT_SYSINFO_EHDR.  */
+    if (map->l_addr == 0 && startswith(map->l_name, "linux-gate.so")) {
+        fprintf(stderr, "vdso found: %p\n", NULL);
+    } else if (map->l_addr == getauxval(AT_SYSINFO_EHDR)) {
+        fprintf(stderr, "vdso found: %p\n", (void *) map->l_addr);
+    }
 
-  return 0;
+    return 0;
 }

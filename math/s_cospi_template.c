@@ -20,20 +20,23 @@
 #include <math.h>
 
 FLOAT
-M_DECL_FUNC (__cospi) (FLOAT x)
+M_DECL_FUNC(__cospi)(FLOAT x)
 {
-  if (isless (M_FABS (x), M_EPSILON))
-    return M_LIT (1.0);
-  if (__glibc_unlikely (isinf (x)))
-    __set_errno (EDOM);
-  x = M_FABS (x - M_LIT (2.0) * M_SUF (round) (M_LIT (0.5) * x));
-  if (islessequal (x, M_LIT (0.25)))
-    return M_SUF (__cos) (M_MLIT (M_PI) * x);
-  else if (x == M_LIT (0.5))
-    return M_LIT (0.0);
-  else if (islessequal (x, M_LIT (0.75)))
-    return M_SUF (__sin) (M_MLIT (M_PI) * (M_LIT (0.5) - x));
-  else
-    return -M_SUF (__cos) (M_MLIT (M_PI) * (M_LIT (1.0) - x));
+    if (isless(M_FABS(x), M_EPSILON)) {
+        return M_LIT(1.0);
+    }
+    if (__glibc_unlikely(isinf(x))) {
+        __set_errno(EDOM);
+    }
+    x = M_FABS(x - M_LIT(2.0) * M_SUF(round)(M_LIT(0.5) * x));
+    if (islessequal(x, M_LIT(0.25))) {
+        return M_SUF(__cos)(M_MLIT(M_PI) * x);
+    } else if (x == M_LIT(0.5)) {
+        return M_LIT(0.0);
+    } else if (islessequal(x, M_LIT(0.75))) {
+        return M_SUF(__sin)(M_MLIT(M_PI) * (M_LIT(0.5) - x));
+    } else {
+        return -M_SUF(__cos)(M_MLIT(M_PI) * (M_LIT(1.0) - x));
+    }
 }
-declare_mgen_alias (__cospi, cospi);
+declare_mgen_alias(__cospi, cospi);

@@ -22,41 +22,41 @@
 #include <unistd.h>
 #include <utmp.h>
 
-static void
-print_entry (struct utmp *up)
+static void print_entry(struct utmp *up)
 {
-  /* Mixed 32-/64-bit systems may have timeval structs of different sixe
-     but need struct utmp to be the same size.  So in 64-bit up->ut_tv may
-     not be a timeval but a struct of __int32_t's.  This would cause a compile
-     time warning and a formatting error when 32-bit int is passed where
-     a 64-bit long is expected. So copy up->up_tv to a temporary timeval.
-     This is 32-/64-bit agnostic and expands the timeval fields to the
-     expected size as needed. */
-  struct timeval temp_tv;
-  temp_tv.tv_sec = up->ut_tv.tv_sec;
-  temp_tv.tv_usec = up->ut_tv.tv_usec;
+    /* Mixed 32-/64-bit systems may have timeval structs of different sixe
+       but need struct utmp to be the same size.  So in 64-bit up->ut_tv may
+       not be a timeval but a struct of __int32_t's.  This would cause a compile
+       time warning and a formatting error when 32-bit int is passed where
+       a 64-bit long is expected. So copy up->up_tv to a temporary timeval.
+       This is 32-/64-bit agnostic and expands the timeval fields to the
+       expected size as needed. */
+    struct timeval temp_tv;
+    temp_tv.tv_sec = up->ut_tv.tv_sec;
+    temp_tv.tv_usec = up->ut_tv.tv_usec;
 
-  printf ("[%d] [%05d] [%-4.4s] [%-8.8s] [%-12.12s] [%-16.16s] [%-15.15s]"
-	  " [%ld]\n",
-	  up->ut_type, up->ut_pid, up->ut_id, up->ut_user, up->ut_line,
-	  up->ut_host, 4 + ctime (&temp_tv.tv_sec),
-	  (long int) temp_tv.tv_usec);
+    printf("[%d] [%05d] [%-4.4s] [%-8.8s] [%-12.12s] [%-16.16s] [%-15.15s]"
+           " [%ld]\n",
+           up->ut_type, up->ut_pid, up->ut_id, up->ut_user, up->ut_line,
+           up->ut_host, 4 + ctime(&temp_tv.tv_sec),
+           (long int) temp_tv.tv_usec);
 }
 
-int
-main (int argc, char *argv[])
+int main(int argc, char *argv[])
 {
-  struct utmp *up;
+    struct utmp *up;
 
-  if (argc > 1)
-    utmpname (argv[1]);
+    if (argc > 1) {
+        utmpname(argv[1]);
+    }
 
-  setutent ();
+    setutent();
 
-  while ((up = getutent ()))
-    print_entry (up);
+    while ((up = getutent())) {
+        print_entry(up);
+    }
 
-  endutent ();
+    endutent();
 
-  return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }

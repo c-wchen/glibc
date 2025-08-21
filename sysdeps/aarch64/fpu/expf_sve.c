@@ -24,30 +24,29 @@
    correctly by FEXPA.  */
 #define Thres 0x1.5d5e2ap+6f
 
-static const struct data
-{
-  struct sv_expf_data d;
-  float thres;
+static const struct data {
+    struct sv_expf_data d;
+    float thres;
 } data = {
-  .d = SV_EXPF_DATA,
-  .thres = Thres,
+    .d = SV_EXPF_DATA,
+    .thres = Thres,
 };
 
-static svfloat32_t NOINLINE
-special_case (svfloat32_t x, svbool_t special, const struct sv_expf_data *d)
+static svfloat32_t NOINLINE special_case(svfloat32_t x, svbool_t special, const struct sv_expf_data *d)
 {
-  return sv_call_f32 (expf, x, expf_inline (x, svptrue_b32 (), d), special);
+    return sv_call_f32(expf, x, expf_inline(x, svptrue_b32(), d), special);
 }
 
 /* Optimised single-precision SVE exp function.
    Worst-case error is 0.88 +0.50 ULP:
    _ZGVsMxv_expf(-0x1.bba276p-6) got 0x1.f25288p-1
-				want 0x1.f2528ap-1.  */
-svfloat32_t SV_NAME_F1 (exp) (svfloat32_t x, const svbool_t pg)
+                want 0x1.f2528ap-1.  */
+svfloat32_t SV_NAME_F1(exp)(svfloat32_t x, const svbool_t pg)
 {
-  const struct data *d = ptr_barrier (&data);
-  svbool_t is_special_case = svacgt (pg, x, d->thres);
-  if (__glibc_unlikely (svptest_any (pg, is_special_case)))
-    return special_case (x, is_special_case, &d->d);
-  return expf_inline (x, pg, &d->d);
+    const struct data *d = ptr_barrier(&data);
+    svbool_t is_special_case = svacgt(pg, x, d->thres);
+    if (__glibc_unlikely(svptest_any(pg, is_special_case))) {
+        return special_case(x, is_special_case, &d->d);
+    }
+    return expf_inline(x, pg, &d->d);
 }

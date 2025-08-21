@@ -23,67 +23,57 @@
 
 #include <support/xunistd.h>
 
-static int do_test (void);
+static int do_test(void);
 
 #define TEST_FUNCTION do_test ()
 #include "../test-skeleton.c"
 
-int
-do_test (void)
+int do_test(void)
 {
-  int max;
+    int max;
 #ifdef PTHREAD_KEYS_MAX
-  max = PTHREAD_KEYS_MAX;
+    max = PTHREAD_KEYS_MAX;
 #else
-  max = _POSIX_THREAD_KEYS_MAX;
+    max = _POSIX_THREAD_KEYS_MAX;
 #endif
-  pthread_key_t *keys = alloca (max * sizeof (pthread_key_t));
+    pthread_key_t *keys = alloca(max * sizeof(pthread_key_t));
 
-  int i;
-  for (i = 0; i < max; ++i)
-    if (pthread_key_create (&keys[i], NULL) != 0)
-      {
-	write_message ("key_create failed\n");
-	_exit (1);
-      }
-    else
-      {
-	printf ("created key %d\n", i);
+    int i;
+    for (i = 0; i < max; ++i)
+        if (pthread_key_create(&keys[i], NULL) != 0) {
+            write_message("key_create failed\n");
+            _exit(1);
+        } else {
+            printf("created key %d\n", i);
 
-	if (pthread_setspecific (keys[i], (const void *) (i + 100l)) != 0)
-	  {
-	    xwrite (2, "setspecific failed\n", 19);
-	    _exit (1);
-	  }
-      }
+            if (pthread_setspecific(keys[i], (const void *)(i + 100l)) != 0) {
+                xwrite(2, "setspecific failed\n", 19);
+                _exit(1);
+            }
+        }
 
-  for (i = 0; i < max; ++i)
-    {
-      if (pthread_getspecific (keys[i]) != (void *) (i + 100l))
-	{
-	  xwrite (2, "getspecific failed\n", 19);
-	  _exit (1);
-	}
+    for (i = 0; i < max; ++i) {
+        if (pthread_getspecific(keys[i]) != (void *)(i + 100l)) {
+            xwrite(2, "getspecific failed\n", 19);
+            _exit(1);
+        }
 
-      if (pthread_key_delete (keys[i]) != 0)
-	{
-	  xwrite (2, "key_delete failed\n", 18);
-	  _exit (1);
-	}
+        if (pthread_key_delete(keys[i]) != 0) {
+            xwrite(2, "key_delete failed\n", 18);
+            _exit(1);
+        }
     }
 
-  /* Now it must be once again possible to allocate keys.  */
-  if (pthread_key_create (&keys[0], NULL) != 0)
-    {
-      xwrite (2, "2nd key_create failed\n", 22);
-      _exit (1);
+    /* Now it must be once again possible to allocate keys.  */
+    if (pthread_key_create(&keys[0], NULL) != 0) {
+        xwrite(2, "2nd key_create failed\n", 22);
+        _exit(1);
     }
 
-  if (pthread_key_delete (keys[0]) != 0)
-    {
-      xwrite (2, "2nd key_delete failed\n", 22);
-      _exit (1);
+    if (pthread_key_delete(keys[0]) != 0) {
+        xwrite(2, "2nd key_delete failed\n", 22);
+        _exit(1);
     }
 
-  return 0;
+    return 0;
 }

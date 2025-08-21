@@ -39,7 +39,7 @@
 
 #include <elf/dl-tunables.h>
 
-extern void __libc_init_first (int argc, char **argv, char **envp);
+extern void __libc_init_first(int argc, char **argv, char **envp);
 
 #include <tls.h>
 #ifndef SHARED
@@ -61,29 +61,29 @@ uintptr_t __pointer_chk_guard_local attribute_relro attribute_hidden;
 # include <dl-irel.h>
 
 # ifdef ELF_MACHINE_IRELA
-#  define IREL_T	ElfW(Rela)
-#  define IPLT_START	__rela_iplt_start
-#  define IPLT_END	__rela_iplt_end
-#  define IREL		elf_irela
+#  define IREL_T    ElfW(Rela)
+#  define IPLT_START    __rela_iplt_start
+#  define IPLT_END  __rela_iplt_end
+#  define IREL      elf_irela
 # elif defined ELF_MACHINE_IREL
-#  define IREL_T	ElfW(Rel)
-#  define IPLT_START	__rel_iplt_start
-#  define IPLT_END	__rel_iplt_end
-#  define IREL		elf_irel
+#  define IREL_T    ElfW(Rel)
+#  define IPLT_START    __rel_iplt_start
+#  define IPLT_END  __rel_iplt_end
+#  define IREL      elf_irel
 # endif
 
-static void
-apply_irel (void)
+static void apply_irel(void)
 {
 # ifdef IREL
-  /* We use weak references for these so that we'll still work with a linker
-     that doesn't define them.  Such a linker doesn't support IFUNC at all
-     and so uses won't work, but a statically-linked program that doesn't
-     use any IFUNC symbols won't have a problem.  */
-  extern const IREL_T IPLT_START[] __attribute__ ((weak));
-  extern const IREL_T IPLT_END[] __attribute__ ((weak));
-  for (const IREL_T *ipltent = IPLT_START; ipltent < IPLT_END; ++ipltent)
-    IREL (ipltent);
+    /* We use weak references for these so that we'll still work with a linker
+       that doesn't define them.  Such a linker doesn't support IFUNC at all
+       and so uses won't work, but a statically-linked program that doesn't
+       use any IFUNC symbols won't have a problem.  */
+    extern const IREL_T IPLT_START[] __attribute__((weak));
+    extern const IREL_T IPLT_END[] __attribute__((weak));
+    for (const IREL_T *ipltent = IPLT_START; ipltent < IPLT_END; ++ipltent) {
+        IREL(ipltent);
+    }
 # endif
 }
 #endif
@@ -104,8 +104,8 @@ apply_irel (void)
 
 #ifdef MAIN_AUXVEC_ARG
 /* main gets passed a pointer to the auxiliary.  */
-# define MAIN_AUXVEC_DECL	, void *
-# define MAIN_AUXVEC_PARAM	, auxvec
+# define MAIN_AUXVEC_DECL   , void *
+# define MAIN_AUXVEC_PARAM  , auxvec
 #else
 # define MAIN_AUXVEC_DECL
 # define MAIN_AUXVEC_PARAM
@@ -121,84 +121,84 @@ apply_irel (void)
 #ifdef SHARED
 /* Initialization for dynamic executables.  Find the main executable
    link map and run its init functions.  */
-static void
-call_init (int argc, char **argv, char **env)
+static void call_init(int argc, char **argv, char **env)
 {
-  /* Obtain the main map of the executable.  */
-  struct link_map *l = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
+    /* Obtain the main map of the executable.  */
+    struct link_map *l = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
 
-  /* DT_PREINIT_ARRAY is not processed here.  It is already handled in
-     _dl_init in elf/dl-init.c.  Also see the call_init function in
-     the same file.  */
+    /* DT_PREINIT_ARRAY is not processed here.  It is already handled in
+       _dl_init in elf/dl-init.c.  Also see the call_init function in
+       the same file.  */
 
-  if (ELF_INITFINI && l->l_info[DT_INIT] != NULL)
-    DL_CALL_DT_INIT(l, l->l_addr + l->l_info[DT_INIT]->d_un.d_ptr,
-		    argc, argv, env);
+    if (ELF_INITFINI && l->l_info[DT_INIT] != NULL)
+        DL_CALL_DT_INIT(l, l->l_addr + l->l_info[DT_INIT]->d_un.d_ptr,
+                        argc, argv, env);
 
-  ElfW(Dyn) *init_array = l->l_info[DT_INIT_ARRAY];
-  if (init_array != NULL)
-    {
-      unsigned int jm
-	= l->l_info[DT_INIT_ARRAYSZ]->d_un.d_val / sizeof (ElfW(Addr));
-      ElfW(Addr) *addrs = (void *) (init_array->d_un.d_ptr + l->l_addr);
-      for (unsigned int j = 0; j < jm; ++j)
-	((dl_init_t) addrs[j]) (argc, argv, env);
+    ElfW(Dyn) *init_array = l->l_info[DT_INIT_ARRAY];
+    if (init_array != NULL) {
+        unsigned int jm
+            = l->l_info[DT_INIT_ARRAYSZ]->d_un.d_val / sizeof(ElfW(Addr));
+        ElfW(Addr) *addrs = (void *)(init_array->d_un.d_ptr + l->l_addr);
+        for (unsigned int j = 0; j < jm; ++j) {
+            ((dl_init_t) addrs[j])(argc, argv, env);
+        }
     }
 }
 
 #else /* !SHARED */
 
 /* These magic symbols are provided by the linker.  */
-extern void (*__preinit_array_start []) (int, char **, char **)
-  attribute_hidden;
-extern void (*__preinit_array_end []) (int, char **, char **)
-  attribute_hidden;
-extern void (*__init_array_start []) (int, char **, char **)
-  attribute_hidden;
-extern void (*__init_array_end []) (int, char **, char **)
-  attribute_hidden;
-extern void (*__fini_array_start []) (void) attribute_hidden;
-extern void (*__fini_array_end []) (void) attribute_hidden;
+extern void (*__preinit_array_start [])(int, char **, char **)
+attribute_hidden;
+extern void (*__preinit_array_end [])(int, char **, char **)
+attribute_hidden;
+extern void (*__init_array_start [])(int, char **, char **)
+attribute_hidden;
+extern void (*__init_array_end [])(int, char **, char **)
+attribute_hidden;
+extern void (*__fini_array_start [])(void) attribute_hidden;
+extern void (*__fini_array_end [])(void) attribute_hidden;
 
 # if ELF_INITFINI
 /* These function symbols are provided for the .init/.fini section entry
    points automagically by the linker.  */
-extern void _init (void);
-extern void _fini (void);
+extern void _init(void);
+extern void _fini(void);
 # endif
 
 /* Initialization for static executables.  There is no dynamic
    segment, so we access the symbols directly.  */
-static void
-call_init (int argc, char **argv, char **envp)
+static void call_init(int argc, char **argv, char **envp)
 {
-  /* For static executables, preinit happens right before init.  */
-  {
-    const size_t size = __preinit_array_end - __preinit_array_start;
-    size_t i;
-    for (i = 0; i < size; i++)
-      (*__preinit_array_start [i]) (argc, argv, envp);
-  }
+    /* For static executables, preinit happens right before init.  */
+    {
+        const size_t size = __preinit_array_end - __preinit_array_start;
+        size_t i;
+        for (i = 0; i < size; i++) {
+            (*__preinit_array_start [i])(argc, argv, envp);
+        }
+    }
 
 # if ELF_INITFINI
-  _init ();
+    _init();
 # endif
 
-  const size_t size = __init_array_end - __init_array_start;
-  for (size_t i = 0; i < size; i++)
-      (*__init_array_start [i]) (argc, argv, envp);
+    const size_t size = __init_array_end - __init_array_start;
+    for (size_t i = 0; i < size; i++) {
+        (*__init_array_start [i])(argc, argv, envp);
+    }
 }
 
 /* Likewise for the destructor.  */
-static void
-call_fini (void *unused)
+static void call_fini(void *unused)
 {
-  size_t i = __fini_array_end - __fini_array_start;
-  while (i-- > 0)
-    (*__fini_array_start [i]) ();
+    size_t i = __fini_array_end - __fini_array_start;
+    while (i-- > 0) {
+        (*__fini_array_start [i])();
+    }
 
 # if ELF_INITFINI
-  _fini ();
+    _fini();
 # endif
 }
 
@@ -206,18 +206,18 @@ call_fini (void *unused)
 
 #include <libc-start.h>
 
-STATIC int LIBC_START_MAIN (int (*main) (int, char **, char **
-					 MAIN_AUXVEC_DECL),
-			    int argc,
-			    char **argv,
+STATIC int LIBC_START_MAIN(int (*main)(int, char **, char **
+                                       MAIN_AUXVEC_DECL),
+                           int argc,
+                           char **argv,
 #ifdef LIBC_START_MAIN_AUXVEC_ARG
-			    ElfW(auxv_t) *auxvec,
+                           ElfW(auxv_t) *auxvec,
 #endif
-			    __typeof (main) init,
-			    void (*fini) (void),
-			    void (*rtld_fini) (void),
-			    void *stack_end)
-     __attribute__ ((noreturn));
+                           __typeof(main) init,
+                           void (*fini)(void),
+                           void (*rtld_fini)(void),
+                           void *stack_end)
+__attribute__((noreturn));
 
 
 /* Note: The init and fini parameters are no longer used.  fini is
@@ -231,133 +231,141 @@ STATIC int LIBC_START_MAIN (int (*main) (int, char **, char **
    locate constructors and destructors.  For statically linked
    executables, the relevant symbols are access directly.  */
 STATIC int
-LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
-		 int argc, char **argv,
+LIBC_START_MAIN(int (*main)(int, char **, char **MAIN_AUXVEC_DECL),
+                int argc, char **argv,
 #ifdef LIBC_START_MAIN_AUXVEC_ARG
-		 ElfW(auxv_t) *auxvec,
+                ElfW(auxv_t) *auxvec,
 #endif
-		 __typeof (main) init,
-		 void (*fini) (void),
-		 void (*rtld_fini) (void), void *stack_end)
+                __typeof(main) init,
+                void (*fini)(void),
+                void (*rtld_fini)(void), void *stack_end)
 {
 #ifndef SHARED
-  char **ev = &argv[argc + 1];
+    char **ev = &argv[argc + 1];
 
-  __environ = ev;
+    __environ = ev;
 
-  /* Store the lowest stack address.  This is done in ld.so if this is
-     the code for the DSO.  */
-  __libc_stack_end = stack_end;
+    /* Store the lowest stack address.  This is done in ld.so if this is
+       the code for the DSO.  */
+    __libc_stack_end = stack_end;
 
 # ifdef HAVE_AUX_VECTOR
-  /* First process the auxiliary vector since we need to find the
-     program header to locate an eventually present PT_TLS entry.  */
+    /* First process the auxiliary vector since we need to find the
+       program header to locate an eventually present PT_TLS entry.  */
 #  ifndef LIBC_START_MAIN_AUXVEC_ARG
-  ElfW(auxv_t) *auxvec;
-  {
-    char **evp = ev;
-    while (*evp++ != NULL)
-      ;
-    auxvec = (ElfW(auxv_t) *) evp;
-  }
+    ElfW(auxv_t) *auxvec;
+    {
+        char **evp = ev;
+        while (*evp++ != NULL)
+            ;
+        auxvec = (ElfW(auxv_t) *) evp;
+    }
 #  endif
-  _dl_aux_init (auxvec);
+    _dl_aux_init(auxvec);
 # endif
 
-  __tunables_init (__environ);
+    __tunables_init(__environ);
 
-  ARCH_INIT_CPU_FEATURES ();
+    ARCH_INIT_CPU_FEATURES();
 
-  /* Do static pie self relocation after tunables and cpu features
-     are setup for ifunc resolvers. Before this point relocations
-     must be avoided.  */
-  _dl_relocate_static_pie ();
+    /* Do static pie self relocation after tunables and cpu features
+       are setup for ifunc resolvers. Before this point relocations
+       must be avoided.  */
+    _dl_relocate_static_pie();
 
-  /* Perform IREL{,A} relocations.  */
-  ARCH_SETUP_IREL ();
+    /* Perform IREL{,A} relocations.  */
+    ARCH_SETUP_IREL();
 
-  /* The stack guard goes into the TCB, so initialize it early.  */
-  ARCH_SETUP_TLS ();
+    /* The stack guard goes into the TCB, so initialize it early.  */
+    ARCH_SETUP_TLS();
 
-  /* In some architectures, IREL{,A} relocations happen after TLS setup in
-     order to let IFUNC resolvers benefit from TCB information, e.g. powerpc's
-     hwcap and platform fields available in the TCB.  */
-  ARCH_APPLY_IREL ();
+    /* In some architectures, IREL{,A} relocations happen after TLS setup in
+       order to let IFUNC resolvers benefit from TCB information, e.g. powerpc's
+       hwcap and platform fields available in the TCB.  */
+    ARCH_APPLY_IREL();
 
-  /* Set up the stack checker's canary.  */
-  uintptr_t stack_chk_guard = _dl_setup_stack_chk_guard (_dl_random);
+    /* Set up the stack checker's canary.  */
+    uintptr_t stack_chk_guard = _dl_setup_stack_chk_guard(_dl_random);
 # ifdef THREAD_SET_STACK_GUARD
-  THREAD_SET_STACK_GUARD (stack_chk_guard);
+    THREAD_SET_STACK_GUARD(stack_chk_guard);
 # else
-  __stack_chk_guard = stack_chk_guard;
+    __stack_chk_guard = stack_chk_guard;
 # endif
 
-  /* Initialize libpthread if linked in.  */
-  if (__pthread_initialize_minimal != NULL)
-    __pthread_initialize_minimal ();
+    /* Initialize libpthread if linked in.  */
+    if (__pthread_initialize_minimal != NULL) {
+        __pthread_initialize_minimal();
+    }
 
-  /* Set up the pointer guard value.  */
-  uintptr_t pointer_chk_guard = _dl_setup_pointer_guard (_dl_random,
-							 stack_chk_guard);
+    /* Set up the pointer guard value.  */
+    uintptr_t pointer_chk_guard = _dl_setup_pointer_guard(_dl_random,
+                                  stack_chk_guard);
 # ifdef THREAD_SET_POINTER_GUARD
-  THREAD_SET_POINTER_GUARD (pointer_chk_guard);
+    THREAD_SET_POINTER_GUARD(pointer_chk_guard);
 # else
-  __pointer_chk_guard_local = pointer_chk_guard;
+    __pointer_chk_guard_local = pointer_chk_guard;
 # endif
 
 #endif /* !SHARED  */
 
-  /* Register the destructor of the dynamic linker if there is any.  */
-  if (__glibc_likely (rtld_fini != NULL))
-    __cxa_atexit ((void (*) (void *)) rtld_fini, NULL, NULL);
+    /* Register the destructor of the dynamic linker if there is any.  */
+    if (__glibc_likely(rtld_fini != NULL)) {
+        __cxa_atexit((void (*)(void *)) rtld_fini, NULL, NULL);
+    }
 
 #ifndef SHARED
-  /* Perform early initialization.  In the shared case, this function
-     is called from the dynamic loader as early as possible.  */
-  __libc_early_init (true);
+    /* Perform early initialization.  In the shared case, this function
+       is called from the dynamic loader as early as possible.  */
+    __libc_early_init(true);
 
-  /* Call the initializer of the libc.  This is only needed here if we
-     are compiling for the static library in which case we haven't
-     run the constructors in `_dl_start_user'.  */
-  __libc_init_first (argc, argv, __environ);
+    /* Call the initializer of the libc.  This is only needed here if we
+       are compiling for the static library in which case we haven't
+       run the constructors in `_dl_start_user'.  */
+    __libc_init_first(argc, argv, __environ);
 
-  /* Register the destructor of the statically-linked program.  */
-  __cxa_atexit (call_fini, NULL, NULL);
+    /* Register the destructor of the statically-linked program.  */
+    __cxa_atexit(call_fini, NULL, NULL);
 
-  /* Some security at this point.  Prevent starting a SUID binary where
-     the standard file descriptors are not opened.  We have to do this
-     only for statically linked applications since otherwise the dynamic
-     loader did the work already.  */
-  if (__builtin_expect (__libc_enable_secure, 0))
-    __libc_check_standard_fds ();
+    /* Some security at this point.  Prevent starting a SUID binary where
+       the standard file descriptors are not opened.  We have to do this
+       only for statically linked applications since otherwise the dynamic
+       loader did the work already.  */
+    if (__builtin_expect(__libc_enable_secure, 0)) {
+        __libc_check_standard_fds();
+    }
 #endif /* !SHARED */
 
-  /* Call the initializer of the program, if any.  */
+    /* Call the initializer of the program, if any.  */
 #ifdef SHARED
-  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_IMPCALLS, 0))
-    GLRO(dl_debug_printf) ("\ninitialize program: %s\n\n", argv[0]);
+    if (__builtin_expect(GLRO(dl_debug_mask) & DL_DEBUG_IMPCALLS, 0)) {
+        GLRO(dl_debug_printf)("\ninitialize program: %s\n\n", argv[0]);
+    }
 
-  if (init != NULL)
-    /* This is a legacy program which supplied its own init
-       routine.  */
-    (*init) (argc, argv, __environ MAIN_AUXVEC_PARAM);
-  else
-    /* This is a current program.  Use the dynamic segment to find
-       constructors.  */
-    call_init (argc, argv, __environ);
+    if (init != NULL)
+        /* This is a legacy program which supplied its own init
+           routine.  */
+    {
+        (*init)(argc, argv, __environ MAIN_AUXVEC_PARAM);
+    } else
+        /* This is a current program.  Use the dynamic segment to find
+           constructors.  */
+    {
+        call_init(argc, argv, __environ);
+    }
 
-  /* Auditing checkpoint: we have a new object.  */
-  _dl_audit_preinit (GL(dl_ns)[LM_ID_BASE]._ns_loaded);
+    /* Auditing checkpoint: we have a new object.  */
+    _dl_audit_preinit(GL(dl_ns)[LM_ID_BASE]._ns_loaded);
 
-  if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_IMPCALLS))
-    GLRO(dl_debug_printf) ("\ntransferring control: %s\n\n", argv[0]);
+    if (__glibc_unlikely(GLRO(dl_debug_mask) & DL_DEBUG_IMPCALLS)) {
+        GLRO(dl_debug_printf)("\ntransferring control: %s\n\n", argv[0]);
+    }
 #else /* !SHARED */
-  call_init (argc, argv, __environ);
+    call_init(argc, argv, __environ);
 
-  _dl_debug_initialize (0, LM_ID_BASE);
+    _dl_debug_initialize(0, LM_ID_BASE);
 #endif
 
-  __libc_start_call_main (main, argc, argv MAIN_AUXVEC_PARAM);
+    __libc_start_call_main(main, argc, argv MAIN_AUXVEC_PARAM);
 }
 
 /* Starting with glibc 2.34, the init parameter is always NULL.  Older
@@ -369,13 +377,13 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
 #ifdef SHARED
 # define DEFINE_LIBC_START_MAIN_VERSION \
   DEFINE_LIBC_START_MAIN_VERSION_1 \
-  strong_alias (__libc_start_main_impl, __libc_start_main_alias_2)	\
+  strong_alias (__libc_start_main_impl, __libc_start_main_alias_2)  \
   versioned_symbol (libc, __libc_start_main_alias_2, __libc_start_main, \
-		    GLIBC_2_34);
+            GLIBC_2_34);
 
 # if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_34)
 #  define DEFINE_LIBC_START_MAIN_VERSION_1 \
-  strong_alias (__libc_start_main_impl, __libc_start_main_alias_1)	\
+  strong_alias (__libc_start_main_impl, __libc_start_main_alias_1)  \
   compat_symbol (libc, __libc_start_main_alias_1, __libc_start_main, GLIBC_2_0);
 #  else
 #  define DEFINE_LIBC_START_MAIN_VERSION_1

@@ -20,11 +20,10 @@
 
 /* Receive the oldest from highest priority messages in message queue
    MQDES.  */
-ssize_t
-mq_receive (mqd_t mqdes, char *msg_ptr, size_t msg_len,
-	    unsigned int *msg_prio)
+ssize_t mq_receive(mqd_t mqdes, char *msg_ptr, size_t msg_len,
+                   unsigned int *msg_prio)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (mq_receive)
+stub_warning(mq_receive)

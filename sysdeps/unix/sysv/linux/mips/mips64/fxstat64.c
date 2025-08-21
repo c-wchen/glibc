@@ -23,11 +23,10 @@
 
 /* Get information about the file FD in BUF.  */
 
-int
-__fxstat64 (int vers, int fd, struct stat64 *buf)
+int __fxstat64(int vers, int fd, struct stat64 *buf)
 {
-  struct kernel_stat kbuf;
-  int r = INLINE_SYSCALL_CALL (fstat, fd, &kbuf);
-  return r ?: __xstat64_conv (vers, &kbuf, buf);
+    struct kernel_stat kbuf;
+    int r = INLINE_SYSCALL_CALL(fstat, fd, &kbuf);
+    return r ? : __xstat64_conv(vers, &kbuf, buf);
 
 }

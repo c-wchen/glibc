@@ -18,12 +18,11 @@
 
 #include <stdlib.h>
 
-extern int preload (void);
+extern int preload(void);
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  return preload () == 0x1234 ? EXIT_SUCCESS : EXIT_FAILURE;
+    return preload() == 0x1234 ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
 #include <support/test-driver.c>

@@ -4,8 +4,8 @@
 
 # ifndef _ISOMAC
 
-libc_hidden_proto (envz_entry)
-libc_hidden_proto (envz_remove)
+libc_hidden_proto(envz_entry)
+libc_hidden_proto(envz_remove)
 
 # endif /* !_ISOMAC */
 #endif

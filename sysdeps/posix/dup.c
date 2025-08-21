@@ -21,10 +21,9 @@
 
 
 /* Duplicate FD, returning a new file descriptor open on the same file.  */
-int
-__dup (int fd)
+int __dup(int fd)
 {
-  return __fcntl (fd, F_DUPFD, 0);
+    return __fcntl(fd, F_DUPFD, 0);
 }
-libc_hidden_def (__dup)
-weak_alias (__dup, dup)
+libc_hidden_def(__dup)
+weak_alias(__dup, dup)

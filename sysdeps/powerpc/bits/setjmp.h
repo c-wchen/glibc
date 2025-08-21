@@ -37,13 +37,13 @@
    We have to version the code because members like  int __mask_was_saved
    in the jmp_buf will move as jmp_buf is now larger than 248 bytes.  We
    cannot keep the altivec jmp_buf backward compatible with the jmp_buf.  */
-#ifndef	_ASM
+#ifndef _ASM
 # if __WORDSIZE == 64
-typedef long int __jmp_buf[64] __attribute__ ((__aligned__ (16)));
+typedef long int __jmp_buf[64] __attribute__((__aligned__(16)));
 # else
 /* The alignment is not essential, i.e.the buffer can be copied to a 4 byte
    aligned buffer as per the ABI it is just added for performance reasons.  */
-typedef long int __jmp_buf[64 + (12 * 4)] __attribute__ ((__aligned__ (16)));
+typedef long int __jmp_buf[64 + (12 * 4)] __attribute__((__aligned__(16)));
 # endif
 #endif
 

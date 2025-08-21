@@ -19,22 +19,22 @@
 #include <fenv.h>
 #include <shlib-compat.h>
 
-int
-__feupdateenv (const fenv_t *envp)
+int __feupdateenv(const fenv_t *envp)
 {
 #if defined FE_NOMASK_ENV && FE_ALL_EXCEPT != 0
-  if (envp == FE_NOMASK_ENV)
-    return 1;
+    if (envp == FE_NOMASK_ENV) {
+        return 1;
+    }
 #endif
-  /* Nothing to do.  */
-  return 0;
+    /* Nothing to do.  */
+    return 0;
 }
 #if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
-strong_alias (__feupdateenv, __old_feupdateenv)
-compat_symbol (libm, __old_feupdateenv, feupdateenv, GLIBC_2_1);
+strong_alias(__feupdateenv, __old_feupdateenv)
+compat_symbol(libm, __old_feupdateenv, feupdateenv, GLIBC_2_1);
 #endif
-libm_hidden_def (__feupdateenv)
-libm_hidden_ver (__feupdateenv, feupdateenv)
-versioned_symbol (libm, __feupdateenv, feupdateenv, GLIBC_2_2);
+libm_hidden_def(__feupdateenv)
+libm_hidden_ver(__feupdateenv, feupdateenv)
+versioned_symbol(libm, __feupdateenv, feupdateenv, GLIBC_2_2);
 
-stub_warning (feupdateenv)
+stub_warning(feupdateenv)

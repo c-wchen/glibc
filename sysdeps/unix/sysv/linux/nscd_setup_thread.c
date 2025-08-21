@@ -21,25 +21,27 @@
 #include <sysdep.h>
 
 
-int
-setup_thread (struct database_dyn *db)
+int setup_thread(struct database_dyn *db)
 {
-  /* Only supported when NPTL is used.  */
-  char buf[100];
-  if (confstr (_CS_GNU_LIBPTHREAD_VERSION, buf, sizeof (buf)) >= sizeof (buf)
-      || strncmp (buf, "NPTL", 4) != 0)
+    /* Only supported when NPTL is used.  */
+    char buf[100];
+    if (confstr(_CS_GNU_LIBPTHREAD_VERSION, buf, sizeof(buf)) >= sizeof(buf)
+        || strncmp(buf, "NPTL", 4) != 0) {
+        return 0;
+    }
+
+    /* Do not try this at home, kids.  We play with the SETTID address
+       even thought the process is multi-threaded.  This can only work
+       since none of the threads ever terminates.  */
+    int r = INTERNAL_SYSCALL_CALL(set_tid_address,
+                                  &db->head->nscd_certainly_running);
+    if (!INTERNAL_SYSCALL_ERROR_P(r))
+        /* We know the kernel can reset this field when nscd terminates.
+           So, set the field to a nonzero value which indicates that nscd
+           is certainly running and clients can skip the test.  */
+    {
+        return db->head->nscd_certainly_running = 1;
+    }
+
     return 0;
-
-  /* Do not try this at home, kids.  We play with the SETTID address
-     even thought the process is multi-threaded.  This can only work
-     since none of the threads ever terminates.  */
-  int r = INTERNAL_SYSCALL_CALL (set_tid_address,
-				 &db->head->nscd_certainly_running);
-  if (!INTERNAL_SYSCALL_ERROR_P (r))
-    /* We know the kernel can reset this field when nscd terminates.
-       So, set the field to a nonzero value which indicates that nscd
-       is certainly running and clients can skip the test.  */
-    return db->head->nscd_certainly_running = 1;
-
-  return 0;
 }

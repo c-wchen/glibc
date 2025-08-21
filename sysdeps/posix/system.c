@@ -31,8 +31,8 @@
 #include <not-cancel.h>
 #include <internal-signals.h>
 
-#define	SHELL_PATH	"/bin/sh"	/* Path of the shell.  */
-#define	SHELL_NAME	"sh"		/* Name to give it.  */
+#define SHELL_PATH  "/bin/sh"   /* Path of the shell.  */
+#define SHELL_NAME  "sh"        /* Name to give it.  */
 
 
 /* This system implementation aims to be thread-safe, which requires to
@@ -50,7 +50,7 @@
 #ifdef _LIBC_REENTRANT
 static struct sigaction intr, quit;
 static int sa_refcntr;
-__libc_lock_define_initialized (static, lock);
+__libc_lock_define_initialized(static, lock);
 
 # define DO_LOCK() __libc_lock_lock (lock)
 # define DO_UNLOCK() __libc_lock_unlock (lock)
@@ -67,148 +67,149 @@ __libc_lock_define_initialized (static, lock);
 
 
 #if defined(_LIBC_REENTRANT) && defined(SIGCANCEL)
-struct cancel_handler_args
-{
-  struct sigaction *quit;
-  struct sigaction *intr;
-  pid_t pid;
+struct cancel_handler_args {
+    struct sigaction *quit;
+    struct sigaction *intr;
+    pid_t pid;
 };
 
-static void
-cancel_handler (void *arg)
+static void cancel_handler(void *arg)
 {
-  struct cancel_handler_args *args = (struct cancel_handler_args *) (arg);
+    struct cancel_handler_args *args = (struct cancel_handler_args *)(arg);
 
-  __kill_noerrno (args->pid, SIGKILL);
+    __kill_noerrno(args->pid, SIGKILL);
 
-  int state;
-  __pthread_setcancelstate (PTHREAD_CANCEL_DISABLE, &state);
-  TEMP_FAILURE_RETRY (__waitpid (args->pid, NULL, 0));
-  __pthread_setcancelstate (state, NULL);
+    int state;
+    __pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &state);
+    TEMP_FAILURE_RETRY(__waitpid(args->pid, NULL, 0));
+    __pthread_setcancelstate(state, NULL);
 
-  DO_LOCK ();
-  if (SUB_REF () == 0)
-    {
-      __sigaction (SIGQUIT, args->quit, NULL);
-      __sigaction (SIGINT, args->intr, NULL);
+    DO_LOCK();
+    if (SUB_REF() == 0) {
+        __sigaction(SIGQUIT, args->quit, NULL);
+        __sigaction(SIGINT, args->intr, NULL);
     }
-  DO_UNLOCK ();
+    DO_UNLOCK();
 }
 #endif
 
 /* Execute LINE as a shell command, returning its status.  */
-static int
-do_system (const char *line)
+static int do_system(const char *line)
 {
-  int status = -1;
-  int ret;
-  pid_t pid;
-  struct sigaction sa;
+    int status = -1;
+    int ret;
+    pid_t pid;
+    struct sigaction sa;
 #ifndef _LIBC_REENTRANT
-  struct sigaction intr, quit;
+    struct sigaction intr, quit;
 #endif
-  sigset_t omask;
-  sigset_t reset;
+    sigset_t omask;
+    sigset_t reset;
 
-  sa.sa_handler = SIG_IGN;
-  sa.sa_flags = 0;
-  __sigemptyset (&sa.sa_mask);
+    sa.sa_handler = SIG_IGN;
+    sa.sa_flags = 0;
+    __sigemptyset(&sa.sa_mask);
 
-  DO_LOCK ();
-  if (ADD_REF () == 0)
-    {
-      /* sigaction can not fail with SIGINT/SIGQUIT used with SIG_IGN.  */
-      __sigaction (SIGINT, &sa, &intr);
-      __sigaction (SIGQUIT, &sa, &quit);
+    DO_LOCK();
+    if (ADD_REF() == 0) {
+        /* sigaction can not fail with SIGINT/SIGQUIT used with SIG_IGN.  */
+        __sigaction(SIGINT, &sa, &intr);
+        __sigaction(SIGQUIT, &sa, &quit);
     }
-  DO_UNLOCK ();
+    DO_UNLOCK();
 
-  __sigaddset (&sa.sa_mask, SIGCHLD);
-  /* sigprocmask can not fail with SIG_BLOCK used with valid input
-     arguments.  */
-  __sigprocmask (SIG_BLOCK, &sa.sa_mask, &omask);
+    __sigaddset(&sa.sa_mask, SIGCHLD);
+    /* sigprocmask can not fail with SIG_BLOCK used with valid input
+       arguments.  */
+    __sigprocmask(SIG_BLOCK, &sa.sa_mask, &omask);
 
-  __sigemptyset (&reset);
-  if (intr.sa_handler != SIG_IGN)
-    __sigaddset(&reset, SIGINT);
-  if (quit.sa_handler != SIG_IGN)
-    __sigaddset(&reset, SIGQUIT);
+    __sigemptyset(&reset);
+    if (intr.sa_handler != SIG_IGN) {
+        __sigaddset(&reset, SIGINT);
+    }
+    if (quit.sa_handler != SIG_IGN) {
+        __sigaddset(&reset, SIGQUIT);
+    }
 
-  posix_spawnattr_t spawn_attr;
-  /* None of the posix_spawnattr_* function returns an error, including
-     posix_spawnattr_setflags for the follow specific usage (using valid
-     flags).  */
-  __posix_spawnattr_init (&spawn_attr);
-  __posix_spawnattr_setsigmask (&spawn_attr, &omask);
-  __posix_spawnattr_setsigdefault (&spawn_attr, &reset);
-  __posix_spawnattr_setflags (&spawn_attr,
-			      POSIX_SPAWN_SETSIGDEF | POSIX_SPAWN_SETSIGMASK);
+    posix_spawnattr_t spawn_attr;
+    /* None of the posix_spawnattr_* function returns an error, including
+       posix_spawnattr_setflags for the follow specific usage (using valid
+       flags).  */
+    __posix_spawnattr_init(&spawn_attr);
+    __posix_spawnattr_setsigmask(&spawn_attr, &omask);
+    __posix_spawnattr_setsigdefault(&spawn_attr, &reset);
+    __posix_spawnattr_setflags(&spawn_attr,
+                               POSIX_SPAWN_SETSIGDEF | POSIX_SPAWN_SETSIGMASK);
 
-  ret = __posix_spawn (&pid, SHELL_PATH, NULL, &spawn_attr,
-		       (char *const[]){ (char *) SHELL_NAME,
-					(char *) "-c",
-					(char *) "--",
-					(char *) line, NULL },
-		       __environ);
-  __posix_spawnattr_destroy (&spawn_attr);
+    ret = __posix_spawn(&pid, SHELL_PATH, NULL, &spawn_attr,
+    (char *const[]) {
+        (char *) SHELL_NAME,
+        (char *) "-c",
+        (char *) "--",
+        (char *) line, NULL
+    },
+    __environ);
+    __posix_spawnattr_destroy(&spawn_attr);
 
-  if (ret == 0)
-    {
-      /* Cancellation results in cleanup handlers running as exceptions in
-	 the block where they were installed, so it is safe to reference
-	 stack variable allocate in the broader scope.  */
+    if (ret == 0) {
+        /* Cancellation results in cleanup handlers running as exceptions in
+        the block where they were installed, so it is safe to reference
+         stack variable allocate in the broader scope.  */
 #if defined(_LIBC_REENTRANT) && defined(SIGCANCEL)
-      struct cancel_handler_args cancel_args =
-      {
-	.quit = &quit,
-	.intr = &intr,
-	.pid = pid
-      };
-      __libc_cleanup_region_start (1, cancel_handler, &cancel_args);
+        struct cancel_handler_args cancel_args = {
+            .quit = &quit,
+            .intr = &intr,
+            .pid = pid
+        };
+        __libc_cleanup_region_start(1, cancel_handler, &cancel_args);
 #endif
-      /* Note the system() is a cancellation point.  But since we call
-	 waitpid() which itself is a cancellation point we do not
-	 have to do anything here.  */
-      if (TEMP_FAILURE_RETRY (__waitpid (pid, &status, 0)) != pid)
-	status = -1;
+        /* Note the system() is a cancellation point.  But since we call
+        waitpid() which itself is a cancellation point we do not
+         have to do anything here.  */
+        if (TEMP_FAILURE_RETRY(__waitpid(pid, &status, 0)) != pid) {
+            status = -1;
+        }
 #if defined(_LIBC_REENTRANT) && defined(SIGCANCEL)
-      __libc_cleanup_region_end (0);
+        __libc_cleanup_region_end(0);
 #endif
-    }
-  else if (ret == EAGAIN || ret == ENOMEM)
-    /* POSIX states that failure to create a child process should
-       return -1.  */
-    status = -1;
-  else
-    /* POSIX states that failure to execute the shell should return
-       as if the shell had terminated using _exit(127).  */
-    status = W_EXITCODE (127, 0);
-
-  /* sigaction can not fail with SIGINT/SIGQUIT used with old
-     disposition.  Same applies for sigprocmask.  */
-  DO_LOCK ();
-  if (SUB_REF () == 0)
+    } else if (ret == EAGAIN || ret == ENOMEM)
+        /* POSIX states that failure to create a child process should
+           return -1.  */
     {
-      __sigaction (SIGINT, &intr, NULL);
-      __sigaction (SIGQUIT, &quit, NULL);
+        status = -1;
+    } else
+        /* POSIX states that failure to execute the shell should return
+           as if the shell had terminated using _exit(127).  */
+    {
+        status = W_EXITCODE(127, 0);
     }
-  DO_UNLOCK ();
-  __sigprocmask (SIG_SETMASK, &omask, NULL);
 
-  if (ret != 0)
-    __set_errno (ret);
+    /* sigaction can not fail with SIGINT/SIGQUIT used with old
+       disposition.  Same applies for sigprocmask.  */
+    DO_LOCK();
+    if (SUB_REF() == 0) {
+        __sigaction(SIGINT, &intr, NULL);
+        __sigaction(SIGQUIT, &quit, NULL);
+    }
+    DO_UNLOCK();
+    __sigprocmask(SIG_SETMASK, &omask, NULL);
 
-  return status;
+    if (ret != 0) {
+        __set_errno(ret);
+    }
+
+    return status;
 }
 
-int
-__libc_system (const char *line)
+int __libc_system(const char *line)
 {
-  if (line == NULL)
-    /* Check that we have a command processor available.  It might
-       not be available after a chroot(), for example.  */
-    return do_system ("exit 0") == 0;
+    if (line == NULL)
+        /* Check that we have a command processor available.  It might
+           not be available after a chroot(), for example.  */
+    {
+        return do_system("exit 0") == 0;
+    }
 
-  return do_system (line);
+    return do_system(line);
 }
-weak_alias (__libc_system, system)
+weak_alias(__libc_system, system)

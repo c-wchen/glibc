@@ -1,8 +1,7 @@
 #include "nldbl-compat.h"
 
 double
-attribute_hidden
-powl (double x, double y)
+attribute_hidden powl(double x, double y)
 {
-  return pow (x, y);
+    return pow(x, y);
 }

@@ -19,41 +19,40 @@
 #include <termios_internals.h>
 
 /* Set both the input and output baud rates stored in *TERMIOS_P to SPEED.  */
-int
-__cfsetspeed (struct termios *termios_p, speed_t speed)
+int __cfsetspeed(struct termios *termios_p, speed_t speed)
 {
-  tcflag_t cbaud = ___speed_to_cbaud (speed);
+    tcflag_t cbaud = ___speed_to_cbaud(speed);
 
-  termios_p->c_ospeed = speed;
-  termios_p->c_ispeed = speed;
-  termios_p->c_cflag &= ~(CBAUD | CIBAUD);
-  termios_p->c_cflag |= cbaud | (cbaud << IBSHIFT);
+    termios_p->c_ospeed = speed;
+    termios_p->c_ispeed = speed;
+    termios_p->c_cflag &= ~(CBAUD | CIBAUD);
+    termios_p->c_cflag |= cbaud | (cbaud << IBSHIFT);
 
-  return 0;
+    return 0;
 }
-libc_hidden_def (__cfsetspeed)
-versioned_symbol (libc, __cfsetspeed, cfsetspeed, GLIBC_2_42);
+libc_hidden_def(__cfsetspeed)
+versioned_symbol(libc, __cfsetspeed, cfsetspeed, GLIBC_2_42);
 
 #if _TERMIOS_OLD_COMPAT
 
 int
-attribute_compat_text_section
-__old_cfsetspeed (old_termios_t *termios_p, speed_t speed)
+attribute_compat_text_section __old_cfsetspeed(old_termios_t *termios_p, speed_t speed)
 {
-  speed_t real_speed = ___cbaud_to_speed (speed, -1);
-  if (real_speed == (speed_t)-1)
-    return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
+    speed_t real_speed = ___cbaud_to_speed(speed, -1);
+    if (real_speed == (speed_t) -1) {
+        return INLINE_SYSCALL_ERROR_RETURN_VALUE(EINVAL);
+    }
 
 #if !_HAVE_STRUCT_OLD_TERMIOS
-  /* Otherwise these fields don't exist in old_termios_t */
-  termios_p->c_ospeed = real_speed;
-  termios_p->c_ispeed = real_speed;
+    /* Otherwise these fields don't exist in old_termios_t */
+    termios_p->c_ospeed = real_speed;
+    termios_p->c_ispeed = real_speed;
 #endif
-  termios_p->c_cflag &= ~(CBAUD | CIBAUD);
-  termios_p->c_cflag |= speed | (speed << IBSHIFT);
+    termios_p->c_cflag &= ~(CBAUD | CIBAUD);
+    termios_p->c_cflag |= speed | (speed << IBSHIFT);
 
-  return 0;
+    return 0;
 }
-compat_symbol (libc, __old_cfsetspeed, cfsetspeed, GLIBC_2_0);
+compat_symbol(libc, __old_cfsetspeed, cfsetspeed, GLIBC_2_0);
 
 #endif /* _TERMIOS_OLD_COMPAT */

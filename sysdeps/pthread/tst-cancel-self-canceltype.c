@@ -23,30 +23,27 @@
 #include "tst-cancel-self-cleanup.c"
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int ret = 0, should_fail = 0;
+    int ret = 0, should_fail = 0;
 
-  pthread_cleanup_push (cleanup, &should_fail);
+    pthread_cleanup_push(cleanup, &should_fail);
 
-  if ((ret = pthread_setcanceltype (PTHREAD_CANCEL_ASYNCHRONOUS, NULL)) != 0)
-    {
-      printf ("setcanceltype failed: %s\n", strerror (ret));
-      exit (1);
+    if ((ret = pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL)) != 0) {
+        printf("setcanceltype failed: %s\n", strerror(ret));
+        exit(1);
     }
 
-  if ((ret = pthread_cancel (pthread_self ())) != 0)
-    {
-      printf ("cancel failed: %s\n", strerror (ret));
-      exit (1);
+    if ((ret = pthread_cancel(pthread_self())) != 0) {
+        printf("cancel failed: %s\n", strerror(ret));
+        exit(1);
     }
 
-  /* Wait to be canceled. Don't give any cancellation points to play with.  */
-  while (1);
-  pthread_cleanup_pop (0);
+    /* Wait to be canceled. Don't give any cancellation points to play with.  */
+    while (1);
+    pthread_cleanup_pop(0);
 
-  return 1;
+    return 1;
 }
 
 #define TEST_FUNCTION do_test ()

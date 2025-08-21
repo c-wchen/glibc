@@ -7,46 +7,45 @@
 
 static int next = 3;
 
-static void
-f1 (void)
+static void f1(void)
 {
-  puts ("f1");
-  if (next-- != 1)
-    _exit (1);
+    puts("f1");
+    if (next-- != 1) {
+        _exit(1);
+    }
 }
 
-static void
-f2 (void)
+static void f2(void)
 {
-  puts ("f2");
-  if (next-- != 2)
-    _exit (1);
+    puts("f2");
+    if (next-- != 2) {
+        _exit(1);
+    }
 }
 
-static void
-f3 (void)
+static void f3(void)
 {
-  puts ("f3");
-  if (next-- != 3)
-    _exit (1);
+    puts("f3");
+    if (next-- != 3) {
+        _exit(1);
+    }
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  atexit (f1);
+    atexit(f1);
 
-  void *dso = dlopen ("$ORIGIN/bug-atexit2-lib.so", RTLD_NOW);
-  void (*fn) (void) = (void (*) (void)) dlsym (dso, "foo");
-  fn ();
+    void *dso = dlopen("$ORIGIN/bug-atexit2-lib.so", RTLD_NOW);
+    void (*fn)(void) = (void (*)(void)) dlsym(dso, "foo");
+    fn();
 
-  atexit (f2);
+    atexit(f2);
 
-  dlclose (dso);
+    dlclose(dso);
 
-  atexit (f3);
+    atexit(f3);
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

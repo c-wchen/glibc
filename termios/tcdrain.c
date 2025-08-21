@@ -19,19 +19,17 @@
 #include <termios.h>
 
 /* Wait for pending output to be written on FD.  */
-int
-__libc_tcdrain (int fd)
+int __libc_tcdrain(int fd)
 {
-  if (fd < 0)
-    {
-      __set_errno (EBADF);
-      return -1;
+    if (fd < 0) {
+        __set_errno(EBADF);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-weak_alias (__libc_tcdrain, tcdrain)
+weak_alias(__libc_tcdrain, tcdrain)
 
 
-stub_warning (tcdrain)
+stub_warning(tcdrain)

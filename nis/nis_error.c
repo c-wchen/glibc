@@ -25,76 +25,71 @@
 
 #define MF(line) MF1 (line)
 #define MF1(line) str##line
-static const union msgstr_t
-{
-  struct
-  {
+static const union msgstr_t {
+    struct {
 #define S(s) char MF(__LINE__)[sizeof (s)];
 #include "nis_error.h"
 #undef S
-  };
-  char str[0];
-} msgstr =
-  {
+    };
+    char str[0];
+} msgstr = {
     {
 #define S(s) s,
 #include "nis_error.h"
 #undef S
     }
-  };
+};
 
-static const unsigned short int msgidx[] =
-  {
+static const unsigned short int msgidx[] = {
 #define S(s) offsetof (union msgstr_t, MF (__LINE__)),
 #include "nis_error.h"
 #undef S
-  };
+};
 
 
-const char *
-nis_sperrno (const nis_error status)
+const char *nis_sperrno(const nis_error status)
 {
-  if (status >= sizeof (msgidx) / sizeof (msgidx[0]))
-    return "???";
-  else
-    return gettext (msgstr.str + msgidx[status]);
+    if (status >= sizeof(msgidx) / sizeof(msgidx[0])) {
+        return "???";
+    } else {
+        return gettext(msgstr.str + msgidx[status]);
+    }
 }
-libnsl_hidden_nolink_def (nis_sperrno, GLIBC_2_1)
+libnsl_hidden_nolink_def(nis_sperrno, GLIBC_2_1)
 
 void
-nis_perror (const nis_error status, const char *label)
+nis_perror(const nis_error status, const char *label)
 {
-  fprintf (stderr, "%s: %s\n", label, nis_sperrno (status));
+    fprintf(stderr, "%s: %s\n", label, nis_sperrno(status));
 }
-libnsl_hidden_nolink_def (nis_perror, GLIBC_2_1)
+libnsl_hidden_nolink_def(nis_perror, GLIBC_2_1)
 
 void
-nis_lerror (const nis_error status, const char *label)
+nis_lerror(const nis_error status, const char *label)
 {
-  syslog (LOG_ERR, "%s: %s", label, nis_sperrno (status));
+    syslog(LOG_ERR, "%s: %s", label, nis_sperrno(status));
 }
-libnsl_hidden_nolink_def (nis_lerror, GLIBC_2_1)
+libnsl_hidden_nolink_def(nis_lerror, GLIBC_2_1)
 
 char *
-nis_sperror_r (const nis_error status, const char *label,
-	       char *buffer, size_t buflen)
+nis_sperror_r(const nis_error status, const char *label,
+              char *buffer, size_t buflen)
 {
-  if (snprintf (buffer, buflen, "%s: %s", label, nis_sperrno (status))
-      >= buflen)
-    {
-      __set_errno (ERANGE);
-      return NULL;
+    if (snprintf(buffer, buflen, "%s: %s", label, nis_sperrno(status))
+        >= buflen) {
+        __set_errno(ERANGE);
+        return NULL;
     }
 
-  return buffer;
+    return buffer;
 }
-libnsl_hidden_nolink_def (nis_sperror_r, GLIBC_2_1)
+libnsl_hidden_nolink_def(nis_sperror_r, GLIBC_2_1)
 
 char *
-nis_sperror (const nis_error status, const char *label)
+nis_sperror(const nis_error status, const char *label)
 {
-  static char buffer[NIS_MAXNAMELEN + 1];
+    static char buffer[NIS_MAXNAMELEN + 1];
 
-  return nis_sperror_r (status, label, buffer, sizeof (buffer));
+    return nis_sperror_r(status, label, buffer, sizeof(buffer));
 }
-libnsl_hidden_nolink_def (nis_sperror, GLIBC_2_1)
+libnsl_hidden_nolink_def(nis_sperror, GLIBC_2_1)

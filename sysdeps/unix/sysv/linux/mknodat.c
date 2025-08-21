@@ -21,16 +21,16 @@
 #include <errno.h>
 #include <sysdep.h>
 
-int
-__mknodat (int fd, const char *path, mode_t mode, dev_t dev)
+int __mknodat(int fd, const char *path, mode_t mode, dev_t dev)
 {
-  /* The user-exported dev_t is 64-bit while the kernel interface is
-     32-bit.  */
-  unsigned int k_dev = dev;
-  if (k_dev != dev)
-    return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
+    /* The user-exported dev_t is 64-bit while the kernel interface is
+       32-bit.  */
+    unsigned int k_dev = dev;
+    if (k_dev != dev) {
+        return INLINE_SYSCALL_ERROR_RETURN_VALUE(EINVAL);
+    }
 
-  return INLINE_SYSCALL_CALL (mknodat, fd, path, mode, k_dev);
+    return INLINE_SYSCALL_CALL(mknodat, fd, path, mode, k_dev);
 }
-libc_hidden_def (__mknodat)
-weak_alias (__mknodat, mknodat)
+libc_hidden_def(__mknodat)
+weak_alias(__mknodat, mknodat)

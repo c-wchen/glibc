@@ -23,20 +23,19 @@
 #include <support/check.h>
 
 /* svcunix_create does not have a default version in linkobj/libc.so.  */
-compat_symbol_reference (libc, svcunix_create, svcunix_create, GLIBC_2_1);
+compat_symbol_reference(libc, svcunix_create, svcunix_create, GLIBC_2_1);
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char pathname[109];
-  memset (pathname, 'x', sizeof (pathname));
-  pathname[sizeof (pathname) - 1] = '\0';
+    char pathname[109];
+    memset(pathname, 'x', sizeof(pathname));
+    pathname[sizeof(pathname) - 1] = '\0';
 
-  errno = 0;
-  TEST_VERIFY (svcunix_create (RPC_ANYSOCK, 4096, 4096, pathname) == NULL);
-  TEST_COMPARE (errno, EINVAL);
+    errno = 0;
+    TEST_VERIFY(svcunix_create(RPC_ANYSOCK, 4096, 4096, pathname) == NULL);
+    TEST_COMPARE(errno, EINVAL);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

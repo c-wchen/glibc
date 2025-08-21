@@ -18,7 +18,6 @@
 
 /* Free libpthread.so resources.
    Note: Caller ensures we are called only once.  */
-void
-__libpthread_freeres (void)
+void __libpthread_freeres(void)
 {
 }

@@ -23,32 +23,35 @@
 extern const uint16_t __cns11643l2_to_ucs4_tab[];
 
 
-static inline uint32_t
-__attribute ((always_inline))
-cns11643l2_to_ucs4 (const unsigned char **s, size_t avail,
-		    unsigned char offset)
+static inline uint32_t __attribute((always_inline))
+cns11643l2_to_ucs4(const unsigned char **s, size_t avail,
+                   unsigned char offset)
 {
-  unsigned char ch = *(*s);
-  unsigned char ch2;
-  int idx;
+    unsigned char ch = *(*s);
+    unsigned char ch2;
+    int idx;
 
-  if (ch < offset || (ch - offset) <= 0x20 || (ch - offset) > 0x7d)
-    return __UNKNOWN_10646_CHAR;
+    if (ch < offset || (ch - offset) <= 0x20 || (ch - offset) > 0x7d) {
+        return __UNKNOWN_10646_CHAR;
+    }
 
-  if (avail < 2)
-    return 0;
+    if (avail < 2) {
+        return 0;
+    }
 
-  ch2 = (*s)[1];
-  if ((ch2 - offset) <= 0x20 || (ch2 - offset) >= 0x7f)
-    return __UNKNOWN_10646_CHAR;
+    ch2 = (*s)[1];
+    if ((ch2 - offset) <= 0x20 || (ch2 - offset) >= 0x7f) {
+        return __UNKNOWN_10646_CHAR;
+    }
 
-  idx = (ch - 0x21 - offset) * 94 + (ch2 - 0x21 - offset);
-  if (idx > 0x1de1)
-    return __UNKNOWN_10646_CHAR;
+    idx = (ch - 0x21 - offset) * 94 + (ch2 - 0x21 - offset);
+    if (idx > 0x1de1) {
+        return __UNKNOWN_10646_CHAR;
+    }
 
-  (*s) += 2;
+    (*s) += 2;
 
-  return __cns11643l2_to_ucs4_tab[idx] ?: ((*s) -= 2, __UNKNOWN_10646_CHAR);
+    return __cns11643l2_to_ucs4_tab[idx] ? : ((*s) -= 2, __UNKNOWN_10646_CHAR);
 }
 
 
@@ -56,30 +59,31 @@ cns11643l2_to_ucs4 (const unsigned char **s, size_t avail,
 extern const char __cns11643_from_ucs4p0_tab[][3];
 
 
-static inline size_t
-__attribute ((always_inline))
-ucs4_to_cns11643l2 (uint32_t wch, unsigned char *s, size_t avail)
+static inline size_t __attribute((always_inline))
+ucs4_to_cns11643l2(uint32_t wch, unsigned char *s, size_t avail)
 {
-  unsigned int ch = (unsigned int) wch;
-  const char *cp = NULL;
+    unsigned int ch = (unsigned int) wch;
+    const char *cp = NULL;
 
-  if (ch >= 0x4e07 && ch <= 0x9fa4)
-    {
-      cp = __cns11643_from_ucs4p0_tab[ch - 0x3400];
-      if (cp[0] == '\2')
-	++cp;
-      else
-	cp = NULL;
+    if (ch >= 0x4e07 && ch <= 0x9fa4) {
+        cp = __cns11643_from_ucs4p0_tab[ch - 0x3400];
+        if (cp[0] == '\2') {
+            ++cp;
+        } else {
+            cp = NULL;
+        }
     }
 
-  if (cp == NULL)
-    return __UNKNOWN_10646_CHAR;
+    if (cp == NULL) {
+        return __UNKNOWN_10646_CHAR;
+    }
 
-  if (avail < 2)
-    return 0;
+    if (avail < 2) {
+        return 0;
+    }
 
-  s[0] = cp[0];
-  s[1] = cp[1];
+    s[0] = cp[0];
+    s[1] = cp[1];
 
-  return 2;
+    return 2;
 }

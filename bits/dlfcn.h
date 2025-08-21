@@ -21,24 +21,24 @@
 #endif
 
 /* The MODE argument to `dlopen' contains one of the following: */
-#define RTLD_LAZY	0x00001	/* Lazy function call binding.  */
-#define RTLD_NOW	0x00002	/* Immediate function call binding.  */
-#define	RTLD_BINDING_MASK   0x3	/* Mask of binding time value.  */
-#define RTLD_NOLOAD	0x00004	/* Do not load the object.  */
-#define RTLD_DEEPBIND	0x00008	/* Use deep binding.  */
+#define RTLD_LAZY   0x00001 /* Lazy function call binding.  */
+#define RTLD_NOW    0x00002 /* Immediate function call binding.  */
+#define RTLD_BINDING_MASK   0x3 /* Mask of binding time value.  */
+#define RTLD_NOLOAD 0x00004 /* Do not load the object.  */
+#define RTLD_DEEPBIND   0x00008 /* Use deep binding.  */
 
 /* If the following bit is set in the MODE argument to `dlopen',
    the symbols of the loaded object and its dependencies are made
    visible as if the object were linked directly into the program.  */
-#define RTLD_GLOBAL	0x00100
+#define RTLD_GLOBAL 0x00100
 
 /* Unix98 demands the following flag which is the inverse to RTLD_GLOBAL.
    The implementation does this by default and so we can define the
    value to zero.  */
-#define RTLD_LOCAL	0
+#define RTLD_LOCAL  0
 
 /* Do not delete object when closed.  */
-#define RTLD_NODELETE	0x01000
+#define RTLD_NODELETE   0x01000
 
 #ifdef __USE_GNU
 /* To support profiling of shared objects it is a good idea to call
@@ -47,7 +47,7 @@
    loader has no chance to find out when the function is called.  The
    macro applies the necessary magic so that profiling is possible.
    Rewrite
-	foo = (*fctp) (arg1, arg2);
+    foo = (*fctp) (arg1, arg2);
    into
         foo = DL_CALL_FCT (fctp, (arg1, arg2));
 */
@@ -57,7 +57,7 @@
 __BEGIN_DECLS
 
 /* This function calls the profiling functions.  */
-extern void _dl_mcount_wrapper_check (void *__selfpc) __THROW;
+extern void _dl_mcount_wrapper_check(void *__selfpc) __THROW;
 
 __END_DECLS
 

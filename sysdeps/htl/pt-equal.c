@@ -22,14 +22,13 @@
 
 /* Return true if __T1 and __T2 both name the same thread.  Otherwise,
    false.  */
-int
-__pthread_equal (pthread_t __t1, pthread_t __t2)
+int __pthread_equal(pthread_t __t1, pthread_t __t2)
 {
-  return __t1 == __t2;
+    return __t1 == __t2;
 }
 
-versioned_symbol (libc, __pthread_equal, pthread_equal, GLIBC_2_21);
+versioned_symbol(libc, __pthread_equal, pthread_equal, GLIBC_2_21);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_21)
-compat_symbol (libc, __pthread_equal, pthread_equal, GLIBC_2_12);
+compat_symbol(libc, __pthread_equal, pthread_equal, GLIBC_2_12);
 #endif

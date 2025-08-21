@@ -23,30 +23,32 @@
 
 #include <pt-internal.h>
 
-int
-__pthread_setname_np (pthread_t thread, const char *name)
+int __pthread_setname_np(pthread_t thread, const char *name)
 {
 #ifdef HAVE_MACH_THREAD_SET_NAME
-/* GNU Mach doesn't export this so we have to define it ourselves.  */
+    /* GNU Mach doesn't export this so we have to define it ourselves.  */
 #define MACH_THREAD_NAME_MAX 32
-  struct __pthread *pthread;
-  error_t err;
+    struct __pthread *pthread;
+    error_t err;
 
-  /* Lookup the thread structure for THREAD.  */
-  pthread = __pthread_getid (thread);
-  if (pthread == NULL)
-    return ESRCH;
+    /* Lookup the thread structure for THREAD.  */
+    pthread = __pthread_getid(thread);
+    if (pthread == NULL) {
+        return ESRCH;
+    }
 
-  if (strlen (name) >= MACH_THREAD_NAME_MAX)
-    return ERANGE;
+    if (strlen(name) >= MACH_THREAD_NAME_MAX) {
+        return ERANGE;
+    }
 
-  err = __thread_set_name (pthread->kernel_thread, name);
-  if (err != KERN_SUCCESS)
-    return __hurd_fail (err);
-  return 0;
+    err = __thread_set_name(pthread->kernel_thread, name);
+    if (err != KERN_SUCCESS) {
+        return __hurd_fail(err);
+    }
+    return 0;
 #else
-  return ENOTSUP;
+    return ENOTSUP;
 #endif
 }
 
-weak_alias (__pthread_setname_np, pthread_setname_np)
+weak_alias(__pthread_setname_np, pthread_setname_np)

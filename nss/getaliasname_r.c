@@ -18,13 +18,13 @@
 #include <aliases.h>
 
 
-#define LOOKUP_TYPE		struct aliasent
-#define FUNCTION_NAME		getaliasbyname
-#define DATABASE_NAME		aliases
-#define ADD_PARAMS		const char *name
-#define ADD_VARIABLES		name
+#define LOOKUP_TYPE     struct aliasent
+#define FUNCTION_NAME       getaliasbyname
+#define DATABASE_NAME       aliases
+#define ADD_PARAMS      const char *name
+#define ADD_VARIABLES       name
 
 /* There is no nscd support for the aliases file.  */
-#undef	USE_NSCD
+#undef  USE_NSCD
 
 #include "../nss/getXXbyYY_r.c"

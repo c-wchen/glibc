@@ -21,19 +21,20 @@
 
 
 FLOAT
-M_DECL_FUNC (__fmin) (FLOAT x, FLOAT y)
+M_DECL_FUNC(__fmin)(FLOAT x, FLOAT y)
 {
 #if M_USE_BUILTIN (FMIN)
-  return M_SUF (__builtin_fmin) (x, y);
+    return M_SUF(__builtin_fmin)(x, y);
 #else
-  if (islessequal (x, y))
-    return x;
-  else if (isgreater (x, y))
-    return y;
-  else if (issignaling (x) || issignaling (y))
-    return x + y;
-  else
-    return isnan (y) ? x : y;
+    if (islessequal(x, y)) {
+        return x;
+    } else if (isgreater(x, y)) {
+        return y;
+    } else if (issignaling(x) || issignaling(y)) {
+        return x + y;
+    } else {
+        return isnan(y) ? x : y;
+    }
 #endif
 }
-declare_mgen_alias (__fmin, fmin);
+declare_mgen_alias(__fmin, fmin);

@@ -32,7 +32,7 @@
 #define VSTART   8
 #define VSTOP    9
 #define VSUSP    10
-#define VDSUSP   11		/* SunOS POSIX nicety I do believe... */
+#define VDSUSP   11     /* SunOS POSIX nicety I do believe... */
 #define VREPRINT 12
 #define VDISCARD 13
 #define VWERASE  14

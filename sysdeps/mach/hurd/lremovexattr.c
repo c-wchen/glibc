@@ -22,14 +22,14 @@
 #include <hurd/xattr.h>
 #include <fcntl.h>
 
-int
-lremovexattr (const char *path, const char *name)
+int lremovexattr(const char *path, const char *name)
 {
-  error_t err;
-  file_t port = __file_name_lookup (path, O_NOLINK, 0);
-  if (port == MACH_PORT_NULL)
-    return -1;
-  err = _hurd_xattr_remove (port, name);
-  __mach_port_deallocate (__mach_task_self (), port);
-  return __hurd_fail (err);
+    error_t err;
+    file_t port = __file_name_lookup(path, O_NOLINK, 0);
+    if (port == MACH_PORT_NULL) {
+        return -1;
+    }
+    err = _hurd_xattr_remove(port, name);
+    __mach_port_deallocate(__mach_task_self(), port);
+    return __hurd_fail(err);
 }

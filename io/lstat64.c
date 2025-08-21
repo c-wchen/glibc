@@ -17,10 +17,9 @@
 
 #include <sys/stat.h>
 
-int
-__lstat64 (const char *file, struct stat64 *buf)
+int __lstat64(const char *file, struct stat64 *buf)
 {
-  return __fstatat64 (AT_FDCWD, file, buf, AT_SYMLINK_NOFOLLOW);
+    return __fstatat64(AT_FDCWD, file, buf, AT_SYMLINK_NOFOLLOW);
 }
-hidden_def (__lstat64)
-weak_alias (__lstat64, lstat64)
+hidden_def(__lstat64)
+weak_alias(__lstat64, lstat64)

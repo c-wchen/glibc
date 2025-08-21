@@ -29,13 +29,12 @@
    moved_function@SONAME_MOVE moved from the soname
    tst-sonamemove-linkmod1.so at link time to the soname
    tst-sonamemove-linkmod2.so at run time. */
-void moved_function (void);
+void moved_function(void);
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  moved_function ();
-  return 0;
+    moved_function();
+    return 0;
 }
 
 #include <support/test-driver.c>

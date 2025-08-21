@@ -17,19 +17,18 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef ALPHA_GET_ROUNDING_MODE_H
-#define ALPHA_GET_ROUNDING_MODE_H	1
+#define ALPHA_GET_ROUNDING_MODE_H   1
 
 #include <fenv.h>
 #include <fenv_libc.h>
 
 /* Return the floating-point rounding mode.  */
 
-static inline int
-get_rounding_mode (void)
+static inline int get_rounding_mode(void)
 {
-  unsigned long fpcr;
-  __asm__ __volatile__("excb; mf_fpcr %0" : "=f"(fpcr));
-  return (fpcr >> FPCR_ROUND_SHIFT) & 3;
+    unsigned long fpcr;
+    __asm__ __volatile__("excb; mf_fpcr %0" : "=f"(fpcr));
+    return (fpcr >> FPCR_ROUND_SHIFT) & 3;
 }
 
 #endif /* get-rounding-mode.h */

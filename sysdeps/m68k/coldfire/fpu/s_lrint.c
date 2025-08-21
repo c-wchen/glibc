@@ -17,11 +17,10 @@
 
 #include <libm-alias-double.h>
 
-long int
-__lrint (double x)
+long int __lrint(double x)
 {
-  long int result;
-  asm ("fmove.l %1,%0" : "=dm" (result) : "f" (x));
-  return result;
+    long int result;
+    asm("fmove.l %1,%0" : "=dm"(result) : "f"(x));
+    return result;
 }
-libm_alias_double (__lrint, lrint)
+libm_alias_double(__lrint, lrint)

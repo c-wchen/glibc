@@ -22,21 +22,22 @@
 /* Get the current time of day, putting it into *TV.
    If *TZ is not NULL, clear it.
    Returns 0 on success, -1 on errors.  */
-int
-___gettimeofday (struct timeval *restrict tv, void *restrict tz)
+int ___gettimeofday(struct timeval *restrict tv, void *restrict tz)
 {
-  if (__glibc_unlikely (tz != 0))
-    memset (tz, 0, sizeof (struct timezone));
+    if (__glibc_unlikely(tz != 0)) {
+        memset(tz, 0, sizeof(struct timezone));
+    }
 
-  struct timespec ts;
-  if (__clock_gettime (CLOCK_REALTIME, &ts))
-    return -1;
+    struct timespec ts;
+    if (__clock_gettime(CLOCK_REALTIME, &ts)) {
+        return -1;
+    }
 
-  TIMESPEC_TO_TIMEVAL (tv, &ts);
-  return 0;
+    TIMESPEC_TO_TIMEVAL(tv, &ts);
+    return 0;
 }
 /* Define to override default symbol version.  */
 #ifndef SET_VERSION
-strong_alias (___gettimeofday, __gettimeofday)
-weak_alias (___gettimeofday, gettimeofday)
+strong_alias(___gettimeofday, __gettimeofday)
+weak_alias(___gettimeofday, gettimeofday)
 #endif

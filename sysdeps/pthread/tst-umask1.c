@@ -24,111 +24,101 @@
 #include <sys/stat.h>
 
 
-static struct
-{
-  int (*fp) (const char *, mode_t);
-  const char *name;
-  bool is_fd;
-} fcts[] =
-{
-  { creat, "creat", true },
-  { mkdir, "mkdir", false },
-  { mkfifo, "mkfifo", false },
+static struct {
+    int (*fp)(const char *, mode_t);
+    const char *name;
+    bool is_fd;
+} fcts[] = {
+    { creat, "creat", true },
+    { mkdir, "mkdir", false },
+    { mkfifo, "mkfifo", false },
 };
 #define nfcts (sizeof (fcts) / sizeof (fcts[0]))
 
 
-static int
-work (const char *fname, int mask)
+static int work(const char *fname, int mask)
 {
-  int result = 0;
-  size_t i;
-  for (i = 0; i < nfcts; ++i)
-    {
-      remove (fname);
-      int fd = fcts[i].fp (fname, 0777);
-      if (fd == -1)
-	{
-	  printf ("cannot %s %s: %m\n", fcts[i].name, fname);
-	  exit (1);
-	}
-      if (fcts[i].is_fd)
-	close (fd);
-      struct stat64 st;
-      if (stat64 (fname, &st) == -1)
-	{
-	  printf ("cannot stat %s after %s: %m\n", fname, fcts[i].name);
-	  exit (1);
-	}
+    int result = 0;
+    size_t i;
+    for (i = 0; i < nfcts; ++i) {
+        remove(fname);
+        int fd = fcts[i].fp(fname, 0777);
+        if (fd == -1) {
+            printf("cannot %s %s: %m\n", fcts[i].name, fname);
+            exit(1);
+        }
+        if (fcts[i].is_fd) {
+            close(fd);
+        }
+        struct stat64 st;
+        if (stat64(fname, &st) == -1) {
+            printf("cannot stat %s after %s: %m\n", fname, fcts[i].name);
+            exit(1);
+        }
 
-      if ((st.st_mode & mask) != 0)
-	{
-	  printf ("mask not successful after %s: %x still set\n",
-		  fcts[i].name, (unsigned int) (st.st_mode & mask));
-	  result = 1;
-	}
+        if ((st.st_mode & mask) != 0) {
+            printf("mask not successful after %s: %x still set\n",
+                   fcts[i].name, (unsigned int)(st.st_mode & mask));
+            result = 1;
+        }
     }
 
-  return result;
+    return result;
 }
 
 
 static pthread_barrier_t bar;
 
 
-static void *
-tf (void *arg)
+static void *tf(void *arg)
 {
-  pthread_barrier_wait (&bar);
+    pthread_barrier_wait(&bar);
 
-  int result = work (arg, 022);
+    int result = work(arg, 022);
 
-  pthread_barrier_wait (&bar);
+    pthread_barrier_wait(&bar);
 
-  pthread_barrier_wait (&bar);
+    pthread_barrier_wait(&bar);
 
-  return (work (arg, 0) | result) ? (void *) -1l : NULL;
+    return (work(arg, 0) | result) ? (void *) -1l : NULL;
 }
 
 
-static int
-do_test (const char *fname)
+static int do_test(const char *fname)
 {
-  int result = 0;
+    int result = 0;
 
-  umask (0);
-  result |= work (fname, 0);
+    umask(0);
+    result |= work(fname, 0);
 
-  pthread_barrier_init (&bar, NULL, 2);
+    pthread_barrier_init(&bar, NULL, 2);
 
-  pthread_t th;
-  if (pthread_create (&th, NULL, tf, (void *) fname) != 0)
-    {
-      puts ("cannot create thread");
-      exit (1);
+    pthread_t th;
+    if (pthread_create(&th, NULL, tf, (void *) fname) != 0) {
+        puts("cannot create thread");
+        exit(1);
     }
 
-  umask (022);
-  result |= work (fname, 022);
+    umask(022);
+    result |= work(fname, 022);
 
-  pthread_barrier_wait (&bar);
+    pthread_barrier_wait(&bar);
 
-  pthread_barrier_wait (&bar);
+    pthread_barrier_wait(&bar);
 
-  umask (0);
+    umask(0);
 
-  pthread_barrier_wait (&bar);
+    pthread_barrier_wait(&bar);
 
-  void *res;
-  if (pthread_join (th, &res) != 0)
-    {
-      puts ("join failed");
-      exit (1);
+    void *res;
+    if (pthread_join(th, &res) != 0) {
+        puts("join failed");
+        exit(1);
     }
 
-  remove (fname);
+    remove(fname);
 
-  return result || res != NULL;
+    return result || res != NULL;
 }
 
 #define TEST_FUNCTION do_test (argc < 2 ? "/tmp/tst-umask.tmp" : argv[1])

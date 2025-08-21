@@ -28,5 +28,5 @@
 # define SYMBOL_NAME memmove
 # include "ifunc-memmove.h"
 
-libc_ifunc_redirected (__redirect_memmove, memmove, IFUNC_SELECTOR ());
+libc_ifunc_redirected(__redirect_memmove, memmove, IFUNC_SELECTOR());
 #endif

@@ -19,16 +19,14 @@
 #include <dlfcn.h>
 #include <stdio.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  void *h = dlopen ("tst-debug1mod1.so", RTLD_LAZY);
-  if (h != NULL)
-    {
-      puts ("shouldn't load tst-debug1mod1.so");
-      return 1;
+    void *h = dlopen("tst-debug1mod1.so", RTLD_LAZY);
+    if (h != NULL) {
+        puts("shouldn't load tst-debug1mod1.so");
+        return 1;
     }
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

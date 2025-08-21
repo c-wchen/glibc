@@ -24,46 +24,44 @@
 
 #if LIBM_SVID_COMPAT
 /* wrapper j0f */
-float
-__j0f (float x)
+float __j0f(float x)
 {
-  if (__builtin_expect (isgreater (fabsf (x),
-				   AS_FLOAT_CONSTANT (X_TLOSS)), 0)
-      && _LIB_VERSION != _IEEE_ && _LIB_VERSION != _POSIX_)
-    /* j0(|x|>X_TLOSS) */
-    return __kernel_standard_f (x, x, 134);
+    if (__builtin_expect(isgreater(fabsf(x),
+                                   AS_FLOAT_CONSTANT(X_TLOSS)), 0)
+        && _LIB_VERSION != _IEEE_ && _LIB_VERSION != _POSIX_)
+        /* j0(|x|>X_TLOSS) */
+    {
+        return __kernel_standard_f(x, x, 134);
+    }
 
-  return __ieee754_j0f (x);
+    return __ieee754_j0f(x);
 }
-libm_alias_float (__j0, j0)
+libm_alias_float(__j0, j0)
 
 
 /* wrapper y0f */
 float
-__y0f (float x)
+__y0f(float x)
 {
-  if (__builtin_expect (islessequal (x, 0.0f)
-                        || isgreater (x, AS_FLOAT_CONSTANT (X_TLOSS)), 0)
-      && _LIB_VERSION != _IEEE_)
-    {
-      if (x < 0.0f)
-	{
-	  /* d = zero/(x-x) */
-	  feraiseexcept (FE_INVALID);
-	  return __kernel_standard_f (x, x, 109);
-	}
-      else if (x == 0.0f)
-	{
-	  /* d = -one/(x-x) */
-	  feraiseexcept (FE_DIVBYZERO);
-	  return __kernel_standard_f (x, x, 108);
-	}
-      else if (_LIB_VERSION != _POSIX_)
-	/* y0(x>X_TLOSS) */
-	return __kernel_standard_f (x, x, 135);
+    if (__builtin_expect(islessequal(x, 0.0f)
+                         || isgreater(x, AS_FLOAT_CONSTANT(X_TLOSS)), 0)
+        && _LIB_VERSION != _IEEE_) {
+        if (x < 0.0f) {
+            /* d = zero/(x-x) */
+            feraiseexcept(FE_INVALID);
+            return __kernel_standard_f(x, x, 109);
+        } else if (x == 0.0f) {
+            /* d = -one/(x-x) */
+            feraiseexcept(FE_DIVBYZERO);
+            return __kernel_standard_f(x, x, 108);
+        } else if (_LIB_VERSION != _POSIX_)
+            /* y0(x>X_TLOSS) */
+        {
+            return __kernel_standard_f(x, x, 135);
+        }
     }
 
-  return __ieee754_y0f (x);
+    return __ieee754_y0f(x);
 }
-libm_alias_float (__y0, y0)
+libm_alias_float(__y0, y0)
 #endif

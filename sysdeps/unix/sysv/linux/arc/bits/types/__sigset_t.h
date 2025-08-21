@@ -4,9 +4,8 @@
 
 /* Linux asm-generic syscall ABI expects sigset_t to hold 64 signals.  */
 #define _SIGSET_NWORDS (64 / (8 * sizeof (unsigned long int)))
-typedef struct
-{
-  unsigned long int __val[_SIGSET_NWORDS];
+typedef struct {
+    unsigned long int __val[_SIGSET_NWORDS];
 } __sigset_t;
 
 #endif

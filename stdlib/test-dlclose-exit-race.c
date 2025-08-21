@@ -43,50 +43,46 @@ sem_t order1;
    starting and the first function returning.  */
 sem_t order2;
 
-void *
-exit_thread (void *arg)
+void *exit_thread(void *arg)
 {
-  /* Wait for the dlclose to start...  */
-  sem_wait (&order1);
-  /* Then try to run the exit sequence which should call all
-     __cxa_atexit registered functions and in parallel with
-     the executing dlclose().  */
-  exit (0);
+    /* Wait for the dlclose to start...  */
+    sem_wait(&order1);
+    /* Then try to run the exit sequence which should call all
+       __cxa_atexit registered functions and in parallel with
+       the executing dlclose().  */
+    exit(0);
 }
 
 
-void
-last (void)
+void last(void)
 {
-  /* Let dlclose thread proceed.  */
-  sem_post (&order2);
+    /* Let dlclose thread proceed.  */
+    sem_post(&order2);
 }
 
-int
-main (void)
+int main(void)
 {
-  int value;
-  void *dso;
-  pthread_t thread;
+    int value;
+    void *dso;
+    pthread_t thread;
 
-  atexit (last);
+    atexit(last);
 
-  dso = xdlopen ("$ORIGIN/test-dlclose-exit-race-helper.so",
-		 RTLD_NOW|RTLD_GLOBAL);
-  if ((value = pthread_create (&thread, NULL, exit_thread, NULL)) != 0)
-    {
-      /* If pthread_create fails, then exit() is called in the main
-	 thread instead of a second thread, so the semaphore post that
-	 would have happened in 'last' gets blocked behind the call to
-	 first() - which is waiting on the semaphore, and thus
-	 hangs.  */
-      sem_post (&order2);
-      errno = value;
-      FAIL_EXIT1 ("pthread_create: %m");
+    dso = xdlopen("$ORIGIN/test-dlclose-exit-race-helper.so",
+                  RTLD_NOW | RTLD_GLOBAL);
+    if ((value = pthread_create(&thread, NULL, exit_thread, NULL)) != 0) {
+        /* If pthread_create fails, then exit() is called in the main
+        thread instead of a second thread, so the semaphore post that
+         would have happened in 'last' gets blocked behind the call to
+         first() - which is waiting on the semaphore, and thus
+         hangs.  */
+        sem_post(&order2);
+        errno = value;
+        FAIL_EXIT1("pthread_create: %m");
     }
 
-  xdlclose (dso);
-  xpthread_join (thread);
+    xdlclose(dso);
+    xpthread_join(thread);
 
-  FAIL_EXIT1 ("Did not terminate via exit(0) in exit_thread() as expected.");
+    FAIL_EXIT1("Did not terminate via exit(0) in exit_thread() as expected.");
 }

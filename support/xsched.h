@@ -25,8 +25,8 @@ __BEGIN_DECLS
 #include <sys/types.h>
 
 #ifdef __linux__
-pid_t xclone (int (*fn) (void *arg), void *arg, void *stack,
-	      size_t stack_size, int flags);
+pid_t xclone(int (*fn)(void *arg), void *arg, void *stack,
+             size_t stack_size, int flags);
 #endif
 
 __END_DECLS

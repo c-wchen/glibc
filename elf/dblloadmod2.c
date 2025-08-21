@@ -1,15 +1,13 @@
-extern int bar (void);
-extern int baz (void);
-extern int xyzzy (void);
+extern int bar(void);
+extern int baz(void);
+extern int xyzzy(void);
 
-int
-baz (void)
+int baz(void)
 {
-  return -42;
+    return -42;
 }
 
-int
-xyzzy (void)
+int xyzzy(void)
 {
-  return 10 + bar ();
+    return 10 + bar();
 }

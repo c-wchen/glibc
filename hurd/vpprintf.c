@@ -22,40 +22,41 @@
 
 #include <libioP.h>
 
-static ssize_t
-do_write (void *cookie,	const char *buf, size_t n)
+static ssize_t do_write(void *cookie, const char *buf, size_t n)
 {
-  io_t io = (io_t) (uintptr_t) cookie;
-  vm_size_t amount = n;
-  error_t error = __io_write (io, buf, n, -1, &amount);
-  if (error)
-    return __hurd_fail (error);
-  return n;
+    io_t io = (io_t)(uintptr_t) cookie;
+    vm_size_t amount = n;
+    error_t error = __io_write(io, buf, n, -1, &amount);
+    if (error) {
+        return __hurd_fail(error);
+    }
+    return n;
 }
 
 /* Write formatted output to PORT, a Mach port supporting the i/o protocol,
    according to the format string FORMAT, using the argument list in ARG.  */
-int
-vpprintf (io_t port, const char *format, va_list arg)
+int vpprintf(io_t port, const char *format, va_list arg)
 {
-  int done;
+    int done;
 
-  struct locked_FILE
-  {
-    struct _IO_cookie_file cfile;
+    struct locked_FILE {
+        struct _IO_cookie_file cfile;
 #ifdef _IO_MTSAFE_IO
-    _IO_lock_t lock;
+        _IO_lock_t lock;
 #endif
-  } temp_f;
+    } temp_f;
 #ifdef _IO_MTSAFE_IO
-  temp_f.cfile.__fp.file._lock = &temp_f.lock;
+    temp_f.cfile.__fp.file._lock = &temp_f.lock;
 #endif
 
-  _IO_cookie_init (&temp_f.cfile, _IO_NO_READS,
-                   (void *) (uintptr_t) port,
-                   (cookie_io_functions_t) { write: do_write });
+    _IO_cookie_init(&temp_f.cfile, _IO_NO_READS,
+                    (void *)(uintptr_t) port,
+    (cookie_io_functions_t) {
+write:
+        do_write
+    });
 
-  done = __vfprintf_internal (&temp_f.cfile.__fp.file, format, arg, 0);
+    done = __vfprintf_internal(&temp_f.cfile.__fp.file, format, arg, 0);
 
-  return done;
+    return done;
 }

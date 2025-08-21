@@ -24,20 +24,18 @@
 #endif
 
 /* Structure describing the action to be taken when a signal arrives.  */
-struct sigaction
-  {
+struct sigaction {
     /* Special flags.  */
     int sa_flags;
 
     /* Signal handler.  */
 #if defined __USE_POSIX199309 || defined __USE_XOPEN_EXTENDED
-    union
-      {
-	/* Used if SA_SIGINFO is not set.  */
-	__sighandler_t sa_handler;
-	/* Used if SA_SIGINFO is set.  */
-	void (*sa_sigaction) (int, siginfo_t *, void *);
-      }
+    union {
+        /* Used if SA_SIGINFO is not set.  */
+        __sighandler_t sa_handler;
+        /* Used if SA_SIGINFO is set.  */
+        void (*sa_sigaction)(int, siginfo_t *, void *);
+    }
     __sigaction_handler;
 # define sa_handler    __sigaction_handler.sa_handler
 # define sa_sigaction  __sigaction_handler.sa_sigaction
@@ -49,12 +47,12 @@ struct sigaction
 
     /* The ABI says here are two unused ints following. */
     /* Restore handler.  */
-    void (*sa_restorer) (void);
+    void (*sa_restorer)(void);
 
 #if _MIPS_SZPTR < 64
     int sa_resv[1];
 #endif
-  };
+};
 
 /* Bits in `sa_flags'.  */
 /* Please note that some Linux kernels versions use different values for these
@@ -62,7 +60,7 @@ struct sigaction
 #define SA_NOCLDSTOP  0x00000001 /* Don't send SIGCHLD when children stop.  */
 #define SA_NOCLDWAIT  0x00010000 /* Don't create zombie on child death.  */
 #define SA_SIGINFO    0x00000008 /* Invoke signal-catching function with
-				    three arguments instead of one.  */
+                    three arguments instead of one.  */
 #if defined __USE_XOPEN_EXTENDED || defined __USE_MISC
 # define SA_ONSTACK   0x08000000 /* Use signal stack by using `sa_restorer'. */
 #endif
@@ -70,7 +68,7 @@ struct sigaction
 # define SA_RESETHAND 0x80000000 /* Reset to SIG_DFL on entry to handler.  */
 # define SA_RESTART   0x10000000 /* Restart syscall on signal return.  */
 # define SA_NODEFER   0x40000000 /* Don't automatically block the signal when
-				    its handler is being executed.  */
+                    its handler is being executed.  */
 #endif
 #ifdef __USE_MISC
 # define SA_INTERRUPT 0x20000000 /* Historical no-op.  */
@@ -82,13 +80,13 @@ struct sigaction
 #endif
 
 /* Values for the HOW argument to `sigprocmask'.  */
-#define SIG_NOP	      0		/* 0 is unused to catch errors */
-#define	SIG_BLOCK     1		/* Block signals.  */
-#define	SIG_UNBLOCK   2		/* Unblock signals.  */
-#define	SIG_SETMASK   3		/* Set the set of blocked signals.  */
+#define SIG_NOP       0     /* 0 is unused to catch errors */
+#define SIG_BLOCK     1     /* Block signals.  */
+#define SIG_UNBLOCK   2     /* Unblock signals.  */
+#define SIG_SETMASK   3     /* Set the set of blocked signals.  */
 #ifdef __USE_MISC
-# define SIG_SETMASK32 256	/* Goodie from SGI for BSD compatibility:
-				   set only the low 32 bit of the sigset.  */
+# define SIG_SETMASK32 256  /* Goodie from SGI for BSD compatibility:
+                   set only the low 32 bit of the sigset.  */
 #endif
 
 #endif

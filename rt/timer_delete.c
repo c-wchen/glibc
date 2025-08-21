@@ -24,44 +24,43 @@
 
 
 /* Delete timer TIMERID.  */
-int
-timer_delete (timer_t timerid)
+int timer_delete(timer_t timerid)
 {
-  struct timer_node *timer;
-  int retval = -1;
+    struct timer_node *timer;
+    int retval = -1;
 
-  pthread_mutex_lock (&__timer_mutex);
+    pthread_mutex_lock(&__timer_mutex);
 
-  timer = timer_id2ptr (timerid);
-  if (! timer_valid (timer))
-    /* Invalid timer ID or the timer is not in use.  */
-    __set_errno (EINVAL);
-  else
+    timer = timer_id2ptr(timerid);
+    if (! timer_valid(timer))
+        /* Invalid timer ID or the timer is not in use.  */
     {
-      if (timer->armed && timer->thread != NULL)
-	{
-	  struct thread_node *thread = timer->thread;
-	  assert (thread != NULL);
+        __set_errno(EINVAL);
+    } else {
+        if (timer->armed && timer->thread != NULL) {
+            struct thread_node *thread = timer->thread;
+            assert(thread != NULL);
 
-	  /* If thread is cancelled while waiting for handler to terminate,
-	     the mutex is unlocked and timer_delete is aborted.  */
-	  pthread_cleanup_push (__timer_mutex_cancel_handler, &__timer_mutex);
+            /* If thread is cancelled while waiting for handler to terminate,
+               the mutex is unlocked and timer_delete is aborted.  */
+            pthread_cleanup_push(__timer_mutex_cancel_handler, &__timer_mutex);
 
-	  /* If timer is currently being serviced, wait for it to finish.  */
-	  while (thread->current_timer == timer)
-	    pthread_cond_wait (&thread->cond, &__timer_mutex);
+            /* If timer is currently being serviced, wait for it to finish.  */
+            while (thread->current_timer == timer) {
+                pthread_cond_wait(&thread->cond, &__timer_mutex);
+            }
 
-	  pthread_cleanup_pop (0);
+            pthread_cleanup_pop(0);
         }
 
-      /* Remove timer from whatever queue it may be on and deallocate it.  */
-      timer->inuse = TIMER_DELETED;
-      list_unlink_ip (&timer->links);
-      timer_delref (timer);
-      retval = 0;
+        /* Remove timer from whatever queue it may be on and deallocate it.  */
+        timer->inuse = TIMER_DELETED;
+        list_unlink_ip(&timer->links);
+        timer_delref(timer);
+        retval = 0;
     }
 
-  pthread_mutex_unlock (&__timer_mutex);
+    pthread_mutex_unlock(&__timer_mutex);
 
-  return retval;
+    return retval;
 }

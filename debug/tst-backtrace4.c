@@ -33,89 +33,84 @@
 
 volatile int sig_handled = 0;
 
-void
-handle_signal (int signum)
+void handle_signal(int signum)
 {
-  void *addresses[NUM_FUNCTIONS];
-  char **symbols;
-  int n;
-  int i;
+    void *addresses[NUM_FUNCTIONS];
+    char **symbols;
+    int n;
+    int i;
 
-  sig_handled = 1;
+    sig_handled = 1;
 
-  /* Get the backtrace addresses.  */
-  n = backtrace (addresses, sizeof (addresses) / sizeof (addresses[0]));
-  printf ("Obtained backtrace with %d functions (want at least %d)\n",
-	  n, NUM_FUNCTIONS);
-  /* Check that there are at least NUM_FUNCTIONS functions.  */
-  if (n < NUM_FUNCTIONS)
-    {
-      FAIL ();
-      /* Only return if we got no symbols at all.  The partial output is
-	 still useful for debugging failures.  */
-      if (n <= 0)
-	return;
+    /* Get the backtrace addresses.  */
+    n = backtrace(addresses, sizeof(addresses) / sizeof(addresses[0]));
+    printf("Obtained backtrace with %d functions (want at least %d)\n",
+           n, NUM_FUNCTIONS);
+    /* Check that there are at least NUM_FUNCTIONS functions.  */
+    if (n < NUM_FUNCTIONS) {
+        FAIL();
+        /* Only return if we got no symbols at all.  The partial output is
+        still useful for debugging failures.  */
+        if (n <= 0) {
+            return;
+        }
     }
-  /* Convert them to symbols.  */
-  symbols = backtrace_symbols (addresses, n);
-  /* Check that symbols were obtained.  */
-  if (symbols == NULL)
-    {
-      FAIL ();
-      return;
+    /* Convert them to symbols.  */
+    symbols = backtrace_symbols(addresses, n);
+    /* Check that symbols were obtained.  */
+    if (symbols == NULL) {
+        FAIL();
+        return;
     }
-  for (i = 0; i < n; ++i)
-    printf ("Function %d: %s\n", i, symbols[i]);
-  /* Check that the function names obtained are accurate.  */
-  if (!match (symbols[0], "handle_signal"))
-    FAIL ();
-  /* Do not check name for signal trampoline.  */
-  for (i = 2; i < n - 1; i++)
-    if (!match (symbols[i], "fn"))
-      {
-	FAIL ();
-	return;
-      }
-  /* Symbol names are not available for static functions, so we do not
-     check do_test.  */
+    for (i = 0; i < n; ++i) {
+        printf("Function %d: %s\n", i, symbols[i]);
+    }
+    /* Check that the function names obtained are accurate.  */
+    if (!match(symbols[0], "handle_signal")) {
+        FAIL();
+    }
+    /* Do not check name for signal trampoline.  */
+    for (i = 2; i < n - 1; i++)
+        if (!match(symbols[i], "fn")) {
+            FAIL();
+            return;
+        }
+    /* Symbol names are not available for static functions, so we do not
+       check do_test.  */
 }
 
-NO_INLINE int
-fn (int c)
+NO_INLINE int fn(int c)
 {
-  pid_t parent_pid, child_pid;
+    pid_t parent_pid, child_pid;
 
-  if (c > 0)
-    {
-      fn (c - 1);
-      return x;
+    if (c > 0) {
+        fn(c - 1);
+        return x;
     }
 
-  signal (SIGUSR1, handle_signal);
-  parent_pid = getpid ();
+    signal(SIGUSR1, handle_signal);
+    parent_pid = getpid();
 
-  child_pid = fork ();
-  if (child_pid == (pid_t) -1)
-    abort ();
-  else if (child_pid == 0)
-    {
-      sleep (1);
-      kill (parent_pid, SIGUSR1);
-      _exit (0);
+    child_pid = fork();
+    if (child_pid == (pid_t) -1) {
+        abort();
+    } else if (child_pid == 0) {
+        sleep(1);
+        kill(parent_pid, SIGUSR1);
+        _exit(0);
     }
 
-  /* In the parent.  */
-  while (sig_handled == 0)
-    ;
+    /* In the parent.  */
+    while (sig_handled == 0)
+        ;
 
-  return 0;
+    return 0;
 }
 
-NO_INLINE int
-do_test (void)
+NO_INLINE int do_test(void)
 {
-  fn (2);
-  return ret;
+    fn(2);
+    return ret;
 }
 
 #include <support/test-driver.c>

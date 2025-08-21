@@ -24,81 +24,85 @@
 #include <string.h>
 
 
-static void print (const void *node, VISIT value, int level);
+static void print(const void *node, VISIT value, int level);
 
 /* Used for several purposes.  */
 static FILE *fp;
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  void *root = NULL;
-  size_t linelen = 0;
-  char *line = NULL;
+    void *root = NULL;
+    size_t linelen = 0;
+    char *line = NULL;
 
-  /* Enable memory usage tracing.  */
-  mtrace ();
+    /* Enable memory usage tracing.  */
+    mtrace();
 
-  /* Perform some operations which definitely will allocate some
-     memory.  */
-  fp = fopen (__FILE__, "r");
-  if (fp == NULL)
-    /* Shouldn't happen since this program is executed in the source
-       directory.  */
-    abort ();
-
-  while (!feof (fp))
+    /* Perform some operations which definitely will allocate some
+       memory.  */
+    fp = fopen(__FILE__, "r");
+    if (fp == NULL)
+        /* Shouldn't happen since this program is executed in the source
+           directory.  */
     {
-      char **p;
-      char *copy;
-      ssize_t n = getline (&line, &linelen, fp);
-
-      if (n < 0)
-        break;
-
-      if (n == 0)
-        continue;
-
-      copy = strdup (line);
-      if (copy == NULL)
-        abort ();
-
-      p = (char **) tsearch (copy, &root,
-                             (int (*)(const void *, const void *))strcmp);
-      if (*p != copy)
-        /* This line wasn't added.  */
-        free (copy);
+        abort();
     }
 
-  fclose (fp);
+    while (!feof(fp)) {
+        char **p;
+        char *copy;
+        ssize_t n = getline(&line, &linelen, fp);
 
-  fp = fopen (_PATH_DEVNULL, "w");
-  if (fp != NULL)
-    {
-      /* Write something through stdout.  */
-      twalk (root, print);
+        if (n < 0) {
+            break;
+        }
 
-      fclose (fp);
+        if (n == 0) {
+            continue;
+        }
+
+        copy = strdup(line);
+        if (copy == NULL) {
+            abort();
+        }
+
+        p = (char **) tsearch(copy, &root,
+                              (int (*)(const void *, const void *))strcmp);
+        if (*p != copy)
+            /* This line wasn't added.  */
+        {
+            free(copy);
+        }
     }
 
-  /* Free everything.  */
-  tdestroy (root, free);
+    fclose(fp);
 
-  /* Also the line buffer.  */
-  free (line);
+    fp = fopen(_PATH_DEVNULL, "w");
+    if (fp != NULL) {
+        /* Write something through stdout.  */
+        twalk(root, print);
 
-  /* That's it.  */
-  return 0;
+        fclose(fp);
+    }
+
+    /* Free everything.  */
+    tdestroy(root, free);
+
+    /* Also the line buffer.  */
+    free(line);
+
+    /* That's it.  */
+    return 0;
 }
 
 
-static void
-print (const void *node, VISIT value, int level)
+static void print(const void *node, VISIT value, int level)
 {
-  static int cnt;
-  if (value == postorder || value == leaf)
-    fprintf (fp, "%3d: %s", ++cnt, *(const char **) node);
+    static int cnt;
+    if (value == postorder || value == leaf) {
+        fprintf(fp, "%3d: %s", ++cnt, *(const char **) node);
+    }
 }
 
 #define TEST_FUNCTION do_test ()

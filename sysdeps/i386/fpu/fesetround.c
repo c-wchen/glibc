@@ -20,33 +20,33 @@
 #include <unistd.h>
 #include <ldsodefs.h>
 
-int
-__fesetround (int round)
+int __fesetround(int round)
 {
-  unsigned short int cw;
+    unsigned short int cw;
 
-  if ((round & ~0xc00) != 0)
-    /* ROUND is no valid rounding mode.  */
-    return 1;
-
-  __asm__ ("fnstcw %0" : "=m" (*&cw));
-  cw &= ~0xc00;
-  cw |= round;
-  __asm__ ("fldcw %0" : : "m" (*&cw));
-
-  /* If the CPU supports SSE we set the MXCSR as well.  */
-  if (CPU_FEATURE_USABLE (SSE))
+    if ((round & ~0xc00) != 0)
+        /* ROUND is no valid rounding mode.  */
     {
-      unsigned int xcw;
-
-      __asm__ ("stmxcsr %0" : "=m" (*&xcw));
-      xcw &= ~0x6000;
-      xcw |= round << 3;
-      __asm__ ("ldmxcsr %0" : : "m" (*&xcw));
+        return 1;
     }
 
-  return 0;
+    __asm__("fnstcw %0" : "=m"( *&cw));
+    cw &= ~0xc00;
+    cw |= round;
+    __asm__("fldcw %0" : : "m"( *&cw));
+
+    /* If the CPU supports SSE we set the MXCSR as well.  */
+    if (CPU_FEATURE_USABLE(SSE)) {
+        unsigned int xcw;
+
+        __asm__("stmxcsr %0" : "=m"( *&xcw));
+        xcw &= ~0x6000;
+        xcw |= round << 3;
+        __asm__("ldmxcsr %0" : : "m"( *&xcw));
+    }
+
+    return 0;
 }
-libm_hidden_def (__fesetround)
-weak_alias (__fesetround, fesetround)
-libm_hidden_weak (fesetround)
+libm_hidden_def(__fesetround)
+weak_alias(__fesetround, fesetround)
+libm_hidden_weak(fesetround)

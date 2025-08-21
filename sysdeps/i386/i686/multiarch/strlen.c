@@ -26,5 +26,5 @@
 # define SYMBOL_NAME strlen
 # include "ifunc-sse2-bsf.h"
 
-libc_ifunc_redirected (__redirect_strlen, strlen, IFUNC_SELECTOR ());
+libc_ifunc_redirected(__redirect_strlen, strlen, IFUNC_SELECTOR());
 #endif

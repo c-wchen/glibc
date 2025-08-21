@@ -31,26 +31,24 @@
    3. It's not really obliged to deliver a single atomic write
       (though it may be preferable).  */
 
-static inline void
-_dl_writev (int fd, const struct iovec *iov, size_t niov)
+static inline void _dl_writev(int fd, const struct iovec *iov, size_t niov)
 {
-  /* Note that if __writev is an implementation that calls malloc,
-     this will cause linking problems building the dynamic linker.  */
+    /* Note that if __writev is an implementation that calls malloc,
+       this will cause linking problems building the dynamic linker.  */
 
 #if RTLD_PRIVATE_ERRNO
-  /* We have to take this lock just to be sure we don't clobber the private
-     errno when it's being used by another thread that cares about it.
-     Yet we must be sure not to try calling the lock functions before
-     the thread library is fully initialized.  */
-  if (__glibc_unlikely (_dl_starting_up))
-    __writev (fd, iov, niov);
-  else
-    {
-      __rtld_lock_lock_recursive (GL(dl_load_lock));
-      __writev (fd, iov, niov);
-      __rtld_lock_unlock_recursive (GL(dl_load_lock));
+    /* We have to take this lock just to be sure we don't clobber the private
+       errno when it's being used by another thread that cares about it.
+       Yet we must be sure not to try calling the lock functions before
+       the thread library is fully initialized.  */
+    if (__glibc_unlikely(_dl_starting_up)) {
+        __writev(fd, iov, niov);
+    } else {
+        __rtld_lock_lock_recursive(GL(dl_load_lock));
+        __writev(fd, iov, niov);
+        __rtld_lock_unlock_recursive(GL(dl_load_lock));
     }
 #else
-  __writev (fd, iov, niov);
+    __writev(fd, iov, niov);
 #endif
 }

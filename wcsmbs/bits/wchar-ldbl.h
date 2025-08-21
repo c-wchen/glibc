@@ -21,95 +21,95 @@
 #endif
 
 #if defined __USE_ISOC95 || defined __USE_UNIX98
-__LDBL_REDIR_DECL (fwprintf);
-__LDBL_REDIR_DECL (wprintf);
-__LDBL_REDIR_DECL (swprintf);
-__LDBL_REDIR_DECL (vfwprintf);
-__LDBL_REDIR_DECL (vwprintf);
-__LDBL_REDIR_DECL (vswprintf);
+__LDBL_REDIR_DECL(fwprintf);
+__LDBL_REDIR_DECL(wprintf);
+__LDBL_REDIR_DECL(swprintf);
+__LDBL_REDIR_DECL(vfwprintf);
+__LDBL_REDIR_DECL(vwprintf);
+__LDBL_REDIR_DECL(vswprintf);
 # if !__GLIBC_USE (DEPRECATED_SCANF)
 #  if defined __LDBL_COMPAT
 #   if __GLIBC_USE (C23_STRTOL)
-__LDBL_REDIR1_DECL (fwscanf, __nldbl___isoc23_fwscanf)
-__LDBL_REDIR1_DECL (wscanf, __nldbl___isoc23_wscanf)
-__LDBL_REDIR1_DECL (swscanf, __nldbl___isoc23_swscanf)
+__LDBL_REDIR1_DECL(fwscanf, __nldbl___isoc23_fwscanf)
+__LDBL_REDIR1_DECL(wscanf, __nldbl___isoc23_wscanf)
+__LDBL_REDIR1_DECL(swscanf, __nldbl___isoc23_swscanf)
 #   else
-__LDBL_REDIR1_DECL (fwscanf, __nldbl___isoc99_fwscanf)
-__LDBL_REDIR1_DECL (wscanf, __nldbl___isoc99_wscanf)
-__LDBL_REDIR1_DECL (swscanf, __nldbl___isoc99_swscanf)
+__LDBL_REDIR1_DECL(fwscanf, __nldbl___isoc99_fwscanf)
+__LDBL_REDIR1_DECL(wscanf, __nldbl___isoc99_wscanf)
+__LDBL_REDIR1_DECL(swscanf, __nldbl___isoc99_swscanf)
 #   endif
 #  elif __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
 #   if __GLIBC_USE (C23_STRTOL)
-__LDBL_REDIR1_DECL (fwscanf, __isoc23_fwscanfieee128)
-__LDBL_REDIR1_DECL (wscanf, __isoc23_wscanfieee128)
-__LDBL_REDIR1_DECL (swscanf, __isoc23_swscanfieee128)
+__LDBL_REDIR1_DECL(fwscanf, __isoc23_fwscanfieee128)
+__LDBL_REDIR1_DECL(wscanf, __isoc23_wscanfieee128)
+__LDBL_REDIR1_DECL(swscanf, __isoc23_swscanfieee128)
 #   else
-__LDBL_REDIR1_DECL (fwscanf, __isoc99_fwscanfieee128)
-__LDBL_REDIR1_DECL (wscanf, __isoc99_wscanfieee128)
-__LDBL_REDIR1_DECL (swscanf, __isoc99_swscanfieee128)
+__LDBL_REDIR1_DECL(fwscanf, __isoc99_fwscanfieee128)
+__LDBL_REDIR1_DECL(wscanf, __isoc99_wscanfieee128)
+__LDBL_REDIR1_DECL(swscanf, __isoc99_swscanfieee128)
 #   endif
 #  else
 #   error bits/stdlib-ldbl.h included when no ldbl redirections are required.
 #  endif
 # else
-__LDBL_REDIR_DECL (fwscanf);
-__LDBL_REDIR_DECL (wscanf);
-__LDBL_REDIR_DECL (swscanf);
+__LDBL_REDIR_DECL(fwscanf);
+__LDBL_REDIR_DECL(wscanf);
+__LDBL_REDIR_DECL(swscanf);
 # endif
 #endif
 
 #ifdef __USE_ISOC99
 # ifdef __LDBL_COMPAT
-__LDBL_REDIR1_DECL (wcstold, wcstod);
+__LDBL_REDIR1_DECL(wcstold, wcstod);
 # else
-__LDBL_REDIR1_DECL (wcstold, __wcstoieee128)
+__LDBL_REDIR1_DECL(wcstold, __wcstoieee128)
 # endif
 # if !__GLIBC_USE (DEPRECATED_SCANF)
 #  if defined __LDBL_COMPAT
 #   if __GLIBC_USE (C23_STRTOL)
-__LDBL_REDIR1_DECL (vfwscanf, __nldbl___isoc23_vfwscanf)
-__LDBL_REDIR1_DECL (vwscanf, __nldbl___isoc23_vwscanf)
-__LDBL_REDIR1_DECL (vswscanf, __nldbl___isoc23_vswscanf)
+__LDBL_REDIR1_DECL(vfwscanf, __nldbl___isoc23_vfwscanf)
+__LDBL_REDIR1_DECL(vwscanf, __nldbl___isoc23_vwscanf)
+__LDBL_REDIR1_DECL(vswscanf, __nldbl___isoc23_vswscanf)
 #   else
-__LDBL_REDIR1_DECL (vfwscanf, __nldbl___isoc99_vfwscanf)
-__LDBL_REDIR1_DECL (vwscanf, __nldbl___isoc99_vwscanf)
-__LDBL_REDIR1_DECL (vswscanf, __nldbl___isoc99_vswscanf)
+__LDBL_REDIR1_DECL(vfwscanf, __nldbl___isoc99_vfwscanf)
+__LDBL_REDIR1_DECL(vwscanf, __nldbl___isoc99_vwscanf)
+__LDBL_REDIR1_DECL(vswscanf, __nldbl___isoc99_vswscanf)
 #   endif
 #  elif __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
 #   if __GLIBC_USE (C23_STRTOL)
-__LDBL_REDIR1_DECL (vfwscanf, __isoc23_vfwscanfieee128)
-__LDBL_REDIR1_DECL (vwscanf, __isoc23_vwscanfieee128)
-__LDBL_REDIR1_DECL (vswscanf, __isoc23_vswscanfieee128)
+__LDBL_REDIR1_DECL(vfwscanf, __isoc23_vfwscanfieee128)
+__LDBL_REDIR1_DECL(vwscanf, __isoc23_vwscanfieee128)
+__LDBL_REDIR1_DECL(vswscanf, __isoc23_vswscanfieee128)
 #   else
-__LDBL_REDIR1_DECL (vfwscanf, __isoc99_vfwscanfieee128)
-__LDBL_REDIR1_DECL (vwscanf, __isoc99_vwscanfieee128)
-__LDBL_REDIR1_DECL (vswscanf, __isoc99_vswscanfieee128)
+__LDBL_REDIR1_DECL(vfwscanf, __isoc99_vfwscanfieee128)
+__LDBL_REDIR1_DECL(vwscanf, __isoc99_vwscanfieee128)
+__LDBL_REDIR1_DECL(vswscanf, __isoc99_vswscanfieee128)
 #   endif
 #  else
 #   error bits/stdlib-ldbl.h included when no ldbl redirections are required.
 #  endif
 # else
-__LDBL_REDIR_DECL (vfwscanf);
-__LDBL_REDIR_DECL (vwscanf);
-__LDBL_REDIR_DECL (vswscanf);
+__LDBL_REDIR_DECL(vfwscanf);
+__LDBL_REDIR_DECL(vwscanf);
+__LDBL_REDIR_DECL(vswscanf);
 # endif
 #endif
 
 #ifdef __USE_GNU
 # ifdef __LDBL_COMPAT
-__LDBL_REDIR1_DECL (wcstold_l, wcstod_l);
+__LDBL_REDIR1_DECL(wcstold_l, wcstod_l);
 # else
-__LDBL_REDIR1_DECL (wcstold_l, __wcstoieee128_l)
+__LDBL_REDIR1_DECL(wcstold_l, __wcstoieee128_l)
 # endif
 #endif
 
 #if __USE_FORTIFY_LEVEL > 0 && defined __fortify_function
-__LDBL_REDIR2_DECL (swprintf_chk)
-__LDBL_REDIR2_DECL (vswprintf_chk)
+__LDBL_REDIR2_DECL(swprintf_chk)
+__LDBL_REDIR2_DECL(vswprintf_chk)
 # if __USE_FORTIFY_LEVEL > 1
-__LDBL_REDIR2_DECL (fwprintf_chk)
-__LDBL_REDIR2_DECL (wprintf_chk)
-__LDBL_REDIR2_DECL (vfwprintf_chk)
-__LDBL_REDIR2_DECL (vwprintf_chk)
+__LDBL_REDIR2_DECL(fwprintf_chk)
+__LDBL_REDIR2_DECL(wprintf_chk)
+__LDBL_REDIR2_DECL(vfwprintf_chk)
+__LDBL_REDIR2_DECL(vwprintf_chk)
 # endif
 #endif

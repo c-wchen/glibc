@@ -19,7 +19,7 @@
 #include <fcntl.h>
 #include "pathconf.h"
 
-static long int posix_fpathconf (int fd, int name);
+static long int posix_fpathconf(int fd, int name);
 
 /* Define this first, so it can be inlined.  */
 #define __fpathconf static posix_fpathconf
@@ -27,26 +27,24 @@ static long int posix_fpathconf (int fd, int name);
 
 
 /* Get file-specific information about descriptor FD.  */
-long int
-__fpathconf (int fd, int name)
+long int __fpathconf(int fd, int name)
 {
-  struct statfs fsbuf;
+    struct statfs fsbuf;
 
-  switch (name)
-    {
-    case _PC_LINK_MAX:
-      return __statfs_link_max (__fstatfs (fd, &fsbuf), &fsbuf, NULL, fd);
+    switch (name) {
+        case _PC_LINK_MAX:
+            return __statfs_link_max(__fstatfs(fd, &fsbuf), &fsbuf, NULL, fd);
 
-    case _PC_FILESIZEBITS:
-      return __statfs_filesize_max (__fstatfs (fd, &fsbuf), &fsbuf);
+        case _PC_FILESIZEBITS:
+            return __statfs_filesize_max(__fstatfs(fd, &fsbuf), &fsbuf);
 
-    case _PC_2_SYMLINKS:
-      return __statfs_symlinks (__fstatfs (fd, &fsbuf), &fsbuf);
+        case _PC_2_SYMLINKS:
+            return __statfs_symlinks(__fstatfs(fd, &fsbuf), &fsbuf);
 
-    case _PC_CHOWN_RESTRICTED:
-      return __statfs_chown_restricted (__fstatfs (fd, &fsbuf), &fsbuf);
+        case _PC_CHOWN_RESTRICTED:
+            return __statfs_chown_restricted(__fstatfs(fd, &fsbuf), &fsbuf);
 
-    default:
-      return posix_fpathconf (fd, name);
+        default:
+            return posix_fpathconf(fd, name);
     }
 }

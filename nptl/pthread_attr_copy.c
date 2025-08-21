@@ -20,45 +20,42 @@
 #include <pthreadP.h>
 #include <stdlib.h>
 
-int
-__pthread_attr_copy (pthread_attr_t *target, const pthread_attr_t *source)
+int __pthread_attr_copy(pthread_attr_t *target, const pthread_attr_t *source)
 {
-  /* Avoid overwriting *TARGET until all allocations have
-     succeeded.  */
-  union pthread_attr_transparent temp;
-  temp.external = *source;
+    /* Avoid overwriting *TARGET until all allocations have
+       succeeded.  */
+    union pthread_attr_transparent temp;
+    temp.external = *source;
 
-  /* Force new allocation.  This function has full ownership of temp.  */
-  temp.internal.extension = NULL;
+    /* Force new allocation.  This function has full ownership of temp.  */
+    temp.internal.extension = NULL;
 
-  int ret = 0;
+    int ret = 0;
 
-  struct pthread_attr *isource = (struct pthread_attr *) source;
+    struct pthread_attr *isource = (struct pthread_attr *) source;
 
-  if (isource->extension != NULL)
-    {
-      /* Propagate affinity mask information.  */
-      if (isource->extension->cpusetsize > 0)
-        ret = __pthread_attr_setaffinity_np (&temp.external,
-                                             isource->extension->cpusetsize,
-                                             isource->extension->cpuset);
+    if (isource->extension != NULL) {
+        /* Propagate affinity mask information.  */
+        if (isource->extension->cpusetsize > 0)
+            ret = __pthread_attr_setaffinity_np(&temp.external,
+                                                isource->extension->cpusetsize,
+                                                isource->extension->cpuset);
 
-      /* Propagate the signal mask information.  */
-      if (ret == 0 && isource->extension->sigmask_set)
-        ret = __pthread_attr_setsigmask_internal ((pthread_attr_t *) &temp,
-                                                  &isource->extension->sigmask);
+        /* Propagate the signal mask information.  */
+        if (ret == 0 && isource->extension->sigmask_set)
+            ret = __pthread_attr_setsigmask_internal((pthread_attr_t *) &temp,
+                    &isource->extension->sigmask);
     }
 
-  if (ret != 0)
-    {
-      /* Deallocate because we have ownership.  */
-      __pthread_attr_destroy (&temp.external);
-      return ret;
+    if (ret != 0) {
+        /* Deallocate because we have ownership.  */
+        __pthread_attr_destroy(&temp.external);
+        return ret;
     }
 
-  /* Transfer ownership.  *target is not assumed to have been
-     initialized.  */
-  *target = temp.external;
-  return 0;
+    /* Transfer ownership.  *target is not assumed to have been
+       initialized.  */
+    *target = temp.external;
+    return 0;
 }
-libc_hidden_def (__pthread_attr_copy)
+libc_hidden_def(__pthread_attr_copy)

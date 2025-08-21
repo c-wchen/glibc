@@ -27,12 +27,11 @@
 # error Unsupported
 #endif
 
-long int
-__lround (double x)
+long int __lround(double x)
 {
-  long int res;
-  asm (OP "\t%0, %1, rmm" : "=r" (res) : "f" (x));
-  return res;
+    long int res;
+    asm(OP "\t%0, %1, rmm" : "=r"(res) : "f"(x));
+    return res;
 }
 
-libm_alias_double (__lround, lround)
+libm_alias_double(__lround, lround)

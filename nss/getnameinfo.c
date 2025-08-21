@@ -86,476 +86,453 @@ static char *domain;
 
 /* Return true if no memory allocation failure happened (even if domain
    name could not be obtained) or false otherwise.  */
-static bool
-nrl_domainname_core (struct scratch_buffer *tmpbuf)
+static bool nrl_domainname_core(struct scratch_buffer *tmpbuf)
 {
-  char *c;
-  struct hostent *h, th;
-  int herror;
+    char *c;
+    struct hostent *h, th;
+    int herror;
 
-  while (__gethostbyname_r ("localhost", &th, tmpbuf->data, tmpbuf->length,
-			    &h, &herror))
-    {
-      if (herror == NETDB_INTERNAL && errno == ERANGE)
-	{
-	  if (!scratch_buffer_grow (tmpbuf))
-	    return false;
-	}
-      else
-	break;
+    while (__gethostbyname_r("localhost", &th, tmpbuf->data, tmpbuf->length,
+                             &h, &herror)) {
+        if (herror == NETDB_INTERNAL && errno == ERANGE) {
+            if (!scratch_buffer_grow(tmpbuf)) {
+                return false;
+            }
+        } else {
+            break;
+        }
     }
 
-  if (h != NULL && (c = strchr (h->h_name, '.')) != NULL)
-    {
-      domain = __strdup (++c);
-      return domain != NULL;
+    if (h != NULL && (c = strchr(h->h_name, '.')) != NULL) {
+        domain = __strdup(++c);
+        return domain != NULL;
     }
 
-  /* The name contains no domain information.  Use the name
-     now to get more information.  */
-  while (__gethostname (tmpbuf->data, tmpbuf->length))
-    if (!scratch_buffer_grow (tmpbuf))
-      return false;
+    /* The name contains no domain information.  Use the name
+       now to get more information.  */
+    while (__gethostname(tmpbuf->data, tmpbuf->length))
+        if (!scratch_buffer_grow(tmpbuf)) {
+            return false;
+        }
 
-  if ((c = strchr (tmpbuf->data, '.')) != NULL)
-    {
-      domain = __strdup (++c);
-      return domain != NULL;
+    if ((c = strchr(tmpbuf->data, '.')) != NULL) {
+        domain = __strdup(++c);
+        return domain != NULL;
     }
 
-  /* We need to preserve the hostname.  */
-  size_t hstnamelen = strlen (tmpbuf->data) + 1;
-  while (__gethostbyname_r (tmpbuf->data, &th, tmpbuf->data + hstnamelen,
-			    tmpbuf->length - hstnamelen, &h, &herror))
-    {
-      if (herror == NETDB_INTERNAL && errno == ERANGE)
-	{
-	  if (!scratch_buffer_grow_preserve (tmpbuf))
-	    return false;
-	}
-      else
-	break;
+    /* We need to preserve the hostname.  */
+    size_t hstnamelen = strlen(tmpbuf->data) + 1;
+    while (__gethostbyname_r(tmpbuf->data, &th, tmpbuf->data + hstnamelen,
+                             tmpbuf->length - hstnamelen, &h, &herror)) {
+        if (herror == NETDB_INTERNAL && errno == ERANGE) {
+            if (!scratch_buffer_grow_preserve(tmpbuf)) {
+                return false;
+            }
+        } else {
+            break;
+        }
     }
 
-  if (h != NULL && (c = strchr(h->h_name, '.')) != NULL)
-    {
-      domain = __strdup (++c);
-      return domain != NULL;
+    if (h != NULL && (c = strchr(h->h_name, '.')) != NULL) {
+        domain = __strdup(++c);
+        return domain != NULL;
     }
 
-  struct in_addr in_addr = { .s_addr = htonl (INADDR_LOOPBACK) };
+    struct in_addr in_addr = { .s_addr = htonl(INADDR_LOOPBACK) };
 
-  while (__gethostbyaddr_r ((const char *) &in_addr, sizeof (struct in_addr),
-			    AF_INET, &th, tmpbuf->data, tmpbuf->length, &h,
-			    &herror))
-    {
-      if (herror == NETDB_INTERNAL && errno == ERANGE)
-	{
-	  if (!scratch_buffer_grow (tmpbuf))
-	    return false;
-	}
-      else
-	break;
+    while (__gethostbyaddr_r((const char *) &in_addr, sizeof(struct in_addr),
+                             AF_INET, &th, tmpbuf->data, tmpbuf->length, &h,
+                             &herror)) {
+        if (herror == NETDB_INTERNAL && errno == ERANGE) {
+            if (!scratch_buffer_grow(tmpbuf)) {
+                return false;
+            }
+        } else {
+            break;
+        }
     }
 
-  if (h != NULL && (c = strchr (h->h_name, '.')) != NULL)
-    {
-      domain = __strdup (++c);
-      return domain != NULL;
+    if (h != NULL && (c = strchr(h->h_name, '.')) != NULL) {
+        domain = __strdup(++c);
+        return domain != NULL;
     }
-  return true;
+    return true;
 }
 
-static bool
-nrl_domainname (void)
+static bool nrl_domainname(void)
 {
-  static int not_first;
+    static int not_first;
 
-  if (__glibc_likely (atomic_load_acquire (&not_first) != 0))
-    return true;
-
-  int r = true;
-
-  __libc_lock_define_initialized (static, lock);
-  __libc_lock_lock (lock);
-
-  if (atomic_load_relaxed (&not_first) == 0)
-    {
-      struct scratch_buffer tmpbuf;
-      scratch_buffer_init (&tmpbuf);
-
-      if ((r = nrl_domainname_core (&tmpbuf)))
-	atomic_store_release (&not_first, 1);
-
-      scratch_buffer_free (&tmpbuf);
+    if (__glibc_likely(atomic_load_acquire(&not_first) != 0)) {
+        return true;
     }
 
-  __libc_lock_unlock (lock);
+    int r = true;
 
-  return r;
+    __libc_lock_define_initialized(static, lock);
+    __libc_lock_lock(lock);
+
+    if (atomic_load_relaxed(&not_first) == 0) {
+        struct scratch_buffer tmpbuf;
+        scratch_buffer_init(&tmpbuf);
+
+        if ((r = nrl_domainname_core(&tmpbuf))) {
+            atomic_store_release(&not_first, 1);
+        }
+
+        scratch_buffer_free(&tmpbuf);
+    }
+
+    __libc_lock_unlock(lock);
+
+    return r;
 };
 
 /* Copy a string to a destination buffer with length checking.  Return
    EAI_OVERFLOW if the buffer is not large enough, and 0 on
    success.  */
-static int
-checked_copy (char *dest, size_t destlen, const char *source)
+static int checked_copy(char *dest, size_t destlen, const char *source)
 {
-  size_t source_length = strlen (source);
-  if (source_length + 1 > destlen)
-    return EAI_OVERFLOW;
-  memcpy (dest, source, source_length + 1);
-  return 0;
+    size_t source_length = strlen(source);
+    if (source_length + 1 > destlen) {
+        return EAI_OVERFLOW;
+    }
+    memcpy(dest, source, source_length + 1);
+    return 0;
 }
 
 /* Helper function for CHECKED_SNPRINTF below.  */
-static int
-check_sprintf_result (int result, size_t destlen)
+static int check_sprintf_result(int result, size_t destlen)
 {
-  if (result < 0)
-    return EAI_SYSTEM;
-  if ((size_t) result >= destlen)
-    /* If ret == destlen, there was no room for the terminating NUL
-       character.  */
-    return EAI_OVERFLOW;
-  return 0;
+    if (result < 0) {
+        return EAI_SYSTEM;
+    }
+    if ((size_t) result >= destlen)
+        /* If ret == destlen, there was no room for the terminating NUL
+           character.  */
+    {
+        return EAI_OVERFLOW;
+    }
+    return 0;
 }
 
 /* Format a string in the destination buffer.  Return 0 on success,
    EAI_OVERFLOW in case the buffer is too small, or EAI_SYSTEM on any
    other error.  */
-#define CHECKED_SNPRINTF(dest, destlen, format, ...)			\
-  check_sprintf_result							\
+#define CHECKED_SNPRINTF(dest, destlen, format, ...)            \
+  check_sprintf_result                          \
     (__snprintf (dest, destlen, format, __VA_ARGS__), destlen)
 
 /* Convert host name, AF_INET/AF_INET6 case, name only.  */
-static int
-gni_host_inet_name (struct scratch_buffer *tmpbuf,
-		    const struct sockaddr *sa, socklen_t addrlen,
-		    char *host, socklen_t hostlen, int flags)
+static int gni_host_inet_name(struct scratch_buffer *tmpbuf,
+                              const struct sockaddr *sa, socklen_t addrlen,
+                              char *host, socklen_t hostlen, int flags)
 {
-  int herrno;
-  struct hostent th;
-  struct hostent *h = NULL;
-  if (sa->sa_family == AF_INET6)
-    {
-      const struct sockaddr_in6 *sin6p = (const struct sockaddr_in6 *) sa;
-      while (__gethostbyaddr_r (&sin6p->sin6_addr, sizeof(struct in6_addr),
-				AF_INET6, &th, tmpbuf->data, tmpbuf->length,
-				&h, &herrno))
-	if (herrno == NETDB_INTERNAL && errno == ERANGE)
-	  {
-	    if (!scratch_buffer_grow (tmpbuf))
-	      {
-		__set_h_errno (herrno);
-		return EAI_MEMORY;
-	      }
-	  }
-	else
-	  break;
-    }
-  else
-    {
-      const struct sockaddr_in *sinp = (const struct sockaddr_in *) sa;
-      while (__gethostbyaddr_r (&sinp->sin_addr, sizeof(struct in_addr),
-				AF_INET, &th, tmpbuf->data, tmpbuf->length,
-				&h, &herrno))
-	if (herrno == NETDB_INTERNAL && errno == ERANGE)
-	    {
-	      if (!scratch_buffer_grow (tmpbuf))
-		{
-		  __set_h_errno (herrno);
-		  return EAI_MEMORY;
-		}
-	    }
-	else
-	  break;
+    int herrno;
+    struct hostent th;
+    struct hostent *h = NULL;
+    if (sa->sa_family == AF_INET6) {
+        const struct sockaddr_in6 *sin6p = (const struct sockaddr_in6 *) sa;
+        while (__gethostbyaddr_r(&sin6p->sin6_addr, sizeof(struct in6_addr),
+                                 AF_INET6, &th, tmpbuf->data, tmpbuf->length,
+                                 &h, &herrno))
+            if (herrno == NETDB_INTERNAL && errno == ERANGE) {
+                if (!scratch_buffer_grow(tmpbuf)) {
+                    __set_h_errno(herrno);
+                    return EAI_MEMORY;
+                }
+            } else {
+                break;
+            }
+    } else {
+        const struct sockaddr_in *sinp = (const struct sockaddr_in *) sa;
+        while (__gethostbyaddr_r(&sinp->sin_addr, sizeof(struct in_addr),
+                                 AF_INET, &th, tmpbuf->data, tmpbuf->length,
+                                 &h, &herrno))
+            if (herrno == NETDB_INTERNAL && errno == ERANGE) {
+                if (!scratch_buffer_grow(tmpbuf)) {
+                    __set_h_errno(herrno);
+                    return EAI_MEMORY;
+                }
+            } else {
+                break;
+            }
     }
 
-  if (h == NULL)
-    {
-      if (herrno == NETDB_INTERNAL)
-	{
-	  __set_h_errno (herrno);
-	  return EAI_SYSTEM;
-	}
-      if (herrno == TRY_AGAIN)
-	{
-	  __set_h_errno (herrno);
-	  return EAI_AGAIN;
-	}
+    if (h == NULL) {
+        if (herrno == NETDB_INTERNAL) {
+            __set_h_errno(herrno);
+            return EAI_SYSTEM;
+        }
+        if (herrno == TRY_AGAIN) {
+            __set_h_errno(herrno);
+            return EAI_AGAIN;
+        }
     }
 
-  if (h)
-    {
-      if (flags & NI_NOFQDN)
-	{
-	  if (!nrl_domainname ())
-	    return EAI_MEMORY;
+    if (h) {
+        if (flags & NI_NOFQDN) {
+            if (!nrl_domainname()) {
+                return EAI_MEMORY;
+            }
 
-	  char *c = domain;
-	  if (c != NULL && (c = strstr (h->h_name, c))
-	       && (c != h->h_name) && (*(--c) == '.'))
-	    /* Terminate the string after the prefix.  */
-	    *c = '\0';
-	}
+            char *c = domain;
+            if (c != NULL && (c = strstr(h->h_name, c))
+                && (c != h->h_name) && (*(--c) == '.'))
+                /* Terminate the string after the prefix.  */
+            {
+                *c = '\0';
+            }
+        }
 
-      /* If requested, convert from the IDN format.  */
-      bool do_idn = flags & NI_IDN;
-      char *h_name;
-      if (do_idn)
-	{
-	  int rc = __idna_from_dns_encoding (h->h_name, &h_name);
-	  if (rc == EAI_IDN_ENCODE)
-	    /* Use the punycode name as a fallback.  */
-	    do_idn = false;
-	  else if (rc != 0)
-	    return rc;
-	}
-      if (!do_idn)
-	h_name = h->h_name;
+        /* If requested, convert from the IDN format.  */
+        bool do_idn = flags & NI_IDN;
+        char *h_name;
+        if (do_idn) {
+            int rc = __idna_from_dns_encoding(h->h_name, &h_name);
+            if (rc == EAI_IDN_ENCODE)
+                /* Use the punycode name as a fallback.  */
+            {
+                do_idn = false;
+            } else if (rc != 0) {
+                return rc;
+            }
+        }
+        if (!do_idn) {
+            h_name = h->h_name;
+        }
 
-      size_t len = strlen (h_name) + 1;
-      if (len > hostlen)
-	return EAI_OVERFLOW;
-      memcpy (host, h_name, len);
+        size_t len = strlen(h_name) + 1;
+        if (len > hostlen) {
+            return EAI_OVERFLOW;
+        }
+        memcpy(host, h_name, len);
 
-      if (do_idn)
-	free (h_name);
+        if (do_idn) {
+            free(h_name);
+        }
 
-      return 0;
+        return 0;
     }
 
-  return EAI_NONAME;
+    return EAI_NONAME;
 }
 
 /* Convert host name, AF_INET/AF_INET6 case, numeric conversion.  */
-static int
-gni_host_inet_numeric (struct scratch_buffer *tmpbuf,
-		       const struct sockaddr *sa, socklen_t addrlen,
-		       char *host, socklen_t hostlen, int flags)
+static int gni_host_inet_numeric(struct scratch_buffer *tmpbuf,
+                                 const struct sockaddr *sa, socklen_t addrlen,
+                                 char *host, socklen_t hostlen, int flags)
 {
-  if (sa->sa_family == AF_INET6)
-    {
-      const struct sockaddr_in6 *sin6p = (const struct sockaddr_in6 *) sa;
-      if (__inet_ntop (AF_INET6, &sin6p->sin6_addr, host, hostlen) == NULL)
-	return EAI_OVERFLOW;
+    if (sa->sa_family == AF_INET6) {
+        const struct sockaddr_in6 *sin6p = (const struct sockaddr_in6 *) sa;
+        if (__inet_ntop(AF_INET6, &sin6p->sin6_addr, host, hostlen) == NULL) {
+            return EAI_OVERFLOW;
+        }
 
-      uint32_t scopeid = sin6p->sin6_scope_id;
-      if (scopeid != 0)
-	{
-	  size_t used_hostlen = __strnlen (host, hostlen);
-	  /* Location of the scope string in the host buffer.  */
-	  char *scope_start = host + used_hostlen;
-	  size_t scope_length = hostlen - used_hostlen;
+        uint32_t scopeid = sin6p->sin6_scope_id;
+        if (scopeid != 0) {
+            size_t used_hostlen = __strnlen(host, hostlen);
+            /* Location of the scope string in the host buffer.  */
+            char *scope_start = host + used_hostlen;
+            size_t scope_length = hostlen - used_hostlen;
 
-	  if (IN6_IS_ADDR_LINKLOCAL (&sin6p->sin6_addr)
-	      || IN6_IS_ADDR_MC_LINKLOCAL (&sin6p->sin6_addr))
-	    {
-	      char scopebuf[IFNAMSIZ];
-	      if (if_indextoname (scopeid, scopebuf) != NULL)
-		return CHECKED_SNPRINTF
-		  (scope_start, scope_length,
-		   "%c%s", SCOPE_DELIMITER, scopebuf);
-	    }
-	  return CHECKED_SNPRINTF
-	    (scope_start, scope_length, "%c%u", SCOPE_DELIMITER, scopeid);
-	}
+            if (IN6_IS_ADDR_LINKLOCAL(&sin6p->sin6_addr)
+                || IN6_IS_ADDR_MC_LINKLOCAL(&sin6p->sin6_addr)) {
+                char scopebuf[IFNAMSIZ];
+                if (if_indextoname(scopeid, scopebuf) != NULL)
+                    return CHECKED_SNPRINTF
+                           (scope_start, scope_length,
+                            "%c%s", SCOPE_DELIMITER, scopebuf);
+            }
+            return CHECKED_SNPRINTF
+                   (scope_start, scope_length, "%c%u", SCOPE_DELIMITER, scopeid);
+        }
+    } else {
+        const struct sockaddr_in *sinp = (const struct sockaddr_in *) sa;
+        if (__inet_ntop(AF_INET, &sinp->sin_addr, host, hostlen) == NULL) {
+            return EAI_OVERFLOW;
+        }
     }
-  else
-    {
-      const struct sockaddr_in *sinp = (const struct sockaddr_in *) sa;
-      if (__inet_ntop (AF_INET, &sinp->sin_addr, host, hostlen) == NULL)
-	return EAI_OVERFLOW;
-    }
-  return 0;
+    return 0;
 }
 
 /* Convert AF_INET or AF_INET6 socket address, host part.  */
-static int
-gni_host_inet (struct scratch_buffer *tmpbuf,
-	       const struct sockaddr *sa, socklen_t addrlen,
-	       char *host, socklen_t hostlen, int flags)
+static int gni_host_inet(struct scratch_buffer *tmpbuf,
+                         const struct sockaddr *sa, socklen_t addrlen,
+                         char *host, socklen_t hostlen, int flags)
 {
-  if (!(flags & NI_NUMERICHOST))
-    {
-      int result = gni_host_inet_name
-	(tmpbuf, sa, addrlen, host, hostlen, flags);
-      if (result != EAI_NONAME)
-	return result;
+    if (!(flags & NI_NUMERICHOST)) {
+        int result = gni_host_inet_name
+                     (tmpbuf, sa, addrlen, host, hostlen, flags);
+        if (result != EAI_NONAME) {
+            return result;
+        }
     }
 
-  if (flags & NI_NAMEREQD)
-    return EAI_NONAME;
-  else
-    return gni_host_inet_numeric
-      (tmpbuf, sa, addrlen, host, hostlen, flags);
+    if (flags & NI_NAMEREQD) {
+        return EAI_NONAME;
+    } else
+        return gni_host_inet_numeric
+               (tmpbuf, sa, addrlen, host, hostlen, flags);
 }
 
 /* Convert AF_LOCAL socket address, host part.   */
-static int
-gni_host_local (struct scratch_buffer *tmpbuf,
-		const struct sockaddr *sa, socklen_t addrlen,
-		char *host, socklen_t hostlen, int flags)
+static int gni_host_local(struct scratch_buffer *tmpbuf,
+                          const struct sockaddr *sa, socklen_t addrlen,
+                          char *host, socklen_t hostlen, int flags)
 {
-  if (!(flags & NI_NUMERICHOST))
-    {
-      struct utsname utsname;
-      if (uname (&utsname) == 0)
-	return checked_copy (host, hostlen, utsname.nodename);
+    if (!(flags & NI_NUMERICHOST)) {
+        struct utsname utsname;
+        if (uname(&utsname) == 0) {
+            return checked_copy(host, hostlen, utsname.nodename);
+        }
     }
 
-  if (flags & NI_NAMEREQD)
-    return EAI_NONAME;
+    if (flags & NI_NAMEREQD) {
+        return EAI_NONAME;
+    }
 
-  return checked_copy (host, hostlen, "localhost");
+    return checked_copy(host, hostlen, "localhost");
 }
 
 /* Convert the host part of an AF_LOCAK socket address.   */
-static int
-gni_host (struct scratch_buffer *tmpbuf,
-	  const struct sockaddr *sa, socklen_t addrlen,
-	  char *host, socklen_t hostlen, int flags)
+static int gni_host(struct scratch_buffer *tmpbuf,
+                    const struct sockaddr *sa, socklen_t addrlen,
+                    char *host, socklen_t hostlen, int flags)
 {
-  switch (sa->sa_family)
-    {
-    case AF_INET:
-    case AF_INET6:
-      return gni_host_inet (tmpbuf, sa, addrlen, host, hostlen, flags);
+    switch (sa->sa_family) {
+        case AF_INET:
+        case AF_INET6:
+            return gni_host_inet(tmpbuf, sa, addrlen, host, hostlen, flags);
 
-    case AF_LOCAL:
-      return gni_host_local (tmpbuf, sa, addrlen, host, hostlen, flags);
+        case AF_LOCAL:
+            return gni_host_local(tmpbuf, sa, addrlen, host, hostlen, flags);
 
-    default:
-      return EAI_FAMILY;
+        default:
+            return EAI_FAMILY;
     }
 }
 
 /* Convert service to string, AF_INET and AF_INET6 variant.  */
-static int
-gni_serv_inet (struct scratch_buffer *tmpbuf,
-	       const struct sockaddr *sa, socklen_t addrlen,
-	       char *serv, socklen_t servlen, int flags)
+static int gni_serv_inet(struct scratch_buffer *tmpbuf,
+                         const struct sockaddr *sa, socklen_t addrlen,
+                         char *serv, socklen_t servlen, int flags)
 {
-  _Static_assert
-    (offsetof (struct sockaddr_in, sin_port)
-     == offsetof (struct sockaddr_in6, sin6_port)
-     && sizeof (((struct sockaddr_in) {}).sin_port) == sizeof (in_port_t)
-     && sizeof (((struct sockaddr_in6) {}).sin6_port) == sizeof (in_port_t),
-     "AF_INET and AF_INET6 port consistency");
-  const struct sockaddr_in *sinp = (const struct sockaddr_in *) sa;
-  if (!(flags & NI_NUMERICSERV))
-    {
-      struct servent *s, ts;
-      int e;
-      while ((e = __getservbyport_r (sinp->sin_port,
-				     ((flags & NI_DGRAM)
-				      ? "udp" : "tcp"), &ts,
-				     tmpbuf->data, tmpbuf->length, &s)))
-	{
-	  if (e == ERANGE)
-	    {
-	      if (!scratch_buffer_grow (tmpbuf))
-		return EAI_MEMORY;
-	    }
-	  else
-	    break;
-	}
-      if (s)
-	return checked_copy (serv, servlen, s->s_name);
-      /* Fall through to numeric conversion.  */
+    _Static_assert
+    (offsetof(struct sockaddr_in, sin_port)
+     == offsetof(struct sockaddr_in6, sin6_port)
+    && sizeof(((struct sockaddr_in) {}).sin_port) == sizeof(in_port_t)
+    && sizeof(((struct sockaddr_in6) {}).sin6_port) == sizeof(in_port_t),
+    "AF_INET and AF_INET6 port consistency");
+    const struct sockaddr_in *sinp = (const struct sockaddr_in *) sa;
+    if (!(flags & NI_NUMERICSERV)) {
+        struct servent *s, ts;
+        int e;
+        while ((e = __getservbyport_r(sinp->sin_port,
+                                      ((flags & NI_DGRAM)
+                                       ? "udp" : "tcp"), &ts,
+                                      tmpbuf->data, tmpbuf->length, &s))) {
+            if (e == ERANGE) {
+                if (!scratch_buffer_grow(tmpbuf)) {
+                    return EAI_MEMORY;
+                }
+            } else {
+                break;
+            }
+        }
+        if (s) {
+            return checked_copy(serv, servlen, s->s_name);
+        }
+        /* Fall through to numeric conversion.  */
     }
-  return CHECKED_SNPRINTF (serv, servlen, "%d", ntohs (sinp->sin_port));
+    return CHECKED_SNPRINTF(serv, servlen, "%d", ntohs(sinp->sin_port));
 }
 
 /* Convert service to string, AF_LOCAL variant.  */
-static int
-gni_serv_local (struct scratch_buffer *tmpbuf,
-	       const struct sockaddr *sa, socklen_t addrlen,
-	       char *serv, socklen_t servlen, int flags)
+static int gni_serv_local(struct scratch_buffer *tmpbuf,
+                          const struct sockaddr *sa, socklen_t addrlen,
+                          char *serv, socklen_t servlen, int flags)
 {
-  return checked_copy
-    (serv, servlen, ((const struct sockaddr_un *) sa)->sun_path);
+    return checked_copy
+           (serv, servlen, ((const struct sockaddr_un *) sa)->sun_path);
 }
 
 /* Convert service to string, dispatching to the implementations
    above.  */
-static int
-gni_serv (struct scratch_buffer *tmpbuf,
-	  const struct sockaddr *sa, socklen_t addrlen,
-	  char *serv, socklen_t servlen, int flags)
+static int gni_serv(struct scratch_buffer *tmpbuf,
+                    const struct sockaddr *sa, socklen_t addrlen,
+                    char *serv, socklen_t servlen, int flags)
 {
-  switch (sa->sa_family)
-    {
-    case AF_INET:
-    case AF_INET6:
-      return gni_serv_inet (tmpbuf, sa, addrlen, serv, servlen, flags);
-    case AF_LOCAL:
-      return gni_serv_local (tmpbuf, sa, addrlen, serv, servlen, flags);
-    default:
-      return EAI_FAMILY;
+    switch (sa->sa_family) {
+        case AF_INET:
+        case AF_INET6:
+            return gni_serv_inet(tmpbuf, sa, addrlen, serv, servlen, flags);
+        case AF_LOCAL:
+            return gni_serv_local(tmpbuf, sa, addrlen, serv, servlen, flags);
+        default:
+            return EAI_FAMILY;
     }
 }
 
-int
-getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
-	     socklen_t hostlen, char *serv, socklen_t servlen,
-	     int flags)
+int getnameinfo(const struct sockaddr *sa, socklen_t addrlen, char *host,
+                socklen_t hostlen, char *serv, socklen_t servlen,
+                int flags)
 {
-  if (flags & ~(NI_NUMERICHOST|NI_NUMERICSERV|NI_NOFQDN|NI_NAMEREQD|NI_DGRAM
-		|NI_IDN|DEPRECATED_NI_IDN))
-    return EAI_BADFLAGS;
-
-  if (sa == NULL || addrlen < sizeof (sa_family_t))
-    return EAI_FAMILY;
-
-  if ((flags & NI_NAMEREQD) && host == NULL && serv == NULL)
-    return EAI_NONAME;
-
-  switch (sa->sa_family)
-    {
-    case AF_LOCAL:
-      if (addrlen < (socklen_t) offsetof (struct sockaddr_un, sun_path))
-	return EAI_FAMILY;
-      break;
-    case AF_INET:
-      if (addrlen < sizeof (struct sockaddr_in))
-	return EAI_FAMILY;
-      break;
-    case AF_INET6:
-      if (addrlen < sizeof (struct sockaddr_in6))
-	return EAI_FAMILY;
-      break;
-    default:
-      return EAI_FAMILY;
+    if (flags & ~(NI_NUMERICHOST | NI_NUMERICSERV | NI_NOFQDN | NI_NAMEREQD | NI_DGRAM
+                  | NI_IDN | DEPRECATED_NI_IDN)) {
+        return EAI_BADFLAGS;
     }
 
-  struct scratch_buffer tmpbuf;
-  scratch_buffer_init (&tmpbuf);
-
-  if (host != NULL && hostlen > 0)
-    {
-      int result = gni_host (&tmpbuf, sa, addrlen, host, hostlen, flags);
-      if (result != 0)
-	{
-	  scratch_buffer_free (&tmpbuf);
-	  return result;
-	}
+    if (sa == NULL || addrlen < sizeof(sa_family_t)) {
+        return EAI_FAMILY;
     }
 
-  if (serv && (servlen > 0))
-    {
-      int result = gni_serv (&tmpbuf, sa, addrlen, serv, servlen, flags);
-      if (result != 0)
-	{
-	  scratch_buffer_free (&tmpbuf);
-	  return result;
-	}
+    if ((flags & NI_NAMEREQD) && host == NULL && serv == NULL) {
+        return EAI_NONAME;
     }
 
-  scratch_buffer_free (&tmpbuf);
-  return 0;
+    switch (sa->sa_family) {
+        case AF_LOCAL:
+            if (addrlen < (socklen_t) offsetof(struct sockaddr_un, sun_path)) {
+                return EAI_FAMILY;
+            }
+            break;
+        case AF_INET:
+            if (addrlen < sizeof(struct sockaddr_in)) {
+                return EAI_FAMILY;
+            }
+            break;
+        case AF_INET6:
+            if (addrlen < sizeof(struct sockaddr_in6)) {
+                return EAI_FAMILY;
+            }
+            break;
+        default:
+            return EAI_FAMILY;
+    }
+
+    struct scratch_buffer tmpbuf;
+    scratch_buffer_init(&tmpbuf);
+
+    if (host != NULL && hostlen > 0) {
+        int result = gni_host(&tmpbuf, sa, addrlen, host, hostlen, flags);
+        if (result != 0) {
+            scratch_buffer_free(&tmpbuf);
+            return result;
+        }
+    }
+
+    if (serv && (servlen > 0)) {
+        int result = gni_serv(&tmpbuf, sa, addrlen, serv, servlen, flags);
+        if (result != 0) {
+            scratch_buffer_free(&tmpbuf);
+            return result;
+        }
+    }
+
+    scratch_buffer_free(&tmpbuf);
+    return 0;
 }
-libc_hidden_def (getnameinfo)
+libc_hidden_def(getnameinfo)
 
-weak_alias (domain, __libc_getnameinfo_freemem_ptr)
+weak_alias(domain, __libc_getnameinfo_freemem_ptr)

@@ -18,8 +18,7 @@
 
 #include <sysdep.h>
 
-void
-_start (void)
+void _start(void)
 {
-  INTERNAL_SYSCALL_CALL (exit_group, 0);
+    INTERNAL_SYSCALL_CALL(exit_group, 0);
 }

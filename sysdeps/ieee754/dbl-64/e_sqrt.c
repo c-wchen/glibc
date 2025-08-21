@@ -47,103 +47,101 @@
 /* it computes the correctly rounded (to nearest) value of square    */
 /* root of x.                                                        */
 /*********************************************************************/
-double
-__ieee754_sqrt (double x)
+double __ieee754_sqrt(double x)
 {
 #if USE_SQRT_BUILTIN
-  return __builtin_sqrt (x);
+    return __builtin_sqrt(x);
 #else
-  /* Use generic implementation.  */
-  static const double
+    /* Use generic implementation.  */
+    static const double
     rt0 = 9.99999999859990725855365213134618E-01,
     rt1 = 4.99999999495955425917856814202739E-01,
     rt2 = 3.75017500867345182581453026130850E-01,
     rt3 = 3.12523626554518656309172508769531E-01;
-  static const double big = 134217728.0;
-  double y, t, del, res, res1, hy, z, zz, s;
-  mynumber a, c = { { 0, 0 } };
-  int4 k;
+    static const double big = 134217728.0;
+    double y, t, del, res, res1, hy, z, zz, s;
+    mynumber a, c = { { 0, 0 } };
+    int4 k;
 
-  a.x = x;
-  k = a.i[HIGH_HALF];
-  a.i[HIGH_HALF] = (k & 0x001fffff) | 0x3fe00000;
-  t = inroot[(k & 0x001fffff) >> 14];
-  s = a.x;
-  /*----------------- 2^-1022  <= | x |< 2^1024  -----------------*/
-  if (k > 0x000fffff && k < 0x7ff00000)
-    {
-      int rm = __fegetround ();
-      fenv_t env;
-      libc_feholdexcept_setround (&env, FE_TONEAREST);
-      double ret;
-      y = 1.0 - t * (t * s);
-      t = t * (rt0 + y * (rt1 + y * (rt2 + y * rt3)));
-      c.i[HIGH_HALF] = 0x20000000 + ((k & 0x7fe00000) >> 1);
-      y = t * s;
-      hy = (y + big) - big;
-      del = 0.5 * t * ((s - hy * hy) - (y - hy) * (y + hy));
-      res = y + del;
-      if (res == (res + 1.002 * ((y - res) + del)))
-	ret = res * c.x;
-      else
-	{
-	  res1 = res + 1.5 * ((y - res) + del);
-	  EMULV (res, res1, z, zz); /* (z+zz)=res*res1 */
-	  res = ((((z - s) + zz) < 0) ? max (res, res1) :
-					min (res, res1));
-	  ret = res * c.x;
-	}
-      math_force_eval (ret);
-      libc_fesetenv (&env);
-      double dret = x / ret;
-      if (dret != ret)
-	{
-	  double force_inexact = 1.0 / 3.0;
-	  math_force_eval (force_inexact);
-	  /* The square root is inexact, ret is the round-to-nearest
-	     value which may need adjusting for other rounding
-	     modes.  */
-	  switch (rm)
-	    {
+    a.x = x;
+    k = a.i[HIGH_HALF];
+    a.i[HIGH_HALF] = (k & 0x001fffff) | 0x3fe00000;
+    t = inroot[(k & 0x001fffff) >> 14];
+    s = a.x;
+    /*----------------- 2^-1022  <= | x |< 2^1024  -----------------*/
+    if (k > 0x000fffff && k < 0x7ff00000) {
+        int rm = __fegetround();
+        fenv_t env;
+        libc_feholdexcept_setround(&env, FE_TONEAREST);
+        double ret;
+        y = 1.0 - t * (t * s);
+        t = t * (rt0 + y * (rt1 + y * (rt2 + y * rt3)));
+        c.i[HIGH_HALF] = 0x20000000 + ((k & 0x7fe00000) >> 1);
+        y = t * s;
+        hy = (y + big) - big;
+        del = 0.5 * t * ((s - hy * hy) - (y - hy) * (y + hy));
+        res = y + del;
+        if (res == (res + 1.002 * ((y - res) + del))) {
+            ret = res * c.x;
+        } else {
+            res1 = res + 1.5 * ((y - res) + del);
+            EMULV(res, res1, z, zz);  /* (z+zz)=res*res1 */
+            res = ((((z - s) + zz) < 0) ? max(res, res1) :
+                   min(res, res1));
+            ret = res * c.x;
+        }
+        math_force_eval(ret);
+        libc_fesetenv(&env);
+        double dret = x / ret;
+        if (dret != ret) {
+            double force_inexact = 1.0 / 3.0;
+            math_force_eval(force_inexact);
+            /* The square root is inexact, ret is the round-to-nearest
+               value which may need adjusting for other rounding
+               modes.  */
+            switch (rm) {
 #ifdef FE_UPWARD
-	    case FE_UPWARD:
-	      if (dret > ret)
-		ret = (res + 0x1p-1022) * c.x;
-	      break;
+                case FE_UPWARD:
+                    if (dret > ret) {
+                        ret = (res + 0x1p - 1022) * c.x;
+                    }
+                    break;
 #endif
 
 #ifdef FE_DOWNWARD
-	    case FE_DOWNWARD:
+                case FE_DOWNWARD:
 #endif
 #ifdef FE_TOWARDZERO
-	    case FE_TOWARDZERO:
+                case FE_TOWARDZERO:
 #endif
 #if defined FE_DOWNWARD || defined FE_TOWARDZERO
-	      if (dret < ret)
-		ret = (res - 0x1p-1022) * c.x;
-	      break;
+                    if (dret < ret) {
+                        ret = (res - 0x1p - 1022) * c.x;
+                    }
+                    break;
 #endif
 
-	    default:
-	      break;
-	    }
-	}
-      /* Otherwise (x / ret == ret), either the square root was exact or
-         the division was inexact.  */
-      return ret;
-    }
-  else
-    {
-      if ((k & 0x7ff00000) == 0x7ff00000)
-	return x * x + x; /* sqrt(NaN)=NaN, sqrt(+inf)=+inf, sqrt(-inf)=sNaN */
-      if (x == 0)
-	return x;       /* sqrt(+0)=+0, sqrt(-0)=-0 */
-      if (k < 0)
-	return (x - x) / (x - x); /* sqrt(-ve)=sNaN */
-      return 0x1p-256 * __ieee754_sqrt (x * 0x1p512);
+                default:
+                    break;
+            }
+        }
+        /* Otherwise (x / ret == ret), either the square root was exact or
+           the division was inexact.  */
+        return ret;
+    } else {
+        if ((k & 0x7ff00000) == 0x7ff00000) {
+            return x * x + x;    /* sqrt(NaN)=NaN, sqrt(+inf)=+inf, sqrt(-inf)=sNaN */
+        }
+        if (x == 0) {
+            return x;    /* sqrt(+0)=+0, sqrt(-0)=-0 */
+        }
+        if (k < 0) {
+            return (x - x) / (x - x);    /* sqrt(-ve)=sNaN */
+        }
+        return 0x1p - 256 * __ieee754_sqrt(x * 0x1p512);
     }
 #endif /* ! USE_SQRT_BUILTIN  */
 }
 #ifndef __ieee754_sqrt
-libm_alias_finite (__ieee754_sqrt, __sqrt)
+libm_alias_finite(__ieee754_sqrt, __sqrt)
 #endif

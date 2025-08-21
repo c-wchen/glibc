@@ -22,11 +22,10 @@
 
 #include <libioP.h>
 
-int
-___vfscanf (FILE *s, const char *format, va_list argptr)
+int ___vfscanf(FILE *s, const char *format, va_list argptr)
 {
-  return __vfscanf_internal (s, format, argptr, 0);
+    return __vfscanf_internal(s, format, argptr, 0);
 }
-ldbl_strong_alias (___vfscanf, __vfscanf)
-ldbl_hidden_def (___vfscanf, __vfscanf)
-ldbl_weak_alias (___vfscanf, vfscanf)
+ldbl_strong_alias(___vfscanf, __vfscanf)
+ldbl_hidden_def(___vfscanf, __vfscanf)
+ldbl_weak_alias(___vfscanf, vfscanf)

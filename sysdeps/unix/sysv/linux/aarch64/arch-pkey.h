@@ -21,33 +21,31 @@
 
 #include <sys/cdefs.h>
 
-#define S1POE_PERM_NO_ACCESS	0b0000UL
-#define S1POE_PERM_R		0b0001UL
-#define S1POE_PERM_X		0b0010UL
-#define S1POE_PERM_RX		0b0011UL
-#define S1POE_PERM_W		0b0100UL
-#define S1POE_PERM_RW		0b0101UL
-#define S1POE_PERM_WX		0b0110UL
-#define S1POE_PERM_RWX		0b0111UL
+#define S1POE_PERM_NO_ACCESS    0b0000UL
+#define S1POE_PERM_R        0b0001UL
+#define S1POE_PERM_X        0b0010UL
+#define S1POE_PERM_RX       0b0011UL
+#define S1POE_PERM_W        0b0100UL
+#define S1POE_PERM_RW       0b0101UL
+#define S1POE_PERM_WX       0b0110UL
+#define S1POE_PERM_RWX      0b0111UL
 
-#define S1POE_PERM_MASK 	0b1111UL
+#define S1POE_PERM_MASK     0b1111UL
 
 #define S1POE_BITS_PER_POI      4UL
 
 /* Return the value of the POR_EL0 register.  */
-static __always_inline unsigned long
-pkey_read (void)
+static __always_inline unsigned long pkey_read(void)
 {
-  unsigned long r;
-  __asm__ volatile ("mrs %0, s3_3_c10_c2_4" : "=r" (r));
-  return r;
+    unsigned long r;
+    __asm__ volatile("mrs %0, s3_3_c10_c2_4" : "=r"(r));
+    return r;
 }
 
 /* Overwrite the POR_EL0 register with VALUE.  */
-static __always_inline void
-pkey_write (unsigned long value)
+static __always_inline void pkey_write(unsigned long value)
 {
-  __asm__ volatile ("msr s3_3_c10_c2_4, %0; isb" : : "r" (value));
+    __asm__ volatile("msr s3_3_c10_c2_4, %0; isb" : : "r"(value));
 }
 
 #endif /* _ARCH_PKEY_H */

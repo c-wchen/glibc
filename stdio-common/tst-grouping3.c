@@ -21,34 +21,33 @@
 #include <support/check.h>
 #include <support/support.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char buf[80];
+    char buf[80];
 
-  xsetlocale (LC_NUMERIC, "de_DE.UTF-8");
+    xsetlocale(LC_NUMERIC, "de_DE.UTF-8");
 
-  /* The format string has the following conversion specifier:
-     '  - Use thousands grouping.
-     +  - The result of a signed conversion shall begin with a sign.
-     -  - Left justified.
-     13 - Minimum 13 bytes of width.
-     9  - Minimum 9 digits of precision.
+    /* The format string has the following conversion specifier:
+       '  - Use thousands grouping.
+       +  - The result of a signed conversion shall begin with a sign.
+       -  - Left justified.
+       13 - Minimum 13 bytes of width.
+       9  - Minimum 9 digits of precision.
 
-     In bug 30068 the grouping characters were not accounted for in
-     the width, and were added after the fact resulting in a 15-byte
-     output instead of a 13-byte output.  The two additional bytes
-     come from the locale-specific thousands separator.  This increase
-     in size could result in a buffer overflow if a reasonable caller
-     calculated the size of the expected buffer using nl_langinfo to
-     determine the sie of THOUSEP in bytes.
+       In bug 30068 the grouping characters were not accounted for in
+       the width, and were added after the fact resulting in a 15-byte
+       output instead of a 13-byte output.  The two additional bytes
+       come from the locale-specific thousands separator.  This increase
+       in size could result in a buffer overflow if a reasonable caller
+       calculated the size of the expected buffer using nl_langinfo to
+       determine the sie of THOUSEP in bytes.
 
-     This bug is distinct from bug 23432 which has to do with the
-     minimum precision calculation (digit based).  */
-  sprintf (buf, "%+-'13.9d", 1234567);
-  TEST_COMPARE_STRING (buf, "+001.234.567 ");
+       This bug is distinct from bug 23432 which has to do with the
+       minimum precision calculation (digit based).  */
+    sprintf(buf, "%+-'13.9d", 1234567);
+    TEST_COMPARE_STRING(buf, "+001.234.567 ");
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -20,11 +20,11 @@
 
 #include <locale.h>
 
-char *
-xsetlocale (int category, const char *locale)
+char *xsetlocale(int category, const char *locale)
 {
-  char *p = setlocale (category, locale);
-  if (p == NULL)
-    FAIL_EXIT1 ("error: setlocale (%d, \"%s\")\n", category, locale);
-  return p;
+    char *p = setlocale(category, locale);
+    if (p == NULL) {
+        FAIL_EXIT1("error: setlocale (%d, \"%s\")\n", category, locale);
+    }
+    return p;
 }

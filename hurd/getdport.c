@@ -20,33 +20,36 @@
 
 /* This is initialized in dtable.c when that gets linked in.
    If dtable.c is not linked in, it will be zero.  */
-static file_t (*_default_hurd_getdport_fn) (int fd) = 0;
-weak_alias (_default_hurd_getdport_fn, _hurd_getdport_fn)
+static file_t (*_default_hurd_getdport_fn)(int fd) = 0;
+weak_alias(_default_hurd_getdport_fn, _hurd_getdport_fn)
 
 file_t
-__getdport (int fd)
+__getdport(int fd)
 {
-  if (_hurd_getdport_fn)
-    /* dtable.c has defined the function to fetch a port from the real file
-       descriptor table.  */
-    return (*_hurd_getdport_fn) (fd);
-
-  /* getdport is the only use of file descriptors,
-     so we don't bother allocating a real table.  */
-
-  if (_hurd_init_dtable == NULL)
-    /* Never had a descriptor table.  */
-    return __hurd_fail (EBADF), MACH_PORT_NULL;
-
-  if (fd < 0 || (unsigned int) fd > _hurd_init_dtablesize
-      || _hurd_init_dtable[fd] == MACH_PORT_NULL)
-    return __hurd_fail (EBADF), MACH_PORT_NULL;
-  else
+    if (_hurd_getdport_fn)
+        /* dtable.c has defined the function to fetch a port from the real file
+           descriptor table.  */
     {
-      __mach_port_mod_refs (__mach_task_self (), _hurd_init_dtable[fd],
-			    MACH_PORT_RIGHT_SEND, 1);
-      return _hurd_init_dtable[fd];
+        return (*_hurd_getdport_fn)(fd);
+    }
+
+    /* getdport is the only use of file descriptors,
+       so we don't bother allocating a real table.  */
+
+    if (_hurd_init_dtable == NULL)
+        /* Never had a descriptor table.  */
+    {
+        return __hurd_fail(EBADF), MACH_PORT_NULL;
+    }
+
+    if (fd < 0 || (unsigned int) fd > _hurd_init_dtablesize
+        || _hurd_init_dtable[fd] == MACH_PORT_NULL) {
+        return __hurd_fail(EBADF), MACH_PORT_NULL;
+    } else {
+        __mach_port_mod_refs(__mach_task_self(), _hurd_init_dtable[fd],
+                             MACH_PORT_RIGHT_SEND, 1);
+        return _hurd_init_dtable[fd];
     }
 }
 
-weak_alias (__getdport, getdport)
+weak_alias(__getdport, getdport)

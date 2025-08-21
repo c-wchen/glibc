@@ -19,16 +19,16 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-static int
-printf_under_test (const char *restrict fmt, ...)
+static int printf_under_test(const char *restrict fmt, ...)
 {
-  va_list ap;
-  int result;
+    va_list ap;
+    int result;
 
-  va_start (ap, fmt);
-  result = vprintf (fmt, ap);
-  va_end (ap);
-  if (result < 0)
-    perror ("vprintf");
-  return result;
+    va_start(ap, fmt);
+    result = vprintf(fmt, ap);
+    va_end(ap);
+    if (result < 0) {
+        perror("vprintf");
+    }
+    return result;
 }

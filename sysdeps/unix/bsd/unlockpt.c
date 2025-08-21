@@ -24,18 +24,17 @@
 
 /* Unlock the slave pseudo terminal associated with the master pseudo
    terminal specified by FD.  */
-int
-unlockpt (int fd)
+int unlockpt(int fd)
 {
-  char buf[sizeof (_PATH_TTY) + 2];
+    char buf[sizeof(_PATH_TTY) + 2];
 
-  /* BSD doesn't have a lock, but it does have `revoke'.  */
-  if (__ptsname_r (fd, buf, sizeof (buf)))
-    {
-      if (errno == ENOTTY)
-	__set_errno (EINVAL);
-      return -1;
+    /* BSD doesn't have a lock, but it does have `revoke'.  */
+    if (__ptsname_r(fd, buf, sizeof(buf))) {
+        if (errno == ENOTTY) {
+            __set_errno(EINVAL);
+        }
+        return -1;
     }
-  return __revoke (buf);
+    return __revoke(buf);
 }
-libc_hidden_def (unlockpt)
+libc_hidden_def(unlockpt)

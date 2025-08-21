@@ -19,7 +19,6 @@
 /* This function moved from tst-sonamemove-runmod1.so.  This module is
    intended for linking only, to simulate an old application which was
    linked against an older version of the library.  */
-void
-moved_function (void)
+void moved_function(void)
 {
 }

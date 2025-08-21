@@ -22,33 +22,30 @@
 #include <unistd.h>
 
 
-char *
-getwd (char *buf)
+char *getwd(char *buf)
 {
 #ifndef PATH_MAX
 #define PATH_MAX 1024
 #endif
-  char tmpbuf[PATH_MAX];
+    char tmpbuf[PATH_MAX];
 
-  if (buf == NULL)
-    {
-      __set_errno (EINVAL);
-      return NULL;
+    if (buf == NULL) {
+        __set_errno(EINVAL);
+        return NULL;
     }
 
-  if (__getcwd (tmpbuf, PATH_MAX) == NULL)
-    {
-      /* We use 1024 here since it should really be enough and because
-	 this is a safe value.  */
-      __strerror_r (errno, buf, 1024);
-      return NULL;
+    if (__getcwd(tmpbuf, PATH_MAX) == NULL) {
+        /* We use 1024 here since it should really be enough and because
+        this is a safe value.  */
+        __strerror_r(errno, buf, 1024);
+        return NULL;
     }
 
-  /* This is completely unsafe.  Nobody can say how big the user
-     provided buffer is.  Perhaps the application and the libc
-     disagree about the value of PATH_MAX.  */
-  return strcpy (buf, tmpbuf);
+    /* This is completely unsafe.  Nobody can say how big the user
+       provided buffer is.  Perhaps the application and the libc
+       disagree about the value of PATH_MAX.  */
+    return strcpy(buf, tmpbuf);
 }
 
-link_warning (getwd,
-	      "the `getwd' function is dangerous and should not be used.")
+link_warning(getwd,
+             "the `getwd' function is dangerous and should not be used.")

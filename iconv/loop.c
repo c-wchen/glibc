@@ -21,29 +21,29 @@
    code but certain actions can be written down generically, with some
    customization options which are these:
 
-     MIN_NEEDED_INPUT	minimal number of input bytes needed for the next
-			conversion.
-     MIN_NEEDED_OUTPUT	minimal number of bytes produced by the next round
-			of conversion.
+     MIN_NEEDED_INPUT   minimal number of input bytes needed for the next
+            conversion.
+     MIN_NEEDED_OUTPUT  minimal number of bytes produced by the next round
+            of conversion.
 
-     MAX_NEEDED_INPUT	you guess it, this is the maximal number of input
-			bytes needed.  It defaults to MIN_NEEDED_INPUT
-     MAX_NEEDED_OUTPUT	likewise for output bytes.
+     MAX_NEEDED_INPUT   you guess it, this is the maximal number of input
+            bytes needed.  It defaults to MIN_NEEDED_INPUT
+     MAX_NEEDED_OUTPUT  likewise for output bytes.
 
-     LOOPFCT		name of the function created.  If not specified
-			the name is `loop' but this prevents the use
-			of multiple functions in the same file.
+     LOOPFCT        name of the function created.  If not specified
+            the name is `loop' but this prevents the use
+            of multiple functions in the same file.
 
-     BODY		this is supposed to expand to the body of the loop.
-			The user must provide this.
+     BODY       this is supposed to expand to the body of the loop.
+            The user must provide this.
 
-     EXTRA_LOOP_DECLS	extra arguments passed from conversion loop call.
+     EXTRA_LOOP_DECLS   extra arguments passed from conversion loop call.
 
-     INIT_PARAMS	code to define and initialize variables from params.
-     UPDATE_PARAMS	code to store result in params.
+     INIT_PARAMS    code to define and initialize variables from params.
+     UPDATE_PARAMS  code to store result in params.
 
-     ONEBYTE_BODY	body of the specialized conversion function for a
-			single byte from the current character set to INTERNAL.
+     ONEBYTE_BODY   body of the specialized conversion function for a
+            single byte from the current character set to INTERNAL.
 */
 
 #include <assert.h>
@@ -52,7 +52,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <wchar.h>
-#include <sys/param.h>		/* For MIN.  */
+#include <sys/param.h>      /* For MIN.  */
 #define __need_size_t
 #include <stddef.h>
 #include <libc-diag.h>
@@ -70,7 +70,7 @@
 
 /* Let's see how many bytes we produce.  */
 #ifndef MAX_NEEDED_INPUT
-# define MAX_NEEDED_INPUT	MIN_NEEDED_INPUT
+# define MAX_NEEDED_INPUT   MIN_NEEDED_INPUT
 #endif
 
 /* We produce at least one byte in the next round.  */
@@ -82,12 +82,12 @@
 
 /* Let's see how many bytes we produce.  */
 #ifndef MAX_NEEDED_OUTPUT
-# define MAX_NEEDED_OUTPUT	MIN_NEEDED_OUTPUT
+# define MAX_NEEDED_OUTPUT  MIN_NEEDED_OUTPUT
 #endif
 
 /* Default name for the function.  */
 #ifndef LOOPFCT
-# define LOOPFCT		loop
+# define LOOPFCT        loop
 #endif
 
 /* Make sure we have a loop body.  */
@@ -122,17 +122,17 @@
    Note that we cannot use the do while (0) trick since `break' and
    `continue' must reach certain points.  */
 #define STANDARD_FROM_LOOP_ERR_HANDLER(Incr) \
-  {									      \
-    result = __gconv_mark_illegal_input (step_data);			      \
-    if (! ignore_errors_p ())						      \
-      break;								      \
-									      \
-    /* We ignore the invalid input byte sequence.  */			      \
-    inptr += (Incr);							      \
-    ++*irreversible;							      \
+  {                                       \
+    result = __gconv_mark_illegal_input (step_data);                  \
+    if (! ignore_errors_p ())                             \
+      break;                                      \
+                                          \
+    /* We ignore the invalid input byte sequence.  */                 \
+    inptr += (Incr);                                  \
+    ++*irreversible;                                  \
     /* But we keep result == __GCONV_ILLEGAL_INPUT, because of the constraint \
-       that "iconv -c" must give the same exitcode as "iconv".  */	      \
-    continue;								      \
+       that "iconv -c" must give the same exitcode as "iconv".  */        \
+    continue;                                     \
   }
 
 /* Error handling for the TO_LOOP direction, with use of transliteration/
@@ -140,48 +140,48 @@
    the do while (0) trick since `break' and `continue' must reach certain
    points.  */
 #define STANDARD_TO_LOOP_ERR_HANDLER(Incr) \
-  {									      \
-    if (irreversible == NULL)						      \
-      {									      \
-	/* This means we are in call from __gconv_transliterate.  In this     \
-	   case we are not doing any error recovery ourselves.  */	      \
-	result = __gconv_mark_illegal_input (step_data);		      \
-	break;								      \
-      }									      \
-									      \
+  {                                       \
+    if (irreversible == NULL)                             \
+      {                                       \
+    /* This means we are in call from __gconv_transliterate.  In this     \
+       case we are not doing any error recovery ourselves.  */        \
+    result = __gconv_mark_illegal_input (step_data);              \
+    break;                                    \
+      }                                       \
+                                          \
     /* If needed, flush any conversion state, so that __gconv_transliterate   \
-       starts with current shift state.  */				      \
-    UPDATE_PARAMS;							      \
-									      \
-    /* First try the transliteration methods.  */			      \
-    if ((step_data->__flags & __GCONV_TRANSLIT) != 0)			      \
-      result = __gconv_transliterate					      \
-	(step, step_data, *inptrp,					      \
-	 &inptr, inend, &outptr, irreversible);			      \
-    else								      \
-      result = __gconv_mark_illegal_input (step_data);			      \
-									      \
-    REINIT_PARAMS;							      \
-									      \
-    /* If any of them recognized the input continue with the loop.  */	      \
-    if (result != __GCONV_ILLEGAL_INPUT)				      \
-      {									      \
-	if (__glibc_unlikely (result == __GCONV_FULL_OUTPUT))		      \
-	  break;							      \
-									      \
-	continue;							      \
-      }									      \
-									      \
-    /* Next see whether we have to ignore the error.  If not, stop.  */	      \
-    if (! ignore_errors_p ())						      \
-      break;								      \
-									      \
-    /* When we come here it means we ignore the character.  */		      \
-    ++*irreversible;							      \
-    inptr += Incr;							      \
+       starts with current shift state.  */                   \
+    UPDATE_PARAMS;                                \
+                                          \
+    /* First try the transliteration methods.  */                 \
+    if ((step_data->__flags & __GCONV_TRANSLIT) != 0)                 \
+      result = __gconv_transliterate                          \
+    (step, step_data, *inptrp,                        \
+     &inptr, inend, &outptr, irreversible);               \
+    else                                      \
+      result = __gconv_mark_illegal_input (step_data);                \
+                                          \
+    REINIT_PARAMS;                                \
+                                          \
+    /* If any of them recognized the input continue with the loop.  */        \
+    if (result != __GCONV_ILLEGAL_INPUT)                      \
+      {                                       \
+    if (__glibc_unlikely (result == __GCONV_FULL_OUTPUT))             \
+      break;                                  \
+                                          \
+    continue;                                 \
+      }                                       \
+                                          \
+    /* Next see whether we have to ignore the error.  If not, stop.  */       \
+    if (! ignore_errors_p ())                             \
+      break;                                      \
+                                          \
+    /* When we come here it means we ignore the character.  */            \
+    ++*irreversible;                                  \
+    inptr += Incr;                                \
     /* But we keep result == __GCONV_ILLEGAL_INPUT, because of the constraint \
-       that "iconv -c" must give the same exitcode as "iconv".  */	      \
-    continue;								      \
+       that "iconv -c" must give the same exitcode as "iconv".  */        \
+    continue;                                     \
   }
 
 
@@ -194,85 +194,82 @@
    has a comment referencing this diagnostic disabling; updates in one
    place may require updates in the other.  */
 DIAG_PUSH_NEEDS_COMMENT;
-DIAG_IGNORE_Os_NEEDS_COMMENT (7, "-Wmaybe-uninitialized");
+DIAG_IGNORE_Os_NEEDS_COMMENT(7, "-Wmaybe-uninitialized");
 /* Handling of Unicode 3.1 TAG characters.  Unicode recommends
    "If language codes are not relevant to the particular processing
     operation, then they should be ignored."  This macro is usually
    called right before  STANDARD_TO_LOOP_ERR_HANDLER (Incr).  */
 #define UNICODE_TAG_HANDLER(Character, Incr) \
-  {									      \
-    /* TAG characters are those in the range U+E0000..U+E007F.  */	      \
-    if (((Character) >> 7) == (0xe0000 >> 7))				      \
-      {									      \
-	inptr += Incr;							      \
-	continue;							      \
-      }									      \
+  {                                       \
+    /* TAG characters are those in the range U+E0000..U+E007F.  */        \
+    if (((Character) >> 7) == (0xe0000 >> 7))                     \
+      {                                       \
+    inptr += Incr;                                \
+    continue;                                 \
+      }                                       \
   }
 DIAG_POP_NEEDS_COMMENT;
 
 
 /* The function returns the status, as defined in gconv.h.  */
 static inline int
-__attribute ((always_inline))
-FCTNAME (LOOPFCT) (struct __gconv_step *step,
-		   struct __gconv_step_data *step_data,
-		   const unsigned char **inptrp, const unsigned char *inend,
-		   unsigned char **outptrp, const unsigned char *outend,
-		   size_t *irreversible EXTRA_LOOP_DECLS)
+__attribute((always_inline))
+FCTNAME(LOOPFCT)(struct __gconv_step *step,
+                 struct __gconv_step_data *step_data,
+                 const unsigned char **inptrp, const unsigned char *inend,
+                 unsigned char **outptrp, const unsigned char *outend,
+                 size_t *irreversible EXTRA_LOOP_DECLS)
 {
 #ifdef LOOP_NEED_STATE
-  mbstate_t *state = step_data->__statep;
+    mbstate_t *state = step_data->__statep;
 #endif
 #ifdef LOOP_NEED_FLAGS
-  int flags = step_data->__flags;
+    int flags = step_data->__flags;
 #endif
 #ifdef LOOP_NEED_DATA
-  void *data = step->__data;
+    void *data = step->__data;
 #endif
-  int result = __GCONV_EMPTY_INPUT;
-  const unsigned char *inptr = *inptrp;
-  unsigned char *outptr = *outptrp;
+    int result = __GCONV_EMPTY_INPUT;
+    const unsigned char *inptr = *inptrp;
+    unsigned char *outptr = *outptrp;
 
 #ifdef INIT_PARAMS
-  INIT_PARAMS;
+    INIT_PARAMS;
 #endif
 
-  while (inptr != inend)
-    {
-      /* `if' cases for MIN_NEEDED_OUTPUT ==/!= 1 is made to help the
-	 compiler generating better code.  They will be optimized away
-	 since MIN_NEEDED_OUTPUT is always a constant.  */
-      if (MIN_NEEDED_INPUT > 1
-	  && __builtin_expect (inptr + MIN_NEEDED_INPUT > inend, 0))
-	{
-	  /* We don't have enough input for another complete input
-	     character.  */
-	  result = __GCONV_INCOMPLETE_INPUT;
-	  break;
-	}
-      if ((MIN_NEEDED_OUTPUT != 1
-	   && __builtin_expect (outptr + MIN_NEEDED_OUTPUT > outend, 0))
-	  || (MIN_NEEDED_OUTPUT == 1
-	      && __builtin_expect (outptr >= outend, 0)))
-	{
-	  /* Overflow in the output buffer.  */
-	  result = __GCONV_FULL_OUTPUT;
-	  break;
-	}
+    while (inptr != inend) {
+        /* `if' cases for MIN_NEEDED_OUTPUT ==/!= 1 is made to help the
+        compiler generating better code.  They will be optimized away
+         since MIN_NEEDED_OUTPUT is always a constant.  */
+        if (MIN_NEEDED_INPUT > 1
+            && __builtin_expect(inptr + MIN_NEEDED_INPUT > inend, 0)) {
+            /* We don't have enough input for another complete input
+               character.  */
+            result = __GCONV_INCOMPLETE_INPUT;
+            break;
+        }
+        if ((MIN_NEEDED_OUTPUT != 1
+             && __builtin_expect(outptr + MIN_NEEDED_OUTPUT > outend, 0))
+            || (MIN_NEEDED_OUTPUT == 1
+                && __builtin_expect(outptr >= outend, 0))) {
+            /* Overflow in the output buffer.  */
+            result = __GCONV_FULL_OUTPUT;
+            break;
+        }
 
-      /* Here comes the body the user provides.  It can stop with
-	 RESULT set to GCONV_INCOMPLETE_INPUT (if the size of the
-	 input characters vary in size), GCONV_ILLEGAL_INPUT, or
-	 GCONV_FULL_OUTPUT (if the output characters vary in size).  */
-      BODY
+        /* Here comes the body the user provides.  It can stop with
+        RESULT set to GCONV_INCOMPLETE_INPUT (if the size of the
+         input characters vary in size), GCONV_ILLEGAL_INPUT, or
+         GCONV_FULL_OUTPUT (if the output characters vary in size).  */
+        BODY
     }
 
-  /* Update the pointers pointed to by the parameters.  */
-  *inptrp = inptr;
-  *outptrp = outptr;
-  UPDATE_PARAMS;
+    /* Update the pointers pointed to by the parameters.  */
+    *inptrp = inptr;
+    *outptrp = outptr;
+    UPDATE_PARAMS;
 
-  return result;
+    return result;
 }
 
 
@@ -280,148 +277,150 @@ FCTNAME (LOOPFCT) (struct __gconv_step *step,
 # define SINGLE(fct) SINGLE2 (fct)
 # define SINGLE2(fct) fct##_single
 static inline int
-__attribute ((always_inline))
-SINGLE(LOOPFCT) (struct __gconv_step *step,
-		 struct __gconv_step_data *step_data,
-		 const unsigned char **inptrp, const unsigned char *inend,
-		 unsigned char **outptrp, unsigned char *outend,
-		 size_t *irreversible EXTRA_LOOP_DECLS)
+__attribute((always_inline))
+SINGLE(LOOPFCT)(struct __gconv_step *step,
+                struct __gconv_step_data *step_data,
+                const unsigned char **inptrp, const unsigned char *inend,
+                unsigned char **outptrp, unsigned char *outend,
+                size_t *irreversible EXTRA_LOOP_DECLS)
 {
-  mbstate_t *state = step_data->__statep;
+    mbstate_t *state = step_data->__statep;
 # ifdef LOOP_NEED_FLAGS
-  int flags = step_data->__flags;
+    int flags = step_data->__flags;
 # endif
 # ifdef LOOP_NEED_DATA
-  void *data = step->__data;
+    void *data = step->__data;
 # endif
-  int result = __GCONV_OK;
-  unsigned char bytebuf[MAX_NEEDED_INPUT];
-  const unsigned char *inptr = *inptrp;
-  unsigned char *outptr = *outptrp;
-  size_t inlen;
+    int result = __GCONV_OK;
+    unsigned char bytebuf[MAX_NEEDED_INPUT];
+    const unsigned char *inptr = *inptrp;
+    unsigned char *outptr = *outptrp;
+    size_t inlen;
 
 # ifdef INIT_PARAMS
-  INIT_PARAMS;
+    INIT_PARAMS;
 # endif
 
 # ifdef UNPACK_BYTES
-  UNPACK_BYTES
+    UNPACK_BYTES
 # else
-  /* Add the bytes from the state to the input buffer.  */
-  assert ((state->__count & 7) <= sizeof (state->__value));
-  for (inlen = 0; inlen < (size_t) (state->__count & 7); ++inlen)
-    bytebuf[inlen] = state->__value.__wchb[inlen];
+    /* Add the bytes from the state to the input buffer.  */
+    assert((state->__count & 7) <= sizeof(state->__value));
+    for (inlen = 0; inlen < (size_t)(state->__count & 7); ++inlen) {
+        bytebuf[inlen] = state->__value.__wchb[inlen];
+    }
 # endif
 
-  /* Are there enough bytes in the input buffer?  */
-  if (MIN_NEEDED_INPUT > 1
-      && __builtin_expect (inptr + (MIN_NEEDED_INPUT - inlen) > inend, 0))
-    {
-      *inptrp = inend;
+    /* Are there enough bytes in the input buffer?  */
+    if (MIN_NEEDED_INPUT > 1
+        && __builtin_expect(inptr + (MIN_NEEDED_INPUT - inlen) > inend, 0)) {
+        *inptrp = inend;
 # ifdef STORE_REST
 
-      /* Building with -O3 GCC emits a `array subscript is above array
-	 bounds' warning.  GCC BZ #64739 has been opened for this.  */
-      DIAG_PUSH_NEEDS_COMMENT;
-      DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Warray-bounds");
-      while (inptr < inend)
-	bytebuf[inlen++] = *inptr++;
-      DIAG_POP_NEEDS_COMMENT;
+        /* Building with -O3 GCC emits a `array subscript is above array
+        bounds' warning.  GCC BZ #64739 has been opened for this.  */
+        DIAG_PUSH_NEEDS_COMMENT;
+        DIAG_IGNORE_NEEDS_COMMENT(4.9, "-Warray-bounds");
+        while (inptr < inend) {
+            bytebuf[inlen++] = *inptr++;
+        }
+        DIAG_POP_NEEDS_COMMENT;
 
-      inptr = bytebuf;
-      inptrp = &inptr;
-      inend = &bytebuf[inlen];
+        inptr = bytebuf;
+        inptrp = &inptr;
+        inend = &bytebuf[inlen];
 
-      STORE_REST
+        STORE_REST
 # else
-      /* We don't have enough input for another complete input
-	 character.  */
-      size_t inlen_after = inlen + (inend - inptr);
-      assert (inlen_after <= sizeof (state->__value.__wchb));
-      for (; inlen < inlen_after; inlen++)
-	state->__value.__wchb[inlen] = *inptr++;
+        /* We don't have enough input for another complete input
+        character.  */
+        size_t inlen_after = inlen + (inend - inptr);
+        assert(inlen_after <= sizeof(state->__value.__wchb));
+        for (; inlen < inlen_after; inlen++) {
+            state->__value.__wchb[inlen] = *inptr++;
+        }
 # endif
 
-      return __GCONV_INCOMPLETE_INPUT;
+        return __GCONV_INCOMPLETE_INPUT;
     }
 
-  /* Enough space in output buffer.  */
-  if ((MIN_NEEDED_OUTPUT != 1 && outptr + MIN_NEEDED_OUTPUT > outend)
-      || (MIN_NEEDED_OUTPUT == 1 && outptr >= outend))
-    /* Overflow in the output buffer.  */
-    return __GCONV_FULL_OUTPUT;
-
-  /*  Now add characters from the normal input buffer.  */
-  if (inlen >= MAX_NEEDED_INPUT || inptr >= inend)
-    /* Avoid a -Wstringop-overflow= warning when this loop is
-       unrolled.  The compiler cannot otherwise see that this is
-       unreachable because it depends on (state->__count & 7) not
-       being too large after a previous conversion step.
-       Starting with GCC 12, we also have mark the inptr >= inend
-       case as unreachable to omit the warning.  Note that this SINGLE
-       function is only used to implement the mb*towc*() or wc*tomb*()
-       functions.  Those functions use inptr and inend pointing to a
-       variable on stack, compute the inend pointer or explicitly check
-       the arguments which always leads to inptr < inend.  */
-    __builtin_unreachable ();
-  do
-    bytebuf[inlen++] = *inptr++;
-  while (inlen < MAX_NEEDED_INPUT && inptr < inend);
-
-  inptr = bytebuf;
-  inend = &bytebuf[inlen];
-
-  do
+    /* Enough space in output buffer.  */
+    if ((MIN_NEEDED_OUTPUT != 1 && outptr + MIN_NEEDED_OUTPUT > outend)
+        || (MIN_NEEDED_OUTPUT == 1 && outptr >= outend))
+        /* Overflow in the output buffer.  */
     {
-      BODY
+        return __GCONV_FULL_OUTPUT;
     }
-  while (0);
 
-  /* Now we either have produced an output character and consumed all the
-     bytes from the state and at least one more, or the character is still
-     incomplete, or we have some other error (like illegal input character,
-     no space in output buffer).  */
-  if (__glibc_likely (inptr != bytebuf))
+    /*  Now add characters from the normal input buffer.  */
+    if (inlen >= MAX_NEEDED_INPUT || inptr >= inend)
+        /* Avoid a -Wstringop-overflow= warning when this loop is
+           unrolled.  The compiler cannot otherwise see that this is
+           unreachable because it depends on (state->__count & 7) not
+           being too large after a previous conversion step.
+           Starting with GCC 12, we also have mark the inptr >= inend
+           case as unreachable to omit the warning.  Note that this SINGLE
+           function is only used to implement the mb*towc*() or wc*tomb*()
+           functions.  Those functions use inptr and inend pointing to a
+           variable on stack, compute the inend pointer or explicitly check
+           the arguments which always leads to inptr < inend.  */
     {
-      /* We found a new character.  */
-      assert (inptr - bytebuf > (state->__count & 7));
+        __builtin_unreachable();
+    }
+    do {
+        bytebuf[inlen++] = *inptr++;
+    } while (inlen < MAX_NEEDED_INPUT && inptr < inend);
 
-      *inptrp += inptr - bytebuf - (state->__count & 7);
-      *outptrp = outptr;
+    inptr = bytebuf;
+    inend = &bytebuf[inlen];
 
-      result = __GCONV_OK;
+    do {
+        BODY
+    } while (0);
 
-      /* Clear the state buffer.  */
+    /* Now we either have produced an output character and consumed all the
+       bytes from the state and at least one more, or the character is still
+       incomplete, or we have some other error (like illegal input character,
+       no space in output buffer).  */
+    if (__glibc_likely(inptr != bytebuf)) {
+        /* We found a new character.  */
+        assert(inptr - bytebuf > (state->__count & 7));
+
+        *inptrp += inptr - bytebuf - (state->__count & 7);
+        *outptrp = outptr;
+
+        result = __GCONV_OK;
+
+        /* Clear the state buffer.  */
 # ifdef CLEAR_STATE
-      CLEAR_STATE;
+        CLEAR_STATE;
 # else
-      state->__count &= ~7;
+        state->__count &= ~7;
 # endif
-    }
-  else if (result == __GCONV_INCOMPLETE_INPUT)
-    {
-      /* This can only happen if we have less than MAX_NEEDED_INPUT bytes
-	 available.  */
-      assert (inend != &bytebuf[MAX_NEEDED_INPUT]);
+    } else if (result == __GCONV_INCOMPLETE_INPUT) {
+        /* This can only happen if we have less than MAX_NEEDED_INPUT bytes
+        available.  */
+        assert(inend != &bytebuf[MAX_NEEDED_INPUT]);
 
-      *inptrp += inend - bytebuf - (state->__count & 7);
+        *inptrp += inend - bytebuf - (state->__count & 7);
 # ifdef STORE_REST
-      inptrp = &inptr;
+        inptrp = &inptr;
 
-      STORE_REST
+        STORE_REST
 # else
-      /* We don't have enough input for another complete input
-	 character.  */
-      assert (inend - inptr > (state->__count & ~7));
-      assert (inend - inptr <= sizeof (state->__value.__wchb));
-      state->__count = (state->__count & ~7) | (inend - inptr);
-      for (inlen = 0; inlen < inend - inptr; inlen++)
-	state->__value.__wchb[inlen] = inptr[inlen];
-      inptr = inend;
+        /* We don't have enough input for another complete input
+        character.  */
+        assert(inend - inptr > (state->__count & ~7));
+        assert(inend - inptr <= sizeof(state->__value.__wchb));
+        state->__count = (state->__count & ~7) | (inend - inptr);
+        for (inlen = 0; inlen < inend - inptr; inlen++) {
+            state->__value.__wchb[inlen] = inptr[inlen];
+        }
+        inptr = inend;
 # endif
     }
 
-  return result;
+    return result;
 }
 # undef SINGLE
 # undef SINGLE2
@@ -430,8 +429,8 @@ SINGLE(LOOPFCT) (struct __gconv_step *step,
 # ifdef ONEBYTE_BODY
 /* Define the shortcut function for btowc.  */
 static wint_t
-gconv_btowc (struct __gconv_step *step, unsigned char c)
-  ONEBYTE_BODY
+gconv_btowc(struct __gconv_step *step, unsigned char c)
+ONEBYTE_BODY
 #  define FROM_ONEBYTE gconv_btowc
 # endif
 

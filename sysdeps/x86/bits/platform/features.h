@@ -20,8 +20,7 @@
 # error "Never include <bits/platform/features.h> directly; use <sys/platform/x86.h> instead."
 #endif
 
-static __inline__ bool
-x86_cpu_cet_active (unsigned int __index)
+static __inline__ bool x86_cpu_cet_active(unsigned int __index)
 {
-  return false;
+    return false;
 }

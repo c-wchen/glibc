@@ -31,7 +31,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-static int do_test (void);
+static int do_test(void);
 #include <support/xthread.h>
 #include <support/test-driver.c>
 
@@ -39,113 +39,104 @@ void *handles[COUNT];
 set_value_func set_value_funcs[COUNT];
 get_value_func get_value_funcs[COUNT];
 
-static void
-init_functions (void)
+static void init_functions(void)
 {
-  for (int i = 0; i < COUNT; ++i)
-    {
-      /* Open the module.  */
-      {
-        char soname[100];
-        snprintf (soname, sizeof (soname), "tst-tls-manydynamic%02dmod.so", i);
-        handles[i] = dlopen (soname, RTLD_LAZY);
-        if (handles[i] == NULL)
-          {
-            printf ("error: dlopen failed: %s\n", dlerror ());
-            exit (1);
-          }
-      }
+    for (int i = 0; i < COUNT; ++i) {
+        /* Open the module.  */
+        {
+            char soname[100];
+            snprintf(soname, sizeof(soname), "tst-tls-manydynamic%02dmod.so", i);
+            handles[i] = dlopen(soname, RTLD_LAZY);
+            if (handles[i] == NULL) {
+                printf("error: dlopen failed: %s\n", dlerror());
+                exit(1);
+            }
+        }
 
-      /* Obtain the setter function.  */
-      {
-        char fname[100];
-        snprintf (fname, sizeof (fname), "set_value_%02d", i);
-        void *func = dlsym (handles[i], fname);
-        if (func == NULL)
-          {
-            printf ("error: dlsym: %s\n", dlerror ());
-            exit (1);
-          }
-        set_value_funcs[i] = func;
-      }
+        /* Obtain the setter function.  */
+        {
+            char fname[100];
+            snprintf(fname, sizeof(fname), "set_value_%02d", i);
+            void *func = dlsym(handles[i], fname);
+            if (func == NULL) {
+                printf("error: dlsym: %s\n", dlerror());
+                exit(1);
+            }
+            set_value_funcs[i] = func;
+        }
 
-      /* Obtain the getter function.  */
-      {
-        char fname[100];
-        snprintf (fname, sizeof (fname), "get_value_%02d", i);
-        void *func = dlsym (handles[i], fname);
-        if (func == NULL)
-          {
-            printf ("error: dlsym: %s\n", dlerror ());
-            exit (1);
-          }
-        get_value_funcs[i] = func;
-      }
+        /* Obtain the getter function.  */
+        {
+            char fname[100];
+            snprintf(fname, sizeof(fname), "get_value_%02d", i);
+            void *func = dlsym(handles[i], fname);
+            if (func == NULL) {
+                printf("error: dlsym: %s\n", dlerror());
+                exit(1);
+            }
+            get_value_funcs[i] = func;
+        }
     }
 }
 
 static pthread_barrier_t barrier;
 
 /* Running thread which forces real TLS initialization.  */
-static void *
-blocked_thread_func (void *closure)
+static void *blocked_thread_func(void *closure)
 {
-  xpthread_barrier_wait (&barrier);
+    xpthread_barrier_wait(&barrier);
 
-  /* TLS test runs here in the main thread.  */
+    /* TLS test runs here in the main thread.  */
 
-  xpthread_barrier_wait (&barrier);
-  return NULL;
+    xpthread_barrier_wait(&barrier);
+    return NULL;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  {
-    int ret = pthread_barrier_init (&barrier, NULL, 2);
-    if (ret != 0)
-      {
-        errno = ret;
-        printf ("error: pthread_barrier_init: %m\n");
-        exit (1);
-      }
-  }
-
-  pthread_t blocked_thread = xpthread_create (NULL, blocked_thread_func, NULL);
-  xpthread_barrier_wait (&barrier);
-
-  init_functions ();
-
-  struct value values[COUNT];
-  /* Initialize the TLS variables.  */
-  for (int i = 0; i < COUNT; ++i)
     {
-      for (int j = 0; j < PER_VALUE_COUNT; ++j)
-        values[i].num[j] = rand ();
-      set_value_funcs[i] (&values[i]);
-    }
-
-  /* Read back their values to check that they do not overlap.  */
-  for (int i = 0; i < COUNT; ++i)
-    {
-      struct value actual;
-      get_value_funcs[i] (&actual);
-
-      for (int j = 0; j < PER_VALUE_COUNT; ++j)
-        if (actual.num[j] != values[i].num[j])
-        {
-          printf ("error: mismatch at variable %d/%d: %d != %d\n",
-                  i, j, actual.num[j], values[i].num[j]);
-          exit (1);
+        int ret = pthread_barrier_init(&barrier, NULL, 2);
+        if (ret != 0) {
+            errno = ret;
+            printf("error: pthread_barrier_init: %m\n");
+            exit(1);
         }
     }
 
-  xpthread_barrier_wait (&barrier);
-  xpthread_join (blocked_thread);
+    pthread_t blocked_thread = xpthread_create(NULL, blocked_thread_func, NULL);
+    xpthread_barrier_wait(&barrier);
 
-  /* Close the modules.  */
-  for (int i = 0; i < COUNT; ++i)
-    dlclose (handles[i]);
+    init_functions();
 
-  return 0;
+    struct value values[COUNT];
+    /* Initialize the TLS variables.  */
+    for (int i = 0; i < COUNT; ++i) {
+        for (int j = 0; j < PER_VALUE_COUNT; ++j) {
+            values[i].num[j] = rand();
+        }
+        set_value_funcs[i](&values[i]);
+    }
+
+    /* Read back their values to check that they do not overlap.  */
+    for (int i = 0; i < COUNT; ++i) {
+        struct value actual;
+        get_value_funcs[i](&actual);
+
+        for (int j = 0; j < PER_VALUE_COUNT; ++j)
+            if (actual.num[j] != values[i].num[j]) {
+                printf("error: mismatch at variable %d/%d: %d != %d\n",
+                       i, j, actual.num[j], values[i].num[j]);
+                exit(1);
+            }
+    }
+
+    xpthread_barrier_wait(&barrier);
+    xpthread_join(blocked_thread);
+
+    /* Close the modules.  */
+    for (int i = 0; i < COUNT; ++i) {
+        dlclose(handles[i]);
+    }
+
+    return 0;
 }

@@ -29,9 +29,8 @@
    information is a counter of the processed bytes so far and the
    value collected so far.  Especially, we don't have different shift
    states.  */
-int
-__mbsinit (const mbstate_t *ps)
+int __mbsinit(const mbstate_t *ps)
 {
-  return ps == NULL || ps->__count == 0;
+    return ps == NULL || ps->__count == 0;
 }
-weak_alias (__mbsinit, mbsinit)
+weak_alias(__mbsinit, mbsinit)

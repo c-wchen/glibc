@@ -18,29 +18,27 @@
 #include <sys/types.h>
 
 
-struct catalog_obj
-{
-  uint32_t magic;
-  uint32_t plane_size;
-  uint32_t plane_depth;
-  /* This is in fact two arrays in one: always a pair of name and
-     pointer into the data area.  */
-  uint32_t name_ptr[0];
+struct catalog_obj {
+    uint32_t magic;
+    uint32_t plane_size;
+    uint32_t plane_depth;
+    /* This is in fact two arrays in one: always a pair of name and
+       pointer into the data area.  */
+    uint32_t name_ptr[0];
 };
 
 
 /* This structure will be filled after loading the catalog.  */
-typedef struct catalog_info
-{
-  enum { mmapped, malloced } status;
+typedef struct catalog_info {
+    enum { mmapped, malloced } status;
 
-  size_t plane_size;
-  size_t plane_depth;
-  uint32_t *name_ptr;
-  const char *strings;
+    size_t plane_size;
+    size_t plane_depth;
+    uint32_t *name_ptr;
+    const char *strings;
 
-  struct catalog_obj *file_ptr;
-  size_t file_size;
+    struct catalog_obj *file_ptr;
+    size_t file_size;
 } *__nl_catd;
 
 
@@ -50,6 +48,6 @@ typedef struct catalog_info
 
 
 /* Prototypes for helper functions.  */
-extern int __open_catalog (const char *cat_name, const char *nlspath,
-			   const char *env_var, __nl_catd __catalog);
-libc_hidden_proto (__open_catalog)
+extern int __open_catalog(const char *cat_name, const char *nlspath,
+                          const char *env_var, __nl_catd __catalog);
+libc_hidden_proto(__open_catalog)

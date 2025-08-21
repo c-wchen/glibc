@@ -18,16 +18,17 @@
 
 #include "tst-posix_fallocate-common.c"
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  struct stat st;
+    struct stat st;
 
-  if (fstat (temp_fd, &st) != 0)
-    FAIL_EXIT1 ("1st fstat failed");
+    if (fstat(temp_fd, &st) != 0) {
+        FAIL_EXIT1("1st fstat failed");
+    }
 
-  if (st.st_size != 0)
-    FAIL_EXIT1 ("file not created with size 0");
+    if (st.st_size != 0) {
+        FAIL_EXIT1("file not created with size 0");
+    }
 
-  return do_test_with_offset (512);
+    return do_test_with_offset(512);
 }

@@ -25,13 +25,12 @@
    Returns the number of file descriptors with events, zero if timed out,
    or -1 for errors.  */
 
-int
-__poll (struct pollfd *fds, nfds_t nfds, int timeout)
+int __poll(struct pollfd *fds, nfds_t nfds, int timeout)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (__poll)
-weak_alias (__poll, poll)
+libc_hidden_def(__poll)
+weak_alias(__poll, poll)
 
-stub_warning (poll)
+stub_warning(poll)

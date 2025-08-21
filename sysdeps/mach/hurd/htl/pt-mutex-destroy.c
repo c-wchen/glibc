@@ -24,19 +24,19 @@
 #include <hurdlock.h>
 #include <shlib-compat.h>
 
-int
-__pthread_mutex_destroy (pthread_mutex_t *mtxp)
+int __pthread_mutex_destroy(pthread_mutex_t *mtxp)
 {
-  atomic_read_barrier ();
-  if (*(volatile unsigned int *) &mtxp->__lock != 0)
-    return EBUSY;
+    atomic_read_barrier();
+    if (*(volatile unsigned int *) &mtxp->__lock != 0) {
+        return EBUSY;
+    }
 
-  mtxp->__type = -1;
-  return 0;
+    mtxp->__type = -1;
+    return 0;
 }
-libc_hidden_def (__pthread_mutex_destroy)
-versioned_symbol (libc, __pthread_mutex_destroy, pthread_mutex_destroy, GLIBC_2_21);
+libc_hidden_def(__pthread_mutex_destroy)
+versioned_symbol(libc, __pthread_mutex_destroy, pthread_mutex_destroy, GLIBC_2_21);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_21)
-compat_symbol (libc, __pthread_mutex_destroy, pthread_mutex_destroy, GLIBC_2_12);
+compat_symbol(libc, __pthread_mutex_destroy, pthread_mutex_destroy, GLIBC_2_12);
 #endif

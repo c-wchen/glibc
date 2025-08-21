@@ -18,9 +18,8 @@
 
 #include <support/xthread.h>
 
-void
-xpthread_barrierattr_init (pthread_barrierattr_t *attr)
+void xpthread_barrierattr_init(pthread_barrierattr_t *attr)
 {
-  xpthread_check_return ("pthread_barrierattr_init",
-                         pthread_barrierattr_init (attr));
+    xpthread_check_return("pthread_barrierattr_init",
+                          pthread_barrierattr_init(attr));
 }

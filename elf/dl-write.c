@@ -21,36 +21,35 @@
 #include <libc-lock.h>
 #include <sys/uio.h>
 
-ssize_t
-_dl_write (int fd, const void *buffer, size_t length)
+ssize_t _dl_write(int fd, const void *buffer, size_t length)
 {
-  struct iovec iov = { .iov_base = (void *) buffer, .iov_len = length };
-  ssize_t ret;
+    struct iovec iov = { .iov_base = (void *) buffer, .iov_len = length };
+    ssize_t ret;
 
 #if RTLD_PRIVATE_ERRNO
-  /* We have to take this lock just to be sure we don't clobber the private
-     errno when it's being used by another thread that cares about it.
-     Yet we must be sure not to try calling the lock functions before
-     the thread library is fully initialized.  */
-  if (__glibc_unlikely (_dl_starting_up))
-    {
-      ret = __writev (fd, &iov, 1);
-      if (ret < 0)
-        ret = -errno;
-    }
-  else
-    {
-      __rtld_lock_lock_recursive (GL(dl_load_lock));
-      ret = __writev (fd, &iov, 1);
-      if (ret < 0)
-        ret = -errno;
-      __rtld_lock_unlock_recursive (GL(dl_load_lock));
+    /* We have to take this lock just to be sure we don't clobber the private
+       errno when it's being used by another thread that cares about it.
+       Yet we must be sure not to try calling the lock functions before
+       the thread library is fully initialized.  */
+    if (__glibc_unlikely(_dl_starting_up)) {
+        ret = __writev(fd, &iov, 1);
+        if (ret < 0) {
+            ret = -errno;
+        }
+    } else {
+        __rtld_lock_lock_recursive(GL(dl_load_lock));
+        ret = __writev(fd, &iov, 1);
+        if (ret < 0) {
+            ret = -errno;
+        }
+        __rtld_lock_unlock_recursive(GL(dl_load_lock));
     }
 #else
-  ret = __writev (fd, &iov, 1);
-  if (ret < 0)
-    ret = -errno;
+    ret = __writev(fd, &iov, 1);
+    if (ret < 0) {
+        ret = -errno;
+    }
 #endif
 
-  return ret;
+    return ret;
 }

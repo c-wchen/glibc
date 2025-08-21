@@ -20,13 +20,12 @@
 #include <support/check.h>
 #include <wchar.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  setvbuf (stdout, NULL, _IOLBF, 0);
-  fgetwc (stdin);
-  fputwc (10, stdout); /* It should not crash here.  */
-  return 0;
+    setvbuf(stdout, NULL, _IOLBF, 0);
+    fgetwc(stdin);
+    fputwc(10, stdout);  /* It should not crash here.  */
+    return 0;
 }
 
 #include <support/test-driver.c>

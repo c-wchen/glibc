@@ -44,23 +44,23 @@
 
 /* Returns a file descriptor that refers to the process PID.  The
    close-on-exec is set on the file descriptor.  */
-extern int pidfd_open (__pid_t __pid, unsigned int __flags) __THROW;
+extern int pidfd_open(__pid_t __pid, unsigned int __flags) __THROW;
 
 /* Duplicates an existing file descriptor TARGETFD in the process referred
    by the PIDFD file descriptor PIDFD.
 
    The FLAGS argument is reserved for future use, it must be specified
    as 0.  */
-extern int pidfd_getfd (int __pidfd, int __targetfd,
-			unsigned int __flags) __THROW;
+extern int pidfd_getfd(int __pidfd, int __targetfd,
+                       unsigned int __flags) __THROW;
 
 /* Sends the signal SIG to the target process referred by the PIDFD.  If
    INFO points to a siginfo_t buffer, it will be populated.  */
-extern int pidfd_send_signal (int __pidfd, int __sig, siginfo_t *__info,
-			      unsigned int __flags) __THROW;
+extern int pidfd_send_signal(int __pidfd, int __sig, siginfo_t *__info,
+                             unsigned int __flags) __THROW;
 
 /* Query the process ID (PID) from process descriptor FD.  Return the PID
    or -1 in case of an error.  */
-extern pid_t pidfd_getpid (int __fd) __THROW;
+extern pid_t pidfd_getpid(int __fd) __THROW;
 
 #endif /* _PIDFD_H  */

@@ -22,19 +22,18 @@
 #define SIZE_CHUNK 32
 
 /* Error codes for use by the tests.  */
-enum
-{
-  INPUT_EOF = -1,		/* Premature end of input.  */
-  INPUT_ERROR = -2,		/* System error reading input data.  */
-  INPUT_FORMAT = -3,		/* Input data format error.  */
-  INPUT_OVERFLOW = -4,		/* Input data arithmetic overflow.  */
-  OUTPUT_TERM = -5,		/* String termination missing from output.  */
-  OUTPUT_OVERRUN = -6		/* Output data overrun.  */
+enum {
+    INPUT_EOF = -1,       /* Premature end of input.  */
+    INPUT_ERROR = -2,     /* System error reading input data.  */
+    INPUT_FORMAT = -3,        /* Input data format error.  */
+    INPUT_OVERFLOW = -4,      /* Input data arithmetic overflow.  */
+    OUTPUT_TERM = -5,     /* String termination missing from output.  */
+    OUTPUT_OVERRUN = -6       /* Output data overrun.  */
 };
 
 /* Input data retrieval handlers made available to individual tests.  */
-static long long read_integer (int *);
-static int read_input (void);
+static long long read_integer(int *);
+static int read_input(void);
 
 /* Input data line number tracker.  */
 static size_t line;

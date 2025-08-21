@@ -22,11 +22,11 @@
 #include <stdlib.h>
 #include <support/check.h>
 
-int
-xpoll (struct pollfd *fds, nfds_t nfds, int timeout)
+int xpoll(struct pollfd *fds, nfds_t nfds, int timeout)
 {
-  int ret = poll (fds, nfds, timeout);
-  if (ret < 0)
-    FAIL_EXIT1 ("poll: %m");
-  return ret;
+    int ret = poll(fds, nfds, timeout);
+    if (ret < 0) {
+        FAIL_EXIT1("poll: %m");
+    }
+    return ret;
 }

@@ -20,11 +20,10 @@
 #include <string.h>
 #include <support/check.h>
 
-static int
-do_test (int argc, char **argv)
+static int do_test(int argc, char **argv)
 {
-  TEST_COMPARE_STRING (argv[0], "test-argv0");
-  return 0;
+    TEST_COMPARE_STRING(argv[0], "test-argv0");
+    return 0;
 }
 
 #define TEST_FUNCTION_ARGV do_test

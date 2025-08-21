@@ -19,9 +19,8 @@
 #include <lock-intern.h>
 #include <lowlevellock.h>
 
-void
-__mutex_init (void *lock)
+void __mutex_init(void *lock)
 {
-  *(int *)lock = LLL_LOCK_INITIALIZER;
+    *(int *)lock = LLL_LOCK_INITIALIZER;
 }
-libc_hidden_def (__mutex_init)
+libc_hidden_def(__mutex_init)

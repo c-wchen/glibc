@@ -29,25 +29,28 @@
    Return the number written (never more than 3, but may be less than NELEM),
    or -1 if an error occurred.  */
 
-int
-getloadavg (double loadavg[], int nelem)
+int getloadavg(double loadavg[], int nelem)
 {
-  host_load_info_data_t info;
-  mach_msg_type_number_t size = HOST_LOAD_INFO_COUNT;
-  error_t err;
-  int i;
+    host_load_info_data_t info;
+    mach_msg_type_number_t size = HOST_LOAD_INFO_COUNT;
+    error_t err;
+    int i;
 
-  err = __host_info (__mach_host_self (), HOST_LOAD_INFO,
-		     (host_info_t) &info, &size);
-  if (err)
-    return __hurd_fail (err);
-  if (size < HOST_LOAD_INFO_COUNT)
-    return __hurd_fail (EGRATUITOUS);
+    err = __host_info(__mach_host_self(), HOST_LOAD_INFO,
+                      (host_info_t) &info, &size);
+    if (err) {
+        return __hurd_fail(err);
+    }
+    if (size < HOST_LOAD_INFO_COUNT) {
+        return __hurd_fail(EGRATUITOUS);
+    }
 
-  if (nelem > 3)
-    nelem = 3;
-  for (i = 0; i < nelem; ++i)
-    loadavg[i] = (double) info.avenrun[i] / (double) LOAD_SCALE;
+    if (nelem > 3) {
+        nelem = 3;
+    }
+    for (i = 0; i < nelem; ++i) {
+        loadavg[i] = (double) info.avenrun[i] / (double) LOAD_SCALE;
+    }
 
-  return i;
+    return i;
 }

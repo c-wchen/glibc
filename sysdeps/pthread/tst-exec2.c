@@ -29,121 +29,106 @@
 #include <support/xsignal.h>
 
 
-static void *
-tf (void *arg)
+static void *tf(void *arg)
 {
-  pthread_t th = (pthread_t) arg;
+    pthread_t th = (pthread_t) arg;
 
-  if (pthread_join (th, NULL) == 0)
-    {
-      puts ("thread in parent joined!?");
-      exit (1);
+    if (pthread_join(th, NULL) == 0) {
+        puts("thread in parent joined!?");
+        exit(1);
     }
 
-  puts ("join in thread in parent returned!?");
-  exit (1);
+    puts("join in thread in parent returned!?");
+    exit(1);
 }
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int fd[2];
-  if (pipe (fd) != 0)
-    {
-      puts ("pipe failed");
-      exit (1);
+    int fd[2];
+    if (pipe(fd) != 0) {
+        puts("pipe failed");
+        exit(1);
     }
 
-  /* Not interested in knowing when the pipe is closed.  */
-  xsignal (SIGPIPE, SIG_IGN);
+    /* Not interested in knowing when the pipe is closed.  */
+    xsignal(SIGPIPE, SIG_IGN);
 
-  pid_t pid = fork ();
-  if (pid == -1)
-    {
-      puts ("fork failed");
-      exit (1);
+    pid_t pid = fork();
+    if (pid == -1) {
+        puts("fork failed");
+        exit(1);
     }
 
-  if (pid == 0)
-    {
-      /* Use the fd for stdout.  This is kind of ugly because it
-	 substitutes the fd of stdout but we know what we are doing
-	 here...  */
-      if (dup2 (fd[1], STDOUT_FILENO) != STDOUT_FILENO)
-	{
-	  puts ("dup2 failed");
-	  exit (1);
-	}
+    if (pid == 0) {
+        /* Use the fd for stdout.  This is kind of ugly because it
+        substitutes the fd of stdout but we know what we are doing
+         here...  */
+        if (dup2(fd[1], STDOUT_FILENO) != STDOUT_FILENO) {
+            puts("dup2 failed");
+            exit(1);
+        }
 
-      close (fd[0]);
+        close(fd[0]);
 
-      pthread_t th;
-      if (pthread_create (&th, NULL, tf, (void *) pthread_self ()) != 0)
-	{
-	  puts ("create failed");
-	  exit (1);
-	}
+        pthread_t th;
+        if (pthread_create(&th, NULL, tf, (void *) pthread_self()) != 0) {
+            puts("create failed");
+            exit(1);
+        }
 
-      execl (_PATH_BSHELL, _PATH_BSHELL, "-c", "echo $$", NULL);
+        execl(_PATH_BSHELL, _PATH_BSHELL, "-c", "echo $$", NULL);
 
-      puts ("execl failed");
-      exit (1);
+        puts("execl failed");
+        exit(1);
     }
 
-  close (fd[1]);
+    close(fd[1]);
 
-  char buf[200];
-  ssize_t n;
-  bool seen_pid = false;
-  while (TEMP_FAILURE_RETRY ((n = read (fd[0], buf, sizeof (buf)))) > 0)
-    {
-      /* We only expect to read the PID.  */
-      char *endp;
-      long int rpid = strtol (buf, &endp, 10);
+    char buf[200];
+    ssize_t n;
+    bool seen_pid = false;
+    while (TEMP_FAILURE_RETRY((n = read(fd[0], buf, sizeof(buf)))) > 0) {
+        /* We only expect to read the PID.  */
+        char *endp;
+        long int rpid = strtol(buf, &endp, 10);
 
-      if (*endp != '\n')
-	{
-	  printf ("didn't parse whole line: \"%s\"\n", buf);
-	  exit (1);
-	}
-      if (endp == buf)
-	{
-	  puts ("read empty line");
-	  exit (1);
-	}
+        if (*endp != '\n') {
+            printf("didn't parse whole line: \"%s\"\n", buf);
+            exit(1);
+        }
+        if (endp == buf) {
+            puts("read empty line");
+            exit(1);
+        }
 
-      if (rpid != pid)
-	{
-	  printf ("found \"%s\", expected PID %ld\n", buf, (long int) pid);
-	  exit (1);
-	}
+        if (rpid != pid) {
+            printf("found \"%s\", expected PID %ld\n", buf, (long int) pid);
+            exit(1);
+        }
 
-      if (seen_pid)
-	{
-	  puts ("found more than one PID line");
-	  exit (1);
-	}
-      seen_pid = true;
+        if (seen_pid) {
+            puts("found more than one PID line");
+            exit(1);
+        }
+        seen_pid = true;
     }
 
-  close (fd[0]);
+    close(fd[0]);
 
-  int status;
-  int err = waitpid (pid, &status, 0);
-  if (err != pid)
-    {
-      puts ("waitpid failed");
-      exit (1);
+    int status;
+    int err = waitpid(pid, &status, 0);
+    if (err != pid) {
+        puts("waitpid failed");
+        exit(1);
     }
 
-  if (!seen_pid)
-    {
-      puts ("didn't get PID");
-      exit (1);
+    if (!seen_pid) {
+        puts("didn't get PID");
+        exit(1);
     }
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

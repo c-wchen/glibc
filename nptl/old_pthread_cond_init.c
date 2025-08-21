@@ -21,24 +21,24 @@
 
 
 #if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_3_2)
-int
-__pthread_cond_init_2_0 (pthread_cond_2_0_t *cond,
-			 const pthread_condattr_t *cond_attr)
+int __pthread_cond_init_2_0(pthread_cond_2_0_t *cond,
+                            const pthread_condattr_t *cond_attr)
 {
-  struct pthread_condattr *icond_attr = (struct pthread_condattr *) cond_attr;
+    struct pthread_condattr *icond_attr = (struct pthread_condattr *) cond_attr;
 
-  /* The type of the first argument is actually that of the old, too
-     small pthread_cond_t.  We use only the first word of it, as a
-     pointer.  */
-  cond->cond = NULL;
+    /* The type of the first argument is actually that of the old, too
+       small pthread_cond_t.  We use only the first word of it, as a
+       pointer.  */
+    cond->cond = NULL;
 
-  /* We can't support PSHARED condvars in the old pthread_cond_*
-     functions and neither clocks other than CLOCK_REALTIME.  */
-  if (icond_attr != NULL && icond_attr->value)
-    return EINVAL;
+    /* We can't support PSHARED condvars in the old pthread_cond_*
+       functions and neither clocks other than CLOCK_REALTIME.  */
+    if (icond_attr != NULL && icond_attr->value) {
+        return EINVAL;
+    }
 
-  return 0;
+    return 0;
 }
-compat_symbol (libc, __pthread_cond_init_2_0, pthread_cond_init,
-	       GLIBC_2_0);
+compat_symbol(libc, __pthread_cond_init_2_0, pthread_cond_init,
+              GLIBC_2_0);
 #endif

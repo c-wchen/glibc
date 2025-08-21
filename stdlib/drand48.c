@@ -18,12 +18,11 @@
 #include <stdlib.h>
 
 
-double
-drand48 (void)
+double drand48(void)
 {
-  double result;
+    double result;
 
-  (void) __erand48_r (__libc_drand48_data.__x, &__libc_drand48_data, &result);
+    (void) __erand48_r(__libc_drand48_data.__x, &__libc_drand48_data, &result);
 
-  return result;
+    return result;
 }

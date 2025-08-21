@@ -27,25 +27,23 @@
 #include "libioP.h"
 #include <stdio.h>
 
-int
-__fileno (FILE *fp)
+int __fileno(FILE *fp)
 {
-  CHECK_FILE (fp, EOF);
+    CHECK_FILE(fp, EOF);
 
-  if (!(fp->_flags & _IO_IS_FILEBUF) || _IO_fileno (fp) < 0)
-    {
-      __set_errno (EBADF);
-      return -1;
+    if (!(fp->_flags & _IO_IS_FILEBUF) || _IO_fileno(fp) < 0) {
+        __set_errno(EBADF);
+        return -1;
     }
 
-  return _IO_fileno (fp);
+    return _IO_fileno(fp);
 }
-libc_hidden_def (__fileno)
-weak_alias (__fileno, fileno)
-libc_hidden_weak (fileno)
+libc_hidden_def(__fileno)
+weak_alias(__fileno, fileno)
+libc_hidden_weak(fileno)
 
 /* The fileno implementation for libio does not require locking because
    it only accesses once a single variable and this is already atomic
    (at least at thread level).  Therefore we don't test _IO_MTSAFE_IO here.  */
 
-weak_alias (__fileno, fileno_unlocked)
+weak_alias(__fileno, fileno_unlocked)

@@ -25,20 +25,19 @@
 /* If SIZE is zero, return the number of supplementary groups
    the calling process is in.  Otherwise, fill in the group IDs
    of its supplementary groups in LIST and return the number written.  */
-int
-__getgroups (int size, gid_t *list)
+int __getgroups(int size, gid_t *list)
 {
 #if defined (NGROUPS_MAX) && NGROUPS_MAX == 0
-  /* The system has no supplementary groups.  */
-  return 0;
+    /* The system has no supplementary groups.  */
+    return 0;
 #endif
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
 #if !(defined (NGROUPS_MAX) && NGROUPS_MAX == 0)
-stub_warning (getgroups);
+stub_warning(getgroups);
 #endif
 
-weak_alias (__getgroups, getgroups)
+weak_alias(__getgroups, getgroups)

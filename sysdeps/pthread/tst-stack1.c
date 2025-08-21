@@ -27,119 +27,105 @@ static void *stack;
 static size_t size;
 
 
-static void *
-tf (void *a)
+static void *tf(void *a)
 {
-  int result = 0;
+    int result = 0;
 
-  puts ("child start");
+    puts("child start");
 
-  pthread_attr_t attr;
-  if (pthread_getattr_np (pthread_self (), &attr) != 0)
-    {
-      puts ("getattr_np failed");
-      exit (1);
+    pthread_attr_t attr;
+    if (pthread_getattr_np(pthread_self(), &attr) != 0) {
+        puts("getattr_np failed");
+        exit(1);
     }
 
-  size_t test_size;
-  void *test_stack;
-  if (pthread_attr_getstack (&attr, &test_stack, &test_size) != 0)
-    {
-      puts ("attr_getstack failed");
-      exit (1);
+    size_t test_size;
+    void *test_stack;
+    if (pthread_attr_getstack(&attr, &test_stack, &test_size) != 0) {
+        puts("attr_getstack failed");
+        exit(1);
     }
 
-  if (test_size != size)
-    {
-      printf ("child: reported size differs: is %zu, expected %zu\n",
-	      test_size, size);
-      result = 1;
+    if (test_size != size) {
+        printf("child: reported size differs: is %zu, expected %zu\n",
+               test_size, size);
+        result = 1;
     }
 
-  if (test_stack != stack)
-    {
-      printf ("child: reported stack address differs: is %p, expected %p\n",
-	      test_stack, stack);
-      result = 1;
+    if (test_stack != stack) {
+        printf("child: reported stack address differs: is %p, expected %p\n",
+               test_stack, stack);
+        result = 1;
     }
 
-  puts ("child OK");
+    puts("child OK");
 
-  return result ? (void *) 1l : NULL;
+    return result ? (void *) 1l : NULL;
 }
 
 
-int
-do_test (void)
+int do_test(void)
 {
-  int result = 0;
+    int result = 0;
 
-  size = 4 * getpagesize ();
+    size = 4 * getpagesize();
 #ifdef PTHREAD_STACK_MIN
-  size = MAX (size, PTHREAD_STACK_MIN);
+    size = MAX(size, PTHREAD_STACK_MIN);
 #endif
-  if (posix_memalign (&stack, getpagesize (), size) != 0)
-    {
-      puts ("out of memory while allocating the stack memory");
-      exit (1);
+    if (posix_memalign(&stack, getpagesize(), size) != 0) {
+        puts("out of memory while allocating the stack memory");
+        exit(1);
     }
 
-  pthread_attr_t attr;
-  if (pthread_attr_init (&attr) != 0)
-    {
-      puts ("attr_init failed");
-      exit (1);
+    pthread_attr_t attr;
+    if (pthread_attr_init(&attr) != 0) {
+        puts("attr_init failed");
+        exit(1);
     }
 
-  puts ("attr_setstack");
-  if (pthread_attr_setstack (&attr, stack, size) != 0)
-    {
-      puts ("attr_setstack failed");
-      exit (1);
+    puts("attr_setstack");
+    if (pthread_attr_setstack(&attr, stack, size) != 0) {
+        puts("attr_setstack failed");
+        exit(1);
     }
 
-  size_t test_size;
-  void *test_stack;
-  puts ("attr_getstack");
-  if (pthread_attr_getstack (&attr, &test_stack, &test_size) != 0)
-    {
-      puts ("attr_getstack failed");
-      exit (1);
+    size_t test_size;
+    void *test_stack;
+    puts("attr_getstack");
+    if (pthread_attr_getstack(&attr, &test_stack, &test_size) != 0) {
+        puts("attr_getstack failed");
+        exit(1);
     }
 
-  if (test_size != size)
-    {
-      printf ("reported size differs: is %zu, expected %zu\n",
-	      test_size, size);
-      result = 1;
+    if (test_size != size) {
+        printf("reported size differs: is %zu, expected %zu\n",
+               test_size, size);
+        result = 1;
     }
 
-  if (test_stack != stack)
-    {
-      printf ("reported stack address differs: is %p, expected %p\n",
-	      test_stack, stack);
-      result = 1;
+    if (test_stack != stack) {
+        printf("reported stack address differs: is %p, expected %p\n",
+               test_stack, stack);
+        result = 1;
     }
 
-  puts ("create");
+    puts("create");
 
-  pthread_t th;
-  if (pthread_create (&th, &attr, tf, NULL) != 0)
-    {
-      puts ("failed to create thread");
-      exit (1);
+    pthread_t th;
+    if (pthread_create(&th, &attr, tf, NULL) != 0) {
+        puts("failed to create thread");
+        exit(1);
     }
 
-  void *status;
-  if (pthread_join (th, &status) != 0)
-    {
-      puts ("join failed");
-      exit (1);
+    void *status;
+    if (pthread_join(th, &status) != 0) {
+        puts("join failed");
+        exit(1);
     }
 
-  result |= status != NULL;
+    result |= status != NULL;
 
-  return result;
+    return result;
 }
 
 

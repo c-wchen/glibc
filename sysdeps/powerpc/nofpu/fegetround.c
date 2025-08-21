@@ -19,11 +19,10 @@
 #include "soft-fp.h"
 #include "soft-supp.h"
 
-int
-__fegetround (void)
+int __fegetround(void)
 {
-  return __sim_round_mode_thread;
+    return __sim_round_mode_thread;
 }
-libm_hidden_def (__fegetround)
-weak_alias (__fegetround, fegetround)
-libm_hidden_weak (fegetround)
+libm_hidden_def(__fegetround)
+weak_alias(__fegetround, fegetround)
+libm_hidden_weak(fegetround)

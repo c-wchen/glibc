@@ -7,4 +7,4 @@
 #include "tsp_common.c"
 #include "dat_iswpunct.c"
 
-TST_FUNC_ISW (PUNCT, punct);
+TST_FUNC_ISW(PUNCT, punct);

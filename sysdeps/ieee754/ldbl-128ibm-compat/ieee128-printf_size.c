@@ -18,15 +18,14 @@
 
 #include <printf.h>
 
-extern __typeof (printf_size) __printf_size;
+extern __typeof(printf_size) __printf_size;
 
-int
-___ieee128_printf_size (FILE *fp, const struct printf_info *info,
-			const void *const *args)
+int ___ieee128_printf_size(FILE *fp, const struct printf_info *info,
+                           const void *const *args)
 {
-  struct printf_info info_ieee128 = *info;
+    struct printf_info info_ieee128 = *info;
 
-  info_ieee128.is_binary128 = info->is_long_double;
-  return __printf_size (fp, &info_ieee128, args);
+    info_ieee128.is_binary128 = info->is_long_double;
+    return __printf_size(fp, &info_ieee128, args);
 }
-strong_alias (___ieee128_printf_size, __printf_sizeieee128)
+strong_alias(___ieee128_printf_size, __printf_sizeieee128)

@@ -18,10 +18,9 @@
 
 #include <support/xthread.h>
 
-void
-xpthread_rwlockattr_setkind_np (pthread_rwlockattr_t *attr,
-				int pref)
+void xpthread_rwlockattr_setkind_np(pthread_rwlockattr_t *attr,
+                                    int pref)
 {
-  xpthread_check_return ("pthread_rwlockattr_setkind_np",
-                         pthread_rwlockattr_setkind_np (attr, pref));
+    xpthread_check_return("pthread_rwlockattr_setkind_np",
+                          pthread_rwlockattr_setkind_np(attr, pref));
 }

@@ -7,4 +7,4 @@
 #include "tsp_common.c"
 #include "dat_towupper.c"
 
-TST_FUNC_TOW (UPPER, upper);
+TST_FUNC_TOW(UPPER, upper);

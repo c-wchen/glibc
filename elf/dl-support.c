@@ -47,7 +47,7 @@
 #include <dl-tunables.h>
 
 extern char *__progname;
-char **_dl_argv = &__progname;	/* This is checked for some error messages.  */
+char **_dl_argv = &__progname;  /* This is checked for some error messages.  */
 
 /* Name of the architecture.  */
 const char *_dl_platform;
@@ -78,50 +78,51 @@ int _dl_bind_not;
 
 /* A dummy link map for the executable, used by dlopen to access the global
    scope.  We don't export any symbols ourselves, so this can be minimal.  */
-static struct link_map _dl_main_map =
-  {
+static struct link_map _dl_main_map = {
     .l_name = (char *) "",
     .l_real = &_dl_main_map,
     .l_ns = LM_ID_BASE,
     .l_libname = &(struct libname_list) { .name = "", .dont_free = 1 },
     .l_searchlist =
-      {
-	.r_list = &(struct link_map *) { &_dl_main_map },
-	.r_nlist = 1,
-      },
-    .l_symbolic_searchlist = { .r_list = &(struct link_map *) { NULL } },
+    {
+        .r_list = &(struct link_map *) { &_dl_main_map },
+        .r_nlist = 1,
+    },
+    .l_symbolic_searchlist = { .r_list = &(struct link_map *)
+        {
+            NULL
+        }
+    },
     .l_type = lt_executable,
     .l_scope_mem = { &_dl_main_map.l_searchlist },
-    .l_scope_max = (sizeof (_dl_main_map.l_scope_mem)
-		    / sizeof (_dl_main_map.l_scope_mem[0])),
+    .l_scope_max = (sizeof(_dl_main_map.l_scope_mem)
+                    / sizeof(_dl_main_map.l_scope_mem[0])),
     .l_scope = _dl_main_map.l_scope_mem,
     .l_local_scope = { &_dl_main_map.l_searchlist },
     .l_used = 1,
     .l_tls_offset = NO_TLS_OFFSET,
     .l_serial = 1,
-  };
+};
 
 /* Namespace information.  */
-struct link_namespaces _dl_ns[DL_NNS] =
-  {
+struct link_namespaces _dl_ns[DL_NNS] = {
     [LM_ID_BASE] =
-      {
-	._ns_loaded = &_dl_main_map,
-	._ns_nloaded = 1,
-	._ns_main_searchlist = &_dl_main_map.l_searchlist,
-      }
-  };
+    {
+        ._ns_loaded = &_dl_main_map,
+        ._ns_nloaded = 1,
+        ._ns_main_searchlist = &_dl_main_map.l_searchlist,
+    }
+};
 size_t _dl_nns = 1;
 
 /* Incremented whenever something may have been added to dl_loaded. */
 unsigned long long _dl_load_adds = 1;
 
 /* Fake scope of the main application.  */
-struct r_scope_elem _dl_initial_searchlist =
-  {
+struct r_scope_elem _dl_initial_searchlist = {
     .r_list = &(struct link_map *) { &_dl_main_map },
     .r_nlist = 1,
-  };
+};
 
 #ifndef HAVE_INLINED_SYSCALLS
 /* Nonzero during startup.  */
@@ -178,7 +179,7 @@ size_t _dl_stack_cache_actsize;
 uintptr_t _dl_in_flight_stack;
 int _dl_stack_cache_lock;
 #else
-void (*_dl_init_static_tls) (struct link_map *) = &_dl_nothread_init_static_tls;
+void (*_dl_init_static_tls)(struct link_map *) = &_dl_nothread_init_static_tls;
 #endif
 struct dl_scope_free_list *_dl_scope_free_list;
 
@@ -206,18 +207,18 @@ struct link_map *_dl_sysinfo_map;
    This must be a recursive lock since the initializer function of
    the loaded object might as well require a call to this function.
    At this time it is not anymore a problem to modify the tables.  */
-__rtld_lock_define_initialized_recursive (, _dl_load_lock)
+__rtld_lock_define_initialized_recursive(, _dl_load_lock)
 /* This lock is used to keep __dl_iterate_phdr from inspecting the
    list of loaded objects while an object is added to or removed from
    that list.  */
-__rtld_lock_define_initialized_recursive (, _dl_load_write_lock)
-  /* This lock protects global and module specific TLS related data.
-     E.g. it is held in dlopen and dlclose when GL(dl_tls_generation),
-     GL(dl_tls_max_dtv_idx) or GL(dl_tls_dtv_slotinfo_list) are
-     accessed and when TLS related relocations are processed for a
-     module.  It was introduced to keep pthread_create accessing TLS
-     state that is being set up.  */
-__rtld_lock_define_initialized_recursive (, _dl_load_tls_lock)
+__rtld_lock_define_initialized_recursive(, _dl_load_write_lock)
+/* This lock protects global and module specific TLS related data.
+   E.g. it is held in dlopen and dlclose when GL(dl_tls_generation),
+   GL(dl_tls_max_dtv_idx) or GL(dl_tls_dtv_slotinfo_list) are
+   accessed and when TLS related relocations are processed for a
+   module.  It was introduced to keep pthread_create accessing TLS
+   state that is being set up.  */
+__rtld_lock_define_initialized_recursive(, _dl_load_tls_lock)
 
 
 #ifdef HAVE_AUX_VECTOR
@@ -225,118 +226,114 @@ __rtld_lock_define_initialized_recursive (, _dl_load_tls_lock)
 
 int _dl_clktck;
 
-void
-_dl_aux_init (ElfW(auxv_t) *av)
+void _dl_aux_init(ElfW(auxv_t) *av)
 {
 #ifdef NEED_DL_SYSINFO
-  /* NB: Avoid RELATIVE relocation in static PIE.  */
-  GL(dl_sysinfo) = DL_SYSINFO_DEFAULT;
+    /* NB: Avoid RELATIVE relocation in static PIE.  */
+    GL(dl_sysinfo) = DL_SYSINFO_DEFAULT;
 #endif
 
-  _dl_auxv = av;
-  dl_parse_auxv_t auxv_values;
-  /* Use an explicit initialization loop here because memset may not
-     be available yet.  */
-  for (int i = 0; i < array_length (auxv_values); ++i)
-    auxv_values[i] = 0;
-  _dl_parse_auxv (av, auxv_values);
+    _dl_auxv = av;
+    dl_parse_auxv_t auxv_values;
+    /* Use an explicit initialization loop here because memset may not
+       be available yet.  */
+    for (int i = 0; i < array_length(auxv_values); ++i) {
+        auxv_values[i] = 0;
+    }
+    _dl_parse_auxv(av, auxv_values);
 
-  _dl_phdr = (void*) auxv_values[AT_PHDR];
-  _dl_phnum = auxv_values[AT_PHNUM];
+    _dl_phdr = (void *) auxv_values[AT_PHDR];
+    _dl_phnum = auxv_values[AT_PHNUM];
 
-  if (_dl_phdr == NULL)
-    {
-      /* Starting from binutils-2.23, the linker will define the
-         magic symbol __ehdr_start to point to our own ELF header
-         if it is visible in a segment that also includes the phdrs.
-         So we can set up _dl_phdr and _dl_phnum even without any
-         information from auxv.  */
+    if (_dl_phdr == NULL) {
+        /* Starting from binutils-2.23, the linker will define the
+           magic symbol __ehdr_start to point to our own ELF header
+           if it is visible in a segment that also includes the phdrs.
+           So we can set up _dl_phdr and _dl_phnum even without any
+           information from auxv.  */
 
-      extern const ElfW(Ehdr) __ehdr_start attribute_hidden;
-      assert (__ehdr_start.e_phentsize == sizeof *GL(dl_phdr));
-      _dl_phdr = (const void *) &__ehdr_start + __ehdr_start.e_phoff;
-      _dl_phnum = __ehdr_start.e_phnum;
+        extern const ElfW(Ehdr) __ehdr_start attribute_hidden;
+        assert(__ehdr_start.e_phentsize == sizeof * GL(dl_phdr));
+        _dl_phdr = (const void *) &__ehdr_start + __ehdr_start.e_phoff;
+        _dl_phnum = __ehdr_start.e_phnum;
     }
 
-  assert (_dl_phdr != NULL);
+    assert(_dl_phdr != NULL);
 }
 #endif
 
 
-void
-_dl_non_dynamic_init (void)
+void _dl_non_dynamic_init(void)
 {
-  _dl_main_map.l_origin = _dl_get_origin ();
-  _dl_main_map.l_phdr = GL(dl_phdr);
-  _dl_main_map.l_phnum = GL(dl_phnum);
+    _dl_main_map.l_origin = _dl_get_origin();
+    _dl_main_map.l_phdr = GL(dl_phdr);
+    _dl_main_map.l_phnum = GL(dl_phnum);
 
-  /* Set up the data structures for the system-supplied DSO early,
-     so they can influence _dl_init_paths.  */
-  setup_vdso (NULL, NULL);
+    /* Set up the data structures for the system-supplied DSO early,
+       so they can influence _dl_init_paths.  */
+    setup_vdso(NULL, NULL);
 
-  /* With vDSO setup we can initialize the function pointers.  */
-  setup_vdso_pointers ();
+    /* With vDSO setup we can initialize the function pointers.  */
+    setup_vdso_pointers();
 
-  if (__libc_enable_secure)
-    {
-      static const char unsecure_envvars[] =
-	UNSECURE_ENVVARS
-	;
-      const char *cp = unsecure_envvars;
+    if (__libc_enable_secure) {
+        static const char unsecure_envvars[] =
+            UNSECURE_ENVVARS
+            ;
+        const char *cp = unsecure_envvars;
 
-      while (cp < unsecure_envvars + sizeof (unsecure_envvars))
-	{
-	  __unsetenv (cp);
-	  cp = strchr (cp, '\0') + 1;
-	}
+        while (cp < unsecure_envvars + sizeof(unsecure_envvars)) {
+            __unsetenv(cp);
+            cp = strchr(cp, '\0') + 1;
+        }
     }
 
-  _dl_verbose = *(getenv ("LD_WARN") ?: "") == '\0' ? 0 : 1;
+    _dl_verbose = *(getenv("LD_WARN") ? : "") == '\0' ? 0 : 1;
 
-  /* Initialize the data structures for the search paths for shared
-     objects.  */
-  _dl_init_paths (getenv ("LD_LIBRARY_PATH"), "LD_LIBRARY_PATH",
-		  /* No glibc-hwcaps selection support in statically
-		     linked binaries.  */
-		  NULL, NULL);
+    /* Initialize the data structures for the search paths for shared
+       objects.  */
+    _dl_init_paths(getenv("LD_LIBRARY_PATH"), "LD_LIBRARY_PATH",
+                   /* No glibc-hwcaps selection support in statically
+                      linked binaries.  */
+                   NULL, NULL);
 
-  /* Remember the last search directory added at startup.  */
-  _dl_init_all_dirs = GL(dl_all_dirs);
+    /* Remember the last search directory added at startup.  */
+    _dl_init_all_dirs = GL(dl_all_dirs);
 
-  _dl_lazy = *(getenv ("LD_BIND_NOW") ?: "") == '\0';
+    _dl_lazy = *(getenv("LD_BIND_NOW") ? : "") == '\0';
 
-  _dl_bind_not = *(getenv ("LD_BIND_NOT") ?: "") != '\0';
+    _dl_bind_not = *(getenv("LD_BIND_NOT") ? : "") != '\0';
 
-  _dl_dynamic_weak = *(getenv ("LD_DYNAMIC_WEAK") ?: "") == '\0';
+    _dl_dynamic_weak = *(getenv("LD_DYNAMIC_WEAK") ? : "") == '\0';
 
 #ifdef DL_PLATFORM_INIT
-  DL_PLATFORM_INIT;
+    DL_PLATFORM_INIT;
 #endif
 
-  /* Now determine the length of the platform string.  */
-  if (_dl_platform != NULL)
-    _dl_platformlen = strlen (_dl_platform);
+    /* Now determine the length of the platform string.  */
+    if (_dl_platform != NULL) {
+        _dl_platformlen = strlen(_dl_platform);
+    }
 
-  for (const ElfW(Phdr) *ph = _dl_phdr; ph < &_dl_phdr[_dl_phnum]; ++ph)
-    switch (ph->p_type)
-      {
-      /* Check if the stack is nonexecutable.  */
-      case PT_GNU_STACK:
-	_dl_stack_flags = ph->p_flags;
-	break;
+    for (const ElfW(Phdr) *ph = _dl_phdr; ph < &_dl_phdr[_dl_phnum]; ++ph)
+        switch (ph->p_type) {
+            /* Check if the stack is nonexecutable.  */
+            case PT_GNU_STACK:
+                _dl_stack_flags = ph->p_flags;
+                break;
 
-      case PT_GNU_RELRO:
-	_dl_main_map.l_relro_addr = ph->p_vaddr;
-	_dl_main_map.l_relro_size = ph->p_memsz;
-	break;
-      }
+            case PT_GNU_RELRO:
+                _dl_main_map.l_relro_addr = ph->p_vaddr;
+                _dl_main_map.l_relro_size = ph->p_memsz;
+                break;
+        }
 
-  _dl_handle_execstack_tunable ();
+    _dl_handle_execstack_tunable();
 
-  call_function_static_weak (_dl_find_object_init);
+    call_function_static_weak(_dl_find_object_init);
 
-  /* Setup relro on the binary itself.  */
-  _dl_protect_relro (&_dl_main_map);
+    /* Setup relro on the binary itself.  */
+    _dl_protect_relro(&_dl_main_map);
 }
 
 #ifdef DL_SYSINFO_IMPLEMENTATION
@@ -347,15 +344,14 @@ DL_SYSINFO_IMPLEMENTATION
    aarch64, a function is used to get the address of _dl_main_map.  */
 
 struct link_map *
-_dl_get_dl_main_map (void)
+_dl_get_dl_main_map(void)
 {
-  return &_dl_main_map;
+    return &_dl_main_map;
 }
 
 /* This is used by _dl_runtime_profile, not used on static code.  */
 void
-DL_ARCH_FIXUP_ATTRIBUTE
-_dl_audit_pltexit (struct link_map *l, ElfW(Word) reloc_arg,
-		   const void *inregs, void *outregs)
+DL_ARCH_FIXUP_ATTRIBUTE _dl_audit_pltexit(struct link_map *l, ElfW(Word) reloc_arg,
+        const void *inregs, void *outregs)
 {
 }

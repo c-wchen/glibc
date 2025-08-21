@@ -86,11 +86,11 @@ extern fpu_control_t __fpu_control;
 #define _FPU_IEEE 0x1F
 
 /* Type of the control word.  */
-typedef unsigned int fpu_control_t __attribute__ ((__mode__ (__SI__)));
+typedef unsigned int fpu_control_t __attribute__((__mode__(__SI__)));
 
 /* Macros for accessing the hardware control word.  */
-extern fpu_control_t __loongarch_fpu_getcw (void) __THROW;
-extern void __loongarch_fpu_setcw (fpu_control_t) __THROW;
+extern fpu_control_t __loongarch_fpu_getcw(void) __THROW;
+extern void __loongarch_fpu_setcw(fpu_control_t) __THROW;
 #define _FPU_GETCW(cw) __asm__ volatile ("movfcsr2gr %0,$fcsr0" : "=r"(cw))
 #define _FPU_SETCW(cw) __asm__ volatile ("movgr2fcsr $fcsr0,%0" : : "r"(cw))
 

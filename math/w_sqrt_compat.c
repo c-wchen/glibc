@@ -29,14 +29,14 @@
 
 #if LIBM_SVID_COMPAT
 /* wrapper sqrt */
-double
-__sqrt (double x)
+double __sqrt(double x)
 {
-  if (__builtin_expect (isless (x, 0.0), 0) && _LIB_VERSION != _IEEE_)
-    return __kernel_standard (x, x, 26); /* sqrt(negative) */
+    if (__builtin_expect(isless(x, 0.0), 0) && _LIB_VERSION != _IEEE_) {
+        return __kernel_standard(x, x, 26);    /* sqrt(negative) */
+    }
 
-  return __ieee754_sqrt (x);
+    return __ieee754_sqrt(x);
 }
-libm_alias_double (__sqrt, sqrt)
-libm_alias_double_narrow (__sqrt, sqrt)
+libm_alias_double(__sqrt, sqrt)
+libm_alias_double_narrow(__sqrt, sqrt)
 #endif

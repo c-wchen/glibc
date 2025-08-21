@@ -20,26 +20,23 @@
 #include <shlib-compat.h>
 #include <pt-internal.h>
 
-int
-__pthread_attr_setscope (pthread_attr_t *attr, int contentionscope)
+int __pthread_attr_setscope(pthread_attr_t *attr, int contentionscope)
 {
-  if (contentionscope == __pthread_default_attr.__contentionscope)
-    {
-      attr->__contentionscope = contentionscope;
-      return 0;
+    if (contentionscope == __pthread_default_attr.__contentionscope) {
+        attr->__contentionscope = contentionscope;
+        return 0;
     }
 
-  switch (contentionscope)
-    {
-    case PTHREAD_SCOPE_PROCESS:
-    case PTHREAD_SCOPE_SYSTEM:
-      return ENOTSUP;
-    default:
-      return EINVAL;
+    switch (contentionscope) {
+        case PTHREAD_SCOPE_PROCESS:
+        case PTHREAD_SCOPE_SYSTEM:
+            return ENOTSUP;
+        default:
+            return EINVAL;
     }
 }
-versioned_symbol (libc, __pthread_attr_setscope, pthread_attr_setscope, GLIBC_2_21);
+versioned_symbol(libc, __pthread_attr_setscope, pthread_attr_setscope, GLIBC_2_21);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_21)
-compat_symbol (libc, __pthread_attr_setscope, pthread_attr_setscope, GLIBC_2_12);
+compat_symbol(libc, __pthread_attr_setscope, pthread_attr_setscope, GLIBC_2_12);
 #endif

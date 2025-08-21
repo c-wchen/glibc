@@ -19,11 +19,10 @@
 #include <string.h>
 
 /* Get flag word from the attribute structure.  */
-int
-posix_spawnattr_getflags (const posix_spawnattr_t *attr, short int *flags)
+int posix_spawnattr_getflags(const posix_spawnattr_t *attr, short int *flags)
 {
-  /* Copy the flag word.  */
-  *flags = attr->__flags;
+    /* Copy the flag word.  */
+    *flags = attr->__flags;
 
-  return 0;
+    return 0;
 }

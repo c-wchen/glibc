@@ -21,32 +21,31 @@
 #endif
 
 /* Define bits representing exceptions in the FPSR status word.  */
-enum
-  {
+enum {
     FE_INVALID =
-#define FE_INVALID	1
-      FE_INVALID,
+#define FE_INVALID  1
+        FE_INVALID,
     FE_DIVBYZERO =
-#define FE_DIVBYZERO	2
-      FE_DIVBYZERO,
+#define FE_DIVBYZERO    2
+        FE_DIVBYZERO,
     FE_OVERFLOW =
-#define FE_OVERFLOW	4
-      FE_OVERFLOW,
+#define FE_OVERFLOW 4
+        FE_OVERFLOW,
     FE_UNDERFLOW =
-#define FE_UNDERFLOW	8
-      FE_UNDERFLOW,
+#define FE_UNDERFLOW    8
+        FE_UNDERFLOW,
     FE_INEXACT =
-#define FE_INEXACT	16
-      FE_INEXACT,
-  };
+#define FE_INEXACT  16
+        FE_INEXACT,
+};
 
 /* Amount to shift by to convert an exception bit in FPSR to a an
    exception bit mask in FPCR.  */
-#define FE_EXCEPT_SHIFT	8
+#define FE_EXCEPT_SHIFT 8
 
 /* All supported exceptions.  */
-#define FE_ALL_EXCEPT	\
-	(FE_INVALID | FE_DIVBYZERO | FE_OVERFLOW | FE_UNDERFLOW | FE_INEXACT)
+#define FE_ALL_EXCEPT   \
+    (FE_INVALID | FE_DIVBYZERO | FE_OVERFLOW | FE_UNDERFLOW | FE_INEXACT)
 
 /* Define bits representing rounding modes in the FPCR Rmode field.  */
 #define FE_TONEAREST  0x000000
@@ -58,15 +57,14 @@ enum
 typedef unsigned int fexcept_t;
 
 /* Type representing floating-point environment.  */
-typedef struct
-  {
+typedef struct {
     unsigned int __fpcr;
     unsigned int __fpsr;
-  }
+}
 fenv_t;
 
 /* If the default argument is used we use this value.  */
-#define FE_DFL_ENV	((const fenv_t *) -1l)
+#define FE_DFL_ENV  ((const fenv_t *) -1l)
 
 #ifdef __USE_GNU
 /* Floating-point environment where none of the exceptions are masked.  */
@@ -78,5 +76,5 @@ fenv_t;
 typedef unsigned int femode_t;
 
 /* Default floating-point control modes.  */
-# define FE_DFL_MODE	((const femode_t *) -1L)
+# define FE_DFL_MODE    ((const femode_t *) -1L)
 #endif

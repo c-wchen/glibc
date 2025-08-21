@@ -65,7 +65,7 @@
 #endif
 
 /* This string was in the Factory zone through version 2016f.  */
-#define GRANDPARENTED	"Local time zone must be set--see zic manual page"
+#define GRANDPARENTED   "Local time zone must be set--see zic manual page"
 
 /*
 ** Defaults for preprocessor symbols.
@@ -202,7 +202,7 @@
 #if !PORT_TO_C89
 # include <inttypes.h>
 #endif
-#include <limits.h>	/* for CHAR_BIT et al. */
+#include <limits.h> /* for CHAR_BIT et al. */
 #include <stdlib.h>
 
 #include <errno.h>
@@ -614,7 +614,10 @@ typedef unsigned long uintmax_t;
 #endif
 
 #if defined LOCALTIME_IMPLEMENTATION && TZ_TIME_T
-static time_t sys_time(time_t *x) { return time(x); }
+static time_t sys_time(time_t *x)
+{
+    return time(x);
+}
 #endif
 
 #if TZ_TIME_T
@@ -707,10 +710,10 @@ char *ctime_r(time_t const *, char *);
 #endif
 double difftime(time_t, time_t);
 size_t strftime(char *restrict, size_t, char const *restrict,
-		struct tm const *restrict);
+                struct tm const *restrict);
 # if HAVE_STRFTIME_L
 size_t strftime_l(char *restrict, size_t, char const *restrict,
-		  struct tm const *restrict, locale_t);
+                  struct tm const *restrict, locale_t);
 # endif
 struct tm *gmtime(time_t const *);
 struct tm *gmtime_r(time_t const *restrict, struct tm *restrict);
@@ -815,7 +818,7 @@ time_t posix2time(time_t);
 #if NETBSD_INSPIRED
 typedef struct state *timezone_t;
 struct tm *localtime_rz(timezone_t restrict, time_t const *restrict,
-			struct tm *restrict);
+                        struct tm *restrict);
 time_t mktime_z(timezone_t restrict, struct tm *restrict);
 timezone_t tzalloc(char const *);
 void tzfree(timezone_t);
@@ -845,10 +848,10 @@ ATTRIBUTE_PURE time_t time2posix_z(timezone_t, time_t);
 /* Max and min values of the integer type T, of which only the bottom
    B bits are used, and where the highest-order used bit is considered
    to be a sign bit if T is signed.  */
-#define MAXVAL(t, b)						\
-  ((t) (((t) 1 << ((b) - 1 - TYPE_SIGNED(t)))			\
-	- 1 + ((t) 1 << ((b) - 1 - TYPE_SIGNED(t)))))
-#define MINVAL(t, b)						\
+#define MAXVAL(t, b)                        \
+  ((t) (((t) 1 << ((b) - 1 - TYPE_SIGNED(t)))           \
+    - 1 + ((t) 1 << ((b) - 1 - TYPE_SIGNED(t)))))
+#define MINVAL(t, b)                        \
   ((t) (TYPE_SIGNED(t) ? - TWOS_COMPLEMENT(t) - MAXVAL(t, b) : 0))
 
 /* The extreme time values, assuming no padding.  */
@@ -864,21 +867,22 @@ ATTRIBUTE_PURE time_t time2posix_z(timezone_t, time_t);
 #if HAVE__GENERIC
 # define TIME_T_MIN \
     _Generic((time_t) 0, \
-	     signed char: SCHAR_MIN, short: SHRT_MIN, \
-	     int: INT_MIN, long: LONG_MIN, long long: LLONG_MIN, \
-	     default: TIME_T_MIN_NO_PADDING)
+         signed char: SCHAR_MIN, short: SHRT_MIN, \
+         int: INT_MIN, long: LONG_MIN, long long: LLONG_MIN, \
+         default: TIME_T_MIN_NO_PADDING)
 # define TIME_T_MAX \
     (TYPE_SIGNED(time_t) \
      ? _Generic((time_t) 0, \
-		signed char: SCHAR_MAX, short: SHRT_MAX, \
-		int: INT_MAX, long: LONG_MAX, long long: LLONG_MAX, \
-		default: TIME_T_MAX_NO_PADDING)			    \
+        signed char: SCHAR_MAX, short: SHRT_MAX, \
+        int: INT_MAX, long: LONG_MAX, long long: LLONG_MAX, \
+        default: TIME_T_MAX_NO_PADDING)             \
      : (time_t) -1)
 enum { SIGNED_PADDING_CHECK_NEEDED
-         = _Generic((time_t) 0,
-		    signed char: false, short: false,
-		    int: false, long: false, long long: false,
-		    default: true) };
+       = _Generic((time_t) 0,
+                  signed char: false, short: false,
+                  int: false, long: false, long long: false,
+                  default: true)
+         };
 #else
 # define TIME_T_MIN TIME_T_MIN_NO_PADDING
 # define TIME_T_MAX TIME_T_MAX_NO_PADDING
@@ -890,7 +894,7 @@ enum { SIGNED_PADDING_CHECK_NEEDED = true };
    platforms' compilers are likely to diagnose these issues in integer
    constant expressions, so it shouldn't hurt to check statically.  */
 static_assert(! TYPE_SIGNED(time_t) || ! SIGNED_PADDING_CHECK_NEEDED
-	      || TIME_T_MAX >> (TYPE_BIT(time_t) - 2) == 1);
+              || TIME_T_MAX >> (TYPE_BIT(time_t) - 2) == 1);
 
 /*
 ** 302 / 1000 is log10(2.0) rounded up.
@@ -899,15 +903,15 @@ static_assert(! TYPE_SIGNED(time_t) || ! SIGNED_PADDING_CHECK_NEEDED
 ** add one more for a minus sign if the type is signed.
 */
 #define INT_STRLEN_MAXIMUM(type) \
-	((TYPE_BIT(type) - TYPE_SIGNED(type)) * 302 / 1000 + \
-	1 + TYPE_SIGNED(type))
+    ((TYPE_BIT(type) - TYPE_SIGNED(type)) * 302 / 1000 + \
+    1 + TYPE_SIGNED(type))
 
 /*
 ** INITIALIZE(x)
 */
 
 #ifdef GCC_LINT
-# define INITIALIZE(x)	((x) = 0)
+# define INITIALIZE(x)  ((x) = 0)
 #else
 # define INITIALIZE(x)
 #endif
@@ -977,22 +981,22 @@ char *ctime_r(time_t const *, char *);
 /* Handy macros that are independent of tzfile implementation.  */
 
 enum {
-  SECSPERMIN = 60,
-  MINSPERHOUR = 60,
-  SECSPERHOUR = SECSPERMIN * MINSPERHOUR,
-  HOURSPERDAY = 24,
-  DAYSPERWEEK = 7,
-  DAYSPERNYEAR = 365,
-  DAYSPERLYEAR = DAYSPERNYEAR + 1,
-  MONSPERYEAR = 12,
-  YEARSPERREPEAT = 400	/* years before a Gregorian repeat */
+    SECSPERMIN = 60,
+    MINSPERHOUR = 60,
+    SECSPERHOUR = SECSPERMIN * MINSPERHOUR,
+    HOURSPERDAY = 24,
+    DAYSPERWEEK = 7,
+    DAYSPERNYEAR = 365,
+    DAYSPERLYEAR = DAYSPERNYEAR + 1,
+    MONSPERYEAR = 12,
+    YEARSPERREPEAT = 400  /* years before a Gregorian repeat */
 };
 
-#define SECSPERDAY	((int_fast32_t) SECSPERHOUR * HOURSPERDAY)
+#define SECSPERDAY  ((int_fast32_t) SECSPERHOUR * HOURSPERDAY)
 
-#define DAYSPERREPEAT		((int_fast32_t) 400 * 365 + 100 - 4 + 1)
-#define SECSPERREPEAT		((int_fast64_t) DAYSPERREPEAT * SECSPERDAY)
-#define AVGSECSPERYEAR		(SECSPERREPEAT / YEARSPERREPEAT)
+#define DAYSPERREPEAT       ((int_fast32_t) 400 * 365 + 100 - 4 + 1)
+#define SECSPERREPEAT       ((int_fast64_t) DAYSPERREPEAT * SECSPERDAY)
+#define AVGSECSPERYEAR      (SECSPERREPEAT / YEARSPERREPEAT)
 
 /* How many years to generate (in zic.c) or search through (in localtime.c).
    This is two years larger than the obvious 400, to avoid edge cases.
@@ -1008,51 +1012,51 @@ enum {
 enum { years_of_observations = YEARSPERREPEAT + 2 };
 
 enum {
-  TM_SUNDAY,
-  TM_MONDAY,
-  TM_TUESDAY,
-  TM_WEDNESDAY,
-  TM_THURSDAY,
-  TM_FRIDAY,
-  TM_SATURDAY
+    TM_SUNDAY,
+    TM_MONDAY,
+    TM_TUESDAY,
+    TM_WEDNESDAY,
+    TM_THURSDAY,
+    TM_FRIDAY,
+    TM_SATURDAY
 };
 
 enum {
-  TM_JANUARY,
-  TM_FEBRUARY,
-  TM_MARCH,
-  TM_APRIL,
-  TM_MAY,
-  TM_JUNE,
-  TM_JULY,
-  TM_AUGUST,
-  TM_SEPTEMBER,
-  TM_OCTOBER,
-  TM_NOVEMBER,
-  TM_DECEMBER
+    TM_JANUARY,
+    TM_FEBRUARY,
+    TM_MARCH,
+    TM_APRIL,
+    TM_MAY,
+    TM_JUNE,
+    TM_JULY,
+    TM_AUGUST,
+    TM_SEPTEMBER,
+    TM_OCTOBER,
+    TM_NOVEMBER,
+    TM_DECEMBER
 };
 
 enum {
-  TM_YEAR_BASE = 1900,
-  TM_WDAY_BASE = TM_MONDAY,
-  EPOCH_YEAR = 1970,
-  EPOCH_WDAY = TM_THURSDAY
+    TM_YEAR_BASE = 1900,
+    TM_WDAY_BASE = TM_MONDAY,
+    EPOCH_YEAR = 1970,
+    EPOCH_WDAY = TM_THURSDAY
 };
 
 #define isleap(y) (((y) % 4) == 0 && (((y) % 100) != 0 || ((y) % 400) == 0))
 
 /*
 ** Since everything in isleap is modulo 400 (or a factor of 400), we know that
-**	isleap(y) == isleap(y % 400)
+**  isleap(y) == isleap(y % 400)
 ** and so
-**	isleap(a + b) == isleap((a + b) % 400)
+**  isleap(a + b) == isleap((a + b) % 400)
 ** or
-**	isleap(a + b) == isleap(a % 400 + b % 400)
+**  isleap(a + b) == isleap(a % 400 + b % 400)
 ** This is true even if % means modulo rather than Fortran remainder
 ** (which is allowed by C89 but not by C99 or later).
 ** We use this to avoid addition overflow problems.
 */
 
-#define isleap_sum(a, b)	isleap((a) % 400 + (b) % 400)
+#define isleap_sum(a, b)    isleap((a) % 400 + (b) % 400)
 
 #endif /* !defined PRIVATE_H */

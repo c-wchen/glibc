@@ -28,28 +28,27 @@
 #include <single.h>
 #include <quad.h>
 
-float
-__faddl (_Float128 x, _Float128 y)
+float __faddl(_Float128 x, _Float128 y)
 {
-  FP_DECL_EX;
-  FP_DECL_Q (X);
-  FP_DECL_Q (Y);
-  FP_DECL_Q (R);
-  FP_DECL_S (RN);
-  float ret;
+    FP_DECL_EX;
+    FP_DECL_Q(X);
+    FP_DECL_Q(Y);
+    FP_DECL_Q(R);
+    FP_DECL_S(RN);
+    float ret;
 
-  FP_INIT_ROUNDMODE;
-  FP_UNPACK_SEMIRAW_Q (X, x);
-  FP_UNPACK_SEMIRAW_Q (Y, y);
-  FP_ADD_Q (R, X, Y);
+    FP_INIT_ROUNDMODE;
+    FP_UNPACK_SEMIRAW_Q(X, x);
+    FP_UNPACK_SEMIRAW_Q(Y, y);
+    FP_ADD_Q(R, X, Y);
 #if _FP_W_TYPE_SIZE < 64
-  FP_TRUNC (S, Q, 1, 4, RN, R);
+    FP_TRUNC(S, Q, 1, 4, RN, R);
 #else
-  FP_TRUNC (S, Q, 1, 2, RN, R);
+    FP_TRUNC(S, Q, 1, 2, RN, R);
 #endif
-  FP_PACK_SEMIRAW_S (ret, RN);
-  FP_HANDLE_EXCEPTIONS;
-  CHECK_NARROW_ADD (ret, x, y);
-  return ret;
+    FP_PACK_SEMIRAW_S(ret, RN);
+    FP_HANDLE_EXCEPTIONS;
+    CHECK_NARROW_ADD(ret, x, y);
+    return ret;
 }
-libm_alias_float_ldouble (add)
+libm_alias_float_ldouble(add)

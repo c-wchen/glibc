@@ -23,11 +23,10 @@
    file it maps.  Filesystem operations on a file being mapped are
    unpredictable before this is done.  */
 
-int
-msync (void *addr, size_t len, int flags)
+int msync(void *addr, size_t len, int flags)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (msync)
+stub_warning(msync)

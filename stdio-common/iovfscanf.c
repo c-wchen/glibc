@@ -25,14 +25,14 @@
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_29)
 
 int
-attribute_compat_text_section
-__IO_vfscanf (FILE *fp, const char *format, va_list ap, int *errp)
+attribute_compat_text_section __IO_vfscanf(FILE *fp, const char *format, va_list ap, int *errp)
 {
-  int rv = __vfscanf_internal (fp, format, ap, 0);
-  if (__glibc_unlikely (errp != NULL))
-    *errp = (rv == -1);
-  return rv;
+    int rv = __vfscanf_internal(fp, format, ap, 0);
+    if (__glibc_unlikely(errp != NULL)) {
+        *errp = (rv == -1);
+    }
+    return rv;
 }
-ldbl_compat_symbol (libc, __IO_vfscanf, _IO_vfscanf, GLIBC_2_0);
+ldbl_compat_symbol(libc, __IO_vfscanf, _IO_vfscanf, GLIBC_2_0);
 
 #endif

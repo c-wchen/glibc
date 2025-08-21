@@ -16,11 +16,11 @@
    <https://www.gnu.org/licenses/>.  */
 
 /*
- *	POSIX Standard: 9.2.2 User Database Access	<pwd.h>
+ *  POSIX Standard: 9.2.2 User Database Access  <pwd.h>
  */
 
-#ifndef	_PWD_H
-#define	_PWD_H	1
+#ifndef _PWD_H
+#define _PWD_H  1
 
 #include <features.h>
 
@@ -46,16 +46,15 @@ typedef __uid_t uid_t;
 #endif
 
 /* A record in the user database.  */
-struct passwd
-{
-  char *pw_name;		/* Username.  */
-  char *pw_passwd;		/* Hashed passphrase, if shadow database
+struct passwd {
+    char *pw_name;        /* Username.  */
+    char *pw_passwd;      /* Hashed passphrase, if shadow database
                                    not in use (see shadow.h).  */
-  __uid_t pw_uid;		/* User ID.  */
-  __gid_t pw_gid;		/* Group ID.  */
-  char *pw_gecos;		/* Real name.  */
-  char *pw_dir;			/* Home directory.  */
-  char *pw_shell;		/* Shell program.  */
+    __uid_t pw_uid;       /* User ID.  */
+    __gid_t pw_gid;       /* Group ID.  */
+    char *pw_gecos;       /* Real name.  */
+    char *pw_dir;         /* Home directory.  */
+    char *pw_shell;       /* Shell program.  */
 };
 
 
@@ -69,29 +68,29 @@ struct passwd
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern void setpwent (void);
+extern void setpwent(void);
 
 /* Close the user database stream.
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern void endpwent (void);
+extern void endpwent(void);
 
 /* Read an entry from the user database stream, opening it if necessary.
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern struct passwd *getpwent (void);
+extern struct passwd *getpwent(void);
 #endif
 
-#ifdef	__USE_MISC
+#ifdef  __USE_MISC
 /* Read a user database entry from STREAM.
 
    This function is not part of POSIX and therefore no official
    cancellation point.  But due to similarity with an POSIX interface
    or due to the implementation it is a cancellation point and
    therefore not marked with __THROW.  */
-extern struct passwd *fgetpwent (FILE *__stream) __nonnull ((1));
+extern struct passwd *fgetpwent(FILE *__stream) __nonnull((1));
 
 /* Write a given user database entry onto the given stream.
 
@@ -99,28 +98,28 @@ extern struct passwd *fgetpwent (FILE *__stream) __nonnull ((1));
    cancellation point.  But due to similarity with an POSIX interface
    or due to the implementation it is a cancellation point and
    therefore not marked with __THROW.  */
-extern int putpwent (const struct passwd *__restrict __p,
-		     FILE *__restrict __f);
+extern int putpwent(const struct passwd *__restrict __p,
+                    FILE *__restrict __f);
 #endif
 
 /* Retrieve the user database entry for the given user ID.
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern struct passwd *getpwuid (__uid_t __uid);
+extern struct passwd *getpwuid(__uid_t __uid);
 
 /* Retrieve the user database entry for the given username.
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern struct passwd *getpwnam (const char *__name) __nonnull ((1));
+extern struct passwd *getpwnam(const char *__name) __nonnull((1));
 
 #ifdef __USE_POSIX
 
 # ifdef __USE_MISC
 /* Reasonable value for the buffer sized used in the reentrant
    functions below.  But better use `sysconf'.  */
-#  define NSS_BUFLEN_PASSWD	1024
+#  define NSS_BUFLEN_PASSWD 1024
 # endif
 
 /* Reentrant versions of some of the functions above.
@@ -136,29 +135,29 @@ extern struct passwd *getpwnam (const char *__name) __nonnull ((1));
    cancellation point.  But due to similarity with an POSIX interface
    or due to the implementation it is a cancellation point and
    therefore not marked with __THROW.  */
-extern int getpwent_r (struct passwd *__restrict __resultbuf,
-		       char *__restrict __buffer, size_t __buflen,
-		       struct passwd **__restrict __result)
-    __nonnull ((1, 2, 4))
-    __attr_access ((__write_only__, 2, 3));
+extern int getpwent_r(struct passwd *__restrict __resultbuf,
+                      char *__restrict __buffer, size_t __buflen,
+                      struct passwd **__restrict __result)
+__nonnull((1, 2, 4))
+__attr_access((__write_only__, 2, 3));
 # endif
 
-extern int getpwuid_r (__uid_t __uid,
-		       struct passwd *__restrict __resultbuf,
-		       char *__restrict __buffer, size_t __buflen,
-		       struct passwd **__restrict __result)
-    __nonnull ((2, 3, 5))
-    __attr_access ((__write_only__, 3, 4));
+extern int getpwuid_r(__uid_t __uid,
+                      struct passwd *__restrict __resultbuf,
+                      char *__restrict __buffer, size_t __buflen,
+                      struct passwd **__restrict __result)
+__nonnull((2, 3, 5))
+__attr_access((__write_only__, 3, 4));
 
-extern int getpwnam_r (const char *__restrict __name,
-		       struct passwd *__restrict __resultbuf,
-		       char *__restrict __buffer, size_t __buflen,
-		       struct passwd **__restrict __result)
-    __nonnull ((1, 2, 3, 5))
-    __attr_access ((__write_only__, 3, 4));
+extern int getpwnam_r(const char *__restrict __name,
+                      struct passwd *__restrict __resultbuf,
+                      char *__restrict __buffer, size_t __buflen,
+                      struct passwd **__restrict __result)
+__nonnull((1, 2, 3, 5))
+__attr_access((__write_only__, 3, 4));
 
 
-# ifdef	__USE_MISC
+# ifdef __USE_MISC
 /* Read a user database entry from STREAM.  This function is not
    standardized and probably never will.
 
@@ -166,15 +165,15 @@ extern int getpwnam_r (const char *__restrict __name,
    cancellation point.  But due to similarity with an POSIX interface
    or due to the implementation it is a cancellation point and
    therefore not marked with __THROW.  */
-extern int fgetpwent_r (FILE *__restrict __stream,
-			struct passwd *__restrict __resultbuf,
-			char *__restrict __buffer, size_t __buflen,
-			struct passwd **__restrict __result)
-    __nonnull ((1, 2, 3, 5))
-    __attr_access ((__write_only__, 3, 4));
+extern int fgetpwent_r(FILE *__restrict __stream,
+                       struct passwd *__restrict __resultbuf,
+                       char *__restrict __buffer, size_t __buflen,
+                       struct passwd **__restrict __result)
+__nonnull((1, 2, 3, 5))
+__attr_access((__write_only__, 3, 4));
 # endif
 
-#endif	/* POSIX or reentrant */
+#endif  /* POSIX or reentrant */
 
 #ifdef __USE_GNU
 /* Write a traditional /etc/passwd line, based on the user database
@@ -185,7 +184,7 @@ extern int fgetpwent_r (FILE *__restrict __stream,
    cancellation point.  But due to similarity with an POSIX interface
    or due to the implementation it is a cancellation point and
    therefore not marked with __THROW.  */
-extern int getpw (__uid_t __uid, char *__buffer);
+extern int getpw(__uid_t __uid, char *__buffer);
 #endif
 
 __END_DECLS

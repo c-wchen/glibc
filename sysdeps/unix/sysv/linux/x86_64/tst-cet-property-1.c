@@ -24,21 +24,21 @@
    is enabled at run-time, which is checked by tst-cet-property-2 to
    verify that the IBT violation is caught on IBT machines.  */
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  unsigned int feature_1;
+    unsigned int feature_1;
 #ifdef __x86_64__
 # define SEG_REG "fs"
 #else
 # define SEG_REG "gs"
 #endif
-  asm ("movl %%" SEG_REG ":%P1, %0"
-       : "=r" (feature_1) : "i" (FEATURE_1_OFFSET));
-  if ((feature_1 & GNU_PROPERTY_X86_FEATURE_1_IBT) != 0)
-    printf ("IBT\n");
+    asm("movl %%" SEG_REG ":%P1, %0"
+        : "=r"(feature_1) : "i"(FEATURE_1_OFFSET));
+    if ((feature_1 & GNU_PROPERTY_X86_FEATURE_1_IBT) != 0) {
+        printf("IBT\n");
+    }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

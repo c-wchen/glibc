@@ -23,14 +23,14 @@
 # include <shlib-compat.h>
 # include "init-arch.h"
 
-extern __typeof (memcmp) __memcmp_ppc attribute_hidden;
-extern __typeof (memcmp) __memcmp_power7 attribute_hidden;
+extern __typeof(memcmp) __memcmp_ppc attribute_hidden;
+extern __typeof(memcmp) __memcmp_power7 attribute_hidden;
 # undef memcmp
 
 /* Avoid DWARF definition DIE on ifunc symbol so that GDB can handle
    ifunc symbol properly.  */
-libc_ifunc_redirected (__redirect_memcmp, memcmp,
-		       (hwcap & PPC_FEATURE_HAS_VSX)
-		       ? __memcmp_power7
-		       : __memcmp_ppc);
+libc_ifunc_redirected(__redirect_memcmp, memcmp,
+                      (hwcap &PPC_FEATURE_HAS_VSX)
+                      ? __memcmp_power7
+                      : __memcmp_ppc);
 #endif

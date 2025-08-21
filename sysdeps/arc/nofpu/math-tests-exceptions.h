@@ -20,8 +20,8 @@
 #define ARC_NOFPU_MATH_TESTS_EXCEPTIONS_H 1
 
 /* Soft-float does not support exceptions.  */
-#define EXCEPTION_TESTS_float		0
-#define EXCEPTION_TESTS_double		0
-#define EXCEPTION_TESTS_long_double	0
+#define EXCEPTION_TESTS_float       0
+#define EXCEPTION_TESTS_double      0
+#define EXCEPTION_TESTS_long_double 0
 
 #endif

@@ -22,36 +22,39 @@
 #include <math_private.h>
 #include <libm-alias-finite.h>
 
-static FLOAT
-__attribute__ ((noinline))
-invalid_fn (FLOAT x, FLOAT fn)
+static FLOAT __attribute__((noinline))
+invalid_fn(FLOAT x, FLOAT fn)
 {
-  if (M_SUF (rint) (fn) != fn)
-    return (fn - fn) / (fn - fn);
-  else if (fn > M_LIT (65000.0))
-    return M_SUF (__scalbn) (x, 65000);
-  else
-    return M_SUF (__scalbn) (x,-65000);
+    if (M_SUF(rint)(fn) != fn) {
+        return (fn - fn) / (fn - fn);
+    } else if (fn > M_LIT(65000.0)) {
+        return M_SUF(__scalbn)(x, 65000);
+    } else {
+        return M_SUF(__scalbn)(x, -65000);
+    }
 }
 
 
 FLOAT
-M_DECL_FUNC (__ieee754_scalb) (FLOAT x, FLOAT fn)
+M_DECL_FUNC(__ieee754_scalb)(FLOAT x, FLOAT fn)
 {
-  if (__glibc_unlikely (isnan (x)))
-    return x * fn;
-  if (__glibc_unlikely (!isfinite (fn)))
-    {
-      if (isnan (fn) || fn > M_LIT (0.0))
-	return x * fn;
-      if (x == M_LIT (0.0))
-	return x;
-      return x / -fn;
+    if (__glibc_unlikely(isnan(x))) {
+        return x * fn;
     }
-  if (__glibc_unlikely (M_FABS (fn) >= M_LIT (0x1p31)
-			|| (FLOAT) (int) fn != fn))
-    return invalid_fn (x, fn);
+    if (__glibc_unlikely(!isfinite(fn))) {
+        if (isnan(fn) || fn > M_LIT(0.0)) {
+            return x * fn;
+        }
+        if (x == M_LIT(0.0)) {
+            return x;
+        }
+        return x / -fn;
+    }
+    if (__glibc_unlikely(M_FABS(fn) >= M_LIT(0x1p31)
+                         || (FLOAT)(int) fn != fn)) {
+        return invalid_fn(x, fn);
+    }
 
-  return M_SCALBN (x, (int) fn);
+    return M_SCALBN(x, (int) fn);
 }
-declare_mgen_finite_alias (__ieee754_scalb, __scalb)
+declare_mgen_finite_alias(__ieee754_scalb, __scalb)

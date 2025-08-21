@@ -23,6 +23,6 @@
 # define __pthread_atfork __dyn_pthread_atfork
 # include "pthread_atfork.c"
 # undef __pthread_atfork
-compat_symbol (libpthread, __dyn_pthread_atfork, pthread_atfork,
-	       PTHREAD_ATFORK_COMPAT_INTRODUCED);
+compat_symbol(libpthread, __dyn_pthread_atfork, pthread_atfork,
+              PTHREAD_ATFORK_COMPAT_INTRODUCED);
 #endif

@@ -19,12 +19,12 @@
 #include <memcopy.h>
 
 
-char *
-__strncpy_chk (char *s1, const char *s2, size_t n, size_t s1len)
+char *__strncpy_chk(char *s1, const char *s2, size_t n, size_t s1len)
 {
-  if (__builtin_expect (s1len < n, 0))
-    __chk_fail ();
+    if (__builtin_expect(s1len < n, 0)) {
+        __chk_fail();
+    }
 
-  return strncpy (s1, s2, n);
+    return strncpy(s1, s2, n);
 }
-libc_hidden_builtin_def (__strncpy_chk)
+libc_hidden_builtin_def(__strncpy_chk)

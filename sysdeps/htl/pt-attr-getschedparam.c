@@ -23,16 +23,15 @@
 
 #include <pt-internal.h>
 
-int
-__pthread_attr_getschedparam (const pthread_attr_t *attr,
-			      struct sched_param *param)
+int __pthread_attr_getschedparam(const pthread_attr_t *attr,
+                                 struct sched_param *param)
 {
-  param->sched_priority = attr->__schedparam.__sched_priority;
-  return 0;
+    param->sched_priority = attr->__schedparam.__sched_priority;
+    return 0;
 }
 
-versioned_symbol (libc, __pthread_attr_getschedparam, pthread_attr_getschedparam, GLIBC_2_21);
+versioned_symbol(libc, __pthread_attr_getschedparam, pthread_attr_getschedparam, GLIBC_2_21);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_21)
-compat_symbol (libc, __pthread_attr_getschedparam, pthread_attr_getschedparam, GLIBC_2_12);
+compat_symbol(libc, __pthread_attr_getschedparam, pthread_attr_getschedparam, GLIBC_2_12);
 #endif

@@ -33,65 +33,68 @@ static mtx_t mutex;
 static unsigned int waiting_threads;
 
 /* Code executed by each thread.  */
-static int
-child_wait (void* data)
+static int child_wait(void *data)
 {
-  /* Wait until parent thread sends broadcast here.  */
-  mtx_lock (&mutex);
-  ++waiting_threads;
-  cnd_wait (&cond, &mutex);
-  mtx_unlock (&mutex);
+    /* Wait until parent thread sends broadcast here.  */
+    mtx_lock(&mutex);
+    ++waiting_threads;
+    cnd_wait(&cond, &mutex);
+    mtx_unlock(&mutex);
 
-  thrd_exit (thrd_success);
+    thrd_exit(thrd_success);
 }
 
 #define N 5
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  thrd_t ids[N];
-  unsigned char i;
+    thrd_t ids[N];
+    unsigned char i;
 
-  if (cnd_init (&cond) != thrd_success)
-    FAIL_EXIT1 ("cnd_init failed");
-  if (mtx_init (&mutex, mtx_plain) != thrd_success)
-    FAIL_EXIT1 ("mtx_init failed");
-
-  /* Create N new threads.  */
-  for (i = 0; i < N; ++i)
-    {
-      if (thrd_create (&ids[i], child_wait, NULL) != thrd_success)
-	FAIL_EXIT1 ("thrd_create failed");
+    if (cnd_init(&cond) != thrd_success) {
+        FAIL_EXIT1("cnd_init failed");
+    }
+    if (mtx_init(&mutex, mtx_plain) != thrd_success) {
+        FAIL_EXIT1("mtx_init failed");
     }
 
-  /* Wait for other threads to reach their wait func.  */
-  while (true)
-    {
-      mtx_lock (&mutex);
-      TEST_VERIFY (waiting_threads <= N);
-      bool done_waiting = waiting_threads == N;
-      mtx_unlock (&mutex);
-      if (done_waiting)
-	break;
-      thrd_sleep (&((struct timespec){.tv_nsec = 100 * 1000 * 1000}), NULL);
+    /* Create N new threads.  */
+    for (i = 0; i < N; ++i) {
+        if (thrd_create(&ids[i], child_wait, NULL) != thrd_success) {
+            FAIL_EXIT1("thrd_create failed");
+        }
     }
 
-  mtx_lock (&mutex);
-  if (cnd_broadcast (&cond) != thrd_success)
-    FAIL_EXIT1 ("cnd_broadcast failed");
-  mtx_unlock (&mutex);
-
-  for (i = 0; i < N; ++i)
-    {
-      if (thrd_join (ids[i], NULL) != thrd_success)
-	FAIL_EXIT1 ("thrd_join failed");
+    /* Wait for other threads to reach their wait func.  */
+    while (true) {
+        mtx_lock(&mutex);
+        TEST_VERIFY(waiting_threads <= N);
+        bool done_waiting = waiting_threads == N;
+        mtx_unlock(&mutex);
+        if (done_waiting) {
+            break;
+        }
+        thrd_sleep(&((struct timespec) {
+            .tv_nsec = 100 * 1000 * 1000
+        }), NULL);
     }
 
-  mtx_destroy (&mutex);
-  cnd_destroy (&cond);
+    mtx_lock(&mutex);
+    if (cnd_broadcast(&cond) != thrd_success) {
+        FAIL_EXIT1("cnd_broadcast failed");
+    }
+    mtx_unlock(&mutex);
 
-  return 0;
+    for (i = 0; i < N; ++i) {
+        if (thrd_join(ids[i], NULL) != thrd_success) {
+            FAIL_EXIT1("thrd_join failed");
+        }
+    }
+
+    mtx_destroy(&mutex);
+    cnd_destroy(&cond);
+
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -21,27 +21,26 @@
 
 /* Write formatted output from FORMAT to a string which is
    allocated with malloc and stored in *STRING_PTR.  */
-int
-___asprintf_chk (char **result_ptr, int flag, const char *format, ...)
+int ___asprintf_chk(char **result_ptr, int flag, const char *format, ...)
 {
-  /* For flag > 0 (i.e. __USE_FORTIFY_LEVEL > 1) request that %n
-     can only come from read-only format strings.  */
-  unsigned int mode = (flag > 0) ? PRINTF_FORTIFY : 0;
-  va_list ap;
-  int ret;
+    /* For flag > 0 (i.e. __USE_FORTIFY_LEVEL > 1) request that %n
+       can only come from read-only format strings.  */
+    unsigned int mode = (flag > 0) ? PRINTF_FORTIFY : 0;
+    va_list ap;
+    int ret;
 
-  va_start (ap, format);
-  ret = __vasprintf_internal (result_ptr, format, ap, mode);
-  va_end (ap);
+    va_start(ap, format);
+    ret = __vasprintf_internal(result_ptr, format, ap, mode);
+    va_end(ap);
 
-  return ret;
+    return ret;
 }
 #if defined __LDBL_COMPAT || __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
 /* This is needed since <bits/stdio-lbdl.h> is included in this case, leading to
  * multiple asm redirection of the same symbol
  */
-ldbl_hidden_def (___asprintf_chk, __asprintf_chk)
-ldbl_strong_alias (___asprintf_chk, __asprintf_chk)
+ldbl_hidden_def(___asprintf_chk, __asprintf_chk)
+ldbl_strong_alias(___asprintf_chk, __asprintf_chk)
 #else
 /* On some systems introduction of ldbl_* macros lead to ABI breakage due to the
  * long_double_symbol aliasing, e.g. on s390x:
@@ -49,6 +48,6 @@ ldbl_strong_alias (___asprintf_chk, __asprintf_chk)
  * `__asprintf_chk'
  * Due to __asprintf_chk@@GLIBC_2.4 alias replacing __asprintf_chk.
  */
-strong_alias (___asprintf_chk, __asprintf_chk)
-libc_hidden_def (__asprintf_chk)
+strong_alias(___asprintf_chk, __asprintf_chk)
+libc_hidden_def(__asprintf_chk)
 #endif

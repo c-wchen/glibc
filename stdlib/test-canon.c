@@ -30,219 +30,210 @@
 #include <support/xunistd.h>
 
 /* Prototype for our test function.  */
-extern int do_test (int argc, char *argv[]);
+extern int do_test(int argc, char *argv[]);
 #include <test-skeleton.c>
 
 #ifndef PATH_MAX
 # define PATH_MAX 4096
 #endif
-static char	cwd[PATH_MAX];
-static size_t	cwd_len;
+static char cwd[PATH_MAX];
+static size_t   cwd_len;
 
 struct {
-  const char *	name;
-  const char *	value;
+    const char   *name;
+    const char   *value;
 } symlinks[] = {
-  {"SYMLINK_LOOP",	"SYMLINK_LOOP"},
-  {"SYMLINK_1",		"."},
-  {"SYMLINK_2",		"//////./../../etc"},
-  {"SYMLINK_3",		"SYMLINK_1"},
-  {"SYMLINK_4",		"SYMLINK_2"},
-  {"SYMLINK_5",		"doesNotExist"},
+    {"SYMLINK_LOOP",  "SYMLINK_LOOP"},
+    {"SYMLINK_1",     "."},
+    {"SYMLINK_2",     "//////./../../etc"},
+    {"SYMLINK_3",     "SYMLINK_1"},
+    {"SYMLINK_4",     "SYMLINK_2"},
+    {"SYMLINK_5",     "doesNotExist"},
 };
 
 struct {
-  const char * in, * out, * resolved;
-  int error;
+    const char *in, * out, * resolved;
+    int error;
 } tests[] = {
-  /*  0 */
-  {"/",					"/"},
-  {"/////////////////////////////////",	"/"},
-  {"/.././.././.././..///",		"/"},
-  {"/etc",				"/etc"},
-  {"/etc/../etc",			"/etc"},
-  /*  5 */
-  {"/doesNotExist/../etc",		0, "/doesNotExist", ENOENT},
-  {"./././././././././.",		"."},
-  {"/etc/.//doesNotExist",		0, "/etc/doesNotExist", ENOENT},
-  {"./doesExist",			"./doesExist"},
-  {"./doesExist/",			"./doesExist"},
-  /* 10 */
-  {"./doesExist/../doesExist",		"./doesExist"},
-  {"foobar",				0, "./foobar", ENOENT},
-  {".",					"."},
-  {"./foobar",				0, "./foobar", ENOENT},
-  {"SYMLINK_LOOP",			0, "./SYMLINK_LOOP", ELOOP},
-  /* 15 */
-  {"./SYMLINK_LOOP",			0, "./SYMLINK_LOOP", ELOOP},
-  {"SYMLINK_1",				"."},
-  {"SYMLINK_1/foobar",			0, "./foobar", ENOENT},
-  {"SYMLINK_2",				"/etc"},
-  {"SYMLINK_3",				"."},
-  /* 20 */
-  {"SYMLINK_4",				"/etc"},
-  {"../stdlib/SYMLINK_1",		"."},
-  {"../stdlib/SYMLINK_2",		"/etc"},
-  {"../stdlib/SYMLINK_3",		"."},
-  {"../stdlib/SYMLINK_4",		"/etc"},
-  /* 25 */
-  {"./SYMLINK_5",			0, "./doesNotExist", ENOENT},
-  {"SYMLINK_5",				0, "./doesNotExist", ENOENT},
-  {"SYMLINK_5/foobar",			0, "./doesNotExist", ENOENT},
-  {"doesExist/../../stdlib/doesExist",	"./doesExist"},
-  {"doesExist/.././../stdlib/.",	"."},
-  /* 30 */
-  {"./doesExist/someFile/",		0, "./doesExist/someFile", ENOTDIR},
-  {"./doesExist/someFile/..",		0, "./doesExist/someFile", ENOTDIR},
+    /*  0 */
+    {"/",                 "/"},
+    {"/////////////////////////////////", "/"},
+    {"/.././.././.././..///",     "/"},
+    {"/etc",              "/etc"},
+    {"/etc/../etc",           "/etc"},
+    /*  5 */
+    {"/doesNotExist/../etc",      0, "/doesNotExist", ENOENT},
+    {"./././././././././.",       "."},
+    {"/etc/.//doesNotExist",      0, "/etc/doesNotExist", ENOENT},
+    {"./doesExist",           "./doesExist"},
+    {"./doesExist/",          "./doesExist"},
+    /* 10 */
+    {"./doesExist/../doesExist",      "./doesExist"},
+    {"foobar",                0, "./foobar", ENOENT},
+    {".",                 "."},
+    {"./foobar",              0, "./foobar", ENOENT},
+    {"SYMLINK_LOOP",          0, "./SYMLINK_LOOP", ELOOP},
+    /* 15 */
+    {"./SYMLINK_LOOP",            0, "./SYMLINK_LOOP", ELOOP},
+    {"SYMLINK_1",             "."},
+    {"SYMLINK_1/foobar",          0, "./foobar", ENOENT},
+    {"SYMLINK_2",             "/etc"},
+    {"SYMLINK_3",             "."},
+    /* 20 */
+    {"SYMLINK_4",             "/etc"},
+    {"../stdlib/SYMLINK_1",       "."},
+    {"../stdlib/SYMLINK_2",       "/etc"},
+    {"../stdlib/SYMLINK_3",       "."},
+    {"../stdlib/SYMLINK_4",       "/etc"},
+    /* 25 */
+    {"./SYMLINK_5",           0, "./doesNotExist", ENOENT},
+    {"SYMLINK_5",             0, "./doesNotExist", ENOENT},
+    {"SYMLINK_5/foobar",          0, "./doesNotExist", ENOENT},
+    {"doesExist/../../stdlib/doesExist",  "./doesExist"},
+    {"doesExist/.././../stdlib/.",    "."},
+    /* 30 */
+    {"./doesExist/someFile/",     0, "./doesExist/someFile", ENOTDIR},
+    {"./doesExist/someFile/..",       0, "./doesExist/someFile", ENOTDIR},
 };
 
 
-static int
-check_path (const char * result, const char * expected)
+static int check_path(const char *result, const char *expected)
 {
-  int good;
+    int good;
 
-  if (!result)
-    return (expected == NULL);
+    if (!result) {
+        return (expected == NULL);
+    }
 
-  if (!expected)
-    return 0;
+    if (!expected) {
+        return 0;
+    }
 
-  if (expected[0] == '.' && (expected[1] == '/' || expected[1] == '\0'))
-    good = (strncmp (result, cwd, cwd_len) == 0
-	    && strcmp (result + cwd_len, expected + 1) == 0);
-  else
-    good = (strcmp (expected, result) == 0);
+    if (expected[0] == '.' && (expected[1] == '/' || expected[1] == '\0'))
+        good = (strncmp(result, cwd, cwd_len) == 0
+                && strcmp(result + cwd_len, expected + 1) == 0);
+    else {
+        good = (strcmp(expected, result) == 0);
+    }
 
-  return good;
+    return good;
 }
 
 
-int
-do_test (int argc, char ** argv)
+int do_test(int argc, char **argv)
 {
-  char * result;
-  int i, errors = 0;
-  char buf[PATH_MAX];
+    char *result;
+    int i, errors = 0;
+    char buf[PATH_MAX];
 
-  if (getcwd (cwd, sizeof (buf)))
-    cwd_len = strlen (cwd);
-  else
-    {
-      printf ("%s: current working directory couldn't be retrieved\n", argv[0]);
-      ++errors;
+    if (getcwd(cwd, sizeof(buf))) {
+        cwd_len = strlen(cwd);
+    } else {
+        printf("%s: current working directory couldn't be retrieved\n", argv[0]);
+        ++errors;
     }
 
-  errno = 0;
-  if (realpath (NULL, buf) != NULL || errno != EINVAL)
-    {
-      printf ("%s: expected return value NULL and errno set to EINVAL"
-	      " for realpath(NULL,...)\n", argv[0]);
-      ++errors;
+    errno = 0;
+    if (realpath(NULL, buf) != NULL || errno != EINVAL) {
+        printf("%s: expected return value NULL and errno set to EINVAL"
+               " for realpath(NULL,...)\n", argv[0]);
+        ++errors;
     }
 
 #if 0
-  /* This is now allowed.  The test is invalid.  */
-  errno = 0;
-  if (realpath ("/", NULL) != NULL || errno != EINVAL)
-    {
-      printf ("%s: expected return value NULL and errno set to EINVAL"
-	      " for realpath(...,NULL)\n", argv[0]);
-      ++errors;
+    /* This is now allowed.  The test is invalid.  */
+    errno = 0;
+    if (realpath("/", NULL) != NULL || errno != EINVAL) {
+        printf("%s: expected return value NULL and errno set to EINVAL"
+               " for realpath(...,NULL)\n", argv[0]);
+        ++errors;
     }
 #endif
 
-  errno = 0;
-  if (realpath ("", buf) != NULL || errno != ENOENT)
-    {
-      printf ("%s: expected return value NULL and set errno to ENOENT"
-	      " for realpath(\"\",...)\n", argv[0]);
-      ++errors;
+    errno = 0;
+    if (realpath("", buf) != NULL || errno != ENOENT) {
+        printf("%s: expected return value NULL and set errno to ENOENT"
+               " for realpath(\"\",...)\n", argv[0]);
+        ++errors;
     }
 
-  for (i = 0; i < (int) (sizeof (symlinks) / sizeof (symlinks[0])); ++i)
-    xsymlink (symlinks[i].value, symlinks[i].name);
+    for (i = 0; i < (int)(sizeof(symlinks) / sizeof(symlinks[0])); ++i) {
+        xsymlink(symlinks[i].value, symlinks[i].name);
+    }
 
-  int has_dir = mkdir ("doesExist", 0777) == 0;
+    int has_dir = mkdir("doesExist", 0777) == 0;
 
-  int fd = has_dir ? creat ("doesExist/someFile", 0777) : -1;
+    int fd = has_dir ? creat("doesExist/someFile", 0777) : -1;
 
-  for (i = 0; i < (int) (sizeof (tests) / sizeof (tests[0])); ++i)
-    {
-      buf[0] = '\0';
-      result = realpath (tests[i].in, buf);
+    for (i = 0; i < (int)(sizeof(tests) / sizeof(tests[0])); ++i) {
+        buf[0] = '\0';
+        result = realpath(tests[i].in, buf);
 
-      if (!check_path (result, tests[i].out))
-	{
-	  printf ("%s: flunked test %d (expected `%s', got `%s')\n",
-		  argv[0], i, tests[i].out ? tests[i].out : "NULL",
-		  result ? result : "NULL");
-	  ++errors;
-	  continue;
-	}
+        if (!check_path(result, tests[i].out)) {
+            printf("%s: flunked test %d (expected `%s', got `%s')\n",
+                   argv[0], i, tests[i].out ? tests[i].out : "NULL",
+                   result ? result : "NULL");
+            ++errors;
+            continue;
+        }
 
-      /* Verify buf contents if the call succeeded or failed with ENOENT.  */
-      if ((result != NULL || errno == ENOENT)
-	  && !check_path (buf, tests[i].out ? tests[i].out : tests[i].resolved))
-	{
-	  printf ("%s: flunked test %d (expected resolved `%s', got `%s')\n",
-		  argv[0], i, tests[i].out ? tests[i].out : tests[i].resolved,
-		  buf);
-	  ++errors;
-	  continue;
-	}
+        /* Verify buf contents if the call succeeded or failed with ENOENT.  */
+        if ((result != NULL || errno == ENOENT)
+            && !check_path(buf, tests[i].out ? tests[i].out : tests[i].resolved)) {
+            printf("%s: flunked test %d (expected resolved `%s', got `%s')\n",
+                   argv[0], i, tests[i].out ? tests[i].out : tests[i].resolved,
+                   buf);
+            ++errors;
+            continue;
+        }
 
-      if (!tests[i].out && errno != tests[i].error)
-	{
-	  printf ("%s: flunked test %d (expected errno %d, got %d)\n",
-		  argv[0], i, tests[i].error, errno);
-	  ++errors;
-	  continue;
-	}
+        if (!tests[i].out && errno != tests[i].error) {
+            printf("%s: flunked test %d (expected errno %d, got %d)\n",
+                   argv[0], i, tests[i].error, errno);
+            ++errors;
+            continue;
+        }
 
-      char *result2 = realpath (tests[i].in, NULL);
-      if ((result2 == NULL && result != NULL)
-	  || (result2 != NULL && strcmp (result, result2) != 0))
-	{
-	  printf ("\
+        char *result2 = realpath(tests[i].in, NULL);
+        if ((result2 == NULL && result != NULL)
+            || (result2 != NULL && strcmp(result, result2) != 0)) {
+            printf("\
 %s: realpath(..., NULL) produced different result than realpath(..., buf): '%s' vs '%s'\n",
-		  argv[0], result2, result);
-	  ++errors;
-	}
-      free (result2);
+                   argv[0], result2, result);
+            ++errors;
+        }
+        free(result2);
     }
 
-  if (!getcwd (buf, sizeof (buf)))
-    {
-      printf ("%s: current working directory couldn't be retrieved\n", argv[0]);
-      ++errors;
+    if (!getcwd(buf, sizeof(buf))) {
+        printf("%s: current working directory couldn't be retrieved\n", argv[0]);
+        ++errors;
     }
 
-  if (strcmp (buf, cwd))
-    {
-      printf ("%s: current working directory changed from %s to %s\n",
-	      argv[0], cwd, buf);
-      ++errors;
+    if (strcmp(buf, cwd)) {
+        printf("%s: current working directory changed from %s to %s\n",
+               argv[0], cwd, buf);
+        ++errors;
     }
 
-  if (fd >= 0)
-    {
-      close (fd);
-      unlink ("doesExist/someFile");
+    if (fd >= 0) {
+        close(fd);
+        unlink("doesExist/someFile");
     }
 
-  if (has_dir)
-    rmdir ("doesExist");
-
-  for (i = 0; i < (int) (sizeof (symlinks) / sizeof (symlinks[0])); ++i)
-    unlink (symlinks[i].name);
-
-  if (errors != 0)
-    {
-      printf ("%d errors.\n", errors);
-      return EXIT_FAILURE;
+    if (has_dir) {
+        rmdir("doesExist");
     }
 
-  puts ("No errors.");
-  return EXIT_SUCCESS;
+    for (i = 0; i < (int)(sizeof(symlinks) / sizeof(symlinks[0])); ++i) {
+        unlink(symlinks[i].name);
+    }
+
+    if (errors != 0) {
+        printf("%d errors.\n", errors);
+        return EXIT_FAILURE;
+    }
+
+    puts("No errors.");
+    return EXIT_SUCCESS;
 }

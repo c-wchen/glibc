@@ -24,21 +24,20 @@
 
 static char tz[] = "TZ=/";
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  struct support_next_to_fault ntf
-    = support_next_to_fault_allocate (sizeof (tz));
-  memcpy (ntf.buffer, tz, sizeof (tz));
-  putenv (ntf.buffer);
+    struct support_next_to_fault ntf
+        = support_next_to_fault_allocate(sizeof(tz));
+    memcpy(ntf.buffer, tz, sizeof(tz));
+    putenv(ntf.buffer);
 
-  tzset ();
+    tzset();
 
-  /* Avoid dangling pointer in environ.  */
-  putenv (tz);
-  support_next_to_fault_free (&ntf);
+    /* Avoid dangling pointer in environ.  */
+    putenv(tz);
+    support_next_to_fault_free(&ntf);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

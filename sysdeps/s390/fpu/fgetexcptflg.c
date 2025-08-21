@@ -18,11 +18,10 @@
 
 #include <fenv_private.h>
 
-int
-fegetexceptflag (fexcept_t *flagp, int excepts)
+int fegetexceptflag(fexcept_t *flagp, int excepts)
 {
-  *flagp = libc_fetestexcept_s390 (excepts);
+    *flagp = libc_fetestexcept_s390(excepts);
 
-  /* Success.  */
-  return 0;
+    /* Success.  */
+    return 0;
 }

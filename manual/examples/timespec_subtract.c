@@ -20,17 +20,16 @@
 /* Put into *R the difference between X and Y.
    Return true if overflow occurs, false otherwise.  */
 
-bool
-timespec_subtract (struct timespec *r,
-                   struct timespec x, struct timespec y)
+bool timespec_subtract(struct timespec *r,
+                       struct timespec x, struct timespec y)
 {
-  /* Compute nanoseconds, setting @var{borrow} to 1 or 0
-     for propagation into seconds.  */
-  long int nsec_diff = x.tv_nsec - y.tv_nsec;
-  bool borrow = nsec_diff < 0;
-  r->tv_nsec = nsec_diff + 1000000000 * borrow;
+    /* Compute nanoseconds, setting @var{borrow} to 1 or 0
+       for propagation into seconds.  */
+    long int nsec_diff = x.tv_nsec - y.tv_nsec;
+    bool borrow = nsec_diff < 0;
+    r->tv_nsec = nsec_diff + 1000000000 * borrow;
 
-  /* Compute seconds, returning true if this overflows.  */
-  bool v = ckd_sub (&r->tv_sec, x.tv_sec, y.tv_sec);
-  return v ^ ckd_sub (&r->tv_sec, r->tv_sec, borrow);
+    /* Compute seconds, returning true if this overflows.  */
+    bool v = ckd_sub(&r->tv_sec, x.tv_sec, y.tv_sec);
+    return v ^ ckd_sub(&r->tv_sec, r->tv_sec, borrow);
 }

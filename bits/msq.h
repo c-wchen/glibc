@@ -22,7 +22,7 @@
 #include <bits/types.h>
 
 /* Define options for message queue functions.  */
-#define MSG_NOERROR	010000	/* no error if message is too big */
+#define MSG_NOERROR 010000  /* no error if message is too big */
 
 /* Types used in the structure definition.  */
 typedef unsigned short int msgqnum_t;
@@ -31,14 +31,13 @@ typedef unsigned short int msglen_t;
 
 /* Structure of record for one message inside the kernel.
    The type `struct __msg' is opaque.  */
-struct msqid_ds
-{
-  struct ipc_perm msg_perm;	/* structure describing operation permission */
-  __time_t msg_stime;		/* time of last msgsnd command */
-  __time_t msg_rtime;		/* time of last msgrcv command */
-  __time_t msg_ctime;		/* time of last change */
-  msgqnum_t msg_qnum;		/* number of messages currently on queue */
-  msglen_t msg_qbytes;		/* max number of bytes allowed on queue */
-  __pid_t msg_lspid;		/* pid of last msgsnd() */
-  __pid_t msg_lrpid;		/* pid of last msgrcv() */
+struct msqid_ds {
+    struct ipc_perm msg_perm; /* structure describing operation permission */
+    __time_t msg_stime;       /* time of last msgsnd command */
+    __time_t msg_rtime;       /* time of last msgrcv command */
+    __time_t msg_ctime;       /* time of last change */
+    msgqnum_t msg_qnum;       /* number of messages currently on queue */
+    msglen_t msg_qbytes;      /* max number of bytes allowed on queue */
+    __pid_t msg_lspid;        /* pid of last msgsnd() */
+    __pid_t msg_lrpid;        /* pid of last msgrcv() */
 };

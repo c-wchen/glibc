@@ -21,8 +21,7 @@
 
 #include <bits/types.h>
 
-struct statfs
-  {
+struct statfs {
     __fsword_t f_type;
     __fsword_t f_bsize;
 #ifndef __USE_FILE_OFFSET64
@@ -43,11 +42,10 @@ struct statfs
     __fsword_t f_frsize;
     __fsword_t f_flags;
     __fsword_t f_spare[4];
-  };
+};
 
 #ifdef __USE_LARGEFILE64
-struct statfs64
-  {
+struct statfs64 {
     __fsword_t f_type;
     __fsword_t f_bsize;
     __fsblkcnt64_t f_blocks;
@@ -60,7 +58,7 @@ struct statfs64
     __fsword_t f_frsize;
     __fsword_t f_flags;
     __fsword_t f_spare[4];
-  };
+};
 #endif
 
 /* Tell code we have these members.  */

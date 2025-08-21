@@ -21,39 +21,34 @@
 #include <stdio.h>
 #include <unistd.h>
 
-int
-main (void)
+int main(void)
 {
-  int fd[2];
-  FILE *f;
+    int fd[2];
+    FILE *f;
 
-  /* Get a stream that cannot seek.  */
+    /* Get a stream that cannot seek.  */
 
-  if (pipe (fd))
-    {
-      perror ("pipe");
-      return 1;
+    if (pipe(fd)) {
+        perror("pipe");
+        return 1;
     }
-  f = fdopen (fd[1], "w");
-  if (f == NULL)
-    {
-      perror ("fdopen");
-      return 1;
+    f = fdopen(fd[1], "w");
+    if (f == NULL) {
+        perror("fdopen");
+        return 1;
     }
 
-  errno = 0;
-  if (fputs ("fnord", f) == EOF)
-    {
-      perror ("fputs");
-      return 1;
+    errno = 0;
+    if (fputs("fnord", f) == EOF) {
+        perror("fputs");
+        return 1;
     }
 
-  if (errno)
-    {
-      perror ("errno gratuitously set -- TEST FAILED");
-      return 1;
+    if (errno) {
+        perror("errno gratuitously set -- TEST FAILED");
+        return 1;
     }
 
-  puts ("Test succeeded.");
-  return 0;
+    puts("Test succeeded.");
+    return 0;
 }

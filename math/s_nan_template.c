@@ -24,9 +24,9 @@
 
 
 FLOAT
-M_DECL_FUNC (__nan) (const char *tagp)
+M_DECL_FUNC(__nan)(const char *tagp)
 {
-  return M_STRTO_NAN (tagp, NULL, 0);
+    return M_STRTO_NAN(tagp, NULL, 0);
 }
 
-declare_mgen_alias (__nan, nan)
+declare_mgen_alias(__nan, nan)

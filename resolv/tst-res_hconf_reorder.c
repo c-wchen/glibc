@@ -35,78 +35,72 @@ static struct timespec ts;
    This is achieved by slowing down realloc(3) that is called several times
    by _res_hconf_reorder_addrs().  */
 
-void *
-realloc (void *ptr, size_t len)
+void *realloc(void *ptr, size_t len)
 {
-  static void *(*fun) (void *, size_t);
+    static void *(*fun)(void *, size_t);
 
-  if (!fun)
-    fun = dlsym (RTLD_NEXT, "realloc");
-
-  if (ts.tv_nsec)
-    nanosleep (&ts, NULL);
-
-  return (*fun) (ptr, len);
-}
-
-static void *
-resolve (void *arg)
-{
-  struct in_addr addr;
-  struct hostent ent;
-  struct hostent *result;
-  int err;
-  char buf[1024];
-
-  addr.s_addr = htonl (INADDR_LOOPBACK);
-  (void) gethostbyaddr_r ((void *) &addr, sizeof (addr), AF_INET,
-		          &ent, buf, sizeof (buf), &result, &err);
-  return arg;
-}
-
-static int
-do_test (void)
-{
-  #define N 3
-  pthread_t thr[N];
-  unsigned int i;
-  int result = 0;
-
-  /* turn on realloc slowdown */
-  ts.tv_nsec = 100000000;
-
-  for (i = 0; i < N; ++i)
-    {
-      int rc = pthread_create (&thr[i], NULL, resolve, NULL);
-
-      if (rc)
-	{
-	  printf ("pthread_create: %s\n", strerror(rc));
-	  exit (1);
-	}
+    if (!fun) {
+        fun = dlsym(RTLD_NEXT, "realloc");
     }
 
-  for (i = 0; i < N; ++i)
-    {
-      void *retval;
-      int rc = pthread_join (thr[i], &retval);
-
-      if (rc)
-	{
-	  printf ("pthread_join: %s\n", strerror(rc));
-	  exit (1);
-	}
-      if (retval)
-	{
-	  printf ("thread %u exit status %p\n", i, retval);
-	  result = 1;
-	}
+    if (ts.tv_nsec) {
+        nanosleep(&ts, NULL);
     }
 
-  /* turn off realloc slowdown, no longer needed */
-  ts.tv_nsec = 0;
+    return (*fun)(ptr, len);
+}
 
-  return result;
+static void *resolve(void *arg)
+{
+    struct in_addr addr;
+    struct hostent ent;
+    struct hostent *result;
+    int err;
+    char buf[1024];
+
+    addr.s_addr = htonl(INADDR_LOOPBACK);
+    (void) gethostbyaddr_r((void *) &addr, sizeof(addr), AF_INET,
+                           &ent, buf, sizeof(buf), &result, &err);
+    return arg;
+}
+
+static int do_test(void)
+{
+#define N 3
+    pthread_t thr[N];
+    unsigned int i;
+    int result = 0;
+
+    /* turn on realloc slowdown */
+    ts.tv_nsec = 100000000;
+
+    for (i = 0; i < N; ++i) {
+        int rc = pthread_create(&thr[i], NULL, resolve, NULL);
+
+        if (rc) {
+            printf("pthread_create: %s\n", strerror(rc));
+            exit(1);
+        }
+    }
+
+    for (i = 0; i < N; ++i) {
+        void *retval;
+        int rc = pthread_join(thr[i], &retval);
+
+        if (rc) {
+            printf("pthread_join: %s\n", strerror(rc));
+            exit(1);
+        }
+        if (retval) {
+            printf("thread %u exit status %p\n", i, retval);
+            result = 1;
+        }
+    }
+
+    /* turn off realloc slowdown, no longer needed */
+    ts.tv_nsec = 0;
+
+    return result;
 }
 
 #define TEST_FUNCTION do_test ()

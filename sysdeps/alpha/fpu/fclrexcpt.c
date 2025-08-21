@@ -18,29 +18,28 @@
 
 #include <fenv_libc.h>
 
-int
-__feclearexcept (int excepts)
+int __feclearexcept(int excepts)
 {
-  unsigned long int swcr;
+    unsigned long int swcr;
 
-  /* Get the current state.  */
-  swcr = __ieee_get_fp_control ();
+    /* Get the current state.  */
+    swcr = __ieee_get_fp_control();
 
-  /* Clear the relevant bits.  */
-  swcr &= ~((unsigned long int) excepts & SWCR_STATUS_MASK);
+    /* Clear the relevant bits.  */
+    swcr &= ~((unsigned long int) excepts & SWCR_STATUS_MASK);
 
-  /* Put the new state in effect.  */
-  __ieee_set_fp_control (swcr);
+    /* Put the new state in effect.  */
+    __ieee_set_fp_control(swcr);
 
-  /* Success.  */
-  return 0;
+    /* Success.  */
+    return 0;
 }
 
 #include <shlib-compat.h>
 #if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
-strong_alias (__feclearexcept, __old_feclearexcept)
-compat_symbol (libm, __old_feclearexcept, feclearexcept, GLIBC_2_1);
+strong_alias(__feclearexcept, __old_feclearexcept)
+compat_symbol(libm, __old_feclearexcept, feclearexcept, GLIBC_2_1);
 #endif
 
-libm_hidden_ver (__feclearexcept, feclearexcept)
-versioned_symbol (libm, __feclearexcept, feclearexcept, GLIBC_2_2);
+libm_hidden_ver(__feclearexcept, feclearexcept)
+versioned_symbol(libm, __feclearexcept, feclearexcept, GLIBC_2_2);

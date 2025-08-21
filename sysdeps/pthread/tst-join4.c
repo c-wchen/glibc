@@ -24,99 +24,84 @@
 static pthread_barrier_t bar;
 
 
-static void *
-tf (void *arg)
+static void *tf(void *arg)
 {
-  if (pthread_barrier_wait (&bar) != 0)
-    {
-      puts ("tf: barrier_wait failed");
-      exit (1);
+    if (pthread_barrier_wait(&bar) != 0) {
+        puts("tf: barrier_wait failed");
+        exit(1);
     }
 
-  return (void *) 1l;
+    return (void *) 1l;
 }
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  if (pthread_barrier_init (&bar, NULL, 3) != 0)
-    {
-      puts ("barrier_init failed");
-      exit (1);
+    if (pthread_barrier_init(&bar, NULL, 3) != 0) {
+        puts("barrier_init failed");
+        exit(1);
     }
 
-  pthread_attr_t a;
+    pthread_attr_t a;
 
-  if (pthread_attr_init (&a) != 0)
-    {
-      puts ("attr_init failed");
-      exit (1);
+    if (pthread_attr_init(&a) != 0) {
+        puts("attr_init failed");
+        exit(1);
     }
 
-  if (pthread_attr_setstacksize (&a, 1 * 1024 * 1024) != 0)
-    {
-      puts ("attr_setstacksize failed");
-      return 1;
+    if (pthread_attr_setstacksize(&a, 1 * 1024 * 1024) != 0) {
+        puts("attr_setstacksize failed");
+        return 1;
     }
 
-  pthread_t th[2];
+    pthread_t th[2];
 
-  if (pthread_create (&th[0], &a, tf, NULL) != 0)
-    {
-      puts ("1st create failed");
-      exit (1);
-    }
-
-  if (pthread_attr_setdetachstate (&a, PTHREAD_CREATE_DETACHED) != 0)
-    {
-      puts ("attr_setdetachstate failed");
-      exit (1);
+    if (pthread_create(&th[0], &a, tf, NULL) != 0) {
+        puts("1st create failed");
+        exit(1);
     }
 
-  if (pthread_create (&th[1], &a, tf, NULL) != 0)
-    {
-      puts ("1st create failed");
-      exit (1);
+    if (pthread_attr_setdetachstate(&a, PTHREAD_CREATE_DETACHED) != 0) {
+        puts("attr_setdetachstate failed");
+        exit(1);
     }
 
-  if (pthread_attr_destroy (&a) != 0)
-    {
-      puts ("attr_destroy failed");
-      exit (1);
+    if (pthread_create(&th[1], &a, tf, NULL) != 0) {
+        puts("1st create failed");
+        exit(1);
     }
 
-  if (pthread_detach (th[0]) != 0)
-    {
-      puts ("could not detach 1st thread");
-      exit (1);
+    if (pthread_attr_destroy(&a) != 0) {
+        puts("attr_destroy failed");
+        exit(1);
     }
 
-  int err = pthread_detach (th[0]);
-  if (err == 0)
-    {
-      puts ("second detach of 1st thread succeeded");
-      exit (1);
-    }
-  if (err != EINVAL)
-    {
-      printf ("second detach of 1st thread returned %d, not EINVAL\n", err);
-      exit (1);
+    if (pthread_detach(th[0]) != 0) {
+        puts("could not detach 1st thread");
+        exit(1);
     }
 
-  err = pthread_detach (th[1]);
-  if (err == 0)
-    {
-      puts ("detach of 2nd thread succeeded");
-      exit (1);
+    int err = pthread_detach(th[0]);
+    if (err == 0) {
+        puts("second detach of 1st thread succeeded");
+        exit(1);
     }
-  if (err != EINVAL)
-    {
-      printf ("detach of 2nd thread returned %d, not EINVAL\n", err);
-      exit (1);
+    if (err != EINVAL) {
+        printf("second detach of 1st thread returned %d, not EINVAL\n", err);
+        exit(1);
     }
 
-  exit (0);
+    err = pthread_detach(th[1]);
+    if (err == 0) {
+        puts("detach of 2nd thread succeeded");
+        exit(1);
+    }
+    if (err != EINVAL) {
+        printf("detach of 2nd thread returned %d, not EINVAL\n", err);
+        exit(1);
+    }
+
+    exit(0);
 }
 
 #define TEST_FUNCTION do_test ()

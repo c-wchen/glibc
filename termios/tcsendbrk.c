@@ -19,18 +19,16 @@
 #include <termios.h>
 
 /* Send zero bits on FD.  */
-int
-tcsendbreak (int fd, int duration)
+int tcsendbreak(int fd, int duration)
 {
-  if (fd < 0)
-    {
-      __set_errno (EBADF);
-      return -1;
+    if (fd < 0) {
+        __set_errno(EBADF);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
 
-stub_warning (tcsendbreak)
+stub_warning(tcsendbreak)

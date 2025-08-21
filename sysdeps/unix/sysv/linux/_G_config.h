@@ -12,4 +12,4 @@
    This function is currently a Linux-specific extension.  */
 #define _G_HAVE_MREMAP 1
 
-#endif	/* bits/_G_config.h */
+#endif  /* bits/_G_config.h */

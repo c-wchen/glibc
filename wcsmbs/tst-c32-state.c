@@ -21,24 +21,23 @@
 #include <wchar.h>
 #include <support/check.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  TEST_VERIFY_EXIT (setlocale (LC_ALL, "de_DE.UTF-8") != NULL);
-  const char buf[] = "\u00ff";
-  wchar_t wc = 0;
-  char32_t c32 = 0;
-  size_t ret = mbrtowc (&wc, buf, 1, NULL);
-  TEST_COMPARE (ret, (size_t) -2);
-  ret = mbrtoc32 (&c32, buf, 1, NULL);
-  TEST_COMPARE (ret, (size_t) -2);
-  ret = mbrtowc (&wc, buf + 1, 1, NULL);
-  TEST_COMPARE (ret, 1);
-  TEST_COMPARE (wc, 0xff);
-  ret = mbrtoc32 (&c32, buf + 1, 1, NULL);
-  TEST_COMPARE (ret, 1);
-  TEST_COMPARE (c32, 0xff);
-  return 0;
+    TEST_VERIFY_EXIT(setlocale(LC_ALL, "de_DE.UTF-8") != NULL);
+    const char buf[] = "\u00ff";
+    wchar_t wc = 0;
+    char32_t c32 = 0;
+    size_t ret = mbrtowc(&wc, buf, 1, NULL);
+    TEST_COMPARE(ret, (size_t) -2);
+    ret = mbrtoc32(&c32, buf, 1, NULL);
+    TEST_COMPARE(ret, (size_t) -2);
+    ret = mbrtowc(&wc, buf + 1, 1, NULL);
+    TEST_COMPARE(ret, 1);
+    TEST_COMPARE(wc, 0xff);
+    ret = mbrtoc32(&c32, buf + 1, 1, NULL);
+    TEST_COMPARE(ret, 1);
+    TEST_COMPARE(c32, 0xff);
+    return 0;
 }
 
 #include <support/test-driver.c>

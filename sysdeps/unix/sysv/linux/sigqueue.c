@@ -22,21 +22,20 @@
 #include <sysdep.h>
 
 /* Return any pending signal or wait for one for the given time.  */
-int
-__sigqueue (pid_t pid, int sig, const union sigval val)
+int __sigqueue(pid_t pid, int sig, const union sigval val)
 {
-  siginfo_t info;
+    siginfo_t info;
 
-  /* First, clear the siginfo_t structure, so that we don't pass our
-     stack content to other tasks.  */
-  memset (&info, 0, sizeof (siginfo_t));
-  /* We must pass the information about the data in a siginfo_t value.  */
-  info.si_signo = sig;
-  info.si_code = SI_QUEUE;
-  info.si_pid = __getpid ();
-  info.si_uid = __getuid ();
-  info.si_value = val;
+    /* First, clear the siginfo_t structure, so that we don't pass our
+       stack content to other tasks.  */
+    memset(&info, 0, sizeof(siginfo_t));
+    /* We must pass the information about the data in a siginfo_t value.  */
+    info.si_signo = sig;
+    info.si_code = SI_QUEUE;
+    info.si_pid = __getpid();
+    info.si_uid = __getuid();
+    info.si_value = val;
 
-  return INLINE_SYSCALL_CALL (rt_sigqueueinfo, pid, sig, &info);
+    return INLINE_SYSCALL_CALL(rt_sigqueueinfo, pid, sig, &info);
 }
-weak_alias (__sigqueue, sigqueue)
+weak_alias(__sigqueue, sigqueue)

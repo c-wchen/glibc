@@ -25,84 +25,89 @@
 
 static int errors = 0;
 
-static void
-merror (const char *msg)
+static void merror(const char *msg)
 {
-  ++errors;
-  printf ("Error: %s\n", msg);
+    ++errors;
+    printf("Error: %s\n", msg);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  void *p;
-  unsigned long pagesize = getpagesize ();
-  unsigned long ptrval;
-  int save;
+    void *p;
+    unsigned long pagesize = getpagesize();
+    unsigned long ptrval;
+    int save;
 
-  errno = 0;
+    errno = 0;
 
-  DIAG_PUSH_NEEDS_COMMENT;
+    DIAG_PUSH_NEEDS_COMMENT;
 #if __GNUC_PREREQ (7, 0)
-  /* GCC 7 warns about too-large allocations; here we want to test
-     that they fail.  */
-  DIAG_IGNORE_NEEDS_COMMENT (7, "-Walloc-size-larger-than=");
+    /* GCC 7 warns about too-large allocations; here we want to test
+       that they fail.  */
+    DIAG_IGNORE_NEEDS_COMMENT(7, "-Walloc-size-larger-than=");
 #endif
-  /* An attempt to allocate a huge value should return NULL and set
-     errno to ENOMEM.  */
-  p = pvalloc (-1);
+    /* An attempt to allocate a huge value should return NULL and set
+       errno to ENOMEM.  */
+    p = pvalloc(-1);
 #if __GNUC_PREREQ (7, 0)
-  DIAG_POP_NEEDS_COMMENT;
+    DIAG_POP_NEEDS_COMMENT;
 #endif
 
-  save = errno;
+    save = errno;
 
-  if (p != NULL)
-    merror ("pvalloc (-1) succeeded.");
+    if (p != NULL) {
+        merror("pvalloc (-1) succeeded.");
+    }
 
-  if (p == NULL && save != ENOMEM)
-    merror ("pvalloc (-1) errno is not set correctly");
+    if (p == NULL && save != ENOMEM) {
+        merror("pvalloc (-1) errno is not set correctly");
+    }
 
-  free (p);
+    free(p);
 
-  errno = 0;
+    errno = 0;
 
-  /* Test to expose integer overflow in malloc internals from BZ #15855.  */
-  p = pvalloc (-pagesize);
+    /* Test to expose integer overflow in malloc internals from BZ #15855.  */
+    p = pvalloc(-pagesize);
 
-  save = errno;
+    save = errno;
 
-  if (p != NULL)
-    merror ("pvalloc (-pagesize) succeeded.");
+    if (p != NULL) {
+        merror("pvalloc (-pagesize) succeeded.");
+    }
 
-  if (p == NULL && save != ENOMEM)
-    merror ("pvalloc (-pagesize) errno is not set correctly");
+    if (p == NULL && save != ENOMEM) {
+        merror("pvalloc (-pagesize) errno is not set correctly");
+    }
 
-  free (p);
+    free(p);
 
-  /* A zero-sized allocation should succeed with glibc, returning a
-     non-NULL value.  */
-  p = pvalloc (0);
+    /* A zero-sized allocation should succeed with glibc, returning a
+       non-NULL value.  */
+    p = pvalloc(0);
 
-  if (p == NULL)
-    merror ("pvalloc (0) failed.");
+    if (p == NULL) {
+        merror("pvalloc (0) failed.");
+    }
 
-  free (p);
+    free(p);
 
-  /* Check the alignment of the returned pointer is correct.  */
-  p = pvalloc (32);
+    /* Check the alignment of the returned pointer is correct.  */
+    p = pvalloc(32);
 
-  if (p == NULL)
-    merror ("pvalloc (32) failed.");
+    if (p == NULL) {
+        merror("pvalloc (32) failed.");
+    }
 
-  ptrval = (unsigned long) p;
+    ptrval = (unsigned long) p;
 
-  if ((ptrval & (pagesize - 1)) != 0)
-    merror ("returned pointer is not page aligned.");
+    if ((ptrval & (pagesize - 1)) != 0) {
+        merror("returned pointer is not page aligned.");
+    }
 
-  free (p);
+    free(p);
 
-  return errors != 0;
+    return errors != 0;
 }
 
 #define TEST_FUNCTION do_test ()

@@ -27,14 +27,14 @@
    won't work.
    makecontext sets up a stack and the registers for the
    user context. The stack looks like this:
-	   size                         offset
+       size                         offset
     %r15 ->    +-----------------------+
-	     4 | back chain (zero)     |  0
-	     4 | reserved              |  4
-	    88 | save area for (*func) |  8
-	       +-----------------------+
-	     n | overflow parameters   | 96
-	       +-----------------------+
+         4 | back chain (zero)     |  0
+         4 | reserved              |  4
+        88 | save area for (*func) |  8
+           +-----------------------+
+         n | overflow parameters   | 96
+           +-----------------------+
    The registers are set up like this:
      %r2-%r6: parameters 1 to 5
      %r7    : (*func) pointer
@@ -48,53 +48,53 @@
      lr    %r2,%r8
      br    %r9.  */
 
-void
-__makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
+void __makecontext(ucontext_t *ucp, void (*func)(void), int argc, ...)
 {
-  extern void __makecontext_ret (void);
-  unsigned long int *sp;
-  va_list ap;
+    extern void __makecontext_ret(void);
+    unsigned long int *sp;
+    va_list ap;
 
-  sp = (unsigned long int *) (((unsigned long int) ucp->uc_stack.ss_sp
-			       + ucp->uc_stack.ss_size) & -8L);
+    sp = (unsigned long int *)(((unsigned long int) ucp->uc_stack.ss_sp
+                                + ucp->uc_stack.ss_size) & -8L);
 
-  /* Set the return address to trampoline.  */
-  ucp->uc_mcontext.gregs[14] = (long int) __makecontext_ret;
-  /* Store psw mask to 0x0 and addr to trampoline.  Then the address
-     can be retrieved from the ucontext structure in the same way as if it
-     is created by kernel and passed to a signal-handler.  */
-  ucp->uc_mcontext.psw.addr = (long int) __makecontext_ret;
-  ucp->uc_mcontext.psw.mask = 0;
+    /* Set the return address to trampoline.  */
+    ucp->uc_mcontext.gregs[14] = (long int) __makecontext_ret;
+    /* Store psw mask to 0x0 and addr to trampoline.  Then the address
+       can be retrieved from the ucontext structure in the same way as if it
+       is created by kernel and passed to a signal-handler.  */
+    ucp->uc_mcontext.psw.addr = (long int) __makecontext_ret;
+    ucp->uc_mcontext.psw.mask = 0;
 
-  /* Set register parameters.  */
-  va_start (ap, argc);
-  for (int i = 0; i < argc && i < 5; ++i)
-    ucp->uc_mcontext.gregs[2 + i] = va_arg (ap, long int);
-
-  /* The remaining arguments go to the overflow area.  */
-  if (argc > 5)
-    {
-      sp -= argc - 5;
-      for (int i = 5; i < argc; ++i)
-	sp[i - 5] = va_arg (ap, long int);
+    /* Set register parameters.  */
+    va_start(ap, argc);
+    for (int i = 0; i < argc && i < 5; ++i) {
+        ucp->uc_mcontext.gregs[2 + i] = va_arg(ap, long int);
     }
-  va_end (ap);
 
-  /* Make room for the save area and set the backchain.  */
-  sp -= 24;
-  *sp = 0;
+    /* The remaining arguments go to the overflow area.  */
+    if (argc > 5) {
+        sp -= argc - 5;
+        for (int i = 5; i < argc; ++i) {
+            sp[i - 5] = va_arg(ap, long int);
+        }
+    }
+    va_end(ap);
 
-  /* Pass (*func) to __makecontext_ret in %r7.  */
-  ucp->uc_mcontext.gregs[7] = (long int) func;
+    /* Make room for the save area and set the backchain.  */
+    sp -= 24;
+    *sp = 0;
 
-  /* Pass ucp->uc_link to __makecontext_ret in %r8.  */
-  ucp->uc_mcontext.gregs[8] = (long int) ucp->uc_link;
+    /* Pass (*func) to __makecontext_ret in %r7.  */
+    ucp->uc_mcontext.gregs[7] = (long int) func;
 
-  /* Pass address of setcontext in %r9.  */
-  ucp->uc_mcontext.gregs[9] = (long int) &setcontext;
+    /* Pass ucp->uc_link to __makecontext_ret in %r8.  */
+    ucp->uc_mcontext.gregs[8] = (long int) ucp->uc_link;
 
-  /* Set stack pointer.  */
-  ucp->uc_mcontext.gregs[15] = (long int) sp;
+    /* Pass address of setcontext in %r9.  */
+    ucp->uc_mcontext.gregs[9] = (long int) &setcontext;
+
+    /* Set stack pointer.  */
+    ucp->uc_mcontext.gregs[15] = (long int) sp;
 }
 
-weak_alias (__makecontext, makecontext)
+weak_alias(__makecontext, makecontext)

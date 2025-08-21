@@ -22,8 +22,7 @@
 const char test_string[] = "test string";
 const char *test_string_ptr = test_string;
 
-void
-no_delete_mod_function (void)
+void no_delete_mod_function(void)
 {
-  TEST_COMPARE_STRING (test_string, test_string_ptr);
+    TEST_COMPARE_STRING(test_string, test_string_ptr);
 }

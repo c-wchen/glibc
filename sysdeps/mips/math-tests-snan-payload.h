@@ -22,9 +22,9 @@
 /* NaN payload preservation when converting a signaling NaN to quiet
    is only required in NAN2008 mode.  */
 #ifdef __mips_nan2008
-# define SNAN_TESTS_PRESERVE_PAYLOAD	1
+# define SNAN_TESTS_PRESERVE_PAYLOAD    1
 #else
-# define SNAN_TESTS_PRESERVE_PAYLOAD	0
+# define SNAN_TESTS_PRESERVE_PAYLOAD    0
 #endif
 
 #endif /* math-tests-snan-payload.h.  */

@@ -21,17 +21,16 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 
-int
-isfdtype (int fildes, int fdtype)
+int isfdtype(int fildes, int fdtype)
 {
-  struct __stat64_t64 st;
-  int result;
+    struct __stat64_t64 st;
+    int result;
 
-  {
-    int save_error = errno;
-    result = __fstat64_time64 (fildes, &st);
-    __set_errno (save_error);
-  }
+    {
+        int save_error = errno;
+        result = __fstat64_time64(fildes, &st);
+        __set_errno(save_error);
+    }
 
-  return result ?: (st.st_mode & S_IFMT) == (mode_t) fdtype;
+    return result ? : (st.st_mode & S_IFMT) == (mode_t) fdtype;
 }

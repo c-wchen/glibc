@@ -26,4 +26,4 @@
 #include "login/pututxline.c"
 #undef pututxline
 
-default_symbol_version (__pututxline, pututxline, UTMP_COMPAT_BASE);
+default_symbol_version(__pututxline, pututxline, UTMP_COMPAT_BASE);

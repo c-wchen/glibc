@@ -17,4 +17,4 @@
    <http://www.gnu.org/licenses/>.  */
 #include "../float128/s_nextafterf128.c"
 
-strong_alias (__nextafterieee128, __nexttowardieee128)
+strong_alias(__nextafterieee128, __nexttowardieee128)

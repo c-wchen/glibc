@@ -27,16 +27,16 @@
 # include <ifunc-resolve.h>
 
 # if HAVE_STRPBRK_C
-extern __typeof (__redirect_strpbrk) STRPBRK_C attribute_hidden;
+extern __typeof(__redirect_strpbrk) STRPBRK_C attribute_hidden;
 # endif
 
 # if HAVE_STRPBRK_Z13
-extern __typeof (__redirect_strpbrk) STRPBRK_Z13 attribute_hidden;
+extern __typeof(__redirect_strpbrk) STRPBRK_Z13 attribute_hidden;
 # endif
 
-s390_libc_ifunc_expr (__redirect_strpbrk, strpbrk,
-		      (HAVE_STRPBRK_Z13 && (hwcap & HWCAP_S390_VX))
-		      ? STRPBRK_Z13
-		      : STRPBRK_DEFAULT
-		      )
+s390_libc_ifunc_expr(__redirect_strpbrk, strpbrk,
+                     (HAVE_STRPBRK_Z13 &&(hwcap &HWCAP_S390_VX))
+                     ? STRPBRK_Z13
+                     : STRPBRK_DEFAULT
+                    )
 #endif /* HAVE_STRPBRK_IFUNC  */

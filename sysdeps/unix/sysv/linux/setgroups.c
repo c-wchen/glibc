@@ -24,13 +24,12 @@
 /* Set the group set for the current user to GROUPS (N of them).  For
    Linux we must convert the array of groups into the format that the
    kernel expects.  */
-int
-setgroups (size_t n, const gid_t *groups)
+int setgroups(size_t n, const gid_t *groups)
 {
 #ifdef __NR_setgroups32
-  return INLINE_SETXID_SYSCALL (setgroups32, 2, n, groups);
+    return INLINE_SETXID_SYSCALL(setgroups32, 2, n, groups);
 #else
-  return INLINE_SETXID_SYSCALL (setgroups, 2, n, groups);
+    return INLINE_SETXID_SYSCALL(setgroups, 2, n, groups);
 #endif
 }
-libc_hidden_def (setgroups)
+libc_hidden_def(setgroups)

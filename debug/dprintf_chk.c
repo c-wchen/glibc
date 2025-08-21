@@ -20,18 +20,17 @@
 
 
 /* Write formatted output to D, according to the format string FORMAT.  */
-int
-__dprintf_chk (int d, int flag, const char *format, ...)
+int __dprintf_chk(int d, int flag, const char *format, ...)
 {
-  /* For flag > 0 (i.e. __USE_FORTIFY_LEVEL > 1) request that %n
-     can only come from read-only format strings.  */
-  unsigned int mode = (flag > 0) ? PRINTF_FORTIFY : 0;
-  va_list ap;
-  int ret;
+    /* For flag > 0 (i.e. __USE_FORTIFY_LEVEL > 1) request that %n
+       can only come from read-only format strings.  */
+    unsigned int mode = (flag > 0) ? PRINTF_FORTIFY : 0;
+    va_list ap;
+    int ret;
 
-  va_start (ap, format);
-  ret = __vdprintf_internal (d, format, ap, mode);
-  va_end (ap);
+    va_start(ap, format);
+    ret = __vdprintf_internal(d, format, ap, mode);
+    va_end(ap);
 
-  return ret;
+    return ret;
 }

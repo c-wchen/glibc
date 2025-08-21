@@ -21,53 +21,53 @@
 #include <lowlevellock.h>
 
 
-int
-__pthread_getschedparam (pthread_t threadid, int *policy,
-			 struct sched_param *param)
+int __pthread_getschedparam(pthread_t threadid, int *policy,
+                            struct sched_param *param)
 {
-  struct pthread *pd = (struct pthread *) threadid;
+    struct pthread *pd = (struct pthread *) threadid;
 
-  /* Make sure the descriptor is valid.  */
-  if (INVALID_TD_P (pd))
-    /* Not a valid thread handle.  */
-    return ESRCH;
-
-  int result = 0;
-
-  /* See CREATE THREAD NOTES in nptl/pthread_create.c.  */
-  lll_lock (pd->lock, LLL_PRIVATE);
-
-  /* The library is responsible for maintaining the values at all
-     times.  If the user uses an interface other than
-     pthread_setschedparam to modify the scheduler setting it is not
-     the library's problem.  In case the descriptor's values have
-     not yet been retrieved do it now.  */
-  if ((pd->flags & ATTR_FLAG_SCHED_SET) == 0)
+    /* Make sure the descriptor is valid.  */
+    if (INVALID_TD_P(pd))
+        /* Not a valid thread handle.  */
     {
-      if (__sched_getparam (pd->tid, &pd->schedparam) != 0)
-	result = 1;
-      else
-	pd->flags |= ATTR_FLAG_SCHED_SET;
+        return ESRCH;
     }
 
-  if ((pd->flags & ATTR_FLAG_POLICY_SET) == 0)
-    {
-      pd->schedpolicy = __sched_getscheduler (pd->tid);
-      if (pd->schedpolicy == -1)
-	result = 1;
-      else
-	pd->flags |= ATTR_FLAG_POLICY_SET;
+    int result = 0;
+
+    /* See CREATE THREAD NOTES in nptl/pthread_create.c.  */
+    lll_lock(pd->lock, LLL_PRIVATE);
+
+    /* The library is responsible for maintaining the values at all
+       times.  If the user uses an interface other than
+       pthread_setschedparam to modify the scheduler setting it is not
+       the library's problem.  In case the descriptor's values have
+       not yet been retrieved do it now.  */
+    if ((pd->flags & ATTR_FLAG_SCHED_SET) == 0) {
+        if (__sched_getparam(pd->tid, &pd->schedparam) != 0) {
+            result = 1;
+        } else {
+            pd->flags |= ATTR_FLAG_SCHED_SET;
+        }
     }
 
-  if (result == 0)
-    {
-      *policy = pd->schedpolicy;
-      memcpy (param, &pd->schedparam, sizeof (struct sched_param));
+    if ((pd->flags & ATTR_FLAG_POLICY_SET) == 0) {
+        pd->schedpolicy = __sched_getscheduler(pd->tid);
+        if (pd->schedpolicy == -1) {
+            result = 1;
+        } else {
+            pd->flags |= ATTR_FLAG_POLICY_SET;
+        }
     }
 
-  lll_unlock (pd->lock, LLL_PRIVATE);
+    if (result == 0) {
+        *policy = pd->schedpolicy;
+        memcpy(param, &pd->schedparam, sizeof(struct sched_param));
+    }
 
-  return result;
+    lll_unlock(pd->lock, LLL_PRIVATE);
+
+    return result;
 }
-libc_hidden_def (__pthread_getschedparam)
-strong_alias (__pthread_getschedparam, pthread_getschedparam)
+libc_hidden_def(__pthread_getschedparam)
+strong_alias(__pthread_getschedparam, pthread_getschedparam)

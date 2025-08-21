@@ -20,30 +20,29 @@
 #include <support/check.h>
 #include <support/support.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char buf[80];
+    char buf[80];
 
-  sprintf (buf, "%-7o", 123);
-  TEST_COMPARE_STRING (buf, "173    ");
+    sprintf(buf, "%-7o", 123);
+    TEST_COMPARE_STRING(buf, "173    ");
 
-  sprintf (buf, "%#-7o", 123);
-  TEST_COMPARE_STRING (buf, "0173   ");
+    sprintf(buf, "%#-7o", 123);
+    TEST_COMPARE_STRING(buf, "0173   ");
 
-  sprintf (buf, "%7o", 123);
-  TEST_COMPARE_STRING (buf, "    173");
+    sprintf(buf, "%7o", 123);
+    TEST_COMPARE_STRING(buf, "    173");
 
-  sprintf (buf, "%#7o", 123);
-  TEST_COMPARE_STRING (buf, "   0173");
+    sprintf(buf, "%#7o", 123);
+    TEST_COMPARE_STRING(buf, "   0173");
 
-  sprintf (buf, "%07o", 123);
-  TEST_COMPARE_STRING (buf, "0000173");
+    sprintf(buf, "%07o", 123);
+    TEST_COMPARE_STRING(buf, "0000173");
 
-  sprintf (buf, "%#07o", 123);
-  TEST_COMPARE_STRING (buf, "0000173");
+    sprintf(buf, "%#07o", 123);
+    TEST_COMPARE_STRING(buf, "0000173");
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

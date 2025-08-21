@@ -18,9 +18,9 @@
 #include <endian.h>
 
 /* All supported kernel versions for MicroBlaze have these syscalls.  */
-#define __ASSUME_CONNECT_SYSCALL	1
-#define __ASSUME_SEND_SYSCALL		1
-#define __ASSUME_RECV_SYSCALL		1
+#define __ASSUME_CONNECT_SYSCALL    1
+#define __ASSUME_SEND_SYSCALL       1
+#define __ASSUME_RECV_SYSCALL       1
 
 #include_next <kernel-features.h>
 

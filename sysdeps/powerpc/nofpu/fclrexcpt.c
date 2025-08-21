@@ -19,19 +19,18 @@
 #include "soft-fp.h"
 #include "soft-supp.h"
 
-int
-__feclearexcept (int x)
+int __feclearexcept(int x)
 {
-  __sim_exceptions_thread &= ~x;
-  SIM_SET_GLOBAL (__sim_exceptions_global, __sim_exceptions_thread);
-  return 0;
+    __sim_exceptions_thread &= ~x;
+    SIM_SET_GLOBAL(__sim_exceptions_global, __sim_exceptions_thread);
+    return 0;
 }
 
 #include <shlib-compat.h>
 #if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
-strong_alias (__feclearexcept, __old_feclearexcept)
-compat_symbol (libm, __old_feclearexcept, feclearexcept, GLIBC_2_1);
+strong_alias(__feclearexcept, __old_feclearexcept)
+compat_symbol(libm, __old_feclearexcept, feclearexcept, GLIBC_2_1);
 #endif
 
-libm_hidden_ver (__feclearexcept, feclearexcept)
-versioned_symbol (libm, __feclearexcept, feclearexcept, GLIBC_2_2);
+libm_hidden_ver(__feclearexcept, feclearexcept)
+versioned_symbol(libm, __feclearexcept, feclearexcept, GLIBC_2_2);

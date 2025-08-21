@@ -41,50 +41,45 @@
 #include <support/check.h>
 #include <support/xthread.h>
 
-static int
-xset_thread_area (struct user_desc *u_info)
+static int xset_thread_area(struct user_desc *u_info)
 {
-  long ret = syscall (SYS_set_thread_area, u_info);
-  TEST_VERIFY_EXIT (ret == 0);
-  return ret;
+    long ret = syscall(SYS_set_thread_area, u_info);
+    TEST_VERIFY_EXIT(ret == 0);
+    return ret;
 }
 
-static void
-xmodify_ldt (int func, const void *ptr, unsigned long bytecount)
+static void xmodify_ldt(int func, const void *ptr, unsigned long bytecount)
 {
-  long ret = syscall (SYS_modify_ldt, func, ptr, bytecount);
+    long ret = syscall(SYS_modify_ldt, func, ptr, bytecount);
 
-  if (ret == -1)
-    {
-      if (errno == ENOSYS)
-	FAIL_UNSUPPORTED ("modify_ldt not supported");
-      FAIL_EXIT1 ("modify_ldt failed (errno=%d)", errno);
+    if (ret == -1) {
+        if (errno == ENOSYS) {
+            FAIL_UNSUPPORTED("modify_ldt not supported");
+        }
+        FAIL_EXIT1("modify_ldt failed (errno=%d)", errno);
     }
 }
 
-static int
-futex (int *uaddr, int futex_op, int val, void *timeout, int *uaddr2,
-	int val3)
+static int futex(int *uaddr, int futex_op, int val, void *timeout, int *uaddr2,
+                 int val3)
 {
-  return syscall (SYS_futex, uaddr, futex_op, val, timeout, uaddr2, val3);
+    return syscall(SYS_futex, uaddr, futex_op, val, timeout, uaddr2, val3);
 }
 
-static void
-xsethandler (int sig, void (*handler)(int, siginfo_t *, void *), int flags)
+static void xsethandler(int sig, void (*handler)(int, siginfo_t *, void *), int flags)
 {
-  struct sigaction sa = { 0 };
-  sa.sa_sigaction = handler;
-  sa.sa_flags = SA_SIGINFO | flags;
-  TEST_VERIFY_EXIT (sigemptyset (&sa.sa_mask) == 0);
-  TEST_VERIFY_EXIT (sigaction (sig, &sa, 0) == 0);
+    struct sigaction sa = { 0 };
+    sa.sa_sigaction = handler;
+    sa.sa_flags = SA_SIGINFO | flags;
+    TEST_VERIFY_EXIT(sigemptyset(&sa.sa_mask) == 0);
+    TEST_VERIFY_EXIT(sigaction(sig, &sa, 0) == 0);
 }
 
 static jmp_buf jmpbuf;
 
-static void
-sigsegv_handler (int sig, siginfo_t *info, void *ctx_void)
+static void sigsegv_handler(int sig, siginfo_t *info, void *ctx_void)
 {
-  siglongjmp (jmpbuf, 1);
+    siglongjmp(jmpbuf, 1);
 }
 
 /* Points to an array of 1024 ints, each holding its own index.  */
@@ -93,41 +88,40 @@ static struct user_desc *low_user_desc;
 static struct user_desc *low_user_desc_clear; /* Used to delete GDT entry.  */
 static int gdt_entry_num;
 
-static void
-setup_counter_page (void)
+static void setup_counter_page(void)
 {
-  long page_size = sysconf (_SC_PAGE_SIZE);
-  TEST_VERIFY_EXIT (page_size > 0);
-  unsigned int *page = xmmap (NULL, page_size, PROT_READ | PROT_WRITE,
-			      MAP_ANONYMOUS | MAP_PRIVATE | MAP_32BIT, -1);
-  for (int i = 0; i < (page_size / sizeof (unsigned int)); i++)
-    page[i] = i;
-  counter_page = page;
+    long page_size = sysconf(_SC_PAGE_SIZE);
+    TEST_VERIFY_EXIT(page_size > 0);
+    unsigned int *page = xmmap(NULL, page_size, PROT_READ | PROT_WRITE,
+                               MAP_ANONYMOUS | MAP_PRIVATE | MAP_32BIT, -1);
+    for (int i = 0; i < (page_size / sizeof(unsigned int)); i++) {
+        page[i] = i;
+    }
+    counter_page = page;
 }
 
-static void
-setup_low_user_desc (void)
+static void setup_low_user_desc(void)
 {
-  low_user_desc = xmmap (NULL, 2 * sizeof (struct user_desc),
-			 PROT_READ | PROT_WRITE,
-			 MAP_ANONYMOUS | MAP_PRIVATE | MAP_32BIT, -1);
+    low_user_desc = xmmap(NULL, 2 * sizeof(struct user_desc),
+                          PROT_READ | PROT_WRITE,
+                          MAP_ANONYMOUS | MAP_PRIVATE | MAP_32BIT, -1);
 
-  low_user_desc->entry_number    = -1;
-  low_user_desc->base_addr       = (unsigned long) &counter_page[1];
-  low_user_desc->limit           = 0xffff;
-  low_user_desc->seg_32bit       = 1;
-  low_user_desc->contents        = 0;
-  low_user_desc->read_exec_only  = 0;
-  low_user_desc->limit_in_pages  = 1;
-  low_user_desc->seg_not_present = 0;
-  low_user_desc->useable         = 0;
+    low_user_desc->entry_number    = -1;
+    low_user_desc->base_addr       = (unsigned long) &counter_page[1];
+    low_user_desc->limit           = 0xffff;
+    low_user_desc->seg_32bit       = 1;
+    low_user_desc->contents        = 0;
+    low_user_desc->read_exec_only  = 0;
+    low_user_desc->limit_in_pages  = 1;
+    low_user_desc->seg_not_present = 0;
+    low_user_desc->useable         = 0;
 
-  xset_thread_area (low_user_desc);
+    xset_thread_area(low_user_desc);
 
-  low_user_desc_clear = low_user_desc + 1;
-  low_user_desc_clear->entry_number = gdt_entry_num;
-  low_user_desc_clear->read_exec_only = 1;
-  low_user_desc_clear->seg_not_present = 1;
+    low_user_desc_clear = low_user_desc + 1;
+    low_user_desc_clear->entry_number = gdt_entry_num;
+    low_user_desc_clear->read_exec_only = 1;
+    low_user_desc_clear->seg_not_present = 1;
 }
 
 /* Possible values of futex:
@@ -137,32 +131,32 @@ setup_low_user_desc (void)
    3: thread should exit.  */
 static atomic_uint ftx;
 
-static void *
-threadproc (void *ctx)
+static void *threadproc(void *ctx)
 {
-  while (1)
-    {
-      /* Continue to wait here until we've successfully waited, unless
-	 we're supposed to be clearing the LDT already.  */
-      while (futex ((int *) &ftx, FUTEX_WAIT, 1, NULL, NULL, 0) < 0)
-	if (atomic_load (&ftx) >= 2)
-	  break;
+    while (1) {
+        /* Continue to wait here until we've successfully waited, unless
+        we're supposed to be clearing the LDT already.  */
+        while (futex((int *) &ftx, FUTEX_WAIT, 1, NULL, NULL, 0) < 0)
+            if (atomic_load(&ftx) >= 2) {
+                break;
+            }
 
-      /* Normally there's time to hit this busy loop and wait for ftx
-	 to be set to 2.  */
-      while (atomic_load (&ftx) != 2)
-	{
-	  if (atomic_load (&ftx) >= 3)
-	    return NULL;
-	}
+        /* Normally there's time to hit this busy loop and wait for ftx
+        to be set to 2.  */
+        while (atomic_load(&ftx) != 2) {
+            if (atomic_load(&ftx) >= 3) {
+                return NULL;
+            }
+        }
 
-      /* clear LDT entry 0.  */
-      const struct user_desc desc = { 0 };
-      xmodify_ldt (1, &desc, sizeof (desc));
+        /* clear LDT entry 0.  */
+        const struct user_desc desc = { 0 };
+        xmodify_ldt(1, &desc, sizeof(desc));
 
-      /* If ftx == 2, set it to zero,  If ftx == 100, quit.  */
-      if (atomic_fetch_add (&ftx, -2) != 2)
-	return NULL;
+        /* If ftx == 2, set it to zero,  If ftx == 100, quit.  */
+        if (atomic_fetch_add(&ftx, -2) != 2) {
+            return NULL;
+        }
     }
 }
 
@@ -179,87 +173,87 @@ threadproc (void *ctx)
    segment.  With a correct zeroed sa_restorer it should not trigger an
    'real' SEGSEGV and allows the siglongjmp in signal handler.  */
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  setup_counter_page ();
-  setup_low_user_desc ();
+    setup_counter_page();
+    setup_low_user_desc();
 
-  pthread_t thread;
-  unsigned short orig_ss;
+    pthread_t thread;
+    unsigned short orig_ss;
 
-  xsethandler (SIGSEGV, sigsegv_handler, 0);
-  /* 32-bit kernels send SIGILL instead of SIGSEGV on IRET faults.  */
-  xsethandler (SIGILL, sigsegv_handler, 0);
-  /* Some kernels send SIGBUS instead.  */
-  xsethandler (SIGBUS, sigsegv_handler, 0);
+    xsethandler(SIGSEGV, sigsegv_handler, 0);
+    /* 32-bit kernels send SIGILL instead of SIGSEGV on IRET faults.  */
+    xsethandler(SIGILL, sigsegv_handler, 0);
+    /* Some kernels send SIGBUS instead.  */
+    xsethandler(SIGBUS, sigsegv_handler, 0);
 
-  thread = xpthread_create (0, threadproc, 0);
+    thread = xpthread_create(0, threadproc, 0);
 
-  asm volatile ("mov %%ss, %0" : "=rm" (orig_ss));
+    asm volatile("mov %%ss, %0" : "=rm"(orig_ss));
 
-  for (int i = 0; i < 5; i++)
-    {
-      if (sigsetjmp (jmpbuf, 1) != 0)
-	continue;
+    for (int i = 0; i < 5; i++) {
+        if (sigsetjmp(jmpbuf, 1) != 0) {
+            continue;
+        }
 
-      /* We may have longjmp'd before triggering the thread.  If so,
-	 trigger the thread now and wait for it.  */
-      if (atomic_load (&ftx) == 1)
-	atomic_store (&ftx, 2);
+        /* We may have longjmp'd before triggering the thread.  If so,
+        trigger the thread now and wait for it.  */
+        if (atomic_load(&ftx) == 1) {
+            atomic_store(&ftx, 2);
+        }
 
-      /* Make sure the thread is ready after the last test.  FTX is
-	 initially zero for the first loop, and set to zero each time
-	 the thread clears the LDT.  */
-      while (atomic_load (&ftx) != 0)
-	;
+        /* Make sure the thread is ready after the last test.  FTX is
+        initially zero for the first loop, and set to zero each time
+         the thread clears the LDT.  */
+        while (atomic_load(&ftx) != 0)
+            ;
 
-      struct user_desc desc = {
-	.entry_number       = 0,
-	.base_addr          = 0,
-	.limit              = 0xffff,
-	.seg_32bit          = 1,
-	.contents           = 0,
-	.read_exec_only     = 0,
-	.limit_in_pages     = 1,
-	.seg_not_present    = 0,
-	.useable            = 0
-      };
+        struct user_desc desc = {
+            .entry_number       = 0,
+            .base_addr          = 0,
+            .limit              = 0xffff,
+            .seg_32bit          = 1,
+            .contents           = 0,
+            .read_exec_only     = 0,
+            .limit_in_pages     = 1,
+            .seg_not_present    = 0,
+            .useable            = 0
+        };
 
-      xmodify_ldt (0x11, &desc, sizeof (desc));
+        xmodify_ldt(0x11, &desc, sizeof(desc));
 
-      /* Arm the thread.  We loop here until we've woken up one thread.  */
-      atomic_store (&ftx, 1);
-      while (futex ((int*) &ftx, FUTEX_WAKE, 1, NULL, NULL, 0) < 1)
-	;
+        /* Arm the thread.  We loop here until we've woken up one thread.  */
+        atomic_store(&ftx, 1);
+        while (futex((int *) &ftx, FUTEX_WAKE, 1, NULL, NULL, 0) < 1)
+            ;
 
-      /* Give the thread a chance to get into it's busy loop.  */
-      usleep (5);
+        /* Give the thread a chance to get into it's busy loop.  */
+        usleep(5);
 
-      /* At *ANY* point after this instruction, we may segfault and
-	 longjump back to the top of the loop.  The intention is to
-	 have this happen when the thread clears the LDT, but it could
-	 happen elsewhen.  */
-      asm volatile ("mov %0, %%ss" : : "r" (0x7));
+        /* At *ANY* point after this instruction, we may segfault and
+        longjump back to the top of the loop.  The intention is to
+         have this happen when the thread clears the LDT, but it could
+         happen elsewhen.  */
+        asm volatile("mov %0, %%ss" : : "r"(0x7));
 
-      /* Fire up thread modify_ldt call.  */
-      atomic_store (&ftx, 2);
+        /* Fire up thread modify_ldt call.  */
+        atomic_store(&ftx, 2);
 
-      /* And wait for it.  */
-      while (atomic_load (&ftx) != 0)
-	;
+        /* And wait for it.  */
+        while (atomic_load(&ftx) != 0)
+            ;
 
-      /* On success, modify_ldt will segfault us synchronously and we will
-	 escape via siglongjmp.  */
-      support_record_failure ();
+        /* On success, modify_ldt will segfault us synchronously and we will
+        escape via siglongjmp.  */
+        support_record_failure();
     }
 
-  atomic_store (&ftx, 100);
-  futex ((int*) &ftx, FUTEX_WAKE, 0, NULL, NULL, 0);
+    atomic_store(&ftx, 100);
+    futex((int *) &ftx, FUTEX_WAKE, 0, NULL, NULL, 0);
 
-  xpthread_join (thread);
+    xpthread_join(thread);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

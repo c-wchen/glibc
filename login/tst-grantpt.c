@@ -29,88 +29,83 @@
 #include <support/xunistd.h>
 
 /* Test grantpt, unlockpt with a closed descriptor.  */
-static void
-test_ebadf (void)
+static void test_ebadf(void)
 {
-  int fd, ret, err;
+    int fd, ret, err;
 
-  fd = posix_openpt (O_RDWR);
-  if (fd == -1)
-    FAIL_EXIT1 ("posix_openpt(O_RDWR) failed\nerrno %d (%m)\n", errno);
-  TEST_COMPARE (unlockpt (fd), 0);
+    fd = posix_openpt(O_RDWR);
+    if (fd == -1) {
+        FAIL_EXIT1("posix_openpt(O_RDWR) failed\nerrno %d (%m)\n", errno);
+    }
+    TEST_COMPARE(unlockpt(fd), 0);
 
-  xclose (fd);
-  ret = grantpt (fd);
-  err = errno;
-  if (ret != -1 || err != EBADF)
-    {
-      support_record_failure ();
-      printf ("grantpt(): expected: return = %d, errno = %d\n", -1, EBADF);
-      printf ("           got: return = %d, errno = %d\n", ret, err);
+    xclose(fd);
+    ret = grantpt(fd);
+    err = errno;
+    if (ret != -1 || err != EBADF) {
+        support_record_failure();
+        printf("grantpt(): expected: return = %d, errno = %d\n", -1, EBADF);
+        printf("           got: return = %d, errno = %d\n", ret, err);
     }
 
-  TEST_COMPARE (unlockpt (fd), -1);
-  TEST_COMPARE (errno, EBADF);
+    TEST_COMPARE(unlockpt(fd), -1);
+    TEST_COMPARE(errno, EBADF);
 }
 
 /* Test grantpt, unlockpt on a regular file.  */
-static void
-test_einval (void)
+static void test_einval(void)
 {
-  int fd, ret, err;
+    int fd, ret, err;
 
-  fd = create_temp_file ("tst-grantpt-", NULL);
-  TEST_VERIFY_EXIT (fd >= 0);
+    fd = create_temp_file("tst-grantpt-", NULL);
+    TEST_VERIFY_EXIT(fd >= 0);
 
-  ret = grantpt (fd);
-  err = errno;
-  if (ret != -1 || err != EINVAL)
-    {
-      support_record_failure ();
-      printf ("grantpt(): expected: return = %d, errno = %d\n", -1, EINVAL);
-      printf ("           got: return = %d, errno = %d\n", ret, err);
+    ret = grantpt(fd);
+    err = errno;
+    if (ret != -1 || err != EINVAL) {
+        support_record_failure();
+        printf("grantpt(): expected: return = %d, errno = %d\n", -1, EINVAL);
+        printf("           got: return = %d, errno = %d\n", ret, err);
     }
 
-  TEST_COMPARE (unlockpt (fd), -1);
-  TEST_COMPARE (errno, EINVAL);
+    TEST_COMPARE(unlockpt(fd), -1);
+    TEST_COMPARE(errno, EINVAL);
 
-  xclose (fd);
+    xclose(fd);
 }
 
 /* Test grantpt, unlockpt on a non-ptmx pseudo-terminal.  */
-static void
-test_not_ptmx (void)
+static void test_not_ptmx(void)
 {
-  int ptmx = posix_openpt (O_RDWR);
-  TEST_VERIFY_EXIT (ptmx >= 0);
-  TEST_COMPARE (grantpt (ptmx), 0);
-  TEST_COMPARE (unlockpt (ptmx), 0);
+    int ptmx = posix_openpt(O_RDWR);
+    TEST_VERIFY_EXIT(ptmx >= 0);
+    TEST_COMPARE(grantpt(ptmx), 0);
+    TEST_COMPARE(unlockpt(ptmx), 0);
 
-  /* A second unlock succeeds as well.  */
-  TEST_COMPARE (unlockpt (ptmx), 0);
+    /* A second unlock succeeds as well.  */
+    TEST_COMPARE(unlockpt(ptmx), 0);
 
-  const char *name = ptsname (ptmx);
-  TEST_VERIFY_EXIT (name != NULL);
-  int pts = open (name, O_RDWR | O_NOCTTY);
-  TEST_VERIFY_EXIT (pts >= 0);
+    const char *name = ptsname(ptmx);
+    TEST_VERIFY_EXIT(name != NULL);
+    int pts = open(name, O_RDWR | O_NOCTTY);
+    TEST_VERIFY_EXIT(pts >= 0);
 
-  TEST_COMPARE (grantpt (pts), -1);
-  TEST_COMPARE (errno, EINVAL);
+    TEST_COMPARE(grantpt(pts), -1);
+    TEST_COMPARE(errno, EINVAL);
 
-  TEST_COMPARE (unlockpt (pts), -1);
-  TEST_COMPARE (errno, EINVAL);
+    TEST_COMPARE(unlockpt(pts), -1);
+    TEST_COMPARE(errno, EINVAL);
 
-  xclose (pts);
-  xclose (ptmx);
+    xclose(pts);
+    xclose(ptmx);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  test_ebadf ();
-  test_einval ();
-  test_not_ptmx ();
-  return 0;
+    test_ebadf();
+    test_einval();
+    test_not_ptmx();
+    return 0;
 }
 
 #include <support/test-driver.c>

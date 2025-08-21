@@ -29,54 +29,51 @@
 #define _PATH_DEVPTS "/dev/pts/"
 
 /* Static buffer for `ptsname'.  */
-static char buffer[sizeof (_PATH_DEVPTS) + 20];
+static char buffer[sizeof(_PATH_DEVPTS) + 20];
 
 
 /* Return the pathname of the pseudo terminal slave associated with
    the master FD is open on, or NULL on errors.
    The returned storage is good until the next call to this function.  */
-char *
-ptsname (int fd)
+char *ptsname(int fd)
 {
-  return __ptsname_r (fd, buffer, sizeof (buffer)) != 0 ? NULL : buffer;
+    return __ptsname_r(fd, buffer, sizeof(buffer)) != 0 ? NULL : buffer;
 }
 
 
 /* Store at most BUFLEN characters of the pathname of the slave pseudo
    terminal associated with the master FD is open on in BUF.
    Return 0 on success, otherwise an error number.  */
-int
-__ptsname_r (int fd, char *buf, size_t buflen)
+int __ptsname_r(int fd, char *buf, size_t buflen)
 {
-  int save_errno = errno;
-  unsigned int ptyno;
+    int save_errno = errno;
+    unsigned int ptyno;
 
-  if (__ioctl (fd, TIOCGPTN, &ptyno) == 0)
+    if (__ioctl(fd, TIOCGPTN, &ptyno) == 0) {
+        /* Buffer we use to print the number in.  For a maximum size for
+        `int' of 8 bytes we never need more than 20 digits.  */
+        char numbuf[21];
+        const char *devpts = _PATH_DEVPTS;
+        const size_t devptslen = strlen(_PATH_DEVPTS);
+        char *p;
+
+        numbuf[sizeof(numbuf) - 1] = '\0';
+        p = _itoa_word(ptyno, &numbuf[sizeof(numbuf) - 1], 10, 0);
+
+        if (buflen < devptslen + (&numbuf[sizeof(numbuf)] - p)) {
+            __set_errno(ERANGE);
+            return ERANGE;
+        }
+
+        memcpy(__stpcpy(buf, devpts), p, &numbuf[sizeof(numbuf)] - p);
+    } else
+        /* Bad file descriptor, or not a ptmx descriptor.  */
     {
-      /* Buffer we use to print the number in.  For a maximum size for
-	 `int' of 8 bytes we never need more than 20 digits.  */
-      char numbuf[21];
-      const char *devpts = _PATH_DEVPTS;
-      const size_t devptslen = strlen (_PATH_DEVPTS);
-      char *p;
-
-      numbuf[sizeof (numbuf) - 1] = '\0';
-      p = _itoa_word (ptyno, &numbuf[sizeof (numbuf) - 1], 10, 0);
-
-      if (buflen < devptslen + (&numbuf[sizeof (numbuf)] - p))
-	{
-	  __set_errno (ERANGE);
-	  return ERANGE;
-	}
-
-      memcpy (__stpcpy (buf, devpts), p, &numbuf[sizeof (numbuf)] - p);
+        return errno;
     }
-  else
-    /* Bad file descriptor, or not a ptmx descriptor.  */
-    return errno;
 
-  __set_errno (save_errno);
-  return 0;
+    __set_errno(save_errno);
+    return 0;
 }
-libc_hidden_def (__ptsname_r)
-weak_alias (__ptsname_r, ptsname_r)
+libc_hidden_def(__ptsname_r)
+weak_alias(__ptsname_r, ptsname_r)

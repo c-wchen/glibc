@@ -19,12 +19,12 @@
 #include <wchar.h>
 
 
-size_t
-__mbsnrtowcs_chk (wchar_t *dst, const char **src, size_t nmc, size_t len,
-		  mbstate_t *ps, size_t dstlen)
+size_t __mbsnrtowcs_chk(wchar_t *dst, const char **src, size_t nmc, size_t len,
+                        mbstate_t *ps, size_t dstlen)
 {
-  if (__glibc_unlikely (dstlen < len))
-    __chk_fail ();
+    if (__glibc_unlikely(dstlen < len)) {
+        __chk_fail();
+    }
 
-  return __mbsnrtowcs (dst, src, nmc, len, ps);
+    return __mbsnrtowcs(dst, src, nmc, len, ps);
 }

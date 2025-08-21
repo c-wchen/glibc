@@ -19,23 +19,23 @@
 #include <fenv_libc.h>
 #include <fpu_control.h>
 
-int
-fesetmode (const femode_t *modep)
+int fesetmode(const femode_t *modep)
 {
-  fenv_union_t old, new;
+    fenv_union_t old, new;
 
-  /* Logic regarding enabled exceptions as in fesetenv.  */
+    /* Logic regarding enabled exceptions as in fesetenv.  */
 
-  new.fenv = *modep;
-  old.fenv = fegetenv_control ();
-  new.l = (new.l & ~FPSCR_STATUS_MASK) | (old.l & FPSCR_STATUS_MASK);
+    new.fenv = *modep;
+    old.fenv = fegetenv_control();
+    new.l = (new.l & ~FPSCR_STATUS_MASK) | (old.l & FPSCR_STATUS_MASK);
 
-  if (old.l == new.l)
+    if (old.l == new.l) {
+        return 0;
+    }
+
+    __TEST_AND_EXIT_NON_STOP(old.l, new.l);
+    __TEST_AND_ENTER_NON_STOP(old.l, new.l);
+
+    fesetenv_control(new.fenv);
     return 0;
-
-  __TEST_AND_EXIT_NON_STOP (old.l, new.l);
-  __TEST_AND_ENTER_NON_STOP (old.l, new.l);
-
-  fesetenv_control (new.fenv);
-  return 0;
 }

@@ -25,17 +25,17 @@
 # include <ifunc-resolve.h>
 
 # if HAVE_MEMCHR_Z900_G5
-extern __typeof (__redirect_memchr) MEMCHR_Z900_G5 attribute_hidden;
+extern __typeof(__redirect_memchr) MEMCHR_Z900_G5 attribute_hidden;
 # endif
 
 # if HAVE_MEMCHR_Z13
-extern __typeof (__redirect_memchr) MEMCHR_Z13 attribute_hidden;
+extern __typeof(__redirect_memchr) MEMCHR_Z13 attribute_hidden;
 # endif
 
-s390_libc_ifunc_expr (__redirect_memchr, __memchr,
-		      (HAVE_MEMCHR_Z13 && (hwcap & HWCAP_S390_VX))
-		      ? MEMCHR_Z13
-		      : MEMCHR_DEFAULT
-		      )
-weak_alias (__memchr, memchr)
+s390_libc_ifunc_expr(__redirect_memchr, __memchr,
+                     (HAVE_MEMCHR_Z13 &&(hwcap &HWCAP_S390_VX))
+                     ? MEMCHR_Z13
+                     : MEMCHR_DEFAULT
+                    )
+weak_alias(__memchr, memchr)
 #endif

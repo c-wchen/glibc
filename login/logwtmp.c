@@ -23,28 +23,27 @@
 #include <struct___timespec64.h>
 #include <shlib-compat.h>
 
-void
-__logwtmp (const char *line, const char *name, const char *host)
+void __logwtmp(const char *line, const char *name, const char *host)
 {
-  struct utmp ut;
+    struct utmp ut;
 
-  /* Set information in new entry.  */
-  memset (&ut, 0, sizeof (ut));
-  ut.ut_pid = getpid ();
-  ut.ut_type = name[0] ? USER_PROCESS : DEAD_PROCESS;
-  strncpy (ut.ut_line, line, sizeof ut.ut_line);
-  strncpy (ut.ut_name, name, sizeof ut.ut_name);
-  strncpy (ut.ut_host, host, sizeof ut.ut_host);
+    /* Set information in new entry.  */
+    memset(&ut, 0, sizeof(ut));
+    ut.ut_pid = getpid();
+    ut.ut_type = name[0] ? USER_PROCESS : DEAD_PROCESS;
+    strncpy(ut.ut_line, line, sizeof ut.ut_line);
+    strncpy(ut.ut_name, name, sizeof ut.ut_name);
+    strncpy(ut.ut_host, host, sizeof ut.ut_host);
 
-  struct __timespec64 ts;
-  __clock_gettime64 (CLOCK_REALTIME, &ts);
-  TIMESPEC_TO_TIMEVAL (&ut.ut_tv, &ts);
+    struct __timespec64 ts;
+    __clock_gettime64(CLOCK_REALTIME, &ts);
+    TIMESPEC_TO_TIMEVAL(&ut.ut_tv, &ts);
 
-  __updwtmp (_PATH_WTMP, &ut);
+    __updwtmp(_PATH_WTMP, &ut);
 }
-versioned_symbol (libc, __logwtmp, logwtmp, GLIBC_2_34);
-libc_hidden_ver (__logwtmp, logwtmp)
+versioned_symbol(libc, __logwtmp, logwtmp, GLIBC_2_34);
+libc_hidden_ver(__logwtmp, logwtmp)
 
 #if OTHER_SHLIB_COMPAT (libutil, GLIBC_2_0, GLIBC_2_34)
-compat_symbol (libutil, __logwtmp, logwtmp, GLIBC_2_0);
+compat_symbol(libutil, __logwtmp, logwtmp, GLIBC_2_0);
 #endif

@@ -19,12 +19,11 @@
 #include <libm-alias-float.h>
 #include <stdint.h>
 
-long long int
-__llrintf (float x)
+long long int __llrintf(float x)
 {
-  int64_t res;
-  asm ("fcvt.l.s %0, %1" : "=r" (res) : "f" (x));
-  return res;
+    int64_t res;
+    asm("fcvt.l.s %0, %1" : "=r"(res) : "f"(x));
+    return res;
 }
 
-libm_alias_float (__llrint, llrint)
+libm_alias_float(__llrint, llrint)

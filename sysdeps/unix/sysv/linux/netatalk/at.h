@@ -25,4 +25,4 @@
 
 #define SOL_ATALK       258     /* sockopt level for atalk */
 
-#endif	/* netatalk/at.h */
+#endif  /* netatalk/at.h */

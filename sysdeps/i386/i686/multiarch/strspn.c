@@ -26,5 +26,5 @@
 # define SYMBOL_NAME strspn
 # include "ifunc-sse4_2.h"
 
-libc_ifunc_redirected (__redirect_strspn, strspn, IFUNC_SELECTOR ());
+libc_ifunc_redirected(__redirect_strspn, strspn, IFUNC_SELECTOR());
 #endif

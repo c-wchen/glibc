@@ -19,7 +19,7 @@
 /* Don't rely on this, the interface is currently messed up and may need to
    be broken to be fixed.  */
 #ifndef _SYS_UCONTEXT_H
-#define _SYS_UCONTEXT_H	1
+#define _SYS_UCONTEXT_H 1
 
 #include <features.h>
 
@@ -29,7 +29,7 @@
 typedef unsigned long int __riscv_mc_gp_state[32];
 
 #ifdef __USE_MISC
-# define NGREG	32
+# define NGREG  32
 
 # define REG_PC 0
 # define REG_RA 1
@@ -50,43 +50,37 @@ typedef __riscv_mc_gp_state gregset_t;
 typedef union __riscv_mc_fp_state fpregset_t;
 #endif
 
-struct __riscv_mc_f_ext_state
-  {
+struct __riscv_mc_f_ext_state {
     unsigned int __f[32];
     unsigned int __fcsr;
-  };
+};
 
-struct __riscv_mc_d_ext_state
-  {
+struct __riscv_mc_d_ext_state {
     unsigned long long int __f[32];
     unsigned int __fcsr;
-  };
+};
 
-struct __riscv_mc_q_ext_state
-  {
-    unsigned long long int __f[64] __attribute__ ((__aligned__ (16)));
+struct __riscv_mc_q_ext_state {
+    unsigned long long int __f[64] __attribute__((__aligned__(16)));
     unsigned int __fcsr;
     /* Reserved for expansion of sigcontext structure.  Currently zeroed
        upon signal, and must be zero upon sigreturn.  */
     unsigned int __glibc_reserved[3];
-  };
+};
 
-union __riscv_mc_fp_state
-  {
+union __riscv_mc_fp_state {
     struct __riscv_mc_f_ext_state __f;
     struct __riscv_mc_d_ext_state __d;
     struct __riscv_mc_q_ext_state __q;
-  };
+};
 
-typedef struct mcontext_t
-  {
+typedef struct mcontext_t {
     __riscv_mc_gp_state __gregs;
     union  __riscv_mc_fp_state __fpregs;
-  } mcontext_t;
+} mcontext_t;
 
 /* Userlevel context.  */
-typedef struct ucontext_t
-  {
+typedef struct ucontext_t {
     unsigned long int  __uc_flags;
     struct ucontext_t *uc_link;
     stack_t            uc_stack;
@@ -95,7 +89,7 @@ typedef struct ucontext_t
        future.  Though this is unlikely, other architectures put uc_sigmask
        at the end of this structure and explicitly state it can be
        expanded, so we didn't want to box ourselves in here.  */
-    char               __glibc_reserved[1024 / 8 - sizeof (sigset_t)];
+    char               __glibc_reserved[1024 / 8 - sizeof(sigset_t)];
     /* We can't put uc_sigmask at the end of this structure because we need
        to be able to expand sigcontext in the future.  For example, the
        vector ISA extension will almost certainly add ISA state.  We want
@@ -105,6 +99,6 @@ typedef struct ucontext_t
        assume sigset_t won't be extended an extreme amount, we're
        prioritizing this.  */
     mcontext_t uc_mcontext;
-  } ucontext_t;
+} ucontext_t;
 
 #endif /* sys/ucontext.h */

@@ -35,6 +35,6 @@
 # define cvt_symbol(local, symbol) \
   strong_alias (local, symbol)
 #endif
-cvt_symbol (__qfcvt, qfcvt);
-cvt_symbol (__qecvt, qecvt);
-cvt_symbol (__qgcvt, qgcvt);
+cvt_symbol(__qfcvt, qfcvt);
+cvt_symbol(__qecvt, qecvt);
+cvt_symbol(__qgcvt, qgcvt);

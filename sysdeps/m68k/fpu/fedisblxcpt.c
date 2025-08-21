@@ -18,20 +18,19 @@
 
 #include <fenv.h>
 
-int
-fedisableexcept (int excepts)
+int fedisableexcept(int excepts)
 {
-  unsigned int old_exc, new_exc;
+    unsigned int old_exc, new_exc;
 
-  /* Get the current control register contents.  */
-  __asm__ ("fmove%.l %!,%0" : "=dm" (new_exc));
+    /* Get the current control register contents.  */
+    __asm__("fmove%.l %!,%0" : "=dm"(new_exc));
 
-  old_exc = (new_exc >> 6) & FE_ALL_EXCEPT;
+    old_exc = (new_exc >> 6) & FE_ALL_EXCEPT;
 
-  excepts &= FE_ALL_EXCEPT;
+    excepts &= FE_ALL_EXCEPT;
 
-  new_exc &= ~(excepts << 6);
-  __asm__ ("fmove%.l %0,%!" : : "dm" (new_exc));
+    new_exc &= ~(excepts << 6);
+    __asm__("fmove%.l %0,%!" : : "dm"(new_exc));
 
-  return old_exc;
+    return old_exc;
 }

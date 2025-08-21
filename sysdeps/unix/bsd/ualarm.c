@@ -23,18 +23,18 @@
    off every INTERVAL microseconds thereafter.
 
    Returns the number of microseconds remaining before the alarm.  */
-useconds_t
-ualarm (useconds_t value, useconds_t interval)
+useconds_t ualarm(useconds_t value, useconds_t interval)
 {
-  struct itimerval timer, otimer;
+    struct itimerval timer, otimer;
 
-  timer.it_value.tv_sec = 0;
-  timer.it_value.tv_usec = value;
-  timer.it_interval.tv_sec = 0;
-  timer.it_interval.tv_usec = interval;
+    timer.it_value.tv_sec = 0;
+    timer.it_value.tv_usec = value;
+    timer.it_interval.tv_sec = 0;
+    timer.it_interval.tv_usec = interval;
 
-  if (__setitimer (ITIMER_REAL, &timer, &otimer) < 0)
-    return -1;
+    if (__setitimer(ITIMER_REAL, &timer, &otimer) < 0) {
+        return -1;
+    }
 
-  return (otimer.it_value.tv_sec * 1000000) + otimer.it_value.tv_usec;
+    return (otimer.it_value.tv_sec * 1000000) + otimer.it_value.tv_usec;
 }

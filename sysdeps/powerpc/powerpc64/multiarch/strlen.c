@@ -25,31 +25,31 @@
 # include <shlib-compat.h>
 # include "init-arch.h"
 
-extern __typeof (__redirect_strlen) __libc_strlen;
+extern __typeof(__redirect_strlen) __libc_strlen;
 
-extern __typeof (__redirect_strlen) __strlen_ppc attribute_hidden;
-extern __typeof (__redirect_strlen) __strlen_power7 attribute_hidden;
-extern __typeof (__redirect_strlen) __strlen_power8 attribute_hidden;
-extern __typeof (__redirect_strlen) __strlen_power9 attribute_hidden;
-extern __typeof (__redirect_strlen) __strlen_power10 attribute_hidden;
+extern __typeof(__redirect_strlen) __strlen_ppc attribute_hidden;
+extern __typeof(__redirect_strlen) __strlen_power7 attribute_hidden;
+extern __typeof(__redirect_strlen) __strlen_power8 attribute_hidden;
+extern __typeof(__redirect_strlen) __strlen_power9 attribute_hidden;
+extern __typeof(__redirect_strlen) __strlen_power10 attribute_hidden;
 
-libc_ifunc (__libc_strlen,
+libc_ifunc(__libc_strlen,
 # ifdef __LITTLE_ENDIAN__
-	(hwcap2 & PPC_FEATURE2_ARCH_3_1
-	 && hwcap & PPC_FEATURE_HAS_VSX)
-	? __strlen_power10 :
-	  (hwcap2 & PPC_FEATURE2_ARCH_3_00
-	   && hwcap & PPC_FEATURE_HAS_VSX)
-	  ? __strlen_power9 :
+           (hwcap2 &PPC_FEATURE2_ARCH_3_1
+            &&hwcap &PPC_FEATURE_HAS_VSX)
+           ? __strlen_power10 :
+           (hwcap2 &PPC_FEATURE2_ARCH_3_00
+            &&hwcap &PPC_FEATURE_HAS_VSX)
+           ? __strlen_power9 :
 # endif
-	    (hwcap2 & PPC_FEATURE2_ARCH_2_07
-	     && hwcap & PPC_FEATURE_HAS_ALTIVEC)
-	    ? __strlen_power8 :
-	      (hwcap & PPC_FEATURE_ARCH_2_06)
-	      ? __strlen_power7
-	      : __strlen_ppc);
+           (hwcap2 &PPC_FEATURE2_ARCH_2_07
+            &&hwcap &PPC_FEATURE_HAS_ALTIVEC)
+           ? __strlen_power8 :
+           (hwcap &PPC_FEATURE_ARCH_2_06)
+           ? __strlen_power7
+           : __strlen_ppc);
 
 #undef strlen
-strong_alias (__libc_strlen, strlen)
-libc_hidden_ver (__libc_strlen, strlen)
+strong_alias(__libc_strlen, strlen)
+libc_hidden_ver(__libc_strlen, strlen)
 #endif

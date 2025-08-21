@@ -24,34 +24,28 @@
 
 /* Header for the allocation.  It contains the size of the allocation
    for subsequent unmapping.  */
-struct header
-{
-  size_t total_size;
-  char data[] __attribute__ ((aligned (__alignof__ (max_align_t))));
+struct header {
+    size_t total_size;
+    char data[] __attribute__((aligned(__alignof__(max_align_t))));
 };
 
-void *
-support_shared_allocate (size_t size)
+void *support_shared_allocate(size_t size)
 {
-  size_t total_size = size + offsetof (struct header, data);
-  if (total_size < size)
-    {
-      errno = ENOMEM;
-      oom_error (__func__, size);
-      return NULL;
-    }
-  else
-    {
-      struct header *result = xmmap (NULL, total_size, PROT_READ | PROT_WRITE,
-                                     MAP_ANONYMOUS | MAP_SHARED, -1);
-      result->total_size = total_size;
-      return &result->data;
+    size_t total_size = size + offsetof(struct header, data);
+    if (total_size < size) {
+        errno = ENOMEM;
+        oom_error(__func__, size);
+        return NULL;
+    } else {
+        struct header *result = xmmap(NULL, total_size, PROT_READ | PROT_WRITE,
+                                      MAP_ANONYMOUS | MAP_SHARED, -1);
+        result->total_size = total_size;
+        return &result->data;
     }
 }
 
-void
-support_shared_free (void *data)
+void support_shared_free(void *data)
 {
-  struct header *header = data - offsetof (struct header, data);
-  xmunmap (header, header->total_size);
+    struct header *header = data - offsetof(struct header, data);
+    xmunmap(header, header->total_size);
 }

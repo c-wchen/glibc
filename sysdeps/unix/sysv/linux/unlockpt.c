@@ -23,15 +23,16 @@
 
 /* Unlock the slave pseudo terminal associated with the master pseudo
    terminal specified by FD.  */
-int
-unlockpt (int fd)
+int unlockpt(int fd)
 {
-  int unlock = 0;
+    int unlock = 0;
 
-  int ret = __ioctl (fd, TIOCSPTLCK, &unlock);
-  if (ret != 0 && errno == ENOTTY)
-    /* POSIX mandates EINVAL for non-ptmx descriptors.  */
-    __set_errno (EINVAL);
-  return ret;
+    int ret = __ioctl(fd, TIOCSPTLCK, &unlock);
+    if (ret != 0 && errno == ENOTTY)
+        /* POSIX mandates EINVAL for non-ptmx descriptors.  */
+    {
+        __set_errno(EINVAL);
+    }
+    return ret;
 }
-libc_hidden_def (unlockpt)
+libc_hidden_def(unlockpt)

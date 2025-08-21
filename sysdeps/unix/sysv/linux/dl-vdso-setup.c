@@ -42,34 +42,34 @@
 
 #if defined PROCINFO_DECL || !defined SHARED
 # ifdef HAVE_CLOCK_GETTIME_VSYSCALL
-PROCINFO_CLASS int (*_dl_vdso_clock_gettime) (clockid_t,
-					      struct timespec *) RELRO;
+PROCINFO_CLASS int (*_dl_vdso_clock_gettime)(clockid_t,
+        struct timespec *) RELRO;
 #endif
 # ifdef HAVE_CLOCK_GETTIME64_VSYSCALL
-PROCINFO_CLASS int (*_dl_vdso_clock_gettime64) (clockid_t,
-						struct __timespec64 *) RELRO;
+PROCINFO_CLASS int (*_dl_vdso_clock_gettime64)(clockid_t,
+        struct __timespec64 *) RELRO;
 #endif
 # ifdef HAVE_GETTIMEOFDAY_VSYSCALL
-PROCINFO_CLASS int (*_dl_vdso_gettimeofday) (struct timeval *, void *) RELRO;
+PROCINFO_CLASS int (*_dl_vdso_gettimeofday)(struct timeval *, void *) RELRO;
 #endif
 # ifdef HAVE_TIME_VSYSCALL
-PROCINFO_CLASS time_t (*_dl_vdso_time) (time_t *) RELRO;
+PROCINFO_CLASS time_t (*_dl_vdso_time)(time_t *) RELRO;
 # endif
 # ifdef HAVE_GETCPU_VSYSCALL
-PROCINFO_CLASS int (*_dl_vdso_getcpu) (unsigned *, unsigned *, void *) RELRO;
+PROCINFO_CLASS int (*_dl_vdso_getcpu)(unsigned *, unsigned *, void *) RELRO;
 # endif
 # ifdef HAVE_CLOCK_GETRES_VSYSCALL
-PROCINFO_CLASS int (*_dl_vdso_clock_getres) (clockid_t,
-					     struct timespec *) RELRO;
+PROCINFO_CLASS int (*_dl_vdso_clock_getres)(clockid_t,
+        struct timespec *) RELRO;
 # endif
 # ifdef HAVE_CLOCK_GETRES64_VSYSCALL
-PROCINFO_CLASS int (*_dl_vdso_clock_getres_time64) (clockid_t,
-						    struct __timespec64 *) RELRO;
+PROCINFO_CLASS int (*_dl_vdso_clock_getres_time64)(clockid_t,
+        struct __timespec64 *) RELRO;
 # endif
 # ifdef HAVE_GETRANDOM_VSYSCALL
-PROCINFO_CLASS ssize_t (*_dl_vdso_getrandom) (void *buffer, size_t len,
-                                              unsigned int flags, void *state,
-                                              size_t state_len) RELRO;
+PROCINFO_CLASS ssize_t (*_dl_vdso_getrandom)(void *buffer, size_t len,
+        unsigned int flags, void *state,
+        size_t state_len) RELRO;
 # endif
 
 /* PowerPC specific ones.  */
@@ -80,10 +80,10 @@ PROCINFO_CLASS uint64_t (*_dl_vdso_get_tbfreq)(void) RELRO;
 /* RISC-V specific ones.  */
 # ifdef HAVE_RISCV_HWPROBE
 PROCINFO_CLASS int (*_dl_vdso_riscv_hwprobe)(void *,
-                                             size_t,
-                                             size_t,
-                                             unsigned long *,
-                                             unsigned int) RELRO;
+        size_t,
+        size_t,
+        unsigned long *,
+        unsigned int) RELRO;
 # endif
 
 #endif

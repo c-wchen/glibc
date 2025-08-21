@@ -1,6 +1,5 @@
 /* Definition of `struct stat' used in the kernel.  */
-struct kernel_stat
-  {
+struct kernel_stat {
     unsigned int st_dev;
     unsigned int st_ino;
     unsigned int st_mode;
@@ -16,11 +15,10 @@ struct kernel_stat
     int st_blocks;
     unsigned int st_flags;
     unsigned int st_gen;
-  };
+};
 
 /* Definition of `struct stat64' used in the kernel.  */
-struct kernel_stat64
-  {
+struct kernel_stat64 {
     unsigned long   st_dev;
     unsigned long   st_ino;
     unsigned long   st_rdev;
@@ -41,11 +39,10 @@ struct kernel_stat64
     unsigned long   st_ctime_sec;
     unsigned long   st_ctimensec;
     long            __glibc_reserved[3];
-  };
+};
 
 /* Definition of `struct stat' used by glibc 2.0.  */
-struct glibc2_stat
-  {
+struct glibc2_stat {
     __dev_t st_dev;
     __ino_t st_ino;
     __mode_t st_mode;
@@ -61,11 +58,10 @@ struct glibc2_stat
     int st_blocks;
     unsigned int st_flags;
     unsigned int st_gen;
-  };
+};
 
 /* Definition of `struct stat' used by glibc 2.1.  */
-struct glibc21_stat
-  {
+struct glibc21_stat {
     __dev_t st_dev;
     __ino64_t st_ino;
     __mode_t st_mode;
@@ -83,7 +79,7 @@ struct glibc21_stat
     unsigned int st_gen;
     int __pad3;
     long __glibc_reserved[4];
-  };
+};
 
 #define STAT_IS_KERNEL_STAT 0
 #define STAT64_IS_KERNEL_STAT64 1

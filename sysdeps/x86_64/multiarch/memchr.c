@@ -26,10 +26,10 @@
 # define SYMBOL_NAME memchr
 # include "ifunc-evex.h"
 
-libc_ifunc_redirected (__redirect_memchr, memchr, IFUNC_SELECTOR ());
-strong_alias (memchr, __memchr)
+libc_ifunc_redirected(__redirect_memchr, memchr, IFUNC_SELECTOR());
+strong_alias(memchr, __memchr)
 # ifdef SHARED
-__hidden_ver1 (memchr, __GI_memchr, __redirect_memchr)
-  __attribute__((visibility ("hidden"))) __attribute_copy__ (memchr);
+__hidden_ver1(memchr, __GI_memchr, __redirect_memchr)
+__attribute__((visibility("hidden"))) __attribute_copy__(memchr);
 # endif
 #endif

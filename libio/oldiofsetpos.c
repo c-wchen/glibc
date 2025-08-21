@@ -30,29 +30,28 @@
 #include <shlib-compat.h>
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
 int
-attribute_compat_text_section
-_IO_old_fsetpos (FILE *fp, const __fpos_t *posp)
+attribute_compat_text_section _IO_old_fsetpos(FILE *fp, const __fpos_t *posp)
 {
-  int result;
-  CHECK_FILE (fp, EOF);
-  _IO_acquire_lock (fp);
-  if (_IO_seekpos_unlocked (fp, posp->__pos, _IOS_INPUT|_IOS_OUTPUT)
-      == _IO_pos_BAD)
-    {
-      /* ANSI explicitly requires setting errno to a positive value on
-	 failure.  */
-      if (errno == 0)
-	__set_errno (EIO);
-      result = EOF;
+    int result;
+    CHECK_FILE(fp, EOF);
+    _IO_acquire_lock(fp);
+    if (_IO_seekpos_unlocked(fp, posp->__pos, _IOS_INPUT | _IOS_OUTPUT)
+        == _IO_pos_BAD) {
+        /* ANSI explicitly requires setting errno to a positive value on
+        failure.  */
+        if (errno == 0) {
+            __set_errno(EIO);
+        }
+        result = EOF;
+    } else {
+        result = 0;
     }
-  else
-    result = 0;
-  _IO_release_lock (fp);
-  return result;
+    _IO_release_lock(fp);
+    return result;
 }
 
-compat_symbol (libc, _IO_old_fsetpos, _IO_fsetpos, GLIBC_2_0);
-strong_alias (_IO_old_fsetpos, __old_fsetpos)
-compat_symbol (libc, __old_fsetpos, fsetpos, GLIBC_2_0);
+compat_symbol(libc, _IO_old_fsetpos, _IO_fsetpos, GLIBC_2_0);
+strong_alias(_IO_old_fsetpos, __old_fsetpos)
+compat_symbol(libc, __old_fsetpos, fsetpos, GLIBC_2_0);
 
 #endif

@@ -22,9 +22,9 @@
 #include <stdlib.h>
 #include <support/check.h>
 
-void
-xgetpeername (int fd, struct sockaddr *sa, socklen_t *plen)
+void xgetpeername(int fd, struct sockaddr *sa, socklen_t *plen)
 {
-  if (getpeername (fd, sa, plen) != 0)
-    FAIL_EXIT1 ("getpeername (%d): %m", fd);
+    if (getpeername(fd, sa, plen) != 0) {
+        FAIL_EXIT1("getpeername (%d): %m", fd);
+    }
 }

@@ -26,38 +26,36 @@ struct timer_node;
 
 
 /* Definitions for an internal thread of the POSIX timer implementation.  */
-struct thread_node
-{
-  struct list_head links;
-  pthread_attr_t attr;
-  pthread_t id;
-  unsigned int exists;
-  struct list_head timer_queue;
-  pthread_cond_t cond;
-  struct timer_node *current_timer;
-  pthread_t captured;
-  clockid_t clock_id;
+struct thread_node {
+    struct list_head links;
+    pthread_attr_t attr;
+    pthread_t id;
+    unsigned int exists;
+    struct list_head timer_queue;
+    pthread_cond_t cond;
+    struct timer_node *current_timer;
+    pthread_t captured;
+    clockid_t clock_id;
 };
 
 
 /* Internal representation of a timer.  */
-struct timer_node
-{
-  struct list_head links;
-  struct sigevent event;
-  clockid_t clock;
-  struct itimerspec value;
-  struct timespec expirytime;
-  pthread_attr_t attr;
-  unsigned int abstime;
-  unsigned int armed;
-  enum {
-    TIMER_FREE, TIMER_INUSE, TIMER_DELETED
-  } inuse;
-  struct thread_node *thread;
-  pid_t creator_pid;
-  int refcount;
-  int overrun_count;
+struct timer_node {
+    struct list_head links;
+    struct sigevent event;
+    clockid_t clock;
+    struct itimerspec value;
+    struct timespec expirytime;
+    pthread_attr_t attr;
+    unsigned int abstime;
+    unsigned int armed;
+    enum {
+        TIMER_FREE, TIMER_INUSE, TIMER_DELETED
+    } inuse;
+    struct thread_node *thread;
+    pid_t creator_pid;
+    int refcount;
+    int overrun_count;
 };
 
 
@@ -89,101 +87,97 @@ extern struct thread_node __timer_signal_thread_rclk;
 #define timer_ptr2id(timerid) ((timer_t) timerid)
 
 /* Check whether timer is valid; global mutex must be held. */
-static inline int
-timer_valid (struct timer_node *timer)
+static inline int timer_valid(struct timer_node *timer)
 {
-  return timer && timer->inuse == TIMER_INUSE;
+    return timer && timer->inuse == TIMER_INUSE;
 }
 
 /* Timer refcount functions; need global mutex. */
-extern void __timer_dealloc (struct timer_node *timer);
+extern void __timer_dealloc(struct timer_node *timer);
 
-static inline void
-timer_addref (struct timer_node *timer)
+static inline void timer_addref(struct timer_node *timer)
 {
-  timer->refcount++;
+    timer->refcount++;
 }
 
-static inline void
-timer_delref (struct timer_node *timer)
+static inline void timer_delref(struct timer_node *timer)
 {
-  if (--timer->refcount == 0)
-    __timer_dealloc (timer);
-}
-
-/* Timespec helper routines.  */
-static inline int
-__attribute ((always_inline))
-timespec_compare (const struct timespec *left, const struct timespec *right)
-{
-  if (left->tv_sec < right->tv_sec)
-    return -1;
-  if (left->tv_sec > right->tv_sec)
-    return 1;
-
-  if (left->tv_nsec < right->tv_nsec)
-    return -1;
-  if (left->tv_nsec > right->tv_nsec)
-    return 1;
-
-  return 0;
-}
-
-static inline void
-timespec_add (struct timespec *sum, const struct timespec *left,
-	      const struct timespec *right)
-{
-  sum->tv_sec = left->tv_sec + right->tv_sec;
-  sum->tv_nsec = left->tv_nsec + right->tv_nsec;
-
-  if (sum->tv_nsec >= 1000000000)
-    {
-      ++sum->tv_sec;
-      sum->tv_nsec -= 1000000000;
+    if (--timer->refcount == 0) {
+        __timer_dealloc(timer);
     }
 }
 
-static inline void
-timespec_sub (struct timespec *diff, const struct timespec *left,
-	      const struct timespec *right)
+/* Timespec helper routines.  */
+static inline int __attribute((always_inline))
+timespec_compare(const struct timespec *left, const struct timespec *right)
 {
-  diff->tv_sec = left->tv_sec - right->tv_sec;
-  diff->tv_nsec = left->tv_nsec - right->tv_nsec;
+    if (left->tv_sec < right->tv_sec) {
+        return -1;
+    }
+    if (left->tv_sec > right->tv_sec) {
+        return 1;
+    }
 
-  if (diff->tv_nsec < 0)
-    {
-      --diff->tv_sec;
-      diff->tv_nsec += 1000000000;
+    if (left->tv_nsec < right->tv_nsec) {
+        return -1;
+    }
+    if (left->tv_nsec > right->tv_nsec) {
+        return 1;
+    }
+
+    return 0;
+}
+
+static inline void timespec_add(struct timespec *sum, const struct timespec *left,
+                                const struct timespec *right)
+{
+    sum->tv_sec = left->tv_sec + right->tv_sec;
+    sum->tv_nsec = left->tv_nsec + right->tv_nsec;
+
+    if (sum->tv_nsec >= 1000000000) {
+        ++sum->tv_sec;
+        sum->tv_nsec -= 1000000000;
+    }
+}
+
+static inline void timespec_sub(struct timespec *diff, const struct timespec *left,
+                                const struct timespec *right)
+{
+    diff->tv_sec = left->tv_sec - right->tv_sec;
+    diff->tv_nsec = left->tv_nsec - right->tv_nsec;
+
+    if (diff->tv_nsec < 0) {
+        --diff->tv_sec;
+        diff->tv_nsec += 1000000000;
     }
 }
 
 
 /* We need one of the list functions in the other modules.  */
-static inline void
-list_unlink_ip (struct list_head *list)
+static inline void list_unlink_ip(struct list_head *list)
 {
-  struct list_head *lnext = list->next, *lprev = list->prev;
+    struct list_head *lnext = list->next, *lprev = list->prev;
 
-  lnext->prev = lprev;
-  lprev->next = lnext;
+    lnext->prev = lprev;
+    lprev->next = lnext;
 
-  /* The suffix ip means idempotent; list_unlink_ip can be called
-   * two or more times on the same node.
-   */
+    /* The suffix ip means idempotent; list_unlink_ip can be called
+     * two or more times on the same node.
+     */
 
-  list->next = list;
-  list->prev = list;
+    list->next = list;
+    list->prev = list;
 }
 
 
 /* Functions in the helper file.  */
-extern void __timer_mutex_cancel_handler (void *arg);
-extern void __timer_init_once (void);
-extern struct timer_node *__timer_alloc (void);
-extern int __timer_thread_start (struct thread_node *thread);
-extern struct thread_node *__timer_thread_find_matching (const pthread_attr_t *desired_attr, clockid_t);
-extern struct thread_node *__timer_thread_alloc (const pthread_attr_t *desired_attr, clockid_t);
-extern void __timer_thread_dealloc (struct thread_node *thread);
-extern int __timer_thread_queue_timer (struct thread_node *thread,
-				       struct timer_node *insert);
-extern void __timer_thread_wakeup (struct thread_node *thread);
+extern void __timer_mutex_cancel_handler(void *arg);
+extern void __timer_init_once(void);
+extern struct timer_node *__timer_alloc(void);
+extern int __timer_thread_start(struct thread_node *thread);
+extern struct thread_node *__timer_thread_find_matching(const pthread_attr_t *desired_attr, clockid_t);
+extern struct thread_node *__timer_thread_alloc(const pthread_attr_t *desired_attr, clockid_t);
+extern void __timer_thread_dealloc(struct thread_node *thread);
+extern int __timer_thread_queue_timer(struct thread_node *thread,
+                                      struct timer_node *insert);
+extern void __timer_thread_wakeup(struct thread_node *thread);

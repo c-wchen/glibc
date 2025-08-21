@@ -23,23 +23,22 @@
 #include <error.h>
 #include <errno.h>
 
-int
-main (int argc, char **argv)
+int main(int argc, char **argv)
 {
-  int i;
-  int err;
+    int i;
+    int err;
 
-  i = pthread_getconcurrency ();
-  assert (i == 0);
+    i = pthread_getconcurrency();
+    assert(i == 0);
 
-  err = pthread_setconcurrency (-1);
-  assert (err == EINVAL);
+    err = pthread_setconcurrency(-1);
+    assert(err == EINVAL);
 
-  err = pthread_setconcurrency (4);
-  assert (err == 0);
+    err = pthread_setconcurrency(4);
+    assert(err == 0);
 
-  i = pthread_getconcurrency ();
-  assert (i == 4);
+    i = pthread_getconcurrency();
+    assert(i == 4);
 
-  return 0;
+    return 0;
 }

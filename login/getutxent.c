@@ -19,7 +19,7 @@
 #include <utmpx.h>
 
 struct utmpx *
-getutxent (void)
+getutxent(void)
 {
-  return (struct utmpx *) __getutent ();
+    return (struct utmpx *) __getutent();
 }

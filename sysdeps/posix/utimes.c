@@ -23,21 +23,19 @@
 
 /* Change the access time of FILE to TVP[0] and
    the modification time of FILE to TVP[1].  */
-int
-__utimes (const char *file, const struct timeval tvp[2])
+int __utimes(const char *file, const struct timeval tvp[2])
 {
-  struct utimbuf buf, *times;
+    struct utimbuf buf, *times;
 
-  if (tvp)
-    {
-      times = &buf;
-      buf.actime = tvp[0].tv_sec + tvp[0].tv_usec / 1000000;
-      buf.modtime = tvp[1].tv_sec + tvp[1].tv_usec / 1000000;
+    if (tvp) {
+        times = &buf;
+        buf.actime = tvp[0].tv_sec + tvp[0].tv_usec / 1000000;
+        buf.modtime = tvp[1].tv_sec + tvp[1].tv_usec / 1000000;
+    } else {
+        times = NULL;
     }
-  else
-    times = NULL;
 
-  return utime (file, times);
+    return utime(file, times);
 }
 
-weak_alias (__utimes, utimes)
+weak_alias(__utimes, utimes)

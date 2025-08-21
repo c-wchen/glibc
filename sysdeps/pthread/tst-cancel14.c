@@ -30,101 +30,89 @@ static pthread_barrier_t bar;
 static sem_t sem;
 
 
-static void
-cleanup (void *arg)
+static void cleanup(void *arg)
 {
-  static int ncall;
+    static int ncall;
 
-  if (++ncall != 1)
-    {
-      puts ("second call to cleanup");
-      exit (1);
+    if (++ncall != 1) {
+        puts("second call to cleanup");
+        exit(1);
     }
 }
 
 
-static void *
-tf (void *arg)
+static void *tf(void *arg)
 {
-  pthread_cleanup_push (cleanup, NULL);
+    pthread_cleanup_push(cleanup, NULL);
 
-  int e = pthread_barrier_wait (&bar);
-  if (e != 0 && e != PTHREAD_BARRIER_SERIAL_THREAD)
-    {
-      puts ("error: tf: 1st barrier_wait failed");
-      exit (1);
+    int e = pthread_barrier_wait(&bar);
+    if (e != 0 && e != PTHREAD_BARRIER_SERIAL_THREAD) {
+        puts("error: tf: 1st barrier_wait failed");
+        exit(1);
     }
 
-  struct timeval tv;
-  (void) gettimeofday (&tv, NULL);
+    struct timeval tv;
+    (void) gettimeofday(&tv, NULL);
 
-  struct timespec ts;
-  TIMEVAL_TO_TIMESPEC (&tv, &ts);
+    struct timespec ts;
+    TIMEVAL_TO_TIMESPEC(&tv, &ts);
 
-  /* Timeout in 5 seconds.  */
-  ts.tv_sec += 5;
+    /* Timeout in 5 seconds.  */
+    ts.tv_sec += 5;
 
-  /* This call should block and be cancelable.  */
-  sem_timedwait (&sem, &ts);
+    /* This call should block and be cancelable.  */
+    sem_timedwait(&sem, &ts);
 
-  pthread_cleanup_pop (0);
+    pthread_cleanup_pop(0);
 
-  return NULL;
+    return NULL;
 }
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  pthread_t th;
+    pthread_t th;
 
-  if (pthread_barrier_init (&bar, NULL, 2) != 0)
-    {
-      puts ("error: barrier_init failed");
-      exit (1);
+    if (pthread_barrier_init(&bar, NULL, 2) != 0) {
+        puts("error: barrier_init failed");
+        exit(1);
     }
 
-  if (sem_init (&sem, 0, 1) != 0)
-    {
-      puts ("error: sem_init failed");
-      exit (1);
+    if (sem_init(&sem, 0, 1) != 0) {
+        puts("error: sem_init failed");
+        exit(1);
     }
 
-  if (pthread_create (&th, NULL, tf, NULL) != 0)
-    {
-      puts ("error: create failed");
-      exit (1);
+    if (pthread_create(&th, NULL, tf, NULL) != 0) {
+        puts("error: create failed");
+        exit(1);
     }
 
-  /* Check whether cancellation is honored even before sem_timedwait does
-     anything.  */
-  if (pthread_cancel (th) != 0)
-    {
-      puts ("error: 1st cancel failed");
-      exit (1);
+    /* Check whether cancellation is honored even before sem_timedwait does
+       anything.  */
+    if (pthread_cancel(th) != 0) {
+        puts("error: 1st cancel failed");
+        exit(1);
     }
 
-  int e = pthread_barrier_wait (&bar);
-  if (e != 0 && e != PTHREAD_BARRIER_SERIAL_THREAD)
-    {
-      puts ("1st barrier_wait failed");
-      exit (1);
+    int e = pthread_barrier_wait(&bar);
+    if (e != 0 && e != PTHREAD_BARRIER_SERIAL_THREAD) {
+        puts("1st barrier_wait failed");
+        exit(1);
     }
 
-  void *r;
-  if (pthread_join (th, &r) != 0)
-    {
-      puts ("join failed");
-      exit (1);
+    void *r;
+    if (pthread_join(th, &r) != 0) {
+        puts("join failed");
+        exit(1);
     }
 
-  if (r != PTHREAD_CANCELED)
-    {
-      puts ("thread not canceled");
-      exit (1);
+    if (r != PTHREAD_CANCELED) {
+        puts("thread not canceled");
+        exit(1);
     }
 
-  return 0;
+    return 0;
 }
 
 

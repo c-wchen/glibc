@@ -19,11 +19,10 @@
 #include <strfile.h>
 #include <libioP.h>
 
-extern int
-___ieee128_vsscanf (const char *string, const char *format, va_list ap)
+extern int ___ieee128_vsscanf(const char *string, const char *format, va_list ap)
 {
-  _IO_strfile sf;
-  FILE *fp = _IO_strfile_read (&sf, string);
-  return __vfscanf_internal (fp, format, ap, SCANF_LDBL_USES_FLOAT128);
+    _IO_strfile sf;
+    FILE *fp = _IO_strfile_read(&sf, string);
+    return __vfscanf_internal(fp, format, ap, SCANF_LDBL_USES_FLOAT128);
 }
-strong_alias (___ieee128_vsscanf, __vsscanfieee128)
+strong_alias(___ieee128_vsscanf, __vsscanfieee128)

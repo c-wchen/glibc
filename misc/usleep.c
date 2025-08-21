@@ -19,11 +19,10 @@
 #include <unistd.h>
 
 /* Sleep USECONDS microseconds, or until a previously set timer goes off.  */
-int
-usleep (useconds_t useconds)
+int usleep(useconds_t useconds)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (usleep)
+stub_warning(usleep)

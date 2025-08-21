@@ -19,8 +19,7 @@
 #include "nldbl-compat.h"
 
 long int
-attribute_hidden
-llogbl (double x)
+attribute_hidden llogbl(double x)
 {
-  return llogb (x);
+    return llogb(x);
 }

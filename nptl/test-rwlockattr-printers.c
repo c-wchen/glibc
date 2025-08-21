@@ -30,71 +30,71 @@
 #define SET_KIND(attr, kind) pthread_rwlockattr_setkind_np (attr, kind)
 #define SET_SHARED(attr, shared) pthread_rwlockattr_setpshared (attr, shared)
 
-static int rwlock_reinit (pthread_rwlock_t *rwlock,
-			  const pthread_rwlockattr_t *attr);
-static int test_setkind_np (pthread_rwlock_t *rwlock,
-			    pthread_rwlockattr_t *attr);
-static int test_setpshared (pthread_rwlock_t *rwlock,
-			    pthread_rwlockattr_t *attr);
+static int rwlock_reinit(pthread_rwlock_t *rwlock,
+                         const pthread_rwlockattr_t *attr);
+static int test_setkind_np(pthread_rwlock_t *rwlock,
+                           pthread_rwlockattr_t *attr);
+static int test_setpshared(pthread_rwlock_t *rwlock,
+                           pthread_rwlockattr_t *attr);
 
-int
-main (void)
+int main(void)
 {
-  pthread_rwlock_t rwlock;
-  pthread_rwlockattr_t attr;
-  int result = FAIL;
+    pthread_rwlock_t rwlock;
+    pthread_rwlockattr_t attr;
+    int result = FAIL;
 
-  if (pthread_rwlockattr_init (&attr) == 0
-      && pthread_rwlock_init (&rwlock, NULL) == 0
-      && test_setkind_np (&rwlock, &attr) == PASS
-      && test_setpshared (&rwlock, &attr) == PASS)
-    result = PASS;
-  /* Else, one of the pthread_rwlock* functions failed.  */
+    if (pthread_rwlockattr_init(&attr) == 0
+        && pthread_rwlock_init(&rwlock, NULL) == 0
+        && test_setkind_np(&rwlock, &attr) == PASS
+        && test_setpshared(&rwlock, &attr) == PASS) {
+        result = PASS;
+    }
+    /* Else, one of the pthread_rwlock* functions failed.  */
 
-  return result;
+    return result;
 }
 
 /* Destroys RWLOCK and re-initializes it using ATTR.  */
-static int
-rwlock_reinit (pthread_rwlock_t *rwlock, const pthread_rwlockattr_t *attr)
+static int rwlock_reinit(pthread_rwlock_t *rwlock, const pthread_rwlockattr_t *attr)
 {
-  int result = FAIL;
+    int result = FAIL;
 
-  if (pthread_rwlock_destroy (rwlock) == 0
-      && pthread_rwlock_init (rwlock, attr) == 0)
-    result = PASS;
+    if (pthread_rwlock_destroy(rwlock) == 0
+        && pthread_rwlock_init(rwlock, attr) == 0) {
+        result = PASS;
+    }
 
-  return result;
+    return result;
 }
 
 /* Tests setting whether the rwlock prefers readers or writers.  */
-static int
-test_setkind_np (pthread_rwlock_t *rwlock, pthread_rwlockattr_t *attr)
+static int test_setkind_np(pthread_rwlock_t *rwlock, pthread_rwlockattr_t *attr)
 {
-  int result = FAIL;
+    int result = FAIL;
 
-  if (SET_KIND (attr, PTHREAD_RWLOCK_PREFER_READER_NP) == 0 /* Set kind.  */
-      && rwlock_reinit (rwlock, attr) == PASS
-      && SET_KIND (attr, PTHREAD_RWLOCK_PREFER_WRITER_NP) == 0
-      && rwlock_reinit (rwlock, attr) == PASS
-      && SET_KIND (attr, PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP) == 0
-      && rwlock_reinit (rwlock, attr) == PASS)
-    result = PASS;
+    if (SET_KIND(attr, PTHREAD_RWLOCK_PREFER_READER_NP) == 0  /* Set kind.  */
+        && rwlock_reinit(rwlock, attr) == PASS
+        && SET_KIND(attr, PTHREAD_RWLOCK_PREFER_WRITER_NP) == 0
+        && rwlock_reinit(rwlock, attr) == PASS
+        && SET_KIND(attr, PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP) == 0
+        && rwlock_reinit(rwlock, attr) == PASS) {
+        result = PASS;
+    }
 
-  return result;
+    return result;
 }
 
 /* Tests setting whether the rwlock can be shared between processes.  */
-static int
-test_setpshared (pthread_rwlock_t *rwlock, pthread_rwlockattr_t *attr)
+static int test_setpshared(pthread_rwlock_t *rwlock, pthread_rwlockattr_t *attr)
 {
-  int result = FAIL;
+    int result = FAIL;
 
-  if (SET_SHARED (attr, PTHREAD_PROCESS_SHARED) == 0 /* Set shared.  */
-      && rwlock_reinit (rwlock, attr) == PASS
-      && SET_SHARED (attr, PTHREAD_PROCESS_PRIVATE) == 0
-      && rwlock_reinit (rwlock, attr) == PASS)
-    result = PASS;
+    if (SET_SHARED(attr, PTHREAD_PROCESS_SHARED) == 0  /* Set shared.  */
+        && rwlock_reinit(rwlock, attr) == PASS
+        && SET_SHARED(attr, PTHREAD_PROCESS_PRIVATE) == 0
+        && rwlock_reinit(rwlock, attr) == PASS) {
+        result = PASS;
+    }
 
-  return result;
+    return result;
 }

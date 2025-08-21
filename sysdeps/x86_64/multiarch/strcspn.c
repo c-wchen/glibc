@@ -26,10 +26,10 @@
 # define SYMBOL_NAME strcspn
 # include "ifunc-sse4_2.h"
 
-libc_ifunc_redirected (__redirect_strcspn, strcspn, IFUNC_SELECTOR ());
+libc_ifunc_redirected(__redirect_strcspn, strcspn, IFUNC_SELECTOR());
 
 # ifdef SHARED
-__hidden_ver1 (strcspn, __GI_strcspn, __redirect_strcspn)
-  __attribute__ ((visibility ("hidden"))) __attribute_copy__ (strcspn);
+__hidden_ver1(strcspn, __GI_strcspn, __redirect_strcspn)
+__attribute__((visibility("hidden"))) __attribute_copy__(strcspn);
 # endif
 #endif

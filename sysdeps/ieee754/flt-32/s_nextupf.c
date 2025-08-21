@@ -22,27 +22,29 @@
 #include <libm-alias-float.h>
 
 /* Return the least floating-point number greater than X.  */
-float
-__nextupf (float x)
+float __nextupf(float x)
 {
-  int32_t hx, ix;
+    int32_t hx, ix;
 
-  GET_FLOAT_WORD (hx, x);
-  ix = hx & 0x7fffffff;
-  if (ix == 0)
-    return FLT_TRUE_MIN;
-  if (ix > 0x7f800000)		/* x is nan.  */
-    return x + x;
-  if (hx >= 0)
-    {				/* x > 0.  */
-      if (isinf (x))
-        return x;
-      hx += 1;
+    GET_FLOAT_WORD(hx, x);
+    ix = hx & 0x7fffffff;
+    if (ix == 0) {
+        return FLT_TRUE_MIN;
     }
-  else
-    hx -= 1;
-  SET_FLOAT_WORD (x, hx);
-  return x;
+    if (ix > 0x7f800000) {    /* x is nan.  */
+        return x + x;
+    }
+    if (hx >= 0) {
+        /* x > 0.  */
+        if (isinf(x)) {
+            return x;
+        }
+        hx += 1;
+    } else {
+        hx -= 1;
+    }
+    SET_FLOAT_WORD(x, hx);
+    return x;
 }
 
-libm_alias_float (__nextup, nextup)
+libm_alias_float(__nextup, nextup)

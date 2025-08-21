@@ -17,8 +17,7 @@
 
 #include <support/xthread.h>
 
-void
-xpthread_key_delete (pthread_key_t key)
+void xpthread_key_delete(pthread_key_t key)
 {
-  xpthread_check_return ("pthread_key_delete", pthread_key_delete (key));
+    xpthread_check_return("pthread_key_delete", pthread_key_delete(key));
 }

@@ -21,15 +21,14 @@
 
 __thread struct __pthread_cancelation_handler *__pthread_cleanup_stack;
 
-void
-__libc_pthread_init (const struct pthread_functions *functions)
+void __libc_pthread_init(const struct pthread_functions *functions)
 {
 #ifdef SHARED
-  /* We copy the content of the variable pointed to by the FUNCTIONS
-     parameter to one in libc.so since this means access to the array
-     can be done with one memory access instead of two.  */
-  memcpy (&__libc_pthread_functions, functions,
-	  sizeof (__libc_pthread_functions));
-  __libc_pthread_functions_init = 1;
+    /* We copy the content of the variable pointed to by the FUNCTIONS
+       parameter to one in libc.so since this means access to the array
+       can be done with one memory access instead of two.  */
+    memcpy(&__libc_pthread_functions, functions,
+           sizeof(__libc_pthread_functions));
+    __libc_pthread_functions_init = 1;
 #endif
 }

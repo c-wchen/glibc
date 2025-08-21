@@ -23,18 +23,19 @@
 
 /* Change the owner and group of FILE; if it's a link, do the link and
    not the target.  */
-int
-__lchown (const char *file, uid_t owner, gid_t group)
+int __lchown(const char *file, uid_t owner, gid_t group)
 {
-  error_t err;
-  file_t port = __file_name_lookup (file, O_NOLINK, 0);
-  if (port == MACH_PORT_NULL)
-    return -1;
-  err = __file_chown (port, owner, group);
-  __mach_port_deallocate (__mach_task_self (), port);
-  if (err)
-    return __hurd_fail (err);
-  return 0;
+    error_t err;
+    file_t port = __file_name_lookup(file, O_NOLINK, 0);
+    if (port == MACH_PORT_NULL) {
+        return -1;
+    }
+    err = __file_chown(port, owner, group);
+    __mach_port_deallocate(__mach_task_self(), port);
+    if (err) {
+        return __hurd_fail(err);
+    }
+    return 0;
 }
 
-weak_alias (__lchown, lchown)
+weak_alias(__lchown, lchown)

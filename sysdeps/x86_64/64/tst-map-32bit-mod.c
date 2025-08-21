@@ -20,14 +20,12 @@
 #include <stdint.h>
 #include <support/check.h>
 
-static void
-dso_do_test (void)
+static void dso_do_test(void)
 {
 }
 
-void
-dso_check_map_32bit (void)
+void dso_check_map_32bit(void)
 {
-  printf ("dso_do_test: %p\n", dso_do_test);
-  TEST_VERIFY ((uintptr_t) dso_do_test < 0xffffffffUL);
+    printf("dso_do_test: %p\n", dso_do_test);
+    TEST_VERIFY((uintptr_t) dso_do_test < 0xffffffffUL);
 }

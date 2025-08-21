@@ -22,14 +22,13 @@
 # define SYSCALL_NUM "0x10"
 #endif
 
-static inline void *
-__brk_call (void *addr)
+static inline void *__brk_call(void *addr)
 {
-  register long int g1 asm ("g1") = __NR_brk;
-  register long int o0 asm ("o0") = (long int) addr;
-  asm volatile ("ta " SYSCALL_NUM
-		: "=r"(o0)
-		: "r"(g1), "0"(o0)
-		: "cc");
-  return (void *) o0;
+    register long int g1 asm("g1") = __NR_brk;
+    register long int o0 asm("o0") = (long int) addr;
+    asm volatile("ta " SYSCALL_NUM
+                 : "=r"(o0)
+                 : "r"(g1), "0"(o0)
+                 : "cc");
+    return (void *) o0;
 }

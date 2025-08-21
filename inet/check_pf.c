@@ -21,42 +21,40 @@
 #include <stdint.h>
 
 void
-attribute_hidden
-__check_pf (bool *seen_ipv4, bool *seen_ipv6,
-	    struct in6addrinfo **in6ai, size_t *in6ailen)
+attribute_hidden __check_pf(bool *seen_ipv4, bool *seen_ipv6,
+                            struct in6addrinfo **in6ai, size_t *in6ailen)
 {
-  /* By default we have no way to determine information about
-     deprecated and temporary addresses.  */
-  *in6ai = NULL;
-  *in6ailen = 0;
+    /* By default we have no way to determine information about
+       deprecated and temporary addresses.  */
+    *in6ai = NULL;
+    *in6ailen = 0;
 
-  /* Get the interface list via getifaddrs.  */
-  struct ifaddrs *ifa = NULL;
-  if (__getifaddrs (&ifa) != 0)
-    {
-      /* We cannot determine what interfaces are available.  Be
-	 pessimistic.  */
-      *seen_ipv4 = true;
-      *seen_ipv6 = true;
-      return;
+    /* Get the interface list via getifaddrs.  */
+    struct ifaddrs *ifa = NULL;
+    if (__getifaddrs(&ifa) != 0) {
+        /* We cannot determine what interfaces are available.  Be
+        pessimistic.  */
+        *seen_ipv4 = true;
+        *seen_ipv6 = true;
+        return;
     }
 
-  *seen_ipv4 = false;
-  *seen_ipv6 = false;
+    *seen_ipv4 = false;
+    *seen_ipv6 = false;
 
-  struct ifaddrs *runp;
-  for (runp = ifa; runp != NULL; runp = runp->ifa_next)
-    if (runp->ifa_addr->sa_family == PF_INET)
-      *seen_ipv4 = true;
-    else if (runp->ifa_addr->sa_family == PF_INET6)
-      *seen_ipv6 = true;
+    struct ifaddrs *runp;
+    for (runp = ifa; runp != NULL; runp = runp->ifa_next)
+        if (runp->ifa_addr->sa_family == PF_INET) {
+            *seen_ipv4 = true;
+        } else if (runp->ifa_addr->sa_family == PF_INET6) {
+            *seen_ipv6 = true;
+        }
 
-  (void) __freeifaddrs (ifa);
+    (void) __freeifaddrs(ifa);
 }
 
 
-void
-__free_in6ai (struct in6addrinfo *in6ai)
+void __free_in6ai(struct in6addrinfo *in6ai)
 {
-  /* Nothing to do.  */
+    /* Nothing to do.  */
 }

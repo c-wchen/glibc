@@ -26,13 +26,14 @@
    X_EPS / X is small enough that factors quadratic in it can be
    neglected.  */
 
-long double
-__lgamma_productl (long double t, long double x, long double x_eps, int n)
+long double __lgamma_productl(long double t, long double x, long double x_eps, int n)
 {
-  long double x_full = x + x_eps;
-  long double ret = 0;
-  for (int i = 0; i < n; i++)
-    /* FIXME: no extra precision used.  */
-    ret += (t / (x_full + i)) * (1 + ret);
-  return ret;
+    long double x_full = x + x_eps;
+    long double ret = 0;
+    for (int i = 0; i < n; i++)
+        /* FIXME: no extra precision used.  */
+    {
+        ret += (t / (x_full + i)) * (1 + ret);
+    }
+    return ret;
 }

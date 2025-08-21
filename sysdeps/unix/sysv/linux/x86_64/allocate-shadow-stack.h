@@ -18,7 +18,7 @@
 
 #include <ucontext.h>
 
-typedef __typeof (((ucontext_t *) 0)->__ssp[0]) shadow_stack_size_t;
+typedef __typeof(((ucontext_t *) 0)->__ssp[0]) shadow_stack_size_t;
 
-extern long int __allocate_shadow_stack (size_t, shadow_stack_size_t *)
-  attribute_hidden;
+extern long int __allocate_shadow_stack(size_t, shadow_stack_size_t *)
+attribute_hidden;

@@ -24,51 +24,55 @@
 
 /* Take a context previously prepared via getcontext() and set to
    call func() with the given int only args.  */
-void
-__makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
+void __makecontext(ucontext_t *ucp, void (*func)(void), int argc, ...)
 {
-  extern void __startcontext (void);
-  unsigned long *funcstack;
-  va_list vl;
-  unsigned long *regptr;
-  unsigned int reg;
-  int misaligned;
+    extern void __startcontext(void);
+    unsigned long *funcstack;
+    va_list vl;
+    unsigned long *regptr;
+    unsigned int reg;
+    int misaligned;
 
-  /* Start at the top of stack.  */
-  funcstack = (unsigned long *) (ucp->uc_stack.ss_sp + ucp->uc_stack.ss_size);
+    /* Start at the top of stack.  */
+    funcstack = (unsigned long *)(ucp->uc_stack.ss_sp + ucp->uc_stack.ss_size);
 
-  /* Ensure the stack stays eight byte aligned.  */
-  misaligned = ((unsigned long) funcstack & 4) != 0;
+    /* Ensure the stack stays eight byte aligned.  */
+    misaligned = ((unsigned long) funcstack & 4) != 0;
 
-  if ((argc > NREG_ARGS) && (argc & 1) != 0)
-    misaligned = !misaligned;
+    if ((argc > NREG_ARGS) && (argc & 1) != 0) {
+        misaligned = !misaligned;
+    }
 
-  if (misaligned)
-    funcstack -= 1;
+    if (misaligned) {
+        funcstack -= 1;
+    }
 
-  va_start (vl, argc);
+    va_start(vl, argc);
 
-  /* Reserve space for the on-stack arguments.  */
-  if (argc > NREG_ARGS)
-    funcstack -= (argc - NREG_ARGS);
+    /* Reserve space for the on-stack arguments.  */
+    if (argc > NREG_ARGS) {
+        funcstack -= (argc - NREG_ARGS);
+    }
 
-  ucp->uc_mcontext.__gregs.__usp = (unsigned long) funcstack;
-  ucp->uc_mcontext.__gregs.__pc = (unsigned long) func;
+    ucp->uc_mcontext.__gregs.__usp = (unsigned long) funcstack;
+    ucp->uc_mcontext.__gregs.__pc = (unsigned long) func;
 
-  /* Exit to startcontext() with the next context in R9.  */
-  ucp->uc_mcontext.__gregs.__regs[5] = (unsigned long) ucp->uc_link;
-  ucp->uc_mcontext.__gregs.__lr = (unsigned long) __startcontext;
+    /* Exit to startcontext() with the next context in R9.  */
+    ucp->uc_mcontext.__gregs.__regs[5] = (unsigned long) ucp->uc_link;
+    ucp->uc_mcontext.__gregs.__lr = (unsigned long) __startcontext;
 
-  /* The first four arguments go into registers.  */
-  regptr = &(ucp->uc_mcontext.__gregs.__a0);
+    /* The first four arguments go into registers.  */
+    regptr = &(ucp->uc_mcontext.__gregs.__a0);
 
-  for (reg = 0; (reg < argc) && (reg < NREG_ARGS); reg++)
-    *regptr++ = va_arg (vl, unsigned long);
+    for (reg = 0; (reg < argc) && (reg < NREG_ARGS); reg++) {
+        *regptr++ = va_arg(vl, unsigned long);
+    }
 
-  /* And the remainder on the stack.  */
-  for (; reg < argc; reg++)
-    *funcstack++ = va_arg (vl, unsigned long);
+    /* And the remainder on the stack.  */
+    for (; reg < argc; reg++) {
+        *funcstack++ = va_arg(vl, unsigned long);
+    }
 
-  va_end (vl);
+    va_end(vl);
 }
-weak_alias (__makecontext, makecontext)
+weak_alias(__makecontext, makecontext)

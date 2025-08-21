@@ -22,11 +22,11 @@
 #include <stdlib.h>
 #include <support/check.h>
 
-pid_t
-xfork (void)
+pid_t xfork(void)
 {
-  pid_t result = fork ();
-  if (result < 0)
-    FAIL_EXIT1 ("fork: %m");
-  return result;
+    pid_t result = fork();
+    if (result < 0) {
+        FAIL_EXIT1("fork: %m");
+    }
+    return result;
 }

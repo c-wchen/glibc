@@ -21,8 +21,7 @@
 #endif
 
 /* Data structure used to pass permission information to IPC operations.  */
-struct ipc_perm
-  {
+struct ipc_perm {
     __key_t __key;                      /* Key.  */
     __uid_t uid;                        /* Owner's user ID.  */
     __gid_t gid;                        /* Owner's group ID.  */
@@ -34,4 +33,4 @@ struct ipc_perm
     unsigned int __pad3;
     __extension__ unsigned long long int __glibc_reserved1;
     __extension__ unsigned long long int __glibc_reserved2;
-  };
+};

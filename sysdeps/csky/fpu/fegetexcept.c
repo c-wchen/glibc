@@ -20,13 +20,12 @@
 #include <fenv_libc.h>
 #include <fpu_control.h>
 
-int
-fegetexcept (void)
+int fegetexcept(void)
 {
-  unsigned int exc;
+    unsigned int exc;
 
-  /* Get the current control word.  */
-  _FPU_GETCW (exc);
+    /* Get the current control word.  */
+    _FPU_GETCW(exc);
 
-  return (exc & ENABLE_MASK) >> ENABLE_SHIFT;
+    return (exc & ENABLE_MASK) >> ENABLE_SHIFT;
 }

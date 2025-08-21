@@ -19,12 +19,12 @@
 #include <support/xunistd.h>
 #include <support/check.h>
 
-int
-xdup (int from)
+int xdup(int from)
 {
-  int ret = dup (from);
-  if (ret < 0)
-    FAIL_EXIT1 ("dup (%d): %m", from);
+    int ret = dup(from);
+    if (ret < 0) {
+        FAIL_EXIT1("dup (%d): %m", from);
+    }
 
-  return ret;
+    return ret;
 }

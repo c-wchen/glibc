@@ -22,56 +22,51 @@
 #include <unistd.h>
 
 
-static void
-handler (int sig)
+static void handler(int sig)
 {
-  struct sigaction sa;
+    struct sigaction sa;
 
-  sa.sa_handler = SIG_DFL;
-  sa.sa_flags = 0;
-  sigemptyset (&sa.sa_mask);
+    sa.sa_handler = SIG_DFL;
+    sa.sa_flags = 0;
+    sigemptyset(&sa.sa_mask);
 
-  sigaction (SIGALRM, &sa, NULL);
+    sigaction(SIGALRM, &sa, NULL);
 
-  /* Rearm the timer.  */
-  alarm (1);
+    /* Rearm the timer.  */
+    alarm(1);
 }
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  sem_t s;
-  struct sigaction sa;
+    sem_t s;
+    struct sigaction sa;
 
-  sa.sa_handler = handler;
-  sa.sa_flags = 0;
-  sigemptyset (&sa.sa_mask);
+    sa.sa_handler = handler;
+    sa.sa_flags = 0;
+    sigemptyset(&sa.sa_mask);
 
-  sigaction (SIGALRM, &sa, NULL);
+    sigaction(SIGALRM, &sa, NULL);
 
-  if (sem_init (&s, 0, 0) == -1)
-    {
-      puts ("init failed");
-      return 1;
+    if (sem_init(&s, 0, 0) == -1) {
+        puts("init failed");
+        return 1;
     }
 
-  /* Set an alarm for 1 second.  The wrapper will expect this.  */
-  alarm (1);
+    /* Set an alarm for 1 second.  The wrapper will expect this.  */
+    alarm(1);
 
-  int res = sem_wait (&s);
-  if (res == 0)
-    {
-      puts ("wait succeeded");
-      return 1;
+    int res = sem_wait(&s);
+    if (res == 0) {
+        puts("wait succeeded");
+        return 1;
     }
-  if (res != -1 || errno != EINTR)
-    {
-      puts ("wait didn't fail with EINTR");
-      return 1;
+    if (res != -1 || errno != EINTR) {
+        puts("wait didn't fail with EINTR");
+        return 1;
     }
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

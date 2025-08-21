@@ -25,41 +25,40 @@
 /* A small buffer size is enough to run this test.  */
 #define BUFSIZE 4
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int fd;
-  FILE *f;
-  struct stat64 st;
+    int fd;
+    FILE *f;
+    struct stat64 st;
 
-  /* Create a temporary file and open it in read-only mode.  */
-  fd = create_temp_file ("tst-fwrite-ro", NULL);
-  TEST_VERIFY_EXIT (fd != -1);
-  f = fdopen (fd, "r");
-  TEST_VERIFY_EXIT (f != NULL);
+    /* Create a temporary file and open it in read-only mode.  */
+    fd = create_temp_file("tst-fwrite-ro", NULL);
+    TEST_VERIFY_EXIT(fd != -1);
+    f = fdopen(fd, "r");
+    TEST_VERIFY_EXIT(f != NULL);
 
-  /* Try to write to the temporary file with nmemb = 0, then check that
-     fwrite returns 0.  No errors are expected from this.  */
-  TEST_COMPARE (fwrite ("a", 1, 0, f), 0);
-  TEST_COMPARE (ferror (f), 0);
+    /* Try to write to the temporary file with nmemb = 0, then check that
+       fwrite returns 0.  No errors are expected from this.  */
+    TEST_COMPARE(fwrite("a", 1, 0, f), 0);
+    TEST_COMPARE(ferror(f), 0);
 
-  /* Try to write to the temporary file with size = 0, then check that
-     fwrite returns 0.  No errors are expected from this.  */
-  TEST_COMPARE (fwrite ("a", 0, 1, f), 0);
-  TEST_COMPARE (ferror (f), 0);
+    /* Try to write to the temporary file with size = 0, then check that
+       fwrite returns 0.  No errors are expected from this.  */
+    TEST_COMPARE(fwrite("a", 0, 1, f), 0);
+    TEST_COMPARE(ferror(f), 0);
 
-  /* Try to write a single byte to the temporary file, then check that
-     fwrite returns 0.  Check if an error was reported.  */
-  TEST_COMPARE (fwrite ("a", 1, 1, f), 0);
-  TEST_COMPARE (ferror (f), 1);
-  clearerr (f);
+    /* Try to write a single byte to the temporary file, then check that
+       fwrite returns 0.  Check if an error was reported.  */
+    TEST_COMPARE(fwrite("a", 1, 1, f), 0);
+    TEST_COMPARE(ferror(f), 1);
+    clearerr(f);
 
-  xfstat64 (fd, &st);
-  TEST_COMPARE (st.st_size, 0);
+    xfstat64(fd, &st);
+    TEST_COMPARE(st.st_size, 0);
 
-  xfclose (f);
+    xfclose(f);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

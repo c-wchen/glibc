@@ -16,8 +16,7 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
-struct link_map_machine
-{
-  ElfW (Addr) plt;	/* Address of .plt.  */
-  void *tlsdesc_table;	/* Address of TLS descriptor hash table.  */
+struct link_map_machine {
+    ElfW(Addr) plt;   /* Address of .plt.  */
+    void *tlsdesc_table;  /* Address of TLS descriptor hash table.  */
 };

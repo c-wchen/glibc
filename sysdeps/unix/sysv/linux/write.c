@@ -20,14 +20,13 @@
 #include <sysdep-cancel.h>
 
 /* Write NBYTES of BUF to FD.  Return the number written, or -1.  */
-ssize_t
-__libc_write (int fd, const void *buf, size_t nbytes)
+ssize_t __libc_write(int fd, const void *buf, size_t nbytes)
 {
-  return SYSCALL_CANCEL (write, fd, buf, nbytes);
+    return SYSCALL_CANCEL(write, fd, buf, nbytes);
 }
-libc_hidden_def (__libc_write)
+libc_hidden_def(__libc_write)
 
-weak_alias (__libc_write, __write)
-libc_hidden_weak (__write)
-weak_alias (__libc_write, write)
-libc_hidden_weak (write)
+weak_alias(__libc_write, __write)
+libc_hidden_weak(__write)
+weak_alias(__libc_write, write)
+libc_hidden_weak(write)

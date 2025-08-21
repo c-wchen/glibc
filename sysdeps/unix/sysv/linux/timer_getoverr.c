@@ -21,31 +21,29 @@
 #include "kernel-posix-timers.h"
 #include <shlib-compat.h>
 
-int
-___timer_getoverrun (timer_t timerid)
+int ___timer_getoverrun(timer_t timerid)
 {
-  kernel_timer_t ktimerid = timerid_to_kernel_timer (timerid);
-  return INLINE_SYSCALL_CALL (timer_getoverrun, ktimerid);
+    kernel_timer_t ktimerid = timerid_to_kernel_timer(timerid);
+    return INLINE_SYSCALL_CALL(timer_getoverrun, ktimerid);
 }
-versioned_symbol (libc, ___timer_getoverrun, timer_getoverrun, GLIBC_2_34);
-libc_hidden_ver (___timer_getoverrun, __timer_getoverrun)
+versioned_symbol(libc, ___timer_getoverrun, timer_getoverrun, GLIBC_2_34);
+libc_hidden_ver(___timer_getoverrun, __timer_getoverrun)
 
 #if TIMER_T_WAS_INT_COMPAT
 # if OTHER_SHLIB_COMPAT (librt, GLIBC_2_3_3, GLIBC_2_34)
-compat_symbol (librt, ___timer_getoverrun, timer_getoverrun, GLIBC_2_3_3);
+compat_symbol(librt, ___timer_getoverrun, timer_getoverrun, GLIBC_2_3_3);
 # endif
 
 # if OTHER_SHLIB_COMPAT (librt, GLIBC_2_2, GLIBC_2_3_3)
-int
-__timer_getoverrun_old (int timerid)
+int __timer_getoverrun_old(int timerid)
 {
-  return __timer_getoverrun (__timer_compat_list[timerid]);
+    return __timer_getoverrun(__timer_compat_list[timerid]);
 }
-compat_symbol (librt, __timer_getoverrun_old, timer_getoverrun, GLIBC_2_2);
+compat_symbol(librt, __timer_getoverrun_old, timer_getoverrun, GLIBC_2_2);
 # endif /* OTHER_SHLIB_COMPAT */
 
 #else /* !TIMER_T_WAS_INT_COMPAT */
 # if OTHER_SHLIB_COMPAT (librt, GLIBC_2_2, GLIBC_2_34)
-compat_symbol (librt, ___timer_getoverrun, timer_getoverrun, GLIBC_2_2);
+compat_symbol(librt, ___timer_getoverrun, timer_getoverrun, GLIBC_2_2);
 # endif
 #endif /* !TIMER_T_WAS_INT_COMPAT */

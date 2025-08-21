@@ -33,17 +33,17 @@ void *arr[] = { ELEMS };
 #define X 2,
 static char val[] = { ELEMS };
 
-extern void bar (void);
+extern void bar(void);
 
-int
-foo (void)
+int foo(void)
 {
-  int err = 0;
-  for (int i = 0; i < array_length (arr); i++)
-    if (!((arr[i] == 0 && val[i] == 0)
-	  || (arr[i] == &o && val[i] == 1)
-	  || (arr[i] == &x && val[i] == 2)))
-      err++;
-  bar ();
-  return err;
+    int err = 0;
+    for (int i = 0; i < array_length(arr); i++)
+        if (!((arr[i] == 0 && val[i] == 0)
+              || (arr[i] == &o && val[i] == 1)
+              || (arr[i] == &x && val[i] == 2))) {
+            err++;
+        }
+    bar();
+    return err;
 }

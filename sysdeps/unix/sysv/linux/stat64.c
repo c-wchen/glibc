@@ -23,30 +23,29 @@
 #include <kernel_stat.h>
 #include <stat_t64_cp.h>
 
-int
-__stat64_time64 (const char *file, struct __stat64_t64 *buf)
+int __stat64_time64(const char *file, struct __stat64_t64 *buf)
 {
-  return __fstatat64_time64 (AT_FDCWD, file, buf, 0);
+    return __fstatat64_time64(AT_FDCWD, file, buf, 0);
 }
 #if __TIMESIZE != 64
-hidden_def (__stat64_time64)
+hidden_def(__stat64_time64)
 
 int
-__stat64 (const char *file, struct stat64 *buf)
+__stat64(const char *file, struct stat64 *buf)
 {
-  struct __stat64_t64 st_t64;
-  return __stat64_time64 (file, &st_t64)
-	 ?: __cp_stat64_t64_stat64 (&st_t64, buf);
+    struct __stat64_t64 st_t64;
+    return __stat64_time64(file, &st_t64)
+           ? : __cp_stat64_t64_stat64(&st_t64, buf);
 }
 #endif
 
 #undef __stat
 #undef stat
 
-hidden_def (__stat64)
-weak_alias (__stat64, stat64)
+hidden_def(__stat64)
+weak_alias(__stat64, stat64)
 
 #if XSTAT_IS_XSTAT64
-strong_alias (__stat64, __stat)
-weak_alias (__stat64, stat)
+strong_alias(__stat64, __stat)
+weak_alias(__stat64, stat)
 #endif

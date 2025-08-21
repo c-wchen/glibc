@@ -23,20 +23,20 @@
 /* Check that an already-open file has exactly the given bytes,
    starting at the current offset.  */
 
-int
-support_compare_file_bytes (FILE *fp, const char *contents, size_t length)
+int support_compare_file_bytes(FILE *fp, const char *contents, size_t length)
 {
-  int c;
-  while (length > 0)
-    {
-      c = getc (fp);
-      if (c == EOF || (unsigned char) c != (unsigned char) contents[0])
-	return 1;
-      contents++;
-      length--;
+    int c;
+    while (length > 0) {
+        c = getc(fp);
+        if (c == EOF || (unsigned char) c != (unsigned char) contents[0]) {
+            return 1;
+        }
+        contents++;
+        length--;
     }
-  c = getc (fp);
-  if (c != EOF || ferror (fp))
-    return 1;
-  return 0;
+    c = getc(fp);
+    if (c != EOF || ferror(fp)) {
+        return 1;
+    }
+    return 0;
 }

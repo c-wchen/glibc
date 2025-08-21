@@ -29,48 +29,47 @@
 
 #define NOT_A_VALID_CLOCK 123456
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  sem_t s;
-  TEST_COMPARE (sem_init (&s, 0, 1), 0);
+    sem_t s;
+    TEST_COMPARE(sem_init(&s, 0, 1), 0);
 
-  const struct timespec ts = make_timespec (0, 0);
+    const struct timespec ts = make_timespec(0, 0);
 
-  /* These clocks are meaningless to sem_clockwait.  */
+    /* These clocks are meaningless to sem_clockwait.  */
 #if defined(CLOCK_PROCESS_CPUTIME_ID)
-  TEST_COMPARE (sem_clockwait (&s, CLOCK_PROCESS_CPUTIME_ID, &ts), -1);
-  TEST_COMPARE (errno, EINVAL);
+    TEST_COMPARE(sem_clockwait(&s, CLOCK_PROCESS_CPUTIME_ID, &ts), -1);
+    TEST_COMPARE(errno, EINVAL);
 #endif
 #if defined(CLOCK_THREAD_CPUTIME_ID)
-  TEST_COMPARE (sem_clockwait (&s, CLOCK_THREAD_CPUTIME_ID, &ts), -1);
-  TEST_COMPARE (errno, EINVAL);
+    TEST_COMPARE(sem_clockwait(&s, CLOCK_THREAD_CPUTIME_ID, &ts), -1);
+    TEST_COMPARE(errno, EINVAL);
 #endif
 
-  /* These clocks might be meaningful, but are currently unsupported
-     by pthread_cond_clockwait.  */
+    /* These clocks might be meaningful, but are currently unsupported
+       by pthread_cond_clockwait.  */
 #if defined(CLOCK_REALTIME_COARSE)
-  TEST_COMPARE (sem_clockwait (&s, CLOCK_REALTIME_COARSE, &ts), -1);
-  TEST_COMPARE (errno, EINVAL);
+    TEST_COMPARE(sem_clockwait(&s, CLOCK_REALTIME_COARSE, &ts), -1);
+    TEST_COMPARE(errno, EINVAL);
 #endif
 #if defined(CLOCK_MONOTONIC_RAW)
-  TEST_COMPARE (sem_clockwait (&s, CLOCK_MONOTONIC_RAW, &ts), -1);
-  TEST_COMPARE (errno, EINVAL);
+    TEST_COMPARE(sem_clockwait(&s, CLOCK_MONOTONIC_RAW, &ts), -1);
+    TEST_COMPARE(errno, EINVAL);
 #endif
 #if defined(CLOCK_MONOTONIC_COARSE)
-  TEST_COMPARE (sem_clockwait (&s, CLOCK_MONOTONIC_COARSE, &ts), -1);
-  TEST_COMPARE (errno, EINVAL);
+    TEST_COMPARE(sem_clockwait(&s, CLOCK_MONOTONIC_COARSE, &ts), -1);
+    TEST_COMPARE(errno, EINVAL);
 #endif
 #if defined(CLOCK_BOOTTIME)
-  TEST_COMPARE (sem_clockwait (&s, CLOCK_BOOTTIME, &ts), -1);
-  TEST_COMPARE (errno, EINVAL);
+    TEST_COMPARE(sem_clockwait(&s, CLOCK_BOOTTIME, &ts), -1);
+    TEST_COMPARE(errno, EINVAL);
 #endif
 
-  /* This is a completely invalid clock.  */
-  TEST_COMPARE (sem_clockwait (&s, NOT_A_VALID_CLOCK, &ts), -1);
-  TEST_COMPARE (errno, EINVAL);
+    /* This is a completely invalid clock.  */
+    TEST_COMPARE(sem_clockwait(&s, NOT_A_VALID_CLOCK, &ts), -1);
+    TEST_COMPARE(errno, EINVAL);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

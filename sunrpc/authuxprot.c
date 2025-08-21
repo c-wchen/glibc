@@ -43,25 +43,23 @@
  * XDR for unix authentication parameters.
  * Unfortunately, none of these can be declared const.
  */
-bool_t
-xdr_authunix_parms (XDR * xdrs, struct authunix_parms *p)
+bool_t xdr_authunix_parms(XDR *xdrs, struct authunix_parms *p)
 {
-  if (xdr_u_long (xdrs, &(p->aup_time))
-      && xdr_string (xdrs, &(p->aup_machname), MAX_MACHINE_NAME)
-      && (sizeof (uid_t) == sizeof (short int)
-	  ? xdr_u_short (xdrs, (u_short *) & (p->aup_uid))
-	  : xdr_u_int (xdrs, (u_int *) & (p->aup_uid)))
-      && (sizeof (gid_t) == sizeof (short int)
-	  ? xdr_u_short (xdrs, (u_short *) & (p->aup_gid))
-	  : xdr_u_int (xdrs, (u_int *) & (p->aup_gid)))
-      && xdr_array (xdrs, (caddr_t *) & (p->aup_gids),
-		    & (p->aup_len), NGRPS, sizeof (gid_t),
-		    (sizeof (gid_t) == sizeof (short int)
-		     ? (xdrproc_t) xdr_u_short
-		     : (xdrproc_t) xdr_u_int)))
-    {
-      return TRUE;
+    if (xdr_u_long(xdrs, &(p->aup_time))
+        && xdr_string(xdrs, &(p->aup_machname), MAX_MACHINE_NAME)
+        && (sizeof(uid_t) == sizeof(short int)
+            ? xdr_u_short(xdrs, (u_short *) & (p->aup_uid))
+            : xdr_u_int(xdrs, (u_int *) & (p->aup_uid)))
+        && (sizeof(gid_t) == sizeof(short int)
+            ? xdr_u_short(xdrs, (u_short *) & (p->aup_gid))
+            : xdr_u_int(xdrs, (u_int *) & (p->aup_gid)))
+        && xdr_array(xdrs, (caddr_t *) & (p->aup_gids),
+                     & (p->aup_len), NGRPS, sizeof(gid_t),
+                     (sizeof(gid_t) == sizeof(short int)
+                      ? (xdrproc_t) xdr_u_short
+                      : (xdrproc_t) xdr_u_int))) {
+        return TRUE;
     }
-  return FALSE;
+    return FALSE;
 }
-libc_hidden_nolink_sunrpc (xdr_authunix_parms, GLIBC_2_0)
+libc_hidden_nolink_sunrpc(xdr_authunix_parms, GLIBC_2_0)

@@ -22,13 +22,13 @@
 #include <atomic.h>
 
 /* Slow path for allocate_once; see below.  */
-void *__libc_allocate_once_slow (void **__place,
-                                 void *(*__allocate) (void *__closure),
-                                 void (*__deallocate) (void *__closure,
-                                                       void *__ptr),
-                                 void *__closure);
+void *__libc_allocate_once_slow(void **__place,
+                                void *(*__allocate)(void *__closure),
+                                void (*__deallocate)(void *__closure,
+                                        void *__ptr),
+                                void *__closure);
 #ifndef _ISOMAC
-libc_hidden_proto (__libc_allocate_once_slow)
+libc_hidden_proto(__libc_allocate_once_slow)
 #endif
 
 /* Return an a pointer to an allocated and initialized data structure.
@@ -77,18 +77,18 @@ libc_hidden_proto (__libc_allocate_once_slow)
    regard.  allocate_once passes a closure parameter to the allocation
    function, too.  */
 static inline void *
-allocate_once (void **__place, void *(*__allocate) (void *__closure),
-               void (*__deallocate) (void *__closure, void *__ptr),
-               void *__closure)
+allocate_once(void **__place, void *(*__allocate)(void *__closure),
+              void (*__deallocate)(void *__closure, void *__ptr),
+              void *__closure)
 {
-  /* Synchronizes with the release MO CAS in
-     __allocate_once_slow.  */
-  void *__result = atomic_load_acquire (__place);
-  if (__result != NULL)
-    return __result;
-  else
-    return __libc_allocate_once_slow (__place, __allocate, __deallocate,
-                                      __closure);
+    /* Synchronizes with the release MO CAS in
+       __allocate_once_slow.  */
+    void *__result = atomic_load_acquire(__place);
+    if (__result != NULL) {
+        return __result;
+    } else
+        return __libc_allocate_once_slow(__place, __allocate, __deallocate,
+                                         __closure);
 }
 
 #endif /* _ALLOCATE_ONCE_H */

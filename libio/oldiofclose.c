@@ -32,38 +32,41 @@
 #include <stdlib.h>
 
 int
-attribute_compat_text_section
-_IO_old_fclose (FILE *fp)
+attribute_compat_text_section _IO_old_fclose(FILE *fp)
 {
-  int status;
+    int status;
 
-  CHECK_FILE(fp, EOF);
+    CHECK_FILE(fp, EOF);
 
-  /* We desperately try to help programs which are using streams in a
-     strange way and mix old and new functions.  Detect new streams
-     here.  */
-  if (fp->_vtable_offset == 0)
-    return _IO_new_fclose (fp);
+    /* We desperately try to help programs which are using streams in a
+       strange way and mix old and new functions.  Detect new streams
+       here.  */
+    if (fp->_vtable_offset == 0) {
+        return _IO_new_fclose(fp);
+    }
 
-  /* First unlink the stream.  */
-  if (fp->_flags & _IO_IS_FILEBUF)
-    _IO_un_link ((struct _IO_FILE_plus *) fp);
+    /* First unlink the stream.  */
+    if (fp->_flags & _IO_IS_FILEBUF) {
+        _IO_un_link((struct _IO_FILE_plus *) fp);
+    }
 
-  _IO_acquire_lock (fp);
-  if (fp->_flags & _IO_IS_FILEBUF)
-    status = _IO_old_file_close_it (fp);
-  else
-    status = fp->_flags & _IO_ERR_SEEN ? -1 : 0;
-  _IO_release_lock (fp);
-  _IO_FINISH (fp);
-  if (_IO_have_backup (fp))
-    _IO_free_backup_area (fp);
-  _IO_deallocate_file (fp);
-  return status;
+    _IO_acquire_lock(fp);
+    if (fp->_flags & _IO_IS_FILEBUF) {
+        status = _IO_old_file_close_it(fp);
+    } else {
+        status = fp->_flags & _IO_ERR_SEEN ? -1 : 0;
+    }
+    _IO_release_lock(fp);
+    _IO_FINISH(fp);
+    if (_IO_have_backup(fp)) {
+        _IO_free_backup_area(fp);
+    }
+    _IO_deallocate_file(fp);
+    return status;
 }
 
-strong_alias (_IO_old_fclose, __old_fclose)
-compat_symbol (libc, _IO_old_fclose, _IO_fclose, GLIBC_2_0);
-compat_symbol (libc, __old_fclose, fclose, GLIBC_2_0);
+strong_alias(_IO_old_fclose, __old_fclose)
+compat_symbol(libc, _IO_old_fclose, _IO_fclose, GLIBC_2_0);
+compat_symbol(libc, __old_fclose, fclose, GLIBC_2_0);
 
 #endif

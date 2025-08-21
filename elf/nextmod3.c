@@ -1,20 +1,17 @@
-int
-foo_v1 (int a)
+int foo_v1(int a)
 {
-  return 1;
+    return 1;
 }
-asm (".symver foo_v1, foo@v1");
+asm(".symver foo_v1, foo@v1");
 
-int
-foo_v2 (int a)
+int foo_v2(int a)
 {
-  return 2;
+    return 2;
 }
-asm (".symver foo_v2, foo@v2");
+asm(".symver foo_v2, foo@v2");
 
-int
-foo (int a)
+int foo(int a)
 {
-  return 3;
+    return 3;
 }
-asm (".symver foo, foo@@@v3");
+asm(".symver foo, foo@@@v3");

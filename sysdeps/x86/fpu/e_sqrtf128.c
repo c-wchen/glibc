@@ -30,19 +30,18 @@
 #include <quad.h>
 #include <libm-alias-finite.h>
 
-__float128
-__ieee754_sqrtf128 (__float128 a)
+__float128 __ieee754_sqrtf128(__float128 a)
 {
-  FP_DECL_EX;
-  FP_DECL_Q (A);
-  FP_DECL_Q (R);
-  __float128 r;
+    FP_DECL_EX;
+    FP_DECL_Q(A);
+    FP_DECL_Q(R);
+    __float128 r;
 
-  FP_INIT_ROUNDMODE;
-  FP_UNPACK_Q (A, a);
-  FP_SQRT_Q (R, A);
-  FP_PACK_Q (r, R);
-  FP_HANDLE_EXCEPTIONS;
-  return r;
+    FP_INIT_ROUNDMODE;
+    FP_UNPACK_Q(A, a);
+    FP_SQRT_Q(R, A);
+    FP_PACK_Q(r, R);
+    FP_HANDLE_EXCEPTIONS;
+    return r;
 }
-libm_alias_finite (__ieee754_sqrtf128, __sqrtf128)
+libm_alias_finite(__ieee754_sqrtf128, __sqrtf128)

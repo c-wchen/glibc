@@ -23,19 +23,17 @@
 /* Replace the current process, executing PATH relative to difrd with
    arguments argv and environment envp.
    argv and envp are terminated by NULL pointers.  */
-int
-__execveat (int dirfd, const char *path, char *const argv[], char *const envp[],
-            int flags)
+int __execveat(int dirfd, const char *path, char *const argv[], char *const envp[],
+               int flags)
 {
-  if (path == NULL || argv == NULL || envp == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (path == NULL || argv == NULL || envp == NULL) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (execveat)
+stub_warning(execveat)
 
-weak_alias (__execveat, execveat)
+weak_alias(__execveat, execveat)

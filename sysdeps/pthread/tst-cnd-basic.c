@@ -28,53 +28,61 @@ static cnd_t cond;
 /* Mutex needed to signal and wait threads.  */
 static mtx_t mutex;
 
-static int
-signal_parent (void)
+static int signal_parent(void)
 {
-  /* Acquire the lock so that cnd_signal does not run until
-     cnd_timedwait has been called.  */
-  if (mtx_lock (&mutex) != thrd_success)
-    FAIL_EXIT1 ("mtx_lock failed");
-  if (cnd_signal (&cond) != thrd_success)
-    FAIL_EXIT1 ("cnd_signal");
-  if (mtx_unlock (&mutex) != thrd_success)
-    FAIL_EXIT1 ("mtx_unlock");
+    /* Acquire the lock so that cnd_signal does not run until
+       cnd_timedwait has been called.  */
+    if (mtx_lock(&mutex) != thrd_success) {
+        FAIL_EXIT1("mtx_lock failed");
+    }
+    if (cnd_signal(&cond) != thrd_success) {
+        FAIL_EXIT1("cnd_signal");
+    }
+    if (mtx_unlock(&mutex) != thrd_success) {
+        FAIL_EXIT1("mtx_unlock");
+    }
 
-  thrd_exit (thrd_success);
+    thrd_exit(thrd_success);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  thrd_t id;
+    thrd_t id;
 
-  if (cnd_init (&cond) != thrd_success)
-    FAIL_EXIT1 ("cnd_init failed");
-  if (mtx_init (&mutex, mtx_plain) != thrd_success)
-    FAIL_EXIT1 ("mtx_init failed");
+    if (cnd_init(&cond) != thrd_success) {
+        FAIL_EXIT1("cnd_init failed");
+    }
+    if (mtx_init(&mutex, mtx_plain) != thrd_success) {
+        FAIL_EXIT1("mtx_init failed");
+    }
 
-  if (mtx_lock (&mutex) != thrd_success)
-    FAIL_EXIT1 ("mtx_lock failed");
+    if (mtx_lock(&mutex) != thrd_success) {
+        FAIL_EXIT1("mtx_lock failed");
+    }
 
-  if (thrd_create (&id, (thrd_start_t) signal_parent, NULL)
-      != thrd_success)
-    FAIL_EXIT1 ("thrd_create failed");
+    if (thrd_create(&id, (thrd_start_t) signal_parent, NULL)
+        != thrd_success) {
+        FAIL_EXIT1("thrd_create failed");
+    }
 
-  if (cnd_wait (&cond, &mutex) != thrd_success)
-    FAIL_EXIT1 ("cnd_wait failed");
+    if (cnd_wait(&cond, &mutex) != thrd_success) {
+        FAIL_EXIT1("cnd_wait failed");
+    }
 
-  /* Joining is not mandatory here, but still done to assure child thread
-     ends correctly.  */
-  if (thrd_join (id, NULL) != thrd_success)
-    FAIL_EXIT1 ("thrd_join failed");
+    /* Joining is not mandatory here, but still done to assure child thread
+       ends correctly.  */
+    if (thrd_join(id, NULL) != thrd_success) {
+        FAIL_EXIT1("thrd_join failed");
+    }
 
-  if (mtx_unlock (&mutex) != thrd_success)
-    FAIL_EXIT1 ("mtx_unlock");
+    if (mtx_unlock(&mutex) != thrd_success) {
+        FAIL_EXIT1("mtx_unlock");
+    }
 
-  mtx_destroy (&mutex);
-  cnd_destroy (&cond);
+    mtx_destroy(&mutex);
+    cnd_destroy(&cond);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -26,54 +26,48 @@
 #include <support/test-driver.h>
 
 __attribute_optimization_barrier__
-static void
-do_test_1 (void)
+static void do_test_1(void)
 {
-  pid_t p1;
+    pid_t p1;
 
-  /* NB: Since child return pops shadow stack which is shared with
-     parent, child must not return after vfork.  */
+    /* NB: Since child return pops shadow stack which is shared with
+       parent, child must not return after vfork.  */
 
-  if ((p1 = vfork ()) == 0)
-    {
-      /* Child return should trigger SIGSEGV due to shadow stack
-	 mismatch.  */
-      return;
-    }
-  else if (p1 == -1)
-    {
-      puts ("vfork failed");
-      _exit (EXIT_FAILURE);
+    if ((p1 = vfork()) == 0) {
+        /* Child return should trigger SIGSEGV due to shadow stack
+        mismatch.  */
+        return;
+    } else if (p1 == -1) {
+        puts("vfork failed");
+        _exit(EXIT_FAILURE);
     }
 
-  int r;
-  if (TEMP_FAILURE_RETRY (waitpid (p1, &r, 0)) != p1)
-    {
-      puts ("waitpid failed");
-      _exit (EXIT_FAILURE);
+    int r;
+    if (TEMP_FAILURE_RETRY(waitpid(p1, &r, 0)) != p1) {
+        puts("waitpid failed");
+        _exit(EXIT_FAILURE);
     }
 
-   if (!WIFSIGNALED (r) || WTERMSIG (r) != SIGSEGV)
-    {
-      puts ("Child not terminated with SIGSEGV");
-      _exit (EXIT_FAILURE);
+    if (!WIFSIGNALED(r) || WTERMSIG(r) != SIGSEGV) {
+        puts("Child not terminated with SIGSEGV");
+        _exit(EXIT_FAILURE);
     }
 
-  /* Parent exits immediately so that parent returns without triggering
-     SIGSEGV when shadow stack is in use.  */
-  _exit (EXIT_SUCCESS);
+    /* Parent exits immediately so that parent returns without triggering
+       SIGSEGV when shadow stack is in use.  */
+    _exit(EXIT_SUCCESS);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* NB: This test should trigger SIGSEGV with shadow stack enabled.  */
-  if (_get_ssp () == 0)
-    return EXIT_UNSUPPORTED;
-  do_test_1 ();
-  /* Child exits immediately so that child returns without triggering
-     SIGSEGV when shadow stack is in use.  */
-  _exit (EXIT_FAILURE);
+    /* NB: This test should trigger SIGSEGV with shadow stack enabled.  */
+    if (_get_ssp() == 0) {
+        return EXIT_UNSUPPORTED;
+    }
+    do_test_1();
+    /* Child exits immediately so that child returns without triggering
+       SIGSEGV when shadow stack is in use.  */
+    _exit(EXIT_FAILURE);
 }
 
 #include <support/test-driver.c>

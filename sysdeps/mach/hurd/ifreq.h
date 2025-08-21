@@ -24,8 +24,7 @@
 #include <sys/mman.h>
 
 
-static inline void
-__if_freereq (struct ifreq *ifreqs, int num_ifs)
+static inline void __if_freereq(struct ifreq *ifreqs, int num_ifs)
 {
-  __munmap (ifreqs, num_ifs * sizeof (struct ifreq));
+    __munmap(ifreqs, num_ifs * sizeof(struct ifreq));
 }

@@ -31,7 +31,7 @@
 # define __glob __glob64
 # define globfree(pglob) globfree64 (pglob)
 
-# define COMPILE_GLOB64	1
+# define COMPILE_GLOB64 1
 # define struct_stat    struct stat64
 # define struct_stat64  struct stat64
 # define GLOB_LSTAT     gl_lstat
@@ -43,11 +43,11 @@
 # include <shlib-compat.h>
 
 # ifdef GLOB_NO_OLD_VERSION
-strong_alias (__glob64, glob64)
-libc_hidden_def (glob64)
+strong_alias(__glob64, glob64)
+libc_hidden_def(glob64)
 # else
-libc_hidden_def (__glob64)
-versioned_symbol (libc, __glob64, glob64, GLIBC_2_27);
-libc_hidden_ver (__glob64, glob64)
+libc_hidden_def(__glob64)
+versioned_symbol(libc, __glob64, glob64, GLIBC_2_27);
+libc_hidden_ver(__glob64, glob64)
 # endif
 #endif /* XSTAT_IS_XSTAT64  */

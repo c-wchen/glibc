@@ -19,14 +19,14 @@
 #include <fenv_libc.h>
 
 #undef fesetround
-int
-__fesetround (int round)
+int __fesetround(int round)
 {
-  if ((unsigned int) round > 3)
-    return 1;
-  else
-    return __fesetround_inline(round);
+    if ((unsigned int) round > 3) {
+        return 1;
+    } else {
+        return __fesetround_inline(round);
+    }
 }
-libm_hidden_def (__fesetround)
-weak_alias (__fesetround, fesetround)
-libm_hidden_weak (fesetround)
+libm_hidden_def(__fesetround)
+weak_alias(__fesetround, fesetround)
+libm_hidden_weak(fesetround)

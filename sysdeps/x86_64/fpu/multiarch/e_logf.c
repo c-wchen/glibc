@@ -21,25 +21,25 @@
 # include <libm-alias-float.h>
 # include <libm-alias-finite.h>
 
-extern float __redirect_logf (float);
+extern float __redirect_logf(float);
 
 # define SYMBOL_NAME logf
 # include "ifunc-fma.h"
 
-libc_ifunc_redirected (__redirect_logf, __logf, IFUNC_SELECTOR ());
+libc_ifunc_redirected(__redirect_logf, __logf, IFUNC_SELECTOR());
 
 # ifdef SHARED
-__hidden_ver1 (__logf, __GI___logf, __redirect_logf)
-  __attribute__ ((visibility ("hidden")));
+__hidden_ver1(__logf, __GI___logf, __redirect_logf)
+__attribute__((visibility("hidden")));
 
-versioned_symbol (libm, __ieee754_logf, logf, GLIBC_2_27);
-libm_alias_float_other (__log, log)
+versioned_symbol(libm, __ieee754_logf, logf, GLIBC_2_27);
+libm_alias_float_other(__log, log)
 # else
-libm_alias_float (__log, log)
+libm_alias_float(__log, log)
 # endif
 
-strong_alias (__logf, __ieee754_logf)
-libm_alias_finite (__logf, __logf)
+strong_alias(__logf, __ieee754_logf)
+libm_alias_finite(__logf, __logf)
 
 # define __logf __logf_sse2
 #endif

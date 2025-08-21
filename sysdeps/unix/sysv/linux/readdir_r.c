@@ -20,58 +20,55 @@
 
 #if !_DIRENT_MATCHES_DIRENT64
 /* Read a directory entry from DIRP.  */
-int
-__readdir_r (DIR *dirp, struct dirent *entry, struct dirent **result)
+int __readdir_r(DIR *dirp, struct dirent *entry, struct dirent **result)
 {
-  struct dirent *dp;
-  size_t reclen;
-  int saved_errno = errno;
+    struct dirent *dp;
+    size_t reclen;
+    int saved_errno = errno;
 
-  __libc_lock_lock (dirp->lock);
+    __libc_lock_lock(dirp->lock);
 
-  while (1)
-    {
-      /* If errno is changed from 0, the NULL return value indicates
-	 an actual error.  It overrides a pending ENAMETOOLONG error.  */
-      __set_errno (0);
-      dp = __readdir_unlocked (dirp);
-      if (dp == NULL)
-	{
-	  if (errno != 0)
-	    dirp->errcode = errno;
-	  break;
-	}
+    while (1) {
+        /* If errno is changed from 0, the NULL return value indicates
+        an actual error.  It overrides a pending ENAMETOOLONG error.  */
+        __set_errno(0);
+        dp = __readdir_unlocked(dirp);
+        if (dp == NULL) {
+            if (errno != 0) {
+                dirp->errcode = errno;
+            }
+            break;
+        }
 
-      reclen = dp->d_reclen;
-      if (reclen <= offsetof (struct dirent, d_name) + NAME_MAX + 1)
-	break;
+        reclen = dp->d_reclen;
+        if (reclen <= offsetof(struct dirent, d_name) + NAME_MAX + 1) {
+            break;
+        }
 
-      /* The record is very long.  It could still fit into the caller-supplied
-	 buffer if we can skip padding at the end.  */
-      size_t namelen = _D_EXACT_NAMLEN (dp);
-      if (namelen <= NAME_MAX)
-	{
-	  reclen = offsetof (struct dirent, d_name) + namelen + 1;
-	  break;
-	}
+        /* The record is very long.  It could still fit into the caller-supplied
+        buffer if we can skip padding at the end.  */
+        size_t namelen = _D_EXACT_NAMLEN(dp);
+        if (namelen <= NAME_MAX) {
+            reclen = offsetof(struct dirent, d_name) + namelen + 1;
+            break;
+        }
 
-      /* The name is too long.  Ignore this file.  */
-      dirp->errcode = ENAMETOOLONG;
+        /* The name is too long.  Ignore this file.  */
+        dirp->errcode = ENAMETOOLONG;
     }
 
-  if (dp != NULL)
-    {
-      *result = memcpy (entry, dp, reclen);
-      entry->d_reclen = reclen;
+    if (dp != NULL) {
+        *result = memcpy(entry, dp, reclen);
+        entry->d_reclen = reclen;
+    } else {
+        *result = NULL;
     }
-  else
-    *result = NULL;
 
-  __libc_lock_unlock (dirp->lock);
+    __libc_lock_unlock(dirp->lock);
 
-  __set_errno (saved_errno);
-  return dp != NULL ? 0 : dirp->errcode;
+    __set_errno(saved_errno);
+    return dp != NULL ? 0 : dirp->errcode;
 }
 
-weak_alias (__readdir_r, readdir_r)
+weak_alias(__readdir_r, readdir_r)
 #endif /* _DIRENT_MATCHES_DIRENT64  */

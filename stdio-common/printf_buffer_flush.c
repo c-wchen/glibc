@@ -35,47 +35,45 @@
 # pragma weak __printf_buffer_flush_obstack
 #endif /* !SHARED */
 
-static void
-__printf_buffer_do_flush (struct __printf_buffer *buf)
+static void __printf_buffer_do_flush(struct __printf_buffer *buf)
 {
-  switch (buf->mode)
-    {
-    case __printf_buffer_mode_failed:
-    case __printf_buffer_mode_sprintf:
-      return;
-    case __printf_buffer_mode_snprintf:
-      __printf_buffer_flush_snprintf ((struct __printf_buffer_snprintf *) buf);
-      return;
-    case __printf_buffer_mode_sprintf_chk:
-      __chk_fail ();
-      break;
-    case __printf_buffer_mode_to_file:
-      __printf_buffer_flush_to_file ((struct __printf_buffer_to_file *) buf);
-      return;
-    case __printf_buffer_mode_asprintf:
-      __printf_buffer_flush_asprintf ((struct __printf_buffer_asprintf *) buf);
-      return;
-    case __printf_buffer_mode_dprintf:
-      __printf_buffer_flush_dprintf ((struct __printf_buffer_dprintf *) buf);
-      return;
-    case __printf_buffer_mode_strfmon:
-      __set_errno (E2BIG);
-      __printf_buffer_mark_failed (buf);
-      return;
-    case __printf_buffer_mode_fp:
-      __printf_buffer_flush_fp ((struct __printf_buffer_fp *) buf);
-      return;
-    case __printf_buffer_mode_fp_to_wide:
-      __printf_buffer_flush_fp_to_wide
-        ((struct __printf_buffer_fp_to_wide *) buf);
-      return;
-    case __printf_buffer_mode_fphex_to_wide:
-      __printf_buffer_flush_fphex_to_wide
-        ((struct __printf_buffer_fphex_to_wide *) buf);
-      return;
-    case __printf_buffer_mode_obstack:
-      __printf_buffer_flush_obstack ((struct __printf_buffer_obstack *) buf);
-      return;
+    switch (buf->mode) {
+        case __printf_buffer_mode_failed:
+        case __printf_buffer_mode_sprintf:
+            return;
+        case __printf_buffer_mode_snprintf:
+            __printf_buffer_flush_snprintf((struct __printf_buffer_snprintf *) buf);
+            return;
+        case __printf_buffer_mode_sprintf_chk:
+            __chk_fail();
+            break;
+        case __printf_buffer_mode_to_file:
+            __printf_buffer_flush_to_file((struct __printf_buffer_to_file *) buf);
+            return;
+        case __printf_buffer_mode_asprintf:
+            __printf_buffer_flush_asprintf((struct __printf_buffer_asprintf *) buf);
+            return;
+        case __printf_buffer_mode_dprintf:
+            __printf_buffer_flush_dprintf((struct __printf_buffer_dprintf *) buf);
+            return;
+        case __printf_buffer_mode_strfmon:
+            __set_errno(E2BIG);
+            __printf_buffer_mark_failed(buf);
+            return;
+        case __printf_buffer_mode_fp:
+            __printf_buffer_flush_fp((struct __printf_buffer_fp *) buf);
+            return;
+        case __printf_buffer_mode_fp_to_wide:
+            __printf_buffer_flush_fp_to_wide
+            ((struct __printf_buffer_fp_to_wide *) buf);
+            return;
+        case __printf_buffer_mode_fphex_to_wide:
+            __printf_buffer_flush_fphex_to_wide
+            ((struct __printf_buffer_fphex_to_wide *) buf);
+            return;
+        case __printf_buffer_mode_obstack:
+            __printf_buffer_flush_obstack((struct __printf_buffer_obstack *) buf);
+            return;
     }
-  __builtin_trap ();
+    __builtin_trap();
 }

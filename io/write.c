@@ -21,29 +21,27 @@
 #include <stddef.h>
 
 /* Write NBYTES of BUF to FD.  Return the number written, or -1.  */
-ssize_t
-__libc_write (int fd, const void *buf, size_t nbytes)
+ssize_t __libc_write(int fd, const void *buf, size_t nbytes)
 {
-  if (nbytes == 0)
-    return 0;
-  if (fd < 0)
-    {
-      __set_errno (EBADF);
-      return -1;
+    if (nbytes == 0) {
+        return 0;
     }
-  if (buf == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (fd < 0) {
+        __set_errno(EBADF);
+        return -1;
+    }
+    if (buf == NULL) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (__libc_write)
-stub_warning (write)
+libc_hidden_def(__libc_write)
+stub_warning(write)
 
-weak_alias (__libc_write, __write)
-libc_hidden_weak (__write)
-weak_alias (__libc_write, write)
-libc_hidden_weak (write)
+weak_alias(__libc_write, __write)
+libc_hidden_weak(__write)
+weak_alias(__libc_write, write)
+libc_hidden_weak(write)

@@ -21,11 +21,11 @@
 #include <sparc-ifunc.h>
 #include <libm-alias-float.h>
 
-extern __typeof (rintf) __rintf_vis3 attribute_hidden;
-extern __typeof (rintf) __rintf_generic attribute_hidden;
+extern __typeof(rintf) __rintf_vis3 attribute_hidden;
+extern __typeof(rintf) __rintf_generic attribute_hidden;
 
-sparc_libm_ifunc (__rintf,
-		  hwcap & HWCAP_SPARC_VIS3
-		  ? __rintf_vis3
-		  : __rintf_generic);
-libm_alias_float (__rint, rint)
+sparc_libm_ifunc(__rintf,
+                 hwcap &HWCAP_SPARC_VIS3
+                 ? __rintf_vis3
+                 : __rintf_generic);
+libm_alias_float(__rint, rint)

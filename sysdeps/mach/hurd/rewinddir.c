@@ -21,10 +21,9 @@
 #include <unistd.h>
 
 /* Rewind DIRP to the beginning of the directory.  */
-void
-__rewinddir (DIR *dirp)
+void __rewinddir(DIR *dirp)
 {
-  __seekdir (dirp, (off_t) 0L);
+    __seekdir(dirp, (off_t) 0L);
 }
-libc_hidden_def (__rewinddir)
-weak_alias (__rewinddir, rewinddir)
+libc_hidden_def(__rewinddir)
+weak_alias(__rewinddir, rewinddir)

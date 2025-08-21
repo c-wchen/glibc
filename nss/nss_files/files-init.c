@@ -23,31 +23,28 @@
 #include <nss.h>
 #include <nss_files.h>
 
-static void
-register_file (void (*cb) (size_t, struct traced_file *),
-               int db, const char *path, int crinit)
+static void register_file(void (*cb)(size_t, struct traced_file *),
+                          int db, const char *path, int crinit)
 {
-  size_t pathlen = strlen (path) + 1;
-  struct traced_file *file = malloc (sizeof (struct traced_file) + pathlen);
-  /* Do not register anything on memory allocation failure.  nscd will
-     fail soon anyway.  */
-  if (file != NULL)
-    {
-      init_traced_file (file, path, crinit);
-      cb (db, file);
+    size_t pathlen = strlen(path) + 1;
+    struct traced_file *file = malloc(sizeof(struct traced_file) + pathlen);
+    /* Do not register anything on memory allocation failure.  nscd will
+       fail soon anyway.  */
+    if (file != NULL) {
+        init_traced_file(file, path, crinit);
+        cb(db, file);
     }
 }
 
-void
-_nss_files_init (void (*cb) (size_t, struct traced_file *))
+void _nss_files_init(void (*cb)(size_t, struct traced_file *))
 {
-  register_file (cb, pwddb, "/etc/passwd", 0);
-  register_file (cb, grpdb, "/etc/group", 0);
-  register_file (cb, hstdb, "/etc/hosts", 0);
-  register_file (cb, hstdb, "/etc/resolv.conf", 1);
-  register_file (cb, servdb, "/etc/services", 0);
-  register_file (cb, netgrdb, "/etc/netgroup", 0);
+    register_file(cb, pwddb, "/etc/passwd", 0);
+    register_file(cb, grpdb, "/etc/group", 0);
+    register_file(cb, hstdb, "/etc/hosts", 0);
+    register_file(cb, hstdb, "/etc/resolv.conf", 1);
+    register_file(cb, servdb, "/etc/services", 0);
+    register_file(cb, netgrdb, "/etc/netgroup", 0);
 }
-libc_hidden_def (_nss_files_init)
+libc_hidden_def(_nss_files_init)
 
 #endif

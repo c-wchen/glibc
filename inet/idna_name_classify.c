@@ -22,54 +22,55 @@
 #include <string.h>
 #include <wchar.h>
 
-enum idna_name_classification
-__idna_name_classify (const char *name)
-{
-  mbstate_t mbs;
-  memset (&mbs, 0, sizeof (mbs));
-  const char *p = name;
-  const char *end = p + strlen (p) + 1;
-  bool nonascii = false;
-  bool backslash = false;
-  while (true)
+enum idna_name_classification __idna_name_classify(const char *name) {
+    mbstate_t mbs;
+    memset(&mbs, 0, sizeof(mbs));
+    const char *p = name;
+    const char *end = p + strlen(p) + 1;
+    bool nonascii = false;
+    bool backslash = false;
+    while (true)
     {
-      wchar_t wc;
-      size_t result = mbrtowc (&wc, p, end - p, &mbs);
-      if (result == 0)
-        /* NUL terminator was reached.  */
-        break;
-      else if (result == (size_t) -2)
-        /* Incomplete trailing multi-byte character.  This is an
-           encoding error because we received the full name.  */
-        return idna_name_encoding_error;
-      else if (result == (size_t) -1)
+        wchar_t wc;
+        size_t result = mbrtowc(&wc, p, end - p, &mbs);
+        if (result == 0)
+            /* NUL terminator was reached.  */
         {
-          /* Other error, including EILSEQ.  */
-          if (errno == EILSEQ)
+            break;
+        } else if (result == (size_t) -2)
+            /* Incomplete trailing multi-byte character.  This is an
+               encoding error because we received the full name.  */
+        {
             return idna_name_encoding_error;
-          else if (errno == ENOMEM)
-            return idna_name_memory_error;
-          else
-            return idna_name_error;
-        }
-      else
-        {
-          /* A wide character was decoded.  */
-          p += result;
-          if (wc == L'\\')
-            backslash = true;
-          else if (wc > 127)
-            nonascii = true;
+        } else if (result == (size_t) -1) {
+            /* Other error, including EILSEQ.  */
+            if (errno == EILSEQ) {
+                return idna_name_encoding_error;
+            } else if (errno == ENOMEM) {
+                return idna_name_memory_error;
+            } else {
+                return idna_name_error;
+            }
+        } else {
+            /* A wide character was decoded.  */
+            p += result;
+            if (wc == L'\\') {
+                backslash = true;
+            } else if (wc > 127) {
+                nonascii = true;
+            }
         }
     }
 
-  if (nonascii)
+    if (nonascii)
     {
-      if (backslash)
-        return idna_name_nonascii_backslash;
-      else
-        return idna_name_nonascii;
+        if (backslash) {
+            return idna_name_nonascii_backslash;
+        } else {
+            return idna_name_nonascii;
+        }
+    } else
+    {
+        return idna_name_ascii;
     }
-  else
-    return idna_name_ascii;
 }

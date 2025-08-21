@@ -24,21 +24,20 @@
 
 # include <fenv.h>
 
-typedef union
-{
-  fenv_t fenv;
-  unsigned int l[2];
+typedef union {
+    fenv_t fenv;
+    unsigned int l[2];
 } fenv_union_t;
 
 #endif
 
 extern __thread int __sim_exceptions_thread attribute_tls_model_ie;
-libc_hidden_tls_proto (__sim_exceptions_thread, tls_model ("initial-exec"));
+libc_hidden_tls_proto(__sim_exceptions_thread, tls_model("initial-exec"));
 extern __thread int __sim_disabled_exceptions_thread attribute_tls_model_ie;
-libc_hidden_tls_proto (__sim_disabled_exceptions_thread,
-		       tls_model ("initial-exec"));
+libc_hidden_tls_proto(__sim_disabled_exceptions_thread,
+                      tls_model("initial-exec"));
 extern __thread int __sim_round_mode_thread attribute_tls_model_ie;
-libc_hidden_tls_proto (__sim_round_mode_thread, tls_model ("initial-exec"));
+libc_hidden_tls_proto(__sim_round_mode_thread, tls_model("initial-exec"));
 
 /* These variables were formerly global, so there are compat symbols
    for global versions as well.  */
@@ -47,11 +46,11 @@ libc_hidden_tls_proto (__sim_round_mode_thread, tls_model ("initial-exec"));
 #define SIM_GLOBAL_COMPAT SHLIB_COMPAT (libc, GLIBC_2_3_2, GLIBC_2_19)
 #if SIM_GLOBAL_COMPAT
 extern int __sim_exceptions_global;
-libc_hidden_proto (__sim_exceptions_global);
+libc_hidden_proto(__sim_exceptions_global);
 extern int __sim_disabled_exceptions_global ;
-libc_hidden_proto (__sim_disabled_exceptions_global);
+libc_hidden_proto(__sim_disabled_exceptions_global);
 extern int __sim_round_mode_global;
-libc_hidden_proto (__sim_round_mode_global);
+libc_hidden_proto(__sim_round_mode_global);
 # define SIM_COMPAT_SYMBOL(GLOBAL_NAME, NAME) \
   compat_symbol (libc, GLOBAL_NAME, NAME, GLIBC_2_3_2)
 # define SIM_SET_GLOBAL(GLOBAL_VAR, THREAD_VAR) ((GLOBAL_VAR) = (THREAD_VAR))
@@ -59,4 +58,4 @@ libc_hidden_proto (__sim_round_mode_global);
 # define SIM_SET_GLOBAL(GLOBAL_VAR, THREAD_VAR) ((void) 0)
 #endif
 
-extern void __simulate_exceptions (int x) attribute_hidden;
+extern void __simulate_exceptions(int x) attribute_hidden;

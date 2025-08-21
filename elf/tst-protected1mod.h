@@ -20,22 +20,22 @@ extern int protected1;
 extern int protected2;
 extern int protected3;
 
-extern void set_protected1a (int);
-extern void set_protected1b (int);
-extern int *protected1a_p (void);
-extern int *protected1b_p (void);
+extern void set_protected1a(int);
+extern void set_protected1b(int);
+extern int *protected1a_p(void);
+extern int *protected1b_p(void);
 
-extern void set_expected_protected1 (int);
-extern int check_protected1 (void);
+extern void set_expected_protected1(int);
+extern int check_protected1(void);
 
-extern void set_protected2 (int);
-extern int check_protected2 (void);
+extern void set_protected2(int);
+extern int check_protected2(void);
 
-extern void set_expected_protected3a (int);
-extern void set_protected3a (int);
-extern int check_protected3a (void);
-extern int *protected3a_p (void);
-extern void set_expected_protected3b (int);
-extern void set_protected3b (int);
-extern int check_protected3b (void);
-extern int *protected3b_p (void);
+extern void set_expected_protected3a(int);
+extern void set_protected3a(int);
+extern int check_protected3a(void);
+extern int *protected3a_p(void);
+extern void set_expected_protected3b(int);
+extern void set_protected3b(int);
+extern int check_protected3b(void);
+extern int *protected3b_p(void);

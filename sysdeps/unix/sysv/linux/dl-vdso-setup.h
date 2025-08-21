@@ -20,38 +20,38 @@
 #define _DL_VDSO_INIT_H
 
 /* Initialize the VDSO functions pointers.  */
-static inline void __attribute__ ((always_inline))
-setup_vdso_pointers (void)
+static inline void __attribute__((always_inline))
+setup_vdso_pointers(void)
 {
 #ifdef HAVE_CLOCK_GETTIME_VSYSCALL
-  GLRO(dl_vdso_clock_gettime) = dl_vdso_vsym (HAVE_CLOCK_GETTIME_VSYSCALL);
+    GLRO(dl_vdso_clock_gettime) = dl_vdso_vsym(HAVE_CLOCK_GETTIME_VSYSCALL);
 #endif
 #ifdef HAVE_CLOCK_GETTIME64_VSYSCALL
-  GLRO(dl_vdso_clock_gettime64) = dl_vdso_vsym (HAVE_CLOCK_GETTIME64_VSYSCALL);
+    GLRO(dl_vdso_clock_gettime64) = dl_vdso_vsym(HAVE_CLOCK_GETTIME64_VSYSCALL);
 #endif
 #ifdef HAVE_GETTIMEOFDAY_VSYSCALL
-  GLRO(dl_vdso_gettimeofday) = dl_vdso_vsym (HAVE_GETTIMEOFDAY_VSYSCALL);
+    GLRO(dl_vdso_gettimeofday) = dl_vdso_vsym(HAVE_GETTIMEOFDAY_VSYSCALL);
 #endif
 #ifdef HAVE_TIME_VSYSCALL
-  GLRO(dl_vdso_time) = dl_vdso_vsym (HAVE_TIME_VSYSCALL);
+    GLRO(dl_vdso_time) = dl_vdso_vsym(HAVE_TIME_VSYSCALL);
 #endif
 #ifdef HAVE_GETCPU_VSYSCALL
-  GLRO(dl_vdso_getcpu) = dl_vdso_vsym (HAVE_GETCPU_VSYSCALL);
+    GLRO(dl_vdso_getcpu) = dl_vdso_vsym(HAVE_GETCPU_VSYSCALL);
 #endif
 #ifdef HAVE_CLOCK_GETRES_VSYSCALL
-  GLRO(dl_vdso_clock_getres) = dl_vdso_vsym (HAVE_CLOCK_GETRES_VSYSCALL);
+    GLRO(dl_vdso_clock_getres) = dl_vdso_vsym(HAVE_CLOCK_GETRES_VSYSCALL);
 #endif
 #ifdef HAVE_CLOCK_GETRES64_VSYSCALL
-  GLRO(dl_vdso_clock_getres_time64) = dl_vdso_vsym (HAVE_CLOCK_GETRES64_VSYSCALL);
+    GLRO(dl_vdso_clock_getres_time64) = dl_vdso_vsym(HAVE_CLOCK_GETRES64_VSYSCALL);
 #endif
 #ifdef HAVE_GET_TBFREQ
-  GLRO(dl_vdso_get_tbfreq) = dl_vdso_vsym (HAVE_GET_TBFREQ);
+    GLRO(dl_vdso_get_tbfreq) = dl_vdso_vsym(HAVE_GET_TBFREQ);
 #endif
 #ifdef HAVE_RISCV_HWPROBE
-  GLRO(dl_vdso_riscv_hwprobe) = dl_vdso_vsym (HAVE_RISCV_HWPROBE);
+    GLRO(dl_vdso_riscv_hwprobe) = dl_vdso_vsym(HAVE_RISCV_HWPROBE);
 #endif
 #ifdef HAVE_GETRANDOM_VSYSCALL
-  GLRO(dl_vdso_getrandom) = dl_vdso_vsym (HAVE_GETRANDOM_VSYSCALL);
+    GLRO(dl_vdso_getrandom) = dl_vdso_vsym(HAVE_GETRANDOM_VSYSCALL);
 #endif
 }
 

@@ -21,18 +21,16 @@
 
 
 /* Remove the directory PATH.  */
-int
-__rmdir (const char *path)
+int __rmdir(const char *path)
 {
-  if (path == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (path == NULL) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (rmdir)
+stub_warning(rmdir)
 
-weak_alias (__rmdir, rmdir)
+weak_alias(__rmdir, rmdir)

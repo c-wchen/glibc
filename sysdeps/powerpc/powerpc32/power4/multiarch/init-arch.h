@@ -24,10 +24,10 @@
    in that case since _rtld_global_ro might not been realocated yet).  */
 #if defined(SHARED) && !IS_IN (rtld)
 # define __GLRO(value) \
-  ({ volatile void **__p = (volatile void**)(&_rtld_global_ro);	\
-    unsigned long int __ret;					\
-     asm ("# x in %0" : "+r" (__p));				\
-     __ret = (__p) ? GLRO(value) : 0;				\
+  ({ volatile void **__p = (volatile void**)(&_rtld_global_ro); \
+    unsigned long int __ret;                    \
+     asm ("# x in %0" : "+r" (__p));                \
+     __ret = (__p) ? GLRO(value) : 0;               \
      __ret; })
 #else
 # define __GLRO(value)  GLRO(value)
@@ -36,22 +36,22 @@
 /* Get the hardware information post the tunables set, the macro checks
    it and fills the previous ones.  */
 #define INIT_ARCH() \
-  const struct cpu_features *features = &GLRO(dl_powerpc_cpu_features);	\
-  unsigned long int hwcap = features->hwcap;				\
+  const struct cpu_features *features = &GLRO(dl_powerpc_cpu_features); \
+  unsigned long int hwcap = features->hwcap;                \
   unsigned long int __attribute__((unused)) hwcap2 = features->hwcap2; \
-  bool __attribute__((unused)) use_cached_memopt =		\
-    __GLRO(dl_powerpc_cpu_features.use_cached_memopt);		\
-  if (hwcap & PPC_FEATURE_ARCH_2_06)				\
-    hwcap |= PPC_FEATURE_ARCH_2_05 |				\
-	     PPC_FEATURE_POWER5_PLUS |				\
-	     PPC_FEATURE_POWER5 |				\
-	     PPC_FEATURE_POWER4;				\
-  else if (hwcap & PPC_FEATURE_ARCH_2_05)			\
-    hwcap |= PPC_FEATURE_POWER5_PLUS |				\
-	     PPC_FEATURE_POWER5 |				\
-	     PPC_FEATURE_POWER4;				\
-  else if (hwcap & PPC_FEATURE_POWER5_PLUS)			\
-    hwcap |= PPC_FEATURE_POWER5 |				\
-	     PPC_FEATURE_POWER4;				\
-  else if (hwcap & PPC_FEATURE_POWER5)				\
+  bool __attribute__((unused)) use_cached_memopt =      \
+    __GLRO(dl_powerpc_cpu_features.use_cached_memopt);      \
+  if (hwcap & PPC_FEATURE_ARCH_2_06)                \
+    hwcap |= PPC_FEATURE_ARCH_2_05 |                \
+         PPC_FEATURE_POWER5_PLUS |              \
+         PPC_FEATURE_POWER5 |               \
+         PPC_FEATURE_POWER4;                \
+  else if (hwcap & PPC_FEATURE_ARCH_2_05)           \
+    hwcap |= PPC_FEATURE_POWER5_PLUS |              \
+         PPC_FEATURE_POWER5 |               \
+         PPC_FEATURE_POWER4;                \
+  else if (hwcap & PPC_FEATURE_POWER5_PLUS)         \
+    hwcap |= PPC_FEATURE_POWER5 |               \
+         PPC_FEATURE_POWER4;                \
+  else if (hwcap & PPC_FEATURE_POWER5)              \
     hwcap |= PPC_FEATURE_POWER4;

@@ -18,10 +18,9 @@
 #define NO_MATH_REDIRECT
 #include <libm-alias-double.h>
 
-double
-__rint (double x)
+double __rint(double x)
 {
-  asm ("fint.d %1,%0" : "=f" (x) : "fm" (x));
-  return x;
+    asm("fint.d %1,%0" : "=f"(x) : "fm"(x));
+    return x;
 }
-libm_alias_double (__rint, rint)
+libm_alias_double(__rint, rint)

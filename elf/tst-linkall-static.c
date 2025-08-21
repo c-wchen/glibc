@@ -27,8 +27,7 @@
 /* These references force linking the executable against central
    functions in the static libraries, pulling significant parts of
    each library into the link.  */
-void *references[] =
-  {
+void *references[] = {
     &pow,                       /* libm */
     &pthread_create,            /* libpthread */
     &res_send,                  /* libresolv */
@@ -36,13 +35,12 @@ void *references[] =
     &login,                     /* libutil */
     &aio_init,                  /* librt */
     &getaddrinfo_a,             /* libanl */
-  };
+};
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* This is a link-time test.  There is nothing to run here.  */
-  return 0;
+    /* This is a link-time test.  There is nothing to run here.  */
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -27,29 +27,29 @@
    actual length.  Returns 0 on success, -1 for errors.  */
 
 /* XXX should be __getsockopt ? */
-int
-getsockopt (int fd,
-	    int level,
-	    int optname,
-	    void *optval,
-	    socklen_t *optlen)
+int getsockopt(int fd,
+               int level,
+               int optname,
+               void *optval,
+               socklen_t *optlen)
 {
-  error_t err;
-  char *buf = optval;
-  mach_msg_type_number_t buflen = *optlen;
+    error_t err;
+    char *buf = optval;
+    mach_msg_type_number_t buflen = *optlen;
 
-  if (err = HURD_DPORT_USE (fd, __socket_getopt (port,
-						 level, optname,
-						 &buf, &buflen)))
-    return __hurd_dfail (fd, err);
-
-  if (*optlen > buflen)
-    *optlen = buflen;
-  if (buf != optval)
-    {
-      memcpy (optval, buf, *optlen);
-      __vm_deallocate (__mach_task_self (), (vm_address_t) buf, buflen);
+    if (err = HURD_DPORT_USE(fd, __socket_getopt(port,
+                             level, optname,
+                             &buf, &buflen))) {
+        return __hurd_dfail(fd, err);
     }
 
-  return 0;
+    if (*optlen > buflen) {
+        *optlen = buflen;
+    }
+    if (buf != optval) {
+        memcpy(optval, buf, *optlen);
+        __vm_deallocate(__mach_task_self(), (vm_address_t) buf, buflen);
+    }
+
+    return 0;
 }

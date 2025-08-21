@@ -21,66 +21,55 @@
 #include <unistd.h>
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  sem_t s;
+    sem_t s;
 
-  if (sem_init (&s, 0, 1) == -1)
-    {
-      puts ("init failed");
-      return 1;
+    if (sem_init(&s, 0, 1) == -1) {
+        puts("init failed");
+        return 1;
     }
 
-  if (TEMP_FAILURE_RETRY (sem_wait (&s)) == -1)
-    {
-      puts ("1st wait failed");
-      return 1;
+    if (TEMP_FAILURE_RETRY(sem_wait(&s)) == -1) {
+        puts("1st wait failed");
+        return 1;
     }
 
-  if (sem_post (&s) == -1)
-    {
-      puts ("1st post failed");
-      return 1;
+    if (sem_post(&s) == -1) {
+        puts("1st post failed");
+        return 1;
     }
 
-  if (TEMP_FAILURE_RETRY (sem_trywait (&s)) == -1)
-    {
-      puts ("1st trywait failed");
-      return 1;
+    if (TEMP_FAILURE_RETRY(sem_trywait(&s)) == -1) {
+        puts("1st trywait failed");
+        return 1;
     }
 
-  errno = 0;
-  if (TEMP_FAILURE_RETRY (sem_trywait (&s)) != -1)
-    {
-      puts ("2nd trywait succeeded");
-      return 1;
-    }
-  else if (errno != EAGAIN)
-    {
-      puts ("2nd trywait did not set errno to EAGAIN");
-      return 1;
+    errno = 0;
+    if (TEMP_FAILURE_RETRY(sem_trywait(&s)) != -1) {
+        puts("2nd trywait succeeded");
+        return 1;
+    } else if (errno != EAGAIN) {
+        puts("2nd trywait did not set errno to EAGAIN");
+        return 1;
     }
 
-  if (sem_post (&s) == -1)
-    {
-      puts ("2nd post failed");
-      return 1;
+    if (sem_post(&s) == -1) {
+        puts("2nd post failed");
+        return 1;
     }
 
-  if (TEMP_FAILURE_RETRY (sem_wait (&s)) == -1)
-    {
-      puts ("2nd wait failed");
-      return 1;
+    if (TEMP_FAILURE_RETRY(sem_wait(&s)) == -1) {
+        puts("2nd wait failed");
+        return 1;
     }
 
-  if (sem_destroy (&s) == -1)
-    {
-      puts ("destroy failed");
-      return 1;
+    if (sem_destroy(&s) == -1) {
+        puts("destroy failed");
+        return 1;
     }
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

@@ -21,8 +21,8 @@
 #define _SET_HOOKS_ARCH_H
 
 #define SET_RELHOOK(NAME, HOOK) \
-	asm(".section " #NAME",\"aR\"\n" \
-	    ".dc.a "#HOOK" - .\n" \
-	    ".section .text");
+    asm(".section " #NAME",\"aR\"\n" \
+        ".dc.a "#HOOK" - .\n" \
+        ".section .text");
 
 #endif /* set_hooks_arch.h */

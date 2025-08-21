@@ -20,15 +20,15 @@
 #include <shlib-compat.h>
 #include "init-arch.h"
 
-extern __typeof (__strncasecmp) __libc_strncasecmp;
+extern __typeof(__strncasecmp) __libc_strncasecmp;
 
-extern __typeof (__strncasecmp) __strncasecmp_ppc attribute_hidden;
-extern __typeof (__strncasecmp) __strncasecmp_power8 attribute_hidden;
+extern __typeof(__strncasecmp) __strncasecmp_ppc attribute_hidden;
+extern __typeof(__strncasecmp) __strncasecmp_power8 attribute_hidden;
 
-libc_ifunc (__libc_strncasecmp,
-	     (hwcap2 & PPC_FEATURE2_ARCH_2_07
-	      && hwcap & PPC_FEATURE_HAS_ALTIVEC)
-             ? __strncasecmp_power8
-	     : __strncasecmp_ppc);
+libc_ifunc(__libc_strncasecmp,
+           (hwcap2 &PPC_FEATURE2_ARCH_2_07
+            &&hwcap &PPC_FEATURE_HAS_ALTIVEC)
+           ? __strncasecmp_power8
+           : __strncasecmp_ppc);
 
-weak_alias (__libc_strncasecmp, strncasecmp)
+weak_alias(__libc_strncasecmp, strncasecmp)

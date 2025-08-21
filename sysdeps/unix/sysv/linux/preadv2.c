@@ -21,33 +21,33 @@
 
 #ifndef __OFF_T_MATCHES_OFF64_T
 
-ssize_t
-preadv2 (int fd, const struct iovec *vector, int count, off_t offset,
-	 int flags)
+ssize_t preadv2(int fd, const struct iovec *vector, int count, off_t offset,
+                int flags)
 {
-  ssize_t result = SYSCALL_CANCEL (preadv2, fd, vector, count,
-				   LO_HI_LONG (offset), flags);
-  if (result >= 0 || errno != ENOSYS)
-    return result;
-
-  /* Trying to emulate the preadv2 syscall flags is troublesome:
-
-     * We can not temporary change the file state of the O_DSYNC and O_SYNC
-       flags to emulate RWF_{D}SYNC (attempts to change the state of using
-       fcntl are silently ignored).
-
-     * IOCB_HIPRI requires the file opened in O_DIRECT and uses an internal
-       semantic not provided by any other flag (O_NONBLOCK for instance).  */
-
-  if (flags != 0)
-    {
-      __set_errno (ENOTSUP);
-      return -1;
+    ssize_t result = SYSCALL_CANCEL(preadv2, fd, vector, count,
+                                    LO_HI_LONG(offset), flags);
+    if (result >= 0 || errno != ENOSYS) {
+        return result;
     }
-  if (offset == -1)
-    return __readv (fd, vector, count);
-  else
-    return preadv (fd, vector, count, offset);
+
+    /* Trying to emulate the preadv2 syscall flags is troublesome:
+
+       * We can not temporary change the file state of the O_DSYNC and O_SYNC
+         flags to emulate RWF_{D}SYNC (attempts to change the state of using
+         fcntl are silently ignored).
+
+       * IOCB_HIPRI requires the file opened in O_DIRECT and uses an internal
+         semantic not provided by any other flag (O_NONBLOCK for instance).  */
+
+    if (flags != 0) {
+        __set_errno(ENOTSUP);
+        return -1;
+    }
+    if (offset == -1) {
+        return __readv(fd, vector, count);
+    } else {
+        return preadv(fd, vector, count, offset);
+    }
 }
 
 #endif

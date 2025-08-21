@@ -33,34 +33,32 @@ static pthread_mutex_t mut = PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP;
 static pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
 
 
-static int
-do_test_clock (clockid_t clockid)
+static int do_test_clock(clockid_t clockid)
 {
-  /* Get the mutex.  */
-  xpthread_mutex_lock (&mut);
+    /* Get the mutex.  */
+    xpthread_mutex_lock(&mut);
 
-  /* Waiting for the condition will fail.  But we want the timeout here.  */
-  const struct timespec ts_now = xclock_now (clockid);
-  const struct timespec ts_timeout =
-    timespec_add (ts_now, make_timespec (0, 500000000));
+    /* Waiting for the condition will fail.  But we want the timeout here.  */
+    const struct timespec ts_now = xclock_now(clockid);
+    const struct timespec ts_timeout =
+        timespec_add(ts_now, make_timespec(0, 500000000));
 
-  /* In theory pthread_cond_clockwait could return zero here due to
-     spurious wakeup. However that can't happen without a signal or an
-     additional waiter.  */
-  TEST_COMPARE (pthread_cond_clockwait (&cond, &mut, clockid, &ts_timeout),
-                ETIMEDOUT);
+    /* In theory pthread_cond_clockwait could return zero here due to
+       spurious wakeup. However that can't happen without a signal or an
+       additional waiter.  */
+    TEST_COMPARE(pthread_cond_clockwait(&cond, &mut, clockid, &ts_timeout),
+                 ETIMEDOUT);
 
-  xpthread_mutex_unlock (&mut);
+    xpthread_mutex_unlock(&mut);
 
-  return 0;
+    return 0;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  do_test_clock (CLOCK_MONOTONIC);
-  do_test_clock (CLOCK_REALTIME);
-  return 0;
+    do_test_clock(CLOCK_MONOTONIC);
+    do_test_clock(CLOCK_REALTIME);
+    return 0;
 }
 
 #include <support/test-driver.c>

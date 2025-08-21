@@ -31,7 +31,7 @@
 
      1. The __syscall_cancel_arch_start should point just before the test
         that thread is already cancelled,
-     2.	The __syscall_cancel_arch_end should point to the immediate next
+     2. The __syscall_cancel_arch_end should point to the immediate next
         instruction after the syscall one.
      3. It should return the syscall value or a negative result if is has
         failed, similar to INTERNAL_SYSCALL_CALL.
@@ -48,26 +48,27 @@
    the architecture should either adjust the macro or provide a custom
    __syscall_cancel_arch implementation.   */
 
-long int
-__syscall_cancel_arch (volatile int *ch, __syscall_arg_t nr,
-		       __syscall_arg_t a1, __syscall_arg_t a2,
-		       __syscall_arg_t a3, __syscall_arg_t a4,
-		       __syscall_arg_t a5, __syscall_arg_t a6
-		       __SYSCALL_CANCEL7_ARG_DEF)
+long int __syscall_cancel_arch(volatile int *ch, __syscall_arg_t nr,
+                               __syscall_arg_t a1, __syscall_arg_t a2,
+                               __syscall_arg_t a3, __syscall_arg_t a4,
+                               __syscall_arg_t a5, __syscall_arg_t a6
+                               __SYSCALL_CANCEL7_ARG_DEF)
 {
-#define ADD_LABEL(__label)		\
-  asm volatile (			\
-    ".global " __label "\t\n"		\
+#define ADD_LABEL(__label)      \
+  asm volatile (            \
+    ".global " __label "\t\n"       \
     __label ":\n");
 
-  ADD_LABEL ("__syscall_cancel_arch_start");
-  if (__glibc_unlikely (*ch & CANCELED_BITMASK))
-    __syscall_do_cancel();
+    ADD_LABEL("__syscall_cancel_arch_start");
+    if (__glibc_unlikely(*ch & CANCELED_BITMASK)) {
+        __syscall_do_cancel();
+    }
 
-  long int result = INTERNAL_SYSCALL_NCS_CALL (nr, a1, a2, a3, a4, a5, a6
-					       __SYSCALL_CANCEL7_ARG7);
-  ADD_LABEL ("__syscall_cancel_arch_end");
-  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (result)))
-    return -INTERNAL_SYSCALL_ERRNO (result);
-  return result;
+    long int result = INTERNAL_SYSCALL_NCS_CALL(nr, a1, a2, a3, a4, a5, a6
+                      __SYSCALL_CANCEL7_ARG7);
+    ADD_LABEL("__syscall_cancel_arch_end");
+    if (__glibc_unlikely(INTERNAL_SYSCALL_ERROR_P(result))) {
+        return -INTERNAL_SYSCALL_ERRNO(result);
+    }
+    return result;
 }

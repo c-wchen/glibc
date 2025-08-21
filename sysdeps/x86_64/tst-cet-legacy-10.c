@@ -23,21 +23,19 @@
 
 /* Check that CPU_FEATURE_ACTIVE on SHSTK matches _get_ssp.  */
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  if (_get_ssp () != 0)
-    {
-      if (CPU_FEATURE_ACTIVE (SHSTK))
-	return EXIT_SUCCESS;
-    }
-  else
-    {
-      if (!CPU_FEATURE_ACTIVE (SHSTK))
-	return EXIT_SUCCESS;
+    if (_get_ssp() != 0) {
+        if (CPU_FEATURE_ACTIVE(SHSTK)) {
+            return EXIT_SUCCESS;
+        }
+    } else {
+        if (!CPU_FEATURE_ACTIVE(SHSTK)) {
+            return EXIT_SUCCESS;
+        }
     }
 
-  return EXIT_FAILURE;
+    return EXIT_FAILURE;
 }
 
 #include <support/test-driver.c>

@@ -35,11 +35,11 @@
 /* Exit codes for the helper program.  */
 enum  /* failure modes */
 {
-  FAIL_EBADF = 1,
-  FAIL_EINVAL,
-  FAIL_EACCES,
-  FAIL_EXEC,
-  FAIL_ENOMEM
+    FAIL_EBADF = 1,
+    FAIL_EINVAL,
+    FAIL_EACCES,
+    FAIL_EXEC,
+    FAIL_ENOMEM
 };
 
 #endif /* pty-private.h  */

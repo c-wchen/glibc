@@ -7,4 +7,4 @@
 #include "tsp_common.c"
 #include "dat_iswalnum.c"
 
-TST_FUNC_ISW (ALNUM, alnum);
+TST_FUNC_ISW(ALNUM, alnum);

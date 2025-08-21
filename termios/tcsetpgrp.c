@@ -20,19 +20,17 @@
 #include <sys/types.h>
 
 /* Set the foreground process group ID of FD set PGRP_ID.  */
-int
-__tcsetpgrp (int fd, pid_t pgrp_id)
+int __tcsetpgrp(int fd, pid_t pgrp_id)
 {
-  if (fd < 0)
-    {
-      __set_errno (EBADF);
-      return -1;
+    if (fd < 0) {
+        __set_errno(EBADF);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-weak_alias (__tcsetpgrp, tcsetpgrp);
-libc_hidden_def (__tcsetpgrp)
+weak_alias(__tcsetpgrp, tcsetpgrp);
+libc_hidden_def(__tcsetpgrp)
 
-stub_warning (tcsetpgrp)
+stub_warning(tcsetpgrp)

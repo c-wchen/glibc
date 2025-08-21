@@ -20,21 +20,20 @@
    primary DSO loaded by the application.  */
 #include <stdio.h>
 
-extern void primary_reference (void);
+extern void primary_reference(void);
 
-void
-plugin_func (void)
+void plugin_func(void)
 {
-  printf ("INFO: Calling plugin function.\n");
-  /* Need a reference to the DSO to ensure that a potential --as-needed
-     doesn't remove the DT_NEEDED entry which we rely upon to ensure
-     destruction ordering.  */
-  primary_reference ();
+    printf("INFO: Calling plugin function.\n");
+    /* Need a reference to the DSO to ensure that a potential --as-needed
+       doesn't remove the DT_NEEDED entry which we rely upon to ensure
+       destruction ordering.  */
+    primary_reference();
 }
 
-__attribute__ ((destructor))
+__attribute__((destructor))
 static void
-plugin_dtor (void)
+plugin_dtor(void)
 {
-  printf ("INFO: Calling plugin destructor.\n");
+    printf("INFO: Calling plugin destructor.\n");
 }

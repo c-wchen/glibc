@@ -29,18 +29,16 @@
    X is small enough that factors quadratic in it can be
    neglected.  */
 
-_Float128
-__gamma_productl (_Float128 x, _Float128 x_eps, int n, _Float128 *eps)
+_Float128 __gamma_productl(_Float128 x, _Float128 x_eps, int n, _Float128 *eps)
 {
-  SET_RESTORE_ROUNDL (FE_TONEAREST);
-  _Float128 ret = x;
-  *eps = x_eps / x;
-  for (int i = 1; i < n; i++)
-    {
-      *eps += x_eps / (x + i);
-      _Float128 lo;
-      mul_splitl (&ret, &lo, ret, x + i);
-      *eps += lo / ret;
+    SET_RESTORE_ROUNDL(FE_TONEAREST);
+    _Float128 ret = x;
+    *eps = x_eps / x;
+    for (int i = 1; i < n; i++) {
+        *eps += x_eps / (x + i);
+        _Float128 lo;
+        mul_splitl(&ret, &lo, ret, x + i);
+        *eps += lo / ret;
     }
-  return ret;
+    return ret;
 }

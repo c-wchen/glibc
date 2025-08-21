@@ -34,87 +34,94 @@
 
 /* Open a directory stream on a file descriptor in Hurd internal form.
    We do no checking here on the descriptor.  */
-DIR *
-_hurd_fd_opendir (struct hurd_fd *d)
+DIR *_hurd_fd_opendir(struct hurd_fd *d)
 {
-  DIR *dirp;
+    DIR *dirp;
 
-  if (d == NULL)
-    return __hurd_fail (EBADF), NULL;
+    if (d == NULL) {
+        return __hurd_fail(EBADF), NULL;
+    }
 
-  dirp = (DIR *) malloc (sizeof (DIR));
-  if (dirp == NULL)
-    return NULL;
+    dirp = (DIR *) malloc(sizeof(DIR));
+    if (dirp == NULL) {
+        return NULL;
+    }
 
-  /* Set the descriptor to close on exec. */
-  HURD_CRITICAL_BEGIN;
-  __spin_lock (&d->port.lock);
-  d->flags |= FD_CLOEXEC;
-  __spin_unlock (&d->port.lock);
-  HURD_CRITICAL_END;
+    /* Set the descriptor to close on exec. */
+    HURD_CRITICAL_BEGIN;
+    __spin_lock(&d->port.lock);
+    d->flags |= FD_CLOEXEC;
+    __spin_unlock(&d->port.lock);
+    HURD_CRITICAL_END;
 
-  dirp->__fd = d;
-  dirp->__data = dirp->__ptr = NULL;
-  dirp->__entry_data = dirp->__entry_ptr = 0;
-  dirp->__allocation = 0;
-  dirp->__size = 0;
+    dirp->__fd = d;
+    dirp->__data = dirp->__ptr = NULL;
+    dirp->__entry_data = dirp->__entry_ptr = 0;
+    dirp->__allocation = 0;
+    dirp->__size = 0;
 
-  __libc_lock_init (dirp->__lock);
+    __libc_lock_init(dirp->__lock);
 
-  return dirp;
+    return dirp;
 }
 
 
-DIR *
-__opendirat (int dfd, const char *name)
+DIR *__opendirat(int dfd, const char *name)
 {
-  if (name[0] == '\0')
-    /* POSIX.1-1990 says an empty name gets ENOENT;
-       but `open' might like it fine.  */
-    return __hurd_fail (ENOENT), NULL;
+    if (name[0] == '\0')
+        /* POSIX.1-1990 says an empty name gets ENOENT;
+           but `open' might like it fine.  */
+    {
+        return __hurd_fail(ENOENT), NULL;
+    }
 
-  int flags = O_RDONLY | O_NONBLOCK | O_DIRECTORY | O_CLOEXEC;
-  int fd;
+    int flags = O_RDONLY | O_NONBLOCK | O_DIRECTORY | O_CLOEXEC;
+    int fd;
 #if IS_IN (rtld)
-  assert (dfd == AT_FDCWD);
-  fd = __open_nocancel (name, flags);
+    assert(dfd == AT_FDCWD);
+    fd = __open_nocancel(name, flags);
 #else
-  fd = __openat_nocancel (dfd, name, flags);
+    fd = __openat_nocancel(dfd, name, flags);
 #endif
-  if (fd < 0)
-    return NULL;
+    if (fd < 0) {
+        return NULL;
+    }
 
-  /* Extract the pointer to the descriptor structure.  */
-  DIR *dirp = _hurd_fd_opendir (_hurd_fd_get (fd));
-  if (dirp == NULL)
-    __close (fd);
+    /* Extract the pointer to the descriptor structure.  */
+    DIR *dirp = _hurd_fd_opendir(_hurd_fd_get(fd));
+    if (dirp == NULL) {
+        __close(fd);
+    }
 
-  return dirp;
+    return dirp;
 }
 
 
 /* Open a directory stream on NAME.  */
-DIR *
-__opendir (const char *name)
+DIR *__opendir(const char *name)
 {
 #if 0 /* TODO.  */
-  return __opendirat (AT_FDCWD, name);
+    return __opendirat(AT_FDCWD, name);
 #else
-  if (name[0] == '\0')
-    /* POSIX.1-1990 says an empty name gets ENOENT;
-       but `open' might like it fine.  */
-    return __hurd_fail (ENOENT), NULL;
+    if (name[0] == '\0')
+        /* POSIX.1-1990 says an empty name gets ENOENT;
+           but `open' might like it fine.  */
+    {
+        return __hurd_fail(ENOENT), NULL;
+    }
 
-  int fd = __open (name, O_RDONLY | O_NONBLOCK | O_DIRECTORY);
-  if (fd < 0)
-    return NULL;
+    int fd = __open(name, O_RDONLY | O_NONBLOCK | O_DIRECTORY);
+    if (fd < 0) {
+        return NULL;
+    }
 
-  /* Extract the pointer to the descriptor structure.  */
-  DIR *dirp = _hurd_fd_opendir (_hurd_fd_get (fd));
-  if (dirp == NULL)
-    __close (fd);
+    /* Extract the pointer to the descriptor structure.  */
+    DIR *dirp = _hurd_fd_opendir(_hurd_fd_get(fd));
+    if (dirp == NULL) {
+        __close(fd);
+    }
 
-  return dirp;
+    return dirp;
 #endif
 }
-weak_alias (__opendir, opendir)
+weak_alias(__opendir, opendir)

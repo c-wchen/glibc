@@ -23,12 +23,11 @@
 
 /* Return true iff ELF program headers are incompatible with the running
    host.  */
-static inline bool
-elf_machine_reject_phdr_p (const ElfW(Phdr) *phdr, unsigned int phnum,
-			   const char *buf, size_t len, struct link_map *map,
-			   int fd)
+static inline bool elf_machine_reject_phdr_p(const ElfW(Phdr) *phdr, unsigned int phnum,
+        const char *buf, size_t len, struct link_map *map,
+        int fd)
 {
-  return false;
+    return false;
 }
 
 #endif /* dl-machine-reject-phdr.h */

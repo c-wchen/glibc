@@ -23,11 +23,10 @@
 /* Guarantee all whole pages mapped by the range [ADDR,ADDR+LEN) to
    be memory resident.  */
 
-int
-mlock (const void *addr, size_t len)
+int mlock(const void *addr, size_t len)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (mlock)
+stub_warning(mlock)

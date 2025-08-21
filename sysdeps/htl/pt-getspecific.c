@@ -21,31 +21,32 @@
 #include <pt-internal.h>
 #include <shlib-compat.h>
 
-void *
-__pthread_getspecific (pthread_key_t key)
+void *__pthread_getspecific(pthread_key_t key)
 {
-  struct __pthread *self;
+    struct __pthread *self;
 
-  if (key < 0 || key >= __pthread_key_count)
-    return NULL;
-
-  self = _pthread_self ();
-
-  if (self->thread_specifics == NULL)
-    {
-      if (key >= PTHREAD_STATIC_KEYS)
-	return NULL;
-      return self->static_thread_specifics[key];
+    if (key < 0 || key >= __pthread_key_count) {
+        return NULL;
     }
 
-  if (key >= self->thread_specifics_size)
-    return 0;
+    self = _pthread_self();
 
-  return self->thread_specifics[key];
+    if (self->thread_specifics == NULL) {
+        if (key >= PTHREAD_STATIC_KEYS) {
+            return NULL;
+        }
+        return self->static_thread_specifics[key];
+    }
+
+    if (key >= self->thread_specifics_size) {
+        return 0;
+    }
+
+    return self->thread_specifics[key];
 }
-libc_hidden_def (__pthread_getspecific)
-versioned_symbol (libc, __pthread_getspecific, pthread_getspecific, GLIBC_2_42);
+libc_hidden_def(__pthread_getspecific)
+versioned_symbol(libc, __pthread_getspecific, pthread_getspecific, GLIBC_2_42);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_42)
-compat_symbol (libpthread, __pthread_getspecific, pthread_getspecific, GLIBC_2_12);
+compat_symbol(libpthread, __pthread_getspecific, pthread_getspecific, GLIBC_2_12);
 #endif

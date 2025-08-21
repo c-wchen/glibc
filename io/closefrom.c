@@ -21,16 +21,17 @@
 #include <sys/param.h>
 #include <unistd.h>
 
-void
-__closefrom (int lowfd)
+void __closefrom(int lowfd)
 {
-  int l = MAX (0, lowfd);
+    int l = MAX(0, lowfd);
 
-  int r = __close_range (l, ~0U, 0);
-  if (r == 0)
-    return ;
+    int r = __close_range(l, ~0U, 0);
+    if (r == 0) {
+        return ;
+    }
 
-  if (!__closefrom_fallback (l, true))
-    __fortify_fail ("closefrom failed to close a file descriptor");
+    if (!__closefrom_fallback(l, true)) {
+        __fortify_fail("closefrom failed to close a file descriptor");
+    }
 }
-weak_alias (__closefrom, closefrom)
+weak_alias(__closefrom, closefrom)

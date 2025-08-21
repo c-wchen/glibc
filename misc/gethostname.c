@@ -21,12 +21,11 @@
 /* Put the name of the current host in no more than LEN bytes of NAME.
    The result is null-terminated if LEN is large enough for the full
    name and the terminator.  */
-int
-__gethostname (char *name, size_t len)
+int __gethostname(char *name, size_t len)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (gethostname)
+stub_warning(gethostname)
 
-weak_alias (__gethostname, gethostname)
+weak_alias(__gethostname, gethostname)

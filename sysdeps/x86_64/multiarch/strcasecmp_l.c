@@ -28,13 +28,13 @@
 # define SYMBOL_NAME strcasecmp_l
 # include "ifunc-strcasecmp.h"
 
-libc_ifunc_redirected (__redirect_strcasecmp_l, __strcasecmp_l,
-		       IFUNC_SELECTOR ());
+libc_ifunc_redirected(__redirect_strcasecmp_l, __strcasecmp_l,
+                      IFUNC_SELECTOR());
 
-weak_alias (__strcasecmp_l, strcasecmp_l)
+weak_alias(__strcasecmp_l, strcasecmp_l)
 # ifdef SHARED
-__hidden_ver1 (__strcasecmp_l, __GI___strcasecmp_l,
-	       __redirect___strcasecmp_l)
-  __attribute__ ((visibility ("hidden")));
+__hidden_ver1(__strcasecmp_l, __GI___strcasecmp_l,
+              __redirect___strcasecmp_l)
+__attribute__((visibility("hidden")));
 # endif
 #endif

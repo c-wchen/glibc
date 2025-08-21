@@ -23,35 +23,30 @@
 /* Verify that errno is 0 at first ELF constructor execution and at
    the start of main.  */
 
-static void set_ctor_errno (void) __attribute__((constructor));
+static void set_ctor_errno(void) __attribute__((constructor));
 static int ctor_errno = -1;
 
-static void
-set_ctor_errno (void)
+static void set_ctor_errno(void)
 {
-  ctor_errno = errno;
+    ctor_errno = errno;
 }
 
-static int
-get_ctor_errno (void)
+static int get_ctor_errno(void)
 {
-  return ctor_errno;
+    return ctor_errno;
 }
 
-int
-main (void)
+int main(void)
 {
-  if (errno != 0)
-    {
-      printf ("At start of main errno set to %d != 0\n", errno);
-      exit (1);
+    if (errno != 0) {
+        printf("At start of main errno set to %d != 0\n", errno);
+        exit(1);
     }
 
-  if (get_ctor_errno () != 0)
-    {
-      printf ("At ctor exec errno set to %d != 0\n", get_ctor_errno ());
-      exit (1);
+    if (get_ctor_errno() != 0) {
+        printf("At ctor exec errno set to %d != 0\n", get_ctor_errno());
+        exit(1);
     }
 
-  return 0;
+    return 0;
 }

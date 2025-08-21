@@ -20,52 +20,50 @@
 #include <pthread-offsets.h>
 #include <shlib-compat.h>
 
-static const struct pthread_rwlockattr default_rwlockattr =
-  {
+static const struct pthread_rwlockattr default_rwlockattr = {
     .lockkind = PTHREAD_RWLOCK_DEFAULT_NP,
     .pshared = PTHREAD_PROCESS_PRIVATE
-  };
+};
 
 
 /* See pthread_rwlock_common.c.  */
-int
-___pthread_rwlock_init (pthread_rwlock_t *rwlock,
-		       const pthread_rwlockattr_t *attr)
+int ___pthread_rwlock_init(pthread_rwlock_t *rwlock,
+                           const pthread_rwlockattr_t *attr)
 {
-  ASSERT_TYPE_SIZE (pthread_rwlock_t, __SIZEOF_PTHREAD_RWLOCK_T);
+    ASSERT_TYPE_SIZE(pthread_rwlock_t, __SIZEOF_PTHREAD_RWLOCK_T);
 
-  /* The __flags is the only field where its offset should be checked to
-     avoid ABI breakage with static initializers.  */
-  ASSERT_PTHREAD_INTERNAL_OFFSET (pthread_rwlock_t, __data.__flags,
-				  __PTHREAD_RWLOCK_FLAGS_OFFSET);
-  ASSERT_PTHREAD_INTERNAL_MEMBER_SIZE (pthread_rwlock_t, __data.__flags,
-				       int);
+    /* The __flags is the only field where its offset should be checked to
+       avoid ABI breakage with static initializers.  */
+    ASSERT_PTHREAD_INTERNAL_OFFSET(pthread_rwlock_t, __data.__flags,
+                                   __PTHREAD_RWLOCK_FLAGS_OFFSET);
+    ASSERT_PTHREAD_INTERNAL_MEMBER_SIZE(pthread_rwlock_t, __data.__flags,
+                                        int);
 
-  const struct pthread_rwlockattr *iattr;
+    const struct pthread_rwlockattr *iattr;
 
-  iattr = ((const struct pthread_rwlockattr *) attr) ?: &default_rwlockattr;
+    iattr = ((const struct pthread_rwlockattr *) attr) ? : &default_rwlockattr;
 
-  memset (rwlock, '\0', sizeof (*rwlock));
+    memset(rwlock, '\0', sizeof(*rwlock));
 
-  rwlock->__data.__flags = iattr->lockkind;
+    rwlock->__data.__flags = iattr->lockkind;
 
-  /* The value of __SHARED in a private rwlock must be zero.  */
-  rwlock->__data.__shared = (iattr->pshared != PTHREAD_PROCESS_PRIVATE);
+    /* The value of __SHARED in a private rwlock must be zero.  */
+    rwlock->__data.__shared = (iattr->pshared != PTHREAD_PROCESS_PRIVATE);
 
-  return 0;
+    return 0;
 }
-versioned_symbol (libc, ___pthread_rwlock_init, pthread_rwlock_init,
-                  GLIBC_2_34);
-libc_hidden_ver (___pthread_rwlock_init, __pthread_rwlock_init)
+versioned_symbol(libc, ___pthread_rwlock_init, pthread_rwlock_init,
+                 GLIBC_2_34);
+libc_hidden_ver(___pthread_rwlock_init, __pthread_rwlock_init)
 #ifndef SHARED
-strong_alias (___pthread_rwlock_init, __pthread_rwlock_init)
+strong_alias(___pthread_rwlock_init, __pthread_rwlock_init)
 #endif
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1, GLIBC_2_34)
-compat_symbol (libpthread, ___pthread_rwlock_init, pthread_rwlock_init,
-               GLIBC_2_1);
+compat_symbol(libpthread, ___pthread_rwlock_init, pthread_rwlock_init,
+              GLIBC_2_1);
 #endif
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
-compat_symbol (libpthread, ___pthread_rwlock_init, __pthread_rwlock_init,
-               GLIBC_2_2);
+compat_symbol(libpthread, ___pthread_rwlock_init, __pthread_rwlock_init,
+              GLIBC_2_2);
 #endif

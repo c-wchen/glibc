@@ -16,22 +16,23 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-static inline RET_TYPE
-IMPL_NAME (double x)
+static inline RET_TYPE IMPL_NAME(double x)
 {
-  uint64_t ux = asuint64 (x);
-  int ex = (ux & ~SIGN_MASK) >> MANTISSA_WIDTH;
-  if (__glibc_unlikely (ex == 0)) /* zero or subnormal */
-    {
-      /* Clear sign and exponent */
-      ux <<= 12;
-      if (ux == 0)
-	return RET_INVALID (RET_LOGB0);
-      /* subnormal  */
-      return (RET_TYPE)-1023 - stdc_leading_zeros (ux);
+    uint64_t ux = asuint64(x);
+    int ex = (ux & ~SIGN_MASK) >> MANTISSA_WIDTH;
+    if (__glibc_unlikely(ex == 0)) { /* zero or subnormal */
+        /* Clear sign and exponent */
+        ux <<= 12;
+        if (ux == 0) {
+            return RET_INVALID(RET_LOGB0);
+        }
+        /* subnormal  */
+        return (RET_TYPE) - 1023 - stdc_leading_zeros(ux);
     }
-  if (__glibc_unlikely (ex == EXPONENT_MASK >> MANTISSA_WIDTH))
-    /* NaN or Inf */
-    return RET_INVALID (ux << 12 ? RET_LOGBNAN : RET_LOGMAX);
-  return ex - 1023;
+    if (__glibc_unlikely(ex == EXPONENT_MASK >> MANTISSA_WIDTH))
+        /* NaN or Inf */
+    {
+        return RET_INVALID(ux << 12 ? RET_LOGBNAN : RET_LOGMAX);
+    }
+    return ex - 1023;
 }

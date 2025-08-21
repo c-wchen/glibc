@@ -20,15 +20,14 @@
 #include <utmpx.h>
 
 /* Copy the information in UTMP to UTMPX. */
-void
-getutmpx (const struct utmp *utmp, struct utmpx *utmpx)
+void getutmpx(const struct utmp *utmp, struct utmpx *utmpx)
 {
-  memset (utmpx, 0, sizeof (struct utmpx));
-  utmpx->ut_type = utmp->ut_type;
-  utmpx->ut_pid = utmp->ut_pid;
-  memcpy (utmpx->ut_line, utmp->ut_line, sizeof (utmp->ut_line));
-  memcpy (utmpx->ut_user, utmp->ut_user, sizeof (utmp->ut_user));
-  memcpy (utmpx->ut_id, utmp->ut_id, sizeof (utmp->ut_id));
-  memcpy (utmpx->ut_host, utmp->ut_host, sizeof (utmp->ut_host));
-  utmpx->ut_tv = utmp->ut_tv;
+    memset(utmpx, 0, sizeof(struct utmpx));
+    utmpx->ut_type = utmp->ut_type;
+    utmpx->ut_pid = utmp->ut_pid;
+    memcpy(utmpx->ut_line, utmp->ut_line, sizeof(utmp->ut_line));
+    memcpy(utmpx->ut_user, utmp->ut_user, sizeof(utmp->ut_user));
+    memcpy(utmpx->ut_id, utmp->ut_id, sizeof(utmp->ut_id));
+    memcpy(utmpx->ut_host, utmp->ut_host, sizeof(utmp->ut_host));
+    utmpx->ut_tv = utmp->ut_tv;
 }

@@ -21,37 +21,35 @@
 static int i;
 int bar;
 
-static __thread void *foo [32 / sizeof (void *)]
-  __attribute__ ((tls_model ("initial-exec"), aligned (sizeof (void *))))
-  = { &i, &bar };
+static __thread void *foo [32 / sizeof(void *)] __attribute__((tls_model("initial-exec"), aligned(sizeof(void *))))
+    = { &i, &bar };
 
-void
-test1 (void)
+void test1(void)
 {
-  size_t s;
+    size_t s;
 
-  if (foo [0] != &i || foo [1] != &bar)
-    abort ();
+    if (foo [0] != &i || foo [1] != &bar) {
+        abort();
+    }
 
-  foo [0] = NULL;
-  foo [1] = NULL;
-  for (s = 0; s < sizeof (foo) / sizeof (void *); ++s)
-    {
-      if (foo [s])
-	abort ();
-      foo [s] = &foo[s];
+    foo [0] = NULL;
+    foo [1] = NULL;
+    for (s = 0; s < sizeof(foo) / sizeof(void *); ++s) {
+        if (foo [s]) {
+            abort();
+        }
+        foo [s] = &foo[s];
     }
 }
 
-void
-test2 (void)
+void test2(void)
 {
-  size_t s;
+    size_t s;
 
-  for (s = 0; s < sizeof (foo) / sizeof (void *); ++s)
-    {
-      if (foo [s] != &foo [s])
-	abort ();
-      foo [s] = &foo [s ^ 1];
+    for (s = 0; s < sizeof(foo) / sizeof(void *); ++s) {
+        if (foo [s] != &foo [s]) {
+            abort();
+        }
+        foo [s] = &foo [s ^ 1];
     }
 }

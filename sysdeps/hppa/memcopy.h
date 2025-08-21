@@ -28,15 +28,15 @@
 
 #undef MERGE
 
-static __always_inline op_t
-MERGE (op_t w0, int shl, op_t w1, int shr)
+static __always_inline op_t MERGE(op_t w0, int shl, op_t w1, int shr)
 {
-  _Static_assert (OPSIZ == 4 || OPSIZ == 8, "Invalid OPSIZE");
+    _Static_assert(OPSIZ == 4 || OPSIZ == 8, "Invalid OPSIZE");
 
-  op_t res;
-  if (OPSIZ == 4)
-    asm ("shrpw %1,%2,%%sar,%0" : "=r"(res) : "r"(w0), "r"(w1), "q"(shr));
-  else if (OPSIZ == 8)
-    asm ("shrpd %1,%2,%%sar,%0" : "=r"(res) : "r"(w0), "r"(w1), "q"(shr));
-  return res;
+    op_t res;
+    if (OPSIZ == 4) {
+        asm("shrpw %1,%2,%%sar,%0" : "=r"(res) : "r"(w0), "r"(w1), "q"(shr));
+    } else if (OPSIZ == 8) {
+        asm("shrpd %1,%2,%%sar,%0" : "=r"(res) : "r"(w0), "r"(w1), "q"(shr));
+    }
+    return res;
 }

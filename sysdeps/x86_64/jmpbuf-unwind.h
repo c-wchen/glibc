@@ -29,15 +29,15 @@
 
 #define _JMPBUF_CFA_UNWINDS_ADJ(_jmpbuf, _context, _adj) \
   _JMPBUF_UNWINDS_ADJ (_jmpbuf, \
-		       (void *) (_Unwind_Ptr) _Unwind_GetCFA (_context), \
-		       _adj)
+               (void *) (_Unwind_Ptr) _Unwind_GetCFA (_context), \
+               _adj)
 
-static inline uintptr_t __attribute__ ((unused))
-_jmpbuf_sp (__jmp_buf regs)
+static inline uintptr_t __attribute__((unused))
+_jmpbuf_sp(__jmp_buf regs)
 {
-  uintptr_t sp = regs[JB_RSP];
-  PTR_DEMANGLE (sp);
-  return sp;
+    uintptr_t sp = regs[JB_RSP];
+    PTR_DEMANGLE(sp);
+    return sp;
 }
 
 #define _JMPBUF_UNWINDS_ADJ(_jmpbuf, _address, _adj) \

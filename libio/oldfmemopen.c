@@ -78,196 +78,187 @@
 
 
 typedef struct fmemopen_cookie_struct fmemopen_cookie_t;
-struct fmemopen_cookie_struct
-{
-  char *buffer;
-  int mybuffer;
-  int binmode;
-  size_t size;
-  off64_t pos;
-  size_t maxpos;
+struct fmemopen_cookie_struct {
+    char *buffer;
+    int mybuffer;
+    int binmode;
+    size_t size;
+    off64_t pos;
+    size_t maxpos;
 };
 
 
-static ssize_t
-fmemopen_read (void *cookie, char *b, size_t s)
+static ssize_t fmemopen_read(void *cookie, char *b, size_t s)
 {
-  fmemopen_cookie_t *c;
+    fmemopen_cookie_t *c;
 
-  c = (fmemopen_cookie_t *) cookie;
+    c = (fmemopen_cookie_t *) cookie;
 
-  if (c->pos + s > c->size)
-    {
-      if ((size_t) c->pos == c->size)
-	return 0;
-      s = c->size - c->pos;
+    if (c->pos + s > c->size) {
+        if ((size_t) c->pos == c->size) {
+            return 0;
+        }
+        s = c->size - c->pos;
     }
 
-  memcpy (b, &(c->buffer[c->pos]), s);
+    memcpy(b, &(c->buffer[c->pos]), s);
 
-  c->pos += s;
-  if ((size_t) c->pos > c->maxpos)
-    c->maxpos = c->pos;
+    c->pos += s;
+    if ((size_t) c->pos > c->maxpos) {
+        c->maxpos = c->pos;
+    }
 
-  return s;
+    return s;
 }
 
 
-static ssize_t
-fmemopen_write (void *cookie, const char *b, size_t s)
+static ssize_t fmemopen_write(void *cookie, const char *b, size_t s)
 {
-  fmemopen_cookie_t *c;
-  int addnullc;
+    fmemopen_cookie_t *c;
+    int addnullc;
 
-  c = (fmemopen_cookie_t *) cookie;
+    c = (fmemopen_cookie_t *) cookie;
 
-  addnullc = c->binmode == 0 && (s == 0 || b[s - 1] != '\0');
+    addnullc = c->binmode == 0 && (s == 0 || b[s - 1] != '\0');
 
-  if (c->pos + s + addnullc > c->size)
-    {
-      if ((size_t) (c->pos + addnullc) >= c->size)
-	{
-	  __set_errno (ENOSPC);
-	  return 0;
-	}
-      s = c->size - c->pos - addnullc;
+    if (c->pos + s + addnullc > c->size) {
+        if ((size_t)(c->pos + addnullc) >= c->size) {
+            __set_errno(ENOSPC);
+            return 0;
+        }
+        s = c->size - c->pos - addnullc;
     }
 
-  memcpy (&(c->buffer[c->pos]), b, s);
+    memcpy(&(c->buffer[c->pos]), b, s);
 
-  c->pos += s;
-  if ((size_t) c->pos > c->maxpos)
-    {
-      c->maxpos = c->pos;
-      if (addnullc)
-	c->buffer[c->maxpos] = '\0';
+    c->pos += s;
+    if ((size_t) c->pos > c->maxpos) {
+        c->maxpos = c->pos;
+        if (addnullc) {
+            c->buffer[c->maxpos] = '\0';
+        }
     }
 
-  return s;
+    return s;
 }
 
 
-static int
-fmemopen_seek (void *cookie, off64_t *p, int w)
+static int fmemopen_seek(void *cookie, off64_t *p, int w)
 {
-  off64_t np;
-  fmemopen_cookie_t *c;
+    off64_t np;
+    fmemopen_cookie_t *c;
 
-  c = (fmemopen_cookie_t *) cookie;
+    c = (fmemopen_cookie_t *) cookie;
 
-  switch (w)
-    {
-    case SEEK_SET:
-      np = *p;
-      break;
+    switch (w) {
+        case SEEK_SET:
+            np = *p;
+            break;
 
-    case SEEK_CUR:
-      np = c->pos + *p;
-      break;
+        case SEEK_CUR:
+            np = c->pos + *p;
+            break;
 
-    case SEEK_END:
-      np = (c->binmode ? c->size : c->maxpos) - *p;
-      break;
+        case SEEK_END:
+            np = (c->binmode ? c->size : c->maxpos) - *p;
+            break;
 
-    default:
-      return -1;
+        default:
+            return -1;
     }
 
-  if (np < 0 || (size_t) np > c->size)
-    return -1;
+    if (np < 0 || (size_t) np > c->size) {
+        return -1;
+    }
 
-  *p = c->pos = np;
+    *p = c->pos = np;
 
-  return 0;
+    return 0;
 }
 
 
-static int
-fmemopen_close (void *cookie)
+static int fmemopen_close(void *cookie)
 {
-  fmemopen_cookie_t *c;
+    fmemopen_cookie_t *c;
 
-  c = (fmemopen_cookie_t *) cookie;
+    c = (fmemopen_cookie_t *) cookie;
 
-  if (c->mybuffer)
-    free (c->buffer);
-  free (c);
+    if (c->mybuffer) {
+        free(c->buffer);
+    }
+    free(c);
 
-  return 0;
+    return 0;
 }
 
 
-FILE *
-__old_fmemopen (void *buf, size_t len, const char *mode)
+FILE *__old_fmemopen(void *buf, size_t len, const char *mode)
 {
-  cookie_io_functions_t iof;
-  fmemopen_cookie_t *c;
-  FILE *result;
+    cookie_io_functions_t iof;
+    fmemopen_cookie_t *c;
+    FILE *result;
 
-  if (__glibc_unlikely (len == 0))
-    {
-    einval:
-      __set_errno (EINVAL);
-      return NULL;
+    if (__glibc_unlikely(len == 0)) {
+einval:
+        __set_errno(EINVAL);
+        return NULL;
     }
 
-  c = (fmemopen_cookie_t *) malloc (sizeof (fmemopen_cookie_t));
-  if (c == NULL)
-    return NULL;
-
-  c->mybuffer = (buf == NULL);
-
-  if (c->mybuffer)
-    {
-      c->buffer = (char *) malloc (len);
-      if (c->buffer == NULL)
-	{
-	  free (c);
-	  return NULL;
-	}
-      c->buffer[0] = '\0';
-      c->maxpos = 0;
-    }
-  else
-    {
-      if (__glibc_unlikely ((uintptr_t) len > -(uintptr_t) buf))
-	{
-	  free (c);
-	  goto einval;
-	}
-
-      c->buffer = buf;
-
-      if (mode[0] == 'w')
-	c->buffer[0] = '\0';
-
-      c->maxpos = strnlen (c->buffer, len);
+    c = (fmemopen_cookie_t *) malloc(sizeof(fmemopen_cookie_t));
+    if (c == NULL) {
+        return NULL;
     }
 
-  c->size = len;
+    c->mybuffer = (buf == NULL);
 
-  if (mode[0] == 'a')
-    c->pos = c->maxpos;
-  else
-    c->pos = 0;
+    if (c->mybuffer) {
+        c->buffer = (char *) malloc(len);
+        if (c->buffer == NULL) {
+            free(c);
+            return NULL;
+        }
+        c->buffer[0] = '\0';
+        c->maxpos = 0;
+    } else {
+        if (__glibc_unlikely((uintptr_t) len > -(uintptr_t) buf)) {
+            free(c);
+            goto einval;
+        }
 
-  c->binmode = mode[0] != '\0' && mode[1] == 'b';
+        c->buffer = buf;
 
-  iof.read = fmemopen_read;
-  iof.write = fmemopen_write;
-  iof.seek = fmemopen_seek;
-  iof.close = fmemopen_close;
+        if (mode[0] == 'w') {
+            c->buffer[0] = '\0';
+        }
 
-  result = _IO_fopencookie (c, mode, iof);
-  if (__glibc_unlikely (result == NULL))
-    {
-      if (c->mybuffer)
-	free (c->buffer);
-
-      free (c);
+        c->maxpos = strnlen(c->buffer, len);
     }
 
-  return result;
+    c->size = len;
+
+    if (mode[0] == 'a') {
+        c->pos = c->maxpos;
+    } else {
+        c->pos = 0;
+    }
+
+    c->binmode = mode[0] != '\0' && mode[1] == 'b';
+
+    iof.read = fmemopen_read;
+    iof.write = fmemopen_write;
+    iof.seek = fmemopen_seek;
+    iof.close = fmemopen_close;
+
+    result = _IO_fopencookie(c, mode, iof);
+    if (__glibc_unlikely(result == NULL)) {
+        if (c->mybuffer) {
+            free(c->buffer);
+        }
+
+        free(c);
+    }
+
+    return result;
 }
-compat_symbol (libc, __old_fmemopen, fmemopen, GLIBC_2_2);
+compat_symbol(libc, __old_fmemopen, fmemopen, GLIBC_2_2);
 #endif

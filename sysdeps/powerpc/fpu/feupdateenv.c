@@ -19,36 +19,35 @@
 #include <fenv_libc.h>
 #include <fpu_control.h>
 
-int
-__feupdateenv (const fenv_t *envp)
+int __feupdateenv(const fenv_t *envp)
 {
-  fenv_union_t old, new;
+    fenv_union_t old, new;
 
-  /* Save the currently set exceptions.  */
-  new.fenv = *envp;
-  old.fenv = fegetenv_register ();
+    /* Save the currently set exceptions.  */
+    new.fenv = *envp;
+    old.fenv = fegetenv_register();
 
-  /* Restore rounding mode and exception enable from *envp and merge
-     exceptions.  Leave fraction rounded/inexact and FP result/CC bits
-     unchanged.  */
-  new.l = (old.l & 0xffffffff1fffff00LL) | (new.l & 0x1ff80fff);
+    /* Restore rounding mode and exception enable from *envp and merge
+       exceptions.  Leave fraction rounded/inexact and FP result/CC bits
+       unchanged.  */
+    new.l = (old.l & 0xffffffff1fffff00LL) | (new.l & 0x1ff80fff);
 
-  __TEST_AND_EXIT_NON_STOP (old.l, new.l);
-  __TEST_AND_ENTER_NON_STOP (old.l, new.l);
+    __TEST_AND_EXIT_NON_STOP(old.l, new.l);
+    __TEST_AND_ENTER_NON_STOP(old.l, new.l);
 
-  /* Atomically enable and raise (if appropriate) exceptions set in `new'. */
-  fesetenv_register (new.fenv);
+    /* Atomically enable and raise (if appropriate) exceptions set in `new'. */
+    fesetenv_register(new.fenv);
 
-  /* Success.  */
-  return 0;
+    /* Success.  */
+    return 0;
 }
 
 #include <shlib-compat.h>
 #if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
-strong_alias (__feupdateenv, __old_feupdateenv)
-compat_symbol (libm, __old_feupdateenv, feupdateenv, GLIBC_2_1);
+strong_alias(__feupdateenv, __old_feupdateenv)
+compat_symbol(libm, __old_feupdateenv, feupdateenv, GLIBC_2_1);
 #endif
 
-libm_hidden_def (__feupdateenv)
-libm_hidden_ver (__feupdateenv, feupdateenv)
-versioned_symbol (libm, __feupdateenv, feupdateenv, GLIBC_2_2);
+libm_hidden_def(__feupdateenv)
+libm_hidden_ver(__feupdateenv, feupdateenv)
+versioned_symbol(libm, __feupdateenv, feupdateenv, GLIBC_2_2);

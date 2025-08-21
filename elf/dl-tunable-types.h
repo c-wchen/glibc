@@ -27,66 +27,60 @@
 #include <stddef.h>
 #include <stdint.h>
 
-typedef enum
-{
-  TUNABLE_TYPE_INT_32,
-  TUNABLE_TYPE_UINT_64,
-  TUNABLE_TYPE_SIZE_T,
-  TUNABLE_TYPE_STRING
+typedef enum {
+    TUNABLE_TYPE_INT_32,
+    TUNABLE_TYPE_UINT_64,
+    TUNABLE_TYPE_SIZE_T,
+    TUNABLE_TYPE_STRING
 } tunable_type_code_t;
 
-typedef struct
-{
-  tunable_type_code_t type_code;
-  tunable_num_t min;
-  tunable_num_t max;
+typedef struct {
+    tunable_type_code_t type_code;
+    tunable_num_t min;
+    tunable_num_t max;
 } tunable_type_t;
 
 /* Security level for tunables.  This decides what to do with individual
    tunables for AT_SECURE binaries.  */
-typedef enum
-{
-  /* Erase the tunable for AT_SECURE binaries so that child processes don't
-     read it.  */
-  TUNABLE_SECLEVEL_SXID_ERASE = 0,
-  /* Ignore the tunable for AT_SECURE binaries, but don't erase it, so that
-     child processes can read it.  */
-  TUNABLE_SECLEVEL_SXID_IGNORE = 1,
-  /* Read the tunable.  */
-  TUNABLE_SECLEVEL_NONE = 2,
+typedef enum {
+    /* Erase the tunable for AT_SECURE binaries so that child processes don't
+       read it.  */
+    TUNABLE_SECLEVEL_SXID_ERASE = 0,
+    /* Ignore the tunable for AT_SECURE binaries, but don't erase it, so that
+       child processes can read it.  */
+    TUNABLE_SECLEVEL_SXID_IGNORE = 1,
+    /* Read the tunable.  */
+    TUNABLE_SECLEVEL_NONE = 2,
 } tunable_seclevel_t;
 
 /* A tunable.  */
-struct _tunable
-{
-  const char name[TUNABLE_NAME_MAX];	/* Internal name of the tunable.  */
-  tunable_type_t type;			/* Data type of the tunable.  */
-  const tunable_val_t def;		/* The value.  */
-  tunable_val_t val;			/* The value.  */
-  bool initialized;			/* Flag to indicate that the tunable is
-					   initialized.  */
-  /* Compatibility elements.  */
-  const char env_alias[TUNABLE_ALIAS_MAX]; /* The compatibility environment
-					   variable name.  */
+struct _tunable {
+    const char name[TUNABLE_NAME_MAX];    /* Internal name of the tunable.  */
+    tunable_type_t type;          /* Data type of the tunable.  */
+    const tunable_val_t def;      /* The value.  */
+    tunable_val_t val;            /* The value.  */
+    bool initialized;         /* Flag to indicate that the tunable is
+                       initialized.  */
+    /* Compatibility elements.  */
+    const char env_alias[TUNABLE_ALIAS_MAX]; /* The compatibility environment
+                       variable name.  */
 };
 
 typedef struct _tunable tunable_t;
 
-static __always_inline bool
-unsigned_tunable_type (tunable_type_code_t t)
+static __always_inline bool unsigned_tunable_type(tunable_type_code_t t)
 {
-  switch (t)
-    {
-    case TUNABLE_TYPE_INT_32:
-      return false;
-    case TUNABLE_TYPE_UINT_64:
-    case TUNABLE_TYPE_SIZE_T:
-      return true;
-    case TUNABLE_TYPE_STRING:
-    default:
-      break;
+    switch (t) {
+        case TUNABLE_TYPE_INT_32:
+            return false;
+        case TUNABLE_TYPE_UINT_64:
+        case TUNABLE_TYPE_SIZE_T:
+            return true;
+        case TUNABLE_TYPE_STRING:
+        default:
+            break;
     }
-  __builtin_unreachable ();
+    __builtin_unreachable();
 }
 
 #endif

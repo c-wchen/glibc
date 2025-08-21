@@ -20,17 +20,17 @@
 #if !_DIRENT_MATCHES_DIRENT64
 # include <unistd.h>
 
-ssize_t
-getdirentries (int fd, char *buf, size_t nbytes, off_t *basep)
+ssize_t getdirentries(int fd, char *buf, size_t nbytes, off_t *basep)
 {
-  off_t base = __lseek (fd, 0, SEEK_CUR);
+    off_t base = __lseek(fd, 0, SEEK_CUR);
 
-  ssize_t result = __getdents (fd, buf, nbytes);
+    ssize_t result = __getdents(fd, buf, nbytes);
 
-  if (result != -1)
-    *basep = base;
+    if (result != -1) {
+        *basep = base;
+    }
 
-  return result;
+    return result;
 }
 
 #endif

@@ -2,8 +2,7 @@
 #define _KERNEL_STAT_H
 
 /* Definition of `struct stat' used in the kernel */
-struct kernel_stat
-  {
+struct kernel_stat {
     unsigned int st_dev;
     unsigned long int st_ino;
     unsigned int st_mode;
@@ -19,11 +18,10 @@ struct kernel_stat
     long int st_blocks;
     unsigned long int __glibc_reserved1;
     unsigned long int __glibc_reserved2;
-  };
+};
 
 /* Definition of `struct stat64' used in the kernel.  */
-struct kernel_stat64
-  {
+struct kernel_stat64 {
     unsigned long int st_dev;
     unsigned long int st_ino;
     unsigned long int st_nlink;
@@ -45,7 +43,7 @@ struct kernel_stat64
     unsigned long int st_ctime_sec;
     unsigned long int st_ctime_nsec;
     long int __glibc_reserved[3];
-  };
+};
 
 #define STAT_IS_KERNEL_STAT 0
 #define STAT64_IS_KERNEL_STAT64 0

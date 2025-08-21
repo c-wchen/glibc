@@ -20,10 +20,9 @@
 
 /* Set the name of the current YP domain to NAME, which is LEN bytes long.
    This call is restricted to the super-user.  */
-int
-setdomainname (const char *name, size_t len)
+int setdomainname(const char *name, size_t len)
 {
-  /* The NIS domain name is just the contents of the file /etc/nisdomain.  */
-  ssize_t n = _hurd_set_host_config ("/etc/nisdomain", name, len);
-  return n < 0 ? -1 : 0;
+    /* The NIS domain name is just the contents of the file /etc/nisdomain.  */
+    ssize_t n = _hurd_set_host_config("/etc/nisdomain", name, len);
+    return n < 0 ? -1 : 0;
 }

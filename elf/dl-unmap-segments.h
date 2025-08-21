@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _DL_UNMAP_SEGMENTS_H
-#define _DL_UNMAP_SEGMENTS_H	1
+#define _DL_UNMAP_SEGMENTS_H    1
 
 #include <link.h>
 #include <sys/mman.h>
@@ -26,10 +26,9 @@
    are filled in with PROT_NONE mappings.  So we can just unmap the whole
    range in one fell swoop.  */
 
-static __always_inline void
-_dl_unmap_segments (struct link_map *l)
+static __always_inline void _dl_unmap_segments(struct link_map *l)
 {
-  __munmap ((void *) l->l_map_start, l->l_map_end - l->l_map_start);
+    __munmap((void *) l->l_map_start, l->l_map_end - l->l_map_start);
 }
 
 #endif  /* dl-unmap-segments.h */

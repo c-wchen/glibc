@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _MACHINE_LOCK_H
-#define	_MACHINE_LOCK_H
+#define _MACHINE_LOCK_H
 
 /* The type of a spin lock variable.  */
 
@@ -25,7 +25,7 @@ typedef volatile int __spin_lock_t;
 
 /* Value to initialize `__spin_lock_t' variables to.  */
 
-#define	__SPIN_LOCK_INITIALIZER	0
+#define __SPIN_LOCK_INITIALIZER 0
 
 
 #ifndef _EXTERN_INLINE
@@ -34,44 +34,41 @@ typedef volatile int __spin_lock_t;
 
 /* Unlock LOCK.  */
 
-extern void __spin_unlock (__spin_lock_t *__lock);
+extern void __spin_unlock(__spin_lock_t *__lock);
 
 #if defined __USE_EXTERN_INLINES && defined _LIBC
-_EXTERN_INLINE void
-__spin_unlock (__spin_lock_t *__lock)
+_EXTERN_INLINE void __spin_unlock(__spin_lock_t *__lock)
 {
-   register int __unlocked;
-   __asm__ __volatile ("xchgl %0, %1"
-		       : "=&r" (__unlocked), "=m" (*__lock) : "0" (0)
-		       : "memory");
+    register int __unlocked;
+    __asm__ __volatile("xchgl %0, %1"
+                       : "=&r"(__unlocked), "=m"(*__lock) : "0"(0)
+                       : "memory");
 }
 #endif
 
 /* Try to lock LOCK; return nonzero if we locked it, zero if another has.  */
 
-extern int __spin_try_lock (__spin_lock_t *__lock);
+extern int __spin_try_lock(__spin_lock_t *__lock);
 
 #if defined __USE_EXTERN_INLINES && defined _LIBC
-_EXTERN_INLINE int
-__spin_try_lock (__spin_lock_t *__lock)
+_EXTERN_INLINE int __spin_try_lock(__spin_lock_t *__lock)
 {
-  register int __locked;
-  __asm__ __volatile ("xchgl %0, %1"
-		      : "=&r" (__locked), "=m" (*__lock) : "0" (1)
-		      : "memory");
-  return !__locked;
+    register int __locked;
+    __asm__ __volatile("xchgl %0, %1"
+                       : "=&r"(__locked), "=m"(*__lock) : "0"(1)
+                       : "memory");
+    return !__locked;
 }
 #endif
 
 /* Return nonzero if LOCK is locked.  */
 
-extern int __spin_lock_locked (__spin_lock_t *__lock);
+extern int __spin_lock_locked(__spin_lock_t *__lock);
 
 #if defined __USE_EXTERN_INLINES && defined _LIBC
-_EXTERN_INLINE int
-__spin_lock_locked (__spin_lock_t *__lock)
+_EXTERN_INLINE int __spin_lock_locked(__spin_lock_t *__lock)
 {
-  return *__lock != 0;
+    return *__lock != 0;
 }
 #endif
 

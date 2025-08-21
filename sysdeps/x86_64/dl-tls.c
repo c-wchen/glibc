@@ -25,29 +25,30 @@
 
 /* Define __tls_get_addr within elf/dl-tls.c under a different
    name.  */
-extern __typeof__ (__tls_get_addr) ___tls_get_addr;
+extern __typeof__(__tls_get_addr) ___tls_get_addr;
 
 # define __tls_get_addr ___tls_get_addr
 # include <elf/dl-tls.c>
 # undef __tls_get_addr
 
-hidden_ver (___tls_get_addr, __tls_get_addr)
+hidden_ver(___tls_get_addr, __tls_get_addr)
 
 /* Only handle slow paths for __tls_get_addr.  */
 attribute_hidden
 void *
-__tls_get_addr_slow (tls_index *ti)
+__tls_get_addr_slow(tls_index *ti)
 {
-  dtv_t *dtv = THREAD_DTV ();
+    dtv_t *dtv = THREAD_DTV();
 
-  size_t gen = atomic_load_acquire (&GL(dl_tls_generation));
-  if (__glibc_unlikely (dtv[0].counter != gen)
-      /* See comment in __tls_get_addr in elf/dl-tls.c.  */
-      && !(_dl_tls_allocate_active ()
-           && ti->ti_module < _dl_tls_initial_modid_limit))
-    return update_get_addr (ti, gen);
+    size_t gen = atomic_load_acquire(&GL(dl_tls_generation));
+    if (__glibc_unlikely(dtv[0].counter != gen)
+        /* See comment in __tls_get_addr in elf/dl-tls.c.  */
+        && !(_dl_tls_allocate_active()
+             && ti->ti_module < _dl_tls_initial_modid_limit)) {
+        return update_get_addr(ti, gen);
+    }
 
-  return tls_get_addr_tail (ti, dtv, NULL);
+    return tls_get_addr_tail(ti, dtv, NULL);
 }
 #else
 

@@ -19,5 +19,5 @@
 
 /* Can't hide __mmap on Hurd, since __mmap in ld.so will be preempted by
    the one in libc.so after bootstrap.  */
-extern __typeof (__mprotect) __mprotect attribute_hidden;
-extern __typeof (__munmap) __munmap attribute_hidden;
+extern __typeof(__mprotect) __mprotect attribute_hidden;
+extern __typeof(__munmap) __munmap attribute_hidden;

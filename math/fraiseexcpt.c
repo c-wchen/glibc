@@ -22,18 +22,17 @@
 #undef __feraiseexcept
 #undef feraiseexcept
 
-int
-__feraiseexcept (int excepts)
+int __feraiseexcept(int excepts)
 {
-  /* This always fails unless nothing needs to be done.  */
-  return (excepts != 0);
+    /* This always fails unless nothing needs to be done.  */
+    return (excepts != 0);
 }
 #if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
-strong_alias (__feraiseexcept, __old_feraiseexcept)
-compat_symbol (libm, __old_feraiseexcept, feraiseexcept, GLIBC_2_1);
+strong_alias(__feraiseexcept, __old_feraiseexcept)
+compat_symbol(libm, __old_feraiseexcept, feraiseexcept, GLIBC_2_1);
 #endif
-libm_hidden_def (__feraiseexcept)
-libm_hidden_ver (__feraiseexcept, feraiseexcept)
-versioned_symbol (libm, __feraiseexcept, feraiseexcept, GLIBC_2_2);
+libm_hidden_def(__feraiseexcept)
+libm_hidden_ver(__feraiseexcept, feraiseexcept)
+versioned_symbol(libm, __feraiseexcept, feraiseexcept, GLIBC_2_2);
 
-stub_warning (feraiseexcept)
+stub_warning(feraiseexcept)

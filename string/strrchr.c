@@ -24,14 +24,13 @@
 #endif
 
 /* Find the last occurrence of C in S.  */
-char *
-STRRCHR (const char *s, int c)
+char *STRRCHR(const char *s, int c)
 {
-  return __memrchr (s, c, strlen (s) + 1);
+    return __memrchr(s, c, strlen(s) + 1);
 }
 
 #ifdef weak_alias
 #undef rindex
-weak_alias (strrchr, rindex)
+weak_alias(strrchr, rindex)
 #endif
-libc_hidden_builtin_def (strrchr)
+libc_hidden_builtin_def(strrchr)

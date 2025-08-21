@@ -34,22 +34,21 @@
 /* Set the soft and hard limits for RESOURCE to *RLIMITS.
    Only the super-user can increase hard limits.
    Return 0 if successful, -1 if not (and sets errno).  */
-int
-__setrlimit64 (enum __rlimit_resource resource, const struct rlimit64 *rlimits)
+int __setrlimit64(enum __rlimit_resource resource, const struct rlimit64 *rlimits)
 {
-  return INLINE_SYSCALL_CALL (prlimit64, 0, resource, rlimits, NULL);
+    return INLINE_SYSCALL_CALL(prlimit64, 0, resource, rlimits, NULL);
 }
 /* Alpha defines a versioned setrlimit{64}.  */
 #ifndef USE_VERSIONED_RLIMIT
-weak_alias (__setrlimit64, setrlimit64)
+weak_alias(__setrlimit64, setrlimit64)
 #endif
 
 #if __RLIM_T_MATCHES_RLIM64_T
-strong_alias (__setrlimit64, __setrlimit)
+strong_alias(__setrlimit64, __setrlimit)
 # ifndef USE_VERSIONED_RLIMIT
-weak_alias (__setrlimit64, setrlimit)
+weak_alias(__setrlimit64, setrlimit)
 # endif
 # ifdef SHARED
-__hidden_ver1 (__setrlimit64, __GI___setrlimit, __setrlimit64);
+__hidden_ver1(__setrlimit64, __GI___setrlimit, __setrlimit64);
 # endif
 #endif

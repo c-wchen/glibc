@@ -22,30 +22,27 @@
 #include <stdlib.h>
 #include <support/check.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
 #ifdef FE_DOWNWARD
-  if (fesetround (FE_DOWNWARD) == 0)
-    {
-      double a = strtod ("-0.1", NULL);
-      double b = 0;
-      int r = sscanf ("-0.1", "%lf", &b);
-      TEST_VERIFY (r == 1);
-      TEST_VERIFY (a == b);
+    if (fesetround(FE_DOWNWARD) == 0) {
+        double a = strtod("-0.1", NULL);
+        double b = 0;
+        int r = sscanf("-0.1", "%lf", &b);
+        TEST_VERIFY(r == 1);
+        TEST_VERIFY(a == b);
     }
 #endif
 #ifdef FE_UPWARD
-  if (fesetround (FE_UPWARD) == 0)
-    {
-      double a = strtod ("-0.1", NULL);
-      double b = 0;
-      int r = sscanf ("-0.1", "%lf", &b);
-      TEST_VERIFY (r == 1);
-      TEST_VERIFY (a == b);
+    if (fesetround(FE_UPWARD) == 0) {
+        double a = strtod("-0.1", NULL);
+        double b = 0;
+        int r = sscanf("-0.1", "%lf", &b);
+        TEST_VERIFY(r == 1);
+        TEST_VERIFY(a == b);
     }
 #endif
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

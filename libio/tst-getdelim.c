@@ -27,30 +27,29 @@
 #include <support/support.h>
 #include <support/test-driver.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* Check that getdelim sets error indicator on error (BZ #29917) */
-  clearerr (stdin);
-  TEST_VERIFY (getdelim (0, 0, '\n', stdin) == -1);
-  TEST_VERIFY (ferror (stdin) != 0);
-  TEST_VERIFY (errno == EINVAL);
+    /* Check that getdelim sets error indicator on error (BZ #29917) */
+    clearerr(stdin);
+    TEST_VERIFY(getdelim(0, 0, '\n', stdin) == -1);
+    TEST_VERIFY(ferror(stdin) != 0);
+    TEST_VERIFY(errno == EINVAL);
 
-  /* Test getdelim with NUL as delimiter */
-  verbose_printf ("Testing NUL delimiter\n");
-  char *lineptr = NULL;
-  size_t linelen = 0;
-  char membuf[] = "abc\0d\nef\0";
-  FILE *memstream = fmemopen (membuf, sizeof (membuf), "r");
-  TEST_VERIFY_EXIT (memstream != NULL);
-  TEST_VERIFY (getdelim (&lineptr, &linelen, '\0', memstream) != -1);
-  TEST_COMPARE_BLOB (lineptr, 4, "abc\0", 4);
-  TEST_VERIFY (getdelim (&lineptr, &linelen, '\0', memstream) != -1);
-  TEST_COMPARE_BLOB (lineptr, 5, "d\nef\0", 5);
-  fclose (memstream);
-  free (lineptr);
+    /* Test getdelim with NUL as delimiter */
+    verbose_printf("Testing NUL delimiter\n");
+    char *lineptr = NULL;
+    size_t linelen = 0;
+    char membuf[] = "abc\0d\nef\0";
+    FILE *memstream = fmemopen(membuf, sizeof(membuf), "r");
+    TEST_VERIFY_EXIT(memstream != NULL);
+    TEST_VERIFY(getdelim(&lineptr, &linelen, '\0', memstream) != -1);
+    TEST_COMPARE_BLOB(lineptr, 4, "abc\0", 4);
+    TEST_VERIFY(getdelim(&lineptr, &linelen, '\0', memstream) != -1);
+    TEST_COMPARE_BLOB(lineptr, 5, "d\nef\0", 5);
+    fclose(memstream);
+    free(lineptr);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

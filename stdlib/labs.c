@@ -17,12 +17,11 @@
 
 #include <stdlib.h>
 
-#undef	labs
+#undef  labs
 
 
 /* Return the absolute value of I.  */
-long int
-labs (long int i)
+long int labs(long int i)
 {
-  return i < 0 ? -i : i;
+    return i < 0 ? -i : i;
 }

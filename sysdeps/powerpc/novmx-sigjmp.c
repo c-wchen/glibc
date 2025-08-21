@@ -30,14 +30,13 @@
    before doing a `__setjmp' on ENV[0].__jmpbuf.
    Always return zero.  */
 
-int
-__novmx__sigjmp_save (__novmx__sigjmp_buf env, int savemask)
+int __novmx__sigjmp_save(__novmx__sigjmp_buf env, int savemask)
 {
-  env[0].__mask_was_saved = (savemask
-			     && __sigprocmask (SIG_BLOCK, (sigset_t *) NULL,
-					       &env[0].__saved_mask) == 0);
+    env[0].__mask_was_saved = (savemask
+                               && __sigprocmask(SIG_BLOCK, (sigset_t *) NULL,
+                                       &env[0].__saved_mask) == 0);
 
-  return 0;
+    return 0;
 }
 
 # endif /* SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_3_4) */

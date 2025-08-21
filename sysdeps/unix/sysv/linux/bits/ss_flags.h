@@ -24,12 +24,11 @@
 #endif
 
 /* Possible values for `ss_flags'.  */
-enum
-{
-  SS_ONSTACK = 1,
-#define SS_ONSTACK	SS_ONSTACK
-  SS_DISABLE
-#define SS_DISABLE	SS_DISABLE
+enum {
+    SS_ONSTACK = 1,
+#define SS_ONSTACK  SS_ONSTACK
+    SS_DISABLE
+#define SS_DISABLE  SS_DISABLE
 };
 
 #endif /* bits/ss_flags.h */

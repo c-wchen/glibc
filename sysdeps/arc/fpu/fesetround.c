@@ -19,22 +19,20 @@
 #include <fenv.h>
 #include <fenv_private.h>
 
-int
-__fesetround (int round)
+int __fesetround(int round)
 {
-  unsigned int fpcr;
+    unsigned int fpcr;
 
-  _FPU_GETCW (fpcr);
+    _FPU_GETCW(fpcr);
 
-  if (((fpcr >> __FPU_RND_SHIFT) & __FPU_RND_MASK) != round)
-    {
-      fpcr &= ~(__FPU_RND_MASK << __FPU_RND_SHIFT);
-      fpcr |= (round & __FPU_RND_MASK) << __FPU_RND_SHIFT;
-      _FPU_SETCW (fpcr);
+    if (((fpcr >> __FPU_RND_SHIFT) & __FPU_RND_MASK) != round) {
+        fpcr &= ~(__FPU_RND_MASK << __FPU_RND_SHIFT);
+        fpcr |= (round & __FPU_RND_MASK) << __FPU_RND_SHIFT;
+        _FPU_SETCW(fpcr);
     }
 
-  return 0;
+    return 0;
 }
-libm_hidden_def (__fesetround)
-weak_alias (__fesetround, fesetround)
-libm_hidden_weak (fesetround)
+libm_hidden_def(__fesetround)
+weak_alias(__fesetround, fesetround)
+libm_hidden_weak(fesetround)

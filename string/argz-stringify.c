@@ -21,19 +21,18 @@
 
 /* Make '\0' separated arg vector ARGZ printable by converting all the '\0's
    except the last into the character SEP.  */
-void
-__argz_stringify (char *argz, size_t len, int sep)
+void __argz_stringify(char *argz, size_t len, int sep)
 {
-  if (len > 0)
-    while (1)
-      {
-	size_t part_len = __strnlen (argz, len);
-	argz += part_len;
-	len -= part_len;
-	if (len-- <= 1)		/* includes final '\0' we want to stop at */
-	  break;
-	*argz++ = sep;
-      }
+    if (len > 0)
+        while (1) {
+            size_t part_len = __strnlen(argz, len);
+            argz += part_len;
+            len -= part_len;
+            if (len-- <= 1) {   /* includes final '\0' we want to stop at */
+                break;
+            }
+            *argz++ = sep;
+        }
 }
-libc_hidden_def (__argz_stringify)
-weak_alias (__argz_stringify, argz_stringify)
+libc_hidden_def(__argz_stringify)
+weak_alias(__argz_stringify, argz_stringify)

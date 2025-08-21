@@ -15,8 +15,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-int
-fp64a (void)
+int fp64a(void)
 {
-  return 7;
+    return 7;
 }

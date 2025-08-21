@@ -18,17 +18,16 @@
 #include "pthreadP.h"
 
 
-int
-__pthread_attr_getinheritsched (const pthread_attr_t *attr, int *inherit)
+int __pthread_attr_getinheritsched(const pthread_attr_t *attr, int *inherit)
 {
-  struct pthread_attr *iattr;
+    struct pthread_attr *iattr;
 
-  iattr = (struct pthread_attr *) attr;
+    iattr = (struct pthread_attr *) attr;
 
-  /* Store the current values.  */
-  *inherit = (iattr->flags & ATTR_FLAG_NOTINHERITSCHED
-	      ? PTHREAD_EXPLICIT_SCHED : PTHREAD_INHERIT_SCHED);
+    /* Store the current values.  */
+    *inherit = (iattr->flags & ATTR_FLAG_NOTINHERITSCHED
+                ? PTHREAD_EXPLICIT_SCHED : PTHREAD_INHERIT_SCHED);
 
-  return 0;
+    return 0;
 }
-strong_alias (__pthread_attr_getinheritsched, pthread_attr_getinheritsched)
+strong_alias(__pthread_attr_getinheritsched, pthread_attr_getinheritsched)

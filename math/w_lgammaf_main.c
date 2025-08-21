@@ -21,26 +21,26 @@
 
 #if BUILD_LGAMMA
 float
-LGFUNC (__lgammaf) (float x)
+LGFUNC(__lgammaf)(float x)
 {
-	float y = CALL_LGAMMA (float, __ieee754_lgammaf_r, x);
-	if(__builtin_expect(!isfinite(y), 0)
-	   && isfinite(x) && _LIB_VERSION != _IEEE_)
-		return __kernel_standard_f(x, x,
-					   floorf(x)==x&&x<=0.0f
-					   ? 115 /* lgamma pole */
-					   : 114); /* lgamma overflow */
+    float y = CALL_LGAMMA(float, __ieee754_lgammaf_r, x);
+    if (__builtin_expect(!isfinite(y), 0)
+        && isfinite(x) && _LIB_VERSION != _IEEE_)
+        return __kernel_standard_f(x, x,
+                                   floorf(x) == x && x <= 0.0f
+                                   ? 115 /* lgamma pole */
+                                   : 114); /* lgamma overflow */
 
-	return y;
+    return y;
 }
 # if USE_AS_COMPAT
-compat_symbol (libm, __lgammaf_compat, lgammaf, LGAMMA_OLD_VER);
+compat_symbol(libm, __lgammaf_compat, lgammaf, LGAMMA_OLD_VER);
 # else
-versioned_symbol (libm, __lgammaf, lgammaf, LGAMMA_NEW_VER);
-libm_alias_float_other (__lgamma, lgamma)
+versioned_symbol(libm, __lgammaf, lgammaf, LGAMMA_NEW_VER);
+libm_alias_float_other(__lgamma, lgamma)
 # endif
 # if GAMMA_ALIAS
-strong_alias (LGFUNC (__lgammaf), __gammaf)
-weak_alias (__gammaf, gammaf)
+strong_alias(LGFUNC(__lgammaf), __gammaf)
+weak_alias(__gammaf, gammaf)
 # endif
 #endif

@@ -50,13 +50,12 @@
 #include <stdlib.h>
 
 /* Return the `div_t' representation of NUMER over DENOM.  */
-div_t
-div (int numer, int denom)
+div_t div(int numer, int denom)
 {
-  div_t result;
+    div_t result;
 
-  result.quot = numer / denom;
-  result.rem = numer % denom;
+    result.quot = numer / denom;
+    result.rem = numer % denom;
 
-  return result;
+    return result;
 }

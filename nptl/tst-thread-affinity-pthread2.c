@@ -25,71 +25,62 @@
 /* Defined for the benefit of tst-skeleton-thread-affinity.c, included
    below.  This variant runs the functions on a separate thread.  */
 
-struct affinity_access_task
-{
-  pthread_t thread;
-  cpu_set_t *set;
-  size_t size;
-  bool get;
-  int result;
+struct affinity_access_task {
+    pthread_t thread;
+    cpu_set_t *set;
+    size_t size;
+    bool get;
+    int result;
 };
 
-static void *
-affinity_access_thread (void *closure)
+static void *affinity_access_thread(void *closure)
 {
-  struct affinity_access_task *task = closure;
-  if (task->get)
-    task->result = pthread_getaffinity_np
-      (task->thread, task->size, task->set);
-  else
-    task->result = pthread_setaffinity_np
-      (task->thread, task->size, task->set);
-  return NULL;
+    struct affinity_access_task *task = closure;
+    if (task->get)
+        task->result = pthread_getaffinity_np
+                       (task->thread, task->size, task->set);
+    else
+        task->result = pthread_setaffinity_np
+                       (task->thread, task->size, task->set);
+    return NULL;
 }
 
-static int
-run_affinity_access_thread (cpu_set_t *set, size_t size, bool get)
+static int run_affinity_access_thread(cpu_set_t *set, size_t size, bool get)
 {
-  struct affinity_access_task task =
-    {
-      .thread = pthread_self (),
-      .set = set,
-      .size = size,
-      .get = get
+    struct affinity_access_task task = {
+        .thread = pthread_self(),
+        .set = set,
+        .size = size,
+        .get = get
     };
-  pthread_t thr;
-  int ret = pthread_create (&thr, NULL, affinity_access_thread, &task);
-  if (ret != 0)
-    {
-      errno = ret;
-      printf ("error: could not create affinity access thread: %m\n");
-      abort ();
+    pthread_t thr;
+    int ret = pthread_create(&thr, NULL, affinity_access_thread, &task);
+    if (ret != 0) {
+        errno = ret;
+        printf("error: could not create affinity access thread: %m\n");
+        abort();
     }
-  ret = pthread_join (thr, NULL);
-  if (ret != 0)
-    {
-      errno = ret;
-      printf ("error: could not join affinity access thread: %m\n");
-      abort ();
+    ret = pthread_join(thr, NULL);
+    if (ret != 0) {
+        errno = ret;
+        printf("error: could not join affinity access thread: %m\n");
+        abort();
     }
-  if (task.result != 0)
-    {
-      errno = task.result;
-      return -1;
+    if (task.result != 0) {
+        errno = task.result;
+        return -1;
     }
-  return 0;
+    return 0;
 }
 
-static int
-setaffinity (size_t size, const cpu_set_t *set)
+static int setaffinity(size_t size, const cpu_set_t *set)
 {
-  return run_affinity_access_thread ((cpu_set_t *) set, size, false);
+    return run_affinity_access_thread((cpu_set_t *) set, size, false);
 }
 
-static int
-getaffinity (size_t size, cpu_set_t *set)
+static int getaffinity(size_t size, cpu_set_t *set)
 {
-  return run_affinity_access_thread (set, size, true);
+    return run_affinity_access_thread(set, size, true);
 }
 
 #include "tst-skeleton-thread-affinity.c"

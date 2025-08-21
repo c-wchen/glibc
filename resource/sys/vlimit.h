@@ -16,7 +16,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _SYS_VLIMIT_H
-#define _SYS_VLIMIT_H	1
+#define _SYS_VLIMIT_H   1
 
 #include <features.h>
 
@@ -25,32 +25,31 @@ __BEGIN_DECLS
 /* This interface is obsolete, and is superseded by <sys/resource.h>.  */
 
 /* Kinds of resource limit.  */
-enum __vlimit_resource
-{
-  /* Setting this non-zero makes it impossible to raise limits.
-     Only the super-use can set it to zero.
+enum __vlimit_resource {
+    /* Setting this non-zero makes it impossible to raise limits.
+       Only the super-use can set it to zero.
 
-     This is not implemented in recent versions of BSD, nor by
-     the GNU C library.  */
-  LIM_NORAISE,
+       This is not implemented in recent versions of BSD, nor by
+       the GNU C library.  */
+    LIM_NORAISE,
 
-  /* CPU time available for each process (seconds).  */
-  LIM_CPU,
+    /* CPU time available for each process (seconds).  */
+    LIM_CPU,
 
-  /* Largest file which can be created (bytes).  */
-  LIM_FSIZE,
+    /* Largest file which can be created (bytes).  */
+    LIM_FSIZE,
 
-  /* Maximum size of the data segment (bytes).  */
-  LIM_DATA,
+    /* Maximum size of the data segment (bytes).  */
+    LIM_DATA,
 
-  /* Maximum size of the stack segment (bytes).  */
-  LIM_STACK,
+    /* Maximum size of the stack segment (bytes).  */
+    LIM_STACK,
 
-  /* Largest core file that will be created (bytes).  */
-  LIM_CORE,
+    /* Largest core file that will be created (bytes).  */
+    LIM_CORE,
 
-  /* Resident set size (bytes).  */
-  LIM_MAXRSS
+    /* Resident set size (bytes).  */
+    LIM_MAXRSS
 };
 
 /* This means no limit.  */
@@ -59,7 +58,7 @@ enum __vlimit_resource
 
 /* Set the soft limit for RESOURCE to be VALUE.
    Returns 0 for success, -1 for failure.  */
-extern int vlimit (enum __vlimit_resource __resource, int __value) __THROW;
+extern int vlimit(enum __vlimit_resource __resource, int __value) __THROW;
 
 
 __END_DECLS

@@ -20,12 +20,11 @@
 #undef alphasort
 #include <string.h>
 
-int
-alphasort64 (const struct dirent64 **a, const struct dirent64 **b)
+int alphasort64(const struct dirent64 **a, const struct dirent64 **b)
 {
-  return strcoll ((*a)->d_name, (*b)->d_name);
+    return strcoll((*a)->d_name, (*b)->d_name);
 }
 
 #if _DIRENT_MATCHES_DIRENT64
-weak_alias (alphasort64, alphasort)
+weak_alias(alphasort64, alphasort)
 #endif

@@ -24,18 +24,16 @@
 
 #if LIBM_SVID_COMPAT
 /* wrapper asin */
-double
-__asin (double x)
+double __asin(double x)
 {
-  if (__builtin_expect (isgreater (fabs (x),  1.0), 0)
-      && _LIB_VERSION != _IEEE_)
-    {
-      /* asin(|x|>1) */
-      __feraiseexcept (FE_INVALID);
-      return __kernel_standard (x, x, 2);
+    if (__builtin_expect(isgreater(fabs(x),  1.0), 0)
+        && _LIB_VERSION != _IEEE_) {
+        /* asin(|x|>1) */
+        __feraiseexcept(FE_INVALID);
+        return __kernel_standard(x, x, 2);
     }
 
-  return __ieee754_asin (x);
+    return __ieee754_asin(x);
 }
-libm_alias_double (__asin, asin)
+libm_alias_double(__asin, asin)
 #endif

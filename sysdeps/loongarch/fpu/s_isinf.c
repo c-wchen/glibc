@@ -19,12 +19,11 @@
 #include <math.h>
 #include <fenv_private.h>
 
-int
-__isinf (double x)
+int __isinf(double x)
 {
-  int x_cond;
-  asm volatile ("fclass.d \t%0, %1" : "=f" (x_cond) : "f" (x));
-  return -((x_cond & _FCLASS_MINF) ? 1 : 0) | ((x_cond & _FCLASS_PINF) ? 1 : 0);
+    int x_cond;
+    asm volatile("fclass.d \t%0, %1" : "=f"(x_cond) : "f"(x));
+    return -((x_cond & _FCLASS_MINF) ? 1 : 0) | ((x_cond & _FCLASS_PINF) ? 1 : 0);
 }
-hidden_def (__isinf)
-weak_alias (__isinf, isinf)
+hidden_def(__isinf)
+weak_alias(__isinf, isinf)

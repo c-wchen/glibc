@@ -16,19 +16,19 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef	_HURD_XATTR_H
-#define	_HURD_XATTR_H	1
+#ifndef _HURD_XATTR_H
+#define _HURD_XATTR_H   1
 
-#include <sys/xattr.h>		/* This defines the XATTR_* flags.  */
+#include <sys/xattr.h>      /* This defines the XATTR_* flags.  */
 
 /* These are the internal versions of getxattr/setxattr/listxattr.  */
-extern error_t _hurd_xattr_get (io_t port, const char *name,
-				void *value, size_t *size);
-extern error_t _hurd_xattr_set (io_t port, const char *name,
-				const void *value, size_t size, int flags);
-extern error_t _hurd_xattr_remove (io_t port, const char *name);
-extern error_t _hurd_xattr_list (io_t port, void *buffer, size_t *size);
+extern error_t _hurd_xattr_get(io_t port, const char *name,
+                               void *value, size_t *size);
+extern error_t _hurd_xattr_set(io_t port, const char *name,
+                               const void *value, size_t size, int flags);
+extern error_t _hurd_xattr_remove(io_t port, const char *name);
+extern error_t _hurd_xattr_list(io_t port, void *buffer, size_t *size);
 
 
 
-#endif	/* hurd/xattr.h */
+#endif  /* hurd/xattr.h */

@@ -20,28 +20,27 @@
 #include <stdlib.h>
 #include <string.h>
 
-int
-main (void)
+int main(void)
 {
-  void *h;
-  const char *s;
+    void *h;
+    const char *s;
 
-  /* Test that dlerror works initially.  */
-  s = dlerror ();
-  printf ("dlerror() without prior dl*() call returned: %s\n", s);
-  if (s != NULL)
-    return 1;
-
-  h = dlopen ("errmsg1mod.so", RTLD_NOW);
-  if (h != NULL)
-    {
-      dlclose (h);
-      puts ("errmsg1mod.so could be loaded !?");
-      exit (1);
+    /* Test that dlerror works initially.  */
+    s = dlerror();
+    printf("dlerror() without prior dl*() call returned: %s\n", s);
+    if (s != NULL) {
+        return 1;
     }
 
-  s = dlerror ();
-  puts (s);
+    h = dlopen("errmsg1mod.so", RTLD_NOW);
+    if (h != NULL) {
+        dlclose(h);
+        puts("errmsg1mod.so could be loaded !?");
+        exit(1);
+    }
 
-  return strstr (s, "errmsg1mod.so") == NULL;
+    s = dlerror();
+    puts(s);
+
+    return strstr(s, "errmsg1mod.so") == NULL;
 }

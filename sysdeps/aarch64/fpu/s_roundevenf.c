@@ -20,10 +20,9 @@
 #include <math.h>
 #include <libm-alias-float.h>
 
-float
-__roundevenf (float x)
+float __roundevenf(float x)
 {
-  asm volatile ("frintn \t%s0, %s1" : "=w" (x) : "w" (x));
-  return x;
+    asm volatile("frintn \t%s0, %s1" : "=w"(x) : "w"(x));
+    return x;
 }
-libm_alias_float (__roundeven, roundeven)
+libm_alias_float(__roundeven, roundeven)

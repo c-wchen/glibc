@@ -25,32 +25,30 @@
 # include <sys/types.h>
 
 # ifndef DEV_TO_KDEV
-#  define DEV_TO_KDEV(__dev)					\
-  ({								\
-    unsigned long long int k_dev;				\
-    k_dev = dev & ((1ULL << 32) - 1);				\
-    if (k_dev != dev)						\
-     return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);		\
-    (unsigned int) k_dev;					\
+#  define DEV_TO_KDEV(__dev)                    \
+  ({                                \
+    unsigned long long int k_dev;               \
+    k_dev = dev & ((1ULL << 32) - 1);               \
+    if (k_dev != dev)                       \
+     return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);     \
+    (unsigned int) k_dev;                   \
   })
 # endif
 
-struct ustat
-{
-  __daddr_t f_tfree;         /* Number of free blocks.  */
-  __ino_t f_tinode;          /* Number of free inodes.  */
-  char f_fname[6];
-  char f_fpack[6];
+struct ustat {
+    __daddr_t f_tfree;         /* Number of free blocks.  */
+    __ino_t f_tinode;          /* Number of free inodes.  */
+    char f_fname[6];
+    char f_fpack[6];
 };
 
-int
-__old_ustat (dev_t dev, struct ustat *ubuf)
+int __old_ustat(dev_t dev, struct ustat *ubuf)
 {
 # ifdef __NR_ustat
-  return INLINE_SYSCALL_CALL (ustat, DEV_TO_KDEV (dev), ubuf);
+    return INLINE_SYSCALL_CALL(ustat, DEV_TO_KDEV(dev), ubuf);
 # else
-  return INLINE_SYSCALL_ERROR_RETURN_VALUE (ENOSYS);
+    return INLINE_SYSCALL_ERROR_RETURN_VALUE(ENOSYS);
 # endif
 }
-compat_symbol (libc, __old_ustat, ustat, GLIBC_2_0);
+compat_symbol(libc, __old_ustat, ustat, GLIBC_2_0);
 #endif /* SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_28)  */

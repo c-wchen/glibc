@@ -18,11 +18,10 @@
 #ifndef _DL_HWCAP_H
 #define _DL_HWCAP_H
 
-enum
-{
-  HWCAP_X86_SSE2		= 1 << 0,
-  HWCAP_X86_64			= 1 << 1,
-  HWCAP_X86_AVX512_1		= 1 << 2
+enum {
+    HWCAP_X86_SSE2        = 1 << 0,
+    HWCAP_X86_64          = 1 << 1,
+    HWCAP_X86_AVX512_1        = 1 << 2
 };
 
 #endif /* dl-hwcap.h */

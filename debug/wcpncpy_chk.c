@@ -18,14 +18,14 @@
 #include <wchar.h>
 
 
-/* Copy no more than N wide-characters of SRC to DEST.	*/
-wchar_t *
-__wcpncpy_chk (wchar_t *dest, const wchar_t *src, size_t n, size_t destlen)
+/* Copy no more than N wide-characters of SRC to DEST.  */
+wchar_t *__wcpncpy_chk(wchar_t *dest, const wchar_t *src, size_t n, size_t destlen)
 {
-  if (__glibc_unlikely (destlen < n))
-    __chk_fail ();
+    if (__glibc_unlikely(destlen < n)) {
+        __chk_fail();
+    }
 
-  /* This function is not often enough used to justify not using a
-     tail call.  */
-  return __wcpncpy (dest, src, n);
+    /* This function is not often enough used to justify not using a
+       tail call.  */
+    return __wcpncpy(dest, src, n);
 }

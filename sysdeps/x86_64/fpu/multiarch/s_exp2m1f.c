@@ -20,13 +20,13 @@
 #if MINIMUM_X86_ISA_LEVEL < AVX2_X86_ISA_LEVEL
 # include <libm-alias-float.h>
 
-extern float __redirect_exp2m1f (float);
+extern float __redirect_exp2m1f(float);
 
 # define SYMBOL_NAME exp2m1f
 # include "ifunc-fma.h"
 
-libc_ifunc_redirected (__redirect_exp2m1f, __exp2m1f, IFUNC_SELECTOR ());
-libm_alias_float (__exp2m1, exp2m1)
+libc_ifunc_redirected(__redirect_exp2m1f, __exp2m1f, IFUNC_SELECTOR());
+libm_alias_float(__exp2m1, exp2m1)
 
 # define __exp2m1f __exp2m1f_sse2
 #endif

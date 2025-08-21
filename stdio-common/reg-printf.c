@@ -28,56 +28,53 @@
 printf_arginfo_size_function **__printf_arginfo_table attribute_hidden;
 printf_function **__printf_function_table attribute_hidden;
 
-__libc_lock_define_initialized (static, lock)
+__libc_lock_define_initialized(static, lock)
 
 /* Register FUNC to be called to format SPEC specifiers.  */
 int
-__register_printf_specifier (int spec, printf_function converter,
-			     printf_arginfo_size_function arginfo)
+__register_printf_specifier(int spec, printf_function converter,
+                            printf_arginfo_size_function arginfo)
 {
-  if (spec < 0 || spec > (int) UCHAR_MAX)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (spec < 0 || spec > (int) UCHAR_MAX) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  int result = 0;
-  __libc_lock_lock (lock);
+    int result = 0;
+    __libc_lock_lock(lock);
 
-  if (__printf_function_table == NULL)
-    {
-      __printf_arginfo_table = (printf_arginfo_size_function **)
-	calloc (UCHAR_MAX + 1, sizeof (void *) * 2);
-      if (__printf_arginfo_table == NULL)
-	{
-	  result = -1;
-	  goto out;
-	}
+    if (__printf_function_table == NULL) {
+        __printf_arginfo_table = (printf_arginfo_size_function **)
+                                 calloc(UCHAR_MAX + 1, sizeof(void *) * 2);
+        if (__printf_arginfo_table == NULL) {
+            result = -1;
+            goto out;
+        }
 
-      __printf_function_table = (printf_function **)
-	(__printf_arginfo_table + UCHAR_MAX + 1);
+        __printf_function_table = (printf_function **)
+                                  (__printf_arginfo_table + UCHAR_MAX + 1);
     }
 
-  __printf_function_table[spec] = converter;
-  __printf_arginfo_table[spec] = arginfo;
+    __printf_function_table[spec] = converter;
+    __printf_arginfo_table[spec] = arginfo;
 
- out:
-  __libc_lock_unlock (lock);
+out:
+    __libc_lock_unlock(lock);
 
-  return result;
+    return result;
 }
-libc_hidden_def (__register_printf_specifier)
-weak_alias (__register_printf_specifier, register_printf_specifier)
+libc_hidden_def(__register_printf_specifier)
+weak_alias(__register_printf_specifier, register_printf_specifier)
 
 
 /* Register FUNC to be called to format SPEC specifiers.  */
 int
-__register_printf_function (int spec, printf_function converter,
-			    printf_arginfo_function arginfo)
+__register_printf_function(int spec, printf_function converter,
+                           printf_arginfo_function arginfo)
 {
-  return __register_printf_specifier (spec, converter,
-				      (printf_arginfo_size_function*) arginfo);
+    return __register_printf_specifier(spec, converter,
+                                       (printf_arginfo_size_function *) arginfo);
 }
-weak_alias (__register_printf_function, register_printf_function)
+weak_alias(__register_printf_function, register_printf_function)
 
-weak_alias (__printf_arginfo_table, __libc_reg_printf_freemem_ptr)
+weak_alias(__printf_arginfo_table, __libc_reg_printf_freemem_ptr)

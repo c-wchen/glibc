@@ -90,43 +90,44 @@
 #include <stdlib.h>
 #include <string.h>
 
-const char *
-__res_context_hostalias (struct resolv_context *ctx,
-                         const char *name, char *dst, size_t siz)
+const char *__res_context_hostalias(struct resolv_context *ctx,
+                                    const char *name, char *dst, size_t siz)
 {
-  char *file, *cp1, *cp2;
-  char buf[BUFSIZ];
-  FILE *fp;
+    char *file, *cp1, *cp2;
+    char buf[BUFSIZ];
+    FILE *fp;
 
-  if (ctx->resp->options & RES_NOALIASES)
-    return NULL;
-  file = getenv ("HOSTALIASES");
-  if (file == NULL || (fp = fopen (file, "rce")) == NULL)
-    return NULL;
-  buf[sizeof (buf) - 1] = '\0';
-  while (__fgets_unlocked (buf, sizeof (buf), fp))
-    {
-      for (cp1 = buf; *cp1 && !isspace (*cp1); ++cp1)
-        ;
-      if (!*cp1)
-        break;
-      *cp1 = '\0';
-      if (__libc_ns_samename (buf, name) == 1)
-        {
-          while (isspace (*++cp1))
+    if (ctx->resp->options & RES_NOALIASES) {
+        return NULL;
+    }
+    file = getenv("HOSTALIASES");
+    if (file == NULL || (fp = fopen(file, "rce")) == NULL) {
+        return NULL;
+    }
+    buf[sizeof(buf) - 1] = '\0';
+    while (__fgets_unlocked(buf, sizeof(buf), fp)) {
+        for (cp1 = buf; *cp1 && !isspace(*cp1); ++cp1)
             ;
-          if (!*cp1)
+        if (!*cp1) {
             break;
-          for (cp2 = cp1 + 1; *cp2 && !isspace (*cp2); ++cp2)
-            ;
-          *cp2 = '\0';
-          strncpy (dst, cp1, siz - 1);
-          dst[siz - 1] = '\0';
-          fclose (fp);
-          return dst;
+        }
+        *cp1 = '\0';
+        if (__libc_ns_samename(buf, name) == 1) {
+            while (isspace(*++cp1))
+                ;
+            if (!*cp1) {
+                break;
+            }
+            for (cp2 = cp1 + 1; *cp2 && !isspace(*cp2); ++cp2)
+                ;
+            *cp2 = '\0';
+            strncpy(dst, cp1, siz - 1);
+            dst[siz - 1] = '\0';
+            fclose(fp);
+            return dst;
         }
     }
-  fclose (fp);
-  return NULL;
+    fclose(fp);
+    return NULL;
 }
-libc_hidden_def (__res_context_hostalias)
+libc_hidden_def(__res_context_hostalias)

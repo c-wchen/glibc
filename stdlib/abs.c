@@ -17,11 +17,10 @@
 
 #include <stdlib.h>
 
-#undef	abs
+#undef  abs
 
 /* Return the absolute value of I.  */
-int
-abs (int i)
+int abs(int i)
 {
-  return i < 0 ? -i : i;
+    return i < 0 ? -i : i;
 }

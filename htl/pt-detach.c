@@ -24,52 +24,51 @@
 
 /* Indicate that the storage for THREAD can be reclaimed when it
    terminates.  */
-int
-__pthread_detach (pthread_t thread)
+int __pthread_detach(pthread_t thread)
 {
-  struct __pthread *pthread;
-  int err = 0;
+    struct __pthread *pthread;
+    int err = 0;
 
-  /* Lookup the thread structure for THREAD.  */
-  pthread = __pthread_getid (thread);
-  if (pthread == NULL)
-    return ESRCH;
-
-  __pthread_mutex_lock (&pthread->state_lock);
-
-  switch (pthread->state)
-    {
-    case PTHREAD_JOINABLE:
-      /* THREAD still running.  Mark it as detached such that its
-         resources can be reclaimed as soon as the thread exits.  */
-      pthread->state = PTHREAD_DETACHED;
-
-      /* Broadcast the condition.  This will make threads that are
-         waiting to join THREAD continue with hopefully disastrous
-         consequences instead of blocking indefinitely.  */
-      __pthread_cond_broadcast (&pthread->state_cond);
-      __pthread_mutex_unlock (&pthread->state_lock);
-
-      __pthread_dealloc (pthread);
-      break;
-
-    case PTHREAD_EXITED:
-      __pthread_mutex_unlock (&pthread->state_lock);
-
-      /* THREAD has already exited.  PTHREAD remained after the thread
-         exited in order to provide the exit status, but it turns out
-         it won't be needed.  */
-      __pthread_dealloc (pthread);
-      break;
-
-    default:
-      /* Thou shalt not detach non-joinable threads!  */
-      __pthread_mutex_unlock (&pthread->state_lock);
-      err = EINVAL;
-      break;
+    /* Lookup the thread structure for THREAD.  */
+    pthread = __pthread_getid(thread);
+    if (pthread == NULL) {
+        return ESRCH;
     }
 
-  return err;
+    __pthread_mutex_lock(&pthread->state_lock);
+
+    switch (pthread->state) {
+        case PTHREAD_JOINABLE:
+            /* THREAD still running.  Mark it as detached such that its
+               resources can be reclaimed as soon as the thread exits.  */
+            pthread->state = PTHREAD_DETACHED;
+
+            /* Broadcast the condition.  This will make threads that are
+               waiting to join THREAD continue with hopefully disastrous
+               consequences instead of blocking indefinitely.  */
+            __pthread_cond_broadcast(&pthread->state_cond);
+            __pthread_mutex_unlock(&pthread->state_lock);
+
+            __pthread_dealloc(pthread);
+            break;
+
+        case PTHREAD_EXITED:
+            __pthread_mutex_unlock(&pthread->state_lock);
+
+            /* THREAD has already exited.  PTHREAD remained after the thread
+               exited in order to provide the exit status, but it turns out
+               it won't be needed.  */
+            __pthread_dealloc(pthread);
+            break;
+
+        default:
+            /* Thou shalt not detach non-joinable threads!  */
+            __pthread_mutex_unlock(&pthread->state_lock);
+            err = EINVAL;
+            break;
+    }
+
+    return err;
 }
-weak_alias (__pthread_detach, pthread_detach)
-hidden_def (__pthread_detach)
+weak_alias(__pthread_detach, pthread_detach)
+hidden_def(__pthread_detach)

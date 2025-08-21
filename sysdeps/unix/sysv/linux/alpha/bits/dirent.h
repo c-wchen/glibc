@@ -16,10 +16,9 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _BITS_DIRENT_H
-#define _BITS_DIRENT_H	1
+#define _BITS_DIRENT_H  1
 
-struct dirent
-  {
+struct dirent {
 #ifdef __USE_FILE_OFFSET64
     __ino64_t d_ino;
 #else
@@ -29,22 +28,21 @@ struct dirent
     __off_t d_off;
     unsigned short int d_reclen;
     unsigned char d_type;
-    char d_name[256];		/* We must not include limits.h! */
-  };
+    char d_name[256];       /* We must not include limits.h! */
+};
 
 #ifdef __USE_LARGEFILE64
 /* Note dirent64 is the same as dirent.  */
-struct dirent64
-  {
+struct dirent64 {
     __ino64_t d_ino;
     __off64_t d_off;
     unsigned short int d_reclen;
     unsigned char d_type;
-    char d_name[256];		/* We must not include limits.h! */
-  };
+    char d_name[256];       /* We must not include limits.h! */
+};
 #endif
 
-#define d_fileno	d_ino	/* Backwards compatibility.  */
+#define d_fileno    d_ino   /* Backwards compatibility.  */
 
 #undef  _DIRENT_HAVE_D_NAMLEN
 #define _DIRENT_HAVE_D_RECLEN
@@ -52,6 +50,6 @@ struct dirent64
 #define _DIRENT_HAVE_D_TYPE
 
 /* Inform libc code that these two types are effectively identical.  */
-#define _DIRENT_MATCHES_DIRENT64	1
+#define _DIRENT_MATCHES_DIRENT64    1
 
 #endif /* bits/dirent.h */

@@ -20,12 +20,11 @@
 #include <unistd.h>
 
 /* Change the current directory to FD.  */
-int
-__fchdir (int fd)
+int __fchdir(int fd)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-weak_alias (__fchdir, fchdir)
+weak_alias(__fchdir, fchdir)
 
-stub_warning (fchdir)
+stub_warning(fchdir)

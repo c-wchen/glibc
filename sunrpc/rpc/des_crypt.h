@@ -1,5 +1,5 @@
 /*
- * @(#)des_crypt.h	2.1 88/08/11 4.0 RPCSRC
+ * @(#)des_crypt.h  2.1 88/08/11 4.0 RPCSRC
  *
  * des_crypt.h, des library routine interface
  * Copyright (c) 2010, Oracle America, Inc.
@@ -39,24 +39,24 @@
 
 __BEGIN_DECLS
 
-#define DES_MAXDATA 8192	/* max bytes encrypted in one call */
+#define DES_MAXDATA 8192    /* max bytes encrypted in one call */
 #define DES_DIRMASK (1 << 0)
-#define DES_ENCRYPT (0*DES_DIRMASK)	/* Encrypt */
-#define DES_DECRYPT (1*DES_DIRMASK)	/* Decrypt */
+#define DES_ENCRYPT (0*DES_DIRMASK) /* Encrypt */
+#define DES_DECRYPT (1*DES_DIRMASK) /* Decrypt */
 
 
 #define DES_DEVMASK (1 << 1)
-#define	DES_HW (0*DES_DEVMASK)	/* Use hardware device */
-#define DES_SW (1*DES_DEVMASK)	/* Use software device */
+#define DES_HW (0*DES_DEVMASK)  /* Use hardware device */
+#define DES_SW (1*DES_DEVMASK)  /* Use software device */
 
 
-#define DESERR_NONE 0	/* succeeded */
-#define DESERR_NOHWDEVICE 1	/* succeeded, but hw device not available */
-#define DESERR_HWERROR 2	/* failed, hardware/driver error */
-#define DESERR_BADPARAM 3	/* failed, bad parameter to call */
+#define DESERR_NONE 0   /* succeeded */
+#define DESERR_NOHWDEVICE 1 /* succeeded, but hw device not available */
+#define DESERR_HWERROR 2    /* failed, hardware/driver error */
+#define DESERR_BADPARAM 3   /* failed, bad parameter to call */
 
 #define DES_FAILED(err) \
-	((err) > DESERR_NOHWDEVICE)
+    ((err) > DESERR_NOHWDEVICE)
 
 /*
  * cbc_crypt()
@@ -76,20 +76,20 @@ __BEGIN_DECLS
 /*
  * Cipher Block Chaining mode
  */
-extern int cbc_crypt (char *__key, char *__buf, unsigned __len,
-		      unsigned __mode, char *__ivec) __THROW;
+extern int cbc_crypt(char *__key, char *__buf, unsigned __len,
+                     unsigned __mode, char *__ivec) __THROW;
 
 /*
  * Electronic Code Book mode
  */
-extern int ecb_crypt (char *__key, char *__buf, unsigned __len,
-		      unsigned __mode) __THROW;
+extern int ecb_crypt(char *__key, char *__buf, unsigned __len,
+                     unsigned __mode) __THROW;
 
 /*
  * Set des parity for a key.
  * DES parity is odd and in the low bit of each byte
  */
-extern void des_setparity (char *__key) __THROW;
+extern void des_setparity(char *__key) __THROW;
 
 __END_DECLS
 

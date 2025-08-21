@@ -29,22 +29,22 @@
    pointers for labels inserted into the message as we compress the
    name.  If DNPTRS is NULL, we don't try to compress names.  If
    LASTDNPTR * is NULL, we don't update the list.  */
-int
-___ns_name_compress (const char *src, unsigned char *dst, size_t dstsiz,
-                     const unsigned char **dnptrs,
-                     const unsigned char **lastdnptr)
+int ___ns_name_compress(const char *src, unsigned char *dst, size_t dstsiz,
+                        const unsigned char **dnptrs,
+                        const unsigned char **lastdnptr)
 {
-  unsigned char tmp[NS_MAXCDNAME];
+    unsigned char tmp[NS_MAXCDNAME];
 
-  if (__ns_name_pton (src, tmp, sizeof tmp) < 0)
-    return -1;
-  return __ns_name_pack (tmp, dst, dstsiz, dnptrs, lastdnptr);
+    if (__ns_name_pton(src, tmp, sizeof tmp) < 0) {
+        return -1;
+    }
+    return __ns_name_pack(tmp, dst, dstsiz, dnptrs, lastdnptr);
 }
-versioned_symbol (libc, ___ns_name_compress, ns_name_compress, GLIBC_2_34);
-versioned_symbol (libc, ___ns_name_compress, __ns_name_compress,
-                  GLIBC_PRIVATE);
-libc_hidden_ver (___ns_name_compress, __ns_name_compress)
+versioned_symbol(libc, ___ns_name_compress, ns_name_compress, GLIBC_2_34);
+versioned_symbol(libc, ___ns_name_compress, __ns_name_compress,
+                 GLIBC_PRIVATE);
+libc_hidden_ver(___ns_name_compress, __ns_name_compress)
 
 #if OTHER_SHLIB_COMPAT (libresolv, GLIBC_2_9, GLIBC_2_34)
-compat_symbol (libresolv, ___ns_name_compress, ns_name_compress, GLIBC_2_9);
+compat_symbol(libresolv, ___ns_name_compress, ns_name_compress, GLIBC_2_9);
 #endif

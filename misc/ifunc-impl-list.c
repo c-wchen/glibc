@@ -24,9 +24,9 @@
 
 size_t
 __libc_ifunc_impl_list
-  (const char *name __attribute__ ((unused)),
-   struct libc_ifunc_impl *array __attribute__ ((unused)),
-   size_t max __attribute__ ((unused)))
+(const char *name __attribute__((unused)),
+ struct libc_ifunc_impl *array __attribute__((unused)),
+ size_t max __attribute__((unused)))
 {
-  return 0;
+    return 0;
 }

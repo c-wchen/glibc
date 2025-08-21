@@ -35,64 +35,62 @@
    used and thus the thread group will finish with return value of '1'
    (where '2' from main thread is expected.  */
 
-static int
-f (void *a)
+static int f(void *a)
 {
-  return 1;
+    return 1;
 }
 
 /* Futex wait for TID argument, similar to pthread_join internal
    implementation.  */
-#define wait_tid(ctid_ptr, ctid_val)					\
-  do {									\
-    __typeof (*(ctid_ptr)) __tid;					\
-    /* We need acquire MO here so that we synchronize with the		\
-       kernel's store to 0 when the clone terminates.  */		\
-    while ((__tid = atomic_load_explicit (ctid_ptr,			\
-					  memory_order_acquire)) != 0)	\
-      futex_wait (ctid_ptr, ctid_val);					\
+#define wait_tid(ctid_ptr, ctid_val)                    \
+  do {                                  \
+    __typeof (*(ctid_ptr)) __tid;                   \
+    /* We need acquire MO here so that we synchronize with the      \
+       kernel's store to 0 when the clone terminates.  */       \
+    while ((__tid = atomic_load_explicit (ctid_ptr,         \
+                      memory_order_acquire)) != 0)  \
+      futex_wait (ctid_ptr, ctid_val);                  \
   } while (0)
 
-static inline int
-futex_wait (_Atomic int *futexp, int val)
+static inline int futex_wait(_Atomic int *futexp, int val)
 {
 #ifdef __NR_futex
-  return syscall (__NR_futex, futexp, FUTEX_WAIT, val);
+    return syscall(__NR_futex, futexp, FUTEX_WAIT, val);
 #else
-  return syscall (__NR_futex_time64, futexp, FUTEX_WAIT, val);
+    return syscall(__NR_futex_time64, futexp, FUTEX_WAIT, val);
 #endif
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char st[1024] __attribute__ ((aligned));
-  int clone_flags = CLONE_THREAD;
-  /* Minimum required flags to used along with CLONE_THREAD.  */
-  clone_flags |= CLONE_VM | CLONE_SIGHAND;
-  /* We will used ctid to call on futex to wait for thread exit.  */
-  clone_flags |= CLONE_CHILD_CLEARTID;
-  /* Initialize with a known value.  ctid is set to zero by the kernel after the
-     cloned thread has exited.  */
+    char st[1024] __attribute__((aligned));
+    int clone_flags = CLONE_THREAD;
+    /* Minimum required flags to used along with CLONE_THREAD.  */
+    clone_flags |= CLONE_VM | CLONE_SIGHAND;
+    /* We will used ctid to call on futex to wait for thread exit.  */
+    clone_flags |= CLONE_CHILD_CLEARTID;
+    /* Initialize with a known value.  ctid is set to zero by the kernel after the
+       cloned thread has exited.  */
 #define CTID_INIT_VAL 1
-  _Atomic pid_t ctid = CTID_INIT_VAL;
-  pid_t tid;
+    _Atomic pid_t ctid = CTID_INIT_VAL;
+    pid_t tid;
 
 #if _STACK_GROWS_DOWN
-  tid = clone (f, st + sizeof (st), clone_flags, NULL, /* ptid */ NULL,
-	       /* tls */ NULL, &ctid);
+    tid = clone(f, st + sizeof(st), clone_flags, NULL, /* ptid */ NULL,
+                /* tls */ NULL, &ctid);
 #elif _STACK_GROWS_UP
-  tid = clone (f, st, clone_flags, NULL, /* ptid */ NULL, /* tls */ NULL,
-	       &ctid);
+    tid = clone(f, st, clone_flags, NULL, /* ptid */ NULL, /* tls */ NULL,
+                &ctid);
 #else
 #error "Define either _STACK_GROWS_DOWN or _STACK_GROWS_UP"
 #endif
-  if (tid == -1)
-    FAIL_EXIT1 ("clone failed: %m");
+    if (tid == -1) {
+        FAIL_EXIT1("clone failed: %m");
+    }
 
-  wait_tid (&ctid, CTID_INIT_VAL);
+    wait_tid(&ctid, CTID_INIT_VAL);
 
-  return 2;
+    return 2;
 }
 
 #define EXPECTED_STATUS 2

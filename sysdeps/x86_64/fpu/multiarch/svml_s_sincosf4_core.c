@@ -19,10 +19,10 @@
 #define SYMBOL_NAME _ZGVbN4vvv_sincosf
 #include "ifunc-mathvec-sse4_1.h"
 
-libc_ifunc_redirected (REDIRECT_NAME, SYMBOL_NAME, IFUNC_SELECTOR ());
+libc_ifunc_redirected(REDIRECT_NAME, SYMBOL_NAME, IFUNC_SELECTOR());
 
 #ifdef SHARED
-__hidden_ver1 (_ZGVbN4vvv_sincosf, __GI__ZGVbN4vvv_sincosf,
-	       __redirect__ZGVbN4vvv_sincosf)
-  __attribute__ ((visibility ("hidden")));
+__hidden_ver1(_ZGVbN4vvv_sincosf, __GI__ZGVbN4vvv_sincosf,
+              __redirect__ZGVbN4vvv_sincosf)
+__attribute__((visibility("hidden")));
 #endif

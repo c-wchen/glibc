@@ -20,22 +20,22 @@
 #include <stdlib.h>
 #include <string.h>
 
-int
-tst_audit10_aux (void)
+int tst_audit10_aux(void)
 {
 #ifdef __AVX512F__
-  extern __m512i audit_test (__m512i, __m512i, __m512i, __m512i,
-                             __m512i, __m512i, __m512i, __m512i);
+    extern __m512i audit_test(__m512i, __m512i, __m512i, __m512i,
+                              __m512i, __m512i, __m512i, __m512i);
 
-  __m512i zmm = _mm512_setzero_si512 ();
-  __m512i ret = audit_test (zmm, zmm, zmm, zmm, zmm, zmm, zmm, zmm);
+    __m512i zmm = _mm512_setzero_si512();
+    __m512i ret = audit_test(zmm, zmm, zmm, zmm, zmm, zmm, zmm, zmm);
 
-  zmm = _mm512_set1_epi64 (0x12349876);
+    zmm = _mm512_set1_epi64(0x12349876);
 
-  if (memcmp (&zmm, &ret, sizeof (ret)))
-    abort ();
-  return 0;
+    if (memcmp(&zmm, &ret, sizeof(ret))) {
+        abort();
+    }
+    return 0;
 #else /* __AVX512F__ */
-  return 77;
+    return 77;
 #endif /* __AVX512F__ */
 }

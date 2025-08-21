@@ -23,11 +23,10 @@
    off every INTERVAL microseconds thereafter.
 
    Returns the number of microseconds remaining before the alarm.  */
-useconds_t
-ualarm (useconds_t value, useconds_t interval)
+useconds_t ualarm(useconds_t value, useconds_t interval)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (ualarm)
+stub_warning(ualarm)

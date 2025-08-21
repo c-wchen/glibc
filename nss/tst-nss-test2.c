@@ -31,107 +31,99 @@
    the pwd_expected table, and the tests[] array.  */
 
 static struct passwd pwd_table_1[] = {
-    PWD (100),
-    PWD (30),
-    PWD (200),
-    PWD (60),
-    PWD (20000),
-    PWD_LAST ()
-  };
+    PWD(100),
+    PWD(30),
+    PWD(200),
+    PWD(60),
+    PWD(20000),
+    PWD_LAST()
+};
 
 static struct passwd pwd_table_2[] = {
-    PWD (5),
+    PWD(5),
     PWD_N(200, "name30"),
-    PWD (16),
-    PWD_LAST ()
-  };
+    PWD(16),
+    PWD_LAST()
+};
 
-void
-_nss_test1_init_hook(test_tables *t)
+void _nss_test1_init_hook(test_tables *t)
 {
-  t->pwd_table = pwd_table_1;
+    t->pwd_table = pwd_table_1;
 }
 
-void
-_nss_test2_init_hook(test_tables *t)
+void _nss_test2_init_hook(test_tables *t)
 {
-  t->pwd_table = pwd_table_2;
+    t->pwd_table = pwd_table_2;
 }
 
 static struct passwd pwd_expected[] = {
-  PWD(100),
-  PWD(30),
-  PWD(200),
-  PWD(60),
-  PWD(20000),
-  PWD(5),
-  PWD_N(200, "name30"),
-  PWD(16),
-  PWD_LAST ()
+    PWD(100),
+    PWD(30),
+    PWD(200),
+    PWD(60),
+    PWD(20000),
+    PWD(5),
+    PWD_N(200, "name30"),
+    PWD(16),
+    PWD_LAST()
 };
 
 static struct {
-  uid_t uid;
-  const char *name;
+    uid_t uid;
+    const char *name;
 } tests[] = {
-  { 100, "name100" }, /* control, first db */
-  {  16, "name16"  }, /* second db */
-  {  30, "name30"  }, /* test overlaps in name */
-  { 200, "name200" }, /* test overlaps uid */
-  { 0, NULL }
+    { 100, "name100" }, /* control, first db */
+    {  16, "name16"  }, /* second db */
+    {  30, "name30"  }, /* test overlaps in name */
+    { 200, "name200" }, /* test overlaps uid */
+    { 0, NULL }
 };
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int retval = 0;
-  int i;
+    int retval = 0;
+    int i;
 
-  __nss_configure_lookup ("passwd", "test1 test2");
+    __nss_configure_lookup("passwd", "test1 test2");
 
-  setpwent ();
+    setpwent();
 
-  i = 0;
-  for (struct passwd *p = getpwent (); p != NULL; ++i, p = getpwent ())
-    {
-      retval += compare_passwds (i, & pwd_expected[i], p);
+    i = 0;
+    for (struct passwd *p = getpwent(); p != NULL; ++i, p = getpwent()) {
+        retval += compare_passwds(i, & pwd_expected[i], p);
 
-      if (p->pw_uid != pwd_expected[i].pw_uid || strcmp (p->pw_name, pwd_expected[i].pw_name) != 0)
-      {
-	printf ("FAIL: getpwent for %u.%s returned %u.%s\n",
-		pwd_expected[i].pw_uid, pwd_expected[i].pw_name,
-		p->pw_uid, p->pw_name);
-	retval = 1;
-	break;
-      }
+        if (p->pw_uid != pwd_expected[i].pw_uid || strcmp(p->pw_name, pwd_expected[i].pw_name) != 0) {
+            printf("FAIL: getpwent for %u.%s returned %u.%s\n",
+                   pwd_expected[i].pw_uid, pwd_expected[i].pw_name,
+                   p->pw_uid, p->pw_name);
+            retval = 1;
+            break;
+        }
     }
 
-  endpwent ();
+    endpwent();
 
-  for (i=0; tests[i].name; i++)
-    {
-      struct passwd *p = getpwnam (tests[i].name);
-      if (strcmp (p->pw_name, tests[i].name) != 0
-	  || p->pw_uid != tests[i].uid)
-	{
-	  printf("FAIL: getpwnam for %u.%s returned %u.%s\n",
-		 tests[i].uid, tests[i].name,
-		 p->pw_uid, p->pw_name);
-	  retval = 1;
-	}
+    for (i = 0; tests[i].name; i++) {
+        struct passwd *p = getpwnam(tests[i].name);
+        if (strcmp(p->pw_name, tests[i].name) != 0
+            || p->pw_uid != tests[i].uid) {
+            printf("FAIL: getpwnam for %u.%s returned %u.%s\n",
+                   tests[i].uid, tests[i].name,
+                   p->pw_uid, p->pw_name);
+            retval = 1;
+        }
 
-      p = getpwuid (tests[i].uid);
-      if (strcmp (p->pw_name, tests[i].name) != 0
-	  || p->pw_uid != tests[i].uid)
-	{
-	  printf("FAIL: getpwuid for %u.%s returned %u.%s\n",
-		 tests[i].uid, tests[i].name,
-		 p->pw_uid, p->pw_name);
-	  retval = 1;
-	}
+        p = getpwuid(tests[i].uid);
+        if (strcmp(p->pw_name, tests[i].name) != 0
+            || p->pw_uid != tests[i].uid) {
+            printf("FAIL: getpwuid for %u.%s returned %u.%s\n",
+                   tests[i].uid, tests[i].name,
+                   p->pw_uid, p->pw_name);
+            retval = 1;
+        }
     }
 
-  return retval;
+    return retval;
 }
 
 #include <support/test-driver.c>

@@ -2,9 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int
-dummy1 (void)
+int dummy1(void)
 {
-  printf ("Called dummy1()\n");
-  return 1;
+    printf("Called dummy1()\n");
+    return 1;
 }

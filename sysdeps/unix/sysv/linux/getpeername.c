@@ -18,13 +18,12 @@
 #include <sys/socket.h>
 #include <socketcall.h>
 
-int
-__getpeername (int fd, __SOCKADDR_ARG addr, socklen_t *len)
+int __getpeername(int fd, __SOCKADDR_ARG addr, socklen_t *len)
 {
 #ifdef __ASSUME_GETPEERNAME_SYSCALL
-  return INLINE_SYSCALL_CALL (getpeername, fd, addr.__sockaddr__, len);
+    return INLINE_SYSCALL_CALL(getpeername, fd, addr.__sockaddr__, len);
 #else
-  return SOCKETCALL (getpeername, fd, addr.__sockaddr__, len);
+    return SOCKETCALL(getpeername, fd, addr.__sockaddr__, len);
 #endif
 }
-weak_alias (__getpeername, getpeername)
+weak_alias(__getpeername, getpeername)

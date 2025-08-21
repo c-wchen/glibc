@@ -25,39 +25,34 @@
 #include <ldsodefs.h>
 #include <dl-funcdesc.h>
 
-#define ELF_MACHINE_IRELA	1
+#define ELF_MACHINE_IRELA   1
 
-static inline Elf64_Addr
-__attribute ((always_inline))
-elf_ifunc_invoke (Elf64_Addr addr)
+static inline Elf64_Addr __attribute((always_inline))
+elf_ifunc_invoke(Elf64_Addr addr)
 {
-  return ((Elf64_Addr (*) (unsigned long int)) (addr)) (GLRO(dl_hwcap));
+    return ((Elf64_Addr(*)(unsigned long int))(addr))(GLRO(dl_hwcap));
 }
 
-static inline void
-__attribute ((always_inline))
-elf_irela (const Elf64_Rela *reloc)
+static inline void __attribute((always_inline))
+elf_irela(const Elf64_Rela *reloc)
 {
-  unsigned int r_type = ELF64_R_TYPE (reloc->r_info);
+    unsigned int r_type = ELF64_R_TYPE(reloc->r_info);
 
-  if (__glibc_likely (r_type == R_PPC64_IRELATIVE))
-    {
-      Elf64_Addr *const reloc_addr = (void *) reloc->r_offset;
-      Elf64_Addr value = elf_ifunc_invoke(reloc->r_addend);
-      *reloc_addr = value;
-    }
-  else if (__glibc_likely (r_type == R_PPC64_JMP_IREL))
-    {
-      Elf64_Addr *const reloc_addr = (void *) reloc->r_offset;
-      Elf64_Addr value = elf_ifunc_invoke(reloc->r_addend);
+    if (__glibc_likely(r_type == R_PPC64_IRELATIVE)) {
+        Elf64_Addr *const reloc_addr = (void *) reloc->r_offset;
+        Elf64_Addr value = elf_ifunc_invoke(reloc->r_addend);
+        *reloc_addr = value;
+    } else if (__glibc_likely(r_type == R_PPC64_JMP_IREL)) {
+        Elf64_Addr *const reloc_addr = (void *) reloc->r_offset;
+        Elf64_Addr value = elf_ifunc_invoke(reloc->r_addend);
 #if _CALL_ELF != 2
-      *(Elf64_FuncDesc *) reloc_addr = *(Elf64_FuncDesc *) value;
+        *(Elf64_FuncDesc *) reloc_addr = *(Elf64_FuncDesc *) value;
 #else
-      *reloc_addr = value;
+        *reloc_addr = value;
 #endif
+    } else {
+        __libc_fatal("Unexpected reloc type in static binary.\n");
     }
-  else
-    __libc_fatal ("Unexpected reloc type in static binary.\n");
 }
 
 #endif /* dl-irel.h */

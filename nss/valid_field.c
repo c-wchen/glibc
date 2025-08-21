@@ -23,9 +23,8 @@ const char __nss_invalid_field_characters[] = NSS_INVALID_FIELD_CHARACTERS;
 /* Check that VALUE is either NULL or a NUL-terminated string which
    does not contain characters not permitted in NSS database
    fields.  */
-_Bool
-__nss_valid_field (const char *value)
+_Bool __nss_valid_field(const char *value)
 {
-  return value == NULL
-    || strpbrk (value, __nss_invalid_field_characters) == NULL;
+    return value == NULL
+           || strpbrk(value, __nss_invalid_field_characters) == NULL;
 }

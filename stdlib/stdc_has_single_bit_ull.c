@@ -19,7 +19,7 @@
 #include <stdbit.h>
 
 _Bool
-(stdc_has_single_bit_ull) (unsigned long long int x)
+(stdc_has_single_bit_ull)(unsigned long long int x)
 {
-  return stdc_has_single_bit_ull (x);
+    return stdc_has_single_bit_ull(x);
 }

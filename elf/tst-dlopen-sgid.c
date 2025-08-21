@@ -38,67 +38,64 @@ static const char dso_name[] = "tst-dlopen-sgid-mod.so";
 /* Used to mark the recursive invocation.  */
 static const char magic_argument[] = "run-actual-test";
 
-static int
-do_test (void)
+static int do_test(void)
 {
-/* Pathname of the directory that receives the shared objects this
-   test attempts to load.  */
-  char *libdir = support_create_temp_directory ("tst-dlopen-sgid-");
+    /* Pathname of the directory that receives the shared objects this
+       test attempts to load.  */
+    char *libdir = support_create_temp_directory("tst-dlopen-sgid-");
 
-  /* This is supposed to be ignored and stripped.  */
-  TEST_COMPARE (setenv ("LD_LIBRARY_PATH", libdir, 1), 0);
+    /* This is supposed to be ignored and stripped.  */
+    TEST_COMPARE(setenv("LD_LIBRARY_PATH", libdir, 1), 0);
 
-  /* Copy of libc.so.6.  */
-  {
-    char *from = xasprintf ("%s/%s", support_objdir_root, LIBC_SO);
-    char *to = xasprintf ("%s/%s", libdir, LIBC_SO);
-    add_temp_file (to);
-    support_copy_file (from, to);
-    free (to);
-    free (from);
-  }
+    /* Copy of libc.so.6.  */
+    {
+        char *from = xasprintf("%s/%s", support_objdir_root, LIBC_SO);
+        char *to = xasprintf("%s/%s", libdir, LIBC_SO);
+        add_temp_file(to);
+        support_copy_file(from, to);
+        free(to);
+        free(from);
+    }
 
-  /* Copy of the test object.   */
-  {
-    char *from = xasprintf ("%s/elf/%s", support_objdir_root, dso_name);
-    char *to = xasprintf ("%s/%s", libdir, dso_name);
-    add_temp_file (to);
-    support_copy_file (from, to);
-    free (to);
-    free (from);
-  }
+    /* Copy of the test object.   */
+    {
+        char *from = xasprintf("%s/elf/%s", support_objdir_root, dso_name);
+        char *to = xasprintf("%s/%s", libdir, dso_name);
+        add_temp_file(to);
+        support_copy_file(from, to);
+        free(to);
+        free(from);
+    }
 
-  free (libdir);
+    free(libdir);
 
-  support_capture_subprogram_self_sgid (magic_argument);
+    support_capture_subprogram_self_sgid(magic_argument);
 
-  return 0;
+    return 0;
 }
 
-static void
-alternative_main (int argc, char **argv)
+static void alternative_main(int argc, char **argv)
 {
-  if (argc == 2 && strcmp (argv[1], magic_argument) == 0)
-    {
-      if (getgid () == getegid ())
-        /* This can happen if the file system is mounted nosuid.  */
-        FAIL_UNSUPPORTED ("SGID failed: GID and EGID match (%jd)\n",
-                          (intmax_t) getgid ());
+    if (argc == 2 && strcmp(argv[1], magic_argument) == 0) {
+        if (getgid() == getegid())
+            /* This can happen if the file system is mounted nosuid.  */
+            FAIL_UNSUPPORTED("SGID failed: GID and EGID match (%jd)\n",
+                             (intmax_t) getgid());
 
-      /* Should be removed due to SGID.  */
-      TEST_COMPARE_STRING (getenv ("LD_LIBRARY_PATH"), NULL);
+        /* Should be removed due to SGID.  */
+        TEST_COMPARE_STRING(getenv("LD_LIBRARY_PATH"), NULL);
 
-      TEST_VERIFY (dlopen (dso_name, RTLD_NOW) == NULL);
-      {
-        const char *message = dlerror ();
-        TEST_COMPARE_STRING (message,
-                             "tst-dlopen-sgid-mod.so:"
-                             " cannot open shared object file:"
-                             " No such file or directory");
-      }
+        TEST_VERIFY(dlopen(dso_name, RTLD_NOW) == NULL);
+        {
+            const char *message = dlerror();
+            TEST_COMPARE_STRING(message,
+                                "tst-dlopen-sgid-mod.so:"
+                                " cannot open shared object file:"
+                                " No such file or directory");
+        }
 
-      support_record_failure_barrier ();
-      exit (EXIT_SUCCESS);
+        support_record_failure_barrier();
+        exit(EXIT_SUCCESS);
     }
 }
 

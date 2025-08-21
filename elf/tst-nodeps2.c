@@ -18,12 +18,11 @@
 
 #include <support/xdlfcn.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  void *handle = xdlmopen (LM_ID_NEWLM, "tst-nodeps2-mod.so", RTLD_NOW);
-  xdlclose (handle);
-  return 0;
+    void *handle = xdlmopen(LM_ID_NEWLM, "tst-nodeps2-mod.so", RTLD_NOW);
+    xdlclose(handle);
+    return 0;
 }
 
 #include <support/test-driver.c>

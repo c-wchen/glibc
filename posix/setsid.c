@@ -22,12 +22,11 @@
 /* Create a new session with the calling process as its leader.
    The process group IDs of the session and the calling process
    are set to the process ID of the calling process, which is returned.  */
-int
-__setsid (void)
+int __setsid(void)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (setsid)
+stub_warning(setsid)
 
-weak_alias (__setsid, setsid)
+weak_alias(__setsid, setsid)

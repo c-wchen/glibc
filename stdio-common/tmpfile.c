@@ -32,47 +32,48 @@
    by tmpnam).  The file is opened with mode "w+b" (binary read/write).
    If we couldn't generate a unique filename or the file couldn't
    be opened, NULL is returned.  */
-FILE *
-tmpfile (void)
+FILE *tmpfile(void)
 {
-  int fd;
-  FILE *f;
-  int flags = 0;
+    int fd;
+    FILE *f;
+    int flags = 0;
 #ifdef FLAGS
-  flags = FLAGS;
+    flags = FLAGS;
 #endif
 
-  /* First try a system specific method.  */
-  fd = __gen_tempfd (flags);
+    /* First try a system specific method.  */
+    fd = __gen_tempfd(flags);
 
-  if (fd < 0)
-    {
-      char buf[FILENAME_MAX];
+    if (fd < 0) {
+        char buf[FILENAME_MAX];
 
-      if (__path_search (buf, sizeof buf, NULL, "tmpf", 0))
-	return NULL;
+        if (__path_search(buf, sizeof buf, NULL, "tmpf", 0)) {
+            return NULL;
+        }
 
-      fd = __gen_tempname (buf, 0, flags, __GT_FILE);
-      if (fd < 0)
-	return NULL;
+        fd = __gen_tempname(buf, 0, flags, __GT_FILE);
+        if (fd < 0) {
+            return NULL;
+        }
 
-      /* Note that this relies on the Unix semantics that
-	 a file is not really removed until it is closed.  */
-      (void) __unlink (buf);
+        /* Note that this relies on the Unix semantics that
+        a file is not really removed until it is closed.  */
+        (void) __unlink(buf);
     }
 
-  if ((f = __fdopen (fd, "w+b")) == NULL)
-    __close (fd);
+    if ((f = __fdopen(fd, "w+b")) == NULL) {
+        __close(fd);
+    }
 
-  return f;
+    return f;
 }
 
 #if !defined O_LARGEFILE || O_LARGEFILE == 0
-weak_alias (__new_tmpfile, tmpfile64)
+weak_alias(__new_tmpfile, tmpfile64)
 #endif
 
 #ifndef FLAGS /* Not for tmpfile64.  */
 # undef tmpfile
 # include <shlib-compat.h>
-versioned_symbol (libc, __new_tmpfile, tmpfile, GLIBC_2_1);
+versioned_symbol(libc, __new_tmpfile, tmpfile, GLIBC_2_1);
 #endif

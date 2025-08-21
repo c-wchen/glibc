@@ -21,6 +21,6 @@
 #include <iso8859-9.h>
 
 #define CHARSET_NAME "ISO-8859-9//"
-#define HAS_HOLES	0	/* All 256 character are defined.  */
+#define HAS_HOLES   0   /* All 256 character are defined.  */
 
 #include <8bit-generic.c>

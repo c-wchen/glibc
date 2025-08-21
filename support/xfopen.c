@@ -21,11 +21,11 @@
 #include <support/check.h>
 #include <stdlib.h>
 
-FILE *
-xfopen (const char *path, const char *mode)
+FILE *xfopen(const char *path, const char *mode)
 {
-  FILE *fp = fopen (path, mode);
-  if (fp == NULL)
-    FAIL_EXIT1 ("could not open %s (mode \"%s\"): %m", path, mode);
-  return fp;
+    FILE *fp = fopen(path, mode);
+    if (fp == NULL) {
+        FAIL_EXIT1("could not open %s (mode \"%s\"): %m", path, mode);
+    }
+    return fp;
 }

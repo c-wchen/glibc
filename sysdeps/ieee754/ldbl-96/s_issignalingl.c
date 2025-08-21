@@ -21,29 +21,28 @@
 #include <nan-high-order-bit.h>
 #include <nan-pseudo-number.h>
 
-int
-__issignalingl (long double x)
+int __issignalingl(long double x)
 {
-  uint32_t exi, hxi, lxi;
-  GET_LDOUBLE_WORDS (exi, hxi, lxi, x);
+    uint32_t exi, hxi, lxi;
+    GET_LDOUBLE_WORDS(exi, hxi, lxi, x);
 
-  /* By default we do not recognize a pseudo NaN as sNaN.  However on 80387 and
-     later all pseudo numbers including pseudo NaNs result in a signal and are
-     hence recognized as signaling.  */
-  int ret = is_pseudo_signaling (exi, hxi);
+    /* By default we do not recognize a pseudo NaN as sNaN.  However on 80387 and
+       later all pseudo numbers including pseudo NaNs result in a signal and are
+       hence recognized as signaling.  */
+    int ret = is_pseudo_signaling(exi, hxi);
 
 #if HIGH_ORDER_BIT_IS_SET_FOR_SNAN
 # error not implemented
 #else
-  /* To keep the following comparison simple, toggle the quiet/signaling bit,
-     so that it is set for sNaNs.  This is inverse to IEEE 754-2008 (as well as
-     common practice for IEEE 754-1985).  */
-  hxi ^= 0x40000000;
-  /* If lxi != 0, then set any suitable bit of the significand in hxi.  */
-  hxi |= (lxi | -lxi) >> 31;
-  /* We have to compare for greater (instead of greater or equal), because x's
-     significand being all-zero designates infinity not NaN.  */
-  return ret || (((exi & 0x7fff) == 0x7fff) && (hxi > 0xc0000000));
+    /* To keep the following comparison simple, toggle the quiet/signaling bit,
+       so that it is set for sNaNs.  This is inverse to IEEE 754-2008 (as well as
+       common practice for IEEE 754-1985).  */
+    hxi ^= 0x40000000;
+    /* If lxi != 0, then set any suitable bit of the significand in hxi.  */
+    hxi |= (lxi | -lxi) >> 31;
+    /* We have to compare for greater (instead of greater or equal), because x's
+       significand being all-zero designates infinity not NaN.  */
+    return ret || (((exi & 0x7fff) == 0x7fff) && (hxi > 0xc0000000));
 #endif
 }
-libm_hidden_def (__issignalingl)
+libm_hidden_def(__issignalingl)

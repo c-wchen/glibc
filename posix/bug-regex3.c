@@ -22,22 +22,20 @@
 #include <stdlib.h>
 
 
-int
-main (void)
+int main(void)
 {
-  regex_t re;
-  int n;
+    regex_t re;
+    int n;
 
-  n = regcomp (&re, "[a-bA-B]", REG_ICASE);
-  if (n != 0)
-    {
-      char buf[500];
-      regerror (n, &re, buf, sizeof (buf));
-      printf ("regcomp failed: %s\n", buf);
-      exit (1);
+    n = regcomp(&re, "[a-bA-B]", REG_ICASE);
+    if (n != 0) {
+        char buf[500];
+        regerror(n, &re, buf, sizeof(buf));
+        printf("regcomp failed: %s\n", buf);
+        exit(1);
     }
 
-  regfree (&re);
+    regfree(&re);
 
-  return 0;
+    return 0;
 }

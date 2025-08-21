@@ -19,13 +19,12 @@
 
 
 /* Write formatted output to FP from the format string FORMAT.  */
-int
-___vfprintf_chk (FILE *fp, int flag, const char *format, va_list ap)
+int ___vfprintf_chk(FILE *fp, int flag, const char *format, va_list ap)
 {
-  /* For flag > 0 (i.e. __USE_FORTIFY_LEVEL > 1) request that %n
-     can only come from read-only format strings.  */
-  unsigned int mode = (flag > 0) ? PRINTF_FORTIFY : 0;
+    /* For flag > 0 (i.e. __USE_FORTIFY_LEVEL > 1) request that %n
+       can only come from read-only format strings.  */
+    unsigned int mode = (flag > 0) ? PRINTF_FORTIFY : 0;
 
-  return __vfprintf_internal (fp, format, ap, mode);
+    return __vfprintf_internal(fp, format, ap, mode);
 }
-ldbl_strong_alias (___vfprintf_chk, __vfprintf_chk)
+ldbl_strong_alias(___vfprintf_chk, __vfprintf_chk)

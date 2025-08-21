@@ -22,15 +22,15 @@
 #include <libm-alias-float.h>
 
 #if LIBM_SVID_COMPAT
-float
-__coshf (float x)
+float __coshf(float x)
 {
-	float z = __ieee754_coshf (x);
-	if (__builtin_expect (!isfinite (z), 0) && isfinite (x)
-	    && _LIB_VERSION != _IEEE_)
-		return __kernel_standard_f (x, x, 105); /* cosh overflow */
+    float z = __ieee754_coshf(x);
+    if (__builtin_expect(!isfinite(z), 0) && isfinite(x)
+        && _LIB_VERSION != _IEEE_) {
+        return __kernel_standard_f(x, x, 105);    /* cosh overflow */
+    }
 
-	return z;
+    return z;
 }
-libm_alias_float (__cosh, cosh)
+libm_alias_float(__cosh, cosh)
 #endif

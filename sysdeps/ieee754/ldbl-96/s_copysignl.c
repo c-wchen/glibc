@@ -26,9 +26,8 @@ static char rcsid[] = "$NetBSD: $";
 #include <math.h>
 #include <libm-alias-ldouble.h>
 
-long double
-__copysignl (long double x, long double y)
+long double __copysignl(long double x, long double y)
 {
-  return __builtin_copysignl (x, y);
+    return __builtin_copysignl(x, y);
 }
-libm_alias_ldouble (__copysign, copysign)
+libm_alias_ldouble(__copysign, copysign)

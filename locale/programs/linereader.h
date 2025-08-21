@@ -28,137 +28,133 @@
 #include "repertoire.h"
 #include "record-status.h"
 
-typedef const struct keyword_t *(*kw_hash_fct_t) (const char *, size_t);
+typedef const struct keyword_t *(*kw_hash_fct_t)(const char *, size_t);
 struct charset_t;
 struct localedef_t;
 
-struct token
-{
-  enum token_t tok;
-  union
-  {
-    struct
-    {
-      char *startmb;
-      size_t lenmb;
-      uint32_t *startwc;
-      size_t lenwc;
-    } str;
-    unsigned long int num;
-    struct
-    {
-      /* This element is sized on the safe expectation that no single
-	 character in any character set uses more than 16 bytes.  */
-      unsigned char bytes[16];
-      int nbytes;
-    } charcode;
-    uint32_t ucs4;
-  } val;
+struct token {
+    enum token_t tok;
+    union {
+        struct {
+            char *startmb;
+            size_t lenmb;
+            uint32_t *startwc;
+            size_t lenwc;
+        } str;
+        unsigned long int num;
+        struct {
+            /* This element is sized on the safe expectation that no single
+            character in any character set uses more than 16 bytes.  */
+            unsigned char bytes[16];
+            int nbytes;
+        } charcode;
+        uint32_t ucs4;
+    } val;
 };
 
 
-struct linereader
-{
-  FILE *fp;
-  const char *fname;
-  char *buf;
-  size_t bufsize;
-  size_t bufact;
-  size_t lineno;
+struct linereader {
+    FILE *fp;
+    const char *fname;
+    char *buf;
+    size_t bufsize;
+    size_t bufact;
+    size_t lineno;
 
-  size_t idx;
+    size_t idx;
 
-  char comment_char;
-  char escape_char;
+    char comment_char;
+    char escape_char;
 
-  struct token token;
+    struct token token;
 
-  int translate_strings;
-  int return_widestr;
+    int translate_strings;
+    int return_widestr;
 
-  kw_hash_fct_t hash_fct;
+    kw_hash_fct_t hash_fct;
 };
 
 
 /* Functions defined in linereader.c.  */
-extern struct linereader *lr_open (const char *fname, kw_hash_fct_t hf);
-extern struct linereader *lr_create (FILE *fp, const char *fname,
-				     kw_hash_fct_t hf);
-extern int lr_eof (struct linereader *lr);
-extern void lr_close (struct linereader *lr);
-extern int lr_next (struct linereader *lr);
-extern struct token *lr_token (struct linereader *lr,
-			       const struct charmap_t *charmap,
-			       struct localedef_t *locale,
-			       const struct repertoire_t *repertoire,
-			       int verbose);
-extern void lr_ignore_rest (struct linereader *lr, int verbose);
+extern struct linereader *lr_open(const char *fname, kw_hash_fct_t hf);
+extern struct linereader *lr_create(FILE *fp, const char *fname,
+                                    kw_hash_fct_t hf);
+extern int lr_eof(struct linereader *lr);
+extern void lr_close(struct linereader *lr);
+extern int lr_next(struct linereader *lr);
+extern struct token *lr_token(struct linereader *lr,
+                              const struct charmap_t *charmap,
+                              struct localedef_t *locale,
+                              const struct repertoire_t *repertoire,
+                              int verbose);
+extern void lr_ignore_rest(struct linereader *lr, int verbose);
 
 
-static inline void
-__attribute__ ((__format__ (__printf__, 2, 3), nonnull (1, 2)))
-lr_error (struct linereader *lr, const char *fmt, ...)
+static inline void __attribute__((__format__(__printf__, 2, 3), nonnull(1, 2)))
+lr_error(struct linereader *lr, const char *fmt, ...)
 {
-  char *str;
-  va_list arg;
-  struct locale_state ls;
-  int ret;
+    char *str;
+    va_list arg;
+    struct locale_state ls;
+    int ret;
 
-  va_start (arg, fmt);
-  ls = push_locale ();
+    va_start(arg, fmt);
+    ls = push_locale();
 
-  ret = vasprintf (&str, fmt, arg);
-  if (ret == -1)
-    abort ();
-
-  pop_locale (ls);
-  va_end (arg);
-
-  error_at_line (0, 0, lr->fname, lr->lineno, "%s", str);
-
-  free (str);
-}
-
-
-static inline int
-__attribute ((always_inline))
-lr_getc (struct linereader *lr)
-{
-  if (lr->idx == lr->bufact)
-    {
-      if (lr->bufact != 0)
-	if (lr_next (lr) < 0)
-	  return EOF;
-
-      if (lr->bufact == 0)
-	return EOF;
+    ret = vasprintf(&str, fmt, arg);
+    if (ret == -1) {
+        abort();
     }
 
-  return lr->buf[lr->idx++] & 0xff;
+    pop_locale(ls);
+    va_end(arg);
+
+    error_at_line(0, 0, lr->fname, lr->lineno, "%s", str);
+
+    free(str);
 }
 
 
-static inline int
-__attribute ((always_inline))
-lr_ungetc (struct linereader *lr, int ch)
+static inline int __attribute((always_inline))
+lr_getc(struct linereader *lr)
 {
-  if (lr->idx == 0)
-    return -1;
+    if (lr->idx == lr->bufact) {
+        if (lr->bufact != 0)
+            if (lr_next(lr) < 0) {
+                return EOF;
+            }
 
-  if (ch != EOF)
-    lr->buf[--lr->idx] = ch;
-  return 0;
+        if (lr->bufact == 0) {
+            return EOF;
+        }
+    }
+
+    return lr->buf[lr->idx++] & 0xff;
 }
 
 
-static inline int
-lr_ungetn (struct linereader *lr, size_t n)
+static inline int __attribute((always_inline))
+lr_ungetc(struct linereader *lr, int ch)
 {
-  if (lr->idx < n)
-    return -1;
+    if (lr->idx == 0) {
+        return -1;
+    }
 
-  lr->idx -= n;
-  return 0;
+    if (ch != EOF) {
+        lr->buf[--lr->idx] = ch;
+    }
+    return 0;
+}
+
+
+static inline int lr_ungetn(struct linereader *lr, size_t n)
+{
+    if (lr->idx < n) {
+        return -1;
+    }
+
+    lr->idx -= n;
+    return 0;
 }
 
 

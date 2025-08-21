@@ -32,97 +32,96 @@ static int restart;
 #define CMDLINE_OPTIONS \
   { "restart", no_argument, &restart, 1 },
 
-static int
-handle_restart (void)
+static int handle_restart(void)
 {
-  {
-    void *h = xdlmopen (LM_ID_NEWLM, LIBC_SO, RTLD_NOW);
+    {
+        void *h = xdlmopen(LM_ID_NEWLM, LIBC_SO, RTLD_NOW);
 
-    pid_t (*s) (void) = xdlsym (h, "getpid");
-    TEST_COMPARE (s (), getpid ());
+        pid_t (*s)(void) = xdlsym(h, "getpid");
+        TEST_COMPARE(s(), getpid());
 
-    xdlclose (h);
-  }
+        xdlclose(h);
+    }
 
-  {
-    void *h = xdlmopen (LM_ID_NEWLM, "tst-audit18mod.so", RTLD_NOW);
+    {
+        void *h = xdlmopen(LM_ID_NEWLM, "tst-audit18mod.so", RTLD_NOW);
 
-    int (*foo) (void) = xdlsym (h, "foo");
-    TEST_COMPARE (foo (), 10);
+        int (*foo)(void) = xdlsym(h, "foo");
+        TEST_COMPARE(foo(), 10);
 
-    xdlclose (h);
-  }
+        xdlclose(h);
+    }
 
-  return 0;
+    return 0;
 }
 
-static int
-do_test (int argc, char *argv[])
+static int do_test(int argc, char *argv[])
 {
-  /* We must have either:
-     - One our fource parameters left if called initially:
-       + path to ld.so         optional
-       + "--library-path"      optional
-       + the library path      optional
-       + the application name  */
+    /* We must have either:
+       - One our fource parameters left if called initially:
+         + path to ld.so         optional
+         + "--library-path"      optional
+         + the library path      optional
+         + the application name  */
 
-  if (restart)
-    return handle_restart ();
-
-  char *spargv[9];
-  int i = 0;
-  for (; i < argc - 1; i++)
-    spargv[i] = argv[i + 1];
-  spargv[i++] = (char *) "--direct";
-  spargv[i++] = (char *) "--restart";
-  spargv[i] = NULL;
-
-  setenv ("LD_AUDIT", "tst-auditmod18.so", 0);
-  struct support_capture_subprocess result
-    = support_capture_subprogram (spargv[0], spargv, NULL);
-  support_capture_subprocess_check (&result, "tst-audit18", 0, sc_allow_stderr);
-
-  struct
-  {
-    const char *name;
-    bool found;
-  } audit_iface[] =
-  {
-    { "la_version", false },
-    { "la_objsearch", false },
-    { "la_activity", false },
-    { "la_objopen", false },
-    { "la_objclose", false },
-    { "la_preinit", false },
-#if __WORDSIZE == 32
-    { "la_symbind32", false },
-#elif __WORDSIZE == 64
-    { "la_symbind64", false },
-#endif
-  };
-
-  /* Some hooks are called more than once but the test only check if any
-     is called at least once.  */
-  FILE *out = fmemopen (result.err.buffer, result.err.length, "r");
-  TEST_VERIFY (out != NULL);
-  char *buffer = NULL;
-  size_t buffer_length = 0;
-  while (xgetline (&buffer, &buffer_length, out))
-    {
-      for (int i = 0; i < array_length (audit_iface); i++)
-	if (strncmp (buffer, audit_iface[i].name,
-		     strlen (audit_iface[i].name)) == 0)
-	  audit_iface[i].found = true;
+    if (restart) {
+        return handle_restart();
     }
-  free (buffer);
-  xfclose (out);
 
-  for (int i = 0; i < array_length (audit_iface); i++)
-    TEST_COMPARE (audit_iface[i].found, true);
+    char *spargv[9];
+    int i = 0;
+    for (; i < argc - 1; i++) {
+        spargv[i] = argv[i + 1];
+    }
+    spargv[i++] = (char *) "--direct";
+    spargv[i++] = (char *) "--restart";
+    spargv[i] = NULL;
 
-  support_capture_subprocess_free (&result);
+    setenv("LD_AUDIT", "tst-auditmod18.so", 0);
+    struct support_capture_subprocess result
+        = support_capture_subprogram(spargv[0], spargv, NULL);
+    support_capture_subprocess_check(&result, "tst-audit18", 0, sc_allow_stderr);
 
-  return 0;
+    struct {
+        const char *name;
+        bool found;
+    } audit_iface[] = {
+        { "la_version", false },
+        { "la_objsearch", false },
+        { "la_activity", false },
+        { "la_objopen", false },
+        { "la_objclose", false },
+        { "la_preinit", false },
+#if __WORDSIZE == 32
+        { "la_symbind32", false },
+#elif __WORDSIZE == 64
+        { "la_symbind64", false },
+#endif
+    };
+
+    /* Some hooks are called more than once but the test only check if any
+       is called at least once.  */
+    FILE *out = fmemopen(result.err.buffer, result.err.length, "r");
+    TEST_VERIFY(out != NULL);
+    char *buffer = NULL;
+    size_t buffer_length = 0;
+    while (xgetline(&buffer, &buffer_length, out)) {
+        for (int i = 0; i < array_length(audit_iface); i++)
+            if (strncmp(buffer, audit_iface[i].name,
+                        strlen(audit_iface[i].name)) == 0) {
+                audit_iface[i].found = true;
+            }
+    }
+    free(buffer);
+    xfclose(out);
+
+    for (int i = 0; i < array_length(audit_iface); i++) {
+        TEST_COMPARE(audit_iface[i].found, true);
+    }
+
+    support_capture_subprocess_free(&result);
+
+    return 0;
 }
 
 #define TEST_FUNCTION_ARGV do_test

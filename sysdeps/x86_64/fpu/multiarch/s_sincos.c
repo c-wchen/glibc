@@ -20,13 +20,13 @@
 #if MINIMUM_X86_ISA_LEVEL < AVX2_X86_ISA_LEVEL
 # include <libm-alias-double.h>
 
-extern void __redirect_sincos (double, double *, double *);
+extern void __redirect_sincos(double, double *, double *);
 
 # define SYMBOL_NAME sincos
 # include "ifunc-fma4.h"
 
-libc_ifunc_redirected (__redirect_sincos, __sincos, IFUNC_SELECTOR ());
-libm_alias_double (__sincos, sincos)
+libc_ifunc_redirected(__redirect_sincos, __sincos, IFUNC_SELECTOR());
+libm_alias_double(__sincos, sincos)
 
 # define __sincos __sincos_sse2
 #endif

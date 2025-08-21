@@ -23,17 +23,17 @@
 # include <ifunc-resolve.h>
 
 # if HAVE_WCPCPY_C
-extern __typeof (__wcpcpy) WCPCPY_C attribute_hidden;
+extern __typeof(__wcpcpy) WCPCPY_C attribute_hidden;
 # endif
 
 # if HAVE_WCPCPY_Z13
-extern __typeof (__wcpcpy) WCPCPY_Z13 attribute_hidden;
+extern __typeof(__wcpcpy) WCPCPY_Z13 attribute_hidden;
 # endif
 
-s390_libc_ifunc_expr (__wcpcpy, __wcpcpy,
-		      (HAVE_WCPCPY_Z13 && (hwcap & HWCAP_S390_VX))
-		      ? WCPCPY_Z13
-		      : WCPCPY_DEFAULT
-		      )
-weak_alias (__wcpcpy, wcpcpy)
+s390_libc_ifunc_expr(__wcpcpy, __wcpcpy,
+                     (HAVE_WCPCPY_Z13 &&(hwcap &HWCAP_S390_VX))
+                     ? WCPCPY_Z13
+                     : WCPCPY_DEFAULT
+                    )
+weak_alias(__wcpcpy, wcpcpy)
 #endif

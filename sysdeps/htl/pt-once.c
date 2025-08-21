@@ -22,41 +22,37 @@
 #include <pt-internal.h>
 #include <shlib-compat.h>
 
-static void
-clear_once_control (void *arg)
+static void clear_once_control(void *arg)
 {
-  pthread_once_t *once_control = arg;
-  __pthread_spin_unlock (&once_control->__lock);
+    pthread_once_t *once_control = arg;
+    __pthread_spin_unlock(&once_control->__lock);
 }
 
-int
-__pthread_once (pthread_once_t *once_control, void (*init_routine) (void))
+int __pthread_once(pthread_once_t *once_control, void (*init_routine)(void))
 {
-  ASSERT_TYPE_SIZE (pthread_once_t, __SIZEOF_PTHREAD_ONCE_T);
+    ASSERT_TYPE_SIZE(pthread_once_t, __SIZEOF_PTHREAD_ONCE_T);
 
-  atomic_full_barrier ();
-  if (once_control->__run == 0)
-    {
-      __pthread_spin_wait (&once_control->__lock);
+    atomic_full_barrier();
+    if (once_control->__run == 0) {
+        __pthread_spin_wait(&once_control->__lock);
 
-      if (once_control->__run == 0)
-	{
-	  pthread_cleanup_push (clear_once_control, once_control);
-	  init_routine ();
-	  pthread_cleanup_pop (0);
+        if (once_control->__run == 0) {
+            pthread_cleanup_push(clear_once_control, once_control);
+            init_routine();
+            pthread_cleanup_pop(0);
 
-	  atomic_full_barrier ();
-	  once_control->__run = 1;
-	}
+            atomic_full_barrier();
+            once_control->__run = 1;
+        }
 
-      __pthread_spin_unlock (&once_control->__lock);
+        __pthread_spin_unlock(&once_control->__lock);
     }
 
-  return 0;
+    return 0;
 }
-libc_hidden_def (__pthread_once)
-versioned_symbol (libc, __pthread_once, pthread_once, GLIBC_2_42);
+libc_hidden_def(__pthread_once)
+versioned_symbol(libc, __pthread_once, pthread_once, GLIBC_2_42);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_42)
-compat_symbol (libpthread, __pthread_once, pthread_once, GLIBC_2_12);
+compat_symbol(libpthread, __pthread_once, pthread_once, GLIBC_2_12);
 #endif

@@ -23,10 +23,9 @@
 
 /* Change the current directory to FD.  */
 
-int
-__fchdir (int fd)
+int __fchdir(int fd)
 {
-  return _hurd_change_directory_port_from_fd (&_hurd_ports[INIT_PORT_CWDIR],
-					      fd);
+    return _hurd_change_directory_port_from_fd(&_hurd_ports[INIT_PORT_CWDIR],
+            fd);
 }
-weak_alias (__fchdir, fchdir)
+weak_alias(__fchdir, fchdir)

@@ -19,17 +19,16 @@
 #include "pthreadP.h"
 
 
-int
-__pthread_attr_getschedparam (const pthread_attr_t *attr,
-			      struct sched_param *param)
+int __pthread_attr_getschedparam(const pthread_attr_t *attr,
+                                 struct sched_param *param)
 {
-  struct pthread_attr *iattr;
+    struct pthread_attr *iattr;
 
-  iattr = (struct pthread_attr *) attr;
+    iattr = (struct pthread_attr *) attr;
 
-  /* Copy the current values.  */
-  memcpy (param, &iattr->schedparam, sizeof (struct sched_param));
+    /* Copy the current values.  */
+    memcpy(param, &iattr->schedparam, sizeof(struct sched_param));
 
-  return 0;
+    return 0;
 }
-strong_alias (__pthread_attr_getschedparam, pthread_attr_getschedparam)
+strong_alias(__pthread_attr_getschedparam, pthread_attr_getschedparam)

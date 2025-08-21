@@ -19,14 +19,14 @@
 #include <time.h>
 #include <unistd.h>
 
-int
-usleep (useconds_t useconds)
+int usleep(useconds_t useconds)
 {
-  struct timespec ts = { .tv_sec = (long int) (useconds / 1000000),
-			 .tv_nsec = (long int) (useconds % 1000000) * 1000ul };
+    struct timespec ts = { .tv_sec = (long int)(useconds / 1000000),
+               .tv_nsec = (long int)(useconds % 1000000) * 1000ul
+    };
 
-  /* Note the usleep() is a cancellation point.  But since we call
-     nanosleep() which itself is a cancellation point we do not have
-     to do anything here.  */
-  return __nanosleep (&ts, NULL);
+    /* Note the usleep() is a cancellation point.  But since we call
+       nanosleep() which itself is a cancellation point we do not have
+       to do anything here.  */
+    return __nanosleep(&ts, NULL);
 }

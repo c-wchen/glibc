@@ -35,22 +35,22 @@
 
 #define EXPECTED_N_GROUPS 4
 static gid_t expected_groups[] =
-  { 20, 30, 50, 51 };
+{ 20, 30, 50, 51 };
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  gid_t mygroups [50];
-  int i, n;
+    gid_t mygroups [50];
+    int i, n;
 
-  n = 50;
-  getgrouplist ("dj", 20, mygroups, &n);
+    n = 50;
+    getgrouplist("dj", 20, mygroups, &n);
 
-  TEST_COMPARE (n, EXPECTED_N_GROUPS);
-  for (i=0; i<n; i++)
-    TEST_COMPARE (mygroups[i], expected_groups[i]);
+    TEST_COMPARE(n, EXPECTED_N_GROUPS);
+    for (i = 0; i < n; i++) {
+        TEST_COMPARE(mygroups[i], expected_groups[i]);
+    }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

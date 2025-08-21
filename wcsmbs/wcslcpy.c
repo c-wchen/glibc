@@ -18,29 +18,27 @@
 
 #include <wchar.h>
 
-size_t
-__wcslcpy (wchar_t *__restrict dest, const wchar_t *__restrict src, size_t size)
+size_t __wcslcpy(wchar_t *__restrict dest, const wchar_t *__restrict src, size_t size)
 {
-  size_t src_length = __wcslen (src);
+    size_t src_length = __wcslen(src);
 
-  if (__glibc_unlikely (src_length >= size))
+    if (__glibc_unlikely(src_length >= size)) {
+        if (size > 0) {
+            /* Copy the leading portion of the string.  The last
+               character is subsequently overwritten with the null
+               terminator, but the destination size is usually a
+               multiple of a small power of two, so writing it twice
+               should be more efficient than copying an odd number of
+               character.  */
+            __wmemcpy(dest, src, size);
+            dest[size - 1] = '\0';
+        }
+    } else
+        /* Copy the string and its terminating null character.  */
     {
-      if (size > 0)
-	{
-	  /* Copy the leading portion of the string.  The last
-	     character is subsequently overwritten with the null
-	     terminator, but the destination size is usually a
-	     multiple of a small power of two, so writing it twice
-	     should be more efficient than copying an odd number of
-	     character.  */
-	  __wmemcpy (dest, src, size);
-	  dest[size - 1] = '\0';
-	}
+        __wmemcpy(dest, src, src_length + 1);
     }
-  else
-    /* Copy the string and its terminating null character.  */
-    __wmemcpy (dest, src, src_length + 1);
-  return src_length;
+    return src_length;
 }
-libc_hidden_def (__wcslcpy)
-weak_alias (__wcslcpy, wcslcpy)
+libc_hidden_def(__wcslcpy)
+weak_alias(__wcslcpy, wcslcpy)

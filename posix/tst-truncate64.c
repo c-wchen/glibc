@@ -19,19 +19,20 @@
 #define _FILE_OFFSET_BITS 64
 #include "tst-truncate-common.c"
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int ret;
+    int ret;
 
-  ret = do_test_with_offset (0);
-  if (ret == -1)
-    return -1;
+    ret = do_test_with_offset(0);
+    if (ret == -1) {
+        return -1;
+    }
 
-  off_t base_offset = UINT32_MAX + 512LL;
-  ret = do_test_with_offset (base_offset);
-  if (ret == -1)
-    return 1;
+    off_t base_offset = UINT32_MAX + 512LL;
+    ret = do_test_with_offset(base_offset);
+    if (ret == -1) {
+        return 1;
+    }
 
-  return 0;
+    return 0;
 }

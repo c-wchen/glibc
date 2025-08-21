@@ -27,7 +27,7 @@
 
 # if HAVE_STRLEN_IFUNC
 #  if defined SHARED && IS_IN (libc)
-__hidden_ver1 (__strlen_c, __GI_strlen, __strlen_c);
+__hidden_ver1(__strlen_c, __GI_strlen, __strlen_c);
 #  endif
 # endif
 

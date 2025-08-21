@@ -23,26 +23,23 @@ static pthread_once_t once = PTHREAD_ONCE_INIT;
 
 static int global;
 
-static void
-once_handler (void)
+static void once_handler(void)
 {
-  ++global;
+    ++global;
 }
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  pthread_once (&once, once_handler);
-  pthread_once (&once, once_handler);
+    pthread_once(&once, once_handler);
+    pthread_once(&once, once_handler);
 
-  if (global != 1)
-    {
-      printf ("global = %d, expected 1\n", global);
-      return 1;
+    if (global != 1) {
+        printf("global = %d, expected 1\n", global);
+        return 1;
     }
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

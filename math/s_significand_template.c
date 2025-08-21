@@ -18,7 +18,7 @@
 
 /*
  * significand(x) computes just
- * 	scalb(x, (FLOAT) - ilogb(x)),
+ *  scalb(x, (FLOAT) - ilogb(x)),
  * for exercising the fraction-part(F) IEEE 754-1985 test vector.
  */
 
@@ -26,9 +26,9 @@
 #include <math_private.h>
 
 FLOAT
-M_DECL_FUNC (__significand) (FLOAT x)
+M_DECL_FUNC(__significand)(FLOAT x)
 {
-  return M_SUF (__ieee754_scalb) (x,(FLOAT) - M_SUF (__ilogb) (x));
+    return M_SUF(__ieee754_scalb)(x, (FLOAT) - M_SUF(__ilogb)(x));
 }
 
 /* Don't provide _FloatN aliases for significand which was originally
@@ -42,4 +42,4 @@ M_DECL_FUNC (__significand) (FLOAT x)
 #undef libm_alias_float128_other_r
 #define libm_alias_float128_other_r(from, to, r)
 
-declare_mgen_alias (__significand, significand)
+declare_mgen_alias(__significand, significand)

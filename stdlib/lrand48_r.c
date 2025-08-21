@@ -17,13 +17,13 @@
 
 #include <stdlib.h>
 
-int
-lrand48_r (struct drand48_data *buffer, long int *result)
+int lrand48_r(struct drand48_data *buffer, long int *result)
 {
-  /* Be generous for the arguments, detect some errors.  */
-  if (buffer == NULL)
-   return -1;
+    /* Be generous for the arguments, detect some errors.  */
+    if (buffer == NULL) {
+        return -1;
+    }
 
-  return __nrand48_r (buffer->__x, buffer, result);
+    return __nrand48_r(buffer->__x, buffer, result);
 }
-libc_hidden_def (lrand48_r)
+libc_hidden_def(lrand48_r)

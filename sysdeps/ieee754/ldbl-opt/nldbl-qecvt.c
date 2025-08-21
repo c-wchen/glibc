@@ -3,8 +3,7 @@
 #undef qecvt
 
 attribute_hidden
-char *
-qecvt (double val, int ndigit, int *__restrict decpt, int *__restrict sign)
+char *qecvt(double val, int ndigit, int *__restrict decpt, int *__restrict sign)
 {
-  return ecvt (val, ndigit, decpt, sign);
+    return ecvt(val, ndigit, decpt, sign);
 }

@@ -20,25 +20,24 @@
 #include "lowlevellock.h"
 #include "htm.h"
 
-int
-__lll_unlock_elision (int *lock, short *adapt_count, int pshared)
+int __lll_unlock_elision(int *lock, short *adapt_count, int pshared)
 {
-  /* When the lock was free we're in a transaction.  */
-  if (*lock == 0)
-    __libc_tend (0);
-  else
-    {
-      /* Update adapt_count in the critical section to prevent a
-	 write-after-destroy error as mentioned in BZ 20822.  The
-	 following update of adapt_count has to be contained within
-	 the critical region of the fall-back lock in order to not violate
-	 the mutex destruction requirements.  */
-      short __tmp = atomic_load_relaxed (adapt_count);
-      if (__tmp > 0)
-	atomic_store_relaxed (adapt_count, __tmp - 1);
+    /* When the lock was free we're in a transaction.  */
+    if (*lock == 0) {
+        __libc_tend(0);
+    } else {
+        /* Update adapt_count in the critical section to prevent a
+        write-after-destroy error as mentioned in BZ 20822.  The
+         following update of adapt_count has to be contained within
+         the critical region of the fall-back lock in order to not violate
+         the mutex destruction requirements.  */
+        short __tmp = atomic_load_relaxed(adapt_count);
+        if (__tmp > 0) {
+            atomic_store_relaxed(adapt_count, __tmp - 1);
+        }
 
-      lll_unlock ((*lock), pshared);
+        lll_unlock((*lock), pshared);
     }
-  return 0;
+    return 0;
 }
-libc_hidden_def (__lll_unlock_elision)
+libc_hidden_def(__lll_unlock_elision)

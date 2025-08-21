@@ -20,11 +20,10 @@
 
 /* Perform user-defined atomic operation of array of semaphores.  */
 
-int
-semop (int semid, struct sembuf *sops, size_t nsops)
+int semop(int semid, struct sembuf *sops, size_t nsops)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (semop)
+stub_warning(semop)

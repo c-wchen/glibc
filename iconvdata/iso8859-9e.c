@@ -22,6 +22,6 @@
 #define TABLES <iso8859-9e.h>
 
 #define CHARSET_NAME "ISO-8859-9E//"
-#define HAS_HOLES	0	/* All 256 character are defined.  */
+#define HAS_HOLES   0   /* All 256 character are defined.  */
 
 #include <8bit-gap.c>

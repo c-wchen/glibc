@@ -22,23 +22,21 @@
 /* Given the file descriptor of a master pty, return the pathname
    of the associated slave. */
 
-char *
-ptsname (int fd __attribute__ ((unused)))
+char *ptsname(int fd __attribute__((unused)))
 {
-  __set_errno (ENOSYS);
-  return NULL;
+    __set_errno(ENOSYS);
+    return NULL;
 }
 
-int
-__ptsname_r (int fd __attribute__ ((unused)),
-	     char *buf __attribute__ ((unused)),
-	     size_t len __attribute__ ((unused)))
+int __ptsname_r(int fd __attribute__((unused)),
+                char *buf __attribute__((unused)),
+                size_t len __attribute__((unused)))
 {
-  __set_errno (ENOSYS);
-  return ENOSYS;
+    __set_errno(ENOSYS);
+    return ENOSYS;
 }
-libc_hidden_def (__ptsname_r)
-weak_alias (__ptsname_r, ptsname_r)
+libc_hidden_def(__ptsname_r)
+weak_alias(__ptsname_r, ptsname_r)
 
 stub_warning(ptsname)
 stub_warning(ptsname_r)

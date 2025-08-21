@@ -34,10 +34,9 @@
    symbol immediately upon loading.  To avoid conflict, symbols for
    which the dynamic linker must assume the non-PIC ABI semantics are
    marked with the STO_MIPS_PLT flag.  */
-static inline bool
-elf_machine_sym_no_match (const ElfW(Sym) *sym)
+static inline bool elf_machine_sym_no_match(const ElfW(Sym) *sym)
 {
-  return sym->st_shndx == SHN_UNDEF && !(sym->st_other & STO_MIPS_PLT);
+    return sym->st_shndx == SHN_UNDEF && !(sym->st_other & STO_MIPS_PLT);
 }
 
 #endif /* _ELF_MACHINE_SYM_NO_MATCH_H */

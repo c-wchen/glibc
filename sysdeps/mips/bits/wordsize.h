@@ -17,11 +17,11 @@
 
 #include <sgidefs.h>
 
-#define __WORDSIZE			_MIPS_SZPTR
+#define __WORDSIZE          _MIPS_SZPTR
 
-#define __WORDSIZE_TIME64_COMPAT32	1
+#define __WORDSIZE_TIME64_COMPAT32  1
 
 #if __WORDSIZE == 32
-#define __WORDSIZE32_SIZE_ULONG		0
-#define __WORDSIZE32_PTRDIFF_LONG	0
+#define __WORDSIZE32_SIZE_ULONG     0
+#define __WORDSIZE32_PTRDIFF_LONG   0
 #endif

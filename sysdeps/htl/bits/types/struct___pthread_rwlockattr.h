@@ -17,15 +17,14 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _BITS_TYPES_STRUCT___PTHREAD_RWLOCKATTR_H
-#define _BITS_TYPES_STRUCT___PTHREAD_RWLOCKATTR_H	1
+#define _BITS_TYPES_STRUCT___PTHREAD_RWLOCKATTR_H   1
 
 enum __pthread_process_shared;
 
 /* This structure describes the attributes of a POSIX thread rwlock.
    Note that not all of them are supported on all systems.  */
-struct __pthread_rwlockattr
-{
-  enum __pthread_process_shared __pshared;
+struct __pthread_rwlockattr {
+    enum __pthread_process_shared __pshared;
 };
 
 #endif /* bits/types/struct___pthread_rwlockattr.h */

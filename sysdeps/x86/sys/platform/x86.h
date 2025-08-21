@@ -27,36 +27,35 @@
 __BEGIN_DECLS
 
 /* Get a pointer to the CPU feature structure.  */
-extern const struct cpuid_feature *__x86_get_cpuid_feature_leaf (unsigned int)
-     __attribute__ ((pure));
+extern const struct cpuid_feature *__x86_get_cpuid_feature_leaf(unsigned int)
+__attribute__((pure));
 
-static __inline__ bool
-x86_cpu_present (unsigned int __index)
+static __inline__ bool x86_cpu_present(unsigned int __index)
 {
-  const struct cpuid_feature *__ptr = __x86_get_cpuid_feature_leaf
-    (__index / (8 * sizeof (unsigned int) * 4));
-  unsigned int __reg
-     = __index & (8 * sizeof (unsigned int) * 4 - 1);
-  unsigned int __bit = __reg & (8 * sizeof (unsigned int) - 1);
-  __reg /= 8 * sizeof (unsigned int);
+    const struct cpuid_feature *__ptr = __x86_get_cpuid_feature_leaf
+                                        (__index / (8 * sizeof(unsigned int) * 4));
+    unsigned int __reg
+        = __index & (8 * sizeof(unsigned int) * 4 - 1);
+    unsigned int __bit = __reg & (8 * sizeof(unsigned int) - 1);
+    __reg /= 8 * sizeof(unsigned int);
 
-  return __ptr->cpuid_array[__reg] & (1 << __bit);
+    return __ptr->cpuid_array[__reg] & (1 << __bit);
 }
 
-static __inline__ bool
-x86_cpu_active (unsigned int __index)
+static __inline__ bool x86_cpu_active(unsigned int __index)
 {
-  if (__index == x86_cpu_IBT || __index == x86_cpu_SHSTK)
-    return x86_cpu_cet_active (__index);
+    if (__index == x86_cpu_IBT || __index == x86_cpu_SHSTK) {
+        return x86_cpu_cet_active(__index);
+    }
 
-  const struct cpuid_feature *__ptr = __x86_get_cpuid_feature_leaf
-    (__index / (8 * sizeof (unsigned int) * 4));
-  unsigned int __reg
-     = __index & (8 * sizeof (unsigned int) * 4 - 1);
-  unsigned int __bit = __reg & (8 * sizeof (unsigned int) - 1);
-  __reg /= 8 * sizeof (unsigned int);
+    const struct cpuid_feature *__ptr = __x86_get_cpuid_feature_leaf
+                                        (__index / (8 * sizeof(unsigned int) * 4));
+    unsigned int __reg
+        = __index & (8 * sizeof(unsigned int) * 4 - 1);
+    unsigned int __bit = __reg & (8 * sizeof(unsigned int) - 1);
+    __reg /= 8 * sizeof(unsigned int);
 
-  return __ptr->active_array[__reg] & (1 << __bit);
+    return __ptr->active_array[__reg] & (1 << __bit);
 }
 
 /* CPU_FEATURE_PRESENT evaluates to true if CPU supports the feature.  */

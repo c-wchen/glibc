@@ -20,21 +20,21 @@
 #if MINIMUM_X86_ISA_LEVEL < AVX2_X86_ISA_LEVEL
 # include <libm-alias-double.h>
 
-extern double __redirect_sin (double);
-extern double __redirect_cos (double);
+extern double __redirect_sin(double);
+extern double __redirect_cos(double);
 
 # define SYMBOL_NAME sin
 # include "ifunc-avx-fma4.h"
 
-libc_ifunc_redirected (__redirect_sin, __sin, IFUNC_SELECTOR ());
-libm_alias_double (__sin, sin)
+libc_ifunc_redirected(__redirect_sin, __sin, IFUNC_SELECTOR());
+libm_alias_double(__sin, sin)
 
 # undef SYMBOL_NAME
 # define SYMBOL_NAME cos
 # include "ifunc-avx-fma4.h"
 
-libc_ifunc_redirected (__redirect_cos, __cos, IFUNC_SELECTOR ());
-libm_alias_double (__cos, cos)
+libc_ifunc_redirected(__redirect_cos, __cos, IFUNC_SELECTOR());
+libm_alias_double(__cos, cos)
 
 # define __cos __cos_sse2
 # define __sin __sin_sse2

@@ -21,11 +21,10 @@
 /* Put the current value for socket FD's option OPTNAME at protocol level LEVEL
    into OPTVAL (which is *OPTLEN bytes long), and set *OPTLEN to the value's
    actual length.  Returns 0 on success, -1 for errors.  */
-int
-getsockopt (int fd, int level, int optname, void *optval, socklen_t *optlen)
+int getsockopt(int fd, int level, int optname, void *optval, socklen_t *optlen)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (getsockopt)
+stub_warning(getsockopt)

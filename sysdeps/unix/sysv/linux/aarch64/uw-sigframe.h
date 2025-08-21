@@ -34,45 +34,46 @@
 
 #define MD_DECODE_SIGNAL_FRAME aarch64_decode_signal_frame
 
-static _Unwind_Reason_Code
-aarch64_decode_signal_frame (frame *frame)
+static _Unwind_Reason_Code aarch64_decode_signal_frame(frame *frame)
 {
-  unsigned int *pc = (unsigned int *) frame->pc;
-  mcontext_t *mt;
-  struct kernel_rt_sigframe *rt_;
+    unsigned int *pc = (unsigned int *) frame->pc;
+    mcontext_t *mt;
+    struct kernel_rt_sigframe *rt_;
 
-  if ((frame->pc & 3) != 0)
-    return _URC_END_OF_STACK;
+    if ((frame->pc & 3) != 0) {
+        return _URC_END_OF_STACK;
+    }
 
-  /* A signal frame will have a return address pointing to
-     __kernel_rt_sigreturn.  This code is hardwired as:
+    /* A signal frame will have a return address pointing to
+       __kernel_rt_sigreturn.  This code is hardwired as:
 
-     0xd2801168         movz x8, #0x8b
-     0xd4000001         svc  0x0
-   */
-  if (pc[0] != MOVZ_X8_8B || pc[1] != SVC_0)
-    return _URC_END_OF_STACK;
+       0xd2801168         movz x8, #0x8b
+       0xd4000001         svc  0x0
+     */
+    if (pc[0] != MOVZ_X8_8B || pc[1] != SVC_0) {
+        return _URC_END_OF_STACK;
+    }
 
-  rt_ = (struct kernel_rt_sigframe *) frame->sp;
-  mt = &rt_->uc.uc_mcontext;
+    rt_ = (struct kernel_rt_sigframe *) frame->sp;
+    mt = &rt_->uc.uc_mcontext;
 
-  /* Frame pointer register number.  */
+    /* Frame pointer register number.  */
 #define FP_REGNUM 30
 
-  frame->pc = (_Unwind_Ptr) mt->pc;
-  frame->sp = (_Unwind_Ptr) mt->sp;
-  frame->fp = (_Unwind_Ptr) mt->regs[FP_REGNUM];
-  return _URC_NO_REASON;
+    frame->pc = (_Unwind_Ptr) mt->pc;
+    frame->sp = (_Unwind_Ptr) mt->sp;
+    frame->fp = (_Unwind_Ptr) mt->regs[FP_REGNUM];
+    return _URC_NO_REASON;
 }
 
 #define MD_DETECT_OUTERMOST_FRAME aarch64_detect_outermost_frame
 
-static _Unwind_Reason_Code
-aarch64_detect_outermost_frame (frame *frame)
+static _Unwind_Reason_Code aarch64_detect_outermost_frame(frame *frame)
 {
-  /* Initial frame has LR and FP set to zero.  We track only FP.  */
-  if (frame->fp == 0)
-    return _URC_END_OF_STACK;
+    /* Initial frame has LR and FP set to zero.  We track only FP.  */
+    if (frame->fp == 0) {
+        return _URC_END_OF_STACK;
+    }
 
-  return _URC_NO_REASON;
+    return _URC_NO_REASON;
 }

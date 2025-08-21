@@ -22,30 +22,31 @@
 #include <hurd/fd.h>
 #include <fcntl.h>
 
-DIR *_hurd_fd_opendir (struct hurd_fd *d); /* opendir.c */
+DIR *_hurd_fd_opendir(struct hurd_fd *d);  /* opendir.c */
 
 /* Open a directory stream on FD.  */
-DIR *
-__fdopendir (int fd)
+DIR *__fdopendir(int fd)
 {
-  struct hurd_fd *d = _hurd_fd_get (fd);
+    struct hurd_fd *d = _hurd_fd_get(fd);
 
-  if (d == NULL)
-    return __hurd_fail (EBADF), NULL;
+    if (d == NULL) {
+        return __hurd_fail(EBADF), NULL;
+    }
 
-  /* Ensure that it's a directory.  */
-  error_t err = HURD_FD_PORT_USE
+    /* Ensure that it's a directory.  */
+    error_t err = HURD_FD_PORT_USE
     (d, ({
-	file_t dir = __file_name_lookup_under (port, "./",
-					       O_DIRECTORY | O_NOTRANS, 0);;
-	if (dir != MACH_PORT_NULL)
-	  __mach_port_deallocate (__mach_task_self (), dir);
-	dir != MACH_PORT_NULL ? 0 : errno;
-      }));
+        file_t dir = __file_name_lookup_under(port, "./",
+                                              O_DIRECTORY | O_NOTRANS, 0);;
+        if (dir != MACH_PORT_NULL)
+            __mach_port_deallocate(__mach_task_self(), dir);
+        dir != MACH_PORT_NULL ? 0 : errno;
+    }));
 
-  if (err)
-    return __hurd_dfail (fd, err), NULL;
+    if (err) {
+        return __hurd_dfail(fd, err), NULL;
+    }
 
-  return _hurd_fd_opendir (d);
+    return _hurd_fd_opendir(d);
 }
-weak_alias (__fdopendir, fdopendir)
+weak_alias(__fdopendir, fdopendir)

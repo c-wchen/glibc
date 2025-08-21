@@ -19,12 +19,11 @@
 #include <stdlib.h>
 #include "tst-ifunc-isa.h"
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  enum isa value = foo ();
-  enum isa expected = get_isa ();
-  return value == expected ? EXIT_SUCCESS : EXIT_FAILURE;
+    enum isa value = foo();
+    enum isa expected = get_isa();
+    return value == expected ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
 #include <support/test-driver.c>

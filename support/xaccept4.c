@@ -22,11 +22,11 @@
 #include <stdlib.h>
 #include <support/check.h>
 
-int
-xaccept4 (int fd, struct sockaddr *sa, socklen_t *salen, int flags)
+int xaccept4(int fd, struct sockaddr *sa, socklen_t *salen, int flags)
 {
-  int clientfd = accept4 (fd, sa, salen, flags);
-  if (clientfd < 0)
-    FAIL_EXIT1 ("accept4 (%d, 0x%x): %m", fd, flags);
-  return clientfd;
+    int clientfd = accept4(fd, sa, salen, flags);
+    if (clientfd < 0) {
+        FAIL_EXIT1("accept4 (%d, 0x%x): %m", fd, flags);
+    }
+    return clientfd;
 }

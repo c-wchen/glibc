@@ -21,11 +21,10 @@
 #include <kernel_stat.h>
 
 #if !XSTAT_IS_XSTAT64
-int
-__lstat (const char *file, struct stat *buf)
+int __lstat(const char *file, struct stat *buf)
 {
-  return __fstatat (AT_FDCWD, file, buf, AT_SYMLINK_NOFOLLOW);
+    return __fstatat(AT_FDCWD, file, buf, AT_SYMLINK_NOFOLLOW);
 }
 
-weak_alias (__lstat, lstat)
+weak_alias(__lstat, lstat)
 #endif

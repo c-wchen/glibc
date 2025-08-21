@@ -18,8 +18,7 @@
 
 #include <sys/single_threaded.h>
 
-_Bool
-single_threaded_1 (void)
+_Bool single_threaded_1(void)
 {
-  return __libc_single_threaded;
+    return __libc_single_threaded;
 }

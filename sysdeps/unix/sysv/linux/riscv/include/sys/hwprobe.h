@@ -2,7 +2,7 @@
 # include_next <sys/hwprobe.h>
 
 #ifndef _ISOMAC
-libc_hidden_proto (__riscv_hwprobe)
+libc_hidden_proto(__riscv_hwprobe)
 #endif
 
 #endif

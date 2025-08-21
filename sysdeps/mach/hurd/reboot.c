@@ -23,28 +23,28 @@
 #include <sys/reboot.h>
 
 /* Reboot the system.  */
-int
-reboot (int howto)
+int reboot(int howto)
 {
-  error_t err;
-  startup_t init;
-  mach_port_t hostpriv;
+    error_t err;
+    startup_t init;
+    mach_port_t hostpriv;
 
-  err = __get_privileged_ports (&hostpriv, NULL);
-  if (err)
-    return __hurd_fail (EPERM);
-
-  init = __file_name_lookup (_SERVERS_STARTUP, 0, 0);
-  if (init != MACH_PORT_NULL)
-    {
-      err = __startup_reboot (init, hostpriv, howto);
-      __mach_port_deallocate (__mach_task_self (), init);
+    err = __get_privileged_ports(&hostpriv, NULL);
+    if (err) {
+        return __hurd_fail(EPERM);
     }
 
-  __mach_port_deallocate (__mach_task_self (), hostpriv);
+    init = __file_name_lookup(_SERVERS_STARTUP, 0, 0);
+    if (init != MACH_PORT_NULL) {
+        err = __startup_reboot(init, hostpriv, howto);
+        __mach_port_deallocate(__mach_task_self(), init);
+    }
 
-  if (err)
-    return __hurd_fail (err);
+    __mach_port_deallocate(__mach_task_self(), hostpriv);
 
-  return 0;
+    if (err) {
+        return __hurd_fail(err);
+    }
+
+    return 0;
 }

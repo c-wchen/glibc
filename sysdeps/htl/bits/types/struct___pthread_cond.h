@@ -17,18 +17,17 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _BITS_TYPES_STRUCT___PTHREAD_COND_H
-#define _BITS_TYPES_STRUCT___PTHREAD_COND_H	1
+#define _BITS_TYPES_STRUCT___PTHREAD_COND_H 1
 
 #include <bits/types/__pthread_spinlock_t.h>
 
 /* User visible part of a condition variable.  */
-struct __pthread_cond
-{
-  __pthread_spinlock_t __lock;
-  struct __pthread *__queue;
-  struct __pthread_condattr *__attr;
-  unsigned int __wrefs;
-  void *__data;
+struct __pthread_cond {
+    __pthread_spinlock_t __lock;
+    struct __pthread *__queue;
+    struct __pthread_condattr *__attr;
+    unsigned int __wrefs;
+    void *__data;
 };
 
 /* Initializer for a condition variable.  */

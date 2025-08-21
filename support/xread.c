@@ -20,17 +20,15 @@
 
 #include <support/check.h>
 
-void
-xread (int fd, void *buffer, size_t length)
+void xread(int fd, void *buffer, size_t length)
 {
-  char *p = buffer;
-  char *end = p + length;
-  while (p < end)
-    {
-      ssize_t ret = read (fd, p, end - p);
-      if (ret < 0)
-        FAIL_EXIT1 ("read of %zu bytes failed after %td: %m",
-                    length, p - (char *) buffer);
-      p += ret;
+    char *p = buffer;
+    char *end = p + length;
+    while (p < end) {
+        ssize_t ret = read(fd, p, end - p);
+        if (ret < 0)
+            FAIL_EXIT1("read of %zu bytes failed after %td: %m",
+                       length, p - (char *) buffer);
+        p += ret;
     }
 }

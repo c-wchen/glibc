@@ -33,19 +33,17 @@
    If memory cannot be allocated for PGLOB, GLOB_NOSPACE is returned.
    Otherwise, `glob' returns zero.  */
 int
-GLOB_ATTRIBUTE
-glob64 (const char *pattern, int flags,
-	int (*errfunc) (const char *, int), glob64_t *pglob)
+GLOB_ATTRIBUTE glob64(const char *pattern, int flags,
+                      int (*errfunc)(const char *, int), glob64_t *pglob)
 {
-  if (pattern == NULL || pglob == NULL || (flags & ~__GLOB_FLAGS) != 0)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (pattern == NULL || pglob == NULL || (flags & ~__GLOB_FLAGS) != 0) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return GLOB_NOSYS;
+    __set_errno(ENOSYS);
+    return GLOB_NOSYS;
 }
-libc_hidden_def (glob64)
+libc_hidden_def(glob64)
 
-stub_warning (glob64)
+stub_warning(glob64)

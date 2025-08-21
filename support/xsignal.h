@@ -27,17 +27,17 @@ __BEGIN_DECLS
 /* The following functions call the corresponding libc functions and
    terminate the process on error.  */
 
-void xraise (int sig);
+void xraise(int sig);
 #ifdef _GNU_SOURCE
-sighandler_t xsignal (int sig, sighandler_t handler);
+sighandler_t xsignal(int sig, sighandler_t handler);
 #endif
-void xsigaction (int sig, const struct sigaction *newact,
-                 struct sigaction *oldact);
+void xsigaction(int sig, const struct sigaction *newact,
+                struct sigaction *oldact);
 
 /* The following functions call the corresponding libpthread functions
    and terminate the process on error.  */
 
-void xpthread_sigmask (int how, const sigset_t *set, sigset_t *oldset);
+void xpthread_sigmask(int how, const sigset_t *set, sigset_t *oldset);
 
 /* Allocate and activate an alternate signal stack.  This stack will
    have SIZE + MINSIGSTKSZ bytes of space, rounded up to a whole
@@ -46,15 +46,15 @@ void xpthread_sigmask (int how, const sigset_t *set, sigset_t *oldset);
    that can be passed to xfree_sigstack to deactivate and deallocate
    the stack again.  It is not necessary to call sigaltstack after
    calling this function.  Terminates the process on error.  */
-void *xalloc_sigstack (size_t size);
+void *xalloc_sigstack(size_t size);
 
 /* Deactivate and deallocate a signal stack created by xalloc_sigstack.  */
-void xfree_sigstack (void *stack);
+void xfree_sigstack(void *stack);
 
 /* Extract the actual address and size of the alternate signal stack from
    the cookie returned by xalloc_sigstack.  */
-void xget_sigstack_location (const void *stack, unsigned char **addrp,
-                             size_t *sizep);
+void xget_sigstack_location(const void *stack, unsigned char **addrp,
+                            size_t *sizep);
 
 __END_DECLS
 

@@ -19,13 +19,12 @@
 #include <string.h>
 #include <support/check.h>
 
-extern const char *foo (void);
+extern const char *foo(void);
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  TEST_COMPARE (strcmp (foo (), "PLT rewrite works"), 0);
-  return 0;
+    TEST_COMPARE(strcmp(foo(), "PLT rewrite works"), 0);
+    return 0;
 }
 
 #include <support/test-driver.c>

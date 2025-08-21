@@ -30,40 +30,39 @@
    argument is taken as `struct mq_attr *', pointer to message queue
    attributes.  If the fourth argument is NULL, default attributes are
    used.  */
-mqd_t
-__mq_open (const char *name, int oflag, ...)
+mqd_t __mq_open(const char *name, int oflag, ...)
 {
-  if (name[0] != '/')
-    return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
-
-  mode_t mode = 0;
-  struct mq_attr *attr = NULL;
-  if (oflag & O_CREAT)
-    {
-      va_list ap;
-
-      va_start (ap, oflag);
-      mode = va_arg (ap, mode_t);
-      attr = va_arg (ap, struct mq_attr *);
-      va_end (ap);
+    if (name[0] != '/') {
+        return INLINE_SYSCALL_ERROR_RETURN_VALUE(EINVAL);
     }
 
-  return INLINE_SYSCALL (mq_open, 4, name + 1, oflag, mode, attr);
+    mode_t mode = 0;
+    struct mq_attr *attr = NULL;
+    if (oflag & O_CREAT) {
+        va_list ap;
+
+        va_start(ap, oflag);
+        mode = va_arg(ap, mode_t);
+        attr = va_arg(ap, struct mq_attr *);
+        va_end(ap);
+    }
+
+    return INLINE_SYSCALL(mq_open, 4, name + 1, oflag, mode, attr);
 }
-versioned_symbol (libc, __mq_open, mq_open, GLIBC_2_34);
+versioned_symbol(libc, __mq_open, mq_open, GLIBC_2_34);
 #if OTHER_SHLIB_COMPAT (librt, GLIBC_2_3_4, GLIBC_2_34)
-compat_symbol (libc, __mq_open, mq_open, GLIBC_2_3_4);
+compat_symbol(libc, __mq_open, mq_open, GLIBC_2_3_4);
 #endif
 
-mqd_t
-___mq_open_2 (const char *name, int oflag)
+mqd_t ___mq_open_2(const char *name, int oflag)
 {
-  if (oflag & O_CREAT)
-    __fortify_fail ("invalid mq_open call: O_CREAT without mode and attr");
+    if (oflag & O_CREAT) {
+        __fortify_fail("invalid mq_open call: O_CREAT without mode and attr");
+    }
 
-  return __mq_open (name, oflag);
+    return __mq_open(name, oflag);
 }
-versioned_symbol (libc, ___mq_open_2, __mq_open_2, GLIBC_2_34);
+versioned_symbol(libc, ___mq_open_2, __mq_open_2, GLIBC_2_34);
 #if OTHER_SHLIB_COMPAT (librt, GLIBC_2_7, GLIBC_2_34)
-compat_symbol (libc, ___mq_open_2, __mq_open_2, GLIBC_2_7);
+compat_symbol(libc, ___mq_open_2, __mq_open_2, GLIBC_2_7);
 #endif

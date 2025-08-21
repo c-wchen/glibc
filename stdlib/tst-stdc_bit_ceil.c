@@ -18,8 +18,7 @@
 
 #include <tst-stdbit.h>
 
-static const struct stdbit_test inputs[] =
-  {
+static const struct stdbit_test inputs[] = {
     { 0ULL, 0x1, 0x1, 0x1, 0x1ULL },
     { 0x1ULL, 0x1, 0x1, 0x1, 0x1ULL },
     { 0x2ULL, 0x2, 0x2, 0x2, 0x2ULL },
@@ -74,15 +73,14 @@ static const struct stdbit_test inputs[] =
     { 0x8000000000000001ULL, 0x1, 0x1, 0x1, 0ULL },
     { 0xfffffffffffffffeULL, 0, 0, 0, 0ULL },
     { 0xffffffffffffffffULL, 0, 0, 0, 0ULL },
-  };
+};
 
-TEST_STDBIT_SAME_TOPLEVEL (stdc_bit_ceil);
+TEST_STDBIT_SAME_TOPLEVEL(stdc_bit_ceil);
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  TEST_STDBIT_SAME (stdc_bit_ceil, inputs);
-  return 0;
+    TEST_STDBIT_SAME(stdc_bit_ceil, inputs);
+    return 0;
 }
 
 #include <support/test-driver.c>

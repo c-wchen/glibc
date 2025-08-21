@@ -43,22 +43,20 @@ typedef unsigned long int greg_t;
 typedef greg_t gregset_t[32];
 #endif
 
-typedef struct mcontext_t
-{
-  unsigned long long __pc;
-  unsigned long long __gregs[32];
-  unsigned int __flags;
-  unsigned long long __extcontext[0] __attribute__((__aligned__(16)));
+typedef struct mcontext_t {
+    unsigned long long __pc;
+    unsigned long long __gregs[32];
+    unsigned int __flags;
+    unsigned long long __extcontext[0] __attribute__((__aligned__(16)));
 } mcontext_t;
 
 /* Userlevel context.  */
-typedef struct ucontext_t
-{
-  unsigned long int __uc_flags;
-  struct ucontext_t *uc_link;
-  stack_t uc_stack;
-  sigset_t uc_sigmask;
-  mcontext_t uc_mcontext;
+typedef struct ucontext_t {
+    unsigned long int __uc_flags;
+    struct ucontext_t *uc_link;
+    stack_t uc_stack;
+    sigset_t uc_sigmask;
+    mcontext_t uc_mcontext;
 } ucontext_t;
 
 #endif /* sys/ucontext.h */

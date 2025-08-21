@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _PTY_H
-#define _PTY_H	1
+#define _PTY_H  1
 
 #include <features.h>
 
@@ -33,16 +33,16 @@ __BEGIN_DECLS
 /* Create pseudo tty master slave pair with NAME and set terminal
    attributes according to TERMP and WINP and return handles for both
    ends in AMASTER and ASLAVE.  */
-extern int openpty (int *__amaster, int *__aslave, char *__name,
-		    const struct termios *__termp,
-		    const struct winsize *__winp) __THROW;
+extern int openpty(int *__amaster, int *__aslave, char *__name,
+                   const struct termios *__termp,
+                   const struct winsize *__winp) __THROW;
 
 /* Create child process and establish the slave pseudo terminal as the
    child's controlling terminal.  */
-extern int forkpty (int *__amaster, char *__name,
-		    const struct termios *__termp,
-		    const struct winsize *__winp) __THROW;
+extern int forkpty(int *__amaster, char *__name,
+                   const struct termios *__termp,
+                   const struct winsize *__winp) __THROW;
 
 __END_DECLS
 
-#endif	/* pty.h */
+#endif  /* pty.h */

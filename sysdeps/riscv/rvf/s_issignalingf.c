@@ -19,9 +19,8 @@
 #include <math.h>
 #include <fenv_private.h>
 
-int
-__issignalingf (float x)
+int __issignalingf(float x)
 {
-  return (_FCLASS (x) & _FCLASS_SNAN) != 0;
+    return (_FCLASS(x) & _FCLASS_SNAN) != 0;
 }
-libm_hidden_def (__issignalingf)
+libm_hidden_def(__issignalingf)

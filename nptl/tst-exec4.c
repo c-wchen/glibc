@@ -23,87 +23,80 @@
 #include <unistd.h>
 #include <support/xsignal.h>
 
-static void *
-tf (void *arg)
+static void *tf(void *arg)
 {
-  /* Ignore SIGUSR1 and block SIGUSR2.  */
-  xsignal (SIGUSR1, SIG_IGN);
+    /* Ignore SIGUSR1 and block SIGUSR2.  */
+    xsignal(SIGUSR1, SIG_IGN);
 
-  sigset_t ss;
-  sigemptyset (&ss);
-  sigaddset (&ss, SIGUSR2);
-  if (pthread_sigmask (SIG_BLOCK, &ss, NULL) != 0)
-    {
-      puts ("1st run: sigmask failed");
-      exit (1);
+    sigset_t ss;
+    sigemptyset(&ss);
+    sigaddset(&ss, SIGUSR2);
+    if (pthread_sigmask(SIG_BLOCK, &ss, NULL) != 0) {
+        puts("1st run: sigmask failed");
+        exit(1);
     }
 
-  char **oldargv = (char **) arg;
-  size_t n = 1;
-  while (oldargv[n] != NULL)
-    ++n;
+    char **oldargv = (char **) arg;
+    size_t n = 1;
+    while (oldargv[n] != NULL) {
+        ++n;
+    }
 
-  char **argv = (char **) alloca ((n + 1) * sizeof (char *));
-  for (n = 0; oldargv[n + 1] != NULL; ++n)
-    argv[n] = oldargv[n + 1];
-  argv[n++] = (char *) "--direct";
-  argv[n] = NULL;
+    char **argv = (char **) alloca((n + 1) * sizeof(char *));
+    for (n = 0; oldargv[n + 1] != NULL; ++n) {
+        argv[n] = oldargv[n + 1];
+    }
+    argv[n++] = (char *) "--direct";
+    argv[n] = NULL;
 
-  execv (argv[0], argv);
+    execv(argv[0], argv);
 
-  puts ("execv failed");
+    puts("execv failed");
 
-  exit (1);
+    exit(1);
 }
 
 
-static int
-do_test (int argc, char *argv[])
+static int do_test(int argc, char *argv[])
 {
-  if (argc == 1)
-    {
-      /* This is the second call.  Perform the test.  */
-      struct sigaction sa;
+    if (argc == 1) {
+        /* This is the second call.  Perform the test.  */
+        struct sigaction sa;
 
-      if (sigaction (SIGUSR1, NULL, &sa) != 0)
-	{
-	  puts ("2nd run: sigaction failed");
-	  return 1;
-	}
-      if (sa.sa_handler != SIG_IGN)
-	{
-	  puts ("SIGUSR1 not ignored");
-	  return 1;
-	}
+        if (sigaction(SIGUSR1, NULL, &sa) != 0) {
+            puts("2nd run: sigaction failed");
+            return 1;
+        }
+        if (sa.sa_handler != SIG_IGN) {
+            puts("SIGUSR1 not ignored");
+            return 1;
+        }
 
-      sigset_t ss;
-      if (pthread_sigmask (SIG_SETMASK, NULL, &ss) != 0)
-	{
-	  puts ("2nd run: sigmask failed");
-	  return 1;
-	}
-      if (! sigismember (&ss, SIGUSR2))
-	{
-	  puts ("SIGUSR2 not blocked");
-	  return 1;
-	}
+        sigset_t ss;
+        if (pthread_sigmask(SIG_SETMASK, NULL, &ss) != 0) {
+            puts("2nd run: sigmask failed");
+            return 1;
+        }
+        if (! sigismember(&ss, SIGUSR2)) {
+            puts("SIGUSR2 not blocked");
+            return 1;
+        }
 
-      return 0;
+        return 0;
     }
 
-  pthread_t th;
-  if (pthread_create (&th, NULL, tf, argv) != 0)
-    {
-      puts ("create failed");
-      exit (1);
+    pthread_t th;
+    if (pthread_create(&th, NULL, tf, argv) != 0) {
+        puts("create failed");
+        exit(1);
     }
 
-  /* This call should never return.  */
-  pthread_join (th, NULL);
+    /* This call should never return.  */
+    pthread_join(th, NULL);
 
-  puts ("join returned");
+    puts("join returned");
 
-  return 1;
+    return 1;
 }
 
 #define TEST_FUNCTION do_test (argc, argv)

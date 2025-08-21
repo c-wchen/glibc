@@ -24,20 +24,21 @@
 #include <sys/syscall.h>
 
 /* Return the system page size.  */
-int
-__getpagesize (void)
+int __getpagesize(void)
 {
-  int result;
+    int result;
 
-  if (GLRO(dl_pagesize) != 0)
-    return GLRO(dl_pagesize);
+    if (GLRO(dl_pagesize) != 0) {
+        return GLRO(dl_pagesize);
+    }
 
-  result = INTERNAL_SYSCALL_CALL (getpagesize);
-  /* The only possible error is ENOSYS.  */
-  if (!INTERNAL_SYSCALL_ERROR_P (result))
-    return result;
+    result = INTERNAL_SYSCALL_CALL(getpagesize);
+    /* The only possible error is ENOSYS.  */
+    if (!INTERNAL_SYSCALL_ERROR_P(result)) {
+        return result;
+    }
 
-  return 4096;
+    return 4096;
 }
-libc_hidden_def (__getpagesize)
-weak_alias (__getpagesize, getpagesize)
+libc_hidden_def(__getpagesize)
+weak_alias(__getpagesize, getpagesize)

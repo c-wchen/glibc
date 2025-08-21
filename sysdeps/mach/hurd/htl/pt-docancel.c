@@ -22,54 +22,51 @@
 #include <pt-internal.h>
 #include <pthreadP.h>
 
-static void
-call_exit (void)
+static void call_exit(void)
 {
-  __pthread_exit (0);
+    __pthread_exit(0);
 }
 
-int
-__pthread_do_cancel (struct __pthread *p)
+int __pthread_do_cancel(struct __pthread *p)
 {
-  mach_port_t ktid;
-  int me;
+    mach_port_t ktid;
+    int me;
 
-  assert (p->cancel_pending == 1);
-  assert (p->cancel_state == PTHREAD_CANCEL_ENABLE);
+    assert(p->cancel_pending == 1);
+    assert(p->cancel_state == PTHREAD_CANCEL_ENABLE);
 
-  __pthread_mutex_unlock (&p->cancel_lock);
+    __pthread_mutex_unlock(&p->cancel_lock);
 
-  ktid = __mach_thread_self ();
-  me = p->kernel_thread == ktid;
-  __mach_port_deallocate (__mach_task_self (), ktid);
+    ktid = __mach_thread_self();
+    me = p->kernel_thread == ktid;
+    __mach_port_deallocate(__mach_task_self(), ktid);
 
-  if (me)
-    call_exit ();
-  else
-    {
-      error_t err;
-      struct hurd_sigstate *ss = _hurd_thread_sigstate (p->kernel_thread);
+    if (me) {
+        call_exit();
+    } else {
+        error_t err;
+        struct hurd_sigstate *ss = _hurd_thread_sigstate(p->kernel_thread);
 
-      __spin_lock (&ss->critical_section_lock);
-      __spin_lock (&ss->lock);
+        __spin_lock(&ss->critical_section_lock);
+        __spin_lock(&ss->lock);
 
-      err = __thread_suspend (p->kernel_thread);
-      assert_perror (err);
+        err = __thread_suspend(p->kernel_thread);
+        assert_perror(err);
 
-      __spin_unlock (&ss->lock);
+        __spin_unlock(&ss->lock);
 
-      err = __thread_abort (p->kernel_thread);
-      assert_perror (err);
+        err = __thread_abort(p->kernel_thread);
+        assert_perror(err);
 
-      err = __thread_set_pcsptp (p->kernel_thread,
-				 1, (void *) call_exit, 0, 0, 0, 0);
-      assert_perror (err);
+        err = __thread_set_pcsptp(p->kernel_thread,
+                                  1, (void *) call_exit, 0, 0, 0, 0);
+        assert_perror(err);
 
-      err = __thread_resume (p->kernel_thread);
-      assert_perror (err);
+        err = __thread_resume(p->kernel_thread);
+        assert_perror(err);
 
-      _hurd_critical_section_unlock (ss);
+        _hurd_critical_section_unlock(ss);
     }
 
-  return 0;
+    return 0;
 }

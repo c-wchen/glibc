@@ -18,11 +18,11 @@
 
 #include <support/xthread.h>
 
-int
-xpthread_barrier_wait (pthread_barrier_t *barrier)
+int xpthread_barrier_wait(pthread_barrier_t *barrier)
 {
-  int ret = pthread_barrier_wait (barrier);
-  if (ret != 0 && ret != PTHREAD_BARRIER_SERIAL_THREAD)
-    xpthread_check_return ("pthread_barrier_wait", ret);
-  return ret == PTHREAD_BARRIER_SERIAL_THREAD;
+    int ret = pthread_barrier_wait(barrier);
+    if (ret != 0 && ret != PTHREAD_BARRIER_SERIAL_THREAD) {
+        xpthread_check_return("pthread_barrier_wait", ret);
+    }
+    return ret == PTHREAD_BARRIER_SERIAL_THREAD;
 }

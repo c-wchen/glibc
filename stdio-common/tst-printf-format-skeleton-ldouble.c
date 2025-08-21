@@ -26,9 +26,10 @@
 #define REF_VAL(v) (v)
 #define PREC LDBL_MANT_DIG
 typedef long double type_t;
-static const type_t vals[] =
-  { -HUGE_VAL, -LDBL_MAX, -LDBL_MIN, -0.0, -NAN, NAN, 0, LDBL_MIN,
-    LDBL_MAX, HUGE_VAL };
+static const type_t vals[] = {
+    -HUGE_VAL, -LDBL_MAX, -LDBL_MIN, -0.0, -NAN, NAN, 0, LDBL_MIN,
+        LDBL_MAX, HUGE_VAL
+    };
 static const char length[] = "L";
 
 #ifndef TIMEOUT

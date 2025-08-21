@@ -19,12 +19,12 @@
 #include <sysdep.h>
 #include <fcntl.h>
 
-static inline int
-__kill_noerrno (pid_t pid, int sig)
+static inline int __kill_noerrno(pid_t pid, int sig)
 {
-  int res;
-  res = INTERNAL_SYSCALL_CALL (kill, pid, sig);
-  if (INTERNAL_SYSCALL_ERROR_P (res))
-    return INTERNAL_SYSCALL_ERRNO (res);
-  return 0;
+    int res;
+    res = INTERNAL_SYSCALL_CALL(kill, pid, sig);
+    if (INTERNAL_SYSCALL_ERROR_P(res)) {
+        return INTERNAL_SYSCALL_ERRNO(res);
+    }
+    return 0;
 }

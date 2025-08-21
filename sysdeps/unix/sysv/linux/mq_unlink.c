@@ -21,27 +21,27 @@
 #include <shlib-compat.h>
 
 /* Remove message queue named NAME.  */
-int
-__mq_unlink (const char *name)
+int __mq_unlink(const char *name)
 {
-  if (name[0] != '/')
-    return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
-
-  int ret = INTERNAL_SYSCALL_CALL (mq_unlink, name + 1);
-
-  /* While unlink can return either EPERM or EACCES, mq_unlink should
-     return just EACCES.  */
-  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (ret)))
-    {
-      ret = INTERNAL_SYSCALL_ERRNO (ret);
-      if (ret == EPERM)
-	ret = EACCES;
-      return INLINE_SYSCALL_ERROR_RETURN_VALUE (ret);
+    if (name[0] != '/') {
+        return INLINE_SYSCALL_ERROR_RETURN_VALUE(EINVAL);
     }
 
-  return ret;
+    int ret = INTERNAL_SYSCALL_CALL(mq_unlink, name + 1);
+
+    /* While unlink can return either EPERM or EACCES, mq_unlink should
+       return just EACCES.  */
+    if (__glibc_unlikely(INTERNAL_SYSCALL_ERROR_P(ret))) {
+        ret = INTERNAL_SYSCALL_ERRNO(ret);
+        if (ret == EPERM) {
+            ret = EACCES;
+        }
+        return INLINE_SYSCALL_ERROR_RETURN_VALUE(ret);
+    }
+
+    return ret;
 }
-versioned_symbol (libc, __mq_unlink, mq_unlink, GLIBC_2_34);
+versioned_symbol(libc, __mq_unlink, mq_unlink, GLIBC_2_34);
 #if OTHER_SHLIB_COMPAT (librt, GLIBC_2_3_4, GLIBC_2_34)
-compat_symbol (libc, __mq_unlink, mq_unlink, GLIBC_2_3_4);
+compat_symbol(libc, __mq_unlink, mq_unlink, GLIBC_2_3_4);
 #endif

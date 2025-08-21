@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _FPU_CONTROL_H
-#define _FPU_CONTROL_H	1
+#define _FPU_CONTROL_H  1
 
 /* Note that this file sets on x86-64 only the x87 FPU, it does not
    touch the SSE unit.  */
@@ -65,7 +65,7 @@
 #define _FPU_MASK_PM  0x20
 
 /* precision control */
-#define _FPU_EXTENDED 0x300	/* libm requires double extended precision.  */
+#define _FPU_EXTENDED 0x300 /* libm requires double extended precision.  */
 #define _FPU_DOUBLE   0x200
 #define _FPU_SINGLE   0x0
 
@@ -87,7 +87,7 @@
 #define _FPU_IEEE     0x037f
 
 /* Type of the control word.  */
-typedef unsigned int fpu_control_t __attribute__ ((__mode__ (__HI__)));
+typedef unsigned int fpu_control_t __attribute__((__mode__(__HI__)));
 
 /* Macros for accessing the hardware control word.  "*&" is used to
    work around a bug in older versions of GCC.  __volatile__ is used
@@ -105,4 +105,4 @@ typedef unsigned int fpu_control_t __attribute__ ((__mode__ (__HI__)));
 /* Default control word set at startup.  */
 extern fpu_control_t __fpu_control;
 
-#endif	/* fpu_control.h */
+#endif  /* fpu_control.h */

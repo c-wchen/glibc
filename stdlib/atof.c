@@ -17,12 +17,11 @@
 
 #include <stdlib.h>
 
-#undef	atof
+#undef  atof
 
 
 /* Convert a string to a double.  */
-double
-atof (const char *nptr)
+double atof(const char *nptr)
 {
-  return strtod (nptr, (char **) NULL);
+    return strtod(nptr, (char **) NULL);
 }

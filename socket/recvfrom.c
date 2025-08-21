@@ -21,14 +21,13 @@
 /* Read N bytes into BUF through socket FD from peer
    at address ADDR (which is ADDR_LEN bytes long).
    Returns the number read or -1 for errors.  */
-ssize_t
-__recvfrom (int fd, void *buf, size_t n, int flags, __SOCKADDR_ARG addr,
-	    socklen_t *addr_len)
+ssize_t __recvfrom(int fd, void *buf, size_t n, int flags, __SOCKADDR_ARG addr,
+                   socklen_t *addr_len)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-weak_alias (__recvfrom, recvfrom)
+weak_alias(__recvfrom, recvfrom)
 
-stub_warning (recvfrom)
+stub_warning(recvfrom)

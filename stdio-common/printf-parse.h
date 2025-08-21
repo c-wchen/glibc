@@ -23,8 +23,7 @@
 #include <wchar.h>
 
 
-struct printf_spec
-  {
+struct printf_spec {
     /* Information parsed from the format spec.  */
     struct printf_info info;
 
@@ -36,56 +35,52 @@ struct printf_spec
        the constant value.  */
     int prec_arg, width_arg;
 
-    int data_arg;		/* Position of data argument.  */
-    int data_arg_type;		/* Type of first argument.  */
+    int data_arg;       /* Position of data argument.  */
+    int data_arg_type;      /* Type of first argument.  */
     /* Number of arguments consumed by this format specifier.  */
     size_t ndata_args;
     /* Size of the parameter for PA_USER type.  */
     int size;
-  };
+};
 
 #ifndef DONT_NEED_READ_INT
 /* Read a simple integer from a string and update the string pointer.
    It is assumed that the first character is a digit.  */
-static int
-read_int (const UCHAR_T * *pstr)
+static int read_int(const UCHAR_T * *pstr)
 {
-  int retval = **pstr - L_('0');
+    int retval = **pstr - L_('0');
 
-  while (ISDIGIT (*++(*pstr)))
-    if (retval >= 0)
-      {
-	if (INT_MAX / 10 < retval)
-	  retval = -1;
-	else
-	  {
-	    int digit = **pstr - L_('0');
+    while (ISDIGIT(*++(*pstr)))
+        if (retval >= 0) {
+            if (INT_MAX / 10 < retval) {
+                retval = -1;
+            } else {
+                int digit = **pstr - L_('0');
 
-	    retval *= 10;
-	    if (INT_MAX - digit < retval)
-	      retval = -1;
-	    else
-	      retval += digit;
-	  }
-      }
+                retval *= 10;
+                if (INT_MAX - digit < retval) {
+                    retval = -1;
+                } else {
+                    retval += digit;
+                }
+            }
+        }
 
-  return retval;
+    return retval;
 }
 #endif
 
 
 /* Find the next spec in FORMAT, or the end of the string.  Returns
    a pointer into FORMAT, to a '%' or a '\0'.  */
-__extern_always_inline const unsigned char *
-__find_specmb (const unsigned char *format)
+__extern_always_inline const unsigned char *__find_specmb(const unsigned char *format)
 {
-  return (const unsigned char *) __strchrnul ((const char *) format, '%');
+    return (const unsigned char *) __strchrnul((const char *) format, '%');
 }
 
-__extern_always_inline const unsigned int *
-__find_specwc (const unsigned int *format)
+__extern_always_inline const unsigned int *__find_specwc(const unsigned int *format)
 {
-  return (const unsigned int *) __wcschrnul ((const wchar_t *) format, L'%');
+    return (const unsigned int *) __wcschrnul((const wchar_t *) format, L'%');
 }
 
 
@@ -95,27 +90,27 @@ __find_specwc (const unsigned int *format)
    the number of args consumed by this spec; *MAX_REF_ARG is updated so it
    remains the highest argument index used.  *FAILED is set to indicate
    whether parsing failed and printf should return with an error status.  */
-extern size_t __parse_one_specmb (const unsigned char *format, size_t posn,
-				  struct printf_spec *spec,
-				  size_t *max_ref_arg,
-				  bool *failed) attribute_hidden;
+extern size_t __parse_one_specmb(const unsigned char *format, size_t posn,
+                                 struct printf_spec *spec,
+                                 size_t *max_ref_arg,
+                                 bool *failed) attribute_hidden;
 
-extern size_t __parse_one_specwc (const unsigned int *format, size_t posn,
-				  struct printf_spec *spec,
-				  size_t *max_ref_arg,
-				  bool *failed) attribute_hidden;
+extern size_t __parse_one_specwc(const unsigned int *format, size_t posn,
+                                 struct printf_spec *spec,
+                                 size_t *max_ref_arg,
+                                 bool *failed) attribute_hidden;
 
 
 
 /* This variable is defined in reg-modifier.c.  */
 struct printf_modifier_record;
 extern struct printf_modifier_record **__printf_modifier_table
-     attribute_hidden;
+    attribute_hidden;
 
 /* Handle registered modifiers.  */
-extern int __handle_registered_modifier_mb (const unsigned char **format,
-					    struct printf_info *info)
-     attribute_hidden;
-extern int __handle_registered_modifier_wc (const unsigned int **format,
-					    struct printf_info *info)
-     attribute_hidden;
+extern int __handle_registered_modifier_mb(const unsigned char **format,
+        struct printf_info *info)
+attribute_hidden;
+extern int __handle_registered_modifier_wc(const unsigned int **format,
+        struct printf_info *info)
+attribute_hidden;

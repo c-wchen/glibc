@@ -22,19 +22,17 @@
 
 
 /* Create a directory named PATH with protections MODE.  */
-int
-__mkdir (const char *path, mode_t mode)
+int __mkdir(const char *path, mode_t mode)
 {
-  if (path == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (path == NULL) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (mkdir)
+stub_warning(mkdir)
 
-libc_hidden_def (__mkdir)
-weak_alias (__mkdir, mkdir)
+libc_hidden_def(__mkdir)
+weak_alias(__mkdir, mkdir)

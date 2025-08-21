@@ -20,429 +20,359 @@
 
 /* Names with hash collisions for classic ELF hash.  */
 
-int
-foo (void)
+int foo(void)
 {
-  return 1;
+    return 1;
 }
 
-int
-Hxxxynpfoo (void)
+int Hxxxynpfoo(void)
 {
-  return 2;
+    return 2;
 }
 
-int
-HxxxynpHxxxynpfoo (void)
+int HxxxynpHxxxynpfoo(void)
 {
-  return 3;
+    return 3;
 }
 
-int
-HxxxynpHxxxynpHxxxynpfoo (void)
+int HxxxynpHxxxynpHxxxynpfoo(void)
 {
-  return 4;
+    return 4;
 }
 
-int
-HxxxynpHxxxynpHxxxynpHxxxynpfoo (void)
+int HxxxynpHxxxynpHxxxynpHxxxynpfoo(void)
 {
-  return 5;
+    return 5;
 }
 
 
 /* Names with hash collisions for GNU hash.  */
 
-int
-bar (void)
+int bar(void)
 {
-  return 10;
+    return 10;
 }
 
-int
-gliinmbar (void)
+int gliinmbar(void)
 {
-  return 9;
+    return 9;
 }
 
-int
-gliinmgliinmbar (void)
+int gliinmgliinmbar(void)
 {
-  return 8;
+    return 8;
 }
 
-int
-gliinmgliinmgliinmbar (void)
+int gliinmgliinmgliinmbar(void)
 {
-  return 7;
+    return 7;
 }
 
-int
-gliinmgliinmgliinmgliinmbar (void)
+int gliinmgliinmgliinmgliinmbar(void)
 {
-  return 6;
+    return 6;
 }
 
 
 /* Names with specific hash values for each hash (see
    tst-hash-collision1.c for details).  */
 
-int
-Hxxxynp (void)
+int Hxxxynp(void)
 {
-  return 11;
+    return 11;
 }
 
-int
-HxxxypP (void)
+int HxxxypP(void)
 {
-  return 12;
+    return 12;
 }
 
-int
-Hxxyinp (void)
+int Hxxyinp(void)
 {
-  return 13;
+    return 13;
 }
 
-int
-HxxyipP (void)
+int HxxyipP(void)
 {
-  return 14;
+    return 14;
 }
 
-int
-HxxykNp (void)
+int HxxykNp(void)
 {
-  return 15;
+    return 15;
 }
 
-int
-Hxxxyoa (void)
+int Hxxxyoa(void)
 {
-  return 16;
+    return 16;
 }
 
-int
-HxxxypQ (void)
+int HxxxypQ(void)
 {
-  return 17;
+    return 17;
 }
 
-int
-HxxxyqA (void)
+int HxxxyqA(void)
 {
-  return 18;
+    return 18;
 }
 
-int
-HxxxzaA (void)
+int HxxxzaA(void)
 {
-  return 19;
+    return 19;
 }
 
-int
-Hxxxz_a (void)
+int Hxxxz_a(void)
 {
-  return 20;
+    return 20;
 }
 
-int
-Hxxxyob (void)
+int Hxxxyob(void)
 {
-  return 21;
+    return 21;
 }
 
-int
-HxxxypR (void)
+int HxxxypR(void)
 {
-  return 22;
+    return 22;
 }
 
-int
-HxxxyqB (void)
+int HxxxyqB(void)
 {
-  return 23;
+    return 23;
 }
 
-int
-HxxxzaB (void)
+int HxxxzaB(void)
 {
-  return 24;
+    return 24;
 }
 
-int
-Hxxxz_b (void)
+int Hxxxz_b(void)
 {
-  return 25;
+    return 25;
 }
 
-int
-glidpk (void)
+int glidpk(void)
 {
-  return 26;
+    return 26;
 }
 
-int
-glidqJ (void)
+int glidqJ(void)
 {
-  return 27;
+    return 27;
 }
 
-int
-glieOk (void)
+int glieOk(void)
 {
-  return 28;
+    return 28;
 }
 
-int
-gliePJ (void)
+int gliePJ(void)
 {
-  return 29;
+    return 29;
 }
 
-int
-gljCpk (void)
+int gljCpk(void)
 {
-  return 30;
+    return 30;
 }
 
-int
-glidpl (void)
+int glidpl(void)
 {
-  return 31;
+    return 31;
 }
 
-int
-glidqK (void)
+int glidqK(void)
 {
-  return 32;
+    return 32;
 }
 
-int
-glieOl (void)
+int glieOl(void)
 {
-  return 33;
+    return 33;
 }
 
-int
-gliePK (void)
+int gliePK(void)
 {
-  return 34;
+    return 34;
 }
 
-int
-gljCpl (void)
+int gljCpl(void)
 {
-  return 35;
+    return 35;
 }
 
-int
-glidpm (void)
+int glidpm(void)
 {
-  return 36;
+    return 36;
 }
 
-int
-glidqL (void)
+int glidqL(void)
 {
-  return 37;
+    return 37;
 }
 
-int
-glieOm (void)
+int glieOm(void)
 {
-  return 38;
+    return 38;
 }
 
-int
-gliePL (void)
+int gliePL(void)
 {
-  return 39;
+    return 39;
 }
 
-int
-gljCpm (void)
+int gljCpm(void)
 {
-  return 40;
+    return 40;
 }
 
-int
-AdfmZru (void)
+int AdfmZru(void)
 {
-  return 41;
+    return 41;
 }
 
-int
-AdfmZsT (void)
+int AdfmZsT(void)
 {
-  return 42;
+    return 42;
 }
 
-int
-AdfmZt3 (void)
+int AdfmZt3(void)
 {
-  return 43;
+    return 43;
 }
 
-int
-Adfn9ru (void)
+int Adfn9ru(void)
 {
-  return 44;
+    return 44;
 }
 
-int
-Adfn9sT (void)
+int Adfn9sT(void)
 {
-  return 45;
+    return 45;
 }
 
-int
-AdfmZrv (void)
+int AdfmZrv(void)
 {
-  return 46;
+    return 46;
 }
 
-int
-AdfmZsU (void)
+int AdfmZsU(void)
 {
-  return 47;
+    return 47;
 }
 
-int
-AdfmZt4 (void)
+int AdfmZt4(void)
 {
-  return 48;
+    return 48;
 }
 
-int
-Adfn9rv (void)
+int Adfn9rv(void)
 {
-  return 49;
+    return 49;
 }
 
-int
-Adfn9sU (void)
+int Adfn9sU(void)
 {
-  return 50;
+    return 50;
 }
 
-int
-AdfmZrw (void)
+int AdfmZrw(void)
 {
-  return 51;
+    return 51;
 }
 
-int
-AdfmZsV (void)
+int AdfmZsV(void)
 {
-  return 52;
+    return 52;
 }
 
-int
-AdfmZt5 (void)
+int AdfmZt5(void)
 {
-  return 53;
+    return 53;
 }
 
-int
-Adfn9rw (void)
+int Adfn9rw(void)
 {
-  return 54;
+    return 54;
 }
 
-int
-Adfn9sV (void)
+int Adfn9sV(void)
 {
-  return 55;
+    return 55;
 }
 
-int
-AdfmZrx (void)
+int AdfmZrx(void)
 {
-  return 56;
+    return 56;
 }
 
-int
-AdfmZsW (void)
+int AdfmZsW(void)
 {
-  return 57;
+    return 57;
 }
 
-int
-AdfmZt6 (void)
+int AdfmZt6(void)
 {
-  return 58;
+    return 58;
 }
 
-int
-Adfn9rx (void)
+int Adfn9rx(void)
 {
-  return 59;
+    return 59;
 }
 
-int
-Adfn9sW (void)
+int Adfn9sW(void)
 {
-  return 60;
+    return 60;
 }
 
-int
-glidpi (void)
+int glidpi(void)
 {
-  return 61;
+    return 61;
 }
 
-int
-glidqH (void)
+int glidqH(void)
 {
-  return 62;
+    return 62;
 }
 
-int
-glieOi (void)
+int glieOi(void)
 {
-  return 63;
+    return 63;
 }
 
-int
-gliePH (void)
+int gliePH(void)
 {
-  return 64;
+    return 64;
 }
 
-int
-gljCpi (void)
+int gljCpi(void)
 {
-  return 65;
+    return 65;
 }
 
-int
-glidpj (void)
+int glidpj(void)
 {
-  return 66;
+    return 66;
 }
 
-int
-glidqI (void)
+int glidqI(void)
 {
-  return 67;
+    return 67;
 }
 
-int
-glieOj (void)
+int glieOj(void)
 {
-  return 68;
+    return 68;
 }
 
-int
-gliePI (void)
+int gliePI(void)
 {
-  return 69;
+    return 69;
 }
 
-int
-gljCpj (void)
+int gljCpj(void)
 {
-  return 70;
+    return 70;
 }

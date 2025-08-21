@@ -32,26 +32,24 @@ mbstate_t __wctomb_state attribute_hidden;
    The interface is completely stupid.  The state is shared between
    all conversion functions.  You should use instead the restartable
    version `wcrtomb'.  */
-int
-wctomb (char *s, wchar_t wchar)
+int wctomb(char *s, wchar_t wchar)
 {
-  /* If S is NULL the function has to return null or not null
-     depending on the encoding having a state depending encoding or
-     not.  */
-  if (s == NULL)
-    {
-      const struct gconv_fcts *fcts;
+    /* If S is NULL the function has to return null or not null
+       depending on the encoding having a state depending encoding or
+       not.  */
+    if (s == NULL) {
+        const struct gconv_fcts *fcts;
 
-      /* Get the conversion functions.  */
-      fcts = get_gconv_fcts (_NL_CURRENT_DATA (LC_CTYPE));
+        /* Get the conversion functions.  */
+        fcts = get_gconv_fcts(_NL_CURRENT_DATA(LC_CTYPE));
 
-      /* This is an extension in the Unix standard which does not directly
-	 violate ISO C.  */
-      memset (&__wctomb_state, '\0', sizeof __wctomb_state);
+        /* This is an extension in the Unix standard which does not directly
+        violate ISO C.  */
+        memset(&__wctomb_state, '\0', sizeof __wctomb_state);
 
-      return fcts->tomb->__stateful;
+        return fcts->tomb->__stateful;
     }
 
-  return __wcrtomb (s, wchar, &__wctomb_state);
+    return __wcrtomb(s, wchar, &__wctomb_state);
 }
-libc_hidden_def (wctomb)
+libc_hidden_def(wctomb)

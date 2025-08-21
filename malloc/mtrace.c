@@ -33,28 +33,25 @@
    do anything anymore; not that they did much before anyway.  */
 
 void *mallwatch;
-compat_symbol (libc, mallwatch, mallwatch, GLIBC_2_0);
+compat_symbol(libc, mallwatch, mallwatch, GLIBC_2_0);
 
-void
-tr_break (void)
+void tr_break(void)
 {
 }
-compat_symbol (libc, tr_break, tr_break, GLIBC_2_0);
+compat_symbol(libc, tr_break, tr_break, GLIBC_2_0);
 #endif
 
 
-void
-mtrace (void)
+void mtrace(void)
 {
 #if !IS_IN (libc)
-  do_mtrace ();
+    do_mtrace();
 #endif
 }
 
-void
-muntrace (void)
+void muntrace(void)
 {
 #if !IS_IN (libc)
-  do_muntrace ();
+    do_muntrace();
 #endif
 }

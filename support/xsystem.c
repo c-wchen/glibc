@@ -21,17 +21,19 @@
 
 #include <support/xstdlib.h>
 
-void
-xsystem (const char *cmd)
+void xsystem(const char *cmd)
 {
-  int ret = system (cmd);
+    int ret = system(cmd);
 
-  if (ret == 0 && cmd == NULL)
-    FAIL_EXIT1 ("Unable to spawn a shell for NULL command");
+    if (ret == 0 && cmd == NULL) {
+        FAIL_EXIT1("Unable to spawn a shell for NULL command");
+    }
 
-  if (ret == 127)
-    FAIL_EXIT1 ("Child terminated with status 127");
+    if (ret == 127) {
+        FAIL_EXIT1("Child terminated with status 127");
+    }
 
-  if (ret < 0)
-    FAIL_EXIT1 ("system (\"%s\")", cmd);
+    if (ret < 0) {
+        FAIL_EXIT1("system (\"%s\")", cmd);
+    }
 }

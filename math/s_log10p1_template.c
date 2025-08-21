@@ -22,28 +22,28 @@
 #include <math-underflow.h>
 
 FLOAT
-M_DECL_FUNC (__log10p1) (FLOAT x)
+M_DECL_FUNC(__log10p1)(FLOAT x)
 {
-  if (__glibc_unlikely (islessequal (x, M_LIT (-1.0))))
-    {
-      if (x == -1)
-	__set_errno (ERANGE);
-      else
-	__set_errno (EDOM);
+    if (__glibc_unlikely(islessequal(x, M_LIT(-1.0)))) {
+        if (x == -1) {
+            __set_errno(ERANGE);
+        } else {
+            __set_errno(EDOM);
+        }
     }
-  if (isless (M_FABS (x), M_EPSILON / 4))
-    {
-      /* Ensure appropriate underflows (a wider range than for log1p,
-	 with potential for zero results from nonzero arguments, in
-	 which case errno should be set based on the result with any
-	 excess range and precision removed) even if the result of
-	 multiplying by M_MLIT (M_LOG10E) is exact.  */
-      FLOAT ret = math_narrow_eval (M_MLIT (M_LOG10E) * x);
-      math_check_force_underflow (ret);
-      if (x != 0 && ret == 0)
-	__set_errno (ERANGE);
-      return ret;
+    if (isless(M_FABS(x), M_EPSILON / 4)) {
+        /* Ensure appropriate underflows (a wider range than for log1p,
+        with potential for zero results from nonzero arguments, in
+         which case errno should be set based on the result with any
+         excess range and precision removed) even if the result of
+         multiplying by M_MLIT (M_LOG10E) is exact.  */
+        FLOAT ret = math_narrow_eval(M_MLIT(M_LOG10E) * x);
+        math_check_force_underflow(ret);
+        if (x != 0 && ret == 0) {
+            __set_errno(ERANGE);
+        }
+        return ret;
     }
-  return M_MLIT (M_LOG10E) * M_SUF (__log1p) (x);
+    return M_MLIT(M_LOG10E) * M_SUF(__log1p)(x);
 }
-declare_mgen_alias (__log10p1, log10p1);
+declare_mgen_alias(__log10p1, log10p1);

@@ -19,8 +19,7 @@
 #include <math.h>
 #include <math_private.h>
 
-int
-__signbitl (_Float128 x)
+int __signbitl(_Float128 x)
 {
-  return __builtin_signbitl (x);
+    return __builtin_signbitl(x);
 }

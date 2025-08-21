@@ -24,16 +24,16 @@
 #include <stdlib.h>
 #include <malloc.h>
 
-static __typeof (aligned_alloc) * volatile aligned_alloc_indirect
-  = aligned_alloc;
-static __typeof (calloc) * volatile calloc_indirect = calloc;
-static __typeof (malloc) * volatile malloc_indirect = malloc;
-static __typeof (memalign) * volatile memalign_indirect = memalign;
-static __typeof (posix_memalign) * volatile posix_memalign_indirect
-  = posix_memalign;
-static __typeof (pvalloc) * volatile pvalloc_indirect = pvalloc;
-static __typeof (realloc) * volatile realloc_indirect = realloc;
-static __typeof (valloc) * volatile valloc_indirect = valloc;
+static __typeof(aligned_alloc) *volatile aligned_alloc_indirect
+    = aligned_alloc;
+static __typeof(calloc) *volatile calloc_indirect = calloc;
+static __typeof(malloc) *volatile malloc_indirect = malloc;
+static __typeof(memalign) *volatile memalign_indirect = memalign;
+static __typeof(posix_memalign) *volatile posix_memalign_indirect
+    = posix_memalign;
+static __typeof(pvalloc) *volatile pvalloc_indirect = pvalloc;
+static __typeof(realloc) *volatile realloc_indirect = realloc;
+static __typeof(valloc) *volatile valloc_indirect = valloc;
 
 #undef aligned_alloc
 #undef calloc

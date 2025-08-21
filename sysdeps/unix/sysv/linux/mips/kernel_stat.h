@@ -7,8 +7,7 @@
    padding.  */
 /* Definition of `struct stat' used in the kernel.  */
 #if _MIPS_SIM != _ABIO32
-struct kernel_stat
-  {
+struct kernel_stat {
     unsigned int st_dev;
     unsigned int __pad1[3];
     unsigned long long st_ino;
@@ -28,12 +27,11 @@ struct kernel_stat
     unsigned int st_blksize;
     unsigned int __pad3;
     unsigned long long st_blocks;
-  };
+};
 #else
-struct kernel_stat
-  {
+struct kernel_stat {
     unsigned long int st_dev;
-    long int __pad1[3];			/* Reserved for network id */
+    long int __pad1[3];         /* Reserved for network id */
     unsigned long int st_ino;
     unsigned long int st_mode;
     unsigned long int st_nlink;
@@ -51,12 +49,12 @@ struct kernel_stat
     unsigned int st_ctime_nsec;
     long int st_blksize;
     long int st_blocks;
-    char st_fstype[16];			/* Filesystem type name, unsupported */
+    char st_fstype[16];         /* Filesystem type name, unsupported */
     long st_pad4[8];
     /* Linux specific fields */
     unsigned int st_flags;
     unsigned int st_gen;
-  };
+};
 #endif
 
 #define STAT_IS_KERNEL_STAT 0

@@ -21,7 +21,7 @@
 /* Get the conversion table.  */
 #define TABLES <macintosh.h>
 
-#define CHARSET_NAME	"MACINTOSH//"
-#define HAS_HOLES	1	/* Not all 256 characters are defined.  */
+#define CHARSET_NAME    "MACINTOSH//"
+#define HAS_HOLES   1   /* Not all 256 characters are defined.  */
 
 #include <8bit-gap.c>

@@ -25,17 +25,16 @@
 # include <math.h>
 # include <libm-alias-float.h>
 
-long long int
-__llroundf (float x)
+long long int __llroundf(float x)
 {
-  long long int y;
-  /* The z196 zarch "convert to fixed" (cgebra) instruction is rounding
-     x to the nearest integer with "ties away from 0" rounding mode
-     (M3-field: 1) where inexact exceptions are suppressed (M4-field: 4).  */
-  __asm__ ("cgebra %0,1,%1,4" : "=d" (y) : "f" (x) : "cc");
-  return y;
+    long long int y;
+    /* The z196 zarch "convert to fixed" (cgebra) instruction is rounding
+       x to the nearest integer with "ties away from 0" rounding mode
+       (M3-field: 1) where inexact exceptions are suppressed (M4-field: 4).  */
+    __asm__("cgebra %0,1,%1,4" : "=d"(y) : "f"(x) : "cc");
+    return y;
 }
-libm_alias_float (__llround, llround)
+libm_alias_float(__llround, llround)
 
 #else
 # include <sysdeps/ieee754/flt-32/s_llroundf.c>

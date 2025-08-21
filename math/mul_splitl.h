@@ -25,25 +25,24 @@
    given that the values are small enough that no overflow occurs and
    large enough (or zero) that no underflow occurs.  */
 
-static inline void
-mul_splitl (long double *hi, long double *lo, long double x, long double y)
+static inline void mul_splitl(long double *hi, long double *lo, long double x, long double y)
 {
 #ifdef __FP_FAST_FMAL
-  /* Fast built-in fused multiply-add.  */
-  *hi = x * y;
-  *lo = __builtin_fmal (x, y, -*hi);
+    /* Fast built-in fused multiply-add.  */
+    *hi = x * y;
+    *lo = __builtin_fmal(x, y, -*hi);
 #else
-  /* Apply Dekker's algorithm.  */
-  *hi = x * y;
+    /* Apply Dekker's algorithm.  */
+    *hi = x * y;
 # define C ((1LL << (LDBL_MANT_DIG + 1) / 2) + 1)
-  long double x1 = x * C;
-  long double y1 = y * C;
+    long double x1 = x * C;
+    long double y1 = y * C;
 # undef C
-  x1 = (x - x1) + x1;
-  y1 = (y - y1) + y1;
-  long double x2 = x - x1;
-  long double y2 = y - y1;
-  *lo = (((x1 * y1 - *hi) + x1 * y2) + x2 * y1) + x2 * y2;
+    x1 = (x - x1) + x1;
+    y1 = (y - y1) + y1;
+    long double x2 = x - x1;
+    long double y2 = y - y1;
+    *lo = (((x1 * y1 - *hi) + x1 * y2) + x2 * y1) + x2 * y2;
 #endif
 }
 

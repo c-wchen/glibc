@@ -24,35 +24,34 @@
 
 static size_t pgsize;
 
-static void
-thread_create_init (void)
+static void thread_create_init(void)
 {
-  pgsize = sysconf (_SC_PAGESIZE);
+    pgsize = sysconf(_SC_PAGESIZE);
 }
 
-static void *
-thread_dummy (void *arg)
+static void *thread_dummy(void *arg)
 {
-  return NULL;
+    return NULL;
 }
 
-static void
-thread_create (int nthreads, size_t stacksize, size_t guardsize)
+static void thread_create(int nthreads, size_t stacksize, size_t guardsize)
 {
-  pthread_attr_t attr;
-  xpthread_attr_init (&attr);
+    pthread_attr_t attr;
+    xpthread_attr_init(&attr);
 
-  stacksize = stacksize * pgsize;
-  guardsize = guardsize * pgsize;
+    stacksize = stacksize * pgsize;
+    guardsize = guardsize * pgsize;
 
-  xpthread_attr_setstacksize (&attr, stacksize);
-  xpthread_attr_setguardsize (&attr, guardsize);
+    xpthread_attr_setstacksize(&attr, stacksize);
+    xpthread_attr_setguardsize(&attr, guardsize);
 
-  pthread_t ts[nthreads];
+    pthread_t ts[nthreads];
 
-  for (int i = 0; i < nthreads; i++)
-    ts[i] = xpthread_create (&attr, thread_dummy, NULL);
+    for (int i = 0; i < nthreads; i++) {
+        ts[i] = xpthread_create(&attr, thread_dummy, NULL);
+    }
 
-  for (int i = 0; i < nthreads; i++)
-    xpthread_join (ts[i]);
+    for (int i = 0; i < nthreads; i++) {
+        xpthread_join(ts[i]);
+    }
 }

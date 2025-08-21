@@ -33,18 +33,18 @@
 /* Produce a stream of more than INT_MAX characters via buffer BUF of
    size SIZE according to bookkeeping in COOKIE and then return EOF.  */
 
-static ssize_t
-io_read (void *cookie, char *buf, size_t size)
+static ssize_t io_read(void *cookie, char *buf, size_t size)
 {
-  unsigned int *written = cookie;
-  unsigned int w = *written;
+    unsigned int *written = cookie;
+    unsigned int w = *written;
 
-  if (w > INT_MAX)
-    return 0;
+    if (w > INT_MAX) {
+        return 0;
+    }
 
-  memset (buf, 'a', size);
-  *written = w + size;
-  return size;
+    memset(buf, 'a', size);
+    *written = w + size;
+    return size;
 }
 
 /* Consume a stream of more than INT_MAX characters from an artificial
@@ -54,54 +54,50 @@ io_read (void *cookie, char *buf, size_t size)
    with characters still outstanding in input.  Diagnose the condition
    and return status accordingly.  */
 
-int
-do_test (void)
+int do_test(void)
 {
-  static cookie_io_functions_t io_funcs = { .read = io_read };
-  unsigned int written = 0;
-  FILE *in;
-  int v;
+    static cookie_io_functions_t io_funcs = { .read = io_read };
+    unsigned int written = 0;
+    FILE *in;
+    int v;
 
-  mtrace ();
+    mtrace();
 
-  in = fopencookie (&written, "r", io_funcs);
-  if (in == NULL)
-    {
-      FAIL ("fopencookie: %m");
-      goto out;
+    in = fopencookie(&written, "r", io_funcs);
+    if (in == NULL) {
+        FAIL("fopencookie: %m");
+        goto out;
     }
 
-  v = fscanf (in, "%*[^\n]");
-  if (ferror (in))
-    {
-      FAIL ("fscanf: input failure, at %u: %m", written);
-      goto out_close;
-    }
-  else if (v == EOF)
-    {
-      FAIL ("fscanf: unexpected end of file, at %u", written);
-      goto out_close;
+    v = fscanf(in, "%*[^\n]");
+    if (ferror(in)) {
+        FAIL("fscanf: input failure, at %u: %m", written);
+        goto out_close;
+    } else if (v == EOF) {
+        FAIL("fscanf: unexpected end of file, at %u", written);
+        goto out_close;
     }
 
-  if (!feof (in))
-    {
-      v = fgetc (in);
-      if (ferror (in))
-	FAIL ("fgetc: input failure: %m");
-      else if (v == EOF)
-	FAIL ("fgetc: unexpected end of file after missing end of file");
-      else if (v == '\n')
-	FAIL ("unexpected new line character received");
-      else
-	FAIL ("character received after end of file expected: \\x%02x", v);
+    if (!feof(in)) {
+        v = fgetc(in);
+        if (ferror(in)) {
+            FAIL("fgetc: input failure: %m");
+        } else if (v == EOF) {
+            FAIL("fgetc: unexpected end of file after missing end of file");
+        } else if (v == '\n') {
+            FAIL("unexpected new line character received");
+        } else {
+            FAIL("character received after end of file expected: \\x%02x", v);
+        }
     }
 
 out_close:
-  if (fclose (in) != 0)
-    FAIL ("fclose: %m");
+    if (fclose(in) != 0) {
+        FAIL("fclose: %m");
+    }
 
 out:
-  return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }
 
 #define TIMEOUT (DEFAULT_TIMEOUT * 8)

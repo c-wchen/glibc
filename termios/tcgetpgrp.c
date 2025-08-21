@@ -20,17 +20,15 @@
 #include <sys/types.h>
 
 /* Return the foreground process group ID of FD.  */
-pid_t
-tcgetpgrp (int fd)
+pid_t tcgetpgrp(int fd)
 {
-  if (fd < 0)
-    {
-      __set_errno (EBADF);
-      return (pid_t) -1;
+    if (fd < 0) {
+        __set_errno(EBADF);
+        return (pid_t) -1;
     }
 
-  __set_errno (ENOSYS);
-  return (pid_t) -1;
+    __set_errno(ENOSYS);
+    return (pid_t) -1;
 }
-libc_hidden_def (tcgetpgrp)
-stub_warning (tcgetpgrp)
+libc_hidden_def(tcgetpgrp)
+stub_warning(tcgetpgrp)

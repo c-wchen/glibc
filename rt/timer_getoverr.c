@@ -23,20 +23,20 @@
 
 
 /* Get expiration overrun for timer TIMERID.  */
-int
-timer_getoverrun (timer_t timerid)
+int timer_getoverrun(timer_t timerid)
 {
-  struct timer_node *timer;
-  int retval = -1;
+    struct timer_node *timer;
+    int retval = -1;
 
-  pthread_mutex_lock (&__timer_mutex);
+    pthread_mutex_lock(&__timer_mutex);
 
-  if (! timer_valid (timer = timer_id2ptr (timerid)))
-    __set_errno (EINVAL);
-  else
-    retval = timer->overrun_count;
+    if (! timer_valid(timer = timer_id2ptr(timerid))) {
+        __set_errno(EINVAL);
+    } else {
+        retval = timer->overrun_count;
+    }
 
-  pthread_mutex_unlock (&__timer_mutex);
+    pthread_mutex_unlock(&__timer_mutex);
 
-  return retval;
+    return retval;
 }

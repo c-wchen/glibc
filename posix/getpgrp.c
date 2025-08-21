@@ -19,8 +19,7 @@
 #include <unistd.h>
 
 /* Get the process group ID of the calling process.  */
-pid_t
-getpgrp (void)
+pid_t getpgrp(void)
 {
-  return __getpgid (0);
+    return __getpgid(0);
 }

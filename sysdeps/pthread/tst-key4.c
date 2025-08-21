@@ -30,104 +30,90 @@ const int max = _POSIX_THREAD_KEYS_MAX;
 static pthread_key_t *keys;
 
 
-static void *
-tf1 (void *arg)
+static void *tf1(void *arg)
 {
-  int i;
-  for (i = 0; i < max; ++i)
-    if (pthread_setspecific (keys[i], (void *) (long int) (i + 1)) != 0)
-      {
-	puts ("setspecific failed");
-	exit (1);
-      }
+    int i;
+    for (i = 0; i < max; ++i)
+        if (pthread_setspecific(keys[i], (void *)(long int)(i + 1)) != 0) {
+            puts("setspecific failed");
+            exit(1);
+        }
 
-  return NULL;
+    return NULL;
 }
 
 
-static void *
-tf2 (void *arg)
+static void *tf2(void *arg)
 {
-  int i;
-  for (i = 0; i < max; ++i)
-    if (pthread_getspecific (keys[i]) != NULL)
-      {
-	printf ("getspecific for key %d not NULL\n", i);
-	exit (1);
-      }
+    int i;
+    for (i = 0; i < max; ++i)
+        if (pthread_getspecific(keys[i]) != NULL) {
+            printf("getspecific for key %d not NULL\n", i);
+            exit(1);
+        }
 
-  return NULL;
+    return NULL;
 }
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  keys = alloca (max * sizeof (pthread_key_t));
+    keys = alloca(max * sizeof(pthread_key_t));
 
-  int i;
-  for (i = 0; i < max; ++i)
-    if (pthread_key_create (&keys[i], NULL) != 0)
-      {
-	puts ("key_create failed");
-	exit (1);
-      }
+    int i;
+    for (i = 0; i < max; ++i)
+        if (pthread_key_create(&keys[i], NULL) != 0) {
+            puts("key_create failed");
+            exit(1);
+        }
 
-  pthread_attr_t a;
+    pthread_attr_t a;
 
-  if (pthread_attr_init (&a) != 0)
-    {
-      puts ("attr_init failed");
-      exit (1);
+    if (pthread_attr_init(&a) != 0) {
+        puts("attr_init failed");
+        exit(1);
     }
 
-  if (pthread_attr_setstacksize (&a, 1 * 1024 * 1024) != 0)
-    {
-      puts ("attr_setstacksize failed");
-      return 1;
+    if (pthread_attr_setstacksize(&a, 1 * 1024 * 1024) != 0) {
+        puts("attr_setstacksize failed");
+        return 1;
     }
 
-  for (i = 0; i < 10; ++i)
-    {
-      int j;
+    for (i = 0; i < 10; ++i) {
+        int j;
 #define N 2
-      pthread_t th[N];
-      for (j = 0; j < N; ++j)
-	if (pthread_create (&th[j], NULL, tf1, NULL) != 0)
-	  {
-	    puts ("1st create failed");
-	    exit (1);
-	  }
+        pthread_t th[N];
+        for (j = 0; j < N; ++j)
+            if (pthread_create(&th[j], NULL, tf1, NULL) != 0) {
+                puts("1st create failed");
+                exit(1);
+            }
 
-      for (j = 0; j < N; ++j)
-	if (pthread_join (th[j], NULL) != 0)
-	  {
-	    puts ("1st join failed");
-	    exit (1);
-	  }
+        for (j = 0; j < N; ++j)
+            if (pthread_join(th[j], NULL) != 0) {
+                puts("1st join failed");
+                exit(1);
+            }
 
-      for (j = 0; j < N; ++j)
-	if (pthread_create (&th[j], NULL, tf2, NULL) != 0)
-	  {
-	    puts ("2nd create failed");
-	    exit (1);
-	  }
+        for (j = 0; j < N; ++j)
+            if (pthread_create(&th[j], NULL, tf2, NULL) != 0) {
+                puts("2nd create failed");
+                exit(1);
+            }
 
-      for (j = 0; j < N; ++j)
-	if (pthread_join (th[j], NULL) != 0)
-	  {
-	    puts ("2nd join failed");
-	    exit (1);
-	  }
+        for (j = 0; j < N; ++j)
+            if (pthread_join(th[j], NULL) != 0) {
+                puts("2nd join failed");
+                exit(1);
+            }
     }
 
-  if (pthread_attr_destroy (&a) != 0)
-    {
-      puts ("attr_destroy failed");
-      exit (1);
+    if (pthread_attr_destroy(&a) != 0) {
+        puts("attr_destroy failed");
+        exit(1);
     }
 
-  return 0;
+    return 0;
 }
 
 

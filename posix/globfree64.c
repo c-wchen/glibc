@@ -24,8 +24,7 @@
 #include <stdlib.h>
 
 /* Free storage allocated in PGLOB by a previous `glob' call.  */
-void
-globfree64 (glob64_t *pglob)
+void globfree64(glob64_t *pglob)
 {
 }
-libc_hidden_def (globfree64)
+libc_hidden_def(globfree64)

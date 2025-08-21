@@ -23,9 +23,9 @@
 
 #include <support/check.h>
 
-static void do_prepare (void);
+static void do_prepare(void);
 #define PREPARE(argc, argv)     do_prepare ()
-static int do_test (void);
+static int do_test(void);
 #define TEST_FUNCTION           do_test ()
 
 #include <test-skeleton.c>
@@ -33,55 +33,62 @@ static int do_test (void);
 static char *temp_filename;
 static int temp_fd;
 
-static void
-do_prepare (void)
+static void do_prepare(void)
 {
-  temp_fd = create_temp_file ("tst-truncate.", &temp_filename);
-  if (temp_fd == -1)
-    {
-      printf ("cannot create temporary file: %m\n");
-      exit (1);
+    temp_fd = create_temp_file("tst-truncate.", &temp_filename);
+    if (temp_fd == -1) {
+        printf("cannot create temporary file: %m\n");
+        exit(1);
     }
 }
 
-static int
-do_test_with_offset (off_t offset)
+static int do_test_with_offset(off_t offset)
 {
-  struct stat st;
-  char buf[1000];
+    struct stat st;
+    char buf[1000];
 
-  memset (buf, 0xcf, sizeof (buf));
+    memset(buf, 0xcf, sizeof(buf));
 
-  if (pwrite (temp_fd, buf, sizeof (buf), offset) != sizeof (buf))
-    FAIL_RET ("write failed");
-  if (fstat (temp_fd, &st) < 0 || st.st_size != (offset + sizeof (buf)))
-    FAIL_RET ("initial size wrong");
+    if (pwrite(temp_fd, buf, sizeof(buf), offset) != sizeof(buf)) {
+        FAIL_RET("write failed");
+    }
+    if (fstat(temp_fd, &st) < 0 || st.st_size != (offset + sizeof(buf))) {
+        FAIL_RET("initial size wrong");
+    }
 
-  if (ftruncate (temp_fd, offset + 800) < 0)
-    FAIL_RET ("size reduction with ftruncate failed");
-  if (fstat (temp_fd, &st) < 0 || st.st_size != (offset + 800))
-    FAIL_RET ("size after reduction with ftruncate is incorrect");
+    if (ftruncate(temp_fd, offset + 800) < 0) {
+        FAIL_RET("size reduction with ftruncate failed");
+    }
+    if (fstat(temp_fd, &st) < 0 || st.st_size != (offset + 800)) {
+        FAIL_RET("size after reduction with ftruncate is incorrect");
+    }
 
-  /* The following test covers more than POSIX.  POSIX does not require
-     that ftruncate() can increase the file size.  But we are testing
-     Unix systems.  */
-  if (ftruncate (temp_fd, offset + 1200) < 0)
-    FAIL_RET ("size increate with ftruncate failed");
-  if (fstat (temp_fd, &st) < 0 || st.st_size != (offset + 1200))
-    FAIL_RET ("size after increase is incorrect");
+    /* The following test covers more than POSIX.  POSIX does not require
+       that ftruncate() can increase the file size.  But we are testing
+       Unix systems.  */
+    if (ftruncate(temp_fd, offset + 1200) < 0) {
+        FAIL_RET("size increate with ftruncate failed");
+    }
+    if (fstat(temp_fd, &st) < 0 || st.st_size != (offset + 1200)) {
+        FAIL_RET("size after increase is incorrect");
+    }
 
-  if (truncate (temp_filename, offset + 800) < 0)
-    FAIL_RET ("size reduction with truncate failed");
-  if (fstat (temp_fd, &st) < 0 || st.st_size != (offset + 800))
-    FAIL_RET ("size after reduction with truncate incorrect");
+    if (truncate(temp_filename, offset + 800) < 0) {
+        FAIL_RET("size reduction with truncate failed");
+    }
+    if (fstat(temp_fd, &st) < 0 || st.st_size != (offset + 800)) {
+        FAIL_RET("size after reduction with truncate incorrect");
+    }
 
-  /* The following test covers more than POSIX.  POSIX does not require
-     that truncate() can increase the file size.  But we are testing
-     Unix systems.  */
-  if (truncate (temp_filename, (offset + 1200)) < 0)
-    FAIL_RET ("size increase with truncate failed");
-  if (fstat (temp_fd, &st) < 0 || st.st_size != (offset + 1200))
-    FAIL_RET ("size increase with truncate is incorrect");
+    /* The following test covers more than POSIX.  POSIX does not require
+       that truncate() can increase the file size.  But we are testing
+       Unix systems.  */
+    if (truncate(temp_filename, (offset + 1200)) < 0) {
+        FAIL_RET("size increase with truncate failed");
+    }
+    if (fstat(temp_fd, &st) < 0 || st.st_size != (offset + 1200)) {
+        FAIL_RET("size increase with truncate is incorrect");
+    }
 
-  return 0;
+    return 0;
 }

@@ -27,69 +27,71 @@
 #include <pointer_guard.h>
 
 
-wint_t
-__btowc (int c)
+wint_t __btowc(int c)
 {
-  const struct gconv_fcts *fcts;
+    const struct gconv_fcts *fcts;
 
-  /* If the parameter does not fit into one byte or it is the EOF value
-     we can give the answer now.  */
-  if (c < SCHAR_MIN || c > UCHAR_MAX || c == EOF)
-    return WEOF;
-
-  /* We know that only ASCII compatible encodings are used for the
-     locale and that the wide character encoding is ISO 10646.  */
-  if (isascii (c))
-    return (wint_t) c;
-
-  /* Get the conversion functions.  */
-  fcts = get_gconv_fcts (_NL_CURRENT_DATA (LC_CTYPE));
-  __gconv_btowc_fct btowc_fct = fcts->towc->__btowc_fct;
-  if (fcts->towc->__shlib_handle != NULL)
-    PTR_DEMANGLE (btowc_fct);
-
-  if (__builtin_expect (fcts->towc_nsteps == 1, 1)
-      && __builtin_expect (btowc_fct != NULL, 1))
-    {
-      /* Use the shortcut function.  */
-      return DL_CALL_FCT (btowc_fct, (fcts->towc, (unsigned char) c));
+    /* If the parameter does not fit into one byte or it is the EOF value
+       we can give the answer now.  */
+    if (c < SCHAR_MIN || c > UCHAR_MAX || c == EOF) {
+        return WEOF;
     }
-  else
-    {
-      /* Fall back to the slow but generic method.  */
-      wchar_t result;
-      struct __gconv_step_data data;
-      unsigned char inbuf[1];
-      const unsigned char *inptr = inbuf;
-      size_t dummy;
-      int status;
 
-      /* Tell where we want the result.  */
-      data.__outbuf = (unsigned char *) &result;
-      data.__outbufend = data.__outbuf + sizeof (wchar_t);
-      data.__invocation_counter = 0;
-      data.__internal_use = 1;
-      data.__flags = __GCONV_IS_LAST;
-      data.__statep = &data.__state;
+    /* We know that only ASCII compatible encodings are used for the
+       locale and that the wide character encoding is ISO 10646.  */
+    if (isascii(c)) {
+        return (wint_t) c;
+    }
 
-      /* Make sure we start in the initial state.  */
-      memset (&data.__state, '\0', sizeof (mbstate_t));
+    /* Get the conversion functions.  */
+    fcts = get_gconv_fcts(_NL_CURRENT_DATA(LC_CTYPE));
+    __gconv_btowc_fct btowc_fct = fcts->towc->__btowc_fct;
+    if (fcts->towc->__shlib_handle != NULL) {
+        PTR_DEMANGLE(btowc_fct);
+    }
 
-      /* Create the input string.  */
-      inbuf[0] = c;
+    if (__builtin_expect(fcts->towc_nsteps == 1, 1)
+        && __builtin_expect(btowc_fct != NULL, 1)) {
+        /* Use the shortcut function.  */
+        return DL_CALL_FCT(btowc_fct, (fcts->towc, (unsigned char) c));
+    } else {
+        /* Fall back to the slow but generic method.  */
+        wchar_t result;
+        struct __gconv_step_data data;
+        unsigned char inbuf[1];
+        const unsigned char *inptr = inbuf;
+        size_t dummy;
+        int status;
 
-      __gconv_fct fct = fcts->towc->__fct;
-      if (fcts->towc->__shlib_handle != NULL)
-	PTR_DEMANGLE (fct);
-      status = DL_CALL_FCT (fct, (fcts->towc, &data, &inptr, inptr + 1,
-				  NULL, &dummy, 0, 1));
+        /* Tell where we want the result.  */
+        data.__outbuf = (unsigned char *) &result;
+        data.__outbufend = data.__outbuf + sizeof(wchar_t);
+        data.__invocation_counter = 0;
+        data.__internal_use = 1;
+        data.__flags = __GCONV_IS_LAST;
+        data.__statep = &data.__state;
 
-      if (status != __GCONV_OK && status != __GCONV_FULL_OUTPUT
-	  && status != __GCONV_EMPTY_INPUT)
-	/* The conversion failed.  */
-	result = WEOF;
+        /* Make sure we start in the initial state.  */
+        memset(&data.__state, '\0', sizeof(mbstate_t));
 
-      return result;
+        /* Create the input string.  */
+        inbuf[0] = c;
+
+        __gconv_fct fct = fcts->towc->__fct;
+        if (fcts->towc->__shlib_handle != NULL) {
+            PTR_DEMANGLE(fct);
+        }
+        status = DL_CALL_FCT(fct, (fcts->towc, &data, &inptr, inptr + 1,
+                                   NULL, &dummy, 0, 1));
+
+        if (status != __GCONV_OK && status != __GCONV_FULL_OUTPUT
+            && status != __GCONV_EMPTY_INPUT)
+            /* The conversion failed.  */
+        {
+            result = WEOF;
+        }
+
+        return result;
     }
 }
-weak_alias (__btowc, btowc)
+weak_alias(__btowc, btowc)

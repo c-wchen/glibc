@@ -18,15 +18,15 @@
 #include <netdb.h>
 
 
-#define LOOKUP_TYPE		struct protoent
-#define SETFUNC_NAME		setprotoent
-#define	GETFUNC_NAME		getprotoent
-#define	ENDFUNC_NAME		endprotoent
-#define DATABASE_NAME		protocols
-#define STAYOPEN		int stayopen
-#define STAYOPEN_VAR		stayopen
+#define LOOKUP_TYPE     struct protoent
+#define SETFUNC_NAME        setprotoent
+#define GETFUNC_NAME        getprotoent
+#define ENDFUNC_NAME        endprotoent
+#define DATABASE_NAME       protocols
+#define STAYOPEN        int stayopen
+#define STAYOPEN_VAR        stayopen
 
 /* There is no nscd support for the protocols file.  */
-#undef	USE_NSCD
+#undef  USE_NSCD
 
 #include "../nss/getXXent_r.c"

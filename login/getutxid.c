@@ -19,7 +19,7 @@
 #include <utmpx.h>
 
 struct utmpx *
-getutxid (const struct utmpx *id)
+getutxid(const struct utmpx *id)
 {
-  return (struct utmpx *) __getutid ((const struct utmp *) id);
+    return (struct utmpx *) __getutid((const struct utmp *) id);
 }

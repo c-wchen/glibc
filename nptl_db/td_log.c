@@ -19,12 +19,11 @@
 #include "thread_dbP.h"
 
 
-td_err_e
-td_log (void)
+td_err_e td_log(void)
 {
-  /* This interface is deprecated in the Sun interface.  We provide it
-     for compatibility but don't do anything ourself.  We might in
-     future do some logging if this seems reasonable.  */
-  LOG ("td_log");
-  return TD_OK;
+    /* This interface is deprecated in the Sun interface.  We provide it
+       for compatibility but don't do anything ourself.  We might in
+       future do some logging if this seems reasonable.  */
+    LOG("td_log");
+    return TD_OK;
 }

@@ -26,7 +26,7 @@
 
 /* This file was broken out from:
 
-	Revision 2.3  92/04/01  19:38:18  rpd
+    Revision 2.3  92/04/01  19:38:18  rpd
 
    The static do_compat function is renamed to be globally accessible.
  */
@@ -36,32 +36,32 @@
 #include <errorlib.h>
 
 
-void
-__mach_error_map_compat(mach_error_t  *org_err)
+void __mach_error_map_compat(mach_error_t  *org_err)
 {
-	mach_error_t		err = *org_err;
+    mach_error_t        err = *org_err;
 
-	/*
-	 * map old error numbers to
-	 * to new error sys & subsystem
-	 */
+    /*
+     * map old error numbers to
+     * to new error sys & subsystem
+     */
 
-	if ((-200 < err) && (err <= -100))
-		err = -(err + 100) | IPC_SEND_MOD;
-	else if ((-300 < err) && (err <= -200))
-		err = -(err + 200) | IPC_RCV_MOD;
-	else if ((-400 < err) && (err <= -300))
-		err = -(err + 300) | MACH_IPC_MIG_MOD;
-	else if ((1000 <= err) && (err < 1100))
-		err = (err - 1000) | SERV_NETNAME_MOD;
-	else if ((1600 <= err) && (err < 1700))
-		err = (err - 1600) | SERV_ENV_MOD;
-	else if ((27600 <= err) && (err < 27700))
-		err = (err - 27600) | SERV_EXECD_MOD;
-	else if ((2500 <= err) && (err < 2600))
-		err = (err - 2500) | KERN_DEVICE_MOD;
-	else if ((5000 <= err) && (err < 5100))
-		err = (err - 5000) | BOOTSTRAP_FS_MOD;
+    if ((-200 < err) && (err <= -100)) {
+        err = -(err + 100) | IPC_SEND_MOD;
+    } else if ((-300 < err) && (err <= -200)) {
+        err = -(err + 200) | IPC_RCV_MOD;
+    } else if ((-400 < err) && (err <= -300)) {
+        err = -(err + 300) | MACH_IPC_MIG_MOD;
+    } else if ((1000 <= err) && (err < 1100)) {
+        err = (err - 1000) | SERV_NETNAME_MOD;
+    } else if ((1600 <= err) && (err < 1700)) {
+        err = (err - 1600) | SERV_ENV_MOD;
+    } else if ((27600 <= err) && (err < 27700)) {
+        err = (err - 27600) | SERV_EXECD_MOD;
+    } else if ((2500 <= err) && (err < 2600)) {
+        err = (err - 2500) | KERN_DEVICE_MOD;
+    } else if ((5000 <= err) && (err < 5100)) {
+        err = (err - 5000) | BOOTSTRAP_FS_MOD;
+    }
 
-	*org_err = err;
+    *org_err = err;
 }

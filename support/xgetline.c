@@ -19,21 +19,18 @@
 #include <support/xstdio.h>
 #include <support/check.h>
 
-size_t
-xgetline (char **lineptr, size_t *n, FILE *stream)
+size_t xgetline(char **lineptr, size_t *n, FILE *stream)
 {
-  TEST_VERIFY (!ferror (stream));
-  ssize_t ret = getline (lineptr, n, stream);
-  if (ferror (stream))
-    {
-      TEST_VERIFY (ret < 0);
-      FAIL_EXIT1 ("getline: %m");
+    TEST_VERIFY(!ferror(stream));
+    ssize_t ret = getline(lineptr, n, stream);
+    if (ferror(stream)) {
+        TEST_VERIFY(ret < 0);
+        FAIL_EXIT1("getline: %m");
     }
-  if (feof (stream))
-    {
-      TEST_VERIFY (ret <= 0);
-      return 0;
+    if (feof(stream)) {
+        TEST_VERIFY(ret <= 0);
+        return 0;
     }
-  TEST_VERIFY (ret > 0);
-  return ret;
+    TEST_VERIFY(ret > 0);
+    return ret;
 }

@@ -27,31 +27,30 @@
 
 /* Test for a double free where the size information gets overwritten by a
  * terminating null byte.  */
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* The payload is exactly 0x19 Bytes long:
-   * 0x18 bytes 'B' and one terminating null byte
-   */
-  const char *payload = "BBBBBBBBBBBBBBBBBBBBBBBB";
+    /* The payload is exactly 0x19 Bytes long:
+     * 0x18 bytes 'B' and one terminating null byte
+     */
+    const char *payload = "BBBBBBBBBBBBBBBBBBBBBBBB";
 
-  char *volatile first_chunk
-      = malloc (strlen (payload)); // <-- off by one error
-  char *volatile second_chunk = malloc (0x118);
+    char *volatile first_chunk
+        = malloc(strlen(payload));   // <-- off by one error
+    char *volatile second_chunk = malloc(0x118);
 
-  // free the second chunk the first time now it is in the tcache with tc_idx =
-  free (second_chunk);
+    // free the second chunk the first time now it is in the tcache with tc_idx =
+    free(second_chunk);
 
-  // change the the size of the second_chunk using the terminating null byte if
-  // the PAYLOAD
-  strcpy (first_chunk, payload);
+    // change the the size of the second_chunk using the terminating null byte if
+    // the PAYLOAD
+    strcpy(first_chunk, payload);
 
-  // now the second_chunk has a new size
-  // calling free a second time will not trigger the double free detection
-  free (second_chunk);
+    // now the second_chunk has a new size
+    // calling free a second time will not trigger the double free detection
+    free(second_chunk);
 
-  printf ("FAIL: tcache double free not detected\n");
-  return 1;
+    printf("FAIL: tcache double free not detected\n");
+    return 1;
 }
 
 #define TEST_FUNCTION do_test

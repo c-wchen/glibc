@@ -18,17 +18,16 @@
 
 #include <string.h>
 
-size_t
-strlen (const char *str)
+size_t strlen(const char *str)
 {
-  int cnt;
+    int cnt;
 
-  asm("cld\n"			/* Search forward.  */
-      /* Some old versions of gas need `repne' instead of `repnz'.  */
-      "repnz\n"			/* Look for a zero byte.  */
-      "scasb" /* %0, %1, %3 */ :
-      "=c" (cnt) : "D" (str), "0" (-1), "a" (0));
+    asm("cld\n"           /* Search forward.  */
+        /* Some old versions of gas need `repne' instead of `repnz'.  */
+        "repnz\n"         /* Look for a zero byte.  */
+        "scasb" /* %0, %1, %3 */ :
+        "=c"(cnt) : "D"(str), "0"(-1), "a"(0));
 
-  return -2 - cnt;
+    return -2 - cnt;
 }
-libc_hidden_builtin_def (strlen)
+libc_hidden_builtin_def(strlen)

@@ -22,15 +22,15 @@
 #include <hurd/fd.h>
 
 /* Change the owner and group of the file referred to by FD.  */
-int
-__fchown (int fd, uid_t owner, gid_t group)
+int __fchown(int fd, uid_t owner, gid_t group)
 {
-  error_t err;
+    error_t err;
 
-  if (err = HURD_DPORT_USE (fd, __file_chown (port, owner, group)))
-    return __hurd_dfail (fd, err);
+    if (err = HURD_DPORT_USE(fd, __file_chown(port, owner, group))) {
+        return __hurd_dfail(fd, err);
+    }
 
-  return 0;
+    return 0;
 }
 
-weak_alias (__fchown, fchown)
+weak_alias(__fchown, fchown)

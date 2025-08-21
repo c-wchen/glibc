@@ -28,45 +28,41 @@
 typedef op_t find_t;
 
 /* This function returns 0xff for each byte that is zero in X.  */
-static __always_inline find_t
-find_zero_all (op_t x)
+static __always_inline find_t find_zero_all(op_t x)
 {
-  find_t r;
+    find_t r;
 #ifdef __riscv_xtheadbb
-  asm ("th.tstnbz %0, %1" : "=r" (r) : "r" (x));
-  return r;
+    asm("th.tstnbz %0, %1" : "=r"(r) : "r"(x));
+    return r;
 #else
-  asm ("orc.b %0, %1" : "=r" (r) : "r" (x));
-  return ~r;
+    asm("orc.b %0, %1" : "=r"(r) : "r"(x));
+    return ~r;
 #endif
 }
 
 /* This function returns 0xff for each byte that is equal between X1 and
    X2.  */
-static __always_inline find_t
-find_eq_all (op_t x1, op_t x2)
+static __always_inline find_t find_eq_all(op_t x1, op_t x2)
 {
-  return find_zero_all (x1 ^ x2);
+    return find_zero_all(x1 ^ x2);
 }
 
 /* Identify zero bytes in X1 or equality between X1 and X2.  */
-static __always_inline find_t
-find_zero_eq_all (op_t x1, op_t x2)
+static __always_inline find_t find_zero_eq_all(op_t x1, op_t x2)
 {
-  return find_zero_all (x1) | find_eq_all (x1, x2);
+    return find_zero_all(x1) | find_eq_all(x1, x2);
 }
 
 /* Identify zero bytes in X1 or inequality between X1 and X2.  */
-static __always_inline find_t
-find_zero_ne_all (op_t x1, op_t x2)
+static __always_inline find_t find_zero_ne_all(op_t x1, op_t x2)
 {
-  return find_zero_all (x1) | ~find_eq_all (x1, x2);
+    return find_zero_all(x1) | ~find_eq_all(x1, x2);
 }
 
 /* Define the "inexact" versions in terms of the exact versions.  */
-# define find_zero_low		find_zero_all
-# define find_eq_low		find_eq_all
-# define find_zero_eq_low	find_zero_eq_all
+# define find_zero_low      find_zero_all
+# define find_eq_low        find_eq_all
+# define find_zero_eq_low   find_zero_eq_all
 #else
 #include <sysdeps/generic/string-fza.h>
 #endif

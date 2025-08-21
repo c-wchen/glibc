@@ -21,13 +21,12 @@
 /* Remap arbitrary pages of a shared backing store within an existing
    VMA.  */
 
-int
-__remap_file_pages (void *start, size_t size, int prot, size_t pgoff,
-		    int flags)
+int __remap_file_pages(void *start, size_t size, int prot, size_t pgoff,
+                       int flags)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (remap_file_pages)
-weak_alias (__remap_file_pages, remap_file_pages)
+stub_warning(remap_file_pages)
+weak_alias(__remap_file_pages, remap_file_pages)

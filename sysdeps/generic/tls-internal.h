@@ -24,12 +24,11 @@
 
 extern __thread struct tls_internal_t __tls_internal attribute_hidden;
 
-static inline struct tls_internal_t *
-__glibc_tls_internal (void)
+static inline struct tls_internal_t *__glibc_tls_internal(void)
 {
-  return &__tls_internal;
+    return &__tls_internal;
 }
 
-extern void __glibc_tls_internal_free (void) attribute_hidden;
+extern void __glibc_tls_internal_free(void) attribute_hidden;
 
 #endif

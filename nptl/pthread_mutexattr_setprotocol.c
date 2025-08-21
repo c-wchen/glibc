@@ -20,25 +20,25 @@
 #include <pthreadP.h>
 #include <shlib-compat.h>
 
-int
-__pthread_mutexattr_setprotocol (pthread_mutexattr_t *attr, int protocol)
+int __pthread_mutexattr_setprotocol(pthread_mutexattr_t *attr, int protocol)
 {
-  if (protocol != PTHREAD_PRIO_NONE
-      && protocol != PTHREAD_PRIO_INHERIT
-      && __builtin_expect (protocol != PTHREAD_PRIO_PROTECT, 0))
-    return EINVAL;
+    if (protocol != PTHREAD_PRIO_NONE
+        && protocol != PTHREAD_PRIO_INHERIT
+        && __builtin_expect(protocol != PTHREAD_PRIO_PROTECT, 0)) {
+        return EINVAL;
+    }
 
-  struct pthread_mutexattr *iattr = (struct pthread_mutexattr *) attr;
+    struct pthread_mutexattr *iattr = (struct pthread_mutexattr *) attr;
 
-  iattr->mutexkind = ((iattr->mutexkind & ~PTHREAD_MUTEXATTR_PROTOCOL_MASK)
-		      | (protocol << PTHREAD_MUTEXATTR_PROTOCOL_SHIFT));
+    iattr->mutexkind = ((iattr->mutexkind & ~PTHREAD_MUTEXATTR_PROTOCOL_MASK)
+                        | (protocol << PTHREAD_MUTEXATTR_PROTOCOL_SHIFT));
 
-  return 0;
+    return 0;
 }
-versioned_symbol (libc, __pthread_mutexattr_setprotocol,
-		  pthread_mutexattr_setprotocol, GLIBC_2_34);
+versioned_symbol(libc, __pthread_mutexattr_setprotocol,
+                 pthread_mutexattr_setprotocol, GLIBC_2_34);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_4, GLIBC_2_34)
-compat_symbol (libpthread, __pthread_mutexattr_setprotocol,
-               pthread_mutexattr_setprotocol, GLIBC_2_4);
+compat_symbol(libpthread, __pthread_mutexattr_setprotocol,
+              pthread_mutexattr_setprotocol, GLIBC_2_4);
 #endif

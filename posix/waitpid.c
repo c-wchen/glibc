@@ -32,10 +32,9 @@
    return PID and store the dead child's status in STAT_LOC.
    Return (pid_t) -1 for errors.  If the WUNTRACED bit is set in OPTIONS,
    return status for stopped children; otherwise don't.  */
-pid_t
-__waitpid (pid_t pid, int *stat_loc, int options)
+pid_t __waitpid(pid_t pid, int *stat_loc, int options)
 {
-  return __wait4 (pid, stat_loc, options, NULL);
+    return __wait4(pid, stat_loc, options, NULL);
 }
-libc_hidden_def (__waitpid)
-weak_alias (__waitpid, waitpid)
+libc_hidden_def(__waitpid)
+weak_alias(__waitpid, waitpid)

@@ -39,69 +39,65 @@
 
 /* Hypot kernel. The inputs must be adjusted so that ax >= ay >= 0
    and squaring ax, ay and (ax - ay) does not overflow or underflow.  */
-static inline _Float128
-kernel (_Float128 ax, _Float128 ay)
+static inline _Float128 kernel(_Float128 ax, _Float128 ay)
 {
-  _Float128 t1, t2;
-  _Float128 h = sqrtl (ax * ax + ay * ay);
-  if (h <= L(2.0) * ay)
-    {
-      _Float128 delta = h - ay;
-      t1 = ax * (L(2.0) * delta - ax);
-      t2 = (delta - L(2.0) * (ax - ay)) * delta;
-    }
-  else
-    {
-      _Float128 delta = h - ax;
-      t1 = L(2.0) * delta * (ax - L(2.0) * ay);
-      t2 = (L(4.0) * delta - ay) * ay + delta * delta;
+    _Float128 t1, t2;
+    _Float128 h = sqrtl(ax * ax + ay * ay);
+    if (h <= L(2.0) * ay) {
+        _Float128 delta = h - ay;
+        t1 = ax * (L(2.0) * delta - ax);
+        t2 = (delta - L(2.0) * (ax - ay)) * delta;
+    } else {
+        _Float128 delta = h - ax;
+        t1 = L(2.0) * delta * (ax - L(2.0) * ay);
+        t2 = (L(4.0) * delta - ay) * ay + delta * delta;
     }
 
-  h -= (t1 + t2) / (L(2.0) * h);
-  return h;
+    h -= (t1 + t2) / (L(2.0) * h);
+    return h;
 }
 
-_Float128
-__ieee754_hypotl(_Float128 x, _Float128 y)
+_Float128 __ieee754_hypotl(_Float128 x, _Float128 y)
 {
-  if (!isfinite(x) || !isfinite(y))
-    {
-      if ((isinf (x) || isinf (y))
-	  && !issignaling (x) && !issignaling (y))
-	return INFINITY;
-      return x + y;
+    if (!isfinite(x) || !isfinite(y)) {
+        if ((isinf(x) || isinf(y))
+            && !issignaling(x) && !issignaling(y)) {
+            return INFINITY;
+        }
+        return x + y;
     }
 
-  x = fabsl (x);
-  y = fabsl (y);
+    x = fabsl(x);
+    y = fabsl(y);
 
-  _Float128 ax = x < y ? y : x;
-  _Float128 ay = x < y ? x : y;
+    _Float128 ax = x < y ? y : x;
+    _Float128 ay = x < y ? x : y;
 
-  /* If ax is huge, scale both inputs down.  */
-  if (__glibc_unlikely (ax > LARGE_VAL))
-    {
-      if (__glibc_unlikely (ay <= ax * EPS))
-	return ax + ay;
+    /* If ax is huge, scale both inputs down.  */
+    if (__glibc_unlikely(ax > LARGE_VAL)) {
+        if (__glibc_unlikely(ay <= ax * EPS)) {
+            return ax + ay;
+        }
 
-      return kernel (ax * SCALE, ay * SCALE) / SCALE;
+        return kernel(ax * SCALE, ay * SCALE) / SCALE;
     }
 
-  /* If ay is tiny, scale both inputs up.  */
-  if (__glibc_unlikely (ay < TINY_VAL))
-    {
-      if (__glibc_unlikely (ax >= ay / EPS))
-	return ax + ay;
+    /* If ay is tiny, scale both inputs up.  */
+    if (__glibc_unlikely(ay < TINY_VAL)) {
+        if (__glibc_unlikely(ax >= ay / EPS)) {
+            return ax + ay;
+        }
 
-      ax = kernel (ax / SCALE, ay / SCALE) * SCALE;
-      math_check_force_underflow_nonneg (ax);
-      return ax;
+        ax = kernel(ax / SCALE, ay / SCALE) * SCALE;
+        math_check_force_underflow_nonneg(ax);
+        return ax;
     }
 
-  /* Common case: ax is not huge and ay is not tiny.  */
-  if (__glibc_unlikely (ay <= ax * EPS))
-    return ax + ay;
+    /* Common case: ax is not huge and ay is not tiny.  */
+    if (__glibc_unlikely(ay <= ax * EPS)) {
+        return ax + ay;
+    }
 
-  return kernel (ax, ay);
+    return kernel(ax, ay);
 }
-libm_alias_finite (__ieee754_hypotl, __hypotl)
+libm_alias_finite(__ieee754_hypotl, __hypotl)

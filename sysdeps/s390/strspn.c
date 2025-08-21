@@ -27,16 +27,16 @@
 # include <ifunc-resolve.h>
 
 # if HAVE_STRSPN_C
-extern __typeof (__redirect_strspn) STRSPN_C attribute_hidden;
+extern __typeof(__redirect_strspn) STRSPN_C attribute_hidden;
 # endif
 
 # if HAVE_STRSPN_Z13
-extern __typeof (__redirect_strspn) STRSPN_Z13 attribute_hidden;
+extern __typeof(__redirect_strspn) STRSPN_Z13 attribute_hidden;
 # endif
 
-s390_libc_ifunc_expr (__redirect_strspn, strspn,
-		      (HAVE_STRSPN_Z13 && (hwcap & HWCAP_S390_VX))
-		      ? STRSPN_Z13
-		      : STRSPN_DEFAULT
-		      )
+s390_libc_ifunc_expr(__redirect_strspn, strspn,
+                     (HAVE_STRSPN_Z13 &&(hwcap &HWCAP_S390_VX))
+                     ? STRSPN_Z13
+                     : STRSPN_DEFAULT
+                    )
 #endif /* HAVE_STRSPN_IFUNC  */

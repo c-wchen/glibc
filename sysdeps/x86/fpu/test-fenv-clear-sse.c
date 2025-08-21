@@ -20,26 +20,26 @@
 #include <cpuid.h>
 #include <stdbool.h>
 
-static bool
-have_sse2 (void)
+static bool have_sse2(void)
 {
-  unsigned int eax, ebx, ecx, edx;
+    unsigned int eax, ebx, ecx, edx;
 
-  if (!__get_cpuid (1, &eax, &ebx, &ecx, &edx))
-    return false;
+    if (!__get_cpuid(1, &eax, &ebx, &ecx, &edx)) {
+        return false;
+    }
 
-  return (edx & bit_SSE2) != 0;
+    return (edx & bit_SSE2) != 0;
 }
 
-#define CHECK_CAN_TEST						\
-  do								\
-    {								\
-      if (!have_sse2 ())					\
-	{							\
-	  puts ("CPU does not support SSE2, cannot test");	\
-	  return 0;						\
-	}							\
-    }								\
+#define CHECK_CAN_TEST                      \
+  do                                \
+    {                               \
+      if (!have_sse2 ())                    \
+    {                           \
+      puts ("CPU does not support SSE2, cannot test");  \
+      return 0;                     \
+    }                           \
+    }                               \
   while (0)
 
 #include <test-fenv-clear-main.c>

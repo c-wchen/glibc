@@ -22,16 +22,16 @@
 #include <support/xsignal.h>
 
 /* Check that legacy shadow stack code will trigger segfault.  */
-extern void legacy (void);
+extern void legacy(void);
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  if (!CPU_FEATURE_ACTIVE (SHSTK))
-    return EXIT_UNSUPPORTED;
+    if (!CPU_FEATURE_ACTIVE(SHSTK)) {
+        return EXIT_UNSUPPORTED;
+    }
 
-  legacy ();
-  return EXIT_FAILURE;
+    legacy();
+    return EXIT_FAILURE;
 }
 
 #define EXPECTED_SIGNAL (CPU_FEATURE_ACTIVE (SHSTK) ? SIGSEGV : 0)

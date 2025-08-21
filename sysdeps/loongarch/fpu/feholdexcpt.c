@@ -19,22 +19,21 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-int
-__feholdexcept (fenv_t *envp)
+int __feholdexcept(fenv_t *envp)
 {
-  fpu_control_t cw;
+    fpu_control_t cw;
 
-  /* Save the current state.  */
-  _FPU_GETCW (cw);
-  envp->__fp_control_register = cw;
+    /* Save the current state.  */
+    _FPU_GETCW(cw);
+    envp->__fp_control_register = cw;
 
-  /* Clear all exception enable bits and flags.  */
-  cw &= ~(_FPU_MASK_V | _FPU_MASK_Z | _FPU_MASK_O | _FPU_MASK_U | _FPU_MASK_I
-	  | FE_ALL_EXCEPT);
-  _FPU_SETCW (cw);
+    /* Clear all exception enable bits and flags.  */
+    cw &= ~(_FPU_MASK_V | _FPU_MASK_Z | _FPU_MASK_O | _FPU_MASK_U | _FPU_MASK_I
+            | FE_ALL_EXCEPT);
+    _FPU_SETCW(cw);
 
-  return 0;
+    return 0;
 }
 
-libm_hidden_def (__feholdexcept) weak_alias (__feholdexcept, feholdexcept)
-libm_hidden_weak (feholdexcept)
+libm_hidden_def(__feholdexcept) weak_alias(__feholdexcept, feholdexcept)
+libm_hidden_weak(feholdexcept)

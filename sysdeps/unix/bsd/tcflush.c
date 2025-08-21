@@ -23,26 +23,24 @@
 #include <sys/file.h>
 
 /* Flush pending data on FD.  */
-int
-tcflush (int fd, int queue_selector)
+int tcflush(int fd, int queue_selector)
 {
-  int arg;
+    int arg;
 
-  switch (queue_selector)
-    {
-    case TCIFLUSH:
-      arg = FREAD;
-      break;
-    case TCOFLUSH:
-      arg = FWRITE;
-      break;
-    case TCIOFLUSH:
-      arg = FREAD | FWRITE;
-      break;
-    default:
-      __set_errno (EINVAL);
-      return -1;
+    switch (queue_selector) {
+        case TCIFLUSH:
+            arg = FREAD;
+            break;
+        case TCOFLUSH:
+            arg = FWRITE;
+            break;
+        case TCIOFLUSH:
+            arg = FREAD | FWRITE;
+            break;
+        default:
+            __set_errno(EINVAL);
+            return -1;
     }
 
-  return __ioctl (fd, TIOCFLUSH, (void *) &arg);
+    return __ioctl(fd, TIOCFLUSH, (void *) &arg);
 }

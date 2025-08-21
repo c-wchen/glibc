@@ -25,21 +25,19 @@
    (if not NULL) for exceptional conditions.  If TIMEOUT is not NULL, time out
    after waiting the interval specified therein.  Returns the number of ready
    descriptors, or -1 for errors.  */
-int
-__select (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
-	  struct timeval *timeout)
+int __select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
+             struct timeval *timeout)
 {
-  struct timespec ts, *to;
+    struct timespec ts, *to;
 
-  if (timeout)
-    {
-      to = &ts;
-      TIMEVAL_TO_TIMESPEC (timeout, to);
+    if (timeout) {
+        to = &ts;
+        TIMEVAL_TO_TIMESPEC(timeout, to);
+    } else {
+        to = NULL;
     }
-  else
-    to = NULL;
 
-  return _hurd_select (nfds, NULL, readfds, writefds, exceptfds, to, NULL);
+    return _hurd_select(nfds, NULL, readfds, writefds, exceptfds, to, NULL);
 }
-libc_hidden_def (__select)
-weak_alias (__select, select)
+libc_hidden_def(__select)
+weak_alias(__select, select)

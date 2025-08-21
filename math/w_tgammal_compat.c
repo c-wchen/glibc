@@ -23,25 +23,25 @@
 #include <libm-alias-ldouble.h>
 
 #if LIBM_SVID_COMPAT
-long double
-__tgammal(long double x)
+long double __tgammal(long double x)
 {
-	int local_signgam;
-	long double y = __ieee754_gammal_r(x,&local_signgam);
+    int local_signgam;
+    long double y = __ieee754_gammal_r(x, &local_signgam);
 
-	if(__glibc_unlikely (!isfinite (y) || y == 0)
-	   && (isfinite (x) || (isinf (x) && x < 0.0))
-	   && _LIB_VERSION != _IEEE_) {
-	  if(x==0.0)
-	    return __kernel_standard_l(x,x,250); /* tgamma pole */
-	  else if(floorl(x)==x&&x<0.0L)
-	    return __kernel_standard_l(x,x,241); /* tgamma domain */
-	  else if (y == 0)
-	    __set_errno (ERANGE); /* tgamma underflow */
-	  else
-	    return __kernel_standard_l(x,x,240); /* tgamma overflow */
-	}
-	return local_signgam < 0 ? - y : y;
+    if (__glibc_unlikely(!isfinite(y) || y == 0)
+        && (isfinite(x) || (isinf(x) && x < 0.0))
+        && _LIB_VERSION != _IEEE_) {
+        if (x == 0.0) {
+            return __kernel_standard_l(x, x, 250);    /* tgamma pole */
+        } else if (floorl(x) == x && x < 0.0L) {
+            return __kernel_standard_l(x, x, 241);    /* tgamma domain */
+        } else if (y == 0) {
+            __set_errno(ERANGE);    /* tgamma underflow */
+        } else {
+            return __kernel_standard_l(x, x, 240);    /* tgamma overflow */
+        }
+    }
+    return local_signgam < 0 ? - y : y;
 }
-libm_alias_ldouble (__tgamma, tgamma)
+libm_alias_ldouble(__tgamma, tgamma)
 #endif

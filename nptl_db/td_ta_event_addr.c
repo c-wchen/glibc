@@ -19,41 +19,39 @@
 #include "thread_dbP.h"
 
 
-td_err_e
-td_ta_event_addr (const td_thragent_t *ta_arg,
-		  td_event_e event, td_notify_t *addr)
+td_err_e td_ta_event_addr(const td_thragent_t *ta_arg,
+                          td_event_e event, td_notify_t *addr)
 {
-  td_thragent_t *const ta = (td_thragent_t *) ta_arg;
-  td_err_e err;
-  psaddr_t taddr;
+    td_thragent_t *const ta = (td_thragent_t *) ta_arg;
+    td_err_e err;
+    psaddr_t taddr;
 
-  LOG ("td_ta_event_addr");
+    LOG("td_ta_event_addr");
 
-  /* Test whether the TA parameter is ok.  */
-  if (! ta_ok (ta))
-    return TD_BADTA;
-
-  switch (event)
-    {
-    case TD_CREATE:
-      err = DB_GET_SYMBOL (taddr, ta, __nptl_create_event);
-      break;
-
-    case TD_DEATH:
-      err = DB_GET_SYMBOL (taddr, ta, __nptl_death_event);
-      break;
-
-    default:
-      /* Event cannot be handled.  */
-      return TD_NOEVENT;
+    /* Test whether the TA parameter is ok.  */
+    if (! ta_ok(ta)) {
+        return TD_BADTA;
     }
 
-  if (err == TD_OK)
-    {
-      /* Success, we got the address.  */
-      addr->type = NOTIFY_BPT;
-      addr->u.bptaddr = taddr;
+    switch (event) {
+        case TD_CREATE:
+            err = DB_GET_SYMBOL(taddr, ta, __nptl_create_event);
+            break;
+
+        case TD_DEATH:
+            err = DB_GET_SYMBOL(taddr, ta, __nptl_death_event);
+            break;
+
+        default:
+            /* Event cannot be handled.  */
+            return TD_NOEVENT;
     }
 
-  return err;
+    if (err == TD_OK) {
+        /* Success, we got the address.  */
+        addr->type = NOTIFY_BPT;
+        addr->u.bptaddr = taddr;
+    }
+
+    return err;
 }

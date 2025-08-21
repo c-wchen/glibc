@@ -25,28 +25,28 @@
 #if !defined _SYS_SYSMACROS_H_WRAPPER && !defined _ISOMAC
 # define _SYS_SYSMACROS_H_WRAPPER 1
 
-libc_hidden_proto (gnu_dev_major)
-libc_hidden_proto (gnu_dev_minor)
-libc_hidden_proto (gnu_dev_makedev)
+libc_hidden_proto(gnu_dev_major)
+libc_hidden_proto(gnu_dev_minor)
+libc_hidden_proto(gnu_dev_makedev)
 
 # undef __SYSMACROS_DECL_TEMPL
-# define __SYSMACROS_DECL_TEMPL(rtype, name, proto)	\
-  extern rtype __gnu_dev_##name proto			\
+# define __SYSMACROS_DECL_TEMPL(rtype, name, proto) \
+  extern rtype __gnu_dev_##name proto           \
   __THROW __attribute_const__ attribute_hidden;
 
 # undef __SYSMACROS_IMPL_TEMPL
-# define __SYSMACROS_IMPL_TEMPL(rtype, name, proto)		\
-  __extension__ __extern_inline __attribute_const__ rtype	\
+# define __SYSMACROS_IMPL_TEMPL(rtype, name, proto)     \
+  __extension__ __extern_inline __attribute_const__ rtype   \
   __NTH (__gnu_dev_##name proto)
 
-__SYSMACROS_DECLARE_MAJOR (__SYSMACROS_DECL_TEMPL)
-__SYSMACROS_DECLARE_MINOR (__SYSMACROS_DECL_TEMPL)
-__SYSMACROS_DECLARE_MAKEDEV (__SYSMACROS_DECL_TEMPL)
+__SYSMACROS_DECLARE_MAJOR(__SYSMACROS_DECL_TEMPL)
+__SYSMACROS_DECLARE_MINOR(__SYSMACROS_DECL_TEMPL)
+__SYSMACROS_DECLARE_MAKEDEV(__SYSMACROS_DECL_TEMPL)
 
 # ifdef __USE_EXTERN_INLINES
-__SYSMACROS_DEFINE_MAJOR (__SYSMACROS_IMPL_TEMPL)
-__SYSMACROS_DEFINE_MINOR (__SYSMACROS_IMPL_TEMPL)
-__SYSMACROS_DEFINE_MAKEDEV (__SYSMACROS_IMPL_TEMPL)
+__SYSMACROS_DEFINE_MAJOR(__SYSMACROS_IMPL_TEMPL)
+__SYSMACROS_DEFINE_MINOR(__SYSMACROS_IMPL_TEMPL)
+__SYSMACROS_DEFINE_MAKEDEV(__SYSMACROS_IMPL_TEMPL)
 # endif
 
 #endif

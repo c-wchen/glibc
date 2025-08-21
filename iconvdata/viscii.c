@@ -21,7 +21,7 @@
 /* Specify the conversion table.  */
 #define TABLES <viscii.h>
 
-#define CHARSET_NAME	"VISCII//"
-#define HAS_HOLES	0	/* All 256 character are defined.  */
+#define CHARSET_NAME    "VISCII//"
+#define HAS_HOLES   0   /* All 256 character are defined.  */
 
 #include <8bit-gap.c>

@@ -22,23 +22,23 @@
 
 /* Duplicate FD to FD2, closing the old FD2 and making FD2 be
    open the same file as FD is.  Return FD2 or -1.  */
-int
-__dup2 (int fd, int fd2)
+int __dup2(int fd, int fd2)
 {
-  if (fd < 0 || fd2 < 0)
-    {
-      __set_errno (EBADF);
-      return -1;
+    if (fd < 0 || fd2 < 0) {
+        __set_errno(EBADF);
+        return -1;
     }
 
-  if (fd == fd2)
-    /* No way to check that they are valid.  */
-    return fd2;
+    if (fd == fd2)
+        /* No way to check that they are valid.  */
+    {
+        return fd2;
+    }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (__dup2)
-stub_warning (dup2)
+libc_hidden_def(__dup2)
+stub_warning(dup2)
 
-weak_alias (__dup2, dup2)
+weak_alias(__dup2, dup2)

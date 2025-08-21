@@ -37,7 +37,7 @@ extern fpu_control_t __fpu_control;
 # define _FPU_IEEE     _FPU_DEFAULT
 
 /* Type of the control word.  */
-typedef unsigned int fpu_control_t __attribute__ ((__mode__ (__SI__)));
+typedef unsigned int fpu_control_t __attribute__((__mode__(__SI__)));
 
 /* Macros for accessing the hardware control word.  */
 # define _FPU_GETCW(cw) __asm__ volatile ("frsr %0" : "=r" (cw))
@@ -71,4 +71,4 @@ extern fpu_control_t __fpu_control;
 
 #endif /* __riscv_flen */
 
-#endif	/* fpu_control.h */
+#endif  /* fpu_control.h */

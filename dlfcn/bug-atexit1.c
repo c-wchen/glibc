@@ -4,19 +4,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  for (int i = 0; i < 2; ++i)
-    {
-      void *dso = dlopen ("$ORIGIN/bug-atexit1-lib.so", RTLD_NOW);
-      void (*fn) (void) = (void (*) (void)) dlsym (dso, "foo");
-      fn ();
-      dlclose (dso);
-      puts ("round done");
+    for (int i = 0; i < 2; ++i) {
+        void *dso = dlopen("$ORIGIN/bug-atexit1-lib.so", RTLD_NOW);
+        void (*fn)(void) = (void (*)(void)) dlsym(dso, "foo");
+        fn();
+        dlclose(dso);
+        puts("round done");
     }
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

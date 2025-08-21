@@ -29,16 +29,16 @@
 
 #undef fread_unlocked
 
-size_t
-__fread_unlocked (void *buf, size_t size, size_t count, FILE *fp)
+size_t __fread_unlocked(void *buf, size_t size, size_t count, FILE *fp)
 {
-  size_t bytes_requested = size * count;
-  size_t bytes_read;
-  CHECK_FILE (fp, 0);
-  if (bytes_requested == 0)
-    return 0;
-  bytes_read = _IO_sgetn (fp, (char *) buf, bytes_requested);
-  return bytes_requested == bytes_read ? count : bytes_read / size;
+    size_t bytes_requested = size * count;
+    size_t bytes_read;
+    CHECK_FILE(fp, 0);
+    if (bytes_requested == 0) {
+        return 0;
+    }
+    bytes_read = _IO_sgetn(fp, (char *) buf, bytes_requested);
+    return bytes_requested == bytes_read ? count : bytes_read / size;
 }
-libc_hidden_def (__fread_unlocked)
-weak_alias (__fread_unlocked, fread_unlocked)
+libc_hidden_def(__fread_unlocked)
+weak_alias(__fread_unlocked, fread_unlocked)

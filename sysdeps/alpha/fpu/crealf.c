@@ -25,16 +25,14 @@
 #undef __crealf
 #undef crealf
 
-float
-__c1_crealf (c1_cfloat_decl (z))
+float __c1_crealf(c1_cfloat_decl(z))
 {
-  return c1_cfloat_real (z);
+    return c1_cfloat_real(z);
 }
 
-float
-__c2_crealf (c2_cfloat_decl (z))
+float __c2_crealf(c2_cfloat_decl(z))
 {
-  return c2_cfloat_real (z);
+    return c2_cfloat_real(z);
 }
 
-cfloat_versions (creal);
+cfloat_versions(creal);

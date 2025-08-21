@@ -20,10 +20,9 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-int
-__waitid (idtype_t idtype, id_t id, siginfo_t *infop, int options)
+int __waitid(idtype_t idtype, id_t id, siginfo_t *infop, int options)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-weak_alias (__waitid, waitid)
+weak_alias(__waitid, waitid)

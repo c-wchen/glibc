@@ -35,19 +35,19 @@ static void __attribute_used__ __mcount (u_long frompc, u_long selfpc)
 #endif
 
 #define MCOUNT asm(\
-	".globl _mcount;\n\t" \
-	".align 2;\n\t" \
-	".set push;\n\t" \
-	".set nomips16;\n\t" \
-	".type _mcount,@function;\n\t" \
-	".ent _mcount\n\t" \
+    ".globl _mcount;\n\t" \
+    ".align 2;\n\t" \
+    ".set push;\n\t" \
+    ".set nomips16;\n\t" \
+    ".type _mcount,@function;\n\t" \
+    ".ent _mcount\n\t" \
         "_mcount:\n\t" \
         ".frame $sp,44,$31\n\t" \
         ".set noreorder;\n\t" \
         ".set noat;\n\t" \
         CPLOAD \
-	"subu $29,$29,48;\n\t" \
-	CPRESTORE \
+    "subu $29,$29,48;\n\t" \
+    CPRESTORE \
         "sw $4,24($29);\n\t" \
         "sw $5,28($29);\n\t" \
         "sw $6,32($29);\n\t" \
@@ -69,8 +69,8 @@ static void __attribute_used__ __mcount (u_long frompc, u_long selfpc)
         "addu $29,$29,56;\n\t" \
         "j $31;\n\t" \
         "move $31,$1;\n\t" \
-	".end _mcount;\n\t" \
-	".set pop");
+    ".end _mcount;\n\t" \
+    ".set pop");
 
 #else
 
@@ -98,12 +98,12 @@ static void __attribute_used__ __mcount (u_long frompc, u_long selfpc)
 #endif
 
 #define MCOUNT asm(\
-	".globl _mcount;\n\t" \
-	".align 3;\n\t" \
-	".set push;\n\t" \
-	".set nomips16;\n\t" \
-	".type _mcount,@function;\n\t" \
-	".ent _mcount\n\t" \
+    ".globl _mcount;\n\t" \
+    ".align 3;\n\t" \
+    ".set push;\n\t" \
+    ".set nomips16;\n\t" \
+    ".type _mcount,@function;\n\t" \
+    ".ent _mcount\n\t" \
         "_mcount:\n\t" \
         ".frame $sp,88,$31\n\t" \
         ".set noreorder;\n\t" \
@@ -140,7 +140,7 @@ static void __attribute_used__ __mcount (u_long frompc, u_long selfpc)
         PTR_ADDU_STRING " $29,$29,96;\n\t" \
         "j $31;\n\t" \
         "move $31,$1;\n\t" \
-	".end _mcount;\n\t" \
-	".set pop");
+    ".end _mcount;\n\t" \
+    ".set pop");
 
 #endif

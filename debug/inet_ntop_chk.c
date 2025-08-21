@@ -18,13 +18,13 @@
 #include <arpa/inet.h>
 #include <stdio.h>
 
-const char *
-__inet_ntop_chk (int af, const void *src, char *dst,
-		 socklen_t size, size_t dst_size)
+const char *__inet_ntop_chk(int af, const void *src, char *dst,
+                            socklen_t size, size_t dst_size)
 {
-  if (size > dst_size)
-    __chk_fail ();
+    if (size > dst_size) {
+        __chk_fail();
+    }
 
-  return __inet_ntop (af, src, dst, size);
+    return __inet_ntop(af, src, dst, size);
 }
-libc_hidden_def (__inet_ntop_chk)
+libc_hidden_def(__inet_ntop_chk)

@@ -15,8 +15,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef	_SGTTY_H
-#define	_SGTTY_H	1
+#ifndef _SGTTY_H
+#define _SGTTY_H    1
 
 #include <features.h>
 
@@ -29,10 +29,10 @@ struct sgttyb;
 __BEGIN_DECLS
 
 /* Fill in *PARAMS with terminal parameters associated with FD.  */
-extern int gtty (int __fd, struct sgttyb *__params) __THROW;
+extern int gtty(int __fd, struct sgttyb *__params) __THROW;
 
 /* Set the terminal parameters associated with FD to *PARAMS.  */
-extern int stty (int __fd, const struct sgttyb *__params) __THROW;
+extern int stty(int __fd, const struct sgttyb *__params) __THROW;
 
 
 __END_DECLS

@@ -23,14 +23,14 @@
 #if LIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_33)
 
 /* Get file information about FILE in BUF.  */
-int
-__xstat (int vers, const char *file, struct stat *buf)
+int __xstat(int vers, const char *file, struct stat *buf)
 {
-  if (vers != _STAT_VER)
-    return __hurd_fail (EINVAL);
+    if (vers != _STAT_VER) {
+        return __hurd_fail(EINVAL);
+    }
 
-  return __stat (file, buf);
+    return __stat(file, buf);
 }
-weak_alias (__xstat, _xstat)
+weak_alias(__xstat, _xstat)
 
 #endif

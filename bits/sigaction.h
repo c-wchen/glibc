@@ -29,20 +29,18 @@
    constants appropriately.  */
 
 /* Structure describing the action to be taken when a signal arrives.  */
-struct sigaction
-  {
+struct sigaction {
     /* Signal handler.  */
 #if defined __USE_POSIX199309 || defined __USE_XOPEN_EXTENDED
-    union
-      {
-	/* Used if SA_SIGINFO is not set.  */
-	__sighandler_t sa_handler;
-	/* Used if SA_SIGINFO is set.  */
-	void (*sa_sigaction) (int, siginfo_t *, void *);
-      }
+    union {
+        /* Used if SA_SIGINFO is not set.  */
+        __sighandler_t sa_handler;
+        /* Used if SA_SIGINFO is set.  */
+        void (*sa_sigaction)(int, siginfo_t *, void *);
+    }
     __sigaction_handler;
-# define sa_handler	__sigaction_handler.sa_handler
-# define sa_sigaction	__sigaction_handler.sa_sigaction
+# define sa_handler __sigaction_handler.sa_handler
+# define sa_sigaction   __sigaction_handler.sa_sigaction
 #else
     __sighandler_t sa_handler;
 #endif
@@ -52,23 +50,23 @@ struct sigaction
 
     /* Special flags.  */
     int sa_flags;
-  };
+};
 
 /* Bits in `sa_flags'.  */
 #if defined __USE_XOPEN_EXTENDED || defined __USE_MISC
-# define SA_ONSTACK	0x0001	/* Take signal on signal stack.  */
+# define SA_ONSTACK 0x0001  /* Take signal on signal stack.  */
 #endif
 #if defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K8
-# define SA_RESTART	0x0002	/* Restart syscall on signal return.  */
-# define SA_NODEFER	0x0010	/* Don't automatically block the signal when
-				    its handler is being executed.  */
-# define SA_RESETHAND	0x0004	/* Reset to SIG_DFL on entry to handler.  */
+# define SA_RESTART 0x0002  /* Restart syscall on signal return.  */
+# define SA_NODEFER 0x0010  /* Don't automatically block the signal when
+                    its handler is being executed.  */
+# define SA_RESETHAND   0x0004  /* Reset to SIG_DFL on entry to handler.  */
 #endif
-#define	SA_NOCLDSTOP	0x0008	/* Don't send SIGCHLD when children stop.  */
-#define SA_SIGINFO	0x0040	/* Signal handler with SA_SIGINFO args */
+#define SA_NOCLDSTOP    0x0008  /* Don't send SIGCHLD when children stop.  */
+#define SA_SIGINFO  0x0040  /* Signal handler with SA_SIGINFO args */
 
 #ifdef __USE_MISC
-# define SA_INTERRUPT	0	/* Historical no-op ("not SA_RESTART").  */
+# define SA_INTERRUPT   0   /* Historical no-op ("not SA_RESTART").  */
 
 /* Some aliases for the SA_ constants.  */
 # define SA_NOMASK    SA_NODEFER
@@ -78,8 +76,8 @@ struct sigaction
 
 
 /* Values for the HOW argument to `sigprocmask'.  */
-#define	SIG_BLOCK	1	/* Block signals.  */
-#define	SIG_UNBLOCK	2	/* Unblock signals.  */
-#define	SIG_SETMASK	3	/* Set the set of blocked signals.  */
+#define SIG_BLOCK   1   /* Block signals.  */
+#define SIG_UNBLOCK 2   /* Unblock signals.  */
+#define SIG_SETMASK 3   /* Set the set of blocked signals.  */
 
 #endif

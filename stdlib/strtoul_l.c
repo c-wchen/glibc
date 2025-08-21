@@ -16,7 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define UNSIGNED	1
+#define UNSIGNED    1
 
 #include <features.h>
 #undef __GLIBC_USE_C23_STRTOL
@@ -24,7 +24,7 @@
 #include <locale.h>
 #include <stdbool.h>
 
-extern unsigned long int ____strtoul_l_internal (const char *, char **, int,
-						 int, bool, locale_t);
+extern unsigned long int ____strtoul_l_internal(const char *, char **, int,
+        int, bool, locale_t);
 
 #include "strtol_l.c"

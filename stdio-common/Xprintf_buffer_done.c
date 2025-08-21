@@ -20,21 +20,20 @@
 #include <intprops.h>
 #include <stdint.h>
 
-int
-Xprintf_buffer_done (struct Xprintf_buffer *buf)
+int Xprintf_buffer_done(struct Xprintf_buffer *buf)
 {
-  if (Xprintf_buffer_has_failed (buf))
-    return -1;
-
-  /* Use uintptr_t here because for sprintf, the buffer range may
-     cover more than half of the address space.  */
-  uintptr_t written_current = buf->write_ptr - buf->write_base;
-  int written_total;
-  if (INT_ADD_WRAPV (buf->written, written_current, &written_total))
-    {
-      __set_errno (EOVERFLOW);
-      return -1;
+    if (Xprintf_buffer_has_failed(buf)) {
+        return -1;
     }
-  else
-    return written_total;
+
+    /* Use uintptr_t here because for sprintf, the buffer range may
+       cover more than half of the address space.  */
+    uintptr_t written_current = buf->write_ptr - buf->write_base;
+    int written_total;
+    if (INT_ADD_WRAPV(buf->written, written_current, &written_total)) {
+        __set_errno(EOVERFLOW);
+        return -1;
+    } else {
+        return written_total;
+    }
 }

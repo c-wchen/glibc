@@ -22,14 +22,13 @@
 /* Return at most NAME_LEN characters of the login name of the user in NAME.
    If it cannot be determined or some other error occurred, return the error
    code.  Otherwise return 0.  */
-int
-__getlogin_r (char *name, size_t name_len)
+int __getlogin_r(char *name, size_t name_len)
 {
-  __set_errno (ENOSYS);
-  return errno;
+    __set_errno(ENOSYS);
+    return errno;
 }
-libc_hidden_def (__getlogin_r)
-weak_alias (__getlogin_r, getlogin_r)
-libc_hidden_weak (getlogin_r)
+libc_hidden_def(__getlogin_r)
+weak_alias(__getlogin_r, getlogin_r)
+libc_hidden_weak(getlogin_r)
 
-stub_warning (getlogin_r)
+stub_warning(getlogin_r)

@@ -25,11 +25,10 @@
 #if OTHER_SHLIB_COMPAT (ld, GLIBC_2_0, GLIBC_2_35)
 void
 attribute_compat_text_section
-__attribute_used__
-__rtld_version_placeholder_1 (void)
+__attribute_used__ __rtld_version_placeholder_1(void)
 {
 }
 
-compat_symbol (ld, __rtld_version_placeholder_1,
-               __rtld_version_placeholder, GLIBC_2_34);
+compat_symbol(ld, __rtld_version_placeholder_1,
+              __rtld_version_placeholder, GLIBC_2_34);
 #endif

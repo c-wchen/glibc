@@ -18,11 +18,11 @@
 #include <netdb.h>
 
 
-#define LOOKUP_TYPE	struct servent
-#define FUNCTION_NAME	getservbyport
-#define DATABASE_NAME	services
-#define ADD_PARAMS	int port, const char *proto
-#define ADD_VARIABLES	port, proto
-#define BUFLEN		1024
+#define LOOKUP_TYPE struct servent
+#define FUNCTION_NAME   getservbyport
+#define DATABASE_NAME   services
+#define ADD_PARAMS  int port, const char *proto
+#define ADD_VARIABLES   port, proto
+#define BUFLEN      1024
 
 #include "../nss/getXXbyYY.c"

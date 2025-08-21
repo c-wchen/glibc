@@ -21,13 +21,12 @@
 
 /* Read a directory entry from DIRP, store result in ENTRY and return
    pointer to result in *RESULT.  */
-int
-__readdir_r (DIR *dirp, struct dirent *entry, struct dirent **result)
+int __readdir_r(DIR *dirp, struct dirent *entry, struct dirent **result)
 {
-  __set_errno (ENOSYS);
-  *result = NULL;
-  return ENOSYS;
+    __set_errno(ENOSYS);
+    *result = NULL;
+    return ENOSYS;
 }
-weak_alias (__readdir_r, readdir_r)
+weak_alias(__readdir_r, readdir_r)
 
-stub_warning (readdir_r)
+stub_warning(readdir_r)

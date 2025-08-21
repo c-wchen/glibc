@@ -22,9 +22,8 @@
 /* Advise the system about particular usage patterns the program follows
    for the region starting at ADDR and extending LEN bytes.  */
 
-int
-posix_madvise (void *addr, size_t len, int advice)
+int posix_madvise(void *addr, size_t len, int advice)
 {
-  return ENOSYS;
+    return ENOSYS;
 }
-stub_warning (posix_madvise)
+stub_warning(posix_madvise)

@@ -24,30 +24,29 @@
 static bool ok = true;
 static pthread_once_t once = PTHREAD_ONCE_INIT;
 
-static void
-once_test (void)
+static void once_test(void)
 {
-  puts ("in once_test");
+    puts("in once_test");
 
-  if (TEST_STACK_ALIGN ())
-    ok = false;
+    if (TEST_STACK_ALIGN()) {
+        ok = false;
+    }
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  puts ("in main");
+    puts("in main");
 
-  if (TEST_STACK_ALIGN ())
-    ok = false;
-
-  if (pthread_once (&once, once_test))
-    {
-      puts ("pthread once failed");
-      return 1;
+    if (TEST_STACK_ALIGN()) {
+        ok = false;
     }
 
-  return ok ? 0 : 1;
+    if (pthread_once(&once, once_test)) {
+        puts("pthread once failed");
+        return 1;
+    }
+
+    return ok ? 0 : 1;
 }
 
 

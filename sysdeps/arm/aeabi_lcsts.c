@@ -47,52 +47,52 @@
 #define eabi_constant2(X,Y) const int __aeabi_##X attribute_hidden = Y
 #define eabi_constant(X) const int __aeabi_##X attribute_hidden = X
 
-eabi_constant (EDOM);
-eabi_constant (ERANGE);
-eabi_constant (EILSEQ);
+eabi_constant(EDOM);
+eabi_constant(ERANGE);
+eabi_constant(EILSEQ);
 
-eabi_constant (MB_LEN_MAX);
+eabi_constant(MB_LEN_MAX);
 
-eabi_constant (LC_COLLATE);
-eabi_constant (LC_CTYPE);
-eabi_constant (LC_MONETARY);
-eabi_constant (LC_NUMERIC);
-eabi_constant (LC_TIME);
-eabi_constant (LC_ALL);
+eabi_constant(LC_COLLATE);
+eabi_constant(LC_CTYPE);
+eabi_constant(LC_MONETARY);
+eabi_constant(LC_NUMERIC);
+eabi_constant(LC_TIME);
+eabi_constant(LC_ALL);
 
 /* The value of __aeabi_JMP_BUF_SIZE is the number of doublewords in a
    jmp_buf.  */
-eabi_constant2 (JMP_BUF_SIZE, sizeof (jmp_buf) / 8);
+eabi_constant2(JMP_BUF_SIZE, sizeof(jmp_buf) / 8);
 
-eabi_constant (SIGABRT);
-eabi_constant (SIGFPE);
-eabi_constant (SIGILL);
-eabi_constant (SIGINT);
-eabi_constant (SIGSEGV);
-eabi_constant (SIGTERM);
+eabi_constant(SIGABRT);
+eabi_constant(SIGFPE);
+eabi_constant(SIGILL);
+eabi_constant(SIGINT);
+eabi_constant(SIGSEGV);
+eabi_constant(SIGTERM);
 
-eabi_constant2 (IOFBF, _IOFBF);
-eabi_constant2 (IOLBF, _IOLBF);
-eabi_constant2 (IONBF, _IONBF);
-eabi_constant (BUFSIZ);
-eabi_constant (FOPEN_MAX);
-eabi_constant (TMP_MAX);
-eabi_constant (FILENAME_MAX);
-eabi_constant (L_tmpnam);
+eabi_constant2(IOFBF, _IOFBF);
+eabi_constant2(IOLBF, _IOLBF);
+eabi_constant2(IONBF, _IONBF);
+eabi_constant(BUFSIZ);
+eabi_constant(FOPEN_MAX);
+eabi_constant(TMP_MAX);
+eabi_constant(FILENAME_MAX);
+eabi_constant(L_tmpnam);
 
 FILE *__aeabi_stdin attribute_hidden;
 FILE *__aeabi_stdout attribute_hidden;
 FILE *__aeabi_stderr attribute_hidden;
 
-static void __attribute__ ((used))
-setup_aeabi_stdio (void)
+static void __attribute__((used))
+setup_aeabi_stdio(void)
 {
-  __aeabi_stdin = stdin;
-  __aeabi_stdout = stdout;
-  __aeabi_stderr = stderr;
+    __aeabi_stdin = stdin;
+    __aeabi_stdout = stdout;
+    __aeabi_stderr = stderr;
 }
 
-static void (*fp) (void) __attribute__ ((used, section (".preinit_array")))
-  = setup_aeabi_stdio;
+static void (*fp)(void) __attribute__((used, section(".preinit_array")))
+    = setup_aeabi_stdio;
 
-eabi_constant (CLOCKS_PER_SEC);
+eabi_constant(CLOCKS_PER_SEC);

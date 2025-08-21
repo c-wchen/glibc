@@ -1,6 +1,5 @@
 /* Definition of `struct stat' used in the kernel */
-struct kernel_stat
-  {
+struct kernel_stat {
     unsigned short int st_dev;
     unsigned long int st_ino;
     unsigned short int st_mode;
@@ -16,7 +15,7 @@ struct kernel_stat
     long int st_blocks;
     unsigned long int __glibc_reserved4;
     unsigned long int __glibc_reserved5;
-  };
+};
 
 #define _HAVE___UNUSED4
 #define _HAVE___UNUSED5

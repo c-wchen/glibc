@@ -20,44 +20,42 @@
 #define _REGISTER_ATFORK_H
 
 /* Elements of the fork handler lists.  */
-struct fork_handler
-{
-  void (*prepare_handler) (void);
-  void (*parent_handler) (void);
-  void (*child_handler) (void);
-  void *dso_handle;
-  uint64_t id;
+struct fork_handler {
+    void (*prepare_handler)(void);
+    void (*parent_handler)(void);
+    void (*child_handler)(void);
+    void *dso_handle;
+    uint64_t id;
 };
 
 /* Function to call to unregister fork handlers.  */
-extern void __unregister_atfork (void *dso_handle) attribute_hidden;
+extern void __unregister_atfork(void *dso_handle) attribute_hidden;
 #define UNREGISTER_ATFORK(dso_handle) __unregister_atfork (dso_handle)
 
-enum __run_fork_handler_type
-{
-  atfork_run_prepare,
-  atfork_run_child,
-  atfork_run_parent
+enum __run_fork_handler_type {
+    atfork_run_prepare,
+    atfork_run_child,
+    atfork_run_parent
 };
 
 /* Run the atfork prepare handlers in the reverse order of registration and
    return the ID of the last registered handler.  If DO_LOCKING is true, the
    internal lock is held locked upon return.  */
-extern uint64_t __run_prefork_handlers (_Bool do_locking) attribute_hidden;
+extern uint64_t __run_prefork_handlers(_Bool do_locking) attribute_hidden;
 
 /* Given a handler type (parent or child), run all the atfork handlers in
    the order of registration up to and including the handler with id equal
    to LASTRUN.  If DO_LOCKING is true, the internal lock is unlocked prior
    to return.  */
-extern void __run_postfork_handlers (enum __run_fork_handler_type who,
-                                     _Bool do_locking,
-                                     uint64_t lastrun) attribute_hidden;
+extern void __run_postfork_handlers(enum __run_fork_handler_type who,
+                                    _Bool do_locking,
+                                    uint64_t lastrun) attribute_hidden;
 
 /* C library side function to register new fork handlers.  */
-extern int __register_atfork (void (*__prepare) (void),
-			      void (*__parent) (void),
-			      void (*__child) (void),
-			      void *dso_handle);
-libc_hidden_proto (__register_atfork)
+extern int __register_atfork(void (*__prepare)(void),
+                             void (*__parent)(void),
+                             void (*__child)(void),
+                             void *dso_handle);
+libc_hidden_proto(__register_atfork)
 
 #endif

@@ -23,11 +23,10 @@
 #include <stddef.h>
 
 /* Structure describing a signal stack.  */
-typedef struct
-  {
+typedef struct {
     void *ss_sp;
     int ss_flags;
     size_t ss_size;
-  } stack_t;
+} stack_t;
 
 #endif

@@ -19,10 +19,9 @@
 #include <mach.h>
 
 /* Return the system page size.  */
-int
-__getpagesize (void)
+int __getpagesize(void)
 {
-  return __vm_page_size;
+    return __vm_page_size;
 }
-libc_hidden_def (__getpagesize)
-weak_alias (__getpagesize, getpagesize)
+libc_hidden_def(__getpagesize)
+weak_alias(__getpagesize, getpagesize)

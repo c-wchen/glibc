@@ -20,14 +20,13 @@
 #include <dirstream.h>
 
 /* Return the current position of DIRP.  */
-long int
-telldir (DIR *dirp)
+long int telldir(DIR *dirp)
 {
-  long int ret;
+    long int ret;
 
-  __libc_lock_lock (dirp->lock);
-  ret = dirp->filepos;
-  __libc_lock_unlock (dirp->lock);
+    __libc_lock_lock(dirp->lock);
+    ret = dirp->filepos;
+    __libc_lock_unlock(dirp->lock);
 
-  return ret;
+    return ret;
 }

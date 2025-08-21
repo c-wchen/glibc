@@ -19,24 +19,21 @@
 #include <unwind.h>
 #include <unistd.h>
 
-static _Unwind_Reason_Code
-callback (struct _Unwind_Context *ctx, void *arg)
+static _Unwind_Reason_Code callback(struct _Unwind_Context *ctx, void *arg)
 {
-  return _URC_NO_REASON;
+    return _URC_NO_REASON;
 }
 
-static void
-__attribute__ ((constructor))
-do_unwind (void)
+static void __attribute__((constructor))
+do_unwind(void)
 {
-  /* Arrange for this test to be killed if _Unwind_Backtrace runs into an
-     endless loop.  We cannot use the test driver since the test needs to
-     run in a constructor.  */
-  alarm (20);
-  _Unwind_Backtrace (callback, 0);
+    /* Arrange for this test to be killed if _Unwind_Backtrace runs into an
+       endless loop.  We cannot use the test driver since the test needs to
+       run in a constructor.  */
+    alarm(20);
+    _Unwind_Backtrace(callback, 0);
 }
 
-void
-dummy (void)
+void dummy(void)
 {
 }

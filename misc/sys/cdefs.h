@@ -16,8 +16,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef	_SYS_CDEFS_H
-#define	_SYS_CDEFS_H	1
+#ifndef _SYS_CDEFS_H
+#define _SYS_CDEFS_H    1
 
 /* We are almost always included from features.h. */
 #ifndef _FEATURES_H
@@ -32,8 +32,8 @@
 #endif
 
 /* Some user header file might have defined this before.  */
-#undef	__P
-#undef	__PMT
+#undef  __P
+#undef  __PMT
 
 /* Compilers that lack __has_attribute may object to
        #if defined __has_attribute && __has_attribute (...)
@@ -76,69 +76,69 @@
    the -fexceptions options for C code as well.  */
 # if !defined __cplusplus \
      && (__GNUC_PREREQ (3, 4) || __glibc_has_attribute (__nothrow__))
-#  define __THROW	__attribute__ ((__nothrow__ __LEAF))
-#  define __THROWNL	__attribute__ ((__nothrow__))
-#  define __NTH(fct)	__attribute__ ((__nothrow__ __LEAF)) fct
+#  define __THROW   __attribute__ ((__nothrow__ __LEAF))
+#  define __THROWNL __attribute__ ((__nothrow__))
+#  define __NTH(fct)    __attribute__ ((__nothrow__ __LEAF)) fct
 #  define __NTHNL(fct)  __attribute__ ((__nothrow__)) fct
 # else
 #  if defined __cplusplus && (__GNUC_PREREQ (2,8) || __clang_major__ >= 4)
 #   if __cplusplus >= 201103L
-#    define __THROW	noexcept (true)
+#    define __THROW noexcept (true)
 #   else
-#    define __THROW	throw ()
+#    define __THROW throw ()
 #   endif
-#   define __THROWNL	__THROW
-#   define __NTH(fct)	__LEAF_ATTR fct __THROW
+#   define __THROWNL    __THROW
+#   define __NTH(fct)   __LEAF_ATTR fct __THROW
 #   define __NTHNL(fct) fct __THROW
 #  else
 #   define __THROW
 #   define __THROWNL
-#   define __NTH(fct)	fct
+#   define __NTH(fct)   fct
 #   define __NTHNL(fct) fct
 #  endif
 # endif
 
 # if __GNUC_PREREQ (4, 3) || __glibc_has_attribute (__cold__)
-#  define __COLD	__attribute__ ((__cold__))
+#  define __COLD    __attribute__ ((__cold__))
 # else
 #  define __COLD
 # endif
 
-#else	/* Not GCC or clang.  */
+#else   /* Not GCC or clang.  */
 
-# if (defined __cplusplus						\
+# if (defined __cplusplus                       \
       || (defined __STDC_VERSION__ && __STDC_VERSION__ >= 199901L))
-#  define __inline	inline
+#  define __inline  inline
 # else
-#  define __inline		/* No inline functions.  */
+#  define __inline      /* No inline functions.  */
 # endif
 
 # define __THROW
 # define __THROWNL
-# define __NTH(fct)	fct
+# define __NTH(fct) fct
 # define __COLD
 
-#endif	/* GCC || clang.  */
+#endif  /* GCC || clang.  */
 
 /* These two macros are not used in glibc anymore.  They are kept here
    only because some other projects expect the macros to be defined.  */
-#define __P(args)	args
-#define __PMT(args)	args
+#define __P(args)   args
+#define __PMT(args) args
 
 /* For these things, GCC behaves the ANSI way normally,
    and the non-ANSI way under -traditional.  */
 
-#define __CONCAT(x,y)	x ## y
-#define __STRING(x)	#x
+#define __CONCAT(x,y)   x ## y
+#define __STRING(x) #x
 
 /* This is not a typedef so `const __ptr_t' does the right thing.  */
 #define __ptr_t void *
 
 
 /* C++ needs to know that types and declarations are C, not C++.  */
-#ifdef	__cplusplus
-# define __BEGIN_DECLS	extern "C" {
-# define __END_DECLS	}
+#ifdef  __cplusplus
+# define __BEGIN_DECLS  extern "C" {
+# define __END_DECLS    }
 #else
 # define __BEGIN_DECLS
 # define __END_DECLS
@@ -158,8 +158,8 @@
 #define __bos0(ptr) __builtin_object_size (ptr, 0)
 
 /* Use __builtin_dynamic_object_size at _FORTIFY_SOURCE=3 when available.  */
-#if __USE_FORTIFY_LEVEL == 3 && (__glibc_clang_prereq (9, 0)		      \
-				 || __GNUC_PREREQ (12, 0))
+#if __USE_FORTIFY_LEVEL == 3 && (__glibc_clang_prereq (9, 0)              \
+                 || __GNUC_PREREQ (12, 0))
 # define __glibc_objsize0(__o) __builtin_dynamic_object_size (__o, 0)
 # define __glibc_objsize(__o) __builtin_dynamic_object_size (__o, 1)
 #else
@@ -174,25 +174,25 @@
 
 #define __glibc_safe_len_cond(__l, __s, __osz) ((__l) <= (__osz) / (__s))
 #define __glibc_unsigned_or_positive(__l) \
-  ((__typeof (__l)) 0 < (__typeof (__l)) -1				      \
+  ((__typeof (__l)) 0 < (__typeof (__l)) -1                   \
    || (__builtin_constant_p (__l) && (__l) > 0))
 
 /* Length is known to be safe at compile time if the __L * __S <= __OBJSZ
    condition can be folded to a constant and if it is true, or unknown (-1) */
 #define __glibc_safe_or_unknown_len(__l, __s, __osz) \
-  ((__builtin_constant_p (__osz) && (__osz) == (__SIZE_TYPE__) -1)	      \
-   || (__glibc_unsigned_or_positive (__l)				      \
+  ((__builtin_constant_p (__osz) && (__osz) == (__SIZE_TYPE__) -1)        \
+   || (__glibc_unsigned_or_positive (__l)                     \
        && __builtin_constant_p (__glibc_safe_len_cond ((__SIZE_TYPE__) (__l), \
-						       (__s), (__osz)))	      \
+                               (__s), (__osz)))       \
        && __glibc_safe_len_cond ((__SIZE_TYPE__) (__l), (__s), (__osz))))
 
 /* Conversely, we know at compile time that the length is unsafe if the
    __L * __S <= __OBJSZ condition can be folded to a constant and if it is
    false.  */
 #define __glibc_unsafe_len(__l, __s, __osz) \
-  (__glibc_unsigned_or_positive (__l)					      \
+  (__glibc_unsigned_or_positive (__l)                         \
    && __builtin_constant_p (__glibc_safe_len_cond ((__SIZE_TYPE__) (__l),     \
-						   __s, __osz))		      \
+                           __s, __osz))           \
    && !__glibc_safe_len_cond ((__SIZE_TYPE__) (__l), __s, __osz))
 
 /* To correctly instrument the fortify wrapper clang requires the
@@ -261,16 +261,16 @@
   __attribute__ ((__diagnose_if__ ((__c), (__msg), "error")))
 #  define __fortify_clang_warning_only_if_bos0_lt(n, buf, complaint) \
   __attribute__ ((__diagnose_if__ \
-		  (__fortify_clang_bosn_args (__bos0, n, buf, 1, complaint))))
+          (__fortify_clang_bosn_args (__bos0, n, buf, 1, complaint))))
 # define __fortify_clang_warning_only_if_bos0_lt2(n, buf, div, complaint) \
   __attribute__ ((__diagnose_if__ \
-		  (__fortify_clang_bosn_args (__bos0, n, buf, div, complaint))))
+          (__fortify_clang_bosn_args (__bos0, n, buf, div, complaint))))
 # define __fortify_clang_warning_only_if_bos_lt(n, buf, complaint) \
   __attribute__ ((__diagnose_if__ \
-		  (__fortify_clang_bosn_args (__bos, n, buf, 1, complaint))))
+          (__fortify_clang_bosn_args (__bos, n, buf, 1, complaint))))
 # define __fortify_clang_warning_only_if_bos_lt2(n, buf, div, complaint) \
   __attribute__ ((__diagnose_if__ \
-		  (__fortify_clang_bosn_args (__bos, n, buf, div, complaint))))
+          (__fortify_clang_bosn_args (__bos, n, buf, div, complaint))))
 
 #  define __fortify_clang_prefer_this_overload \
   __attribute__ ((enable_if (1, "")))
@@ -296,9 +296,9 @@
   (__bos (__dest) != (size_t) -1 && __bos (__dest) < __len)
 # define __fortify_clang_warn_if_src_too_large(__dest, __src) \
   __fortify_clang_warning (__fortify_clang_size_too_small (__glibc_objsize, \
-							   __dest, \
-							   __builtin_strlen (__src) + 1), \
-			   "destination buffer will always be overflown by source")
+                               __dest, \
+                               __builtin_strlen (__src) + 1), \
+               "destination buffer will always be overflown by source")
 # define __fortify_clang_warn_if_dest_too_small(__dest, __len) \
   __fortify_clang_warning (__fortify_clang_size_too_small (__glibc_objsize, \
                                                            __dest, \
@@ -331,15 +331,15 @@
 
 #if !__fortify_use_clang
 # define __glibc_fortify(f, __l, __s, __osz, ...) \
-  (__glibc_safe_or_unknown_len (__l, __s, __osz)			      \
-   ? __ ## f ## _alias (__VA_ARGS__)					      \
-   : (__glibc_unsafe_len (__l, __s, __osz)				      \
-      ? __ ## f ## _chk_warn (__VA_ARGS__, __osz)			      \
+  (__glibc_safe_or_unknown_len (__l, __s, __osz)                  \
+   ? __ ## f ## _alias (__VA_ARGS__)                          \
+   : (__glibc_unsafe_len (__l, __s, __osz)                    \
+      ? __ ## f ## _chk_warn (__VA_ARGS__, __osz)                 \
       : __ ## f ## _chk (__VA_ARGS__, __osz)))
 #else
 # define __glibc_fortify(f, __l, __s, __osz, ...) \
-  (__osz == (__SIZE_TYPE__) -1)						      \
-   ? __ ## f ## _alias (__VA_ARGS__)					      \
+  (__osz == (__SIZE_TYPE__) -1)                           \
+   ? __ ## f ## _alias (__VA_ARGS__)                          \
    : __ ## f ## _chk (__VA_ARGS__, __osz)
 #endif
 
@@ -348,15 +348,15 @@
 
 #if !__fortify_use_clang
 # define __glibc_fortify_n(f, __l, __s, __osz, ...) \
-  (__glibc_safe_or_unknown_len (__l, __s, __osz)			      \
-   ? __ ## f ## _alias (__VA_ARGS__)					      \
-   : (__glibc_unsafe_len (__l, __s, __osz)				      \
-      ? __ ## f ## _chk_warn (__VA_ARGS__, (__osz) / (__s))		      \
+  (__glibc_safe_or_unknown_len (__l, __s, __osz)                  \
+   ? __ ## f ## _alias (__VA_ARGS__)                          \
+   : (__glibc_unsafe_len (__l, __s, __osz)                    \
+      ? __ ## f ## _chk_warn (__VA_ARGS__, (__osz) / (__s))           \
       : __ ## f ## _chk (__VA_ARGS__, (__osz) / (__s))))
 # else
 # define __glibc_fortify_n(f, __l, __s, __osz, ...) \
-  (__osz == (__SIZE_TYPE__) -1)						      \
-   ? __ ## f ## _alias (__VA_ARGS__)					      \
+  (__osz == (__SIZE_TYPE__) -1)                           \
+   ? __ ## f ## _alias (__VA_ARGS__)                          \
    : __ ## f ## _chk (__VA_ARGS__, (__osz) / (__s))
 #endif
 
@@ -376,21 +376,21 @@
    (e.g. only if they won't affect sizeof()) should test
    #if __glibc_c99_flexarr_available.  */
 #if defined __STDC_VERSION__ && __STDC_VERSION__ >= 199901L && !defined __HP_cc
-# define __flexarr	[]
+# define __flexarr  []
 # define __glibc_c99_flexarr_available 1
 #elif __GNUC_PREREQ (2,97) || defined __clang__
 /* GCC 2.97 and clang support C99 flexible array members as an extension,
    even when in C89 mode or compiling C++ (any version).  */
-# define __flexarr	[]
+# define __flexarr  []
 # define __glibc_c99_flexarr_available 1
 #elif defined __GNUC__
 /* Pre-2.97 GCC did not support C99 flexible arrays but did have
    an equivalent extension with slightly different notation.  */
-# define __flexarr	[0]
+# define __flexarr  [0]
 # define __glibc_c99_flexarr_available 1
 #else
 /* Some other non-C99 compiler.  Approximate with [1].  */
-# define __flexarr	[1]
+# define __flexarr  [1]
 # define __glibc_c99_flexarr_available 0
 #endif
 
@@ -434,7 +434,7 @@
 #elif __SOME_OTHER_COMPILER__
 
 # define __REDIRECT(name, proto, alias) name proto; \
-	_Pragma("let " #name " = " #alias)
+    _Pragma("let " #name " = " #alias)
 */
 #endif
 
@@ -442,7 +442,7 @@
    the '__attribute__' syntax.  All of the ways we use this do fine if
    they are omitted for compilers that don't understand it.  */
 #if !(defined __GNUC__ || defined __clang__)
-# define __attribute__(xyz)	/* Ignore */
+# define __attribute__(xyz) /* Ignore */
 #endif
 
 /* At some point during the gcc 2.96 development the `malloc' attribute
@@ -518,7 +518,7 @@
 #if __GNUC_PREREQ (4,5) \
     || __glibc_has_extension (__attribute_deprecated_with_message__)
 # define __attribute_deprecated_msg__(msg) \
-	 __attribute__ ((__deprecated__ (msg)))
+     __attribute__ ((__deprecated__ (msg)))
 #else
 # define __attribute_deprecated_msg__(msg) __attribute_deprecated__
 #endif
@@ -617,7 +617,7 @@
    __GNUC_GNU_INLINE__ macro definitions.  */
 #if (!defined __cplusplus || __GNUC_PREREQ (4,3) \
      || (defined __clang__ && (defined __GNUC_STDC_INLINE__ \
-			       || defined __GNUC_GNU_INLINE__)))
+                   || defined __GNUC_GNU_INLINE__)))
 # if defined __GNUC_STDC_INLINE__ || defined __cplusplus
 #  define __extern_inline extern __inline __attribute__ ((__gnu_inline__))
 #  define __extern_always_inline \
@@ -644,7 +644,7 @@
    `__extension__' keyword.  But this is not generally available before
    version 2.8.  */
 #if !(__GNUC_PREREQ (2,8) || defined __clang__)
-# define __extension__		/* Ignore */
+# define __extension__      /* Ignore */
 #endif
 
 /* __restrict is known in EGCS 1.2 and above, and in clang.
@@ -652,9 +652,9 @@
    as '__restrict', not 'restrict'.  */
 #if !(__GNUC_PREREQ (2,92) || __clang_major__ >= 3)
 # if defined __STDC_VERSION__ && __STDC_VERSION__ >= 199901L
-#  define __restrict	restrict
+#  define __restrict    restrict
 # else
-#  define __restrict	/* Ignore */
+#  define __restrict    /* Ignore */
 # endif
 #endif
 
@@ -663,26 +663,26 @@
    GCC 3.1 and clang support this.
    This syntax is not usable in C++ mode.  */
 #if (__GNUC_PREREQ (3,1) || __clang_major__ >= 3) && !defined __cplusplus
-# define __restrict_arr	__restrict
+# define __restrict_arr __restrict
 #else
 # ifdef __GNUC__
-#  define __restrict_arr	/* Not supported in old GCC.  */
+#  define __restrict_arr    /* Not supported in old GCC.  */
 # else
 #  if defined __STDC_VERSION__ && __STDC_VERSION__ >= 199901L
-#   define __restrict_arr	restrict
+#   define __restrict_arr   restrict
 #  else
 /* Some other non-C99 compiler.  */
-#   define __restrict_arr	/* Not supported.  */
+#   define __restrict_arr   /* Not supported.  */
 #  endif
 # endif
 #endif
 
 #if (__GNUC__ >= 3) || __glibc_has_builtin (__builtin_expect)
-# define __glibc_unlikely(cond)	__builtin_expect ((cond), 0)
-# define __glibc_likely(cond)	__builtin_expect ((cond), 1)
+# define __glibc_unlikely(cond) __builtin_expect ((cond), 0)
+# define __glibc_likely(cond)   __builtin_expect ((cond), 1)
 #else
-# define __glibc_unlikely(cond)	(cond)
-# define __glibc_likely(cond)	(cond)
+# define __glibc_unlikely(cond) (cond)
+# define __glibc_likely(cond)   (cond)
 #endif
 
 #if (!defined _Noreturn \
@@ -760,7 +760,7 @@
 #  define __LDBL_REDIR_NTH(name, proto) ... unused__ldbl_redir_nth
 
 # else
-_Static_assert (0, "IEEE 128-bits long double requires redirection on this platform");
+_Static_assert(0, "IEEE 128-bits long double requires redirection on this platform");
 # endif
 #elif defined __LONG_DOUBLE_MATH_OPTIONAL && defined __NO_LONG_DOUBLE_MATH
 # define __LDBL_COMPAT 1
@@ -820,9 +820,9 @@ _Static_assert (0, "IEEE 128-bits long double requires redirection on this platf
    check is required to enable the use of generic selection.  */
 #if !defined __cplusplus \
     && (__GNUC_PREREQ (4, 9) \
-	|| __glibc_has_extension (c_generic_selections) \
-	|| (!defined __GNUC__ && defined __STDC_VERSION__ \
-	    && __STDC_VERSION__ >= 201112L))
+    || __glibc_has_extension (c_generic_selections) \
+    || (!defined __GNUC__ && defined __STDC_VERSION__ \
+        && __STDC_VERSION__ >= 201112L))
 # define __HAVE_GENERIC_SELECTION 1
 #else
 # define __HAVE_GENERIC_SELECTION 0
@@ -883,4 +883,4 @@ _Static_assert (0, "IEEE 128-bits long double requires redirection on this platf
 # define __attribute_struct_may_alias__
 #endif
 
-#endif	 /* sys/cdefs.h */
+#endif   /* sys/cdefs.h */

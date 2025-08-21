@@ -25,37 +25,34 @@ along with the GNU MP Library; see the file COPYING.LIB.  If not, see
 #include "gmp-impl.h"
 #include "longlong.h"
 
-mp_limb_t
-mpn_submul_1 (register mp_ptr res_ptr, register mp_srcptr s1_ptr,
-	      mp_size_t s1_size, register mp_limb_t s2_limb)
+mp_limb_t mpn_submul_1(register mp_ptr res_ptr, register mp_srcptr s1_ptr,
+                       mp_size_t s1_size, register mp_limb_t s2_limb)
 {
-  register mp_limb_t cy_limb;
-  register mp_size_t j;
-  register mp_limb_t prod_high, prod_low;
-  register mp_limb_t x;
+    register mp_limb_t cy_limb;
+    register mp_size_t j;
+    register mp_limb_t prod_high, prod_low;
+    register mp_limb_t x;
 
-  /* The loop counter and index J goes from -SIZE to -1.  This way
-     the loop becomes faster.  */
-  j = -s1_size;
+    /* The loop counter and index J goes from -SIZE to -1.  This way
+       the loop becomes faster.  */
+    j = -s1_size;
 
-  /* Offset the base pointers to compensate for the negative indices.  */
-  res_ptr -= j;
-  s1_ptr -= j;
+    /* Offset the base pointers to compensate for the negative indices.  */
+    res_ptr -= j;
+    s1_ptr -= j;
 
-  cy_limb = 0;
-  do
-    {
-      umul_ppmm (prod_high, prod_low, s1_ptr[j], s2_limb);
+    cy_limb = 0;
+    do {
+        umul_ppmm(prod_high, prod_low, s1_ptr[j], s2_limb);
 
-      prod_low += cy_limb;
-      cy_limb = (prod_low < cy_limb) + prod_high;
+        prod_low += cy_limb;
+        cy_limb = (prod_low < cy_limb) + prod_high;
 
-      x = res_ptr[j];
-      prod_low = x - prod_low;
-      cy_limb += (prod_low > x);
-      res_ptr[j] = prod_low;
-    }
-  while (++j != 0);
+        x = res_ptr[j];
+        prod_low = x - prod_low;
+        cy_limb += (prod_low > x);
+        res_ptr[j] = prod_low;
+    } while (++j != 0);
 
-  return cy_limb;
+    return cy_limb;
 }

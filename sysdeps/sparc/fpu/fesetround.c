@@ -19,22 +19,23 @@
 #include <fenv.h>
 #include <fenv_private.h>
 
-int
-__fesetround (int round)
+int __fesetround(int round)
 {
-  fenv_t tmp;
+    fenv_t tmp;
 
-  if ((round & ~__FE_ROUND_MASK) != 0)
-    /* ROUND is no valid rounding mode.  */
-    return 1;
+    if ((round & ~__FE_ROUND_MASK) != 0)
+        /* ROUND is no valid rounding mode.  */
+    {
+        return 1;
+    }
 
-  __fenv_stfsr (tmp);
-  tmp &= ~__FE_ROUND_MASK;
-  tmp |= round;
-  __fenv_ldfsr (tmp);
+    __fenv_stfsr(tmp);
+    tmp &= ~__FE_ROUND_MASK;
+    tmp |= round;
+    __fenv_ldfsr(tmp);
 
-  return 0;
+    return 0;
 }
-libm_hidden_def (__fesetround)
-weak_alias (__fesetround, fesetround)
-libm_hidden_weak (fesetround)
+libm_hidden_def(__fesetround)
+weak_alias(__fesetround, fesetround)
+libm_hidden_weak(fesetround)

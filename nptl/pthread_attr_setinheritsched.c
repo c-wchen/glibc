@@ -19,23 +19,24 @@
 #include "pthreadP.h"
 
 
-int
-__pthread_attr_setinheritsched (pthread_attr_t *attr, int inherit)
+int __pthread_attr_setinheritsched(pthread_attr_t *attr, int inherit)
 {
-  struct pthread_attr *iattr;
+    struct pthread_attr *iattr;
 
-  iattr = (struct pthread_attr *) attr;
+    iattr = (struct pthread_attr *) attr;
 
-  /* Catch invalid values.  */
-  if (inherit != PTHREAD_INHERIT_SCHED && inherit != PTHREAD_EXPLICIT_SCHED)
-    return EINVAL;
+    /* Catch invalid values.  */
+    if (inherit != PTHREAD_INHERIT_SCHED && inherit != PTHREAD_EXPLICIT_SCHED) {
+        return EINVAL;
+    }
 
-  /* Store the new values.  */
-  if (inherit != PTHREAD_INHERIT_SCHED)
-    iattr->flags |= ATTR_FLAG_NOTINHERITSCHED;
-  else
-    iattr->flags &= ~ATTR_FLAG_NOTINHERITSCHED;
+    /* Store the new values.  */
+    if (inherit != PTHREAD_INHERIT_SCHED) {
+        iattr->flags |= ATTR_FLAG_NOTINHERITSCHED;
+    } else {
+        iattr->flags &= ~ATTR_FLAG_NOTINHERITSCHED;
+    }
 
-  return 0;
+    return 0;
 }
-strong_alias (__pthread_attr_setinheritsched, pthread_attr_setinheritsched)
+strong_alias(__pthread_attr_setinheritsched, pthread_attr_setinheritsched)

@@ -21,12 +21,11 @@
 
 /* Set the real user ID of the calling process to RUID,
    and the effective user ID of the calling process to EUID.  */
-int
-__setreuid (uid_t effective_uid, uid_t real_uid)
+int __setreuid(uid_t effective_uid, uid_t real_uid)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (setreuid)
+stub_warning(setreuid)
 
-weak_alias (__setreuid, setreuid)
+weak_alias(__setreuid, setreuid)

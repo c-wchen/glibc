@@ -23,12 +23,11 @@ void *__curbrk;
 
 /* Set the end of the process's data space to ADDR.
    Return 0 if successful, -1 if not.  */
-int
-__brk (void *addr)
+int __brk(void *addr)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (brk)
+stub_warning(brk)
 
-weak_alias (__brk, brk)
+weak_alias(__brk, brk)

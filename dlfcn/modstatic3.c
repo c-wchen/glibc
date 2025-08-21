@@ -18,14 +18,12 @@
 
 unsigned int foo;
 
-unsigned int
-getfoo (void)
+unsigned int getfoo(void)
 {
-  return foo;
+    return foo;
 }
 
-void
-setfoo (unsigned int f)
+void setfoo(unsigned int f)
 {
-  foo = f;
+    foo = f;
 }

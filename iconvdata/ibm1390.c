@@ -16,19 +16,19 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define DATA_HEADER	"ibm1390.h"
-#define CHARSET_NAME	"IBM1390//"
-#define FROM_LOOP	from_ibm1390
-#define TO_LOOP		to_ibm1390
-#define SB_TO_UCS4	__ibm1390sb_to_ucs4
-#define DB_TO_UCS4_IDX	__ibm1390db_to_ucs4_idx
-#define DB_TO_UCS4	__ibm1390db_to_ucs4
-#define UCS4_TO_SB_IDX	__ucs4_to_ibm1390sb_idx
-#define UCS4_TO_SB	__ucs4_to_ibm1390sb
-#define UCS4_TO_DB_IDX	__ucs4_to_ibm1390db_idx
-#define UCS4_TO_DB	__ucs4_to_ibm1390db
-#define DB_TO_UCS4_COMB	__ibm1390db_to_ucs4_combined
-#define UCS4_COMB_TO_DB	__ucs4_combined_to_ibm1390db
-#define UCS_LIMIT	0xffffffff
+#define DATA_HEADER "ibm1390.h"
+#define CHARSET_NAME    "IBM1390//"
+#define FROM_LOOP   from_ibm1390
+#define TO_LOOP     to_ibm1390
+#define SB_TO_UCS4  __ibm1390sb_to_ucs4
+#define DB_TO_UCS4_IDX  __ibm1390db_to_ucs4_idx
+#define DB_TO_UCS4  __ibm1390db_to_ucs4
+#define UCS4_TO_SB_IDX  __ucs4_to_ibm1390sb_idx
+#define UCS4_TO_SB  __ucs4_to_ibm1390sb
+#define UCS4_TO_DB_IDX  __ucs4_to_ibm1390db_idx
+#define UCS4_TO_DB  __ucs4_to_ibm1390db
+#define DB_TO_UCS4_COMB __ibm1390db_to_ucs4_combined
+#define UCS4_COMB_TO_DB __ucs4_combined_to_ibm1390db
+#define UCS_LIMIT   0xffffffff
 
 #include "ibm1364.c"

@@ -21,21 +21,20 @@
 #include <sys/ioctl.h>
 #include <sys/socket.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int pair[2];
-  TEST_COMPARE (socketpair (AF_UNIX, SOCK_STREAM, 0, pair), 0);
-  TEST_COMPARE (write (pair[0], "buffer", sizeof ("buffer")),
-                sizeof ("buffer"));
-  int value;
-  TEST_COMPARE (ioctl (pair[1], FIONREAD, &value), 0);
-  TEST_COMPARE (value, sizeof ("buffer"));
-  TEST_COMPARE (ioctl (pair[0], FIONREAD, &value), 0);
-  TEST_COMPARE (value, 0);
-  xclose (pair[0]);
-  xclose (pair[1]);
-  return 0;
+    int pair[2];
+    TEST_COMPARE(socketpair(AF_UNIX, SOCK_STREAM, 0, pair), 0);
+    TEST_COMPARE(write(pair[0], "buffer", sizeof("buffer")),
+                 sizeof("buffer"));
+    int value;
+    TEST_COMPARE(ioctl(pair[1], FIONREAD, &value), 0);
+    TEST_COMPARE(value, sizeof("buffer"));
+    TEST_COMPARE(ioctl(pair[0], FIONREAD, &value), 0);
+    TEST_COMPARE(value, 0);
+    xclose(pair[0]);
+    xclose(pair[1]);
+    return 0;
 }
 
 #include <support/test-driver.c>

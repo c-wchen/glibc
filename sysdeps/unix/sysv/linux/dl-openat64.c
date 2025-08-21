@@ -21,10 +21,9 @@
 #include <sysdep.h>
 
 
-int
-openat64 (int dfd, const char *file, int oflag, ...)
+int openat64(int dfd, const char *file, int oflag, ...)
 {
-  assert (!__OPEN_NEEDS_MODE (oflag));
+    assert(!__OPEN_NEEDS_MODE(oflag));
 
-  return INLINE_SYSCALL (openat, 3, dfd, file, oflag | O_LARGEFILE);
+    return INLINE_SYSCALL(openat, 3, dfd, file, oflag | O_LARGEFILE);
 }

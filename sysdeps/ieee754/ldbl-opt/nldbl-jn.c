@@ -1,8 +1,7 @@
 #include "nldbl-compat.h"
 
 double
-attribute_hidden
-jnl (int n, double x)
+attribute_hidden jnl(int n, double x)
 {
-  return jn (n, x);
+    return jn(n, x);
 }

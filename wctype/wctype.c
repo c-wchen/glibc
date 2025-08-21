@@ -20,28 +20,28 @@
 #include <wctype.h>
 #include <locale/localeinfo.h>
 
-wctype_t
-__wctype (const char *property)
+wctype_t __wctype(const char *property)
 {
-  const char *names;
-  unsigned int result;
-  size_t proplen = strlen (property);
-  size_t i;
+    const char *names;
+    unsigned int result;
+    size_t proplen = strlen(property);
+    size_t i;
 
-  names = _NL_CURRENT (LC_CTYPE, _NL_CTYPE_CLASS_NAMES);
-  for (result = 0; ; result++)
-    {
-      size_t nameslen = strlen (names);
+    names = _NL_CURRENT(LC_CTYPE, _NL_CTYPE_CLASS_NAMES);
+    for (result = 0; ; result++) {
+        size_t nameslen = strlen(names);
 
-      if (proplen == nameslen && memcmp (property, names, proplen) == 0)
-	break;
+        if (proplen == nameslen && memcmp(property, names, proplen) == 0) {
+            break;
+        }
 
-      names += nameslen + 1;
-      if (names[0] == '\0')
-	return 0;
+        names += nameslen + 1;
+        if (names[0] == '\0') {
+            return 0;
+        }
     }
 
-  i = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_CLASS_OFFSET) + result;
-  return (wctype_t) _NL_CURRENT_DATA (LC_CTYPE)->values[i].string;
+    i = _NL_CURRENT_WORD(LC_CTYPE, _NL_CTYPE_CLASS_OFFSET) + result;
+    return (wctype_t) _NL_CURRENT_DATA(LC_CTYPE)->values[i].string;
 }
-weak_alias (__wctype, wctype)
+weak_alias(__wctype, wctype)

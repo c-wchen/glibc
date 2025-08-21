@@ -25,24 +25,23 @@
 # include <socket-constants-time64.h>
 #endif
 
-bool
-support_socket_so_timestamp_time64 (int fd)
+bool support_socket_so_timestamp_time64(int fd)
 {
 #ifdef __linux__
 # if __LINUX_KERNEL_VERSION >= 0x050100                          \
    || __WORDSIZE == 64                                           \
    || (defined __SYSCALL_WORDSIZE && __SYSCALL_WORDSIZE == 64)
-  return true;
+    return true;
 # else
-  int level = SOL_SOCKET;
-  int optname = COMPAT_SO_TIMESTAMP_NEW;
-  int optval;
-  socklen_t len = sizeof (optval);
+    int level = SOL_SOCKET;
+    int optname = COMPAT_SO_TIMESTAMP_NEW;
+    int optval;
+    socklen_t len = sizeof(optval);
 
-  int r = syscall (__NR_getsockopt, fd, level, optname, &optval, &len);
-  return r != -1;
+    int r = syscall(__NR_getsockopt, fd, level, optname, &optval, &len);
+    return r != -1;
 # endif
 #else
-  return false;
+    return false;
 #endif
 }

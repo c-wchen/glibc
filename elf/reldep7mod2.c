@@ -1,12 +1,10 @@
-int foo (void) __attribute__ ((weak));
-int
-foo (void)
+int foo(void) __attribute__((weak));
+int foo(void)
 {
-  return 2;
+    return 2;
 }
 
-int
-mod2_bar (void)
+int mod2_bar(void)
 {
-  return foo ();
+    return foo();
 }

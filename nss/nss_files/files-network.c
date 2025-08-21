@@ -22,60 +22,58 @@
 #include <stdint.h>
 #include <nss.h>
 
-#define ENTNAME		netent
-#define DATABASE	"networks"
+#define ENTNAME     netent
+#define DATABASE    "networks"
 #define NEED_H_ERRNO
 
 struct netent_data {};
 
-#define TRAILING_LIST_MEMBER		n_aliases
-#define TRAILING_LIST_SEPARATOR_P	isspace
+#define TRAILING_LIST_MEMBER        n_aliases
+#define TRAILING_LIST_SEPARATOR_P   isspace
 #include "files-parse.c"
 LINE_PARSER
-("#",
- {
-   char *addr;
-   char *cp;
-   int n = 1;
+("#", {
+    char *addr;
+    char *cp;
+    int n = 1;
 
-   STRING_FIELD (result->n_name, isspace, 1);
+    STRING_FIELD(result->n_name, isspace, 1);
 
-   STRING_FIELD (addr, isspace, 1);
-   /* 'inet_network' does not add zeroes at the end if the network number
-      does not contain four byte values.  We shift result ourselves if
-      necessary.  */
-   cp = strchr (addr, '.');
-   if (cp != NULL)
-     {
-       ++n;
-       cp = strchr (cp + 1, '.');
-       if (cp != NULL)
-	 {
-	   ++n;
-	   cp = strchr (cp + 1, '.');
-	   if (cp != NULL)
-	     ++n;
-	 }
-     }
-   result->n_net = __inet_network (addr);
-   if (result->n_net == INADDR_NONE)
-     return 0;
-   if (n < 4)
-     result->n_net <<= 8 * (4 - n);
-   result->n_addrtype = AF_INET;
+    STRING_FIELD(addr, isspace, 1);
+    /* 'inet_network' does not add zeroes at the end if the network number
+       does not contain four byte values.  We shift result ourselves if
+       necessary.  */
+    cp = strchr(addr, '.');
+    if (cp != NULL)
+    {
+        ++n;
+        cp = strchr(cp + 1, '.');
+        if (cp != NULL) {
+            ++n;
+            cp = strchr(cp + 1, '.');
+            if (cp != NULL) {
+                ++n;
+            }
+        }
+    }
+    result->n_net = __inet_network(addr);
+    if (result->n_net == INADDR_NONE)
+        return 0;
+    if (n < 4)
+        result->n_net <<= 8 * (4 - n);
+    result->n_addrtype = AF_INET;
 
- })
+})
 
 #include "files-XXX.c"
 
-DB_LOOKUP (netbyname, ,,,
-	   LOOKUP_NAME_CASE (n_name, n_aliases),
-	   const char *name)
+DB_LOOKUP(netbyname,,,,
+          LOOKUP_NAME_CASE(n_name, n_aliases),
+          const char *name)
 
-DB_LOOKUP (netbyaddr, ,,,
-	   {
-	     if ((type == AF_UNSPEC || result->n_addrtype == type)
-		 && result->n_net == net)
-	       /* Bingo!  */
-	       break;
-	   }, uint32_t net, int type)
+DB_LOOKUP(netbyaddr,,,, {
+    if ((type == AF_UNSPEC || result->n_addrtype == type)
+        && result->n_net == net)
+        /* Bingo!  */
+        break;
+}, uint32_t net, int type)

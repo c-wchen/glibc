@@ -26,32 +26,28 @@
 
 #include "mktime-internal.h"
 
-__time64_t
-__timegm64 (struct tm *tmp)
+__time64_t __timegm64(struct tm *tmp)
 {
-  static mktime_offset_t gmtime_offset;
-  tmp->tm_isdst = 0;
-  return __mktime_internal (tmp, __gmtime64_r, &gmtime_offset);
+    static mktime_offset_t gmtime_offset;
+    tmp->tm_isdst = 0;
+    return __mktime_internal(tmp, __gmtime64_r, &gmtime_offset);
 }
 
 #if defined _LIBC && __TIMESIZE != 64
 
-libc_hidden_def (__timegm64)
+libc_hidden_def(__timegm64)
 
 time_t
-timegm (struct tm *tmp)
+timegm(struct tm *tmp)
 {
-  struct tm tm = *tmp;
-  __time64_t t = __timegm64 (&tm);
-  if (in_time_t_range (t))
-    {
-      *tmp = tm;
-      return t;
-    }
-  else
-    {
-      __set_errno (EOVERFLOW);
-      return -1;
+    struct tm tm = *tmp;
+    __time64_t t = __timegm64(&tm);
+    if (in_time_t_range(t)) {
+        *tmp = tm;
+        return t;
+    } else {
+        __set_errno(EOVERFLOW);
+        return -1;
     }
 }
 

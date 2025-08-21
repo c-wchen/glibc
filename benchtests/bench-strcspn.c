@@ -26,8 +26,8 @@
 #endif /* WIDE */
 #include "bench-string.h"
 
-typedef size_t (*proto_t) (const CHAR *, const CHAR *);
+typedef size_t (*proto_t)(const CHAR *, const CHAR *);
 
-IMPL (STRCSPN, 1)
+IMPL(STRCSPN, 1)
 
 #include "bench-strpbrk.c"

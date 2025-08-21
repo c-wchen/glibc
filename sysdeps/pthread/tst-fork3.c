@@ -26,82 +26,70 @@
 static pid_t initial_pid;
 
 
-static void *
-tf2 (void *arg)
+static void *tf2(void *arg)
 {
-  if (getppid () != initial_pid)
-    {
-      printf ("getppid in thread returned %ld, expected %ld\n",
-	      (long int) getppid (), (long int) initial_pid);
-      return (void *) -1;
+    if (getppid() != initial_pid) {
+        printf("getppid in thread returned %ld, expected %ld\n",
+               (long int) getppid(), (long int) initial_pid);
+        return (void *) -1;
     }
 
-  return NULL;
+    return NULL;
 }
 
 
-static void *
-tf1 (void *arg)
+static void *tf1(void *arg)
 {
-  pid_t child = fork ();
-  if (child == 0)
-    {
-      if (getppid () != initial_pid)
-	{
-	  printf ("first getppid returned %ld, expected %ld\n",
-		  (long int) getppid (), (long int) initial_pid);
-	  exit (1);
-	}
+    pid_t child = fork();
+    if (child == 0) {
+        if (getppid() != initial_pid) {
+            printf("first getppid returned %ld, expected %ld\n",
+                   (long int) getppid(), (long int) initial_pid);
+            exit(1);
+        }
 
-      pthread_t th2;
-      if (pthread_create (&th2, NULL, tf2, NULL) != 0)
-	{
-	  puts ("child: pthread_create failed");
-	  exit (1);
-	}
+        pthread_t th2;
+        if (pthread_create(&th2, NULL, tf2, NULL) != 0) {
+            puts("child: pthread_create failed");
+            exit(1);
+        }
 
-      void *result;
-      if (pthread_join (th2, &result) != 0)
-	{
-	  puts ("pthread_join failed");
-	  exit  (1);
-	}
+        void *result;
+        if (pthread_join(th2, &result) != 0) {
+            puts("pthread_join failed");
+            exit(1);
+        }
 
-      exit (result == NULL ? 0 : 1);
-    }
-  else if (child == -1)
-    {
-      puts ("initial fork failed");
-      exit (1);
+        exit(result == NULL ? 0 : 1);
+    } else if (child == -1) {
+        puts("initial fork failed");
+        exit(1);
     }
 
-  int status;
-  if (TEMP_FAILURE_RETRY (waitpid (child, &status, 0)) != child)
-    {
-      printf ("waitpid failed: %m\n");
-      exit (1);
+    int status;
+    if (TEMP_FAILURE_RETRY(waitpid(child, &status, 0)) != child) {
+        printf("waitpid failed: %m\n");
+        exit(1);
     }
 
-  exit (status);
+    exit(status);
 }
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  initial_pid = getpid ();
+    initial_pid = getpid();
 
-  pthread_t th1;
-  if (pthread_create (&th1, NULL, tf1, NULL) != 0)
-    {
-      puts ("parent: pthread_create failed");
-      exit (1);
+    pthread_t th1;
+    if (pthread_create(&th1, NULL, tf1, NULL) != 0) {
+        puts("parent: pthread_create failed");
+        exit(1);
     }
 
-  /* This call should never return.  */
-  pthread_join (th1, NULL);
+    /* This call should never return.  */
+    pthread_join(th1, NULL);
 
-  return 1;
+    return 1;
 }
 
 #include <support/test-driver.c>

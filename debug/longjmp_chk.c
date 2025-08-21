@@ -21,4 +21,4 @@
 #define __libc_siglongjmp __longjmp_chk
 
 #include <setjmp/longjmp.c>
-libc_hidden_def (__longjmp_chk)
+libc_hidden_def(__longjmp_chk)

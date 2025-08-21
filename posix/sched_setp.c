@@ -21,13 +21,12 @@
 
 
 /* Set scheduling parameters for a process.  */
-int
-__sched_setparam (pid_t pid, const struct sched_param *param)
+int __sched_setparam(pid_t pid, const struct sched_param *param)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (sched_setparam)
+stub_warning(sched_setparam)
 
-libc_hidden_def (__sched_setparam)
-weak_alias (__sched_setparam, sched_setparam)
+libc_hidden_def(__sched_setparam)
+weak_alias(__sched_setparam, sched_setparam)

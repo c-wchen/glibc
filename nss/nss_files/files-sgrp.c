@@ -19,9 +19,9 @@
 #include <gshadow.h>
 #include <nss.h>
 
-#define STRUCTURE	sgrp
-#define ENTNAME		sgent
-#define DATABASE	"gshadow"
+#define STRUCTURE   sgrp
+#define ENTNAME     sgent
+#define DATABASE    "gshadow"
 struct sgent_data {};
 
 /* Our parser function is already defined in sgetspent_r.c, so use that
@@ -30,9 +30,8 @@ struct sgent_data {};
 #include "files-parse.c"
 #include GENERIC
 
-DB_LOOKUP (sgnam, '.', 0, ("%s", name),
-	   {
-	     if (name[0] != '+' && name[0] != '-'
-		 && ! strcmp (name, result->sg_namp))
-	       break;
-	   }, const char *name)
+DB_LOOKUP(sgnam, '.', 0, ("%s", name), {
+    if (name[0] != '+' && name[0] != '-'
+        && ! strcmp(name, result->sg_namp))
+        break;
+}, const char *name)

@@ -26,33 +26,31 @@
 
 static char domainname[MAXDOMAINNAMELEN];
 
-__libc_lock_define_initialized (static, domainname_lock)
+__libc_lock_define_initialized(static, domainname_lock)
 
 int
-__nss_get_default_domain (char **outdomain)
+__nss_get_default_domain(char **outdomain)
 {
-  int result = 0;
-  *outdomain = NULL;
+    int result = 0;
+    *outdomain = NULL;
 
-  __libc_lock_lock (domainname_lock);
+    __libc_lock_lock(domainname_lock);
 
-  if (domainname[0] != '\0')
-    {
-      if (getdomainname (domainname, MAXDOMAINNAMELEN) < 0)
-	result = errno;
-      else if (strcmp (domainname, "(none)") == 0)
-	{
-	  /* If domainname is not set, some systems will return "(none)" */
-	  domainname[0] = '\0';
-	  result = ENOENT;
-	}
-      else
-	*outdomain = domainname;
+    if (domainname[0] != '\0') {
+        if (getdomainname(domainname, MAXDOMAINNAMELEN) < 0) {
+            result = errno;
+        } else if (strcmp(domainname, "(none)") == 0) {
+            /* If domainname is not set, some systems will return "(none)" */
+            domainname[0] = '\0';
+            result = ENOENT;
+        } else {
+            *outdomain = domainname;
+        }
+    } else {
+        *outdomain = domainname;
     }
-  else
-    *outdomain = domainname;
 
-  __libc_lock_unlock (domainname_lock);
+    __libc_lock_unlock(domainname_lock);
 
-  return result;
+    return result;
 }

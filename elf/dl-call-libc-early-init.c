@@ -22,20 +22,20 @@
 #include <link.h>
 #include <stddef.h>
 
-void
-_dl_call_libc_early_init (struct link_map *libc_map, _Bool initial)
+void _dl_call_libc_early_init(struct link_map *libc_map, _Bool initial)
 {
-  /* There is nothing to do if we did not actually load libc.so.  */
-  if (libc_map == NULL)
-    return;
+    /* There is nothing to do if we did not actually load libc.so.  */
+    if (libc_map == NULL) {
+        return;
+    }
 
-  const ElfW(Sym) *sym
-    = _dl_lookup_direct (libc_map, "__libc_early_init",
-                         0x069682ac, /* dl_new_hash output.  */
-                         "GLIBC_PRIVATE",
-                         0x0963cf85); /* _dl_elf_hash output.  */
-  assert (sym != NULL);
-  __typeof (__libc_early_init) *early_init
-    = DL_SYMBOL_ADDRESS (libc_map, sym);
-  early_init (initial);
+    const ElfW(Sym) *sym
+        = _dl_lookup_direct(libc_map, "__libc_early_init",
+                            0x069682ac, /* dl_new_hash output.  */
+                            "GLIBC_PRIVATE",
+                            0x0963cf85); /* _dl_elf_hash output.  */
+    assert(sym != NULL);
+    __typeof(__libc_early_init) *early_init
+        = DL_SYMBOL_ADDRESS(libc_map, sym);
+    early_init(initial);
 }

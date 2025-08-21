@@ -23,19 +23,19 @@
 
 #if LIBM_SVID_COMPAT
 /* wrapper remainder */
-double
-__remainder (double x, double y)
+double __remainder(double x, double y)
 {
-  if (((__builtin_expect (y == 0.0, 0) && ! isnan (x))
-       || (__builtin_expect (isinf (x), 0) && ! isnan (y)))
-      && _LIB_VERSION != _IEEE_)
-    return __kernel_standard (x, y, 28); /* remainder domain */
+    if (((__builtin_expect(y == 0.0, 0) && ! isnan(x))
+         || (__builtin_expect(isinf(x), 0) && ! isnan(y)))
+        && _LIB_VERSION != _IEEE_) {
+        return __kernel_standard(x, y, 28);    /* remainder domain */
+    }
 
-  return __ieee754_remainder (x, y);
+    return __ieee754_remainder(x, y);
 }
-libm_alias_double (__remainder, remainder)
-weak_alias (__remainder, drem)
+libm_alias_double(__remainder, remainder)
+weak_alias(__remainder, drem)
 # ifdef NO_LONG_DOUBLE
-weak_alias (__remainder, dreml)
+weak_alias(__remainder, dreml)
 # endif
 #endif

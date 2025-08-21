@@ -19,10 +19,9 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-int
-fegetmode (femode_t *modep)
+int fegetmode(femode_t *modep)
 {
-  _FPU_GETCW (modep->__control_word);
-  __asm__ ("stmxcsr %0" : "=m" (modep->__mxcsr));
-  return 0;
+    _FPU_GETCW(modep->__control_word);
+    __asm__("stmxcsr %0" : "=m"(modep->__mxcsr));
+    return 0;
 }

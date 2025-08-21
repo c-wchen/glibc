@@ -19,12 +19,11 @@
 #ifndef _SYS_THREAD_POINTER_H
 #define _SYS_THREAD_POINTER_H
 
-static inline void *
-__thread_pointer (void)
+static inline void *__thread_pointer(void)
 {
-  void *__thread_register;
-  __asm__ ("l.or %0, r10, r0" : "=r" (__thread_register));
-  return __thread_register;
+    void *__thread_register;
+    __asm__("l.or %0, r10, r0" : "=r"(__thread_register));
+    return __thread_register;
 }
 
 #endif /* _SYS_THREAD_POINTER_H */

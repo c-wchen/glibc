@@ -22,7 +22,7 @@
 
 typedef unsigned long elf_greg_t;
 #define ELF_NGREG 80    /* We only need 64 at present, but leave space
-			                              for expansion. */
+                                          for expansion. */
 typedef elf_greg_t elf_gregset_t[ELF_NGREG];
 
 #define ELF_NFPREG 32

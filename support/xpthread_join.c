@@ -18,10 +18,9 @@
 
 #include <support/xthread.h>
 
-void *
-xpthread_join (pthread_t thr)
+void *xpthread_join(pthread_t thr)
 {
-  void *result;
-  xpthread_check_return ("pthread_join", pthread_join (thr, &result));
-  return result;
+    void *result;
+    xpthread_check_return("pthread_join", pthread_join(thr, &result));
+    return result;
 }

@@ -27,20 +27,19 @@
    This adds between one and two additional pointers per active
    environemnt entry, on top of what is used by setenv to keep track
    of environment values used before.  */
-struct environ_array
-{
-  /* The actual environment array.  Use a separate allocation (and not
-     a flexible array member) so that calls like free (environ) that
-     have been encountered in some applications do not crash
-     immediately.  With such a call, if the application restores the
-     original environ pointer at process start and does not modify the
-     environment again, a use-after-free situation only occurs during
-     __libc_freeres, which is only called during memory debugging.
-     With subsequent setenv calls, there is still heap corruption, but
-     that happened with the old realloc-based implementation, too.  */
-  char **array;
-  size_t allocated;             /* Number of allocated array elments.  */
-  struct environ_array *next;   /* Previously used environment array.  */
+struct environ_array {
+    /* The actual environment array.  Use a separate allocation (and not
+       a flexible array member) so that calls like free (environ) that
+       have been encountered in some applications do not crash
+       immediately.  With such a call, if the application restores the
+       original environ pointer at process start and does not modify the
+       environment again, a use-after-free situation only occurs during
+       __libc_freeres, which is only called during memory debugging.
+       With subsequent setenv calls, there is still heap corruption, but
+       that happened with the old realloc-based implementation, too.  */
+    char **array;
+    size_t allocated;             /* Number of allocated array elments.  */
+    struct environ_array *next;   /* Previously used environment array.  */
 };
 
 /* After initialization, and until the user resets environ (perhaps by
@@ -49,11 +48,10 @@ extern struct environ_array *__environ_array_list attribute_hidden;
 
 /* Returns true if EP (which should be an __environ value) is a
    pointer managed by setenv.  */
-static inline bool
-__environ_is_from_array_list (char **ep)
+static inline bool __environ_is_from_array_list(char **ep)
 {
-  struct environ_array *eal = atomic_load_relaxed (&__environ_array_list);
-  return eal != NULL && eal->array == ep;
+    struct environ_array *eal = atomic_load_relaxed(&__environ_array_list);
+    return eal != NULL && eal->array == ep;
 }
 
 /* Counter for detecting concurrent modification in unsetenv.
@@ -76,7 +74,7 @@ extern environ_counter __environ_counter attribute_hidden;
    must be used directly.  This is all complicated by the fact that we try
    to reuse values once generated for a `setenv' call since we can never
    free the strings.  */
-int __add_to_environ (const char *name, const char *value,
-                      const char *combines, int replace) attribute_hidden;
+int __add_to_environ(const char *name, const char *value,
+                     const char *combines, int replace) attribute_hidden;
 
 #endif /* _SETENV_H */

@@ -18,18 +18,17 @@
 #include <stdint.h>
 #include <netinet/in.h>
 
-#undef	htonl
-#undef	ntohl
+#undef  htonl
+#undef  ntohl
 
-uint32_t
-htonl (uint32_t x)
+uint32_t htonl(uint32_t x)
 {
 #if BYTE_ORDER == BIG_ENDIAN
-  return x;
+    return x;
 #elif BYTE_ORDER == LITTLE_ENDIAN
-  return __bswap_32 (x);
+    return __bswap_32(x);
 #else
 # error "What kind of system is this?"
 #endif
 }
-weak_alias (htonl, ntohl)
+weak_alias(htonl, ntohl)

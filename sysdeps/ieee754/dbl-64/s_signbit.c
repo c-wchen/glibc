@@ -18,8 +18,7 @@
 
 #include <math.h>
 
-int
-__signbit (double x)
+int __signbit(double x)
 {
-  return __builtin_signbit (x);
+    return __builtin_signbit(x);
 }

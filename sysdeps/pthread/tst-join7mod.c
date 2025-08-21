@@ -26,38 +26,36 @@
 static pthread_t th;
 static int running = 1;
 
-static void *
-test_run (void *p)
+static void *test_run(void *p)
 {
-  while (atomic_load_relaxed (&running))
-    printf ("Test running\n");
-  printf ("Test finished\n");
-  return NULL;
+    while (atomic_load_relaxed(&running)) {
+        printf("Test running\n");
+    }
+    printf("Test finished\n");
+    return NULL;
 }
 
-static void __attribute__ ((constructor))
-do_init (void)
+static void __attribute__((constructor))
+do_init(void)
 {
-  int ret = pthread_create (&th, NULL, test_run, NULL);
+    int ret = pthread_create(&th, NULL, test_run, NULL);
 
-  if (ret != 0)
-    {
-      printf ("failed to create thread: %s (%d)\n", strerror (ret), ret);
-      exit (1);
+    if (ret != 0) {
+        printf("failed to create thread: %s (%d)\n", strerror(ret), ret);
+        exit(1);
     }
 }
 
-static void __attribute__ ((destructor))
-do_end (void)
+static void __attribute__((destructor))
+do_end(void)
 {
-  atomic_store_relaxed (&running, 0);
-  int ret = pthread_join (th, NULL);
+    atomic_store_relaxed(&running, 0);
+    int ret = pthread_join(th, NULL);
 
-  if (ret != 0)
-    {
-      printf ("pthread_join: %s(%d)\n", strerror (ret), ret);
-      exit (1);
+    if (ret != 0) {
+        printf("pthread_join: %s(%d)\n", strerror(ret), ret);
+        exit(1);
     }
 
-  printf ("Thread joined\n");
+    printf("Thread joined\n");
 }

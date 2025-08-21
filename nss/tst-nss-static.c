@@ -3,13 +3,12 @@
 
 #include <support/support.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  struct passwd *pw;
+    struct passwd *pw;
 
-  pw = getpwuid(0);
-  return pw == NULL;
+    pw = getpwuid(0);
+    return pw == NULL;
 }
 
 

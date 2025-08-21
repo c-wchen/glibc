@@ -20,57 +20,51 @@
 #include <string.h>
 #include <unistd.h>
 
-static void
-print (const char *s)
+static void print(const char *s)
 {
-  const char *end = s + strlen (s);
-  while (s < end)
-    {
-      ssize_t ret = write (STDOUT_FILENO, s, end - s);
-      if (ret <= 0)
-        _exit (2);
-      s += ret;
+    const char *end = s + strlen(s);
+    while (s < end) {
+        ssize_t ret = write(STDOUT_FILENO, s, end - s);
+        if (ret <= 0) {
+            _exit(2);
+        }
+        s += ret;
     }
 }
 
-static void __attribute__ ((noreturn))
-unexpected_call (const char *function)
+static void __attribute__((noreturn))
+unexpected_call(const char *function)
 {
-  print ("error: unexpected call to ");
-  print (function);
-  print ("\n");
-  _exit (1);
+    print("error: unexpected call to ");
+    print(function);
+    print("\n");
+    _exit(1);
 }
 
 /* These are the malloc functions implement in elf/dl-minimal.c.  */
 
-void
-free (void *ignored)
+void free(void *ignored)
 {
-  unexpected_call ("free");
+    unexpected_call("free");
 }
 
-void *
-calloc (size_t ignored1, size_t ignored2)
+void *calloc(size_t ignored1, size_t ignored2)
 {
-  unexpected_call ("calloc");
+    unexpected_call("calloc");
 }
 
-void *
-malloc (size_t ignored)
+void *malloc(size_t ignored)
 {
-  unexpected_call ("malloc");
+    unexpected_call("malloc");
 }
 
-void *
-realloc (void *ignored1, size_t ignored2)
+void *realloc(void *ignored1, size_t ignored2)
 {
-  unexpected_call ("realloc");
+    unexpected_call("realloc");
 }
 
-int
-main (void)
+int main(void)
 {
-  /* Do not use the test wrapper, to avoid spurious malloc calls from it.  */
-  return 0;
+    /* Do not use the test wrapper, to avoid spurious malloc calls from it.  */
+    return 0;
 }

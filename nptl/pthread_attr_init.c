@@ -27,58 +27,55 @@ struct pthread_attr *__attr_list;
 int __attr_list_lock = LLL_LOCK_INITIALIZER;
 
 
-int
-__pthread_attr_init (pthread_attr_t *attr)
+int __pthread_attr_init(pthread_attr_t *attr)
 {
-  struct pthread_attr *iattr;
+    struct pthread_attr *iattr;
 
-  ASSERT_TYPE_SIZE (pthread_attr_t, __SIZEOF_PTHREAD_ATTR_T);
-  ASSERT_PTHREAD_INTERNAL_SIZE (pthread_attr_t, struct pthread_attr);
+    ASSERT_TYPE_SIZE(pthread_attr_t, __SIZEOF_PTHREAD_ATTR_T);
+    ASSERT_PTHREAD_INTERNAL_SIZE(pthread_attr_t, struct pthread_attr);
 
-  /* Many elements are initialized to zero so let us do it all at
-     once.  This also takes care of clearing the bytes which are not
-     internally used.  */
-  memset (attr, '\0', __SIZEOF_PTHREAD_ATTR_T);
+    /* Many elements are initialized to zero so let us do it all at
+       once.  This also takes care of clearing the bytes which are not
+       internally used.  */
+    memset(attr, '\0', __SIZEOF_PTHREAD_ATTR_T);
 
-  iattr = (struct pthread_attr *) attr;
+    iattr = (struct pthread_attr *) attr;
 
-  /* Default guard size specified by the standard.  */
-  iattr->guardsize = __getpagesize ();
+    /* Default guard size specified by the standard.  */
+    iattr->guardsize = __getpagesize();
 
-  return 0;
+    return 0;
 }
-libc_hidden_def (__pthread_attr_init)
-versioned_symbol (libc, __pthread_attr_init, pthread_attr_init, GLIBC_2_1);
+libc_hidden_def(__pthread_attr_init)
+versioned_symbol(libc, __pthread_attr_init, pthread_attr_init, GLIBC_2_1);
 
 
 #if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_1)
-int
-__pthread_attr_init_2_0 (pthread_attr_t *attr)
+int __pthread_attr_init_2_0(pthread_attr_t *attr)
 {
-  /* This code is specific to the old LinuxThread code which has a too
-     small pthread_attr_t definition.  The struct looked like
-     this:  */
-  struct old_attr
-  {
-    int detachstate;
-    int schedpolicy;
-    struct sched_param schedparam;
-    int inheritsched;
-    int scope;
-  };
-  struct pthread_attr *iattr;
+    /* This code is specific to the old LinuxThread code which has a too
+       small pthread_attr_t definition.  The struct looked like
+       this:  */
+    struct old_attr {
+        int detachstate;
+        int schedpolicy;
+        struct sched_param schedparam;
+        int inheritsched;
+        int scope;
+    };
+    struct pthread_attr *iattr;
 
-  /* Many elements are initialized to zero so let us do it all at
-     once.  This also takes care of clearing the bytes which are not
-     internally used.  */
-  memset (attr, '\0', sizeof (struct old_attr));
+    /* Many elements are initialized to zero so let us do it all at
+       once.  This also takes care of clearing the bytes which are not
+       internally used.  */
+    memset(attr, '\0', sizeof(struct old_attr));
 
-  iattr = (struct pthread_attr *) attr;
-  iattr->flags |= ATTR_FLAG_OLDATTR;
+    iattr = (struct pthread_attr *) attr;
+    iattr->flags |= ATTR_FLAG_OLDATTR;
 
-  /* We cannot enqueue the attribute because that member is not in the
-     old attribute structure.  */
-  return 0;
+    /* We cannot enqueue the attribute because that member is not in the
+       old attribute structure.  */
+    return 0;
 }
-compat_symbol (libc, __pthread_attr_init_2_0, pthread_attr_init, GLIBC_2_0);
+compat_symbol(libc, __pthread_attr_init_2_0, pthread_attr_init, GLIBC_2_0);
 #endif

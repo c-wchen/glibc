@@ -24,44 +24,47 @@
 
 #include <pt-internal.h>
 
-int
-__pthread_getname_np (pthread_t thread, char *buf, size_t len)
+int __pthread_getname_np(pthread_t thread, char *buf, size_t len)
 {
 #ifdef HAVE_MACH_THREAD_GET_NAME
-/* GNU Mach doesn't export this so we have to define it ourselves.  */
+    /* GNU Mach doesn't export this so we have to define it ourselves.  */
 #define MACH_THREAD_NAME_MAX 32
-  struct __pthread *pthread;
-  error_t err;
-  kernel_debug_name_t tmp;
+    struct __pthread *pthread;
+    error_t err;
+    kernel_debug_name_t tmp;
 
-  /* Note that we don't check for len to be MACH_THREAD_NAME_MAX
-   * since we want to be more compatible with the Linux API which
-   * requires that the buffer is at least 16 bytes long.
-   *
-   * We check for at least 1 byte since we truncate the result below.  */
-  if (len < 1)
-    return ERANGE;
-  if (len > MACH_THREAD_NAME_MAX)
-    len = MACH_THREAD_NAME_MAX;
+    /* Note that we don't check for len to be MACH_THREAD_NAME_MAX
+     * since we want to be more compatible with the Linux API which
+     * requires that the buffer is at least 16 bytes long.
+     *
+     * We check for at least 1 byte since we truncate the result below.  */
+    if (len < 1) {
+        return ERANGE;
+    }
+    if (len > MACH_THREAD_NAME_MAX) {
+        len = MACH_THREAD_NAME_MAX;
+    }
 
-  /* Lookup the thread structure for THREAD.  */
-  pthread = __pthread_getid (thread);
-  if (pthread == NULL)
-    return ESRCH;
+    /* Lookup the thread structure for THREAD.  */
+    pthread = __pthread_getid(thread);
+    if (pthread == NULL) {
+        return ESRCH;
+    }
 
-  /* __thread_get_name expects a buffer of size sizeof (kernel_debug_name_t)
-   * and anything smaller will overflow.  */
-  err = __thread_get_name (pthread->kernel_thread, tmp);
-  if (err != KERN_SUCCESS)
-    return __hurd_fail (err);
-  /* Truncate the source name to fit in the destination buffer.  */
-  tmp[len - 1] = '\0';
-  memcpy (buf, tmp, len);
+    /* __thread_get_name expects a buffer of size sizeof (kernel_debug_name_t)
+     * and anything smaller will overflow.  */
+    err = __thread_get_name(pthread->kernel_thread, tmp);
+    if (err != KERN_SUCCESS) {
+        return __hurd_fail(err);
+    }
+    /* Truncate the source name to fit in the destination buffer.  */
+    tmp[len - 1] = '\0';
+    memcpy(buf, tmp, len);
 
-  return 0;
+    return 0;
 #else
-  return ENOTSUP;
+    return ENOTSUP;
 #endif
 }
 
-weak_alias (__pthread_getname_np, pthread_getname_np)
+weak_alias(__pthread_getname_np, pthread_getname_np)

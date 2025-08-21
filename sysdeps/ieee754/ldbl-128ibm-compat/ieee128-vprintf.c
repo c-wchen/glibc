@@ -18,10 +18,9 @@
 
 #include <libio/libioP.h>
 
-extern int
-___ieee128_vprintf (const char *format, va_list ap)
+extern int ___ieee128_vprintf(const char *format, va_list ap)
 {
-  return __vfprintf_internal (stdout, format, ap,
-			      PRINTF_LDBL_USES_FLOAT128);
+    return __vfprintf_internal(stdout, format, ap,
+                               PRINTF_LDBL_USES_FLOAT128);
 }
-strong_alias (___ieee128_vprintf, __vprintfieee128)
+strong_alias(___ieee128_vprintf, __vprintfieee128)

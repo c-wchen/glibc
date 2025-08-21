@@ -21,7 +21,7 @@
 #if MINIMUM_X86_ISA_LEVEL == 1
 #include <string/strpbrk.c>
 #else
-#define STRPBRK	strpbrk
+#define STRPBRK strpbrk
 #include "multiarch/strpbrk-sse4.c"
-libc_hidden_builtin_def (strpbrk)
+libc_hidden_builtin_def(strpbrk)
 #endif

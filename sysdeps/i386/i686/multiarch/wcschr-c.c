@@ -16,7 +16,7 @@
 # endif
 #endif
 
-extern __typeof (wcschr) __wcschr_ia32;
+extern __typeof(wcschr) __wcschr_ia32;
 
 #define WCSCHR  __wcschr_ia32
 #include <wcsmbs/wcschr.c>

@@ -20,11 +20,11 @@
 #include <hurd.h>
 
 /* Make all changes done to all files actually appear on disk.  */
-void
-sync (void)
+void sync(void)
 {
-  /* This is not actually synchronous; we don't wait.  */
-  error_t err = __USEPORT (CRDIR, __file_syncfs (port, 0, 1));
-  if (err)
-    (void) __hurd_fail (err);
+    /* This is not actually synchronous; we don't wait.  */
+    error_t err = __USEPORT(CRDIR, __file_syncfs(port, 0, 1));
+    if (err) {
+        (void) __hurd_fail(err);
+    }
 }

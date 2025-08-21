@@ -25,36 +25,37 @@
 
 #include <support/check.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  static const char modname[] = "tst-cet-legacy-mod-4.so";
-  int (*fp) (void);
-  void *h;
+    static const char modname[] = "tst-cet-legacy-mod-4.so";
+    int (*fp)(void);
+    void *h;
 
-  h = dlopen (modname, RTLD_LAZY);
-  if (h == NULL)
-    {
-      const char *err = dlerror ();
-      if (!strstr (err, "rebuild shared object with IBT support enabled"))
-	FAIL_EXIT1 ("incorrect dlopen '%s' error: %s\n", modname, err);
-      return 0;
+    h = dlopen(modname, RTLD_LAZY);
+    if (h == NULL) {
+        const char *err = dlerror();
+        if (!strstr(err, "rebuild shared object with IBT support enabled")) {
+            FAIL_EXIT1("incorrect dlopen '%s' error: %s\n", modname, err);
+        }
+        return 0;
     }
 
 #ifdef CET_IS_PERMISSIVE
-  TEST_VERIFY (!CPU_FEATURE_ACTIVE (IBT) && !CPU_FEATURE_ACTIVE (SHSTK));
+    TEST_VERIFY(!CPU_FEATURE_ACTIVE(IBT) && !CPU_FEATURE_ACTIVE(SHSTK));
 #endif
 
-  fp = dlsym (h, "test");
-  if (fp == NULL)
-    FAIL_EXIT1 ("cannot get symbol 'test': %s\n", dlerror ());
+    fp = dlsym(h, "test");
+    if (fp == NULL) {
+        FAIL_EXIT1("cannot get symbol 'test': %s\n", dlerror());
+    }
 
-  if (fp () != 0)
-    FAIL_EXIT1 ("test () != 0");
+    if (fp() != 0) {
+        FAIL_EXIT1("test () != 0");
+    }
 
-  dlclose (h);
+    dlclose(h);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

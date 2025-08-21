@@ -25,30 +25,30 @@
 #include <sys/socket.h>
 
 
-int
-setipv4sourcefilter (int s, struct in_addr interface, struct in_addr group,
-		     uint32_t fmode, uint32_t numsrc,
-		     const struct in_addr *slist)
+int setipv4sourcefilter(int s, struct in_addr interface, struct in_addr group,
+                        uint32_t fmode, uint32_t numsrc,
+                        const struct in_addr *slist)
 {
-  /* We have to create an struct ip_msfilter object which we can pass
-     to the kernel.  */
-  size_t needed = IP_MSFILTER_SIZE (numsrc);
+    /* We have to create an struct ip_msfilter object which we can pass
+       to the kernel.  */
+    size_t needed = IP_MSFILTER_SIZE(numsrc);
 
-  struct scratch_buffer buf;
-  scratch_buffer_init (&buf);
-  if (!scratch_buffer_set_array_size (&buf, 1, needed))
-    return -1;
-  struct ip_msfilter *imsf = buf.data;
+    struct scratch_buffer buf;
+    scratch_buffer_init(&buf);
+    if (!scratch_buffer_set_array_size(&buf, 1, needed)) {
+        return -1;
+    }
+    struct ip_msfilter *imsf = buf.data;
 
-  imsf->imsf_multiaddr = group;
-  imsf->imsf_interface = interface;
-  imsf->imsf_fmode = fmode;
-  imsf->imsf_numsrc = numsrc;
-  memcpy (imsf->imsf_slist, slist, numsrc * sizeof (struct in_addr));
+    imsf->imsf_multiaddr = group;
+    imsf->imsf_interface = interface;
+    imsf->imsf_fmode = fmode;
+    imsf->imsf_numsrc = numsrc;
+    memcpy(imsf->imsf_slist, slist, numsrc * sizeof(struct in_addr));
 
-  int result = __setsockopt (s, SOL_IP, IP_MSFILTER, imsf, needed);
+    int result = __setsockopt(s, SOL_IP, IP_MSFILTER, imsf, needed);
 
-  scratch_buffer_free (&buf);
+    scratch_buffer_free(&buf);
 
-  return result;
+    return result;
 }

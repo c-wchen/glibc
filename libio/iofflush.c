@@ -27,29 +27,27 @@
 #include "libioP.h"
 #include <stdio.h>
 
-int
-_IO_fflush (FILE *fp)
+int _IO_fflush(FILE *fp)
 {
-  if (fp == NULL)
-    return _IO_flush_all ();
-  else
-    {
-      int result;
-      CHECK_FILE (fp, EOF);
-      _IO_acquire_lock (fp);
-      result = _IO_SYNC (fp) ? EOF : 0;
-      _IO_release_lock (fp);
-      return result;
+    if (fp == NULL) {
+        return _IO_flush_all();
+    } else {
+        int result;
+        CHECK_FILE(fp, EOF);
+        _IO_acquire_lock(fp);
+        result = _IO_SYNC(fp) ? EOF : 0;
+        _IO_release_lock(fp);
+        return result;
     }
 }
-libc_hidden_def (_IO_fflush)
+libc_hidden_def(_IO_fflush)
 
-weak_alias (_IO_fflush, fflush)
-libc_hidden_weak (fflush)
+weak_alias(_IO_fflush, fflush)
+libc_hidden_weak(fflush)
 
 #ifndef _IO_MTSAFE_IO
-strong_alias (_IO_fflush, __fflush_unlocked)
-libc_hidden_def (__fflush_unlocked)
-weak_alias (_IO_fflush, fflush_unlocked)
-libc_hidden_weak (fflush_unlocked)
+strong_alias(_IO_fflush, __fflush_unlocked)
+libc_hidden_def(__fflush_unlocked)
+weak_alias(_IO_fflush, fflush_unlocked)
+libc_hidden_weak(fflush_unlocked)
 #endif

@@ -26,38 +26,42 @@
 
 /* Datatype for the list of known thread agents.  Normally there will
    be exactly one so we don't spend much though on making it fast.  */
-LIST_HEAD (__td_agent_list);
+LIST_HEAD(__td_agent_list);
 
 
-td_err_e
-td_ta_new (struct ps_prochandle *ps, td_thragent_t **ta)
+td_err_e td_ta_new(struct ps_prochandle *ps, td_thragent_t **ta)
 {
-  psaddr_t versaddr;
-  char versbuf[sizeof (VERSION)];
+    psaddr_t versaddr;
+    char versbuf[sizeof(VERSION)];
 
-  LOG ("td_ta_new");
+    LOG("td_ta_new");
 
-  /* Check whether the versions match.  */
-  if (td_lookup (ps, SYM___nptl_version, &versaddr) != PS_OK)
-    return TD_NOLIBTHREAD;
-  if (ps_pdread (ps, versaddr, versbuf, sizeof (versbuf)) != PS_OK)
-    return TD_ERR;
+    /* Check whether the versions match.  */
+    if (td_lookup(ps, SYM___nptl_version, &versaddr) != PS_OK) {
+        return TD_NOLIBTHREAD;
+    }
+    if (ps_pdread(ps, versaddr, versbuf, sizeof(versbuf)) != PS_OK) {
+        return TD_ERR;
+    }
 
-  if (memcmp (versbuf, VERSION, sizeof VERSION) != 0)
-    /* Not the right version.  */
-    return TD_VERSION;
+    if (memcmp(versbuf, VERSION, sizeof VERSION) != 0)
+        /* Not the right version.  */
+    {
+        return TD_VERSION;
+    }
 
-  /* Fill in the appropriate information.  */
-  *ta = (td_thragent_t *) calloc (1, sizeof (td_thragent_t));
-  if (*ta == NULL)
-    return TD_MALLOC;
+    /* Fill in the appropriate information.  */
+    *ta = (td_thragent_t *) calloc(1, sizeof(td_thragent_t));
+    if (*ta == NULL) {
+        return TD_MALLOC;
+    }
 
-  /* Store the proc handle which we will pass to the callback functions
-     back into the debugger.  */
-  (*ta)->ph = ps;
+    /* Store the proc handle which we will pass to the callback functions
+       back into the debugger.  */
+    (*ta)->ph = ps;
 
-  /* Now add the new agent descriptor to the list.  */
-  list_add (&(*ta)->list, &__td_agent_list);
+    /* Now add the new agent descriptor to the list.  */
+    list_add(&(*ta)->list, &__td_agent_list);
 
-  return TD_OK;
+    return TD_OK;
 }

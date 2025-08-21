@@ -18,8 +18,7 @@
 #include <utmp.h>
 #include <utmpx.h>
 
-void
-updwtmpx (const char *wtmpx_file, const struct utmpx *utmpx)
+void updwtmpx(const char *wtmpx_file, const struct utmpx *utmpx)
 {
-  __updwtmp (wtmpx_file, (const struct utmp *) utmpx);
+    __updwtmp(wtmpx_file, (const struct utmp *) utmpx);
 }

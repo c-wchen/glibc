@@ -20,18 +20,19 @@ static bool __always_fail_morecore = false;
 /* Allocate INCREMENT more bytes of data space,
    and return the start of data space, or NULL on errors.
    If INCREMENT is negative, shrink data space.  */
-void *
-__glibc_morecore (ptrdiff_t increment)
+void *__glibc_morecore(ptrdiff_t increment)
 {
-  if (__always_fail_morecore)
-    return NULL;
+    if (__always_fail_morecore) {
+        return NULL;
+    }
 
-  void *result = (void *) __sbrk (increment);
-  if (result == (void *) -1)
-    return NULL;
+    void *result = (void *) __sbrk(increment);
+    if (result == (void *) -1) {
+        return NULL;
+    }
 
-  return result;
+    return result;
 }
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_34)
-compat_symbol (libc, __glibc_morecore, __default_morecore, GLIBC_2_0);
+compat_symbol(libc, __glibc_morecore, __default_morecore, GLIBC_2_0);
 #endif

@@ -27,19 +27,21 @@
 # include <math_private.h>
 
 FLOAT
-M_DECL_FUNC (__log2) (FLOAT x)
+M_DECL_FUNC(__log2)(FLOAT x)
 {
-  if (__glibc_unlikely (islessequal (x, M_LIT (0.0))))
-    {
-      if (x == 0)
-	/* Pole error: log2(0).  */
-	__set_errno (ERANGE);
-      else
-	/* Domain error: log2(<0).  */
-	__set_errno (EDOM);
+    if (__glibc_unlikely(islessequal(x, M_LIT(0.0)))) {
+        if (x == 0)
+            /* Pole error: log2(0).  */
+        {
+            __set_errno(ERANGE);
+        } else
+            /* Domain error: log2(<0).  */
+        {
+            __set_errno(EDOM);
+        }
     }
-  return M_SUF (__ieee754_log2) (x);
+    return M_SUF(__ieee754_log2)(x);
 }
-declare_mgen_alias (__log2, log2)
+declare_mgen_alias(__log2, log2)
 
 #endif /* __USE_WRAPPER_TEMPLATE.  */

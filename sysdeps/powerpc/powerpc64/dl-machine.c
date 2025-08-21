@@ -22,45 +22,42 @@
 #include <_itoa.h>
 #include <dl-machine.h>
 
-void
-_dl_reloc_overflow (struct link_map *map,
-		    const char *name,
-		    Elf64_Addr *const reloc_addr,
-		    const Elf64_Sym *refsym)
+void _dl_reloc_overflow(struct link_map *map,
+                        const char *name,
+                        Elf64_Addr *const reloc_addr,
+                        const Elf64_Sym *refsym)
 {
-  char buffer[1024];
-  char *t;
-  t = stpcpy (buffer, name);
-  /* Notice that _itoa_word() writes characters from the higher address to the
-     lower address, requiring the destination string to reserve all the
-     required size before the call.  */
-  t = stpcpy (t, " reloc at 0x0000000000000000");
-  _itoa_word ((unsigned long) reloc_addr, t, 16, 0);
-  if (refsym)
-    {
-      const char *strtab;
+    char buffer[1024];
+    char *t;
+    t = stpcpy(buffer, name);
+    /* Notice that _itoa_word() writes characters from the higher address to the
+       lower address, requiring the destination string to reserve all the
+       required size before the call.  */
+    t = stpcpy(t, " reloc at 0x0000000000000000");
+    _itoa_word((unsigned long) reloc_addr, t, 16, 0);
+    if (refsym) {
+        const char *strtab;
 
-      strtab = (const void *) D_PTR (map, l_info[DT_STRTAB]);
-      t = stpcpy (t, " for symbol `");
-      t = stpcpy (t, strtab + refsym->st_name);
-      t = stpcpy (t, "'");
+        strtab = (const void *) D_PTR(map, l_info[DT_STRTAB]);
+        t = stpcpy(t, " for symbol `");
+        t = stpcpy(t, strtab + refsym->st_name);
+        t = stpcpy(t, "'");
     }
-  t = stpcpy (t, " out of range");
-  _dl_signal_error (0, map->l_name, NULL, buffer);
+    t = stpcpy(t, " out of range");
+    _dl_signal_error(0, map->l_name, NULL, buffer);
 }
 
 #if _CALL_ELF == 2
-void
-_dl_error_localentry (struct link_map *map, const Elf64_Sym *refsym)
+void _dl_error_localentry(struct link_map *map, const Elf64_Sym *refsym)
 {
-  char buffer[1024];
-  char *t;
-  const char *strtab;
+    char buffer[1024];
+    char *t;
+    const char *strtab;
 
-  strtab = (const void *) D_PTR (map, l_info[DT_STRTAB]);
-  t = stpcpy (buffer, "expected localentry:0 `");
-  t = stpcpy (t, strtab + refsym->st_name);
-  t = stpcpy (t, "'");
-  _dl_signal_error (0, map->l_name, NULL, buffer);
+    strtab = (const void *) D_PTR(map, l_info[DT_STRTAB]);
+    t = stpcpy(buffer, "expected localentry:0 `");
+    t = stpcpy(t, strtab + refsym->st_name);
+    t = stpcpy(t, "'");
+    _dl_signal_error(0, map->l_name, NULL, buffer);
 }
 #endif

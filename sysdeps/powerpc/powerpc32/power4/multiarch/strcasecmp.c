@@ -20,8 +20,8 @@
 # include <string.h>
 # define strcasecmp __strcasecmp_ppc
 
-extern __typeof (__strcasecmp) __strcasecmp_ppc attribute_hidden;
-extern __typeof (__strcasecmp) __strcasecmp_power7 attribute_hidden;
+extern __typeof(__strcasecmp) __strcasecmp_ppc attribute_hidden;
+extern __typeof(__strcasecmp) __strcasecmp_power7 attribute_hidden;
 #endif
 
 #include <string/strcasecmp.c>
@@ -31,11 +31,11 @@ extern __typeof (__strcasecmp) __strcasecmp_power7 attribute_hidden;
 # include <shlib-compat.h>
 # include "init-arch.h"
 
-extern __typeof (__strcasecmp) __libc_strcasecmp;
-libc_ifunc (__libc_strcasecmp,
-	    (hwcap & PPC_FEATURE_HAS_VSX)
-            ? __strcasecmp_power7
-            : __strcasecmp_ppc);
+extern __typeof(__strcasecmp) __libc_strcasecmp;
+libc_ifunc(__libc_strcasecmp,
+           (hwcap &PPC_FEATURE_HAS_VSX)
+           ? __strcasecmp_power7
+           : __strcasecmp_ppc);
 
-weak_alias (__libc_strcasecmp, strcasecmp)
+weak_alias(__libc_strcasecmp, strcasecmp)
 #endif

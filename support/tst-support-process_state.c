@@ -28,89 +28,92 @@
 #include <support/xunistd.h>
 
 #ifndef WEXITED
-# define WEXITED	0
+# define WEXITED    0
 #endif
 
-static void
-sigusr1_handler (int signo)
+static void sigusr1_handler(int signo)
 {
 }
 
-static void
-test_child (void)
+static void test_child(void)
 {
-  xsignal (SIGUSR1, sigusr1_handler);
+    xsignal(SIGUSR1, sigusr1_handler);
 
-  raise (SIGSTOP);
+    raise(SIGSTOP);
 
-  TEST_COMPARE (pause (), -1);
-  TEST_COMPARE (errno, EINTR);
+    TEST_COMPARE(pause(), -1);
+    TEST_COMPARE(errno, EINTR);
 
-  while (1)
-    asm ("");
+    while (1) {
+        asm("");
+    }
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  pid_t pid = xfork ();
-  if (pid == 0)
-    {
-      test_child ();
-      _exit (127);
+    pid_t pid = xfork();
+    if (pid == 0) {
+        test_child();
+        _exit(127);
     }
 
-  /* Adding process_state_tracing_stop ('t') allows the test to work under
-     trace programs such as ptrace.  */
-  enum support_process_state stop_state = support_process_state_stopped
-				    | support_process_state_tracing_stop;
+    /* Adding process_state_tracing_stop ('t') allows the test to work under
+       trace programs such as ptrace.  */
+    enum support_process_state stop_state = support_process_state_stopped
+                                            | support_process_state_tracing_stop;
 
-  if (test_verbose)
-    printf ("info: waiting pid %d, state_stopped/state_tracing_stop\n",
-	    (int) pid);
-  {
-    enum support_process_state state =
-      support_process_state_wait (pid, stop_state);
-    TEST_VERIFY (state == support_process_state_stopped
-		 || state == support_process_state_tracing_stop);
-  }
+    if (test_verbose)
+        printf("info: waiting pid %d, state_stopped/state_tracing_stop\n",
+               (int) pid);
+    {
+        enum support_process_state state =
+            support_process_state_wait(pid, stop_state);
+        TEST_VERIFY(state == support_process_state_stopped
+                    || state == support_process_state_tracing_stop);
+    }
 
-  if (kill (pid, SIGCONT) != 0)
-    FAIL_RET ("kill (%d, SIGCONT): %m\n", pid);
+    if (kill(pid, SIGCONT) != 0) {
+        FAIL_RET("kill (%d, SIGCONT): %m\n", pid);
+    }
 
-  if (test_verbose)
-    printf ("info: waiting pid %d, state_sleeping\n", (int) pid);
-  TEST_COMPARE (support_process_state_wait (pid,
-					    support_process_state_sleeping),
-		support_process_state_sleeping);
+    if (test_verbose) {
+        printf("info: waiting pid %d, state_sleeping\n", (int) pid);
+    }
+    TEST_COMPARE(support_process_state_wait(pid,
+                                            support_process_state_sleeping),
+                 support_process_state_sleeping);
 
-  if (kill (pid, SIGUSR1) != 0)
-    FAIL_RET ("kill (%d, SIGUSR1): %m\n", pid);
+    if (kill(pid, SIGUSR1) != 0) {
+        FAIL_RET("kill (%d, SIGUSR1): %m\n", pid);
+    }
 
-  if (test_verbose)
-    printf ("info: waiting pid %d, state_running\n", (int) pid);
-  TEST_COMPARE (support_process_state_wait (pid,
-					    support_process_state_running),
-		support_process_state_running);
+    if (test_verbose) {
+        printf("info: waiting pid %d, state_running\n", (int) pid);
+    }
+    TEST_COMPARE(support_process_state_wait(pid,
+                                            support_process_state_running),
+                 support_process_state_running);
 
-  if (kill (pid, SIGKILL) != 0)
-    FAIL_RET ("kill (%d, SIGKILL): %m\n", pid);
+    if (kill(pid, SIGKILL) != 0) {
+        FAIL_RET("kill (%d, SIGKILL): %m\n", pid);
+    }
 
-  if (test_verbose)
-    printf ("info: waiting pid %d, state_zombie\n", (int) pid);
-  TEST_COMPARE (support_process_state_wait (pid,
-					    support_process_state_zombie),
-		support_process_state_zombie);;
+    if (test_verbose) {
+        printf("info: waiting pid %d, state_zombie\n", (int) pid);
+    }
+    TEST_COMPARE(support_process_state_wait(pid,
+                                            support_process_state_zombie),
+                 support_process_state_zombie);;
 
-  siginfo_t info;
-  int r = waitid (P_PID, pid, &info, WEXITED);
-  TEST_COMPARE (r, 0);
-  TEST_COMPARE (info.si_signo, SIGCHLD);
-  TEST_COMPARE (info.si_code, CLD_KILLED);
-  TEST_COMPARE (info.si_status, SIGKILL);
-  TEST_COMPARE (info.si_pid, pid);
+    siginfo_t info;
+    int r = waitid(P_PID, pid, &info, WEXITED);
+    TEST_COMPARE(r, 0);
+    TEST_COMPARE(info.si_signo, SIGCHLD);
+    TEST_COMPARE(info.si_code, CLD_KILLED);
+    TEST_COMPARE(info.si_status, SIGKILL);
+    TEST_COMPARE(info.si_pid, pid);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -39,16 +39,15 @@
    bridge.  Return TRUE if the PC is within the boundary, meaning the
    syscall does not have any side effects; or FALSE otherwise.  */
 
-static __always_inline bool
-cancellation_pc_check (void *ctx)
+static __always_inline bool cancellation_pc_check(void *ctx)
 {
-  /* Both are defined in syscall_cancel.S.  */
-  extern const char __syscall_cancel_arch_start[1];
-  extern const char __syscall_cancel_arch_end[1];
+    /* Both are defined in syscall_cancel.S.  */
+    extern const char __syscall_cancel_arch_start[1];
+    extern const char __syscall_cancel_arch_end[1];
 
-  uintptr_t pc = sigcontext_get_pc (ctx);
-  return pc >= (uintptr_t) __syscall_cancel_arch_start
-	 && pc < (uintptr_t) __syscall_cancel_arch_end;
+    uintptr_t pc = sigcontext_get_pc(ctx);
+    return pc >= (uintptr_t) __syscall_cancel_arch_start
+           && pc < (uintptr_t) __syscall_cancel_arch_end;
 }
 
 #endif

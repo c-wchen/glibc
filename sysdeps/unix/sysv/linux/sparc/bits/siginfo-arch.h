@@ -12,6 +12,6 @@
 #define __SI_SIGFAULT_ADDL \
   int _si_trapno;
 
-#define si_trapno	_sifields._sigfault._si_trapno
+#define si_trapno   _sifields._sigfault._si_trapno
 
 #endif

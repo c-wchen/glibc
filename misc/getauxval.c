@@ -20,48 +20,44 @@
 #include <ldsodefs.h>
 #include <stdbool.h>
 
-bool
-__getauxval2 (unsigned long int type, unsigned long int *result)
+bool __getauxval2(unsigned long int type, unsigned long int *result)
 {
 #ifdef HAVE_AUX_VECTOR
-  ElfW(auxv_t) *p;
+    ElfW(auxv_t) *p;
 #endif
 
-  if (type == AT_HWCAP)
-    {
-      *result = GLRO(dl_hwcap);
-      return true;
-    }
-  else if (type == AT_HWCAP2)
-    {
-      *result = GLRO(dl_hwcap2);
-      return true;
+    if (type == AT_HWCAP) {
+        *result = GLRO(dl_hwcap);
+        return true;
+    } else if (type == AT_HWCAP2) {
+        *result = GLRO(dl_hwcap2);
+        return true;
     }
 
 #ifdef HAVE_AUX_VECTOR
-  for (p = GLRO(dl_auxv); p->a_type != AT_NULL; p++)
-    if (p->a_type == type)
-      {
-        *result = p->a_un.a_val;
-        return true;
-      }
+    for (p = GLRO(dl_auxv); p->a_type != AT_NULL; p++)
+        if (p->a_type == type) {
+            *result = p->a_un.a_val;
+            return true;
+        }
 #endif
 
-  return false;
+    return false;
 }
-libc_hidden_def (__getauxval2)
+libc_hidden_def(__getauxval2)
 
 unsigned long int
-__getauxval (unsigned long int type)
+__getauxval(unsigned long int type)
 {
-  unsigned long int result;
+    unsigned long int result;
 
-  if (__getauxval2 (type, &result))
-    return result;
+    if (__getauxval2(type, &result)) {
+        return result;
+    }
 
-  __set_errno (ENOENT);
-  return 0;
+    __set_errno(ENOENT);
+    return 0;
 }
 
-weak_alias (__getauxval, getauxval)
-libc_hidden_def (__getauxval)
+weak_alias(__getauxval, getauxval)
+libc_hidden_def(__getauxval)

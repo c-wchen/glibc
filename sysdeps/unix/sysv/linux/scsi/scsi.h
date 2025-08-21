@@ -21,7 +21,7 @@
  */
 
 #ifndef _SCSI_SCSI_H
-#define _SCSI_SCSI_H	1
+#define _SCSI_SCSI_H    1
 
 #include <features.h>
 
@@ -146,9 +146,9 @@
 #define TYPE_ROM            0x05
 #define TYPE_SCANNER        0x06
 #define TYPE_MOD            0x07    /* Magneto-optical disk -
-				     * - treated as TYPE_DISK */
+                     * - treated as TYPE_DISK */
 #define TYPE_MEDIUM_CHANGER 0x08
-#define TYPE_ENCLOSURE	    0x0d    /* Enclosure Services Device */
+#define TYPE_ENCLOSURE      0x0d    /* Enclosure Services Device */
 #define TYPE_NO_LUN         0x7f
 
 /*
@@ -157,23 +157,22 @@
  * moved here from cdrom.h -- kraxel
  */
 
-struct ccs_modesel_head
-  {
-    unsigned char _r1;			/* reserved.  */
-    unsigned char medium;		/* device-specific medium type.  */
-    unsigned char _r2;			/* reserved.  */
-    unsigned char block_desc_length;	/* block descriptor length.  */
-    unsigned char density;		/* device-specific density code.  */
-    unsigned char number_blocks_hi;	/* number of blocks in this block
-					   desc.  */
+struct ccs_modesel_head {
+    unsigned char _r1;          /* reserved.  */
+    unsigned char medium;       /* device-specific medium type.  */
+    unsigned char _r2;          /* reserved.  */
+    unsigned char block_desc_length;    /* block descriptor length.  */
+    unsigned char density;      /* device-specific density code.  */
+    unsigned char number_blocks_hi; /* number of blocks in this block
+                       desc.  */
     unsigned char number_blocks_med;
     unsigned char number_blocks_lo;
     unsigned char _r3;
-    unsigned char block_length_hi;	/* block length for blocks in this
-					   desc.  */
+    unsigned char block_length_hi;  /* block length for blocks in this
+                       desc.  */
     unsigned char block_length_med;
     unsigned char block_length_lo;
-  };
+};
 
 /*
  *  MESSAGE CODES

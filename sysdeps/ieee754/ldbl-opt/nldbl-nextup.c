@@ -20,8 +20,7 @@
 
 /* Return the least floating-point number greater than X.  */
 double
-attribute_hidden
-nextupl (double x)
+attribute_hidden nextupl(double x)
 {
-  return nextup (x);
+    return nextup(x);
 }

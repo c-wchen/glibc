@@ -31,12 +31,11 @@
 
 #include "strfile.h"
 
-int
-_IO_vsscanf (const char *string, const char *format, va_list args)
+int _IO_vsscanf(const char *string, const char *format, va_list args)
 {
-  _IO_strfile sf;
-  FILE *f = _IO_strfile_read (&sf, string);
-  return __vfscanf_internal (f, format, args, 0);
+    _IO_strfile sf;
+    FILE *f = _IO_strfile_read(&sf, string);
+    return __vfscanf_internal(f, format, args, 0);
 }
-ldbl_weak_alias (_IO_vsscanf, __vsscanf)
-ldbl_weak_alias (_IO_vsscanf, vsscanf)
+ldbl_weak_alias(_IO_vsscanf, __vsscanf)
+ldbl_weak_alias(_IO_vsscanf, vsscanf)

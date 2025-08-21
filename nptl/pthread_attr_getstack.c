@@ -18,27 +18,26 @@
 #include "pthreadP.h"
 #include <shlib-compat.h>
 
-int
-__pthread_attr_getstack (const pthread_attr_t *attr, void **stackaddr,
-			 size_t *stacksize)
+int __pthread_attr_getstack(const pthread_attr_t *attr, void **stackaddr,
+                            size_t *stacksize)
 {
-  struct pthread_attr *iattr;
+    struct pthread_attr *iattr;
 
-  iattr = (struct pthread_attr *) attr;
+    iattr = (struct pthread_attr *) attr;
 
-  /* Store the result.  */
+    /* Store the result.  */
 #if _STACK_GROWS_DOWN
-  *stackaddr = (char *) iattr->stackaddr - iattr->stacksize;
+    *stackaddr = (char *) iattr->stackaddr - iattr->stacksize;
 #else
-  *stackaddr = (char *) iattr->stackaddr;
+    *stackaddr = (char *) iattr->stackaddr;
 #endif
-  *stacksize = iattr->stacksize;
+    *stacksize = iattr->stacksize;
 
-  return 0;
+    return 0;
 }
-versioned_symbol (libpthread, __pthread_attr_getstack,
-                  pthread_attr_getstack, GLIBC_2_34);
+versioned_symbol(libpthread, __pthread_attr_getstack,
+                 pthread_attr_getstack, GLIBC_2_34);
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
-compat_symbol (libpthread, __pthread_attr_getstack,
-               pthread_attr_getstack, GLIBC_2_2);
+compat_symbol(libpthread, __pthread_attr_getstack,
+              pthread_attr_getstack, GLIBC_2_2);
 #endif

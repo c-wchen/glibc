@@ -22,23 +22,20 @@
 /* Read the contents of the symbolic link PATH relative to FD into no
    more than LEN bytes of BUF.  The contents are not null-terminated.
    Returns the number of characters read, or -1 for errors.  */
-ssize_t
-readlinkat (int fd, const char *path, char *buf, size_t len)
+ssize_t readlinkat(int fd, const char *path, char *buf, size_t len)
 {
-  if (path == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (path == NULL) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  if (fd != AT_FDCWD && fd < 0 && *path != '/')
-    {
-      __set_errno (EBADF);
-      return -1;
+    if (fd != AT_FDCWD && fd < 0 && *path != '/') {
+        __set_errno(EBADF);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (readlinkat)
-libc_hidden_def (readlinkat)
+stub_warning(readlinkat)
+libc_hidden_def(readlinkat)

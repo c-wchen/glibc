@@ -22,32 +22,31 @@
 #include <libm-alias-float.h>
 #include <stdint.h>
 
-float
-__floorf (float x)
+float __floorf(float x)
 {
-  int flags = riscv_getflags ();
-  bool nan = isnan (x);
-  float mag = fabsf (x);
+    int flags = riscv_getflags();
+    bool nan = isnan(x);
+    float mag = fabsf(x);
 
-  if (nan)
-    return x + x;
-
-  if (mag < (1 << __FLT_MANT_DIG__))
-    {
-      int32_t i;
-      float new_x;
-
-      asm volatile ("fcvt.w.s %0, %1, rdn" : "=r" (i) : "f" (x));
-      asm volatile ("fcvt.s.w %0, %1, rdn" : "=f" (new_x) : "r" (i));
-
-      /* floor(-0) == -0, and in general we'll always have the same
-	 sign as our input.  */
-      x = copysignf (new_x, x);
-
-      riscv_setflags (flags);
+    if (nan) {
+        return x + x;
     }
 
-  return x;
+    if (mag < (1 << __FLT_MANT_DIG__)) {
+        int32_t i;
+        float new_x;
+
+        asm volatile("fcvt.w.s %0, %1, rdn" : "=r"(i) : "f"(x));
+        asm volatile("fcvt.s.w %0, %1, rdn" : "=f"(new_x) : "r"(i));
+
+        /* floor(-0) == -0, and in general we'll always have the same
+        sign as our input.  */
+        x = copysignf(new_x, x);
+
+        riscv_setflags(flags);
+    }
+
+    return x;
 }
 
-libm_alias_float (__floor, floor)
+libm_alias_float(__floor, floor)

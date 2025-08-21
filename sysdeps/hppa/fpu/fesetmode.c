@@ -21,16 +21,16 @@
 
 #define FPU_CONTROL_BITS (_FPU_HPPA_MASK_RM | 0x20 | _FPU_HPPA_MASK_INT)
 
-int
-fesetmode (const femode_t *modep)
+int fesetmode(const femode_t *modep)
 {
-  fpu_control_t cw;
-  _FPU_GETCW (cw);
-  cw &= ~FPU_CONTROL_BITS;
-  if (modep == FE_DFL_MODE)
-    cw |= _FPU_DEFAULT;
-  else
-    cw |= *modep & FPU_CONTROL_BITS;
-  _FPU_SETCW (cw);
-  return 0;
+    fpu_control_t cw;
+    _FPU_GETCW(cw);
+    cw &= ~FPU_CONTROL_BITS;
+    if (modep == FE_DFL_MODE) {
+        cw |= _FPU_DEFAULT;
+    } else {
+        cw |= *modep & FPU_CONTROL_BITS;
+    }
+    _FPU_SETCW(cw);
+    return 0;
 }

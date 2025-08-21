@@ -16,12 +16,11 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define	__NO_CTYPE
+#define __NO_CTYPE
 #include <ctype.h>
 
-int
-__isblank_l (int c, locale_t l)
+int __isblank_l(int c, locale_t l)
 {
-  return __isctype_l (c, _ISblank, l);
+    return __isctype_l(c, _ISblank, l);
 }
-weak_alias (__isblank_l, isblank_l)
+weak_alias(__isblank_l, isblank_l)

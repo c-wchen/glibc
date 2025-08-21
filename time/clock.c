@@ -20,11 +20,10 @@
 #include <errno.h>
 
 /* Return the time used by the program so far (user time + system time).  */
-clock_t
-clock (void)
+clock_t clock(void)
 {
-  __set_errno (ENOSYS);
-  return (clock_t) -1;
+    __set_errno(ENOSYS);
+    return (clock_t) -1;
 }
 
-stub_warning (clock)
+stub_warning(clock)

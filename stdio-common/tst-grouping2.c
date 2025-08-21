@@ -21,19 +21,18 @@
 #include <support/check.h>
 #include <support/support.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  const int field_width = 1000;
-  char buf[field_width + 1];
+    const int field_width = 1000;
+    char buf[field_width + 1];
 
-  xsetlocale (LC_NUMERIC, "de_DE.UTF-8");
+    xsetlocale(LC_NUMERIC, "de_DE.UTF-8");
 
-  /* This used to crash in group_number.  */
-  TEST_COMPARE (sprintf (buf, "%'*d", field_width, 1000), field_width);
-  TEST_COMPARE_STRING (buf + field_width - 6, " 1.000");
+    /* This used to crash in group_number.  */
+    TEST_COMPARE(sprintf(buf, "%'*d", field_width, 1000), field_width);
+    TEST_COMPARE_STRING(buf + field_width - 6, " 1.000");
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -23,24 +23,23 @@
    defines do_test, reference support_test_main here to include it to
    avoid undefined reference to support_test_main.  The libmvec ABI test
    doesn't need other symbols in libsupport_nonshared.a.  */
-__typeof (support_test_main) *support_test_main_p = support_test_main;
+__typeof(support_test_main) *support_test_main_p = support_test_main;
 
 #define N 1000
 LIBMVEC_TYPE x[N], s[N], c[N];
 
-int
-test_vector_abi (void)
+int test_vector_abi(void)
 {
-  int i;
-  for(i = 0; i < N; i++)
-    {
-      c[i] = i / 3;
-      s[i] = c[i];
+    int i;
+    for (i = 0; i < N; i++) {
+        c[i] = i / 3;
+        s[i] = c[i];
     }
 
-#pragma omp simd
-  for(i = 0; i < N; i++)
-    x[i] = LIBMVEC_FUNC (s[i], c[i]);
+    #pragma omp simd
+    for (i = 0; i < N; i++) {
+        x[i] = LIBMVEC_FUNC(s[i], c[i]);
+    }
 
-  return 0;
+    return 0;
 }

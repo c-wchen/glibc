@@ -21,10 +21,9 @@
 #include <sysdep.h>
 
 /* Return information about the filesystem on which FD resides.  */
-int
-__fstatfs (int fd, struct statfs *buf)
+int __fstatfs(int fd, struct statfs *buf)
 {
-  return INLINE_SYSCALL_CALL (fstatfs, fd, buf);
+    return INLINE_SYSCALL_CALL(fstatfs, fd, buf);
 }
-libc_hidden_def (__fstatfs)
-weak_alias (__fstatfs, fstatfs)
+libc_hidden_def(__fstatfs)
+weak_alias(__fstatfs, fstatfs)

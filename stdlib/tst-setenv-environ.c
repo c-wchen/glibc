@@ -21,16 +21,15 @@
 
 extern char **environ;
 
-int
-do_test (void)
+int do_test(void)
 {
-  char *valp;
-  static char *dummy_environ[] = { NULL };
-  environ = dummy_environ;
-  setenv ("A", "1", 0);
-  valp = getenv ("A");
-  TEST_VERIFY_EXIT (valp[0] == '1' && valp[1] == '\0');
-  return 0;
+    char *valp;
+    static char *dummy_environ[] = { NULL };
+    environ = dummy_environ;
+    setenv("A", "1", 0);
+    valp = getenv("A");
+    TEST_VERIFY_EXIT(valp[0] == '1' && valp[1] == '\0');
+    return 0;
 }
 
 #include <support/test-driver.c>

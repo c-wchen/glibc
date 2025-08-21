@@ -20,20 +20,18 @@
 
 #include <fast-jitter.h>
 
-static inline unsigned int
-get_jitter (void)
+static inline unsigned int get_jitter(void)
 {
-  return get_fast_jitter ();
+    return get_fast_jitter();
 }
 
 #define MAX_BACKOFF 16
 
-static inline int
-get_next_backoff (int backoff)
+static inline int get_next_backoff(int backoff)
 {
-  /* Binary expontial backoff. Limiting max backoff
-     can reduce latency in large critical section.  */
-  return (backoff < MAX_BACKOFF) ? backoff << 1 : backoff;
+    /* Binary expontial backoff. Limiting max backoff
+       can reduce latency in large critical section.  */
+    return (backoff < MAX_BACKOFF) ? backoff << 1 : backoff;
 }
 
 #endif

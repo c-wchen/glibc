@@ -24,60 +24,56 @@
 #include <support/check.h>
 
 /* fa_IR defines to_inpunct for numbers.  */
-static const struct
-{
-  int n;
-  const char *str;
-} inputs[] =
-{
-  { 1,    "\xdb\xb1" },
-  { 2,    "\xdb\xb2" },
-  { 3,    "\xdb\xb3" },
-  { 4,    "\xdb\xb4" },
-  { 5,    "\xdb\xb5" },
-  { 6,    "\xdb\xb6" },
-  { 7,    "\xdb\xb7" },
-  { 8,    "\xdb\xb8" },
-  { 9,    "\xdb\xb9" },
-  { 10,   "\xdb\xb1\xdb\xb0" },
-  { 11,   "\xdb\xb1\xdb\xb1" },
-  { 12,   "\xdb\xb1\xdb\xb2" },
-  { 13,   "\xdb\xb1\xdb\xb3" },
-  { 14,   "\xdb\xb1\xdb\xb4" },
-  { 15,   "\xdb\xb1\xdb\xb5" },
-  { 16,   "\xdb\xb1\xdb\xb6" },
-  { 17,   "\xdb\xb1\xdb\xb7" },
-  { 18,   "\xdb\xb1\xdb\xb8" },
-  { 19,   "\xdb\xb1\xdb\xb9" },
-  { 20,   "\xdb\xb2\xdb\xb0" },
-  { 30,   "\xdb\xb3\xdb\xb0" },
-  { 40,   "\xdb\xb4\xdb\xb0" },
-  { 50,   "\xdb\xb5\xdb\xb0" },
-  { 60,   "\xdb\xb6\xdb\xb0" },
-  { 70,   "\xdb\xb7\xdb\xb0" },
-  { 80,   "\xdb\xb8\xdb\xb0" },
-  { 90,   "\xdb\xb9\xdb\xb0" },
-  { 100,  "\xdb\xb1\xdb\xb0\xdb\xb0" },
-  { 1000, "\xdb\xb1\xdb\xb0\xdb\xb0\xdb\xb0" },
+static const struct {
+    int n;
+    const char *str;
+} inputs[] = {
+    { 1,    "\xdb\xb1" },
+    { 2,    "\xdb\xb2" },
+    { 3,    "\xdb\xb3" },
+    { 4,    "\xdb\xb4" },
+    { 5,    "\xdb\xb5" },
+    { 6,    "\xdb\xb6" },
+    { 7,    "\xdb\xb7" },
+    { 8,    "\xdb\xb8" },
+    { 9,    "\xdb\xb9" },
+    { 10,   "\xdb\xb1\xdb\xb0" },
+    { 11,   "\xdb\xb1\xdb\xb1" },
+    { 12,   "\xdb\xb1\xdb\xb2" },
+    { 13,   "\xdb\xb1\xdb\xb3" },
+    { 14,   "\xdb\xb1\xdb\xb4" },
+    { 15,   "\xdb\xb1\xdb\xb5" },
+    { 16,   "\xdb\xb1\xdb\xb6" },
+    { 17,   "\xdb\xb1\xdb\xb7" },
+    { 18,   "\xdb\xb1\xdb\xb8" },
+    { 19,   "\xdb\xb1\xdb\xb9" },
+    { 20,   "\xdb\xb2\xdb\xb0" },
+    { 30,   "\xdb\xb3\xdb\xb0" },
+    { 40,   "\xdb\xb4\xdb\xb0" },
+    { 50,   "\xdb\xb5\xdb\xb0" },
+    { 60,   "\xdb\xb6\xdb\xb0" },
+    { 70,   "\xdb\xb7\xdb\xb0" },
+    { 80,   "\xdb\xb8\xdb\xb0" },
+    { 90,   "\xdb\xb9\xdb\xb0" },
+    { 100,  "\xdb\xb1\xdb\xb0\xdb\xb0" },
+    { 1000, "\xdb\xb1\xdb\xb0\xdb\xb0\xdb\xb0" },
 };
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  xsetlocale (LC_ALL, "fa_IR.UTF-8");
+    xsetlocale(LC_ALL, "fa_IR.UTF-8");
 
-  for (int i = 0; i < array_length (inputs); i++)
-    {
-      int n;
-      /* clang does not support 'I' specifier.  */
-      DIAG_PUSH_NEEDS_COMMENT_CLANG;
-      DIAG_IGNORE_NEEDS_COMMENT_CLANG (13, "-Wformat");
-      sscanf (inputs[i].str, "%Id", &n);
-      DIAG_POP_NEEDS_COMMENT_CLANG;
-      TEST_COMPARE (n, inputs[i].n);
+    for (int i = 0; i < array_length(inputs); i++) {
+        int n;
+        /* clang does not support 'I' specifier.  */
+        DIAG_PUSH_NEEDS_COMMENT_CLANG;
+        DIAG_IGNORE_NEEDS_COMMENT_CLANG(13, "-Wformat");
+        sscanf(inputs[i].str, "%Id", &n);
+        DIAG_POP_NEEDS_COMMENT_CLANG;
+        TEST_COMPARE(n, inputs[i].n);
     }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

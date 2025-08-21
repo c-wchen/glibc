@@ -20,13 +20,12 @@
 
 /* Perform user-defined atomic operation of array of semaphores.  */
 
-int
-__semtimedop (int semid, struct sembuf *sops, size_t nsops,
-	      const struct timespec *timeout)
+int __semtimedop(int semid, struct sembuf *sops, size_t nsops,
+                 const struct timespec *timeout)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-weak_alias (__semtimedop, semtimedop)
+weak_alias(__semtimedop, semtimedop)
 
-stub_warning (semtimedop)
+stub_warning(semtimedop)

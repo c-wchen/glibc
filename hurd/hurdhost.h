@@ -21,7 +21,7 @@
    If BUFLEN is not big enough to contain the whole contents,
    BUFLEN bytes of BUF are filled in and we fail with ENAMETOOLONG.  */
 
-ssize_t _hurd_get_host_config (const char *item,
-			       char *buf, size_t buflen);
-ssize_t _hurd_set_host_config (const char *item,
-			       const char *value, size_t valuelen);
+ssize_t _hurd_get_host_config(const char *item,
+                              char *buf, size_t buflen);
+ssize_t _hurd_set_host_config(const char *item,
+                              const char *value, size_t valuelen);

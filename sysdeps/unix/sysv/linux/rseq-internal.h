@@ -37,18 +37,17 @@
 
    Access to fields of the Extended ABI beyond the 20 bytes of the original ABI
    (after 'flags') must be gated by a check of the feature size.  */
-struct rseq_area
-{
-  /* Original ABI.  */
-  uint32_t cpu_id_start;
-  uint32_t cpu_id;
-  uint64_t rseq_cs;
-  uint32_t flags;
-  /* Extended ABI.  */
-  uint32_t node_id;
-  uint32_t mm_cid;
-  /* Flexible array member to discourage direct object allocations.  */
-  char end[];
+struct rseq_area {
+    /* Original ABI.  */
+    uint32_t cpu_id_start;
+    uint32_t cpu_id;
+    uint64_t rseq_cs;
+    uint32_t flags;
+    /* Extended ABI.  */
+    uint32_t node_id;
+    uint32_t mm_cid;
+    /* Flexible array member to discourage direct object allocations.  */
+    char end[];
 };
 
 /* Minimum size of the rseq area allocation required by the syscall.  The
@@ -83,53 +82,52 @@ extern ptrdiff_t _rseq_offset attribute_hidden;
 /* We want to use rtld_hidden_proto in order to call the internal aliases
    of __rseq_size and __rseq_offset from ld.so.  This avoids dynamic symbol
    binding at run time for both variables.  */
-rtld_hidden_proto (__rseq_size)
-rtld_hidden_proto (__rseq_offset)
+rtld_hidden_proto(__rseq_size)
+rtld_hidden_proto(__rseq_offset)
 
 /* Returns a pointer to the current thread rseq area.  */
 static inline struct rseq_area *
-RSEQ_SELF (void)
+RSEQ_SELF(void)
 {
-  return (struct rseq_area *) ((char *) __thread_pointer () + __rseq_offset);
+    return (struct rseq_area *)((char *) __thread_pointer() + __rseq_offset);
 }
 
 #ifdef RSEQ_SIG
-static inline bool
-rseq_register_current_thread (struct pthread *self, bool do_rseq)
+static inline bool rseq_register_current_thread(struct pthread *self, bool do_rseq)
 {
-  if (do_rseq)
-    {
-      unsigned int size =  __rseq_size;
+    if (do_rseq) {
+        unsigned int size =  __rseq_size;
 
-      /* The feature size can be smaller than the minimum rseq area size of 32
-         bytes accepted by the syscall, if this is the case, bump the size of
-         the registration to the minimum.  The 'extra TLS' block is always at
-         least 32 bytes. */
-      if (size < RSEQ_AREA_SIZE_INITIAL)
-        size = RSEQ_AREA_SIZE_INITIAL;
+        /* The feature size can be smaller than the minimum rseq area size of 32
+           bytes accepted by the syscall, if this is the case, bump the size of
+           the registration to the minimum.  The 'extra TLS' block is always at
+           least 32 bytes. */
+        if (size < RSEQ_AREA_SIZE_INITIAL) {
+            size = RSEQ_AREA_SIZE_INITIAL;
+        }
 
-      /* Initialize the whole rseq area to zero prior to registration.  */
-      memset (RSEQ_SELF (), 0, size);
+        /* Initialize the whole rseq area to zero prior to registration.  */
+        memset(RSEQ_SELF(), 0, size);
 
-      /* Set the cpu_id field to RSEQ_CPU_ID_UNINITIALIZED, this is checked by
-         the kernel at registration when CONFIG_DEBUG_RSEQ is enabled.  */
-      RSEQ_SETMEM (cpu_id, RSEQ_CPU_ID_UNINITIALIZED);
+        /* Set the cpu_id field to RSEQ_CPU_ID_UNINITIALIZED, this is checked by
+           the kernel at registration when CONFIG_DEBUG_RSEQ is enabled.  */
+        RSEQ_SETMEM(cpu_id, RSEQ_CPU_ID_UNINITIALIZED);
 
-      int ret = INTERNAL_SYSCALL_CALL (rseq, RSEQ_SELF (), size, 0, RSEQ_SIG);
-      if (!INTERNAL_SYSCALL_ERROR_P (ret))
-        return true;
+        int ret = INTERNAL_SYSCALL_CALL(rseq, RSEQ_SELF(), size, 0, RSEQ_SIG);
+        if (!INTERNAL_SYSCALL_ERROR_P(ret)) {
+            return true;
+        }
     }
-  /* When rseq is disabled by tunables or the registration fails, inform
-     userspace by setting 'cpu_id' to RSEQ_CPU_ID_REGISTRATION_FAILED.  */
-  RSEQ_SETMEM (cpu_id, RSEQ_CPU_ID_REGISTRATION_FAILED);
-  return false;
+    /* When rseq is disabled by tunables or the registration fails, inform
+       userspace by setting 'cpu_id' to RSEQ_CPU_ID_REGISTRATION_FAILED.  */
+    RSEQ_SETMEM(cpu_id, RSEQ_CPU_ID_REGISTRATION_FAILED);
+    return false;
 }
 #else /* RSEQ_SIG */
-static inline bool
-rseq_register_current_thread (struct pthread *self, bool do_rseq)
+static inline bool rseq_register_current_thread(struct pthread *self, bool do_rseq)
 {
-  RSEQ_SETMEM (cpu_id, RSEQ_CPU_ID_REGISTRATION_FAILED);
-  return false;
+    RSEQ_SETMEM(cpu_id, RSEQ_CPU_ID_REGISTRATION_FAILED);
+    return false;
 }
 #endif /* RSEQ_SIG */
 

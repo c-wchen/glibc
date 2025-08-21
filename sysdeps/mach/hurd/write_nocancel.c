@@ -20,11 +20,10 @@
 #include <hurd/fd.h>
 #include <not-cancel.h>
 
-ssize_t
-__write_nocancel (int fd, const void *buf, size_t nbytes)
+ssize_t __write_nocancel(int fd, const void *buf, size_t nbytes)
 {
-  error_t err = HURD_FD_USE (fd, _hurd_fd_write (descriptor,
-						 buf, &nbytes, -1));
-  return err ? __hurd_dfail (fd, err) : nbytes;
+    error_t err = HURD_FD_USE(fd, _hurd_fd_write(descriptor,
+                              buf, &nbytes, -1));
+    return err ? __hurd_dfail(fd, err) : nbytes;
 }
-libc_hidden_weak (__write_nocancel)
+libc_hidden_weak(__write_nocancel)

@@ -20,17 +20,15 @@
 #include <errno.h>
 #include <sys/mman.h>
 
-int
-__pkey_get (int key)
+int __pkey_get(int key)
 {
-  if (key < 0 || key > 15)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (key < 0 || key > 15) {
+        __set_errno(EINVAL);
+        return -1;
     }
-  unsigned int pkru = pkey_read ();
-  return (pkru >> (2 * key)) & 3;
-  return 0;
+    unsigned int pkru = pkey_read();
+    return (pkru >> (2 * key)) & 3;
+    return 0;
 }
-libc_hidden_def (__pkey_get)
-weak_alias (__pkey_get, pkey_get)
+libc_hidden_def(__pkey_get)
+weak_alias(__pkey_get, pkey_get)

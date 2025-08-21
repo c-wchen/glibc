@@ -43,7 +43,7 @@
    section but we cannot add const to the type because this isn't how
    the variable is declared.  So we use the section attribute.  */
 struct opaque_auth _null_auth;
-libc_hidden_nolink_sunrpc (_null_auth, GLIBC_2_0)
+libc_hidden_nolink_sunrpc(_null_auth, GLIBC_2_0)
 
 fd_set svc_fdset;
 struct rpc_createerr rpc_createerr;
@@ -51,9 +51,9 @@ struct pollfd *svc_pollfd;
 int svc_max_pollfd;
 #ifdef SHARED
 # ifndef EXPORT_RPC_SYMBOLS
-compat_symbol (libc, svc_fdset, svc_fdset, GLIBC_2_0);
-compat_symbol (libc, rpc_createerr, rpc_createerr, GLIBC_2_0);
-compat_symbol (libc, svc_pollfd, svc_pollfd, GLIBC_2_2);
-compat_symbol (libc, svc_max_pollfd, svc_max_pollfd, GLIBC_2_2);
+compat_symbol(libc, svc_fdset, svc_fdset, GLIBC_2_0);
+compat_symbol(libc, rpc_createerr, rpc_createerr, GLIBC_2_0);
+compat_symbol(libc, svc_pollfd, svc_pollfd, GLIBC_2_2);
+compat_symbol(libc, svc_max_pollfd, svc_max_pollfd, GLIBC_2_2);
 # endif
 #endif

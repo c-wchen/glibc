@@ -19,7 +19,7 @@
 /* System V/AArch64 ABI compliant context switching support.  */
 
 #ifndef _SYS_UCONTEXT_H
-#define _SYS_UCONTEXT_H	1
+#define _SYS_UCONTEXT_H 1
 
 #include <features.h>
 
@@ -42,15 +42,14 @@ typedef elf_greg_t greg_t;
 typedef elf_gregset_t gregset_t;
 
 /* Structure to describe FPU registers.  */
-typedef elf_fpregset_t	fpregset_t;
+typedef elf_fpregset_t  fpregset_t;
 #endif
 
 /* Context to describe whole processor state.  This only describes
    the core registers; coprocessor registers get saved elsewhere
    (e.g. in uc_regspace, or somewhere unspecified on the stack
    during non-RT signal handlers).  */
-typedef struct
-  {
+typedef struct {
     unsigned long long int __ctx(fault_address);
     unsigned long long int __ctx(regs)[31];
     unsigned long long int __ctx(sp);
@@ -60,18 +59,17 @@ typedef struct
        state such as the FP/SIMD state.  It has to match the definition
        of the corresponding field in the sigcontext struct, see the
        arch/arm64/include/uapi/asm/sigcontext.h linux header for details.  */
-    unsigned char __reserved[4096] __attribute__ ((__aligned__ (16)));
-  } mcontext_t;
+    unsigned char __reserved[4096] __attribute__((__aligned__(16)));
+} mcontext_t;
 
 /* Userlevel context.  */
-typedef struct ucontext_t
-  {
+typedef struct ucontext_t {
     unsigned long __ctx(uc_flags);
     struct ucontext_t *uc_link;
     stack_t uc_stack;
     sigset_t uc_sigmask;
     mcontext_t uc_mcontext;
-  } ucontext_t;
+} ucontext_t;
 
 #undef __ctx
 

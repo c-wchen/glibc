@@ -20,10 +20,9 @@
 #include <shlib-compat.h>
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
-int attribute_compat_text_section
-__pthread_yield (void)
+int attribute_compat_text_section __pthread_yield(void)
 {
-  return __sched_yield ();
+    return __sched_yield();
 }
-compat_symbol (libpthread, __pthread_yield, pthread_yield, GLIBC_2_2);
+compat_symbol(libpthread, __pthread_yield, pthread_yield, GLIBC_2_2);
 #endif /* OTHER_SHLIB_COMPAT */

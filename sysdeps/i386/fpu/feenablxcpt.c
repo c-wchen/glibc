@@ -20,33 +20,31 @@
 #include <unistd.h>
 #include <ldsodefs.h>
 
-int
-feenableexcept (int excepts)
+int feenableexcept(int excepts)
 {
-  unsigned short int new_exc;
-  unsigned short int old_exc;
+    unsigned short int new_exc;
+    unsigned short int old_exc;
 
-  /* Get the current control word.  */
-  __asm__ ("fstcw %0" : "=m" (*&new_exc));
+    /* Get the current control word.  */
+    __asm__("fstcw %0" : "=m"( *&new_exc));
 
-  excepts &= FE_ALL_EXCEPT;
-  old_exc = (~new_exc) & FE_ALL_EXCEPT;
+    excepts &= FE_ALL_EXCEPT;
+    old_exc = (~new_exc) & FE_ALL_EXCEPT;
 
-  new_exc &= ~excepts;
-  __asm__ ("fldcw %0" : : "m" (*&new_exc));
+    new_exc &= ~excepts;
+    __asm__("fldcw %0" : : "m"( *&new_exc));
 
-  /* If the CPU supports SSE we set the MXCSR as well.  */
-  if (CPU_FEATURE_USABLE (SSE))
-    {
-      unsigned int xnew_exc;
+    /* If the CPU supports SSE we set the MXCSR as well.  */
+    if (CPU_FEATURE_USABLE(SSE)) {
+        unsigned int xnew_exc;
 
-      /* Get the current control word.  */
-      __asm__ ("stmxcsr %0" : "=m" (*&xnew_exc));
+        /* Get the current control word.  */
+        __asm__("stmxcsr %0" : "=m"( *&xnew_exc));
 
-      xnew_exc &= ~(excepts << 7);
+        xnew_exc &= ~(excepts << 7);
 
-      __asm__ ("ldmxcsr %0" : : "m" (*&xnew_exc));
+        __asm__("ldmxcsr %0" : : "m"( *&xnew_exc));
     }
 
-  return old_exc;
+    return old_exc;
 }

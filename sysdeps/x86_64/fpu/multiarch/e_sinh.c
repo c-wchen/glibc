@@ -20,15 +20,15 @@
 #if MINIMUM_X86_ISA_LEVEL < AVX2_X86_ISA_LEVEL
 # include <libm-alias-finite.h>
 
-extern double __redirect_ieee754_sinh (double);
+extern double __redirect_ieee754_sinh(double);
 
 # define SYMBOL_NAME ieee754_sinh
 # include "ifunc-fma.h"
 
-libc_ifunc_redirected (__redirect_ieee754_sinh, __ieee754_sinh,
-		       IFUNC_SELECTOR ());
+libc_ifunc_redirected(__redirect_ieee754_sinh, __ieee754_sinh,
+                      IFUNC_SELECTOR());
 
-libm_alias_finite (__ieee754_sinh, __sinh)
+libm_alias_finite(__ieee754_sinh, __sinh)
 
 # define __ieee754_sinh __ieee754_sinh_sse2
 #endif

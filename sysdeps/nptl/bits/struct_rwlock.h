@@ -26,28 +26,27 @@
    arch-specific extensions (such as lock-elision).  The struct have a size
    of 32 bytes on both LP32 and LP64 architectures.  */
 
-struct __pthread_rwlock_arch_t
-{
-  unsigned int __readers;
-  unsigned int __writers;
-  unsigned int __wrphase_futex;
-  unsigned int __writers_futex;
-  unsigned int __pad3;
-  unsigned int __pad4;
-  /* FLAGS must stay at its position in the structure to maintain
-     binary compatibility.  */
+struct __pthread_rwlock_arch_t {
+    unsigned int __readers;
+    unsigned int __writers;
+    unsigned int __wrphase_futex;
+    unsigned int __writers_futex;
+    unsigned int __pad3;
+    unsigned int __pad4;
+    /* FLAGS must stay at its position in the structure to maintain
+       binary compatibility.  */
 #if __BYTE_ORDER == __BIG_ENDIAN
-  unsigned char __pad1;
-  unsigned char __pad2;
-  unsigned char __shared;
-  unsigned char __flags;
+    unsigned char __pad1;
+    unsigned char __pad2;
+    unsigned char __shared;
+    unsigned char __flags;
 #else
-  unsigned char __flags;
-  unsigned char __shared;
-  unsigned char __pad1;
-  unsigned char __pad2;
+    unsigned char __flags;
+    unsigned char __shared;
+    unsigned char __pad1;
+    unsigned char __pad2;
 #endif
-  int __cur_writer;
+    int __cur_writer;
 };
 
 #if __BYTE_ORDER == __BIG_ENDIAN

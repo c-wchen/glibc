@@ -1,13 +1,12 @@
 #include <stdio.h>
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  putc ('1', stderr);
-  putc ('2', stderr);
+    putc('1', stderr);
+    putc('2', stderr);
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

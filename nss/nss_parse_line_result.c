@@ -21,26 +21,24 @@
 #include <assert.h>
 #include <errno.h>
 
-int
-__nss_parse_line_result (FILE *fp, off64_t offset, int parse_line_result)
+int __nss_parse_line_result(FILE *fp, off64_t offset, int parse_line_result)
 {
-  assert (parse_line_result >= -1 && parse_line_result <= 1);
+    assert(parse_line_result >= -1 && parse_line_result <= 1);
 
-  switch (__builtin_expect (parse_line_result, 1))
-    {
-    case 1:
-      /* Success.  */
-      return 0;
-    case 0:
-      /* Parse error.  */
-      __set_errno (EINVAL);
-      return EINVAL;
-    case -1:
-      /* Out of buffer space.  */
-      return __nss_readline_seek (fp, offset);
+    switch (__builtin_expect(parse_line_result, 1)) {
+        case 1:
+            /* Success.  */
+            return 0;
+        case 0:
+            /* Parse error.  */
+            __set_errno(EINVAL);
+            return EINVAL;
+        case -1:
+            /* Out of buffer space.  */
+            return __nss_readline_seek(fp, offset);
 
-      default:
-        __builtin_unreachable ();
+        default:
+            __builtin_unreachable();
     }
 }
-libc_hidden_def (__nss_parse_line_result)
+libc_hidden_def(__nss_parse_line_result)

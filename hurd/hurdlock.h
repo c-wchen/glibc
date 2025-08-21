@@ -52,43 +52,43 @@ struct timespec;
 
 /* Same as '__lll_wait', but only block until TSP elapses,
    using clock CLK.  */
-extern int __lll_abstimed_wait (void *__ptr, int __val,
-  const struct timespec *__tsp, int __flags, int __clk);
+extern int __lll_abstimed_wait(void *__ptr, int __val,
+                               const struct timespec *__tsp, int __flags, int __clk);
 
 /* Interruptible version.  */
-extern int __lll_abstimed_wait_intr (void *__ptr, int __val,
-  const struct timespec *__tsp, int __flags, int __clk);
+extern int __lll_abstimed_wait_intr(void *__ptr, int __val,
+                                    const struct timespec *__tsp, int __flags, int __clk);
 
 /* Same as 'lll_xwait', but only block until TSP elapses,
    using clock CLK.  */
-extern int __lll_abstimed_xwait (void *__ptr, int __lo, int __hi,
-  const struct timespec *__tsp, int __flags, int __clk);
+extern int __lll_abstimed_xwait(void *__ptr, int __lo, int __hi,
+                                const struct timespec *__tsp, int __flags, int __clk);
 
 /* Same as 'lll_lock', but return with an error if TSP elapses,
    using clock CLK.  */
-extern int __lll_abstimed_lock (void *__ptr,
-  const struct timespec *__tsp, int __flags, int __clk);
-libc_hidden_proto (__lll_abstimed_lock)
+extern int __lll_abstimed_lock(void *__ptr,
+                               const struct timespec *__tsp, int __flags, int __clk);
+libc_hidden_proto(__lll_abstimed_lock)
 
 /* Acquire the lock at PTR, but return with an error if
    the process containing the owner thread dies.  */
-extern int __lll_robust_lock (void *__ptr, int __flags);
+extern int __lll_robust_lock(void *__ptr, int __flags);
 #define lll_robust_lock(var, flags) \
   __lll_robust_lock (&(var), flags)
-libc_hidden_proto (__lll_robust_lock)
+libc_hidden_proto(__lll_robust_lock)
 
 /* Same as '__lll_robust_lock', but only block until TSP
    elapses, using clock CLK.  */
-extern int __lll_robust_abstimed_lock (void *__ptr,
-  const struct timespec *__tsp, int __flags, int __clk);
-libc_hidden_proto (__lll_robust_abstimed_lock)
+extern int __lll_robust_abstimed_lock(void *__ptr,
+                                      const struct timespec *__tsp, int __flags, int __clk);
+libc_hidden_proto(__lll_robust_abstimed_lock)
 
 /* Same as '__lll_robust_lock', but return with an error
    if the lock cannot be acquired without blocking.  */
-extern int __lll_robust_trylock (void *__ptr);
+extern int __lll_robust_trylock(void *__ptr);
 #define lll_robust_trylock(var) \
   __lll_robust_trylock (&(var))
-libc_hidden_proto (__lll_robust_trylock)
+libc_hidden_proto(__lll_robust_trylock)
 
 /* Wake one or more threads waiting on address PTR,
    setting its value to VAL before doing so.  */
@@ -97,10 +97,10 @@ libc_hidden_proto (__lll_robust_trylock)
     (vm_offset_t)ptr, val, flags | GSYNC_MUTATE)
 
 /* Release the robust lock at PTR.  */
-extern void __lll_robust_unlock (void *__ptr, int __flags);
+extern void __lll_robust_unlock(void *__ptr, int __flags);
 #define lll_robust_unlock(var, flags) \
   __lll_robust_unlock (&(var), flags)
-libc_hidden_proto (__lll_robust_unlock)
+libc_hidden_proto(__lll_robust_unlock)
 
 /* Rearrange threads waiting on address SRC to instead wait on
    DST, waking one of them if WAIT_ONE is non-zero.  */

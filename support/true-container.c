@@ -19,8 +19,7 @@
 /* Implements the in-container /bin/true, which always returns true
    (0).  */
 
-int
-main (void)
+int main(void)
 {
-  return 0;
+    return 0;
 }

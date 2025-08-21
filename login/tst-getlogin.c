@@ -19,41 +19,35 @@
 #include <stdio.h>
 #include <string.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char *login;
-  int errors = 0;
+    char *login;
+    int errors = 0;
 
-  login = getlogin ();
-  if (login == NULL)
-    puts ("getlogin returned NULL, no further tests");
-  else
-    {
-      char name[1024];
-      int ret;
+    login = getlogin();
+    if (login == NULL) {
+        puts("getlogin returned NULL, no further tests");
+    } else {
+        char name[1024];
+        int ret;
 
-      printf ("getlogin returned: `%s'\n", login);
+        printf("getlogin returned: `%s'\n", login);
 
-      ret = getlogin_r (name, sizeof (name));
-      if (ret == 0)
-	{
-	  printf ("getlogin_r returned: `%s'\n", name);
-	  if (strcmp (name, login) != 0)
-	    {
-	      puts ("Error: getlogin and getlogin_r returned different names");
-	      ++errors;
-	    }
-	}
-      else
-	{
-	  printf ("Error: getlogin_r returned: %d (%s)\n",
-		  ret, strerror (ret));
-	  ++errors;
-	}
+        ret = getlogin_r(name, sizeof(name));
+        if (ret == 0) {
+            printf("getlogin_r returned: `%s'\n", name);
+            if (strcmp(name, login) != 0) {
+                puts("Error: getlogin and getlogin_r returned different names");
+                ++errors;
+            }
+        } else {
+            printf("Error: getlogin_r returned: %d (%s)\n",
+                   ret, strerror(ret));
+            ++errors;
+        }
     }
 
-  return errors != 0;
+    return errors != 0;
 }
 
 #define TEST_FUNCTION do_test ()

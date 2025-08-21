@@ -24,37 +24,35 @@
 #include <stdlib.h>
 #include <support/test-driver.h>
 
-static void
-print_failure (const char *file, int line, const char *format, va_list ap)
+static void print_failure(const char *file, int line, const char *format, va_list ap)
 {
-  int saved_errno = errno;
-  printf ("error: %s:%d: ", file, line);
-  vprintf (format, ap);
-  puts ("");
-  errno = saved_errno;
+    int saved_errno = errno;
+    printf("error: %s:%d: ", file, line);
+    vprintf(format, ap);
+    puts("");
+    errno = saved_errno;
 }
 
-int
-support_print_failure_impl (const char *file, int line,
-                            const char *format, ...)
+int support_print_failure_impl(const char *file, int line,
+                               const char *format, ...)
 {
-  support_record_failure ();
-  va_list ap;
-  va_start (ap, format);
-  print_failure (file, line, format, ap);
-  va_end (ap);
-  return 1;
+    support_record_failure();
+    va_list ap;
+    va_start(ap, format);
+    print_failure(file, line, format, ap);
+    va_end(ap);
+    return 1;
 }
 
-void
-support_exit_failure_impl (int status, const char *file, int line,
-                           const char *format, ...)
+void support_exit_failure_impl(int status, const char *file, int line,
+                               const char *format, ...)
 {
-  if (status != EXIT_SUCCESS && status != EXIT_UNSUPPORTED)
-    support_record_failure ();
-  va_list ap;
-  va_start (ap, format);
-  print_failure (file, line, format, ap);
-  va_end (ap);
-  exit (status);
+    if (status != EXIT_SUCCESS && status != EXIT_UNSUPPORTED) {
+        support_record_failure();
+    }
+    va_list ap;
+    va_start(ap, format);
+    print_failure(file, line, format, ap);
+    va_end(ap);
+    exit(status);
 }

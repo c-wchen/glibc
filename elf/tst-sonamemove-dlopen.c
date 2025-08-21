@@ -20,16 +20,15 @@
 #include <support/check.h>
 #include <support/xdlfcn.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* tst-sonamemove-runmod1.so does not define moved_function, but it
-     depends on tst-sonamemove-runmod2.so, which does.  */
-  void *handle = xdlopen ("tst-sonamemove-runmod1.so", RTLD_NOW);
-  TEST_VERIFY (xdlsym (handle, "moved_function") != NULL);
-  TEST_VERIFY (xdlvsym (handle, "moved_function", "SONAME_MOVE") != NULL);
+    /* tst-sonamemove-runmod1.so does not define moved_function, but it
+       depends on tst-sonamemove-runmod2.so, which does.  */
+    void *handle = xdlopen("tst-sonamemove-runmod1.so", RTLD_NOW);
+    TEST_VERIFY(xdlsym(handle, "moved_function") != NULL);
+    TEST_VERIFY(xdlvsym(handle, "moved_function", "SONAME_MOVE") != NULL);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

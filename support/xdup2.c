@@ -20,9 +20,9 @@
 
 #include <support/check.h>
 
-void
-xdup2 (int from, int to)
+void xdup2(int from, int to)
 {
-  if (dup2 (from, to) < 0)
-    FAIL_EXIT1 ("dup2 (%d, %d): %m", from, to);
+    if (dup2(from, to) < 0) {
+        FAIL_EXIT1("dup2 (%d, %d): %m", from, to);
+    }
 }

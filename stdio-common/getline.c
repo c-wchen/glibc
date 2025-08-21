@@ -22,10 +22,9 @@
 #undef __getline
 
 /* Like getdelim, but always looks for a newline.  */
-ssize_t
-__getline (char **lineptr, size_t *n, FILE *stream)
+ssize_t __getline(char **lineptr, size_t *n, FILE *stream)
 {
-  return __getdelim (lineptr, n, '\n', stream);
+    return __getdelim(lineptr, n, '\n', stream);
 }
 
-weak_alias (__getline, getline)
+weak_alias(__getline, getline)

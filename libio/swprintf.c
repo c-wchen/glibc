@@ -21,16 +21,15 @@
 
 /* Write formatted output into S, according to the format string FORMAT.  */
 /* VARARGS3 */
-int
-__swprintf (wchar_t *s, size_t n, const wchar_t *format, ...)
+int __swprintf(wchar_t *s, size_t n, const wchar_t *format, ...)
 {
-  va_list arg;
-  int done;
+    va_list arg;
+    int done;
 
-  va_start (arg, format);
-  done = __vswprintf_internal (s, n, format, arg, 0);
-  va_end (arg);
+    va_start(arg, format);
+    done = __vswprintf_internal(s, n, format, arg, 0);
+    va_end(arg);
 
-  return done;
+    return done;
 }
-ldbl_strong_alias (__swprintf, swprintf)
+ldbl_strong_alias(__swprintf, swprintf)

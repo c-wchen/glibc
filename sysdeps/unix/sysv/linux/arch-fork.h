@@ -31,27 +31,26 @@
    The architecture with non-default kernel abi semantic should correctly
    override it with one of the supported calling convention (check generic
    kernel-features.h for the clone abi variants).  */
-static inline pid_t
-arch_fork (void *ctid)
+static inline pid_t arch_fork(void *ctid)
 {
-  const int flags = CLONE_CHILD_SETTID | CLONE_CHILD_CLEARTID | SIGCHLD;
-  long int ret;
+    const int flags = CLONE_CHILD_SETTID | CLONE_CHILD_CLEARTID | SIGCHLD;
+    long int ret;
 #ifdef __ASSUME_CLONE_BACKWARDS
 # ifdef INLINE_CLONE_SYSCALL
-  ret = INLINE_CLONE_SYSCALL (flags, 0, NULL, 0, ctid);
+    ret = INLINE_CLONE_SYSCALL(flags, 0, NULL, 0, ctid);
 # else
-  ret = INLINE_SYSCALL_CALL (clone, flags, 0, NULL, 0, ctid);
+    ret = INLINE_SYSCALL_CALL(clone, flags, 0, NULL, 0, ctid);
 # endif
 #elif defined(__ASSUME_CLONE_BACKWARDS2)
-  ret = INLINE_SYSCALL_CALL (clone, 0, flags, NULL, ctid, 0);
+    ret = INLINE_SYSCALL_CALL(clone, 0, flags, NULL, ctid, 0);
 #elif defined(__ASSUME_CLONE_BACKWARDS3)
-  ret = INLINE_SYSCALL_CALL (clone, flags, 0, 0, NULL, ctid, 0);
+    ret = INLINE_SYSCALL_CALL(clone, flags, 0, 0, NULL, ctid, 0);
 #elif defined(__ASSUME_CLONE_DEFAULT)
-  ret = INLINE_SYSCALL_CALL (clone, flags, 0, NULL, ctid, 0);
+    ret = INLINE_SYSCALL_CALL(clone, flags, 0, NULL, ctid, 0);
 #else
 # error "Undefined clone variant"
 #endif
-  return ret;
+    return ret;
 }
 
 #endif /* __ARCH_FORK_H  */

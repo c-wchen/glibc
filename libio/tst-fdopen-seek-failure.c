@@ -26,23 +26,23 @@
 #include <support/xunistd.h>
 #include <unistd.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  mtrace ();
+    mtrace();
 
-  /* This file is special because it is seekable, but only
-     with SEEK_SET, not SEEK_END.  */
-  int fd = open ("/proc/self/mem", O_RDWR);
-  if (fd < 0)
-    FAIL_UNSUPPORTED ("/proc/self/mem not found: %m");
-  FILE *fp = fdopen (fd, "a");
-  /* The fdopen call should have failed because it tried to use
-     SEEK_END.  */
-  TEST_VERIFY (fp == NULL);
-  TEST_COMPARE (errno, EINVAL);
-  xclose (fd);
-  return 0;
+    /* This file is special because it is seekable, but only
+       with SEEK_SET, not SEEK_END.  */
+    int fd = open("/proc/self/mem", O_RDWR);
+    if (fd < 0) {
+        FAIL_UNSUPPORTED("/proc/self/mem not found: %m");
+    }
+    FILE *fp = fdopen(fd, "a");
+    /* The fdopen call should have failed because it tried to use
+       SEEK_END.  */
+    TEST_VERIFY(fp == NULL);
+    TEST_COMPARE(errno, EINVAL);
+    xclose(fd);
+    return 0;
 }
 
 #include <support/test-driver.c>

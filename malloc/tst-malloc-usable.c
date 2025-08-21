@@ -25,21 +25,20 @@
 #include <support/support.h>
 #include <support/check.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  size_t usable_size;
-  void *p = malloc (7);
+    size_t usable_size;
+    void *p = malloc(7);
 
-  TEST_VERIFY_EXIT (p != NULL);
-  usable_size = malloc_usable_size (p);
-  TEST_COMPARE (usable_size, 7);
-  memset (p, 0, usable_size);
-  free (p);
+    TEST_VERIFY_EXIT(p != NULL);
+    usable_size = malloc_usable_size(p);
+    TEST_COMPARE(usable_size, 7);
+    memset(p, 0, usable_size);
+    free(p);
 
-  TEST_COMPARE (malloc_usable_size (NULL), 0);
+    TEST_COMPARE(malloc_usable_size(NULL), 0);
 
-  return 0;
+    return 0;
 }
 
 #include "support/test-driver.c"

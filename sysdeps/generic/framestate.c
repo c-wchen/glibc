@@ -25,22 +25,21 @@
 
 #include <unwind-link.h>
 
-typedef struct frame_state * (*framesf)(void *pc, struct frame_state *);
-struct frame_state *__frame_state_for (void *pc,
-				       struct frame_state *frame_state);
+typedef struct frame_state *(*framesf)(void *pc, struct frame_state *);
+struct frame_state *__frame_state_for(void *pc,
+                                      struct frame_state *frame_state);
 
 struct frame_state *
-__frame_state_for (void *pc, struct frame_state *frame_state)
+__frame_state_for(void *pc, struct frame_state *frame_state)
 {
-  struct unwind_link *unwind_link = __libc_unwind_link_get ();
-  if (unwind_link != NULL)
-    return UNWIND_LINK_PTR (unwind_link, __frame_state_for) (pc, frame_state);
-  else
-    {
+    struct unwind_link *unwind_link = __libc_unwind_link_get();
+    if (unwind_link != NULL) {
+        return UNWIND_LINK_PTR(unwind_link, __frame_state_for)(pc, frame_state);
+    } else {
 #ifndef __USING_SJLJ_EXCEPTIONS__
-      return fallback_frame_state_for (pc, frame_state);
+        return fallback_frame_state_for(pc, frame_state);
 #else
-      abort ();
+        abort();
 #endif
     }
 }

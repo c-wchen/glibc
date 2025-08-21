@@ -22,7 +22,7 @@
 
 #include <sysdep.h>
 
-static void mcount_internal (u_long frompc, u_long selfpc);
+static void mcount_internal(u_long frompc, u_long selfpc);
 
 #define _MCOUNT_DECL(frompc, selfpc) \
 static inline void mcount_internal (u_long frompc, u_long selfpc)

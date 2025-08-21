@@ -19,9 +19,8 @@
 #include <link.h>
 #include <support/support.h>
 
-unsigned int
-la_version (unsigned int v)
+unsigned int la_version(unsigned int v)
 {
-  write_message ("info: tst-auditlogmod-2.so loaded\n");
-  return LAV_CURRENT;
+    write_message("info: tst-auditlogmod-2.so loaded\n");
+    return LAV_CURRENT;
 }

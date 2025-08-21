@@ -19,13 +19,12 @@
 #include <machine-lock.h>
 
 /* In glibc.  */
-extern void __spin_lock_solid (__spin_lock_t *lock);
+extern void __spin_lock_solid(__spin_lock_t *lock);
 
 /* Lock the spin lock object LOCK.  If the lock is held by another
    thread spin until it becomes available.  */
-int
-_pthread_spin_lock (__spin_lock_t *lock)
+int _pthread_spin_lock(__spin_lock_t *lock)
 {
-  __spin_lock_solid (lock);
-  return 0;
+    __spin_lock_solid(lock);
+    return 0;
 }

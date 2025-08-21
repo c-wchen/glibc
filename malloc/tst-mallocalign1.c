@@ -22,52 +22,50 @@
 #include <malloc-size.h>
 #include <support/check.h>
 
-static void *
-test (size_t s)
+static void *test(size_t s)
 {
-  void *p = malloc (s);
+    void *p = malloc(s);
 
-  printf ("malloc: %zu, %p: %zu\n", s, p,
-	  ((uintptr_t) p) & MALLOC_ALIGN_MASK);
-  return p;
+    printf("malloc: %zu, %p: %zu\n", s, p,
+           ((uintptr_t) p) & MALLOC_ALIGN_MASK);
+    return p;
 }
 
 #define ALIGNED(p) (((uintptr_t) p & MALLOC_ALIGN_MASK) == 0)
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  void *p;
+    void *p;
 
-  p = test (2);
-  TEST_VERIFY (ALIGNED (p));
-  free (p);
+    p = test(2);
+    TEST_VERIFY(ALIGNED(p));
+    free(p);
 
-  p = test (8);
-  TEST_VERIFY (ALIGNED (p));
-  free (p);
+    p = test(8);
+    TEST_VERIFY(ALIGNED(p));
+    free(p);
 
-  p = test (13);
-  TEST_VERIFY (ALIGNED (p));
-  free (p);
+    p = test(13);
+    TEST_VERIFY(ALIGNED(p));
+    free(p);
 
-  p = test (16);
-  TEST_VERIFY (ALIGNED (p));
-  free (p);
+    p = test(16);
+    TEST_VERIFY(ALIGNED(p));
+    free(p);
 
-  p = test (23);
-  TEST_VERIFY (ALIGNED (p));
-  free (p);
+    p = test(23);
+    TEST_VERIFY(ALIGNED(p));
+    free(p);
 
-  p = test (43);
-  TEST_VERIFY (ALIGNED (p));
-  free (p);
+    p = test(43);
+    TEST_VERIFY(ALIGNED(p));
+    free(p);
 
-  p = test (123);
-  TEST_VERIFY (ALIGNED (p));
-  free (p);
+    p = test(123);
+    TEST_VERIFY(ALIGNED(p));
+    free(p);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

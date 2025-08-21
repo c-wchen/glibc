@@ -30,55 +30,49 @@ static char *logfilename;
 FILE *dbgout;
 int debug_level;
 
-void
-set_logfile (const char *logfile)
+void set_logfile(const char *logfile)
 {
-  logfilename = strdup (logfile);
+    logfilename = strdup(logfile);
 }
 
-int
-init_logfile (void)
+int init_logfile(void)
 {
-  if (logfilename)
-    {
-      dbgout = fopen64 (logfilename, "a");
-      return dbgout == NULL ? 0 : 1;
+    if (logfilename) {
+        dbgout = fopen64(logfilename, "a");
+        return dbgout == NULL ? 0 : 1;
     }
-  return 1;
+    return 1;
 }
 
-void
-dbg_log (const char *fmt,...)
+void dbg_log(const char *fmt, ...)
 {
-  va_list ap;
-  char msg2[512];
+    va_list ap;
+    char msg2[512];
 
-  va_start (ap, fmt);
-  vsnprintf (msg2, sizeof (msg2), fmt, ap);
+    va_start(ap, fmt);
+    vsnprintf(msg2, sizeof(msg2), fmt, ap);
 
-  if (debug_level > 0)
-    {
-      time_t t = time (NULL);
+    if (debug_level > 0) {
+        time_t t = time(NULL);
 
-      struct tm now;
-      localtime_r (&t, &now);
+        struct tm now;
+        localtime_r(&t, &now);
 
-      char buf[256];
-      strftime (buf, sizeof (buf), "%c", &now);
+        char buf[256];
+        strftime(buf, sizeof(buf), "%c", &now);
 
-      char msg[1024];
-      snprintf (msg, sizeof (msg), "%s - %d: %s%s", buf, getpid (), msg2,
-		msg2[strlen (msg2) - 1] == '\n' ? "" : "\n");
-      if (dbgout)
-	{
-	  fputs (msg, dbgout);
-	  fflush (dbgout);
-	}
-      else
-	fputs (msg, stderr);
+        char msg[1024];
+        snprintf(msg, sizeof(msg), "%s - %d: %s%s", buf, getpid(), msg2,
+                 msg2[strlen(msg2) - 1] == '\n' ? "" : "\n");
+        if (dbgout) {
+            fputs(msg, dbgout);
+            fflush(dbgout);
+        } else {
+            fputs(msg, stderr);
+        }
+    } else {
+        syslog(LOG_NOTICE, "%d %s", getpid(), msg2);
     }
-  else
-    syslog (LOG_NOTICE, "%d %s", getpid (), msg2);
 
-  va_end (ap);
+    va_end(ap);
 }

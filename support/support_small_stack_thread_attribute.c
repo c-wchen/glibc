@@ -19,36 +19,32 @@
 #include <support/xthread.h>
 #include <allocate_once.h>
 
-static void *
-allocate (void *closure)
+static void *allocate(void *closure)
 {
-  pthread_attr_t *result = malloc (sizeof (*result));
-  xpthread_attr_init (result);
-  support_set_small_thread_stack_size (result);
-  return result;
+    pthread_attr_t *result = malloc(sizeof(*result));
+    xpthread_attr_init(result);
+    support_set_small_thread_stack_size(result);
+    return result;
 }
 
-static void
-deallocate (void *ptr, void *closure)
+static void deallocate(void *ptr, void *closure)
 {
-  xpthread_attr_destroy (ptr);
-  free (ptr);
+    xpthread_attr_destroy(ptr);
+    free(ptr);
 }
 
 static void *small_stack_attr;
 
-pthread_attr_t *
-support_small_stack_thread_attribute (void)
+pthread_attr_t *support_small_stack_thread_attribute(void)
 {
-  return allocate_once (&small_stack_attr, allocate, deallocate, NULL);
+    return allocate_once(&small_stack_attr, allocate, deallocate, NULL);
 }
 
-static void __attribute__ ((destructor))
-fini (void)
+static void __attribute__((destructor))
+fini(void)
 {
-  if (small_stack_attr != NULL)
-    {
-      deallocate (small_stack_attr, NULL);
-      small_stack_attr = NULL;
+    if (small_stack_attr != NULL) {
+        deallocate(small_stack_attr, NULL);
+        small_stack_attr = NULL;
     }
 }

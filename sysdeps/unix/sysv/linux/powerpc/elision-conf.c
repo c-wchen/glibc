@@ -28,8 +28,7 @@
 /* Reasonable initial tuning values, may be revised in the future.
    This is a conservative initial value.  */
 
-struct elision_config __elision_aconf =
-  {
+struct elision_config __elision_aconf = {
     /* How many times to use a non-transactional lock after a transactional
        failure has occurred because the lock is already acquired.  Expressed
        in number of lock acquisition attempts.  */
@@ -47,18 +46,17 @@ struct elision_config __elision_aconf =
     .try_tbegin = 3,
     /* Same as SKIP_LOCK_INTERNAL_ABORT but for trylock.  */
     .skip_trylock_internal_abort = 3,
-  };
+};
 
 static inline void
-__always_inline
-do_set_elision_enable (int32_t elision_enable)
+__always_inline do_set_elision_enable(int32_t elision_enable)
 {
-  /* Enable elision if it's available in hardware. It's not necessary to check
-     if __libc_enable_secure isn't enabled since elision_enable will be set
-     according to the default, which is disabled.  */
-  if (elision_enable == 1)
-    __pthread_force_elision = (GLRO (dl_hwcap2)
-			       & PPC_FEATURE2_HAS_HTM) ? 1 : 0;
+    /* Enable elision if it's available in hardware. It's not necessary to check
+       if __libc_enable_secure isn't enabled since elision_enable will be set
+       according to the default, which is disabled.  */
+    if (elision_enable == 1)
+        __pthread_force_elision = (GLRO(dl_hwcap2)
+                                   & PPC_FEATURE2_HAS_HTM) ? 1 : 0;
 }
 
 /* The pthread->elision_enable tunable is 0 or 1 indicating that elision
@@ -66,73 +64,73 @@ do_set_elision_enable (int32_t elision_enable)
    if it's supported by the hardware.  */
 
 void
-TUNABLE_CALLBACK (set_elision_enable) (tunable_val_t *valp)
+TUNABLE_CALLBACK(set_elision_enable)(tunable_val_t *valp)
 {
-  int32_t elision_enable = (int32_t) valp->numval;
-  do_set_elision_enable (elision_enable);
+    int32_t elision_enable = (int32_t) valp->numval;
+    do_set_elision_enable(elision_enable);
 }
 
-#define TUNABLE_CALLBACK_FNDECL(__name, __type)			\
-static inline void						\
-__always_inline							\
-do_set_elision_ ## __name (__type value)			\
-{								\
-  __elision_aconf.__name = value;				\
-}								\
-void								\
+#define TUNABLE_CALLBACK_FNDECL(__name, __type)         \
+static inline void                      \
+__always_inline                         \
+do_set_elision_ ## __name (__type value)            \
+{                               \
+  __elision_aconf.__name = value;               \
+}                               \
+void                                \
 TUNABLE_CALLBACK (set_elision_ ## __name) (tunable_val_t *valp) \
-{								\
-  __type value = (__type) (valp)->numval;			\
-  do_set_elision_ ## __name (value);				\
+{                               \
+  __type value = (__type) (valp)->numval;           \
+  do_set_elision_ ## __name (value);                \
 }
 
-TUNABLE_CALLBACK_FNDECL (skip_lock_busy, int32_t);
-TUNABLE_CALLBACK_FNDECL (skip_lock_internal_abort, int32_t);
-TUNABLE_CALLBACK_FNDECL (skip_lock_out_of_tbegin_retries, int32_t);
-TUNABLE_CALLBACK_FNDECL (try_tbegin, int32_t);
-TUNABLE_CALLBACK_FNDECL (skip_trylock_internal_abort, int32_t);
+TUNABLE_CALLBACK_FNDECL(skip_lock_busy, int32_t);
+TUNABLE_CALLBACK_FNDECL(skip_lock_internal_abort, int32_t);
+TUNABLE_CALLBACK_FNDECL(skip_lock_out_of_tbegin_retries, int32_t);
+TUNABLE_CALLBACK_FNDECL(try_tbegin, int32_t);
+TUNABLE_CALLBACK_FNDECL(skip_trylock_internal_abort, int32_t);
 
 /* Initialize elision.  */
 
-void
-__lll_elision_init (void)
+void __lll_elision_init(void)
 {
-  /* Elision depends on tunables and must be explicitly turned on by setting
-     the appropriate tunable on a supported platform.  */
+    /* Elision depends on tunables and must be explicitly turned on by setting
+       the appropriate tunable on a supported platform.  */
 
-  TUNABLE_GET (enable, int32_t,
-	       TUNABLE_CALLBACK (set_elision_enable));
-  TUNABLE_GET (skip_lock_busy, int32_t,
-	       TUNABLE_CALLBACK (set_elision_skip_lock_busy));
-  TUNABLE_GET (skip_lock_internal_abort, int32_t,
-	       TUNABLE_CALLBACK (set_elision_skip_lock_internal_abort));
-  TUNABLE_GET (skip_lock_after_retries, int32_t,
-	       TUNABLE_CALLBACK (set_elision_skip_lock_out_of_tbegin_retries));
-  TUNABLE_GET (tries, int32_t,
-	       TUNABLE_CALLBACK (set_elision_try_tbegin));
-  TUNABLE_GET (skip_trylock_internal_abort, int32_t,
-	       TUNABLE_CALLBACK (set_elision_skip_trylock_internal_abort));
+    TUNABLE_GET(enable, int32_t,
+                TUNABLE_CALLBACK(set_elision_enable));
+    TUNABLE_GET(skip_lock_busy, int32_t,
+                TUNABLE_CALLBACK(set_elision_skip_lock_busy));
+    TUNABLE_GET(skip_lock_internal_abort, int32_t,
+                TUNABLE_CALLBACK(set_elision_skip_lock_internal_abort));
+    TUNABLE_GET(skip_lock_after_retries, int32_t,
+                TUNABLE_CALLBACK(set_elision_skip_lock_out_of_tbegin_retries));
+    TUNABLE_GET(tries, int32_t,
+                TUNABLE_CALLBACK(set_elision_try_tbegin));
+    TUNABLE_GET(skip_trylock_internal_abort, int32_t,
+                TUNABLE_CALLBACK(set_elision_skip_trylock_internal_abort));
 
-  /* Linux from 3.9 through 4.2 do not abort HTM transaction on syscalls,
-     instead it suspends the transaction and resumes it when returning to
-     usercode.  The side-effects of the syscall will always remain visible,
-     even if the transaction is aborted.  This is an issue when a transaction
-     is used along with futex syscall, on pthread_cond_wait for instance,
-     where futex might succeed but the transaction is rolled back leading
-     the condition variable object in an inconsistent state.
+    /* Linux from 3.9 through 4.2 do not abort HTM transaction on syscalls,
+       instead it suspends the transaction and resumes it when returning to
+       usercode.  The side-effects of the syscall will always remain visible,
+       even if the transaction is aborted.  This is an issue when a transaction
+       is used along with futex syscall, on pthread_cond_wait for instance,
+       where futex might succeed but the transaction is rolled back leading
+       the condition variable object in an inconsistent state.
 
-     Glibc used to prevent it by always aborting a transaction before issuing
-     a syscall.  Linux 4.2 also decided to abort active transaction in
-     syscalls which makes the glibc workaround superflours.  Worse, glibc
-     transaction abortions leads to a performance issues on recent kernels.
+       Glibc used to prevent it by always aborting a transaction before issuing
+       a syscall.  Linux 4.2 also decided to abort active transaction in
+       syscalls which makes the glibc workaround superflours.  Worse, glibc
+       transaction abortions leads to a performance issues on recent kernels.
 
-     So Lock Elision is just enabled when it has been explicitly set (either
-     by tunables of by a configure switch) and if kernel aborts HTM
-     transactions on syscalls (PPC_FEATURE2_HTM_NOSC)  */
+       So Lock Elision is just enabled when it has been explicitly set (either
+       by tunables of by a configure switch) and if kernel aborts HTM
+       transactions on syscalls (PPC_FEATURE2_HTM_NOSC)  */
 
-  __pthread_force_elision = (__pthread_force_elision
-			     && GLRO (dl_hwcap2) & PPC_FEATURE2_HTM_NOSC);
+    __pthread_force_elision = (__pthread_force_elision
+                               && GLRO(dl_hwcap2) & PPC_FEATURE2_HTM_NOSC);
 
-  if (!__pthread_force_elision)
-    __elision_aconf.try_tbegin = 0; /* Disable elision on rwlocks.  */
+    if (!__pthread_force_elision) {
+        __elision_aconf.try_tbegin = 0;    /* Disable elision on rwlocks.  */
+    }
 }

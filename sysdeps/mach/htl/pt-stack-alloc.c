@@ -27,20 +27,21 @@
    Otherwise return an error code (EINVAL for an invalid stack size,
    EAGAIN if the system lacked the necessary resources to allocate a
    new stack).  */
-int
-__pthread_stack_alloc (void **stackaddr, size_t stacksize)
+int __pthread_stack_alloc(void **stackaddr, size_t stacksize)
 {
-  error_t err;
-  vm_prot_t prot = VM_PROT_READ | VM_PROT_WRITE;
+    error_t err;
+    vm_prot_t prot = VM_PROT_READ | VM_PROT_WRITE;
 
-  if (GL(dl_stack_flags) & PF_X)
-    prot |= VM_PROT_EXECUTE;
+    if (GL(dl_stack_flags) & PF_X) {
+        prot |= VM_PROT_EXECUTE;
+    }
 
-  err = __vm_map (__mach_task_self (), (vm_offset_t *) stackaddr,
-		  stacksize, 0, TRUE, MEMORY_OBJECT_NULL, 0, FALSE,
-		  prot, VM_PROT_ALL, VM_INHERIT_COPY);
+    err = __vm_map(__mach_task_self(), (vm_offset_t *) stackaddr,
+                   stacksize, 0, TRUE, MEMORY_OBJECT_NULL, 0, FALSE,
+                   prot, VM_PROT_ALL, VM_INHERIT_COPY);
 
-  if (err == KERN_NO_SPACE)
-    err = EAGAIN;
-  return err;
+    if (err == KERN_NO_SPACE) {
+        err = EAGAIN;
+    }
+    return err;
 }

@@ -27,6 +27,6 @@
    the C library implementation of readv/writev is able to emulate the
    functionality even if the currently running kernel does not support
    this large value the readv/writev call will not fail because of this.  */
-#define __IOV_MAX	1024
+#define __IOV_MAX   1024
 
 #endif

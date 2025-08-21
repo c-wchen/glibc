@@ -21,22 +21,20 @@
 
 /* Open FILE with access OFLAG.  If O_CREAT or O_TMPFILE is in OFLAG,
    a third argument is the file protection.  */
-int
-__libc_open64 (const char *file, int oflag, ...)
+int __libc_open64(const char *file, int oflag, ...)
 {
-  int mode = 0;
+    int mode = 0;
 
-  if (__OPEN_NEEDS_MODE (oflag))
-    {
-      va_list arg;
-      va_start (arg, oflag);
-      mode = va_arg (arg, int);
-      va_end (arg);
+    if (__OPEN_NEEDS_MODE(oflag)) {
+        va_list arg;
+        va_start(arg, oflag);
+        mode = va_arg(arg, int);
+        va_end(arg);
     }
 
-  /* __libc_open should be a cancellation point.  */
-  return __libc_open (file, oflag | O_LARGEFILE, mode);
+    /* __libc_open should be a cancellation point.  */
+    return __libc_open(file, oflag | O_LARGEFILE, mode);
 }
-weak_alias (__libc_open64, __open64)
-libc_hidden_weak (__open64)
-weak_alias (__libc_open64, open64)
+weak_alias(__libc_open64, __open64)
+libc_hidden_weak(__open64)
+weak_alias(__libc_open64, open64)

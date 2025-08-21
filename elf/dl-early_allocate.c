@@ -20,11 +20,11 @@
 #include <stddef.h>
 #include <unistd.h>
 
-void *
-_dl_early_allocate (size_t size)
+void *_dl_early_allocate(size_t size)
 {
-  void *result = __sbrk (size);
-  if (result == (void *) -1)
-    result = NULL;
-  return result;
+    void *result = __sbrk(size);
+    if (result == (void *) -1) {
+        result = NULL;
+    }
+    return result;
 }

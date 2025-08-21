@@ -18,13 +18,13 @@
 #include <rpc/netdb.h>
 
 
-#define LOOKUP_TYPE		struct rpcent
-#define FUNCTION_NAME		getrpcbynumber
-#define DATABASE_NAME		rpc
-#define ADD_PARAMS		int number
-#define ADD_VARIABLES		number
+#define LOOKUP_TYPE     struct rpcent
+#define FUNCTION_NAME       getrpcbynumber
+#define DATABASE_NAME       rpc
+#define ADD_PARAMS      int number
+#define ADD_VARIABLES       number
 
 /* There is no nscd support for the rpc file.  */
-#undef	USE_NSCD
+#undef  USE_NSCD
 
 #include "../nss/getXXbyYY_r.c"

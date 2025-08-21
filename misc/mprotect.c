@@ -23,12 +23,11 @@
    extending LEN bytes to PROT.  Returns 0 if successful, -1 for errors
    (and sets errno).  */
 
-int
-__mprotect (void *addr, size_t len, int prot)
+int __mprotect(void *addr, size_t len, int prot)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-weak_alias (__mprotect, mprotect)
+weak_alias(__mprotect, mprotect)
 
-stub_warning (mprotect)
+stub_warning(mprotect)

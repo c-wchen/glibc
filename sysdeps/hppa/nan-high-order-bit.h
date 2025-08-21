@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef NAN_HIGH_ORDER_BIT_H
-#define NAN_HIGH_ORDER_BIT_H	1
+#define NAN_HIGH_ORDER_BIT_H    1
 
 /* One of the few architectures where the meaning of the
    quiet/signaling bit is inverse to IEEE 754-2008 (as well as common

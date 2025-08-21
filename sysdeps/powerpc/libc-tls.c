@@ -24,9 +24,8 @@
    by passing --no-tls-optimze to the linker, we need to provide __tls_get_addr
    in static libc in order to avoid undefined references to that symbol.  */
 
-void *
-__tls_get_addr (tls_index *ti)
+void *__tls_get_addr(tls_index *ti)
 {
-  dtv_t *dtv = THREAD_DTV ();
-  return (char *) dtv[1].pointer.val + ti->ti_offset + TLS_DTV_OFFSET;
+    dtv_t *dtv = THREAD_DTV();
+    return (char *) dtv[1].pointer.val + ti->ti_offset + TLS_DTV_OFFSET;
 }

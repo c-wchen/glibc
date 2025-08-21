@@ -74,7 +74,7 @@
 #define gp      $28     /* global pointer */
 #define sp      $29     /* stack pointer */
 #define fp      $30     /* frame pointer */
-#define s8	$30	/* same like fp! */
+#define s8  $30 /* same like fp! */
 #define ra      $31     /* return address */
 
 #endif /* _SYS_REGDEF_H */

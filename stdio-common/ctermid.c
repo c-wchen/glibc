@@ -22,12 +22,11 @@
 /* Return the name of the controlling terminal.
    If S is not NULL, the name is copied into it (it should be at
    least L_ctermid bytes long), otherwise a static buffer is used.  */
-char *
-ctermid (char *s)
+char *ctermid(char *s)
 {
-  __set_errno (ENOSYS);
-  return NULL;
+    __set_errno(ENOSYS);
+    return NULL;
 }
 
 
-stub_warning (ctermid)
+stub_warning(ctermid)

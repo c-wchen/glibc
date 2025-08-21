@@ -23,87 +23,75 @@
 #include <unistd.h>
 
 
-static void
-remove_sem (int status, void *arg)
+static void remove_sem(int status, void *arg)
 {
-  sem_unlink (arg);
+    sem_unlink(arg);
 }
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  sem_t *s;
-  sem_t *s2;
-  sem_t *s3;
+    sem_t *s;
+    sem_t *s2;
+    sem_t *s3;
 
-  s = sem_open ("/glibc-tst-sem7", O_CREAT, 0600, 1);
-  if (s == SEM_FAILED)
-    {
-      if (errno == ENOSYS)
-	{
-	  puts ("sem_open not supported.  Oh well.");
-	  return 0;
-	}
+    s = sem_open("/glibc-tst-sem7", O_CREAT, 0600, 1);
+    if (s == SEM_FAILED) {
+        if (errno == ENOSYS) {
+            puts("sem_open not supported.  Oh well.");
+            return 0;
+        }
 
-      /* Maybe the shm filesystem has strict permissions.  */
-      if (errno == EACCES)
-	{
-	  puts ("sem_open not allowed.  Oh well.");
-	  return 0;
-	}
+        /* Maybe the shm filesystem has strict permissions.  */
+        if (errno == EACCES) {
+            puts("sem_open not allowed.  Oh well.");
+            return 0;
+        }
 
-      printf ("sem_open: %m\n");
-      return 1;
+        printf("sem_open: %m\n");
+        return 1;
     }
 
-  on_exit (remove_sem, (void *) "/glibc-tst-sem7");
+    on_exit(remove_sem, (void *) "/glibc-tst-sem7");
 
-  /* We have the semaphore object.  Now try again.  We should get the
-     same address.  */
-  s2 = sem_open ("/glibc-tst-sem7", O_CREAT, 0600, 1);
-  if (s2 == SEM_FAILED)
-    {
-      puts ("2nd sem_open failed");
-      return 1;
+    /* We have the semaphore object.  Now try again.  We should get the
+       same address.  */
+    s2 = sem_open("/glibc-tst-sem7", O_CREAT, 0600, 1);
+    if (s2 == SEM_FAILED) {
+        puts("2nd sem_open failed");
+        return 1;
     }
-  if (s != s2)
-    {
-      puts ("2nd sem_open didn't return the same address");
-      return 1;
+    if (s != s2) {
+        puts("2nd sem_open didn't return the same address");
+        return 1;
     }
 
-  /* And again, this time without O_CREAT.  */
-  s3 = sem_open ("/glibc-tst-sem7", 0);
-  if (s3 == SEM_FAILED)
-    {
-      puts ("3rd sem_open failed");
-      return 1;
+    /* And again, this time without O_CREAT.  */
+    s3 = sem_open("/glibc-tst-sem7", 0);
+    if (s3 == SEM_FAILED) {
+        puts("3rd sem_open failed");
+        return 1;
     }
-  if (s != s3)
-    {
-      puts ("3rd sem_open didn't return the same address");
-      return 1;
+    if (s != s3) {
+        puts("3rd sem_open didn't return the same address");
+        return 1;
     }
 
-  /* Now close the handle.  Three times.  */
-  if (sem_close (s2) != 0)
-    {
-      puts ("1st sem_close failed");
-      return 1;
+    /* Now close the handle.  Three times.  */
+    if (sem_close(s2) != 0) {
+        puts("1st sem_close failed");
+        return 1;
     }
-  if (sem_close (s) != 0)
-    {
-      puts ("2nd sem_close failed");
-      return 1;
+    if (sem_close(s) != 0) {
+        puts("2nd sem_close failed");
+        return 1;
     }
-  if (sem_close (s3) != 0)
-    {
-      puts ("3rd sem_close failed");
-      return 1;
+    if (sem_close(s3) != 0) {
+        puts("3rd sem_close failed");
+        return 1;
     }
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

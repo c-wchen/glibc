@@ -23,17 +23,17 @@
 #include <math.h>
 
 FLOAT
-M_DECL_FUNC (__fmaximum_mag_num) (FLOAT x, FLOAT y)
+M_DECL_FUNC(__fmaximum_mag_num)(FLOAT x, FLOAT y)
 {
-  FLOAT a, b;
-  asm("fcmp.cor." INSN_FMT "\t$fcc0, %2, %2\n\t"
-      "fcmp.cor." INSN_FMT "\t$fcc1, %3, %3\n\t"
-      "fsel"		   "\t%0, %3, %2, $fcc0\n\t"
-      "fsel"		   "\t%1, %2, %3, $fcc1\n\t"
-      "fmaxa."	  INSN_FMT "\t%1, %0, %1"
-      : "=&f" (a), "=f" (b) : "f" (x), "f" (y) : "fcc0", "fcc1");
-  return b;
+    FLOAT a, b;
+    asm("fcmp.cor." INSN_FMT "\t$fcc0, %2, %2\n\t"
+        "fcmp.cor." INSN_FMT "\t$fcc1, %3, %3\n\t"
+        "fsel"           "\t%0, %3, %2, $fcc0\n\t"
+        "fsel"           "\t%1, %2, %3, $fcc1\n\t"
+        "fmaxa."    INSN_FMT "\t%1, %0, %1"
+        : "=&f"(a), "=f"(b) : "f"(x), "f"(y) : "fcc0", "fcc1");
+    return b;
 }
-declare_mgen_alias (__fmaximum_mag_num, fmaximum_mag_num);
+declare_mgen_alias(__fmaximum_mag_num, fmaximum_mag_num);
 
 #endif

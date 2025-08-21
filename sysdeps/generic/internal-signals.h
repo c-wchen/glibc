@@ -29,14 +29,12 @@
    (SIGCANCEL and SIGSETXID).  */
 #define RESERVED_SIGRT  0
 
-static inline bool
-is_internal_signal (int sig)
+static inline bool is_internal_signal(int sig)
 {
-  return false;
+    return false;
 }
 
-static inline void
-clear_internal_signals (sigset_t *set)
+static inline void clear_internal_signals(sigset_t *set)
 {
 }
 
@@ -45,27 +43,24 @@ clear_internal_signals (sigset_t *set)
 #define internal_sigaddset(__s, __i)         __sigaddset (__s, __i)
 #define internal_sigprocmask(__h, __s, __o)  __sigprocmask (__h, __s, __o)
 
-static inline void
-internal_signal_block_all (internal_sigset_t *oset)
+static inline void internal_signal_block_all(internal_sigset_t *oset)
 {
-  internal_sigset_t set;
-  internal_sigfillset (&set);
-  internal_sigprocmask (SIG_BLOCK, &set, oset);
+    internal_sigset_t set;
+    internal_sigfillset(&set);
+    internal_sigprocmask(SIG_BLOCK, &set, oset);
 }
 
-static inline void
-internal_signal_restore_set (const internal_sigset_t *set)
+static inline void internal_signal_restore_set(const internal_sigset_t *set)
 {
-  internal_sigprocmask (SIG_SETMASK, set, NULL);
+    internal_sigprocmask(SIG_SETMASK, set, NULL);
 }
 
-static inline void
-internal_signal_unblock_signal (int sig)
+static inline void internal_signal_unblock_signal(int sig)
 {
-  internal_sigset_t set;
-  internal_sigemptyset (&set);
-  internal_sigaddset (&set, sig);
-  internal_sigprocmask (SIG_UNBLOCK, &set, NULL);
+    internal_sigset_t set;
+    internal_sigemptyset(&set);
+    internal_sigaddset(&set, sig);
+    internal_sigprocmask(SIG_UNBLOCK, &set, NULL);
 }
 
 #endif /* __INTERNAL_SIGNALS_H  */

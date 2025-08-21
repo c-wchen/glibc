@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _SYS_SOCKETCALL_H
-#define _SYS_SOCKETCALL_H	1
+#define _SYS_SOCKETCALL_H   1
 
 #include <sysdep.h>
 
@@ -27,27 +27,27 @@
    We cannot use an enum here because the values are used in assembler
    code.  */
 
-#define SOCKOP_invalid		-1
-#define SOCKOP_socket		1
-#define SOCKOP_bind		2
-#define SOCKOP_connect		3
-#define SOCKOP_listen		4
-#define SOCKOP_accept		5
-#define SOCKOP_getsockname	6
-#define SOCKOP_getpeername	7
-#define SOCKOP_socketpair	8
-#define SOCKOP_send		9
-#define SOCKOP_recv		10
-#define SOCKOP_sendto		11
-#define SOCKOP_recvfrom		12
-#define SOCKOP_shutdown		13
-#define SOCKOP_setsockopt	14
-#define SOCKOP_getsockopt	15
-#define SOCKOP_sendmsg		16
-#define SOCKOP_recvmsg		17
-#define SOCKOP_accept4		18
-#define SOCKOP_recvmmsg		19
-#define SOCKOP_sendmmsg		20
+#define SOCKOP_invalid      -1
+#define SOCKOP_socket       1
+#define SOCKOP_bind     2
+#define SOCKOP_connect      3
+#define SOCKOP_listen       4
+#define SOCKOP_accept       5
+#define SOCKOP_getsockname  6
+#define SOCKOP_getpeername  7
+#define SOCKOP_socketpair   8
+#define SOCKOP_send     9
+#define SOCKOP_recv     10
+#define SOCKOP_sendto       11
+#define SOCKOP_recvfrom     12
+#define SOCKOP_shutdown     13
+#define SOCKOP_setsockopt   14
+#define SOCKOP_getsockopt   15
+#define SOCKOP_sendmsg      16
+#define SOCKOP_recvmsg      17
+#define SOCKOP_accept4      18
+#define SOCKOP_recvmmsg     19
+#define SOCKOP_sendmmsg     20
 
 #define __SOCKETCALL1(name, a1) \
   INLINE_SYSCALL (socketcall, 2, name, \
@@ -82,10 +82,10 @@
 #define __SOCKETCALL(...) __SOCKETCALL_DISP (__SOCKETCALL, __VA_ARGS__)
 
 
-#define SOCKETCALL(name, args...)					\
-  ({									\
-    long int sc_ret = __SOCKETCALL (SOCKOP_##name, args);		\
-    sc_ret;								\
+#define SOCKETCALL(name, args...)                   \
+  ({                                    \
+    long int sc_ret = __SOCKETCALL (SOCKOP_##name, args);       \
+    sc_ret;                             \
   })
 
 #define __SOCKETCALL_CANCEL1(__name, __a1) \
@@ -111,7 +111,7 @@
                        (long int) __a4, (long int) __a5, (long int) __a6 }))
 
 #define __SOCKETCALL_CANCEL(...) __SOCKETCALL_DISP (__SOCKETCALL_CANCEL,\
-						    __VA_ARGS__)
+                            __VA_ARGS__)
 
 #define SOCKETCALL_CANCEL(name, args...) \
    __SOCKETCALL_CANCEL (SOCKOP_##name, args)

@@ -22,8 +22,8 @@
 #include <math.h>
 #include <libm-alias-double.h>
 
-extern double __fdim_vis3 (double, double);
-extern double __fdim_generic (double, double);
+extern double __fdim_vis3(double, double);
+extern double __fdim_generic(double, double);
 
 sparc_libm_ifunc(__fdim, hwcap & HWCAP_SPARC_VIS3 ? __fdim_vis3 : __fdim_generic);
-libm_alias_double (__fdim, fdim)
+libm_alias_double(__fdim, fdim)

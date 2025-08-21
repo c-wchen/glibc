@@ -27,19 +27,21 @@
 # include <math_private.h>
 
 FLOAT
-M_DECL_FUNC (__atanh) (FLOAT x)
+M_DECL_FUNC(__atanh)(FLOAT x)
 {
-  if (__glibc_unlikely (isgreaterequal (M_FABS (x), M_LIT (1.0))))
-    {
-      if (M_FABS (x) == 1)
-	/* Pole error: atanh(|x|==1).  */
-	__set_errno (ERANGE);
-      else
-	/* Domain error: atanh(|x|>1).  */
-	__set_errno (EDOM);
+    if (__glibc_unlikely(isgreaterequal(M_FABS(x), M_LIT(1.0)))) {
+        if (M_FABS(x) == 1)
+            /* Pole error: atanh(|x|==1).  */
+        {
+            __set_errno(ERANGE);
+        } else
+            /* Domain error: atanh(|x|>1).  */
+        {
+            __set_errno(EDOM);
+        }
     }
-  return M_SUF (__ieee754_atanh) (x);
+    return M_SUF(__ieee754_atanh)(x);
 }
-declare_mgen_alias (__atanh, atanh)
+declare_mgen_alias(__atanh, atanh)
 
 #endif /* __USE_WRAPPER_TEMPLATE.  */

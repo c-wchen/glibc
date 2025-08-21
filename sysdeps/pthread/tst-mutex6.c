@@ -23,7 +23,7 @@
 #include <stdbool.h>
 
 #ifndef TEST_FUNCTION
-static int do_test (void);
+static int do_test(void);
 # define TEST_FUNCTION do_test ()
 #endif
 #include "../test-skeleton.c"
@@ -37,39 +37,34 @@ pthread_mutexattr_t *attr;
 # define ATTR_NULL (ATTR == NULL)
 #endif
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  pthread_mutex_t m;
+    pthread_mutex_t m;
 
-  int e = pthread_mutex_init (&m, ATTR);
-  if (!ATTR_NULL && e == ENOTSUP)
-    {
-      puts ("cannot support selected type of mutexes");
-      e = pthread_mutex_init (&m, NULL);
+    int e = pthread_mutex_init(&m, ATTR);
+    if (!ATTR_NULL && e == ENOTSUP) {
+        puts("cannot support selected type of mutexes");
+        e = pthread_mutex_init(&m, NULL);
     }
-  if (e != 0)
-    {
-      puts ("mutex_init failed");
-      return 1;
+    if (e != 0) {
+        puts("mutex_init failed");
+        return 1;
     }
 
-  if (!ATTR_NULL && pthread_mutexattr_destroy (ATTR) != 0)
-    {
-      puts ("mutexattr_destroy failed");
-      return 1;
+    if (!ATTR_NULL && pthread_mutexattr_destroy(ATTR) != 0) {
+        puts("mutexattr_destroy failed");
+        return 1;
     }
 
-  if (pthread_mutex_lock (&m) != 0)
-    {
-      puts ("1st mutex_lock failed");
-      return 1;
+    if (pthread_mutex_lock(&m) != 0) {
+        puts("1st mutex_lock failed");
+        return 1;
     }
 
-  delayed_exit (1);
-  /* This call should never return.  */
-  xpthread_mutex_lock (&m);
+    delayed_exit(1);
+    /* This call should never return.  */
+    xpthread_mutex_lock(&m);
 
-  puts ("2nd mutex_lock returned");
-  return 1;
+    puts("2nd mutex_lock returned");
+    return 1;
 }

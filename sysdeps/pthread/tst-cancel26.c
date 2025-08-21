@@ -25,43 +25,38 @@
 
 /* Check that the cancel syscall points handles both the errno and return code
    correctly for invalid arguments.  */
-static void *
-tf (void *arg)
+static void *tf(void *arg)
 {
 #ifdef SET_CANCEL_DISABLE
-  pthread_setcancelstate (PTHREAD_CANCEL_DISABLE, NULL);
+    pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, NULL);
 #endif
 
-  /* This is a cancellation point, but we should not be cancelled.  */
-  int r = write (-1, 0, 0);
+    /* This is a cancellation point, but we should not be cancelled.  */
+    int r = write(-1, 0, 0);
 
-  if (r != -1 || errno != EBADF)
-    {
-      printf ("error: write returned %d, errno %d\n", r, errno);
-      exit (1);
+    if (r != -1 || errno != EBADF) {
+        printf("error: write returned %d, errno %d\n", r, errno);
+        exit(1);
     }
 
-  return NULL;
+    return NULL;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  pthread_t th;
+    pthread_t th;
 
-  if (pthread_create (&th, NULL, tf, NULL) != 0)
-    {
-      puts ("error: pthread_create failed");
-      exit (1);
+    if (pthread_create(&th, NULL, tf, NULL) != 0) {
+        puts("error: pthread_create failed");
+        exit(1);
     }
 
-  if (pthread_join (th, NULL) != 0)
-    {
-      puts ("error: pthread_join failed");
-      exit (1);
+    if (pthread_join(th, NULL) != 0) {
+        puts("error: pthread_join failed");
+        exit(1);
     }
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

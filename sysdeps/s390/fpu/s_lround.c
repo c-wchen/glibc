@@ -30,17 +30,16 @@
 #  define INSN "cfdbra"
 # endif
 
-long int
-__lround (double x)
+long int __lround(double x)
 {
-  long int y;
-  /* The z196 zarch "convert to fixed" (cgdbra) instruction is rounding
-     x to the nearest integer with "ties away from 0" rounding mode
-     (M3-field: 1) where inexact exceptions are suppressed (M4-field: 4).  */
-  __asm__ (INSN " %0,1,%1,4" : "=d" (y) : "f" (x) : "cc");
-  return y;
+    long int y;
+    /* The z196 zarch "convert to fixed" (cgdbra) instruction is rounding
+       x to the nearest integer with "ties away from 0" rounding mode
+       (M3-field: 1) where inexact exceptions are suppressed (M4-field: 4).  */
+    __asm__(INSN " %0,1,%1,4" : "=d"(y) : "f"(x) : "cc");
+    return y;
 }
-libm_alias_double (__lround, lround)
+libm_alias_double(__lround, lround)
 
 #else
 # include <sysdeps/ieee754/dbl-64/s_lround.c>

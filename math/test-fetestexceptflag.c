@@ -20,110 +20,101 @@
 #include <stdio.h>
 #include <math-tests.h>
 
-static int
-test_one (int exc_test, int exc_set, int exc_save)
+static int test_one(int exc_test, int exc_set, int exc_save)
 {
-  int result = 0;
+    int result = 0;
 
-  printf ("Individual test: %x %x %x\n", (unsigned int) exc_test,
-	  (unsigned int) exc_set, (unsigned int) exc_save);
+    printf("Individual test: %x %x %x\n", (unsigned int) exc_test,
+           (unsigned int) exc_set, (unsigned int) exc_save);
 
-  feclearexcept (FE_ALL_EXCEPT);
-  int ret = fesetexcept (exc_set);
-  if (ret != 0)
-    {
-      puts ("fesetexcept failed");
-      if (exc_set == 0 || EXCEPTION_TESTS (float))
-	{
-	  puts ("failure of fesetexcept was unexpected");
-	  result = 1;
-	}
-      else
-	puts ("failure of fesetexcept OK, skipping further tests");
-      return result;
+    feclearexcept(FE_ALL_EXCEPT);
+    int ret = fesetexcept(exc_set);
+    if (ret != 0) {
+        puts("fesetexcept failed");
+        if (exc_set == 0 || EXCEPTION_TESTS(float)) {
+            puts("failure of fesetexcept was unexpected");
+            result = 1;
+        } else {
+            puts("failure of fesetexcept OK, skipping further tests");
+        }
+        return result;
     }
-  fexcept_t saved;
-  ret = fegetexceptflag (&saved, exc_save);
-  if (ret == 0)
-    puts ("fegetexceptflag succeeded");
-  else
-    {
-      puts ("fegetexceptflag failed");
-      result = 1;
-      return result;
+    fexcept_t saved;
+    ret = fegetexceptflag(&saved, exc_save);
+    if (ret == 0) {
+        puts("fegetexceptflag succeeded");
+    } else {
+        puts("fegetexceptflag failed");
+        result = 1;
+        return result;
     }
-  ret = fetestexceptflag (&saved, exc_test);
-  if (ret == (exc_set & exc_test))
-    puts ("fetestexceptflag result correct");
-  else
-    {
-      printf ("fetestexceptflag returned %x, expected %x\n", ret,
-	      exc_set & exc_test);
-      result = 1;
+    ret = fetestexceptflag(&saved, exc_test);
+    if (ret == (exc_set & exc_test)) {
+        puts("fetestexceptflag result correct");
+    } else {
+        printf("fetestexceptflag returned %x, expected %x\n", ret,
+               exc_set & exc_test);
+        result = 1;
     }
-  if (exc_save == FE_ALL_EXCEPT)
-    {
-      /* Also test fetestexceptflag testing all exceptions but
-	 possibly with only some set.  */
-      ret = fetestexceptflag (&saved, FE_ALL_EXCEPT);
-      if (ret == exc_set)
-	puts ("fetestexceptflag (FE_ALL_EXCEPT) result correct");
-      else
-	{
-	  printf ("fetestexceptflag (FE_ALL_EXCEPT) returned %x, expected %x\n",
-		  ret, exc_set);
-	  result = 1;
-	}
+    if (exc_save == FE_ALL_EXCEPT) {
+        /* Also test fetestexceptflag testing all exceptions but
+        possibly with only some set.  */
+        ret = fetestexceptflag(&saved, FE_ALL_EXCEPT);
+        if (ret == exc_set) {
+            puts("fetestexceptflag (FE_ALL_EXCEPT) result correct");
+        } else {
+            printf("fetestexceptflag (FE_ALL_EXCEPT) returned %x, expected %x\n",
+                   ret, exc_set);
+            result = 1;
+        }
     }
-  return result;
+    return result;
 }
 
-static int
-test_fetestexceptflag (int exc, const char *exc_name)
+static int test_fetestexceptflag(int exc, const char *exc_name)
 {
-  int result = 0;
+    int result = 0;
 
-  printf ("Testing %s\n", exc_name);
+    printf("Testing %s\n", exc_name);
 
-  /* Test each case of: whether this exception is set or clear;
-     whether other exceptions are set or clear; whether the whole
-     state is saved or just the state for this exception.  */
-  result |= test_one (exc, 0, exc);
-  result |= test_one (exc, 0, FE_ALL_EXCEPT);
-  result |= test_one (exc, exc, exc);
-  result |= test_one (exc, exc, FE_ALL_EXCEPT);
-  result |= test_one (exc, FE_ALL_EXCEPT & ~exc, exc);
-  result |= test_one (exc, FE_ALL_EXCEPT & ~exc, FE_ALL_EXCEPT);
-  result |= test_one (exc, FE_ALL_EXCEPT, exc);
-  result |= test_one (exc, FE_ALL_EXCEPT, FE_ALL_EXCEPT);
+    /* Test each case of: whether this exception is set or clear;
+       whether other exceptions are set or clear; whether the whole
+       state is saved or just the state for this exception.  */
+    result |= test_one(exc, 0, exc);
+    result |= test_one(exc, 0, FE_ALL_EXCEPT);
+    result |= test_one(exc, exc, exc);
+    result |= test_one(exc, exc, FE_ALL_EXCEPT);
+    result |= test_one(exc, FE_ALL_EXCEPT & ~exc, exc);
+    result |= test_one(exc, FE_ALL_EXCEPT & ~exc, FE_ALL_EXCEPT);
+    result |= test_one(exc, FE_ALL_EXCEPT, exc);
+    result |= test_one(exc, FE_ALL_EXCEPT, FE_ALL_EXCEPT);
 
-  return result;
+    return result;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int result = 0;
+    int result = 0;
 
-  result |= test_fetestexceptflag (0, "0");
-  result |= test_fetestexceptflag (FE_ALL_EXCEPT, "FE_ALL_EXCEPT");
+    result |= test_fetestexceptflag(0, "0");
+    result |= test_fetestexceptflag(FE_ALL_EXCEPT, "FE_ALL_EXCEPT");
 #ifdef FE_DIVBYZERO
-  result |= test_fetestexceptflag (FE_DIVBYZERO, "FE_DIVBYZERO");
+    result |= test_fetestexceptflag(FE_DIVBYZERO, "FE_DIVBYZERO");
 #endif
 #ifdef FE_INEXACT
-  result |= test_fetestexceptflag (FE_INEXACT, "FE_INEXACT");
+    result |= test_fetestexceptflag(FE_INEXACT, "FE_INEXACT");
 #endif
 #ifdef FE_INVALID
-  result |= test_fetestexceptflag (FE_INVALID, "FE_INVALID");
+    result |= test_fetestexceptflag(FE_INVALID, "FE_INVALID");
 #endif
 #ifdef FE_OVERFLOW
-  result |= test_fetestexceptflag (FE_OVERFLOW, "FE_OVERFLOW");
+    result |= test_fetestexceptflag(FE_OVERFLOW, "FE_OVERFLOW");
 #endif
 #ifdef FE_UNDERFLOW
-  result |= test_fetestexceptflag (FE_UNDERFLOW, "FE_UNDERFLOW");
+    result |= test_fetestexceptflag(FE_UNDERFLOW, "FE_UNDERFLOW");
 #endif
 
-  return result;
+    return result;
 }
 
 #define TEST_FUNCTION do_test ()

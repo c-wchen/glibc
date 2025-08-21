@@ -34,39 +34,35 @@
 # define UCHAR wchar_t
 #endif /* WIDE */
 
-IMPL (MEMCHR, 1)
+IMPL(MEMCHR, 1)
 
-typedef CHAR * (*proto_t) (const CHAR*, int, size_t);
+typedef CHAR *(*proto_t)(const CHAR *, int, size_t);
 
-static CHAR *
-__attribute__ ((noinline, noclone))
-do_memchr (parameter_t a, parameter_t b)
+static CHAR *__attribute__((noinline, noclone))
+do_memchr(parameter_t a, parameter_t b)
 {
-  return CALL (&b, a.p, (uintptr_t) b.p, a.len);
+    return CALL(&b, a.p, (uintptr_t) b.p, a.len);
 }
 
-static int
-test_main (void)
+static int test_main(void)
 {
-  test_init ();
+    test_init();
 
-  parameter_t src = { { page_size / sizeof (CHAR) }, buf2 };
-  parameter_t c = { { 0 }, (void *) (uintptr_t) 0x12 };
+    parameter_t src = { { page_size / sizeof(CHAR) }, buf2 };
+    parameter_t c = { { 0 }, (void *)(uintptr_t) 0x12 };
 
-  int ret = 0;
-  FOR_EACH_IMPL (impl, 0)
-    {
-      c.fn = impl->fn;
-      CHAR *res = do_memchr (src, c);
-      if (res)
-	{
-	  error (0, 0, "Wrong result in function %s: %p != NULL",
-		 impl->name, res);
-	  ret = 1;
-	}
+    int ret = 0;
+    FOR_EACH_IMPL(impl, 0) {
+        c.fn = impl->fn;
+        CHAR *res = do_memchr(src, c);
+        if (res) {
+            error(0, 0, "Wrong result in function %s: %p != NULL",
+                  impl->name, res);
+            ret = 1;
+        }
     }
 
-  return ret ? EXIT_FAILURE : EXIT_SUCCESS;
+    return ret ? EXIT_FAILURE : EXIT_SUCCESS;
 }
 
 #include <support/test-driver.c>

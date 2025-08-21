@@ -27,22 +27,22 @@
 #include "libioP.h"
 #include "stdio.h"
 
-int
-_IO_feof (FILE *fp)
+int _IO_feof(FILE *fp)
 {
-  int result;
-  CHECK_FILE (fp, EOF);
-  if (!_IO_need_lock (fp))
-    return _IO_feof_unlocked (fp);
-  _IO_flockfile (fp);
-  result = _IO_feof_unlocked (fp);
-  _IO_funlockfile (fp);
-  return result;
+    int result;
+    CHECK_FILE(fp, EOF);
+    if (!_IO_need_lock(fp)) {
+        return _IO_feof_unlocked(fp);
+    }
+    _IO_flockfile(fp);
+    result = _IO_feof_unlocked(fp);
+    _IO_funlockfile(fp);
+    return result;
 }
 
-weak_alias (_IO_feof, feof)
+weak_alias(_IO_feof, feof)
 
 #ifndef _IO_MTSAFE_IO
 #undef feof_unlocked
-weak_alias (_IO_feof, feof_unlocked)
+weak_alias(_IO_feof, feof_unlocked)
 #endif

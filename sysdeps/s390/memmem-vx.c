@@ -36,11 +36,11 @@
 #    define libc_hidden_def(name)
 #    define libc_hidden_weak(name)
 #   else
-#    define libc_hidden_def(name)				\
-  strong_alias (__memmem_vx, __memmem_vx_1);			\
+#    define libc_hidden_def(name)               \
+  strong_alias (__memmem_vx, __memmem_vx_1);            \
   __hidden_ver1 (__memmem_vx, __GI___memmem, __memmem_vx);
 
-#    define libc_hidden_weak(name)					\
+#    define libc_hidden_weak(name)                  \
   __hidden_ver1 (__memmem_vx_1, __GI_memmem, __memmem_vx_1) __attribute__((weak));
 #   endif
 #  endif
@@ -50,10 +50,10 @@
 # endif
 
 # ifdef USE_MULTIARCH
-extern __typeof (memchr) __memchr_vx attribute_hidden;
+extern __typeof(memchr) __memchr_vx attribute_hidden;
 # define memchr __memchr_vx
 
-extern __typeof (memcmp) __memcmp_z196 attribute_hidden;
+extern __typeof(memcmp) __memcmp_z196 attribute_hidden;
 # define memcmp __memcmp_z196
 # endif
 

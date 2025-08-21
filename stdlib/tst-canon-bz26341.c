@@ -38,71 +38,67 @@ static char *linkname;
 # define PATH_MAX 1024
 #endif
 
-static void
-create_link (void)
+static void create_link(void)
 {
-  int fd = create_temp_file ("tst-canon-bz26341", &filename);
-  TEST_VERIFY_EXIT (fd != -1);
-  xclose (fd);
+    int fd = create_temp_file("tst-canon-bz26341", &filename);
+    TEST_VERIFY_EXIT(fd != -1);
+    xclose(fd);
 
-  /* Make filename a canonical path.  */
-  char *saved_filename = filename;
-  filename = realpath (filename, NULL);
-  free (saved_filename);
-  TEST_VERIFY (filename != NULL);
+    /* Make filename a canonical path.  */
+    char *saved_filename = filename;
+    filename = realpath(filename, NULL);
+    free(saved_filename);
+    TEST_VERIFY(filename != NULL);
 
-  /* Create MAXLINKS symbolic links to the temporary filename.
-     On exit, linkname has the last link created.  */
-  char *prevlink = filename;
-  int maxlinks = MIN_ELOOP_THRESHOLD;
-  for (int i = 0; i < maxlinks; i++)
-    {
-      linkname = xasprintf ("%s%d", filename, i);
-      xsymlink (prevlink, linkname);
-      add_temp_file (linkname);
-      prevlink = linkname;
+    /* Create MAXLINKS symbolic links to the temporary filename.
+       On exit, linkname has the last link created.  */
+    char *prevlink = filename;
+    int maxlinks = MIN_ELOOP_THRESHOLD;
+    for (int i = 0; i < maxlinks; i++) {
+        linkname = xasprintf("%s%d", filename, i);
+        xsymlink(prevlink, linkname);
+        add_temp_file(linkname);
+        prevlink = linkname;
     }
 
-  filenamelen = strlen (filename);
+    filenamelen = strlen(filename);
 }
 
-static void *
-do_realpath (void *arg)
+static void *do_realpath(void *arg)
 {
-  /* Old implementation of realpath allocates a PATH_MAX using alloca
-     for each symlink in the path, leading to MAXSYMLINKS times PATH_MAX
-     maximum stack usage.
-     This stack allocations tries fill the thread allocated stack minus
-     the resolved path (plus some slack), the realpath (plus some
-     slack), and the system call usage (plus some slack).
-     If realpath uses more than 2 * PATH_MAX plus some slack it will trigger
-     a stackoverflow.  */
+    /* Old implementation of realpath allocates a PATH_MAX using alloca
+       for each symlink in the path, leading to MAXSYMLINKS times PATH_MAX
+       maximum stack usage.
+       This stack allocations tries fill the thread allocated stack minus
+       the resolved path (plus some slack), the realpath (plus some
+       slack), and the system call usage (plus some slack).
+       If realpath uses more than 2 * PATH_MAX plus some slack it will trigger
+       a stackoverflow.  */
 
-  const size_t syscall_usage = 1 * PATH_MAX + 1024;
-  const size_t realpath_usage = 2 * PATH_MAX + 1024;
-  const size_t thread_usage = 1 * PATH_MAX + 1024;
-  size_t stack_size = support_small_thread_stack_size ()
-		      - syscall_usage - realpath_usage - thread_usage;
-  char stack[stack_size];
-  char *resolved = stack + stack_size - thread_usage + 1024;
+    const size_t syscall_usage = 1 * PATH_MAX + 1024;
+    const size_t realpath_usage = 2 * PATH_MAX + 1024;
+    const size_t thread_usage = 1 * PATH_MAX + 1024;
+    size_t stack_size = support_small_thread_stack_size()
+                        - syscall_usage - realpath_usage - thread_usage;
+    char stack[stack_size];
+    char *resolved = stack + stack_size - thread_usage + 1024;
 
-  char *p = realpath (linkname, resolved);
-  TEST_VERIFY (p != NULL);
-  TEST_COMPARE_BLOB (resolved, filenamelen, filename, filenamelen);
+    char *p = realpath(linkname, resolved);
+    TEST_VERIFY(p != NULL);
+    TEST_COMPARE_BLOB(resolved, filenamelen, filename, filenamelen);
 
-  return NULL;
+    return NULL;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  create_link ();
+    create_link();
 
-  pthread_t th = xpthread_create (support_small_stack_thread_attribute (),
-				  do_realpath, NULL);
-  xpthread_join (th);
+    pthread_t th = xpthread_create(support_small_stack_thread_attribute(),
+                                   do_realpath, NULL);
+    xpthread_join(th);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

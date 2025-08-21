@@ -18,33 +18,32 @@
 #include "tgn_locdef.h"
 
 
-int
-main (int argc, char *argv[])
+int main(int argc, char *argv[])
 {
-  int ret;
-  int debug;
+    int ret;
+    int debug;
 
-  debug = argc > 1 ? atoi (argv[1]) : 0;
+    debug = argc > 1 ? atoi(argv[1]) : 0;
 
-  if (debug)
-    {
-      fprintf (stdout, "\nTST_MBWC ===> %s ...\n", argv[0]);
+    if (debug) {
+        fprintf(stdout, "\nTST_MBWC ===> %s ...\n", argv[0]);
     }
-  ret = TST_FUNCTION_CALL (TST_FUNCTION) (stdout, debug);
+    ret = TST_FUNCTION_CALL(TST_FUNCTION)(stdout, debug);
 
-  return (ret != 0);
+    return (ret != 0);
 }
 
-int
-result (FILE * fp, char res, const char *func, const char *loc, int rec_no,
-	int seq_no, int case_no, const char *msg)
+int result(FILE *fp, char res, const char *func, const char *loc, int rec_no,
+           int seq_no, int case_no, const char *msg)
 {
-  if (fp == NULL)
-    fp = stderr;
+    if (fp == NULL) {
+        fp = stderr;
+    }
 
-  if (fprintf (fp, "%s:%s:%d:%d:%d:%c:%s\n", func, loc, rec_no, seq_no,
-	       case_no, res, msg) == EOF)
-    return 0;
+    if (fprintf(fp, "%s:%s:%d:%d:%d:%c:%s\n", func, loc, rec_no, seq_no,
+                case_no, res, msg) == EOF) {
+        return 0;
+    }
 
-  return 1;
+    return 1;
 }

@@ -22,33 +22,33 @@
 
 #include <support/check.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  struct timeb prev, curr = {.time = 0, .millitm = 0};
-  int sec = 0;
+    struct timeb prev, curr = {.time = 0, .millitm = 0};
+    int sec = 0;
 
-  while (sec != 3)
-    {
-      prev = curr;
+    while (sec != 3) {
+        prev = curr;
 
-      /* ftime was deprecated on 2.31.  */
-      DIAG_PUSH_NEEDS_COMMENT;
-      DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wdeprecated-declarations");
+        /* ftime was deprecated on 2.31.  */
+        DIAG_PUSH_NEEDS_COMMENT;
+        DIAG_IGNORE_NEEDS_COMMENT(4.9, "-Wdeprecated-declarations");
 
-      TEST_COMPARE (ftime (&curr), 0);
+        TEST_COMPARE(ftime(&curr), 0);
 
-      DIAG_POP_NEEDS_COMMENT;
+        DIAG_POP_NEEDS_COMMENT;
 
-      TEST_VERIFY (curr.time >= prev.time);
+        TEST_VERIFY(curr.time >= prev.time);
 
-      if (curr.time == prev.time)
-	TEST_VERIFY (curr.millitm >= prev.millitm);
+        if (curr.time == prev.time) {
+            TEST_VERIFY(curr.millitm >= prev.millitm);
+        }
 
-      if (curr.time > prev.time)
-        sec ++;
+        if (curr.time > prev.time) {
+            sec ++;
+        }
     }
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

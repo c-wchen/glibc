@@ -21,11 +21,10 @@
 
 /* Return the login name of the user, or NULL if it can't be determined.
    The returned pointer, if not NULL, is good only until the next call.  */
-char *
-getlogin (void)
+char *getlogin(void)
 {
-  __set_errno (ENOSYS);
-  return NULL;
+    __set_errno(ENOSYS);
+    return NULL;
 }
 
-stub_warning (getlogin)
+stub_warning(getlogin)

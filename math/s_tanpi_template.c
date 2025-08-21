@@ -21,45 +21,45 @@
 #include <math-underflow.h>
 
 FLOAT
-M_DECL_FUNC (__tanpi) (FLOAT x)
+M_DECL_FUNC(__tanpi)(FLOAT x)
 {
-  if (isless (M_FABS (x), M_EPSILON))
-    {
-      FLOAT ret = M_MLIT (M_PI) * x;
-      math_check_force_underflow (ret);
-      return ret;
+    if (isless(M_FABS(x), M_EPSILON)) {
+        FLOAT ret = M_MLIT(M_PI) * x;
+        math_check_force_underflow(ret);
+        return ret;
     }
-  if (__glibc_unlikely (isinf (x)))
-    __set_errno (EDOM);
-  FLOAT y = x - M_LIT (2.0) * M_SUF (round) (M_LIT (0.5) * x);
-  FLOAT absy = M_FABS (y);
-  if (absy == M_LIT (0.0))
-    /* For even integers, return +0 if positive and -0 if negative (so
-       matching sinpi(x)/cospi(x)).  */
-    return M_COPYSIGN (M_LIT (0.0), x);
-  else if (absy == M_LIT (1.0))
-    /* For odd integers, return -0 if positive and +0 if negative (so
-       matching sinpi(x)/cospi(x)).  */
-    return M_COPYSIGN (M_LIT (0.0), -x);
-  else if (absy == M_LIT (0.5))
-    {
-      /* Return infinity with positive sign for an even integer + 0.5
-	 and negative sign for an odd integer + 0.5 (so matching
-	 sinpi(x)/cospi(x)).  */
-      __set_errno (ERANGE);
-      return 1.0 / M_COPYSIGN (M_LIT (0.0), y);
+    if (__glibc_unlikely(isinf(x))) {
+        __set_errno(EDOM);
     }
-  /* Now we only care about the value of X mod 1, not mod 2.  */
-  else if (isgreater (absy, 0.5))
+    FLOAT y = x - M_LIT(2.0) * M_SUF(round)(M_LIT(0.5) * x);
+    FLOAT absy = M_FABS(y);
+    if (absy == M_LIT(0.0))
+        /* For even integers, return +0 if positive and -0 if negative (so
+           matching sinpi(x)/cospi(x)).  */
     {
-      y -= M_COPYSIGN (M_LIT (1.0), y);
-      absy = M_FABS (y);
+        return M_COPYSIGN(M_LIT(0.0), x);
+    } else if (absy == M_LIT(1.0))
+        /* For odd integers, return -0 if positive and +0 if negative (so
+           matching sinpi(x)/cospi(x)).  */
+    {
+        return M_COPYSIGN(M_LIT(0.0), -x);
+    } else if (absy == M_LIT(0.5)) {
+        /* Return infinity with positive sign for an even integer + 0.5
+        and negative sign for an odd integer + 0.5 (so matching
+         sinpi(x)/cospi(x)).  */
+        __set_errno(ERANGE);
+        return 1.0 / M_COPYSIGN(M_LIT(0.0), y);
     }
-  if (islessequal (absy, M_LIT (0.25)))
-    return M_SUF (__tan) (M_MLIT (M_PI) * y);
-  else
-    return M_COPYSIGN (M_LIT (1.0)
-		       / M_SUF (__tan) (M_MLIT (M_PI) * (M_LIT (0.5) - absy)),
-		       y);
+    /* Now we only care about the value of X mod 1, not mod 2.  */
+    else if (isgreater(absy, 0.5)) {
+        y -= M_COPYSIGN(M_LIT(1.0), y);
+        absy = M_FABS(y);
+    }
+    if (islessequal(absy, M_LIT(0.25))) {
+        return M_SUF(__tan)(M_MLIT(M_PI) * y);
+    } else
+        return M_COPYSIGN(M_LIT(1.0)
+                          / M_SUF(__tan)(M_MLIT(M_PI) * (M_LIT(0.5) - absy)),
+                          y);
 }
-declare_mgen_alias (__tanpi, tanpi);
+declare_mgen_alias(__tanpi, tanpi);

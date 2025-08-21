@@ -20,10 +20,9 @@
 
 /* Return 1 if FD is a terminal, 0 if not. This simply does a
    TCGETS2 ioctl into a dummy buffer without parsing the result. */
-int
-__isatty (int fd)
+int __isatty(int fd)
 {
-  struct termios2 k_termios;
-  return INLINE_SYSCALL_CALL (ioctl, fd, TCGETS2, &k_termios) == 0;
+    struct termios2 k_termios;
+    return INLINE_SYSCALL_CALL(ioctl, fd, TCGETS2, &k_termios) == 0;
 }
-weak_alias (__isatty, isatty)
+weak_alias(__isatty, isatty)

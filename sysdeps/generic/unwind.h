@@ -21,7 +21,7 @@
    for cross-architecture compatibility are noted with "@@@".  */
 
 #ifndef _UNWIND_H
-#define _UNWIND_H	1
+#define _UNWIND_H   1
 
 #ifdef __cplusplus
 extern "C" {
@@ -44,17 +44,16 @@ typedef unsigned _Unwind_Exception_Class __attribute__((__mode__(__DI__)));
 
 /* The unwind interface uses reason codes in several contexts to
    identify the reasons for failures or other actions.  */
-typedef enum
-{
-  _URC_NO_REASON = 0,
-  _URC_FOREIGN_EXCEPTION_CAUGHT = 1,
-  _URC_FATAL_PHASE2_ERROR = 2,
-  _URC_FATAL_PHASE1_ERROR = 3,
-  _URC_NORMAL_STOP = 4,
-  _URC_END_OF_STACK = 5,
-  _URC_HANDLER_FOUND = 6,
-  _URC_INSTALL_CONTEXT = 7,
-  _URC_CONTINUE_UNWIND = 8
+typedef enum {
+    _URC_NO_REASON = 0,
+    _URC_FOREIGN_EXCEPTION_CAUGHT = 1,
+    _URC_FATAL_PHASE2_ERROR = 2,
+    _URC_FATAL_PHASE1_ERROR = 3,
+    _URC_NORMAL_STOP = 4,
+    _URC_END_OF_STACK = 5,
+    _URC_HANDLER_FOUND = 6,
+    _URC_INSTALL_CONTEXT = 7,
+    _URC_CONTINUE_UNWIND = 8
 } _Unwind_Reason_Code;
 
 
@@ -66,25 +65,21 @@ typedef enum
 
 struct _Unwind_Exception;
 
-typedef void (*_Unwind_Exception_Cleanup_Fn) (_Unwind_Reason_Code,
-					      struct _Unwind_Exception *);
+typedef void (*_Unwind_Exception_Cleanup_Fn)(_Unwind_Reason_Code,
+        struct _Unwind_Exception *);
 
-struct _Unwind_Exception
-{
-  union
-  {
-    struct
-    {
-      _Unwind_Exception_Class exception_class;
-      _Unwind_Exception_Cleanup_Fn exception_cleanup;
-      _Unwind_Word private_1;
-      _Unwind_Word private_2;
+struct _Unwind_Exception {
+    union {
+        struct {
+            _Unwind_Exception_Class exception_class;
+            _Unwind_Exception_Cleanup_Fn exception_cleanup;
+            _Unwind_Word private_1;
+            _Unwind_Word private_2;
+        };
+
+        /* The IA-64 ABI says that this structure must be double-word aligned.  */
+        _Unwind_Word unwind_exception_align[2] __attribute__((__aligned__(2 * sizeof(_Unwind_Word))));
     };
-
-    /* The IA-64 ABI says that this structure must be double-word aligned.  */
-    _Unwind_Word unwind_exception_align[2]
-      __attribute__ ((__aligned__ (2 * sizeof (_Unwind_Word))));
-  };
 };
 
 
@@ -92,11 +87,11 @@ struct _Unwind_Exception
    or more of the following constants.  */
 typedef int _Unwind_Action;
 
-#define _UA_SEARCH_PHASE	1
-#define _UA_CLEANUP_PHASE	2
-#define _UA_HANDLER_FRAME	4
-#define _UA_FORCE_UNWIND	8
-#define _UA_END_OF_STACK	16
+#define _UA_SEARCH_PHASE    1
+#define _UA_CLEANUP_PHASE   2
+#define _UA_HANDLER_FRAME   4
+#define _UA_FORCE_UNWIND    8
+#define _UA_END_OF_STACK    16
 
 /* This is an opaque type used to refer to a system-specific data
    structure used by the system unwinder. This context is created and
@@ -105,50 +100,50 @@ typedef int _Unwind_Action;
 struct _Unwind_Context;
 
 /* Raise an exception, passing along the given exception object.  */
-extern _Unwind_Reason_Code _Unwind_RaiseException (struct _Unwind_Exception *);
+extern _Unwind_Reason_Code _Unwind_RaiseException(struct _Unwind_Exception *);
 
 /* Raise an exception for forced unwinding.  */
 
-typedef _Unwind_Reason_Code (*_Unwind_Stop_Fn)
-     (int, _Unwind_Action, _Unwind_Exception_Class,
-      struct _Unwind_Exception *, struct _Unwind_Context *, void *);
+typedef _Unwind_Reason_Code(*_Unwind_Stop_Fn)
+(int, _Unwind_Action, _Unwind_Exception_Class,
+ struct _Unwind_Exception *, struct _Unwind_Context *, void *);
 
-extern _Unwind_Reason_Code _Unwind_ForcedUnwind (struct _Unwind_Exception *,
-						 _Unwind_Stop_Fn,
-						 void *);
+extern _Unwind_Reason_Code _Unwind_ForcedUnwind(struct _Unwind_Exception *,
+        _Unwind_Stop_Fn,
+        void *);
 
 /* Helper to invoke the exception_cleanup routine.  */
-extern void _Unwind_DeleteException (struct _Unwind_Exception *);
+extern void _Unwind_DeleteException(struct _Unwind_Exception *);
 
 /* Resume propagation of an existing exception.  This is used after
    e.g. executing cleanup code, and not to implement rethrowing.  */
-extern void _Unwind_Resume (struct _Unwind_Exception *);
+extern void _Unwind_Resume(struct _Unwind_Exception *);
 
 /* @@@ Use unwind data to perform a stack backtrace.  The trace callback
    is called for every stack frame in the call chain, but no cleanup
    actions are performed.  */
-typedef _Unwind_Reason_Code (*_Unwind_Trace_Fn)
-     (struct _Unwind_Context *, void *);
+typedef _Unwind_Reason_Code(*_Unwind_Trace_Fn)
+(struct _Unwind_Context *, void *);
 
-extern _Unwind_Reason_Code _Unwind_Backtrace (_Unwind_Trace_Fn, void *);
+extern _Unwind_Reason_Code _Unwind_Backtrace(_Unwind_Trace_Fn, void *);
 
 /* These functions are used for communicating information about the unwind
    context (i.e. the unwind descriptors and the user register state) between
    the unwind library and the personality routine and landing pad.  Only
    selected registers maybe manipulated.  */
 
-extern _Unwind_Word _Unwind_GetGR (struct _Unwind_Context *, int);
-extern void _Unwind_SetGR (struct _Unwind_Context *, int, _Unwind_Word);
+extern _Unwind_Word _Unwind_GetGR(struct _Unwind_Context *, int);
+extern void _Unwind_SetGR(struct _Unwind_Context *, int, _Unwind_Word);
 
-extern _Unwind_Ptr _Unwind_GetIP (struct _Unwind_Context *);
-extern void _Unwind_SetIP (struct _Unwind_Context *, _Unwind_Ptr);
+extern _Unwind_Ptr _Unwind_GetIP(struct _Unwind_Context *);
+extern void _Unwind_SetIP(struct _Unwind_Context *, _Unwind_Ptr);
 
 /* @@@ Retrieve the CFA of the given context.  */
-extern _Unwind_Word _Unwind_GetCFA (struct _Unwind_Context *);
+extern _Unwind_Word _Unwind_GetCFA(struct _Unwind_Context *);
 
-extern void *_Unwind_GetLanguageSpecificData (struct _Unwind_Context *);
+extern void *_Unwind_GetLanguageSpecificData(struct _Unwind_Context *);
 
-extern _Unwind_Ptr _Unwind_GetRegionStart (struct _Unwind_Context *);
+extern _Unwind_Ptr _Unwind_GetRegionStart(struct _Unwind_Context *);
 
 
 /* The personality routine is the function in the C++ (or other language)
@@ -165,36 +160,36 @@ extern _Unwind_Ptr _Unwind_GetRegionStart (struct _Unwind_Context *);
    provides more effective versioning by detecting at link time the
    lack of code to handle the different data format.  */
 
-typedef _Unwind_Reason_Code (*_Unwind_Personality_Fn)
-     (int, _Unwind_Action, _Unwind_Exception_Class,
-      struct _Unwind_Exception *, struct _Unwind_Context *);
+typedef _Unwind_Reason_Code(*_Unwind_Personality_Fn)
+(int, _Unwind_Action, _Unwind_Exception_Class,
+ struct _Unwind_Exception *, struct _Unwind_Context *);
 
 /* @@@ The following alternate entry points are for setjmp/longjmp
    based unwinding.  */
 
 struct SjLj_Function_Context;
-extern void _Unwind_SjLj_Register (struct SjLj_Function_Context *);
-extern void _Unwind_SjLj_Unregister (struct SjLj_Function_Context *);
+extern void _Unwind_SjLj_Register(struct SjLj_Function_Context *);
+extern void _Unwind_SjLj_Unregister(struct SjLj_Function_Context *);
 
 extern _Unwind_Reason_Code _Unwind_SjLj_RaiseException
-     (struct _Unwind_Exception *);
+(struct _Unwind_Exception *);
 extern _Unwind_Reason_Code _Unwind_SjLj_ForcedUnwind
-     (struct _Unwind_Exception *, _Unwind_Stop_Fn, void *);
-extern void _Unwind_SjLj_Resume (struct _Unwind_Exception *);
+(struct _Unwind_Exception *, _Unwind_Stop_Fn, void *);
+extern void _Unwind_SjLj_Resume(struct _Unwind_Exception *);
 
 /* @@@ The following provide access to the base addresses for text
    and data-relative addressing in the LDSA.  In order to stay link
    compatible with the standard ABI for IA-64, we inline these.  */
 
-extern _Unwind_Ptr _Unwind_GetDataRelBase (struct _Unwind_Context *);
-extern _Unwind_Ptr _Unwind_GetTextRelBase (struct _Unwind_Context *);
+extern _Unwind_Ptr _Unwind_GetDataRelBase(struct _Unwind_Context *);
+extern _Unwind_Ptr _Unwind_GetTextRelBase(struct _Unwind_Context *);
 
 /* @@@ Given an address, return the entry point of the function that
    contains it.  */
-extern void * _Unwind_FindEnclosingFunction (void *pc);
+extern void *_Unwind_FindEnclosingFunction(void *pc);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif	/* unwind.h */
+#endif  /* unwind.h */

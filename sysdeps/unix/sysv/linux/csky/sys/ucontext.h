@@ -17,15 +17,14 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _SYS_UCONTEXT_H
-#define _SYS_UCONTEXT_H	1
+#define _SYS_UCONTEXT_H 1
 
 #include <features.h>
 
 #include <bits/types/sigset_t.h>
 #include <bits/types/stack_t.h>
 
-typedef struct
-  {
+typedef struct {
     unsigned long __tls;
     unsigned long __lr;
     unsigned long __pc;
@@ -55,33 +54,30 @@ typedef struct
     unsigned long __rhi;
     unsigned long __rlo;
     unsigned long __glibc_reserved;
-  } gregset_t;
+} gregset_t;
 
-typedef struct
-  {
+typedef struct {
     unsigned long __vr[64];
     unsigned long __fcr;
     unsigned long __fesr;
     unsigned long __fid;
     unsigned long __glibc_reserved;
-  } fpregset_t;
+} fpregset_t;
 
 /* Context to describe whole processor state.  */
-typedef struct
-  {
+typedef struct {
     gregset_t __gregs;
     fpregset_t __fpregs;
-  } mcontext_t;
+} mcontext_t;
 
 /* Userlevel context.  */
-typedef struct ucontext_t
-  {
+typedef struct ucontext_t {
     unsigned long int __uc_flags;
     struct ucontext_t *uc_link;
     stack_t uc_stack;
     mcontext_t uc_mcontext;
     sigset_t uc_sigmask;
-  } ucontext_t;
+} ucontext_t;
 
 #undef __ctx
 

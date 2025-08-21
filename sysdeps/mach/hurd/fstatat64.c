@@ -26,26 +26,25 @@
 #include <fstatat_common.h>
 
 /* Get information about the file descriptor FD in BUF.  */
-int
-__fstatat64_common (int fd, const char *filename, struct stat64 *buf, int at_flags, int flags)
+int __fstatat64_common(int fd, const char *filename, struct stat64 *buf, int at_flags, int flags)
 {
-  error_t err;
-  io_t port;
+    error_t err;
+    io_t port;
 
-  port = __file_name_lookup_at (fd, at_flags, filename, flags, 0);
-  if (port == MACH_PORT_NULL)
-    return -1;
+    port = __file_name_lookup_at(fd, at_flags, filename, flags, 0);
+    if (port == MACH_PORT_NULL) {
+        return -1;
+    }
 
-  err = __io_stat (port, buf);
-  __mach_port_deallocate (__mach_task_self (), port);
+    err = __io_stat(port, buf);
+    __mach_port_deallocate(__mach_task_self(), port);
 
-  return __hurd_fail (err);
+    return __hurd_fail(err);
 }
 
-int
-__fstatat64 (int fd, const char *filename, struct stat64 *buf, int at_flags)
+int __fstatat64(int fd, const char *filename, struct stat64 *buf, int at_flags)
 {
-  return __fstatat64_common (fd, filename, buf, at_flags, 0);
+    return __fstatat64_common(fd, filename, buf, at_flags, 0);
 }
-libc_hidden_def (__fstatat64)
-weak_alias (__fstatat64, fstatat64)
+libc_hidden_def(__fstatat64)
+weak_alias(__fstatat64, fstatat64)

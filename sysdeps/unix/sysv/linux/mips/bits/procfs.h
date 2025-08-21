@@ -23,8 +23,8 @@
 #include <sgidefs.h>
 
 /* ELF register definitions */
-#define ELF_NGREG	45
-#define ELF_NFPREG	33
+#define ELF_NGREG   45
+#define ELF_NFPREG  33
 
 #if _MIPS_SIM == _ABIN32
 __extension__ typedef unsigned long long elf_greg_t;

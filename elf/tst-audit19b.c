@@ -29,65 +29,65 @@ static int restart;
 #define CMDLINE_OPTIONS \
   { "restart", no_argument, &restart, 1 },
 
-int tst_audit18bmod1_func (void);
+int tst_audit18bmod1_func(void);
 
-static int
-handle_restart (void)
+static int handle_restart(void)
 {
-  TEST_COMPARE (tst_audit18bmod1_func (), 10);
-  return 0;
+    TEST_COMPARE(tst_audit18bmod1_func(), 10);
+    return 0;
 }
 
-static inline bool
-startswith (const char *str, const char *pre)
+static inline bool startswith(const char *str, const char *pre)
 {
-  size_t lenpre = strlen (pre);
-  size_t lenstr = strlen (str);
-  return lenstr < lenpre ? false : memcmp (pre, str, lenpre) == 0;
+    size_t lenpre = strlen(pre);
+    size_t lenstr = strlen(str);
+    return lenstr < lenpre ? false : memcmp(pre, str, lenpre) == 0;
 }
 
-static int
-do_test (int argc, char *argv[])
+static int do_test(int argc, char *argv[])
 {
-  /* We must have either:
-     - One our fource parameters left if called initially:
-       + path to ld.so         optional
-       + "--library-path"      optional
-       + the library path      optional
-       + the application name  */
+    /* We must have either:
+       - One our fource parameters left if called initially:
+         + path to ld.so         optional
+         + "--library-path"      optional
+         + the library path      optional
+         + the application name  */
 
-  if (restart)
-    return handle_restart ();
+    if (restart) {
+        return handle_restart();
+    }
 
-  char *spargv[9];
-  int i = 0;
-  for (; i < argc - 1; i++)
-    spargv[i] = argv[i + 1];
-  spargv[i++] = (char *) "--direct";
-  spargv[i++] = (char *) "--restart";
-  spargv[i] = NULL;
+    char *spargv[9];
+    int i = 0;
+    for (; i < argc - 1; i++) {
+        spargv[i] = argv[i + 1];
+    }
+    spargv[i++] = (char *) "--direct";
+    spargv[i++] = (char *) "--restart";
+    spargv[i] = NULL;
 
-  setenv ("LD_AUDIT", "tst-auditmod18b.so", 0);
-  struct support_capture_subprocess result
-    = support_capture_subprogram (spargv[0], spargv, NULL);
-  support_capture_subprocess_check (&result, "tst-audit18b", 0, sc_allow_stderr);
+    setenv("LD_AUDIT", "tst-auditmod18b.so", 0);
+    struct support_capture_subprocess result
+        = support_capture_subprogram(spargv[0], spargv, NULL);
+    support_capture_subprocess_check(&result, "tst-audit18b", 0, sc_allow_stderr);
 
-  bool find_symbind = false;
+    bool find_symbind = false;
 
-  FILE *out = fmemopen (result.err.buffer, result.err.length, "r");
-  TEST_VERIFY (out != NULL);
-  char *buffer = NULL;
-  size_t buffer_length = 0;
-  while (xgetline (&buffer, &buffer_length, out))
-    if (startswith (buffer, "la_symbind: tst_audit18bmod1_func") == 0)
-      find_symbind = true;
+    FILE *out = fmemopen(result.err.buffer, result.err.length, "r");
+    TEST_VERIFY(out != NULL);
+    char *buffer = NULL;
+    size_t buffer_length = 0;
+    while (xgetline(&buffer, &buffer_length, out))
+        if (startswith(buffer, "la_symbind: tst_audit18bmod1_func") == 0) {
+            find_symbind = true;
+        }
 
-  TEST_COMPARE (find_symbind, true);
+    TEST_COMPARE(find_symbind, true);
 
-  free (buffer);
-  xfclose (out);
+    free(buffer);
+    xfclose(out);
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION_ARGV do_test

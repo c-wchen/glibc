@@ -23,12 +23,11 @@
 /* Description of data base entry for a single network.  NOTE: here a
    poor assumption is made.  The network number is expected to fit
    into an unsigned long int variable.  */
-struct netent
-{
-  char *n_name;			/* Official name of network.  */
-  char **n_aliases;		/* Alias list.  */
-  int n_addrtype;		/* Net address type.  */
-  /* XXX We should probably use uint32_t for the field and ensure
-     compatibility by adding appropriate padding.  */
-  unsigned long	int n_net;	/* Network number.  */
+struct netent {
+    char *n_name;         /* Official name of network.  */
+    char **n_aliases;     /* Alias list.  */
+    int n_addrtype;       /* Net address type.  */
+    /* XXX We should probably use uint32_t for the field and ensure
+       compatibility by adding appropriate padding.  */
+    unsigned long int n_net;  /* Network number.  */
 };

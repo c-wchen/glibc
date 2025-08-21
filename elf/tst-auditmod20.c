@@ -20,38 +20,37 @@
 #include <link.h>
 #include <stdlib.h>
 
-unsigned int
-la_version (unsigned int v)
+unsigned int la_version(unsigned int v)
 {
-  return LAV_CURRENT;
+    return LAV_CURRENT;
 }
 
-static void
-check (void)
+static void check(void)
 {
-  {
-    void *mod = dlopen ("nonexistent.so", RTLD_NOW);
-    if (mod != NULL)
-      abort ();
-  }
+    {
+        void *mod = dlopen("nonexistent.so", RTLD_NOW);
+        if (mod != NULL) {
+            abort();
+        }
+    }
 
-  {
-    void *mod = dlmopen (LM_ID_BASE, "nonexistent.so", RTLD_NOW);
-    if (mod != NULL)
-      abort ();
-  }
+    {
+        void *mod = dlmopen(LM_ID_BASE, "nonexistent.so", RTLD_NOW);
+        if (mod != NULL) {
+            abort();
+        }
+    }
 }
 
-void
-la_activity (uintptr_t *cookie, unsigned int flag)
+void la_activity(uintptr_t *cookie, unsigned int flag)
 {
-  if (flag != LA_ACT_CONSISTENT)
-    return;
-  check ();
+    if (flag != LA_ACT_CONSISTENT) {
+        return;
+    }
+    check();
 }
 
-void
-la_preinit (uintptr_t *cookie)
+void la_preinit(uintptr_t *cookie)
 {
-  check ();
+    check();
 }

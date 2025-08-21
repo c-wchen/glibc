@@ -22,50 +22,49 @@
 #include <lowlevellock.h>
 
 
-int
-__pthread_setschedparam (pthread_t threadid, int policy,
-			 const struct sched_param *param)
+int __pthread_setschedparam(pthread_t threadid, int policy,
+                            const struct sched_param *param)
 {
-  struct pthread *pd = (struct pthread *) threadid;
+    struct pthread *pd = (struct pthread *) threadid;
 
-  /* Make sure the descriptor is valid.  */
-  if (INVALID_TD_P (pd))
-    /* Not a valid thread handle.  */
-    return ESRCH;
-
-  int result = 0;
-
-  /* See CREATE THREAD NOTES in nptl/pthread_create.c.  */
-  lll_lock (pd->lock, LLL_PRIVATE);
-
-  struct sched_param p;
-  const struct sched_param *orig_param = param;
-
-  /* If the thread should have higher priority because of some
-     PTHREAD_PRIO_PROTECT mutexes it holds, adjust the priority.  */
-  if (__builtin_expect (pd->tpp != NULL, 0)
-      && pd->tpp->priomax > param->sched_priority)
+    /* Make sure the descriptor is valid.  */
+    if (INVALID_TD_P(pd))
+        /* Not a valid thread handle.  */
     {
-      p = *param;
-      p.sched_priority = pd->tpp->priomax;
-      param = &p;
+        return ESRCH;
     }
 
-  /* Try to set the scheduler information.  */
-  if (__builtin_expect (__sched_setscheduler (pd->tid, policy,
-					      param) == -1, 0))
-    result = errno;
-  else
-    {
-      /* We succeeded changing the kernel information.  Reflect this
-	 change in the thread descriptor.  */
-      pd->schedpolicy = policy;
-      memcpy (&pd->schedparam, orig_param, sizeof (struct sched_param));
-      pd->flags |= ATTR_FLAG_SCHED_SET | ATTR_FLAG_POLICY_SET;
+    int result = 0;
+
+    /* See CREATE THREAD NOTES in nptl/pthread_create.c.  */
+    lll_lock(pd->lock, LLL_PRIVATE);
+
+    struct sched_param p;
+    const struct sched_param *orig_param = param;
+
+    /* If the thread should have higher priority because of some
+       PTHREAD_PRIO_PROTECT mutexes it holds, adjust the priority.  */
+    if (__builtin_expect(pd->tpp != NULL, 0)
+        && pd->tpp->priomax > param->sched_priority) {
+        p = *param;
+        p.sched_priority = pd->tpp->priomax;
+        param = &p;
     }
 
-  lll_unlock (pd->lock, LLL_PRIVATE);
+    /* Try to set the scheduler information.  */
+    if (__builtin_expect(__sched_setscheduler(pd->tid, policy,
+                         param) == -1, 0)) {
+        result = errno;
+    } else {
+        /* We succeeded changing the kernel information.  Reflect this
+        change in the thread descriptor.  */
+        pd->schedpolicy = policy;
+        memcpy(&pd->schedparam, orig_param, sizeof(struct sched_param));
+        pd->flags |= ATTR_FLAG_SCHED_SET | ATTR_FLAG_POLICY_SET;
+    }
 
-  return result;
+    lll_unlock(pd->lock, LLL_PRIVATE);
+
+    return result;
 }
-strong_alias (__pthread_setschedparam, pthread_setschedparam)
+strong_alias(__pthread_setschedparam, pthread_setschedparam)

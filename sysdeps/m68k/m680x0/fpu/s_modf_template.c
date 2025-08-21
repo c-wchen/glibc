@@ -20,24 +20,24 @@
 #include "mathimpl.h"
 
 FLOAT
-M_DECL_FUNC (__modf) (FLOAT x, FLOAT *iptr)
+M_DECL_FUNC(__modf)(FLOAT x, FLOAT *iptr)
 {
-  FLOAT x_int, result;
-  unsigned long x_cond;
+    FLOAT x_int, result;
+    unsigned long x_cond;
 
-  __asm ("fintrz%.x %1, %0" : "=f" (x_int) : "f" (x));
-  *iptr = x_int;
-  x_cond = __m81_test (x);
-  if (x_cond & __M81_COND_INF)
-    {
-      result = 0;
-      if (x_cond & __M81_COND_NEG)
-	result = -result;
+    __asm("fintrz%.x %1, %0" : "=f"(x_int) : "f"(x));
+    *iptr = x_int;
+    x_cond = __m81_test(x);
+    if (x_cond & __M81_COND_INF) {
+        result = 0;
+        if (x_cond & __M81_COND_NEG) {
+            result = -result;
+        }
+    } else if (x_cond & __M81_COND_ZERO) {
+        result = x;
+    } else {
+        result = x - x_int;
     }
-  else if (x_cond & __M81_COND_ZERO)
-    result = x;
-  else
-    result = x - x_int;
-  return result;
+    return result;
 }
-declare_mgen_alias (__modf, modf)
+declare_mgen_alias(__modf, modf)

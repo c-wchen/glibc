@@ -19,11 +19,10 @@
 #define NO_MATH_REDIRECT
 #include <math.h>
 
-double
-__scalbn (double x, int fn)
+double __scalbn(double x, int fn)
 {
-  double tmp;
-  asm volatile ("movgr2fr.d \t%0, %1" : "=f" (tmp) : "r" (fn));
-  asm volatile ("fscaleb.d \t%0, %1, %2" : "=f" (x) : "f" (x), "f" (tmp));
-  return x;
+    double tmp;
+    asm volatile("movgr2fr.d \t%0, %1" : "=f"(tmp) : "r"(fn));
+    asm volatile("fscaleb.d \t%0, %1, %2" : "=f"(x) : "f"(x), "f"(tmp));
+    return x;
 }

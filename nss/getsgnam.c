@@ -18,14 +18,14 @@
 #include <gshadow.h>
 
 
-#define LOOKUP_TYPE	struct sgrp
-#define FUNCTION_NAME	getsgnam
-#define DATABASE_NAME	gshadow
-#define ADD_PARAMS	const char *name
-#define ADD_VARIABLES	name
-#define BUFLEN		1024
+#define LOOKUP_TYPE struct sgrp
+#define FUNCTION_NAME   getsgnam
+#define DATABASE_NAME   gshadow
+#define ADD_PARAMS  const char *name
+#define ADD_VARIABLES   name
+#define BUFLEN      1024
 
 /* There is no nscd support for the shadow file.  */
-#undef	USE_NSCD
+#undef  USE_NSCD
 
 #include "../nss/getXXbyYY.c"

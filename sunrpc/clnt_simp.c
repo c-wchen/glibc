@@ -42,91 +42,87 @@
 #include <string.h>
 #include <shlib-compat.h>
 
-struct callrpc_private_s
-  {
+struct callrpc_private_s {
     CLIENT *client;
     int socket;
     u_long oldprognum, oldversnum, valid;
     char *oldhost;
-  };
+};
 #define callrpc_private RPC_THREAD_VARIABLE(callrpc_private_s)
 
-int
-callrpc (const char *host, u_long prognum, u_long versnum, u_long procnum,
-	 xdrproc_t inproc, const char *in, xdrproc_t outproc, char *out)
+int callrpc(const char *host, u_long prognum, u_long versnum, u_long procnum,
+            xdrproc_t inproc, const char *in, xdrproc_t outproc, char *out)
 {
-  struct callrpc_private_s *crp = callrpc_private;
-  struct sockaddr_in server_addr;
-  enum clnt_stat clnt_stat;
-  struct timeval timeout, tottimeout;
+    struct callrpc_private_s *crp = callrpc_private;
+    struct sockaddr_in server_addr;
+    enum clnt_stat clnt_stat;
+    struct timeval timeout, tottimeout;
 
-  if (crp == NULL)
-    {
-      crp = (struct callrpc_private_s *) calloc (1, sizeof (*crp));
-      if (crp == NULL)
-	return 0;
-      callrpc_private = crp;
+    if (crp == NULL) {
+        crp = (struct callrpc_private_s *) calloc(1, sizeof(*crp));
+        if (crp == NULL) {
+            return 0;
+        }
+        callrpc_private = crp;
     }
-  if (crp->oldhost == NULL)
-    {
-      crp->oldhost = malloc (256);
-      crp->oldhost[0] = 0;
-      crp->socket = RPC_ANYSOCK;
+    if (crp->oldhost == NULL) {
+        crp->oldhost = malloc(256);
+        crp->oldhost[0] = 0;
+        crp->socket = RPC_ANYSOCK;
     }
-  if (crp->valid && crp->oldprognum == prognum && crp->oldversnum == versnum
-      && strcmp (crp->oldhost, host) == 0)
-    {
-      /* reuse old client */
-    }
-  else
-    {
-      crp->valid = 0;
-      if (crp->socket != RPC_ANYSOCK)
-	{
-	  (void) __close (crp->socket);
-	  crp->socket = RPC_ANYSOCK;
-	}
-      if (crp->client)
-	{
-	  clnt_destroy (crp->client);
-	  crp->client = NULL;
-	}
+    if (crp->valid && crp->oldprognum == prognum && crp->oldversnum == versnum
+        && strcmp(crp->oldhost, host) == 0) {
+        /* reuse old client */
+    } else {
+        crp->valid = 0;
+        if (crp->socket != RPC_ANYSOCK) {
+            (void) __close(crp->socket);
+            crp->socket = RPC_ANYSOCK;
+        }
+        if (crp->client) {
+            clnt_destroy(crp->client);
+            crp->client = NULL;
+        }
 
-      if (__libc_rpc_gethostbyname (host, &server_addr) != 0)
-	return (int) get_rpc_createerr().cf_stat;
+        if (__libc_rpc_gethostbyname(host, &server_addr) != 0) {
+            return (int) get_rpc_createerr().cf_stat;
+        }
 
-      timeout.tv_usec = 0;
-      timeout.tv_sec = 5;
-      if ((crp->client = clntudp_create (&server_addr, (u_long) prognum,
-			  (u_long) versnum, timeout, &crp->socket)) == NULL)
-	return (int) get_rpc_createerr().cf_stat;
-      crp->valid = 1;
-      crp->oldprognum = prognum;
-      crp->oldversnum = versnum;
-      (void) strncpy (crp->oldhost, host, 255);
-      crp->oldhost[255] = '\0';
+        timeout.tv_usec = 0;
+        timeout.tv_sec = 5;
+        if ((crp->client = clntudp_create(&server_addr, (u_long) prognum,
+                                          (u_long) versnum, timeout, &crp->socket)) == NULL) {
+            return (int) get_rpc_createerr().cf_stat;
+        }
+        crp->valid = 1;
+        crp->oldprognum = prognum;
+        crp->oldversnum = versnum;
+        (void) strncpy(crp->oldhost, host, 255);
+        crp->oldhost[255] = '\0';
     }
-  tottimeout.tv_sec = 25;
-  tottimeout.tv_usec = 0;
-  clnt_stat = clnt_call (crp->client, procnum, inproc, (char *) in,
-			 outproc, out, tottimeout);
-  /*
-   * if call failed, empty cache
-   */
-  if (clnt_stat != RPC_SUCCESS)
-    crp->valid = 0;
-  return (int) clnt_stat;
+    tottimeout.tv_sec = 25;
+    tottimeout.tv_usec = 0;
+    clnt_stat = clnt_call(crp->client, procnum, inproc, (char *) in,
+                          outproc, out, tottimeout);
+    /*
+     * if call failed, empty cache
+     */
+    if (clnt_stat != RPC_SUCCESS) {
+        crp->valid = 0;
+    }
+    return (int) clnt_stat;
 }
-libc_hidden_nolink_sunrpc (callrpc, GLIBC_2_0)
+libc_hidden_nolink_sunrpc(callrpc, GLIBC_2_0)
 
 void
-__rpc_thread_clnt_cleanup (void)
+__rpc_thread_clnt_cleanup(void)
 {
-	struct callrpc_private_s *rcp = RPC_THREAD_VARIABLE(callrpc_private_s);
+    struct callrpc_private_s *rcp = RPC_THREAD_VARIABLE(callrpc_private_s);
 
-	if (rcp) {
-		if (rcp->client)
-			CLNT_DESTROY (rcp->client);
-		free (rcp);
-	}
+    if (rcp) {
+        if (rcp->client) {
+            CLNT_DESTROY(rcp->client);
+        }
+        free(rcp);
+    }
 }

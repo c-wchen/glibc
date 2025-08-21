@@ -16,7 +16,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _SYS_TIMEB_H
-#define _SYS_TIMEB_H	1
+#define _SYS_TIMEB_H    1
 
 #include <features.h>
 
@@ -26,10 +26,10 @@ __BEGIN_DECLS
 
 /* Fill in TIMEBUF with information about the current time.  */
 
-extern int ftime (struct timeb *__timebuf)
-  __nonnull ((1))
-  __attribute_deprecated_msg__ ("Use gettimeofday or clock_gettime instead");
+extern int ftime(struct timeb *__timebuf)
+__nonnull((1))
+__attribute_deprecated_msg__("Use gettimeofday or clock_gettime instead");
 
 __END_DECLS
 
-#endif	/* sys/timeb.h */
+#endif  /* sys/timeb.h */

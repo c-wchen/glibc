@@ -20,33 +20,32 @@
 #include <stdlib.h>
 #include <unwind-link.h>
 
-struct trace_arg
-{
-  void **array;
-  struct unwind_link *unwind_link;
-  int cnt, size;
-  void *lastfp, *lastsp;
+struct trace_arg {
+    void **array;
+    struct unwind_link *unwind_link;
+    int cnt, size;
+    void *lastfp, *lastsp;
 };
 
-static _Unwind_Reason_Code
-backtrace_helper (struct _Unwind_Context *ctx, void *a)
+static _Unwind_Reason_Code backtrace_helper(struct _Unwind_Context *ctx, void *a)
 {
-  struct trace_arg *arg = a;
+    struct trace_arg *arg = a;
 
-  /* We are first called with address in the __backtrace function.
-     Skip it.  */
-  if (arg->cnt != -1)
-    arg->array[arg->cnt]
-      = (void *) UNWIND_LINK_PTR (arg->unwind_link, _Unwind_GetIP) (ctx);
-  if (++arg->cnt == arg->size)
-    return _URC_END_OF_STACK;
+    /* We are first called with address in the __backtrace function.
+       Skip it.  */
+    if (arg->cnt != -1)
+        arg->array[arg->cnt]
+            = (void *) UNWIND_LINK_PTR(arg->unwind_link, _Unwind_GetIP)(ctx);
+    if (++arg->cnt == arg->size) {
+        return _URC_END_OF_STACK;
+    }
 
-  /* %fp is DWARF2 register 14 on M68K.  */
-  arg->lastfp
-    = (void *) UNWIND_LINK_PTR (arg->unwind_link, _Unwind_GetGR) (ctx, 14);
-  arg->lastsp
-    = (void *) UNWIND_LINK_PTR (arg->unwind_link, _Unwind_GetCFA) (ctx);
-  return _URC_NO_REASON;
+    /* %fp is DWARF2 register 14 on M68K.  */
+    arg->lastfp
+        = (void *) UNWIND_LINK_PTR(arg->unwind_link, _Unwind_GetGR)(ctx, 14);
+    arg->lastsp
+        = (void *) UNWIND_LINK_PTR(arg->unwind_link, _Unwind_GetCFA)(ctx);
+    return _URC_NO_REASON;
 }
 
 
@@ -69,48 +68,45 @@ extern void *__libc_stack_end;
    as well, but requires .eh_frame info.  Then fall back to
    walking the stack manually.  */
 
-struct layout
-{
-  struct layout *fp;
-  void *ret;
+struct layout {
+    struct layout *fp;
+    void *ret;
 };
 
 
-int
-__backtrace (void **array, int size)
+int __backtrace(void **array, int size)
 {
-  struct trace_arg arg =
-    {
-     .array = array,
-     .unwind_link = __libc_unwind_link_get (),
-     .size = size,
-     .cnt = -1,
+    struct trace_arg arg = {
+        .array = array,
+        .unwind_link = __libc_unwind_link_get(),
+        .size = size,
+        .cnt = -1,
     };
 
-  if (size <= 0 || arg.unwind_link == NULL)
-    return 0;
+    if (size <= 0 || arg.unwind_link == NULL) {
+        return 0;
+    }
 
-  UNWIND_LINK_PTR (arg.unwind_link, _Unwind_Backtrace)
+    UNWIND_LINK_PTR(arg.unwind_link, _Unwind_Backtrace)
     (backtrace_helper, &arg);
 
-  if (arg.cnt > 1 && arg.array[arg.cnt - 1] == NULL)
-    --arg.cnt;
-  else if (arg.cnt < size)
-    {
-      struct layout *fp = (struct layout *) arg.lastfp;
+    if (arg.cnt > 1 && arg.array[arg.cnt - 1] == NULL) {
+        --arg.cnt;
+    } else if (arg.cnt < size) {
+        struct layout *fp = (struct layout *) arg.lastfp;
 
-      while (arg.cnt < size)
-	{
-	  /* Check for out of range.  */
-	  if ((void *) fp < arg.lastsp || (void *) fp > __libc_stack_end
-	      || ((long) fp & 1))
-	    break;
+        while (arg.cnt < size) {
+            /* Check for out of range.  */
+            if ((void *) fp < arg.lastsp || (void *) fp > __libc_stack_end
+                || ((long) fp & 1)) {
+                break;
+            }
 
-	  array[arg.cnt++] = fp->ret;
-	  fp = fp->fp;
-	}
+            array[arg.cnt++] = fp->ret;
+            fp = fp->fp;
+        }
     }
-  return arg.cnt != -1 ? arg.cnt : 0;
+    return arg.cnt != -1 ? arg.cnt : 0;
 }
-weak_alias (__backtrace, backtrace)
-libc_hidden_def (__backtrace)
+weak_alias(__backtrace, backtrace)
+libc_hidden_def(__backtrace)

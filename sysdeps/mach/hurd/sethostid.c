@@ -24,19 +24,19 @@
    This call is restricted to the super-user.  */
 /* XXX should be __sethostid?
        isn't hostid supposed to be hardwired and unchangeable? */
-int
-sethostid (long int id)
+int sethostid(long int id)
 {
-  char buf[8], *bp;
-  ssize_t n;
+    char buf[8], *bp;
+    ssize_t n;
 
-  /* The hostid is kept in the file /etc/hostid,
-     eight characters of upper-case hexadecimal.  */
+    /* The hostid is kept in the file /etc/hostid,
+       eight characters of upper-case hexadecimal.  */
 
-  bp = _itoa_word (id, &buf[sizeof buf], 16, 1);
-  while (bp > buf)
-    *--bp = '0';
+    bp = _itoa_word(id, &buf[sizeof buf], 16, 1);
+    while (bp > buf) {
+        *--bp = '0';
+    }
 
-  n = _hurd_set_host_config ("/etc/hostid", buf, sizeof buf);
-  return n < 0 ? -1 : 0;
+    n = _hurd_set_host_config("/etc/hostid", buf, sizeof buf);
+    return n < 0 ? -1 : 0;
 }

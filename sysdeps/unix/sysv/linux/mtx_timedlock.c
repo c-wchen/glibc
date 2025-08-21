@@ -20,31 +20,30 @@
 #include <shlib-compat.h>
 #include "thrd_priv.h"
 
-int
-__mtx_timedlock64 (mtx_t *restrict mutex,
-                   const struct __timespec64 *restrict time_point)
+int __mtx_timedlock64(mtx_t *restrict mutex,
+                      const struct __timespec64 *restrict time_point)
 {
-  int err_code = __pthread_mutex_timedlock64 ((pthread_mutex_t *)mutex,
-                                              time_point);
-  return thrd_err_map (err_code);
+    int err_code = __pthread_mutex_timedlock64((pthread_mutex_t *)mutex,
+                   time_point);
+    return thrd_err_map(err_code);
 }
 
 #if __TIMESIZE == 64
-strong_alias (__mtx_timedlock64, ___mtx_timedlock)
+strong_alias(__mtx_timedlock64, ___mtx_timedlock)
 #else
-libc_hidden_def (__mtx_timedlock64)
+libc_hidden_def(__mtx_timedlock64)
 
 int
-___mtx_timedlock (mtx_t *restrict mutex,
-                  const struct timespec *restrict time_point)
+___mtx_timedlock(mtx_t *restrict mutex,
+                 const struct timespec *restrict time_point)
 {
-  struct __timespec64 ts64 = valid_timespec_to_timespec64 (*time_point);
+    struct __timespec64 ts64 = valid_timespec_to_timespec64(*time_point);
 
-  return __mtx_timedlock64 (mutex, &ts64);
+    return __mtx_timedlock64(mutex, &ts64);
 }
 #endif /* __TIMESIZE == 64 */
-versioned_symbol (libc, ___mtx_timedlock, mtx_timedlock, GLIBC_2_34);
+versioned_symbol(libc, ___mtx_timedlock, mtx_timedlock, GLIBC_2_34);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_28, GLIBC_2_34)
-compat_symbol (libpthread, ___mtx_timedlock, mtx_timedlock, GLIBC_2_28);
+compat_symbol(libpthread, ___mtx_timedlock, mtx_timedlock, GLIBC_2_28);
 #endif

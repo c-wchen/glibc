@@ -21,12 +21,12 @@
 #include <support/check.h>
 #include <stdlib.h>
 
-char *
-xfgets (char *s, int size, FILE *stream)
+char *xfgets(char *s, int size, FILE *stream)
 {
-  char *ret = fgets (s, size, stream);
-  if (!ret && ferror(stream))
-    FAIL_EXIT1 ("fgets failed: %m");
+    char *ret = fgets(s, size, stream);
+    if (!ret && ferror(stream)) {
+        FAIL_EXIT1("fgets failed: %m");
+    }
 
-  return ret;
+    return ret;
 }

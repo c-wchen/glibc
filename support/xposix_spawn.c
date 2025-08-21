@@ -19,14 +19,14 @@
 #include <support/xspawn.h>
 #include <support/check.h>
 
-pid_t
-xposix_spawn (const char *file, const posix_spawn_file_actions_t *fa,
-	      const posix_spawnattr_t *attr, char *const args[],
-	      char *const envp[])
+pid_t xposix_spawn(const char *file, const posix_spawn_file_actions_t *fa,
+                   const posix_spawnattr_t *attr, char *const args[],
+                   char *const envp[])
 {
-  pid_t pid;
-  int status = posix_spawn (&pid, file, fa, attr, args, envp);
-  if (status != 0)
-    FAIL_EXIT1 ("posix_spawn to %s file failed: %m", file);
-  return pid;
+    pid_t pid;
+    int status = posix_spawn(&pid, file, fa, attr, args, envp);
+    if (status != 0) {
+        FAIL_EXIT1("posix_spawn to %s file failed: %m", file);
+    }
+    return pid;
 }

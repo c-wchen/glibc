@@ -20,21 +20,19 @@
 #include <nss_dns.h>
 #include <string.h>
 
-void
-__nss_dns_functions (nss_module_functions_untyped pointers)
+void __nss_dns_functions(nss_module_functions_untyped pointers)
 {
-  struct nss_module_functions typed =
-    {
-      .getcanonname_r = &_nss_dns_getcanonname_r,
-      .gethostbyname3_r = &_nss_dns_gethostbyname3_r,
-      .gethostbyname2_r = &_nss_dns_gethostbyname2_r,
-      .gethostbyname_r = &_nss_dns_gethostbyname_r,
-      .gethostbyname4_r = &_nss_dns_gethostbyname4_r,
-      .gethostbyaddr2_r = &_nss_dns_gethostbyaddr2_r,
-      .gethostbyaddr_r = &_nss_dns_gethostbyaddr_r,
-      .getnetbyname_r = &_nss_dns_getnetbyname_r,
-      .getnetbyaddr_r = &_nss_dns_getnetbyaddr_r,
+    struct nss_module_functions typed = {
+        .getcanonname_r = &_nss_dns_getcanonname_r,
+        .gethostbyname3_r = &_nss_dns_gethostbyname3_r,
+        .gethostbyname2_r = &_nss_dns_gethostbyname2_r,
+        .gethostbyname_r = &_nss_dns_gethostbyname_r,
+        .gethostbyname4_r = &_nss_dns_gethostbyname4_r,
+        .gethostbyaddr2_r = &_nss_dns_gethostbyaddr2_r,
+        .gethostbyaddr_r = &_nss_dns_gethostbyaddr_r,
+        .getnetbyname_r = &_nss_dns_getnetbyname_r,
+        .getnetbyaddr_r = &_nss_dns_getnetbyaddr_r,
     };
 
-  memcpy (pointers, &typed, sizeof (nss_module_functions_untyped));
+    memcpy(pointers, &typed, sizeof(nss_module_functions_untyped));
 }

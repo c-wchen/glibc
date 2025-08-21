@@ -31,30 +31,28 @@
 
 static int __waitid_pidfd_supported = 0;
 
-bool
-__clone_pidfd_supported (void)
+bool __clone_pidfd_supported(void)
 {
-  int state = atomic_load_relaxed (&__waitid_pidfd_supported);
-  if (state == 0)
-    {
-      /* Linux define the maximum allocated file descriptor value as
-	 0x7fffffc0 (from fs/file.c):
+    int state = atomic_load_relaxed(&__waitid_pidfd_supported);
+    if (state == 0) {
+        /* Linux define the maximum allocated file descriptor value as
+        0x7fffffc0 (from fs/file.c):
 
-         #define __const_min(x, y) ((x) < (y) ? (x) : (y))
-         unsigned int sysctl_nr_open_max =
-	   __const_min(INT_MAX, ~(size_t)0/sizeof(void *)) & -BITS_PER_LONG;
+               #define __const_min(x, y) ((x) < (y) ? (x) : (y))
+               unsigned int sysctl_nr_open_max =
+           __const_min(INT_MAX, ~(size_t)0/sizeof(void *)) & -BITS_PER_LONG;
 
-	 So we can detect whether kernel supports all pidfd interfaces by
-	 using a valid but never allocated file descriptor: if is not
-	 supported waitid will return EINVAL, otherwise EBADF.
+         So we can detect whether kernel supports all pidfd interfaces by
+         using a valid but never allocated file descriptor: if is not
+         supported waitid will return EINVAL, otherwise EBADF.
 
-         Also the waitid is a cancellation entrypoint, so issue the syscall
-	 directly.  */
-      int r = INTERNAL_SYSCALL_CALL (waitid, P_PIDFD, INT_MAX, NULL,
-				     WEXITED | WNOHANG);
-      state = r == -EBADF ? 1 : -1;
-      atomic_store_relaxed (&__waitid_pidfd_supported, state);
+               Also the waitid is a cancellation entrypoint, so issue the syscall
+         directly.  */
+        int r = INTERNAL_SYSCALL_CALL(waitid, P_PIDFD, INT_MAX, NULL,
+                                      WEXITED | WNOHANG);
+        state = r == -EBADF ? 1 : -1;
+        atomic_store_relaxed(&__waitid_pidfd_supported, state);
     }
 
-  return state > 0;
+    return state > 0;
 }

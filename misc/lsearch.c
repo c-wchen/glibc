@@ -20,38 +20,34 @@
 #include <string.h>
 
 
-void *
-lsearch (const void *key, void *base, size_t *nmemb, size_t size,
-	 __compar_fn_t compar)
+void *lsearch(const void *key, void *base, size_t *nmemb, size_t size,
+              __compar_fn_t compar)
 {
-  void *result;
+    void *result;
 
-  /* Try to find it.  */
-  result = lfind (key, base, nmemb, size, compar);
-  if (result == NULL)
-    {
-      /* Not available.  Insert at the end.  */
-      result = memcpy (base + (*nmemb) * size, key, size);
-      ++(*nmemb);
+    /* Try to find it.  */
+    result = lfind(key, base, nmemb, size, compar);
+    if (result == NULL) {
+        /* Not available.  Insert at the end.  */
+        result = memcpy(base + (*nmemb) * size, key, size);
+        ++(*nmemb);
     }
 
-  return result;
+    return result;
 }
 
 
-void *
-lfind (const void *key, const void *base, size_t *nmemb, size_t size,
-       __compar_fn_t compar)
+void *lfind(const void *key, const void *base, size_t *nmemb, size_t size,
+            __compar_fn_t compar)
 {
-  const void *result = base;
-  size_t cnt = 0;
+    const void *result = base;
+    size_t cnt = 0;
 
-  while (cnt < *nmemb && (*compar) (key, result) != 0)
-    {
-      result += size;
-      ++cnt;
+    while (cnt < *nmemb && (*compar)(key, result) != 0) {
+        result += size;
+        ++cnt;
     }
 
-  return cnt < *nmemb ? (void *) result : NULL;
+    return cnt < *nmemb ? (void *) result : NULL;
 }
-libc_hidden_def (lfind)
+libc_hidden_def(lfind)

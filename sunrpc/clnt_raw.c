@@ -47,200 +47,192 @@
 /*
  * This is the "network" we will be moving stuff over.
  */
-struct clntraw_private_s
-  {
+struct clntraw_private_s {
     CLIENT client_object;
     XDR xdr_stream;
     char _raw_buf[UDPMSGSIZE];
-    union
-    {
-      char msg[MCALL_MSG_SIZE];
-      u_long rm_xid;
+    union {
+        char msg[MCALL_MSG_SIZE];
+        u_long rm_xid;
     } mashl_callmsg;
     u_int mcnt;
-  };
+};
 #define clntraw_private RPC_THREAD_VARIABLE(clntraw_private_s)
 
-static enum clnt_stat clntraw_call (CLIENT *, u_long, xdrproc_t, caddr_t,
-				    xdrproc_t, caddr_t, struct timeval);
-static void clntraw_abort (void);
-static void clntraw_geterr (CLIENT *, struct rpc_err *);
-static bool_t clntraw_freeres (CLIENT *, xdrproc_t, caddr_t);
-static bool_t clntraw_control (CLIENT *, int, char *);
-static void clntraw_destroy (CLIENT *);
+static enum clnt_stat clntraw_call(CLIENT *, u_long, xdrproc_t, caddr_t,
+                                   xdrproc_t, caddr_t, struct timeval);
+static void clntraw_abort(void);
+static void clntraw_geterr(CLIENT *, struct rpc_err *);
+static bool_t clntraw_freeres(CLIENT *, xdrproc_t, caddr_t);
+static bool_t clntraw_control(CLIENT *, int, char *);
+static void clntraw_destroy(CLIENT *);
 
-static const struct clnt_ops client_ops =
-{
-  clntraw_call,
-  clntraw_abort,
-  clntraw_geterr,
-  clntraw_freeres,
-  clntraw_destroy,
-  clntraw_control
+static const struct clnt_ops client_ops = {
+    clntraw_call,
+    clntraw_abort,
+    clntraw_geterr,
+    clntraw_freeres,
+    clntraw_destroy,
+    clntraw_control
 };
 
 /*
  * Create a client handle for memory based rpc.
  */
-CLIENT *
-clntraw_create (u_long prog, u_long vers)
+CLIENT *clntraw_create(u_long prog, u_long vers)
 {
-  struct clntraw_private_s *clp = clntraw_private;
-  struct rpc_msg call_msg;
-  XDR *xdrs;
-  CLIENT *client;
+    struct clntraw_private_s *clp = clntraw_private;
+    struct rpc_msg call_msg;
+    XDR *xdrs;
+    CLIENT *client;
 
-  if (clp == NULL)
-    {
-      clp = (struct clntraw_private_s *) calloc (1, sizeof (*clp));
-      if (clp == NULL)
-	return NULL;
-      clntraw_private = clp;
+    if (clp == NULL) {
+        clp = (struct clntraw_private_s *) calloc(1, sizeof(*clp));
+        if (clp == NULL) {
+            return NULL;
+        }
+        clntraw_private = clp;
     }
-  xdrs = &clp->xdr_stream;
-  client = &clp->client_object;
-  /*
-   * pre-serialize the static part of the call msg and stash it away
-   */
-  call_msg.rm_direction = CALL;
-  call_msg.rm_call.cb_rpcvers = RPC_MSG_VERSION;
-  call_msg.rm_call.cb_prog = prog;
-  call_msg.rm_call.cb_vers = vers;
-  xdrmem_create (xdrs, clp->mashl_callmsg.msg, MCALL_MSG_SIZE, XDR_ENCODE);
-  if (!xdr_callhdr (xdrs, &call_msg))
-    {
-      perror (_ ("clnt_raw.c: fatal header serialization error"));
+    xdrs = &clp->xdr_stream;
+    client = &clp->client_object;
+    /*
+     * pre-serialize the static part of the call msg and stash it away
+     */
+    call_msg.rm_direction = CALL;
+    call_msg.rm_call.cb_rpcvers = RPC_MSG_VERSION;
+    call_msg.rm_call.cb_prog = prog;
+    call_msg.rm_call.cb_vers = vers;
+    xdrmem_create(xdrs, clp->mashl_callmsg.msg, MCALL_MSG_SIZE, XDR_ENCODE);
+    if (!xdr_callhdr(xdrs, &call_msg)) {
+        perror(_("clnt_raw.c: fatal header serialization error"));
     }
-  clp->mcnt = XDR_GETPOS (xdrs);
-  XDR_DESTROY (xdrs);
+    clp->mcnt = XDR_GETPOS(xdrs);
+    XDR_DESTROY(xdrs);
 
-  /*
-   * Set xdrmem for client/server shared buffer
-   */
-  xdrmem_create (xdrs, clp->_raw_buf, UDPMSGSIZE, XDR_FREE);
+    /*
+     * Set xdrmem for client/server shared buffer
+     */
+    xdrmem_create(xdrs, clp->_raw_buf, UDPMSGSIZE, XDR_FREE);
 
-  /*
-   * create client handle
-   */
-  client->cl_ops = (struct clnt_ops *) &client_ops;
-  client->cl_auth = authnone_create ();
-  return client;
+    /*
+     * create client handle
+     */
+    client->cl_ops = (struct clnt_ops *) &client_ops;
+    client->cl_auth = authnone_create();
+    return client;
 }
-libc_hidden_nolink_sunrpc (clntraw_create, GLIBC_2_0)
+libc_hidden_nolink_sunrpc(clntraw_create, GLIBC_2_0)
 
 static enum clnt_stat
-clntraw_call (CLIENT *h, u_long proc, xdrproc_t xargs, caddr_t argsp,
-	      xdrproc_t xresults, caddr_t resultsp, struct timeval timeout)
-{
-  struct clntraw_private_s *clp = clntraw_private;
-  XDR *xdrs = &clp->xdr_stream;
-  struct rpc_msg msg;
-  enum clnt_stat status;
-  struct rpc_err error;
+clntraw_call(CLIENT *h, u_long proc, xdrproc_t xargs, caddr_t argsp,
+             xdrproc_t xresults, caddr_t resultsp, struct timeval timeout) {
+    struct clntraw_private_s *clp = clntraw_private;
+    XDR *xdrs = &clp->xdr_stream;
+    struct rpc_msg msg;
+    enum clnt_stat status;
+    struct rpc_err error;
 
-  if (clp == NULL)
-    return RPC_FAILED;
+    if (clp == NULL)
+    {
+        return RPC_FAILED;
+    }
 call_again:
-  /*
-   * send request
-   */
-  xdrs->x_op = XDR_ENCODE;
-  XDR_SETPOS (xdrs, 0);
-  /* Just checking the union definition to access rm_xid is correct.  */
-  if (offsetof (struct rpc_msg, rm_xid) != 0)
-    abort ();
-  clp->mashl_callmsg.rm_xid++;
-  if ((!XDR_PUTBYTES (xdrs, clp->mashl_callmsg.msg, clp->mcnt)) ||
-      (!XDR_PUTLONG (xdrs, (long *) &proc)) ||
-      (!AUTH_MARSHALL (h->cl_auth, xdrs)) ||
-      (!(*xargs) (xdrs, argsp)))
+    /*
+     * send request
+     */
+    xdrs->x_op = XDR_ENCODE;
+    XDR_SETPOS(xdrs, 0);
+    /* Just checking the union definition to access rm_xid is correct.  */
+    if (offsetof(struct rpc_msg, rm_xid) != 0)
     {
-      return (RPC_CANTENCODEARGS);
+        abort();
     }
-  (void) XDR_GETPOS (xdrs);	/* called just to cause overhead */
-
-  /*
-   * We have to call server input routine here because this is
-   * all going on in one process. Yuk.
-   */
-  svc_getreq (1);
-
-  /*
-   * get results
-   */
-  xdrs->x_op = XDR_DECODE;
-  XDR_SETPOS (xdrs, 0);
-  msg.acpted_rply.ar_verf = _null_auth;
-  msg.acpted_rply.ar_results.where = resultsp;
-  msg.acpted_rply.ar_results.proc = xresults;
-  if (!xdr_replymsg (xdrs, &msg))
-    return RPC_CANTDECODERES;
-  _seterr_reply (&msg, &error);
-  status = error.re_status;
-
-  if (status == RPC_SUCCESS)
+    clp->mashl_callmsg.rm_xid++;
+    if ((!XDR_PUTBYTES(xdrs, clp->mashl_callmsg.msg, clp->mcnt)) ||
+        (!XDR_PUTLONG(xdrs, (long *) &proc)) ||
+        (!AUTH_MARSHALL(h->cl_auth, xdrs)) ||
+        (!(*xargs)(xdrs, argsp)))
     {
-      if (!AUTH_VALIDATE (h->cl_auth, &msg.acpted_rply.ar_verf))
-	{
-	  status = RPC_AUTHERROR;
-	}
-    }				/* end successful completion */
-  else
-    {
-      if (AUTH_REFRESH (h->cl_auth))
-	goto call_again;
-    }				/* end of unsuccessful completion */
+        return (RPC_CANTENCODEARGS);
+    }
+    (void) XDR_GETPOS(xdrs);  /* called just to cause overhead */
 
-  if (status == RPC_SUCCESS)
+    /*
+     * We have to call server input routine here because this is
+     * all going on in one process. Yuk.
+     */
+    svc_getreq(1);
+
+    /*
+     * get results
+     */
+    xdrs->x_op = XDR_DECODE;
+    XDR_SETPOS(xdrs, 0);
+    msg.acpted_rply.ar_verf = _null_auth;
+    msg.acpted_rply.ar_results.where = resultsp;
+    msg.acpted_rply.ar_results.proc = xresults;
+    if (!xdr_replymsg(xdrs, &msg))
     {
-      if (!AUTH_VALIDATE (h->cl_auth, &msg.acpted_rply.ar_verf))
-	{
-	  status = RPC_AUTHERROR;
-	}
-      if (msg.acpted_rply.ar_verf.oa_base != NULL)
-	{
-	  xdrs->x_op = XDR_FREE;
-	  (void) xdr_opaque_auth (xdrs, &(msg.acpted_rply.ar_verf));
-	}
+        return RPC_CANTDECODERES;
+    }
+    _seterr_reply(&msg, &error);
+    status = error.re_status;
+
+    if (status == RPC_SUCCESS)
+    {
+        if (!AUTH_VALIDATE(h->cl_auth, &msg.acpted_rply.ar_verf)) {
+            status = RPC_AUTHERROR;
+        }
+    }               /* end successful completion */
+    else
+    {
+        if (AUTH_REFRESH(h->cl_auth)) {
+            goto call_again;
+        }
+    }               /* end of unsuccessful completion */
+
+    if (status == RPC_SUCCESS)
+    {
+        if (!AUTH_VALIDATE(h->cl_auth, &msg.acpted_rply.ar_verf)) {
+            status = RPC_AUTHERROR;
+        }
+        if (msg.acpted_rply.ar_verf.oa_base != NULL) {
+            xdrs->x_op = XDR_FREE;
+            (void) xdr_opaque_auth(xdrs, &(msg.acpted_rply.ar_verf));
+        }
     }
 
-  return status;
+    return status;
 }
 
-static void
-clntraw_geterr (CLIENT *cl, struct rpc_err *err)
+static void clntraw_geterr(CLIENT *cl, struct rpc_err *err)
 {
 }
 
 
-static bool_t
-clntraw_freeres (CLIENT *cl, xdrproc_t xdr_res, caddr_t res_ptr)
+static bool_t clntraw_freeres(CLIENT *cl, xdrproc_t xdr_res, caddr_t res_ptr)
 {
-  struct clntraw_private_s *clp = clntraw_private;
-  XDR *xdrs = &clp->xdr_stream;
-  bool_t rval;
+    struct clntraw_private_s *clp = clntraw_private;
+    XDR *xdrs = &clp->xdr_stream;
+    bool_t rval;
 
-  if (clp == NULL)
-    {
-      rval = (bool_t) RPC_FAILED;
-      return rval;
+    if (clp == NULL) {
+        rval = (bool_t) RPC_FAILED;
+        return rval;
     }
-  xdrs->x_op = XDR_FREE;
-  return (*xdr_res) (xdrs, res_ptr);
+    xdrs->x_op = XDR_FREE;
+    return (*xdr_res)(xdrs, res_ptr);
 }
 
-static void
-clntraw_abort (void)
+static void clntraw_abort(void)
 {
 }
 
-static bool_t
-clntraw_control (CLIENT *cl, int i, char *c)
+static bool_t clntraw_control(CLIENT *cl, int i, char *c)
 {
-  return FALSE;
+    return FALSE;
 }
 
-static void
-clntraw_destroy (CLIENT *cl)
+static void clntraw_destroy(CLIENT *cl)
 {
 }

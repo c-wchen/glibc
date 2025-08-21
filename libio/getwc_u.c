@@ -29,12 +29,11 @@
 
 #undef getwc_unlocked
 
-wint_t
-__getwc_unlocked (FILE *fp)
+wint_t __getwc_unlocked(FILE *fp)
 {
-  CHECK_FILE (fp, WEOF);
-  return _IO_getwc_unlocked (fp);
+    CHECK_FILE(fp, WEOF);
+    return _IO_getwc_unlocked(fp);
 }
 
-weak_alias (__getwc_unlocked, getwc_unlocked)
-weak_alias (__getwc_unlocked, fgetwc_unlocked)
+weak_alias(__getwc_unlocked, getwc_unlocked)
+weak_alias(__getwc_unlocked, fgetwc_unlocked)

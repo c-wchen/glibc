@@ -21,39 +21,32 @@
 #include <string.h>
 #include <regex.h>
 
-int
-main (void)
+int main(void)
 {
-  struct re_pattern_buffer regex;
-  struct re_registers regs;
-  const char *s;
-  int match;
-  int result = 0;
+    struct re_pattern_buffer regex;
+    struct re_registers regs;
+    const char *s;
+    int match;
+    int result = 0;
 
-  regs.num_regs = 1;
-  memset (&regex, '\0', sizeof (regex));
-  s = re_compile_pattern ("[abc]*d", 7, &regex);
-  if (s != NULL)
-    {
-      puts ("re_compile_pattern return non-NULL value");
-      result = 1;
-    }
-  else
-    {
-      match = re_match (&regex, "foacabdxy", 9, 2, &regs);
-      if (match != 5)
-	{
-	  printf ("re_match returned %d, expected 5\n", match);
-	  result = 1;
-	}
-      else if (regs.start[0] != 2 || regs.end[0] != 7)
-	{
-	  printf ("re_match returned %d..%d, expected 2..7\n",
-		  regs.start[0], regs.end[0]);
-	  result = 1;
-	}
-	puts (" -> OK");
+    regs.num_regs = 1;
+    memset(&regex, '\0', sizeof(regex));
+    s = re_compile_pattern("[abc]*d", 7, &regex);
+    if (s != NULL) {
+        puts("re_compile_pattern return non-NULL value");
+        result = 1;
+    } else {
+        match = re_match(&regex, "foacabdxy", 9, 2, &regs);
+        if (match != 5) {
+            printf("re_match returned %d, expected 5\n", match);
+            result = 1;
+        } else if (regs.start[0] != 2 || regs.end[0] != 7) {
+            printf("re_match returned %d..%d, expected 2..7\n",
+                   regs.start[0], regs.end[0]);
+            result = 1;
+        }
+        puts(" -> OK");
     }
 
-  return result;
+    return result;
 }

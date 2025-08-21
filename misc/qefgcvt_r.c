@@ -33,5 +33,5 @@
   libc_hidden_def (local) \
   weak_alias (local, symbol)
 #endif
-cvt_symbol (__qfcvt_r, qfcvt_r);
-cvt_symbol (__qecvt_r, qecvt_r);
+cvt_symbol(__qfcvt_r, qfcvt_r);
+cvt_symbol(__qecvt_r, qecvt_r);

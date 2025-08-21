@@ -2,5 +2,5 @@
 
 #ifdef TLS_REGISTER
 static __thread int d;
-TLS_REGISTER (d)
+TLS_REGISTER(d)
 #endif

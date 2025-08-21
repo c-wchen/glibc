@@ -26,10 +26,9 @@
    Return the number written (never more than 3, but may be less than NELEM),
    or -1 if an error occurred.  */
 
-int
-getloadavg (double loadavg[], int nelem)
+int getloadavg(double loadavg[], int nelem)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (getloadavg)
+stub_warning(getloadavg)

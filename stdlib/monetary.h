@@ -16,8 +16,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef	_MONETARY_H
-#define	_MONETARY_H	1
+#ifndef _MONETARY_H
+#define _MONETARY_H 1
 
 #include <features.h>
 
@@ -26,7 +26,7 @@
 #include <stddef.h>
 #include <bits/types.h>
 
-#ifndef	__ssize_t_defined
+#ifndef __ssize_t_defined
 typedef __ssize_t ssize_t;
 # define __ssize_t_defined
 #endif
@@ -35,21 +35,21 @@ typedef __ssize_t ssize_t;
 __BEGIN_DECLS
 
 /* Formatting a monetary value according to the current locale.  */
-extern ssize_t strfmon (char *__restrict __s, size_t __maxsize,
-			const char *__restrict __format, ...)
-     __THROW __attribute_format_strfmon__ (3, 4)
-     __attr_access ((__write_only__, 1, 2));
+extern ssize_t strfmon(char *__restrict __s, size_t __maxsize,
+                       const char *__restrict __format, ...)
+__THROW __attribute_format_strfmon__(3, 4)
+__attr_access((__write_only__, 1, 2));
 
 #ifdef __USE_XOPEN2K8
 /* POSIX.1-2008 extended locale interface (see locale.h).  */
 # include <bits/types/locale_t.h>
 
 /* Formatting a monetary value according to the given locale.  */
-extern ssize_t strfmon_l (char *__restrict __s, size_t __maxsize,
-			  locale_t __loc,
-			  const char *__restrict __format, ...)
-     __THROW __attribute_format_strfmon__ (4, 5)
-     __attr_access ((__write_only__, 1, 2));
+extern ssize_t strfmon_l(char *__restrict __s, size_t __maxsize,
+                         locale_t __loc,
+                         const char *__restrict __format, ...)
+__THROW __attribute_format_strfmon__(4, 5)
+__attr_access((__write_only__, 1, 2));
 #endif
 
 #include <bits/floatn.h>
@@ -59,4 +59,4 @@ extern ssize_t strfmon_l (char *__restrict __s, size_t __maxsize,
 
 __END_DECLS
 
-#endif	/* monetary.h */
+#endif  /* monetary.h */

@@ -25,10 +25,9 @@
 # undef getutmpx
 #endif
 
-void
-getutmp (const struct utmpx *utmpx, struct utmp *utmp)
+void getutmp(const struct utmpx *utmpx, struct utmp *utmp)
 {
-  assert (sizeof (struct utmp) == sizeof (struct utmpx));
-  memcpy (utmp, utmpx, sizeof (struct utmp));
+    assert(sizeof(struct utmp) == sizeof(struct utmpx));
+    memcpy(utmp, utmpx, sizeof(struct utmp));
 }
-strong_alias (getutmp, getutmpx)
+strong_alias(getutmp, getutmpx)

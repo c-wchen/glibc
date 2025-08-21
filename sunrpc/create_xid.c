@@ -23,32 +23,30 @@
 
 /* The RPC code is not threadsafe, but new code should be threadsafe. */
 
-__libc_lock_define_initialized (static, createxid_lock)
+__libc_lock_define_initialized(static, createxid_lock)
 
 static pid_t is_initialized;
 static struct drand48_data __rpc_lrand48_data;
 
-unsigned long
-_create_xid (void)
+unsigned long _create_xid(void)
 {
-  long int res;
+    long int res;
 
-  __libc_lock_lock (createxid_lock);
+    __libc_lock_lock(createxid_lock);
 
-  pid_t pid = getpid ();
-  if (is_initialized != pid)
-    {
-      struct timespec now;
+    pid_t pid = getpid();
+    if (is_initialized != pid) {
+        struct timespec now;
 
-      __clock_gettime (CLOCK_REALTIME, &now);
-      __srand48_r (now.tv_sec ^ now.tv_nsec ^ pid,
-		   &__rpc_lrand48_data);
-      is_initialized = pid;
+        __clock_gettime(CLOCK_REALTIME, &now);
+        __srand48_r(now.tv_sec ^ now.tv_nsec ^ pid,
+                    &__rpc_lrand48_data);
+        is_initialized = pid;
     }
 
-  lrand48_r (&__rpc_lrand48_data, &res);
+    lrand48_r(&__rpc_lrand48_data, &res);
 
-  __libc_lock_unlock (createxid_lock);
+    __libc_lock_unlock(createxid_lock);
 
-  return res;
+    return res;
 }

@@ -29,12 +29,11 @@
 
 #undef getwchar
 
-wint_t
-getwchar (void)
+wint_t getwchar(void)
 {
-  wint_t result;
-  _IO_acquire_lock (stdin);
-  result = _IO_getwc_unlocked (stdin);
-  _IO_release_lock (stdin);
-  return result;
+    wint_t result;
+    _IO_acquire_lock(stdin);
+    result = _IO_getwc_unlocked(stdin);
+    _IO_release_lock(stdin);
+    return result;
 }

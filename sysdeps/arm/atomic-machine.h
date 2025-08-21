@@ -20,7 +20,7 @@
 #define USE_ATOMIC_COMPILER_BUILTINS 1
 #define ATOMIC_EXCHANGE_USES_CAS 1
 
-void __arm_link_error (void);
+void __arm_link_error(void);
 
 #ifdef __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4
 # define atomic_full_barrier() __sync_synchronize ()

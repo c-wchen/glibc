@@ -26,10 +26,10 @@
 # define SYMBOL_NAME strpbrk
 # include "ifunc-sse4_2.h"
 
-libc_ifunc_redirected (__redirect_strpbrk, strpbrk, IFUNC_SELECTOR ());
+libc_ifunc_redirected(__redirect_strpbrk, strpbrk, IFUNC_SELECTOR());
 
 # ifdef SHARED
-__hidden_ver1 (strpbrk, __GI_strpbrk, __redirect_strpbrk)
-  __attribute__ ((visibility ("hidden"))) __attribute_copy__ (strpbrk);
+__hidden_ver1(strpbrk, __GI_strpbrk, __redirect_strpbrk)
+__attribute__((visibility("hidden"))) __attribute_copy__(strpbrk);
 # endif
 #endif

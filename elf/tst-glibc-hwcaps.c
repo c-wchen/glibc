@@ -18,11 +18,10 @@
 
 #include <stdio.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  puts ("info: generic tst-glibc-hwcaps (tests nothing)");
-  return 0;
+    puts("info: generic tst-glibc-hwcaps (tests nothing)");
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -21,10 +21,10 @@
 /* Specify the conversion table.  */
 #define TABLES <isiri-3342.h>
 
-#define CHARSET_NAME	"ISIRI-3342//"
-#define HAS_HOLES	1
+#define CHARSET_NAME    "ISIRI-3342//"
+#define HAS_HOLES   1
 
 /* 0x80 really maps to 0x0000.  */
-#define NONNUL(c)	((c) != '\0' && (c) != 0x80)
+#define NONNUL(c)   ((c) != '\0' && (c) != 0x80)
 
 #include <8bit-gap.c>

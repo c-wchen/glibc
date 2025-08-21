@@ -21,8 +21,8 @@
 
 /* Test if longjmp to JMPBUF would unwind the frame
    containing a local variable at ADDRESS.  */
-#define _JMPBUF_UNWINDS(jmpbuf, address, demangle)	\
-  ((unsigned long int) (address)			\
+#define _JMPBUF_UNWINDS(jmpbuf, address, demangle)  \
+  ((unsigned long int) (address)            \
    < (jmpbuf)->__uc_mcontext.__mc_gregs[MC_O6] + 2047)
 
 #define _JMPBUF_CFA_UNWINDS_ADJ(_jmpbuf, _context, _adj) \

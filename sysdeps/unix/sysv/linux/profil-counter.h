@@ -20,13 +20,12 @@
 #include <sigcontextinfo.h>
 
 /* sa_sigaction signature to use along SA_SIGINFO.  */
-static void
-__profil_counter (int signo, siginfo_t *info, void *ctx)
+static void __profil_counter(int signo, siginfo_t *info, void *ctx)
 {
-  profil_count (sigcontext_get_pc (ctx));
+    profil_count(sigcontext_get_pc(ctx));
 
-  /* This is a hack to prevent the compiler from implementing the
-     above function call as a sibcall.  The sibcall would overwrite
-     the signal context.  */
-  asm volatile ("");
+    /* This is a hack to prevent the compiler from implementing the
+       above function call as a sibcall.  The sibcall would overwrite
+       the signal context.  */
+    asm volatile("");
 }

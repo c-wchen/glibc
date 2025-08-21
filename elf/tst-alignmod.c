@@ -21,31 +21,28 @@
 static int res, *resp;
 
 static void __attribute__((constructor))
-con (void)
+con(void)
 {
-  res = TEST_STACK_ALIGN () ? -1 : 1;
+    res = TEST_STACK_ALIGN() ? -1 : 1;
 }
 
-void
-in_dso (int *result)
+void in_dso(int *result)
 {
-  if (!res)
-    {
-      puts ("constructor has not been run");
-      *result = 1;
-    }
-  else if (res != 1)
-    {
-      puts ("constructor has been run without sufficient alignment");
-      *result = 1;
+    if (!res) {
+        puts("constructor has not been run");
+        *result = 1;
+    } else if (res != 1) {
+        puts("constructor has been run without sufficient alignment");
+        *result = 1;
     }
 
-  resp = result;
+    resp = result;
 }
 
 static void __attribute__((destructor))
-des (void)
+des(void)
 {
-  if (TEST_STACK_ALIGN ())
-    *resp = 1;
+    if (TEST_STACK_ALIGN()) {
+        *resp = 1;
+    }
 }

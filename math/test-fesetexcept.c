@@ -20,109 +20,97 @@
 #include <stdio.h>
 #include <math-tests.h>
 
-static int
-test_fesetexcept (int exc, const char *exc_name)
+static int test_fesetexcept(int exc, const char *exc_name)
 {
-  int result = 0;
+    int result = 0;
 
-  printf ("Testing %s\n", exc_name);
-  feclearexcept (FE_ALL_EXCEPT);
-  int ret = fesetexcept (exc);
-  if (ret == 0)
-    printf ("fesetexcept (%s) succeeded\n", exc_name);
-  else
-    {
-      printf ("fesetexcept (%s) failed\n", exc_name);
-      if (exc == 0 || EXCEPTION_TESTS (float))
-	{
-	  puts ("failure of fesetexcept was unexpected");
-	  result = 1;
-	}
-      else
-	puts ("failure of fesetexcept OK, skipping further tests");
-      return result;
+    printf("Testing %s\n", exc_name);
+    feclearexcept(FE_ALL_EXCEPT);
+    int ret = fesetexcept(exc);
+    if (ret == 0) {
+        printf("fesetexcept (%s) succeeded\n", exc_name);
+    } else {
+        printf("fesetexcept (%s) failed\n", exc_name);
+        if (exc == 0 || EXCEPTION_TESTS(float)) {
+            puts("failure of fesetexcept was unexpected");
+            result = 1;
+        } else {
+            puts("failure of fesetexcept OK, skipping further tests");
+        }
+        return result;
     }
-  ret = fetestexcept (FE_ALL_EXCEPT);
-  if (ret != exc)
-    {
-      printf ("raised exceptions %x, expected %x\n",
-	      (unsigned int) ret, (unsigned int) exc);
-      result = 1;
+    ret = fetestexcept(FE_ALL_EXCEPT);
+    if (ret != exc) {
+        printf("raised exceptions %x, expected %x\n",
+               (unsigned int) ret, (unsigned int) exc);
+        result = 1;
     }
 
-  ret = feraiseexcept (FE_ALL_EXCEPT);
-  if (ret != 0)
-    {
-      if (exc == 0 && !EXCEPTION_TESTS (float))
-	{
-	  puts ("feraiseexcept (FE_ALL_EXCEPT) failed, skipping further tests");
-	  return result;
-	}
-      puts ("feraiseexcept (FE_ALL_EXCEPT) unexpectedly failed");
-      result = 1;
+    ret = feraiseexcept(FE_ALL_EXCEPT);
+    if (ret != 0) {
+        if (exc == 0 && !EXCEPTION_TESTS(float)) {
+            puts("feraiseexcept (FE_ALL_EXCEPT) failed, skipping further tests");
+            return result;
+        }
+        puts("feraiseexcept (FE_ALL_EXCEPT) unexpectedly failed");
+        result = 1;
     }
-  ret = fesetexcept (exc);
-  if (ret != 0)
-    {
-      puts ("fesetexcept (second test) unexpectedly failed");
-      result = 1;
+    ret = fesetexcept(exc);
+    if (ret != 0) {
+        puts("fesetexcept (second test) unexpectedly failed");
+        result = 1;
     }
-  ret = fetestexcept (FE_ALL_EXCEPT);
-  if (ret != FE_ALL_EXCEPT)
-    {
-      printf ("raised exceptions (second test) %x, expected %x\n",
-	      (unsigned int) ret, (unsigned int) FE_ALL_EXCEPT);
-      result = 1;
+    ret = fetestexcept(FE_ALL_EXCEPT);
+    if (ret != FE_ALL_EXCEPT) {
+        printf("raised exceptions (second test) %x, expected %x\n",
+               (unsigned int) ret, (unsigned int) FE_ALL_EXCEPT);
+        result = 1;
     }
 
-  feclearexcept (FE_ALL_EXCEPT);
-  ret = feraiseexcept (FE_ALL_EXCEPT & ~exc);
-  if (ret != 0)
-    {
-      puts ("feraiseexcept (third test) unexpectedly failed");
-      result = 1;
+    feclearexcept(FE_ALL_EXCEPT);
+    ret = feraiseexcept(FE_ALL_EXCEPT & ~exc);
+    if (ret != 0) {
+        puts("feraiseexcept (third test) unexpectedly failed");
+        result = 1;
     }
-  ret = fesetexcept (exc);
-  if (ret != 0)
-    {
-      puts ("fesetexcept (third test) unexpectedly failed");
-      result = 1;
+    ret = fesetexcept(exc);
+    if (ret != 0) {
+        puts("fesetexcept (third test) unexpectedly failed");
+        result = 1;
     }
-  ret = fetestexcept (FE_ALL_EXCEPT);
-  if (ret != FE_ALL_EXCEPT)
-    {
-      printf ("raised exceptions (third test) %x, expected %x\n",
-	      (unsigned int) ret, (unsigned int) FE_ALL_EXCEPT);
-      result = 1;
+    ret = fetestexcept(FE_ALL_EXCEPT);
+    if (ret != FE_ALL_EXCEPT) {
+        printf("raised exceptions (third test) %x, expected %x\n",
+               (unsigned int) ret, (unsigned int) FE_ALL_EXCEPT);
+        result = 1;
     }
 
-  return result;
+    return result;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int result = 0;
+    int result = 0;
 
-  result |= test_fesetexcept (0, "0");
-  result |= test_fesetexcept (FE_ALL_EXCEPT, "FE_ALL_EXCEPT");
+    result |= test_fesetexcept(0, "0");
+    result |= test_fesetexcept(FE_ALL_EXCEPT, "FE_ALL_EXCEPT");
 #ifdef FE_DIVBYZERO
-  result |= test_fesetexcept (FE_DIVBYZERO, "FE_DIVBYZERO");
+    result |= test_fesetexcept(FE_DIVBYZERO, "FE_DIVBYZERO");
 #endif
 #ifdef FE_INEXACT
-  result |= test_fesetexcept (FE_INEXACT, "FE_INEXACT");
+    result |= test_fesetexcept(FE_INEXACT, "FE_INEXACT");
 #endif
 #ifdef FE_INVALID
-  result |= test_fesetexcept (FE_INVALID, "FE_INVALID");
+    result |= test_fesetexcept(FE_INVALID, "FE_INVALID");
 #endif
 #ifdef FE_OVERFLOW
-  result |= test_fesetexcept (FE_OVERFLOW, "FE_OVERFLOW");
+    result |= test_fesetexcept(FE_OVERFLOW, "FE_OVERFLOW");
 #endif
 #ifdef FE_UNDERFLOW
-  result |= test_fesetexcept (FE_UNDERFLOW, "FE_UNDERFLOW");
+    result |= test_fesetexcept(FE_UNDERFLOW, "FE_UNDERFLOW");
 #endif
 
-  return result;
+    return result;
 }
 
 #define TEST_FUNCTION do_test ()

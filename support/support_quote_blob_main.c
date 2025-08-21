@@ -19,70 +19,68 @@
 #include <support/support.h>
 #include <support/xmemstream.h>
 
-char *
-SUPPORT_QUOTE_BLOB (const void *blob, size_t length)
+char *SUPPORT_QUOTE_BLOB(const void *blob, size_t length)
 {
-  struct xmemstream out;
-  xopen_memstream (&out);
+    struct xmemstream out;
+    xopen_memstream(&out);
 
-  const CHAR *p = blob;
-  for (size_t i = 0; i < length; ++i)
-    {
-      CHAR ch = p[i];
+    const CHAR *p = blob;
+    for (size_t i = 0; i < length; ++i) {
+        CHAR ch = p[i];
 
-      /* Use C backslash escapes for those control characters for
-	 which they are defined.  */
-      switch (ch)
-	{
-	case L_('\a'):
-	  putc_unlocked ('\\', out.out);
-	  putc_unlocked ('a', out.out);
-	  break;
-	case L_('\b'):
-	  putc_unlocked ('\\', out.out);
-	  putc_unlocked ('b', out.out);
-	  break;
-	case L_('\f'):
-	  putc_unlocked ('\\', out.out);
-	  putc_unlocked ('f', out.out);
-	  break;
-	case L_('\n'):
-	  putc_unlocked ('\\', out.out);
-	  putc_unlocked ('n', out.out);
-	  break;
-	case L_('\r'):
-	  putc_unlocked ('\\', out.out);
-	  putc_unlocked ('r', out.out);
-	  break;
-	case L_('\t'):
-	  putc_unlocked ('\\', out.out);
-	  putc_unlocked ('t', out.out);
-	  break;
-	case L_('\v'):
-	  putc_unlocked ('\\', out.out);
-	  putc_unlocked ('v', out.out);
-	  break;
-	case L_('\\'):
-	case L_('\''):
-	case L_('\"'):
-	  putc_unlocked ('\\', out.out);
-	  putc_unlocked (ch, out.out);
-	  break;
-	default:
-	  if (ch < L_(' ') || ch > L_('~'))
-	    /* For narrow characters, use octal sequences because they
-	       are fixed width, unlike hexadecimal sequences.  For
-	       wide characters, use N2785 delimited escape
-	       sequences.  */
-	    if (WIDE)
-	      fprintf (out.out, "\\x{%x}", (unsigned int) ch);
-	    else
-	      fprintf (out.out, "\\%03o", (unsigned int) ch);
-	  else
-	    putc_unlocked (ch, out.out);
-	}
+        /* Use C backslash escapes for those control characters for
+        which they are defined.  */
+        switch (ch) {
+            case L_('\a'):
+                putc_unlocked('\\', out.out);
+                putc_unlocked('a', out.out);
+                break;
+            case L_('\b'):
+                putc_unlocked('\\', out.out);
+                putc_unlocked('b', out.out);
+                break;
+            case L_('\f'):
+                putc_unlocked('\\', out.out);
+                putc_unlocked('f', out.out);
+                break;
+            case L_('\n'):
+                putc_unlocked('\\', out.out);
+                putc_unlocked('n', out.out);
+                break;
+            case L_('\r'):
+                putc_unlocked('\\', out.out);
+                putc_unlocked('r', out.out);
+                break;
+            case L_('\t'):
+                putc_unlocked('\\', out.out);
+                putc_unlocked('t', out.out);
+                break;
+            case L_('\v'):
+                putc_unlocked('\\', out.out);
+                putc_unlocked('v', out.out);
+                break;
+            case L_('\\'):
+            case L_('\''):
+            case L_('\"'):
+                putc_unlocked('\\', out.out);
+                putc_unlocked(ch, out.out);
+                break;
+            default:
+                if (ch < L_(' ') || ch > L_('~'))
+                    /* For narrow characters, use octal sequences because they
+                       are fixed width, unlike hexadecimal sequences.  For
+                       wide characters, use N2785 delimited escape
+                       sequences.  */
+                    if (WIDE) {
+                        fprintf(out.out, "\\x{%x}", (unsigned int) ch);
+                    } else {
+                        fprintf(out.out, "\\%03o", (unsigned int) ch);
+                    } else {
+                    putc_unlocked(ch, out.out);
+                }
+        }
     }
 
-  xfclose_memstream (&out);
-  return out.buffer;
+    xfclose_memstream(&out);
+    return out.buffer;
 }

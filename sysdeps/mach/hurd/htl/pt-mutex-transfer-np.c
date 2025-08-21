@@ -25,53 +25,54 @@
 #include <hurdlock.h>
 #include <unistd.h>
 
-int
-__pthread_mutex_transfer_np (pthread_mutex_t *mtxp, pthread_t th)
+int __pthread_mutex_transfer_np(pthread_mutex_t *mtxp, pthread_t th)
 {
-  struct __pthread *self = _pthread_self ();
-  struct __pthread *pt = __pthread_getid (th);
+    struct __pthread *self = _pthread_self();
+    struct __pthread *pt = __pthread_getid(th);
 
-  if (pt == NULL)
-    return ESRCH;
-  else if (pt == self)
-    return 0;
-
-  int ret = 0;
-  int flags = mtxp->__flags & GSYNC_SHARED;
-
-  switch (MTX_TYPE (mtxp))
-    {
-    case PT_MTX_NORMAL:
-      break;
-
-    case PT_MTX_RECURSIVE:
-    case PT_MTX_ERRORCHECK:
-      if (!mtx_owned_p (mtxp, self, flags))
-	ret = EPERM;
-      else
-	mtx_set_owner (mtxp, pt, flags);
-
-      break;
-
-    case PT_MTX_NORMAL | PTHREAD_MUTEX_ROBUST:
-    case PT_MTX_RECURSIVE | PTHREAD_MUTEX_ROBUST:
-    case PT_MTX_ERRORCHECK | PTHREAD_MUTEX_ROBUST:
-      /* Note that this can be used to transfer an inconsistent
-       * mutex as well. The new owner will still have the same
-       * flags as the original. */
-      if (mtxp->__owner_id != self->thread
-	  || (int) (mtxp->__lock & LLL_OWNER_MASK) != __getpid ())
-	ret = EPERM;
-      else
-	mtxp->__owner_id = pt->thread;
-
-      break;
-
-    default:
-      ret = EINVAL;
+    if (pt == NULL) {
+        return ESRCH;
+    } else if (pt == self) {
+        return 0;
     }
 
-  return ret;
+    int ret = 0;
+    int flags = mtxp->__flags & GSYNC_SHARED;
+
+    switch (MTX_TYPE(mtxp)) {
+        case PT_MTX_NORMAL:
+            break;
+
+        case PT_MTX_RECURSIVE:
+        case PT_MTX_ERRORCHECK:
+            if (!mtx_owned_p(mtxp, self, flags)) {
+                ret = EPERM;
+            } else {
+                mtx_set_owner(mtxp, pt, flags);
+            }
+
+            break;
+
+        case PT_MTX_NORMAL | PTHREAD_MUTEX_ROBUST:
+        case PT_MTX_RECURSIVE | PTHREAD_MUTEX_ROBUST:
+        case PT_MTX_ERRORCHECK | PTHREAD_MUTEX_ROBUST:
+            /* Note that this can be used to transfer an inconsistent
+             * mutex as well. The new owner will still have the same
+             * flags as the original. */
+            if (mtxp->__owner_id != self->thread
+                || (int)(mtxp->__lock & LLL_OWNER_MASK) != __getpid()) {
+                ret = EPERM;
+            } else {
+                mtxp->__owner_id = pt->thread;
+            }
+
+            break;
+
+        default:
+            ret = EINVAL;
+    }
+
+    return ret;
 }
 
-weak_alias (__pthread_mutex_transfer_np, pthread_mutex_transfer_np)
+weak_alias(__pthread_mutex_transfer_np, pthread_mutex_transfer_np)

@@ -47,73 +47,67 @@
 
 
 /* Return is sig is used internally.  */
-static inline bool
-is_internal_signal (int sig)
+static inline bool is_internal_signal(int sig)
 {
-  return (sig == SIGCANCEL) || (sig == SIGSETXID);
+    return (sig == SIGCANCEL) || (sig == SIGSETXID);
 }
 
 /* Remove internal glibc signal from the mask.  */
-static inline void
-clear_internal_signals (sigset_t *set)
+static inline void clear_internal_signals(sigset_t *set)
 {
-  __sigdelset (set, SIGCANCEL);
-  __sigdelset (set, SIGSETXID);
+    __sigdelset(set, SIGCANCEL);
+    __sigdelset(set, SIGSETXID);
 }
 
 static const internal_sigset_t sigall_set = {
-   .__val = {[0 ...  __NSIG_WORDS-1 ] =  -1 }
+    .__val = {[0 ...  __NSIG_WORDS - 1 ] =  -1 }
 };
 
 /* Obtain and change blocked signals, including internal glibc ones.  */
-static inline int
-internal_sigprocmask (int how, const internal_sigset_t *set,
-		      internal_sigset_t *oldset)
+static inline int internal_sigprocmask(int how, const internal_sigset_t *set,
+                                       internal_sigset_t *oldset)
 {
-  return INTERNAL_SYSCALL_CALL (rt_sigprocmask, how, set, oldset,
-				__NSIG_BYTES);
+    return INTERNAL_SYSCALL_CALL(rt_sigprocmask, how, set, oldset,
+                                 __NSIG_BYTES);
 }
 
 /* Block all signals, including internal glibc ones.  */
-static inline void
-internal_signal_block_all (internal_sigset_t *oset)
+static inline void internal_signal_block_all(internal_sigset_t *oset)
 {
-  INTERNAL_SYSCALL_CALL (rt_sigprocmask, SIG_BLOCK, &sigall_set, oset,
-			 __NSIG_BYTES);
+    INTERNAL_SYSCALL_CALL(rt_sigprocmask, SIG_BLOCK, &sigall_set, oset,
+                          __NSIG_BYTES);
 }
 
 /* Restore current process signal mask.  */
-static inline void
-internal_signal_restore_set (const internal_sigset_t *set)
+static inline void internal_signal_restore_set(const internal_sigset_t *set)
 {
-  INTERNAL_SYSCALL_CALL (rt_sigprocmask, SIG_SETMASK, set, NULL,
-			 __NSIG_BYTES);
+    INTERNAL_SYSCALL_CALL(rt_sigprocmask, SIG_SETMASK, set, NULL,
+                          __NSIG_BYTES);
 }
 
-static inline void
-internal_signal_unblock_signal (int sig)
+static inline void internal_signal_unblock_signal(int sig)
 {
-  internal_sigset_t set;
-  internal_sigemptyset (&set);
-  internal_sigaddset (&set, sig);
-  INTERNAL_SYSCALL_CALL (rt_sigprocmask, SIG_UNBLOCK, &set, NULL,
-			 __NSIG_BYTES);
+    internal_sigset_t set;
+    internal_sigemptyset(&set);
+    internal_sigaddset(&set, sig);
+    INTERNAL_SYSCALL_CALL(rt_sigprocmask, SIG_UNBLOCK, &set, NULL,
+                          __NSIG_BYTES);
 }
 
 /* It is used on timer_create code directly on sigwaitinfo call, so it can not
    use the internal_sigset_t definitions.  */
 static const sigset_t sigtimer_set = {
-  .__val = { [0]                      = __sigmask (SIGTIMER),
-             [1 ... _SIGSET_NWORDS-1] = 0
-  }
+    .__val = {
+        [0]                      = __sigmask(SIGTIMER),
+        [1 ... _SIGSET_NWORDS - 1] = 0
+    }
 };
 
 /* Unblock only SIGTIMER.  */
-static inline void
-signal_unblock_sigtimer (void)
+static inline void signal_unblock_sigtimer(void)
 {
-  INTERNAL_SYSCALL_CALL (rt_sigprocmask, SIG_UNBLOCK, &sigtimer_set, NULL,
-			 __NSIG_BYTES);
+    INTERNAL_SYSCALL_CALL(rt_sigprocmask, SIG_UNBLOCK, &sigtimer_set, NULL,
+                          __NSIG_BYTES);
 }
 
 #endif

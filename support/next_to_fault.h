@@ -25,29 +25,28 @@
 __BEGIN_DECLS
 
 /* The memory region created by next_to_fault_allocate.  */
-struct support_next_to_fault
-{
-  /* The user data.  */
-  char *buffer;
-  size_t length;
+struct support_next_to_fault {
+    /* The user data.  */
+    char *buffer;
+    size_t length;
 
-  /* The entire allocated region.  */
-  void *region_start;
-  size_t region_size;
+    /* The entire allocated region.  */
+    void *region_start;
+    size_t region_size;
 };
 
 /* Allocate a buffer of SIZE bytes just before a page which is mapped
    with PROT_NONE (so that overrunning the buffer will cause a
    fault).  */
-struct support_next_to_fault support_next_to_fault_allocate (size_t size);
+struct support_next_to_fault support_next_to_fault_allocate(size_t size);
 
 /* Allocate a buffer of SIZE bytes just *after* a page which is mapped
    with PROT_NONE (so that under-running the buffer will cause a
    fault).  */
-struct support_next_to_fault support_next_to_fault_allocate_before (size_t size);
+struct support_next_to_fault support_next_to_fault_allocate_before(size_t size);
 
 /* Deallocate the memory region allocated by
    next_to_fault_allocate.  */
-void support_next_to_fault_free (struct support_next_to_fault *);
+void support_next_to_fault_free(struct support_next_to_fault *);
 
 #endif /* SUPPORT_NEXT_TO_FAULT_H */

@@ -19,20 +19,19 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-int
-fegetexceptflag (fexcept_t *flagp, int excepts)
+int fegetexceptflag(fexcept_t *flagp, int excepts)
 {
-  fpu_control_t temp;
+    fpu_control_t temp;
 
-  /* Get the current exceptions.  */
-  _FPU_GETCW (temp);
+    /* Get the current exceptions.  */
+    _FPU_GETCW(temp);
 
-  /* We only save the relevant bits here.  In particular, care has to be
-     taken with the CAUSE bits, as an inadvertent restore later on could
-     generate unexpected exceptions.  */
+    /* We only save the relevant bits here.  In particular, care has to be
+       taken with the CAUSE bits, as an inadvertent restore later on could
+       generate unexpected exceptions.  */
 
-  *flagp = temp & excepts & FE_ALL_EXCEPT;
+    *flagp = temp & excepts & FE_ALL_EXCEPT;
 
-  /* Success.  */
-  return 0;
+    /* Success.  */
+    return 0;
 }

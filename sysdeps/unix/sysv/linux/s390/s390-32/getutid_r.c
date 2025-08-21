@@ -30,5 +30,5 @@
 #include "login/getutid_r.c"
 
 #if defined SHARED
-default_symbol_version (__getutid_r, getutid_r, UTMP_COMPAT_BASE);
+default_symbol_version(__getutid_r, getutid_r, UTMP_COMPAT_BASE);
 #endif

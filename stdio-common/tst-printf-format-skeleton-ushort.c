@@ -24,7 +24,7 @@
 #define REF_VAL(v) ((v) & 0xffff)
 typedef unsigned int type_t;
 static const type_t vals[] =
-  { 0, 1, 42, USHRT_MAX, USHRT_MAX + 1, USHRT_MAX + 42 };
+{ 0, 1, 42, USHRT_MAX, USHRT_MAX + 1, USHRT_MAX + 42 };
 static const char length[] = "h";
 
 #include "tst-printf-format-skeleton.c"

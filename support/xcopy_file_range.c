@@ -20,13 +20,13 @@
 #include <support/xunistd.h>
 #include <support/check.h>
 
-ssize_t
-xcopy_file_range (int infd, off64_t *pinoff, int outfd, off64_t *poutoff,
-		  size_t length, unsigned int flags)
+ssize_t xcopy_file_range(int infd, off64_t *pinoff, int outfd, off64_t *poutoff,
+                         size_t length, unsigned int flags)
 {
-  ssize_t status = support_copy_file_range (infd, pinoff, outfd,
-					    poutoff, length, flags);
-  if (status == -1)
-    FAIL_EXIT1 ("cannot copy file: %m\n");
-  return status;
+    ssize_t status = support_copy_file_range(infd, pinoff, outfd,
+                     poutoff, length, flags);
+    if (status == -1) {
+        FAIL_EXIT1("cannot copy file: %m\n");
+    }
+    return status;
 }

@@ -25,60 +25,62 @@
 #include <kernel-features.h>
 
 /* Get resolution of clock.  */
-int
-__clock_getres64 (clockid_t clock_id, struct __timespec64 *res)
+int __clock_getres64(clockid_t clock_id, struct __timespec64 *res)
 {
-  int r;
+    int r;
 
 #ifndef __NR_clock_getres_time64
 # define __NR_clock_getres_time64 __NR_clock_getres
 #endif
 
 #ifdef HAVE_CLOCK_GETRES64_VSYSCALL
-  r = INLINE_VSYSCALL (clock_getres_time64, 2, clock_id, res);
+    r = INLINE_VSYSCALL(clock_getres_time64, 2, clock_id, res);
 #else
-  r = INLINE_SYSCALL_CALL (clock_getres_time64, clock_id, res);
+    r = INLINE_SYSCALL_CALL(clock_getres_time64, clock_id, res);
 #endif
-  if (r == 0 || errno != ENOSYS)
-    return r;
+    if (r == 0 || errno != ENOSYS) {
+        return r;
+    }
 
 #ifndef __ASSUME_TIME64_SYSCALLS
-  /* Fallback code that uses 32-bit support.  */
-  struct timespec ts32;
+    /* Fallback code that uses 32-bit support.  */
+    struct timespec ts32;
 # ifdef HAVE_CLOCK_GETRES_VSYSCALL
-  r = INLINE_VSYSCALL (clock_getres, 2, clock_id, &ts32);
+    r = INLINE_VSYSCALL(clock_getres, 2, clock_id, &ts32);
 # else
-  r = INLINE_SYSCALL_CALL (clock_getres, clock_id, &ts32);
+    r = INLINE_SYSCALL_CALL(clock_getres, clock_id, &ts32);
 # endif
-  if (r == 0 && res != NULL)
-    *res = valid_timespec_to_timespec64 (ts32);
+    if (r == 0 && res != NULL) {
+        *res = valid_timespec_to_timespec64(ts32);
+    }
 #endif
 
-  return r;
+    return r;
 }
 
 #if __TIMESIZE != 64
-libc_hidden_def (__clock_getres64)
+libc_hidden_def(__clock_getres64)
 
 int
-__clock_getres (clockid_t clock_id, struct timespec *res)
+__clock_getres(clockid_t clock_id, struct timespec *res)
 {
-  struct __timespec64 ts64;
-  int retval;
+    struct __timespec64 ts64;
+    int retval;
 
-  retval = __clock_getres64 (clock_id, &ts64);
-  if (retval == 0 && res != NULL)
-    *res = valid_timespec64_to_timespec (ts64);
+    retval = __clock_getres64(clock_id, &ts64);
+    if (retval == 0 && res != NULL) {
+        *res = valid_timespec64_to_timespec(ts64);
+    }
 
-  return retval;
+    return retval;
 }
 #endif
-libc_hidden_def (__clock_getres)
+libc_hidden_def(__clock_getres)
 
-versioned_symbol (libc, __clock_getres, clock_getres, GLIBC_2_17);
+versioned_symbol(libc, __clock_getres, clock_getres, GLIBC_2_17);
 /* clock_getres moved to libc in version 2.17;
    old binaries may expect the symbol version it had in librt.  */
 #if SHLIB_COMPAT (libc, GLIBC_2_2, GLIBC_2_17)
-strong_alias (__clock_getres, __clock_getres_2);
-compat_symbol (libc, __clock_getres_2, clock_getres, GLIBC_2_2);
+strong_alias(__clock_getres, __clock_getres_2);
+compat_symbol(libc, __clock_getres_2, clock_getres, GLIBC_2_2);
 #endif

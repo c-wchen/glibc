@@ -19,15 +19,15 @@
 #include <stdint.h>
 
 
-#define LOOKUP_TYPE	struct netent
-#define FUNCTION_NAME	getnetbyaddr
-#define DATABASE_NAME	networks
-#define ADD_PARAMS	uint32_t net, int type
-#define ADD_VARIABLES	net, type
-#define BUFLEN		1024
-#define NEED_H_ERRNO	1
+#define LOOKUP_TYPE struct netent
+#define FUNCTION_NAME   getnetbyaddr
+#define DATABASE_NAME   networks
+#define ADD_PARAMS  uint32_t net, int type
+#define ADD_VARIABLES   net, type
+#define BUFLEN      1024
+#define NEED_H_ERRNO    1
 
 /* There is no nscd support for the networks file.  */
-#undef	USE_NSCD
+#undef  USE_NSCD
 
 #include "../nss/getXXbyYY.c"

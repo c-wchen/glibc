@@ -21,23 +21,22 @@
 
 /* Run signals handlers on the stack specified by SS (if not NULL).
    If OSS is not NULL, it is filled in with the old signal stack status.  */
-int
-sigstack (struct sigstack *ss, struct sigstack *oss)
+int sigstack(struct sigstack *ss, struct sigstack *oss)
 {
-  stack_t as, oas;
+    stack_t as, oas;
 
-  as.ss_sp = ss->ss_sp;
-  as.ss_size = 0;
-  as.ss_flags = 0;
+    as.ss_sp = ss->ss_sp;
+    as.ss_size = 0;
+    as.ss_flags = 0;
 
-  if (__sigaltstack (&as, &oas) < 0)
-    return -1;
-
-  if (oss != NULL)
-    {
-      oss->ss_sp = oas.ss_sp;
-      oss->ss_onstack = oas.ss_flags & SS_ONSTACK;
+    if (__sigaltstack(&as, &oas) < 0) {
+        return -1;
     }
 
-  return 0;
+    if (oss != NULL) {
+        oss->ss_sp = oas.ss_sp;
+        oss->ss_onstack = oas.ss_flags & SS_ONSTACK;
+    }
+
+    return 0;
 }

@@ -24,54 +24,50 @@
 /* Define a line parsing function using the common code
    used in the nss_files module.  */
 
-#define STRUCTURE	sgrp
-#define ENTNAME		sgent
+#define STRUCTURE   sgrp
+#define ENTNAME     sgent
 struct sgent_data {};
 
 
-#define TRAILING_LIST_MEMBER		sg_mem
-#define TRAILING_LIST_SEPARATOR_P(c)	((c) == ',')
+#define TRAILING_LIST_MEMBER        sg_mem
+#define TRAILING_LIST_SEPARATOR_P(c)    ((c) == ',')
 #include <nss/nss_files/files-parse.c>
 LINE_PARSER
 (,
- STRING_FIELD (result->sg_namp, ISCOLON, 0);
+ STRING_FIELD(result->sg_namp, ISCOLON, 0);
  if (line[0] == '\0'
      && (result->sg_namp[0] == '+' || result->sg_namp[0] == '-'))
-   {
-     result->sg_passwd = NULL;
-     result->sg_adm = NULL;
-     result->sg_mem = NULL;
-   }
- else
-   {
-     STRING_FIELD (result->sg_passwd, ISCOLON, 0);
-     STRING_LIST (result->sg_adm, ':');
-   }
- )
+{
+result->sg_passwd = NULL;
+result->sg_adm = NULL;
+result->sg_mem = NULL;
+} else
+{
+STRING_FIELD(result->sg_passwd, ISCOLON, 0);
+    STRING_LIST(result->sg_adm, ':');
+}
+)
 
 
 /* Read one shadow entry from the given stream.  */
-int
-__sgetsgent_r (const char *string, struct sgrp *resbuf, char *buffer,
-	       size_t buflen, struct sgrp **result)
+int __sgetsgent_r(const char *string, struct sgrp *resbuf, char *buffer,
+                  size_t buflen, struct sgrp **result)
 {
-  char *sp;
-  if (string < buffer || string >= buffer + buflen)
-    {
-      buffer[buflen - 1] = '\0';
-      sp = strncpy (buffer, string, buflen);
-      if (buffer[buflen - 1] != '\0')
-	{
-	  __set_errno (ERANGE);
-	  return ERANGE;
-	}
+    char *sp;
+    if (string < buffer || string >= buffer + buflen) {
+        buffer[buflen - 1] = '\0';
+        sp = strncpy(buffer, string, buflen);
+        if (buffer[buflen - 1] != '\0') {
+            __set_errno(ERANGE);
+            return ERANGE;
+        }
+    } else {
+        sp = (char *) string;
     }
-  else
-    sp = (char *) string;
 
-  int parse_result = parse_line (sp, resbuf, (void *) buffer, buflen, &errno);
-  *result = parse_result > 0 ? resbuf : NULL;
+    int parse_result = parse_line(sp, resbuf, (void *) buffer, buflen, &errno);
+    *result = parse_result > 0 ? resbuf : NULL;
 
-  return *result == NULL ? errno : 0;
+    return *result == NULL ? errno : 0;
 }
-weak_alias (__sgetsgent_r, sgetsgent_r)
+weak_alias(__sgetsgent_r, sgetsgent_r)

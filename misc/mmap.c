@@ -28,13 +28,12 @@
    for errors (in which case `errno' is set).  A successful `mmap' call
    deallocates any previous mapping for the affected region.  */
 
-void *
-__mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
+void *__mmap(void *addr, size_t len, int prot, int flags, int fd, off_t offset)
 {
-  __set_errno (ENOSYS);
-  return MAP_FAILED;
+    __set_errno(ENOSYS);
+    return MAP_FAILED;
 }
 
-stub_warning (mmap)
-weak_alias (__mmap, mmap)
-libc_hidden_def (__mmap)
+stub_warning(mmap)
+weak_alias(__mmap, mmap)
+libc_hidden_def(__mmap)

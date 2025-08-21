@@ -22,100 +22,85 @@
 #include <string.h>
 
 /* Data structure to describe the tests.  */
-struct test
-{
-  int start;
-  int end;
-  const char *reg;
-  const char *str;
-  int options;
-} tests[] =
-{
+struct test {
+    int start;
+    int end;
+    const char *reg;
+    const char *str;
+    int options;
+} tests[] = {
 #include "ptestcases.h"
 };
 
 
-int
-main (int argc, char *argv[])
+int main(int argc, char *argv[])
 {
-  size_t cnt;
-  int errors = 0;
+    size_t cnt;
+    int errors = 0;
 
-  for (cnt = 0; cnt < sizeof (tests) / sizeof (tests[0]); ++cnt)
-    if (tests[cnt].str == NULL)
-      {
-	printf ("\n%s\n%.*s\n", tests[cnt].reg,
-		(int) strlen (tests[cnt].reg),
-		"-----------------------------------------------------");
-      }
-    else if (tests[cnt].reg == NULL)
-	printf ("!!! %s\n", tests[cnt].str);
-    else
-      {
-	regex_t re;
-	regmatch_t match[20];
-	int err;
+    for (cnt = 0; cnt < sizeof(tests) / sizeof(tests[0]); ++cnt)
+        if (tests[cnt].str == NULL) {
+            printf("\n%s\n%.*s\n", tests[cnt].reg,
+                   (int) strlen(tests[cnt].reg),
+                   "-----------------------------------------------------");
+        } else if (tests[cnt].reg == NULL) {
+            printf("!!! %s\n", tests[cnt].str);
+        } else {
+            regex_t re;
+            regmatch_t match[20];
+            int err;
 
-	printf ("regexp: \"%s\", string: \"%s\" -> ", tests[cnt].reg,
-		tests[cnt].str);
+            printf("regexp: \"%s\", string: \"%s\" -> ", tests[cnt].reg,
+                   tests[cnt].str);
 
-	/* Compile the expression.  */
-	err = regcomp (&re, tests[cnt].reg, tests[cnt].options);
-	if (err != 0)
-	  {
-	    if (tests[cnt].start == -2)
-	      puts ("compiling failed, OK");
-	    else
-	      {
-		char buf[100];
-		regerror (err, &re, buf, sizeof (buf));
-		printf ("FAIL: %s\n", buf);
-		++errors;
-	      }
+            /* Compile the expression.  */
+            err = regcomp(&re, tests[cnt].reg, tests[cnt].options);
+            if (err != 0) {
+                if (tests[cnt].start == -2) {
+                    puts("compiling failed, OK");
+                } else {
+                    char buf[100];
+                    regerror(err, &re, buf, sizeof(buf));
+                    printf("FAIL: %s\n", buf);
+                    ++errors;
+                }
 
-	    continue;
-	  }
-	else if (tests[cnt].start == -2)
-	  {
-	    puts ("compiling succeeds, FAIL");
-	    errors++;
-	    continue;
-	  }
+                continue;
+            } else if (tests[cnt].start == -2) {
+                puts("compiling succeeds, FAIL");
+                errors++;
+                continue;
+            }
 
-	/* Run the actual test.  */
-	err = regexec (&re, tests[cnt].str, 20, match, 0);
+            /* Run the actual test.  */
+            err = regexec(&re, tests[cnt].str, 20, match, 0);
 
-	if (err != 0)
-	  {
-	    if (tests[cnt].start == -1)
-	      puts ("no match, OK");
-	    else
-	      {
-		puts ("no match, FAIL");
-		++errors;
-	      }
-	  }
-	else
-	  {
-	    if (match[0].rm_so == 0 && tests[cnt].start == 0
-		&& match[0].rm_eo == 0 && tests[cnt].end == 0)
-	      puts ("match, OK");
-	    else if (match[0].rm_so + 1 == tests[cnt].start
-		     && match[0].rm_eo == tests[cnt].end)
-	      puts ("match, OK");
-	    else
-	      {
-		printf ("wrong match (%d to %d): FAIL\n",
-			match[0].rm_so, match[0].rm_eo);
-		++errors;
-	      }
-	  }
+            if (err != 0) {
+                if (tests[cnt].start == -1) {
+                    puts("no match, OK");
+                } else {
+                    puts("no match, FAIL");
+                    ++errors;
+                }
+            } else {
+                if (match[0].rm_so == 0 && tests[cnt].start == 0
+                    && match[0].rm_eo == 0 && tests[cnt].end == 0) {
+                    puts("match, OK");
+                } else if (match[0].rm_so + 1 == tests[cnt].start
+                           && match[0].rm_eo == tests[cnt].end) {
+                    puts("match, OK");
+                } else {
+                    printf("wrong match (%d to %d): FAIL\n",
+                           match[0].rm_so, match[0].rm_eo);
+                    ++errors;
+                }
+            }
 
-	/* Free all resources.  */
-	regfree (&re);
-      }
+            /* Free all resources.  */
+            regfree(&re);
+        }
 
-  printf ("\n%zu tests, %d errors\n", cnt, errors);
+    printf("\n%zu tests, %d errors\n", cnt, errors);
 
-  return errors != 0;
+    return errors != 0;
 }

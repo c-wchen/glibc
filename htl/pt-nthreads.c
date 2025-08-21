@@ -20,4 +20,4 @@
 
 /* Number of threads running.  */
 unsigned int __pthread_total;
-libc_hidden_data_def (__pthread_total)
+libc_hidden_data_def(__pthread_total)

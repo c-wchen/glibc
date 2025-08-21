@@ -36,30 +36,29 @@ void *arr[] = { ELEMS };
 #define X 2,
 static char val[] = { ELEMS };
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  ElfW(Dyn) *d = _DYNAMIC;
-  if (d)
-    {
-      bool has_relr = false;
-      for (; d->d_tag != DT_NULL; d++)
-	if (d->d_tag == DT_RELR)
-	  has_relr = true;
+    ElfW(Dyn) *d = _DYNAMIC;
+    if (d) {
+        bool has_relr = false;
+        for (; d->d_tag != DT_NULL; d++)
+            if (d->d_tag == DT_RELR) {
+                has_relr = true;
+            }
 
 #if defined __PIE__ || defined __pie__ || defined PIE || defined pie
-      TEST_VERIFY (has_relr);
+        TEST_VERIFY(has_relr);
 #else
-      TEST_VERIFY (!has_relr);
+        TEST_VERIFY(!has_relr);
 #endif
     }
 
-  for (int i = 0; i < array_length (arr); i++)
-    TEST_VERIFY ((arr[i] == 0 && val[i] == 0)
-		 || (arr[i] == &o && val[i] == 1)
-		 || (arr[i] == &x && val[i] == 2));
+    for (int i = 0; i < array_length(arr); i++)
+        TEST_VERIFY((arr[i] == 0 && val[i] == 0)
+                    || (arr[i] == &o && val[i] == 1)
+                    || (arr[i] == &x && val[i] == 2));
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

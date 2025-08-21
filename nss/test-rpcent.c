@@ -25,49 +25,44 @@
 #include <rpc/netdb.h>
 
 
-static void
-output_rpcent (const char *call, struct rpcent *rptr)
+static void output_rpcent(const char *call, struct rpcent *rptr)
 {
-  char **pptr;
+    char **pptr;
 
-  if (rptr == NULL)
-    printf ("Call: %s returned NULL\n", call);
-  else
-    {
-      printf ("Call: %s, returned: r_name: %s, r_number: %d\n",
-		call, rptr->r_name, rptr->r_number);
-      for (pptr = rptr->r_aliases; *pptr != NULL; pptr++)
-	printf ("  alias: %s\n", *pptr);
+    if (rptr == NULL) {
+        printf("Call: %s returned NULL\n", call);
+    } else {
+        printf("Call: %s, returned: r_name: %s, r_number: %d\n",
+               call, rptr->r_name, rptr->r_number);
+        for (pptr = rptr->r_aliases; *pptr != NULL; pptr++) {
+            printf("  alias: %s\n", *pptr);
+        }
     }
 }
 
-static void
-test_rpc (void)
+static void test_rpc(void)
 {
-  struct rpcent *rptr;
+    struct rpcent *rptr;
 
-  rptr = getrpcbyname ("portmap");
-  output_rpcent ("getrpcyname (\"portmap\")", rptr);
+    rptr = getrpcbyname("portmap");
+    output_rpcent("getrpcyname (\"portmap\")", rptr);
 
-  rptr = getrpcbynumber (100000);
-  output_rpcent ("getrpcbynumber (100000)", rptr);
+    rptr = getrpcbynumber(100000);
+    output_rpcent("getrpcbynumber (100000)", rptr);
 
-  setrpcent (0);
-  do
-    {
-      rptr = getrpcent ();
-      output_rpcent ("getrpcent ()", rptr);
-    }
-  while (rptr != NULL);
-  endrpcent ();
+    setrpcent(0);
+    do {
+        rptr = getrpcent();
+        output_rpcent("getrpcent ()", rptr);
+    } while (rptr != NULL);
+    endrpcent();
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  test_rpc ();
+    test_rpc();
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

@@ -19,18 +19,18 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-static int
-scanf_under_test (const char *restrict fmt, ...)
+static int scanf_under_test(const char *restrict fmt, ...)
 {
-  va_list ap;
-  int result;
+    va_list ap;
+    int result;
 
-  va_start (ap, fmt);
-  result = vscanf (fmt, ap);
-  va_end (ap);
-  if (ferror (stdin))
-    result = INPUT_ERROR;
-  else if (result == EOF)
-    result = INPUT_EOF;
-  return result;
+    va_start(ap, fmt);
+    result = vscanf(fmt, ap);
+    va_end(ap);
+    if (ferror(stdin)) {
+        result = INPUT_ERROR;
+    } else if (result == EOF) {
+        result = INPUT_EOF;
+    }
+    return result;
 }

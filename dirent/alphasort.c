@@ -20,9 +20,8 @@
 #if !_DIRENT_MATCHES_DIRENT64
 # include <string.h>
 
-int
-alphasort (const struct dirent **a, const struct dirent **b)
+int alphasort(const struct dirent **a, const struct dirent **b)
 {
-  return strcoll ((*a)->d_name, (*b)->d_name);
+    return strcoll((*a)->d_name, (*b)->d_name);
 }
 #endif

@@ -22,6 +22,6 @@
 
 #include <fenv.h>
 
-#define EXCEPTION_ENABLE_SUPPORTED(EXCEPT)	((EXCEPT) == 0)
+#define EXCEPTION_ENABLE_SUPPORTED(EXCEPT)  ((EXCEPT) == 0)
 
 #endif /* math-tests-trap.h */

@@ -24,6 +24,6 @@
   __hidden_ver1 (__strcat_ppc, __GI_strcat, __strcat_ppc);
 #endif
 
-extern __typeof (strcat) __strcat_ppc attribute_hidden;
+extern __typeof(strcat) __strcat_ppc attribute_hidden;
 
 #include <string/strcat.c>

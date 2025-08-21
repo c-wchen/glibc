@@ -27,52 +27,57 @@
 
 
 /* Make a link to FROM called TO relative to FD.  */
-int
-__symlinkat (const char *from, int fd, const char *to)
+int __symlinkat(const char *from, int fd, const char *to)
 {
-  error_t err;
-  file_t dir, node;
-  char *name;
-  const size_t len = strlen (from) + 1;
-  char buf[sizeof (_HURD_SYMLINK) + len];
+    error_t err;
+    file_t dir, node;
+    char *name;
+    const size_t len = strlen(from) + 1;
+    char buf[sizeof(_HURD_SYMLINK) + len];
 
-  /* A symlink is a file whose translator is "/hurd/symlink\0target\0".  */
+    /* A symlink is a file whose translator is "/hurd/symlink\0target\0".  */
 
-  memcpy (buf, _HURD_SYMLINK, sizeof (_HURD_SYMLINK));
-  memcpy (&buf[sizeof (_HURD_SYMLINK)], from, len);
+    memcpy(buf, _HURD_SYMLINK, sizeof(_HURD_SYMLINK));
+    memcpy(&buf[sizeof(_HURD_SYMLINK)], from, len);
 
-  dir = __file_name_split_at (fd, to, &name);
-  if (dir == MACH_PORT_NULL)
-    return -1;
-
-  if (! *name)
-    /* Can't link to the existing directory itself.  */
-    err = EEXIST;
-  else
-    /* Create a new, unlinked node in the target directory.  */
-    err = __dir_mkfile (dir, O_WRITE, 0777 & ~_hurd_umask, &node);
-
-  if (! err)
-    {
-      /* Set the node's translator to make it a symlink.  */
-      err = __file_set_translator (node,
-                                   FS_TRANS_EXCL|FS_TRANS_SET,
-                                   FS_TRANS_EXCL|FS_TRANS_SET, 0,
-                                   buf, sizeof (_HURD_SYMLINK) + len,
-                                   MACH_PORT_NULL, MACH_MSG_TYPE_COPY_SEND);
-
-      if (! err)
-        /* Link the node, now a valid symlink, into the target directory.  */
-        err = __dir_link (dir, node, name, 1);
-
-      __mach_port_deallocate (__mach_task_self (), node);
+    dir = __file_name_split_at(fd, to, &name);
+    if (dir == MACH_PORT_NULL) {
+        return -1;
     }
 
-  __mach_port_deallocate (__mach_task_self (), dir);
+    if (! *name)
+        /* Can't link to the existing directory itself.  */
+    {
+        err = EEXIST;
+    } else
+        /* Create a new, unlinked node in the target directory.  */
+    {
+        err = __dir_mkfile(dir, O_WRITE, 0777 & ~_hurd_umask, &node);
+    }
 
-  if (err)
-    return __hurd_fail (err);
-  return 0;
+    if (! err) {
+        /* Set the node's translator to make it a symlink.  */
+        err = __file_set_translator(node,
+                                    FS_TRANS_EXCL | FS_TRANS_SET,
+                                    FS_TRANS_EXCL | FS_TRANS_SET, 0,
+                                    buf, sizeof(_HURD_SYMLINK) + len,
+                                    MACH_PORT_NULL, MACH_MSG_TYPE_COPY_SEND);
+
+        if (! err)
+            /* Link the node, now a valid symlink, into the target directory.  */
+        {
+            err = __dir_link(dir, node, name, 1);
+        }
+
+        __mach_port_deallocate(__mach_task_self(), node);
+    }
+
+    __mach_port_deallocate(__mach_task_self(), dir);
+
+    if (err) {
+        return __hurd_fail(err);
+    }
+    return 0;
 }
 
-weak_alias (__symlinkat, symlinkat)
+weak_alias(__symlinkat, symlinkat)

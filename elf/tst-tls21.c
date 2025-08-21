@@ -27,42 +27,39 @@
 
 static atomic_int done;
 
-static void *
-start (void *a)
+static void *start(void *a)
 {
-  /* Load a module with many dependencies that each have TLS.  */
-  xdlopen ("tst-tls21mod.so", RTLD_LAZY);
-  atomic_store_explicit (&done, 1, memory_order_release);
-  return 0;
+    /* Load a module with many dependencies that each have TLS.  */
+    xdlopen("tst-tls21mod.so", RTLD_LAZY);
+    atomic_store_explicit(&done, 1, memory_order_release);
+    return 0;
 }
 
-static void *
-nop (void *a)
+static void *nop(void *a)
 {
-  return 0;
+    return 0;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  pthread_t t1, t2;
-  int i;
+    pthread_t t1, t2;
+    int i;
 
-  /* Load a module with lots of dependencies and TLS.  */
-  t1 = xpthread_create (0, start, 0);
+    /* Load a module with lots of dependencies and TLS.  */
+    t1 = xpthread_create(0, start, 0);
 
-  /* Concurrently create lots of threads until dlopen is observably done.  */
-  for (i = 0; i < THREADS; i++)
-    {
-      if (atomic_load_explicit (&done, memory_order_acquire) != 0)
-	break;
-      t2 = xpthread_create (0, nop, 0);
-      xpthread_join (t2);
+    /* Concurrently create lots of threads until dlopen is observably done.  */
+    for (i = 0; i < THREADS; i++) {
+        if (atomic_load_explicit(&done, memory_order_acquire) != 0) {
+            break;
+        }
+        t2 = xpthread_create(0, nop, 0);
+        xpthread_join(t2);
     }
 
-  xpthread_join (t1);
-  printf ("threads created during dlopen: %d\n", i);
-  return 0;
+    xpthread_join(t1);
+    printf("threads created during dlopen: %d\n", i);
+    return 0;
 }
 
 #include <support/test-driver.c>

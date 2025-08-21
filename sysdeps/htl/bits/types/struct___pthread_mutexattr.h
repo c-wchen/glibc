@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _BITS_TYPES_STRUCT___PTHREAD_MUTEXATTR_H
-#define _BITS_TYPES_STRUCT___PTHREAD_MUTEXATTR_H	1
+#define _BITS_TYPES_STRUCT___PTHREAD_MUTEXATTR_H    1
 
 enum __pthread_mutex_protocol;
 enum __pthread_process_shared;
@@ -25,12 +25,11 @@ enum __pthread_mutex_type;
 
 /* This structure describes the attributes of a POSIX mutex
    attribute.  */
-struct __pthread_mutexattr
-{
-  int __prioceiling;
-  enum __pthread_mutex_protocol __protocol;
-  enum __pthread_process_shared __pshared;
-  enum __pthread_mutex_type __mutex_type;
+struct __pthread_mutexattr {
+    int __prioceiling;
+    enum __pthread_mutex_protocol __protocol;
+    enum __pthread_process_shared __pshared;
+    enum __pthread_mutex_type __mutex_type;
 };
 
 #endif /* bits/types/struct___pthread_mutexattr.h */

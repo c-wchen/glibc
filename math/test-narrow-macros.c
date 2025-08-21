@@ -46,11 +46,10 @@
 
 #include <math.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* This is a compilation test.  */
-  return 0;
+    /* This is a compilation test.  */
+    return 0;
 }
 
 #include <support/test-driver.c>

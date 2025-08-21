@@ -20,24 +20,21 @@
 #include <termios.h>
 
 /* Put the state of FD into *TERMIOS_P.  */
-int
-__tcgetattr (int fd, struct termios *termios_p)
+int __tcgetattr(int fd, struct termios *termios_p)
 {
-  if (fd < 0)
-    {
-      __set_errno (EBADF);
-      return -1;
+    if (fd < 0) {
+        __set_errno(EBADF);
+        return -1;
     }
-  if (termios_p == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (termios_p == NULL) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (tcgetattr)
+stub_warning(tcgetattr)
 
-libc_hidden_def (__tcgetattr)
-weak_alias (__tcgetattr, tcgetattr)
+libc_hidden_def(__tcgetattr)
+weak_alias(__tcgetattr, tcgetattr)

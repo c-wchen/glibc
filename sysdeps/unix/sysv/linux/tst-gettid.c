@@ -25,55 +25,52 @@
 static pid_t initial_tid;
 
 /* Check that PID and TID are the same in a subprocess.  */
-static void
-subprocess (void *closure)
+static void subprocess(void *closure)
 {
-  TEST_COMPARE (getpid (), gettid ());
-  TEST_VERIFY (gettid () != initial_tid);
+    TEST_COMPARE(getpid(), gettid());
+    TEST_VERIFY(gettid() != initial_tid);
 }
 
 /* Check that the TID changes in a new thread.  */
-static void *
-threadfunc (void *closure)
+static void *threadfunc(void *closure)
 {
-  TEST_VERIFY (getpid () != gettid ());
-  TEST_VERIFY (gettid () != initial_tid);
-  return NULL;
+    TEST_VERIFY(getpid() != gettid());
+    TEST_VERIFY(gettid() != initial_tid);
+    return NULL;
 }
 
 /* Check for interactions with vfork.  */
-static void
-test_vfork (void)
+static void test_vfork(void)
 {
-  pid_t proc = vfork ();
-  if (proc == 0)
-    {
-      if (getpid () != gettid ())
-        _exit (1);
-      if (gettid () == initial_tid)
-        _exit (2);
-      _exit (0);
+    pid_t proc = vfork();
+    if (proc == 0) {
+        if (getpid() != gettid()) {
+            _exit(1);
+        }
+        if (gettid() == initial_tid) {
+            _exit(2);
+        }
+        _exit(0);
     }
-  int status;
-  xwaitpid (proc, &status, 0);
-  TEST_COMPARE (status, 0);
+    int status;
+    xwaitpid(proc, &status, 0);
+    TEST_COMPARE(status, 0);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  initial_tid = gettid ();
+    initial_tid = gettid();
 
-  /* The main thread has the same TID as the PID.  */
-  TEST_COMPARE (getpid (), gettid ());
+    /* The main thread has the same TID as the PID.  */
+    TEST_COMPARE(getpid(), gettid());
 
-  test_vfork ();
+    test_vfork();
 
-  support_isolate_in_subprocess (subprocess, NULL);
+    support_isolate_in_subprocess(subprocess, NULL);
 
-  xpthread_join (xpthread_create (NULL, threadfunc, NULL));
+    xpthread_join(xpthread_create(NULL, threadfunc, NULL));
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -20,13 +20,12 @@
 
 /* Fetch the real group ID, effective group ID, and saved-set group ID,
    of the calling process.  */
-int
-__getresgid (gid_t *rgid, gid_t *egid, gid_t *sgid)
+int __getresgid(gid_t *rgid, gid_t *egid, gid_t *sgid)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (__getresgid)
-stub_warning (getresgid)
+libc_hidden_def(__getresgid)
+stub_warning(getresgid)
 
-weak_alias (__getresgid, getresgid)
+weak_alias(__getresgid, getresgid)

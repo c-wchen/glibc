@@ -18,29 +18,27 @@
 
 #include <string.h>
 
-size_t
-__strlcpy (char *__restrict dest, const char *__restrict src, size_t size)
+size_t __strlcpy(char *__restrict dest, const char *__restrict src, size_t size)
 {
-  size_t src_length = strlen (src);
+    size_t src_length = strlen(src);
 
-  if (__glibc_unlikely (src_length >= size))
+    if (__glibc_unlikely(src_length >= size)) {
+        if (size > 0) {
+            /* Copy the leading portion of the string.  The last
+               character is subsequently overwritten with the NUL
+               terminator, but the destination size is usually a
+               multiple of a small power of two, so writing it twice
+               should be more efficient than copying an odd number of
+               bytes.  */
+            memcpy(dest, src, size);
+            dest[size - 1] = '\0';
+        }
+    } else
+        /* Copy the string and its terminating NUL character.  */
     {
-      if (size > 0)
-	{
-	  /* Copy the leading portion of the string.  The last
-	     character is subsequently overwritten with the NUL
-	     terminator, but the destination size is usually a
-	     multiple of a small power of two, so writing it twice
-	     should be more efficient than copying an odd number of
-	     bytes.  */
-	  memcpy (dest, src, size);
-	  dest[size - 1] = '\0';
-	}
+        memcpy(dest, src, src_length + 1);
     }
-  else
-    /* Copy the string and its terminating NUL character.  */
-    memcpy (dest, src, src_length + 1);
-  return src_length;
+    return src_length;
 }
-libc_hidden_def (__strlcpy)
-weak_alias (__strlcpy, strlcpy)
+libc_hidden_def(__strlcpy)
+weak_alias(__strlcpy, strlcpy)

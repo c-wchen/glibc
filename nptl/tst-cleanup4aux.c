@@ -21,104 +21,101 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-extern void _pthread_cleanup_push (struct _pthread_cleanup_buffer *__buffer,
-                                   void (*__routine) (void *),
-                                   void *__arg);
-compat_symbol_reference (libpthread, _pthread_cleanup_push,
-                         _pthread_cleanup_push, GLIBC_2_0);
-extern void _pthread_cleanup_pop (struct _pthread_cleanup_buffer *__buffer,
-                                  int __execute);
-compat_symbol_reference (libpthread, _pthread_cleanup_pop,
-                         _pthread_cleanup_pop, GLIBC_2_0);
+extern void _pthread_cleanup_push(struct _pthread_cleanup_buffer *__buffer,
+                                  void (*__routine)(void *),
+                                  void *__arg);
+compat_symbol_reference(libpthread, _pthread_cleanup_push,
+                        _pthread_cleanup_push, GLIBC_2_0);
+extern void _pthread_cleanup_pop(struct _pthread_cleanup_buffer *__buffer,
+                                 int __execute);
+compat_symbol_reference(libpthread, _pthread_cleanup_pop,
+                        _pthread_cleanup_pop, GLIBC_2_0);
 
-extern void clh (void *arg);
-extern void fn0 (void);
-extern void fn1 (void);
-extern void fn5 (void);
-extern void fn7 (void);
-extern void fn9 (void);
-
-
-static __attribute__((noinline)) void
-fn3 (void)
-{
-  /* This is the old LinuxThreads pthread_cleanup_{push,pop}.  */
-     struct _pthread_cleanup_buffer b;
-  _pthread_cleanup_push (&b, clh, (void *) 4l);
-
-  fn0 ();
-
-  _pthread_cleanup_pop (&b, 1);
-}
+extern void clh(void *arg);
+extern void fn0(void);
+extern void fn1(void);
+extern void fn5(void);
+extern void fn7(void);
+extern void fn9(void);
 
 
 static __attribute__((noinline)) void
-fn4 (void)
+fn3(void)
 {
-  pthread_cleanup_push (clh, (void *) 5l);
+    /* This is the old LinuxThreads pthread_cleanup_{push,pop}.  */
+    struct _pthread_cleanup_buffer b;
+    _pthread_cleanup_push(&b, clh, (void *) 4l);
 
-  fn3 ();
+    fn0();
 
-  pthread_cleanup_pop (1);
-}
-
-
-void
-fn5 (void)
-{
-  /* This is the old LinuxThreads pthread_cleanup_{push,pop}.  */
-     struct _pthread_cleanup_buffer b;
-  _pthread_cleanup_push (&b, clh, (void *) 6l);
-
-  fn4 ();
-
-  _pthread_cleanup_pop (&b, 1);
+    _pthread_cleanup_pop(&b, 1);
 }
 
 
 static __attribute__((noinline)) void
-fn6 (void)
+fn4(void)
 {
-  pthread_cleanup_push (clh, (void *) 7l);
+    pthread_cleanup_push(clh, (void *) 5l);
 
-  fn0 ();
+    fn3();
 
-  pthread_cleanup_pop (1);
+    pthread_cleanup_pop(1);
 }
 
 
-void
-fn7 (void)
+void fn5(void)
 {
-  /* This is the old LinuxThreads pthread_cleanup_{push,pop}.  */
-     struct _pthread_cleanup_buffer b;
-  _pthread_cleanup_push (&b, clh, (void *) 8l);
+    /* This is the old LinuxThreads pthread_cleanup_{push,pop}.  */
+    struct _pthread_cleanup_buffer b;
+    _pthread_cleanup_push(&b, clh, (void *) 6l);
 
-  fn6 ();
+    fn4();
 
-  _pthread_cleanup_pop (&b, 1);
+    _pthread_cleanup_pop(&b, 1);
 }
 
 
 static __attribute__((noinline)) void
-fn8 (void)
+fn6(void)
 {
-  pthread_cleanup_push (clh, (void *) 9l);
+    pthread_cleanup_push(clh, (void *) 7l);
 
-  fn1 ();
+    fn0();
 
-  pthread_cleanup_pop (1);
+    pthread_cleanup_pop(1);
 }
 
 
-void
-fn9 (void)
+void fn7(void)
 {
-  /* This is the old LinuxThreads pthread_cleanup_{push,pop}.  */
-     struct _pthread_cleanup_buffer b;
-  _pthread_cleanup_push (&b, clh, (void *) 10l);
+    /* This is the old LinuxThreads pthread_cleanup_{push,pop}.  */
+    struct _pthread_cleanup_buffer b;
+    _pthread_cleanup_push(&b, clh, (void *) 8l);
 
-  fn8 ();
+    fn6();
 
-  _pthread_cleanup_pop (&b, 1);
+    _pthread_cleanup_pop(&b, 1);
+}
+
+
+static __attribute__((noinline)) void
+fn8(void)
+{
+    pthread_cleanup_push(clh, (void *) 9l);
+
+    fn1();
+
+    pthread_cleanup_pop(1);
+}
+
+
+void fn9(void)
+{
+    /* This is the old LinuxThreads pthread_cleanup_{push,pop}.  */
+    struct _pthread_cleanup_buffer b;
+    _pthread_cleanup_push(&b, clh, (void *) 10l);
+
+    fn8();
+
+    _pthread_cleanup_pop(&b, 1);
 }

@@ -8,4 +8,4 @@
 #include "dat_towlower.c"
 
 
-TST_FUNC_TOW (LOWER, lower);
+TST_FUNC_TOW(LOWER, lower);

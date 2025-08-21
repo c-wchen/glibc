@@ -91,22 +91,22 @@
    first location after the message, EXP_DN is a pointer to a buffer
    of size LENGTH for the result.  Returns size of compressed name or
    -1 if there was an error.  */
-int
-___dn_expand (const unsigned char *msg, const unsigned char *eom,
-              const unsigned char *src, char *dst, int dstsiz)
+int ___dn_expand(const unsigned char *msg, const unsigned char *eom,
+                 const unsigned char *src, char *dst, int dstsiz)
 {
-  int n = __ns_name_uncompress (msg, eom, src, dst, (size_t) dstsiz);
-  if (n > 0 && dst[0] == '.')
-    dst[0] = '\0';
-  return n;
+    int n = __ns_name_uncompress(msg, eom, src, dst, (size_t) dstsiz);
+    if (n > 0 && dst[0] == '.') {
+        dst[0] = '\0';
+    }
+    return n;
 }
-versioned_symbol (libc, ___dn_expand, dn_expand, GLIBC_2_34);
-versioned_symbol (libc, ___dn_expand, __libc_dn_expand, GLIBC_PRIVATE);
-libc_hidden_ver (___dn_expand, __libc_dn_expand);
+versioned_symbol(libc, ___dn_expand, dn_expand, GLIBC_2_34);
+versioned_symbol(libc, ___dn_expand, __libc_dn_expand, GLIBC_PRIVATE);
+libc_hidden_ver(___dn_expand, __libc_dn_expand);
 
 #if OTHER_SHLIB_COMPAT (libresolv, GLIBC_2_0, GLIBC_2_2)
-compat_symbol (libresolv, ___dn_expand, dn_expand, GLIBC_2_0);
+compat_symbol(libresolv, ___dn_expand, dn_expand, GLIBC_2_0);
 #endif
 #if OTHER_SHLIB_COMPAT (libresolv, GLIBC_2_2, GLIBC_2_34)
-compat_symbol (libresolv, ___dn_expand, __dn_expand, GLIBC_2_2);
+compat_symbol(libresolv, ___dn_expand, __dn_expand, GLIBC_2_2);
 #endif

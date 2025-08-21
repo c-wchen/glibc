@@ -21,15 +21,13 @@
 #include <sigsetops.h>
 
 /* Return 1 if SIGNO is in SET, 0 if not.  */
-int
-sigismember (const sigset_t *set, int signo)
+int sigismember(const sigset_t *set, int signo)
 {
-  if (set == NULL || signo <= 0 || signo >= NSIG)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (set == NULL || signo <= 0 || signo >= NSIG) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  return __sigismember (set, signo);
+    return __sigismember(set, signo);
 }
-libc_hidden_def (sigismember)
+libc_hidden_def(sigismember)

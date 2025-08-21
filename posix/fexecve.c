@@ -22,17 +22,15 @@
 
 /* Execute the file FD refers to, overlaying the running program image.
    ARGV and ENVP are passed to the new program, as for `execve'.  */
-int
-fexecve (int fd, char *const argv[], char *const envp[])
+int fexecve(int fd, char *const argv[], char *const envp[])
 {
-  if (fd < 0 || argv == NULL || envp == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (fd < 0 || argv == NULL || envp == NULL) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (fexecve)
+stub_warning(fexecve)

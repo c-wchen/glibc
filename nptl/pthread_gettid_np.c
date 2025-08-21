@@ -19,12 +19,12 @@
 #include <errno.h>
 #include <pthreadP.h>
 
-pid_t
-pthread_gettid_np (pthread_t threadid)
+pid_t pthread_gettid_np(pthread_t threadid)
 {
-  /* The kernel may concurrently set this field.  */
-  pid_t tid = atomic_load_relaxed (&((struct pthread *) threadid)->tid);
-  if (tid <= 0)
-    return -1;
-  return tid;
+    /* The kernel may concurrently set this field.  */
+    pid_t tid = atomic_load_relaxed(&((struct pthread *) threadid)->tid);
+    if (tid <= 0) {
+        return -1;
+    }
+    return tid;
 }

@@ -28,34 +28,34 @@
    in with standard 64-bit syscalls but return them through APIs that
    only expose the low 32 bits of some fields.  */
 
-static inline off_t lseek_overflow (loff_t res)
+static inline off_t lseek_overflow(loff_t res)
 {
-  off_t retval = (off_t) res;
-  if (retval == res)
-    return retval;
+    off_t retval = (off_t) res;
+    if (retval == res) {
+        return retval;
+    }
 
-  __set_errno (EOVERFLOW);
-  return (off_t) -1;
+    __set_errno(EOVERFLOW);
+    return (off_t) -1;
 }
 
-off_t
-__lseek (int fd, off_t offset, int whence)
+off_t __lseek(int fd, off_t offset, int whence)
 {
 #ifdef __NR_llseek
 # define __NR__llseek __NR_llseek
 #endif
 
 # ifdef __NR__llseek
-  loff_t res;
-  int rc = INLINE_SYSCALL_CALL (_llseek, fd,
-				(long) (((uint64_t) (offset)) >> 32),
-				(long) offset, &res, whence);
-  return rc ?: lseek_overflow (res);
+    loff_t res;
+    int rc = INLINE_SYSCALL_CALL(_llseek, fd,
+                                 (long)(((uint64_t)(offset)) >> 32),
+                                 (long) offset, &res, whence);
+    return rc ? : lseek_overflow(res);
 # else
-  return INLINE_SYSCALL_CALL (lseek, fd, offset, whence);
+    return INLINE_SYSCALL_CALL(lseek, fd, offset, whence);
 # endif
 }
-libc_hidden_def (__lseek)
-weak_alias (__lseek, lseek)
-strong_alias (__lseek, __libc_lseek)
+libc_hidden_def(__lseek)
+weak_alias(__lseek, lseek)
+strong_alias(__lseek, __libc_lseek)
 #endif /* __OFF_T_MATCHES_OFF64_T  */

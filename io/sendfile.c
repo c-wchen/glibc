@@ -21,10 +21,9 @@
 
 /* Send COUNT bytes from file associated with IN_FD starting at OFFSET to
    descriptor OUT_FD.  */
-ssize_t
-sendfile (int out_fd, int in_fd, off_t *offset, size_t count)
+ssize_t sendfile(int out_fd, int in_fd, off_t *offset, size_t count)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (sendfile)
+stub_warning(sendfile)

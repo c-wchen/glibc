@@ -21,30 +21,30 @@
 #include <arm-features.h>
 
 
-int
-feenableexcept (int excepts)
+int feenableexcept(int excepts)
 {
-  fpu_control_t fpscr, new_fpscr, updated_fpscr;
+    fpu_control_t fpscr, new_fpscr, updated_fpscr;
 
-  /* Fail if a VFP unit isn't present.  */
-  if (!ARM_HAVE_VFP)
-    return -1;
-
-  _FPU_GETCW (fpscr);
-  excepts &= FE_ALL_EXCEPT;
-  new_fpscr = fpscr | (excepts << FE_EXCEPT_SHIFT);
-
-  if (new_fpscr != fpscr)
-    {
-      _FPU_SETCW (new_fpscr);
-
-      /* Not all VFP architectures support trapping exceptions, so
-	 test whether the relevant bits were set and fail if not.  */
-      _FPU_GETCW (updated_fpscr);
-
-      if (new_fpscr & ~updated_fpscr)
-	return -1;
+    /* Fail if a VFP unit isn't present.  */
+    if (!ARM_HAVE_VFP) {
+        return -1;
     }
 
-  return (fpscr >> FE_EXCEPT_SHIFT) & FE_ALL_EXCEPT;
+    _FPU_GETCW(fpscr);
+    excepts &= FE_ALL_EXCEPT;
+    new_fpscr = fpscr | (excepts << FE_EXCEPT_SHIFT);
+
+    if (new_fpscr != fpscr) {
+        _FPU_SETCW(new_fpscr);
+
+        /* Not all VFP architectures support trapping exceptions, so
+        test whether the relevant bits were set and fail if not.  */
+        _FPU_GETCW(updated_fpscr);
+
+        if (new_fpscr & ~updated_fpscr) {
+            return -1;
+        }
+    }
+
+    return (fpscr >> FE_EXCEPT_SHIFT) & FE_ALL_EXCEPT;
 }

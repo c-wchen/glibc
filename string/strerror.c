@@ -18,8 +18,7 @@
 #include <string.h>
 #include <locale/localeinfo.h>
 
-char *
-strerror (int errnum)
+char *strerror(int errnum)
 {
-  return __strerror_l (errnum, __libc_tsd_LOCALE);
+    return __strerror_l(errnum, __libc_tsd_LOCALE);
 }

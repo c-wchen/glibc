@@ -22,37 +22,40 @@
 #include <libm-alias-ldouble.h>
 
 /* Return the least floating-point number greater than X.  */
-_Float128
-__nextupl (_Float128 x)
+_Float128 __nextupl(_Float128 x)
 {
-  int64_t hx, ix;
-  uint64_t lx;
+    int64_t hx, ix;
+    uint64_t lx;
 
-  GET_LDOUBLE_WORDS64 (hx, lx, x);
-  ix = hx & 0x7fffffffffffffffLL;
+    GET_LDOUBLE_WORDS64(hx, lx, x);
+    ix = hx & 0x7fffffffffffffffLL;
 
-  /* x is nan.  */
-  if (((ix >= 0x7fff000000000000LL)
-       && ((ix - 0x7fff000000000000LL) | lx) != 0))
-    return x + x;
-  if ((ix | lx) == 0)
-    return LDBL_TRUE_MIN;
-  if (hx >= 0)
-    {				/* x > 0.  */
-      if (isinf (x))
-        return x;
-      lx++;
-      if (lx == 0)
-        hx++;
+    /* x is nan.  */
+    if (((ix >= 0x7fff000000000000LL)
+         && ((ix - 0x7fff000000000000LL) | lx) != 0)) {
+        return x + x;
     }
-  else
-    {				/* x < 0.  */
-      if (lx == 0)
-        hx--;
-      lx--;
+    if ((ix | lx) == 0) {
+        return LDBL_TRUE_MIN;
     }
-  SET_LDOUBLE_WORDS64 (x, hx, lx);
-  return x;
+    if (hx >= 0) {
+        /* x > 0.  */
+        if (isinf(x)) {
+            return x;
+        }
+        lx++;
+        if (lx == 0) {
+            hx++;
+        }
+    } else {
+        /* x < 0.  */
+        if (lx == 0) {
+            hx--;
+        }
+        lx--;
+    }
+    SET_LDOUBLE_WORDS64(x, hx, lx);
+    return x;
 }
 
-libm_alias_ldouble (__nextup, nextup)
+libm_alias_ldouble(__nextup, nextup)

@@ -2,6 +2,6 @@
    version.  */
 
 #define backtrace_flush_register_windows() \
-	asm volatile ("flushw")
+    asm volatile ("flushw")
 
-#define BACKTRACE_STACK_BIAS	STACK_BIAS
+#define BACKTRACE_STACK_BIAS    STACK_BIAS

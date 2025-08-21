@@ -38,14 +38,14 @@
 #include <shlib-compat.h>
 
 
-bool_t
-xdr_pmap (XDR *xdrs, struct pmap *regs)
+bool_t xdr_pmap(XDR *xdrs, struct pmap *regs)
 {
 
-  if (xdr_u_long (xdrs, &regs->pm_prog) &&
-      xdr_u_long (xdrs, &regs->pm_vers) &&
-      xdr_u_long (xdrs, &regs->pm_prot))
-    return xdr_u_long (xdrs, &regs->pm_port);
-  return FALSE;
+    if (xdr_u_long(xdrs, &regs->pm_prog) &&
+        xdr_u_long(xdrs, &regs->pm_vers) &&
+        xdr_u_long(xdrs, &regs->pm_prot)) {
+        return xdr_u_long(xdrs, &regs->pm_port);
+    }
+    return FALSE;
 }
-libc_hidden_nolink_sunrpc (xdr_pmap, GLIBC_2_0)
+libc_hidden_nolink_sunrpc(xdr_pmap, GLIBC_2_0)

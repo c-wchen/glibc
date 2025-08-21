@@ -22,62 +22,60 @@
 #include <wchar.h>
 #include "libioP.h"
 
-static void
-perror_internal (FILE *fp, const char *s, int errnum)
+static void perror_internal(FILE *fp, const char *s, int errnum)
 {
-  char buf[1024];
-  const char *colon;
-  const char *errstring;
+    char buf[1024];
+    const char *colon;
+    const char *errstring;
 
-  if (s == NULL || *s == '\0')
-    s = colon = "";
-  else
-    colon = ": ";
+    if (s == NULL || *s == '\0') {
+        s = colon = "";
+    } else {
+        colon = ": ";
+    }
 
-  errstring = __strerror_r (errnum, buf, sizeof buf);
+    errstring = __strerror_r(errnum, buf, sizeof buf);
 
-  (void) __fxprintf (fp, "%s%s%s\n", s, colon, errstring);
+    (void) __fxprintf(fp, "%s%s%s\n", s, colon, errstring);
 }
 
 
 /* Print a line on stderr consisting of the text in S, a colon, a space,
    a message describing the meaning of the contents of `errno' and a newline.
    If S is NULL or "", the colon and space are omitted.  */
-void
-perror (const char *s)
+void perror(const char *s)
 {
-  int errnum = errno;
-  FILE *fp;
-  int fd = -1;
+    int errnum = errno;
+    FILE *fp;
+    int fd = -1;
 
 
-  /* The standard says that 'perror' must not change the orientation
-     of the stream.  What is supposed to happen when the stream isn't
-     oriented yet?  In this case we'll create a new stream which is
-     using the same underlying file descriptor.  */
-  if (__builtin_expect (_IO_fwide (stderr, 0) != 0, 1)
-      || (fd = __fileno (stderr)) == -1
-      || (fd = __dup (fd)) == -1
-      || (fp = fdopen (fd, "w+")) == NULL)
-    {
-      if (__glibc_unlikely (fd != -1))
-	__close (fd);
+    /* The standard says that 'perror' must not change the orientation
+       of the stream.  What is supposed to happen when the stream isn't
+       oriented yet?  In this case we'll create a new stream which is
+       using the same underlying file descriptor.  */
+    if (__builtin_expect(_IO_fwide(stderr, 0) != 0, 1)
+        || (fd = __fileno(stderr)) == -1
+        || (fd = __dup(fd)) == -1
+        || (fp = fdopen(fd, "w+")) == NULL) {
+        if (__glibc_unlikely(fd != -1)) {
+            __close(fd);
+        }
 
-      /* Use standard error as is.  */
-      perror_internal (stderr, s, errnum);
-    }
-  else
-    {
-      /* We don't have to do any special hacks regarding the file
-	 position.  Since the stderr stream wasn't used so far we just
-	 write to the descriptor.  */
-      perror_internal (fp, s, errnum);
+        /* Use standard error as is.  */
+        perror_internal(stderr, s, errnum);
+    } else {
+        /* We don't have to do any special hacks regarding the file
+        position.  Since the stderr stream wasn't used so far we just
+         write to the descriptor.  */
+        perror_internal(fp, s, errnum);
 
-      if (_IO_ferror_unlocked (fp))
-	stderr->_flags |= _IO_ERR_SEEN;
+        if (_IO_ferror_unlocked(fp)) {
+            stderr->_flags |= _IO_ERR_SEEN;
+        }
 
-      /* Close the stream.  */
-      fclose (fp);
+        /* Close the stream.  */
+        fclose(fp);
     }
 }
-libc_hidden_def (perror)
+libc_hidden_def(perror)

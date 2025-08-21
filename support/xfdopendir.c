@@ -20,11 +20,11 @@
 
 #include <support/check.h>
 
-DIR *
-xfdopendir (int fd)
+DIR *xfdopendir(int fd)
 {
-  DIR *result = fdopendir (fd);
-  if (result == NULL)
-    FAIL_EXIT1 ("fdopendir (%d): %m", fd);
-  return result;
+    DIR *result = fdopendir(fd);
+    if (result == NULL) {
+        FAIL_EXIT1("fdopendir (%d): %m", fd);
+    }
+    return result;
 }

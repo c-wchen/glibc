@@ -26,114 +26,108 @@
 
 static volatile int handler_called;
 
-static void
-handler (int sig)
+static void handler(int sig)
 {
-  handler_called = 1;
+    handler_called = 1;
 }
 
 
-static void
-test_pselect_basic (void)
+static void test_pselect_basic(void)
 {
-  struct sigaction sa;
-  sa.sa_handler = handler;
-  sa.sa_flags = 0;
-  sigemptyset (&sa.sa_mask);
+    struct sigaction sa;
+    sa.sa_handler = handler;
+    sa.sa_flags = 0;
+    sigemptyset(&sa.sa_mask);
 
-  xsigaction (SIGUSR1, &sa, NULL);
+    xsigaction(SIGUSR1, &sa, NULL);
 
-  sa.sa_handler = SIG_IGN;
-  xsigaction (SIGCHLD, &sa, NULL);
+    sa.sa_handler = SIG_IGN;
+    xsigaction(SIGCHLD, &sa, NULL);
 
-  sigset_t ss_usr1;
-  sigemptyset (&ss_usr1);
-  sigaddset (&ss_usr1, SIGUSR1);
-  TEST_COMPARE (sigprocmask (SIG_BLOCK, &ss_usr1, NULL), 0);
+    sigset_t ss_usr1;
+    sigemptyset(&ss_usr1);
+    sigaddset(&ss_usr1, SIGUSR1);
+    TEST_COMPARE(sigprocmask(SIG_BLOCK, &ss_usr1, NULL), 0);
 
-  int fds[2][2];
-  xpipe (fds[0]);
-  xpipe (fds[1]);
+    int fds[2][2];
+    xpipe(fds[0]);
+    xpipe(fds[1]);
 
-  fd_set rfds;
-  FD_ZERO (&rfds);
+    fd_set rfds;
+    FD_ZERO(&rfds);
 
-  sigset_t ss;
-  TEST_COMPARE (sigprocmask (SIG_SETMASK, NULL, &ss), 0);
-  sigdelset (&ss, SIGUSR1);
+    sigset_t ss;
+    TEST_COMPARE(sigprocmask(SIG_SETMASK, NULL, &ss), 0);
+    sigdelset(&ss, SIGUSR1);
 
-  struct timespec to = { .tv_sec = 0, .tv_nsec = 500000000 };
+    struct timespec to = { .tv_sec = 0, .tv_nsec = 500000000 };
 
-  pid_t parent = getpid ();
-  pid_t p = xfork ();
-  if (p == 0)
-    {
-      xclose (fds[0][1]);
-      xclose (fds[1][0]);
+    pid_t parent = getpid();
+    pid_t p = xfork();
+    if (p == 0) {
+        xclose(fds[0][1]);
+        xclose(fds[1][0]);
 
-      FD_SET (fds[0][0], &rfds);
+        FD_SET(fds[0][0], &rfds);
 
-      int e;
-      do
-	{
-	  if (getppid () != parent)
-	    FAIL_EXIT1 ("getppid()=%d != parent=%d", getppid(), parent);
+        int e;
+        do {
+            if (getppid() != parent) {
+                FAIL_EXIT1("getppid()=%d != parent=%d", getppid(), parent);
+            }
 
-	  errno = 0;
-	  e = pselect (fds[0][0] + 1, &rfds, NULL, NULL, &to, &ss);
-	}
-      while (e == 0);
+            errno = 0;
+            e = pselect(fds[0][0] + 1, &rfds, NULL, NULL, &to, &ss);
+        } while (e == 0);
 
-      TEST_COMPARE (e, -1);
-      TEST_COMPARE (errno, EINTR);
+        TEST_COMPARE(e, -1);
+        TEST_COMPARE(errno, EINTR);
 
-      TEMP_FAILURE_RETRY (write (fds[1][1], "foo", 3));
+        TEMP_FAILURE_RETRY(write(fds[1][1], "foo", 3));
 
-      exit (0);
+        exit(0);
     }
 
-  xclose (fds[0][0]);
-  xclose (fds[1][1]);
+    xclose(fds[0][0]);
+    xclose(fds[1][1]);
 
-  FD_SET (fds[1][0], &rfds);
+    FD_SET(fds[1][0], &rfds);
 
-  TEST_COMPARE (kill (p, SIGUSR1), 0);
+    TEST_COMPARE(kill(p, SIGUSR1), 0);
 
-  int e = pselect (fds[1][0] + 1, &rfds, NULL, NULL, NULL, &ss);
-  TEST_COMPARE (e, 1);
-  TEST_VERIFY (FD_ISSET (fds[1][0], &rfds));
+    int e = pselect(fds[1][0] + 1, &rfds, NULL, NULL, NULL, &ss);
+    TEST_COMPARE(e, 1);
+    TEST_VERIFY(FD_ISSET(fds[1][0], &rfds));
 }
 
-static void
-test_pselect_large_timeout (void)
+static void test_pselect_large_timeout(void)
 {
-  support_create_timer (0, 100000000, false, NULL);
+    support_create_timer(0, 100000000, false, NULL);
 
-  int fds[2];
-  xpipe (fds);
+    int fds[2];
+    xpipe(fds);
 
-  fd_set rfds;
-  FD_ZERO (&rfds);
-  FD_SET (fds[0], &rfds);
+    fd_set rfds;
+    FD_ZERO(&rfds);
+    FD_SET(fds[0], &rfds);
 
-  sigset_t ss;
-  TEST_COMPARE (sigprocmask (SIG_SETMASK, NULL, &ss), 0);
-  sigdelset (&ss, SIGALRM);
+    sigset_t ss;
+    TEST_COMPARE(sigprocmask(SIG_SETMASK, NULL, &ss), 0);
+    sigdelset(&ss, SIGALRM);
 
-  struct timespec ts = { TYPE_MAXIMUM (time_t), 0 };
+    struct timespec ts = { TYPE_MAXIMUM(time_t), 0 };
 
-  TEST_COMPARE (pselect (fds[0] + 1, &rfds, NULL, NULL, &ts, &ss), -1);
-  TEST_VERIFY (errno == EINTR || errno == EOVERFLOW);
+    TEST_COMPARE(pselect(fds[0] + 1, &rfds, NULL, NULL, &ts, &ss), -1);
+    TEST_VERIFY(errno == EINTR || errno == EOVERFLOW);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  test_pselect_basic ();
+    test_pselect_basic();
 
-  test_pselect_large_timeout ();
+    test_pselect_large_timeout();
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

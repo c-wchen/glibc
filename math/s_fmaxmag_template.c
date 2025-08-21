@@ -19,20 +19,21 @@
 #include <math.h>
 
 FLOAT
-M_DECL_FUNC (__fmaxmag) (FLOAT x, FLOAT y)
+M_DECL_FUNC(__fmaxmag)(FLOAT x, FLOAT y)
 {
-  FLOAT ax = M_FABS (x);
-  FLOAT ay = M_FABS (y);
-  if (isgreater (ax, ay))
-    return x;
-  else if (isless (ax, ay))
-    return y;
-  else if (ax == ay)
-    return x > y ? x : y;
-  else if (issignaling (x) || issignaling (y))
-    return x + y;
-  else
-    return isnan (y) ? x : y;
+    FLOAT ax = M_FABS(x);
+    FLOAT ay = M_FABS(y);
+    if (isgreater(ax, ay)) {
+        return x;
+    } else if (isless(ax, ay)) {
+        return y;
+    } else if (ax == ay) {
+        return x > y ? x : y;
+    } else if (issignaling(x) || issignaling(y)) {
+        return x + y;
+    } else {
+        return isnan(y) ? x : y;
+    }
 }
 
-declare_mgen_alias (__fmaxmag, fmaxmag);
+declare_mgen_alias(__fmaxmag, fmaxmag);

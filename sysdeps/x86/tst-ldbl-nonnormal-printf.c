@@ -23,27 +23,25 @@
 
 /* Fill the stack with non-zero values.  This makes a crash in
    snprintf more likely.  */
-static void __attribute_optimization_barrier__
-fill_stack (void)
+static void __attribute_optimization_barrier__ fill_stack(void)
 {
-  char buffer[65536];
-  memset (buffer, 0xc0, sizeof (buffer));
-  asm ("" ::: "memory");
+    char buffer[65536];
+    memset(buffer, 0xc0, sizeof(buffer));
+    asm("" ::: "memory");
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  fill_stack ();
+    fill_stack();
 
-  long double value;
-  memcpy (&value, "\x00\x04\x00\x00\x00\x00\x00\x00\x00\x04", 10);
+    long double value;
+    memcpy(&value, "\x00\x04\x00\x00\x00\x00\x00\x00\x00\x04", 10);
 
-  char buf[30];
-  int ret = snprintf (buf, sizeof (buf), "%Lg", value);
-  TEST_COMPARE (ret, strlen (buf));
-  TEST_COMPARE_STRING (buf, "nan");
-  return 0;
+    char buf[30];
+    int ret = snprintf(buf, sizeof(buf), "%Lg", value);
+    TEST_COMPARE(ret, strlen(buf));
+    TEST_COMPARE_STRING(buf, "nan");
+    return 0;
 }
 
 #include <support/test-driver.c>

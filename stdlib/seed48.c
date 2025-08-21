@@ -18,10 +18,9 @@
 #include <stdlib.h>
 
 
-unsigned short int *
-seed48 (unsigned short int seed16v[3])
+unsigned short int *seed48(unsigned short int seed16v[3])
 {
-  (void) __seed48_r (seed16v, &__libc_drand48_data);
+    (void) __seed48_r(seed16v, &__libc_drand48_data);
 
-  return __libc_drand48_data.__old_x;
+    return __libc_drand48_data.__old_x;
 }

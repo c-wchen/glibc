@@ -18,12 +18,11 @@
 #include <stdlib.h>
 
 
-double
-erand48 (unsigned short int xsubi[3])
+double erand48(unsigned short int xsubi[3])
 {
-  double result;
+    double result;
 
-  (void) __erand48_r (xsubi, &__libc_drand48_data, &result);
+    (void) __erand48_r(xsubi, &__libc_drand48_data, &result);
 
-  return result;
+    return result;
 }

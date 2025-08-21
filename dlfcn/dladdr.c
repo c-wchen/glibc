@@ -20,17 +20,17 @@
 #include <ldsodefs.h>
 #include <shlib-compat.h>
 
-int
-__dladdr (const void *address, Dl_info *info)
+int __dladdr(const void *address, Dl_info *info)
 {
 #ifdef SHARED
-  if (GLRO (dl_dlfcn_hook) != NULL)
-    return GLRO (dl_dlfcn_hook)->dladdr (address, info);
+    if (GLRO(dl_dlfcn_hook) != NULL) {
+        return GLRO(dl_dlfcn_hook)->dladdr(address, info);
+    }
 #endif
-  return _dl_addr (address, info, NULL, NULL);
+    return _dl_addr(address, info, NULL, NULL);
 }
-versioned_symbol (libc, __dladdr, dladdr, GLIBC_2_34);
+versioned_symbol(libc, __dladdr, dladdr, GLIBC_2_34);
 
 #if OTHER_SHLIB_COMPAT  (libdl, GLIBC_2_0, GLIBC_2_34)
-compat_symbol (libdl, __dladdr, dladdr, GLIBC_2_0);
+compat_symbol(libdl, __dladdr, dladdr, GLIBC_2_0);
 #endif

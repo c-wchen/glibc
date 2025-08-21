@@ -25,52 +25,44 @@
 
 static int seen;
 
-static void *
-tf (void *p)
+static void *tf(void *p)
 {
-  ++seen;
-  return NULL;
+    ++seen;
+    return NULL;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  pthread_attr_t attr;
-  pthread_attr_init (&attr);
+    pthread_attr_t attr;
+    pthread_attr_init(&attr);
 
-  int result = 0;
-  int res = pthread_attr_setstacksize (&attr, PTHREAD_STACK_MIN);
-  if (res)
-    {
-      printf ("pthread_attr_setstacksize failed %d\n", res);
-      result = 1;
+    int result = 0;
+    int res = pthread_attr_setstacksize(&attr, PTHREAD_STACK_MIN);
+    if (res) {
+        printf("pthread_attr_setstacksize failed %d\n", res);
+        result = 1;
     }
 
-  /* Create the thread.  */
-  pthread_t th;
-  res = pthread_create (&th, &attr, tf, NULL);
-  if (res)
-    {
-      printf ("pthread_create failed %d\n", res);
-      result = 1;
-    }
-  else
-    {
-      res = pthread_join (th, NULL);
-      if (res)
-	{
-	  printf ("pthread_join failed %d\n", res);
-	  result = 1;
-	}
+    /* Create the thread.  */
+    pthread_t th;
+    res = pthread_create(&th, &attr, tf, NULL);
+    if (res) {
+        printf("pthread_create failed %d\n", res);
+        result = 1;
+    } else {
+        res = pthread_join(th, NULL);
+        if (res) {
+            printf("pthread_join failed %d\n", res);
+            result = 1;
+        }
     }
 
-  if (seen != 1)
-    {
-      printf ("seen %d != 1\n", seen);
-      result = 1;
+    if (seen != 1) {
+        printf("seen %d != 1\n", seen);
+        result = 1;
     }
 
-  return result;
+    return result;
 }
 
 

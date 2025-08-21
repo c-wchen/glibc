@@ -29,32 +29,30 @@
 #include <errno.h>
 /* ANSI explicily requires setting errno to a positive value on failure. */
 
-long int
-_IO_ftell (FILE *fp)
+long int _IO_ftell(FILE *fp)
 {
-  off64_t pos;
-  CHECK_FILE (fp, -1L);
-  _IO_acquire_lock (fp);
-  pos = _IO_seekoff_unlocked (fp, 0, _IO_seek_cur, 0);
-  if (_IO_in_backup (fp) && pos != _IO_pos_BAD)
-    {
-      if (_IO_vtable_offset (fp) != 0 || fp->_mode <= 0)
-	pos -= fp->_IO_save_end - fp->_IO_save_base;
+    off64_t pos;
+    CHECK_FILE(fp, -1L);
+    _IO_acquire_lock(fp);
+    pos = _IO_seekoff_unlocked(fp, 0, _IO_seek_cur, 0);
+    if (_IO_in_backup(fp) && pos != _IO_pos_BAD) {
+        if (_IO_vtable_offset(fp) != 0 || fp->_mode <= 0) {
+            pos -= fp->_IO_save_end - fp->_IO_save_base;
+        }
     }
-  _IO_release_lock (fp);
-  if (pos == _IO_pos_BAD)
-    {
-      if (errno == 0)
-	__set_errno (EIO);
-      return -1L;
+    _IO_release_lock(fp);
+    if (pos == _IO_pos_BAD) {
+        if (errno == 0) {
+            __set_errno(EIO);
+        }
+        return -1L;
     }
-  if ((off64_t) (long int) pos != pos)
-    {
-      __set_errno (EOVERFLOW);
-      return -1L;
+    if ((off64_t)(long int) pos != pos) {
+        __set_errno(EOVERFLOW);
+        return -1L;
     }
-  return pos;
+    return pos;
 }
-libc_hidden_def (_IO_ftell)
+libc_hidden_def(_IO_ftell)
 
-weak_alias (_IO_ftell, ftell)
+weak_alias(_IO_ftell, ftell)

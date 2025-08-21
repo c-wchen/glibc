@@ -21,16 +21,14 @@
 #include <stddef.h>
 
 /* Clear all signals from SET.  */
-int
-sigemptyset (sigset_t *set)
+int sigemptyset(sigset_t *set)
 {
-  if (set == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (set == NULL) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  __sigemptyset (set);
-  return 0;
+    __sigemptyset(set);
+    return 0;
 }
-libc_hidden_def (sigemptyset)
+libc_hidden_def(sigemptyset)

@@ -4,5 +4,5 @@
 #undef declare_mgen_alias
 #define declare_mgen_alias(a, b)
 #include <w_log2_template.c>
-versioned_symbol (libm, __log2, log2, GLIBC_2_29);
-libm_alias_double_other (__log2, log2)
+versioned_symbol(libm, __log2, log2, GLIBC_2_29);
+libm_alias_double_other(__log2, log2)

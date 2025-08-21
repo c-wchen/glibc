@@ -95,27 +95,25 @@
 
    Conceptually, the memory region consists of a current write pointer
    and a limit, beyond which the write pointer cannot move.  */
-struct alloc_buffer
-{
-  /* uintptr_t is used here to simplify the alignment code, and to
-     avoid issues undefined subtractions if the buffer covers more
-     than half of the address space (which would result in differences
-     which could not be represented as a ptrdiff_t value).  */
-  uintptr_t __alloc_buffer_current;
-  uintptr_t __alloc_buffer_end;
+struct alloc_buffer {
+    /* uintptr_t is used here to simplify the alignment code, and to
+       avoid issues undefined subtractions if the buffer covers more
+       than half of the address space (which would result in differences
+       which could not be represented as a ptrdiff_t value).  */
+    uintptr_t __alloc_buffer_current;
+    uintptr_t __alloc_buffer_end;
 };
 
-enum
-  {
+enum {
     /* The value for the __alloc_buffer_current member which marks the
        buffer as invalid (together with a zero-length buffer).  */
     __ALLOC_BUFFER_INVALID_POINTER = 0,
-  };
+};
 
 /* Internal function.  Terminate the process using __libc_fatal.  */
-void __libc_alloc_buffer_create_failure (void *start, size_t size);
+void __libc_alloc_buffer_create_failure(void *start, size_t size);
 #ifndef _ISOMAC
-libc_hidden_proto (__libc_alloc_buffer_create_failure)
+libc_hidden_proto(__libc_alloc_buffer_create_failure)
 #endif
 
 /* Create a new allocation buffer.  The byte range from START to START
@@ -123,66 +121,68 @@ libc_hidden_proto (__libc_alloc_buffer_create_failure)
    objects from that range.  If START is NULL (so that SIZE must be
    0), the buffer is marked as failed immediately.  */
 static inline struct alloc_buffer
-alloc_buffer_create (void *start, size_t size)
+alloc_buffer_create(void *start, size_t size)
 {
-  uintptr_t current = (uintptr_t) start;
-  uintptr_t end = (uintptr_t) start + size;
-  if (end < current)
-    __libc_alloc_buffer_create_failure (start, size);
-  return (struct alloc_buffer) { current, end };
+    uintptr_t current = (uintptr_t) start;
+    uintptr_t end = (uintptr_t) start + size;
+    if (end < current) {
+        __libc_alloc_buffer_create_failure(start, size);
+    }
+    return (struct alloc_buffer) {
+        current, end
+    };
 }
 
 /* Internal function.  See alloc_buffer_allocate below.  */
-struct alloc_buffer __libc_alloc_buffer_allocate (size_t size, void **pptr)
-  __attribute__ ((nonnull (2)));
+struct alloc_buffer __libc_alloc_buffer_allocate(size_t size, void **pptr)
+__attribute__((nonnull(2)));
 #ifndef _ISOMAC
-libc_hidden_proto (__libc_alloc_buffer_allocate)
+libc_hidden_proto(__libc_alloc_buffer_allocate)
 #endif
 
 /* Allocate a buffer of SIZE bytes using malloc.  The returned buffer
    is in a failed state if malloc fails.  *PPTR points to the start of
    the buffer and can be used to free it later, after the returned
    buffer has been freed.  */
-static __always_inline __attribute__ ((nonnull (2)))
-struct alloc_buffer alloc_buffer_allocate (size_t size, void **pptr)
+static __always_inline __attribute__((nonnull(2)))
+struct alloc_buffer alloc_buffer_allocate(size_t size, void **pptr)
 {
-  return __libc_alloc_buffer_allocate (size, pptr);
+    return __libc_alloc_buffer_allocate(size, pptr);
 }
 
 /* Mark the buffer as failed.  */
-static inline void __attribute__ ((nonnull (1)))
-alloc_buffer_mark_failed (struct alloc_buffer *buf)
+static inline void __attribute__((nonnull(1)))
+alloc_buffer_mark_failed(struct alloc_buffer *buf)
 {
-  buf->__alloc_buffer_current = __ALLOC_BUFFER_INVALID_POINTER;
-  buf->__alloc_buffer_end = __ALLOC_BUFFER_INVALID_POINTER;
+    buf->__alloc_buffer_current = __ALLOC_BUFFER_INVALID_POINTER;
+    buf->__alloc_buffer_end = __ALLOC_BUFFER_INVALID_POINTER;
 }
 
 /* Return the remaining number of bytes in the buffer.  */
-static __always_inline __attribute__ ((nonnull (1))) size_t
-alloc_buffer_size (const struct alloc_buffer *buf)
+static __always_inline __attribute__((nonnull(1))) size_t
+alloc_buffer_size(const struct alloc_buffer *buf)
 {
-  return buf->__alloc_buffer_end - buf->__alloc_buffer_current;
+    return buf->__alloc_buffer_end - buf->__alloc_buffer_current;
 }
 
 /* Return true if the buffer has been marked as failed.  */
-static inline bool __attribute__ ((nonnull (1)))
-alloc_buffer_has_failed (const struct alloc_buffer *buf)
+static inline bool __attribute__((nonnull(1)))
+alloc_buffer_has_failed(const struct alloc_buffer *buf)
 {
-  return buf->__alloc_buffer_current == __ALLOC_BUFFER_INVALID_POINTER;
+    return buf->__alloc_buffer_current == __ALLOC_BUFFER_INVALID_POINTER;
 }
 
 /* Add a single byte to the buffer (consuming the space for this
    byte).  Mark the buffer as failed if there is not enough room.  */
-static inline void __attribute__ ((nonnull (1)))
-alloc_buffer_add_byte (struct alloc_buffer *buf, unsigned char b)
+static inline void __attribute__((nonnull(1)))
+alloc_buffer_add_byte(struct alloc_buffer *buf, unsigned char b)
 {
-  if (__glibc_likely (buf->__alloc_buffer_current < buf->__alloc_buffer_end))
-    {
-      *(unsigned char *) buf->__alloc_buffer_current = b;
-      ++buf->__alloc_buffer_current;
+    if (__glibc_likely(buf->__alloc_buffer_current < buf->__alloc_buffer_end)) {
+        *(unsigned char *) buf->__alloc_buffer_current = b;
+        ++buf->__alloc_buffer_current;
+    } else {
+        alloc_buffer_mark_failed(buf);
     }
-  else
-    alloc_buffer_mark_failed (buf);
 }
 
 /* Obtain a pointer to LENGTH bytes in BUF, and consume these bytes.
@@ -190,84 +190,69 @@ alloc_buffer_add_byte (struct alloc_buffer *buf, unsigned char b)
    marked as failed, or if the buffer has already failed.
    (Zero-length allocations from an empty buffer which has not yet
    failed succeed.)  The buffer contents is not modified.  */
-static inline __attribute__ ((nonnull (1))) void *
-alloc_buffer_alloc_bytes (struct alloc_buffer *buf, size_t length)
+static inline __attribute__((nonnull(1))) void *
+alloc_buffer_alloc_bytes(struct alloc_buffer *buf, size_t length)
 {
-  if (length <= alloc_buffer_size (buf))
-    {
-      void *result = (void *) buf->__alloc_buffer_current;
-      buf->__alloc_buffer_current += length;
-      return result;
-    }
-  else
-    {
-      alloc_buffer_mark_failed (buf);
-      return NULL;
+    if (length <= alloc_buffer_size(buf)) {
+        void *result = (void *) buf->__alloc_buffer_current;
+        buf->__alloc_buffer_current += length;
+        return result;
+    } else {
+        alloc_buffer_mark_failed(buf);
+        return NULL;
     }
 }
 
 /* Internal function.  Statically assert that the type size is
    constant and valid.  */
-static __always_inline size_t
-__alloc_buffer_assert_size (size_t size)
+static __always_inline size_t __alloc_buffer_assert_size(size_t size)
 {
-  if (!__builtin_constant_p (size))
-    {
-      __errordecl (error, "type size is not constant");
-      error ();
+    if (!__builtin_constant_p(size)) {
+        __errordecl(error, "type size is not constant");
+        error();
+    } else if (size == 0) {
+        __errordecl(error, "type size is zero");
+        error();
     }
-  else if (size == 0)
-    {
-      __errordecl (error, "type size is zero");
-      error ();
-    }
-  return size;
+    return size;
 }
 
 /* Internal function.  Statically assert that the type alignment is
    constant and valid.  */
-static __always_inline size_t
-__alloc_buffer_assert_align (size_t align)
+static __always_inline size_t __alloc_buffer_assert_align(size_t align)
 {
-  if (!__builtin_constant_p (align))
-    {
-      __errordecl (error, "type alignment is not constant");
-      error ();
+    if (!__builtin_constant_p(align)) {
+        __errordecl(error, "type alignment is not constant");
+        error();
+    } else if (align == 0) {
+        __errordecl(error, "type alignment is zero");
+        error();
+    } else if (!powerof2(align)) {
+        __errordecl(error, "type alignment is not a power of two");
+        error();
     }
-  else if (align == 0)
-    {
-      __errordecl (error, "type alignment is zero");
-      error ();
-    }
-  else if (!powerof2 (align))
-    {
-      __errordecl (error, "type alignment is not a power of two");
-      error ();
-    }
-  return align;
+    return align;
 }
 
 /* Internal function.  Obtain a pointer to an object.  */
-static inline __attribute__ ((nonnull (1))) void *
-__alloc_buffer_alloc (struct alloc_buffer *buf, size_t size, size_t align)
+static inline __attribute__((nonnull(1))) void *
+__alloc_buffer_alloc(struct alloc_buffer *buf, size_t size, size_t align)
 {
-  if (size == 1 && align == 1)
-    return alloc_buffer_alloc_bytes (buf, size);
-
-  uintptr_t current = buf->__alloc_buffer_current;
-  uintptr_t aligned = roundup (current, align);
-  uintptr_t new_current = aligned + size;
-  if (aligned >= current        /* No overflow in align step.  */
-      && new_current >= size    /* No overflow in size computation.  */
-      && new_current <= buf->__alloc_buffer_end) /* Room in buffer.  */
-    {
-      buf->__alloc_buffer_current = new_current;
-      return (void *) aligned;
+    if (size == 1 && align == 1) {
+        return alloc_buffer_alloc_bytes(buf, size);
     }
-  else
-    {
-      alloc_buffer_mark_failed (buf);
-      return NULL;
+
+    uintptr_t current = buf->__alloc_buffer_current;
+    uintptr_t aligned = roundup(current, align);
+    uintptr_t new_current = aligned + size;
+    if (aligned >= current        /* No overflow in align step.  */
+        && new_current >= size    /* No overflow in size computation.  */
+        && new_current <= buf->__alloc_buffer_end) { /* Room in buffer.  */
+        buf->__alloc_buffer_current = new_current;
+        return (void *) aligned;
+    } else {
+        alloc_buffer_mark_failed(buf);
+        return NULL;
     }
 }
 
@@ -275,31 +260,29 @@ __alloc_buffer_alloc (struct alloc_buffer *buf, size_t size, size_t align)
    bytes from the buffer.  Return NULL and mark the buffer as failed
    if there is not enough room in the buffer, or if the buffer has
    failed before.  */
-#define alloc_buffer_alloc(buf, type)				\
-  ((type *) __alloc_buffer_alloc				\
-   (buf, __alloc_buffer_assert_size (sizeof (type)),		\
+#define alloc_buffer_alloc(buf, type)               \
+  ((type *) __alloc_buffer_alloc                \
+   (buf, __alloc_buffer_assert_size (sizeof (type)),        \
     __alloc_buffer_assert_align (__alignof__ (type))))
 
 /* Internal function.  Obtain a pointer to an object which is
    subsequently added.  */
-static inline const __attribute__ ((nonnull (1))) void *
-__alloc_buffer_next (struct alloc_buffer *buf, size_t align)
+static inline const __attribute__((nonnull(1))) void *
+__alloc_buffer_next(struct alloc_buffer *buf, size_t align)
 {
-  if (align == 1)
-    return (const void *) buf->__alloc_buffer_current;
-
-  uintptr_t current = buf->__alloc_buffer_current;
-  uintptr_t aligned = roundup (current, align);
-  if (aligned >= current        /* No overflow in align step.  */
-      && aligned <= buf->__alloc_buffer_end) /* Room in buffer.  */
-    {
-      buf->__alloc_buffer_current = aligned;
-      return (const void *) aligned;
+    if (align == 1) {
+        return (const void *) buf->__alloc_buffer_current;
     }
-  else
-    {
-      alloc_buffer_mark_failed (buf);
-      return NULL;
+
+    uintptr_t current = buf->__alloc_buffer_current;
+    uintptr_t aligned = roundup(current, align);
+    if (aligned >= current        /* No overflow in align step.  */
+        && aligned <= buf->__alloc_buffer_end) { /* Room in buffer.  */
+        buf->__alloc_buffer_current = aligned;
+        return (const void *) aligned;
+    } else {
+        alloc_buffer_mark_failed(buf);
+        return NULL;
     }
 }
 
@@ -330,17 +313,17 @@ __alloc_buffer_next (struct alloc_buffer *buf, size_t align)
 
    This manual length checking can easily introduce errors, so this
    coding style is not recommended.  */
-#define alloc_buffer_next(buf, type)				\
-  ((type *) __alloc_buffer_next					\
+#define alloc_buffer_next(buf, type)                \
+  ((type *) __alloc_buffer_next                 \
    (buf, __alloc_buffer_assert_align (__alignof__ (type))))
 
 /* Internal function.  Allocate an array.  */
-void * __libc_alloc_buffer_alloc_array (struct alloc_buffer *buf,
-					size_t size, size_t align,
-					size_t count)
-  __attribute__ ((nonnull (1)));
+void *__libc_alloc_buffer_alloc_array(struct alloc_buffer *buf,
+                                      size_t size, size_t align,
+                                      size_t count)
+__attribute__((nonnull(1)));
 #ifndef _ISOMAC
-libc_hidden_proto (__libc_alloc_buffer_alloc_array)
+libc_hidden_proto(__libc_alloc_buffer_alloc_array)
 #endif
 
 /* Obtain a TYPE * pointer to an array of COUNT objects in BUF of
@@ -349,47 +332,47 @@ libc_hidden_proto (__libc_alloc_buffer_alloc_array)
    or if the buffer has failed before.  (Zero-length allocations from
    an empty buffer which has not yet failed succeed.)  */
 #define alloc_buffer_alloc_array(buf, type, count)       \
-  ((type *) __libc_alloc_buffer_alloc_array		 \
-   (buf, __alloc_buffer_assert_size (sizeof (type)),	 \
-    __alloc_buffer_assert_align (__alignof__ (type)),	 \
+  ((type *) __libc_alloc_buffer_alloc_array      \
+   (buf, __alloc_buffer_assert_size (sizeof (type)),     \
+    __alloc_buffer_assert_align (__alignof__ (type)),    \
     count))
 
 /* Internal function.  See alloc_buffer_copy_bytes below.  */
-struct alloc_buffer __libc_alloc_buffer_copy_bytes (struct alloc_buffer,
-						    const void *, size_t)
-  __attribute__ ((nonnull (2)));
+struct alloc_buffer __libc_alloc_buffer_copy_bytes(struct alloc_buffer,
+        const void *, size_t)
+__attribute__((nonnull(2)));
 #ifndef _ISOMAC
-libc_hidden_proto (__libc_alloc_buffer_copy_bytes)
+libc_hidden_proto(__libc_alloc_buffer_copy_bytes)
 #endif
 
 /* Copy SIZE bytes starting at SRC into the buffer.  If there is not
    enough room in the buffer, the buffer is marked as failed.  No
    alignment of the buffer is performed.  */
-static inline __attribute__ ((nonnull (1, 2))) void
-alloc_buffer_copy_bytes (struct alloc_buffer *buf, const void *src, size_t size)
+static inline __attribute__((nonnull(1, 2))) void
+alloc_buffer_copy_bytes(struct alloc_buffer *buf, const void *src, size_t size)
 {
-  *buf = __libc_alloc_buffer_copy_bytes (*buf, src, size);
+    *buf = __libc_alloc_buffer_copy_bytes(*buf, src, size);
 }
 
 /* Internal function.  See alloc_buffer_copy_string below.  */
-struct alloc_buffer __libc_alloc_buffer_copy_string (struct alloc_buffer,
-						     const char *)
-  __attribute__ ((nonnull (2)));
+struct alloc_buffer __libc_alloc_buffer_copy_string(struct alloc_buffer,
+        const char *) __attribute__((nonnull(2)));
 #ifndef _ISOMAC
-libc_hidden_proto (__libc_alloc_buffer_copy_string)
+libc_hidden_proto(__libc_alloc_buffer_copy_string)
 #endif
 
 /* Copy the string at SRC into the buffer, including its null
    terminator.  If there is not enough room in the buffer, the buffer
    is marked as failed.  Return a pointer to the string.  */
-static inline __attribute__ ((nonnull (1, 2))) char *
-alloc_buffer_copy_string (struct alloc_buffer *buf, const char *src)
+static inline __attribute__((nonnull(1, 2))) char *
+alloc_buffer_copy_string(struct alloc_buffer *buf, const char *src)
 {
-  char *result = (char *) buf->__alloc_buffer_current;
-  *buf = __libc_alloc_buffer_copy_string (*buf, src);
-  if (alloc_buffer_has_failed (buf))
-    result = NULL;
-  return result;
+    char *result = (char *) buf->__alloc_buffer_current;
+    *buf = __libc_alloc_buffer_copy_string(*buf, src);
+    if (alloc_buffer_has_failed(buf)) {
+        result = NULL;
+    }
+    return result;
 }
 
 #endif /* _ALLOC_BUFFER_H */

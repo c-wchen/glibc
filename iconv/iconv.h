@@ -16,7 +16,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _ICONV_H
-#define _ICONV_H	1
+#define _ICONV_H    1
 
 #include <features.h>
 #define __need_size_t
@@ -33,23 +33,23 @@ typedef void *iconv_t;
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern int iconv_close (iconv_t __cd);
+extern int iconv_close(iconv_t __cd);
 
 /* Allocate descriptor for code conversion from codeset FROMCODE to
    codeset TOCODE.
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern iconv_t iconv_open (const char *__tocode, const char *__fromcode)
-	__attribute_malloc__ __attr_dealloc (iconv_close, 1);
+extern iconv_t iconv_open(const char *__tocode, const char *__fromcode)
+__attribute_malloc__ __attr_dealloc(iconv_close, 1);
 
 /* Convert at most *INBYTESLEFT bytes from *INBUF according to the
    code conversion algorithm specified by CD and place up to
    *OUTBYTESLEFT bytes in buffer at *OUTBUF.  */
-extern size_t iconv (iconv_t __cd, char **__restrict __inbuf,
-		     size_t *__restrict __inbytesleft,
-		     char **__restrict __outbuf,
-		     size_t *__restrict __outbytesleft);
+extern size_t iconv(iconv_t __cd, char **__restrict __inbuf,
+                    size_t *__restrict __inbytesleft,
+                    char **__restrict __outbuf,
+                    size_t *__restrict __outbytesleft);
 
 __END_DECLS
 

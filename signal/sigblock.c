@@ -19,13 +19,12 @@
 #include <signal.h>
 
 /* Block signals in MASK, returning the old mask.  */
-int
-__sigblock (int mask)
+int __sigblock(int mask)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (sigblock)
+stub_warning(sigblock)
 
-libc_hidden_def (__sigblock)
-weak_alias (__sigblock, sigblock)
+libc_hidden_def(__sigblock)
+weak_alias(__sigblock, sigblock)

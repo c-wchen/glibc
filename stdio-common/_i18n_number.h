@@ -23,89 +23,88 @@
 #include "../locale/outdigits.h"
 #include "../locale/outdigitswc.h"
 
-static CHAR_T *
-_i18n_number_rewrite (CHAR_T *w, CHAR_T *rear_ptr, CHAR_T *end)
+static CHAR_T *_i18n_number_rewrite(CHAR_T *w, CHAR_T *rear_ptr, CHAR_T *end)
 {
 #ifdef COMPILE_WPRINTF
 # define decimal NULL
 # define thousands NULL
 #else
-  char decimal[MB_LEN_MAX + 1];
-  char thousands[MB_LEN_MAX + 1];
+    char decimal[MB_LEN_MAX + 1];
+    char thousands[MB_LEN_MAX + 1];
 #endif
 
-  /* "to_outpunct" is a map from ASCII decimal point and thousands-sep
-     to their equivalent in locale. This is defined for locales which
-     use extra decimal point and thousands-sep.  */
-  wctrans_t map = __wctrans ("to_outpunct");
-  wint_t wdecimal = __towctrans (L'.', map);
-  wint_t wthousands = __towctrans (L',', map);
+    /* "to_outpunct" is a map from ASCII decimal point and thousands-sep
+       to their equivalent in locale. This is defined for locales which
+       use extra decimal point and thousands-sep.  */
+    wctrans_t map = __wctrans("to_outpunct");
+    wint_t wdecimal = __towctrans(L'.', map);
+    wint_t wthousands = __towctrans(L',', map);
 
 #ifndef COMPILE_WPRINTF
-  if (__glibc_unlikely (map != NULL))
-    {
-      mbstate_t state;
-      memset (&state, '\0', sizeof (state));
+    if (__glibc_unlikely(map != NULL)) {
+        mbstate_t state;
+        memset(&state, '\0', sizeof(state));
 
-      size_t n = __wcrtomb (decimal, wdecimal, &state);
-      if (n == (size_t) -1)
-	memcpy (decimal, ".", 2);
-      else
-	decimal[n] = '\0';
+        size_t n = __wcrtomb(decimal, wdecimal, &state);
+        if (n == (size_t) -1) {
+            memcpy(decimal, ".", 2);
+        } else {
+            decimal[n] = '\0';
+        }
 
-      memset (&state, '\0', sizeof (state));
+        memset(&state, '\0', sizeof(state));
 
-      n = __wcrtomb (thousands, wthousands, &state);
-      if (n == (size_t) -1)
-	memcpy (thousands, ",", 2);
-      else
-	thousands[n] = '\0';
+        n = __wcrtomb(thousands, wthousands, &state);
+        if (n == (size_t) -1) {
+            memcpy(thousands, ",", 2);
+        } else {
+            thousands[n] = '\0';
+        }
     }
 #endif
 
-  /* Copy existing string so that nothing gets overwritten.  */
-  CHAR_T *src;
-  struct scratch_buffer buffer;
-  scratch_buffer_init (&buffer);
-  if (!scratch_buffer_set_array_size (&buffer, rear_ptr - w, sizeof (CHAR_T)))
-    /* If we cannot allocate the memory don't rewrite the string.
-       It is better than nothing.  */
-    return w;
-  src = buffer.data;
-
-  CHAR_T *s = (CHAR_T *) __mempcpy (src, w,
-				    (rear_ptr - w) * sizeof (CHAR_T));
-
-  w = end;
-
-  /* Process all characters in the string.  */
-  while (--s >= src)
+    /* Copy existing string so that nothing gets overwritten.  */
+    CHAR_T *src;
+    struct scratch_buffer buffer;
+    scratch_buffer_init(&buffer);
+    if (!scratch_buffer_set_array_size(&buffer, rear_ptr - w, sizeof(CHAR_T)))
+        /* If we cannot allocate the memory don't rewrite the string.
+           It is better than nothing.  */
     {
-      if (*s >= '0' && *s <= '9')
-	{
-	  if (sizeof (CHAR_T) == 1)
-	    w = (CHAR_T *) outdigit_value ((char *) w, *s - '0');
-	  else
-	    *--w = (CHAR_T) outdigitwc_value (*s - '0');
-	}
-      else if (__builtin_expect (map == NULL, 1) || (*s != '.' && *s != ','))
-	*--w = *s;
-      else
-	{
-	  if (sizeof (CHAR_T) == 1)
-	    {
-	      const char *outpunct = *s == '.' ? decimal : thousands;
-	      size_t dlen = strlen (outpunct);
+        return w;
+    }
+    src = buffer.data;
 
-	      w -= dlen;
-	      while (dlen-- > 0)
-		w[dlen] = outpunct[dlen];
-	    }
-	  else
-	    *--w = *s == '.' ? (CHAR_T) wdecimal : (CHAR_T) wthousands;
-	}
+    CHAR_T *s = (CHAR_T *) __mempcpy(src, w,
+                                     (rear_ptr - w) * sizeof(CHAR_T));
+
+    w = end;
+
+    /* Process all characters in the string.  */
+    while (--s >= src) {
+        if (*s >= '0' && *s <= '9') {
+            if (sizeof(CHAR_T) == 1) {
+                w = (CHAR_T *) outdigit_value((char *) w, *s - '0');
+            } else {
+                *--w = (CHAR_T) outdigitwc_value(*s - '0');
+            }
+        } else if (__builtin_expect(map == NULL, 1) || (*s != '.' && *s != ',')) {
+            *--w = *s;
+        } else {
+            if (sizeof(CHAR_T) == 1) {
+                const char *outpunct = *s == '.' ? decimal : thousands;
+                size_t dlen = strlen(outpunct);
+
+                w -= dlen;
+                while (dlen-- > 0) {
+                    w[dlen] = outpunct[dlen];
+                }
+            } else {
+                *--w = *s == '.' ? (CHAR_T) wdecimal : (CHAR_T) wthousands;
+            }
+        }
     }
 
-  scratch_buffer_free (&buffer);
-  return w;
+    scratch_buffer_free(&buffer);
+    return w;
 }

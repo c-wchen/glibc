@@ -24,58 +24,56 @@
 #ifndef INLINE_HASHTAB_H
 # define INLINE_HASHTAB_H 1
 
-struct hashtab
-{
-  /* Table itself.  */
-  void **entries;
+struct hashtab {
+    /* Table itself.  */
+    void **entries;
 
-  /* Current size (in entries) of the hash table */
-  size_t size;
+    /* Current size (in entries) of the hash table */
+    size_t size;
 
-  /* Current number of elements.  */
-  size_t n_elements;
+    /* Current number of elements.  */
+    size_t n_elements;
 
-  /* Free function for the entries array.  This may vary depending on
-     how early the array was allocated.  If it is NULL, then the array
-     can't be freed.  */
-  void (*free) (void *ptr);
+    /* Free function for the entries array.  This may vary depending on
+       how early the array was allocated.  If it is NULL, then the array
+       can't be freed.  */
+    void (*free)(void *ptr);
 };
 
-inline static struct hashtab *
-htab_create (void)
+inline static struct hashtab *htab_create(void)
 {
-  struct hashtab *ht = malloc (sizeof (struct hashtab));
+    struct hashtab *ht = malloc(sizeof(struct hashtab));
 
-  if (! ht)
-    return NULL;
-  ht->size = 3;
-  ht->entries = malloc (sizeof (void *) * ht->size);
-  ht->free = __rtld_free;
-  if (! ht->entries)
-    {
-      free (ht);
-      return NULL;
+    if (! ht) {
+        return NULL;
+    }
+    ht->size = 3;
+    ht->entries = malloc(sizeof(void *) * ht->size);
+    ht->free = __rtld_free;
+    if (! ht->entries) {
+        free(ht);
+        return NULL;
     }
 
-  ht->n_elements = 0;
+    ht->n_elements = 0;
 
-  memset (ht->entries, 0, sizeof (void *) * ht->size);
+    memset(ht->entries, 0, sizeof(void *) * ht->size);
 
-  return ht;
+    return ht;
 }
 
 /* This is only called from _dl_unmap, so it's safe to call
    free().  */
-inline static void
-htab_delete (struct hashtab *htab)
+inline static void htab_delete(struct hashtab *htab)
 {
-  int i;
+    int i;
 
-  for (i = htab->size - 1; i >= 0; i--)
-    free (htab->entries[i]);
+    for (i = htab->size - 1; i >= 0; i--) {
+        free(htab->entries[i]);
+    }
 
-  htab->free (htab->entries);
-  free (htab);
+    htab->free(htab->entries);
+    free(htab);
 }
 
 /* Similar to htab_find_slot, but without several unwanted side effects:
@@ -85,27 +83,28 @@ htab_delete (struct hashtab *htab)
    This function also assumes there are no deleted entries in the table.
    HASH is the hash value for the element to be inserted.  */
 
-inline static void **
-find_empty_slot_for_expand (struct hashtab *htab, int hash)
+inline static void **find_empty_slot_for_expand(struct hashtab *htab, int hash)
 {
-  size_t size = htab->size;
-  unsigned int index = hash % size;
-  void **slot = htab->entries + index;
-  int hash2;
+    size_t size = htab->size;
+    unsigned int index = hash % size;
+    void **slot = htab->entries + index;
+    int hash2;
 
-  if (! *slot)
-    return slot;
+    if (! *slot) {
+        return slot;
+    }
 
-  hash2 = 1 + hash % (size - 2);
-  for (;;)
-    {
-      index += hash2;
-      if (index >= size)
-	index -= size;
+    hash2 = 1 + hash % (size - 2);
+    for (;;) {
+        index += hash2;
+        if (index >= size) {
+            index -= size;
+        }
 
-      slot = htab->entries + index;
-      if (! *slot)
-	return slot;
+        slot = htab->entries + index;
+        if (! *slot) {
+            return slot;
+        }
     }
 }
 
@@ -117,58 +116,57 @@ find_empty_slot_for_expand (struct hashtab *htab, int hash)
    this function will return zero, indicating that the table could not be
    expanded.  If all goes well, it will return a non-zero value.  */
 
-inline static int
-htab_expand (struct hashtab *htab, int (*hash_fn) (void *))
+inline static int htab_expand(struct hashtab *htab, int (*hash_fn)(void *))
 {
-  void **oentries;
-  void **olimit;
-  void **p;
-  void **nentries;
-  size_t nsize;
+    void **oentries;
+    void **olimit;
+    void **p;
+    void **nentries;
+    size_t nsize;
 
-  oentries = htab->entries;
-  olimit = oentries + htab->size;
+    oentries = htab->entries;
+    olimit = oentries + htab->size;
 
-  /* Resize only when table after removal of unused elements is either
-     too full or too empty.  */
-  if (htab->n_elements * 2 > htab->size)
-    nsize = _dl_higher_prime_number (htab->n_elements * 2);
-  else
-    nsize = htab->size;
-
-  nentries = calloc (sizeof (void *), nsize);
-  if (nentries == NULL)
-    return 0;
-  htab->entries = nentries;
-  htab->size = nsize;
-
-  p = oentries;
-  do
-    {
-      if (*p)
-	*find_empty_slot_for_expand (htab, hash_fn (*p))
-	  = *p;
-
-      p++;
+    /* Resize only when table after removal of unused elements is either
+       too full or too empty.  */
+    if (htab->n_elements * 2 > htab->size) {
+        nsize = _dl_higher_prime_number(htab->n_elements * 2);
+    } else {
+        nsize = htab->size;
     }
-  while (p < olimit);
 
-  /* Without recording the free corresponding to the malloc used to
-     allocate the table, we couldn't tell whether this was allocated
-     by the malloc() built into ld.so or the one in the main
-     executable or libc.  Calling free() for something that was
-     allocated by the early malloc(), rather than the final run-time
-     malloc() could do Very Bad Things (TM).  We will waste memory
-     allocated early as long as there's no corresponding free(), but
-     this isn't so much memory as to be significant.  */
+    nentries = calloc(sizeof(void *), nsize);
+    if (nentries == NULL) {
+        return 0;
+    }
+    htab->entries = nentries;
+    htab->size = nsize;
 
-  htab->free (oentries);
+    p = oentries;
+    do {
+        if (*p)
+            *find_empty_slot_for_expand(htab, hash_fn(*p))
+                = *p;
 
-  /* Use the free() corresponding to the malloc() above to free this
-     up.  */
-  htab->free = __rtld_free;
+        p++;
+    } while (p < olimit);
 
-  return 1;
+    /* Without recording the free corresponding to the malloc used to
+       allocate the table, we couldn't tell whether this was allocated
+       by the malloc() built into ld.so or the one in the main
+       executable or libc.  Calling free() for something that was
+       allocated by the early malloc(), rather than the final run-time
+       malloc() could do Very Bad Things (TM).  We will waste memory
+       allocated early as long as there's no corresponding free(), but
+       this isn't so much memory as to be significant.  */
+
+    htab->free(oentries);
+
+    /* Use the free() corresponding to the malloc() above to free this
+       up.  */
+    htab->free = __rtld_free;
+
+    return 1;
 }
 
 /* This function searches for a hash table slot containing an entry
@@ -179,50 +177,53 @@ htab_expand (struct hashtab *htab, int (*hash_fn) (void *))
    When inserting an entry, NULL may be returned if memory allocation
    fails.  */
 
-inline static void **
-htab_find_slot (struct hashtab *htab, void *ptr, int insert,
-		int (*hash_fn)(void *), int (*eq_fn)(void *, void *))
+inline static void **htab_find_slot(struct hashtab *htab, void *ptr, int insert,
+                                    int (*hash_fn)(void *), int (*eq_fn)(void *, void *))
 {
-  unsigned int index;
-  int hash, hash2;
-  size_t size;
-  void **entry;
+    unsigned int index;
+    int hash, hash2;
+    size_t size;
+    void **entry;
 
-  if (htab->size * 3 <= htab->n_elements * 4
-      && htab_expand (htab, hash_fn) == 0)
-    return NULL;
-
-  hash = hash_fn (ptr);
-
-  size = htab->size;
-  index = hash % size;
-
-  entry = &htab->entries[index];
-  if (!*entry)
-    goto empty_entry;
-  else if (eq_fn (*entry, ptr))
-    return entry;
-
-  hash2 = 1 + hash % (size - 2);
-  for (;;)
-    {
-      index += hash2;
-      if (index >= size)
-	index -= size;
-
-      entry = &htab->entries[index];
-      if (!*entry)
-	goto empty_entry;
-      else if (eq_fn (*entry, ptr))
-	return entry;
+    if (htab->size * 3 <= htab->n_elements * 4
+        && htab_expand(htab, hash_fn) == 0) {
+        return NULL;
     }
 
- empty_entry:
-  if (!insert)
-    return NULL;
+    hash = hash_fn(ptr);
 
-  htab->n_elements++;
-  return entry;
+    size = htab->size;
+    index = hash % size;
+
+    entry = &htab->entries[index];
+    if (!*entry) {
+        goto empty_entry;
+    } else if (eq_fn(*entry, ptr)) {
+        return entry;
+    }
+
+    hash2 = 1 + hash % (size - 2);
+    for (;;) {
+        index += hash2;
+        if (index >= size) {
+            index -= size;
+        }
+
+        entry = &htab->entries[index];
+        if (!*entry) {
+            goto empty_entry;
+        } else if (eq_fn(*entry, ptr)) {
+            return entry;
+        }
+    }
+
+empty_entry:
+    if (!insert) {
+        return NULL;
+    }
+
+    htab->n_elements++;
+    return entry;
 }
 
 #endif /* INLINE_HASHTAB_H */

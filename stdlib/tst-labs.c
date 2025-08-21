@@ -23,30 +23,34 @@
 
 #define LARGE_PRIME 49999
 
-static int do_test (void)
+static int do_test(void)
 {
-  long int i;
+    long int i;
 
-  TEST_COMPARE (labs (LONG_MAX), LONG_MAX);
-  TEST_COMPARE (labs (LONG_MIN + 1), LONG_MAX);
-  TEST_COMPARE (labs (-1), 1);
-  TEST_COMPARE (labs (0), 0);
-  TEST_COMPARE (labs (1), 1);
+    TEST_COMPARE(labs(LONG_MAX), LONG_MAX);
+    TEST_COMPARE(labs(LONG_MIN + 1), LONG_MAX);
+    TEST_COMPARE(labs(-1), 1);
+    TEST_COMPARE(labs(0), 0);
+    TEST_COMPARE(labs(1), 1);
 
-  for (i = LONG_MIN + 1; i < LONG_MIN + INT_MAX; i += LARGE_PRIME)
-    TEST_COMPARE (labs (i), -i);
+    for (i = LONG_MIN + 1; i < LONG_MIN + INT_MAX; i += LARGE_PRIME) {
+        TEST_COMPARE(labs(i), -i);
+    }
 
-  for (i = LONG_MAX - INT_MAX; i < LONG_MAX - LARGE_PRIME;
-       i += LARGE_PRIME)
-    TEST_COMPARE (labs (i), i);
+    for (i = LONG_MAX - INT_MAX; i < LONG_MAX - LARGE_PRIME;
+         i += LARGE_PRIME) {
+        TEST_COMPARE(labs(i), i);
+    }
 
-  for (i = INT_MIN + 1; i < 0; i += LARGE_PRIME)
-    TEST_COMPARE (labs (i), -i);
+    for (i = INT_MIN + 1; i < 0; i += LARGE_PRIME) {
+        TEST_COMPARE(labs(i), -i);
+    }
 
-  for (i = 0; i <= INT_MAX - LARGE_PRIME; i += LARGE_PRIME)
-    TEST_COMPARE (labs (i), i);
+    for (i = 0; i <= INT_MAX - LARGE_PRIME; i += LARGE_PRIME) {
+        TEST_COMPARE(labs(i), i);
+    }
 
-  return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }
 
 #include <support/test-driver.c>

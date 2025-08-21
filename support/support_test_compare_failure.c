@@ -22,46 +22,48 @@
 #include <string.h>
 #include <support/check.h>
 
-static void
-report (const char *which, const char *expr, long long value, int positive,
-        int size)
+static void report(const char *which, const char *expr, long long value, int positive,
+                   int size)
 {
-  printf ("  %s: ", which);
-  if (positive)
-    printf ("%llu", (unsigned long long) value);
-  else
-    printf ("%lld", value);
-  unsigned long long mask
-    = (~0ULL) >> (8 * (sizeof (unsigned long long) - size));
-  const char *errno_constant = NULL;
-  if (strcmp (expr, "errno") == 0
-      && positive && (unsigned long long int) value <= INT_MAX)
-    errno_constant = strerrorname_np (value);
-  printf (" (0x%llx", (unsigned long long) value & mask);
-  if (errno_constant != NULL)
-    printf (", %s", errno_constant);
-  printf ("); from: %s\n", expr);
+    printf("  %s: ", which);
+    if (positive) {
+        printf("%llu", (unsigned long long) value);
+    } else {
+        printf("%lld", value);
+    }
+    unsigned long long mask
+        = (~0ULL) >> (8 * (sizeof(unsigned long long) - size));
+    const char *errno_constant = NULL;
+    if (strcmp(expr, "errno") == 0
+        && positive && (unsigned long long int) value <= INT_MAX) {
+        errno_constant = strerrorname_np(value);
+    }
+    printf(" (0x%llx", (unsigned long long) value & mask);
+    if (errno_constant != NULL) {
+        printf(", %s", errno_constant);
+    }
+    printf("); from: %s\n", expr);
 }
 
-void
-support_test_compare_failure (const char *file, int line,
-                              const char *left_expr,
-                              long long left_value,
-                              int left_positive,
-                              int left_size,
-                              const char *right_expr,
-                              long long right_value,
-                              int right_positive,
-                              int right_size)
+void support_test_compare_failure(const char *file, int line,
+                                  const char *left_expr,
+                                  long long left_value,
+                                  int left_positive,
+                                  int left_size,
+                                  const char *right_expr,
+                                  long long right_value,
+                                  int right_positive,
+                                  int right_size)
 {
-  int saved_errno = errno;
-  support_record_failure ();
-  if (left_size != right_size)
-    printf ("%s:%d: numeric comparison failure (widths %d and %d)\n",
-            file, line, left_size * 8, right_size * 8);
-  else
-    printf ("%s:%d: numeric comparison failure\n", file, line);
-  report (" left", left_expr, left_value, left_positive, left_size);
-  report ("right", right_expr, right_value, right_positive, right_size);
-  errno = saved_errno;
+    int saved_errno = errno;
+    support_record_failure();
+    if (left_size != right_size)
+        printf("%s:%d: numeric comparison failure (widths %d and %d)\n",
+               file, line, left_size * 8, right_size * 8);
+    else {
+        printf("%s:%d: numeric comparison failure\n", file, line);
+    }
+    report(" left", left_expr, left_value, left_positive, left_size);
+    report("right", right_expr, right_value, right_positive, right_size);
+    errno = saved_errno;
 }

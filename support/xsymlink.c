@@ -21,9 +21,9 @@
 
 #include <unistd.h>
 
-void
-xsymlink (const char *target, const char *linkpath)
+void xsymlink(const char *target, const char *linkpath)
 {
-  if (symlink (target, linkpath) < 0)
-    FAIL_EXIT1 ("symlink (\"%s\", \"%s\")", target, linkpath);
+    if (symlink(target, linkpath) < 0) {
+        FAIL_EXIT1("symlink (\"%s\", \"%s\")", target, linkpath);
+    }
 }

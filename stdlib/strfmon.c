@@ -21,18 +21,17 @@
 #include <locale/localeinfo.h>
 #include <math_ldbl_opt.h>
 
-ssize_t
-__strfmon (char *s, size_t maxsize, const char *format, ...)
+ssize_t __strfmon(char *s, size_t maxsize, const char *format, ...)
 {
-  va_list ap;
+    va_list ap;
 
-  va_start (ap, format);
+    va_start(ap, format);
 
-  ssize_t res = __vstrfmon_l_internal (s, maxsize, _NL_CURRENT_LOCALE,
-				       format, ap, 0);
+    ssize_t res = __vstrfmon_l_internal(s, maxsize, _NL_CURRENT_LOCALE,
+                                        format, ap, 0);
 
-  va_end (ap);
+    va_end(ap);
 
-  return res;
+    return res;
 }
-ldbl_strong_alias (__strfmon, strfmon)
+ldbl_strong_alias(__strfmon, strfmon)

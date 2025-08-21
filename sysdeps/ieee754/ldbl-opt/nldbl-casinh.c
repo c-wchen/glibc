@@ -2,8 +2,7 @@
 #include <complex.h>
 
 double _Complex
-attribute_hidden
-casinhl (double _Complex x)
+attribute_hidden casinhl(double _Complex x)
 {
-  return casinh (x);
+    return casinh(x);
 }

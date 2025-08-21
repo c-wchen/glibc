@@ -21,9 +21,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void
-oom_error (const char *function, size_t size)
+void oom_error(const char *function, size_t size)
 {
-  printf ("%s: unable to allocate %zu bytes: %m\n", function, size);
-  exit (1);
+    printf("%s: unable to allocate %zu bytes: %m\n", function, size);
+    exit(1);
 }

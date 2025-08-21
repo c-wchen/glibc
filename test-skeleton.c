@@ -46,26 +46,24 @@
 #include <support/temp_file.h>
 
 /* TEST_FUNCTION is no longer used. */
-static int
-legacy_test_function (int argc __attribute__ ((unused)),
-		      char **argv __attribute__ ((unused)))
+static int legacy_test_function(int argc __attribute__((unused)),
+                                char **argv __attribute__((unused)))
 {
 #ifdef TEST_FUNCTION
-  return TEST_FUNCTION;
+    return TEST_FUNCTION;
 # undef TEST_FUNCTION
 #else
-  return do_test (argc, argv);
+    return do_test(argc, argv);
 #endif
 }
 #define TEST_FUNCTION_ARGV legacy_test_function
 
 /* PREPARE is a function name in the new skeleton.  */
 #ifdef PREPARE
-static void
-legacy_prepare_function  (int argc __attribute__ ((unused)),
-			  char **argv __attribute__ ((unused)))
+static void legacy_prepare_function(int argc __attribute__((unused)),
+                                    char **argv __attribute__((unused)))
 {
-  PREPARE (argc, argv);
+    PREPARE(argc, argv);
 }
 # undef PREPARE
 # define PREPARE legacy_prepare_function
@@ -73,10 +71,9 @@ legacy_prepare_function  (int argc __attribute__ ((unused)),
 
 /* CLEANUP_HANDLER is a function name in the new skeleton.  */
 #ifdef CLEANUP_HANDLER
-static void
-legacy_cleanup_handler_function  (void)
+static void legacy_cleanup_handler_function(void)
 {
-  CLEANUP_HANDLER;
+    CLEANUP_HANDLER;
 }
 # undef CLEANUP_HANDLER
 # define CLEANUP_HANDLER legacy_cleanup_handler_function
@@ -84,12 +81,10 @@ legacy_cleanup_handler_function  (void)
 
 /* CMDLINE_PROCESS is a function name in the new skeleton.  */
 #ifdef CMDLINE_PROCESS
-static void
-legacy_cmdline_process_function (int c)
+static void legacy_cmdline_process_function(int c)
 {
-  switch (c)
-    {
-      CMDLINE_PROCESS
+    switch (c) {
+            CMDLINE_PROCESS
     }
 }
 # undef CMDLINE_PROCESS
@@ -103,4 +98,4 @@ legacy_cmdline_process_function (int c)
    included before this file.  */
 #ifdef _PTHREAD_H
 # include <support/xthread.h>
-#endif	/* _PTHREAD_H */
+#endif  /* _PTHREAD_H */

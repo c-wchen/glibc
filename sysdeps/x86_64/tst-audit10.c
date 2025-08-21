@@ -18,39 +18,40 @@
 
 #include <cpuid.h>
 
-int tst_audit10_aux (void);
+int tst_audit10_aux(void);
 
-static int
-avx512_enabled (void)
+static int avx512_enabled(void)
 {
 #ifdef bit_AVX512F
-  unsigned int eax, ebx, ecx, edx;
+    unsigned int eax, ebx, ecx, edx;
 
-  if (__get_cpuid (1, &eax, &ebx, &ecx, &edx) == 0
-      || (ecx & (bit_AVX | bit_OSXSAVE)) != (bit_AVX | bit_OSXSAVE))
-    return 0;
+    if (__get_cpuid(1, &eax, &ebx, &ecx, &edx) == 0
+        || (ecx & (bit_AVX | bit_OSXSAVE)) != (bit_AVX | bit_OSXSAVE)) {
+        return 0;
+    }
 
-  __cpuid_count (7, 0, eax, ebx, ecx, edx);
-  if (!(ebx & bit_AVX512F))
-    return 0;
+    __cpuid_count(7, 0, eax, ebx, ecx, edx);
+    if (!(ebx & bit_AVX512F)) {
+        return 0;
+    }
 
-  asm ("xgetbv" : "=a" (eax), "=d" (edx) : "c" (0));
+    asm("xgetbv" : "=a"(eax), "=d"(edx) : "c"(0));
 
-  /* Verify that ZMM, YMM and XMM states are enabled.  */
-  return (eax & 0xe6) == 0xe6;
+    /* Verify that ZMM, YMM and XMM states are enabled.  */
+    return (eax & 0xe6) == 0xe6;
 #else
-  return 0;
+    return 0;
 #endif
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* Run AVX512 test only if AVX512 is supported.  */
-  if (avx512_enabled ())
-    return tst_audit10_aux ();
-  else
-    return 77;
+    /* Run AVX512 test only if AVX512 is supported.  */
+    if (avx512_enabled()) {
+        return tst_audit10_aux();
+    } else {
+        return 77;
+    }
 }
 
 #define TEST_FUNCTION do_test ()

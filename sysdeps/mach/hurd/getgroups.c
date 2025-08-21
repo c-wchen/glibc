@@ -21,53 +21,52 @@
 #include <hurd/id.h>
 #include <string.h>
 
-int
-__getgroups (int n, gid_t *gidset)
+int __getgroups(int n, gid_t *gidset)
 {
-  error_t err;
-  int ngids;
-  void *crit;
+    error_t err;
+    int ngids;
+    void *crit;
 
-  if (n < 0)
-    return __hurd_fail (EINVAL);
+    if (n < 0) {
+        return __hurd_fail(EINVAL);
+    }
 
 retry:
-  crit = _hurd_critical_section_lock ();
-  __mutex_lock (&_hurd_id.lock);
+    crit = _hurd_critical_section_lock();
+    __mutex_lock(&_hurd_id.lock);
 
-  if (err = _hurd_check_ids ())
-    {
-      __mutex_unlock (&_hurd_id.lock);
-      _hurd_critical_section_unlock (crit);
-      if (err == EINTR)
-	/* Got a signal while inside an RPC of the critical section, retry again */
-	goto retry;
-      return __hurd_fail (err);
+    if (err = _hurd_check_ids()) {
+        __mutex_unlock(&_hurd_id.lock);
+        _hurd_critical_section_unlock(crit);
+        if (err == EINTR)
+            /* Got a signal while inside an RPC of the critical section, retry again */
+        {
+            goto retry;
+        }
+        return __hurd_fail(err);
     }
 
-  ngids = _hurd_id.gen.ngids;
+    ngids = _hurd_id.gen.ngids;
 
-  if (n != 0)
-    {
-      /* Copy the gids onto stack storage and then release the idlock.  */
-      gid_t gids[ngids];
-      memcpy (gids, _hurd_id.gen.gids, sizeof (gids));
-      __mutex_unlock (&_hurd_id.lock);
-      _hurd_critical_section_unlock (crit);
+    if (n != 0) {
+        /* Copy the gids onto stack storage and then release the idlock.  */
+        gid_t gids[ngids];
+        memcpy(gids, _hurd_id.gen.gids, sizeof(gids));
+        __mutex_unlock(&_hurd_id.lock);
+        _hurd_critical_section_unlock(crit);
 
-      /* Now that the lock is released, we can safely copy the
-	 group set into the user's array, which might fault.  */
-      if (ngids > n)
-	return __hurd_fail (EINVAL);
-      memcpy (gidset, gids, ngids * sizeof (gid_t));
-    }
-  else
-    {
-      __mutex_unlock (&_hurd_id.lock);
-      _hurd_critical_section_unlock (crit);
+        /* Now that the lock is released, we can safely copy the
+        group set into the user's array, which might fault.  */
+        if (ngids > n) {
+            return __hurd_fail(EINVAL);
+        }
+        memcpy(gidset, gids, ngids * sizeof(gid_t));
+    } else {
+        __mutex_unlock(&_hurd_id.lock);
+        _hurd_critical_section_unlock(crit);
     }
 
-  return ngids;
+    return ngids;
 }
 
-weak_alias (__getgroups, getgroups)
+weak_alias(__getgroups, getgroups)

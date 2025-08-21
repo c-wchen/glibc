@@ -18,12 +18,11 @@
 #include <errno.h>
 #include <ucontext.h>
 
-int
-swapcontext (ucontext_t *oucp, const ucontext_t *ucp)
+int swapcontext(ucontext_t *oucp, const ucontext_t *ucp)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
 
-stub_warning (swapcontext)
+stub_warning(swapcontext)

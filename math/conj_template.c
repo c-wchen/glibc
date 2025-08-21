@@ -19,9 +19,9 @@
 #include <complex.h>
 
 CFLOAT
-M_DECL_FUNC (__conj) (CFLOAT z)
+M_DECL_FUNC(__conj)(CFLOAT z)
 {
-  return ~z;
+    return ~z;
 }
 
-declare_mgen_alias (__conj, conj)
+declare_mgen_alias(__conj, conj)

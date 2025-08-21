@@ -18,9 +18,8 @@
 
 #include <tst-tls22.h>
 
-void
-test_mod2 (struct one_thread_data *data, int base_val)
+void test_mod2(struct one_thread_data *data, int base_val)
 {
-  STORE_ADDRS (&data->mod2_self, mod2);
-  STORE_ADDRS (&data->exe_from_mod2, exe);
+    STORE_ADDRS(&data->mod2_self, mod2);
+    STORE_ADDRS(&data->exe_from_mod2, exe);
 }

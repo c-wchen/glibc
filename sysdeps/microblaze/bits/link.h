@@ -21,37 +21,35 @@
 #endif
 
 /* Registers for entry into PLT on Microblaze.  */
-typedef struct La_microblaze_regs
-{
-  uint32_t lr_r0;
-  uint32_t lr_r1;
-  uint32_t lr_sp;
+typedef struct La_microblaze_regs {
+    uint32_t lr_r0;
+    uint32_t lr_r1;
+    uint32_t lr_sp;
 } La_microblaze_regs;
 
 /* Return values for calls from PLT on Microblaze.  */
-typedef struct La_microblaze_retval
-{
-  uint32_t lrv_r3;
+typedef struct La_microblaze_retval {
+    uint32_t lrv_r3;
 } La_microblaze_retval;
 
 
 __BEGIN_DECLS
 
-extern Elf32_Addr la_microblaze_gnu_pltenter (Elf32_Sym *__sym,
-                                              unsigned int __ndx,
-                                              uintptr_t *__refcook,
-                                              uintptr_t *__defcook,
-                                              La_microblaze_regs *__regs,
-                                              unsigned int *__flags,
-                                              const char *__symname,
-                                              long int *__framesizep);
+extern Elf32_Addr la_microblaze_gnu_pltenter(Elf32_Sym *__sym,
+        unsigned int __ndx,
+        uintptr_t *__refcook,
+        uintptr_t *__defcook,
+        La_microblaze_regs *__regs,
+        unsigned int *__flags,
+        const char *__symname,
+        long int *__framesizep);
 
-extern unsigned int la_microblaze_gnu_pltexit (Elf32_Sym *__sym,
-                                               unsigned int __ndx,
-                                               uintptr_t *__refcook,
-                                               uintptr_t *__defcook,
-                                               const La_microblaze_regs *__inregs,
-                                               La_microblaze_retval *__outregs,
-                                               const char *__symname);
+extern unsigned int la_microblaze_gnu_pltexit(Elf32_Sym *__sym,
+        unsigned int __ndx,
+        uintptr_t *__refcook,
+        uintptr_t *__defcook,
+        const La_microblaze_regs *__inregs,
+        La_microblaze_retval *__outregs,
+        const char *__symname);
 
 __END_DECLS

@@ -38,13 +38,13 @@ REPS
 #undef REP
 
 /* Calls all 16 leaf functions f1_* in succession */
-__attribute__ ((weak)) __attribute_optimization_barrier__ void
-f2 (void)
+__attribute__((weak)) __attribute_optimization_barrier__ void
+f2(void)
 {
 # define REP(n) f1_##n();
-  REPS
+    REPS
 # undef REP
-  PREVENT_TAIL_CALL;
+    PREVENT_TAIL_CALL;
 }
 
 /* Defines 16 functions named f2_0 to f2_15, which all just call f2 */
@@ -54,21 +54,19 @@ f2 (void)
 REPS
 #undef REP
 
-__attribute__ ((weak)) __attribute_optimization_barrier__ void
-f3 (int count)
+__attribute__((weak)) __attribute_optimization_barrier__ void
+f3(int count)
 {
-  for (int i = 0; i < count; ++i)
-    {
-      /* Calls f1_0(), f2_0(), f1_1(), f2_1(), f3_0(), etc */
+    for (int i = 0; i < count; ++i) {
+        /* Calls f1_0(), f2_0(), f1_1(), f2_1(), f3_0(), etc */
 #     define REP(n) f1_##n(); f2_##n();
-      REPS
+        REPS
 #     undef REP
     }
 }
 
-int
-main (void)
+int main(void)
 {
-  f3 (1000);
-  return 0;
+    f3(1000);
+    return 0;
 }

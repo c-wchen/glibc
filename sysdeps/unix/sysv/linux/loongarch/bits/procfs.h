@@ -32,21 +32,18 @@ typedef __uint64_t elf_greg_t;
 typedef elf_greg_t elf_gregset_t[ELF_NGREG];
 
 #define ELF_NFPREG 34 /* 32 FPRs + 8-byte byte-vec for fcc + 4-byte FCR */
-typedef union
-{
-  double d;
-  float f;
+typedef union {
+    double d;
+    float f;
 } elf_fpreg_t;
 typedef elf_fpreg_t elf_fpregset_t[ELF_NFPREG];
 
-typedef union
-{
-  double d[2];
-  float f[4];
-} __attribute__ ((__aligned__ (16))) elf_lsxregset_t[32];
+typedef union {
+    double d[2];
+    float f[4];
+} __attribute__((__aligned__(16))) elf_lsxregset_t[32];
 
-typedef union
-{
-  double d[4];
-  float f[8];
-} __attribute__ ((__aligned__ (32))) elf_lasxregset_t[32];
+typedef union {
+    double d[4];
+    float f[8];
+} __attribute__((__aligned__(32))) elf_lasxregset_t[32];

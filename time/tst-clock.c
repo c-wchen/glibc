@@ -25,94 +25,81 @@
 /* We want to see output immediately.  */
 #define STDOUT_UNBUFFERED
 
-static int
-clock_test (clockid_t cl)
+static int clock_test(clockid_t cl)
 {
-  struct timespec old_ts;
-  struct timespec ts;
-  struct timespec waitit;
-  int result = 0;
-  int i;
+    struct timespec old_ts;
+    struct timespec ts;
+    struct timespec waitit;
+    int result = 0;
+    int i;
 
-  memset (&ts, '\0', sizeof ts);
+    memset(&ts, '\0', sizeof ts);
 
-  waitit.tv_sec = 0;
-  waitit.tv_nsec = 500000000;
+    waitit.tv_sec = 0;
+    waitit.tv_nsec = 500000000;
 
-  /* Get and print resolution of the clock.  */
-  if (clock_getres (cl, &ts) == 0)
-    {
-      if (ts.tv_nsec < 0 || ts.tv_nsec >= 1000000000)
-	{
-	  printf ("clock %d: nanosecond value of resolution wrong\n", cl);
-	  result = 1;
-	}
-      else
-	printf ("clock %d: resolution = %jd.%09jd secs\n",
-		cl, (intmax_t) ts.tv_sec, (intmax_t) ts.tv_nsec);
-    }
-  else
-    {
-      printf ("clock %d: cannot get resolution\n", cl);
-      result = 1;
+    /* Get and print resolution of the clock.  */
+    if (clock_getres(cl, &ts) == 0) {
+        if (ts.tv_nsec < 0 || ts.tv_nsec >= 1000000000) {
+            printf("clock %d: nanosecond value of resolution wrong\n", cl);
+            result = 1;
+        } else
+            printf("clock %d: resolution = %jd.%09jd secs\n",
+                   cl, (intmax_t) ts.tv_sec, (intmax_t) ts.tv_nsec);
+    } else {
+        printf("clock %d: cannot get resolution\n", cl);
+        result = 1;
     }
 
-  memset (&ts, '\0', sizeof ts);
-  memset (&old_ts, '\0', sizeof old_ts);
+    memset(&ts, '\0', sizeof ts);
+    memset(&old_ts, '\0', sizeof old_ts);
 
-  /* Next get the current time value a few times.  */
-  for (i = 0; i < 10; ++i)
-    {
-      if (clock_gettime (cl, &ts) == 0)
-	{
-	  if (ts.tv_nsec < 0 || ts.tv_nsec >= 1000000000)
-	    {
-	      printf ("clock %d: nanosecond value of time wrong (try %d)\n",
-		      cl, i);
-	      result = 1;
-	    }
-	  else
-	    {
-	      printf ("clock %d: time = %jd.%09jd secs\n",
-		      cl, (intmax_t) ts.tv_sec, (intmax_t) ts.tv_nsec);
+    /* Next get the current time value a few times.  */
+    for (i = 0; i < 10; ++i) {
+        if (clock_gettime(cl, &ts) == 0) {
+            if (ts.tv_nsec < 0 || ts.tv_nsec >= 1000000000) {
+                printf("clock %d: nanosecond value of time wrong (try %d)\n",
+                       cl, i);
+                result = 1;
+            } else {
+                printf("clock %d: time = %jd.%09jd secs\n",
+                       cl, (intmax_t) ts.tv_sec, (intmax_t) ts.tv_nsec);
 
-	      if (memcmp (&ts, &old_ts, sizeof ts) == 0)
-		{
-		  printf ("clock %d: time hasn't changed (try %d)\n", cl, i);
-		  result = 1;
+                if (memcmp(&ts, &old_ts, sizeof ts) == 0) {
+                    printf("clock %d: time hasn't changed (try %d)\n", cl, i);
+                    result = 1;
 
-		  old_ts = ts;
-		}
-	    }
-	}
-      else
-	{
-	  printf ("clock %d: cannot get time (try %d)\n", cl, i);
-	  result = 1;
-	}
+                    old_ts = ts;
+                }
+            }
+        } else {
+            printf("clock %d: cannot get time (try %d)\n", cl, i);
+            result = 1;
+        }
 
-      /* Wait a bit before the next iteration.  */
-      nanosleep (&waitit, NULL);
+        /* Wait a bit before the next iteration.  */
+        nanosleep(&waitit, NULL);
     }
 
-  return result;
+    return result;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  clockid_t cl;
-  int result;
+    clockid_t cl;
+    int result;
 
-  result = clock_test (CLOCK_REALTIME);
+    result = clock_test(CLOCK_REALTIME);
 
-  if (clock_getcpuclockid (0, &cl) == 0)
-    /* XXX It's not yet a bug when this fails.  */
-    clock_test (cl);
-  else
-	  printf("CPU clock unavailable, skipping test\n");
+    if (clock_getcpuclockid(0, &cl) == 0)
+        /* XXX It's not yet a bug when this fails.  */
+    {
+        clock_test(cl);
+    } else {
+        printf("CPU clock unavailable, skipping test\n");
+    }
 
-  return result;
+    return result;
 }
 #define TEST_FUNCTION do_test ()
 

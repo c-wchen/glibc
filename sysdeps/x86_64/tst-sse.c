@@ -20,26 +20,26 @@
 #include <stdlib.h>
 #include <string.h>
 
-extern __m128i sse_test (__m128i, __m128i, __m128i, __m128i,
-			 __m128i, __m128i, __m128i, __m128i);
+extern __m128i sse_test(__m128i, __m128i, __m128i, __m128i,
+                        __m128i, __m128i, __m128i, __m128i);
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  __m128i xmm0 = _mm_set1_epi32 (0);
-  __m128i xmm1 = _mm_set1_epi32 (1);
-  __m128i xmm2 = _mm_set1_epi32 (2);
-  __m128i xmm3 = _mm_set1_epi32 (3);
-  __m128i xmm4 = _mm_set1_epi32 (4);
-  __m128i xmm5 = _mm_set1_epi32 (5);
-  __m128i xmm6 = _mm_set1_epi32 (6);
-  __m128i xmm7 = _mm_set1_epi32 (7);
-  __m128i ret = sse_test (xmm0, xmm1, xmm2, xmm3,
-			  xmm4, xmm5, xmm6, xmm7);
-  xmm0 =  _mm_set1_epi32 (0x12349876);
-  if (memcmp (&xmm0, &ret, sizeof (ret)))
-    abort ();
-  return 0;
+    __m128i xmm0 = _mm_set1_epi32(0);
+    __m128i xmm1 = _mm_set1_epi32(1);
+    __m128i xmm2 = _mm_set1_epi32(2);
+    __m128i xmm3 = _mm_set1_epi32(3);
+    __m128i xmm4 = _mm_set1_epi32(4);
+    __m128i xmm5 = _mm_set1_epi32(5);
+    __m128i xmm6 = _mm_set1_epi32(6);
+    __m128i xmm7 = _mm_set1_epi32(7);
+    __m128i ret = sse_test(xmm0, xmm1, xmm2, xmm3,
+                           xmm4, xmm5, xmm6, xmm7);
+    xmm0 =  _mm_set1_epi32(0x12349876);
+    if (memcmp(&xmm0, &ret, sizeof(ret))) {
+        abort();
+    }
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

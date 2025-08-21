@@ -25,19 +25,18 @@
 #include <support/format_nss.h>
 #include <support/run_diff.h>
 
-void
-check_dns_packet (const char *query_description,
-                  const unsigned char *buffer, size_t length,
-                  const char *expected)
+void check_dns_packet(const char *query_description,
+                      const unsigned char *buffer, size_t length,
+                      const char *expected)
 {
-  char *formatted = support_format_dns_packet (buffer, length);
-  if (strcmp (formatted, expected) != 0)
-    {
-      support_record_failure ();
-      printf ("error: packet comparison failure\n");
-      if (query_description != NULL)
-        printf ("query: %s\n", query_description);
-      support_run_diff ("expected", expected, "actual", formatted);
+    char *formatted = support_format_dns_packet(buffer, length);
+    if (strcmp(formatted, expected) != 0) {
+        support_record_failure();
+        printf("error: packet comparison failure\n");
+        if (query_description != NULL) {
+            printf("query: %s\n", query_description);
+        }
+        support_run_diff("expected", expected, "actual", formatted);
     }
-  free (formatted);
+    free(formatted);
 }

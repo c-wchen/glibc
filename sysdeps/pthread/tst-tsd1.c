@@ -20,99 +20,84 @@
 #include <string.h>
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  pthread_key_t key1;
-  pthread_key_t key2;
-  void *value;
-  /* Addresses of val1 and val2 are used as arbitrary but valid pointers
-     in calls to pthread_setspecific to avoid GCC warnings.  */
-  char val1 = 0, val2 = 0;
-  int result = 0;
-  int err;
+    pthread_key_t key1;
+    pthread_key_t key2;
+    void *value;
+    /* Addresses of val1 and val2 are used as arbitrary but valid pointers
+       in calls to pthread_setspecific to avoid GCC warnings.  */
+    char val1 = 0, val2 = 0;
+    int result = 0;
+    int err;
 
-  err = pthread_key_create (&key1, NULL);
-  if (err != 0)
-    {
-      printf ("1st key_create failed: %s\n", strerror (err));
-      return 1;
-    }
-
-  /* Initial value must be NULL.  */
-  value = pthread_getspecific (key1);
-  if (value != NULL)
-    {
-      puts ("1st getspecific != NULL");
-      result = 1;
+    err = pthread_key_create(&key1, NULL);
+    if (err != 0) {
+        printf("1st key_create failed: %s\n", strerror(err));
+        return 1;
     }
 
-  err = pthread_setspecific (key1, (void *) &val1);
-  if (err != 0)
-    {
-      printf ("1st setspecific failed: %s\n", strerror (err));
-      return 1;
+    /* Initial value must be NULL.  */
+    value = pthread_getspecific(key1);
+    if (value != NULL) {
+        puts("1st getspecific != NULL");
+        result = 1;
     }
 
-  value = pthread_getspecific (key1);
-  if (value == NULL)
-    {
-      puts ("2nd getspecific == NULL\n");
-      result = 1;
-    }
-  else if (value != (void *) &val1)
-    {
-      puts ("2nd getspecific != &val1l\n");
-      result = 1;
+    err = pthread_setspecific(key1, (void *) &val1);
+    if (err != 0) {
+        printf("1st setspecific failed: %s\n", strerror(err));
+        return 1;
     }
 
-  err = pthread_setspecific (key1, (void *) &val2);
-  if (err != 0)
-    {
-      printf ("2nd setspecific failed: %s\n", strerror (err));
-      return 1;
+    value = pthread_getspecific(key1);
+    if (value == NULL) {
+        puts("2nd getspecific == NULL\n");
+        result = 1;
+    } else if (value != (void *) &val1) {
+        puts("2nd getspecific != &val1l\n");
+        result = 1;
     }
 
-  value = pthread_getspecific (key1);
-  if (value == NULL)
-    {
-      puts ("3rd getspecific == NULL\n");
-      result = 1;
-    }
-  else if (value != (void *) &val2)
-    {
-      puts ("3rd getspecific != &val2\n");
-      result = 1;
+    err = pthread_setspecific(key1, (void *) &val2);
+    if (err != 0) {
+        printf("2nd setspecific failed: %s\n", strerror(err));
+        return 1;
     }
 
-  err = pthread_key_delete (key1);
-  if (err != 0)
-    {
-      printf ("key_delete failed: %s\n", strerror (err));
-      result = 1;
+    value = pthread_getspecific(key1);
+    if (value == NULL) {
+        puts("3rd getspecific == NULL\n");
+        result = 1;
+    } else if (value != (void *) &val2) {
+        puts("3rd getspecific != &val2\n");
+        result = 1;
+    }
+
+    err = pthread_key_delete(key1);
+    if (err != 0) {
+        printf("key_delete failed: %s\n", strerror(err));
+        result = 1;
     }
 
 
-  err = pthread_key_create (&key2, NULL);
-  if (err != 0)
-    {
-      printf ("2nd key_create failed: %s\n", strerror (err));
-      return 1;
+    err = pthread_key_create(&key2, NULL);
+    if (err != 0) {
+        printf("2nd key_create failed: %s\n", strerror(err));
+        return 1;
     }
 
-  if (key1 != key2)
-    puts ("key1 != key2; no more tests performed");
-  else
-    {
-      value = pthread_getspecific (key2);
-      if (value != NULL)
-	{
-	  puts ("4th getspecific != NULL");
-	  result = 1;
-	}
+    if (key1 != key2) {
+        puts("key1 != key2; no more tests performed");
+    } else {
+        value = pthread_getspecific(key2);
+        if (value != NULL) {
+            puts("4th getspecific != NULL");
+            result = 1;
+        }
     }
 
-  return result;
+    return result;
 }
 
 #define TEST_FUNCTION do_test ()

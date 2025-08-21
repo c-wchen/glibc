@@ -21,9 +21,8 @@
 #include <sysdep-cancel.h>
 
 /* Make all changes done to FD actually appear on disk.  */
-int
-fsync (int fd)
+int fsync(int fd)
 {
-  return SYSCALL_CANCEL (fsync, fd);
+    return SYSCALL_CANCEL(fsync, fd);
 }
-libc_hidden_def (fsync)
+libc_hidden_def(fsync)

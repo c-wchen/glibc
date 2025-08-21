@@ -21,15 +21,14 @@
 #include <errno.h>
 #include <string.h>
 
-int
-__gen_tempfd (int flags)
+int __gen_tempfd(int flags)
 {
-  int fd = __open (P_tmpdir, O_RDWR | O_TMPFILE | O_EXCL | flags,
-		   S_IRUSR | S_IWUSR);
-  if (fd < 0 && errno == ENOENT && strcmp (P_tmpdir, "/tmp") != 0)
-    fd = __open ("/tmp", O_RDWR | O_TMPFILE | O_EXCL | flags,
-		 S_IRUSR | S_IWUSR);
+    int fd = __open(P_tmpdir, O_RDWR | O_TMPFILE | O_EXCL | flags,
+                    S_IRUSR | S_IWUSR);
+    if (fd < 0 && errno == ENOENT && strcmp(P_tmpdir, "/tmp") != 0)
+        fd = __open("/tmp", O_RDWR | O_TMPFILE | O_EXCL | flags,
+                    S_IRUSR | S_IWUSR);
 
-  return fd;
+    return fd;
 }
-libc_hidden_def (__gen_tempfd)
+libc_hidden_def(__gen_tempfd)

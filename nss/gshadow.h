@@ -18,7 +18,7 @@
 /* Declaration of types and functions for shadow group suite.  */
 
 #ifndef _GSHADOW_H
-#define _GSHADOW_H	1
+#define _GSHADOW_H  1
 
 #include <features.h>
 #include <paths.h>
@@ -28,19 +28,18 @@
 #include <stddef.h>
 
 /* Path to the user database files.  */
-#define	GSHADOW _PATH_GSHADOW
+#define GSHADOW _PATH_GSHADOW
 
 
 __BEGIN_DECLS
 
 /* Structure of the group file.  */
-struct sgrp
-  {
-    char *sg_namp;		/* Group name.  */
-    char *sg_passwd;		/* Encrypted password.  */
-    char **sg_adm;		/* Group administrator list.  */
-    char **sg_mem;		/* Group member list.  */
-  };
+struct sgrp {
+    char *sg_namp;      /* Group name.  */
+    char *sg_passwd;        /* Encrypted password.  */
+    char **sg_adm;      /* Group administrator list.  */
+    char **sg_mem;      /* Group member list.  */
+};
 
 
 /* Open database for reading.
@@ -49,7 +48,7 @@ struct sgrp
    cancellation point.  But due to similarity with an POSIX interface
    or due to the implementation it is a cancellation point and
    therefore not marked with __THROW.  */
-extern void setsgent (void);
+extern void setsgent(void);
 
 /* Close database.
 
@@ -57,7 +56,7 @@ extern void setsgent (void);
    cancellation point.  But due to similarity with an POSIX interface
    or due to the implementation it is a cancellation point and
    therefore not marked with __THROW.  */
-extern void endsgent (void);
+extern void endsgent(void);
 
 /* Get next entry from database, perhaps after opening the file.
 
@@ -65,7 +64,7 @@ extern void endsgent (void);
    cancellation point.  But due to similarity with an POSIX interface
    or due to the implementation it is a cancellation point and
    therefore not marked with __THROW.  */
-extern struct sgrp *getsgent (void);
+extern struct sgrp *getsgent(void);
 
 /* Get shadow entry matching NAME.
 
@@ -73,7 +72,7 @@ extern struct sgrp *getsgent (void);
    cancellation point.  But due to similarity with an POSIX interface
    or due to the implementation it is a cancellation point and
    therefore not marked with __THROW.  */
-extern struct sgrp *getsgnam (const char *__name);
+extern struct sgrp *getsgnam(const char *__name);
 
 /* Read shadow entry from STRING.
 
@@ -81,7 +80,7 @@ extern struct sgrp *getsgnam (const char *__name);
    cancellation point.  But due to similarity with an POSIX interface
    or due to the implementation it is a cancellation point and
    therefore not marked with __THROW.  */
-extern struct sgrp *sgetsgent (const char *__string);
+extern struct sgrp *sgetsgent(const char *__string);
 
 /* Read next shadow entry from STREAM.
 
@@ -89,7 +88,7 @@ extern struct sgrp *sgetsgent (const char *__string);
    cancellation point.  But due to similarity with an POSIX interface
    or due to the implementation it is a cancellation point and
    therefore not marked with __THROW.  */
-extern struct sgrp *fgetsgent (FILE *__stream);
+extern struct sgrp *fgetsgent(FILE *__stream);
 
 /* Write line containing shadow password entry to stream.
 
@@ -97,7 +96,7 @@ extern struct sgrp *fgetsgent (FILE *__stream);
    cancellation point.  But due to similarity with an POSIX interface
    or due to the implementation it is a cancellation point and
    therefore not marked with __THROW.  */
-extern int putsgent (const struct sgrp *__g, FILE *__stream);
+extern int putsgent(const struct sgrp *__g, FILE *__stream);
 
 
 #ifdef __USE_MISC
@@ -107,25 +106,25 @@ extern int putsgent (const struct sgrp *__g, FILE *__stream);
    cancellation point.  But due to similarity with an POSIX interface
    or due to the implementation they are cancellation points and
    therefore not marked with __THROW.  */
-extern int getsgent_r (struct sgrp *__result_buf, char *__buffer,
-		       size_t __buflen, struct sgrp **__result)
-	__attr_access ((__write_only__, 2, 3));
+extern int getsgent_r(struct sgrp *__result_buf, char *__buffer,
+                      size_t __buflen, struct sgrp **__result)
+__attr_access((__write_only__, 2, 3));
 
-extern int getsgnam_r (const char *__name, struct sgrp *__result_buf,
-		       char *__buffer, size_t __buflen,
-		       struct sgrp **__result)
-	__attr_access ((__write_only__, 3, 4));
+extern int getsgnam_r(const char *__name, struct sgrp *__result_buf,
+                      char *__buffer, size_t __buflen,
+                      struct sgrp **__result)
+__attr_access((__write_only__, 3, 4));
 
-extern int sgetsgent_r (const char *__string, struct sgrp *__result_buf,
-			char *__buffer, size_t __buflen,
-			struct sgrp **__result)
-	__attr_access ((__write_only__, 3, 4));
+extern int sgetsgent_r(const char *__string, struct sgrp *__result_buf,
+                       char *__buffer, size_t __buflen,
+                       struct sgrp **__result)
+__attr_access((__write_only__, 3, 4));
 
-extern int fgetsgent_r (FILE *__stream, struct sgrp *__result_buf,
-			char *__buffer, size_t __buflen,
-			struct sgrp **__result)
-	__attr_access ((__write_only__, 3, 4));
-#endif	/* misc */
+extern int fgetsgent_r(FILE *__stream, struct sgrp *__result_buf,
+                       char *__buffer, size_t __buflen,
+                       struct sgrp **__result)
+__attr_access((__write_only__, 3, 4));
+#endif  /* misc */
 
 __END_DECLS
 

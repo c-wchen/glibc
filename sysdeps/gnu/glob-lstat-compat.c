@@ -35,5 +35,5 @@
 #include <posix/glob.c>
 
 #if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_27)
-compat_symbol (libc, __glob_lstat_compat, glob, GLIBC_2_0);
+compat_symbol(libc, __glob_lstat_compat, glob, GLIBC_2_0);
 #endif

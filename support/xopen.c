@@ -20,11 +20,11 @@
 #include <support/xunistd.h>
 #include <fcntl.h>
 
-int
-xopen (const char *path, int flags, mode_t mode)
+int xopen(const char *path, int flags, mode_t mode)
 {
-  int ret = open64 (path, flags, mode);
-  if (ret < 0)
-    FAIL_EXIT1 ("open64 (\"%s\", 0x%x, 0%o): %m", path, flags, mode);
-  return ret;
+    int ret = open64(path, flags, mode);
+    if (ret < 0) {
+        FAIL_EXIT1("open64 (\"%s\", 0x%x, 0%o): %m", path, flags, mode);
+    }
+    return ret;
 }

@@ -22,14 +22,12 @@
 #include <stdint.h>
 #include <sys/auxv.h>
 
-struct cpu_features
-{
-  uint64_t hwcap;
+struct cpu_features {
+    uint64_t hwcap;
 };
 
 /* Get a pointer to the CPU features structure.  */
-extern const struct cpu_features *
-_dl_larch_get_cpu_features (void) __attribute__ ((pure));
+extern const struct cpu_features *_dl_larch_get_cpu_features(void) __attribute__((pure));
 
 #define SUPPORT_UAL (GLRO (dl_larch_cpu_features).hwcap & HWCAP_LOONGARCH_UAL)
 #define SUPPORT_LSX (GLRO (dl_larch_cpu_features).hwcap & HWCAP_LOONGARCH_LSX)

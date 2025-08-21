@@ -18,15 +18,15 @@
 
 #ifndef __SYS_SWAP_H
 
-#define __SYS_SWAP_H	1
+#define __SYS_SWAP_H    1
 #include <features.h>
 
 
 /* Make the block special device PATH available to the system for swapping.
    This call is restricted to the super-user.  */
-extern int swapon (const char *__path, int __flags) __THROW;
+extern int swapon(const char *__path, int __flags) __THROW;
 
 /* Stop using block special device PATH for swapping.  */
-extern int swapoff (const char *__path) __THROW;
+extern int swapoff(const char *__path) __THROW;
 
 #endif /* sys/swap.h */

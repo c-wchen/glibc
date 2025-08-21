@@ -73,7 +73,7 @@ typedef int mktime_offset_t;
 /* Subroutine of mktime.  Return the time_t representation of TP and
    normalize TP, given that a struct tm * maps to a time_t as performed
    by FUNC.  Record next guess for localtime-gmtime offset in *OFFSET.  */
-extern __time64_t __mktime_internal (struct tm *tp,
-                                     struct tm *(*func) (__time64_t const *,
-                                                         struct tm *),
-                                     mktime_offset_t *offset) attribute_hidden;
+extern __time64_t __mktime_internal(struct tm *tp,
+                                    struct tm * (*func)(__time64_t const *,
+                                            struct tm *),
+                                    mktime_offset_t *offset) attribute_hidden;

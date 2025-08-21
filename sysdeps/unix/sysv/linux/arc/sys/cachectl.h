@@ -27,7 +27,7 @@
 __BEGIN_DECLS
 
 #ifdef __USE_MISC
-extern int cacheflush (void *__addr, int __nbytes, int __op) __THROW;
+extern int cacheflush(void *__addr, int __nbytes, int __op) __THROW;
 #endif
 
 __END_DECLS

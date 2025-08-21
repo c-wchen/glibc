@@ -19,12 +19,11 @@
 #include <sysdep-cancel.h>
 
 /* Return any pending signal or wait for one for the given time.  */
-int
-__sigwaitinfo (const sigset_t *set, siginfo_t *info)
+int __sigwaitinfo(const sigset_t *set, siginfo_t *info)
 {
-  return __sigtimedwait (set, info, NULL);
+    return __sigtimedwait(set, info, NULL);
 }
 
-libc_hidden_def (__sigwaitinfo)
-weak_alias (__sigwaitinfo, sigwaitinfo)
-strong_alias (__sigwaitinfo, __libc_sigwaitinfo)
+libc_hidden_def(__sigwaitinfo)
+weak_alias(__sigwaitinfo, sigwaitinfo)
+strong_alias(__sigwaitinfo, __libc_sigwaitinfo)

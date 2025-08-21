@@ -33,170 +33,159 @@
 
 #define PACKAGE _libc_intl_domainname
 
-static int makesymlink (const char *src, const char *dest);
-static int makesymlinks (const char *file);
-static void usage (void);
+static int makesymlink(const char *src, const char *dest);
+static int makesymlinks(const char *file);
+static void usage(void);
 
-int
-main (int argc, char **argv)
+int main(int argc, char **argv)
 {
-  /* Set locale via LC_ALL.  */
-  setlocale (LC_ALL, "");
+    /* Set locale via LC_ALL.  */
+    setlocale(LC_ALL, "");
 
-  /* Set the text message domain.  */
-  textdomain (PACKAGE);
+    /* Set the text message domain.  */
+    textdomain(PACKAGE);
 
-  switch (argc)
-    {
-    case 2:
-      if (strcmp (argv[1], "--version") == 0) {
-	printf ("sln %s%s\n", PKGVERSION, VERSION);
-	return 0;
-      } else if (strcmp (argv[1], "--help") == 0) {
-	usage ();
-	return 0;
-      }
-      return makesymlinks (argv [1]);
-      break;
+    switch (argc) {
+        case 2:
+            if (strcmp(argv[1], "--version") == 0) {
+                printf("sln %s%s\n", PKGVERSION, VERSION);
+                return 0;
+            } else if (strcmp(argv[1], "--help") == 0) {
+                usage();
+                return 0;
+            }
+            return makesymlinks(argv [1]);
+            break;
 
-    case 3:
-      return makesymlink (argv [1], argv [2]);
-      break;
+        case 3:
+            return makesymlink(argv [1], argv [2]);
+            break;
 
-    default:
-      usage ();
-      return 1;
-      break;
+        default:
+            usage();
+            return 1;
+            break;
     }
 }
 
-static void
-usage (void)
+static void usage(void)
 {
-  printf (_("Usage: sln src dest|file\n\n"));
-  printf (_("For bug reporting instructions, please see:\n\
+    printf(_("Usage: sln src dest|file\n\n"));
+    printf(_("For bug reporting instructions, please see:\n\
 %s.\n"), REPORT_BUGS_TO);
 }
 
-static int
-makesymlinks (const char *file)
+static int makesymlinks(const char *file)
 {
-  char *buffer = NULL;
-  size_t bufferlen = 0;
-  int ret;
-  int lineno;
-  FILE *fp;
+    char *buffer = NULL;
+    size_t bufferlen = 0;
+    int ret;
+    int lineno;
+    FILE *fp;
 
-  if (strcmp (file, "-") == 0)
-    fp = stdin;
-  else
-    {
-      fp = fopen (file, "r");
-      if (fp == NULL)
-	{
-	  fprintf (stderr, _("%s: file open error: %m\n"), file);
-	  return 1;
-	}
+    if (strcmp(file, "-") == 0) {
+        fp = stdin;
+    } else {
+        fp = fopen(file, "r");
+        if (fp == NULL) {
+            fprintf(stderr, _("%s: file open error: %m\n"), file);
+            return 1;
+        }
     }
 
-  ret = 0;
-  lineno = 0;
-  while (!feof_unlocked (fp))
-    {
-      ssize_t n = getline (&buffer, &bufferlen, fp);
-      char *src;
-      char *dest;
-      char *cp = buffer;
+    ret = 0;
+    lineno = 0;
+    while (!feof_unlocked(fp)) {
+        ssize_t n = getline(&buffer, &bufferlen, fp);
+        char *src;
+        char *dest;
+        char *cp = buffer;
 
-      if (n < 0)
-	break;
-      if (buffer[n - 1] == '\n')
-	buffer[n - 1] = '\0';
+        if (n < 0) {
+            break;
+        }
+        if (buffer[n - 1] == '\n') {
+            buffer[n - 1] = '\0';
+        }
 
-      ++lineno;
-      while (isspace (*cp))
-	++cp;
-      if (*cp == '\0')
-	/* Ignore empty lines.  */
-	continue;
-      src = cp;
+        ++lineno;
+        while (isspace(*cp)) {
+            ++cp;
+        }
+        if (*cp == '\0')
+            /* Ignore empty lines.  */
+        {
+            continue;
+        }
+        src = cp;
 
-      do
-	++cp;
-      while (*cp != '\0' && ! isspace (*cp));
-      if (*cp != '\0')
-	*cp++ = '\0';
+        do {
+            ++cp;
+        } while (*cp != '\0' && ! isspace(*cp));
+        if (*cp != '\0') {
+            *cp++ = '\0';
+        }
 
-      while (isspace (*cp))
-	++cp;
-      if (*cp == '\0')
-	{
-	  fprintf (stderr, _("No target in line %d\n"), lineno);
-	  ret = 1;
-	  continue;
-	}
-      dest = cp;
+        while (isspace(*cp)) {
+            ++cp;
+        }
+        if (*cp == '\0') {
+            fprintf(stderr, _("No target in line %d\n"), lineno);
+            ret = 1;
+            continue;
+        }
+        dest = cp;
 
-      do
-	++cp;
-      while (*cp != '\0' && ! isspace (*cp));
-      if (*cp != '\0')
-	*cp++ = '\0';
+        do {
+            ++cp;
+        } while (*cp != '\0' && ! isspace(*cp));
+        if (*cp != '\0') {
+            *cp++ = '\0';
+        }
 
-      ret |= makesymlink (src, dest);
+        ret |= makesymlink(src, dest);
     }
-  fclose (fp);
+    fclose(fp);
 
-  return ret;
+    return ret;
 }
 
-static int
-makesymlink (const char *src, const char *dest)
+static int makesymlink(const char *src, const char *dest)
 {
-  struct stat stats;
-  const char *error;
+    struct stat stats;
+    const char *error;
 
-  /* Destination must not be a directory. */
-  if (lstat (dest, &stats) == 0)
-    {
-      if (S_ISDIR (stats.st_mode))
-	{
-	  fprintf (stderr, _("%s: destination must not be a directory\n"),
-		   dest);
-	  return 1;
-	}
-      else if (unlink (dest) && errno != ENOENT)
-	{
-	  fprintf (stderr, _("%s: failed to remove the old destination\n"),
-		   dest);
-	  return 1;
-	}
-    }
-  else if (errno != ENOENT)
-    {
-      error = strerror (errno);
-      fprintf (stderr, _("%s: invalid destination: %s\n"), dest, error);
-      return -1;
+    /* Destination must not be a directory. */
+    if (lstat(dest, &stats) == 0) {
+        if (S_ISDIR(stats.st_mode)) {
+            fprintf(stderr, _("%s: destination must not be a directory\n"),
+                    dest);
+            return 1;
+        } else if (unlink(dest) && errno != ENOENT) {
+            fprintf(stderr, _("%s: failed to remove the old destination\n"),
+                    dest);
+            return 1;
+        }
+    } else if (errno != ENOENT) {
+        error = strerror(errno);
+        fprintf(stderr, _("%s: invalid destination: %s\n"), dest, error);
+        return -1;
     }
 
-  if (symlink (src, dest) == 0)
-    {
-      /* Destination must exist by now. */
-      if (access (dest, F_OK))
-        {
-	  error = strerror (errno);
-	  unlink (dest);
-	  fprintf (stderr, _("Invalid link from \"%s\" to \"%s\": %s\n"),
-		   src, dest, error);
-	  return 1;
-	}
-      return 0;
-    }
-  else
-    {
-      error = strerror (errno);
-      fprintf (stderr, _("Invalid link from \"%s\" to \"%s\": %s\n"),
-	       src, dest, error);
-      return 1;
+    if (symlink(src, dest) == 0) {
+        /* Destination must exist by now. */
+        if (access(dest, F_OK)) {
+            error = strerror(errno);
+            unlink(dest);
+            fprintf(stderr, _("Invalid link from \"%s\" to \"%s\": %s\n"),
+                    src, dest, error);
+            return 1;
+        }
+        return 0;
+    } else {
+        error = strerror(errno);
+        fprintf(stderr, _("Invalid link from \"%s\" to \"%s\": %s\n"),
+                src, dest, error);
+        return 1;
     }
 }

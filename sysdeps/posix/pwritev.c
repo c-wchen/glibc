@@ -25,6 +25,6 @@
 # define OFF_T off_t
 # include <sysdeps/posix/pwritev_common.c>
 
-libc_hidden_def (pwritev)
+libc_hidden_def(pwritev)
 
 #endif

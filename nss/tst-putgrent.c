@@ -25,142 +25,126 @@
 
 static bool errors;
 
-static void
-check (struct group e, const char *expected)
+static void check(struct group e, const char *expected)
 {
-  char *buf;
-  size_t buf_size;
-  FILE *f = open_memstream (&buf, &buf_size);
+    char *buf;
+    size_t buf_size;
+    FILE *f = open_memstream(&buf, &buf_size);
 
-  if (f == NULL)
-    {
-      printf ("open_memstream: %m\n");
-      errors = true;
-      return;
+    if (f == NULL) {
+        printf("open_memstream: %m\n");
+        errors = true;
+        return;
     }
 
-  int ret = putgrent (&e, f);
+    int ret = putgrent(&e, f);
 
-  if (expected == NULL)
-    {
-      if (ret == -1)
-	{
-	  if (errno != EINVAL)
-	    {
-	      printf ("putgrent: unexpected error code: %m\n");
-	      errors = true;
-	    }
-	}
-      else
-	{
-	  printf ("putgrent: unexpected success (\"%s\", \"%s\")\n",
-		  e.gr_name, e.gr_passwd);
-	  errors = true;
-	}
-    }
-  else
-    {
-      /* Expect success.  */
-      size_t expected_length = strlen (expected);
-      if (ret == 0)
-	{
-	  long written = ftell (f);
+    if (expected == NULL) {
+        if (ret == -1) {
+            if (errno != EINVAL) {
+                printf("putgrent: unexpected error code: %m\n");
+                errors = true;
+            }
+        } else {
+            printf("putgrent: unexpected success (\"%s\", \"%s\")\n",
+                   e.gr_name, e.gr_passwd);
+            errors = true;
+        }
+    } else {
+        /* Expect success.  */
+        size_t expected_length = strlen(expected);
+        if (ret == 0) {
+            long written = ftell(f);
 
-	  if (written <= 0 || fflush (f) < 0)
-	    {
-	      printf ("stream error: %m\n");
-	      errors = true;
-	    }
-	  else if (buf[written - 1] != '\n')
-	    {
-	      printf ("FAILED: \"%s\" without newline\n", expected);
-	      errors = true;
-	    }
-	  else if (strncmp (buf, expected, written - 1) != 0
-		   || written - 1 != expected_length)
-	    {
-	      buf[written - 1] = '\0';
-	      printf ("FAILED: \"%s\" (%ld), expected \"%s\" (%zu)\n",
-		      buf, written - 1, expected, expected_length);
-	      errors = true;
-	    }
-	}
-      else
-	{
-	  printf ("FAILED: putgrent (expected \"%s\"): %m\n", expected);
-	  errors = true;
-	}
+            if (written <= 0 || fflush(f) < 0) {
+                printf("stream error: %m\n");
+                errors = true;
+            } else if (buf[written - 1] != '\n') {
+                printf("FAILED: \"%s\" without newline\n", expected);
+                errors = true;
+            } else if (strncmp(buf, expected, written - 1) != 0
+                       || written - 1 != expected_length) {
+                buf[written - 1] = '\0';
+                printf("FAILED: \"%s\" (%ld), expected \"%s\" (%zu)\n",
+                       buf, written - 1, expected, expected_length);
+                errors = true;
+            }
+        } else {
+            printf("FAILED: putgrent (expected \"%s\"): %m\n", expected);
+            errors = true;
+        }
     }
 
-  fclose (f);
-  free (buf);
+    fclose(f);
+    free(buf);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  check ((struct group) {
-      .gr_name = (char *) "root",
+    check((struct group) {
+        .gr_name = (char *) "root",
     },
     "root::0:");
-  check ((struct group) {
-      .gr_name = (char *) "root",
-      .gr_passwd = (char *) "password",
-      .gr_gid = 1234,
-      .gr_mem = (char *[2]) {(char *) "member1", NULL}
+    check((struct group) {
+        .gr_name = (char *) "root",
+        .gr_passwd = (char *) "password",
+        .gr_gid = 1234,
+        .gr_mem = (char *[2]) {
+            (char *) "member1", NULL
+        }
     },
     "root:password:1234:member1");
-  check ((struct group) {
-      .gr_name = (char *) "root",
-      .gr_passwd = (char *) "password",
-      .gr_gid = 1234,
-      .gr_mem = (char *[3]) {(char *) "member1", (char *) "member2", NULL}
+    check((struct group) {
+        .gr_name = (char *) "root",
+        .gr_passwd = (char *) "password",
+        .gr_gid = 1234,
+        .gr_mem = (char *[3]) {
+            (char *) "member1", (char *) "member2", NULL
+        }
     },
     "root:password:1234:member1,member2");
 
-  /* Bad values.  */
-  {
-    static const char *const bad_strings[] = {
-      ":",
-      "\n",
-      ":bad",
-      "\nbad",
-      "b:ad",
-      "b\nad",
-      "bad:",
-      "bad\n",
-      "b:a\nd"
-      ",",
-      "\n,",
-      ":,",
-      ",bad",
-      "b,ad",
-      "bad,",
-      NULL
-    };
-    for (const char *const *bad = bad_strings; *bad != NULL; ++bad)
-      {
-	char *members[]
-	  = {(char *) "first", (char *) *bad, (char *) "last", NULL};
-	if (strpbrk (*bad, ":\n") != NULL)
-	  {
-	    check ((struct group) {
-		.gr_name = (char *) *bad,
-	      }, NULL);
-	    check ((struct group) {
-		.gr_name = (char *) "root",
-		.gr_passwd = (char *) *bad,
-	      }, NULL);
-	  }
-	check ((struct group) {
-	    .gr_name = (char *) "root",
-	    .gr_passwd = (char *) "password",
-	    .gr_mem = members,
-	  }, NULL);
-      }
-  }
+    /* Bad values.  */
+    {
+        static const char *const bad_strings[] = {
+            ":",
+            "\n",
+            ":bad",
+            "\nbad",
+            "b:ad",
+            "b\nad",
+            "bad:",
+            "bad\n",
+            "b:a\nd"
+            ",",
+            "\n,",
+            ":,",
+            ",bad",
+            "b,ad",
+            "bad,",
+            NULL
+        };
+        for (const char *const *bad = bad_strings; *bad != NULL; ++bad) {
+            char *members[]
+                = {(char *) "first", (char *) *bad, (char *) "last", NULL};
+            if (strpbrk(*bad, ":\n") != NULL) {
+                check((struct group) {
+                    .gr_name = (char *) *bad,
+                }, NULL);
+                check((struct group) {
+                    .gr_name = (char *) "root",
+                    .gr_passwd = (char *) *bad,
+                }, NULL);
+            }
+            check((struct group) {
+                .gr_name = (char *) "root",
+                .gr_passwd = (char *) "password",
+                .gr_mem = members,
+            }, NULL);
+        }
+    }
 
-  return errors;
+    return errors;
 }
 
 #define TEST_FUNCTION do_test ()

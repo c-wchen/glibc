@@ -25,9 +25,8 @@
 
 /* Return a string with the data for locale-dependent parameter ITEM.  */
 
-char *
-nl_langinfo (nl_item item)
+char *nl_langinfo(nl_item item)
 {
-  return __nl_langinfo_l (item, _NL_CURRENT_LOCALE);
+    return __nl_langinfo_l(item, _NL_CURRENT_LOCALE);
 }
-libc_hidden_def (nl_langinfo)
+libc_hidden_def(nl_langinfo)

@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _BITS_SEMAPHORE_H
-#define _BITS_SEMAPHORE_H	1
+#define _BITS_SEMAPHORE_H   1
 
 #ifndef _SEMAPHORE_H
 # error Never include <bits/semaphore.h> directly.
@@ -28,12 +28,11 @@
 
 /* User visible part of a semaphore.  */
 
-#define __SIZEOF_SEM_T	20
+#define __SIZEOF_SEM_T  20
 
-typedef union
-{
-  char __size[__SIZEOF_SEM_T];
-  long int __align;
+typedef union {
+    char __size[__SIZEOF_SEM_T];
+    long int __align;
 } sem_t;
 
 #define SEM_FAILED ((void *) 0)

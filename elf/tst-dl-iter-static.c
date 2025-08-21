@@ -21,26 +21,25 @@
 /* Check that the link map of the static executable itself is iterated
    over exactly once.  */
 
-static int
-callback (struct dl_phdr_info *info, size_t size, void *data)
+static int callback(struct dl_phdr_info *info, size_t size, void *data)
 {
-  int *count = data;
+    int *count = data;
 
-  if (info->dlpi_name[0] == '\0')
-    (*count)++;
+    if (info->dlpi_name[0] == '\0') {
+        (*count)++;
+    }
 
-  return 0;
+    return 0;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int count = 0;
-  int status;
+    int count = 0;
+    int status;
 
-  status = dl_iterate_phdr (callback, &count);
+    status = dl_iterate_phdr(callback, &count);
 
-  return status || count != 1;
+    return status || count != 1;
 }
 
 #include <support/test-driver.c>

@@ -3,6 +3,6 @@
 
 #ifndef _ISOMAC
 /* Now define the internal interfaces.  */
-extern clock_t __times (struct tms *__buffer);
+extern clock_t __times(struct tms *__buffer);
 #endif
 #endif

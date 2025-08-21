@@ -19,9 +19,8 @@
 #include <sys/ioctl.h>
 
 /* Wait for pending output to be written on FD.  */
-int
-__libc_tcdrain (int fd)
+int __libc_tcdrain(int fd)
 {
-  return __ioctl (fd, TIOCDRAIN);
+    return __ioctl(fd, TIOCDRAIN);
 }
-weak_alias (__libc_tcdrain, tcdrain)
+weak_alias(__libc_tcdrain, tcdrain)

@@ -21,11 +21,10 @@
 /* Given a fd on a master pseudoterminal, clear a kernel lock so that
    the slave can be opened.  This is to avoid a race between opening the
    master and calling grantpt() to take possession of the slave. */
-int
-unlockpt (int fd __attribute__ ((unused)))
+int unlockpt(int fd __attribute__((unused)))
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (unlockpt)
+stub_warning(unlockpt)

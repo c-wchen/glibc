@@ -20,7 +20,7 @@
 #define S_TRIG_DATA_H
 
 .macro float_vector offset value
-.if .-__svml_s_trig_data != \offset
+.if . - __svml_s_trig_data != \offset
 .err
 .endif
 .rept 16
@@ -53,9 +53,9 @@
 #define __sRShifter                     64*22
 #define __sHalfPI                       64*23
 #define __sOneHalf                      64*24
-#define __iIndexMask                  	64*25
-#define __i2pK_1                      	64*26
-#define __sSignMask                   	64*27
+#define __iIndexMask                    64*25
+#define __i2pK_1                        64*26
+#define __sSignMask                     64*27
 #define __dT_cosf                       64*28
 #define __dT                            64*92
 

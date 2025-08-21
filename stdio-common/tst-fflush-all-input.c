@@ -25,70 +25,63 @@
 #include <support/xstdio.h>
 #include <support/xunistd.h>
 
-int
-do_test (void)
+int do_test(void)
 {
-  FILE *temp = tmpfile ();
-  TEST_VERIFY_EXIT (temp != NULL);
-  fprintf (temp, "abc");
-  TEST_COMPARE (fflush (temp), 0);
-  TEST_COMPARE (lseek (fileno (temp), 0, SEEK_SET), 0);
-  TEST_COMPARE (fgetc (temp), 'a');
-  TEST_COMPARE (fflush (NULL), 0);
-  TEST_COMPARE (lseek (fileno (temp), 0, SEEK_CUR), 1);
-  xfclose (temp);
+    FILE *temp = tmpfile();
+    TEST_VERIFY_EXIT(temp != NULL);
+    fprintf(temp, "abc");
+    TEST_COMPARE(fflush(temp), 0);
+    TEST_COMPARE(lseek(fileno(temp), 0, SEEK_SET), 0);
+    TEST_COMPARE(fgetc(temp), 'a');
+    TEST_COMPARE(fflush(NULL), 0);
+    TEST_COMPARE(lseek(fileno(temp), 0, SEEK_CUR), 1);
+    xfclose(temp);
 
-  /* Likewise, but in wide mode.  */
-  temp = tmpfile ();
-  TEST_VERIFY_EXIT (temp != NULL);
-  fwprintf (temp, L"abc");
-  TEST_COMPARE (fflush (temp), 0);
-  TEST_COMPARE (lseek (fileno (temp), 0, SEEK_SET), 0);
-  TEST_COMPARE (fgetwc (temp), L'a');
-  TEST_COMPARE (fflush (NULL), 0);
-  TEST_COMPARE (lseek (fileno (temp), 0, SEEK_CUR), 1);
-  xfclose (temp);
+    /* Likewise, but in wide mode.  */
+    temp = tmpfile();
+    TEST_VERIFY_EXIT(temp != NULL);
+    fwprintf(temp, L"abc");
+    TEST_COMPARE(fflush(temp), 0);
+    TEST_COMPARE(lseek(fileno(temp), 0, SEEK_SET), 0);
+    TEST_COMPARE(fgetwc(temp), L'a');
+    TEST_COMPARE(fflush(NULL), 0);
+    TEST_COMPARE(lseek(fileno(temp), 0, SEEK_CUR), 1);
+    xfclose(temp);
 
-  /* Similar tests, but with the flush implicitly occurring on exit
-     (in a forked subprocess).  */
+    /* Similar tests, but with the flush implicitly occurring on exit
+       (in a forked subprocess).  */
 
-  temp = tmpfile ();
-  TEST_VERIFY_EXIT (temp != NULL);
-  pid_t pid = xfork ();
-  if (pid == 0)
-    {
-      fprintf (temp, "abc");
-      TEST_COMPARE (fflush (temp), 0);
-      TEST_COMPARE (lseek (fileno (temp), 0, SEEK_SET), 0);
-      TEST_COMPARE (fgetc (temp), 'a');
-      exit (EXIT_SUCCESS);
-    }
-  else
-    {
-      TEST_COMPARE (xwaitpid (pid, NULL, 0), pid);
-      TEST_COMPARE (lseek (fileno (temp), 0, SEEK_CUR), 1);
-      xfclose (temp);
+    temp = tmpfile();
+    TEST_VERIFY_EXIT(temp != NULL);
+    pid_t pid = xfork();
+    if (pid == 0) {
+        fprintf(temp, "abc");
+        TEST_COMPARE(fflush(temp), 0);
+        TEST_COMPARE(lseek(fileno(temp), 0, SEEK_SET), 0);
+        TEST_COMPARE(fgetc(temp), 'a');
+        exit(EXIT_SUCCESS);
+    } else {
+        TEST_COMPARE(xwaitpid(pid, NULL, 0), pid);
+        TEST_COMPARE(lseek(fileno(temp), 0, SEEK_CUR), 1);
+        xfclose(temp);
     }
 
-  temp = tmpfile ();
-  TEST_VERIFY_EXIT (temp != NULL);
-  pid = xfork ();
-  if (pid == 0)
-    {
-      fwprintf (temp, L"abc");
-      TEST_COMPARE (fflush (temp), 0);
-      TEST_COMPARE (lseek (fileno (temp), 0, SEEK_SET), 0);
-      TEST_COMPARE (fgetwc (temp), L'a');
-      exit (EXIT_SUCCESS);
-    }
-  else
-    {
-      TEST_COMPARE (xwaitpid (pid, NULL, 0), pid);
-      TEST_COMPARE (lseek (fileno (temp), 0, SEEK_CUR), 1);
-      xfclose (temp);
+    temp = tmpfile();
+    TEST_VERIFY_EXIT(temp != NULL);
+    pid = xfork();
+    if (pid == 0) {
+        fwprintf(temp, L"abc");
+        TEST_COMPARE(fflush(temp), 0);
+        TEST_COMPARE(lseek(fileno(temp), 0, SEEK_SET), 0);
+        TEST_COMPARE(fgetwc(temp), L'a');
+        exit(EXIT_SUCCESS);
+    } else {
+        TEST_COMPARE(xwaitpid(pid, NULL, 0), pid);
+        TEST_COMPARE(lseek(fileno(temp), 0, SEEK_CUR), 1);
+        xfclose(temp);
     }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

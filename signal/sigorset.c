@@ -20,15 +20,13 @@
 #include <sigsetops.h>
 
 /* Combine sets LEFT and RIGHT by logical OR and place result in DEST.  */
-int
-sigorset (sigset_t *dest, const sigset_t *left, const sigset_t *right)
+int sigorset(sigset_t *dest, const sigset_t *left, const sigset_t *right)
 {
-  if (!dest || !left || !right)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (!dest || !left || !right) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  __sigorset (dest, left, right);
-  return 0;
+    __sigorset(dest, left, right);
+    return 0;
 }

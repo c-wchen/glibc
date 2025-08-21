@@ -18,10 +18,9 @@
 
 #include "tst-vtables-common.c"
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  return run_tests (true);
+    return run_tests(true);
 }
 
 #include <support/test-driver.c>

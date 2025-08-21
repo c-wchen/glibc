@@ -23,33 +23,30 @@
 #include <string-optype.h>
 
 /* Determine if any bytes within X1 and X2 are equal.  */
-static __always_inline _Bool
-has_eq (op_t x1, op_t x2)
+static __always_inline _Bool has_eq(op_t x1, op_t x2)
 {
-  int ret;
+    int ret;
 
-  /* TODO: A compiler builtin for cmp/str would be much better.  It is
-     difficult to use asm goto here, because the range of bt/bf are
-     quite small.  */
-  asm("cmp/str %1,%2\n\t"
-      "movt %0"
-      : "=r" (ret) : "r" (x1), "r" (x2) : "t");
+    /* TODO: A compiler builtin for cmp/str would be much better.  It is
+       difficult to use asm goto here, because the range of bt/bf are
+       quite small.  */
+    asm("cmp/str %1,%2\n\t"
+        "movt %0"
+        : "=r"(ret) : "r"(x1), "r"(x2) : "t");
 
-  return ret;
+    return ret;
 }
 
 /* Determine if any byte within X is zero.  */
-static __always_inline _Bool
-has_zero (op_t x)
+static __always_inline _Bool has_zero(op_t x)
 {
-  return has_eq (x, 0);
+    return has_eq(x, 0);
 }
 
 /* Likewise, but for zeros in X1 and equal bytes between X1 and X2.  */
-static __always_inline _Bool
-has_zero_eq (op_t x1, op_t x2)
+static __always_inline _Bool has_zero_eq(op_t x1, op_t x2)
 {
-  return has_zero (x1) | has_eq (x1, x2);
+    return has_zero(x1) | has_eq(x1, x2);
 }
 
 #endif /* STRING_FZB_H */

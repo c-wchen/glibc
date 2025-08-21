@@ -19,8 +19,7 @@
 #include <mach.h>
 #include <string.h>
 
-void *
-__mig_memcpy (void *dst, const void *src, vm_size_t len)
+void *__mig_memcpy(void *dst, const void *src, vm_size_t len)
 {
-  return memcpy (dst, src, len);
+    return memcpy(dst, src, len);
 }

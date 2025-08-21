@@ -25,24 +25,23 @@ int auditdupmod_status;
 /* Used to check for successful relocation processing.  */
 int *auditdupmod_status_address = &auditdupmod_status;
 
-static void __attribute__ ((constructor))
-init (void)
+static void __attribute__((constructor))
+init(void)
 {
-  ++auditdupmod_status;
-  printf ("info: tst-dlopen-auditdupmod.so constructor called (status %d)\n",
-          auditdupmod_status);
+    ++auditdupmod_status;
+    printf("info: tst-dlopen-auditdupmod.so constructor called (status %d)\n",
+           auditdupmod_status);
 }
 
-static void __attribute__ ((destructor))
-fini (void)
+static void __attribute__((destructor))
+fini(void)
 {
-  /* The tst-dlopen-auditdup-auditmod.so auditor incremented
-     auditdupmod_status.  */
-  printf ("info: tst-dlopen-auditdupmod.so destructor called (status %d)\n",
-          auditdupmod_status);
-  if (auditdupmod_status != 2)
-    {
-      puts ("error: auditdupmod_status == 2 expected");
-      exit (1);
+    /* The tst-dlopen-auditdup-auditmod.so auditor incremented
+       auditdupmod_status.  */
+    printf("info: tst-dlopen-auditdupmod.so destructor called (status %d)\n",
+           auditdupmod_status);
+    if (auditdupmod_status != 2) {
+        puts("error: auditdupmod_status == 2 expected");
+        exit(1);
     }
 }

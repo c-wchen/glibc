@@ -20,12 +20,11 @@
 
 /* Set the current machine's Internet number to ID.
    This call is restricted to the super-user.  */
-int
-sethostid (long int id)
+int sethostid(long int id)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
 
-stub_warning (sethostid)
+stub_warning(sethostid)

@@ -19,26 +19,26 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define printf_under_test(...)						\
-({									\
-  __label__ out;							\
-  int result;								\
-  char *str;								\
-									\
-  result = asprintf (&str, __VA_ARGS__);				\
-  if (result < 0)							\
-    {									\
-      perror ("asprintf");						\
-      goto out;								\
-    }									\
-  if (fwrite (str, sizeof (*str), result, stdout) != result)		\
-    {									\
-      perror ("fwrite");						\
-      result = -1;							\
-    }									\
-  free (str);								\
-out:									\
-  result;								\
+#define printf_under_test(...)                      \
+({                                  \
+  __label__ out;                            \
+  int result;                               \
+  char *str;                                \
+                                    \
+  result = asprintf (&str, __VA_ARGS__);                \
+  if (result < 0)                           \
+    {                                   \
+      perror ("asprintf");                      \
+      goto out;                             \
+    }                                   \
+  if (fwrite (str, sizeof (*str), result, stdout) != result)        \
+    {                                   \
+      perror ("fwrite");                        \
+      result = -1;                          \
+    }                                   \
+  free (str);                               \
+out:                                    \
+  result;                               \
 })
 
 #ifndef TIMEOUT

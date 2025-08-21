@@ -22,16 +22,17 @@
 #include <support/check.h>
 #include <support/support.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  if (setenv ("LANGUAGE", "de_DE.UTF-8", 1) != 0)
-    FAIL_EXIT1 ("setenv");
-  if (setenv ("LC_ALL", "C.UTF-8", 1) != 0)
-    FAIL_EXIT1 ("setenv");
-  xsetlocale (LC_ALL, "");
-  TEST_COMPARE_STRING (strerror (ENOENT), "No such file or directory");
-  return 0;
+    if (setenv("LANGUAGE", "de_DE.UTF-8", 1) != 0) {
+        FAIL_EXIT1("setenv");
+    }
+    if (setenv("LC_ALL", "C.UTF-8", 1) != 0) {
+        FAIL_EXIT1("setenv");
+    }
+    xsetlocale(LC_ALL, "");
+    TEST_COMPARE_STRING(strerror(ENOENT), "No such file or directory");
+    return 0;
 }
 
 #include <support/test-driver.c>

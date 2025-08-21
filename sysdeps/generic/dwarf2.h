@@ -19,7 +19,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _DWARF2_H
-#define _DWARF2_H	1
+#define _DWARF2_H   1
 
 /* This file is derived from the DWARF specification (a public document)
    Revision 2.0.0 (July 27, 1993) developed by the UNIX International
@@ -33,8 +33,7 @@
 #ifndef __ASSEMBLER__
 /* Tag names and codes.  */
 
-enum dwarf_tag
-  {
+enum dwarf_tag {
     DW_TAG_padding = 0x00,
     DW_TAG_array_type = 0x01,
     DW_TAG_class_type = 0x02,
@@ -86,23 +85,22 @@ enum dwarf_tag
     /* SGI/MIPS Extensions */
     DW_TAG_MIPS_loop = 0x4081,
     /* GNU extensions */
-    DW_TAG_format_label = 0x4101,	/* for FORTRAN 77 and Fortran 90 */
-    DW_TAG_function_template = 0x4102,	/* for C++ */
-    DW_TAG_class_template = 0x4103,	/* for C++ */
+    DW_TAG_format_label = 0x4101,   /* for FORTRAN 77 and Fortran 90 */
+    DW_TAG_function_template = 0x4102,  /* for C++ */
+    DW_TAG_class_template = 0x4103, /* for C++ */
     DW_TAG_GNU_BINCL = 0x4104,
     DW_TAG_GNU_EINCL = 0x4105
-  };
+};
 
-#define DW_TAG_lo_user	0x4080
-#define DW_TAG_hi_user	0xffff
+#define DW_TAG_lo_user  0x4080
+#define DW_TAG_hi_user  0xffff
 
 /* flag that tells whether entry has a child or not */
 #define DW_children_no   0
-#define	DW_children_yes  1
+#define DW_children_yes  1
 
 /* Form names and codes.  */
-enum dwarf_form
-  {
+enum dwarf_form {
     DW_FORM_addr = 0x01,
     DW_FORM_block2 = 0x03,
     DW_FORM_block4 = 0x04,
@@ -124,12 +122,11 @@ enum dwarf_form
     DW_FORM_ref8 = 0x14,
     DW_FORM_ref_udata = 0x15,
     DW_FORM_indirect = 0x16
-  };
+};
 
 /* Attribute names and codes.  */
 
-enum dwarf_attribute
-  {
+enum dwarf_attribute {
     DW_AT_sibling = 0x01,
     DW_AT_location = 0x02,
     DW_AT_name = 0x03,
@@ -211,15 +208,14 @@ enum dwarf_attribute
     DW_AT_src_coords = 0x2104,
     DW_AT_body_begin = 0x2105,
     DW_AT_body_end = 0x2106
-  };
+};
 
-#define DW_AT_lo_user	0x2000	/* implementation-defined range start */
-#define DW_AT_hi_user	0x3ff0	/* implementation-defined range end */
+#define DW_AT_lo_user   0x2000  /* implementation-defined range start */
+#define DW_AT_hi_user   0x3ff0  /* implementation-defined range end */
 
 /* Location atom names and codes.  */
 
-enum dwarf_location_atom
-  {
+enum dwarf_location_atom {
     DW_OP_addr = 0x03,
     DW_OP_deref = 0x06,
     DW_OP_const1u = 0x08,
@@ -365,15 +361,14 @@ enum dwarf_location_atom
     DW_OP_deref_size = 0x94,
     DW_OP_xderef_size = 0x95,
     DW_OP_nop = 0x96
-  };
+};
 
-#define DW_OP_lo_user	0x80	/* implementation-defined range start */
-#define DW_OP_hi_user	0xff	/* implementation-defined range end */
+#define DW_OP_lo_user   0x80    /* implementation-defined range start */
+#define DW_OP_hi_user   0xff    /* implementation-defined range end */
 
 /* Type encodings.  */
 
-enum dwarf_type
-  {
+enum dwarf_type {
     DW_ATE_void = 0x0,
     DW_ATE_address = 0x1,
     DW_ATE_boolean = 0x2,
@@ -383,81 +378,72 @@ enum dwarf_type
     DW_ATE_signed_char = 0x6,
     DW_ATE_unsigned = 0x7,
     DW_ATE_unsigned_char = 0x8
-  };
+};
 
-#define	DW_ATE_lo_user 0x80
-#define	DW_ATE_hi_user 0xff
+#define DW_ATE_lo_user 0x80
+#define DW_ATE_hi_user 0xff
 
 /* Array ordering names and codes.  */
-enum dwarf_array_dim_ordering
-  {
+enum dwarf_array_dim_ordering {
     DW_ORD_row_major = 0,
     DW_ORD_col_major = 1
-  };
+};
 
 /* access attribute */
-enum dwarf_access_attribute
-  {
+enum dwarf_access_attribute {
     DW_ACCESS_public = 1,
     DW_ACCESS_protected = 2,
     DW_ACCESS_private = 3
-  };
+};
 
 /* visibility */
-enum dwarf_visibility_attribute
-  {
+enum dwarf_visibility_attribute {
     DW_VIS_local = 1,
     DW_VIS_exported = 2,
     DW_VIS_qualified = 3
-  };
+};
 
 /* virtuality */
-enum dwarf_virtuality_attribute
-  {
+enum dwarf_virtuality_attribute {
     DW_VIRTUALITY_none = 0,
     DW_VIRTUALITY_virtual = 1,
     DW_VIRTUALITY_pure_virtual = 2
-  };
+};
 
 /* case sensitivity */
-enum dwarf_id_case
-  {
+enum dwarf_id_case {
     DW_ID_case_sensitive = 0,
     DW_ID_up_case = 1,
     DW_ID_down_case = 2,
     DW_ID_case_insensitive = 3
-  };
+};
 
 /* calling convention */
-enum dwarf_calling_convention
-  {
+enum dwarf_calling_convention {
     DW_CC_normal = 0x1,
     DW_CC_program = 0x2,
     DW_CC_nocall = 0x3
-  };
+};
 
 #define DW_CC_lo_user 0x40
 #define DW_CC_hi_user 0xff
 
 /* inline attribute */
-enum dwarf_inline_attribute
-  {
+enum dwarf_inline_attribute {
     DW_INL_not_inlined = 0,
     DW_INL_inlined = 1,
     DW_INL_declared_not_inlined = 2,
     DW_INL_declared_inlined = 3
-  };
+};
 
 /* discriminant lists */
-enum dwarf_discrim_list
-  {
+enum dwarf_discrim_list {
     DW_DSC_label = 0,
     DW_DSC_range = 1
-  };
+};
 
 /* line number opcodes */
-enum dwarf_line_number_ops
-  {
+enum dwarf_line_number_ops {
     DW_LNS_extended_op = 0,
     DW_LNS_copy = 1,
     DW_LNS_advance_pc = 2,
@@ -468,19 +454,17 @@ enum dwarf_line_number_ops
     DW_LNS_set_basic_block = 7,
     DW_LNS_const_add_pc = 8,
     DW_LNS_fixed_advance_pc = 9
-  };
+};
 
 /* line number extended opcodes */
-enum dwarf_line_number_x_ops
-  {
+enum dwarf_line_number_x_ops {
     DW_LNE_end_sequence = 1,
     DW_LNE_set_address = 2,
     DW_LNE_define_file = 3
-  };
+};
 
 /* call frame information */
-enum dwarf_call_frame_info
-  {
+enum dwarf_call_frame_info {
     DW_CFA_advance_loc = 0x40,
     DW_CFA_offset = 0x80,
     DW_CFA_restore = 0xc0,
@@ -513,24 +497,23 @@ enum dwarf_call_frame_info
     DW_CFA_GNU_window_save = 0x2d,
     DW_CFA_GNU_args_size = 0x2e,
     DW_CFA_GNU_negative_offset_extended = 0x2f
-  };
+};
 
-#define DW_CIE_ID	  0xffffffff
-#define DW_CIE_VERSION	  1
+#define DW_CIE_ID     0xffffffff
+#define DW_CIE_VERSION    1
 
 #define DW_CFA_extended   0
 #define DW_CFA_low_user   0x1c
 #define DW_CFA_high_user  0x3f
 
-#define DW_CHILDREN_no		     0x00
-#define DW_CHILDREN_yes		     0x01
+#define DW_CHILDREN_no           0x00
+#define DW_CHILDREN_yes          0x01
 
-#define DW_ADDR_none		0
+#define DW_ADDR_none        0
 
 /* Source language names and codes.  */
 
-enum dwarf_source_language
-  {
+enum dwarf_source_language {
     DW_LANG_C89 = 0x0001,
     DW_LANG_C = 0x0002,
     DW_LANG_Ada83 = 0x0003,
@@ -543,46 +526,45 @@ enum dwarf_source_language
     DW_LANG_Modula2 = 0x000a,
     DW_LANG_Java = 0x000b,
     DW_LANG_Mips_Assembler = 0x8001
-  };
+};
 
 
-#define DW_LANG_lo_user 0x8000	/* implementation-defined range start */
-#define DW_LANG_hi_user 0xffff	/* implementation-defined range start */
+#define DW_LANG_lo_user 0x8000  /* implementation-defined range start */
+#define DW_LANG_hi_user 0xffff  /* implementation-defined range start */
 
 /* Names and codes for macro information.  */
 
-enum dwarf_macinfo_record_type
-  {
+enum dwarf_macinfo_record_type {
     DW_MACINFO_define = 1,
     DW_MACINFO_undef = 2,
     DW_MACINFO_start_file = 3,
     DW_MACINFO_end_file = 4,
     DW_MACINFO_vendor_ext = 255
-  };
+};
 
 #endif /* !ASSEMBLER */
 
 /* @@@ For use with GNU frame unwind information.  */
 
-#define DW_EH_PE_absptr		0x00
-#define DW_EH_PE_omit		0xff
+#define DW_EH_PE_absptr     0x00
+#define DW_EH_PE_omit       0xff
 
-#define DW_EH_PE_uleb128	0x01
-#define DW_EH_PE_udata2		0x02
-#define DW_EH_PE_udata4		0x03
-#define DW_EH_PE_udata8		0x04
-#define DW_EH_PE_sleb128	0x09
-#define DW_EH_PE_sdata2		0x0A
-#define DW_EH_PE_sdata4		0x0B
-#define DW_EH_PE_sdata8		0x0C
-#define DW_EH_PE_signed		0x08
+#define DW_EH_PE_uleb128    0x01
+#define DW_EH_PE_udata2     0x02
+#define DW_EH_PE_udata4     0x03
+#define DW_EH_PE_udata8     0x04
+#define DW_EH_PE_sleb128    0x09
+#define DW_EH_PE_sdata2     0x0A
+#define DW_EH_PE_sdata4     0x0B
+#define DW_EH_PE_sdata8     0x0C
+#define DW_EH_PE_signed     0x08
 
-#define DW_EH_PE_pcrel		0x10
-#define DW_EH_PE_textrel	0x20
-#define DW_EH_PE_datarel	0x30
-#define DW_EH_PE_funcrel	0x40
-#define DW_EH_PE_aligned	0x50
+#define DW_EH_PE_pcrel      0x10
+#define DW_EH_PE_textrel    0x20
+#define DW_EH_PE_datarel    0x30
+#define DW_EH_PE_funcrel    0x40
+#define DW_EH_PE_aligned    0x50
 
-#define DW_EH_PE_indirect	0x80
+#define DW_EH_PE_indirect   0x80
 
 #endif /* dwarf2.h */

@@ -19,20 +19,19 @@
 #include <support/check.h>
 #include <support/xunistd.h>
 
-void
-support_isolate_in_subprocess (void (*callback) (void *), void *closure)
+void support_isolate_in_subprocess(void (*callback)(void *), void *closure)
 {
-  pid_t pid = xfork ();
-  if (pid == 0)
-    {
-      /* Child process.  */
-      callback (closure);
-      _exit (0);
+    pid_t pid = xfork();
+    if (pid == 0) {
+        /* Child process.  */
+        callback(closure);
+        _exit(0);
     }
 
-  /* Parent process.  */
-  int status;
-  xwaitpid (pid, &status, 0);
-  if (status != 0)
-    FAIL_EXIT1 ("child process exited with status %d", status);
+    /* Parent process.  */
+    int status;
+    xwaitpid(pid, &status, 0);
+    if (status != 0) {
+        FAIL_EXIT1("child process exited with status %d", status);
+    }
 }

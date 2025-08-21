@@ -21,9 +21,8 @@
 
 /* When threaded, h_errno may be a per-thread variable.  */
 int *
-weak_const_function
-__h_errno_location (void)
+weak_const_function __h_errno_location(void)
 {
-  return &h_errno;
+    return &h_errno;
 }
-libc_hidden_def (__h_errno_location)
+libc_hidden_def(__h_errno_location)

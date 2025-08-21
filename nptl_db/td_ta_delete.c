@@ -21,20 +21,20 @@
 #include "thread_dbP.h"
 
 
-td_err_e
-td_ta_delete (td_thragent_t *ta)
+td_err_e td_ta_delete(td_thragent_t *ta)
 {
-  LOG ("td_ta_delete");
+    LOG("td_ta_delete");
 
-  /* Safety check.  Note that the test will also fail for TA == NULL.  */
-  if (!ta_ok (ta))
-    return TD_BADTA;
+    /* Safety check.  Note that the test will also fail for TA == NULL.  */
+    if (!ta_ok(ta)) {
+        return TD_BADTA;
+    }
 
-  /* Remove the handle from the list.  */
-  list_del (&ta->list);
+    /* Remove the handle from the list.  */
+    list_del(&ta->list);
 
-  /* The handle was allocated in `td_ta_new'.  */
-  free (ta);
+    /* The handle was allocated in `td_ta_new'.  */
+    free(ta);
 
-  return TD_OK;
+    return TD_OK;
 }

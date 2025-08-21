@@ -33,173 +33,185 @@ static uint8_t *za_orig;
 static uint8_t *za_dump;
 static uint8_t *za_save;
 
-static void
-print_data(const char *msg, void *p)
+static void print_data(const char *msg, void *p)
 {
-  unsigned char *a = p;
-  printf ("%s:\n", msg);
-  for (int i = 0; i < svl; i++)
-    {
-      printf ("%d: ", i);
-      for (int j = 0; j < svl; j++)
-	printf("%02x,", a[i*svl+j]);
-      printf("\n");
+    unsigned char *a = p;
+    printf("%s:\n", msg);
+    for (int i = 0; i < svl; i++) {
+        printf("%d: ", i);
+        for (int j = 0; j < svl; j++) {
+            printf("%02x,", a[i * svl + j]);
+        }
+        printf("\n");
     }
-  printf(".\n");
-  fflush (stdout);
+    printf(".\n");
+    fflush(stdout);
 }
 
-__attribute__ ((noinline))
+__attribute__((noinline))
 static void
-do_longjmp (jmp_buf env)
+do_longjmp(jmp_buf env)
 {
-  longjmp (env, 1);
+    longjmp(env, 1);
 }
 
-__attribute__ ((noinline))
+__attribute__((noinline))
 static void
-do_setcontext (const ucontext_t *p)
+do_setcontext(const ucontext_t *p)
 {
-  setcontext (p);
+    setcontext(p);
 }
 
-static void
-longjmp_test (void)
+static void longjmp_test(void)
 {
-  unsigned long svcr;
-  jmp_buf env;
-  void *p;
-  int r;
-  struct blk blk = {za_save, svl, {0}};
+    unsigned long svcr;
+    jmp_buf env;
+    void *p;
+    int r;
+    struct blk blk = {za_save, svl, {0}};
 
-  printf ("longjmp test:\n");
-  p = get_tpidr2 ();
-  printf ("initial tp2 = %p\n", p);
-  if (p != NULL)
-    FAIL_EXIT1 ("tpidr2 is not initialized to 0");
-  svcr = get_svcr ();
-  if (svcr != 0)
-    FAIL_EXIT1 ("svcr != 0: %lu", svcr);
-  set_tpidr2 (&blk);
-  start_za ();
-  load_za (za_orig);
-
-  print_data ("za save space", za_save);
-  p = get_tpidr2 ();
-  printf ("before setjmp: tp2 = %p\n", p);
-  if (p != &blk)
-    FAIL_EXIT1 ("tpidr2 is not set to BLK %p", (void *)&blk);
-  if (setjmp (env) == 0)
-    {
-      p = get_tpidr2 ();
-      printf ("before longjmp: tp2 = %p\n", p);
-      if (p != NULL)
-	FAIL_EXIT1 ("tpidr2 has not been reset to null");
-      do_longjmp (env);
-      FAIL_EXIT1 ("longjmp returned");
+    printf("longjmp test:\n");
+    p = get_tpidr2();
+    printf("initial tp2 = %p\n", p);
+    if (p != NULL) {
+        FAIL_EXIT1("tpidr2 is not initialized to 0");
     }
-  p = get_tpidr2 ();
-  printf ("after longjmp: tp2 = %p\n", p);
-  if (p != NULL)
-    FAIL_EXIT1 ("tpidr2 is not set to 0");
-  svcr = get_svcr ();
-  if (svcr != 0)
-    FAIL_EXIT1 ("svcr != 0: %lu", svcr);
-  print_data ("za save space", za_save);
-  r = memcmp (za_orig, za_save, svl*svl);
-  if (r != 0)
-    FAIL_EXIT1 ("saving za failed");
-}
-
-static void
-setcontext_test (void)
-{
-  volatile int setcontext_done = 0;
-  unsigned long svcr;
-  ucontext_t ctx;
-  void *p;
-  int r;
-  struct blk blk = {za_save, svl, {0}};
-
-  printf ("setcontext test:\n");
-  p = get_tpidr2 ();
-  printf ("initial tp2 = %p\n", p);
-  if (p != NULL)
-    FAIL_EXIT1 ("tpidr2 is not initialized to 0");
-  svcr = get_svcr ();
-  if (svcr != 0)
-    FAIL_EXIT1 ("svcr != 0: %lu", svcr);
-  set_tpidr2 (&blk);
-  start_za ();
-  load_za (za_orig);
-
-  print_data ("za save space", za_save);
-  p = get_tpidr2 ();
-  printf ("before getcontext: tp2 = %p\n", p);
-  if (p != &blk)
-    FAIL_EXIT1 ("tpidr2 is not set to BLK %p", (void *)&blk);
-  r = getcontext (&ctx);
-  if (r != 0)
-    FAIL_EXIT1 ("getcontext failed");
-  if (setcontext_done == 0)
-    {
-      p = get_tpidr2 ();
-      printf ("before setcontext: tp2 = %p\n", p);
-      if (p != &blk)
-	FAIL_EXIT1 ("tpidr2 is clobbered");
-      setcontext_done = 1;
-      do_setcontext (&ctx);
-      FAIL_EXIT1 ("setcontext returned");
+    svcr = get_svcr();
+    if (svcr != 0) {
+        FAIL_EXIT1("svcr != 0: %lu", svcr);
     }
-  p = get_tpidr2 ();
-  printf ("after setcontext: tp2 = %p\n", p);
-  if (p != NULL)
-    FAIL_EXIT1 ("tpidr2 is not set to 0");
-  svcr = get_svcr ();
-  if (svcr != 0)
-    FAIL_EXIT1 ("svcr != 0: %lu", svcr);
-  print_data ("za save space", za_save);
-  r = memcmp (za_orig, za_save, svl*svl);
-  if (r != 0)
-    FAIL_EXIT1 ("saving za failed");
+    set_tpidr2(&blk);
+    start_za();
+    load_za(za_orig);
+
+    print_data("za save space", za_save);
+    p = get_tpidr2();
+    printf("before setjmp: tp2 = %p\n", p);
+    if (p != &blk) {
+        FAIL_EXIT1("tpidr2 is not set to BLK %p", (void *)&blk);
+    }
+    if (setjmp(env) == 0) {
+        p = get_tpidr2();
+        printf("before longjmp: tp2 = %p\n", p);
+        if (p != NULL) {
+            FAIL_EXIT1("tpidr2 has not been reset to null");
+        }
+        do_longjmp(env);
+        FAIL_EXIT1("longjmp returned");
+    }
+    p = get_tpidr2();
+    printf("after longjmp: tp2 = %p\n", p);
+    if (p != NULL) {
+        FAIL_EXIT1("tpidr2 is not set to 0");
+    }
+    svcr = get_svcr();
+    if (svcr != 0) {
+        FAIL_EXIT1("svcr != 0: %lu", svcr);
+    }
+    print_data("za save space", za_save);
+    r = memcmp(za_orig, za_save, svl * svl);
+    if (r != 0) {
+        FAIL_EXIT1("saving za failed");
+    }
 }
 
-static int
-do_test (void)
+static void setcontext_test(void)
 {
-  unsigned long hwcap2;
+    volatile int setcontext_done = 0;
+    unsigned long svcr;
+    ucontext_t ctx;
+    void *p;
+    int r;
+    struct blk blk = {za_save, svl, {0}};
 
-  hwcap2 = getauxval (AT_HWCAP2);
-  if ((hwcap2 & HWCAP2_SME) == 0)
-    return EXIT_UNSUPPORTED;
+    printf("setcontext test:\n");
+    p = get_tpidr2();
+    printf("initial tp2 = %p\n", p);
+    if (p != NULL) {
+        FAIL_EXIT1("tpidr2 is not initialized to 0");
+    }
+    svcr = get_svcr();
+    if (svcr != 0) {
+        FAIL_EXIT1("svcr != 0: %lu", svcr);
+    }
+    set_tpidr2(&blk);
+    start_za();
+    load_za(za_orig);
 
-  svl = get_svl ();
-  printf ("svl: %lu\n", svl);
-  if (svl < 16 || svl % 16 != 0 || svl >= (1 << 16))
-    FAIL_EXIT1 ("invalid svl");
+    print_data("za save space", za_save);
+    p = get_tpidr2();
+    printf("before getcontext: tp2 = %p\n", p);
+    if (p != &blk) {
+        FAIL_EXIT1("tpidr2 is not set to BLK %p", (void *)&blk);
+    }
+    r = getcontext(&ctx);
+    if (r != 0) {
+        FAIL_EXIT1("getcontext failed");
+    }
+    if (setcontext_done == 0) {
+        p = get_tpidr2();
+        printf("before setcontext: tp2 = %p\n", p);
+        if (p != &blk) {
+            FAIL_EXIT1("tpidr2 is clobbered");
+        }
+        setcontext_done = 1;
+        do_setcontext(&ctx);
+        FAIL_EXIT1("setcontext returned");
+    }
+    p = get_tpidr2();
+    printf("after setcontext: tp2 = %p\n", p);
+    if (p != NULL) {
+        FAIL_EXIT1("tpidr2 is not set to 0");
+    }
+    svcr = get_svcr();
+    if (svcr != 0) {
+        FAIL_EXIT1("svcr != 0: %lu", svcr);
+    }
+    print_data("za save space", za_save);
+    r = memcmp(za_orig, za_save, svl * svl);
+    if (r != 0) {
+        FAIL_EXIT1("saving za failed");
+    }
+}
 
-  za_orig = xmalloc (svl*svl);
-  za_save = xmalloc (svl*svl);
-  za_dump = xmalloc (svl*svl);
-  memset (za_orig, 1, svl*svl);
-  memset (za_save, 2, svl*svl);
-  memset (za_dump, 3, svl*svl);
-  for (int i = 0; i < svl; i++)
-    for (int j = 0; j < svl; j++)
-      za_orig[i*svl+j] = i*svl+j;
-  print_data ("original data", za_orig);
+static int do_test(void)
+{
+    unsigned long hwcap2;
 
-  longjmp_test ();
+    hwcap2 = getauxval(AT_HWCAP2);
+    if ((hwcap2 & HWCAP2_SME) == 0) {
+        return EXIT_UNSUPPORTED;
+    }
 
-  memset (za_save, 2, svl*svl);
-  memset (za_dump, 3, svl*svl);
+    svl = get_svl();
+    printf("svl: %lu\n", svl);
+    if (svl < 16 || svl % 16 != 0 || svl >= (1 << 16)) {
+        FAIL_EXIT1("invalid svl");
+    }
 
-  setcontext_test ();
+    za_orig = xmalloc(svl * svl);
+    za_save = xmalloc(svl * svl);
+    za_dump = xmalloc(svl * svl);
+    memset(za_orig, 1, svl * svl);
+    memset(za_save, 2, svl * svl);
+    memset(za_dump, 3, svl * svl);
+    for (int i = 0; i < svl; i++)
+        for (int j = 0; j < svl; j++) {
+            za_orig[i * svl + j] = i * svl + j;
+        }
+    print_data("original data", za_orig);
 
-  free (za_orig);
-  free (za_save);
-  free (za_dump);
-  return 0;
+    longjmp_test();
+
+    memset(za_save, 2, svl * svl);
+    memset(za_dump, 3, svl * svl);
+
+    setcontext_test();
+
+    free(za_orig);
+    free(za_save);
+    free(za_dump);
+    return 0;
 }
 
 #include <support/test-driver.c>

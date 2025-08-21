@@ -20,24 +20,22 @@
 #include <support/xstdio.h>
 #include <support/xptrace.h>
 
-int
-support_ptrace_scope (void)
+int support_ptrace_scope(void)
 {
-  int ptrace_scope = -1;
+    int ptrace_scope = -1;
 
 #ifdef __linux__
-  /* YAMA may be not enabled.  Otherwise it contains a value from 0 to 3:
-     - 0 classic ptrace permissions
-     - 1 restricted ptrace
-     - 2 admin-only attach
-     - 3 no attach  */
-  FILE *f = fopen ("/proc/sys/kernel/yama/ptrace_scope", "r");
-  if (f != NULL)
-    {
-      TEST_COMPARE (fscanf (f, "%d", &ptrace_scope), 1);
-      xfclose (f);
+    /* YAMA may be not enabled.  Otherwise it contains a value from 0 to 3:
+       - 0 classic ptrace permissions
+       - 1 restricted ptrace
+       - 2 admin-only attach
+       - 3 no attach  */
+    FILE *f = fopen("/proc/sys/kernel/yama/ptrace_scope", "r");
+    if (f != NULL) {
+        TEST_COMPARE(fscanf(f, "%d", &ptrace_scope), 1);
+        xfclose(f);
     }
 #endif
 
-  return ptrace_scope;
+    return ptrace_scope;
 }

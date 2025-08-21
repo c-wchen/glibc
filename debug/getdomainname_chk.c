@@ -18,12 +18,12 @@
 #include <unistd.h>
 
 
-int
-__getdomainname_chk (char *buf, size_t buflen, size_t nreal)
+int __getdomainname_chk(char *buf, size_t buflen, size_t nreal)
 {
-  if (buflen > nreal)
-    __chk_fail ();
+    if (buflen > nreal) {
+        __chk_fail();
+    }
 
-  return getdomainname (buf, buflen);
+    return getdomainname(buf, buflen);
 }
-libc_hidden_def (__getdomainname_chk)
+libc_hidden_def(__getdomainname_chk)

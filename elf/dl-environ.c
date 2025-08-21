@@ -23,62 +23,57 @@
 
 /* Walk through the environment of the process and return all entries
    starting with `LD_'.  */
-char *
-_dl_next_ld_env_entry (char ***position)
+char *_dl_next_ld_env_entry(char ***position)
 {
-  char **current = *position;
-  char *result = NULL;
+    char **current = *position;
+    char *result = NULL;
 
-  while (*current != NULL)
-    {
-      if (__builtin_expect ((*current)[0] == 'L', 0)
-	  && (*current)[1] == 'D' && (*current)[2] == '_')
-	{
-	  result = &(*current)[3];
+    while (*current != NULL) {
+        if (__builtin_expect((*current)[0] == 'L', 0)
+            && (*current)[1] == 'D' && (*current)[2] == '_') {
+            result = &(*current)[3];
 
-	  /* Save current position for next visit.  */
-	  *position = ++current;
+            /* Save current position for next visit.  */
+            *position = ++current;
 
-	  break;
-	}
+            break;
+        }
 
-      ++current;
+        ++current;
     }
 
-  return result;
+    return result;
 }
 
 
 /* In ld.so __environ is not exported.  */
 extern char **__environ attribute_hidden;
 
-int
-unsetenv (const char *name)
+int unsetenv(const char *name)
 {
-  char **ep;
+    char **ep;
 
-  ep = __environ;
-  while (*ep != NULL)
-    {
-      size_t cnt = 0;
+    ep = __environ;
+    while (*ep != NULL) {
+        size_t cnt = 0;
 
-      while ((*ep)[cnt] == name[cnt] && name[cnt] != '\0')
-	++cnt;
+        while ((*ep)[cnt] == name[cnt] && name[cnt] != '\0') {
+            ++cnt;
+        }
 
-      if (name[cnt] == '\0' && (*ep)[cnt] == '=')
-	{
-	  /* Found it.  Remove this pointer by moving later ones to
-	     the front.  */
-	  char **dp = ep;
+        if (name[cnt] == '\0' && (*ep)[cnt] == '=') {
+            /* Found it.  Remove this pointer by moving later ones to
+               the front.  */
+            char **dp = ep;
 
-	  do
-	    dp[0] = dp[1];
-	  while (*dp++);
-	  /* Continue the loop in case NAME appears again.  */
-	}
-      else
-	++ep;
+            do {
+                dp[0] = dp[1];
+            } while (*dp++);
+            /* Continue the loop in case NAME appears again.  */
+        } else {
+            ++ep;
+        }
     }
 
-  return 0;
+    return 0;
 }

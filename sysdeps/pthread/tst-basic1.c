@@ -21,61 +21,53 @@
 #include <sys/types.h>
 
 
-static int do_test (void);
+static int do_test(void);
 
 #define TEST_FUNCTION do_test ()
 #include "../test-skeleton.c"
 
 static pid_t pid;
 
-static void *
-tf (void *a)
+static void *tf(void *a)
 {
-  if (getpid () != pid)
-    {
-      write_message ("pid mismatch\n");
-      _exit (1);
+    if (getpid() != pid) {
+        write_message("pid mismatch\n");
+        _exit(1);
     }
 
-  return a;
+    return a;
 }
 
 
-int
-do_test (void)
+int do_test(void)
 {
-  pid = getpid ();
+    pid = getpid();
 
 #define N 2
-  pthread_t t[N];
-  int i;
+    pthread_t t[N];
+    int i;
 
-  for (i = 0; i < N; ++i)
-    if (pthread_create (&t[i], NULL, tf, (void *) (long int) (i + 1)) != 0)
-      {
-	write_message ("create failed\n");
-	_exit (1);
-      }
-    else
-      printf ("created thread %d\n", i);
+    for (i = 0; i < N; ++i)
+        if (pthread_create(&t[i], NULL, tf, (void *)(long int)(i + 1)) != 0) {
+            write_message("create failed\n");
+            _exit(1);
+        } else {
+            printf("created thread %d\n", i);
+        }
 
-  for (i = 0; i < N; ++i)
-    {
-      void *r;
-      int e;
-      if ((e = pthread_join (t[i], &r)) != 0)
-	{
-	  printf ("join failed: %d\n", e);
-	  _exit (1);
-	}
-      else if (r != (void *) (long int) (i + 1))
-	{
-	  write_message ("result wrong\n");
-	  _exit (1);
-	}
-      else
-	printf ("joined thread %d\n", i);
+    for (i = 0; i < N; ++i) {
+        void *r;
+        int e;
+        if ((e = pthread_join(t[i], &r)) != 0) {
+            printf("join failed: %d\n", e);
+            _exit(1);
+        } else if (r != (void *)(long int)(i + 1)) {
+            write_message("result wrong\n");
+            _exit(1);
+        } else {
+            printf("joined thread %d\n", i);
+        }
     }
 
-  return 0;
+    return 0;
 }

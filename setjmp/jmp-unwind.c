@@ -18,11 +18,10 @@
 
 #include <setjmp.h>
 
-void
-_longjmp_unwind (jmp_buf env, int val)
+void _longjmp_unwind(jmp_buf env, int val)
 {
 
-  /* This function can perform any cleanups necessary to safely unwind the
-     stack frames around the current context which ENV unwinds past.  */
+    /* This function can perform any cleanups necessary to safely unwind the
+       stack frames around the current context which ENV unwinds past.  */
 
 }

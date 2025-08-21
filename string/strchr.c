@@ -25,13 +25,12 @@
 #endif
 
 /* Find the first occurrence of C in S.  */
-char *
-strchr (const char *s, int c_in)
+char *strchr(const char *s, int c_in)
 {
-  char *r = __strchrnul (s, c_in);
-  return (*(unsigned char *)r == (unsigned char)c_in) ? r : NULL;
+    char *r = __strchrnul(s, c_in);
+    return (*(unsigned char *)r == (unsigned char)c_in) ? r : NULL;
 }
 #ifndef STRCHR
-weak_alias (strchr, index)
-libc_hidden_builtin_def (strchr)
+weak_alias(strchr, index)
+libc_hidden_builtin_def(strchr)
 #endif

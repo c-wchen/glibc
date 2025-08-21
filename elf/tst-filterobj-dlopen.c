@@ -22,18 +22,18 @@
 #include <support/check.h>
 #include <support/xdlfcn.h>
 
-static int do_test (void)
+static int do_test(void)
 {
-  void *lib = xdlopen ("tst-filterobj-flt.so", RTLD_LAZY);
-  char *(*fn)(void) = xdlsym (lib, "get_text");
-  const char* text = fn ();
+    void *lib = xdlopen("tst-filterobj-flt.so", RTLD_LAZY);
+    char *(*fn)(void) = xdlsym(lib, "get_text");
+    const char *text = fn();
 
-  printf ("%s\n", text);
+    printf("%s\n", text);
 
-  /* Verify the text matches what we expect from the filtee */
-  TEST_COMPARE_STRING (text, "Hello from filtee (PASS)");
+    /* Verify the text matches what we expect from the filtee */
+    TEST_COMPARE_STRING(text, "Hello from filtee (PASS)");
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

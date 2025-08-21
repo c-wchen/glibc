@@ -25,17 +25,16 @@
 # include <math.h>
 # include <libm-alias-double.h>
 
-long long int
-__llround (double x)
+long long int __llround(double x)
 {
-  long long int y;
-  /* The z196 zarch "convert to fixed" (cgdbra) instruction is rounding
-     x to the nearest integer with "ties away from 0" rounding mode
-     (M3-field: 1) where inexact exceptions are suppressed (M4-field: 4).  */
-  __asm__ ("cgdbra %0,1,%1,4" : "=d" (y) : "f" (x) : "cc");
-  return y;
+    long long int y;
+    /* The z196 zarch "convert to fixed" (cgdbra) instruction is rounding
+       x to the nearest integer with "ties away from 0" rounding mode
+       (M3-field: 1) where inexact exceptions are suppressed (M4-field: 4).  */
+    __asm__("cgdbra %0,1,%1,4" : "=d"(y) : "f"(x) : "cc");
+    return y;
 }
-libm_alias_double (__llround, llround)
+libm_alias_double(__llround, llround)
 
 #else
 # include <sysdeps/ieee754/dbl-64/s_llround.c>

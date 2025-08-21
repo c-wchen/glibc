@@ -31,79 +31,81 @@
 
 /* As ptsname, but allocates space for an appropriately-sized string
    using malloc.  */
-static char *
-xptsname (int fd)
+static char *xptsname(int fd)
 {
-  int rv;
-  size_t buf_len = 128;
-  char *buf = xmalloc (buf_len);
-  for (;;)
-    {
-      rv = ptsname_r (fd, buf, buf_len);
-      if (rv)
-        FAIL_EXIT1 ("ptsname_r: %s", strerror (errno));
+    int rv;
+    size_t buf_len = 128;
+    char *buf = xmalloc(buf_len);
+    for (;;) {
+        rv = ptsname_r(fd, buf, buf_len);
+        if (rv) {
+            FAIL_EXIT1("ptsname_r: %s", strerror(errno));
+        }
 
-      if (memchr (buf, '\0', buf_len))
-        return buf; /* ptsname succeeded and the buffer was not truncated */
+        if (memchr(buf, '\0', buf_len)) {
+            return buf;    /* ptsname succeeded and the buffer was not truncated */
+        }
 
-      buf_len *= 2;
-      buf = xrealloc (buf, buf_len);
+        buf_len *= 2;
+        buf = xrealloc(buf, buf_len);
     }
 }
 
-void
-support_openpty (int *a_outer, int *a_inner, char **a_name,
-                 const struct termios *termp,
-                 const struct winsize *winp)
+void support_openpty(int *a_outer, int *a_inner, char **a_name,
+                     const struct termios *termp,
+                     const struct winsize *winp)
 {
-  int outer = -1, inner = -1;
-  char *namebuf = NULL;
+    int outer = -1, inner = -1;
+    char *namebuf = NULL;
 
-  outer = posix_openpt (O_RDWR | O_NOCTTY);
-  if (outer == -1)
-    FAIL_EXIT1 ("posix_openpt: %s", strerror (errno));
+    outer = posix_openpt(O_RDWR | O_NOCTTY);
+    if (outer == -1) {
+        FAIL_EXIT1("posix_openpt: %s", strerror(errno));
+    }
 
-  if (grantpt (outer))
-    FAIL_EXIT1 ("grantpt: %s", strerror (errno));
+    if (grantpt(outer)) {
+        FAIL_EXIT1("grantpt: %s", strerror(errno));
+    }
 
-  if (unlockpt (outer))
-    FAIL_EXIT1 ("unlockpt: %s", strerror (errno));
+    if (unlockpt(outer)) {
+        FAIL_EXIT1("unlockpt: %s", strerror(errno));
+    }
 
 
 #ifdef TIOCGPTPEER
-  inner = ioctl (outer, TIOCGPTPEER, O_RDWR | O_NOCTTY);
+    inner = ioctl(outer, TIOCGPTPEER, O_RDWR | O_NOCTTY);
 #endif
-  if (inner == -1)
-    {
-      /* The kernel might not support TIOCGPTPEER, fall back to open
-         by name.  */
-      namebuf = xptsname (outer);
-      inner = open (namebuf, O_RDWR | O_NOCTTY);
-      if (inner == -1)
-        FAIL_EXIT1 ("%s: %s", namebuf, strerror (errno));
+    if (inner == -1) {
+        /* The kernel might not support TIOCGPTPEER, fall back to open
+           by name.  */
+        namebuf = xptsname(outer);
+        inner = open(namebuf, O_RDWR | O_NOCTTY);
+        if (inner == -1) {
+            FAIL_EXIT1("%s: %s", namebuf, strerror(errno));
+        }
     }
 
-  if (termp)
-    {
-      if (tcsetattr (inner, TCSAFLUSH, termp))
-        FAIL_EXIT1 ("tcsetattr: %s", strerror (errno));
+    if (termp) {
+        if (tcsetattr(inner, TCSAFLUSH, termp)) {
+            FAIL_EXIT1("tcsetattr: %s", strerror(errno));
+        }
     }
 #ifdef TIOCSWINSZ
-  if (winp)
-    {
-      if (ioctl (inner, TIOCSWINSZ, winp))
-        FAIL_EXIT1 ("TIOCSWINSZ: %s", strerror (errno));
+    if (winp) {
+        if (ioctl(inner, TIOCSWINSZ, winp)) {
+            FAIL_EXIT1("TIOCSWINSZ: %s", strerror(errno));
+        }
     }
 #endif
 
-  if (a_name)
-    {
-      if (!namebuf)
-        namebuf = xptsname (outer);
-      *a_name = namebuf;
+    if (a_name) {
+        if (!namebuf) {
+            namebuf = xptsname(outer);
+        }
+        *a_name = namebuf;
+    } else {
+        free(namebuf);
     }
-  else
-    free (namebuf);
-  *a_outer = outer;
-  *a_inner = inner;
+    *a_outer = outer;
+    *a_inner = inner;
 }

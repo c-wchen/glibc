@@ -21,7 +21,7 @@
  */
 
 #ifndef _BITS_TIME_H
-#define _BITS_TIME_H	1
+#define _BITS_TIME_H    1
 
 #include <bits/types.h>
 
@@ -37,28 +37,28 @@
    && !defined __USE_XOPEN2K
 /* Even though CLOCKS_PER_SEC has such a strange value CLK_TCK
    presents the real value for clock ticks per second for the system.  */
-extern long int __sysconf (int);
-# define CLK_TCK ((__clock_t) __sysconf (2))	/* 2 is _SC_CLK_TCK */
+extern long int __sysconf(int);
+# define CLK_TCK ((__clock_t) __sysconf (2))    /* 2 is _SC_CLK_TCK */
 #endif
 
 #ifdef __USE_POSIX199309
 /* Identifier for system-wide realtime clock.  */
-# define CLOCK_REALTIME			0
+# define CLOCK_REALTIME         0
 /* Monotonic system-wide clock.  */
-# define CLOCK_MONOTONIC		1
+# define CLOCK_MONOTONIC        1
 /* High-resolution timer from the CPU.  */
-# define CLOCK_PROCESS_CPUTIME_ID	2
+# define CLOCK_PROCESS_CPUTIME_ID   2
 /* Thread-specific CPU-time clock.  */
-# define CLOCK_THREAD_CPUTIME_ID	3
+# define CLOCK_THREAD_CPUTIME_ID    3
 /* Monotonic system-wide clock, not adjusted for frequency scaling.  */
-# define CLOCK_MONOTONIC_RAW		4
+# define CLOCK_MONOTONIC_RAW        4
 /* Identifier for system-wide realtime clock, updated only on ticks.  */
-# define CLOCK_REALTIME_COARSE		5
+# define CLOCK_REALTIME_COARSE      5
 /* Monotonic system-wide clock, updated only on ticks.  */
-# define CLOCK_MONOTONIC_COARSE		6
+# define CLOCK_MONOTONIC_COARSE     6
 
 /* Flag to indicate time is absolute.  */
-# define TIMER_ABSTIME			1
+# define TIMER_ABSTIME          1
 #endif
 
-#endif	/* bits/time.h */
+#endif  /* bits/time.h */

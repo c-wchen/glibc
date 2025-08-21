@@ -22,16 +22,15 @@
 extern int mod1_status;
 int mod2_status;
 
-static void __attribute__ ((constructor))
-init (void)
+static void __attribute__((constructor))
+init(void)
 {
-  printf ("info: tst-dlopen-constructor-null-mod2.so constructor"
-          " (mod1_status=%d)", mod1_status);
-  if (!(mod1_status == 1 && mod2_status == 0))
-    {
-      puts ("error: mod1_status == 1 && mod2_status == 0 expected");
-      exit (1);
+    printf("info: tst-dlopen-constructor-null-mod2.so constructor"
+           " (mod1_status=%d)", mod1_status);
+    if (!(mod1_status == 1 && mod2_status == 0)) {
+        puts("error: mod1_status == 1 && mod2_status == 0 expected");
+        exit(1);
     }
-  setenv ("mod2_status", "constructed", 1);
-  mod2_status = 1;
+    setenv("mod2_status", "constructed", 1);
+    mod2_status = 1;
 }

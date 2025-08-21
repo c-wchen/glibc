@@ -24,30 +24,31 @@
 #include <support/support.h>
 #include <support/xmemstream.h>
 
-char *
-support_format_netent (struct netent *e)
+char *support_format_netent(struct netent *e)
 {
-  if (e == NULL)
-    {
-      char *value = support_format_herrno (h_errno);
-      char *result = xasprintf ("error: %s\n", value);
-      free (value);
-      return result;
+    if (e == NULL) {
+        char *value = support_format_herrno(h_errno);
+        char *result = xasprintf("error: %s\n", value);
+        free(value);
+        return result;
     }
 
-  struct xmemstream mem;
-  xopen_memstream (&mem);
+    struct xmemstream mem;
+    xopen_memstream(&mem);
 
-  if (e->n_name != NULL)
-    fprintf (mem.out, "name: %s\n", e->n_name);
-  for (char **ap = e->n_aliases; *ap != NULL; ++ap)
-    fprintf (mem.out, "alias: %s\n", *ap);
-  if (e->n_addrtype != AF_INET)
-    fprintf (mem.out, "addrtype: %d\n", e->n_addrtype);
-  /* On alpha, e->n_net is an unsigned long.  */
-  unsigned int n_net = e->n_net;
-  fprintf (mem.out, "net: 0x%08x\n", n_net);
+    if (e->n_name != NULL) {
+        fprintf(mem.out, "name: %s\n", e->n_name);
+    }
+    for (char **ap = e->n_aliases; *ap != NULL; ++ap) {
+        fprintf(mem.out, "alias: %s\n", *ap);
+    }
+    if (e->n_addrtype != AF_INET) {
+        fprintf(mem.out, "addrtype: %d\n", e->n_addrtype);
+    }
+    /* On alpha, e->n_net is an unsigned long.  */
+    unsigned int n_net = e->n_net;
+    fprintf(mem.out, "net: 0x%08x\n", n_net);
 
-  xfclose_memstream (&mem);
-  return mem.buffer;
+    xfclose_memstream(&mem);
+    return mem.buffer;
 }

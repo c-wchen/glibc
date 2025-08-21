@@ -23,10 +23,9 @@
    store information about the child's resource usage (as a `struct rusage')
    there.  If the WUNTRACED bit is set in OPTIONS, return status for stopped
    children; otherwise don't.  */
-pid_t
-__wait3 (int *stat_loc, int options, struct rusage *usage)
+pid_t __wait3(int *stat_loc, int options, struct rusage *usage)
 {
-  return __wait4 (WAIT_ANY, stat_loc, options, usage);
+    return __wait4(WAIT_ANY, stat_loc, options, usage);
 }
 
-weak_alias (__wait3, wait3)
+weak_alias(__wait3, wait3)

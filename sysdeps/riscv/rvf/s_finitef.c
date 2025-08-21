@@ -19,10 +19,9 @@
 #include <math.h>
 #include <fenv_private.h>
 
-int
-__finitef (float x)
+int __finitef(float x)
 {
-  return _FCLASS (x) & ~(_FCLASS_INF | _FCLASS_NAN);
+    return _FCLASS(x) & ~(_FCLASS_INF | _FCLASS_NAN);
 }
-hidden_def (__finitef)
-weak_alias (__finitef, finitef)
+hidden_def(__finitef)
+weak_alias(__finitef, finitef)

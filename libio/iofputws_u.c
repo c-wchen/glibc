@@ -28,15 +28,15 @@
 #include <stdio.h>
 #include <wchar.h>
 
-int
-fputws_unlocked (const wchar_t *str, FILE *fp)
+int fputws_unlocked(const wchar_t *str, FILE *fp)
 {
-  size_t len = __wcslen (str);
-  int result = EOF;
-  CHECK_FILE (fp, EOF);
-  if (_IO_fwide (fp, 1) == 1
-      && _IO_sputn (fp, (char *) str, len) == len)
-    result = 1;
-  return result;
+    size_t len = __wcslen(str);
+    int result = EOF;
+    CHECK_FILE(fp, EOF);
+    if (_IO_fwide(fp, 1) == 1
+        && _IO_sputn(fp, (char *) str, len) == len) {
+        result = 1;
+    }
+    return result;
 }
-libc_hidden_def (fputws_unlocked)
+libc_hidden_def(fputws_unlocked)

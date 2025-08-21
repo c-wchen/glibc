@@ -2,8 +2,7 @@
 #include <complex.h>
 
 double _Complex
-attribute_hidden
-cacoshl (double _Complex x)
+attribute_hidden cacoshl(double _Complex x)
 {
-  return cacosh (x);
+    return cacosh(x);
 }

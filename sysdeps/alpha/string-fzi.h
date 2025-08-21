@@ -28,34 +28,35 @@
 
 /* A subroutine for the index_zero functions.  Given a bitmask C,
    return the index of the first bit set in memory order.  */
-static __always_inline unsigned int
-index_first (find_t c)
+static __always_inline unsigned int index_first(find_t c)
 {
 #ifdef __alpha_cix__
-  return __builtin_ctzl (c);
+    return __builtin_ctzl(c);
 #else
-  c = c & -c;
-  return (c & 0xf0 ? 4 : 0) + (c & 0xcc ? 2 : 0) + (c & 0xaa ? 1 : 0);
+    c = c & -c;
+    return (c & 0xf0 ? 4 : 0) + (c & 0xcc ? 2 : 0) + (c & 0xaa ? 1 : 0);
 #endif
 }
 
 /* Similarly, but return the (memory order) index of the last bit
    that is non-zero.  Note that only the least 8 bits may be nonzero.  */
 
-static __always_inline unsigned int
-index_last (find_t x)
+static __always_inline unsigned int index_last(find_t x)
 {
 #ifdef __alpha_cix__
-  return __builtin_clzl (x) ^ 63;
+    return __builtin_clzl(x) ^ 63;
 #else
-  unsigned r = 0;
-  if (x & 0xf0)
-    r += 4;
-  if (x & (0xc << r))
-    r += 2;
-  if (x & (0x2 << r))
-    r += 1;
-  return r;
+    unsigned r = 0;
+    if (x & 0xf0) {
+        r += 4;
+    }
+    if (x & (0xc << r)) {
+        r += 2;
+    }
+    if (x & (0x2 << r)) {
+        r += 1;
+    }
+    return r;
 #endif
 }
 

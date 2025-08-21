@@ -29,11 +29,10 @@
 
 #undef ferror_unlocked
 
-int
-__ferror_unlocked (FILE *fp)
+int __ferror_unlocked(FILE *fp)
 {
-  CHECK_FILE (fp, EOF);
-  return _IO_ferror_unlocked (fp);
+    CHECK_FILE(fp, EOF);
+    return _IO_ferror_unlocked(fp);
 }
-weak_alias (__ferror_unlocked, ferror_unlocked)
-libc_hidden_weak (ferror_unlocked)
+weak_alias(__ferror_unlocked, ferror_unlocked)
+libc_hidden_weak(ferror_unlocked)

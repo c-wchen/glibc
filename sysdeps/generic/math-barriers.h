@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _MATH_BARRIERS_H
-#define _MATH_BARRIERS_H	1
+#define _MATH_BARRIERS_H    1
 
 /* math_opt_barrier evaluates and returns its floating-point argument
    and ensures that the evaluation of any expression using the result
@@ -29,9 +29,9 @@
    expression evaluations with respect to accesses to the
    floating-point environment.  */
 
-#define math_opt_barrier(x)					\
+#define math_opt_barrier(x)                 \
   ({ __typeof (x) __x = (x); __asm ("" : "+m" (__x)); __x; })
-#define math_force_eval(x)						\
+#define math_force_eval(x)                      \
   ({ __typeof (x) __x = (x); __asm __volatile__ ("" : : "m" (__x)); })
 
 #endif /* math-barriers.h */

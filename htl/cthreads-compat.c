@@ -19,84 +19,82 @@
 #include <assert.h>
 #include <pthreadP.h>
 
-#define	CTHREAD_KEY_INVALID (__cthread_key_t) -1
+#define CTHREAD_KEY_INVALID (__cthread_key_t) -1
 
-void
-__cthread_detach (__cthread_t thread)
+void __cthread_detach(__cthread_t thread)
 {
-  int err;
-  pthread_t pthread = (pthread_t) (uintptr_t) thread;
+    int err;
+    pthread_t pthread = (pthread_t)(uintptr_t) thread;
 
-  err = __pthread_detach (pthread);
-  assert_perror (err);
+    err = __pthread_detach(pthread);
+    assert_perror(err);
 }
-weak_alias (__cthread_detach, cthread_detach)
+weak_alias(__cthread_detach, cthread_detach)
 
 __cthread_t
-__cthread_fork (__cthread_fn_t func, void *arg)
+__cthread_fork(__cthread_fn_t func, void *arg)
 {
-  pthread_t thread;
-  int err;
+    pthread_t thread;
+    int err;
 
-  err = __pthread_create (&thread, NULL, func, arg);
-  assert_perror (err);
+    err = __pthread_create(&thread, NULL, func, arg);
+    assert_perror(err);
 
-  return (__cthread_t) (uintptr_t) thread;
+    return (__cthread_t)(uintptr_t) thread;
 }
-weak_alias (__cthread_fork, cthread_fork)
+weak_alias(__cthread_fork, cthread_fork)
 
 int
-__cthread_keycreate (__cthread_key_t *key)
+__cthread_keycreate(__cthread_key_t *key)
 {
-  error_t err;
+    error_t err;
 
-  err = __pthread_key_create (key, 0);
-  if (err)
-    {
-      errno = err;
-      *key = CTHREAD_KEY_INVALID;
-      err = -1;
+    err = __pthread_key_create(key, 0);
+    if (err) {
+        errno = err;
+        *key = CTHREAD_KEY_INVALID;
+        err = -1;
     }
 
-  return err;
+    return err;
 }
-weak_alias (__cthread_keycreate, cthread_keycreate)
+weak_alias(__cthread_keycreate, cthread_keycreate)
 
 int
-__cthread_getspecific (__cthread_key_t key, void **val)
+__cthread_getspecific(__cthread_key_t key, void **val)
 {
-  *val = __pthread_getspecific (key);
-  return 0;
+    *val = __pthread_getspecific(key);
+    return 0;
 }
-weak_alias (__cthread_getspecific, cthread_getspecific)
+weak_alias(__cthread_getspecific, cthread_getspecific)
 
 int
-__cthread_setspecific (__cthread_key_t key, void *val)
+__cthread_setspecific(__cthread_key_t key, void *val)
 {
-  error_t err;
+    error_t err;
 
-  err = __pthread_setspecific (key, (const void *) val);
-  if (err)
-    {
-      errno = err;
-      err = -1;
+    err = __pthread_setspecific(key, (const void *) val);
+    if (err) {
+        errno = err;
+        err = -1;
     }
 
-  return err;
+    return err;
 }
-weak_alias (__cthread_setspecific, cthread_setspecific)
+weak_alias(__cthread_setspecific, cthread_setspecific)
 
 void
-__mutex_lock_solid (void *lock)
+__mutex_lock_solid(void *lock)
 {
-  __pthread_mutex_lock (lock);
+    __pthread_mutex_lock(lock);
 }
 
-void
-__mutex_unlock_solid (void *lock)
+void __mutex_unlock_solid(void *lock)
 {
-  if (__pthread_spin_trylock (lock) != 0)
-    /* Somebody already got the lock, that one will manage waking up others */
-    return;
-  __pthread_mutex_unlock (lock);
+    if (__pthread_spin_trylock(lock) != 0)
+        /* Somebody already got the lock, that one will manage waking up others */
+    {
+        return;
+    }
+    __pthread_mutex_unlock(lock);
 }

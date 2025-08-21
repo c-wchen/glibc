@@ -40,25 +40,24 @@
    bridge.  Return TRUE if the PC is within the boundary, meaning the
    syscall does not have any side effects; or FALSE otherwise.  */
 
-static __always_inline bool
-cancellation_pc_check (void *ctx)
+static __always_inline bool cancellation_pc_check(void *ctx)
 {
-  /* Both are defined in syscall_cancel.S.  */
-  extern const char __syscall_cancel_arch_start[1];
-  extern const char __syscall_cancel_arch_end_sc[1];
+    /* Both are defined in syscall_cancel.S.  */
+    extern const char __syscall_cancel_arch_start[1];
+    extern const char __syscall_cancel_arch_end_sc[1];
 #if defined(USE_PPC_SVC) && defined(__powerpc64__)
-  extern const char __syscall_cancel_arch_end_svc[1];
+    extern const char __syscall_cancel_arch_end_svc[1];
 #endif
 
-  uintptr_t pc = sigcontext_get_pc (ctx);
+    uintptr_t pc = sigcontext_get_pc(ctx);
 
-  return pc >= (uintptr_t) __syscall_cancel_arch_start
+    return pc >= (uintptr_t) __syscall_cancel_arch_start
 #if defined(USE_PPC_SVC) && defined(__powerpc64__)
-	 && THREAD_GET_HWCAP() & PPC_FEATURE2_SCV
-	    ? pc < (uintptr_t) __syscall_cancel_arch_end_sc
-	    : pc < (uintptr_t) __syscall_cancel_arch_end_svc;
+           && THREAD_GET_HWCAP() & PPC_FEATURE2_SCV
+           ? pc < (uintptr_t) __syscall_cancel_arch_end_sc
+           : pc < (uintptr_t) __syscall_cancel_arch_end_svc;
 #else
-	 && pc < (uintptr_t) __syscall_cancel_arch_end_sc;
+           &&pc < (uintptr_t) __syscall_cancel_arch_end_sc;
 #endif
 }
 

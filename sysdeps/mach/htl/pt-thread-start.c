@@ -23,31 +23,26 @@
 #include <pt-internal.h>
 
 /* Start THREAD.  Get the kernel thread scheduled and running.  */
-int
-__pthread_thread_start (struct __pthread *thread)
+int __pthread_thread_start(struct __pthread *thread)
 {
-  static int do_start;
-  error_t err;
+    static int do_start;
+    error_t err;
 
-  if (!do_start)
-    {
-      /* The main thread is already running: do nothing.  */
-      assert (__pthread_total == 1);
-      assert ((
-		{
-		  mach_port_t ktid = __mach_thread_self ();
-		  int ok = thread->kernel_thread == ktid;
-		  __mach_port_deallocate (__mach_task_self (),
-					  thread->kernel_thread);
-		  ok;
-		}));
-      do_start = 1;
-    }
-  else
-    {
-      err = __thread_resume (thread->kernel_thread);
-      assert_perror (err);
+    if (!do_start) {
+        /* The main thread is already running: do nothing.  */
+        assert(__pthread_total == 1);
+        assert(( {
+            mach_port_t ktid = __mach_thread_self();
+            int ok = thread->kernel_thread == ktid;
+            __mach_port_deallocate(__mach_task_self(),
+                                   thread->kernel_thread);
+            ok;
+        }));
+        do_start = 1;
+    } else {
+        err = __thread_resume(thread->kernel_thread);
+        assert_perror(err);
     }
 
-  return 0;
+    return 0;
 }

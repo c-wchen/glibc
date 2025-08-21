@@ -20,12 +20,11 @@
 #include <grp.h>
 
 /* Set the group set for the current user to GROUPS (N of them).  */
-int
-setgroups (size_t n, const gid_t *groups)
+int setgroups(size_t n, const gid_t *groups)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (setgroups)
+libc_hidden_def(setgroups)
 
-stub_warning (setgroups)
+stub_warning(setgroups)

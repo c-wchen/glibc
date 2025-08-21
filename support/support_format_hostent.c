@@ -25,58 +25,53 @@
 #include <support/support.h>
 #include <support/xmemstream.h>
 
-static int
-address_length (int family)
+static int address_length(int family)
 {
-  switch (family)
-    {
-    case AF_INET:
-      return 4;
-    case AF_INET6:
-      return 16;
+    switch (family) {
+        case AF_INET:
+            return 4;
+        case AF_INET6:
+            return 16;
     }
-  return -1;
+    return -1;
 }
 
-char *
-support_format_hostent (struct hostent *h)
+char *support_format_hostent(struct hostent *h)
 {
-  if (h == NULL)
-    {
-      if (h_errno == NETDB_INTERNAL)
-        return xasprintf ("error: NETDB_INTERNAL (errno %d, %m)\n", errno);
-      else
-        {
-          char *value = support_format_herrno (h_errno);
-          char *result = xasprintf ("error: %s\n", value);
-          free (value);
-          return result;
+    if (h == NULL) {
+        if (h_errno == NETDB_INTERNAL) {
+            return xasprintf("error: NETDB_INTERNAL (errno %d, %m)\n", errno);
+        } else {
+            char *value = support_format_herrno(h_errno);
+            char *result = xasprintf("error: %s\n", value);
+            free(value);
+            return result;
         }
     }
 
-  struct xmemstream mem;
-  xopen_memstream (&mem);
+    struct xmemstream mem;
+    xopen_memstream(&mem);
 
-  fprintf (mem.out, "name: %s\n", h->h_name);
-  for (char **alias = h->h_aliases; *alias != NULL; ++alias)
-    fprintf (mem.out, "alias: %s\n", *alias);
-  for (unsigned i = 0; h->h_addr_list[i] != NULL; ++i)
-    {
-      char buf[128];
-      if (inet_ntop (h->h_addrtype, h->h_addr_list[i],
-                     buf, sizeof (buf)) == NULL)
-        fprintf (mem.out, "error: inet_ntop failed: %m\n");
-      else
-        fprintf (mem.out, "address: %s\n", buf);
+    fprintf(mem.out, "name: %s\n", h->h_name);
+    for (char **alias = h->h_aliases; *alias != NULL; ++alias) {
+        fprintf(mem.out, "alias: %s\n", *alias);
     }
-  if (h->h_length != address_length (h->h_addrtype))
-    {
-      char *family = support_format_address_family (h->h_addrtype);
-      fprintf (mem.out, "error: invalid address length %d for %s\n",
-               h->h_length, family);
-      free (family);
+    for (unsigned i = 0; h->h_addr_list[i] != NULL; ++i) {
+        char buf[128];
+        if (inet_ntop(h->h_addrtype, h->h_addr_list[i],
+                      buf, sizeof(buf)) == NULL) {
+            fprintf(mem.out, "error: inet_ntop failed: %m\n");
+        } else {
+            fprintf(mem.out, "address: %s\n", buf);
+        }
+    }
+    if (h->h_length != address_length(h->h_addrtype)) {
+        char *family = support_format_address_family(h->h_addrtype);
+        fprintf(mem.out, "error: invalid address length %d for %s\n",
+                h->h_length, family);
+        free(family);
     }
 
-  xfclose_memstream (&mem);
-  return mem.buffer;
+    xfclose_memstream(&mem);
+    return mem.buffer;
 }

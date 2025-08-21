@@ -20,34 +20,35 @@
 #include <stdint.h>
 #include <mach.h>
 
-enum readonly_error_type
-__readonly_area_fallback (const void *ptr, size_t size)
-{
-  vm_address_t region_address = (uintptr_t) ptr;
-  vm_size_t region_length = size;
-  vm_prot_t protection;
-  vm_prot_t max_protection;
-  vm_inherit_t inheritance;
-  boolean_t is_shared;
-  mach_port_t object_name;
-  vm_offset_t offset;
+enum readonly_error_type __readonly_area_fallback(const void *ptr, size_t size) {
+    vm_address_t region_address = (uintptr_t) ptr;
+    vm_size_t region_length = size;
+    vm_prot_t protection;
+    vm_prot_t max_protection;
+    vm_inherit_t inheritance;
+    boolean_t is_shared;
+    mach_port_t object_name;
+    vm_offset_t offset;
 
-  while (__vm_region (__mach_task_self (),
-		      &region_address, &region_length,
-		      &protection, &max_protection, &inheritance, &is_shared,
-		      &object_name, &offset) == KERN_SUCCESS
-	 && region_address <= (uintptr_t) ptr)
+    while (__vm_region(__mach_task_self(),
+                       &region_address, &region_length,
+                       &protection, &max_protection, &inheritance, &is_shared,
+                       &object_name, &offset) == KERN_SUCCESS
+           && region_address <= (uintptr_t) ptr)
     {
-      region_address += region_length;
-      if (region_address < (uintptr_t) ptr)
-	continue;
+        region_address += region_length;
+        if (region_address < (uintptr_t) ptr) {
+            continue;
+        }
 
-      if (protection & VM_PROT_WRITE)
-	return readonly_area_writable;
+        if (protection & VM_PROT_WRITE) {
+            return readonly_area_writable;
+        }
 
-      if (region_address - (uintptr_t) ptr >= size)
-	break;
+        if (region_address - (uintptr_t) ptr >= size) {
+            break;
+        }
     }
 
-  return readonly_noerror;
+    return readonly_noerror;
 }

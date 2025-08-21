@@ -28,6 +28,6 @@
 # define SYMBOL_NAME wcschr
 # include "ifunc-sse2.h"
 
-libc_ifunc_redirected (__redirect_wcschr, __wcschr, IFUNC_SELECTOR ());
-weak_alias (__wcschr, wcschr);
+libc_ifunc_redirected(__redirect_wcschr, __wcschr, IFUNC_SELECTOR());
+weak_alias(__wcschr, wcschr);
 #endif

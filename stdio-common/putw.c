@@ -20,11 +20,11 @@
 #define fwrite(p, n, m, s) _IO_fwrite (p, n, m, s)
 
 /* Write the word (int) W to STREAM.  */
-int
-putw (int w, FILE *stream)
+int putw(int w, FILE *stream)
 {
-  /* Is there a better way?  */
-  if (fwrite ((const void *) &w, sizeof (w), 1, stream) < 1)
-    return EOF;
-  return 0;
+    /* Is there a better way?  */
+    if (fwrite((const void *) &w, sizeof(w), 1, stream) < 1) {
+        return EOF;
+    }
+    return 0;
 }

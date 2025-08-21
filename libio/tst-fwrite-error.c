@@ -21,47 +21,41 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char tmpl[] = "/tmp/tst-fwrite-error.XXXXXX";
-  int fd = mkstemp (tmpl);
-  if (fd == -1)
-    {
-      printf ("mkstemp failed with errno %d\n", errno);
-      return 1;
+    char tmpl[] = "/tmp/tst-fwrite-error.XXXXXX";
+    int fd = mkstemp(tmpl);
+    if (fd == -1) {
+        printf("mkstemp failed with errno %d\n", errno);
+        return 1;
     }
-  FILE *fp = fdopen (fd, "w");
-  if (fp == NULL)
-    {
-      printf ("fdopen failed with errno %d\n", errno);
-      return 1;
+    FILE *fp = fdopen(fd, "w");
+    if (fp == NULL) {
+        printf("fdopen failed with errno %d\n", errno);
+        return 1;
     }
 
-  char buf[] = "world";
-  setvbuf (fp, NULL, _IONBF, 0);
-  close (fd);
-  unlink (tmpl);
-  errno = 0;
+    char buf[] = "world";
+    setvbuf(fp, NULL, _IONBF, 0);
+    close(fd);
+    unlink(tmpl);
+    errno = 0;
 
-  int ret = fwrite (buf, 1, sizeof (buf), fp);
-  if (ret != 0)
-    {
-      printf ("fwrite returned %d\n", ret);
-      return 1;
+    int ret = fwrite(buf, 1, sizeof(buf), fp);
+    if (ret != 0) {
+        printf("fwrite returned %d\n", ret);
+        return 1;
     }
-  if (errno != EBADF)
-    {
-      printf ("Errno is not EBADF: %d\n", errno);
-      return 1;
+    if (errno != EBADF) {
+        printf("Errno is not EBADF: %d\n", errno);
+        return 1;
     }
-  if (ferror (fp) == 0)
-    {
-      printf ("ferror not set\n");
-      return 1;
+    if (ferror(fp) == 0) {
+        printf("ferror not set\n");
+        return 1;
     }
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

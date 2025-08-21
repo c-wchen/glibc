@@ -24,25 +24,24 @@
    __ctype_init before user code runs, but this does not happen for
    threads in secondary namespaces.  With the initializers, secondary
    namespaces at least get locale data from the C locale.  */
-__thread const uint16_t * __libc_tsd_CTYPE_B
-  = (const uint16_t *) _nl_C_LC_CTYPE_class + 128;
-__thread const int32_t * __libc_tsd_CTYPE_TOLOWER
-  = (const int32_t *) _nl_C_LC_CTYPE_tolower + 128;
-__thread const int32_t * __libc_tsd_CTYPE_TOUPPER
-  = (const int32_t *) _nl_C_LC_CTYPE_toupper + 128;
+__thread const uint16_t *__libc_tsd_CTYPE_B
+    = (const uint16_t *) _nl_C_LC_CTYPE_class + 128;
+__thread const int32_t *__libc_tsd_CTYPE_TOLOWER
+    = (const int32_t *) _nl_C_LC_CTYPE_tolower + 128;
+__thread const int32_t *__libc_tsd_CTYPE_TOUPPER
+    = (const int32_t *) _nl_C_LC_CTYPE_toupper + 128;
 
 
-void
-__ctype_init (void)
+void __ctype_init(void)
 {
-  __libc_tsd_CTYPE_B
-    = ((const uint16_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_CLASS)) + 128;
-  __libc_tsd_CTYPE_TOUPPER
-    = ((const int32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TOUPPER)) + 128;
-  __libc_tsd_CTYPE_TOLOWER =
-    ((const int32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TOLOWER)) + 128;
+    __libc_tsd_CTYPE_B
+        = ((const uint16_t *) _NL_CURRENT(LC_CTYPE, _NL_CTYPE_CLASS)) + 128;
+    __libc_tsd_CTYPE_TOUPPER
+        = ((const int32_t *) _NL_CURRENT(LC_CTYPE, _NL_CTYPE_TOUPPER)) + 128;
+    __libc_tsd_CTYPE_TOLOWER =
+        ((const int32_t *) _NL_CURRENT(LC_CTYPE, _NL_CTYPE_TOLOWER)) + 128;
 }
-libc_hidden_def (__ctype_init)
+libc_hidden_def(__ctype_init)
 
 
 #include <shlib-compat.h>
@@ -65,18 +64,18 @@ extern const char _nl_C_LC_CTYPE_class_alnum[] attribute_hidden;
 
 #define b(t,x,o) (((const t *) _nl_C_LC_CTYPE_##x) + o)
 
-const unsigned short int *__ctype_b = b (unsigned short int, class, 128);
-const __uint32_t *__ctype32_b = b (__uint32_t, class32, 0);
-const __int32_t *__ctype_tolower = b (__int32_t, tolower, 128);
-const __int32_t *__ctype_toupper = b (__int32_t, toupper, 128);
-const __uint32_t *__ctype32_tolower = b (__uint32_t, tolower, 128);
-const __uint32_t *__ctype32_toupper = b (__uint32_t, toupper, 128);
+const unsigned short int *__ctype_b = b(unsigned short int, class, 128);
+const __uint32_t *__ctype32_b = b(__uint32_t, class32, 0);
+const __int32_t *__ctype_tolower = b(__int32_t, tolower, 128);
+const __int32_t *__ctype_toupper = b(__int32_t, toupper, 128);
+const __uint32_t *__ctype32_tolower = b(__uint32_t, tolower, 128);
+const __uint32_t *__ctype32_toupper = b(__uint32_t, toupper, 128);
 
-compat_symbol (libc, __ctype_b, __ctype_b, GLIBC_2_0);
-compat_symbol (libc, __ctype_tolower, __ctype_tolower, GLIBC_2_0);
-compat_symbol (libc, __ctype_toupper, __ctype_toupper, GLIBC_2_0);
-compat_symbol (libc, __ctype32_b, __ctype32_b, GLIBC_2_0);
-compat_symbol (libc, __ctype32_tolower, __ctype32_tolower, GLIBC_2_2);
-compat_symbol (libc, __ctype32_toupper, __ctype32_toupper, GLIBC_2_2);
+compat_symbol(libc, __ctype_b, __ctype_b, GLIBC_2_0);
+compat_symbol(libc, __ctype_tolower, __ctype_tolower, GLIBC_2_0);
+compat_symbol(libc, __ctype_toupper, __ctype_toupper, GLIBC_2_0);
+compat_symbol(libc, __ctype32_b, __ctype32_b, GLIBC_2_0);
+compat_symbol(libc, __ctype32_tolower, __ctype32_tolower, GLIBC_2_2);
+compat_symbol(libc, __ctype32_toupper, __ctype32_toupper, GLIBC_2_2);
 
 #endif

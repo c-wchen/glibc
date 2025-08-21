@@ -23,47 +23,43 @@
 #include <sys/stat.h>
 
 
-extern int foo (void);
+extern int foo(void);
 
 static const char testsubdir[] = PFX "test-subdir";
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  struct stat64 st;
-  int result = 1;
+    struct stat64 st;
+    int result = 1;
 
-  if (mkdir (testsubdir, 0777) != 0
-      && (errno != EEXIST
-	  || stat64 (testsubdir, &st) != 0
-	  || !S_ISDIR (st.st_mode)))
-    {
-      printf ("cannot create directory %s\n", testsubdir);
-      return 1;
+    if (mkdir(testsubdir, 0777) != 0
+        && (errno != EEXIST
+            || stat64(testsubdir, &st) != 0
+            || !S_ISDIR(st.st_mode))) {
+        printf("cannot create directory %s\n", testsubdir);
+        return 1;
     }
 
-  if (system ("cp " PFX "firstobj.so " PFX "test-subdir/in-subdir.so") != 0)
-    {
-      puts ("cannot copy DSO");
-      return 1;
+    if (system("cp " PFX "firstobj.so " PFX "test-subdir/in-subdir.so") != 0) {
+        puts("cannot copy DSO");
+        return 1;
     }
 
-  void *p = dlopen ("in-subdir.so", RTLD_LAZY|RTLD_LOCAL);
-  if (p != NULL)
-    {
-      puts ("succeeded in opening in-subdir.so from do_test");
-      dlclose (p);
-      goto out;
+    void *p = dlopen("in-subdir.so", RTLD_LAZY | RTLD_LOCAL);
+    if (p != NULL) {
+        puts("succeeded in opening in-subdir.so from do_test");
+        dlclose(p);
+        goto out;
     }
 
-  result = foo ();
+    result = foo();
 
- out:
-  unlink (PFX "test-subdir/in-subdir.so");
-  rmdir (testsubdir);
+out:
+    unlink(PFX "test-subdir/in-subdir.so");
+    rmdir(testsubdir);
 
-  return result;
+    return result;
 }
 
 #include <support/test-driver.c>

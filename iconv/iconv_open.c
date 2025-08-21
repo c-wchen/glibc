@@ -27,27 +27,27 @@
 #include "gconv_charset.h"
 
 
-iconv_t
-iconv_open (const char *tocode, const char *fromcode)
+iconv_t iconv_open(const char *tocode, const char *fromcode)
 {
-  __gconv_t cd;
-  struct gconv_spec conv_spec;
+    __gconv_t cd;
+    struct gconv_spec conv_spec;
 
-  if (__gconv_create_spec (&conv_spec, fromcode, tocode) == NULL)
-    return (iconv_t) -1;
-
-  int res = __gconv_open (&conv_spec, &cd, 0);
-
-  __gconv_destroy_spec (&conv_spec);
-
-  if (__builtin_expect (res, __GCONV_OK) != __GCONV_OK)
-    {
-      /* We must set the error number according to the specs.  */
-      if (res == __GCONV_NOCONV || res == __GCONV_NODB)
-	__set_errno (EINVAL);
-
-      cd = (iconv_t) -1;
+    if (__gconv_create_spec(&conv_spec, fromcode, tocode) == NULL) {
+        return (iconv_t) -1;
     }
 
-  return (iconv_t) cd;
+    int res = __gconv_open(&conv_spec, &cd, 0);
+
+    __gconv_destroy_spec(&conv_spec);
+
+    if (__builtin_expect(res, __GCONV_OK) != __GCONV_OK) {
+        /* We must set the error number according to the specs.  */
+        if (res == __GCONV_NOCONV || res == __GCONV_NODB) {
+            __set_errno(EINVAL);
+        }
+
+        cd = (iconv_t) -1;
+    }
+
+    return (iconv_t) cd;
 }

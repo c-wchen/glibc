@@ -18,21 +18,21 @@
 #include <stdlib.h>
 #include <limits.h>
 
-int
-__srand48_r (long int seedval, struct drand48_data *buffer)
+int __srand48_r(long int seedval, struct drand48_data *buffer)
 {
-  /* The standards say we only have 32 bits.  */
-  if (sizeof (long int) > 4)
-    seedval &= 0xffffffffl;
+    /* The standards say we only have 32 bits.  */
+    if (sizeof(long int) > 4) {
+        seedval &= 0xffffffffl;
+    }
 
-  buffer->__x[2] = seedval >> 16;
-  buffer->__x[1] = seedval & 0xffffl;
-  buffer->__x[0] = 0x330e;
+    buffer->__x[2] = seedval >> 16;
+    buffer->__x[1] = seedval & 0xffffl;
+    buffer->__x[0] = 0x330e;
 
-  buffer->__a = 0x5deece66dull;
-  buffer->__c = 0xb;
-  buffer->__init = 1;
+    buffer->__a = 0x5deece66dull;
+    buffer->__c = 0xb;
+    buffer->__init = 1;
 
-  return 0;
+    return 0;
 }
-weak_alias (__srand48_r, srand48_r)
+weak_alias(__srand48_r, srand48_r)

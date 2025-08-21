@@ -22,23 +22,20 @@
 #include <unistd.h>
 #include <sys/types.h>
 
-int
-faccessat (int fd, const char *file, int type, int flag)
+int faccessat(int fd, const char *file, int type, int flag)
 {
-  if (file == NULL || (flag & ~(AT_SYMLINK_NOFOLLOW | AT_EACCESS)) != 0
-      || (type & ~(R_OK|W_OK|X_OK|F_OK)) != 0)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (file == NULL || (flag & ~(AT_SYMLINK_NOFOLLOW | AT_EACCESS)) != 0
+        || (type & ~(R_OK | W_OK | X_OK | F_OK)) != 0) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  if (fd < 0 && fd != AT_FDCWD)
-    {
-      __set_errno (EBADF);
-      return -1;
+    if (fd < 0 && fd != AT_FDCWD) {
+        __set_errno(EBADF);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (faccessat)
+stub_warning(faccessat)

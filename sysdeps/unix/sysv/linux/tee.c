@@ -19,8 +19,7 @@
 #include <fcntl.h>
 #include <sysdep-cancel.h>
 
-ssize_t
-tee (int src, int dest, size_t len, unsigned int flags)
+ssize_t tee(int src, int dest, size_t len, unsigned int flags)
 {
-  return SYSCALL_CANCEL (tee, src, dest, len, flags);
+    return SYSCALL_CANCEL(tee, src, dest, len, flags);
 }

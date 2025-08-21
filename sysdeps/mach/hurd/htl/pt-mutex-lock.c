@@ -25,61 +25,60 @@
 #include <unistd.h>
 #include <shlib-compat.h>
 
-int
-__pthread_mutex_lock (pthread_mutex_t *mtxp)
+int __pthread_mutex_lock(pthread_mutex_t *mtxp)
 {
-  struct __pthread *self;
-  int flags = mtxp->__flags & GSYNC_SHARED;
-  int ret = 0;
+    struct __pthread *self;
+    int flags = mtxp->__flags & GSYNC_SHARED;
+    int ret = 0;
 
-  switch (MTX_TYPE (mtxp))
-    {
-    case PT_MTX_NORMAL:
-      lll_lock (mtxp->__lock, flags);
-      break;
+    switch (MTX_TYPE(mtxp)) {
+        case PT_MTX_NORMAL:
+            lll_lock(mtxp->__lock, flags);
+            break;
 
-    case PT_MTX_RECURSIVE:
-      self = _pthread_self ();
-      if (mtx_owned_p (mtxp, self, flags))
-	{
-	  if (__glibc_unlikely (mtxp->__cnt + 1 == 0))
-	    return EAGAIN;
+        case PT_MTX_RECURSIVE:
+            self = _pthread_self();
+            if (mtx_owned_p(mtxp, self, flags)) {
+                if (__glibc_unlikely(mtxp->__cnt + 1 == 0)) {
+                    return EAGAIN;
+                }
 
-	  ++mtxp->__cnt;
-	  return ret;
-	}
+                ++mtxp->__cnt;
+                return ret;
+            }
 
-      lll_lock (mtxp->__lock, flags);
-      mtx_set_owner (mtxp, self, flags);
-      mtxp->__cnt = 1;
-      break;
+            lll_lock(mtxp->__lock, flags);
+            mtx_set_owner(mtxp, self, flags);
+            mtxp->__cnt = 1;
+            break;
 
-    case PT_MTX_ERRORCHECK:
-      self = _pthread_self ();
-      if (mtx_owned_p (mtxp, self, flags))
-	return EDEADLK;
+        case PT_MTX_ERRORCHECK:
+            self = _pthread_self();
+            if (mtx_owned_p(mtxp, self, flags)) {
+                return EDEADLK;
+            }
 
-      lll_lock (mtxp->__lock, flags);
-      mtx_set_owner (mtxp, self, flags);
-      break;
+            lll_lock(mtxp->__lock, flags);
+            mtx_set_owner(mtxp, self, flags);
+            break;
 
-    case PT_MTX_NORMAL | PTHREAD_MUTEX_ROBUST:
-    case PT_MTX_RECURSIVE | PTHREAD_MUTEX_ROBUST:
-    case PT_MTX_ERRORCHECK | PTHREAD_MUTEX_ROBUST:
-      self = _pthread_self ();
-      ROBUST_LOCK (self, mtxp, lll_robust_lock, flags);
-      break;
+        case PT_MTX_NORMAL | PTHREAD_MUTEX_ROBUST:
+        case PT_MTX_RECURSIVE | PTHREAD_MUTEX_ROBUST:
+        case PT_MTX_ERRORCHECK | PTHREAD_MUTEX_ROBUST:
+            self = _pthread_self();
+            ROBUST_LOCK(self, mtxp, lll_robust_lock, flags);
+            break;
 
-    default:
-      ret = EINVAL;
-      break;
+        default:
+            ret = EINVAL;
+            break;
     }
 
-  return ret;
+    return ret;
 }
-libc_hidden_def (__pthread_mutex_lock)
-versioned_symbol (libc, __pthread_mutex_lock, pthread_mutex_lock, GLIBC_2_21);
+libc_hidden_def(__pthread_mutex_lock)
+versioned_symbol(libc, __pthread_mutex_lock, pthread_mutex_lock, GLIBC_2_21);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_21)
-compat_symbol (libc, __pthread_mutex_lock, pthread_mutex_lock, GLIBC_2_12);
+compat_symbol(libc, __pthread_mutex_lock, pthread_mutex_lock, GLIBC_2_12);
 #endif

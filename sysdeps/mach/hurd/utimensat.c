@@ -26,27 +26,27 @@
 
 /* Change the access time of FILE to TSP[0] and
    the modification time of FILE to TSP[1].  */
-int
-utimensat (int fd, const char *file, const struct timespec tsp[2],
-	   int flags)
+int utimensat(int fd, const char *file, const struct timespec tsp[2],
+              int flags)
 {
-  error_t err;
-  file_t port;
+    error_t err;
+    file_t port;
 
-  if (file)
-    {
-      port = __file_name_lookup_at (fd, flags, file, 0, 0);
-      if (port == MACH_PORT_NULL)
-	return -1;
+    if (file) {
+        port = __file_name_lookup_at(fd, flags, file, 0, 0);
+        if (port == MACH_PORT_NULL) {
+            return -1;
+        }
 
-      err = hurd_futimens (port, tsp);
+        err = hurd_futimens(port, tsp);
 
-      __mach_port_deallocate (__mach_task_self (), port);
+        __mach_port_deallocate(__mach_task_self(), port);
+    } else {
+        err = HURD_DPORT_USE(fd, hurd_futimens(port, tsp));
     }
-  else
-    err = HURD_DPORT_USE (fd, hurd_futimens (port, tsp));
 
-  if (err)
-    return __hurd_fail (err);
-  return 0;
+    if (err) {
+        return __hurd_fail(err);
+    }
+    return 0;
 }

@@ -6,10 +6,9 @@
 #include <pthread.h>
 
 /* This is never called, just here to get pthreads linked in.  */
-void *
-useless (void *a)
+void *useless(void *a)
 {
-  pthread_t th;
-  pthread_create (&th, 0, useless, a);
-  return NULL;
+    pthread_t th;
+    pthread_create(&th, 0, useless, a);
+    return NULL;
 }

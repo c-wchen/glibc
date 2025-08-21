@@ -22,9 +22,9 @@
 #include <sincosf_poly.h>
 
 /* 2PI * 2^-64.  */
-static const double pi63 = 0x1.921FB54442D18p-62;
+static const double pi63 = 0x1.921FB54442D18p - 62;
 /* PI / 4.  */
-static const float pio4 = 0x1.921FB6p-1f;
+static const float pio4 = 0x1.921FB6p - 1f;
 
 /* Polynomial data (the cosine polynomial is negated in the 2nd entry).  */
 extern const sincos_t __sincosf_table[2] attribute_hidden;
@@ -33,10 +33,9 @@ extern const sincos_t __sincosf_table[2] attribute_hidden;
 extern const uint32_t __inv_pio4[] attribute_hidden;
 
 /* Top 12 bits of the float representation with the sign bit cleared.  */
-static inline uint32_t
-abstop12 (float x)
+static inline uint32_t abstop12(float x)
 {
-  return (asuint (x) >> 20) & 0x7ff;
+    return (asuint(x) >> 20) & 0x7ff;
 }
 
 /* Fast range reduction using single multiply-subtract.  Return the modulo of
@@ -44,23 +43,22 @@ abstop12 (float x)
    The values for PI/2 and 2/PI are accessed via P.  Since PI/2 as a double
    is accurate to 55 bits and the worst-case cancellation happens at 6 * PI/4,
    the result is accurate for |X| <= 120.0.  */
-static inline double
-reduce_fast (double x, const sincos_t *p, int *np)
+static inline double reduce_fast(double x, const sincos_t *p, int *np)
 {
-  double r;
+    double r;
 #if TOINT_INTRINSICS
-  /* Use fast round and lround instructions when available.  */
-  r = x * p->hpi_inv;
-  *np = converttoint (r);
-  return x - roundtoint (r) * p->hpi;
+    /* Use fast round and lround instructions when available.  */
+    r = x * p->hpi_inv;
+    *np = converttoint(r);
+    return x - roundtoint(r) * p->hpi;
 #else
-  /* Use scaled float to int conversion with explicit rounding.
-     hpi_inv is prescaled by 2^24 so the quadrant ends up in bits 24..31.
-     This avoids inaccuracies introduced by truncating negative values.  */
-  r = x * p->hpi_inv;
-  int n = ((int32_t)r + 0x800000) >> 24;
-  *np = n;
-  return x - n * p->hpi;
+    /* Use scaled float to int conversion with explicit rounding.
+       hpi_inv is prescaled by 2^24 so the quadrant ends up in bits 24..31.
+       This avoids inaccuracies introduced by truncating negative values.  */
+    r = x * p->hpi_inv;
+    int n = ((int32_t)r + 0x800000) >> 24;
+    *np = n;
+    return x - n * p->hpi;
 #endif
 }
 
@@ -71,25 +69,24 @@ reduce_fast (double x, const sincos_t *p, int *np)
    multiply computes the exact 2.62-bit fixed-point modulo.  Since the result
    can have at most 29 leading zeros after the binary point, the double
    precision result is accurate to 33 bits.  */
-static inline double
-reduce_large (uint32_t xi, int *np)
+static inline double reduce_large(uint32_t xi, int *np)
 {
-  const uint32_t *arr = &__inv_pio4[(xi >> 26) & 15];
-  int shift = (xi >> 23) & 7;
-  uint64_t n, res0, res1, res2;
+    const uint32_t *arr = &__inv_pio4[(xi >> 26) & 15];
+    int shift = (xi >> 23) & 7;
+    uint64_t n, res0, res1, res2;
 
-  xi = (xi & 0xffffff) | 0x800000;
-  xi <<= shift;
+    xi = (xi & 0xffffff) | 0x800000;
+    xi <<= shift;
 
-  res0 = xi * arr[0];
-  res1 = (uint64_t)xi * arr[4];
-  res2 = (uint64_t)xi * arr[8];
-  res0 = (res2 >> 32) | (res0 << 32);
-  res0 += res1;
+    res0 = xi * arr[0];
+    res1 = (uint64_t)xi * arr[4];
+    res2 = (uint64_t)xi * arr[8];
+    res0 = (res2 >> 32) | (res0 << 32);
+    res0 += res1;
 
-  n = (res0 + (1ULL << 61)) >> 62;
-  res0 -= n << 62;
-  double x = (int64_t)res0;
-  *np = n;
-  return x * pi63;
+    n = (res0 + (1ULL << 61)) >> 62;
+    res0 -= n << 62;
+    double x = (int64_t)res0;
+    *np = n;
+    return x * pi63;
 }

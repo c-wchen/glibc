@@ -22,14 +22,14 @@
 #include "statfsconv.c"
 
 /* Return information about the filesystem on which FD resides.  */
-int
-__fstatfs64 (int fd, struct statfs64 *buf)
+int __fstatfs64(int fd, struct statfs64 *buf)
 {
-  error_t err;
+    error_t err;
 
-  if (err = HURD_DPORT_USE (fd, __file_statfs (port, buf)))
-    return __hurd_dfail (fd, err);
+    if (err = HURD_DPORT_USE(fd, __file_statfs(port, buf))) {
+        return __hurd_dfail(fd, err);
+    }
 
-  return 0;
+    return 0;
 }
-weak_alias (__fstatfs64, fstatfs64)
+weak_alias(__fstatfs64, fstatfs64)

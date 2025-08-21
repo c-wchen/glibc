@@ -20,12 +20,11 @@
 #include <netinet/in.h>
 #include <stdint.h>
 
-int
-getsourcefilter (int s, uint32_t interface, const struct sockaddr *group,
-		 socklen_t grouplen, uint32_t *fmode, uint32_t *numsrc,
-		 struct sockaddr_storage *slist)
+int getsourcefilter(int s, uint32_t interface, const struct sockaddr *group,
+                    socklen_t grouplen, uint32_t *fmode, uint32_t *numsrc,
+                    struct sockaddr_storage *slist)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (getsourcefilter)
+stub_warning(getsourcefilter)

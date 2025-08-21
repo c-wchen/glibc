@@ -19,6 +19,6 @@
 #define _X86_64_VM_PARAM_H
 
 /* Arbitrary start of the brk. This is after usual binary and library mappings.  */
-#define BRK_START	0x200000000000
+#define BRK_START   0x200000000000
 
 #endif /* x86_64/vm_param.h */

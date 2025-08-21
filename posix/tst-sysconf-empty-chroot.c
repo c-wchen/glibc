@@ -28,67 +28,63 @@
 
 /* Check for an SMP system in a forked process, so that the parent
    process does not cache the value.  */
-static void
-is_smp_callback (void *closure)
+static void is_smp_callback(void *closure)
 {
-  bool *result = closure;
+    bool *result = closure;
 
-  long cpus = sysconf (_SC_NPROCESSORS_ONLN);
-  TEST_VERIFY_EXIT (cpus > 0);
-  *result = cpus != 1;
+    long cpus = sysconf(_SC_NPROCESSORS_ONLN);
+    TEST_VERIFY_EXIT(cpus > 0);
+    *result = cpus != 1;
 }
 
-static bool
-is_smp (void)
+static bool is_smp(void)
 {
-  bool *result = support_shared_allocate (sizeof (*result));
-  support_isolate_in_subprocess (is_smp_callback, result);
-  bool result_copy = *result;
-  support_shared_free (result);
-  return result_copy;
+    bool *result = support_shared_allocate(sizeof(*result));
+    support_isolate_in_subprocess(is_smp_callback, result);
+    bool result_copy = *result;
+    support_shared_free(result);
+    return result_copy;
 }
 
 static char *path_chroot;
 
 /* Prepare an empty directory, to be used as a chroot.  */
-static void
-prepare (int argc, char **argv)
+static void prepare(int argc, char **argv)
 {
-  path_chroot = xasprintf ("%s/tst-resolv-res_init-XXXXXX", test_dir);
-  if (mkdtemp (path_chroot) == NULL)
-    FAIL_EXIT1 ("mkdtemp (\"%s\"): %m", path_chroot);
-  add_temp_file (path_chroot);
+    path_chroot = xasprintf("%s/tst-resolv-res_init-XXXXXX", test_dir);
+    if (mkdtemp(path_chroot) == NULL) {
+        FAIL_EXIT1("mkdtemp (\"%s\"): %m", path_chroot);
+    }
+    add_temp_file(path_chroot);
 }
 
 /* The actual test.  Run it in a subprocess, so that the test harness
    can remove the temporary directory in --direct mode.  */
-static void
-chroot_callback (void *closure)
+static void chroot_callback(void *closure)
 {
-  xchroot (path_chroot);
-  long cpus = sysconf (_SC_NPROCESSORS_ONLN);
-  printf ("info: sysconf (_SC_NPROCESSORS_ONLN) in chroot: %ld\n", cpus);
-  TEST_VERIFY (cpus > 0);
-  TEST_VERIFY (cpus != 1);
-  _exit (0);
+    xchroot(path_chroot);
+    long cpus = sysconf(_SC_NPROCESSORS_ONLN);
+    printf("info: sysconf (_SC_NPROCESSORS_ONLN) in chroot: %ld\n", cpus);
+    TEST_VERIFY(cpus > 0);
+    TEST_VERIFY(cpus != 1);
+    _exit(0);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  if (!is_smp ())
-    {
-      printf ("warning: test not supported on uniprocessor system\n");
-      return EXIT_UNSUPPORTED;
+    if (!is_smp()) {
+        printf("warning: test not supported on uniprocessor system\n");
+        return EXIT_UNSUPPORTED;
     }
 
-  support_become_root ();
-  if (!support_can_chroot ())
-    return EXIT_UNSUPPORTED;
+    support_become_root();
+    if (!support_can_chroot()) {
+        return EXIT_UNSUPPORTED;
+    }
 
-  support_isolate_in_subprocess (chroot_callback, NULL);
+    support_isolate_in_subprocess(chroot_callback, NULL);
 
-  return 0;
+    return 0;
 }
 
 #define PREPARE prepare

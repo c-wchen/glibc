@@ -19,10 +19,9 @@
 #include <string.h>
 #include <tls-internal.h>
 
-void
-__glibc_tls_internal_free (void)
+void __glibc_tls_internal_free(void)
 {
-  struct pthread *self = THREAD_SELF;
-  free (self->tls_state.strsignal_buf);
-  free (self->tls_state.strerror_l_buf);
+    struct pthread *self = THREAD_SELF;
+    free(self->tls_state.strsignal_buf);
+    free(self->tls_state.strerror_l_buf);
 }

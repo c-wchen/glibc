@@ -19,9 +19,9 @@
 #include <shadow.h>
 #include <nss.h>
 
-#define STRUCTURE	spwd
-#define ENTNAME		spent
-#define DATABASE	"shadow"
+#define STRUCTURE   spwd
+#define ENTNAME     spent
+#define DATABASE    "shadow"
 struct spent_data {};
 
 /* Our parser function is already defined in sgetspent_r.c, so use that
@@ -30,9 +30,8 @@ struct spent_data {};
 #include "files-parse.c"
 #include GENERIC
 
-DB_LOOKUP (spnam, '.', 0, ("%s", name),
-	   {
-	     if (name[0] != '+' && name[0] != '-'
-		 && ! strcmp (name, result->sp_namp))
-	       break;
-	   }, const char *name)
+DB_LOOKUP(spnam, '.', 0, ("%s", name), {
+    if (name[0] != '+' && name[0] != '-'
+        && ! strcmp(name, result->sp_namp))
+        break;
+}, const char *name)

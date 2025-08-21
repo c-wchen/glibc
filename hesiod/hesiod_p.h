@@ -43,14 +43,14 @@
 #ifndef _HESIOD_P_H_INCLUDED
 #define _HESIOD_P_H_INCLUDED
 
-#define DEF_LHS		".ns"			/*    file is not */
-						/*    present. */
+#define DEF_LHS     ".ns"           /*    file is not */
+/*    present. */
 struct hesiod_p {
-	char *		LHS;		/* normally ".ns" */
-	char *		RHS;		/* AKA the default hesiod domain */
-	int		classes[2];	/* The class search order. */
+    char       *LHS;        /* normally ".ns" */
+    char       *RHS;        /* AKA the default hesiod domain */
+    int     classes[2]; /* The class search order. */
 };
 
-#define MAX_HESRESP	1024
+#define MAX_HESRESP 1024
 
 #endif /*_HESIOD_P_H_INCLUDED*/

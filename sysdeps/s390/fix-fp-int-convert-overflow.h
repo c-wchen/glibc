@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef FIX_FP_INT_CONVERT_OVERFLOW_H
-#define FIX_FP_INT_CONVERT_OVERFLOW_H	1
+#define FIX_FP_INT_CONVERT_OVERFLOW_H   1
 
 /* GCC emits "convert to fixed" instructions for casting floating point values
    to integer values. These instructions raise invalid and inexact exceptions

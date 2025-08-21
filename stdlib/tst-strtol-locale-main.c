@@ -29,58 +29,54 @@
 #define CONCAT(X, Y) CONCAT_ (X, Y)
 #define FNX(FN) CONCAT (FNPFX, FN)
 
-#define TEST(LOC, STR, EXP_VAL, FN, TYPE, FMT)				\
-  do									\
-    {									\
-      CHAR *ep;								\
-      TYPE val = FNX (FN) (STR, &ep, 36);				\
+#define TEST(LOC, STR, EXP_VAL, FN, TYPE, FMT)              \
+  do                                    \
+    {                                   \
+      CHAR *ep;                             \
+      TYPE val = FNX (FN) (STR, &ep, 36);               \
       printf ("%s: " FNPFXS #FN " (" SFMT ") == " FMT "\n", LOC, STR, val); \
-      if (val == (TYPE) (EXP_VAL) && *ep == 0)				\
-	printf ("PASS: %s: " FNPFXS #FN " (" SFMT ")\n", LOC, STR);	\
-      else								\
-	{								\
-	  printf ("FAIL: %s: " FNPFXS #FN " (" SFMT ")\n", LOC, STR);	\
-	  result = 1;							\
-	}								\
-    }									\
+      if (val == (TYPE) (EXP_VAL) && *ep == 0)              \
+    printf ("PASS: %s: " FNPFXS #FN " (" SFMT ")\n", LOC, STR); \
+      else                              \
+    {                               \
+      printf ("FAIL: %s: " FNPFXS #FN " (" SFMT ")\n", LOC, STR);   \
+      result = 1;                           \
+    }                               \
+    }                                   \
   while (0)
 
-static int
-test_one_locale (const char *loc)
+static int test_one_locale(const char *loc)
 {
-  if (setlocale (LC_ALL, loc) == NULL)
-    {
-      printf ("setlocale (LC_ALL, \"%s\") failed\n", loc);
-      return 1;
+    if (setlocale(LC_ALL, loc) == NULL) {
+        printf("setlocale (LC_ALL, \"%s\") failed\n", loc);
+        return 1;
     }
-  int result = 0;
-  for (int i = 10; i < 36; i++)
-    {
-      CHAR s[2];
-      s[0] = L_('A') + i - 10;
-      s[1] = 0;
-      TEST (loc, s, i, l, long int, "%ld");
-      TEST (loc, s, i, ul, unsigned long int, "%lu");
-      TEST (loc, s, i, ll, long long int, "%lld");
-      TEST (loc, s, i, ull, unsigned long long int, "%llu");
-      s[0] = L_('a') + i - 10;
-      s[1] = 0;
-      TEST (loc, s, i, l, long int, "%ld");
-      TEST (loc, s, i, ul, unsigned long int, "%lu");
-      TEST (loc, s, i, ll, long long int, "%lld");
-      TEST (loc, s, i, ull, unsigned long long int, "%llu");
+    int result = 0;
+    for (int i = 10; i < 36; i++) {
+        CHAR s[2];
+        s[0] = L_('A') + i - 10;
+        s[1] = 0;
+        TEST(loc, s, i, l, long int, "%ld");
+        TEST(loc, s, i, ul, unsigned long int, "%lu");
+        TEST(loc, s, i, ll, long long int, "%lld");
+        TEST(loc, s, i, ull, unsigned long long int, "%llu");
+        s[0] = L_('a') + i - 10;
+        s[1] = 0;
+        TEST(loc, s, i, l, long int, "%ld");
+        TEST(loc, s, i, ul, unsigned long int, "%lu");
+        TEST(loc, s, i, ll, long long int, "%lld");
+        TEST(loc, s, i, ull, unsigned long long int, "%llu");
     }
-  return result;
+    return result;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int result = 0;
-  result |= test_one_locale ("C");
-  result |= test_one_locale ("tr_TR.UTF-8");
-  result |= test_one_locale ("tr_TR.ISO-8859-9");
-  return result;
+    int result = 0;
+    result |= test_one_locale("C");
+    result |= test_one_locale("tr_TR.UTF-8");
+    result |= test_one_locale("tr_TR.ISO-8859-9");
+    return result;
 }
 
 #define TEST_FUNCTION do_test ()

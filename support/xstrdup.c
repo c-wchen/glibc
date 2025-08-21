@@ -20,11 +20,11 @@
 
 #include <string.h>
 
-char *
-xstrdup (const char *s)
+char *xstrdup(const char *s)
 {
-  char *p = strdup (s);
-  if (p == NULL)
-    oom_error ("strdup", strlen (s));
-  return p;
+    char *p = strdup(s);
+    if (p == NULL) {
+        oom_error("strdup", strlen(s));
+    }
+    return p;
 }

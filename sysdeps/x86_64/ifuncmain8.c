@@ -18,14 +18,14 @@
 
 #include <stdlib.h>
 
-extern float foo (float);
+extern float foo(float);
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  if (foo (2) != 3)
-    abort ();
-  return 0;
+    if (foo(2) != 3) {
+        abort();
+    }
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

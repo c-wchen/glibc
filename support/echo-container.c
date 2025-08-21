@@ -18,17 +18,16 @@
 
 #include <stdio.h>
 
-int
-main (int argc, const char **argv)
+int main(int argc, const char **argv)
 {
-  int i;
+    int i;
 
-  for (i = 1; i < argc; i++)
-    {
-      if (i > 1)
-	putchar (' ');
-      fputs (argv[i], stdout);
+    for (i = 1; i < argc; i++) {
+        if (i > 1) {
+            putchar(' ');
+        }
+        fputs(argv[i], stdout);
     }
-  putchar ('\n');
-  return 0;
+    putchar('\n');
+    return 0;
 }

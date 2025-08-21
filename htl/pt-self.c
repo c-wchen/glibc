@@ -21,16 +21,15 @@
 #include <pt-internal.h>
 
 /* Return the thread ID of the calling thread.  */
-pthread_t
-__pthread_self (void)
+pthread_t __pthread_self(void)
 {
-  struct __pthread *self = _pthread_self ();
-  return self->thread;
+    struct __pthread *self = _pthread_self();
+    return self->thread;
 }
 
-libc_hidden_def (__pthread_self)
-versioned_symbol (libc, __pthread_self, pthread_self, GLIBC_2_21);
+libc_hidden_def(__pthread_self)
+versioned_symbol(libc, __pthread_self, pthread_self, GLIBC_2_21);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_21)
-compat_symbol (libc, __pthread_self, pthread_self, GLIBC_2_12);
+compat_symbol(libc, __pthread_self, pthread_self, GLIBC_2_12);
 #endif

@@ -21,15 +21,15 @@
 # define __wcsncpy WCSNCPY
 #endif
 
-/* Copy no more than N wide-characters of SRC to DEST.	*/
-wchar_t *
-__wcsncpy (wchar_t *dest, const wchar_t *src, size_t n)
+/* Copy no more than N wide-characters of SRC to DEST.  */
+wchar_t *__wcsncpy(wchar_t *dest, const wchar_t *src, size_t n)
 {
-  size_t size = __wcsnlen (src, n);
-  if (size != n)
-    __wmemset (dest + size, L'\0', n - size);
-  return __wmemcpy (dest, src, size);
+    size_t size = __wcsnlen(src, n);
+    if (size != n) {
+        __wmemset(dest + size, L'\0', n - size);
+    }
+    return __wmemcpy(dest, src, size);
 }
 #ifndef WCSNCPY
-weak_alias (__wcsncpy, wcsncpy)
+weak_alias(__wcsncpy, wcsncpy)
 #endif

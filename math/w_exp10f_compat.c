@@ -26,20 +26,21 @@
 #include <libm-alias-float.h>
 
 #if LIBM_SVID_COMPAT
-float
-__exp10f_compat (float x)
+float __exp10f_compat(float x)
 {
-  float z = __exp10f (x);
-  if (__builtin_expect (!isfinite (z) || z == 0, 0)
-      && isfinite (x) && _LIB_VERSION != _IEEE_)
-    /* exp10f overflow (146) if x > 0, underflow (147) if x < 0.  */
-    return __kernel_standard_f (x, x, 146 + !!signbit (x));
+    float z = __exp10f(x);
+    if (__builtin_expect(!isfinite(z) || z == 0, 0)
+        && isfinite(x) && _LIB_VERSION != _IEEE_)
+        /* exp10f overflow (146) if x > 0, underflow (147) if x < 0.  */
+    {
+        return __kernel_standard_f(x, x, 146 + !!signbit(x));
+    }
 
-  return z;
+    return z;
 }
-compat_symbol (libm, __exp10f_compat, exp10f, GLIBC_2_1);
+compat_symbol(libm, __exp10f_compat, exp10f, GLIBC_2_1);
 # if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_27)
-strong_alias (__exp10f_compat, __pow10f)
-compat_symbol (libm, __pow10f, pow10f, GLIBC_2_1);
+strong_alias(__exp10f_compat, __pow10f)
+compat_symbol(libm, __pow10f, pow10f, GLIBC_2_1);
 # endif
 #endif

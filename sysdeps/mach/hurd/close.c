@@ -22,18 +22,17 @@
 #include <sysdep-cancel.h>
 
 /* Close the file descriptor FD.  */
-int
-__close (int fd)
+int __close(int fd)
 {
-  error_t err;
-  int cancel_oldtype;
+    error_t err;
+    int cancel_oldtype;
 
-  cancel_oldtype = LIBC_CANCEL_ASYNC();
-  err = HURD_FD_USE (fd, _hurd_fd_close (descriptor));
-  LIBC_CANCEL_RESET (cancel_oldtype);
+    cancel_oldtype = LIBC_CANCEL_ASYNC();
+    err = HURD_FD_USE(fd, _hurd_fd_close(descriptor));
+    LIBC_CANCEL_RESET(cancel_oldtype);
 
-  return err ? __hurd_fail (err) : 0;
+    return err ? __hurd_fail(err) : 0;
 }
-libc_hidden_def (__close)
-strong_alias (__close, __libc_close)
-weak_alias (__close, close)
+libc_hidden_def(__close)
+strong_alias(__close, __libc_close)
+weak_alias(__close, close)

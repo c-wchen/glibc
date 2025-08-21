@@ -17,8 +17,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef	_LINK_H
-#define	_LINK_H	1
+#ifndef _LINK_H
+#define _LINK_H 1
 
 #include <features.h>
 #include <elf.h>
@@ -27,22 +27,21 @@
 
 /* We use this macro to refer to ELF types independent of the native wordsize.
    `ElfW(TYPE)' is used in place of `Elf32_TYPE' or `Elf64_TYPE'.  */
-#define ElfW(type)	_ElfW (Elf, __ELF_NATIVE_CLASS, type)
-#define _ElfW(e,w,t)	_ElfW_1 (e, w, _##t)
-#define _ElfW_1(e,w,t)	e##w##t
+#define ElfW(type)  _ElfW (Elf, __ELF_NATIVE_CLASS, type)
+#define _ElfW(e,w,t)    _ElfW_1 (e, w, _##t)
+#define _ElfW_1(e,w,t)  e##w##t
 
-#include <bits/elfclass.h>		/* Defines __ELF_NATIVE_CLASS.  */
+#include <bits/elfclass.h>      /* Defines __ELF_NATIVE_CLASS.  */
 #include <bits/link.h>
 
 /* The legacy rendezvous structure used by the run-time dynamic linker to
    communicate details of shared object loading to the debugger.  */
 
-struct r_debug
-  {
+struct r_debug {
     /* Version number for this protocol.  It should be greater than 0.  */
     int r_version;
 
-    struct link_map *r_map;	/* Head of the chain of loaded objects.  */
+    struct link_map *r_map; /* Head of the chain of loaded objects.  */
 
     /* This is the address of a function internal to the run-time linker,
        that will always be called when the linker begins to map in a
@@ -50,17 +49,16 @@ struct r_debug
        The debugger can set a breakpoint at this address if it wants to
        notice shared object mapping changes.  */
     ElfW(Addr) r_brk;
-    enum
-      {
-	/* This state value describes the mapping change taking place when
-	   the `r_brk' address is called.  */
-	RT_CONSISTENT,		/* Mapping change is complete.  */
-	RT_ADD,			/* Beginning to add a new object.  */
-	RT_DELETE		/* Beginning to remove an object mapping.  */
-      } r_state;
+    enum {
+        /* This state value describes the mapping change taking place when
+           the `r_brk' address is called.  */
+        RT_CONSISTENT,      /* Mapping change is complete.  */
+        RT_ADD,         /* Beginning to add a new object.  */
+        RT_DELETE       /* Beginning to remove an object mapping.  */
+    } r_state;
 
-    ElfW(Addr) r_ldbase;	/* Base address the linker is loaded at.  */
-  };
+    ElfW(Addr) r_ldbase;    /* Base address the linker is loaded at.  */
+};
 
 /* This is the symbol of that structure provided by the dynamic linker.  */
 extern struct r_debug _r_debug;
@@ -71,8 +69,7 @@ extern struct r_debug _r_debug;
    linker sets that element's value to the address where this structure
    can be found.  */
 
-struct r_debug_extended
-  {
+struct r_debug_extended {
     struct r_debug base;
 
     /* The following field is added by r_version == 2.  */
@@ -81,14 +78,14 @@ struct r_debug_extended
        structure represents a different namespace.  The first
        r_debug_extended structure is for the default namespace.  */
     struct r_debug_extended *r_next;
-  };
+};
 
 /* This symbol refers to the "dynamic structure" in the `.dynamic' section
    of whatever module refers to `_DYNAMIC'.  So, to find its own
    `struct r_debug_extended', a program could do:
      for (dyn = _DYNAMIC; dyn->d_tag != DT_NULL; ++dyn)
        if (dyn->d_tag == DT_DEBUG)
-	 r_debug_extended = (struct r_debug_extended *) dyn->d_un.d_ptr;
+     r_debug_extended = (struct r_debug_extended *) dyn->d_un.d_ptr;
  */
 extern ElfW(Dyn) _DYNAMIC[];
 
@@ -98,17 +95,16 @@ extern ElfW(Dyn) _DYNAMIC[];
    These data structures exist in space used by the run-time dynamic linker;
    modifying them may have disastrous results.  */
 
-struct link_map
-  {
+struct link_map {
     /* These first few members are part of the protocol with the debugger.
        This is the same format used in SVR4.  */
 
-    ElfW(Addr) l_addr;		/* Difference between the address in the ELF
-				   file and the addresses in memory.  */
-    char *l_name;		/* Absolute file name object was found in.  */
-    ElfW(Dyn) *l_ld;		/* Dynamic section of the shared object.  */
+    ElfW(Addr) l_addr;      /* Difference between the address in the ELF
+                   file and the addresses in memory.  */
+    char *l_name;       /* Absolute file name object was found in.  */
+    ElfW(Dyn) *l_ld;        /* Dynamic section of the shared object.  */
     struct link_map *l_next, *l_prev; /* Chain of loaded objects.  */
-  };
+};
 
 #ifdef __USE_GNU
 
@@ -116,44 +112,39 @@ struct link_map
 #include <bits/link_lavcurrent.h>
 
 /* Activity types signaled through la_activity.  */
-enum
-  {
-    LA_ACT_CONSISTENT,		/* Link map consistent again.  */
-    LA_ACT_ADD,			/* New object will be added.  */
-    LA_ACT_DELETE		/* Objects will be removed.  */
-  };
+enum {
+    LA_ACT_CONSISTENT,      /* Link map consistent again.  */
+    LA_ACT_ADD,         /* New object will be added.  */
+    LA_ACT_DELETE       /* Objects will be removed.  */
+};
 
 /* Values representing origin of name for dynamic loading.  */
-enum
-  {
-    LA_SER_ORIG = 0x01,		/* Original name.  */
-    LA_SER_LIBPATH = 0x02,	/* Directory from LD_LIBRARY_PATH.  */
-    LA_SER_RUNPATH = 0x04,	/* Directory from RPATH/RUNPATH.  */
-    LA_SER_CONFIG = 0x08,	/* Found through ldconfig.  */
-    LA_SER_DEFAULT = 0x40,	/* Default directory.  */
-    LA_SER_SECURE = 0x80	/* Unused.  */
-  };
+enum {
+    LA_SER_ORIG = 0x01,     /* Original name.  */
+    LA_SER_LIBPATH = 0x02,  /* Directory from LD_LIBRARY_PATH.  */
+    LA_SER_RUNPATH = 0x04,  /* Directory from RPATH/RUNPATH.  */
+    LA_SER_CONFIG = 0x08,   /* Found through ldconfig.  */
+    LA_SER_DEFAULT = 0x40,  /* Default directory.  */
+    LA_SER_SECURE = 0x80    /* Unused.  */
+};
 
 /* Values for la_objopen return value.  */
-enum
-  {
-    LA_FLG_BINDTO = 0x01,	/* Audit symbols bound to this object.  */
-    LA_FLG_BINDFROM = 0x02	/* Audit symbols bound from this object.  */
-  };
+enum {
+    LA_FLG_BINDTO = 0x01,   /* Audit symbols bound to this object.  */
+    LA_FLG_BINDFROM = 0x02  /* Audit symbols bound from this object.  */
+};
 
 /* Values for la_symbind flags parameter.  */
-enum
-  {
-    LA_SYMB_NOPLTENTER = 0x01,	/* la_pltenter will not be called.  */
-    LA_SYMB_NOPLTEXIT = 0x02,	/* la_pltexit will not be called.  */
-    LA_SYMB_STRUCTCALL = 0x04,	/* Return value is a structure.  */
-    LA_SYMB_DLSYM = 0x08,	/* Binding due to dlsym call.  */
-    LA_SYMB_ALTVALUE = 0x10	/* Value has been changed by a previous
-				   la_symbind call.  */
-  };
+enum {
+    LA_SYMB_NOPLTENTER = 0x01,  /* la_pltenter will not be called.  */
+    LA_SYMB_NOPLTEXIT = 0x02,   /* la_pltexit will not be called.  */
+    LA_SYMB_STRUCTCALL = 0x04,  /* Return value is a structure.  */
+    LA_SYMB_DLSYM = 0x08,   /* Binding due to dlsym call.  */
+    LA_SYMB_ALTVALUE = 0x10 /* Value has been changed by a previous
+                   la_symbind call.  */
+};
 
-struct dl_phdr_info
-  {
+struct dl_phdr_info {
     ElfW(Addr) dlpi_addr;
     const char *dlpi_name;
     const ElfW(Phdr) *dlpi_phdr;
@@ -177,32 +168,32 @@ struct dl_phdr_info
        PT_TLS segment, if it has one and it has been allocated
        in the calling thread, otherwise a null pointer.  */
     void *dlpi_tls_data;
-  };
+};
 
 __BEGIN_DECLS
 
-extern int dl_iterate_phdr (int (*__callback) (struct dl_phdr_info *,
-					       size_t, void *),
-			    void *__data);
+extern int dl_iterate_phdr(int (*__callback)(struct dl_phdr_info *,
+                           size_t, void *),
+                           void *__data);
 
 
 /* Prototypes for the ld.so auditing interfaces.  These are not
    defined anywhere in ld.so but instead have to be provided by the
    auditing DSO.  */
-extern unsigned int la_version (unsigned int __version);
-extern void la_activity (uintptr_t *__cookie, unsigned int __flag);
-extern char *la_objsearch (const char *__name, uintptr_t *__cookie,
-			   unsigned int __flag);
-extern unsigned int la_objopen (struct link_map *__map, Lmid_t __lmid,
-				uintptr_t *__cookie);
-extern void la_preinit (uintptr_t *__cookie);
-extern uintptr_t la_symbind32 (Elf32_Sym *__sym, unsigned int __ndx,
-			       uintptr_t *__refcook, uintptr_t *__defcook,
-			       unsigned int *__flags, const char *__symname);
-extern uintptr_t la_symbind64 (Elf64_Sym *__sym, unsigned int __ndx,
-			       uintptr_t *__refcook, uintptr_t *__defcook,
-			       unsigned int *__flags, const char *__symname);
-extern unsigned int la_objclose (uintptr_t *__cookie);
+extern unsigned int la_version(unsigned int __version);
+extern void la_activity(uintptr_t *__cookie, unsigned int __flag);
+extern char *la_objsearch(const char *__name, uintptr_t *__cookie,
+                          unsigned int __flag);
+extern unsigned int la_objopen(struct link_map *__map, Lmid_t __lmid,
+                               uintptr_t *__cookie);
+extern void la_preinit(uintptr_t *__cookie);
+extern uintptr_t la_symbind32(Elf32_Sym *__sym, unsigned int __ndx,
+                              uintptr_t *__refcook, uintptr_t *__defcook,
+                              unsigned int *__flags, const char *__symname);
+extern uintptr_t la_symbind64(Elf64_Sym *__sym, unsigned int __ndx,
+                              uintptr_t *__refcook, uintptr_t *__defcook,
+                              unsigned int *__flags, const char *__symname);
+extern unsigned int la_objclose(uintptr_t *__cookie);
 
 __END_DECLS
 

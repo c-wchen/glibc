@@ -18,28 +18,25 @@
 #include <ctype.h>
 #include <stdio.h>
 
-int
-main (int argc, char *argv[])
+int main(int argc, char *argv[])
 {
-  int exc = 0;
-  int retc;
-  float f;
-  int d;
-  char str[] = "x 1";
-  int c;
+    int exc = 0;
+    int retc;
+    float f;
+    int d;
+    char str[] = "x 1";
+    int c;
 
-  for (c = 1; c < 127; ++c)
-    if (! isdigit (c) && ! isspace (c))
-      {
-	str[0] = c;
-	retc = sscanf (str, "%e %d", &f, &d);
-	if (retc != 0)
-	  {
-	    printf ("sscanf (\"%s\", \"%%e %%d\", ...) == %d, not 0\n",
-		    str, retc);
-	    exc = 1;
-	  }
-      }
+    for (c = 1; c < 127; ++c)
+        if (! isdigit(c) && ! isspace(c)) {
+            str[0] = c;
+            retc = sscanf(str, "%e %d", &f, &d);
+            if (retc != 0) {
+                printf("sscanf (\"%s\", \"%%e %%d\", ...) == %d, not 0\n",
+                       str, retc);
+                exc = 1;
+            }
+        }
 
-  return exc;
+    return exc;
 }

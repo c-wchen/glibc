@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 1983, 1993
- *	The Regents of the University of California.  All rights reserved.
+ *  The Regents of the University of California.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -26,40 +26,40 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	@(#)rwhod.h	8.1 (Berkeley) 6/2/93
+ *  @(#)rwhod.h 8.1 (Berkeley) 6/2/93
  */
 
 #ifndef _PROTOCOLS_RWHOD_H
-#define	_PROTOCOLS_RWHOD_H 1
+#define _PROTOCOLS_RWHOD_H 1
 
 #include <sys/types.h>
 
 /*
  * rwho protocol packet format.
  */
-struct	outmp {
-	char	out_line[8];		/* tty name */
-	char	out_name[8];		/* user id */
-	int32_t	out_time;		/* time on */
+struct  outmp {
+    char    out_line[8];        /* tty name */
+    char    out_name[8];        /* user id */
+    int32_t out_time;       /* time on */
 };
 
-struct	whod {
-	char	wd_vers;		/* protocol version # */
-	char	wd_type;		/* packet type, see below */
-	char	wd_pad[2];
-	int	wd_sendtime;		/* time stamp by sender */
-	int	wd_recvtime;		/* time stamp applied by receiver */
-	char	wd_hostname[32];	/* hosts's name */
-	int	wd_loadav[3];		/* load average as in uptime */
-	int	wd_boottime;		/* time system booted */
-	struct	whoent {
-		struct	outmp we_utmp;	/* active tty info */
-		int	we_idle;	/* tty idle time */
-	} wd_we[1024 / sizeof (struct whoent)];
+struct  whod {
+    char    wd_vers;        /* protocol version # */
+    char    wd_type;        /* packet type, see below */
+    char    wd_pad[2];
+    int wd_sendtime;        /* time stamp by sender */
+    int wd_recvtime;        /* time stamp applied by receiver */
+    char    wd_hostname[32];    /* hosts's name */
+    int wd_loadav[3];       /* load average as in uptime */
+    int wd_boottime;        /* time system booted */
+    struct  whoent {
+        struct  outmp we_utmp;  /* active tty info */
+        int we_idle;    /* tty idle time */
+    } wd_we[1024 / sizeof(struct whoent)];
 };
 
-#define	WHODVERSION	1
-#define	WHODTYPE_STATUS	1		/* host status */
+#define WHODVERSION 1
+#define WHODTYPE_STATUS 1       /* host status */
 
 /* We used to define _PATH_RWHODIR here but it's now in <paths.h>.  */
 #include <paths.h>

@@ -18,22 +18,23 @@
 
 #include <libio/libioP.h>
 
-extern int
-___ieee128___vsprintf_chk (char *string, int flag, size_t slen,
-			const char *format, va_list ap)
+extern int ___ieee128___vsprintf_chk(char *string, int flag, size_t slen,
+                                     const char *format, va_list ap)
 {
-  unsigned int mode = PRINTF_LDBL_USES_FLOAT128;
-  if (flag > 0)
-    mode |= PRINTF_FORTIFY;
+    unsigned int mode = PRINTF_LDBL_USES_FLOAT128;
+    if (flag > 0) {
+        mode |= PRINTF_FORTIFY;
+    }
 
-  /* Regardless of the value of flag, let __vsprintf_internal know that
-     this is a call from *printf_chk.  */
-  mode |= PRINTF_CHK;
+    /* Regardless of the value of flag, let __vsprintf_internal know that
+       this is a call from *printf_chk.  */
+    mode |= PRINTF_CHK;
 
-  if (slen == 0)
-    __chk_fail ();
+    if (slen == 0) {
+        __chk_fail();
+    }
 
-  return __vsprintf_internal (string, slen, format, ap, mode);
+    return __vsprintf_internal(string, slen, format, ap, mode);
 }
-hidden_def (___ieee128___vsprintf_chk)
-strong_alias (___ieee128___vsprintf_chk, __vsprintf_chkieee128)
+hidden_def(___ieee128___vsprintf_chk)
+strong_alias(___ieee128___vsprintf_chk, __vsprintf_chkieee128)

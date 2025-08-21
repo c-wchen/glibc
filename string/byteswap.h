@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _BYTESWAP_H
-#define _BYTESWAP_H	1
+#define _BYTESWAP_H 1
 
 #include <features.h>
 

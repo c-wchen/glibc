@@ -48,79 +48,83 @@ bool warn_int_curr_symbol = true;
 /* Alter the current locale to match the locale configured by the
    user, and return the previous saved state.  */
 struct locale_state
-push_locale (void)
+push_locale(void)
 {
-  int saved_errno;
-  const char *orig;
-  char *copy = NULL;
+    int saved_errno;
+    const char *orig;
+    char *copy = NULL;
 
-  saved_errno = errno;
+    saved_errno = errno;
 
-  orig = setlocale (LC_CTYPE, NULL);
-  if (orig == NULL)
-    error (0, 0, "failed to read locale!");
+    orig = setlocale(LC_CTYPE, NULL);
+    if (orig == NULL) {
+        error(0, 0, "failed to read locale!");
+    }
 
-  if (setlocale (LC_CTYPE, "") == NULL)
-    error (0, 0, "failed to set locale!");
+    if (setlocale(LC_CTYPE, "") == NULL) {
+        error(0, 0, "failed to set locale!");
+    }
 
-  errno = saved_errno;
+    errno = saved_errno;
 
-  if (orig != NULL)
-    copy = strdup (orig);
+    if (orig != NULL) {
+        copy = strdup(orig);
+    }
 
-  /* We will return either a valid locale or NULL if we failed
-     to save the locale.  */
-  return (struct locale_state) { .cur_locale = copy };
+    /* We will return either a valid locale or NULL if we failed
+       to save the locale.  */
+    return (struct locale_state) {
+        .cur_locale = copy
+    };
 }
 
 /* Use the saved state to restore the locale.  */
-void
-pop_locale (struct locale_state ls)
+void pop_locale(struct locale_state ls)
 {
-  const char *set = NULL;
-  /* We might have failed to save the locale, so only attempt to
-     restore a validly saved non-NULL locale.  */
-  if (ls.cur_locale != NULL)
-    {
-      set = setlocale (LC_CTYPE, ls.cur_locale);
-      if (set == NULL)
-	error (0, 0, "failed to restore %s locale!", ls.cur_locale);
+    const char *set = NULL;
+    /* We might have failed to save the locale, so only attempt to
+       restore a validly saved non-NULL locale.  */
+    if (ls.cur_locale != NULL) {
+        set = setlocale(LC_CTYPE, ls.cur_locale);
+        if (set == NULL) {
+            error(0, 0, "failed to restore %s locale!", ls.cur_locale);
+        }
 
-      free (ls.cur_locale);
+        free(ls.cur_locale);
     }
 }
 
 /* Wrapper to print verbose informative messages.
    Verbose messages are only printed if --verbose
    is in effect and --quiet is not.  */
-void
-__attribute__ ((__format__ (__printf__, 2, 3), nonnull (1, 2), unused))
-record_verbose (FILE *stream, const char *format, ...)
+void __attribute__((__format__(__printf__, 2, 3), nonnull(1, 2), unused))
+record_verbose(FILE *stream, const char *format, ...)
 {
-  char *str;
-  va_list arg;
+    char *str;
+    va_list arg;
 
-  if (!verbose)
-    return;
+    if (!verbose) {
+        return;
+    }
 
-  if (!be_quiet)
-    {
-      struct locale_state ls;
-      int ret;
+    if (!be_quiet) {
+        struct locale_state ls;
+        int ret;
 
-      va_start (arg, format);
-      ls = push_locale ();
+        va_start(arg, format);
+        ls = push_locale();
 
-      ret = vasprintf (&str, format, arg);
-      if (ret == -1)
-	abort ();
+        ret = vasprintf(&str, format, arg);
+        if (ret == -1) {
+            abort();
+        }
 
-      pop_locale (ls);
-      va_end (arg);
+        pop_locale(ls);
+        va_end(arg);
 
-      fprintf (stream, "[verbose] %s\n", str);
+        fprintf(stream, "[verbose] %s\n", str);
 
-      free (str);
+        free(str);
     }
 }
 
@@ -128,33 +132,32 @@ record_verbose (FILE *stream, const char *format, ...)
    many were called because this effects our exit code.
    Nothing is printed if --quiet is in effect, but warnings
    are always counted.  */
-void
-__attribute__ ((__format__ (__printf__, 1, 2), nonnull (1), unused))
-record_warning (const char *format, ...)
+void __attribute__((__format__(__printf__, 1, 2), nonnull(1), unused))
+record_warning(const char *format, ...)
 {
-  char *str;
-  va_list arg;
+    char *str;
+    va_list arg;
 
-  recorded_warning_count++;
+    recorded_warning_count++;
 
-  if (!be_quiet)
-    {
-      struct locale_state ls;
-      int ret;
+    if (!be_quiet) {
+        struct locale_state ls;
+        int ret;
 
-      va_start (arg, format);
-      ls = push_locale ();
+        va_start(arg, format);
+        ls = push_locale();
 
-      ret = vasprintf (&str, format, arg);
-      if (ret == -1)
-	abort ();
+        ret = vasprintf(&str, format, arg);
+        if (ret == -1) {
+            abort();
+        }
 
-      pop_locale (ls);
-      va_end (arg);
+        pop_locale(ls);
+        va_end(arg);
 
-      fprintf (stderr, "[warning] %s\n", str);
+        fprintf(stderr, "[warning] %s\n", str);
 
-      free (str);
+        free(str);
     }
 }
 
@@ -163,67 +166,65 @@ record_warning (const char *format, ...)
    Nothing is printed if --quiet is in effect, but errors
    are always counted, and fatal errors always exit the
    program.  */
-void
-__attribute__ ((__format__ (__printf__, 3, 4), nonnull (3), unused))
-record_error (int status, int errnum, const char *format, ...)
+void __attribute__((__format__(__printf__, 3, 4), nonnull(3), unused))
+record_error(int status, int errnum, const char *format, ...)
 {
-  char *str;
-  va_list arg;
+    char *str;
+    va_list arg;
 
-  recorded_error_count++;
+    recorded_error_count++;
 
-  /* The existing behaviour is that even if you use --quiet, a fatal
-     error is always printed and terminates the process.  */
-  if (!be_quiet || status != 0)
-    {
-      struct locale_state ls;
-      int ret;
+    /* The existing behaviour is that even if you use --quiet, a fatal
+       error is always printed and terminates the process.  */
+    if (!be_quiet || status != 0) {
+        struct locale_state ls;
+        int ret;
 
-      va_start (arg, format);
-      ls = push_locale ();
+        va_start(arg, format);
+        ls = push_locale();
 
-      ret = vasprintf (&str, format, arg);
-      if (ret == -1)
-        abort ();
+        ret = vasprintf(&str, format, arg);
+        if (ret == -1) {
+            abort();
+        }
 
-      pop_locale (ls);
-      va_end (arg);
+        pop_locale(ls);
+        va_end(arg);
 
-      error (status, errnum, "[error] %s", str);
+        error(status, errnum, "[error] %s", str);
 
-      free (str);
+        free(str);
     }
 }
 /* ... likewise for error_at_line.  */
-void
-__attribute__ ((__format__ (__printf__, 5, 6), nonnull (3, 5), unused))
-record_error_at_line (int status, int errnum, const char *filename,
-		      unsigned int linenum, const char *format, ...)
+void __attribute__((__format__(__printf__, 5, 6), nonnull(3, 5), unused))
+record_error_at_line(int status, int errnum, const char *filename,
+                     unsigned int linenum, const char *format, ...)
 {
-  char *str;
-  va_list arg;
+    char *str;
+    va_list arg;
 
-  recorded_error_count++;
+    recorded_error_count++;
 
-  /* The existing behaviour is that even if you use --quiet, a fatal
-     error is always printed and terminates the process.  */
-  if (!be_quiet || status != 0)
-    {
-      struct locale_state ls;
-      int ret;
+    /* The existing behaviour is that even if you use --quiet, a fatal
+       error is always printed and terminates the process.  */
+    if (!be_quiet || status != 0) {
+        struct locale_state ls;
+        int ret;
 
-      va_start (arg, format);
-      ls = push_locale ();
+        va_start(arg, format);
+        ls = push_locale();
 
-      ret = vasprintf (&str, format, arg);
-      if (ret == -1)
-        abort ();
+        ret = vasprintf(&str, format, arg);
+        if (ret == -1) {
+            abort();
+        }
 
-      pop_locale (ls);
-      va_end (arg);
+        pop_locale(ls);
+        va_end(arg);
 
-      error_at_line (status, errnum, filename, linenum, "[error] %s", str);
+        error_at_line(status, errnum, filename, linenum, "[error] %s", str);
 
-      free (str);
+        free(str);
     }
 }

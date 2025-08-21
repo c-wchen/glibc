@@ -22,23 +22,21 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
-int
-__gethostname (char *name, size_t len)
+int __gethostname(char *name, size_t len)
 {
-  int result;
+    int result;
 
-  result = INLINE_SYSCALL (gethostname, 2, name, len);
+    result = INLINE_SYSCALL(gethostname, 2, name, len);
 
-  if (result == 0
-      /* See whether the string is terminated.  If not we will return
-	 an error.  */
-      && memchr (name, '\0', len) == NULL)
-    {
-      __set_errno (EOVERFLOW);
-      result = -1;
+    if (result == 0
+        /* See whether the string is terminated.  If not we will return
+        an error.  */
+        && memchr(name, '\0', len) == NULL) {
+        __set_errno(EOVERFLOW);
+        result = -1;
     }
 
-  return result;
+    return result;
 }
 
-weak_alias (__gethostname, gethostname)
+weak_alias(__gethostname, gethostname)

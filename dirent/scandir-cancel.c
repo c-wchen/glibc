@@ -18,14 +18,14 @@
 
 #include <dirent.h>
 
-void
-__scandir_cancel_handler (void *arg)
+void __scandir_cancel_handler(void *arg)
 {
-  struct scandir_cancel_struct *cp = arg;
-  void **v = cp->v;
+    struct scandir_cancel_struct *cp = arg;
+    void **v = cp->v;
 
-  for (size_t i = 0; i < cp->cnt; ++i)
-    free (v[i]);
-  free (v);
-  (void) __closedir (cp->dp);
+    for (size_t i = 0; i < cp->cnt; ++i) {
+        free(v[i]);
+    }
+    free(v);
+    (void) __closedir(cp->dp);
 }

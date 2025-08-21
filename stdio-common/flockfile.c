@@ -19,10 +19,9 @@
 #include <stdio.h>
 #include <stdio-lock.h>
 
-void
-__flockfile (FILE *stream)
+void __flockfile(FILE *stream)
 {
-  _IO_lock_lock (*stream->_lock);
+    _IO_lock_lock(*stream->_lock);
 }
-weak_alias (__flockfile, flockfile);
-weak_alias (__flockfile, _IO_flockfile)
+weak_alias(__flockfile, flockfile);
+weak_alias(__flockfile, _IO_flockfile)

@@ -36,51 +36,46 @@ _Atomic int do_exit;
 pthread_rwlockattr_t mylock_attr;
 pthread_rwlock_t mylock;
 
-void *
-run_loop (void *a)
+void *run_loop(void *a)
 {
-  while (!do_exit)
-    {
-      if (random () & 1)
-	{
-	  xpthread_rwlock_wrlock (&mylock);
-	  xpthread_rwlock_unlock (&mylock);
-	}
-      else
-	{
-	  xpthread_rwlock_rdlock (&mylock);
-	  xpthread_rwlock_unlock (&mylock);
-	}
+    while (!do_exit) {
+        if (random() & 1) {
+            xpthread_rwlock_wrlock(&mylock);
+            xpthread_rwlock_unlock(&mylock);
+        } else {
+            xpthread_rwlock_rdlock(&mylock);
+            xpthread_rwlock_unlock(&mylock);
+        }
     }
-  return NULL;
+    return NULL;
 }
 
-int
-do_test (void)
+int do_test(void)
 {
-  xpthread_rwlockattr_init (&mylock_attr);
-  xpthread_rwlockattr_setkind_np (&mylock_attr,
-				  PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP);
-  xpthread_rwlock_init (&mylock, &mylock_attr);
+    xpthread_rwlockattr_init(&mylock_attr);
+    xpthread_rwlockattr_setkind_np(&mylock_attr,
+                                   PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP);
+    xpthread_rwlock_init(&mylock, &mylock_attr);
 
-  for (int n = 0; n < LOOPS; n++)
-    {
-      pthread_t tids[NTHREADS];
-      do_exit = 0;
-      for (int i = 0; i < NTHREADS; i++)
-	tids[i] = xpthread_create (NULL, run_loop, NULL);
-      /* Let the threads run for some time.  */
-      sleep (1);
-      printf ("Exiting...");
-      fflush (stdout);
-      do_exit = 1;
-      for (int i = 0; i < NTHREADS; i++)
-	xpthread_join (tids[i]);
-      printf ("done.\n");
+    for (int n = 0; n < LOOPS; n++) {
+        pthread_t tids[NTHREADS];
+        do_exit = 0;
+        for (int i = 0; i < NTHREADS; i++) {
+            tids[i] = xpthread_create(NULL, run_loop, NULL);
+        }
+        /* Let the threads run for some time.  */
+        sleep(1);
+        printf("Exiting...");
+        fflush(stdout);
+        do_exit = 1;
+        for (int i = 0; i < NTHREADS; i++) {
+            xpthread_join(tids[i]);
+        }
+        printf("done.\n");
     }
-  pthread_rwlock_destroy (&mylock);
-  pthread_rwlockattr_destroy (&mylock_attr);
-  return 0;
+    pthread_rwlock_destroy(&mylock);
+    pthread_rwlockattr_destroy(&mylock_attr);
+    return 0;
 }
 
 #define TIMEOUT (DEFAULT_TIMEOUT + 3 * LOOPS)

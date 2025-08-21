@@ -20,42 +20,40 @@
 #include <rpcsvc/nis.h>
 #include <shlib-compat.h>
 
-nis_name
-nis_domain_of_r (const_nis_name name, char *buffer, size_t buflen)
+nis_name nis_domain_of_r(const_nis_name name, char *buffer, size_t buflen)
 {
-  char *cptr;
-  size_t cptr_len;
+    char *cptr;
+    size_t cptr_len;
 
-  if (buffer == NULL)
-    {
-    erange:
-      __set_errno (ERANGE);
-      return NULL;
+    if (buffer == NULL) {
+erange:
+        __set_errno(ERANGE);
+        return NULL;
     }
 
-  buffer[0] = '\0';
+    buffer[0] = '\0';
 
-  cptr = strchr (name, '.');
+    cptr = strchr(name, '.');
 
-  if (cptr == NULL)
-    return buffer;
-
-  ++cptr;
-  cptr_len = strlen (cptr);
-
-  if (cptr_len == 0)
-    {
-      if (buflen < 2)
-	goto erange;
-      return strcpy (buffer, ".");
+    if (cptr == NULL) {
+        return buffer;
     }
 
-  if (__glibc_unlikely (cptr_len >= buflen))
-    {
-      __set_errno (ERANGE);
-      return NULL;
+    ++cptr;
+    cptr_len = strlen(cptr);
+
+    if (cptr_len == 0) {
+        if (buflen < 2) {
+            goto erange;
+        }
+        return strcpy(buffer, ".");
     }
 
-  return memcpy (buffer, cptr, cptr_len + 1);
+    if (__glibc_unlikely(cptr_len >= buflen)) {
+        __set_errno(ERANGE);
+        return NULL;
+    }
+
+    return memcpy(buffer, cptr, cptr_len + 1);
 }
-libnsl_hidden_nolink_def (nis_domain_of_r, GLIBC_2_1)
+libnsl_hidden_nolink_def(nis_domain_of_r, GLIBC_2_1)

@@ -24,79 +24,82 @@
 #include <sys/param.h>
 #include <sys/random.h>
 
-static void
-arc4random_getrandom_failure (void)
+static void arc4random_getrandom_failure(void)
 {
-  __libc_fatal ("Fatal glibc error: cannot get entropy for arc4random\n");
+    __libc_fatal("Fatal glibc error: cannot get entropy for arc4random\n");
 }
 
-void
-__arc4random_buf (void *p, size_t n)
+void __arc4random_buf(void *p, size_t n)
 {
-  static int seen_initialized;
-  ssize_t l;
-  int fd;
+    static int seen_initialized;
+    ssize_t l;
+    int fd;
 
-  if (n == 0)
-    return;
-
-  for (;;)
-    {
-      l = TEMP_FAILURE_RETRY (__getrandom_nocancel (p, n, 0));
-      if (l > 0)
-	{
-	  if ((size_t) l == n)
-	    return; /* Done reading, success.  */
-	  p = (uint8_t *) p + l;
-	  n -= l;
-	  continue; /* Interrupted by a signal; keep going.  */
-	}
-      else if (l < 0 && errno == ENOSYS)
-	break; /* No syscall, so fallback to /dev/urandom.  */
-      arc4random_getrandom_failure ();
+    if (n == 0) {
+        return;
     }
 
-  if (atomic_load_relaxed (&seen_initialized) == 0)
-    {
-      /* Poll /dev/random as an approximation of RNG initialization.  */
-      struct pollfd pfd = { .events = POLLIN };
-      pfd.fd = TEMP_FAILURE_RETRY (
-	  __open64_nocancel ("/dev/random", O_RDONLY | O_CLOEXEC | O_NOCTTY));
-      if (pfd.fd < 0)
-	arc4random_getrandom_failure ();
-      if (TEMP_FAILURE_RETRY (__poll_infinity_nocancel (&pfd, 1)) < 0)
-	arc4random_getrandom_failure ();
-      if (__close_nocancel (pfd.fd) < 0)
-	arc4random_getrandom_failure ();
-      atomic_store_relaxed (&seen_initialized, 1);
+    for (;;) {
+        l = TEMP_FAILURE_RETRY(__getrandom_nocancel(p, n, 0));
+        if (l > 0) {
+            if ((size_t) l == n) {
+                return;    /* Done reading, success.  */
+            }
+            p = (uint8_t *) p + l;
+            n -= l;
+            continue; /* Interrupted by a signal; keep going.  */
+        } else if (l < 0 && errno == ENOSYS) {
+            break;    /* No syscall, so fallback to /dev/urandom.  */
+        }
+        arc4random_getrandom_failure();
     }
 
-  fd = TEMP_FAILURE_RETRY (
-      __open64_nocancel ("/dev/urandom", O_RDONLY | O_CLOEXEC | O_NOCTTY));
-  if (fd < 0)
-    arc4random_getrandom_failure ();
-  for (;;)
-    {
-      l = TEMP_FAILURE_RETRY (__read_nocancel (fd, p, n));
-      if (l <= 0)
-	arc4random_getrandom_failure ();
-      if ((size_t) l == n)
-	break; /* Done reading, success.  */
-      p = (uint8_t *) p + l;
-      n -= l;
+    if (atomic_load_relaxed(&seen_initialized) == 0) {
+        /* Poll /dev/random as an approximation of RNG initialization.  */
+        struct pollfd pfd = { .events = POLLIN };
+        pfd.fd = TEMP_FAILURE_RETRY(
+                     __open64_nocancel("/dev/random", O_RDONLY | O_CLOEXEC | O_NOCTTY));
+        if (pfd.fd < 0) {
+            arc4random_getrandom_failure();
+        }
+        if (TEMP_FAILURE_RETRY(__poll_infinity_nocancel(&pfd, 1)) < 0) {
+            arc4random_getrandom_failure();
+        }
+        if (__close_nocancel(pfd.fd) < 0) {
+            arc4random_getrandom_failure();
+        }
+        atomic_store_relaxed(&seen_initialized, 1);
     }
-  if (__close_nocancel (fd) < 0)
-    arc4random_getrandom_failure ();
+
+    fd = TEMP_FAILURE_RETRY(
+             __open64_nocancel("/dev/urandom", O_RDONLY | O_CLOEXEC | O_NOCTTY));
+    if (fd < 0) {
+        arc4random_getrandom_failure();
+    }
+    for (;;) {
+        l = TEMP_FAILURE_RETRY(__read_nocancel(fd, p, n));
+        if (l <= 0) {
+            arc4random_getrandom_failure();
+        }
+        if ((size_t) l == n) {
+            break;    /* Done reading, success.  */
+        }
+        p = (uint8_t *) p + l;
+        n -= l;
+    }
+    if (__close_nocancel(fd) < 0) {
+        arc4random_getrandom_failure();
+    }
 }
-libc_hidden_def (__arc4random_buf)
-weak_alias (__arc4random_buf, arc4random_buf)
+libc_hidden_def(__arc4random_buf)
+weak_alias(__arc4random_buf, arc4random_buf)
 
 uint32_t
-__arc4random (void)
+__arc4random(void)
 {
-  uint32_t r;
-  __arc4random_buf (&r, sizeof (r));
-  return r;
+    uint32_t r;
+    __arc4random_buf(&r, sizeof(r));
+    return r;
 }
-libc_hidden_def (__arc4random)
-weak_alias (__arc4random, arc4random)
+libc_hidden_def(__arc4random)
+weak_alias(__arc4random, arc4random)

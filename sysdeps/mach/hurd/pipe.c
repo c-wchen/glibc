@@ -22,10 +22,9 @@
    If successful, two file descriptors are stored in FDS;
    bytes written on FDS[1] can be read from FDS[0].
    Returns 0 if successful, -1 if not.  */
-int
-__pipe (int fds[2])
+int __pipe(int fds[2])
 {
-  return __pipe2 (fds, 0);
+    return __pipe2(fds, 0);
 }
-libc_hidden_def (__pipe)
-weak_alias (__pipe, pipe)
+libc_hidden_def(__pipe)
+weak_alias(__pipe, pipe)

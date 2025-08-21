@@ -24,8 +24,8 @@
 
 #include <stdio.h>
 
-void support_set_test_dir (const char *name) __attribute__ ((weak));
-void support_delete_temp_files (void) __attribute__ ((weak));
-void support_print_temp_files (FILE *) __attribute__ ((weak));
+void support_set_test_dir(const char *name) __attribute__((weak));
+void support_delete_temp_files(void) __attribute__((weak));
+void support_print_temp_files(FILE *) __attribute__((weak));
 
 #endif /* SUPPORT_TEMP_FILE_INTERNAL_H */

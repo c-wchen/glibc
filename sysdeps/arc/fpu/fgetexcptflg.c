@@ -19,13 +19,12 @@
 #include <fenv.h>
 #include <fenv_private.h>
 
-int
-fegetexceptflag (fexcept_t *flagp, int excepts)
+int fegetexceptflag(fexcept_t *flagp, int excepts)
 {
-  unsigned int fpsr;
+    unsigned int fpsr;
 
-  _FPU_GETS (fpsr);
-  *flagp = fpsr & excepts;
+    _FPU_GETS(fpsr);
+    *flagp = fpsr & excepts;
 
-  return 0;
+    return 0;
 }

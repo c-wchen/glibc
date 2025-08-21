@@ -16,67 +16,64 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef	_FCNTL_H
+#ifndef _FCNTL_H
 # error "Never include <bits/mqueue2.h> directly; use <mqueue.h> instead."
 #endif
 
 /* Check that calls to mq_open with O_CREAT set have an appropriate third and fourth
    parameter.  */
-extern mqd_t mq_open (const char *__name, int __oflag, ...)
-     __THROW __nonnull ((1));
-extern mqd_t __mq_open_2 (const char *__name, int __oflag)
-     __THROW __nonnull ((1));
-extern mqd_t __REDIRECT_NTH (__mq_open_alias, (const char *__name,
-					       int __oflag, ...), mq_open)
-     __nonnull ((1));
+extern mqd_t mq_open(const char *__name, int __oflag, ...)
+__THROW __nonnull((1));
+extern mqd_t __mq_open_2(const char *__name, int __oflag)
+__THROW __nonnull((1));
+extern mqd_t __REDIRECT_NTH(__mq_open_alias, (const char *__name,
+                            int __oflag, ...), mq_open)
+__nonnull((1));
 
 #ifdef __va_arg_pack_len
-__errordecl (__mq_open_wrong_number_of_args,
-	     "mq_open can be called either with 2 or 4 arguments");
-__errordecl (__mq_open_missing_mode_and_attr,
-	     "mq_open with O_CREAT in second argument needs 4 arguments");
+__errordecl(__mq_open_wrong_number_of_args,
+            "mq_open can be called either with 2 or 4 arguments");
+__errordecl(__mq_open_missing_mode_and_attr,
+            "mq_open with O_CREAT in second argument needs 4 arguments");
 
-__fortify_function mqd_t
-__NTH (mq_open (const char *__name, int __oflag, ...))
+__fortify_function mqd_t __NTH(mq_open(const char *__name, int __oflag, ...))
 {
-  if (__va_arg_pack_len () != 0 && __va_arg_pack_len () != 2)
-    __mq_open_wrong_number_of_args ();
-
-  if (__builtin_constant_p (__oflag))
-    {
-      if ((__oflag & O_CREAT) != 0 && __va_arg_pack_len () == 0)
-	{
-	  __mq_open_missing_mode_and_attr ();
-	  return __mq_open_2 (__name, __oflag);
-	}
-      return __mq_open_alias (__name, __oflag, __va_arg_pack ());
+    if (__va_arg_pack_len() != 0 && __va_arg_pack_len() != 2) {
+        __mq_open_wrong_number_of_args();
     }
 
-  if (__va_arg_pack_len () == 0)
-    return __mq_open_2 (__name, __oflag);
+    if (__builtin_constant_p(__oflag)) {
+        if ((__oflag & O_CREAT) != 0 && __va_arg_pack_len() == 0) {
+            __mq_open_missing_mode_and_attr();
+            return __mq_open_2(__name, __oflag);
+        }
+        return __mq_open_alias(__name, __oflag, __va_arg_pack());
+    }
 
-  return __mq_open_alias (__name, __oflag, __va_arg_pack ());
+    if (__va_arg_pack_len() == 0) {
+        return __mq_open_2(__name, __oflag);
+    }
+
+    return __mq_open_alias(__name, __oflag, __va_arg_pack());
 }
 #elif __fortify_use_clang
-__fortify_function_error_function __attribute_overloadable__ mqd_t
-__NTH (mq_open (__fortify_clang_overload_arg (const char *, , __name),
-		int __oflag, mode_t __mode, ...))
-     __fortify_clang_unavailable ("mq_open can be called either with 2 or 4 arguments");
+__fortify_function_error_function __attribute_overloadable__ mqd_t __NTH(mq_open(__fortify_clang_overload_arg(
+            const char *,, __name),
+        int __oflag, mode_t __mode, ...))
+__fortify_clang_unavailable("mq_open can be called either with 2 or 4 arguments");
 
-__fortify_function __attribute_overloadable__ mqd_t
-__NTH (mq_open (__fortify_clang_overload_arg (const char *, ,__name),
-		int __oflag, mode_t __mode, struct mq_attr *__attr))
+__fortify_function __attribute_overloadable__ mqd_t __NTH(mq_open(__fortify_clang_overload_arg(const char *,, __name),
+        int __oflag, mode_t __mode, struct mq_attr *__attr))
 {
-  return __mq_open_alias (__name, __oflag, __mode, __attr);
+    return __mq_open_alias(__name, __oflag, __mode, __attr);
 }
 
-__fortify_function __attribute_overloadable__ mqd_t
-__NTH (mq_open (__fortify_clang_overload_arg (const char *, ,__name),
-		int __oflag))
-     __fortify_clang_prefer_this_overload
-     __fortify_clang_error ((__oflag & O_CREAT),
-			     "mq_open with O_CREAT in second argument needs 4 arguments")
+__fortify_function __attribute_overloadable__ mqd_t __NTH(mq_open(__fortify_clang_overload_arg(const char *,, __name),
+        int __oflag))
+__fortify_clang_prefer_this_overload
+__fortify_clang_error((__oflag &O_CREAT),
+                      "mq_open with O_CREAT in second argument needs 4 arguments")
 {
-  return __mq_open_alias (__name, __oflag);
+    return __mq_open_alias(__name, __oflag);
 }
 #endif

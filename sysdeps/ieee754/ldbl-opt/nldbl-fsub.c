@@ -21,8 +21,7 @@
 #undef fsubl
 
 float
-attribute_hidden
-fsubl (double x, double y)
+attribute_hidden fsubl(double x, double y)
 {
-  return fsub (x, y);
+    return fsub(x, y);
 }

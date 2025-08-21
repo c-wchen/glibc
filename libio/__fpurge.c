@@ -18,25 +18,23 @@
 #include <stdio_ext.h>
 #include "libioP.h"
 
-void
-__fpurge (FILE *fp)
+void __fpurge(FILE *fp)
 {
-  if (fp->_mode > 0)
-    {
-      /* Wide-char stream.  */
-      if (_IO_in_backup (fp))
-	_IO_free_wbackup_area (fp);
+    if (fp->_mode > 0) {
+        /* Wide-char stream.  */
+        if (_IO_in_backup(fp)) {
+            _IO_free_wbackup_area(fp);
+        }
 
-      fp->_wide_data->_IO_read_end = fp->_wide_data->_IO_read_ptr;
-      fp->_wide_data->_IO_write_ptr = fp->_wide_data->_IO_write_base;
-    }
-  else
-    {
-      /* Byte stream.  */
-      if (_IO_in_backup (fp))
-	_IO_free_backup_area (fp);
+        fp->_wide_data->_IO_read_end = fp->_wide_data->_IO_read_ptr;
+        fp->_wide_data->_IO_write_ptr = fp->_wide_data->_IO_write_base;
+    } else {
+        /* Byte stream.  */
+        if (_IO_in_backup(fp)) {
+            _IO_free_backup_area(fp);
+        }
 
-      fp->_IO_read_end = fp->_IO_read_ptr;
-      fp->_IO_write_ptr = fp->_IO_write_base;
+        fp->_IO_read_end = fp->_IO_read_ptr;
+        fp->_IO_write_ptr = fp->_IO_write_base;
     }
 }

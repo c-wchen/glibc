@@ -18,13 +18,13 @@
 #include <netdb.h>
 
 
-#define LOOKUP_TYPE		struct protoent
-#define FUNCTION_NAME		getprotobyname
-#define DATABASE_NAME		protocols
-#define ADD_PARAMS		const char *name
-#define ADD_VARIABLES		name
+#define LOOKUP_TYPE     struct protoent
+#define FUNCTION_NAME       getprotobyname
+#define DATABASE_NAME       protocols
+#define ADD_PARAMS      const char *name
+#define ADD_VARIABLES       name
 
 /* There is no nscd support for the protocols file.  */
-#undef	USE_NSCD
+#undef  USE_NSCD
 
 #include "../nss/getXXbyYY_r.c"

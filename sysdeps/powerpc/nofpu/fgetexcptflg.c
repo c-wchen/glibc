@@ -19,18 +19,17 @@
 #include "soft-fp.h"
 #include "soft-supp.h"
 
-int
-__fegetexceptflag (fexcept_t *flagp, int excepts)
+int __fegetexceptflag(fexcept_t *flagp, int excepts)
 {
-  *flagp = (fexcept_t) __sim_exceptions_thread & excepts & FE_ALL_EXCEPT;
+    *flagp = (fexcept_t) __sim_exceptions_thread & excepts & FE_ALL_EXCEPT;
 
-  return 0;
+    return 0;
 }
 
 #include <shlib-compat.h>
 #if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
-strong_alias (__fegetexceptflag, __old_fegetexceptflag)
-compat_symbol (libm, __old_fegetexceptflag, fegetexceptflag, GLIBC_2_1);
+strong_alias(__fegetexceptflag, __old_fegetexceptflag)
+compat_symbol(libm, __old_fegetexceptflag, fegetexceptflag, GLIBC_2_1);
 #endif
 
-versioned_symbol (libm, __fegetexceptflag, fegetexceptflag, GLIBC_2_2);
+versioned_symbol(libm, __fegetexceptflag, fegetexceptflag, GLIBC_2_2);

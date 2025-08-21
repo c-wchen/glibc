@@ -18,8 +18,7 @@
 
 #include <math.h>
 
-int
-__signbitl (long double x)
+int __signbitl(long double x)
 {
-  return __builtin_signbitl (x);
+    return __builtin_signbitl(x);
 }

@@ -20,14 +20,14 @@
 #include <sys/param.h>
 
 
-char *
-__getwd_chk (char *buf, size_t buflen)
+char *__getwd_chk(char *buf, size_t buflen)
 {
-  char *res = __getcwd (buf, buflen);
-  if (res == NULL && errno == ERANGE)
-    __chk_fail ();
-  return res;
+    char *res = __getcwd(buf, buflen);
+    if (res == NULL && errno == ERANGE) {
+        __chk_fail();
+    }
+    return res;
 }
 
-link_warning (__getwd_chk,
-	      "the `getwd' function is dangerous and should not be used.")
+link_warning(__getwd_chk,
+             "the `getwd' function is dangerous and should not be used.")

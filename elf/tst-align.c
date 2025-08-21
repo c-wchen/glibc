@@ -19,33 +19,30 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  static const char modname[] = "tst-alignmod.so";
-  int result = 0;
-  void (*fp) (int *);
-  void *h;
+    static const char modname[] = "tst-alignmod.so";
+    int result = 0;
+    void (*fp)(int *);
+    void *h;
 
-  h = dlopen (modname, RTLD_LAZY);
-  if (h == NULL)
-    {
-      printf ("cannot open '%s': %s\n", modname, dlerror ());
-      exit (1);
+    h = dlopen(modname, RTLD_LAZY);
+    if (h == NULL) {
+        printf("cannot open '%s': %s\n", modname, dlerror());
+        exit(1);
     }
 
-  fp = dlsym (h, "in_dso");
-  if (fp == NULL)
-    {
-      printf ("cannot get symbol 'in_dso': %s\n", dlerror ());
-      exit (1);
+    fp = dlsym(h, "in_dso");
+    if (fp == NULL) {
+        printf("cannot get symbol 'in_dso': %s\n", dlerror());
+        exit(1);
     }
 
-  fp (&result);
+    fp(&result);
 
-  dlclose (h);
+    dlclose(h);
 
-  return result;
+    return result;
 }
 
 #include <support/test-driver.c>

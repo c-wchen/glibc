@@ -20,29 +20,28 @@
 #include <math.h>
 #include <stdio.h>
 
-#define TEST(TYPE, TRUE_MIN)						\
-  do									\
-    {									\
-      if (iszero (TRUE_MIN / 2))					\
-	puts ("iszero removes excess precision for " #TYPE);		\
-      else								\
-	{								\
-	  puts ("iszero fails to remove excess precision for " #TYPE);	\
-	  result = 1;							\
-	}								\
-    }									\
+#define TEST(TYPE, TRUE_MIN)                        \
+  do                                    \
+    {                                   \
+      if (iszero (TRUE_MIN / 2))                    \
+    puts ("iszero removes excess precision for " #TYPE);        \
+      else                              \
+    {                               \
+      puts ("iszero fails to remove excess precision for " #TYPE);  \
+      result = 1;                           \
+    }                               \
+    }                                   \
   while (0)
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int result = 0;
+    int result = 0;
 
-  TEST (float, FLT_TRUE_MIN);
-  TEST (double, DBL_TRUE_MIN);
-  TEST (long double, LDBL_TRUE_MIN);
+    TEST(float, FLT_TRUE_MIN);
+    TEST(double, DBL_TRUE_MIN);
+    TEST(long double, LDBL_TRUE_MIN);
 
-  return result;
+    return result;
 }
 
 #define TEST_FUNCTION do_test ()

@@ -24,10 +24,10 @@
 
 /* In the PowerPC64 ABI, the unadorned F_GETLK* opcodes should be used
    even by largefile64 code.  */
-#define FCNTL_ADJUST_CMD(__cmd)				\
-  ({ int cmd_ = (__cmd);				\
-     if (cmd_ >= F_GETLK64 && cmd_ <= F_SETLKW64)	\
-       cmd_ -= F_GETLK64 - F_GETLK;			\
+#define FCNTL_ADJUST_CMD(__cmd)             \
+  ({ int cmd_ = (__cmd);                \
+     if (cmd_ >= F_GETLK64 && cmd_ <= F_SETLKW64)   \
+       cmd_ -= F_GETLK64 - F_GETLK;         \
      cmd_; })
 
 

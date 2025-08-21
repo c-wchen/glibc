@@ -22,12 +22,11 @@
 #include <hurd/xattr.h>
 #include <hurd/fd.h>
 
-ssize_t
-flistxattr (int fd, char *list, size_t size)
+ssize_t flistxattr(int fd, char *list, size_t size)
 {
-  error_t err;
+    error_t err;
 
-  err = HURD_DPORT_USE (fd, _hurd_xattr_list (port, list, &size));
+    err = HURD_DPORT_USE(fd, _hurd_xattr_list(port, list, &size));
 
-  return err ? __hurd_dfail (fd, err) : size;
+    return err ? __hurd_dfail(fd, err) : size;
 }

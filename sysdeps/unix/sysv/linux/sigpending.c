@@ -21,8 +21,7 @@
 
 /* Change the set of blocked signals to SET,
    wait until a signal arrives, and restore the set of blocked signals.  */
-int
-sigpending (sigset_t *set)
+int sigpending(sigset_t *set)
 {
-  return INLINE_SYSCALL_CALL (rt_sigpending, set, __NSIG_BYTES);
+    return INLINE_SYSCALL_CALL(rt_sigpending, set, __NSIG_BYTES);
 }

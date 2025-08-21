@@ -21,25 +21,24 @@
 #include <libm-alias-double.h>
 
 
-double
-__rint (double x)
+double __rint(double x)
 {
-  if (isnan (x))
-    return x + x;
-
-  if (isless (fabs (x), 9007199254740992.0))	/* 1 << DBL_MANT_DIG */
-    {
-      double tmp1, new_x;
-      __asm ("cvttq/svid %2,%1\n\t"
-	     "cvtqt/d %1,%0\n\t"
-	     : "=f"(new_x), "=&f"(tmp1)
-	     : "f"(x));
-
-      /* rint(-0.1) == -0, and in general we'll always have the same
-	 sign as our input.  */
-      x = copysign(new_x, x);
+    if (isnan(x)) {
+        return x + x;
     }
-  return x;
+
+    if (isless(fabs(x), 9007199254740992.0)) {    /* 1 << DBL_MANT_DIG */
+        double tmp1, new_x;
+        __asm("cvttq/svid %2,%1\n\t"
+              "cvtqt/d %1,%0\n\t"
+              : "=f"(new_x), "=&f"(tmp1)
+              : "f"(x));
+
+        /* rint(-0.1) == -0, and in general we'll always have the same
+        sign as our input.  */
+        x = copysign(new_x, x);
+    }
+    return x;
 }
 
-libm_alias_double (__rint, rint)
+libm_alias_double(__rint, rint)

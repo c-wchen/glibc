@@ -17,24 +17,23 @@
 
 #include <ucontext.h>
 
-extern int __getcontext (ucontext_t *ucp);
-extern int __setcontext (const ucontext_t *ucp, int restoremask);
+extern int __getcontext(ucontext_t *ucp);
+extern int __setcontext(const ucontext_t *ucp, int restoremask);
 
-int
-__swapcontext (ucontext_t *oucp, const ucontext_t *ucp)
+int __swapcontext(ucontext_t *oucp, const ucontext_t *ucp)
 {
-  extern void __swapcontext_ret (void);
-  /* Save the current machine context to oucp.  */
-  __getcontext (oucp);
-  /* Modify oucp to skip the __setcontext call on reactivation.  */
-  oucp->uc_mcontext.mc_gregs[MC_PC] = (long) __swapcontext_ret;
-  oucp->uc_mcontext.mc_gregs[MC_NPC] = ((long) __swapcontext_ret) + 4;
-  /* Restore the machine context in ucp.  */
-  __setcontext (ucp, 1);
-  return 0;
+    extern void __swapcontext_ret(void);
+    /* Save the current machine context to oucp.  */
+    __getcontext(oucp);
+    /* Modify oucp to skip the __setcontext call on reactivation.  */
+    oucp->uc_mcontext.mc_gregs[MC_PC] = (long) __swapcontext_ret;
+    oucp->uc_mcontext.mc_gregs[MC_NPC] = ((long) __swapcontext_ret) + 4;
+    /* Restore the machine context in ucp.  */
+    __setcontext(ucp, 1);
+    return 0;
 }
 
-asm ("							\n\
+asm("							\n\
 	.text						\n\
 	.type	__swapcontext_ret, #function		\n\
 __swapcontext_ret:					\n\
@@ -43,4 +42,4 @@ __swapcontext_ret:					\n\
 	.size	__swapcontext_ret, .-__swapcontext_ret	\n\
      ");
 
-weak_alias (__swapcontext, swapcontext)
+weak_alias(__swapcontext, swapcontext)

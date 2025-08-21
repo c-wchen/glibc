@@ -19,11 +19,10 @@
 #include <errno.h>
 #include <sys/auxv.h>
 
-unsigned long
-getauxval_wrapper (unsigned long type, int *errnop)
+unsigned long getauxval_wrapper(unsigned long type, int *errnop)
 {
-  errno = *errnop;
-  unsigned long result = getauxval (type);
-  *errnop = errno;
-  return result;
+    errno = *errnop;
+    unsigned long result = getauxval(type);
+    *errnop = errno;
+    return result;
 }

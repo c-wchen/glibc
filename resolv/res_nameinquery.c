@@ -87,30 +87,31 @@
 #include <resolv/resolv-internal.h>
 
 /* Author: paul vixie, 29may94.  */
-int
-__libc_res_nameinquery (const char *name, int type, int class,
-                        const unsigned char *buf, const unsigned char *eom)
+int __libc_res_nameinquery(const char *name, int type, int class,
+                           const unsigned char *buf, const unsigned char *eom)
 {
-  const unsigned char *cp = buf + HFIXEDSZ;
-  int qdcount = ntohs (((UHEADER *) buf)->qdcount);
+    const unsigned char *cp = buf + HFIXEDSZ;
+    int qdcount = ntohs(((UHEADER *) buf)->qdcount);
 
-  while (qdcount-- > 0)
-    {
-      char tname[MAXDNAME+1];
-      int n, ttype, tclass;
+    while (qdcount-- > 0) {
+        char tname[MAXDNAME + 1];
+        int n, ttype, tclass;
 
-      n = __libc_dn_expand (buf, eom, cp, tname, sizeof tname);
-      if (n < 0)
-        return -1;
-      cp += n;
-      if (cp + 2 * INT16SZ > eom)
-        return -1;
-      NS_GET16 (ttype, cp);
-      NS_GET16 (tclass, cp);
-      if (ttype == type && tclass == class
-          && __libc_ns_samename (tname, name) == 1)
-        return 1;
+        n = __libc_dn_expand(buf, eom, cp, tname, sizeof tname);
+        if (n < 0) {
+            return -1;
+        }
+        cp += n;
+        if (cp + 2 * INT16SZ > eom) {
+            return -1;
+        }
+        NS_GET16(ttype, cp);
+        NS_GET16(tclass, cp);
+        if (ttype == type && tclass == class
+            && __libc_ns_samename(tname, name) == 1) {
+            return 1;
+        }
     }
-  return 0;
+    return 0;
 }
-libc_hidden_def (__libc_res_nameinquery)
+libc_hidden_def(__libc_res_nameinquery)

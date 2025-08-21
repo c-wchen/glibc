@@ -19,13 +19,12 @@
 #include <strfile.h>
 #include <libioP.h>
 
-extern int
-___ieee128_isoc99_vsscanf (const char *string, const char *format, va_list ap)
+extern int ___ieee128_isoc99_vsscanf(const char *string, const char *format, va_list ap)
 {
-  _IO_strfile sf;
-  FILE *fp = _IO_strfile_read (&sf, string);
-  int mode_flags = SCANF_ISOC99_A | SCANF_LDBL_USES_FLOAT128;
-  return __vfscanf_internal (fp, format, ap, mode_flags);
+    _IO_strfile sf;
+    FILE *fp = _IO_strfile_read(&sf, string);
+    int mode_flags = SCANF_ISOC99_A | SCANF_LDBL_USES_FLOAT128;
+    return __vfscanf_internal(fp, format, ap, mode_flags);
 }
-strong_alias (___ieee128_isoc99_vsscanf, __isoc99_vsscanfieee128)
-hidden_def (___ieee128_isoc99_vsscanf)
+strong_alias(___ieee128_isoc99_vsscanf, __isoc99_vsscanfieee128)
+hidden_def(___ieee128_isoc99_vsscanf)

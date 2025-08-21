@@ -20,11 +20,10 @@
 
 extern long double _Q_sqrt(const long double a);
 
-long double
-__ieee754_sqrtl (long double x)
+long double __ieee754_sqrtl(long double x)
 {
-  return _Q_sqrt (x);
+    return _Q_sqrt(x);
 }
 
 #include <shlib-compat.h>
-versioned_symbol (libm, __ieee754_sqrtl, __sqrtl_finite, GLIBC_2_23);
+versioned_symbol(libm, __ieee754_sqrtl, __sqrtl_finite, GLIBC_2_23);

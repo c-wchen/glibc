@@ -19,17 +19,16 @@
 #include <shlib-compat.h>
 #include <gai_misc.h>
 
-int
-__gai_error (struct gaicb *req)
+int __gai_error(struct gaicb *req)
 {
-  return req->__return;
+    return req->__return;
 }
 #if PTHREAD_IN_LIBC
-versioned_symbol (libc, __gai_error, gai_error, GLIBC_2_34);
+versioned_symbol(libc, __gai_error, gai_error, GLIBC_2_34);
 
 # if OTHER_SHLIB_COMPAT (libanl, GLIBC_2_2_3, GLIBC_2_34)
-compat_symbol (libanl, __gai_error, gai_error, GLIBC_2_2_3);
+compat_symbol(libanl, __gai_error, gai_error, GLIBC_2_2_3);
 # endif
 #else /* !PTHREAD_IN_LIBC */
-strong_alias (__gai_error, gai_error)
+strong_alias(__gai_error, gai_error)
 #endif /* !PTHREAD_IN_LIBC */

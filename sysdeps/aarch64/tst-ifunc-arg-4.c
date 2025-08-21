@@ -22,46 +22,40 @@
 #include <sys/ifunc.h>
 #include <support/check.h>
 
-static int
-one (void)
+static int one(void)
 {
-  return 1;
+    return 1;
 }
 
-static int
-two (void)
+static int two(void)
 {
-  return 2;
+    return 2;
 }
 
 /* Resolver function.  */
-static void *
-resolver (uint64_t arg0, const uint64_t arg1[])
+static void *resolver(uint64_t arg0, const uint64_t arg1[])
 {
-  uint64_t hwcap2 = __ifunc_hwcap (_IFUNC_ARG_AT_HWCAP2, arg0, arg1);
-  if (hwcap2 & HWCAP2_POE)
-    return (void *)one;
-  else
-    return (void *)two;
+    uint64_t hwcap2 = __ifunc_hwcap(_IFUNC_ARG_AT_HWCAP2, arg0, arg1);
+    if (hwcap2 & HWCAP2_POE) {
+        return (void *)one;
+    } else {
+        return (void *)two;
+    }
 }
 
 /* An extern visible ifunc symbol.  */
-int fun (void) __attribute__((ifunc ("resolver")));
+int fun(void) __attribute__((ifunc("resolver")));
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  if (getauxval (AT_HWCAP2) & HWCAP2_POE)
-    {
-      printf ("using 1st implementation\n");
-      TEST_VERIFY (fun () == 1);
+    if (getauxval(AT_HWCAP2) & HWCAP2_POE) {
+        printf("using 1st implementation\n");
+        TEST_VERIFY(fun() == 1);
+    } else {
+        printf("using 2nd implementation\n");
+        TEST_VERIFY(fun() == 2);
     }
-  else
-    {
-      printf ("using 2nd implementation\n");
-      TEST_VERIFY (fun () == 2);
-    }
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

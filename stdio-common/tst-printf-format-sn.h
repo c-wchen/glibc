@@ -26,35 +26,34 @@
 static struct support_next_to_fault ntf;
 
 #define PREPARE printf_under_test_init
-static void
-printf_under_test_init (int argc, char **argv)
+static void printf_under_test_init(int argc, char **argv)
 {
-  ntf = support_next_to_fault_allocate (SPRINTF_BUFFER_SIZE);
+    ntf = support_next_to_fault_allocate(SPRINTF_BUFFER_SIZE);
 }
 
-static void __attribute__ ((destructor))
-printf_under_test_fini (void)
+static void __attribute__((destructor))
+printf_under_test_fini(void)
 {
-  support_next_to_fault_free (&ntf);
+    support_next_to_fault_free(&ntf);
 }
 
-#define printf_under_test(...)						\
-({									\
-  __label__ out;							\
-  char *str = ntf.buffer;						\
-  int result;								\
-									\
-  result = snprintf (str, ntf.length, __VA_ARGS__);			\
-  if (result < 0)							\
-    {									\
-      perror ("snprintf");						\
-      goto out;								\
-    }									\
-  if (fwrite (str, sizeof (*str), result, stdout) != result)		\
-    {									\
-      perror ("fwrite");						\
-      result = -1;							\
-    }									\
-out:									\
-  result;								\
+#define printf_under_test(...)                      \
+({                                  \
+  __label__ out;                            \
+  char *str = ntf.buffer;                       \
+  int result;                               \
+                                    \
+  result = snprintf (str, ntf.length, __VA_ARGS__);         \
+  if (result < 0)                           \
+    {                                   \
+      perror ("snprintf");                      \
+      goto out;                             \
+    }                                   \
+  if (fwrite (str, sizeof (*str), result, stdout) != result)        \
+    {                                   \
+      perror ("fwrite");                        \
+      result = -1;                          \
+    }                                   \
+out:                                    \
+  result;                               \
 })

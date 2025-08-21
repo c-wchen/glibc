@@ -21,13 +21,12 @@
 #include <sysdep.h>
 
 /* Make a link to FROM called TO.  */
-int
-__symlink (const char *from, const char *to)
+int __symlink(const char *from, const char *to)
 {
 #ifdef __NR_symlink
-  return INLINE_SYSCALL_CALL (symlink, from, to);
+    return INLINE_SYSCALL_CALL(symlink, from, to);
 #else
-  return INLINE_SYSCALL_CALL (symlinkat, from, AT_FDCWD, to);
+    return INLINE_SYSCALL_CALL(symlinkat, from, AT_FDCWD, to);
 #endif
 }
-weak_alias (__symlink, symlink)
+weak_alias(__symlink, symlink)

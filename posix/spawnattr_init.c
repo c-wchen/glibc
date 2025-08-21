@@ -19,13 +19,12 @@
 #include <string.h>
 
 /* Initialize data structure for file attribute for `spawn' call.  */
-int
-__posix_spawnattr_init (posix_spawnattr_t *attr)
+int __posix_spawnattr_init(posix_spawnattr_t *attr)
 {
-  /* All elements have to be initialized to the default values which
-     is generally zero.  */
-  memset (attr, '\0', sizeof (*attr));
+    /* All elements have to be initialized to the default values which
+       is generally zero.  */
+    memset(attr, '\0', sizeof(*attr));
 
-  return 0;
+    return 0;
 }
-weak_alias (__posix_spawnattr_init, posix_spawnattr_init)
+weak_alias(__posix_spawnattr_init, posix_spawnattr_init)

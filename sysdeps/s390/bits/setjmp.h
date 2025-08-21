@@ -26,19 +26,18 @@
 
 #include <bits/wordsize.h>
 
-#ifndef	_ASM
+#ifndef _ASM
 
-typedef struct __s390_jmp_buf
-{
-  /* We save registers 6-15.  */
-  long int __gregs[10];
+typedef struct __s390_jmp_buf {
+    /* We save registers 6-15.  */
+    long int __gregs[10];
 
 # if __WORDSIZE == 64
-  /* We save fpu registers f8 - f15.  */
-  long __fpregs[8];
+    /* We save fpu registers f8 - f15.  */
+    long __fpregs[8];
 # else
-  /* We save fpu registers 4 and 6.  */
-  long __fpregs[4];
+    /* We save fpu registers 4 and 6.  */
+    long __fpregs[4];
 # endif
 } __jmp_buf[1];
 

@@ -25,22 +25,22 @@
 #include <unistd.h>
 #include <dl-fptr.h>
 
-#define ELF_MACHINE_IREL	1
+#define ELF_MACHINE_IREL    1
 
 /* There is no IFUNC implementation yet. Add stubs to allow builds.  */
 
-static inline struct fdesc
-__attribute ((always_inline))
-elf_ifunc_invoke (uintptr_t addr)
+static inline struct fdesc __attribute((always_inline))
+elf_ifunc_invoke(uintptr_t addr)
 {
-  return ((struct fdesc) {0, 0});
+    return ((struct fdesc) {
+        0, 0
+    });
 }
 
-static inline void
-__attribute ((always_inline))
-elf_irel (const Elf32_Rel *reloc)
+static inline void __attribute((always_inline))
+elf_irel(const Elf32_Rel *reloc)
 {
-  return;
+    return;
 }
 
 #endif /* dl-irel.h */

@@ -27,28 +27,25 @@
 #define PAYLOAD_DIG 22
 #define EXPLICIT_MANT_DIG 23
 
-int
-FUNC (float *x, float payload)
+int FUNC(float *x, float payload)
 {
-  uint32_t ix;
-  GET_FLOAT_WORD (ix, payload);
-  int exponent = ix >> EXPLICIT_MANT_DIG;
-  /* Test if argument is (a) negative or too large; (b) too small,
-     except for 0 when allowed; (c) not an integer.  */
-  if (exponent >= BIAS + PAYLOAD_DIG
-      || (exponent < BIAS && !(SET_HIGH_BIT && ix == 0))
-      || (ix & ((1U << (BIAS + EXPLICIT_MANT_DIG - exponent)) - 1)) != 0)
-    {
-      SET_FLOAT_WORD (*x, 0);
-      return 1;
+    uint32_t ix;
+    GET_FLOAT_WORD(ix, payload);
+    int exponent = ix >> EXPLICIT_MANT_DIG;
+    /* Test if argument is (a) negative or too large; (b) too small,
+       except for 0 when allowed; (c) not an integer.  */
+    if (exponent >= BIAS + PAYLOAD_DIG
+        || (exponent < BIAS && !(SET_HIGH_BIT && ix == 0))
+        || (ix & ((1U << (BIAS + EXPLICIT_MANT_DIG - exponent)) - 1)) != 0) {
+        SET_FLOAT_WORD(*x, 0);
+        return 1;
     }
-  if (ix != 0)
-    {
-      ix &= (1U << EXPLICIT_MANT_DIG) - 1;
-      ix |= 1U << EXPLICIT_MANT_DIG;
-      ix >>= BIAS + EXPLICIT_MANT_DIG - exponent;
+    if (ix != 0) {
+        ix &= (1U << EXPLICIT_MANT_DIG) - 1;
+        ix |= 1U << EXPLICIT_MANT_DIG;
+        ix >>= BIAS + EXPLICIT_MANT_DIG - exponent;
     }
-  ix |= 0x7f800000 | (SET_HIGH_BIT ? 0x400000 : 0);
-  SET_FLOAT_WORD (*x, ix);
-  return 0;
+    ix |= 0x7f800000 | (SET_HIGH_BIT ? 0x400000 : 0);
+    SET_FLOAT_WORD(*x, ix);
+    return 0;
 }

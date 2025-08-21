@@ -18,9 +18,8 @@
 
 #include <support/xthread.h>
 
-void
-xpthread_rwlock_destroy (pthread_rwlock_t *rwlock)
+void xpthread_rwlock_destroy(pthread_rwlock_t *rwlock)
 {
-  xpthread_check_return ("pthread_rwlock_destroy",
-                         pthread_rwlock_destroy (rwlock));
+    xpthread_check_return("pthread_rwlock_destroy",
+                          pthread_rwlock_destroy(rwlock));
 }

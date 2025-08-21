@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _BITS_TYPES_STRUCT___PTHREAD_ATTR
-#define _BITS_TYPES_STRUCT___PTHREAD_ATTR	1
+#define _BITS_TYPES_STRUCT___PTHREAD_ATTR   1
 
 #define __need_size_t
 #include <stddef.h>
@@ -27,21 +27,20 @@ enum __pthread_inheritsched;
 enum __pthread_contentionscope;
 
 struct __sched_param {
-  int __sched_priority;
+    int __sched_priority;
 };
 
 /* This structure describes the attributes of a POSIX thread.  Note
    that not all of them are supported on all systems.  */
-struct __pthread_attr
-{
-  struct __sched_param __schedparam;
-  void *__stackaddr;
-  size_t __stacksize;
-  size_t __guardsize;
-  enum __pthread_detachstate __detachstate;
-  enum __pthread_inheritsched __inheritsched;
-  enum __pthread_contentionscope __contentionscope;
-  int __schedpolicy;
+struct __pthread_attr {
+    struct __sched_param __schedparam;
+    void *__stackaddr;
+    size_t __stacksize;
+    size_t __guardsize;
+    enum __pthread_detachstate __detachstate;
+    enum __pthread_inheritsched __inheritsched;
+    enum __pthread_contentionscope __contentionscope;
+    int __schedpolicy;
 };
 
 #endif /* bits/types/struct___pthread_attr.h */

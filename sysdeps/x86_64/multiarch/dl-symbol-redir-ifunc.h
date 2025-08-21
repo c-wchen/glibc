@@ -31,7 +31,7 @@
 # define HAVE_MEMSET_IFUNC_GENERIC "__memset_sse2_unaligned"
 #endif
 
-asm ("memset = " HAVE_MEMSET_IFUNC_GENERIC);
+asm("memset = " HAVE_MEMSET_IFUNC_GENERIC);
 
 
 #if MINIMUM_X86_ISA_LEVEL >= 4
@@ -42,7 +42,7 @@ asm ("memset = " HAVE_MEMSET_IFUNC_GENERIC);
 # define HAVE_MEMCMP_IFUNC_GENERIC "__memcmp_sse2"
 #endif
 
-asm ("memcmp = " HAVE_MEMCMP_IFUNC_GENERIC);
+asm("memcmp = " HAVE_MEMCMP_IFUNC_GENERIC);
 
 #endif /* SHARED */
 

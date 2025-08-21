@@ -25,17 +25,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-extern int test (void);
+extern int test(void);
 
-int
-test (void)
+int test(void)
 {
-  (void) dlopen ("reldepmod4.so", RTLD_LAZY | RTLD_GLOBAL);
-  if (dlsym (RTLD_DEFAULT, "call_me") != NULL)
-    {
-      puts ("found \"call_me\"");
-      return EXIT_SUCCESS;
+    (void) dlopen("reldepmod4.so", RTLD_LAZY | RTLD_GLOBAL);
+    if (dlsym(RTLD_DEFAULT, "call_me") != NULL) {
+        puts("found \"call_me\"");
+        return EXIT_SUCCESS;
     }
-  puts ("didn't find \"call_me\"");
-  return EXIT_FAILURE;
+    puts("didn't find \"call_me\"");
+    return EXIT_FAILURE;
 }

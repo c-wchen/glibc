@@ -43,161 +43,154 @@ int subdirectory_fd;
 /* And a pathname in that directory (called "file").  */
 static char *subdir_path;
 
-static void
-prepare (int argc, char **argv)
+static void prepare(int argc, char **argv)
 {
-  directory = support_create_temp_directory ("tst-renameat2-");
-  directory_fd = xopen (directory, O_RDONLY | O_DIRECTORY, 0);
-  old_path = xasprintf ("%s/old", directory);
-  add_temp_file (old_path);
-  new_path = xasprintf ("%s/new", directory);
-  add_temp_file (new_path);
-  subdirectory = xasprintf ("%s/subdir", directory);
-  xmkdir (subdirectory, 0777);
-  add_temp_file (subdirectory);
-  subdirectory_fd = xopen (subdirectory, O_RDONLY | O_DIRECTORY, 0);
-  subdir_path = xasprintf ("%s/file", subdirectory);
-  add_temp_file (subdir_path);
+    directory = support_create_temp_directory("tst-renameat2-");
+    directory_fd = xopen(directory, O_RDONLY | O_DIRECTORY, 0);
+    old_path = xasprintf("%s/old", directory);
+    add_temp_file(old_path);
+    new_path = xasprintf("%s/new", directory);
+    add_temp_file(new_path);
+    subdirectory = xasprintf("%s/subdir", directory);
+    xmkdir(subdirectory, 0777);
+    add_temp_file(subdirectory);
+    subdirectory_fd = xopen(subdirectory, O_RDONLY | O_DIRECTORY, 0);
+    subdir_path = xasprintf("%s/file", subdirectory);
+    add_temp_file(subdir_path);
 }
 
 /* Delete all files, preparing a clean slate for the next test.  */
-static void
-delete_all_files (void)
+static void delete_all_files(void)
 {
-  char *files[] = { old_path, new_path, subdir_path };
-  for (size_t i = 0; i < array_length (files); ++i)
-    if (unlink (files[i]) != 0 && errno != ENOENT)
-      FAIL_EXIT1 ("unlink (\"%s\"): %m", files[i]);
+    char *files[] = { old_path, new_path, subdir_path };
+    for (size_t i = 0; i < array_length(files); ++i)
+        if (unlink(files[i]) != 0 && errno != ENOENT) {
+            FAIL_EXIT1("unlink (\"%s\"): %m", files[i]);
+        }
 }
 
 /* Return true if PATH exists in the file system.  */
-static bool
-file_exists (const char *path)
+static bool file_exists(const char *path)
 {
-  return access (path, F_OK) == 0;
+    return access(path, F_OK) == 0;
 }
 
 /* Check that PATH exists and has size EXPECTED_SIZE.  */
-static void
-check_size (const char *path, off64_t expected_size)
+static void check_size(const char *path, off64_t expected_size)
 {
-  struct stat64 st;
-  xstat64 (path, &st);
-  if (st.st_size != expected_size)
-    FAIL_EXIT1 ("file \"%s\": expected size %lld, actual size %lld",
-                path, (unsigned long long int) expected_size,
-                (unsigned long long int) st.st_size);
+    struct stat64 st;
+    xstat64(path, &st);
+    if (st.st_size != expected_size)
+        FAIL_EXIT1("file \"%s\": expected size %lld, actual size %lld",
+                   path, (unsigned long long int) expected_size,
+                   (unsigned long long int) st.st_size);
 }
 
 /* Rename tests where the target does not exist.  */
-static void
-rename_without_existing_target (unsigned int flags)
+static void rename_without_existing_target(unsigned int flags)
 {
-  delete_all_files ();
-  support_write_file_string (old_path, "");
-  TEST_COMPARE (renameat2 (AT_FDCWD, old_path, AT_FDCWD, new_path, flags), 0);
-  TEST_VERIFY (!file_exists (old_path));
-  TEST_VERIFY (file_exists (new_path));
+    delete_all_files();
+    support_write_file_string(old_path, "");
+    TEST_COMPARE(renameat2(AT_FDCWD, old_path, AT_FDCWD, new_path, flags), 0);
+    TEST_VERIFY(!file_exists(old_path));
+    TEST_VERIFY(file_exists(new_path));
 
-  delete_all_files ();
-  support_write_file_string (old_path, "");
-  TEST_COMPARE (renameat2 (directory_fd, "old", AT_FDCWD, new_path, flags), 0);
-  TEST_VERIFY (!file_exists (old_path));
-  TEST_VERIFY (file_exists (new_path));
+    delete_all_files();
+    support_write_file_string(old_path, "");
+    TEST_COMPARE(renameat2(directory_fd, "old", AT_FDCWD, new_path, flags), 0);
+    TEST_VERIFY(!file_exists(old_path));
+    TEST_VERIFY(file_exists(new_path));
 
-  delete_all_files ();
-  support_write_file_string (old_path, "");
-  TEST_COMPARE (renameat2 (directory_fd, "old", subdirectory_fd, "file", 0),
-                0);
-  TEST_VERIFY (!file_exists (old_path));
-  TEST_VERIFY (file_exists (subdir_path));
+    delete_all_files();
+    support_write_file_string(old_path, "");
+    TEST_COMPARE(renameat2(directory_fd, "old", subdirectory_fd, "file", 0),
+                 0);
+    TEST_VERIFY(!file_exists(old_path));
+    TEST_VERIFY(file_exists(subdir_path));
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* Tests with zero flags argument.  These are expected to succeed
-     because this renameat2 variant can be implemented with
-     renameat.  */
-  rename_without_existing_target (0);
+    /* Tests with zero flags argument.  These are expected to succeed
+       because this renameat2 variant can be implemented with
+       renameat.  */
+    rename_without_existing_target(0);
 
-  /* renameat2 without flags replaces an existing destination.  */
-  delete_all_files ();
-  support_write_file_string (old_path, "123");
-  support_write_file_string (new_path, "1234");
-  TEST_COMPARE (renameat2 (AT_FDCWD, old_path, AT_FDCWD, new_path, 0), 0);
-  TEST_VERIFY (!file_exists (old_path));
-  check_size (new_path, 3);
+    /* renameat2 without flags replaces an existing destination.  */
+    delete_all_files();
+    support_write_file_string(old_path, "123");
+    support_write_file_string(new_path, "1234");
+    TEST_COMPARE(renameat2(AT_FDCWD, old_path, AT_FDCWD, new_path, 0), 0);
+    TEST_VERIFY(!file_exists(old_path));
+    check_size(new_path, 3);
 
-  /* Now we need to check for kernel support of renameat2 with
-     flags.  */
-  delete_all_files ();
-  support_write_file_string (old_path, "");
-  if (renameat2 (AT_FDCWD, old_path, AT_FDCWD, new_path, RENAME_NOREPLACE)
-      != 0)
-    {
-      if (errno == EINVAL)
-        puts ("warning: no support for renameat2 with flags");
-      else
-        FAIL_EXIT1 ("renameat2 probe failed: %m");
-    }
-  else
-    {
-      /* We have full renameat2 support.  */
-      rename_without_existing_target (RENAME_NOREPLACE);
+    /* Now we need to check for kernel support of renameat2 with
+       flags.  */
+    delete_all_files();
+    support_write_file_string(old_path, "");
+    if (renameat2(AT_FDCWD, old_path, AT_FDCWD, new_path, RENAME_NOREPLACE)
+        != 0) {
+        if (errno == EINVAL) {
+            puts("warning: no support for renameat2 with flags");
+        } else {
+            FAIL_EXIT1("renameat2 probe failed: %m");
+        }
+    } else {
+        /* We have full renameat2 support.  */
+        rename_without_existing_target(RENAME_NOREPLACE);
 
-      /* Now test RENAME_NOREPLACE with an existing target.  */
-      delete_all_files ();
-      support_write_file_string (old_path, "123");
-      support_write_file_string (new_path, "1234");
-      TEST_COMPARE (renameat2 (AT_FDCWD, old_path, AT_FDCWD, new_path,
+        /* Now test RENAME_NOREPLACE with an existing target.  */
+        delete_all_files();
+        support_write_file_string(old_path, "123");
+        support_write_file_string(new_path, "1234");
+        TEST_COMPARE(renameat2(AT_FDCWD, old_path, AT_FDCWD, new_path,
                                RENAME_NOREPLACE), -1);
-      TEST_COMPARE (errno, EEXIST);
-      check_size (old_path, 3);
-      check_size (new_path, 4);
+        TEST_COMPARE(errno, EEXIST);
+        check_size(old_path, 3);
+        check_size(new_path, 4);
 
-      delete_all_files ();
-      support_write_file_string (old_path, "123");
-      support_write_file_string (new_path, "1234");
-      TEST_COMPARE (renameat2 (directory_fd, "old", AT_FDCWD, new_path,
+        delete_all_files();
+        support_write_file_string(old_path, "123");
+        support_write_file_string(new_path, "1234");
+        TEST_COMPARE(renameat2(directory_fd, "old", AT_FDCWD, new_path,
                                RENAME_NOREPLACE), -1);
-      TEST_COMPARE (errno, EEXIST);
-      check_size (old_path, 3);
-      check_size (new_path, 4);
+        TEST_COMPARE(errno, EEXIST);
+        check_size(old_path, 3);
+        check_size(new_path, 4);
 
-      delete_all_files ();
-      support_write_file_string (old_path, "123");
-      support_write_file_string (subdir_path, "1234");
-      TEST_COMPARE (renameat2 (directory_fd, "old", subdirectory_fd, "file",
+        delete_all_files();
+        support_write_file_string(old_path, "123");
+        support_write_file_string(subdir_path, "1234");
+        TEST_COMPARE(renameat2(directory_fd, "old", subdirectory_fd, "file",
                                RENAME_NOREPLACE), -1);
-      TEST_COMPARE (errno, EEXIST);
-      check_size (old_path, 3);
-      check_size (subdir_path, 4);
+        TEST_COMPARE(errno, EEXIST);
+        check_size(old_path, 3);
+        check_size(subdir_path, 4);
 
-      /* The flag combination of RENAME_NOREPLACE and RENAME_EXCHANGE
-         is invalid.  */
-      TEST_COMPARE (renameat2 (directory_fd, "ignored",
+        /* The flag combination of RENAME_NOREPLACE and RENAME_EXCHANGE
+           is invalid.  */
+        TEST_COMPARE(renameat2(directory_fd, "ignored",
                                subdirectory_fd, "ignored",
                                RENAME_NOREPLACE | RENAME_EXCHANGE), -1);
-      TEST_COMPARE (errno, EINVAL);
+        TEST_COMPARE(errno, EINVAL);
     }
 
-  /* Create all the pathnames to avoid warnings from the test
-     harness.  */
-  support_write_file_string (old_path, "");
-  support_write_file_string (new_path, "");
-  support_write_file_string (subdir_path, "");
+    /* Create all the pathnames to avoid warnings from the test
+       harness.  */
+    support_write_file_string(old_path, "");
+    support_write_file_string(new_path, "");
+    support_write_file_string(subdir_path, "");
 
-  free (directory);
-  free (subdirectory);
-  free (old_path);
-  free (new_path);
-  free (subdir_path);
+    free(directory);
+    free(subdirectory);
+    free(old_path);
+    free(new_path);
+    free(subdir_path);
 
-  xclose (directory_fd);
-  xclose (subdirectory_fd);
+    xclose(directory_fd);
+    xclose(subdirectory_fd);
 
-  return 0;
+    return 0;
 }
 
 #define PREPARE prepare

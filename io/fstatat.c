@@ -18,24 +18,21 @@
 #include <sys/stat.h>
 #include <errno.h>
 
-int
-__fstatat (int fd, const char *file, struct stat *buf, int flag)
+int __fstatat(int fd, const char *file, struct stat *buf, int flag)
 {
-  if (fd < 0 && fd != AT_FDCWD)
-    {
-      __set_errno (EBADF);
-      return -1;
+    if (fd < 0 && fd != AT_FDCWD) {
+        __set_errno(EBADF);
+        return -1;
     }
-  if (buf == NULL || (flag & ~AT_SYMLINK_NOFOLLOW) != 0)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (buf == NULL || (flag & ~AT_SYMLINK_NOFOLLOW) != 0) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-weak_alias (__fstatat, fstatat)
+weak_alias(__fstatat, fstatat)
 
-stub_warning (fstatat)
+stub_warning(fstatat)

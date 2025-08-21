@@ -22,11 +22,10 @@
 #include <support/check.h>
 #include <sys/stat.h>
 
-void
-xstatx (int fd, const char *path, int flags, unsigned int mask,
-        struct statx *stx)
+void xstatx(int fd, const char *path, int flags, unsigned int mask,
+            struct statx *stx)
 {
-  if (statx (fd, path, flags, mask, stx) != 0)
-    FAIL_EXIT1 ("statx (AT_FDCWD, \"%s\", 0x%x, 0x%x): %m",
-                path, (unsigned int) flags, mask);
+    if (statx(fd, path, flags, mask, stx) != 0)
+        FAIL_EXIT1("statx (AT_FDCWD, \"%s\", 0x%x, 0x%x): %m",
+                   path, (unsigned int) flags, mask);
 }

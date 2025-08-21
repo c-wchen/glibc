@@ -19,12 +19,11 @@
 #include <libm-alias-double.h>
 #include <stdint.h>
 
-long long int
-__llround (double x)
+long long int __llround(double x)
 {
-  int64_t res;
-  asm ("fcvt.l.d %0, %1, rmm" : "=r" (res) : "f" (x));
-  return res;
+    int64_t res;
+    asm("fcvt.l.d %0, %1, rmm" : "=r"(res) : "f"(x));
+    return res;
 }
 
-libm_alias_double (__llround, llround)
+libm_alias_double(__llround, llround)

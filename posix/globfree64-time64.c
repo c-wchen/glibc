@@ -21,10 +21,9 @@
 #if __TIMESIZE != 64
 
 /* Free storage allocated in PGLOB by a previous `glob' call.  */
-void
-__globfree64_time64 (glob64_time64_t *pglob)
+void __globfree64_time64(glob64_time64_t *pglob)
 {
 }
-libc_hidden_def (__globfree64_time64)
+libc_hidden_def(__globfree64_time64)
 
 #endif

@@ -23,19 +23,17 @@
 /* Return true if the N bytes at NAME end with with the characters in
    the string SUFFIX.  (NAME[N + 1] does not have to be a null byte.)
    Expected to be called with a string literal for SUFFIX.  */
-static inline bool
-endswithn (const char *name, size_t n, const char *suffix)
+static inline bool endswithn(const char *name, size_t n, const char *suffix)
 {
-  return (n >= strlen (suffix)
-	  && memcmp (name + n - strlen (suffix), suffix,
-		     strlen (suffix)) == 0);
+    return (n >= strlen(suffix)
+            && memcmp(name + n - strlen(suffix), suffix,
+                      strlen(suffix)) == 0);
 }
 
 /* Same as endswithn, but uses the entire SUBJECT for matching.  */
-static inline bool
-endswith (const char *subject, const char *suffix)
+static inline bool endswith(const char *subject, const char *suffix)
 {
-  return endswithn (subject, strlen (subject), suffix);
+    return endswithn(subject, strlen(subject), suffix);
 }
 
 #endif /* _ENDSWITH_H */

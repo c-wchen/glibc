@@ -22,12 +22,11 @@
 #include <hurd/xattr.h>
 #include <hurd/fd.h>
 
-ssize_t
-fgetxattr (int fd, const char *name, void *value, size_t size)
+ssize_t fgetxattr(int fd, const char *name, void *value, size_t size)
 {
-  error_t err;
+    error_t err;
 
-  err = HURD_DPORT_USE (fd, _hurd_xattr_get (port, name, value, &size));
+    err = HURD_DPORT_USE(fd, _hurd_xattr_get(port, name, value, &size));
 
-  return err ? __hurd_dfail (fd, err) : size;
+    return err ? __hurd_dfail(fd, err) : size;
 }

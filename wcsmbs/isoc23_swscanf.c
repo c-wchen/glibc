@@ -20,19 +20,18 @@
 
 /* Read formatted input from S, according to the format string FORMAT.  */
 
-int
-__isoc23_swscanf (const wchar_t *s, const wchar_t *format, ...)
+int __isoc23_swscanf(const wchar_t *s, const wchar_t *format, ...)
 {
-  va_list arg;
-  int done;
-  _IO_strfile sf;
-  struct _IO_wide_data wd;
-  FILE *f = _IO_strfile_readw (&sf, &wd, s);
+    va_list arg;
+    int done;
+    _IO_strfile sf;
+    struct _IO_wide_data wd;
+    FILE *f = _IO_strfile_readw(&sf, &wd, s);
 
-  va_start (arg, format);
-  done = __vfwscanf_internal (f, format, arg,
-			      SCANF_ISOC99_A | SCANF_ISOC23_BIN_CST);
-  va_end (arg);
+    va_start(arg, format);
+    done = __vfwscanf_internal(f, format, arg,
+                               SCANF_ISOC99_A | SCANF_ISOC23_BIN_CST);
+    va_end(arg);
 
-  return done;
+    return done;
 }

@@ -19,7 +19,7 @@
 #include <stdbit.h>
 
 unsigned int
-(stdc_first_trailing_zero_ull) (unsigned long long int x)
+(stdc_first_trailing_zero_ull)(unsigned long long int x)
 {
-  return stdc_first_trailing_zero_ull (x);
+    return stdc_first_trailing_zero_ull(x);
 }

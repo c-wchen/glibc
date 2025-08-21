@@ -17,22 +17,21 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _DL_HASH_H
-#define _DL_HASH_H	1
+#define _DL_HASH_H  1
 
 
 /* This is the hashing function specified by the ELF ABI.  It is highly
    optimized for the PII processors.  Though it will run on i586 it
    would be much slower than the generic C implementation.  So don't
    use it.  */
-static unsigned int
-__attribute__ ((unused))
-_dl_elf_hash (const char *name)
+static unsigned int __attribute__((unused))
+_dl_elf_hash(const char *name)
 {
-  unsigned int result;
-  unsigned int temp0;
-  unsigned int temp1;
+    unsigned int result;
+    unsigned int temp0;
+    unsigned int temp1;
 
-  __asm__ __volatile__
+    __asm__ __volatile__
     ("movzbl (%1),%2\n\t"
      "testl %2, %2\n\t"
      "jz 1f\n\t"
@@ -69,10 +68,10 @@ _dl_elf_hash (const char *name)
      "testl %2, %2\n\t"
      "jnz 2b\n"
      "1:\t"
-     : "=&r" (result), "=r" (name), "=&c" (temp0), "=&r" (temp1)
-     : "0" (0), "1" ((const unsigned char *) name));
+     : "=&r"(result), "=r"(name), "=&c"(temp0), "=&r"(temp1)
+     : "0"(0), "1"((const unsigned char *) name));
 
-  return result;
+    return result;
 }
 
 #endif /* dl-hash.h */

@@ -19,8 +19,7 @@
 #include "nldbl-compat.h"
 
 double
-attribute_hidden
-fmaxmagl (double x, double y)
+attribute_hidden fmaxmagl(double x, double y)
 {
-  return fmaxmag (x, y);
+    return fmaxmag(x, y);
 }

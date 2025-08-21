@@ -27,14 +27,16 @@
 # include <math_private.h>
 
 FLOAT
-M_DECL_FUNC (__cosh) (FLOAT x)
+M_DECL_FUNC(__cosh)(FLOAT x)
 {
-  FLOAT z = M_SUF (__ieee754_cosh) (x);
-  if (__glibc_unlikely (!isfinite (z)) && isfinite (x))
-    /* Overflow.  */
-    __set_errno (ERANGE);
-  return z;
+    FLOAT z = M_SUF(__ieee754_cosh)(x);
+    if (__glibc_unlikely(!isfinite(z)) && isfinite(x))
+        /* Overflow.  */
+    {
+        __set_errno(ERANGE);
+    }
+    return z;
 }
-declare_mgen_alias (__cosh, cosh)
+declare_mgen_alias(__cosh, cosh)
 
 #endif /* __USE_WRAPPER_TEMPLATE.  */

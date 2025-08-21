@@ -22,21 +22,21 @@
 #include <kernel_stat.h>
 
 #if !STATFS_IS_STATFS64
-int
-__statvfs (const char *file, struct statvfs *buf)
+int __statvfs(const char *file, struct statvfs *buf)
 {
-  struct statfs fsbuf;
+    struct statfs fsbuf;
 
-  /* Get as much information as possible from the system.  */
-  if (__statfs (file, &fsbuf) < 0)
-    return -1;
+    /* Get as much information as possible from the system.  */
+    if (__statfs(file, &fsbuf) < 0) {
+        return -1;
+    }
 
-  /* Convert the result.  */
-  __internal_statvfs (buf, &fsbuf);
+    /* Convert the result.  */
+    __internal_statvfs(buf, &fsbuf);
 
-  /* We signal success if the statfs call succeeded.  */
-  return 0;
+    /* We signal success if the statfs call succeeded.  */
+    return 0;
 }
-weak_alias (__statvfs, statvfs)
-libc_hidden_weak (statvfs)
+weak_alias(__statvfs, statvfs)
+libc_hidden_weak(statvfs)
 #endif

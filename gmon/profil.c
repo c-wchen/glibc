@@ -26,15 +26,16 @@
    SAMPLE_BUFFER[((PC - OFFSET) / 2) * SCALE / 65536].  If SCALE is zero,
    disable profiling.  Returns zero on success, -1 on error.  */
 
-int
-__profil (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
+int __profil(u_short *sample_buffer, size_t size, size_t offset, u_int scale)
 {
-  if (scale == 0)
-    /* Disable profiling.  */
-    return 0;
+    if (scale == 0)
+        /* Disable profiling.  */
+    {
+        return 0;
+    }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-weak_alias (__profil, profil)
-stub_warning (profil)
+weak_alias(__profil, profil)
+stub_warning(profil)

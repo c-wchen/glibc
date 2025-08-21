@@ -26,39 +26,34 @@
 /* Error counter for delayed error reporting.  */
 static int errors;
 
-unsigned int
-la_version (unsigned int version)
+unsigned int la_version(unsigned int version)
 {
-  return version;
+    return version;
 }
 
-unsigned int
-la_objopen (struct link_map *map, Lmid_t lmid,
-            uintptr_t *cookie)
+unsigned int la_objopen(struct link_map *map, Lmid_t lmid,
+                        uintptr_t *cookie)
 {
-  struct link_map *cookie_map = (struct link_map *) *cookie;
-  printf ("info: %d, la_objopen: map=%p name=%s cookie=%p:%p diff=%td\n",
-          MOD, map, map->l_name, cookie, cookie_map,
-          (char *) cookie - (char *) map);
-  fflush (stdout);
-  if (map != cookie_map)
-    {
-      printf ("error: %d, la_objopen:"
-              " map address does not match cookie value\n",
-              MOD);
-      fflush (stdout);
-      ++errors;
+    struct link_map *cookie_map = (struct link_map *) *cookie;
+    printf("info: %d, la_objopen: map=%p name=%s cookie=%p:%p diff=%td\n",
+           MOD, map, map->l_name, cookie, cookie_map,
+           (char *) cookie - (char *) map);
+    fflush(stdout);
+    if (map != cookie_map) {
+        printf("error: %d, la_objopen:"
+               " map address does not match cookie value\n",
+               MOD);
+        fflush(stdout);
+        ++errors;
     }
-  return 0;
+    return 0;
 }
 
-extern unsigned int
-la_objclose (uintptr_t *__cookie)
+extern unsigned int la_objclose(uintptr_t *__cookie)
 {
-  if (errors != 0)
-    {
-      printf ("error: exiting due to previous errors");
-      _exit (1);
+    if (errors != 0) {
+        printf("error: exiting due to previous errors");
+        _exit(1);
     }
-  return 0;
+    return 0;
 }

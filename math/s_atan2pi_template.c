@@ -23,19 +23,21 @@
 #include <math-underflow.h>
 
 FLOAT
-M_DECL_FUNC (__atan2pi) (FLOAT y, FLOAT x)
+M_DECL_FUNC(__atan2pi)(FLOAT y, FLOAT x)
 {
-  FLOAT ret = math_narrow_eval (M_SUF (__ieee754_atan2) (y, x)
-				/ M_MLIT (M_PI));
-  if (__glibc_likely (!isnan (ret)))
-    math_check_force_underflow (ret);
-  if (ret == 0 && y != 0 && isfinite (x))
-    __set_errno (ERANGE);
-  /* Ensure that rounding away from zero for both atan2 and the
-     division cannot yield a return value from atan2pi with absolute
-     value greater than 1.  */
-  return (isgreater (M_FABS (ret), M_LIT (1.0))
-	  ? M_COPYSIGN (M_LIT (1.0), ret)
-	  : ret);
+    FLOAT ret = math_narrow_eval(M_SUF(__ieee754_atan2)(y, x)
+                                 / M_MLIT(M_PI));
+    if (__glibc_likely(!isnan(ret))) {
+        math_check_force_underflow(ret);
+    }
+    if (ret == 0 && y != 0 && isfinite(x)) {
+        __set_errno(ERANGE);
+    }
+    /* Ensure that rounding away from zero for both atan2 and the
+       division cannot yield a return value from atan2pi with absolute
+       value greater than 1.  */
+    return (isgreater(M_FABS(ret), M_LIT(1.0))
+            ? M_COPYSIGN(M_LIT(1.0), ret)
+            : ret);
 }
-declare_mgen_alias (__atan2pi, atan2pi);
+declare_mgen_alias(__atan2pi, atan2pi);

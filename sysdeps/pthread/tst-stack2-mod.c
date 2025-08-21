@@ -21,19 +21,17 @@
 
 bool init_result;
 
-void
-__attribute__ ((constructor))
-init (void)
+void __attribute__((constructor))
+init(void)
 {
-  pthread_t me = pthread_self ();
-  pthread_attr_t attr;
-  init_result = pthread_getattr_np (me, &attr) == 0;
+    pthread_t me = pthread_self();
+    pthread_attr_t attr;
+    init_result = pthread_getattr_np(me, &attr) == 0;
 }
 
-int
-mod_func (void)
+int mod_func(void)
 {
-  pthread_t me = pthread_self ();
-  pthread_attr_t attr;
-  return pthread_getattr_np (me, &attr);
+    pthread_t me = pthread_self();
+    pthread_attr_t attr;
+    return pthread_getattr_np(me, &attr);
 }

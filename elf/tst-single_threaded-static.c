@@ -19,11 +19,10 @@
 #include <support/check.h>
 #include <sys/single_threaded.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  TEST_VERIFY (__libc_single_threaded);
-  return 0;
+    TEST_VERIFY(__libc_single_threaded);
+    return 0;
 }
 
 #include <support/test-driver.c>

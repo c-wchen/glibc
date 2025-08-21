@@ -22,49 +22,42 @@
 
 
 
-int
-do_test (void)
+int do_test(void)
 {
-  int c = pthread_getconcurrency ();
-  if (c != 0)
-    {
-      puts ("initial concurrencylevel wrong");
-      exit (1);
+    int c = pthread_getconcurrency();
+    if (c != 0) {
+        puts("initial concurrencylevel wrong");
+        exit(1);
     }
 
-  if (pthread_setconcurrency (1) != 0)
-    {
-      puts ("setconcurrency failed");
-      exit (1);
+    if (pthread_setconcurrency(1) != 0) {
+        puts("setconcurrency failed");
+        exit(1);
     }
 
-  c = pthread_getconcurrency ();
-  if (c != 1)
-    {
-      puts ("getconcurrency didn't return the value previous set");
-      exit (1);
+    c = pthread_getconcurrency();
+    if (c != 1) {
+        puts("getconcurrency didn't return the value previous set");
+        exit(1);
     }
 
-  int e = pthread_setconcurrency (-1);
-  if (e == 0)
-    {
-      puts ("setconcurrency of negative value didn't failed");
-      exit (1);
+    int e = pthread_setconcurrency(-1);
+    if (e == 0) {
+        puts("setconcurrency of negative value didn't failed");
+        exit(1);
     }
-  if (e != EINVAL)
-    {
-      puts ("setconcurrency didn't return EINVAL for negative value");
-      exit (1);
+    if (e != EINVAL) {
+        puts("setconcurrency didn't return EINVAL for negative value");
+        exit(1);
     }
 
-  c = pthread_getconcurrency ();
-  if (c != 1)
-    {
-      puts ("invalid getconcurrency changed level");
-      exit (1);
+    c = pthread_getconcurrency();
+    if (c != 1) {
+        puts("invalid getconcurrency changed level");
+        exit(1);
     }
 
-  return 0;
+    return 0;
 }
 
 

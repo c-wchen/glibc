@@ -21,14 +21,14 @@
 #include <math.h>
 
 CFLOAT
-M_DECL_FUNC (__ccos) (CFLOAT x)
+M_DECL_FUNC(__ccos)(CFLOAT x)
 {
-  CFLOAT y;
+    CFLOAT y;
 
-  __real__ y = -__imag__ x;
-  __imag__ y = __real__ x;
+    __real__ y = -__imag__ x;
+    __imag__ y = __real__ x;
 
-  return M_SUF (__ccosh) (y);
+    return M_SUF(__ccosh)(y);
 }
 
-declare_mgen_alias (__ccos, ccos);
+declare_mgen_alias(__ccos, ccos);

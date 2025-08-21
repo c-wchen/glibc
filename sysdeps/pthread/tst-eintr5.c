@@ -34,29 +34,27 @@ static pthread_mutex_t m = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t c = PTHREAD_COND_INITIALIZER;
 
 
-static void *
-tf (void *arg)
+static void *tf(void *arg)
 {
-  struct timespec ts = timespec_add (xclock_now (CLOCK_REALTIME),
-                                     make_timespec (10000, 0));
+    struct timespec ts = timespec_add(xclock_now(CLOCK_REALTIME),
+                                      make_timespec(10000, 0));
 
-  /* This call must never return.  */
-  TEST_COMPARE (pthread_cond_timedwait (&c, &m, &ts), 0);
-  FAIL_EXIT1 ("pthread_cond_timedwait returned unexpectedly\n");
+    /* This call must never return.  */
+    TEST_COMPARE(pthread_cond_timedwait(&c, &m, &ts), 0);
+    FAIL_EXIT1("pthread_cond_timedwait returned unexpectedly\n");
 }
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  setup_eintr (SIGUSR1, NULL);
+    setup_eintr(SIGUSR1, NULL);
 
-  xpthread_create (NULL, tf, NULL);
+    xpthread_create(NULL, tf, NULL);
 
-  delayed_exit (3);
-  /* This call must never return.  */
-  xpthread_cond_wait (&c, &m);
-  FAIL_RET ("error: pthread_cond_wait returned");
+    delayed_exit(3);
+    /* This call must never return.  */
+    xpthread_cond_wait(&c, &m);
+    FAIL_RET("error: pthread_cond_wait returned");
 }
 
 #include <support/test-driver.c>

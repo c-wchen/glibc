@@ -134,7 +134,7 @@
 # define putchar_unlocked(x) putchar (x)
 # endif
 
-extern char *__argp_basename (char *name);
+extern char *__argp_basename(char *name);
 
 #endif /* !_LIBC */
 
@@ -143,7 +143,7 @@ extern char *__argp_basename (char *name);
 #endif
 
 #if defined _LIBC || HAVE_DECL_PROGRAM_INVOCATION_SHORT_NAME
-# define __argp_short_program_name()	(program_invocation_short_name)
+# define __argp_short_program_name()    (program_invocation_short_name)
 #else
-extern char *__argp_short_program_name (void);
+extern char *__argp_short_program_name(void);
 #endif

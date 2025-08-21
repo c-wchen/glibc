@@ -30,6 +30,6 @@
 # define SYMBOL_NAME trunc
 # include "ifunc-sse4_1.h"
 
-libc_ifunc_redirected (__redirect_trunc, __trunc, IFUNC_SELECTOR ());
-libm_alias_double (__trunc, trunc)
+libc_ifunc_redirected(__redirect_trunc, __trunc, IFUNC_SELECTOR());
+libm_alias_double(__trunc, trunc)
 #endif

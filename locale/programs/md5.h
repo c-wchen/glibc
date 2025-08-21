@@ -35,20 +35,18 @@ typedef uint32_t md5_uint32;
 typedef uintptr_t md5_uintptr;
 
 /* Structure to save state of computation between the single steps.  */
-struct md5_ctx
-{
-  md5_uint32 A;
-  md5_uint32 B;
-  md5_uint32 C;
-  md5_uint32 D;
+struct md5_ctx {
+    md5_uint32 A;
+    md5_uint32 B;
+    md5_uint32 C;
+    md5_uint32 D;
 
-  md5_uint32 total[2];
-  md5_uint32 buflen;
-  union
-  {
-    char buffer[128];
-    md5_uint32 buffer32[32];
-  };
+    md5_uint32 total[2];
+    md5_uint32 buflen;
+    union {
+        char buffer[128];
+        md5_uint32 buffer32[32];
+    };
 };
 
 /*
@@ -58,21 +56,21 @@ struct md5_ctx
 
 /* Initialize structure containing state of computation.
    (RFC 1321, 3.3: Step 3)  */
-extern void __md5_init_ctx (struct md5_ctx *ctx) __THROW;
+extern void __md5_init_ctx(struct md5_ctx *ctx) __THROW;
 
 /* Starting with the result of former calls of this function (or the
    initialization function update the context for the next LEN bytes
    starting at BUFFER.
    It is necessary that LEN is a multiple of 64!!! */
-extern void __md5_process_block (const void *buffer, size_t len,
-				 struct md5_ctx *ctx) __THROW;
+extern void __md5_process_block(const void *buffer, size_t len,
+                                struct md5_ctx *ctx) __THROW;
 
 /* Starting with the result of former calls of this function (or the
    initialization function update the context for the next LEN bytes
    starting at BUFFER.
    It is NOT required that LEN is a multiple of 64.  */
-extern void __md5_process_bytes (const void *buffer, size_t len,
-				 struct md5_ctx *ctx) __THROW;
+extern void __md5_process_bytes(const void *buffer, size_t len,
+                                struct md5_ctx *ctx) __THROW;
 
 /* Process the remaining bytes in the buffer and put result from CTX
    in first 16 bytes following RESBUF.  The result is always in little
@@ -81,7 +79,7 @@ extern void __md5_process_bytes (const void *buffer, size_t len,
 
    IMPORTANT: On some systems it is required that RESBUF is correctly
    aligned for a 32 bits value.  */
-extern void *__md5_finish_ctx (struct md5_ctx *ctx, void *resbuf) __THROW;
+extern void *__md5_finish_ctx(struct md5_ctx *ctx, void *resbuf) __THROW;
 
 
 /* Put result from CTX in first 16 bytes following RESBUF.  The result is
@@ -90,13 +88,13 @@ extern void *__md5_finish_ctx (struct md5_ctx *ctx, void *resbuf) __THROW;
 
    IMPORTANT: On some systems it is required that RESBUF is correctly
    aligned for a 32 bits value.  */
-extern void *__md5_read_ctx (const struct md5_ctx *ctx, void *resbuf) __THROW;
+extern void *__md5_read_ctx(const struct md5_ctx *ctx, void *resbuf) __THROW;
 
 /* Compute MD5 message digest for LEN bytes beginning at BUFFER.  The
    result is always in little endian byte order, so that a byte-wise
    output yields to the wanted ASCII representation of the message
    digest.  */
-extern void *__md5_buffer (const char *buffer, size_t len,
-			   void *resblock) __THROW;
+extern void *__md5_buffer(const char *buffer, size_t len,
+                          void *resblock) __THROW;
 
 #endif /* md5.h */

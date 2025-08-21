@@ -23,22 +23,23 @@
 static struct utmp *buffer;
 
 struct utmp *
-__getutid (const struct utmp *id)
+__getutid(const struct utmp *id)
 {
-  struct utmp *result;
+    struct utmp *result;
 
-  if (buffer == NULL)
-    {
-      buffer = (struct utmp *) malloc (sizeof (struct utmp));
-      if (buffer == NULL)
+    if (buffer == NULL) {
+        buffer = (struct utmp *) malloc(sizeof(struct utmp));
+        if (buffer == NULL) {
+            return NULL;
+        }
+    }
+    if (__getutid_r(id, buffer, &result) < 0) {
         return NULL;
     }
-  if (__getutid_r (id, buffer, &result) < 0)
-    return NULL;
 
-  return result;
+    return result;
 }
-libc_hidden_def (__getutid)
-weak_alias (__getutid, getutid)
+libc_hidden_def(__getutid)
+weak_alias(__getutid, getutid)
 
-weak_alias (buffer, __libc_getutid_freemem_ptr)
+weak_alias(buffer, __libc_getutid_freemem_ptr)

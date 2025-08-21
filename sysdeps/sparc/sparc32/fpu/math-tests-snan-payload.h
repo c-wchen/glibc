@@ -22,9 +22,9 @@
 /* LEON floating-point instructions do not preserve sNaN
    payloads.  */
 #if defined (__leon__)
-# define SNAN_TESTS_PRESERVE_PAYLOAD	0
+# define SNAN_TESTS_PRESERVE_PAYLOAD    0
 #else
-# define SNAN_TESTS_PRESERVE_PAYLOAD	1
+# define SNAN_TESTS_PRESERVE_PAYLOAD    1
 #endif
 
 #endif /* math-tests-snan-payload.h.  */

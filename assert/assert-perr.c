@@ -22,17 +22,16 @@
 
 /* This function, when passed an error number, a filename, and a line
    number, prints a message on the standard error stream of the form:
-	a.c:10: foobar: Unexpected error: Computer bought the farm
+    a.c:10: foobar: Unexpected error: Computer bought the farm
    It then aborts program execution via a call to `abort'.  */
-void
-__assert_perror_fail (int errnum,
-		      const char *file, unsigned int line,
-		      const char *function)
+void __assert_perror_fail(int errnum,
+                          const char *file, unsigned int line,
+                          const char *function)
 {
-  char errbuf[1024];
+    char errbuf[1024];
 
-  char *e = __strerror_r (errnum, errbuf, sizeof errbuf);
-  __assert_fail_base (_("%s%s%s:%u: %s%sUnexpected error: %s.\n"),
-		      e, file, line, function);
+    char *e = __strerror_r(errnum, errbuf, sizeof errbuf);
+    __assert_fail_base(_("%s%s%s:%u: %s%sUnexpected error: %s.\n"),
+                       e, file, line, function);
 }
-libc_hidden_def (__assert_perror_fail)
+libc_hidden_def(__assert_perror_fail)

@@ -24,26 +24,24 @@
 #include <support/check.h>
 #include <support/xthread.h>
 
-_Static_assert (__SC_THREAD_STACK_MIN_VALUE == _SC_THREAD_STACK_MIN,
-                "__SC_THREAD_STACK_MIN_VALUE is correct");
+_Static_assert(__SC_THREAD_STACK_MIN_VALUE == _SC_THREAD_STACK_MIN,
+               "__SC_THREAD_STACK_MIN_VALUE is correct");
 
-static void *
-threadfunc (void *closure)
+static void *threadfunc(void *closure)
 {
-  pthread_exit (threadfunc);
-  return NULL;
+    pthread_exit(threadfunc);
+    return NULL;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  pthread_attr_t attr;
-  xpthread_attr_init (&attr);
-  xpthread_attr_setstacksize (&attr, PTHREAD_STACK_MIN);
-  pthread_t thr = xpthread_create (&attr, threadfunc, NULL);
-  TEST_VERIFY (xpthread_join (thr) == threadfunc);
-  xpthread_attr_destroy (&attr);
-  return 0;
+    pthread_attr_t attr;
+    xpthread_attr_init(&attr);
+    xpthread_attr_setstacksize(&attr, PTHREAD_STACK_MIN);
+    pthread_t thr = xpthread_create(&attr, threadfunc, NULL);
+    TEST_VERIFY(xpthread_join(thr) == threadfunc);
+    xpthread_attr_destroy(&attr);
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -19,27 +19,28 @@
 #include <fenv_libc.h>
 #include <fpu_control.h>
 
-int
-feclearexcept (int excepts)
+int feclearexcept(int excepts)
 {
-  fexcept_t temp;
+    fexcept_t temp;
 
-  /* Mask out unsupported bits/exceptions.  */
-  excepts &= FE_ALL_EXCEPT;
+    /* Mask out unsupported bits/exceptions.  */
+    excepts &= FE_ALL_EXCEPT;
 
-  _FPU_GETCW (temp);
-  /* Clear the relevant bits.  */
-  temp &= ~(excepts << FPC_FLAGS_SHIFT);
-  if ((temp & FPC_NOT_FPU_EXCEPTION) == 0)
-    /* Bits 6, 7 of dxc-byte are zero,
-       thus bits 0-5 of dxc-byte correspond to the flag-bits.
-       Clear the relevant bits in flags and dxc-field.  */
-    temp &= ~(excepts << FPC_DXC_SHIFT);
+    _FPU_GETCW(temp);
+    /* Clear the relevant bits.  */
+    temp &= ~(excepts << FPC_FLAGS_SHIFT);
+    if ((temp & FPC_NOT_FPU_EXCEPTION) == 0)
+        /* Bits 6, 7 of dxc-byte are zero,
+           thus bits 0-5 of dxc-byte correspond to the flag-bits.
+           Clear the relevant bits in flags and dxc-field.  */
+    {
+        temp &= ~(excepts << FPC_DXC_SHIFT);
+    }
 
-  /* Put the new data in effect.  */
-  _FPU_SETCW (temp);
+    /* Put the new data in effect.  */
+    _FPU_SETCW(temp);
 
-  /* Success.  */
-  return 0;
+    /* Success.  */
+    return 0;
 }
-libm_hidden_def (feclearexcept)
+libm_hidden_def(feclearexcept)

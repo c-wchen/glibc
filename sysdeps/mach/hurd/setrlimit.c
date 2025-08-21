@@ -24,31 +24,32 @@
 /* Set the soft and hard limits for RESOURCE to *RLIMITS.
    Only the super-user can increase hard limits.
    Return 0 if successful, -1 if not (and sets errno).  */
-int
-__setrlimit (enum __rlimit_resource resource, const struct rlimit *rlimits)
+int __setrlimit(enum __rlimit_resource resource, const struct rlimit *rlimits)
 {
-  struct rlimit lim;
+    struct rlimit lim;
 
-  if (rlimits == NULL || (unsigned int) resource >= RLIMIT_NLIMITS)
-    return __hurd_fail (EINVAL);
+    if (rlimits == NULL || (unsigned int) resource >= RLIMIT_NLIMITS) {
+        return __hurd_fail(EINVAL);
+    }
 
-  lim = *rlimits;
+    lim = *rlimits;
 
-  /* Even though most limits do nothing, there is no inheritance, and hard
-     limits are not really hard, we just let any old call succeed to make
-     life easier for programs that expect normal behavior.  */
+    /* Even though most limits do nothing, there is no inheritance, and hard
+       limits are not really hard, we just let any old call succeed to make
+       life easier for programs that expect normal behavior.  */
 
-  if (lim.rlim_cur > lim.rlim_max)
-    lim.rlim_cur = lim.rlim_max;
+    if (lim.rlim_cur > lim.rlim_max) {
+        lim.rlim_cur = lim.rlim_max;
+    }
 
-  HURD_CRITICAL_BEGIN;
-  __mutex_lock (&_hurd_rlimit_lock);
-  _hurd_rlimits[resource] = lim;
-  __mutex_unlock (&_hurd_rlimit_lock);
-  HURD_CRITICAL_END;
+    HURD_CRITICAL_BEGIN;
+    __mutex_lock(&_hurd_rlimit_lock);
+    _hurd_rlimits[resource] = lim;
+    __mutex_unlock(&_hurd_rlimit_lock);
+    HURD_CRITICAL_END;
 
-  return 0;
+    return 0;
 }
 
-libc_hidden_def (__setrlimit)
-weak_alias (__setrlimit, setrlimit)
+libc_hidden_def(__setrlimit)
+weak_alias(__setrlimit, setrlimit)

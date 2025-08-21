@@ -22,28 +22,27 @@
 #include <elf/sotruss-lib.c>
 
 ElfW(Addr)
-la_csky_gnu_pltenter (ElfW(Sym) *sym __attribute__ ((unused)),
-		      unsigned int ndx __attribute__ ((unused)),
-		      uintptr_t *refcook, uintptr_t *defcook,
-		      La_csky_regs *regs, unsigned int *flags,
-		      const char *symname, long int *framesizep)
+la_csky_gnu_pltenter(ElfW(Sym) *sym __attribute__((unused)),
+                     unsigned int ndx __attribute__((unused)),
+                     uintptr_t *refcook, uintptr_t *defcook,
+                     La_csky_regs *regs, unsigned int *flags,
+                     const char *symname, long int *framesizep)
 {
-  print_enter (refcook, defcook, symname,
-	       regs->lr_reg[0], regs->lr_reg[1], regs->lr_reg[2],
-	       *flags);
+    print_enter(refcook, defcook, symname,
+                regs->lr_reg[0], regs->lr_reg[1], regs->lr_reg[2],
+                *flags);
 
-  /* No need to copy anything, we will not need the parameters in any case.  */
-  *framesizep = 0;
+    /* No need to copy anything, we will not need the parameters in any case.  */
+    *framesizep = 0;
 
-  return sym->st_value;
+    return sym->st_value;
 }
 
-unsigned int
-la_csky_gnu_pltexit (ElfW(Sym) *sym, unsigned int ndx, uintptr_t *refcook,
-		     uintptr_t *defcook, const struct La_csky_regs *inregs,
-		     struct La_csky_retval *outregs, const char *symname)
+unsigned int la_csky_gnu_pltexit(ElfW(Sym) *sym, unsigned int ndx, uintptr_t *refcook,
+                                 uintptr_t *defcook, const struct La_csky_regs *inregs,
+                                 struct La_csky_retval *outregs, const char *symname)
 {
-  print_exit (refcook, defcook, symname, outregs->lrv_v0);
+    print_exit(refcook, defcook, symname, outregs->lrv_v0);
 
-  return 0;
+    return 0;
 }

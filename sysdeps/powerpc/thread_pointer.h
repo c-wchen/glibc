@@ -20,15 +20,14 @@
 #define _SYS_THREAD_POINTER_H
 
 #ifdef __powerpc64__
-register void *__thread_register asm ("r13");
+register void *__thread_register asm("r13");
 #else
-register void *__thread_register asm ("r2");
+register void *__thread_register asm("r2");
 #endif
 
-static inline void *
-__thread_pointer (void)
+static inline void *__thread_pointer(void)
 {
-  return __thread_register;
+    return __thread_register;
 }
 
 #endif /* _SYS_THREAD_POINTER_H */

@@ -19,57 +19,51 @@
 #include <shlib-compat.h>
 #include "nis_xdr.h"
 
-void
-__free_fdresult (fd_result *res)
+void __free_fdresult(fd_result *res)
 {
-  if (res != NULL)
-    {
-      xdr_free ((xdrproc_t)_xdr_fd_result, (char *)res);
-      free (res);
+    if (res != NULL) {
+        xdr_free((xdrproc_t)_xdr_fd_result, (char *)res);
+        free(res);
     }
 }
-libnsl_hidden_nolink_def (__free_fdresult, GLIBC_2_1)
+libnsl_hidden_nolink_def(__free_fdresult, GLIBC_2_1)
 
 void
-nis_free_request (ib_request *ibreq)
+nis_free_request(ib_request *ibreq)
 {
-  if (ibreq != NULL)
-    {
-      xdr_free ((xdrproc_t)_xdr_ib_request, (char *)ibreq);
-      free (ibreq);
+    if (ibreq != NULL) {
+        xdr_free((xdrproc_t)_xdr_ib_request, (char *)ibreq);
+        free(ibreq);
     }
 }
-libnsl_hidden_nolink_def (nis_free_request, GLIBC_2_1)
+libnsl_hidden_nolink_def(nis_free_request, GLIBC_2_1)
 
 void
-nis_free_directory (directory_obj *obj)
+nis_free_directory(directory_obj *obj)
 {
-  if (obj != NULL)
-    {
-      xdr_free ((xdrproc_t)_xdr_directory_obj, (char *)obj);
-      free (obj);
+    if (obj != NULL) {
+        xdr_free((xdrproc_t)_xdr_directory_obj, (char *)obj);
+        free(obj);
     }
 }
-libnsl_hidden_nolink_def (nis_free_directory, GLIBC_2_1)
+libnsl_hidden_nolink_def(nis_free_directory, GLIBC_2_1)
 
 void
-nis_free_object (nis_object *obj)
+nis_free_object(nis_object *obj)
 {
-  if (obj != NULL)
-    {
-      xdr_free ((xdrproc_t)_xdr_nis_object, (char *)obj);
-      free (obj);
+    if (obj != NULL) {
+        xdr_free((xdrproc_t)_xdr_nis_object, (char *)obj);
+        free(obj);
     }
 }
-libnsl_hidden_nolink_def (nis_free_object, GLIBC_2_1)
+libnsl_hidden_nolink_def(nis_free_object, GLIBC_2_1)
 
 void
-nis_freeresult (nis_result *res)
+nis_freeresult(nis_result *res)
 {
-  if (res != NULL)
-    {
-      xdr_free ((xdrproc_t)_xdr_nis_result, (char *)res);
-      free (res);
+    if (res != NULL) {
+        xdr_free((xdrproc_t)_xdr_nis_result, (char *)res);
+        free(res);
     }
 }
-libnsl_hidden_nolink_def (nis_freeresult, GLIBC_2_1)
+libnsl_hidden_nolink_def(nis_freeresult, GLIBC_2_1)

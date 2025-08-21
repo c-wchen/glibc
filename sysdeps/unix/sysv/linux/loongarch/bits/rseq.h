@@ -30,7 +30,7 @@
 
    RSEQ_SIG uses the following break instruction:
 
-   0x002a0010	break	0x10
+   0x002a0010   break   0x10
 */
 
 #define RSEQ_SIG        0x002a0010

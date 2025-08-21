@@ -29,49 +29,47 @@
 
 static volatile bool fail_malloc;
 
-void *
-malloc (size_t size)
+void *malloc(size_t size)
 {
-  if (fail_malloc)
-    return NULL;
+    if (fail_malloc) {
+        return NULL;
+    }
 
-  static void *(*original_malloc) (size_t);
-  if (original_malloc == NULL)
-    original_malloc = xdlsym (RTLD_NEXT, "malloc");
-  return original_malloc (size);
+    static void *(*original_malloc)(size_t);
+    if (original_malloc == NULL) {
+        original_malloc = xdlsym(RTLD_NEXT, "malloc");
+    }
+    return original_malloc(size);
 }
 
 /* Callbacks for the actual tests.  Use fork to run both tests with a
    clean state.  */
 
-static void
-test_strerror (void *closure)
+static void test_strerror(void *closure)
 {
-  fail_malloc = true;
-  const char *s = strerror (999);
-  fail_malloc = false;
-  TEST_COMPARE_STRING (s, "Unknown error");
+    fail_malloc = true;
+    const char *s = strerror(999);
+    fail_malloc = false;
+    TEST_COMPARE_STRING(s, "Unknown error");
 }
 
-static void
-test_strerror_l (void *closure)
+static void test_strerror_l(void *closure)
 {
-  locale_t loc = newlocale (LC_ALL, "C", (locale_t) 0);
-  TEST_VERIFY (loc != (locale_t) 0);
-  fail_malloc = true;
-  const char *s = strerror_l (999, loc);
-  fail_malloc = false;
-  TEST_COMPARE_STRING (s, "Unknown error");
-  freelocale (loc);
+    locale_t loc = newlocale(LC_ALL, "C", (locale_t) 0);
+    TEST_VERIFY(loc != (locale_t) 0);
+    fail_malloc = true;
+    const char *s = strerror_l(999, loc);
+    fail_malloc = false;
+    TEST_COMPARE_STRING(s, "Unknown error");
+    freelocale(loc);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  support_isolate_in_subprocess (test_strerror, NULL);
-  support_isolate_in_subprocess (test_strerror_l, NULL);
+    support_isolate_in_subprocess(test_strerror, NULL);
+    support_isolate_in_subprocess(test_strerror_l, NULL);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

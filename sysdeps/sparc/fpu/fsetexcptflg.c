@@ -21,25 +21,24 @@
 #include <math.h>
 #include <shlib-compat.h>
 
-int
-__fesetexceptflag (const fexcept_t *flagp, int excepts)
+int __fesetexceptflag(const fexcept_t *flagp, int excepts)
 {
-  fenv_t tmp;
+    fenv_t tmp;
 
-  __fenv_stfsr (tmp);
+    __fenv_stfsr(tmp);
 
-  tmp &= ~(excepts & FE_ALL_EXCEPT);
-  tmp |= *flagp & excepts & FE_ALL_EXCEPT;
+    tmp &= ~(excepts & FE_ALL_EXCEPT);
+    tmp |= *flagp & excepts & FE_ALL_EXCEPT;
 
-  __fenv_ldfsr (tmp);
+    __fenv_ldfsr(tmp);
 
-  /* Success.  */
-  return 0;
+    /* Success.  */
+    return 0;
 }
 
 #if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
-strong_alias (__fesetexceptflag, __old_fesetexceptflag)
-compat_symbol (libm, __old_fesetexceptflag, fesetexceptflag, GLIBC_2_1);
+strong_alias(__fesetexceptflag, __old_fesetexceptflag)
+compat_symbol(libm, __old_fesetexceptflag, fesetexceptflag, GLIBC_2_1);
 #endif
 
-versioned_symbol (libm, __fesetexceptflag, fesetexceptflag, GLIBC_2_2);
+versioned_symbol(libm, __fesetexceptflag, fesetexceptflag, GLIBC_2_2);

@@ -25,25 +25,26 @@
    There is no return value to indicate an error, but you can set `errno'
    to 0 and check its value after calling `alarm', and this might tell you.
    The signal may come late due to processor scheduling.  */
-unsigned int
-alarm (unsigned int seconds)
+unsigned int alarm(unsigned int seconds)
 {
-  struct itimerval old, new;
-  unsigned int retval;
+    struct itimerval old, new;
+    unsigned int retval;
 
-  new.it_interval.tv_usec = 0;
-  new.it_interval.tv_sec = 0;
-  new.it_value.tv_usec = 0;
-  new.it_value.tv_sec = (long int) seconds;
-  if (__setitimer (ITIMER_REAL, &new, &old) < 0)
-    return 0;
+    new.it_interval.tv_usec = 0;
+    new.it_interval.tv_sec = 0;
+    new.it_value.tv_usec = 0;
+    new.it_value.tv_sec = (long int) seconds;
+    if (__setitimer(ITIMER_REAL, &new, &old) < 0) {
+        return 0;
+    }
 
-  retval = old.it_value.tv_sec;
-  /* Round to the nearest second, but never report zero seconds when
-     the alarm is still set.  */
-  if (old.it_value.tv_usec >= 500000
-      || (retval == 0 && old.it_value.tv_usec > 0))
-    ++retval;
-  return retval;
+    retval = old.it_value.tv_sec;
+    /* Round to the nearest second, but never report zero seconds when
+       the alarm is still set.  */
+    if (old.it_value.tv_usec >= 500000
+        || (retval == 0 && old.it_value.tv_usec > 0)) {
+        ++retval;
+    }
+    return retval;
 }
-libc_hidden_def (alarm)
+libc_hidden_def(alarm)

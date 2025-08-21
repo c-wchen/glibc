@@ -21,44 +21,43 @@
 #include <support/check.h>
 #include "tst-audit27mod.h"
 
-int
-do_test (void)
+int do_test(void)
 {
-  {
-    float r = tst_audit27_func_float (FUNC_FLOAT_ARG0, FUNC_FLOAT_ARG1,
-				      FUNC_FLOAT_ARG2, FUNC_FLOAT_ARG3,
-				      FUNC_FLOAT_ARG4, FUNC_FLOAT_ARG5,
-				      FUNC_FLOAT_ARG6, FUNC_FLOAT_ARG7);
-    if (r != FUNC_FLOAT_RET)
-      FAIL_EXIT1 ("tst_audit27_func_float() returned %a, expected %a",
-		  r, FUNC_FLOAT_RET);
-  }
+    {
+        float r = tst_audit27_func_float(FUNC_FLOAT_ARG0, FUNC_FLOAT_ARG1,
+                                         FUNC_FLOAT_ARG2, FUNC_FLOAT_ARG3,
+                                         FUNC_FLOAT_ARG4, FUNC_FLOAT_ARG5,
+                                         FUNC_FLOAT_ARG6, FUNC_FLOAT_ARG7);
+        if (r != FUNC_FLOAT_RET)
+            FAIL_EXIT1("tst_audit27_func_float() returned %a, expected %a",
+                       r, FUNC_FLOAT_RET);
+    }
 
-  {
-    double r = tst_audit27_func_double (FUNC_DOUBLE_ARG0, FUNC_DOUBLE_ARG1,
-					FUNC_DOUBLE_ARG2, FUNC_DOUBLE_ARG3,
-					FUNC_DOUBLE_ARG4, FUNC_DOUBLE_ARG5,
-					FUNC_DOUBLE_ARG6, FUNC_DOUBLE_ARG7);
-    if (r != FUNC_DOUBLE_RET)
-      FAIL_EXIT1 ("tst_audit27_func_double() returned %la, expected %la",
-		  r, FUNC_DOUBLE_RET);
-  }
+    {
+        double r = tst_audit27_func_double(FUNC_DOUBLE_ARG0, FUNC_DOUBLE_ARG1,
+                                           FUNC_DOUBLE_ARG2, FUNC_DOUBLE_ARG3,
+                                           FUNC_DOUBLE_ARG4, FUNC_DOUBLE_ARG5,
+                                           FUNC_DOUBLE_ARG6, FUNC_DOUBLE_ARG7);
+        if (r != FUNC_DOUBLE_RET)
+            FAIL_EXIT1("tst_audit27_func_double() returned %la, expected %la",
+                       r, FUNC_DOUBLE_RET);
+    }
 
-  {
-    long double r = tst_audit27_func_ldouble (FUNC_LDOUBLE_ARG0,
-					      FUNC_LDOUBLE_ARG1,
-					      FUNC_LDOUBLE_ARG2,
-					      FUNC_LDOUBLE_ARG3,
-					      FUNC_LDOUBLE_ARG4,
-					      FUNC_LDOUBLE_ARG5,
-					      FUNC_LDOUBLE_ARG6,
-					      FUNC_LDOUBLE_ARG7);
-    if (r != FUNC_LDOUBLE_RET)
-      FAIL_EXIT1 ("tst_audit27_func_ldouble() returned %La, expected %La",
-		  r, FUNC_LDOUBLE_RET);
-  }
+    {
+        long double r = tst_audit27_func_ldouble(FUNC_LDOUBLE_ARG0,
+                        FUNC_LDOUBLE_ARG1,
+                        FUNC_LDOUBLE_ARG2,
+                        FUNC_LDOUBLE_ARG3,
+                        FUNC_LDOUBLE_ARG4,
+                        FUNC_LDOUBLE_ARG5,
+                        FUNC_LDOUBLE_ARG6,
+                        FUNC_LDOUBLE_ARG7);
+        if (r != FUNC_LDOUBLE_RET)
+            FAIL_EXIT1("tst_audit27_func_ldouble() returned %La, expected %La",
+                       r, FUNC_LDOUBLE_RET);
+    }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

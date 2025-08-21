@@ -20,13 +20,12 @@
 #include <unistd.h>
 
 /* Truncate the file referenced by FD to LENGTH bytes.  */
-int
-__ftruncate (int fd, off_t length)
+int __ftruncate(int fd, off_t length)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-weak_alias (__ftruncate, ftruncate)
+weak_alias(__ftruncate, ftruncate)
 
-stub_warning (ftruncate)
+stub_warning(ftruncate)

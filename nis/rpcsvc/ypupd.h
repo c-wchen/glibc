@@ -28,7 +28,7 @@
  *   NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-/* from @(#)ypupdate_prot.x	1.3 91/03/11 TIRPC 1.0 */
+/* from @(#)ypupdate_prot.x 1.3 91/03/11 TIRPC 1.0 */
 
 #ifndef __RPCSVC_YPUPD_H__
 #define __RPCSVC_YPUPD_H__
@@ -44,44 +44,44 @@
 __BEGIN_DECLS
 
 typedef struct {
-	u_int yp_buf_len;
-	char *yp_buf_val;
+    u_int yp_buf_len;
+    char *yp_buf_val;
 } yp_buf;
 
-extern  bool_t xdr_yp_buf (XDR *, yp_buf*);
+extern  bool_t xdr_yp_buf(XDR *, yp_buf *);
 
 struct ypupdate_args {
-	char *mapname;
-	yp_buf key;
-	yp_buf datum;
+    char *mapname;
+    yp_buf key;
+    yp_buf datum;
 };
 typedef struct ypupdate_args ypupdate_args;
 
-extern  bool_t xdr_ypupdate_args (XDR *, ypupdate_args*);
+extern  bool_t xdr_ypupdate_args(XDR *, ypupdate_args *);
 
 struct ypdelete_args {
-	char *mapname;
-	yp_buf key;
+    char *mapname;
+    yp_buf key;
 };
 typedef struct ypdelete_args ypdelete_args;
 
-extern  bool_t xdr_ypdelete_args (XDR *, ypdelete_args*);
+extern  bool_t xdr_ypdelete_args(XDR *, ypdelete_args *);
 
 #define YPU_PROG 100028
 #define YPU_VERS 1
 
 #define YPU_CHANGE 1
-extern  u_int * ypu_change_1 (ypupdate_args *, CLIENT *);
-extern  u_int * ypu_change_1_svc (ypupdate_args *, struct svc_req *);
+extern  u_int *ypu_change_1(ypupdate_args *, CLIENT *);
+extern  u_int *ypu_change_1_svc(ypupdate_args *, struct svc_req *);
 #define YPU_INSERT 2
-extern  u_int * ypu_insert_1 (ypupdate_args *, CLIENT *);
-extern  u_int * ypu_insert_1_svc (ypupdate_args *, struct svc_req *);
+extern  u_int *ypu_insert_1(ypupdate_args *, CLIENT *);
+extern  u_int *ypu_insert_1_svc(ypupdate_args *, struct svc_req *);
 #define YPU_DELETE 3
-extern  u_int * ypu_delete_1 (ypdelete_args *, CLIENT *);
-extern  u_int * ypu_delete_1_svc (ypdelete_args *, struct svc_req *);
+extern  u_int *ypu_delete_1(ypdelete_args *, CLIENT *);
+extern  u_int *ypu_delete_1_svc(ypdelete_args *, struct svc_req *);
 #define YPU_STORE 4
-extern  u_int * ypu_store_1 (ypupdate_args *, CLIENT *);
-extern  u_int * ypu_store_1_svc (ypupdate_args *, struct svc_req *);
+extern  u_int *ypu_store_1(ypupdate_args *, CLIENT *);
+extern  u_int *ypu_store_1_svc(ypupdate_args *, struct svc_req *);
 
 __END_DECLS
 

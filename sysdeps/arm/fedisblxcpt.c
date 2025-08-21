@@ -21,22 +21,23 @@
 #include <arm-features.h>
 
 
-int
-fedisableexcept (int excepts)
+int fedisableexcept(int excepts)
 {
-  fpu_control_t fpscr, new_fpscr;
+    fpu_control_t fpscr, new_fpscr;
 
-  /* Fail if a VFP unit isn't present.  */
-  if (!ARM_HAVE_VFP)
-    return -1;
+    /* Fail if a VFP unit isn't present.  */
+    if (!ARM_HAVE_VFP) {
+        return -1;
+    }
 
-  _FPU_GETCW (fpscr);
-  excepts &= FE_ALL_EXCEPT;
-  new_fpscr = fpscr & ~(excepts << FE_EXCEPT_SHIFT);
+    _FPU_GETCW(fpscr);
+    excepts &= FE_ALL_EXCEPT;
+    new_fpscr = fpscr & ~(excepts << FE_EXCEPT_SHIFT);
 
-  /* Write new exceptions if changed.  */
-  if (new_fpscr != fpscr)
-    _FPU_SETCW (new_fpscr);
+    /* Write new exceptions if changed.  */
+    if (new_fpscr != fpscr) {
+        _FPU_SETCW(new_fpscr);
+    }
 
-  return (fpscr >> FE_EXCEPT_SHIFT) & FE_ALL_EXCEPT;
+    return (fpscr >> FE_EXCEPT_SHIFT) & FE_ALL_EXCEPT;
 }

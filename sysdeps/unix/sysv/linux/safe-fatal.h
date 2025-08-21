@@ -22,11 +22,10 @@
 #include <sysdep.h>
 #include <unistd.h>
 
-static inline void
-__safe_fatal (void)
+static inline void __safe_fatal(void)
 {
-  pid_t self = INTERNAL_SYSCALL_CALL (getpid);
-  INTERNAL_SYSCALL_CALL (kill, self, SIGKILL);
+    pid_t self = INTERNAL_SYSCALL_CALL(getpid);
+    INTERNAL_SYSCALL_CALL(kill, self, SIGKILL);
 }
 
 #endif  /* safe-fatal.h */

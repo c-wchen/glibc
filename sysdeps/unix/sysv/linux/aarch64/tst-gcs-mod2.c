@@ -18,8 +18,8 @@
 
 #include <stdio.h>
 
-int fun2 (void)
+int fun2(void)
 {
-  puts ("called function fun2");
-  return 0;
+    puts("called function fun2");
+    return 0;
 }

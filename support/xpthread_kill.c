@@ -19,8 +19,7 @@
 #include <signal.h>
 #include <support/xthread.h>
 
-void
-xpthread_kill (pthread_t thr, int signo)
+void xpthread_kill(pthread_t thr, int signo)
 {
-  xpthread_check_return ("pthread_kill", pthread_kill (thr, signo));
+    xpthread_check_return("pthread_kill", pthread_kill(thr, signo));
 }

@@ -19,12 +19,11 @@
 #include <sys/socket.h>
 
 /* Determine whether socket is at a out-of-band mark.  */
-int
-sockatmark (int fd)
+int sockatmark(int fd)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
 
-stub_warning (sockatmark)
+stub_warning(sockatmark)

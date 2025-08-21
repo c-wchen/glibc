@@ -17,11 +17,10 @@
 
 #include <stdio.h>
 
-void
-__attribute__ ((noreturn))
-__stack_chk_fail (void)
+void __attribute__((noreturn))
+__stack_chk_fail(void)
 {
-  __fortify_fail ("stack smashing detected");
+    __fortify_fail("stack smashing detected");
 }
 
-strong_alias (__stack_chk_fail, __stack_chk_fail_local)
+strong_alias(__stack_chk_fail, __stack_chk_fail_local)

@@ -25,26 +25,28 @@
 
 
 /* Remove the link named NAME.  */
-int
-__unlinkat (int fd, const char *name, int flag)
+int __unlinkat(int fd, const char *name, int flag)
 {
-  error_t err;
-  file_t dir;
-  const char *file;
+    error_t err;
+    file_t dir;
+    const char *file;
 
-  if ((flag &~ AT_REMOVEDIR) != 0)
-    return __hurd_fail (EINVAL);
+    if ((flag & ~ AT_REMOVEDIR) != 0) {
+        return __hurd_fail(EINVAL);
+    }
 
-  dir = __directory_name_split_at (fd, name, (char **) &file);
-  if (dir == MACH_PORT_NULL)
-    return -1;
+    dir = __directory_name_split_at(fd, name, (char **) &file);
+    if (dir == MACH_PORT_NULL) {
+        return -1;
+    }
 
-  err = ((flag & AT_REMOVEDIR) ? __dir_rmdir : __dir_unlink) (dir, file);
-  __mach_port_deallocate (__mach_task_self (), dir);
+    err = ((flag & AT_REMOVEDIR) ? __dir_rmdir : __dir_unlink)(dir, file);
+    __mach_port_deallocate(__mach_task_self(), dir);
 
-  if (err)
-    return __hurd_fail (err);
-  return 0;
+    if (err) {
+        return __hurd_fail(err);
+    }
+    return 0;
 }
 
-weak_alias (__unlinkat, unlinkat)
+weak_alias(__unlinkat, unlinkat)

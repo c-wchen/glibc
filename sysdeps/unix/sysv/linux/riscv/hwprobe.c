@@ -22,16 +22,16 @@
 #include <sysdep.h>
 #include <sysdep-vdso.h>
 
-int __riscv_hwprobe (struct riscv_hwprobe *pairs, size_t pair_count,
-		     size_t cpusetsize, __RISCV_HWPROBE_CPUS_TYPE cpus,
-		     unsigned int flags)
+int __riscv_hwprobe(struct riscv_hwprobe *pairs, size_t pair_count,
+                    size_t cpusetsize, __RISCV_HWPROBE_CPUS_TYPE cpus,
+                    unsigned int flags)
 {
-  int r;
+    int r;
 
-  r = INTERNAL_VSYSCALL (riscv_hwprobe, 5, pairs, pair_count,
-                         cpusetsize, cpus.__ul, flags);
+    r = INTERNAL_VSYSCALL(riscv_hwprobe, 5, pairs, pair_count,
+                          cpusetsize, cpus.__ul, flags);
 
-  /* Negate negative errno values to match pthreads API. */
-  return -r;
+    /* Negate negative errno values to match pthreads API. */
+    return -r;
 }
-libc_hidden_def (__riscv_hwprobe)
+libc_hidden_def(__riscv_hwprobe)

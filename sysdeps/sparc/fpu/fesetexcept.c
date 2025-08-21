@@ -19,14 +19,13 @@
 #include <fenv.h>
 #include <fenv_private.h>
 
-int
-fesetexcept (int excepts)
+int fesetexcept(int excepts)
 {
-  fenv_t tmp;
+    fenv_t tmp;
 
-  __fenv_stfsr (tmp);
-  tmp |= excepts & FE_ALL_EXCEPT;
-  __fenv_ldfsr (tmp);
+    __fenv_stfsr(tmp);
+    tmp |= excepts & FE_ALL_EXCEPT;
+    __fenv_ldfsr(tmp);
 
-  return 0;
+    return 0;
 }

@@ -28,60 +28,64 @@
 static int fd;
 static char *name;
 
-static void
-do_prepare (int argc, char *argv[])
+static void do_prepare(int argc, char *argv[])
 {
-  fd = create_temp_file ("tst-freopen.", &name);
-  TEST_VERIFY_EXIT (fd != -1);
+    fd = create_temp_file("tst-freopen.", &name);
+    TEST_VERIFY_EXIT(fd != -1);
 }
 
 #define PREPARE do_prepare
 
 /* Basic tests for freopen.  */
-static void
-do_test_basic (void)
+static void do_test_basic(void)
 {
-  const char * const test = "Let's test freopen.\n";
-  DIAG_PUSH_NEEDS_COMMENT_CLANG;
-  DIAG_IGNORE_NEEDS_COMMENT_CLANG (3.4, "-Wgnu-folding-constant");
-  char temp[strlen (test) + 1];
-  DIAG_POP_NEEDS_COMMENT_CLANG;
+    const char *const test = "Let's test freopen.\n";
+    DIAG_PUSH_NEEDS_COMMENT_CLANG;
+    DIAG_IGNORE_NEEDS_COMMENT_CLANG(3.4, "-Wgnu-folding-constant");
+    char temp[strlen(test) + 1];
+    DIAG_POP_NEEDS_COMMENT_CLANG;
 
-  FILE *f = fdopen (fd, "w");
-  if (f == NULL)
-    FAIL_EXIT1 ("fdopen: %m");
+    FILE *f = fdopen(fd, "w");
+    if (f == NULL) {
+        FAIL_EXIT1("fdopen: %m");
+    }
 
-  fputs (test, f);
-  fclose (f);
+    fputs(test, f);
+    fclose(f);
 
-  f = fopen (name, "r");
-  if (f == NULL)
-    FAIL_EXIT1 ("fopen: %m");
+    f = fopen(name, "r");
+    if (f == NULL) {
+        FAIL_EXIT1("fopen: %m");
+    }
 
-  if (fread (temp, 1, strlen (test), f) != strlen (test))
-    FAIL_EXIT1 ("fread: %m");
-  temp [strlen (test)] = '\0';
+    if (fread(temp, 1, strlen(test), f) != strlen(test)) {
+        FAIL_EXIT1("fread: %m");
+    }
+    temp [strlen(test)] = '\0';
 
-  if (strcmp (test, temp))
-    FAIL_EXIT1 ("read different string than was written: (%s, %s)",
-	        test, temp);
+    if (strcmp(test, temp))
+        FAIL_EXIT1("read different string than was written: (%s, %s)",
+                   test, temp);
 
-  f = freopen (name, "r+", f);
-  if (f == NULL)
-    FAIL_EXIT1 ("freopen: %m");
+    f = freopen(name, "r+", f);
+    if (f == NULL) {
+        FAIL_EXIT1("freopen: %m");
+    }
 
-  if (fseek (f, 0, SEEK_SET) != 0)
-    FAIL_EXIT1 ("fseek: %m");
+    if (fseek(f, 0, SEEK_SET) != 0) {
+        FAIL_EXIT1("fseek: %m");
+    }
 
-  if (fread (temp, 1, strlen (test), f) != strlen (test))
-    FAIL_EXIT1 ("fread: %m");
-  temp [strlen (test)] = '\0';
+    if (fread(temp, 1, strlen(test), f) != strlen(test)) {
+        FAIL_EXIT1("fread: %m");
+    }
+    temp [strlen(test)] = '\0';
 
-  if (strcmp (test, temp))
-    FAIL_EXIT1 ("read different string than was written: (%s, %s)",
-	        test, temp);
+    if (strcmp(test, temp))
+        FAIL_EXIT1("read different string than was written: (%s, %s)",
+                   test, temp);
 
-  fclose (f);
+    fclose(f);
 }
 
 #if defined __GNUC__ && __GNUC__ >= 11
@@ -95,24 +99,26 @@ do_test_basic (void)
 #endif
 
 /* Verify that freopen returns stream.  */
-static void
-do_test_return_stream (void)
+static void do_test_return_stream(void)
 {
-  FILE *f1 = fopen (name, "r");
-  if (f1 == NULL)
-    FAIL_EXIT1 ("fopen: %m");
+    FILE *f1 = fopen(name, "r");
+    if (f1 == NULL) {
+        FAIL_EXIT1("fopen: %m");
+    }
 
-  FILE *f2 = freopen (name, "r+", f1);
-  if (f2 == NULL)
-    FAIL_EXIT1 ("freopen: %m");
+    FILE *f2 = freopen(name, "r+", f1);
+    if (f2 == NULL) {
+        FAIL_EXIT1("freopen: %m");
+    }
 
-  /* Verify that freopen isn't declared with the no-argument attribute
-     malloc (which could let GCC fold the inequality to false).  */
-  if (f1 != f2)
-    FAIL_EXIT1 ("freopen returned a different stream");
+    /* Verify that freopen isn't declared with the no-argument attribute
+       malloc (which could let GCC fold the inequality to false).  */
+    if (f1 != f2) {
+        FAIL_EXIT1("freopen returned a different stream");
+    }
 
-  /* This shouldn't trigger -Wmismatched-dealloc.  */
-  fclose (f1);
+    /* This shouldn't trigger -Wmismatched-dealloc.  */
+    fclose(f1);
 }
 
 #if defined __GNUC__ && __GNUC__ >= 11
@@ -122,31 +128,30 @@ do_test_return_stream (void)
 
 /* Test for BZ#21398, where it tries to freopen stdio after the close
    of its file descriptor.  */
-static void
-do_test_bz21398 (void)
+static void do_test_bz21398(void)
 {
-  (void) close (STDIN_FILENO);
+    (void) close(STDIN_FILENO);
 
-  FILE *f = freopen (name, "r", stdin);
-  if (f == NULL)
-    FAIL_EXIT1 ("freopen: %m");
+    FILE *f = freopen(name, "r", stdin);
+    if (f == NULL) {
+        FAIL_EXIT1("freopen: %m");
+    }
 
-  TEST_VERIFY_EXIT (ferror (f) == 0);
+    TEST_VERIFY_EXIT(ferror(f) == 0);
 
-  char buf[128];
-  char *ret = fgets (buf, sizeof (buf), stdin);
-  TEST_VERIFY_EXIT (ret != NULL);
-  TEST_VERIFY_EXIT (ferror (f) == 0);
+    char buf[128];
+    char *ret = fgets(buf, sizeof(buf), stdin);
+    TEST_VERIFY_EXIT(ret != NULL);
+    TEST_VERIFY_EXIT(ferror(f) == 0);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  do_test_basic ();
-  do_test_bz21398 ();
-  do_test_return_stream ();
+    do_test_basic();
+    do_test_bz21398();
+    do_test_return_stream();
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

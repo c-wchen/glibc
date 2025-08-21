@@ -17,11 +17,11 @@
    <https://www.gnu.org/licenses/>.  */
 
 /*
- *	ISO C99 Standard: 7.12 Mathematics	<math.h>
+ *  ISO C99 Standard: 7.12 Mathematics  <math.h>
  */
 
-#ifndef	_MATH_H
-#define	_MATH_H	1
+#ifndef _MATH_H
+#define _MATH_H 1
 
 #define __GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION
 #include <bits/libc-header-start.h>
@@ -116,38 +116,38 @@ __BEGIN_DECLS
 #  define SNANL (__builtin_nansl (""))
 # endif
 #endif
-#if (__HAVE_FLOAT16					\
-     && __GLIBC_USE (IEC_60559_TYPES_EXT)		\
+#if (__HAVE_FLOAT16                 \
+     && __GLIBC_USE (IEC_60559_TYPES_EXT)       \
      && (defined __USE_GNU || !__GLIBC_USE (ISOC23)))
 # define SNANF16 (__builtin_nansf16 (""))
 #endif
-#if (__HAVE_FLOAT32					\
-     && __GLIBC_USE (IEC_60559_TYPES_EXT)		\
+#if (__HAVE_FLOAT32                 \
+     && __GLIBC_USE (IEC_60559_TYPES_EXT)       \
      && (defined __USE_GNU || !__GLIBC_USE (ISOC23)))
 # define SNANF32 (__builtin_nansf32 (""))
 #endif
-#if (__HAVE_FLOAT64					\
-     && __GLIBC_USE (IEC_60559_TYPES_EXT)		\
+#if (__HAVE_FLOAT64                 \
+     && __GLIBC_USE (IEC_60559_TYPES_EXT)       \
      && (defined __USE_GNU || !__GLIBC_USE (ISOC23)))
 # define SNANF64 (__builtin_nansf64 (""))
 #endif
-#if (__HAVE_FLOAT128					\
-     && __GLIBC_USE (IEC_60559_TYPES_EXT)		\
+#if (__HAVE_FLOAT128                    \
+     && __GLIBC_USE (IEC_60559_TYPES_EXT)       \
      && (defined __USE_GNU || !__GLIBC_USE (ISOC23)))
 # define SNANF128 (__builtin_nansf128 (""))
 #endif
-#if (__HAVE_FLOAT32X					\
-     && __GLIBC_USE (IEC_60559_TYPES_EXT)		\
+#if (__HAVE_FLOAT32X                    \
+     && __GLIBC_USE (IEC_60559_TYPES_EXT)       \
      && (defined __USE_GNU || !__GLIBC_USE (ISOC23)))
 # define SNANF32X (__builtin_nansf32x (""))
 #endif
-#if (__HAVE_FLOAT64X					\
-     && __GLIBC_USE (IEC_60559_TYPES_EXT)		\
+#if (__HAVE_FLOAT64X                    \
+     && __GLIBC_USE (IEC_60559_TYPES_EXT)       \
      && (defined __USE_GNU || !__GLIBC_USE (ISOC23)))
 # define SNANF64X (__builtin_nansf64x (""))
 #endif
-#if (__HAVE_FLOAT128X					\
-     && __GLIBC_USE (IEC_60559_TYPES_EXT)		\
+#if (__HAVE_FLOAT128X                   \
+     && __GLIBC_USE (IEC_60559_TYPES_EXT)       \
      && (defined __USE_GNU || !__GLIBC_USE (ISOC23)))
 # define SNANF128X (__builtin_nansf128x (""))
 #endif
@@ -158,10 +158,10 @@ __BEGIN_DECLS
 #ifdef __USE_ISOC99
 /* Define the following typedefs.
 
-    float_t	floating-point type at least as wide as `float' used
-		to evaluate `float' expressions
-    double_t	floating-point type at least as wide as `double' used
-		to evaluate `double' expressions
+    float_t floating-point type at least as wide as `float' used
+        to evaluate `float' expressions
+    double_t    floating-point type at least as wide as `double' used
+        to evaluate `double' expressions
 */
 # if __GLIBC_FLT_EVAL_METHOD == 0 || __GLIBC_FLT_EVAL_METHOD == 16
 typedef float float_t;
@@ -198,24 +198,24 @@ typedef _Float128x double_t;
 /* Define macros for the return values of ilogb and llogb, based on
    __FP_LOGB0_IS_MIN and __FP_LOGBNAN_IS_MIN.
 
-    FP_ILOGB0	Expands to a value returned by `ilogb (0.0)'.
-    FP_ILOGBNAN	Expands to a value returned by `ilogb (NAN)'.
-    FP_LLOGB0	Expands to a value returned by `llogb (0.0)'.
-    FP_LLOGBNAN	Expands to a value returned by `llogb (NAN)'.
+    FP_ILOGB0   Expands to a value returned by `ilogb (0.0)'.
+    FP_ILOGBNAN Expands to a value returned by `ilogb (NAN)'.
+    FP_LLOGB0   Expands to a value returned by `llogb (0.0)'.
+    FP_LLOGBNAN Expands to a value returned by `llogb (NAN)'.
 
 */
 
 #include <bits/fp-logb.h>
 #ifdef __USE_ISOC99
 # if __FP_LOGB0_IS_MIN
-#  define FP_ILOGB0	(-2147483647 - 1)
+#  define FP_ILOGB0 (-2147483647 - 1)
 # else
-#  define FP_ILOGB0	(-2147483647)
+#  define FP_ILOGB0 (-2147483647)
 # endif
 # if __FP_LOGBNAN_IS_MIN
-#  define FP_ILOGBNAN	(-2147483647 - 1)
+#  define FP_ILOGBNAN   (-2147483647 - 1)
 # else
-#  define FP_ILOGBNAN	2147483647
+#  define FP_ILOGBNAN   2147483647
 # endif
 #endif
 #if __GLIBC_USE (IEC_60559_BFP_EXT_C23)
@@ -225,14 +225,14 @@ typedef _Float128x double_t;
 #  define __FP_LONG_MAX 0x7fffffffffffffffL
 # endif
 # if __FP_LOGB0_IS_MIN
-#  define FP_LLOGB0	(-__FP_LONG_MAX - 1)
+#  define FP_LLOGB0 (-__FP_LONG_MAX - 1)
 # else
-#  define FP_LLOGB0	(-__FP_LONG_MAX)
+#  define FP_LLOGB0 (-__FP_LONG_MAX)
 # endif
 # if __FP_LOGBNAN_IS_MIN
-#  define FP_LLOGBNAN	(-__FP_LONG_MAX - 1)
+#  define FP_LLOGBNAN   (-__FP_LONG_MAX - 1)
 # else
-#  define FP_LLOGBNAN	__FP_LONG_MAX
+#  define FP_LLOGBNAN   __FP_LONG_MAX
 # endif
 #endif
 
@@ -242,46 +242,45 @@ typedef _Float128x double_t;
     FP_FAST_FMA
     FP_FAST_FMAF
     FP_FAST_FMAL
-		If defined it indicates that the `fma' function
-		generally executes about as fast as a multiply and an add.
-		This macro is defined only iff the `fma' function is
-		implemented directly with a hardware multiply-add instructions.
+        If defined it indicates that the `fma' function
+        generally executes about as fast as a multiply and an add.
+        This macro is defined only iff the `fma' function is
+        implemented directly with a hardware multiply-add instructions.
 */
 
 #include <bits/fp-fast.h>
 
 #if __GLIBC_USE (IEC_60559_BFP_EXT_C23)
 /* Rounding direction macros for fromfp functions.  */
-enum
-  {
+enum {
     FP_INT_UPWARD =
 # define FP_INT_UPWARD 0
-      FP_INT_UPWARD,
+        FP_INT_UPWARD,
     FP_INT_DOWNWARD =
 # define FP_INT_DOWNWARD 1
-      FP_INT_DOWNWARD,
+        FP_INT_DOWNWARD,
     FP_INT_TOWARDZERO =
 # define FP_INT_TOWARDZERO 2
-      FP_INT_TOWARDZERO,
+        FP_INT_TOWARDZERO,
     FP_INT_TONEARESTFROMZERO =
 # define FP_INT_TONEARESTFROMZERO 3
-      FP_INT_TONEARESTFROMZERO,
+        FP_INT_TONEARESTFROMZERO,
     FP_INT_TONEAREST =
 # define FP_INT_TONEAREST 4
-      FP_INT_TONEAREST,
-  };
+        FP_INT_TONEAREST,
+};
 #endif
 
 #include <bits/mathcalls-macros.h>
 
-#define _Mdouble_		double
-#define __MATH_PRECNAME(name,r)	__CONCAT(name,r)
+#define _Mdouble_       double
+#define __MATH_PRECNAME(name,r) __CONCAT(name,r)
 #define __MATH_DECLARING_DOUBLE  1
 #define __MATH_DECLARING_FLOATN  0
 #include <bits/mathcalls-helper-functions.h>
 #include <bits/mathcalls.h>
-#undef	_Mdouble_
-#undef	__MATH_PRECNAME
+#undef  _Mdouble_
+#undef  __MATH_PRECNAME
 #undef __MATH_DECLARING_DOUBLE
 #undef __MATH_DECLARING_FLOATN
 
@@ -291,14 +290,14 @@ enum
 /* Include the file of declarations again, this time using `float'
    instead of `double' and appending f to each function name.  */
 
-# define _Mdouble_		float
+# define _Mdouble_      float
 # define __MATH_PRECNAME(name,r) name##f##r
 # define __MATH_DECLARING_DOUBLE  0
 # define __MATH_DECLARING_FLOATN  0
 # include <bits/mathcalls-helper-functions.h>
 # include <bits/mathcalls.h>
-# undef	_Mdouble_
-# undef	__MATH_PRECNAME
+# undef _Mdouble_
+# undef __MATH_PRECNAME
 # undef __MATH_DECLARING_DOUBLE
 # undef __MATH_DECLARING_FLOATN
 
@@ -308,17 +307,17 @@ enum
 #  ifdef __LDBL_COMPAT
 
 #   ifdef __USE_ISOC99
-extern float __nldbl_nexttowardf (float __x, long double __y)
-				  __THROW __attribute__ ((__const__));
+extern float __nldbl_nexttowardf(float __x, long double __y)
+__THROW __attribute__((__const__));
 #    ifdef __REDIRECT_NTH
-extern float __REDIRECT_NTH (nexttowardf, (float __x, long double __y),
-			     __nldbl_nexttowardf)
-     __attribute__ ((__const__));
-extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
-			      nextafter) __attribute__ ((__const__));
-extern long double __REDIRECT_NTH (nexttowardl,
-				   (long double __x, long double __y),
-				   nextafter) __attribute__ ((__const__));
+extern float __REDIRECT_NTH(nexttowardf, (float __x, long double __y),
+                            __nldbl_nexttowardf)
+__attribute__((__const__));
+extern double __REDIRECT_NTH(nexttoward, (double __x, long double __y),
+                             nextafter) __attribute__((__const__));
+extern long double __REDIRECT_NTH(nexttowardl,
+                                  (long double __x, long double __y),
+                                  nextafter) __attribute__((__const__));
 #    endif
 #   endif
 
@@ -329,12 +328,12 @@ extern long double __REDIRECT_NTH (nexttowardl,
 #  elif __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
 #   ifdef __REDIRECT_NTH
 #    ifdef __USE_ISOC99
-extern float __REDIRECT_NTH (nexttowardf, (float __x, long double __y),
-			    __nexttowardf_to_ieee128)
-  __attribute__ ((__const__));
-extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
-			     __nexttoward_to_ieee128)
-  __attribute__ ((__const__));
+extern float __REDIRECT_NTH(nexttowardf, (float __x, long double __y),
+                            __nexttowardf_to_ieee128)
+__attribute__((__const__));
+extern double __REDIRECT_NTH(nexttoward, (double __x, long double __y),
+                             __nexttoward_to_ieee128)
+__attribute__((__const__));
 
 #define __dremieee128 __remainderieee128
 #define __gammaieee128 __lgammaieee128
@@ -359,7 +358,7 @@ extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
 /* Include the file of declarations again, this time using `long double'
    instead of `double' and appending l to each function name.  */
 
-#  define _Mdouble_		long double
+#  define _Mdouble_     long double
 #  define __MATH_PRECNAME(name,r) name##l##r
 #  define __MATH_DECLARING_DOUBLE  0
 #  define __MATH_DECLARING_FLOATN  0
@@ -385,13 +384,13 @@ extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
 #  endif
 # endif /* !(__NO_LONG_DOUBLE_MATH && _LIBC) || __LDBL_COMPAT */
 
-#endif	/* Use ISO C99.  */
+#endif  /* Use ISO C99.  */
 
 /* Include the file of declarations for _FloatN and _FloatNx
    types.  */
 
 #if __HAVE_DISTINCT_FLOAT16 || (__HAVE_FLOAT16 && !defined _LIBC)
-# define _Mdouble_		_Float16
+# define _Mdouble_      _Float16
 # define __MATH_PRECNAME(name,r) name##f16##r
 # define __MATH_DECLARING_DOUBLE  0
 # define __MATH_DECLARING_FLOATN  1
@@ -408,7 +407,7 @@ extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
 #endif /* __HAVE_DISTINCT_FLOAT16 || (__HAVE_FLOAT16 && !_LIBC).  */
 
 #if __HAVE_DISTINCT_FLOAT32 || (__HAVE_FLOAT32 && !defined _LIBC)
-# define _Mdouble_		_Float32
+# define _Mdouble_      _Float32
 # define __MATH_PRECNAME(name,r) name##f32##r
 # define __MATH_DECLARING_DOUBLE  0
 # define __MATH_DECLARING_FLOATN  1
@@ -425,7 +424,7 @@ extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
 #endif /* __HAVE_DISTINCT_FLOAT32 || (__HAVE_FLOAT32 && !_LIBC).  */
 
 #if __HAVE_DISTINCT_FLOAT64 || (__HAVE_FLOAT64 && !defined _LIBC)
-# define _Mdouble_		_Float64
+# define _Mdouble_      _Float64
 # define __MATH_PRECNAME(name,r) name##f64##r
 # define __MATH_DECLARING_DOUBLE  0
 # define __MATH_DECLARING_FLOATN  1
@@ -442,7 +441,7 @@ extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
 #endif /* __HAVE_DISTINCT_FLOAT64 || (__HAVE_FLOAT64 && !_LIBC).  */
 
 #if __HAVE_DISTINCT_FLOAT128 || (__HAVE_FLOAT128 && !defined _LIBC)
-# define _Mdouble_		_Float128
+# define _Mdouble_      _Float128
 # define __MATH_PRECNAME(name,r) name##f128##r
 # define __MATH_DECLARING_DOUBLE  0
 # define __MATH_DECLARING_FLOATN  1
@@ -459,7 +458,7 @@ extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
 #endif /* __HAVE_DISTINCT_FLOAT128 || (__HAVE_FLOAT128 && !_LIBC).  */
 
 #if __HAVE_DISTINCT_FLOAT32X || (__HAVE_FLOAT32X && !defined _LIBC)
-# define _Mdouble_		_Float32x
+# define _Mdouble_      _Float32x
 # define __MATH_PRECNAME(name,r) name##f32x##r
 # define __MATH_DECLARING_DOUBLE  0
 # define __MATH_DECLARING_FLOATN  1
@@ -476,7 +475,7 @@ extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
 #endif /* __HAVE_DISTINCT_FLOAT32X || (__HAVE_FLOAT32X && !_LIBC).  */
 
 #if __HAVE_DISTINCT_FLOAT64X || (__HAVE_FLOAT64X && !defined _LIBC)
-# define _Mdouble_		_Float64x
+# define _Mdouble_      _Float64x
 # define __MATH_PRECNAME(name,r) name##f64x##r
 # define __MATH_DECLARING_DOUBLE  0
 # define __MATH_DECLARING_FLOATN  1
@@ -493,7 +492,7 @@ extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
 #endif /* __HAVE_DISTINCT_FLOAT64X || (__HAVE_FLOAT64X && !_LIBC).  */
 
 #if __HAVE_DISTINCT_FLOAT128X || (__HAVE_FLOAT128X && !defined _LIBC)
-# define _Mdouble_		_Float128x
+# define _Mdouble_      _Float128x
 # define __MATH_PRECNAME(name,r) name##f128x##r
 # define __MATH_DECLARING_DOUBLE  0
 # define __MATH_DECLARING_FLOATN  1
@@ -509,22 +508,22 @@ extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
 # undef __MATH_DECLARING_FLOATN
 #endif /* __HAVE_DISTINCT_FLOAT128X || (__HAVE_FLOAT128X && !_LIBC).  */
 
-#undef	__MATHDECL_1_IMPL
-#undef	__MATHDECL_1
-#undef	__MATHDECL_ALIAS
-#undef	__MATHDECL
-#undef	__MATHCALL
+#undef  __MATHDECL_1_IMPL
+#undef  __MATHDECL_1
+#undef  __MATHDECL_ALIAS
+#undef  __MATHDECL
+#undef  __MATHCALL
 
 /* Declare functions returning a narrower type.  */
 #define __MATHCALL_NARROW_ARGS_1 (_Marg_ __x)
 #define __MATHCALL_NARROW_ARGS_2 (_Marg_ __x, _Marg_ __y)
 #define __MATHCALL_NARROW_ARGS_3 (_Marg_ __x, _Marg_ __y, _Marg_ __z)
-#define __MATHCALL_NARROW_NORMAL(func, nargs)			\
+#define __MATHCALL_NARROW_NORMAL(func, nargs)           \
   extern _Mret_ func __MATHCALL_NARROW_ARGS_ ## nargs __THROW
-#define __MATHCALL_NARROW_REDIR(func, redir, nargs)			\
+#define __MATHCALL_NARROW_REDIR(func, redir, nargs)         \
   extern _Mret_ __REDIRECT_NTH (func, __MATHCALL_NARROW_ARGS_ ## nargs, \
-				redir)
-#define __MATHCALL_NARROW(func, redir, nargs)	\
+                redir)
+#define __MATHCALL_NARROW(func, redir, nargs)   \
   __MATHCALL_NARROW_NORMAL (func, nargs)
 
 #if __GLIBC_USE (IEC_60559_BFP_EXT_C23)
@@ -823,11 +822,11 @@ extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
 extern int signgam;
 #endif
 
-#if (__HAVE_DISTINCT_FLOAT16			\
-     || __HAVE_DISTINCT_FLOAT32			\
-     || __HAVE_DISTINCT_FLOAT64			\
-     || __HAVE_DISTINCT_FLOAT32X		\
-     || __HAVE_DISTINCT_FLOAT64X		\
+#if (__HAVE_DISTINCT_FLOAT16            \
+     || __HAVE_DISTINCT_FLOAT32         \
+     || __HAVE_DISTINCT_FLOAT64         \
+     || __HAVE_DISTINCT_FLOAT32X        \
+     || __HAVE_DISTINCT_FLOAT64X        \
      || __HAVE_DISTINCT_FLOAT128X)
 # error "Unsupported _FloatN or _FloatNx types for <math.h>."
 #endif
@@ -845,7 +844,7 @@ extern int signgam;
 # if __HAVE_DISTINCT_FLOAT128
 #  error "Distinct _Float128 without distinct long double not supported."
 # endif
-# define __MATH_TG(TG_ARG, FUNC, ARGS)					\
+# define __MATH_TG(TG_ARG, FUNC, ARGS)                  \
   (sizeof (TG_ARG) == sizeof (float) ? FUNC ## f ARGS : FUNC ARGS)
 #elif __HAVE_DISTINCT_FLOAT128
 # if __HAVE_GENERIC_SELECTION
@@ -863,36 +862,36 @@ extern int signgam;
 #  else
 #   define __MATH_TG_F64X(FUNC, ARGS)
 #  endif
-#  define __MATH_TG(TG_ARG, FUNC, ARGS)	\
-     _Generic ((TG_ARG),			\
-	       float: FUNC ## f ARGS,		\
-	       __MATH_TG_F32 (FUNC, ARGS)	\
-	       default: FUNC ARGS,		\
-	       long double: FUNC ## l ARGS,	\
-	       __MATH_TG_F64X (FUNC, ARGS)	\
-	       _Float128: FUNC ## f128 ARGS)
+#  define __MATH_TG(TG_ARG, FUNC, ARGS) \
+     _Generic ((TG_ARG),            \
+           float: FUNC ## f ARGS,       \
+           __MATH_TG_F32 (FUNC, ARGS)   \
+           default: FUNC ARGS,      \
+           long double: FUNC ## l ARGS, \
+           __MATH_TG_F64X (FUNC, ARGS)  \
+           _Float128: FUNC ## f128 ARGS)
 # else
 #  if __HAVE_FLOATN_NOT_TYPEDEF
 #   error "Non-typedef _FloatN but no _Generic."
 #  endif
-#  define __MATH_TG(TG_ARG, FUNC, ARGS)					\
-     __builtin_choose_expr						\
-     (__builtin_types_compatible_p (__typeof (TG_ARG), float),		\
-      FUNC ## f ARGS,							\
-      __builtin_choose_expr						\
-      (__builtin_types_compatible_p (__typeof (TG_ARG), double),	\
-       FUNC ARGS,							\
-       __builtin_choose_expr						\
-       (__builtin_types_compatible_p (__typeof (TG_ARG), long double),	\
-	FUNC ## l ARGS,							\
-	FUNC ## f128 ARGS)))
+#  define __MATH_TG(TG_ARG, FUNC, ARGS)                 \
+     __builtin_choose_expr                      \
+     (__builtin_types_compatible_p (__typeof (TG_ARG), float),      \
+      FUNC ## f ARGS,                           \
+      __builtin_choose_expr                     \
+      (__builtin_types_compatible_p (__typeof (TG_ARG), double),    \
+       FUNC ARGS,                           \
+       __builtin_choose_expr                        \
+       (__builtin_types_compatible_p (__typeof (TG_ARG), long double),  \
+    FUNC ## l ARGS,                         \
+    FUNC ## f128 ARGS)))
 # endif
 #else
-# define __MATH_TG(TG_ARG, FUNC, ARGS)		\
-  (sizeof (TG_ARG) == sizeof (float)		\
-   ? FUNC ## f ARGS				\
-   : sizeof (TG_ARG) == sizeof (double)		\
-   ? FUNC ARGS					\
+# define __MATH_TG(TG_ARG, FUNC, ARGS)      \
+  (sizeof (TG_ARG) == sizeof (float)        \
+   ? FUNC ## f ARGS             \
+   : sizeof (TG_ARG) == sizeof (double)     \
+   ? FUNC ARGS                  \
    : FUNC ## l ARGS)
 #endif
 
@@ -900,40 +899,39 @@ extern int signgam;
 #ifdef __USE_ISOC99
 
 /* All floating-point numbers can be put in one of these categories.  */
-enum
-  {
+enum {
     FP_NAN =
 # define FP_NAN 0
-      FP_NAN,
+        FP_NAN,
     FP_INFINITE =
 # define FP_INFINITE 1
-      FP_INFINITE,
+        FP_INFINITE,
     FP_ZERO =
 # define FP_ZERO 2
-      FP_ZERO,
+        FP_ZERO,
     FP_SUBNORMAL =
 # define FP_SUBNORMAL 3
-      FP_SUBNORMAL,
+        FP_SUBNORMAL,
     FP_NORMAL =
 # define FP_NORMAL 4
-      FP_NORMAL
-  };
+        FP_NORMAL
+};
 
 /* GCC bug 66462 means we cannot use the math builtins with -fsignaling-nan,
    so disable builtins if this is enabled.  When fixed in a newer GCC,
    the __SUPPORT_SNAN__ check may be skipped for those versions.  */
 
 /* Return number of classification appropriate for X.  */
-# if ((__GNUC_PREREQ (4,4) && !defined __SUPPORT_SNAN__)		      \
-      || __glibc_clang_prereq (2,8))					      \
+# if ((__GNUC_PREREQ (4,4) && !defined __SUPPORT_SNAN__)              \
+      || __glibc_clang_prereq (2,8))                          \
      && (!defined __OPTIMIZE_SIZE__ || defined __cplusplus)
-     /* The check for __cplusplus allows the use of the builtin, even
-	when optimization for size is on.  This is provided for
-	libstdc++, only to let its configure test work when it is built
-	with -Os.  No further use of this definition of fpclassify is
-	expected in C++ mode, since libstdc++ provides its own version
-	of fpclassify in cmath (which undefines fpclassify).  */
-#  define fpclassify(x) __builtin_fpclassify (FP_NAN, FP_INFINITE,	      \
+/* The check for __cplusplus allows the use of the builtin, even
+when optimization for size is on.  This is provided for
+libstdc++, only to let its configure test work when it is built
+with -Os.  No further use of this definition of fpclassify is
+expected in C++ mode, since libstdc++ provides its own version
+of fpclassify in cmath (which undefines fpclassify).  */
+#  define fpclassify(x) __builtin_fpclassify (FP_NAN, FP_INFINITE,        \
      FP_NORMAL, FP_SUBNORMAL, FP_ZERO, x)
 # else
 #  define fpclassify(x) __MATH_TG ((x), __fpclassify, (x))
@@ -943,13 +941,13 @@ enum
 # if __GNUC_PREREQ (6,0) || __glibc_clang_prereq (3,3)
 #  define signbit(x) __builtin_signbit (x)
 # elif defined __cplusplus
-  /* In C++ mode, __MATH_TG cannot be used, because it relies on
-     __builtin_types_compatible_p, which is a C-only builtin.
-     The check for __cplusplus allows the use of the builtin instead of
-     __MATH_TG. This is provided for libstdc++, only to let its configure
-     test work. No further use of this definition of signbit is expected
-     in C++ mode, since libstdc++ provides its own version of signbit
-     in cmath (which undefines signbit). */
+/* In C++ mode, __MATH_TG cannot be used, because it relies on
+   __builtin_types_compatible_p, which is a C-only builtin.
+   The check for __cplusplus allows the use of the builtin instead of
+   __MATH_TG. This is provided for libstdc++, only to let its configure
+   test work. No further use of this definition of signbit is expected
+   in C++ mode, since libstdc++ provides its own version of signbit
+   in cmath (which undefines signbit). */
 #  define signbit(x) __builtin_signbitl (x)
 # elif __GNUC_PREREQ (4,0)
 #  define signbit(x) __MATH_TG ((x), __builtin_signbit, (x))
@@ -986,11 +984,11 @@ enum
 # if __HAVE_DISTINCT_FLOAT128 && !__GNUC_PREREQ (7,0) \
      && !defined __SUPPORT_SNAN__ && !defined __cplusplus \
      && !defined __clang__
-   /* Since __builtin_isinf_sign is broken for float128 before GCC 7.0,
-      use the helper function, __isinff128, with older compilers.  This is
-      only provided for C mode, because in C++ mode, GCC has no support
-      for __builtin_types_compatible_p (and when in C++ mode, this macro is
-      not used anyway, because libstdc++ headers undefine it).  */
+/* Since __builtin_isinf_sign is broken for float128 before GCC 7.0,
+   use the helper function, __isinff128, with older compilers.  This is
+   only provided for C mode, because in C++ mode, GCC has no support
+   for __builtin_types_compatible_p (and when in C++ mode, this macro is
+   not used anyway, because libstdc++ headers undefine it).  */
 #  define isinf(x) \
     (__builtin_types_compatible_p (__typeof (x), _Float128) \
      ? __isinff128 (x) : __builtin_isinf_sign (x))
@@ -1002,8 +1000,8 @@ enum
 # endif
 
 /* Bitmasks for the math_errhandling macro.  */
-# define MATH_ERRNO	1	/* errno set by math functions.  */
-# define MATH_ERREXCEPT	2	/* Exceptions raised by math functions.  */
+# define MATH_ERRNO 1   /* errno set by math functions.  */
+# define MATH_ERREXCEPT 2   /* Exceptions raised by math functions.  */
 
 /* By default all math functions support both errno and exception handling
    (except for soft floating point implementations which may only support
@@ -1011,11 +1009,11 @@ enum
    supported by GLIBC.  Set math_errhandling to 0 with -ffast-math (this is
    nonconforming but it is more useful than leaving it undefined).  */
 # ifdef __FAST_MATH__
-#  define math_errhandling	0
+#  define math_errhandling  0
 # elif defined __NO_MATH_ERRNO__
-#  define math_errhandling	(MATH_ERREXCEPT)
+#  define math_errhandling  (MATH_ERREXCEPT)
 # else
-#  define math_errhandling	(MATH_ERRNO | MATH_ERREXCEPT)
+#  define math_errhandling  (MATH_ERRNO | MATH_ERREXCEPT)
 # endif
 
 #endif /* Use ISO C99.  */
@@ -1027,28 +1025,37 @@ enum
 # ifndef __cplusplus
 #  define issignaling(x) __MATH_TG ((x), __issignaling, (x))
 # else
-   /* In C++ mode, __MATH_TG cannot be used, because it relies on
-      __builtin_types_compatible_p, which is a C-only builtin.  On the
-      other hand, overloading provides the means to distinguish between
-      the floating-point types.  The overloading resolution will match
-      the correct parameter (regardless of type qualifiers (i.e.: const
-      and volatile)).  */
+/* In C++ mode, __MATH_TG cannot be used, because it relies on
+   __builtin_types_compatible_p, which is a C-only builtin.  On the
+   other hand, overloading provides the means to distinguish between
+   the floating-point types.  The overloading resolution will match
+   the correct parameter (regardless of type qualifiers (i.e.: const
+   and volatile)).  */
 extern "C++" {
-inline int issignaling (float __val) { return __issignalingf (__val); }
-inline int issignaling (double __val) { return __issignaling (__val); }
-inline int
-issignaling (long double __val)
-{
+    inline int issignaling(float __val)
+    {
+        return __issignalingf(__val);
+    }
+    inline int issignaling(double __val)
+    {
+        return __issignaling(__val);
+    }
+    inline int
+    issignaling(long double __val)
+    {
 #  ifdef __NO_LONG_DOUBLE_MATH
-  return __issignaling (__val);
+        return __issignaling(__val);
 #  else
-  return __issignalingl (__val);
+        return __issignalingl(__val);
 #  endif
-}
+    }
 #  if __HAVE_FLOAT128_UNLIKE_LDBL
-/* When using an IEEE 128-bit long double, _Float128 is defined as long double
-   in C++.  */
-inline int issignaling (_Float128 __val) { return __issignalingf128 (__val); }
+    /* When using an IEEE 128-bit long double, _Float128 is defined as long double
+       in C++.  */
+    inline int issignaling(_Float128 __val)
+    {
+        return __issignalingf128(__val);
+    }
 #  endif
 } /* extern C++ */
 # endif
@@ -1063,201 +1070,201 @@ inline int issignaling (_Float128 __val) { return __issignalingf128 (__val); }
 #  else
 #   define iszero(x) (((__typeof (x)) (x)) == 0)
 #  endif
-# else	/* __cplusplus */
+# else  /* __cplusplus */
 extern "C++" {
 #  ifdef __SUPPORT_SNAN__
-inline int
-iszero (float __val)
-{
-  return __fpclassifyf (__val) == FP_ZERO;
-}
-inline int
-iszero (double __val)
-{
-  return __fpclassify (__val) == FP_ZERO;
-}
-inline int
-iszero (long double __val)
-{
+    inline int
+    iszero(float __val)
+    {
+        return __fpclassifyf(__val) == FP_ZERO;
+    }
+    inline int
+    iszero(double __val)
+    {
+        return __fpclassify(__val) == FP_ZERO;
+    }
+    inline int
+    iszero(long double __val)
+    {
 #   ifdef __NO_LONG_DOUBLE_MATH
-  return __fpclassify (__val) == FP_ZERO;
+        return __fpclassify(__val) == FP_ZERO;
 #   else
-  return __fpclassifyl (__val) == FP_ZERO;
+        return __fpclassifyl(__val) == FP_ZERO;
 #   endif
-}
+    }
 #   if __HAVE_FLOAT128_UNLIKE_LDBL
-  /* When using an IEEE 128-bit long double, _Float128 is defined as long double
-     in C++.  */
-inline int
-iszero (_Float128 __val)
-{
-  return __fpclassifyf128 (__val) == FP_ZERO;
-}
+    /* When using an IEEE 128-bit long double, _Float128 is defined as long double
+       in C++.  */
+    inline int
+    iszero(_Float128 __val)
+    {
+        return __fpclassifyf128(__val) == FP_ZERO;
+    }
 #   endif
 #  else
-template <class __T> inline bool
-iszero (__T __val)
-{
-  return __val == 0;
-}
+    template <class __T> inline bool
+    iszero(__T __val)
+    {
+        return __val == 0;
+    }
 #  endif
 } /* extern C++ */
-# endif	/* __cplusplus */
+# endif /* __cplusplus */
 #endif /* Use IEC_60559_BFP_EXT.  */
 
 #ifdef __USE_XOPEN
 /* X/Open wants another strange constant.  */
-# define MAXFLOAT	3.40282347e+38F
+# define MAXFLOAT   3.40282347e+38F
 #endif
 
 
 /* Some useful constants.  */
 #if defined __USE_MISC || defined __USE_XOPEN
-# define M_E		2.7182818284590452354	/* e */
-# define M_LOG2E	1.4426950408889634074	/* log_2 e */
-# define M_LOG10E	0.43429448190325182765	/* log_10 e */
-# define M_LN2		0.69314718055994530942	/* log_e 2 */
-# define M_LN10		2.30258509299404568402	/* log_e 10 */
-# define M_PI		3.14159265358979323846	/* pi */
-# define M_PI_2		1.57079632679489661923	/* pi/2 */
-# define M_PI_4		0.78539816339744830962	/* pi/4 */
-# define M_1_PI		0.31830988618379067154	/* 1/pi */
-# define M_2_PI		0.63661977236758134308	/* 2/pi */
-# define M_2_SQRTPI	1.12837916709551257390	/* 2/sqrt(pi) */
-# define M_SQRT2	1.41421356237309504880	/* sqrt(2) */
-# define M_SQRT1_2	0.70710678118654752440	/* 1/sqrt(2) */
+# define M_E        2.7182818284590452354   /* e */
+# define M_LOG2E    1.4426950408889634074   /* log_2 e */
+# define M_LOG10E   0.43429448190325182765  /* log_10 e */
+# define M_LN2      0.69314718055994530942  /* log_e 2 */
+# define M_LN10     2.30258509299404568402  /* log_e 10 */
+# define M_PI       3.14159265358979323846  /* pi */
+# define M_PI_2     1.57079632679489661923  /* pi/2 */
+# define M_PI_4     0.78539816339744830962  /* pi/4 */
+# define M_1_PI     0.31830988618379067154  /* 1/pi */
+# define M_2_PI     0.63661977236758134308  /* 2/pi */
+# define M_2_SQRTPI 1.12837916709551257390  /* 2/sqrt(pi) */
+# define M_SQRT2    1.41421356237309504880  /* sqrt(2) */
+# define M_SQRT1_2  0.70710678118654752440  /* 1/sqrt(2) */
 #endif
 
 /* GNU extension to provide float constants with similar names.  */
 #ifdef __USE_GNU
-# define M_Ef		2.7182818284590452354f	/* e */
-# define M_LOG2Ef	1.4426950408889634074f	/* log_2 e */
-# define M_LOG10Ef	0.43429448190325182765f	/* log_10 e */
-# define M_LN2f		0.69314718055994530942f	/* log_e 2 */
-# define M_LN10f	2.30258509299404568402f	/* log_e 10 */
-# define M_PIf		3.14159265358979323846f	/* pi */
-# define M_PI_2f	1.57079632679489661923f	/* pi/2 */
-# define M_PI_4f	0.78539816339744830962f	/* pi/4 */
-# define M_1_PIf	0.31830988618379067154f	/* 1/pi */
-# define M_2_PIf	0.63661977236758134308f	/* 2/pi */
-# define M_2_SQRTPIf	1.12837916709551257390f	/* 2/sqrt(pi) */
-# define M_SQRT2f	1.41421356237309504880f	/* sqrt(2) */
-# define M_SQRT1_2f	0.70710678118654752440f	/* 1/sqrt(2) */
+# define M_Ef       2.7182818284590452354f  /* e */
+# define M_LOG2Ef   1.4426950408889634074f  /* log_2 e */
+# define M_LOG10Ef  0.43429448190325182765f /* log_10 e */
+# define M_LN2f     0.69314718055994530942f /* log_e 2 */
+# define M_LN10f    2.30258509299404568402f /* log_e 10 */
+# define M_PIf      3.14159265358979323846f /* pi */
+# define M_PI_2f    1.57079632679489661923f /* pi/2 */
+# define M_PI_4f    0.78539816339744830962f /* pi/4 */
+# define M_1_PIf    0.31830988618379067154f /* 1/pi */
+# define M_2_PIf    0.63661977236758134308f /* 2/pi */
+# define M_2_SQRTPIf    1.12837916709551257390f /* 2/sqrt(pi) */
+# define M_SQRT2f   1.41421356237309504880f /* sqrt(2) */
+# define M_SQRT1_2f 0.70710678118654752440f /* 1/sqrt(2) */
 #endif
 
 /* The above constants are not adequate for computation using `long double's.
    Therefore we provide as an extension constants with similar names as a
    GNU extension.  Provide enough digits for the 128-bit IEEE quad.  */
 #ifdef __USE_GNU
-# define M_El		2.718281828459045235360287471352662498L /* e */
-# define M_LOG2El	1.442695040888963407359924681001892137L /* log_2 e */
-# define M_LOG10El	0.434294481903251827651128918916605082L /* log_10 e */
-# define M_LN2l		0.693147180559945309417232121458176568L /* log_e 2 */
-# define M_LN10l	2.302585092994045684017991454684364208L /* log_e 10 */
-# define M_PIl		3.141592653589793238462643383279502884L /* pi */
-# define M_PI_2l	1.570796326794896619231321691639751442L /* pi/2 */
-# define M_PI_4l	0.785398163397448309615660845819875721L /* pi/4 */
-# define M_1_PIl	0.318309886183790671537767526745028724L /* 1/pi */
-# define M_2_PIl	0.636619772367581343075535053490057448L /* 2/pi */
-# define M_2_SQRTPIl	1.128379167095512573896158903121545172L /* 2/sqrt(pi) */
-# define M_SQRT2l	1.414213562373095048801688724209698079L /* sqrt(2) */
-# define M_SQRT1_2l	0.707106781186547524400844362104849039L /* 1/sqrt(2) */
+# define M_El       2.718281828459045235360287471352662498L /* e */
+# define M_LOG2El   1.442695040888963407359924681001892137L /* log_2 e */
+# define M_LOG10El  0.434294481903251827651128918916605082L /* log_10 e */
+# define M_LN2l     0.693147180559945309417232121458176568L /* log_e 2 */
+# define M_LN10l    2.302585092994045684017991454684364208L /* log_e 10 */
+# define M_PIl      3.141592653589793238462643383279502884L /* pi */
+# define M_PI_2l    1.570796326794896619231321691639751442L /* pi/2 */
+# define M_PI_4l    0.785398163397448309615660845819875721L /* pi/4 */
+# define M_1_PIl    0.318309886183790671537767526745028724L /* 1/pi */
+# define M_2_PIl    0.636619772367581343075535053490057448L /* 2/pi */
+# define M_2_SQRTPIl    1.128379167095512573896158903121545172L /* 2/sqrt(pi) */
+# define M_SQRT2l   1.414213562373095048801688724209698079L /* sqrt(2) */
+# define M_SQRT1_2l 0.707106781186547524400844362104849039L /* 1/sqrt(2) */
 #endif
 
 #if __HAVE_FLOAT16 && defined __USE_GNU
-# define M_Ef16		__f16 (2.718281828459045235360287471352662498) /* e */
-# define M_LOG2Ef16	__f16 (1.442695040888963407359924681001892137) /* log_2 e */
-# define M_LOG10Ef16	__f16 (0.434294481903251827651128918916605082) /* log_10 e */
-# define M_LN2f16	__f16 (0.693147180559945309417232121458176568) /* log_e 2 */
-# define M_LN10f16	__f16 (2.302585092994045684017991454684364208) /* log_e 10 */
-# define M_PIf16	__f16 (3.141592653589793238462643383279502884) /* pi */
-# define M_PI_2f16	__f16 (1.570796326794896619231321691639751442) /* pi/2 */
-# define M_PI_4f16	__f16 (0.785398163397448309615660845819875721) /* pi/4 */
-# define M_1_PIf16	__f16 (0.318309886183790671537767526745028724) /* 1/pi */
-# define M_2_PIf16	__f16 (0.636619772367581343075535053490057448) /* 2/pi */
-# define M_2_SQRTPIf16	__f16 (1.128379167095512573896158903121545172) /* 2/sqrt(pi) */
-# define M_SQRT2f16	__f16 (1.414213562373095048801688724209698079) /* sqrt(2) */
-# define M_SQRT1_2f16	__f16 (0.707106781186547524400844362104849039) /* 1/sqrt(2) */
+# define M_Ef16     __f16 (2.718281828459045235360287471352662498) /* e */
+# define M_LOG2Ef16 __f16 (1.442695040888963407359924681001892137) /* log_2 e */
+# define M_LOG10Ef16    __f16 (0.434294481903251827651128918916605082) /* log_10 e */
+# define M_LN2f16   __f16 (0.693147180559945309417232121458176568) /* log_e 2 */
+# define M_LN10f16  __f16 (2.302585092994045684017991454684364208) /* log_e 10 */
+# define M_PIf16    __f16 (3.141592653589793238462643383279502884) /* pi */
+# define M_PI_2f16  __f16 (1.570796326794896619231321691639751442) /* pi/2 */
+# define M_PI_4f16  __f16 (0.785398163397448309615660845819875721) /* pi/4 */
+# define M_1_PIf16  __f16 (0.318309886183790671537767526745028724) /* 1/pi */
+# define M_2_PIf16  __f16 (0.636619772367581343075535053490057448) /* 2/pi */
+# define M_2_SQRTPIf16  __f16 (1.128379167095512573896158903121545172) /* 2/sqrt(pi) */
+# define M_SQRT2f16 __f16 (1.414213562373095048801688724209698079) /* sqrt(2) */
+# define M_SQRT1_2f16   __f16 (0.707106781186547524400844362104849039) /* 1/sqrt(2) */
 #endif
 
 #if __HAVE_FLOAT32 && defined __USE_GNU
-# define M_Ef32		__f32 (2.718281828459045235360287471352662498) /* e */
-# define M_LOG2Ef32	__f32 (1.442695040888963407359924681001892137) /* log_2 e */
-# define M_LOG10Ef32	__f32 (0.434294481903251827651128918916605082) /* log_10 e */
-# define M_LN2f32	__f32 (0.693147180559945309417232121458176568) /* log_e 2 */
-# define M_LN10f32	__f32 (2.302585092994045684017991454684364208) /* log_e 10 */
-# define M_PIf32	__f32 (3.141592653589793238462643383279502884) /* pi */
-# define M_PI_2f32	__f32 (1.570796326794896619231321691639751442) /* pi/2 */
-# define M_PI_4f32	__f32 (0.785398163397448309615660845819875721) /* pi/4 */
-# define M_1_PIf32	__f32 (0.318309886183790671537767526745028724) /* 1/pi */
-# define M_2_PIf32	__f32 (0.636619772367581343075535053490057448) /* 2/pi */
-# define M_2_SQRTPIf32	__f32 (1.128379167095512573896158903121545172) /* 2/sqrt(pi) */
-# define M_SQRT2f32	__f32 (1.414213562373095048801688724209698079) /* sqrt(2) */
-# define M_SQRT1_2f32	__f32 (0.707106781186547524400844362104849039) /* 1/sqrt(2) */
+# define M_Ef32     __f32 (2.718281828459045235360287471352662498) /* e */
+# define M_LOG2Ef32 __f32 (1.442695040888963407359924681001892137) /* log_2 e */
+# define M_LOG10Ef32    __f32 (0.434294481903251827651128918916605082) /* log_10 e */
+# define M_LN2f32   __f32 (0.693147180559945309417232121458176568) /* log_e 2 */
+# define M_LN10f32  __f32 (2.302585092994045684017991454684364208) /* log_e 10 */
+# define M_PIf32    __f32 (3.141592653589793238462643383279502884) /* pi */
+# define M_PI_2f32  __f32 (1.570796326794896619231321691639751442) /* pi/2 */
+# define M_PI_4f32  __f32 (0.785398163397448309615660845819875721) /* pi/4 */
+# define M_1_PIf32  __f32 (0.318309886183790671537767526745028724) /* 1/pi */
+# define M_2_PIf32  __f32 (0.636619772367581343075535053490057448) /* 2/pi */
+# define M_2_SQRTPIf32  __f32 (1.128379167095512573896158903121545172) /* 2/sqrt(pi) */
+# define M_SQRT2f32 __f32 (1.414213562373095048801688724209698079) /* sqrt(2) */
+# define M_SQRT1_2f32   __f32 (0.707106781186547524400844362104849039) /* 1/sqrt(2) */
 #endif
 
 #if __HAVE_FLOAT64 && defined __USE_GNU
-# define M_Ef64		__f64 (2.718281828459045235360287471352662498) /* e */
-# define M_LOG2Ef64	__f64 (1.442695040888963407359924681001892137) /* log_2 e */
-# define M_LOG10Ef64	__f64 (0.434294481903251827651128918916605082) /* log_10 e */
-# define M_LN2f64	__f64 (0.693147180559945309417232121458176568) /* log_e 2 */
-# define M_LN10f64	__f64 (2.302585092994045684017991454684364208) /* log_e 10 */
-# define M_PIf64	__f64 (3.141592653589793238462643383279502884) /* pi */
-# define M_PI_2f64	__f64 (1.570796326794896619231321691639751442) /* pi/2 */
-# define M_PI_4f64	__f64 (0.785398163397448309615660845819875721) /* pi/4 */
-# define M_1_PIf64	__f64 (0.318309886183790671537767526745028724) /* 1/pi */
-# define M_2_PIf64	__f64 (0.636619772367581343075535053490057448) /* 2/pi */
-# define M_2_SQRTPIf64	__f64 (1.128379167095512573896158903121545172) /* 2/sqrt(pi) */
-# define M_SQRT2f64	__f64 (1.414213562373095048801688724209698079) /* sqrt(2) */
-# define M_SQRT1_2f64	__f64 (0.707106781186547524400844362104849039) /* 1/sqrt(2) */
+# define M_Ef64     __f64 (2.718281828459045235360287471352662498) /* e */
+# define M_LOG2Ef64 __f64 (1.442695040888963407359924681001892137) /* log_2 e */
+# define M_LOG10Ef64    __f64 (0.434294481903251827651128918916605082) /* log_10 e */
+# define M_LN2f64   __f64 (0.693147180559945309417232121458176568) /* log_e 2 */
+# define M_LN10f64  __f64 (2.302585092994045684017991454684364208) /* log_e 10 */
+# define M_PIf64    __f64 (3.141592653589793238462643383279502884) /* pi */
+# define M_PI_2f64  __f64 (1.570796326794896619231321691639751442) /* pi/2 */
+# define M_PI_4f64  __f64 (0.785398163397448309615660845819875721) /* pi/4 */
+# define M_1_PIf64  __f64 (0.318309886183790671537767526745028724) /* 1/pi */
+# define M_2_PIf64  __f64 (0.636619772367581343075535053490057448) /* 2/pi */
+# define M_2_SQRTPIf64  __f64 (1.128379167095512573896158903121545172) /* 2/sqrt(pi) */
+# define M_SQRT2f64 __f64 (1.414213562373095048801688724209698079) /* sqrt(2) */
+# define M_SQRT1_2f64   __f64 (0.707106781186547524400844362104849039) /* 1/sqrt(2) */
 #endif
 
 #if __HAVE_FLOAT128 && defined __USE_GNU
-# define M_Ef128	__f128 (2.718281828459045235360287471352662498) /* e */
-# define M_LOG2Ef128	__f128 (1.442695040888963407359924681001892137) /* log_2 e */
-# define M_LOG10Ef128	__f128 (0.434294481903251827651128918916605082) /* log_10 e */
-# define M_LN2f128	__f128 (0.693147180559945309417232121458176568) /* log_e 2 */
-# define M_LN10f128	__f128 (2.302585092994045684017991454684364208) /* log_e 10 */
-# define M_PIf128	__f128 (3.141592653589793238462643383279502884) /* pi */
-# define M_PI_2f128	__f128 (1.570796326794896619231321691639751442) /* pi/2 */
-# define M_PI_4f128	__f128 (0.785398163397448309615660845819875721) /* pi/4 */
-# define M_1_PIf128	__f128 (0.318309886183790671537767526745028724) /* 1/pi */
-# define M_2_PIf128	__f128 (0.636619772367581343075535053490057448) /* 2/pi */
-# define M_2_SQRTPIf128	__f128 (1.128379167095512573896158903121545172) /* 2/sqrt(pi) */
-# define M_SQRT2f128	__f128 (1.414213562373095048801688724209698079) /* sqrt(2) */
-# define M_SQRT1_2f128	__f128 (0.707106781186547524400844362104849039) /* 1/sqrt(2) */
+# define M_Ef128    __f128 (2.718281828459045235360287471352662498) /* e */
+# define M_LOG2Ef128    __f128 (1.442695040888963407359924681001892137) /* log_2 e */
+# define M_LOG10Ef128   __f128 (0.434294481903251827651128918916605082) /* log_10 e */
+# define M_LN2f128  __f128 (0.693147180559945309417232121458176568) /* log_e 2 */
+# define M_LN10f128 __f128 (2.302585092994045684017991454684364208) /* log_e 10 */
+# define M_PIf128   __f128 (3.141592653589793238462643383279502884) /* pi */
+# define M_PI_2f128 __f128 (1.570796326794896619231321691639751442) /* pi/2 */
+# define M_PI_4f128 __f128 (0.785398163397448309615660845819875721) /* pi/4 */
+# define M_1_PIf128 __f128 (0.318309886183790671537767526745028724) /* 1/pi */
+# define M_2_PIf128 __f128 (0.636619772367581343075535053490057448) /* 2/pi */
+# define M_2_SQRTPIf128 __f128 (1.128379167095512573896158903121545172) /* 2/sqrt(pi) */
+# define M_SQRT2f128    __f128 (1.414213562373095048801688724209698079) /* sqrt(2) */
+# define M_SQRT1_2f128  __f128 (0.707106781186547524400844362104849039) /* 1/sqrt(2) */
 #endif
 
 #if __HAVE_FLOAT32X && defined __USE_GNU
-# define M_Ef32x	__f32x (2.718281828459045235360287471352662498) /* e */
-# define M_LOG2Ef32x	__f32x (1.442695040888963407359924681001892137) /* log_2 e */
-# define M_LOG10Ef32x	__f32x (0.434294481903251827651128918916605082) /* log_10 e */
-# define M_LN2f32x	__f32x (0.693147180559945309417232121458176568) /* log_e 2 */
-# define M_LN10f32x	__f32x (2.302585092994045684017991454684364208) /* log_e 10 */
-# define M_PIf32x	__f32x (3.141592653589793238462643383279502884) /* pi */
-# define M_PI_2f32x	__f32x (1.570796326794896619231321691639751442) /* pi/2 */
-# define M_PI_4f32x	__f32x (0.785398163397448309615660845819875721) /* pi/4 */
-# define M_1_PIf32x	__f32x (0.318309886183790671537767526745028724) /* 1/pi */
-# define M_2_PIf32x	__f32x (0.636619772367581343075535053490057448) /* 2/pi */
-# define M_2_SQRTPIf32x	__f32x (1.128379167095512573896158903121545172) /* 2/sqrt(pi) */
-# define M_SQRT2f32x	__f32x (1.414213562373095048801688724209698079) /* sqrt(2) */
-# define M_SQRT1_2f32x	__f32x (0.707106781186547524400844362104849039) /* 1/sqrt(2) */
+# define M_Ef32x    __f32x (2.718281828459045235360287471352662498) /* e */
+# define M_LOG2Ef32x    __f32x (1.442695040888963407359924681001892137) /* log_2 e */
+# define M_LOG10Ef32x   __f32x (0.434294481903251827651128918916605082) /* log_10 e */
+# define M_LN2f32x  __f32x (0.693147180559945309417232121458176568) /* log_e 2 */
+# define M_LN10f32x __f32x (2.302585092994045684017991454684364208) /* log_e 10 */
+# define M_PIf32x   __f32x (3.141592653589793238462643383279502884) /* pi */
+# define M_PI_2f32x __f32x (1.570796326794896619231321691639751442) /* pi/2 */
+# define M_PI_4f32x __f32x (0.785398163397448309615660845819875721) /* pi/4 */
+# define M_1_PIf32x __f32x (0.318309886183790671537767526745028724) /* 1/pi */
+# define M_2_PIf32x __f32x (0.636619772367581343075535053490057448) /* 2/pi */
+# define M_2_SQRTPIf32x __f32x (1.128379167095512573896158903121545172) /* 2/sqrt(pi) */
+# define M_SQRT2f32x    __f32x (1.414213562373095048801688724209698079) /* sqrt(2) */
+# define M_SQRT1_2f32x  __f32x (0.707106781186547524400844362104849039) /* 1/sqrt(2) */
 #endif
 
 #if __HAVE_FLOAT64X && defined __USE_GNU
-# define M_Ef64x	__f64x (2.718281828459045235360287471352662498) /* e */
-# define M_LOG2Ef64x	__f64x (1.442695040888963407359924681001892137) /* log_2 e */
-# define M_LOG10Ef64x	__f64x (0.434294481903251827651128918916605082) /* log_10 e */
-# define M_LN2f64x	__f64x (0.693147180559945309417232121458176568) /* log_e 2 */
-# define M_LN10f64x	__f64x (2.302585092994045684017991454684364208) /* log_e 10 */
-# define M_PIf64x	__f64x (3.141592653589793238462643383279502884) /* pi */
-# define M_PI_2f64x	__f64x (1.570796326794896619231321691639751442) /* pi/2 */
-# define M_PI_4f64x	__f64x (0.785398163397448309615660845819875721) /* pi/4 */
-# define M_1_PIf64x	__f64x (0.318309886183790671537767526745028724) /* 1/pi */
-# define M_2_PIf64x	__f64x (0.636619772367581343075535053490057448) /* 2/pi */
-# define M_2_SQRTPIf64x	__f64x (1.128379167095512573896158903121545172) /* 2/sqrt(pi) */
-# define M_SQRT2f64x	__f64x (1.414213562373095048801688724209698079) /* sqrt(2) */
-# define M_SQRT1_2f64x	__f64x (0.707106781186547524400844362104849039) /* 1/sqrt(2) */
+# define M_Ef64x    __f64x (2.718281828459045235360287471352662498) /* e */
+# define M_LOG2Ef64x    __f64x (1.442695040888963407359924681001892137) /* log_2 e */
+# define M_LOG10Ef64x   __f64x (0.434294481903251827651128918916605082) /* log_10 e */
+# define M_LN2f64x  __f64x (0.693147180559945309417232121458176568) /* log_e 2 */
+# define M_LN10f64x __f64x (2.302585092994045684017991454684364208) /* log_e 10 */
+# define M_PIf64x   __f64x (3.141592653589793238462643383279502884) /* pi */
+# define M_PI_2f64x __f64x (1.570796326794896619231321691639751442) /* pi/2 */
+# define M_PI_4f64x __f64x (0.785398163397448309615660845819875721) /* pi/4 */
+# define M_1_PIf64x __f64x (0.318309886183790671537767526745028724) /* 1/pi */
+# define M_2_PIf64x __f64x (0.636619772367581343075535053490057448) /* 2/pi */
+# define M_2_SQRTPIf64x __f64x (1.128379167095512573896158903121545172) /* 2/sqrt(pi) */
+# define M_SQRT2f64x    __f64x (1.414213562373095048801688724209698079) /* sqrt(2) */
+# define M_SQRT1_2f64x  __f64x (0.707106781186547524400844362104849039) /* 1/sqrt(2) */
 #endif
 
 #if __HAVE_FLOAT128X && defined __USE_GNU
@@ -1272,32 +1279,32 @@ iszero (__T __val)
    in 2.97, but not all cpus added their patterns until 3.1.  Therefore
    we enable the builtins from 3.1 onwards and use a generic implementation
    otherwise.  */
-#  define isgreater(x, y)	__builtin_isgreater(x, y)
-#  define isgreaterequal(x, y)	__builtin_isgreaterequal(x, y)
-#  define isless(x, y)		__builtin_isless(x, y)
-#  define islessequal(x, y)	__builtin_islessequal(x, y)
-#  define islessgreater(x, y)	__builtin_islessgreater(x, y)
-#  define isunordered(x, y)	__builtin_isunordered(x, y)
+#  define isgreater(x, y)   __builtin_isgreater(x, y)
+#  define isgreaterequal(x, y)  __builtin_isgreaterequal(x, y)
+#  define isless(x, y)      __builtin_isless(x, y)
+#  define islessequal(x, y) __builtin_islessequal(x, y)
+#  define islessgreater(x, y)   __builtin_islessgreater(x, y)
+#  define isunordered(x, y) __builtin_isunordered(x, y)
 # else
 #  define isgreater(x, y) \
   (__extension__ ({ __typeof__ (x) __x = (x); __typeof__ (y) __y = (y); \
-		    !isunordered (__x, __y) && __x > __y; }))
+            !isunordered (__x, __y) && __x > __y; }))
 #  define isgreaterequal(x, y) \
   (__extension__ ({ __typeof__ (x) __x = (x); __typeof__ (y) __y = (y); \
-		    !isunordered (__x, __y) && __x >= __y; }))
+            !isunordered (__x, __y) && __x >= __y; }))
 #  define isless(x, y) \
   (__extension__ ({ __typeof__ (x) __x = (x); __typeof__ (y) __y = (y); \
-		    !isunordered (__x, __y) && __x < __y; }))
+            !isunordered (__x, __y) && __x < __y; }))
 #  define islessequal(x, y) \
   (__extension__ ({ __typeof__ (x) __x = (x); __typeof__ (y) __y = (y); \
-		    !isunordered (__x, __y) && __x <= __y; }))
+            !isunordered (__x, __y) && __x <= __y; }))
 #  define islessgreater(x, y) \
   (__extension__ ({ __typeof__ (x) __x = (x); __typeof__ (y) __y = (y); \
-		    !isunordered (__x, __y) && __x != __y; }))
+            !isunordered (__x, __y) && __x != __y; }))
 /* isunordered must always check both operands first for signaling NaNs.  */
 #  define isunordered(x, y) \
   (__extension__ ({ __typeof__ (x) __u = (x); __typeof__ (y) __v = (y); \
-		    __u != __v && (__u != __u || __v != __v); }))
+            __u != __v && (__u != __u || __v != __v); }))
 # endif
 #endif
 
@@ -1331,107 +1338,107 @@ iszero (__T __val)
    Thus, the type is used as a template parameter for __iseqsig_type,
    which calls the appropriate underlying function.  */
 extern "C++" {
-template<typename> struct __iseqsig_type;
+    template<typename> struct __iseqsig_type;
 
-template<> struct __iseqsig_type<float>
-{
-  static int __call (float __x, float __y) throw ()
-  {
-    return __iseqsigf (__x, __y);
-  }
-};
+    template<> struct __iseqsig_type<float>
+    {
+        static int __call(float __x, float __y) throw ()
+        {
+            return __iseqsigf(__x, __y);
+        }
+    };
 
-template<> struct __iseqsig_type<double>
-{
-  static int __call (double __x, double __y) throw ()
-  {
-    return __iseqsig (__x, __y);
-  }
-};
+    template<> struct __iseqsig_type<double>
+    {
+        static int __call(double __x, double __y) throw ()
+        {
+            return __iseqsig(__x, __y);
+        }
+    };
 
-template<> struct __iseqsig_type<long double>
-{
-  static int __call (long double __x, long double __y) throw ()
-  {
+    template<> struct __iseqsig_type<long double>
+    {
+        static int __call(long double __x, long double __y) throw ()
+        {
 #  ifndef __NO_LONG_DOUBLE_MATH
-    return __iseqsigl (__x, __y);
+            return __iseqsigl(__x, __y);
 #  else
-    return __iseqsig (__x, __y);
+            return __iseqsig(__x, __y);
 #  endif
-  }
-};
+        }
+    };
 
 #  if __HAVE_FLOAT32 && __GNUC_PREREQ (13, 0)
-template<> struct __iseqsig_type<_Float32>
-{
-  static int __call (_Float32 __x, _Float32 __y) throw ()
-  {
-    return __iseqsigf (__x, __y);
-  }
-};
+    template<> struct __iseqsig_type<_Float32>
+    {
+        static int __call(_Float32 __x, _Float32 __y) throw ()
+        {
+            return __iseqsigf(__x, __y);
+        }
+    };
 #  endif
 
 #  if __HAVE_FLOAT64 && __GNUC_PREREQ (13, 0)
-template<> struct __iseqsig_type<_Float64>
-{
-  static int __call (_Float64 __x, _Float64 __y) throw ()
-  {
-    return __iseqsig (__x, __y);
-  }
-};
+    template<> struct __iseqsig_type<_Float64>
+    {
+        static int __call(_Float64 __x, _Float64 __y) throw ()
+        {
+            return __iseqsig(__x, __y);
+        }
+    };
 #  endif
 
 #  if __HAVE_FLOAT128_UNLIKE_LDBL || (__HAVE_FLOAT128 && __GNUC_PREREQ (13, 0))
-  /* When using an IEEE 128-bit long double, _Float128 is defined as long double
-     in C++.  */
-template<> struct __iseqsig_type<_Float128>
-{
-  static int __call (_Float128 __x, _Float128 __y) throw ()
-  {
+    /* When using an IEEE 128-bit long double, _Float128 is defined as long double
+       in C++.  */
+    template<> struct __iseqsig_type<_Float128>
+    {
+        static int __call(_Float128 __x, _Float128 __y) throw ()
+        {
 #   if __HAVE_FLOAT128_UNLIKE_LDBL
-    return __iseqsigf128 (__x, __y);
+            return __iseqsigf128(__x, __y);
 #   else
-    return __iseqsigl (__x, __y);
+            return __iseqsigl(__x, __y);
 #   endif
-  }
-};
+        }
+    };
 #  endif
 
 #  if __HAVE_FLOAT32X && __GNUC_PREREQ (13, 0)
-template<> struct __iseqsig_type<_Float32x>
-{
-  static int __call (_Float32x __x, _Float32x __y) throw ()
-  {
-    return __iseqsig (__x, __y);
-  }
-};
+    template<> struct __iseqsig_type<_Float32x>
+    {
+        static int __call(_Float32x __x, _Float32x __y) throw ()
+        {
+            return __iseqsig(__x, __y);
+        }
+    };
 #  endif
 
 #  if __HAVE_FLOAT64X && __GNUC_PREREQ (13, 0)
-template<> struct __iseqsig_type<_Float64x>
-{
-  static int __call (_Float64x __x, _Float64x __y) throw ()
-  {
+    template<> struct __iseqsig_type<_Float64x>
+    {
+        static int __call(_Float64x __x, _Float64x __y) throw ()
+        {
 #   if __HAVE_FLOAT64X_LONG_DOUBLE
-    return __iseqsigl (__x, __y);
+            return __iseqsigl(__x, __y);
 #   else
-    return __iseqsigf128 (__x, __y);
+            return __iseqsigf128(__x, __y);
 #   endif
-  }
-};
+        }
+    };
 #  endif
 
-template<typename _T1, typename _T2>
-inline int
-iseqsig (_T1 __x, _T2 __y) throw ()
-{
+    template<typename _T1, typename _T2>
+    inline int
+    iseqsig(_T1 __x, _T2 __y) throw ()
+    {
 #  if __cplusplus >= 201103L
-  typedef decltype (__MATH_EVAL_FMT2 (__x, __y)) _T3;
+        typedef decltype(__MATH_EVAL_FMT2(__x, __y)) _T3;
 #  else
-  typedef __typeof (__MATH_EVAL_FMT2 (__x, __y)) _T3;
+        typedef __typeof(__MATH_EVAL_FMT2(__x, __y)) _T3;
 #  endif
-  return __iseqsig_type<_T3>::__call (__x, __y);
-}
+        return __iseqsig_type<_T3>::__call(__x, __y);
+    }
 
 } /* extern "C++" */
 # endif /* __cplusplus */

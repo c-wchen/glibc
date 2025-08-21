@@ -23,90 +23,86 @@
 #include <unistd.h>
 #include <stdint.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  XDR xdrs;
-  void *buf;
-  size_t ps = sysconf (_SC_PAGESIZE);
-  uintptr_t half = -1;
-  int v_int;
-  u_short v_u_short;
+    XDR xdrs;
+    void *buf;
+    size_t ps = sysconf(_SC_PAGESIZE);
+    uintptr_t half = -1;
+    int v_int;
+    u_short v_u_short;
 
-  half = (half >> 1) & ~(uintptr_t) (ps - 1);
-  buf = mmap ((void *) half, 2 * ps, PROT_READ | PROT_WRITE,
-	      MAP_PRIVATE | MAP_ANON, -1, 0);
-  if (buf == MAP_FAILED || buf != (void *) half)
-    {
-      puts ("Couldn't mmap 2 pages in the middle of address space");
-      return 0;
+    half = (half >> 1) & ~(uintptr_t)(ps - 1);
+    buf = mmap((void *) half, 2 * ps, PROT_READ | PROT_WRITE,
+               MAP_PRIVATE | MAP_ANON, -1, 0);
+    if (buf == MAP_FAILED || buf != (void *) half) {
+        puts("Couldn't mmap 2 pages in the middle of address space");
+        return 0;
     }
 
-  xdrmem_create (&xdrs, (char *) buf, 2 * ps, XDR_ENCODE);
+    xdrmem_create(&xdrs, (char *) buf, 2 * ps, XDR_ENCODE);
 
 #define T(type, val) \
-  v_##type = val;			\
-  if (! xdr_##type (&xdrs, &v_##type))	\
-    {					\
-      puts ("encoding of " #type	\
-	    " " #val " failed");	\
-      return 1;				\
+  v_##type = val;           \
+  if (! xdr_##type (&xdrs, &v_##type))  \
+    {                   \
+      puts ("encoding of " #type    \
+        " " #val " failed");    \
+      return 1;             \
     }
 
-  T(int, 127)
+    T(int, 127)
 
-  u_int pos = xdr_getpos (&xdrs);
+    u_int pos = xdr_getpos(&xdrs);
 
-  T(u_short, 31)
+    T(u_short, 31)
 
-  if (! xdr_setpos (&xdrs, pos))
-    {
-      puts ("xdr_setpos during encoding failed");
-      return 1;
+    if (! xdr_setpos(&xdrs, pos)) {
+        puts("xdr_setpos during encoding failed");
+        return 1;
     }
 
-  T(u_short, 36)
+    T(u_short, 36)
 
 #undef T
 
-  xdr_destroy (&xdrs);
+    xdr_destroy(&xdrs);
 
-  xdrmem_create (&xdrs, (char *) buf, 2 * ps, XDR_DECODE);
+    xdrmem_create(&xdrs, (char *) buf, 2 * ps, XDR_DECODE);
 
 #define T(type, val) \
-  v_##type = 0x15;			\
-  if (! xdr_##type (&xdrs, &v_##type))	\
-    {					\
-      puts ("decoding of " #type	\
-	    " " #val " failed");	\
-      return 1;				\
-    }					\
-  if (v_##type != val)			\
-    {					\
-      puts ("decoded value differs, "	\
-	    "type " #type " " #val);	\
-      return 1;				\
+  v_##type = 0x15;          \
+  if (! xdr_##type (&xdrs, &v_##type))  \
+    {                   \
+      puts ("decoding of " #type    \
+        " " #val " failed");    \
+      return 1;             \
+    }                   \
+  if (v_##type != val)          \
+    {                   \
+      puts ("decoded value differs, "   \
+        "type " #type " " #val);    \
+      return 1;             \
     }
 
-  T(int, 127)
+    T(int, 127)
 
-  pos = xdr_getpos (&xdrs);
+    pos = xdr_getpos(&xdrs);
 
-  T(u_short, 36)
+    T(u_short, 36)
 
-  if (! xdr_setpos (&xdrs, pos))
-    {
-      puts ("xdr_setpos during encoding failed");
-      return 1;
+    if (! xdr_setpos(&xdrs, pos)) {
+        puts("xdr_setpos during encoding failed");
+        return 1;
     }
 
-  T(u_short, 36)
+    T(u_short, 36)
 
 #undef T
 
-  xdr_destroy (&xdrs);
+    xdr_destroy(&xdrs);
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

@@ -24,22 +24,20 @@
 #include <string.h>
 
 
-static void *
-thread_function (void *arg)
+static void *thread_function(void *arg)
 {
-  abort ();
+    abort();
 }
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
 #if !defined SCHED_FIFO || !defined SCHED_OTHER
-  puts ("SCHED_FIFO or SCHED_OTHER not available at compile time");
-  return 0; /* 77 */
+    puts("SCHED_FIFO or SCHED_OTHER not available at compile time");
+    return 0; /* 77 */
 #else
 
-  int err;
+    int err;
 
 #define TRY(func, arglist)                              \
   if ((err = func arglist) != 0)                        \
@@ -48,47 +46,44 @@ do_test (void)
       return 2;                                         \
     }
 
-  int fifo_max = sched_get_priority_max (SCHED_FIFO);
-  if (fifo_max == -1)
-    {
-      assert (errno == ENOTSUP || errno == ENOSYS);
-      puts ("SCHED_FIFO not supported, cannot test");
-      return 0; /* 77 */
+    int fifo_max = sched_get_priority_max(SCHED_FIFO);
+    if (fifo_max == -1) {
+        assert(errno == ENOTSUP || errno == ENOSYS);
+        puts("SCHED_FIFO not supported, cannot test");
+        return 0; /* 77 */
     }
 
-  int other_max = sched_get_priority_max (SCHED_OTHER);
-  if (other_max == -1)
-    {
-      assert (errno == ENOTSUP || errno == ENOSYS);
-      puts ("SCHED_OTHER not supported, cannot test");
-      return 0; /* 77 */
+    int other_max = sched_get_priority_max(SCHED_OTHER);
+    if (other_max == -1) {
+        assert(errno == ENOTSUP || errno == ENOSYS);
+        puts("SCHED_OTHER not supported, cannot test");
+        return 0; /* 77 */
     }
 
-  assert (fifo_max > other_max);
+    assert(fifo_max > other_max);
 
-  pthread_attr_t attr;
-  TRY (pthread_attr_init, (&attr));
-  TRY (pthread_attr_setinheritsched, (&attr, PTHREAD_EXPLICIT_SCHED));
-  TRY (pthread_attr_setschedpolicy, (&attr, SCHED_FIFO));
+    pthread_attr_t attr;
+    TRY(pthread_attr_init, (&attr));
+    TRY(pthread_attr_setinheritsched, (&attr, PTHREAD_EXPLICIT_SCHED));
+    TRY(pthread_attr_setschedpolicy, (&attr, SCHED_FIFO));
 
-  /* This value is chosen so as to be valid for SCHED_FIFO but invalid for
-     SCHED_OTHER.  */
-  struct sched_param param = { .sched_priority = other_max + 1 };
-  TRY (pthread_attr_setschedparam, (&attr, &param));
+    /* This value is chosen so as to be valid for SCHED_FIFO but invalid for
+       SCHED_OTHER.  */
+    struct sched_param param = { .sched_priority = other_max + 1 };
+    TRY(pthread_attr_setschedparam, (&attr, &param));
 
-  TRY (pthread_attr_setschedpolicy, (&attr, SCHED_OTHER));
+    TRY(pthread_attr_setschedpolicy, (&attr, SCHED_OTHER));
 
-  /* Now ATTR has a sched_param that is invalid for its policy.  */
-  pthread_t th;
-  err = pthread_create (&th, &attr, &thread_function, NULL);
-  if (err != EINVAL)
-    {
-      printf ("pthread_create returned %d (%s), expected %d (EINVAL: %s)\n",
-              err, strerror (err), EINVAL, strerror (EINVAL));
-      return 1;
+    /* Now ATTR has a sched_param that is invalid for its policy.  */
+    pthread_t th;
+    err = pthread_create(&th, &attr, &thread_function, NULL);
+    if (err != EINVAL) {
+        printf("pthread_create returned %d (%s), expected %d (EINVAL: %s)\n",
+               err, strerror(err), EINVAL, strerror(EINVAL));
+        return 1;
     }
 
-  return 0;
+    return 0;
 #endif
 }
 

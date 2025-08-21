@@ -29,5 +29,5 @@
 # define SYMBOL_NAME wcsncmp
 # include "ifunc-avx2.h"
 
-libc_ifunc_redirected (__redirect_wcsncmp, wcsncmp, IFUNC_SELECTOR ());
+libc_ifunc_redirected(__redirect_wcsncmp, wcsncmp, IFUNC_SELECTOR());
 #endif

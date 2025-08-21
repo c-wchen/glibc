@@ -21,13 +21,12 @@
 #include <sysdep.h>
 
 /* Remove the directory PATH.  */
-int
-__rmdir (const char *path)
+int __rmdir(const char *path)
 {
 #ifdef __NR_rmdir
-  return INLINE_SYSCALL_CALL (rmdir, path);
+    return INLINE_SYSCALL_CALL(rmdir, path);
 #else
-  return INLINE_SYSCALL_CALL (unlinkat, AT_FDCWD, path, AT_REMOVEDIR);
+    return INLINE_SYSCALL_CALL(unlinkat, AT_FDCWD, path, AT_REMOVEDIR);
 #endif
 }
-weak_alias (__rmdir, rmdir)
+weak_alias(__rmdir, rmdir)

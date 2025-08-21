@@ -21,12 +21,11 @@
 
 /* Change the access time of FILE to TVP[0] and
    the modification time of FILE to TVP[1], but do not follow symlinks.  */
-int
-__futimes (int fd, const struct timeval tvp[2])
+int __futimes(int fd, const struct timeval tvp[2])
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-weak_alias (__futimes, futimes)
+weak_alias(__futimes, futimes)
 
-stub_warning (futimes)
+stub_warning(futimes)

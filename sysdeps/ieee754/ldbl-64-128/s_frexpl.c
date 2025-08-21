@@ -6,5 +6,5 @@
 #endif
 #include <sysdeps/ieee754/ldbl-128/s_frexpl.c>
 #if IS_IN (libc) && defined SHARED
-long_double_symbol (libc, __frexpl, frexpl);
+long_double_symbol(libc, __frexpl, frexpl);
 #endif

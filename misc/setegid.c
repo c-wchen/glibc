@@ -19,11 +19,10 @@
 #include <unistd.h>
 
 /* Set the effective group ID of the calling process to GID.  */
-int
-setegid (__gid_t gid)
+int setegid(__gid_t gid)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (setegid)
-stub_warning (setegid)
+libc_hidden_def(setegid)
+stub_warning(setegid)

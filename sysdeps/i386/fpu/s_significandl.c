@@ -3,14 +3,13 @@
  */
 
 
-long double
-__significandl (long double x)
+long double __significandl(long double x)
 {
-  long double res;
+    long double res;
 
-  asm ("fxtract\n"
-       "fstp	%%st(1)" : "=t" (res) : "0" (x));
-  return res;
+    asm("fxtract\n"
+        "fstp	%%st(1)" : "=t"(res) : "0"(x));
+    return res;
 }
 
-weak_alias (__significandl, significandl)
+weak_alias(__significandl, significandl)

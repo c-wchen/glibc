@@ -27,27 +27,27 @@
 
 /* Older Linux headers do not define these constants.  */
 # ifndef ENOTSUP
-#  define ENOTSUP		EOPNOTSUPP
+#  define ENOTSUP       EOPNOTSUPP
 # endif
 
 # ifndef ECANCELED
-#  define ECANCELED		253
+#  define ECANCELED     253
 # endif
 
 # ifndef EOWNERDEAD
-#  define EOWNERDEAD		254
+#  define EOWNERDEAD        254
 # endif
 
 # ifndef ENOTRECOVERABLE
-#  define ENOTRECOVERABLE	255
+#  define ENOTRECOVERABLE   255
 # endif
 
 # ifndef ERFKILL
-#  define ERFKILL		256
+#  define ERFKILL       256
 # endif
 
 # ifndef EHWPOISON
-#  define EHWPOISON		257
+#  define EHWPOISON     257
 # endif
 
 #endif /* bits/errno.h.  */

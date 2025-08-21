@@ -25,45 +25,34 @@
 #include <string.h>
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char buf[100];
-  int result = 0;
+    char buf[100];
+    int result = 0;
 
-  if (gets (buf) != buf)
-    {
-      printf ("gets: read error: %m\n");
-      result = 1;
-    }
-  else if (strchr (buf, '\n') != NULL)
-    {
-      printf ("newline not stripped: \"%s\"\n", buf);
-      result = 1;
-    }
-  else if (strcmp (buf, "foo") != 0)
-    {
-      printf ("read mismatch: expected \"%s\", got \"%s\"\n", "foo", buf);
-      result = 1;
+    if (gets(buf) != buf) {
+        printf("gets: read error: %m\n");
+        result = 1;
+    } else if (strchr(buf, '\n') != NULL) {
+        printf("newline not stripped: \"%s\"\n", buf);
+        result = 1;
+    } else if (strcmp(buf, "foo") != 0) {
+        printf("read mismatch: expected \"%s\", got \"%s\"\n", "foo", buf);
+        result = 1;
     }
 
-  if (gets (buf) != buf)
-    {
-      printf ("gets: read error: %m\n");
-      result = 1;
-    }
-  else if (strchr (buf, '\n') != NULL)
-    {
-      printf ("newline not stripped: \"%s\"\n", buf);
-      result = 1;
-    }
-  else if (strcmp (buf, "bar") != 0)
-    {
-      printf ("read mismatch: expected \"%s\", got \"%s\"\n", "bar", buf);
-      result = 1;
+    if (gets(buf) != buf) {
+        printf("gets: read error: %m\n");
+        result = 1;
+    } else if (strchr(buf, '\n') != NULL) {
+        printf("newline not stripped: \"%s\"\n", buf);
+        result = 1;
+    } else if (strcmp(buf, "bar") != 0) {
+        printf("read mismatch: expected \"%s\", got \"%s\"\n", "bar", buf);
+        result = 1;
     }
 
-  return result;
+    return result;
 }
 
 #define TEST_FUNCTION do_test ()

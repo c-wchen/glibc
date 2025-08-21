@@ -30,40 +30,40 @@
 
 /* Execute the file FD refers to, overlaying the running program image.
    ARGV and ENVP are passed to the new program, as for `execve'.  */
-int
-fexecve (int fd, char *const argv[], char *const envp[])
+int fexecve(int fd, char *const argv[], char *const envp[])
 {
-  if (fd < 0 || argv == NULL || envp == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (fd < 0 || argv == NULL || envp == NULL) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
 #ifdef __NR_execveat
-  /* Avoid implicit array coercion in syscall macros.  */
-  INLINE_SYSCALL (execveat, 5, fd, "", &argv[0], &envp[0], AT_EMPTY_PATH);
+    /* Avoid implicit array coercion in syscall macros.  */
+    INLINE_SYSCALL(execveat, 5, fd, "", &argv[0], &envp[0], AT_EMPTY_PATH);
 # ifndef __ASSUME_EXECVEAT
-  if (errno != ENOSYS)
-    return -1;
+    if (errno != ENOSYS) {
+        return -1;
+    }
 # endif
 #endif
 
 #ifndef __ASSUME_EXECVEAT
-  /* We use the /proc filesystem to get the information.  If it is not
-     mounted we fail.  We do not need the return value.  */
-  struct fd_to_filename filename;
-  __execve (__fd_to_filename (fd, &filename), argv, envp);
+    /* We use the /proc filesystem to get the information.  If it is not
+       mounted we fail.  We do not need the return value.  */
+    struct fd_to_filename filename;
+    __execve(__fd_to_filename(fd, &filename), argv, envp);
 
-  int save = errno;
+    int save = errno;
 
-  /* We come here only if the 'execve' call fails.  Determine whether
-     /proc is mounted.  If not we return ENOSYS.  */
-  struct __stat64_t64 st;
-  if (__stat64_time64 ("/proc/self/fd", &st) != 0 && errno == ENOENT)
-    save = ENOSYS;
+    /* We come here only if the 'execve' call fails.  Determine whether
+       /proc is mounted.  If not we return ENOSYS.  */
+    struct __stat64_t64 st;
+    if (__stat64_time64("/proc/self/fd", &st) != 0 && errno == ENOENT) {
+        save = ENOSYS;
+    }
 
-  __set_errno (save);
+    __set_errno(save);
 #endif
 
-  return -1;
+    return -1;
 }

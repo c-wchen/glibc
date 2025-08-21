@@ -22,24 +22,23 @@
 
 
 /* Set scheduling algorithm and/or parameters for a process.  */
-int
-__sched_setscheduler (pid_t pid, int policy, const struct sched_param *param)
+int __sched_setscheduler(pid_t pid, int policy, const struct sched_param *param)
 {
-  switch (policy)
-    {
-    case SCHED_OTHER:
-      if (param->sched_priority != 0)
-	return __hurd_fail (EINVAL);
-      break;
+    switch (policy) {
+        case SCHED_OTHER:
+            if (param->sched_priority != 0) {
+                return __hurd_fail(EINVAL);
+            }
+            break;
 
-    case SCHED_FIFO:
-    case SCHED_RR:
-      return __hurd_fail (ENOTSUP);
+        case SCHED_FIFO:
+        case SCHED_RR:
+            return __hurd_fail(ENOTSUP);
 
-    default:
-      return EINVAL;
+        default:
+            return EINVAL;
     }
-  return 0;
+    return 0;
 }
-libc_hidden_def (__sched_setscheduler)
-weak_alias (__sched_setscheduler, sched_setscheduler)
+libc_hidden_def(__sched_setscheduler)
+weak_alias(__sched_setscheduler, sched_setscheduler)

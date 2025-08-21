@@ -34,69 +34,63 @@ static bool tlsreinitmod3_constructed;
 /* Second half of test, behind a compiler barrier.  The compiler
    barrier is necessary to prevent carrying over TLS address
    information from call_tlsreinitmod3 to call_tlsreinitmod3_tail.  */
-void call_tlsreinitmod3_tail (void *self) __attribute__ ((weak));
+void call_tlsreinitmod3_tail(void *self) __attribute__((weak));
 
 /* Called from tst-dlopen-tlsreinitmod2.so.  */
-void
-call_tlsreinitmod3 (void)
+void call_tlsreinitmod3(void)
 {
-  printf ("info: call_tlsreinitmod3 invoked (state=%d)\n",
-          tlsreinitmod3_state);
+    printf("info: call_tlsreinitmod3 invoked (state=%d)\n",
+           tlsreinitmod3_state);
 
-  if (tlsreinitmod3_constructed)
-    {
-      puts ("error: call_tlsreinitmod3 called after ELF constructor");
-      fflush (stdout);
-      /* Cannot rely on test harness due to dynamic linking.  */
-      _exit (1);
+    if (tlsreinitmod3_constructed) {
+        puts("error: call_tlsreinitmod3 called after ELF constructor");
+        fflush(stdout);
+        /* Cannot rely on test harness due to dynamic linking.  */
+        _exit(1);
     }
 
-  tlsreinitmod3_state = 2;
+    tlsreinitmod3_state = 2;
 
-  /* Self-dlopen.  This will run the ELF constructor.   */
-  void *self = dlopen ("tst-dlopen-tlsreinitmod3.so", RTLD_NOW);
-  if (self == NULL)
-    {
-      printf ("error: dlopen: %s\n", dlerror ());
-      fflush (stdout);
-      /* Cannot rely on test harness due to dynamic linking.  */
-      _exit (1);
+    /* Self-dlopen.  This will run the ELF constructor.   */
+    void *self = dlopen("tst-dlopen-tlsreinitmod3.so", RTLD_NOW);
+    if (self == NULL) {
+        printf("error: dlopen: %s\n", dlerror());
+        fflush(stdout);
+        /* Cannot rely on test harness due to dynamic linking.  */
+        _exit(1);
     }
 
-  call_tlsreinitmod3_tail (self);
+    call_tlsreinitmod3_tail(self);
 }
 
-void
-call_tlsreinitmod3_tail (void *self)
+void call_tlsreinitmod3_tail(void *self)
 {
-  printf ("info: dlopen returned in tlsreinitmod3 (state=%d)\n",
-          tlsreinitmod3_state);
+    printf("info: dlopen returned in tlsreinitmod3 (state=%d)\n",
+           tlsreinitmod3_state);
 
-  if (!tlsreinitmod3_constructed)
-    {
-      puts ("error: dlopen did not call tlsreinitmod3 ELF constructor");
-      fflush (stdout);
-      /* Cannot rely on test harness due to dynamic linking.  */
-      _exit (1);
+    if (!tlsreinitmod3_constructed) {
+        puts("error: dlopen did not call tlsreinitmod3 ELF constructor");
+        fflush(stdout);
+        /* Cannot rely on test harness due to dynamic linking.  */
+        _exit(1);
     }
 
-  if (tlsreinitmod3_state != 2)
-    {
-      puts ("error: TLS state reverted in tlsreinitmod3");
-      fflush (stdout);
-      /* Cannot rely on test harness due to dynamic linking.  */
-      _exit (1);
+    if (tlsreinitmod3_state != 2) {
+        puts("error: TLS state reverted in tlsreinitmod3");
+        fflush(stdout);
+        /* Cannot rely on test harness due to dynamic linking.  */
+        _exit(1);
     }
 
-  dlclose (self);
+    dlclose(self);
 
-  /* Signal test completion to the main program.  */
-  tlsreinitmod3_tested = true;
+    /* Signal test completion to the main program.  */
+    tlsreinitmod3_tested = true;
 }
 
-static void __attribute__ ((constructor))
-tlsreinitmod3_init (void)
+static void __attribute__((constructor))
+tlsreinitmod3_init(void)
 {
-  puts ("info: constructor of tst-dlopen-tlsreinitmod3.so invoked");
-  tlsreinitmod3_constructed = true;
+    puts("info: constructor of tst-dlopen-tlsreinitmod3.so invoked");
+    tlsreinitmod3_constructed = true;
 }

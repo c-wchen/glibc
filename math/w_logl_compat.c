@@ -24,24 +24,19 @@
 
 #if LIBM_SVID_COMPAT
 /* wrapper logl(x) */
-long double
-__logl (long double x)
+long double __logl(long double x)
 {
-  if (__builtin_expect (islessequal (x, 0.0L), 0) && _LIB_VERSION != _IEEE_)
-    {
-      if (x == 0.0L)
-	{
-	  feraiseexcept (FE_DIVBYZERO);
-	  return __kernel_standard_l (x, x, 216); /* log(0) */
-	}
-      else
-	{
-	  feraiseexcept (FE_INVALID);
-	  return __kernel_standard_l (x, x, 217); /* log(x<0) */
-	}
+    if (__builtin_expect(islessequal(x, 0.0L), 0) && _LIB_VERSION != _IEEE_) {
+        if (x == 0.0L) {
+            feraiseexcept(FE_DIVBYZERO);
+            return __kernel_standard_l(x, x, 216);  /* log(0) */
+        } else {
+            feraiseexcept(FE_INVALID);
+            return __kernel_standard_l(x, x, 217);  /* log(x<0) */
+        }
     }
 
-  return  __ieee754_logl (x);
+    return  __ieee754_logl(x);
 }
-libm_alias_ldouble (__log, log)
+libm_alias_ldouble(__log, log)
 #endif

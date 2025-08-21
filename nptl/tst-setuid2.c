@@ -28,101 +28,96 @@
 
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t cond_send;
-static void (*func_sent) (void);
+static void (*func_sent)(void);
 static pthread_cond_t cond_recv;
 
 #define FAIL(fmt, ...) \
   do { printf ("FAIL: " fmt "\n", __VA_ARGS__); _exit (1); } while (0)
 
-static void *
-thread_func (void *ctx __attribute__ ((unused)))
+static void *thread_func(void *ctx __attribute__((unused)))
 {
-  xpthread_mutex_lock (&mutex);
-  while (true)
-    {
-      if (func_sent != NULL)
-	{
-	  void (*func) (void) = func_sent;
-	  xpthread_mutex_unlock (&mutex);
+    xpthread_mutex_lock(&mutex);
+    while (true) {
+        if (func_sent != NULL) {
+            void (*func)(void) = func_sent;
+            xpthread_mutex_unlock(&mutex);
 
-	  func ();
+            func();
 
-	  xpthread_mutex_lock (&mutex);
-	  func_sent = NULL;
-	  xpthread_cond_signal (&cond_recv);
-	}
-      xpthread_cond_wait (&cond_send, &mutex);
+            xpthread_mutex_lock(&mutex);
+            func_sent = NULL;
+            xpthread_cond_signal(&cond_recv);
+        }
+        xpthread_cond_wait(&cond_send, &mutex);
     }
-  return NULL;
+    return NULL;
 }
 
-static void
-run_on_thread (void (*func) (void))
+static void run_on_thread(void (*func)(void))
 {
-  xpthread_mutex_lock (&mutex);
-  func_sent = func;
-  xpthread_mutex_unlock (&mutex);
+    xpthread_mutex_lock(&mutex);
+    func_sent = func;
+    xpthread_mutex_unlock(&mutex);
 
-  xpthread_cond_signal (&cond_send);
+    xpthread_cond_signal(&cond_send);
 
-  xpthread_mutex_lock (&mutex);
-  while (func_sent != NULL)
-    {
-      xpthread_cond_wait (&cond_recv, &mutex);
+    xpthread_mutex_lock(&mutex);
+    while (func_sent != NULL) {
+        xpthread_cond_wait(&cond_recv, &mutex);
     }
-  xpthread_mutex_unlock (&mutex);
+    xpthread_mutex_unlock(&mutex);
 }
 
-static void
-change_thread_ids (void)
+static void change_thread_ids(void)
 {
 #ifdef __NR_setresuid32
-  /* Prefer 32-bit setresuid32 over 16-bit setresuid.  */
-  long ret = syscall (__NR_setresuid32, 2001, 2002, 2003);
+    /* Prefer 32-bit setresuid32 over 16-bit setresuid.  */
+    long ret = syscall(__NR_setresuid32, 2001, 2002, 2003);
 #else
-  long ret = syscall (__NR_setresuid, 2001, 2002, 2003);
+    long ret = syscall(__NR_setresuid, 2001, 2002, 2003);
 #endif
-  if (ret != 0)
-    FAIL ("setresuid (2001, 2002, 2003): %ld", ret);
+    if (ret != 0) {
+        FAIL("setresuid (2001, 2002, 2003): %ld", ret);
+    }
 }
 
 static uid_t ruid, euid, suid;
 
-static void
-get_thread_ids (void)
+static void get_thread_ids(void)
 {
-  if (getresuid (&ruid, &euid, &suid) < 0)
-    FAIL ("getresuid: %m (%d)", errno);
+    if (getresuid(&ruid, &euid, &suid) < 0) {
+        FAIL("getresuid: %m (%d)", errno);
+    }
 }
 
-static void
-abort_expected (int signal __attribute__ ((unused)))
+static void abort_expected(int signal __attribute__((unused)))
 {
-  _exit (0);
+    _exit(0);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  pthread_t thread;
-  int ret = pthread_create (&thread, NULL, thread_func, NULL);
-  if (ret != 0)
-    FAIL ("pthread_create: %d", ret);
+    pthread_t thread;
+    int ret = pthread_create(&thread, NULL, thread_func, NULL);
+    if (ret != 0) {
+        FAIL("pthread_create: %d", ret);
+    }
 
-  run_on_thread (change_thread_ids);
+    run_on_thread(change_thread_ids);
 
-  signal (SIGABRT, &abort_expected);
-  /* This should abort the process.  */
-  if (setresuid (1001, 1002, 1003) < 0)
-    FAIL ("setresuid: %m (%d)", errno);
-  signal (SIGABRT, SIG_DFL);
+    signal(SIGABRT, &abort_expected);
+    /* This should abort the process.  */
+    if (setresuid(1001, 1002, 1003) < 0) {
+        FAIL("setresuid: %m (%d)", errno);
+    }
+    signal(SIGABRT, SIG_DFL);
 
-  /* If we get here, check that the kernel did the right thing. */
-  run_on_thread (get_thread_ids);
-  if (ruid != 1001 || euid != 1002 || suid != 1003)
-    FAIL ("unexpected UIDs after setuid: %ld, %ld, %ld",
-	  (long) ruid, (long) euid, (long) suid);
-  return 0;
+    /* If we get here, check that the kernel did the right thing. */
+    run_on_thread(get_thread_ids);
+    if (ruid != 1001 || euid != 1002 || suid != 1003)
+        FAIL("unexpected UIDs after setuid: %ld, %ld, %ld",
+             (long) ruid, (long) euid, (long) suid);
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -21,12 +21,11 @@
 /* Put the name of the current host in no more than LEN bytes of NAME.
    The result is null-terminated if LEN is large enough for the full
    name and the terminator.  */
-int
-__gethostname (char *name, size_t len)
+int __gethostname(char *name, size_t len)
 {
-  /* The host name is just the contents of the file /etc/hostname.  */
-  ssize_t n = _hurd_get_host_config ("/etc/hostname", name, len);
-  return n < 0 ? -1 : 0;
+    /* The host name is just the contents of the file /etc/hostname.  */
+    ssize_t n = _hurd_get_host_config("/etc/hostname", name, len);
+    return n < 0 ? -1 : 0;
 }
 
-weak_alias (__gethostname, gethostname)
+weak_alias(__gethostname, gethostname)

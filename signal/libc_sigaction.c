@@ -21,12 +21,11 @@
 
 /* If ACT is not NULL, change the action for SIG to *ACT.
    If OACT is not NULL, put the old action for SIG in *OACT.  */
-int
-__libc_sigaction (int sig, const struct sigaction *act,
-		  struct sigaction *oact)
+int __libc_sigaction(int sig, const struct sigaction *act,
+                     struct sigaction *oact)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (libc_sigaction)
-libc_hidden_def (__libc_sigaction)
+stub_warning(libc_sigaction)
+libc_hidden_def(__libc_sigaction)

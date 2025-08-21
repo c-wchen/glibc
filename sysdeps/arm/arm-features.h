@@ -28,7 +28,7 @@
 /* The compiler is generating VFP instructions, so we're already
    assuming the hardware exists.  */
 # undef ARM_HAVE_VFP
-# define ARM_HAVE_VFP	1
+# define ARM_HAVE_VFP   1
 #endif
 
 /* An OS-specific arm-features.h file may define ARM_ASSUME_NO_IWMMXT
@@ -50,7 +50,7 @@
    specifically aligning all the related branch targets to match (since
    Thumb instructions might be either two or four bytes).  */
 #ifndef ARM_BX_ALIGN_LOG2
-# define ARM_BX_ALIGN_LOG2	2
+# define ARM_BX_ALIGN_LOG2  2
 #endif
 
 /* An OS-specific arm-features.h file may define ARM_NO_INDEX_REGISTER to

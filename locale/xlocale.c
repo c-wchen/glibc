@@ -23,26 +23,25 @@
 #define DEFINE_CATEGORY(category, category_name, items, a) \
 extern struct __locale_data _nl_C_##category;
 #include "categories.def"
-#undef	DEFINE_CATEGORY
+#undef  DEFINE_CATEGORY
 
-const struct __locale_struct _nl_C_locobj attribute_hidden =
-  {
+const struct __locale_struct _nl_C_locobj attribute_hidden = {
     .__locales =
     {
 #define DEFINE_CATEGORY(category, category_name, items, a) \
       [category] = &_nl_C_##category,
 #include "categories.def"
-#undef	DEFINE_CATEGORY
+#undef  DEFINE_CATEGORY
     },
     .__names =
     {
-      [LC_ALL] = _nl_C_name,
+        [LC_ALL] = _nl_C_name,
 #define DEFINE_CATEGORY(category, category_name, items, a) \
       [category] = _nl_C_name,
 #include "categories.def"
-#undef	DEFINE_CATEGORY
+#undef  DEFINE_CATEGORY
     },
     .__ctype_b = (const unsigned short int *) _nl_C_LC_CTYPE_class + 128,
     .__ctype_tolower = (const int *) _nl_C_LC_CTYPE_tolower + 128,
     .__ctype_toupper = (const int *) _nl_C_LC_CTYPE_toupper + 128
-  };
+};

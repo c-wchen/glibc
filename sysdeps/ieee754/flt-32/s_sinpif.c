@@ -32,49 +32,48 @@ SOFTWARE.
 #include "s_sincospif_data.h"
 #include "math_config.h"
 
-float
-__sinpif (float x)
+float __sinpif(float x)
 {
-  uint32_t ix = asuint (x);
-  int32_t e = (ix >> 23) & 0xff;
-  if (__glibc_unlikely (e == 0xff))
-    {
-      if (!(ix << 9))
-        return __math_invalidf (x);
-      return x + x; /* nan */
+    uint32_t ix = asuint(x);
+    int32_t e = (ix >> 23) & 0xff;
+    if (__glibc_unlikely(e == 0xff)) {
+        if (!(ix << 9)) {
+            return __math_invalidf(x);
+        }
+        return x + x; /* nan */
     }
-  int32_t m = (ix & ~0u >> 9) | 1 << 23, sgn = ix;
-  sgn >>= 31;
-  m = (m ^ sgn) - sgn;
-  int32_t s = 143 - e;
-  if (__glibc_unlikely (s < 0))
-    {
-      if (__glibc_unlikely (s < -6))
-	return copysignf (0.0f, x);
-      int32_t iq = (uint32_t)m << (-s - 1);
-      iq &= 127;
-      if (iq == 0 || iq == 64)
-	return copysignf (0.0f, x);
-      return S[iq];
+    int32_t m = (ix & ~0u >> 9) | 1 << 23, sgn = ix;
+    sgn >>= 31;
+    m = (m ^ sgn) - sgn;
+    int32_t s = 143 - e;
+    if (__glibc_unlikely(s < 0)) {
+        if (__glibc_unlikely(s < -6)) {
+            return copysignf(0.0f, x);
+        }
+        int32_t iq = (uint32_t)m << (-s - 1);
+        iq &= 127;
+        if (iq == 0 || iq == 64) {
+            return copysignf(0.0f, x);
+        }
+        return S[iq];
+    } else if (__glibc_unlikely(s > 30)) {
+        double z = x, z2 = z * z;
+        return z * (0x1.921fb54442d18p + 1 + z2 * (-0x1.4abbce625be53p + 2));
     }
-  else if (__glibc_unlikely (s > 30))
-    {
-      double z = x, z2 = z * z;
-      return z * (0x1.921fb54442d18p+1 + z2 * (-0x1.4abbce625be53p+2));
+    int32_t si = 25 - s;
+    if (__glibc_unlikely(si >= 0 && ((uint32_t)m << si) == 0)) {
+        return copysignf(0.0f, x);
     }
-  int32_t si = 25 - s;
-  if (__glibc_unlikely (si >= 0 && ((uint32_t)m << si) == 0))
-    return copysignf (0.0f, x);
 
-  int32_t k = (uint32_t)m << (31 - s);
-  double z = k, z2 = z * z;
-  double fs = SN[0] + z2 * (SN[1] + z2 * SN[2]);
-  double fc = CN[0] + z2 * (CN[1] + z2 * CN[2]);
-  uint32_t iq = m >> s;
-  iq = (iq + 1) >> 1;
-  uint32_t is = iq & 127, ic = (iq + 32) & 127;
-  double ts = S[is], tc = S[ic];
-  double r = ts + (ts * z2) * fc + (tc * z) * fs;
-  return r;
+    int32_t k = (uint32_t)m << (31 - s);
+    double z = k, z2 = z * z;
+    double fs = SN[0] + z2 * (SN[1] + z2 * SN[2]);
+    double fc = CN[0] + z2 * (CN[1] + z2 * CN[2]);
+    uint32_t iq = m >> s;
+    iq = (iq + 1) >> 1;
+    uint32_t is = iq & 127, ic = (iq + 32) & 127;
+    double ts = S[is], tc = S[ic];
+    double r = ts + (ts * z2) * fc + (tc * z) * fs;
+    return r;
 }
-libm_alias_float (__sinpi, sinpi)
+libm_alias_float(__sinpi, sinpi)

@@ -63,35 +63,35 @@
 
 /* Allocate a file buffer, or switch to unbuffered I/O.  Streams for
    TTY devices default to line buffered.  */
-int
-_IO_file_doallocate (FILE *fp)
+int _IO_file_doallocate(FILE *fp)
 {
-  size_t size;
-  char *p;
-  struct __stat64_t64 st;
+    size_t size;
+    char *p;
+    struct __stat64_t64 st;
 
-  size = BUFSIZ;
-  if (fp->_fileno >= 0 && __builtin_expect (_IO_SYSSTAT (fp, &st), 0) >= 0)
-    {
-      if (S_ISCHR (st.st_mode))
-	{
-	  /* Possibly a tty.  */
-	  if (
+    size = BUFSIZ;
+    if (fp->_fileno >= 0 && __builtin_expect(_IO_SYSSTAT(fp, &st), 0) >= 0) {
+        if (S_ISCHR(st.st_mode)) {
+            /* Possibly a tty.  */
+            if (
 #ifdef DEV_TTY_P
-	      DEV_TTY_P (&st) ||
+                DEV_TTY_P(&st) ||
 #endif
-	      __isatty_nostatus (fp->_fileno))
-	    fp->_flags |= _IO_LINE_BUF;
-	}
+                __isatty_nostatus(fp->_fileno)) {
+                fp->_flags |= _IO_LINE_BUF;
+            }
+        }
 #if defined _STATBUF_ST_BLKSIZE
-      if (st.st_blksize > 0 && st.st_blksize < BUFSIZ)
-	size = st.st_blksize;
+        if (st.st_blksize > 0 && st.st_blksize < BUFSIZ) {
+            size = st.st_blksize;
+        }
 #endif
     }
-  p = malloc (size);
-  if (__glibc_unlikely (p == NULL))
-    return EOF;
-  _IO_setb (fp, p, p + size, 1);
-  return 1;
+    p = malloc(size);
+    if (__glibc_unlikely(p == NULL)) {
+        return EOF;
+    }
+    _IO_setb(fp, p, p + size, 1);
+    return 1;
 }
-libc_hidden_def (_IO_file_doallocate)
+libc_hidden_def(_IO_file_doallocate)

@@ -26,15 +26,14 @@
    0, then the lock is held by a writer.  If __held is held and
    readers is greater than 0, then the lock is held by READERS
    readers.  */
-struct __pthread_rwlock
-{
-  __pthread_spinlock_t __held;
-  __pthread_spinlock_t __lock;
-  int __readers;
-  struct __pthread *__readerqueue;
-  struct __pthread *__writerqueue;
-  struct __pthread_rwlockattr *__attr;
-  void *__data;
+struct __pthread_rwlock {
+    __pthread_spinlock_t __held;
+    __pthread_spinlock_t __lock;
+    int __readers;
+    struct __pthread *__readerqueue;
+    struct __pthread *__writerqueue;
+    struct __pthread_rwlockattr *__attr;
+    void *__data;
 };
 
 /* Initializer for a rwlock.  */

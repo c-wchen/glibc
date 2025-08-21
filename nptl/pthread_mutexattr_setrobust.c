@@ -19,33 +19,34 @@
 #include <pthreadP.h>
 #include <shlib-compat.h>
 
-int
-__pthread_mutexattr_setrobust (pthread_mutexattr_t *attr, int robustness)
+int __pthread_mutexattr_setrobust(pthread_mutexattr_t *attr, int robustness)
 {
-  if (robustness != PTHREAD_MUTEX_STALLED_NP
-      && __builtin_expect (robustness != PTHREAD_MUTEX_ROBUST_NP, 0))
-    return EINVAL;
+    if (robustness != PTHREAD_MUTEX_STALLED_NP
+        && __builtin_expect(robustness != PTHREAD_MUTEX_ROBUST_NP, 0)) {
+        return EINVAL;
+    }
 
-  struct pthread_mutexattr *iattr = (struct pthread_mutexattr *) attr;
+    struct pthread_mutexattr *iattr = (struct pthread_mutexattr *) attr;
 
-  /* We use bit 30 to signal whether the mutex is going to be
-     robust or not.  */
-  if (robustness == PTHREAD_MUTEX_STALLED_NP)
-    iattr->mutexkind &= ~PTHREAD_MUTEXATTR_FLAG_ROBUST;
-  else
-    iattr->mutexkind |= PTHREAD_MUTEXATTR_FLAG_ROBUST;
+    /* We use bit 30 to signal whether the mutex is going to be
+       robust or not.  */
+    if (robustness == PTHREAD_MUTEX_STALLED_NP) {
+        iattr->mutexkind &= ~PTHREAD_MUTEXATTR_FLAG_ROBUST;
+    } else {
+        iattr->mutexkind |= PTHREAD_MUTEXATTR_FLAG_ROBUST;
+    }
 
-  return 0;
+    return 0;
 }
-versioned_symbol (libc, __pthread_mutexattr_setrobust,
-                  pthread_mutexattr_setrobust, GLIBC_2_34);
+versioned_symbol(libc, __pthread_mutexattr_setrobust,
+                 pthread_mutexattr_setrobust, GLIBC_2_34);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_4, GLIBC_2_34)
-compat_symbol (libpthread, __pthread_mutexattr_setrobust,
-               pthread_mutexattr_setrobust_np, GLIBC_2_4);
+compat_symbol(libpthread, __pthread_mutexattr_setrobust,
+              pthread_mutexattr_setrobust_np, GLIBC_2_4);
 #endif
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_34)
-compat_symbol (libpthread, __pthread_mutexattr_setrobust,
-               pthread_mutexattr_setrobust, GLIBC_2_12);
+compat_symbol(libpthread, __pthread_mutexattr_setrobust,
+              pthread_mutexattr_setrobust, GLIBC_2_12);
 #endif

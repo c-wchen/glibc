@@ -23,43 +23,42 @@
 #include <math-underflow.h>
 
 FLOAT
-M_DECL_FUNC (__exp2m1) (FLOAT x)
+M_DECL_FUNC(__exp2m1)(FLOAT x)
 {
-  if (isgreaterequal (x, M_LIT (-1.0)) && islessequal (x, M_LIT (1.0)))
-    {
-      FLOAT ret = M_SUF (__expm1) (M_MLIT (M_LN2) * x);
-      math_check_force_underflow (ret);
-      if (x != 0 && ret == 0)
-	__set_errno (ERANGE);
-      return ret;
-    }
-  else if (isgreater (x, M_MANT_DIG + M_LIT (2.0)))
-    {
+    if (isgreaterequal(x, M_LIT(-1.0)) && islessequal(x, M_LIT(1.0))) {
+        FLOAT ret = M_SUF(__expm1)(M_MLIT(M_LN2) * x);
+        math_check_force_underflow(ret);
+        if (x != 0 && ret == 0) {
+            __set_errno(ERANGE);
+        }
+        return ret;
+    } else if (isgreater(x, M_MANT_DIG + M_LIT(2.0))) {
 #if defined FE_DOWNWARD || defined FE_TOWARDZERO
-      /* exp2m1 (MAX_EXP) should not overflow in these two rounding
-	 modes, but exp2 does overflow.  */
-      if (x == M_MAX_EXP)
-	{
-	  int rnd_mode = fegetround ();
-	  if (0
+        /* exp2m1 (MAX_EXP) should not overflow in these two rounding
+        modes, but exp2 does overflow.  */
+        if (x == M_MAX_EXP) {
+            int rnd_mode = fegetround();
+            if (0
 # ifdef FE_DOWNWARD
-	      || rnd_mode == FE_DOWNWARD
+                || rnd_mode == FE_DOWNWARD
 # endif
 # ifdef FE_TOWARDZERO
-	      || rnd_mode == FE_TOWARDZERO
+                || rnd_mode == FE_TOWARDZERO
 # endif
-	      )
-	    return M_MAX;
-	}
+               ) {
+                return M_MAX;
+            }
+        }
 #endif
-      FLOAT ret = M_SUF (__ieee754_exp2) (x);
-      if (!isfinite (ret) && isfinite (x))
-	__set_errno (ERANGE);
-      return ret;
+        FLOAT ret = M_SUF(__ieee754_exp2)(x);
+        if (!isfinite(ret) && isfinite(x)) {
+            __set_errno(ERANGE);
+        }
+        return ret;
+    } else if (isless(x, -M_MANT_DIG - M_LIT(2.0))) {
+        return M_LIT(-1.0);
+    } else {
+        return M_SUF(__ieee754_exp2)(x) - M_LIT(1.0);
     }
-  else if (isless (x, -M_MANT_DIG - M_LIT (2.0)))
-    return M_LIT (-1.0);
-  else
-    return M_SUF (__ieee754_exp2) (x) - M_LIT (1.0);
 }
-declare_mgen_alias (__exp2m1, exp2m1);
+declare_mgen_alias(__exp2m1, exp2m1);

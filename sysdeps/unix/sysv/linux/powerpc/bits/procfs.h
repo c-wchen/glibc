@@ -43,7 +43,7 @@ typedef elf_fpreg_t elf_fpregset_t[ELF_NFPREG];
 
 /* Altivec registers */
 typedef struct {
-  unsigned int u[4];
-} __attribute__ ((__aligned__ (16))) elf_vrreg_t;
+    unsigned int u[4];
+} __attribute__((__aligned__(16))) elf_vrreg_t;
 typedef elf_vrreg_t elf_vrregset_t[ELF_NVRREG];
 #endif

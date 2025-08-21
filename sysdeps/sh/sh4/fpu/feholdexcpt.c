@@ -19,26 +19,25 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-int
-__feholdexcept (fenv_t *envp)
+int __feholdexcept(fenv_t *envp)
 {
-  fpu_control_t temp;
+    fpu_control_t temp;
 
-  /* Store the environment.  */
-  _FPU_GETCW (temp);
-  envp->__fpscr = temp;
+    /* Store the environment.  */
+    _FPU_GETCW(temp);
+    envp->__fpscr = temp;
 
-  /* Clear the status flags.  */
-  temp &= ~FE_ALL_EXCEPT;
+    /* Clear the status flags.  */
+    temp &= ~FE_ALL_EXCEPT;
 
-  /* Now set all exceptions to non-stop.  */
-  temp &= ~(FE_ALL_EXCEPT << 5);
+    /* Now set all exceptions to non-stop.  */
+    temp &= ~(FE_ALL_EXCEPT << 5);
 
-  _FPU_SETCW (temp);
+    _FPU_SETCW(temp);
 
-  /* Success.  */
-  return 0;
+    /* Success.  */
+    return 0;
 }
-libm_hidden_def (__feholdexcept)
-weak_alias (__feholdexcept, feholdexcept)
-libm_hidden_weak (feholdexcept)
+libm_hidden_def(__feholdexcept)
+weak_alias(__feholdexcept, feholdexcept)
+libm_hidden_weak(feholdexcept)

@@ -22,11 +22,10 @@
 
 /* Undo the effects of all prior mlock calls in this process.  */
 
-int
-munlockall (void)
+int munlockall(void)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (munlockall)
+stub_warning(munlockall)

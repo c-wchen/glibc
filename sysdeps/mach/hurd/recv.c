@@ -26,45 +26,47 @@
 /* Read N bytes into BUF from socket FD.
    Returns the number read or -1 for errors.  */
 
-ssize_t
-__recv (int fd, void *buf, size_t n, int flags)
+ssize_t __recv(int fd, void *buf, size_t n, int flags)
 {
-  error_t err;
-  mach_port_t addrport;
-  char *bufp = buf;
-  mach_msg_type_number_t nread = n;
-  mach_port_t *ports;
-  mach_msg_type_number_t nports = 0;
-  char *cdata = NULL;
-  mach_msg_type_number_t clen = 0;
-  int cancel_oldtype;
+    error_t err;
+    mach_port_t addrport;
+    char *bufp = buf;
+    mach_msg_type_number_t nread = n;
+    mach_port_t *ports;
+    mach_msg_type_number_t nports = 0;
+    char *cdata = NULL;
+    mach_msg_type_number_t clen = 0;
+    int cancel_oldtype;
 
-  cancel_oldtype = LIBC_CANCEL_ASYNC();
-  err = HURD_DPORT_USE_CANCEL (fd, __socket_recv (port, &addrport,
-						  flags, &bufp, &nread,
-						  &ports, &nports,
-						  &cdata, &clen,
-						  &flags,
-						  n));
-  LIBC_CANCEL_RESET (cancel_oldtype);
+    cancel_oldtype = LIBC_CANCEL_ASYNC();
+    err = HURD_DPORT_USE_CANCEL(fd, __socket_recv(port, &addrport,
+                                flags, &bufp, &nread,
+                                &ports, &nports,
+                                &cdata, &clen,
+                                &flags,
+                                n));
+    LIBC_CANCEL_RESET(cancel_oldtype);
 
-  if (err == MIG_BAD_ID || err == EOPNOTSUPP)
-    /* The file did not grok the socket protocol.  */
-    err = ENOTSOCK;
-  if (err)
-    return __hurd_sockfail (fd, flags, err);
-
-  if (MACH_PORT_VALID (addrport))
-    __mach_port_deallocate (__mach_task_self (), addrport);
-  __vm_deallocate (__mach_task_self (), (vm_address_t) cdata, clen);
-
-  if (bufp != buf)
+    if (err == MIG_BAD_ID || err == EOPNOTSUPP)
+        /* The file did not grok the socket protocol.  */
     {
-      memcpy (buf, bufp, nread);
-      __vm_deallocate (__mach_task_self (), (vm_address_t) bufp, nread);
+        err = ENOTSOCK;
+    }
+    if (err) {
+        return __hurd_sockfail(fd, flags, err);
     }
 
-  return nread;
+    if (MACH_PORT_VALID(addrport)) {
+        __mach_port_deallocate(__mach_task_self(), addrport);
+    }
+    __vm_deallocate(__mach_task_self(), (vm_address_t) cdata, clen);
+
+    if (bufp != buf) {
+        memcpy(buf, bufp, nread);
+        __vm_deallocate(__mach_task_self(), (vm_address_t) bufp, nread);
+    }
+
+    return nread;
 }
-libc_hidden_def (__recv)
-weak_alias (__recv, recv)
+libc_hidden_def(__recv)
+weak_alias(__recv, recv)

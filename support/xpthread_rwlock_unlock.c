@@ -18,9 +18,8 @@
 
 #include <support/xthread.h>
 
-void
-xpthread_rwlock_unlock (pthread_rwlock_t *rwlock)
+void xpthread_rwlock_unlock(pthread_rwlock_t *rwlock)
 {
-  xpthread_check_return ("pthread_rwlock_unlock",
-			 pthread_rwlock_unlock (rwlock));
+    xpthread_check_return("pthread_rwlock_unlock",
+                          pthread_rwlock_unlock(rwlock));
 }

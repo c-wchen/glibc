@@ -19,7 +19,7 @@
 /* We need a special version of the `mcount' function because it has
    to preserve more registers than your usual function.  */
 
-void __mcount_internal (unsigned long frompc, unsigned long selfpc);
+void __mcount_internal(unsigned long frompc, unsigned long selfpc);
 
 #define _MCOUNT_DECL(frompc, selfpc) \
 void __mcount_internal (unsigned long frompc, unsigned long selfpc)

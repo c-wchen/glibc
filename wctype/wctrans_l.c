@@ -20,28 +20,28 @@
 #include <wctype.h>
 #include "../locale/localeinfo.h"
 
-wctrans_t
-__wctrans_l (const char *property, locale_t locale)
+wctrans_t __wctrans_l(const char *property, locale_t locale)
 {
-  const char *names;
-  size_t cnt;
-  size_t i;
+    const char *names;
+    size_t cnt;
+    size_t i;
 
-  names = locale->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX (_NL_CTYPE_MAP_NAMES)].string;
-  cnt = 0;
-  while (names[0] != '\0')
-    {
-      if (strcmp (property, names) == 0)
-	break;
+    names = locale->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX(_NL_CTYPE_MAP_NAMES)].string;
+    cnt = 0;
+    while (names[0] != '\0') {
+        if (strcmp(property, names) == 0) {
+            break;
+        }
 
-      names = strchr (names, '\0') + 1;
-      ++cnt;
+        names = strchr(names, '\0') + 1;
+        ++cnt;
     }
 
-  if (names[0] == '\0')
-    return NULL;
+    if (names[0] == '\0') {
+        return NULL;
+    }
 
-  i = locale->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX (_NL_CTYPE_MAP_OFFSET)].word + cnt;
-  return (wctrans_t) locale->__locales[LC_CTYPE]->values[i].string;
+    i = locale->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX(_NL_CTYPE_MAP_OFFSET)].word + cnt;
+    return (wctrans_t) locale->__locales[LC_CTYPE]->values[i].string;
 }
-weak_alias (__wctrans_l, wctrans_l)
+weak_alias(__wctrans_l, wctrans_l)

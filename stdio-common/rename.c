@@ -20,18 +20,16 @@
 
 
 /* Rename the file OLD to NEW.  */
-int
-rename (const char *old, const char *new)
+int rename(const char *old, const char *new)
 {
-  if (old == NULL || new == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (old == NULL || new == NULL) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
 
-stub_warning (rename)
+stub_warning(rename)

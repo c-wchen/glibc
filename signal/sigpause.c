@@ -20,30 +20,29 @@
 #include <signal.h>
 #undef sigpause
 
-int
-__sigpause (int sig_or_mask, int is_sig)
+int __sigpause(int sig_or_mask, int is_sig)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (__sigpause)
-libc_hidden_def (__sigpause)
+stub_warning(__sigpause)
+libc_hidden_def(__sigpause)
 
 int
-__attribute__ ((weak))
-__default_sigpause (int mask)
+__attribute__((weak))
+__default_sigpause(int mask)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-weak_alias (__default_sigpause, sigpause)
-stub_warning (sigpause)
+weak_alias(__default_sigpause, sigpause)
+stub_warning(sigpause)
 
 
 int
-__attribute ((weak))
-__xpg___sigpause (int sig)
+__attribute((weak))
+__xpg___sigpause(int sig)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }

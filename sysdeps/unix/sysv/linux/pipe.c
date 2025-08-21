@@ -23,10 +23,9 @@
    If successful, two file descriptors are stored in PIPEDES;
    bytes written on PIPEDES[1] can be read from PIPEDES[0].
    Returns 0 if successful, -1 if not.  */
-int
-__pipe (int __pipedes[2])
+int __pipe(int __pipedes[2])
 {
-  return INLINE_SYSCALL_CALL (pipe2, (int *) __pipedes, 0);
+    return INLINE_SYSCALL_CALL(pipe2, (int *) __pipedes, 0);
 }
-libc_hidden_def (__pipe)
-weak_alias (__pipe, pipe)
+libc_hidden_def(__pipe)
+weak_alias(__pipe, pipe)

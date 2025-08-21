@@ -19,24 +19,25 @@
 #include "pthreadP.h"
 
 
-int
-__pthread_attr_setdetachstate (pthread_attr_t *attr, int detachstate)
+int __pthread_attr_setdetachstate(pthread_attr_t *attr, int detachstate)
 {
-  struct pthread_attr *iattr;
+    struct pthread_attr *iattr;
 
-  iattr = (struct pthread_attr *) attr;
+    iattr = (struct pthread_attr *) attr;
 
-  /* Catch invalid values.  */
-  if (detachstate != PTHREAD_CREATE_DETACHED
-      && __builtin_expect (detachstate != PTHREAD_CREATE_JOINABLE, 0))
-    return EINVAL;
+    /* Catch invalid values.  */
+    if (detachstate != PTHREAD_CREATE_DETACHED
+        && __builtin_expect(detachstate != PTHREAD_CREATE_JOINABLE, 0)) {
+        return EINVAL;
+    }
 
-  /* Set the flag.  It is nonzero if threads are created detached.  */
-  if (detachstate == PTHREAD_CREATE_DETACHED)
-    iattr->flags |= ATTR_FLAG_DETACHSTATE;
-  else
-    iattr->flags &= ~ATTR_FLAG_DETACHSTATE;
+    /* Set the flag.  It is nonzero if threads are created detached.  */
+    if (detachstate == PTHREAD_CREATE_DETACHED) {
+        iattr->flags |= ATTR_FLAG_DETACHSTATE;
+    } else {
+        iattr->flags &= ~ATTR_FLAG_DETACHSTATE;
+    }
 
-  return 0;
+    return 0;
 }
-strong_alias (__pthread_attr_setdetachstate, pthread_attr_setdetachstate)
+strong_alias(__pthread_attr_setdetachstate, pthread_attr_setdetachstate)

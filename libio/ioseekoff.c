@@ -28,45 +28,42 @@
 #include <libioP.h>
 #include <errno.h>
 
-off64_t
-_IO_seekoff_unlocked (FILE *fp, off64_t offset, int dir, int mode)
+off64_t _IO_seekoff_unlocked(FILE *fp, off64_t offset, int dir, int mode)
 {
-  if (dir != _IO_seek_cur && dir != _IO_seek_set && dir != _IO_seek_end)
-    {
-      __set_errno (EINVAL);
-      return EOF;
+    if (dir != _IO_seek_cur && dir != _IO_seek_set && dir != _IO_seek_end) {
+        __set_errno(EINVAL);
+        return EOF;
     }
 
-  /* If we have a backup buffer, get rid of it, since the __seekoff
-     callback may not know to do the right thing about it.
-     This may be over-kill, but it'll do for now. TODO */
-  if (mode != 0 && ((_IO_fwide (fp, 0) < 0 && _IO_have_backup (fp))
-		    || (_IO_fwide (fp, 0) > 0 && _IO_have_wbackup (fp))))
-    {
-      if (dir == _IO_seek_cur && _IO_in_backup (fp))
-	{
-	  if (_IO_vtable_offset (fp) != 0 || fp->_mode <= 0)
-	    offset -= fp->_IO_read_end - fp->_IO_read_ptr;
-	  else
-	    abort ();
-	}
-      if (_IO_fwide (fp, 0) < 0)
-	_IO_free_backup_area (fp);
-      else
-	_IO_free_wbackup_area (fp);
+    /* If we have a backup buffer, get rid of it, since the __seekoff
+       callback may not know to do the right thing about it.
+       This may be over-kill, but it'll do for now. TODO */
+    if (mode != 0 && ((_IO_fwide(fp, 0) < 0 && _IO_have_backup(fp))
+                      || (_IO_fwide(fp, 0) > 0 && _IO_have_wbackup(fp)))) {
+        if (dir == _IO_seek_cur && _IO_in_backup(fp)) {
+            if (_IO_vtable_offset(fp) != 0 || fp->_mode <= 0) {
+                offset -= fp->_IO_read_end - fp->_IO_read_ptr;
+            } else {
+                abort();
+            }
+        }
+        if (_IO_fwide(fp, 0) < 0) {
+            _IO_free_backup_area(fp);
+        } else {
+            _IO_free_wbackup_area(fp);
+        }
     }
 
-  return _IO_SEEKOFF (fp, offset, dir, mode);
+    return _IO_SEEKOFF(fp, offset, dir, mode);
 }
 
 
-off64_t
-_IO_seekoff (FILE *fp, off64_t offset, int dir, int mode)
+off64_t _IO_seekoff(FILE *fp, off64_t offset, int dir, int mode)
 {
-  off64_t retval;
+    off64_t retval;
 
-  _IO_acquire_lock (fp);
-  retval = _IO_seekoff_unlocked (fp, offset, dir, mode);
-  _IO_release_lock (fp);
-  return retval;
+    _IO_acquire_lock(fp);
+    retval = _IO_seekoff_unlocked(fp, offset, dir, mode);
+    _IO_release_lock(fp);
+    return retval;
 }

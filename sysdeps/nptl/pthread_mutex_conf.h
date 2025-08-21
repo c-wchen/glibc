@@ -20,14 +20,13 @@
 
 #include <adaptive_spin_count.h>
 
-struct mutex_config
-{
-  int spin_count;
+struct mutex_config {
+    int spin_count;
 };
 
 extern struct mutex_config __mutex_aconf;
-libc_hidden_proto (__mutex_aconf)
+libc_hidden_proto(__mutex_aconf)
 
-extern void __pthread_tunables_init (void) attribute_hidden;
+extern void __pthread_tunables_init(void) attribute_hidden;
 
 #endif

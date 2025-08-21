@@ -21,46 +21,52 @@
 #include <errno.h>
 #include <netdb.h>
 
-static int
-try (const char *service, int family, int flags)
+static int try
+    (const char *service, int family, int flags)
 {
-  struct addrinfo hints, *h, *ai;
-  int res;
+    struct addrinfo hints, *h, *ai;
+    int res;
 
-  memset (&hints, 0, sizeof hints);
-  hints.ai_family = family;
-  hints.ai_flags = flags;
+    memset(&hints, 0, sizeof hints);
+    hints.ai_family = family;
+    hints.ai_flags = flags;
 
-  errno = 0;
-  h = (family || flags) ? &hints : NULL;
-  res = getaddrinfo ("example.net", service, h, &ai);
-  switch (res)
-    {
-    case 0:
-    case EAI_AGAIN:
-    case EAI_NONAME:
-      printf ("SUCCESS getaddrinfo(service=%s, family=%d, flags=%d): %s: %m\n",
-              service ?: "NULL", family, flags, gai_strerror (res));
-      return 0;
+    errno = 0;
+    h = (family || flags) ? &hints : NULL;
+    res = getaddrinfo("example.net", service, h, &ai);
+    switch (res) {
+        case 0:
+        case EAI_AGAIN:
+        case EAI_NONAME:
+            printf("SUCCESS getaddrinfo(service=%s, family=%d, flags=%d): %s: %m\n",
+                   service ? : "NULL", family, flags, gai_strerror(res));
+            return 0;
     }
-  printf ("FAIL getaddrinfo(service=%s, family=%d, flags=%d): %s: %m\n",
-          service ?: "NULL", family, flags, gai_strerror (res));
-  return 1;
+    printf("FAIL getaddrinfo(service=%s, family=%d, flags=%d): %s: %m\n",
+           service ? : "NULL", family, flags, gai_strerror(res));
+    return 1;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int err = 0;
-  err |= try (NULL, 0, 0);
-  err |= try (NULL, AF_UNSPEC, AI_ADDRCONFIG);
-  err |= try (NULL, AF_INET, 0);
-  err |= try (NULL, AF_INET6, 0);
-  err |= try ("http", 0, 0);
-  err |= try ("http", AF_UNSPEC, AI_ADDRCONFIG);
-  err |= try ("http", AF_INET, 0);
-  err |= try ("http", AF_INET6, 0);
-  return err;
+    int err = 0;
+    err |= try
+               (NULL, 0, 0);
+    err |= try
+               (NULL, AF_UNSPEC, AI_ADDRCONFIG);
+    err |= try
+               (NULL, AF_INET, 0);
+    err |= try
+               (NULL, AF_INET6, 0);
+    err |= try
+               ("http", 0, 0);
+    err |= try
+               ("http", AF_UNSPEC, AI_ADDRCONFIG);
+    err |= try
+               ("http", AF_INET, 0);
+    err |= try
+               ("http", AF_INET6, 0);
+    return err;
 }
 
 #define TEST_FUNCTION do_test ()

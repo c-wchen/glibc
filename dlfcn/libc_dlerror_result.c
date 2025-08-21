@@ -24,16 +24,13 @@
 __thread struct dl_action_result *__libc_dlerror_result attribute_tls_model_ie;
 
 /* Called during thread shutdown to free resources.  */
-void
-__libc_dlerror_result_free (void)
+void __libc_dlerror_result_free(void)
 {
-  if (__libc_dlerror_result != NULL)
-    {
-      if (__libc_dlerror_result != dl_action_result_malloc_failed)
-        {
-          dl_action_result_errstring_free (__libc_dlerror_result);
-          free (__libc_dlerror_result);
+    if (__libc_dlerror_result != NULL) {
+        if (__libc_dlerror_result != dl_action_result_malloc_failed) {
+            dl_action_result_errstring_free(__libc_dlerror_result);
+            free(__libc_dlerror_result);
         }
-      __libc_dlerror_result = NULL;
+        __libc_dlerror_result = NULL;
     }
 }

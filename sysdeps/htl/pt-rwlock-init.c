@@ -21,31 +21,33 @@
 #include <pt-internal.h>
 #include <shlib-compat.h>
 
-int
-__pthread_rwlock_init (pthread_rwlock_t *rwlock,
-		      const pthread_rwlockattr_t *attr)
+int __pthread_rwlock_init(pthread_rwlock_t *rwlock,
+                          const pthread_rwlockattr_t *attr)
 {
-  ASSERT_TYPE_SIZE (pthread_rwlock_t, __SIZEOF_PTHREAD_RWLOCK_T);
+    ASSERT_TYPE_SIZE(pthread_rwlock_t, __SIZEOF_PTHREAD_RWLOCK_T);
 
-  *rwlock = (pthread_rwlock_t) __PTHREAD_RWLOCK_INITIALIZER;
+    *rwlock = (pthread_rwlock_t) __PTHREAD_RWLOCK_INITIALIZER;
 
-  if (attr == NULL
-      || memcmp (attr, &__pthread_default_rwlockattr, sizeof (*attr)) == 0)
-    /* Use the default attributes.  */
+    if (attr == NULL
+        || memcmp(attr, &__pthread_default_rwlockattr, sizeof(*attr)) == 0)
+        /* Use the default attributes.  */
+    {
+        return 0;
+    }
+
+    /* Non-default attributes.  */
+
+    rwlock->__attr = malloc(sizeof * attr);
+    if (rwlock->__attr == NULL) {
+        return ENOMEM;
+    }
+
+    *rwlock->__attr = *attr;
     return 0;
-
-  /* Non-default attributes.  */
-
-  rwlock->__attr = malloc (sizeof *attr);
-  if (rwlock->__attr == NULL)
-    return ENOMEM;
-
-  *rwlock->__attr = *attr;
-  return 0;
 }
-libc_hidden_def (__pthread_rwlock_init)
-versioned_symbol (libc, __pthread_rwlock_init, pthread_rwlock_init, GLIBC_2_42);
+libc_hidden_def(__pthread_rwlock_init)
+versioned_symbol(libc, __pthread_rwlock_init, pthread_rwlock_init, GLIBC_2_42);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_42)
-compat_symbol (libpthread, __pthread_rwlock_init, pthread_rwlock_init, GLIBC_2_12);
+compat_symbol(libpthread, __pthread_rwlock_init, pthread_rwlock_init, GLIBC_2_12);
 #endif

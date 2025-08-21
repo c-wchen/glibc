@@ -60,8 +60,8 @@
    with the corresponding ISO C type in the current compilation unit as
    opposed to __HAVE_DISTINCT_FLOATN, which indicates the default types built
    in glibc.  */
-#define __HAVE_FLOAT128_UNLIKE_LDBL (__HAVE_DISTINCT_FLOAT128	\
-				     && __LDBL_MANT_DIG__ != 113)
+#define __HAVE_FLOAT128_UNLIKE_LDBL (__HAVE_DISTINCT_FLOAT128   \
+                     && __LDBL_MANT_DIG__ != 113)
 
 /* Defined to 1 if any _FloatN or _FloatNx types that are not
    ABI-distinct are however distinct types at the C language level (so
@@ -137,7 +137,7 @@
 /* Defined to a complex type if __HAVE_<type> is 1.  */
 # if __HAVE_FLOAT16
 #  if !__GNUC_PREREQ (7, 0) || (defined __cplusplus && !__GNUC_PREREQ (13, 0))
-typedef _Complex float __cfloat16 __attribute__ ((__mode__ (__HC__)));
+typedef _Complex float __cfloat16 __attribute__((__mode__(__HC__)));
 #   define __CFLOAT16 __cfloat16
 #  else
 #   define __CFLOAT16 _Complex _Float16
@@ -196,7 +196,7 @@ typedef _Complex float __cfloat16 __attribute__ ((__mode__ (__HC__)));
 # if __HAVE_FLOAT16
 
 #  if !__GNUC_PREREQ (7, 0) || (defined __cplusplus && !__GNUC_PREREQ (13, 0))
-typedef float _Float16 __attribute__ ((__mode__ (__HF__)));
+typedef float _Float16 __attribute__((__mode__(__HF__)));
 #  endif
 
 #  if !__GNUC_PREREQ (7, 0)

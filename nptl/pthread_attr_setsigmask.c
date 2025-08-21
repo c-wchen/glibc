@@ -19,16 +19,16 @@
 #include <pthreadP.h>
 #include <internal-signals.h>
 
-int
-pthread_attr_setsigmask_np (pthread_attr_t *attr, const sigset_t *sigmask)
+int pthread_attr_setsigmask_np(pthread_attr_t *attr, const sigset_t *sigmask)
 {
-  int ret = __pthread_attr_setsigmask_internal (attr, sigmask);
-  if (ret != 0)
-    return ret;
+    int ret = __pthread_attr_setsigmask_internal(attr, sigmask);
+    if (ret != 0) {
+        return ret;
+    }
 
-  /* Filter out internal signals.  */
-  struct pthread_attr *iattr = (struct pthread_attr *) attr;
-  clear_internal_signals (&iattr->extension->sigmask);
+    /* Filter out internal signals.  */
+    struct pthread_attr *iattr = (struct pthread_attr *) attr;
+    clear_internal_signals(&iattr->extension->sigmask);
 
-  return 0;
+    return 0;
 }

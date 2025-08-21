@@ -21,8 +21,7 @@
 #undef fsqrtl
 
 float
-attribute_hidden
-fsqrtl (double x)
+attribute_hidden fsqrtl(double x)
 {
-  return fsqrt (x);
+    return fsqrt(x);
 }

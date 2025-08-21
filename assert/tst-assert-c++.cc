@@ -24,67 +24,62 @@
 #if __GNUC_PREREQ (5, 0)
 /* The C++ standard requires that if the assert argument is a constant
    subexpression, then the assert itself is one, too.  */
-constexpr int
-check_constexpr ()
+constexpr int check_constexpr()
 {
-  return (assert (true), 1);
+    return (assert(true), 1);
 }
 
 /* Objects of this class can be contextually converted to bool, but
    cannot be compared to int.  */
-struct no_int
-{
-  no_int () = default;
-  no_int (const no_int &) = delete;
+struct no_int {
+    no_int() = default;
+    no_int(const no_int &) = delete;
 
-  explicit operator bool () const
-  {
-    return true;
-  }
+    explicit operator bool () const
+    {
+        return true;
+    }
 
-  bool operator! () const; /* No definition.  */
-  template <class T> bool operator== (T) const; /* No definition.  */
-  template <class T> bool operator!= (T) const; /* No definition.  */
+    bool operator!() const;  /* No definition.  */
+    template <class T> bool operator== (T) const; /* No definition.  */
+    template <class T> bool operator!= (T) const; /* No definition.  */
 };
 
 /* This class tests that operator== is not used by assert.  */
-struct bool_and_int
-{
-  bool_and_int () = default;
-  bool_and_int (const no_int &) = delete;
+struct bool_and_int {
+    bool_and_int() = default;
+    bool_and_int(const no_int &) = delete;
 
-  explicit operator bool () const
-  {
-    return true;
-  }
+    explicit operator bool () const
+    {
+        return true;
+    }
 
-  bool operator! () const; /* No definition.  */
-  template <class T> bool operator== (T) const; /* No definition.  */
-  template <class T> bool operator!= (T) const; /* No definition.  */
+    bool operator!() const;  /* No definition.  */
+    template <class T> bool operator== (T) const; /* No definition.  */
+    template <class T> bool operator!= (T) const; /* No definition.  */
 };
 
-static int
-do_test ()
+static int do_test()
 {
-  {
-    no_int value;
-    assert (value);
-  }
+    {
+        no_int value;
+        assert(value);
+    }
 
-  {
-    bool_and_int value;
-    assert (value);
-  }
+    {
+        bool_and_int value;
+        assert(value);
+    }
 
-  return 0;
+    return 0;
 }
 #else
 #include <support/test-driver.h>
 
-static int
-do_test ()
+static int do_test()
 {
-  return EXIT_UNSUPPORTED;
+    return EXIT_UNSUPPORTED;
 }
 #endif
 

@@ -21,4 +21,4 @@
 #endif
 
 /* Segment low boundary address multiple.  */
-#define SHMLBA		0x4000
+#define SHMLBA      0x4000

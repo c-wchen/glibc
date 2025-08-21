@@ -22,8 +22,7 @@
 # error MARKER not defined
 #endif
 
-int
-MARKER (void)
+int MARKER(void)
 {
-  return VALUE;
+    return VALUE;
 }

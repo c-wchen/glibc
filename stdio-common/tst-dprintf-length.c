@@ -22,24 +22,23 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* Use a datagram socket to check that everything arrives in one packet.
-     The dprintf function should perform a single write call.  */
-  int fds[2];
-  TEST_VERIFY_EXIT (socketpair (AF_LOCAL, SOCK_DGRAM, 0, fds) == 0);
+    /* Use a datagram socket to check that everything arrives in one packet.
+       The dprintf function should perform a single write call.  */
+    int fds[2];
+    TEST_VERIFY_EXIT(socketpair(AF_LOCAL, SOCK_DGRAM, 0, fds) == 0);
 
-  TEST_COMPARE (dprintf (fds[0], "(%d)%s[%d]", 123, "---", 4567), 14);
+    TEST_COMPARE(dprintf(fds[0], "(%d)%s[%d]", 123, "---", 4567), 14);
 
-  char buf[32];
-  ssize_t ret = read (fds[1], buf, sizeof (buf));
-  TEST_VERIFY_EXIT (ret > 0);
-  TEST_COMPARE_BLOB (buf, ret, "(123)---[4567]", strlen ("(123)---[4567]"));
+    char buf[32];
+    ssize_t ret = read(fds[1], buf, sizeof(buf));
+    TEST_VERIFY_EXIT(ret > 0);
+    TEST_COMPARE_BLOB(buf, ret, "(123)---[4567]", strlen("(123)---[4567]"));
 
-  close (fds[1]);
-  close (fds[0]);
-  return 0;
+    close(fds[1]);
+    close(fds[0]);
+    return 0;
 }
 
 #include <support/test-driver.c>

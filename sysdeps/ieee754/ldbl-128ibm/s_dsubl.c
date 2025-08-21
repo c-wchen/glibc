@@ -19,9 +19,8 @@
 #include <math.h>
 #include <math-narrow.h>
 
-double
-__dsubl (long double x, long double y)
+double __dsubl(long double x, long double y)
 {
-  NARROW_SUB_TRIVIAL (x, y, double);
+    NARROW_SUB_TRIVIAL(x, y, double);
 }
-libm_alias_double_ldouble (sub)
+libm_alias_double_ldouble(sub)

@@ -27,17 +27,17 @@
 # include <ifunc-resolve.h>
 
 # if HAVE_WMEMSET_C
-extern __typeof (__redirect___wmemset) WMEMSET_C attribute_hidden;
+extern __typeof(__redirect___wmemset) WMEMSET_C attribute_hidden;
 # endif
 
 # if HAVE_WMEMSET_Z13
-extern __typeof (__redirect___wmemset) WMEMSET_Z13 attribute_hidden;
+extern __typeof(__redirect___wmemset) WMEMSET_Z13 attribute_hidden;
 # endif
 
-s390_libc_ifunc_expr (__redirect___wmemset, __wmemset,
-		      (HAVE_WMEMSET_Z13 && (hwcap & HWCAP_S390_VX))
-		      ? WMEMSET_Z13
-		      : WMEMSET_DEFAULT
-		      )
-weak_alias (__wmemset, wmemset)
+s390_libc_ifunc_expr(__redirect___wmemset, __wmemset,
+                     (HAVE_WMEMSET_Z13 &&(hwcap &HWCAP_S390_VX))
+                     ? WMEMSET_Z13
+                     : WMEMSET_DEFAULT
+                    )
+weak_alias(__wmemset, wmemset)
 #endif

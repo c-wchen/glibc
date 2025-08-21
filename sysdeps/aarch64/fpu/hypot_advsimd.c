@@ -20,29 +20,26 @@
 #include "v_math.h"
 
 #if WANT_SIMD_EXCEPT
-static const struct data
-{
-  uint64x2_t tiny_bound, thres;
+static const struct data {
+    uint64x2_t tiny_bound, thres;
 } data = {
-  .tiny_bound = V2 (0x2000000000000000), /* asuint (0x1p-511).  */
-  .thres = V2 (0x3fe0000000000000), /* asuint (0x1p511) - tiny_bound.  */
+    .tiny_bound = V2(0x2000000000000000),  /* asuint (0x1p-511).  */
+    .thres = V2(0x3fe0000000000000),  /* asuint (0x1p511) - tiny_bound.  */
 };
 #else
-static const struct data
-{
-  uint64x2_t tiny_bound;
-  uint32x4_t thres;
+static const struct data {
+    uint64x2_t tiny_bound;
+    uint32x4_t thres;
 } data = {
-  .tiny_bound = V2 (0x0360000000000000), /* asuint (0x1p-969).  */
-  .thres = V4 (0x7c900000),	 /* asuint (inf) - tiny_bound.  */
+    .tiny_bound = V2(0x0360000000000000),  /* asuint (0x1p-969).  */
+    .thres = V4(0x7c900000),   /* asuint (inf) - tiny_bound.  */
 };
 #endif
 
-static float64x2_t VPCS_ATTR NOINLINE
-special_case (float64x2_t x, float64x2_t y, float64x2_t sqsum,
-	      uint32x2_t special)
+static float64x2_t VPCS_ATTR NOINLINE special_case(float64x2_t x, float64x2_t y, float64x2_t sqsum,
+        uint32x2_t special)
 {
-  return v_call2_f64 (hypot, x, y, vsqrtq_f64 (sqsum), vmovl_u32 (special));
+    return v_call2_f64(hypot, x, y, vsqrtq_f64(sqsum), vmovl_u32(special));
 }
 
 /* Vector implementation of double-precision hypot.
@@ -52,46 +49,48 @@ special_case (float64x2_t x, float64x2_t y, float64x2_t sqsum,
    want 0x1.6a1b19400964dp-204.  */
 #if WANT_SIMD_EXCEPT
 
-float64x2_t VPCS_ATTR V_NAME_D2 (hypot) (float64x2_t x, float64x2_t y)
+float64x2_t VPCS_ATTR V_NAME_D2(hypot)(float64x2_t x, float64x2_t y)
 {
-  const struct data *d = ptr_barrier (&data);
+    const struct data *d = ptr_barrier(&data);
 
-  float64x2_t ax = vabsq_f64 (x);
-  float64x2_t ay = vabsq_f64 (y);
+    float64x2_t ax = vabsq_f64(x);
+    float64x2_t ay = vabsq_f64(y);
 
-  uint64x2_t ix = vreinterpretq_u64_f64 (ax);
-  uint64x2_t iy = vreinterpretq_u64_f64 (ay);
+    uint64x2_t ix = vreinterpretq_u64_f64(ax);
+    uint64x2_t iy = vreinterpretq_u64_f64(ay);
 
-  /* Extreme values, NaNs, and infinities should be handled by the scalar
-     fallback for correct flag handling.  */
-  uint64x2_t specialx = vcgeq_u64 (vsubq_u64 (ix, d->tiny_bound), d->thres);
-  uint64x2_t specialy = vcgeq_u64 (vsubq_u64 (iy, d->tiny_bound), d->thres);
-  ax = v_zerofy_f64 (ax, specialx);
-  ay = v_zerofy_f64 (ay, specialy);
-  uint32x2_t special = vaddhn_u64 (specialx, specialy);
+    /* Extreme values, NaNs, and infinities should be handled by the scalar
+       fallback for correct flag handling.  */
+    uint64x2_t specialx = vcgeq_u64(vsubq_u64(ix, d->tiny_bound), d->thres);
+    uint64x2_t specialy = vcgeq_u64(vsubq_u64(iy, d->tiny_bound), d->thres);
+    ax = v_zerofy_f64(ax, specialx);
+    ay = v_zerofy_f64(ay, specialy);
+    uint32x2_t special = vaddhn_u64(specialx, specialy);
 
-  float64x2_t sqsum = vfmaq_f64 (vmulq_f64 (ax, ax), ay, ay);
+    float64x2_t sqsum = vfmaq_f64(vmulq_f64(ax, ax), ay, ay);
 
-  if (__glibc_unlikely (v_any_u32h (special)))
-    return special_case (x, y, sqsum, special);
+    if (__glibc_unlikely(v_any_u32h(special))) {
+        return special_case(x, y, sqsum, special);
+    }
 
-  return vsqrtq_f64 (sqsum);
+    return vsqrtq_f64(sqsum);
 }
 #else
 
-float64x2_t VPCS_ATTR V_NAME_D2 (hypot) (float64x2_t x, float64x2_t y)
+float64x2_t VPCS_ATTR V_NAME_D2(hypot)(float64x2_t x, float64x2_t y)
 {
-  const struct data *d = ptr_barrier (&data);
+    const struct data *d = ptr_barrier(&data);
 
-  float64x2_t sqsum = vfmaq_f64 (vmulq_f64 (x, x), y, y);
+    float64x2_t sqsum = vfmaq_f64(vmulq_f64(x, x), y, y);
 
-  uint32x2_t special = vcge_u32 (
-      vsubhn_u64 (vreinterpretq_u64_f64 (sqsum), d->tiny_bound),
-      vget_low_u32 (d->thres));
+    uint32x2_t special = vcge_u32(
+                             vsubhn_u64(vreinterpretq_u64_f64(sqsum), d->tiny_bound),
+                             vget_low_u32(d->thres));
 
-  if (__glibc_unlikely (v_any_u32h (special)))
-    return special_case (x, y, sqsum, special);
+    if (__glibc_unlikely(v_any_u32h(special))) {
+        return special_case(x, y, sqsum, special);
+    }
 
-  return vsqrtq_f64 (sqsum);
+    return vsqrtq_f64(sqsum);
 }
 #endif

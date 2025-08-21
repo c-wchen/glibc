@@ -23,18 +23,16 @@
 
 /* Set the access and modification times of FILE to those given in TIMES.
    If TIMES is NULL, set them to the current time.  */
-int
-utime (const char *file, const struct utimbuf *times)
+int utime(const char *file, const struct utimbuf *times)
 {
-  if (file == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (file == NULL) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (utime)
+libc_hidden_def(utime)
 
-stub_warning (utime)
+stub_warning(utime)

@@ -23,14 +23,12 @@
 
 __thread struct value NAME;
 
-void
-SETTER (const struct value *value)
+void SETTER(const struct value *value)
 {
-  NAME = *value;
+    NAME = *value;
 }
 
-void
-GETTER (struct value *value)
+void GETTER(struct value *value)
 {
-  *value = NAME;
+    *value = NAME;
 }

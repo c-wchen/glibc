@@ -20,15 +20,14 @@
 #include <stdio.h>
 #include <support/check.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  mtrace ();
-  FILE *fp = fopen ("/dev/full", "w");
-  TEST_VERIFY_EXIT (fp != NULL);
-  TEST_COMPARE (fprintf (fp, "%.65536f", 1.0), -1);
-  fclose (fp);
-  return 0;
+    mtrace();
+    FILE *fp = fopen("/dev/full", "w");
+    TEST_VERIFY_EXIT(fp != NULL);
+    TEST_COMPARE(fprintf(fp, "%.65536f", 1.0), -1);
+    fclose(fp);
+    return 0;
 }
 
 #include <support/test-driver.c>

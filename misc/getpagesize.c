@@ -19,13 +19,12 @@
 #include <unistd.h>
 
 /* Return the system page size.  */
-int
-__getpagesize (void)
+int __getpagesize(void)
 {
-  __set_errno (ENOSYS);
-  return 0;
+    __set_errno(ENOSYS);
+    return 0;
 }
-libc_hidden_def (__getpagesize)
-stub_warning (getpagesize)
+libc_hidden_def(__getpagesize)
+stub_warning(getpagesize)
 
-weak_alias (__getpagesize, getpagesize)
+weak_alias(__getpagesize, getpagesize)

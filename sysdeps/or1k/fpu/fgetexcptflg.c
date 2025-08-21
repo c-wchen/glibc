@@ -19,11 +19,10 @@
 #include <fenv.h>
 #include <fenv_private.h>
 
-int
-fegetexceptflag (fexcept_t *flagp, int excepts)
+int fegetexceptflag(fexcept_t *flagp, int excepts)
 {
-  *flagp = libc_fetestexcept_or1k (excepts);
+    *flagp = libc_fetestexcept_or1k(excepts);
 
-  /* Success.  */
-  return 0;
+    /* Success.  */
+    return 0;
 }

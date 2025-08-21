@@ -32,67 +32,67 @@
 static pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 
 
-static void *
-tf (void *arg)
+static void *tf(void *arg)
 {
-  xpthread_mutex_lock (&lock);
-  xpthread_mutex_unlock (&lock);
+    xpthread_mutex_lock(&lock);
+    xpthread_mutex_unlock(&lock);
 
-  return (void *) 42l;
+    return (void *) 42l;
 }
 
 
-static int
-do_test_clock (clockid_t clockid)
+static int do_test_clock(clockid_t clockid)
 {
-  const clockid_t clockid_for_get =
-    (clockid == CLOCK_USE_TIMEDJOIN) ? CLOCK_REALTIME : clockid;
+    const clockid_t clockid_for_get =
+        (clockid == CLOCK_USE_TIMEDJOIN) ? CLOCK_REALTIME : clockid;
 
-  xpthread_mutex_lock (&lock);
-  pthread_t th = xpthread_create (NULL, tf, NULL);
+    xpthread_mutex_lock(&lock);
+    pthread_t th = xpthread_create(NULL, tf, NULL);
 
-  void *status;
-  struct timespec timeout = timespec_add (xclock_now (clockid_for_get),
-                                          make_timespec (0, 200000000));
+    void *status;
+    struct timespec timeout = timespec_add(xclock_now(clockid_for_get),
+                                           make_timespec(0, 200000000));
 
-  int val;
-  if (clockid == CLOCK_USE_TIMEDJOIN)
-    val = pthread_timedjoin_np (th, &status, &timeout);
-  else
-    val = pthread_clockjoin_np (th, &status, clockid, &timeout);
-
-  TEST_COMPARE (val, ETIMEDOUT);
-
-  xpthread_mutex_unlock (&lock);
-
-  while (1)
-    {
-      timeout = timespec_add (xclock_now (clockid_for_get),
-                              make_timespec (0, 200000000));
-
-      if (clockid == CLOCK_USE_TIMEDJOIN)
-        val = pthread_timedjoin_np (th, &status, &timeout);
-      else
-        val = pthread_clockjoin_np (th, &status, clockid, &timeout);
-      if (val == 0)
-	break;
-
-      TEST_COMPARE (val, ETIMEDOUT);
+    int val;
+    if (clockid == CLOCK_USE_TIMEDJOIN) {
+        val = pthread_timedjoin_np(th, &status, &timeout);
+    } else {
+        val = pthread_clockjoin_np(th, &status, clockid, &timeout);
     }
 
-  if (status != (void *) 42l)
-    FAIL_EXIT1 ("return value %p, expected %p\n", status, (void *) 42l);
+    TEST_COMPARE(val, ETIMEDOUT);
 
-  return 0;
+    xpthread_mutex_unlock(&lock);
+
+    while (1) {
+        timeout = timespec_add(xclock_now(clockid_for_get),
+                               make_timespec(0, 200000000));
+
+        if (clockid == CLOCK_USE_TIMEDJOIN) {
+            val = pthread_timedjoin_np(th, &status, &timeout);
+        } else {
+            val = pthread_clockjoin_np(th, &status, clockid, &timeout);
+        }
+        if (val == 0) {
+            break;
+        }
+
+        TEST_COMPARE(val, ETIMEDOUT);
+    }
+
+    if (status != (void *) 42l) {
+        FAIL_EXIT1("return value %p, expected %p\n", status, (void *) 42l);
+    }
+
+    return 0;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  do_test_clock (CLOCK_USE_TIMEDJOIN);
-  do_test_clock (CLOCK_REALTIME);
-  do_test_clock (CLOCK_MONOTONIC);
-  return 0;
+    do_test_clock(CLOCK_USE_TIMEDJOIN);
+    do_test_clock(CLOCK_REALTIME);
+    do_test_clock(CLOCK_MONOTONIC);
+    return 0;
 }
 
 #include <support/test-driver.c>

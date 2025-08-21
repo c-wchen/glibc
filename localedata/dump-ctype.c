@@ -32,131 +32,122 @@
 static const char *program_name = "dump-ctype";
 static const char *locale;
 
-static const char *class_names[] =
-  {
+static const char *class_names[] = {
     "alnum", "alpha", "blank", "cntrl", "digit", "graph", "lower",
     "print", "punct", "space", "upper", "xdigit"
-  };
+};
 
-static const char *map_names[] =
-  {
+static const char *map_names[] = {
     "tolower", "toupper", "totitle"
-  };
+};
 
-static void dump_class (const char *class_name)
+static void dump_class(const char *class_name)
 {
-  wctype_t class;
-  FILE *f;
-  unsigned int ch;
+    wctype_t class;
+    FILE *f;
+    unsigned int ch;
 
-  class = wctype (class_name);
-  if (class == (wctype_t) 0)
-    {
-      fprintf (stderr, "%s %s: noexistent class %s\n", program_name,
-	       locale, class_name);
-      return;
+    class = wctype(class_name);
+    if (class == (wctype_t) 0) {
+        fprintf(stderr, "%s %s: noexistent class %s\n", program_name,
+                locale, class_name);
+        return;
     }
 
-  f = fopen (class_name, "w");
-  if (f == NULL)
-    {
-      fprintf (stderr, "%s %s: cannot open file %s/%s\n", program_name,
-	       locale, locale, class_name);
-      exit (1);
+    f = fopen(class_name, "w");
+    if (f == NULL) {
+        fprintf(stderr, "%s %s: cannot open file %s/%s\n", program_name,
+                locale, locale, class_name);
+        exit(1);
     }
 
-  for (ch = 0; ch < 0x10000; ch++)
-    if (iswctype (ch, class))
-      fprintf (f, "0x%04X\n", ch);
+    for (ch = 0; ch < 0x10000; ch++)
+        if (iswctype(ch, class)) {
+            fprintf(f, "0x%04X\n", ch);
+        }
 
-  if (ferror (f) || fclose (f))
-    {
-      fprintf (stderr, "%s %s: I/O error on file %s/%s\n", program_name,
-	       locale, locale, class_name);
-      exit (1);
+    if (ferror(f) || fclose(f)) {
+        fprintf(stderr, "%s %s: I/O error on file %s/%s\n", program_name,
+                locale, locale, class_name);
+        exit(1);
     }
 }
 
-static void dump_map (const char *map_name)
+static void dump_map(const char *map_name)
 {
-  wctrans_t map;
-  FILE *f;
-  unsigned int ch;
+    wctrans_t map;
+    FILE *f;
+    unsigned int ch;
 
-  map = wctrans (map_name);
-  if (map == (wctrans_t) 0)
-    {
-      fprintf (stderr, "%s %s: noexistent map %s\n", program_name,
-	       locale, map_name);
-      return;
+    map = wctrans(map_name);
+    if (map == (wctrans_t) 0) {
+        fprintf(stderr, "%s %s: noexistent map %s\n", program_name,
+                locale, map_name);
+        return;
     }
 
-  f = fopen (map_name, "w");
-  if (f == NULL)
-    {
-      fprintf (stderr, "%s %s: cannot open file %s/%s\n", program_name,
-	       locale, locale, map_name);
-      exit (1);
+    f = fopen(map_name, "w");
+    if (f == NULL) {
+        fprintf(stderr, "%s %s: cannot open file %s/%s\n", program_name,
+                locale, locale, map_name);
+        exit(1);
     }
 
-  for (ch = 0; ch < 0x10000; ch++)
-    if (towctrans (ch, map) != ch)
-      fprintf (f, "0x%04X\t0x%04X\n", ch, towctrans (ch, map));
+    for (ch = 0; ch < 0x10000; ch++)
+        if (towctrans(ch, map) != ch) {
+            fprintf(f, "0x%04X\t0x%04X\n", ch, towctrans(ch, map));
+        }
 
-  if (ferror (f) || fclose (f))
-    {
-      fprintf (stderr, "%s %s: I/O error on file %s/%s\n", program_name,
-	       locale, locale, map_name);
-      exit (1);
+    if (ferror(f) || fclose(f)) {
+        fprintf(stderr, "%s %s: I/O error on file %s/%s\n", program_name,
+                locale, locale, map_name);
+        exit(1);
     }
 }
 
-int
-main (int argc, char *argv[])
+int main(int argc, char *argv[])
 {
-  size_t i;
+    size_t i;
 
-  if (argc != 2)
-    {
-      fprintf (stderr, "Usage: dump-ctype locale\n");
-      exit (1);
+    if (argc != 2) {
+        fprintf(stderr, "Usage: dump-ctype locale\n");
+        exit(1);
     }
-  locale = argv[1];
+    locale = argv[1];
 
-  if (setlocale (LC_ALL, locale) == NULL)
-    {
-      fprintf (stderr, "%s: setlocale cannot switch to locale %s\n",
-	       program_name, locale);
-      exit (1);
+    if (setlocale(LC_ALL, locale) == NULL) {
+        fprintf(stderr, "%s: setlocale cannot switch to locale %s\n",
+                program_name, locale);
+        exit(1);
     }
 
-  if (mkdir (locale, 0777) < 0)
-    {
-      char buf[100];
-      int save_errno = errno;
+    if (mkdir(locale, 0777) < 0) {
+        char buf[100];
+        int save_errno = errno;
 
-      sprintf (buf, "%s: cannot create directory %s", program_name, locale);
-      errno = save_errno;
-      perror (buf);
-      exit (1);
+        sprintf(buf, "%s: cannot create directory %s", program_name, locale);
+        errno = save_errno;
+        perror(buf);
+        exit(1);
     }
 
-  if (chdir (locale) < 0)
-    {
-      char buf[100];
-      int save_errno = errno;
+    if (chdir(locale) < 0) {
+        char buf[100];
+        int save_errno = errno;
 
-      sprintf (buf, "%s: cannot chdir to %s", program_name, locale);
-      errno = save_errno;
-      perror (buf);
-      exit (1);
+        sprintf(buf, "%s: cannot chdir to %s", program_name, locale);
+        errno = save_errno;
+        perror(buf);
+        exit(1);
     }
 
-  for (i = 0; i < sizeof (class_names) / sizeof (class_names[0]); i++)
-    dump_class (class_names[i]);
+    for (i = 0; i < sizeof(class_names) / sizeof(class_names[0]); i++) {
+        dump_class(class_names[i]);
+    }
 
-  for (i = 0; i < sizeof (map_names) / sizeof (map_names[0]); i++)
-    dump_map (map_names[i]);
+    for (i = 0; i < sizeof(map_names) / sizeof(map_names[0]); i++) {
+        dump_map(map_names[i]);
+    }
 
-  return 0;
+    return 0;
 }

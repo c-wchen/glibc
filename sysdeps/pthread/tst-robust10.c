@@ -24,86 +24,73 @@
 
 pthread_mutex_t mutex;
 
-static void *
-thr (void *arg)
+static void *thr(void *arg)
 {
-  struct timespec abstime;
-  clock_gettime (CLOCK_REALTIME, &abstime);
-  abstime.tv_sec += 1;
-  int ret = pthread_mutex_timedlock (&mutex, &abstime);
-  if (ret == 0)
-    {
-      puts ("mutex_timedlock didn't fail");
-      exit (1);
+    struct timespec abstime;
+    clock_gettime(CLOCK_REALTIME, &abstime);
+    abstime.tv_sec += 1;
+    int ret = pthread_mutex_timedlock(&mutex, &abstime);
+    if (ret == 0) {
+        puts("mutex_timedlock didn't fail");
+        exit(1);
     }
-  if (ret != ETIMEDOUT)
-    {
-      printf ("mutex_timedlock failed: %s\n", strerror (ret));
-      exit (1);
+    if (ret != ETIMEDOUT) {
+        printf("mutex_timedlock failed: %s\n", strerror(ret));
+        exit(1);
     }
 
-  return 0;
+    return 0;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  pthread_t pt;
-  pthread_mutexattr_t ma;
+    pthread_t pt;
+    pthread_mutexattr_t ma;
 
-  if (pthread_mutexattr_init (&ma) != 0)
-    {
-      puts ("mutexattr_init failed");
-      return 0;
+    if (pthread_mutexattr_init(&ma) != 0) {
+        puts("mutexattr_init failed");
+        return 0;
     }
-  if (pthread_mutexattr_setrobust (&ma, PTHREAD_MUTEX_ROBUST_NP) != 0)
-    {
-      puts ("mutexattr_setrobust failed");
-      return 1;
+    if (pthread_mutexattr_setrobust(&ma, PTHREAD_MUTEX_ROBUST_NP) != 0) {
+        puts("mutexattr_setrobust failed");
+        return 1;
     }
-  if (pthread_mutex_init (&mutex, &ma))
-    {
-      puts ("mutex_init failed");
-      return 1;
+    if (pthread_mutex_init(&mutex, &ma)) {
+        puts("mutex_init failed");
+        return 1;
     }
 
-  if (pthread_mutexattr_destroy (&ma))
-    {
-      puts ("mutexattr_destroy failed");
-      return 1;
+    if (pthread_mutexattr_destroy(&ma)) {
+        puts("mutexattr_destroy failed");
+        return 1;
     }
 
-  if (pthread_mutex_lock (&mutex))
-    {
-      puts ("mutex_lock failed");
-      return 1;
+    if (pthread_mutex_lock(&mutex)) {
+        puts("mutex_lock failed");
+        return 1;
     }
 
-  if (pthread_create (&pt, NULL, thr, NULL))
-    {
-      puts ("pthread_create failed");
-      return 1;
+    if (pthread_create(&pt, NULL, thr, NULL)) {
+        puts("pthread_create failed");
+        return 1;
     }
 
-  if (pthread_join (pt, NULL))
-    {
-      puts ("pthread_join failed");
-      return 1;
+    if (pthread_join(pt, NULL)) {
+        puts("pthread_join failed");
+        return 1;
     }
 
-  if (pthread_mutex_unlock (&mutex))
-    {
-      puts ("mutex_unlock failed");
-      return 1;
+    if (pthread_mutex_unlock(&mutex)) {
+        puts("mutex_unlock failed");
+        return 1;
     }
 
-  if (pthread_mutex_destroy (&mutex))
-    {
-      puts ("mutex_destroy failed");
-      return 1;
+    if (pthread_mutex_destroy(&mutex)) {
+        puts("mutex_destroy failed");
+        return 1;
     }
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

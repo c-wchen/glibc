@@ -19,9 +19,9 @@
 #include <complex.h>
 
 FLOAT
-M_DECL_FUNC (__creal) (CFLOAT z)
+M_DECL_FUNC(__creal)(CFLOAT z)
 {
-  return __real__ z;
+    return __real__ z;
 }
 
-declare_mgen_alias (__creal, creal)
+declare_mgen_alias(__creal, creal)

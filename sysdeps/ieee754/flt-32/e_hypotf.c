@@ -24,28 +24,28 @@
 #include <math-narrow-eval.h>
 #include <math_private.h>
 
-float
-__hypotf (float x, float y)
+float __hypotf(float x, float y)
 {
-  if (!isfinite (x) || !isfinite (y))
-    {
-      if ((isinf (x) || isinf (y))
-	  && !issignaling (x) && !issignaling (y))
-	return INFINITY;
-      return x + y;
+    if (!isfinite(x) || !isfinite(y)) {
+        if ((isinf(x) || isinf(y))
+            && !issignaling(x) && !issignaling(y)) {
+            return INFINITY;
+        }
+        return x + y;
     }
 
-  float r = math_narrow_eval ((float) sqrt ((double) x * (double) x
-					    + (double) y * (double) y));
-  if (!isfinite (r))
-    __set_errno (ERANGE);
-  return r;
+    float r = math_narrow_eval((float) sqrt((double) x * (double) x
+                                            + (double) y * (double) y));
+    if (!isfinite(r)) {
+        __set_errno(ERANGE);
+    }
+    return r;
 }
-strong_alias (__hypotf, __ieee754_hypotf)
+strong_alias(__hypotf, __ieee754_hypotf)
 #if LIBM_SVID_COMPAT
-versioned_symbol (libm, __hypotf, hypotf, GLIBC_2_35);
-libm_alias_float_other (__hypot, hypot)
+versioned_symbol(libm, __hypotf, hypotf, GLIBC_2_35);
+libm_alias_float_other(__hypot, hypot)
 #else
-libm_alias_float (__hypot, hypot)
+libm_alias_float(__hypot, hypot)
 #endif
-libm_alias_finite (__ieee754_hypotf, __hypotf)
+libm_alias_finite(__ieee754_hypotf, __hypotf)

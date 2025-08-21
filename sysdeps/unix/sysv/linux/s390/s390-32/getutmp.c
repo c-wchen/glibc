@@ -32,5 +32,5 @@
 #undef getutmp
 #undef getutmpx
 
-default_symbol_version (__getutmp, getutmp, UTMP_COMPAT_BASE);
-default_symbol_version (__getutmpx, getutmpx, UTMP_COMPAT_BASE);
+default_symbol_version(__getutmp, getutmp, UTMP_COMPAT_BASE);
+default_symbol_version(__getutmpx, getutmpx, UTMP_COMPAT_BASE);

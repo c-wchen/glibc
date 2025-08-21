@@ -18,12 +18,12 @@
 #include <netdb.h>
 
 
-#define LOOKUP_TYPE	struct netent
-#define	GETFUNC_NAME	getnetent
-#define BUFLEN		1024
-#define NEED_H_ERRNO	1
+#define LOOKUP_TYPE struct netent
+#define GETFUNC_NAME    getnetent
+#define BUFLEN      1024
+#define NEED_H_ERRNO    1
 
 /* There is no nscd support for the networks file.  */
-#undef	USE_NSCD
+#undef  USE_NSCD
 
 #include "../nss/getXXent.c"

@@ -22,8 +22,7 @@
 
 /* Perform user-defined atomic operation of array of semaphores.  */
 
-int
-semop (int semid, struct sembuf *sops, size_t nsops)
+int semop(int semid, struct sembuf *sops, size_t nsops)
 {
-  return __semtimedop (semid, sops, nsops, NULL);
+    return __semtimedop(semid, sops, nsops, NULL);
 }

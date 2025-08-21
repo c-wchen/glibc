@@ -20,13 +20,14 @@
 #include <pthreadP.h>
 #include <stdlib.h>
 
-int
- __pthread_attr_extension (struct pthread_attr *attr)
+int __pthread_attr_extension(struct pthread_attr *attr)
 {
-  if (attr->extension != NULL)
+    if (attr->extension != NULL) {
+        return 0;
+    }
+    attr->extension = calloc(sizeof(*attr->extension), 1);
+    if (attr->extension == NULL) {
+        return errno;
+    }
     return 0;
-  attr->extension = calloc (sizeof (*attr->extension), 1);
-  if (attr->extension == NULL)
-    return errno;
-  return 0;
 }

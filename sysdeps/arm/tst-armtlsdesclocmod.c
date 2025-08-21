@@ -19,26 +19,22 @@
 static int __thread bar = 1;
 static int __thread foo;
 
-int
-getfoo (void)
+int getfoo(void)
 {
-  return foo;
+    return foo;
 }
 
-void
-setfoo (int i)
+void setfoo(int i)
 {
-  foo = 1;
+    foo = 1;
 }
 
-int
-getbar (void)
+int getbar(void)
 {
-  return bar;
+    return bar;
 }
 
-void
-setbar (int i)
+void setbar(int i)
 {
-  bar = 1;
+    bar = 1;
 }

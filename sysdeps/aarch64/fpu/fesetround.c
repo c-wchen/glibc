@@ -20,15 +20,15 @@
 #include <fenv_private.h>
 #include <fpu_control.h>
 
-int
-__fesetround (int round)
+int __fesetround(int round)
 {
-  if (round & ~_FPU_FPCR_RM_MASK)
-    return 1;
+    if (round & ~_FPU_FPCR_RM_MASK) {
+        return 1;
+    }
 
-  libc_fesetround_aarch64 (round);
-  return 0;
+    libc_fesetround_aarch64(round);
+    return 0;
 }
-libm_hidden_def (__fesetround)
-weak_alias (__fesetround, fesetround)
-libm_hidden_weak (fesetround)
+libm_hidden_def(__fesetround)
+weak_alias(__fesetround, fesetround)
+libm_hidden_weak(fesetround)

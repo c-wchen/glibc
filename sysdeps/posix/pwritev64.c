@@ -21,8 +21,8 @@
 #define OFF_T off64_t
 #include <sysdeps/posix/pwritev_common.c>
 
-libc_hidden_def (pwritev64)
+libc_hidden_def(pwritev64)
 #ifdef __OFF_T_MATCHES_OFF64_T
-strong_alias (pwritev64, pwritev)
-libc_hidden_def (pwritev)
+strong_alias(pwritev64, pwritev)
+libc_hidden_def(pwritev)
 #endif

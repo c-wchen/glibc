@@ -20,9 +20,8 @@
 #include <sys/sysinfo.h>
 
 #ifndef CHILD_MAX
-long int
-__get_child_max (void)
+long int __get_child_max(void)
 {
-  return -1;
+    return -1;
 }
 #endif

@@ -19,7 +19,7 @@
 #include <stdbit.h>
 
 unsigned int
-(stdc_count_zeros_ui) (unsigned int x)
+(stdc_count_zeros_ui)(unsigned int x)
 {
-  return stdc_count_zeros_ui (x);
+    return stdc_count_zeros_ui(x);
 }

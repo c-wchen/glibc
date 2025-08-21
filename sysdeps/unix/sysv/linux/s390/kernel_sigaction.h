@@ -1,5 +1,5 @@
 /* S390 uses the generic Linux UAPI but defines SA_RESTORER.  */
-#define SA_RESTORER	0x04000000
+#define SA_RESTORER 0x04000000
 
 #define SET_SA_RESTORER(kact, act)             \
   (kact)->sa_restorer = (act)->sa_restorer

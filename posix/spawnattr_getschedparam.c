@@ -19,12 +19,11 @@
 #include <string.h>
 
 /* Get scheduling parameters from the attribute structure.  */
-int
-posix_spawnattr_getschedparam (const posix_spawnattr_t *attr,
-			       struct sched_param *schedparam)
+int posix_spawnattr_getschedparam(const posix_spawnattr_t *attr,
+                                  struct sched_param *schedparam)
 {
-  /* Copy the scheduling parameters.  */
-  memcpy (schedparam, &attr->__sp, sizeof (attr->__sp));
+    /* Copy the scheduling parameters.  */
+    memcpy(schedparam, &attr->__sp, sizeof(attr->__sp));
 
-  return 0;
+    return 0;
 }

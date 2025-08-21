@@ -16,10 +16,9 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
-static inline void *
-__brk_call (void *addr)
+static inline void *__brk_call(void *addr)
 {
-  /* The default implementation reports errors through an unchanged
-     break.  */
-  return (void *) INTERNAL_SYSCALL_CALL (brk, addr);
+    /* The default implementation reports errors through an unchanged
+       break.  */
+    return (void *) INTERNAL_SYSCALL_CALL(brk, addr);
 }

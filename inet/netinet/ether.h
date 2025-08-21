@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _NETINET_ETHER_H
-#define _NETINET_ETHER_H	1
+#define _NETINET_ETHER_H    1
 
 #include <features.h>
 
@@ -28,26 +28,26 @@
 __BEGIN_DECLS
 
 /* Convert 48 bit Ethernet ADDRess to ASCII.  */
-extern char *ether_ntoa (const struct ether_addr *__addr) __THROW;
-extern char *ether_ntoa_r (const struct ether_addr *__addr, char *__buf)
-     __THROW;
+extern char *ether_ntoa(const struct ether_addr *__addr) __THROW;
+extern char *ether_ntoa_r(const struct ether_addr *__addr, char *__buf)
+__THROW;
 
 /* Convert ASCII string S to 48 bit Ethernet address.  */
-extern struct ether_addr *ether_aton (const char *__asc) __THROW;
-extern struct ether_addr *ether_aton_r (const char *__asc,
-					struct ether_addr *__addr) __THROW;
+extern struct ether_addr *ether_aton(const char *__asc) __THROW;
+extern struct ether_addr *ether_aton_r(const char *__asc,
+                                       struct ether_addr *__addr) __THROW;
 
 /* Map 48 bit Ethernet number ADDR to HOSTNAME.  */
-extern int ether_ntohost (char *__hostname, const struct ether_addr *__addr)
-     __THROW;
+extern int ether_ntohost(char *__hostname, const struct ether_addr *__addr)
+__THROW;
 
 /* Map HOSTNAME to 48 bit Ethernet address.  */
-extern int ether_hostton (const char *__hostname, struct ether_addr *__addr)
-     __THROW;
+extern int ether_hostton(const char *__hostname, struct ether_addr *__addr)
+__THROW;
 
 /* Scan LINE and set ADDR and HOSTNAME.  */
-extern int ether_line (const char *__line, struct ether_addr *__addr,
-		       char *__hostname) __THROW;
+extern int ether_line(const char *__line, struct ether_addr *__addr,
+                      char *__hostname) __THROW;
 
 __END_DECLS
 #endif /* Use misc.  */

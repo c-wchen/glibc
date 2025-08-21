@@ -21,19 +21,17 @@
 #include <support/check.h>
 #include <stdlib.h>
 
-void
-xfread (void *ptr, size_t size, size_t nmemb, FILE *stream)
+void xfread(void *ptr, size_t size, size_t nmemb, FILE *stream)
 {
-  size_t count = 0;
-  char *p = ptr;
+    size_t count = 0;
+    char *p = ptr;
 
-  while (count < nmemb)
-    {
-      size_t ret = fread (p, size, nmemb - count, stream);
-      if (ret <= 0 && ferror(stream))
-        FAIL_EXIT1 ("read of %zu bytes failed after %td: %m",
-                    size * nmemb, p - (char *) ptr);
-      count += ret;
-      p += size * ret;
+    while (count < nmemb) {
+        size_t ret = fread(p, size, nmemb - count, stream);
+        if (ret <= 0 && ferror(stream))
+            FAIL_EXIT1("read of %zu bytes failed after %td: %m",
+                       size * nmemb, p - (char *) ptr);
+        count += ret;
+        p += size * ret;
     }
 }

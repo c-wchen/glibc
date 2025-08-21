@@ -23,20 +23,18 @@
    `longjmp (ENV, VAL)', and this will unwind the frame of
    that last user.  Deallocate the right he will never get back to using.  */
 
-void
-_hurd_port_cleanup (void *cleanup_data, jmp_buf env, int val)
+void _hurd_port_cleanup(void *cleanup_data, jmp_buf env, int val)
 {
-  mach_port_t port = (mach_port_t) (uintptr_t) cleanup_data;
-  __mach_port_deallocate (__mach_task_self (), port);
+    mach_port_t port = (mach_port_t)(uintptr_t) cleanup_data;
+    __mach_port_deallocate(__mach_task_self(), port);
 }
 
 /* We were cancelled while using a port, and called from the cleanup unwinding.
  */
 
-void
-_hurd_port_use_cleanup (void *arg)
+void _hurd_port_use_cleanup(void *arg)
 {
-  struct _hurd_port_use_data *data = arg;
+    struct _hurd_port_use_data *data = arg;
 
-  _hurd_port_free (data->p, &data->link, data->port);
+    _hurd_port_free(data->p, &data->link, data->port);
 }

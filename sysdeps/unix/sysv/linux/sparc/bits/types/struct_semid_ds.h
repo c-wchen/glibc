@@ -21,23 +21,22 @@
 #endif
 
 /* Data structure describing a set of semaphores.  */
-struct semid_ds
-{
+struct semid_ds {
 #ifdef __USE_TIME64_REDIRECTS
 # include <bits/types/struct_semid64_ds_helper.h>
 #else
-  struct ipc_perm sem_perm;   /* operation permission struct */
+    struct ipc_perm sem_perm;   /* operation permission struct */
 # if __TIMESIZE == 32
-  __syscall_ulong_t __sem_otime_high;
-  __time_t sem_otime;         /* last semop() time */
-  __syscall_ulong_t __sem_ctime_high;
-  __time_t sem_ctime;        /* last time changed by semctl() */
+    __syscall_ulong_t __sem_otime_high;
+    __time_t sem_otime;         /* last semop() time */
+    __syscall_ulong_t __sem_ctime_high;
+    __time_t sem_ctime;        /* last time changed by semctl() */
 # else
-  __time_t sem_otime;         /* last semop() time */
-  __time_t sem_ctime;         /* last time changed by semctl() */
+    __time_t sem_otime;         /* last semop() time */
+    __time_t sem_ctime;         /* last time changed by semctl() */
 # endif
-  __syscall_ulong_t sem_nsems;    /* number of semaphores in set */
-  __syscall_ulong_t __glibc_reserved3;
-  __syscall_ulong_t __glibc_reserved4;
+    __syscall_ulong_t sem_nsems;    /* number of semaphores in set */
+    __syscall_ulong_t __glibc_reserved3;
+    __syscall_ulong_t __glibc_reserved4;
 #endif
 };

@@ -18,8 +18,7 @@
 #include <utmp.h>
 #include <utmpx.h>
 
-void
-endutxent (void)
+void endutxent(void)
 {
-  __endutent ();
+    __endutent();
 }

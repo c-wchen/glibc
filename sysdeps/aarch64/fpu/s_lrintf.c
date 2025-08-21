@@ -20,16 +20,15 @@
 #include <math-barriers.h>
 #include <libm-alias-float.h>
 
-long int
-__lrintf (float x)
+long int __lrintf(float x)
 {
-  float r = __builtin_rintf (x);
+    float r = __builtin_rintf(x);
 
-  /* Prevent gcc from calling lrintf directly when compiled with
-     -fno-math-errno by inserting a barrier.  */
+    /* Prevent gcc from calling lrintf directly when compiled with
+       -fno-math-errno by inserting a barrier.  */
 
-  math_opt_barrier (r);
-  return r;
+    math_opt_barrier(r);
+    return r;
 }
 
-libm_alias_float (__lrint, lrint)
+libm_alias_float(__lrint, lrint)

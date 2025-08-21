@@ -44,12 +44,12 @@
 
 /* _F128_IFUNC2(func, from, r)
       Generate an ifunc symbol func ## r from the symbols
-	from ## {power8, power9} ## r
+    from ## {power8, power9} ## r
 
       We use the PPC hwcap bit HAS_IEEE128 to select between the two with
       the assumption all P9 features are available on such targets.  */
 #define _F128_IFUNC2(func, from, r) \
-	libc_ifunc (func ## r, (hwcap2 & PPC_FEATURE2_HAS_IEEE128) \
+    libc_ifunc (func ## r, (hwcap2 & PPC_FEATURE2_HAS_IEEE128) \
                                 ? from ## _power9 ## r : from ## _power8 ## r)
 
 /* _F128_IFUNC(func, r)
@@ -63,14 +63,14 @@
      which are exported as implementation specific symbols (i.e backing support
      for type classification macros).  */
 #define MAKE_IMPL_IFUNC2(func, pfx1, pfx2, r) \
-	extern __typeof (pfx1 ## func ## f128 ## r) pfx2 ## func ## f128_power8 ## r; \
-	extern __typeof (pfx1 ## func ## f128 ## r) pfx2 ## func ## f128_power9 ## r; \
+    extern __typeof (pfx1 ## func ## f128 ## r) pfx2 ## func ## f128_power8 ## r; \
+    extern __typeof (pfx1 ## func ## f128 ## r) pfx2 ## func ## f128_power9 ## r; \
         _F128_IFUNC2 (__ ## func ## f128, pfx2 ## func ## f128, r);
 
 /* GEN_COMPAT_R_e(f)
      Generate a compatibility symbol for finite alias of ieee function.  */
 #define GEN_COMPAT_R_e(f, r) \
-	libm_alias_finite (__ieee754_ ## f ## f128 ## r, __ ## f ## f128 ## r)
+    libm_alias_finite (__ieee754_ ## f ## f128 ## r, __ ## f ## f128 ## r)
 
 #define GEN_COMPAT_e_acos(f) GEN_COMPAT_R_e(f,)
 #define GEN_COMPAT_e_acosh(f) GEN_COMPAT_R_e(f,)
@@ -99,18 +99,18 @@
 /* MAKE_IEEE_IFUNC_R(func, pfx, r)
     Declare an ieee ifunc symbol used internally by libm.  E.g __ieee754_sinf128  */
 #define MAKE_IEEE_IFUNC_R(func, r) \
-	extern __typeof (__ieee754_ ## func ## f128 ## r) __ieee754_ ## func ## f128_power8 ## r; \
-	extern __typeof (__ieee754_ ## func ## f128 ## r) __ieee754_ ## func ## f128_power9 ## r; \
+    extern __typeof (__ieee754_ ## func ## f128 ## r) __ieee754_ ## func ## f128_power8 ## r; \
+    extern __typeof (__ieee754_ ## func ## f128 ## r) __ieee754_ ## func ## f128_power9 ## r; \
         _F128_IFUNC2 (__ieee754_ ## func ## f128, __ieee754_ ## func ## f128, r);
 
 /* MAKE_IFUNCP_WRAP_R(w, func, r)
       Export a function which the implementation wraps with prefix w to
       to func ## r.  */
 #define MAKE_IFUNCP_WRAP_R(w, func, r) \
-	extern __typeof (func ## f128 ## r) __ ## func ## f128 ## r; \
-	MAKE_IMPL_IFUNC2 (func,__,__ ## w, r) \
-	weak_alias (__ ## func ## f128 ## r, func ## f128 ## r); \
-	libm_alias_float128_other_r (__ ## func, func, r);
+    extern __typeof (func ## f128 ## r) __ ## func ## f128 ## r; \
+    MAKE_IMPL_IFUNC2 (func,__,__ ## w, r) \
+    weak_alias (__ ## func ## f128 ## r, func ## f128 ## r); \
+    libm_alias_float128_other_r (__ ## func, func, r);
 
 /* MAKE_IFUNCP_R(func, r)
     The default IFUNC generator for all libm _Float128 ABI except
@@ -138,8 +138,8 @@
 
 /* Ensure the wrapper functions get exposed via IFUNC, not the
    wrappee (e.g __w_log1pf128_power8 instead of __log1pf128_power8.  */
-#define DECL_ALIAS_w_log1p(x)			\
-  MAKE_IFUNCP_WRAP_R (w_, x, )			\
+#define DECL_ALIAS_w_log1p(x)           \
+  MAKE_IFUNCP_WRAP_R (w_, x, )          \
   MAKE_IFUNCP_WRAP_R (w_, logp1, )
 #define DECL_ALIAS_w_scalbln(x) MAKE_IFUNCP_WRAP_R(w_,x,)
 
@@ -165,15 +165,15 @@
 /* Declare an IFUNC for a symbol which only exists
    to provide long double == ieee128 ABI.  */
 #define DECL_LDOUBLE_ALIAS(func, RTYPE, ARGS) \
-	extern RTYPE func ARGS; \
-	extern __typeof (func) func ## _power8; \
-	extern __typeof (func) func ## _power9; \
-	_F128_IFUNC ( func,)
+    extern RTYPE func ARGS; \
+    extern __typeof (func) func ## _power8; \
+    extern __typeof (func) func ## _power9; \
+    _F128_IFUNC ( func,)
 
 /* Handle the special case functions which exist only to support
    ldouble == ieee128.  */
 #define DECL_ALIAS_w_scalb(x) \
-	DECL_LDOUBLE_ALIAS (__scalbf128,_Float128, (_Float128, _Float128)) \
-	libm_alias_float128_other_r_ldbl (__scalb, scalb,)
+    DECL_LDOUBLE_ALIAS (__scalbf128,_Float128, (_Float128, _Float128)) \
+    libm_alias_float128_other_r_ldbl (__scalb, scalb,)
 
 #endif /* ifndef _FLOAT128_IFUNC_H  */

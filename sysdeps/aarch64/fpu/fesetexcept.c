@@ -19,16 +19,16 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-int
-fesetexcept (int excepts)
+int fesetexcept(int excepts)
 {
-  fpu_fpsr_t fpsr;
-  fpu_fpsr_t fpsr_new;
+    fpu_fpsr_t fpsr;
+    fpu_fpsr_t fpsr_new;
 
-  _FPU_GETFPSR (fpsr);
-  fpsr_new = fpsr | (excepts & FE_ALL_EXCEPT);
-  if (fpsr != fpsr_new)
-    _FPU_SETFPSR (fpsr_new);
+    _FPU_GETFPSR(fpsr);
+    fpsr_new = fpsr | (excepts & FE_ALL_EXCEPT);
+    if (fpsr != fpsr_new) {
+        _FPU_SETFPSR(fpsr_new);
+    }
 
-  return 0;
+    return 0;
 }

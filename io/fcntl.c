@@ -19,19 +19,17 @@
 #include <fcntl.h>
 
 /* Perform file control operations on FD.  */
-int
-__fcntl (int fd, int cmd, ...)
+int __fcntl(int fd, int cmd, ...)
 {
-  if (fd < 0)
-    {
-      __set_errno (EBADF);
-      return -1;
+    if (fd < 0) {
+        __set_errno(EBADF);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (__fcntl)
-stub_warning (fcntl)
+libc_hidden_def(__fcntl)
+stub_warning(fcntl)
 
-weak_alias (__fcntl, fcntl)
+weak_alias(__fcntl, fcntl)

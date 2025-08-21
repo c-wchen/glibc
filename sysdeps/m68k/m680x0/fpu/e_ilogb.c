@@ -30,18 +30,20 @@
 #define m81(func) __m81_u(s(func))
 
 int
-s(__ieee754_ilogb) (float_type x)
+s(__ieee754_ilogb)(float_type x)
 {
-  float_type result;
-  unsigned long x_cond;
+    float_type result;
+    unsigned long x_cond;
 
-  x_cond = __m81_test (x);
-  /* We must return consistent values for zero and NaN.  */
-  if (x_cond & __M81_COND_ZERO)
-    return FP_ILOGB0;
-  if (x_cond & (__M81_COND_NAN | __M81_COND_INF))
-    return FP_ILOGBNAN;
+    x_cond = __m81_test(x);
+    /* We must return consistent values for zero and NaN.  */
+    if (x_cond & __M81_COND_ZERO) {
+        return FP_ILOGB0;
+    }
+    if (x_cond & (__M81_COND_NAN | __M81_COND_INF)) {
+        return FP_ILOGBNAN;
+    }
 
-  __asm ("fgetexp%.x %1, %0" : "=f" (result) : "f" (x));
-  return (int) result;
+    __asm("fgetexp%.x %1, %0" : "=f"(result) : "f"(x));
+    return (int) result;
 }

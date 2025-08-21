@@ -24,15 +24,14 @@
 
 /* Bits which indicate which functions are supposed to report
    success.  */
-enum
-  {
+enum {
     hnok = 1,
     dnok = 2,
     mailok = 4,
     ownok = 8,
     allnomailok = hnok | dnok | ownok,
     allok = hnok | dnok | mailok | ownok
-  };
+};
 
 /* A string of 60 characters.  */
 #define STRING60 "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"
@@ -41,14 +40,12 @@ enum
 #define STRING63 STRING60 "zzz"
 
 /* Combines a test name with the expected results.  */
-struct test_case
-{
-  const char *dn;
-  unsigned int result;          /* Combination of the *ok flags.  */
+struct test_case {
+    const char *dn;
+    unsigned int result;          /* Combination of the *ok flags.  */
 };
 
-static const struct test_case tests[] =
-  {
+static const struct test_case tests[] = {
     { "", allok },
     { ".", allok },
     { "..", 0 },
@@ -88,42 +85,37 @@ static const struct test_case tests[] =
     { "with.whitespace\\ ", 0 },
     { "with.whitespace\\\t", 0 },
     { "with.whitespace\\\n", 0 },
-  };
+};
 
 /* Run test case *TEST with FUNC (named FUNCNAME) and report an error
    if the result does not match the result flag at BIT.  */
-static void
-one_test (const struct test_case *test, const char *funcname,
-          int (*func) (const char *), unsigned int bit)
+static void one_test(const struct test_case *test, const char *funcname,
+                     int (*func)(const char *), unsigned int bit)
 {
-  int expected = (test->result & bit) != 0;
-  int actual = func (test->dn);
-  if (actual != expected)
-    {
-      support_record_failure ();
-      printf ("error: %s (\"%s\"): expected=%d, actual=%d\n",
-              funcname, test->dn, expected, actual);
+    int expected = (test->result & bit) != 0;
+    int actual = func(test->dn);
+    if (actual != expected) {
+        support_record_failure();
+        printf("error: %s (\"%s\"): expected=%d, actual=%d\n",
+               funcname, test->dn, expected, actual);
     }
 }
 
 /* Run 255 tests using all the bytes from 1 to 255, surround the byte
    with the strings PREFIX and SUFFIX, and check that FUNC (named
    FUNCNAME) accepts only those bytes listed in ACCEPTED.  */
-static void
-one_char (const char *prefix, const char *accepted, const char *suffix,
-          const char *funcname, int (*func) (const char *))
+static void one_char(const char *prefix, const char *accepted, const char *suffix,
+                     const char *funcname, int (*func)(const char *))
 {
-  for (int ch = 1; ch <= 255; ++ch)
-    {
-      char dn[1024];
-      snprintf (dn, sizeof (dn), "%s%c%s", prefix, ch, suffix);
-      int expected = strchr (accepted, ch) != NULL;
-      int actual = func (dn);
-      if (actual != expected)
-        {
-          support_record_failure ();
-          printf ("error: %s (\"%s\"): expected=%d, actual=%d\n",
-                  funcname, dn, expected, actual);
+    for (int ch = 1; ch <= 255; ++ch) {
+        char dn[1024];
+        snprintf(dn, sizeof(dn), "%s%c%s", prefix, ch, suffix);
+        int expected = strchr(accepted, ch) != NULL;
+        int actual = func(dn);
+        if (actual != expected) {
+            support_record_failure();
+            printf("error: %s (\"%s\"): expected=%d, actual=%d\n",
+                   funcname, dn, expected, actual);
         }
     }
 }
@@ -134,36 +126,34 @@ one_char (const char *prefix, const char *accepted, const char *suffix,
 #define PRINTABLE \
   "!\"#$%&'()*+,/:;<=>?@[\\]^`{|}~"
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  for (const struct test_case *test = tests; test < array_end (tests); ++test)
-    {
-      if (test_verbose)
-        printf ("info: testing domain name [[[%s]]] (0x%x)\n",
-                test->dn, test->result);
-      one_test (test, "res_hnok", res_hnok, hnok);
-      one_test (test, "res_dnok", res_dnok, dnok);
-      one_test (test, "res_mailok", res_mailok, mailok);
-      one_test (test, "res_ownok", res_ownok, ownok);
+    for (const struct test_case *test = tests; test < array_end(tests); ++test) {
+        if (test_verbose)
+            printf("info: testing domain name [[[%s]]] (0x%x)\n",
+                   test->dn, test->result);
+        one_test(test, "res_hnok", res_hnok, hnok);
+        one_test(test, "res_dnok", res_dnok, dnok);
+        one_test(test, "res_mailok", res_mailok, mailok);
+        one_test(test, "res_ownok", res_ownok, ownok);
     }
 
-  one_char
+    one_char
     ("", LETTERSDIGITS "._", "", "res_hnok", res_hnok);
-  one_char
+    one_char
     ("middle",
      LETTERSDIGITS ".-_\\", /* "middle\\suffix" == "middlesuffix", so good.  */
      "suffix", "res_hnok", res_hnok);
-  one_char
+    one_char
     ("middle",
      LETTERSDIGITS ".-_" PRINTABLE,
      "suffix.example", "res_mailok", res_mailok);
-  one_char
+    one_char
     ("mailbox.middle",
      LETTERSDIGITS ".-_\\",
      "suffix.example", "res_mailok", res_mailok);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

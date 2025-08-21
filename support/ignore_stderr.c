@@ -23,16 +23,14 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-void
-ignore_stderr (void)
+void ignore_stderr(void)
 {
-  int fd = open (_PATH_DEVNULL, O_WRONLY);
-  if (fd == -1)
-    close (STDERR_FILENO);
-  else
-    {
-      dup2 (fd, STDERR_FILENO);
-      close (fd);
+    int fd = open(_PATH_DEVNULL, O_WRONLY);
+    if (fd == -1) {
+        close(STDERR_FILENO);
+    } else {
+        dup2(fd, STDERR_FILENO);
+        close(fd);
     }
-  setenv ("LIBC_FATAL_STDERR_", "1", 1);
+    setenv("LIBC_FATAL_STDERR_", "1", 1);
 }

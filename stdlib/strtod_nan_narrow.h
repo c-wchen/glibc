@@ -18,5 +18,5 @@
 
 #define STRING_TYPE char
 #define L_(Ch) Ch
-#define STRTOULL(S, E, B) ____strtoull_l_internal ((S), (E), (B), 0,	\
-						   false, _nl_C_locobj_ptr)
+#define STRTOULL(S, E, B) ____strtoull_l_internal ((S), (E), (B), 0,    \
+                           false, _nl_C_locobj_ptr)

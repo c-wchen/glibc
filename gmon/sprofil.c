@@ -20,15 +20,15 @@
 #include <sys/profil.h>
 #include <sys/time.h>
 
-int
-__sprofil (struct prof *profp, int profcnt, struct timeval *tvp,
-	   unsigned int flags)
+int __sprofil(struct prof *profp, int profcnt, struct timeval *tvp,
+              unsigned int flags)
 {
-  if (profcnt == 0)
-    return 0;
+    if (profcnt == 0) {
+        return 0;
+    }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-weak_alias (__sprofil, sprofil)
+weak_alias(__sprofil, sprofil)

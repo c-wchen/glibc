@@ -18,9 +18,8 @@
 
 #include <support/xthread.h>
 
-void
-xpthread_mutexattr_settype (pthread_mutexattr_t *attr, int flag)
+void xpthread_mutexattr_settype(pthread_mutexattr_t *attr, int flag)
 {
-  xpthread_check_return ("pthread_mutexattr_settype",
-                         pthread_mutexattr_settype (attr, flag));
+    xpthread_check_return("pthread_mutexattr_settype",
+                          pthread_mutexattr_settype(attr, flag));
 }

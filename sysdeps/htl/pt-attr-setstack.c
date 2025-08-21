@@ -22,34 +22,33 @@
 #include <pt-internal.h>
 #include <pthreadP.h>
 
-int
-__pthread_attr_setstack (pthread_attr_t *attr, void *stackaddr, size_t stacksize)
+int __pthread_attr_setstack(pthread_attr_t *attr, void *stackaddr, size_t stacksize)
 {
-  int err;
-  size_t s;
+    int err;
+    size_t s;
 
-  /* pthread_attr_setstack should always succeed, thus we set the size
-     first as it is more discriminating.  */
-  __pthread_attr_getstacksize (attr, &s);
+    /* pthread_attr_setstack should always succeed, thus we set the size
+       first as it is more discriminating.  */
+    __pthread_attr_getstacksize(attr, &s);
 
-  err = __pthread_attr_setstacksize (attr, stacksize);
-  if (err)
-    return err;
-
-  err = __pthread_attr_setstackaddr (attr, stackaddr);
-  if (err)
-    {
-      int e = __pthread_attr_setstacksize (attr, s);
-      assert_perror (e);
-
-      return err;
+    err = __pthread_attr_setstacksize(attr, stacksize);
+    if (err) {
+        return err;
     }
 
-  return 0;
+    err = __pthread_attr_setstackaddr(attr, stackaddr);
+    if (err) {
+        int e = __pthread_attr_setstacksize(attr, s);
+        assert_perror(e);
+
+        return err;
+    }
+
+    return 0;
 }
-libc_hidden_def (__pthread_attr_setstack)
-versioned_symbol (libc, __pthread_attr_setstack, pthread_attr_setstack, GLIBC_2_41);
+libc_hidden_def(__pthread_attr_setstack)
+versioned_symbol(libc, __pthread_attr_setstack, pthread_attr_setstack, GLIBC_2_41);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_41)
-compat_symbol (libpthread, __pthread_attr_setstack, pthread_attr_setstack, GLIBC_2_12);
+compat_symbol(libpthread, __pthread_attr_setstack, pthread_attr_setstack, GLIBC_2_12);
 #endif

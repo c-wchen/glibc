@@ -18,15 +18,15 @@
 #include <netdb.h>
 
 
-#define LOOKUP_TYPE		struct rpcent
-#define SETFUNC_NAME		setrpcent
-#define	GETFUNC_NAME		getrpcent
-#define	ENDFUNC_NAME		endrpcent
-#define DATABASE_NAME		rpc
-#define STAYOPEN		int stayopen
-#define STAYOPEN_VAR		stayopen
+#define LOOKUP_TYPE     struct rpcent
+#define SETFUNC_NAME        setrpcent
+#define GETFUNC_NAME        getrpcent
+#define ENDFUNC_NAME        endrpcent
+#define DATABASE_NAME       rpc
+#define STAYOPEN        int stayopen
+#define STAYOPEN_VAR        stayopen
 
 /* There is no nscd support for the rpc file.  */
-#undef	USE_NSCD
+#undef  USE_NSCD
 
 #include "../nss/getXXent_r.c"

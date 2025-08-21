@@ -19,21 +19,20 @@
 #include <sys/epoll.h>
 #include <sysdep.h>
 
-libc_hidden_proto (epoll_create)
+libc_hidden_proto(epoll_create)
 
 int
-epoll_create (int size)
+epoll_create(int size)
 {
 #ifdef __NR_epoll_create
-  return INLINE_SYSCALL_CALL (epoll_create, size);
+    return INLINE_SYSCALL_CALL(epoll_create, size);
 #else
-  if (size <= 0)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (size <= 0) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  return INLINE_SYSCALL_CALL (epoll_create1, 0);
+    return INLINE_SYSCALL_CALL(epoll_create1, 0);
 #endif
 }
-libc_hidden_def (epoll_create)
+libc_hidden_def(epoll_create)

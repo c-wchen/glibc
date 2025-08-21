@@ -20,16 +20,16 @@
 #include <stddef.h>
 
 /* Set both the input and output baud rates stored in *TERMIOS_P to SPEED.  */
-int
-__cfsetspeed (struct termios *termios_p, speed_t speed)
+int __cfsetspeed(struct termios *termios_p, speed_t speed)
 {
-  int rv;
+    int rv;
 
-  rv = __cfsetospeed (termios_p, speed);
-  if (rv)
-    return rv;
+    rv = __cfsetospeed(termios_p, speed);
+    if (rv) {
+        return rv;
+    }
 
-  return __cfsetispeed (termios_p, speed);
+    return __cfsetispeed(termios_p, speed);
 }
-libc_hidden_def (__cfsetspeed)
-weak_alias (__cfsetspeed, cfsetspeed)
+libc_hidden_def(__cfsetspeed)
+weak_alias(__cfsetspeed, cfsetspeed)

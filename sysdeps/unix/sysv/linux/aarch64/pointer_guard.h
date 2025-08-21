@@ -24,10 +24,10 @@
      || (!defined SHARED && (IS_IN (libc) \
                              || IS_IN (libpthread))))
 # ifdef __ASSEMBLER__
-#  define PTR_MANGLE(dst, src, tmp)					    \
-	adrp    tmp, C_SYMBOL_NAME(__pointer_chk_guard_local);		    \
-	ldr	tmp, [tmp, :lo12:C_SYMBOL_NAME(__pointer_chk_guard_local)]; \
-	eor	dst, src, tmp
+#  define PTR_MANGLE(dst, src, tmp)                     \
+    adrp    tmp, C_SYMBOL_NAME(__pointer_chk_guard_local);          \
+    ldr tmp, [tmp, :lo12:C_SYMBOL_NAME(__pointer_chk_guard_local)]; \
+    eor dst, src, tmp
 #  define PTR_DEMANGLE(dst, src, tmp) PTR_MANGLE (dst, src, tmp)
 # else
 extern uintptr_t __pointer_chk_guard_local attribute_relro attribute_hidden;
@@ -37,11 +37,11 @@ extern uintptr_t __pointer_chk_guard_local attribute_relro attribute_hidden;
 # endif
 #else
 # ifdef __ASSEMBLER__
-#  define PTR_MANGLE(dst, src, tmp)					  \
-	adrp	tmp, :got:C_SYMBOL_NAME(__pointer_chk_guard);		  \
-	ldr	tmp, [tmp, :got_lo12:C_SYMBOL_NAME(__pointer_chk_guard)]; \
-	ldr	tmp, [tmp];						  \
-	eor	dst, src, tmp;
+#  define PTR_MANGLE(dst, src, tmp)                   \
+    adrp    tmp, :got:C_SYMBOL_NAME(__pointer_chk_guard);         \
+    ldr tmp, [tmp, :got_lo12:C_SYMBOL_NAME(__pointer_chk_guard)]; \
+    ldr tmp, [tmp];                       \
+    eor dst, src, tmp;
 #  define PTR_DEMANGLE(dst, src, tmp) PTR_MANGLE (dst, src, tmp)
 # else
 #  include <stdint.h>

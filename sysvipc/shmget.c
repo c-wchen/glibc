@@ -21,11 +21,10 @@
 /* Return an identifier for an shared memory segment of at least size SIZE
    which is associated with KEY.  */
 
-int
-shmget (key_t key, size_t size, int shmflg)
+int shmget(key_t key, size_t size, int shmflg)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (shmget)
+stub_warning(shmget)

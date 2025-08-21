@@ -42,96 +42,92 @@ static int inner_thread_count = 4;
 static size_t malloc_size = 32;
 
 static void
-__attribute_optimization_barrier__
-unoptimized_free (void *ptr)
+__attribute_optimization_barrier__ unoptimized_free(void *ptr)
 {
-  free (ptr);
+    free(ptr);
 }
 
-static void *
-malloc_first_thread (void * closure)
+static void *malloc_first_thread(void *closure)
 {
-  pthread_barrier_t *barrier = closure;
-  void *ptr = xmalloc (malloc_size);
-  xpthread_barrier_wait (barrier);
-  unoptimized_free (ptr);
-  return NULL;
+    pthread_barrier_t *barrier = closure;
+    void *ptr = xmalloc(malloc_size);
+    xpthread_barrier_wait(barrier);
+    unoptimized_free(ptr);
+    return NULL;
 }
 
-static void *
-wait_first_thread (void * closure)
+static void *wait_first_thread(void *closure)
 {
-  pthread_barrier_t *barrier = closure;
-  xpthread_barrier_wait (barrier);
-  void *ptr = xmalloc (malloc_size);
-  unoptimized_free (ptr);
-  return NULL;
+    pthread_barrier_t *barrier = closure;
+    xpthread_barrier_wait(barrier);
+    void *ptr = xmalloc(malloc_size);
+    unoptimized_free(ptr);
+    return NULL;
 }
 
-static void *
-outer_thread (void *closure)
+static void *outer_thread(void *closure)
 {
-  pthread_t *threads = xcalloc (sizeof (*threads), inner_thread_count);
-  while (!__atomic_load_n (&termination_requested, __ATOMIC_RELAXED))
-    {
-      pthread_barrier_t barrier;
-      xpthread_barrier_init (&barrier, NULL, inner_thread_count + 1);
-      for (int i = 0; i < inner_thread_count; ++i)
-        {
-          void *(*func) (void *);
-          if ((i  % 2) == 0)
-            func = malloc_first_thread;
-          else
-            func = wait_first_thread;
-          threads[i] = xpthread_create (NULL, func, &barrier);
+    pthread_t *threads = xcalloc(sizeof(*threads), inner_thread_count);
+    while (!__atomic_load_n(&termination_requested, __ATOMIC_RELAXED)) {
+        pthread_barrier_t barrier;
+        xpthread_barrier_init(&barrier, NULL, inner_thread_count + 1);
+        for (int i = 0; i < inner_thread_count; ++i) {
+            void *(*func)(void *);
+            if ((i  % 2) == 0) {
+                func = malloc_first_thread;
+            } else {
+                func = wait_first_thread;
+            }
+            threads[i] = xpthread_create(NULL, func, &barrier);
         }
-      xpthread_barrier_wait (&barrier);
-      for (int i = 0; i < inner_thread_count; ++i)
-        xpthread_join (threads[i]);
-      xpthread_barrier_destroy (&barrier);
+        xpthread_barrier_wait(&barrier);
+        for (int i = 0; i < inner_thread_count; ++i) {
+            xpthread_join(threads[i]);
+        }
+        xpthread_barrier_destroy(&barrier);
     }
 
-  free (threads);
+    free(threads);
 
-  return NULL;
+    return NULL;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* The number of threads should be smaller than the number of
-     arenas, so that there will be some free arenas to add to the
-     arena free list.  */
-  enum { outer_thread_count = 2 };
-  if (mallopt (M_ARENA_MAX, 8) == 0)
-    {
-      printf ("error: mallopt (M_ARENA_MAX) failed\n");
-      return 1;
+    /* The number of threads should be smaller than the number of
+       arenas, so that there will be some free arenas to add to the
+       arena free list.  */
+    enum { outer_thread_count = 2 };
+    if (mallopt(M_ARENA_MAX, 8) == 0) {
+        printf("error: mallopt (M_ARENA_MAX) failed\n");
+        return 1;
     }
 
-  /* Leave some room for shutting down all threads gracefully.  */
-  int timeout = 3;
-  if (timeout > DEFAULT_TIMEOUT)
-    timeout = DEFAULT_TIMEOUT - 1;
-
-  pthread_t *threads = xcalloc (sizeof (*threads), outer_thread_count);
-  for (long i = 0; i < outer_thread_count; ++i)
-    threads[i] = xpthread_create (NULL, outer_thread, NULL);
-
-  struct timespec ts = {timeout, 0};
-  if (nanosleep (&ts, NULL))
-    {
-      printf ("error: error: nanosleep: %m\n");
-      abort ();
+    /* Leave some room for shutting down all threads gracefully.  */
+    int timeout = 3;
+    if (timeout > DEFAULT_TIMEOUT) {
+        timeout = DEFAULT_TIMEOUT - 1;
     }
 
-  __atomic_store_n (&termination_requested, true, __ATOMIC_RELAXED);
+    pthread_t *threads = xcalloc(sizeof(*threads), outer_thread_count);
+    for (long i = 0; i < outer_thread_count; ++i) {
+        threads[i] = xpthread_create(NULL, outer_thread, NULL);
+    }
 
-  for (long i = 0; i < outer_thread_count; ++i)
-    xpthread_join (threads[i]);
-  free (threads);
+    struct timespec ts = {timeout, 0};
+    if (nanosleep(&ts, NULL)) {
+        printf("error: error: nanosleep: %m\n");
+        abort();
+    }
 
-  return 0;
+    __atomic_store_n(&termination_requested, true, __ATOMIC_RELAXED);
+
+    for (long i = 0; i < outer_thread_count; ++i) {
+        xpthread_join(threads[i]);
+    }
+    free(threads);
+
+    return 0;
 }
 
 #include <support/test-driver.c>

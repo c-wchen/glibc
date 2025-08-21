@@ -21,8 +21,8 @@
 
 
 /* Prototype for our test function.  */
-extern void do_prepare (int argc, char *argv[]);
-extern int do_test (int argc, char *argv[]);
+extern void do_prepare(int argc, char *argv[]);
+extern int do_test(int argc, char *argv[]);
 
 /* We have a preparation function.  */
 #define PREPARE do_prepare
@@ -34,40 +34,40 @@ char *name1;
 char *name2;
 
 /* Preparation.  */
-void
-do_prepare (int argc, char *argv[])
+void do_prepare(int argc, char *argv[])
 {
-  size_t test_dir_len;
+    size_t test_dir_len;
 
-  test_dir_len = strlen (test_dir);
+    test_dir_len = strlen(test_dir);
 
-  /* Generate the circular symlinks.  */
-  name1 = malloc (test_dir_len + sizeof ("/canonXXXXXX"));
-  mempcpy (mempcpy (name1, test_dir, test_dir_len),
-	   "/canonXXXXXX", sizeof ("/canonXXXXXX"));
-  name2 = strdup (name1);
+    /* Generate the circular symlinks.  */
+    name1 = malloc(test_dir_len + sizeof("/canonXXXXXX"));
+    mempcpy(mempcpy(name1, test_dir, test_dir_len),
+            "/canonXXXXXX", sizeof("/canonXXXXXX"));
+    name2 = strdup(name1);
 
-  add_temp_file (mktemp (name1));
-  add_temp_file (mktemp (name2));
+    add_temp_file(mktemp(name1));
+    add_temp_file(mktemp(name2));
 }
 
 
 /* Run the test.  */
-int
-do_test (int argc, char *argv[])
+int do_test(int argc, char *argv[])
 {
-  char *canon;
+    char *canon;
 
-  printf ("create symlinks from %s to %s and vice versa\n", name1, name2);
-  if (symlink (name1, name2) == -1
-      || symlink (name2, name1) == -1)
-    /* We cannot test this.  */
-    return 0;
+    printf("create symlinks from %s to %s and vice versa\n", name1, name2);
+    if (symlink(name1, name2) == -1
+        || symlink(name2, name1) == -1)
+        /* We cannot test this.  */
+    {
+        return 0;
+    }
 
-  /* Call the function.  This is equivalent the using `realpath' but the
-     function allocates the room for the result.  */
-  errno = 0;
-  canon = canonicalize_file_name (name1);
+    /* Call the function.  This is equivalent the using `realpath' but the
+       function allocates the room for the result.  */
+    errno = 0;
+    canon = canonicalize_file_name(name1);
 
-  return canon != NULL || errno != ELOOP;
+    return canon != NULL || errno != ELOOP;
 }

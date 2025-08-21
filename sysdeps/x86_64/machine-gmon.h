@@ -26,7 +26,7 @@
 /* We must not pollute the global namespace.  */
 #define mcount_internal __mcount_internal
 
-void mcount_internal (u_long frompc, u_long selfpc);
+void mcount_internal(u_long frompc, u_long selfpc);
 
 #define _MCOUNT_DECL(frompc, selfpc) \
 void mcount_internal (u_long frompc, u_long selfpc)

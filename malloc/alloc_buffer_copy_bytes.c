@@ -23,12 +23,13 @@
 /* This function works on a copy of the buffer object, so that it can
    remain non-addressable in the caller.  */
 struct alloc_buffer
-__libc_alloc_buffer_copy_bytes (struct alloc_buffer buf,
-                                const void *src, size_t len)
+__libc_alloc_buffer_copy_bytes(struct alloc_buffer buf,
+                               const void *src, size_t len)
 {
-  void *ptr = alloc_buffer_alloc_bytes (&buf, len);
-  if (ptr != NULL)
-    memcpy (ptr, src, len);
-  return buf;
+    void *ptr = alloc_buffer_alloc_bytes(&buf, len);
+    if (ptr != NULL) {
+        memcpy(ptr, src, len);
+    }
+    return buf;
 }
-libc_hidden_def (__libc_alloc_buffer_copy_bytes)
+libc_hidden_def(__libc_alloc_buffer_copy_bytes)

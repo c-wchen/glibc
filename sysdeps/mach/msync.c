@@ -33,29 +33,30 @@
    file it maps.  Filesystem operations on a file being mapped are
    unpredictable before this is done.  */
 
-int
-msync (void *addr, size_t len, int flags)
+int msync(void *addr, size_t len, int flags)
 {
-  vm_sync_t sync_flags = 0;
-  kern_return_t err;
-  int cancel_oldtype;
+    vm_sync_t sync_flags = 0;
+    kern_return_t err;
+    int cancel_oldtype;
 
-  if (flags & MS_SYNC)
-    sync_flags |= VM_SYNC_SYNCHRONOUS;
-  if (flags & MS_ASYNC)
-    sync_flags |= VM_SYNC_ASYNCHRONOUS;
-  if (flags & MS_INVALIDATE)
-    sync_flags |= VM_SYNC_INVALIDATE;
-
-  cancel_oldtype = LIBC_CANCEL_ASYNC();
-  err = __vm_msync (__mach_task_self (),
-		    (vm_address_t) addr, (vm_size_t) len, sync_flags);
-  LIBC_CANCEL_RESET (cancel_oldtype);
-  if (err)
-    {
-      errno = err;
-      return -1;
+    if (flags & MS_SYNC) {
+        sync_flags |= VM_SYNC_SYNCHRONOUS;
     }
-  return 0;
+    if (flags & MS_ASYNC) {
+        sync_flags |= VM_SYNC_ASYNCHRONOUS;
+    }
+    if (flags & MS_INVALIDATE) {
+        sync_flags |= VM_SYNC_INVALIDATE;
+    }
+
+    cancel_oldtype = LIBC_CANCEL_ASYNC();
+    err = __vm_msync(__mach_task_self(),
+                     (vm_address_t) addr, (vm_size_t) len, sync_flags);
+    LIBC_CANCEL_RESET(cancel_oldtype);
+    if (err) {
+        errno = err;
+        return -1;
+    }
+    return 0;
 }
 #endif

@@ -28,10 +28,9 @@
 
 #include <math-narrow.h>
 
-double
-__ddivl (_Float128 x, _Float128 y)
+double __ddivl(_Float128 x, _Float128 y)
 {
-  NARROW_DIV_ROUND_TO_ODD (x, y, double, union ieee854_long_double, l,
-			   mantissa3, false);
+    NARROW_DIV_ROUND_TO_ODD(x, y, double, union ieee854_long_double, l,
+                            mantissa3, false);
 }
-libm_alias_double_ldouble (div)
+libm_alias_double_ldouble(div)

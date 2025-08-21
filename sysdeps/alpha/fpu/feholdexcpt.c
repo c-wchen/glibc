@@ -18,17 +18,16 @@
 
 #include <fenv_libc.h>
 
-int
-__feholdexcept (fenv_t *envp)
+int __feholdexcept(fenv_t *envp)
 {
-  /* Save the current state.  */
-  __fegetenv(envp);
+    /* Save the current state.  */
+    __fegetenv(envp);
 
-  /* Clear all exception status bits and exception enable bits.  */
-  __ieee_set_fp_control(*envp & SWCR_MAP_MASK);
+    /* Clear all exception status bits and exception enable bits.  */
+    __ieee_set_fp_control(*envp & SWCR_MAP_MASK);
 
-  return 0;
+    return 0;
 }
-libm_hidden_def (__feholdexcept)
-weak_alias (__feholdexcept, feholdexcept)
-libm_hidden_weak (feholdexcept)
+libm_hidden_def(__feholdexcept)
+weak_alias(__feholdexcept, feholdexcept)
+libm_hidden_weak(feholdexcept)

@@ -18,17 +18,18 @@
 
 #include <libio/libioP.h>
 
-extern int
-___ieee128___vsnprintf_chk (char *string, size_t maxlen, int flag,
-			 size_t slen, const char *format, va_list ap)
+extern int ___ieee128___vsnprintf_chk(char *string, size_t maxlen, int flag,
+                                      size_t slen, const char *format, va_list ap)
 {
-  if (__glibc_unlikely (slen < maxlen))
-    __chk_fail ();
+    if (__glibc_unlikely(slen < maxlen)) {
+        __chk_fail();
+    }
 
-  unsigned int mode = PRINTF_LDBL_USES_FLOAT128;
-  if (flag > 0)
-    mode |= PRINTF_FORTIFY;
+    unsigned int mode = PRINTF_LDBL_USES_FLOAT128;
+    if (flag > 0) {
+        mode |= PRINTF_FORTIFY;
+    }
 
-  return __vsnprintf_internal (string, maxlen, format, ap, mode);
+    return __vsnprintf_internal(string, maxlen, format, ap, mode);
 }
-strong_alias (___ieee128___vsnprintf_chk, __vsnprintf_chkieee128)
+strong_alias(___ieee128___vsnprintf_chk, __vsnprintf_chkieee128)

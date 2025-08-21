@@ -16,11 +16,11 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _SYS_KD_H
-#define _SYS_KD_H	1
+#define _SYS_KD_H   1
 
 /* Make sure the <linux/types.h> header is not loaded.  */
 #ifndef _LINUX_TYPES_H
-# define _LINUX_TYPES_H		1
+# define _LINUX_TYPES_H     1
 # define __undef_LINUX_TYPES_H
 #endif
 
@@ -31,4 +31,4 @@
 # undef __undef_LINUX_TYPES_H
 #endif
 
-#endif	/* sys/kd.h */
+#endif  /* sys/kd.h */

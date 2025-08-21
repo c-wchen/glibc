@@ -21,15 +21,14 @@
 
 #ifndef __OFF_T_MATCHES_OFF64_T
 /* Truncate the file FD refers to LENGTH bytes.  */
-int
-__ftruncate (int fd, off_t length)
+int __ftruncate(int fd, off_t length)
 {
 # ifndef __NR_ftruncate
-  return INLINE_SYSCALL_CALL (ftruncate64, fd,
-			      __ALIGNMENT_ARG SYSCALL_LL (length));
+    return INLINE_SYSCALL_CALL(ftruncate64, fd,
+                               __ALIGNMENT_ARG SYSCALL_LL(length));
 # else
-  return INLINE_SYSCALL_CALL (ftruncate, fd, length);
+    return INLINE_SYSCALL_CALL(ftruncate, fd, length);
 # endif
 }
-weak_alias (__ftruncate, ftruncate)
+weak_alias(__ftruncate, ftruncate)
 #endif

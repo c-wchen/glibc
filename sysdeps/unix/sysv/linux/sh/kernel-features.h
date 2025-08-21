@@ -23,16 +23,16 @@
 #include <endian.h>
 
 /* These syscalls were added for SH in 2.6.37.  */
-#define __ASSUME_CONNECT_SYSCALL	1
-#define __ASSUME_SEND_SYSCALL		1
-#define __ASSUME_RECV_SYSCALL		1
+#define __ASSUME_CONNECT_SYSCALL    1
+#define __ASSUME_SEND_SYSCALL       1
+#define __ASSUME_RECV_SYSCALL       1
 
 #include_next <kernel-features.h>
 
 /* SH4 ABI does not really require argument alignment for 64-bits, but
    the kernel interface for p{read,write}64 adds a dummy long argument
    before the offset.  */
-#define __ASSUME_PRW_DUMMY_ARG	1
+#define __ASSUME_PRW_DUMMY_ARG  1
 
 /* sh only supports ipc syscall before 5.1.  */
 #if __LINUX_KERNEL_VERSION < 0x050100

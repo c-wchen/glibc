@@ -22,7 +22,9 @@
 #include <pt-internal.h>
 
 const struct __pthread_condattr __pthread_default_condattr = {
-  __pshared: PTHREAD_PROCESS_PRIVATE,
-  __clock: CLOCK_REALTIME
+__pshared:
+    PTHREAD_PROCESS_PRIVATE,
+__clock:
+    CLOCK_REALTIME
 };
-libc_hidden_data_def (__pthread_default_condattr)
+libc_hidden_data_def(__pthread_default_condattr)

@@ -21,54 +21,49 @@
 #include <fpu_control.h>
 #include <math.h>
 
-int
-__feraiseexcept (int excepts)
+int __feraiseexcept(int excepts)
 {
-  if (excepts == 0)
+    if (excepts == 0) {
+        return 0;
+    }
+
+    /* Raise exceptions represented by EXPECTS.  */
+
+    if (excepts & FE_INEXACT) {
+        double d = 1.0, x = 3.0;
+        __asm__ __volatile__("fdiv %1, %0" : "+d"(d) : "d"(x));
+    }
+
+    if (excepts & FE_UNDERFLOW) {
+        long double d = LDBL_MIN, x = 10;
+        __asm__ __volatile__("fdiv %1, %0" : "+d"(d) : "d"(x));
+    }
+
+    if (excepts & FE_OVERFLOW) {
+        long double d = LDBL_MAX;
+        __asm__ __volatile__("fmul %0, %0" : "+d"(d) : "d"(d));
+    }
+
+    if (excepts & FE_DIVBYZERO) {
+        double d = 1.0, x = 0.0;
+        __asm__ __volatile__("fdiv %1, %0" : "+d"(d) : "d"(x));
+    }
+
+    if (excepts & FE_INVALID) {
+        double d = HUGE_VAL, x = 0.0;
+        __asm__ __volatile__("fmul %1, %0" : "+d"(d) : "d"(x));
+    }
+
+    {
+        /* Restore flag fields.  */
+        fpu_control_t cw;
+        _FPU_GETCW(cw);
+        cw |= (excepts & FE_ALL_EXCEPT);
+        _FPU_SETCW(cw);
+    }
+
     return 0;
-
-  /* Raise exceptions represented by EXPECTS.  */
-
-  if (excepts & FE_INEXACT)
-  {
-    double d = 1.0, x = 3.0;
-    __asm__ __volatile__ ("fdiv %1, %0" : "+d" (d) : "d" (x));
-  }
-
-  if (excepts & FE_UNDERFLOW)
-  {
-    long double d = LDBL_MIN, x = 10;
-    __asm__ __volatile__ ("fdiv %1, %0" : "+d" (d) : "d" (x));
-  }
-
-  if (excepts & FE_OVERFLOW)
-  {
-    long double d = LDBL_MAX;
-    __asm__ __volatile__ ("fmul %0, %0" : "+d" (d) : "d" (d));
-  }
-
-  if (excepts & FE_DIVBYZERO)
-  {
-    double d = 1.0, x = 0.0;
-    __asm__ __volatile__ ("fdiv %1, %0" : "+d" (d) : "d" (x));
-  }
-
-  if (excepts & FE_INVALID)
-  {
-    double d = HUGE_VAL, x = 0.0;
-    __asm__ __volatile__ ("fmul %1, %0" : "+d" (d) : "d" (x));
-  }
-
-  {
-    /* Restore flag fields.  */
-    fpu_control_t cw;
-    _FPU_GETCW (cw);
-    cw |= (excepts & FE_ALL_EXCEPT);
-    _FPU_SETCW (cw);
-  }
-
-  return 0;
 }
-libm_hidden_def (__feraiseexcept)
-weak_alias (__feraiseexcept, feraiseexcept)
-libm_hidden_weak (feraiseexcept)
+libm_hidden_def(__feraiseexcept)
+weak_alias(__feraiseexcept, feraiseexcept)
+libm_hidden_weak(feraiseexcept)

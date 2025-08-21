@@ -28,95 +28,98 @@
 #include "hurd/hurdsocket.h"
 
 /* Give the socket FD the local address ADDR (which is LEN bytes long).  */
-int
-__bind  (int fd, __CONST_SOCKADDR_ARG addrarg, socklen_t len)
+int __bind(int fd, __CONST_SOCKADDR_ARG addrarg, socklen_t len)
 {
-  addr_port_t aport;
-  error_t err;
-  const struct sockaddr_un *addr = addrarg.__sockaddr_un__;
+    addr_port_t aport;
+    error_t err;
+    const struct sockaddr_un *addr = addrarg.__sockaddr_un__;
 
-  if (addr->sun_family == AF_LOCAL)
-    {
-      char *name = _hurd_sun_path_dupa (addr, len);
-      /* For the local domain, we must create a node in the filesystem
-	 using the ifsock translator and then fetch the address from it.  */
-      file_t dir, node, ifsock;
-      char *n;
+    if (addr->sun_family == AF_LOCAL) {
+        char *name = _hurd_sun_path_dupa(addr, len);
+        /* For the local domain, we must create a node in the filesystem
+        using the ifsock translator and then fetch the address from it.  */
+        file_t dir, node, ifsock;
+        char *n;
 
-      dir = __file_name_split (name, &n);
-      if (dir == MACH_PORT_NULL)
-	return -1;
+        dir = __file_name_split(name, &n);
+        if (dir == MACH_PORT_NULL) {
+            return -1;
+        }
 
-      if (! *n)
-	/* Can't bind on the existing directory itself.  */
-	err = ENOTDIR;
-      else
-	/* Create a new, unlinked node in the target directory.  */
-	err = __dir_mkfile (dir, O_CREAT, 0666 & ~_hurd_umask, &node);
+        if (! *n)
+            /* Can't bind on the existing directory itself.  */
+        {
+            err = ENOTDIR;
+        } else
+            /* Create a new, unlinked node in the target directory.  */
+        {
+            err = __dir_mkfile(dir, O_CREAT, 0666 & ~_hurd_umask, &node);
+        }
 
-      if (! err)
-	{
-	  /* Set the node's translator to make it a local-domain socket.  */
-	  err = __file_set_translator (node,
-				       FS_TRANS_EXCL | FS_TRANS_SET,
-				       FS_TRANS_EXCL | FS_TRANS_SET, 0,
-				       _HURD_IFSOCK, sizeof _HURD_IFSOCK,
-				       MACH_PORT_NULL,
-				       MACH_MSG_TYPE_COPY_SEND);
-	  if (! err)
-	    {
-	      enum retry_type doretry;
-	      string_t retryname;
-	      /* Get a port to the ifsock translator.  */
-	      err = __dir_lookup (node, "", 0, 0, &doretry, retryname, &ifsock);
-	      if (! err && (doretry != FS_RETRY_NORMAL || retryname[0] != '\0'))
-		err = EADDRINUSE;
-	    }
-	  if (! err)
-	    {
-	      /* Get the address port.  */
-	      err = __ifsock_getsockaddr (ifsock, &aport);
-	      if (err == MIG_BAD_ID || err == EOPNOTSUPP)
-		err = EGRATUITOUS;
-	      if (! err)
-		{
-		  /* Link the node, now a socket with proper mode, into the
-		     target directory.  */
-		  err = __dir_link (dir, node, n, 1);
-		  if (err == EEXIST)
-		    err = EADDRINUSE;
-		  if (err)
-		    __mach_port_deallocate (__mach_task_self (), aport);
-		}
-	      __mach_port_deallocate (__mach_task_self (), ifsock);
-	    }
-	  __mach_port_deallocate (__mach_task_self (), node);
-	}
-      __mach_port_deallocate (__mach_task_self (), dir);
+        if (! err) {
+            /* Set the node's translator to make it a local-domain socket.  */
+            err = __file_set_translator(node,
+                                        FS_TRANS_EXCL | FS_TRANS_SET,
+                                        FS_TRANS_EXCL | FS_TRANS_SET, 0,
+                                        _HURD_IFSOCK, sizeof _HURD_IFSOCK,
+                                        MACH_PORT_NULL,
+                                        MACH_MSG_TYPE_COPY_SEND);
+            if (! err) {
+                enum retry_type doretry;
+                string_t retryname;
+                /* Get a port to the ifsock translator.  */
+                err = __dir_lookup(node, "", 0, 0, &doretry, retryname, &ifsock);
+                if (! err && (doretry != FS_RETRY_NORMAL || retryname[0] != '\0')) {
+                    err = EADDRINUSE;
+                }
+            }
+            if (! err) {
+                /* Get the address port.  */
+                err = __ifsock_getsockaddr(ifsock, &aport);
+                if (err == MIG_BAD_ID || err == EOPNOTSUPP) {
+                    err = EGRATUITOUS;
+                }
+                if (! err) {
+                    /* Link the node, now a socket with proper mode, into the
+                       target directory.  */
+                    err = __dir_link(dir, node, n, 1);
+                    if (err == EEXIST) {
+                        err = EADDRINUSE;
+                    }
+                    if (err) {
+                        __mach_port_deallocate(__mach_task_self(), aport);
+                    }
+                }
+                __mach_port_deallocate(__mach_task_self(), ifsock);
+            }
+            __mach_port_deallocate(__mach_task_self(), node);
+        }
+        __mach_port_deallocate(__mach_task_self(), dir);
 
-      if (err)
-	return __hurd_fail (err);
+        if (err) {
+            return __hurd_fail(err);
+        }
+    } else {
+        err = EIEIO;
     }
-  else
-    err = EIEIO;
 
-  err = HURD_DPORT_USE (fd,
-			({
-			  if (err)
-			    err = __socket_create_address (port,
-							   addr->sun_family,
-							   (char *) addr, len,
-							   &aport);
-			  if (! err)
-			    {
-			      err = __socket_bind (port, aport);
-			      __mach_port_deallocate (__mach_task_self (),
-						      aport);
-			    }
-			  err;
-			}));
+    err = HURD_DPORT_USE(fd,
+    ({
+        if (err)
+            err = __socket_create_address(port,
+                                          addr->sun_family,
+                                          (char *) addr, len,
+                                          &aport);
+        if (! err)
+        {
+            err = __socket_bind(port, aport);
+            __mach_port_deallocate(__mach_task_self(),
+                                   aport);
+        }
+        err;
+    }));
 
-  return err ? __hurd_dfail (fd, err) : 0;
+    return err ? __hurd_dfail(fd, err) : 0;
 }
 
-weak_alias (__bind, bind)
+weak_alias(__bind, bind)

@@ -21,7 +21,7 @@
 /* Specify the conversion table.  */
 #define TABLES <cp772.h>
 
-#define CHARSET_NAME	"CP772//"
-#define HAS_HOLES	0	/* All 256 character are defined.  */
+#define CHARSET_NAME    "CP772//"
+#define HAS_HOLES   0   /* All 256 character are defined.  */
 
 #include <8bit-gap.c>

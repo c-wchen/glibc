@@ -27,52 +27,52 @@
 
 /* This implementation avoids FP to INT conversions by using VSX
    bitwise instructions over FP values.  */
-long double
-__logbl (long double x)
+long double __logbl(long double x)
 {
-  double xh, xl;
-  double ret;
-  int64_t hx;
+    double xh, xl;
+    double ret;
+    int64_t hx;
 
-  if (__glibc_unlikely (x == 0.0))
-    /* Raise FE_DIVBYZERO and return -HUGE_VAL[LF].  */
-    return -1.0L / __builtin_fabsl (x);
-
-  ldbl_unpack (x, &xh, &xl);
-  EXTRACT_WORDS64 (hx, xh);
-
-  /* Mask to extract the exponent.  */
-  asm ("xxland %x0,%x1,%x2\n"
-       "fcfid  %0,%0"
-       : "=d" (ret)
-       : "d" (xh), "d" (0x7ff0000000000000ULL));
-  ret = (ret * 0x1p-52) - 1023.0;
-  if (ret > 1023.0)
-    /* Multiplication is used to set logb (+-INF) = INF.  */
-    return (xh * xh);
-  else if (ret == -1023.0)
+    if (__glibc_unlikely(x == 0.0))
+        /* Raise FE_DIVBYZERO and return -HUGE_VAL[LF].  */
     {
-      /* POSIX specifies that denormal number is treated as
-         though it were normalized.  */
-      return (long double) (- (__builtin_clzll (hx & 0x7fffffffffffffffLL) \
-			       - 12) - 1023);
+        return -1.0L / __builtin_fabsl(x);
     }
-  else if ((hx & 0x000fffffffffffffLL) == 0)
+
+    ldbl_unpack(x, &xh, &xl);
+    EXTRACT_WORDS64(hx, xh);
+
+    /* Mask to extract the exponent.  */
+    asm("xxland %x0,%x1,%x2\n"
+        "fcfid  %0,%0"
+        : "=d"(ret)
+        : "d"(xh), "d"(0x7ff0000000000000ULL));
+    ret = (ret * 0x1p - 52) - 1023.0;
+    if (ret > 1023.0)
+        /* Multiplication is used to set logb (+-INF) = INF.  */
     {
-      /* If the high part is a power of 2, and the low part is nonzero
-	 with the opposite sign, the low part affects the
-	 exponent.  */
-      int64_t lx, rhx;
-      EXTRACT_WORDS64 (lx, xl);
-      rhx = (hx & 0x7ff0000000000000LL) >> 52;
-      if ((hx ^ lx) < 0 && (lx & 0x7fffffffffffffffLL) != 0)
-	rhx--;
-      return (long double) (rhx - 1023);
+        return (xh * xh);
+    } else if (ret == -1023.0) {
+        /* POSIX specifies that denormal number is treated as
+           though it were normalized.  */
+        return (long double)(- (__builtin_clzll(hx & 0x7fffffffffffffffLL) \
+                                - 12) - 1023);
+    } else if ((hx & 0x000fffffffffffffLL) == 0) {
+        /* If the high part is a power of 2, and the low part is nonzero
+        with the opposite sign, the low part affects the
+         exponent.  */
+        int64_t lx, rhx;
+        EXTRACT_WORDS64(lx, xl);
+        rhx = (hx & 0x7ff0000000000000LL) >> 52;
+        if ((hx ^ lx) < 0 && (lx & 0x7fffffffffffffffLL) != 0) {
+            rhx--;
+        }
+        return (long double)(rhx - 1023);
     }
-  /* Test to avoid logb_downward (0.0) == -0.0.  */
-  return ret == -0.0 ? 0.0 : ret;
+    /* Test to avoid logb_downward (0.0) == -0.0.  */
+    return ret == -0.0 ? 0.0 : ret;
 }
 # ifndef __logbl
-long_double_symbol (libm, __logbl, logbl);
+long_double_symbol(libm, __logbl, logbl);
 # endif
 #endif

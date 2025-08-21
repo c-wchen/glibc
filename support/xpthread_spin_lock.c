@@ -18,8 +18,7 @@
 
 #include <support/xthread.h>
 
-void
-xpthread_spin_lock (pthread_spinlock_t *lock)
+void xpthread_spin_lock(pthread_spinlock_t *lock)
 {
-  xpthread_check_return ("pthread_spin_lock", pthread_spin_lock (lock));
+    xpthread_check_return("pthread_spin_lock", pthread_spin_lock(lock));
 }

@@ -20,25 +20,24 @@
 #include "soft-fp.h"
 #include "soft-supp.h"
 
-int
-__feholdexcept (fenv_t *envp)
+int __feholdexcept(fenv_t *envp)
 {
-  fenv_union_t u;
+    fenv_union_t u;
 
-  /* Get the current state.  */
-  __fegetenv (envp);
+    /* Get the current state.  */
+    __fegetenv(envp);
 
-  u.fenv = *envp;
-  /* Clear everything except the rounding mode.  */
-  u.l[0] &= 0x3;
-  /* Disable exceptions */
-  u.l[1] = FE_ALL_EXCEPT;
+    u.fenv = *envp;
+    /* Clear everything except the rounding mode.  */
+    u.l[0] &= 0x3;
+    /* Disable exceptions */
+    u.l[1] = FE_ALL_EXCEPT;
 
-  /* Put the new state in effect.  */
-  __fesetenv (&u.fenv);
+    /* Put the new state in effect.  */
+    __fesetenv(&u.fenv);
 
-  return 0;
+    return 0;
 }
-libm_hidden_def (__feholdexcept)
-weak_alias (__feholdexcept, feholdexcept)
-libm_hidden_weak (feholdexcept)
+libm_hidden_def(__feholdexcept)
+weak_alias(__feholdexcept, feholdexcept)
+libm_hidden_weak(feholdexcept)

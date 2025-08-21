@@ -25,41 +25,37 @@
 #include <unistd.h>
 
 /* Helpers used in catgets/gencat.c and malloc/memusage*.c */
-static inline void
-write_all (int fd, const void *buffer, size_t length)
+static inline void write_all(int fd, const void *buffer, size_t length)
 {
-  const char *p = buffer;
-  const char *end = p + length;
-  while (p < end)
-    {
-      ssize_t ret = write (fd, p, end - p);
-      if (ret < 0)
-	error (EXIT_FAILURE, errno,
-	       gettext ("write of %zu bytes failed after %td: %m"),
-	       length, p - (const char *) buffer);
+    const char *p = buffer;
+    const char *end = p + length;
+    while (p < end) {
+        ssize_t ret = write(fd, p, end - p);
+        if (ret < 0)
+            error(EXIT_FAILURE, errno,
+                  gettext("write of %zu bytes failed after %td: %m"),
+                  length, p - (const char *) buffer);
 
-      if (ret == 0)
-	error (EXIT_FAILURE, 0,
-	       gettext ("write returned 0 after writing %td bytes of %zu"),
-	       p - (const char *) buffer, length);
-      p += ret;
+        if (ret == 0)
+            error(EXIT_FAILURE, 0,
+                  gettext("write returned 0 after writing %td bytes of %zu"),
+                  p - (const char *) buffer, length);
+        p += ret;
     }
 }
 
-static inline void
-read_all (int fd, void *buffer, size_t length)
+static inline void read_all(int fd, void *buffer, size_t length)
 {
-  char *p = buffer;
-  char *end = p + length;
-  while (p < end)
-    {
-      ssize_t ret = read (fd, p, end - p);
-      if (ret < 0)
-	error (EXIT_FAILURE, errno,
-	       gettext ("read of %zu bytes failed after %td: %m"),
-	       length, p - (char *) buffer);
+    char *p = buffer;
+    char *end = p + length;
+    while (p < end) {
+        ssize_t ret = read(fd, p, end - p);
+        if (ret < 0)
+            error(EXIT_FAILURE, errno,
+                  gettext("read of %zu bytes failed after %td: %m"),
+                  length, p - (char *) buffer);
 
-      p += ret;
+        p += ret;
     }
 }
 

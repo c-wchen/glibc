@@ -21,25 +21,25 @@
 # include <libm-alias-double.h>
 # include <libm-alias-finite.h>
 
-extern double __redirect_log2 (double);
+extern double __redirect_log2(double);
 
 # define SYMBOL_NAME log2
 # include "ifunc-fma.h"
 
-libc_ifunc_redirected (__redirect_log2, __log2, IFUNC_SELECTOR ());
+libc_ifunc_redirected(__redirect_log2, __log2, IFUNC_SELECTOR());
 
 # ifdef SHARED
-__hidden_ver1 (__log2, __GI___log2, __redirect_log2)
-  __attribute__ ((visibility ("hidden")));
+__hidden_ver1(__log2, __GI___log2, __redirect_log2)
+__attribute__((visibility("hidden")));
 
-versioned_symbol (libm, __ieee754_log2, log2, GLIBC_2_29);
-libm_alias_double_other (__log2, log2)
+versioned_symbol(libm, __ieee754_log2, log2, GLIBC_2_29);
+libm_alias_double_other(__log2, log2)
 # else
-libm_alias_double (__log2, log2)
+libm_alias_double(__log2, log2)
 # endif
 
-strong_alias (__log2, __ieee754_log2)
-libm_alias_finite (__log2, __log2)
+strong_alias(__log2, __ieee754_log2)
+libm_alias_finite(__log2, __log2)
 
 # define __log2 __log2_sse2
 #endif

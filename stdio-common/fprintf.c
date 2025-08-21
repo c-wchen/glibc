@@ -22,22 +22,21 @@
 
 /* Write formatted output to STREAM from the format string FORMAT.  */
 /* VARARGS2 */
-int
-__fprintf (FILE *stream, const char *format, ...)
+int __fprintf(FILE *stream, const char *format, ...)
 {
-  va_list arg;
-  int done;
+    va_list arg;
+    int done;
 
-  va_start (arg, format);
-  done = __vfprintf_internal (stream, format, arg, 0);
-  va_end (arg);
+    va_start(arg, format);
+    done = __vfprintf_internal(stream, format, arg, 0);
+    va_end(arg);
 
-  return done;
+    return done;
 }
-ldbl_hidden_def (__fprintf, fprintf)
-ldbl_strong_alias (__fprintf, fprintf)
+ldbl_hidden_def(__fprintf, fprintf)
+ldbl_strong_alias(__fprintf, fprintf)
 
 /* We define the function with the real name here.  But deep down in
    libio the original function _IO_fprintf is also needed.  So make
    an alias.  */
-ldbl_weak_alias (__fprintf, _IO_fprintf)
+ldbl_weak_alias(__fprintf, _IO_fprintf)

@@ -21,22 +21,19 @@
 #include <locale/localeinfo.h>
 #include <printf.h>
 
-int
-__translated_number_width (locale_t loc, const char *first, const char *last)
+int __translated_number_width(locale_t loc, const char *first, const char *last)
 {
-  struct lc_ctype_data *ctype = loc->__locales[LC_CTYPE]->private;
+    struct lc_ctype_data *ctype = loc->__locales[LC_CTYPE]->private;
 
-  if (ctype->outdigit_bytes_all_equal > 0)
-    return (last - first) * ctype->outdigit_bytes_all_equal;
-  else
-    {
-      /* Digits have varying length, so the fast path cannot be used.  */
-      int digits = 0;
-      for (const char *p = first; p < last; ++p)
-        {
-          assert ('0' <= *p && *p <= '9');
-          digits += ctype->outdigit_bytes[*p - '0'];
+    if (ctype->outdigit_bytes_all_equal > 0) {
+        return (last - first) * ctype->outdigit_bytes_all_equal;
+    } else {
+        /* Digits have varying length, so the fast path cannot be used.  */
+        int digits = 0;
+        for (const char *p = first; p < last; ++p) {
+            assert('0' <= *p && *p <= '9');
+            digits += ctype->outdigit_bytes[*p - '0'];
         }
-      return digits;
+        return digits;
     }
 }

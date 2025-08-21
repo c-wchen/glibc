@@ -22,35 +22,34 @@
 #include <bits/types.h>
 
 /* Flags for `shmat'.  */
-#define SHM_RDONLY	010000		/* attach read-only else read-write */
-#define SHM_RND		020000		/* round attach address to SHMLBA */
-#define SHM_REMAP	040000		/* take-over region on attach */
+#define SHM_RDONLY  010000      /* attach read-only else read-write */
+#define SHM_RND     020000      /* round attach address to SHMLBA */
+#define SHM_REMAP   040000      /* take-over region on attach */
 
 /* Commands for `shmctl'.  */
-#define SHM_LOCK	11		/* lock segment (root only) */
-#define SHM_UNLOCK	12		/* unlock segment (root only) */
+#define SHM_LOCK    11      /* lock segment (root only) */
+#define SHM_UNLOCK  12      /* unlock segment (root only) */
 
 __BEGIN_DECLS
 
 /* Segment low boundary address multiple.  */
-#define SHMLBA		(__getpagesize ())
-extern int __getpagesize (void) __THROW __attribute__ ((__const__));
+#define SHMLBA      (__getpagesize ())
+extern int __getpagesize(void) __THROW __attribute__((__const__));
 
 
 /* Type to count number of attaches.  */
 typedef unsigned short int shmatt_t;
 
 /* Data structure describing a shared memory segment.  */
-struct shmid_ds
-  {
-    struct ipc_perm shm_perm;		/* operation permission struct */
-    size_t shm_segsz;			/* size of segment in bytes */
-    __time_t shm_atime;			/* time of last shmat() */
-    __time_t shm_dtime;			/* time of last shmdt() */
-    __time_t shm_ctime;			/* time of last change by shmctl() */
-    __pid_t shm_cpid;			/* pid of creator */
-    __pid_t shm_lpid;			/* pid of last shmop */
-    shmatt_t shm_nattch;		/* number of current attaches */
-  };
+struct shmid_ds {
+    struct ipc_perm shm_perm;       /* operation permission struct */
+    size_t shm_segsz;           /* size of segment in bytes */
+    __time_t shm_atime;         /* time of last shmat() */
+    __time_t shm_dtime;         /* time of last shmdt() */
+    __time_t shm_ctime;         /* time of last change by shmctl() */
+    __pid_t shm_cpid;           /* pid of creator */
+    __pid_t shm_lpid;           /* pid of last shmop */
+    shmatt_t shm_nattch;        /* number of current attaches */
+};
 
 __END_DECLS

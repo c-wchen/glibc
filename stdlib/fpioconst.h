@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _FPIOCONST_H
-#define	_FPIOCONST_H
+#define _FPIOCONST_H
 
 #include <float.h>
 #include <math.h>
@@ -33,19 +33,19 @@
    IEEE754 values here.  */
 
 #if !defined __NO_LONG_DOUBLE_MATH && __LDBL_MAX_EXP__ > 1024
-# define LDBL_MAX_10_EXP_LOG	12 /* = floor(log_2(LDBL_MAX_10_EXP)) */
+# define LDBL_MAX_10_EXP_LOG    12 /* = floor(log_2(LDBL_MAX_10_EXP)) */
 #else
-# define LDBL_MAX_10_EXP_LOG	8 /* = floor(log_2(LDBL_MAX_10_EXP)) */
+# define LDBL_MAX_10_EXP_LOG    8 /* = floor(log_2(LDBL_MAX_10_EXP)) */
 #endif
-#define DBL_MAX_10_EXP_LOG	8 /* = floor(log_2(DBL_MAX_10_EXP)) */
-#define FLT_MAX_10_EXP_LOG	5 /* = floor(log_2(FLT_MAX_10_EXP)) */
+#define DBL_MAX_10_EXP_LOG  8 /* = floor(log_2(DBL_MAX_10_EXP)) */
+#define FLT_MAX_10_EXP_LOG  5 /* = floor(log_2(FLT_MAX_10_EXP)) */
 
 /* On some machines, _Float128 may be ABI-distinct from long double (e.g
    IBM extended precision).  */
 #include <bits/floatn.h>
 
 #if __HAVE_DISTINCT_FLOAT128
-# define FLT128_MAX_10_EXP_LOG	12 /* = floor(log_2(FLT128_MAX_10_EXP)) */
+# define FLT128_MAX_10_EXP_LOG  12 /* = floor(log_2(FLT128_MAX_10_EXP)) */
 #endif
 
 /* For strtold, we need powers of 10 up to floor (log_2 (LDBL_MANT_DIG
@@ -60,9 +60,9 @@
 #endif
 
 #if FPIOCONST_HAVE_EXTENDED_RANGE
-# define FPIOCONST_POW10_ARRAY_SIZE	15
+# define FPIOCONST_POW10_ARRAY_SIZE 15
 #else
-# define FPIOCONST_POW10_ARRAY_SIZE	11
+# define FPIOCONST_POW10_ARRAY_SIZE 11
 #endif
 
 /* The array with the number representation. */
@@ -70,22 +70,21 @@ extern const mp_limb_t __tens[] attribute_hidden;
 
 /* Table of powers of ten.  This is used by __printf_fp and by
    strtof/strtod/strtold.  */
-struct mp_power
-  {
-    size_t arrayoff;		/* Offset in `__tens'.  */
-    mp_size_t arraysize;	/* Size of the array.  */
-    int p_expo;			/* Exponent of the number 10^(2^i).  */
-    int m_expo;			/* Exponent of the number 10^-(2^i-1).  */
-  };
+struct mp_power {
+    size_t arrayoff;        /* Offset in `__tens'.  */
+    mp_size_t arraysize;    /* Size of the array.  */
+    int p_expo;         /* Exponent of the number 10^(2^i).  */
+    int m_expo;         /* Exponent of the number 10^-(2^i-1).  */
+};
 extern const struct mp_power _fpioconst_pow10[FPIOCONST_POW10_ARRAY_SIZE]
-     attribute_hidden;
+    attribute_hidden;
 
 /* The constants in the array `_fpioconst_pow10' have an offset.  */
 #if BITS_PER_MP_LIMB == 32
-# define _FPIO_CONST_OFFSET	2
+# define _FPIO_CONST_OFFSET 2
 #else
-# define _FPIO_CONST_OFFSET	1
+# define _FPIO_CONST_OFFSET 1
 #endif
 
 
-#endif	/* fpioconst.h */
+#endif  /* fpioconst.h */

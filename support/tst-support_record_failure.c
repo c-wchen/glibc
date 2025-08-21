@@ -30,124 +30,111 @@
 static int exit_status_with_failure = -1;
 static bool test_verify;
 static bool test_verify_exit;
-enum
-  {
+enum {
     OPT_STATUS = 10001,
     OPT_TEST_VERIFY,
     OPT_TEST_VERIFY_EXIT,
-  };
+};
 #define CMDLINE_OPTIONS                                                 \
   { "status", required_argument, NULL, OPT_STATUS },                    \
   { "test-verify", no_argument, NULL, OPT_TEST_VERIFY },                \
   { "test-verify-exit", no_argument, NULL, OPT_TEST_VERIFY_EXIT },
-static void
-cmdline_process (int c)
+static void cmdline_process(int c)
 {
-  switch (c)
-    {
-    case OPT_STATUS:
-      exit_status_with_failure = atoi (optarg);
-      break;
-    case OPT_TEST_VERIFY:
-      test_verify = true;
-      break;
-    case OPT_TEST_VERIFY_EXIT:
-      test_verify_exit = true;
-      break;
+    switch (c) {
+        case OPT_STATUS:
+            exit_status_with_failure = atoi(optarg);
+            break;
+        case OPT_TEST_VERIFY:
+            test_verify = true;
+            break;
+        case OPT_TEST_VERIFY_EXIT:
+            test_verify_exit = true;
+            break;
     }
 }
 #define CMDLINE_PROCESS cmdline_process
 
-static void
-check_failure_reporting (int phase, int zero, int unsupported)
+static void check_failure_reporting(int phase, int zero, int unsupported)
 {
-  int status = support_report_failure (0);
-  if (status != zero)
-    {
-      printf ("real-error (phase %d): support_report_failure (0) == %d\n",
-              phase, status);
-      exit (1);
+    int status = support_report_failure(0);
+    if (status != zero) {
+        printf("real-error (phase %d): support_report_failure (0) == %d\n",
+               phase, status);
+        exit(1);
     }
-  status = support_report_failure (1);
-  if (status != 1)
-    {
-      printf ("real-error (phase %d): support_report_failure (1) == %d\n",
-              phase, status);
-      exit (1);
+    status = support_report_failure(1);
+    if (status != 1) {
+        printf("real-error (phase %d): support_report_failure (1) == %d\n",
+               phase, status);
+        exit(1);
     }
-  status = support_report_failure (2);
-  if (status != 2)
-    {
-      printf ("real-error (phase %d): support_report_failure (2) == %d\n",
-              phase, status);
-      exit (1);
+    status = support_report_failure(2);
+    if (status != 2) {
+        printf("real-error (phase %d): support_report_failure (2) == %d\n",
+               phase, status);
+        exit(1);
     }
-  status = support_report_failure (EXIT_UNSUPPORTED);
-  if (status != unsupported)
-    {
-      printf ("real-error (phase %d): "
-              "support_report_failure (EXIT_UNSUPPORTED) == %d\n",
-              phase, status);
-      exit (1);
+    status = support_report_failure(EXIT_UNSUPPORTED);
+    if (status != unsupported) {
+        printf("real-error (phase %d): "
+               "support_report_failure (EXIT_UNSUPPORTED) == %d\n",
+               phase, status);
+        exit(1);
     }
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  if (exit_status_with_failure >= 0)
-    {
-      /* External invocation with requested error status.  Used by
-         tst-support_report_failure-2.sh.  */
-      support_record_failure ();
-      return exit_status_with_failure;
+    if (exit_status_with_failure >= 0) {
+        /* External invocation with requested error status.  Used by
+           tst-support_report_failure-2.sh.  */
+        support_record_failure();
+        return exit_status_with_failure;
     }
-  TEST_VERIFY (true);
-  TEST_VERIFY_EXIT (true);
-  if (test_verify)
-    {
-      TEST_VERIFY (false);
-      if (test_verbose)
-        printf ("info: execution passed failed TEST_VERIFY\n");
-      return 2; /* Expected exit status.  */
+    TEST_VERIFY(true);
+    TEST_VERIFY_EXIT(true);
+    if (test_verify) {
+        TEST_VERIFY(false);
+        if (test_verbose) {
+            printf("info: execution passed failed TEST_VERIFY\n");
+        }
+        return 2; /* Expected exit status.  */
     }
-  if (test_verify_exit)
-    {
-      TEST_VERIFY_EXIT (false);
-      return 3; /* Not reached.  Expected exit status is 1.  */
+    if (test_verify_exit) {
+        TEST_VERIFY_EXIT(false);
+        return 3; /* Not reached.  Expected exit status is 1.  */
     }
 
-  printf ("info: This test tests the test framework.\n"
-          "info: It reports some expected errors on stdout.\n");
+    printf("info: This test tests the test framework.\n"
+           "info: It reports some expected errors on stdout.\n");
 
-  /* Check that the status is passed through unchanged.  */
-  check_failure_reporting (1, 0, EXIT_UNSUPPORTED);
+    /* Check that the status is passed through unchanged.  */
+    check_failure_reporting(1, 0, EXIT_UNSUPPORTED);
 
-  /* Check state propagation from a subprocess.  */
-  pid_t pid = xfork ();
-  if (pid == 0)
-    {
-      support_record_failure ();
-      _exit (0);
+    /* Check state propagation from a subprocess.  */
+    pid_t pid = xfork();
+    if (pid == 0) {
+        support_record_failure();
+        _exit(0);
     }
-  int status;
-  xwaitpid (pid, &status, 0);
-  if (status != 0)
-    {
-      printf ("real-error: incorrect status from subprocess: %d\n", status);
-      return 1;
+    int status;
+    xwaitpid(pid, &status, 0);
+    if (status != 0) {
+        printf("real-error: incorrect status from subprocess: %d\n", status);
+        return 1;
     }
-  check_failure_reporting (2, 1, 1);
+    check_failure_reporting(2, 1, 1);
 
-  /* Also test directly in the parent process.  */
-  support_record_failure_reset ();
-  check_failure_reporting (3, 0, EXIT_UNSUPPORTED);
-  support_record_failure ();
-  check_failure_reporting (4, 1, 1);
+    /* Also test directly in the parent process.  */
+    support_record_failure_reset();
+    check_failure_reporting(3, 0, EXIT_UNSUPPORTED);
+    support_record_failure();
+    check_failure_reporting(4, 1, 1);
 
-  /* We need to mask the failure above.  */
-  support_record_failure_reset ();
-  return 0;
+    /* We need to mask the failure above.  */
+    support_record_failure_reset();
+    return 0;
 }
 
 #include <support/test-driver.c>

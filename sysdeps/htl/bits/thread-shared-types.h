@@ -25,11 +25,10 @@
 
 typedef int __tss_t;
 
-typedef union
-{
-  struct __pthread_once __data;
-  int __align __ONCE_ALIGNMENT;
-  char __size[__SIZEOF_PTHREAD_ONCE_T];
+typedef union {
+    struct __pthread_once __data;
+    int __align __ONCE_ALIGNMENT;
+    char __size[__SIZEOF_PTHREAD_ONCE_T];
 } __once_flag;
 
 #define __ONCE_FLAG_INIT { { __PTHREAD_ONCE_INIT } }

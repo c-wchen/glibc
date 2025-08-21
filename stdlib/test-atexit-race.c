@@ -23,8 +23,7 @@
 #define CALL_ATEXIT atexit (&no_op)
 #define CALL_EXIT exit (0)
 
-static void
-no_op (void)
+static void no_op(void)
 {
 }
 

@@ -35,20 +35,19 @@
 static char *name;
 static int shmid;
 
-static void
-remove_shm (void)
+static void remove_shm(void)
 {
-  /* Enforce message queue removal in case of early test failure.
-     Ignore error since the shm may already have being removed.  */
-  shmctl (shmid, IPC_RMID, 0);
+    /* Enforce message queue removal in case of early test failure.
+       Ignore error since the shm may already have being removed.  */
+    shmctl(shmid, IPC_RMID, 0);
 }
 
-static void
-do_prepare (int argc, char *argv[])
+static void do_prepare(int argc, char *argv[])
 {
-  int fd = create_temp_file ("tst-sysvshm.", &name);
-  if (fd == -1)
-    FAIL_EXIT1 ("cannot create temporary file (errno=%d)", errno);
+    int fd = create_temp_file("tst-sysvshm.", &name);
+    if (fd == -1) {
+        FAIL_EXIT1("cannot create temporary file (errno=%d)", errno);
+    }
 }
 
 #define PREPARE do_prepare
@@ -62,75 +61,82 @@ do_prepare (int argc, char *argv[])
 
 #define SHM_MODE 0666
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  atexit (remove_shm);
+    atexit(remove_shm);
 
-  key_t key = ftok (name, 'G');
-  if (key == -1)
-    FAIL_EXIT1 ("ftok failed");
-
-  long int pgsz = sysconf (_SC_PAGESIZE);
-  if (pgsz == -1)
-    FAIL_EXIT1 ("sysconf (_SC_PAGESIZE) failed (errno = %d)", errno);
-
-  shmid = shmget(key, pgsz, IPC_CREAT | IPC_EXCL | SHM_MODE);
-  if (shmid == -1)
-    {
-      if (errno == ENOSYS)
-	FAIL_UNSUPPORTED ("shmget not supported");
-      FAIL_EXIT1 ("shmget failed (errno=%d)", errno);
+    key_t key = ftok(name, 'G');
+    if (key == -1) {
+        FAIL_EXIT1("ftok failed");
     }
 
-  TEST_COMPARE (shmctl (shmid, first_shm_invalid_cmd (), NULL), -1);
-  TEST_COMPARE (errno, EINVAL);
+    long int pgsz = sysconf(_SC_PAGESIZE);
+    if (pgsz == -1) {
+        FAIL_EXIT1("sysconf (_SC_PAGESIZE) failed (errno = %d)", errno);
+    }
 
-  /* Get shared memory kernel information and do some sanity checks.  */
-  struct shmid_ds shminfo;
-  if (shmctl (shmid, IPC_STAT, &shminfo) == -1)
-    FAIL_EXIT1 ("shmctl with IPC_STAT failed (errno=%d)", errno);
+    shmid = shmget(key, pgsz, IPC_CREAT | IPC_EXCL | SHM_MODE);
+    if (shmid == -1) {
+        if (errno == ENOSYS) {
+            FAIL_UNSUPPORTED("shmget not supported");
+        }
+        FAIL_EXIT1("shmget failed (errno=%d)", errno);
+    }
 
-  if (shminfo.shm_perm.__key != key)
-    FAIL_EXIT1 ("shmid_ds::shm_perm::key (%d) != %d",
-		(int) shminfo.shm_perm.__key, (int) key);
-  if (shminfo.shm_perm.mode != SHM_MODE)
-    FAIL_EXIT1 ("shmid_ds::shm_perm::mode (%o) != %o",
-		shminfo.shm_perm.mode, SHM_MODE);
-  if (shminfo.shm_segsz != pgsz)
-    FAIL_EXIT1 ("shmid_ds::shm_segsz (%lu) != %lu",
-		(long unsigned) shminfo.shm_segsz, pgsz);
+    TEST_COMPARE(shmctl(shmid, first_shm_invalid_cmd(), NULL), -1);
+    TEST_COMPARE(errno, EINVAL);
 
-  /* Attach on shared memory and realize some operations.  */
-  int *shmem = shmat (shmid, NULL, 0);
-  if (shmem == (void*) -1)
-    FAIL_EXIT1 ("shmem failed (errno=%d)", errno);
+    /* Get shared memory kernel information and do some sanity checks.  */
+    struct shmid_ds shminfo;
+    if (shmctl(shmid, IPC_STAT, &shminfo) == -1) {
+        FAIL_EXIT1("shmctl with IPC_STAT failed (errno=%d)", errno);
+    }
 
-  shmem[0]   = 0x55555555;
-  shmem[32]  = 0x44444444;
-  shmem[64]  = 0x33333333;
-  shmem[128] = 0x22222222;
+    if (shminfo.shm_perm.__key != key)
+        FAIL_EXIT1("shmid_ds::shm_perm::key (%d) != %d",
+                   (int) shminfo.shm_perm.__key, (int) key);
+    if (shminfo.shm_perm.mode != SHM_MODE)
+        FAIL_EXIT1("shmid_ds::shm_perm::mode (%o) != %o",
+                   shminfo.shm_perm.mode, SHM_MODE);
+    if (shminfo.shm_segsz != pgsz)
+        FAIL_EXIT1("shmid_ds::shm_segsz (%lu) != %lu",
+                   (long unsigned) shminfo.shm_segsz, pgsz);
 
-  if (shmdt (shmem) == -1)
-    FAIL_EXIT1 ("shmem failed (errno=%d)", errno);
+    /* Attach on shared memory and realize some operations.  */
+    int *shmem = shmat(shmid, NULL, 0);
+    if (shmem == (void *) -1) {
+        FAIL_EXIT1("shmem failed (errno=%d)", errno);
+    }
 
-  shmem = shmat (shmid, NULL, SHM_RDONLY);
-  if (shmem == (void*) -1)
-    FAIL_EXIT1 ("shmem failed (errno=%d)", errno);
+    shmem[0]   = 0x55555555;
+    shmem[32]  = 0x44444444;
+    shmem[64]  = 0x33333333;
+    shmem[128] = 0x22222222;
 
-  CHECK_EQ (shmem[0],   0x55555555);
-  CHECK_EQ (shmem[32],  0x44444444);
-  CHECK_EQ (shmem[64],  0x33333333);
-  CHECK_EQ (shmem[128], 0x22222222);
+    if (shmdt(shmem) == -1) {
+        FAIL_EXIT1("shmem failed (errno=%d)", errno);
+    }
 
-  if (shmdt (shmem) == -1)
-    FAIL_EXIT1 ("shmem failed (errno=%d)", errno);
+    shmem = shmat(shmid, NULL, SHM_RDONLY);
+    if (shmem == (void *) -1) {
+        FAIL_EXIT1("shmem failed (errno=%d)", errno);
+    }
 
-  /* Finally free up the semnaphore resource.  */
-  if (shmctl (shmid, IPC_RMID, 0) == -1)
-    FAIL_EXIT1 ("semctl failed (errno=%d)", errno);
+    CHECK_EQ(shmem[0],   0x55555555);
+    CHECK_EQ(shmem[32],  0x44444444);
+    CHECK_EQ(shmem[64],  0x33333333);
+    CHECK_EQ(shmem[128], 0x22222222);
 
-  return 0;
+    if (shmdt(shmem) == -1) {
+        FAIL_EXIT1("shmem failed (errno=%d)", errno);
+    }
+
+    /* Finally free up the semnaphore resource.  */
+    if (shmctl(shmid, IPC_RMID, 0) == -1) {
+        FAIL_EXIT1("semctl failed (errno=%d)", errno);
+    }
+
+    return 0;
 }
 
 #include <support/test-driver.c>

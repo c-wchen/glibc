@@ -22,11 +22,11 @@
 #include <libintl.h>
 #include <stdio.h>
 
-const char *
-__get_errlist (int errnum)
+const char *__get_errlist(int errnum)
 {
-  int mapped = ERR_MAP (errnum);
-  if (mapped >= 0 && mapped < _sys_errlist_internal_len)
-    return _sys_errlist_internal[mapped];
-  return NULL;
+    int mapped = ERR_MAP(errnum);
+    if (mapped >= 0 && mapped < _sys_errlist_internal_len) {
+        return _sys_errlist_internal[mapped];
+    }
+    return NULL;
 }

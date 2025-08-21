@@ -24,39 +24,37 @@
 #include <math-use-builtins.h>
 
 
-_Float128
-__truncl (_Float128 x)
+_Float128 __truncl(_Float128 x)
 {
 #if USE_TRUNCL_BUILTIN
-  return __builtin_truncl (x);
+    return __builtin_truncl(x);
 #else
-  /* Use generic implementation.  */
-  int32_t j0;
-  uint64_t i0, i1, sx;
+    /* Use generic implementation.  */
+    int32_t j0;
+    uint64_t i0, i1, sx;
 
-  GET_LDOUBLE_WORDS64 (i0, i1, x);
-  sx = i0 & 0x8000000000000000ULL;
-  j0 = ((i0 >> 48) & 0x7fff) - 0x3fff;
-  if (j0 < 48)
-    {
-      if (j0 < 0)
-	/* The magnitude of the number is < 1 so the result is +-0.  */
-	SET_LDOUBLE_WORDS64 (x, sx, 0);
-      else
-	SET_LDOUBLE_WORDS64 (x, i0 & ~(0x0000ffffffffffffLL >> j0), 0);
-    }
-  else if (j0 > 111)
-    {
-      if (j0 == 0x4000)
-	/* x is inf or NaN.  */
-	return x + x;
-    }
-  else
-    {
-      SET_LDOUBLE_WORDS64 (x, i0, i1 & ~(0xffffffffffffffffULL >> (j0 - 48)));
+    GET_LDOUBLE_WORDS64(i0, i1, x);
+    sx = i0 & 0x8000000000000000ULL;
+    j0 = ((i0 >> 48) & 0x7fff) - 0x3fff;
+    if (j0 < 48) {
+        if (j0 < 0)
+            /* The magnitude of the number is < 1 so the result is +-0.  */
+        {
+            SET_LDOUBLE_WORDS64(x, sx, 0);
+        } else {
+            SET_LDOUBLE_WORDS64(x, i0 & ~(0x0000ffffffffffffLL >> j0), 0);
+        }
+    } else if (j0 > 111) {
+        if (j0 == 0x4000)
+            /* x is inf or NaN.  */
+        {
+            return x + x;
+        }
+    } else {
+        SET_LDOUBLE_WORDS64(x, i0, i1 & ~(0xffffffffffffffffULL >> (j0 - 48)));
     }
 
-  return x;
+    return x;
 #endif /* ! USE_TRUNCL_BUILTIN  */
 }
-libm_alias_ldouble (__trunc, trunc)
+libm_alias_ldouble(__trunc, trunc)

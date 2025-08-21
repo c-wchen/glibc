@@ -40,70 +40,66 @@
 
 /* This function can be used as a signal handler to terminate the
    server loop.  */
-void
-svc_exit (void)
+void svc_exit(void)
 {
-  free (svc_pollfd);
-  svc_pollfd = NULL;
-  svc_max_pollfd = 0;
+    free(svc_pollfd);
+    svc_pollfd = NULL;
+    svc_max_pollfd = 0;
 }
-libc_hidden_nolink_sunrpc (svc_exit, GLIBC_2_0)
+libc_hidden_nolink_sunrpc(svc_exit, GLIBC_2_0)
 
 void
-svc_run (void)
+svc_run(void)
 {
-  int i;
-  struct pollfd *my_pollfd = NULL;
-  int last_max_pollfd = 0;
+    int i;
+    struct pollfd *my_pollfd = NULL;
+    int last_max_pollfd = 0;
 
-  for (;;)
-    {
-      int max_pollfd = svc_max_pollfd;
-      if (max_pollfd == 0 && svc_pollfd == NULL)
-	break;
+    for (;;) {
+        int max_pollfd = svc_max_pollfd;
+        if (max_pollfd == 0 && svc_pollfd == NULL) {
+            break;
+        }
 
-      if (last_max_pollfd != max_pollfd)
-	{
-	  struct pollfd *new_pollfd
-	    = realloc (my_pollfd, sizeof (struct pollfd) * max_pollfd);
+        if (last_max_pollfd != max_pollfd) {
+            struct pollfd *new_pollfd
+                = realloc(my_pollfd, sizeof(struct pollfd) * max_pollfd);
 
-	  if (new_pollfd == NULL)
-	    {
-	      perror (_("svc_run: - out of memory"));
-	      break;
-	    }
+            if (new_pollfd == NULL) {
+                perror(_("svc_run: - out of memory"));
+                break;
+            }
 
-	  my_pollfd = new_pollfd;
-	  last_max_pollfd = max_pollfd;
-	}
+            my_pollfd = new_pollfd;
+            last_max_pollfd = max_pollfd;
+        }
 
-      for (i = 0; i < max_pollfd; ++i)
-	{
-	  my_pollfd[i].fd = svc_pollfd[i].fd;
-	  my_pollfd[i].events = svc_pollfd[i].events;
-	  my_pollfd[i].revents = 0;
-	}
+        for (i = 0; i < max_pollfd; ++i) {
+            my_pollfd[i].fd = svc_pollfd[i].fd;
+            my_pollfd[i].events = svc_pollfd[i].events;
+            my_pollfd[i].revents = 0;
+        }
 
-      switch (i = __poll (my_pollfd, max_pollfd, -1))
-	{
-	case -1:
-	  if (errno == EINTR)
-	    continue;
-	  perror (_("svc_run: - poll failed"));
-	  break;
-	case 0:
-	  continue;
-	default:
-	  svc_getreq_poll (my_pollfd, i);
-	  continue;
-	}
-      break;
+        switch (i = __poll(my_pollfd, max_pollfd, -1)) {
+            case -1:
+                if (errno == EINTR) {
+                    continue;
+                }
+                perror(_("svc_run: - poll failed"));
+                break;
+            case 0:
+                continue;
+            default:
+                svc_getreq_poll(my_pollfd, i);
+                continue;
+        }
+        break;
     }
 
-  free (my_pollfd);
+    free(my_pollfd);
 }
 #ifdef EXPORT_RPC_SYMBOLS
-libc_hidden_def (svc_run)
+libc_hidden_def(svc_run)
 #else
-libc_hidden_nolink_sunrpc (svc_run, GLIBC_2_0)
+libc_hidden_nolink_sunrpc(svc_run, GLIBC_2_0)
 #endif

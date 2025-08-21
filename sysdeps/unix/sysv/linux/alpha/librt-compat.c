@@ -19,6 +19,6 @@
 #include <sysdeps/unix/sysv/linux/librt-compat.c>
 
 #if SHLIB_COMPAT (librt, GLIBC_2_3, GLIBC_2_34)
-compat_symbol (librt, __librt_version_placeholder_1,
-               __librt_version_placeholder, GLIBC_2_3);
+compat_symbol(librt, __librt_version_placeholder_1,
+              __librt_version_placeholder, GLIBC_2_3);
 #endif

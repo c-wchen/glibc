@@ -16,55 +16,53 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define _GNU_SOURCE	1
+#define _GNU_SOURCE 1
 #include <libgen.h>
 #include <stdio.h>
 #include <string.h>
 
 
-static int
-test (const char *input, const char *result)
+static int test(const char *input, const char *result)
 {
-  int retval;
-  char *cp;
-  cp = strdupa (input);
-  cp = dirname (cp);
-  retval = strcmp (cp, result);
-  if (retval)
-    printf ("dirname(\"%s\") should be \"%s\", but is \"%s\"\n",
-	    input, result, cp);
-  return retval;
+    int retval;
+    char *cp;
+    cp = strdupa(input);
+    cp = dirname(cp);
+    retval = strcmp(cp, result);
+    if (retval)
+        printf("dirname(\"%s\") should be \"%s\", but is \"%s\"\n",
+               input, result, cp);
+    return retval;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int result = 0;
+    int result = 0;
 
-  /* These are the examples given in XPG4.2.  */
-  result |= test ("/usr/lib", "/usr");
-  result |= test ("/usr/", "/");
-  result |= test ("usr", ".");
-  result |= test ("/", "/");
-  result |= test (".", ".");
-  result |= test ("..", ".");
+    /* These are the examples given in XPG4.2.  */
+    result |= test("/usr/lib", "/usr");
+    result |= test("/usr/", "/");
+    result |= test("usr", ".");
+    result |= test("/", "/");
+    result |= test(".", ".");
+    result |= test("..", ".");
 
-  /* Some more tests.   */
-  result |= test ("/usr/lib/", "/usr");
-  result |= test ("/usr", "/");
-  result |= test ("a//", ".");
-  result |= test ("a////", ".");
-  result |= test ("////usr", "/");
-  result |= test ("////usr//", "/");
-  result |= test ("//usr", "//");
-  result |= test ("//usr//", "//");
-  result |= test ("//", "//");
+    /* Some more tests.   */
+    result |= test("/usr/lib/", "/usr");
+    result |= test("/usr", "/");
+    result |= test("a//", ".");
+    result |= test("a////", ".");
+    result |= test("////usr", "/");
+    result |= test("////usr//", "/");
+    result |= test("//usr", "//");
+    result |= test("//usr//", "//");
+    result |= test("//", "//");
 
-  /* Other Unix implementations behave like this.  */
-  result |= test ("x///y", "x");
-  result |= test ("x/////y", "x");
+    /* Other Unix implementations behave like this.  */
+    result |= test("x///y", "x");
+    result |= test("x/////y", "x");
 
-  return result != 0;
+    return result != 0;
 }
 
 #define TEST_FUNCTION do_test ()

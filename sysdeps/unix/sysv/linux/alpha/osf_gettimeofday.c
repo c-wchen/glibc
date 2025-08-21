@@ -29,20 +29,20 @@
    into *TV and *TZ.  */
 
 int
-attribute_compat_text_section
-__gettimeofday_tv32 (struct __timeval32 *restrict tv32, void *restrict tz)
+attribute_compat_text_section __gettimeofday_tv32(struct __timeval32 *restrict tv32, void *restrict tz)
 {
-  if (__glibc_unlikely (tz != 0))
-    memset (tz, 0, sizeof (struct timezone));
+    if (__glibc_unlikely(tz != 0)) {
+        memset(tz, 0, sizeof(struct timezone));
+    }
 
-  struct __timespec64 ts;
-  __clock_gettime64 (CLOCK_REALTIME, &ts);
+    struct __timespec64 ts;
+    __clock_gettime64(CLOCK_REALTIME, &ts);
 
-  *tv32 = valid_timespec_to_timeval32 (ts);
-  return 0;
+    *tv32 = valid_timespec_to_timeval32(ts);
+    return 0;
 }
 
-compat_symbol (libc, __gettimeofday_tv32, __gettimeofday, GLIBC_2_0);
-strong_alias (__gettimeofday_tv32, __gettimeofday_tv32_1);
-compat_symbol (libc, __gettimeofday_tv32_1, gettimeofday, GLIBC_2_0);
+compat_symbol(libc, __gettimeofday_tv32, __gettimeofday, GLIBC_2_0);
+strong_alias(__gettimeofday_tv32, __gettimeofday_tv32_1);
+compat_symbol(libc, __gettimeofday_tv32_1, gettimeofday, GLIBC_2_0);
 #endif

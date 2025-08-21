@@ -20,14 +20,17 @@
 #include "tst-audit26mod.h"
 
 struct large_struct
-tst_audit26_func (char a, short b, long int c)
+tst_audit26_func(char a, short b, long int c)
 {
-  if (a != ARG1)
-    abort ();
-  if (b != ARG2)
-    abort ();
-  if (c != ARG3)
-    abort ();
+    if (a != ARG1) {
+        abort();
+    }
+    if (b != ARG2) {
+        abort();
+    }
+    if (c != ARG3) {
+        abort();
+    }
 
-  return set_large_struct (a, b, c);
+    return set_large_struct(a, b, c);
 }

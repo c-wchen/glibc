@@ -21,13 +21,12 @@
 /* Prepare to accept connections on socket FD.
    N connection requests will be queued before further requests are refused.
    Returns 0 on success, -1 for errors.  */
-int
-__listen (int fd, int n)
+int __listen(int fd, int n)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-weak_alias (__listen, listen)
+weak_alias(__listen, listen)
 
-stub_warning (listen)
+stub_warning(listen)

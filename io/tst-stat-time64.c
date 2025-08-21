@@ -31,78 +31,74 @@
    returns the expected value for comparable fields, so it does not really
    matter whether statx uses a fallback implementation or not.  */
 
-static void
-stat_check (int fd, const char *path, struct stat *st)
+static void stat_check(int fd, const char *path, struct stat *st)
 {
-  TEST_COMPARE (stat (path, st), 0);
+    TEST_COMPARE(stat(path, st), 0);
 }
 
-static void
-lstat_check (int fd, const char *path, struct stat *st)
+static void lstat_check(int fd, const char *path, struct stat *st)
 {
-  TEST_COMPARE (lstat (path, st), 0);
+    TEST_COMPARE(lstat(path, st), 0);
 }
 
-static void
-fstat_check (int fd, const char *path, struct stat *st)
+static void fstat_check(int fd, const char *path, struct stat *st)
 {
-  TEST_COMPARE (fstat (fd, st), 0);
+    TEST_COMPARE(fstat(fd, st), 0);
 }
 
-static void
-fstatat_check (int fd, const char *path, struct stat *st)
+static void fstatat_check(int fd, const char *path, struct stat *st)
 {
-  TEST_COMPARE (fstatat (fd, "", st, 0), -1);
-  TEST_COMPARE (errno, ENOENT);
+    TEST_COMPARE(fstatat(fd, "", st, 0), -1);
+    TEST_COMPARE(errno, ENOENT);
 
-  TEST_COMPARE (fstatat (AT_FDCWD, "_non_existing_file", st, 0), -1);
-  TEST_COMPARE (errno, ENOENT);
+    TEST_COMPARE(fstatat(AT_FDCWD, "_non_existing_file", st, 0), -1);
+    TEST_COMPARE(errno, ENOENT);
 
-  TEST_COMPARE (fstatat (fd, path, st, 0), 0);
+    TEST_COMPARE(fstatat(fd, path, st, 0), 0);
 }
 
 typedef void (*test_t)(int, const char *path, struct stat *);
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char *path;
-  int fd = create_temp_file ("tst-statx-", &path);
-  TEST_VERIFY_EXIT (fd >= 0);
-  support_write_file_string (path, "abc");
+    char *path;
+    int fd = create_temp_file("tst-statx-", &path);
+    TEST_VERIFY_EXIT(fd >= 0);
+    support_write_file_string(path, "abc");
 
-  struct statx stx;
-  TEST_COMPARE (statx (fd, path, 0, STATX_BASIC_STATS, &stx), 0);
+    struct statx stx;
+    TEST_COMPARE(statx(fd, path, 0, STATX_BASIC_STATS, &stx), 0);
 
-  for (test_t *test = (test_t[]) { stat_check, lstat_check, fstat_check,
-				   fstatat_check, NULL };
-       *test != NULL; test++)
-  {
-    struct stat st;
-    (*test) (fd, path, &st);
+    for (test_t *test = (test_t[]) {
+    stat_check, lstat_check, fstat_check,
+                fstatat_check, NULL
+};
+*test != NULL; test++) {
+        struct stat st;
+        (*test)(fd, path, &st);
 
-    TEST_COMPARE (stx.stx_dev_major, major (st.st_dev));
-    TEST_COMPARE (stx.stx_dev_minor, minor (st.st_dev));
-    TEST_COMPARE (stx.stx_ino, st.st_ino);
-    TEST_COMPARE (stx.stx_mode, st.st_mode);
-    TEST_COMPARE (stx.stx_nlink, st.st_nlink);
-    TEST_COMPARE (stx.stx_uid, st.st_uid);
-    TEST_COMPARE (stx.stx_gid, st.st_gid);
-    TEST_COMPARE (stx.stx_rdev_major, major (st.st_rdev));
-    TEST_COMPARE (stx.stx_rdev_minor, minor (st.st_rdev));
-    TEST_COMPARE (stx.stx_blksize, st.st_blksize);
-    TEST_COMPARE (stx.stx_blocks, st.st_blocks);
+        TEST_COMPARE(stx.stx_dev_major, major(st.st_dev));
+        TEST_COMPARE(stx.stx_dev_minor, minor(st.st_dev));
+        TEST_COMPARE(stx.stx_ino, st.st_ino);
+        TEST_COMPARE(stx.stx_mode, st.st_mode);
+        TEST_COMPARE(stx.stx_nlink, st.st_nlink);
+        TEST_COMPARE(stx.stx_uid, st.st_uid);
+        TEST_COMPARE(stx.stx_gid, st.st_gid);
+        TEST_COMPARE(stx.stx_rdev_major, major(st.st_rdev));
+        TEST_COMPARE(stx.stx_rdev_minor, minor(st.st_rdev));
+        TEST_COMPARE(stx.stx_blksize, st.st_blksize);
+        TEST_COMPARE(stx.stx_blocks, st.st_blocks);
 
-    TEST_COMPARE (stx.stx_ctime.tv_sec, st.st_ctim.tv_sec);
-    TEST_COMPARE (stx.stx_ctime.tv_nsec, st.st_ctim.tv_nsec);
-    TEST_COMPARE (stx.stx_mtime.tv_sec, st.st_mtim.tv_sec);
-    TEST_COMPARE (stx.stx_mtime.tv_nsec, st.st_mtim.tv_nsec);
-  }
+        TEST_COMPARE(stx.stx_ctime.tv_sec, st.st_ctim.tv_sec);
+        TEST_COMPARE(stx.stx_ctime.tv_nsec, st.st_ctim.tv_nsec);
+        TEST_COMPARE(stx.stx_mtime.tv_sec, st.st_mtim.tv_sec);
+        TEST_COMPARE(stx.stx_mtime.tv_nsec, st.st_mtim.tv_nsec);
+    }
 
-  xclose (fd);
-  free (path);
+    xclose(fd);
+    free(path);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

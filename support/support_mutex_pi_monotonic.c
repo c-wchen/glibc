@@ -20,17 +20,18 @@
 #include <sys/syscall.h>
 #include <unistd.h>
 
-bool
-support_mutex_pi_monotonic (void)
+bool support_mutex_pi_monotonic(void)
 {
 #ifdef __linux__
 # ifndef __NR_futex
 #  define __NR_futex __NR_futex_time64
 # endif
-  int r = syscall (__NR_futex, &(unsigned int){0}, 13 /* FUTEX_LOCK_PI2  */,
-		   0, NULL);
-  return r == 0;
+    int r = syscall(__NR_futex, &(unsigned int) {
+        0
+    }, 13 /* FUTEX_LOCK_PI2  */,
+    0, NULL);
+    return r == 0;
 #else
-  return false;
+    return false;
 #endif
 }

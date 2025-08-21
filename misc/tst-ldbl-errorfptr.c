@@ -38,50 +38,47 @@
 # define LDBL_NAME(alias) #alias
 #endif
 
-typedef void (*error_func_t) (int, int, const char*, ...);
-typedef void (*error_at_line_func_t) (int, int, const char*,
-	      unsigned int, const char*, ...);
+typedef void (*error_func_t)(int, int, const char *, ...);
+typedef void (*error_at_line_func_t)(int, int, const char *,
+                                     unsigned int, const char *, ...);
 
-error_func_t
-__attribute__ ((noinline))
-get_error_func (void) {
-  return &error;
-}
-
-error_at_line_func_t
-__attribute__ ((noinline))
-get_error_at_line_func (void) {
-  return &error_at_line;
-}
-
-static int
-do_test (void)
+error_func_t __attribute__((noinline))
+get_error_func(void)
 {
-  /* Prepare the symbol names as per long double standards */
-  char *error_sym = NULL;
-  char *error_sym_at_line = NULL;
-  error_sym = (char *) LDBL_NAME(error);
-  error_sym_at_line = (char *) LDBL_NAME(error_at_line);
-  TEST_VERIFY (error_sym != NULL && error_sym_at_line != NULL);
-  /* Map the function pointers to appropriate redirected error symbols */
-  error_func_t fp;
-  fp = get_error_func ();
-  if (fp != xdlsym (RTLD_DEFAULT, error_sym))
-    {
-      printf ("FAIL: fp=%p error_sym=%p\n", fp, error_sym);
-      return 1;
+    return &error;
+}
+
+error_at_line_func_t __attribute__((noinline))
+get_error_at_line_func(void)
+{
+    return &error_at_line;
+}
+
+static int do_test(void)
+{
+    /* Prepare the symbol names as per long double standards */
+    char *error_sym = NULL;
+    char *error_sym_at_line = NULL;
+    error_sym = (char *) LDBL_NAME(error);
+    error_sym_at_line = (char *) LDBL_NAME(error_at_line);
+    TEST_VERIFY(error_sym != NULL && error_sym_at_line != NULL);
+    /* Map the function pointers to appropriate redirected error symbols */
+    error_func_t fp;
+    fp = get_error_func();
+    if (fp != xdlsym(RTLD_DEFAULT, error_sym)) {
+        printf("FAIL: fp=%p error_sym=%p\n", fp, error_sym);
+        return 1;
     }
 
-  error_at_line_func_t fpat;
-  fpat = get_error_at_line_func ();
-  if (fpat != xdlsym (RTLD_DEFAULT, error_sym_at_line))
-    {
-      printf ("FAIL: fpat=%p error_sym_at_line=%p\n",
-	      fpat, error_sym_at_line);
-      return 1;
+    error_at_line_func_t fpat;
+    fpat = get_error_at_line_func();
+    if (fpat != xdlsym(RTLD_DEFAULT, error_sym_at_line)) {
+        printf("FAIL: fpat=%p error_sym_at_line=%p\n",
+               fpat, error_sym_at_line);
+        return 1;
     }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

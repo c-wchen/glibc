@@ -28,76 +28,71 @@ static char *testfile;
 static char *testlink;
 
 const static struct {
-  int64_t v1;
-  int64_t v2;
+    int64_t v1;
+    int64_t v2;
 } tests[] = {
-  /* Some arbitrary date before Y2038.  */
-  { 0x60ECA720LL, 0x60eca721LL },
-  /* Y2038 threshold minus 2 and 1 seconds.  */
-  { 0x7FFFFFFELL, 0x7FFFFFFFLL },
-  /* Y2038 threshold plus 1 and 2 seconds.  */
-  { 0x80000001LL, 0x80000002LL },
-  /* Around Y2038 threshold.  */
-  { 0x7FFFFFFELL, 0x80000002LL },
-  /* Y2106 threshold minus 2 and 1 seconds.  */
-  { 0x100000000LL, 0xFFFFFFFELL },
-  /* Y2106 threshold plus 1 and 2 seconds.  */
-  { 0x100000001LL, 0x100000002LL },
-  /* Around Y2106 threshold.  */
-  { 0xFFFFFFFELL, 0xFFFFFFFELL },
+    /* Some arbitrary date before Y2038.  */
+    { 0x60ECA720LL, 0x60eca721LL },
+    /* Y2038 threshold minus 2 and 1 seconds.  */
+    { 0x7FFFFFFELL, 0x7FFFFFFFLL },
+    /* Y2038 threshold plus 1 and 2 seconds.  */
+    { 0x80000001LL, 0x80000002LL },
+    /* Around Y2038 threshold.  */
+    { 0x7FFFFFFELL, 0x80000002LL },
+    /* Y2106 threshold minus 2 and 1 seconds.  */
+    { 0x100000000LL, 0xFFFFFFFELL },
+    /* Y2106 threshold plus 1 and 2 seconds.  */
+    { 0x100000001LL, 0x100000002LL },
+    /* Around Y2106 threshold.  */
+    { 0xFFFFFFFELL, 0xFFFFFFFELL },
 };
 
 #define PREPARE do_prepare
-static void
-do_prepare (int argc, char *argv[])
+static void do_prepare(int argc, char *argv[])
 {
-  temp_fd = create_temp_file ("utime", &testfile);
-  TEST_VERIFY_EXIT (temp_fd > 0);
+    temp_fd = create_temp_file("utime", &testfile);
+    TEST_VERIFY_EXIT(temp_fd > 0);
 
-  testlink = xasprintf ("%s-symlink", testfile);
-  xsymlink (testfile, testlink);
-  add_temp_file (testlink);
+    testlink = xasprintf("%s-symlink", testfile);
+    xsymlink(testfile, testlink);
+    add_temp_file(testlink);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  if (sizeof (time_t) == 8 && !support_path_support_time64 (testfile))
-    FAIL_UNSUPPORTED ("File %s does not support 64-bit timestamps",
-		      testfile);
+    if (sizeof(time_t) == 8 && !support_path_support_time64(testfile))
+        FAIL_UNSUPPORTED("File %s does not support 64-bit timestamps",
+                         testfile);
 
-  bool y2106 = support_path_support_time64_value (testfile,
-						  0x100000001LL,
-						  0x100000002LL);
+    bool y2106 = support_path_support_time64_value(testfile,
+                 0x100000001LL,
+                 0x100000002LL);
 
-  for (int i = 0; i < array_length (tests); i++)
-    {
-      /* Check if we run on port with 32 bit time_t size.  */
+    for (int i = 0; i < array_length(tests); i++) {
+        /* Check if we run on port with 32 bit time_t size.  */
 #if __GNUC_PREREQ (5, 0)
-      time_t t;
-      if (__builtin_add_overflow (tests[i].v1, 0, &t)
-	  || __builtin_add_overflow (tests[i].v2, 0, &t))
-        {
-          printf ("warning: skipping tests[%d] { %" PRIx64 ", %" PRIx64 " }: "
-		  "time_t overflows\n", i, tests[i].v1, tests[i].v2);
-	  continue;
+        time_t t;
+        if (__builtin_add_overflow(tests[i].v1, 0, &t)
+            || __builtin_add_overflow(tests[i].v2, 0, &t)) {
+            printf("warning: skipping tests[%d] { %" PRIx64 ", %" PRIx64 " }: "
+                   "time_t overflows\n", i, tests[i].v1, tests[i].v2);
+            continue;
         }
 #else
-      return EXIT_UNSUPPORTED;
+        return EXIT_UNSUPPORTED;
 #endif
 
-      if (tests[i].v1 >= 0x100000000LL && !y2106)
-	{
-          printf ("warning: skipping tests[%d] { %" PRIx64 ", %" PRIx64 " }: "
-		  "unsupported timestamp value\n",
-		  i, tests[i].v1, tests[i].v2);
-	  continue;
-	}
+        if (tests[i].v1 >= 0x100000000LL && !y2106) {
+            printf("warning: skipping tests[%d] { %" PRIx64 ", %" PRIx64 " }: "
+                   "unsupported timestamp value\n",
+                   i, tests[i].v1, tests[i].v2);
+            continue;
+        }
 
-      TEST_CALL (testfile, temp_fd, testlink, tests[i].v1, tests[i].v2);
+        TEST_CALL(testfile, temp_fd, testlink, tests[i].v1, tests[i].v2);
     }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

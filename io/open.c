@@ -25,35 +25,32 @@
 
 /* Open FILE with access OFLAG.  If O_CREAT or O_TMPFILE is in OFLAG,
    a third argument is the file protection.  */
-int
-__libc_open (const char *file, int oflag)
+int __libc_open(const char *file, int oflag)
 {
-  int mode;
+    int mode;
 
-  if (file == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (file == NULL) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  if (__OPEN_NEEDS_MODE (oflag))
-    {
-      va_list arg;
-      va_start(arg, oflag);
-      mode = va_arg(arg, int);
-      va_end(arg);
+    if (__OPEN_NEEDS_MODE(oflag)) {
+        va_list arg;
+        va_start(arg, oflag);
+        mode = va_arg(arg, int);
+        va_end(arg);
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (__libc_open)
-weak_alias (__libc_open, __open)
-libc_hidden_weak (__open)
-weak_alias (__libc_open, open)
+libc_hidden_def(__libc_open)
+weak_alias(__libc_open, __open)
+libc_hidden_weak(__open)
+weak_alias(__libc_open, open)
 
-stub_warning (open)
+stub_warning(open)
 
 /* __open_2 is a generic wrapper that calls __open.
    So give a stub warning for that symbol too.  */
-stub_warning (__open_2)
+stub_warning(__open_2)

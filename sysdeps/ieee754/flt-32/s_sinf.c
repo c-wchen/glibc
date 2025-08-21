@@ -39,59 +39,55 @@
    arithmetic.
 */
 float
-SECTION
-SINF_FUNC (float y)
+SECTION SINF_FUNC(float y)
 {
-  double x = y;
-  double s;
-  int n;
-  const sincos_t *p = &__sincosf_table[0];
+    double x = y;
+    double s;
+    int n;
+    const sincos_t *p = &__sincosf_table[0];
 
-  if (abstop12 (y) < abstop12 (pio4))
-    {
-      s = x * x;
+    if (abstop12(y) < abstop12(pio4)) {
+        s = x * x;
 
-      if (__glibc_unlikely (abstop12 (y) < abstop12 (0x1p-12f)))
-      {
-	/* Force underflow for tiny y.  */
-	if (__glibc_unlikely (abstop12 (y) < abstop12 (0x1p-126f)))
-	  math_force_eval ((float)s);
-	return y;
-      }
+        if (__glibc_unlikely(abstop12(y) < abstop12(0x1p - 12f))) {
+            /* Force underflow for tiny y.  */
+            if (__glibc_unlikely(abstop12(y) < abstop12(0x1p - 126f))) {
+                math_force_eval((float)s);
+            }
+            return y;
+        }
 
-      return sinf_poly (x, s, p, 0);
+        return sinf_poly(x, s, p, 0);
+    } else if (__glibc_likely(abstop12(y) < abstop12(120.0f))) {
+        x = reduce_fast(x, p, &n);
+
+        /* Setup the signs for sin and cos.  */
+        s = p->sign[n & 3];
+
+        if (n & 2) {
+            p = &__sincosf_table[1];
+        }
+
+        return sinf_poly(x * s, x * x, p, n);
+    } else if (abstop12(y) < abstop12(INFINITY)) {
+        uint32_t xi = asuint(y);
+        int sign = xi >> 31;
+
+        x = reduce_large(xi, &n);
+
+        /* Setup signs for sin and cos - include original sign.  */
+        s = p->sign[(n + sign) & 3];
+
+        if ((n + sign) & 2) {
+            p = &__sincosf_table[1];
+        }
+
+        return sinf_poly(x * s, x * x, p, n);
+    } else {
+        return __math_invalidf(y);
     }
-  else if (__glibc_likely (abstop12 (y) < abstop12 (120.0f)))
-    {
-      x = reduce_fast (x, p, &n);
-
-      /* Setup the signs for sin and cos.  */
-      s = p->sign[n & 3];
-
-      if (n & 2)
-	p = &__sincosf_table[1];
-
-      return sinf_poly (x * s, x * x, p, n);
-    }
-  else if (abstop12 (y) < abstop12 (INFINITY))
-    {
-      uint32_t xi = asuint (y);
-      int sign = xi >> 31;
-
-      x = reduce_large (xi, &n);
-
-      /* Setup signs for sin and cos - include original sign.  */
-      s = p->sign[(n + sign) & 3];
-
-      if ((n + sign) & 2)
-	p = &__sincosf_table[1];
-
-      return sinf_poly (x * s, x * x, p, n);
-    }
-  else
-    return __math_invalidf (y);
 }
 
 #ifndef SINF
-libm_alias_float (__sin, sin)
+libm_alias_float(__sin, sin)
 #endif

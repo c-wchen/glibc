@@ -57,17 +57,17 @@
 #include <rpc/pmap_clnt.h>
 #include <sys/socket.h>
 
-int
-getrpcport (const char *host, u_long prognum, u_long versnum, u_int proto)
+int getrpcport(const char *host, u_long prognum, u_long versnum, u_int proto)
 {
-  struct sockaddr_in addr;
+    struct sockaddr_in addr;
 
-  if (__libc_rpc_gethostbyname (host, &addr) != 0)
-    return 0;
-  return pmap_getport (&addr, prognum, versnum, proto);
+    if (__libc_rpc_gethostbyname(host, &addr) != 0) {
+        return 0;
+    }
+    return pmap_getport(&addr, prognum, versnum, proto);
 }
 #ifdef SHARED
 # ifndef EXPORT_RPC_SYMBOLS
-compat_symbol (libc, getrpcport, getrpcport, GLIBC_2_0);
+compat_symbol(libc, getrpcport, getrpcport, GLIBC_2_0);
 # endif
 #endif

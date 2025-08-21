@@ -24,30 +24,29 @@
 #include <hurdlock.h>
 #include <unistd.h>
 
-int
-__pthread_mutex_checklocked (pthread_mutex_t *mtxp)
+int __pthread_mutex_checklocked(pthread_mutex_t *mtxp)
 {
-  int ret = 0;
+    int ret = 0;
 
-  switch (MTX_TYPE (mtxp))
-    {
-    case PT_MTX_NORMAL:
-      break;
+    switch (MTX_TYPE(mtxp)) {
+        case PT_MTX_NORMAL:
+            break;
 
-    case PT_MTX_RECURSIVE:
-    case PT_MTX_ERRORCHECK:
-    case PT_MTX_NORMAL | PTHREAD_MUTEX_ROBUST:
-    case PT_MTX_RECURSIVE | PTHREAD_MUTEX_ROBUST:
-    case PT_MTX_ERRORCHECK | PTHREAD_MUTEX_ROBUST:
-      if (!mtx_owned_p (mtxp, _pthread_self (), mtxp->__flags))
-	ret = EPERM;
-      break;
+        case PT_MTX_RECURSIVE:
+        case PT_MTX_ERRORCHECK:
+        case PT_MTX_NORMAL | PTHREAD_MUTEX_ROBUST:
+        case PT_MTX_RECURSIVE | PTHREAD_MUTEX_ROBUST:
+        case PT_MTX_ERRORCHECK | PTHREAD_MUTEX_ROBUST:
+            if (!mtx_owned_p(mtxp, _pthread_self(), mtxp->__flags)) {
+                ret = EPERM;
+            }
+            break;
 
-    default:
-      ret = EINVAL;
-      break;
+        default:
+            ret = EINVAL;
+            break;
     }
 
-  return ret;
+    return ret;
 }
-libc_hidden_def (__pthread_mutex_checklocked)
+libc_hidden_def(__pthread_mutex_checklocked)

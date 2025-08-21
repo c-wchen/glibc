@@ -26,7 +26,7 @@
 # include <stdlib.h>
 # include <string.h>
 #else
-char *malloc ();
+char *malloc();
 #endif
 
 #undef __strndup
@@ -36,21 +36,21 @@ char *malloc ();
 # define __strndup strndup
 #endif
 
-char *
-__strndup (const char *s, size_t n)
+char *__strndup(const char *s, size_t n)
 {
-  size_t len = __strnlen (s, n);
-  char *new = (char *) malloc (len + 1);
+    size_t len = __strnlen(s, n);
+    char *new = (char *) malloc(len + 1);
 
-  if (new == NULL)
-    return NULL;
+    if (new == NULL) {
+        return NULL;
+    }
 
-  new[len] = '\0';
-  return (char *) memcpy (new, s, len);
+    new[len] = '\0';
+    return (char *) memcpy(new, s, len);
 }
 #ifdef libc_hidden_def
-libc_hidden_def (__strndup)
+libc_hidden_def(__strndup)
 #endif
 #ifdef weak_alias
-weak_alias (__strndup, strndup)
+weak_alias(__strndup, strndup)
 #endif

@@ -19,12 +19,12 @@
    of the processor.  */
 
 #ifndef _STACKINFO_H
-#define _STACKINFO_H	1
+#define _STACKINFO_H    1
 
 #include <elf.h>
 
 /* On m68k the stack grows down.  */
-#define _STACK_GROWS_DOWN	1
+#define _STACK_GROWS_DOWN   1
 
 /* Default to an executable stack.  PF_X can be overridden if PT_GNU_STACK
    is present, but it is presumed absent.  */
@@ -34,8 +34,8 @@
 #define stackinfo_get_sp() \
   ({ void *p__; asm volatile ("move.l %%sp, %0" : "=r" (p__)); p__; })
 #define stackinfo_sub_sp(ptr) \
-  ({ ptrdiff_t d__;						\
-     asm volatile ("sub.l %%sp, %0" : "=r" (d__) : "0" (ptr));	\
+  ({ ptrdiff_t d__;                     \
+     asm volatile ("sub.l %%sp, %0" : "=r" (d__) : "0" (ptr));  \
      d__; })
 
-#endif	/* stackinfo.h */
+#endif  /* stackinfo.h */

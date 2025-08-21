@@ -28,65 +28,63 @@
 #include <sys/ioctl.h>
 #include <sys/epoll.h>
 
-static void
-test_epoll_ioctl (void)
+static void test_epoll_ioctl(void)
 {
-  int efd = epoll_create1 (0);
-  TEST_VERIFY_EXIT (efd != -1);
+    int efd = epoll_create1(0);
+    TEST_VERIFY_EXIT(efd != -1);
 
-  struct epoll_params params;
+    struct epoll_params params;
 
-  TEST_COMPARE (ioctl (efd, EPIOCGPARAMS, &params), 0);
+    TEST_COMPARE(ioctl(efd, EPIOCGPARAMS, &params), 0);
 
-  /* parameters are all 0 by default */
-  TEST_COMPARE (params.busy_poll_usecs, 0);
-  TEST_COMPARE (params.busy_poll_budget, 0);
-  TEST_COMPARE (params.prefer_busy_poll, 0);
-  TEST_COMPARE (params.__pad, 0);
+    /* parameters are all 0 by default */
+    TEST_COMPARE(params.busy_poll_usecs, 0);
+    TEST_COMPARE(params.busy_poll_budget, 0);
+    TEST_COMPARE(params.prefer_busy_poll, 0);
+    TEST_COMPARE(params.__pad, 0);
 
-  /* set custom parameters */
-  params.busy_poll_usecs = 40;
-  params.busy_poll_budget = 8;
-  params.prefer_busy_poll = 1;
-  params.__pad = 0;
+    /* set custom parameters */
+    params.busy_poll_usecs = 40;
+    params.busy_poll_budget = 8;
+    params.prefer_busy_poll = 1;
+    params.__pad = 0;
 
-  TEST_COMPARE (ioctl (efd, EPIOCSPARAMS, &params), 0);
+    TEST_COMPARE(ioctl(efd, EPIOCSPARAMS, &params), 0);
 
-  memset (&params, 0, sizeof (params));
+    memset(&params, 0, sizeof(params));
 
-  TEST_COMPARE (ioctl (efd, EPIOCGPARAMS, &params), 0);
+    TEST_COMPARE(ioctl(efd, EPIOCGPARAMS, &params), 0);
 
-  /* check custom values were retrieved after being set */
-  TEST_COMPARE (params.busy_poll_usecs, 40);
-  TEST_COMPARE (params.busy_poll_budget, 8);
-  TEST_COMPARE (params.prefer_busy_poll, 1);
-  TEST_COMPARE (params.__pad, 0);
+    /* check custom values were retrieved after being set */
+    TEST_COMPARE(params.busy_poll_usecs, 40);
+    TEST_COMPARE(params.busy_poll_budget, 8);
+    TEST_COMPARE(params.prefer_busy_poll, 1);
+    TEST_COMPARE(params.__pad, 0);
 
-  xclose (efd);
+    xclose(efd);
 }
 
-static bool
-ioctl_supported (void)
+static bool ioctl_supported(void)
 {
-  int efd = epoll_create1 (0);
-  TEST_VERIFY_EXIT (efd != -1);
+    int efd = epoll_create1(0);
+    TEST_VERIFY_EXIT(efd != -1);
 
-  struct epoll_params params;
-  int r = ioctl (efd, EPIOCGPARAMS, &params);
-  xclose (efd);
+    struct epoll_params params;
+    int r = ioctl(efd, EPIOCGPARAMS, &params);
+    xclose(efd);
 
-  return (r == 0);
+    return (r == 0);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  if (ioctl_supported ())
-    test_epoll_ioctl ();
-  else
-    return EXIT_UNSUPPORTED;
+    if (ioctl_supported()) {
+        test_epoll_ioctl();
+    } else {
+        return EXIT_UNSUPPORTED;
+    }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

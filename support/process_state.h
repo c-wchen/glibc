@@ -21,17 +21,16 @@
 
 #include <sys/types.h>
 
-enum support_process_state
-{
-  support_process_state_running      = 0x01,  /* R (running).  */
-  support_process_state_sleeping     = 0x02,  /* S (sleeping).  */
-  support_process_state_disk_sleep   = 0x04,  /* D (disk sleep).  */
-  support_process_state_stopped      = 0x08,  /* T (stopped).  */
-  support_process_state_tracing_stop = 0x10,  /* t (tracing stop).  */
-  support_process_state_dead         = 0x20,  /* X (dead).  */
-  support_process_state_zombie       = 0x40,  /* Z (zombie).  */
-  support_process_state_parked       = 0x80,  /* P (parked).  */
-  support_process_state_invalid      = 0x100  /* Invalid state.  */
+enum support_process_state {
+    support_process_state_running      = 0x01,  /* R (running).  */
+    support_process_state_sleeping     = 0x02,  /* S (sleeping).  */
+    support_process_state_disk_sleep   = 0x04,  /* D (disk sleep).  */
+    support_process_state_stopped      = 0x08,  /* T (stopped).  */
+    support_process_state_tracing_stop = 0x10,  /* t (tracing stop).  */
+    support_process_state_dead         = 0x20,  /* X (dead).  */
+    support_process_state_zombie       = 0x40,  /* Z (zombie).  */
+    support_process_state_parked       = 0x80,  /* P (parked).  */
+    support_process_state_invalid      = 0x100  /* Invalid state.  */
 };
 
 /* Wait for process PID to reach state STATE.  It can be a combination of
@@ -40,7 +39,6 @@ enum support_process_state
    For an invalid state not represented by SUPPORT_PROCESS_STATE, it fallbacks
    to a 2 second sleep.
    Return the found process state.  */
-enum support_process_state
-support_process_state_wait (pid_t pid, enum support_process_state state);
+enum support_process_state support_process_state_wait(pid_t pid, enum support_process_state state);
 
 #endif

@@ -21,11 +21,10 @@
 const char16_t *s16 = u"";
 const char32_t *s32 = U"";
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* This is a compilation test.  */
-  return 0;
+    /* This is a compilation test.  */
+    return 0;
 }
 
 #include <support/test-driver.c>

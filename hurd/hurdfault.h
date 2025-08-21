@@ -27,10 +27,10 @@
    returns zero the first time, and returns again nonzero if the signal
    does arrive.  */
 
-#define _hurdsig_catch_fault(sigset, firstcode, lastcode)	\
-  (_hurdsig_fault_preemptor.signals = (sigset),			\
-   _hurdsig_fault_preemptor.first = (long int) (firstcode),	\
-   _hurdsig_fault_preemptor.last = (long int) (lastcode),	\
+#define _hurdsig_catch_fault(sigset, firstcode, lastcode)   \
+  (_hurdsig_fault_preemptor.signals = (sigset),         \
+   _hurdsig_fault_preemptor.first = (long int) (firstcode), \
+   _hurdsig_fault_preemptor.last = (long int) (lastcode),   \
    setjmp (_hurdsig_fault_env))
 
 /* Call this at the end of a section protected by _hurdsig_catch_fault.  */
@@ -44,7 +44,7 @@ extern struct hurd_signal_preemptor _hurdsig_fault_preemptor;
 
 #define _hurdsig_catch_memory_fault(object) \
   _hurdsig_catch_fault (__sigmask (SIGSEGV) | __sigmask (SIGBUS), \
-			(object), (object) + 1)
+            (object), (object) + 1)
 
 
-#endif	/* hurdfault.h */
+#endif  /* hurdfault.h */

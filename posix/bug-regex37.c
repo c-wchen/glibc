@@ -20,13 +20,12 @@
 
 #include <support/check.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char const pattern[] = "()*)|\\1)*";
-  regex_t r;
-  TEST_VERIFY_EXIT (regcomp (&r, pattern, REG_EXTENDED) == REG_ESUBREG);
-  return 0;
+    char const pattern[] = "()*)|\\1)*";
+    regex_t r;
+    TEST_VERIFY_EXIT(regcomp(&r, pattern, REG_EXTENDED) == REG_ESUBREG);
+    return 0;
 }
 
 #include <support/test-driver.c>

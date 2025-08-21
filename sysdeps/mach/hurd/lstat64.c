@@ -24,10 +24,9 @@
 #include <fstatat_common.h>
 
 /* Get information about the file descriptor FD in BUF.  */
-int
-__lstat64 (const char *file, struct stat64 *buf)
+int __lstat64(const char *file, struct stat64 *buf)
 {
-  return __fstatat64_common (AT_FDCWD, file, buf, 0, O_NOLINK);
+    return __fstatat64_common(AT_FDCWD, file, buf, 0, O_NOLINK);
 }
-hidden_def (__lstat64)
-weak_alias (__lstat64, lstat64)
+hidden_def(__lstat64)
+weak_alias(__lstat64, lstat64)

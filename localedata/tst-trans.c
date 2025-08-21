@@ -24,54 +24,54 @@
 #include <wctype.h>
 #include <libc-diag.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char buf[30];
-  wchar_t wbuf[30];
-  wctrans_t t;
-  wint_t wch;
-  int errors = 0;
-  int len;
+    char buf[30];
+    wchar_t wbuf[30];
+    wctrans_t t;
+    wint_t wch;
+    int errors = 0;
+    int len;
 
-  setlocale (LC_ALL, "");
+    setlocale(LC_ALL, "");
 
-  t = wctrans ("test");
-  if (t == (wctrans_t) 0)
-    {
-      puts ("locale data files probably not loaded");
-      exit (1);
+    t = wctrans("test");
+    if (t == (wctrans_t) 0) {
+        puts("locale data files probably not loaded");
+        exit(1);
     }
 
-  wch = towctrans (L'A', t);
-  printf ("towctrans (L'A', t) = %lc\n", wch);
-  if (wch != L'B')
-    errors = 1;
+    wch = towctrans(L'A', t);
+    printf("towctrans (L'A', t) = %lc\n", wch);
+    if (wch != L'B') {
+        errors = 1;
+    }
 
-  wch = towctrans (L'B', t);
-  printf ("towctrans (L'B', t) = %lc\n", wch);
-  if (wch != L'C')
-    errors = 1;
+    wch = towctrans(L'B', t);
+    printf("towctrans (L'B', t) = %lc\n", wch);
+    if (wch != L'C') {
+        errors = 1;
+    }
 
-  /* Test the output digit handling.  */
-  swprintf (wbuf, sizeof (wbuf) / sizeof (wbuf[0]), L"%Id", 0x499602D2);
-  errors |= wcscmp (wbuf, L"bcdefghija") != 0;
-  len = wcslen (wbuf);
-  errors |= len != 10;
-  printf ("len = %d, wbuf = L\"%ls\"\n", len, wbuf);
+    /* Test the output digit handling.  */
+    swprintf(wbuf, sizeof(wbuf) / sizeof(wbuf[0]), L"%Id", 0x499602D2);
+    errors |= wcscmp(wbuf, L"bcdefghija") != 0;
+    len = wcslen(wbuf);
+    errors |= len != 10;
+    printf("len = %d, wbuf = L\"%ls\"\n", len, wbuf);
 
-  /* clang does not support 'I' specifier and handles it as a 'length
-   * modifier'.  */
-  DIAG_PUSH_NEEDS_COMMENT_CLANG;
-  DIAG_IGNORE_NEEDS_COMMENT_CLANG (16, "-Wformat");
-  snprintf (buf, sizeof buf, "%Id", 0x499602D2U);
-  DIAG_POP_NEEDS_COMMENT_CLANG;
-  errors |= strcmp (buf, "bcdefghija") != 0;
-  len = strlen (buf);
-  errors |= len != 10;
-  printf ("len = %d, buf = \"%s\"\n", len, buf);
+    /* clang does not support 'I' specifier and handles it as a 'length
+     * modifier'.  */
+    DIAG_PUSH_NEEDS_COMMENT_CLANG;
+    DIAG_IGNORE_NEEDS_COMMENT_CLANG(16, "-Wformat");
+    snprintf(buf, sizeof buf, "%Id", 0x499602D2U);
+    DIAG_POP_NEEDS_COMMENT_CLANG;
+    errors |= strcmp(buf, "bcdefghija") != 0;
+    len = strlen(buf);
+    errors |= len != 10;
+    printf("len = %d, buf = \"%s\"\n", len, buf);
 
-  return errors;
+    return errors;
 }
 
 #define TEST_FUNCTION do_test ()

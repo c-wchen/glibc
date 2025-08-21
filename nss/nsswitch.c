@@ -43,8 +43,8 @@
 #include <config.h>
 
 /* Declare external database variables.  */
-#define DEFINE_DATABASE(name)						      \
-  nss_action_list __nss_##name##_database attribute_hidden;		      \
+#define DEFINE_DATABASE(name)                             \
+  nss_action_list __nss_##name##_database attribute_hidden;           \
   weak_extern (__nss_##name##_database)
 #include "databases.def"
 #undef DEFINE_DATABASE
@@ -60,80 +60,81 @@ bool __nss_database_custom[NSS_DBSIDX_max];
 /* -1 == not found
     0 == function found
     1 == finished */
-int
-__nss_lookup (nss_action_list *ni, const char *fct_name, const char *fct2_name,
-	      void **fctp)
+int __nss_lookup(nss_action_list *ni, const char *fct_name, const char *fct2_name,
+                 void **fctp)
 {
-  *fctp = __nss_lookup_function (*ni, fct_name);
-  if (*fctp == NULL && fct2_name != NULL)
-    *fctp = __nss_lookup_function (*ni, fct2_name);
-
-  while (*fctp == NULL
-	 && nss_next_action (*ni, NSS_STATUS_UNAVAIL) == NSS_ACTION_CONTINUE
-	 && (*ni)[1].module != NULL)
-    {
-      ++(*ni);
-
-      *fctp = __nss_lookup_function (*ni, fct_name);
-      if (*fctp == NULL && fct2_name != NULL)
-	*fctp = __nss_lookup_function (*ni, fct2_name);
+    *fctp = __nss_lookup_function(*ni, fct_name);
+    if (*fctp == NULL && fct2_name != NULL) {
+        *fctp = __nss_lookup_function(*ni, fct2_name);
     }
 
-  return *fctp != NULL ? 0 : (*ni)[1].module == NULL ? 1 : -1;
+    while (*fctp == NULL
+           && nss_next_action(*ni, NSS_STATUS_UNAVAIL) == NSS_ACTION_CONTINUE
+           && (*ni)[1].module != NULL) {
+        ++(*ni);
+
+        *fctp = __nss_lookup_function(*ni, fct_name);
+        if (*fctp == NULL && fct2_name != NULL) {
+            *fctp = __nss_lookup_function(*ni, fct2_name);
+        }
+    }
+
+    return *fctp != NULL ? 0 : (*ni)[1].module == NULL ? 1 : -1;
 }
-libc_hidden_def (__nss_lookup)
+libc_hidden_def(__nss_lookup)
 
 
 /* -1 == not found
     0 == adjusted for next function
     1 == finished */
 int
-__nss_next2 (nss_action_list *ni, const char *fct_name, const char *fct2_name,
-	     void **fctp, int status, int all_values)
+__nss_next2(nss_action_list *ni, const char *fct_name, const char *fct2_name,
+            void **fctp, int status, int all_values)
 {
-  if (all_values)
-    {
-      if (nss_next_action (*ni, NSS_STATUS_TRYAGAIN) == NSS_ACTION_RETURN
-	  && nss_next_action (*ni, NSS_STATUS_UNAVAIL) == NSS_ACTION_RETURN
-	  && nss_next_action (*ni, NSS_STATUS_NOTFOUND) == NSS_ACTION_RETURN
-	  && nss_next_action (*ni, NSS_STATUS_SUCCESS) == NSS_ACTION_RETURN)
-	return 1;
+    if (all_values) {
+        if (nss_next_action(*ni, NSS_STATUS_TRYAGAIN) == NSS_ACTION_RETURN
+            && nss_next_action(*ni, NSS_STATUS_UNAVAIL) == NSS_ACTION_RETURN
+            && nss_next_action(*ni, NSS_STATUS_NOTFOUND) == NSS_ACTION_RETURN
+            && nss_next_action(*ni, NSS_STATUS_SUCCESS) == NSS_ACTION_RETURN) {
+            return 1;
+        }
+    } else {
+        /* This is really only for debugging.  */
+        if (__builtin_expect(NSS_STATUS_TRYAGAIN > status
+                             || status > NSS_STATUS_RETURN, 0)) {
+            __libc_fatal("Illegal status in __nss_next.\n");
+        }
+
+        if (nss_next_action(*ni, status) == NSS_ACTION_RETURN) {
+            return 1;
+        }
     }
-  else
-    {
-      /* This is really only for debugging.  */
-      if (__builtin_expect (NSS_STATUS_TRYAGAIN > status
-			    || status > NSS_STATUS_RETURN, 0))
-	 __libc_fatal ("Illegal status in __nss_next.\n");
 
-       if (nss_next_action (*ni, status) == NSS_ACTION_RETURN)
-	 return 1;
+    if ((*ni)[1].module == NULL) {
+        return -1;
     }
 
-  if ((*ni)[1].module == NULL)
-    return -1;
+    do {
+        ++(*ni);
 
-  do
-    {
-      ++(*ni);
+        *fctp = __nss_lookup_function(*ni, fct_name);
+        if (*fctp == NULL && fct2_name != NULL) {
+            *fctp = __nss_lookup_function(*ni, fct2_name);
+        }
+    } while (*fctp == NULL
+             && nss_next_action(*ni, NSS_STATUS_UNAVAIL) == NSS_ACTION_CONTINUE
+             && (*ni)[1].module != NULL);
 
-      *fctp = __nss_lookup_function (*ni, fct_name);
-      if (*fctp == NULL && fct2_name != NULL)
-	*fctp = __nss_lookup_function (*ni, fct2_name);
-    }
-  while (*fctp == NULL
-	 && nss_next_action (*ni, NSS_STATUS_UNAVAIL) == NSS_ACTION_CONTINUE
-	 && (*ni)[1].module != NULL);
-
-  return *fctp != NULL ? 0 : -1;
+    return *fctp != NULL ? 0 : -1;
 }
-libc_hidden_def (__nss_next2)
+libc_hidden_def(__nss_next2)
 
 void *
-__nss_lookup_function (nss_action_list ni, const char *fct_name)
+__nss_lookup_function(nss_action_list ni, const char *fct_name)
 {
-  if (ni->module == NULL)
-    return NULL;
-  return __nss_module_get_function (ni->module, fct_name);
+    if (ni->module == NULL) {
+        return NULL;
+    }
+    return __nss_module_get_function(ni->module, fct_name);
 }
-libc_hidden_def (__nss_lookup_function)
+libc_hidden_def(__nss_lookup_function)

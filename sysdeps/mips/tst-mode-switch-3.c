@@ -30,63 +30,57 @@
 /* This test verifies that mode changes between a setjmp and longjmp do
    not corrupt the state of callee-saved registers.  */
 
-static int mode[6] =
-  {
+static int mode[6] = {
     0,
     PR_FP_MODE_FR,
     PR_FP_MODE_FR | PR_FP_MODE_FRE,
     PR_FP_MODE_FR,
     0,
     PR_FP_MODE_FR | PR_FP_MODE_FRE
-  };
+};
 static jmp_buf env;
 float check1 = 2.0;
 double check2 = 3.0;
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int i;
-  int result = 0;
+    int i;
+    int result = 0;
 
-  for (i = 0 ; i < 7 ; i++)
-    {
-      int retval;
-      register float test1 __asm ("$f20");
-      register double test2 __asm ("$f22");
+    for (i = 0 ; i < 7 ; i++) {
+        int retval;
+        register float test1 __asm("$f20");
+        register double test2 __asm("$f22");
 
-      /* Hide what we are doing to $f20 and $f22 from the compiler.  */
-      __asm __volatile ("l.s %0,%2\n"
-			"l.d %1,%3\n"
-			: "=f" (test1), "=f" (test2)
-			: "m" (check1), "m" (check2));
+        /* Hide what we are doing to $f20 and $f22 from the compiler.  */
+        __asm __volatile("l.s %0,%2\n"
+                         "l.d %1,%3\n"
+                         : "=f"(test1), "=f"(test2)
+                         : "m"(check1), "m"(check2));
 
-      retval = setjmp (env);
+        retval = setjmp(env);
 
-      /* Make sure the compiler knows we want to access the variables
-         via the named registers again.  */
-      __asm __volatile ("" : : "f" (test1), "f" (test2));
+        /* Make sure the compiler knows we want to access the variables
+           via the named registers again.  */
+        __asm __volatile("" : : "f"(test1), "f"(test2));
 
-      if (test1 != check1 || test2 != check2)
-	{
-	  printf ("Corrupt register detected: $20 %f = %f, $22 %f = %f\n",
-		  test1, check1, test2, check2);
-	  result = 1;
-	}
+        if (test1 != check1 || test2 != check2) {
+            printf("Corrupt register detected: $20 %f = %f, $22 %f = %f\n",
+                   test1, check1, test2, check2);
+            result = 1;
+        }
 
-      if (retval == 0)
-	{
-	  if (prctl (PR_SET_FP_MODE, mode[i % 6]) != 0
-	      && errno != ENOTSUP)
-	    {
-	      printf ("prctl PR_SET_FP_MODE failed: %m");
-	      exit (1);
-	    }
-	  longjmp (env, 0);
-	}
+        if (retval == 0) {
+            if (prctl(PR_SET_FP_MODE, mode[i % 6]) != 0
+                && errno != ENOTSUP) {
+                printf("prctl PR_SET_FP_MODE failed: %m");
+                exit(1);
+            }
+            longjmp(env, 0);
+        }
     }
 
-  return result;
+    return result;
 }
 
 #define TEST_FUNCTION do_test ()

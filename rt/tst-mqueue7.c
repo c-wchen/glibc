@@ -35,74 +35,67 @@ static mqd_t after_exec = (mqd_t) -1;
   { "after-exec", required_argument, NULL, OPT_AFTEREXEC },
 
 #define CMDLINE_PROCESS \
-  case OPT_AFTEREXEC:					\
-    after_exec = (mqd_t) strtoul (optarg, NULL, 0);	\
+  case OPT_AFTEREXEC:                   \
+    after_exec = (mqd_t) strtoul (optarg, NULL, 0); \
     break;
 
-static int
-do_after_exec (void)
+static int do_after_exec(void)
 {
-  int result = 0;
+    int result = 0;
 
-  struct mq_attr attr;
-  if (mq_getattr (after_exec, &attr) == 0)
-    {
-      puts ("mq_getattr after exec unexpectedly succeeded");
-      result = 1;
-    }
-  else if (errno != EBADF)
-    {
-      printf ("mq_getattr after exec did not fail with EBADF: %m\n");
-      result = 1;
+    struct mq_attr attr;
+    if (mq_getattr(after_exec, &attr) == 0) {
+        puts("mq_getattr after exec unexpectedly succeeded");
+        result = 1;
+    } else if (errno != EBADF) {
+        printf("mq_getattr after exec did not fail with EBADF: %m\n");
+        result = 1;
     }
 
-  return result;
+    return result;
 }
 
-static int
-do_test (int argc, char **argv)
+static int do_test(int argc, char **argv)
 {
-  if (after_exec != (mqd_t) -1)
-    return do_after_exec ();
-
-  char name[sizeof "/tst-mqueue7-" + sizeof (pid_t) * 3];
-  snprintf (name, sizeof (name), "/tst-mqueue7-%u", getpid ());
-
-  struct mq_attr attr = { .mq_maxmsg = 10, .mq_msgsize = 1 };
-  mqd_t q = mq_open (name, O_CREAT | O_EXCL | O_WRONLY, 0600, &attr);
-
-  if (q == (mqd_t) -1)
-    {
-      printf ("mq_open failed with: %m\n");
-      return 0;
-    }
-  else if (mq_unlink (name) != 0)
-    {
-      printf ("mq_unlink failed with: %m\n");
-      return 1;
+    if (after_exec != (mqd_t) -1) {
+        return do_after_exec();
     }
 
-  if (mq_getattr (q, &attr) != 0)
-    {
-      printf ("mq_getattr failed: %m\n");
-      return 1;
+    char name[sizeof "/tst-mqueue7-" + sizeof(pid_t) * 3];
+    snprintf(name, sizeof(name), "/tst-mqueue7-%u", getpid());
+
+    struct mq_attr attr = { .mq_maxmsg = 10, .mq_msgsize = 1 };
+    mqd_t q = mq_open(name, O_CREAT | O_EXCL | O_WRONLY, 0600, &attr);
+
+    if (q == (mqd_t) -1) {
+        printf("mq_open failed with: %m\n");
+        return 0;
+    } else if (mq_unlink(name) != 0) {
+        printf("mq_unlink failed with: %m\n");
+        return 1;
     }
 
-  char after_exec_arg[sizeof "--after-exec=0x" + sizeof (long) * 3];
-  snprintf (after_exec_arg, sizeof (after_exec_arg),
-	    "--after-exec=0x%lx", (long) q);
+    if (mq_getattr(q, &attr) != 0) {
+        printf("mq_getattr failed: %m\n");
+        return 1;
+    }
 
-  const char *newargv[argc + 2];
-  for (int i = 1; i < argc; ++i)
-    newargv[i - 1] = argv[i];
-  newargv[argc - 1] = "--direct";
-  newargv[argc] = after_exec_arg;
-  newargv[argc + 1] = NULL;
+    char after_exec_arg[sizeof "--after-exec=0x" + sizeof(long) * 3];
+    snprintf(after_exec_arg, sizeof(after_exec_arg),
+             "--after-exec=0x%lx", (long) q);
 
-  /* Verify that exec* has the effect of mq_close (q).  */
-  execv (newargv[0], (char * const *) newargv);
-  printf ("execv failed: %m\n");
-  return 1;
+    const char *newargv[argc + 2];
+    for (int i = 1; i < argc; ++i) {
+        newargv[i - 1] = argv[i];
+    }
+    newargv[argc - 1] = "--direct";
+    newargv[argc] = after_exec_arg;
+    newargv[argc + 1] = NULL;
+
+    /* Verify that exec* has the effect of mq_close (q).  */
+    execv(newargv[0], (char *const *) newargv);
+    printf("execv failed: %m\n");
+    return 1;
 }
 
 #include "../test-skeleton.c"

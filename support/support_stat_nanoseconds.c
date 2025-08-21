@@ -26,32 +26,31 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-bool
-support_stat_nanoseconds (const char *path)
+bool support_stat_nanoseconds(const char *path)
 {
-  bool support = true;
+    bool support = true;
 #ifdef __linux__
-  /* Obtain the original timestamp to restore at the end.  */
-  struct stat ost;
-  TEST_VERIFY_EXIT (stat (path, &ost) == 0);
+    /* Obtain the original timestamp to restore at the end.  */
+    struct stat ost;
+    TEST_VERIFY_EXIT(stat(path, &ost) == 0);
 
-  const struct timespec tsp[] = { { 0, TIMESPEC_HZ - 1 },
-				  { 0, TIMESPEC_HZ / 2 } };
-  TEST_VERIFY_EXIT (utimensat (AT_FDCWD, path, tsp, 0) == 0);
+    const struct timespec tsp[] = { { 0, TIMESPEC_HZ - 1 },
+        { 0, TIMESPEC_HZ / 2 }
+    };
+    TEST_VERIFY_EXIT(utimensat(AT_FDCWD, path, tsp, 0) == 0);
 
-  struct stat st;
-  TEST_VERIFY_EXIT (stat (path, &st) == 0);
+    struct stat st;
+    TEST_VERIFY_EXIT(stat(path, &st) == 0);
 
-  support = st.st_atim.tv_nsec == tsp[0].tv_nsec
-	    && st.st_mtim.tv_nsec == tsp[1].tv_nsec;
+    support = st.st_atim.tv_nsec == tsp[0].tv_nsec
+              && st.st_mtim.tv_nsec == tsp[1].tv_nsec;
 
-  /* Reset to original timestamps.  */
-  const struct timespec otsp[] =
-  {
-    { ost.st_atim.tv_sec, ost.st_atim.tv_nsec },
-    { ost.st_mtim.tv_sec, ost.st_mtim.tv_nsec },
-  };
-  TEST_VERIFY_EXIT (utimensat (AT_FDCWD, path, otsp, 0) == 0);
+    /* Reset to original timestamps.  */
+    const struct timespec otsp[] = {
+        { ost.st_atim.tv_sec, ost.st_atim.tv_nsec },
+        { ost.st_mtim.tv_sec, ost.st_mtim.tv_nsec },
+    };
+    TEST_VERIFY_EXIT(utimensat(AT_FDCWD, path, otsp, 0) == 0);
 #endif
-  return support;
+    return support;
 }

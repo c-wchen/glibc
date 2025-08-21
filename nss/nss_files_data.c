@@ -25,137 +25,136 @@
 #include <stdlib.h>
 
 /* This collects all per file-data.   */
-struct nss_files_data
-{
-  struct nss_files_per_file_data files[nss_file_count];
+struct nss_files_data {
+    struct nss_files_per_file_data files[nss_file_count];
 };
 
 /* For use with allocate_once.  */
 static void *nss_files_global;
-static void *
-nss_files_global_allocate (void *closure)
+static void *nss_files_global_allocate(void *closure)
 {
-  struct nss_files_data *result = malloc (sizeof (*result));
-  if (result != NULL)
-    {
-      for (int i = 0; i < nss_file_count; ++i)
-        {
-          result->files[i].stream = NULL;
-          __libc_lock_init (result->files[i].lock);
+    struct nss_files_data *result = malloc(sizeof(*result));
+    if (result != NULL) {
+        for (int i = 0; i < nss_file_count; ++i) {
+            result->files[i].stream = NULL;
+            __libc_lock_init(result->files[i].lock);
         }
     }
-  return result;
+    return result;
 }
 /* Like __nss_files_data_open, but does not perform the open call.  */
-static enum nss_status
-__nss_files_data_get (struct nss_files_per_file_data **pdata,
-                      enum nss_files_file file, int *errnop, int *herrnop)
-{
-  struct nss_files_data *data = allocate_once (&nss_files_global,
-                                               nss_files_global_allocate,
-                                               NULL, NULL);
-  if (data == NULL)
+static enum nss_status __nss_files_data_get(struct nss_files_per_file_data **pdata,
+        enum nss_files_file file, int *errnop, int *herrnop) {
+    struct nss_files_data *data = allocate_once(&nss_files_global,
+                                  nss_files_global_allocate,
+                                  NULL, NULL);
+    if (data == NULL)
     {
-      if (errnop != NULL)
-        *errnop = errno;
-      if (herrnop != NULL)
-        {
-          __set_h_errno (NETDB_INTERNAL);
-          *herrnop = NETDB_INTERNAL;
+        if (errnop != NULL) {
+            *errnop = errno;
         }
-      return NSS_STATUS_TRYAGAIN;
+        if (herrnop != NULL) {
+            __set_h_errno(NETDB_INTERNAL);
+            *herrnop = NETDB_INTERNAL;
+        }
+        return NSS_STATUS_TRYAGAIN;
     }
 
-  *pdata = &data->files[file];
-  __libc_lock_lock ((*pdata)->lock);
-  return NSS_STATUS_SUCCESS;
+    *pdata = &data->files[file];
+    __libc_lock_lock((*pdata)->lock);
+    return NSS_STATUS_SUCCESS;
 }
 
 /* Helper function for opening the backing file at PATH.  */
-static enum nss_status
-__nss_files_data_internal_open (struct nss_files_per_file_data *data,
-                                const char *path)
-{
-  enum nss_status status = NSS_STATUS_SUCCESS;
+static enum nss_status __nss_files_data_internal_open(struct nss_files_per_file_data *data,
+        const char *path) {
+    enum nss_status status = NSS_STATUS_SUCCESS;
 
-  if (data->stream == NULL)
+    if (data->stream == NULL)
     {
-      data->stream = __nss_files_fopen (path);
+        data->stream = __nss_files_fopen(path);
 
-      if (data->stream == NULL)
-        status = errno == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
+        if (data->stream == NULL) {
+            status = errno == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
+        }
     }
 
-  return status;
-}
-
-
-enum nss_status
-__nss_files_data_open (struct nss_files_per_file_data **pdata,
-                       enum nss_files_file file, const char *path,
-                       int *errnop, int *herrnop)
-{
-  enum nss_status status = __nss_files_data_get (pdata, file, errnop, herrnop);
-  if (status != NSS_STATUS_SUCCESS)
     return status;
-
-  /* Be prepared that the set*ent function was not called before.  */
-  if ((*pdata)->stream == NULL)
-    {
-      int saved_errno = errno;
-      status = __nss_files_data_internal_open (*pdata, path);
-      __set_errno (saved_errno);
-      if (status != NSS_STATUS_SUCCESS)
-        __nss_files_data_put (*pdata);
-    }
-
-  return status;
 }
 
-libc_hidden_def (__nss_files_data_open)
+
+enum nss_status __nss_files_data_open(struct nss_files_per_file_data **pdata,
+                                      enum nss_files_file file, const char *path,
+                                      int *errnop, int *herrnop) {
+    enum nss_status status = __nss_files_data_get(pdata, file, errnop, herrnop);
+    if (status != NSS_STATUS_SUCCESS)
+    {
+        return status;
+    }
+
+    /* Be prepared that the set*ent function was not called before.  */
+    if ((*pdata)->stream == NULL)
+    {
+        int saved_errno = errno;
+        status = __nss_files_data_internal_open(*pdata, path);
+        __set_errno(saved_errno);
+        if (status != NSS_STATUS_SUCCESS) {
+            __nss_files_data_put(*pdata);
+        }
+    }
+
+    return status;
+}
+
+libc_hidden_def(__nss_files_data_open)
 
 void
-__nss_files_data_put (struct nss_files_per_file_data *data)
+__nss_files_data_put(struct nss_files_per_file_data *data)
 {
-  __libc_lock_unlock (data->lock);
+    __libc_lock_unlock(data->lock);
 }
-libc_hidden_def (__nss_files_data_put)
+libc_hidden_def(__nss_files_data_put)
 
 enum nss_status
-__nss_files_data_setent (enum nss_files_file file, const char *path)
-{
-  struct nss_files_per_file_data *data;
-  enum nss_status status = __nss_files_data_get (&data, file, NULL, NULL);
-  if (status != NSS_STATUS_SUCCESS)
-    return status;
-
-  if (data->stream == NULL)
-    status = __nss_files_data_internal_open (data, path);
-  else
-    rewind (data->stream);
-
-  __nss_files_data_put (data);
-  return status;
-}
-libc_hidden_def (__nss_files_data_setent)
-
-enum nss_status
-__nss_files_data_endent (enum nss_files_file file)
-{
-  /* No cleanup is necessary if not initialized.  */
-  struct nss_files_data *data = atomic_load_acquire (&nss_files_global);
-  if (data == NULL)
-    return NSS_STATUS_SUCCESS;
-
-  struct nss_files_per_file_data *fdata = &data->files[file];
-  __libc_lock_lock (fdata->lock);
-  if (fdata->stream != NULL)
+__nss_files_data_setent(enum nss_files_file file, const char *path) {
+    struct nss_files_per_file_data *data;
+    enum nss_status status = __nss_files_data_get(&data, file, NULL, NULL);
+    if (status != NSS_STATUS_SUCCESS)
     {
-      fclose (fdata->stream);
-      fdata->stream = NULL;
+        return status;
     }
-  __libc_lock_unlock (fdata->lock);
 
-  return NSS_STATUS_SUCCESS;
+    if (data->stream == NULL)
+    {
+        status = __nss_files_data_internal_open(data, path);
+    } else
+    {
+        rewind(data->stream);
+    }
+
+    __nss_files_data_put(data);
+    return status;
 }
-libc_hidden_def (__nss_files_data_endent)
+libc_hidden_def(__nss_files_data_setent)
+
+enum nss_status
+__nss_files_data_endent(enum nss_files_file file) {
+    /* No cleanup is necessary if not initialized.  */
+    struct nss_files_data *data = atomic_load_acquire(&nss_files_global);
+    if (data == NULL)
+    {
+        return NSS_STATUS_SUCCESS;
+    }
+
+    struct nss_files_per_file_data *fdata = &data->files[file];
+    __libc_lock_lock(fdata->lock);
+    if (fdata->stream != NULL)
+    {
+        fclose(fdata->stream);
+        fdata->stream = NULL;
+    }
+    __libc_lock_unlock(fdata->lock);
+
+    return NSS_STATUS_SUCCESS;
+}
+libc_hidden_def(__nss_files_data_endent)

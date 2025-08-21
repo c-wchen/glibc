@@ -20,9 +20,9 @@
 #include <support/xunistd.h>
 #include <sys/stat.h>
 
-void
-xchroot (const char *path)
+void xchroot(const char *path)
 {
-  if (chroot (path) != 0)
-    FAIL_EXIT1 ("chroot (\"%s\"): %m", path);
+    if (chroot(path) != 0) {
+        FAIL_EXIT1("chroot (\"%s\"): %m", path);
+    }
 }

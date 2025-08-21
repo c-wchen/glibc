@@ -93,7 +93,7 @@
   do \
     { \
       if (__glibc_unlikely (_fex)) \
-	_FPU_SETCW (_fcw | _fex | (_fex << 8)); \
+    _FPU_SETCW (_fcw | _fex | (_fex << 8)); \
     } \
   while (0)
 #define FP_TRAPPING_EXCEPTIONS ((_fcw << 16) & 0x1f0000)

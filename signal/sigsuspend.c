@@ -21,14 +21,13 @@
 
 /* Change the set of blocked signals to SET,
    wait until a signal arrives, and restore the set of blocked signals.  */
-int
-__sigsuspend (const sigset_t *set)
+int __sigsuspend(const sigset_t *set)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (__sigsuspend)
-weak_alias (__sigsuspend, sigsuspend)
+libc_hidden_def(__sigsuspend)
+weak_alias(__sigsuspend, sigsuspend)
 
-stub_warning (sigsuspend)
-stub_warning (__sigsuspend)
+stub_warning(sigsuspend)
+stub_warning(__sigsuspend)

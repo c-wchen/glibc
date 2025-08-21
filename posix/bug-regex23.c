@@ -20,14 +20,13 @@
 #include <regex.h>
 #include <string.h>
 
-int
-main (void)
+int main(void)
 {
-  regex_t r;
+    regex_t r;
 
-  memset (&r, 0, sizeof (r));
-  setlocale (LC_ALL, "de_DE.UTF-8");
-  regcomp (&r, "[-a-z_0-9.]+@[-a-z_0-9.]+", REG_EXTENDED | REG_ICASE);
-  regexec (&r, "\xe7\xb7\x95\xe7\x97", 0, NULL, 0);
-  return 0;
+    memset(&r, 0, sizeof(r));
+    setlocale(LC_ALL, "de_DE.UTF-8");
+    regcomp(&r, "[-a-z_0-9.]+@[-a-z_0-9.]+", REG_EXTENDED | REG_ICASE);
+    regexec(&r, "\xe7\xb7\x95\xe7\x97", 0, NULL, 0);
+    return 0;
 }

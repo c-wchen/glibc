@@ -24,8 +24,8 @@
    But the kernel header is not namespace clean.  */
 
 /* Other flags.  */
-#define MAP_32BIT	0x40		/* Only give out 32-bit addresses.  */
-#define MAP_ABOVE4G	0x80		/* Only map above 4GB.  */
+#define MAP_32BIT   0x40        /* Only give out 32-bit addresses.  */
+#define MAP_ABOVE4G 0x80        /* Only map above 4GB.  */
 
 #ifdef __USE_MISC
 /* Set up a restore token in the newly allocated shadow stack */

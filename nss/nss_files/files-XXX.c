@@ -37,14 +37,14 @@
    Also see files-parse.c.
 */
 
-#define ENTNAME_r	CONCAT(ENTNAME,_r)
+#define ENTNAME_r   CONCAT(ENTNAME,_r)
 
-#define DATAFILE	"/etc/" DATABASE
+#define DATAFILE    "/etc/" DATABASE
 
 #ifdef NEED_H_ERRNO
 # include <netdb.h>
-# define H_ERRNO_PROTO	, int *herrnop
-# define H_ERRNO_ARG	, herrnop
+# define H_ERRNO_PROTO  , int *herrnop
+# define H_ERRNO_ARG    , herrnop
 # define H_ERRNO_ARG_OR_NULL herrnop
 # define H_ERRNO_SET(val) (*herrnop = (val))
 #else
@@ -66,122 +66,120 @@
    getXXbyYY operations all use their own stream.  */
 
 /* Open database file if not already opened.  */
-static enum nss_status
-internal_setent (FILE **stream)
-{
-  enum nss_status status = NSS_STATUS_SUCCESS;
+static enum nss_status internal_setent(FILE **stream) {
+    enum nss_status status = NSS_STATUS_SUCCESS;
 
-  if (*stream == NULL)
+    if (*stream == NULL)
     {
-      *stream = __nss_files_fopen (DATAFILE);
+        *stream = __nss_files_fopen(DATAFILE);
 
-      if (*stream == NULL)
-	status = errno == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
+        if (*stream == NULL) {
+            status = errno == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
+        }
+    } else
+    {
+        rewind(*stream);
     }
-  else
-    rewind (*stream);
 
-  return status;
+    return status;
 }
 
 
 /* Thread-safe, exported version of that.  */
 enum nss_status
-CONCAT(_nss_files_set,ENTNAME) (int stayopen)
-{
-  return __nss_files_data_setent (CONCAT (nss_file_, ENTNAME), DATAFILE);
+CONCAT(_nss_files_set, ENTNAME)(int stayopen) {
+    return __nss_files_data_setent(CONCAT(nss_file_, ENTNAME), DATAFILE);
 }
-libc_hidden_def (CONCAT (_nss_files_set,ENTNAME))
+libc_hidden_def(CONCAT(_nss_files_set, ENTNAME))
 
 enum nss_status
-CONCAT(_nss_files_end,ENTNAME) (void)
-{
-  return __nss_files_data_endent (CONCAT (nss_file_, ENTNAME));
+CONCAT(_nss_files_end, ENTNAME)(void) {
+    return __nss_files_data_endent(CONCAT(nss_file_, ENTNAME));
 }
-libc_hidden_def (CONCAT (_nss_files_end,ENTNAME))
+libc_hidden_def(CONCAT(_nss_files_end, ENTNAME))
 
 
 /* Parsing the database file into `struct STRUCTURE' data structures.  */
 static enum nss_status
-internal_getent (FILE *stream, struct STRUCTURE *result,
-		 char *buffer, size_t buflen, int *errnop H_ERRNO_PROTO
-		 EXTRA_ARGS_DECL)
-{
-  struct parser_data *data = (void *) buffer;
-  size_t linebuflen = buffer + buflen - data->linebuffer;
-  int saved_errno = errno;	/* Do not clobber errno on success.  */
+internal_getent(FILE *stream, struct STRUCTURE *result,
+                char *buffer, size_t buflen, int *errnop H_ERRNO_PROTO
+                EXTRA_ARGS_DECL) {
+    struct parser_data *data = (void *) buffer;
+    size_t linebuflen = buffer + buflen - data->linebuffer;
+    int saved_errno = errno;  /* Do not clobber errno on success.  */
 
-  if (buflen < sizeof *data + 2)
+    if (buflen < sizeof * data + 2)
     {
-      *errnop = ERANGE;
-      H_ERRNO_SET (NETDB_INTERNAL);
-      return NSS_STATUS_TRYAGAIN;
+        *errnop = ERANGE;
+        H_ERRNO_SET(NETDB_INTERNAL);
+        return NSS_STATUS_TRYAGAIN;
     }
 
-  while (true)
+    while (true)
     {
-      off64_t original_offset;
-      int ret = __nss_readline (stream, data->linebuffer, linebuflen,
-				&original_offset);
-      if (ret == ENOENT)
-	{
-	  /* End of file.  */
-	  H_ERRNO_SET (HOST_NOT_FOUND);
-	  __set_errno (saved_errno);
-	  return NSS_STATUS_NOTFOUND;
-	}
-      else if (ret == 0)
-	{
-	  ret = __nss_parse_line_result (stream, original_offset,
-					 parse_line (data->linebuffer,
-						     result, data, buflen,
-						     errnop EXTRA_ARGS));
-	  if (ret == 0)
-	    {
-	      /* Line has been parsed successfully.  */
-	      __set_errno (saved_errno);
-	      return NSS_STATUS_SUCCESS;
-	    }
-	  else if (ret == EINVAL)
-	    /* If it is invalid, loop to get the next line of the file
-	       to parse.  */
-	    continue;
-	}
+        off64_t original_offset;
+        int ret = __nss_readline(stream, data->linebuffer, linebuflen,
+                                 &original_offset);
+        if (ret == ENOENT) {
+            /* End of file.  */
+            H_ERRNO_SET(HOST_NOT_FOUND);
+            __set_errno(saved_errno);
+            return NSS_STATUS_NOTFOUND;
+        } else if (ret == 0) {
+            ret = __nss_parse_line_result(stream, original_offset,
+                                          parse_line(data->linebuffer,
+                                                  result, data, buflen,
+                                                  errnop EXTRA_ARGS));
+            if (ret == 0) {
+                /* Line has been parsed successfully.  */
+                __set_errno(saved_errno);
+                return NSS_STATUS_SUCCESS;
+            } else if (ret == EINVAL)
+                /* If it is invalid, loop to get the next line of the file
+                   to parse.  */
+            {
+                continue;
+            }
+        }
 
-      *errnop = ret;
-      H_ERRNO_SET (NETDB_INTERNAL);
-      if (ret == ERANGE)
-	/* Request larger buffer.  */
-	return NSS_STATUS_TRYAGAIN;
-      else
-	/* Other read failure.  */
-	return NSS_STATUS_UNAVAIL;
+        *errnop = ret;
+        H_ERRNO_SET(NETDB_INTERNAL);
+        if (ret == ERANGE)
+            /* Request larger buffer.  */
+        {
+            return NSS_STATUS_TRYAGAIN;
+        } else
+            /* Other read failure.  */
+        {
+            return NSS_STATUS_UNAVAIL;
+        }
     }
 }
 
 
 /* Return the next entry from the database file, doing locking.  */
 enum nss_status
-CONCAT(_nss_files_get,ENTNAME_r) (struct STRUCTURE *result, char *buffer,
-				  size_t buflen, int *errnop H_ERRNO_PROTO)
-{
-  /* Return next entry in host file.  */
+CONCAT(_nss_files_get, ENTNAME_r)(struct STRUCTURE *result, char *buffer,
+                                  size_t buflen, int *errnop H_ERRNO_PROTO) {
+    /* Return next entry in host file.  */
 
-  struct nss_files_per_file_data *data;
-  enum nss_status status = __nss_files_data_open (&data,
-						  CONCAT (nss_file_, ENTNAME),
-						  DATAFILE,
-						  errnop, H_ERRNO_ARG_OR_NULL);
-  if (status != NSS_STATUS_SUCCESS)
+    struct nss_files_per_file_data *data;
+    enum nss_status status = __nss_files_data_open(&data,
+                             CONCAT(nss_file_, ENTNAME),
+                             DATAFILE,
+                             errnop, H_ERRNO_ARG_OR_NULL);
+    if (status != NSS_STATUS_SUCCESS)
+    {
+        return status;
+    }
+
+    status = internal_getent(data->stream, result, buffer, buflen, errnop
+                             H_ERRNO_ARG EXTRA_ARGS_VALUE);
+
+    __nss_files_data_put(data);
     return status;
-
-  status = internal_getent (data->stream, result, buffer, buflen, errnop
-			    H_ERRNO_ARG EXTRA_ARGS_VALUE);
-
-  __nss_files_data_put (data);
-  return status;
 }
-libc_hidden_def (CONCAT (_nss_files_get,ENTNAME_r))
+libc_hidden_def(CONCAT(_nss_files_get, ENTNAME_r))
 
 /* Macro for defining lookup functions for this file-based database.
 
@@ -196,27 +194,27 @@ libc_hidden_def (CONCAT (_nss_files_get,ENTNAME_r))
    to the lookup key arguments and does `break;' if they match.  */
 
 #define DB_LOOKUP(name, db_char, keysize, keypattern, break_if_match, proto...)\
-enum nss_status								      \
-_nss_files_get##name##_r (proto,					      \
-			  struct STRUCTURE *result, char *buffer,	      \
-			  size_t buflen, int *errnop H_ERRNO_PROTO)	      \
-{									      \
-  enum nss_status status;						      \
-  FILE *stream = NULL;							      \
-									      \
-  /* Open file.  */							      \
-  status = internal_setent (&stream);					      \
-									      \
-  if (status == NSS_STATUS_SUCCESS)					      \
-    {									      \
+enum nss_status                                   \
+_nss_files_get##name##_r (proto,                          \
+              struct STRUCTURE *result, char *buffer,         \
+              size_t buflen, int *errnop H_ERRNO_PROTO)       \
+{                                         \
+  enum nss_status status;                             \
+  FILE *stream = NULL;                                \
+                                          \
+  /* Open file.  */                               \
+  status = internal_setent (&stream);                         \
+                                          \
+  if (status == NSS_STATUS_SUCCESS)                       \
+    {                                         \
       while ((status = internal_getent (stream, result, buffer, buflen, errnop \
-					H_ERRNO_ARG EXTRA_ARGS_VALUE))	      \
-	     == NSS_STATUS_SUCCESS)					      \
-	{ break_if_match }						      \
-									      \
-      fclose (stream);							      \
-    }									      \
-									      \
-  return status;							      \
-}									      \
+                    H_ERRNO_ARG EXTRA_ARGS_VALUE))        \
+         == NSS_STATUS_SUCCESS)                       \
+    { break_if_match }                            \
+                                          \
+      fclose (stream);                                \
+    }                                         \
+                                          \
+  return status;                                  \
+}                                         \
 libc_hidden_def (_nss_files_get##name##_r)

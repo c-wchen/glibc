@@ -3,8 +3,7 @@
 #include <stddef.h>
 ptrdiff_t i;
 
-int
-main (void)
+int main(void)
 {
-  return 0;
+    return 0;
 }

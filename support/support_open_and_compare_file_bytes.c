@@ -22,12 +22,11 @@
 /* Check that a not-currently-open file has exactly the given
    bytes.  */
 
-int
-support_open_and_compare_file_bytes (const char *file, const char *contents,
-				     size_t length)
+int support_open_and_compare_file_bytes(const char *file, const char *contents,
+                                        size_t length)
 {
-  FILE *fp = xfopen (file, "r");
-  int ret = support_compare_file_bytes (fp, contents, length);
-  xfclose (fp);
-  return ret;
+    FILE *fp = xfopen(file, "r");
+    int ret = support_compare_file_bytes(fp, contents, length);
+    xfclose(fp);
+    return ret;
 }

@@ -25,9 +25,8 @@
 
 /* Change the access time of FILE to TVP[0] and
    the modification time of FILE to TVP[1].  */
-int
-__utimes (const char *file, const struct timeval tvp[2])
+int __utimes(const char *file, const struct timeval tvp[2])
 {
-  return __futimesat (AT_FDCWD, file, tvp);
+    return __futimesat(AT_FDCWD, file, tvp);
 }
-weak_alias (__utimes, utimes)
+weak_alias(__utimes, utimes)

@@ -21,36 +21,33 @@
 
 #include <support/check.h>
 
-static void
-my_sig_handler (int signum)
+static void my_sig_handler(int signum)
 {
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* Define a simple signal handler */
-  struct sigaction act;
-  act.sa_handler = my_sig_handler;
-  act.sa_flags = 0;
-  sigemptyset (&act.sa_mask);
+    /* Define a simple signal handler */
+    struct sigaction act;
+    act.sa_handler = my_sig_handler;
+    act.sa_flags = 0;
+    sigemptyset(&act.sa_mask);
 
-  /* Set it as SIGUSR1 signal handler */
-  TEST_VERIFY_EXIT (sigaction (SIGUSR1, &act, NULL) == 0);
+    /* Set it as SIGUSR1 signal handler */
+    TEST_VERIFY_EXIT(sigaction(SIGUSR1, &act, NULL) == 0);
 
-  /* Get SIGUSR1 signal handler */
-  TEST_VERIFY_EXIT (sigaction (SIGUSR1, NULL, &act) == 0);
+    /* Get SIGUSR1 signal handler */
+    TEST_VERIFY_EXIT(sigaction(SIGUSR1, NULL, &act) == 0);
 
-  /* Check it is consistent with the defined one */
-  TEST_VERIFY (act.sa_handler == my_sig_handler);
-  TEST_VERIFY (!(act.sa_flags & SA_RESETHAND));
+    /* Check it is consistent with the defined one */
+    TEST_VERIFY(act.sa_handler == my_sig_handler);
+    TEST_VERIFY(!(act.sa_flags & SA_RESETHAND));
 
-  for (int i = 1; i < _NSIG; i++)
-    {
-      TEST_VERIFY (!sigismember (&act.sa_mask, i));
+    for (int i = 1; i < _NSIG; i++) {
+        TEST_VERIFY(!sigismember(&act.sa_mask, i));
     }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -27,13 +27,15 @@
 # include <math_private.h>
 
 FLOAT
-M_DECL_FUNC (__acos) (FLOAT x)
+M_DECL_FUNC(__acos)(FLOAT x)
 {
-  if (__glibc_unlikely (isgreater (M_FABS (x), M_LIT (1.0))))
-    /* Domain error: acos(|x|>1).  */
-    __set_errno (EDOM);
-  return M_SUF (__ieee754_acos) (x);
+    if (__glibc_unlikely(isgreater(M_FABS(x), M_LIT(1.0))))
+        /* Domain error: acos(|x|>1).  */
+    {
+        __set_errno(EDOM);
+    }
+    return M_SUF(__ieee754_acos)(x);
 }
-declare_mgen_alias (__acos, acos)
+declare_mgen_alias(__acos, acos)
 
 #endif /* __USE_WRAPPER_TEMPLATE.  */

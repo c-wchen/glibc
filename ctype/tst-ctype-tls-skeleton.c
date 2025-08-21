@@ -26,42 +26,40 @@
 #include <support/xdlfcn.h>
 #include <support/xthread.h>
 
-static int (*my_isalpha) (int);
-static int (*my_toupper) (int);
-static int (*my_tolower) (int);
+static int (*my_isalpha)(int);
+static int (*my_toupper)(int);
+static int (*my_tolower)(int);
 
-static void *
-checks (void *ignore)
+static void *checks(void *ignore)
 {
-  TEST_VERIFY (my_isalpha ('a'));
-  TEST_VERIFY (!my_isalpha ('0'));
-  TEST_COMPARE (my_toupper ('a'), 'A');
-  TEST_COMPARE (my_toupper ('A'), 'A');
-  TEST_COMPARE (my_tolower ('a'), 'a');
-  TEST_COMPARE (my_tolower ('A'), 'a');
-  return NULL;
+    TEST_VERIFY(my_isalpha('a'));
+    TEST_VERIFY(!my_isalpha('0'));
+    TEST_COMPARE(my_toupper('a'), 'A');
+    TEST_COMPARE(my_toupper('A'), 'A');
+    TEST_COMPARE(my_tolower('a'), 'a');
+    TEST_COMPARE(my_tolower('A'), 'a');
+    return NULL;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char *dso = xasprintf ("%s/ctype/tst-ctype-tls-mod.so", support_objdir_root);
+    char *dso = xasprintf("%s/ctype/tst-ctype-tls-mod.so", support_objdir_root);
 #if DO_STATIC_TEST
-  void *handle = xdlopen (dso, RTLD_LAZY);
+    void *handle = xdlopen(dso, RTLD_LAZY);
 #else
-  void *handle = xdlmopen (LM_ID_NEWLM, dso, RTLD_LAZY);
+    void *handle = xdlmopen(LM_ID_NEWLM, dso, RTLD_LAZY);
 #endif
-  my_isalpha = xdlsym (handle, "my_isalpha");
-  my_toupper = xdlsym (handle, "my_toupper");
-  my_tolower = xdlsym (handle, "my_tolower");
+    my_isalpha = xdlsym(handle, "my_isalpha");
+    my_toupper = xdlsym(handle, "my_toupper");
+    my_tolower = xdlsym(handle, "my_tolower");
 
-  checks (NULL);
-  xpthread_join (xpthread_create (NULL, checks, NULL));
+    checks(NULL);
+    xpthread_join(xpthread_create(NULL, checks, NULL));
 
-  xdlclose (handle);
-  free (dso);
+    xdlclose(handle);
+    free(dso);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

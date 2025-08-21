@@ -26,46 +26,44 @@
 #include <support/support.h>
 #include <stdbool.h>
 
-static int test_ppoll_timeout (bool zero_tmo)
+static int test_ppoll_timeout(bool zero_tmo)
 {
-  /* We wait for half a second.  */
-  struct timespec ts;
-  xclock_gettime (CLOCK_REALTIME, &ts);
-  struct timespec timeout = make_timespec (0, zero_tmo ? 0 : TIMESPEC_HZ/2);
-  ts = timespec_add (ts, timeout);
+    /* We wait for half a second.  */
+    struct timespec ts;
+    xclock_gettime(CLOCK_REALTIME, &ts);
+    struct timespec timeout = make_timespec(0, zero_tmo ? 0 : TIMESPEC_HZ / 2);
+    ts = timespec_add(ts, timeout);
 
-  /* Ignore fds - just wait for timeout.  */
-  struct pollfd fds = { -1, 0, 0 };
-  TEST_COMPARE (ppoll (&fds, 1, &timeout, 0), 0);
+    /* Ignore fds - just wait for timeout.  */
+    struct pollfd fds = { -1, 0, 0 };
+    TEST_COMPARE(ppoll(&fds, 1, &timeout, 0), 0);
 
-  TEST_TIMESPEC_NOW_OR_AFTER (CLOCK_REALTIME, ts);
+    TEST_TIMESPEC_NOW_OR_AFTER(CLOCK_REALTIME, ts);
 
-  return 0;
+    return 0;
 }
 
-static void
-test_ppoll_large_timeout (void)
+static void test_ppoll_large_timeout(void)
 {
-  support_create_timer (0, 100000000, false, NULL);
-  struct timespec ts = { TYPE_MAXIMUM (time_t), 0 };
-  struct pollfd fds = { -1, 0, 0 };
-  TEST_COMPARE (ppoll (&fds, 1, &ts, 0), -1);
-  TEST_VERIFY (errno == EINTR || errno == EOVERFLOW);
+    support_create_timer(0, 100000000, false, NULL);
+    struct timespec ts = { TYPE_MAXIMUM(time_t), 0 };
+    struct pollfd fds = { -1, 0, 0 };
+    TEST_COMPARE(ppoll(&fds, 1, &ts, 0), -1);
+    TEST_VERIFY(errno == EINTR || errno == EOVERFLOW);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* Check if ppoll exits immediately.  */
-  test_ppoll_timeout (true);
+    /* Check if ppoll exits immediately.  */
+    test_ppoll_timeout(true);
 
-  /* Check if ppoll exits after specified timeout.  */
-  test_ppoll_timeout (false);
+    /* Check if ppoll exits after specified timeout.  */
+    test_ppoll_timeout(false);
 
-  /* Check if ppoll with large timeout.  */
-  test_ppoll_large_timeout ();
+    /* Check if ppoll with large timeout.  */
+    test_ppoll_large_timeout();
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

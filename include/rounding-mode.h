@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _ROUNDING_MODE_H
-#define _ROUNDING_MODE_H	1
+#define _ROUNDING_MODE_H    1
 
 #include <fenv.h>
 #include <stdbool.h>
@@ -39,26 +39,24 @@
    MORE_BITS is true if the number is not exactly equal to the
    truncated value or the half-way value, false otherwise.  */
 
-static bool
-round_away (bool negative, bool last_digit_odd, bool half_bit, bool more_bits,
-	    int mode)
+static bool round_away(bool negative, bool last_digit_odd, bool half_bit, bool more_bits,
+                       int mode)
 {
-  switch (mode)
-    {
-    case FE_DOWNWARD:
-      return negative && (half_bit || more_bits);
+    switch (mode) {
+        case FE_DOWNWARD:
+            return negative && (half_bit || more_bits);
 
-    case FE_TONEAREST:
-      return half_bit && (last_digit_odd || more_bits);
+        case FE_TONEAREST:
+            return half_bit && (last_digit_odd || more_bits);
 
-    case FE_TOWARDZERO:
-      return false;
+        case FE_TOWARDZERO:
+            return false;
 
-    case FE_UPWARD:
-      return !negative && (half_bit || more_bits);
+        case FE_UPWARD:
+            return !negative && (half_bit || more_bits);
 
-    default:
-      abort ();
+        default:
+            abort();
     }
 }
 

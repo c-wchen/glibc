@@ -21,6 +21,6 @@
 #define ARM_MATH_TESTS_TRAP_H 1
 
 /* Not all VFP implementations support trapping exceptions.  */
-#define EXCEPTION_ENABLE_SUPPORTED(EXCEPT)	((EXCEPT) == 0)
+#define EXCEPTION_ENABLE_SUPPORTED(EXCEPT)  ((EXCEPT) == 0)
 
 #endif /* math-tests-trap.h.  */

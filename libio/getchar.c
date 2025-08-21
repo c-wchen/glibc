@@ -29,19 +29,19 @@
 
 #undef getchar
 
-int
-getchar (void)
+int getchar(void)
 {
-  int result;
-  if (!_IO_need_lock (stdin))
-    return _IO_getc_unlocked (stdin);
-  _IO_acquire_lock (stdin);
-  result = _IO_getc_unlocked (stdin);
-  _IO_release_lock (stdin);
-  return result;
+    int result;
+    if (!_IO_need_lock(stdin)) {
+        return _IO_getc_unlocked(stdin);
+    }
+    _IO_acquire_lock(stdin);
+    result = _IO_getc_unlocked(stdin);
+    _IO_release_lock(stdin);
+    return result;
 }
 
 #ifndef _IO_MTSAFE_IO
 #undef getchar_unlocked
-weak_alias (getchar, getchar_unlocked)
+weak_alias(getchar, getchar_unlocked)
 #endif

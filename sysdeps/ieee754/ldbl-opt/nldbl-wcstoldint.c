@@ -3,8 +3,7 @@
 #undef __wcstold_internal
 
 double
-attribute_hidden
-__wcstold_internal (const wchar_t *nptr, wchar_t **endptr, int group)
+attribute_hidden __wcstold_internal(const wchar_t *nptr, wchar_t **endptr, int group)
 {
-  return __wcstod_internal (nptr, endptr, group);
+    return __wcstod_internal(nptr, endptr, group);
 }

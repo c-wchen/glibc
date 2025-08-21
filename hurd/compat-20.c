@@ -27,11 +27,10 @@
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
 
 void
-attribute_compat_text_section
-_hurd_proc_init_compat_20 (char **argv)
+attribute_compat_text_section _hurd_proc_init_compat_20(char **argv)
 {
-  _hurd_proc_init (argv, NULL, 0);
+    _hurd_proc_init(argv, NULL, 0);
 }
-compat_symbol (libc, _hurd_proc_init_compat_20, _hurd_proc_init, GLIBC_2_0);
+compat_symbol(libc, _hurd_proc_init_compat_20, _hurd_proc_init, GLIBC_2_0);
 
 #endif

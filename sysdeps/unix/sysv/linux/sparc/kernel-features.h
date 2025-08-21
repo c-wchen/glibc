@@ -86,7 +86,7 @@
    Which required a special macro to correct issue the syscall
    (INLINE_CLONE_SYSCALL).  */
 #undef __ASSUME_CLONE_DEFAULT
-#define __ASSUME_CLONE_BACKWARDS	1
+#define __ASSUME_CLONE_BACKWARDS    1
 
 /* sparc does not provide clone3.  */
 #undef __ASSUME_CLONE3

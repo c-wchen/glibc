@@ -27,16 +27,16 @@
 # include <ifunc-resolve.h>
 
 # if HAVE_STRNCPY_Z900_G5
-extern __typeof (__redirect_strncpy) STRNCPY_Z900_G5 attribute_hidden;
+extern __typeof(__redirect_strncpy) STRNCPY_Z900_G5 attribute_hidden;
 # endif
 
 # if HAVE_STRNCPY_Z13
-extern __typeof (__redirect_strncpy) STRNCPY_Z13 attribute_hidden;
+extern __typeof(__redirect_strncpy) STRNCPY_Z13 attribute_hidden;
 # endif
 
-s390_libc_ifunc_expr (__redirect_strncpy, strncpy,
-		      (HAVE_STRNCPY_Z13 && (hwcap & HWCAP_S390_VX))
-		      ? STRNCPY_Z13
-		      : STRNCPY_DEFAULT
-		      )
+s390_libc_ifunc_expr(__redirect_strncpy, strncpy,
+                     (HAVE_STRNCPY_Z13 &&(hwcap &HWCAP_S390_VX))
+                     ? STRNCPY_Z13
+                     : STRNCPY_DEFAULT
+                    )
 #endif

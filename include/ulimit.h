@@ -3,6 +3,6 @@
 
 #ifndef _ISOMAC
 /* Now define the internal interfaces.  */
-extern long int __ulimit (int __cmd, ...);
+extern long int __ulimit(int __cmd, ...);
 #endif
 #endif

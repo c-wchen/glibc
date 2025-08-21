@@ -15,24 +15,23 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define __llroundf	not___llroundf
-#define llroundf	not_llroundf
+#define __llroundf  not___llroundf
+#define llroundf    not_llroundf
 #include <math.h>
 #include <libm-alias-float.h>
 #undef __llroundf
 #undef llroundf
 
 
-long int
-__lroundf (float x)
+long int __lroundf(float x)
 {
-  float adj, y;
+    float adj, y;
 
-  adj = copysignf (0.5f, x);
-  asm("adds/suc %1,%2,%0" : "=&f"(y) : "f"(x), "f"(adj));
-  return y;
+    adj = copysignf(0.5f, x);
+    asm("adds/suc %1,%2,%0" : "=&f"(y) : "f"(x), "f"(adj));
+    return y;
 }
 
-strong_alias (__lroundf, __llroundf)
-libm_alias_float (__lround, lround)
-libm_alias_float (__llround, llround)
+strong_alias(__lroundf, __llroundf)
+libm_alias_float(__lround, lround)
+libm_alias_float(__llround, llround)

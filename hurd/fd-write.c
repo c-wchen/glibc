@@ -21,26 +21,26 @@
 #include <hurd.h>
 #include <hurd/fd.h>
 
-error_t
-_hurd_fd_write (struct hurd_fd *fd,
-		const void *buf, size_t *nbytes, loff_t offset)
+error_t _hurd_fd_write(struct hurd_fd *fd,
+                       const void *buf, size_t *nbytes, loff_t offset)
 {
-  error_t err;
-  vm_size_t wrote;
+    error_t err;
+    vm_size_t wrote;
 
-  error_t writefd (io_t port)
-    {
-      return __io_write (port, buf, *nbytes, offset, &wrote);
+    error_t writefd(io_t port) {
+        return __io_write(port, buf, *nbytes, offset, &wrote);
     }
 
-  err = HURD_FD_PORT_USE_CANCEL (fd, _hurd_ctty_output (port, ctty, writefd));
-  if (err)
-    return err;
+    err = HURD_FD_PORT_USE_CANCEL(fd, _hurd_ctty_output(port, ctty, writefd));
+    if (err) {
+        return err;
+    }
 
-  if (__glibc_unlikely (wrote > *nbytes))	/* Sanity check for bogus server.  */
-    return EGRATUITOUS;
+    if (__glibc_unlikely(wrote > *nbytes)) {  /* Sanity check for bogus server.  */
+        return EGRATUITOUS;
+    }
 
-  *nbytes = wrote;
+    *nbytes = wrote;
 
-  return 0;
+    return 0;
 }

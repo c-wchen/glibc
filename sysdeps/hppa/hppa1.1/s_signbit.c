@@ -20,14 +20,13 @@
 
 #include <math_private.h>
 
-int
-__signbit (double x)
+int __signbit(double x)
 {
-  int32_t hx;
+    int32_t hx;
 
-  GET_HIGH_WORD (hx, x);
-  return hx & 0x80000000;
+    GET_HIGH_WORD(hx, x);
+    return hx & 0x80000000;
 }
 #ifdef NO_LONG_DOUBLE
-strong_alias (__signbit, __signbitl)
+strong_alias(__signbit, __signbitl)
 #endif

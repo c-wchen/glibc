@@ -18,11 +18,10 @@
 #include <dirent.h>
 
 #if !_DIRENT_MATCHES_DIRENT64
-int
-scandir (const char *dir, struct dirent ***namelist,
-	 int (*select) (const struct dirent *),
-	 int (*cmp) (const struct dirent **, const struct dirent **))
+int scandir(const char *dir, struct dirent ***namelist,
+            int (*select)(const struct dirent *),
+            int (*cmp)(const struct dirent **, const struct dirent **))
 {
-  return __scandir_tail (__opendir (dir), namelist, select, cmp);
+    return __scandir_tail(__opendir(dir), namelist, select, cmp);
 }
 #endif

@@ -27,16 +27,14 @@
    X is small enough that factors quadratic in it can be
    neglected.  */
 
-long double
-__gamma_productl (long double x, long double x_eps, int n, long double *eps)
+long double __gamma_productl(long double x, long double x_eps, int n, long double *eps)
 {
-  long double ret = x;
-  *eps = x_eps / x;
-  for (int i = 1; i < n; i++)
-    {
-      *eps += x_eps / (x + i);
-      ret *= x + i;
-      /* FIXME: no error estimates for the multiplication.  */
+    long double ret = x;
+    *eps = x_eps / x;
+    for (int i = 1; i < n; i++) {
+        *eps += x_eps / (x + i);
+        ret *= x + i;
+        /* FIXME: no error estimates for the multiplication.  */
     }
-  return ret;
+    return ret;
 }

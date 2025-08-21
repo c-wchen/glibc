@@ -26,7 +26,7 @@
 # define SYMBOL_NAME strchr
 # include "ifunc-sse2-bsf.h"
 
-libc_ifunc_redirected (__redirect_strchr, strchr, IFUNC_SELECTOR ());
+libc_ifunc_redirected(__redirect_strchr, strchr, IFUNC_SELECTOR());
 
-weak_alias (strchr, index)
+weak_alias(strchr, index)
 #endif

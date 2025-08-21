@@ -19,30 +19,28 @@
 #ifndef _THREAD_MUTEX_INTERNAL_H
 #define _THREAD_MUTEX_INTERNAL_H 1
 
-struct __pthread_mutex_s
-{
-  int __lock __LOCK_ALIGNMENT;
-  unsigned int __count;
-  int __owner;
-  /* KIND must stay at this position in the structure to maintain
-     binary compatibility with static initializers.  */
-  int __kind;
-  /* The old 4-word 16-byte aligned lock. This is initialized
-     to all ones by the Linuxthreads PTHREAD_MUTEX_INITIALIZER.
-     Unused in NPTL.  */
-  int __glibc_compat_padding[4];
-  /* In the old structure there are 4 words left due to alignment.
-     In NPTL two words are used.  */
-  unsigned int __nusers;
-  __extension__ union
-  {
-    int __spins;
-    __pthread_slist_t __list;
-  };
-  /* Two more words are left before the NPTL
-     pthread_mutex_t is larger than Linuxthreads.  */
-  int __glibc_reserved1;
-  int __glibc_reserved2;
+struct __pthread_mutex_s {
+    int __lock __LOCK_ALIGNMENT;
+    unsigned int __count;
+    int __owner;
+    /* KIND must stay at this position in the structure to maintain
+       binary compatibility with static initializers.  */
+    int __kind;
+    /* The old 4-word 16-byte aligned lock. This is initialized
+       to all ones by the Linuxthreads PTHREAD_MUTEX_INITIALIZER.
+       Unused in NPTL.  */
+    int __glibc_compat_padding[4];
+    /* In the old structure there are 4 words left due to alignment.
+       In NPTL two words are used.  */
+    unsigned int __nusers;
+    __extension__ union {
+        int __spins;
+        __pthread_slist_t __list;
+    };
+    /* Two more words are left before the NPTL
+       pthread_mutex_t is larger than Linuxthreads.  */
+    int __glibc_reserved1;
+    int __glibc_reserved2;
 };
 
 #define __PTHREAD_MUTEX_HAVE_PREV       0

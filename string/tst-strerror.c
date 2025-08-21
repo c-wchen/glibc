@@ -27,53 +27,52 @@
 #include <support/support.h>
 #include <support/check.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  unsetenv ("LANGUAGE");
+    unsetenv("LANGUAGE");
 
-  xsetlocale (LC_ALL, "C");
+    xsetlocale(LC_ALL, "C");
 
-  TEST_COMPARE_STRING (strerror (EINVAL), "Invalid argument");
-  TEST_COMPARE_STRING (strerror (-1),     "Unknown error -1");
+    TEST_COMPARE_STRING(strerror(EINVAL), "Invalid argument");
+    TEST_COMPARE_STRING(strerror(-1),     "Unknown error -1");
 
-  {
-    char buffer[32];
-    TEST_COMPARE_STRING (strerror_r (EINVAL, buffer, 8),
-			 "Invalid argument");
-    TEST_COMPARE_STRING (strerror_r (-1, buffer, 8),
-			 "Unknown");
-    TEST_COMPARE_STRING (strerror_r (-1, buffer, 16),
-			 "Unknown error -");
-    TEST_COMPARE_STRING (strerror_r (-1, buffer, 32),
-			 "Unknown error -1");
-  }
+    {
+        char buffer[32];
+        TEST_COMPARE_STRING(strerror_r(EINVAL, buffer, 8),
+                            "Invalid argument");
+        TEST_COMPARE_STRING(strerror_r(-1, buffer, 8),
+                            "Unknown");
+        TEST_COMPARE_STRING(strerror_r(-1, buffer, 16),
+                            "Unknown error -");
+        TEST_COMPARE_STRING(strerror_r(-1, buffer, 32),
+                            "Unknown error -1");
+    }
 
-  locale_t l = xnewlocale (LC_ALL_MASK, "pt_BR.UTF-8", NULL);
+    locale_t l = xnewlocale(LC_ALL_MASK, "pt_BR.UTF-8", NULL);
 
-  TEST_COMPARE_STRING (strerror_l (EINVAL, l), "Argumento inv\303\241lido");
-  TEST_COMPARE_STRING (strerror_l (-1, l),     "Erro desconhecido -1");
+    TEST_COMPARE_STRING(strerror_l(EINVAL, l), "Argumento inv\303\241lido");
+    TEST_COMPARE_STRING(strerror_l(-1, l),     "Erro desconhecido -1");
 
-  xuselocale (l);
+    xuselocale(l);
 
-  TEST_COMPARE_STRING (strerror (EINVAL), "Argumento inv\303\241lido");
-  TEST_COMPARE_STRING (strerror (-1),     "Erro desconhecido -1");
+    TEST_COMPARE_STRING(strerror(EINVAL), "Argumento inv\303\241lido");
+    TEST_COMPARE_STRING(strerror(-1),     "Erro desconhecido -1");
 
-  {
-    char buffer[32];
-    TEST_COMPARE_STRING (strerror_r (EINVAL, buffer, 8),
-			 "Argumento inv\303\241lido");
-    TEST_COMPARE_STRING (strerror_r (-1, buffer, 8),
-			 "Erro de");
-    TEST_COMPARE_STRING (strerror_r (-1, buffer, 16),
-			 "Erro desconheci");
-    TEST_COMPARE_STRING (strerror_r (-1, buffer, 32),
-			 "Erro desconhecido -1");
-  }
+    {
+        char buffer[32];
+        TEST_COMPARE_STRING(strerror_r(EINVAL, buffer, 8),
+                            "Argumento inv\303\241lido");
+        TEST_COMPARE_STRING(strerror_r(-1, buffer, 8),
+                            "Erro de");
+        TEST_COMPARE_STRING(strerror_r(-1, buffer, 16),
+                            "Erro desconheci");
+        TEST_COMPARE_STRING(strerror_r(-1, buffer, 32),
+                            "Erro desconhecido -1");
+    }
 
-  freelocale (l);
+    freelocale(l);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

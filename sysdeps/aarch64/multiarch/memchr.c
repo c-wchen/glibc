@@ -26,16 +26,16 @@
 # include <string.h>
 # include <init-arch.h>
 
-extern __typeof (__redirect_memchr) __memchr;
+extern __typeof(__redirect_memchr) __memchr;
 
-extern __typeof (__redirect_memchr) __memchr_generic attribute_hidden;
-extern __typeof (__redirect_memchr) __memchr_nosimd attribute_hidden;
+extern __typeof(__redirect_memchr) __memchr_generic attribute_hidden;
+extern __typeof(__redirect_memchr) __memchr_nosimd attribute_hidden;
 
-libc_ifunc (__memchr,
-	    ((IS_EMAG (midr)
-	       ? __memchr_nosimd
-	       : __memchr_generic)));
+libc_ifunc(__memchr,
+           ((IS_EMAG(midr)
+             ? __memchr_nosimd
+             : __memchr_generic)));
 
 # undef memchr
-strong_alias (__memchr, memchr);
+strong_alias(__memchr, memchr);
 #endif

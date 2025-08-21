@@ -19,19 +19,21 @@
 #include <math.h>
 
 int
-M_DECL_FUNC (__canonicalize) (FLOAT *cx, const FLOAT *x)
+M_DECL_FUNC(__canonicalize)(FLOAT *cx, const FLOAT *x)
 {
-  FLOAT val = *x;
-  /* For all binary formats supported by glibc, iscanonical only fails
-     if the representation is not a valid representation of the type,
-     so the only work to do is for signaling NaNs.  */
-  if (!iscanonical (val))
-    return 1;
-  if (issignaling (val))
-    *cx = val + val;
-  else
-    *cx = val;
-  return 0;
+    FLOAT val = *x;
+    /* For all binary formats supported by glibc, iscanonical only fails
+       if the representation is not a valid representation of the type,
+       so the only work to do is for signaling NaNs.  */
+    if (!iscanonical(val)) {
+        return 1;
+    }
+    if (issignaling(val)) {
+        *cx = val + val;
+    } else {
+        *cx = val;
+    }
+    return 0;
 }
 
-declare_mgen_alias (__canonicalize, canonicalize)
+declare_mgen_alias(__canonicalize, canonicalize)

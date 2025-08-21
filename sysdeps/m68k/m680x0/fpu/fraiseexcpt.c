@@ -20,63 +20,57 @@
 #include <float.h>
 #include <math.h>
 
-int
-__feraiseexcept (int excepts)
+int __feraiseexcept(int excepts)
 {
-  /* Raise exceptions represented by EXCEPTS.  But we must raise only one
-     signal at a time.  It is important that if the overflow/underflow
-     exception and the divide by zero exception are given at the same
-     time, the overflow/underflow exception follows the divide by zero
-     exception.  */
+    /* Raise exceptions represented by EXCEPTS.  But we must raise only one
+       signal at a time.  It is important that if the overflow/underflow
+       exception and the divide by zero exception are given at the same
+       time, the overflow/underflow exception follows the divide by zero
+       exception.  */
 
-  /* First: invalid exception.  */
-  if (excepts & FE_INVALID)
-    {
-      /* One example of an invalid operation is 0 * Infinity.  */
-      double d = HUGE_VAL;
-      __asm__ __volatile__ ("fmul%.s %#0r0,%0; fnop" : "=f" (d) : "0" (d));
+    /* First: invalid exception.  */
+    if (excepts & FE_INVALID) {
+        /* One example of an invalid operation is 0 * Infinity.  */
+        double d = HUGE_VAL;
+        __asm__ __volatile__("fmul%.s %#0r0,%0; fnop" : "=f"(d) : "0"(d));
     }
 
-  /* Next: division by zero.  */
-  if (excepts & FE_DIVBYZERO)
-    {
-      double d = 1.0;
-      __asm__ __volatile__ ("fdiv%.s %#0r0,%0; fnop" : "=f" (d) : "0" (d));
+    /* Next: division by zero.  */
+    if (excepts & FE_DIVBYZERO) {
+        double d = 1.0;
+        __asm__ __volatile__("fdiv%.s %#0r0,%0; fnop" : "=f"(d) : "0"(d));
     }
 
-  /* Next: overflow.  */
-  if (excepts & FE_OVERFLOW)
-    {
-      long double d = LDBL_MAX;
+    /* Next: overflow.  */
+    if (excepts & FE_OVERFLOW) {
+        long double d = LDBL_MAX;
 
-      __asm__ __volatile__ ("fmul%.x %0,%0; fnop" : "=f" (d) : "0" (d));
+        __asm__ __volatile__("fmul%.x %0,%0; fnop" : "=f"(d) : "0"(d));
     }
 
-  /* Next: underflow.  */
-  if (excepts & FE_UNDERFLOW)
-    {
-      long double d = -LDBL_MAX;
+    /* Next: underflow.  */
+    if (excepts & FE_UNDERFLOW) {
+        long double d = -LDBL_MAX;
 
-      __asm__ __volatile__ ("fetox%.x %0; fnop" : "=f" (d) : "0" (d));
+        __asm__ __volatile__("fetox%.x %0; fnop" : "=f"(d) : "0"(d));
     }
 
-  /* Last: inexact.  */
-  if (excepts & FE_INEXACT)
-    {
-      long double d = 1.0;
-      __asm__ __volatile__ ("fdiv%.s %#0r3,%0; fnop" : "=f" (d) : "0" (d));
+    /* Last: inexact.  */
+    if (excepts & FE_INEXACT) {
+        long double d = 1.0;
+        __asm__ __volatile__("fdiv%.s %#0r3,%0; fnop" : "=f"(d) : "0"(d));
     }
 
-  /* Success.  */
-  return 0;
+    /* Success.  */
+    return 0;
 }
 
 #include <shlib-compat.h>
 #if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
-strong_alias (__feraiseexcept, __old_feraiseexcept)
-compat_symbol (libm, __old_feraiseexcept, feraiseexcept, GLIBC_2_1);
+strong_alias(__feraiseexcept, __old_feraiseexcept)
+compat_symbol(libm, __old_feraiseexcept, feraiseexcept, GLIBC_2_1);
 #endif
 
-libm_hidden_def (__feraiseexcept)
-libm_hidden_ver (__feraiseexcept, feraiseexcept)
-versioned_symbol (libm, __feraiseexcept, feraiseexcept, GLIBC_2_2);
+libm_hidden_def(__feraiseexcept)
+libm_hidden_ver(__feraiseexcept, feraiseexcept)
+versioned_symbol(libm, __feraiseexcept, feraiseexcept, GLIBC_2_2);

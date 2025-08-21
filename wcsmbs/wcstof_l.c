@@ -20,6 +20,6 @@
 #include <locale.h>
 
 
-#define	USE_WIDE_CHAR	1
+#define USE_WIDE_CHAR   1
 
 #include <stdlib/strtof_l.c>

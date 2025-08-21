@@ -20,29 +20,27 @@
 
 /* The user-visible size of struct termios has changed.  Catch ioctl calls
    using the new-style struct termios, and translate them to old-style.  */
-static inline bool
-__ioctl_arch (int *r, int fd, unsigned long request, void *arg)
+static inline bool __ioctl_arch(int *r, int fd, unsigned long request, void *arg)
 {
-  switch (request)
-    {
-    case TCGETS:
-      *r = __tcgetattr (fd, (struct termios *) arg);
-      break;
+    switch (request) {
+        case TCGETS:
+            *r = __tcgetattr(fd, (struct termios *) arg);
+            break;
 
-    case TCSETS:
-      *r = __tcsetattr (fd, TCSANOW, (struct termios *) arg);
-      break;
+        case TCSETS:
+            *r = __tcsetattr(fd, TCSANOW, (struct termios *) arg);
+            break;
 
-    case TCSETSW:
-      *r = __tcsetattr (fd, TCSADRAIN, (struct termios *) arg);
-      break;
+        case TCSETSW:
+            *r = __tcsetattr(fd, TCSADRAIN, (struct termios *) arg);
+            break;
 
-    case TCSETSF:
-      *r = __tcsetattr (fd, TCSAFLUSH, (struct termios *) arg);
-      break;
+        case TCSETSF:
+            *r = __tcsetattr(fd, TCSAFLUSH, (struct termios *) arg);
+            break;
 
-    default:
-      return false;
+        default:
+            return false;
     }
-  return true;
+    return true;
 }

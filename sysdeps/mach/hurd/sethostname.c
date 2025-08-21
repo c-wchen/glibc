@@ -21,10 +21,9 @@
 /* Set the name of the current host to NAME, which is LEN bytes long.
    This call is restricted to the super-user.  */
 /* XXX should be __sethostname ? */
-int
-sethostname (const char *name, size_t len)
+int sethostname(const char *name, size_t len)
 {
-  /* The host name is just the contents of the file /etc/hostname.  */
-  ssize_t n = _hurd_set_host_config ("/etc/hostname", name, len);
-  return n < 0 ? -1 : 0;
+    /* The host name is just the contents of the file /etc/hostname.  */
+    ssize_t n = _hurd_set_host_config("/etc/hostname", name, len);
+    return n < 0 ? -1 : 0;
 }

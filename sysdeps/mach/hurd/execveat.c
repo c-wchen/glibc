@@ -25,68 +25,59 @@
 
 /* Replace the current process, executing FILE_NAME with arguments ARGV and
    environment ENVP.  ARGV and ENVP are terminated by NULL pointers.  */
-int
-__execveat (int dirfd, const char *file_name, char *const argv[],
-            char *const envp[], int flags)
+int __execveat(int dirfd, const char *file_name, char *const argv[],
+               char *const envp[], int flags)
 {
-  error_t err;
-  char *concat_name = NULL;
-  const char *abs_path;
+    error_t err;
+    char *concat_name = NULL;
+    const char *abs_path;
 
-  file_t file = __file_name_lookup_at (dirfd, flags, file_name, O_EXEC, 0);
-  if (file == MACH_PORT_NULL)
-    return -1;
-
-  if (file_name[0] == '/')
-    {
-      /* Already an absolute path */
-      abs_path = file_name;
-    }
-  else
-    {
-      /* Relative path */
-      char *cwd;
-      if (dirfd == AT_FDCWD)
-	{
-	  cwd = __getcwd (NULL, 0);
-	  if (cwd == NULL)
-	    {
-	      __mach_port_deallocate (__mach_task_self (), file);
-	      return -1;
-	    }
-	}
-      else
-	{
-	  err = HURD_DPORT_USE (dirfd,
-	    (cwd = __hurd_canonicalize_directory_name_internal (port, NULL, 0),
-	     cwd == NULL ? errno : 0));
-	  if (err)
-	    {
-	      __mach_port_deallocate (__mach_task_self (), file);
-	      return __hurd_fail (err);
-	    }
-	}
-
-      int res = __asprintf (&concat_name, "%s/%s", cwd, file_name);
-      free (cwd);
-      if (res == -1)
-	{
-	  __mach_port_deallocate (__mach_task_self (), file);
-	  return -1;
-	}
-
-      abs_path = concat_name;
+    file_t file = __file_name_lookup_at(dirfd, flags, file_name, O_EXEC, 0);
+    if (file == MACH_PORT_NULL) {
+        return -1;
     }
 
-  /* Hopefully this will not return.  */
-  err = _hurd_exec_paths (__mach_task_self (), file,
-			  file_name, abs_path, argv, envp);
+    if (file_name[0] == '/') {
+        /* Already an absolute path */
+        abs_path = file_name;
+    } else {
+        /* Relative path */
+        char *cwd;
+        if (dirfd == AT_FDCWD) {
+            cwd = __getcwd(NULL, 0);
+            if (cwd == NULL) {
+                __mach_port_deallocate(__mach_task_self(), file);
+                return -1;
+            }
+        } else {
+            err = HURD_DPORT_USE(dirfd,
+                                 (cwd = __hurd_canonicalize_directory_name_internal(port, NULL, 0),
+                                  cwd == NULL ? errno : 0));
+            if (err) {
+                __mach_port_deallocate(__mach_task_self(), file);
+                return __hurd_fail(err);
+            }
+        }
 
-  /* Oh well.  Might as well be tidy.  */
-  __mach_port_deallocate (__mach_task_self (), file);
-  free (concat_name);
+        int res = __asprintf(&concat_name, "%s/%s", cwd, file_name);
+        free(cwd);
+        if (res == -1) {
+            __mach_port_deallocate(__mach_task_self(), file);
+            return -1;
+        }
 
-  return __hurd_fail (err);
+        abs_path = concat_name;
+    }
+
+    /* Hopefully this will not return.  */
+    err = _hurd_exec_paths(__mach_task_self(), file,
+                           file_name, abs_path, argv, envp);
+
+    /* Oh well.  Might as well be tidy.  */
+    __mach_port_deallocate(__mach_task_self(), file);
+    free(concat_name);
+
+    return __hurd_fail(err);
 }
 
-weak_alias (__execveat, execveat)
+weak_alias(__execveat, execveat)

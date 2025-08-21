@@ -18,8 +18,7 @@
 
 #include <errno.h>
 
-static inline int
-__rtld_execve (const char *path, char *const *argv, char *const *envp)
+static inline int __rtld_execve(const char *path, char *const *argv, char *const *envp)
 {
-  return -INTERNAL_SYSCALL_CALL (execve, path, argv, envp);
+    return -INTERNAL_SYSCALL_CALL(execve, path, argv, envp);
 }

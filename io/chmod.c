@@ -21,19 +21,17 @@
 #include <sys/types.h>
 
 /* Change the protections of FILE to MODE.  */
-int
-__chmod (const char *file, mode_t mode)
+int __chmod(const char *file, mode_t mode)
 {
-  if (file == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (file == NULL) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (chmod)
+stub_warning(chmod)
 
-libc_hidden_def (__chmod)
-weak_alias (__chmod, chmod)
+libc_hidden_def(__chmod)
+weak_alias(__chmod, chmod)

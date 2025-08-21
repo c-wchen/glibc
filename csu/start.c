@@ -8,4 +8,4 @@
 
 /* The first piece of initialized data.  */
 int __data_start = 0;
-weak_alias (__data_start, data_start)
+weak_alias(__data_start, data_start)

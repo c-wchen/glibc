@@ -7,4 +7,4 @@
 #include "tsp_common.c"
 #include "dat_iswcntrl.c"
 
-TST_FUNC_ISW (CNTRL, cntrl);
+TST_FUNC_ISW(CNTRL, cntrl);

@@ -26,21 +26,22 @@
 
 /* Change the access time of FILE to TVP[0] and
    the modification time of FILE to TVP[1].  */
-int
-__lutimes (const char *file, const struct timeval tvp[2])
+int __lutimes(const char *file, const struct timeval tvp[2])
 {
-  error_t err;
-  file_t port;
+    error_t err;
+    file_t port;
 
-  port = __file_name_lookup (file, O_NOLINK, 0);
-  if (port == MACH_PORT_NULL)
-    return -1;
+    port = __file_name_lookup(file, O_NOLINK, 0);
+    if (port == MACH_PORT_NULL) {
+        return -1;
+    }
 
-  err = hurd_futimes (port, tvp);
+    err = hurd_futimes(port, tvp);
 
-  __mach_port_deallocate (__mach_task_self (), port);
-  if (err)
-    return __hurd_fail (err);
-  return 0;
+    __mach_port_deallocate(__mach_task_self(), port);
+    if (err) {
+        return __hurd_fail(err);
+    }
+    return 0;
 }
-weak_alias (__lutimes, lutimes)
+weak_alias(__lutimes, lutimes)

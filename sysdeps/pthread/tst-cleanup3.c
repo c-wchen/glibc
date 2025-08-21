@@ -21,7 +21,7 @@
 #include <unistd.h>
 
 
-static int do_test (void);
+static int do_test(void);
 
 #define TEST_FUNCTION do_test ()
 #include "../test-skeleton.c"
@@ -29,69 +29,62 @@ static int do_test (void);
 static int global;
 
 
-static void
-ch (void *arg)
+static void ch(void *arg)
 {
-  int val = (long int) arg;
+    int val = (long int) arg;
 
-  printf ("ch (%d)\n", val);
+    printf("ch (%d)\n", val);
 
-  global *= val;
-  global += val;
+    global *= val;
+    global += val;
 }
 
 
-static void *
-tf (void *a)
+static void *tf(void *a)
 {
-  pthread_cleanup_push (ch, (void *) 1l);
+    pthread_cleanup_push(ch, (void *) 1l);
 
-  pthread_cleanup_push (ch, (void *) 2l);
+    pthread_cleanup_push(ch, (void *) 2l);
 
-  pthread_cleanup_push (ch, (void *) 3l);
+    pthread_cleanup_push(ch, (void *) 3l);
 
-  pthread_exit ((void *) 1l);
+    pthread_exit((void *) 1l);
 
-  pthread_cleanup_pop (1);
+    pthread_cleanup_pop(1);
 
-  pthread_cleanup_pop (1);
+    pthread_cleanup_pop(1);
 
-  pthread_cleanup_pop (1);
+    pthread_cleanup_pop(1);
 
-  return NULL;
+    return NULL;
 }
 
 
-int
-do_test (void)
+int do_test(void)
 {
-  pthread_t th;
+    pthread_t th;
 
-  if (pthread_create (&th, NULL, tf, NULL) != 0)
-    {
-      write_message ("create failed\n");
-      _exit (1);
+    if (pthread_create(&th, NULL, tf, NULL) != 0) {
+        write_message("create failed\n");
+        _exit(1);
     }
 
-  void *r;
-  int e;
-  if ((e = pthread_join (th, &r)) != 0)
-    {
-      printf ("join failed: %d\n", e);
-      _exit (1);
+    void *r;
+    int e;
+    if ((e = pthread_join(th, &r)) != 0) {
+        printf("join failed: %d\n", e);
+        _exit(1);
     }
 
-  if (r != (void *) 1l)
-    {
-      puts ("thread not canceled");
-      exit (1);
+    if (r != (void *) 1l) {
+        puts("thread not canceled");
+        exit(1);
     }
 
-  if (global != 9)
-    {
-      printf ("global = %d, expected 9\n", global);
-      exit (1);
+    if (global != 9) {
+        printf("global = %d, expected 9\n", global);
+        exit(1);
     }
 
-  return 0;
+    return 0;
 }

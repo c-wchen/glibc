@@ -41,7 +41,7 @@
 
 /* Use __executable_start as the lowest address to keep profiling records
    if it provided by the linker.  */
-extern const char __executable_start[] __attribute__ ((visibility ("hidden")));
+extern const char __executable_start[] __attribute__((visibility("hidden")));
 
 extern char etext[];
 
@@ -53,33 +53,33 @@ extern char etext[];
 #endif
 
 #ifdef GMON_START_ARRAY_SECTION
-static void __gmon_start__ (void);
-static void (*const gmon_start_initializer) (void)
-  __attribute__ ((used, section (GMON_START_ARRAY_SECTION))) = &__gmon_start__;
+static void __gmon_start__(void);
+static void (*const gmon_start_initializer)(void)
+__attribute__((used, section(GMON_START_ARRAY_SECTION))) = &__gmon_start__;
 static
 #else
 /* We cannot use the normal constructor mechanism to call
    __gmon_start__ because gcrt1.o appears before crtbegin.o in the link.
    Instead crti.o calls it specially.  */
-extern void __gmon_start__ (void);
+extern void __gmon_start__(void);
 #endif
 
-void
-__gmon_start__ (void)
+void __gmon_start__(void)
 {
-  /* Protect from being called more than once.  Since crti.o is linked
-     into every shared library, each of their init functions will call us.  */
-  static int called;
+    /* Protect from being called more than once.  Since crti.o is linked
+       into every shared library, each of their init functions will call us.  */
+    static int called;
 
-  if (called)
-    return;
+    if (called) {
+        return;
+    }
 
-  called = 1;
+    called = 1;
 
-  /* Start keeping profiling records.  */
-  __monstartup ((u_long) &__executable_start, (u_long) &etext);
+    /* Start keeping profiling records.  */
+    __monstartup((u_long) &__executable_start, (u_long) &etext);
 
-  /* Call _mcleanup before exiting; it will write out gmon.out from the
-     collected data.  */
-  atexit (&_mcleanup);
+    /* Call _mcleanup before exiting; it will write out gmon.out from the
+       collected data.  */
+    atexit(&_mcleanup);
 }

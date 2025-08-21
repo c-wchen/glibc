@@ -20,13 +20,12 @@
 #define TEST_NAME "memrchr"
 #include "bench-string.h"
 
-typedef char *(*proto_t) (const char *, int, size_t);
+typedef char *(*proto_t)(const char *, int, size_t);
 
-void *
-generic_memrchr (const void *, int, size_t);
+void *generic_memrchr(const void *, int, size_t);
 
-IMPL (memrchr, 1)
-IMPL (generic_memrchr, 0)
+IMPL(memrchr, 1)
+IMPL(generic_memrchr, 0)
 
 #define USE_AS_MEMRCHR
 #include "bench-memchr.c"

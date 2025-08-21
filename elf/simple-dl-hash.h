@@ -23,20 +23,18 @@
 
 /* For testing/benchmarking purposes.  Real implementation in
    sysdeps/generic/dl-hash.h.  */
-static uint32_t
-__attribute__ ((unused))
-__simple_dl_elf_hash (const char *name_arg)
+static uint32_t __attribute__((unused))
+__simple_dl_elf_hash(const char *name_arg)
 {
-  unsigned long int hash = 0;
-  for (unsigned char c = *name_arg; c != '\0'; c = *(++name_arg))
-    {
-      unsigned long int hi;
-      hash = (hash << 4) + c;
-      hi = hash & 0xf0000000;
-      hash ^= hi >> 24;
-      hash &= 0x0fffffff;
+    unsigned long int hash = 0;
+    for (unsigned char c = *name_arg; c != '\0'; c = *(++name_arg)) {
+        unsigned long int hi;
+        hash = (hash << 4) + c;
+        hi = hash & 0xf0000000;
+        hash ^= hi >> 24;
+        hash &= 0x0fffffff;
     }
-  return hash;
+    return hash;
 }
 
 #endif /* simple-dl-hash.h */

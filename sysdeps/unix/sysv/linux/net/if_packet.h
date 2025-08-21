@@ -26,11 +26,10 @@
    From Linux 2.1 the AF_PACKET interface is preferred and you should
    consider using it in place of this one.  */
 
-struct __attribute_struct_may_alias__ sockaddr_pkt
-  {
-    __SOCKADDR_COMMON (spkt_);
+struct __attribute_struct_may_alias__ sockaddr_pkt {
+    __SOCKADDR_COMMON(spkt_);
     unsigned char spkt_device[14];
     unsigned short spkt_protocol;
-  };
+};
 
 #endif

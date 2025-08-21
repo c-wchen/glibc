@@ -20,14 +20,13 @@
 #include <string.h>
 
 /* Returns true if the file name looks like a DSO name.  */
-static bool
-_dl_is_dso (const char *name)
+static bool _dl_is_dso(const char *name)
 {
-  /* Recognize lib*.so*, ld-*.so*, ld.so.*, ld64.so.*.  ld-*.so*
-     matches both platform dynamic linker names like ld-linux.so.2,
-     and versioned dynamic loader names like ld-2.12.so.  */
-  return (((strncmp (name, "lib", 3) == 0 || strncmp (name, "ld-", 3) == 0)
-           && strstr (name, ".so") != NULL)
-          || strncmp (name, "ld.so.", 6) == 0
-          || strncmp (name, "ld64.so.", 8) == 0);
+    /* Recognize lib*.so*, ld-*.so*, ld.so.*, ld64.so.*.  ld-*.so*
+       matches both platform dynamic linker names like ld-linux.so.2,
+       and versioned dynamic loader names like ld-2.12.so.  */
+    return (((strncmp(name, "lib", 3) == 0 || strncmp(name, "ld-", 3) == 0)
+             && strstr(name, ".so") != NULL)
+            || strncmp(name, "ld.so.", 6) == 0
+            || strncmp(name, "ld64.so.", 8) == 0);
 }

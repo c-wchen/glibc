@@ -21,16 +21,14 @@
 /* Defined for the benefit of tst-skeleton-thread-affinity.c, included
    below.  */
 
-static int
-getaffinity (size_t size, cpu_set_t *set)
+static int getaffinity(size_t size, cpu_set_t *set)
 {
-  return sched_getaffinity (0, size, set);
+    return sched_getaffinity(0, size, set);
 }
 
-static int
-setaffinity (size_t size, const cpu_set_t *set)
+static int setaffinity(size_t size, const cpu_set_t *set)
 {
-  return sched_setaffinity (0, size, set);
+    return sched_setaffinity(0, size, set);
 }
 
 #include "tst-skeleton-thread-affinity.c"

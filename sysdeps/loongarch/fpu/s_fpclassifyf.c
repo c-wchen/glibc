@@ -19,20 +19,23 @@
 #include <math.h>
 #include <fenv_private.h>
 
-int
-__fpclassifyf (float x)
+int __fpclassifyf(float x)
 {
-  int cls;
-  asm volatile ("fclass.s \t%0, %1" : "=f" (cls) : "f" (x));
+    int cls;
+    asm volatile("fclass.s \t%0, %1" : "=f"(cls) : "f"(x));
 
-  if (__glibc_likely (!!(cls & _FCLASS_NORM)))
-    return FP_NORMAL;
-  if (__glibc_likely (!!(cls & _FCLASS_ZERO)))
-    return FP_ZERO;
-  if (__glibc_likely (!!(cls & _FCLASS_SUBNORM)))
-    return FP_SUBNORMAL;
-  if (__glibc_likely (!!(cls & _FCLASS_INF)))
-    return FP_INFINITE;
-  return FP_NAN;
+    if (__glibc_likely(!!(cls & _FCLASS_NORM))) {
+        return FP_NORMAL;
+    }
+    if (__glibc_likely(!!(cls & _FCLASS_ZERO))) {
+        return FP_ZERO;
+    }
+    if (__glibc_likely(!!(cls & _FCLASS_SUBNORM))) {
+        return FP_SUBNORMAL;
+    }
+    if (__glibc_likely(!!(cls & _FCLASS_INF))) {
+        return FP_INFINITE;
+    }
+    return FP_NAN;
 }
-libm_hidden_def (__fpclassifyf)
+libm_hidden_def(__fpclassifyf)

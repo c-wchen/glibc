@@ -20,26 +20,23 @@
 #include <stdlib.h>
 #include <gnu/lib-names.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  void *p = dlopen (LIBPTHREAD_SO, RTLD_LAZY);
+    void *p = dlopen(LIBPTHREAD_SO, RTLD_LAZY);
 
-  if (p == NULL)
-    {
-      puts ("failed to load " LIBPTHREAD_SO);
-      return 1;
+    if (p == NULL) {
+        puts("failed to load " LIBPTHREAD_SO);
+        return 1;
     }
 
-  if (dlclose (p) != 0)
-    {
-      puts ("dlclose (" LIBPTHREAD_SO ") failed");
-      return 1;
+    if (dlclose(p) != 0) {
+        puts("dlclose (" LIBPTHREAD_SO ") failed");
+        return 1;
     }
 
-  puts ("seems to work");
+    puts("seems to work");
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

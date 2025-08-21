@@ -3,20 +3,19 @@
 
 #define WCS_LENGTH 256
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  const char cnv[] ="%l[abc]";
-  const char str[] = "abbcXab";
-  wchar_t wcs[WCS_LENGTH];
-  int result = 0;
+    const char cnv[] = "%l[abc]";
+    const char str[] = "abbcXab";
+    wchar_t wcs[WCS_LENGTH];
+    int result = 0;
 
-  sscanf (str, cnv, wcs);
-  printf ("wcs = \"%ls\"\n", wcs);
-  fflush (stdout);
-  result = wcscmp (wcs, L"abbc") != 0;
+    sscanf(str, cnv, wcs);
+    printf("wcs = \"%ls\"\n", wcs);
+    fflush(stdout);
+    result = wcscmp(wcs, L"abbc") != 0;
 
-  return result;
+    return result;
 }
 
 #define TEST_FUNCTION do_test ()

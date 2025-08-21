@@ -23,19 +23,17 @@
 #include <tst-file-align.h>
 #include "tst-p_align.h"
 
-int foo __attribute__ ((aligned (ALIGN))) = 1;
+int foo __attribute__((aligned(ALIGN))) = 1;
 
-bool
-__attribute__ ((weak)) __attribute_optimization_barrier__
-is_aligned_p (void *p, int align)
+bool __attribute__((weak)) __attribute_optimization_barrier__
+is_aligned_p(void *p, int align)
 {
-  return (((uintptr_t) p) & (align - 1)) == 0;
+    return (((uintptr_t) p) & (align - 1)) == 0;
 }
 
-int
-do_load_test (void)
+int do_load_test(void)
 {
-  printf ("foo: %p\n", &foo);
-  TEST_VERIFY (is_aligned_p (&foo, ALIGN));
-  return 0;
+    printf("foo: %p\n", &foo);
+    TEST_VERIFY(is_aligned_p(&foo, ALIGN));
+    return 0;
 }

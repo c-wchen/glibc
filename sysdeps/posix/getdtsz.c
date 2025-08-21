@@ -21,15 +21,14 @@
 
 /* Return the maximum number of file descriptors
    the current process could possibly have.  */
-int
-__getdtablesize (void)
+int __getdtablesize(void)
 {
-  struct rlimit ru;
+    struct rlimit ru;
 
-  /* This should even work if `getrlimit' is not implemented.  POSIX.1
-     does not define this function but we will generate a stub which
-     returns -1.  */
-  return __getrlimit (RLIMIT_NOFILE, &ru) < 0 ? OPEN_MAX : ru.rlim_cur;
+    /* This should even work if `getrlimit' is not implemented.  POSIX.1
+       does not define this function but we will generate a stub which
+       returns -1.  */
+    return __getrlimit(RLIMIT_NOFILE, &ru) < 0 ? OPEN_MAX : ru.rlim_cur;
 }
 
-weak_alias (__getdtablesize, getdtablesize)
+weak_alias(__getdtablesize, getdtablesize)

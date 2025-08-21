@@ -18,55 +18,54 @@
 #define sigpause __rename_sigpause
 #include <errno.h>
 #include <signal.h>
-#include <stddef.h>		/* For NULL.  */
+#include <stddef.h>     /* For NULL.  */
 #undef sigpause
 
 #include <sigset-cvt-mask.h>
 #include <sysdep-cancel.h>
 
-int
-__sigpause (int sig_or_mask, int is_sig)
+int __sigpause(int sig_or_mask, int is_sig)
 {
-  sigset_t set;
+    sigset_t set;
 
-  if (is_sig != 0)
-    {
-      /* The modern X/Open implementation is requested.  */
-      if (__sigprocmask (0, NULL, &set) < 0
-	  || sigdelset (&set, sig_or_mask) < 0)
-	return -1;
+    if (is_sig != 0) {
+        /* The modern X/Open implementation is requested.  */
+        if (__sigprocmask(0, NULL, &set) < 0
+            || sigdelset(&set, sig_or_mask) < 0) {
+            return -1;
+        }
+    } else if (sigset_set_old_mask(&set, sig_or_mask) < 0) {
+        return -1;
     }
-  else if (sigset_set_old_mask (&set, sig_or_mask) < 0)
-    return -1;
 
-  /* Note the sigpause() is a cancellation point.  But since we call
-     sigsuspend() which itself is a cancellation point we do not have
-     to do anything here.  */
-  return __sigsuspend (&set);
+    /* Note the sigpause() is a cancellation point.  But since we call
+       sigsuspend() which itself is a cancellation point we do not have
+       to do anything here.  */
+    return __sigsuspend(&set);
 }
-libc_hidden_def (__sigpause)
+libc_hidden_def(__sigpause)
 
 /* We have to provide a default version of this function since the
    standards demand it.  The version which is a bit more reasonable is
    the BSD version.  So make this the default.  */
 int
-__attribute__ ((weak))
-__default_sigpause (int mask)
+__attribute__((weak))
+__default_sigpause(int mask)
 {
-  return __sigpause (mask, 0);
+    return __sigpause(mask, 0);
 }
 #undef sigpause
-weak_alias (__default_sigpause, sigpause)
-strong_alias (__default_sigpause, __libc_sigpause)
+weak_alias(__default_sigpause, sigpause)
+strong_alias(__default_sigpause, __libc_sigpause)
 
 
 /* We have to provide a default version of this function since the
    standards demand it.  The version which is a bit more reasonable is
    the BSD version.  So make this the default.  */
 int
-__attribute__ ((weak))
-__xpg_sigpause (int sig)
+__attribute__((weak))
+__xpg_sigpause(int sig)
 {
-  return __sigpause (sig, 1);
+    return __sigpause(sig, 1);
 }
-strong_alias (__xpg_sigpause, __libc___xpg_sigpause)
+strong_alias(__xpg_sigpause, __libc___xpg_sigpause)

@@ -23,14 +23,14 @@
 
 /* For testing/benchmarking purposes.  Real implementation in
    sysdeps/generic/dl-new-hash.h.  */
-static uint32_t
-__attribute__ ((unused))
-__simple_dl_new_hash (const char *s)
+static uint32_t __attribute__((unused))
+__simple_dl_new_hash(const char *s)
 {
-  uint32_t h = 5381;
-  for (unsigned char c = *s; c != '\0'; c = *++s)
-    h = h * 33 + c;
-  return h;
+    uint32_t h = 5381;
+    for (unsigned char c = *s; c != '\0'; c = *++s) {
+        h = h * 33 + c;
+    }
+    return h;
 }
 
 #endif /* simple-dl-new-hash.h */

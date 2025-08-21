@@ -44,24 +44,24 @@
     1. LEAF(fcn) -- the align value of fcn is .align 3 (default value)
     2. LEAF(fcn, 6) -- the align value of fcn is .align 6
 */
-#define LEAF_IMPL(symbol, aln, ...)	\
-	.text;				\
-	.globl symbol;			\
-	.align aln;			\
-	.type symbol, @function;	\
+#define LEAF_IMPL(symbol, aln, ...) \
+    .text;              \
+    .globl symbol;          \
+    .align aln;         \
+    .type symbol, @function;    \
 symbol: \
-	cfi_startproc;
+    cfi_startproc;
 
 
 #define LEAF(...) LEAF_IMPL(__VA_ARGS__, 3)
 #define ENTRY(...) LEAF(__VA_ARGS__)
 
-#define	LEAF_NO_ALIGN(symbol)		\
-	.text;				\
-	.globl	symbol;			\
-	.type	symbol, @function;	\
+#define LEAF_NO_ALIGN(symbol)       \
+    .text;              \
+    .globl  symbol;         \
+    .type   symbol, @function;  \
 symbol: \
-	cfi_startproc;
+    cfi_startproc;
 
 #define ENTRY_NO_ALIGN(symbol) LEAF_NO_ALIGN(symbol)
 

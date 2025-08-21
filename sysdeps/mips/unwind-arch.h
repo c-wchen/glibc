@@ -40,35 +40,39 @@
    [1] libgcc/config/mips/linux-unwind.h from gcc code.
    [2] gcc/config/mips/mips.h from gcc code.  */
 
-static inline void *
-unwind_arch_adjustment (void *prev, void *addr)
+static inline void *unwind_arch_adjustment(void *prev, void *addr)
 {
-  uint32_t *pc = (uint32_t *) prev;
+    uint32_t *pc = (uint32_t *) prev;
 
-  if (pc == NULL)
-    return addr;
+    if (pc == NULL) {
+        return addr;
+    }
 
-  /* For MIPS16 or microMIPS frame libgcc makes no adjustment.  */
-  if ((uintptr_t) pc & 0x3)
-    return addr;
+    /* For MIPS16 or microMIPS frame libgcc makes no adjustment.  */
+    if ((uintptr_t) pc & 0x3) {
+        return addr;
+    }
 
-  /* The vDSO contains either
+    /* The vDSO contains either
 
-     24021061 li v0, 0x1061 (rt_sigreturn)
-     0000000c syscall
-        or
-     24021017 li v0, 0x1017 (sigreturn)
-     0000000c syscall  */
-  if (pc[1] != 0x0000000c)
-    return addr;
+       24021061 li v0, 0x1061 (rt_sigreturn)
+       0000000c syscall
+          or
+       24021017 li v0, 0x1017 (sigreturn)
+       0000000c syscall  */
+    if (pc[1] != 0x0000000c) {
+        return addr;
+    }
 #if _MIPS_SIM == _ABIO32
-  if (pc[0] == (0x24020000 | __NR_sigreturn))
-    return (void *) ((uintptr_t) addr - 2);
+    if (pc[0] == (0x24020000 | __NR_sigreturn)) {
+        return (void *)((uintptr_t) addr - 2);
+    }
 #endif
-  if (pc[0] == (0x24020000 | __NR_rt_sigreturn))
-    return (void *) ((uintptr_t) addr - 2);
+    if (pc[0] == (0x24020000 | __NR_rt_sigreturn)) {
+        return (void *)((uintptr_t) addr - 2);
+    }
 
-  return addr;
+    return addr;
 }
 
 #endif /* _ARCH_UNWIND_LINK_H */

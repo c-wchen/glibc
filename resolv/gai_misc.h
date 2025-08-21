@@ -16,15 +16,14 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _GAI_MISC_H
-#define _GAI_MISC_H	1
+#define _GAI_MISC_H 1
 
 #include <netdb.h>
 #include <signal.h>
 
 
 /* Used to synchronize.  */
-struct waitlist
-  {
+struct waitlist {
     struct waitlist *next;
 
 #ifndef DONT_NEED_GAI_MISC_COND
@@ -36,12 +35,11 @@ struct waitlist
     /* XXX See requestlist, it's used to work around the broken signal
        handling in Linux.  */
     pid_t caller_pid;
-  };
+};
 
 
 /* Used to queue requests..  */
-struct requestlist
-  {
+struct requestlist {
     int running;
 
     struct requestlist *next;
@@ -51,22 +49,21 @@ struct requestlist
 
     /* List of waiting processes.  */
     struct waitlist *waiting;
-  };
+};
 
 /* To customize the implementation one can use the following struct.
    This implementation follows the one in Irix.  */
-struct gaiinit
-  {
-    int gai_threads;		/* Maximal number of threads.  */
-    int gai_num;		/* Number of expected simultaneous requests. */
-    int gai_locks;		/* Not used.  */
-    int gai_usedba;		/* Not used.  */
-    int gai_debug;		/* Not used.  */
-    int gai_numusers;		/* Not used.  */
-    int gai_idle_time;		/* Number of seconds before idle thread
-				   terminates.  */
+struct gaiinit {
+    int gai_threads;        /* Maximal number of threads.  */
+    int gai_num;        /* Number of expected simultaneous requests. */
+    int gai_locks;      /* Not used.  */
+    int gai_usedba;     /* Not used.  */
+    int gai_debug;      /* Not used.  */
+    int gai_numusers;       /* Not used.  */
+    int gai_idle_time;      /* Number of seconds before idle thread
+                   terminates.  */
     int gai_reserved;
-  };
+};
 
 
 /* Lock for global I/O list of requests.  */
@@ -74,27 +71,27 @@ extern pthread_mutex_t __gai_requests_mutex;
 
 
 /* Enqueue request.  */
-extern struct requestlist *__gai_enqueue_request (struct gaicb *gaicbp)
-     attribute_hidden;
+extern struct requestlist *__gai_enqueue_request(struct gaicb *gaicbp)
+attribute_hidden;
 
 /* Find request on wait list.  */
-extern struct requestlist *__gai_find_request (const struct gaicb *gaicbp)
-     attribute_hidden;
+extern struct requestlist *__gai_find_request(const struct gaicb *gaicbp)
+attribute_hidden;
 
 /* Remove request from waitlist.  */
-extern int __gai_remove_request (struct gaicb *gaicbp)
-     attribute_hidden;
+extern int __gai_remove_request(struct gaicb *gaicbp)
+attribute_hidden;
 
 /* Notify initiator of request and tell this everybody listening.  */
-extern void __gai_notify (struct requestlist *req)
-     attribute_hidden;
+extern void __gai_notify(struct requestlist *req)
+attribute_hidden;
 
 /* Notify initiator of request.  */
-extern int __gai_notify_only (struct sigevent *sigev, pid_t caller_pid)
-     attribute_hidden;
+extern int __gai_notify_only(struct sigevent *sigev, pid_t caller_pid)
+attribute_hidden;
 
 /* Send the signal.  */
-extern int __gai_sigqueue (int sig, const union sigval val, pid_t caller_pid);
-libc_hidden_proto (__gai_sigqueue)
+extern int __gai_sigqueue(int sig, const union sigval val, pid_t caller_pid);
+libc_hidden_proto(__gai_sigqueue)
 
 #endif /* gai_misc.h */

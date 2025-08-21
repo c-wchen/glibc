@@ -18,12 +18,11 @@
 
 #include <string.h>
 
-char *
-__basename (const char *filename)
+char *__basename(const char *filename)
 {
-  char *p = strrchr (filename, '/');
-  return p ? p + 1 : (char *) filename;
+    char *p = strrchr(filename, '/');
+    return p ? p + 1 : (char *) filename;
 }
-libc_hidden_def (__basename)
-weak_alias (__basename, basename)
-libc_hidden_weak (basename)
+libc_hidden_def(__basename)
+weak_alias(__basename, basename)
+libc_hidden_weak(basename)

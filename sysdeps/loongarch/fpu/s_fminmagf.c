@@ -20,10 +20,9 @@
 #include <math.h>
 #include <libm-alias-float.h>
 
-float
-__fminmagf (float x, float y)
+float __fminmagf(float x, float y)
 {
-  asm volatile ("fmina.s \t%0, %1, %2" : "=f" (x) : "f" (x), "f" (y));
-  return x;
+    asm volatile("fmina.s \t%0, %1, %2" : "=f"(x) : "f"(x), "f"(y));
+    return x;
 }
-libm_alias_float (__fminmag, fminmag)
+libm_alias_float(__fminmag, fminmag)

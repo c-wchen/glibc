@@ -22,24 +22,26 @@
 
 #include <support/check.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  static mtx_t mutex;
+    static mtx_t mutex;
 
-  if (mtx_init (&mutex, mtx_plain | mtx_recursive) != thrd_success)
-    FAIL_EXIT1 ("mtx_init failed");
+    if (mtx_init(&mutex, mtx_plain | mtx_recursive) != thrd_success) {
+        FAIL_EXIT1("mtx_init failed");
+    }
 
-  if (mtx_lock (&mutex) != thrd_success)
-    FAIL_EXIT1 ("mtx_lock failed");
+    if (mtx_lock(&mutex) != thrd_success) {
+        FAIL_EXIT1("mtx_lock failed");
+    }
 
-  /* Lock mutex second time, if not recursive should deadlock.  */
-  if (mtx_lock (&mutex) != thrd_success)
-    FAIL_EXIT1 ("mtx_lock failed");
+    /* Lock mutex second time, if not recursive should deadlock.  */
+    if (mtx_lock(&mutex) != thrd_success) {
+        FAIL_EXIT1("mtx_lock failed");
+    }
 
-  mtx_destroy (&mutex);
+    mtx_destroy(&mutex);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

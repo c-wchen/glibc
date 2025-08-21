@@ -25,19 +25,18 @@
 
 /* Read formatted input from S, according to the format string FORMAT.  */
 
-int
-__sscanf (const char *s, const char *format, ...)
+int __sscanf(const char *s, const char *format, ...)
 {
-  va_list arg;
-  int done;
-  _IO_strfile sf;
-  FILE *f = _IO_strfile_read (&sf, s);
+    va_list arg;
+    int done;
+    _IO_strfile sf;
+    FILE *f = _IO_strfile_read(&sf, s);
 
-  va_start (arg, format);
-  done = __vfscanf_internal (f, format, arg, 0);
-  va_end (arg);
+    va_start(arg, format);
+    done = __vfscanf_internal(f, format, arg, 0);
+    va_end(arg);
 
-  return done;
+    return done;
 }
-ldbl_strong_alias (__sscanf, sscanf)
-ldbl_strong_alias (__sscanf, _IO_sscanf)
+ldbl_strong_alias(__sscanf, sscanf)
+ldbl_strong_alias(__sscanf, _IO_sscanf)

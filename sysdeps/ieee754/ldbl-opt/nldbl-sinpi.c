@@ -1,8 +1,7 @@
 #include "nldbl-compat.h"
 
 double
-attribute_hidden
-sinpil (double x)
+attribute_hidden sinpil(double x)
 {
-  return sinpi (x);
+    return sinpi(x);
 }

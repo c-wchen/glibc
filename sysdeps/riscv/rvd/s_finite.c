@@ -19,10 +19,9 @@
 #include <math.h>
 #include <fenv_private.h>
 
-int
-__finite (double x)
+int __finite(double x)
 {
-  return _FCLASS (x) & ~(_FCLASS_INF | _FCLASS_NAN);
+    return _FCLASS(x) & ~(_FCLASS_INF | _FCLASS_NAN);
 }
-hidden_def (__finite)
-weak_alias (__finite, finite)
+hidden_def(__finite)
+weak_alias(__finite, finite)

@@ -22,8 +22,8 @@
 
 #ifdef __USE_GNU
 /* Flags for mremap.  */
-# define MREMAP_MAYMOVE	1
-# define MREMAP_FIXED	2
+# define MREMAP_MAYMOVE 1
+# define MREMAP_FIXED   2
 # define MREMAP_DONTUNMAP 4
 
 /* Flags for memfd_create.  */
@@ -51,34 +51,34 @@ __BEGIN_DECLS
 
 /* Create a new memory file descriptor.  NAME is a name for debugging.
    FLAGS is a combination of the MFD_* constants.  */
-int memfd_create (const char *__name, unsigned int __flags) __THROW;
+int memfd_create(const char *__name, unsigned int __flags) __THROW;
 
 /* Lock pages from ADDR (inclusive) to ADDR + LENGTH (exclusive) into
    memory.  FLAGS is a combination of the MLOCK_* flags above.  */
-int mlock2 (const void *__addr, size_t __length, unsigned int __flags) __THROW
-    __attr_access_none (1);
+int mlock2(const void *__addr, size_t __length, unsigned int __flags) __THROW
+__attr_access_none(1);
 
 /* Allocate a new protection key, with the PKEY_DISABLE_* bits
    specified in ACCESS_RESTRICTIONS.  The protection key mask for the
    current thread is updated to match the access privilege for the new
    key.  */
-int pkey_alloc (unsigned int __flags, unsigned int __access_restrictions) __THROW;
+int pkey_alloc(unsigned int __flags, unsigned int __access_restrictions) __THROW;
 
 /* Update the access restrictions for the current thread for KEY, which must
    have been allocated using pkey_alloc.  */
-int pkey_set (int __key, unsigned int __access_restrictions) __THROW;
+int pkey_set(int __key, unsigned int __access_restrictions) __THROW;
 
 /* Return the access restrictions for the current thread for KEY, which must
    have been allocated using pkey_alloc.  */
-int pkey_get (int __key) __THROW;
+int pkey_get(int __key) __THROW;
 
 /* Free an allocated protection key, which must have been allocated
    using pkey_alloc.  */
-int pkey_free (int __key) __THROW;
+int pkey_free(int __key) __THROW;
 
 /* Apply memory protection flags for KEY to the specified address
    range.  */
-int pkey_mprotect (void *__addr, size_t __len, int __prot, int __pkey) __THROW;
+int pkey_mprotect(void *__addr, size_t __len, int __prot, int __pkey) __THROW;
 
 __END_DECLS
 

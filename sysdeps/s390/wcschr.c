@@ -27,17 +27,17 @@
 # include <ifunc-resolve.h>
 
 # if HAVE_WCSCHR_C
-extern __typeof (__redirect___wcschr) WCSCHR_C attribute_hidden;
+extern __typeof(__redirect___wcschr) WCSCHR_C attribute_hidden;
 # endif
 
 # if HAVE_WCSCHR_Z13
-extern __typeof (__redirect___wcschr) WCSCHR_Z13 attribute_hidden;
+extern __typeof(__redirect___wcschr) WCSCHR_Z13 attribute_hidden;
 # endif
 
-s390_libc_ifunc_expr (__redirect___wcschr, __wcschr,
-		      (HAVE_WCSCHR_Z13 && (hwcap & HWCAP_S390_VX))
-		      ? WCSCHR_Z13
-		      : WCSCHR_DEFAULT
-		      )
-weak_alias (__wcschr, wcschr)
+s390_libc_ifunc_expr(__redirect___wcschr, __wcschr,
+                     (HAVE_WCSCHR_Z13 &&(hwcap &HWCAP_S390_VX))
+                     ? WCSCHR_Z13
+                     : WCSCHR_DEFAULT
+                    )
+weak_alias(__wcschr, wcschr)
 #endif

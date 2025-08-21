@@ -19,28 +19,28 @@
 #include <fenv_libc.h>
 #include <fpu_control.h>
 
-int
-__feholdexcept (fenv_t *envp)
+int __feholdexcept(fenv_t *envp)
 {
-  fenv_union_t old, new;
+    fenv_union_t old, new;
 
-  /* Save the currently set exceptions.  */
-  old.fenv = *envp = fegetenv_register ();
+    /* Save the currently set exceptions.  */
+    old.fenv = *envp = fegetenv_register();
 
-  /* Clear everything except for the rounding modes and non-IEEE arithmetic
-     flag.  */
-  new.l = old.l & 0xffffffff00000007LL;
+    /* Clear everything except for the rounding modes and non-IEEE arithmetic
+       flag.  */
+    new.l = old.l & 0xffffffff00000007LL;
 
-  if (new.l == old.l)
+    if (new.l == old.l) {
+        return 0;
+    }
+
+    __TEST_AND_ENTER_NON_STOP(old.l, 0ULL);
+
+    /* Put the new state in effect.  */
+    fesetenv_register(new.fenv);
+
     return 0;
-
-  __TEST_AND_ENTER_NON_STOP (old.l, 0ULL);
-
-  /* Put the new state in effect.  */
-  fesetenv_register (new.fenv);
-
-  return 0;
 }
-libm_hidden_def (__feholdexcept)
-weak_alias (__feholdexcept, feholdexcept)
-libm_hidden_weak (feholdexcept)
+libm_hidden_def(__feholdexcept)
+weak_alias(__feholdexcept, feholdexcept)
+libm_hidden_weak(feholdexcept)

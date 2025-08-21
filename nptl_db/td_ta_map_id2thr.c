@@ -19,18 +19,18 @@
 #include "thread_dbP.h"
 
 
-td_err_e
-td_ta_map_id2thr (const td_thragent_t *ta, pthread_t pt, td_thrhandle_t *th)
+td_err_e td_ta_map_id2thr(const td_thragent_t *ta, pthread_t pt, td_thrhandle_t *th)
 {
-  LOG ("td_ta_map_id2thr");
+    LOG("td_ta_map_id2thr");
 
-  /* Test whether the TA parameter is ok.  */
-  if (! ta_ok (ta))
-    return TD_BADTA;
+    /* Test whether the TA parameter is ok.  */
+    if (! ta_ok(ta)) {
+        return TD_BADTA;
+    }
 
-  /* Create the `td_thrhandle_t' object.  */
-  th->th_ta_p = (td_thragent_t *) ta;
-  th->th_unique = (psaddr_t) pt;
+    /* Create the `td_thrhandle_t' object.  */
+    th->th_ta_p = (td_thragent_t *) ta;
+    th->th_unique = (psaddr_t) pt;
 
-  return TD_OK;
+    return TD_OK;
 }

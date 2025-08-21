@@ -40,9 +40,8 @@ volatile int x;
    that the function names are chosen so they cannot accidentally
    match the hex offset before the closing ')'. */
 
-static inline bool
-match (const char *sym, const char *name)
+static inline bool match(const char *sym, const char *name)
 {
-  char *p = strchr (sym, '(');
-  return p != NULL && strstr (p, name) != NULL;
+    char *p = strchr(sym, '(');
+    return p != NULL && strstr(p, name) != NULL;
 }

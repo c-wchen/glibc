@@ -18,9 +18,8 @@
 #include "libioP.h"
 #include "stdio.h"
 
-void
-clearerr_unlocked (FILE *fp)
+void clearerr_unlocked(FILE *fp)
 {
-  CHECK_FILE (fp, /*nothing*/);
-  _IO_clearerr (fp);
+    CHECK_FILE(fp, /*nothing*/);
+    _IO_clearerr(fp);
 }

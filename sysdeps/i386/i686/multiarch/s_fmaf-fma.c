@@ -18,9 +18,8 @@
 
 #include <config.h>
 
-float
-__fmaf_fma (float x, float y, float z)
+float __fmaf_fma(float x, float y, float z)
 {
-  asm ("vfmadd213ss %3, %2, %0" : "=x" (x) : "0" (x), "x" (y), "xm" (z));
-  return x;
+    asm("vfmadd213ss %3, %2, %0" : "=x"(x) : "0"(x), "x"(y), "xm"(z));
+    return x;
 }

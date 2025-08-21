@@ -25,18 +25,17 @@
    See BZ #27714.  */
 
 DIAG_PUSH_NEEDS_COMMENT;
-DIAG_IGNORE_NEEDS_COMMENT_GCC (6, "-Wmaybe-uninitialized");
-DIAG_IGNORE_NEEDS_COMMENT (6, "-Wuninitialized");
+DIAG_IGNORE_NEEDS_COMMENT_GCC(6, "-Wmaybe-uninitialized");
+DIAG_IGNORE_NEEDS_COMMENT(6, "-Wuninitialized");
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  void *p = malloc (1);   /* Deliberately uninitialized.  */
-  pthread_setspecific (pthread_self (), p);
+    void *p = malloc(1);    /* Deliberately uninitialized.  */
+    pthread_setspecific(pthread_self(), p);
 
-  void *q = pthread_getspecific (pthread_self ());
+    void *q = pthread_getspecific(pthread_self());
 
-  return p == q;
+    return p == q;
 }
 
 DIAG_POP_NEEDS_COMMENT;

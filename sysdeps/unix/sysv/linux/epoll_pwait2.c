@@ -19,26 +19,24 @@
 #include <sys/epoll.h>
 #include <sysdep.h>
 
-int
-__epoll_pwait2_time64 (int fd, struct epoll_event *ev, int maxev,
-		       const struct __timespec64 *tmo, const sigset_t *s)
+int __epoll_pwait2_time64(int fd, struct epoll_event *ev, int maxev,
+                          const struct __timespec64 *tmo, const sigset_t *s)
 {
-  /* The syscall only supports 64-bit time_t.  */
-  return SYSCALL_CANCEL (epoll_pwait2, fd, ev, maxev, tmo, s, __NSIG_BYTES);
+    /* The syscall only supports 64-bit time_t.  */
+    return SYSCALL_CANCEL(epoll_pwait2, fd, ev, maxev, tmo, s, __NSIG_BYTES);
 }
 #if __TIMESIZE != 64
-libc_hidden_def (__epoll_pwait2_time64)
+libc_hidden_def(__epoll_pwait2_time64)
 
 int
-epoll_pwait2 (int fd, struct epoll_event *ev, int maxev,
-	      const struct timespec *tmo, const sigset_t *s)
+epoll_pwait2(int fd, struct epoll_event *ev, int maxev,
+             const struct timespec *tmo, const sigset_t *s)
 {
-  struct __timespec64 tmo64, *ptmo64 = NULL;
-  if (tmo != NULL)
-    {
-      tmo64 = valid_timespec_to_timespec64 (*tmo);
-      ptmo64 = &tmo64;
+    struct __timespec64 tmo64, *ptmo64 = NULL;
+    if (tmo != NULL) {
+        tmo64 = valid_timespec_to_timespec64(*tmo);
+        ptmo64 = &tmo64;
     }
-  return __epoll_pwait2_time64 (fd, ev, maxev, ptmo64, s);
+    return __epoll_pwait2_time64(fd, ev, maxev, ptmo64, s);
 }
 #endif

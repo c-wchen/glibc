@@ -33,22 +33,22 @@
 #  define RESTORE_GP64_REG
 #  define RESTORE_GP64_STACK
 # else
-#  define SETUP_GP64_REG_CFI(gpsavereg)		\
-	cfi_register (gp, gpsavereg)
-#  define SETUP_GP64_REG(gpsavereg, proc)	\
-	SETUP_GP64 (gpsavereg, proc);		\
-	SETUP_GP64_REG_CFI (gpsavereg)
-#  define SETUP_GP64_STACK_CFI(gpoffset)	\
-	cfi_rel_offset (gp, gpoffset)
-#  define SETUP_GP64_STACK(gpoffset, proc)	\
-	SETUP_GP64 (gpoffset, proc);		\
-	SETUP_GP64_STACK_CFI (gpoffset)
-#  define RESTORE_GP64_REG			\
-	RESTORE_GP64;				\
-	cfi_restore (gp)
-#  define RESTORE_GP64_STACK			\
-	RESTORE_GP64;				\
-	cfi_restore (gp)
+#  define SETUP_GP64_REG_CFI(gpsavereg)     \
+    cfi_register (gp, gpsavereg)
+#  define SETUP_GP64_REG(gpsavereg, proc)   \
+    SETUP_GP64 (gpsavereg, proc);       \
+    SETUP_GP64_REG_CFI (gpsavereg)
+#  define SETUP_GP64_STACK_CFI(gpoffset)    \
+    cfi_rel_offset (gp, gpoffset)
+#  define SETUP_GP64_STACK(gpoffset, proc)  \
+    SETUP_GP64 (gpoffset, proc);        \
+    SETUP_GP64_STACK_CFI (gpoffset)
+#  define RESTORE_GP64_REG          \
+    RESTORE_GP64;               \
+    cfi_restore (gp)
+#  define RESTORE_GP64_STACK            \
+    RESTORE_GP64;               \
+    cfi_restore (gp)
 # endif
 
 # endif /* _ISOMAC */

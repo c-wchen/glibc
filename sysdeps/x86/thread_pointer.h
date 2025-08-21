@@ -21,19 +21,18 @@
 
 #include <features.h>
 
-static inline void *
-__thread_pointer (void)
+static inline void *__thread_pointer(void)
 {
 #if __GNUC_PREREQ (11, 1)
-  return __builtin_thread_pointer ();
+    return __builtin_thread_pointer();
 #else
-  void *__result;
+    void *__result;
 # ifdef __x86_64__
-  __asm__ ("mov %%fs:0, %0" : "=r" (__result));
+    __asm__("mov %%fs:0, %0" : "=r"(__result));
 # else
-  __asm__ ("mov %%gs:0, %0" : "=r" (__result));
+    __asm__("mov %%gs:0, %0" : "=r"(__result));
 # endif
-  return __result;
+    return __result;
 #endif /* !GCC 11 */
 }
 

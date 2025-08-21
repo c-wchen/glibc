@@ -76,37 +76,39 @@
  * the net, yet is the data that the pointer points to which is interesting;
  * this sounds like a job for xdr_reference!
  */
-bool_t
-xdr_pmaplist (XDR *xdrs, struct pmaplist **rp)
+bool_t xdr_pmaplist(XDR *xdrs, struct pmaplist **rp)
 {
-  /*
-   * more_elements is pre-computed in case the direction is
-   * XDR_ENCODE or XDR_FREE.  more_elements is overwritten by
-   * xdr_bool when the direction is XDR_DECODE.
-   */
-  bool_t more_elements;
-  int freeing = (xdrs->x_op == XDR_FREE);
-  struct pmaplist *next = NULL;
+    /*
+     * more_elements is pre-computed in case the direction is
+     * XDR_ENCODE or XDR_FREE.  more_elements is overwritten by
+     * xdr_bool when the direction is XDR_DECODE.
+     */
+    bool_t more_elements;
+    int freeing = (xdrs->x_op == XDR_FREE);
+    struct pmaplist *next = NULL;
 
-  while (TRUE)
-    {
-      more_elements = (bool_t) (*rp != NULL);
-      if (!xdr_bool (xdrs, &more_elements))
-	return FALSE;
-      if (!more_elements)
-	return TRUE;		/* we are done */
-      /*
-       * the unfortunate side effect of non-recursion is that in
-       * the case of freeing we must remember the next object
-       * before we free the current object ...
-       */
-      if (freeing)
-	next = (*rp)->pml_next;
-      if (!xdr_reference (xdrs, (caddr_t *) rp,
-			  (u_int) sizeof (struct pmaplist),
-			  (xdrproc_t) xdr_pmap))
-	  return FALSE;
-      rp = freeing ? &next : &((*rp)->pml_next);
+    while (TRUE) {
+        more_elements = (bool_t)(*rp != NULL);
+        if (!xdr_bool(xdrs, &more_elements)) {
+            return FALSE;
+        }
+        if (!more_elements) {
+            return TRUE;    /* we are done */
+        }
+        /*
+         * the unfortunate side effect of non-recursion is that in
+         * the case of freeing we must remember the next object
+         * before we free the current object ...
+         */
+        if (freeing) {
+            next = (*rp)->pml_next;
+        }
+        if (!xdr_reference(xdrs, (caddr_t *) rp,
+                           (u_int) sizeof(struct pmaplist),
+                           (xdrproc_t) xdr_pmap)) {
+            return FALSE;
+        }
+        rp = freeing ? &next : &((*rp)->pml_next);
     }
 }
-libc_hidden_nolink_sunrpc (xdr_pmaplist, GLIBC_2_0)
+libc_hidden_nolink_sunrpc(xdr_pmaplist, GLIBC_2_0)

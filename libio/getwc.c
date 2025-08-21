@@ -30,18 +30,17 @@
 
 #undef _IO_getwc
 
-wint_t
-_IO_getwc (FILE *fp)
+wint_t _IO_getwc(FILE *fp)
 {
-  wint_t result;
-  CHECK_FILE (fp, WEOF);
-  _IO_acquire_lock (fp);
-  result = _IO_getwc_unlocked (fp);
-  _IO_release_lock (fp);
-  return result;
+    wint_t result;
+    CHECK_FILE(fp, WEOF);
+    _IO_acquire_lock(fp);
+    result = _IO_getwc_unlocked(fp);
+    _IO_release_lock(fp);
+    return result;
 }
 
 #undef getwc
 
-weak_alias (_IO_getwc, getwc)
-weak_alias (_IO_getwc, fgetwc)
+weak_alias(_IO_getwc, getwc)
+weak_alias(_IO_getwc, fgetwc)

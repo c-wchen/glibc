@@ -26,13 +26,13 @@
 #if LIB_COMPAT(libc, GLIBC_2_4, GLIBC_2_33)
 
 /* Get information about the file descriptor FD in BUF.  */
-int
-__fxstatat64 (int vers, int fd, const char *filename, struct stat64 *buf,
-	      int flag)
+int __fxstatat64(int vers, int fd, const char *filename, struct stat64 *buf,
+                 int flag)
 {
-  if (vers != _STAT_VER)
-    return __hurd_fail (EINVAL);
+    if (vers != _STAT_VER) {
+        return __hurd_fail(EINVAL);
+    }
 
-  return __fstatat64 (fd, filename, buf, flag);
+    return __fstatat64(fd, filename, buf, flag);
 }
 #endif

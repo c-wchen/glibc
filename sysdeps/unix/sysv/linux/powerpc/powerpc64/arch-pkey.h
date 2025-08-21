@@ -25,31 +25,28 @@
 #define PKEY_AMR_WRITE 2UL
 
 /* Return the value of the AMR register.  */
-static inline unsigned long int
-pkey_read (void)
+static inline unsigned long int pkey_read(void)
 {
-  unsigned long int result;
-  __asm__ volatile ("mfspr %0, 13" : "=r" (result));
-  return result;
+    unsigned long int result;
+    __asm__ volatile("mfspr %0, 13" : "=r"(result));
+    return result;
 }
 
 /* Overwrite the AMR register with VALUE.  */
-static inline void
-pkey_write (unsigned long int value)
+static inline void pkey_write(unsigned long int value)
 {
-  __asm__ volatile ("isync; mtspr 13, %0; isync" : : "r" (value));
+    __asm__ volatile("isync; mtspr 13, %0; isync" : : "r"(value));
 }
 
 /* Number of the largest supported key.  This depends on the width of
    the AMR register.  */
 #define PKEY_MAX (sizeof (unsigned long int) * 8 / 2 - 1)
-_Static_assert (PKEY_MAX == 15 || PKEY_MAX == 31, "PKEY_MAX value");
+_Static_assert(PKEY_MAX == 15 || PKEY_MAX == 31, "PKEY_MAX value");
 
 /* Translate key number into AMR index position.  */
-static inline int
-pkey_index (int key)
+static inline int pkey_index(int key)
 {
-  return 2 * (PKEY_MAX - key);
+    return 2 * (PKEY_MAX - key);
 }
 
 #endif /* _ARCH_PKEY_H */

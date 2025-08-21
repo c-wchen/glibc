@@ -20,10 +20,9 @@
 #include <sys/stat.h>
 
 
-int
-isfdtype (int fildes, int fdtype)
+int isfdtype(int fildes, int fdtype)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (isfdtype)
+stub_warning(isfdtype)

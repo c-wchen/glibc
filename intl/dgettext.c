@@ -44,13 +44,12 @@
 
 /* Look up MSGID in the DOMAINNAME message catalog of the current
    LC_MESSAGES locale.  */
-char *
-DGETTEXT (const char *domainname, const char *msgid)
+char *DGETTEXT(const char *domainname, const char *msgid)
 {
-  return DCGETTEXT (domainname, msgid, LC_MESSAGES);
+    return DCGETTEXT(domainname, msgid, LC_MESSAGES);
 }
 
 #ifdef _LIBC
 /* Alias for function name in GNU C Library.  */
-weak_alias (__dgettext, dgettext);
+weak_alias(__dgettext, dgettext);
 #endif

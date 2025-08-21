@@ -24,41 +24,39 @@
 #include <errno.h>
 #include <limits.h>
 
-bool
-__libc_scratch_buffer_set_array_size (struct scratch_buffer *buffer,
-				      size_t nelem, size_t size)
+bool __libc_scratch_buffer_set_array_size(struct scratch_buffer *buffer,
+        size_t nelem, size_t size)
 {
-  size_t new_length = nelem * size;
+    size_t new_length = nelem * size;
 
-  /* Avoid overflow check if both values are small. */
-  if ((nelem | size) >> (sizeof (size_t) * CHAR_BIT / 2) != 0
-      && nelem != 0 && size != new_length / nelem)
-    {
-      /* Overflow.  Discard the old buffer, but it must remain valid
-	 to free.  */
-      scratch_buffer_free (buffer);
-      scratch_buffer_init (buffer);
-      __set_errno (ENOMEM);
-      return false;
+    /* Avoid overflow check if both values are small. */
+    if ((nelem | size) >> (sizeof(size_t) * CHAR_BIT / 2) != 0
+        && nelem != 0 && size != new_length / nelem) {
+        /* Overflow.  Discard the old buffer, but it must remain valid
+        to free.  */
+        scratch_buffer_free(buffer);
+        scratch_buffer_init(buffer);
+        __set_errno(ENOMEM);
+        return false;
     }
 
-  if (new_length <= buffer->length)
+    if (new_length <= buffer->length) {
+        return true;
+    }
+
+    /* Discard old buffer.  */
+    scratch_buffer_free(buffer);
+
+    char *new_ptr = malloc(new_length);
+    if (new_ptr == NULL) {
+        /* Buffer must remain valid to free.  */
+        scratch_buffer_init(buffer);
+        return false;
+    }
+
+    /* Install new heap-based buffer.  */
+    buffer->data = new_ptr;
+    buffer->length = new_length;
     return true;
-
-  /* Discard old buffer.  */
-  scratch_buffer_free (buffer);
-
-  char *new_ptr = malloc (new_length);
-  if (new_ptr == NULL)
-    {
-      /* Buffer must remain valid to free.  */
-      scratch_buffer_init (buffer);
-      return false;
-    }
-
-  /* Install new heap-based buffer.  */
-  buffer->data = new_ptr;
-  buffer->length = new_length;
-  return true;
 }
-libc_hidden_def (__libc_scratch_buffer_set_array_size)
+libc_hidden_def(__libc_scratch_buffer_set_array_size)

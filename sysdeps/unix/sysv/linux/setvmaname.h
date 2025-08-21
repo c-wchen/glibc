@@ -28,16 +28,16 @@
 #if IS_IN(libc) || IS_IN(rtld)
 #include <stdbool.h>
 
-bool __is_decorate_maps_enabled (void) attribute_hidden;
+bool __is_decorate_maps_enabled(void) attribute_hidden;
 
-void __set_vma_name (void *start, size_t len, const char *name)
-  attribute_hidden;
+void __set_vma_name(void *start, size_t len, const char *name)
+attribute_hidden;
 #else
 #include <sys/prctl.h>
 
-static inline void __set_vma_name (void *start, size_t len, const char *name)
+static inline void __set_vma_name(void *start, size_t len, const char *name)
 {
-  prctl (PR_SET_VMA, PR_SET_VMA_ANON_NAME, start, len, name);
+    prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, start, len, name);
 }
 #endif
 

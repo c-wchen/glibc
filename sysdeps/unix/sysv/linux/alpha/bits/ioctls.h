@@ -28,9 +28,9 @@
 #undef  TCSETS
 #undef  TCSETSW
 #undef  TCSETSF
-#define TCGETS	_IOR ('t', 19, char[44])
-#define TCSETS	_IOW ('t', 20, char[44])
-#define TCSETSW	_IOW ('t', 21, char[44])
-#define TCSETSF	_IOW ('t', 22, char[44])
+#define TCGETS  _IOR ('t', 19, char[44])
+#define TCSETS  _IOW ('t', 20, char[44])
+#define TCSETSW _IOW ('t', 21, char[44])
+#define TCSETSF _IOW ('t', 22, char[44])
 
 #include <linux/sockios.h>

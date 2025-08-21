@@ -25,17 +25,17 @@
 /* Unmap the dynamic object, but also release its TLS descriptor table
    if there is one.  */
 
-void
-_dl_unmap (struct link_map *map)
+void _dl_unmap(struct link_map *map)
 {
-  _dl_unmap_segments (map);
+    _dl_unmap_segments(map);
 
 #ifdef SHARED
-  /* _dl_unmap is only called for dlopen()ed libraries, for which
-     calling free() is safe, or before we've completed the initial
-     relocation, in which case calling free() is probably pointless,
-     but still safe.  */
-  if (map->l_mach.tlsdesc_table)
-    htab_delete (map->l_mach.tlsdesc_table);
+    /* _dl_unmap is only called for dlopen()ed libraries, for which
+       calling free() is safe, or before we've completed the initial
+       relocation, in which case calling free() is probably pointless,
+       but still safe.  */
+    if (map->l_mach.tlsdesc_table) {
+        htab_delete(map->l_mach.tlsdesc_table);
+    }
 #endif
 }

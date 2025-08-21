@@ -23,45 +23,42 @@
 #include <support/capture_subprocess.h>
 #include <support/check.h>
 
-static void
-do_test_one_call (void *last, ...)
+static void do_test_one_call(void *last, ...)
 {
-  long double ld = -1;
-  va_list ap;
+    long double ld = -1;
+    va_list ap;
 
-  /* Make syslog functions write to stderr with LOG_PERROR, so that it
-     can be captured by support_capture_subprocess and verified.  */
-  openlog ("test-syslog", LOG_PERROR, LOG_USER);
+    /* Make syslog functions write to stderr with LOG_PERROR, so that it
+       can be captured by support_capture_subprocess and verified.  */
+    openlog("test-syslog", LOG_PERROR, LOG_USER);
 
-  /* Call syslog functions that take a format string.  */
-  SYSLOG_FUNCTION SYSLOG_FUNCTION_PARAMS;
-  va_start (ap, last);
-  VSYSLOG_FUNCTION VSYSLOG_FUNCTION_PARAMS;
-  va_end (ap);
+    /* Call syslog functions that take a format string.  */
+    SYSLOG_FUNCTION SYSLOG_FUNCTION_PARAMS;
+    va_start(ap, last);
+    VSYSLOG_FUNCTION VSYSLOG_FUNCTION_PARAMS;
+    va_end(ap);
 }
 
-static void
-do_test_call (void)
+static void do_test_call(void)
 {
-  long double ld = -1;
-  do_test_one_call (NULL, ld);
+    long double ld = -1;
+    do_test_one_call(NULL, ld);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  struct support_capture_subprocess result;
-  result = support_capture_subprocess ((void *) &do_test_call, NULL);
+    struct support_capture_subprocess result;
+    result = support_capture_subprocess((void *) &do_test_call, NULL);
 
-  do_test_call ();
+    do_test_call();
 
-  /* Compare against the expected output.  */
-  const char *expected =
-    "test-syslog: -1.000000\n"
-    "test-syslog: -1.000000\n";
-  TEST_COMPARE_STRING (expected, result.err.buffer);
+    /* Compare against the expected output.  */
+    const char *expected =
+        "test-syslog: -1.000000\n"
+        "test-syslog: -1.000000\n";
+    TEST_COMPARE_STRING(expected, result.err.buffer);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

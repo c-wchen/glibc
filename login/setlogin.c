@@ -19,11 +19,10 @@
 #include <unistd.h>
 
 /* Set the login name returned by `getlogin'.  */
-int
-setlogin (const char *name)
+int setlogin(const char *name)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (setlogin)
+stub_warning(setlogin)

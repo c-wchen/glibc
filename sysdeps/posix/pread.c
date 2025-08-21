@@ -22,40 +22,41 @@
 
 /* Note: This implementation of pread is not multithread-safe.  */
 
-ssize_t
-__libc_pread (int fd, void *buf, size_t nbyte, off_t offset)
+ssize_t __libc_pread(int fd, void *buf, size_t nbyte, off_t offset)
 {
-  /* Since we must not change the file pointer preserve the value so that
-     we can restore it later.  */
-  int save_errno;
-  ssize_t result;
-  off_t old_offset = __libc_lseek (fd, 0, SEEK_CUR);
-  if (old_offset == (off_t) -1)
-    return -1;
-
-  /* Set to wanted position.  */
-  if (__libc_lseek (fd, offset, SEEK_SET) == (off_t) -1)
-    return -1;
-
-  /* Write out the data.  */
-  result = __libc_read (fd, buf, nbyte);
-
-  /* Now we have to restore the position.  If this fails we have to
-     return this as an error.  But if the writing also failed we
-     return this error.  */
-  save_errno = errno;
-  if (__libc_lseek (fd, old_offset, SEEK_SET) == (off_t) -1)
-    {
-      if (result == -1)
-	__set_errno (save_errno);
-      return -1;
+    /* Since we must not change the file pointer preserve the value so that
+       we can restore it later.  */
+    int save_errno;
+    ssize_t result;
+    off_t old_offset = __libc_lseek(fd, 0, SEEK_CUR);
+    if (old_offset == (off_t) -1) {
+        return -1;
     }
-  __set_errno (save_errno);
 
-  return result;
+    /* Set to wanted position.  */
+    if (__libc_lseek(fd, offset, SEEK_SET) == (off_t) -1) {
+        return -1;
+    }
+
+    /* Write out the data.  */
+    result = __libc_read(fd, buf, nbyte);
+
+    /* Now we have to restore the position.  If this fails we have to
+       return this as an error.  But if the writing also failed we
+       return this error.  */
+    save_errno = errno;
+    if (__libc_lseek(fd, old_offset, SEEK_SET) == (off_t) -1) {
+        if (result == -1) {
+            __set_errno(save_errno);
+        }
+        return -1;
+    }
+    __set_errno(save_errno);
+
+    return result;
 }
 
 #ifndef __libc_pread
-strong_alias (__libc_pread, __pread)
-weak_alias (__libc_pread, pread)
+strong_alias(__libc_pread, __pread)
+weak_alias(__libc_pread, pread)
 #endif

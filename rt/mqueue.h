@@ -16,7 +16,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _MQUEUE_H
-#define _MQUEUE_H	1
+#define _MQUEUE_H   1
 
 #include <features.h>
 #include <sys/types.h>
@@ -35,73 +35,73 @@ __BEGIN_DECLS
    argument is taken as `struct mq_attr *', pointer to message queue
    attributes.  If the fourth argument is NULL, default attributes are
    used.  */
-extern mqd_t mq_open (const char *__name, int __oflag, ...)
-  __THROW __nonnull ((1));
+extern mqd_t mq_open(const char *__name, int __oflag, ...)
+__THROW __nonnull((1));
 
 /* Removes the association between message queue descriptor MQDES and its
    message queue.  */
-extern int mq_close (mqd_t __mqdes) __THROW;
+extern int mq_close(mqd_t __mqdes) __THROW;
 
 /* Query status and attributes of message queue MQDES.  */
-extern int mq_getattr (mqd_t __mqdes, struct mq_attr *__mqstat)
-  __THROW __nonnull ((2));
+extern int mq_getattr(mqd_t __mqdes, struct mq_attr *__mqstat)
+__THROW __nonnull((2));
 
 /* Set attributes associated with message queue MQDES and if OMQSTAT is
    not NULL also query its old attributes.  */
-extern int mq_setattr (mqd_t __mqdes,
-		       const struct mq_attr *__restrict __mqstat,
-		       struct mq_attr *__restrict __omqstat)
-  __THROW __nonnull ((2));
+extern int mq_setattr(mqd_t __mqdes,
+                      const struct mq_attr *__restrict __mqstat,
+                      struct mq_attr *__restrict __omqstat)
+__THROW __nonnull((2));
 
 /* Remove message queue named NAME.  */
-extern int mq_unlink (const char *__name) __THROW __nonnull ((1));
+extern int mq_unlink(const char *__name) __THROW __nonnull((1));
 
 /* Register notification issued upon message arrival to an empty
    message queue MQDES.  */
-extern int mq_notify (mqd_t __mqdes, const struct sigevent *__notification)
-     __THROW;
+extern int mq_notify(mqd_t __mqdes, const struct sigevent *__notification)
+__THROW;
 
 /* Receive the oldest from highest priority messages in message queue
    MQDES.  */
-extern ssize_t mq_receive (mqd_t __mqdes, char *__msg_ptr, size_t __msg_len,
-			   unsigned int *__msg_prio) __nonnull ((2));
+extern ssize_t mq_receive(mqd_t __mqdes, char *__msg_ptr, size_t __msg_len,
+                          unsigned int *__msg_prio) __nonnull((2));
 
 /* Add message pointed by MSG_PTR to message queue MQDES.  */
-extern int mq_send (mqd_t __mqdes, const char *__msg_ptr, size_t __msg_len,
-		    unsigned int __msg_prio) __nonnull ((2));
+extern int mq_send(mqd_t __mqdes, const char *__msg_ptr, size_t __msg_len,
+                   unsigned int __msg_prio) __nonnull((2));
 
 #ifdef __USE_XOPEN2K
 # ifndef __USE_TIME64_REDIRECTS
 /* Receive the oldest from highest priority messages in message queue
    MQDES, stop waiting if ABS_TIMEOUT expires.  */
-extern ssize_t mq_timedreceive (mqd_t __mqdes, char *__restrict __msg_ptr,
-				size_t __msg_len,
-				unsigned int *__restrict __msg_prio,
-				const struct timespec *__restrict __abs_timeout)
-  __nonnull ((2, 5));
+extern ssize_t mq_timedreceive(mqd_t __mqdes, char *__restrict __msg_ptr,
+                               size_t __msg_len,
+                               unsigned int *__restrict __msg_prio,
+                               const struct timespec *__restrict __abs_timeout)
+__nonnull((2, 5));
 
 /* Add message pointed by MSG_PTR to message queue MQDES, stop blocking
    on full message queue if ABS_TIMEOUT expires.  */
-extern int mq_timedsend (mqd_t __mqdes, const char *__msg_ptr,
-			 size_t __msg_len, unsigned int __msg_prio,
-			 const struct timespec *__abs_timeout)
-  __nonnull ((2, 5));
+extern int mq_timedsend(mqd_t __mqdes, const char *__msg_ptr,
+                        size_t __msg_len, unsigned int __msg_prio,
+                        const struct timespec *__abs_timeout)
+__nonnull((2, 5));
 # else
 #  ifdef __REDIRECT
-extern int __REDIRECT (mq_timedreceive, (mqd_t __mqdes,
-                               char *__restrict __msg_ptr,
-                               size_t __msg_len,
-                               unsigned int *__restrict __msg_prio,
-                               const struct timespec *__restrict __abs_timeout),
-                       __mq_timedreceive_time64)
-  __nonnull ((2, 5));
+extern int __REDIRECT(mq_timedreceive, (mqd_t __mqdes,
+                                        char *__restrict __msg_ptr,
+                                        size_t __msg_len,
+                                        unsigned int *__restrict __msg_prio,
+                                        const struct timespec *__restrict __abs_timeout),
+                      __mq_timedreceive_time64)
+__nonnull((2, 5));
 
-extern int __REDIRECT (mq_timedsend, (mqd_t __mqdes,
-                       const char *__msg_ptr, size_t __msg_len,
-                       unsigned int __msg_prio,
-                       const struct timespec *__abs_timeout),
-		       __mq_timedsend_time64)
-  __nonnull ((2, 5));
+extern int __REDIRECT(mq_timedsend, (mqd_t __mqdes,
+                                     const char *__msg_ptr, size_t __msg_len,
+                                     unsigned int __msg_prio,
+                                     const struct timespec *__abs_timeout),
+                      __mq_timedsend_time64)
+__nonnull((2, 5));
 #  else
 #   define mq_timedreceive __mq_timedreceive_time64
 #   define mq_timedsend __mq_timedsend_time64

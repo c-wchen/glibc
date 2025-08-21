@@ -20,26 +20,24 @@
 #include <unistd.h>
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  puts ("We expect no limits");
-  /* We have no fixed limit on the number of threads.  Make sure the
-     headers tell the right story.  */
+    puts("We expect no limits");
+    /* We have no fixed limit on the number of threads.  Make sure the
+       headers tell the right story.  */
 #ifdef PTHREAD_THREADS_MAX
-  printf ("Header report maximum number of threads = %lu\n",
-	  (unsigned long int) PTHREAD_THREADS_MAX);
-  return 1;
+    printf("Header report maximum number of threads = %lu\n",
+           (unsigned long int) PTHREAD_THREADS_MAX);
+    return 1;
 #else
-  long int r = sysconf (_SC_THREAD_THREADS_MAX);
-  if (r != -1)
-    {
-      printf ("sysconf(_SC_THREAD_THREADS_MAX) return %ld\n", r);
-      return 1;
+    long int r = sysconf(_SC_THREAD_THREADS_MAX);
+    if (r != -1) {
+        printf("sysconf(_SC_THREAD_THREADS_MAX) return %ld\n", r);
+        return 1;
     }
 #endif
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

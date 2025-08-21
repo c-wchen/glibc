@@ -24,10 +24,9 @@
 /* Link in libpthread.  */
 void *pthread_create_ptr = &pthread_create;
 
-int this_function_is_not_defined (void);
+int this_function_is_not_defined(void);
 
-int
-trigger_dynlink_failure (void)
+int trigger_dynlink_failure(void)
 {
-  return this_function_is_not_defined ();
+    return this_function_is_not_defined();
 }

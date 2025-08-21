@@ -22,26 +22,24 @@
 #include <gnu/lib-names.h>
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* Get the iconv machinery initialized.  */
-  (void) iconv_open ("ISO-8859-1", "ISO-8859-2");
+    /* Get the iconv machinery initialized.  */
+    (void) iconv_open("ISO-8859-1", "ISO-8859-2");
 
-  /* Dynamically load libpthread.  */
-  if (dlopen (LIBPTHREAD_SO, RTLD_NOW) == NULL)
-    {
-      printf ("cannot load %s: %s\n", LIBPTHREAD_SO, dlerror ());
-      exit (1);
+    /* Dynamically load libpthread.  */
+    if (dlopen(LIBPTHREAD_SO, RTLD_NOW) == NULL) {
+        printf("cannot load %s: %s\n", LIBPTHREAD_SO, dlerror());
+        exit(1);
     }
 
-  /* And load some more.  This call hang for some configuration since
-     the internal locking necessary wasn't adequately written to
-     handle a dynamically loaded libpthread after the first call to
-     iconv_open.  */
-  (void) iconv_open ("ISO-8859-2", "ISO-8859-3");
+    /* And load some more.  This call hang for some configuration since
+       the internal locking necessary wasn't adequately written to
+       handle a dynamically loaded libpthread after the first call to
+       iconv_open.  */
+    (void) iconv_open("ISO-8859-2", "ISO-8859-3");
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

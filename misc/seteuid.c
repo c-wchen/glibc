@@ -19,11 +19,10 @@
 #include <unistd.h>
 
 /* Set the effective user ID of the calling process to UID.  */
-int
-seteuid (__uid_t uid)
+int seteuid(__uid_t uid)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (seteuid)
-stub_warning (seteuid)
+libc_hidden_def(seteuid)
+stub_warning(seteuid)

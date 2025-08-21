@@ -18,17 +18,16 @@
 
 #include <fenv_libc.h>
 
-int
-feenableexcept (int excepts)
+int feenableexcept(int excepts)
 {
-  unsigned long int new_exc, old_exc;
+    unsigned long int new_exc, old_exc;
 
-  new_exc = __ieee_get_fp_control ();
+    new_exc = __ieee_get_fp_control();
 
-  old_exc = (new_exc & SWCR_ENABLE_MASK) << SWCR_ENABLE_SHIFT;
-  new_exc |= (excepts >> SWCR_ENABLE_SHIFT) & SWCR_ENABLE_MASK;
+    old_exc = (new_exc & SWCR_ENABLE_MASK) << SWCR_ENABLE_SHIFT;
+    new_exc |= (excepts >> SWCR_ENABLE_SHIFT) & SWCR_ENABLE_MASK;
 
-  __ieee_set_fp_control (new_exc);
+    __ieee_set_fp_control(new_exc);
 
-  return old_exc;
+    return old_exc;
 }

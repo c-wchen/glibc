@@ -15,8 +15,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define USE_IN_EXTENDED_LOCALE_MODEL	1
+#define USE_IN_EXTENDED_LOCALE_MODEL    1
 #include <wcsncase.c>
 
-libc_hidden_def (__wcsncasecmp_l)
-weak_alias (__wcsncasecmp_l, wcsncasecmp_l)
+libc_hidden_def(__wcsncasecmp_l)
+weak_alias(__wcsncasecmp_l, wcsncasecmp_l)

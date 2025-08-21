@@ -19,11 +19,10 @@
 #include <mcheck.h>
 #include <support/test-driver.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  mtrace ();
-  return 0;
+    mtrace();
+    return 0;
 }
 
 #include <support/test-driver.c>

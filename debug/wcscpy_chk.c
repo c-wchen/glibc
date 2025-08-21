@@ -20,20 +20,18 @@
 
 
 /* Copy SRC to DEST.  */
-wchar_t *
-__wcscpy_chk (wchar_t *dest, const wchar_t *src, size_t n)
+wchar_t *__wcscpy_chk(wchar_t *dest, const wchar_t *src, size_t n)
 {
-  wint_t c;
-  wchar_t *wcp = dest;
+    wint_t c;
+    wchar_t *wcp = dest;
 
-  do
-    {
-      if (__glibc_unlikely (n-- == 0))
-        __chk_fail ();
-      c = *src++;
-      *wcp++ = c;
-    }
-  while (c != L'\0');
+    do {
+        if (__glibc_unlikely(n-- == 0)) {
+            __chk_fail();
+        }
+        c = *src++;
+        *wcp++ = c;
+    } while (c != L'\0');
 
-  return dest;
+    return dest;
 }

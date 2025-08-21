@@ -22,10 +22,9 @@
 static mbstate_t internal;
 
 
-size_t
-__mbrlen (const char *s, size_t n, mbstate_t *ps)
+size_t __mbrlen(const char *s, size_t n, mbstate_t *ps)
 {
-  return __mbrtowc (NULL, s, n, ps ?: &internal);
+    return __mbrtowc(NULL, s, n, ps ? : &internal);
 }
-libc_hidden_def (__mbrlen)
-weak_alias (__mbrlen, mbrlen)
+libc_hidden_def(__mbrlen)
+weak_alias(__mbrlen, mbrlen)

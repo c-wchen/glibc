@@ -5,10 +5,9 @@
 #undef nexttowardl
 
 double
-attribute_hidden
-nexttoward (double x, double y)
+attribute_hidden nexttoward(double x, double y)
 {
-  return nextafter (x, y);
+    return nextafter(x, y);
 }
-extern __typeof (nexttoward) nexttowardl attribute_hidden;
-strong_alias (nexttoward, nexttowardl)
+extern __typeof(nexttoward) nexttowardl attribute_hidden;
+strong_alias(nexttoward, nexttowardl)

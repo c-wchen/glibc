@@ -16,11 +16,11 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#if defined USE_MULTIARCH && IS_IN (libc)		\
+#if defined USE_MULTIARCH && IS_IN (libc)       \
   && ! defined HAVE_S390_MIN_Z13_ZARCH_ASM_SUPPORT
-# define HAVE_STRCAT_IFUNC	1
+# define HAVE_STRCAT_IFUNC  1
 #else
-# define HAVE_STRCAT_IFUNC	0
+# define HAVE_STRCAT_IFUNC  0
 #endif
 
 #ifdef HAVE_S390_VX_ASM_SUPPORT
@@ -30,23 +30,23 @@
 #endif
 
 #if defined HAVE_S390_MIN_Z13_ZARCH_ASM_SUPPORT
-# define STRCAT_DEFAULT		STRCAT_Z13
-# define HAVE_STRCAT_C		0
-# define HAVE_STRCAT_Z13	1
+# define STRCAT_DEFAULT     STRCAT_Z13
+# define HAVE_STRCAT_C      0
+# define HAVE_STRCAT_Z13    1
 #else
-# define STRCAT_DEFAULT		STRCAT_C
-# define HAVE_STRCAT_C		1
-# define HAVE_STRCAT_Z13	HAVE_STRCAT_IFUNC_AND_VX_SUPPORT
+# define STRCAT_DEFAULT     STRCAT_C
+# define HAVE_STRCAT_C      1
+# define HAVE_STRCAT_Z13    HAVE_STRCAT_IFUNC_AND_VX_SUPPORT
 #endif
 
 #if HAVE_STRCAT_C
-# define STRCAT_C		__strcat_c
+# define STRCAT_C       __strcat_c
 #else
-# define STRCAT_C		NULL
+# define STRCAT_C       NULL
 #endif
 
 #if HAVE_STRCAT_Z13
-# define STRCAT_Z13		__strcat_vx
+# define STRCAT_Z13     __strcat_vx
 #else
-# define STRCAT_Z13		NULL
+# define STRCAT_Z13     NULL
 #endif

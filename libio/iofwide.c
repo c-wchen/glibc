@@ -42,212 +42,215 @@
 /* Return orientation of stream.  If mode is nonzero try to change
    the orientation first.  */
 #undef _IO_fwide
-int
-_IO_fwide (FILE *fp, int mode)
+int _IO_fwide(FILE *fp, int mode)
 {
-  /* Normalize the value.  */
-  mode = mode < 0 ? -1 : (mode == 0 ? 0 : 1);
+    /* Normalize the value.  */
+    mode = mode < 0 ? -1 : (mode == 0 ? 0 : 1);
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
-  if (__glibc_unlikely (&_IO_stdin_used == NULL) && _IO_legacy_file (fp))
-    /* This is for a stream in the glibc 2.0 format.  */
-    return -1;
+    if (__glibc_unlikely(&_IO_stdin_used == NULL) && _IO_legacy_file(fp))
+        /* This is for a stream in the glibc 2.0 format.  */
+    {
+        return -1;
+    }
 #endif
 
-  /* The orientation already has been determined.  */
-  if (fp->_mode != 0
-      /* Or the caller simply wants to know about the current orientation.  */
-      || mode == 0)
-    return fp->_mode;
-
-  /* Set the orientation appropriately.  */
-  if (mode > 0)
-    {
-      struct _IO_codecvt *cc = fp->_codecvt = &fp->_wide_data->_codecvt;
-
-      fp->_wide_data->_IO_read_ptr = fp->_wide_data->_IO_read_end;
-      fp->_wide_data->_IO_write_ptr = fp->_wide_data->_IO_write_base;
-
-      /* Get the character conversion functions based on the currently
-	 selected locale for LC_CTYPE.  */
-      {
-	/* Clear the state.  We start all over again.  */
-	memset (&fp->_wide_data->_IO_state, '\0', sizeof (__mbstate_t));
-	memset (&fp->_wide_data->_IO_last_state, '\0', sizeof (__mbstate_t));
-
-	struct gconv_fcts fcts;
-	__wcsmbs_clone_conv (&fcts);
-	assert (fcts.towc_nsteps == 1);
-	assert (fcts.tomb_nsteps == 1);
-
-	cc->__cd_in.step = fcts.towc;
-
-	cc->__cd_in.step_data.__invocation_counter = 0;
-	cc->__cd_in.step_data.__internal_use = 1;
-	cc->__cd_in.step_data.__flags = __GCONV_IS_LAST;
-	cc->__cd_in.step_data.__statep = &fp->_wide_data->_IO_state;
-
-	cc->__cd_out.step = fcts.tomb;
-
-	cc->__cd_out.step_data.__invocation_counter = 0;
-	cc->__cd_out.step_data.__internal_use = 1;
-	cc->__cd_out.step_data.__flags = __GCONV_IS_LAST | __GCONV_TRANSLIT;
-	cc->__cd_out.step_data.__statep = &fp->_wide_data->_IO_state;
-      }
-
-      /* From now on use the wide character callback functions.  */
-      _IO_JUMPS_FILE_plus (fp) = fp->_wide_data->_wide_vtable;
+    /* The orientation already has been determined.  */
+    if (fp->_mode != 0
+        /* Or the caller simply wants to know about the current orientation.  */
+        || mode == 0) {
+        return fp->_mode;
     }
 
-  /* Set the mode now.  */
-  fp->_mode = mode;
+    /* Set the orientation appropriately.  */
+    if (mode > 0) {
+        struct _IO_codecvt *cc = fp->_codecvt = &fp->_wide_data->_codecvt;
 
-  return mode;
-}
+        fp->_wide_data->_IO_read_ptr = fp->_wide_data->_IO_read_end;
+        fp->_wide_data->_IO_write_ptr = fp->_wide_data->_IO_write_base;
 
+        /* Get the character conversion functions based on the currently
+        selected locale for LC_CTYPE.  */
+        {
+            /* Clear the state.  We start all over again.  */
+            memset(&fp->_wide_data->_IO_state, '\0', sizeof(__mbstate_t));
+            memset(&fp->_wide_data->_IO_last_state, '\0', sizeof(__mbstate_t));
 
-enum __codecvt_result
-__libio_codecvt_out (struct _IO_codecvt *codecvt, __mbstate_t *statep,
-		     const wchar_t *from_start, const wchar_t *from_end,
-		     const wchar_t **from_stop, char *to_start, char *to_end,
-		     char **to_stop)
-{
-  enum __codecvt_result result;
+            struct gconv_fcts fcts;
+            __wcsmbs_clone_conv(&fcts);
+            assert(fcts.towc_nsteps == 1);
+            assert(fcts.tomb_nsteps == 1);
 
-  struct __gconv_step *gs = codecvt->__cd_out.step;
-  int status;
-  size_t dummy;
-  const unsigned char *from_start_copy = (unsigned char *) from_start;
+            cc->__cd_in.step = fcts.towc;
 
-  codecvt->__cd_out.step_data.__outbuf = (unsigned char *) to_start;
-  codecvt->__cd_out.step_data.__outbufend = (unsigned char *) to_end;
-  codecvt->__cd_out.step_data.__statep = statep;
+            cc->__cd_in.step_data.__invocation_counter = 0;
+            cc->__cd_in.step_data.__internal_use = 1;
+            cc->__cd_in.step_data.__flags = __GCONV_IS_LAST;
+            cc->__cd_in.step_data.__statep = &fp->_wide_data->_IO_state;
 
-  __gconv_fct fct = gs->__fct;
-  if (gs->__shlib_handle != NULL)
-    PTR_DEMANGLE (fct);
+            cc->__cd_out.step = fcts.tomb;
 
-  status = DL_CALL_FCT (fct,
-			(gs, &codecvt->__cd_out.step_data, &from_start_copy,
-			 (const unsigned char *) from_end, NULL,
-			 &dummy, 0, 0));
+            cc->__cd_out.step_data.__invocation_counter = 0;
+            cc->__cd_out.step_data.__internal_use = 1;
+            cc->__cd_out.step_data.__flags = __GCONV_IS_LAST | __GCONV_TRANSLIT;
+            cc->__cd_out.step_data.__statep = &fp->_wide_data->_IO_state;
+        }
 
-  *from_stop = (wchar_t *) from_start_copy;
-  *to_stop = (char *) codecvt->__cd_out.step_data.__outbuf;
-
-  switch (status)
-    {
-    case __GCONV_OK:
-    case __GCONV_EMPTY_INPUT:
-      result = __codecvt_ok;
-      break;
-
-    case __GCONV_FULL_OUTPUT:
-    case __GCONV_INCOMPLETE_INPUT:
-      result = __codecvt_partial;
-      break;
-
-    default:
-      result = __codecvt_error;
-      break;
+        /* From now on use the wide character callback functions.  */
+        _IO_JUMPS_FILE_plus(fp) = fp->_wide_data->_wide_vtable;
     }
 
-  return result;
+    /* Set the mode now.  */
+    fp->_mode = mode;
+
+    return mode;
 }
 
 
-enum __codecvt_result
-__libio_codecvt_in (struct _IO_codecvt *codecvt, __mbstate_t *statep,
-		    const char *from_start, const char *from_end,
-		    const char **from_stop,
-		    wchar_t *to_start, wchar_t *to_end, wchar_t **to_stop)
-{
-  enum __codecvt_result result;
+enum __codecvt_result __libio_codecvt_out(struct _IO_codecvt *codecvt, __mbstate_t *statep,
+        const wchar_t *from_start, const wchar_t *from_end,
+        const wchar_t **from_stop, char *to_start, char *to_end,
+        char **to_stop) {
+    enum __codecvt_result result;
 
-  struct __gconv_step *gs = codecvt->__cd_in.step;
-  int status;
-  size_t dummy;
-  const unsigned char *from_start_copy = (unsigned char *) from_start;
+    struct __gconv_step *gs = codecvt->__cd_out.step;
+    int status;
+    size_t dummy;
+    const unsigned char *from_start_copy = (unsigned char *) from_start;
 
-  codecvt->__cd_in.step_data.__outbuf = (unsigned char *) to_start;
-  codecvt->__cd_in.step_data.__outbufend = (unsigned char *) to_end;
-  codecvt->__cd_in.step_data.__statep = statep;
+    codecvt->__cd_out.step_data.__outbuf = (unsigned char *) to_start;
+    codecvt->__cd_out.step_data.__outbufend = (unsigned char *) to_end;
+    codecvt->__cd_out.step_data.__statep = statep;
 
-  __gconv_fct fct = gs->__fct;
-  if (gs->__shlib_handle != NULL)
-    PTR_DEMANGLE (fct);
-
-  status = DL_CALL_FCT (fct,
-			(gs, &codecvt->__cd_in.step_data, &from_start_copy,
-			 (const unsigned char *) from_end, NULL,
-			 &dummy, 0, 0));
-
-  *from_stop = (const char *) from_start_copy;
-  *to_stop = (wchar_t *) codecvt->__cd_in.step_data.__outbuf;
-
-  switch (status)
+    __gconv_fct fct = gs->__fct;
+    if (gs->__shlib_handle != NULL)
     {
-    case __GCONV_OK:
-    case __GCONV_EMPTY_INPUT:
-      result = __codecvt_ok;
-      break;
-
-    case __GCONV_FULL_OUTPUT:
-    case __GCONV_INCOMPLETE_INPUT:
-      result = __codecvt_partial;
-      break;
-
-    default:
-      result = __codecvt_error;
-      break;
+        PTR_DEMANGLE(fct);
     }
 
-  return result;
+    status = DL_CALL_FCT(fct,
+                         (gs, &codecvt->__cd_out.step_data, &from_start_copy,
+                          (const unsigned char *) from_end, NULL,
+                          &dummy, 0, 0));
+
+    *from_stop = (wchar_t *) from_start_copy;
+    *to_stop = (char *) codecvt->__cd_out.step_data.__outbuf;
+
+    switch (status)
+    {
+        case __GCONV_OK:
+        case __GCONV_EMPTY_INPUT:
+            result = __codecvt_ok;
+            break;
+
+        case __GCONV_FULL_OUTPUT:
+        case __GCONV_INCOMPLETE_INPUT:
+            result = __codecvt_partial;
+            break;
+
+        default:
+            result = __codecvt_error;
+            break;
+    }
+
+    return result;
 }
 
 
-int
-__libio_codecvt_encoding (struct _IO_codecvt *codecvt)
-{
-  /* See whether the encoding is stateful.  */
-  if (codecvt->__cd_in.step->__stateful)
-    return -1;
-  /* Fortunately not.  Now determine the input bytes for the conversion
-     necessary for each wide character.  */
-  if (codecvt->__cd_in.step->__min_needed_from
-      != codecvt->__cd_in.step->__max_needed_from)
-    /* Not a constant value.  */
-    return 0;
+enum __codecvt_result __libio_codecvt_in(struct _IO_codecvt *codecvt, __mbstate_t *statep,
+        const char *from_start, const char *from_end,
+        const char **from_stop,
+        wchar_t *to_start, wchar_t *to_end, wchar_t **to_stop) {
+    enum __codecvt_result result;
 
-  return codecvt->__cd_in.step->__min_needed_from;
+    struct __gconv_step *gs = codecvt->__cd_in.step;
+    int status;
+    size_t dummy;
+    const unsigned char *from_start_copy = (unsigned char *) from_start;
+
+    codecvt->__cd_in.step_data.__outbuf = (unsigned char *) to_start;
+    codecvt->__cd_in.step_data.__outbufend = (unsigned char *) to_end;
+    codecvt->__cd_in.step_data.__statep = statep;
+
+    __gconv_fct fct = gs->__fct;
+    if (gs->__shlib_handle != NULL)
+    {
+        PTR_DEMANGLE(fct);
+    }
+
+    status = DL_CALL_FCT(fct,
+                         (gs, &codecvt->__cd_in.step_data, &from_start_copy,
+                          (const unsigned char *) from_end, NULL,
+                          &dummy, 0, 0));
+
+    *from_stop = (const char *) from_start_copy;
+    *to_stop = (wchar_t *) codecvt->__cd_in.step_data.__outbuf;
+
+    switch (status)
+    {
+        case __GCONV_OK:
+        case __GCONV_EMPTY_INPUT:
+            result = __codecvt_ok;
+            break;
+
+        case __GCONV_FULL_OUTPUT:
+        case __GCONV_INCOMPLETE_INPUT:
+            result = __codecvt_partial;
+            break;
+
+        default:
+            result = __codecvt_error;
+            break;
+    }
+
+    return result;
 }
 
 
-int
-__libio_codecvt_length (struct _IO_codecvt *codecvt, __mbstate_t *statep,
-			const char *from_start, const char *from_end,
-			size_t max)
+int __libio_codecvt_encoding(struct _IO_codecvt *codecvt)
 {
-  int result;
-  const unsigned char *cp = (const unsigned char *) from_start;
-  wchar_t to_buf[max];
-  struct __gconv_step *gs = codecvt->__cd_in.step;
-  size_t dummy;
+    /* See whether the encoding is stateful.  */
+    if (codecvt->__cd_in.step->__stateful) {
+        return -1;
+    }
+    /* Fortunately not.  Now determine the input bytes for the conversion
+       necessary for each wide character.  */
+    if (codecvt->__cd_in.step->__min_needed_from
+        != codecvt->__cd_in.step->__max_needed_from)
+        /* Not a constant value.  */
+    {
+        return 0;
+    }
 
-  codecvt->__cd_in.step_data.__outbuf = (unsigned char *) to_buf;
-  codecvt->__cd_in.step_data.__outbufend = (unsigned char *) &to_buf[max];
-  codecvt->__cd_in.step_data.__statep = statep;
+    return codecvt->__cd_in.step->__min_needed_from;
+}
 
-  __gconv_fct fct = gs->__fct;
-  if (gs->__shlib_handle != NULL)
-    PTR_DEMANGLE (fct);
 
-  DL_CALL_FCT (fct,
-	       (gs, &codecvt->__cd_in.step_data, &cp,
-		(const unsigned char *) from_end, NULL,
-		&dummy, 0, 0));
+int __libio_codecvt_length(struct _IO_codecvt *codecvt, __mbstate_t *statep,
+                           const char *from_start, const char *from_end,
+                           size_t max)
+{
+    int result;
+    const unsigned char *cp = (const unsigned char *) from_start;
+    wchar_t to_buf[max];
+    struct __gconv_step *gs = codecvt->__cd_in.step;
+    size_t dummy;
 
-  result = cp - (const unsigned char *) from_start;
+    codecvt->__cd_in.step_data.__outbuf = (unsigned char *) to_buf;
+    codecvt->__cd_in.step_data.__outbufend = (unsigned char *) &to_buf[max];
+    codecvt->__cd_in.step_data.__statep = statep;
 
-  return result;
+    __gconv_fct fct = gs->__fct;
+    if (gs->__shlib_handle != NULL) {
+        PTR_DEMANGLE(fct);
+    }
+
+    DL_CALL_FCT(fct,
+                (gs, &codecvt->__cd_in.step_data, &cp,
+                 (const unsigned char *) from_end, NULL,
+                 &dummy, 0, 0));
+
+    result = cp - (const unsigned char *) from_start;
+
+    return result;
 }

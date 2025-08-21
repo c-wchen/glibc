@@ -26,44 +26,39 @@
 
 /* Returns the size of the extra TLS block, it must always be a multiple of the
    alignment.  */
-static inline size_t
-_dl_extra_tls_get_size (void)
+static inline size_t _dl_extra_tls_get_size(void)
 {
-  bool do_rseq = TUNABLE_GET_FULL (glibc, pthread, rseq, int, NULL);
-  if (do_rseq)
-    {
-      /* Make sure the rseq area size is at least the minimum ABI size and a
-         multiple of the requested aligment.  */
-      return roundup (MAX (_rseq_size, RSEQ_AREA_SIZE_INITIAL), _rseq_align);
+    bool do_rseq = TUNABLE_GET_FULL(glibc, pthread, rseq, int, NULL);
+    if (do_rseq) {
+        /* Make sure the rseq area size is at least the minimum ABI size and a
+           multiple of the requested aligment.  */
+        return roundup(MAX(_rseq_size, RSEQ_AREA_SIZE_INITIAL), _rseq_align);
     }
 
-  /* Even when disabled by tunable, an rseq area will be allocated to allow
-     application code to test the registration status with 'rseq->cpu_id >= 0'.
-     Default to the rseq ABI minimum size, this will ensure we don't use more
-     TLS than necessary.  */
-  return RSEQ_AREA_SIZE_INITIAL;
+    /* Even when disabled by tunable, an rseq area will be allocated to allow
+       application code to test the registration status with 'rseq->cpu_id >= 0'.
+       Default to the rseq ABI minimum size, this will ensure we don't use more
+       TLS than necessary.  */
+    return RSEQ_AREA_SIZE_INITIAL;
 }
 
 /* Returns the alignment requirements of the extra TLS block.  */
-static inline size_t
-_dl_extra_tls_get_align (void)
+static inline size_t _dl_extra_tls_get_align(void)
 {
-  bool do_rseq = TUNABLE_GET_FULL (glibc, pthread, rseq, int, NULL);
-  if (do_rseq)
-    {
-      return _rseq_align;
+    bool do_rseq = TUNABLE_GET_FULL(glibc, pthread, rseq, int, NULL);
+    if (do_rseq) {
+        return _rseq_align;
     }
 
-  /* Even when disabled by tunable, an rseq area will be allocated to allow
-     application code to test the registration status with 'rseq->cpu_id >= 0'.
-     Default to the rseq ABI minimum alignment, this will ensure we don't use
-     more TLS than necessary.  */
-  return RSEQ_MIN_ALIGN;
+    /* Even when disabled by tunable, an rseq area will be allocated to allow
+       application code to test the registration status with 'rseq->cpu_id >= 0'.
+       Default to the rseq ABI minimum alignment, this will ensure we don't use
+       more TLS than necessary.  */
+    return RSEQ_MIN_ALIGN;
 }
 
 /* Record the offset of the extra TLS block from the thread pointer.  */
-static inline void
-_dl_extra_tls_set_offset (ptrdiff_t tls_offset)
+static inline void _dl_extra_tls_set_offset(ptrdiff_t tls_offset)
 {
     _rseq_offset = tls_offset;
 }

@@ -19,36 +19,34 @@
 #include "pthreadP.h"
 #include <shlib-compat.h>
 
-int
-___pthread_timedjoin_np64 (pthread_t threadid, void **thread_return,
-                           const struct __timespec64 *abstime)
+int ___pthread_timedjoin_np64(pthread_t threadid, void **thread_return,
+                              const struct __timespec64 *abstime)
 {
-  return __pthread_clockjoin_ex (threadid, thread_return,
-                                 CLOCK_REALTIME, abstime, true);
+    return __pthread_clockjoin_ex(threadid, thread_return,
+                                  CLOCK_REALTIME, abstime, true);
 }
 
 #if __TIMESIZE == 64
-strong_alias (___pthread_timedjoin_np64, ___pthread_timedjoin_np)
+strong_alias(___pthread_timedjoin_np64, ___pthread_timedjoin_np)
 #else /* __TIMESPEC64 != 64 */
-strong_alias (___pthread_timedjoin_np64, __pthread_timedjoin_np64)
-libc_hidden_def (__pthread_timedjoin_np64)
+strong_alias(___pthread_timedjoin_np64, __pthread_timedjoin_np64)
+libc_hidden_def(__pthread_timedjoin_np64)
 
 int
-  ___pthread_timedjoin_np (pthread_t threadid, void **thread_return,
-                           const struct timespec *abstime)
+___pthread_timedjoin_np(pthread_t threadid, void **thread_return,
+                        const struct timespec *abstime)
 {
-  if (abstime != NULL)
-    {
-      struct __timespec64 ts64 = valid_timespec_to_timespec64 (*abstime);
-      return __pthread_timedjoin_np64 (threadid, thread_return, &ts64);
+    if (abstime != NULL) {
+        struct __timespec64 ts64 = valid_timespec_to_timespec64(*abstime);
+        return __pthread_timedjoin_np64(threadid, thread_return, &ts64);
+    } else {
+        return __pthread_timedjoin_np64(threadid, thread_return, NULL);
     }
-  else
-    return __pthread_timedjoin_np64 (threadid, thread_return, NULL);
 }
 #endif /* __TIMESPEC64 != 64 */
-versioned_symbol (libc, ___pthread_timedjoin_np, pthread_timedjoin_np,
-                  GLIBC_2_34);
+versioned_symbol(libc, ___pthread_timedjoin_np, pthread_timedjoin_np,
+                 GLIBC_2_34);
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_3_3, GLIBC_2_34)
-compat_symbol (libpthread, ___pthread_timedjoin_np, pthread_timedjoin_np,
-               GLIBC_2_3_3);
+compat_symbol(libpthread, ___pthread_timedjoin_np, pthread_timedjoin_np,
+              GLIBC_2_3_3);
 #endif

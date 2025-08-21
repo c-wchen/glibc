@@ -18,15 +18,15 @@
 
 #include <tst-tls23.h>
 
-__thread struct tls tls_var0 __attribute__ ((visibility ("hidden")));
+__thread struct tls tls_var0 __attribute__((visibility("hidden")));
 
 struct tls *
-apply_tls (struct tls *p)
+apply_tls(struct tls *p)
 {
-  INIT_TLS_CALL ();
-  BEFORE_TLS_CALL ();
-  tls_var0 = *p;
-  struct tls *ret = &tls_var0;
-  AFTER_TLS_CALL ();
-  return ret;
+    INIT_TLS_CALL();
+    BEFORE_TLS_CALL();
+    tls_var0 = *p;
+    struct tls *ret = &tls_var0;
+    AFTER_TLS_CALL();
+    return ret;
 }

@@ -19,22 +19,21 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-int
-__feupdateenv (const fenv_t *envp)
+int __feupdateenv(const fenv_t *envp)
 {
-  fpu_control_t temp;
+    fpu_control_t temp;
 
-  _FPU_GETCW (temp);
-  temp = (temp & FE_ALL_EXCEPT);
+    _FPU_GETCW(temp);
+    temp = (temp & FE_ALL_EXCEPT);
 
-  /* Raise the saved exception. Incidentally for us the implementation
-    defined format of the values in objects of type fexcept_t is the
-    same as the ones specified using the FE_* constants. */
-  __fesetenv (envp);
-  __feraiseexcept ((int) temp);
+    /* Raise the saved exception. Incidentally for us the implementation
+      defined format of the values in objects of type fexcept_t is the
+      same as the ones specified using the FE_* constants. */
+    __fesetenv(envp);
+    __feraiseexcept((int) temp);
 
-  return 0;
+    return 0;
 }
-libm_hidden_def (__feupdateenv)
-weak_alias (__feupdateenv, feupdateenv)
-libm_hidden_weak (feupdateenv)
+libm_hidden_def(__feupdateenv)
+weak_alias(__feupdateenv, feupdateenv)
+libm_hidden_weak(feupdateenv)

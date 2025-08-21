@@ -22,15 +22,16 @@
 
 #if LIBM_SVID_COMPAT && SHLIB_COMPAT (libm, GLIBC_2_0, GLIBC_2_38)
 /* wrapper fmodf */
-float
-__fmod_compatf (float x, float y)
+float __fmod_compatf(float x, float y)
 {
-  if (__builtin_expect (isinf (x) || y == 0.0f, 0)
-      && _LIB_VERSION != _IEEE_ && !isnan (y) && !isnan (x))
-    /* fmod(+-Inf,y) or fmod(x,0) */
-    return __kernel_standard_f (x, y, 127);
+    if (__builtin_expect(isinf(x) || y == 0.0f, 0)
+        && _LIB_VERSION != _IEEE_ && !isnan(y) && !isnan(x))
+        /* fmod(+-Inf,y) or fmod(x,0) */
+    {
+        return __kernel_standard_f(x, y, 127);
+    }
 
-  return __ieee754_fmodf (x, y);
+    return __ieee754_fmodf(x, y);
 }
-compat_symbol (libm, __fmod_compatf, fmodf, GLIBC_2_0);
+compat_symbol(libm, __fmod_compatf, fmodf, GLIBC_2_0);
 #endif

@@ -20,22 +20,22 @@
 #include <setxid.h>
 
 
-int
-setegid (gid_t gid)
+int setegid(gid_t gid)
 {
-  int result;
+    int result;
 
-  if (gid == (gid_t) ~0)
-    return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
+    if (gid == (gid_t) ~0) {
+        return INLINE_SYSCALL_ERROR_RETURN_VALUE(EINVAL);
+    }
 
 #ifdef __NR_setresgid32
-  result = INLINE_SETXID_SYSCALL (setresgid32, 3, -1, gid, -1);
+    result = INLINE_SETXID_SYSCALL(setresgid32, 3, -1, gid, -1);
 #else
-  result = INLINE_SETXID_SYSCALL (setresgid, 3, -1, gid, -1);
+    result = INLINE_SETXID_SYSCALL(setresgid, 3, -1, gid, -1);
 #endif
 
-  return result;
+    return result;
 }
 #ifndef setegid
-libc_hidden_def (setegid)
+libc_hidden_def(setegid)
 #endif

@@ -19,12 +19,11 @@
 
 /* Set memory like memset, but different argument order and no return
    value required.  Also only integer caller-saves may be used.  */
-void
-__aeabi_memclr (void *dest, size_t n)
+void __aeabi_memclr(void *dest, size_t n)
 {
-  memset (dest, 0, n);
+    memset(dest, 0, n);
 }
 
 /* Versions of the above which may assume memory alignment.  */
-strong_alias (__aeabi_memclr, __aeabi_memclr4)
-strong_alias (__aeabi_memclr, __aeabi_memclr8)
+strong_alias(__aeabi_memclr, __aeabi_memclr4)
+strong_alias(__aeabi_memclr, __aeabi_memclr8)

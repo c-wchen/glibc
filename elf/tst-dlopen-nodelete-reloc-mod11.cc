@@ -31,19 +31,17 @@ bool may_finalize_mod11 = false;
 
 extern template struct unique_symbol<9>;
 
-int
-global_function_mod11 (void)
+int global_function_mod11(void)
 {
-  return unique_symbol<9>::value;
+    return unique_symbol<9>::value;
 }
 
-static void __attribute__ ((destructor))
-fini (void)
+static void __attribute__((destructor))
+fini(void)
 {
-  if (!may_finalize_mod11)
-    {
-      puts ("error: tst-dlopen-nodelete-reloc-mod11.so destructor"
-            " called too early");
-      _exit (1);
+    if (!may_finalize_mod11) {
+        puts("error: tst-dlopen-nodelete-reloc-mod11.so destructor"
+             " called too early");
+        _exit(1);
     }
 }

@@ -33,47 +33,46 @@ extern sem_t order1;
 extern sem_t order2;
 
 /* glibc function for registering DSO-specific exit functions.  */
-extern int __cxa_atexit (void (*func) (void *), void *arg, void *dso_handle);
+extern int __cxa_atexit(void (*func)(void *), void *arg, void *dso_handle);
 
 /* Hidden compiler handle to this shared object.  */
-extern void *__dso_handle __attribute__ ((__weak__));
+extern void *__dso_handle __attribute__((__weak__));
 
-static void
-first (void *start)
+static void first(void *start)
 {
-  /* Let the exiting thread run.  */
-  sem_post (&order1);
+    /* Let the exiting thread run.  */
+    sem_post(&order1);
 
-  /* Wait for exiting thread to finish.  */
-  sem_wait (&order2);
+    /* Wait for exiting thread to finish.  */
+    sem_wait(&order2);
 
-  printf ("first\n");
+    printf("first\n");
 }
 
-static void
-second (void *start)
+static void second(void *start)
 {
-  /* We may be called from different threads.
-     This lock protects called.  */
-  static pthread_mutex_t mtx = PTHREAD_MUTEX_INITIALIZER;
-  static bool called = false;
+    /* We may be called from different threads.
+       This lock protects called.  */
+    static pthread_mutex_t mtx = PTHREAD_MUTEX_INITIALIZER;
+    static bool called = false;
 
-  xpthread_mutex_lock (&mtx);
-  if (called)
-    FAIL_EXIT1 ("second called twice!");
+    xpthread_mutex_lock(&mtx);
+    if (called) {
+        FAIL_EXIT1("second called twice!");
+    }
 
-  called = true;
-  xpthread_mutex_unlock (&mtx);
+    called = true;
+    xpthread_mutex_unlock(&mtx);
 
-  printf ("second\n");
+    printf("second\n");
 }
 
 
-__attribute__ ((constructor)) static void
-constructor (void)
+__attribute__((constructor)) static void
+constructor(void)
 {
-  sem_init (&order1, 0, 0);
-  sem_init (&order2, 0, 0);
-  __cxa_atexit (second, NULL, __dso_handle);
-  __cxa_atexit (first, NULL, __dso_handle);
+    sem_init(&order1, 0, 0);
+    sem_init(&order2, 0, 0);
+    __cxa_atexit(second, NULL, __dso_handle);
+    __cxa_atexit(first, NULL, __dso_handle);
 }

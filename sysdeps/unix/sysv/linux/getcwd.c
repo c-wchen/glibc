@@ -30,7 +30,7 @@
 /* If we compile the file for use in ld.so we don't need the feature
    that getcwd() allocates the buffers itself.  */
 #if IS_IN (rtld)
-# define NO_ALLOCATION	1
+# define NO_ALLOCATION  1
 #endif
 
 
@@ -41,93 +41,92 @@
    the proc filesystem mounted.  Use the POSIX implementation in this case.  */
 
 /* Get the code for the generic version.  */
-#define GETCWD_RETURN_TYPE	static char *
+#define GETCWD_RETURN_TYPE  static char *
 #include <sysdeps/posix/getcwd.c>
 
-char *
-__getcwd (char *buf, size_t size)
+char *__getcwd(char *buf, size_t size)
 {
-  char *path;
-  char *result;
+    char *path;
+    char *result;
 
 #ifndef NO_ALLOCATION
-  size_t alloc_size = size;
-  if (size == 0)
-    {
-      if (buf != NULL)
-	{
-	  __set_errno (EINVAL);
-	  return NULL;
-	}
+    size_t alloc_size = size;
+    if (size == 0) {
+        if (buf != NULL) {
+            __set_errno(EINVAL);
+            return NULL;
+        }
 
-      alloc_size = MAX (PATH_MAX, __getpagesize ());
+        alloc_size = MAX(PATH_MAX, __getpagesize());
     }
 
-  if (buf == NULL)
-    {
-      path = malloc (alloc_size);
-      if (path == NULL)
-	return NULL;
-    }
-  else
+    if (buf == NULL) {
+        path = malloc(alloc_size);
+        if (path == NULL) {
+            return NULL;
+        }
+    } else
 #else
 # define alloc_size size
 #endif
-    path = buf;
+        path = buf;
 
-  int retval;
+    int retval;
 
-  retval = INLINE_SYSCALL (getcwd, 2, path, alloc_size);
-  if (retval > 0 && path[0] == '/')
-    {
+    retval = INLINE_SYSCALL(getcwd, 2, path, alloc_size);
+    if (retval > 0 && path[0] == '/') {
 #ifndef NO_ALLOCATION
-      if (buf == NULL && size == 0)
-	/* Ensure that the buffer is only as large as necessary.  */
-	buf = realloc (path, (size_t) retval);
+        if (buf == NULL && size == 0)
+            /* Ensure that the buffer is only as large as necessary.  */
+        {
+            buf = realloc(path, (size_t) retval);
+        }
 
-      if (buf == NULL)
-	/* Either buf was NULL all along, or `realloc' failed but
-	   we still have the original string.  */
-	buf = path;
+        if (buf == NULL)
+            /* Either buf was NULL all along, or `realloc' failed but
+               we still have the original string.  */
+        {
+            buf = path;
+        }
 #endif
 
-      return buf;
+        return buf;
     }
 
-  /* The system call either cannot handle paths longer than a page
-     or can succeed without returning an absolute path.  Just use the
-     generic implementation right away.  */
-  if (retval >= 0 || errno == ENAMETOOLONG)
-    {
+    /* The system call either cannot handle paths longer than a page
+       or can succeed without returning an absolute path.  Just use the
+       generic implementation right away.  */
+    if (retval >= 0 || errno == ENAMETOOLONG) {
 #ifndef NO_ALLOCATION
-      if (buf == NULL && size == 0)
-	{
-	  free (path);
-	  path = NULL;
-	}
+        if (buf == NULL && size == 0) {
+            free(path);
+            path = NULL;
+        }
 #endif
 
-      result = __getcwd_generic (path, size);
+        result = __getcwd_generic(path, size);
 
 #ifndef NO_ALLOCATION
-      if (result == NULL && buf == NULL && size != 0)
-	free (path);
+        if (result == NULL && buf == NULL && size != 0) {
+            free(path);
+        }
 #endif
 
-      return result;
+        return result;
     }
 
-  /* It should never happen that the `getcwd' syscall failed because
-     the buffer is too small if we allocated the buffer ourselves
-     large enough.  */
-  assert (errno != ERANGE || buf != NULL || size != 0);
+    /* It should never happen that the `getcwd' syscall failed because
+       the buffer is too small if we allocated the buffer ourselves
+       large enough.  */
+    assert(errno != ERANGE || buf != NULL || size != 0);
 
 #ifndef NO_ALLOCATION
-  if (buf == NULL)
-    free (path);
+    if (buf == NULL) {
+        free(path);
+    }
 #endif
 
-  return NULL;
+    return NULL;
 }
-libc_hidden_def (__getcwd)
-weak_alias (__getcwd, getcwd)
+libc_hidden_def(__getcwd)
+weak_alias(__getcwd, getcwd)

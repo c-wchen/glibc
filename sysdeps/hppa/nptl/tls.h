@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _TLS_H
-#define _TLS_H	1
+#define _TLS_H  1
 
 #include <dl-sysdep.h>
 
@@ -34,28 +34,27 @@
 # include <sysdep.h>
 
 /* The TP points to the start of the thread blocks.  */
-# define TLS_DTV_AT_TP	1
-# define TLS_TCB_AT_TP	0
+# define TLS_DTV_AT_TP  1
+# define TLS_TCB_AT_TP  0
 
 /* Get the thread descriptor definition.  */
 # include <nptl/descr.h>
 
 # include <thread_pointer.h>
 
-typedef struct
-{
-  dtv_t *dtv;
-  void *private;
+typedef struct {
+    dtv_t *dtv;
+    void *private;
 } tcbhead_t;
 
 /* This is the size of the initial TCB.  */
-# define TLS_INIT_TCB_SIZE	sizeof (tcbhead_t)
+# define TLS_INIT_TCB_SIZE  sizeof (tcbhead_t)
 
 /* This is the size of the TCB.  */
-# define TLS_TCB_SIZE		sizeof (tcbhead_t)
+# define TLS_TCB_SIZE       sizeof (tcbhead_t)
 
 /* This is the size we need before TCB */
-# define TLS_PRE_TCB_SIZE	sizeof (struct pthread)
+# define TLS_PRE_TCB_SIZE   sizeof (struct pthread)
 
 /* Install the dtv pointer.  The pointer passed is to the element with
    index -1 which contain the length.  */
@@ -64,8 +63,8 @@ typedef struct
 
 /* Install new dtv for current thread.  */
 # define INSTALL_NEW_DTV(dtv) \
-  ({ tcbhead_t *__tcbp = (tcbhead_t *)__thread_pointer();	\
-	__tcbp->dtv = dtv;				\
+  ({ tcbhead_t *__tcbp = (tcbhead_t *)__thread_pointer();   \
+    __tcbp->dtv = dtv;              \
    })
 
 /* Return dtv of given thread descriptor.  */
@@ -83,15 +82,15 @@ typedef struct
 
 /* Return the address of the dtv for the current thread.  */
 # define THREAD_DTV() \
-  ({ tcbhead_t *__tcbp = (tcbhead_t *)__thread_pointer();	\
-	__tcbp->dtv;					\
+  ({ tcbhead_t *__tcbp = (tcbhead_t *)__thread_pointer();   \
+    __tcbp->dtv;                    \
    })
 
 /* Return the thread descriptor for the current thread.  */
 # define THREAD_SELF \
-  ({ struct pthread *__self;			\
-	__self = (struct pthread *)__thread_pointer();	\
-	__self - 1;				\
+  ({ struct pthread *__self;            \
+    __self = (struct pthread *)__thread_pointer();  \
+    __self - 1;             \
    })
 
 /* Magic for libthread_db to know how to do THREAD_SELF.
@@ -107,22 +106,22 @@ typedef struct
 #define THREAD_GSCOPE_FLAG_USED   1
 #define THREAD_GSCOPE_FLAG_WAIT   2
 #define THREAD_GSCOPE_RESET_FLAG() \
-  do									     \
-    { int __res								     \
-	= atomic_exchange_release (&THREAD_SELF->header.gscope_flag,	     \
-			       THREAD_GSCOPE_FLAG_UNUSED);		     \
-      if (__res == THREAD_GSCOPE_FLAG_WAIT)				     \
-	lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1, LLL_PRIVATE);   \
-    }									     \
+  do                                         \
+    { int __res                                  \
+    = atomic_exchange_release (&THREAD_SELF->header.gscope_flag,         \
+                   THREAD_GSCOPE_FLAG_UNUSED);           \
+      if (__res == THREAD_GSCOPE_FLAG_WAIT)                  \
+    lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1, LLL_PRIVATE);   \
+    }                                        \
   while (0)
 #define THREAD_GSCOPE_SET_FLAG() \
-  do									     \
-    {									     \
-      THREAD_SELF->header.gscope_flag = THREAD_GSCOPE_FLAG_USED;	     \
-      atomic_write_barrier ();						     \
-    }									     \
+  do                                         \
+    {                                        \
+      THREAD_SELF->header.gscope_flag = THREAD_GSCOPE_FLAG_USED;         \
+      atomic_write_barrier ();                           \
+    }                                        \
   while (0)
 
 #endif /* !__ASSEMBLER__ */
 
-#endif	/* tls.h */
+#endif  /* tls.h */

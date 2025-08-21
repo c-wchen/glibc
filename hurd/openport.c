@@ -21,8 +21,7 @@
 /* User entry point for interning a port as a new FD.
    Just like _hurd_intern_fd, but don't dealloc PORT on error.  */
 
-int
-openport (io_t port, int flags)
+int openport(io_t port, int flags)
 {
-  return _hurd_intern_fd (port, flags, 0);
+    return _hurd_intern_fd(port, flags, 0);
 }

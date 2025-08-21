@@ -21,25 +21,26 @@
 #include <math_private.h>
 
 
-int
-__fpclassifyl (long double x)
+int __fpclassifyl(long double x)
 {
-  uint32_t ex, hx, lx;
-  int retval = FP_NORMAL;
+    uint32_t ex, hx, lx;
+    int retval = FP_NORMAL;
 
-  GET_LDOUBLE_WORDS (ex, hx, lx, x);
-  ex &= 0x7fff;
-  if ((ex | lx | hx) == 0)
-    retval = FP_ZERO;
-  else if (ex == 0 && (hx & 0x80000000) == 0)
-    retval = FP_SUBNORMAL;
-  /* Pseudo-normals, i.e. pseudo-zero, pseudo-infinity and un-normals.  They
-     behave like NaNs, so categorize them as such.  */
-  else if ((hx & 0x80000000) == 0)
-    retval = FP_NAN;
-  else if (ex == 0x7fff)
-    retval = ((hx & 0x7fffffff) | lx) != 0 ? FP_NAN : FP_INFINITE;
+    GET_LDOUBLE_WORDS(ex, hx, lx, x);
+    ex &= 0x7fff;
+    if ((ex | lx | hx) == 0) {
+        retval = FP_ZERO;
+    } else if (ex == 0 && (hx & 0x80000000) == 0) {
+        retval = FP_SUBNORMAL;
+    }
+    /* Pseudo-normals, i.e. pseudo-zero, pseudo-infinity and un-normals.  They
+       behave like NaNs, so categorize them as such.  */
+    else if ((hx & 0x80000000) == 0) {
+        retval = FP_NAN;
+    } else if (ex == 0x7fff) {
+        retval = ((hx & 0x7fffffff) | lx) != 0 ? FP_NAN : FP_INFINITE;
+    }
 
-  return retval;
+    return retval;
 }
-libm_hidden_def (__fpclassifyl)
+libm_hidden_def(__fpclassifyl)

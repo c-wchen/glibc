@@ -16,7 +16,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _ATOMIC_MACHINE_H
-#define _ATOMIC_MACHINE_H	1
+#define _ATOMIC_MACHINE_H   1
 
 #define atomic_full_barrier() __sync_synchronize ()
 
@@ -26,7 +26,7 @@
 /* We use the compiler atomic load and store builtins as the generic
    defines are not atomic.  In particular, we need to use compare and
    exchange for stores as the implementation is synthesized.  */
-void __atomic_link_error (void);
+void __atomic_link_error(void);
 #define __atomic_check_size_ls(mem) \
  if ((sizeof (*mem) != 1) && (sizeof (*mem) != 2) && sizeof (*mem) != 4)    \
    __atomic_link_error ();
@@ -69,35 +69,35 @@ void __atomic_link_error (void);
 
 /* The only basic operation needed is compare and exchange.  The mem
    pointer must be word aligned.  We no longer loop on deadlock.  */
-#define atomic_compare_and_exchange_val_acq(mem, newval, oldval)	\
-  ({									\
-     register long lws_errno asm("r21");				\
-     register unsigned long lws_ret asm("r28");				\
-     register unsigned long lws_mem asm("r26") = (unsigned long)(mem);	\
+#define atomic_compare_and_exchange_val_acq(mem, newval, oldval)    \
+  ({                                    \
+     register long lws_errno asm("r21");                \
+     register unsigned long lws_ret asm("r28");             \
+     register unsigned long lws_mem asm("r26") = (unsigned long)(mem);  \
      register unsigned long lws_old asm("r25") = (unsigned long)(oldval);\
      register unsigned long lws_new asm("r24") = (unsigned long)(newval);\
-     __asm__ __volatile__(						\
-	"0:					\n\t"			\
-	"ble	" _LWS "(%%sr2, %%r0)		\n\t"			\
-	"ldi	" _LWS_CAS ", %%r20		\n\t"			\
-	"cmpiclr,<> " _ASM_EAGAIN ", %%r21, %%r0\n\t"			\
-	"b,n 0b					\n\t"			\
-	"cmpclr,= %%r0, %%r21, %%r0		\n\t"			\
-	"iitlbp %%r0,(%%sr0, %%r0)		\n\t"			\
-	: "=r" (lws_ret), "=r" (lws_errno)				\
-	: "r" (lws_mem), "r" (lws_old), "r" (lws_new)			\
-	: _LWS_CLOBBER							\
-     );									\
-									\
-     (__typeof (oldval)) lws_ret;					\
+     __asm__ __volatile__(                      \
+    "0:					\n\t"           \
+    "ble	" _LWS "(%%sr2, %%r0)		\n\t"           \
+    "ldi	" _LWS_CAS ", %%r20		\n\t"         \
+    "cmpiclr,<> " _ASM_EAGAIN ", %%r21, %%r0\n\t"           \
+    "b,n 0b					\n\t"           \
+    "cmpclr,= %%r0, %%r21, %%r0		\n\t"          \
+    "iitlbp %%r0,(%%sr0, %%r0)		\n\t"           \
+    : "=r" (lws_ret), "=r" (lws_errno)              \
+    : "r" (lws_mem), "r" (lws_old), "r" (lws_new)           \
+    : _LWS_CLOBBER                          \
+     );                                 \
+                                    \
+     (__typeof (oldval)) lws_ret;                   \
    })
 
-#define atomic_compare_and_exchange_bool_acq(mem, newval, oldval)	\
-  ({									\
-     __typeof__ (*mem) ret;						\
-     ret = atomic_compare_and_exchange_val_acq(mem, newval, oldval);	\
-     /* Return 1 if it was already acquired.  */			\
-     (ret != oldval);							\
+#define atomic_compare_and_exchange_bool_acq(mem, newval, oldval)   \
+  ({                                    \
+     __typeof__ (*mem) ret;                     \
+     ret = atomic_compare_and_exchange_val_acq(mem, newval, oldval);    \
+     /* Return 1 if it was already acquired.  */            \
+     (ret != oldval);                           \
    })
 
 #endif

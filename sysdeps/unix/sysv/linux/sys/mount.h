@@ -19,7 +19,7 @@
 /* This is taken from /usr/include/linux/fs.h.  */
 
 #ifndef _SYS_MOUNT_H
-#define _SYS_MOUNT_H	1
+#define _SYS_MOUNT_H    1
 
 #include <fcntl.h>
 #include <features.h>
@@ -34,108 +34,107 @@
 #endif
 
 
-#define BLOCK_SIZE_BITS	10
-#define BLOCK_SIZE	(1<<BLOCK_SIZE_BITS)
+#define BLOCK_SIZE_BITS 10
+#define BLOCK_SIZE  (1<<BLOCK_SIZE_BITS)
 
 
 /* These are the fs-independent mount-flags: up to 16 flags are
    supported  */
-enum
-{
+enum {
 #undef MS_RDONLY
-  MS_RDONLY = 1,		/* Mount read-only.  */
-#define MS_RDONLY	MS_RDONLY
+    MS_RDONLY = 1,        /* Mount read-only.  */
+#define MS_RDONLY   MS_RDONLY
 #undef MS_NOSUID
-  MS_NOSUID = 2,		/* Ignore suid and sgid bits.  */
-#define MS_NOSUID	MS_NOSUID
+    MS_NOSUID = 2,        /* Ignore suid and sgid bits.  */
+#define MS_NOSUID   MS_NOSUID
 #undef MS_NODEV
-  MS_NODEV = 4,			/* Disallow access to device special files.  */
-#define MS_NODEV	MS_NODEV
+    MS_NODEV = 4,         /* Disallow access to device special files.  */
+#define MS_NODEV    MS_NODEV
 #undef MS_NOEXEC
-  MS_NOEXEC = 8,		/* Disallow program execution.  */
-#define MS_NOEXEC	MS_NOEXEC
+    MS_NOEXEC = 8,        /* Disallow program execution.  */
+#define MS_NOEXEC   MS_NOEXEC
 #undef MS_SYNCHRONOUS
-  MS_SYNCHRONOUS = 16,		/* Writes are synced at once.  */
-#define MS_SYNCHRONOUS	MS_SYNCHRONOUS
+    MS_SYNCHRONOUS = 16,      /* Writes are synced at once.  */
+#define MS_SYNCHRONOUS  MS_SYNCHRONOUS
 #undef MS_REMOUNT
-  MS_REMOUNT = 32,		/* Alter flags of a mounted FS.  */
-#define MS_REMOUNT	MS_REMOUNT
+    MS_REMOUNT = 32,      /* Alter flags of a mounted FS.  */
+#define MS_REMOUNT  MS_REMOUNT
 #undef MS_MANDLOCK
-  MS_MANDLOCK = 64,		/* Allow mandatory locks on an FS.  */
-#define MS_MANDLOCK	MS_MANDLOCK
+    MS_MANDLOCK = 64,     /* Allow mandatory locks on an FS.  */
+#define MS_MANDLOCK MS_MANDLOCK
 #undef MS_DIRSYNC
-  MS_DIRSYNC = 128,		/* Directory modifications are synchronous.  */
-#define MS_DIRSYNC	MS_DIRSYNC
+    MS_DIRSYNC = 128,     /* Directory modifications are synchronous.  */
+#define MS_DIRSYNC  MS_DIRSYNC
 #undef MS_NOSYMFOLLOW
-  MS_NOSYMFOLLOW = 256,		/* Do not follow symlinks.  */
-#define MS_NOSYMFOLLOW	MS_NOSYMFOLLOW
+    MS_NOSYMFOLLOW = 256,     /* Do not follow symlinks.  */
+#define MS_NOSYMFOLLOW  MS_NOSYMFOLLOW
 #undef MS_NOATIME
-  MS_NOATIME = 1024,		/* Do not update access times.  */
-#define MS_NOATIME	MS_NOATIME
+    MS_NOATIME = 1024,        /* Do not update access times.  */
+#define MS_NOATIME  MS_NOATIME
 #undef MS_NODIRATIME
-  MS_NODIRATIME = 2048,		/* Do not update directory access times.  */
-#define MS_NODIRATIME	MS_NODIRATIME
+    MS_NODIRATIME = 2048,     /* Do not update directory access times.  */
+#define MS_NODIRATIME   MS_NODIRATIME
 #undef MS_BIND
-  MS_BIND = 4096,		/* Bind directory at different place.  */
-#define MS_BIND		MS_BIND
+    MS_BIND = 4096,       /* Bind directory at different place.  */
+#define MS_BIND     MS_BIND
 #undef MS_MOVE
-  MS_MOVE = 8192,
-#define MS_MOVE		MS_MOVE
+    MS_MOVE = 8192,
+#define MS_MOVE     MS_MOVE
 #undef MS_REC
-  MS_REC = 16384,
-#define MS_REC		MS_REC
+    MS_REC = 16384,
+#define MS_REC      MS_REC
 #undef MS_SILENT
-  MS_SILENT = 32768,
-#define MS_SILENT	MS_SILENT
+    MS_SILENT = 32768,
+#define MS_SILENT   MS_SILENT
 #undef MS_POSIXACL
-  MS_POSIXACL = 1 << 16,	/* VFS does not apply the umask.  */
-#define MS_POSIXACL	MS_POSIXACL
+    MS_POSIXACL = 1 << 16,    /* VFS does not apply the umask.  */
+#define MS_POSIXACL MS_POSIXACL
 #undef MS_UNBINDABLE
-  MS_UNBINDABLE = 1 << 17,	/* Change to unbindable.  */
-#define MS_UNBINDABLE	MS_UNBINDABLE
+    MS_UNBINDABLE = 1 << 17,  /* Change to unbindable.  */
+#define MS_UNBINDABLE   MS_UNBINDABLE
 #undef MS_PRIVATE
-  MS_PRIVATE = 1 << 18,		/* Change to private.  */
-#define MS_PRIVATE	MS_PRIVATE
+    MS_PRIVATE = 1 << 18,     /* Change to private.  */
+#define MS_PRIVATE  MS_PRIVATE
 #undef MS_SLAVE
-  MS_SLAVE = 1 << 19,		/* Change to slave.  */
-#define MS_SLAVE	MS_SLAVE
+    MS_SLAVE = 1 << 19,       /* Change to slave.  */
+#define MS_SLAVE    MS_SLAVE
 #undef MS_SHARED
-  MS_SHARED = 1 << 20,		/* Change to shared.  */
-#define MS_SHARED	MS_SHARED
+    MS_SHARED = 1 << 20,      /* Change to shared.  */
+#define MS_SHARED   MS_SHARED
 #undef MS_RELATIME
-  MS_RELATIME = 1 << 21,	/* Update atime relative to mtime/ctime.  */
-#define MS_RELATIME	MS_RELATIME
+    MS_RELATIME = 1 << 21,    /* Update atime relative to mtime/ctime.  */
+#define MS_RELATIME MS_RELATIME
 #undef MS_KERNMOUNT
-  MS_KERNMOUNT = 1 << 22,	/* This is a kern_mount call.  */
-#define MS_KERNMOUNT	MS_KERNMOUNT
+    MS_KERNMOUNT = 1 << 22,   /* This is a kern_mount call.  */
+#define MS_KERNMOUNT    MS_KERNMOUNT
 #undef MS_I_VERSION
-  MS_I_VERSION =  1 << 23,	/* Update inode I_version field.  */
-#define MS_I_VERSION	MS_I_VERSION
+    MS_I_VERSION =  1 << 23,  /* Update inode I_version field.  */
+#define MS_I_VERSION    MS_I_VERSION
 #undef MS_STRICTATIME
-  MS_STRICTATIME = 1 << 24,	/* Always perform atime updates.  */
-#define MS_STRICTATIME	MS_STRICTATIME
+    MS_STRICTATIME = 1 << 24, /* Always perform atime updates.  */
+#define MS_STRICTATIME  MS_STRICTATIME
 #undef MS_LAZYTIME
-  MS_LAZYTIME = 1 << 25,	/* Update the on-disk [acm]times lazily.  */
-#define MS_LAZYTIME	MS_LAZYTIME
+    MS_LAZYTIME = 1 << 25,    /* Update the on-disk [acm]times lazily.  */
+#define MS_LAZYTIME MS_LAZYTIME
 #undef MS_ACTIVE
-  MS_ACTIVE = 1 << 30,
-#define MS_ACTIVE	MS_ACTIVE
+    MS_ACTIVE = 1 << 30,
+#define MS_ACTIVE   MS_ACTIVE
 #undef MS_NOUSER
-  MS_NOUSER = 1U << 31
-#define MS_NOUSER	MS_NOUSER
+    MS_NOUSER = 1U << 31
+#define MS_NOUSER   MS_NOUSER
 };
 
 /* Flags that can be altered by MS_REMOUNT  */
 #undef MS_RMT_MASK
 #define MS_RMT_MASK (MS_RDONLY|MS_SYNCHRONOUS|MS_MANDLOCK|MS_I_VERSION \
-		     |MS_LAZYTIME)
+             |MS_LAZYTIME)
 
 
 /* Magic mount flag number. Has to be or-ed to the flag values.  */
 
 #undef MS_MGC_VAL
-#define MS_MGC_VAL 0xc0ed0000	/* Magic flag number to indicate "new" flags */
-#define MS_MGC_MSK 0xffff0000	/* Magic flag number mask */
+#define MS_MGC_VAL 0xc0ed0000   /* Magic flag number to indicate "new" flags */
+#define MS_MGC_MSK 0xffff0000   /* Magic flag number mask */
 
 
 /* The read-only stuff doesn't really belong here, but any other place
@@ -175,15 +174,14 @@ enum
 
 
 /* Possible value for FLAGS parameter of `umount2'.  */
-enum
-{
-  MNT_FORCE = 1,		/* Force unmounting.  */
+enum {
+    MNT_FORCE = 1,        /* Force unmounting.  */
 #define MNT_FORCE MNT_FORCE
-  MNT_DETACH = 2,		/* Just detach from the tree.  */
+    MNT_DETACH = 2,       /* Just detach from the tree.  */
 #define MNT_DETACH MNT_DETACH
-  MNT_EXPIRE = 4,		/* Mark for expiry.  */
+    MNT_EXPIRE = 4,       /* Mark for expiry.  */
 #define MNT_EXPIRE MNT_EXPIRE
-  UMOUNT_NOFOLLOW = 8		/* Don't follow symlink on umount.  */
+    UMOUNT_NOFOLLOW = 8       /* Don't follow symlink on umount.  */
 #define UMOUNT_NOFOLLOW UMOUNT_NOFOLLOW
 };
 
@@ -207,12 +205,11 @@ enum
 
 #ifndef MOUNT_ATTR_SIZE_VER0
 /* For mount_setattr.  */
-struct mount_attr
-{
-  uint64_t attr_set;
-  uint64_t attr_clr;
-  uint64_t propagation;
-  uint64_t userns_fd;
+struct mount_attr {
+    uint64_t attr_set;
+    uint64_t attr_clr;
+    uint64_t propagation;
+    uint64_t userns_fd;
 };
 #endif
 
@@ -238,25 +235,24 @@ struct mount_attr
 
 #ifndef FSOPEN_CLOEXEC
 /* The type of fsconfig call made.   */
-enum fsconfig_command
-{
-  FSCONFIG_SET_FLAG       = 0,    /* Set parameter, supplying no value */
+enum fsconfig_command {
+    FSCONFIG_SET_FLAG       = 0,    /* Set parameter, supplying no value */
 # define FSCONFIG_SET_FLAG FSCONFIG_SET_FLAG
-  FSCONFIG_SET_STRING     = 1,    /* Set parameter, supplying a string value */
+    FSCONFIG_SET_STRING     = 1,    /* Set parameter, supplying a string value */
 # define FSCONFIG_SET_STRING FSCONFIG_SET_STRING
-  FSCONFIG_SET_BINARY     = 2,    /* Set parameter, supplying a binary blob value */
+    FSCONFIG_SET_BINARY     = 2,    /* Set parameter, supplying a binary blob value */
 # define FSCONFIG_SET_BINARY FSCONFIG_SET_BINARY
-  FSCONFIG_SET_PATH       = 3,    /* Set parameter, supplying an object by path */
+    FSCONFIG_SET_PATH       = 3,    /* Set parameter, supplying an object by path */
 # define FSCONFIG_SET_PATH FSCONFIG_SET_PATH
-  FSCONFIG_SET_PATH_EMPTY = 4,    /* Set parameter, supplying an object by (empty) path */
+    FSCONFIG_SET_PATH_EMPTY = 4,    /* Set parameter, supplying an object by (empty) path */
 # define FSCONFIG_SET_PATH_EMPTY FSCONFIG_SET_PATH_EMPTY
-  FSCONFIG_SET_FD         = 5,    /* Set parameter, supplying an object by fd */
+    FSCONFIG_SET_FD         = 5,    /* Set parameter, supplying an object by fd */
 # define FSCONFIG_SET_FD FSCONFIG_SET_FD
-  FSCONFIG_CMD_CREATE     = 6,    /* Invoke superblock creation */
+    FSCONFIG_CMD_CREATE     = 6,    /* Invoke superblock creation */
 # define FSCONFIG_CMD_CREATE FSCONFIG_CMD_CREATE
-  FSCONFIG_CMD_RECONFIGURE = 7,   /* Invoke superblock reconfiguration */
+    FSCONFIG_CMD_RECONFIGURE = 7,   /* Invoke superblock reconfiguration */
 # define FSCONFIG_CMD_RECONFIGURE FSCONFIG_CMD_RECONFIGURE
-  FSCONFIG_CMD_CREATE_EXCL = 8,    /* Create new superblock, fail if reusing existing superblock */
+    FSCONFIG_CMD_CREATE_EXCL = 8,    /* Create new superblock, fail if reusing existing superblock */
 # define FSCONFIG_CMD_CREATE_EXCL FSCONFIG_CMD_CREATE_EXCL
 };
 #endif
@@ -272,53 +268,53 @@ enum fsconfig_command
 __BEGIN_DECLS
 
 /* Mount a filesystem.  */
-extern int mount (const char *__special_file, const char *__dir,
-		  const char *__fstype, unsigned long int __rwflag,
-		  const void *__data) __THROW;
+extern int mount(const char *__special_file, const char *__dir,
+                 const char *__fstype, unsigned long int __rwflag,
+                 const void *__data) __THROW;
 
 /* Unmount a filesystem.  */
-extern int umount (const char *__special_file) __THROW;
+extern int umount(const char *__special_file) __THROW;
 
 /* Unmount a filesystem.  Force unmounting if FLAGS is set to MNT_FORCE.  */
-extern int umount2 (const char *__special_file, int __flags) __THROW;
+extern int umount2(const char *__special_file, int __flags) __THROW;
 
 /* Open the filesystem referenced by FS_NAME so it can be configured for
    mouting.  */
-extern int fsopen (const char *__fs_name, unsigned int __flags) __THROW;
+extern int fsopen(const char *__fs_name, unsigned int __flags) __THROW;
 
 /* Create a mount representation for the FD created by fsopen using
    FLAGS with ATTR_FLAGS describing how the mount is to be performed.  */
-extern int fsmount (int __fd, unsigned int __flags,
-		    unsigned int __ms_flags) __THROW;
+extern int fsmount(int __fd, unsigned int __flags,
+                   unsigned int __ms_flags) __THROW;
 
 /* Add the mounted FROM_DFD referenced by FROM_PATHNAME filesystem returned
    by fsmount in the hierarchy in the place TO_DFD reference by TO_PATHNAME
    using FLAGS.  */
-extern int move_mount (int __from_dfd, const char *__from_pathname,
-		       int __to_dfd, const char *__to_pathname,
-		       unsigned int flags) __THROW;
+extern int move_mount(int __from_dfd, const char *__from_pathname,
+                      int __to_dfd, const char *__to_pathname,
+                      unsigned int flags) __THROW;
 
 /* Set parameters and trigger CMD action on the FD context.  KEY, VALUE,
    and AUX are used depending ng of the CMD.  */
-extern int fsconfig (int __fd, unsigned int __cmd, const char *__key,
-		     const void *__value, int __aux) __THROW;
+extern int fsconfig(int __fd, unsigned int __cmd, const char *__key,
+                    const void *__value, int __aux) __THROW;
 
 /* Equivalent of fopen for an existing mount point.  */
-extern int fspick (int __dfd, const char *__path, unsigned int __flags)
-  __THROW;
+extern int fspick(int __dfd, const char *__path, unsigned int __flags)
+__THROW;
 
 /* Open the mount point FILENAME in directory DFD using FLAGS.  */
-extern int open_tree (int __dfd, const char *__filename, unsigned int __flags)
-  __THROW;
+extern int open_tree(int __dfd, const char *__filename, unsigned int __flags)
+__THROW;
 
 /* Change the mount properties of the mount or an entire mount tree.  If
    PATH is a relative pathname, then it is interpreted relative to the
    directory referred to by the file descriptor dirfd.  Otherwise if DFD is
    the special value AT_FDCWD then PATH is interpreted relative to the current
    working directory of the calling process.  */
-extern int mount_setattr (int __dfd, const char *__path, unsigned int __flags,
-			  struct mount_attr *__uattr, size_t __usize)
-  __THROW;
+extern int mount_setattr(int __dfd, const char *__path, unsigned int __flags,
+                         struct mount_attr *__uattr, size_t __usize)
+__THROW;
 
 __END_DECLS
 

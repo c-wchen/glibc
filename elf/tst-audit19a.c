@@ -21,18 +21,17 @@
 #include <support/xdlfcn.h>
 #include <support/check.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  void *h = xdlopen ("tst-auditmod19a.so", RTLD_NOW);
+    void *h = xdlopen("tst-auditmod19a.so", RTLD_NOW);
 
-  struct link_map *lmap;
-  TEST_VERIFY_EXIT (dlinfo (h, RTLD_DI_LINKMAP, &lmap) == 0);
+    struct link_map *lmap;
+    TEST_VERIFY_EXIT(dlinfo(h, RTLD_DI_LINKMAP, &lmap) == 0);
 
-  /* The internal array is only allocated if profiling is enabled.  */
-  TEST_VERIFY (lmap->l_reloc_result == NULL);
+    /* The internal array is only allocated if profiling is enabled.  */
+    TEST_VERIFY(lmap->l_reloc_result == NULL);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -23,10 +23,9 @@
 
 extern const char __dl_hwcap_names[] attribute_hidden;
 
-struct hwcap_info_t
-{
-  unsigned int value;
-  int hwcap;
+struct hwcap_info_t {
+    unsigned int value;
+    int hwcap;
 };
 extern const struct hwcap_info_t __dl_hwcap_info[] attribute_hidden;
 extern size_t __dl_hwcap_info_size attribute_hidden;

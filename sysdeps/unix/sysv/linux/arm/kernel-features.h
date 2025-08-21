@@ -28,18 +28,18 @@
 #endif
 
 /* ARM fadvise64_64 reorganize the syscall arguments.  */
-#define __ASSUME_FADVISE64_64_6ARG	1
+#define __ASSUME_FADVISE64_64_6ARG  1
 
 /* Define this if your 32-bit syscall API requires 64-bit register
    pairs to start with an even-number register.  */
-#define __ASSUME_ALIGNED_REGISTER_PAIRS	1
+#define __ASSUME_ALIGNED_REGISTER_PAIRS 1
 
 /* ARM only has a syscall for fadvise64{_64} and it is defined with a
    non-standard name.  */
 #define __NR_fadvise64_64 __NR_arm_fadvise64_64
 
 #define __ASSUME_RECV_SYSCALL   1
-#define __ASSUME_SEND_SYSCALL	1
+#define __ASSUME_SEND_SYSCALL   1
 
 /* Support for the mlock2 and copy_file_range syscalls was added to
    the compat syscall table for 64-bit kernels in 4.7, although
@@ -49,7 +49,7 @@
 #endif
 
 #undef __ASSUME_CLONE_DEFAULT
-#define __ASSUME_CLONE_BACKWARDS	1
+#define __ASSUME_CLONE_BACKWARDS    1
 
 #if __BYTE_ORDER == __BIG_ENDIAN
 # define __ASSUME_SYSVIPC_BROKEN_MODE_T

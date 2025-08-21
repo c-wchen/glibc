@@ -22,53 +22,56 @@
 #include "nis_xdr.h"
 #include "nis_intern.h"
 
-nis_result *
-nis_modify (const_nis_name name, const nis_object *obj2)
+nis_result *nis_modify(const_nis_name name, const nis_object *obj2)
 {
-  nis_object obj;
-  nis_result *res;
-  nis_error status;
-  struct ns_request req;
-  size_t namelen = strlen (name);
-  char buf1[namelen + 20];
-  char buf4[namelen + 20];
+    nis_object obj;
+    nis_result *res;
+    nis_error status;
+    struct ns_request req;
+    size_t namelen = strlen(name);
+    char buf1[namelen + 20];
+    char buf4[namelen + 20];
 
-  res = calloc (1, sizeof (nis_result));
-  if (res == NULL)
-    return NULL;
-
-  req.ns_name = (char *) name;
-
-  memcpy (&obj, obj2, sizeof (nis_object));
-
-  if (obj.zo_name == NULL || obj.zo_name[0] == '\0')
-    obj.zo_name = nis_leaf_of_r (name, buf1, sizeof (buf1));
-
-  if (obj.zo_owner == NULL || obj.zo_owner[0] == '\0')
-    obj.zo_owner = nis_local_principal ();
-
-  if (obj.zo_group == NULL || obj.zo_group[0] == '\0')
-    obj.zo_group = nis_local_group ();
-
-  obj.zo_domain = nis_domain_of_r (name, buf4, sizeof (buf4));
-
-  req.ns_object.ns_object_val = nis_clone_object (&obj, NULL);
-  if (req.ns_object.ns_object_val == NULL)
-    {
-      NIS_RES_STATUS (res) = NIS_NOMEMORY;
-      return res;
+    res = calloc(1, sizeof(nis_result));
+    if (res == NULL) {
+        return NULL;
     }
-  req.ns_object.ns_object_len = 1;
 
-  status = __do_niscall (name, NIS_MODIFY, (xdrproc_t) _xdr_ns_request,
-			 (caddr_t) & req, (xdrproc_t) _xdr_nis_result,
-			 (caddr_t) res, MASTER_ONLY,
-			 NULL);
-  if (status != NIS_SUCCESS)
-    NIS_RES_STATUS (res) = status;
+    req.ns_name = (char *) name;
 
-  nis_destroy_object (req.ns_object.ns_object_val);
+    memcpy(&obj, obj2, sizeof(nis_object));
 
-  return res;
+    if (obj.zo_name == NULL || obj.zo_name[0] == '\0') {
+        obj.zo_name = nis_leaf_of_r(name, buf1, sizeof(buf1));
+    }
+
+    if (obj.zo_owner == NULL || obj.zo_owner[0] == '\0') {
+        obj.zo_owner = nis_local_principal();
+    }
+
+    if (obj.zo_group == NULL || obj.zo_group[0] == '\0') {
+        obj.zo_group = nis_local_group();
+    }
+
+    obj.zo_domain = nis_domain_of_r(name, buf4, sizeof(buf4));
+
+    req.ns_object.ns_object_val = nis_clone_object(&obj, NULL);
+    if (req.ns_object.ns_object_val == NULL) {
+        NIS_RES_STATUS(res) = NIS_NOMEMORY;
+        return res;
+    }
+    req.ns_object.ns_object_len = 1;
+
+    status = __do_niscall(name, NIS_MODIFY, (xdrproc_t) _xdr_ns_request,
+                          (caddr_t) & req, (xdrproc_t) _xdr_nis_result,
+                          (caddr_t) res, MASTER_ONLY,
+                          NULL);
+    if (status != NIS_SUCCESS) {
+        NIS_RES_STATUS(res) = status;
+    }
+
+    nis_destroy_object(req.ns_object.ns_object_val);
+
+    return res;
 }
-libnsl_hidden_nolink_def (nis_modify, GLIBC_2_1)
+libnsl_hidden_nolink_def(nis_modify, GLIBC_2_1)

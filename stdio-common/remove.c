@@ -19,12 +19,11 @@
 #include <errno.h>
 #include <stdio.h>
 
-int
-remove (const char *file)
+int remove(const char *file)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (remove)
+libc_hidden_def(remove)
 
-stub_warning (remove)
+stub_warning(remove)

@@ -18,8 +18,7 @@
 
 #include <support/xthread.h>
 
-void
-xpthread_mutexattr_init (pthread_mutexattr_t *attr)
+void xpthread_mutexattr_init(pthread_mutexattr_t *attr)
 {
-  xpthread_check_return ("pthread_mutexattr_init", pthread_mutexattr_init (attr));
+    xpthread_check_return("pthread_mutexattr_init", pthread_mutexattr_init(attr));
 }

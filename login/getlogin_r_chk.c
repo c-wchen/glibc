@@ -18,12 +18,12 @@
 #include <unistd.h>
 
 
-int
-__getlogin_r_chk (char *buf, size_t buflen, size_t nreal)
+int __getlogin_r_chk(char *buf, size_t buflen, size_t nreal)
 {
-  if (buflen > nreal)
-    __chk_fail ();
+    if (buflen > nreal) {
+        __chk_fail();
+    }
 
-  return getlogin_r (buf, buflen);
+    return getlogin_r(buf, buflen);
 }
-libc_hidden_def (__getlogin_r_chk)
+libc_hidden_def(__getlogin_r_chk)

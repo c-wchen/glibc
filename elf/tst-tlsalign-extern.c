@@ -35,39 +35,36 @@ extern __thread int tbss1;
 extern __thread int tbss2;
 extern __thread int tbss3;
 
-static int
-test_one (const char *which, unsigned int alignment, int *var, int value)
+static int test_one(const char *which, unsigned int alignment, int *var, int value)
 {
-  uintptr_t addr = (uintptr_t) var;
-  unsigned int misalign = addr & (alignment - 1);
+    uintptr_t addr = (uintptr_t) var;
+    unsigned int misalign = addr & (alignment - 1);
 
-  printf ("%s TLS address %p %% %u = %u\n",
-	  which, (void *) var, alignment, misalign);
+    printf("%s TLS address %p %% %u = %u\n",
+           which, (void *) var, alignment, misalign);
 
-  int got = *var;
-  if (got != value)
-    {
-      printf ("%s value %d should be %d\n", which, got, value);
-      return 1;
+    int got = *var;
+    if (got != value) {
+        printf("%s value %d should be %d\n", which, got, value);
+        return 1;
     }
 
-  return misalign != 0;
+    return misalign != 0;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int fail = 0;
+    int fail = 0;
 
-  fail |= test_one ("tdata1", 4, &tdata1, 1);
-  fail |= test_one ("tdata2", 0x10, &tdata2, 2);
-  fail |= test_one ("tdata3", 0x1000, &tdata3, 4);
+    fail |= test_one("tdata1", 4, &tdata1, 1);
+    fail |= test_one("tdata2", 0x10, &tdata2, 2);
+    fail |= test_one("tdata3", 0x1000, &tdata3, 4);
 
-  fail |= test_one ("tbss1", 4, &tbss1, 0);
-  fail |= test_one ("tbss2", 0x10, &tbss2, 0);
-  fail |= test_one ("tbss3", 0x1000, &tbss3, 0);
+    fail |= test_one("tbss1", 4, &tbss1, 0);
+    fail |= test_one("tbss2", 0x10, &tbss2, 0);
+    fail |= test_one("tbss3", 0x1000, &tbss3, 0);
 
-  return fail ? EXIT_FAILURE : EXIT_SUCCESS;
+    return fail ? EXIT_FAILURE : EXIT_SUCCESS;
 }
 
 #include <support/test-driver.c>

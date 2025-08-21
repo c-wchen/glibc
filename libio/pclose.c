@@ -32,10 +32,9 @@
 /* POSIX does not require us to check that a stream passed to pclose()
    was created by popen().  Instead we rely on _IO_SYSCLOSE to call
    _proc_close when appropriate.  */
-int
-__new_pclose (FILE *fp)
+int __new_pclose(FILE *fp)
 {
-  return _IO_new_fclose (fp);
+    return _IO_new_fclose(fp);
 }
 
-versioned_symbol (libc, __new_pclose, pclose, GLIBC_2_1);
+versioned_symbol(libc, __new_pclose, pclose, GLIBC_2_1);

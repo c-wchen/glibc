@@ -20,30 +20,30 @@
 # include <time/sys/time.h>
 
 # ifndef _ISOMAC
-extern int __gettimeofday (struct timeval *__tv,
-			   void *__tz);
-extern int __settimezone (const struct timezone *__tz)
-	attribute_hidden;
-extern int __adjtime (const struct timeval *__delta,
-		      struct timeval *__olddelta);
+extern int __gettimeofday(struct timeval *__tv,
+                          void *__tz);
+extern int __settimezone(const struct timezone *__tz)
+attribute_hidden;
+extern int __adjtime(const struct timeval *__delta,
+                     struct timeval *__olddelta);
 
 #  include <struct___timeval64.h>
 #  if __TIMESIZE == 64
 #   define __adjtime64 __adjtime
 #  else
-extern int __adjtime64 (const struct __timeval64 *itv,
-                        struct __timeval64 *otv);
-libc_hidden_proto (__adjtime64)
+extern int __adjtime64(const struct __timeval64 *itv,
+                       struct __timeval64 *otv);
+libc_hidden_proto(__adjtime64)
 #  endif
-extern int __getitimer (enum __itimer_which __which,
-			struct itimerval *__value);
-extern int __setitimer (enum __itimer_which __which,
-			const struct itimerval *__restrict __new,
-			struct itimerval *__restrict __old)
-	attribute_hidden;
-extern int __utimes (const char *__file, const struct timeval __tvp[2])
-	attribute_hidden;
-extern int __futimes (int fd, const struct timeval tvp[2]) attribute_hidden;
+extern int __getitimer(enum __itimer_which __which,
+                       struct itimerval *__value);
+extern int __setitimer(enum __itimer_which __which,
+                       const struct itimerval *__restrict __new,
+                       struct itimerval *__restrict __old)
+attribute_hidden;
+extern int __utimes(const char *__file, const struct timeval __tvp[2])
+attribute_hidden;
+extern int __futimes(int fd, const struct timeval tvp[2]) attribute_hidden;
 
 # endif
 #endif

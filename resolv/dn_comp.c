@@ -88,16 +88,15 @@
 /* Packs domain name SRC in presentation form into DST.  Returns the
    size of the compressed name or -1.  DSTSIZ is the size of the array
    pointed to by COMPDN.  */
-int
-___dn_comp (const char *src, unsigned char *dst, int dstsiz,
-            unsigned char **dnptrs, unsigned char **lastdnptr)
+int ___dn_comp(const char *src, unsigned char *dst, int dstsiz,
+               unsigned char **dnptrs, unsigned char **lastdnptr)
 {
-  return __ns_name_compress (src, dst, (size_t) dstsiz,
-                             (const unsigned char **) dnptrs,
-                             (const unsigned char **) lastdnptr);
+    return __ns_name_compress(src, dst, (size_t) dstsiz,
+                              (const unsigned char **) dnptrs,
+                              (const unsigned char **) lastdnptr);
 }
-versioned_symbol (libc, ___dn_comp, dn_comp, GLIBC_2_34);
+versioned_symbol(libc, ___dn_comp, dn_comp, GLIBC_2_34);
 
 #if OTHER_SHLIB_COMPAT (libresolv, GLIBC_2_0, GLIBC_2_34)
-compat_symbol (libresolv, ___dn_comp, __dn_comp, GLIBC_2_0);
+compat_symbol(libresolv, ___dn_comp, __dn_comp, GLIBC_2_0);
 #endif

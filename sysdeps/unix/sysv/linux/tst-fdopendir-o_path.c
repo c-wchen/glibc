@@ -23,26 +23,25 @@
 #include <support/temp_file.h>
 #include <support/xunistd.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char *dirname = support_create_temp_directory ("tst-fdopendir-o_path");
+    char *dirname = support_create_temp_directory("tst-fdopendir-o_path");
 
-  {
-    int fd = xopen (dirname, O_RDONLY |  O_DIRECTORY, 0600);
-    DIR *dir = fdopendir (fd);
-    TEST_VERIFY_EXIT (dir != NULL);
-    closedir (dir);
-  }
+    {
+        int fd = xopen(dirname, O_RDONLY |  O_DIRECTORY, 0600);
+        DIR *dir = fdopendir(fd);
+        TEST_VERIFY_EXIT(dir != NULL);
+        closedir(dir);
+    }
 
-  {
-    int fd = xopen (dirname, O_RDONLY | O_PATH | O_DIRECTORY, 0600);
-    TEST_VERIFY (fdopendir (fd) == NULL);
-    TEST_COMPARE (errno, EBADF);
-    xclose (fd);
-  }
+    {
+        int fd = xopen(dirname, O_RDONLY | O_PATH | O_DIRECTORY, 0600);
+        TEST_VERIFY(fdopendir(fd) == NULL);
+        TEST_COMPARE(errno, EBADF);
+        xclose(fd);
+    }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

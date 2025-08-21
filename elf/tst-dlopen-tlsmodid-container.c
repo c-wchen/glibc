@@ -23,16 +23,16 @@
 
 static char *iconv_path;
 
-static __attribute__ ((constructor)) void
-iconv_path_init (void)
+static __attribute__((constructor)) void
+iconv_path_init(void)
 {
-  iconv_path = xasprintf ("%s/iconv", support_bindir_prefix);
+    iconv_path = xasprintf("%s/iconv", support_bindir_prefix);
 }
 
-static __attribute__ ((destructor)) void
-iconv_path_fini (void)
+static __attribute__((destructor)) void
+iconv_path_fini(void)
 {
-  free (iconv_path);
+    free(iconv_path);
 }
 
 #define TST_DLOPEN_TLSMODID_PATH iconv_path

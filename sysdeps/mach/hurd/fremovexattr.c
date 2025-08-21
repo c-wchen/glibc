@@ -22,12 +22,11 @@
 #include <hurd/xattr.h>
 #include <hurd/fd.h>
 
-int
-fremovexattr (int fd, const char *name)
+int fremovexattr(int fd, const char *name)
 {
-  error_t err;
+    error_t err;
 
-  err = HURD_DPORT_USE (fd, _hurd_xattr_remove (port, name));
+    err = HURD_DPORT_USE(fd, _hurd_xattr_remove(port, name));
 
-  return err ? __hurd_dfail (fd, err) : 0;
+    return err ? __hurd_dfail(fd, err) : 0;
 }

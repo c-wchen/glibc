@@ -24,8 +24,8 @@
 
 __BEGIN_DECLS
 
-extern int __riscv_flush_icache (void *__start, void *__end,
-				 unsigned long int __flags);
+extern int __riscv_flush_icache(void *__start, void *__end,
+                                unsigned long int __flags);
 
 __END_DECLS
 

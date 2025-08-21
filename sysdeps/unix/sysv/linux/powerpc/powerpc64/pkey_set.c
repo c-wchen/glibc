@@ -20,31 +20,31 @@
 #include <errno.h>
 #include <sys/mman.h>
 
-int
-__pkey_set (int key, unsigned int rights)
+int __pkey_set(int key, unsigned int rights)
 {
-  if (key < 0 || key > PKEY_MAX || rights > 3)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (key < 0 || key > PKEY_MAX || rights > 3) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  /* Translate to AMR bit values.  */
-  unsigned long int bits;
-  if (rights & PKEY_DISABLE_ACCESS)
-    /* The PKEY_DISABLE_WRITE bit does not matter.  */
-    bits = PKEY_AMR_READ | PKEY_AMR_WRITE;
-  else if (rights == PKEY_DISABLE_WRITE)
-    bits = PKEY_AMR_WRITE;
-  else
-    bits = 0;
+    /* Translate to AMR bit values.  */
+    unsigned long int bits;
+    if (rights & PKEY_DISABLE_ACCESS)
+        /* The PKEY_DISABLE_WRITE bit does not matter.  */
+    {
+        bits = PKEY_AMR_READ | PKEY_AMR_WRITE;
+    } else if (rights == PKEY_DISABLE_WRITE) {
+        bits = PKEY_AMR_WRITE;
+    } else {
+        bits = 0;
+    }
 
-  unsigned int index = pkey_index (key);
-  unsigned long int mask = 3UL << index;
-  unsigned long int amr = pkey_read ();
-  amr = (amr & ~mask) | (bits << index);
-  pkey_write (amr);
-  return 0;
+    unsigned int index = pkey_index(key);
+    unsigned long int mask = 3UL << index;
+    unsigned long int amr = pkey_read();
+    amr = (amr & ~mask) | (bits << index);
+    pkey_write(amr);
+    return 0;
 }
-libc_hidden_def (__pkey_set)
-weak_alias (__pkey_set, pkey_set)
+libc_hidden_def(__pkey_set)
+weak_alias(__pkey_set, pkey_set)

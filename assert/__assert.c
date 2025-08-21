@@ -19,8 +19,7 @@
 #undef NDEBUG
 #include <assert.h>
 
-void
-__assert (const char *assertion, const char *file, int line)
+void __assert(const char *assertion, const char *file, int line)
 {
-  __assert_fail (assertion, file, line, (const char *) 0);
+    __assert_fail(assertion, file, line, (const char *) 0);
 }

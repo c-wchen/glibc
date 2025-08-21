@@ -25,15 +25,15 @@
 
 #if STDC_HEADERS || _LIBC
 #include <stdlib.h>
-static VOID *fixup_null_alloc (size_t n) __THROW;
-VOID *xmalloc (size_t n) __THROW;
-VOID *xcalloc (size_t n, size_t s) __THROW;
-VOID *xrealloc (VOID *p, size_t n) __THROW;
+static VOID *fixup_null_alloc(size_t n) __THROW;
+VOID *xmalloc(size_t n) __THROW;
+VOID *xcalloc(size_t n, size_t s) __THROW;
+VOID *xrealloc(VOID *p, size_t n) __THROW;
 #else
-VOID *calloc ();
-VOID *malloc ();
-VOID *realloc ();
-void free ();
+VOID *calloc();
+VOID *malloc();
+VOID *realloc();
+void free();
 #endif
 
 #include <libintl.h>
@@ -51,56 +51,58 @@ void free ();
    The caller may set it to some other value.  */
 int xmalloc_exit_failure = EXIT_FAILURE;
 
-static VOID *
-fixup_null_alloc (size_t n)
+static VOID *fixup_null_alloc(size_t n)
 {
-  VOID *p;
+    VOID *p;
 
-  p = NULL;
-  if (n == 0)
-    p = malloc ((size_t) 1);
-  if (p == NULL)
-    error (xmalloc_exit_failure, 0, _("memory exhausted"));
-  return p;
+    p = NULL;
+    if (n == 0) {
+        p = malloc((size_t) 1);
+    }
+    if (p == NULL) {
+        error(xmalloc_exit_failure, 0, _("memory exhausted"));
+    }
+    return p;
 }
 
 /* Allocate N bytes of memory dynamically, with error checking.  */
 
-VOID *
-xmalloc (size_t n)
+VOID *xmalloc(size_t n)
 {
-  VOID *p;
+    VOID *p;
 
-  p = malloc (n);
-  if (p == NULL)
-    p = fixup_null_alloc (n);
-  return p;
+    p = malloc(n);
+    if (p == NULL) {
+        p = fixup_null_alloc(n);
+    }
+    return p;
 }
 
 /* Allocate memory for N elements of S bytes, with error checking.  */
 
-VOID *
-xcalloc (size_t n, size_t s)
+VOID *xcalloc(size_t n, size_t s)
 {
-  VOID *p;
+    VOID *p;
 
-  p = calloc (n, s);
-  if (p == NULL)
-    p = fixup_null_alloc (n);
-  return p;
+    p = calloc(n, s);
+    if (p == NULL) {
+        p = fixup_null_alloc(n);
+    }
+    return p;
 }
 
 /* Change the size of an allocated block of memory P to N bytes,
    with error checking.
    If P is NULL, run xmalloc.  */
 
-VOID *
-xrealloc (VOID *p, size_t n)
+VOID *xrealloc(VOID *p, size_t n)
 {
-  if (p == NULL)
-    return xmalloc (n);
-  p = realloc (p, n);
-  if (p == NULL)
-    p = fixup_null_alloc (n);
-  return p;
+    if (p == NULL) {
+        return xmalloc(n);
+    }
+    p = realloc(p, n);
+    if (p == NULL) {
+        p = fixup_null_alloc(n);
+    }
+    return p;
 }

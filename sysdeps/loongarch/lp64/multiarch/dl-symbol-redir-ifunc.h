@@ -20,8 +20,8 @@
 #define _DL_IFUNC_GENERIC_H
 
 #ifndef SHARED
-asm ("memset = __memset_aligned");
-asm ("memcmp = __memcmp_aligned");
+asm("memset = __memset_aligned");
+asm("memcmp = __memcmp_aligned");
 #endif
 
 #endif

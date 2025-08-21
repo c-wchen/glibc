@@ -25,79 +25,80 @@
 #include <support/check.h>
 #include <support/test-driver.h>
 
-static void
-do_test_1 (const char *modname, bool fail)
+static void do_test_1(const char *modname, bool fail)
 {
-  int (*fp) (void);
-  void *h;
+    int (*fp)(void);
+    void *h;
 
-  h = dlopen (modname, RTLD_LAZY);
-  if (h == NULL)
-    {
-      const char *err = dlerror ();
-      if (fail)
-	{
-	  if (strstr (err, "CPU ISA level is lower than required") == NULL)
-	    FAIL_EXIT1 ("incorrect dlopen '%s' error: %s\n", modname, err);
+    h = dlopen(modname, RTLD_LAZY);
+    if (h == NULL) {
+        const char *err = dlerror();
+        if (fail) {
+            if (strstr(err, "CPU ISA level is lower than required") == NULL) {
+                FAIL_EXIT1("incorrect dlopen '%s' error: %s\n", modname, err);
+            }
 
-	  return;
-	}
+            return;
+        }
 
-      FAIL_EXIT1 ("cannot open '%s': %s\n", modname, err);
+        FAIL_EXIT1("cannot open '%s': %s\n", modname, err);
     }
 
-  if (fail)
-    FAIL_EXIT1 ("dlopen '%s' should have failed\n", modname);
+    if (fail) {
+        FAIL_EXIT1("dlopen '%s' should have failed\n", modname);
+    }
 
-  fp = xdlsym (h, "test");
+    fp = xdlsym(h, "test");
 
-  if (fp () != 0)
-    FAIL_EXIT1 ("test () != 0\n");
+    if (fp() != 0) {
+        FAIL_EXIT1("test () != 0\n");
+    }
 
-  dlclose (h);
+    dlclose(h);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  const struct cpu_features *cpu_features = __get_cpu_features ();
-  unsigned int isa_level = get_isa_level (cpu_features);
-  bool has_isa_baseline = ((isa_level & GNU_PROPERTY_X86_ISA_1_BASELINE)
-			   == GNU_PROPERTY_X86_ISA_1_BASELINE);
-  bool has_isa_v2 = ((isa_level & GNU_PROPERTY_X86_ISA_1_V2)
-			   == GNU_PROPERTY_X86_ISA_1_V2);
-  bool has_isa_v3 = ((isa_level & GNU_PROPERTY_X86_ISA_1_V3)
-			   == GNU_PROPERTY_X86_ISA_1_V3);
-  bool has_isa_v4 = ((isa_level & GNU_PROPERTY_X86_ISA_1_V4)
-			   == GNU_PROPERTY_X86_ISA_1_V4);
+    const struct cpu_features *cpu_features = __get_cpu_features();
+    unsigned int isa_level = get_isa_level(cpu_features);
+    bool has_isa_baseline = ((isa_level & GNU_PROPERTY_X86_ISA_1_BASELINE)
+                             == GNU_PROPERTY_X86_ISA_1_BASELINE);
+    bool has_isa_v2 = ((isa_level & GNU_PROPERTY_X86_ISA_1_V2)
+                       == GNU_PROPERTY_X86_ISA_1_V2);
+    bool has_isa_v3 = ((isa_level & GNU_PROPERTY_X86_ISA_1_V3)
+                       == GNU_PROPERTY_X86_ISA_1_V3);
+    bool has_isa_v4 = ((isa_level & GNU_PROPERTY_X86_ISA_1_V4)
+                       == GNU_PROPERTY_X86_ISA_1_V4);
 
-  if (!has_isa_baseline)
-    {
-      do_test_1 ("tst-isa-level-mod-1-baseline.so", true);
-      return EXIT_SUCCESS;
+    if (!has_isa_baseline) {
+        do_test_1("tst-isa-level-mod-1-baseline.so", true);
+        return EXIT_SUCCESS;
     }
 
-  do_test_1 ("tst-isa-level-mod-1-baseline.so", false);
+    do_test_1("tst-isa-level-mod-1-baseline.so", false);
 
-  /* Skip on x86-64-v4 platforms since dlopen v4 module always works.  */
-  if (has_isa_v4)
+    /* Skip on x86-64-v4 platforms since dlopen v4 module always works.  */
+    if (has_isa_v4) {
+        return EXIT_SUCCESS;
+    }
+
+    do_test_1("tst-isa-level-mod-1-v4.so", true);
+
+    /* Skip on x86-64-v3 platforms since dlopen v3 module always works.  */
+    if (has_isa_v3) {
+        return EXIT_SUCCESS;
+    }
+
+    do_test_1("tst-isa-level-mod-1-v3.so", true);
+
+    /* Skip on x86-64-v2 platforms since dlopen v2 module always works.  */
+    if (has_isa_v2) {
+        return EXIT_SUCCESS;
+    }
+
+    do_test_1("tst-isa-level-mod-1-v2.so", true);
+
     return EXIT_SUCCESS;
-
-  do_test_1 ("tst-isa-level-mod-1-v4.so", true);
-
-  /* Skip on x86-64-v3 platforms since dlopen v3 module always works.  */
-  if (has_isa_v3)
-    return EXIT_SUCCESS;
-
-  do_test_1 ("tst-isa-level-mod-1-v3.so", true);
-
-  /* Skip on x86-64-v2 platforms since dlopen v2 module always works.  */
-  if (has_isa_v2)
-    return EXIT_SUCCESS;
-
-  do_test_1 ("tst-isa-level-mod-1-v2.so", true);
-
-  return EXIT_SUCCESS;
 }
 
 #include <support/test-driver.c>

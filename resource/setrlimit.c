@@ -23,13 +23,12 @@
 /* Set the soft and hard limits for RESOURCE to *RLIMITS.
    Only the super-user can increase hard limits.
    Return 0 if successful, -1 if not (and sets errno).  */
-int
-__setrlimit (enum __rlimit_resource resource, const struct rlimit *rlimits)
+int __setrlimit(enum __rlimit_resource resource, const struct rlimit *rlimits)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (__setrlimit)
-weak_alias (__setrlimit, setrlimit)
+libc_hidden_def(__setrlimit)
+weak_alias(__setrlimit, setrlimit)
 
-stub_warning (setrlimit)
+stub_warning(setrlimit)

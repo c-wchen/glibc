@@ -2,8 +2,7 @@
 #include <complex.h>
 
 double
-attribute_hidden
-creall (double _Complex x)
+attribute_hidden creall(double _Complex x)
 {
-  return creal (x);
+    return creal(x);
 }

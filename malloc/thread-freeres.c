@@ -26,17 +26,16 @@
    for threads during shutdown for correctness reasons.  Unlike
    __libc_freeres, skipping calls to it is not a valid optimization.
    This is called directly from pthread_create as the thread exits.  */
-void
-__libc_thread_freeres (void)
+void __libc_thread_freeres(void)
 {
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_32)
-  __rpc_thread_destroy ();
+    __rpc_thread_destroy();
 #endif
-  call_function_static_weak (__res_thread_freeres);
-  call_function_static_weak (__glibc_tls_internal_free);
-  call_function_static_weak (__libc_dlerror_result_free);
+    call_function_static_weak(__res_thread_freeres);
+    call_function_static_weak(__glibc_tls_internal_free);
+    call_function_static_weak(__libc_dlerror_result_free);
 
-  /* This should come last because it shuts down malloc for this
-     thread and the other shutdown functions might well call free.  */
-  call_function_static_weak (__malloc_arena_thread_freeres);
+    /* This should come last because it shuts down malloc for this
+       thread and the other shutdown functions might well call free.  */
+    call_function_static_weak(__malloc_arena_thread_freeres);
 }

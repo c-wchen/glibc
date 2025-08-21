@@ -17,26 +17,26 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-static inline int __attribute__ ((unused))
-sigset_set_old_mask (sigset_t *set, int mask)
+static inline int __attribute__((unused))
+sigset_set_old_mask(sigset_t *set, int mask)
 {
-  unsigned long int *ptr;
-  int cnt;
+    unsigned long int *ptr;
+    int cnt;
 
-  ptr = &set->__val[0];
+    ptr = &set->__val[0];
 
-  *ptr++ = (unsigned int) mask;
+    *ptr++ = (unsigned int) mask;
 
-  cnt = _SIGSET_NWORDS - 2;
-  do
-    *ptr++ = 0ul;
-  while (--cnt >= 0);
+    cnt = _SIGSET_NWORDS - 2;
+    do {
+        *ptr++ = 0ul;
+    } while (--cnt >= 0);
 
-  return 0;
+    return 0;
 }
 
-static inline int __attribute__ ((unused))
-sigset_get_old_mask (const sigset_t *set)
+static inline int __attribute__((unused))
+sigset_get_old_mask(const sigset_t *set)
 {
-  return (unsigned int) set->__val[0];
+    return (unsigned int) set->__val[0];
 }

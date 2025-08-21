@@ -20,16 +20,15 @@
 #include <string.h>
 #include <limits.h>
 
-int
-__lcong48_r (unsigned short int param[7], struct drand48_data *buffer)
+int __lcong48_r(unsigned short int param[7], struct drand48_data *buffer)
 {
-  /* Store the given values.  */
-  memcpy (buffer->__x, &param[0], sizeof (buffer->__x));
-  buffer->__a = ((uint64_t) param[5] << 32 | (uint32_t) param[4] << 16
-		 | param[3]);
-  buffer->__c = param[6];
-  buffer->__init = 1;
+    /* Store the given values.  */
+    memcpy(buffer->__x, &param[0], sizeof(buffer->__x));
+    buffer->__a = ((uint64_t) param[5] << 32 | (uint32_t) param[4] << 16
+                   | param[3]);
+    buffer->__c = param[6];
+    buffer->__init = 1;
 
-  return 0;
+    return 0;
 }
-weak_alias (__lcong48_r, lcong48_r)
+weak_alias(__lcong48_r, lcong48_r)

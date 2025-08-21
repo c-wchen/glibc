@@ -1,8 +1,7 @@
 #include "nldbl-compat.h"
 
 double
-attribute_hidden
-ceill (double x)
+attribute_hidden ceill(double x)
 {
-  return ceil (x);
+    return ceil(x);
 }

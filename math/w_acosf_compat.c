@@ -24,18 +24,16 @@
 
 #if LIBM_SVID_COMPAT
 /* wrapper acosf */
-float
-__acosf (float x)
+float __acosf(float x)
 {
-  if (__builtin_expect (isgreater (fabsf (x), 1.0f), 0)
-      && _LIB_VERSION != _IEEE_)
-    {
-      /* acos(|x|>1) */
-      feraiseexcept (FE_INVALID);
-      return __kernel_standard_f (x, x, 101);
+    if (__builtin_expect(isgreater(fabsf(x), 1.0f), 0)
+        && _LIB_VERSION != _IEEE_) {
+        /* acos(|x|>1) */
+        feraiseexcept(FE_INVALID);
+        return __kernel_standard_f(x, x, 101);
     }
 
-  return __ieee754_acosf (x);
+    return __ieee754_acosf(x);
 }
-libm_alias_float (__acos, acos)
+libm_alias_float(__acos, acos)
 #endif

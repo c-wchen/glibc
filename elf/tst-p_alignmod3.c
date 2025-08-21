@@ -18,8 +18,7 @@
 
 #include "tst-p_align.h"
 
-int
-do_load_test (void)
+int do_load_test(void)
 {
-  return 0;
+    return 0;
 }

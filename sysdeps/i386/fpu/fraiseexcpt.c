@@ -19,105 +19,99 @@
 #include <fenv.h>
 #include <math.h>
 
-int
-__feraiseexcept (int excepts)
+int __feraiseexcept(int excepts)
 {
-  /* Raise exceptions represented by EXPECTS.  But we must raise only
-     one signal at a time.  It is important that if the overflow/underflow
-     exception and the inexact exception are given at the same time,
-     the overflow/underflow exception follows the inexact exception.  */
+    /* Raise exceptions represented by EXPECTS.  But we must raise only
+       one signal at a time.  It is important that if the overflow/underflow
+       exception and the inexact exception are given at the same time,
+       the overflow/underflow exception follows the inexact exception.  */
 
-  /* First: invalid exception.  */
-  if ((FE_INVALID & excepts) != 0)
-    {
-      /* One example of an invalid operation is 0.0 / 0.0.  */
-      double d;
-      __asm__ __volatile__ ("fldz; fdiv %%st, %%st(0); fwait" : "=t" (d));
-      (void) &d;
+    /* First: invalid exception.  */
+    if ((FE_INVALID & excepts) != 0) {
+        /* One example of an invalid operation is 0.0 / 0.0.  */
+        double d;
+        __asm__ __volatile__("fldz; fdiv %%st, %%st(0); fwait" : "=t"(d));
+        (void) &d;
     }
 
-  /* Next: division by zero.  */
-  if ((FE_DIVBYZERO & excepts) != 0)
-    {
-      double d;
-      __asm__ __volatile__ ("fldz; fld1; fdivp %%st, %%st(1); fwait"
-			    : "=t" (d));
-      (void) &d;
+    /* Next: division by zero.  */
+    if ((FE_DIVBYZERO & excepts) != 0) {
+        double d;
+        __asm__ __volatile__("fldz; fld1; fdivp %%st, %%st(1); fwait"
+                             : "=t"(d));
+        (void) &d;
     }
 
-  /* Next: overflow.  */
-  if ((FE_OVERFLOW & excepts) != 0)
-    {
-      /* There is no way to raise only the overflow flag.  Do it the
-	 hard way.  */
-      fenv_t temp;
+    /* Next: overflow.  */
+    if ((FE_OVERFLOW & excepts) != 0) {
+        /* There is no way to raise only the overflow flag.  Do it the
+        hard way.  */
+        fenv_t temp;
 
-      /* Bah, we have to clear selected exceptions.  Since there is no
-	 `fldsw' instruction we have to do it the hard way.  */
-      __asm__ __volatile__ ("fnstenv %0" : "=m" (*&temp));
+        /* Bah, we have to clear selected exceptions.  Since there is no
+        `fldsw' instruction we have to do it the hard way.  */
+        __asm__ __volatile__("fnstenv %0" : "=m"( *&temp));
 
-      /* Set the relevant bits.  */
-      temp.__status_word |= FE_OVERFLOW;
+        /* Set the relevant bits.  */
+        temp.__status_word |= FE_OVERFLOW;
 
-      /* Put the new data in effect.  */
-      __asm__ __volatile__ ("fldenv %0" : : "m" (*&temp));
+        /* Put the new data in effect.  */
+        __asm__ __volatile__("fldenv %0" : : "m"( *&temp));
 
-      /* And raise the exception.  */
-      __asm__ __volatile__ ("fwait");
+        /* And raise the exception.  */
+        __asm__ __volatile__("fwait");
     }
 
-  /* Next: underflow.  */
-  if ((FE_UNDERFLOW & excepts) != 0)
-    {
-      /* There is no way to raise only the underflow flag.  Do it the
-	 hard way.  */
-      fenv_t temp;
+    /* Next: underflow.  */
+    if ((FE_UNDERFLOW & excepts) != 0) {
+        /* There is no way to raise only the underflow flag.  Do it the
+        hard way.  */
+        fenv_t temp;
 
-      /* Bah, we have to clear selected exceptions.  Since there is no
-	 `fldsw' instruction we have to do it the hard way.  */
-      __asm__ __volatile__ ("fnstenv %0" : "=m" (*&temp));
+        /* Bah, we have to clear selected exceptions.  Since there is no
+        `fldsw' instruction we have to do it the hard way.  */
+        __asm__ __volatile__("fnstenv %0" : "=m"( *&temp));
 
-      /* Set the relevant bits.  */
-      temp.__status_word |= FE_UNDERFLOW;
+        /* Set the relevant bits.  */
+        temp.__status_word |= FE_UNDERFLOW;
 
-      /* Put the new data in effect.  */
-      __asm__ __volatile__ ("fldenv %0" : : "m" (*&temp));
+        /* Put the new data in effect.  */
+        __asm__ __volatile__("fldenv %0" : : "m"( *&temp));
 
-      /* And raise the exception.  */
-      __asm__ __volatile__ ("fwait");
+        /* And raise the exception.  */
+        __asm__ __volatile__("fwait");
     }
 
-  /* Last: inexact.  */
-  if ((FE_INEXACT & excepts) != 0)
-    {
-      /* There is no way to raise only the inexact flag.  Do it the
-	 hard way.  */
-      fenv_t temp;
+    /* Last: inexact.  */
+    if ((FE_INEXACT & excepts) != 0) {
+        /* There is no way to raise only the inexact flag.  Do it the
+        hard way.  */
+        fenv_t temp;
 
-      /* Bah, we have to clear selected exceptions.  Since there is no
-	 `fldsw' instruction we have to do it the hard way.  */
-      __asm__ __volatile__ ("fnstenv %0" : "=m" (*&temp));
+        /* Bah, we have to clear selected exceptions.  Since there is no
+        `fldsw' instruction we have to do it the hard way.  */
+        __asm__ __volatile__("fnstenv %0" : "=m"( *&temp));
 
-      /* Set the relevant bits.  */
-      temp.__status_word |= FE_INEXACT;
+        /* Set the relevant bits.  */
+        temp.__status_word |= FE_INEXACT;
 
-      /* Put the new data in effect.  */
-      __asm__ __volatile__ ("fldenv %0" : : "m" (*&temp));
+        /* Put the new data in effect.  */
+        __asm__ __volatile__("fldenv %0" : : "m"( *&temp));
 
-      /* And raise the exception.  */
-      __asm__ __volatile__ ("fwait");
+        /* And raise the exception.  */
+        __asm__ __volatile__("fwait");
     }
 
-  /* Success.  */
-  return 0;
+    /* Success.  */
+    return 0;
 }
 
 #include <shlib-compat.h>
 #if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
-strong_alias (__feraiseexcept, __old_feraiseexcept)
-compat_symbol (libm, __old_feraiseexcept, feraiseexcept, GLIBC_2_1);
+strong_alias(__feraiseexcept, __old_feraiseexcept)
+compat_symbol(libm, __old_feraiseexcept, feraiseexcept, GLIBC_2_1);
 #endif
 
-libm_hidden_def (__feraiseexcept)
-libm_hidden_ver (__feraiseexcept, feraiseexcept)
-versioned_symbol (libm, __feraiseexcept, feraiseexcept, GLIBC_2_2);
+libm_hidden_def(__feraiseexcept)
+libm_hidden_ver(__feraiseexcept, feraiseexcept)
+versioned_symbol(libm, __feraiseexcept, feraiseexcept, GLIBC_2_2);

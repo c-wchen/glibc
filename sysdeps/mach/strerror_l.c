@@ -27,80 +27,74 @@
 #include <tls-internal.h>
 
 
-static const char *
-translate (const char *str, locale_t loc)
+static const char *translate(const char *str, locale_t loc)
 {
-  locale_t oldloc = __uselocale (loc);
-  const char *res = _(str);
-  __uselocale (oldloc);
-  return res;
+    locale_t oldloc = __uselocale(loc);
+    const char *res = _(str);
+    __uselocale(oldloc);
+    return res;
 }
 
 
 /* Return a string describing the errno code in ERRNUM.  */
-char *
-__strerror_l (int errnum, locale_t loc)
+char *__strerror_l(int errnum, locale_t loc)
 {
-  int saved_errno = errno;
-  char *err;
-  int system;
-  int sub;
-  int code;
-  const struct error_system *es;
-  extern void __mach_error_map_compat (int *);
+    int saved_errno = errno;
+    char *err;
+    int system;
+    int sub;
+    int code;
+    const struct error_system *es;
+    extern void __mach_error_map_compat(int *);
 
-  __mach_error_map_compat (&errnum);
+    __mach_error_map_compat(&errnum);
 
-  system = err_get_system (errnum);
-  sub = err_get_sub (errnum);
-  code = err_get_code (errnum);
+    system = err_get_system(errnum);
+    sub = err_get_sub(errnum);
+    code = err_get_code(errnum);
 
-  if (system > err_max_system || ! __mach_error_systems[system].bad_sub)
-    {
-      struct tls_internal_t *tls_internal = __glibc_tls_internal ();
-      free (tls_internal->strerror_l_buf);
-      if (__asprintf (&tls_internal->strerror_l_buf, "%s%X",
-		      translate ("Error in unknown error system: ", loc),
-		      errnum) > 0)
-	err = tls_internal->strerror_l_buf;
-      else
-	{
-	  /* The memory was freed above.  */
-	  tls_internal->strerror_l_buf = NULL;
-	  /* Provide a fallback translation.  */
-	  err = (char *) translate ("Unknown error", loc);
-	}
+    if (system > err_max_system || ! __mach_error_systems[system].bad_sub) {
+        struct tls_internal_t *tls_internal = __glibc_tls_internal();
+        free(tls_internal->strerror_l_buf);
+        if (__asprintf(&tls_internal->strerror_l_buf, "%s%X",
+                       translate("Error in unknown error system: ", loc),
+                       errnum) > 0) {
+            err = tls_internal->strerror_l_buf;
+        } else {
+            /* The memory was freed above.  */
+            tls_internal->strerror_l_buf = NULL;
+            /* Provide a fallback translation.  */
+            err = (char *) translate("Unknown error", loc);
+        }
 
-      __set_errno (saved_errno);
-      return err;
+        __set_errno(saved_errno);
+        return err;
     }
 
-  es = &__mach_error_systems[system];
+    es = &__mach_error_systems[system];
 
-  if (sub >= es->max_sub)
-    err = (char *) translate (es->bad_sub, loc);
-  else if (code >= es->subsystem[sub].max_code)
-    {
-      struct tls_internal_t *tls_internal = __glibc_tls_internal ();
-      free (tls_internal->strerror_l_buf);
-      if (__asprintf (&tls_internal->strerror_l_buf, "%s%s %d",
-		      translate ("Unknown error ", loc),
-		      translate (es->subsystem[sub].subsys_name, loc),
-		      errnum) > 0)
-	err = tls_internal->strerror_l_buf;
-      else
-	{
-	  /* The memory was freed above.  */
-	  tls_internal->strerror_l_buf = NULL;
-	  /* Provide a fallback translation.  */
-	  err = (char *) translate ("Unknown error", loc);
-	}
+    if (sub >= es->max_sub) {
+        err = (char *) translate(es->bad_sub, loc);
+    } else if (code >= es->subsystem[sub].max_code) {
+        struct tls_internal_t *tls_internal = __glibc_tls_internal();
+        free(tls_internal->strerror_l_buf);
+        if (__asprintf(&tls_internal->strerror_l_buf, "%s%s %d",
+                       translate("Unknown error ", loc),
+                       translate(es->subsystem[sub].subsys_name, loc),
+                       errnum) > 0) {
+            err = tls_internal->strerror_l_buf;
+        } else {
+            /* The memory was freed above.  */
+            tls_internal->strerror_l_buf = NULL;
+            /* Provide a fallback translation.  */
+            err = (char *) translate("Unknown error", loc);
+        }
+    } else {
+        err = (char *) translate(es->subsystem[sub].codes[code], loc);
     }
-  else
-    err = (char *) translate (es->subsystem[sub].codes[code], loc);
 
-  __set_errno (saved_errno);
-  return err;
+    __set_errno(saved_errno);
+    return err;
 }
-weak_alias (__strerror_l, strerror_l)
-libc_hidden_def (__strerror_l)
+weak_alias(__strerror_l, strerror_l)
+libc_hidden_def(__strerror_l)

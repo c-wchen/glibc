@@ -19,28 +19,29 @@
 #define _FILE_OFFSET_BITS 64
 #include "tst-posix_fadvise-common.c"
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int ret = do_test_common ();
-  if (ret == 1)
-    return 1;
+    int ret = do_test_common();
+    if (ret == 1) {
+        return 1;
+    }
 
-  /* Test passing a negative length.  The compat fadvise64 might use
-     off64_t for size argument passing, so using -1 for len without
-     _FILE_OFFSET_BITS might not trigger the length issue.  */
-  if (posix_fadvise (temp_fd, 0, -1, POSIX_FADV_NORMAL) != EINVAL)
-    FAIL_EXIT1 ("posix_fadvise with negative length did not return EINVAL");
+    /* Test passing a negative length.  The compat fadvise64 might use
+       off64_t for size argument passing, so using -1 for len without
+       _FILE_OFFSET_BITS might not trigger the length issue.  */
+    if (posix_fadvise(temp_fd, 0, -1, POSIX_FADV_NORMAL) != EINVAL) {
+        FAIL_EXIT1("posix_fadvise with negative length did not return EINVAL");
+    }
 
-  /* Check with some offset values larger than 32-bits.  */
-  off_t offset = UINT32_MAX + 2048LL;
-  if (posix_fadvise (temp_fd, 0, offset, POSIX_FADV_NORMAL) != 0)
-    FAIL_EXIT1 ("posix_fadvise failed (offset = 0, len = %zd) failed",
-		(ssize_t)offset);
+    /* Check with some offset values larger than 32-bits.  */
+    off_t offset = UINT32_MAX + 2048LL;
+    if (posix_fadvise(temp_fd, 0, offset, POSIX_FADV_NORMAL) != 0)
+        FAIL_EXIT1("posix_fadvise failed (offset = 0, len = %zd) failed",
+                   (ssize_t)offset);
 
-  if (posix_fadvise (temp_fd, offset, 0, POSIX_FADV_NORMAL) != 0)
-    FAIL_EXIT1 ("posix_fadvise failed (offset = %zd, len = 0) failed",
-		(ssize_t)offset);
+    if (posix_fadvise(temp_fd, offset, 0, POSIX_FADV_NORMAL) != 0)
+        FAIL_EXIT1("posix_fadvise failed (offset = %zd, len = 0) failed",
+                   (ssize_t)offset);
 
-  return 0;
+    return 0;
 }

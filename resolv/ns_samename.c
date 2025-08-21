@@ -22,17 +22,18 @@
 /* Determines whether domain name A is the same as domain name B.
    Returns -1 on error, 0 if names differ, 1 if names are the
    same.  */
-int
-__libc_ns_samename (const char *a, const char *b)
+int __libc_ns_samename(const char *a, const char *b)
 {
-  char ta[NS_MAXDNAME], tb[NS_MAXDNAME];
+    char ta[NS_MAXDNAME], tb[NS_MAXDNAME];
 
-  if (__libc_ns_makecanon (a, ta, sizeof ta) < 0 ||
-      __libc_ns_makecanon (b, tb, sizeof tb) < 0)
-    return -1;
-  if (__strcasecmp (ta, tb) == 0)
-    return 1;
-  else
-    return 0;
+    if (__libc_ns_makecanon(a, ta, sizeof ta) < 0 ||
+        __libc_ns_makecanon(b, tb, sizeof tb) < 0) {
+        return -1;
+    }
+    if (__strcasecmp(ta, tb) == 0) {
+        return 1;
+    } else {
+        return 0;
+    }
 }
-libc_hidden_def (__libc_ns_samename)
+libc_hidden_def(__libc_ns_samename)

@@ -15,15 +15,14 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef	_SYS_SIGNALFD_H
+#ifndef _SYS_SIGNALFD_H
 # error "Never use <bits/signalfd.h> directly; include <sys/signalfd.h> instead."
 #endif
 
 /* Flags for signalfd.  */
-enum
-  {
+enum {
     SFD_CLOEXEC = 010000000,
 #define SFD_CLOEXEC SFD_CLOEXEC
     SFD_NONBLOCK = 00200000
 #define SFD_NONBLOCK SFD_NONBLOCK
-  };
+};

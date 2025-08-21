@@ -35,26 +35,26 @@
 # include <wchar.h>
 # define NEW(x) NEW1(x)
 # define NEW1(x) __new_##x
-long double ____new_strtold_internal (const char *, char **, int);
-long double __new_strtold (const char *, char **);
-long double ____new_wcstold_internal (const wchar_t *, wchar_t **, int);
-long double __new_wcstold (const wchar_t *, wchar_t **);
-libc_hidden_proto (____new_strtold_internal)
-libc_hidden_proto (____new_wcstold_internal)
-libc_hidden_proto (__new_strtold)
-libc_hidden_proto (__new_wcstold)
+long double ____new_strtold_internal(const char *, char **, int);
+long double __new_strtold(const char *, char **);
+long double ____new_wcstold_internal(const wchar_t *, wchar_t **, int);
+long double __new_wcstold(const wchar_t *, wchar_t **);
+libc_hidden_proto(____new_strtold_internal)
+libc_hidden_proto(____new_wcstold_internal)
+libc_hidden_proto(__new_strtold)
+libc_hidden_proto(__new_wcstold)
 #else
 # define NEW(x) x
 #endif
 
-#define	FLOAT		long double
-#define	FLT		LDBL
+#define FLOAT       long double
+#define FLT     LDBL
 #ifdef USE_WIDE_CHAR
-# define STRTOF		NEW (wcstold)
-# define STRTOF_L	__wcstold_l
+# define STRTOF     NEW (wcstold)
+# define STRTOF_L   __wcstold_l
 #else
-# define STRTOF		NEW (strtold)
-# define STRTOF_L	__strtold_l
+# define STRTOF     NEW (strtold)
+# define STRTOF_L   __strtold_l
 #endif
 
 #include "strtod.c"
@@ -62,13 +62,13 @@ libc_hidden_proto (__new_wcstold)
 #ifdef __LONG_DOUBLE_MATH_OPTIONAL
 # include <math_ldbl_opt.h>
 # ifdef USE_WIDE_CHAR
-long_double_symbol (libc, __new_wcstold, wcstold);
-long_double_symbol (libc, ____new_wcstold_internal, __wcstold_internal);
-libc_hidden_ver (____new_wcstold_internal, __wcstold_internal)
+long_double_symbol(libc, __new_wcstold, wcstold);
+long_double_symbol(libc, ____new_wcstold_internal, __wcstold_internal);
+libc_hidden_ver(____new_wcstold_internal, __wcstold_internal)
 # else
-long_double_symbol (libc, __new_strtold, strtold);
-long_double_symbol (libc, ____new_strtold_internal, __strtold_internal);
-libc_hidden_ver (____new_strtold_internal, __strtold_internal)
+long_double_symbol(libc, __new_strtold, strtold);
+long_double_symbol(libc, ____new_strtold_internal, __strtold_internal);
+libc_hidden_ver(____new_strtold_internal, __strtold_internal)
 # endif
 #endif
 
@@ -76,9 +76,9 @@ libc_hidden_ver (____new_strtold_internal, __strtold_internal)
 # undef strtof128
 # undef wcstof128
 # ifdef USE_WIDE_CHAR
-weak_alias (NEW (wcstold), wcstof128)
+weak_alias(NEW(wcstold), wcstof128)
 # else
-weak_alias (NEW (strtold), strtof128)
+weak_alias(NEW(strtold), strtof128)
 # endif
 #endif
 
@@ -86,8 +86,8 @@ weak_alias (NEW (strtold), strtof128)
 # undef strtof64x
 # undef wcstof64x
 # ifdef USE_WIDE_CHAR
-weak_alias (NEW (wcstold), wcstof64x)
+weak_alias(NEW(wcstold), wcstof64x)
 # else
-weak_alias (NEW (strtold), strtof64x)
+weak_alias(NEW(strtold), strtof64x)
 # endif
 #endif

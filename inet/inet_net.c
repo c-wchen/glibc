@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 1983, 1993
- *	The Regents of the University of California.  All rights reserved.
+ *  The Regents of the University of California.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -54,60 +54,70 @@
  * The library routines call this routine to interpret
  * network numbers.
  */
-uint32_t
-__inet_network (const char *cp)
+uint32_t __inet_network(const char *cp)
 {
-	uint32_t val, base, n, i;
-	char c;
-	uint32_t parts[4], *pp = parts;
-	int digit;
+    uint32_t val, base, n, i;
+    char c;
+    uint32_t parts[4], *pp = parts;
+    int digit;
 
 again:
-	val = 0; base = 10; digit = 0;
-	if (*cp == '0')
-		digit = 1, base = 8, cp++;
-	if (*cp == 'x' || *cp == 'X')
-		digit = 0, base = 16, cp++;
-	while ((c = *cp) != 0) {
-		if (val > 0xff)
-			return (INADDR_NONE);
-		if (isdigit(c)) {
-			if (base == 8 && (c == '8' || c == '9'))
-				return (INADDR_NONE);
-			val = (val * base) + (c - '0');
-			cp++;
-			digit = 1;
-			continue;
-		}
-		if (base == 16 && isxdigit(c)) {
-			val = (val << 4) + (tolower (c) + 10 - 'a');
-			cp++;
-			digit = 1;
-			continue;
-		}
-		break;
-	}
-	if (!digit)
-		return (INADDR_NONE);
-	if (pp >= parts + 4 || val > 0xff)
-		return (INADDR_NONE);
-	if (*cp == '.') {
-		*pp++ = val, cp++;
-		goto again;
-	}
-	while (isspace(*cp))
-		cp++;
-	if (*cp)
-		return (INADDR_NONE);
-	if (pp >= parts + 4 || val > 0xff)
-		return (INADDR_NONE);
-	*pp++ = val;
-	n = pp - parts;
-	for (val = 0, i = 0; i < n; i++) {
-		val <<= 8;
-		val |= parts[i] & 0xff;
-	}
-	return (val);
+    val = 0;
+    base = 10;
+    digit = 0;
+    if (*cp == '0') {
+        digit = 1, base = 8, cp++;
+    }
+    if (*cp == 'x' || *cp == 'X') {
+        digit = 0, base = 16, cp++;
+    }
+    while ((c = *cp) != 0) {
+        if (val > 0xff) {
+            return (INADDR_NONE);
+        }
+        if (isdigit(c)) {
+            if (base == 8 && (c == '8' || c == '9')) {
+                return (INADDR_NONE);
+            }
+            val = (val * base) + (c - '0');
+            cp++;
+            digit = 1;
+            continue;
+        }
+        if (base == 16 && isxdigit(c)) {
+            val = (val << 4) + (tolower(c) + 10 - 'a');
+            cp++;
+            digit = 1;
+            continue;
+        }
+        break;
+    }
+    if (!digit) {
+        return (INADDR_NONE);
+    }
+    if (pp >= parts + 4 || val > 0xff) {
+        return (INADDR_NONE);
+    }
+    if (*cp == '.') {
+        *pp++ = val, cp++;
+        goto again;
+    }
+    while (isspace(*cp)) {
+        cp++;
+    }
+    if (*cp) {
+        return (INADDR_NONE);
+    }
+    if (pp >= parts + 4 || val > 0xff) {
+        return (INADDR_NONE);
+    }
+    *pp++ = val;
+    n = pp - parts;
+    for (val = 0, i = 0; i < n; i++) {
+        val <<= 8;
+        val |= parts[i] & 0xff;
+    }
+    return (val);
 }
-libc_hidden_def (__inet_network)
-weak_alias (__inet_network, inet_network)
+libc_hidden_def(__inet_network)
+weak_alias(__inet_network, inet_network)

@@ -22,48 +22,45 @@
 /* Get GNU_PROPERTY_X86_ISA_1_BASELINE and GNU_PROPERTY_X86_ISA_1_V[234]
    ISA level.  */
 
-static unsigned int
-get_isa_level (const struct cpu_features *cpu_features)
+static unsigned int get_isa_level(const struct cpu_features *cpu_features)
 {
-  unsigned int isa_level = 0;
+    unsigned int isa_level = 0;
 
-  if (CPU_FEATURE_USABLE_P (cpu_features, CMOV)
-      && CPU_FEATURE_USABLE_P (cpu_features, CX8)
-      && CPU_FEATURE_CPU_P (cpu_features, FPU)
-      && CPU_FEATURE_USABLE_P (cpu_features, FXSR)
-      && CPU_FEATURE_USABLE_P (cpu_features, MMX)
-      && CPU_FEATURE_USABLE_P (cpu_features, SSE)
-      && CPU_FEATURE_USABLE_P (cpu_features, SSE2))
-    {
-      isa_level = GNU_PROPERTY_X86_ISA_1_BASELINE;
-      if (CPU_FEATURE_USABLE_P (cpu_features, CMPXCHG16B)
-	  && CPU_FEATURE_USABLE_P (cpu_features, LAHF64_SAHF64)
-	  && CPU_FEATURE_USABLE_P (cpu_features, POPCNT)
-	  && CPU_FEATURE_USABLE_P (cpu_features, SSE3)
-	  && CPU_FEATURE_USABLE_P (cpu_features, SSSE3)
-	  && CPU_FEATURE_USABLE_P (cpu_features, SSE4_1)
-	  && CPU_FEATURE_USABLE_P (cpu_features, SSE4_2))
-	{
-	  isa_level |= GNU_PROPERTY_X86_ISA_1_V2;
-	  if (CPU_FEATURE_USABLE_P (cpu_features, AVX)
-	      && CPU_FEATURE_USABLE_P (cpu_features, AVX2)
-	      && CPU_FEATURE_USABLE_P (cpu_features, BMI1)
-	      && CPU_FEATURE_USABLE_P (cpu_features, BMI2)
-	      && CPU_FEATURE_USABLE_P (cpu_features, F16C)
-	      && CPU_FEATURE_USABLE_P (cpu_features, FMA)
-	      && CPU_FEATURE_USABLE_P (cpu_features, LZCNT)
-	      && CPU_FEATURE_USABLE_P (cpu_features, MOVBE))
-	    {
-	      isa_level |= GNU_PROPERTY_X86_ISA_1_V3;
-	      if (CPU_FEATURE_USABLE_P (cpu_features, AVX512F)
-		  && CPU_FEATURE_USABLE_P (cpu_features, AVX512BW)
-		  && CPU_FEATURE_USABLE_P (cpu_features, AVX512CD)
-		  && CPU_FEATURE_USABLE_P (cpu_features, AVX512DQ)
-		  && CPU_FEATURE_USABLE_P (cpu_features, AVX512VL))
-		isa_level |= GNU_PROPERTY_X86_ISA_1_V4;
-	    }
-	}
+    if (CPU_FEATURE_USABLE_P(cpu_features, CMOV)
+        && CPU_FEATURE_USABLE_P(cpu_features, CX8)
+        && CPU_FEATURE_CPU_P(cpu_features, FPU)
+        && CPU_FEATURE_USABLE_P(cpu_features, FXSR)
+        && CPU_FEATURE_USABLE_P(cpu_features, MMX)
+        && CPU_FEATURE_USABLE_P(cpu_features, SSE)
+        && CPU_FEATURE_USABLE_P(cpu_features, SSE2)) {
+        isa_level = GNU_PROPERTY_X86_ISA_1_BASELINE;
+        if (CPU_FEATURE_USABLE_P(cpu_features, CMPXCHG16B)
+            && CPU_FEATURE_USABLE_P(cpu_features, LAHF64_SAHF64)
+            && CPU_FEATURE_USABLE_P(cpu_features, POPCNT)
+            && CPU_FEATURE_USABLE_P(cpu_features, SSE3)
+            && CPU_FEATURE_USABLE_P(cpu_features, SSSE3)
+            && CPU_FEATURE_USABLE_P(cpu_features, SSE4_1)
+            && CPU_FEATURE_USABLE_P(cpu_features, SSE4_2)) {
+            isa_level |= GNU_PROPERTY_X86_ISA_1_V2;
+            if (CPU_FEATURE_USABLE_P(cpu_features, AVX)
+                && CPU_FEATURE_USABLE_P(cpu_features, AVX2)
+                && CPU_FEATURE_USABLE_P(cpu_features, BMI1)
+                && CPU_FEATURE_USABLE_P(cpu_features, BMI2)
+                && CPU_FEATURE_USABLE_P(cpu_features, F16C)
+                && CPU_FEATURE_USABLE_P(cpu_features, FMA)
+                && CPU_FEATURE_USABLE_P(cpu_features, LZCNT)
+                && CPU_FEATURE_USABLE_P(cpu_features, MOVBE)) {
+                isa_level |= GNU_PROPERTY_X86_ISA_1_V3;
+                if (CPU_FEATURE_USABLE_P(cpu_features, AVX512F)
+                    && CPU_FEATURE_USABLE_P(cpu_features, AVX512BW)
+                    && CPU_FEATURE_USABLE_P(cpu_features, AVX512CD)
+                    && CPU_FEATURE_USABLE_P(cpu_features, AVX512DQ)
+                    && CPU_FEATURE_USABLE_P(cpu_features, AVX512VL)) {
+                    isa_level |= GNU_PROPERTY_X86_ISA_1_V4;
+                }
+            }
+        }
     }
 
-  return isa_level;
+    return isa_level;
 }

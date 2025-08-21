@@ -17,11 +17,11 @@
 
 #include <stdio_ext.h>
 
-size_t
-__fpending (FILE *fp)
+size_t __fpending(FILE *fp)
 {
-  if (fp->_mode > 0)
-    return fp->_wide_data->_IO_write_ptr - fp->_wide_data->_IO_write_base;
-  else
-    return fp->_IO_write_ptr - fp->_IO_write_base;
+    if (fp->_mode > 0) {
+        return fp->_wide_data->_IO_write_ptr - fp->_wide_data->_IO_write_base;
+    } else {
+        return fp->_IO_write_ptr - fp->_IO_write_base;
+    }
 }

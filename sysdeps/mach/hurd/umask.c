@@ -19,14 +19,13 @@
 #include <hurd.h>
 
 /* Set the file creation mask to MASK, returning the old mask.  */
-mode_t
-__umask (mode_t mask)
+mode_t __umask(mode_t mask)
 {
-  mode_t omask;
-  mask &= 0777;
-  omask = _hurd_umask;
-  _hurd_umask = mask;
-  return omask;
+    mode_t omask;
+    mask &= 0777;
+    omask = _hurd_umask;
+    _hurd_umask = mask;
+    return omask;
 }
 
-weak_alias (__umask, umask)
+weak_alias(__umask, umask)

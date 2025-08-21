@@ -23,8 +23,7 @@ static struct exit_function_list initial_quick;
 struct exit_function_list *__quick_exit_funcs = &initial_quick;
 
 /* Register a function to be called by quick_exit.  */
-int
-__cxa_at_quick_exit (void (*func) (void *), void *d)
+int __cxa_at_quick_exit(void (*func)(void *), void *d)
 {
-  return __internal_atexit (func, NULL, d, &__quick_exit_funcs);
+    return __internal_atexit(func, NULL, d, &__quick_exit_funcs);
 }

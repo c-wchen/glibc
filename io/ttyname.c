@@ -24,12 +24,11 @@ char *__ttyname = NULL;
 
 /* Return the pathname of the terminal FD is open on, or NULL on errors.
    The returned storage is good only until the next call to this function.  */
-char *
-ttyname (int fd)
+char *ttyname(int fd)
 {
-  __set_errno (ENOSYS);
-  return NULL;
+    __set_errno(ENOSYS);
+    return NULL;
 }
 
 
-stub_warning (ttyname)
+stub_warning(ttyname)

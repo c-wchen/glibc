@@ -19,29 +19,30 @@
 #include <stdarg.h>
 #include <libio/libioP.h>
 
-extern int
-___ieee128___sprintf_chk (char *s, int flag, size_t slen,
-		       const char *format, ...)
+extern int ___ieee128___sprintf_chk(char *s, int flag, size_t slen,
+                                    const char *format, ...)
 {
-  va_list ap;
-  int done;
+    va_list ap;
+    int done;
 
-  unsigned int mode = PRINTF_LDBL_USES_FLOAT128;
-  if (flag > 0)
-    mode |= PRINTF_FORTIFY;
+    unsigned int mode = PRINTF_LDBL_USES_FLOAT128;
+    if (flag > 0) {
+        mode |= PRINTF_FORTIFY;
+    }
 
-  /* Regardless of the value of flag, let __vsprintf_internal know that
-     this is a call from *printf_chk.  */
-  mode |= PRINTF_CHK;
+    /* Regardless of the value of flag, let __vsprintf_internal know that
+       this is a call from *printf_chk.  */
+    mode |= PRINTF_CHK;
 
-  if (slen == 0)
-    __chk_fail ();
+    if (slen == 0) {
+        __chk_fail();
+    }
 
-  va_start (ap, format);
-  done = __vsprintf_internal (s, slen, format, ap, mode);
-  va_end (ap);
+    va_start(ap, format);
+    done = __vsprintf_internal(s, slen, format, ap, mode);
+    va_end(ap);
 
-  return done;
+    return done;
 }
-hidden_def (___ieee128___sprintf_chk)
-strong_alias (___ieee128___sprintf_chk, __sprintf_chkieee128)
+hidden_def(___ieee128___sprintf_chk)
+strong_alias(___ieee128___sprintf_chk, __sprintf_chkieee128)

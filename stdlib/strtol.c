@@ -97,33 +97,33 @@
 #define __strtol SYM__ (strtol)
 
 
-extern INT INTERNAL (__strtol_l) (const STRING_TYPE *, STRING_TYPE **, int,
-				  int, bool, locale_t);
+extern INT INTERNAL(__strtol_l)(const STRING_TYPE *, STRING_TYPE **, int,
+                                int, bool, locale_t);
 
 
 INT
-INTERNAL (strtol) (const STRING_TYPE *nptr, STRING_TYPE **endptr,
-		   int base, int group)
+INTERNAL(strtol)(const STRING_TYPE *nptr, STRING_TYPE **endptr,
+                 int base, int group)
 {
-  return INTERNAL (__strtol_l) (nptr, endptr, base, group, false,
-				_NL_CURRENT_LOCALE);
+    return INTERNAL(__strtol_l)(nptr, endptr, base, group, false,
+                                _NL_CURRENT_LOCALE);
 }
-libc_hidden_def (INTERNAL (strtol))
+libc_hidden_def(INTERNAL(strtol))
 
 
 INT
-__strtol (const STRING_TYPE *nptr, STRING_TYPE **endptr, int base)
+__strtol(const STRING_TYPE *nptr, STRING_TYPE **endptr, int base)
 {
-  return INTERNAL (__strtol_l) (nptr, endptr, base, 0, false,
-				_NL_CURRENT_LOCALE);
+    return INTERNAL(__strtol_l)(nptr, endptr, base, 0, false,
+                                _NL_CURRENT_LOCALE);
 }
-weak_alias (__strtol, strtol)
-libc_hidden_weak (strtol)
+weak_alias(__strtol, strtol)
+libc_hidden_weak(strtol)
 
 INT
-__isoc23_strtol (const STRING_TYPE *nptr, STRING_TYPE **endptr, int base)
+__isoc23_strtol(const STRING_TYPE *nptr, STRING_TYPE **endptr, int base)
 {
-  return INTERNAL (__strtol_l) (nptr, endptr, base, 0, true,
-				_NL_CURRENT_LOCALE);
+    return INTERNAL(__strtol_l)(nptr, endptr, base, 0, true,
+                                _NL_CURRENT_LOCALE);
 }
-libc_hidden_def (__isoc23_strtol)
+libc_hidden_def(__isoc23_strtol)

@@ -21,32 +21,30 @@
 #include <unistd.h>
 
 
-static long int linux_sysconf (int name);
+static long int linux_sysconf(int name);
 
 /* Get the value of the system variable NAME.  */
-long int
-__sysconf (int name)
+long int __sysconf(int name)
 {
-  uint64_t ctr;
+    uint64_t ctr;
 
-  /* Unfortunately, the registers that contain the actual cache info
-     (CCSIDR_EL1, CLIDR_EL1, and CSSELR_EL1) are protected by the Linux
-     kernel (though they need not have been).  However, CTR_EL0 contains
-     the *minimum* linesize in the entire cache hierarchy, and is
-     accessible to userland, for use in __aarch64_sync_cache_range,
-     and it is a reasonable assumption that the L1 cache will have that
-     minimum line size.  */
-  switch (name)
-    {
-    case _SC_LEVEL1_ICACHE_LINESIZE:
-      asm("mrs\t%0, ctr_el0" : "=r"(ctr));
-      return 4 << (ctr & 0xf);
-    case _SC_LEVEL1_DCACHE_LINESIZE:
-      asm("mrs\t%0, ctr_el0" : "=r"(ctr));
-      return 4 << ((ctr >> 16) & 0xf);
+    /* Unfortunately, the registers that contain the actual cache info
+       (CCSIDR_EL1, CLIDR_EL1, and CSSELR_EL1) are protected by the Linux
+       kernel (though they need not have been).  However, CTR_EL0 contains
+       the *minimum* linesize in the entire cache hierarchy, and is
+       accessible to userland, for use in __aarch64_sync_cache_range,
+       and it is a reasonable assumption that the L1 cache will have that
+       minimum line size.  */
+    switch (name) {
+        case _SC_LEVEL1_ICACHE_LINESIZE:
+            asm("mrs\t%0, ctr_el0" : "=r"(ctr));
+            return 4 << (ctr & 0xf);
+        case _SC_LEVEL1_DCACHE_LINESIZE:
+            asm("mrs\t%0, ctr_el0" : "=r"(ctr));
+            return 4 << ((ctr >> 16) & 0xf);
     }
 
-  return linux_sysconf (name);
+    return linux_sysconf(name);
 }
 
 /* Now the generic Linux version.  */

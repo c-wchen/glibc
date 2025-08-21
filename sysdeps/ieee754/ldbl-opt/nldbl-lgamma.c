@@ -1,8 +1,7 @@
 #include "nldbl-compat.h"
 
 double
-attribute_hidden
-lgammal (double x)
+attribute_hidden lgammal(double x)
 {
-  return lgamma (x);
+    return lgamma(x);
 }

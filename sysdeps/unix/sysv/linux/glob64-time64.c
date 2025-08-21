@@ -39,8 +39,8 @@
 # define GLOB_LSTAT64    __lstat64_time64
 # define GLOB_FSTATAT64    __fstatat64_time64
 
-# define COMPILE_GLOB64	1
+# define COMPILE_GLOB64 1
 
 # include <posix/glob.c>
-libc_hidden_def (__glob64_time64)
+libc_hidden_def(__glob64_time64)
 #endif

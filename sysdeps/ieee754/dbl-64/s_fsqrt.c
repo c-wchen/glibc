@@ -26,9 +26,8 @@
 
 #include <math-narrow.h>
 
-float
-__fsqrt (double x)
+float __fsqrt(double x)
 {
-  NARROW_SQRT_ROUND_TO_ODD (x, float, union ieee754_double, , mantissa1);
+    NARROW_SQRT_ROUND_TO_ODD(x, float, union ieee754_double,, mantissa1);
 }
-libm_alias_float_double (sqrt)
+libm_alias_float_double(sqrt)

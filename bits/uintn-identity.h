@@ -29,22 +29,19 @@
    conversions and associated diagnostics from macros that convert to
    a given endianness.  */
 
-static __inline __uint16_t
-__uint16_identity (__uint16_t __x)
+static __inline __uint16_t __uint16_identity(__uint16_t __x)
 {
-  return __x;
+    return __x;
 }
 
-static __inline __uint32_t
-__uint32_identity (__uint32_t __x)
+static __inline __uint32_t __uint32_identity(__uint32_t __x)
 {
-  return __x;
+    return __x;
 }
 
-static __inline __uint64_t
-__uint64_identity (__uint64_t __x)
+static __inline __uint64_t __uint64_identity(__uint64_t __x)
 {
-  return __x;
+    return __x;
 }
 
 #endif /* _BITS_UINTN_IDENTITY_H.  */

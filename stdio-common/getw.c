@@ -21,13 +21,13 @@
 #define fread(p, m, n, s) _IO_fread (p, m, n, s)
 
 /* Read a word (int) from STREAM.  */
-int
-getw (FILE *stream)
+int getw(FILE *stream)
 {
-  int w;
+    int w;
 
-  /* Is there a better way?  */
-  if (fread ((void *) &w, sizeof (w), 1, stream) != 1)
-    return EOF;
-  return w;
+    /* Is there a better way?  */
+    if (fread((void *) &w, sizeof(w), 1, stream) != 1) {
+        return EOF;
+    }
+    return w;
 }

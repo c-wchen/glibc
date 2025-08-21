@@ -21,10 +21,9 @@
 #include <hurd/fd.h>
 
 /* Rename the file OLD relative to OLDFD to NEW relative to NEWFD.  */
-int
-__renameat (int oldfd, const char *old, int newfd, const char *new)
+int __renameat(int oldfd, const char *old, int newfd, const char *new)
 {
-  return __renameat2 (oldfd, old, newfd, new, 0);
+    return __renameat2(oldfd, old, newfd, new, 0);
 }
-libc_hidden_def (__renameat)
-weak_alias (__renameat, renameat)
+libc_hidden_def(__renameat)
+weak_alias(__renameat, renameat)

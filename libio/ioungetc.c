@@ -26,19 +26,20 @@
 
 #include "libioP.h"
 
-int
-ungetc (int c, FILE *fp)
+int ungetc(int c, FILE *fp)
 {
-  int result;
-  CHECK_FILE (fp, EOF);
-  if (c == EOF)
-    return EOF;
-  if (!_IO_need_lock (fp))
-    return _IO_sputbackc (fp, (unsigned char) c);
-  _IO_acquire_lock (fp);
-  result = _IO_sputbackc (fp, (unsigned char) c);
-  _IO_release_lock (fp);
-  return result;
+    int result;
+    CHECK_FILE(fp, EOF);
+    if (c == EOF) {
+        return EOF;
+    }
+    if (!_IO_need_lock(fp)) {
+        return _IO_sputbackc(fp, (unsigned char) c);
+    }
+    _IO_acquire_lock(fp);
+    result = _IO_sputbackc(fp, (unsigned char) c);
+    _IO_release_lock(fp);
+    return result;
 }
-libc_hidden_def (ungetc)
-strong_alias (ungetc, _IO_ungetc)
+libc_hidden_def(ungetc)
+strong_alias(ungetc, _IO_ungetc)

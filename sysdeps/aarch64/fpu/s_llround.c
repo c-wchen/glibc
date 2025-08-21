@@ -19,10 +19,9 @@
 #include <math.h>
 #include <libm-alias-double.h>
 
-long long int
-__llround (double x)
+long long int __llround(double x)
 {
-  return __builtin_llround (x);
+    return __builtin_llround(x);
 }
 
-libm_alias_double (__llround, llround)
+libm_alias_double(__llround, llround)

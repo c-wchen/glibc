@@ -19,17 +19,16 @@
 #include <stdarg.h>
 #include <libioP.h>
 
-extern int
-___ieee128_fwscanf (FILE *fp, const wchar_t *format, ...)
+extern int ___ieee128_fwscanf(FILE *fp, const wchar_t *format, ...)
 {
-  va_list ap;
-  int done;
+    va_list ap;
+    int done;
 
-  va_start (ap, format);
-  done = __vfwscanf_internal (fp, format, ap,
-			      SCANF_LDBL_USES_FLOAT128);
-  va_end (ap);
+    va_start(ap, format);
+    done = __vfwscanf_internal(fp, format, ap,
+                               SCANF_LDBL_USES_FLOAT128);
+    va_end(ap);
 
-  return done;
+    return done;
 }
-strong_alias (___ieee128_fwscanf, __fwscanfieee128)
+strong_alias(___ieee128_fwscanf, __fwscanfieee128)

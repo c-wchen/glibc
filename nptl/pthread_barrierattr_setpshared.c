@@ -20,21 +20,21 @@
 #include <futex-internal.h>
 #include <shlib-compat.h>
 
-int
-__pthread_barrierattr_setpshared (pthread_barrierattr_t *attr, int pshared)
+int __pthread_barrierattr_setpshared(pthread_barrierattr_t *attr, int pshared)
 {
-  int err = futex_supports_pshared (pshared);
-  if (err != 0)
-    return err;
+    int err = futex_supports_pshared(pshared);
+    if (err != 0) {
+        return err;
+    }
 
-  ((struct pthread_barrierattr *) attr)->pshared = pshared;
+    ((struct pthread_barrierattr *) attr)->pshared = pshared;
 
-  return 0;
+    return 0;
 }
-versioned_symbol (libc, __pthread_barrierattr_setpshared,
-                  pthread_barrierattr_setpshared, GLIBC_2_34);
+versioned_symbol(libc, __pthread_barrierattr_setpshared,
+                 pthread_barrierattr_setpshared, GLIBC_2_34);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
-compat_symbol (libpthread, __pthread_barrierattr_setpshared,
-               pthread_barrierattr_setpshared, GLIBC_2_2);
+compat_symbol(libpthread, __pthread_barrierattr_setpshared,
+              pthread_barrierattr_setpshared, GLIBC_2_2);
 #endif

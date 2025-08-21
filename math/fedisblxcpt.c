@@ -18,10 +18,9 @@
 
 #include <fenv.h>
 
-int
-fedisableexcept (int excepts)
+int fedisableexcept(int excepts)
 {
-  /* All exception traps are disabled.  */
-  return 0;
+    /* All exception traps are disabled.  */
+    return 0;
 }
-stub_warning (fedisableexcept)
+stub_warning(fedisableexcept)

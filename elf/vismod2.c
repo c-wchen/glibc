@@ -18,106 +18,95 @@
 #include <stdlib.h>
 #include "vismod.h"
 
-int
-protlocal (void)
+int protlocal(void)
 {
-  return 0x40;
+    return 0x40;
 }
-asm (".protected protlocal");
+asm(".protected protlocal");
 
 
-int
-calllocal2 (void)
+int calllocal2(void)
 {
-  return protlocal () + 0x100;
+    return protlocal() + 0x100;
 }
 
 int
-(*getlocal2 (void)) (void)
+(*getlocal2(void))(void)
 {
-  return protlocal;
+    return protlocal;
+}
+
+int protinmod(void)
+{
+    return 0x4000;
+}
+asm(".protected protinmod");
+
+int callinmod2(void)
+{
+    return protinmod() + 0x10000;
 }
 
 int
-protinmod (void)
+(*getinmod2(void))(void)
 {
-  return 0x4000;
-}
-asm (".protected protinmod");
-
-int
-callinmod2 (void)
-{
-  return protinmod () + 0x10000;
+    return protinmod;
 }
 
-int
-(*getinmod2 (void)) (void)
+int protitcpt(void)
 {
-  return protinmod;
+    return 0x400000;
+}
+asm(".protected protitcpt");
+
+int callitcpt2(void)
+{
+    return protitcpt() + 0x1000000;
 }
 
 int
-protitcpt (void)
+(*getitcpt2(void))(void)
 {
-  return 0x400000;
-}
-asm (".protected protitcpt");
-
-int
-callitcpt2 (void)
-{
-  return protitcpt () + 0x1000000;
-}
-
-int
-(*getitcpt2 (void)) (void)
-{
-  return protitcpt;
+    return protitcpt;
 }
 
 const char *protvarlocal = __FILE__;
-asm (".protected protvarlocal");
+asm(".protected protvarlocal");
 
-const char **
-getvarlocal2 (void)
+const char **getvarlocal2(void)
 {
-  return &protvarlocal;
+    return &protvarlocal;
 }
 
 const char *protvarinmod = __FILE__;
-asm (".protected protvarinmod");
+asm(".protected protvarinmod");
 
-const char **
-getvarinmod2 (void)
+const char **getvarinmod2(void)
 {
-  return &protvarinmod;
+    return &protvarinmod;
 }
 
 const char *protvaritcpt = __FILE__;
-asm (".protected protvaritcpt");
+asm(".protected protvaritcpt");
 
-const char **
-getvaritcpt2 (void)
+const char **getvaritcpt2(void)
 {
-  return &protvaritcpt;
+    return &protvaritcpt;
 }
 
 /* We must never call these functions.  */
-int
-callitcpt3 (void)
+int callitcpt3(void)
 {
-  abort ();
+    abort();
 }
 
 int
-(*getitcpt3 (void)) (void)
+(*getitcpt3(void))(void)
 {
-  abort ();
+    abort();
 }
 
-const char **
-getvaritcpt3 (void)
+const char **getvaritcpt3(void)
 {
-  abort ();
+    abort();
 }

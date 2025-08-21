@@ -19,10 +19,10 @@
 #define SYMBOL_NAME _ZGVdN8vv_hypotf
 #include "ifunc-mathvec-avx2.h"
 
-libc_ifunc_redirected (REDIRECT_NAME, SYMBOL_NAME, IFUNC_SELECTOR ());
+libc_ifunc_redirected(REDIRECT_NAME, SYMBOL_NAME, IFUNC_SELECTOR());
 
 #ifdef SHARED
-__hidden_ver1 (_ZGVdN8vv_hypotf, __GI__ZGVdN8vv_hypotf,
-	       __redirect__ZGVdN8vv_hypotf)
-  __attribute__ ((visibility ("hidden")));
+__hidden_ver1(_ZGVdN8vv_hypotf, __GI__ZGVdN8vv_hypotf,
+              __redirect__ZGVdN8vv_hypotf)
+__attribute__((visibility("hidden")));
 #endif

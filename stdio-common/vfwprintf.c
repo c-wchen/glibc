@@ -17,9 +17,8 @@
 
 #include <libio/libioP.h>
 
-extern int
-__vfwprintf (FILE *fp, const wchar_t *format, va_list ap)
+extern int __vfwprintf(FILE *fp, const wchar_t *format, va_list ap)
 {
-  return __vfwprintf_internal (fp, format, ap, 0);
+    return __vfwprintf_internal(fp, format, ap, 0);
 }
-ldbl_weak_alias (__vfwprintf, vfwprintf);
+ldbl_weak_alias(__vfwprintf, vfwprintf);

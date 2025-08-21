@@ -21,41 +21,40 @@
 #include <allocate_once.h>
 #include <set-freeres.h>
 
-struct mntent_buffer
-{
-  struct mntent m;
-  char buffer[4096];
+struct mntent_buffer {
+    struct mntent m;
+    char buffer[4096];
 };
 
 /* We don't want to allocate the static buffer all the time since it
    is not always used (in fact, rather infrequently).  */
 static void *mntent_buffer;
 
-static void *
-allocate (void *closure)
+static void *allocate(void *closure)
 {
-  return malloc (sizeof (struct mntent_buffer));
+    return malloc(sizeof(struct mntent_buffer));
 }
 
-static void
-deallocate (void *closure, void *ptr)
+static void deallocate(void *closure, void *ptr)
 {
-  free (ptr);
+    free(ptr);
 }
 
 struct mntent *
-getmntent (FILE *stream)
+getmntent(FILE *stream)
 {
-  struct mntent_buffer *buffer = allocate_once (&mntent_buffer,
-						allocate, deallocate, NULL);
-  if (buffer == NULL)
-    /* If no core is available we don't have a chance to run the
-       program successfully and so returning NULL is an acceptable
-       result.  */
-    return NULL;
+    struct mntent_buffer *buffer = allocate_once(&mntent_buffer,
+                                   allocate, deallocate, NULL);
+    if (buffer == NULL)
+        /* If no core is available we don't have a chance to run the
+           program successfully and so returning NULL is an acceptable
+           result.  */
+    {
+        return NULL;
+    }
 
-  return __getmntent_r (stream, &buffer->m,
-			buffer->buffer, sizeof (buffer->buffer));
+    return __getmntent_r(stream, &buffer->m,
+                         buffer->buffer, sizeof(buffer->buffer));
 }
 
-weak_alias (mntent_buffer, __libc_mntent_freemem_ptr)
+weak_alias(mntent_buffer, __libc_mntent_freemem_ptr)

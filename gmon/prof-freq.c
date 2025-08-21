@@ -1,7 +1,7 @@
 /* Return frequency of ticks reported by profil.  Generic version. */
 /*-
  * Copyright (c) 1983, 1992, 1993
- *	The Regents of the University of California.  All rights reserved.
+ *  The Regents of the University of California.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -33,23 +33,23 @@
 #include <sys/time.h>
 #include <libc-internal.h>
 
-int
-__profile_frequency (void)
+int __profile_frequency(void)
 {
-  /*
-   * Discover the tick frequency of the machine if something goes wrong,
-   * we return 0, an impossible hertz.
-   */
-  struct itimerval tim;
+    /*
+     * Discover the tick frequency of the machine if something goes wrong,
+     * we return 0, an impossible hertz.
+     */
+    struct itimerval tim;
 
-  tim.it_interval.tv_sec = 0;
-  tim.it_interval.tv_usec = 1;
-  tim.it_value.tv_sec = 0;
-  tim.it_value.tv_usec = 0;
-  __setitimer(ITIMER_REAL, &tim, 0);
-  __setitimer(ITIMER_REAL, 0, &tim);
-  if (tim.it_interval.tv_usec < 2)
-    return 0;
-  return (1000000 / tim.it_interval.tv_usec);
+    tim.it_interval.tv_sec = 0;
+    tim.it_interval.tv_usec = 1;
+    tim.it_value.tv_sec = 0;
+    tim.it_value.tv_usec = 0;
+    __setitimer(ITIMER_REAL, &tim, 0);
+    __setitimer(ITIMER_REAL, 0, &tim);
+    if (tim.it_interval.tv_usec < 2) {
+        return 0;
+    }
+    return (1000000 / tim.it_interval.tv_usec);
 }
-libc_hidden_def (__profile_frequency)
+libc_hidden_def(__profile_frequency)

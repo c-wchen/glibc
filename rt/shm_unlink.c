@@ -23,23 +23,22 @@
 #include <unistd.h>
 
 /* Remove shared memory object.  */
-int
-__shm_unlink (const char *name)
+int __shm_unlink(const char *name)
 {
-  struct shmdir_name dirname;
-  if (__shm_get_name (&dirname, name, false) != 0)
-    {
-      __set_errno (ENOENT);
-      return -1;
+    struct shmdir_name dirname;
+    if (__shm_get_name(&dirname, name, false) != 0) {
+        __set_errno(ENOENT);
+        return -1;
     }
 
-  int result = __unlink (dirname.name);
-  if (result < 0 && errno == EPERM)
-    __set_errno (EACCES);
-  return result;
+    int result = __unlink(dirname.name);
+    if (result < 0 && errno == EPERM) {
+        __set_errno(EACCES);
+    }
+    return result;
 }
-versioned_symbol (libc, __shm_unlink, shm_unlink, GLIBC_2_34);
+versioned_symbol(libc, __shm_unlink, shm_unlink, GLIBC_2_34);
 
 #if OTHER_SHLIB_COMPAT (librt, GLIBC_2_2, GLIBC_2_34)
-compat_symbol (libc, __shm_unlink, shm_unlink, GLIBC_2_2);
+compat_symbol(libc, __shm_unlink, shm_unlink, GLIBC_2_2);
 #endif

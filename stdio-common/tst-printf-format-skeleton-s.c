@@ -24,7 +24,7 @@
 #define REF_VAL(v) (v)
 typedef const char *type_t;
 static const type_t vals[] =
-  { "", "The", "quick", "brown fox", "jumps over the lazy dog" };
+{ "", "The", "quick", "brown fox", "jumps over the lazy dog" };
 static const char length[] = "";
 
 #include "tst-printf-format-skeleton.c"

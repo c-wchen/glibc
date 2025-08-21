@@ -24,13 +24,13 @@
 /* Change the flags of the file referenced by FD to FLAGS.  */
 
 /* XXX should be __fchflags? */
-int
-fchflags (int fd, unsigned long int flags)
+int fchflags(int fd, unsigned long int flags)
 {
-  error_t err;
+    error_t err;
 
-  if (err = HURD_DPORT_USE (fd, __file_chflags (port, flags)))
-    return __hurd_dfail (fd, err);
+    if (err = HURD_DPORT_USE(fd, __file_chflags(port, flags))) {
+        return __hurd_dfail(fd, err);
+    }
 
-  return 0;
+    return 0;
 }

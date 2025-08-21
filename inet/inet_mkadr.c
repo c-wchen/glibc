@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 1983, 1993
- *	The Regents of the University of California.  All rights reserved.
+ *  The Regents of the University of California.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -36,20 +36,21 @@
  * building addresses stored in the ifnet structure.
  */
 struct in_addr
-__inet_makeaddr (in_addr_t net, in_addr_t host)
+__inet_makeaddr(in_addr_t net, in_addr_t host)
 {
-	struct in_addr in;
+    struct in_addr in;
 
-	if (net < 128)
-		in.s_addr = (net << IN_CLASSA_NSHIFT) | (host & IN_CLASSA_HOST);
-	else if (net < 65536)
-		in.s_addr = (net << IN_CLASSB_NSHIFT) | (host & IN_CLASSB_HOST);
-	else if (net < 16777216L)
-		in.s_addr = (net << IN_CLASSC_NSHIFT) | (host & IN_CLASSC_HOST);
-	else
-		in.s_addr = net | host;
-	in.s_addr = htonl(in.s_addr);
-	return in;
+    if (net < 128) {
+        in.s_addr = (net << IN_CLASSA_NSHIFT) | (host & IN_CLASSA_HOST);
+    } else if (net < 65536) {
+        in.s_addr = (net << IN_CLASSB_NSHIFT) | (host & IN_CLASSB_HOST);
+    } else if (net < 16777216L) {
+        in.s_addr = (net << IN_CLASSC_NSHIFT) | (host & IN_CLASSC_HOST);
+    } else {
+        in.s_addr = net | host;
+    }
+    in.s_addr = htonl(in.s_addr);
+    return in;
 }
-libc_hidden_def (__inet_makeaddr)
-weak_alias (__inet_makeaddr, inet_makeaddr)
+libc_hidden_def(__inet_makeaddr)
+weak_alias(__inet_makeaddr, inet_makeaddr)

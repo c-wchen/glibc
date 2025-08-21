@@ -41,38 +41,37 @@
     }                                                                         \
   while (0)
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int fds[2];
-  xpipe (fds);
-  TEST ("%d", 0);
-  TEST ("%d", 1);
-  TEST ("%d", INT_MAX);
-  TEST ("%d", -1);
-  TEST ("%d", INT_MIN + 1);
-  TEST ("%d", INT_MIN);
-  TEST ("%u", 0U);
-  TEST ("%u", 1U);
-  TEST ("%u", UINT_MAX);
-  TEST ("%x", 0);
-  TEST ("%x", 1);
-  TEST ("%x", UINT_MAX);
-  TEST ("%ld", 0L);
-  TEST ("%ld", 1L);
-  TEST ("%ld", LONG_MAX);
-  TEST ("%ld", -1L);
-  TEST ("%ld", LONG_MIN + 1);
-  TEST ("%ld", LONG_MIN);
-  TEST ("%lu", 0UL);
-  TEST ("%lu", 1UL);
-  TEST ("%lu", ULONG_MAX);
-  TEST ("%lx", 0UL);
-  TEST ("%lx", 1UL);
-  TEST ("%lx", ULONG_MAX);
-  xclose (fds[0]);
-  xclose (fds[1]);
-  return 0;
+    int fds[2];
+    xpipe(fds);
+    TEST("%d", 0);
+    TEST("%d", 1);
+    TEST("%d", INT_MAX);
+    TEST("%d", -1);
+    TEST("%d", INT_MIN + 1);
+    TEST("%d", INT_MIN);
+    TEST("%u", 0U);
+    TEST("%u", 1U);
+    TEST("%u", UINT_MAX);
+    TEST("%x", 0);
+    TEST("%x", 1);
+    TEST("%x", UINT_MAX);
+    TEST("%ld", 0L);
+    TEST("%ld", 1L);
+    TEST("%ld", LONG_MAX);
+    TEST("%ld", -1L);
+    TEST("%ld", LONG_MIN + 1);
+    TEST("%ld", LONG_MIN);
+    TEST("%lu", 0UL);
+    TEST("%lu", 1UL);
+    TEST("%lu", ULONG_MAX);
+    TEST("%lx", 0UL);
+    TEST("%lx", 1UL);
+    TEST("%lx", ULONG_MAX);
+    xclose(fds[0]);
+    xclose(fds[1]);
+    return 0;
 }
 
 #include <support/test-driver.c>

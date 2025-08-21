@@ -1,8 +1,7 @@
 #include "nldbl-compat.h"
 
 double
-attribute_hidden
-logl (double x)
+attribute_hidden logl(double x)
 {
-  return log (x);
+    return log(x);
 }

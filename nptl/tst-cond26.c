@@ -31,47 +31,46 @@ static pthread_mutex_t mut = PTHREAD_MUTEX_INITIALIZER;
 
 #define NOT_A_VALID_CLOCK 123456
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  xpthread_mutex_lock (&mut);
+    xpthread_mutex_lock(&mut);
 
-  const struct timespec ts = make_timespec (0, 0);
+    const struct timespec ts = make_timespec(0, 0);
 
-  /* These clocks are meaningless to sem_clockwait.  */
+    /* These clocks are meaningless to sem_clockwait.  */
 #if defined(CLOCK_PROCESS_CPUTIME_ID)
-  TEST_COMPARE (pthread_cond_clockwait (&cond, &mut,
+    TEST_COMPARE(pthread_cond_clockwait(&cond, &mut,
                                         CLOCK_PROCESS_CPUTIME_ID, &ts), EINVAL);
 #endif
 #if defined(CLOCK_THREAD_CPUTIME_ID)
-  TEST_COMPARE (pthread_cond_clockwait (&cond, &mut,
+    TEST_COMPARE(pthread_cond_clockwait(&cond, &mut,
                                         CLOCK_THREAD_CPUTIME_ID, &ts), EINVAL);
 #endif
 
-  /* These clocks might be meaningful, but are currently unsupported
-     by pthread_cond_clockwait.  */
+    /* These clocks might be meaningful, but are currently unsupported
+       by pthread_cond_clockwait.  */
 #if defined(CLOCK_REALTIME_COARSE)
-  TEST_COMPARE (pthread_cond_clockwait (&cond, &mut,
+    TEST_COMPARE(pthread_cond_clockwait(&cond, &mut,
                                         CLOCK_REALTIME_COARSE, &ts), EINVAL);
 #endif
 #if defined(CLOCK_MONOTONIC_RAW)
-  TEST_COMPARE (pthread_cond_clockwait (&cond, &mut,
+    TEST_COMPARE(pthread_cond_clockwait(&cond, &mut,
                                         CLOCK_MONOTONIC_RAW, &ts), EINVAL);
 #endif
 #if defined(CLOCK_MONOTONIC_COARSE)
-  TEST_COMPARE (pthread_cond_clockwait (&cond, &mut,
+    TEST_COMPARE(pthread_cond_clockwait(&cond, &mut,
                                         CLOCK_MONOTONIC_COARSE, &ts), EINVAL);
 #endif
 #if defined(CLOCK_BOOTTIME)
-  TEST_COMPARE (pthread_cond_clockwait (&cond, &mut,
+    TEST_COMPARE(pthread_cond_clockwait(&cond, &mut,
                                         CLOCK_BOOTTIME, &ts), EINVAL);
 #endif
 
-  /* This is a completely invalid clock.  */
-  TEST_COMPARE (pthread_cond_clockwait (&cond, &mut,
+    /* This is a completely invalid clock.  */
+    TEST_COMPARE(pthread_cond_clockwait(&cond, &mut,
                                         NOT_A_VALID_CLOCK, &ts), EINVAL);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

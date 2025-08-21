@@ -22,15 +22,15 @@
 #include <hurd.h>
 #include <pt-internal.h>
 
-int
-__sem_trywait (sem_t *sem)
+int __sem_trywait(sem_t *sem)
 {
-  struct new_sem *isem = (struct new_sem *) sem;
+    struct new_sem *isem = (struct new_sem *) sem;
 
-  if (__sem_waitfast (isem, 1) == 0)
-    return 0;
+    if (__sem_waitfast(isem, 1) == 0) {
+        return 0;
+    }
 
-  return __hurd_fail (EAGAIN);
+    return __hurd_fail(EAGAIN);
 }
 
-weak_alias (__sem_trywait, sem_trywait);
+weak_alias(__sem_trywait, sem_trywait);

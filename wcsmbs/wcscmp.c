@@ -23,22 +23,20 @@
 
 /* Compare S1 and S2, returning less than, equal to or
    greater than zero if S1 is lexicographically less than,
-   equal to or greater than S2.	 */
-int
-WCSCMP (const wchar_t *s1, const wchar_t *s2)
+   equal to or greater than S2.  */
+int WCSCMP(const wchar_t *s1, const wchar_t *s2)
 {
-  wchar_t c1, c2;
+    wchar_t c1, c2;
 
-  do
-    {
-      c1 = *s1++;
-      c2 = *s2++;
-      if (c2 == L'\0')
-	return c1 - c2;
-    }
-  while (c1 == c2);
+    do {
+        c1 = *s1++;
+        c2 = *s2++;
+        if (c2 == L'\0') {
+            return c1 - c2;
+        }
+    } while (c1 == c2);
 
-  return c1 < c2 ? -1 : 1;
+    return c1 < c2 ? -1 : 1;
 }
-libc_hidden_def (WCSCMP)
-weak_alias (WCSCMP, wcscmp)
+libc_hidden_def(WCSCMP)
+weak_alias(WCSCMP, wcscmp)

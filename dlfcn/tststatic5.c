@@ -28,43 +28,39 @@
    the size currently in use via the auxiliary vector.  The auxiliary
    vector and HWCAP/HWCAP2 bits are copied across the static dlopen
    boundary in __rtld_static_init.  */
-static int
-do_test (void)
+static int do_test(void)
 {
-  int pagesize = getpagesize ();
-  int (*my_getpagesize) (void);
-  int my_pagesize;
-  void *handle;
+    int pagesize = getpagesize();
+    int (*my_getpagesize)(void);
+    int my_pagesize;
+    void *handle;
 
-  /* Try to map a module.  */
-  handle = dlopen ("modstatic5.so", RTLD_LAZY | RTLD_LOCAL);
-  if (handle == NULL)
-    {
-      printf ("dlopen (modstatic5.so): %s\n", dlerror ());
-      return 1;
+    /* Try to map a module.  */
+    handle = dlopen("modstatic5.so", RTLD_LAZY | RTLD_LOCAL);
+    if (handle == NULL) {
+        printf("dlopen (modstatic5.so): %s\n", dlerror());
+        return 1;
     }
 
-  /* Get at its symbol.  */
-  my_getpagesize = dlsym (handle, "my_getpagesize");
-  if (my_getpagesize == NULL)
-    {
-      printf ("dlsym (my_getpagesize): %s\n", dlerror ());
-      return 1;
+    /* Get at its symbol.  */
+    my_getpagesize = dlsym(handle, "my_getpagesize");
+    if (my_getpagesize == NULL) {
+        printf("dlsym (my_getpagesize): %s\n", dlerror());
+        return 1;
     }
 
-  /* Make sure the page size reported is the same either way.  */
-  my_pagesize = my_getpagesize ();
-  if (my_pagesize != pagesize)
-    {
-      printf ("my_getpagesize: got %i, expected %i\n", my_pagesize, pagesize);
-      return 1;
+    /* Make sure the page size reported is the same either way.  */
+    my_pagesize = my_getpagesize();
+    if (my_pagesize != pagesize) {
+        printf("my_getpagesize: got %i, expected %i\n", my_pagesize, pagesize);
+        return 1;
     }
 
-  /* All done, clean up.  */
-  my_getpagesize = NULL;
-  dlclose (handle);
+    /* All done, clean up.  */
+    my_getpagesize = NULL;
+    dlclose(handle);
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

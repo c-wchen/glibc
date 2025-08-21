@@ -21,23 +21,23 @@
 #include "nis_xdr.h"
 #include "nis_intern.h"
 
-nis_error
-nis_mkdir (const_nis_name dir, const nis_server *server)
+nis_error nis_mkdir(const_nis_name dir, const nis_server *server)
 {
-  nis_error res, res2;
+    nis_error res, res2;
 
-  if (server == NULL)
-    res2 = __do_niscall (dir, NIS_MKDIR, (xdrproc_t) _xdr_nis_name,
-			 (caddr_t) &dir, (xdrproc_t) _xdr_nis_error,
-			 (caddr_t) &res, 0, NULL);
-  else
-    res2 = __do_niscall2 (server, 1, NIS_MKDIR,
-			  (xdrproc_t) _xdr_nis_name,
-			  (caddr_t) &dir, (xdrproc_t) _xdr_nis_error,
-			  (caddr_t) &res, 0, NULL);
-  if (res2 != NIS_SUCCESS)
-    return res2;
+    if (server == NULL)
+        res2 = __do_niscall(dir, NIS_MKDIR, (xdrproc_t) _xdr_nis_name,
+                            (caddr_t) &dir, (xdrproc_t) _xdr_nis_error,
+                            (caddr_t) &res, 0, NULL);
+    else
+        res2 = __do_niscall2(server, 1, NIS_MKDIR,
+                             (xdrproc_t) _xdr_nis_name,
+                             (caddr_t) &dir, (xdrproc_t) _xdr_nis_error,
+                             (caddr_t) &res, 0, NULL);
+    if (res2 != NIS_SUCCESS) {
+        return res2;
+    }
 
-  return res;
+    return res;
 }
-libnsl_hidden_nolink_def (nis_mkdir, GLIBC_2_1)
+libnsl_hidden_nolink_def(nis_mkdir, GLIBC_2_1)

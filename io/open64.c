@@ -23,34 +23,31 @@
 
 /* Open FILE with access OFLAG.  If O_CREAT or O_TMPFILE is in OFLAG,
    a third argument is the file protection.  */
-int
-__libc_open64 (const char *file, int oflag)
+int __libc_open64(const char *file, int oflag)
 {
-  int mode;
+    int mode;
 
-  if (file == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (file == NULL) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  if (__OPEN_NEEDS_MODE (oflag))
-    {
-      va_list arg;
-      va_start (arg, oflag);
-      mode = va_arg (arg, int);
-      va_end (arg);
+    if (__OPEN_NEEDS_MODE(oflag)) {
+        va_list arg;
+        va_start(arg, oflag);
+        mode = va_arg(arg, int);
+        va_end(arg);
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-strong_alias (__libc_open64, __open64)
-libc_hidden_def (__open64)
-weak_alias (__libc_open64, open64)
+strong_alias(__libc_open64, __open64)
+libc_hidden_def(__open64)
+weak_alias(__libc_open64, open64)
 
-stub_warning (open64)
+stub_warning(open64)
 
 /* __open64_2 is a generic wrapper that calls __open64.
    So give a stub warning for that symbol too.  */
-stub_warning (__open64_2)
+stub_warning(__open64_2)

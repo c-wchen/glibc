@@ -19,10 +19,10 @@
 #define SYMBOL_NAME _ZGVbN2vv_hypot
 #include "ifunc-mathvec-sse4_1.h"
 
-libc_ifunc_redirected (REDIRECT_NAME, SYMBOL_NAME, IFUNC_SELECTOR ());
+libc_ifunc_redirected(REDIRECT_NAME, SYMBOL_NAME, IFUNC_SELECTOR());
 
 #ifdef SHARED
-__hidden_ver1 (_ZGVbN2vv_hypot, __GI__ZGVbN2vv_hypot,
-	       __redirect__ZGVbN2vv_hypot)
-  __attribute__ ((visibility ("hidden")));
+__hidden_ver1(_ZGVbN2vv_hypot, __GI__ZGVbN2vv_hypot,
+              __redirect__ZGVbN2vv_hypot)
+__attribute__((visibility("hidden")));
 #endif

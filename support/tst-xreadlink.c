@@ -26,47 +26,44 @@
 #include <support/temp_file.h>
 #include <support/xunistd.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char *dir = support_create_temp_directory ("tst-xreadlink-");
-  char *symlink_name = xasprintf ("%s/symlink", dir);
-  add_temp_file (symlink_name);
+    char *dir = support_create_temp_directory("tst-xreadlink-");
+    char *symlink_name = xasprintf("%s/symlink", dir);
+    add_temp_file(symlink_name);
 
-  /* The limit 10000 is arbitrary and simply there to prevent an
-     attempt to exhaust all available disk space.  */
-  for (int size = 1; size < 10000; ++size)
-    {
-      char *contents = xmalloc (size + 1);
-      for (int i = 0; i < size; ++i)
-        contents[i] = 'a' + (rand () % 26);
-      contents[size] = '\0';
-      if (symlink (contents, symlink_name) != 0)
-        {
-          if (errno == ENAMETOOLONG)
-            {
-              printf ("info: ENAMETOOLONG failure at %d bytes\n", size);
-              free (contents);
-              break;
+    /* The limit 10000 is arbitrary and simply there to prevent an
+       attempt to exhaust all available disk space.  */
+    for (int size = 1; size < 10000; ++size) {
+        char *contents = xmalloc(size + 1);
+        for (int i = 0; i < size; ++i) {
+            contents[i] = 'a' + (rand() % 26);
+        }
+        contents[size] = '\0';
+        if (symlink(contents, symlink_name) != 0) {
+            if (errno == ENAMETOOLONG) {
+                printf("info: ENAMETOOLONG failure at %d bytes\n", size);
+                free(contents);
+                break;
             }
-          FAIL_EXIT1 ("symlink (%d bytes): %m", size);
+            FAIL_EXIT1("symlink (%d bytes): %m", size);
         }
 
-      char *readlink_result = xreadlink (symlink_name);
-      TEST_VERIFY (strcmp (readlink_result, contents) == 0);
-      free (readlink_result);
-      xunlink (symlink_name);
-      free (contents);
+        char *readlink_result = xreadlink(symlink_name);
+        TEST_VERIFY(strcmp(readlink_result, contents) == 0);
+        free(readlink_result);
+        xunlink(symlink_name);
+        free(contents);
     }
 
-  /* Create an empty file to suppress the temporary file deletion
-     warning.  */
-  xclose (xopen (symlink_name, O_WRONLY | O_CREAT, 0));
+    /* Create an empty file to suppress the temporary file deletion
+       warning.  */
+    xclose(xopen(symlink_name, O_WRONLY | O_CREAT, 0));
 
-  free (symlink_name);
-  free (dir);
+    free(symlink_name);
+    free(dir);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

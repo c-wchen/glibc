@@ -18,24 +18,23 @@
 
 #include <fenv.h>
 
-int
-__feholdexcept (fenv_t *envp)
+int __feholdexcept(fenv_t *envp)
 {
-  unsigned int mxcsr;
+    unsigned int mxcsr;
 
-  /* Store the environment.  Recall that fnstenv has a side effect of
-     masking all exceptions.  Then clear all exceptions.  */
-  __asm__ ("fnstenv %0\n\t"
-	   "stmxcsr %1\n\t"
-	   "fnclex"
-	   : "=m" (*envp), "=m" (envp->__mxcsr));
+    /* Store the environment.  Recall that fnstenv has a side effect of
+       masking all exceptions.  Then clear all exceptions.  */
+    __asm__("fnstenv %0\n\t"
+            "stmxcsr %1\n\t"
+            "fnclex"
+            : "=m"(*envp), "=m"(envp->__mxcsr));
 
-  /* Set the SSE MXCSR register.  */
-  mxcsr = (envp->__mxcsr | 0x1f80) & ~0x3f;
-  __asm__ ("ldmxcsr %0" : : "m" (*&mxcsr));
+    /* Set the SSE MXCSR register.  */
+    mxcsr = (envp->__mxcsr | 0x1f80) & ~0x3f;
+    __asm__("ldmxcsr %0" : : "m"( *&mxcsr));
 
-  return 0;
+    return 0;
 }
-libm_hidden_def (__feholdexcept)
-weak_alias (__feholdexcept, feholdexcept)
-libm_hidden_weak (feholdexcept)
+libm_hidden_def(__feholdexcept)
+weak_alias(__feholdexcept, feholdexcept)
+libm_hidden_weak(feholdexcept)

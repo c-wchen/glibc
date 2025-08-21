@@ -27,20 +27,19 @@
 #include <aio_misc.h>
 
 /* Return any pending signal or wait for one for the given time.  */
-int
-__aio_sigqueue (int sig, const union sigval val, pid_t caller_pid)
+int __aio_sigqueue(int sig, const union sigval val, pid_t caller_pid)
 {
-  siginfo_t info;
+    siginfo_t info;
 
-  /* First, clear the siginfo_t structure, so that we don't pass our
-     stack content to other tasks.  */
-  memset (&info, 0, sizeof (siginfo_t));
-  /* We must pass the information about the data in a siginfo_t value.  */
-  info.si_signo = sig;
-  info.si_code = SI_ASYNCIO;
-  info.si_pid = caller_pid;
-  info.si_uid = __getuid ();
-  info.si_value = val;
+    /* First, clear the siginfo_t structure, so that we don't pass our
+       stack content to other tasks.  */
+    memset(&info, 0, sizeof(siginfo_t));
+    /* We must pass the information about the data in a siginfo_t value.  */
+    info.si_signo = sig;
+    info.si_code = SI_ASYNCIO;
+    info.si_pid = caller_pid;
+    info.si_uid = __getuid();
+    info.si_value = val;
 
-  return INLINE_SYSCALL (rt_sigqueueinfo, 3, info.si_pid, sig, &info);
+    return INLINE_SYSCALL(rt_sigqueueinfo, 3, info.si_pid, sig, &info);
 }

@@ -23,51 +23,45 @@
 
 
 /* Get current value of timer TIMERID and store it in VALUE.  */
-int
-timer_gettime (timer_t timerid, struct itimerspec *value)
+int timer_gettime(timer_t timerid, struct itimerspec *value)
 {
-  struct timer_node *timer;
-  struct timespec now, expiry;
-  int retval = -1, armed = 0, valid;
-  clock_t clock = 0;
+    struct timer_node *timer;
+    struct timespec now, expiry;
+    int retval = -1, armed = 0, valid;
+    clock_t clock = 0;
 
-  pthread_mutex_lock (&__timer_mutex);
+    pthread_mutex_lock(&__timer_mutex);
 
-  timer = timer_id2ptr (timerid);
-  valid = timer_valid (timer);
+    timer = timer_id2ptr(timerid);
+    valid = timer_valid(timer);
 
-  if (valid) {
-    armed = timer->armed;
-    expiry = timer->expirytime;
-    clock = timer->clock;
-    value->it_interval = timer->value.it_interval;
-  }
-
-  pthread_mutex_unlock (&__timer_mutex);
-
-  if (valid)
-    {
-      if (armed)
-	{
-	  __clock_gettime (clock, &now);
-	  if (timespec_compare (&now, &expiry) < 0)
-	    timespec_sub (&value->it_value, &expiry, &now);
-	  else
-	    {
-	      value->it_value.tv_sec = 0;
-	      value->it_value.tv_nsec = 0;
-	    }
-	}
-      else
-	{
-	  value->it_value.tv_sec = 0;
-	  value->it_value.tv_nsec = 0;
-	}
-
-      retval = 0;
+    if (valid) {
+        armed = timer->armed;
+        expiry = timer->expirytime;
+        clock = timer->clock;
+        value->it_interval = timer->value.it_interval;
     }
-  else
-    __set_errno (EINVAL);
 
-  return retval;
+    pthread_mutex_unlock(&__timer_mutex);
+
+    if (valid) {
+        if (armed) {
+            __clock_gettime(clock, &now);
+            if (timespec_compare(&now, &expiry) < 0) {
+                timespec_sub(&value->it_value, &expiry, &now);
+            } else {
+                value->it_value.tv_sec = 0;
+                value->it_value.tv_nsec = 0;
+            }
+        } else {
+            value->it_value.tv_sec = 0;
+            value->it_value.tv_nsec = 0;
+        }
+
+        retval = 0;
+    } else {
+        __set_errno(EINVAL);
+    }
+
+    return retval;
 }

@@ -28,117 +28,114 @@
 #include <support/test-driver.h>
 #include <support/xstdio.h>
 
-#define START_TEST(DESC)			\
-  do						\
-    {						\
-      fds = support_descriptors_list ();	\
-      verbose_printf (DESC);			\
-    }						\
+#define START_TEST(DESC)            \
+  do                        \
+    {                       \
+      fds = support_descriptors_list ();    \
+      verbose_printf (DESC);            \
+    }                       \
   while (0)
 
-#define END_TEST				\
-  do						\
-    {						\
-      support_descriptors_check (fds);		\
-      support_descriptors_free (fds);		\
-    }						\
+#define END_TEST                \
+  do                        \
+    {                       \
+      support_descriptors_check (fds);      \
+      support_descriptors_free (fds);       \
+    }                       \
   while (0)
 
-int
-do_test (void)
+int do_test(void)
 {
-  mtrace ();
-  struct support_descriptors *fds;
-  FILE *fp;
-  int ret;
+    mtrace();
+    struct support_descriptors *fds;
+    FILE *fp;
+    int ret;
 
-  char *temp_dir = support_create_temp_directory ("tst-freopen5");
-  /* This file is removed at the end of each test rather than left
-     around between tests to avoid problems with subsequent tests
-     reopening it as a large (2GB + 1 byte) file.  */
-  char *file1 = xasprintf ("%s/file1", temp_dir);
+    char *temp_dir = support_create_temp_directory("tst-freopen5");
+    /* This file is removed at the end of each test rather than left
+       around between tests to avoid problems with subsequent tests
+       reopening it as a large (2GB + 1 byte) file.  */
+    char *file1 = xasprintf("%s/file1", temp_dir);
 
-  /* fopen with freopen64: large offsets OK.  */
-  START_TEST ("testing fopen with freopen64\n");
-  fp = fopen ("/dev/null", "r");
-  TEST_VERIFY_EXIT (fp != NULL);
-  fp = freopen64 (file1, "w", fp);
-  TEST_VERIFY_EXIT (fp != NULL);
-  setbuf (fp, NULL);
-  ret = fseeko64 (fp, 1LL << 32, SEEK_SET);
-  TEST_COMPARE (ret, 0);
-  ret = fputc ('x', fp);
-  TEST_COMPARE (ret, 'x');
-  xfclose (fp);
-  ret = remove (file1);
-  TEST_COMPARE (ret, 0);
-  END_TEST;
+    /* fopen with freopen64: large offsets OK.  */
+    START_TEST("testing fopen with freopen64\n");
+    fp = fopen("/dev/null", "r");
+    TEST_VERIFY_EXIT(fp != NULL);
+    fp = freopen64(file1, "w", fp);
+    TEST_VERIFY_EXIT(fp != NULL);
+    setbuf(fp, NULL);
+    ret = fseeko64(fp, 1LL << 32, SEEK_SET);
+    TEST_COMPARE(ret, 0);
+    ret = fputc('x', fp);
+    TEST_COMPARE(ret, 'x');
+    xfclose(fp);
+    ret = remove(file1);
+    TEST_COMPARE(ret, 0);
+    END_TEST;
 
-  /* fopen64 with freopen64: large offsets OK.  */
-  START_TEST ("testing fopen64 with freopen64\n");
-  fp = fopen64 ("/dev/null", "r");
-  TEST_VERIFY_EXIT (fp != NULL);
-  fp = freopen64 (file1, "w", fp);
-  TEST_VERIFY_EXIT (fp != NULL);
-  setbuf (fp, NULL);
-  ret = fseeko64 (fp, 1LL << 32, SEEK_SET);
-  TEST_COMPARE (ret, 0);
-  ret = fputc ('x', fp);
-  TEST_COMPARE (ret, 'x');
-  xfclose (fp);
-  ret = remove (file1);
-  TEST_COMPARE (ret, 0);
-  END_TEST;
+    /* fopen64 with freopen64: large offsets OK.  */
+    START_TEST("testing fopen64 with freopen64\n");
+    fp = fopen64("/dev/null", "r");
+    TEST_VERIFY_EXIT(fp != NULL);
+    fp = freopen64(file1, "w", fp);
+    TEST_VERIFY_EXIT(fp != NULL);
+    setbuf(fp, NULL);
+    ret = fseeko64(fp, 1LL << 32, SEEK_SET);
+    TEST_COMPARE(ret, 0);
+    ret = fputc('x', fp);
+    TEST_COMPARE(ret, 'x');
+    xfclose(fp);
+    ret = remove(file1);
+    TEST_COMPARE(ret, 0);
+    END_TEST;
 
-  /* fopen with freopen: large offsets not OK on 32-bit systems.  */
-  START_TEST ("testing fopen with freopen\n");
-  fp = fopen ("/dev/null", "r");
-  TEST_VERIFY_EXIT (fp != NULL);
-  fp = freopen (file1, "w", fp);
-  TEST_VERIFY_EXIT (fp != NULL);
-  setbuf (fp, NULL);
-  ret = fseeko64 (fp, 1LL << 32, SEEK_SET);
-  TEST_COMPARE (ret, 0);
-  errno = 0;
-  ret = fputc ('x', fp);
-  if (sizeof (off_t) == 4)
-    {
-      TEST_COMPARE (ret, EOF);
-      TEST_COMPARE (errno, EFBIG);
+    /* fopen with freopen: large offsets not OK on 32-bit systems.  */
+    START_TEST("testing fopen with freopen\n");
+    fp = fopen("/dev/null", "r");
+    TEST_VERIFY_EXIT(fp != NULL);
+    fp = freopen(file1, "w", fp);
+    TEST_VERIFY_EXIT(fp != NULL);
+    setbuf(fp, NULL);
+    ret = fseeko64(fp, 1LL << 32, SEEK_SET);
+    TEST_COMPARE(ret, 0);
+    errno = 0;
+    ret = fputc('x', fp);
+    if (sizeof(off_t) == 4) {
+        TEST_COMPARE(ret, EOF);
+        TEST_COMPARE(errno, EFBIG);
+    } else {
+        TEST_COMPARE(ret, 'x');
     }
-  else
-    TEST_COMPARE (ret, 'x');
-  fclose (fp);
-  ret = remove (file1);
-  TEST_COMPARE (ret, 0);
-  END_TEST;
+    fclose(fp);
+    ret = remove(file1);
+    TEST_COMPARE(ret, 0);
+    END_TEST;
 
-  /* fopen64 with freopen: large offsets not OK on 32-bit systems.  */
-  START_TEST ("testing fopen64 with freopen\n");
-  fp = fopen64 ("/dev/null", "r");
-  TEST_VERIFY_EXIT (fp != NULL);
-  fp = freopen (file1, "w", fp);
-  TEST_VERIFY_EXIT (fp != NULL);
-  setbuf (fp, NULL);
-  ret = fseeko64 (fp, 1LL << 32, SEEK_SET);
-  TEST_COMPARE (ret, 0);
-  errno = 0;
-  ret = fputc ('x', fp);
-  if (sizeof (off_t) == 4)
-    {
-      TEST_COMPARE (ret, EOF);
-      TEST_COMPARE (errno, EFBIG);
+    /* fopen64 with freopen: large offsets not OK on 32-bit systems.  */
+    START_TEST("testing fopen64 with freopen\n");
+    fp = fopen64("/dev/null", "r");
+    TEST_VERIFY_EXIT(fp != NULL);
+    fp = freopen(file1, "w", fp);
+    TEST_VERIFY_EXIT(fp != NULL);
+    setbuf(fp, NULL);
+    ret = fseeko64(fp, 1LL << 32, SEEK_SET);
+    TEST_COMPARE(ret, 0);
+    errno = 0;
+    ret = fputc('x', fp);
+    if (sizeof(off_t) == 4) {
+        TEST_COMPARE(ret, EOF);
+        TEST_COMPARE(errno, EFBIG);
+    } else {
+        TEST_COMPARE(ret, 'x');
     }
-  else
-    TEST_COMPARE (ret, 'x');
-  fclose (fp);
-  ret = remove (file1);
-  TEST_COMPARE (ret, 0);
-  END_TEST;
+    fclose(fp);
+    ret = remove(file1);
+    TEST_COMPARE(ret, 0);
+    END_TEST;
 
-  free (temp_dir);
-  free (file1);
-  return 0;
+    free(temp_dir);
+    free(file1);
+    return 0;
 }
 
 #include <support/test-driver.c>

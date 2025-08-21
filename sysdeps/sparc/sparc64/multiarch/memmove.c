@@ -27,7 +27,7 @@
 # define SYMBOL_NAME memmove
 # include "ifunc-memmove.h"
 
-sparc_libc_ifunc_redirected (__redirect_memmove, memmove, IFUNC_SELECTOR);
+sparc_libc_ifunc_redirected(__redirect_memmove, memmove, IFUNC_SELECTOR);
 
-sparc_ifunc_redirected_hidden_def (__redirect_memmove, memmove)
+sparc_ifunc_redirected_hidden_def(__redirect_memmove, memmove)
 #endif

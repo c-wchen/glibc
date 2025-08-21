@@ -20,9 +20,9 @@
 #include <support/xunistd.h>
 #include <unistd.h>
 
-void
-xchdir (const char *path)
+void xchdir(const char *path)
 {
-  if (chdir (path) != 0)
-    FAIL_EXIT1 ("chdir (\"%s\"): %m", path);
+    if (chdir(path) != 0) {
+        FAIL_EXIT1("chdir (\"%s\"): %m", path);
+    }
 }

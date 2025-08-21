@@ -36,119 +36,119 @@ pthread_cond_t waitqueue;
 
 /* Waits until the flipflop has a given value.
    Before the call, the lock is unlocked.  After the call, it is locked.  */
-static void
-waitfor (int value)
+static void waitfor(int value)
 {
-  if (pthread_mutex_lock (&lock))
-    exit (10);
-  while (flipflop != value)
-    if (pthread_cond_wait (&waitqueue, &lock))
-      exit (11);
+    if (pthread_mutex_lock(&lock)) {
+        exit(10);
+    }
+    while (flipflop != value)
+        if (pthread_cond_wait(&waitqueue, &lock)) {
+            exit(11);
+        }
 }
 
 /* Sets the flipflop to a given value.
    Before the call, the lock is locked.  After the call, it is unlocked.  */
-static void
-setto (int value)
+static void setto(int value)
 {
-  flipflop = value;
-  if (pthread_cond_signal (&waitqueue))
-    exit (20);
-  if (pthread_mutex_unlock (&lock))
-    exit (21);
+    flipflop = value;
+    if (pthread_cond_signal(&waitqueue)) {
+        exit(20);
+    }
+    if (pthread_mutex_unlock(&lock)) {
+        exit(21);
+    }
 }
 
-void *
-thread1_execution (void *arg)
+void *thread1_execution(void *arg)
 {
-  char *s;
+    char *s;
 
-  waitfor (1);
-  uselocale (newlocale (LC_ALL_MASK, "de_DE.ISO-8859-1", NULL));
-  setto (2);
+    waitfor(1);
+    uselocale(newlocale(LC_ALL_MASK, "de_DE.ISO-8859-1", NULL));
+    setto(2);
 
-  /* Here we expect output in ISO-8859-1.  */
+    /* Here we expect output in ISO-8859-1.  */
 
-  waitfor (1);
-  s = gettext ("cheese");
-  puts (s);
-  if (strcmp (s, "K\344se"))
-    {
-      fprintf (stderr, "thread 1 call 1 returned: %s\n", s);
-      result = 1;
+    waitfor(1);
+    s = gettext("cheese");
+    puts(s);
+    if (strcmp(s, "K\344se")) {
+        fprintf(stderr, "thread 1 call 1 returned: %s\n", s);
+        result = 1;
     }
-  setto (2);
+    setto(2);
 
-  waitfor (1);
-  s = gettext ("cheese");
-  puts (s);
-  if (strcmp (s, "K\344se"))
-    {
-      fprintf (stderr, "thread 1 call 2 returned: %s\n", s);
-      result = 1;
+    waitfor(1);
+    s = gettext("cheese");
+    puts(s);
+    if (strcmp(s, "K\344se")) {
+        fprintf(stderr, "thread 1 call 2 returned: %s\n", s);
+        result = 1;
     }
-  setto (2);
+    setto(2);
 
-  return NULL;
+    return NULL;
 }
 
-void *
-thread2_execution (void *arg)
+void *thread2_execution(void *arg)
 {
-  char *s;
+    char *s;
 
-  waitfor (2);
-  uselocale (newlocale (LC_ALL_MASK, "de_DE.UTF-8", NULL));
-  setto (1);
+    waitfor(2);
+    uselocale(newlocale(LC_ALL_MASK, "de_DE.UTF-8", NULL));
+    setto(1);
 
-  /* Here we expect output in UTF-8.  */
+    /* Here we expect output in UTF-8.  */
 
-  waitfor (2);
-  s = gettext ("cheese");
-  puts (s);
-  if (strcmp (s, "K\303\244se"))
-    {
-      fprintf (stderr, "thread 2 call 1 returned: %s\n", s);
-      result = 1;
+    waitfor(2);
+    s = gettext("cheese");
+    puts(s);
+    if (strcmp(s, "K\303\244se")) {
+        fprintf(stderr, "thread 2 call 1 returned: %s\n", s);
+        result = 1;
     }
-  setto (1);
+    setto(1);
 
-  waitfor (2);
-  s = gettext ("cheese");
-  puts (s);
-  if (strcmp (s, "K\303\244se"))
-    {
-      fprintf (stderr, "thread 2 call 2 returned: %s\n", s);
-      result = 1;
+    waitfor(2);
+    s = gettext("cheese");
+    puts(s);
+    if (strcmp(s, "K\303\244se")) {
+        fprintf(stderr, "thread 2 call 2 returned: %s\n", s);
+        result = 1;
     }
-  setto (1);
+    setto(1);
 
-  return NULL;
+    return NULL;
 }
 
-int
-main (void)
+int main(void)
 {
-  pthread_t thread1;
-  pthread_t thread2;
+    pthread_t thread1;
+    pthread_t thread2;
 
-  unsetenv ("LANGUAGE");
-  unsetenv ("OUTPUT_CHARSET");
-  textdomain ("codeset");
-  bindtextdomain ("codeset", OBJPFX "domaindir");
-  result = 0;
+    unsetenv("LANGUAGE");
+    unsetenv("OUTPUT_CHARSET");
+    textdomain("codeset");
+    bindtextdomain("codeset", OBJPFX "domaindir");
+    result = 0;
 
-  flipflop = 1;
-  if (pthread_mutex_init (&lock, NULL))
-    exit (2);
-  if (pthread_cond_init (&waitqueue, NULL))
-    exit (2);
-  if (pthread_create (&thread1, NULL, &thread1_execution, NULL))
-    exit (2);
-  if (pthread_create (&thread2, NULL, &thread2_execution, NULL))
-    exit (2);
-  if (pthread_join (thread2, NULL))
-    exit (3);
+    flipflop = 1;
+    if (pthread_mutex_init(&lock, NULL)) {
+        exit(2);
+    }
+    if (pthread_cond_init(&waitqueue, NULL)) {
+        exit(2);
+    }
+    if (pthread_create(&thread1, NULL, &thread1_execution, NULL)) {
+        exit(2);
+    }
+    if (pthread_create(&thread2, NULL, &thread2_execution, NULL)) {
+        exit(2);
+    }
+    if (pthread_join(thread2, NULL)) {
+        exit(3);
+    }
 
-  return result;
+    return result;
 }

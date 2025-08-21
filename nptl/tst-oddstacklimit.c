@@ -31,43 +31,40 @@
 
 static const char *command;
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int ret;
-  struct rlimit rlim;
+    int ret;
+    struct rlimit rlim;
 
-  ret = getrlimit (RLIMIT_STACK, &rlim);
-  if (ret != 0)
-    {
-      printf ("getrlimit failed: %s\n", strerror (errno));
-      return 1;
+    ret = getrlimit(RLIMIT_STACK, &rlim);
+    if (ret != 0) {
+        printf("getrlimit failed: %s\n", strerror(errno));
+        return 1;
     }
-  rlim.rlim_cur = ODD_STACK_LIMIT;
-  ret = setrlimit (RLIMIT_STACK, &rlim);
-  if (ret != 0)
-    {
-      printf ("setrlimit failed: %s\n", strerror (errno));
-      return 1;
+    rlim.rlim_cur = ODD_STACK_LIMIT;
+    ret = setrlimit(RLIMIT_STACK, &rlim);
+    if (ret != 0) {
+        printf("setrlimit failed: %s\n", strerror(errno));
+        return 1;
     }
-  ret = system (command);
-  if (ret == -1)
-    {
-      printf ("system failed: %s\n", strerror (errno));
-      return 1;
+    ret = system(command);
+    if (ret == -1) {
+        printf("system failed: %s\n", strerror(errno));
+        return 1;
     }
-  if (WIFEXITED (ret))
-    return WEXITSTATUS (ret);
-  else
-    return 1;
+    if (WIFEXITED(ret)) {
+        return WEXITSTATUS(ret);
+    } else {
+        return 1;
+    }
 }
 
-#define OPT_COMMAND	10000
-#define CMDLINE_OPTIONS	\
+#define OPT_COMMAND 10000
+#define CMDLINE_OPTIONS \
   { "command", required_argument, NULL, OPT_COMMAND },
-#define CMDLINE_PROCESS	\
-  case OPT_COMMAND:	\
-    command = optarg;	\
+#define CMDLINE_PROCESS \
+  case OPT_COMMAND: \
+    command = optarg;   \
     break;
 #define TEST_FUNCTION do_test ()
 #include "../test-skeleton.c"

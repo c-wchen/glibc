@@ -17,8 +17,7 @@
 
 #include <stdio_ext.h>
 
-int
-__freadable (FILE *fp)
+int __freadable(FILE *fp)
 {
-  return (fp->_flags & _IO_NO_READS) == 0;
+    return (fp->_flags & _IO_NO_READS) == 0;
 }

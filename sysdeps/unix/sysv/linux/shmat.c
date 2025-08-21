@@ -23,20 +23,20 @@
    segment of the calling process.  SHMADDR and SHMFLG determine how
    and where the segment is attached.  */
 
-void *
-shmat (int shmid, const void *shmaddr, int shmflg)
+void *shmat(int shmid, const void *shmaddr, int shmflg)
 {
 #ifdef __ASSUME_DIRECT_SYSVIPC_SYSCALLS
-  return (void*) INLINE_SYSCALL_CALL (shmat, shmid, shmaddr, shmflg);
+    return (void *) INLINE_SYSCALL_CALL(shmat, shmid, shmaddr, shmflg);
 #else
-  unsigned long resultvar;
-  void *raddr;
+    unsigned long resultvar;
+    void *raddr;
 
-  resultvar = INTERNAL_SYSCALL_CALL (ipc, IPCOP_shmat, shmid, shmflg,
-				     &raddr, shmaddr);
-  if (INTERNAL_SYSCALL_ERROR_P (resultvar))
-    return (void *) INLINE_SYSCALL_ERROR_RETURN_VALUE (INTERNAL_SYSCALL_ERRNO (resultvar));
+    resultvar = INTERNAL_SYSCALL_CALL(ipc, IPCOP_shmat, shmid, shmflg,
+                                      &raddr, shmaddr);
+    if (INTERNAL_SYSCALL_ERROR_P(resultvar)) {
+        return (void *) INLINE_SYSCALL_ERROR_RETURN_VALUE(INTERNAL_SYSCALL_ERRNO(resultvar));
+    }
 
-  return raddr;
+    return raddr;
 #endif
 }

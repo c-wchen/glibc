@@ -19,13 +19,12 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-int
-fegetmode (femode_t *modep)
+int fegetmode(femode_t *modep)
 {
-  unsigned int fpcr;
+    unsigned int fpcr;
 
-  _FPU_GETCW (fpcr);
-  *modep = fpcr;
+    _FPU_GETCW(fpcr);
+    *modep = fpcr;
 
-  return 0;
+    return 0;
 }

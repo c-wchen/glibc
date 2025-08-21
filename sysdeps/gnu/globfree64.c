@@ -7,4 +7,4 @@
 
 #include <posix/globfree.c>
 
-libc_hidden_def (globfree64)
+libc_hidden_def(globfree64)

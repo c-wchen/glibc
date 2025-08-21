@@ -19,31 +19,31 @@
 #include <fenv_libc.h>
 
 #undef feclearexcept
-int
-__feclearexcept (int excepts)
+int __feclearexcept(int excepts)
 {
-  fenv_union_t u, n;
+    fenv_union_t u, n;
 
-  /* Get the current state.  */
-  u.fenv = fegetenv_register ();
+    /* Get the current state.  */
+    u.fenv = fegetenv_register();
 
-  /* Clear the relevant bits.  */
-  n.l = u.l & ~((-(excepts >> (31 - FPSCR_VX) & 1) & FE_ALL_INVALID)
-		| (excepts & FPSCR_STICKY_BITS));
+    /* Clear the relevant bits.  */
+    n.l = u.l & ~((-(excepts >> (31 - FPSCR_VX) & 1) & FE_ALL_INVALID)
+                  | (excepts & FPSCR_STICKY_BITS));
 
-  /* Put the new state in effect.  */
-  if (u.l != n.l)
-    fesetenv_register (n.fenv);
+    /* Put the new state in effect.  */
+    if (u.l != n.l) {
+        fesetenv_register(n.fenv);
+    }
 
-  /* Success.  */
-  return 0;
+    /* Success.  */
+    return 0;
 }
 
 #include <shlib-compat.h>
 #if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
-strong_alias (__feclearexcept, __old_feclearexcept)
-compat_symbol (libm, __old_feclearexcept, feclearexcept, GLIBC_2_1);
+strong_alias(__feclearexcept, __old_feclearexcept)
+compat_symbol(libm, __old_feclearexcept, feclearexcept, GLIBC_2_1);
 #endif
 
-libm_hidden_ver (__feclearexcept, feclearexcept)
-versioned_symbol (libm, __feclearexcept, feclearexcept, GLIBC_2_2);
+libm_hidden_ver(__feclearexcept, feclearexcept)
+versioned_symbol(libm, __feclearexcept, feclearexcept, GLIBC_2_2);

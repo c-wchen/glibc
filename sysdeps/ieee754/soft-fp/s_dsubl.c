@@ -32,28 +32,27 @@
 #include <double.h>
 #include <quad.h>
 
-double
-__dsubl (_Float128 x, _Float128 y)
+double __dsubl(_Float128 x, _Float128 y)
 {
-  FP_DECL_EX;
-  FP_DECL_Q (X);
-  FP_DECL_Q (Y);
-  FP_DECL_Q (R);
-  FP_DECL_D (RN);
-  double ret;
+    FP_DECL_EX;
+    FP_DECL_Q(X);
+    FP_DECL_Q(Y);
+    FP_DECL_Q(R);
+    FP_DECL_D(RN);
+    double ret;
 
-  FP_INIT_ROUNDMODE;
-  FP_UNPACK_SEMIRAW_Q (X, x);
-  FP_UNPACK_SEMIRAW_Q (Y, y);
-  FP_SUB_Q (R, X, Y);
+    FP_INIT_ROUNDMODE;
+    FP_UNPACK_SEMIRAW_Q(X, x);
+    FP_UNPACK_SEMIRAW_Q(Y, y);
+    FP_SUB_Q(R, X, Y);
 #if _FP_W_TYPE_SIZE < 64
-  FP_TRUNC (D, Q, 2, 4, RN, R);
+    FP_TRUNC(D, Q, 2, 4, RN, R);
 #else
-  FP_TRUNC (D, Q, 1, 2, RN, R);
+    FP_TRUNC(D, Q, 1, 2, RN, R);
 #endif
-  FP_PACK_SEMIRAW_D (ret, RN);
-  FP_HANDLE_EXCEPTIONS;
-  CHECK_NARROW_SUB (ret, x, y);
-  return ret;
+    FP_PACK_SEMIRAW_D(ret, RN);
+    FP_HANDLE_EXCEPTIONS;
+    CHECK_NARROW_SUB(ret, x, y);
+    return ret;
 }
-libm_alias_double_ldouble (sub)
+libm_alias_double_ldouble(sub)

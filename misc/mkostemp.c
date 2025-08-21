@@ -27,12 +27,11 @@
    The last six characters of TEMPLATE must be "XXXXXX";
    they are replaced with a string that makes the filename unique.
    Then open the file and return a fd. */
-int
-mkostemp (char *template, int flags)
+int mkostemp(char *template, int flags)
 {
-  return __gen_tempname (template, 0, flags, __GT_FILE);
+    return __gen_tempname(template, 0, flags, __GT_FILE);
 }
 
 #if !defined O_LARGEFILE || O_LARGEFILE == 0
-weak_alias (mkostemp, mkostemp64)
+weak_alias(mkostemp, mkostemp64)
 #endif

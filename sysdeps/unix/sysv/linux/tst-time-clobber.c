@@ -21,16 +21,14 @@
 #include <support/check.h>
 #include <time.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  for (int original_errno = 0; original_errno < 2; ++original_errno)
-    {
-      errno = original_errno;
-      time (NULL);
-      TEST_COMPARE (errno, original_errno);
+    for (int original_errno = 0; original_errno < 2; ++original_errno) {
+        errno = original_errno;
+        time(NULL);
+        TEST_COMPARE(errno, original_errno);
     }
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

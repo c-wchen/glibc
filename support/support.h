@@ -39,87 +39,87 @@ __BEGIN_DECLS
 
 /* Write a message to standard output.  Can be used in signal
    handlers.  */
-void write_message (const char *message) __attribute__ ((nonnull (1)));
+void write_message(const char *message) __attribute__((nonnull(1)));
 
 /* Avoid all the buffer overflow messages on stderr.  */
-void ignore_stderr (void);
+void ignore_stderr(void);
 
 /* Set fortification error handler.  Used when tests want to verify that bad
    code is caught by the library.  */
-void set_fortify_handler (void (*handler) (int sig));
+void set_fortify_handler(void (*handler)(int sig));
 
 /* Report an out-of-memory error for the allocation of SIZE bytes in
    FUNCTION, terminating the process.  */
-void oom_error (const char *function, size_t size)
-  __attribute__ ((nonnull (1)));
+void oom_error(const char *function, size_t size)
+__attribute__((nonnull(1)));
 
 /* Return a pointer to a memory region of SIZE bytes.  The memory is
    initialized to zero and will be shared with subprocesses (across
    fork).  The returned pointer must be freed using
    support_shared_free; it is not compatible with the malloc
    functions.  */
-void *support_shared_allocate (size_t size);
+void *support_shared_allocate(size_t size);
 
 /* Deallocate a pointer returned by support_shared_allocate.  */
-void support_shared_free (void *);
+void support_shared_free(void *);
 
 /* Write CONTENTS to the file PATH.  Create or truncate the file as
    needed.  The file mode is 0666 masked by the umask.  Terminate the
    process on error.  */
-void support_write_file_string (const char *path, const char *contents);
+void support_write_file_string(const char *path, const char *contents);
 
 /* Quote the contents of the byte array starting at BLOB, of LENGTH
    bytes, in such a way that the result string can be included in a C
    literal (in single/double quotes, without putting the quotes into
    the result).  */
-char *support_quote_blob (const void *blob, size_t length);
+char *support_quote_blob(const void *blob, size_t length);
 
 /* Quote the contents of the wide character array starting at BLOB, of
    LENGTH wide characters, in such a way that the result string can be
    included in a C wide string literal (in single/double quotes,
    without putting the quotes into the result).  */
-char *support_quote_blob_wide (const void *blob, size_t length);
+char *support_quote_blob_wide(const void *blob, size_t length);
 
 /* Quote the contents of the string, in such a way that the result
    string can be included in a C literal (in single/double quotes,
    without putting the quotes into the result).  */
-char *support_quote_string (const char *);
+char *support_quote_string(const char *);
 
 /* Returns non-zero if the file descriptor is a regular file on a file
    system which supports holes (that is, seeking and writing does not
    allocate storage for the range of zeros).  FD must refer to a
    regular file open for writing, and initially empty.  */
-int support_descriptor_supports_holes (int fd);
+int support_descriptor_supports_holes(int fd);
 
 /* Predicates that a test requires a working /proc filesystem.  This
    call will exit with UNSUPPORTED if /proc is not available, printing
    WHY_MSG as part of the diagnostic.  */
-void support_need_proc (const char *why_msg);
+void support_need_proc(const char *why_msg);
 
 /* Error-checking wrapper functions which terminate the process on
    error.  */
 
-extern void *xmalloc (size_t n)
-  __attribute_malloc__ __attribute_alloc_size__ ((1)) __attr_dealloc_free
-  __returns_nonnull;
-extern void *xcalloc (size_t n, size_t s)
-  __attribute_malloc__ __attribute_alloc_size__ ((1, 2)) __attr_dealloc_free
-  __returns_nonnull;
-extern void *xrealloc (void *o, size_t n)
-  __attribute_malloc__ __attribute_alloc_size__ ((2)) __attr_dealloc_free;
-extern char *xstrdup (const char *) __attribute_malloc__ __attr_dealloc_free
-  __returns_nonnull;
-void *xposix_memalign (size_t alignment, size_t n)
-  __attribute_malloc__ __attribute_alloc_align__ ((1))
-  __attribute_alloc_size__ ((2)) __attr_dealloc_free __returns_nonnull;
-char *xasprintf (const char *format, ...)
-  __attribute__ ((format (printf, 1, 2), __malloc__)) __attr_dealloc_free
-  __returns_nonnull;
-char *xstrdup (const char *) __attr_dealloc_free __returns_nonnull;
-char *xstrndup (const char *, size_t) __attr_dealloc_free __returns_nonnull;
-char *xsetlocale (int category, const char *locale);
-locale_t xnewlocale (int category_mask, const char *locale, locale_t base);
-char *xuselocale (locale_t newloc);
+extern void *xmalloc(size_t n)
+__attribute_malloc__ __attribute_alloc_size__((1)) __attr_dealloc_free
+__returns_nonnull;
+extern void *xcalloc(size_t n, size_t s)
+__attribute_malloc__ __attribute_alloc_size__((1, 2)) __attr_dealloc_free
+__returns_nonnull;
+extern void *xrealloc(void *o, size_t n)
+__attribute_malloc__ __attribute_alloc_size__((2)) __attr_dealloc_free;
+extern char *xstrdup(const char *) __attribute_malloc__ __attr_dealloc_free
+__returns_nonnull;
+void *xposix_memalign(size_t alignment, size_t n)
+__attribute_malloc__ __attribute_alloc_align__((1))
+__attribute_alloc_size__((2)) __attr_dealloc_free __returns_nonnull;
+char *xasprintf(const char *format, ...)
+__attribute__((format(printf, 1, 2), __malloc__)) __attr_dealloc_free
+__returns_nonnull;
+char *xstrdup(const char *) __attr_dealloc_free __returns_nonnull;
+char *xstrndup(const char *, size_t) __attr_dealloc_free __returns_nonnull;
+char *xsetlocale(int category, const char *locale);
+locale_t xnewlocale(int category_mask, const char *locale, locale_t base);
+char *xuselocale(locale_t newloc);
 
 /* These point to the TOP of the source/build tree, not your (or
    support's) subdirectory.  */
@@ -150,69 +150,68 @@ extern const char support_sysconfdir_prefix[];
 /* Copies the file at the path FROM to TO.  If TO does not exist, it
    is created.  If TO is a regular file, it is truncated before
    copying.  The file mode is copied, but the permissions are not.  */
-extern void support_copy_file (const char *from, const char *to);
+extern void support_copy_file(const char *from, const char *to);
 
-extern ssize_t support_copy_file_range (int, off64_t *, int, off64_t *,
-					size_t, unsigned int);
+extern ssize_t support_copy_file_range(int, off64_t *, int, off64_t *,
+                                       size_t, unsigned int);
 
 /* Return true if PATH supports 64-bit time_t interfaces for file
    operations (such as fstatat or utimensat).  */
-extern bool support_path_support_time64_value (const char *path, int64_t at,
-					       int64_t mt);
-static __inline bool support_path_support_time64 (const char *path)
+extern bool support_path_support_time64_value(const char *path, int64_t at,
+        int64_t mt);
+static __inline bool support_path_support_time64(const char *path)
 {
-  /* 1s and 2s after y2038 limit.  */
-  return support_path_support_time64_value (path, 0x80000001ULL,
-					    0x80000002ULL);
+    /* 1s and 2s after y2038 limit.  */
+    return support_path_support_time64_value(path, 0x80000001ULL,
+            0x80000002ULL);
 }
 
 /* Return true if the setitimer and getitimer syscalls support 64-bit time_t
    values without resulting in overflow.  This is not true on some linux systems
    which have 64-bit time_t due to legacy kernel API's.  */
-static __inline bool support_itimer_support_time64 (void)
+static __inline bool support_itimer_support_time64(void)
 {
 #ifdef __KERNEL_OLD_TIMEVAL_MATCHES_TIMEVAL64
-  return __KERNEL_OLD_TIMEVAL_MATCHES_TIMEVAL64;
+    return __KERNEL_OLD_TIMEVAL_MATCHES_TIMEVAL64;
 #else
-  return sizeof (__time_t) == 8;
+    return sizeof(__time_t) == 8;
 #endif
 }
 
 /* Return true if stat supports nanoseconds resolution.  PATH is used
    for tests and its ctime may change.  */
-extern bool support_stat_nanoseconds (const char *path);
+extern bool support_stat_nanoseconds(const char *path);
 
 /* Return true if select modify the timeout to reflect the amount of time
    no slept.  */
-extern bool support_select_modifies_timeout (void);
+extern bool support_select_modifies_timeout(void);
 
 /* Return true if select normalize the timeout input by taking in account
    tv_usec larger than 1000000.  */
-extern bool support_select_normalizes_timeout (void);
+extern bool support_select_normalizes_timeout(void);
 
 /* Return true if socket FD supports 64-bit timestamps with the SOL_SOCKET
    and SO_TIMESTAMP/SO_TIMESTAMPNS.  */
-extern bool support_socket_so_timestamp_time64 (int fd);
+extern bool support_socket_so_timestamp_time64(int fd);
 
 /* Create a timer that trigger after SEC seconds and NSEC nanoseconds.  If
    REPEAT is true the timer will repeat indefinitely.  If CALLBACK is not
    NULL, the function will be called when the timer expires; otherwise a
    dummy empty function is used instead.
    This is implemented with POSIX per-process timer with SIGEV_SIGNAL.  */
-timer_t support_create_timer (uint64_t sec, long int nsec, bool repeat,
-			      void (*callback)(int));
+timer_t support_create_timer(uint64_t sec, long int nsec, bool repeat,
+                             void (*callback)(int));
 /* Disable the timer TIMER.  */
-void support_delete_timer (timer_t timer);
+void support_delete_timer(timer_t timer);
 
 /* Wait until all threads except the current thread have exited (as
    far as the kernel is concerned).  */
-void support_wait_for_thread_exit (void);
+void support_wait_for_thread_exit(void);
 
-struct support_stack
-{
-  void *stack;
-  size_t size;
-  size_t guardsize;
+struct support_stack {
+    void *stack;
+    size_t size;
+    size_t guardsize;
 };
 
 /* Allocate stack suitable to used with xclone or sigaltstack call. The stack
@@ -222,10 +221,10 @@ struct support_stack
    The returned value on ALLOC_BASE and ALLOC_SIZE will be the usable stack
    region, excluding the GUARD_SIZE allocated area.
    It also terminates the process on error.  */
-struct support_stack support_stack_alloc (size_t size);
+struct support_stack support_stack_alloc(size_t size);
 
 /* Deallocate the STACK.  */
-void support_stack_free (struct support_stack *stack);
+void support_stack_free(struct support_stack *stack);
 
 
 /* Create a range of NUM opened '/dev/null' file descriptors using FLAGS and
@@ -233,11 +232,11 @@ void support_stack_free (struct support_stack *stack);
    descriptor is found within the specified range and also increases
    RLIMIT_NOFILE if required.
    The returned value is the lowest file descriptor number.  */
-int support_open_dev_null_range (int num, int flags, mode_t mode);
+int support_open_dev_null_range(int num, int flags, mode_t mode);
 
 
 /* Check if kernel supports set VMA range name.  */
-extern bool support_set_vma_name_supported (void);
+extern bool support_set_vma_name_supported(void);
 
 __END_DECLS
 

@@ -20,23 +20,22 @@
 #include <fenv_libc.h>
 #include <fpu_control.h>
 
-int
-feclearexcept (int excepts)
+int feclearexcept(int excepts)
 {
-  int fpsr;
+    int fpsr;
 
-  /* Mask out unsupported bits/exceptions.  */
-  excepts &= FE_ALL_EXCEPT;
+    /* Mask out unsupported bits/exceptions.  */
+    excepts &= FE_ALL_EXCEPT;
 
-  /* Read the complete control word.  */
-  _FPU_GETFPSR (fpsr);
+    /* Read the complete control word.  */
+    _FPU_GETFPSR(fpsr);
 
-  /* Clear the relevant bits.  */
-  fpsr &= ~(excepts | (excepts << CAUSE_SHIFT));
+    /* Clear the relevant bits.  */
+    fpsr &= ~(excepts | (excepts << CAUSE_SHIFT));
 
-  /* Put the new data in effect.  */
-  _FPU_SETFPSR (fpsr);
+    /* Put the new data in effect.  */
+    _FPU_SETFPSR(fpsr);
 
-  return 0;
+    return 0;
 }
-libm_hidden_def (feclearexcept)
+libm_hidden_def(feclearexcept)

@@ -31,47 +31,45 @@
 #define offsetofend(TYPE, MEMBER) \
   (offsetof (TYPE, MEMBER) + sizeof_field (TYPE, MEMBER))
 
-_Static_assert (sizeof (__ifunc_arg_t) == _IFUNC_ARG_SIZE_VER1,
-  "sizeof (__ifunc_arg_t) != _IFUNC_ARG_SIZE_VER1");
+_Static_assert(sizeof(__ifunc_arg_t) == _IFUNC_ARG_SIZE_VER1,
+               "sizeof (__ifunc_arg_t) != _IFUNC_ARG_SIZE_VER1");
 
-_Static_assert (_IFUNC_ARG_SIZE_VER1
-  == (_IFUNC_HWCAP_MAX + 1) * sizeof (unsigned long),
-  "_IFUNC_ARG_SIZE_VER1 and _IFUNC_HWCAP_MAX mismatch");
+_Static_assert(_IFUNC_ARG_SIZE_VER1
+               == (_IFUNC_HWCAP_MAX + 1) * sizeof(unsigned long),
+               "_IFUNC_ARG_SIZE_VER1 and _IFUNC_HWCAP_MAX mismatch");
 
 #undef offsetofend
 #undef sizeof_field
 
-#define ELF_MACHINE_IRELA	1
+#define ELF_MACHINE_IRELA   1
 
 static inline ElfW(Addr)
-__attribute ((always_inline))
-elf_ifunc_invoke (ElfW(Addr) addr)
+__attribute((always_inline))
+elf_ifunc_invoke(ElfW(Addr) addr)
 {
-  __ifunc_arg_t arg;
+    __ifunc_arg_t arg;
 
-  arg._size = sizeof (arg);
-  arg._hwcap = GLRO(dl_hwcap);
-  arg._hwcap2 = GLRO(dl_hwcap2);
-  arg._hwcap3 = GLRO(dl_hwcap3);
-  arg._hwcap4 = GLRO(dl_hwcap4);
-  return ((ElfW(Addr) (*) (uint64_t, const __ifunc_arg_t *)) (addr))
-	 (GLRO(dl_hwcap) | _IFUNC_ARG_HWCAP, &arg);
+    arg._size = sizeof(arg);
+    arg._hwcap = GLRO(dl_hwcap);
+    arg._hwcap2 = GLRO(dl_hwcap2);
+    arg._hwcap3 = GLRO(dl_hwcap3);
+    arg._hwcap4 = GLRO(dl_hwcap4);
+    return ((ElfW(Addr)(*)(uint64_t, const __ifunc_arg_t *))(addr))
+           (GLRO(dl_hwcap) | _IFUNC_ARG_HWCAP, &arg);
 }
 
-static inline void
-__attribute ((always_inline))
-elf_irela (const ElfW(Rela) *reloc)
+static inline void __attribute((always_inline))
+elf_irela(const ElfW(Rela) *reloc)
 {
-  ElfW(Addr) *const reloc_addr = (void *) reloc->r_offset;
-  const unsigned long int r_type = ELFW(R_TYPE) (reloc->r_info);
+    ElfW(Addr) *const reloc_addr = (void *) reloc->r_offset;
+    const unsigned long int r_type = ELFW(R_TYPE)(reloc->r_info);
 
-  if (__glibc_likely (r_type == R_AARCH64_IRELATIVE))
-    {
-      ElfW(Addr) value = elf_ifunc_invoke (reloc->r_addend);
-      *reloc_addr = value;
+    if (__glibc_likely(r_type == R_AARCH64_IRELATIVE)) {
+        ElfW(Addr) value = elf_ifunc_invoke(reloc->r_addend);
+        *reloc_addr = value;
+    } else {
+        __libc_fatal("Unexpected reloc type in static binary.\n");
     }
-  else
-    __libc_fatal ("Unexpected reloc type in static binary.\n");
 }
 
 #endif

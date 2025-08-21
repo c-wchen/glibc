@@ -23,37 +23,35 @@
 #include <support/xthread.h>
 #include <stdlib.h>
 
-static void *
-thr_func (void *arg)
+static void *thr_func(void *arg)
 {
-  abort ();
-  return NULL;
+    abort();
+    return NULL;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int max_cpu = xsysconf (_SC_NPROCESSORS_CONF) + 1;
-  /* Set a affinity mask with an invalid CPU.  */
-  cpu_set_t *cpuset = CPU_ALLOC (max_cpu);
-  TEST_VERIFY_EXIT (cpuset != NULL);
-  size_t cpusetsize = CPU_ALLOC_SIZE (max_cpu);
-  CPU_ZERO_S (cpusetsize, cpuset);
-  CPU_SET_S (max_cpu, cpusetsize, cpuset);
+    int max_cpu = xsysconf(_SC_NPROCESSORS_CONF) + 1;
+    /* Set a affinity mask with an invalid CPU.  */
+    cpu_set_t *cpuset = CPU_ALLOC(max_cpu);
+    TEST_VERIFY_EXIT(cpuset != NULL);
+    size_t cpusetsize = CPU_ALLOC_SIZE(max_cpu);
+    CPU_ZERO_S(cpusetsize, cpuset);
+    CPU_SET_S(max_cpu, cpusetsize, cpuset);
 
-  /* Check if the affinity mask does trigger an error.  */
-  TEST_COMPARE (sched_setaffinity (0, cpusetsize, cpuset), -1);
-  TEST_COMPARE (errno, EINVAL);
+    /* Check if the affinity mask does trigger an error.  */
+    TEST_COMPARE(sched_setaffinity(0, cpusetsize, cpuset), -1);
+    TEST_COMPARE(errno, EINVAL);
 
-  pthread_attr_t attr;
-  xpthread_attr_init (&attr);
-  xpthread_attr_setaffinity_np (&attr, cpusetsize, cpuset);
+    pthread_attr_t attr;
+    xpthread_attr_init(&attr);
+    xpthread_attr_setaffinity_np(&attr, cpusetsize, cpuset);
 
-  pthread_t thr;
-  TEST_COMPARE (pthread_create (&thr, &attr, thr_func, NULL), EINVAL);
-  xpthread_attr_destroy (&attr);
+    pthread_t thr;
+    TEST_COMPARE(pthread_create(&thr, &attr, thr_func, NULL), EINVAL);
+    xpthread_attr_destroy(&attr);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

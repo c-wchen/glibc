@@ -28,58 +28,55 @@
 /* This is not specifically needed for the test, but (1) does
    something to the data so gcc doesn't optimize it away, and (2) may
    help when developing future tests.  */
-static void
-print_mi (const char *msg, struct mallinfo2 *m)
+static void print_mi(const char *msg, struct mallinfo2 *m)
 {
-  printf("\n%s...\n", msg);
+    printf("\n%s...\n", msg);
 #define P(f) printf("%s: %zu\n", #f, m->f)
-  P(arena);
-  P(ordblks);
-  P(smblks);
-  P(hblks);
-  P(hblkhd);
-  P(usmblks);
-  P(fsmblks);
-  P(uordblks);
-  P(fordblks);
-  P(keepcost);
+    P(arena);
+    P(ordblks);
+    P(smblks);
+    P(hblks);
+    P(hblkhd);
+    P(usmblks);
+    P(fsmblks);
+    P(uordblks);
+    P(fordblks);
+    P(keepcost);
 }
 
 /* We do this to force the call to malloc to not be optimized
    away.  */
 volatile void *ptr;
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  struct mallinfo2 mi1, mi2;
-  int i;
-  size_t total = 0;
+    struct mallinfo2 mi1, mi2;
+    int i;
+    size_t total = 0;
 
-  /* This is the key difference between mallinfo() and mallinfo2().
-     It may be a false positive if int and size_t are the same
-     size.  */
-  TEST_COMPARE (sizeof (mi1.arena), sizeof (size_t));
+    /* This is the key difference between mallinfo() and mallinfo2().
+       It may be a false positive if int and size_t are the same
+       size.  */
+    TEST_COMPARE(sizeof(mi1.arena), sizeof(size_t));
 
-  mi1 = mallinfo2 ();
-  print_mi ("before", &mi1);
+    mi1 = mallinfo2();
+    print_mi("before", &mi1);
 
-  /* Allocations that are meaningful-sized but not so large as to be
-     mmapped, so that they're all accounted for in the field we test
-     below.  */
-  for (i = 1; i < 20; ++i)
-    {
-      ptr = malloc (160 * i);
-      total += 160 * i;
+    /* Allocations that are meaningful-sized but not so large as to be
+       mmapped, so that they're all accounted for in the field we test
+       below.  */
+    for (i = 1; i < 20; ++i) {
+        ptr = malloc(160 * i);
+        total += 160 * i;
     }
 
-  mi2 = mallinfo2 ();
-  print_mi ("after", &mi2);
+    mi2 = mallinfo2();
+    print_mi("after", &mi2);
 
-  /* Check at least something changed.  */
-  TEST_VERIFY (mi2.uordblks >= mi1.uordblks + total);
+    /* Check at least something changed.  */
+    TEST_VERIFY(mi2.uordblks >= mi1.uordblks + total);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

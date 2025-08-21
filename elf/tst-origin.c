@@ -16,11 +16,10 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-extern void foo (void);
+extern void foo(void);
 
-int
-main (int argc, char *argv[])
+int main(int argc, char *argv[])
 {
-  foo ();
-  return 0;
+    foo();
+    return 0;
 }

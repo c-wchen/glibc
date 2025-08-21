@@ -22,46 +22,44 @@
 #include <sysdep.h>
 #include <kernel-features.h>
 
-int
-__timerfd_gettime64 (int fd, struct __itimerspec64 *value)
+int __timerfd_gettime64(int fd, struct __itimerspec64 *value)
 {
 #ifndef __NR_timerfd_gettime64
 # define __NR_timerfd_gettime64 __NR_timerfd_gettime
 #endif
 
 #ifdef __ASSUME_TIME64_SYSCALLS
-  return INLINE_SYSCALL_CALL (timerfd_gettime64, fd, value);
+    return INLINE_SYSCALL_CALL(timerfd_gettime64, fd, value);
 #else
-  int ret = INLINE_SYSCALL_CALL (timerfd_gettime64, fd, value);
-  if (ret == 0 || errno != ENOSYS)
-    return ret;
-  struct itimerspec its32;
-  int retval = INLINE_SYSCALL_CALL (timerfd_gettime, fd, &its32);
-  if (retval == 0)
-    {
-      value->it_interval = valid_timespec_to_timespec64 (its32.it_interval);
-      value->it_value = valid_timespec_to_timespec64 (its32.it_value);
+    int ret = INLINE_SYSCALL_CALL(timerfd_gettime64, fd, value);
+    if (ret == 0 || errno != ENOSYS) {
+        return ret;
+    }
+    struct itimerspec its32;
+    int retval = INLINE_SYSCALL_CALL(timerfd_gettime, fd, &its32);
+    if (retval == 0) {
+        value->it_interval = valid_timespec_to_timespec64(its32.it_interval);
+        value->it_value = valid_timespec_to_timespec64(its32.it_value);
     }
 
-  return retval;
+    return retval;
 #endif
 }
 
 #if __TIMESIZE != 64
-libc_hidden_def (__timerfd_gettime64)
+libc_hidden_def(__timerfd_gettime64)
 
 int
-__timerfd_gettime (int fd, struct itimerspec *value)
+__timerfd_gettime(int fd, struct itimerspec *value)
 {
-  struct __itimerspec64 its64;
-  int retval = __timerfd_gettime64 (fd, &its64);
-  if (retval == 0)
-    {
-      value->it_interval = valid_timespec64_to_timespec (its64.it_interval);
-      value->it_value = valid_timespec64_to_timespec (its64.it_value);
+    struct __itimerspec64 its64;
+    int retval = __timerfd_gettime64(fd, &its64);
+    if (retval == 0) {
+        value->it_interval = valid_timespec64_to_timespec(its64.it_interval);
+        value->it_value = valid_timespec64_to_timespec(its64.it_value);
     }
 
-  return retval;
+    return retval;
 }
 #endif
-strong_alias (__timerfd_gettime, timerfd_gettime)
+strong_alias(__timerfd_gettime, timerfd_gettime)

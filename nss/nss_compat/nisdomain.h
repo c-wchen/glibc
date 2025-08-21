@@ -17,4 +17,4 @@
 
 /* Set OUTDOMAIN to a pointer to the current NIS domain name, or NULL if
    not set.  Return zero on success, an error number on failure.  */
-extern int __nss_get_default_domain (char **outdomain);
+extern int __nss_get_default_domain(char **outdomain);

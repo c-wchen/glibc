@@ -18,8 +18,7 @@
 
 /* This structure must have the same shape as the linux kernel
    equivalent.  */
-struct kernel_rt_sigframe
-{
-  siginfo_t info;
-  ucontext_t uc;
+struct kernel_rt_sigframe {
+    siginfo_t info;
+    ucontext_t uc;
 };

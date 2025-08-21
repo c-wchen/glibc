@@ -20,8 +20,8 @@
 #include "mathimpl.h"
 
 FLOAT
-M_DECL_FUNC (__nearbyint) (FLOAT x)
+M_DECL_FUNC(__nearbyint)(FLOAT x)
 {
-  return __m81_u(M_SUF (__nearbyint)) (x);
+    return __m81_u(M_SUF(__nearbyint))(x);
 }
-declare_mgen_alias (__nearbyint, nearbyint)
+declare_mgen_alias(__nearbyint, nearbyint)

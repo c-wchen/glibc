@@ -3,7 +3,7 @@
 
 # ifndef _ISOMAC
 
-libc_hidden_proto (xdr_authunix_parms)
+libc_hidden_proto(xdr_authunix_parms)
 
 # endif /* !_ISOMAC */
 #endif /* rpc/auth_unix.h */

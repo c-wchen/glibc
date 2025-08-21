@@ -23,17 +23,17 @@
 # include <ifunc-resolve.h>
 
 # if HAVE_WCSCHRNUL_C
-extern __typeof (__wcschrnul) WCSCHRNUL_C attribute_hidden;
+extern __typeof(__wcschrnul) WCSCHRNUL_C attribute_hidden;
 # endif
 
 # if HAVE_WCSCHRNUL_Z13
-extern __typeof (__wcschrnul) WCSCHRNUL_Z13 attribute_hidden;
+extern __typeof(__wcschrnul) WCSCHRNUL_Z13 attribute_hidden;
 # endif
 
-s390_libc_ifunc_expr (__wcschrnul, __wcschrnul,
-		      (HAVE_WCSCHRNUL_Z13 && (hwcap & HWCAP_S390_VX))
-		      ? WCSCHRNUL_Z13
-		      : WCSCHRNUL_DEFAULT
-		      )
-weak_alias (__wcschrnul, wcschrnul)
+s390_libc_ifunc_expr(__wcschrnul, __wcschrnul,
+                     (HAVE_WCSCHRNUL_Z13 &&(hwcap &HWCAP_S390_VX))
+                     ? WCSCHRNUL_Z13
+                     : WCSCHRNUL_DEFAULT
+                    )
+weak_alias(__wcschrnul, wcschrnul)
 #endif

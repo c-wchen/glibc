@@ -21,10 +21,9 @@
 /* Internal: doubly linked lists.  */
 
 /* Basic type for the double-link list.  */
-typedef struct list_head
-{
-  struct list_head *next;
-  struct list_head *prev;
+typedef struct list_head {
+    struct list_head *next;
+    struct list_head *prev;
 } list_t;
 
 #endif /* list_t.h */

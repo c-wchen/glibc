@@ -18,9 +18,9 @@
 #include <netdb.h>
 
 
-#define LOOKUP_TYPE	struct hostent
-#define	GETFUNC_NAME	gethostent
-#define BUFLEN		1024
-#define NEED_H_ERRNO	1
+#define LOOKUP_TYPE struct hostent
+#define GETFUNC_NAME    gethostent
+#define BUFLEN      1024
+#define NEED_H_ERRNO    1
 
 #include "../nss/getXXent.c"

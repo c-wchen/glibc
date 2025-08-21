@@ -18,8 +18,7 @@
 
 #include <link.h>
 
-unsigned int
-la_version (unsigned int version)
+unsigned int la_version(unsigned int version)
 {
-  return LAV_CURRENT;
+    return LAV_CURRENT;
 }

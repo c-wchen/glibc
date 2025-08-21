@@ -20,9 +20,9 @@
 #include <support/check.h>
 #include <errno.h>
 
-void
-xclose (int fd)
+void xclose(int fd)
 {
-  if (close (fd) < 0 && errno != EINTR)
-    FAIL_EXIT1 ("close of descriptor %d failed: %m", fd);
+    if (close(fd) < 0 && errno != EINTR) {
+        FAIL_EXIT1("close of descriptor %d failed: %m", fd);
+    }
 }

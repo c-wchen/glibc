@@ -20,38 +20,37 @@
 #include <shlib-compat.h>
 #include <pt-internal.h>
 
-int
-__pthread_condattr_setclock (pthread_condattr_t *attr, clockid_t clock)
+int __pthread_condattr_setclock(pthread_condattr_t *attr, clockid_t clock)
 {
-  /* Only a few clocks are allowed.  CLOCK_REALTIME is always allowed.
-     CLOCK_MONOTONIC only if the kernel has the necessary support.  */
-  if (clock == CLOCK_MONOTONIC)
-    {
-      /* Check whether the clock is available.  */
-      static int avail;
+    /* Only a few clocks are allowed.  CLOCK_REALTIME is always allowed.
+       CLOCK_MONOTONIC only if the kernel has the necessary support.  */
+    if (clock == CLOCK_MONOTONIC) {
+        /* Check whether the clock is available.  */
+        static int avail;
 
-      if (avail == 0)
-	{
-	  struct timespec ts;
-	  int res;
+        if (avail == 0) {
+            struct timespec ts;
+            int res;
 
-	  res = __clock_gettime (CLOCK_MONOTONIC, &ts);
-	  avail = res < 0 ? -1 : 1;
-	}
+            res = __clock_gettime(CLOCK_MONOTONIC, &ts);
+            avail = res < 0 ? -1 : 1;
+        }
 
-      if (avail < 0)
-	/* Not available.  */
-	return EINVAL;
+        if (avail < 0)
+            /* Not available.  */
+        {
+            return EINVAL;
+        }
+    } else if (clock != CLOCK_REALTIME) {
+        return EINVAL;
     }
-  else if (clock != CLOCK_REALTIME)
-    return EINVAL;
 
-  attr->__clock = clock;
+    attr->__clock = clock;
 
-  return 0;
+    return 0;
 }
-versioned_symbol (libc, __pthread_condattr_setclock, pthread_condattr_setclock, GLIBC_2_41);
+versioned_symbol(libc, __pthread_condattr_setclock, pthread_condattr_setclock, GLIBC_2_41);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_41)
-compat_symbol (libpthread, __pthread_condattr_setclock, pthread_condattr_setclock, GLIBC_2_12);
+compat_symbol(libpthread, __pthread_condattr_setclock, pthread_condattr_setclock, GLIBC_2_12);
 #endif

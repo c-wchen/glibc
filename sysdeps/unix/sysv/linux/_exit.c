@@ -22,18 +22,16 @@
 #include <abort-instr.h>
 
 
-void
-_exit (int status)
+void _exit(int status)
 {
-  while (1)
-    {
-      INLINE_SYSCALL (exit_group, 1, status);
+    while (1) {
+        INLINE_SYSCALL(exit_group, 1, status);
 
 #ifdef ABORT_INSTRUCTION
-      ABORT_INSTRUCTION;
+        ABORT_INSTRUCTION;
 #endif
     }
 }
-libc_hidden_def (_exit)
-rtld_hidden_def (_exit)
-weak_alias (_exit, _Exit)
+libc_hidden_def(_exit)
+rtld_hidden_def(_exit)
+weak_alias(_exit, _Exit)

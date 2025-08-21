@@ -32,125 +32,122 @@
 
 #include <stdio.h>
 
-static void
-check_path (int fd)
+static void check_path(int fd)
 {
-  char *proc_fd_path = xasprintf ("/proc/self/fd/%d", fd);
-  char file_path[PATH_MAX];
-  ssize_t file_path_length
-    = readlink (proc_fd_path, file_path, sizeof (file_path));
-  if (file_path_length < 0)
-    FAIL_EXIT1 ("readlink (%s, %p, %zu)", proc_fd_path, file_path,
-		sizeof (file_path));
+    char *proc_fd_path = xasprintf("/proc/self/fd/%d", fd);
+    char file_path[PATH_MAX];
+    ssize_t file_path_length
+        = readlink(proc_fd_path, file_path, sizeof(file_path));
+    if (file_path_length < 0)
+        FAIL_EXIT1("readlink (%s, %p, %zu)", proc_fd_path, file_path,
+                   sizeof(file_path));
 
-  free (proc_fd_path);
-  file_path[file_path_length] = '\0';
-  TEST_COMPARE_STRING (file_path, "/dev/null");
+    free(proc_fd_path);
+    file_path[file_path_length] = '\0';
+    TEST_COMPARE_STRING(file_path, "/dev/null");
 }
 
-static int
-number_of_opened_files (void)
+static int number_of_opened_files(void)
 {
-  DIR *fds = opendir ("/proc/self/fd");
-  if (fds == NULL)
-    FAIL_EXIT1 ("opendir (\"/proc/self/fd\"): %m");
+    DIR *fds = opendir("/proc/self/fd");
+    if (fds == NULL) {
+        FAIL_EXIT1("opendir (\"/proc/self/fd\"): %m");
+    }
 
-  int r = 0;
-  while (true)
-    {
-      errno = 0;
-      struct dirent64 *e = readdir64 (fds);
-      if (e == NULL)
-        {
-          if (errno != 0)
-            FAIL_EXIT1 ("readdir: %m");
-          break;
+    int r = 0;
+    while (true) {
+        errno = 0;
+        struct dirent64 *e = readdir64(fds);
+        if (e == NULL) {
+            if (errno != 0) {
+                FAIL_EXIT1("readdir: %m");
+            }
+            break;
         }
 
-      if (e->d_name[0] == '.')
-        continue;
+        if (e->d_name[0] == '.') {
+            continue;
+        }
 
-      char *endptr;
-      long int fd = strtol (e->d_name, &endptr, 10);
-      if (*endptr != '\0' || fd < 0 || fd > INT_MAX)
-        FAIL_EXIT1 ("readdir: invalid file descriptor name: /proc/self/fd/%s",
-                    e->d_name);
+        char *endptr;
+        long int fd = strtol(e->d_name, &endptr, 10);
+        if (*endptr != '\0' || fd < 0 || fd > INT_MAX)
+            FAIL_EXIT1("readdir: invalid file descriptor name: /proc/self/fd/%s",
+                       e->d_name);
 
-      /* Skip the descriptor which is used to enumerate the
-         descriptors.  */
-      if (fd == dirfd (fds))
-        continue;
+        /* Skip the descriptor which is used to enumerate the
+           descriptors.  */
+        if (fd == dirfd(fds)) {
+            continue;
+        }
 
-      r = r + 1;
+        r = r + 1;
     }
 
-  closedir (fds);
+    closedir(fds);
 
-  return r;
+    return r;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  const int nfds1 = 8;
-  int lowfd = support_open_dev_null_range (nfds1, O_RDONLY, 0600);
-  for (int i = 0; i < nfds1; i++)
-    {
-      TEST_VERIFY (fcntl (lowfd + i, F_GETFL) > -1);
-      check_path (lowfd + i);
+    const int nfds1 = 8;
+    int lowfd = support_open_dev_null_range(nfds1, O_RDONLY, 0600);
+    for (int i = 0; i < nfds1; i++) {
+        TEST_VERIFY(fcntl(lowfd + i, F_GETFL) > -1);
+        check_path(lowfd + i);
     }
 
-  /* create some gaps.  */
-  xclose (lowfd + 1);
-  xclose (lowfd + 5);
-  xclose (lowfd + 6);
+    /* create some gaps.  */
+    xclose(lowfd + 1);
+    xclose(lowfd + 5);
+    xclose(lowfd + 6);
 
-  const int nfds2 = 16;
-  int lowfd2 = support_open_dev_null_range (nfds2, O_RDONLY, 0600);
-  for (int i = 0; i < nfds2; i++)
-    {
-      TEST_VERIFY (fcntl (lowfd2 + i, F_GETFL) > -1);
-      check_path (lowfd2 + i);
+    const int nfds2 = 16;
+    int lowfd2 = support_open_dev_null_range(nfds2, O_RDONLY, 0600);
+    for (int i = 0; i < nfds2; i++) {
+        TEST_VERIFY(fcntl(lowfd2 + i, F_GETFL) > -1);
+        check_path(lowfd2 + i);
     }
 
-  /* Decrease the maximum number of files.  */
-  {
-    struct rlimit rl;
-    if (getrlimit (RLIMIT_NOFILE, &rl) == -1)
-      FAIL_EXIT1 ("getrlimit (RLIMIT_NOFILE): %m");
-
-    rl.rlim_cur = number_of_opened_files ();
-
-    if (setrlimit (RLIMIT_NOFILE, &rl) == 1)
-      FAIL_EXIT1 ("setrlimit (RLIMIT_NOFILE): %m");
-  }
-
-  const int nfds3 = 16;
-  int lowfd3 = support_open_dev_null_range (nfds3, O_RDONLY, 0600);
-  for (int i = 0; i < nfds3; i++)
+    /* Decrease the maximum number of files.  */
     {
-      TEST_VERIFY (fcntl (lowfd3 + i, F_GETFL) > -1);
-      check_path (lowfd3 + i);
+        struct rlimit rl;
+        if (getrlimit(RLIMIT_NOFILE, &rl) == -1) {
+            FAIL_EXIT1("getrlimit (RLIMIT_NOFILE): %m");
+        }
+
+        rl.rlim_cur = number_of_opened_files();
+
+        if (setrlimit(RLIMIT_NOFILE, &rl) == 1) {
+            FAIL_EXIT1("setrlimit (RLIMIT_NOFILE): %m");
+        }
     }
 
-  /* create a lot of gaps to trigger the range extension.  */
-  xclose (lowfd3 + 1);
-  xclose (lowfd3 + 3);
-  xclose (lowfd3 + 5);
-  xclose (lowfd3 + 7);
-  xclose (lowfd3 + 9);
-  xclose (lowfd3 + 11);
-  xclose (lowfd3 + 13);
-
-  const int nfds4 = 16;
-  int lowfd4 = support_open_dev_null_range (nfds4, O_RDONLY, 0600);
-  for (int i = 0; i < nfds4; i++)
-    {
-      TEST_VERIFY (fcntl (lowfd4 + i, F_GETFL) > -1);
-      check_path (lowfd4 + i);
+    const int nfds3 = 16;
+    int lowfd3 = support_open_dev_null_range(nfds3, O_RDONLY, 0600);
+    for (int i = 0; i < nfds3; i++) {
+        TEST_VERIFY(fcntl(lowfd3 + i, F_GETFL) > -1);
+        check_path(lowfd3 + i);
     }
 
-  return 0;
+    /* create a lot of gaps to trigger the range extension.  */
+    xclose(lowfd3 + 1);
+    xclose(lowfd3 + 3);
+    xclose(lowfd3 + 5);
+    xclose(lowfd3 + 7);
+    xclose(lowfd3 + 9);
+    xclose(lowfd3 + 11);
+    xclose(lowfd3 + 13);
+
+    const int nfds4 = 16;
+    int lowfd4 = support_open_dev_null_range(nfds4, O_RDONLY, 0600);
+    for (int i = 0; i < nfds4; i++) {
+        TEST_VERIFY(fcntl(lowfd4 + i, F_GETFL) > -1);
+        check_path(lowfd4 + i);
+    }
+
+    return 0;
 }
 
 #include <support/test-driver.c>

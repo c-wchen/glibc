@@ -21,19 +21,18 @@
 /* Write formatted output from FORMAT to a string which is
    allocated with malloc and stored in *STRING_PTR.  */
 /* VARARGS2 */
-int
-___asprintf (char **string_ptr, const char *format, ...)
+int ___asprintf(char **string_ptr, const char *format, ...)
 {
-  va_list arg;
-  int done;
+    va_list arg;
+    int done;
 
-  va_start (arg, format);
-  done = __vasprintf_internal (string_ptr, format, arg, 0);
-  va_end (arg);
+    va_start(arg, format);
+    done = __vasprintf_internal(string_ptr, format, arg, 0);
+    va_end(arg);
 
-  return done;
+    return done;
 }
-ldbl_hidden_def (___asprintf, __asprintf)
+ldbl_hidden_def(___asprintf, __asprintf)
 
-ldbl_strong_alias (___asprintf, __asprintf)
-ldbl_weak_alias (___asprintf, asprintf)
+ldbl_strong_alias(___asprintf, __asprintf)
+ldbl_weak_alias(___asprintf, asprintf)

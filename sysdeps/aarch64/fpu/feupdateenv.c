@@ -19,71 +19,70 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-int
-__feupdateenv (const fenv_t *envp)
+int __feupdateenv(const fenv_t *envp)
 {
-  fpu_control_t fpcr;
-  fpu_control_t fpcr_new;
-  fpu_control_t updated_fpcr;
-  fpu_fpsr_t fpsr;
-  fpu_fpsr_t fpsr_new;
-  int excepts;
+    fpu_control_t fpcr;
+    fpu_control_t fpcr_new;
+    fpu_control_t updated_fpcr;
+    fpu_fpsr_t fpsr;
+    fpu_fpsr_t fpsr_new;
+    int excepts;
 
-  _FPU_GETCW (fpcr);
-  _FPU_GETFPSR (fpsr);
-  excepts = fpsr & FE_ALL_EXCEPT;
+    _FPU_GETCW(fpcr);
+    _FPU_GETFPSR(fpsr);
+    excepts = fpsr & FE_ALL_EXCEPT;
 
-  if ((envp != FE_DFL_ENV) && (envp != FE_NOMASK_ENV))
-    {
-      fpcr_new = envp->__fpcr;
-      fpsr_new = envp->__fpsr | excepts;
+    if ((envp != FE_DFL_ENV) && (envp != FE_NOMASK_ENV)) {
+        fpcr_new = envp->__fpcr;
+        fpsr_new = envp->__fpsr | excepts;
 
-      if (fpcr != fpcr_new)
-        _FPU_SETCW (fpcr_new);
+        if (fpcr != fpcr_new) {
+            _FPU_SETCW(fpcr_new);
+        }
 
-      if (fpsr != fpsr_new)
-        _FPU_SETFPSR (fpsr_new);
+        if (fpsr != fpsr_new) {
+            _FPU_SETFPSR(fpsr_new);
+        }
 
-      if (excepts & (fpcr_new >> FE_EXCEPT_SHIFT))
-        return __feraiseexcept (excepts);
+        if (excepts & (fpcr_new >> FE_EXCEPT_SHIFT)) {
+            return __feraiseexcept(excepts);
+        }
 
-      return 0;
+        return 0;
     }
 
-  fpcr_new = fpcr & _FPU_RESERVED;
-  fpsr_new = fpsr & (_FPU_FPSR_RESERVED | FE_ALL_EXCEPT);
+    fpcr_new = fpcr & _FPU_RESERVED;
+    fpsr_new = fpsr & (_FPU_FPSR_RESERVED | FE_ALL_EXCEPT);
 
-  if (envp == FE_DFL_ENV)
-    {
-      fpcr_new |= _FPU_DEFAULT;
-      fpsr_new |= _FPU_FPSR_DEFAULT;
-    }
-  else
-    {
-      fpcr_new |= _FPU_FPCR_IEEE;
-      fpsr_new |= _FPU_FPSR_IEEE;
+    if (envp == FE_DFL_ENV) {
+        fpcr_new |= _FPU_DEFAULT;
+        fpsr_new |= _FPU_FPSR_DEFAULT;
+    } else {
+        fpcr_new |= _FPU_FPCR_IEEE;
+        fpsr_new |= _FPU_FPSR_IEEE;
     }
 
-  _FPU_SETFPSR (fpsr_new);
+    _FPU_SETFPSR(fpsr_new);
 
-  if (fpcr != fpcr_new)
-    {
-      _FPU_SETCW (fpcr_new);
+    if (fpcr != fpcr_new) {
+        _FPU_SETCW(fpcr_new);
 
-      /* Trapping exceptions are optional in AArch64; the relevant enable
-	 bits in FPCR are RES0 hence the absence of support can be detected
-	 by reading back the FPCR and comparing with the required value.  */
-      _FPU_GETCW (updated_fpcr);
+        /* Trapping exceptions are optional in AArch64; the relevant enable
+        bits in FPCR are RES0 hence the absence of support can be detected
+         by reading back the FPCR and comparing with the required value.  */
+        _FPU_GETCW(updated_fpcr);
 
-      if (fpcr_new & ~updated_fpcr)
-        return 1;
+        if (fpcr_new & ~updated_fpcr) {
+            return 1;
+        }
     }
 
-  if (excepts & (fpcr_new >> FE_EXCEPT_SHIFT))
-    return __feraiseexcept (excepts);
+    if (excepts & (fpcr_new >> FE_EXCEPT_SHIFT)) {
+        return __feraiseexcept(excepts);
+    }
 
-  return 0;
+    return 0;
 }
-libm_hidden_def (__feupdateenv)
-weak_alias (__feupdateenv, feupdateenv)
-libm_hidden_weak (feupdateenv)
+libm_hidden_def(__feupdateenv)
+weak_alias(__feupdateenv, feupdateenv)
+libm_hidden_weak(feupdateenv)

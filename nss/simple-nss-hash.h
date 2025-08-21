@@ -23,19 +23,19 @@
 
 /* For testing/benchmarking purposes.  Real implementation in
    nss/nss_hash.c.  */
-static uint32_t
-__attribute__ ((unused))
-__simple_nss_hash (const void *keyarg, size_t len)
+static uint32_t __attribute__((unused))
+__simple_nss_hash(const void *keyarg, size_t len)
 {
-  const unsigned char *key;
-  size_t i;
-  uint32_t h = 0;
-  key = keyarg;
+    const unsigned char *key;
+    size_t i;
+    uint32_t h = 0;
+    key = keyarg;
 
-  for (i = 0; i < len; ++i)
-    h = *key++ + 65599 * h;
+    for (i = 0; i < len; ++i) {
+        h = *key++ + 65599 * h;
+    }
 
-  return h;
+    return h;
 }
 
 

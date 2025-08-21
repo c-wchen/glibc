@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _JISX0213_H
-#define _JISX0213_H	1
+#define _JISX0213_H 1
 
 #include <stdint.h>
 
@@ -29,72 +29,71 @@ extern const uint16_t __jisx0213_from_ucs_level2[];
 
 #define NELEMS(arr) (sizeof (arr) / sizeof (arr[0]))
 
-static inline uint32_t
-__attribute ((always_inline))
-jisx0213_to_ucs4 (unsigned int row, unsigned int col)
+static inline uint32_t __attribute((always_inline))
+jisx0213_to_ucs4(unsigned int row, unsigned int col)
 {
-  uint32_t val;
+    uint32_t val;
 
-  if (row >= 0x121 && row <= 0x17e)
-    row -= 289;
-  else if (row == 0x221)
-    row -= 451;
-  else if (row >= 0x223 && row <= 0x225)
-    row -= 452;
-  else if (row == 0x228)
-    row -= 454;
-  else if (row >= 0x22c && row <= 0x22f)
-    row -= 457;
-  else if (row >= 0x26e && row <= 0x27e)
-    row -= 519;
-  else
-    return 0x0000;
-
-  if (col >= 0x21 && col <= 0x7e)
-    col -= 0x21;
-  else
-    return 0x0000;
-
-  val = __jisx0213_to_ucs_main[row * 94 + col];
-  val = __jisx0213_to_ucs_pagestart[val >> 8] + (val & 0xff);
-  if (val == 0xfffd)
-    val = 0x0000;
-  return val;
-}
-
-static inline uint16_t
-__attribute ((always_inline))
-ucs4_to_jisx0213 (uint32_t ucs)
-{
-  if (ucs < NELEMS (__jisx0213_from_ucs_level1) << 6)
-    {
-      int index1 = __jisx0213_from_ucs_level1[ucs >> 6];
-      if (index1 >= 0)
-	return __jisx0213_from_ucs_level2[(index1 << 6) + (ucs & 0x3f)];
+    if (row >= 0x121 && row <= 0x17e) {
+        row -= 289;
+    } else if (row == 0x221) {
+        row -= 451;
+    } else if (row >= 0x223 && row <= 0x225) {
+        row -= 452;
+    } else if (row == 0x228) {
+        row -= 454;
+    } else if (row >= 0x22c && row <= 0x22f) {
+        row -= 457;
+    } else if (row >= 0x26e && row <= 0x27e) {
+        row -= 519;
+    } else {
+        return 0x0000;
     }
-  return 0x0000;
+
+    if (col >= 0x21 && col <= 0x7e) {
+        col -= 0x21;
+    } else {
+        return 0x0000;
+    }
+
+    val = __jisx0213_to_ucs_main[row * 94 + col];
+    val = __jisx0213_to_ucs_pagestart[val >> 8] + (val & 0xff);
+    if (val == 0xfffd) {
+        val = 0x0000;
+    }
+    return val;
 }
 
-static inline int
-__attribute ((always_inline))
-jisx0213_added_in_2004_p (uint16_t val)
+static inline uint16_t __attribute((always_inline))
+ucs4_to_jisx0213(uint32_t ucs)
 {
-  /* From JISX 0213:2000 to JISX 0213:2004, 10 characters were added to
-     plane 1, and plane 2 was left unchanged.  See ISO-IR-233.  */
-  switch (val >> 8)
-    {
-    case 0x2e:
-      return val == 0x2e21;
-    case 0x2f:
-      return val == 0x2f7e;
-    case 0x4f:
-      return val == 0x4f54 || val == 0x4f7e;
-    case 0x74:
-      return val == 0x7427;
-    case 0x7e:
-      return val >= 0x7e7a && val <= 0x7e7e;
-    default:
-      return 0;
+    if (ucs < NELEMS(__jisx0213_from_ucs_level1) << 6) {
+        int index1 = __jisx0213_from_ucs_level1[ucs >> 6];
+        if (index1 >= 0) {
+            return __jisx0213_from_ucs_level2[(index1 << 6) + (ucs & 0x3f)];
+        }
+    }
+    return 0x0000;
+}
+
+static inline int __attribute((always_inline))
+jisx0213_added_in_2004_p(uint16_t val)
+{
+    /* From JISX 0213:2000 to JISX 0213:2004, 10 characters were added to
+       plane 1, and plane 2 was left unchanged.  See ISO-IR-233.  */
+    switch (val >> 8) {
+        case 0x2e:
+            return val == 0x2e21;
+        case 0x2f:
+            return val == 0x2f7e;
+        case 0x4f:
+            return val == 0x4f54 || val == 0x4f7e;
+        case 0x74:
+            return val == 0x7427;
+        case 0x7e:
+            return val >= 0x7e7a && val <= 0x7e7e;
+        default:
+            return 0;
     }
 }
 

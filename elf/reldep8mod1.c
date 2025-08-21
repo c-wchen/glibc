@@ -1,17 +1,14 @@
 #include <stdlib.h>
-void
-foo (void)
+void foo(void)
 {
-  exit (0);
+    exit(0);
 }
 
-void
-__attribute__((destructor))
-bar (void)
+void __attribute__((destructor))
+bar(void)
 {
-  foo ();
+    foo();
 }
-void
-baz (void)
+void baz(void)
 {
 }

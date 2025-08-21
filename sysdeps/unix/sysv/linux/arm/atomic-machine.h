@@ -22,18 +22,18 @@
    to get assistance from the kernel.  */
 #ifdef __thumb2__
 # define __arm_assisted_full_barrier() \
-     __asm__ __volatile__						      \
-	     ("movw\tip, #0x0fa0\n\t"					      \
-	      "movt\tip, #0xffff\n\t"					      \
-	      "blx\tip"							      \
-	      : : : "ip", "lr", "cc", "memory");
+     __asm__ __volatile__                             \
+         ("movw\tip, #0x0fa0\n\t"                         \
+          "movt\tip, #0xffff\n\t"                         \
+          "blx\tip"                               \
+          : : : "ip", "lr", "cc", "memory");
 #else
 # define __arm_assisted_full_barrier() \
-     __asm__ __volatile__						      \
-	     ("mov\tip, #0xffff0fff\n\t"				      \
-	      "mov\tlr, pc\n\t"						      \
-	      "add\tpc, ip, #(0xffff0fa0 - 0xffff0fff)"			      \
-	      : : : "ip", "lr", "cc", "memory");
+     __asm__ __volatile__                             \
+         ("mov\tip, #0xffff0fff\n\t"                      \
+          "mov\tlr, pc\n\t"                           \
+          "add\tpc, ip, #(0xffff0fa0 - 0xffff0fff)"               \
+          : : : "ip", "lr", "cc", "memory");
 #endif
 
 /* Atomic compare and exchange.  This sequence relies on the kernel to
@@ -63,52 +63,52 @@
   ({ union { __typeof (mem) a; uint32_t v; } mem_arg = { .a = (mem) };       \
      union { __typeof (oldval) a; uint32_t v; } oldval_arg = { .a = (oldval) };\
      union { __typeof (newval) a; uint32_t v; } newval_arg = { .a = (newval) };\
-     register uint32_t a_oldval asm ("r0");				      \
-     register uint32_t a_newval asm ("r1") = newval_arg.v;		      \
-     register uint32_t a_ptr asm ("r2") = mem_arg.v;			      \
-     register uint32_t a_tmp asm ("r3");				      \
-     register uint32_t a_oldval2 asm ("r4") = oldval_arg.v;		      \
-     __asm__ __volatile__						      \
-	     ("0:\tldr\t%[tmp],[%[ptr]]\n\t"				      \
-	      "cmp\t%[tmp], %[old2]\n\t"				      \
-	      "bne\t1f\n\t"						      \
-	      "mov\t%[old], %[old2]\n\t"				      \
-	      "movw\t%[tmp], #0x0fc0\n\t"				      \
-	      "movt\t%[tmp], #0xffff\n\t"				      \
-	      "blx\t%[tmp]\n\t"						      \
-	      "bcc\t0b\n\t"						      \
-	      "mov\t%[tmp], %[old2]\n\t"				      \
-	      "1:"							      \
-	      : [old] "=&r" (a_oldval), [tmp] "=&r" (a_tmp)		      \
-	      : [new] "r" (a_newval), [ptr] "r" (a_ptr),		      \
-		[old2] "r" (a_oldval2)					      \
-	      : "ip", "lr", "cc", "memory");				      \
+     register uint32_t a_oldval asm ("r0");                   \
+     register uint32_t a_newval asm ("r1") = newval_arg.v;            \
+     register uint32_t a_ptr asm ("r2") = mem_arg.v;                  \
+     register uint32_t a_tmp asm ("r3");                      \
+     register uint32_t a_oldval2 asm ("r4") = oldval_arg.v;           \
+     __asm__ __volatile__                             \
+         ("0:\tldr\t%[tmp],[%[ptr]]\n\t"                      \
+          "cmp\t%[tmp], %[old2]\n\t"                      \
+          "bne\t1f\n\t"                           \
+          "mov\t%[old], %[old2]\n\t"                      \
+          "movw\t%[tmp], #0x0fc0\n\t"                     \
+          "movt\t%[tmp], #0xffff\n\t"                     \
+          "blx\t%[tmp]\n\t"                           \
+          "bcc\t0b\n\t"                           \
+          "mov\t%[tmp], %[old2]\n\t"                      \
+          "1:"                                \
+          : [old] "=&r" (a_oldval), [tmp] "=&r" (a_tmp)           \
+          : [new] "r" (a_newval), [ptr] "r" (a_ptr),              \
+        [old2] "r" (a_oldval2)                        \
+          : "ip", "lr", "cc", "memory");                      \
      (__typeof (oldval)) a_tmp; })
 #else
 # define __arm_assisted_compare_and_exchange_val_32_acq(mem, newval, oldval) \
   ({ union { __typeof (mem) a; uint32_t v; } mem_arg = { .a = (mem) };       \
      union { __typeof (oldval) a; uint32_t v; } oldval_arg = { .a = (oldval) };\
      union { __typeof (newval) a; uint32_t v; } newval_arg = { .a = (newval) };\
-     register uint32_t a_oldval asm ("r0");				      \
-     register uint32_t a_newval asm ("r1") = newval_arg.v;		      \
-     register uint32_t a_ptr asm ("r2") = mem_arg.v;			      \
-     register uint32_t a_tmp asm ("r3");				      \
-     register uint32_t a_oldval2 asm ("r4") = oldval_arg.v;		      \
-     __asm__ __volatile__						      \
-	     ("0:\tldr\t%[tmp],[%[ptr]]\n\t"				      \
-	      "cmp\t%[tmp], %[old2]\n\t"				      \
-	      "bne\t1f\n\t"						      \
-	      "mov\t%[old], %[old2]\n\t"				      \
-	      "mov\t%[tmp], #0xffff0fff\n\t"				      \
-	      "mov\tlr, pc\n\t"						      \
-	      "add\tpc, %[tmp], #(0xffff0fc0 - 0xffff0fff)\n\t"		      \
-	      "bcc\t0b\n\t"						      \
-	      "mov\t%[tmp], %[old2]\n\t"				      \
-	      "1:"							      \
-	      : [old] "=&r" (a_oldval), [tmp] "=&r" (a_tmp)		      \
-	      : [new] "r" (a_newval), [ptr] "r" (a_ptr),		      \
-		[old2] "r" (a_oldval2)					      \
-	      : "ip", "lr", "cc", "memory");				      \
+     register uint32_t a_oldval asm ("r0");                   \
+     register uint32_t a_newval asm ("r1") = newval_arg.v;            \
+     register uint32_t a_ptr asm ("r2") = mem_arg.v;                  \
+     register uint32_t a_tmp asm ("r3");                      \
+     register uint32_t a_oldval2 asm ("r4") = oldval_arg.v;           \
+     __asm__ __volatile__                             \
+         ("0:\tldr\t%[tmp],[%[ptr]]\n\t"                      \
+          "cmp\t%[tmp], %[old2]\n\t"                      \
+          "bne\t1f\n\t"                           \
+          "mov\t%[old], %[old2]\n\t"                      \
+          "mov\t%[tmp], #0xffff0fff\n\t"                      \
+          "mov\tlr, pc\n\t"                           \
+          "add\tpc, %[tmp], #(0xffff0fc0 - 0xffff0fff)\n\t"           \
+          "bcc\t0b\n\t"                           \
+          "mov\t%[tmp], %[old2]\n\t"                      \
+          "1:"                                \
+          : [old] "=&r" (a_oldval), [tmp] "=&r" (a_tmp)           \
+          : [new] "r" (a_newval), [ptr] "r" (a_ptr),              \
+        [old2] "r" (a_oldval2)                        \
+          : "ip", "lr", "cc", "memory");                      \
      (__typeof (oldval)) a_tmp; })
 #endif
 

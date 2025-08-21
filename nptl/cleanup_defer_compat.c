@@ -21,29 +21,28 @@
 # include "pthreadP.h"
 # include <libc-lock.h>
 
-void attribute_compat_text_section
-_pthread_cleanup_push_defer (struct _pthread_cleanup_buffer *buffer,
-			     void (*routine) (void *), void *arg)
+void attribute_compat_text_section _pthread_cleanup_push_defer(struct _pthread_cleanup_buffer *buffer,
+        void (*routine)(void *), void *arg)
 {
-  buffer->__routine = routine;
-  buffer->__arg = arg;
-  __libc_cleanup_push_defer (buffer);
+    buffer->__routine = routine;
+    buffer->__arg = arg;
+    __libc_cleanup_push_defer(buffer);
 }
-compat_symbol (libpthread, _pthread_cleanup_push_defer,
-	       _pthread_cleanup_push_defer, GLIBC_2_0);
+compat_symbol(libpthread, _pthread_cleanup_push_defer,
+              _pthread_cleanup_push_defer, GLIBC_2_0);
 
-void attribute_compat_text_section
-_pthread_cleanup_pop_restore (struct _pthread_cleanup_buffer *buffer,
-			      int execute)
+void attribute_compat_text_section _pthread_cleanup_pop_restore(struct _pthread_cleanup_buffer *buffer,
+        int execute)
 {
-  __libc_cleanup_pop_restore (buffer);
+    __libc_cleanup_pop_restore(buffer);
 
-  /* If necessary call the cleanup routine after we removed the
-     current cleanup block from the list.  */
-  if (execute)
-    buffer->__routine (buffer->__arg);
+    /* If necessary call the cleanup routine after we removed the
+       current cleanup block from the list.  */
+    if (execute) {
+        buffer->__routine(buffer->__arg);
+    }
 }
-compat_symbol (libpthread, _pthread_cleanup_pop_restore,
-	       _pthread_cleanup_pop_restore, GLIBC_2_0);
+compat_symbol(libpthread, _pthread_cleanup_pop_restore,
+              _pthread_cleanup_pop_restore, GLIBC_2_0);
 
 #endif /* OTHER_SHLIB_COMPAT */

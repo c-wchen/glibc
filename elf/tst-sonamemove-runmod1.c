@@ -17,7 +17,6 @@
    <https://www.gnu.org/licenses/>.  */
 
 /* Dummy function to add the required symbol version.  */
-void
-other_function (void)
+void other_function(void)
 {
 }

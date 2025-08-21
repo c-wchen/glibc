@@ -26,14 +26,16 @@
 # include <math_private.h>
 
 FLOAT
-M_DECL_FUNC (__atan2) (FLOAT y, FLOAT x)
+M_DECL_FUNC(__atan2)(FLOAT y, FLOAT x)
 {
-  FLOAT z = M_SUF (__ieee754_atan2) (y, x);
-  if (__glibc_unlikely (z == 0 && y != 0 && isfinite (x)))
-    /* Underflow.  */
-    __set_errno (ERANGE);
-  return z;
+    FLOAT z = M_SUF(__ieee754_atan2)(y, x);
+    if (__glibc_unlikely(z == 0 && y != 0 && isfinite(x)))
+        /* Underflow.  */
+    {
+        __set_errno(ERANGE);
+    }
+    return z;
 }
-declare_mgen_alias (__atan2, atan2)
+declare_mgen_alias(__atan2, atan2)
 
 #endif /* __USE_WRAPPER_TEMPLATE.  */

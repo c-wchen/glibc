@@ -22,18 +22,18 @@
 
 #define FPC_STATUS (FPC_FLAGS_MASK | FPC_DXC_MASK)
 
-int
-fesetmode (const femode_t *modep)
+int fesetmode(const femode_t *modep)
 {
-  fpu_control_t fpc;
+    fpu_control_t fpc;
 
-  _FPU_GETCW (fpc);
-  fpc &= FPC_STATUS;
-  if (modep == FE_DFL_MODE)
-    fpc |= _FPU_DEFAULT;
-  else
-    fpc |= *modep & ~FPC_STATUS;
-  _FPU_SETCW (fpc);
+    _FPU_GETCW(fpc);
+    fpc &= FPC_STATUS;
+    if (modep == FE_DFL_MODE) {
+        fpc |= _FPU_DEFAULT;
+    } else {
+        fpc |= *modep & ~FPC_STATUS;
+    }
+    _FPU_SETCW(fpc);
 
-  return 0;
+    return 0;
 }

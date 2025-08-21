@@ -22,18 +22,18 @@
 #include <unistd.h>
 
 
-static long int linux_sysconf (int name);
-extern long int __cache_sysconf (int) attribute_hidden;
+static long int linux_sysconf(int name);
+extern long int __cache_sysconf(int) attribute_hidden;
 
 
 /* Get the value of the system variable NAME.  */
-long int
-__sysconf (int name)
+long int __sysconf(int name)
 {
-  if (name >= _SC_LEVEL1_ICACHE_SIZE && name <= _SC_LEVEL4_CACHE_LINESIZE)
-    return __cache_sysconf (name);
+    if (name >= _SC_LEVEL1_ICACHE_SIZE && name <= _SC_LEVEL4_CACHE_LINESIZE) {
+        return __cache_sysconf(name);
+    }
 
-  return linux_sysconf (name);
+    return linux_sysconf(name);
 }
 
 /* Now the generic Linux version.  */

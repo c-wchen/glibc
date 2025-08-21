@@ -34,7 +34,7 @@
 #undef __stat
 #define __stat(file, buf) __stat64 (file, buf)
 
-#define COMPILE_GLOB64	1
+#define COMPILE_GLOB64  1
 
 #define GLOB_ATTRIBUTE attribute_compat_text_section
 
@@ -45,5 +45,5 @@
 #include <posix/glob.c>
 
 #if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_27)
-compat_symbol (libc, __glob64_lstat_compat, glob64, GLIBC_2_1);
+compat_symbol(libc, __glob64_lstat_compat, glob64, GLIBC_2_1);
 #endif

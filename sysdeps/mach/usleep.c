@@ -22,20 +22,19 @@
 #include <sysdep-cancel.h>
 
 /* Sleep USECONDS microseconds, or until a previously set timer goes off.  */
-int
-usleep (useconds_t useconds)
+int usleep(useconds_t useconds)
 {
-  mach_port_t recv;
-  int cancel_oldtype;
-  mach_msg_timeout_t timeout = useconds / 1000 + (useconds % 1000 != 0);
+    mach_port_t recv;
+    int cancel_oldtype;
+    mach_msg_timeout_t timeout = useconds / 1000 + (useconds % 1000 != 0);
 
-  recv = __mach_reply_port ();
+    recv = __mach_reply_port();
 
-  cancel_oldtype = LIBC_CANCEL_ASYNC();
-  (void) __mach_msg (NULL, MACH_RCV_MSG|MACH_RCV_TIMEOUT|MACH_RCV_INTERRUPT,
-		     0, 0, recv, timeout, MACH_PORT_NULL);
-  LIBC_CANCEL_RESET (cancel_oldtype);
-  __mach_port_destroy (mach_task_self (), recv);
+    cancel_oldtype = LIBC_CANCEL_ASYNC();
+    (void) __mach_msg(NULL, MACH_RCV_MSG | MACH_RCV_TIMEOUT | MACH_RCV_INTERRUPT,
+                      0, 0, recv, timeout, MACH_PORT_NULL);
+    LIBC_CANCEL_RESET(cancel_oldtype);
+    __mach_port_destroy(mach_task_self(), recv);
 
-  return 0;
+    return 0;
 }

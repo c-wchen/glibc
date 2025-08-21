@@ -18,10 +18,9 @@
 
 #include <fenv.h>
 
-int
-fetestexceptflag (const fexcept_t *flagp, int excepts)
+int fetestexceptflag(const fexcept_t *flagp, int excepts)
 {
-  /* Most versions of fegetexceptflag store exceptions in a form such
-     that this works.  */
-  return *flagp & excepts & FE_ALL_EXCEPT;
+    /* Most versions of fegetexceptflag store exceptions in a form such
+       that this works.  */
+    return *flagp & excepts & FE_ALL_EXCEPT;
 }

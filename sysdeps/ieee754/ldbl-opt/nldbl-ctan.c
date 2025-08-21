@@ -2,8 +2,7 @@
 #include <complex.h>
 
 double _Complex
-attribute_hidden
-ctanl (double _Complex x)
+attribute_hidden ctanl(double _Complex x)
 {
-  return ctan (x);
+    return ctan(x);
 }

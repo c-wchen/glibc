@@ -19,20 +19,19 @@
 #include <string.h>
 #include <limits.h>
 
-int
-__seed48_r (unsigned short int seed16v[3], struct drand48_data *buffer)
+int __seed48_r(unsigned short int seed16v[3], struct drand48_data *buffer)
 {
-  /* Save old value at a private place to be used as return value.  */
-  memcpy (buffer->__old_x, buffer->__x, sizeof (buffer->__x));
+    /* Save old value at a private place to be used as return value.  */
+    memcpy(buffer->__old_x, buffer->__x, sizeof(buffer->__x));
 
-  /* Install new state.  */
-  buffer->__x[2] = seed16v[2];
-  buffer->__x[1] = seed16v[1];
-  buffer->__x[0] = seed16v[0];
-  buffer->__a = 0x5deece66dull;
-  buffer->__c = 0xb;
-  buffer->__init = 1;
+    /* Install new state.  */
+    buffer->__x[2] = seed16v[2];
+    buffer->__x[1] = seed16v[1];
+    buffer->__x[0] = seed16v[0];
+    buffer->__a = 0x5deece66dull;
+    buffer->__c = 0xb;
+    buffer->__init = 1;
 
-  return 0;
+    return 0;
 }
-weak_alias (__seed48_r, seed48_r)
+weak_alias(__seed48_r, seed48_r)

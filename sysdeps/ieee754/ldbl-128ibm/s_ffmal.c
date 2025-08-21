@@ -20,9 +20,8 @@
 #include <math.h>
 #include <math-narrow.h>
 
-float
-__ffmal (long double x, long double y, long double z)
+float __ffmal(long double x, long double y, long double z)
 {
-  NARROW_FMA_TRIVIAL (x, y, z, float, l);
+    NARROW_FMA_TRIVIAL(x, y, z, float, l);
 }
-libm_alias_float_ldouble (fma)
+libm_alias_float_ldouble(fma)

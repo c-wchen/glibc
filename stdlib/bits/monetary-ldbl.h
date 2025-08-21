@@ -20,8 +20,8 @@
 # error "Never include <bits/monetary-ldbl.h> directly; use <monetary.h> instead."
 #endif
 
-__LDBL_REDIR_DECL (strfmon)
+__LDBL_REDIR_DECL(strfmon)
 
 #ifdef __USE_GNU
-__LDBL_REDIR_DECL (strfmon_l)
+__LDBL_REDIR_DECL(strfmon_l)
 #endif

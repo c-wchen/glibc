@@ -57,12 +57,12 @@ extern "C" {
  */
 #if defined _WIN32 || defined __CYGWIN__ \
     || defined __EMX__ || defined __MSDOS__ || defined __DJGPP__
-  /* Native Windows, Cygwin, OS/2, DOS */
+/* Native Windows, Cygwin, OS/2, DOS */
 # define ISSLASH(C) ((C) == '/' || (C) == '\\')
-  /* Internal macro: Tests whether a character is a drive letter.  */
+/* Internal macro: Tests whether a character is a drive letter.  */
 # define _IS_DRIVE_LETTER(C) \
     (((C) >= 'A' && (C) <= 'Z') || ((C) >= 'a' && (C) <= 'z'))
-  /* Help the compiler optimizing it.  This assumes ASCII.  */
+/* Help the compiler optimizing it.  This assumes ASCII.  */
 # undef _IS_DRIVE_LETTER
 # define _IS_DRIVE_LETTER(C) \
     (((unsigned int) (C) | ('a' - 'A')) - 'a' <= 'z' - 'a')
@@ -72,8 +72,8 @@ extern "C" {
 # ifdef __CYGWIN__
 #  define FILE_SYSTEM_DRIVE_PREFIX_CAN_BE_RELATIVE 0
 # else
-   /* On native Windows, OS/2, DOS, the system has the notion of a
-      "current directory" on each drive.  */
+/* On native Windows, OS/2, DOS, the system has the notion of a
+   "current directory" on each drive.  */
 #  define FILE_SYSTEM_DRIVE_PREFIX_CAN_BE_RELATIVE 1
 # endif
 # if FILE_SYSTEM_DRIVE_PREFIX_CAN_BE_RELATIVE
@@ -89,7 +89,7 @@ extern "C" {
     (strchr ((Filename), '/') != NULL || strchr ((Filename), '\\') != NULL \
      || HAS_DEVICE (Filename))
 #else
-  /* Unix */
+/* Unix */
 # define ISSLASH(C) ((C) == '/')
 # define HAS_DEVICE(Filename) ((void) (Filename), 0)
 # define FILE_SYSTEM_PREFIX_LEN(Filename) ((void) (Filename), 0)

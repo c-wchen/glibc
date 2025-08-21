@@ -29,50 +29,49 @@ struct OnceException { };
 // Test iteration counter.
 static int niter;
 
-static void
-init_routine (void)
+static void init_routine(void)
 {
-  if (niter < 2)
-    throw OnceException ();
+    if (niter < 2) {
+        throw OnceException();
+    }
 }
 
 // Verify that an exception thrown from the pthread_once init routine
 // is propagated to the pthread_once caller and that the function can
 // be subsequently invoked to attempt the initialization again.
-static int
-do_test (void)
+static int do_test(void)
 {
-  int result = 1;
+    int result = 1;
 
-  // Repeat three times, having the init routine throw the first two
-  // times and succeed on the final attempt.
-  for (niter = 0; niter != 3; ++niter) {
+    // Repeat three times, having the init routine throw the first two
+    // times and succeed on the final attempt.
+    for (niter = 0; niter != 3; ++niter) {
 
-    try {
-      int rc = pthread_once (&once, init_routine);
-      if (rc)
-        fprintf (stderr, "pthread_once failed: %i (%s)\n",
-                 rc, strerror (rc));
+        try {
+            int rc = pthread_once(&once, init_routine);
+            if (rc)
+                fprintf(stderr, "pthread_once failed: %i (%s)\n",
+                        rc, strerror(rc));
 
-      if (niter < 2)
-        fputs ("pthread_once unexpectedly returned without"
-               " throwing an exception", stderr);
+            if (niter < 2)
+                fputs("pthread_once unexpectedly returned without"
+                      " throwing an exception", stderr);
+        } catch (OnceException) {
+            if (niter > 1) {
+                fputs("pthread_once unexpectedly threw", stderr);
+            }
+            result = 0;
+        } catch (...) {
+            fputs("pthread_once threw an unknown exception", stderr);
+        }
+
+        // Abort the test on the first failure.
+        if (result) {
+            break;
+        }
     }
-    catch (OnceException) {
-      if (niter > 1)
-        fputs ("pthread_once unexpectedly threw", stderr);
-      result = 0;
-    }
-    catch (...) {
-      fputs ("pthread_once threw an unknown exception", stderr);
-    }
 
-    // Abort the test on the first failure.
-    if (result)
-      break;
-  }
-
-  return result;
+    return result;
 }
 
 #define TEST_FUNCTION do_test ()

@@ -22,9 +22,8 @@
 #include <not-cancel.h>
 
 /* Close the file descriptor FD.  */
-void
-__close_nocancel_nostatus (int fd)
+void __close_nocancel_nostatus(int fd)
 {
-  HURD_FD_USE (fd, _hurd_fd_close (descriptor));
+    HURD_FD_USE(fd, _hurd_fd_close(descriptor));
 }
-libc_hidden_def (__close_nocancel_nostatus)
+libc_hidden_def(__close_nocancel_nostatus)

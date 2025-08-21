@@ -27,16 +27,15 @@ extern template struct unique_symbol<14>;
 /* Trigger the creation of a unique symbol reference.  This should
    cause tst-dlopen-nodelete-reloc-mod14.so to be marked as
    NODELETE.  */
-int
-global_function_mod15 (void)
+int global_function_mod15(void)
 {
-  return unique_symbol<14>::value;
+    return unique_symbol<14>::value;
 }
 
-static void __attribute__ ((destructor))
-fini (void)
+static void __attribute__((destructor))
+fini(void)
 {
-  /* This object is never loaded completely.  */
-  puts ("error: tst-dlopen-nodelete-reloc-mod15.so destructor invoked");
-  _exit (1);
+    /* This object is never loaded completely.  */
+    puts("error: tst-dlopen-nodelete-reloc-mod15.so destructor invoked");
+    _exit(1);
 }

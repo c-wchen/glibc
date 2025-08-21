@@ -17,4 +17,4 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include "../float128/strfromf128.c"
-weak_alias (strfromf128, __strfromieee128)
+weak_alias(strfromf128, __strfromieee128)

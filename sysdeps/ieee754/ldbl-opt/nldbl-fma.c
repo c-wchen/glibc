@@ -1,8 +1,7 @@
 #include "nldbl-compat.h"
 
 double
-attribute_hidden
-fmal (double x, double y, double z)
+attribute_hidden fmal(double x, double y, double z)
 {
-  return fma (x, y, z);
+    return fma(x, y, z);
 }

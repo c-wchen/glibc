@@ -21,30 +21,30 @@
 #include <math_private.h>
 
 FLOAT
-M_DECL_FUNC (__powr) (FLOAT x, FLOAT y)
+M_DECL_FUNC(__powr)(FLOAT x, FLOAT y)
 {
-  if (isless (x, M_LIT (0.0))
-      || (x == M_LIT (0.0) && y == M_LIT (0.0))
-      || (x == M_LIT (1.0) && isinf (y))
-      || (isinf (x) && y == M_LIT (0.0)))
-    {
-      __set_errno (EDOM);
-      return (x - x) / (x - x);
+    if (isless(x, M_LIT(0.0))
+        || (x == M_LIT(0.0) && y == M_LIT(0.0))
+        || (x == M_LIT(1.0) && isinf(y))
+        || (isinf(x) && y == M_LIT(0.0))) {
+        __set_errno(EDOM);
+        return (x - x) / (x - x);
     }
-  if (isnan (x) || isnan (y))
-    return x + y;
-  x = M_FABS (x);
-  FLOAT ret = M_SUF (__ieee754_pow) (x, y);
-  if (!isfinite (ret))
-    {
-      if (isfinite (x) && isfinite (y))
-	__set_errno (ERANGE);
+    if (isnan(x) || isnan(y)) {
+        return x + y;
     }
-  else if (ret == 0
-	   && isfinite (x)
-	   && x != 0
-	   && isfinite (y))
-    __set_errno (ERANGE);
-  return ret;
+    x = M_FABS(x);
+    FLOAT ret = M_SUF(__ieee754_pow)(x, y);
+    if (!isfinite(ret)) {
+        if (isfinite(x) && isfinite(y)) {
+            __set_errno(ERANGE);
+        }
+    } else if (ret == 0
+               && isfinite(x)
+               && x != 0
+               && isfinite(y)) {
+        __set_errno(ERANGE);
+    }
+    return ret;
 }
-declare_mgen_alias (__powr, powr);
+declare_mgen_alias(__powr, powr);

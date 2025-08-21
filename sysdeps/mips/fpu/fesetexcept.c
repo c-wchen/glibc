@@ -19,14 +19,13 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-int
-fesetexcept (int excepts)
+int fesetexcept(int excepts)
 {
-  fpu_control_t temp;
+    fpu_control_t temp;
 
-  _FPU_GETCW (temp);
-  temp |= excepts & FE_ALL_EXCEPT;
-  _FPU_SETCW (temp);
+    _FPU_GETCW(temp);
+    temp |= excepts & FE_ALL_EXCEPT;
+    _FPU_SETCW(temp);
 
-  return 0;
+    return 0;
 }

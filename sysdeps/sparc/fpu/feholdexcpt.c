@@ -19,20 +19,19 @@
 #include <fenv.h>
 #include <fenv_private.h>
 
-int
-__feholdexcept (fenv_t *envp)
+int __feholdexcept(fenv_t *envp)
 {
-  fenv_t tmp;
+    fenv_t tmp;
 
-  __fenv_stfsr (*envp);
+    __fenv_stfsr(*envp);
 
-  /* Set all exceptions to non-stop and clear all exceptions.  */
-  tmp = *envp & ~((0x1f << 23) | FE_ALL_EXCEPT);
+    /* Set all exceptions to non-stop and clear all exceptions.  */
+    tmp = *envp & ~((0x1f << 23) | FE_ALL_EXCEPT);
 
-  __fenv_ldfsr (tmp);
+    __fenv_ldfsr(tmp);
 
-  return 0;
+    return 0;
 }
-libm_hidden_def (__feholdexcept)
-weak_alias (__feholdexcept, feholdexcept)
-libm_hidden_weak (feholdexcept)
+libm_hidden_def(__feholdexcept)
+weak_alias(__feholdexcept, feholdexcept)
+libm_hidden_weak(feholdexcept)

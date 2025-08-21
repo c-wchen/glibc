@@ -16,9 +16,9 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define _DL_CACHE_DEFAULT_ID	0x103
+#define _DL_CACHE_DEFAULT_ID    0x103
 
-#define _dl_cache_check_flags(flags)			\
+#define _dl_cache_check_flags(flags)            \
   ((flags) == _DL_CACHE_DEFAULT_ID)
 
 #include_next <dl-cache.h>

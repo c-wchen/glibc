@@ -17,10 +17,9 @@
 
 #include <stdio_ext.h>
 
-int
-__freading (FILE *fp)
+int __freading(FILE *fp)
 {
-  return ((fp->_flags & _IO_NO_WRITES)
-	  || ((fp->_flags & (_IO_CURRENTLY_PUTTING | _IO_NO_READS)) == 0
-	      && fp->_IO_read_base != NULL));
+    return ((fp->_flags & _IO_NO_WRITES)
+            || ((fp->_flags & (_IO_CURRENTLY_PUTTING | _IO_NO_READS)) == 0
+                && fp->_IO_read_base != NULL));
 }

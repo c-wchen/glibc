@@ -24,22 +24,23 @@
 /* Return at most NAME_LEN characters of the login name of the user in NAME.
    If it cannot be determined or some other error occurred, return the error
    code.  Otherwise return 0.  */
-int
-__getlogin_r (char *name, size_t name_len)
+int __getlogin_r(char *name, size_t name_len)
 {
-  string_t login;
-  error_t err;
+    string_t login;
+    error_t err;
 
-  if (err = __USEPORT (PROC, __proc_getlogin (port, login)))
-    return __hurd_fail (err), err;
+    if (err = __USEPORT(PROC, __proc_getlogin(port, login))) {
+        return __hurd_fail(err), err;
+    }
 
-  size_t len = __strnlen (login, sizeof login - 1) + 1;
-  if (len > name_len)
-    return __hurd_fail (ERANGE), ERANGE;
+    size_t len = __strnlen(login, sizeof login - 1) + 1;
+    if (len > name_len) {
+        return __hurd_fail(ERANGE), ERANGE;
+    }
 
-  memcpy (name, login, len);
-  return 0;
+    memcpy(name, login, len);
+    return 0;
 }
-libc_hidden_def (__getlogin_r)
-weak_alias (__getlogin_r, getlogin_r)
-libc_hidden_weak (getlogin_r)
+libc_hidden_def(__getlogin_r)
+weak_alias(__getlogin_r, getlogin_r)
+libc_hidden_weak(getlogin_r)

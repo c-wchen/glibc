@@ -42,104 +42,98 @@ static pthread_barrier_t barrier;
 
 __thread unsigned int seed;
 
-typedef struct
-{
-  int id;
-  pthread_t thread;
+typedef struct {
+    int id;
+    pthread_t thread;
 } thread;
 
 thread threads[NUM_THREADS];
 
 void *allocations[NUM_THREADS][NUM_ALLOCATIONS];
 
-void
-run_thread_dealloc (int id)
+void run_thread_dealloc(int id)
 {
-  for (int i = 0; i < NUM_ALLOCATIONS; i++)
-    {
-      free (allocations[id][i]);
-      allocations[id][i] = NULL;
+    for (int i = 0; i < NUM_ALLOCATIONS; i++) {
+        free(allocations[id][i]);
+        allocations[id][i] = NULL;
     }
 }
 
-void
-run_thread_alloc (int id)
+void run_thread_alloc(int id)
 {
-  size_t msb, size;
-  for (int i = 0; i < NUM_ALLOCATIONS; i++)
-    {
-      msb = 1 << rand_r (&seed) % 16;
-      size = msb + rand_r (&seed) % msb;
-      allocations[id][i] = malloc (size);
-      TEST_VERIFY_EXIT (allocations[id][i] != NULL);
+    size_t msb, size;
+    for (int i = 0; i < NUM_ALLOCATIONS; i++) {
+        msb = 1 << rand_r(&seed) % 16;
+        size = msb + rand_r(&seed) % msb;
+        allocations[id][i] = malloc(size);
+        TEST_VERIFY_EXIT(allocations[id][i] != NULL);
     }
 }
 
-void *
-run_allocations (void *arg)
+void *run_allocations(void *arg)
 {
-  int id = *((int *) arg);
-  seed = time (NULL) + id;
+    int id = *((int *) arg);
+    seed = time(NULL) + id;
 
-  /* Stage 1: First half o the threads allocating memory and the second
-   * half waiting for them to finish
-   */
-  if (id < NUM_THREADS / 2)
-    run_thread_alloc (id);
+    /* Stage 1: First half o the threads allocating memory and the second
+     * half waiting for them to finish
+     */
+    if (id < NUM_THREADS / 2) {
+        run_thread_alloc(id);
+    }
 
-  xpthread_barrier_wait (&barrier);
+    xpthread_barrier_wait(&barrier);
 
-  /* Stage 2: Half of the threads allocationg memory and the other
-   * half deallocating:
-   * - In the non cross-thread dealloc scenario the first half will be
-   *   deallocating the memory allocated by themselves in stage 1 and the
-   *   second half will be allocating memory.
-   * - In the cross-thread dealloc scenario the first half will continue
-   *   to allocate memory and the second half will deallocate the memory
-   *   allocated by the first half in stage 1.
-   */
-  if (id < NUM_THREADS / 2)
+    /* Stage 2: Half of the threads allocationg memory and the other
+     * half deallocating:
+     * - In the non cross-thread dealloc scenario the first half will be
+     *   deallocating the memory allocated by themselves in stage 1 and the
+     *   second half will be allocating memory.
+     * - In the cross-thread dealloc scenario the first half will continue
+     *   to allocate memory and the second half will deallocate the memory
+     *   allocated by the first half in stage 1.
+     */
+    if (id < NUM_THREADS / 2)
 #ifndef CROSS_THREAD_DEALLOC
-    run_thread_dealloc (id);
+        run_thread_dealloc(id);
 #else
-    run_thread_alloc (id + NUM_THREADS / 2);
+        run_thread_alloc(id + NUM_THREADS / 2);
 #endif
-  else
+    else
 #ifndef CROSS_THREAD_DEALLOC
-    run_thread_alloc (id);
+        run_thread_alloc(id);
 #else
-    run_thread_dealloc (id - NUM_THREADS / 2);
+        run_thread_dealloc(id - NUM_THREADS / 2);
 #endif
 
-  xpthread_barrier_wait (&barrier);
+    xpthread_barrier_wait(&barrier);
 
-  // Stage 3: Second half of the threads deallocating and the first half
-  // waiting for them to finish.
-  if (id >= NUM_THREADS / 2)
-    run_thread_dealloc (id);
-
-  return NULL;
-}
-
-static int
-do_test (void)
-{
-  xpthread_barrier_init (&barrier, NULL, NUM_THREADS);
-
-  for (int i = 0; i < ITERATIONS; i++)
-    {
-      for (int t = 0; t < NUM_THREADS; t++)
-	{
-	  threads[t].id = t;
-	  threads[t].thread
-	      = xpthread_create (NULL, run_allocations, &threads[t].id);
-	}
-
-      for (int t = 0; t < NUM_THREADS; t++)
-	xpthread_join (threads[t].thread);
+    // Stage 3: Second half of the threads deallocating and the first half
+    // waiting for them to finish.
+    if (id >= NUM_THREADS / 2) {
+        run_thread_dealloc(id);
     }
 
-  return 0;
+    return NULL;
+}
+
+static int do_test(void)
+{
+    xpthread_barrier_init(&barrier, NULL, NUM_THREADS);
+
+    for (int i = 0; i < ITERATIONS; i++) {
+        for (int t = 0; t < NUM_THREADS; t++) {
+            threads[t].id = t;
+            threads[t].thread
+                = xpthread_create(NULL, run_allocations, &threads[t].id);
+        }
+
+        for (int t = 0; t < NUM_THREADS; t++) {
+            xpthread_join(threads[t].thread);
+        }
+    }
+
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -30,56 +30,62 @@
 static char *temp_filename;
 static int temp_fd;
 
-static void
-do_prepare (int argc, char **argv)
+static void do_prepare(int argc, char **argv)
 {
-  temp_fd = create_temp_file ("tst-posix_fallocate.", &temp_filename);
-  if (temp_fd == -1)
-    FAIL_EXIT1 ("cannot create temporary file: %m\n");
+    temp_fd = create_temp_file("tst-posix_fallocate.", &temp_filename);
+    if (temp_fd == -1) {
+        FAIL_EXIT1("cannot create temporary file: %m\n");
+    }
 }
 #define PREPARE do_prepare
 
-static int
-do_test_with_offset (off_t offset)
+static int do_test_with_offset(off_t offset)
 {
-  struct stat st;
+    struct stat st;
 
-  if (posix_fallocate (temp_fd, offset, 768) != 0)
-    FAIL_EXIT1 ("1st posix_fallocate call failed");
+    if (posix_fallocate(temp_fd, offset, 768) != 0) {
+        FAIL_EXIT1("1st posix_fallocate call failed");
+    }
 
-  if (fstat (temp_fd, &st) != 0)
-    FAIL_EXIT1 ("2nd fstat failed");
+    if (fstat(temp_fd, &st) != 0) {
+        FAIL_EXIT1("2nd fstat failed");
+    }
 
-  if (st.st_size != (offset + 768))
-    FAIL_EXIT1 ("file size after first posix_fallocate call is %lu, "
-		"expected %lu",
-		(unsigned long int) st.st_size, 512lu + 768lu);
+    if (st.st_size != (offset + 768))
+        FAIL_EXIT1("file size after first posix_fallocate call is %lu, "
+                   "expected %lu",
+                   (unsigned long int) st.st_size, 512lu + 768lu);
 
-  if (posix_fallocate (temp_fd, 0, 1024) != 0)
-    FAIL_EXIT1 ("2nd posix_fallocate call failed");
+    if (posix_fallocate(temp_fd, 0, 1024) != 0) {
+        FAIL_EXIT1("2nd posix_fallocate call failed");
+    }
 
-  if (fstat (temp_fd, &st) != 0)
-    FAIL_EXIT1 ("3rd fstat failed");
+    if (fstat(temp_fd, &st) != 0) {
+        FAIL_EXIT1("3rd fstat failed");
+    }
 
-  if (st.st_size != (offset) + 768)
-    FAIL_EXIT1 ("file size changed in second posix_fallocate");
+    if (st.st_size != (offset) + 768) {
+        FAIL_EXIT1("file size changed in second posix_fallocate");
+    }
 
-  offset += 2048;
-  if (posix_fallocate (temp_fd, offset, 64) != 0)
-    FAIL_EXIT1 ("3rd posix_fallocate call failed");
+    offset += 2048;
+    if (posix_fallocate(temp_fd, offset, 64) != 0) {
+        FAIL_EXIT1("3rd posix_fallocate call failed");
+    }
 
-  if (fstat (temp_fd, &st) != 0)
-    FAIL_EXIT1 ("4th fstat failed");
+    if (fstat(temp_fd, &st) != 0) {
+        FAIL_EXIT1("4th fstat failed");
+    }
 
-  if (st.st_size != (offset + 64))
-    FAIL_EXIT1 ("file size after first posix_fallocate call is %llu, "
-		"expected %u",
-		(unsigned long long int) st.st_size, 2048u + 64u);
+    if (st.st_size != (offset + 64))
+        FAIL_EXIT1("file size after first posix_fallocate call is %llu, "
+                   "expected %u",
+                   (unsigned long long int) st.st_size, 2048u + 64u);
 
-  return 0;
+    return 0;
 }
 
 /* This function is defined by the individual tests.  */
-static int do_test (void);
+static int do_test(void);
 
 #include <support/test-driver.c>

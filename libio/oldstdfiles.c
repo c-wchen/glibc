@@ -46,18 +46,18 @@
 
 DEF_STDFILE(_IO_stdin_, 0, 0, _IO_NO_WRITES);
 DEF_STDFILE(_IO_stdout_, 1, &_IO_stdin_, _IO_NO_READS);
-DEF_STDFILE(_IO_stderr_, 2, &_IO_stdout_, _IO_NO_READS+_IO_UNBUFFERED);
+DEF_STDFILE(_IO_stderr_, 2, &_IO_stdout_, _IO_NO_READS + _IO_UNBUFFERED);
 
-compat_symbol (libc, _IO_stdin_, _IO_stdin_, GLIBC_2_0);
-compat_symbol (libc, _IO_stdout_, _IO_stdout_, GLIBC_2_0);
-compat_symbol (libc, _IO_stderr_, _IO_stderr_, GLIBC_2_0);
+compat_symbol(libc, _IO_stdin_, _IO_stdin_, GLIBC_2_0);
+compat_symbol(libc, _IO_stdout_, _IO_stdout_, GLIBC_2_0);
+compat_symbol(libc, _IO_stderr_, _IO_stderr_, GLIBC_2_0);
 
 #if defined __GNUC__ && __GNUC__ >= 2
 
 #include <stdio.h>
 
 extern const int _IO_stdin_used;
-weak_extern (_IO_stdin_used);
+weak_extern(_IO_stdin_used);
 
 #undef stdin
 #undef stdout
@@ -67,31 +67,30 @@ extern FILE *stdin;
 extern FILE *stdout;
 extern FILE *stderr;
 
-static void _IO_check_libio (void) __THROW __attribute__ ((constructor));
+static void _IO_check_libio(void) __THROW __attribute__((constructor));
 
 /* This function determines which shared C library the application
    was linked against. We then set up the stdin/stdout/stderr and
    _IO_list_all accordingly. */
 
-static void
-_IO_check_libio (void)
+static void _IO_check_libio(void)
 {
-  if (&_IO_stdin_used == NULL)
-    {
-      /* We are using the old one. */
-      stdin = (FILE *) &_IO_stdin_;
-      stdout = (FILE *) &_IO_stdout_;
-      stderr = (FILE *) &_IO_stderr_;
-      _IO_list_all = &_IO_stderr_;
-      stdin->_vtable_offset = stdout->_vtable_offset
-	= stderr->_vtable_offset =
-	((int) sizeof (struct _IO_FILE)
-	 - (int) sizeof (struct _IO_FILE_complete));
+    if (&_IO_stdin_used == NULL) {
+        /* We are using the old one. */
+        stdin = (FILE *) &_IO_stdin_;
+        stdout = (FILE *) &_IO_stdout_;
+        stderr = (FILE *) &_IO_stderr_;
+        _IO_list_all = &_IO_stderr_;
+        stdin->_vtable_offset = stdout->_vtable_offset
+                                = stderr->_vtable_offset =
+                                      ((int) sizeof(struct _IO_FILE)
+                                       - (int) sizeof(struct _IO_FILE_complete));
 
-      if (_IO_stdin_.vtable != &_IO_old_file_jumps
-	  || _IO_stdout_.vtable != &_IO_old_file_jumps
-	  || _IO_stderr_.vtable != &_IO_old_file_jumps)
-	IO_set_accept_foreign_vtables (&_IO_vtable_check);
+        if (_IO_stdin_.vtable != &_IO_old_file_jumps
+            || _IO_stdout_.vtable != &_IO_old_file_jumps
+            || _IO_stderr_.vtable != &_IO_old_file_jumps) {
+            IO_set_accept_foreign_vtables(&_IO_vtable_check);
+        }
     }
 }
 

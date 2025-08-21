@@ -1,16 +1,14 @@
 #include <stdio.h>
 
-extern void start_a2( void ) __attribute__((constructor));
-extern void finish_a2( void ) __attribute__((destructor));
+extern void start_a2(void) __attribute__((constructor));
+extern void finish_a2(void) __attribute__((destructor));
 
-void
-start_a2( void )
+void start_a2(void)
 {
-  printf( "start_a2\n" );
+    printf("start_a2\n");
 }
 
-void
-finish_a2( void )
+void finish_a2(void)
 {
-  printf( "finish_a2\n" );
+    printf("finish_a2\n");
 }

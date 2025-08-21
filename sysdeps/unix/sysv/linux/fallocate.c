@@ -21,10 +21,9 @@
 
 #ifndef __OFF_T_MATCHES_OFF64_T
 /* Reserve storage for the data of the file associated with FD.  */
-int
-fallocate (int fd, int mode, __off_t offset, __off_t len)
+int fallocate(int fd, int mode, __off_t offset, __off_t len)
 {
-  return SYSCALL_CANCEL (fallocate, fd, mode,
-			 SYSCALL_LL (offset), SYSCALL_LL (len));
+    return SYSCALL_CANCEL(fallocate, fd, mode,
+                          SYSCALL_LL(offset), SYSCALL_LL(len));
 }
 #endif

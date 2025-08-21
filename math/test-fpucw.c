@@ -22,25 +22,24 @@
 # define FPU_CONTROL _FPU_DEFAULT
 #endif
 
-static int
-do_test (void)
+static int do_test(void)
 {
 #ifdef _FPU_GETCW
-/* Some architectures don't have _FPU_GETCW (e.g. Linux/Alpha).  */
-  fpu_control_t cw;
+    /* Some architectures don't have _FPU_GETCW (e.g. Linux/Alpha).  */
+    fpu_control_t cw;
 
-  _FPU_GETCW (cw);
+    _FPU_GETCW(cw);
 
-  cw &= ~_FPU_RESERVED;
+    cw &= ~_FPU_RESERVED;
 
-  if (cw != (FPU_CONTROL & ~_FPU_RESERVED))
-    printf ("control word is 0x%lx but should be 0x%lx.\n",
-	    (long int) cw, (long int) (FPU_CONTROL & ~_FPU_RESERVED));
+    if (cw != (FPU_CONTROL & ~_FPU_RESERVED))
+        printf("control word is 0x%lx but should be 0x%lx.\n",
+               (long int) cw, (long int)(FPU_CONTROL & ~_FPU_RESERVED));
 
-  return cw != (FPU_CONTROL & ~_FPU_RESERVED);
+    return cw != (FPU_CONTROL & ~_FPU_RESERVED);
 
 #else
-  return 0;
+    return 0;
 #endif
 }
 

@@ -19,12 +19,12 @@
 #include <wchar.h>
 
 
-size_t
-__wcsrtombs_chk (char *dst, const wchar_t **src, size_t len,
-		 mbstate_t *ps, size_t dstlen)
+size_t __wcsrtombs_chk(char *dst, const wchar_t **src, size_t len,
+                       mbstate_t *ps, size_t dstlen)
 {
-  if (__glibc_unlikely (dstlen < len))
-    __chk_fail ();
+    if (__glibc_unlikely(dstlen < len)) {
+        __chk_fail();
+    }
 
-  return __wcsrtombs (dst, src, len, ps);
+    return __wcsrtombs(dst, src, len, ps);
 }

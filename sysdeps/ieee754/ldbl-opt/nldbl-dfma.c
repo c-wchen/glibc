@@ -21,8 +21,7 @@
 #undef dfmal
 
 double
-attribute_hidden
-dfmal (double x, double y, double z)
+attribute_hidden dfmal(double x, double y, double z)
 {
-  return fma (x, y, z);
+    return fma(x, y, z);
 }

@@ -26,18 +26,18 @@
 #endif /* WIDE */
 #include "bench-string.h"
 
-CHAR *
-generic_stpncpy (CHAR *dst, const CHAR *src, size_t n)
+CHAR *generic_stpncpy(CHAR *dst, const CHAR *src, size_t n)
 {
-  size_t nc = STRNLEN (src, n);
-  MEMCPY (dst, src, nc);
-  dst += nc;
-  if (nc == n)
-    return dst;
-  return MEMSET (dst, 0, n - nc);
+    size_t nc = STRNLEN(src, n);
+    MEMCPY(dst, src, nc);
+    dst += nc;
+    if (nc == n) {
+        return dst;
+    }
+    return MEMSET(dst, 0, n - nc);
 }
 
-IMPL (STPNCPY, 1)
-IMPL (generic_stpncpy, 0)
+IMPL(STPNCPY, 1)
+IMPL(generic_stpncpy, 0)
 
 #include "bench-strncpy.c"

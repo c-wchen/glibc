@@ -16,7 +16,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _ALIASES_H
-#define _ALIASES_H	1
+#define _ALIASES_H  1
 
 #include <features.h>
 
@@ -26,37 +26,36 @@
 __BEGIN_DECLS
 
 /* Structure to represent one entry of the alias database.  */
-struct aliasent
-  {
+struct aliasent {
     char *alias_name;
     size_t alias_members_len;
     char **alias_members;
     int alias_local;
-  };
+};
 
 
 /* Open alias data base files.  */
-extern void setaliasent (void) __THROW;
+extern void setaliasent(void) __THROW;
 
 /* Close alias database files.  */
-extern void endaliasent (void) __THROW;
+extern void endaliasent(void) __THROW;
 
 /* Get the next entry from the alias database.  */
-extern struct aliasent *getaliasent (void) __THROW;
+extern struct aliasent *getaliasent(void) __THROW;
 
 /* Get the next entry from the alias database and put it in RESULT_BUF.  */
-extern int getaliasent_r (struct aliasent *__restrict __result_buf,
-			  char *__restrict __buffer, size_t __buflen,
-			  struct aliasent **__restrict __result) __THROW;
+extern int getaliasent_r(struct aliasent *__restrict __result_buf,
+                         char *__restrict __buffer, size_t __buflen,
+                         struct aliasent **__restrict __result) __THROW;
 
 /* Get alias entry corresponding to NAME.  */
-extern struct aliasent *getaliasbyname (const char *__name) __THROW;
+extern struct aliasent *getaliasbyname(const char *__name) __THROW;
 
 /* Get alias entry corresponding to NAME and put it in RESULT_BUF.  */
-extern int getaliasbyname_r (const char *__restrict __name,
-			     struct aliasent *__restrict __result_buf,
-			     char *__restrict __buffer, size_t __buflen,
-			     struct aliasent **__restrict __result) __THROW;
+extern int getaliasbyname_r(const char *__restrict __name,
+                            struct aliasent *__restrict __result_buf,
+                            char *__restrict __buffer, size_t __buflen,
+                            struct aliasent **__restrict __result) __THROW;
 
 __END_DECLS
 

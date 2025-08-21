@@ -24,17 +24,16 @@
 #include <stdio.h>
 #include <sys/signal.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* Do one allocation of any size that fits in tcache.  */
-  char * volatile x = malloc (32);
+    /* Do one allocation of any size that fits in tcache.  */
+    char *volatile x = malloc(32);
 
-  free (x); // puts in tcache
-  free (x); // should abort
+    free(x);  // puts in tcache
+    free(x);  // should abort
 
-  printf("FAIL: tcache double free not detected\n");
-  return 1;
+    printf("FAIL: tcache double free not detected\n");
+    return 1;
 }
 
 #define TEST_FUNCTION do_test

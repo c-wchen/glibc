@@ -17,8 +17,8 @@
 
 #define USE_VERSIONED_RLIMIT
 #include <sysdeps/unix/sysv/linux/getrlimit64.c>
-versioned_symbol (libc, __getrlimit, getrlimit, GLIBC_2_27);
-versioned_symbol (libc, __getrlimit64, getrlimit64, GLIBC_2_27);
+versioned_symbol(libc, __getrlimit, getrlimit, GLIBC_2_27);
+versioned_symbol(libc, __getrlimit64, getrlimit64, GLIBC_2_27);
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_27)
 /* RLIM64_INFINITY was supposed to be a glibc convention rather than
@@ -29,28 +29,30 @@ versioned_symbol (libc, __getrlimit64, getrlimit64, GLIBC_2_27);
 # define OLD_RLIM64_INFINITY           0x7fffffffffffffffULL
 
 int
-attribute_compat_text_section
-__old_getrlimit64 (enum __rlimit_resource resource,
-		   struct rlimit64 *rlimits)
+attribute_compat_text_section __old_getrlimit64(enum __rlimit_resource resource,
+        struct rlimit64 *rlimits)
 {
-  struct rlimit64 krlimits;
+    struct rlimit64 krlimits;
 
-  if (__getrlimit64 (resource, &krlimits) < 0)
-    return -1;
+    if (__getrlimit64(resource, &krlimits) < 0) {
+        return -1;
+    }
 
-  if (krlimits.rlim_cur == RLIM64_INFINITY)
-    rlimits->rlim_cur = OLD_RLIM64_INFINITY;
-  else
-    rlimits->rlim_cur = krlimits.rlim_cur;
-  if (krlimits.rlim_max == RLIM64_INFINITY)
-    rlimits->rlim_max = OLD_RLIM64_INFINITY;
-  else
-    rlimits->rlim_max = krlimits.rlim_max;
+    if (krlimits.rlim_cur == RLIM64_INFINITY) {
+        rlimits->rlim_cur = OLD_RLIM64_INFINITY;
+    } else {
+        rlimits->rlim_cur = krlimits.rlim_cur;
+    }
+    if (krlimits.rlim_max == RLIM64_INFINITY) {
+        rlimits->rlim_max = OLD_RLIM64_INFINITY;
+    } else {
+        rlimits->rlim_max = krlimits.rlim_max;
+    }
 
-  return 0;
+    return 0;
 }
 
-strong_alias (__old_getrlimit64, __old_getrlimit)
-compat_symbol (libc, __old_getrlimit, getrlimit, GLIBC_2_0);
-compat_symbol (libc, __old_getrlimit64, getrlimit64, GLIBC_2_1);
+strong_alias(__old_getrlimit64, __old_getrlimit)
+compat_symbol(libc, __old_getrlimit, getrlimit, GLIBC_2_0);
+compat_symbol(libc, __old_getrlimit64, getrlimit64, GLIBC_2_1);
 #endif

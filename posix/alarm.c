@@ -25,12 +25,11 @@
    There is no return value to indicate an error, but you can set `errno'
    to 0 and check its value after calling `alarm', and this might tell you.
    The signal may come late due to processor scheduling.  */
-unsigned int
-alarm (unsigned int seconds)
+unsigned int alarm(unsigned int seconds)
 {
-  __set_errno (ENOSYS);
-  return 0;
+    __set_errno(ENOSYS);
+    return 0;
 }
-libc_hidden_def (alarm)
+libc_hidden_def(alarm)
 
-stub_warning (alarm)
+stub_warning(alarm)

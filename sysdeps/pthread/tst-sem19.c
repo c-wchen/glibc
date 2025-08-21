@@ -34,44 +34,42 @@
 static pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 static sem_t sem;
 
-static void *
-tf (void *arg)
+static void *tf(void *arg)
 {
-  xpthread_mutex_lock (&lock);
-  sem_post (&sem);
-  xpthread_mutex_unlock (&lock);
-  return NULL;
+    xpthread_mutex_lock(&lock);
+    sem_post(&sem);
+    xpthread_mutex_unlock(&lock);
+    return NULL;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int ret;
+    int ret;
 
-  ret = sem_init (&sem, 0, 0);
-  TEST_VERIFY_EXIT (ret == 0);
-  xpthread_mutex_lock (&lock);
-  pthread_t th = xpthread_create (NULL, tf, NULL);
-  errno = 0;
-  /* The other thread is waiting on the lock before it calls sem_post,
-     so sem_trywait should fail.  */
-  ret = sem_trywait (&sem);
-  TEST_COMPARE (ret, -1);
-  TEST_COMPARE (errno, EAGAIN);
-  xpthread_mutex_unlock (&lock);
-  /* The other thread now takes the lock, calls sem_post and releases
-     the lock.  */
-  for (;;)
-    {
-      errno = 0;
-      ret = sem_trywait (&sem);
-      if (ret == 0)
-	break;
-      TEST_COMPARE (errno, EAGAIN);
+    ret = sem_init(&sem, 0, 0);
+    TEST_VERIFY_EXIT(ret == 0);
+    xpthread_mutex_lock(&lock);
+    pthread_t th = xpthread_create(NULL, tf, NULL);
+    errno = 0;
+    /* The other thread is waiting on the lock before it calls sem_post,
+       so sem_trywait should fail.  */
+    ret = sem_trywait(&sem);
+    TEST_COMPARE(ret, -1);
+    TEST_COMPARE(errno, EAGAIN);
+    xpthread_mutex_unlock(&lock);
+    /* The other thread now takes the lock, calls sem_post and releases
+       the lock.  */
+    for (;;) {
+        errno = 0;
+        ret = sem_trywait(&sem);
+        if (ret == 0) {
+            break;
+        }
+        TEST_COMPARE(errno, EAGAIN);
     }
-  xpthread_join (th);
+    xpthread_join(th);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

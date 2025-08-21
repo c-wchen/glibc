@@ -28,9 +28,9 @@ void *pthread_create_reference = pthread_create;
 
 /* The constructor will never be executed because the module cannot be
    loaded.  */
-static void __attribute__ ((constructor))
-init (void)
+static void __attribute__((constructor))
+init(void)
 {
-  puts ("tst-dlopenfailmod1 constructor executed");
-  _exit (1);
+    puts("tst-dlopenfailmod1 constructor executed");
+    _exit(1);
 }

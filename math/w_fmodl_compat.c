@@ -22,15 +22,16 @@
 
 #if LIBM_SVID_COMPAT
 /* wrapper fmodl */
-long double
-__fmodl (long double x, long double y)
+long double __fmodl(long double x, long double y)
 {
-  if (__builtin_expect (isinf (x) || y == 0.0L, 0)
-      && _LIB_VERSION != _IEEE_ && !isnan (y) && !isnan (x))
-    /* fmod(+-Inf,y) or fmod(x,0) */
-    return __kernel_standard_l (x, y, 227);
+    if (__builtin_expect(isinf(x) || y == 0.0L, 0)
+        && _LIB_VERSION != _IEEE_ && !isnan(y) && !isnan(x))
+        /* fmod(+-Inf,y) or fmod(x,0) */
+    {
+        return __kernel_standard_l(x, y, 227);
+    }
 
-  return __ieee754_fmodl (x, y);
+    return __ieee754_fmodl(x, y);
 }
-libm_alias_ldouble (__fmod, fmod)
+libm_alias_ldouble(__fmod, fmod)
 #endif

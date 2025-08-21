@@ -25,8 +25,7 @@
    statically linked __tls_get_offset is defined here but
    aborts if it is used.  */
 
-void *
-__tls_get_offset (size_t m, size_t offset)
+void *__tls_get_offset(size_t m, size_t offset)
 {
-  abort ();
+    abort();
 }

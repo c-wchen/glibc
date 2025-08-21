@@ -19,7 +19,7 @@
 #include <stdbit.h>
 
 unsigned int
-(stdc_count_ones_ull) (unsigned long long int x)
+(stdc_count_ones_ull)(unsigned long long int x)
 {
-  return stdc_count_ones_ull (x);
+    return stdc_count_ones_ull(x);
 }

@@ -21,13 +21,12 @@
 #include <stdbool.h>
 #include <sys/auxv.h>
 
-struct cpu_features
-{
-  bool use_cached_memopt;
-  unsigned long int hwcap;
-  unsigned long int hwcap2;
-  unsigned long int hwcap3;
-  unsigned long int hwcap4;
+struct cpu_features {
+    bool use_cached_memopt;
+    unsigned long int hwcap;
+    unsigned long int hwcap2;
+    unsigned long int hwcap3;
+    unsigned long int hwcap4;
 };
 
 #endif /* __CPU_FEATURES_H  */

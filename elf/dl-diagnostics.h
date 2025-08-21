@@ -23,24 +23,24 @@
 
 /* Write the null-terminated string to standard output, surrounded in
    quotation marks.  */
-void _dl_diagnostics_print_string (const char *s) attribute_hidden;
+void _dl_diagnostics_print_string(const char *s) attribute_hidden;
 
 /* Like _dl_diagnostics_print_string, but add a LABEL= prefix, and a
    newline character as a suffix.  */
-void _dl_diagnostics_print_labeled_string (const char *label, const char *s)
-  attribute_hidden;
+void _dl_diagnostics_print_labeled_string(const char *label, const char *s)
+attribute_hidden;
 
 /* Print LABEL=VALUE to standard output, followed by a newline
    character.  */
-void _dl_diagnostics_print_labeled_value (const char *label, uint64_t value)
-  attribute_hidden;
+void _dl_diagnostics_print_labeled_value(const char *label, uint64_t value)
+attribute_hidden;
 
 /* Print diagnostics data for the kernel.  Called from
    _dl_print_diagnostics.  */
-void _dl_diagnostics_kernel (void) attribute_hidden;
+void _dl_diagnostics_kernel(void) attribute_hidden;
 
 /* Print diagnostics data for the CPU(s).  Called from
    _dl_print_diagnostics.  */
-void _dl_diagnostics_cpu (void) attribute_hidden;
+void _dl_diagnostics_cpu(void) attribute_hidden;
 
 #endif /* _DL_DIAGNOSTICS_H */

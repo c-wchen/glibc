@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _S390_GET_ROUNDING_MODE_H
-#define _S390_GET_ROUNDING_MODE_H	1
+#define _S390_GET_ROUNDING_MODE_H   1
 
 #include <fenv.h>
 #include <fenv_libc.h>
@@ -25,13 +25,12 @@
 
 /* Return the floating-point rounding mode.  */
 
-static inline int
-get_rounding_mode (void)
+static inline int get_rounding_mode(void)
 {
-  fpu_control_t fc;
+    fpu_control_t fc;
 
-  _FPU_GETCW (fc);
-  return fc & FPC_RM_MASK;
+    _FPU_GETCW(fc);
+    return fc & FPC_RM_MASK;
 }
 
 #endif /* get-rounding-mode.h */

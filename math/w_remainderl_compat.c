@@ -23,16 +23,16 @@
 
 #if LIBM_SVID_COMPAT
 /* wrapper remainderl */
-long double
-__remainderl (long double x, long double y)
+long double __remainderl(long double x, long double y)
 {
-  if (((__builtin_expect (y == 0.0L, 0) && ! isnan (x))
-       || (__builtin_expect (isinf (x), 0) && ! isnan (y)))
-      && _LIB_VERSION != _IEEE_)
-    return __kernel_standard_l (x, y, 228); /* remainder domain */
+    if (((__builtin_expect(y == 0.0L, 0) && ! isnan(x))
+         || (__builtin_expect(isinf(x), 0) && ! isnan(y)))
+        && _LIB_VERSION != _IEEE_) {
+        return __kernel_standard_l(x, y, 228);    /* remainder domain */
+    }
 
-  return __ieee754_remainderl (x, y);
+    return __ieee754_remainderl(x, y);
 }
-libm_alias_ldouble (__remainder, remainder)
-weak_alias (__remainderl, dreml)
+libm_alias_ldouble(__remainder, remainder)
+weak_alias(__remainderl, dreml)
 #endif

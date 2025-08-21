@@ -21,16 +21,15 @@
 
 static int called = 0;
 
-static void
-__attribute__ ((constructor))
-init (void)
+static void __attribute__((constructor))
+init(void)
 {
-  called = 1;
+    called = 1;
 }
 
-void
-foo (void)
+void foo(void)
 {
-  if (!called)
-    abort ();
+    if (!called) {
+        abort();
+    }
 }

@@ -21,74 +21,69 @@
 #include <shlib-compat.h>
 #include <stddef.h>
 
-struct dlvsym_args
-{
-  /* The arguments to dlvsym_doit.  */
-  void *handle;
-  const char *name;
-  const char *version;
-  void *who;
+struct dlvsym_args {
+    /* The arguments to dlvsym_doit.  */
+    void *handle;
+    const char *name;
+    const char *version;
+    void *who;
 
-  /* The return values of dlvsym_doit.  */
-  void *sym;
+    /* The return values of dlvsym_doit.  */
+    void *sym;
 };
 
-static void
-dlvsym_doit (void *a)
+static void dlvsym_doit(void *a)
 {
-  struct dlvsym_args *args = (struct dlvsym_args *) a;
+    struct dlvsym_args *args = (struct dlvsym_args *) a;
 
-  args->sym = _dl_vsym (args->handle, args->name, args->version, args->who);
+    args->sym = _dl_vsym(args->handle, args->name, args->version, args->who);
 }
 
-static void *
-dlvsym_implementation (void *handle, const char *name, const char *version,
-		       void *dl_caller)
+static void *dlvsym_implementation(void *handle, const char *name, const char *version,
+                                   void *dl_caller)
 {
-  struct dlvsym_args args;
-  args.who = dl_caller;
-  args.handle = handle;
-  args.name = name;
-  args.version = version;
+    struct dlvsym_args args;
+    args.who = dl_caller;
+    args.handle = handle;
+    args.name = name;
+    args.version = version;
 
-  /* Protect against concurrent loads and unloads.  */
-  __rtld_lock_lock_recursive (GL(dl_load_lock));
+    /* Protect against concurrent loads and unloads.  */
+    __rtld_lock_lock_recursive(GL(dl_load_lock));
 
-  void *result = (_dlerror_run (dlvsym_doit, &args) ? NULL : args.sym);
+    void *result = (_dlerror_run(dlvsym_doit, &args) ? NULL : args.sym);
 
-  __rtld_lock_unlock_recursive (GL(dl_load_lock));
+    __rtld_lock_unlock_recursive(GL(dl_load_lock));
 
-  return result;
+    return result;
 }
 
 #ifdef SHARED
-void *
-___dlvsym (void *handle, const char *name, const char *version)
+void *___dlvsym(void *handle, const char *name, const char *version)
 {
-  if (GLRO (dl_dlfcn_hook) != NULL)
-    return GLRO (dl_dlfcn_hook)->dlvsym (handle, name, version,
-					 RETURN_ADDRESS (0));
-  else
-    return dlvsym_implementation (handle, name, version, RETURN_ADDRESS (0));
+    if (GLRO(dl_dlfcn_hook) != NULL)
+        return GLRO(dl_dlfcn_hook)->dlvsym(handle, name, version,
+                                           RETURN_ADDRESS(0));
+    else {
+        return dlvsym_implementation(handle, name, version, RETURN_ADDRESS(0));
+    }
 }
-versioned_symbol (libc, ___dlvsym, dlvsym, GLIBC_2_34);
+versioned_symbol(libc, ___dlvsym, dlvsym, GLIBC_2_34);
 
 # if OTHER_SHLIB_COMPAT (libdl, GLIBC_2_1, GLIBC_2_34)
-compat_symbol (libdl, ___dlvsym, dlvsym, GLIBC_2_1);
+compat_symbol(libdl, ___dlvsym, dlvsym, GLIBC_2_1);
 # endif
 
 #else /* !SHARED */
 /* Also used with _dlfcn_hook.  */
-void *
-__dlvsym (void *handle, const char *name, const char *version, void *dl_caller)
+void *__dlvsym(void *handle, const char *name, const char *version, void *dl_caller)
 {
-  return dlvsym_implementation (handle, name, version, dl_caller);
+    return dlvsym_implementation(handle, name, version, dl_caller);
 }
 
-void *
-___dlvsym (void *handle, const char *name, const char *version)
+void *___dlvsym(void *handle, const char *name, const char *version)
 {
-  return __dlvsym (handle, name, version, RETURN_ADDRESS (0));
+    return __dlvsym(handle, name, version, RETURN_ADDRESS(0));
 }
-weak_alias (___dlvsym, dlvsym)
+weak_alias(___dlvsym, dlvsym)
 #endif /* !SHARED */

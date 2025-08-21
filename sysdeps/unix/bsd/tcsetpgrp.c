@@ -21,10 +21,9 @@
 #include <unistd.h>
 
 /* Set the foreground process group ID of FD set PGRP_ID.  */
-int
-__tcsetpgrp (int fd, pid_t pgrp_id)
+int __tcsetpgrp(int fd, pid_t pgrp_id)
 {
-  return __ioctl (fd, TIOCSPGRP, &pgrp_id);
+    return __ioctl(fd, TIOCSPGRP, &pgrp_id);
 }
-weak_alias (__tcsetpgrp, tcsetpgrp)
-libc_hidden_def (__tcsetpgrp)
+weak_alias(__tcsetpgrp, tcsetpgrp)
+libc_hidden_def(__tcsetpgrp)

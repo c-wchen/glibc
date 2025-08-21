@@ -20,6 +20,6 @@
 #define I386_STRING_OPTHR_H 1
 
 /* Threshold value for when to enter the unrolled loops.  */
-#define OP_T_THRES	8
+#define OP_T_THRES  8
 
 #endif /* I386_STRING_OPTHR_H */

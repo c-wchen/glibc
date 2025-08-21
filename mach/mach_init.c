@@ -22,8 +22,8 @@
 
 mach_port_t __mach_task_self_;
 mach_port_t __mach_host_self_;
-vm_size_t __vm_page_size = 0;	/* Must be data not bss for weak alias.  */
-weak_alias (__vm_page_size, vm_page_size)
+vm_size_t __vm_page_size = 0;   /* Must be data not bss for weak alias.  */
+weak_alias(__vm_page_size, vm_page_size)
 
 #ifdef NDR_DEF_HEADER
 /* This defines NDR_record, which the MiG-generated stubs use. XXX namespace */
@@ -31,31 +31,35 @@ weak_alias (__vm_page_size, vm_page_size)
 #endif
 
 void
-__mach_init (void)
+__mach_init(void)
 {
-  kern_return_t err;
+    kern_return_t err;
 
-  if (__mach_host_self_)
-    /* Already initialized.  */
-    return;
+    if (__mach_host_self_)
+        /* Already initialized.  */
+    {
+        return;
+    }
 
-  __mach_task_self_ = (__mach_task_self) ();
-  __mach_host_self_ = (__mach_host_self) ();
-  __mig_init (0);
+    __mach_task_self_ = (__mach_task_self)();
+    __mach_host_self_ = (__mach_host_self)();
+    __mig_init(0);
 
 #ifdef PAGE_SIZE
-  __vm_page_size = PAGE_SIZE;
-  (void) err;
+    __vm_page_size = PAGE_SIZE;
+    (void) err;
 #elif defined (HAVE_HOST_PAGE_SIZE)
-  if (err = __host_page_size (__mach_host_self (), &__vm_page_size))
-    _exit (err);
+    if (err = __host_page_size(__mach_host_self(), &__vm_page_size)) {
+        _exit(err);
+    }
 #else
-  {
-    vm_statistics_data_t stats;
-    if (err = __vm_statistics (__mach_task_self (), &stats))
-      _exit (err);
-    __vm_page_size = stats.pagesize;
-  }
+    {
+        vm_statistics_data_t stats;
+        if (err = __vm_statistics(__mach_task_self(), &stats)) {
+            _exit(err);
+        }
+        __vm_page_size = stats.pagesize;
+    }
 #endif
 }
-weak_alias (__mach_init, mach_init)
+weak_alias(__mach_init, mach_init)

@@ -31,42 +31,40 @@
 #define LARGE_SIZE (10 * (1 << 20)) // 10 MB
 static long page_size;
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* Get current program break.  */
-  void *current_brk = sbrk (0);
+    /* Get current program break.  */
+    void *current_brk = sbrk(0);
 
-  page_size = sysconf (_SC_PAGESIZE);
+    page_size = sysconf(_SC_PAGESIZE);
 
-  /* Round up to the next page boundary.  */
-  void *next_page_boundary = PTR_ALIGN_UP (current_brk, page_size);
+    /* Round up to the next page boundary.  */
+    void *next_page_boundary = PTR_ALIGN_UP(current_brk, page_size);
 
-  /* Place a mapping using mmap at the next page boundary.  */
-  void *obstruction_addr
-  = mmap (next_page_boundary, page_size, PROT_READ,
-    MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, -1, 0);
+    /* Place a mapping using mmap at the next page boundary.  */
+    void *obstruction_addr
+        = mmap(next_page_boundary, page_size, PROT_READ,
+               MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, -1, 0);
 
-  /* Check if memory obstruction is set up correctly.  */
-  TEST_VERIFY_EXIT (obstruction_addr == next_page_boundary);
+    /* Check if memory obstruction is set up correctly.  */
+    TEST_VERIFY_EXIT(obstruction_addr == next_page_boundary);
 
-  /* Try to extend the heap beyond the obstruction using sbrk */
-  int *ptr = sbrk (page_size);
-  TEST_VERIFY_EXIT (ptr == (void *) -1);
+    /* Try to extend the heap beyond the obstruction using sbrk */
+    int *ptr = sbrk(page_size);
+    TEST_VERIFY_EXIT(ptr == (void *) -1);
 
-  /* Attempt multiple small allocations using malloc.  */
-  for (size_t i = 0; i < page_size / alignof (max_align_t); i++)
-    {
-      TEST_VERIFY (malloc (alignof (max_align_t)));
+    /* Attempt multiple small allocations using malloc.  */
+    for (size_t i = 0; i < page_size / alignof(max_align_t); i++) {
+        TEST_VERIFY(malloc(alignof(max_align_t)));
     }
 
-  /* Attempt to allocate a large block of memory using malloc.  */
-  TEST_VERIFY_EXIT (malloc (LARGE_SIZE) != NULL);
+    /* Attempt to allocate a large block of memory using malloc.  */
+    TEST_VERIFY_EXIT(malloc(LARGE_SIZE) != NULL);
 
-  /* Check if malloc changed current program break.  */
-  TEST_VERIFY_EXIT (current_brk == sbrk (0));
+    /* Check if malloc changed current program break.  */
+    TEST_VERIFY_EXIT(current_brk == sbrk(0));
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -59,26 +59,28 @@
 #include <stdlib.h>
 
 /* Allocate a file buffer, or switch to unbuffered I/O.  */
-int
-_IO_wfile_doallocate (FILE *fp)
+int _IO_wfile_doallocate(FILE *fp)
 {
-  size_t size;
-  wchar_t *p;
+    size_t size;
+    wchar_t *p;
 
-  /* Allocate room for the external buffer.  */
-  if (fp->_IO_buf_base == NULL)
-    _IO_file_doallocate (fp);
+    /* Allocate room for the external buffer.  */
+    if (fp->_IO_buf_base == NULL) {
+        _IO_file_doallocate(fp);
+    }
 
-  /* If narrow buffer is user allocated (set by setvbuf etc.),
-     use that size as the size of the wide buffer, when it is
-     allocated by _IO_file_doallocate, multiply that by size
-     of the wide character.  */
-  size = fp->_IO_buf_end - fp->_IO_buf_base;
-  if ((fp->_flags & _IO_USER_BUF))
-    size = (size + sizeof (wchar_t) - 1) / sizeof (wchar_t);
-  p = malloc (size * sizeof (wchar_t));
-  if (__glibc_unlikely (p == NULL))
-    return EOF;
-  _IO_wsetb (fp, p, p + size, 1);
-  return 1;
+    /* If narrow buffer is user allocated (set by setvbuf etc.),
+       use that size as the size of the wide buffer, when it is
+       allocated by _IO_file_doallocate, multiply that by size
+       of the wide character.  */
+    size = fp->_IO_buf_end - fp->_IO_buf_base;
+    if ((fp->_flags & _IO_USER_BUF)) {
+        size = (size + sizeof(wchar_t) - 1) / sizeof(wchar_t);
+    }
+    p = malloc(size * sizeof(wchar_t));
+    if (__glibc_unlikely(p == NULL)) {
+        return EOF;
+    }
+    _IO_wsetb(fp, p, p + size, 1);
+    return 1;
 }

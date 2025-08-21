@@ -22,16 +22,16 @@
 /* Event types that can be polled for.  These bits may be set in `events'
    to indicate the interesting event types; they will appear in `revents'
    to indicate the status of the file descriptor.  */
-#define POLLIN		01              /* There is data to read.  */
-#define POLLPRI		02              /* There is urgent data to read.  */
-#define POLLOUT		04              /* Writing now will not block.  */
+#define POLLIN      01              /* There is data to read.  */
+#define POLLPRI     02              /* There is urgent data to read.  */
+#define POLLOUT     04              /* Writing now will not block.  */
 
 #if defined __USE_XOPEN || defined __USE_XOPEN2K8
 /* These values are defined in XPG4.2 and later.  */
-# define POLLRDNORM	POLLIN		/* Normal data may be read.  */
-# define POLLRDBAND	POLLPRI		/* Priority data may be read.  */
-# define POLLWRNORM	POLLOUT		/* Writing now will not block.  */
-# define POLLWRBAND	POLLOUT		/* Priority data may be written.  */
+# define POLLRDNORM POLLIN      /* Normal data may be read.  */
+# define POLLRDBAND POLLPRI     /* Priority data may be read.  */
+# define POLLWRNORM POLLOUT     /* Writing now will not block.  */
+# define POLLWRBAND POLLOUT     /* Priority data may be written.  */
 #endif
 
 /* Event types always implicitly polled for.  These bits need not be set in

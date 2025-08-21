@@ -20,8 +20,7 @@
 #include <sys/stat.h>
 
 /* Change the protections of FILE to MODE.  */
-int
-lchmod (const char *file, mode_t mode)
+int lchmod(const char *file, mode_t mode)
 {
-  return fchmodat (AT_FDCWD, file, mode, AT_SYMLINK_NOFOLLOW);
+    return fchmodat(AT_FDCWD, file, mode, AT_SYMLINK_NOFOLLOW);
 }

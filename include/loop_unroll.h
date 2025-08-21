@@ -28,7 +28,7 @@
    DEST the destination buffer, it is expected the macro to be used in this
    way:
 
-     #define ITERATION(index)	\
+     #define ITERATION(index)   \
        ({ char c = *str++; *dest++ = c; c != '\0' })
 
      while (1)
@@ -37,9 +37,9 @@
    The loop will be manually unrolled 4 times.  Another option is to do
    the index update after the tests:
 
-     #define ITERATION(index)	\
+     #define ITERATION(index)   \
        ({ char c = *(str + index); *(dest + index) = c; c != '\0' })
-     #define UPDATE(n)		\
+     #define UPDATE(n)      \
        str += n; dst += n
 
      while (1)

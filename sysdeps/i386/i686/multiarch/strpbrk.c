@@ -26,5 +26,5 @@
 # define SYMBOL_NAME strpbrk
 # include "ifunc-sse4_2.h"
 
-libc_ifunc_redirected (__redirect_strpbrk, strpbrk, IFUNC_SELECTOR ());
+libc_ifunc_redirected(__redirect_strpbrk, strpbrk, IFUNC_SELECTOR());
 #endif

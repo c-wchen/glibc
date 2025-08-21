@@ -37,38 +37,33 @@ static ucontext_t ctx;
 static char *filename;
 
 /* It is intended that this function does nothing.  */
-static void
-cf (void)
+static void cf(void)
 {
-  printf ("called context function\n");
+    printf("called context function\n");
 }
 
-static void
-exit_called (void)
+static void exit_called(void)
 {
-  int fd;
-  ssize_t res;
-  const char buf[] = "Called exit function\n";
+    int fd;
+    ssize_t res;
+    const char buf[] = "Called exit function\n";
 
-  fd = open (filename, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
-  if (fd == -1)
-    {
-      printf ("FAIL: Unable to create test file %s\n", filename);
-      exit (1);
+    fd = open(filename, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
+    if (fd == -1) {
+        printf("FAIL: Unable to create test file %s\n", filename);
+        exit(1);
     }
-  res = write (fd, buf, sizeof (buf));
-  if (res != sizeof (buf))
-    {
-      printf ("FAIL: Expected to write test file in one write call.\n");
-      exit (1);
+    res = write(fd, buf, sizeof(buf));
+    if (res != sizeof(buf)) {
+        printf("FAIL: Expected to write test file in one write call.\n");
+        exit(1);
     }
-  res = close (fd);
-  if (res == -1)
-    {
-      printf ("FAIL: Failed to close test file.\n");
-      exit (1);
+    res = close(fd);
+    if (res == -1) {
+        printf("FAIL: Failed to close test file.\n");
+        exit(1);
     }
-  printf ("PASS: %s", buf);
+    printf("PASS: %s", buf);
 }
 
 /* The test expects a filename given by the wrapper calling script.
@@ -81,58 +76,52 @@ exit_called (void)
    and fails the test.  This test cannot be done using an _exit
    interposer since setcontext avoids the PLT and calls _exit
    directly.  */
-static int
-do_test (int argc, char **argv)
+static int do_test(int argc, char **argv)
 {
-  int ret;
-  char st1[32768];
-  ucontext_t tempctx = ctx;
+    int ret;
+    char st1[32768];
+    ucontext_t tempctx = ctx;
 
-  if (argc < 2)
-    {
-      printf ("FAIL: Test missing filename argument.\n");
-      exit (1);
+    if (argc < 2) {
+        printf("FAIL: Test missing filename argument.\n");
+        exit(1);
     }
 
-  filename = argv[1];
+    filename = argv[1];
 
-  atexit (exit_called);
+    atexit(exit_called);
 
-  puts ("making contexts");
-  if (getcontext (&ctx) != 0)
-    {
-      if (errno == ENOSYS)
-	{
-	  /* Exit with 77 to mark the test as UNSUPPORTED.  */
-	  printf ("UNSUPPORTED: getcontext not implemented.\n");
-	  exit (77);
-	}
+    puts("making contexts");
+    if (getcontext(&ctx) != 0) {
+        if (errno == ENOSYS) {
+            /* Exit with 77 to mark the test as UNSUPPORTED.  */
+            printf("UNSUPPORTED: getcontext not implemented.\n");
+            exit(77);
+        }
 
-      printf ("FAIL: getcontext failed.\n");
-      exit (1);
+        printf("FAIL: getcontext failed.\n");
+        exit(1);
     }
 
-  ctx.uc_stack.ss_sp = st1;
-  ctx.uc_stack.ss_size = sizeof (st1);
-  ctx.uc_link = 0;
-  makecontext (&ctx, cf, 0);
+    ctx.uc_stack.ss_sp = st1;
+    ctx.uc_stack.ss_size = sizeof(st1);
+    ctx.uc_link = 0;
+    makecontext(&ctx, cf, 0);
 
-  /* Without this check, a stub makecontext can make us spin forever.  */
-  if (memcmp (&tempctx, &ctx, sizeof ctx) == 0)
-    {
-      puts ("UNSUPPORTED: makecontext was a no-op, presuming not implemented");
-      exit (77);
+    /* Without this check, a stub makecontext can make us spin forever.  */
+    if (memcmp(&tempctx, &ctx, sizeof ctx) == 0) {
+        puts("UNSUPPORTED: makecontext was a no-op, presuming not implemented");
+        exit(77);
     }
 
-  ret = setcontext (&ctx);
-  if (ret != 0)
-    {
-      printf ("FAIL: setcontext returned with %d and errno of %d.\n", ret, errno);
-      exit (1);
+    ret = setcontext(&ctx);
+    if (ret != 0) {
+        printf("FAIL: setcontext returned with %d and errno of %d.\n", ret, errno);
+        exit(1);
     }
 
-  printf ("FAIL: Impossibly returned to main.\n");
-  exit (1);
+    printf("FAIL: Impossibly returned to main.\n");
+    exit(1);
 }
 
 #include "../test-skeleton.c"

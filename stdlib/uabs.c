@@ -17,12 +17,11 @@
 
 #include <stdlib.h>
 
-#undef	uabs
+#undef  uabs
 
 /* Return the absolute value of I.  */
-unsigned int
-uabs (int i)
+unsigned int uabs(int i)
 {
-  unsigned int j = i;
-  return i < 0 ? -j : i;
+    unsigned int j = i;
+    return i < 0 ? -j : i;
 }

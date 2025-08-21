@@ -23,72 +23,72 @@
 
 /* Provide real-function versions of all the wctype macros.  */
 
-#define	func(name, type)						      \
-  extern int __isw##name (wint_t __wc);					      \
-  int									      \
-  __isw##name (wint_t wc)						      \
-  {									      \
-    if (isascii (wc))							      \
-      return is##name ((int) wc);					      \
+#define func(name, type)                              \
+  extern int __isw##name (wint_t __wc);                       \
+  int                                         \
+  __isw##name (wint_t wc)                             \
+  {                                       \
+    if (isascii (wc))                                 \
+      return is##name ((int) wc);                         \
     size_t i = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_CLASS_OFFSET) + type;    \
-    const char *desc = _NL_CURRENT (LC_CTYPE, i);			      \
-    return wctype_table_lookup (desc, wc);				      \
-  }									      \
+    const char *desc = _NL_CURRENT (LC_CTYPE, i);                 \
+    return wctype_table_lookup (desc, wc);                    \
+  }                                       \
   weak_alias (__isw##name, isw##name)
 
 #undef iswalnum
-func (alnum, __ISwalnum)
-libc_hidden_def (__iswalnum)
-libc_hidden_weak (iswalnum)
+func(alnum, __ISwalnum)
+libc_hidden_def(__iswalnum)
+libc_hidden_weak(iswalnum)
 #undef iswalpha
-func (alpha, __ISwalpha)
-libc_hidden_weak (iswalpha)
+func(alpha, __ISwalpha)
+libc_hidden_weak(iswalpha)
 #undef iswblank
-func (blank, __ISwblank)
+func(blank, __ISwblank)
 #undef iswcntrl
-func (cntrl, __ISwcntrl)
+func(cntrl, __ISwcntrl)
 #undef iswdigit
-func (digit, __ISwdigit)
-libc_hidden_weak (iswdigit)
+func(digit, __ISwdigit)
+libc_hidden_weak(iswdigit)
 #undef iswlower
-func (lower, __ISwlower)
-libc_hidden_def (__iswlower)
-libc_hidden_weak (iswlower)
+func(lower, __ISwlower)
+libc_hidden_def(__iswlower)
+libc_hidden_weak(iswlower)
 #undef iswgraph
-func (graph, __ISwgraph)
+func(graph, __ISwgraph)
 #undef iswprint
-func (print, __ISwprint)
+func(print, __ISwprint)
 #undef iswpunct
-func (punct, __ISwpunct)
+func(punct, __ISwpunct)
 #undef iswspace
-func (space, __ISwspace)
-libc_hidden_weak (iswspace)
+func(space, __ISwspace)
+libc_hidden_weak(iswspace)
 #undef iswupper
-func (upper, __ISwupper)
+func(upper, __ISwupper)
 #undef iswxdigit
-func (xdigit, __ISwxdigit)
-libc_hidden_weak (iswxdigit)
+func(xdigit, __ISwxdigit)
+libc_hidden_weak(iswxdigit)
 
 #undef towlower
 wint_t
-__towlower (wint_t wc)
+__towlower(wint_t wc)
 {
-  size_t i = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_MAP_OFFSET) + __TOW_tolower;
-  const char *desc = _NL_CURRENT (LC_CTYPE, i);
-  return wctrans_table_lookup (desc, wc);
+    size_t i = _NL_CURRENT_WORD(LC_CTYPE, _NL_CTYPE_MAP_OFFSET) + __TOW_tolower;
+    const char *desc = _NL_CURRENT(LC_CTYPE, i);
+    return wctrans_table_lookup(desc, wc);
 }
-libc_hidden_def (__towlower)
-weak_alias (__towlower, towlower)
-libc_hidden_weak (towlower)
+libc_hidden_def(__towlower)
+weak_alias(__towlower, towlower)
+libc_hidden_weak(towlower)
 
 #undef towupper
 wint_t
-__towupper (wint_t wc)
+__towupper(wint_t wc)
 {
-  size_t i = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_MAP_OFFSET) + __TOW_toupper;
-  const char *desc = _NL_CURRENT (LC_CTYPE, i);
-  return wctrans_table_lookup (desc, wc);
+    size_t i = _NL_CURRENT_WORD(LC_CTYPE, _NL_CTYPE_MAP_OFFSET) + __TOW_toupper;
+    const char *desc = _NL_CURRENT(LC_CTYPE, i);
+    return wctrans_table_lookup(desc, wc);
 }
-libc_hidden_def (__towupper)
-weak_alias (__towupper, towupper)
-libc_hidden_weak (towupper)
+libc_hidden_def(__towupper)
+weak_alias(__towupper, towupper)
+libc_hidden_weak(towupper)

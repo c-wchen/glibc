@@ -25,9 +25,8 @@
    comments in k_standard.c for details), with arguments X and Y,
    returning the appropriate return value for that function.  */
 
-float
-__kernel_standard_f (float x, float y, int type)
+float __kernel_standard_f(float x, float y, int type)
 {
-  return __kernel_standard (x, y, type);
+    return __kernel_standard(x, y, type);
 }
 #endif

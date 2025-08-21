@@ -18,29 +18,26 @@
 
 #include <support/check.h>
 
-extern int (*func_p) (void);
-extern void foo (void);
+extern int (*func_p)(void);
+extern void foo(void);
 
-int
-func (void)
+int func(void)
 {
-  return 0xbadbeef;
+    return 0xbadbeef;
 }
 
-void
-bar (void)
+void bar(void)
 {
-  TEST_VERIFY (func_p == &func);
-  TEST_VERIFY (func_p () == 0xbadbeef);
+    TEST_VERIFY(func_p == &func);
+    TEST_VERIFY(func_p() == 0xbadbeef);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  func_p = &func;
-  foo ();
-  bar ();
-  return 0;
+    func_p = &func;
+    foo();
+    bar();
+    return 0;
 }
 
 #include <support/test-driver.c>

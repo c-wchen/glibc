@@ -22,41 +22,35 @@ int protected1 = -3;
 int protected3 = -5;
 static int expected_protected3 = -5;
 
-asm (".protected protected3");
+asm(".protected protected3");
 
-void
-set_protected1b (int i)
+void set_protected1b(int i)
 {
-  protected1 = i;
+    protected1 = i;
 }
 
-int *
-protected1b_p (void)
+int *protected1b_p(void)
 {
-  return &protected1;
+    return &protected1;
 }
 
-void
-set_expected_protected3b (int i)
+void set_expected_protected3b(int i)
 {
-  expected_protected3 = i;
+    expected_protected3 = i;
 }
 
-void
-set_protected3b (int i)
+void set_protected3b(int i)
 {
-  protected3 = i;
-  set_expected_protected3b (i);
+    protected3 = i;
+    set_expected_protected3b(i);
 }
 
-int
-check_protected3b (void)
+int check_protected3b(void)
 {
-  return protected3 == expected_protected3;
+    return protected3 == expected_protected3;
 }
 
-int *
-protected3b_p (void)
+int *protected3b_p(void)
 {
-  return &protected3;
+    return &protected3;
 }

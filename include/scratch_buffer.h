@@ -28,7 +28,7 @@
 
      while (!function_that_uses_buffer (tmpbuf.data, tmpbuf.length))
        if (!scratch_buffer_grow (&tmpbuf))
-	 return -1;
+     return -1;
 
      scratch_buffer_free (&tmpbuf);
      return 0;
@@ -45,7 +45,7 @@
 
      while (!function_that_uses_buffer (tmpbuf.data, tmpbuf.length))
        if (!scratch_buffer_grow (&tmpbuf))
-	 break;
+     break;
 
      scratch_buffer_free (&tmpbuf);
 
@@ -64,26 +64,28 @@
 /* Scratch buffer.  Must be initialized with scratch_buffer_init
    before its use.  */
 struct scratch_buffer {
-  void *data;    /* Pointer to the beginning of the scratch area.  */
-  size_t length; /* Allocated space at the data pointer, in bytes.  */
-  union { max_align_t __align; char __c[1024]; } __space;
+    void *data;    /* Pointer to the beginning of the scratch area.  */
+    size_t length; /* Allocated space at the data pointer, in bytes.  */
+    union {
+        max_align_t __align;
+        char __c[1024];
+    } __space;
 };
 
 /* Initializes *BUFFER so that BUFFER->data points to BUFFER->__space
    and BUFFER->length reflects the available space.  */
-static inline void
-scratch_buffer_init (struct scratch_buffer *buffer)
+static inline void scratch_buffer_init(struct scratch_buffer *buffer)
 {
-  buffer->data = buffer->__space.__c;
-  buffer->length = sizeof (buffer->__space);
+    buffer->data = buffer->__space.__c;
+    buffer->length = sizeof(buffer->__space);
 }
 
 /* Deallocates *BUFFER (if it was heap-allocated).  */
-static inline void
-scratch_buffer_free (struct scratch_buffer *buffer)
+static inline void scratch_buffer_free(struct scratch_buffer *buffer)
 {
-  if (buffer->data != buffer->__space.__c)
-    free (buffer->data);
+    if (buffer->data != buffer->__space.__c) {
+        free(buffer->data);
+    }
 }
 
 /* Grow *BUFFER by some arbitrary amount.  The buffer contents is NOT
@@ -91,26 +93,26 @@ scratch_buffer_free (struct scratch_buffer *buffer)
    which case the old buffer is freed).  On success, the new buffer is
    larger than the previous size.  On failure, *BUFFER is deallocated,
    but remains in a free-able state, and errno is set.  */
-bool __libc_scratch_buffer_grow (struct scratch_buffer *buffer);
-libc_hidden_proto (__libc_scratch_buffer_grow)
+bool __libc_scratch_buffer_grow(struct scratch_buffer *buffer);
+libc_hidden_proto(__libc_scratch_buffer_grow)
 
 /* Alias for __libc_scratch_buffer_grow.  */
 static __always_inline bool
-scratch_buffer_grow (struct scratch_buffer *buffer)
+scratch_buffer_grow(struct scratch_buffer *buffer)
 {
-  return __glibc_likely (__libc_scratch_buffer_grow (buffer));
+    return __glibc_likely(__libc_scratch_buffer_grow(buffer));
 }
 
 /* Like __libc_scratch_buffer_grow, but preserve the old buffer
    contents on success, as a prefix of the new buffer.  */
-bool __libc_scratch_buffer_grow_preserve (struct scratch_buffer *buffer);
-libc_hidden_proto (__libc_scratch_buffer_grow_preserve)
+bool __libc_scratch_buffer_grow_preserve(struct scratch_buffer *buffer);
+libc_hidden_proto(__libc_scratch_buffer_grow_preserve)
 
 /* Alias for __libc_scratch_buffer_grow_preserve.  */
 static __always_inline bool
-scratch_buffer_grow_preserve (struct scratch_buffer *buffer)
+scratch_buffer_grow_preserve(struct scratch_buffer *buffer)
 {
-  return __glibc_likely (__libc_scratch_buffer_grow_preserve (buffer));
+    return __glibc_likely(__libc_scratch_buffer_grow_preserve(buffer));
 }
 
 /* Grow *BUFFER so that it can store at least NELEM elements of SIZE
@@ -119,17 +121,17 @@ scratch_buffer_grow_preserve (struct scratch_buffer *buffer)
    (in which case the old buffer is freed, but *BUFFER remains in a
    free-able state, and errno is set).  It is unspecified whether this
    function can reduce the array size.  */
-bool __libc_scratch_buffer_set_array_size (struct scratch_buffer *buffer,
-					   size_t nelem, size_t size);
-libc_hidden_proto (__libc_scratch_buffer_set_array_size)
+bool __libc_scratch_buffer_set_array_size(struct scratch_buffer *buffer,
+        size_t nelem, size_t size);
+libc_hidden_proto(__libc_scratch_buffer_set_array_size)
 
 /* Alias for __libc_scratch_set_array_size.  */
 static __always_inline bool
-scratch_buffer_set_array_size (struct scratch_buffer *buffer,
-			       size_t nelem, size_t size)
+scratch_buffer_set_array_size(struct scratch_buffer *buffer,
+                              size_t nelem, size_t size)
 {
-  return __glibc_likely (__libc_scratch_buffer_set_array_size
-			 (buffer, nelem, size));
+    return __glibc_likely(__libc_scratch_buffer_set_array_size
+                          (buffer, nelem, size));
 }
 
 #endif /* _SCRATCH_BUFFER_H */

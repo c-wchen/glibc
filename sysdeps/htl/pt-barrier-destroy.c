@@ -20,14 +20,13 @@
 #include <pt-internal.h>
 #include <shlib-compat.h>
 
-int
-__pthread_barrier_destroy (pthread_barrier_t *barrier)
+int __pthread_barrier_destroy(pthread_barrier_t *barrier)
 {
-  return 0;
+    return 0;
 }
-libc_hidden_def (__pthread_barrier_destroy)
-versioned_symbol (libc, __pthread_barrier_destroy, pthread_barrier_destroy, GLIBC_2_42);
+libc_hidden_def(__pthread_barrier_destroy)
+versioned_symbol(libc, __pthread_barrier_destroy, pthread_barrier_destroy, GLIBC_2_42);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_42)
-compat_symbol (libpthread, __pthread_barrier_destroy, pthread_barrier_destroy, GLIBC_2_12);
+compat_symbol(libpthread, __pthread_barrier_destroy, pthread_barrier_destroy, GLIBC_2_12);
 #endif

@@ -18,10 +18,10 @@
 
 /* An undefined function.  Calling it will cause a lazy binding
    failure.  */
-void undefined_function (void);
+void undefined_function(void);
 
-static void __attribute__ ((constructor))
-init (void)
+static void __attribute__((constructor))
+init(void)
 {
-  undefined_function ();
+    undefined_function();
 }

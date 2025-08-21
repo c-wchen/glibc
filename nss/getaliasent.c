@@ -18,11 +18,11 @@
 #include <aliases.h>
 
 
-#define LOOKUP_TYPE	struct aliasent
-#define	GETFUNC_NAME	getaliasent
-#define BUFLEN		1024
+#define LOOKUP_TYPE struct aliasent
+#define GETFUNC_NAME    getaliasent
+#define BUFLEN      1024
 
 /* There is no nscd support for the aliases file.  */
-#undef	USE_NSCD
+#undef  USE_NSCD
 
 #include "../nss/getXXent.c"

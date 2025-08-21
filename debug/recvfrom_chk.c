@@ -19,12 +19,12 @@
 #include <sys/socket.h>
 
 
-ssize_t
-__recvfrom_chk (int fd, void *buf, size_t n, size_t buflen, int flags,
-		__SOCKADDR_ARG addr, socklen_t *addr_len)
+ssize_t __recvfrom_chk(int fd, void *buf, size_t n, size_t buflen, int flags,
+                       __SOCKADDR_ARG addr, socklen_t *addr_len)
 {
-  if (n > buflen)
-    __chk_fail ();
+    if (n > buflen) {
+        __chk_fail();
+    }
 
-  return __recvfrom (fd, buf, n, flags, addr, addr_len);
+    return __recvfrom(fd, buf, n, flags, addr, addr_len);
 }

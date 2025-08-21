@@ -22,12 +22,12 @@
 # include <shlib-compat.h>
 # include "init-arch.h"
 
-extern __typeof (strlen) __strlen_ppc attribute_hidden;
-extern __typeof (strlen) __strlen_power7 attribute_hidden;
+extern __typeof(strlen) __strlen_ppc attribute_hidden;
+extern __typeof(strlen) __strlen_power7 attribute_hidden;
 # undef strlen
 
-libc_ifunc_redirected (__redirect_strlen, strlen,
-		       (hwcap & PPC_FEATURE_HAS_VSX)
-		       ? __strlen_power7
-		       : __strlen_ppc);
+libc_ifunc_redirected(__redirect_strlen, strlen,
+                      (hwcap &PPC_FEATURE_HAS_VSX)
+                      ? __strlen_power7
+                      : __strlen_ppc);
 #endif

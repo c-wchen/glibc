@@ -24,39 +24,38 @@
 /* We need to go through the POSIX-mandated dance to switch between
    handles on an open file description.  */
 
-static int
-printf_under_test (const char *restrict fmt, ...)
+static int printf_under_test(const char *restrict fmt, ...)
 {
-  va_list ap;
-  int result;
+    va_list ap;
+    int result;
 
-  result = fflush (stdout);
-  if (result == EOF)
-    {
-      perror ("fflush");
-      goto out;
+    result = fflush(stdout);
+    if (result == EOF) {
+        perror("fflush");
+        goto out;
     }
-  result = lseek (STDOUT_FILENO, 0, SEEK_END);
-  if (result < 0 && errno == ESPIPE)
-    result = 0;
-  if (result < 0)
-    {
-      perror ("lseek");
-      goto out;
+    result = lseek(STDOUT_FILENO, 0, SEEK_END);
+    if (result < 0 && errno == ESPIPE) {
+        result = 0;
     }
-  va_start (ap, fmt);
-  result = vdprintf (STDOUT_FILENO, fmt, ap);
-  va_end (ap);
-  if (result < 0)
-    {
-      perror ("vdprintf");
-      goto out;
+    if (result < 0) {
+        perror("lseek");
+        goto out;
     }
-  result = fseek (stdout, 0, SEEK_END);
-  if (result < 0 && errno == ESPIPE)
-    result = 0;
-  if (result < 0)
-    perror ("fseek");
+    va_start(ap, fmt);
+    result = vdprintf(STDOUT_FILENO, fmt, ap);
+    va_end(ap);
+    if (result < 0) {
+        perror("vdprintf");
+        goto out;
+    }
+    result = fseek(stdout, 0, SEEK_END);
+    if (result < 0 && errno == ESPIPE) {
+        result = 0;
+    }
+    if (result < 0) {
+        perror("fseek");
+    }
 out:
-  return result;
+    return result;
 }

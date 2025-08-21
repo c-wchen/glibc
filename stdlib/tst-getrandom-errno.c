@@ -22,16 +22,17 @@
 #include <sys/random.h>
 
 static
-int do_test (void)
+int do_test(void)
 {
-  errno = -1181968554;          /* Just a random value.  */
-  char buf[4];
-  int ret = getrandom (buf, sizeof (buf), -1); /* All flags set.  */
-  if (errno != ENOSYS)
-    TEST_COMPARE (errno, EINVAL);
-  TEST_COMPARE (ret, -1);
+    errno = -1181968554;          /* Just a random value.  */
+    char buf[4];
+    int ret = getrandom(buf, sizeof(buf), -1);   /* All flags set.  */
+    if (errno != ENOSYS) {
+        TEST_COMPARE(errno, EINVAL);
+    }
+    TEST_COMPARE(ret, -1);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

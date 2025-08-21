@@ -19,8 +19,7 @@
 #include <sgtty.h>
 
 /* Set the terminal parameters associated with FD to *PARAMS.  */
-int
-stty (int fd, const struct sgttyb *params)
+int stty(int fd, const struct sgttyb *params)
 {
-  return __ioctl (fd, TIOCSETP, (void *) params);
+    return __ioctl(fd, TIOCSETP, (void *) params);
 }

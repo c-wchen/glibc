@@ -36,21 +36,21 @@
 #undef __NR_utimensat
 
 /* Fix sysdeps/unix/sysv/linux/clock_getcpuclockid.c.  */
-#define __NR_clock_getres	__NR_clock_getres_time64
+#define __NR_clock_getres   __NR_clock_getres_time64
 /* Fix sysdeps/nptl/lowlevellock-futex.h.  */
-#define __NR_futex		__NR_futex_time64
+#define __NR_futex      __NR_futex_time64
 /* Fix sysdeps/unix/sysv/linux/pause.c.  */
-#define __NR_ppoll		__NR_ppoll_time64
+#define __NR_ppoll      __NR_ppoll_time64
 /* Fix sysdeps/unix/sysv/linux/select.c.  */
-#define __NR_pselect6		__NR_pselect6_time64
+#define __NR_pselect6       __NR_pselect6_time64
 /* Fix sysdeps/unix/sysv/linux/recvmmsg.c.  */
-#define __NR_recvmmsg		__NR_recvmmsg_time64
+#define __NR_recvmmsg       __NR_recvmmsg_time64
 /* Fix sysdeps/unix/sysv/linux/sigtimedwait.c.  */
-#define __NR_rt_sigtimedwait	__NR_rt_sigtimedwait_time64
+#define __NR_rt_sigtimedwait    __NR_rt_sigtimedwait_time64
 /* Fix sysdeps/unix/sysv/linux/semtimedop.c.  */
-#define __NR_semtimedop		__NR_semtimedop_time64
+#define __NR_semtimedop     __NR_semtimedop_time64
 /* Hack sysdeps/unix/sysv/linux/generic/utimes.c.  */
-#define __NR_utimensat		__NR_utimensat_time64
+#define __NR_utimensat      __NR_utimensat_time64
 
 #undef SYS_ify
 #define SYS_ify(syscall_name)   (__NR_##syscall_name)
@@ -72,13 +72,13 @@
 #define ret          l.jr r9; l.nop
 #define ret_NOERRNO  l.jr r9; l.nop
 
-#undef	DO_CALL
+#undef  DO_CALL
 #define DO_CALL(syscall_name) \
   l.addi r11, r0, SYS_ify (syscall_name); \
   l.sys 1; \
    l.nop
 
-#undef	PSEUDO
+#undef  PSEUDO
 #define PSEUDO(name, syscall_name, args) \
   ENTRY (name); \
   DO_CALL(syscall_name); \
@@ -87,19 +87,19 @@
   l.bf L(pseudo_end); \
    l.nop
 
-#undef	PSEUDO_NOERRNO
+#undef  PSEUDO_NOERRNO
 #define PSEUDO_NOERRNO(name, syscall_name, args)  \
   ENTRY (name);           \
   DO_CALL(syscall_name)
 
-#undef	PSEUDO_END
+#undef  PSEUDO_END
 #define PSEUDO_END(name) \
 L(pseudo_end): \
   l.j SYSCALL_ERROR_NAME; \
   l.ori r3,r11,0; \
   END (name)
 
-#undef	PSEUDO_END_NOERRNO
+#undef  PSEUDO_END_NOERRNO
 #define PSEUDO_END_NOERRNO(name) \
   END (name)
 
@@ -118,31 +118,31 @@ L(pseudo_end): \
 
 #include <errno.h>
 
-extern long int __syscall_error (long int neg_errno);
+extern long int __syscall_error(long int neg_errno);
 
 #undef INTERNAL_SYSCALL
 #define INTERNAL_SYSCALL(name, nr, args...) \
-	INTERNAL_SYSCALL_NCS (SYS_ify (name), nr, args)
+    INTERNAL_SYSCALL_NCS (SYS_ify (name), nr, args)
 
 /* The _NCS variant allows non-constant syscall numbers.  */
 #undef INTERNAL_SYSCALL_NCS
 #define INTERNAL_SYSCALL_NCS(number, nr, args...) \
-	({ unsigned long int __sys_result;				\
-	  {								\
-	    long int _sc_ret = (long int) number;			\
-	    LOAD_ARGS_##nr (args)					\
-	    register long int __sc_ret __asm__ ("r11") = _sc_ret;	\
-	    __asm__ __volatile__ ("l.sys 1\n\t"				\
-				  " l.nop\n\t"				\
-				  : "+r" (__sc_ret)			\
-				  : ASM_ARGS_##nr			\
-				  : ASM_CLOBBERS_##nr			\
-				    "r12", "r13", "r15", "r17", "r19",	\
-				    "r21", "r23", "r25", "r27", "r29",	\
-				    "r31", "memory");			\
-	    __sys_result = __sc_ret;					\
-	  }								\
-	  (long int) __sys_result; })
+    ({ unsigned long int __sys_result;              \
+      {                             \
+        long int _sc_ret = (long int) number;           \
+        LOAD_ARGS_##nr (args)                   \
+        register long int __sc_ret __asm__ ("r11") = _sc_ret;   \
+        __asm__ __volatile__ ("l.sys 1\n\t"             \
+                  " l.nop\n\t"              \
+                  : "+r" (__sc_ret)         \
+                  : ASM_ARGS_##nr           \
+                  : ASM_CLOBBERS_##nr           \
+                    "r12", "r13", "r15", "r17", "r19",  \
+                    "r21", "r23", "r25", "r27", "r29",  \
+                    "r31", "memory");           \
+        __sys_result = __sc_ret;                    \
+      }                             \
+      (long int) __sys_result; })
 
 /* From here on we have nested macros that generate code for
    setting up syscall arguments.  */

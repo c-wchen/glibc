@@ -21,18 +21,16 @@
 #include <sys/types.h>
 
 /* Change the owner and group of the file referred to by FD.  */
-int
-__fchown (int fd, uid_t owner, gid_t group)
+int __fchown(int fd, uid_t owner, gid_t group)
 {
-  if (fd < 0)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (fd < 0) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (fchown)
+stub_warning(fchown)
 
-weak_alias (__fchown, fchown)
+weak_alias(__fchown, fchown)

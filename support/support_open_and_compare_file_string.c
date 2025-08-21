@@ -24,9 +24,8 @@
 /* Check that a not-currently-open file has exactly the given string
    as contents, starting at the current offset.  */
 
-int
-support_open_and_compare_file_string (const char *file, const char *contents)
+int support_open_and_compare_file_string(const char *file, const char *contents)
 {
-  return support_open_and_compare_file_bytes (file, contents,
-					      strlen (contents));
+    return support_open_and_compare_file_bytes(file, contents,
+            strlen(contents));
 }

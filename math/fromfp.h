@@ -36,13 +36,13 @@
    the case of negative arguments, and if not out of range it may
    become out of range as a result of rounding.  */
 
-static int
-fromfp_max_exponent (bool negative, int width)
+static int fromfp_max_exponent(bool negative, int width)
 {
-  if (UNSIGNED)
-    return negative ? -1 : width - 1;
-  else
-    return negative ? width - 1 : width - 2;
+    if (UNSIGNED) {
+        return negative ? -1 : width - 1;
+    } else {
+        return negative ? width - 1 : width - 2;
+    }
 }
 
 /* Return the result of rounding an integer value X (passed as the
@@ -51,29 +51,27 @@ fromfp_max_exponent (bool negative, int width)
    true if any lower bits are set, in the rounding direction
    ROUND.  */
 
-static uintmax_t
-fromfp_round (bool negative, uintmax_t x, bool half_bit, bool more_bits,
-	      int round)
+static uintmax_t fromfp_round(bool negative, uintmax_t x, bool half_bit, bool more_bits,
+                              int round)
 {
-  switch (round)
-    {
-    case FP_INT_UPWARD:
-      return x + (!negative && (half_bit || more_bits));
+    switch (round) {
+        case FP_INT_UPWARD:
+            return x + (!negative && (half_bit || more_bits));
 
-    case FP_INT_DOWNWARD:
-      return x + (negative && (half_bit || more_bits));
+        case FP_INT_DOWNWARD:
+            return x + (negative && (half_bit || more_bits));
 
-    case FP_INT_TOWARDZERO:
-    default:
-      /* Unknown rounding directions are defined to mean unspecified
-	 rounding; treat this as truncation.  */
-      return x;
+        case FP_INT_TOWARDZERO:
+        default:
+            /* Unknown rounding directions are defined to mean unspecified
+            rounding; treat this as truncation.  */
+            return x;
 
-    case FP_INT_TONEARESTFROMZERO:
-      return x + half_bit;
+        case FP_INT_TONEARESTFROMZERO:
+            return x + half_bit;
 
-    case FP_INT_TONEAREST:
-      return x + (half_bit && ((x & 1) || more_bits));
+        case FP_INT_TONEAREST:
+            return x + (half_bit && ((x & 1) || more_bits));
     }
 }
 
@@ -83,24 +81,22 @@ fromfp_round (bool negative, uintmax_t x, bool half_bit, bool more_bits,
    negative if NEGATIVE is true.  Return whether this overflowed the
    allowed width.  */
 
-static bool
-fromfp_overflowed (bool negative, uintmax_t x, int exponent, int max_exponent)
+static bool fromfp_overflowed(bool negative, uintmax_t x, int exponent, int max_exponent)
 {
-  if (UNSIGNED)
-    {
-      if (negative)
-	return x != 0;
-      else if (max_exponent == INTMAX_WIDTH - 1)
-	return exponent == INTMAX_WIDTH - 1 && x == 0;
-      else
-	return x == (1ULL << (max_exponent + 1));
-    }
-  else
-    {
-      if (negative)
-	return exponent == max_exponent && x != (1ULL << max_exponent);
-      else
-	return x == (1ULL << (max_exponent + 1));
+    if (UNSIGNED) {
+        if (negative) {
+            return x != 0;
+        } else if (max_exponent == INTMAX_WIDTH - 1) {
+            return exponent == INTMAX_WIDTH - 1 && x == 0;
+        } else {
+            return x == (1ULL << (max_exponent + 1));
+        }
+    } else {
+        if (negative) {
+            return exponent == max_exponent && x != (1ULL << max_exponent);
+        } else {
+            return x == (1ULL << (max_exponent + 1));
+        }
     }
 }
 
@@ -111,30 +107,28 @@ fromfp_overflowed (bool negative, uintmax_t x, int exponent, int max_exponent)
    within WIDTH bits in this case); we choose to saturate to the given
    number of bits (treating NaNs like any other value).  */
 
-static RET_TYPE
-fromfp_domain_error (bool negative, unsigned int width)
+static RET_TYPE fromfp_domain_error(bool negative, unsigned int width)
 {
-  feraiseexcept (FE_INVALID);
-  __set_errno (EDOM);
-  /* The return value is unspecified; we choose to saturate to the
-     given number of bits (treating NaNs like any other value).  */
-  if (UNSIGNED)
-    {
-      if (negative)
-	return 0;
-      else if (width == INTMAX_WIDTH)
-	return -1;
-      else
-	return (1ULL << width) - 1;
-    }
-  else
-    {
-      if (width == 0)
-	return 0;
-      else if (negative)
-	return -(1ULL << (width - 1));
-      else
-	return (1ULL << (width - 1)) - 1;
+    feraiseexcept(FE_INVALID);
+    __set_errno(EDOM);
+    /* The return value is unspecified; we choose to saturate to the
+       given number of bits (treating NaNs like any other value).  */
+    if (UNSIGNED) {
+        if (negative) {
+            return 0;
+        } else if (width == INTMAX_WIDTH) {
+            return -1;
+        } else {
+            return (1ULL << width) - 1;
+        }
+    } else {
+        if (width == 0) {
+            return 0;
+        } else if (negative) {
+            return -(1ULL << (width - 1));
+        } else {
+            return (1ULL << (width - 1)) - 1;
+        }
     }
 }
 
@@ -147,28 +141,29 @@ fromfp_domain_error (bool negative, unsigned int width)
    EXPONENT, which does not exceed MAX_EXPONENT, the return value from
    fromfp_max_exponent with width WIDTH.  */
 
-static RET_TYPE
-fromfp_round_and_return (bool negative, uintmax_t x, bool half_bit,
-			 bool more_bits, int round, int exponent,
-			 int max_exponent, unsigned int width)
+static RET_TYPE fromfp_round_and_return(bool negative, uintmax_t x, bool half_bit,
+                                        bool more_bits, int round, int exponent,
+                                        int max_exponent, unsigned int width)
 {
-  uintmax_t uret = fromfp_round (negative, x, half_bit, more_bits, round);
-  if (fromfp_overflowed (negative, uret, exponent, max_exponent))
-    return fromfp_domain_error (negative, width);
-
-  if (INEXACT && (half_bit || more_bits))
-    {
-      /* There is no need for this to use the specific floating-point
-	 type for which this header is included, and there is no need
-	 for this header to know that type at all, so just use float
-	 here.  */
-      float force_inexact = 1.0f + FLT_MIN;
-      math_force_eval (force_inexact);
+    uintmax_t uret = fromfp_round(negative, x, half_bit, more_bits, round);
+    if (fromfp_overflowed(negative, uret, exponent, max_exponent)) {
+        return fromfp_domain_error(negative, width);
     }
-  if (UNSIGNED)
-    /* A negative argument not rounding to zero will already have
-       produced a domain error.  */
-    return uret;
-  else
-    return negative ? -uret : uret;
+
+    if (INEXACT && (half_bit || more_bits)) {
+        /* There is no need for this to use the specific floating-point
+        type for which this header is included, and there is no need
+         for this header to know that type at all, so just use float
+         here.  */
+        float force_inexact = 1.0f + FLT_MIN;
+        math_force_eval(force_inexact);
+    }
+    if (UNSIGNED)
+        /* A negative argument not rounding to zero will already have
+           produced a domain error.  */
+    {
+        return uret;
+    } else {
+        return negative ? -uret : uret;
+    }
 }

@@ -31,56 +31,55 @@ static pthread_barrier_t barrier1;
 /* Second barrier synchronizes main thread, thread 2.  */
 static pthread_barrier_t barrier2;
 
-static void *
-threadfunc (void *closure)
+static void *threadfunc(void *closure)
 {
-  TEST_VERIFY (!__libc_single_threaded);
+    TEST_VERIFY(!__libc_single_threaded);
 
-  /* Wait for the main thread and the other thread.  */
-  xpthread_barrier_wait (&barrier1);
-  TEST_VERIFY (!__libc_single_threaded);
+    /* Wait for the main thread and the other thread.  */
+    xpthread_barrier_wait(&barrier1);
+    TEST_VERIFY(!__libc_single_threaded);
 
-  /* Second thread waits on second barrier, too.  */
-  if (closure != NULL)
-    xpthread_barrier_wait (&barrier2);
-  TEST_VERIFY (!__libc_single_threaded);
+    /* Second thread waits on second barrier, too.  */
+    if (closure != NULL) {
+        xpthread_barrier_wait(&barrier2);
+    }
+    TEST_VERIFY(!__libc_single_threaded);
 
-  return NULL;
+    return NULL;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  TEST_VERIFY (__libc_single_threaded);
+    TEST_VERIFY(__libc_single_threaded);
 
-  /* Two threads plus main thread.  */
-  xpthread_barrier_init (&barrier1, NULL, 3);
+    /* Two threads plus main thread.  */
+    xpthread_barrier_init(&barrier1, NULL, 3);
 
-  /* Main thread and second thread.  */
-  xpthread_barrier_init (&barrier2, NULL, 2);
+    /* Main thread and second thread.  */
+    xpthread_barrier_init(&barrier2, NULL, 2);
 
-  pthread_t thr1 = xpthread_create (NULL, threadfunc, NULL);
-  TEST_VERIFY (!__libc_single_threaded);
+    pthread_t thr1 = xpthread_create(NULL, threadfunc, NULL);
+    TEST_VERIFY(!__libc_single_threaded);
 
-  pthread_t thr2 = xpthread_create (NULL, threadfunc, &thr2);
-  TEST_VERIFY (!__libc_single_threaded);
+    pthread_t thr2 = xpthread_create(NULL, threadfunc, &thr2);
+    TEST_VERIFY(!__libc_single_threaded);
 
-  xpthread_barrier_wait (&barrier1);
-  TEST_VERIFY (!__libc_single_threaded);
+    xpthread_barrier_wait(&barrier1);
+    TEST_VERIFY(!__libc_single_threaded);
 
-  /* Join first thread.  This should not bring us back into
-     single-threaded mode.  */
-  xpthread_join (thr1);
-  TEST_VERIFY (!__libc_single_threaded);
+    /* Join first thread.  This should not bring us back into
+       single-threaded mode.  */
+    xpthread_join(thr1);
+    TEST_VERIFY(!__libc_single_threaded);
 
-  /* We may be back in single-threaded mode after joining both
-     threads, but this is not guaranteed.  */
-  xpthread_barrier_wait (&barrier2);
-  xpthread_join (thr2);
-  printf ("info: __libc_single_threaded after joining all threads: %d\n",
-          __libc_single_threaded);
+    /* We may be back in single-threaded mode after joining both
+       threads, but this is not guaranteed.  */
+    xpthread_barrier_wait(&barrier2);
+    xpthread_join(thr2);
+    printf("info: __libc_single_threaded after joining all threads: %d\n",
+           __libc_single_threaded);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

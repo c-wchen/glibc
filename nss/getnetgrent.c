@@ -28,25 +28,22 @@ static char *buffer;
 
 
 
-static void
-allocate (void)
+static void allocate(void)
 {
-  buffer = (char *) malloc (BUFSIZE);
+    buffer = (char *) malloc(BUFSIZE);
 }
 
-int
-getnetgrent (char **hostp, char **userp, char **domainp)
+int getnetgrent(char **hostp, char **userp, char **domainp)
 {
-  __libc_once_define (static, once);
-  __libc_once (once, allocate);
+    __libc_once_define(static, once);
+    __libc_once(once, allocate);
 
-  if (buffer == NULL)
-    {
-      __set_errno (ENOMEM);
-      return -1;
+    if (buffer == NULL) {
+        __set_errno(ENOMEM);
+        return -1;
     }
 
-  return __getnetgrent_r (hostp, userp, domainp, buffer, BUFSIZE);
+    return __getnetgrent_r(hostp, userp, domainp, buffer, BUFSIZE);
 }
 
-weak_alias (buffer, __libc_getnetgrent_freemem_ptr)
+weak_alias(buffer, __libc_getnetgrent_freemem_ptr)

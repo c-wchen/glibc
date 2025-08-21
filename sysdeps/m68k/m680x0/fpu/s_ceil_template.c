@@ -21,8 +21,8 @@
 #include "mathimpl.h"
 
 FLOAT
-M_DECL_FUNC (__ceil) (FLOAT x)
+M_DECL_FUNC(__ceil)(FLOAT x)
 {
-  return __m81_u(M_SUF (__ceil)) (x);
+    return __m81_u(M_SUF(__ceil))(x);
 }
-declare_mgen_alias (__ceil, ceil)
+declare_mgen_alias(__ceil, ceil)

@@ -22,26 +22,27 @@
 #include <math-narrow-eval.h>
 #include <libm-alias-double.h>
 
-double
-__fdim (double x, double y)
+double __fdim(double x, double y)
 {
-  if (islessequal (x, y))
-    return 0.0;
+    if (islessequal(x, y)) {
+        return 0.0;
+    }
 
-  /* To avoid double rounding, set double precision for the
-     subtraction.  math_narrow_eval is still needed to eliminate
-     excess range in the case of overflow.  If the result of the
-     subtraction is in the subnormal range for double, it is exact, so
-     no issues of double rounding for subnormals arise.  */
-  fpu_control_t cw, cw_double;
-  _FPU_GETCW (cw);
-  cw_double = (cw & ~_FPU_EXTENDED) | _FPU_DOUBLE;
-  _FPU_SETCW (cw_double);
-  double r = math_narrow_eval (x - y);
-  _FPU_SETCW (cw);
-  if (isinf (r) && !isinf (x) && !isinf (y))
-    __set_errno (ERANGE);
+    /* To avoid double rounding, set double precision for the
+       subtraction.  math_narrow_eval is still needed to eliminate
+       excess range in the case of overflow.  If the result of the
+       subtraction is in the subnormal range for double, it is exact, so
+       no issues of double rounding for subnormals arise.  */
+    fpu_control_t cw, cw_double;
+    _FPU_GETCW(cw);
+    cw_double = (cw & ~_FPU_EXTENDED) | _FPU_DOUBLE;
+    _FPU_SETCW(cw_double);
+    double r = math_narrow_eval(x - y);
+    _FPU_SETCW(cw);
+    if (isinf(r) && !isinf(x) && !isinf(y)) {
+        __set_errno(ERANGE);
+    }
 
-  return r;
+    return r;
 }
-libm_alias_double (__fdim, fdim)
+libm_alias_double(__fdim, fdim)

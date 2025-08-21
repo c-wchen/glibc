@@ -22,101 +22,85 @@
 
 static int count_errors;
 
-static void
-test_feenableexcept (void)
+static void test_feenableexcept(void)
 {
 #if defined FE_ALL_EXCEPT
-  int res;
+    int res;
 
-  fedisableexcept (FE_ALL_EXCEPT);
+    fedisableexcept(FE_ALL_EXCEPT);
 
-  res = feenableexcept (FE_ALL_EXCEPT);
+    res = feenableexcept(FE_ALL_EXCEPT);
 
-  if (!EXCEPTION_ENABLE_SUPPORTED (FE_ALL_EXCEPT) && (res == -1))
-    {
-      puts ("feenableexcept (FE_ALL_EXCEPT) not supported, cannot test.");
-      return;
-    }
-  else if (res != 0)
-    {
-      puts ("feenableexcept (FE_ALL_EXCEPT) failed");
-      count_errors++;
+    if (!EXCEPTION_ENABLE_SUPPORTED(FE_ALL_EXCEPT) && (res == -1)) {
+        puts("feenableexcept (FE_ALL_EXCEPT) not supported, cannot test.");
+        return;
+    } else if (res != 0) {
+        puts("feenableexcept (FE_ALL_EXCEPT) failed");
+        count_errors++;
     }
 
-  if (fegetexcept () != FE_ALL_EXCEPT)
-    {
-      puts ("feenableexcept did not set all exceptions");
-      count_errors++;
+    if (fegetexcept() != FE_ALL_EXCEPT) {
+        puts("feenableexcept did not set all exceptions");
+        count_errors++;
     }
 #endif
 }
 
-static void
-test_fesetenv (void)
+static void test_fesetenv(void)
 {
 #if defined FE_NOMASK_ENV && defined FE_ALL_EXCEPT
-  int res;
+    int res;
 
-  fedisableexcept (FE_ALL_EXCEPT);
+    fedisableexcept(FE_ALL_EXCEPT);
 
-  res = fesetenv (FE_NOMASK_ENV);
+    res = fesetenv(FE_NOMASK_ENV);
 
-  if (!EXCEPTION_ENABLE_SUPPORTED (FE_ALL_EXCEPT) && (res != 0))
-    {
-      puts ("fesetenv (FE_NOMASK_ENV) not supported, cannot test.");
-      return;
-    }
-  else if (res != 0)
-    {
-      puts ("fesetenv (FE_NOMASK_ENV) failed");
-      count_errors++;
+    if (!EXCEPTION_ENABLE_SUPPORTED(FE_ALL_EXCEPT) && (res != 0)) {
+        puts("fesetenv (FE_NOMASK_ENV) not supported, cannot test.");
+        return;
+    } else if (res != 0) {
+        puts("fesetenv (FE_NOMASK_ENV) failed");
+        count_errors++;
     }
 
-  if (fegetexcept () != FE_ALL_EXCEPT)
-    {
-      puts ("fesetenv did not set all exceptions");
-      count_errors++;
+    if (fegetexcept() != FE_ALL_EXCEPT) {
+        puts("fesetenv did not set all exceptions");
+        count_errors++;
     }
 #endif
 }
 
-static void
-test_feupdateenv (void)
+static void test_feupdateenv(void)
 {
 #if defined FE_NOMASK_ENV && defined FE_ALL_EXCEPT
-  int res;
+    int res;
 
-  fedisableexcept (FE_ALL_EXCEPT);
+    fedisableexcept(FE_ALL_EXCEPT);
 
-  res = feupdateenv (FE_NOMASK_ENV);
+    res = feupdateenv(FE_NOMASK_ENV);
 
-  if (!EXCEPTION_ENABLE_SUPPORTED (FE_ALL_EXCEPT) && (res != 0))
-    {
-      puts ("feupdateenv (FE_NOMASK_ENV)) not supported, cannot test.");
-      return;
-    }
-  else if (res != 0)
-    {
-      puts ("feupdateenv (FE_NOMASK_ENV) failed");
-      count_errors++;
+    if (!EXCEPTION_ENABLE_SUPPORTED(FE_ALL_EXCEPT) && (res != 0)) {
+        puts("feupdateenv (FE_NOMASK_ENV)) not supported, cannot test.");
+        return;
+    } else if (res != 0) {
+        puts("feupdateenv (FE_NOMASK_ENV) failed");
+        count_errors++;
     }
 
-  if (fegetexcept () != FE_ALL_EXCEPT)
-    {
-      puts ("feupdateenv did not set all exceptions");
-      count_errors++;
+    if (fegetexcept() != FE_ALL_EXCEPT) {
+        puts("feupdateenv did not set all exceptions");
+        count_errors++;
     }
 #endif
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  test_feenableexcept ();
-  test_fesetenv ();
-  test_feupdateenv ();
+    test_feenableexcept();
+    test_fesetenv();
+    test_feupdateenv();
 
-  return count_errors != 0 ? 1 : 0;
+    return count_errors != 0 ? 1 : 0;
 }
 
 #define TEST_FUNCTION do_test ()

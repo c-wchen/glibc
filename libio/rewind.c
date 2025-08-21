@@ -27,13 +27,12 @@
 #include "libioP.h"
 #include <stdio.h>
 
-void
-rewind (FILE *fp)
+void rewind(FILE *fp)
 {
-  CHECK_FILE (fp, );
-  _IO_acquire_lock (fp);
-  _IO_rewind (fp);
-  _IO_clearerr (fp);
-  _IO_release_lock (fp);
+    CHECK_FILE(fp,);
+    _IO_acquire_lock(fp);
+    _IO_rewind(fp);
+    _IO_clearerr(fp);
+    _IO_release_lock(fp);
 }
-libc_hidden_def (rewind)
+libc_hidden_def(rewind)

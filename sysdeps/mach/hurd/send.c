@@ -23,25 +23,26 @@
 #include <sysdep-cancel.h>
 
 /* Send N bytes of BUF to socket FD.  Returns the number sent or -1.  */
-ssize_t
-__send (int fd, const void *buf, size_t n, int flags)
+ssize_t __send(int fd, const void *buf, size_t n, int flags)
 {
-  error_t err;
-  vm_size_t wrote;
-  int cancel_oldtype;
+    error_t err;
+    vm_size_t wrote;
+    int cancel_oldtype;
 
-  cancel_oldtype = LIBC_CANCEL_ASYNC();
-  err = HURD_DPORT_USE_CANCEL (fd, __socket_send (port, MACH_PORT_NULL,
-						  flags, buf, n,
-						  NULL, MACH_MSG_TYPE_COPY_SEND, 0,
-						  NULL, 0, &wrote));
-  LIBC_CANCEL_RESET (cancel_oldtype);
+    cancel_oldtype = LIBC_CANCEL_ASYNC();
+    err = HURD_DPORT_USE_CANCEL(fd, __socket_send(port, MACH_PORT_NULL,
+                                flags, buf, n,
+                                NULL, MACH_MSG_TYPE_COPY_SEND, 0,
+                                NULL, 0, &wrote));
+    LIBC_CANCEL_RESET(cancel_oldtype);
 
-  if (err == MIG_BAD_ID || err == EOPNOTSUPP)
-    /* The file did not grok the socket protocol.  */
-    err = ENOTSOCK;
+    if (err == MIG_BAD_ID || err == EOPNOTSUPP)
+        /* The file did not grok the socket protocol.  */
+    {
+        err = ENOTSOCK;
+    }
 
-  return err ? __hurd_sockfail (fd, flags, err) : wrote;
+    return err ? __hurd_sockfail(fd, flags, err) : wrote;
 }
-libc_hidden_def (__send)
-weak_alias (__send, send)
+libc_hidden_def(__send)
+weak_alias(__send, send)

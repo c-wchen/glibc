@@ -20,9 +20,8 @@
 #include <errno.h>
 #include <tls.h>
 
-int *
-__errno_location (void)
+int *__errno_location(void)
 {
-  return &errno;
+    return &errno;
 }
-libc_hidden_def (__errno_location)
+libc_hidden_def(__errno_location)

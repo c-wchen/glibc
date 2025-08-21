@@ -21,12 +21,11 @@
 #include <support/check.h>
 #include <support/support.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  mtrace ();
-  TEST_COMPARE (ungetc('y', stdin), 'y');
-  return 0;
+    mtrace();
+    TEST_COMPARE(ungetc('y', stdin), 'y');
+    return 0;
 }
 
 #include <support/test-driver.c>

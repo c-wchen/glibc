@@ -16,10 +16,10 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define	QUAD	1
+#define QUAD    1
 
 #include "wcstol.c"
 
-weak_alias (wcstoll, wcstoq)
-weak_alias (wcstoll, wcstoimax)
-weak_alias (__isoc23_wcstoll, __isoc23_wcstoimax)
+weak_alias(wcstoll, wcstoq)
+weak_alias(wcstoll, wcstoimax)
+weak_alias(__isoc23_wcstoll, __isoc23_wcstoimax)

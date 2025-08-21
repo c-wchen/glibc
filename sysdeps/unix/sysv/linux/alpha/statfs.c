@@ -21,10 +21,9 @@
 #include <kernel_stat.h>
 
 /* Return information about the filesystem on which FILE resides.  */
-int
-__statfs (const char *file, struct statfs *buf)
+int __statfs(const char *file, struct statfs *buf)
 {
-  return INLINE_SYSCALL_CALL (statfs, file, buf);
+    return INLINE_SYSCALL_CALL(statfs, file, buf);
 }
-libc_hidden_def (__statfs)
-weak_alias (__statfs, statfs)
+libc_hidden_def(__statfs)
+weak_alias(__statfs, statfs)

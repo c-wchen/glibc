@@ -20,8 +20,7 @@ _Thread_local int foo;
 /* Make the TLS segment large enough to trigger _dl_tlsdesc_dynamic.  */
 _Thread_local int foobar[1000];
 
-void
-bar (void)
+void bar(void)
 {
-  foo = 1;
+    foo = 1;
 }

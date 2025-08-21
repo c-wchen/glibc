@@ -23,24 +23,24 @@
 /* Define a line parsing function using the common code
    used in the nss_files module.  */
 
-#define STRUCTURE	sgrp
-#define ENTNAME		sgent
-#define	EXTERN_PARSER	1
+#define STRUCTURE   sgrp
+#define ENTNAME     sgent
+#define EXTERN_PARSER   1
 struct sgent_data {};
 
 #include <nss/nss_files/files-parse.c>
 
 
 /* Read one shadow entry from the given stream.  */
-int
-__fgetsgent_r (FILE *stream, struct sgrp *resbuf, char *buffer, size_t buflen,
-	       struct sgrp **result)
+int __fgetsgent_r(FILE *stream, struct sgrp *resbuf, char *buffer, size_t buflen,
+                  struct sgrp **result)
 {
-  int ret = __nss_fgetent_r (stream, resbuf, buffer, buflen, parse_line);
-  if (ret == 0)
-    *result = resbuf;
-  else
-    *result = NULL;
-  return ret;
+    int ret = __nss_fgetent_r(stream, resbuf, buffer, buflen, parse_line);
+    if (ret == 0) {
+        *result = resbuf;
+    } else {
+        *result = NULL;
+    }
+    return ret;
 }
-weak_alias (__fgetsgent_r, fgetsgent_r)
+weak_alias(__fgetsgent_r, fgetsgent_r)

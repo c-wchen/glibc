@@ -20,16 +20,14 @@
 #include <stdlib.h>
 #include <errno.h>
 
-void *
-xposix_memalign (size_t alignment, size_t n)
+void *xposix_memalign(size_t alignment, size_t n)
 {
-  void *p = NULL;
+    void *p = NULL;
 
-  int ret = posix_memalign (&p, alignment, n);
-  if (ret)
-    {
-      errno = ret;
-      oom_error ("posix_memalign", n);
+    int ret = posix_memalign(&p, alignment, n);
+    if (ret) {
+        errno = ret;
+        oom_error("posix_memalign", n);
     }
-  return p;
+    return p;
 }

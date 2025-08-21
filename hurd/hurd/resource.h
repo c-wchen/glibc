@@ -36,10 +36,10 @@ extern struct mutex _hurd_rlimit_lock; /* Locks _hurd_rlimits.  */
    reset on the next call; PI_FLAGS is passed to proc_getprocinfo.  Returns
    FN's result the first time it returns nonzero.  If FN never returns
    nonzero, this returns zero.  */
-extern error_t _hurd_priority_which_map (enum __priority_which which, int who,
-					 error_t (*fn) (pid_t pid,
-							struct procinfo *pi),
-					 int pi_flags);
+extern error_t _hurd_priority_which_map(enum __priority_which which, int who,
+                                        error_t (*fn)(pid_t pid,
+                                                struct procinfo *pi),
+                                        int pi_flags);
 
 /* Convert between Mach priority values and the priority
    values used by getpriority, setpriority, and nice.  */

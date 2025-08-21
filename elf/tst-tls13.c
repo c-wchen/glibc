@@ -5,24 +5,21 @@
 #include <unistd.h>
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  for (int i = 0; i < 1000;)
-    {
-      printf ("round %d\n",++i);
+    for (int i = 0; i < 1000;) {
+        printf("round %d\n", ++i);
 
-      void *h = dlopen ("$ORIGIN/tst-tlsmod13a.so", RTLD_LAZY);
-      if (h == NULL)
-	{
-	  printf ("cannot load: %s\n", dlerror ());
-	  exit (1);
-	}
+        void *h = dlopen("$ORIGIN/tst-tlsmod13a.so", RTLD_LAZY);
+        if (h == NULL) {
+            printf("cannot load: %s\n", dlerror());
+            exit(1);
+        }
 
-      dlclose (h);
+        dlclose(h);
     }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -22,13 +22,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void *
-xcalloc (size_t n, size_t s)
+void *xcalloc(size_t n, size_t s)
 {
-  void *p;
+    void *p;
 
-  p = calloc (n, s);
-  if (p == NULL)
-    oom_error ("calloc", n * s);
-  return p;
+    p = calloc(n, s);
+    if (p == NULL) {
+        oom_error("calloc", n * s);
+    }
+    return p;
 }

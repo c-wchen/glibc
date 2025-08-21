@@ -29,21 +29,20 @@
    them is correct.  The many checks in support_openpty.c are
    sufficient for this.  */
 
-int
-do_test (void)
+int do_test(void)
 {
-  int outer, inner;
-  char *name;
-  struct termios term;
-  struct winsize win;
+    int outer, inner;
+    char *name;
+    struct termios term;
+    struct winsize win;
 
-  cfmakeraw (&term);
-  win.ws_row = 24;
-  win.ws_col = 80;
+    cfmakeraw(&term);
+    win.ws_row = 24;
+    win.ws_col = 80;
 
-  support_openpty (&outer, &inner, &name, &term, &win);
+    support_openpty(&outer, &inner, &name, &term, &win);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

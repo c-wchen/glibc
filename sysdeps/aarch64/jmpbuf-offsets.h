@@ -28,16 +28,16 @@
 #define JB_X28            9
 #define JB_X29           10
 #define JB_LR            11
-#define JB_SP		 13
+#define JB_SP        13
 
-#define JB_D8		 14
-#define JB_D9		 15
-#define JB_D10		 16
-#define JB_D11		 17
-#define JB_D12		 18
-#define JB_D13		 19
-#define JB_D14		 20
-#define JB_D15		 21
+#define JB_D8        14
+#define JB_D9        15
+#define JB_D10       16
+#define JB_D11       17
+#define JB_D12       18
+#define JB_D13       19
+#define JB_D14       20
+#define JB_D15       21
 
 /* The target specific part of jmp_buf has no space for expansion but
    the public jmp_buf ABI type has.  Unfortunately there is another type
@@ -107,12 +107,12 @@
 #include <sysdep.h>
 #include <pointer_guard.h>
 
-static inline uintptr_t __attribute__ ((unused))
-_jmpbuf_sp (__jmp_buf jmpbuf)
+static inline uintptr_t __attribute__((unused))
+_jmpbuf_sp(__jmp_buf jmpbuf)
 {
-  uintptr_t sp = jmpbuf[JB_SP];
-  PTR_DEMANGLE (sp);
-  return sp;
+    uintptr_t sp = jmpbuf[JB_SP];
+    PTR_DEMANGLE(sp);
+    return sp;
 }
 #endif
 

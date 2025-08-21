@@ -21,14 +21,14 @@
 #include <libintl.h>
 #include <error.h>
 
-char *
-xasprintf (const char *format, ...)
+char *xasprintf(const char *format, ...)
 {
-  va_list ap;
-  va_start (ap, format);
-  char *result;
-  if (vasprintf (&result, format, ap) < 0)
-    error (EXIT_FAILURE, 0, _("memory exhausted"));
-  va_end (ap);
-  return result;
+    va_list ap;
+    va_start(ap, format);
+    char *result;
+    if (vasprintf(&result, format, ap) < 0) {
+        error(EXIT_FAILURE, 0, _("memory exhausted"));
+    }
+    va_end(ap);
+    return result;
 }

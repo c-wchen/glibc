@@ -21,8 +21,7 @@
 #undef dmull
 
 double
-attribute_hidden
-dmull (double x, double y)
+attribute_hidden dmull(double x, double y)
 {
-  return __nldbl_dmull (x, y);
+    return __nldbl_dmull(x, y);
 }

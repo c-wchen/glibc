@@ -35,49 +35,47 @@
 
 #include <fromfp.h>
 
-RET_TYPE
-FUNC (float x, int round, unsigned int width)
+RET_TYPE FUNC(float x, int round, unsigned int width)
 {
-  if (width > INTMAX_WIDTH)
-    width = INTMAX_WIDTH;
-  uint32_t ix;
-  GET_FLOAT_WORD (ix, x);
-  bool negative = (ix & 0x80000000) != 0;
-  if (width == 0)
-    return fromfp_domain_error (negative, width);
-  ix &= 0x7fffffff;
-  if (ix == 0)
-    return 0;
-  int exponent = ix >> (MANT_DIG - 1);
-  exponent -= BIAS;
-  int max_exponent = fromfp_max_exponent (negative, width);
-  if (exponent > max_exponent)
-    return fromfp_domain_error (negative, width);
+    if (width > INTMAX_WIDTH) {
+        width = INTMAX_WIDTH;
+    }
+    uint32_t ix;
+    GET_FLOAT_WORD(ix, x);
+    bool negative = (ix & 0x80000000) != 0;
+    if (width == 0) {
+        return fromfp_domain_error(negative, width);
+    }
+    ix &= 0x7fffffff;
+    if (ix == 0) {
+        return 0;
+    }
+    int exponent = ix >> (MANT_DIG - 1);
+    exponent -= BIAS;
+    int max_exponent = fromfp_max_exponent(negative, width);
+    if (exponent > max_exponent) {
+        return fromfp_domain_error(negative, width);
+    }
 
-  ix &= ((1U << (MANT_DIG - 1)) - 1);
-  ix |= 1U << (MANT_DIG - 1);
-  uintmax_t uret;
-  bool half_bit, more_bits;
-  if (exponent >= MANT_DIG - 1)
-    {
-      uret = ix;
-      uret <<= exponent - (MANT_DIG - 1);
-      half_bit = false;
-      more_bits = false;
+    ix &= ((1U << (MANT_DIG - 1)) - 1);
+    ix |= 1U << (MANT_DIG - 1);
+    uintmax_t uret;
+    bool half_bit, more_bits;
+    if (exponent >= MANT_DIG - 1) {
+        uret = ix;
+        uret <<= exponent - (MANT_DIG - 1);
+        half_bit = false;
+        more_bits = false;
+    } else if (exponent >= -1) {
+        uint32_t h = 1U << (MANT_DIG - 2 - exponent);
+        half_bit = (ix & h) != 0;
+        more_bits = (ix & (h - 1)) != 0;
+        uret = ix >> (MANT_DIG - 1 - exponent);
+    } else {
+        uret = 0;
+        half_bit = false;
+        more_bits = true;
     }
-  else if (exponent >= -1)
-    {
-      uint32_t h = 1U << (MANT_DIG - 2 - exponent);
-      half_bit = (ix & h) != 0;
-      more_bits = (ix & (h - 1)) != 0;
-      uret = ix >> (MANT_DIG - 1 - exponent);
-    }
-  else
-    {
-      uret = 0;
-      half_bit = false;
-      more_bits = true;
-    }
-  return fromfp_round_and_return (negative, uret, half_bit, more_bits, round,
-				  exponent, max_exponent, width);
+    return fromfp_round_and_return(negative, uret, half_bit, more_bits, round,
+                                   exponent, max_exponent, width);
 }

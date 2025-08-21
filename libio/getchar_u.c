@@ -29,8 +29,7 @@
 
 #undef getchar_unlocked
 
-int
-getchar_unlocked (void)
+int getchar_unlocked(void)
 {
-  return _IO_getc_unlocked (stdin);
+    return _IO_getc_unlocked(stdin);
 }

@@ -27,7 +27,7 @@
    and the linker uses the first version it sees.  */
 
 #if SHLIB_COMPAT (libc, GLIBC_2_17, GLIBC_2_18)
-versioned_symbol (libc, __mcount, _mcount, GLIBC_2_18);
+versioned_symbol(libc, __mcount, _mcount, GLIBC_2_18);
 #else
-strong_alias (__mcount, _mcount);
+strong_alias(__mcount, _mcount);
 #endif

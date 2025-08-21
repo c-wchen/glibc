@@ -31,15 +31,15 @@
    (as specified by WHO) is used.  A lower priority number means higher
    priority.  Priorities range from PRIO_MIN to PRIO_MAX.  */
 
-int
-__getpriority (enum __priority_which which, id_t who)
+int __getpriority(enum __priority_which which, id_t who)
 {
-  int res;
+    int res;
 
-  res = INLINE_SYSCALL (getpriority, 2, (int) which, who);
-  if (res >= 0)
-    res = PZERO - res;
-  return res;
+    res = INLINE_SYSCALL(getpriority, 2, (int) which, who);
+    if (res >= 0) {
+        res = PZERO - res;
+    }
+    return res;
 }
-libc_hidden_def (__getpriority)
-weak_alias (__getpriority, getpriority)
+libc_hidden_def(__getpriority)
+weak_alias(__getpriority, getpriority)

@@ -18,31 +18,31 @@
 
 #include <cpuid.h>
 
-int tst_audit4_aux (void);
+int tst_audit4_aux(void);
 
-static int
-avx_enabled (void)
+static int avx_enabled(void)
 {
-  unsigned int eax, ebx, ecx, edx;
+    unsigned int eax, ebx, ecx, edx;
 
-  if (__get_cpuid (1, &eax, &ebx, &ecx, &edx) == 0
-      || (ecx & (bit_AVX | bit_OSXSAVE)) != (bit_AVX | bit_OSXSAVE))
-    return 0;
+    if (__get_cpuid(1, &eax, &ebx, &ecx, &edx) == 0
+        || (ecx & (bit_AVX | bit_OSXSAVE)) != (bit_AVX | bit_OSXSAVE)) {
+        return 0;
+    }
 
-  /* Check the OS has AVX and SSE saving enabled.  */
-  asm ("xgetbv" : "=a" (eax), "=d" (edx) : "c" (0));
+    /* Check the OS has AVX and SSE saving enabled.  */
+    asm("xgetbv" : "=a"(eax), "=d"(edx) : "c"(0));
 
-  return (eax & 6) == 6;
+    return (eax & 6) == 6;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* Run AVX test only if AVX is supported.  */
-  if (avx_enabled ())
-    return tst_audit4_aux ();
-  else
-    return 77;
+    /* Run AVX test only if AVX is supported.  */
+    if (avx_enabled()) {
+        return tst_audit4_aux();
+    } else {
+        return 77;
+    }
 }
 
 #define TEST_FUNCTION do_test ()

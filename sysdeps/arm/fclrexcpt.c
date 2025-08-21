@@ -21,23 +21,24 @@
 #include <arm-features.h>
 
 
-int
-feclearexcept (int excepts)
+int feclearexcept(int excepts)
 {
-  fpu_control_t fpscr, new_fpscr;
+    fpu_control_t fpscr, new_fpscr;
 
-  /* Fail if a VFP unit isn't present unless nothing needs to be done.  */
-  if (!ARM_HAVE_VFP)
-    return (excepts != 0);
+    /* Fail if a VFP unit isn't present unless nothing needs to be done.  */
+    if (!ARM_HAVE_VFP) {
+        return (excepts != 0);
+    }
 
-  _FPU_GETCW (fpscr);
-  excepts &= FE_ALL_EXCEPT;
-  new_fpscr = fpscr & ~excepts;
+    _FPU_GETCW(fpscr);
+    excepts &= FE_ALL_EXCEPT;
+    new_fpscr = fpscr & ~excepts;
 
-  /* Write new exception flags if changed.  */
-  if (new_fpscr != fpscr)
-    _FPU_SETCW (new_fpscr);
+    /* Write new exception flags if changed.  */
+    if (new_fpscr != fpscr) {
+        _FPU_SETCW(new_fpscr);
+    }
 
-  return 0;
+    return 0;
 }
-libm_hidden_def (feclearexcept)
+libm_hidden_def(feclearexcept)

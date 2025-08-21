@@ -29,40 +29,38 @@ static mbstate_t state;
    at S which is no longer than N characters.
    The ISO C standard says that the `mblen' function must not change
    the state of the `mbtowc' function.  */
-int
-mblen (const char *s, size_t n)
+int mblen(const char *s, size_t n)
 {
-  int result;
+    int result;
 
-  /* If S is NULL the function has to return null or not null
-     depending on the encoding having a state depending encoding or
-     not.  */
-  if (s == NULL)
+    /* If S is NULL the function has to return null or not null
+       depending on the encoding having a state depending encoding or
+       not.  */
+    if (s == NULL) {
+        const struct gconv_fcts *fcts;
+
+        /* Get the conversion functions.  */
+        fcts = get_gconv_fcts(_NL_CURRENT_DATA(LC_CTYPE));
+
+        /* Reset the state.  */
+        memset(&state, '\0', sizeof state);
+
+        result = fcts->towc->__stateful;
+    } else if (*s == '\0')
+        /* According to the ISO C 89 standard this is the expected behaviour.  */
     {
-      const struct gconv_fcts *fcts;
+        result = 0;
+    } else {
+        memset(&state, '\0', sizeof state);
 
-      /* Get the conversion functions.  */
-      fcts = get_gconv_fcts (_NL_CURRENT_DATA (LC_CTYPE));
+        result = __mbrtowc(NULL, s, n, &state);
 
-      /* Reset the state.  */
-      memset (&state, '\0', sizeof state);
-
-      result = fcts->towc->__stateful;
-    }
-  else if (*s == '\0')
-    /* According to the ISO C 89 standard this is the expected behaviour.  */
-    result = 0;
-  else
-    {
-      memset (&state, '\0', sizeof state);
-
-      result = __mbrtowc (NULL, s, n, &state);
-
-      /* The `mbrtowc' functions tell us more than we need.  Fold the -1
-	 and -2 result into -1.  */
-      if (result < 0)
-	result = -1;
+        /* The `mbrtowc' functions tell us more than we need.  Fold the -1
+        and -2 result into -1.  */
+        if (result < 0) {
+            result = -1;
+        }
     }
 
-  return result;
+    return result;
 }

@@ -27,12 +27,11 @@
 #include "../locale/localeinfo.h"
 
 
-int
-STRCOLL (const STRING_TYPE *s1, const STRING_TYPE *s2)
+int STRCOLL(const STRING_TYPE *s1, const STRING_TYPE *s2)
 {
-  return STRCOLL_L (s1, s2, _NL_CURRENT_LOCALE);
+    return STRCOLL_L(s1, s2, _NL_CURRENT_LOCALE);
 }
 
 #ifdef USE_HIDDEN_DEF
-libc_hidden_def (STRCOLL)
+libc_hidden_def(STRCOLL)
 #endif

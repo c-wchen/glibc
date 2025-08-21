@@ -24,42 +24,43 @@
 
 #include <pt-internal.h>
 
-int
-__sem_post (sem_t *sem)
+int __sem_post(sem_t *sem)
 {
-  struct new_sem *isem = (struct new_sem *) sem;
-  int flags = isem->pshared ? GSYNC_SHARED : 0;
+    struct new_sem *isem = (struct new_sem *) sem;
+    int flags = isem->pshared ? GSYNC_SHARED : 0;
 
 #if __HAVE_64B_ATOMICS
-  uint64_t d = atomic_load_relaxed (&isem->data);
+    uint64_t d = atomic_load_relaxed(&isem->data);
 
-  do
+    do {
+        if ((d & SEM_VALUE_MASK) == SEM_VALUE_MAX) {
+            return __hurd_fail(EOVERFLOW);
+        }
+    } while (!atomic_compare_exchange_weak_release(&isem->data, &d, d + 1));
+
+    if ((d >> SEM_NWAITERS_SHIFT) != 0)
+        /* Wake one waiter.  */
     {
-      if ((d & SEM_VALUE_MASK) == SEM_VALUE_MAX)
-	return __hurd_fail (EOVERFLOW);
+        __lll_wake(((unsigned int *) &isem->data) + SEM_VALUE_OFFSET, flags);
     }
-  while (!atomic_compare_exchange_weak_release (&isem->data, &d, d + 1));
-
-  if ((d >> SEM_NWAITERS_SHIFT) != 0)
-    /* Wake one waiter.  */
-    __lll_wake (((unsigned int *) &isem->data) + SEM_VALUE_OFFSET, flags);
 #else
-  unsigned int v = atomic_load_relaxed (&isem->value);
+    unsigned int v = atomic_load_relaxed(&isem->value);
 
-  do
+    do {
+        if ((v >> SEM_VALUE_SHIFT) == SEM_VALUE_MAX) {
+            return __hurd_fail(EOVERFLOW);
+        }
+    } while (!atomic_compare_exchange_weak_release
+             (&isem->value, &v, v + (1 << SEM_VALUE_SHIFT)));
+
+    if ((v & SEM_NWAITERS_MASK) != 0)
+        /* Wake one waiter.  */
     {
-      if ((v >> SEM_VALUE_SHIFT) == SEM_VALUE_MAX)
-	return __hurd_fail (EOVERFLOW);
+        __lll_wake(&isem->value, flags);
     }
-  while (!atomic_compare_exchange_weak_release
-	  (&isem->value, &v, v + (1 << SEM_VALUE_SHIFT)));
-
-  if ((v & SEM_NWAITERS_MASK) != 0)
-    /* Wake one waiter.  */
-    __lll_wake (&isem->value, flags);
 #endif
 
-  return 0;
+    return 0;
 }
-libpthread_hidden_def (__sem_post)
-strong_alias (__sem_post, sem_post);
+libpthread_hidden_def(__sem_post)
+strong_alias(__sem_post, sem_post);

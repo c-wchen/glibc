@@ -8,8 +8,8 @@
 #   define PR_SET_VMA_ANON_NAME  0
 #  endif
 
-extern int __prctl (int __option, ...);
-libc_hidden_proto (__prctl)
+extern int __prctl(int __option, ...);
+libc_hidden_proto(__prctl)
 
 # endif /* !_ISOMAC */
 #endif

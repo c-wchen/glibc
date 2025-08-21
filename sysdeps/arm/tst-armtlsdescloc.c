@@ -16,12 +16,11 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-int getfoo (void);
+int getfoo(void);
 
-int
-do_test (void)
+int do_test(void)
 {
-  return getfoo ();
+    return getfoo();
 }
 
 #define TEST_FUNCTION do_test ()

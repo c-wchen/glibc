@@ -23,48 +23,48 @@
 mach_port_t _hurd_host_priv, _hurd_device_master;
 
 
-kern_return_t
-__get_privileged_ports (mach_port_t *host_priv_ptr,
-			device_t *device_master_ptr)
+kern_return_t __get_privileged_ports(mach_port_t *host_priv_ptr,
+                                     device_t *device_master_ptr)
 {
-  if ((host_priv_ptr && _hurd_host_priv == MACH_PORT_NULL)
-      || (device_master_ptr && _hurd_device_master == MACH_PORT_NULL))
-    {
-      error_t err;
+    if ((host_priv_ptr && _hurd_host_priv == MACH_PORT_NULL)
+        || (device_master_ptr && _hurd_device_master == MACH_PORT_NULL)) {
+        error_t err;
 
-      if (_hurd_ports)
-	/* We have gotten some initial ports, so perhaps
-	   we have a proc server to talk to.  */
-	err = __USEPORT (PROC, __proc_getprivports (port,
-						    &_hurd_host_priv,
-						    &_hurd_device_master));
-      else
-	return MACH_SEND_INVALID_DEST;
+        if (_hurd_ports)
+            /* We have gotten some initial ports, so perhaps
+               we have a proc server to talk to.  */
+            err = __USEPORT(PROC, __proc_getprivports(port,
+                            &_hurd_host_priv,
+                            &_hurd_device_master));
+        else {
+            return MACH_SEND_INVALID_DEST;
+        }
 
-      if (err)
-	return err;
+        if (err) {
+            return err;
+        }
     }
 
-  if (host_priv_ptr)
-    {
-      error_t err = _hurd_host_priv == MACH_PORT_NULL ? 0
-	: __mach_port_mod_refs (mach_task_self (),
-				_hurd_host_priv, MACH_PORT_RIGHT_SEND, +1);
-      if (err)
-	return err;
-      *host_priv_ptr = _hurd_host_priv;
+    if (host_priv_ptr) {
+        error_t err = _hurd_host_priv == MACH_PORT_NULL ? 0
+                      : __mach_port_mod_refs(mach_task_self(),
+                                             _hurd_host_priv, MACH_PORT_RIGHT_SEND, +1);
+        if (err) {
+            return err;
+        }
+        *host_priv_ptr = _hurd_host_priv;
     }
 
-  if (device_master_ptr)
-    {
-      error_t err = _hurd_device_master == MACH_PORT_NULL ? 0
-	: __mach_port_mod_refs (mach_task_self (),
-				_hurd_device_master, MACH_PORT_RIGHT_SEND, +1);
-      if (err)
-	return err;
-      *device_master_ptr = _hurd_device_master;
+    if (device_master_ptr) {
+        error_t err = _hurd_device_master == MACH_PORT_NULL ? 0
+                      : __mach_port_mod_refs(mach_task_self(),
+                                             _hurd_device_master, MACH_PORT_RIGHT_SEND, +1);
+        if (err) {
+            return err;
+        }
+        *device_master_ptr = _hurd_device_master;
     }
 
-  return KERN_SUCCESS;
+    return KERN_SUCCESS;
 }
-weak_alias (__get_privileged_ports, get_privileged_ports)
+weak_alias(__get_privileged_ports, get_privileged_ports)

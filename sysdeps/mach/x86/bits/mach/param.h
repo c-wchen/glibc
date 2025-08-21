@@ -21,5 +21,5 @@
 #endif
 
 #ifndef EXEC_PAGESIZE
-#define EXEC_PAGESIZE	4096
+#define EXEC_PAGESIZE   4096
 #endif

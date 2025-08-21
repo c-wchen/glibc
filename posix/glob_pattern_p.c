@@ -25,9 +25,8 @@
 
 /* Return nonzero if PATTERN contains any metacharacters.
    Metacharacters can be quoted with backslashes if QUOTE is nonzero.  */
-int
-__glob_pattern_p (const char *pattern, int quote)
+int __glob_pattern_p(const char *pattern, int quote)
 {
-  return __glob_pattern_type (pattern, quote) == GLOBPAT_SPECIAL;
+    return __glob_pattern_type(pattern, quote) == GLOBPAT_SPECIAL;
 }
-weak_alias (__glob_pattern_p, glob_pattern_p)
+weak_alias(__glob_pattern_p, glob_pattern_p)

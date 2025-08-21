@@ -22,56 +22,49 @@
 
 #include <support/xstdio.h>
 
-static void *
-tf (void *arg)
+static void *tf(void *arg)
 {
-  char buf[100];
-  xfgets (buf, sizeof (buf), arg);
-  /* This call should never return.  */
-  return NULL;
+    char buf[100];
+    xfgets(buf, sizeof(buf), arg);
+    /* This call should never return.  */
+    return NULL;
 }
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int fd[2];
-  if (pipe (fd) != 0)
-    {
-      puts ("pipe failed");
-      return 1;
+    int fd[2];
+    if (pipe(fd) != 0) {
+        puts("pipe failed");
+        return 1;
     }
 
-  FILE *fp = fdopen (fd[0], "r");
-  if (fp == NULL)
-    {
-      puts ("fdopen failed");
-      return 1;
+    FILE *fp = fdopen(fd[0], "r");
+    if (fp == NULL) {
+        puts("fdopen failed");
+        return 1;
     }
 
-  pthread_t th;
-  if (pthread_create (&th, NULL, tf, fp) != 0)
-    {
-      puts ("pthread_create failed");
-      return 1;
+    pthread_t th;
+    if (pthread_create(&th, NULL, tf, fp) != 0) {
+        puts("pthread_create failed");
+        return 1;
     }
 
-  sleep (1);
+    sleep(1);
 
-  if (pthread_cancel (th) != 0)
-    {
-      puts ("pthread_cancel failed");
-      return 1;
+    if (pthread_cancel(th) != 0) {
+        puts("pthread_cancel failed");
+        return 1;
     }
 
-  void *r;
-  if (pthread_join (th, &r) != 0)
-    {
-      puts ("pthread_join failed");
-      return 1;
+    void *r;
+    if (pthread_join(th, &r) != 0) {
+        puts("pthread_join failed");
+        return 1;
     }
 
-  return r != PTHREAD_CANCELED;
+    return r != PTHREAD_CANCELED;
 }
 
 #define TEST_FUNCTION do_test ()

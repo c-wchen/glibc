@@ -18,20 +18,17 @@
 
 #include <ctype.h>
 
-int
-my_isalpha (int ch)
+int my_isalpha(int ch)
 {
-  return isalpha (ch);
+    return isalpha(ch);
 }
 
-int
-my_toupper (int ch)
+int my_toupper(int ch)
 {
-  return toupper (ch);
+    return toupper(ch);
 }
 
-int
-my_tolower (int ch)
+int my_tolower(int ch)
 {
-  return tolower (ch);
+    return tolower(ch);
 }

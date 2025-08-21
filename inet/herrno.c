@@ -25,6 +25,6 @@
    accessible in the libc.  */
 
 __thread int __h_errno;
-extern __thread int __libc_h_errno __attribute__ ((alias ("__h_errno")))
-  attribute_hidden;
+extern __thread int __libc_h_errno __attribute__((alias("__h_errno")))
+attribute_hidden;
 #define h_errno __libc_h_errno

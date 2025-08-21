@@ -25,7 +25,7 @@
 #include <errno.h>
 #include <unistd.h>
 
-static int do_test (void);
+static int do_test(void);
 #define TEST_FUNCTION do_test ()
 #include "../test-skeleton.c"
 
@@ -34,74 +34,68 @@ static int do_test (void);
 #define STRING_SIZE (1400)
 #define NSTRINGS (2)
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  FILE *fp = NULL;
-  wchar_t *inputs[NSTRINGS] = {NULL};
-  int ret = 1;
+    FILE *fp = NULL;
+    wchar_t *inputs[NSTRINGS] = {NULL};
+    int ret = 1;
 
-  if (setlocale (LC_ALL, "en_US.UTF-8") == NULL)
-    {
-      printf ("Cannot set en_US.UTF-8 locale.\n");
-      goto out;
+    if (setlocale(LC_ALL, "en_US.UTF-8") == NULL) {
+        printf("Cannot set en_US.UTF-8 locale.\n");
+        goto out;
     }
 
 
-  /* Generate input from one character, chosen because it has an odd number of
-     bytes in UTF-8, making it easier to reproduce the problem:
+    /* Generate input from one character, chosen because it has an odd number of
+       bytes in UTF-8, making it easier to reproduce the problem:
 
-     NAME    Hiragana letter GO
-     CHAR    ご
-     UTF-8   E38194
-     UCS     3054
-     MARC-8  692434  */
-  wchar_t seed = L'ご';
-  for (int i = 0; i < NSTRINGS; i++)
-    {
-      inputs[i] = malloc (STRING_SIZE * sizeof (wchar_t));
-      if (inputs[i] == NULL)
-	{
-	  printf ("Failed to allocate memory for inputs: %m\n");
-	  goto out;
-	}
-      wmemset (inputs[i], seed, STRING_SIZE - 1);
-      inputs[i][STRING_SIZE - 1] = L'\0';
+       NAME    Hiragana letter GO
+       CHAR    ご
+       UTF-8   E38194
+       UCS     3054
+       MARC-8  692434  */
+    wchar_t seed = L'ご';
+    for (int i = 0; i < NSTRINGS; i++) {
+        inputs[i] = malloc(STRING_SIZE * sizeof(wchar_t));
+        if (inputs[i] == NULL) {
+            printf("Failed to allocate memory for inputs: %m\n");
+            goto out;
+        }
+        wmemset(inputs[i], seed, STRING_SIZE - 1);
+        inputs[i][STRING_SIZE - 1] = L'\0';
     }
 
-  char *filename;
-  int fd = create_temp_file ("tst-fseek-wide-partial.out", &filename);
+    char *filename;
+    int fd = create_temp_file("tst-fseek-wide-partial.out", &filename);
 
-  if (fd == -1)
-    {
-      printf ("create_temp_file: %m\n");
-      goto out;
+    if (fd == -1) {
+        printf("create_temp_file: %m\n");
+        goto out;
     }
 
-  fp = fdopen (fd, "w+");
-  if (fp == NULL)
-    {
-      printf ("fopen: %m\n");
-      close (fd);
-      goto out;
+    fp = fdopen(fd, "w+");
+    if (fp == NULL) {
+        printf("fopen: %m\n");
+        close(fd);
+        goto out;
     }
 
-  for (int i = 0; i < NSTRINGS; i++)
-    {
-      printf ("offset: %ld\n", ftell (fp));
-      if (fputws (inputs[i], fp) == -1)
-	{
-	  perror ("fputws");
-	  goto out;
-	}
+    for (int i = 0; i < NSTRINGS; i++) {
+        printf("offset: %ld\n", ftell(fp));
+        if (fputws(inputs[i], fp) == -1) {
+            perror("fputws");
+            goto out;
+        }
     }
-  ret = 0;
+    ret = 0;
 
 out:
-  if (fp != NULL)
-    fclose (fp);
-  for (int i = 0; i < NSTRINGS; i++)
-    free (inputs[i]);
+    if (fp != NULL) {
+        fclose(fp);
+    }
+    for (int i = 0; i < NSTRINGS; i++) {
+        free(inputs[i]);
+    }
 
-  return ret;
+    return ret;
 }

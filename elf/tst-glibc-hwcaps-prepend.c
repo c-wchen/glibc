@@ -18,15 +18,14 @@
 
 #include <support/check.h>
 
-extern int marker1 (void);
+extern int marker1(void);
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* The marker1 function in
-     glibc-hwcaps/prepend-markermod1/markermod1.so returns 2.  */
-  TEST_COMPARE (marker1 (), 2);
-  return 0;
+    /* The marker1 function in
+       glibc-hwcaps/prepend-markermod1/markermod1.so returns 2.  */
+    TEST_COMPARE(marker1(), 2);
+    return 0;
 }
 
 #include <support/test-driver.c>

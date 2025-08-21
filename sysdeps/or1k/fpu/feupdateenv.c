@@ -20,14 +20,13 @@
 #include <fenv.h>
 #include <fenv_private.h>
 
-int
-__feupdateenv (const fenv_t *envp)
+int __feupdateenv(const fenv_t *envp)
 {
-  libc_feupdateenv_or1k (envp);
+    libc_feupdateenv_or1k(envp);
 
-  /* Success.  */
-  return 0;
+    /* Success.  */
+    return 0;
 }
-libm_hidden_def (__feupdateenv)
-weak_alias (__feupdateenv, feupdateenv)
-libm_hidden_weak (feupdateenv)
+libm_hidden_def(__feupdateenv)
+weak_alias(__feupdateenv, feupdateenv)
+libm_hidden_weak(feupdateenv)

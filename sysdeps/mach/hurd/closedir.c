@@ -26,32 +26,31 @@
 
 /* Close the directory stream DIRP.
    Return 0 if successful, -1 if not.  */
-int
-__closedir (DIR *dirp)
+int __closedir(DIR *dirp)
 {
-  error_t err;
+    error_t err;
 
-  if (dirp == NULL)
-    return __hurd_fail (EINVAL);
-
-  __libc_lock_lock (dirp->__lock);
-  err = __vm_deallocate (__mach_task_self (),
-			 (vm_address_t) dirp->__data, dirp->__allocation);
-  dirp->__data = NULL;
-  err = _hurd_fd_close (dirp->__fd);
-
-  if (err)
-    {
-      /* Unlock the DIR.  A failing closedir can be repeated (and may fail
-	 again, but shouldn't deadlock).  */
-      __libc_lock_unlock (dirp->__lock);
-      return __hurd_fail (err);
+    if (dirp == NULL) {
+        return __hurd_fail(EINVAL);
     }
 
-  /* Clean up the lock and free the structure.  */
-  __libc_lock_fini (dirp->__lock);
-  free (dirp);
+    __libc_lock_lock(dirp->__lock);
+    err = __vm_deallocate(__mach_task_self(),
+                          (vm_address_t) dirp->__data, dirp->__allocation);
+    dirp->__data = NULL;
+    err = _hurd_fd_close(dirp->__fd);
 
-  return 0;
+    if (err) {
+        /* Unlock the DIR.  A failing closedir can be repeated (and may fail
+        again, but shouldn't deadlock).  */
+        __libc_lock_unlock(dirp->__lock);
+        return __hurd_fail(err);
+    }
+
+    /* Clean up the lock and free the structure.  */
+    __libc_lock_fini(dirp->__lock);
+    free(dirp);
+
+    return 0;
 }
-weak_alias (__closedir, closedir)
+weak_alias(__closedir, closedir)

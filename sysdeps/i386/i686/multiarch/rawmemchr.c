@@ -28,8 +28,8 @@
 # define SYMBOL_NAME rawmemchr
 # include "ifunc-sse2-bsf.h"
 
-libc_ifunc_redirected (__redirect_rawmemchr, __rawmemchr,
-		       IFUNC_SELECTOR ());
+libc_ifunc_redirected(__redirect_rawmemchr, __rawmemchr,
+                      IFUNC_SELECTOR());
 
-weak_alias (__rawmemchr, rawmemchr)
+weak_alias(__rawmemchr, rawmemchr)
 #endif

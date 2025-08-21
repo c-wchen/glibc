@@ -22,57 +22,52 @@
 #include <shlib-compat.h>
 #include <string.h>
 
-int
-__pthread_setspecific (pthread_key_t key, const void *value)
+int __pthread_setspecific(pthread_key_t key, const void *value)
 {
-  struct __pthread *self = _pthread_self ();
+    struct __pthread *self = _pthread_self();
 
-  if (key < 0 || key >= __pthread_key_count)
-    return EINVAL;
-
-  if (self->thread_specifics == NULL)
-    {
-      if (key < PTHREAD_STATIC_KEYS)
-	{
-	  self->static_thread_specifics[key] = (void *) value;
-	  return 0;
-	}
+    if (key < 0 || key >= __pthread_key_count) {
+        return EINVAL;
     }
 
-  if (key >= self->thread_specifics_size)
-    {
-      /* Amortize reallocation cost.  */
-      int newsize = 2 * key + 1;
-      void **new;
-
-      if (self->thread_specifics == NULL)
-	{
-	  self->thread_specifics_size = PTHREAD_STATIC_KEYS;
-	  new = malloc (newsize * sizeof (new[0]));
-	  if (new != NULL)
-	    memcpy (new, self->static_thread_specifics,
-		    PTHREAD_STATIC_KEYS * sizeof (new[0]));
-	}
-      else
-	{
-	  new = realloc (self->thread_specifics,
-			 newsize * sizeof (new[0]));
-	}
-      if (new == NULL)
-	return ENOMEM;
-
-      memset (&new[self->thread_specifics_size], 0,
-	      (newsize - self->thread_specifics_size) * sizeof (new[0]));
-      self->thread_specifics = new;
-      self->thread_specifics_size = newsize;
+    if (self->thread_specifics == NULL) {
+        if (key < PTHREAD_STATIC_KEYS) {
+            self->static_thread_specifics[key] = (void *) value;
+            return 0;
+        }
     }
 
-  self->thread_specifics[key] = (void *) value;
-  return 0;
+    if (key >= self->thread_specifics_size) {
+        /* Amortize reallocation cost.  */
+        int newsize = 2 * key + 1;
+        void **new;
+
+        if (self->thread_specifics == NULL) {
+            self->thread_specifics_size = PTHREAD_STATIC_KEYS;
+            new = malloc(newsize * sizeof(new[0]));
+            if (new != NULL)
+                memcpy(new, self->static_thread_specifics,
+                       PTHREAD_STATIC_KEYS * sizeof(new[0]));
+        } else {
+            new = realloc(self->thread_specifics,
+                          newsize * sizeof(new[0]));
+        }
+        if (new == NULL) {
+            return ENOMEM;
+        }
+
+        memset(&new[self->thread_specifics_size], 0,
+               (newsize - self->thread_specifics_size) * sizeof(new[0]));
+        self->thread_specifics = new;
+        self->thread_specifics_size = newsize;
+    }
+
+    self->thread_specifics[key] = (void *) value;
+    return 0;
 }
-libc_hidden_def (__pthread_setspecific)
-versioned_symbol (libc, __pthread_setspecific, pthread_setspecific, GLIBC_2_42);
+libc_hidden_def(__pthread_setspecific)
+versioned_symbol(libc, __pthread_setspecific, pthread_setspecific, GLIBC_2_42);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_42)
-compat_symbol (libpthread, __pthread_setspecific, pthread_setspecific, GLIBC_2_12);
+compat_symbol(libpthread, __pthread_setspecific, pthread_setspecific, GLIBC_2_12);
 #endif

@@ -7,4 +7,4 @@
 #include "tsp_common.c"
 #include "dat_iswprint.c"
 
-TST_FUNC_ISW (PRINT, print);
+TST_FUNC_ISW(PRINT, print);

@@ -21,15 +21,14 @@
 
 #ifndef __OFF_T_MATCHES_OFF64_T
 /* Truncate PATH to LENGTH bytes.  */
-int
-__truncate (const char *path, off_t length)
+int __truncate(const char *path, off_t length)
 {
 # ifndef __NR_truncate
-  return INLINE_SYSCALL_CALL (truncate64, path,
-			      __ALIGNMENT_ARG SYSCALL_LL (length));
+    return INLINE_SYSCALL_CALL(truncate64, path,
+                               __ALIGNMENT_ARG SYSCALL_LL(length));
 # else
-  return INLINE_SYSCALL_CALL (truncate, path, length);
+    return INLINE_SYSCALL_CALL(truncate, path, length);
 # endif
 }
-weak_alias (__truncate, truncate)
+weak_alias(__truncate, truncate)
 #endif

@@ -19,33 +19,30 @@
 #include <rpcsvc/nis.h>
 #include <shlib-compat.h>
 
-nis_error
-nis_verifygroup (const_nis_name group)
+nis_error nis_verifygroup(const_nis_name group)
 {
-  if (group != NULL && group[0] != '\0')
-    {
-      size_t grouplen = strlen (group);
-      char buf[grouplen + 50];
-      char leafbuf[grouplen + 2];
-      char domainbuf[grouplen + 2];
-      nis_result *res;
-      nis_error status;
-      char *cp, *cp2;
+    if (group != NULL && group[0] != '\0') {
+        size_t grouplen = strlen(group);
+        char buf[grouplen + 50];
+        char leafbuf[grouplen + 2];
+        char domainbuf[grouplen + 2];
+        nis_result *res;
+        nis_error status;
+        char *cp, *cp2;
 
-      cp = stpcpy (buf, nis_leaf_of_r (group, leafbuf, sizeof (leafbuf) - 1));
-      cp = stpcpy (cp, ".groups_dir");
-      cp2 = nis_domain_of_r (group, domainbuf, sizeof (domainbuf) - 1);
-      if (cp2 != NULL && cp2[0] != '\0')
-	{
-	  *cp++ = '.';
-	  stpcpy (cp, cp2);
-	}
-      res = nis_lookup (buf, 0);
-      status = NIS_RES_STATUS (res);
-      nis_freeresult (res);
-      return status;
+        cp = stpcpy(buf, nis_leaf_of_r(group, leafbuf, sizeof(leafbuf) - 1));
+        cp = stpcpy(cp, ".groups_dir");
+        cp2 = nis_domain_of_r(group, domainbuf, sizeof(domainbuf) - 1);
+        if (cp2 != NULL && cp2[0] != '\0') {
+            *cp++ = '.';
+            stpcpy(cp, cp2);
+        }
+        res = nis_lookup(buf, 0);
+        status = NIS_RES_STATUS(res);
+        nis_freeresult(res);
+        return status;
+    } else {
+        return NIS_FAIL;
     }
-  else
-    return NIS_FAIL;
 }
-libnsl_hidden_nolink_def (nis_verifygroup, GLIBC_2_1)
+libnsl_hidden_nolink_def(nis_verifygroup, GLIBC_2_1)

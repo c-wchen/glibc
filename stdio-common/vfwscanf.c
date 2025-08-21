@@ -23,9 +23,8 @@
 
 #include <libioP.h>
 
-int
-__vfwscanf (FILE *s, const wchar_t *format, va_list argptr)
+int __vfwscanf(FILE *s, const wchar_t *format, va_list argptr)
 {
-  return __vfwscanf_internal (s, format, argptr, 0);
+    return __vfwscanf_internal(s, format, argptr, 0);
 }
-ldbl_weak_alias (__vfwscanf, vfwscanf)
+ldbl_weak_alias(__vfwscanf, vfwscanf)

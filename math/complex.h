@@ -16,11 +16,11 @@
    <https://www.gnu.org/licenses/>.  */
 
 /*
- *	ISO C99:  7.3 Complex arithmetic	<complex.h>
+ *  ISO C99:  7.3 Complex arithmetic    <complex.h>
  */
 
 #ifndef _COMPLEX_H
-#define _COMPLEX_H	1
+#define _COMPLEX_H  1
 
 #define __GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION
 #include <bits/libc-header-start.h>
@@ -40,12 +40,12 @@ __BEGIN_DECLS
 # define _Complex __complex__
 #endif
 
-#define complex		_Complex
+#define complex     _Complex
 
 /* Narrowest imaginary unit.  This depends on the floating-point
    evaluation method.
    XXX This probably has to go into a gcc related file.  */
-#define _Complex_I	(__extension__ 1.0iF)
+#define _Complex_I  (__extension__ 1.0iF)
 
 /* Another more descriptive name is `I'.
    XXX Once we have the imaginary support switch this to _Imaginary_I.  */
@@ -85,7 +85,7 @@ __BEGIN_DECLS
 #endif
 
 #if __HAVE_FLOAT128X && __GLIBC_USE (IEC_60559_TYPES_EXT)
-# define CMPLXF128X(x, y)					\
+# define CMPLXF128X(x, y)                   \
   __builtin_complex ((_Float128x) (x), (_Float128x) (y))
 #endif
 
@@ -94,7 +94,7 @@ __BEGIN_DECLS
    so we can easily declare each function as both `name' and `__name',
    and can declare the float versions `namef' and `__namef'.  */
 
-#define __MATHCALL(function, args)	\
+#define __MATHCALL(function, args)  \
   __MATHDECL (_Mdouble_complex_,function, args)
 #define __MATHDECL_IMPL(type, function, args) \
   __MATHDECL_1(type, function, args); \
@@ -106,22 +106,22 @@ __BEGIN_DECLS
 #define __MATHDECL_1(type, function, args) \
   __MATHDECL_1_IMPL(type, function, args)
 
-#define _Mdouble_ 		double
-#define __MATH_PRECNAME(name)	name
+#define _Mdouble_       double
+#define __MATH_PRECNAME(name)   name
 #include <bits/cmathcalls.h>
-#undef	_Mdouble_
-#undef	__MATH_PRECNAME
+#undef  _Mdouble_
+#undef  __MATH_PRECNAME
 
 /* Now the float versions.  */
-#define _Mdouble_ 		float
-#define __MATH_PRECNAME(name)	name##f
+#define _Mdouble_       float
+#define __MATH_PRECNAME(name)   name##f
 #include <bits/cmathcalls.h>
-#undef	_Mdouble_
-#undef	__MATH_PRECNAME
+#undef  _Mdouble_
+#undef  __MATH_PRECNAME
 
 /* And the long double versions.  It is non-critical to define them
    here unconditionally since `long double' is required in ISO C99.  */
-#if !(defined __NO_LONG_DOUBLE_MATH && defined _LIBC)	\
+#if !(defined __NO_LONG_DOUBLE_MATH && defined _LIBC)   \
     || defined __LDBL_COMPAT
 # ifdef __LDBL_COMPAT
 #  undef __MATHDECL_1
@@ -139,8 +139,8 @@ __BEGIN_DECLS
   __MATHDECL_1(type, __CONCAT(__,function), __REDIR_TO(function), args)
 # endif
 
-# define _Mdouble_ 		long double
-# define __MATH_PRECNAME(name)	name##l
+# define _Mdouble_      long double
+# define __MATH_PRECNAME(name)  name##l
 # include <bits/cmathcalls.h>
 # if defined __LDBL_COMPAT \
      || __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
@@ -153,15 +153,15 @@ __BEGIN_DECLS
   __MATHDECL_1_IMPL(type, function, args)
 # endif
 #endif
-#undef	_Mdouble_
-#undef	__MATH_PRECNAME
+#undef  _Mdouble_
+#undef  __MATH_PRECNAME
 
 #if (__HAVE_DISTINCT_FLOAT16 || (__HAVE_FLOAT16 && !defined _LIBC)) \
      && __GLIBC_USE (IEC_60559_TYPES_EXT)
 # undef _Mdouble_complex_
-# define _Mdouble_complex_	__CFLOAT16
-# define _Mdouble_		_Float16
-# define __MATH_PRECNAME(name)	name##f16
+# define _Mdouble_complex_  __CFLOAT16
+# define _Mdouble_      _Float16
+# define __MATH_PRECNAME(name)  name##f16
 # include <bits/cmathcalls.h>
 # undef _Mdouble_
 # undef __MATH_PRECNAME
@@ -171,9 +171,9 @@ __BEGIN_DECLS
 #if (__HAVE_DISTINCT_FLOAT32 || (__HAVE_FLOAT32 && !defined _LIBC)) \
      && __GLIBC_USE (IEC_60559_TYPES_EXT)
 # undef _Mdouble_complex_
-# define _Mdouble_complex_	__CFLOAT32
-# define _Mdouble_		_Float32
-# define __MATH_PRECNAME(name)	name##f32
+# define _Mdouble_complex_  __CFLOAT32
+# define _Mdouble_      _Float32
+# define __MATH_PRECNAME(name)  name##f32
 # include <bits/cmathcalls.h>
 # undef _Mdouble_
 # undef __MATH_PRECNAME
@@ -183,9 +183,9 @@ __BEGIN_DECLS
 #if (__HAVE_DISTINCT_FLOAT64 || (__HAVE_FLOAT64 && !defined _LIBC)) \
      && __GLIBC_USE (IEC_60559_TYPES_EXT)
 # undef _Mdouble_complex_
-# define _Mdouble_complex_	__CFLOAT64
-# define _Mdouble_		_Float64
-# define __MATH_PRECNAME(name)	name##f64
+# define _Mdouble_complex_  __CFLOAT64
+# define _Mdouble_      _Float64
+# define __MATH_PRECNAME(name)  name##f64
 # include <bits/cmathcalls.h>
 # undef _Mdouble_
 # undef __MATH_PRECNAME
@@ -195,9 +195,9 @@ __BEGIN_DECLS
 #if (__HAVE_DISTINCT_FLOAT128 || (__HAVE_FLOAT128 && !defined _LIBC)) \
      && __GLIBC_USE (IEC_60559_TYPES_EXT)
 # undef _Mdouble_complex_
-# define _Mdouble_complex_	__CFLOAT128
-# define _Mdouble_		_Float128
-# define __MATH_PRECNAME(name)	name##f128
+# define _Mdouble_complex_  __CFLOAT128
+# define _Mdouble_      _Float128
+# define __MATH_PRECNAME(name)  name##f128
 # include <bits/cmathcalls.h>
 # undef _Mdouble_
 # undef __MATH_PRECNAME
@@ -207,9 +207,9 @@ __BEGIN_DECLS
 #if (__HAVE_DISTINCT_FLOAT32X || (__HAVE_FLOAT32X && !defined _LIBC)) \
      && __GLIBC_USE (IEC_60559_TYPES_EXT)
 # undef _Mdouble_complex_
-# define _Mdouble_complex_	__CFLOAT32X
-# define _Mdouble_		_Float32x
-# define __MATH_PRECNAME(name)	name##f32x
+# define _Mdouble_complex_  __CFLOAT32X
+# define _Mdouble_      _Float32x
+# define __MATH_PRECNAME(name)  name##f32x
 # include <bits/cmathcalls.h>
 # undef _Mdouble_
 # undef __MATH_PRECNAME
@@ -219,9 +219,9 @@ __BEGIN_DECLS
 #if (__HAVE_DISTINCT_FLOAT64X || (__HAVE_FLOAT64X && !defined _LIBC)) \
      && __GLIBC_USE (IEC_60559_TYPES_EXT)
 # undef _Mdouble_complex_
-# define _Mdouble_complex_	__CFLOAT64X
-# define _Mdouble_		_Float64x
-# define __MATH_PRECNAME(name)	name##f64x
+# define _Mdouble_complex_  __CFLOAT64X
+# define _Mdouble_      _Float64x
+# define __MATH_PRECNAME(name)  name##f64x
 # include <bits/cmathcalls.h>
 # undef _Mdouble_
 # undef __MATH_PRECNAME
@@ -231,19 +231,19 @@ __BEGIN_DECLS
 #if (__HAVE_DISTINCT_FLOAT128X || (__HAVE_FLOAT128X && !defined _LIBC)) \
      && __GLIBC_USE (IEC_60559_TYPES_EXT)
 # undef _Mdouble_complex_
-# define _Mdouble_complex_	__CFLOAT128X
-# define _Mdouble_		_Float128x
-# define __MATH_PRECNAME(name)	name##f128x
+# define _Mdouble_complex_  __CFLOAT128X
+# define _Mdouble_      _Float128x
+# define __MATH_PRECNAME(name)  name##f128x
 # include <bits/cmathcalls.h>
 # undef _Mdouble_
 # undef __MATH_PRECNAME
 # undef _Mdouble_complex_
 #endif
 
-#undef	__MATHDECL_1_IMPL
-#undef	__MATHDECL_1
-#undef	__MATHDECL
-#undef	__MATHCALL
+#undef  __MATHDECL_1_IMPL
+#undef  __MATHDECL_1
+#undef  __MATHDECL
+#undef  __MATHCALL
 
 __END_DECLS
 

@@ -20,11 +20,10 @@
 
 
 /* Set the disposition for SIG.  */
-__sighandler_t
-sigset (int sig, __sighandler_t disp)
+__sighandler_t sigset(int sig, __sighandler_t disp)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (sigset)
+stub_warning(sigset)

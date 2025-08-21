@@ -19,12 +19,11 @@
 #ifndef _SYS_THREAD_POINTER_H
 #define _SYS_THREAD_POINTER_H
 
-register void *__thread_self asm ("$tp");
+register void *__thread_self asm("$tp");
 
-static inline void *
-__thread_pointer (void)
+static inline void *__thread_pointer(void)
 {
-  return __thread_self;
+    return __thread_self;
 }
 
 #endif /* _SYS_THREAD_POINTER_H */

@@ -22,21 +22,22 @@
 #include <hurd.h>
 
 /* Truncate FILE_NAME to LENGTH bytes.  */
-int
-__truncate64 (const char *file_name, off64_t length)
+int __truncate64(const char *file_name, off64_t length)
 {
-  error_t err;
-  file_t file = __file_name_lookup (file_name, O_WRITE, 0);
+    error_t err;
+    file_t file = __file_name_lookup(file_name, O_WRITE, 0);
 
-  if (file == MACH_PORT_NULL)
-    return -1;
+    if (file == MACH_PORT_NULL) {
+        return -1;
+    }
 
-  err = __file_set_size (file, length);
-  __mach_port_deallocate (__mach_task_self (), file);
+    err = __file_set_size(file, length);
+    __mach_port_deallocate(__mach_task_self(), file);
 
-  if (err)
-    return __hurd_fail (err);
-  return 0;
+    if (err) {
+        return __hurd_fail(err);
+    }
+    return 0;
 }
 
-weak_alias (__truncate64, truncate64)
+weak_alias(__truncate64, truncate64)

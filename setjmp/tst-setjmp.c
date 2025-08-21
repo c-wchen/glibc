@@ -22,98 +22,93 @@
 static jmp_buf env;
 static int last_value = -1, lose = 0;
 
-static __attribute__ ((__noreturn__)) void
-jump (int val)
+static __attribute__((__noreturn__)) void
+jump(int val)
 {
-  longjmp (env, val);
+    longjmp(env, val);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int value;
+    int value;
 
-  value = setjmp (env);
-  if (value != last_value + 1)
-    {
-      fputs("Shouldn't have ", stdout);
-      lose = 1;
+    value = setjmp(env);
+    if (value != last_value + 1) {
+        fputs("Shouldn't have ", stdout);
+        lose = 1;
     }
-  last_value = value;
-  switch (value)
-    {
-    case 0:
-      puts("Saved environment.");
-      jump (0);
-    default:
-      printf ("Jumped to %d.\n", value);
-      if (value < 10)
-	jump (value + 1);
+    last_value = value;
+    switch (value) {
+        case 0:
+            puts("Saved environment.");
+            jump(0);
+        default:
+            printf("Jumped to %d.\n", value);
+            if (value < 10) {
+                jump(value + 1);
+            }
     }
 
-  if (!lose && value == 10)
-    {
-      /* Do a second test, this time without `setjmp' being a macro.
-         This is not required by ISO C but we have this for compatibility.  */
+    if (!lose && value == 10) {
+        /* Do a second test, this time without `setjmp' being a macro.
+           This is not required by ISO C but we have this for compatibility.  */
 #undef setjmp
-      extern int setjmp (jmp_buf);
+        extern int setjmp(jmp_buf);
 
-      last_value = -1;
-      lose = 0;
+        last_value = -1;
+        lose = 0;
 
-      value = setjmp (env);
-      if (value != last_value + 1)
-	{
-	  fputs("Shouldn't have ", stdout);
-	  lose = 1;
-	}
-      last_value = value;
-      switch (value)
-	{
-	case 0:
-	  puts("Saved environment.");
-	  jump (0);
-	default:
-	  printf ("Jumped to %d.\n", value);
-	  if (value < 10)
-	    jump (value + 1);
-	}
+        value = setjmp(env);
+        if (value != last_value + 1) {
+            fputs("Shouldn't have ", stdout);
+            lose = 1;
+        }
+        last_value = value;
+        switch (value) {
+            case 0:
+                puts("Saved environment.");
+                jump(0);
+            default:
+                printf("Jumped to %d.\n", value);
+                if (value < 10) {
+                    jump(value + 1);
+                }
+        }
     }
 
-  if (!lose && value == 10)
-    {
-      /* And again for the `_setjmp' function.  */
+    if (!lose && value == 10) {
+        /* And again for the `_setjmp' function.  */
 #ifndef _setjmp
-      extern int _setjmp (jmp_buf);
+        extern int _setjmp(jmp_buf);
 #endif
-      last_value = -1;
-      lose = 0;
+        last_value = -1;
+        lose = 0;
 
-      value = _setjmp (env);
-      if (value != last_value + 1)
-	{
-	  fputs("Shouldn't have ", stdout);
-	  lose = 1;
-	}
-      last_value = value;
-      switch (value)
-	{
-	case 0:
-	  puts("Saved environment.");
-	  jump (0);
-	default:
-	  printf ("Jumped to %d.\n", value);
-	  if (value < 10)
-	    jump (value + 1);
-	}
+        value = _setjmp(env);
+        if (value != last_value + 1) {
+            fputs("Shouldn't have ", stdout);
+            lose = 1;
+        }
+        last_value = value;
+        switch (value) {
+            case 0:
+                puts("Saved environment.");
+                jump(0);
+            default:
+                printf("Jumped to %d.\n", value);
+                if (value < 10) {
+                    jump(value + 1);
+                }
+        }
     }
 
-  if (lose || value != 10)
-    puts ("Test FAILED!");
-  else
-    puts ("Test succeeded!");
+    if (lose || value != 10) {
+        puts("Test FAILED!");
+    } else {
+        puts("Test succeeded!");
+    }
 
-  return lose ? EXIT_FAILURE : EXIT_SUCCESS;
+    return lose ? EXIT_FAILURE : EXIT_SUCCESS;
 }
 
 #define TEST_FUNCTION do_test ()

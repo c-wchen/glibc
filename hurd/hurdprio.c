@@ -21,68 +21,72 @@
 #include <sys/mman.h>
 #include <unistd.h>
 
-error_t
-_hurd_priority_which_map (enum __priority_which which, int who,
-			  error_t (*function) (pid_t, struct procinfo *),
-			  int pi_flags)
+error_t _hurd_priority_which_map(enum __priority_which which, int who,
+                                 error_t (*function)(pid_t, struct procinfo *),
+                                 int pi_flags)
 {
-  mach_msg_type_number_t npids = 64, i;
-  pid_t pidbuf[npids], *pids = pidbuf;
-  error_t err;
-  struct procinfo *pip;
-  int pibuf[sizeof *pip + 5 * sizeof (pip->threadinfos[0])], *pi = pibuf;
-  mach_msg_type_number_t pisize = sizeof (pibuf) / sizeof (int);
+    mach_msg_type_number_t npids = 64, i;
+    pid_t pidbuf[npids], *pids = pidbuf;
+    error_t err;
+    struct procinfo *pip;
+    int pibuf[sizeof * pip + 5 * sizeof(pip->threadinfos[0])], *pi = pibuf;
+    mach_msg_type_number_t pisize = sizeof(pibuf) / sizeof(int);
 
-  switch (which)
-    {
-    default:
-      return EINVAL;
+    switch (which) {
+        default:
+            return EINVAL;
 
-    case PRIO_PROCESS:
-      err = (*function) (who ?: getpid (), 0); /* XXX special-case self? */
-      break;
+        case PRIO_PROCESS:
+            err = (*function)(who ? : getpid(), 0);  /* XXX special-case self? */
+            break;
 
-    case PRIO_PGRP:
-      err = __USEPORT (PROC, __proc_getpgrppids (port, who, &pids, &npids));
-      for (i = 0; !err && i < npids; ++i)
-	err = (*function) (pids[i], 0);
-      break;
+        case PRIO_PGRP:
+            err = __USEPORT(PROC, __proc_getpgrppids(port, who, &pids, &npids));
+            for (i = 0; !err && i < npids; ++i) {
+                err = (*function)(pids[i], 0);
+            }
+            break;
 
-    case PRIO_USER:
-      if (who == 0)
-	who = __geteuid ();
-      err = __USEPORT (PROC, __proc_getallpids (port, &pids, &npids));
-      for (i = 0; !err && i < npids; ++i)
-	{
-	  /* Get procinfo to check the owner.  */
-	  int *oldpi = pi;
-	  mach_msg_type_number_t oldpisize = pisize;
-	  char *tw = 0;
-	  mach_msg_type_number_t twsz = 0;
-	  err = __USEPORT (PROC, __proc_getprocinfo (port, pids[i],
-						     &pi_flags,
-						     &pi, &pisize,
-						     &tw, &twsz));
-	  if (!err)
-	    {
-	      if (twsz)		/* Gratuitous.  */
-		__munmap (tw, twsz);
-	      if (pi != oldpi && oldpi != pibuf)
-		/* Old buffer from last call was not reused; free it.  */
-		__munmap (oldpi, oldpisize * sizeof pi[0]);
+        case PRIO_USER:
+            if (who == 0) {
+                who = __geteuid();
+            }
+            err = __USEPORT(PROC, __proc_getallpids(port, &pids, &npids));
+            for (i = 0; !err && i < npids; ++i) {
+                /* Get procinfo to check the owner.  */
+                int *oldpi = pi;
+                mach_msg_type_number_t oldpisize = pisize;
+                char *tw = 0;
+                mach_msg_type_number_t twsz = 0;
+                err = __USEPORT(PROC, __proc_getprocinfo(port, pids[i],
+                                &pi_flags,
+                                &pi, &pisize,
+                                &tw, &twsz));
+                if (!err) {
+                    if (twsz) {   /* Gratuitous.  */
+                        __munmap(tw, twsz);
+                    }
+                    if (pi != oldpi && oldpi != pibuf)
+                        /* Old buffer from last call was not reused; free it.  */
+                    {
+                        __munmap(oldpi, oldpisize * sizeof pi[0]);
+                    }
 
-	      pip = (struct procinfo *) pi;
-	      if (pip->owner == (uid_t) who)
-		err = (*function) (pids[i], pip);
-	    }
-	}
-      break;
+                    pip = (struct procinfo *) pi;
+                    if (pip->owner == (uid_t) who) {
+                        err = (*function)(pids[i], pip);
+                    }
+                }
+            }
+            break;
     }
 
-  if (pids != pidbuf)
-    __munmap (pids, npids * sizeof pids[0]);
-  if (pi != pibuf)
-    __munmap (pi, pisize * sizeof pi[0]);
+    if (pids != pidbuf) {
+        __munmap(pids, npids * sizeof pids[0]);
+    }
+    if (pi != pibuf) {
+        __munmap(pi, pisize * sizeof pi[0]);
+    }
 
-  return err;
+    return err;
 }

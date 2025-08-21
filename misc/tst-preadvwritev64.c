@@ -19,39 +19,35 @@
 #define _FILE_OFFSET_BITS 64
 #include "tst-preadvwritev-common.c"
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int ret;
+    int ret;
 
-  ret = do_test_with_offset (0);
+    ret = do_test_with_offset(0);
 
-  if (!temp_fd_supports_holes)
-    {
-      puts ("warning: partial test due to lack of support for holes");
-      return ret;
+    if (!temp_fd_supports_holes) {
+        puts("warning: partial test due to lack of support for holes");
+        return ret;
     }
 
-  /* Create a sparse file larger than 4GB to check if offset is handled
-     correctly in p{write,read}v64. */
-  off_t base_offset = UINT32_MAX + 2048LL;
-  ret += do_test_with_offset (base_offset);
+    /* Create a sparse file larger than 4GB to check if offset is handled
+       correctly in p{write,read}v64. */
+    off_t base_offset = UINT32_MAX + 2048LL;
+    ret += do_test_with_offset(base_offset);
 
-  struct stat st;
-  if (fstat (temp_fd, &st) == -1)
-    {
-      printf ("error: fstat on temporary file failed: %m");
-      return 1;
+    struct stat st;
+    if (fstat(temp_fd, &st) == -1) {
+        printf("error: fstat on temporary file failed: %m");
+        return 1;
     }
 
-  /* The total size should base_offset plus 2 * 96.  */
-  off_t expected_value = base_offset + (2 * (96LL));
-  if (st.st_size != expected_value)
-    {
-      printf ("error: file size different than expected (%jd != %jd)\n",
-	      (intmax_t) expected_value, (intmax_t) st.st_size);
-      return 1;
+    /* The total size should base_offset plus 2 * 96.  */
+    off_t expected_value = base_offset + (2 * (96LL));
+    if (st.st_size != expected_value) {
+        printf("error: file size different than expected (%jd != %jd)\n",
+               (intmax_t) expected_value, (intmax_t) st.st_size);
+        return 1;
     }
 
-  return ret;
+    return ret;
 }

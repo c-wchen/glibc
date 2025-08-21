@@ -32,44 +32,44 @@
 ** Each file begins with. . .
 */
 
-#define	TZ_MAGIC	"TZif"
+#define TZ_MAGIC    "TZif"
 
 struct tzhead {
-	char	tzh_magic[4];		/* TZ_MAGIC */
-	char	tzh_version[1];		/* '\0' or '2'-'4' as of 2021 */
-	char	tzh_reserved[15];	/* reserved; must be zero */
-	char	tzh_ttisutcnt[4];	/* coded number of trans. time flags */
-	char	tzh_ttisstdcnt[4];	/* coded number of trans. time flags */
-	char	tzh_leapcnt[4];		/* coded number of leap seconds */
-	char	tzh_timecnt[4];		/* coded number of transition times */
-	char	tzh_typecnt[4];		/* coded number of local time types */
-	char	tzh_charcnt[4];		/* coded number of abbr. chars */
+    char    tzh_magic[4];       /* TZ_MAGIC */
+    char    tzh_version[1];     /* '\0' or '2'-'4' as of 2021 */
+    char    tzh_reserved[15];   /* reserved; must be zero */
+    char    tzh_ttisutcnt[4];   /* coded number of trans. time flags */
+    char    tzh_ttisstdcnt[4];  /* coded number of trans. time flags */
+    char    tzh_leapcnt[4];     /* coded number of leap seconds */
+    char    tzh_timecnt[4];     /* coded number of transition times */
+    char    tzh_typecnt[4];     /* coded number of local time types */
+    char    tzh_charcnt[4];     /* coded number of abbr. chars */
 };
 
 /*
 ** . . .followed by. . .
 **
-**	tzh_timecnt (char [4])s		coded transition times a la time(2)
-**	tzh_timecnt (unsigned char)s	types of local time starting at above
-**	tzh_typecnt repetitions of
-**		one (char [4])		coded UT offset in seconds
-**		one (unsigned char)	used to set tm_isdst
-**		one (unsigned char)	that's an abbreviation list index
-**	tzh_charcnt (char)s		'\0'-terminated zone abbreviations
-**	tzh_leapcnt repetitions of
-**		one (char [4])		coded leap second transition times
-**		one (char [4])		total correction after above
-**	tzh_ttisstdcnt (char)s		indexed by type; if 1, transition
-**					time is standard time, if 0,
-**					transition time is local (wall clock)
-**					time; if absent, transition times are
-**					assumed to be local time
-**	tzh_ttisutcnt (char)s		indexed by type; if 1, transition
-**					time is UT, if 0, transition time is
-**					local time; if absent, transition
-**					times are assumed to be local time.
-**					When this is 1, the corresponding
-**					std/wall indicator must also be 1.
+**  tzh_timecnt (char [4])s     coded transition times a la time(2)
+**  tzh_timecnt (unsigned char)s    types of local time starting at above
+**  tzh_typecnt repetitions of
+**      one (char [4])      coded UT offset in seconds
+**      one (unsigned char) used to set tm_isdst
+**      one (unsigned char) that's an abbreviation list index
+**  tzh_charcnt (char)s     '\0'-terminated zone abbreviations
+**  tzh_leapcnt repetitions of
+**      one (char [4])      coded leap second transition times
+**      one (char [4])      total correction after above
+**  tzh_ttisstdcnt (char)s      indexed by type; if 1, transition
+**                  time is standard time, if 0,
+**                  transition time is local (wall clock)
+**                  time; if absent, transition times are
+**                  assumed to be local time
+**  tzh_ttisutcnt (char)s       indexed by type; if 1, transition
+**                  time is UT, if 0, transition time is
+**                  local time; if absent, transition
+**                  times are assumed to be local time.
+**                  When this is 1, the corresponding
+**                  std/wall indicator must also be 1.
 */
 
 /*
@@ -108,14 +108,14 @@ struct tzhead {
 
 #ifndef TZ_MAX_CHARS
 /* This must be at least 40 for America/Anchorage.  */
-# define TZ_MAX_CHARS 50	/* Maximum number of abbreviation characters */
-				/* (limited by what unsigned chars can hold) */
+# define TZ_MAX_CHARS 50    /* Maximum number of abbreviation characters */
+/* (limited by what unsigned chars can hold) */
 #endif /* !defined TZ_MAX_CHARS */
 
 #ifndef TZ_MAX_LEAPS
 /* This must be at least 27 for leap seconds from 1972 through mid-2023.
    There's a plan to discontinue leap seconds by 2035.  */
-# define TZ_MAX_LEAPS 50	/* Maximum number of leap second corrections */
+# define TZ_MAX_LEAPS 50    /* Maximum number of leap second corrections */
 #endif /* !defined TZ_MAX_LEAPS */
 
 #endif /* !defined TZFILE_H */

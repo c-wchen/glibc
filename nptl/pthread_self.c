@@ -18,10 +18,9 @@
 #include "pthreadP.h"
 #include <tls.h>
 
-pthread_t
-__pthread_self (void)
+pthread_t __pthread_self(void)
 {
-  return (pthread_t) THREAD_SELF;
+    return (pthread_t) THREAD_SELF;
 }
-libc_hidden_def (__pthread_self)
-weak_alias (__pthread_self, pthread_self)
+libc_hidden_def(__pthread_self)
+weak_alias(__pthread_self, pthread_self)

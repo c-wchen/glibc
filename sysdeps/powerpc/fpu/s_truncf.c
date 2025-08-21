@@ -21,15 +21,14 @@
 #include <libm-alias-float.h>
 #include <round_to_integer.h>
 
-float
-__truncf (float x)
+float __truncf(float x)
 {
 #ifdef _ARCH_PWR5X
-  return __builtin_truncf (x);
+    return __builtin_truncf(x);
 #else
-  return round_to_integer_float (TRUNC, x);
+    return round_to_integer_float(TRUNC, x);
 #endif
 }
 #ifndef __truncf
-libm_alias_float (__trunc, trunc)
+libm_alias_float(__trunc, trunc)
 #endif

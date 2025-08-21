@@ -25,17 +25,16 @@
 /* Check that mmapped legacy code won't trigger segfault with
    -fcf-protection and GLIBC_TUNABLES=glibc.cpu.hwcaps=-IBT,-SHSTK.  */
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  void (*funcp) (void);
-  funcp = xmmap (NULL, 0x1000, PROT_EXEC | PROT_READ | PROT_WRITE,
-		 MAP_ANONYMOUS | MAP_PRIVATE, -1);
-  printf ("mmap = %p\n", funcp);
-  /* Write RET instruction.  */
-  *(char *) funcp = 0xc3;
-  funcp ();
-  return EXIT_SUCCESS;
+    void (*funcp)(void);
+    funcp = xmmap(NULL, 0x1000, PROT_EXEC | PROT_READ | PROT_WRITE,
+                  MAP_ANONYMOUS | MAP_PRIVATE, -1);
+    printf("mmap = %p\n", funcp);
+    /* Write RET instruction.  */
+    *(char *) funcp = 0xc3;
+    funcp();
+    return EXIT_SUCCESS;
 }
 
 #include <support/test-driver.c>

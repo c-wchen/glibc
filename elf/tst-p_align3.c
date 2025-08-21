@@ -18,10 +18,9 @@
 
 #include "tst-p_align.h"
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  return do_load_test ();
+    return do_load_test();
 }
 
 #include <support/test-driver.c>

@@ -23,20 +23,20 @@
 #include <netinet/in.h>
 #include <resolv/res_hconf.h>
 
-#define LOOKUP_TYPE	struct hostent
-#define FUNCTION_NAME	gethostbyname2
-#define DATABASE_NAME	hosts
-#define ADD_PARAMS	const char *name, int af
-#define ADD_VARIABLES	name, af
-#define NEED_H_ERRNO	1
-#define NEED__RES	1
+#define LOOKUP_TYPE struct hostent
+#define FUNCTION_NAME   gethostbyname2
+#define DATABASE_NAME   hosts
+#define ADD_PARAMS  const char *name, int af
+#define ADD_VARIABLES   name, af
+#define NEED_H_ERRNO    1
+#define NEED__RES   1
 #define POSTPROCESS \
-  if (status == NSS_STATUS_SUCCESS)					      \
+  if (status == NSS_STATUS_SUCCESS)                       \
     _res_hconf_reorder_addrs (resbuf);
 
-#define HANDLE_DIGITS_DOTS	1
-#define HAVE_LOOKUP_BUFFER	1
-#define HAVE_AF			1
+#define HANDLE_DIGITS_DOTS  1
+#define HAVE_LOOKUP_BUFFER  1
+#define HAVE_AF         1
 
 /* Special name for the lookup function.  */
 #define DB_LOOKUP_FCT __nss_hosts_lookup2

@@ -16,11 +16,10 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-extern int ref1 (void);
+extern int ref1(void);
 
-extern int ref2 (void);
-int
-ref2 (void)
+extern int ref2(void);
+int ref2(void)
 {
-  return ref1 ();
+    return ref1();
 }

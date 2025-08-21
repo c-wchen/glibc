@@ -27,16 +27,15 @@
 
 /* Read formatted input from STREAM according to the format string FORMAT.  */
 /* VARARGS2 */
-int
-__fwscanf (FILE *stream, const wchar_t *format, ...)
+int __fwscanf(FILE *stream, const wchar_t *format, ...)
 {
-  va_list arg;
-  int done;
+    va_list arg;
+    int done;
 
-  va_start (arg, format);
-  done = __vfwscanf (stream, format, arg);
-  va_end (arg);
+    va_start(arg, format);
+    done = __vfwscanf(stream, format, arg);
+    va_end(arg);
 
-  return done;
+    return done;
 }
-ldbl_strong_alias (__fwscanf, fwscanf)
+ldbl_strong_alias(__fwscanf, fwscanf)

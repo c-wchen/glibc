@@ -20,13 +20,12 @@
 
 /* Apply or remove an advisory lock, according to OPERATION,
    on the file FD refers to.  */
-int
-__flock (int fd, int operation)
+int __flock(int fd, int operation)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-weak_alias (__flock, flock)
+weak_alias(__flock, flock)
 
-stub_warning (flock)
+stub_warning(flock)

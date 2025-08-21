@@ -20,9 +20,9 @@
 #include <support/xunistd.h>
 #include <sys/stat.h>
 
-void
-xfchmod (int fd, mode_t mode)
+void xfchmod(int fd, mode_t mode)
 {
-  if (fchmod (fd, mode) != 0)
-    FAIL_EXIT1 ("fchmod (%d, 0%o): %m", fd, mode);
+    if (fchmod(fd, mode) != 0) {
+        FAIL_EXIT1("fchmod (%d, 0%o): %m", fd, mode);
+    }
 }

@@ -20,8 +20,8 @@
 #include "mathimpl.h"
 
 void
-M_DECL_FUNC (__sincos) (FLOAT x, FLOAT *sinx, FLOAT *cosx)
+M_DECL_FUNC(__sincos)(FLOAT x, FLOAT *sinx, FLOAT *cosx)
 {
-  __m81_u(M_SUF (__sincos)) (x, sinx, cosx);
+    __m81_u(M_SUF(__sincos))(x, sinx, cosx);
 }
-declare_mgen_alias (__sincos, sincos)
+declare_mgen_alias(__sincos, sincos)

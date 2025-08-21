@@ -24,7 +24,7 @@
 #  undef weak_alias
 #  if defined SHARED && IS_IN (libc)
 #   undef libc_hidden_builtin_def
-#   define libc_hidden_builtin_def(name)			\
+#   define libc_hidden_builtin_def(name)            \
      __hidden_ver1 (__strrchr_c, __GI_strrchr, __strrchr_c);
 #  endif
 # endif

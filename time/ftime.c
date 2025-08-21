@@ -19,15 +19,14 @@
 #include <sys/timeb.h>
 #include <time.h>
 
-int
-ftime (struct timeb *timebuf)
+int ftime(struct timeb *timebuf)
 {
-  struct timespec ts;
-  __clock_gettime (CLOCK_REALTIME, &ts);
+    struct timespec ts;
+    __clock_gettime(CLOCK_REALTIME, &ts);
 
-  timebuf->time = ts.tv_sec;
-  timebuf->millitm = ts.tv_nsec / 1000000;
-  timebuf->timezone = 0;
-  timebuf->dstflag = 0;
-  return 0;
+    timebuf->time = ts.tv_sec;
+    timebuf->millitm = ts.tv_nsec / 1000000;
+    timebuf->timezone = 0;
+    timebuf->dstflag = 0;
+    return 0;
 }

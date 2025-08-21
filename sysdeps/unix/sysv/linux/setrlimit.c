@@ -30,30 +30,31 @@
 #  define SHLIB_COMPAT(a, b, c) 0
 # endif
 
-int
-__setrlimit (enum __rlimit_resource resource, const struct rlimit *rlim)
+int __setrlimit(enum __rlimit_resource resource, const struct rlimit *rlim)
 {
-  struct rlimit64 rlim64;
+    struct rlimit64 rlim64;
 
-  if (rlim->rlim_cur == RLIM_INFINITY)
-    rlim64.rlim_cur = RLIM64_INFINITY;
-  else
-    rlim64.rlim_cur = rlim->rlim_cur;
-  if (rlim->rlim_max == RLIM_INFINITY)
-    rlim64.rlim_max = RLIM64_INFINITY;
-  else
-    rlim64.rlim_max = rlim->rlim_max;
+    if (rlim->rlim_cur == RLIM_INFINITY) {
+        rlim64.rlim_cur = RLIM64_INFINITY;
+    } else {
+        rlim64.rlim_cur = rlim->rlim_cur;
+    }
+    if (rlim->rlim_max == RLIM_INFINITY) {
+        rlim64.rlim_max = RLIM64_INFINITY;
+    } else {
+        rlim64.rlim_max = rlim->rlim_max;
+    }
 
-  return INLINE_SYSCALL_CALL (prlimit64, 0, resource, &rlim64, NULL);
+    return INLINE_SYSCALL_CALL(prlimit64, 0, resource, &rlim64, NULL);
 }
 
-libc_hidden_def (__setrlimit)
+libc_hidden_def(__setrlimit)
 # if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
-strong_alias (__setrlimit, __setrlimit_1)
-compat_symbol (libc, __setrlimit, setrlimit, GLIBC_2_0);
-versioned_symbol (libc, __setrlimit_1, setrlimit, GLIBC_2_2);
+strong_alias(__setrlimit, __setrlimit_1)
+compat_symbol(libc, __setrlimit, setrlimit, GLIBC_2_0);
+versioned_symbol(libc, __setrlimit_1, setrlimit, GLIBC_2_2);
 # else
-weak_alias (__setrlimit, setrlimit)
+weak_alias(__setrlimit, setrlimit)
 # endif
 
 #endif /* __RLIM_T_MATCHES_RLIM64_T  */

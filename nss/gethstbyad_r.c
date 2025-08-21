@@ -19,29 +19,29 @@
 #include <string.h>
 #include <resolv/res_hconf.h>
 
-#define LOOKUP_TYPE	struct hostent
-#define FUNCTION_NAME	gethostbyaddr
-#define DATABASE_NAME	hosts
-#define ADD_PARAMS	const void *addr, socklen_t len, int type
-#define ADD_VARIABLES	addr, len, type
-#define NEED_H_ERRNO	1
-#define NEED__RES	1
+#define LOOKUP_TYPE struct hostent
+#define FUNCTION_NAME   gethostbyaddr
+#define DATABASE_NAME   hosts
+#define ADD_PARAMS  const void *addr, socklen_t len, int type
+#define ADD_VARIABLES   addr, len, type
+#define NEED_H_ERRNO    1
+#define NEED__RES   1
 /* If the addr parameter is the IPv6 unspecified address no query must
    be performed.  */
 #define PREPROCESS \
-  if (len == sizeof (struct in6_addr)					      \
-      && __builtin_expect (memcmp (&__in6addr_any, addr,		      \
-				   sizeof (struct in6_addr)), 1) == 0)	      \
-    {									      \
-      *h_errnop = HOST_NOT_FOUND;					      \
-      *result = NULL;							      \
-      return ENOENT;							      \
+  if (len == sizeof (struct in6_addr)                         \
+      && __builtin_expect (memcmp (&__in6addr_any, addr,              \
+                   sizeof (struct in6_addr)), 1) == 0)        \
+    {                                         \
+      *h_errnop = HOST_NOT_FOUND;                         \
+      *result = NULL;                                 \
+      return ENOENT;                                  \
     }
 #define POSTPROCESS \
-  if (status == NSS_STATUS_SUCCESS)					      \
-    {									      \
-      _res_hconf_reorder_addrs (resbuf);				      \
-      _res_hconf_trim_domains (resbuf);					      \
+  if (status == NSS_STATUS_SUCCESS)                       \
+    {                                         \
+      _res_hconf_reorder_addrs (resbuf);                      \
+      _res_hconf_trim_domains (resbuf);                       \
     }
 
 /* Special name for the lookup function.  */

@@ -16,13 +16,12 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-static inline bool
-_dl_audit_check_version (unsigned int lav)
+static inline bool _dl_audit_check_version(unsigned int lav)
 {
-  /* Audit version 1 do not save x8 or NEON registers, which required
-     changing La_aarch64_regs and La_aarch64_retval layout (BZ#26643).  The
-     missing indirect result save/restore makes _dl_runtime_profile
-     potentially trigger undefined behavior if the function returns a large
-     struct (even when PLT trace is not requested).  */
-  return lav == LAV_CURRENT;
+    /* Audit version 1 do not save x8 or NEON registers, which required
+       changing La_aarch64_regs and La_aarch64_retval layout (BZ#26643).  The
+       missing indirect result save/restore makes _dl_runtime_profile
+       potentially trigger undefined behavior if the function returns a large
+       struct (even when PLT trace is not requested).  */
+    return lav == LAV_CURRENT;
 }

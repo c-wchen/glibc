@@ -17,8 +17,7 @@
 
 #include <stdio_ext.h>
 
-int
-__fwriting (FILE *fp)
+int __fwriting(FILE *fp)
 {
-  return fp->_flags & (_IO_NO_READS | _IO_CURRENTLY_PUTTING);
+    return fp->_flags & (_IO_NO_READS | _IO_CURRENTLY_PUTTING);
 }

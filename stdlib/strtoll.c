@@ -16,7 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define	QUAD	1
+#define QUAD    1
 
 #include <strtol.c>
 
@@ -25,11 +25,11 @@
 #  include <shlib-compat.h>
 
 #  if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
-compat_symbol (libc, __strtoll_internal, __strtoq_internal, GLIBC_2_0);
+compat_symbol(libc, __strtoll_internal, __strtoq_internal, GLIBC_2_0);
 #  endif
 
 # endif
-weak_alias (strtoll, strtoq)
-weak_alias (strtoll, strtoimax)
-weak_alias (__isoc23_strtoll, __isoc23_strtoimax)
+weak_alias(strtoll, strtoq)
+weak_alias(strtoll, strtoimax)
+weak_alias(__isoc23_strtoll, __isoc23_strtoimax)
 #endif

@@ -22,10 +22,9 @@
    significand scaled up by the highest possible number of significant bits
    of fraction (DBL_MANT_DIG), and an integral power of two (MPN frexp). */
 
-mp_size_t
-__mpn_extract_double (mp_ptr res_ptr, mp_size_t size,
-		      int *expt, int *is_neg,
-		      double value)
+mp_size_t __mpn_extract_double(mp_ptr res_ptr, mp_size_t size,
+                               int *expt, int *is_neg,
+                               double value)
 {
 #error "__mpn_extract_double is not implemented for this floating point format"
 }

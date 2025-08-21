@@ -20,12 +20,11 @@
 #include <support/xtime.h>
 #include <support/xthread.h>
 
-void
-xclock_gettime (clockid_t clockid,
-                struct timespec *ts)
+void xclock_gettime(clockid_t clockid,
+                    struct timespec *ts)
 {
-  const int ret = clock_gettime (clockid, ts);
-  if (ret < 0)
-    FAIL_EXIT1 ("clock_gettime (%d): %m",
-                clockid);
+    const int ret = clock_gettime(clockid, ts);
+    if (ret < 0)
+        FAIL_EXIT1("clock_gettime (%d): %m",
+                   clockid);
 }

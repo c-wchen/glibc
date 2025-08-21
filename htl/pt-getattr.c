@@ -25,27 +25,27 @@
 /* Initialize thread attribute *ATTR with attributes corresponding to the
    already running thread THREAD.  It shall be called on an uninitialized ATTR
    and destroyed with pthread_attr_destroy when no longer needed.  */
-int
-__pthread_getattr_np (pthread_t thread, pthread_attr_t *attr)
+int __pthread_getattr_np(pthread_t thread, pthread_attr_t *attr)
 {
-  struct __pthread *pthread;
+    struct __pthread *pthread;
 
-  pthread = __pthread_getid (thread);
-  if (pthread == NULL)
-    return ESRCH;
+    pthread = __pthread_getid(thread);
+    if (pthread == NULL) {
+        return ESRCH;
+    }
 
-  /* Some attributes (schedparam, inheritsched, contentionscope and schedpolicy)
-     are not supported yet, so fill them with our default values.  */
-  *attr = __pthread_default_attr;
+    /* Some attributes (schedparam, inheritsched, contentionscope and schedpolicy)
+       are not supported yet, so fill them with our default values.  */
+    *attr = __pthread_default_attr;
 
-  attr->__stackaddr = (pthread->stackaddr
-		       + ((pthread->guardsize + __vm_page_size - 1)
-			  / __vm_page_size * __vm_page_size));
-  attr->__stacksize = pthread->stacksize;
-  attr->__guardsize = pthread->guardsize;
-  attr->__detachstate = (pthread->state == PTHREAD_DETACHED
-			 ? PTHREAD_CREATE_DETACHED : PTHREAD_CREATE_JOINABLE);
+    attr->__stackaddr = (pthread->stackaddr
+                         + ((pthread->guardsize + __vm_page_size - 1)
+                            / __vm_page_size * __vm_page_size));
+    attr->__stacksize = pthread->stacksize;
+    attr->__guardsize = pthread->guardsize;
+    attr->__detachstate = (pthread->state == PTHREAD_DETACHED
+                           ? PTHREAD_CREATE_DETACHED : PTHREAD_CREATE_JOINABLE);
 
-  return 0;
+    return 0;
 }
-weak_alias (__pthread_getattr_np, pthread_getattr_np)
+weak_alias(__pthread_getattr_np, pthread_getattr_np)

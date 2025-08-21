@@ -24,10 +24,9 @@
 
 #include <math-narrow.h>
 
-double
-__dsqrtl (long double x)
+double __dsqrtl(long double x)
 {
-  NARROW_SQRT_ROUND_TO_ODD (x, double, union ieee854_long_double, l,
-			    mantissa1);
+    NARROW_SQRT_ROUND_TO_ODD(x, double, union ieee854_long_double, l,
+                             mantissa1);
 }
-libm_alias_double_ldouble (sqrt)
+libm_alias_double_ldouble(sqrt)

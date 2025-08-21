@@ -18,8 +18,7 @@
 
 #include "tst-posix_fadvise-common.c"
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  return do_test_common ();
+    return do_test_common();
 }

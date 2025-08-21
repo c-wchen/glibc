@@ -19,7 +19,7 @@
 #include <stdbit.h>
 
 unsigned char
-(stdc_bit_ceil_uc) (unsigned char x)
+(stdc_bit_ceil_uc)(unsigned char x)
 {
-  return stdc_bit_ceil_uc (x);
+    return stdc_bit_ceil_uc(x);
 }

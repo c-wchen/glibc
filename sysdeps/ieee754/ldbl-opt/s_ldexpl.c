@@ -24,6 +24,6 @@
 #include <s_ldexp_template.c>
 
 #if IS_IN (libc) && defined SHARED
-long_double_symbol (libc, __ldexpl, ldexpl);
-long_double_symbol (libc, __wrap_scalbnl, scalbnl);
+long_double_symbol(libc, __ldexpl, ldexpl);
+long_double_symbol(libc, __wrap_scalbnl, scalbnl);
 #endif

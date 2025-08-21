@@ -65,7 +65,7 @@
    similar which will cause the process to die in a characteristic
    way suggesting a bug.  */
 #ifndef LOSE
-#define	LOSE	({ volatile int zero = 0; zero / zero; })
+#define LOSE    ({ volatile int zero = 0; zero / zero; })
 #endif
 
 /* One of these should be defined to specify the stack direction.  */
@@ -74,4 +74,4 @@
 #endif
 
 /* Used by some assembly code.  */
-#define C_SYMBOL_NAME(name)	name
+#define C_SYMBOL_NAME(name) name

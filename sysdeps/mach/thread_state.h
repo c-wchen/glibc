@@ -56,46 +56,44 @@
 /* These functions are of use in machine-dependent signal trampoline
    implementations.  */
 
-#include <string.h>		/* size_t, memcpy */
+#include <string.h>     /* size_t, memcpy */
 #include <mach/mach_interface.h> /* __thread_get_state */
 
-static __inline int
-machine_get_state (thread_t thread, struct machine_thread_all_state *state,
-		   int flavor, void *stateptr, void *scpptr, size_t size)
+static __inline int machine_get_state(thread_t thread, struct machine_thread_all_state *state,
+                                      int flavor, void *stateptr, void *scpptr, size_t size)
 {
-  if (state->set & (1 << flavor))
-    {
-      /* Copy the saved state.  */
-      memcpy (scpptr, stateptr, size);
-      return 1;
-    }
-  else
-    {
-      /* No one asked about this flavor of state before; fetch the state
-	 directly from the kernel into the sigcontext.  */
-      mach_msg_type_number_t got = (size / sizeof (int));
-      return (! __thread_get_state (thread, flavor, (thread_state_t) scpptr, &got)
-	      && got == (size / sizeof (int)));
+    if (state->set & (1 << flavor)) {
+        /* Copy the saved state.  */
+        memcpy(scpptr, stateptr, size);
+        return 1;
+    } else {
+        /* No one asked about this flavor of state before; fetch the state
+        directly from the kernel into the sigcontext.  */
+        mach_msg_type_number_t got = (size / sizeof(int));
+        return (! __thread_get_state(thread, flavor, (thread_state_t) scpptr, &got)
+                && got == (size / sizeof(int)));
     }
 }
 
-static __inline int
-machine_get_basic_state (thread_t thread,
-			 struct machine_thread_all_state *state)
+static __inline int machine_get_basic_state(thread_t thread,
+        struct machine_thread_all_state *state)
 {
-  mach_msg_type_number_t count;
+    mach_msg_type_number_t count;
 
-  if (state->set & (1 << MACHINE_THREAD_STATE_FLAVOR))
+    if (state->set & (1 << MACHINE_THREAD_STATE_FLAVOR)) {
+        return 1;
+    }
+
+    count = MACHINE_THREAD_STATE_COUNT;
+    if (__thread_get_state(thread, MACHINE_THREAD_STATE_FLAVOR,
+                           (natural_t *) &state->basic,
+                           &count) != KERN_SUCCESS
+        || count != MACHINE_THREAD_STATE_COUNT)
+        /* What kind of thread?? */
+    {
+        return 0;    /* XXX */
+    }
+
+    state->set |= 1 << MACHINE_THREAD_STATE_FLAVOR;
     return 1;
-
-  count = MACHINE_THREAD_STATE_COUNT;
-  if (__thread_get_state (thread, MACHINE_THREAD_STATE_FLAVOR,
-			  (natural_t *) &state->basic,
-			  &count) != KERN_SUCCESS
-      || count != MACHINE_THREAD_STATE_COUNT)
-    /* What kind of thread?? */
-    return 0;			/* XXX */
-
-  state->set |= 1 << MACHINE_THREAD_STATE_FLAVOR;
-  return 1;
 }

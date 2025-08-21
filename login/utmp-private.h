@@ -17,28 +17,28 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _UTMP_PRIVATE_H
-#define _UTMP_PRIVATE_H	1
+#define _UTMP_PRIVATE_H 1
 
 #include <utmp.h>
 #include <libc-lock.h>
 
 /* These functions check for initialization, but not perform any
    locking.  */
-int __libc_setutent (void) attribute_hidden;
-int __libc_getutent_r (struct utmp *, struct utmp **) attribute_hidden;
-int __libc_getutid_r (const struct utmp *, struct utmp *, struct utmp **)
-  attribute_hidden;
-int __libc_getutline_r (const struct utmp *, struct utmp *, struct utmp **)
-  attribute_hidden;
-struct utmp *__libc_pututline (const struct utmp *) attribute_hidden;
-void __libc_endutent (void) attribute_hidden;
-int __libc_updwtmp (const char *, const struct utmp *) attribute_hidden;
+int __libc_setutent(void) attribute_hidden;
+int __libc_getutent_r(struct utmp *, struct utmp **) attribute_hidden;
+int __libc_getutid_r(const struct utmp *, struct utmp *, struct utmp **)
+attribute_hidden;
+int __libc_getutline_r(const struct utmp *, struct utmp *, struct utmp **)
+attribute_hidden;
+struct utmp *__libc_pututline(const struct utmp *) attribute_hidden;
+void __libc_endutent(void) attribute_hidden;
+int __libc_updwtmp(const char *, const struct utmp *) attribute_hidden;
 
 /* Current file name.  */
 extern const char *__libc_utmp_file_name attribute_hidden;
 
 /* Locks access to the global data.  */
-__libc_lock_define (extern, __libc_utmp_lock attribute_hidden)
+__libc_lock_define(extern, __libc_utmp_lock attribute_hidden)
 
 
 #endif /* utmp-private.h */

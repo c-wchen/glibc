@@ -15,24 +15,23 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define __llrint	not___llrint
-#define llrint		not_llrint
+#define __llrint    not___llrint
+#define llrint      not_llrint
 #include <math.h>
 #include <math_ldbl_opt.h>
 #include <libm-alias-double.h>
 #undef __llrint
 #undef llrint
 
-long int
-__lrint (double x)
+long int __lrint(double x)
 {
-  long ret;
+    long ret;
 
-  __asm ("cvttq/svd %1,%0" : "=&f"(ret) : "f"(x));
+    __asm("cvttq/svd %1,%0" : "=&f"(ret) : "f"(x));
 
-  return ret;
+    return ret;
 }
 
-strong_alias (__lrint, __llrint)
-libm_alias_double (__lrint, lrint)
-libm_alias_double (__llrint, llrint)
+strong_alias(__lrint, __llrint)
+libm_alias_double(__lrint, lrint)
+libm_alias_double(__llrint, llrint)

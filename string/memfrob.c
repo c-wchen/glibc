@@ -17,13 +17,13 @@
 
 #include <string.h>
 
-void *
-memfrob (void *s, size_t n)
+void *memfrob(void *s, size_t n)
 {
-  char *p = (char *) s;
+    char *p = (char *) s;
 
-  while (n-- > 0)
-    *p++ ^= 42;
+    while (n-- > 0) {
+        *p++ ^= 42;
+    }
 
-  return s;
+    return s;
 }

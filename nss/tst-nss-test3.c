@@ -29,27 +29,27 @@
    not, and groups 6 and 7 test for partial matches.  */
 
 static const char *group_2[] = {
-  "foo", "bar", NULL
+    "foo", "bar", NULL
 };
 
 static const char *group_3[] = {
-  "tom", "dick", "harry", NULL
+    "tom", "dick", "harry", NULL
 };
 
 static const char *group_4[] = {
-  "alpha", "beta", "gamma", "fred", NULL
+    "alpha", "beta", "gamma", "fred", NULL
 };
 
 static const char *group_6[] = {
-  "larry", "curly", "moe", NULL
+    "larry", "curly", "moe", NULL
 };
 
 static const char *group_7[] = {
-  "larry", "curly", "darryl", NULL
+    "larry", "curly", "darryl", NULL
 };
 
 static const char *group_14[] = {
-  "huey", "dewey", "louis", NULL
+    "huey", "dewey", "louis", NULL
 };
 
 /* Note that we're intentionally causing mis-matches here; the purpose
@@ -61,93 +61,86 @@ static const char *group_14[] = {
 
 /* This is the data we're giving the service.  */
 static struct group group_table_data[] = {
-  GRP(4), /* match */
-  GRP_N(8, "name6", group_6), /* wrong gid */
-  GRP_N(14, NULL, group_14), /* missing name */
-  GRP(14), /* unexpected name */
-  GRP_N(7, "name7_wrong", group_7), /* wrong name */
-  { .gr_name =  (char *)"name5", .gr_passwd =  (char *)"wilma", .gr_gid = 5, .gr_mem = NULL }, /* unexpected passwd */
-  { .gr_name =  (char *)"name5", .gr_passwd = NULL, .gr_gid = 5, .gr_mem = NULL }, /* missing passwd */
-  { .gr_name =  (char *)"name5", .gr_passwd = (char *)"wilma", .gr_gid = 5, .gr_mem = NULL }, /* wrong passwd */
-  GRP_N(3, "name3a", NULL),   /* missing member list */
-  GRP_N(3, "name3b", group_3), /* unexpected member list */
-  GRP_N(3, "name3c", group_3), /* wrong/short member list */
-  GRP_N(3, "name3d", group_4), /* wrong/long member list */
-  GRP_LAST ()
+    GRP(4), /* match */
+    GRP_N(8, "name6", group_6), /* wrong gid */
+    GRP_N(14, NULL, group_14), /* missing name */
+    GRP(14), /* unexpected name */
+    GRP_N(7, "name7_wrong", group_7), /* wrong name */
+    { .gr_name = (char *)"name5", .gr_passwd = (char *)"wilma", .gr_gid = 5, .gr_mem = NULL },   /* unexpected passwd */
+    { .gr_name = (char *)"name5", .gr_passwd = NULL, .gr_gid = 5, .gr_mem = NULL },  /* missing passwd */
+    { .gr_name = (char *)"name5", .gr_passwd = (char *)"wilma", .gr_gid = 5, .gr_mem = NULL },  /* wrong passwd */
+    GRP_N(3, "name3a", NULL),   /* missing member list */
+    GRP_N(3, "name3b", group_3), /* unexpected member list */
+    GRP_N(3, "name3c", group_3), /* wrong/short member list */
+    GRP_N(3, "name3d", group_4), /* wrong/long member list */
+    GRP_LAST()
 };
 
 /* This is the data we compare against.  */
 static struct group group_table[] = {
-  GRP(4),
-  GRP(6),
-  GRP(14),
-  GRP_N(14, NULL, group_14),
-  GRP(7),
-  { .gr_name =  (char *)"name5", .gr_passwd = NULL, .gr_gid = 5, .gr_mem = NULL },
-  { .gr_name =  (char *)"name5", .gr_passwd =  (char *)"fred", .gr_gid = 5, .gr_mem = NULL },
-  { .gr_name =  (char *)"name5", .gr_passwd =  (char *)"fred", .gr_gid = 5, .gr_mem = NULL },
-  GRP_N(3, "name3a", group_3),
-  GRP_N(3, "name3b", NULL),
-  GRP_N(3, "name3c", group_4),
-  GRP_N(3, "name3d", group_3),
-  GRP(2),
-  GRP_LAST ()
+    GRP(4),
+    GRP(6),
+    GRP(14),
+    GRP_N(14, NULL, group_14),
+    GRP(7),
+    { .gr_name = (char *)"name5", .gr_passwd = NULL, .gr_gid = 5, .gr_mem = NULL },
+    { .gr_name = (char *)"name5", .gr_passwd = (char *)"fred", .gr_gid = 5, .gr_mem = NULL },
+    { .gr_name = (char *)"name5", .gr_passwd = (char *)"fred", .gr_gid = 5, .gr_mem = NULL },
+    GRP_N(3, "name3a", group_3),
+    GRP_N(3, "name3b", NULL),
+    GRP_N(3, "name3c", group_4),
+    GRP_N(3, "name3d", group_3),
+    GRP(2),
+    GRP_LAST()
 };
 
-void
-_nss_test1_init_hook(test_tables *t)
+void _nss_test1_init_hook(test_tables *t)
 {
-  t->grp_table = group_table_data;
+    t->grp_table = group_table_data;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int retval = 0;
-  int i;
-  struct group *g = NULL;
+    int retval = 0;
+    int i;
+    struct group *g = NULL;
 
-/* Previously we used __nss_configure_lookup to isolate the test
-   from the host environment and to get it to lookup from our new
-   test1 NSS service module, but now this test is run in a different
-   root filesystem via the test-container support and we directly
-   configure the use of the test1 NSS service.  */
+    /* Previously we used __nss_configure_lookup to isolate the test
+       from the host environment and to get it to lookup from our new
+       test1 NSS service module, but now this test is run in a different
+       root filesystem via the test-container support and we directly
+       configure the use of the test1 NSS service.  */
 
-  setgrent ();
+    setgrent();
 
-  i = 0;
-  for (g = getgrent () ;
-       g != NULL && ! GRP_ISLAST(&group_table[i]);
-       ++i, g = getgrent ())
-    {
-      retval += compare_groups (i, g, & group_table[i]);
+    i = 0;
+    for (g = getgrent() ;
+         g != NULL && ! GRP_ISLAST(&group_table[i]);
+         ++i, g = getgrent()) {
+        retval += compare_groups(i, g, & group_table[i]);
     }
 
-  endgrent ();
+    endgrent();
 
-  if (g)
-    {
-      printf ("FAIL: [?] group entry %u.%s unexpected\n", g->gr_gid, g->gr_name);
-      ++retval;
+    if (g) {
+        printf("FAIL: [?] group entry %u.%s unexpected\n", g->gr_gid, g->gr_name);
+        ++retval;
     }
-  if (group_table[i].gr_name || group_table[i].gr_gid)
-    {
-      printf ("FAIL: [%d] group entry %u.%s missing\n", i,
-	      group_table[i].gr_gid, group_table[i].gr_name);
-      ++retval;
+    if (group_table[i].gr_name || group_table[i].gr_gid) {
+        printf("FAIL: [%d] group entry %u.%s missing\n", i,
+               group_table[i].gr_gid, group_table[i].gr_name);
+        ++retval;
     }
 
 #define EXPECTED 18
-  if (retval == EXPECTED)
-    {
-      if (retval > 0)
-	printf ("PASS: Found %d expected errors\n", retval);
-      return 0;
-    }
-  else
-    {
-      printf ("FAIL: Found %d errors, expected %d\n", retval, EXPECTED);
-      return 1;
+    if (retval == EXPECTED) {
+        if (retval > 0) {
+            printf("PASS: Found %d expected errors\n", retval);
+        }
+        return 0;
+    } else {
+        printf("FAIL: Found %d errors, expected %d\n", retval, EXPECTED);
+        return 1;
     }
 }
 

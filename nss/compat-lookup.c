@@ -28,17 +28,16 @@
    The following error-returning stub happens to be compatible with
    glibc 2.7 and earlier and glibc 2.8 and later, even on i386.  */
 int
-attribute_compat_text_section
-__nss_passwd_lookup (nss_action_list *ni, const char *fct_name, void **fctp)
+attribute_compat_text_section __nss_passwd_lookup(nss_action_list *ni, const char *fct_name, void **fctp)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-compat_symbol (libc, __nss_passwd_lookup, __nss_passwd_lookup, GLIBC_2_0);
-strong_alias (__nss_passwd_lookup, __nss_group_lookup)
-compat_symbol (libc, __nss_group_lookup, __nss_group_lookup, GLIBC_2_0);
-strong_alias (__nss_passwd_lookup, __nss_hosts_lookup)
-compat_symbol (libc, __nss_hosts_lookup, __nss_hosts_lookup, GLIBC_2_0);
+compat_symbol(libc, __nss_passwd_lookup, __nss_passwd_lookup, GLIBC_2_0);
+strong_alias(__nss_passwd_lookup, __nss_group_lookup)
+compat_symbol(libc, __nss_group_lookup, __nss_group_lookup, GLIBC_2_0);
+strong_alias(__nss_passwd_lookup, __nss_hosts_lookup)
+compat_symbol(libc, __nss_hosts_lookup, __nss_hosts_lookup, GLIBC_2_0);
 
 #endif /* SHLIB_COMPAT */
 
@@ -49,22 +48,20 @@ compat_symbol (libc, __nss_hosts_lookup, __nss_hosts_lookup, GLIBC_2_0);
    (now nss_action_list) type dependency.  */
 
 int
-attribute_compat_text_section
-__nss_next (nss_action_list *ni, const char *fct_name, void **fctp, int status,
-            int all_values)
+attribute_compat_text_section __nss_next(nss_action_list *ni, const char *fct_name, void **fctp, int status,
+        int all_values)
 {
-  return -1;
+    return -1;
 }
-compat_symbol (libc, __nss_next, __nss_next, GLIBC_2_0);
+compat_symbol(libc, __nss_next, __nss_next, GLIBC_2_0);
 
 int
-attribute_compat_text_section
-__nss_database_lookup (const char *database, const char *alternate_name,
-                       const char *defconfig, nss_action_list *ni)
+attribute_compat_text_section __nss_database_lookup(const char *database, const char *alternate_name,
+        const char *defconfig, nss_action_list *ni)
 {
-  *ni = NULL;
-  return -1;
+    *ni = NULL;
+    return -1;
 }
-compat_symbol (libc, __nss_database_lookup, __nss_database_lookup, GLIBC_2_0);
+compat_symbol(libc, __nss_database_lookup, __nss_database_lookup, GLIBC_2_0);
 
 #endif /* SHLIB_COMPAT */

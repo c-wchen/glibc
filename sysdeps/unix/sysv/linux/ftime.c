@@ -21,35 +21,33 @@
 #include <time.h>
 #include <errno.h>
 
-int
-__ftime64 (struct __timeb64 *timebuf)
+int __ftime64(struct __timeb64 *timebuf)
 {
-  struct __timespec64 ts;
-  __clock_gettime64 (CLOCK_REALTIME, &ts);
+    struct __timespec64 ts;
+    __clock_gettime64(CLOCK_REALTIME, &ts);
 
-  timebuf->time = ts.tv_sec;
-  timebuf->millitm = ts.tv_nsec / 1000000;
-  timebuf->timezone = 0;
-  timebuf->dstflag = 0;
-  return 0;
+    timebuf->time = ts.tv_sec;
+    timebuf->millitm = ts.tv_nsec / 1000000;
+    timebuf->timezone = 0;
+    timebuf->dstflag = 0;
+    return 0;
 }
 #if __TIMESIZE != 64
-libc_hidden_def (__ftime64)
+libc_hidden_def(__ftime64)
 
 int
-ftime (struct timeb *timebuf)
+ftime(struct timeb *timebuf)
 {
-  struct __timeb64 tb64;
-  __ftime64 (&tb64);
-  if (! in_time_t_range (tb64.time))
-    {
-      __set_errno (EOVERFLOW);
-      return -1;
+    struct __timeb64 tb64;
+    __ftime64(&tb64);
+    if (! in_time_t_range(tb64.time)) {
+        __set_errno(EOVERFLOW);
+        return -1;
     }
-  timebuf->time = tb64.time;
-  timebuf->millitm = tb64.millitm;
-  timebuf->timezone = tb64.timezone;
-  timebuf->dstflag = tb64.dstflag;
-  return 0;
+    timebuf->time = tb64.time;
+    timebuf->millitm = tb64.millitm;
+    timebuf->timezone = tb64.timezone;
+    timebuf->dstflag = tb64.dstflag;
+    return 0;
 }
 #endif

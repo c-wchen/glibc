@@ -87,17 +87,17 @@
 #include <shlib-compat.h>
 
 /* Skips over a compressed domain name. Returns the size or -1.  */
-int
-___dn_skipname (const unsigned char *ptr, const unsigned char *eom)
+int ___dn_skipname(const unsigned char *ptr, const unsigned char *eom)
 {
-  const unsigned char *saveptr = ptr;
-  if (__ns_name_skip (&ptr, eom) < 0)
-    return -1;
-  return ptr - saveptr;
+    const unsigned char *saveptr = ptr;
+    if (__ns_name_skip(&ptr, eom) < 0) {
+        return -1;
+    }
+    return ptr - saveptr;
 }
-versioned_symbol (libc, ___dn_skipname, dn_skipname, GLIBC_2_34);
-versioned_symbol (libc, ___dn_skipname, __libc_dn_skipname, GLIBC_PRIVATE);
-libc_hidden_ver (___dn_skipname, __libc_dn_skipname)
+versioned_symbol(libc, ___dn_skipname, dn_skipname, GLIBC_2_34);
+versioned_symbol(libc, ___dn_skipname, __libc_dn_skipname, GLIBC_PRIVATE);
+libc_hidden_ver(___dn_skipname, __libc_dn_skipname)
 #if OTHER_SHLIB_COMPAT (libresolv, GLIBC_2_0, GLIBC_2_34)
-compat_symbol (libresolv, ___dn_skipname, __dn_skipname, GLIBC_2_0);
+compat_symbol(libresolv, ___dn_skipname, __dn_skipname, GLIBC_2_0);
 #endif

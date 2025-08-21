@@ -20,7 +20,7 @@
 
 /* Lower-case digits.  */
 const wchar_t _itowa_lower_digits[36] attribute_hidden
-	= L"0123456789abcdefghijklmnopqrstuvwxyz";
+    = L"0123456789abcdefghijklmnopqrstuvwxyz";
 /* Upper-case digits.  */
 const wchar_t _itowa_upper_digits[36] attribute_hidden
-	= L"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    = L"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";

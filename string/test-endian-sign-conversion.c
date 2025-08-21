@@ -23,26 +23,25 @@ uint16_t u16;
 uint32_t u32;
 uint64_t u64;
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* This is a compilation test.  */
-  u16 = (htobe16 (u16));
-  u16 = (htole16 (u16));
-  u16 = (be16toh (u16));
-  u16 = (le16toh (u16));
-  u32 = (htobe32 (u32));
-  u32 = (htole32 (u32));
-  u32 = (be32toh (u32));
-  u32 = (le32toh (u32));
-  u64 = (htobe64 (u64));
-  u64 = (htole64 (u64));
-  u64 = (be64toh (u64));
-  u64 = (le64toh (u64));
-  (void) u16;
-  (void) u32;
-  (void) u64;
-  return 0;
+    /* This is a compilation test.  */
+    u16 = (htobe16(u16));
+    u16 = (htole16(u16));
+    u16 = (be16toh(u16));
+    u16 = (le16toh(u16));
+    u32 = (htobe32(u32));
+    u32 = (htole32(u32));
+    u32 = (be32toh(u32));
+    u32 = (le32toh(u32));
+    u64 = (htobe64(u64));
+    u64 = (htole64(u64));
+    u64 = (be64toh(u64));
+    u64 = (le64toh(u64));
+    (void) u16;
+    (void) u32;
+    (void) u64;
+    return 0;
 }
 
 #include <support/test-driver.c>

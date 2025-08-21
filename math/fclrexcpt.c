@@ -19,17 +19,16 @@
 #include <fenv.h>
 #include <shlib-compat.h>
 
-int
-__feclearexcept (int excepts)
+int __feclearexcept(int excepts)
 {
-  /* This always fails unless nothing needs to be done.  */
-  return (excepts != 0);
+    /* This always fails unless nothing needs to be done.  */
+    return (excepts != 0);
 }
 #if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
-strong_alias (__feclearexcept, __old_feclearexcept)
-compat_symbol (libm, __old_feclearexcept, feclearexcept, GLIBC_2_1);
+strong_alias(__feclearexcept, __old_feclearexcept)
+compat_symbol(libm, __old_feclearexcept, feclearexcept, GLIBC_2_1);
 #endif
-libm_hidden_ver (__feclearexcept, feclearexcept)
-versioned_symbol (libm, __feclearexcept, feclearexcept, GLIBC_2_2);
+libm_hidden_ver(__feclearexcept, feclearexcept)
+versioned_symbol(libm, __feclearexcept, feclearexcept, GLIBC_2_2);
 
-stub_warning (feclearexcept)
+stub_warning(feclearexcept)

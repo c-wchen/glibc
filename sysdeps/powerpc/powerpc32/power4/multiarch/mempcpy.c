@@ -25,19 +25,19 @@
 # include <shlib-compat.h>
 # include "init-arch.h"
 
-extern __typeof (__mempcpy) __mempcpy_ppc attribute_hidden;
-extern __typeof (__mempcpy) __mempcpy_power7 attribute_hidden;
+extern __typeof(__mempcpy) __mempcpy_ppc attribute_hidden;
+extern __typeof(__mempcpy) __mempcpy_power7 attribute_hidden;
 # undef mempcpy
 # undef __mempcpy
 
 /* Avoid DWARF definition DIE on ifunc symbol so that GDB can handle
    ifunc symbol properly.  */
-libc_ifunc_redirected (__redirect___mempcpy,  __mempcpy,
-		       (hwcap & PPC_FEATURE_HAS_VSX)
-		       ? __mempcpy_power7
-		       : __mempcpy_ppc);
+libc_ifunc_redirected(__redirect___mempcpy,  __mempcpy,
+                      (hwcap &PPC_FEATURE_HAS_VSX)
+                      ? __mempcpy_power7
+                      : __mempcpy_ppc);
 
-weak_alias (__mempcpy, mempcpy)
+weak_alias(__mempcpy, mempcpy)
 #else
 # include <string/mempcpy.c>
 #endif

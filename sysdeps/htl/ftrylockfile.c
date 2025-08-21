@@ -20,14 +20,13 @@
 #include <libc-lockP.h>
 
 
-int
-__ftrylockfile (FILE *stream)
+int __ftrylockfile(FILE *stream)
 {
 #ifdef SHARED
-  return __libc_ptf_call (_IO_ftrylockfile, (stream), 0);
+    return __libc_ptf_call(_IO_ftrylockfile, (stream), 0);
 #else
-  return 0;
+    return 0;
 #endif
 }
-weak_alias (__ftrylockfile, _IO_ftrylockfile)
-weak_alias (__ftrylockfile, ftrylockfile)
+weak_alias(__ftrylockfile, _IO_ftrylockfile)
+weak_alias(__ftrylockfile, ftrylockfile)

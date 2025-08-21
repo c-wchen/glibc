@@ -21,50 +21,49 @@
 
 /* Advances *PTRPTR to skip over the compressed name it points at.
    Returns 0 on success, -1 (with errno set) on failure.  */
-int
-___ns_name_skip (const unsigned char **ptrptr, const unsigned char *eom)
+int ___ns_name_skip(const unsigned char **ptrptr, const unsigned char *eom)
 {
-  const unsigned char *cp;
-  unsigned int n;
+    const unsigned char *cp;
+    unsigned int n;
 
-  cp = *ptrptr;
-  while (cp < eom)
-    {
-      n = *cp++;
-      if (n == 0)
-        {
-          /* End of domain name without indirection.  */
-          *ptrptr = cp;
-          return 0;
+    cp = *ptrptr;
+    while (cp < eom) {
+        n = *cp++;
+        if (n == 0) {
+            /* End of domain name without indirection.  */
+            *ptrptr = cp;
+            return 0;
         }
 
-      /* Check for indirection.  */
-      switch (n & NS_CMPRSFLGS)
-        {
-        case 0:                 /* Normal case, n == len.  */
-          if (eom - cp < n)
-            goto malformed;
-          cp += n;
-          break;
-        case NS_CMPRSFLGS:      /* Indirection.  */
-          if (cp == eom)
-            /* No room for second indirection byte.  */
-            goto malformed;
-          *ptrptr = cp + 1;
-          return 0;
-        default:                /* Illegal type.  */
-          goto malformed;
+        /* Check for indirection.  */
+        switch (n & NS_CMPRSFLGS) {
+            case 0:                 /* Normal case, n == len.  */
+                if (eom - cp < n) {
+                    goto malformed;
+                }
+                cp += n;
+                break;
+            case NS_CMPRSFLGS:      /* Indirection.  */
+                if (cp == eom)
+                    /* No room for second indirection byte.  */
+                {
+                    goto malformed;
+                }
+                *ptrptr = cp + 1;
+                return 0;
+            default:                /* Illegal type.  */
+                goto malformed;
         }
     }
 
- malformed:
-  __set_errno (EMSGSIZE);
-  return -1;
+malformed:
+    __set_errno(EMSGSIZE);
+    return -1;
 }
-versioned_symbol (libc, ___ns_name_skip, ns_name_skip, GLIBC_2_34);
-versioned_symbol (libc, ___ns_name_skip, __ns_name_skip, GLIBC_PRIVATE);
-libc_hidden_ver (___ns_name_skip, __ns_name_skip)
+versioned_symbol(libc, ___ns_name_skip, ns_name_skip, GLIBC_2_34);
+versioned_symbol(libc, ___ns_name_skip, __ns_name_skip, GLIBC_PRIVATE);
+libc_hidden_ver(___ns_name_skip, __ns_name_skip)
 
 #if OTHER_SHLIB_COMPAT (libresolv, GLIBC_2_9, GLIBC_2_34)
-compat_symbol (libresolv, ___ns_name_skip, ns_name_skip, GLIBC_2_9);
+compat_symbol(libresolv, ___ns_name_skip, ns_name_skip, GLIBC_2_9);
 #endif

@@ -28,31 +28,30 @@
 #if _UTSNAME_DOMAIN_LENGTH
 /* The `uname' information includes the domain name.  */
 
-int
-getdomainname (char *name, size_t len)
+int getdomainname(char *name, size_t len)
 {
-  struct utsname u;
-  size_t u_len;
+    struct utsname u;
+    size_t u_len;
 
-  if (uname (&u) < 0)
-    return -1;
+    if (uname(&u) < 0) {
+        return -1;
+    }
 
-  u_len = strlen (u.domainname);
-  memcpy (name, u.domainname, MIN (u_len + 1, len));
-  return 0;
+    u_len = strlen(u.domainname);
+    memcpy(name, u.domainname, MIN(u_len + 1, len));
+    return 0;
 }
 
 #else
 
-int
-getdomainname (char *name, size_t len)
+int getdomainname(char *name, size_t len)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (getdomainname)
+stub_warning(getdomainname)
 
 #endif
 
-libc_hidden_def (getdomainname)
+libc_hidden_def(getdomainname)

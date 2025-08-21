@@ -21,12 +21,11 @@
 #include <stddef.h>
 
 /* Return information about the filesystem on which FD resides.  */
-int
-__fstatfs (int fd, struct statfs *buf)
+int __fstatfs(int fd, struct statfs *buf)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (fstatfs)
+stub_warning(fstatfs)
 
-weak_alias (__fstatfs, fstatfs)
+weak_alias(__fstatfs, fstatfs)

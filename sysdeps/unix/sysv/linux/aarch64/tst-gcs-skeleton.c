@@ -18,26 +18,25 @@
 
 #include "tst-gcs-helper.h"
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* Check if GCS could possible by enabled.  */
-  if (!(getauxval (AT_HWCAP) & HWCAP_GCS))
-    {
-      puts ("kernel or CPU does not support GCS");
-      return EXIT_UNSUPPORTED;
+    /* Check if GCS could possible by enabled.  */
+    if (!(getauxval(AT_HWCAP) & HWCAP_GCS)) {
+        puts("kernel or CPU does not support GCS");
+        return EXIT_UNSUPPORTED;
     }
-  bool gcs_enabled = __check_gcs_status ();
-  if (gcs_enabled)
-    puts ("GCS enabled");
-  else
-    puts ("GCS not enabled");
+    bool gcs_enabled = __check_gcs_status();
+    if (gcs_enabled) {
+        puts("GCS enabled");
+    } else {
+        puts("GCS not enabled");
+    }
 #if TEST_GCS_EXPECT_ENABLED
-  TEST_VERIFY (gcs_enabled);
+    TEST_VERIFY(gcs_enabled);
 #else
-  TEST_VERIFY (!gcs_enabled);
+    TEST_VERIFY(!gcs_enabled);
 #endif
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -1,8 +1,7 @@
 #include "nldbl-compat.h"
 
 double
-attribute_hidden
-asinl (double x)
+attribute_hidden asinl(double x)
 {
-  return asin (x);
+    return asin(x);
 }

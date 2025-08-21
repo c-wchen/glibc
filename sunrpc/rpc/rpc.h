@@ -35,26 +35,26 @@
 #ifndef _RPC_RPC_H
 #define _RPC_RPC_H 1
 
-#include <rpc/types.h>		/* some typedefs */
+#include <rpc/types.h>      /* some typedefs */
 #include <netinet/in.h>
 
 /* external data representation interfaces */
-#include <rpc/xdr.h>		/* generic (de)serializer */
+#include <rpc/xdr.h>        /* generic (de)serializer */
 
 /* Client side only authentication */
-#include <rpc/auth.h>		/* generic authenticator (client side) */
+#include <rpc/auth.h>       /* generic authenticator (client side) */
 
 /* Client side (mostly) remote procedure call */
-#include <rpc/clnt.h>		/* generic rpc stuff */
+#include <rpc/clnt.h>       /* generic rpc stuff */
 
 /* semi-private protocol headers */
-#include <rpc/rpc_msg.h>	/* protocol for rpc messages */
-#include <rpc/auth_unix.h>	/* protocol for unix style cred */
-#include <rpc/auth_des.h>	/* protocol for des style cred */
+#include <rpc/rpc_msg.h>    /* protocol for rpc messages */
+#include <rpc/auth_unix.h>  /* protocol for unix style cred */
+#include <rpc/auth_des.h>   /* protocol for des style cred */
 
 /* Server side only remote procedure callee */
-#include <rpc/svc.h>		/* service manager and multiplexer */
-#include <rpc/svc_auth.h>	/* service side authenticator */
+#include <rpc/svc.h>        /* service manager and multiplexer */
+#include <rpc/svc_auth.h>   /* service side authenticator */
 
 /*
  * COMMENT OUT THE NEXT INCLUDE IF RUNNING ON SUN OS OR ON A VERSION
@@ -62,16 +62,16 @@
  * defined by <rpc/netdb.h> included in <netdb.h>.
  */
 /* routines for parsing /etc/rpc */
-#include <rpc/netdb.h>		/* structures and routines to parse /etc/rpc */
+#include <rpc/netdb.h>      /* structures and routines to parse /etc/rpc */
 
 __BEGIN_DECLS
 
 /* Global variables, protected for multi-threaded applications.  */
-extern fd_set *__rpc_thread_svc_fdset (void) __attribute__ ((__const__));
+extern fd_set *__rpc_thread_svc_fdset(void) __attribute__((__const__));
 #define svc_fdset (*__rpc_thread_svc_fdset ())
 
-extern struct rpc_createerr *__rpc_thread_createerr (void)
-     __attribute__ ((__const__));
+extern struct rpc_createerr *__rpc_thread_createerr(void)
+__attribute__((__const__));
 #define get_rpc_createerr() (*__rpc_thread_createerr ())
 /* The people who "engineered" RPC should bee punished for naming the
    data structure and the variable the same.  We cannot always define the
@@ -82,11 +82,11 @@ extern struct rpc_createerr *__rpc_thread_createerr (void)
 # define rpc_createerr (*__rpc_thread_createerr ())
 #endif
 
-extern struct pollfd **__rpc_thread_svc_pollfd (void)
-     __attribute__ ((__const__));
+extern struct pollfd **__rpc_thread_svc_pollfd(void)
+__attribute__((__const__));
 #define svc_pollfd (*__rpc_thread_svc_pollfd ())
 
-extern int *__rpc_thread_svc_max_pollfd (void) __attribute__ ((__const__));
+extern int *__rpc_thread_svc_max_pollfd(void) __attribute__((__const__));
 #define svc_max_pollfd (*__rpc_thread_svc_max_pollfd ())
 
 __END_DECLS

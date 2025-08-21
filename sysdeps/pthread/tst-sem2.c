@@ -22,31 +22,28 @@
 #include <stdio.h>
 #include <unistd.h>
 
-static int do_test (void);
+static int do_test(void);
 
 #define TEST_FUNCTION do_test ()
 #include "../test-skeleton.c"
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  sem_t s;
+    sem_t s;
 
-  if (sem_init (&s, 0, 0) == -1)
-    {
-      puts ("init failed");
-      return 1;
+    if (sem_init(&s, 0, 0) == -1) {
+        puts("init failed");
+        return 1;
     }
 
-  delayed_exit (1);
+    delayed_exit(1);
 
-  if (TEMP_FAILURE_RETRY (sem_wait (&s)) == -1)
-    {
-      puts ("wait failed");
-      return 1;
+    if (TEMP_FAILURE_RETRY(sem_wait(&s)) == -1) {
+        puts("wait failed");
+        return 1;
     }
 
-  /* We should never get here.  */
-  puts ("wait succeeded");
-  return 1;
+    /* We should never get here.  */
+    puts("wait succeeded");
+    return 1;
 }

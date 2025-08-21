@@ -25,17 +25,17 @@
 # include <ifunc-resolve.h>
 
 # if HAVE_RAWMEMCHR_C
-extern __typeof (__redirect___rawmemchr) RAWMEMCHR_C attribute_hidden;
+extern __typeof(__redirect___rawmemchr) RAWMEMCHR_C attribute_hidden;
 # endif
 
 # if HAVE_RAWMEMCHR_Z13
-extern __typeof (__redirect___rawmemchr) RAWMEMCHR_Z13 attribute_hidden;
+extern __typeof(__redirect___rawmemchr) RAWMEMCHR_Z13 attribute_hidden;
 # endif
 
-s390_libc_ifunc_expr (__redirect___rawmemchr, __rawmemchr,
-		      (HAVE_RAWMEMCHR_Z13 && (hwcap & HWCAP_S390_VX))
-		      ? RAWMEMCHR_Z13
-		      : RAWMEMCHR_DEFAULT
-		      )
-weak_alias (__rawmemchr, rawmemchr)
+s390_libc_ifunc_expr(__redirect___rawmemchr, __rawmemchr,
+                     (HAVE_RAWMEMCHR_Z13 &&(hwcap &HWCAP_S390_VX))
+                     ? RAWMEMCHR_Z13
+                     : RAWMEMCHR_DEFAULT
+                    )
+weak_alias(__rawmemchr, rawmemchr)
 #endif /* HAVE_RAWMEMCHR_IFUNC  */

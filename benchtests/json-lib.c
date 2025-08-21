@@ -20,221 +20,206 @@
 
 #include "json-lib.h"
 
-void
-json_init (json_ctx_t *ctx, unsigned int indent_level, FILE *fp)
+void json_init(json_ctx_t *ctx, unsigned int indent_level, FILE *fp)
 {
-  ctx->indent_level = indent_level;
-  ctx->fp = fp;
-  ctx->first_element = true;
+    ctx->indent_level = indent_level;
+    ctx->fp = fp;
+    ctx->first_element = true;
 }
 
-static void
-do_indent (json_ctx_t *ctx)
+static void do_indent(json_ctx_t *ctx)
 {
-  char indent_buf[ctx->indent_level + 1];
+    char indent_buf[ctx->indent_level + 1];
 
-  memset (indent_buf, ' ', ctx->indent_level + 1);
-  indent_buf[ctx->indent_level] = '\0';
+    memset(indent_buf, ' ', ctx->indent_level + 1);
+    indent_buf[ctx->indent_level] = '\0';
 
-  fputs (indent_buf, ctx->fp);
+    fputs(indent_buf, ctx->fp);
 }
 
-void
-json_document_begin (json_ctx_t *ctx)
+void json_document_begin(json_ctx_t *ctx)
 {
-  do_indent (ctx);
+    do_indent(ctx);
 
-  fputs ("{\n", ctx->fp);
+    fputs("{\n", ctx->fp);
 
-  ctx->indent_level++;
-  ctx->first_element = true;
+    ctx->indent_level++;
+    ctx->first_element = true;
 }
 
-void
-json_document_end (json_ctx_t *ctx)
+void json_document_end(json_ctx_t *ctx)
 {
-  ctx->indent_level--;
+    ctx->indent_level--;
 
-  do_indent (ctx);
+    do_indent(ctx);
 
-  fputs ("\n}", ctx->fp);
+    fputs("\n}", ctx->fp);
 }
 
-void
-json_attr_object_begin (json_ctx_t *ctx, const char *name)
+void json_attr_object_begin(json_ctx_t *ctx, const char *name)
 {
-  if (!ctx->first_element)
-    fprintf (ctx->fp, ",\n");
+    if (!ctx->first_element) {
+        fprintf(ctx->fp, ",\n");
+    }
 
-  do_indent (ctx);
+    do_indent(ctx);
 
-  fprintf (ctx->fp, "\"%s\": {\n", name);
+    fprintf(ctx->fp, "\"%s\": {\n", name);
 
-  ctx->indent_level++;
-  ctx->first_element = true;
+    ctx->indent_level++;
+    ctx->first_element = true;
 }
 
-void
-json_attr_object_end (json_ctx_t *ctx)
+void json_attr_object_end(json_ctx_t *ctx)
 {
-  ctx->indent_level--;
-  ctx->first_element = false;
-
-  fputs ("\n", ctx->fp);
-
-  do_indent (ctx);
-
-  fputs ("}", ctx->fp);
-}
-
-void
-json_attr_string (json_ctx_t *ctx, const char *name, const char *s)
-{
-  if (!ctx->first_element)
-    fprintf (ctx->fp, ",\n");
-  else
+    ctx->indent_level--;
     ctx->first_element = false;
 
-  do_indent (ctx);
+    fputs("\n", ctx->fp);
 
-  fprintf (ctx->fp, "\"%s\": \"%s\"", name, s);
+    do_indent(ctx);
+
+    fputs("}", ctx->fp);
 }
 
-void
-json_attr_uint (json_ctx_t *ctx, const char *name, uint64_t d)
+void json_attr_string(json_ctx_t *ctx, const char *name, const char *s)
 {
-  if (!ctx->first_element)
-    fprintf (ctx->fp, ",\n");
-  else
+    if (!ctx->first_element) {
+        fprintf(ctx->fp, ",\n");
+    } else {
+        ctx->first_element = false;
+    }
+
+    do_indent(ctx);
+
+    fprintf(ctx->fp, "\"%s\": \"%s\"", name, s);
+}
+
+void json_attr_uint(json_ctx_t *ctx, const char *name, uint64_t d)
+{
+    if (!ctx->first_element) {
+        fprintf(ctx->fp, ",\n");
+    } else {
+        ctx->first_element = false;
+    }
+
+    do_indent(ctx);
+
+    fprintf(ctx->fp, "\"%s\": %" PRIu64, name, d);
+}
+
+void json_attr_int(json_ctx_t *ctx, const char *name, int64_t d)
+{
+    if (!ctx->first_element) {
+        fprintf(ctx->fp, ",\n");
+    } else {
+        ctx->first_element = false;
+    }
+
+    do_indent(ctx);
+
+    fprintf(ctx->fp, "\"%s\": %" PRId64, name, d);
+}
+
+void json_attr_double(json_ctx_t *ctx, const char *name, double d)
+{
+    if (!ctx->first_element) {
+        fprintf(ctx->fp, ",\n");
+    } else {
+        ctx->first_element = false;
+    }
+
+    do_indent(ctx);
+
+    fprintf(ctx->fp, "\"%s\": %g", name, d);
+}
+
+void json_array_begin(json_ctx_t *ctx, const char *name)
+{
+    if (!ctx->first_element) {
+        fprintf(ctx->fp, ",\n");
+    }
+
+    do_indent(ctx);
+
+    fprintf(ctx->fp, "\"%s\": [", name);
+
+    ctx->indent_level++;
+    ctx->first_element = true;
+}
+
+void json_array_end(json_ctx_t *ctx)
+{
+    ctx->indent_level--;
     ctx->first_element = false;
 
-  do_indent (ctx);
-
-  fprintf (ctx->fp, "\"%s\": %" PRIu64 , name, d);
+    fputs("]", ctx->fp);
 }
 
-void
-json_attr_int (json_ctx_t *ctx, const char *name, int64_t d)
+void json_element_string(json_ctx_t *ctx, const char *s)
 {
-  if (!ctx->first_element)
-    fprintf (ctx->fp, ",\n");
-  else
-    ctx->first_element = false;
-
-  do_indent (ctx);
-
-  fprintf (ctx->fp, "\"%s\": %" PRId64 , name, d);
-}
-
-void
-json_attr_double (json_ctx_t *ctx, const char *name, double d)
-{
-  if (!ctx->first_element)
-    fprintf (ctx->fp, ",\n");
-  else
-    ctx->first_element = false;
-
-  do_indent (ctx);
-
-  fprintf (ctx->fp, "\"%s\": %g", name, d);
-}
-
-void
-json_array_begin (json_ctx_t *ctx, const char *name)
-{
-  if (!ctx->first_element)
-    fprintf (ctx->fp, ",\n");
-
-  do_indent (ctx);
-
-  fprintf (ctx->fp, "\"%s\": [", name);
-
-  ctx->indent_level++;
-  ctx->first_element = true;
-}
-
-void
-json_array_end (json_ctx_t *ctx)
-{
-  ctx->indent_level--;
-  ctx->first_element = false;
-
-  fputs ("]", ctx->fp);
-}
-
-void
-json_element_string (json_ctx_t *ctx, const char *s)
-{
-  if (!ctx->first_element)
-    fprintf (ctx->fp, ", \"%s\"", s);
-  else
-    {
-      fprintf (ctx->fp, "\"%s\"", s);
-      ctx->first_element = false;
+    if (!ctx->first_element) {
+        fprintf(ctx->fp, ", \"%s\"", s);
+    } else {
+        fprintf(ctx->fp, "\"%s\"", s);
+        ctx->first_element = false;
     }
 }
 
-void
-json_element_uint (json_ctx_t *ctx, uint64_t d)
+void json_element_uint(json_ctx_t *ctx, uint64_t d)
 {
-  if (!ctx->first_element)
-    fprintf (ctx->fp, ", %" PRIu64, d);
-  else
-    {
-      fprintf (ctx->fp, "%" PRIu64, d);
-      ctx->first_element = false;
+    if (!ctx->first_element) {
+        fprintf(ctx->fp, ", %" PRIu64, d);
+    } else {
+        fprintf(ctx->fp, "%" PRIu64, d);
+        ctx->first_element = false;
     }
 }
 
-void
-json_element_int (json_ctx_t *ctx, int64_t d)
+void json_element_int(json_ctx_t *ctx, int64_t d)
 {
-  if (!ctx->first_element)
-    fprintf (ctx->fp, ", %" PRId64, d);
-  else
-    {
-      fprintf (ctx->fp, "%" PRId64, d);
-      ctx->first_element = false;
+    if (!ctx->first_element) {
+        fprintf(ctx->fp, ", %" PRId64, d);
+    } else {
+        fprintf(ctx->fp, "%" PRId64, d);
+        ctx->first_element = false;
     }
 }
 
-void
-json_element_double (json_ctx_t *ctx, double d)
+void json_element_double(json_ctx_t *ctx, double d)
 {
-  if (!ctx->first_element)
-    fprintf (ctx->fp, ", %g", d);
-  else
-    {
-      fprintf (ctx->fp, "%g", d);
-      ctx->first_element = false;
+    if (!ctx->first_element) {
+        fprintf(ctx->fp, ", %g", d);
+    } else {
+        fprintf(ctx->fp, "%g", d);
+        ctx->first_element = false;
     }
 }
 
-void
-json_element_object_begin (json_ctx_t *ctx)
+void json_element_object_begin(json_ctx_t *ctx)
 {
-  if (!ctx->first_element)
-    fprintf (ctx->fp, ",");
+    if (!ctx->first_element) {
+        fprintf(ctx->fp, ",");
+    }
 
-  fputs ("\n", ctx->fp);
+    fputs("\n", ctx->fp);
 
-  do_indent (ctx);
+    do_indent(ctx);
 
-  fputs ("{\n", ctx->fp);
+    fputs("{\n", ctx->fp);
 
-  ctx->indent_level++;
-  ctx->first_element = true;
+    ctx->indent_level++;
+    ctx->first_element = true;
 }
 
-void
-json_element_object_end (json_ctx_t *ctx)
+void json_element_object_end(json_ctx_t *ctx)
 {
-  ctx->indent_level--;
-  ctx->first_element = false;
+    ctx->indent_level--;
+    ctx->first_element = false;
 
-  fputs ("\n", ctx->fp);
+    fputs("\n", ctx->fp);
 
-  do_indent (ctx);
+    do_indent(ctx);
 
-  fputs ("}", ctx->fp);
+    fputs("}", ctx->fp);
 }

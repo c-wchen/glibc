@@ -20,12 +20,11 @@
 
 /* Set attributes associated with message queue MQDES and if OMQSTAT is
    not NULL also query its old attributes.  */
-int
-mq_setattr (mqd_t mqdes, const struct mq_attr *__restrict mqstat,
-	    struct mq_attr *__restrict omqstat)
+int mq_setattr(mqd_t mqdes, const struct mq_attr *__restrict mqstat,
+               struct mq_attr *__restrict omqstat)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-hidden_def (mq_setattr)
-stub_warning (mq_setattr)
+hidden_def(mq_setattr)
+stub_warning(mq_setattr)

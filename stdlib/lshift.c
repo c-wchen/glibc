@@ -30,49 +30,47 @@ along with the GNU MP Library; see the file COPYING.LIB.  If not, see
    2. If the result is to be written over the input, WP must be >= UP.
 */
 
-mp_limb_t
-mpn_lshift (register mp_ptr wp,
-	    register mp_srcptr up, mp_size_t usize,
-	    register unsigned int cnt)
+mp_limb_t mpn_lshift(register mp_ptr wp,
+                     register mp_srcptr up, mp_size_t usize,
+                     register unsigned int cnt)
 {
-  register mp_limb_t high_limb, low_limb;
-  register unsigned sh_1, sh_2;
-  register mp_size_t i;
-  mp_limb_t retval;
+    register mp_limb_t high_limb, low_limb;
+    register unsigned sh_1, sh_2;
+    register mp_size_t i;
+    mp_limb_t retval;
 
 #ifdef DEBUG
-  if (usize == 0 || cnt == 0)
-    abort ();
+    if (usize == 0 || cnt == 0) {
+        abort();
+    }
 #endif
 
-  sh_1 = cnt;
+    sh_1 = cnt;
 #if 0
-  if (sh_1 == 0)
-    {
-      if (wp != up)
-	{
-	  /* Copy from high end to low end, to allow specified input/output
-	     overlapping.  */
-	  for (i = usize - 1; i >= 0; i--)
-	    wp[i] = up[i];
-	}
-      return 0;
+    if (sh_1 == 0) {
+        if (wp != up) {
+            /* Copy from high end to low end, to allow specified input/output
+               overlapping.  */
+            for (i = usize - 1; i >= 0; i--) {
+                wp[i] = up[i];
+            }
+        }
+        return 0;
     }
 #endif
 
-  wp += 1;
-  sh_2 = BITS_PER_MP_LIMB - sh_1;
-  i = usize - 1;
-  low_limb = up[i];
-  retval = low_limb >> sh_2;
-  high_limb = low_limb;
-  while (--i >= 0)
-    {
-      low_limb = up[i];
-      wp[i] = (high_limb << sh_1) | (low_limb >> sh_2);
-      high_limb = low_limb;
+    wp += 1;
+    sh_2 = BITS_PER_MP_LIMB - sh_1;
+    i = usize - 1;
+    low_limb = up[i];
+    retval = low_limb >> sh_2;
+    high_limb = low_limb;
+    while (--i >= 0) {
+        low_limb = up[i];
+        wp[i] = (high_limb << sh_1) | (low_limb >> sh_2);
+        high_limb = low_limb;
     }
-  wp[i] = high_limb << sh_1;
+    wp[i] = high_limb << sh_1;
 
-  return retval;
+    return retval;
 }

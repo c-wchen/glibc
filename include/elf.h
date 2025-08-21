@@ -20,11 +20,11 @@
 # else
 /* Evaluate EXPR without run-time relocation for it.  EXPR should be an
    array, an address of an object, or a string literal.  */
-#  define DL_ADDRESS_WITHOUT_RELOC(expr)	\
-  ({						\
-     __auto_type _result = (expr);		\
-     asm ("" : "+r" (_result));			\
-     _result;					\
+#  define DL_ADDRESS_WITHOUT_RELOC(expr)    \
+  ({                        \
+     __auto_type _result = (expr);      \
+     asm ("" : "+r" (_result));         \
+     _result;                   \
    })
 # endif
 

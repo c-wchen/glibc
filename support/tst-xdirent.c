@@ -22,59 +22,57 @@
 #include <support/check.h>
 #include <unistd.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  {
-    DIR *d = xopendir (".");
-    struct dirent *e = xreaddir (d);
-    /* Assume that the "." special entry always comes first.  */
-    TEST_COMPARE_STRING (e->d_name, ".");
-    while (xreaddir (d) != NULL)
-      ;
-    xclosedir (d);
-  }
+    {
+        DIR *d = xopendir(".");
+        struct dirent *e = xreaddir(d);
+        /* Assume that the "." special entry always comes first.  */
+        TEST_COMPARE_STRING(e->d_name, ".");
+        while (xreaddir(d) != NULL)
+            ;
+        xclosedir(d);
+    }
 
-  {
-    DIR *d = xopendir (".");
-    struct dirent64 *e = xreaddir64 (d);
-    TEST_COMPARE_STRING (e->d_name, ".");
-    while (xreaddir64 (d) != NULL)
-      ;
-    xclosedir (d);
-  }
+    {
+        DIR *d = xopendir(".");
+        struct dirent64 *e = xreaddir64(d);
+        TEST_COMPARE_STRING(e->d_name, ".");
+        while (xreaddir64(d) != NULL)
+            ;
+        xclosedir(d);
+    }
 
-  /* The functions readdir_r, readdir64_r were deprecated in glibc 2.24.  */
-  DIAG_PUSH_NEEDS_COMMENT;
-  DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wdeprecated-declarations");
+    /* The functions readdir_r, readdir64_r were deprecated in glibc 2.24.  */
+    DIAG_PUSH_NEEDS_COMMENT;
+    DIAG_IGNORE_NEEDS_COMMENT(4.9, "-Wdeprecated-declarations");
 
-  {
-    DIR *d = xopendir (".");
-    union
-      {
-	struct dirent d;
-	char b[offsetof (struct dirent, d_name) + NAME_MAX + 1];
-      } buf;
-    TEST_VERIFY (xreaddir_r (d, &buf.d));
-    TEST_COMPARE_STRING (buf.d.d_name, ".");
-    while (xreaddir_r (d, &buf.d))
-      ;
-    xclosedir (d);
-  }
+    {
+        DIR *d = xopendir(".");
+        union {
+            struct dirent d;
+            char b[offsetof(struct dirent, d_name) + NAME_MAX + 1];
+        } buf;
+        TEST_VERIFY(xreaddir_r(d, &buf.d));
+        TEST_COMPARE_STRING(buf.d.d_name, ".");
+        while (xreaddir_r(d, &buf.d))
+            ;
+        xclosedir(d);
+    }
 
-  {
-    DIR *d = xopendir (".");
-    struct dirent64 buf = { 0, };
-    TEST_VERIFY (xreaddir64_r (d, &buf));
-    TEST_COMPARE_STRING (buf.d_name, ".");
-    while (xreaddir64_r (d, &buf))
-      ;
-    xclosedir (d);
-  }
+    {
+        DIR *d = xopendir(".");
+        struct dirent64 buf = { 0, };
+        TEST_VERIFY(xreaddir64_r(d, &buf));
+        TEST_COMPARE_STRING(buf.d_name, ".");
+        while (xreaddir64_r(d, &buf))
+            ;
+        xclosedir(d);
+    }
 
-  DIAG_POP_NEEDS_COMMENT;
+    DIAG_POP_NEEDS_COMMENT;
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

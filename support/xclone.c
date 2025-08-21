@@ -21,22 +21,22 @@
 # include <stackinfo.h>  /* For _STACK_GROWS_{UP,DOWN}.  */
 # include <xsched.h>
 
-pid_t
-xclone (int (*fn) (void *arg), void *arg, void *stack, size_t stack_size,
-	int flags)
+pid_t xclone(int (*fn)(void *arg), void *arg, void *stack, size_t stack_size,
+             int flags)
 {
-  pid_t r = -1;
+    pid_t r = -1;
 
 # if _STACK_GROWS_DOWN
-  r = clone (fn, stack + stack_size, flags, arg, /* ptid */ NULL,
-	     /* tls */ NULL, /* ctid */  NULL);
+    r = clone(fn, stack + stack_size, flags, arg, /* ptid */ NULL,
+              /* tls */ NULL, /* ctid */  NULL);
 # elif _STACK_GROWS_UP
-  r = clone (fn, stack, flags, arg, /* ptid */ NULL, /* tls */ NULL, NULL);
+    r = clone(fn, stack, flags, arg, /* ptid */ NULL, /* tls */ NULL, NULL);
 # endif
 
-  if (r < 0)
-    FAIL_EXIT1 ("clone: %m");
+    if (r < 0) {
+        FAIL_EXIT1("clone: %m");
+    }
 
-  return r;
+    return r;
 }
 #endif

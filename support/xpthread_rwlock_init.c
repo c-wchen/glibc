@@ -18,10 +18,9 @@
 
 #include <support/xthread.h>
 
-void
-xpthread_rwlock_init (pthread_rwlock_t *rwlock,
-		      const pthread_rwlockattr_t *attr)
+void xpthread_rwlock_init(pthread_rwlock_t *rwlock,
+                          const pthread_rwlockattr_t *attr)
 {
-  xpthread_check_return ("pthread_rwlock_init",
-                         pthread_rwlock_init (rwlock, attr));
+    xpthread_check_return("pthread_rwlock_init",
+                          pthread_rwlock_init(rwlock, attr));
 }

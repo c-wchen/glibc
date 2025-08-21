@@ -21,14 +21,14 @@
 # include <math.h>
 # include <libm-alias-finite.h>
 
-extern double __redirect_ieee754_log (double);
+extern double __redirect_ieee754_log(double);
 
 # define SYMBOL_NAME ieee754_log
 # include "ifunc-avx-fma4.h"
 
-libc_ifunc_redirected (__redirect_ieee754_log, __ieee754_log,
-		       IFUNC_SELECTOR ());
-libm_alias_finite (__ieee754_log, __log)
+libc_ifunc_redirected(__redirect_ieee754_log, __ieee754_log,
+                      IFUNC_SELECTOR());
+libm_alias_finite(__ieee754_log, __log)
 
 # define __log __ieee754_log_sse2
 #endif

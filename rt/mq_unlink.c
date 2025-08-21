@@ -19,10 +19,9 @@
 #include <mqueue.h>
 
 /* Remove message queue named NAME.  */
-int
-mq_unlink (const char *name)
+int mq_unlink(const char *name)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (mq_unlink)
+stub_warning(mq_unlink)

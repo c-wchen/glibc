@@ -19,9 +19,9 @@
 #include <support/check.h>
 #include <support/xunistd.h>
 
-void
-support_check_stat_path (const char *name, const char *path, int result)
+void support_check_stat_path(const char *name, const char *path, int result)
 {
-  if (result != 0)
-    FAIL_EXIT1 ("%s (\"%s\"): %m", name, path);
+    if (result != 0) {
+        FAIL_EXIT1("%s (\"%s\"): %m", name, path);
+    }
 }

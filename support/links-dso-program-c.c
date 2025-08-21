@@ -15,32 +15,29 @@
 */
 
 /* Use attribute cleanup to force linking against libgcc_s.  */
-static void
-cleanup_function (int *ignored)
+static void cleanup_function(int *ignored)
 {
-  puts ("cleanup performed");
+    puts("cleanup performed");
 }
 
-void
-invoke_callback (void (*callback) (int *))
+void invoke_callback(void (*callback)(int *))
 {
-  __attribute__ ((cleanup (cleanup_function))) int i = 0;
-  callback (&i);
+    __attribute__((cleanup(cleanup_function))) int i = 0;
+    callback(&i);
 }
 
-int
-main (int argc, char **argv)
+int main(int argc, char **argv)
 {
-  /* Complexity to keep gcc from optimizing this away.  */
-  printf ("This is a test %s.\n", argc > 1 ? argv[1] : "null");
+    /* Complexity to keep gcc from optimizing this away.  */
+    printf("This is a test %s.\n", argc > 1 ? argv[1] : "null");
 #ifdef HAVE_SELINUX
-  /* This exists to force libselinux.so to be required.  */
-  printf ("selinux %d\n", is_selinux_enabled ());
+    /* This exists to force libselinux.so to be required.  */
+    printf("selinux %d\n", is_selinux_enabled());
 #endif
-  /* Prevent invoke_callback from being optimized away.  */
-  {
-    Dl_info dli;
-    dladdr (invoke_callback, &dli);
-  }
-  return 0;
+    /* Prevent invoke_callback from being optimized away.  */
+    {
+        Dl_info dli;
+        dladdr(invoke_callback, &dli);
+    }
+    return 0;
 }

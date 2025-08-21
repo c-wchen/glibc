@@ -34,8 +34,8 @@
    aren't present.  */
 #ifndef RISCV_HWPROBE_KEY_MVENDORID
 struct riscv_hwprobe {
-	signed long long int key;
-	unsigned long long int value;
+    signed long long int key;
+    unsigned long long int value;
 };
 
 #define RISCV_HWPROBE_KEY_MVENDORID 0
@@ -77,53 +77,55 @@ __BEGIN_DECLS
    In C++ and with compilers that do not support transparent unions, the
    argument type must be cpu_set_t *.  */
 typedef union {
-	cpu_set_t *__cs;
-	unsigned long int *__ul;
-} __RISCV_HWPROBE_CPUS_TYPE __attribute__ ((__transparent_union__));
+    cpu_set_t *__cs;
+    unsigned long int *__ul;
+} __RISCV_HWPROBE_CPUS_TYPE __attribute__((__transparent_union__));
 # define __RISCV_HWPROBE_CPUS_TYPE __RISCV_HWPROBE_CPUS_TYPE
 #endif
 
-extern int __riscv_hwprobe (struct riscv_hwprobe *__pairs,
-			    size_t __pair_count, size_t __cpusetsize,
-			    __RISCV_HWPROBE_CPUS_TYPE __cpus,
-			    unsigned int __flags)
-     __THROW __nonnull ((1)) __attr_access ((__read_write__, 1, 2));
+extern int __riscv_hwprobe(struct riscv_hwprobe *__pairs,
+                           size_t __pair_count, size_t __cpusetsize,
+                           __RISCV_HWPROBE_CPUS_TYPE __cpus,
+                           unsigned int __flags)
+__THROW __nonnull((1)) __attr_access((__read_write__, 1, 2));
 
 /* A pointer to the __riscv_hwprobe function is passed as the second
    argument to ifunc selector routines. Include a function pointer type for
    convenience in calling the function in those settings. */
-typedef int (*__riscv_hwprobe_t) (struct riscv_hwprobe *__pairs,
-				  size_t __pair_count, size_t __cpusetsize,
-				  __RISCV_HWPROBE_CPUS_TYPE __cpus,
-				  unsigned int __flags)
-     __nonnull ((1)) __attr_access ((__read_write__, 1, 2));
+typedef int (*__riscv_hwprobe_t)(struct riscv_hwprobe *__pairs,
+                                 size_t __pair_count, size_t __cpusetsize,
+                                 __RISCV_HWPROBE_CPUS_TYPE __cpus,
+                                 unsigned int __flags)
+__nonnull((1)) __attr_access((__read_write__, 1, 2));
 
 /* Helper function usable from ifunc selectors that probes a single key. */
-static __inline int
-__riscv_hwprobe_one(__riscv_hwprobe_t hwprobe_func,
-                    long long int key,
-                    unsigned long long int *value)
+static __inline int __riscv_hwprobe_one(__riscv_hwprobe_t hwprobe_func,
+                                        long long int key,
+                                        unsigned long long int *value)
 {
-  struct riscv_hwprobe pair;
-  int rc;
+    struct riscv_hwprobe pair;
+    int rc;
 
-  /* Earlier versions of glibc pass NULL as the second ifunc parameter. Other C
-     libraries on non-Linux systems may pass +1 as this function pointer to
-     indicate no support. Users copying this function to exotic worlds
-     (non-Linux non-glibc) may want to do additional validity checks here. */
-  if (hwprobe_func == NULL)
-    return ENOSYS;
+    /* Earlier versions of glibc pass NULL as the second ifunc parameter. Other C
+       libraries on non-Linux systems may pass +1 as this function pointer to
+       indicate no support. Users copying this function to exotic worlds
+       (non-Linux non-glibc) may want to do additional validity checks here. */
+    if (hwprobe_func == NULL) {
+        return ENOSYS;
+    }
 
-  pair.key = key;
-  rc = hwprobe_func (&pair, 1, 0, NULL, 0);
-  if (rc != 0)
-    return rc;
+    pair.key = key;
+    rc = hwprobe_func(&pair, 1, 0, NULL, 0);
+    if (rc != 0) {
+        return rc;
+    }
 
-  if (pair.key < 0)
-    return ENOENT;
+    if (pair.key < 0) {
+        return ENOENT;
+    }
 
-  *value = pair.value;
-  return 0;
+    *value = pair.value;
+    return 0;
 }
 
 __END_DECLS

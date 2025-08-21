@@ -21,7 +21,7 @@
 /* Specify the conversion table.  */
 #define TABLES <ebcdic-es.h>
 
-#define CHARSET_NAME	"EBCDIC-ES//"
-#define HAS_HOLES	1	/* Not all 256 character are defined.  */
+#define CHARSET_NAME    "EBCDIC-ES//"
+#define HAS_HOLES   1   /* Not all 256 character are defined.  */
 
 #include <8bit-gap.c>

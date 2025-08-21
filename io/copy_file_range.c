@@ -19,12 +19,11 @@
 #include <errno.h>
 #include <unistd.h>
 
-ssize_t
-copy_file_range (int infd, __off64_t *pinoff,
-                 int outfd, __off64_t *poutoff,
-                 size_t length, unsigned int flags)
+ssize_t copy_file_range(int infd, __off64_t *pinoff,
+                        int outfd, __off64_t *poutoff,
+                        size_t length, unsigned int flags)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (copy_file_range)
+stub_warning(copy_file_range)

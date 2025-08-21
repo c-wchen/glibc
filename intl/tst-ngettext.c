@@ -24,43 +24,41 @@
 #include <string.h>
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  const char *strs[2] = { "singular", "plural" };
-  unsigned long int i;
-  int res = 0;
+    const char *strs[2] = { "singular", "plural" };
+    unsigned long int i;
+    int res = 0;
 
-  /* We don't want any translation here.  */
-  setenv ("LANGUAGE", "C", 1);
-  unsetenv ("OUTPUT_CHARSET");
+    /* We don't want any translation here.  */
+    setenv("LANGUAGE", "C", 1);
+    unsetenv("OUTPUT_CHARSET");
 
-  for (i = 0; i < 30; ++i)
-    {
-      char *tr;
+    for (i = 0; i < 30; ++i) {
+        char *tr;
 
-      tr = ngettext (strs[0], strs[1], i);
+        tr = ngettext(strs[0], strs[1], i);
 #define TEST \
-      do								      \
-	if (tr != strs[i != 1])						      \
-	  {								      \
-	    if (strcmp (tr, strs[i != 1]) == 0)				      \
-	      printf ("%lu: correct string, wrong pointer (%s)\n", i, tr);    \
-	    else							      \
-	      printf ("%lu: wrong result (%s)\n", i, tr);		      \
-	    res = 1;							      \
-	  }								      \
+      do                                      \
+    if (tr != strs[i != 1])                           \
+      {                                   \
+        if (strcmp (tr, strs[i != 1]) == 0)                   \
+          printf ("%lu: correct string, wrong pointer (%s)\n", i, tr);    \
+        else                                  \
+          printf ("%lu: wrong result (%s)\n", i, tr);             \
+        res = 1;                                  \
+      }                                   \
       while (0)
-      TEST;
+        TEST;
 
-      tr = dngettext ("messages", strs[0], strs[1], i);
-      TEST;
+        tr = dngettext("messages", strs[0], strs[1], i);
+        TEST;
 
-      tr = dcngettext ("messages", strs[0], strs[1], i, LC_MESSAGES);
-      TEST;
+        tr = dcngettext("messages", strs[0], strs[1], i, LC_MESSAGES);
+        TEST;
     }
 
-  return res;
+    return res;
 }
 
 #define TEST_FUNCTION do_test ()

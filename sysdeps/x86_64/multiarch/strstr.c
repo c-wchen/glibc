@@ -33,17 +33,17 @@
 
 #include "string/strstr.c"
 
-extern __typeof (__redirect_strstr) __strstr_sse2_unaligned attribute_hidden;
-extern __typeof (__redirect_strstr) __strstr_generic attribute_hidden;
+extern __typeof(__redirect_strstr) __strstr_sse2_unaligned attribute_hidden;
+extern __typeof(__redirect_strstr) __strstr_generic attribute_hidden;
 
 #include "init-arch.h"
 
 /* Avoid DWARF definition DIE on ifunc symbol so that GDB can handle
    ifunc symbol properly.  */
-extern __typeof (__redirect_strstr) __libc_strstr;
-libc_ifunc (__libc_strstr,
-	    HAS_ARCH_FEATURE (Fast_Unaligned_Load)
-	    ? __strstr_sse2_unaligned
-	    : __strstr_generic)
+extern __typeof(__redirect_strstr) __libc_strstr;
+libc_ifunc(__libc_strstr,
+           HAS_ARCH_FEATURE(Fast_Unaligned_Load)
+           ? __strstr_sse2_unaligned
+           : __strstr_generic)
 #undef strstr
-strong_alias (__libc_strstr, strstr)
+strong_alias(__libc_strstr, strstr)

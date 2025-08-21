@@ -18,12 +18,11 @@
 #include <stdio.h>
 
 /* Abort with an error message.  */
-void
-__libc_fatal (const char *message)
+void __libc_fatal(const char *message)
 {
-  /* This function should write MESSAGE out in the most reliable way.
-     It is called in situations like internal stdio lossage.  */
+    /* This function should write MESSAGE out in the most reliable way.
+       It is called in situations like internal stdio lossage.  */
 
-  abort ();
+    abort();
 }
-libc_hidden_def (__libc_fatal)
+libc_hidden_def(__libc_fatal)

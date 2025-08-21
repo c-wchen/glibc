@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 1985, 1993
- *	The Regents of the University of California.  All rights reserved.
+ *  The Regents of the University of California.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -55,89 +55,93 @@ static const char *const okshells[] = { _PATH_BSHELL, _PATH_CSHELL, NULL };
 #else
 static const char *okshells[3];
 #endif
-static char **curshell, **shells, *strings;
-static char **initshells (void) __THROW;
+static char **curshell, * *shells, *strings;
+static char **initshells(void) __THROW;
 
 /*
  * Get a list of shells from _PATH_SHELLS, if it exists.
  */
-char *
-getusershell (void)
+char *getusershell(void)
 {
-	char *ret;
+    char *ret;
 
-	if (curshell == NULL)
-		curshell = initshells();
-	ret = *curshell;
-	if (ret != NULL)
-		curshell++;
-	return (ret);
+    if (curshell == NULL) {
+        curshell = initshells();
+    }
+    ret = *curshell;
+    if (ret != NULL) {
+        curshell++;
+    }
+    return (ret);
 }
 
-void
-endusershell (void)
+void endusershell(void)
 {
 
-	free(shells);
-	shells = NULL;
-	free(strings);
-	strings = NULL;
-	curshell = NULL;
+    free(shells);
+    shells = NULL;
+    free(strings);
+    strings = NULL;
+    curshell = NULL;
 }
 
-void
-setusershell (void)
+void setusershell(void)
 {
 
-	curshell = initshells();
+    curshell = initshells();
 }
 
-static char **
-initshells (void)
+static char **initshells(void)
 {
-	char **sp, *cp;
-	FILE *fp;
-	struct __stat64_t64 statb;
-	size_t flen;
+    char **sp, *cp;
+    FILE *fp;
+    struct __stat64_t64 statb;
+    size_t flen;
 
-	free(shells);
-	shells = NULL;
-	free(strings);
-	strings = NULL;
-	if ((fp = fopen(_PATH_SHELLS, "rce")) == NULL)
-		goto init_okshells_noclose;
-	if (__fstat64_time64(fileno(fp), &statb) == -1) {
-	init_okshells:
-		(void)fclose(fp);
-	init_okshells_noclose:
-		okshells[0] = _PATH_BSHELL;
-		okshells[1] = _PATH_CSHELL;
-		return (char **) okshells;
-	}
-	if (statb.st_size > ~(size_t)0 / sizeof (char *) * 3)
-		goto init_okshells;
-	flen = statb.st_size + 3;
-	if ((strings = malloc(flen)) == NULL)
-		goto init_okshells;
-	shells = malloc(statb.st_size / 3 * sizeof (char *));
-	if (shells == NULL) {
-		free(strings);
-		strings = NULL;
-		goto init_okshells;
-	}
-	sp = shells;
-	cp = strings;
-	while (fgets_unlocked(cp, flen - (cp - strings), fp) != NULL) {
-		while (*cp != '#' && *cp != '/' && *cp != '\0')
-			cp++;
-		if (*cp == '#' || *cp == '\0' || cp[1] == '\0')
-			continue;
-		*sp++ = cp;
-		while (!isspace(*cp) && *cp != '#' && *cp != '\0')
-			cp++;
-		*cp++ = '\0';
-	}
-	*sp = NULL;
-	(void)fclose(fp);
-	return (shells);
+    free(shells);
+    shells = NULL;
+    free(strings);
+    strings = NULL;
+    if ((fp = fopen(_PATH_SHELLS, "rce")) == NULL) {
+        goto init_okshells_noclose;
+    }
+    if (__fstat64_time64(fileno(fp), &statb) == -1) {
+init_okshells:
+        (void)fclose(fp);
+init_okshells_noclose:
+        okshells[0] = _PATH_BSHELL;
+        okshells[1] = _PATH_CSHELL;
+        return (char **) okshells;
+    }
+    if (statb.st_size > ~(size_t)0 / sizeof(char *) * 3) {
+        goto init_okshells;
+    }
+    flen = statb.st_size + 3;
+    if ((strings = malloc(flen)) == NULL) {
+        goto init_okshells;
+    }
+    shells = malloc(statb.st_size / 3 * sizeof(char *));
+    if (shells == NULL) {
+        free(strings);
+        strings = NULL;
+        goto init_okshells;
+    }
+    sp = shells;
+    cp = strings;
+    while (fgets_unlocked(cp, flen - (cp - strings), fp) != NULL) {
+        while (*cp != '#' && *cp != '/' && *cp != '\0') {
+            cp++;
+        }
+        if (*cp == '#' || *cp == '\0' || cp[1] == '\0') {
+            continue;
+        }
+        *sp++ = cp;
+        while (!isspace(*cp) && *cp != '#' && *cp != '\0') {
+            cp++;
+        }
+        *cp++ = '\0';
+    }
+    *sp = NULL;
+    (void)fclose(fp);
+    return (shells);
 }

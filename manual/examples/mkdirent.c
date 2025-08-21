@@ -22,21 +22,21 @@
 #include <string.h>
 
 struct dirent *
-mkdirent (const char *name)
+mkdirent(const char *name)
 {
-  size_t dirent_size = offsetof (struct dirent, d_name) + 1;
-  size_t name_length = strlen (name);
-  size_t total_size = dirent_size + name_length;
-  if (total_size < dirent_size)
-    {
-      errno = ENOMEM;
-      return NULL;
+    size_t dirent_size = offsetof(struct dirent, d_name) + 1;
+    size_t name_length = strlen(name);
+    size_t total_size = dirent_size + name_length;
+    if (total_size < dirent_size) {
+        errno = ENOMEM;
+        return NULL;
     }
-  struct dirent *result = malloc (total_size);
-  if (result == NULL)
-    return NULL;
-  result->d_type = DT_UNKNOWN;
-  result->d_ino = 1;            /* Do not skip this entry.  */
-  memcpy (result->d_name, name, name_length + 1);
-  return result;
+    struct dirent *result = malloc(total_size);
+    if (result == NULL) {
+        return NULL;
+    }
+    result->d_type = DT_UNKNOWN;
+    result->d_ino = 1;            /* Do not skip this entry.  */
+    memcpy(result->d_name, name, name_length + 1);
+    return result;
 }

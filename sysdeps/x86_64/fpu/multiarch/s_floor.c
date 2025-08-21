@@ -30,6 +30,6 @@
 # define SYMBOL_NAME floor
 # include "ifunc-sse4_1.h"
 
-libc_ifunc_redirected (__redirect_floor, __floor, IFUNC_SELECTOR ());
-libm_alias_double (__floor, floor)
+libc_ifunc_redirected(__redirect_floor, __floor, IFUNC_SELECTOR());
+libm_alias_double(__floor, floor)
 #endif

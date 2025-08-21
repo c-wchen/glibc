@@ -10,11 +10,10 @@
 #ifndef _ISOMAC
 #include <stdarg.h>
 
-extern ssize_t
-__vstrfmon_l_internal (char *s, size_t maxsize, locale_t loc,
-		       const char *format, va_list ap,
-		       unsigned int flags)
-  attribute_hidden;
+extern ssize_t __vstrfmon_l_internal(char *s, size_t maxsize, locale_t loc,
+                                     const char *format, va_list ap,
+                                     unsigned int flags)
+attribute_hidden;
 
 /* Flags for __vstrfmon_l_internal.
 

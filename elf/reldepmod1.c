@@ -1,10 +1,9 @@
-extern int foo (void);
+extern int foo(void);
 
 int some_var;
 
 
-int
-foo (void)
+int foo(void)
 {
-  return some_var;
+    return some_var;
 }

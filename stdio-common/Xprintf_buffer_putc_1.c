@@ -19,11 +19,12 @@
 #include <assert.h>
 
 void
-Xprintf (buffer_putc_1) (struct Xprintf_buffer *buf, CHAR_T ch)
+Xprintf(buffer_putc_1)(struct Xprintf_buffer *buf, CHAR_T ch)
 {
-  if (__glibc_unlikely (Xprintf_buffer_has_failed (buf))
-      || !Xprintf_buffer_flush (buf))
-    return;
-  assert (buf->write_ptr < buf->write_end);
-  *buf->write_ptr++ = ch;
+    if (__glibc_unlikely(Xprintf_buffer_has_failed(buf))
+        || !Xprintf_buffer_flush(buf)) {
+        return;
+    }
+    assert(buf->write_ptr < buf->write_end);
+    *buf->write_ptr++ = ch;
 }

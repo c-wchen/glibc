@@ -39,7 +39,7 @@
  */
 
 #ifndef _RPC_AUTH_UNIX_H
-#define _RPC_AUTH_UNIX_H	1
+#define _RPC_AUTH_UNIX_H    1
 
 #include <features.h>
 #include <sys/types.h>
@@ -58,28 +58,26 @@ __BEGIN_DECLS
 /*
  * Unix style credentials.
  */
-struct authunix_parms
-  {
+struct authunix_parms {
     u_long aup_time;
     char *aup_machname;
     __uid_t aup_uid;
     __gid_t aup_gid;
     u_int aup_len;
     __gid_t *aup_gids;
-  };
+};
 
-extern bool_t xdr_authunix_parms (XDR *__xdrs, struct authunix_parms *__p)
-     __THROW;
+extern bool_t xdr_authunix_parms(XDR *__xdrs, struct authunix_parms *__p)
+__THROW;
 
 /*
  * If a response verifier has flavor AUTH_SHORT,
  * then the body of the response verifier encapsulates the following structure;
  * again it is serialized in the obvious fashion.
  */
-struct short_hand_verf
-  {
+struct short_hand_verf {
     struct opaque_auth new_cred;
-  };
+};
 
 __END_DECLS
 

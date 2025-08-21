@@ -1,12 +1,12 @@
-int foo (void);
-int weak (void);
+int foo(void);
+int weak(void);
 
-int foo (void)
+int foo(void)
 {
-  return 10;
+    return 10;
 }
 
-int weak (void)
+int weak(void)
 {
-  return 30;
+    return 30;
 }

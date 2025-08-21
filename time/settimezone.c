@@ -20,9 +20,8 @@
 
 /* Set the system-wide timezone.
    This call is restricted to the super-user.  */
-int
-__settimezone (const struct timezone *tz)
+int __settimezone(const struct timezone *tz)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }

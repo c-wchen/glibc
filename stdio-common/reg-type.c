@@ -25,39 +25,37 @@
 /* Array of functions indexed by format character.  */
 printf_va_arg_function **__printf_va_arg_table attribute_hidden;
 
-__libc_lock_define_initialized (static, lock);
+__libc_lock_define_initialized(static, lock);
 
 /* Last type allocated.  */
 static int pa_next_type = PA_LAST;
 
 
-int
-__register_printf_type (printf_va_arg_function fct)
+int __register_printf_type(printf_va_arg_function fct)
 {
-  int result = -1;
-  __libc_lock_lock (lock);
+    int result = -1;
+    __libc_lock_lock(lock);
 
-  if (__printf_va_arg_table == NULL)
-    {
-      __printf_va_arg_table = (printf_va_arg_function **)
-	calloc (0x100 - PA_LAST, sizeof (void *));
-      if (__printf_va_arg_table == NULL)
-	goto out;
+    if (__printf_va_arg_table == NULL) {
+        __printf_va_arg_table = (printf_va_arg_function **)
+                                calloc(0x100 - PA_LAST, sizeof(void *));
+        if (__printf_va_arg_table == NULL) {
+            goto out;
+        }
     }
 
-  if (pa_next_type == 0x100)
-    __set_errno (ENOSPC);
-  else
-    {
-      result = pa_next_type++;
-      __printf_va_arg_table[result - PA_LAST] = fct;
+    if (pa_next_type == 0x100) {
+        __set_errno(ENOSPC);
+    } else {
+        result = pa_next_type++;
+        __printf_va_arg_table[result - PA_LAST] = fct;
     }
 
- out:
-  __libc_lock_unlock (lock);
+out:
+    __libc_lock_unlock(lock);
 
-  return result;
+    return result;
 }
-weak_alias (__register_printf_type, register_printf_type)
+weak_alias(__register_printf_type, register_printf_type)
 
-weak_alias (__printf_va_arg_table, __libc_reg_type_freemem_ptr)
+weak_alias(__printf_va_arg_table, __libc_reg_type_freemem_ptr)

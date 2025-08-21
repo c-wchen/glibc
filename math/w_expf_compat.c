@@ -21,15 +21,15 @@
 
 #if LIBM_SVID_COMPAT && SHLIB_COMPAT (libm, GLIBC_2_0, GLIBC_2_27)
 /* wrapper expf */
-float
-__expf_compat (float x)
+float __expf_compat(float x)
 {
-  float z = __ieee754_expf (x);
-  if (__builtin_expect (!isfinite (z) || z == 0, 0)
-      && isfinite (x) && _LIB_VERSION != _IEEE_)
-    return __kernel_standard_f (x, x, 106 + !!signbit (x));
+    float z = __ieee754_expf(x);
+    if (__builtin_expect(!isfinite(z) || z == 0, 0)
+        && isfinite(x) && _LIB_VERSION != _IEEE_) {
+        return __kernel_standard_f(x, x, 106 + !!signbit(x));
+    }
 
-  return z;
+    return z;
 }
-compat_symbol (libm, __expf_compat, expf, GLIBC_2_0);
+compat_symbol(libm, __expf_compat, expf, GLIBC_2_0);
 #endif

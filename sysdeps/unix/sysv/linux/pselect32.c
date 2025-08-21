@@ -21,21 +21,21 @@
 
 #ifndef __ASSUME_TIME64_SYSCALLS
 
-int
-__pselect32 (int nfds, fd_set *readfds, fd_set *writefds,
-	     fd_set *exceptfds, const struct __timespec64 *timeout,
-	     const sigset_t *sigmask)
+int __pselect32(int nfds, fd_set *readfds, fd_set *writefds,
+                fd_set *exceptfds, const struct __timespec64 *timeout,
+                const sigset_t *sigmask)
 {
-  struct timespec ts32, *pts32 = NULL;
-  if (timeout != NULL)
-    {
-      ts32 = valid_timespec64_to_timespec (*timeout);
-      pts32 = &ts32;
+    struct timespec ts32, *pts32 = NULL;
+    if (timeout != NULL) {
+        ts32 = valid_timespec64_to_timespec(*timeout);
+        pts32 = &ts32;
     }
 
-  return SYSCALL_CANCEL (pselect6, nfds, readfds, writefds, exceptfds,
-			 pts32,
-			 ((__syscall_ulong_t[]){ (uintptr_t) sigmask,
-						 __NSIG_BYTES }));
+    return SYSCALL_CANCEL(pselect6, nfds, readfds, writefds, exceptfds,
+                          pts32,
+    ((__syscall_ulong_t[]) {
+        (uintptr_t) sigmask,
+        __NSIG_BYTES
+    }));
 }
 #endif

@@ -21,15 +21,15 @@
 /* Define the lookup function.  */
 #include "wchar-lookup.h"
 
-wint_t
-__towctrans (wint_t wc, wctrans_t desc)
+wint_t __towctrans(wint_t wc, wctrans_t desc)
 {
-  /* If the user passes in an invalid DESC valid (the one returned from
-     `wctrans' in case of an error) simply return the value.  */
-  if (desc == (wctrans_t) 0)
-    return wc;
+    /* If the user passes in an invalid DESC valid (the one returned from
+       `wctrans' in case of an error) simply return the value.  */
+    if (desc == (wctrans_t) 0) {
+        return wc;
+    }
 
-  return wctrans_table_lookup ((const char *) desc, wc);
+    return wctrans_table_lookup((const char *) desc, wc);
 }
-libc_hidden_def (__towctrans)
-weak_alias (__towctrans, towctrans)
+libc_hidden_def(__towctrans)
+weak_alias(__towctrans, towctrans)

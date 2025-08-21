@@ -25,6 +25,6 @@
 # define OFF_T off_t
 # include <sysdeps/posix/preadv_common.c>
 
-libc_hidden_def (preadv)
+libc_hidden_def(preadv)
 
 #endif

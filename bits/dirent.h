@@ -20,34 +20,32 @@
 # error "Never use <bits/dirent.h> directly; include <dirent.h> instead."
 #endif
 
-struct dirent
-  {
+struct dirent {
 #ifndef __USE_FILE_OFFSET64
-    __ino_t d_ino;		/* File serial number.  */
+    __ino_t d_ino;      /* File serial number.  */
 #else
     __ino64_t d_ino;
 #endif
     unsigned short int d_reclen; /* Length of the whole `struct dirent'.  */
-    unsigned char d_type;	/* File type, possibly unknown.  */
-    unsigned char d_namlen;	/* Length of the file name.  */
+    unsigned char d_type;   /* File type, possibly unknown.  */
+    unsigned char d_namlen; /* Length of the file name.  */
 
     /* Only this member is in the POSIX standard.  */
-    char d_name[1];		/* File name (actually longer).  */
-  };
+    char d_name[1];     /* File name (actually longer).  */
+};
 
 #ifdef __USE_LARGEFILE64
-struct dirent64
-  {
+struct dirent64 {
     __ino64_t d_ino;
     unsigned short int d_reclen;
     unsigned char d_type;
     unsigned char d_namlen;
 
     char d_name[1];
-  };
+};
 #endif
 
-#define d_fileno	d_ino	/* Backwards compatibility.  */
+#define d_fileno    d_ino   /* Backwards compatibility.  */
 
 #define _DIRENT_HAVE_D_RECLEN 1
 #define _DIRENT_HAVE_D_NAMLEN 1
@@ -55,7 +53,7 @@ struct dirent64
 
 #ifdef __INO_T_MATCHES_INO64_T
 /* Inform libc code that these two types are effectively identical.  */
-# define _DIRENT_MATCHES_DIRENT64	1
+# define _DIRENT_MATCHES_DIRENT64   1
 #else
-# define _DIRENT_MATCHES_DIRENT64	0
+# define _DIRENT_MATCHES_DIRENT64   0
 #endif

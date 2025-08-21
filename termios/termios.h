@@ -16,11 +16,11 @@
    <https://www.gnu.org/licenses/>.  */
 
 /*
- *	POSIX Standard: 7.1-2 General Terminal Interface	<termios.h>
+ *  POSIX Standard: 7.1-2 General Terminal Interface    <termios.h>
  */
 
-#ifndef	_TERMIOS_H
-#define	_TERMIOS_H	1
+#ifndef _TERMIOS_H
+#define _TERMIOS_H  1
 
 #include <features.h>
 #if defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K8
@@ -41,24 +41,24 @@ __BEGIN_DECLS
 #ifdef __USE_MISC
 /* Compare a character C to a value VAL from the `c_cc' array in a
    `struct termios'.  If VAL is _POSIX_VDISABLE, no character can match it.  */
-# define CCEQ(val, c)	((c) == (val) && (val) != _POSIX_VDISABLE)
+# define CCEQ(val, c)   ((c) == (val) && (val) != _POSIX_VDISABLE)
 #endif
 
 /* Return the output baud rate stored in *TERMIOS_P.  */
-extern speed_t cfgetospeed (const struct termios *__termios_p) __THROW;
+extern speed_t cfgetospeed(const struct termios *__termios_p) __THROW;
 
 /* Return the input baud rate stored in *TERMIOS_P.  */
-extern speed_t cfgetispeed (const struct termios *__termios_p) __THROW;
+extern speed_t cfgetispeed(const struct termios *__termios_p) __THROW;
 
 /* Set the output baud rate stored in *TERMIOS_P to SPEED.  */
-extern int cfsetospeed (struct termios *__termios_p, speed_t __speed) __THROW;
+extern int cfsetospeed(struct termios *__termios_p, speed_t __speed) __THROW;
 
 /* Set the input baud rate stored in *TERMIOS_P to SPEED.  */
-extern int cfsetispeed (struct termios *__termios_p, speed_t __speed) __THROW;
+extern int cfsetispeed(struct termios *__termios_p, speed_t __speed) __THROW;
 
-#ifdef	__USE_MISC
+#ifdef  __USE_MISC
 /* Set both the input and output baud rates in *TERMIOS_OP to SPEED.  */
-extern int cfsetspeed (struct termios *__termios_p, speed_t __speed) __THROW;
+extern int cfsetspeed(struct termios *__termios_p, speed_t __speed) __THROW;
 #endif
 
 #ifdef __USE_GNU
@@ -67,56 +67,56 @@ typedef speed_t baud_t;
 #define BAUD_MAX SPEED_MAX
 
 /* Return the output baud rate stored in *TERMIOS_P.  */
-extern baud_t cfgetobaud (const struct termios *__termios_p) __THROW;
+extern baud_t cfgetobaud(const struct termios *__termios_p) __THROW;
 
 /* Return the input baud rate stored in *TERMIOS_P.  */
-extern baud_t cfgetibaud (const struct termios *__termios_p) __THROW;
+extern baud_t cfgetibaud(const struct termios *__termios_p) __THROW;
 
 /* Set the output baud rate stored in *TERMIOS_P to BAUD.  */
-extern int cfsetobaud (struct termios *__termios_p, baud_t __baud) __THROW;
+extern int cfsetobaud(struct termios *__termios_p, baud_t __baud) __THROW;
 
 /* Set the input baud rate stored in *TERMIOS_P to BAUD.  */
-extern int cfsetibaud (struct termios *__termios_p, baud_t __baud) __THROW;
+extern int cfsetibaud(struct termios *__termios_p, baud_t __baud) __THROW;
 
 /* Set both the input and output baud rates in *TERMIOS_OP to BAUD.  */
-extern int cfsetbaud (struct termios *__termios_p, baud_t __baud) __THROW;
+extern int cfsetbaud(struct termios *__termios_p, baud_t __baud) __THROW;
 #endif
 
 /* Put the state of FD into *TERMIOS_P.  */
-extern int tcgetattr (int __fd, struct termios *__termios_p) __THROW;
+extern int tcgetattr(int __fd, struct termios *__termios_p) __THROW;
 
 /* Set the state of FD to *TERMIOS_P.
    Values for OPTIONAL_ACTIONS (TCSA*) are in <bits/termios.h>.  */
-extern int tcsetattr (int __fd, int __optional_actions,
-		      const struct termios *__termios_p) __THROW;
+extern int tcsetattr(int __fd, int __optional_actions,
+                     const struct termios *__termios_p) __THROW;
 
 
-#ifdef	__USE_MISC
+#ifdef  __USE_MISC
 /* Set *TERMIOS_P to indicate raw mode.  */
-extern void cfmakeraw (struct termios *__termios_p) __THROW;
+extern void cfmakeraw(struct termios *__termios_p) __THROW;
 #endif
 
 /* Send zero bits on FD.  */
-extern int tcsendbreak (int __fd, int __duration) __THROW;
+extern int tcsendbreak(int __fd, int __duration) __THROW;
 
 /* Wait for pending output to be written on FD.
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
-extern int tcdrain (int __fd);
+extern int tcdrain(int __fd);
 
 /* Flush pending data on FD.
    Values for QUEUE_SELECTOR (TC{I,O,IO}FLUSH) are in <bits/termios.h>.  */
-extern int tcflush (int __fd, int __queue_selector) __THROW;
+extern int tcflush(int __fd, int __queue_selector) __THROW;
 
 /* Suspend or restart transmission on FD.
    Values for ACTION (TC[IO]{OFF,ON}) are in <bits/termios.h>.  */
-extern int tcflow (int __fd, int __action) __THROW;
+extern int tcflow(int __fd, int __action) __THROW;
 
 
 #if defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K8
 /* Get process group ID for session leader for controlling terminal FD.  */
-extern __pid_t tcgetsid (int __fd) __THROW;
+extern __pid_t tcgetsid(int __fd) __THROW;
 #endif
 
 

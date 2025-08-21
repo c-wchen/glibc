@@ -20,10 +20,9 @@
 
 /* Return frequency of `times'.
    Since Mach reports CPU times in microseconds, we always use 1 million.  */
-int
-__getclktck (void)
+int __getclktck(void)
 {
-  return 1000000;
+    return 1000000;
 }
 
 /* Before glibc 2.2, the Hurd actually did this differently, so we
@@ -32,5 +31,5 @@ __getclktck (void)
 #include <shlib-compat.h>
 
 #if SHLIB_COMPAT (libc, GLIBC_2_1_1, GLIBC_2_2)
-compat_symbol (libc, __getclktck, __libc_clk_tck, GLIBC_2_1_1);
+compat_symbol(libc, __getclktck, __libc_clk_tck, GLIBC_2_1_1);
 #endif

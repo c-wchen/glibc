@@ -22,11 +22,10 @@
 /* Do system call CALLNO, passing it the remaining arguments.
    This only makes sense in certain operating systems.  */
 
-long int
-syscall (long int callno, ...)
+long int syscall(long int callno, ...)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (syscall)
+stub_warning(syscall)

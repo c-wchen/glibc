@@ -21,23 +21,22 @@
 #include <math-underflow.h>
 
 FLOAT
-M_DECL_FUNC (__log2p1) (FLOAT x)
+M_DECL_FUNC(__log2p1)(FLOAT x)
 {
-  if (__glibc_unlikely (islessequal (x, M_LIT (-1.0))))
-    {
-      if (x == -1)
-	__set_errno (ERANGE);
-      else
-	__set_errno (EDOM);
+    if (__glibc_unlikely(islessequal(x, M_LIT(-1.0)))) {
+        if (x == -1) {
+            __set_errno(ERANGE);
+        } else {
+            __set_errno(EDOM);
+        }
     }
-  if (isless (M_FABS (x), M_EPSILON / 4))
-    {
-      /* Avoid spurious underflows when log1p underflows but log2p1
-	 should not.  */
-      FLOAT ret = M_MLIT (M_LOG2E) * x;
-      math_check_force_underflow (ret);
-      return ret;
+    if (isless(M_FABS(x), M_EPSILON / 4)) {
+        /* Avoid spurious underflows when log1p underflows but log2p1
+        should not.  */
+        FLOAT ret = M_MLIT(M_LOG2E) * x;
+        math_check_force_underflow(ret);
+        return ret;
     }
-  return M_MLIT (M_LOG2E) * M_SUF (__log1p) (x);
+    return M_MLIT(M_LOG2E) * M_SUF(__log1p)(x);
 }
-declare_mgen_alias (__log2p1, log2p1);
+declare_mgen_alias(__log2p1, log2p1);

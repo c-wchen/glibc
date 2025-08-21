@@ -21,13 +21,12 @@
 
 /* Put the soft and hard limits for RESOURCE in *RLIMITS.
    Returns 0 if successful, -1 if not (and sets errno).  */
-int
-__getrlimit (enum __rlimit_resource resource, struct rlimit *rlimits)
+int __getrlimit(enum __rlimit_resource resource, struct rlimit *rlimits)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (__getrlimit)
-weak_alias (__getrlimit, getrlimit)
+libc_hidden_def(__getrlimit)
+weak_alias(__getrlimit, getrlimit)
 
-stub_warning (getrlimit)
+stub_warning(getrlimit)

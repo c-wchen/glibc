@@ -16,9 +16,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-static inline void
-__rtld_static_init_arch (struct link_map *map, struct rtld_global_ro *dl)
+static inline void __rtld_static_init_arch(struct link_map *map, struct rtld_global_ro *dl)
 {
-  /* The generic helper does not perform any additional
-     initialization.  */
+    /* The generic helper does not perform any additional
+       initialization.  */
 }

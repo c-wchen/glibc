@@ -23,24 +23,25 @@
 
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_3_2)
-int
-__pthread_cond_broadcast_2_0 (pthread_cond_2_0_t *cond)
+int __pthread_cond_broadcast_2_0(pthread_cond_2_0_t *cond)
 {
-  if (cond->cond == NULL)
-    {
-      pthread_cond_t *newcond;
+    if (cond->cond == NULL) {
+        pthread_cond_t *newcond;
 
-      newcond = (pthread_cond_t *) calloc (sizeof (pthread_cond_t), 1);
-      if (newcond == NULL)
-	return ENOMEM;
+        newcond = (pthread_cond_t *) calloc(sizeof(pthread_cond_t), 1);
+        if (newcond == NULL) {
+            return ENOMEM;
+        }
 
-      if (atomic_compare_and_exchange_bool_acq (&cond->cond, newcond, NULL))
-	/* Somebody else just initialized the condvar.  */
-	free (newcond);
+        if (atomic_compare_and_exchange_bool_acq(&cond->cond, newcond, NULL))
+            /* Somebody else just initialized the condvar.  */
+        {
+            free(newcond);
+        }
     }
 
-  return __pthread_cond_broadcast (cond->cond);
+    return __pthread_cond_broadcast(cond->cond);
 }
-compat_symbol (libpthread, __pthread_cond_broadcast_2_0,
-	       pthread_cond_broadcast, GLIBC_2_0);
+compat_symbol(libpthread, __pthread_cond_broadcast_2_0,
+              pthread_cond_broadcast, GLIBC_2_0);
 #endif

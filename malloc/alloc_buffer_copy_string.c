@@ -23,8 +23,8 @@
 /* This function works on a copy of the buffer object, so that it can
    remain non-addressable in the caller.  */
 struct alloc_buffer
-__libc_alloc_buffer_copy_string (struct alloc_buffer buf, const char *src)
+__libc_alloc_buffer_copy_string(struct alloc_buffer buf, const char *src)
 {
-  return __libc_alloc_buffer_copy_bytes (buf, src, strlen (src) + 1);
+    return __libc_alloc_buffer_copy_bytes(buf, src, strlen(src) + 1);
 }
-libc_hidden_def (__libc_alloc_buffer_copy_string)
+libc_hidden_def(__libc_alloc_buffer_copy_string)

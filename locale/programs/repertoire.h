@@ -15,7 +15,7 @@
    along with this program; if not, see <https://www.gnu.org/licenses/>.  */
 
 #ifndef _REPERTOIREMAP_H
-#define _REPERTOIREMAP_H	1
+#define _REPERTOIREMAP_H    1
 
 #include <obstack.h>
 #include <stdint.h>
@@ -23,13 +23,12 @@
 #include "charmap.h"
 #include "simple-hash.h"
 
-struct repertoire_t
-{
-  const char *name;
-  struct obstack mem_pool;
-  hash_table char_table;
-  hash_table reverse_table;
-  hash_table seq_table;
+struct repertoire_t {
+    const char *name;
+    struct obstack mem_pool;
+    hash_table char_table;
+    hash_table reverse_table;
+    hash_table seq_table;
 };
 
 
@@ -43,21 +42,21 @@ struct repertoire_t
 
 
 /* Prototypes for repertoire map handling functions.  */
-extern struct repertoire_t *repertoire_read (const char *filename);
+extern struct repertoire_t *repertoire_read(const char *filename);
 
 /* Report missing repertoire map.  */
-extern void repertoire_complain (const char *name);
+extern void repertoire_complain(const char *name);
 
 /* Return UCS4 value of character with given NAME.  */
-extern uint32_t repertoire_find_value (const struct repertoire_t *repertoire,
-				       const char *name, size_t len);
+extern uint32_t repertoire_find_value(const struct repertoire_t *repertoire,
+                                      const char *name, size_t len);
 
 /* Return symbol for given UCS4 value.  */
-extern const char *repertoire_find_symbol (const struct repertoire_t *repertoire,
-					   uint32_t ucs);
+extern const char *repertoire_find_symbol(const struct repertoire_t *repertoire,
+        uint32_t ucs);
 
 /* Query the has table to memoize mapping from UCS4 to byte sequences.  */
-extern struct charseq *repertoire_find_seq (const struct repertoire_t *rep,
-					    uint32_t ucs);
+extern struct charseq *repertoire_find_seq(const struct repertoire_t *rep,
+        uint32_t ucs);
 
 #endif /* repertoiremap.h */

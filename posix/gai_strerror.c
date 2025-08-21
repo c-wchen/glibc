@@ -18,11 +18,10 @@
 #include <errno.h>
 #include <netdb.h>
 
-const char *
-gai_strerror (int code)
+const char *gai_strerror(int code)
 {
-  static char buffer[128];
-  snprintf (buffer, sizeof buffer, "Unknown error (%d)", code);
-  return buffer;
+    static char buffer[128];
+    snprintf(buffer, sizeof buffer, "Unknown error (%d)", code);
+    return buffer;
 }
-libc_hidden_def (gai_strerror)
+libc_hidden_def(gai_strerror)

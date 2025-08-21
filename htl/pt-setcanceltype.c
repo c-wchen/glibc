@@ -20,36 +20,37 @@
 #include <shlib-compat.h>
 #include <pt-internal.h>
 
-int
-__pthread_setcanceltype (int type, int *oldtype)
+int __pthread_setcanceltype(int type, int *oldtype)
 {
-  struct __pthread *p = _pthread_self ();
-  int cancelled;
+    struct __pthread *p = _pthread_self();
+    int cancelled;
 
-  switch (type)
-    {
-    default:
-      return EINVAL;
-    case PTHREAD_CANCEL_DEFERRED:
-    case PTHREAD_CANCEL_ASYNCHRONOUS:
-      break;
+    switch (type) {
+        default:
+            return EINVAL;
+        case PTHREAD_CANCEL_DEFERRED:
+        case PTHREAD_CANCEL_ASYNCHRONOUS:
+            break;
     }
 
-  __pthread_mutex_lock (&p->cancel_lock);
-  if (oldtype != NULL)
-    *oldtype = p->cancel_type;
-  p->cancel_type = type;
-  cancelled = (p->cancel_state == PTHREAD_CANCEL_ENABLE) && p->cancel_pending && (p->cancel_type == PTHREAD_CANCEL_ASYNCHRONOUS);
-  __pthread_mutex_unlock (&p->cancel_lock);
+    __pthread_mutex_lock(&p->cancel_lock);
+    if (oldtype != NULL) {
+        *oldtype = p->cancel_type;
+    }
+    p->cancel_type = type;
+    cancelled = (p->cancel_state == PTHREAD_CANCEL_ENABLE) && p->cancel_pending &&
+                (p->cancel_type == PTHREAD_CANCEL_ASYNCHRONOUS);
+    __pthread_mutex_unlock(&p->cancel_lock);
 
-  if (cancelled && __pthread_exit)
-    __pthread_exit (PTHREAD_CANCELED);
+    if (cancelled && __pthread_exit) {
+        __pthread_exit(PTHREAD_CANCELED);
+    }
 
-  return 0;
+    return 0;
 }
-libc_hidden_def (__pthread_setcanceltype)
-versioned_symbol (libc, __pthread_setcanceltype, pthread_setcanceltype, GLIBC_2_21);
+libc_hidden_def(__pthread_setcanceltype)
+versioned_symbol(libc, __pthread_setcanceltype, pthread_setcanceltype, GLIBC_2_21);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_21)
-compat_symbol (libc, __pthread_setcanceltype, pthread_setcanceltype, GLIBC_2_12);
+compat_symbol(libc, __pthread_setcanceltype, pthread_setcanceltype, GLIBC_2_12);
 #endif

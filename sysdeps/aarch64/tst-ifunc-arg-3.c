@@ -40,58 +40,54 @@
     TEST_COMPARE (__ifunc_hwcap (5, p1, arg), 0); \
   })
 
-static void
-test_one (const unsigned long *arg)
+static void test_one(const unsigned long *arg)
 {
-  uint64_t size = arg[0] / sizeof (uint64_t);
+    uint64_t size = arg[0] / sizeof(uint64_t);
 
-  switch (size)
-    {
-      case 1:
-	CHECK_VALUES_WITH_ARG (0, 0, 0, 0);
-	CHECK_VALUES_WITHOUT_ARG (0);
-	break;
-      case 2:
-	CHECK_VALUES_WITH_ARG (1, 0, 0, 0);
-	CHECK_VALUES_WITHOUT_ARG (1);
-	break;
-      case 3:
-	CHECK_VALUES_WITH_ARG (1, 2, 0, 0);
-	CHECK_VALUES_WITHOUT_ARG (1);
-	break;
-      case 4:
-	CHECK_VALUES_WITH_ARG (1, 2, 3, 0);
-	CHECK_VALUES_WITHOUT_ARG (1);
-	break;
-      case 5:
-	CHECK_VALUES_WITH_ARG (1, 2, 3, 4);
-	CHECK_VALUES_WITHOUT_ARG (1);
-	break;
-      default:
-	TEST_VERIFY (0); // unexpected size
-	break;
+    switch (size) {
+        case 1:
+            CHECK_VALUES_WITH_ARG(0, 0, 0, 0);
+            CHECK_VALUES_WITHOUT_ARG(0);
+            break;
+        case 2:
+            CHECK_VALUES_WITH_ARG(1, 0, 0, 0);
+            CHECK_VALUES_WITHOUT_ARG(1);
+            break;
+        case 3:
+            CHECK_VALUES_WITH_ARG(1, 2, 0, 0);
+            CHECK_VALUES_WITHOUT_ARG(1);
+            break;
+        case 4:
+            CHECK_VALUES_WITH_ARG(1, 2, 3, 0);
+            CHECK_VALUES_WITHOUT_ARG(1);
+            break;
+        case 5:
+            CHECK_VALUES_WITH_ARG(1, 2, 3, 4);
+            CHECK_VALUES_WITHOUT_ARG(1);
+            break;
+        default:
+            TEST_VERIFY(0);  // unexpected size
+            break;
     }
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  uint64_t arg[_IFUNC_HWCAP_MAX + 1] = {
-    0, /* Placeholder for size */
-    _IFUNC_ARG_AT_HWCAP, /* AT_HWCAP */
-    _IFUNC_ARG_AT_HWCAP2, /* AT_HWCAP2 */
-    _IFUNC_ARG_AT_HWCAP3, /* AT_HWCAP3 */
-    _IFUNC_ARG_AT_HWCAP4, /* AT_HWCAP4 */
-  };
+    uint64_t arg[_IFUNC_HWCAP_MAX + 1] = {
+        0, /* Placeholder for size */
+        _IFUNC_ARG_AT_HWCAP, /* AT_HWCAP */
+        _IFUNC_ARG_AT_HWCAP2, /* AT_HWCAP2 */
+        _IFUNC_ARG_AT_HWCAP3, /* AT_HWCAP3 */
+        _IFUNC_ARG_AT_HWCAP4, /* AT_HWCAP4 */
+    };
 
-  for (int k = 0; k <= _IFUNC_HWCAP_MAX; k++)
-    {
-      /* Update size */
-      arg[0] = (k + 1) * sizeof (uint64_t);
-      test_one (arg);
+    for (int k = 0; k <= _IFUNC_HWCAP_MAX; k++) {
+        /* Update size */
+        arg[0] = (k + 1) * sizeof(uint64_t);
+        test_one(arg);
     }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

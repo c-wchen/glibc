@@ -36,52 +36,55 @@
 #define CAT(x, y) PRIMITIVE_CAT (x, y)
 
 static double __attribute_optimization_barrier__
-CAT (do_one_test_kernel, POSTFIX) (const char *s, size_t len)
+CAT(do_one_test_kernel, POSTFIX)(const char *s, size_t len)
 {
 
-  unsigned int iters;
-  timing_t start, stop, cur;
+    unsigned int iters;
+    timing_t start, stop, cur;
 
-  /* Warmup.  */
-  for (iters = NFIXED_ITERS / 32; iters; --iters)
-    DO_NOT_OPTIMIZE_OUT (RUN_FUNC (s, len));
+    /* Warmup.  */
+    for (iters = NFIXED_ITERS / 32; iters; --iters) {
+        DO_NOT_OPTIMIZE_OUT(RUN_FUNC(s, len));
+    }
 
-  TIMING_NOW (start);
-  for (iters = NFIXED_ITERS; iters; --iters)
-    DO_NOT_OPTIMIZE_OUT (RUN_FUNC (s, len));
+    TIMING_NOW(start);
+    for (iters = NFIXED_ITERS; iters; --iters) {
+        DO_NOT_OPTIMIZE_OUT(RUN_FUNC(s, len));
+    }
 
-  TIMING_NOW (stop);
+    TIMING_NOW(stop);
 
-  TIMING_DIFF (cur, start, stop);
+    TIMING_DIFF(cur, start, stop);
 
-  (void) (len);
-  return (double) cur / (double) NFIXED_ITERS;
+    (void)(len);
+    return (double) cur / (double) NFIXED_ITERS;
 }
 
 static double __attribute_optimization_barrier__
-CAT (do_rand_test_kernel, POSTFIX) (char const *bufs,
-				    unsigned int const *sizes)
+CAT(do_rand_test_kernel, POSTFIX)(char const *bufs,
+                                  unsigned int const *sizes)
 {
-  unsigned int i, iters;
-  size_t offset;
-  timing_t start, stop, cur;
+    unsigned int i, iters;
+    size_t offset;
+    timing_t start, stop, cur;
 
-  /* Warmup.  */
-  for (i = 0, offset = 0; i < NRAND_BUFS; ++i, offset += RAND_BENCH_MAX_LEN)
-    DO_NOT_OPTIMIZE_OUT (RUN_FUNC (bufs + offset, sizes[i]));
+    /* Warmup.  */
+    for (i = 0, offset = 0; i < NRAND_BUFS; ++i, offset += RAND_BENCH_MAX_LEN) {
+        DO_NOT_OPTIMIZE_OUT(RUN_FUNC(bufs + offset, sizes[i]));
+    }
 
-  TIMING_NOW (start);
-  for (iters = NRAND_ITERS; iters; --iters)
-    {
-      for (i = 0, offset = 0; i < NRAND_BUFS;
-	   ++i, offset += RAND_BENCH_MAX_LEN)
-	DO_NOT_OPTIMIZE_OUT (RUN_FUNC (bufs + offset, sizes[i]));
+    TIMING_NOW(start);
+    for (iters = NRAND_ITERS; iters; --iters) {
+        for (i = 0, offset = 0; i < NRAND_BUFS;
+             ++i, offset += RAND_BENCH_MAX_LEN) {
+            DO_NOT_OPTIMIZE_OUT(RUN_FUNC(bufs + offset, sizes[i]));
+        }
 
     }
-  TIMING_NOW (stop);
+    TIMING_NOW(stop);
 
-  TIMING_DIFF (cur, start, stop);
+    TIMING_DIFF(cur, start, stop);
 
-  (void) (sizes);
-  return (double) cur / (double) (NRAND_ITERS * NRAND_BUFS);
+    (void)(sizes);
+    return (double) cur / (double)(NRAND_ITERS * NRAND_BUFS);
 }

@@ -19,24 +19,23 @@
 /* To use the wrappers, this file deliberately does not include
    <math.h>.  */
 
-long double sqrtl (long double);
-long double ceill (long double);
-long double floorl (long double);
-long double rintl (long double);
-long double truncl (long double);
-long double roundl (long double);
+long double sqrtl(long double);
+long double ceill(long double);
+long double floorl(long double);
+long double rintl(long double);
+long double truncl(long double);
+long double roundl(long double);
 
 volatile long double x = 2.25L;
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  return (sqrtl (x) != 1.5L
-	  || ceill (x) != 3.0L
-	  || floorl (x) != 2.0L
-	  || rintl (x) != 2.0L
-	  || truncl (x) != 2.0L
-	  || roundl (x) != 2.0L);
+    return (sqrtl(x) != 1.5L
+            || ceill(x) != 3.0L
+            || floorl(x) != 2.0L
+            || rintl(x) != 2.0L
+            || truncl(x) != 2.0L
+            || roundl(x) != 2.0L);
 }
 
 #include <support/test-driver.c>

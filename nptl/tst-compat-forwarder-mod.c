@@ -19,10 +19,9 @@
 
 #include <stdlib.h>
 
-int (*system_function) (const char *) = system;
+int (*system_function)(const char *) = system;
 
-void
-call_system (void)
+void call_system(void)
 {
-  system_function (NULL);
+    system_function(NULL);
 }

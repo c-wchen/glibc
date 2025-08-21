@@ -21,19 +21,17 @@
 
 /* Change the flags of the file referenced by FD to FLAGS.  */
 
-int fchflags (int fd, unsigned long int flags) __THROW;
+int fchflags(int fd, unsigned long int flags) __THROW;
 
-int
-fchflags (int fd, unsigned long int flags)
+int fchflags(int fd, unsigned long int flags)
 {
-  if (fd < 0)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (fd < 0) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (fchflags)
+stub_warning(fchflags)

@@ -19,9 +19,8 @@
 #include <fenv.h>
 #include <fenv_private.h>
 
-int
-fegetmode (femode_t *modep)
+int fegetmode(femode_t *modep)
 {
-  __fenv_stfsr (*modep);
-  return 0;
+    __fenv_stfsr(*modep);
+    return 0;
 }

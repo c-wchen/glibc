@@ -16,33 +16,31 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef	_HURD_ID_H
+#ifndef _HURD_ID_H
 
-#define	_HURD_ID_H	1
+#define _HURD_ID_H  1
 #include <features.h>
 #include <hurd/hurd_types.h>
 #include <errno.h>
 #include <bits/types/error_t.h>
 
-#include <lock-intern.h>	/* For `struct mutex'.  */
+#include <lock-intern.h>    /* For `struct mutex'.  */
 
 /* Structure describing authorization data for the process.  */
 
-struct hurd_id_data
-  {
+struct hurd_id_data {
     struct mutex lock;
 
-    int valid;			/* If following data are up to date.  */
+    int valid;          /* If following data are up to date.  */
 
-    struct
-      {
-	uid_t *uids;
-	gid_t *gids;
-	mach_msg_type_number_t nuids, ngids;
-      } gen, aux;
+    struct {
+        uid_t *uids;
+        gid_t *gids;
+        mach_msg_type_number_t nuids, ngids;
+    } gen, aux;
 
-    auth_t rid_auth;		/* Cache used by access.  */
-  };
+    auth_t rid_auth;        /* Cache used by access.  */
+};
 
 /* Current data.  */
 
@@ -51,7 +49,7 @@ extern struct hurd_id_data _hurd_id;
 
 /* Update _hurd_id (caller should be holding the lock).  */
 
-extern error_t _hurd_check_ids (void);
+extern error_t _hurd_check_ids(void);
 
 
-#endif	/* hurd/id.h */
+#endif  /* hurd/id.h */

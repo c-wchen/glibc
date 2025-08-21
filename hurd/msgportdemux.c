@@ -20,32 +20,31 @@
 #include <hurd/signal.h>
 #include <stddef.h>
 
-static boolean_t
-msgport_server (mach_msg_header_t *inp,
-		mach_msg_header_t *outp)
+static boolean_t msgport_server(mach_msg_header_t *inp,
+                                mach_msg_header_t *outp)
 {
-  extern boolean_t _S_msg_server (mach_msg_header_t *inp,
-				  mach_msg_header_t *outp);
-  extern boolean_t _S_exc_server (mach_msg_header_t *inp,
-				  mach_msg_header_t *outp);
+    extern boolean_t _S_msg_server(mach_msg_header_t *inp,
+                                   mach_msg_header_t *outp);
+    extern boolean_t _S_exc_server(mach_msg_header_t *inp,
+                                   mach_msg_header_t *outp);
 
-  return (_S_exc_server (inp, outp)
-	  || _S_msg_server (inp, outp));
+    return (_S_exc_server(inp, outp)
+            || _S_msg_server(inp, outp));
 }
 
 /* This is the code that the signal thread runs.  */
-void *
-_hurd_msgport_receive (void *arg)
+void *_hurd_msgport_receive(void *arg)
 {
-  /* Get our own sigstate cached so we never again have to take a lock to
-     fetch it.  There is much code in hurdsig.c that operates with some
-     sigstate lock held, which will deadlock with _hurd_thread_sigstate.
+    /* Get our own sigstate cached so we never again have to take a lock to
+       fetch it.  There is much code in hurdsig.c that operates with some
+       sigstate lock held, which will deadlock with _hurd_thread_sigstate.
 
-     Furthermore, in the pthread case this is the convenient spot
-     to initialize _hurd_msgport_thread (see hurdsig.c:_hurdsig_init).  */
+       Furthermore, in the pthread case this is the convenient spot
+       to initialize _hurd_msgport_thread (see hurdsig.c:_hurdsig_init).  */
 
-  _hurd_msgport_thread = _hurd_self_sigstate ()->thread;
+    _hurd_msgport_thread = _hurd_self_sigstate()->thread;
 
-  while (1)
-    (void) __mach_msg_server (msgport_server, __vm_page_size, _hurd_msgport);
+    while (1) {
+        (void) __mach_msg_server(msgport_server, __vm_page_size, _hurd_msgport);
+    }
 }

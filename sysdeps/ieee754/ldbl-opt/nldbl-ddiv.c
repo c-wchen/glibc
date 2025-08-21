@@ -21,8 +21,7 @@
 #undef ddivl
 
 double
-attribute_hidden
-ddivl (double x, double y)
+attribute_hidden ddivl(double x, double y)
 {
-  return __nldbl_ddivl (x, y);
+    return __nldbl_ddivl(x, y);
 }

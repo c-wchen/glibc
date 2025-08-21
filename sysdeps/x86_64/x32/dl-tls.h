@@ -22,14 +22,13 @@
 #include <stdint.h>
 
 /* Type used for the representation of TLS information in the GOT.  */
-typedef struct dl_tls_index
-{
-  uint64_t ti_module;
-  uint64_t ti_offset;
+typedef struct dl_tls_index {
+    uint64_t ti_module;
+    uint64_t ti_offset;
 } tls_index;
 
 
-extern void *__tls_get_addr (tls_index *ti);
+extern void *__tls_get_addr(tls_index *ti);
 
 /* Dynamic thread vector pointers point to the start of each
    TLS block.  */

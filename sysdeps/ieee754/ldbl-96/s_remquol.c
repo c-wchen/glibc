@@ -25,87 +25,81 @@
 static const long double zero = 0.0;
 
 
-long double
-__remquol (long double x, long double p, int *quo)
+long double __remquol(long double x, long double p, int *quo)
 {
-  int32_t ex,ep,hx,hp;
-  uint32_t sx,lx,lp;
-  int cquo,qs;
+    int32_t ex, ep, hx, hp;
+    uint32_t sx, lx, lp;
+    int cquo, qs;
 
-  GET_LDOUBLE_WORDS (ex, hx, lx, x);
-  GET_LDOUBLE_WORDS (ep, hp, lp, p);
-  sx = ex & 0x8000;
-  qs = (sx ^ (ep & 0x8000)) >> 15;
-  ep &= 0x7fff;
-  ex &= 0x7fff;
+    GET_LDOUBLE_WORDS(ex, hx, lx, x);
+    GET_LDOUBLE_WORDS(ep, hp, lp, p);
+    sx = ex & 0x8000;
+    qs = (sx ^ (ep & 0x8000)) >> 15;
+    ep &= 0x7fff;
+    ex &= 0x7fff;
 
-  /* Purge off exception values.  */
-  if ((ep | hp | lp) == 0)
-    return (x * p) / (x * p); 			/* p = 0 */
-  if ((ex == 0x7fff)				/* x not finite */
-      || ((ep == 0x7fff)			/* p is NaN */
-	  && (((hp & 0x7fffffff) | lp) != 0)))
-    return (x * p) / (x * p);
-
-  if (ep <= 0x7ffb)
-    x = __ieee754_fmodl (x, 8 * p);		/* now x < 8p */
-
-  if (((ex - ep) | (hx - hp) | (lx - lp)) == 0)
-    {
-      *quo = qs ? -1 : 1;
-      return zero * x;
+    /* Purge off exception values.  */
+    if ((ep | hp | lp) == 0) {
+        return (x * p) / (x * p);    /* p = 0 */
+    }
+    if ((ex == 0x7fff)                /* x not finite */
+        || ((ep == 0x7fff)            /* p is NaN */
+            && (((hp & 0x7fffffff) | lp) != 0))) {
+        return (x * p) / (x * p);
     }
 
-  x  = fabsl (x);
-  p  = fabsl (p);
-  cquo = 0;
-
-  if (ep <= 0x7ffc && x >= 4 * p)
-    {
-      x -= 4 * p;
-      cquo += 4;
-    }
-  if (ep <= 0x7ffd && x >= 2 * p)
-    {
-      x -= 2 * p;
-      cquo += 2;
+    if (ep <= 0x7ffb) {
+        x = __ieee754_fmodl(x, 8 * p);    /* now x < 8p */
     }
 
-  if (ep < 0x0002)
-    {
-      if (x + x > p)
-	{
-	  x -= p;
-	  ++cquo;
-	  if (x + x >= p)
-	    {
-	      x -= p;
-	      ++cquo;
-	    }
-	}
-    }
-  else
-    {
-      long double p_half = 0.5 * p;
-      if (x > p_half)
-	{
-	  x -= p;
-	  ++cquo;
-	  if (x >= p_half)
-	    {
-	      x -= p;
-	      ++cquo;
-	    }
-	}
+    if (((ex - ep) | (hx - hp) | (lx - lp)) == 0) {
+        *quo = qs ? -1 : 1;
+        return zero * x;
     }
 
-  *quo = qs ? -cquo : cquo;
+    x  = fabsl(x);
+    p  = fabsl(p);
+    cquo = 0;
 
-  /* Ensure correct sign of zero result in round-downward mode.  */
-  if (x == 0.0L)
-    x = 0.0L;
-  if (sx)
-    x = -x;
-  return x;
+    if (ep <= 0x7ffc && x >= 4 * p) {
+        x -= 4 * p;
+        cquo += 4;
+    }
+    if (ep <= 0x7ffd && x >= 2 * p) {
+        x -= 2 * p;
+        cquo += 2;
+    }
+
+    if (ep < 0x0002) {
+        if (x + x > p) {
+            x -= p;
+            ++cquo;
+            if (x + x >= p) {
+                x -= p;
+                ++cquo;
+            }
+        }
+    } else {
+        long double p_half = 0.5 * p;
+        if (x > p_half) {
+            x -= p;
+            ++cquo;
+            if (x >= p_half) {
+                x -= p;
+                ++cquo;
+            }
+        }
+    }
+
+    *quo = qs ? -cquo : cquo;
+
+    /* Ensure correct sign of zero result in round-downward mode.  */
+    if (x == 0.0L) {
+        x = 0.0L;
+    }
+    if (sx) {
+        x = -x;
+    }
+    return x;
 }
-libm_alias_ldouble (__remquo, remquo)
+libm_alias_ldouble(__remquo, remquo)

@@ -19,8 +19,7 @@
 #include "nldbl-compat.h"
 
 uintmax_t
-attribute_hidden
-ufromfpxl (double x, int round, unsigned int width)
+attribute_hidden ufromfpxl(double x, int round, unsigned int width)
 {
-  return ufromfpx (x, round, width);
+    return ufromfpx(x, round, width);
 }

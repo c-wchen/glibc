@@ -23,27 +23,28 @@
 #include <kernel-posix-cpu-timers.h>
 #include <shlib-compat.h>
 
-int
-__pthread_getcpuclockid (pthread_t threadid, clockid_t *clockid)
+int __pthread_getcpuclockid(pthread_t threadid, clockid_t *clockid)
 {
-  struct pthread *pd = (struct pthread *) threadid;
+    struct pthread *pd = (struct pthread *) threadid;
 
-  /* Make sure the descriptor is valid.  */
-  if (INVALID_TD_P (pd))
-    /* Not a valid thread handle.  */
-    return ESRCH;
+    /* Make sure the descriptor is valid.  */
+    if (INVALID_TD_P(pd))
+        /* Not a valid thread handle.  */
+    {
+        return ESRCH;
+    }
 
-  /* The clockid_t value is a simple computation from the TID.  */
+    /* The clockid_t value is a simple computation from the TID.  */
 
-  const clockid_t tidclock = make_thread_cpuclock (pd->tid, CPUCLOCK_SCHED);
+    const clockid_t tidclock = make_thread_cpuclock(pd->tid, CPUCLOCK_SCHED);
 
-  *clockid = tidclock;
-  return 0;
+    *clockid = tidclock;
+    return 0;
 }
-versioned_symbol (libc, __pthread_getcpuclockid, pthread_getcpuclockid,
-                  GLIBC_2_34);
+versioned_symbol(libc, __pthread_getcpuclockid, pthread_getcpuclockid,
+                 GLIBC_2_34);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
-compat_symbol (libpthread, __pthread_getcpuclockid, pthread_getcpuclockid,
-               GLIBC_2_2);
+compat_symbol(libpthread, __pthread_getcpuclockid, pthread_getcpuclockid,
+              GLIBC_2_2);
 #endif

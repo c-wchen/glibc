@@ -34,54 +34,49 @@
    terminate.  */
 static bool timeout;
 
-static void *
-timeout_thread_function (void *unused)
+static void *timeout_thread_function(void *unused)
 {
-  usleep (5 * 1000 * 1000);
-  __atomic_store_n (&timeout, true, __ATOMIC_RELAXED);
-  return NULL;
+    usleep(5 * 1000 * 1000);
+    __atomic_store_n(&timeout, true, __ATOMIC_RELAXED);
+    return NULL;
 }
 
 /* Used for blocking the select function below.  */
 static int pipe_fds[2];
 
-static void *
-canceled_thread_function (void *unused)
+static void *canceled_thread_function(void *unused)
 {
-  while (true)
-    {
-      fd_set rfs;
-      fd_set wfs;
-      fd_set efs;
-      FD_ZERO (&rfs);
-      FD_ZERO (&wfs);
-      FD_ZERO (&efs);
-      FD_SET (pipe_fds[0], &rfs);
+    while (true) {
+        fd_set rfs;
+        fd_set wfs;
+        fd_set efs;
+        FD_ZERO(&rfs);
+        FD_ZERO(&wfs);
+        FD_ZERO(&efs);
+        FD_SET(pipe_fds[0], &rfs);
 
-      /* If the cancellation request is recognized early, the thread
-         begins exiting while the cancellation signal arrives.  */
-      select (FD_SETSIZE, &rfs, &wfs, &efs, NULL);
+        /* If the cancellation request is recognized early, the thread
+           begins exiting while the cancellation signal arrives.  */
+        select(FD_SETSIZE, &rfs, &wfs, &efs, NULL);
     }
-  return NULL;
+    return NULL;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  xpipe (pipe_fds);
-  pthread_t thr_timeout = xpthread_create (NULL, timeout_thread_function, NULL);
+    xpipe(pipe_fds);
+    pthread_t thr_timeout = xpthread_create(NULL, timeout_thread_function, NULL);
 
-  while (!__atomic_load_n (&timeout, __ATOMIC_RELAXED))
-    {
-      pthread_t thr = xpthread_create (NULL, canceled_thread_function, NULL);
-      xpthread_cancel (thr);
-      TEST_VERIFY (xpthread_join (thr) == PTHREAD_CANCELED);
+    while (!__atomic_load_n(&timeout, __ATOMIC_RELAXED)) {
+        pthread_t thr = xpthread_create(NULL, canceled_thread_function, NULL);
+        xpthread_cancel(thr);
+        TEST_VERIFY(xpthread_join(thr) == PTHREAD_CANCELED);
     }
 
-  xpthread_join (thr_timeout);
-  xclose (pipe_fds[0]);
-  xclose (pipe_fds[1]);
-  return 0;
+    xpthread_join(thr_timeout);
+    xclose(pipe_fds[0]);
+    xclose(pipe_fds[1]);
+    return 0;
 }
 
 #include <support/test-driver.c>

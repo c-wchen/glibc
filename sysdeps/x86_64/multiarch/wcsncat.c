@@ -26,9 +26,9 @@
 # define SYMBOL_NAME wcsncat
 # include "ifunc-wcs.h"
 
-libc_ifunc_redirected (__redirect_wcsncat, wcsncat, IFUNC_SELECTOR ());
+libc_ifunc_redirected(__redirect_wcsncat, wcsncat, IFUNC_SELECTOR());
 # ifdef SHARED
-__hidden_ver1 (wcsncat, __GI_wcsncat, __redirect_wcsncat)
-  __attribute__((visibility ("hidden"))) __attribute_copy__ (wcsncat);
+__hidden_ver1(wcsncat, __GI_wcsncat, __redirect_wcsncat)
+__attribute__((visibility("hidden"))) __attribute_copy__(wcsncat);
 # endif
 #endif

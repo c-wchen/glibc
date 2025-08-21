@@ -19,8 +19,7 @@
 #include <mach.h>
 #include <string.h>
 
-vm_size_t
-__mig_strlen (const char *src)
+vm_size_t __mig_strlen(const char *src)
 {
-  return strlen (src);
+    return strlen(src);
 }

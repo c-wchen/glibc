@@ -26,49 +26,52 @@
 #include <linkat_common.h>
 
 /* Make a link to FROM relative to FROMFD called TO relative to TOFD.  */
-int
-__linkat_common (int fromfd, const char *from, int tofd, const char *to, int at_flags, int flags)
+int __linkat_common(int fromfd, const char *from, int tofd, const char *to, int at_flags, int flags)
 {
-  error_t err;
-  file_t oldfile, linknode, todir;
-  char *toname;
+    error_t err;
+    file_t oldfile, linknode, todir;
+    char *toname;
 
-  oldfile = __file_name_lookup_at (fromfd, at_flags, from, flags, 0);
-  if (oldfile == MACH_PORT_NULL)
-    return -1;
-
-  /* The file_getlinknode RPC returns the port that should be passed to
-     the receiving filesystem (the one containing TODIR) in dir_link.  */
-
-  err = __file_getlinknode (oldfile, &linknode);
-  __mach_port_deallocate (__mach_task_self (), oldfile);
-  if (err)
-    return __hurd_fail (err);
-
-  todir = __file_name_split_at (tofd, to, &toname);
-  if (todir != MACH_PORT_NULL)
-    {
-      if (! *toname)
-	/* Can't link to the existing directory itself.  */
-	err = ENOTDIR;
-      else
-	err = __dir_link (todir, linknode, toname, 1);
-      __mach_port_deallocate (__mach_task_self (), todir);
+    oldfile = __file_name_lookup_at(fromfd, at_flags, from, flags, 0);
+    if (oldfile == MACH_PORT_NULL) {
+        return -1;
     }
-  __mach_port_deallocate (__mach_task_self (), linknode);
-  if (todir == MACH_PORT_NULL)
-    return -1;
 
-  if (err)
-    return __hurd_fail (err);
-  return 0;
+    /* The file_getlinknode RPC returns the port that should be passed to
+       the receiving filesystem (the one containing TODIR) in dir_link.  */
+
+    err = __file_getlinknode(oldfile, &linknode);
+    __mach_port_deallocate(__mach_task_self(), oldfile);
+    if (err) {
+        return __hurd_fail(err);
+    }
+
+    todir = __file_name_split_at(tofd, to, &toname);
+    if (todir != MACH_PORT_NULL) {
+        if (! *toname)
+            /* Can't link to the existing directory itself.  */
+        {
+            err = ENOTDIR;
+        } else {
+            err = __dir_link(todir, linknode, toname, 1);
+        }
+        __mach_port_deallocate(__mach_task_self(), todir);
+    }
+    __mach_port_deallocate(__mach_task_self(), linknode);
+    if (todir == MACH_PORT_NULL) {
+        return -1;
+    }
+
+    if (err) {
+        return __hurd_fail(err);
+    }
+    return 0;
 }
 
-int
-__linkat (int fromfd, const char *from, int tofd, const char *to, int at_flags)
+int __linkat(int fromfd, const char *from, int tofd, const char *to, int at_flags)
 {
-  /* POSIX says linkat doesn't follow symlinks by default, so pass
-     O_NOLINK.  That can be overridden by AT_SYMLINK_FOLLOW in FLAGS.  */
-  return __linkat_common (fromfd, from, tofd, to, at_flags, O_NOLINK);
+    /* POSIX says linkat doesn't follow symlinks by default, so pass
+       O_NOLINK.  That can be overridden by AT_SYMLINK_FOLLOW in FLAGS.  */
+    return __linkat_common(fromfd, from, tofd, to, at_flags, O_NOLINK);
 }
-weak_alias (__linkat, linkat)
+weak_alias(__linkat, linkat)

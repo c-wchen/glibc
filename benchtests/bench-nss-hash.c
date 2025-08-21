@@ -21,6 +21,6 @@
 #define TEST_FUNC __nss_hash
 #define SIMPLE_TEST_FUNC __simple_nss_hash
 
-uint32_t __nss_hash (const void *__key, size_t __length);
+uint32_t __nss_hash(const void *__key, size_t __length);
 
 #include "bench-hash-funcs.c"

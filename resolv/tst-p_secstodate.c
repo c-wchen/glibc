@@ -25,19 +25,17 @@
 
 #include <shlib-compat.h>
 
-char *__p_secstodate (unsigned long int);
-compat_symbol_reference (libresolv, __p_secstodate, __p_secstodate, GLIBC_2_0);
+char *__p_secstodate(unsigned long int);
+compat_symbol_reference(libresolv, __p_secstodate, __p_secstodate, GLIBC_2_0);
 
-struct test
-{
-  /* Argument to __p_secstodate.  */
-  unsigned long int in;
-  /* Expected output.  */
-  const char *out;
+struct test {
+    /* Argument to __p_secstodate.  */
+    unsigned long int in;
+    /* Expected output.  */
+    const char *out;
 };
 
-static const struct test tests[] =
-  {
+static const struct test tests[] = {
     { 0UL, "19700101000000" },
     { 12345UL, "19700101032545" },
     { 999999999UL, "20010909014639" },
@@ -50,23 +48,20 @@ static const struct test tests[] =
     { LONG_MAX, "<overflow>" },
     { ULONG_MAX, "<overflow>" },
 # endif
-  };
+};
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int ret = 0;
-  for (size_t i = 0; i < array_length (tests); i++)
-    {
-      char *p = __p_secstodate (tests[i].in);
-      printf ("Test %zu: %lu -> %s\n", i, tests[i].in, p);
-      if (strcmp (p, tests[i].out) != 0)
-	{
-	  printf ("test %zu failed", i);
-	  ret = 1;
-	}
+    int ret = 0;
+    for (size_t i = 0; i < array_length(tests); i++) {
+        char *p = __p_secstodate(tests[i].in);
+        printf("Test %zu: %lu -> %s\n", i, tests[i].in, p);
+        if (strcmp(p, tests[i].out) != 0) {
+            printf("test %zu failed", i);
+            ret = 1;
+        }
     }
-  return ret;
+    return ret;
 }
 
 #include <support/test-driver.c>

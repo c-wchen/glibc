@@ -19,11 +19,10 @@
 #include <unistd.h>
 
 /* Stop using block special device PATH for swapping.  */
-int
-swapoff (const char *path)
+int swapoff(const char *path)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (swapoff)
+stub_warning(swapoff)

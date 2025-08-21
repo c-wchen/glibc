@@ -25,12 +25,12 @@
 /* Create a device file named FILE_NAME, with permission and special bits MODE
    and device number DEV (which can be constructed from major and minor
    device numbers with the `makedev' macro above).  */
-int
-__xmknod (int vers, const char *file_name, mode_t mode, dev_t *dev)
+int __xmknod(int vers, const char *file_name, mode_t mode, dev_t *dev)
 {
-  if (vers != _MKNOD_VER)
-    return __hurd_fail (EINVAL);
+    if (vers != _MKNOD_VER) {
+        return __hurd_fail(EINVAL);
+    }
 
-  return __mknodat (AT_FDCWD, file_name, mode, *dev);
+    return __mknodat(AT_FDCWD, file_name, mode, *dev);
 }
 #endif

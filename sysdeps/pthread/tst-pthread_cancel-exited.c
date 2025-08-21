@@ -23,23 +23,21 @@
 #include <support/support.h>
 #include <support/xthread.h>
 
-static void *
-noop_thread (void *closure)
+static void *noop_thread(void *closure)
 {
-  return NULL;
+    return NULL;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  pthread_t thr = xpthread_create (NULL, noop_thread, NULL);
+    pthread_t thr = xpthread_create(NULL, noop_thread, NULL);
 
-  support_wait_for_thread_exit ();
+    support_wait_for_thread_exit();
 
-  xpthread_cancel (thr);
-  xpthread_join (thr);
+    xpthread_cancel(thr);
+    xpthread_join(thr);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

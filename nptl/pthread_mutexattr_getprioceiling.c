@@ -20,35 +20,35 @@
 #include <atomic.h>
 #include <shlib-compat.h>
 
-int
-__pthread_mutexattr_getprioceiling (const pthread_mutexattr_t *attr,
-				    int *prioceiling)
+int __pthread_mutexattr_getprioceiling(const pthread_mutexattr_t *attr,
+                                       int *prioceiling)
 {
-  const struct pthread_mutexattr *iattr;
-  int ceiling;
+    const struct pthread_mutexattr *iattr;
+    int ceiling;
 
-  iattr = (const struct pthread_mutexattr *) attr;
+    iattr = (const struct pthread_mutexattr *) attr;
 
-  ceiling = ((iattr->mutexkind & PTHREAD_MUTEXATTR_PRIO_CEILING_MASK)
-	     >> PTHREAD_MUTEXATTR_PRIO_CEILING_SHIFT);
+    ceiling = ((iattr->mutexkind & PTHREAD_MUTEXATTR_PRIO_CEILING_MASK)
+               >> PTHREAD_MUTEXATTR_PRIO_CEILING_SHIFT);
 
-  if (! ceiling)
-    {
-      /* See __init_sched_fifo_prio.  */
-      if (atomic_load_relaxed (&__sched_fifo_min_prio) == -1)
-	__init_sched_fifo_prio ();
-      if (ceiling < atomic_load_relaxed (&__sched_fifo_min_prio))
-	ceiling = atomic_load_relaxed (&__sched_fifo_min_prio);
+    if (! ceiling) {
+        /* See __init_sched_fifo_prio.  */
+        if (atomic_load_relaxed(&__sched_fifo_min_prio) == -1) {
+            __init_sched_fifo_prio();
+        }
+        if (ceiling < atomic_load_relaxed(&__sched_fifo_min_prio)) {
+            ceiling = atomic_load_relaxed(&__sched_fifo_min_prio);
+        }
     }
 
-  *prioceiling = ceiling;
+    *prioceiling = ceiling;
 
-  return 0;
+    return 0;
 }
-versioned_symbol (libc, __pthread_mutexattr_getprioceiling,
-		  pthread_mutexattr_getprioceiling, GLIBC_2_34);
+versioned_symbol(libc, __pthread_mutexattr_getprioceiling,
+                 pthread_mutexattr_getprioceiling, GLIBC_2_34);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_4, GLIBC_2_34)
-compat_symbol (libpthread, __pthread_mutexattr_getprioceiling,
-               pthread_mutexattr_getprioceiling, GLIBC_2_4);
+compat_symbol(libpthread, __pthread_mutexattr_getprioceiling,
+              pthread_mutexattr_getprioceiling, GLIBC_2_4);
 #endif

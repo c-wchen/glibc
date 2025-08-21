@@ -22,18 +22,16 @@
 #include <features.h>
 
 #if __GNUC_PREREQ (10, 3) || __glibc_clang_prereq (11, 0)
-static inline void *
-__thread_pointer (void)
+static inline void *__thread_pointer(void)
 {
-  return __builtin_thread_pointer ();
+    return __builtin_thread_pointer();
 }
 #else
-static inline void *
-__thread_pointer (void)
+static inline void *__thread_pointer(void)
 {
-  void *__thread_register;
-  __asm__ ("mv %0, tp" : "=r" (__thread_register));
-  return __thread_register;
+    void *__thread_register;
+    __asm__("mv %0, tp" : "=r"(__thread_register));
+    return __thread_register;
 }
 #endif
 

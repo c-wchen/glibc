@@ -16,7 +16,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _SGIDEFS_H
-#define _SGIDEFS_H	1
+#define _SGIDEFS_H  1
 
 /*
  * A crude hack to stop <asm/sgidefs.h>
@@ -54,22 +54,22 @@
  * Subprogram calling convention
  */
 #ifndef _ABIO32
-# define _ABIO32		1
+# define _ABIO32        1
 #endif
-#define _MIPS_SIM_ABI32		_ABIO32
+#define _MIPS_SIM_ABI32     _ABIO32
 
 #ifndef _ABIN32
-# define _ABIN32		2
+# define _ABIN32        2
 #endif
-#define _MIPS_SIM_NABI32	_ABIN32
+#define _MIPS_SIM_NABI32    _ABIN32
 
 #ifndef _ABI64
-# define _ABI64			3
+# define _ABI64         3
 #endif
-#define _MIPS_SIM_ABI64		_ABI64
+#define _MIPS_SIM_ABI64     _ABI64
 
 #ifndef _ABIO64
-# define _ABIO64		4
+# define _ABIO64        4
 #endif
 
 #endif /* sgidefs.h */

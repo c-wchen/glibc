@@ -19,15 +19,16 @@
 #include <math.h>
 
 FLOAT
-M_DECL_FUNC (__fminimum) (FLOAT x, FLOAT y)
+M_DECL_FUNC(__fminimum)(FLOAT x, FLOAT y)
 {
-  if (isless (x, y))
-    return x;
-  else if (isgreater (x, y))
-    return y;
-  else if (x == y)
-    return (M_COPYSIGN (1, x) <= M_COPYSIGN (1, y) ? x : y);
-  else
-    return x + y;
+    if (isless(x, y)) {
+        return x;
+    } else if (isgreater(x, y)) {
+        return y;
+    } else if (x == y) {
+        return (M_COPYSIGN(1, x) <= M_COPYSIGN(1, y) ? x : y);
+    } else {
+        return x + y;
+    }
 }
-declare_mgen_alias (__fminimum, fminimum);
+declare_mgen_alias(__fminimum, fminimum);

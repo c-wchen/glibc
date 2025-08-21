@@ -19,14 +19,13 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-int
-fetestexcept (int excepts)
+int fetestexcept(int excepts)
 {
-  fpu_control_t temp;
+    fpu_control_t temp;
 
-  /* Get current exceptions.  */
-  _FPU_GETCW (temp);
+    /* Get current exceptions.  */
+    _FPU_GETCW(temp);
 
-  return temp & excepts & FE_ALL_EXCEPT;
+    return temp & excepts & FE_ALL_EXCEPT;
 }
-libm_hidden_def (fetestexcept)
+libm_hidden_def(fetestexcept)

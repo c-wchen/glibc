@@ -20,9 +20,9 @@
 #include <math.h>
 
 FLOAT
-M_DECL_FUNC (__cabs) (CFLOAT z)
+M_DECL_FUNC(__cabs)(CFLOAT z)
 {
-  return M_SUF (__hypot) (__real__ z, __imag__ z);
+    return M_SUF(__hypot)(__real__ z, __imag__ z);
 }
 
-declare_mgen_alias (__cabs, cabs)
+declare_mgen_alias(__cabs, cabs)

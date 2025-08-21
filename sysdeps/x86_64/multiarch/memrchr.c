@@ -26,7 +26,7 @@
 # define SYMBOL_NAME memrchr
 # include "ifunc-avx2.h"
 
-libc_ifunc_redirected (__redirect_memrchr, __memrchr, IFUNC_SELECTOR ());
-libc_hidden_def (__memrchr)
-weak_alias (__memrchr, memrchr)
+libc_ifunc_redirected(__redirect_memrchr, __memrchr, IFUNC_SELECTOR());
+libc_hidden_def(__memrchr)
+weak_alias(__memrchr, memrchr)
 #endif

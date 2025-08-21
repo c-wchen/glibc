@@ -24,22 +24,21 @@
 #undef FP_ROUNDMODE
 #define FP_ROUNDMODE  FP_RND_ZERO
 
-void
-_OtsConvertFloatTX(double a)
+void _OtsConvertFloatTX(double a)
 {
-  FP_DECL_EX;
-  FP_DECL_D(A);
-  FP_DECL_Q(C);
-  AXP_DECL_RETURN_Q(c);
+    FP_DECL_EX;
+    FP_DECL_D(A);
+    FP_DECL_Q(C);
+    AXP_DECL_RETURN_Q(c);
 
-  FP_UNPACK_RAW_D(A, a);
+    FP_UNPACK_RAW_D(A, a);
 #if _FP_W_TYPE_SIZE < 64
-  FP_EXTEND(Q,D,4,2,C,A);
+    FP_EXTEND(Q, D, 4, 2, C, A);
 #else
-  FP_EXTEND(Q,D,2,1,C,A);
+    FP_EXTEND(Q, D, 2, 1, C, A);
 #endif
-  AXP_PACK_RAW_Q(c, C);
-  FP_HANDLE_EXCEPTIONS;
+    AXP_PACK_RAW_Q(c, C);
+    FP_HANDLE_EXCEPTIONS;
 
-  AXP_RETURN_Q(c);
+    AXP_RETURN_Q(c);
 }

@@ -21,11 +21,10 @@
 /* Return identifier for array of NSEMS semaphores associated with
    KEY.  */
 
-int
-semctl (int semid, int semnum, int cmd, ...)
+int semctl(int semid, int semnum, int cmd, ...)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (semctl)
+stub_warning(semctl)

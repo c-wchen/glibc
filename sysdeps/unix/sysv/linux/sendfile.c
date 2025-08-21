@@ -25,30 +25,28 @@
 
 /* Send COUNT bytes from file associated with IN_FD starting at OFFSET to
    descriptor OUT_FD.  */
-ssize_t
-sendfile (int out_fd, int in_fd, off_t *offset, size_t count)
+ssize_t sendfile(int out_fd, int in_fd, off_t *offset, size_t count)
 {
 # ifdef __NR_sendfile
-  return INLINE_SYSCALL_CALL (sendfile, out_fd, in_fd, offset, count);
+    return INLINE_SYSCALL_CALL(sendfile, out_fd, in_fd, offset, count);
 # else
-  __off64_t off64;
-  int rc;
+    __off64_t off64;
+    int rc;
 
-  if (offset != NULL)
-    {
-      if (*offset < 0 || (off_t) (*offset + count) < 0)
-        {
-          __set_errno (EINVAL);
-          return -1;
+    if (offset != NULL) {
+        if (*offset < 0 || (off_t)(*offset + count) < 0) {
+            __set_errno(EINVAL);
+            return -1;
         }
-      off64 = *offset;
+        off64 = *offset;
     }
 
-  rc = INLINE_SYSCALL_CALL (sendfile64, out_fd, in_fd, offset ? &off64 : NULL,
-			    count);
-  if (offset)
-    *offset = off64;
-  return rc;
+    rc = INLINE_SYSCALL_CALL(sendfile64, out_fd, in_fd, offset ? &off64 : NULL,
+                             count);
+    if (offset) {
+        *offset = off64;
+    }
+    return rc;
 # endif
 }
 

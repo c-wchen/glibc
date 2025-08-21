@@ -18,17 +18,17 @@
 #include <netdb.h>
 
 
-#define LOOKUP_TYPE		struct netent
-#define SETFUNC_NAME		setnetent
-#define	GETFUNC_NAME		getnetent
-#define	ENDFUNC_NAME		endnetent
-#define DATABASE_NAME		networks
-#define STAYOPEN		int stayopen
-#define STAYOPEN_VAR		stayopen
-#define NEED__RES		1
-#define NEED_H_ERRNO		1
+#define LOOKUP_TYPE     struct netent
+#define SETFUNC_NAME        setnetent
+#define GETFUNC_NAME        getnetent
+#define ENDFUNC_NAME        endnetent
+#define DATABASE_NAME       networks
+#define STAYOPEN        int stayopen
+#define STAYOPEN_VAR        stayopen
+#define NEED__RES       1
+#define NEED_H_ERRNO        1
 
 /* There is no nscd support for the networks file.  */
-#undef	USE_NSCD
+#undef  USE_NSCD
 
 #include "../nss/getXXent_r.c"

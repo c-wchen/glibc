@@ -21,11 +21,10 @@
 /* Given a fd on a master pseudoterminal, chown the file associated
    with the slave to the calling process, and set its group and
    mode appropriately.  Note that this is an unprivileged operation. */
-int
-grantpt (int fd __attribute__ ((unused)))
+int grantpt(int fd __attribute__((unused)))
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (grantpt)
-stub_warning (grantpt)
+libc_hidden_def(grantpt)
+stub_warning(grantpt)

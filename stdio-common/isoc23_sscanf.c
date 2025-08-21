@@ -19,19 +19,18 @@
 #include <libio/strfile.h>
 
 /* Read formatted input from S, according to the format string FORMAT.  */
-int
-__isoc23_sscanf (const char *s, const char *format, ...)
+int __isoc23_sscanf(const char *s, const char *format, ...)
 {
-  va_list arg;
-  int done;
-  _IO_strfile sf;
-  FILE *f = _IO_strfile_read (&sf, s);
+    va_list arg;
+    int done;
+    _IO_strfile sf;
+    FILE *f = _IO_strfile_read(&sf, s);
 
-  va_start (arg, format);
-  done = __vfscanf_internal (f, format, arg,
-			     SCANF_ISOC99_A | SCANF_ISOC23_BIN_CST);
-  va_end (arg);
+    va_start(arg, format);
+    done = __vfscanf_internal(f, format, arg,
+                              SCANF_ISOC99_A | SCANF_ISOC23_BIN_CST);
+    va_end(arg);
 
-  return done;
+    return done;
 }
-libc_hidden_def (__isoc23_sscanf)
+libc_hidden_def(__isoc23_sscanf)

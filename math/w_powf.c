@@ -4,5 +4,5 @@
 #undef declare_mgen_alias
 #define declare_mgen_alias(a, b)
 #include <w_pow_template.c>
-versioned_symbol (libm, __powf, powf, GLIBC_2_27);
-libm_alias_float_other (__pow, pow)
+versioned_symbol(libm, __powf, powf, GLIBC_2_27);
+libm_alias_float_other(__pow, pow)

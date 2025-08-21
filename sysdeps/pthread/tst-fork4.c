@@ -25,39 +25,35 @@
 #include <string.h>
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  pthread_t me = pthread_self ();
+    pthread_t me = pthread_self();
 
-  pid_t pid = fork ();
+    pid_t pid = fork();
 
-  if (pid < 0)
-    {
-      printf ("fork: %m\n");
-      return 1;
+    if (pid < 0) {
+        printf("fork: %m\n");
+        return 1;
     }
 
-  if (pid == 0)
-    {
-      int err = pthread_kill (me, SIGTERM);
-      printf ("pthread_kill returned: %s\n", strerror (err));
-      return 3;
+    if (pid == 0) {
+        int err = pthread_kill(me, SIGTERM);
+        printf("pthread_kill returned: %s\n", strerror(err));
+        return 3;
     }
 
-  int status;
-  errno = 0;
-  if (wait (&status) != pid)
-    printf ("wait failed: %m\n");
-  else if (WIFSIGNALED (status) && WTERMSIG (status) == SIGTERM)
-    {
-      printf ("child correctly died with SIGTERM\n");
-      return 0;
+    int status;
+    errno = 0;
+    if (wait(&status) != pid) {
+        printf("wait failed: %m\n");
+    } else if (WIFSIGNALED(status) && WTERMSIG(status) == SIGTERM) {
+        printf("child correctly died with SIGTERM\n");
+        return 0;
+    } else {
+        printf("child died with bad status %#x\n", status);
     }
-  else
-    printf ("child died with bad status %#x\n", status);
 
-  return 1;
+    return 1;
 }
 
 #define TEST_FUNCTION do_test ()

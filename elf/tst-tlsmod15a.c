@@ -1,6 +1,5 @@
 extern int nonexistent_dummy_var;
-int *
-foo (void)
+int *foo(void)
 {
-  return &nonexistent_dummy_var;
+    return &nonexistent_dummy_var;
 }

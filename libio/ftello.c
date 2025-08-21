@@ -33,38 +33,36 @@
 #include <libioP.h>
 #include <errno.h>
 
-off_t
-__ftello (FILE *fp)
+off_t __ftello(FILE *fp)
 {
-  off64_t pos;
-  CHECK_FILE (fp, -1L);
-  _IO_acquire_lock (fp);
-  pos = _IO_seekoff_unlocked (fp, 0, _IO_seek_cur, 0);
-  if (_IO_in_backup (fp) && pos != _IO_pos_BAD)
-    {
-      if (fp->_mode <= 0)
-	pos -= fp->_IO_save_end - fp->_IO_save_base;
+    off64_t pos;
+    CHECK_FILE(fp, -1L);
+    _IO_acquire_lock(fp);
+    pos = _IO_seekoff_unlocked(fp, 0, _IO_seek_cur, 0);
+    if (_IO_in_backup(fp) && pos != _IO_pos_BAD) {
+        if (fp->_mode <= 0) {
+            pos -= fp->_IO_save_end - fp->_IO_save_base;
+        }
     }
-  _IO_release_lock (fp);
-  if (pos == _IO_pos_BAD)
-    {
-      if (errno == 0)
-	__set_errno (EIO);
-      return -1L;
+    _IO_release_lock(fp);
+    if (pos == _IO_pos_BAD) {
+        if (errno == 0) {
+            __set_errno(EIO);
+        }
+        return -1L;
     }
-  if ((off64_t) (off_t) pos != pos)
-    {
-      __set_errno (EOVERFLOW);
-      return -1L;
+    if ((off64_t)(off_t) pos != pos) {
+        __set_errno(EOVERFLOW);
+        return -1L;
     }
-  return pos;
+    return pos;
 }
-libc_hidden_def (__ftello)
-weak_alias (__ftello, ftello)
+libc_hidden_def(__ftello)
+weak_alias(__ftello, ftello)
 
 #ifdef __OFF_T_MATCHES_OFF64_T
-weak_alias (__ftello, ftello64)
+weak_alias(__ftello, ftello64)
 # undef __ftello64
-strong_alias (__ftello, __ftello64)
-libc_hidden_ver (__ftello, __ftello64)
+strong_alias(__ftello, __ftello64)
+libc_hidden_ver(__ftello, __ftello64)
 #endif

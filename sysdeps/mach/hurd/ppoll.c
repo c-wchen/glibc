@@ -21,10 +21,9 @@
 #include <hurd.h>
 #include <hurd/fd.h>
 
-int
-ppoll (struct pollfd *fds, nfds_t nfds,
-       const struct timespec *timeout, const sigset_t *sigmask)
+int ppoll(struct pollfd *fds, nfds_t nfds,
+          const struct timespec *timeout, const sigset_t *sigmask)
 {
-  return _hurd_select (nfds, fds, NULL, NULL, NULL, timeout, sigmask);
+    return _hurd_select(nfds, fds, NULL, NULL, NULL, timeout, sigmask);
 }
-libc_hidden_def (ppoll)
+libc_hidden_def(ppoll)

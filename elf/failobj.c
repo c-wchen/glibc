@@ -1,10 +1,9 @@
 /* This function is supposed to not exist.  */
-extern int xyzzy (int);
+extern int xyzzy(int);
 
-extern int foo (int);
+extern int foo(int);
 
-int
-foo (int a)
+int foo(int a)
 {
-  return xyzzy (a);
+    return xyzzy(a);
 }

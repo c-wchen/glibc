@@ -22,11 +22,11 @@
 #include <stdlib.h>
 #include <support/check.h>
 
-int
-xaccept (int fd, struct sockaddr *sa, socklen_t *salen)
+int xaccept(int fd, struct sockaddr *sa, socklen_t *salen)
 {
-  int clientfd = accept (fd, sa, salen);
-  if (clientfd < 0)
-    FAIL_EXIT1 ("accept (%d): %m", fd);
-  return clientfd;
+    int clientfd = accept(fd, sa, salen);
+    if (clientfd < 0) {
+        FAIL_EXIT1("accept (%d): %m", fd);
+    }
+    return clientfd;
 }

@@ -19,9 +19,8 @@
 #include <fenv.h>
 #include <fenv_private.h>
 
-int
-fetestexcept (int excepts)
+int fetestexcept(int excepts)
 {
-  return libc_fetestexcept_aarch64 (excepts);
+    return libc_fetestexcept_aarch64(excepts);
 }
-libm_hidden_def (fetestexcept)
+libm_hidden_def(fetestexcept)

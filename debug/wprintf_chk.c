@@ -20,18 +20,17 @@
 
 
 /* Write formatted output to stdout from the format string FORMAT.  */
-int
-__wprintf_chk (int flag, const wchar_t *format, ...)
+int __wprintf_chk(int flag, const wchar_t *format, ...)
 {
-  /* For flag > 0 (i.e. __USE_FORTIFY_LEVEL > 1) request that %n
-     can only come from read-only format strings.  */
-  unsigned int mode = (flag > 0) ? PRINTF_FORTIFY : 0;
-  va_list ap;
-  int ret;
+    /* For flag > 0 (i.e. __USE_FORTIFY_LEVEL > 1) request that %n
+       can only come from read-only format strings.  */
+    unsigned int mode = (flag > 0) ? PRINTF_FORTIFY : 0;
+    va_list ap;
+    int ret;
 
-  va_start (ap, format);
-  ret = __vfwprintf_internal (stdout, format, ap, mode);
-  va_end (ap);
+    va_start(ap, format);
+    ret = __vfwprintf_internal(stdout, format, ap, mode);
+    va_end(ap);
 
-  return ret;
+    return ret;
 }

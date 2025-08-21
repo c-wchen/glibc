@@ -21,17 +21,16 @@
 #include <support/check.h>
 #include "tst-audit26mod.h"
 
-int
-do_test (void)
+int do_test(void)
 {
-  /* Returning a large struct uses 'x8' as indirect result location.  */
-  struct large_struct r = tst_audit26_func (ARG1, ARG2, ARG3);
+    /* Returning a large struct uses 'x8' as indirect result location.  */
+    struct large_struct r = tst_audit26_func(ARG1, ARG2, ARG3);
 
-  struct large_struct e = set_large_struct (ARG1, ARG2, ARG3);
+    struct large_struct e = set_large_struct(ARG1, ARG2, ARG3);
 
-  TEST_COMPARE_BLOB (r.a, sizeof (r.a), e.a, sizeof (e.a));
+    TEST_COMPARE_BLOB(r.a, sizeof(r.a), e.a, sizeof(e.a));
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

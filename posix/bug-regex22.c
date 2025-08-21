@@ -22,96 +22,84 @@
 #include <stdio.h>
 #include <string.h>
 
-int
-main (void)
+int main(void)
 {
-  struct re_pattern_buffer re;
-  char trans[256];
-  int i, result = 0;
-  const char *s;
+    struct re_pattern_buffer re;
+    char trans[256];
+    int i, result = 0;
+    const char *s;
 
-  setlocale (LC_ALL, "de_DE.ISO-8859-1");
+    setlocale(LC_ALL, "de_DE.ISO-8859-1");
 
-  for (i = 0; i < 256; ++i)
-    trans[i] = tolower (i);
-
-  re_set_syntax (RE_SYNTAX_POSIX_EGREP);
-
-  memset (&re, 0, sizeof (re));
-  re.translate = (unsigned char *) trans;
-  s = re_compile_pattern ("\\W", 2, &re);
-
-  if (s != NULL)
-    {
-      printf ("failed to compile pattern \"\\W\": %s\n", s);
-      result = 1;
-    }
-  else
-    {
-      int ret = re_search (&re, "abc.de", 6, 0, 6, NULL);
-      if (ret != 3)
-	{
-	  printf ("1st re_search returned %d\n", ret);
-	  result = 1;
-	}
-
-      ret = re_search (&re, "\xc4\xd6\xae\xf7", 4, 0, 4, NULL);
-      if (ret != 2)
-	{
-	  printf ("2nd re_search returned %d\n", ret);
-	  result = 1;
-	}
-      re.translate = NULL;
-      regfree (&re);
+    for (i = 0; i < 256; ++i) {
+        trans[i] = tolower(i);
     }
 
-  memset (&re, 0, sizeof (re));
-  re.translate = (unsigned char *) trans;
-  s = re_compile_pattern ("\\w", 2, &re);
+    re_set_syntax(RE_SYNTAX_POSIX_EGREP);
 
-  if (s != NULL)
-    {
-      printf ("failed to compile pattern \"\\w\": %s\n", s);
-      result = 1;
-    }
-  else
-    {
-      int ret = re_search (&re, ".,!abc", 6, 0, 6, NULL);
-      if (ret != 3)
-	{
-	  printf ("3rd re_search returned %d\n", ret);
-	  result = 1;
-	}
+    memset(&re, 0, sizeof(re));
+    re.translate = (unsigned char *) trans;
+    s = re_compile_pattern("\\W", 2, &re);
 
-      ret = re_search (&re, "\xae\xf7\xc4\xd6", 4, 0, 4, NULL);
-      if (ret != 2)
-	{
-	  printf ("4th re_search returned %d\n", ret);
-	  result = 1;
-	}
-      re.translate = NULL;
-      regfree (&re);
+    if (s != NULL) {
+        printf("failed to compile pattern \"\\W\": %s\n", s);
+        result = 1;
+    } else {
+        int ret = re_search(&re, "abc.de", 6, 0, 6, NULL);
+        if (ret != 3) {
+            printf("1st re_search returned %d\n", ret);
+            result = 1;
+        }
+
+        ret = re_search(&re, "\xc4\xd6\xae\xf7", 4, 0, 4, NULL);
+        if (ret != 2) {
+            printf("2nd re_search returned %d\n", ret);
+            result = 1;
+        }
+        re.translate = NULL;
+        regfree(&re);
     }
 
-  memset (&re, 0, sizeof (re));
-  re.translate = (unsigned char *) trans;
-  s = re_compile_pattern ("[[:DIGIT:]]", 11, &re);
-  if (s == NULL)
-    {
-      puts ("compilation of \"[[:DIGIT:]]\" pattern unexpectedly succeeded: "
-	    "length 11");
-      result = 1;
+    memset(&re, 0, sizeof(re));
+    re.translate = (unsigned char *) trans;
+    s = re_compile_pattern("\\w", 2, &re);
+
+    if (s != NULL) {
+        printf("failed to compile pattern \"\\w\": %s\n", s);
+        result = 1;
+    } else {
+        int ret = re_search(&re, ".,!abc", 6, 0, 6, NULL);
+        if (ret != 3) {
+            printf("3rd re_search returned %d\n", ret);
+            result = 1;
+        }
+
+        ret = re_search(&re, "\xae\xf7\xc4\xd6", 4, 0, 4, NULL);
+        if (ret != 2) {
+            printf("4th re_search returned %d\n", ret);
+            result = 1;
+        }
+        re.translate = NULL;
+        regfree(&re);
     }
 
-  memset (&re, 0, sizeof (re));
-  re.translate = (unsigned char *) trans;
-  s = re_compile_pattern ("[[:DIGIT:]]", 2, &re);
-  if (s == NULL)
-    {
-      puts ("compilation of \"[[:DIGIT:]]\" pattern unexpectedly succeeded: "
-	    "length 2");
-      result = 1;
+    memset(&re, 0, sizeof(re));
+    re.translate = (unsigned char *) trans;
+    s = re_compile_pattern("[[:DIGIT:]]", 11, &re);
+    if (s == NULL) {
+        puts("compilation of \"[[:DIGIT:]]\" pattern unexpectedly succeeded: "
+             "length 11");
+        result = 1;
     }
 
-  return result;
+    memset(&re, 0, sizeof(re));
+    re.translate = (unsigned char *) trans;
+    s = re_compile_pattern("[[:DIGIT:]]", 2, &re);
+    if (s == NULL) {
+        puts("compilation of \"[[:DIGIT:]]\" pattern unexpectedly succeeded: "
+             "length 2");
+        result = 1;
+    }
+
+    return result;
 }

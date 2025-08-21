@@ -20,9 +20,8 @@
 #include <libm-alias-ldouble.h>
 #include <math-use-builtins.h>
 
-long double
-__fabsl (long double x)
+long double __fabsl(long double x)
 {
-  return __builtin_fabsl (x);
+    return __builtin_fabsl(x);
 }
-libm_alias_ldouble (__fabs, fabs)
+libm_alias_ldouble(__fabs, fabs)

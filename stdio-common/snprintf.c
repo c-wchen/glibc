@@ -21,17 +21,16 @@
 /* Write formatted output into S, according to the format
    string FORMAT, writing no more than MAXLEN characters.  */
 /* VARARGS3 */
-int
-__snprintf (char *s, size_t maxlen, const char *format, ...)
+int __snprintf(char *s, size_t maxlen, const char *format, ...)
 {
-  va_list arg;
-  int done;
+    va_list arg;
+    int done;
 
-  va_start (arg, format);
-  done = __vsnprintf_internal (s, maxlen, format, arg, 0);
-  va_end (arg);
+    va_start(arg, format);
+    done = __vsnprintf_internal(s, maxlen, format, arg, 0);
+    va_end(arg);
 
-  return done;
+    return done;
 }
-libc_hidden_def (__snprintf)
-ldbl_weak_alias (__snprintf, snprintf)
+libc_hidden_def(__snprintf)
+ldbl_weak_alias(__snprintf, snprintf)

@@ -9,7 +9,7 @@
    multiple of 8 bytes.  Note: with some compilers, the alignment
    attribute would be ignored if it were put in __SI_CLOCK_T instead
    of encapsulated in a typedef.  */
-typedef __clock_t __attribute__ ((__aligned__ (4))) __sigchld_clock_t;
+typedef __clock_t __attribute__((__aligned__(4))) __sigchld_clock_t;
 # define __SI_ALIGNMENT __attribute__ ((__aligned__ (8)))
 # define __SI_CLOCK_T __sigchld_clock_t
 #endif

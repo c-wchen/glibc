@@ -19,21 +19,19 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-static int
-check (const char *name, FILE *stream, int fd)
+static int check(const char *name, FILE *stream, int fd)
 {
-  int sfd = fileno (stream);
-  printf ("(fileno (%s) = %d) %c= %d\n", name, sfd,
-	  sfd == fd ? '=' : '!', fd);
-  return sfd != fd;
+    int sfd = fileno(stream);
+    printf("(fileno (%s) = %d) %c= %d\n", name, sfd,
+           sfd == fd ? '=' : '!', fd);
+    return sfd != fd;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  return (check ("stdin", stdin, STDIN_FILENO)
-	  || check ("stdout", stdout, STDOUT_FILENO)
-	  || check ("stderr", stderr, STDERR_FILENO));
+    return (check("stdin", stdin, STDIN_FILENO)
+            || check("stdout", stdout, STDOUT_FILENO)
+            || check("stderr", stderr, STDERR_FILENO));
 }
 
 #define TEST_FUNCTION do_test ()

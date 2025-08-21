@@ -17,5 +17,5 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-extern __typeof (__open) __open attribute_hidden;
-extern __typeof (__fcntl) __fcntl attribute_hidden;
+extern __typeof(__open) __open attribute_hidden;
+extern __typeof(__fcntl) __fcntl attribute_hidden;

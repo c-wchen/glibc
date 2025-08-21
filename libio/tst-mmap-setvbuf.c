@@ -22,63 +22,57 @@
 #include <unistd.h>
 #include <libc-diag.h>
 
-int main (void)
+int main(void)
 {
-  char name[] = "/tmp/tst-mmap-setvbuf.XXXXXX";
-  char buf[4096];
-  const char * const test = "Let's see if mmap stdio works with setvbuf.\n";
-  DIAG_PUSH_NEEDS_COMMENT_CLANG;
-  DIAG_IGNORE_NEEDS_COMMENT_CLANG (3.4, "-Wgnu-folding-constant");
-  char temp[strlen (test) + 1];
-  DIAG_POP_NEEDS_COMMENT_CLANG;
-  int fd = mkstemp (name);
-  FILE *f;
+    char name[] = "/tmp/tst-mmap-setvbuf.XXXXXX";
+    char buf[4096];
+    const char *const test = "Let's see if mmap stdio works with setvbuf.\n";
+    DIAG_PUSH_NEEDS_COMMENT_CLANG;
+    DIAG_IGNORE_NEEDS_COMMENT_CLANG(3.4, "-Wgnu-folding-constant");
+    char temp[strlen(test) + 1];
+    DIAG_POP_NEEDS_COMMENT_CLANG;
+    int fd = mkstemp(name);
+    FILE *f;
 
-  if (fd == -1)
-    {
-      printf ("%u: cannot open temporary file: %m\n", __LINE__);
-      exit (1);
+    if (fd == -1) {
+        printf("%u: cannot open temporary file: %m\n", __LINE__);
+        exit(1);
     }
 
-  f = fdopen (fd, "w");
-  if (f == NULL)
-    {
-      printf ("%u: cannot fdopen temporary file: %m\n", __LINE__);
-      exit (1);
+    f = fdopen(fd, "w");
+    if (f == NULL) {
+        printf("%u: cannot fdopen temporary file: %m\n", __LINE__);
+        exit(1);
     }
 
-  fputs (test, f);
-  fclose (f);
+    fputs(test, f);
+    fclose(f);
 
-  f = fopen (name, "rm");
-  if (f == NULL)
-    {
-      printf ("%u: cannot fopen temporary file: %m\n", __LINE__);
-      exit (1);
+    f = fopen(name, "rm");
+    if (f == NULL) {
+        printf("%u: cannot fopen temporary file: %m\n", __LINE__);
+        exit(1);
     }
 
-  if (setvbuf (f, buf, _IOFBF, sizeof buf))
-    {
-      printf ("%u: setvbuf failed: %m\n", __LINE__);
-      exit (1);
+    if (setvbuf(f, buf, _IOFBF, sizeof buf)) {
+        printf("%u: setvbuf failed: %m\n", __LINE__);
+        exit(1);
     }
 
-  if (fread (temp, 1, strlen (test), f) != strlen (test))
-    {
-      printf ("%u: couldn't read the file back: %m\n", __LINE__);
-      exit (1);
+    if (fread(temp, 1, strlen(test), f) != strlen(test)) {
+        printf("%u: couldn't read the file back: %m\n", __LINE__);
+        exit(1);
     }
-  temp [strlen (test)] = '\0';
+    temp [strlen(test)] = '\0';
 
-  if (strcmp (test, temp))
-    {
-      printf ("%u: read different string than was written:\n%s%s",
-	      __LINE__, test, temp);
-      exit (1);
+    if (strcmp(test, temp)) {
+        printf("%u: read different string than was written:\n%s%s",
+               __LINE__, test, temp);
+        exit(1);
     }
 
-  fclose (f);
+    fclose(f);
 
-  unlink (name);
-  exit (0);
+    unlink(name);
+    exit(0);
 }

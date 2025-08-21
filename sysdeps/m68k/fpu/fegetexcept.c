@@ -18,13 +18,12 @@
 
 #include <fenv.h>
 
-int
-fegetexcept (void)
+int fegetexcept(void)
 {
-  unsigned int exc;
+    unsigned int exc;
 
-  /* Get the current control register contents.  */
-  __asm__ ("fmove%.l %!,%0" : "=dm" (exc));
+    /* Get the current control register contents.  */
+    __asm__("fmove%.l %!,%0" : "=dm"(exc));
 
-  return (exc >> 6) & FE_ALL_EXCEPT;
+    return (exc >> 6) & FE_ALL_EXCEPT;
 }

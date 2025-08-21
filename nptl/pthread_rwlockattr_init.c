@@ -18,26 +18,25 @@
 #include "pthreadP.h"
 #include <shlib-compat.h>
 
-int
-__pthread_rwlockattr_init (pthread_rwlockattr_t *attr)
+int __pthread_rwlockattr_init(pthread_rwlockattr_t *attr)
 {
-  ASSERT_TYPE_SIZE (pthread_rwlockattr_t, __SIZEOF_PTHREAD_RWLOCKATTR_T);
-  ASSERT_PTHREAD_INTERNAL_SIZE (pthread_rwlockattr_t,
-				struct pthread_rwlockattr);
+    ASSERT_TYPE_SIZE(pthread_rwlockattr_t, __SIZEOF_PTHREAD_RWLOCKATTR_T);
+    ASSERT_PTHREAD_INTERNAL_SIZE(pthread_rwlockattr_t,
+                                 struct pthread_rwlockattr);
 
-  struct pthread_rwlockattr *iattr;
+    struct pthread_rwlockattr *iattr;
 
-  iattr = (struct pthread_rwlockattr *) attr;
+    iattr = (struct pthread_rwlockattr *) attr;
 
-  iattr->lockkind = PTHREAD_RWLOCK_DEFAULT_NP;
-  iattr->pshared = PTHREAD_PROCESS_PRIVATE;
+    iattr->lockkind = PTHREAD_RWLOCK_DEFAULT_NP;
+    iattr->pshared = PTHREAD_PROCESS_PRIVATE;
 
-  return 0;
+    return 0;
 }
-versioned_symbol (libc, __pthread_rwlockattr_init,
-                  pthread_rwlockattr_init, GLIBC_2_34);
+versioned_symbol(libc, __pthread_rwlockattr_init,
+                 pthread_rwlockattr_init, GLIBC_2_34);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1, GLIBC_2_34)
-compat_symbol (libpthread, __pthread_rwlockattr_init,
-               pthread_rwlockattr_init, GLIBC_2_1);
+compat_symbol(libpthread, __pthread_rwlockattr_init,
+              pthread_rwlockattr_init, GLIBC_2_1);
 #endif

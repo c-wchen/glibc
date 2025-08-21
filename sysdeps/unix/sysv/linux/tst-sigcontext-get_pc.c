@@ -31,48 +31,43 @@
 
 static bool handler_called;
 
-static void
-handler (int signal, siginfo_t *info, void *ctx)
+static void handler(int signal, siginfo_t *info, void *ctx)
 {
-  TEST_COMPARE (signal, SIGUSR1);
+    TEST_COMPARE(signal, SIGUSR1);
 
-  uintptr_t pc = sigcontext_get_pc (ctx);
-  printf ("info: address in signal handler: 0x%" PRIxPTR "\n", pc);
+    uintptr_t pc = sigcontext_get_pc(ctx);
+    printf("info: address in signal handler: 0x%" PRIxPTR "\n", pc);
 
-  void *callstack[10];
-  int callstack_count = backtrace (callstack, array_length (callstack));
-  TEST_VERIFY_EXIT (callstack_count > 0);
-  TEST_VERIFY_EXIT (callstack_count <= array_length (callstack));
-  bool found = false;
-  for (int i = 0; i < callstack_count; ++i)
-    {
-      const char *marker;
-      if ((uintptr_t) callstack[i] == pc)
-        {
-          found = true;
-          marker = " *";
+    void *callstack[10];
+    int callstack_count = backtrace(callstack, array_length(callstack));
+    TEST_VERIFY_EXIT(callstack_count > 0);
+    TEST_VERIFY_EXIT(callstack_count <= array_length(callstack));
+    bool found = false;
+    for (int i = 0; i < callstack_count; ++i) {
+        const char *marker;
+        if ((uintptr_t) callstack[i] == pc) {
+            found = true;
+            marker = " *";
+        } else {
+            marker = "";
         }
-      else
-        marker = "";
-      printf ("info: call stack entry %d: 0x%" PRIxPTR "%s\n",
-              i, (uintptr_t) callstack[i], marker);
+        printf("info: call stack entry %d: 0x%" PRIxPTR "%s\n",
+               i, (uintptr_t) callstack[i], marker);
     }
-  TEST_VERIFY (found);
-  handler_called = true;
+    TEST_VERIFY(found);
+    handler_called = true;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  struct sigaction sa =
-    {
-     .sa_sigaction = &handler,
-     .sa_flags = SA_SIGINFO
+    struct sigaction sa = {
+        .sa_sigaction = &handler,
+        .sa_flags = SA_SIGINFO
     };
-  xsigaction (SIGUSR1, &sa, NULL);
-  raise (SIGUSR1);
-  TEST_VERIFY (handler_called);
-  return 0;
+    xsigaction(SIGUSR1, &sa, NULL);
+    raise(SIGUSR1);
+    TEST_VERIFY(handler_called);
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -51,16 +51,16 @@
 #define KEYCHECKSUMSIZE 16
 
 enum keystatus {
-	KEY_SUCCESS = 0,
-	KEY_NOSECRET = 1,
-	KEY_UNKNOWN = 2,
-	KEY_SYSTEMERR = 3,
+    KEY_SUCCESS = 0,
+    KEY_NOSECRET = 1,
+    KEY_UNKNOWN = 2,
+    KEY_SYSTEMERR = 3,
 };
 typedef enum keystatus keystatus;
 #ifdef __cplusplus
-extern "C" bool_t xdr_keystatus(XDR *, keystatus*);
+extern "C" bool_t xdr_keystatus(XDR *, keystatus *);
 #elif __STDC__
-extern  bool_t xdr_keystatus(XDR *, keystatus*);
+extern  bool_t xdr_keystatus(XDR *, keystatus *);
 #else /* Old Style C */
 bool_t xdr_keystatus();
 #endif /* Old Style C */
@@ -78,54 +78,54 @@ bool_t xdr_keybuf();
 
 typedef char *netnamestr;
 #ifdef __cplusplus
-extern "C" bool_t xdr_netnamestr(XDR *, netnamestr*);
+extern "C" bool_t xdr_netnamestr(XDR *, netnamestr *);
 #elif __STDC__
-extern  bool_t xdr_netnamestr(XDR *, netnamestr*);
+extern  bool_t xdr_netnamestr(XDR *, netnamestr *);
 #else /* Old Style C */
 bool_t xdr_netnamestr();
 #endif /* Old Style C */
 
 
 struct cryptkeyarg {
-	netnamestr remotename;
-	des_block deskey;
+    netnamestr remotename;
+    des_block deskey;
 };
 typedef struct cryptkeyarg cryptkeyarg;
 #ifdef __cplusplus
-extern "C" bool_t xdr_cryptkeyarg(XDR *, cryptkeyarg*);
+extern "C" bool_t xdr_cryptkeyarg(XDR *, cryptkeyarg *);
 #elif __STDC__
-extern  bool_t xdr_cryptkeyarg(XDR *, cryptkeyarg*);
+extern  bool_t xdr_cryptkeyarg(XDR *, cryptkeyarg *);
 #else /* Old Style C */
 bool_t xdr_cryptkeyarg();
 #endif /* Old Style C */
 
 
 struct cryptkeyarg2 {
-	netnamestr remotename;
-	netobj remotekey;
-	des_block deskey;
+    netnamestr remotename;
+    netobj remotekey;
+    des_block deskey;
 };
 typedef struct cryptkeyarg2 cryptkeyarg2;
 #ifdef __cplusplus
-extern "C" bool_t xdr_cryptkeyarg2(XDR *, cryptkeyarg2*);
+extern "C" bool_t xdr_cryptkeyarg2(XDR *, cryptkeyarg2 *);
 #elif __STDC__
-extern  bool_t xdr_cryptkeyarg2(XDR *, cryptkeyarg2*);
+extern  bool_t xdr_cryptkeyarg2(XDR *, cryptkeyarg2 *);
 #else /* Old Style C */
 bool_t xdr_cryptkeyarg2();
 #endif /* Old Style C */
 
 
 struct cryptkeyres {
-	keystatus status;
-	union {
-		des_block deskey;
-	} cryptkeyres_u;
+    keystatus status;
+    union {
+        des_block deskey;
+    } cryptkeyres_u;
 };
 typedef struct cryptkeyres cryptkeyres;
 #ifdef __cplusplus
-extern "C" bool_t xdr_cryptkeyres(XDR *, cryptkeyres*);
+extern "C" bool_t xdr_cryptkeyres(XDR *, cryptkeyres *);
 #elif __STDC__
-extern  bool_t xdr_cryptkeyres(XDR *, cryptkeyres*);
+extern  bool_t xdr_cryptkeyres(XDR *, cryptkeyres *);
 #else /* Old Style C */
 bool_t xdr_cryptkeyres();
 #endif /* Old Style C */
@@ -133,65 +133,65 @@ bool_t xdr_cryptkeyres();
 #define MAXGIDS 16
 
 struct unixcred {
-	u_int uid;
-	u_int gid;
-	struct {
-		u_int gids_len;
-		u_int *gids_val;
-	} gids;
+    u_int uid;
+    u_int gid;
+    struct {
+        u_int gids_len;
+        u_int *gids_val;
+    } gids;
 };
 typedef struct unixcred unixcred;
 #ifdef __cplusplus
-extern "C" bool_t xdr_unixcred(XDR *, unixcred*);
+extern "C" bool_t xdr_unixcred(XDR *, unixcred *);
 #elif __STDC__
-extern  bool_t xdr_unixcred(XDR *, unixcred*);
+extern  bool_t xdr_unixcred(XDR *, unixcred *);
 #else /* Old Style C */
 bool_t xdr_unixcred();
 #endif /* Old Style C */
 
 
 struct getcredres {
-	keystatus status;
-	union {
-		unixcred cred;
-	} getcredres_u;
+    keystatus status;
+    union {
+        unixcred cred;
+    } getcredres_u;
 };
 typedef struct getcredres getcredres;
 #ifdef __cplusplus
-extern "C" bool_t xdr_getcredres(XDR *, getcredres*);
+extern "C" bool_t xdr_getcredres(XDR *, getcredres *);
 #elif __STDC__
-extern  bool_t xdr_getcredres(XDR *, getcredres*);
+extern  bool_t xdr_getcredres(XDR *, getcredres *);
 #else /* Old Style C */
 bool_t xdr_getcredres();
 #endif /* Old Style C */
 
 
 struct key_netstarg {
-	keybuf st_priv_key;
-	keybuf st_pub_key;
-	netnamestr st_netname;
+    keybuf st_priv_key;
+    keybuf st_pub_key;
+    netnamestr st_netname;
 };
 typedef struct key_netstarg key_netstarg;
 #ifdef __cplusplus
-extern "C" bool_t xdr_key_netstarg(XDR *, key_netstarg*);
+extern "C" bool_t xdr_key_netstarg(XDR *, key_netstarg *);
 #elif __STDC__
-extern  bool_t xdr_key_netstarg(XDR *, key_netstarg*);
+extern  bool_t xdr_key_netstarg(XDR *, key_netstarg *);
 #else /* Old Style C */
 bool_t xdr_key_netstarg();
 #endif /* Old Style C */
 
 
 struct key_netstres {
-	keystatus status;
-	union {
-		key_netstarg knet;
-	} key_netstres_u;
+    keystatus status;
+    union {
+        key_netstarg knet;
+    } key_netstres_u;
 };
 typedef struct key_netstres key_netstres;
 #ifdef __cplusplus
-extern "C" bool_t xdr_key_netstres(XDR *, key_netstres*);
+extern "C" bool_t xdr_key_netstres(XDR *, key_netstres *);
 #elif __STDC__
-extern  bool_t xdr_key_netstres(XDR *, key_netstres*);
+extern  bool_t xdr_key_netstres(XDR *, key_netstres *);
 #else /* Old Style C */
 bool_t xdr_key_netstres();
 #endif /* Old Style C */
@@ -207,137 +207,137 @@ bool_t xdr_key_netstres();
 
 #ifdef __cplusplus
 #define KEY_SET ((u_long)1)
-extern "C" keystatus * key_set_1(opaque *, CLIENT *);
-extern "C" keystatus * key_set_1_svc(opaque *, struct svc_req *);
+extern "C" keystatus *key_set_1(opaque *, CLIENT *);
+extern "C" keystatus *key_set_1_svc(opaque *, struct svc_req *);
 #define KEY_ENCRYPT ((u_long)2)
-extern "C" cryptkeyres * key_encrypt_1(cryptkeyarg *, CLIENT *);
-extern "C" cryptkeyres * key_encrypt_1_svc(cryptkeyarg *, struct svc_req *);
+extern "C" cryptkeyres *key_encrypt_1(cryptkeyarg *, CLIENT *);
+extern "C" cryptkeyres *key_encrypt_1_svc(cryptkeyarg *, struct svc_req *);
 #define KEY_DECRYPT ((u_long)3)
-extern "C" cryptkeyres * key_decrypt_1(cryptkeyarg *, CLIENT *);
-extern "C" cryptkeyres * key_decrypt_1_svc(cryptkeyarg *, struct svc_req *);
+extern "C" cryptkeyres *key_decrypt_1(cryptkeyarg *, CLIENT *);
+extern "C" cryptkeyres *key_decrypt_1_svc(cryptkeyarg *, struct svc_req *);
 #define KEY_GEN ((u_long)4)
-extern "C" des_block * key_gen_1(void *, CLIENT *);
-extern "C" des_block * key_gen_1_svc(void *, struct svc_req *);
+extern "C" des_block *key_gen_1(void *, CLIENT *);
+extern "C" des_block *key_gen_1_svc(void *, struct svc_req *);
 #define KEY_GETCRED ((u_long)5)
-extern "C" getcredres * key_getcred_1(netnamestr *, CLIENT *);
-extern "C" getcredres * key_getcred_1_svc(netnamestr *, struct svc_req *);
+extern "C" getcredres *key_getcred_1(netnamestr *, CLIENT *);
+extern "C" getcredres *key_getcred_1_svc(netnamestr *, struct svc_req *);
 
 #elif __STDC__
 #define KEY_SET ((u_long)1)
-extern  keystatus * key_set_1(opaque *, CLIENT *);
-extern  keystatus * key_set_1_svc(opaque *, struct svc_req *);
+extern  keystatus *key_set_1(opaque *, CLIENT *);
+extern  keystatus *key_set_1_svc(opaque *, struct svc_req *);
 #define KEY_ENCRYPT ((u_long)2)
-extern  cryptkeyres * key_encrypt_1(cryptkeyarg *, CLIENT *);
-extern  cryptkeyres * key_encrypt_1_svc(cryptkeyarg *, struct svc_req *);
+extern  cryptkeyres *key_encrypt_1(cryptkeyarg *, CLIENT *);
+extern  cryptkeyres *key_encrypt_1_svc(cryptkeyarg *, struct svc_req *);
 #define KEY_DECRYPT ((u_long)3)
-extern  cryptkeyres * key_decrypt_1(cryptkeyarg *, CLIENT *);
-extern  cryptkeyres * key_decrypt_1_svc(cryptkeyarg *, struct svc_req *);
+extern  cryptkeyres *key_decrypt_1(cryptkeyarg *, CLIENT *);
+extern  cryptkeyres *key_decrypt_1_svc(cryptkeyarg *, struct svc_req *);
 #define KEY_GEN ((u_long)4)
-extern  des_block * key_gen_1(void *, CLIENT *);
-extern  des_block * key_gen_1_svc(void *, struct svc_req *);
+extern  des_block *key_gen_1(void *, CLIENT *);
+extern  des_block *key_gen_1_svc(void *, struct svc_req *);
 #define KEY_GETCRED ((u_long)5)
-extern  getcredres * key_getcred_1(netnamestr *, CLIENT *);
-extern  getcredres * key_getcred_1_svc(netnamestr *, struct svc_req *);
+extern  getcredres *key_getcred_1(netnamestr *, CLIENT *);
+extern  getcredres *key_getcred_1_svc(netnamestr *, struct svc_req *);
 
 #else /* Old Style C */
 #define KEY_SET ((u_long)1)
-extern  keystatus * key_set_1();
-extern  keystatus * key_set_1_svc();
+extern  keystatus *key_set_1();
+extern  keystatus *key_set_1_svc();
 #define KEY_ENCRYPT ((u_long)2)
-extern  cryptkeyres * key_encrypt_1();
-extern  cryptkeyres * key_encrypt_1_svc();
+extern  cryptkeyres *key_encrypt_1();
+extern  cryptkeyres *key_encrypt_1_svc();
 #define KEY_DECRYPT ((u_long)3)
-extern  cryptkeyres * key_decrypt_1();
-extern  cryptkeyres * key_decrypt_1_svc();
+extern  cryptkeyres *key_decrypt_1();
+extern  cryptkeyres *key_decrypt_1_svc();
 #define KEY_GEN ((u_long)4)
-extern  des_block * key_gen_1();
-extern  des_block * key_gen_1_svc();
+extern  des_block *key_gen_1();
+extern  des_block *key_gen_1_svc();
 #define KEY_GETCRED ((u_long)5)
-extern  getcredres * key_getcred_1();
-extern  getcredres * key_getcred_1_svc();
+extern  getcredres *key_getcred_1();
+extern  getcredres *key_getcred_1_svc();
 #endif /* Old Style C */
 #define KEY_VERS2 ((u_long)2)
 
 #ifdef __cplusplus
-extern "C" keystatus * key_set_2(opaque *, CLIENT *);
-extern "C" keystatus * key_set_2_svc(opaque *, struct svc_req *);
-extern "C" cryptkeyres * key_encrypt_2(cryptkeyarg *, CLIENT *);
-extern "C" cryptkeyres * key_encrypt_2_svc(cryptkeyarg *, struct svc_req *);
-extern "C" cryptkeyres * key_decrypt_2(cryptkeyarg *, CLIENT *);
-extern "C" cryptkeyres * key_decrypt_2_svc(cryptkeyarg *, struct svc_req *);
-extern "C" des_block * key_gen_2(void *, CLIENT *);
-extern "C" des_block * key_gen_2_svc(void *, struct svc_req *);
-extern "C" getcredres * key_getcred_2(netnamestr *, CLIENT *);
-extern "C" getcredres * key_getcred_2_svc(netnamestr *, struct svc_req *);
+extern "C" keystatus *key_set_2(opaque *, CLIENT *);
+extern "C" keystatus *key_set_2_svc(opaque *, struct svc_req *);
+extern "C" cryptkeyres *key_encrypt_2(cryptkeyarg *, CLIENT *);
+extern "C" cryptkeyres *key_encrypt_2_svc(cryptkeyarg *, struct svc_req *);
+extern "C" cryptkeyres *key_decrypt_2(cryptkeyarg *, CLIENT *);
+extern "C" cryptkeyres *key_decrypt_2_svc(cryptkeyarg *, struct svc_req *);
+extern "C" des_block *key_gen_2(void *, CLIENT *);
+extern "C" des_block *key_gen_2_svc(void *, struct svc_req *);
+extern "C" getcredres *key_getcred_2(netnamestr *, CLIENT *);
+extern "C" getcredres *key_getcred_2_svc(netnamestr *, struct svc_req *);
 #define KEY_ENCRYPT_PK ((u_long)6)
-extern "C" cryptkeyres * key_encrypt_pk_2(cryptkeyarg2 *, CLIENT *);
-extern "C" cryptkeyres * key_encrypt_pk_2_svc(cryptkeyarg2 *, struct svc_req *);
+extern "C" cryptkeyres *key_encrypt_pk_2(cryptkeyarg2 *, CLIENT *);
+extern "C" cryptkeyres *key_encrypt_pk_2_svc(cryptkeyarg2 *, struct svc_req *);
 #define KEY_DECRYPT_PK ((u_long)7)
-extern "C" cryptkeyres * key_decrypt_pk_2(cryptkeyarg2 *, CLIENT *);
-extern "C" cryptkeyres * key_decrypt_pk_2_svc(cryptkeyarg2 *, struct svc_req *);
+extern "C" cryptkeyres *key_decrypt_pk_2(cryptkeyarg2 *, CLIENT *);
+extern "C" cryptkeyres *key_decrypt_pk_2_svc(cryptkeyarg2 *, struct svc_req *);
 #define KEY_NET_PUT ((u_long)8)
-extern "C" keystatus * key_net_put_2(key_netstarg *, CLIENT *);
-extern "C" keystatus * key_net_put_2_svc(key_netstarg *, struct svc_req *);
+extern "C" keystatus *key_net_put_2(key_netstarg *, CLIENT *);
+extern "C" keystatus *key_net_put_2_svc(key_netstarg *, struct svc_req *);
 #define KEY_NET_GET ((u_long)9)
-extern "C" key_netstres * key_net_get_2(void *, CLIENT *);
-extern "C" key_netstres * key_net_get_2_svc(void *, struct svc_req *);
+extern "C" key_netstres *key_net_get_2(void *, CLIENT *);
+extern "C" key_netstres *key_net_get_2_svc(void *, struct svc_req *);
 #define KEY_GET_CONV ((u_long)10)
-extern "C" cryptkeyres * key_get_conv_2(opaque *, CLIENT *);
-extern "C" cryptkeyres * key_get_conv_2_svc(opaque *, struct svc_req *);
+extern "C" cryptkeyres *key_get_conv_2(opaque *, CLIENT *);
+extern "C" cryptkeyres *key_get_conv_2_svc(opaque *, struct svc_req *);
 
 #elif __STDC__
-extern  keystatus * key_set_2(opaque *, CLIENT *);
-extern  keystatus * key_set_2_svc(opaque *, struct svc_req *);
-extern  cryptkeyres * key_encrypt_2(cryptkeyarg *, CLIENT *);
-extern  cryptkeyres * key_encrypt_2_svc(cryptkeyarg *, struct svc_req *);
-extern  cryptkeyres * key_decrypt_2(cryptkeyarg *, CLIENT *);
-extern  cryptkeyres * key_decrypt_2_svc(cryptkeyarg *, struct svc_req *);
-extern  des_block * key_gen_2(void *, CLIENT *);
-extern  des_block * key_gen_2_svc(void *, struct svc_req *);
-extern  getcredres * key_getcred_2(netnamestr *, CLIENT *);
-extern  getcredres * key_getcred_2_svc(netnamestr *, struct svc_req *);
+extern  keystatus *key_set_2(opaque *, CLIENT *);
+extern  keystatus *key_set_2_svc(opaque *, struct svc_req *);
+extern  cryptkeyres *key_encrypt_2(cryptkeyarg *, CLIENT *);
+extern  cryptkeyres *key_encrypt_2_svc(cryptkeyarg *, struct svc_req *);
+extern  cryptkeyres *key_decrypt_2(cryptkeyarg *, CLIENT *);
+extern  cryptkeyres *key_decrypt_2_svc(cryptkeyarg *, struct svc_req *);
+extern  des_block *key_gen_2(void *, CLIENT *);
+extern  des_block *key_gen_2_svc(void *, struct svc_req *);
+extern  getcredres *key_getcred_2(netnamestr *, CLIENT *);
+extern  getcredres *key_getcred_2_svc(netnamestr *, struct svc_req *);
 #define KEY_ENCRYPT_PK ((u_long)6)
-extern  cryptkeyres * key_encrypt_pk_2(cryptkeyarg2 *, CLIENT *);
-extern  cryptkeyres * key_encrypt_pk_2_svc(cryptkeyarg2 *, struct svc_req *);
+extern  cryptkeyres *key_encrypt_pk_2(cryptkeyarg2 *, CLIENT *);
+extern  cryptkeyres *key_encrypt_pk_2_svc(cryptkeyarg2 *, struct svc_req *);
 #define KEY_DECRYPT_PK ((u_long)7)
-extern  cryptkeyres * key_decrypt_pk_2(cryptkeyarg2 *, CLIENT *);
-extern  cryptkeyres * key_decrypt_pk_2_svc(cryptkeyarg2 *, struct svc_req *);
+extern  cryptkeyres *key_decrypt_pk_2(cryptkeyarg2 *, CLIENT *);
+extern  cryptkeyres *key_decrypt_pk_2_svc(cryptkeyarg2 *, struct svc_req *);
 #define KEY_NET_PUT ((u_long)8)
-extern  keystatus * key_net_put_2(key_netstarg *, CLIENT *);
-extern  keystatus * key_net_put_2_svc(key_netstarg *, struct svc_req *);
+extern  keystatus *key_net_put_2(key_netstarg *, CLIENT *);
+extern  keystatus *key_net_put_2_svc(key_netstarg *, struct svc_req *);
 #define KEY_NET_GET ((u_long)9)
-extern  key_netstres * key_net_get_2(void *, CLIENT *);
-extern  key_netstres * key_net_get_2_svc(void *, struct svc_req *);
+extern  key_netstres *key_net_get_2(void *, CLIENT *);
+extern  key_netstres *key_net_get_2_svc(void *, struct svc_req *);
 #define KEY_GET_CONV ((u_long)10)
-extern  cryptkeyres * key_get_conv_2(opaque *, CLIENT *);
-extern  cryptkeyres * key_get_conv_2_svc(opaque *, struct svc_req *);
+extern  cryptkeyres *key_get_conv_2(opaque *, CLIENT *);
+extern  cryptkeyres *key_get_conv_2_svc(opaque *, struct svc_req *);
 
 #else /* Old Style C */
-extern  keystatus * key_set_2();
-extern  keystatus * key_set_2_svc();
-extern  cryptkeyres * key_encrypt_2();
-extern  cryptkeyres * key_encrypt_2_svc();
-extern  cryptkeyres * key_decrypt_2();
-extern  cryptkeyres * key_decrypt_2_svc();
-extern  des_block * key_gen_2();
-extern  des_block * key_gen_2_svc();
-extern  getcredres * key_getcred_2();
-extern  getcredres * key_getcred_2_svc();
+extern  keystatus *key_set_2();
+extern  keystatus *key_set_2_svc();
+extern  cryptkeyres *key_encrypt_2();
+extern  cryptkeyres *key_encrypt_2_svc();
+extern  cryptkeyres *key_decrypt_2();
+extern  cryptkeyres *key_decrypt_2_svc();
+extern  des_block *key_gen_2();
+extern  des_block *key_gen_2_svc();
+extern  getcredres *key_getcred_2();
+extern  getcredres *key_getcred_2_svc();
 #define KEY_ENCRYPT_PK ((u_long)6)
-extern  cryptkeyres * key_encrypt_pk_2();
-extern  cryptkeyres * key_encrypt_pk_2_svc();
+extern  cryptkeyres *key_encrypt_pk_2();
+extern  cryptkeyres *key_encrypt_pk_2_svc();
 #define KEY_DECRYPT_PK ((u_long)7)
-extern  cryptkeyres * key_decrypt_pk_2();
-extern  cryptkeyres * key_decrypt_pk_2_svc();
+extern  cryptkeyres *key_decrypt_pk_2();
+extern  cryptkeyres *key_decrypt_pk_2_svc();
 #define KEY_NET_PUT ((u_long)8)
-extern  keystatus * key_net_put_2();
-extern  keystatus * key_net_put_2_svc();
+extern  keystatus *key_net_put_2();
+extern  keystatus *key_net_put_2_svc();
 #define KEY_NET_GET ((u_long)9)
-extern  key_netstres * key_net_get_2();
-extern  key_netstres * key_net_get_2_svc();
+extern  key_netstres *key_net_get_2();
+extern  key_netstres *key_net_get_2_svc();
 #define KEY_GET_CONV ((u_long)10)
-extern  cryptkeyres * key_get_conv_2();
-extern  cryptkeyres * key_get_conv_2_svc();
+extern  cryptkeyres *key_get_conv_2();
+extern  cryptkeyres *key_get_conv_2_svc();
 #endif /* Old Style C */
 
 #endif /* !_KEY_PROT_H_RPCGEN */

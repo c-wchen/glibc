@@ -17,15 +17,15 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _FENV_LIBC_H
-#define _FENV_LIBC_H	1
+#define _FENV_LIBC_H    1
 
 #include <fenv.h>
 #include <ldsodefs.h>
 #include <sysdep.h>
 
-extern const fenv_t *__fe_nomask_env_priv (void);
+extern const fenv_t *__fe_nomask_env_priv(void);
 
-extern const fenv_t *__fe_mask_env (void) attribute_hidden;
+extern const fenv_t *__fe_mask_env(void) attribute_hidden;
 
 /* If the old env had any enabled exceptions and the new env has no enabled
    exceptions, then mask SIGFPE in the MSR FE0/FE1 bits.  This may allow the
@@ -60,12 +60,12 @@ extern const fenv_t *__fe_mask_env (void) attribute_hidden;
    'mffs' on architectures older than "power9" because the additional
    bits set for 'mffsl' are "don't care" for 'mffs'.  'mffs' is a superset
    of 'mffsl'.  */
-#define fegetenv_control()					\
-  ({register double __fr;						\
-    __asm__ __volatile__ (						\
-      ".machine push; .machine \"power9\"; mffsl %0; .machine pop"	\
-      : "=f" (__fr));							\
-    __fr;								\
+#define fegetenv_control()                  \
+  ({register double __fr;                       \
+    __asm__ __volatile__ (                      \
+      ".machine push; .machine \"power9\"; mffsl %0; .machine pop"  \
+      : "=f" (__fr));                           \
+    __fr;                               \
   })
 
 /* Starting with GCC 14 __builtin_set_fpscr_rn can be used to return the
@@ -76,20 +76,20 @@ extern const fenv_t *__fe_mask_env (void) attribute_hidden;
 #ifdef __SET_FPSCR_RN_RETURNS_FPSCR__
 #define __fe_mffscrn(rn)  __builtin_set_fpscr_rn (rn)
 #else
-#define __fe_mffscrn(rn)						\
-  ({register fenv_union_t __fr;						\
-    if (__builtin_constant_p (rn))					\
-      __asm__ __volatile__ (						\
+#define __fe_mffscrn(rn)                        \
+  ({register fenv_union_t __fr;                     \
+    if (__builtin_constant_p (rn))                  \
+      __asm__ __volatile__ (                        \
         ".machine push; .machine \"power9\"; mffscrni %0,%1; .machine pop" \
-        : "=f" (__fr.fenv) : "n" (rn));					\
-    else								\
-    {									\
-      __fr.l = (rn);							\
-      __asm__ __volatile__ (						\
+        : "=f" (__fr.fenv) : "n" (rn));                 \
+    else                                \
+    {                                   \
+      __fr.l = (rn);                            \
+      __asm__ __volatile__ (                        \
         ".machine push; .machine \"power9\"; mffscrn %0,%1; .machine pop" \
-        : "=f" (__fr.fenv) : "f" (__fr.fenv));				\
-    }									\
-    __fr.fenv;								\
+        : "=f" (__fr.fenv) : "f" (__fr.fenv));              \
+    }                                   \
+    __fr.fenv;                              \
   })
 #endif
 
@@ -100,27 +100,27 @@ extern const fenv_t *__fe_mask_env (void) attribute_hidden;
 /* 'mffscrn' will decode to 'mffs' on ARCH < 3_00, which is still necessary
    but not sufficient, because it does not set the rounding mode.
    Explicitly set the rounding mode when 'mffscrn' actually doesn't.  */
-#define fegetenv_and_set_rn(rn)						\
-  ({register fenv_union_t __fr;						\
-    __fr.fenv = __fe_mffscrn (rn);					\
-    if (__glibc_unlikely (!(GLRO(dl_hwcap2) & PPC_FEATURE2_ARCH_3_00)))	\
-      __fesetround_inline (rn);						\
-    __fr.fenv;								\
+#define fegetenv_and_set_rn(rn)                     \
+  ({register fenv_union_t __fr;                     \
+    __fr.fenv = __fe_mffscrn (rn);                  \
+    if (__glibc_unlikely (!(GLRO(dl_hwcap2) & PPC_FEATURE2_ARCH_3_00))) \
+      __fesetround_inline (rn);                     \
+    __fr.fenv;                              \
   })
 #endif
 
 /* Equivalent to fesetenv, but takes a fenv_t instead of a pointer.  */
 #define fesetenv_register(env) \
-	do { \
-	  double d = (env); \
-	  if(GLRO(dl_hwcap) & PPC_FEATURE_HAS_DFP) \
-	    asm volatile (".machine push; " \
-			  ".machine \"power6\"; " \
-			  "mtfsf 0xff,%0,1,0; " \
-			  ".machine pop" : : "f" (d)); \
-	  else \
-	    __builtin_mtfsf (0xff, d); \
-	} while(0)
+    do { \
+      double d = (env); \
+      if(GLRO(dl_hwcap) & PPC_FEATURE_HAS_DFP) \
+        asm volatile (".machine push; " \
+              ".machine \"power6\"; " \
+              "mtfsf 0xff,%0,1,0; " \
+              ".machine pop" : : "f" (d)); \
+      else \
+        __builtin_mtfsf (0xff, d); \
+    } while(0)
 
 /* Set the last 2 nibbles of the FPSCR, which contain the
    exception enables and the rounding mode.
@@ -134,12 +134,12 @@ extern const fenv_t *__fe_mask_env (void) attribute_hidden;
    These things happen to be exactly what you need for typical elementary
    functions.  */
 #define relax_fenv_state() \
-	do { \
-	   if (GLRO(dl_hwcap) & PPC_FEATURE_HAS_DFP) \
-	     asm volatile (".machine push; .machine \"power6\"; " \
-		  "mtfsfi 7,0,1; .machine pop"); \
-	   asm volatile ("mtfsfi 7,0"); \
-	} while(0)
+    do { \
+       if (GLRO(dl_hwcap) & PPC_FEATURE_HAS_DFP) \
+         asm volatile (".machine push; .machine \"power6\"; " \
+          "mtfsfi 7,0,1; .machine pop"); \
+       asm volatile ("mtfsfi 7,0"); \
+    } while(0)
 
 /* Set/clear a particular FPSCR bit (for instance,
    reset_fpscr_bit(FPSCR_VE);
@@ -147,122 +147,118 @@ extern const fenv_t *__fe_mask_env (void) attribute_hidden;
 #define set_fpscr_bit(x) asm volatile ("mtfsb1 %0" : : "n"(x))
 #define reset_fpscr_bit(x) asm volatile ("mtfsb0 %0" : : "n"(x))
 
-typedef union
-{
-  fenv_t fenv;
-  unsigned long long l;
+typedef union {
+    fenv_t fenv;
+    unsigned long long l;
 } fenv_union_t;
 
 
-static inline int
-__fesetround_inline (int round)
+static inline int __fesetround_inline(int round)
 {
 #ifdef _ARCH_PWR9
-  __fe_mffscrn (round);
+    __fe_mffscrn(round);
 #else
-  if (__glibc_likely (GLRO(dl_hwcap2) & PPC_FEATURE2_ARCH_3_00))
-    __fe_mffscrn (round);
-  else if ((unsigned int) round < 2)
-    {
-       asm volatile ("mtfsb0 30");
-       if ((unsigned int) round == 0)
-         asm volatile ("mtfsb0 31");
-       else
-         asm volatile ("mtfsb1 31");
-    }
-  else
-    {
-       asm volatile ("mtfsb1 30");
-       if ((unsigned int) round == 2)
-         asm volatile ("mtfsb0 31");
-       else
-         asm volatile ("mtfsb1 31");
+    if (__glibc_likely(GLRO(dl_hwcap2) & PPC_FEATURE2_ARCH_3_00)) {
+        __fe_mffscrn(round);
+    } else if ((unsigned int) round < 2) {
+        asm volatile("mtfsb0 30");
+        if ((unsigned int) round == 0) {
+            asm volatile("mtfsb0 31");
+        } else {
+            asm volatile("mtfsb1 31");
+        }
+    } else {
+        asm volatile("mtfsb1 30");
+        if ((unsigned int) round == 2) {
+            asm volatile("mtfsb0 31");
+        } else {
+            asm volatile("mtfsb1 31");
+        }
     }
 #endif
-  return 0;
+    return 0;
 }
 
 /* Same as __fesetround_inline, and it also disable the floating-point
    inexact execption (bit 60 - XE, assuming NI is 0).  It does not check
    if ROUND is a valid value.  */
-static inline void
-__fesetround_inline_disable_inexact (const int round)
+static inline void __fesetround_inline_disable_inexact(const int round)
 {
-  asm volatile ("mtfsfi 7,%0" : : "n" (round));
+    asm volatile("mtfsfi 7,%0" : : "n"(round));
 }
 
 #define FPSCR_MASK(bit) (1 << (31 - (bit)))
 
 /* Definitions of all the FPSCR bit numbers */
 enum {
-  FPSCR_FX = 0,    /* exception summary */
+    FPSCR_FX = 0,    /* exception summary */
 #define FPSCR_FX_MASK (FPSCR_MASK (FPSCR_FX))
-  FPSCR_FEX,       /* enabled exception summary */
+    FPSCR_FEX,       /* enabled exception summary */
 #define FPSCR_FEX_MASK (FPSCR_MASK FPSCR_FEX))
-  FPSCR_VX,        /* invalid operation summary */
+    FPSCR_VX,        /* invalid operation summary */
 #define FPSCR_VX_MASK (FPSCR_MASK (FPSCR_VX))
-  FPSCR_OX,        /* overflow */
+    FPSCR_OX,        /* overflow */
 #define FPSCR_OX_MASK (FPSCR_MASK (FPSCR_OX))
-  FPSCR_UX,        /* underflow */
+    FPSCR_UX,        /* underflow */
 #define FPSCR_UX_MASK (FPSCR_MASK (FPSCR_UX))
-  FPSCR_ZX,        /* zero divide */
+    FPSCR_ZX,        /* zero divide */
 #define FPSCR_ZX_MASK (FPSCR_MASK (FPSCR_ZX))
-  FPSCR_XX,        /* inexact */
+    FPSCR_XX,        /* inexact */
 #define FPSCR_XX_MASK (FPSCR_MASK (FPSCR_XX))
-  FPSCR_VXSNAN,    /* invalid operation for sNaN */
+    FPSCR_VXSNAN,    /* invalid operation for sNaN */
 #define FPSCR_VXSNAN_MASK (FPSCR_MASK (FPSCR_VXSNAN))
-  FPSCR_VXISI,     /* invalid operation for Inf-Inf */
+    FPSCR_VXISI,     /* invalid operation for Inf-Inf */
 #define FPSCR_VXISI_MASK (FPSCR_MASK (FPSCR_VXISI))
-  FPSCR_VXIDI,     /* invalid operation for Inf/Inf */
+    FPSCR_VXIDI,     /* invalid operation for Inf/Inf */
 #define FPSCR_VXIDI_MASK (FPSCR_MASK (FPSCR_VXIDI))
-  FPSCR_VXZDZ,     /* invalid operation for 0/0 */
+    FPSCR_VXZDZ,     /* invalid operation for 0/0 */
 #define FPSCR_VXZDZ_MASK (FPSCR_MASK (FPSCR_VXZDZ))
-  FPSCR_VXIMZ,     /* invalid operation for Inf*0 */
+    FPSCR_VXIMZ,     /* invalid operation for Inf*0 */
 #define FPSCR_VXIMZ_MASK (FPSCR_MASK (FPSCR_VXIMZ))
-  FPSCR_VXVC,      /* invalid operation for invalid compare */
+    FPSCR_VXVC,      /* invalid operation for invalid compare */
 #define FPSCR_VXVC_MASK (FPSCR_MASK (FPSCR_VXVC))
-  FPSCR_FR,        /* fraction rounded [fraction was incremented by round] */
+    FPSCR_FR,        /* fraction rounded [fraction was incremented by round] */
 #define FPSCR_FR_MASK (FPSCR_MASK (FPSCR_FR))
-  FPSCR_FI,        /* fraction inexact */
+    FPSCR_FI,        /* fraction inexact */
 #define FPSCR_FI_MASK (FPSCR_MASK (FPSCR_FI))
-  FPSCR_FPRF_C,    /* result class descriptor */
+    FPSCR_FPRF_C,    /* result class descriptor */
 #define FPSCR_FPRF_C_MASK (FPSCR_MASK (FPSCR_FPRF_C))
-  FPSCR_FPRF_FL,   /* result less than (usually, less than 0) */
+    FPSCR_FPRF_FL,   /* result less than (usually, less than 0) */
 #define FPSCR_FPRF_FL_MASK (FPSCR_MASK (FPSCR_FPRF_FL))
-  FPSCR_FPRF_FG,   /* result greater than */
+    FPSCR_FPRF_FG,   /* result greater than */
 #define FPSCR_FPRF_FG_MASK (FPSCR_MASK (FPSCR_FPRF_FG))
-  FPSCR_FPRF_FE,   /* result equal to */
+    FPSCR_FPRF_FE,   /* result equal to */
 #define FPSCR_FPRF_FE_MASK (FPSCR_MASK (FPSCR_FPRF_FE))
-  FPSCR_FPRF_FU,   /* result unordered */
+    FPSCR_FPRF_FU,   /* result unordered */
 #define FPSCR_FPRF_FU_MASK (FPSCR_MASK (FPSCR_FPRF_FU))
-  FPSCR_20,        /* reserved */
-  FPSCR_VXSOFT,    /* invalid operation set by software */
+    FPSCR_20,        /* reserved */
+    FPSCR_VXSOFT,    /* invalid operation set by software */
 #define FPSCR_VXSOFT_MASK (FPSCR_MASK (FPSCR_VXSOFT))
-  FPSCR_VXSQRT,    /* invalid operation for square root */
+    FPSCR_VXSQRT,    /* invalid operation for square root */
 #define FPSCR_VXSQRT_MASK (FPSCR_MASK (FPSCR_VXSQRT))
-  FPSCR_VXCVI,     /* invalid operation for invalid integer convert */
+    FPSCR_VXCVI,     /* invalid operation for invalid integer convert */
 #define FPSCR_VXCVI_MASK (FPSCR_MASK (FPSCR_VXCVI))
-  FPSCR_VE,        /* invalid operation exception enable */
+    FPSCR_VE,        /* invalid operation exception enable */
 #define FPSCR_VE_MASK (FPSCR_MASK (FPSCR_VE))
-  FPSCR_OE,        /* overflow exception enable */
+    FPSCR_OE,        /* overflow exception enable */
 #define FPSCR_OE_MASK (FPSCR_MASK (FPSCR_OE))
-  FPSCR_UE,        /* underflow exception enable */
+    FPSCR_UE,        /* underflow exception enable */
 #define FPSCR_UE_MASK (FPSCR_MASK (FPSCR_UE))
-  FPSCR_ZE,        /* zero divide exception enable */
+    FPSCR_ZE,        /* zero divide exception enable */
 #define FPSCR_ZE_MASK (FPSCR_MASK (FPSCR_ZE))
-  FPSCR_XE,        /* inexact exception enable */
+    FPSCR_XE,        /* inexact exception enable */
 #define FPSCR_XE_MASK (FPSCR_MASK (FPSCR_XE))
 #ifdef _ARCH_PWR6
-  FPSCR_29,        /* Reserved in ISA 2.05  */
+    FPSCR_29,        /* Reserved in ISA 2.05  */
 #define FPSCR_NI_MASK (FPSCR_MASK (FPSCR_29))
 #else
-  FPSCR_NI,        /* non-IEEE mode (typically, no denormalised numbers) */
+    FPSCR_NI,        /* non-IEEE mode (typically, no denormalised numbers) */
 #define FPSCR_NI_MASK (FPSCR_MASK (FPSCR_NI))
 #endif /* _ARCH_PWR6 */
-  /* the remaining two least-significant bits keep the rounding mode */
-  FPSCR_RN_hi,
+    /* the remaining two least-significant bits keep the rounding mode */
+    FPSCR_RN_hi,
 #define FPSCR_RN_hi_MASK (FPSCR_MASK (FPSCR_RN_hi))
-  FPSCR_RN_lo
+    FPSCR_RN_lo
 #define FPSCR_RN_lo_MASK (FPSCR_MASK (FPSCR_RN_lo))
 };
 
@@ -289,21 +285,19 @@ enum {
    and vice versa. */
 #define FPSCR_EXCEPT_TO_ENABLE_SHIFT 22
 
-static inline int
-fenv_reg_to_exceptions (unsigned long long l)
+static inline int fenv_reg_to_exceptions(unsigned long long l)
 {
-  return (((int)l) & FPSCR_ENABLES_MASK) << FPSCR_EXCEPT_TO_ENABLE_SHIFT;
+    return (((int)l) & FPSCR_ENABLES_MASK) << FPSCR_EXCEPT_TO_ENABLE_SHIFT;
 }
 
-static inline unsigned long long
-fenv_exceptions_to_reg (int excepts)
+static inline unsigned long long fenv_exceptions_to_reg(int excepts)
 {
-  return (unsigned long long)
-    (excepts & FE_ALL_EXCEPT) >> FPSCR_EXCEPT_TO_ENABLE_SHIFT;
+    return (unsigned long long)
+           (excepts & FE_ALL_EXCEPT) >> FPSCR_EXCEPT_TO_ENABLE_SHIFT;
 }
 
 #ifdef _ARCH_PWR6
-  /* Not supported in ISA 2.05.  Provided for source compat only.  */
+/* Not supported in ISA 2.05.  Provided for source compat only.  */
 # define FPSCR_NI 29
 #endif /* _ARCH_PWR6 */
 
@@ -314,11 +308,11 @@ fenv_exceptions_to_reg (int excepts)
    out by gcc.  */
 #define f_wash(x) \
    ({ double d; asm volatile ("fmul %0,%1,%2" \
-			      : "=f"(d) \
-			      : "f" (x), "f"((float)1.0)); d; })
+                  : "=f"(d) \
+                  : "f" (x), "f"((float)1.0)); d; })
 #define f_washf(x) \
    ({ float f; asm volatile ("fmuls %0,%1,%2" \
-			     : "=f"(f) \
-			     : "f" (x), "f"((float)1.0)); f; })
+                 : "=f"(f) \
+                 : "f" (x), "f"((float)1.0)); f; })
 
 #endif /* fenv_libc.h */

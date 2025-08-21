@@ -24,78 +24,70 @@
 
 #if __HAVE_64B_ATOMICS
 
-static inline uint64_t
-__atomic_wide_counter_load_relaxed (__atomic_wide_counter *c)
+static inline uint64_t __atomic_wide_counter_load_relaxed(__atomic_wide_counter *c)
 {
-  return atomic_load_relaxed (&c->__value64);
+    return atomic_load_relaxed(&c->__value64);
 }
 
-static inline uint64_t
-__atomic_wide_counter_load_acquire (__atomic_wide_counter *c)
+static inline uint64_t __atomic_wide_counter_load_acquire(__atomic_wide_counter *c)
 {
-  return atomic_load_acquire (&c->__value64);
+    return atomic_load_acquire(&c->__value64);
 }
 
-static inline uint64_t
-__atomic_wide_counter_fetch_add_relaxed (__atomic_wide_counter *c,
-                                         unsigned int val)
+static inline uint64_t __atomic_wide_counter_fetch_add_relaxed(__atomic_wide_counter *c,
+        unsigned int val)
 {
-  return atomic_fetch_add_relaxed (&c->__value64, val);
+    return atomic_fetch_add_relaxed(&c->__value64, val);
 }
 
-static inline uint64_t
-__atomic_wide_counter_fetch_add_acquire (__atomic_wide_counter *c,
-                                         unsigned int val)
+static inline uint64_t __atomic_wide_counter_fetch_add_acquire(__atomic_wide_counter *c,
+        unsigned int val)
 {
-  return atomic_fetch_add_acquire (&c->__value64, val);
+    return atomic_fetch_add_acquire(&c->__value64, val);
 }
 
-static inline void
-__atomic_wide_counter_add_relaxed (__atomic_wide_counter *c,
-                                   unsigned int val)
+static inline void __atomic_wide_counter_add_relaxed(__atomic_wide_counter *c,
+        unsigned int val)
 {
-  atomic_store_relaxed (&c->__value64,
-                        atomic_load_relaxed (&c->__value64) + val);
+    atomic_store_relaxed(&c->__value64,
+                         atomic_load_relaxed(&c->__value64) + val);
 }
 
-static uint64_t __attribute__ ((unused))
-__atomic_wide_counter_fetch_xor_release (__atomic_wide_counter *c,
-                                         unsigned int val)
+static uint64_t __attribute__((unused))
+__atomic_wide_counter_fetch_xor_release(__atomic_wide_counter *c,
+                                        unsigned int val)
 {
-  return atomic_fetch_xor_release (&c->__value64, val);
+    return atomic_fetch_xor_release(&c->__value64, val);
 }
 
 #else /* !__HAVE_64B_ATOMICS */
 
-uint64_t __atomic_wide_counter_load_relaxed (__atomic_wide_counter *c)
-  attribute_hidden;
+uint64_t __atomic_wide_counter_load_relaxed(__atomic_wide_counter *c)
+attribute_hidden;
 
-static inline uint64_t
-__atomic_wide_counter_load_acquire (__atomic_wide_counter *c)
+static inline uint64_t __atomic_wide_counter_load_acquire(__atomic_wide_counter *c)
 {
-  uint64_t r = __atomic_wide_counter_load_relaxed (c);
-  atomic_thread_fence_acquire ();
-  return r;
+    uint64_t r = __atomic_wide_counter_load_relaxed(c);
+    atomic_thread_fence_acquire();
+    return r;
 }
 
-uint64_t __atomic_wide_counter_fetch_add_relaxed (__atomic_wide_counter *c,
-                                                  unsigned int op)
-  attribute_hidden;
+uint64_t __atomic_wide_counter_fetch_add_relaxed(__atomic_wide_counter *c,
+        unsigned int op)
+attribute_hidden;
 
-static inline uint64_t
-__atomic_wide_counter_fetch_add_acquire (__atomic_wide_counter *c,
-                                         unsigned int val)
+static inline uint64_t __atomic_wide_counter_fetch_add_acquire(__atomic_wide_counter *c,
+        unsigned int val)
 {
-  uint64_t r = __atomic_wide_counter_fetch_add_relaxed (c, val);
-  atomic_thread_fence_acquire ();
-  return r;
+    uint64_t r = __atomic_wide_counter_fetch_add_relaxed(c, val);
+    atomic_thread_fence_acquire();
+    return r;
 }
 
-static inline void
-__atomic_wide_counter_add_relaxed (__atomic_wide_counter *c,
-                                   unsigned int val)
+static inline void __atomic_wide_counter_add_relaxed(__atomic_wide_counter *c,
+        unsigned int val)
 {
-  __atomic_wide_counter_fetch_add_relaxed (c, val);
+    __atomic_wide_counter_fetch_add_relaxed(c, val);
 }
 
 #endif /* !__HAVE_64B_ATOMICS */

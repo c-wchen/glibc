@@ -24,14 +24,14 @@
 #if LIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_33)
 
 /* Get information about the file descriptor FD in BUF.  */
-int
-__fxstat (int vers, int fd, struct stat *buf)
+int __fxstat(int vers, int fd, struct stat *buf)
 {
-  if (vers != _STAT_VER)
-    return __hurd_fail (EINVAL);
+    if (vers != _STAT_VER) {
+        return __hurd_fail(EINVAL);
+    }
 
-  return __fstat (fd, buf);
+    return __fstat(fd, buf);
 }
-weak_alias (__fxstat, _fxstat)
+weak_alias(__fxstat, _fxstat)
 
 #endif /* LIB_COMPAT  */

@@ -18,12 +18,11 @@
 #include <errno.h>
 #include <sys/xattr.h>
 
-int
-fsetxattr (int __fd, const char *__name, const void *__value,
-	   size_t __size, int __flags)
+int fsetxattr(int __fd, const char *__name, const void *__value,
+              size_t __size, int __flags)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (fsetxattr)
+stub_warning(fsetxattr)

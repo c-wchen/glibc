@@ -37,84 +37,82 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-const int degree = 128;		/* random number generator degree (should
-				   be one of 8, 16, 32, 64, 128, 256) */
-const int nseq = 3;		/* number of test sequences */
-const int nrnd = 50;		/* length of each test sequence */
+const int degree = 128;     /* random number generator degree (should
+                   be one of 8, 16, 32, 64, 128, 256) */
+const int nseq = 3;     /* number of test sequences */
+const int nrnd = 50;        /* length of each test sequence */
 const unsigned int seed[3] = { 0x12344321U, 0xEE11DD22U, 0xFEDCBA98 };
 
-void fail (const char *msg, int s, int i) __attribute__ ((__noreturn__));
+void fail(const char *msg, int s, int i) __attribute__((__noreturn__));
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  long int rnd[nseq][nrnd];	/* pseudorandom numbers */
-  char* state[nseq];		/* state for PRNG */
-  char* oldstate[nseq];		/* old PRNG state */
-  int s;			/* sequence index */
-  int i;			/* element index */
+    long int rnd[nseq][nrnd]; /* pseudorandom numbers */
+    char *state[nseq];        /* state for PRNG */
+    char *oldstate[nseq];     /* old PRNG state */
+    int s;            /* sequence index */
+    int i;            /* element index */
 
-  printf ("Beginning random package test using %d sequences of length %d.\n",
-	  nseq, nrnd);
+    printf("Beginning random package test using %d sequences of length %d.\n",
+           nseq, nrnd);
 
-  /* 1. Generate and store the sequences.  */
-  printf ("Generating random sequences.\n");
-  for (s = 0; s < nseq; ++s)
-    {
-      srandom ( seed[s] );
-      for (i = 0; i < nrnd; ++i)
-	rnd[s][i] = random ();
+    /* 1. Generate and store the sequences.  */
+    printf("Generating random sequences.\n");
+    for (s = 0; s < nseq; ++s) {
+        srandom(seed[s]);
+        for (i = 0; i < nrnd; ++i) {
+            rnd[s][i] = random();
+        }
     }
 
-  /* 2. Regenerate and check.  */
-  printf ("Regenerating and checking sequences.\n");
-  for (s = 0; s < nseq; ++s)
-    {
-      srandom (seed[s]);
-      for (i = 0; i < nrnd; ++i)
-	if (rnd[s][i] != random ())
-	  fail ("first regenerate test", s, i);
+    /* 2. Regenerate and check.  */
+    printf("Regenerating and checking sequences.\n");
+    for (s = 0; s < nseq; ++s) {
+        srandom(seed[s]);
+        for (i = 0; i < nrnd; ++i)
+            if (rnd[s][i] != random()) {
+                fail("first regenerate test", s, i);
+            }
     }
 
-  /* 3. Create state vector, one for each sequence.
-	First state is random's internal state; others are malloced.  */
-  printf ("Creating and checking state vector for each sequence.\n");
-  srandom (seed[0]);			/* reseed with first seed */
-  for (s = 1; s < nseq; ++s)
-    {
-      state[s] = (char*) malloc (degree);
-      oldstate[s] = initstate (seed[s], state[s], degree);
+    /* 3. Create state vector, one for each sequence.
+    First state is random's internal state; others are malloced.  */
+    printf("Creating and checking state vector for each sequence.\n");
+    srandom(seed[0]);             /* reseed with first seed */
+    for (s = 1; s < nseq; ++s) {
+        state[s] = (char *) malloc(degree);
+        oldstate[s] = initstate(seed[s], state[s], degree);
     }
-  state[0] = oldstate[1];
+    state[0] = oldstate[1];
 
-  /* Check returned values.  */
-  for (s = 1; s < nseq - 1; ++s)
-    if (state[s] != oldstate[s + 1])
-      fail ("bad initstate() return value", s, i);
+    /* Check returned values.  */
+    for (s = 1; s < nseq - 1; ++s)
+        if (state[s] != oldstate[s + 1]) {
+            fail("bad initstate() return value", s, i);
+        }
 
-  /* 4. Regenerate sequences interleaved and check.  */
-  printf ("Regenerating and checking sequences in interleaved order.\n");
-  for (i = 0; i < nrnd; ++i)
-    {
-      for (s = 0; s < nseq; ++s)
-	{
-	  char *oldstate = (char *) setstate (state[s]);
-	  if (oldstate != state[(s + nseq - 1) % nseq])
-	    fail ("bad setstate() return value", s, i);
-	  if (rnd[s][i] != random ())
-	    fail ("bad value generated in interleave test", s, i);
-	}
+    /* 4. Regenerate sequences interleaved and check.  */
+    printf("Regenerating and checking sequences in interleaved order.\n");
+    for (i = 0; i < nrnd; ++i) {
+        for (s = 0; s < nseq; ++s) {
+            char *oldstate = (char *) setstate(state[s]);
+            if (oldstate != state[(s + nseq - 1) % nseq]) {
+                fail("bad setstate() return value", s, i);
+            }
+            if (rnd[s][i] != random()) {
+                fail("bad value generated in interleave test", s, i);
+            }
+        }
     }
-  printf ("All tests passed!\n");
-  return 0;
+    printf("All tests passed!\n");
+    return 0;
 }
 
-void
-fail (const char *msg, int s, int i)
+void fail(const char *msg, int s, int i)
 {
-  printf ("\nTest FAILED: ");
-  printf ("%s (seq %d, pos %d).\n", msg, s, i);
-  exit (1);
+    printf("\nTest FAILED: ");
+    printf("%s (seq %d, pos %d).\n", msg, s, i);
+    exit(1);
 }
 
 #define TEST_FUNCTION do_test ()

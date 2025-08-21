@@ -23,30 +23,29 @@
 #include <string.h>
 #include <unistd.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int result = 0;
-  const char *s;
+    int result = 0;
+    const char *s;
 
-  setenv ("LANGUAGE", "existing-locale", 1);
-  unsetenv ("OUTPUT_CHARSET");
-  setlocale (LC_ALL, "en_US.ANSI_X3.4-1968");
-  textdomain ("translit");
-  bindtextdomain ("translit", OBJPFX "domaindir");
+    setenv("LANGUAGE", "existing-locale", 1);
+    unsetenv("OUTPUT_CHARSET");
+    setlocale(LC_ALL, "en_US.ANSI_X3.4-1968");
+    textdomain("translit");
+    bindtextdomain("translit", OBJPFX "domaindir");
 
 #define TEST(in, exp) \
-  s = gettext (in);							      \
-  puts (s);								      \
+  s = gettext (in);                               \
+  puts (s);                                   \
   result |= strcmp (s, exp) != 0;
 
-  TEST ("test", "<<(C) AEss>>");
-  TEST ("test", "<<(C) AEss>>");
-  TEST ("onemore", " 1/2 * 1/2 = 1/4 ");
-  TEST ("onemore", " 1/2 * 1/2 = 1/4 ");
-  TEST ("test", "<<(C) AEss>>");
+    TEST("test", "<<(C) AEss>>");
+    TEST("test", "<<(C) AEss>>");
+    TEST("onemore", " 1/2 * 1/2 = 1/4 ");
+    TEST("onemore", " 1/2 * 1/2 = 1/4 ");
+    TEST("test", "<<(C) AEss>>");
 
-  return result;
+    return result;
 }
 
 #define TEST_FUNCTION do_test ()

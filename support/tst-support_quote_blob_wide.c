@@ -21,25 +21,24 @@
 #include <string.h>
 #include <stdlib.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* Check handling of the empty blob, both with and without trailing
-     NUL byte.  */
-  char *p = support_quote_blob_wide (L"", 0);
-  TEST_COMPARE (strlen (p), 0);
-  free (p);
-  p = support_quote_blob_wide (L"X", 0);
-  TEST_COMPARE (strlen (p), 0);
-  free (p);
+    /* Check handling of the empty blob, both with and without trailing
+       NUL byte.  */
+    char *p = support_quote_blob_wide(L"", 0);
+    TEST_COMPARE(strlen(p), 0);
+    free(p);
+    p = support_quote_blob_wide(L"X", 0);
+    TEST_COMPARE(strlen(p), 0);
+    free(p);
 
-  /* Check escaping of backslash-escaped characters, and lack of
-     escaping for other shell meta-characters.  */
-  p = support_quote_blob_wide (L"$()*?`@[]{}~\'\"X", 14);
-  TEST_COMPARE (strcmp (p, "$()*?`@[]{}~\\'\\\""), 0);
-  free (p);
+    /* Check escaping of backslash-escaped characters, and lack of
+       escaping for other shell meta-characters.  */
+    p = support_quote_blob_wide(L"$()*?`@[]{}~\'\"X", 14);
+    TEST_COMPARE(strcmp(p, "$()*?`@[]{}~\\'\\\""), 0);
+    free(p);
 
-  /* Check lack of escaping for letters and digits.  */
+    /* Check lack of escaping for letters and digits.  */
 #define LETTERS_AND_DIGTS                       \
   "abcdefghijklmnopqrstuvwxyz"                  \
   "ABCDEFGHIJKLMNOPQRSTUVWXYZ"                  \
@@ -47,20 +46,20 @@ do_test (void)
 #define CONCATX(X, Y) X ## Y
 #define CONCAT(X, Y) CONCATX (X, Y)
 #define WLETTERS_AND_DIGTS CONCAT (L, LETTERS_AND_DIGTS)
-  p = support_quote_blob_wide (WLETTERS_AND_DIGTS "@", 2 * 26 + 10);
-  TEST_COMPARE (strcmp (p, LETTERS_AND_DIGTS), 0);
-  free (p);
+    p = support_quote_blob_wide(WLETTERS_AND_DIGTS "@", 2 * 26 + 10);
+    TEST_COMPARE(strcmp(p, LETTERS_AND_DIGTS), 0);
+    free(p);
 
-  /* Check escaping of control characters and other non-printable
-     characters.  */
-  p = support_quote_blob_wide (L"\r\n\t\a\b\f\v\1\177\200\377"
-			       "\x123\x76543210\xfedcba98\0@", 17);
-  TEST_COMPARE (strcmp (p, "\\r\\n\\t\\a\\b\\f\\v\\x{1}"
+    /* Check escaping of control characters and other non-printable
+       characters.  */
+    p = support_quote_blob_wide(L"\r\n\t\a\b\f\v\1\177\200\377"
+                                "\x123\x76543210\xfedcba98\0@", 17);
+    TEST_COMPARE(strcmp(p, "\\r\\n\\t\\a\\b\\f\\v\\x{1}"
                         "\\x{7f}\\x{80}\\x{ff}\\x{123}\\x{76543210}"
-			"\\x{fedcba98}\\x{0}@\\x{0}"), 0);
-  free (p);
+                        "\\x{fedcba98}\\x{0}@\\x{0}"), 0);
+    free(p);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

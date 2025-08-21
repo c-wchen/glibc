@@ -35,55 +35,56 @@
 #include <shlib-compat.h>
 #include "des.h"
 
-extern int _des_crypt (char *, unsigned, struct desparams *);
+extern int _des_crypt(char *, unsigned, struct desparams *);
 
 /*
  * Copy 8 bytes
  */
 #define COPY8(src, dst) { \
-	register char *a = (char *) dst; \
-	register char *b = (char *) src; \
-	*a++ = *b++; *a++ = *b++; *a++ = *b++; *a++ = *b++; \
-	*a++ = *b++; *a++ = *b++; *a++ = *b++; *a++ = *b++; \
+    register char *a = (char *) dst; \
+    register char *b = (char *) src; \
+    *a++ = *b++; *a++ = *b++; *a++ = *b++; *a++ = *b++; \
+    *a++ = *b++; *a++ = *b++; *a++ = *b++; *a++ = *b++; \
 }
 
 /*
  * Copy multiple of 8 bytes
  */
 #define DESCOPY(src, dst, len) { \
-	register char *a = (char *) dst; \
-	register char *b = (char *) src; \
-	register int i; \
-	for (i = (int) len; i > 0; i -= 8) { \
-		*a++ = *b++; *a++ = *b++; *a++ = *b++; *a++ = *b++; \
-		*a++ = *b++; *a++ = *b++; *a++ = *b++; *a++ = *b++; \
-	} \
+    register char *a = (char *) dst; \
+    register char *b = (char *) src; \
+    register int i; \
+    for (i = (int) len; i > 0; i -= 8) { \
+        *a++ = *b++; *a++ = *b++; *a++ = *b++; *a++ = *b++; \
+        *a++ = *b++; *a++ = *b++; *a++ = *b++; *a++ = *b++; \
+    } \
 }
 
 /*
  * Common code to cbc_crypt() & ecb_crypt()
  */
-static int
-common_crypt (char *key, char *buf, register unsigned len,
-	      unsigned mode, register struct desparams *desp)
+static int common_crypt(char *key, char *buf, register unsigned len,
+                        unsigned mode, register struct desparams *desp)
 {
-  register int desdev;
+    register int desdev;
 
-  if ((len % 8) != 0 || len > DES_MAXDATA)
-    return DESERR_BADPARAM;
+    if ((len % 8) != 0 || len > DES_MAXDATA) {
+        return DESERR_BADPARAM;
+    }
 
-  desp->des_dir =
-    ((mode & DES_DIRMASK) == DES_ENCRYPT) ? ENCRYPT : DECRYPT;
+    desp->des_dir =
+        ((mode & DES_DIRMASK) == DES_ENCRYPT) ? ENCRYPT : DECRYPT;
 
-  desdev = mode & DES_DEVMASK;
-  COPY8 (key, desp->des_key);
-  /*
-   * software
-   */
-  if (!_des_crypt (buf, len, desp))
-    return DESERR_HWERROR;
+    desdev = mode & DES_DEVMASK;
+    COPY8(key, desp->des_key);
+    /*
+     * software
+     */
+    if (!_des_crypt(buf, len, desp)) {
+        return DESERR_HWERROR;
+    }
 
-  return desdev == DES_SW ? DESERR_NONE : DESERR_NOHWDEVICE;
+    return desdev == DES_SW ? DESERR_NONE : DESERR_NOHWDEVICE;
 }
 
 /* Note: these cannot be excluded from the build yet, because they are
@@ -92,30 +93,29 @@ common_crypt (char *key, char *buf, register unsigned len,
 /*
  * CBC mode encryption
  */
-int
-cbc_crypt (char *key, char *buf, unsigned int len, unsigned int mode,
-	   char *ivec)
+int cbc_crypt(char *key, char *buf, unsigned int len, unsigned int mode,
+              char *ivec)
 {
-  int err;
-  struct desparams dp;
+    int err;
+    struct desparams dp;
 
-  dp.des_mode = CBC;
-  COPY8 (ivec, dp.des_ivec);
-  err = common_crypt (key, buf, len, mode, &dp);
-  COPY8 (dp.des_ivec, ivec);
-  return err;
+    dp.des_mode = CBC;
+    COPY8(ivec, dp.des_ivec);
+    err = common_crypt(key, buf, len, mode, &dp);
+    COPY8(dp.des_ivec, ivec);
+    return err;
 }
-hidden_nolink (cbc_crypt, libc, GLIBC_2_1)
+hidden_nolink(cbc_crypt, libc, GLIBC_2_1)
 
 /*
  * ECB mode encryption
  */
 int
-ecb_crypt (char *key, char *buf, unsigned int len, unsigned int mode)
+ecb_crypt(char *key, char *buf, unsigned int len, unsigned int mode)
 {
-  struct desparams dp;
+    struct desparams dp;
 
-  dp.des_mode = ECB;
-  return common_crypt (key, buf, len, mode, &dp);
+    dp.des_mode = ECB;
+    return common_crypt(key, buf, len, mode, &dp);
 }
-hidden_nolink (ecb_crypt, libc, GLIBC_2_1)
+hidden_nolink(ecb_crypt, libc, GLIBC_2_1)

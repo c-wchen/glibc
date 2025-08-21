@@ -23,28 +23,27 @@
 #include <support/xstdio.h>
 #include <support/xunistd.h>
 
-int
-do_test (void)
+int do_test(void)
 {
-  char *filename = NULL;
-  int fd = create_temp_file ("tst-fflush-mmap", &filename);
-  TEST_VERIFY_EXIT (fd != -1);
-  xclose (fd);
+    char *filename = NULL;
+    int fd = create_temp_file("tst-fflush-mmap", &filename);
+    TEST_VERIFY_EXIT(fd != -1);
+    xclose(fd);
 
-  /* Test fflush after ungetc (bug 32535).  */
-  FILE *fp = xfopen (filename, "w");
-  TEST_VERIFY (0 <= fputs ("test", fp));
-  xfclose (fp);
+    /* Test fflush after ungetc (bug 32535).  */
+    FILE *fp = xfopen(filename, "w");
+    TEST_VERIFY(0 <= fputs("test", fp));
+    xfclose(fp);
 
-  fp = xfopen (filename, "rm");
-  TEST_COMPARE (fgetc (fp), 't');
-  TEST_COMPARE (ungetc ('u', fp), 'u');
-  TEST_COMPARE (fflush (fp), 0);
-  TEST_COMPARE (fgetc (fp), 't');
-  TEST_COMPARE (fgetc (fp), 'e');
-  xfclose (fp);
+    fp = xfopen(filename, "rm");
+    TEST_COMPARE(fgetc(fp), 't');
+    TEST_COMPARE(ungetc('u', fp), 'u');
+    TEST_COMPARE(fflush(fp), 0);
+    TEST_COMPARE(fgetc(fp), 't');
+    TEST_COMPARE(fgetc(fp), 'e');
+    xfclose(fp);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

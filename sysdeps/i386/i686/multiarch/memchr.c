@@ -26,7 +26,7 @@
 # define SYMBOL_NAME memchr
 # include "ifunc-sse2-bsf.h"
 
-libc_ifunc_redirected (__redirect_memchr, __memchr, IFUNC_SELECTOR ());
+libc_ifunc_redirected(__redirect_memchr, __memchr, IFUNC_SELECTOR());
 
-weak_alias (__memchr, memchr)
+weak_alias(__memchr, memchr)
 #endif

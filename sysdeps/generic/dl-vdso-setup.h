@@ -20,8 +20,8 @@
 #define _DL_VDSO_INIT_H
 
 /* Initialize the VDSO functions pointers.  */
-static inline void __attribute__ ((always_inline))
-setup_vdso_pointers (void)
+static inline void __attribute__((always_inline))
+setup_vdso_pointers(void)
 {
 }
 

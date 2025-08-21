@@ -22,10 +22,9 @@
 #include <xstatconv.h>
 
 /* Get information about the file NAME in BUF.  */
-int
-__lxstat64 (int vers, const char *name, struct stat64 *buf)
+int __lxstat64(int vers, const char *name, struct stat64 *buf)
 {
-  struct kernel_stat kbuf;
-  int r = INLINE_SYSCALL_CALL (lstat, name, &kbuf);
-  return r ?: __xstat64_conv (vers, &kbuf, buf);
+    struct kernel_stat kbuf;
+    int r = INLINE_SYSCALL_CALL(lstat, name, &kbuf);
+    return r ? : __xstat64_conv(vers, &kbuf, buf);
 }

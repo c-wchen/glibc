@@ -32,8 +32,8 @@ static int restart;
   { "restart", no_argument, &restart, 1 },
 
 /* Prototype for our test function.  */
-extern void do_prepare (int argc, char *argv[]);
-extern int do_test (int argc, char *argv[]);
+extern void do_prepare(int argc, char *argv[]);
+extern int do_test(int argc, char *argv[]);
 
 #include "../test-skeleton.c"
 
@@ -41,120 +41,105 @@ extern int do_test (int argc, char *argv[]);
 #define EXECVPE_VALUE  "execvpe_test"
 
 
-static int
-handle_restart (void)
+static int handle_restart(void)
 {
-  /* First check if only one variable is passed on execvpe.  */
-  int env_count = 0;
-  for (char **e = environ; *e != NULL; ++e)
-    if (++env_count == INT_MAX)
-      {
-	printf ("Environment variable number overflow");
-	exit (EXIT_FAILURE);
-      }
-  if (env_count != 1)
-    {
-      printf ("Wrong number of environment variables");
-      exit (EXIT_FAILURE);
+    /* First check if only one variable is passed on execvpe.  */
+    int env_count = 0;
+    for (char **e = environ; *e != NULL; ++e)
+        if (++env_count == INT_MAX) {
+            printf("Environment variable number overflow");
+            exit(EXIT_FAILURE);
+        }
+    if (env_count != 1) {
+        printf("Wrong number of environment variables");
+        exit(EXIT_FAILURE);
     }
 
-  /* Check if the combinarion os "EXECVPE_ENV=execvpe_test"  */
-  const char *env = getenv (EXECVPE_KEY);
-  if (env == NULL)
-    {
-      printf ("Test environment variable not found");
-      exit (EXIT_FAILURE);
+    /* Check if the combinarion os "EXECVPE_ENV=execvpe_test"  */
+    const char *env = getenv(EXECVPE_KEY);
+    if (env == NULL) {
+        printf("Test environment variable not found");
+        exit(EXIT_FAILURE);
     }
 
-  if (strncmp (env, EXECVPE_VALUE, sizeof (EXECVPE_VALUE)))
-    {
-      printf ("Test environment variable with wrong value");
-      exit (EXIT_FAILURE);
+    if (strncmp(env, EXECVPE_VALUE, sizeof(EXECVPE_VALUE))) {
+        printf("Test environment variable with wrong value");
+        exit(EXIT_FAILURE);
     }
 
-  return 0;
+    return 0;
 }
 
 
-int
-do_test (int argc, char *argv[])
+int do_test(int argc, char *argv[])
 {
-  pid_t pid;
-  int status;
+    pid_t pid;
+    int status;
 
-  /* We must have
-     - one or four parameters left if called initially
-       + path for ld.so		optional
-       + "--library-path"	optional
-       + the library path	optional
-       + the application name
+    /* We must have
+       - one or four parameters left if called initially
+         + path for ld.so     optional
+         + "--library-path"   optional
+         + the library path   optional
+         + the application name
 
-    if --enable-hardcoded-path-in-tests is used, just
-      + the application name
-  */
+      if --enable-hardcoded-path-in-tests is used, just
+        + the application name
+    */
 
-  if (restart)
-    {
-      if (argc != 1)
-	{
-	  printf ("Wrong number of arguments (%d) in restart\n", argc);
-	  exit (EXIT_FAILURE);
-	}
+    if (restart) {
+        if (argc != 1) {
+            printf("Wrong number of arguments (%d) in restart\n", argc);
+            exit(EXIT_FAILURE);
+        }
 
-      return handle_restart ();
+        return handle_restart();
     }
 
-  if (argc != 2 && argc != 5)
-    {
-      printf ("Wrong number of arguments (%d)\n", argc);
-      exit (EXIT_FAILURE);
+    if (argc != 2 && argc != 5) {
+        printf("Wrong number of arguments (%d)\n", argc);
+        exit(EXIT_FAILURE);
     }
 
-  /* We want to test the `execvpe' function.  To do this we restart the
-     program with an additional parameter.  */
-  pid = fork ();
-  if (pid == 0)
-    {
-      /* This is the child.  Construct the command line.  */
+    /* We want to test the `execvpe' function.  To do this we restart the
+       program with an additional parameter.  */
+    pid = fork();
+    if (pid == 0) {
+        /* This is the child.  Construct the command line.  */
 
-      /* We cast here to char* because the test itself does not modify neither
-	 the argument nor the environment list.  */
-      char *envs[] = { (char*)(EXECVPE_KEY "=" EXECVPE_VALUE), NULL };
-      if (argc == 5)
-	{
-	  char *args[] = { argv[1], argv[2], argv[3], argv[4],
-			   (char *) "--direct", (char *) "--restart", NULL };
-	  execvpe (args[0], args, envs);
-	}
-      else
-	{
-	  char *args[] = { argv[0],
-			   (char *) "--direct", (char *) "--restart", NULL };
-	  execvpe (args[0], args, envs);
-	}
+        /* We cast here to char* because the test itself does not modify neither
+        the argument nor the environment list.  */
+        char *envs[] = { (char *)(EXECVPE_KEY "=" EXECVPE_VALUE), NULL };
+        if (argc == 5) {
+            char *args[] = { argv[1], argv[2], argv[3], argv[4],
+                             (char *) "--direct", (char *) "--restart", NULL
+                           };
+            execvpe(args[0], args, envs);
+        } else {
+            char *args[] = { argv[0],
+                             (char *) "--direct", (char *) "--restart", NULL
+                           };
+            execvpe(args[0], args, envs);
+        }
 
-      puts ("Cannot exec");
-      exit (EXIT_FAILURE);
-    }
-  else if (pid == (pid_t) -1)
-    {
-      puts ("Cannot fork");
-      return 1;
+        puts("Cannot exec");
+        exit(EXIT_FAILURE);
+    } else if (pid == (pid_t) -1) {
+        puts("Cannot fork");
+        return 1;
     }
 
-  /* Wait for the child.  */
-  if (waitpid (pid, &status, 0) != pid)
-    {
-      puts ("Wrong child");
-      return 1;
+    /* Wait for the child.  */
+    if (waitpid(pid, &status, 0) != pid) {
+        puts("Wrong child");
+        return 1;
     }
 
-  if (WTERMSIG (status) != 0)
-    {
-      puts ("Child terminated incorrectly");
-      return 1;
+    if (WTERMSIG(status) != 0) {
+        puts("Child terminated incorrectly");
+        return 1;
     }
-  status = WEXITSTATUS (status);
+    status = WEXITSTATUS(status);
 
-  return status;
+    return status;
 }

@@ -1,8 +1,7 @@
 #include "nldbl-compat.h"
 
 double
-attribute_hidden
-atanpil (double x)
+attribute_hidden atanpil(double x)
 {
-  return atanpi (x);
+    return atanpi(x);
 }

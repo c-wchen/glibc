@@ -21,22 +21,22 @@
 #include <math_private.h>
 
 
-int
-__fpclassify (double x)
+int __fpclassify(double x)
 {
-  uint32_t hx, lx;
-  int retval = FP_NORMAL;
+    uint32_t hx, lx;
+    int retval = FP_NORMAL;
 
-  EXTRACT_WORDS (hx, lx, x);
-  lx |= hx & 0xfffff;
-  hx &= 0x7ff00000;
-  if ((hx | lx) == 0)
-    retval = FP_ZERO;
-  else if (hx == 0)
-    retval = FP_SUBNORMAL;
-  else if (hx == 0x7ff00000)
-    retval = lx != 0 ? FP_NAN : FP_INFINITE;
+    EXTRACT_WORDS(hx, lx, x);
+    lx |= hx & 0xfffff;
+    hx &= 0x7ff00000;
+    if ((hx | lx) == 0) {
+        retval = FP_ZERO;
+    } else if (hx == 0) {
+        retval = FP_SUBNORMAL;
+    } else if (hx == 0x7ff00000) {
+        retval = lx != 0 ? FP_NAN : FP_INFINITE;
+    }
 
-  return retval;
+    return retval;
 }
-libm_hidden_def (__fpclassify)
+libm_hidden_def(__fpclassify)

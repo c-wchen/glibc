@@ -25,60 +25,60 @@
 #endif
 
 
-int
-__pthread_attr_setstacksize (pthread_attr_t *attr, size_t stacksize)
+int __pthread_attr_setstacksize(pthread_attr_t *attr, size_t stacksize)
 {
-  struct pthread_attr *iattr;
+    struct pthread_attr *iattr;
 
-  iattr = (struct pthread_attr *) attr;
+    iattr = (struct pthread_attr *) attr;
 
-  /* Catch invalid sizes.  */
-  int ret = check_stacksize_attr (stacksize);
-  if (ret)
-    return ret;
+    /* Catch invalid sizes.  */
+    int ret = check_stacksize_attr(stacksize);
+    if (ret) {
+        return ret;
+    }
 
-  iattr->stacksize = stacksize;
+    iattr->stacksize = stacksize;
 
-  return 0;
+    return 0;
 }
-versioned_symbol (libc, __pthread_attr_setstacksize,
-		  pthread_attr_setstacksize, GLIBC_2_34);
+versioned_symbol(libc, __pthread_attr_setstacksize,
+                 pthread_attr_setstacksize, GLIBC_2_34);
 
 
 #if PTHREAD_STACK_MIN == 16384
 # if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1, GLIBC_2_34)
-compat_symbol (libpthread, __pthread_attr_setstacksize,
-	       pthread_attr_setstacksize, GLIBC_2_1);
+compat_symbol(libpthread, __pthread_attr_setstacksize,
+              pthread_attr_setstacksize, GLIBC_2_1);
 # endif
 #else /* PTHREAD_STACK_MIN != 16384 */
 # if OTHER_SHLIB_COMPAT (libpthread, NEW_VERNUM, GLIBC_2_34)
-compat_symbol (libpthread, __pthread_attr_setstacksize,
-	       pthread_attr_setstacksize, NEW_VERNUM);
+compat_symbol(libpthread, __pthread_attr_setstacksize,
+              pthread_attr_setstacksize, NEW_VERNUM);
 # endif
 
 # if OTHER_SHLIB_COMPAT(libpthread, GLIBC_2_1, NEW_VERNUM)
 
-int
-__old_pthread_attr_setstacksize (pthread_attr_t *attr, size_t stacksize)
+int __old_pthread_attr_setstacksize(pthread_attr_t *attr, size_t stacksize)
 {
-  struct pthread_attr *iattr;
+    struct pthread_attr *iattr;
 
-  iattr = (struct pthread_attr *) attr;
+    iattr = (struct pthread_attr *) attr;
 
-  /* Catch invalid sizes.  */
-  if (stacksize < 16384)
-    return EINVAL;
+    /* Catch invalid sizes.  */
+    if (stacksize < 16384) {
+        return EINVAL;
+    }
 
 #  ifdef STACKSIZE_ADJUST
-  STACKSIZE_ADJUST;
+    STACKSIZE_ADJUST;
 #  endif
 
-  iattr->stacksize = stacksize;
+    iattr->stacksize = stacksize;
 
-  return 0;
+    return 0;
 }
 
-compat_symbol (libpthread, __old_pthread_attr_setstacksize,
-	       pthread_attr_setstacksize, GLIBC_2_1);
+compat_symbol(libpthread, __old_pthread_attr_setstacksize,
+              pthread_attr_setstacksize, GLIBC_2_1);
 # endif /* OTHER_SHLIB_COMPAT */
 #endif /* PTHREAD_STACK_MIN != 16384 */

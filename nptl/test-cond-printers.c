@@ -26,32 +26,32 @@
 #define PASS 0
 #define FAIL 1
 
-static int test_status_destroyed (pthread_cond_t *condvar);
+static int test_status_destroyed(pthread_cond_t *condvar);
 
-int
-main (void)
+int main(void)
 {
-  pthread_cond_t condvar;
-  pthread_condattr_t attr;
-  int result = FAIL;
+    pthread_cond_t condvar;
+    pthread_condattr_t attr;
+    int result = FAIL;
 
-  if (pthread_condattr_init (&attr) == 0
-      && test_status_destroyed (&condvar) == PASS)
-    result = PASS;
-  /* Else, one of the pthread_cond* functions failed.  */
+    if (pthread_condattr_init(&attr) == 0
+        && test_status_destroyed(&condvar) == PASS) {
+        result = PASS;
+    }
+    /* Else, one of the pthread_cond* functions failed.  */
 
-  return result;
+    return result;
 }
 
 /* Initializes CONDVAR, then destroys it.  */
-static int
-test_status_destroyed (pthread_cond_t *condvar)
+static int test_status_destroyed(pthread_cond_t *condvar)
 {
-  int result = FAIL;
+    int result = FAIL;
 
-  if (pthread_cond_init (condvar, NULL) == 0
-      && pthread_cond_destroy (condvar) == 0)
-    result = PASS; /* Test status (destroyed).  */
+    if (pthread_cond_init(condvar, NULL) == 0
+        && pthread_cond_destroy(condvar) == 0) {
+        result = PASS;    /* Test status (destroyed).  */
+    }
 
-  return result;
+    return result;
 }

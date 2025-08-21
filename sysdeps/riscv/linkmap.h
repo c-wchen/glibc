@@ -1,4 +1,3 @@
-struct link_map_machine
-  {
+struct link_map_machine {
     ElfW(Addr) plt; /* Address of .plt.  */
-  };
+};

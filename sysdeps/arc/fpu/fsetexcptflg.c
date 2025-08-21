@@ -19,20 +19,19 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-int
-fesetexceptflag (const fexcept_t *flagp, int excepts)
+int fesetexceptflag(const fexcept_t *flagp, int excepts)
 {
-  unsigned int fpsr;
+    unsigned int fpsr;
 
-  _FPU_GETS (fpsr);
+    _FPU_GETS(fpsr);
 
-  /* Clear the bits first.  */
-  fpsr &= ~excepts;
+    /* Clear the bits first.  */
+    fpsr &= ~excepts;
 
-  /* Now set those bits, copying them over from @flagp.  */
-  fpsr |= *flagp & excepts;
+    /* Now set those bits, copying them over from @flagp.  */
+    fpsr |= *flagp & excepts;
 
-  _FPU_SETS (fpsr);
+    _FPU_SETS(fpsr);
 
-  return 0;
+    return 0;
 }

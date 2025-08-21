@@ -19,13 +19,12 @@
 #include <sys/socket.h>
 
 /* Send N bytes of BUF to socket FD.  Returns the number sent or -1.  */
-ssize_t
-__send (int fd, const void *buf, size_t n, int flags)
+ssize_t __send(int fd, const void *buf, size_t n, int flags)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (__send)
-weak_alias (__send, send)
+libc_hidden_def(__send)
+weak_alias(__send, send)
 
-stub_warning (send)
+stub_warning(send)

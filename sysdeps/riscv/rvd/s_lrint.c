@@ -27,12 +27,11 @@
 # error Unsupported
 #endif
 
-long int
-__lrint (double x)
+long int __lrint(double x)
 {
-  long int res;
-  asm (OP "\t%0, %1" : "=r" (res) : "f" (x));
-  return res;
+    long int res;
+    asm(OP "\t%0, %1" : "=r"(res) : "f"(x));
+    return res;
 }
 
-libm_alias_double (__lrint, lrint)
+libm_alias_double(__lrint, lrint)

@@ -32,125 +32,111 @@
 
 static int dir_fd;
 
-static void
-prepare (int argc, char *argv[])
+static void prepare(int argc, char *argv[])
 {
-  size_t test_dir_len = strlen (test_dir);
-  static const char dir_name[] = "/tst-futimesat.XXXXXX";
+    size_t test_dir_len = strlen(test_dir);
+    static const char dir_name[] = "/tst-futimesat.XXXXXX";
 
-  size_t dirbuflen = test_dir_len + sizeof (dir_name);
-  char *dirbuf = malloc (dirbuflen);
-  if (dirbuf == NULL)
-    {
-      puts ("out of memory");
-      exit (1);
+    size_t dirbuflen = test_dir_len + sizeof(dir_name);
+    char *dirbuf = malloc(dirbuflen);
+    if (dirbuf == NULL) {
+        puts("out of memory");
+        exit(1);
     }
 
-  snprintf (dirbuf, dirbuflen, "%s%s", test_dir, dir_name);
-  if (mkdtemp (dirbuf) == NULL)
-    {
-      puts ("cannot create temporary directory");
-      exit (1);
+    snprintf(dirbuf, dirbuflen, "%s%s", test_dir, dir_name);
+    if (mkdtemp(dirbuf) == NULL) {
+        puts("cannot create temporary directory");
+        exit(1);
     }
 
-  add_temp_file (dirbuf);
+    add_temp_file(dirbuf);
 
-  dir_fd = open (dirbuf, O_RDONLY | O_DIRECTORY);
-  if (dir_fd == -1)
-    {
-      puts ("cannot open directory");
-      exit (1);
+    dir_fd = open(dirbuf, O_RDONLY | O_DIRECTORY);
+    if (dir_fd == -1) {
+        puts("cannot open directory");
+        exit(1);
     }
 }
 #define PREPARE prepare
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* fdopendir takes over the descriptor, make a copy.  */
-  int dupfd = dup (dir_fd);
-  if (dupfd == -1)
-    {
-      puts ("dup failed");
-      return 1;
+    /* fdopendir takes over the descriptor, make a copy.  */
+    int dupfd = dup(dir_fd);
+    if (dupfd == -1) {
+        puts("dup failed");
+        return 1;
     }
-  if (lseek (dupfd, 0, SEEK_SET) != 0)
-    {
-      puts ("1st lseek failed");
-      return 1;
+    if (lseek(dupfd, 0, SEEK_SET) != 0) {
+        puts("1st lseek failed");
+        return 1;
     }
 
-  /* The directory should be empty safe the . and .. files.  */
-  DIR *dir = fdopendir (dupfd);
-  if (dir == NULL)
-    {
-      puts ("fdopendir failed");
-      return 1;
+    /* The directory should be empty safe the . and .. files.  */
+    DIR *dir = fdopendir(dupfd);
+    if (dir == NULL) {
+        puts("fdopendir failed");
+        return 1;
     }
-  struct dirent64 *d;
-  while ((d = readdir64 (dir)) != NULL)
-    if (strcmp (d->d_name, ".") != 0 && strcmp (d->d_name, "..") != 0)
-      {
-	printf ("temp directory contains file \"%s\"\n", d->d_name);
-	return 1;
-      }
-  closedir (dir);
+    struct dirent64 *d;
+    while ((d = readdir64(dir)) != NULL)
+        if (strcmp(d->d_name, ".") != 0 && strcmp(d->d_name, "..") != 0) {
+            printf("temp directory contains file \"%s\"\n", d->d_name);
+            return 1;
+        }
+    closedir(dir);
 
-  /* Try to create a file.  */
-  int fd = openat (dir_fd, "some-file", O_CREAT|O_RDWR|O_EXCL, 0666);
-  if (fd == -1)
-    {
-      if (errno == ENOSYS)
-	{
-	  puts ("*at functions not supported");
-	  return 0;
-	}
+    /* Try to create a file.  */
+    int fd = openat(dir_fd, "some-file", O_CREAT | O_RDWR | O_EXCL, 0666);
+    if (fd == -1) {
+        if (errno == ENOSYS) {
+            puts("*at functions not supported");
+            return 0;
+        }
 
-      puts ("file creation failed");
-      return 1;
+        puts("file creation failed");
+        return 1;
     }
-  xwrite (fd, "hello", 5);
-  puts ("file created");
+    xwrite(fd, "hello", 5);
+    puts("file created");
 
-  struct statx st1;
-  xstatx (fd, "", AT_EMPTY_PATH, STATX_BASIC_STATS, &st1);
+    struct statx st1;
+    xstatx(fd, "", AT_EMPTY_PATH, STATX_BASIC_STATS, &st1);
 
-  close (fd);
+    close(fd);
 
-  struct timeval tv[2];
-  tv[0].tv_sec = st1.stx_atime.tv_sec + 1;
-  tv[0].tv_usec = 0;
-  tv[1].tv_sec = st1.stx_mtime.tv_sec + 1;
-  tv[1].tv_usec = 0;
-  if (futimesat (dir_fd, "some-file", tv) != 0)
-    {
-      puts ("futimesat failed");
-      return 1;
+    struct timeval tv[2];
+    tv[0].tv_sec = st1.stx_atime.tv_sec + 1;
+    tv[0].tv_usec = 0;
+    tv[1].tv_sec = st1.stx_mtime.tv_sec + 1;
+    tv[1].tv_usec = 0;
+    if (futimesat(dir_fd, "some-file", tv) != 0) {
+        puts("futimesat failed");
+        return 1;
     }
 
-  struct statx st2;
-  xstatx (dir_fd, "some-file", 0, STATX_BASIC_STATS, &st2);
+    struct statx st2;
+    xstatx(dir_fd, "some-file", 0, STATX_BASIC_STATS, &st2);
 
-  if (st2.stx_mtime.tv_sec != tv[1].tv_sec
+    if (st2.stx_mtime.tv_sec != tv[1].tv_sec
 #ifdef _STATBUF_ST_NSEC
-      || st2.stx_mtime.tv_nsec != 0
+        || st2.stx_mtime.tv_nsec != 0
 #endif
-      )
-    {
-      puts ("stat shows different mtime");
-      return 1;
+       ) {
+        puts("stat shows different mtime");
+        return 1;
     }
 
 
-  if (unlinkat (dir_fd, "some-file", 0) != 0)
-    {
-      puts ("unlinkat failed");
-      return 1;
+    if (unlinkat(dir_fd, "some-file", 0) != 0) {
+        puts("unlinkat failed");
+        return 1;
     }
 
-  close (dir_fd);
+    close(dir_fd);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

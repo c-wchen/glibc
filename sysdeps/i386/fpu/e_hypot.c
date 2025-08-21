@@ -28,30 +28,30 @@
 /* The i386 allows to use the default excess of precision to optimize the
    hypot implementation, since internal multiplication and sqrt is carried
    with 80-bit FP type.  */
-double
-__hypot (double x, double y)
+double __hypot(double x, double y)
 {
-  if (!isfinite (x) || !isfinite (y))
-    {
-      if ((isinf (x) || isinf (y))
-	  && !issignaling (x) && !issignaling (y))
-	return INFINITY;
-      return x + y;
+    if (!isfinite(x) || !isfinite(y)) {
+        if ((isinf(x) || isinf(y))
+            && !issignaling(x) && !issignaling(y)) {
+            return INFINITY;
+        }
+        return x + y;
     }
 
-  long double lx = x;
-  long double ly = y;
-  double r = math_narrow_eval ((double) sqrtl (lx * lx + ly * ly));
-  math_check_force_underflow_nonneg (r);
-  if (isinf (r))
-    __set_errno (ERANGE);
-  return r;
+    long double lx = x;
+    long double ly = y;
+    double r = math_narrow_eval((double) sqrtl(lx * lx + ly * ly));
+    math_check_force_underflow_nonneg(r);
+    if (isinf(r)) {
+        __set_errno(ERANGE);
+    }
+    return r;
 }
-strong_alias (__hypot, __ieee754_hypot)
+strong_alias(__hypot, __ieee754_hypot)
 #if LIBM_SVID_COMPAT
-versioned_symbol (libm, __hypot, hypot, GLIBC_2_35);
-libm_alias_finite (__ieee754_hypot, __hypot)
-libm_alias_double_other (__hypot, hypot)
+versioned_symbol(libm, __hypot, hypot, GLIBC_2_35);
+libm_alias_finite(__ieee754_hypot, __hypot)
+libm_alias_double_other(__hypot, hypot)
 #else
-libm_alias_double (__hypot, hypot)
+libm_alias_double(__hypot, hypot)
 #endif

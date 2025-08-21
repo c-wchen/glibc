@@ -26,40 +26,38 @@
 __BEGIN_DECLS
 
 /* Definition independent of _FILE_OFFSET_BITS.  */
-struct support_dirent
-{
-  uint64_t d_ino;
-  uint64_t d_off;               /* 0 if d_off is not supported.  */
-  uint32_t d_type;
-  char *d_name;
+struct support_dirent {
+    uint64_t d_ino;
+    uint64_t d_off;               /* 0 if d_off is not supported.  */
+    uint32_t d_type;
+    char *d_name;
 };
 
 /* Operation to be performed by support_readdir below.  */
-enum support_readdir_op
-  {
+enum support_readdir_op {
     SUPPORT_READDIR,
     SUPPORT_READDIR64,
     SUPPORT_READDIR_R,
     SUPPORT_READDIR64_R,
     SUPPORT_READDIR64_COMPAT,
     SUPPORT_READDIR64_R_COMPAT,
-  };
+};
 
 /* Returns the last supported function.  May exclude
    SUPPORT_READDIR64_R_COMPAT if not implemented.  */
-enum support_readdir_op support_readdir_op_last (void);
+enum support_readdir_op support_readdir_op_last(void);
 
 /* Returns the name of the function that corresponds to the OP constant.  */
-const char *support_readdir_function (enum support_readdir_op op);
+const char *support_readdir_function(enum support_readdir_op op);
 
 /* Returns the d_ino field width for OP, in bits.  */
-unsigned int support_readdir_inode_width (enum support_readdir_op op);
+unsigned int support_readdir_inode_width(enum support_readdir_op op);
 
 /* Returns the d_off field width for OP, in bits.  Zero if not present.  */
-unsigned int support_readdir_offset_width (enum support_readdir_op op);
+unsigned int support_readdir_offset_width(enum support_readdir_op op);
 
 /* Returns true if OP is an _r variant with name length restrictions.  */
-bool support_readdir_r_variant (enum support_readdir_op op);
+bool support_readdir_r_variant(enum support_readdir_op op);
 
 /* First, free E->d_name and set the field to NULL.  Then call the
    readdir variant as specified by OP.  If successfully, copy fields
@@ -73,12 +71,12 @@ bool support_readdir_r_variant (enum support_readdir_op op);
 
    Note that this function assumes that E->d_name has been initialized
    to NULL or has been allocated by a previous call to this function.  */
-bool support_readdir (DIR *stream, enum support_readdir_op op,
-                      struct support_dirent *e) __nonnull ((1, 3));
+bool support_readdir(DIR *stream, enum support_readdir_op op,
+                     struct support_dirent *e) __nonnull((1, 3));
 
 /* Checks that the readdir operation OP fails with errno value EXPECTED.  */
-void support_readdir_expect_error (DIR *stream, enum support_readdir_op op,
-                                   int expected) __nonnull ((1));
+void support_readdir_expect_error(DIR *stream, enum support_readdir_op op,
+                                  int expected) __nonnull((1));
 
 __END_DECLS
 

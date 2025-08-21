@@ -29,72 +29,69 @@ volatile unsigned v = 0xdeadbeef;
 
 int child_fn(void *arg)
 {
-  puts ("FAIL: in child_fn(); should not be here");
-  exit(1);
+    puts("FAIL: in child_fn(); should not be here");
+    exit(1);
 }
 
-static int
-__attribute__((noinline))
-do_clone (int (*fn)(void *), void *stack)
+static int __attribute__((noinline))
+do_clone(int (*fn)(void *), void *stack)
 {
-  int result;
-  unsigned int a = v;
-  unsigned int b = v;
-  unsigned int c = v;
-  unsigned int d = v;
-  unsigned int e = v;
-  unsigned int f = v;
-  unsigned int g = v;
-  unsigned int h = v;
-  unsigned int i = v;
-  unsigned int j = v;
-  unsigned int k = v;
-  unsigned int l = v;
-  unsigned int m = v;
-  unsigned int n = v;
-  unsigned int o = v;
+    int result;
+    unsigned int a = v;
+    unsigned int b = v;
+    unsigned int c = v;
+    unsigned int d = v;
+    unsigned int e = v;
+    unsigned int f = v;
+    unsigned int g = v;
+    unsigned int h = v;
+    unsigned int i = v;
+    unsigned int j = v;
+    unsigned int k = v;
+    unsigned int l = v;
+    unsigned int m = v;
+    unsigned int n = v;
+    unsigned int o = v;
 
-  result = clone (fn, stack, 0, NULL);
+    result = clone(fn, stack, 0, NULL);
 
-  /* Check that clone does not clobber call-saved registers.  */
-  TEST_VERIFY (a == v && b == v && c == v && d == v && e == v && f == v
-	       && g == v && h == v && i == v && j == v && k == v && l == v
-	       && m == v && n == v && o == v);
+    /* Check that clone does not clobber call-saved registers.  */
+    TEST_VERIFY(a == v && b == v && c == v && d == v && e == v && f == v
+                && g == v && h == v && i == v && j == v && k == v && l == v
+                && m == v && n == v && o == v);
 
-  return result;
+    return result;
 }
 
-static void
-__attribute__((noinline))
-do_test_single (int (*fn)(void *), void *stack)
+static void __attribute__((noinline))
+do_test_single(int (*fn)(void *), void *stack)
 {
-  printf ("%s (fn=%p, stack=%p)\n", __FUNCTION__, fn, stack);
-  errno = 0;
+    printf("%s (fn=%p, stack=%p)\n", __FUNCTION__, fn, stack);
+    errno = 0;
 
-  int result = do_clone (fn, stack);
+    int result = do_clone(fn, stack);
 
-  TEST_COMPARE (errno, EINVAL);
-  TEST_COMPARE (result, -1);
+    TEST_COMPARE(errno, EINVAL);
+    TEST_COMPARE(result, -1);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char st[128 * 1024] __attribute__ ((aligned));
-  void *stack = NULL;
+    char st[128 * 1024] __attribute__((aligned));
+    void *stack = NULL;
 #if _STACK_GROWS_DOWN
-  stack = st + sizeof (st);
+    stack = st + sizeof(st);
 #elif _STACK_GROWS_UP
-  stack = st;
+    stack = st;
 #else
 # error "Define either _STACK_GROWS_DOWN or _STACK_GROWS_UP"
 #endif
 
-  do_test_single (child_fn, NULL);
-  do_test_single (NULL, stack);
-  do_test_single (NULL, NULL);
+    do_test_single(child_fn, NULL);
+    do_test_single(NULL, stack);
+    do_test_single(NULL, NULL);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -23,12 +23,11 @@
 
 /* Copy SRC to DEST, returning the address of the terminating L'\0' in
    DEST.  */
-wchar_t *
-__wcpcpy (wchar_t *dest, const wchar_t *src)
+wchar_t *__wcpcpy(wchar_t *dest, const wchar_t *src)
 {
-  size_t len = __wcslen (src);
-  return __wmemcpy (dest, src, len + 1) + len;
+    size_t len = __wcslen(src);
+    return __wmemcpy(dest, src, len + 1) + len;
 }
 #ifndef WCPCPY
-weak_alias (__wcpcpy, wcpcpy)
+weak_alias(__wcpcpy, wcpcpy)
 #endif

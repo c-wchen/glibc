@@ -19,10 +19,9 @@
 #include <sys/socket.h>
 
 /* Determine whether socket is at a out-of-band mark.  */
-int
-sockatmark (int fd)
+int sockatmark(int fd)
 {
-  int answ;
+    int answ;
 
-  return __ioctl (fd, SIOCATMARK, &answ) == -1 ? -1 : answ;
+    return __ioctl(fd, SIOCATMARK, &answ) == -1 ? -1 : answ;
 }

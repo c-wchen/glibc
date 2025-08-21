@@ -16,8 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-int
-preload (void)
+int preload(void)
 {
-  return 0;
+    return 0;
 }

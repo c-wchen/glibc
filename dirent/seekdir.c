@@ -21,17 +21,15 @@
 #include <dirent.h>
 
 /* Seek to position POS in DIRP.  */
-void
-seekdir (DIR *dirp, long int pos)
+void seekdir(DIR *dirp, long int pos)
 {
-  if (dirp == NULL)
-    {
-      __set_errno (EINVAL);
-      return;
+    if (dirp == NULL) {
+        __set_errno(EINVAL);
+        return;
     }
 
-  __set_errno (ENOSYS);
+    __set_errno(ENOSYS);
 }
 
 
-stub_warning (seekdir)
+stub_warning(seekdir)

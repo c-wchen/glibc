@@ -23,17 +23,17 @@
 # include <ifunc-resolve.h>
 
 # if HAVE_WCSNLEN_C
-extern __typeof (__wcsnlen) WCSNLEN_C attribute_hidden;
+extern __typeof(__wcsnlen) WCSNLEN_C attribute_hidden;
 # endif
 
 # if HAVE_WCSNLEN_Z13
-extern __typeof (__wcsnlen) WCSNLEN_Z13 attribute_hidden;
+extern __typeof(__wcsnlen) WCSNLEN_Z13 attribute_hidden;
 # endif
 
-s390_libc_ifunc_expr (__wcsnlen, __wcsnlen,
-		      (HAVE_WCSNLEN_Z13 && (hwcap & HWCAP_S390_VX))
-		      ? WCSNLEN_Z13
-		      : WCSNLEN_DEFAULT
-		      )
-weak_alias (__wcsnlen, wcsnlen)
+s390_libc_ifunc_expr(__wcsnlen, __wcsnlen,
+                     (HAVE_WCSNLEN_Z13 &&(hwcap &HWCAP_S390_VX))
+                     ? WCSNLEN_Z13
+                     : WCSNLEN_DEFAULT
+                    )
+weak_alias(__wcsnlen, wcsnlen)
 #endif

@@ -21,15 +21,14 @@
 #include <sysdep.h>
 
 /* Create a directory named PATH with protections MODE.  */
-int
-__mkdir (const char *path, mode_t mode)
+int __mkdir(const char *path, mode_t mode)
 {
 #ifdef __NR_mkdir
-  return INLINE_SYSCALL_CALL (mkdir,  path, mode);
+    return INLINE_SYSCALL_CALL(mkdir,  path, mode);
 #else
-  return INLINE_SYSCALL_CALL (mkdirat, AT_FDCWD, path, mode);
+    return INLINE_SYSCALL_CALL(mkdirat, AT_FDCWD, path, mode);
 #endif
 }
 
-libc_hidden_def (__mkdir)
-weak_alias (__mkdir, mkdir)
+libc_hidden_def(__mkdir)
+weak_alias(__mkdir, mkdir)

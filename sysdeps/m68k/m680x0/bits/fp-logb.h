@@ -20,5 +20,5 @@
 # error "Never use <bits/fp-logb.h> directly; include <math.h> instead."
 #endif
 
-#define __FP_LOGB0_IS_MIN	1
-#define __FP_LOGBNAN_IS_MIN	0
+#define __FP_LOGB0_IS_MIN   1
+#define __FP_LOGBNAN_IS_MIN 0

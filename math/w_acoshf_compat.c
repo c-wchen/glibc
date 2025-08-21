@@ -23,14 +23,15 @@
 
 #if LIBM_SVID_COMPAT
 /* wrapper acoshf */
-float
-__acoshf (float x)
+float __acoshf(float x)
 {
-  if (__builtin_expect (isless (x, 1.0f), 0) && _LIB_VERSION != _IEEE_)
-    /* acosh(x<1) */
-    return __kernel_standard_f (x, x, 129);
+    if (__builtin_expect(isless(x, 1.0f), 0) && _LIB_VERSION != _IEEE_)
+        /* acosh(x<1) */
+    {
+        return __kernel_standard_f(x, x, 129);
+    }
 
-  return __ieee754_acoshf (x);
+    return __ieee754_acoshf(x);
 }
-libm_alias_float (__acosh, acosh)
+libm_alias_float(__acosh, acosh)
 #endif

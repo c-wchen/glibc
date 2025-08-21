@@ -18,13 +18,13 @@
 #include <aliases.h>
 
 
-#define LOOKUP_TYPE		struct aliasent
-#define SETFUNC_NAME		setaliasent
-#define	GETFUNC_NAME		getaliasent
-#define	ENDFUNC_NAME		endaliasent
-#define DATABASE_NAME		aliases
+#define LOOKUP_TYPE     struct aliasent
+#define SETFUNC_NAME        setaliasent
+#define GETFUNC_NAME        getaliasent
+#define ENDFUNC_NAME        endaliasent
+#define DATABASE_NAME       aliases
 
 /* There is no nscd support for the aliases file.  */
-#undef	USE_NSCD
+#undef  USE_NSCD
 
 #include "../nss/getXXent_r.c"

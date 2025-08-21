@@ -27,48 +27,44 @@
 #include "libioP.h"
 
 #define PADSIZE 16
-static wchar_t const blanks[PADSIZE] =
-{
-  L' ', L' ', L' ', L' ', L' ', L' ', L' ', L' ',
-  L' ', L' ', L' ', L' ', L' ', L' ', L' ', L' '
+static wchar_t const blanks[PADSIZE] = {
+    L' ', L' ', L' ', L' ', L' ', L' ', L' ', L' ',
+    L' ', L' ', L' ', L' ', L' ', L' ', L' ', L' '
 };
-static wchar_t const zeroes[PADSIZE] =
-{
-  L'0', L'0', L'0', L'0', L'0', L'0', L'0', L'0',
-  L'0', L'0', L'0', L'0', L'0', L'0', L'0', L'0'
+static wchar_t const zeroes[PADSIZE] = {
+    L'0', L'0', L'0', L'0', L'0', L'0', L'0', L'0',
+    L'0', L'0', L'0', L'0', L'0', L'0', L'0', L'0'
 };
 
-ssize_t
-_IO_wpadn (FILE *fp, wint_t pad, ssize_t count)
+ssize_t _IO_wpadn(FILE *fp, wint_t pad, ssize_t count)
 {
-  wchar_t padbuf[PADSIZE];
-  const wchar_t *padptr;
-  int i;
-  size_t written = 0;
-  size_t w;
+    wchar_t padbuf[PADSIZE];
+    const wchar_t *padptr;
+    int i;
+    size_t written = 0;
+    size_t w;
 
-  if (pad == L' ')
-    padptr = blanks;
-  else if (pad == L'0')
-    padptr = zeroes;
-  else
-    {
-      for (i = PADSIZE; --i >= 0; )
-	padbuf[i] = pad;
-      padptr = padbuf;
+    if (pad == L' ') {
+        padptr = blanks;
+    } else if (pad == L'0') {
+        padptr = zeroes;
+    } else {
+        for (i = PADSIZE; --i >= 0;) {
+            padbuf[i] = pad;
+        }
+        padptr = padbuf;
     }
-  for (i = count; i >= PADSIZE; i -= PADSIZE)
-    {
-      w = _IO_sputn (fp, (char *) padptr, PADSIZE);
-      written += w;
-      if (w != PADSIZE)
-	return written;
+    for (i = count; i >= PADSIZE; i -= PADSIZE) {
+        w = _IO_sputn(fp, (char *) padptr, PADSIZE);
+        written += w;
+        if (w != PADSIZE) {
+            return written;
+        }
     }
 
-  if (i > 0)
-    {
-      w = _IO_sputn (fp, (char *) padptr, i);
-      written += w;
+    if (i > 0) {
+        w = _IO_sputn(fp, (char *) padptr, i);
+        written += w;
     }
-  return written;
+    return written;
 }

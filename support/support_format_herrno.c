@@ -20,26 +20,24 @@
 
 #include <support/support.h>
 
-char *
-support_format_herrno (int code)
+char *support_format_herrno(int code)
 {
-  const char *errstr;
-  switch (code)
-    {
-    case HOST_NOT_FOUND:
-      errstr = "HOST_NOT_FOUND";
-      break;
-    case NO_ADDRESS:
-      errstr = "NO_ADDRESS";
-      break;
-    case NO_RECOVERY:
-      errstr = "NO_RECOVERY";
-      break;
-    case TRY_AGAIN:
-      errstr = "TRY_AGAIN";
-      break;
-    default:
-      return xasprintf ("<invalid h_errno value %d>\n", code);
+    const char *errstr;
+    switch (code) {
+        case HOST_NOT_FOUND:
+            errstr = "HOST_NOT_FOUND";
+            break;
+        case NO_ADDRESS:
+            errstr = "NO_ADDRESS";
+            break;
+        case NO_RECOVERY:
+            errstr = "NO_RECOVERY";
+            break;
+        case TRY_AGAIN:
+            errstr = "TRY_AGAIN";
+            break;
+        default:
+            return xasprintf("<invalid h_errno value %d>\n", code);
     }
-  return xstrdup (errstr);
+    return xstrdup(errstr);
 }

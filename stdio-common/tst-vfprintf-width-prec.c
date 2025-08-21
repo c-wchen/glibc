@@ -22,80 +22,71 @@
 #include <sys/resource.h>
 #include <wchar.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  mtrace ();
+    mtrace();
 
-  int ret;
-  {
-    char *result;
-    ret = asprintf (&result, "%133000.133001x", 17);
-    if (ret < 0)
-      {
-        printf ("error: asprintf: %m\n");
-        return 1;
-      }
-    free (result);
-  }
-  {
-    wchar_t *result = calloc (ret + 1, sizeof (wchar_t));
-    if (result == NULL)
-      {
-        printf ("error: calloc (%d, %zu): %m", ret + 1, sizeof (wchar_t));
-        return 1;
-      }
-
-    ret = swprintf (result, ret + 1, L"%133000.133001x", 17);
-    if (ret < 0)
-      {
-        printf ("error: swprintf: %d (%m)\n", ret);
-        return 1;
-      }
-    free (result);
-  }
-
-  /* Limit the size of the process, so that the second allocation will
-     fail.  */
-  {
-    struct rlimit limit;
-    if (getrlimit (RLIMIT_AS, &limit) != 0)
-      {
-        printf ("getrlimit (RLIMIT_AS) failed: %m\n");
-        return 1;
-      }
-    long target = 200 * 1024 * 1024;
-    if (limit.rlim_cur == RLIM_INFINITY || limit.rlim_cur > target)
-      {
-        limit.rlim_cur = target;
-        if (setrlimit (RLIMIT_AS, &limit) != 0)
-          {
-            printf ("setrlimit (RLIMIT_AS) failed: %m\n");
+    int ret;
+    {
+        char *result;
+        ret = asprintf(&result, "%133000.133001x", 17);
+        if (ret < 0) {
+            printf("error: asprintf: %m\n");
             return 1;
-          }
-      }
-  }
+        }
+        free(result);
+    }
+    {
+        wchar_t *result = calloc(ret + 1, sizeof(wchar_t));
+        if (result == NULL) {
+            printf("error: calloc (%d, %zu): %m", ret + 1, sizeof(wchar_t));
+            return 1;
+        }
 
-  {
-    char *result;
-    ret = asprintf (&result, "%133000.999999999x", 17);
-    if (ret >= 0)
-      {
-        printf ("error: asprintf: incorrect result %d\n", ret);
-        return 1;
-      }
-  }
-  {
-    wchar_t result[100];
-    ret = swprintf (result, 100, L"%133000.999999999x", 17);
-    if (ret >= 0)
-      {
-        printf ("error: swprintf: incorrect result %d\n", ret);
-        return 1;
-      }
-  }
+        ret = swprintf(result, ret + 1, L"%133000.133001x", 17);
+        if (ret < 0) {
+            printf("error: swprintf: %d (%m)\n", ret);
+            return 1;
+        }
+        free(result);
+    }
 
-  return 0;
+    /* Limit the size of the process, so that the second allocation will
+       fail.  */
+    {
+        struct rlimit limit;
+        if (getrlimit(RLIMIT_AS, &limit) != 0) {
+            printf("getrlimit (RLIMIT_AS) failed: %m\n");
+            return 1;
+        }
+        long target = 200 * 1024 * 1024;
+        if (limit.rlim_cur == RLIM_INFINITY || limit.rlim_cur > target) {
+            limit.rlim_cur = target;
+            if (setrlimit(RLIMIT_AS, &limit) != 0) {
+                printf("setrlimit (RLIMIT_AS) failed: %m\n");
+                return 1;
+            }
+        }
+    }
+
+    {
+        char *result;
+        ret = asprintf(&result, "%133000.999999999x", 17);
+        if (ret >= 0) {
+            printf("error: asprintf: incorrect result %d\n", ret);
+            return 1;
+        }
+    }
+    {
+        wchar_t result[100];
+        ret = swprintf(result, 100, L"%133000.999999999x", 17);
+        if (ret >= 0) {
+            printf("error: swprintf: incorrect result %d\n", ret);
+            return 1;
+        }
+    }
+
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

@@ -24,13 +24,12 @@
 #else
 # include <strings.h>
 #endif
-void *xmalloc (size_t n) __THROW;
-char *xstrdup (char *string) __THROW;
+void *xmalloc(size_t n) __THROW;
+char *xstrdup(char *string) __THROW;
 
 /* Return a newly allocated copy of STRING.  */
 
-char *
-xstrdup (char *string)
+char *xstrdup(char *string)
 {
-  return strcpy (xmalloc (strlen (string) + 1), string);
+    return strcpy(xmalloc(strlen(string) + 1), string);
 }

@@ -22,10 +22,10 @@
 #include <unistd.h>
 #include <sys/stat.h>
 
-static void do_prepare (void);
-#define PREPARE(argc, argv)	do_prepare ()
-static int do_test (void);
-#define TEST_FUNCTION		do_test ()
+static void do_prepare(void);
+#define PREPARE(argc, argv) do_prepare ()
+static int do_test(void);
+#define TEST_FUNCTION       do_test ()
 
 /* This defines the `main' function and some more.  */
 #include <test-skeleton.c>
@@ -34,50 +34,54 @@ static int do_test (void);
 static char *name;
 static int fd;
 
-static void
-do_prepare (void)
+static void do_prepare(void)
 {
-  fd = create_temp_file ("tst-preadwrite.", &name);
-  if (fd == -1)
-    error (EXIT_FAILURE, errno, "cannot create temporary file");
+    fd = create_temp_file("tst-preadwrite.", &name);
+    if (fd == -1) {
+        error(EXIT_FAILURE, errno, "cannot create temporary file");
+    }
 }
 
 
-static ssize_t
-do_test_with_offset (off_t offset)
+static ssize_t do_test_with_offset(off_t offset)
 {
-  char buf[1000];
-  char res[1000];
-  int i;
-  ssize_t ret;
+    char buf[1000];
+    char res[1000];
+    int i;
+    ssize_t ret;
 
-  memset (buf, '\0', sizeof (buf));
-  memset (res, '\xff', sizeof (res));
+    memset(buf, '\0', sizeof(buf));
+    memset(res, '\xff', sizeof(res));
 
-  if (write (fd, buf, sizeof (buf)) != sizeof (buf))
-    error (EXIT_FAILURE, errno, "during write");
-
-  for (i = 100; i < 200; ++i)
-    buf[i] = i;
-  ret = pwrite (fd, buf + 100, 100, offset + 100);
-  if (ret == -1)
-    error (EXIT_FAILURE, errno, "during pwrite");
-
-  for (i = 450; i < 600; ++i)
-    buf[i] = i;
-  ret = pwrite (fd, buf + 450, 150, offset + 450);
-  if (ret == -1)
-    error (EXIT_FAILURE, errno, "during pwrite");
-
-  ret = pread (fd, res, sizeof (buf) - 50, offset + 50);
-  if (ret == -1)
-    error (EXIT_FAILURE, errno, "during pread");
-
-  if (memcmp (buf + 50, res, ret) != 0)
-    {
-      printf ("error: read of pread != write of pwrite\n");
-      return -1;
+    if (write(fd, buf, sizeof(buf)) != sizeof(buf)) {
+        error(EXIT_FAILURE, errno, "during write");
     }
 
-  return ret;
+    for (i = 100; i < 200; ++i) {
+        buf[i] = i;
+    }
+    ret = pwrite(fd, buf + 100, 100, offset + 100);
+    if (ret == -1) {
+        error(EXIT_FAILURE, errno, "during pwrite");
+    }
+
+    for (i = 450; i < 600; ++i) {
+        buf[i] = i;
+    }
+    ret = pwrite(fd, buf + 450, 150, offset + 450);
+    if (ret == -1) {
+        error(EXIT_FAILURE, errno, "during pwrite");
+    }
+
+    ret = pread(fd, res, sizeof(buf) - 50, offset + 50);
+    if (ret == -1) {
+        error(EXIT_FAILURE, errno, "during pread");
+    }
+
+    if (memcmp(buf + 50, res, ret) != 0) {
+        printf("error: read of pread != write of pwrite\n");
+        return -1;
+    }
+
+    return ret;
 }

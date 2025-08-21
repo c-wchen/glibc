@@ -19,27 +19,26 @@
 #include <sysdep-cancel.h>
 #include <shlib-compat.h>
 
-ssize_t
-__libc_pwrite64 (int fd, const void *buf, size_t count, off64_t offset)
+ssize_t __libc_pwrite64(int fd, const void *buf, size_t count, off64_t offset)
 {
-  return SYSCALL_CANCEL (pwrite64, fd, buf, count, SYSCALL_LL64_PRW (offset));
+    return SYSCALL_CANCEL(pwrite64, fd, buf, count, SYSCALL_LL64_PRW(offset));
 }
 
-weak_alias (__libc_pwrite64, __pwrite64)
-libc_hidden_weak (__pwrite64)
-weak_alias (__libc_pwrite64, pwrite64)
+weak_alias(__libc_pwrite64, __pwrite64)
+libc_hidden_weak(__pwrite64)
+weak_alias(__libc_pwrite64, pwrite64)
 
 #ifdef __OFF_T_MATCHES_OFF64_T
-strong_alias (__libc_pwrite64, __libc_pwrite)
-weak_alias (__libc_pwrite64, __pwrite)
-weak_alias (__libc_pwrite64, pwrite)
+strong_alias(__libc_pwrite64, __libc_pwrite)
+weak_alias(__libc_pwrite64, __pwrite)
+weak_alias(__libc_pwrite64, pwrite)
 
 # if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1, GLIBC_2_2)
-compat_symbol (libc, __libc_pwrite64, pwrite, GLIBC_2_2);
+compat_symbol(libc, __libc_pwrite64, pwrite, GLIBC_2_2);
 # endif
 #endif
 
 #if SHLIB_COMPAT (libc, GLIBC_2_1, GLIBC_2_2)
-compat_symbol (libc, __libc_pwrite64, pwrite64, GLIBC_2_2);
-compat_symbol (libc, __libc_pwrite64, __pwrite64, GLIBC_2_2);
+compat_symbol(libc, __libc_pwrite64, pwrite64, GLIBC_2_2);
+compat_symbol(libc, __libc_pwrite64, __pwrite64, GLIBC_2_2);
 #endif

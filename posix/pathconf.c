@@ -21,17 +21,15 @@
 
 
 /* Get file-specific information about PATH.  */
-long int
-__pathconf (const char *path, int name)
+long int __pathconf(const char *path, int name)
 {
-  if (path == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (path == NULL) {
+        __set_errno(EINVAL);
+        return -1;
     }
-  return __fpathconf (0, name);
+    return __fpathconf(0, name);
 }
 
-weak_alias (__pathconf, pathconf)
+weak_alias(__pathconf, pathconf)
 
-stub_warning (pathconf)
+stub_warning(pathconf)

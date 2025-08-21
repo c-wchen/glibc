@@ -19,10 +19,9 @@
 #include "thread_dbP.h"
 
 
-td_err_e
-td_thr_dbresume (const td_thrhandle_t *th)
+td_err_e td_thr_dbresume(const td_thrhandle_t *th)
 {
-  /* XXX We have to figure out what has to be done.  */
-  LOG ("td_thr_dbresume");
-  return TD_NOCAPAB;
+    /* XXX We have to figure out what has to be done.  */
+    LOG("td_thr_dbresume");
+    return TD_NOCAPAB;
 }

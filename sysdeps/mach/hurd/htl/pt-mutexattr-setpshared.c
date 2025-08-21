@@ -24,19 +24,19 @@
 #include <hurdlock.h>
 #include <shlib-compat.h>
 
-int
-__pthread_mutexattr_setpshared (pthread_mutexattr_t *attrp, int pshared)
+int __pthread_mutexattr_setpshared(pthread_mutexattr_t *attrp, int pshared)
 {
-  if (pshared != PTHREAD_PROCESS_PRIVATE && pshared != PTHREAD_PROCESS_SHARED)
-    return EINVAL;
+    if (pshared != PTHREAD_PROCESS_PRIVATE && pshared != PTHREAD_PROCESS_SHARED) {
+        return EINVAL;
+    }
 
-  attrp->__pshared = pshared;
-  return 0;
+    attrp->__pshared = pshared;
+    return 0;
 }
 
-libc_hidden_def (__pthread_mutexattr_setpshared)
-versioned_symbol (libc, __pthread_mutexattr_setpshared, pthread_mutexattr_setpshared, GLIBC_2_41);
+libc_hidden_def(__pthread_mutexattr_setpshared)
+versioned_symbol(libc, __pthread_mutexattr_setpshared, pthread_mutexattr_setpshared, GLIBC_2_41);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_41)
-compat_symbol (libpthread, __pthread_mutexattr_setpshared,pthread_mutexattr_setpshared, GLIBC_2_12);
+compat_symbol(libpthread, __pthread_mutexattr_setpshared, pthread_mutexattr_setpshared, GLIBC_2_12);
 #endif

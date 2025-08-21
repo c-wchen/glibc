@@ -85,28 +85,26 @@
 #include <arpa/nameser.h>
 #include <resolv.h>
 
-void
-__putlong (uint32_t src, unsigned char *dst)
+void __putlong(uint32_t src, unsigned char *dst)
 {
-  ns_put32 (src, dst);
+    ns_put32(src, dst);
 }
-libresolv_hidden_def (__putlong)
+libresolv_hidden_def(__putlong)
 
 void
-__putshort (uint16_t src, unsigned char *dst)
+__putshort(uint16_t src, unsigned char *dst)
 {
-  ns_put16 (src, dst);
+    ns_put16(src, dst);
 }
-libresolv_hidden_def (__putshort)
+libresolv_hidden_def(__putshort)
 
 uint32_t
-_getlong (const unsigned char *src)
+_getlong(const unsigned char *src)
 {
-  return ns_get32 (src);
+    return ns_get32(src);
 }
 
-uint16_t
-_getshort (const unsigned char *src)
+uint16_t _getshort(const unsigned char *src)
 {
-  return ns_get16 (src);
+    return ns_get16(src);
 }

@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _JIS0201_H
-#define _JIS0201_H	1
+#define _JIS0201_H  1
 
 #include <stdint.h>
 
@@ -25,38 +25,38 @@
 extern const uint32_t __jisx0201_to_ucs4[];
 
 
-static inline uint32_t
-__attribute ((always_inline))
-jisx0201_to_ucs4 (char ch)
+static inline uint32_t __attribute((always_inline))
+jisx0201_to_ucs4(char ch)
 {
-  uint32_t val = __jisx0201_to_ucs4[(unsigned char) ch];
+    uint32_t val = __jisx0201_to_ucs4[(unsigned char) ch];
 
-  if (val == 0 && ch != '\0')
-    val = __UNKNOWN_10646_CHAR;
+    if (val == 0 && ch != '\0') {
+        val = __UNKNOWN_10646_CHAR;
+    }
 
-  return val;
+    return val;
 }
 
 
-static inline size_t
-__attribute ((always_inline))
-ucs4_to_jisx0201 (uint32_t wch, unsigned char *s)
+static inline size_t __attribute((always_inline))
+ucs4_to_jisx0201(uint32_t wch, unsigned char *s)
 {
-  unsigned char ch;
+    unsigned char ch;
 
-  if (wch == 0xa5)
-    ch = '\x5c';
-  else if (wch == 0x203e)
-    ch = '\x7e';
-  else if (wch < 0x7e && wch != 0x5c)
-    ch = wch;
-  else if (wch >= 0xff61 && wch <= 0xff9f)
-    ch = wch - 0xfec0;
-  else
-    return __UNKNOWN_10646_CHAR;
+    if (wch == 0xa5) {
+        ch = '\x5c';
+    } else if (wch == 0x203e) {
+        ch = '\x7e';
+    } else if (wch < 0x7e && wch != 0x5c) {
+        ch = wch;
+    } else if (wch >= 0xff61 && wch <= 0xff9f) {
+        ch = wch - 0xfec0;
+    } else {
+        return __UNKNOWN_10646_CHAR;
+    }
 
-  s[0] = ch;
-  return 1;
+    s[0] = ch;
+    return 1;
 }
 
 #endif /* jis0201.h */

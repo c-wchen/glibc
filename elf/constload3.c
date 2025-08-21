@@ -1,8 +1,7 @@
-extern int baz (void);
-extern int bar (void);
+extern int baz(void);
+extern int bar(void);
 
-int
-bar (void)
+int bar(void)
 {
-  return -21 + baz ();
+    return -21 + baz();
 }

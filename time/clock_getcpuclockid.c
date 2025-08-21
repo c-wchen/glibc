@@ -21,26 +21,26 @@
 #include <unistd.h>
 #include <shlib-compat.h>
 
-int
-__clock_getcpuclockid (pid_t pid, clockid_t *clock_id)
+int __clock_getcpuclockid(pid_t pid, clockid_t *clock_id)
 {
-  /* We don't allow any process ID but our own.  */
-  if (pid != 0 && pid != getpid ())
-    return EPERM;
+    /* We don't allow any process ID but our own.  */
+    if (pid != 0 && pid != getpid()) {
+        return EPERM;
+    }
 
 #ifdef CLOCK_PROCESS_CPUTIME_ID
-  /* Store the number.  */
-  *clock_id = CLOCK_PROCESS_CPUTIME_ID;
+    /* Store the number.  */
+    *clock_id = CLOCK_PROCESS_CPUTIME_ID;
 
-  return 0;
+    return 0;
 #else
-  /* We don't have a timer for that.  */
-  return ENOENT;
+    /* We don't have a timer for that.  */
+    return ENOENT;
 #endif
 }
-versioned_symbol (libc, __clock_getcpuclockid, clock_getcpuclockid, GLIBC_2_17);
+versioned_symbol(libc, __clock_getcpuclockid, clock_getcpuclockid, GLIBC_2_17);
 /* clock_getcpuclockid moved to libc in version 2.17;
    old binaries may expect the symbol version it had in librt.  */
 #if SHLIB_COMPAT (libc, GLIBC_2_2, GLIBC_2_17)
-compat_symbol (libc, __clock_getcpuclockid, clock_getcpuclockid, GLIBC_2_2);
+compat_symbol(libc, __clock_getcpuclockid, clock_getcpuclockid, GLIBC_2_2);
 #endif

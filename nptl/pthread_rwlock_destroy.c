@@ -19,22 +19,21 @@
 #include <stap-probe.h>
 #include <shlib-compat.h>
 
-int
-___pthread_rwlock_destroy (pthread_rwlock_t *rwlock)
+int ___pthread_rwlock_destroy(pthread_rwlock_t *rwlock)
 {
-  LIBC_PROBE (rwlock_destroy, 1, rwlock);
+    LIBC_PROBE(rwlock_destroy, 1, rwlock);
 
-  /* Nothing to be done.  For now.  */
-  return 0;
+    /* Nothing to be done.  For now.  */
+    return 0;
 }
-versioned_symbol (libc, ___pthread_rwlock_destroy, pthread_rwlock_destroy,
-                  GLIBC_2_34);
+versioned_symbol(libc, ___pthread_rwlock_destroy, pthread_rwlock_destroy,
+                 GLIBC_2_34);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1, GLIBC_2_34)
-compat_symbol (libpthread, ___pthread_rwlock_destroy, pthread_rwlock_destroy,
-               GLIBC_2_1);
+compat_symbol(libpthread, ___pthread_rwlock_destroy, pthread_rwlock_destroy,
+              GLIBC_2_1);
 #endif
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
-compat_symbol (libpthread, ___pthread_rwlock_destroy, __pthread_rwlock_destroy,
-               GLIBC_2_2);
+compat_symbol(libpthread, ___pthread_rwlock_destroy, __pthread_rwlock_destroy,
+              GLIBC_2_2);
 #endif

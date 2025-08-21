@@ -26,8 +26,7 @@
    the caller, not the state of this `setjmp' frame which then
    immediate unwinds.  */
 
-int
-setjmp (jmp_buf env)
+int setjmp(jmp_buf env)
 {
-  return __sigsetjmp (env, 1);
+    return __sigsetjmp(env, 1);
 }

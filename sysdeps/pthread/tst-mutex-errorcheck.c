@@ -22,31 +22,30 @@
 #include <pthread.h>
 #include <support/check.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  struct timespec tms = { 0 };
-  pthread_mutex_t mutex;
-  pthread_mutexattr_t mutexattr;
-  int ret = 0;
+    struct timespec tms = { 0 };
+    pthread_mutex_t mutex;
+    pthread_mutexattr_t mutexattr;
+    int ret = 0;
 
-  TEST_COMPARE (pthread_mutexattr_init (&mutexattr), 0);
-  TEST_COMPARE (pthread_mutexattr_settype (&mutexattr,
+    TEST_COMPARE(pthread_mutexattr_init(&mutexattr), 0);
+    TEST_COMPARE(pthread_mutexattr_settype(&mutexattr,
                                            PTHREAD_MUTEX_ERRORCHECK), 0);
 
-  TEST_COMPARE (pthread_mutex_init (&mutex, &mutexattr), 0);
-  TEST_COMPARE (pthread_mutexattr_destroy (&mutexattr), 0);
+    TEST_COMPARE(pthread_mutex_init(&mutex, &mutexattr), 0);
+    TEST_COMPARE(pthread_mutexattr_destroy(&mutexattr), 0);
 
-  /* The call to pthread_mutex_timedlock erroneously enabled lock elision
-     on the mutex, which then triggered an assertion failure in
-     pthread_mutex_unlock.  It would also defeat the error checking nature
-     of the mutex.  */
-  TEST_COMPARE (pthread_mutex_timedlock (&mutex, &tms), 0);
-  TEST_COMPARE (pthread_mutex_timedlock (&mutex, &tms), EDEADLK);
+    /* The call to pthread_mutex_timedlock erroneously enabled lock elision
+       on the mutex, which then triggered an assertion failure in
+       pthread_mutex_unlock.  It would also defeat the error checking nature
+       of the mutex.  */
+    TEST_COMPARE(pthread_mutex_timedlock(&mutex, &tms), 0);
+    TEST_COMPARE(pthread_mutex_timedlock(&mutex, &tms), EDEADLK);
 
-  TEST_COMPARE (pthread_mutex_unlock (&mutex), 0);
+    TEST_COMPARE(pthread_mutex_unlock(&mutex), 0);
 
-  return ret;
+    return ret;
 }
 
 #include <support/test-driver.c>

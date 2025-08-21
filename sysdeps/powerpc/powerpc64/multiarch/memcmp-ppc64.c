@@ -32,6 +32,6 @@
   __hidden_ver1(__memcmp_ppc, __GI_memcmp, __memcmp_ppc);
 #endif
 
-extern __typeof (memcmp) __memcmp_ppc attribute_hidden;
+extern __typeof(memcmp) __memcmp_ppc attribute_hidden;
 
 #include <string/memcmp.c>

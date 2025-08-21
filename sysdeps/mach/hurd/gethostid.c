@@ -20,15 +20,15 @@
 #include "hurdhost.h"
 
 /* Return the current machine's Internet number.  */
-long int
-gethostid (void)
+long int gethostid(void)
 {
-  /* The hostid is just the contents of the file /etc/hostid,
-     kept as text of hexadecimal digits.  */
-  /* XXX this is supposed to come from the hardware serial number */
-  char buf[8];
-  ssize_t n = _hurd_get_host_config ("/etc/hostid", buf, sizeof buf);
-  if (n < 0)
-    return -1;
-  return strtol (buf, NULL, 16);
+    /* The hostid is just the contents of the file /etc/hostid,
+       kept as text of hexadecimal digits.  */
+    /* XXX this is supposed to come from the hardware serial number */
+    char buf[8];
+    ssize_t n = _hurd_get_host_config("/etc/hostid", buf, sizeof buf);
+    if (n < 0) {
+        return -1;
+    }
+    return strtol(buf, NULL, 16);
 }

@@ -18,18 +18,17 @@
 
 #include <fenv.h>
 
-int
-fegetexceptflag (fexcept_t *flagp, int excepts)
+int fegetexceptflag(fexcept_t *flagp, int excepts)
 {
-  fexcept_t temp;
-  unsigned int mxscr;
+    fexcept_t temp;
+    unsigned int mxscr;
 
-  /* Get the current exceptions for the x87 FPU and SSE unit.  */
-  __asm__ ("fnstsw %0\n"
-	   "stmxcsr %1" : "=m" (*&temp), "=m" (*&mxscr));
+    /* Get the current exceptions for the x87 FPU and SSE unit.  */
+    __asm__("fnstsw %0\n"
+            "stmxcsr %1" : "=m"( *&temp), "=m"( *&mxscr));
 
-  *flagp = (temp | mxscr) & FE_ALL_EXCEPT & excepts;
+    *flagp = (temp | mxscr) & FE_ALL_EXCEPT & excepts;
 
-  /* Success.  */
-  return 0;
+    /* Success.  */
+    return 0;
 }

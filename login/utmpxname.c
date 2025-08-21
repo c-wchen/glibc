@@ -18,8 +18,7 @@
 #include <utmp.h>
 #include <utmpx.h>
 
-int
-utmpxname (const char *file)
+int utmpxname(const char *file)
 {
-  return __utmpname (file);
+    return __utmpname(file);
 }

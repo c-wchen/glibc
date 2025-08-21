@@ -22,35 +22,37 @@
 #include <sys/auxv.h>
 #include <sys/param.h>
 
-extern int marker2 (void);
-extern int marker3 (void);
+extern int marker2(void);
+extern int marker3(void);
 
 /* Return the POWER level, 8 for the baseline.  */
-static int
-compute_level (void)
+static int compute_level(void)
 {
-  const char *platform = (const char *) getauxval (AT_PLATFORM);
-  if (strcmp (platform, "power8") == 0)
-    return 8;
-  if (strcmp (platform, "power9") == 0)
-    return 9;
-  if (strcmp (platform, "power10") == 0)
-    return 10;
-  if (strcmp (platform, "power11") == 0)
+    const char *platform = (const char *) getauxval(AT_PLATFORM);
+    if (strcmp(platform, "power8") == 0) {
+        return 8;
+    }
+    if (strcmp(platform, "power9") == 0) {
+        return 9;
+    }
+    if (strcmp(platform, "power10") == 0) {
+        return 10;
+    }
+    if (strcmp(platform, "power11") == 0) {
+        return 11;
+    }
+    printf("warning: unrecognized AT_PLATFORM value: %s\n", platform);
+    /* Assume that the new platform supports POWER11.  */
     return 11;
-  printf ("warning: unrecognized AT_PLATFORM value: %s\n", platform);
-  /* Assume that the new platform supports POWER11.  */
-  return 11;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int level = compute_level ();
-  printf ("info: detected POWER level: %d\n", level);
-  TEST_COMPARE (marker2 (), MIN (level - 7, 2));
-  TEST_COMPARE (marker3 (), MIN (level - 7, 3));
-  return 0;
+    int level = compute_level();
+    printf("info: detected POWER level: %d\n", level);
+    TEST_COMPARE(marker2(), MIN(level - 7, 2));
+    TEST_COMPARE(marker3(), MIN(level - 7, 3));
+    return 0;
 }
 
 #include <support/test-driver.c>

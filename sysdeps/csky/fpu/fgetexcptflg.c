@@ -22,11 +22,10 @@
 #include <fenv_private.h>
 #include <stdio.h>
 
-int
-fegetexceptflag (fexcept_t *flagp, int excepts)
+int fegetexceptflag(fexcept_t *flagp, int excepts)
 {
-  *flagp = libc_fetestexcept_vfp (excepts);
+    *flagp = libc_fetestexcept_vfp(excepts);
 
-  /* Success.  */
-  return 0;
+    /* Success.  */
+    return 0;
 }

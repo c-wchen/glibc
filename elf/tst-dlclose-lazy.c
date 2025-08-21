@@ -31,17 +31,16 @@
 #include <support/xdlfcn.h>
 #include <support/check.h>
 
-int
-main (void)
+int main(void)
 {
-  /* Load tst-dlclose-lazy-mod1.so, indirectly loading
-     tst-dlclose-lazy-mod2.so.  */
-  void *handle = xdlopen ("tst-dlclose-lazy-mod1.so", RTLD_GLOBAL | RTLD_LAZY);
+    /* Load tst-dlclose-lazy-mod1.so, indirectly loading
+       tst-dlclose-lazy-mod2.so.  */
+    void *handle = xdlopen("tst-dlclose-lazy-mod1.so", RTLD_GLOBAL | RTLD_LAZY);
 
-  /* Invoke the destructor of tst-dlclose-lazy-mod2.so, which calls
-     into tst-dlclose-lazy-mod1.so after its destructor has been
-     called.  */
-  xdlclose (handle);
+    /* Invoke the destructor of tst-dlclose-lazy-mod2.so, which calls
+       into tst-dlclose-lazy-mod1.so after its destructor has been
+       called.  */
+    xdlclose(handle);
 
-  return 0;
+    return 0;
 }

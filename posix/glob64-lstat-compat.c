@@ -33,5 +33,5 @@
 
 # include <posix/glob64.c>
 
-compat_symbol (libc, __glob64_lstat_compat, glob64, GLIBC_2_0);
+compat_symbol(libc, __glob64_lstat_compat, glob64, GLIBC_2_0);
 #endif

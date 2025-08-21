@@ -24,158 +24,152 @@
 #include <stdint.h>
 
 /* Some of the functions here must not be used while setlocale is called.  */
-__libc_rwlock_define (extern, __libc_setlocale_lock attribute_hidden)
+__libc_rwlock_define(extern, __libc_setlocale_lock attribute_hidden)
 
 #define CURRENT(item) (current->values[_NL_ITEM_INDEX (item)].string)
 #define CURRENT_WSTR(item) \
   ((wchar_t *) current->values[_NL_ITEM_INDEX (item)].wstr)
 
 static struct lc_time_data *
-_nl_init_alt_digit (struct __locale_data *current)
+_nl_init_alt_digit(struct __locale_data *current)
 {
-  struct lc_time_data *data = current->private;
+    struct lc_time_data *data = current->private;
 
-  if (data == NULL)
-    {
-      data = calloc (sizeof *data, 1);
-      if (data == NULL)
-	return NULL;
-      current->private = data;
+    if (data == NULL) {
+        data = calloc(sizeof * data, 1);
+        if (data == NULL) {
+            return NULL;
+        }
+        current->private = data;
     }
 
-  if (! data->alt_digits_initialized)
-    {
-      const char *ptr = CURRENT (ALT_DIGITS);
-      size_t cnt;
+    if (! data->alt_digits_initialized) {
+        const char *ptr = CURRENT(ALT_DIGITS);
+        size_t cnt;
 
-      data->alt_digits_initialized = 1;
+        data->alt_digits_initialized = 1;
 
-      if (ptr != NULL)
-	{
-	  data->alt_digits = malloc (100 * sizeof (const char *));
-	  if (data->alt_digits != NULL)
-	    for (cnt = 0; cnt < 100; ++cnt)
-	      {
-		data->alt_digits[cnt] = ptr;
+        if (ptr != NULL) {
+            data->alt_digits = malloc(100 * sizeof(const char *));
+            if (data->alt_digits != NULL)
+                for (cnt = 0; cnt < 100; ++cnt) {
+                    data->alt_digits[cnt] = ptr;
 
-		/* Skip digit format. */
-		ptr = strchr (ptr, '\0') + 1;
-	      }
-	}
+                    /* Skip digit format. */
+                    ptr = strchr(ptr, '\0') + 1;
+                }
+        }
     }
 
-  return data;
+    return data;
 }
 
-const char *
-_nl_get_alt_digit (unsigned int number, struct __locale_data *current)
+const char *_nl_get_alt_digit(unsigned int number, struct __locale_data *current)
 {
-  const char *result;
+    const char *result;
 
-  if (number >= 100 || CURRENT (ALT_DIGITS)[0] == '\0')
-    return NULL;
-
-  __libc_rwlock_wrlock (__libc_setlocale_lock);
-
-  struct lc_time_data *data = _nl_init_alt_digit (current);
-
-  result = ((data != NULL
-	     && data->alt_digits != NULL)
-	    ? data->alt_digits[number]
-	    : NULL);
-
-  __libc_rwlock_unlock (__libc_setlocale_lock);
-
-  return result;
-}
-
-
-const wchar_t *
-_nl_get_walt_digit (unsigned int number, struct __locale_data *current)
-{
-  const wchar_t *result = NULL;
-
-  if (number >= 100 || CURRENT_WSTR (_NL_WALT_DIGITS)[0] == L'\0')
-    return NULL;
-
-  __libc_rwlock_wrlock (__libc_setlocale_lock);
-
-  struct lc_time_data *data = current->private;
-  if (data == NULL)
-    {
-      data = calloc (sizeof *data, 1);
-      if (data == NULL)
-	goto out;
-      current->private = data;
+    if (number >= 100 || CURRENT(ALT_DIGITS)[0] == '\0') {
+        return NULL;
     }
 
-  if (! data->walt_digits_initialized)
-    {
-      const wchar_t *ptr = CURRENT_WSTR (_NL_WALT_DIGITS);
-      size_t cnt;
+    __libc_rwlock_wrlock(__libc_setlocale_lock);
 
-      data->walt_digits_initialized = 1;
+    struct lc_time_data *data = _nl_init_alt_digit(current);
 
-      if (ptr != NULL)
-	{
-	  data->walt_digits = malloc (100 * sizeof (const uint32_t *));
-	  if (data->walt_digits != NULL)
-	    for (cnt = 0; cnt < 100; ++cnt)
-	      {
-		data->walt_digits[cnt] = ptr;
+    result = ((data != NULL
+               && data->alt_digits != NULL)
+              ? data->alt_digits[number]
+              : NULL);
 
-		/* Skip digit format. */
-		ptr = __wcschr (ptr, L'\0') + 1;
-	      }
-	}
-    }
+    __libc_rwlock_unlock(__libc_setlocale_lock);
 
-  if (data->walt_digits != NULL)
-    result = data->walt_digits[number];
-
- out:
-  __libc_rwlock_unlock (__libc_setlocale_lock);
-
-  return (wchar_t *) result;
-}
-
-
-int
-_nl_parse_alt_digit (const char **strp, struct __locale_data *current)
-{
-  const char *str = *strp;
-  int result = -1;
-  size_t cnt;
-  size_t maxlen = 0;
-
-  if (CURRENT_WSTR (_NL_WALT_DIGITS)[0] == L'\0')
     return result;
+}
 
-  __libc_rwlock_wrlock (__libc_setlocale_lock);
 
-  struct lc_time_data *data = _nl_init_alt_digit (current);
-  if (data != NULL && data->alt_digits != NULL)
-    /* Matching is not unambiguous.  The alternative digits could be like
-       I, II, III, ... and the first one is a substring of the second
-       and third.  Therefore we must keep on searching until we found
-       the longest possible match.  Note that this is not specified in
-       the standard.  */
-    for (cnt = 0; cnt < 100; ++cnt)
-      {
-	const char *const dig = data->alt_digits[cnt];
-	size_t len = strlen (dig);
+const wchar_t *_nl_get_walt_digit(unsigned int number, struct __locale_data *current)
+{
+    const wchar_t *result = NULL;
 
-	if (len > maxlen && strncmp (dig, str, len) == 0)
-	  {
-	    maxlen = len;
-	    result = (int) cnt;
-	  }
-      }
+    if (number >= 100 || CURRENT_WSTR(_NL_WALT_DIGITS)[0] == L'\0') {
+        return NULL;
+    }
 
-  __libc_rwlock_unlock (__libc_setlocale_lock);
+    __libc_rwlock_wrlock(__libc_setlocale_lock);
 
-  if (result != -1)
-    *strp += maxlen;
+    struct lc_time_data *data = current->private;
+    if (data == NULL) {
+        data = calloc(sizeof * data, 1);
+        if (data == NULL) {
+            goto out;
+        }
+        current->private = data;
+    }
 
-  return result;
+    if (! data->walt_digits_initialized) {
+        const wchar_t *ptr = CURRENT_WSTR(_NL_WALT_DIGITS);
+        size_t cnt;
+
+        data->walt_digits_initialized = 1;
+
+        if (ptr != NULL) {
+            data->walt_digits = malloc(100 * sizeof(const uint32_t *));
+            if (data->walt_digits != NULL)
+                for (cnt = 0; cnt < 100; ++cnt) {
+                    data->walt_digits[cnt] = ptr;
+
+                    /* Skip digit format. */
+                    ptr = __wcschr(ptr, L'\0') + 1;
+                }
+        }
+    }
+
+    if (data->walt_digits != NULL) {
+        result = data->walt_digits[number];
+    }
+
+out:
+    __libc_rwlock_unlock(__libc_setlocale_lock);
+
+    return (wchar_t *) result;
+}
+
+
+int _nl_parse_alt_digit(const char **strp, struct __locale_data *current)
+{
+    const char *str = *strp;
+    int result = -1;
+    size_t cnt;
+    size_t maxlen = 0;
+
+    if (CURRENT_WSTR(_NL_WALT_DIGITS)[0] == L'\0') {
+        return result;
+    }
+
+    __libc_rwlock_wrlock(__libc_setlocale_lock);
+
+    struct lc_time_data *data = _nl_init_alt_digit(current);
+    if (data != NULL && data->alt_digits != NULL)
+        /* Matching is not unambiguous.  The alternative digits could be like
+           I, II, III, ... and the first one is a substring of the second
+           and third.  Therefore we must keep on searching until we found
+           the longest possible match.  Note that this is not specified in
+           the standard.  */
+        for (cnt = 0; cnt < 100; ++cnt) {
+            const char *const dig = data->alt_digits[cnt];
+            size_t len = strlen(dig);
+
+            if (len > maxlen && strncmp(dig, str, len) == 0) {
+                maxlen = len;
+                result = (int) cnt;
+            }
+        }
+
+    __libc_rwlock_unlock(__libc_setlocale_lock);
+
+    if (result != -1) {
+        *strp += maxlen;
+    }
+
+    return result;
 }

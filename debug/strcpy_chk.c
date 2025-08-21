@@ -22,13 +22,13 @@
 #undef strcpy
 
 /* Copy SRC to DEST with checking of destination buffer overflow.  */
-char *
-__strcpy_chk (char *dest, const char *src, size_t destlen)
+char *__strcpy_chk(char *dest, const char *src, size_t destlen)
 {
-  size_t len = strlen (src);
-  if (len >= destlen)
-    __chk_fail ();
+    size_t len = strlen(src);
+    if (len >= destlen) {
+        __chk_fail();
+    }
 
-  return memcpy (dest, src, len + 1);
+    return memcpy(dest, src, len + 1);
 }
-libc_hidden_builtin_def (__strcpy_chk)
+libc_hidden_builtin_def(__strcpy_chk)

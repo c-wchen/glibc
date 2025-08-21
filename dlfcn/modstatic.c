@@ -1,7 +1,6 @@
-extern int test (int);
+extern int test(int);
 
-int
-test (int a)
+int test(int a)
 {
-  return a + a;
+    return a + a;
 }

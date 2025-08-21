@@ -23,34 +23,33 @@
 
 
 /* Test that nanosleep() does sleep.  */
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* Current time.  */
-  struct timeval tv1;
-  (void) gettimeofday (&tv1, NULL);
+    /* Current time.  */
+    struct timeval tv1;
+    (void) gettimeofday(&tv1, NULL);
 
-  struct timespec ts;
-  ts.tv_sec = 1;
-  ts.tv_nsec = 0;
-  TEMP_FAILURE_RETRY (nanosleep (&ts, &ts));
+    struct timespec ts;
+    ts.tv_sec = 1;
+    ts.tv_nsec = 0;
+    TEMP_FAILURE_RETRY(nanosleep(&ts, &ts));
 
-  /* At least one second must have passed.  */
-  struct timeval tv2;
-  (void) gettimeofday (&tv2, NULL);
+    /* At least one second must have passed.  */
+    struct timeval tv2;
+    (void) gettimeofday(&tv2, NULL);
 
-  tv2.tv_sec -= tv1.tv_sec;
-  tv2.tv_usec -= tv1.tv_usec;
-  if (tv2.tv_usec < 0)
-    --tv2.tv_sec;
-
-  if (tv2.tv_sec < 1)
-    {
-      puts ("nanosleep didn't sleep long enough");
-      return 1;
+    tv2.tv_sec -= tv1.tv_sec;
+    tv2.tv_usec -= tv1.tv_usec;
+    if (tv2.tv_usec < 0) {
+        --tv2.tv_sec;
     }
 
-  return 0;
+    if (tv2.tv_sec < 1) {
+        puts("nanosleep didn't sleep long enough");
+        return 1;
+    }
+
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

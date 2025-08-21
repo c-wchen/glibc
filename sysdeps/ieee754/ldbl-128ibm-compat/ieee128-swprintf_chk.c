@@ -19,24 +19,25 @@
 #include <stdarg.h>
 #include <libio/libioP.h>
 
-extern int
-___ieee128___swprintf_chk (wchar_t *string, size_t maxlen, int flag,
-			size_t slen, const wchar_t *format, ...)
+extern int ___ieee128___swprintf_chk(wchar_t *string, size_t maxlen, int flag,
+                                     size_t slen, const wchar_t *format, ...)
 {
-  va_list ap;
-  int done;
+    va_list ap;
+    int done;
 
-  unsigned int mode = PRINTF_LDBL_USES_FLOAT128;
-  if (flag > 0)
-    mode |= PRINTF_FORTIFY;
+    unsigned int mode = PRINTF_LDBL_USES_FLOAT128;
+    if (flag > 0) {
+        mode |= PRINTF_FORTIFY;
+    }
 
-  if (__glibc_unlikely (slen < maxlen))
-    __chk_fail ();
+    if (__glibc_unlikely(slen < maxlen)) {
+        __chk_fail();
+    }
 
-  va_start (ap, format);
-  done = __vswprintf_internal (string, maxlen, format, ap, mode);
-  va_end (ap);
+    va_start(ap, format);
+    done = __vswprintf_internal(string, maxlen, format, ap, mode);
+    va_end(ap);
 
-  return done;
+    return done;
 }
-strong_alias (___ieee128___swprintf_chk, __swprintf_chkieee128)
+strong_alias(___ieee128___swprintf_chk, __swprintf_chkieee128)

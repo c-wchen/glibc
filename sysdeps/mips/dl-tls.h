@@ -20,18 +20,17 @@
 #define _DL_TLS_H
 
 /* Type used for the representation of TLS information in the GOT.  */
-typedef struct
-{
-  unsigned long int ti_module;
-  unsigned long int ti_offset;
+typedef struct {
+    unsigned long int ti_module;
+    unsigned long int ti_offset;
 } tls_index;
 
 /* The thread pointer points 0x7000 past the first static TLS block.  */
-#define TLS_TP_OFFSET		0x7000
+#define TLS_TP_OFFSET       0x7000
 
 /* Dynamic thread vector pointers point 0x8000 past the start of each
    TLS block.  */
-#define TLS_DTV_OFFSET		0x8000
+#define TLS_DTV_OFFSET      0x8000
 
 /* Compute the value for a GOTTPREL reloc.  */
 #define TLS_TPREL_VALUE(sym_map, sym) \
@@ -41,8 +40,8 @@ typedef struct
 #define TLS_DTPREL_VALUE(sym) \
   ((sym)->st_value - TLS_DTV_OFFSET)
 
-extern void *__tls_get_addr (tls_index *ti);
+extern void *__tls_get_addr(tls_index *ti);
 
-#define __TLS_GET_ADDR(__ti)	(__tls_get_addr (__ti) - TLS_DTV_OFFSET)
+#define __TLS_GET_ADDR(__ti)    (__tls_get_addr (__ti) - TLS_DTV_OFFSET)
 
 #endif /* _DL_TLS_H */

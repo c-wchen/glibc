@@ -1,7 +1,6 @@
-extern void mod2 (void);
+extern void mod2(void);
 
-void
-mod1 (void)
+void mod1(void)
 {
-  mod2 ();
+    mod2();
 }

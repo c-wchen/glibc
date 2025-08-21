@@ -21,12 +21,11 @@
    instead of DT_RPATH, can call a function in a shared library, which
    dlopens another shared library.  */
 
-extern int test (void);
+extern int test(void);
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  return test ();
+    return test();
 }
 
 #include <support/test-driver.c>

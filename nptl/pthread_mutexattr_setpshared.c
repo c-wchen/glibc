@@ -20,28 +20,29 @@
 #include <futex-internal.h>
 #include <shlib-compat.h>
 
-int
-__pthread_mutexattr_setpshared (pthread_mutexattr_t *attr, int pshared)
+int __pthread_mutexattr_setpshared(pthread_mutexattr_t *attr, int pshared)
 {
-  struct pthread_mutexattr *iattr;
+    struct pthread_mutexattr *iattr;
 
-  int err = futex_supports_pshared (pshared);
-  if (err != 0)
-    return err;
+    int err = futex_supports_pshared(pshared);
+    if (err != 0) {
+        return err;
+    }
 
-  iattr = (struct pthread_mutexattr *) attr;
+    iattr = (struct pthread_mutexattr *) attr;
 
-  if (pshared == PTHREAD_PROCESS_PRIVATE)
-    iattr->mutexkind &= ~PTHREAD_MUTEXATTR_FLAG_PSHARED;
-  else
-    iattr->mutexkind |= PTHREAD_MUTEXATTR_FLAG_PSHARED;
+    if (pshared == PTHREAD_PROCESS_PRIVATE) {
+        iattr->mutexkind &= ~PTHREAD_MUTEXATTR_FLAG_PSHARED;
+    } else {
+        iattr->mutexkind |= PTHREAD_MUTEXATTR_FLAG_PSHARED;
+    }
 
-  return 0;
+    return 0;
 }
-versioned_symbol (libc, __pthread_mutexattr_setpshared,
-                  pthread_mutexattr_setpshared, GLIBC_2_34);
+versioned_symbol(libc, __pthread_mutexattr_setpshared,
+                 pthread_mutexattr_setpshared, GLIBC_2_34);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
-compat_symbol (libpthread, __pthread_mutexattr_setpshared,
-               pthread_mutexattr_setpshared, GLIBC_2_2);
+compat_symbol(libpthread, __pthread_mutexattr_setpshared,
+              pthread_mutexattr_setpshared, GLIBC_2_2);
 #endif

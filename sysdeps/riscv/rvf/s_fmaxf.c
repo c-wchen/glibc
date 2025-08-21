@@ -20,16 +20,16 @@
 #include <fenv_private.h>
 #include <libm-alias-float.h>
 
-float
-__fmaxf (float x, float y)
+float __fmaxf(float x, float y)
 {
-  float res;
+    float res;
 
-  if (__glibc_unlikely ((_FCLASS (x) | _FCLASS (y)) & _FCLASS_SNAN))
-    return x + y;
-  else
-    asm ("fmax.s %0, %1, %2" : "=f" (res) : "f" (x), "f" (y));
+    if (__glibc_unlikely((_FCLASS(x) | _FCLASS(y)) & _FCLASS_SNAN)) {
+        return x + y;
+    } else {
+        asm("fmax.s %0, %1, %2" : "=f"(res) : "f"(x), "f"(y));
+    }
 
-  return res;
+    return res;
 }
-libm_alias_float (__fmax, fmax)
+libm_alias_float(__fmax, fmax)

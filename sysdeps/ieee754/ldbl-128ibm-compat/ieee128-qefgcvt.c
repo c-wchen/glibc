@@ -18,14 +18,14 @@
 
 /* When in IEEE long double mode, call ___ieee128_sprintf.  */
 #include <stdio.h>
-typeof (sprintf) ___ieee128_sprintf attribute_hidden;
+typeof(sprintf) ___ieee128_sprintf attribute_hidden;
 #define SPRINTF ___ieee128_sprintf
 
 /* Declare internal functions: ___qecvtieee128_r and ___qfcvtieee128_r,
    built from a different compiling unit, and called from here.  */
 #include <stdlib.h>
-typeof (qecvt_r) ___qecvtieee128_r;
-typeof (qfcvt_r) ___qfcvtieee128_r;
+typeof(qecvt_r) ___qecvtieee128_r;
+typeof(qfcvt_r) ___qfcvtieee128_r;
 
 /* Rename the static buffers and pointer, otherwise the IEEE long double
    variants of qecvt and qfcvt would reuse the same buffers and pointer
@@ -48,6 +48,6 @@ typeof (qfcvt_r) ___qfcvtieee128_r;
 
 #define cvt_symbol(local, symbol) \
   strong_alias (local, symbol)
-cvt_symbol (___qfcvtieee128, __qfcvtieee128);
-cvt_symbol (___qecvtieee128, __qecvtieee128);
-cvt_symbol (___qgcvtieee128, __qgcvtieee128);
+cvt_symbol(___qfcvtieee128, __qfcvtieee128);
+cvt_symbol(___qecvtieee128, __qecvtieee128);
+cvt_symbol(___qgcvtieee128, __qgcvtieee128);

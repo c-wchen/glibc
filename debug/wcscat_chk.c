@@ -19,35 +19,32 @@
 
 
 /* Append SRC on the end of DEST.  Check for overflows.  */
-wchar_t *
-__wcscat_chk (wchar_t *dest, const wchar_t *src, size_t destlen)
+wchar_t *__wcscat_chk(wchar_t *dest, const wchar_t *src, size_t destlen)
 {
-  wchar_t *s1 = dest;
-  const wchar_t *s2 = src;
-  wchar_t c;
+    wchar_t *s1 = dest;
+    const wchar_t *s2 = src;
+    wchar_t c;
 
-  /* Find the end of the string.  */
-  do
-    {
-      if (__glibc_unlikely (destlen-- == 0))
-	__chk_fail ();
-      c = *s1++;
-    }
-  while (c != L'\0');
+    /* Find the end of the string.  */
+    do {
+        if (__glibc_unlikely(destlen-- == 0)) {
+            __chk_fail();
+        }
+        c = *s1++;
+    } while (c != L'\0');
 
-  /* Make S1 point before the next character, so we can increment
-     it while memory is read (wins on pipelined cpus).	*/
-  s1 -= 2;
-  ++destlen;
+    /* Make S1 point before the next character, so we can increment
+       it while memory is read (wins on pipelined cpus).  */
+    s1 -= 2;
+    ++destlen;
 
-  do
-    {
-      if (__glibc_unlikely (destlen-- == 0))
-	__chk_fail ();
-      c = *s2++;
-      *++s1 = c;
-    }
-  while (c != L'\0');
+    do {
+        if (__glibc_unlikely(destlen-- == 0)) {
+            __chk_fail();
+        }
+        c = *s2++;
+        *++s1 = c;
+    } while (c != L'\0');
 
-  return dest;
+    return dest;
 }

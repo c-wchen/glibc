@@ -24,9 +24,8 @@ static char rcsid[] = "$NetBSD: s_copysign.c,v 1.8 1995/05/10 20:46:57 jtc Exp $
 #include <math.h>
 #include <libm-alias-double.h>
 
-double
-__copysign (double x, double y)
+double __copysign(double x, double y)
 {
-  return __builtin_copysign (x, y);
+    return __builtin_copysign(x, y);
 }
-libm_alias_double (__copysign, copysign)
+libm_alias_double(__copysign, copysign)

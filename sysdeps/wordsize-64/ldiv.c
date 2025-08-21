@@ -23,4 +23,4 @@
 #include <stdlib/ldiv.c>
 
 #undef imaxdiv
-weak_alias (ldiv, imaxdiv)
+weak_alias(ldiv, imaxdiv)

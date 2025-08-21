@@ -22,22 +22,19 @@
 
 
 /* Make a link to FROM called TO relative to FD.  */
-int
-symlinkat (const char *from, int fd, const char *to)
+int symlinkat(const char *from, int fd, const char *to)
 {
-  if (from == NULL || to == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (from == NULL || to == NULL) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  if (fd != AT_FDCWD && fd < 0 && *to != '/')
-    {
-      __set_errno (EBADF);
-      return -1;
+    if (fd != AT_FDCWD && fd < 0 && *to != '/') {
+        __set_errno(EBADF);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (symlinkat)
+stub_warning(symlinkat)

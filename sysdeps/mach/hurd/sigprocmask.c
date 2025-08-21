@@ -24,11 +24,10 @@
 /* If SET is not NULL, modify the current set of blocked signals
    according to HOW, which may be SIG_BLOCK, SIG_UNBLOCK or SIG_SETMASK.
    If OSET is not NULL, store the old set of blocked signals in *OSET.  */
-int
-__sigprocmask (int how, const sigset_t *set, sigset_t *oset)
+int __sigprocmask(int how, const sigset_t *set, sigset_t *oset)
 {
-  return __hurd_fail (__sigthreadmask (_hurd_self_sigstate (), how, set, oset, 0));
+    return __hurd_fail(__sigthreadmask(_hurd_self_sigstate(), how, set, oset, 0));
 }
 
-libc_hidden_def (__sigprocmask)
-weak_alias (__sigprocmask, sigprocmask)
+libc_hidden_def(__sigprocmask)
+weak_alias(__sigprocmask, sigprocmask)

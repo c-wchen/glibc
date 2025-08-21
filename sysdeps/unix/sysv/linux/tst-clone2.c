@@ -37,102 +37,103 @@
 static int sig;
 static int pipefd[2];
 
-static int
-f (void *a)
+static int f(void *a)
 {
-  close (pipefd[0]);
+    close(pipefd[0]);
 
-  pid_t ppid = getppid ();
-  pid_t pid = getpid ();
-  pid_t tid = syscall (__NR_gettid);
+    pid_t ppid = getppid();
+    pid_t pid = getpid();
+    pid_t tid = syscall(__NR_gettid);
 
-  if (write (pipefd[1], &ppid, sizeof ppid) != sizeof (ppid))
-    FAIL_EXIT1 ("write ppid failed\n");
-  if (write (pipefd[1], &pid, sizeof pid) != sizeof (pid))
-    FAIL_EXIT1 ("write pid failed\n");
-  if (write (pipefd[1], &tid, sizeof tid) != sizeof (tid))
-    FAIL_EXIT1 ("write tid failed\n");
+    if (write(pipefd[1], &ppid, sizeof ppid) != sizeof(ppid)) {
+        FAIL_EXIT1("write ppid failed\n");
+    }
+    if (write(pipefd[1], &pid, sizeof pid) != sizeof(pid)) {
+        FAIL_EXIT1("write pid failed\n");
+    }
+    if (write(pipefd[1], &tid, sizeof tid) != sizeof(tid)) {
+        FAIL_EXIT1("write tid failed\n");
+    }
 
-  return 0;
+    return 0;
 }
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  sig = SIGRTMIN;
-  sigset_t ss;
-  sigemptyset (&ss);
-  sigaddset (&ss, sig);
-  if (sigprocmask (SIG_BLOCK, &ss, NULL) != 0)
-    FAIL_EXIT1 ("sigprocmask failed: %m");
+    sig = SIGRTMIN;
+    sigset_t ss;
+    sigemptyset(&ss);
+    sigaddset(&ss, sig);
+    if (sigprocmask(SIG_BLOCK, &ss, NULL) != 0) {
+        FAIL_EXIT1("sigprocmask failed: %m");
+    }
 
-  if (pipe2 (pipefd, O_CLOEXEC))
-    FAIL_EXIT1 ("pipe failed: %m");
+    if (pipe2(pipefd, O_CLOEXEC)) {
+        FAIL_EXIT1("pipe failed: %m");
+    }
 
-  int clone_flags = 0;
-  char st[128 * 1024] __attribute__ ((aligned));
+    int clone_flags = 0;
+    char st[128 * 1024] __attribute__((aligned));
 #if _STACK_GROWS_DOWN
-  pid_t p = clone (f, st + sizeof (st), clone_flags, 0);
+    pid_t p = clone(f, st + sizeof(st), clone_flags, 0);
 #elif _STACK_GROWS_UP
-  pid_t p = clone (f, st, clone_flags, 0);
+    pid_t p = clone(f, st, clone_flags, 0);
 #else
 #error "Define either _STACK_GROWS_DOWN or _STACK_GROWS_UP"
 #endif
 
-  close (pipefd[1]);
+    close(pipefd[1]);
 
-  if (p == -1)
-    FAIL_EXIT1("clone failed: %m");
-
-  pid_t ppid, pid, tid;
-  if (read (pipefd[0], &ppid, sizeof pid) != sizeof pid)
-    {
-      kill (p, SIGKILL);
-      FAIL_EXIT1 ("read ppid failed: %m");
-    }
-  if (read (pipefd[0], &pid, sizeof pid) != sizeof pid)
-    {
-      kill (p, SIGKILL);
-      FAIL_EXIT1 ("read pid failed: %m");
-    }
-  if (read (pipefd[0], &tid, sizeof tid) != sizeof tid)
-    {
-      kill (p, SIGKILL);
-      FAIL_EXIT1 ("read tid failed: %m");
+    if (p == -1) {
+        FAIL_EXIT1("clone failed: %m");
     }
 
-  close (pipefd[0]);
-
-  int ret = 0;
-
-  pid_t own_pid = getpid ();
-  pid_t own_tid = syscall (__NR_gettid);
-
-  /* Some sanity checks for clone syscall: returned ppid should be current
-     pid and both returned tid/pid should be different from current one.  */
-  if ((ppid != own_pid) || (pid == own_pid) || (tid == own_tid))
-    FAIL_RET ("ppid=%i pid=%i tid=%i | own_pid=%i own_tid=%i",
-	      (int)ppid, (int)pid, (int)tid, (int)own_pid, (int)own_tid);
-
-  int e;
-  if (waitpid (p, &e, __WCLONE) != p)
-    {
-      kill (p, SIGKILL);
-      FAIL_EXIT1 ("waitpid failed");
+    pid_t ppid, pid, tid;
+    if (read(pipefd[0], &ppid, sizeof pid) != sizeof pid) {
+        kill(p, SIGKILL);
+        FAIL_EXIT1("read ppid failed: %m");
     }
-  if (!WIFEXITED (e))
-    {
-      if (WIFSIGNALED (e))
-	printf ("died from signal %s\n", strsignal (WTERMSIG (e)));
-      else
-	puts ("did not terminate correctly");
-      exit (EXIT_FAILURE);
+    if (read(pipefd[0], &pid, sizeof pid) != sizeof pid) {
+        kill(p, SIGKILL);
+        FAIL_EXIT1("read pid failed: %m");
     }
-  if (WEXITSTATUS (e) != 0)
-    FAIL_EXIT1 ("exit code %d", WEXITSTATUS (e));
+    if (read(pipefd[0], &tid, sizeof tid) != sizeof tid) {
+        kill(p, SIGKILL);
+        FAIL_EXIT1("read tid failed: %m");
+    }
 
-  return ret;
+    close(pipefd[0]);
+
+    int ret = 0;
+
+    pid_t own_pid = getpid();
+    pid_t own_tid = syscall(__NR_gettid);
+
+    /* Some sanity checks for clone syscall: returned ppid should be current
+       pid and both returned tid/pid should be different from current one.  */
+    if ((ppid != own_pid) || (pid == own_pid) || (tid == own_tid))
+        FAIL_RET("ppid=%i pid=%i tid=%i | own_pid=%i own_tid=%i",
+                 (int)ppid, (int)pid, (int)tid, (int)own_pid, (int)own_tid);
+
+    int e;
+    if (waitpid(p, &e, __WCLONE) != p) {
+        kill(p, SIGKILL);
+        FAIL_EXIT1("waitpid failed");
+    }
+    if (!WIFEXITED(e)) {
+        if (WIFSIGNALED(e)) {
+            printf("died from signal %s\n", strsignal(WTERMSIG(e)));
+        } else {
+            puts("did not terminate correctly");
+        }
+        exit(EXIT_FAILURE);
+    }
+    if (WEXITSTATUS(e) != 0) {
+        FAIL_EXIT1("exit code %d", WEXITSTATUS(e));
+    }
+
+    return ret;
 }
 
 #include <support/test-driver.c>

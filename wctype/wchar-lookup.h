@@ -28,9 +28,9 @@
    - the next p bits,
    - the next 5 bits.
 
-	    +------------------+-----+-----+-----+
+        +------------------+-----+-----+-----+
      wc  =  +     32-q-p-5     |  q  |  p  |  5  |
-	    +------------------+-----+-----+-----+
+        +------------------+-----+-----+-----+
 
    p and q are variable.  For 16-bit Unicode it is sufficient to
    choose p and q such that q+p+5 <= 16.
@@ -46,65 +46,57 @@
    - 3rd-level table: j*2^p words, each containing 32 bits of data.
 */
 
-static __inline int
-__attribute ((always_inline))
-wctype_table_lookup (const char *table, uint32_t wc)
+static __inline int __attribute((always_inline))
+wctype_table_lookup(const char *table, uint32_t wc)
 {
-  uint32_t shift1 = ((const uint32_t *) table)[0];
-  uint32_t index1 = wc >> shift1;
-  uint32_t bound = ((const uint32_t *) table)[1];
-  if (index1 < bound)
-    {
-      uint32_t lookup1 = ((const uint32_t *) table)[5 + index1];
-      if (lookup1 != 0)
-	{
-	  uint32_t shift2 = ((const uint32_t *) table)[2];
-	  uint32_t mask2 = ((const uint32_t *) table)[3];
-	  uint32_t index2 = (wc >> shift2) & mask2;
-	  uint32_t lookup2 = ((const uint32_t *)(table + lookup1))[index2];
-	  if (lookup2 != 0)
-	    {
-	      uint32_t mask3 = ((const uint32_t *) table)[4];
-	      uint32_t index3 = (wc >> 5) & mask3;
-	      uint32_t lookup3 = ((const uint32_t *)(table + lookup2))[index3];
+    uint32_t shift1 = ((const uint32_t *) table)[0];
+    uint32_t index1 = wc >> shift1;
+    uint32_t bound = ((const uint32_t *) table)[1];
+    if (index1 < bound) {
+        uint32_t lookup1 = ((const uint32_t *) table)[5 + index1];
+        if (lookup1 != 0) {
+            uint32_t shift2 = ((const uint32_t *) table)[2];
+            uint32_t mask2 = ((const uint32_t *) table)[3];
+            uint32_t index2 = (wc >> shift2) & mask2;
+            uint32_t lookup2 = ((const uint32_t *)(table + lookup1))[index2];
+            if (lookup2 != 0) {
+                uint32_t mask3 = ((const uint32_t *) table)[4];
+                uint32_t index3 = (wc >> 5) & mask3;
+                uint32_t lookup3 = ((const uint32_t *)(table + lookup2))[index3];
 
-	      return (lookup3 >> (wc & 0x1f)) & 1;
-	    }
-	}
+                return (lookup3 >> (wc & 0x1f)) & 1;
+            }
+        }
     }
-  return 0;
+    return 0;
 }
 
 /* Byte tables are similar to bit tables, except that the addressing
    unit is a single byte, and no 5 bits are used as a word index.  */
 
-static __inline int
-__attribute ((always_inline))
-wcwidth_table_lookup (const char *table, uint32_t wc)
+static __inline int __attribute((always_inline))
+wcwidth_table_lookup(const char *table, uint32_t wc)
 {
-  uint32_t shift1 = ((const uint32_t *) table)[0];
-  uint32_t index1 = wc >> shift1;
-  uint32_t bound = ((const uint32_t *) table)[1];
-  if (index1 < bound)
-    {
-      uint32_t lookup1 = ((const uint32_t *) table)[5 + index1];
-      if (lookup1 != 0)
-	{
-	  uint32_t shift2 = ((const uint32_t *) table)[2];
-	  uint32_t mask2 = ((const uint32_t *) table)[3];
-	  uint32_t index2 = (wc >> shift2) & mask2;
-	  uint32_t lookup2 = ((const uint32_t *)(table + lookup1))[index2];
-	  if (lookup2 != 0)
-	    {
-	      uint32_t mask3 = ((const uint32_t *) table)[4];
-	      uint32_t index3 = wc & mask3;
-	      uint8_t lookup3 = ((const uint8_t *)(table + lookup2))[index3];
+    uint32_t shift1 = ((const uint32_t *) table)[0];
+    uint32_t index1 = wc >> shift1;
+    uint32_t bound = ((const uint32_t *) table)[1];
+    if (index1 < bound) {
+        uint32_t lookup1 = ((const uint32_t *) table)[5 + index1];
+        if (lookup1 != 0) {
+            uint32_t shift2 = ((const uint32_t *) table)[2];
+            uint32_t mask2 = ((const uint32_t *) table)[3];
+            uint32_t index2 = (wc >> shift2) & mask2;
+            uint32_t lookup2 = ((const uint32_t *)(table + lookup1))[index2];
+            if (lookup2 != 0) {
+                uint32_t mask3 = ((const uint32_t *) table)[4];
+                uint32_t index3 = wc & mask3;
+                uint8_t lookup3 = ((const uint8_t *)(table + lookup2))[index3];
 
-	      return lookup3;
-	    }
-	}
+                return lookup3;
+            }
+        }
     }
-  return 0xff;
+    return 0xff;
 }
 
 /* Mapping tables are similar to bit tables, except that the
@@ -112,31 +104,27 @@ wcwidth_table_lookup (const char *table, uint32_t wc)
    difference between the desired result and the argument, and no 5
    bits are used as a word index.  */
 
-static __inline uint32_t
-__attribute ((always_inline))
-wctrans_table_lookup (const char *table, uint32_t wc)
+static __inline uint32_t __attribute((always_inline))
+wctrans_table_lookup(const char *table, uint32_t wc)
 {
-  uint32_t shift1 = ((const uint32_t *) table)[0];
-  uint32_t index1 = wc >> shift1;
-  uint32_t bound = ((const uint32_t *) table)[1];
-  if (index1 < bound)
-    {
-      uint32_t lookup1 = ((const uint32_t *) table)[5 + index1];
-      if (lookup1 != 0)
-	{
-	  uint32_t shift2 = ((const uint32_t *) table)[2];
-	  uint32_t mask2 = ((const uint32_t *) table)[3];
-	  uint32_t index2 = (wc >> shift2) & mask2;
-	  uint32_t lookup2 = ((const uint32_t *)(table + lookup1))[index2];
-	  if (lookup2 != 0)
-	    {
-	      uint32_t mask3 = ((const uint32_t *) table)[4];
-	      uint32_t index3 = wc & mask3;
-	      int32_t lookup3 = ((const int32_t *)(table + lookup2))[index3];
+    uint32_t shift1 = ((const uint32_t *) table)[0];
+    uint32_t index1 = wc >> shift1;
+    uint32_t bound = ((const uint32_t *) table)[1];
+    if (index1 < bound) {
+        uint32_t lookup1 = ((const uint32_t *) table)[5 + index1];
+        if (lookup1 != 0) {
+            uint32_t shift2 = ((const uint32_t *) table)[2];
+            uint32_t mask2 = ((const uint32_t *) table)[3];
+            uint32_t index2 = (wc >> shift2) & mask2;
+            uint32_t lookup2 = ((const uint32_t *)(table + lookup1))[index2];
+            if (lookup2 != 0) {
+                uint32_t mask3 = ((const uint32_t *) table)[4];
+                uint32_t index3 = wc & mask3;
+                int32_t lookup3 = ((const int32_t *)(table + lookup2))[index3];
 
-	      return wc + lookup3;
-	    }
-	}
+                return wc + lookup3;
+            }
+        }
     }
-  return wc;
+    return wc;
 }

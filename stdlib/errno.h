@@ -16,11 +16,11 @@
    <https://www.gnu.org/licenses/>.  */
 
 /*
- *	ISO C99 Standard: 7.5 Errors	<errno.h>
+ *  ISO C99 Standard: 7.5 Errors    <errno.h>
  */
 
-#ifndef	_ERRNO_H
-#define	_ERRNO_H 1
+#ifndef _ERRNO_H
+#define _ERRNO_H 1
 
 #include <features.h>
 
@@ -34,7 +34,7 @@
 __BEGIN_DECLS
 
 /* The error code set by various library functions.  */
-extern int *__errno_location (void) __THROW __attribute_const__;
+extern int *__errno_location(void) __THROW __attribute_const__;
 # define errno (*__errno_location ())
 
 # ifdef __USE_GNU

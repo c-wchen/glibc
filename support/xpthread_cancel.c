@@ -18,8 +18,7 @@
 
 #include <support/xthread.h>
 
-void
-xpthread_cancel (pthread_t thr)
+void xpthread_cancel(pthread_t thr)
 {
-  xpthread_check_return ("pthread_cancel", pthread_cancel (thr));
+    xpthread_check_return("pthread_cancel", pthread_cancel(thr));
 }

@@ -23,9 +23,9 @@
 #include <stdlib.h>
 #include <support/check.h>
 
-void
-xgetsockname (int fd, struct sockaddr *sa, socklen_t *plen)
+void xgetsockname(int fd, struct sockaddr *sa, socklen_t *plen)
 {
-  if (getsockname (fd, sa, plen) != 0)
-    FAIL_EXIT1 ("getsockname (%d): %m", fd);
+    if (getsockname(fd, sa, plen) != 0) {
+        FAIL_EXIT1("getsockname (%d): %m", fd);
+    }
 }

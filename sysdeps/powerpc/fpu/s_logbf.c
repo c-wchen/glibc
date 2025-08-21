@@ -25,32 +25,35 @@
 # include <libm-alias-float.h>
 /* This implementation avoids FP to INT conversions by using VSX
    bitwise instructions over FP values.  */
-float
-__logbf (float x)
+float __logbf(float x)
 {
-  /* VSX operation are all done internally as double.  */
-  double ret;
+    /* VSX operation are all done internally as double.  */
+    double ret;
 
-  if (__glibc_unlikely (x == 0.0))
-    /* Raise FE_DIVBYZERO and return -HUGE_VAL[LF].  */
-    return -1.0 / fabs (x);
+    if (__glibc_unlikely(x == 0.0))
+        /* Raise FE_DIVBYZERO and return -HUGE_VAL[LF].  */
+    {
+        return -1.0 / fabs(x);
+    }
 
-  /* mask to extract the exponent.  */
-  asm ("xxland %x0,%x1,%x2\n"
-       "fcfid  %0,%0"
-       : "=d"(ret)
-       : "d" (x), "d" (0x7ff0000000000000ULL));
-  /* ret = (ret >> 52) - 1023.0, since ret is double.  */
-  ret = (ret * 0x1p-52) - 1023.0;
-  if (ret > 127.0)
-    /* Multiplication is used to set logb (+-INF) = INF.  */
-    return (x * x);
-  /* Since operations are done with double we don't need
-     additional tests for subnormal numbers.
-     The test is to avoid logb_downward (0.0) == -0.0.  */
-  return ret == -0.0 ? 0.0 : ret;
+    /* mask to extract the exponent.  */
+    asm("xxland %x0,%x1,%x2\n"
+        "fcfid  %0,%0"
+        : "=d"(ret)
+        : "d"(x), "d"(0x7ff0000000000000ULL));
+    /* ret = (ret >> 52) - 1023.0, since ret is double.  */
+    ret = (ret * 0x1p - 52) - 1023.0;
+    if (ret > 127.0)
+        /* Multiplication is used to set logb (+-INF) = INF.  */
+    {
+        return (x * x);
+    }
+    /* Since operations are done with double we don't need
+       additional tests for subnormal numbers.
+       The test is to avoid logb_downward (0.0) == -0.0.  */
+    return ret == -0.0 ? 0.0 : ret;
 }
 # ifndef __logbf
-libm_alias_float (__logb, logb)
+libm_alias_float(__logb, logb)
 # endif
 #endif

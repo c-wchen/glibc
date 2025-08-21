@@ -21,18 +21,18 @@
 #include <hurd.h>
 
 /* Seek to OFFSET on FD, starting from WHENCE.  */
-off_t
-__libc_lseek (int fd, off_t offset, int whence)
+off_t __libc_lseek(int fd, off_t offset, int whence)
 {
-  off64_t res64 = __libc_lseek64 (fd, (off64_t) offset, whence);
-  off_t res = (off_t) res64;
+    off64_t res64 = __libc_lseek64(fd, (off64_t) offset, whence);
+    off_t res = (off_t) res64;
 
-  if (sizeof res != sizeof res64 && res != res64)
-    return (off_t) __hurd_fail (EOVERFLOW);
+    if (sizeof res != sizeof res64 && res != res64) {
+        return (off_t) __hurd_fail(EOVERFLOW);
+    }
 
-  return res;
+    return res;
 }
 
-weak_alias (__libc_lseek, __lseek)
-libc_hidden_def (__lseek)
-weak_alias (__libc_lseek, lseek)
+weak_alias(__libc_lseek, __lseek)
+libc_hidden_def(__lseek)
+weak_alias(__libc_lseek, lseek)

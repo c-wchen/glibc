@@ -19,9 +19,9 @@
 #include <string.h>
 
 #if defined SHARED && IS_IN (libc)
-extern __typeof (memcpy) __memcpy_ppc attribute_hidden;
-extern __typeof (strlen) __strlen_ppc attribute_hidden;
-extern __typeof (strcpy) __strcpy_ppc attribute_hidden;
+extern __typeof(memcpy) __memcpy_ppc attribute_hidden;
+extern __typeof(strlen) __strlen_ppc attribute_hidden;
+extern __typeof(strcpy) __strcpy_ppc attribute_hidden;
 
 # define STRCPY __strcpy_ppc
 # define memcpy __memcpy_ppc

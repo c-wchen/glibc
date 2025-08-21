@@ -24,7 +24,7 @@
 # if defined(__GNUC__) && !__GNUC_PREREQ(3,4)
 
 /* Due to an ABI change, we need to remap the complex float symbols.  */
-#  define _Mdouble_		float
+#  define _Mdouble_     float
 #  define __MATHCALL(function, args) \
     __MATHDECL (_Complex float, function, args)
 #  define __MATHDECL(type, function, args) \

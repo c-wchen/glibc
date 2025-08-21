@@ -18,14 +18,14 @@
 #include <shadow.h>
 
 
-#define LOOKUP_TYPE	struct spwd
-#define SETFUNC_NAME	setspent
-#define	GETFUNC_NAME	getspent
-#define	ENDFUNC_NAME	endspent
-#define DATABASE_NAME	shadow
-#define BUFLEN		1024
+#define LOOKUP_TYPE struct spwd
+#define SETFUNC_NAME    setspent
+#define GETFUNC_NAME    getspent
+#define ENDFUNC_NAME    endspent
+#define DATABASE_NAME   shadow
+#define BUFLEN      1024
 
 /* There is no nscd support for the shadow file.  */
-#undef	USE_NSCD
+#undef  USE_NSCD
 
 #include "../nss/getXXent.c"

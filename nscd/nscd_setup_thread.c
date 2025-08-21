@@ -18,9 +18,8 @@
 #include <nscd.h>
 
 
-int
-setup_thread (struct database_dyn *db)
+int setup_thread(struct database_dyn *db)
 {
-  /* Nothing.  */
-  return 0;
+    /* Nothing.  */
+    return 0;
 }

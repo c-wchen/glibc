@@ -19,11 +19,10 @@
 #include <shlib-compat.h>
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_32)
-void * attribute_compat_text_section
-sstk (int increment)
+void *attribute_compat_text_section sstk(int increment)
 {
-  __set_errno (ENOSYS);
-  return (void *) -1;
+    __set_errno(ENOSYS);
+    return (void *) -1;
 }
-compat_symbol (libc, sstk, sstk, GLIBC_2_0);
+compat_symbol(libc, sstk, sstk, GLIBC_2_0);
 #endif

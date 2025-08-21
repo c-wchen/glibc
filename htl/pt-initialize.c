@@ -27,18 +27,17 @@
 
 #if IS_IN (libpthread)
 static const struct pthread_functions pthread_functions = {
-  .ptr___pthread_exit = __pthread_exit,
-  .ptr__IO_flockfile = _cthreads_flockfile,
-  .ptr__IO_funlockfile = _cthreads_funlockfile,
-  .ptr__IO_ftrylockfile = _cthreads_ftrylockfile,
+    .ptr___pthread_exit = __pthread_exit,
+    .ptr__IO_flockfile = _cthreads_flockfile,
+    .ptr__IO_funlockfile = _cthreads_funlockfile,
+    .ptr__IO_ftrylockfile = _cthreads_ftrylockfile,
 };
 #endif /* IS_IN (libpthread) */
 
 /* Initialize the pthreads library.  */
-void
-___pthread_init (void)
+void ___pthread_init(void)
 {
 #if IS_IN (libpthread)
-  __libc_pthread_init (&pthread_functions);
+    __libc_pthread_init(&pthread_functions);
 #endif
 }

@@ -23,20 +23,20 @@
 # error "Never include <bits/inet-fortified-decl.h> directly; use <arpa/inet.h> instead."
 #endif
 
-extern const char *__inet_ntop_chk (int, const void *, char *, socklen_t, size_t);
+extern const char *__inet_ntop_chk(int, const void *, char *, socklen_t, size_t);
 
-extern const char *__REDIRECT_FORTIFY_NTH (__inet_ntop_alias,
-					   (int, const void *, char *, socklen_t), inet_ntop);
-extern const char *__REDIRECT_NTH (__inet_ntop_chk_warn,
-				   (int, const void *, char *, socklen_t, size_t), __inet_ntop_chk)
-     __warnattr ("inet_ntop called with bigger length than "
-		 "size of destination buffer");
+extern const char *__REDIRECT_FORTIFY_NTH(__inet_ntop_alias,
+        (int, const void *, char *, socklen_t), inet_ntop);
+extern const char *__REDIRECT_NTH(__inet_ntop_chk_warn,
+                                  (int, const void *, char *, socklen_t, size_t), __inet_ntop_chk)
+__warnattr("inet_ntop called with bigger length than "
+           "size of destination buffer");
 
-extern int __inet_pton_chk (int, const char *, void *, size_t);
+extern int __inet_pton_chk(int, const char *, void *, size_t);
 
-extern int __REDIRECT_FORTIFY_NTH (__inet_pton_alias,
-				   (int, const char *, void *), inet_pton);
-extern int __REDIRECT_NTH (__inet_pton_chk_warn,
-			   (int, const char *, void *, size_t), __inet_pton_chk)
-     __warnattr ("inet_pton called with a destination buffer size too small");
+extern int __REDIRECT_FORTIFY_NTH(__inet_pton_alias,
+                                  (int, const char *, void *), inet_pton);
+extern int __REDIRECT_NTH(__inet_pton_chk_warn,
+                          (int, const char *, void *, size_t), __inet_pton_chk)
+__warnattr("inet_pton called with a destination buffer size too small");
 #endif /* bits/inet-fortified-decl.h.  */

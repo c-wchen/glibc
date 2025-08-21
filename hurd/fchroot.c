@@ -22,28 +22,27 @@
 #include <hurd/port.h>
 
 /* Change the current root directory to FD.  */
-int
-fchroot (int fd)
+int fchroot(int fd)
 {
-  error_t err;
-  file_t dir;
+    error_t err;
+    file_t dir;
 
-  err = HURD_DPORT_USE (fd,
-			({
-			  dir = __file_name_lookup_under (port, ".", 0, 0);
-			  dir == MACH_PORT_NULL ? errno : 0;
-			}));
+    err = HURD_DPORT_USE(fd,
+    ({
+        dir = __file_name_lookup_under(port, ".", 0, 0);
+        dir == MACH_PORT_NULL ? errno : 0;
+    }));
 
-  if (! err)
-    {
-      file_t root;
+    if (! err) {
+        file_t root;
 
-      /* Prevent going through DIR's ..  */
-      err = __file_reparent (dir, MACH_PORT_NULL, &root);
-      __mach_port_deallocate (__mach_task_self (), dir);
-      if (! err)
-	_hurd_port_set (&_hurd_ports[INIT_PORT_CRDIR], root);
+        /* Prevent going through DIR's ..  */
+        err = __file_reparent(dir, MACH_PORT_NULL, &root);
+        __mach_port_deallocate(__mach_task_self(), dir);
+        if (! err) {
+            _hurd_port_set(&_hurd_ports[INIT_PORT_CRDIR], root);
+        }
     }
 
-  return err ? __hurd_fail (err) : 0;
+    return err ? __hurd_fail(err) : 0;
 }

@@ -29,11 +29,10 @@
 #include <sys/ioctl.h>
 
 /* Put the state of FD into *TERMIOS_P.  */
-int
-__tcgetattr (int fd, struct termios *termios_p)
+int __tcgetattr(int fd, struct termios *termios_p)
 {
-  return __ioctl (fd, TIOCGETA, termios_p);
+    return __ioctl(fd, TIOCGETA, termios_p);
 }
 
-libc_hidden_def (__tcgetattr)
-weak_alias (__tcgetattr, tcgetattr)
+libc_hidden_def(__tcgetattr)
+weak_alias(__tcgetattr, tcgetattr)

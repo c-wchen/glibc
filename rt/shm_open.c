@@ -26,34 +26,35 @@
 #include <sys/mman.h>
 
 /* Open shared memory object.  */
-int
-__shm_open (const char *name, int oflag, mode_t mode)
+int __shm_open(const char *name, int oflag, mode_t mode)
 {
-  struct shmdir_name dirname;
-  int ret =__shm_get_name (&dirname, name, false);
-  if (ret != 0)
-    {
-      __set_errno (ret);
-      return -1;
+    struct shmdir_name dirname;
+    int ret = __shm_get_name(&dirname, name, false);
+    if (ret != 0) {
+        __set_errno(ret);
+        return -1;
     }
 
-  oflag |= O_NOFOLLOW | O_CLOEXEC;
+    oflag |= O_NOFOLLOW | O_CLOEXEC;
 #if defined (SHM_ANON) && defined (O_TMPFILE)
-  if (name == SHM_ANON)
-    oflag |= O_TMPFILE;
+    if (name == SHM_ANON) {
+        oflag |= O_TMPFILE;
+    }
 #endif
 
-  int fd = __open64_nocancel (dirname.name, oflag, mode);
-  if (fd == -1 && __glibc_unlikely (errno == EISDIR))
-    /* It might be better to fold this error with EINVAL since
-       directory names are just another example for unsuitable shared
-       object names and the standard does not mention EISDIR.  */
-    __set_errno (EINVAL);
+    int fd = __open64_nocancel(dirname.name, oflag, mode);
+    if (fd == -1 && __glibc_unlikely(errno == EISDIR))
+        /* It might be better to fold this error with EINVAL since
+           directory names are just another example for unsuitable shared
+           object names and the standard does not mention EISDIR.  */
+    {
+        __set_errno(EINVAL);
+    }
 
-  return fd;
+    return fd;
 }
-versioned_symbol (libc, __shm_open, shm_open, GLIBC_2_34);
+versioned_symbol(libc, __shm_open, shm_open, GLIBC_2_34);
 
 #if OTHER_SHLIB_COMPAT (librt, GLIBC_2_2, GLIBC_2_34)
-compat_symbol (libc, __shm_open, shm_open, GLIBC_2_2);
+compat_symbol(libc, __shm_open, shm_open, GLIBC_2_2);
 #endif

@@ -18,7 +18,7 @@
 
 #include <sysdeps/generic/sysdep.h>
 
-#ifdef	__ASSEMBLER__
+#ifdef  __ASSEMBLER__
 
 /* Syntactic details of assembler.  */
 
@@ -27,50 +27,50 @@
 #define L(label) .L##label
 
 #ifdef SHARED
-#define PLTJMP(_x)	_x##@PLT
+#define PLTJMP(_x)  _x##@PLT
 #else
-#define PLTJMP(_x)	_x
+#define PLTJMP(_x)  _x
 #endif
 
 
 /* Define an entry point visible from C.  */
-#define	ENTRY(name)							      \
-  .globl C_SYMBOL_NAME(name);						      \
-  .type C_SYMBOL_NAME(name),@function;					      \
-  .align ALIGNARG(5);							      \
-  C_LABEL(name)								      \
-  cfi_startproc;							      \
+#define ENTRY(name)                               \
+  .globl C_SYMBOL_NAME(name);                             \
+  .type C_SYMBOL_NAME(name),@function;                        \
+  .align ALIGNARG(5);                                 \
+  C_LABEL(name)                                   \
+  cfi_startproc;                                  \
   CALL_MCOUNT
 
-#undef	END
-#define END(name)							      \
-  cfi_endproc;								      \
+#undef  END
+#define END(name)                                 \
+  cfi_endproc;                                    \
   ASM_SIZE_DIRECTIVE(C_SYMBOL_NAME(name))
 
 /* If compiled for profiling, call `mcount' at the start of each function.  */
-#ifdef	PROF
-#define CALL_MCOUNT					\
-	mov.l	1f,r1;					\
-	sts.l	pr,@-r15;				\
-	cfi_adjust_cfa_offset (4);			\
-	cfi_rel_offset (pr, 0);				\
-	mova	2f,r0;					\
-	jmp	@r1;					\
-	 lds	r0,pr;					\
-	.align	2;					\
-1:	.long	mcount;					\
-2:	lds.l	@r15+,pr;				\
-	cfi_adjust_cfa_offset (-4);			\
-	cfi_restore (pr)
+#ifdef  PROF
+#define CALL_MCOUNT                 \
+    mov.l   1f,r1;                  \
+    sts.l   pr,@-r15;               \
+    cfi_adjust_cfa_offset (4);          \
+    cfi_rel_offset (pr, 0);             \
+    mova    2f,r0;                  \
+    jmp @r1;                    \
+     lds    r0,pr;                  \
+    .align  2;                  \
+1:  .long   mcount;                 \
+2:  lds.l   @r15+,pr;               \
+    cfi_adjust_cfa_offset (-4);         \
+    cfi_restore (pr)
 
 #else
-#define CALL_MCOUNT		/* Do nothing.  */
+#define CALL_MCOUNT     /* Do nothing.  */
 #endif
 
 /* Since C identifiers are not normally prefixed with an underscore
    on this system, the asm identifier `syscall_error' intrudes on the
    C name space.  Make sure we use an innocuous name.  */
-#define	syscall_error	__syscall_error
-#define mcount		_mcount
+#define syscall_error   __syscall_error
+#define mcount      _mcount
 
-#endif	/* __ASSEMBLER__ */
+#endif  /* __ASSEMBLER__ */

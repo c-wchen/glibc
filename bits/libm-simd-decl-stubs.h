@@ -18,12 +18,12 @@
 
 #ifndef _MATH_H
 # error "Never include <bits/libm-simd-decl-stubs.h> directly;\
- include <math.h> instead."
+include <math.h> instead."
 #endif
 
 /* Needed definitions could be generated with:
    for func in $(grep __MATHCALL_VEC math/bits/mathcalls.h |\
-		 sed -r "s|__MATHCALL_VEC.?\(||; s|,.*||"); do
+         sed -r "s|__MATHCALL_VEC.?\(||; s|,.*||"); do
      echo "#define __DECL_SIMD_${func}";
      echo "#define __DECL_SIMD_${func}f";
      echo "#define __DECL_SIMD_${func}l";

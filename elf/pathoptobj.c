@@ -1,8 +1,7 @@
-extern int in_renamed (int);
+extern int in_renamed(int);
 
 
-int
-in_renamed (int a)
+int in_renamed(int a)
 {
-  return a - 10;
+    return a - 10;
 }

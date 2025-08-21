@@ -16,7 +16,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _SIZES_H
-#define _SIZES_H	1
+#define _SIZES_H    1
 
 #define PTR_SIZE_STR "8"
 

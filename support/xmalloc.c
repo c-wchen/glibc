@@ -22,13 +22,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void *
-xmalloc (size_t n)
+void *xmalloc(size_t n)
 {
-  void *p;
+    void *p;
 
-  p = malloc (n);
-  if (p == NULL)
-    oom_error ("malloc", n);
-  return p;
+    p = malloc(n);
+    if (p == NULL) {
+        oom_error("malloc", n);
+    }
+    return p;
 }

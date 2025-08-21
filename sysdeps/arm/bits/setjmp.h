@@ -30,7 +30,7 @@
    Library ABI requires that the buffer be 8-byte aligned, and
    recommends that the buffer contain 64 words.  The first 26 words
    are occupied by sp, lr, v1-v6, sl, fp, and d8-d15.  */
-typedef int __jmp_buf[64] __attribute__((__aligned__ (8)));
+typedef int __jmp_buf[64] __attribute__((__aligned__(8)));
 #endif
 
 #endif

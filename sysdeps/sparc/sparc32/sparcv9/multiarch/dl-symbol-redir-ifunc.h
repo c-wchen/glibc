@@ -19,6 +19,6 @@
 #ifndef _DL_IFUNC_GENERIC_H
 #define _DL_IFUNC_GENERIC_H
 
-asm ("memset = __memset_ultra1");
+asm("memset = __memset_ultra1");
 
 #endif

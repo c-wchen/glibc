@@ -20,9 +20,9 @@
 #define _LOONGARCH_MATH_BARRIERS_H 1
 
 /* Generic code forces values to memory; we don't need to do that.  */
-#define math_opt_barrier(x)					\
+#define math_opt_barrier(x)                 \
   ({ __typeof (x) __x = (x); __asm ("" : "+frm" (__x)); __x; })
-#define math_force_eval(x)						\
+#define math_force_eval(x)                      \
   ({ __typeof (x) __x = (x); __asm __volatile__ ("" : : "frm" (__x)); })
 
 #endif /* math-barriers.h */

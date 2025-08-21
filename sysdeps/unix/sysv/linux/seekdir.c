@@ -23,13 +23,12 @@
 
 /* Seek to position POS in DIRP.  */
 /* XXX should be __seekdir ? */
-void
-seekdir (DIR *dirp, long int pos)
+void seekdir(DIR *dirp, long int pos)
 {
-  __libc_lock_lock (dirp->lock);
-  (void) __lseek (dirp->fd, pos, SEEK_SET);
-  dirp->size = 0;
-  dirp->offset = 0;
-  dirp->filepos = pos;
-  __libc_lock_unlock (dirp->lock);
+    __libc_lock_lock(dirp->lock);
+    (void) __lseek(dirp->fd, pos, SEEK_SET);
+    dirp->size = 0;
+    dirp->offset = 0;
+    dirp->filepos = pos;
+    __libc_lock_unlock(dirp->lock);
 }

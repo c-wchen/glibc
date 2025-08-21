@@ -21,11 +21,10 @@
 /* Allows to control internal state and destruction of message queue
    objects.  */
 
-int
-msgctl (int msqid, int cmd, struct msqid_ds *buf)
+int msgctl(int msqid, int cmd, struct msqid_ds *buf)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (msgctl)
+stub_warning(msgctl)

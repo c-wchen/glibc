@@ -27,14 +27,13 @@
 #include "libioP.h"
 #include <stdio.h>
 
-int
-fseek (FILE *fp, long int offset, int whence)
+int fseek(FILE *fp, long int offset, int whence)
 {
-  int result;
-  CHECK_FILE (fp, -1);
-  _IO_acquire_lock (fp);
-  result = _IO_fseek (fp, offset, whence);
-  _IO_release_lock (fp);
-  return result;
+    int result;
+    CHECK_FILE(fp, -1);
+    _IO_acquire_lock(fp);
+    result = _IO_fseek(fp, offset, whence);
+    _IO_release_lock(fp);
+    return result;
 }
-libc_hidden_def (fseek)
+libc_hidden_def(fseek)

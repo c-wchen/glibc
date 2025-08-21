@@ -25,58 +25,53 @@
 
 
 /* Type of the lookup function for the public key.  */
-typedef int (*public_function) (const char *, char *, int *);
+typedef int (*public_function)(const char *, char *, int *);
 
 /* Type of the lookup function for the secret key.  */
-typedef int (*secret_function) (const char *, char *, const char *, int *);
+typedef int (*secret_function)(const char *, char *, const char *, int *);
 
-int
-getpublickey (const char *name, char *key)
+int getpublickey(const char *name, char *key)
 {
-  nss_action_list nip;
-  union
-  {
-    public_function f;
-    void *ptr;
-  } fct;
-  enum nss_status status = NSS_STATUS_UNAVAIL;
-  int no_more;
+    nss_action_list nip;
+    union {
+        public_function f;
+        void *ptr;
+    } fct;
+    enum nss_status status = NSS_STATUS_UNAVAIL;
+    int no_more;
 
-  no_more = __nss_publickey_lookup2 (&nip, "getpublickey", NULL, &fct.ptr);
+    no_more = __nss_publickey_lookup2(&nip, "getpublickey", NULL, &fct.ptr);
 
-  while (! no_more)
-    {
-      status = (*fct.f) (name, key, &errno);
+    while (! no_more) {
+        status = (*fct.f)(name, key, &errno);
 
-      no_more = __nss_next2 (&nip, "getpublickey", NULL, &fct.ptr, status, 0);
+        no_more = __nss_next2(&nip, "getpublickey", NULL, &fct.ptr, status, 0);
     }
 
-  return status == NSS_STATUS_SUCCESS;
+    return status == NSS_STATUS_SUCCESS;
 }
-libc_hidden_nolink_sunrpc (getpublickey, GLIBC_2_0)
+libc_hidden_nolink_sunrpc(getpublickey, GLIBC_2_0)
 
 
 int
-getsecretkey (const char *name, char *key, const char *passwd)
+getsecretkey(const char *name, char *key, const char *passwd)
 {
-  nss_action_list nip;
-  union
-  {
-    secret_function f;
-    void *ptr;
-  } fct;
-  enum nss_status status = NSS_STATUS_UNAVAIL;
-  int no_more;
+    nss_action_list nip;
+    union {
+        secret_function f;
+        void *ptr;
+    } fct;
+    enum nss_status status = NSS_STATUS_UNAVAIL;
+    int no_more;
 
-  no_more = __nss_publickey_lookup2 (&nip, "getsecretkey", NULL, &fct.ptr);
+    no_more = __nss_publickey_lookup2(&nip, "getsecretkey", NULL, &fct.ptr);
 
-  while (! no_more)
-    {
-      status = (*fct.f) (name, key, passwd, &errno);
+    while (! no_more) {
+        status = (*fct.f)(name, key, passwd, &errno);
 
-      no_more = __nss_next2 (&nip, "getsecretkey", NULL, &fct.ptr, status, 0);
+        no_more = __nss_next2(&nip, "getsecretkey", NULL, &fct.ptr, status, 0);
     }
 
-  return status == NSS_STATUS_SUCCESS;
+    return status == NSS_STATUS_SUCCESS;
 }
-libc_hidden_nolink_sunrpc (getsecretkey, GLIBC_2_0)
+libc_hidden_nolink_sunrpc(getsecretkey, GLIBC_2_0)

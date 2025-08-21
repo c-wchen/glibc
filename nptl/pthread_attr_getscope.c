@@ -18,17 +18,16 @@
 #include "pthreadP.h"
 
 
-int
-__pthread_attr_getscope (const pthread_attr_t *attr, int *scope)
+int __pthread_attr_getscope(const pthread_attr_t *attr, int *scope)
 {
-  struct pthread_attr *iattr;
+    struct pthread_attr *iattr;
 
-  iattr = (struct pthread_attr *) attr;
+    iattr = (struct pthread_attr *) attr;
 
-  /* Store the current values.  */
-  *scope = (iattr->flags & ATTR_FLAG_SCOPEPROCESS
-	      ? PTHREAD_SCOPE_PROCESS : PTHREAD_SCOPE_SYSTEM);
+    /* Store the current values.  */
+    *scope = (iattr->flags & ATTR_FLAG_SCOPEPROCESS
+              ? PTHREAD_SCOPE_PROCESS : PTHREAD_SCOPE_SYSTEM);
 
-  return 0;
+    return 0;
 }
-strong_alias (__pthread_attr_getscope, pthread_attr_getscope)
+strong_alias(__pthread_attr_getscope, pthread_attr_getscope)

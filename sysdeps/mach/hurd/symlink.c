@@ -22,10 +22,9 @@
 #include <fcntl.h>
 
 /* Make a link to FROM called TO.  */
-int
-__symlink (const char *from, const char *to)
+int __symlink(const char *from, const char *to)
 {
-  return __symlinkat (from, AT_FDCWD, to);
+    return __symlinkat(from, AT_FDCWD, to);
 }
 
-weak_alias (__symlink, symlink)
+weak_alias(__symlink, symlink)

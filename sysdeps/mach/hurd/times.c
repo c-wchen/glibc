@@ -26,16 +26,15 @@
 #include <mach/task_info.h>
 #include <hurd.h>
 
-static inline clock_t
-clock_from_time_value (const time_value_t *t)
+static inline clock_t clock_from_time_value(const time_value_t *t)
 {
-  return t->seconds * 1000000 + t->microseconds;
+    return t->seconds * 1000000 + t->microseconds;
 }
 
 #ifdef HAVE_HURD_PROC_GETCHILDREN_RUSAGE
-static inline clock_t
-clock_from_timeval (const struct timeval *t) {
-  return t->tv_sec * 1000000 + t->tv_usec;
+static inline clock_t clock_from_timeval(const struct timeval *t)
+{
+    return t->tv_sec * 1000000 + t->tv_usec;
 }
 #endif
 
@@ -43,47 +42,49 @@ clock_from_timeval (const struct timeval *t) {
    dead children (and their dead children) in BUFFER.
    Return the elapsed real time, or (clock_t) -1 for errors.
    All times are in CLK_TCKths of a second.  */
-clock_t
-__times (struct tms *tms)
+clock_t __times(struct tms *tms)
 {
-  struct task_basic_info bi;
-  struct task_thread_times_info tti;
-  mach_msg_type_number_t count;
-  time_value_t now;
-  error_t err;
+    struct task_basic_info bi;
+    struct task_thread_times_info tti;
+    mach_msg_type_number_t count;
+    time_value_t now;
+    error_t err;
 
-  count = TASK_BASIC_INFO_COUNT;
-  err = __task_info (__mach_task_self (), TASK_BASIC_INFO,
-		     (task_info_t) &bi, &count);
-  if (err)
-    return __hurd_fail (err);
+    count = TASK_BASIC_INFO_COUNT;
+    err = __task_info(__mach_task_self(), TASK_BASIC_INFO,
+                      (task_info_t) &bi, &count);
+    if (err) {
+        return __hurd_fail(err);
+    }
 
-  count = TASK_THREAD_TIMES_INFO_COUNT;
-  err = __task_info (__mach_task_self (), TASK_THREAD_TIMES_INFO,
-		     (task_info_t) &tti, &count);
-  if (err)
-    return __hurd_fail (err);
+    count = TASK_THREAD_TIMES_INFO_COUNT;
+    err = __task_info(__mach_task_self(), TASK_THREAD_TIMES_INFO,
+                      (task_info_t) &tti, &count);
+    if (err) {
+        return __hurd_fail(err);
+    }
 
-  tms->tms_utime = (clock_from_time_value (&bi.user_time)
-		    + clock_from_time_value (&tti.user_time));
-  tms->tms_stime = (clock_from_time_value (&bi.system_time)
-		    + clock_from_time_value (&tti.system_time));
+    tms->tms_utime = (clock_from_time_value(&bi.user_time)
+                      + clock_from_time_value(&tti.user_time));
+    tms->tms_stime = (clock_from_time_value(&bi.system_time)
+                      + clock_from_time_value(&tti.system_time));
 
 #ifdef HAVE_HURD_PROC_GETCHILDREN_RUSAGE
-  struct rusage child_rusage;
-  err = __USEPORT (PROC, __proc_getchildren_rusage (port, &child_rusage));
-  if (err)
-    return __hurd_fail (err);
+    struct rusage child_rusage;
+    err = __USEPORT(PROC, __proc_getchildren_rusage(port, &child_rusage));
+    if (err) {
+        return __hurd_fail(err);
+    }
 
-  tms->tms_cutime = clock_from_timeval (&child_rusage.ru_utime);
-  tms->tms_cstime = clock_from_timeval (&child_rusage.ru_stime);
+    tms->tms_cutime = clock_from_timeval(&child_rusage.ru_utime);
+    tms->tms_cstime = clock_from_timeval(&child_rusage.ru_stime);
 #else
-  tms->tms_cutime = tms->tms_cstime = 0;
+    tms->tms_cutime = tms->tms_cstime = 0;
 #endif
 
-  __host_get_time (__mach_host_self (), &now);
+    __host_get_time(__mach_host_self(), &now);
 
-  return (clock_from_time_value (&now)
-	  - clock_from_time_value (&bi.creation_time));
+    return (clock_from_time_value(&now)
+            - clock_from_time_value(&bi.creation_time));
 }
-weak_alias (__times, times)
+weak_alias(__times, times)

@@ -28,12 +28,12 @@
 /* Return the login name of the user, or NULL if it can't be determined.
    The returned pointer, if not NULL, is good only until the next call.  */
 
-char *
-getlogin (void)
+char *getlogin(void)
 {
-  int res = __getlogin_r_loginuid (name, sizeof (name));
-  if (res >= 0)
-    return res == 0 ? name : NULL;
+    int res = __getlogin_r_loginuid(name, sizeof(name));
+    if (res >= 0) {
+        return res == 0 ? name : NULL;
+    }
 
-  return getlogin_fd0 ();
+    return getlogin_fd0();
 }

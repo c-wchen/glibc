@@ -21,57 +21,59 @@
 #include <arm-features.h>
 
 
-int
-__feupdateenv (const fenv_t *envp)
+int __feupdateenv(const fenv_t *envp)
 {
-  fpu_control_t fpscr, new_fpscr, updated_fpscr;
-  int excepts;
+    fpu_control_t fpscr, new_fpscr, updated_fpscr;
+    int excepts;
 
-  /* Fail if a VFP unit isn't present.  */
-  if (!ARM_HAVE_VFP)
-    return 1;
-
-  _FPU_GETCW (fpscr);
-  excepts = fpscr & FE_ALL_EXCEPT;
-
-  if ((envp != FE_DFL_ENV) && (envp != FE_NOMASK_ENV))
-    {
-      /* Merge current exception flags with the saved fenv.  */
-      new_fpscr = envp->__cw | excepts;
-
-      /* Write new FPSCR if different (ignoring NZCV flags).  */
-      if (((fpscr ^ new_fpscr) & ~_FPU_MASK_NZCV) != 0)
-	_FPU_SETCW (new_fpscr);
-
-      /* Raise the exceptions if enabled in the new FP state.  */
-      if (excepts & (new_fpscr >> FE_EXCEPT_SHIFT))
-	return __feraiseexcept (excepts);
-
-      return 0;
+    /* Fail if a VFP unit isn't present.  */
+    if (!ARM_HAVE_VFP) {
+        return 1;
     }
 
-  /* Preserve the reserved FPSCR flags.  */
-  new_fpscr = fpscr & (_FPU_RESERVED | FE_ALL_EXCEPT);
-  new_fpscr |= (envp == FE_DFL_ENV) ? _FPU_DEFAULT : _FPU_IEEE;
+    _FPU_GETCW(fpscr);
+    excepts = fpscr & FE_ALL_EXCEPT;
 
-  if (((new_fpscr ^ fpscr) & ~_FPU_MASK_NZCV) != 0)
-    {
-      _FPU_SETCW (new_fpscr);
+    if ((envp != FE_DFL_ENV) && (envp != FE_NOMASK_ENV)) {
+        /* Merge current exception flags with the saved fenv.  */
+        new_fpscr = envp->__cw | excepts;
 
-      /* Not all VFP architectures support trapping exceptions, so
-	 test whether the relevant bits were set and fail if not.  */
-      _FPU_GETCW (updated_fpscr);
+        /* Write new FPSCR if different (ignoring NZCV flags).  */
+        if (((fpscr ^ new_fpscr) & ~_FPU_MASK_NZCV) != 0) {
+            _FPU_SETCW(new_fpscr);
+        }
 
-      if (new_fpscr & ~updated_fpscr)
-	return 1;
+        /* Raise the exceptions if enabled in the new FP state.  */
+        if (excepts & (new_fpscr >> FE_EXCEPT_SHIFT)) {
+            return __feraiseexcept(excepts);
+        }
+
+        return 0;
     }
 
-  /* Raise the exceptions if enabled in the new FP state.  */
-  if (excepts & (new_fpscr >> FE_EXCEPT_SHIFT))
-    return __feraiseexcept (excepts);
+    /* Preserve the reserved FPSCR flags.  */
+    new_fpscr = fpscr & (_FPU_RESERVED | FE_ALL_EXCEPT);
+    new_fpscr |= (envp == FE_DFL_ENV) ? _FPU_DEFAULT : _FPU_IEEE;
 
-  return 0;
+    if (((new_fpscr ^ fpscr) & ~_FPU_MASK_NZCV) != 0) {
+        _FPU_SETCW(new_fpscr);
+
+        /* Not all VFP architectures support trapping exceptions, so
+        test whether the relevant bits were set and fail if not.  */
+        _FPU_GETCW(updated_fpscr);
+
+        if (new_fpscr & ~updated_fpscr) {
+            return 1;
+        }
+    }
+
+    /* Raise the exceptions if enabled in the new FP state.  */
+    if (excepts & (new_fpscr >> FE_EXCEPT_SHIFT)) {
+        return __feraiseexcept(excepts);
+    }
+
+    return 0;
 }
-libm_hidden_def (__feupdateenv)
-weak_alias (__feupdateenv, feupdateenv)
-libm_hidden_weak (feupdateenv)
+libm_hidden_def(__feupdateenv)
+weak_alias(__feupdateenv, feupdateenv)
+libm_hidden_weak(feupdateenv)

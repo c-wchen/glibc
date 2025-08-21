@@ -19,10 +19,9 @@
 #include "thread_dbP.h"
 
 
-td_err_e
-td_thr_getxregs (const td_thrhandle_t *th, void *xregs)
+td_err_e td_thr_getxregs(const td_thrhandle_t *th, void *xregs)
 {
-  /* XXX This might be platform specific.  */
-  LOG ("td_thr_getxregs");
-  return TD_NOXREGS;
+    /* XXX This might be platform specific.  */
+    LOG("td_thr_getxregs");
+    return TD_NOXREGS;
 }

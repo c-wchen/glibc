@@ -40,42 +40,41 @@
    GCC automatically disables inlining of allocator and deallocator
    functions marked with the argument form of attribute malloc but
    it doesn't hurt to disable it explicitly.  */
-__attribute  ((noipa)) void dealloc (void *);
-__attribute ((malloc (dealloc, 1))) char* alloc (void);
+__attribute((noipa)) void dealloc(void *);
+__attribute((malloc(dealloc, 1))) char *alloc(void);
 #endif
 
-void dealloc (void *p)
+void dealloc(void *p)
 {
-  free (p);
+    free(p);
 }
 
-char* alloc (void)
+char *alloc(void)
 {
 #ifdef PATH_MAX
-  return (char *)malloc (PATH_MAX);
+    return (char *)malloc(PATH_MAX);
 #else
-  return (char *)malloc (4096);
+    return (char *)malloc(4096);
 #endif
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char *resolved_path = alloc ();
-  char *ret = realpath ("/", resolved_path);
-  dealloc (ret);
+    char *resolved_path = alloc();
+    char *ret = realpath("/", resolved_path);
+    dealloc(ret);
 
-  resolved_path = alloc ();
-  ret = realpath ("/", resolved_path);
-  dealloc (resolved_path);
+    resolved_path = alloc();
+    ret = realpath("/", resolved_path);
+    dealloc(resolved_path);
 
-  /* The following should emit a warning (but doesn't with GCC 11):
-     resolved_path = alloc ();
-     ret = realpath ("/", resolved_path);
-     free (ret);   // expect -Wmismatched-dealloc
-  */
+    /* The following should emit a warning (but doesn't with GCC 11):
+       resolved_path = alloc ();
+       ret = realpath ("/", resolved_path);
+       free (ret);   // expect -Wmismatched-dealloc
+    */
 
-  return 0;
+    return 0;
 }
 
 #if defined __GNUC__ && __GNUC__ >= 11

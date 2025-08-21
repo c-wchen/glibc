@@ -20,28 +20,25 @@
 #include <stdio.h>
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int result = 0;
+    int result = 0;
 
-  if (FP_ILOGB0 != INT_MIN && FP_ILOGB0 != -INT_MAX)
-    {
-      puts ("FP_ILOGB0 has no valid value");
-      result = 1;
+    if (FP_ILOGB0 != INT_MIN && FP_ILOGB0 != -INT_MAX) {
+        puts("FP_ILOGB0 has no valid value");
+        result = 1;
+    } else {
+        puts("FP_ILOGB0 value is OK");
     }
-  else
-    puts ("FP_ILOGB0 value is OK");
 
-  if (FP_ILOGBNAN != INT_MIN && FP_ILOGBNAN != INT_MAX)
-    {
-      puts ("FP_ILOBNAN has no valid value");
-      result = 1;
+    if (FP_ILOGBNAN != INT_MIN && FP_ILOGBNAN != INT_MAX) {
+        puts("FP_ILOBNAN has no valid value");
+        result = 1;
+    } else {
+        puts("FP_ILOGBNAN value is OK");
     }
-  else
-    puts ("FP_ILOGBNAN value is OK");
 
-  return result;
+    return result;
 }
 
 #define TEST_FUNCTION do_test ()

@@ -32,77 +32,82 @@
 
 #include "tst-cancel4-common.h"
 
-static void *
-tf_sendmmsg (void *arg)
+static void *tf_sendmmsg(void *arg)
 {
-  if (arg == NULL)
-    // XXX If somebody can provide a portable test case in which sendmmsg()
-    // blocks we can enable this test to run in both rounds.
-    abort ();
-
-  struct sockaddr_un sun;
-
-  tempfd = socket (AF_UNIX, SOCK_DGRAM, 0);
-  if (tempfd == -1)
-    FAIL_EXIT1 ("socket (AF_UNIX, SOCK_DGRAM, 0): %m");
-
-  int tries = 0;
-  do
+    if (arg == NULL)
+        // XXX If somebody can provide a portable test case in which sendmmsg()
+        // blocks we can enable this test to run in both rounds.
     {
-      if (++tries > 10)
-	FAIL_EXIT1 ("too many unsuccessful bind calls");
-
-      strcpy (sun.sun_path, "/tmp/tst-cancel4-socket-7-XXXXXX");
-      if (mktemp (sun.sun_path) == NULL)
-	FAIL_EXIT1 ("cannot generate temp file name");
-
-      sun.sun_family = AF_UNIX;
+        abort();
     }
-  while (bind (tempfd, (struct sockaddr *) &sun,
-	       offsetof (struct sockaddr_un, sun_path)
-	       + strlen (sun.sun_path) + 1) != 0);
-  tempfname = strdup (sun.sun_path);
 
-  tempfd2 = socket (AF_UNIX, SOCK_DGRAM, 0);
-  if (tempfd2 == -1)
-    FAIL_EXIT1 ("socket (AF_UNIX, SOCK_DGRAM, 0): %m");
+    struct sockaddr_un sun;
 
-  int r = pthread_barrier_wait (&b2);
-  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
-    FAIL_EXIT1 ("pthread_barrier_wait");
+    tempfd = socket(AF_UNIX, SOCK_DGRAM, 0);
+    if (tempfd == -1) {
+        FAIL_EXIT1("socket (AF_UNIX, SOCK_DGRAM, 0): %m");
+    }
 
-  r = pthread_barrier_wait (&b2);
-  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
-    FAIL_EXIT1 ("pthread_barrier_wait");
+    int tries = 0;
+    do {
+        if (++tries > 10) {
+            FAIL_EXIT1("too many unsuccessful bind calls");
+        }
 
-  pthread_cleanup_push (cl, NULL);
+        strcpy(sun.sun_path, "/tmp/tst-cancel4-socket-7-XXXXXX");
+        if (mktemp(sun.sun_path) == NULL) {
+            FAIL_EXIT1("cannot generate temp file name");
+        }
 
-  char mem[1];
-  struct iovec iov[1];
-  iov[0].iov_base = mem;
-  iov[0].iov_len = 1;
+        sun.sun_family = AF_UNIX;
+    } while (bind(tempfd, (struct sockaddr *) &sun,
+                  offsetof(struct sockaddr_un, sun_path)
+                  + strlen(sun.sun_path) + 1) != 0);
+    tempfname = strdup(sun.sun_path);
 
-  struct mmsghdr mm;
-  mm.msg_hdr.msg_name = &sun;
-  mm.msg_hdr.msg_namelen = (offsetof (struct sockaddr_un, sun_path)
-			   + strlen (sun.sun_path) + 1);
-  mm.msg_hdr.msg_iov = iov;
-  mm.msg_hdr.msg_iovlen = 1;
-  mm.msg_hdr.msg_control = NULL;
-  mm.msg_hdr.msg_controllen = 0;
+    tempfd2 = socket(AF_UNIX, SOCK_DGRAM, 0);
+    if (tempfd2 == -1) {
+        FAIL_EXIT1("socket (AF_UNIX, SOCK_DGRAM, 0): %m");
+    }
 
-  ssize_t ret = sendmmsg (tempfd2, &mm, 1, 0);
-  if (ret == -1 && errno == ENOSYS)
-    exit (77);
+    int r = pthread_barrier_wait(&b2);
+    if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD) {
+        FAIL_EXIT1("pthread_barrier_wait");
+    }
 
-  pthread_cleanup_pop (0);
+    r = pthread_barrier_wait(&b2);
+    if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD) {
+        FAIL_EXIT1("pthread_barrier_wait");
+    }
 
-  FAIL_EXIT1 ("sendmmsg returned");
+    pthread_cleanup_push(cl, NULL);
+
+    char mem[1];
+    struct iovec iov[1];
+    iov[0].iov_base = mem;
+    iov[0].iov_len = 1;
+
+    struct mmsghdr mm;
+    mm.msg_hdr.msg_name = &sun;
+    mm.msg_hdr.msg_namelen = (offsetof(struct sockaddr_un, sun_path)
+                              + strlen(sun.sun_path) + 1);
+    mm.msg_hdr.msg_iov = iov;
+    mm.msg_hdr.msg_iovlen = 1;
+    mm.msg_hdr.msg_control = NULL;
+    mm.msg_hdr.msg_controllen = 0;
+
+    ssize_t ret = sendmmsg(tempfd2, &mm, 1, 0);
+    if (ret == -1 && errno == ENOSYS) {
+        exit(77);
+    }
+
+    pthread_cleanup_pop(0);
+
+    FAIL_EXIT1("sendmmsg returned");
 }
 
-struct cancel_tests tests[] =
-{
-  ADD_TEST (sendmmsg, 2, 1),
+struct cancel_tests tests[] = {
+    ADD_TEST(sendmmsg, 2, 1),
 };
 #define ntest_tf (sizeof (tests) / sizeof (tests[0]))
 

@@ -19,33 +19,33 @@
 #include <pthreadP.h>
 #include <shlib-compat.h>
 
-int
-___pthread_mutexattr_init (pthread_mutexattr_t *attr)
+int ___pthread_mutexattr_init(pthread_mutexattr_t *attr)
 {
-  ASSERT_TYPE_SIZE (pthread_mutexattr_t, __SIZEOF_PTHREAD_MUTEXATTR_T);
-  ASSERT_PTHREAD_INTERNAL_SIZE (pthread_mutexattr_t,
-				struct pthread_mutexattr);
+    ASSERT_TYPE_SIZE(pthread_mutexattr_t, __SIZEOF_PTHREAD_MUTEXATTR_T);
+    ASSERT_PTHREAD_INTERNAL_SIZE(pthread_mutexattr_t,
+                                 struct pthread_mutexattr);
 
-  if (sizeof (struct pthread_mutexattr) != sizeof (pthread_mutexattr_t))
-    memset (attr, '\0', sizeof (*attr));
+    if (sizeof(struct pthread_mutexattr) != sizeof(pthread_mutexattr_t)) {
+        memset(attr, '\0', sizeof(*attr));
+    }
 
-  /* We use bit 31 to signal whether the mutex is going to be
-     process-shared or not.  By default it is zero, i.e., the mutex is
-     not process-shared.  */
-  ((struct pthread_mutexattr *) attr)->mutexkind = PTHREAD_MUTEX_NORMAL;
+    /* We use bit 31 to signal whether the mutex is going to be
+       process-shared or not.  By default it is zero, i.e., the mutex is
+       not process-shared.  */
+    ((struct pthread_mutexattr *) attr)->mutexkind = PTHREAD_MUTEX_NORMAL;
 
-  return 0;
+    return 0;
 }
-versioned_symbol (libc, ___pthread_mutexattr_init,
-		  pthread_mutexattr_init, GLIBC_2_34);
-libc_hidden_ver (___pthread_mutexattr_init, __pthread_mutexattr_init)
+versioned_symbol(libc, ___pthread_mutexattr_init,
+                 pthread_mutexattr_init, GLIBC_2_34);
+libc_hidden_ver(___pthread_mutexattr_init, __pthread_mutexattr_init)
 #ifndef SHARED
-strong_alias (___pthread_mutexattr_init, __pthread_mutexattr_init)
+strong_alias(___pthread_mutexattr_init, __pthread_mutexattr_init)
 #endif
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_34)
-compat_symbol (libpthread, ___pthread_mutexattr_init,
-	       pthread_mutexattr_init, GLIBC_2_0);
-compat_symbol (libpthread, ___pthread_mutexattr_init,
-	       __pthread_mutexattr_init, GLIBC_2_0);
+compat_symbol(libpthread, ___pthread_mutexattr_init,
+              pthread_mutexattr_init, GLIBC_2_0);
+compat_symbol(libpthread, ___pthread_mutexattr_init,
+              __pthread_mutexattr_init, GLIBC_2_0);
 #endif

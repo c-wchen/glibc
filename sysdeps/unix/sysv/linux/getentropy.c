@@ -24,42 +24,39 @@
 
 /* Write LENGTH bytes of randomness starting at BUFFER.  Return 0 on
    success and -1 on failure.  */
-int
-getentropy (void *buffer, size_t length)
+int getentropy(void *buffer, size_t length)
 {
-  /* The interface is documented to return EIO for buffer lengths
-     longer than 256 bytes.  */
-  if (length > 256)
-    {
-      __set_errno (EIO);
-      return -1;
+    /* The interface is documented to return EIO for buffer lengths
+       longer than 256 bytes.  */
+    if (length > 256) {
+        __set_errno(EIO);
+        return -1;
     }
 
-  /* Try to fill the buffer completely.  Even with the 256 byte limit
-     above, we might still receive an EINTR error (when blocking
-     during boot).  */
-  void *end = buffer + length;
-  while (buffer < end)
-    {
-      /* NB: No cancellation point.  */
-      ssize_t bytes = INLINE_SYSCALL_CALL (getrandom, buffer, end - buffer, 0);
-      if (bytes < 0)
-        {
-          if (errno == EINTR)
-            /* Try again if interrupted by a signal.  */
-            continue;
-          else
+    /* Try to fill the buffer completely.  Even with the 256 byte limit
+       above, we might still receive an EINTR error (when blocking
+       during boot).  */
+    void *end = buffer + length;
+    while (buffer < end) {
+        /* NB: No cancellation point.  */
+        ssize_t bytes = INLINE_SYSCALL_CALL(getrandom, buffer, end - buffer, 0);
+        if (bytes < 0) {
+            if (errno == EINTR)
+                /* Try again if interrupted by a signal.  */
+            {
+                continue;
+            } else {
+                return -1;
+            }
+        }
+        if (bytes == 0) {
+            /* No more bytes available.  This should not happen under
+               normal circumstances.  */
+            __set_errno(EIO);
             return -1;
         }
-      if (bytes == 0)
-        {
-          /* No more bytes available.  This should not happen under
-             normal circumstances.  */
-          __set_errno (EIO);
-          return -1;
-        }
-      /* Try again in case of a short read.  */
-      buffer += bytes;
+        /* Try again in case of a short read.  */
+        buffer += bytes;
     }
-  return 0;
+    return 0;
 }

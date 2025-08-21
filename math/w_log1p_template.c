@@ -20,18 +20,18 @@
 #include <math.h>
 
 FLOAT
-M_DECL_FUNC (__w_log1p) (FLOAT x)
+M_DECL_FUNC(__w_log1p)(FLOAT x)
 {
-  if (__glibc_unlikely (islessequal (x, M_LIT (-1.0))))
-    {
-      if (x == -1)
-	__set_errno (ERANGE);
-      else
-	__set_errno (EDOM);
+    if (__glibc_unlikely(islessequal(x, M_LIT(-1.0)))) {
+        if (x == -1) {
+            __set_errno(ERANGE);
+        } else {
+            __set_errno(EDOM);
+        }
     }
 
-  return M_SUF (__log1p) (x);
+    return M_SUF(__log1p)(x);
 }
-declare_mgen_alias (__w_log1p, log1p)
-strong_alias (M_SUF (__w_log1p), M_SUF (__w_logp1))
-declare_mgen_alias (__w_logp1, logp1)
+declare_mgen_alias(__w_log1p, log1p)
+strong_alias(M_SUF(__w_log1p), M_SUF(__w_logp1))
+declare_mgen_alias(__w_logp1, logp1)

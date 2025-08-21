@@ -43,7 +43,7 @@
 #include <wchar.h>
 #include <shlib-compat.h>
 
-#define LASTUNSIGNED	((u_int)0-1)
+#define LASTUNSIGNED    ((u_int)0-1)
 
 
 /*
@@ -53,86 +53,80 @@
  * elsize is the size (in bytes) of each element, and elproc is the
  * xdr procedure to call to handle each element of the array.
  */
-bool_t
-xdr_array (XDR *xdrs,
-	   /* array pointer */
-	   caddr_t *addrp,
-	   /* number of elements */
-	   u_int *sizep,
-	   /* max numberof elements */
-	   u_int maxsize,
-	   /* size in bytes of each element */
-	   u_int elsize,
-	   /* xdr routine to handle each element */
-	   xdrproc_t elproc)
+bool_t xdr_array(XDR *xdrs,
+                 /* array pointer */
+                 caddr_t *addrp,
+                 /* number of elements */
+                 u_int *sizep,
+                 /* max numberof elements */
+                 u_int maxsize,
+                 /* size in bytes of each element */
+                 u_int elsize,
+                 /* xdr routine to handle each element */
+                 xdrproc_t elproc)
 {
-  u_int i;
-  caddr_t target = *addrp;
-  u_int c;		/* the actual element count */
-  bool_t stat = TRUE;
+    u_int i;
+    caddr_t target = *addrp;
+    u_int c;      /* the actual element count */
+    bool_t stat = TRUE;
 
-  /* like strings, arrays are really counted arrays */
-  if (!xdr_u_int (xdrs, sizep))
-    {
-      return FALSE;
+    /* like strings, arrays are really counted arrays */
+    if (!xdr_u_int(xdrs, sizep)) {
+        return FALSE;
     }
-  c = *sizep;
-  /*
-   * XXX: Let the overflow possibly happen with XDR_FREE because mem_free()
-   * doesn't actually use its second argument anyway.
-   */
-  if ((c > maxsize || c > UINT_MAX / elsize) && (xdrs->x_op != XDR_FREE))
-    {
-      return FALSE;
+    c = *sizep;
+    /*
+     * XXX: Let the overflow possibly happen with XDR_FREE because mem_free()
+     * doesn't actually use its second argument anyway.
+     */
+    if ((c > maxsize || c > UINT_MAX / elsize) && (xdrs->x_op != XDR_FREE)) {
+        return FALSE;
     }
 
-  /*
-   * if we are deserializing, we may need to allocate an array.
-   * We also save time by checking for a null array if we are freeing.
-   */
-  if (target == NULL)
-    switch (xdrs->x_op)
-      {
-      case XDR_DECODE:
-	if (c == 0)
-	  return TRUE;
-	*addrp = target = calloc (c, elsize);
-	if (target == NULL)
-	  {
-	    (void) __fxprintf (NULL, "%s: %s", __func__, _("out of memory\n"));
-	    return FALSE;
-	  }
-	break;
+    /*
+     * if we are deserializing, we may need to allocate an array.
+     * We also save time by checking for a null array if we are freeing.
+     */
+    if (target == NULL)
+        switch (xdrs->x_op) {
+            case XDR_DECODE:
+                if (c == 0) {
+                    return TRUE;
+                }
+                *addrp = target = calloc(c, elsize);
+                if (target == NULL) {
+                    (void) __fxprintf(NULL, "%s: %s", __func__, _("out of memory\n"));
+                    return FALSE;
+                }
+                break;
 
-      case XDR_FREE:
-	return TRUE;
-      default:
-	break;
-      }
+            case XDR_FREE:
+                return TRUE;
+            default:
+                break;
+        }
 
-  /*
-   * now we xdr each element of array
-   */
-  for (i = 0; (i < c) && stat; i++)
-    {
-      stat = (*elproc) (xdrs, target, LASTUNSIGNED);
-      target += elsize;
+    /*
+     * now we xdr each element of array
+     */
+    for (i = 0; (i < c) && stat; i++) {
+        stat = (*elproc)(xdrs, target, LASTUNSIGNED);
+        target += elsize;
     }
 
-  /*
-   * the array may need freeing
-   */
-  if (xdrs->x_op == XDR_FREE)
-    {
-      mem_free (*addrp, c * elsize);
-      *addrp = NULL;
+    /*
+     * the array may need freeing
+     */
+    if (xdrs->x_op == XDR_FREE) {
+        mem_free(*addrp, c * elsize);
+        *addrp = NULL;
     }
-  return stat;
+    return stat;
 }
 #ifdef EXPORT_RPC_SYMBOLS
-libc_hidden_def (xdr_array)
+libc_hidden_def(xdr_array)
 #else
-libc_hidden_nolink_sunrpc (xdr_array, GLIBC_2_0)
+libc_hidden_nolink_sunrpc(xdr_array, GLIBC_2_0)
 #endif
 
 /*
@@ -146,21 +140,19 @@ libc_hidden_nolink_sunrpc (xdr_array, GLIBC_2_0)
  * > xdr_elem: routine to XDR each element
  */
 bool_t
-xdr_vector (XDR *xdrs, char *basep, u_int nelem, u_int elemsize,
-	    xdrproc_t xdr_elem)
+xdr_vector(XDR *xdrs, char *basep, u_int nelem, u_int elemsize,
+           xdrproc_t xdr_elem)
 {
-  u_int i;
-  char *elptr;
+    u_int i;
+    char *elptr;
 
-  elptr = basep;
-  for (i = 0; i < nelem; i++)
-    {
-      if (!(*xdr_elem) (xdrs, elptr, LASTUNSIGNED))
-	{
-	  return FALSE;
-	}
-      elptr += elemsize;
+    elptr = basep;
+    for (i = 0; i < nelem; i++) {
+        if (!(*xdr_elem)(xdrs, elptr, LASTUNSIGNED)) {
+            return FALSE;
+        }
+        elptr += elemsize;
     }
-  return TRUE;
+    return TRUE;
 }
-libc_hidden_nolink_sunrpc (xdr_vector, GLIBC_2_0)
+libc_hidden_nolink_sunrpc(xdr_vector, GLIBC_2_0)

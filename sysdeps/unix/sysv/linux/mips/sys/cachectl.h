@@ -28,13 +28,13 @@
 __BEGIN_DECLS
 
 #ifdef __USE_MISC
-extern int cachectl (void *__addr, const int __nbytes, const int __op) __THROW;
+extern int cachectl(void *__addr, const int __nbytes, const int __op) __THROW;
 #endif
-extern int __cachectl (void *__addr, const int __nbytes, const int __op) __THROW;
+extern int __cachectl(void *__addr, const int __nbytes, const int __op) __THROW;
 #ifdef __USE_MISC
-extern int cacheflush (void *__addr, const int __nbytes, const int __op) __THROW;
+extern int cacheflush(void *__addr, const int __nbytes, const int __op) __THROW;
 #endif
-extern int _flush_cache (char *__addr, const int __nbytes, const int __op) __THROW;
+extern int _flush_cache(char *__addr, const int __nbytes, const int __op) __THROW;
 
 __END_DECLS
 

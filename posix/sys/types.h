@@ -16,11 +16,11 @@
    <https://www.gnu.org/licenses/>.  */
 
 /*
- *	POSIX Standard: 2.6 Primitive System Data Types	<sys/types.h>
+ *  POSIX Standard: 2.6 Primitive System Data Types <sys/types.h>
  */
 
-#ifndef	_SYS_TYPES_H
-#define	_SYS_TYPES_H	1
+#ifndef _SYS_TYPES_H
+#define _SYS_TYPES_H    1
 
 #include <features.h>
 
@@ -28,7 +28,7 @@ __BEGIN_DECLS
 
 #include <bits/types.h>
 
-#ifdef	__USE_MISC
+#ifdef  __USE_MISC
 # ifndef __u_char_defined
 typedef __u_char u_char;
 typedef __u_short u_short;
@@ -109,7 +109,7 @@ typedef __ssize_t ssize_t;
 # define __ssize_t_defined
 #endif
 
-#ifdef	__USE_MISC
+#ifdef  __USE_MISC
 # ifndef __daddr_t_defined
 typedef __daddr_t daddr_t;
 typedef __caddr_t caddr_t;
@@ -140,7 +140,7 @@ typedef __suseconds_t suseconds_t;
 # endif
 #endif
 
-#define	__need_size_t
+#define __need_size_t
 #include <stddef.h>
 
 #ifdef __USE_MISC
@@ -161,17 +161,17 @@ typedef __uint32_t u_int32_t;
 typedef __uint64_t u_int64_t;
 
 #if __GNUC_PREREQ (2, 7)
-typedef int register_t __attribute__ ((__mode__ (__word__)));
+typedef int register_t __attribute__((__mode__(__word__)));
 #else
 typedef int register_t;
 #endif
 
 /* Some code from BIND tests this macro to see if the types above are
    defined.  */
-#define __BIT_TYPES_DEFINED__	1
+#define __BIT_TYPES_DEFINED__   1
 
 
-#ifdef	__USE_MISC
+#ifdef  __USE_MISC
 /* In BSD <sys/types.h> is expected to define BYTE_ORDER.  */
 # include <endian.h>
 
@@ -189,7 +189,7 @@ typedef __blksize_t blksize_t;
 /* Types from the Large File Support interface.  */
 #ifndef __USE_FILE_OFFSET64
 # ifndef __blkcnt_t_defined
-typedef __blkcnt_t blkcnt_t;	 /* Type to count number of disk blocks.  */
+typedef __blkcnt_t blkcnt_t;     /* Type to count number of disk blocks.  */
 #  define __blkcnt_t_defined
 # endif
 # ifndef __fsblkcnt_t_defined
@@ -202,7 +202,7 @@ typedef __fsfilcnt_t fsfilcnt_t; /* Type to count file system inodes.  */
 # endif
 #else
 # ifndef __blkcnt_t_defined
-typedef __blkcnt64_t blkcnt_t;	   /* Type to count number of disk blocks.  */
+typedef __blkcnt64_t blkcnt_t;     /* Type to count number of disk blocks.  */
 #  define __blkcnt_t_defined
 # endif
 # ifndef __fsblkcnt_t_defined

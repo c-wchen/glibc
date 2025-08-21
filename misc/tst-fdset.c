@@ -19,47 +19,42 @@
 #include <stdio.h>
 #include <sys/types.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int retval = 0;
-  int i;
-  fd_set set;
+    int retval = 0;
+    int i;
+    fd_set set;
 
-  FD_ZERO (&set);
-  for (i=0; i < FD_SETSIZE; ++i)
-    {
-      printf ("%d =>  check:", i);
-      if (FD_ISSET (i, &set) == 0)
-	fputs ("ok", stdout);
-      else
-	{
-	  fputs ("nok", stdout);
-	  retval = 1;
-	}
-      fputs (", set", stdout);
-      FD_SET (i, &set);
-      fputs (", check:", stdout);
-      if (FD_ISSET (i, &set))
-	fputs ("ok", stdout);
-      else
-	{
-	  fputs ("nok", stdout);
-	  retval = 1;
-	}
-      fputs (", clear", stdout);
-      FD_CLR (i, &set);
-      fputs (", check:", stdout);
-      if (FD_ISSET (i, &set) == 0)
-	puts ("ok");
-      else
-	{
-	  puts ("nok");
-	  retval = 1;
-	}
+    FD_ZERO(&set);
+    for (i = 0; i < FD_SETSIZE; ++i) {
+        printf("%d =>  check:", i);
+        if (FD_ISSET(i, &set) == 0) {
+            fputs("ok", stdout);
+        } else {
+            fputs("nok", stdout);
+            retval = 1;
+        }
+        fputs(", set", stdout);
+        FD_SET(i, &set);
+        fputs(", check:", stdout);
+        if (FD_ISSET(i, &set)) {
+            fputs("ok", stdout);
+        } else {
+            fputs("nok", stdout);
+            retval = 1;
+        }
+        fputs(", clear", stdout);
+        FD_CLR(i, &set);
+        fputs(", check:", stdout);
+        if (FD_ISSET(i, &set) == 0) {
+            puts("ok");
+        } else {
+            puts("nok");
+            retval = 1;
+        }
     }
 
-  return retval;
+    return retval;
 }
 
 #define TEST_FUNCTION do_test ()

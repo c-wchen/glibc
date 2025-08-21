@@ -34,78 +34,72 @@
 #define __TEST_AND_END_NON_STOP __TEST_AND_EXIT_NON_STOP
 #endif
 
-static __always_inline void
-libc_feholdexcept_setround_ppc (fenv_t *envp, int r)
+static __always_inline void libc_feholdexcept_setround_ppc(fenv_t *envp, int r)
 {
-  fenv_union_t old, new;
+    fenv_union_t old, new;
 
-  old.fenv = *envp = fegetenv_register ();
+    old.fenv = *envp = fegetenv_register();
 
-  __TEST_AND_BEGIN_NON_STOP (old.l, 0ULL);
+    __TEST_AND_BEGIN_NON_STOP(old.l, 0ULL);
 
-  /* Clear everything and set the rounding mode.  */
-  new.l = r;
-  fesetenv_register (new.fenv);
+    /* Clear everything and set the rounding mode.  */
+    new.l = r;
+    fesetenv_register(new.fenv);
 }
 
-static __always_inline unsigned long long
-__libc_femergeenv_ppc (const fenv_t *envp, unsigned long long old_mask,
-	unsigned long long new_mask)
+static __always_inline unsigned long long __libc_femergeenv_ppc(const fenv_t *envp, unsigned long long old_mask,
+        unsigned long long new_mask)
 {
-  fenv_union_t old, new;
+    fenv_union_t old, new;
 
-  new.fenv = *envp;
-  old.fenv = fegetenv_register ();
+    new.fenv = *envp;
+    old.fenv = fegetenv_register();
 
-  /* Merge bits while masking unwanted bits from new and old env.  */
-  new.l = (old.l & old_mask) | (new.l & new_mask);
+    /* Merge bits while masking unwanted bits from new and old env.  */
+    new.l = (old.l & old_mask) | (new.l & new_mask);
 
-  __TEST_AND_END_NON_STOP (old.l, new.l);
-  __TEST_AND_BEGIN_NON_STOP (old.l, new.l);
+    __TEST_AND_END_NON_STOP(old.l, new.l);
+    __TEST_AND_BEGIN_NON_STOP(old.l, new.l);
 
-  /* If requesting to keep status, replace control, and merge exceptions,
-     and exceptions haven't changed, we can just set new control instead
-     of the whole FPSCR.  */
-  if ((old_mask & (FPSCR_CONTROL_MASK|FPSCR_STATUS_MASK|FPSCR_EXCEPTIONS_MASK))
-      == (FPSCR_STATUS_MASK|FPSCR_EXCEPTIONS_MASK) &&
-      (new_mask & (FPSCR_CONTROL_MASK|FPSCR_STATUS_MASK|FPSCR_EXCEPTIONS_MASK))
-      == (FPSCR_CONTROL_MASK|FPSCR_EXCEPTIONS_MASK) &&
-      (old.l & FPSCR_EXCEPTIONS_MASK) == (new.l & FPSCR_EXCEPTIONS_MASK))
-  {
-    fesetenv_control (new.fenv);
-  }
-  else
-    /* Atomically enable and raise (if appropriate) exceptions set in `new'.  */
-    fesetenv_register (new.fenv);
+    /* If requesting to keep status, replace control, and merge exceptions,
+       and exceptions haven't changed, we can just set new control instead
+       of the whole FPSCR.  */
+    if ((old_mask & (FPSCR_CONTROL_MASK | FPSCR_STATUS_MASK | FPSCR_EXCEPTIONS_MASK))
+        == (FPSCR_STATUS_MASK | FPSCR_EXCEPTIONS_MASK) &&
+        (new_mask & (FPSCR_CONTROL_MASK | FPSCR_STATUS_MASK | FPSCR_EXCEPTIONS_MASK))
+        == (FPSCR_CONTROL_MASK | FPSCR_EXCEPTIONS_MASK) &&
+        (old.l & FPSCR_EXCEPTIONS_MASK) == (new.l & FPSCR_EXCEPTIONS_MASK)) {
+        fesetenv_control(new.fenv);
+    } else
+        /* Atomically enable and raise (if appropriate) exceptions set in `new'.  */
+    {
+        fesetenv_register(new.fenv);
+    }
 
-  return old.l;
+    return old.l;
 }
 
-static __always_inline void
-libc_fesetenv_ppc (const fenv_t *envp)
+static __always_inline void libc_fesetenv_ppc(const fenv_t *envp)
 {
-  /* Replace the entire environment.  */
-  __libc_femergeenv_ppc (envp, 0LL, -1LL);
+    /* Replace the entire environment.  */
+    __libc_femergeenv_ppc(envp, 0LL, -1LL);
 }
 
-static __always_inline void
-libc_feresetround_ppc (fenv_t *envp)
+static __always_inline void libc_feresetround_ppc(fenv_t *envp)
 {
-  fenv_union_t new = { .fenv = *envp };
-  fegetenv_and_set_rn (new.l & FPSCR_RN_MASK);
+    fenv_union_t new = { .fenv = *envp };
+    fegetenv_and_set_rn(new.l & FPSCR_RN_MASK);
 }
 
-static __always_inline int
-libc_feupdateenv_test_ppc (fenv_t *envp, int ex)
+static __always_inline int libc_feupdateenv_test_ppc(fenv_t *envp, int ex)
 {
-  return __libc_femergeenv_ppc (envp, ~FPSCR_CONTROL_MASK,
-				~FPSCR_STATUS_MASK) & ex;
+    return __libc_femergeenv_ppc(envp, ~FPSCR_CONTROL_MASK,
+                                 ~FPSCR_STATUS_MASK) & ex;
 }
 
-static __always_inline void
-libc_feupdateenv_ppc (fenv_t *e)
+static __always_inline void libc_feupdateenv_ppc(fenv_t *e)
 {
-  libc_feupdateenv_test_ppc (e, 0);
+    libc_feupdateenv_test_ppc(e, 0);
 }
 
 #define libc_feholdexceptf           libc_feholdexcept_ppc
@@ -131,53 +125,49 @@ libc_feupdateenv_ppc (fenv_t *e)
 /* We have support for rounding mode context.  */
 #define HAVE_RM_CTX 1
 
-static __always_inline void
-libc_feholdsetround_ppc_ctx (struct rm_ctx *ctx, int r)
+static __always_inline void libc_feholdsetround_ppc_ctx(struct rm_ctx *ctx, int r)
 {
-  fenv_union_t old;
+    fenv_union_t old;
 
-  ctx->env = old.fenv = fegetenv_and_set_rn (r);
-  ctx->updated_status = (r != (old.l & FPSCR_RN_MASK));
+    ctx->env = old.fenv = fegetenv_and_set_rn(r);
+    ctx->updated_status = (r != (old.l & FPSCR_RN_MASK));
 }
 
-static __always_inline void
-libc_feholdsetround_noex_ppc_ctx (struct rm_ctx *ctx, int r)
+static __always_inline void libc_feholdsetround_noex_ppc_ctx(struct rm_ctx *ctx, int r)
 {
-  fenv_union_t old, new;
+    fenv_union_t old, new;
 
-  old.fenv = fegetenv_register ();
+    old.fenv = fegetenv_register();
 
-  new.l = (old.l & ~(FPSCR_ENABLES_MASK|FPSCR_RN_MASK)) | r;
+    new.l = (old.l & ~(FPSCR_ENABLES_MASK | FPSCR_RN_MASK)) | r;
 
-  ctx->env = old.fenv;
-  if (__glibc_unlikely (new.l != old.l))
-    {
-      __TEST_AND_BEGIN_NON_STOP (old.l, 0ULL);
-      fesetenv_control (new.fenv);
-      ctx->updated_status = true;
+    ctx->env = old.fenv;
+    if (__glibc_unlikely(new.l != old.l)) {
+        __TEST_AND_BEGIN_NON_STOP(old.l, 0ULL);
+        fesetenv_control(new.fenv);
+        ctx->updated_status = true;
+    } else {
+        ctx->updated_status = false;
     }
-  else
-    ctx->updated_status = false;
 }
 
-static __always_inline void
-libc_fesetenv_ppc_ctx (struct rm_ctx *ctx)
+static __always_inline void libc_fesetenv_ppc_ctx(struct rm_ctx *ctx)
 {
-  libc_fesetenv_ppc (&ctx->env);
+    libc_fesetenv_ppc(&ctx->env);
 }
 
-static __always_inline void
-libc_feupdateenv_ppc_ctx (struct rm_ctx *ctx)
+static __always_inline void libc_feupdateenv_ppc_ctx(struct rm_ctx *ctx)
 {
-  if (__glibc_unlikely (ctx->updated_status))
-    libc_feresetround_ppc (&ctx->env);
+    if (__glibc_unlikely(ctx->updated_status)) {
+        libc_feresetround_ppc(&ctx->env);
+    }
 }
 
-static __always_inline void
-libc_feresetround_ppc_ctx (struct rm_ctx *ctx)
+static __always_inline void libc_feresetround_ppc_ctx(struct rm_ctx *ctx)
 {
-  if (__glibc_unlikely (ctx->updated_status))
-    libc_feresetround_ppc (&ctx->env);
+    if (__glibc_unlikely(ctx->updated_status)) {
+        libc_feresetround_ppc(&ctx->env);
+    }
 }
 
 #define libc_fesetenv_ctx                libc_fesetenv_ppc_ctx

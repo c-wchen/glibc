@@ -23,33 +23,32 @@
 # if SHLIB_COMPAT (librt, GLIBC_2_1, GLIBC_2_34)
 void
 attribute_compat_text_section
-__attribute_used__
-__librt_version_placeholder_1 (void)
+__attribute_used__ __librt_version_placeholder_1(void)
 {
 }
 
-compat_symbol (librt, __librt_version_placeholder_1,
-               __librt_version_placeholder, GLIBC_2_1);
+compat_symbol(librt, __librt_version_placeholder_1,
+              __librt_version_placeholder, GLIBC_2_1);
 # endif
 
 # if SHLIB_COMPAT (librt, GLIBC_2_2, GLIBC_2_34)
-compat_symbol (librt, __librt_version_placeholder_1,
-               __librt_version_placeholder, GLIBC_2_2);
+compat_symbol(librt, __librt_version_placeholder_1,
+              __librt_version_placeholder, GLIBC_2_2);
 # endif
 
 # if SHLIB_COMPAT (librt, GLIBC_2_3_4, GLIBC_2_34)
-compat_symbol (librt, __librt_version_placeholder_1,
-               __librt_version_placeholder, GLIBC_2_3_4);
+compat_symbol(librt, __librt_version_placeholder_1,
+              __librt_version_placeholder, GLIBC_2_3_4);
 # endif
 
 # if SHLIB_COMPAT (librt, GLIBC_2_4, GLIBC_2_34)
-compat_symbol (librt, __librt_version_placeholder_1,
-               __librt_version_placeholder, GLIBC_2_4);
+compat_symbol(librt, __librt_version_placeholder_1,
+              __librt_version_placeholder, GLIBC_2_4);
 # endif
 
 # if SHLIB_COMPAT (librt, GLIBC_2_7, GLIBC_2_34)
-compat_symbol (librt, __librt_version_placeholder_1,
-               __librt_version_placeholder, GLIBC_2_7);
+compat_symbol(librt, __librt_version_placeholder_1,
+              __librt_version_placeholder, GLIBC_2_7);
 # endif
 
 #endif

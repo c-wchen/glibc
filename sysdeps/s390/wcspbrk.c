@@ -24,16 +24,16 @@
 # undef wcspbrk
 # include <ifunc-resolve.h>
 # if HAVE_WCSPBRK_C
-extern __typeof (__redirect_wcspbrk) WCSPBRK_C attribute_hidden;
+extern __typeof(__redirect_wcspbrk) WCSPBRK_C attribute_hidden;
 # endif
 
 # if HAVE_WCSPBRK_Z13
-extern __typeof (__redirect_wcspbrk) WCSPBRK_Z13 attribute_hidden;
+extern __typeof(__redirect_wcspbrk) WCSPBRK_Z13 attribute_hidden;
 # endif
 
-s390_libc_ifunc_expr (__redirect_wcspbrk, wcspbrk,
-		      (HAVE_WCSPBRK_Z13 && (hwcap & HWCAP_S390_VX))
-		      ? WCSPBRK_Z13
-		      : WCSPBRK_DEFAULT
-		      )
+s390_libc_ifunc_expr(__redirect_wcspbrk, wcspbrk,
+                     (HAVE_WCSPBRK_Z13 &&(hwcap &HWCAP_S390_VX))
+                     ? WCSPBRK_Z13
+                     : WCSPBRK_DEFAULT
+                    )
 #endif

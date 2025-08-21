@@ -41,7 +41,7 @@ int
 #ifndef atexit
 attribute_hidden
 #endif
-atexit (void (*func) (void))
+atexit(void (*func)(void))
 {
-  return __cxa_atexit ((void (*) (void *)) func, NULL, __dso_handle);
+    return __cxa_atexit((void (*)(void *)) func, NULL, __dso_handle);
 }

@@ -22,37 +22,35 @@
 #include <hurd/port.h>
 #include <sysdep-cancel.h>
 
-pid_t
-__wait4 (pid_t pid, int *stat_loc, int options, struct rusage *usage)
+pid_t __wait4(pid_t pid, int *stat_loc, int options, struct rusage *usage)
 {
-  pid_t dead;
-  error_t err;
-  struct rusage ignored;
-  int sigcode;
-  int dummy;
-  int cancel_oldtype;
+    pid_t dead;
+    error_t err;
+    struct rusage ignored;
+    int sigcode;
+    int dummy;
+    int cancel_oldtype;
 
-  cancel_oldtype = LIBC_CANCEL_ASYNC();
-  err = __USEPORT_CANCEL (PROC, __proc_wait (port, pid, options,
-					     stat_loc ?: &dummy, &sigcode,
-					     usage ?: &ignored, &dead));
-  LIBC_CANCEL_RESET (cancel_oldtype);
-  switch (err)
-    {
-    case 0:			/* Got a child.  */
-      return dead;
-    case EAGAIN:
-      /* The RPC returns this error when the WNOHANG flag is set and no
-	 selected children are dead (but some are living).  In that
-	 situation, our return value is zero.  (The RPC can't return zero
-	 for DEAD without also returning some garbage for the other out
-	 parameters, so an error return is much more natural here.  Hence
-	 the difference between the RPC and the POSIX.1 interface.  */
-      return (pid_t) 0;
-    default:
-      return (pid_t) __hurd_fail (err);
+    cancel_oldtype = LIBC_CANCEL_ASYNC();
+    err = __USEPORT_CANCEL(PROC, __proc_wait(port, pid, options,
+                           stat_loc ? : &dummy, &sigcode,
+                           usage ? : &ignored, &dead));
+    LIBC_CANCEL_RESET(cancel_oldtype);
+    switch (err) {
+        case 0:         /* Got a child.  */
+            return dead;
+        case EAGAIN:
+            /* The RPC returns this error when the WNOHANG flag is set and no
+            selected children are dead (but some are living).  In that
+             situation, our return value is zero.  (The RPC can't return zero
+             for DEAD without also returning some garbage for the other out
+             parameters, so an error return is much more natural here.  Hence
+             the difference between the RPC and the POSIX.1 interface.  */
+            return (pid_t) 0;
+        default:
+            return (pid_t) __hurd_fail(err);
     }
 }
 
-libc_hidden_def (__wait4)
-weak_alias (__wait4, wait4)
+libc_hidden_def(__wait4)
+weak_alias(__wait4, wait4)

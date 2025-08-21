@@ -22,9 +22,8 @@
 
 /* Write formatted output to stdout according to the
    format string FORMAT, using the argument list in ARG.  */
-int
-__vwprintf (const wchar_t *format, __gnuc_va_list arg)
+int __vwprintf(const wchar_t *format, __gnuc_va_list arg)
 {
-  return __vfwprintf_internal (stdout, format, arg, 0);
+    return __vfwprintf_internal(stdout, format, arg, 0);
 }
-ldbl_strong_alias (__vwprintf, vwprintf)
+ldbl_strong_alias(__vwprintf, vwprintf)

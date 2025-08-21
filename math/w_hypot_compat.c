@@ -21,22 +21,22 @@
 
 
 #if LIBM_SVID_COMPAT && SHLIB_COMPAT (libm, GLIBC_2_0, GLIBC_2_35)
-double
-__hypot_compat (double x, double y)
+double __hypot_compat(double x, double y)
 {
-	double z = __ieee754_hypot(x,y);
-	if(__builtin_expect(!isfinite(z), 0)
-	   && isfinite(x) && isfinite(y) && _LIB_VERSION != _IEEE_)
-	    return __kernel_standard(x, y, 4); /* hypot overflow */
+    double z = __ieee754_hypot(x, y);
+    if (__builtin_expect(!isfinite(z), 0)
+        && isfinite(x) && isfinite(y) && _LIB_VERSION != _IEEE_) {
+        return __kernel_standard(x, y, 4);    /* hypot overflow */
+    }
 
-	return z;
+    return z;
 }
-compat_symbol (libm, __hypot_compat, hypot, GLIBC_2_0);
+compat_symbol(libm, __hypot_compat, hypot, GLIBC_2_0);
 # ifdef NO_LONG_DOUBLE
-weak_alias (__hypot_compat, hypotl)
+weak_alias(__hypot_compat, hypotl)
 # endif
 # ifdef LONG_DOUBLE_COMPAT
-LONG_DOUBLE_COMPAT_CHOOSE_libm_hypotl (
-  compat_symbol (libm, __hypot_compat, hypotl, FIRST_VERSION_libm_hypotl), );
+LONG_DOUBLE_COMPAT_CHOOSE_libm_hypotl(
+    compat_symbol(libm, __hypot_compat, hypotl, FIRST_VERSION_libm_hypotl),);
 # endif
 #endif

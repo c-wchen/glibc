@@ -25,70 +25,65 @@
 #include <pt-internal.h>
 
 /* Prepare a wakeup message.  */
-static error_t
-create_wakeupmsg (struct __pthread *thread)
+static error_t create_wakeupmsg(struct __pthread *thread)
 {
-  kern_return_t err;
+    kern_return_t err;
 
-  /* Build wakeup message.  */
-  thread->wakeupmsg.msgh_bits = MACH_MSGH_BITS (MACH_MSG_TYPE_COPY_SEND, 0);
-  thread->wakeupmsg.msgh_size = 0;
+    /* Build wakeup message.  */
+    thread->wakeupmsg.msgh_bits = MACH_MSGH_BITS(MACH_MSG_TYPE_COPY_SEND, 0);
+    thread->wakeupmsg.msgh_size = 0;
 
-  err = __mach_port_allocate (__mach_task_self (), MACH_PORT_RIGHT_RECEIVE,
-			      &thread->wakeupmsg.msgh_remote_port);
-  if (err)
-    return EAGAIN;
-
-  thread->wakeupmsg.msgh_local_port = MACH_PORT_NULL;
-  thread->wakeupmsg.msgh_seqno = 0;
-  thread->wakeupmsg.msgh_id = 0;
-
-  err = __mach_port_insert_right (__mach_task_self (),
-				  thread->wakeupmsg.msgh_remote_port,
-				  thread->wakeupmsg.msgh_remote_port,
-				  MACH_MSG_TYPE_MAKE_SEND);
-  if (err)
-    {
-      __mach_port_destroy (__mach_task_self (),
-			   thread->wakeupmsg.msgh_remote_port);
-      return EAGAIN;
+    err = __mach_port_allocate(__mach_task_self(), MACH_PORT_RIGHT_RECEIVE,
+                               &thread->wakeupmsg.msgh_remote_port);
+    if (err) {
+        return EAGAIN;
     }
 
-  /* No need to queue more than one wakeup message on this port.  */
-  __mach_port_set_qlimit (__mach_task_self (),
-			  thread->wakeupmsg.msgh_remote_port, 1);
+    thread->wakeupmsg.msgh_local_port = MACH_PORT_NULL;
+    thread->wakeupmsg.msgh_seqno = 0;
+    thread->wakeupmsg.msgh_id = 0;
 
-  return 0;
+    err = __mach_port_insert_right(__mach_task_self(),
+                                   thread->wakeupmsg.msgh_remote_port,
+                                   thread->wakeupmsg.msgh_remote_port,
+                                   MACH_MSG_TYPE_MAKE_SEND);
+    if (err) {
+        __mach_port_destroy(__mach_task_self(),
+                            thread->wakeupmsg.msgh_remote_port);
+        return EAGAIN;
+    }
+
+    /* No need to queue more than one wakeup message on this port.  */
+    __mach_port_set_qlimit(__mach_task_self(),
+                           thread->wakeupmsg.msgh_remote_port, 1);
+
+    return 0;
 }
 
 /* Allocate any resources for THREAD.  The new kernel thread should not
    be eligible to be scheduled.  */
-int
-__pthread_thread_alloc (struct __pthread *thread)
+int __pthread_thread_alloc(struct __pthread *thread)
 {
-  static int do_create;
-  error_t err;
+    static int do_create;
+    error_t err;
 
-  err = create_wakeupmsg (thread);
-  if (err)
-    return err;
-
-  if (!do_create)
-    {
-      assert (__pthread_total == 0);
-      thread->kernel_thread = __mach_thread_self ();
-      do_create = 1;
-    }
-  else
-    {
-      err = __thread_create (__mach_task_self (), &thread->kernel_thread);
-      if (err)
-	{
-	  __mach_port_destroy (__mach_task_self (),
-			       thread->wakeupmsg.msgh_remote_port);
-	  return EAGAIN;
-	}
+    err = create_wakeupmsg(thread);
+    if (err) {
+        return err;
     }
 
-  return 0;
+    if (!do_create) {
+        assert(__pthread_total == 0);
+        thread->kernel_thread = __mach_thread_self();
+        do_create = 1;
+    } else {
+        err = __thread_create(__mach_task_self(), &thread->kernel_thread);
+        if (err) {
+            __mach_port_destroy(__mach_task_self(),
+                                thread->wakeupmsg.msgh_remote_port);
+            return EAGAIN;
+        }
+    }
+
+    return 0;
 }

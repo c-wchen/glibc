@@ -19,7 +19,7 @@
 #ifndef _DL_IFUNC_GENERIC_H
 #define _DL_IFUNC_GENERIC_H
 
-asm ("memset = __memset_power8");
-asm ("__mempcpy = __mempcpy_power7");
+asm("memset = __memset_power8");
+asm("__mempcpy = __mempcpy_power7");
 
 #endif

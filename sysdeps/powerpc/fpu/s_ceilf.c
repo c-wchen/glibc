@@ -21,15 +21,14 @@
 #include <libm-alias-float.h>
 #include <round_to_integer.h>
 
-float
-__ceilf (float x)
+float __ceilf(float x)
 {
 #ifdef _ARCH_PWR5X
-  return __builtin_ceilf (x);
+    return __builtin_ceilf(x);
 #else
-  return round_to_integer_float (CEIL, x);
+    return round_to_integer_float(CEIL, x);
 #endif
 }
 #ifndef __ceilf
-libm_alias_float (__ceil, ceil)
+libm_alias_float(__ceil, ceil)
 #endif

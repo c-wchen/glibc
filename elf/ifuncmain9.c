@@ -35,72 +35,65 @@ static volatile int resolver_called;
    function.  */
 enum { random_constant = 0x3a88d66d };
 
-static int
-implementation (void)
+static int implementation(void)
 {
-  ++implementation_called;
-  return random_constant;
+    ++implementation_called;
+    return random_constant;
 }
 
 DIAG_PUSH_NEEDS_COMMENT_CLANG;
-DIAG_IGNORE_NEEDS_COMMENT_CLANG (13, "-Wunused-function");
-static __typeof__ (implementation) *
+DIAG_IGNORE_NEEDS_COMMENT_CLANG(13, "-Wunused-function");
+static __typeof__(implementation) *
 inhibit_stack_protector
-resolver (void)
+resolver(void)
 {
-  ++resolver_called;
-  return implementation;
+    ++resolver_called;
+    return implementation;
 }
 
-static int magic (void) __attribute__ ((ifunc ("resolver")));
+static int magic(void) __attribute__((ifunc("resolver")));
 DIAG_POP_NEEDS_COMMENT_CLANG;
 
-int
-main (void)
+int main(void)
 {
-  bool errors = false;
+    bool errors = false;
 
-  if (implementation_called != 0)
-    {
-      printf ("error: initial value of implementation_called is not zero:"
-              " %d\n", implementation_called);
-      errors = true;
+    if (implementation_called != 0) {
+        printf("error: initial value of implementation_called is not zero:"
+               " %d\n", implementation_called);
+        errors = true;
     }
 
-  /* This can be zero if the reference is bound lazily.  */
-  printf ("info: initial value of resolver_called: %d\n", resolver_called);
+    /* This can be zero if the reference is bound lazily.  */
+    printf("info: initial value of resolver_called: %d\n", resolver_called);
 
-  int magic_value = magic ();
-  if (magic_value != random_constant)
-    {
-      printf ("error: invalid magic value: 0x%x\n", magic_value);
-      errors = true;
+    int magic_value = magic();
+    if (magic_value != random_constant) {
+        printf("error: invalid magic value: 0x%x\n", magic_value);
+        errors = true;
     }
 
-  printf ("info: resolver_called value: %d\n", resolver_called);
-  if (resolver_called == 0)
-    {
-      /* In theory, the resolver could be called multiple times if
-         several relocations are needed.  */
-      puts ("error: invalid resolver_called value (must not be zero)");
-      errors = true;
+    printf("info: resolver_called value: %d\n", resolver_called);
+    if (resolver_called == 0) {
+        /* In theory, the resolver could be called multiple times if
+           several relocations are needed.  */
+        puts("error: invalid resolver_called value (must not be zero)");
+        errors = true;
     }
 
-  printf ("info: implementation_called value: %d\n", implementation_called);
-  if (implementation_called != 1)
-    {
-      puts ("error: invalid implementation_called value (must be 1)");
-      errors = true;
+    printf("info: implementation_called value: %d\n", implementation_called);
+    if (implementation_called != 1) {
+        puts("error: invalid implementation_called value (must be 1)");
+        errors = true;
     }
 
-  return errors;
+    return errors;
 }
 #else
 #include <support/test-driver.h>
 
-int
-main (void)
+int main(void)
 {
-  return EXIT_UNSUPPORTED;
+    return EXIT_UNSUPPORTED;
 }
 #endif

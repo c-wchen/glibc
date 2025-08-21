@@ -34,46 +34,46 @@ static char rcsid[] = "$NetBSD: $";
 #include <libm-alias-ldouble.h>
 
 static const _Float128
-  one = 1,
-  ln2 = L(6.931471805599453094172321214581765681e-1),
-  huge = L(1.0e+4900);
+one = 1,
+ln2 = L(6.931471805599453094172321214581765681e-1),
+huge = L(1.0e+4900);
 
-_Float128
-__asinhl (_Float128 x)
+_Float128 __asinhl(_Float128 x)
 {
-  _Float128 t, w;
-  int32_t ix, sign;
-  ieee854_long_double_shape_type u;
+    _Float128 t, w;
+    int32_t ix, sign;
+    ieee854_long_double_shape_type u;
 
-  u.value = x;
-  sign = u.parts32.w0;
-  ix = sign & 0x7fffffff;
-  if (ix == 0x7fff0000)
-    return x + x;		/* x is inf or NaN */
-  if (ix < 0x3fc70000)
-    {				/* |x| < 2^ -56 */
-      math_check_force_underflow (x);
-      if (huge + x > one)
-	return x;		/* return x inexact except 0 */
+    u.value = x;
+    sign = u.parts32.w0;
+    ix = sign & 0x7fffffff;
+    if (ix == 0x7fff0000) {
+        return x + x;    /* x is inf or NaN */
     }
-  u.parts32.w0 = ix;
-  if (ix > 0x40350000)
-    {				/* |x| > 2 ^ 54 */
-      w = __ieee754_logl (u.value) + ln2;
+    if (ix < 0x3fc70000) {
+        /* |x| < 2^ -56 */
+        math_check_force_underflow(x);
+        if (huge + x > one) {
+            return x;    /* return x inexact except 0 */
+        }
     }
-  else if (ix >0x40000000)
-    {				/* 2^ 54 > |x| > 2.0 */
-      t = u.value;
-      w = __ieee754_logl (2.0 * t + one / (sqrtl (x * x + one) + t));
+    u.parts32.w0 = ix;
+    if (ix > 0x40350000) {
+        /* |x| > 2 ^ 54 */
+        w = __ieee754_logl(u.value) + ln2;
+    } else if (ix > 0x40000000) {
+        /* 2^ 54 > |x| > 2.0 */
+        t = u.value;
+        w = __ieee754_logl(2.0 * t + one / (sqrtl(x * x + one) + t));
+    } else {
+        /* 2.0 > |x| > 2 ^ -56 */
+        t = x * x;
+        w = __log1pl(u.value + t / (one + sqrtl(one + t)));
     }
-  else
-    {				/* 2.0 > |x| > 2 ^ -56 */
-      t = x * x;
-      w = __log1pl (u.value + t / (one + sqrtl (one + t)));
+    if (sign & 0x80000000) {
+        return -w;
+    } else {
+        return w;
     }
-  if (sign & 0x80000000)
-    return -w;
-  else
-    return w;
 }
-libm_alias_ldouble (__asinh, asinh)
+libm_alias_ldouble(__asinh, asinh)

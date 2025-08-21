@@ -22,20 +22,19 @@
 
 char test_string[] = "test";
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  struct rlimit limit;
-  TEST_VERIFY_EXIT (getrlimit (RLIMIT_AS, &limit) == 0);
-  limit.rlim_cur = 200 * 1024 * 1024;
-  TEST_VERIFY_EXIT (setrlimit (RLIMIT_AS, &limit) == 0);
-  FILE *fp = fopen ("/dev/null", "w");
-  TEST_VERIFY_EXIT (fp != NULL);
-  TEST_COMPARE (fprintf (fp, "%1000000000d", 1), 1000000000);
-  TEST_COMPARE (fprintf (fp, "%.1000000000s", test_string), 4);
-  TEST_COMPARE (fprintf (fp, "%1000000000d %1000000000d", 1, 2), 2000000001);
-  TEST_COMPARE (fprintf (fp, "%2$.*1$s", 0x7fffffff, test_string), 4);
-  return 0;
+    struct rlimit limit;
+    TEST_VERIFY_EXIT(getrlimit(RLIMIT_AS, &limit) == 0);
+    limit.rlim_cur = 200 * 1024 * 1024;
+    TEST_VERIFY_EXIT(setrlimit(RLIMIT_AS, &limit) == 0);
+    FILE *fp = fopen("/dev/null", "w");
+    TEST_VERIFY_EXIT(fp != NULL);
+    TEST_COMPARE(fprintf(fp, "%1000000000d", 1), 1000000000);
+    TEST_COMPARE(fprintf(fp, "%.1000000000s", test_string), 4);
+    TEST_COMPARE(fprintf(fp, "%1000000000d %1000000000d", 1, 2), 2000000001);
+    TEST_COMPARE(fprintf(fp, "%2$.*1$s", 0x7fffffff, test_string), 4);
+    return 0;
 }
 
 #include <support/test-driver.c>

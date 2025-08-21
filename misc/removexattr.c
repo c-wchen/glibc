@@ -18,11 +18,10 @@
 #include <errno.h>
 #include <sys/xattr.h>
 
-int
-removexattr (const char *__path, const char *__name)
+int removexattr(const char *__path, const char *__name)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (removexattr)
+stub_warning(removexattr)

@@ -22,41 +22,39 @@
 #include <string.h>
 #include <stdlib.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char *ldconfig_path = xasprintf ("%s/elf/ldconfig", support_objdir_root);
+    char *ldconfig_path = xasprintf("%s/elf/ldconfig", support_objdir_root);
 
-  {
-    char *argv[] = { (char *) "ld.so", ldconfig_path, (char *) "--help", NULL };
-    struct support_capture_subprocess cap
-      = support_capture_subprogram (support_objdir_elf_ldso, argv, NULL);
-    support_capture_subprocess_check (&cap, "no --argv0", 0, sc_allow_stdout);
-    puts ("info: output without --argv0:");
-    puts (cap.out.buffer);
-    TEST_VERIFY (strstr (cap.out.buffer, "Usage: ldconfig [OPTION...]\n")
-                 == cap.out.buffer);
-    support_capture_subprocess_free (&cap);
-  }
+    {
+        char *argv[] = { (char *) "ld.so", ldconfig_path, (char *) "--help", NULL };
+        struct support_capture_subprocess cap
+            = support_capture_subprogram(support_objdir_elf_ldso, argv, NULL);
+        support_capture_subprocess_check(&cap, "no --argv0", 0, sc_allow_stdout);
+        puts("info: output without --argv0:");
+        puts(cap.out.buffer);
+        TEST_VERIFY(strstr(cap.out.buffer, "Usage: ldconfig [OPTION...]\n")
+                    == cap.out.buffer);
+        support_capture_subprocess_free(&cap);
+    }
 
-  {
-    char *argv[] =
-      {
-        (char *) "ld.so", (char *) "--argv0", (char *) "ldconfig-argv0",
-        ldconfig_path, (char *) "--help", NULL
-      };
-    struct support_capture_subprocess cap
-      = support_capture_subprogram (support_objdir_elf_ldso, argv, NULL);
-    support_capture_subprocess_check (&cap, "with --argv0", 0, sc_allow_stdout);
-    puts ("info: output with --argv0:");
-    puts (cap.out.buffer);
-    TEST_VERIFY (strstr (cap.out.buffer, "Usage: ldconfig-argv0 [OPTION...]\n")
-                 == cap.out.buffer);
-    support_capture_subprocess_free (&cap);
-  }
+    {
+        char *argv[] = {
+            (char *) "ld.so", (char *) "--argv0", (char *) "ldconfig-argv0",
+            ldconfig_path, (char *) "--help", NULL
+        };
+        struct support_capture_subprocess cap
+            = support_capture_subprogram(support_objdir_elf_ldso, argv, NULL);
+        support_capture_subprocess_check(&cap, "with --argv0", 0, sc_allow_stdout);
+        puts("info: output with --argv0:");
+        puts(cap.out.buffer);
+        TEST_VERIFY(strstr(cap.out.buffer, "Usage: ldconfig-argv0 [OPTION...]\n")
+                    == cap.out.buffer);
+        support_capture_subprocess_free(&cap);
+    }
 
-  free (ldconfig_path);
-  return 0;
+    free(ldconfig_path);
+    return 0;
 }
 
 #include <support/test-driver.c>

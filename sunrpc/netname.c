@@ -24,185 +24,184 @@
 
 #include "nsswitch.h"
 
-#define	OPSYS_LEN 4
-#define	MAXIPRINT (11)		/* max length of printed integer */
+#define OPSYS_LEN 4
+#define MAXIPRINT (11)      /* max length of printed integer */
 static const char OPSYS[] = "unix";
 
-int
-user2netname (char netname[MAXNETNAMELEN + 1], const uid_t uid,
-	      const char *domain)
+int user2netname(char netname[MAXNETNAMELEN + 1], const uid_t uid,
+                 const char *domain)
 {
-  char dfltdom[MAXNETNAMELEN + 1];
-  size_t i;
+    char dfltdom[MAXNETNAMELEN + 1];
+    size_t i;
 
-  if (domain == NULL)
-    {
-      if (getdomainname (dfltdom, sizeof (dfltdom)) < 0)
-	return 0;
-    }
-  else
-    {
-      strncpy (dfltdom, domain, MAXNETNAMELEN);
-      dfltdom[MAXNETNAMELEN] = '\0';
+    if (domain == NULL) {
+        if (getdomainname(dfltdom, sizeof(dfltdom)) < 0) {
+            return 0;
+        }
+    } else {
+        strncpy(dfltdom, domain, MAXNETNAMELEN);
+        dfltdom[MAXNETNAMELEN] = '\0';
     }
 
-  if ((strlen (dfltdom) + OPSYS_LEN + 3 + MAXIPRINT) > (size_t) MAXNETNAMELEN)
-    return 0;
+    if ((strlen(dfltdom) + OPSYS_LEN + 3 + MAXIPRINT) > (size_t) MAXNETNAMELEN) {
+        return 0;
+    }
 
-  /* GCC with -Os or -O1 warns that sprint might overflow while handling
-     dfltdom, however the above test does check if an overflow would
-     happen.  */
+    /* GCC with -Os or -O1 warns that sprint might overflow while handling
+       dfltdom, however the above test does check if an overflow would
+       happen.  */
 #if __GNUC_PREREQ (8, 0)
-  DIAG_PUSH_NEEDS_COMMENT;
-  DIAG_IGNORE_NEEDS_COMMENT (8, "-Wformat-overflow");
+    DIAG_PUSH_NEEDS_COMMENT;
+    DIAG_IGNORE_NEEDS_COMMENT(8, "-Wformat-overflow");
 #endif
-  sprintf (netname, "%s.%d@%s", OPSYS, uid, dfltdom);
+    sprintf(netname, "%s.%d@%s", OPSYS, uid, dfltdom);
 #if __GNUC_PREREQ (8, 0)
-  DIAG_POP_NEEDS_COMMENT;
+    DIAG_POP_NEEDS_COMMENT;
 #endif
-  i = strlen (netname);
-  if (netname[i - 1] == '.')
-    netname[i - 1] = '\0';
-  return 1;
+    i = strlen(netname);
+    if (netname[i - 1] == '.') {
+        netname[i - 1] = '\0';
+    }
+    return 1;
 }
-libc_hidden_nolink_sunrpc (user2netname, GLIBC_2_1)
+libc_hidden_nolink_sunrpc(user2netname, GLIBC_2_1)
 
 int
-host2netname (char netname[MAXNETNAMELEN + 1], const char *host,
-	      const char *domain)
+host2netname(char netname[MAXNETNAMELEN + 1], const char *host,
+             const char *domain)
 {
-  char *p;
-  char hostname[MAXHOSTNAMELEN + 1];
-  char domainname[MAXHOSTNAMELEN + 1];
-  char *dot_in_host;
-  size_t i;
+    char *p;
+    char hostname[MAXHOSTNAMELEN + 1];
+    char domainname[MAXHOSTNAMELEN + 1];
+    char *dot_in_host;
+    size_t i;
 
-  netname[0] = '\0';		/* make null first (no need for memset) */
+    netname[0] = '\0';        /* make null first (no need for memset) */
 
-  if (host == NULL)
-    __gethostname (hostname, MAXHOSTNAMELEN);
-  else
-    {
-      strncpy (hostname, host, MAXHOSTNAMELEN);
-      hostname[MAXHOSTNAMELEN] = '\0';
+    if (host == NULL) {
+        __gethostname(hostname, MAXHOSTNAMELEN);
+    } else {
+        strncpy(hostname, host, MAXHOSTNAMELEN);
+        hostname[MAXHOSTNAMELEN] = '\0';
     }
 
-  dot_in_host = strchr (hostname, '.');
-  if (domain == NULL)
-    {
-      p = dot_in_host;
-      if (p)
-	{
-	  ++p;
-	  strncpy (domainname, p, MAXHOSTNAMELEN);
-	  domainname[MAXHOSTNAMELEN] = '\0';
-	}
-      else
-	{
-	  domainname[0] = 0;
-	  if (getdomainname (domainname, MAXHOSTNAMELEN))
-	    return 0;
-	}
-    }
-  else
-    {
-      strncpy (domainname, domain, MAXHOSTNAMELEN);
-      domainname[MAXHOSTNAMELEN] = '\0';
+    dot_in_host = strchr(hostname, '.');
+    if (domain == NULL) {
+        p = dot_in_host;
+        if (p) {
+            ++p;
+            strncpy(domainname, p, MAXHOSTNAMELEN);
+            domainname[MAXHOSTNAMELEN] = '\0';
+        } else {
+            domainname[0] = 0;
+            if (getdomainname(domainname, MAXHOSTNAMELEN)) {
+                return 0;
+            }
+        }
+    } else {
+        strncpy(domainname, domain, MAXHOSTNAMELEN);
+        domainname[MAXHOSTNAMELEN] = '\0';
     }
 
-  i = strlen (domainname);
-  if (i == 0)
-    /* No domainname */
-    return 0;
-  if (domainname[i - 1] == '.')
-    domainname[i - 1] = 0;
+    i = strlen(domainname);
+    if (i == 0)
+        /* No domainname */
+    {
+        return 0;
+    }
+    if (domainname[i - 1] == '.') {
+        domainname[i - 1] = 0;
+    }
 
-  if (dot_in_host)		/* strip off rest of name */
-    *dot_in_host = '\0';
+    if (dot_in_host) {    /* strip off rest of name */
+        *dot_in_host = '\0';
+    }
 
-  if ((strlen (domainname) + strlen (hostname) + OPSYS_LEN + 3)
-      > MAXNETNAMELEN)
-    return 0;
+    if ((strlen(domainname) + strlen(hostname) + OPSYS_LEN + 3)
+        > MAXNETNAMELEN) {
+        return 0;
+    }
 
-  sprintf (netname, "%s.%s@%s", OPSYS, hostname, domainname);
-  return 1;
+    sprintf(netname, "%s.%s@%s", OPSYS, hostname, domainname);
+    return 1;
 }
 #ifdef EXPORT_RPC_SYMBOLS
-libc_hidden_def (host2netname)
+libc_hidden_def(host2netname)
 #else
-libc_hidden_nolink_sunrpc (host2netname, GLIBC_2_1)
+libc_hidden_nolink_sunrpc(host2netname, GLIBC_2_1)
 #endif
 
 int
-getnetname (char name[MAXNETNAMELEN + 1])
+getnetname(char name[MAXNETNAMELEN + 1])
 {
-  uid_t uid;
-  int dummy;
+    uid_t uid;
+    int dummy;
 
-  uid = __geteuid ();
-  if (uid == 0)
-    dummy = host2netname (name, NULL, NULL);
-  else
-    dummy = user2netname (name, uid, NULL);
-  return (dummy);
+    uid = __geteuid();
+    if (uid == 0) {
+        dummy = host2netname(name, NULL, NULL);
+    } else {
+        dummy = user2netname(name, uid, NULL);
+    }
+    return (dummy);
 }
-libc_hidden_nolink_sunrpc (getnetname, GLIBC_2_1)
+libc_hidden_nolink_sunrpc(getnetname, GLIBC_2_1)
 
 /* Type of the lookup function for netname2user.  */
-typedef int (*netname2user_function) (const char netname[MAXNETNAMELEN + 1],
-				      uid_t *, gid_t *, int *, gid_t *);
+typedef int (*netname2user_function)(const char netname[MAXNETNAMELEN + 1],
+                                     uid_t *, gid_t *, int *, gid_t *);
 
-int
-netname2user (const char *netname, uid_t * uidp, gid_t * gidp,
-	      int *gidlenp, gid_t * gidlist)
+int netname2user(const char *netname, uid_t *uidp, gid_t *gidp,
+                 int *gidlenp, gid_t *gidlist)
 {
-  nss_action_list nip;
-  union
-  {
-    netname2user_function f;
-    void *ptr;
-  } fct;
-  enum nss_status status = NSS_STATUS_UNAVAIL;
-  int no_more;
+    nss_action_list nip;
+    union {
+        netname2user_function f;
+        void *ptr;
+    } fct;
+    enum nss_status status = NSS_STATUS_UNAVAIL;
+    int no_more;
 
-  no_more = __nss_publickey_lookup2 (&nip, "netname2user", NULL, &fct.ptr);
+    no_more = __nss_publickey_lookup2(&nip, "netname2user", NULL, &fct.ptr);
 
-  while (!no_more)
-    {
-      status = (*fct.f) (netname, uidp, gidp, gidlenp, gidlist);
+    while (!no_more) {
+        status = (*fct.f)(netname, uidp, gidp, gidlenp, gidlist);
 
-      no_more = __nss_next2 (&nip, "netname2user", NULL, &fct.ptr, status, 0);
+        no_more = __nss_next2(&nip, "netname2user", NULL, &fct.ptr, status, 0);
     }
 
-  return status == NSS_STATUS_SUCCESS;
+    return status == NSS_STATUS_SUCCESS;
 }
 #ifdef EXPORT_RPC_SYMBOLS
-libc_hidden_def (netname2user)
+libc_hidden_def(netname2user)
 #else
-libc_hidden_nolink_sunrpc (netname2user, GLIBC_2_1)
+libc_hidden_nolink_sunrpc(netname2user, GLIBC_2_1)
 #endif
 
 int
-netname2host (const char *netname, char *hostname, const int hostlen)
+netname2host(const char *netname, char *hostname, const int hostlen)
 {
-  char *p1, *p2;
+    char *p1, *p2;
 
-  p1 = strchr (netname, '.');
-  if (p1 == NULL)
-    return 0;
-  p1++;
+    p1 = strchr(netname, '.');
+    if (p1 == NULL) {
+        return 0;
+    }
+    p1++;
 
-  p2 = strchr (p1, '@');
-  if (p2 == NULL)
-    return 0;
-  *p2 = '\0';
+    p2 = strchr(p1, '@');
+    if (p2 == NULL) {
+        return 0;
+    }
+    *p2 = '\0';
 
-  if (hostlen > MAXNETNAMELEN)
-    return 0;
+    if (hostlen > MAXNETNAMELEN) {
+        return 0;
+    }
 
-  strncpy (hostname, p1, hostlen);
-  hostname[hostlen] = '\0';
+    strncpy(hostname, p1, hostlen);
+    hostname[hostlen] = '\0';
 
-  return 1;
+    return 1;
 }
-libc_hidden_nolink_sunrpc (netname2host, GLIBC_2_1)
+libc_hidden_nolink_sunrpc(netname2host, GLIBC_2_1)

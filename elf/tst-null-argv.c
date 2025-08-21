@@ -17,19 +17,18 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-extern void foo (void);
+extern void foo(void);
 
-int
-do_test (int argc, char **argv)
+int do_test(int argc, char **argv)
 {
-  argv[0] = argv[1];
-  argc--;
+    argv[0] = argv[1];
+    argc--;
 
-  /* This should result in a symbol lookup, causing a volley of debug output
-     when LD_DEBUG=symbols.  */
-  foo ();
+    /* This should result in a symbol lookup, causing a volley of debug output
+       when LD_DEBUG=symbols.  */
+    foo();
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION_ARGV do_test

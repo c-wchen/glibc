@@ -24,16 +24,15 @@
 
 /* wrapper ilogb */
 int
-M_DECL_FUNC (__ilogb) (FLOAT x)
+M_DECL_FUNC(__ilogb)(FLOAT x)
 {
-  int r = M_SUF (__ieee754_ilogb) (x);
-  if (__builtin_expect (r == FP_ILOGB0, 0)
-      || __builtin_expect (r == FP_ILOGBNAN, 0)
-      || __builtin_expect (r == INT_MAX, 0))
-    {
-      __set_errno (EDOM);
-      __feraiseexcept (FE_INVALID);
+    int r = M_SUF(__ieee754_ilogb)(x);
+    if (__builtin_expect(r == FP_ILOGB0, 0)
+        || __builtin_expect(r == FP_ILOGBNAN, 0)
+        || __builtin_expect(r == INT_MAX, 0)) {
+        __set_errno(EDOM);
+        __feraiseexcept(FE_INVALID);
     }
-  return r;
+    return r;
 }
-declare_mgen_alias (__ilogb, ilogb)
+declare_mgen_alias(__ilogb, ilogb)

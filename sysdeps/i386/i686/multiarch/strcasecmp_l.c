@@ -28,8 +28,8 @@
 # define SYMBOL_NAME strcasecmp_l
 # include "ifunc-ssse3-sse4_2.h"
 
-libc_ifunc_redirected (__redirect_strcasecmp_l, __strcasecmp_l,
-		       IFUNC_SELECTOR ());
+libc_ifunc_redirected(__redirect_strcasecmp_l, __strcasecmp_l,
+                      IFUNC_SELECTOR());
 
-weak_alias (__strcasecmp_l, strcasecmp_l)
+weak_alias(__strcasecmp_l, strcasecmp_l)
 #endif

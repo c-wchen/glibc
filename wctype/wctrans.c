@@ -20,28 +20,28 @@
 #include <wctype.h>
 #include "../locale/localeinfo.h"
 
-wctrans_t
-__wctrans (const char *property)
+wctrans_t __wctrans(const char *property)
 {
-  const char *names;
-  size_t cnt;
-  size_t i;
+    const char *names;
+    size_t cnt;
+    size_t i;
 
-  names = _NL_CURRENT (LC_CTYPE, _NL_CTYPE_MAP_NAMES);
-  cnt = 0;
-  while (names[0] != '\0')
-    {
-      if (strcmp (property, names) == 0)
-	break;
+    names = _NL_CURRENT(LC_CTYPE, _NL_CTYPE_MAP_NAMES);
+    cnt = 0;
+    while (names[0] != '\0') {
+        if (strcmp(property, names) == 0) {
+            break;
+        }
 
-      names = strchr (names, '\0') + 1;
-      ++cnt;
+        names = strchr(names, '\0') + 1;
+        ++cnt;
     }
 
-  if (names[0] == '\0')
-    return NULL;
+    if (names[0] == '\0') {
+        return NULL;
+    }
 
-  i = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_MAP_OFFSET) + cnt;
-  return (wctrans_t) _NL_CURRENT_DATA (LC_CTYPE)->values[i].string;
+    i = _NL_CURRENT_WORD(LC_CTYPE, _NL_CTYPE_MAP_OFFSET) + cnt;
+    return (wctrans_t) _NL_CURRENT_DATA(LC_CTYPE)->values[i].string;
 }
-weak_alias (__wctrans, wctrans)
+weak_alias(__wctrans, wctrans)

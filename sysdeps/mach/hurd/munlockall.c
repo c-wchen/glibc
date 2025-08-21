@@ -24,17 +24,17 @@
 
 /* Undo the effects of all prior mlock calls in this process.  */
 
-int
-munlockall (void)
+int munlockall(void)
 {
-  mach_port_t host;
-  error_t err;
+    mach_port_t host;
+    error_t err;
 
-  err = __get_privileged_ports (&host, NULL);
-  if (err)
-    return __hurd_fail (err);
+    err = __get_privileged_ports(&host, NULL);
+    if (err) {
+        return __hurd_fail(err);
+    }
 
-  err = __vm_wire_all (host, __mach_task_self (), VM_WIRE_NONE);
-  __mach_port_deallocate (__mach_task_self (), host);
-  return err ? __hurd_fail (err) : 0;
+    err = __vm_wire_all(host, __mach_task_self(), VM_WIRE_NONE);
+    __mach_port_deallocate(__mach_task_self(), host);
+    return err ? __hurd_fail(err) : 0;
 }

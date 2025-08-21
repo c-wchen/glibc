@@ -28,29 +28,27 @@
 
 #define STR(__s) #__s
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  struct timespec tv_before_ntp, tv_after_ntp;
-  struct ntptimeval ntv;
+    struct timespec tv_before_ntp, tv_after_ntp;
+    struct ntptimeval ntv;
 
-  /* To prevent seconds rollover (which is very unlikely though),
-     loop until we do match seconds values before and after
-     call to ntp_gettime.  */
-  do
-    {
-      tv_before_ntp = xclock_now (CLOCK_REALTIME);
+    /* To prevent seconds rollover (which is very unlikely though),
+       loop until we do match seconds values before and after
+       call to ntp_gettime.  */
+    do {
+        tv_before_ntp = xclock_now(CLOCK_REALTIME);
 
-      int ret = NTP_GETTIME_SYSCALL (&ntv);
-      if (ret == -1)
-        FAIL_EXIT1 (STR(NTP_GETTIME_SYSCALL)" failed: %m\n");
+        int ret = NTP_GETTIME_SYSCALL(&ntv);
+        if (ret == -1) {
+            FAIL_EXIT1(STR(NTP_GETTIME_SYSCALL)" failed: %m\n");
+        }
 
-      tv_after_ntp = xclock_now (CLOCK_REALTIME);
-    }
-  while (tv_after_ntp.tv_sec != tv_before_ntp.tv_sec);
+        tv_after_ntp = xclock_now(CLOCK_REALTIME);
+    } while (tv_after_ntp.tv_sec != tv_before_ntp.tv_sec);
 
-  TEST_COMPARE (tv_after_ntp.tv_sec, ntv.time.tv_sec);
-  return 0;
+    TEST_COMPARE(tv_after_ntp.tv_sec, ntv.time.tv_sec);
+    return 0;
 }
 
 #include <support/test-driver.c>

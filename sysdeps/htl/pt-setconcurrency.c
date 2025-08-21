@@ -21,13 +21,13 @@
 
 int __pthread_concurrency;
 
-int
-pthread_setconcurrency (int new_level)
+int pthread_setconcurrency(int new_level)
 {
-  if (new_level < 0)
-    return EINVAL;
+    if (new_level < 0) {
+        return EINVAL;
+    }
 
-  __pthread_concurrency = new_level;
+    __pthread_concurrency = new_level;
 
-  return 0;
+    return 0;
 }

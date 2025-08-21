@@ -26,19 +26,17 @@ _LIB_VERSION_TYPE _LIB_VERSION = _SVID_;
 
 static int fail = 0;
 
-int
-matherr (struct exception *s)
+int matherr(struct exception *s)
 {
-  printf ("matherr is working, but should not be\n");
-  fail = 1;
-  return 1;
+    printf("matherr is working, but should not be\n");
+    fail = 1;
+    return 1;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  acos (2.0);
-  return fail;
+    acos(2.0);
+    return fail;
 }
 
 #include <support/test-driver.c>

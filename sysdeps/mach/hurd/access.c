@@ -20,10 +20,9 @@
 #include <fcntl.h>
 
 /* Test for access to FILE by our real user and group IDs.  */
-int
-__access (const char *file, int type)
+int __access(const char *file, int type)
 {
-  return __faccessat (AT_FDCWD, file, type, 0);
+    return __faccessat(AT_FDCWD, file, type, 0);
 }
-libc_hidden_def (__access)
-weak_alias (__access, access)
+libc_hidden_def(__access)
+weak_alias(__access, access)

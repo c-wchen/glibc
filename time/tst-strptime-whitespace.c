@@ -22,21 +22,19 @@
 #include <stdio.h>
 #include <string.h>
 
-int
-do_test (void)
+int do_test(void)
 {
-  struct tm t;
-  const char *in = "Tuesday \t 22 \t July\t1942";
+    struct tm t;
+    const char *in = "Tuesday \t 22 \t July\t1942";
 
-  char *r = strptime (in, "%A%d %b%Y", &t);
+    char *r = strptime(in, "%A%d %b%Y", &t);
 
-  if (r == NULL || r != in + strlen (in))
-    {
-      printf ("strptime failed\n");
-      return 1;
+    if (r == NULL || r != in + strlen(in)) {
+        printf("strptime failed\n");
+        return 1;
     }
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

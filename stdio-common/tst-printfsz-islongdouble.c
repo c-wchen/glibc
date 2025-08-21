@@ -22,30 +22,29 @@
 
 #include <support/check.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  double d = 2000;
-  double *dptr = &d;
-  long double ld = 4000;
-  long double *ldptr = & ld;
-  struct printf_info info;
+    double d = 2000;
+    double *dptr = &d;
+    long double ld = 4000;
+    long double *ldptr = & ld;
+    struct printf_info info;
 
-  memset (&info, 0, sizeof (info));
-  info.spec = L'f';
+    memset(&info, 0, sizeof(info));
+    info.spec = L'f';
 
-  /* Print a value with double type.  */
-  printf_size (stdout, &info, (void *) &dptr);
+    /* Print a value with double type.  */
+    printf_size(stdout, &info, (void *) &dptr);
 
-  /* Printf a value with long double type.  */
-  info.is_long_double = 1;
-  printf_size (stdout, &info, (void *) &ldptr);
+    /* Printf a value with long double type.  */
+    info.is_long_double = 1;
+    printf_size(stdout, &info, (void *) &ldptr);
 
-  /* Setting both 'is_long_double' and 'is_binary128' to one is out of
-     the scope of this test, because such configuration is only valid
-     when _Float128 and long double are ABI-distinct (which is not
-     always true in this arch-independent test).  */
-  return 0;
+    /* Setting both 'is_long_double' and 'is_binary128' to one is out of
+       the scope of this test, because such configuration is only valid
+       when _Float128 and long double are ABI-distinct (which is not
+       always true in this arch-independent test).  */
+    return 0;
 }
 
 #include <support/test-driver.c>

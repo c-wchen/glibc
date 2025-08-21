@@ -18,30 +18,28 @@
 #include "pthreadP.h"
 #include <shlib-compat.h>
 
-int
-__pthread_attr_getstacksize (const pthread_attr_t *attr, size_t *stacksize)
+int __pthread_attr_getstacksize(const pthread_attr_t *attr, size_t *stacksize)
 {
-  struct pthread_attr *iattr;
+    struct pthread_attr *iattr;
 
-  iattr = (struct pthread_attr *) attr;
+    iattr = (struct pthread_attr *) attr;
 
-  size_t size = iattr->stacksize;
+    size_t size = iattr->stacksize;
 
-  /* If the user has not set a stack size we return what the system
-     will use as the default.  */
-  if (size == 0)
-    {
-      lll_lock (__default_pthread_attr_lock, LLL_PRIVATE);
-      size = __default_pthread_attr.internal.stacksize;
-      lll_unlock (__default_pthread_attr_lock, LLL_PRIVATE);
+    /* If the user has not set a stack size we return what the system
+       will use as the default.  */
+    if (size == 0) {
+        lll_lock(__default_pthread_attr_lock, LLL_PRIVATE);
+        size = __default_pthread_attr.internal.stacksize;
+        lll_unlock(__default_pthread_attr_lock, LLL_PRIVATE);
     }
-  *stacksize = size;
+    *stacksize = size;
 
-  return 0;
+    return 0;
 }
-versioned_symbol (libc, __pthread_attr_getstacksize,
-                  pthread_attr_getstacksize, GLIBC_2_34);
+versioned_symbol(libc, __pthread_attr_getstacksize,
+                 pthread_attr_getstacksize, GLIBC_2_34);
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1, GLIBC_2_34)
-compat_symbol (libpthread, __pthread_attr_getstacksize,
-               pthread_attr_getstacksize, GLIBC_2_1);
+compat_symbol(libpthread, __pthread_attr_getstacksize,
+              pthread_attr_getstacksize, GLIBC_2_1);
 #endif

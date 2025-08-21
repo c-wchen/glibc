@@ -20,34 +20,31 @@
 #define _X86_64_FEATURE_CONTROL_H
 
 /* For each CET feature, IBT and SHSTK, valid control values.  */
-enum dl_x86_cet_control
-{
-  /* Enable CET features based on ELF property note.  */
-  cet_elf_property = 0,
-  /* Always enable CET features.  */
-  cet_always_on,
-  /* Always disable CET features.  */
-  cet_always_off,
-  /* Enable CET features permissively.  */
-  cet_permissive
+enum dl_x86_cet_control {
+    /* Enable CET features based on ELF property note.  */
+    cet_elf_property = 0,
+    /* Always enable CET features.  */
+    cet_always_on,
+    /* Always disable CET features.  */
+    cet_always_off,
+    /* Enable CET features permissively.  */
+    cet_permissive
 };
 
 /* PLT rewrite control.  */
-enum dl_plt_rewrite_control
-{
-  /* No PLT rewrite.  */
-  plt_rewrite_none,
-  /* Rewrite PLT with JMP at run-time.  */
-  plt_rewrite_jmp,
-  /* Rewrite PLT with JMP and JMPABS at run-time.  */
-  plt_rewrite_jmpabs
+enum dl_plt_rewrite_control {
+    /* No PLT rewrite.  */
+    plt_rewrite_none,
+    /* Rewrite PLT with JMP at run-time.  */
+    plt_rewrite_jmp,
+    /* Rewrite PLT with JMP and JMPABS at run-time.  */
+    plt_rewrite_jmpabs
 };
 
-struct dl_x86_feature_control
-{
-  enum dl_x86_cet_control ibt : 2;
-  enum dl_x86_cet_control shstk : 2;
-  enum dl_plt_rewrite_control plt_rewrite : 2;
+struct dl_x86_feature_control {
+    enum dl_x86_cet_control ibt : 2;
+    enum dl_x86_cet_control shstk : 2;
+    enum dl_plt_rewrite_control plt_rewrite : 2;
 };
 
 #endif /* feature-control.h */

@@ -20,22 +20,22 @@
 #include "soft-supp.h"
 #include <signal.h>
 
-int
-__feraiseexcept (int x)
+int __feraiseexcept(int x)
 {
-  __sim_exceptions_thread |= x;
-  SIM_SET_GLOBAL (__sim_exceptions_global, __sim_exceptions_thread);
-  if (x & ~__sim_disabled_exceptions_thread)
-    raise (SIGFPE);
-  return 0;
+    __sim_exceptions_thread |= x;
+    SIM_SET_GLOBAL(__sim_exceptions_global, __sim_exceptions_thread);
+    if (x & ~__sim_disabled_exceptions_thread) {
+        raise(SIGFPE);
+    }
+    return 0;
 }
 
 #include <shlib-compat.h>
 #if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
-strong_alias (__feraiseexcept, __old_feraiseexcept)
-compat_symbol (libm, __old_feraiseexcept, feraiseexcept, GLIBC_2_1);
+strong_alias(__feraiseexcept, __old_feraiseexcept)
+compat_symbol(libm, __old_feraiseexcept, feraiseexcept, GLIBC_2_1);
 #endif
 
-libm_hidden_def (__feraiseexcept)
-libm_hidden_ver (__feraiseexcept, feraiseexcept)
-versioned_symbol (libm, __feraiseexcept, feraiseexcept, GLIBC_2_2);
+libm_hidden_def(__feraiseexcept)
+libm_hidden_ver(__feraiseexcept, feraiseexcept)
+versioned_symbol(libm, __feraiseexcept, feraiseexcept, GLIBC_2_2);

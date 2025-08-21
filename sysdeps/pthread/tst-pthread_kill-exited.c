@@ -28,36 +28,34 @@
 #include <support/support.h>
 #include <support/xthread.h>
 
-static void *
-noop_thread (void *closure)
+static void *noop_thread(void *closure)
 {
-  return NULL;
+    return NULL;
 }
 
 #if TEST_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_34) && PTHREAD_IN_LIBC
-extern __typeof (pthread_kill) compat_pthread_kill;
-compat_symbol_reference (libpthread, compat_pthread_kill, pthread_kill,
-                         GLIBC_2_0);
+extern __typeof(pthread_kill) compat_pthread_kill;
+compat_symbol_reference(libpthread, compat_pthread_kill, pthread_kill,
+                        GLIBC_2_0);
 #endif
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  pthread_t thr = xpthread_create (NULL, noop_thread, NULL);
+    pthread_t thr = xpthread_create(NULL, noop_thread, NULL);
 
-  support_wait_for_thread_exit ();
+    support_wait_for_thread_exit();
 
-  /* NB: Always uses the default symbol due to separate compilation.  */
-  xpthread_kill (thr, SIGUSR1);
+    /* NB: Always uses the default symbol due to separate compilation.  */
+    xpthread_kill(thr, SIGUSR1);
 
 #if TEST_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_34) && PTHREAD_IN_LIBC
-  /* Old binaries need the non-conforming ESRCH error code.  */
-  TEST_COMPARE (compat_pthread_kill (thr, SIGUSR1), ESRCH);
+    /* Old binaries need the non-conforming ESRCH error code.  */
+    TEST_COMPARE(compat_pthread_kill(thr, SIGUSR1), ESRCH);
 #endif
 
-  xpthread_join (thr);
+    xpthread_join(thr);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

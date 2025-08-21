@@ -19,14 +19,14 @@
 #include <fenv_libc.h>
 
 int
-(__fegetround) (void)
+(__fegetround)(void)
 {
-  fenv_union_t fe;
+    fenv_union_t fe;
 
-  fe.fenv = fegetenv_control ();
+    fe.fenv = fegetenv_control();
 
-  return fe.l & 0x3;
+    return fe.l & 0x3;
 }
-libm_hidden_def (__fegetround)
-weak_alias (__fegetround, fegetround)
-libm_hidden_weak (fegetround)
+libm_hidden_def(__fegetround)
+weak_alias(__fegetround, fegetround)
+libm_hidden_weak(fegetround)

@@ -21,7 +21,7 @@
 /* Get the conversion table.  */
 #define TABLES <dec-mcs.h>
 
-#define CHARSET_NAME	"DEC-MCS//"
-#define HAS_HOLES	1	/* Not all 256 character are defined.  */
+#define CHARSET_NAME    "DEC-MCS//"
+#define HAS_HOLES   1   /* Not all 256 character are defined.  */
 
 #include <8bit-gap.c>

@@ -19,9 +19,8 @@
 #include "bench-timing.h"
 #include <stdio.h>
 
-int
-main (int argc, char **argv)
+int main(int argc, char **argv)
 {
-  puts (TIMING_TYPE);
-  return 0;
+    puts(TIMING_TYPE);
+    return 0;
 }

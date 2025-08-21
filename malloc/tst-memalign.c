@@ -27,99 +27,106 @@
 
 static int errors = 0;
 
-static void
-merror (const char *msg)
+static void merror(const char *msg)
 {
-  ++errors;
-  printf ("Error: %s\n", msg);
+    ++errors;
+    printf("Error: %s\n", msg);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  void *p;
-  unsigned long pagesize = getpagesize ();
-  unsigned long ptrval;
-  int save;
+    void *p;
+    unsigned long pagesize = getpagesize();
+    unsigned long ptrval;
+    int save;
 
-  errno = 0;
+    errno = 0;
 
-  DIAG_PUSH_NEEDS_COMMENT;
+    DIAG_PUSH_NEEDS_COMMENT;
 #if __GNUC_PREREQ (7, 0)
-  /* GCC 7 warns about too-large allocations; here we want to test
-     that they fail.  */
-  DIAG_IGNORE_NEEDS_COMMENT (7, "-Walloc-size-larger-than=");
+    /* GCC 7 warns about too-large allocations; here we want to test
+       that they fail.  */
+    DIAG_IGNORE_NEEDS_COMMENT(7, "-Walloc-size-larger-than=");
 #endif
-  /* An attempt to allocate a huge value should return NULL and set
-     errno to ENOMEM.  */
-  p = memalign (sizeof (void *), -1);
+    /* An attempt to allocate a huge value should return NULL and set
+       errno to ENOMEM.  */
+    p = memalign(sizeof(void *), -1);
 #if __GNUC_PREREQ (7, 0)
-  DIAG_POP_NEEDS_COMMENT;
+    DIAG_POP_NEEDS_COMMENT;
 #endif
 
-  save = errno;
+    save = errno;
 
-  if (p != NULL)
-    merror ("memalign (sizeof (void *), -1) succeeded.");
+    if (p != NULL) {
+        merror("memalign (sizeof (void *), -1) succeeded.");
+    }
 
-  if (p == NULL && save != ENOMEM)
-    merror ("memalign (sizeof (void *), -1) errno is not set correctly");
+    if (p == NULL && save != ENOMEM) {
+        merror("memalign (sizeof (void *), -1) errno is not set correctly");
+    }
 
-  free (p);
+    free(p);
 
-  errno = 0;
+    errno = 0;
 
-  /* Test to expose integer overflow in malloc internals from BZ #15857.  */
-  p = memalign (pagesize, -pagesize);
+    /* Test to expose integer overflow in malloc internals from BZ #15857.  */
+    p = memalign(pagesize, -pagesize);
 
-  save = errno;
+    save = errno;
 
-  if (p != NULL)
-    merror ("memalign (pagesize, -pagesize) succeeded.");
+    if (p != NULL) {
+        merror("memalign (pagesize, -pagesize) succeeded.");
+    }
 
-  if (p == NULL && save != ENOMEM)
-    merror ("memalign (pagesize, -pagesize) errno is not set correctly");
+    if (p == NULL && save != ENOMEM) {
+        merror("memalign (pagesize, -pagesize) errno is not set correctly");
+    }
 
-  free (p);
+    free(p);
 
-  errno = 0;
+    errno = 0;
 
-  /* Test to expose integer overflow in malloc internals from BZ #16038.  */
-  p = memalign (-1, pagesize);
+    /* Test to expose integer overflow in malloc internals from BZ #16038.  */
+    p = memalign(-1, pagesize);
 
-  save = errno;
+    save = errno;
 
-  if (p != NULL)
-    merror ("memalign (-1, pagesize) succeeded.");
+    if (p != NULL) {
+        merror("memalign (-1, pagesize) succeeded.");
+    }
 
-  if (p == NULL && save != EINVAL)
-    merror ("memalign (-1, pagesize) errno is not set correctly");
+    if (p == NULL && save != EINVAL) {
+        merror("memalign (-1, pagesize) errno is not set correctly");
+    }
 
-  free (p);
+    free(p);
 
-  /* A zero-sized allocation should succeed with glibc, returning a
-     non-NULL value.  */
-  p = memalign (sizeof (void *), 0);
+    /* A zero-sized allocation should succeed with glibc, returning a
+       non-NULL value.  */
+    p = memalign(sizeof(void *), 0);
 
-  if (p == NULL)
-    merror ("memalign (sizeof (void *), 0) failed.");
+    if (p == NULL) {
+        merror("memalign (sizeof (void *), 0) failed.");
+    }
 
-  free (p);
+    free(p);
 
-  /* Check the alignment of the returned pointer is correct.  */
-  p = memalign (0x100, 10);
+    /* Check the alignment of the returned pointer is correct.  */
+    p = memalign(0x100, 10);
 
-  if (p == NULL)
-    merror ("memalign (0x100, 10) failed.");
+    if (p == NULL) {
+        merror("memalign (0x100, 10) failed.");
+    }
 
-  ptrval = (unsigned long) p;
+    ptrval = (unsigned long) p;
 
-  if ((ptrval & 0xff) != 0)
-    merror ("pointer is not aligned to 0x100");
+    if ((ptrval & 0xff) != 0) {
+        merror("pointer is not aligned to 0x100");
+    }
 
-  free (p);
+    free(p);
 
-  return errors != 0;
+    return errors != 0;
 }
 
 #define TEST_FUNCTION do_test ()

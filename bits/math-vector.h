@@ -18,7 +18,7 @@
 
 #ifndef _MATH_H
 # error "Never include <bits/math-vector.h> directly;\
- include <math.h> instead."
+include <math.h> instead."
 #endif
 
 /* Get default empty definitions required for __MATHCALL_VEC unfolding.

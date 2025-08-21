@@ -25,139 +25,120 @@
 
 static bool errors;
 
-static void
-check (struct spwd p, const char *expected)
+static void check(struct spwd p, const char *expected)
 {
-  char *buf;
-  size_t buf_size;
-  FILE *f = open_memstream (&buf, &buf_size);
+    char *buf;
+    size_t buf_size;
+    FILE *f = open_memstream(&buf, &buf_size);
 
-  if (f == NULL)
-    {
-      printf ("open_memstream: %m\n");
-      errors = true;
-      return;
+    if (f == NULL) {
+        printf("open_memstream: %m\n");
+        errors = true;
+        return;
     }
 
-  int ret = putspent (&p, f);
+    int ret = putspent(&p, f);
 
-  if (expected == NULL)
-    {
-      if (ret == -1)
-	{
-	  if (errno != EINVAL)
-	    {
-	      printf ("putspent: unexpected error code: %m\n");
-	      errors = true;
-	    }
-	}
-      else
-	{
-	  printf ("putspent: unexpected success (\"%s\")\n", p.sp_namp);
-	  errors = true;
-	}
-    }
-  else
-    {
-      /* Expect success.  */
-      size_t expected_length = strlen (expected);
-      if (ret == 0)
-	{
-	  long written = ftell (f);
+    if (expected == NULL) {
+        if (ret == -1) {
+            if (errno != EINVAL) {
+                printf("putspent: unexpected error code: %m\n");
+                errors = true;
+            }
+        } else {
+            printf("putspent: unexpected success (\"%s\")\n", p.sp_namp);
+            errors = true;
+        }
+    } else {
+        /* Expect success.  */
+        size_t expected_length = strlen(expected);
+        if (ret == 0) {
+            long written = ftell(f);
 
-	  if (written <= 0 || fflush (f) < 0)
-	    {
-	      printf ("stream error: %m\n");
-	      errors = true;
-	    }
-	  else if (buf[written - 1] != '\n')
-	    {
-	      printf ("FAILED: \"%s\" without newline\n", expected);
-	      errors = true;
-	    }
-	  else if (strncmp (buf, expected, written - 1) != 0
-		   || written - 1 != expected_length)
-	    {
-	      printf ("FAILED: \"%s\" (%ld), expected \"%s\" (%zu)\n",
-		      buf, written - 1, expected, expected_length);
-	      errors = true;
-	    }
-	}
-      else
-	{
-	  printf ("FAILED: putspent (expected \"%s\"): %m\n", expected);
-	  errors = true;
-	}
+            if (written <= 0 || fflush(f) < 0) {
+                printf("stream error: %m\n");
+                errors = true;
+            } else if (buf[written - 1] != '\n') {
+                printf("FAILED: \"%s\" without newline\n", expected);
+                errors = true;
+            } else if (strncmp(buf, expected, written - 1) != 0
+                       || written - 1 != expected_length) {
+                printf("FAILED: \"%s\" (%ld), expected \"%s\" (%zu)\n",
+                       buf, written - 1, expected, expected_length);
+                errors = true;
+            }
+        } else {
+            printf("FAILED: putspent (expected \"%s\"): %m\n", expected);
+            errors = true;
+        }
     }
 
-  fclose (f);
-  free (buf);
+    fclose(f);
+    free(buf);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  check ((struct spwd) {
-      .sp_namp = (char *) "root",
+    check((struct spwd) {
+        .sp_namp = (char *) "root",
     },
     "root::0:0:0:0:0:0:0");
-  check ((struct spwd) {
-      .sp_namp = (char *) "root",
-      .sp_pwdp = (char *) "password",
+    check((struct spwd) {
+        .sp_namp = (char *) "root",
+        .sp_pwdp = (char *) "password",
     },
     "root:password:0:0:0:0:0:0:0");
-  check ((struct spwd) {
-      .sp_namp = (char *) "root",
-      .sp_pwdp = (char *) "password",
-      .sp_lstchg = -1,
-      .sp_min = -1,
-      .sp_max = -1,
-      .sp_warn = -1,
-      .sp_inact = -1,
-      .sp_expire = -1,
-      .sp_flag = -1
+    check((struct spwd) {
+        .sp_namp = (char *) "root",
+        .sp_pwdp = (char *) "password",
+        .sp_lstchg = -1,
+        .sp_min = -1,
+        .sp_max = -1,
+        .sp_warn = -1,
+        .sp_inact = -1,
+        .sp_expire = -1,
+        .sp_flag = -1
     },
     "root:password:::::::");
-  check ((struct spwd) {
-      .sp_namp = (char *) "root",
-      .sp_pwdp = (char *) "password",
-      .sp_lstchg = 1,
-      .sp_min = 2,
-      .sp_max = 3,
-      .sp_warn = 4,
-      .sp_inact = 5,
-      .sp_expire = 6,
-      .sp_flag = 7
+    check((struct spwd) {
+        .sp_namp = (char *) "root",
+        .sp_pwdp = (char *) "password",
+        .sp_lstchg = 1,
+        .sp_min = 2,
+        .sp_max = 3,
+        .sp_warn = 4,
+        .sp_inact = 5,
+        .sp_expire = 6,
+        .sp_flag = 7
     },
     "root:password:1:2:3:4:5:6:7");
 
-  /* Bad values.  */
-  {
-    static const char *const bad_strings[] = {
-      ":",
-      "\n",
-      ":bad",
-      "\nbad",
-      "b:ad",
-      "b\nad",
-      "bad:",
-      "bad\n",
-      "b:a\nd",
-      NULL
-    };
-    for (const char *const *bad = bad_strings; *bad != NULL; ++bad)
-      {
-	check ((struct spwd) {
-	    .sp_namp = (char *) *bad,
-	  }, NULL);
-	check ((struct spwd) {
-	    .sp_namp = (char *) "root",
-	    .sp_pwdp = (char *) *bad,
-	  }, NULL);
-      }
-  }
+    /* Bad values.  */
+    {
+        static const char *const bad_strings[] = {
+            ":",
+            "\n",
+            ":bad",
+            "\nbad",
+            "b:ad",
+            "b\nad",
+            "bad:",
+            "bad\n",
+            "b:a\nd",
+            NULL
+        };
+        for (const char *const *bad = bad_strings; *bad != NULL; ++bad) {
+            check((struct spwd) {
+                .sp_namp = (char *) *bad,
+            }, NULL);
+            check((struct spwd) {
+                .sp_namp = (char *) "root",
+                .sp_pwdp = (char *) *bad,
+            }, NULL);
+        }
+    }
 
-  return errors;
+    return errors;
 }
 
 #define TEST_FUNCTION do_test ()

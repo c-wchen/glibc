@@ -21,10 +21,10 @@
 #endif
 
 #ifdef __USE_MISC
-# define CBAUD	 000000010017 /* Baud speed mask (not in POSIX).  */
+# define CBAUD   000000010017 /* Baud speed mask (not in POSIX).  */
 # define CBAUDEX 000000010000 /* Extra baud speed mask, included in CBAUD.
-				 (not in POSIX).  */
-# define CIBAUD	 002003600000 /* Input baud rate.  */
+                 (not in POSIX).  */
+# define CIBAUD  002003600000 /* Input baud rate.  */
 # define IBSHIFT 16
 #endif
 

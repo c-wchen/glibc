@@ -27,20 +27,20 @@
 #include "libioP.h"
 #include "stdio.h"
 
-int
-fputc (int c, FILE *fp)
+int fputc(int c, FILE *fp)
 {
-  int result;
-  CHECK_FILE (fp, EOF);
-  if (!_IO_need_lock (fp))
-    return _IO_putc_unlocked (c, fp);
-  _IO_acquire_lock (fp);
-  result = _IO_putc_unlocked (c, fp);
-  _IO_release_lock (fp);
-  return result;
+    int result;
+    CHECK_FILE(fp, EOF);
+    if (!_IO_need_lock(fp)) {
+        return _IO_putc_unlocked(c, fp);
+    }
+    _IO_acquire_lock(fp);
+    result = _IO_putc_unlocked(c, fp);
+    _IO_release_lock(fp);
+    return result;
 }
 
 #ifndef _IO_MTSAFE_IO
 #undef fputc_unlocked
-weak_alias (fputc, fputc_unlocked)
+weak_alias(fputc, fputc_unlocked)
 #endif

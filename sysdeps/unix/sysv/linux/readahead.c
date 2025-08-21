@@ -20,11 +20,10 @@
 #include <sys/types.h>
 #include <sysdep.h>
 
-ssize_t
-__readahead (int fd, off64_t offset, size_t count)
+ssize_t __readahead(int fd, off64_t offset, size_t count)
 {
-  return INLINE_SYSCALL_CALL (readahead, fd,
-			      __ALIGNMENT_ARG SYSCALL_LL64 (offset),
-			      count);
+    return INLINE_SYSCALL_CALL(readahead, fd,
+                               __ALIGNMENT_ARG SYSCALL_LL64(offset),
+                               count);
 }
-weak_alias (__readahead, readahead)
+weak_alias(__readahead, readahead)

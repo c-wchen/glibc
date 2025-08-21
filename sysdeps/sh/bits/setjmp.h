@@ -24,23 +24,22 @@
 #endif
 
 #ifndef _ASM
-typedef struct __jmp_buf_internal_tag
-  {
+typedef struct __jmp_buf_internal_tag {
     /* Callee-saved registers r8 through r15.  */
     int __regs[8];
 
     /* Program counter.  */
-    void * __pc;
+    void *__pc;
 
     /* The global pointer.  */
-    void * __gbr;
+    void *__gbr;
 
     /* Floating point status register.  */
     int __fpscr;
 
     /* Callee-saved floating point registers fr12 through fr15.  */
     int __fpregs[4];
-  } __jmp_buf[1];
+} __jmp_buf[1];
 #endif
 
 #endif  /* bits/setjmp.h */

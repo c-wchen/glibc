@@ -26,18 +26,18 @@
 # define SYMBOL_NAME memcmp
 # include "ifunc-memcmp.h"
 
-libc_ifunc_redirected (__redirect_memcmp, memcmp,
-		       IFUNC_SELECTOR ());
+libc_ifunc_redirected(__redirect_memcmp, memcmp,
+                      IFUNC_SELECTOR());
 # undef bcmp
-weak_alias (memcmp, bcmp)
+weak_alias(memcmp, bcmp)
 
 # undef __memcmpeq
-strong_alias (memcmp, __memcmpeq)
-libc_hidden_def (__memcmpeq)
+strong_alias(memcmp, __memcmpeq)
+libc_hidden_def(__memcmpeq)
 
 # ifdef SHARED
-__hidden_ver1 (memcmp, __GI_memcmp, __redirect_memcmp)
-  __attribute__ ((visibility ("hidden"))) __attribute_copy__ (memcmp);
+__hidden_ver1(memcmp, __GI_memcmp, __redirect_memcmp)
+__attribute__((visibility("hidden"))) __attribute_copy__(memcmp);
 # endif
 
 #endif

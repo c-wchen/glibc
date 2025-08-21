@@ -16,23 +16,22 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef	_HURD_SIGPREEMPT_H
+#ifndef _HURD_SIGPREEMPT_H
 
-#define	_HURD_SIGPREEMPT_H	1
+#define _HURD_SIGPREEMPT_H  1
 #define __need_size_t
 #include <stddef.h>
 #include <errno.h>
 #include <bits/types/error_t.h>
-#include <signal.h>		/* For sighandler_t, SIG_ERR.  */
+#include <signal.h>     /* For sighandler_t, SIG_ERR.  */
 #include <bits/types/sigset_t.h>
-struct hurd_sigstate;		/* <hurd/signal.h> */
-struct hurd_signal_detail;	/* <hurd/signal.h> */
+struct hurd_sigstate;       /* <hurd/signal.h> */
+struct hurd_signal_detail;  /* <hurd/signal.h> */
 
-struct hurd_signal_preemptor
-  {
+struct hurd_signal_preemptor {
     /* These members select which signals this structure will apply to.
        The rest of the structure is only consulted if these match.  */
-    sigset_t signals;		/* Signals preempted.  */
+    sigset_t signals;       /* Signals preempted.  */
     unsigned long int first, last; /* Range of sigcode values preempted.  */
 
     /* This function will be called (with SS->lock held) to decide what to
@@ -41,21 +40,21 @@ struct hurd_signal_preemptor
        is tried, or the normal handling is done for the signal (which may
        have been changed by the preemptor function).  Otherwise, the signal
        is processed as if the return value were its handler setting.  */
-    __sighandler_t (*preemptor) (struct hurd_signal_preemptor *preemptor,
-			         struct hurd_sigstate *ss,
-			         int *signo, struct hurd_signal_detail *detail);
+    __sighandler_t (*preemptor)(struct hurd_signal_preemptor *preemptor,
+                                struct hurd_sigstate *ss,
+                                int *signo, struct hurd_signal_detail *detail);
     /* If PREEMPTOR is null, act as if it returned HANDLER.  */
     __sighandler_t handler;
 
-    struct hurd_signal_preemptor *next;	/* List structure.  */
-  };
+    struct hurd_signal_preemptor *next; /* List structure.  */
+};
 
 /* The caller must initialize all members of *PREEMPTOR except `next'.
    The preemptor is registered on the global list.  */
-void hurd_preempt_signals (struct hurd_signal_preemptor *preemptor);
+void hurd_preempt_signals(struct hurd_signal_preemptor *preemptor);
 
 /* Remove a preemptor registered with hurd_preempt_signals.  */
-void hurd_unpreempt_signals (struct hurd_signal_preemptor *preemptor);
+void hurd_unpreempt_signals(struct hurd_signal_preemptor *preemptor);
 
 
 /* Call *OPERATE and return its value.  If a signal in SIGSET with a sigcode
@@ -69,28 +68,28 @@ void hurd_unpreempt_signals (struct hurd_signal_preemptor *preemptor);
    sigcode range or functions at any time during which it is guaranteed no
    signal in SIGSET will arrive.  */
 
-error_t hurd_catch_signal (sigset_t sigset,
-			   unsigned long int first, unsigned long int last,
-			   error_t (*operate) (struct hurd_signal_preemptor *),
-			   __sighandler_t handler);
+error_t hurd_catch_signal(sigset_t sigset,
+                          unsigned long int first, unsigned long int last,
+                          error_t (*operate)(struct hurd_signal_preemptor *),
+                          __sighandler_t handler);
 
 
 /* Convenience functions using `hurd_catch_signal'.  */
 
 
 /* Like `memset', but catch faults in DEST.  */
-error_t hurd_safe_memset (void *dest, int byte, size_t nbytes);
+error_t hurd_safe_memset(void *dest, int byte, size_t nbytes);
 
 /* Like `memcpy', but catch faults in SRC.  */
-error_t hurd_safe_copyin (void *dest, const void *src, size_t nbytes);
+error_t hurd_safe_copyin(void *dest, const void *src, size_t nbytes);
 
 /* Like `memcpy', but catch faults in DEST.  */
-error_t hurd_safe_copyout (void *dest, const void *src, size_t nbytes);
+error_t hurd_safe_copyout(void *dest, const void *src, size_t nbytes);
 
 /* Like `memmove', but catch faults in SRC or DEST.
    If only one region is expected to fault, it is more efficient
    to use `hurd_safe_copyin' or `hurd_safe_copyout' as appropriate.  */
-error_t hurd_safe_memmove (void *dest, const void *src, size_t nbytes);
+error_t hurd_safe_memmove(void *dest, const void *src, size_t nbytes);
 
 
-#endif	/* hurd/sigpreempt.h */
+#endif  /* hurd/sigpreempt.h */

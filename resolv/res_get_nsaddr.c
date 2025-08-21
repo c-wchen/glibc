@@ -21,19 +21,22 @@
 #include <resolv-internal.h>
 
 struct sockaddr *
-__res_get_nsaddr (res_state statp, unsigned int n)
+__res_get_nsaddr(res_state statp, unsigned int n)
 {
-  assert (n < statp->nscount);
+    assert(n < statp->nscount);
 
-  if (statp->nsaddr_list[n].sin_family == 0
-      && statp->_u._ext.nsaddrs[n] != NULL)
-    /* statp->_u._ext.nsaddrs[n] holds an address that is larger than
-       struct sockaddr, and user code did not update
-       statp->nsaddr_list[n].  */
-    return (struct sockaddr *) statp->_u._ext.nsaddrs[n];
-  else
-    /* User code updated statp->nsaddr_list[n], or statp->nsaddr_list[n]
-       has the same content as statp->_u._ext.nsaddrs[n].  */
-    return (struct sockaddr *) (void *) &statp->nsaddr_list[n];
+    if (statp->nsaddr_list[n].sin_family == 0
+        && statp->_u._ext.nsaddrs[n] != NULL)
+        /* statp->_u._ext.nsaddrs[n] holds an address that is larger than
+           struct sockaddr, and user code did not update
+           statp->nsaddr_list[n].  */
+    {
+        return (struct sockaddr *) statp->_u._ext.nsaddrs[n];
+    } else
+        /* User code updated statp->nsaddr_list[n], or statp->nsaddr_list[n]
+           has the same content as statp->_u._ext.nsaddrs[n].  */
+    {
+        return (struct sockaddr *)(void *) &statp->nsaddr_list[n];
+    }
 }
-libc_hidden_def (__res_get_nsaddr)
+libc_hidden_def(__res_get_nsaddr)

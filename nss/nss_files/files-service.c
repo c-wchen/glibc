@@ -20,44 +20,41 @@
 #include <netdb.h>
 #include <nss.h>
 
-#define ENTNAME		servent
-#define DATABASE	"services"
+#define ENTNAME     servent
+#define DATABASE    "services"
 
 struct servent_data {};
 
-#define TRAILING_LIST_MEMBER		s_aliases
-#define TRAILING_LIST_SEPARATOR_P	isspace
+#define TRAILING_LIST_MEMBER        s_aliases
+#define TRAILING_LIST_SEPARATOR_P   isspace
 #include "files-parse.c"
 #define ISSLASH(c) ((c) == '/')
 LINE_PARSER
 ("#",
- STRING_FIELD (result->s_name, isspace, 1);
- INT_FIELD (result->s_port, ISSLASH, 10, 0, htons);
- STRING_FIELD (result->s_proto, isspace, 1);
- )
+ STRING_FIELD(result->s_name, isspace, 1);
+ INT_FIELD(result->s_port, ISSLASH, 10, 0, htons);
+ STRING_FIELD(result->s_proto, isspace, 1);
+)
 
 #include GENERIC
 
-DB_LOOKUP (servbyname, ':',
-	   strlen (name) + 2 + (proto == NULL ? 0 : strlen (proto)),
-	   ("%s/%s", name, proto ?: ""),
-	   {
-	     /* Must match both protocol (if specified) and name.  */
-	     if (proto != NULL && strcmp (result->s_proto, proto))
-	       /* A continue statement here breaks nss_db, because it
-		bypasses advancing to the next db entry, and it
-		doesn't make nss_files any more efficient.  */;
-	     else
-	       LOOKUP_NAME (s_name, s_aliases)
-	   },
-	   const char *name, const char *proto)
-
-DB_LOOKUP (servbyport, '=', 21 + (proto ? strlen (proto) : 0),
-	   ("%zd/%s", (ssize_t) ntohs (port), proto ?: ""),
-	   {
-	     /* Must match both port and protocol.  */
-	     if (result->s_port == port
-		 && (proto == NULL
-		     || strcmp (result->s_proto, proto) == 0))
-	       break;
-	   }, int port, const char *proto)
+DB_LOOKUP(servbyname, ':',
+          strlen(name) + 2 + (proto == NULL ? 0 : strlen(proto)),
+("%s/%s", name, proto ? : ""), {
+    /* Must match both protocol (if specified) and name.  */
+    if (proto != NULL && strcmp(result->s_proto, proto))
+        /* A continue statement here breaks nss_db, because it
+        bypasses advancing to the next db entry, and it
+        doesn't make nss_files any more efficient.  */;
+    else
+        LOOKUP_NAME(s_name, s_aliases)
+    },
+const char *name, const char *proto)
+DB_LOOKUP(servbyport, '=', 21 + (proto ? strlen(proto) : 0),
+("%zd/%s", (ssize_t) ntohs(port), proto ? : ""), {
+    /* Must match both port and protocol.  */
+    if (result->s_port == port
+        && (proto == NULL
+            || strcmp(result->s_proto, proto) == 0))
+        break;
+}, int port, const char *proto)

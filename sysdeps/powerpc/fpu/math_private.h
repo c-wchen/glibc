@@ -46,12 +46,11 @@
 #define __builtin_ilogbf128(x) __builtin_vsx_scalar_extract_expq(x) - 0x3fff
 
 #if __HAVE_DISTINCT_FLOAT128
-extern __always_inline _Float128
-__ieee754_sqrtf128 (_Float128 __x)
+extern __always_inline _Float128 __ieee754_sqrtf128(_Float128 __x)
 {
-  _Float128 __z;
-  asm ("xssqrtqp %0,%1" : "=v" (__z) : "v" (__x));
-  return __z;
+    _Float128 __z;
+    asm("xssqrtqp %0,%1" : "=v"(__z) : "v"(__x));
+    return __z;
 }
 #endif
 #else /* !_ARCH_PWR9 */

@@ -27,8 +27,8 @@
 # include <setjmp.h>
 
 // XXX Should move to include/setjmp.h
-extern void ____longjmp_chk (__jmp_buf __env, int __val)
-     __attribute__ ((__noreturn__));
+extern void ____longjmp_chk(__jmp_buf __env, int __val)
+__attribute__((__noreturn__));
 
 # define __longjmp ____longjmp_chk
 # define __libc_siglongjmp __v1__longjmp_chk
@@ -37,9 +37,9 @@ extern void ____longjmp_chk (__jmp_buf __env, int __val)
 
 /* In glibc release 2.19 a new versions of __longjmp_chk was introduced,
    but was reverted before 2.20. Thus both versions are the same function.  */
-strong_alias (__v1__longjmp_chk, __v2__longjmp_chk);
-versioned_symbol (libc, __v1__longjmp_chk, __longjmp_chk, GLIBC_2_11);
-compat_symbol (libc, __v2__longjmp_chk, __longjmp_chk, GLIBC_2_19);
+strong_alias(__v1__longjmp_chk, __v2__longjmp_chk);
+versioned_symbol(libc, __v1__longjmp_chk, __longjmp_chk, GLIBC_2_11);
+compat_symbol(libc, __v2__longjmp_chk, __longjmp_chk, GLIBC_2_19);
 
 #else
 

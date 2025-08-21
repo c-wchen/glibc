@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _BITS_PTHREADTYPES_ARCH_H
-#define _BITS_PTHREADTYPES_ARCH_H	1
+#define _BITS_PTHREADTYPES_ARCH_H   1
 
 #define __SIZEOF_PTHREAD_MUTEX_T 32
 #define __SIZEOF_PTHREAD_ATTR_T 48

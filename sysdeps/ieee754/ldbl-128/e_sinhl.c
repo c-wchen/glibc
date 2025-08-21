@@ -58,60 +58,61 @@
 #include <libm-alias-finite.h>
 
 static const _Float128 one = 1.0, shuge = L(1.0e4931),
-ovf_thresh = L(1.1357216553474703894801348310092223067821E4);
+                       ovf_thresh = L(1.1357216553474703894801348310092223067821E4);
 
-_Float128
-__ieee754_sinhl (_Float128 x)
+_Float128 __ieee754_sinhl(_Float128 x)
 {
-  _Float128 t, w, h;
-  uint32_t jx, ix;
-  ieee854_long_double_shape_type u;
+    _Float128 t, w, h;
+    uint32_t jx, ix;
+    ieee854_long_double_shape_type u;
 
-  /* Words of |x|. */
-  u.value = x;
-  jx = u.parts32.w0;
-  ix = jx & 0x7fffffff;
+    /* Words of |x|. */
+    u.value = x;
+    jx = u.parts32.w0;
+    ix = jx & 0x7fffffff;
 
-  /* x is INF or NaN */
-  if (ix >= 0x7fff0000)
-    return x + x;
-
-  h = 0.5;
-  if (jx & 0x80000000)
-    h = -h;
-
-  /* Absolute value of x.  */
-  u.parts32.w0 = ix;
-
-  /* |x| in [0,40], return sign(x)*0.5*(E+E/(E+1))) */
-  if (ix <= 0x40044000)
-    {
-      if (ix < 0x3fc60000) /* |x| < 2^-57 */
-	{
-	  math_check_force_underflow (x);
-	  if (shuge + x > one)
-	    return x;		/* sinh(tiny) = tiny with inexact */
-	}
-      t = __expm1l (u.value);
-      if (ix < 0x3fff0000)
-	return h * (2.0 * t - t * t / (t + one));
-      return h * (t + t / (t + one));
+    /* x is INF or NaN */
+    if (ix >= 0x7fff0000) {
+        return x + x;
     }
 
-  /* |x| in [40, log(maxdouble)] return 0.5*exp(|x|) */
-  if (ix <= 0x400c62e3) /* 11356.375 */
-    return h * __ieee754_expl (u.value);
-
-  /* |x| in [log(maxdouble), overflowthreshold]
-     Overflow threshold is log(2 * maxdouble).  */
-  if (u.value <= ovf_thresh)
-    {
-      w = __ieee754_expl (0.5 * u.value);
-      t = h * w;
-      return t * w;
+    h = 0.5;
+    if (jx & 0x80000000) {
+        h = -h;
     }
 
-  /* |x| > overflowthreshold, sinhl(x) overflow */
-  return x * shuge;
+    /* Absolute value of x.  */
+    u.parts32.w0 = ix;
+
+    /* |x| in [0,40], return sign(x)*0.5*(E+E/(E+1))) */
+    if (ix <= 0x40044000) {
+        if (ix < 0x3fc60000) { /* |x| < 2^-57 */
+            math_check_force_underflow(x);
+            if (shuge + x > one) {
+                return x;    /* sinh(tiny) = tiny with inexact */
+            }
+        }
+        t = __expm1l(u.value);
+        if (ix < 0x3fff0000) {
+            return h * (2.0 * t - t * t / (t + one));
+        }
+        return h * (t + t / (t + one));
+    }
+
+    /* |x| in [40, log(maxdouble)] return 0.5*exp(|x|) */
+    if (ix <= 0x400c62e3) { /* 11356.375 */
+        return h * __ieee754_expl(u.value);
+    }
+
+    /* |x| in [log(maxdouble), overflowthreshold]
+       Overflow threshold is log(2 * maxdouble).  */
+    if (u.value <= ovf_thresh) {
+        w = __ieee754_expl(0.5 * u.value);
+        t = h * w;
+        return t * w;
+    }
+
+    /* |x| > overflowthreshold, sinhl(x) overflow */
+    return x * shuge;
 }
-libm_alias_finite (__ieee754_sinhl, __sinhl)
+libm_alias_finite(__ieee754_sinhl, __sinhl)

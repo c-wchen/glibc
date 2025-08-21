@@ -16,17 +16,14 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-static inline void
-fork_system_setup (void)
+static inline void fork_system_setup(void)
 {
 }
 
-static inline void
-fork_system_setup_after_fork (void)
+static inline void fork_system_setup_after_fork(void)
 {
 }
 
-static inline void
-reclaim_stacks (void)
+static inline void reclaim_stacks(void)
 {
 }

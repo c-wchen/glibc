@@ -16,10 +16,9 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

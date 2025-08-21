@@ -21,10 +21,9 @@
 #include <sysdep-cancel.h>
 
 /* Wait for pending output to be written on FD.  */
-int
-__libc_tcdrain (int fd)
+int __libc_tcdrain(int fd)
 {
-  /* With an argument of 1, TCSBRK for output to be drain.  */
-  return SYSCALL_CANCEL (ioctl, fd, TCSBRK, 1);
+    /* With an argument of 1, TCSBRK for output to be drain.  */
+    return SYSCALL_CANCEL(ioctl, fd, TCSBRK, 1);
 }
-weak_alias (__libc_tcdrain, tcdrain)
+weak_alias(__libc_tcdrain, tcdrain)

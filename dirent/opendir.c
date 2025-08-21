@@ -21,20 +21,18 @@
 #include <fcntl.h>
 
 
-DIR *
-__opendirat (int dfd, const char *name)
+DIR *__opendirat(int dfd, const char *name)
 {
-  __set_errno (ENOSYS);
-  return NULL;
+    __set_errno(ENOSYS);
+    return NULL;
 }
 
 
 /* Open a directory stream on NAME.  */
-DIR *
-__opendir (const char *name)
+DIR *__opendir(const char *name)
 {
-  return __opendirat (AT_FDCWD, name);
+    return __opendirat(AT_FDCWD, name);
 }
-weak_alias (__opendir, opendir)
+weak_alias(__opendir, opendir)
 
-stub_warning (opendir)
+stub_warning(opendir)

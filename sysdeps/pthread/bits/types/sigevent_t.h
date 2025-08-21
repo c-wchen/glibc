@@ -6,13 +6,12 @@
 #include <bits/pthreadtypes.h>
 
 /* Structure to transport application-defined values with signals.  */
-typedef struct sigevent
-  {
+typedef struct sigevent {
     __sigval_t sigev_value;
     int sigev_signo;
     int sigev_notify;
-    void (*sigev_notify_function) (__sigval_t);	    /* Function to start.  */
-    pthread_attr_t *sigev_notify_attributes;	    /* Really pthread_attr_t.*/
-  } sigevent_t;
+    void (*sigev_notify_function)(__sigval_t);      /* Function to start.  */
+    pthread_attr_t *sigev_notify_attributes;        /* Really pthread_attr_t.*/
+} sigevent_t;
 
 #endif

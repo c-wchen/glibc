@@ -18,29 +18,29 @@
 
 #include <stdlib.h>
 
-struct A
-{
-  ~A () { abort (); }
+struct A {
+    ~A()
+    {
+        abort();
+    }
 };
 
 thread_local A a;
 
 void
-__attribute_optimization_barrier__
-optimization_barrier (A &)
+__attribute_optimization_barrier__ optimization_barrier(A &)
 {
 }
 
-static int
-do_test ()
+static int do_test()
 {
-  optimization_barrier (a);
-  /* The C++11 standard in 18.5.12 says:
-     "Objects shall not be destroyed as a result of calling
-      quick_exit."
-     If quick_exit calls the destructors the test aborts.  */
-  quick_exit (0);
-  return 0;
+    optimization_barrier(a);
+    /* The C++11 standard in 18.5.12 says:
+       "Objects shall not be destroyed as a result of calling
+        quick_exit."
+       If quick_exit calls the destructors the test aborts.  */
+    quick_exit(0);
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

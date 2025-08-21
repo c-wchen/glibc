@@ -19,14 +19,13 @@
 #include <fenv.h>
 #include <fenv_private.h>
 
-int
-__fesetenv (const fenv_t *envp)
+int __fesetenv(const fenv_t *envp)
 {
-  libc_fesetenv_or1k (envp);
+    libc_fesetenv_or1k(envp);
 
-  /* Success.  */
-  return 0;
+    /* Success.  */
+    return 0;
 }
-libm_hidden_def (__fesetenv)
-weak_alias (__fesetenv, fesetenv)
-libm_hidden_weak (fesetenv)
+libm_hidden_def(__fesetenv)
+weak_alias(__fesetenv, fesetenv)
+libm_hidden_weak(fesetenv)

@@ -27,78 +27,81 @@
    that fall on the criteria.  If DIRFD_FALLBACK is set, a failure on
    /proc/self/fd open will trigger a fallback that tries to close a file
    descriptor before proceed.  */
-_Bool
-__closefrom_fallback (int from, _Bool dirfd_fallback)
+_Bool __closefrom_fallback(int from, _Bool dirfd_fallback)
 {
-  int dirfd = __open_nocancel (FD_TO_FILENAME_PREFIX, O_RDONLY | O_DIRECTORY,
-                               0);
-  if (dirfd == -1)
-    {
-      /* Return if procfs can not be opened for some reason.  */
-      if ((errno != EMFILE && errno != ENFILE && errno != ENOMEM)
-	  || !dirfd_fallback)
-	return false;
+    int dirfd = __open_nocancel(FD_TO_FILENAME_PREFIX, O_RDONLY | O_DIRECTORY,
+                                0);
+    if (dirfd == -1) {
+        /* Return if procfs can not be opened for some reason.  */
+        if ((errno != EMFILE && errno != ENFILE && errno != ENOMEM)
+            || !dirfd_fallback) {
+            return false;
+        }
 
-      /* The closefrom should work even when process can't open new files.  */
-      for (int i = from; i < INT_MAX; i++)
-        {
-          int r = __close_nocancel (i);
-          if (r == 0 || (r == -1 && errno != EBADF))
+        /* The closefrom should work even when process can't open new files.  */
+        for (int i = from; i < INT_MAX; i++) {
+            int r = __close_nocancel(i);
+            if (r == 0 || (r == -1 && errno != EBADF)) {
+                break;
+            }
+        }
+
+        dirfd = __open_nocancel(FD_TO_FILENAME_PREFIX, O_RDONLY | O_DIRECTORY,
+                                0);
+        if (dirfd == -1) {
+            return false;
+        }
+    }
+
+    char buffer[1024];
+    bool ret = false;
+    while (true) {
+        ssize_t ret = __getdents64(dirfd, buffer, sizeof(buffer));
+        if (ret == -1) {
+            goto err;
+        } else if (ret == 0) {
             break;
         }
 
-      dirfd = __open_nocancel (FD_TO_FILENAME_PREFIX, O_RDONLY | O_DIRECTORY,
-                               0);
-      if (dirfd == -1)
-        return false;
-    }
+        /* If any file descriptor is closed it resets the /proc/self position
+           read again from the start (to obtain any possible kernel update).  */
+        bool closed = false;
+        char *begin = buffer, *end = buffer + ret;
+        while (begin != end) {
+            unsigned short int d_reclen;
+            memcpy(&d_reclen, begin + offsetof(struct dirent64, d_reclen),
+                   sizeof(d_reclen));
+            const char *dname = begin + offsetof(struct dirent64, d_name);
+            begin += d_reclen;
 
-  char buffer[1024];
-  bool ret = false;
-  while (true)
-    {
-      ssize_t ret = __getdents64 (dirfd, buffer, sizeof (buffer));
-      if (ret == -1)
-        goto err;
-      else if (ret == 0)
-        break;
+            if (dname[0] == '.') {
+                continue;
+            }
 
-      /* If any file descriptor is closed it resets the /proc/self position
-         read again from the start (to obtain any possible kernel update).  */
-      bool closed = false;
-      char *begin = buffer, *end = buffer + ret;
-      while (begin != end)
-        {
-          unsigned short int d_reclen;
-          memcpy (&d_reclen, begin + offsetof (struct dirent64, d_reclen),
-                  sizeof (d_reclen));
-          const char *dname = begin + offsetof (struct dirent64, d_name);
-          begin += d_reclen;
+            int fd = 0;
+            for (const char *s = dname; (unsigned int)(*s) - '0' < 10; s++) {
+                fd = 10 * fd + (*s - '0');
+            }
 
-          if (dname[0] == '.')
-            continue;
+            if (fd == dirfd || fd < from) {
+                continue;
+            }
 
-          int fd = 0;
-          for (const char *s = dname; (unsigned int) (*s) - '0' < 10; s++)
-            fd = 10 * fd + (*s - '0');
-
-          if (fd == dirfd || fd < from)
-            continue;
-
-          /* We ignore close errors because EBADF, EINTR, and EIO means the
-             descriptor has been released.  */
-          __close_nocancel (fd);
-          closed = true;
+            /* We ignore close errors because EBADF, EINTR, and EIO means the
+               descriptor has been released.  */
+            __close_nocancel(fd);
+            closed = true;
         }
 
-      if (closed && __lseek (dirfd, 0, SEEK_SET) < 0)
-        goto err;
+        if (closed && __lseek(dirfd, 0, SEEK_SET) < 0) {
+            goto err;
+        }
     }
 
-  ret = true;
+    ret = true;
 err:
-  __close_nocancel (dirfd);
-  return ret;
+    __close_nocancel(dirfd);
+    return ret;
 }
 
 #endif

@@ -24,19 +24,17 @@
 /* Return true if this is a UNIX98 pty device, as defined in
    linux/Documentation/devices.txt (on linux < 4.10) or
    linux/Documentation/admin-guide/devices.txt (on linux >= 4.10).  */
-static inline bool
-is_pty (struct __stat64_t64 *sb)
+static inline bool is_pty(struct __stat64_t64 *sb)
 {
-  int m = __gnu_dev_major (sb->st_rdev);
-  return (136 <= m && m <= 143);
+    int m = __gnu_dev_major(sb->st_rdev);
+    return (136 <= m && m <= 143);
 }
 
-static inline bool
-is_mytty (const struct __stat64_t64 *mytty, const struct __stat64_t64 *maybe)
+static inline bool is_mytty(const struct __stat64_t64 *mytty, const struct __stat64_t64 *maybe)
 {
-  return (maybe->st_ino == mytty->st_ino
-	  && maybe->st_dev == mytty->st_dev
-	  && S_ISCHR (maybe->st_mode)
-	  && maybe->st_rdev == mytty->st_rdev
-	  );
+    return (maybe->st_ino == mytty->st_ino
+            && maybe->st_dev == mytty->st_dev
+            && S_ISCHR(maybe->st_mode)
+            && maybe->st_rdev == mytty->st_rdev
+           );
 }

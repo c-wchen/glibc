@@ -26,37 +26,36 @@
 #include <sys/socket.h>
 
 
-int
-getipv4sourcefilter (int s, struct in_addr interface, struct in_addr group,
-		     uint32_t *fmode, uint32_t *numsrc, struct in_addr *slist)
+int getipv4sourcefilter(int s, struct in_addr interface, struct in_addr group,
+                        uint32_t *fmode, uint32_t *numsrc, struct in_addr *slist)
 {
-  /* We have to create an struct ip_msfilter object which we can pass
-     to the kernel.  */
-  socklen_t needed = IP_MSFILTER_SIZE (*numsrc);
+    /* We have to create an struct ip_msfilter object which we can pass
+       to the kernel.  */
+    socklen_t needed = IP_MSFILTER_SIZE(*numsrc);
 
-  struct scratch_buffer buf;
-  scratch_buffer_init (&buf);
-  if (!scratch_buffer_set_array_size (&buf, 1, needed))
-    return -1;
-  struct ip_msfilter *imsf = buf.data;
+    struct scratch_buffer buf;
+    scratch_buffer_init(&buf);
+    if (!scratch_buffer_set_array_size(&buf, 1, needed)) {
+        return -1;
+    }
+    struct ip_msfilter *imsf = buf.data;
 
-  imsf->imsf_multiaddr = group;
-  imsf->imsf_interface = interface;
-  imsf->imsf_numsrc = *numsrc;
+    imsf->imsf_multiaddr = group;
+    imsf->imsf_interface = interface;
+    imsf->imsf_numsrc = *numsrc;
 
-  int result = __getsockopt (s, SOL_IP, IP_MSFILTER, imsf, &needed);
+    int result = __getsockopt(s, SOL_IP, IP_MSFILTER, imsf, &needed);
 
-  /* If successful, copy the results to the places the caller wants
-     them in.  */
-  if (result == 0)
-    {
-      *fmode = imsf->imsf_fmode;
-      memcpy (slist, imsf->imsf_slist,
-	      MIN (*numsrc, imsf->imsf_numsrc) * sizeof (struct in_addr));
-      *numsrc = imsf->imsf_numsrc;
+    /* If successful, copy the results to the places the caller wants
+       them in.  */
+    if (result == 0) {
+        *fmode = imsf->imsf_fmode;
+        memcpy(slist, imsf->imsf_slist,
+               MIN(*numsrc, imsf->imsf_numsrc) * sizeof(struct in_addr));
+        *numsrc = imsf->imsf_numsrc;
     }
 
-  scratch_buffer_free (&buf);
+    scratch_buffer_free(&buf);
 
-  return result;
+    return result;
 }

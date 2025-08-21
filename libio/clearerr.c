@@ -18,15 +18,14 @@
 #include "libioP.h"
 #include "stdio.h"
 
-void
-clearerr (FILE *fp)
+void clearerr(FILE *fp)
 {
-  CHECK_FILE (fp, /*nothing*/);
-  _IO_flockfile (fp);
-  _IO_clearerr (fp);
-  _IO_funlockfile (fp);
+    CHECK_FILE(fp, /*nothing*/);
+    _IO_flockfile(fp);
+    _IO_clearerr(fp);
+    _IO_funlockfile(fp);
 }
 
 #ifndef _IO_MTSAFE_IO
-weak_alias (clearerr, clearerr_unlocked)
+weak_alias(clearerr, clearerr_unlocked)
 #endif

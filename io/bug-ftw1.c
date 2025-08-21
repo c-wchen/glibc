@@ -27,50 +27,41 @@ int cnt;
 int sawroot;
 
 
-static int
-callback (const char *fname, const struct stat *st, int flag)
+static int callback(const char *fname, const struct stat *st, int flag)
 {
-  if (++cnt >= 10)
-    return 1;
-
-  printf ("%d: \"%s\" -> ", cnt, fname);
-  if (strcmp (fname, "/") == 0 && sawroot)
-    {
-      puts ("root directory reported twice");
-      result = 1;
-    }
-  else if (fname[0] != '/')
-    {
-      puts ("missing '/' as first character");
-      result = 1;
-    }
-  else if (fname[1] == '/')
-    {
-      puts ("double '/' at beginning");
-      result = 1;
-    }
-  else
-    {
-      puts ("OK");
-      sawroot |= strcmp (fname, "/") == 0;
+    if (++cnt >= 10) {
+        return 1;
     }
 
-  return 0;
+    printf("%d: \"%s\" -> ", cnt, fname);
+    if (strcmp(fname, "/") == 0 && sawroot) {
+        puts("root directory reported twice");
+        result = 1;
+    } else if (fname[0] != '/') {
+        puts("missing '/' as first character");
+        result = 1;
+    } else if (fname[1] == '/') {
+        puts("double '/' at beginning");
+        result = 1;
+    } else {
+        puts("OK");
+        sawroot |= strcmp(fname, "/") == 0;
+    }
+
+    return 0;
 }
 
 
-int
-main (void)
+int main(void)
 {
-  mtrace ();
+    mtrace();
 
-  ftw ("/", callback, 10);
+    ftw("/", callback, 10);
 
-  if (! sawroot)
-    {
-      puts ("root directory wasn't reported");
-      result = 1;
+    if (! sawroot) {
+        puts("root directory wasn't reported");
+        result = 1;
     }
 
-  return result;
+    return result;
 }

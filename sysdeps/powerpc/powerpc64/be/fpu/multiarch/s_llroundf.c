@@ -26,22 +26,22 @@
 #include "init-arch.h"
 #include <libm-alias-float.h>
 
-extern __typeof (__llroundf) __llroundf_ppc64 attribute_hidden;
-extern __typeof (__llroundf) __llround_power6x attribute_hidden;
-extern __typeof (__llroundf) __llround_power8 attribute_hidden;
+extern __typeof(__llroundf) __llroundf_ppc64 attribute_hidden;
+extern __typeof(__llroundf) __llround_power6x attribute_hidden;
+extern __typeof(__llroundf) __llround_power8 attribute_hidden;
 
 /* The ppc64 ABI passes float and double parameters in 64bit floating point
    registers (at least up to a point) as IEEE binary64 format, so effectively
    of "double" type.  Both l[l]round and l[l]roundf return long type.  So these
    functions have identical signatures and functionality, and can use a
    single implementation.  */
-libc_ifunc (__llroundf,
-	    (hwcap2 & PPC_FEATURE2_ARCH_2_07)
-	    ? __llround_power8 :
-	    (hwcap & PPC_FEATURE_POWER6_EXT)
-	    ? __llround_power6x
-	    : __llroundf_ppc64);
+libc_ifunc(__llroundf,
+           (hwcap2 &PPC_FEATURE2_ARCH_2_07)
+           ? __llround_power8 :
+           (hwcap &PPC_FEATURE_POWER6_EXT)
+           ? __llround_power6x
+           : __llroundf_ppc64);
 
-libm_alias_float (__llround, llround)
-strong_alias (__llroundf, __lroundf)
-libm_alias_float (__lround, lround)
+libm_alias_float(__llround, llround)
+strong_alias(__llroundf, __lroundf)
+libm_alias_float(__lround, lround)

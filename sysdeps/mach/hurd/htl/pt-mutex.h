@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _PT_MUTEX_H
-#define _PT_MUTEX_H	1
+#define _PT_MUTEX_H 1
 
 /* Special ID used to signal an unrecoverable robust mutex. */
 #define NOTRECOVERABLE_ID   (1U << 31)
@@ -28,7 +28,7 @@
   if (mtxp->__owner_id == NOTRECOVERABLE_ID)   \
     return ENOTRECOVERABLE;   \
   else if (mtxp->__owner_id == self->thread   \
-	   && __getpid () == (int)(mtxp->__lock & LLL_OWNER_MASK))   \
+       && __getpid () == (int)(mtxp->__lock & LLL_OWNER_MASK))   \
     {   \
       if (mtxp->__type == PT_MTX_RECURSIVE)   \
         {   \

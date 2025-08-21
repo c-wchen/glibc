@@ -25,33 +25,32 @@
 #include <support/xdlfcn.h>
 #include <sys/single_threaded.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  TEST_VERIFY (__libc_single_threaded);
+    TEST_VERIFY(__libc_single_threaded);
 
-  /* Defined in tst-single-threaded-mod1.o.  */
-  extern _Bool single_threaded_1 (void);
-  TEST_VERIFY (single_threaded_1 ());
+    /* Defined in tst-single-threaded-mod1.o.  */
+    extern _Bool single_threaded_1(void);
+    TEST_VERIFY(single_threaded_1());
 
-  /* A failed dlopen does not change the multi-threaded status.  */
-  TEST_VERIFY (dlopen ("tst-single_threaded-does-not-exist.so", RTLD_LAZY)
-               == NULL);
-  TEST_VERIFY (__libc_single_threaded);
-  TEST_VERIFY (single_threaded_1 ());
+    /* A failed dlopen does not change the multi-threaded status.  */
+    TEST_VERIFY(dlopen("tst-single_threaded-does-not-exist.so", RTLD_LAZY)
+                == NULL);
+    TEST_VERIFY(__libc_single_threaded);
+    TEST_VERIFY(single_threaded_1());
 
-  /* And neither does a successful dlopen for outer (static) libc.  */
-  void *handle_mod2 = xdlopen ("tst-single_threaded-mod2.so", RTLD_LAZY);
-  _Bool (*single_threaded_2) (void)
-    = xdlsym (handle_mod2, "single_threaded_2");
-  TEST_VERIFY (__libc_single_threaded);
-  TEST_VERIFY (single_threaded_1 ());
-  /* The inner libc always assumes multi-threaded use.  */
-  TEST_VERIFY (!single_threaded_2 ());
+    /* And neither does a successful dlopen for outer (static) libc.  */
+    void *handle_mod2 = xdlopen("tst-single_threaded-mod2.so", RTLD_LAZY);
+    _Bool(*single_threaded_2)(void)
+        = xdlsym(handle_mod2, "single_threaded_2");
+    TEST_VERIFY(__libc_single_threaded);
+    TEST_VERIFY(single_threaded_1());
+    /* The inner libc always assumes multi-threaded use.  */
+    TEST_VERIFY(!single_threaded_2());
 
-  xdlclose (handle_mod2);
+    xdlclose(handle_mod2);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

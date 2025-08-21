@@ -25,10 +25,9 @@
 #define CALL_ATEXIT __cxa_atexit (&no_op, NULL, NULL)
 #define CALL_EXIT exit (0)
 
-int __cxa_atexit (void (*func) (void *), void *arg, void *d);
+int __cxa_atexit(void (*func)(void *), void *arg, void *d);
 
-static void
-no_op (void *ignored)
+static void no_op(void *ignored)
 {
 }
 

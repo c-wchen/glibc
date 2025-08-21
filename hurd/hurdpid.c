@@ -22,50 +22,51 @@
 pid_t _hurd_pid, _hurd_ppid, _hurd_pgrp;
 int _hurd_orphaned;
 
-static void attribute_used_retain
-init_pids (void)
+static void attribute_used_retain init_pids(void)
 {
-  __USEPORT (PROC,
-	     ({
-	       __proc_getpids (port, &_hurd_pid, &_hurd_ppid, &_hurd_orphaned);
-	       __proc_getpgrp (port, _hurd_pid, &_hurd_pgrp);
-	     }));
+    __USEPORT(PROC,
+    ({
+        __proc_getpids(port, &_hurd_pid, &_hurd_ppid, &_hurd_orphaned);
+        __proc_getpgrp(port, _hurd_pid, &_hurd_pgrp);
+    }));
 }
 
-SET_RELHOOK (_hurd_proc_subinit, init_pids);
+SET_RELHOOK(_hurd_proc_subinit, init_pids);
 
 #include <hurd/msg_server.h>
 #include "set-hooks.h"
 
-DEFINE_HOOK (_hurd_pgrp_changed_hook, (pid_t));
+DEFINE_HOOK(_hurd_pgrp_changed_hook, (pid_t));
 
 /* These let user threads synchronize with an operation which changes ids.  */
 unsigned int _hurd_pids_changed_stamp;
 
-kern_return_t
-_S_msg_proc_newids (mach_port_t me,
-		    task_t task,
-		    pid_t ppid, pid_t pgrp, int orphaned)
+kern_return_t _S_msg_proc_newids(mach_port_t me,
+                                 task_t task,
+                                 pid_t ppid, pid_t pgrp, int orphaned)
 {
-  int pgrp_changed;
+    int pgrp_changed;
 
-  if (task != __mach_task_self ())
-    return EPERM;
+    if (task != __mach_task_self()) {
+        return EPERM;
+    }
 
-  __mach_port_deallocate (__mach_task_self (), task);
+    __mach_port_deallocate(__mach_task_self(), task);
 
-  pgrp_changed = pgrp != _hurd_pgrp;
-  _hurd_ppid = ppid;
-  _hurd_pgrp = pgrp;
-  _hurd_orphaned = orphaned;
+    pgrp_changed = pgrp != _hurd_pgrp;
+    _hurd_ppid = ppid;
+    _hurd_pgrp = pgrp;
+    _hurd_orphaned = orphaned;
 
-  if (pgrp_changed)
-    /* Run things that want notification of a pgrp change.  */
-    RUN_HOOK (_hurd_pgrp_changed_hook, (pgrp));
+    if (pgrp_changed)
+        /* Run things that want notification of a pgrp change.  */
+    {
+        RUN_HOOK(_hurd_pgrp_changed_hook, (pgrp));
+    }
 
-  /* Notify any waiting user threads that the id change as been completed.  */
-  ++_hurd_pids_changed_stamp;
-  lll_wake (_hurd_pids_changed_stamp, GSYNC_BROADCAST);
+    /* Notify any waiting user threads that the id change as been completed.  */
+    ++_hurd_pids_changed_stamp;
+    lll_wake(_hurd_pids_changed_stamp, GSYNC_BROADCAST);
 
-  return 0;
+    return 0;
 }

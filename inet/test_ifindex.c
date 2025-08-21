@@ -22,44 +22,41 @@
 #include <string.h>
 #include <net/if.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int failures = 0;
-  struct if_nameindex *idx = if_nameindex (), *p;
-  if (idx == NULL)
-    {
-      if (errno != ENOSYS)
-	{
-	  printf ("Couldn't get any interfaces.\n");
-	  exit (1);
-	}
-      /* The function is simply not implemented.  */
-      exit (0);
+    int failures = 0;
+    struct if_nameindex *idx = if_nameindex(), *p;
+    if (idx == NULL) {
+        if (errno != ENOSYS) {
+            printf("Couldn't get any interfaces.\n");
+            exit(1);
+        }
+        /* The function is simply not implemented.  */
+        exit(0);
     }
 
-  printf ("Idx            Name | Idx           Name\n");
+    printf("Idx            Name | Idx           Name\n");
 
-  for (p = idx; p->if_index || p->if_name; ++p)
-    {
-      char buf[IFNAMSIZ];
-      unsigned int ni;
-      int result;
-      printf ("%3d %15s | ", p->if_index, p->if_name);
-      printf ("%3d", ni = if_nametoindex (p->if_name));
-      printf ("%15s", if_indextoname (p->if_index, buf));
-      result = (ni != p->if_index || (strcmp (buf, p->if_name)));
-      if (ni == p->if_index)
-	/* We have to make sure that this is not an alias with the
-	   same interface number.  */
-	if (p->if_index == if_nametoindex (buf))
-	  result = 0;
-      printf ("%10s", result ? "fail" : "okay");
-      printf ("\n");
-      failures += result;
+    for (p = idx; p->if_index || p->if_name; ++p) {
+        char buf[IFNAMSIZ];
+        unsigned int ni;
+        int result;
+        printf("%3d %15s | ", p->if_index, p->if_name);
+        printf("%3d", ni = if_nametoindex(p->if_name));
+        printf("%15s", if_indextoname(p->if_index, buf));
+        result = (ni != p->if_index || (strcmp(buf, p->if_name)));
+        if (ni == p->if_index)
+            /* We have to make sure that this is not an alias with the
+               same interface number.  */
+            if (p->if_index == if_nametoindex(buf)) {
+                result = 0;
+            }
+        printf("%10s", result ? "fail" : "okay");
+        printf("\n");
+        failures += result;
     }
-  if_freenameindex (idx);
-  return failures ? 1 : 0;
+    if_freenameindex(idx);
+    return failures ? 1 : 0;
 }
 
 #define TEST_FUNCTION do_test ()

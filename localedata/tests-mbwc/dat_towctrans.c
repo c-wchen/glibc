@@ -1,9 +1,9 @@
 /*
  *  TEST SUITE FOR MB/WC FUNCTIONS IN C LIBRARY
  *
- *	 FILE:	dat_towctrans.c
+ *   FILE:  dat_towctrans.c
  *
- *	 TOWCTRANS:  wint_t towctrans (wint_t wc, wctrans_t charclass);
+ *   TOWCTRANS:  wint_t towctrans (wint_t wc, wctrans_t charclass);
  */
 
 #include <errno.h>
@@ -23,11 +23,11 @@
  *    the non-zero value.
  *
  *  { { WEOF }, { 0,0,1,0 } },
- *		      | |
- *		      | ret_val: an expected return value
- *		      ret_flg: if 1, compare an actual return value with the
- *			       ret_val; if 0, the test program checks
- *			       the actual return value.
+ *            | |
+ *            | ret_val: an expected return value
+ *            ret_flg: if 1, compare an actual return value with the
+ *                 ret_val; if 0, the test program checks
+ *                 the actual return value.
  *
  *    CAUTION: if a charclass is invalid, the test function gives
  *    towctrans() an invalid wctrans object instead of a return value
@@ -35,47 +35,47 @@
  */
 
 TST_TOWCTRANS tst_towctrans_loc [] = {
-  {
-    { Ttowctrans, TST_LOC_C },
     {
-      {	 { 0x0010, "xxxxxxx" }, { 0,     1,0x0010 }  },
-      {	 { 0x007F, "tolower" }, { 0,	   1,0x007F }  },
-      {	 { 0x0061, "toupper" }, { 0,	   1,0x0041 }  },
-      {	 { 0x0041, "tolower" }, { 0,	   1,0x0061 }  },
-      { .is_last = 1 }
-    }
-  },
-  {
-    { Ttowctrans, TST_LOC_de },
+        { Ttowctrans, TST_LOC_C },
+        {
+            {  { 0x0010, "xxxxxxx" }, { 0,     1, 0x0010 }  },
+            {  { 0x007F, "tolower" }, { 0,       1, 0x007F }  },
+            {  { 0x0061, "toupper" }, { 0,       1, 0x0041 }  },
+            {  { 0x0041, "tolower" }, { 0,       1, 0x0061 }  },
+            { .is_last = 1 }
+        }
+    },
     {
-      {	 { 0x0010, "tojkata" }, { 0,     1,0x0010 }  },
-      {	 { 0x0080, "tolower" }, { 0,	   1,0x0080 }  },
-      {	 { 0x00EC, "toupper" }, { 0,	   1,0x00CC }  },
-      {	 { 0x00CC, "tolower" }, { 0,	   1,0x00EC }  },
-      { .is_last = 1 }
-    }
-  },
-  {
-    { Ttowctrans, TST_LOC_enUS },
+        { Ttowctrans, TST_LOC_de },
+        {
+            {  { 0x0010, "tojkata" }, { 0,     1, 0x0010 }  },
+            {  { 0x0080, "tolower" }, { 0,       1, 0x0080 }  },
+            {  { 0x00EC, "toupper" }, { 0,       1, 0x00CC }  },
+            {  { 0x00CC, "tolower" }, { 0,       1, 0x00EC }  },
+            { .is_last = 1 }
+        }
+    },
     {
-      {	 { 0x0010, "xxxxxxx" }, { 0,     1,0x0010 }  },
-      {	 { 0x007F, "tolower" }, { 0,	   1,0x007F }  },
-      {	 { 0x0061, "toupper" }, { 0,	   1,0x0041 }  },
-      {	 { 0x0041, "tolower" }, { 0,	   1,0x0061 }  },
-      { .is_last = 1 }
-    }
-  },
-  {
-    { Ttowctrans, TST_LOC_eucJP },
+        { Ttowctrans, TST_LOC_enUS },
+        {
+            {  { 0x0010, "xxxxxxx" }, { 0,     1, 0x0010 }  },
+            {  { 0x007F, "tolower" }, { 0,       1, 0x007F }  },
+            {  { 0x0061, "toupper" }, { 0,       1, 0x0041 }  },
+            {  { 0x0041, "tolower" }, { 0,       1, 0x0061 }  },
+            { .is_last = 1 }
+        }
+    },
     {
-      {	 { 0xFF21, "tolower" }, { 0,	   1,0xFF41 }  },
-      {	 { 0xFF41, "toupper" }, { 0,	   1,0xFF21 }  },
-      {	 { 0x30A1, "tojhira" }, { 0,	   1,0x3041 }  },
-      {	 { 0x3041, "tojkata" }, { 0,	   1,0x30A1 }  },
-      { .is_last = 1 }
+        { Ttowctrans, TST_LOC_eucJP },
+        {
+            {  { 0xFF21, "tolower" }, { 0,       1, 0xFF41 }  },
+            {  { 0xFF41, "toupper" }, { 0,       1, 0xFF21 }  },
+            {  { 0x30A1, "tojhira" }, { 0,       1, 0x3041 }  },
+            {  { 0x3041, "tojkata" }, { 0,       1, 0x30A1 }  },
+            { .is_last = 1 }
+        }
+    },
+    {
+        { Ttowctrans, TST_LOC_end }
     }
-  },
-  {
-    { Ttowctrans, TST_LOC_end }
-  }
 };

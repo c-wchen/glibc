@@ -15,25 +15,25 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define	__NO_CTYPE
+#define __NO_CTYPE
 #include <ctype.h>
 
 /* Provide real-function versions of all the ctype macros.  */
 
-#define	func(name, type) \
+#define func(name, type) \
   int name (int c) { return __isctype (c, type); }
 
-func (isalnum, _ISalnum)
-func (isalpha, _ISalpha)
-func (iscntrl, _IScntrl)
-func (isdigit, _ISdigit)
-func (islower, _ISlower)
-func (isgraph, _ISgraph)
-func (isprint, _ISprint)
-func (ispunct, _ISpunct)
-func (isspace, _ISspace)
-func (isupper, _ISupper)
-func (isxdigit, _ISxdigit)
+func(isalnum, _ISalnum)
+func(isalpha, _ISalpha)
+func(iscntrl, _IScntrl)
+func(isdigit, _ISdigit)
+func(islower, _ISlower)
+func(isgraph, _ISgraph)
+func(isprint, _ISprint)
+func(ispunct, _ISpunct)
+func(isspace, _ISspace)
+func(isupper, _ISupper)
+func(isxdigit, _ISxdigit)
 
 #define __ctype_tolower \
   ((int32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TOLOWER) + 128)
@@ -41,15 +41,15 @@ func (isxdigit, _ISxdigit)
   ((int32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TOUPPER) + 128)
 
 int
-tolower (int c)
+tolower(int c)
 {
-  return c >= -128 && c < 256 ? __ctype_tolower[c] : c;
+    return c >= -128 && c < 256 ? __ctype_tolower[c] : c;
 }
-libc_hidden_def (tolower)
+libc_hidden_def(tolower)
 
 int
-toupper (int c)
+toupper(int c)
 {
-  return c >= -128 && c < 256 ? __ctype_toupper[c] : c;
+    return c >= -128 && c < 256 ? __ctype_toupper[c] : c;
 }
-libc_hidden_def (toupper)
+libc_hidden_def(toupper)

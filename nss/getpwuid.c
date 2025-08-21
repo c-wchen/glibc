@@ -18,11 +18,11 @@
 #include <pwd.h>
 
 
-#define LOOKUP_TYPE	struct passwd
-#define FUNCTION_NAME	getpwuid
-#define DATABASE_NAME	passwd
-#define ADD_PARAMS	uid_t uid
-#define ADD_VARIABLES	uid
-#define BUFLEN		NSS_BUFLEN_PASSWD
+#define LOOKUP_TYPE struct passwd
+#define FUNCTION_NAME   getpwuid
+#define DATABASE_NAME   passwd
+#define ADD_PARAMS  uid_t uid
+#define ADD_VARIABLES   uid
+#define BUFLEN      NSS_BUFLEN_PASSWD
 
 #include "../nss/getXXbyYY.c"

@@ -25,33 +25,32 @@
 #include <stdlib.h>
 #include <support/check.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  TEST_COMPARE (rand (), 1804289383);
-  TEST_COMPARE (rand (), 846930886);
-  TEST_COMPARE (rand (), 1681692777);
-  TEST_COMPARE (rand (), 1714636915);
-  TEST_COMPARE (rand (), 1957747793);
-  TEST_COMPARE (rand (), 424238335);
-  TEST_COMPARE (rand (), 719885386);
-  TEST_COMPARE (rand (), 1649760492);
-  TEST_COMPARE (rand (), 596516649);
-  TEST_COMPARE (rand (), 1189641421);
+    TEST_COMPARE(rand(), 1804289383);
+    TEST_COMPARE(rand(), 846930886);
+    TEST_COMPARE(rand(), 1681692777);
+    TEST_COMPARE(rand(), 1714636915);
+    TEST_COMPARE(rand(), 1957747793);
+    TEST_COMPARE(rand(), 424238335);
+    TEST_COMPARE(rand(), 719885386);
+    TEST_COMPARE(rand(), 1649760492);
+    TEST_COMPARE(rand(), 596516649);
+    TEST_COMPARE(rand(), 1189641421);
 
-  srand (1009);
-  TEST_COMPARE (rand (), 176208083);
-  TEST_COMPARE (rand (), 1650100842);
-  TEST_COMPARE (rand (), 1813188575);
-  TEST_COMPARE (rand (), 2064804480);
-  TEST_COMPARE (rand (), 1944264725);
-  TEST_COMPARE (rand (), 1673642853);
-  TEST_COMPARE (rand (), 1582759448);
-  TEST_COMPARE (rand (), 309901569);
-  TEST_COMPARE (rand (), 444031692);
-  TEST_COMPARE (rand (), 1926035991);
+    srand(1009);
+    TEST_COMPARE(rand(), 176208083);
+    TEST_COMPARE(rand(), 1650100842);
+    TEST_COMPARE(rand(), 1813188575);
+    TEST_COMPARE(rand(), 2064804480);
+    TEST_COMPARE(rand(), 1944264725);
+    TEST_COMPARE(rand(), 1673642853);
+    TEST_COMPARE(rand(), 1582759448);
+    TEST_COMPARE(rand(), 309901569);
+    TEST_COMPARE(rand(), 444031692);
+    TEST_COMPARE(rand(), 1926035991);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

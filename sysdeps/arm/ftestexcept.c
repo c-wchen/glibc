@@ -20,13 +20,13 @@
 #include <arm-features.h>
 
 
-int
-fetestexcept (int excepts)
+int fetestexcept(int excepts)
 {
-  /* Return no exception flags if a VFP unit isn't present.  */
-  if (!ARM_HAVE_VFP)
-    return 0;
+    /* Return no exception flags if a VFP unit isn't present.  */
+    if (!ARM_HAVE_VFP) {
+        return 0;
+    }
 
-  return libc_fetestexcept_vfp (excepts);
+    return libc_fetestexcept_vfp(excepts);
 }
-libm_hidden_def (fetestexcept)
+libm_hidden_def(fetestexcept)

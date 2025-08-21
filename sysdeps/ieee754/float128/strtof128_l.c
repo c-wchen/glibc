@@ -26,22 +26,22 @@
 # define wcstof64x_l __hide_wcstof64x_l
 #endif
 
-extern _Float128 ____strtof128_l_internal (const char *, char **,
-					   int, locale_t);
+extern _Float128 ____strtof128_l_internal(const char *, char **,
+        int, locale_t);
 
-#define	FLOAT		_Float128
-#define	FLT		FLT128
+#define FLOAT       _Float128
+#define FLT     FLT128
 #ifdef USE_WIDE_CHAR
-# define STRTOF		wcstof128_l
-# define __STRTOF	__wcstof128_l
-# define STRTOF_NAN	__wcstof128_nan
+# define STRTOF     wcstof128_l
+# define __STRTOF   __wcstof128_l
+# define STRTOF_NAN __wcstof128_nan
 #else
-# define STRTOF		strtof128_l
-# define __STRTOF	__strtof128_l
-# define STRTOF_NAN	__strtof128_nan
+# define STRTOF     strtof128_l
+# define __STRTOF   __strtof128_l
+# define STRTOF_NAN __strtof128_nan
 #endif
-#define	MPN2FLOAT	__mpn_construct_float128
-#define	FLOAT_HUGE_VAL	__builtin_huge_valf128 ()
+#define MPN2FLOAT   __mpn_construct_float128
+#define FLOAT_HUGE_VAL  __builtin_huge_valf128 ()
 
 #include <float128_private.h>
 
@@ -51,8 +51,8 @@ extern _Float128 ____strtof128_l_internal (const char *, char **,
 # undef strtof64x_l
 # undef wcstof64x_l
 # ifdef USE_WIDE_CHAR
-weak_alias (wcstof128_l, wcstof64x_l)
+weak_alias(wcstof128_l, wcstof64x_l)
 # else
-weak_alias (strtof128_l, strtof64x_l)
+weak_alias(strtof128_l, strtof64x_l)
 # endif
 #endif

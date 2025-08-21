@@ -25,56 +25,52 @@
 
 static pthread_barrier_t b;
 
-static void
-cl (void *arg)
+static void cl(void *arg)
 {
 }
 
-static int
-compar_func (const void *a1, const void *a2)
+static int compar_func(const void *a1, const void *a2)
 {
-  xpthread_barrier_wait (&b);
+    xpthread_barrier_wait(&b);
 
-  pthread_cleanup_push (cl, NULL);
+    pthread_cleanup_push(cl, NULL);
 
-  pause ();
+    pause();
 
-  pthread_cleanup_pop (0);
+    pthread_cleanup_pop(0);
 
-  support_record_failure ();
+    support_record_failure();
 
-  return 0;
+    return 0;
 }
 
-static void *
-tf (void *tf)
+static void *tf(void *tf)
 {
-  /* An array larger than QSORT_STACK_SIZE to force memory allocation.  */
-  int input[1024] = { 0 };
-  qsort (input, array_length (input), sizeof input[0], compar_func);
+    /* An array larger than QSORT_STACK_SIZE to force memory allocation.  */
+    int input[1024] = { 0 };
+    qsort(input, array_length(input), sizeof input[0], compar_func);
 
-  return NULL;
+    return NULL;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  mtrace ();
+    mtrace();
 
-  xpthread_barrier_init (&b, NULL, 2);
+    xpthread_barrier_init(&b, NULL, 2);
 
-  pthread_t thr = xpthread_create (NULL, tf, NULL);
+    pthread_t thr = xpthread_create(NULL, tf, NULL);
 
-  xpthread_barrier_wait (&b);
+    xpthread_barrier_wait(&b);
 
-  xpthread_cancel (thr);
+    xpthread_cancel(thr);
 
-  {
-    void *r = xpthread_join (thr);
-    TEST_VERIFY (r == PTHREAD_CANCELED);
-  }
+    {
+        void *r = xpthread_join(thr);
+        TEST_VERIFY(r == PTHREAD_CANCELED);
+    }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

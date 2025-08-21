@@ -18,10 +18,9 @@
 
 #include <support/xthread.h>
 
-void
-xpthread_barrier_init (pthread_barrier_t *barrier,
-                       pthread_barrierattr_t *attr, unsigned int count)
+void xpthread_barrier_init(pthread_barrier_t *barrier,
+                           pthread_barrierattr_t *attr, unsigned int count)
 {
-  xpthread_check_return ("pthread_barrier_init",
-                         pthread_barrier_init (barrier, attr, count));
+    xpthread_check_return("pthread_barrier_init",
+                          pthread_barrier_init(barrier, attr, count));
 }

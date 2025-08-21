@@ -16,23 +16,24 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-static inline RET_TYPE
-IMPL_NAME (float x)
+static inline RET_TYPE IMPL_NAME(float x)
 {
-  uint32_t ux = asuint (x);
-  int ex = (ux & ~SIGN_MASK) >> MANTISSA_WIDTH;
-  if (__glibc_unlikely (ex == 0))
-    {
-      /* Zero or subnormal.
-         Clear sign and exponent.  */
-      ux <<= 1 + EXPONENT_WIDTH;
-      if (ux == 0)
-	return RET_INVALID (RET_LOGB0);
-      /* subnormal */
-      return (RET_TYPE)-127 - stdc_leading_zeros (ux);
+    uint32_t ux = asuint(x);
+    int ex = (ux & ~SIGN_MASK) >> MANTISSA_WIDTH;
+    if (__glibc_unlikely(ex == 0)) {
+        /* Zero or subnormal.
+           Clear sign and exponent.  */
+        ux <<= 1 + EXPONENT_WIDTH;
+        if (ux == 0) {
+            return RET_INVALID(RET_LOGB0);
+        }
+        /* subnormal */
+        return (RET_TYPE) - 127 - stdc_leading_zeros(ux);
     }
-  if (__glibc_unlikely (ex == EXPONENT_MASK >> MANTISSA_WIDTH))
-    /* NaN or Inf */
-    return RET_INVALID (ux << (1 + EXPONENT_WIDTH) ? RET_LOGBNAN : RET_LOGMAX);
-  return ex - 127;
+    if (__glibc_unlikely(ex == EXPONENT_MASK >> MANTISSA_WIDTH))
+        /* NaN or Inf */
+    {
+        return RET_INVALID(ux << (1 + EXPONENT_WIDTH) ? RET_LOGBNAN : RET_LOGMAX);
+    }
+    return ex - 127;
 }

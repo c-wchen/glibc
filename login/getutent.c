@@ -25,23 +25,24 @@ static struct utmp *buffer;
 
 
 struct utmp *
-__getutent (void)
+__getutent(void)
 {
-  struct utmp *result;
+    struct utmp *result;
 
-  if (buffer == NULL)
-    {
-      buffer = (struct utmp *) malloc (sizeof (struct utmp));
-      if (buffer == NULL)
+    if (buffer == NULL) {
+        buffer = (struct utmp *) malloc(sizeof(struct utmp));
+        if (buffer == NULL) {
+            return NULL;
+        }
+    }
+
+    if (__getutent_r(buffer, &result) < 0) {
         return NULL;
     }
 
-  if (__getutent_r (buffer, &result) < 0)
-    return NULL;
-
-  return result;
+    return result;
 }
-libc_hidden_def (__getutent)
-weak_alias (__getutent, getutent)
+libc_hidden_def(__getutent)
+weak_alias(__getutent, getutent)
 
-weak_alias (buffer, __libc_getutent_freemem_ptr)
+weak_alias(buffer, __libc_getutent_freemem_ptr)

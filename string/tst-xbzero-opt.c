@@ -50,9 +50,8 @@
 
 /* A byte pattern that is unlikely to occur by chance: the first 16
    prime numbers (OEIS A000040).  */
-static const unsigned char test_pattern[16] =
-{
-  2, 3, 5, 7,  11, 13, 17, 19,  23, 29, 31, 37,  41, 43, 47, 53
+static const unsigned char test_pattern[16] = {
+    2, 3, 5, 7,  11, 13, 17, 19,  23, 29, 31, 37,  41, 43, 47, 53
 };
 
 /* Immediately after each subtest returns, we call swapcontext to get
@@ -97,15 +96,15 @@ static const unsigned char test_pattern[16] =
 
 static ucontext_t uc_main, uc_co;
 
-static __attribute_optimization_barrier__ int
-use_test_buffer (unsigned char *buf)
+static __attribute_optimization_barrier__ int use_test_buffer(unsigned char *buf)
 {
-  unsigned int sum = 0;
+    unsigned int sum = 0;
 
-  for (unsigned int i = 0; i < PATTERN_REPS; i++)
-    sum += buf[i * PATTERN_SIZE];
+    for (unsigned int i = 0; i < PATTERN_REPS; i++) {
+        sum += buf[i * PATTERN_SIZE];
+    }
 
-  return (sum == 2 * PATTERN_REPS) ? 0 : 1;
+    return (sum == 2 * PATTERN_REPS) ? 0 : 1;
 }
 
 /* Always check the test buffer immediately after filling it; this
@@ -117,75 +116,70 @@ use_test_buffer (unsigned char *buf)
    returns_twice attribute, which prevents always_inline to work.  */
 # define ALWAYS_INLINE
 #else
-# define ALWAYS_INLINE	__attribute__ ((always_inline))
+# define ALWAYS_INLINE  __attribute__ ((always_inline))
 #endif
-static inline ALWAYS_INLINE void
-prepare_test_buffer (unsigned char *buf)
+static inline ALWAYS_INLINE void prepare_test_buffer(unsigned char *buf)
 {
-  for (unsigned int i = 0; i < PATTERN_REPS; i++)
-    memcpy (buf + i*PATTERN_SIZE, test_pattern, PATTERN_SIZE);
+    for (unsigned int i = 0; i < PATTERN_REPS; i++) {
+        memcpy(buf + i * PATTERN_SIZE, test_pattern, PATTERN_SIZE);
+    }
 
-  if (swapcontext (&uc_co, &uc_main))
-    abort ();
+    if (swapcontext(&uc_co, &uc_main)) {
+        abort();
+    }
 
-  /* Force the compiler to really copy the pattern to buf.  */
-  if (use_test_buffer (buf))
-    abort ();
+    /* Force the compiler to really copy the pattern to buf.  */
+    if (use_test_buffer(buf)) {
+        abort();
+    }
 }
 
-static void
-setup_no_clear (void)
+static void setup_no_clear(void)
 {
-  unsigned char buf[TEST_BUFFER_SIZE];
-  prepare_test_buffer (buf);
+    unsigned char buf[TEST_BUFFER_SIZE];
+    prepare_test_buffer(buf);
 }
 
-static void
-setup_ordinary_clear (void)
+static void setup_ordinary_clear(void)
 {
-  unsigned char buf[TEST_BUFFER_SIZE];
-  prepare_test_buffer (buf);
-  memset (buf, 0, TEST_BUFFER_SIZE);
+    unsigned char buf[TEST_BUFFER_SIZE];
+    prepare_test_buffer(buf);
+    memset(buf, 0, TEST_BUFFER_SIZE);
 }
 
-static void
-setup_explicit_clear (void)
+static void setup_explicit_clear(void)
 {
-  unsigned char buf[TEST_BUFFER_SIZE];
-  prepare_test_buffer (buf);
-  explicit_bzero (buf, TEST_BUFFER_SIZE);
+    unsigned char buf[TEST_BUFFER_SIZE];
+    prepare_test_buffer(buf);
+    explicit_bzero(buf, TEST_BUFFER_SIZE);
 }
 
-enum test_expectation
-  {
+enum test_expectation {
     EXPECT_NONE, EXPECT_SOME, EXPECT_ALL, NO_EXPECTATIONS
-  };
-struct subtest
-{
-  void (*setup_subtest) (void);
-  const char *label;
-  enum test_expectation expected;
+};
+struct subtest {
+    void (*setup_subtest)(void);
+    const char *label;
+    enum test_expectation expected;
 };
 static const struct subtest *cur_subtest;
 
-static const struct subtest subtests[] =
-{
-  { setup_no_clear,       "no clear",       EXPECT_SOME },
-  /* The memset may happen or not, depending on compiler
-     optimizations.  */
-  { setup_ordinary_clear, "ordinary clear", NO_EXPECTATIONS },
-  { setup_explicit_clear, "explicit clear", EXPECT_NONE },
-  { 0,                    0,                -1          }
+static const struct subtest subtests[] = {
+    { setup_no_clear,       "no clear",       EXPECT_SOME },
+    /* The memset may happen or not, depending on compiler
+       optimizations.  */
+    { setup_ordinary_clear, "ordinary clear", NO_EXPECTATIONS },
+    { setup_explicit_clear, "explicit clear", EXPECT_NONE },
+    { 0,                    0,                -1          }
 };
 
-static void
-test_coroutine (void)
+static void test_coroutine(void)
 {
-  while (cur_subtest->setup_subtest)
-    {
-      cur_subtest->setup_subtest ();
-      if (swapcontext (&uc_co, &uc_main))
-	abort ();
+    while (cur_subtest->setup_subtest) {
+        cur_subtest->setup_subtest();
+        if (swapcontext(&uc_co, &uc_main)) {
+            abort();
+        }
     }
 }
 
@@ -196,126 +190,122 @@ static int test_status;
 static unsigned char *co_stack_buffer;
 static size_t co_stack_size;
 
-static unsigned int
-count_test_patterns (unsigned char *buf, size_t bufsiz)
+static unsigned int count_test_patterns(unsigned char *buf, size_t bufsiz)
 {
-  unsigned char *first = memmem (buf, bufsiz, test_pattern, PATTERN_SIZE);
-  if (!first)
-    return 0;
-  unsigned int cnt = 0;
-  for (unsigned int i = 0; i < PATTERN_REPS; i++)
-    {
-      unsigned char *p = first + i*PATTERN_SIZE;
-      if (p + PATTERN_SIZE - buf > bufsiz)
-	break;
-      if (memcmp (p, test_pattern, PATTERN_SIZE) == 0)
-	cnt++;
+    unsigned char *first = memmem(buf, bufsiz, test_pattern, PATTERN_SIZE);
+    if (!first) {
+        return 0;
     }
-  return cnt;
+    unsigned int cnt = 0;
+    for (unsigned int i = 0; i < PATTERN_REPS; i++) {
+        unsigned char *p = first + i * PATTERN_SIZE;
+        if (p + PATTERN_SIZE - buf > bufsiz) {
+            break;
+        }
+        if (memcmp(p, test_pattern, PATTERN_SIZE) == 0) {
+            cnt++;
+        }
+    }
+    return cnt;
 }
 
-static void
-check_test_buffer (enum test_expectation expected,
-		   const char *label, const char *stage)
+static void check_test_buffer(enum test_expectation expected,
+                              const char *label, const char *stage)
 {
-  unsigned int cnt = count_test_patterns (co_stack_buffer, co_stack_size);
-  switch (expected)
-    {
-    case EXPECT_NONE:
-      if (cnt == 0)
-	printf ("PASS: %s/%s: expected 0 got %d\n", label, stage, cnt);
-      else
-	{
-	  printf ("FAIL: %s/%s: expected 0 got %d\n", label, stage, cnt);
-	  test_status = 1;
-	}
-      break;
+    unsigned int cnt = count_test_patterns(co_stack_buffer, co_stack_size);
+    switch (expected) {
+        case EXPECT_NONE:
+            if (cnt == 0) {
+                printf("PASS: %s/%s: expected 0 got %d\n", label, stage, cnt);
+            } else {
+                printf("FAIL: %s/%s: expected 0 got %d\n", label, stage, cnt);
+                test_status = 1;
+            }
+            break;
 
-    case EXPECT_SOME:
-      if (cnt > 0)
-	printf ("PASS: %s/%s: expected some got %d\n", label, stage, cnt);
-      else
-	{
-	  printf ("FAIL: %s/%s: expected some got 0\n", label, stage);
-	  test_status = 1;
-	}
-      break;
+        case EXPECT_SOME:
+            if (cnt > 0) {
+                printf("PASS: %s/%s: expected some got %d\n", label, stage, cnt);
+            } else {
+                printf("FAIL: %s/%s: expected some got 0\n", label, stage);
+                test_status = 1;
+            }
+            break;
 
-     case EXPECT_ALL:
-      if (cnt == PATTERN_REPS)
-	printf ("PASS: %s/%s: expected %d got %d\n", label, stage,
-		PATTERN_REPS, cnt);
-      else
-	{
-	  printf ("FAIL: %s/%s: expected %d got %d\n", label, stage,
-		  PATTERN_REPS, cnt);
-	  test_status = 1;
-	}
-      break;
+        case EXPECT_ALL:
+            if (cnt == PATTERN_REPS)
+                printf("PASS: %s/%s: expected %d got %d\n", label, stage,
+                       PATTERN_REPS, cnt);
+            else {
+                printf("FAIL: %s/%s: expected %d got %d\n", label, stage,
+                       PATTERN_REPS, cnt);
+                test_status = 1;
+            }
+            break;
 
-    case NO_EXPECTATIONS:
-      printf ("INFO: %s/%s: found %d patterns%s\n", label, stage, cnt,
-	      cnt == 0 ? " (memset not eliminated)" : "");
-      break;
+        case NO_EXPECTATIONS:
+            printf("INFO: %s/%s: found %d patterns%s\n", label, stage, cnt,
+                   cnt == 0 ? " (memset not eliminated)" : "");
+            break;
 
-    default:
-      printf ("ERROR: %s/%s: invalid value for 'expected' = %d\n",
-	      label, stage, (int)expected);
-      test_status = 1;
+        default:
+            printf("ERROR: %s/%s: invalid value for 'expected' = %d\n",
+                   label, stage, (int)expected);
+            test_status = 1;
     }
 }
 
-static void
-test_loop (void)
+static void test_loop(void)
 {
-  cur_subtest = subtests;
-  while (cur_subtest->setup_subtest)
-    {
-      if (swapcontext (&uc_main, &uc_co))
-	abort ();
-      check_test_buffer (EXPECT_ALL, cur_subtest->label, "prepare");
-      if (swapcontext (&uc_main, &uc_co))
-	abort ();
-      check_test_buffer (cur_subtest->expected, cur_subtest->label, "test");
-      cur_subtest++;
+    cur_subtest = subtests;
+    while (cur_subtest->setup_subtest) {
+        if (swapcontext(&uc_main, &uc_co)) {
+            abort();
+        }
+        check_test_buffer(EXPECT_ALL, cur_subtest->label, "prepare");
+        if (swapcontext(&uc_main, &uc_co)) {
+            abort();
+        }
+        check_test_buffer(cur_subtest->expected, cur_subtest->label, "test");
+        cur_subtest++;
     }
-  /* Terminate the coroutine.  */
-  if (swapcontext (&uc_main, &uc_co))
-    abort ();
+    /* Terminate the coroutine.  */
+    if (swapcontext(&uc_main, &uc_co)) {
+        abort();
+    }
 }
 
-int
-do_test (void)
+int do_test(void)
 {
-  size_t page_alignment = sysconf (_SC_PAGESIZE);
-  if (page_alignment < sizeof (void *))
-    page_alignment = sizeof (void *);
-
-  co_stack_size = SIGSTKSZ + TEST_BUFFER_SIZE;
-  if (co_stack_size < page_alignment * 4)
-    co_stack_size = page_alignment * 4;
-
-  void *p;
-  int err = posix_memalign (&p, page_alignment, co_stack_size);
-  if (err || !p)
-    {
-      printf ("ERROR: allocating alt stack: %s\n", strerror (err));
-      return 2;
+    size_t page_alignment = sysconf(_SC_PAGESIZE);
+    if (page_alignment < sizeof(void *)) {
+        page_alignment = sizeof(void *);
     }
-  co_stack_buffer = p;
 
-  if (getcontext (&uc_co))
-    {
-      printf ("ERROR: allocating coroutine context: %s\n", strerror (err));
-      return 2;
+    co_stack_size = SIGSTKSZ + TEST_BUFFER_SIZE;
+    if (co_stack_size < page_alignment * 4) {
+        co_stack_size = page_alignment * 4;
     }
-  uc_co.uc_stack.ss_sp   = co_stack_buffer;
-  uc_co.uc_stack.ss_size = co_stack_size;
-  uc_co.uc_link          = &uc_main;
-  makecontext (&uc_co, test_coroutine, 0);
 
-  test_loop ();
-  return test_status;
+    void *p;
+    int err = posix_memalign(&p, page_alignment, co_stack_size);
+    if (err || !p) {
+        printf("ERROR: allocating alt stack: %s\n", strerror(err));
+        return 2;
+    }
+    co_stack_buffer = p;
+
+    if (getcontext(&uc_co)) {
+        printf("ERROR: allocating coroutine context: %s\n", strerror(err));
+        return 2;
+    }
+    uc_co.uc_stack.ss_sp   = co_stack_buffer;
+    uc_co.uc_stack.ss_size = co_stack_size;
+    uc_co.uc_link          = &uc_main;
+    makecontext(&uc_co, test_coroutine, 0);
+
+    test_loop();
+    return test_status;
 }
 
 #include <support/test-driver.c>

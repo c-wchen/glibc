@@ -19,15 +19,15 @@
 #ifndef _SPIN_LOCK_H
 #define _SPIN_LOCK_H
 
-#include <lock-intern.h>	/* This does all the work.  */
+#include <lock-intern.h>    /* This does all the work.  */
 
 typedef __spin_lock_t spin_lock_t;
-#define SPIN_LOCK_INITIALIZER	__SPIN_LOCK_INITIALIZER
+#define SPIN_LOCK_INITIALIZER   __SPIN_LOCK_INITIALIZER
 
-#define spin_lock_init(lock)	__spin_lock_init (lock)
-#define spin_lock(lock)		__spin_lock (lock)
-#define spin_try_lock(lock)	__spin_try_lock (lock)
-#define spin_unlock(lock)	__spin_unlock (lock)
-#define spin_lock_locked(lock)	__spin_lock_locked (lock)
+#define spin_lock_init(lock)    __spin_lock_init (lock)
+#define spin_lock(lock)     __spin_lock (lock)
+#define spin_try_lock(lock) __spin_try_lock (lock)
+#define spin_unlock(lock)   __spin_unlock (lock)
+#define spin_lock_locked(lock)  __spin_lock_locked (lock)
 
 #endif /* spin-lock.h */

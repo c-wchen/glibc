@@ -21,29 +21,28 @@
 struct dwarf_fde;
 struct fde_vector;
 
-struct object
-{
-  void *pc_begin;
-  void *tbase;
-  void *dbase;
-  union {
-    struct dwarf_fde *single;
-    struct dwarf_fde **array;
-    struct fde_vector *sort;
-  } u;
+struct object {
+    void *pc_begin;
+    void *tbase;
+    void *dbase;
+    union {
+        struct dwarf_fde *single;
+        struct dwarf_fde **array;
+        struct fde_vector *sort;
+    } u;
 
-  union {
-    struct {
-      unsigned long sorted : 1;
-      unsigned long from_array : 1;
-      unsigned long mixed_encoding : 1;
-      unsigned long encoding : 8;
-      /* ??? Wish there was an easy way to detect a 64-bit host here;
-	 we've got 32 bits left to play with... */
-      unsigned long count : 21;
-    } b;
-    size_t i;
-  } s;
+    union {
+        struct {
+            unsigned long sorted : 1;
+            unsigned long from_array : 1;
+            unsigned long mixed_encoding : 1;
+            unsigned long encoding : 8;
+            /* ??? Wish there was an easy way to detect a 64-bit host here;
+            we've got 32 bits left to play with... */
+            unsigned long count : 21;
+        } b;
+        size_t i;
+    } s;
 
-  struct object *next;
+    struct object *next;
 };

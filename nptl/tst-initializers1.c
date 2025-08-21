@@ -26,33 +26,39 @@ pthread_mutex_t mtx_errorchk = PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP;
 pthread_mutex_t mtx_adaptive = PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP;
 pthread_rwlock_t rwl_normal = PTHREAD_RWLOCK_INITIALIZER;
 pthread_rwlock_t rwl_writer
-  = PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP;
+    = PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP;
 pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  if (mtx_normal.__data.__kind != PTHREAD_MUTEX_TIMED_NP)
-    return 1;
-  if (mtx_recursive.__data.__kind != PTHREAD_MUTEX_RECURSIVE_NP)
-    return 2;
-  if (mtx_errorchk.__data.__kind != PTHREAD_MUTEX_ERRORCHECK_NP)
-    return 3;
-  if (mtx_adaptive.__data.__kind != PTHREAD_MUTEX_ADAPTIVE_NP)
-    return 4;
-  if (rwl_normal.__data.__flags != PTHREAD_RWLOCK_PREFER_READER_NP)
-    return 5;
-  if (rwl_writer.__data.__flags
-      != PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP)
-    return 6;
-  /* <libc-lock.h> __libc_rwlock_init definition for libc.so
-     relies on PTHREAD_RWLOCK_INITIALIZER being all zeros.  If
-     that ever changes, <libc-lock.h> needs updating.  */
-  size_t i;
-  for (i = 0; i < sizeof (rwl_normal); i++)
-    if (((char *) &rwl_normal)[i] != '\0')
-      return 7;
-  return 0;
+    if (mtx_normal.__data.__kind != PTHREAD_MUTEX_TIMED_NP) {
+        return 1;
+    }
+    if (mtx_recursive.__data.__kind != PTHREAD_MUTEX_RECURSIVE_NP) {
+        return 2;
+    }
+    if (mtx_errorchk.__data.__kind != PTHREAD_MUTEX_ERRORCHECK_NP) {
+        return 3;
+    }
+    if (mtx_adaptive.__data.__kind != PTHREAD_MUTEX_ADAPTIVE_NP) {
+        return 4;
+    }
+    if (rwl_normal.__data.__flags != PTHREAD_RWLOCK_PREFER_READER_NP) {
+        return 5;
+    }
+    if (rwl_writer.__data.__flags
+        != PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP) {
+        return 6;
+    }
+    /* <libc-lock.h> __libc_rwlock_init definition for libc.so
+       relies on PTHREAD_RWLOCK_INITIALIZER being all zeros.  If
+       that ever changes, <libc-lock.h> needs updating.  */
+    size_t i;
+    for (i = 0; i < sizeof(rwl_normal); i++)
+        if (((char *) &rwl_normal)[i] != '\0') {
+            return 7;
+        }
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

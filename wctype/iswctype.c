@@ -22,15 +22,15 @@
 
 #undef __iswctype
 
-int
-__iswctype (wint_t wc, wctype_t desc)
+int __iswctype(wint_t wc, wctype_t desc)
 {
-  /* If the user passes in an invalid DESC valid (the one returned from
-     `wctype' in case of an error) simply return 0.  */
-  if (desc == (wctype_t) 0)
-    return 0;
+    /* If the user passes in an invalid DESC valid (the one returned from
+       `wctype' in case of an error) simply return 0.  */
+    if (desc == (wctype_t) 0) {
+        return 0;
+    }
 
-  return wctype_table_lookup ((const char *) desc, wc);
+    return wctype_table_lookup((const char *) desc, wc);
 }
-libc_hidden_def (__iswctype)
-weak_alias (__iswctype, iswctype)
+libc_hidden_def(__iswctype)
+weak_alias(__iswctype, iswctype)

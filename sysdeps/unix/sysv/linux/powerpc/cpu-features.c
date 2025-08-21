@@ -26,88 +26,85 @@
 #include <string.h>
 #include <ldsodefs.h>
 
-static void set_hwcap_bit (unsigned long int *hwcap, bool disable,
-			   unsigned long int tcb_value, unsigned int value)
+static void set_hwcap_bit(unsigned long int *hwcap, bool disable,
+                          unsigned long int tcb_value, unsigned int value)
 {
-  if (disable)
-    *hwcap &= ~value;
-  else
-    *hwcap |= tcb_value & value;
-}
-
-static void
-TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *valp)
-{
-  /* The current IFUNC selection is always using the most recent
-     features which are available via AT_HWCAP or AT_HWCAP2.  But in
-     some scenarios it is useful to adjust this selection.
-
-     The environment variable:
-
-     GLIBC_TUNABLES=glibc.cpu.hwcaps=-xxx,yyy,....
-
-     Can be used to enable HWCAP/HWCAP2 feature yyy, disable HWCAP/HWCAP2
-     feature xxx, where the feature name is case-sensitive and has to match
-     the ones mentioned in the file{sysdeps/powerpc/dl-procinfo.c}. */
-
-  /* Copy the features from dl_powerpc_cpu_features, which contains the
-     features provided by AT_HWCAP and AT_HWCAP2.  */
-  struct cpu_features *cpu_features = &GLRO(dl_powerpc_cpu_features);
-  unsigned long int tcbv_hwcap = cpu_features->hwcap;
-  unsigned long int tcbv_hwcap2 = cpu_features->hwcap2;
-
-  struct tunable_str_comma_state_t ts;
-  tunable_str_comma_init (&ts, valp);
-
-  struct tunable_str_comma_t t;
-  while (tunable_str_comma_next (&ts, &t))
-    {
-      if (t.len == 0)
-	continue;
-
-      size_t offset = 0;
-      for (int i = 0; i < __dl_hwcap_info_size; ++i)
-	{
-	  const char *hwcap_name = __dl_hwcap_names + offset;
-	  size_t hwcap_name_len = strlen (hwcap_name);
-	  /* Check the tunable name on the supported list.  */
-	  if (tunable_str_comma_strcmp (&t, hwcap_name, hwcap_name_len))
-	    {
-	      switch (__dl_hwcap_info[i].hwcap)
-		{
-		case AT_HWCAP:
-		  set_hwcap_bit (&cpu_features->hwcap, t.disable, tcbv_hwcap,
-				 __dl_hwcap_info[i].value);
-		  break;
-
-		case AT_HWCAP2:
-		  set_hwcap_bit (&cpu_features->hwcap2, t.disable, tcbv_hwcap2,
-				 __dl_hwcap_info[i].value);
-		  break;
-
-		/* Ignore unknown values.  */
-		}
-	    }
-	  offset += hwcap_name_len + 1;
-	}
+    if (disable) {
+        *hwcap &= ~value;
+    } else {
+        *hwcap |= tcb_value & value;
     }
 }
 
-static inline void
-init_cpu_features (struct cpu_features *cpu_features, uint64_t hwcaps[])
+static void
+TUNABLE_CALLBACK(set_hwcaps)(tunable_val_t *valp)
 {
-  /* Fill the cpu_features with the supported hwcaps
-     which are set by __tcb_parse_hwcap_and_convert_at_platform.  */
-  cpu_features->hwcap = hwcaps[0];
-  cpu_features->hwcap2 = hwcaps[1];
-  cpu_features->hwcap3 = hwcaps[2];
-  cpu_features->hwcap4 = hwcaps[3];
-  /* Default is to use aligned memory access on optimized function unless
-     tunables is enable, since for this case user can explicit disable
-     unaligned optimizations.  */
-  int32_t cached_memfunc = TUNABLE_GET (glibc, cpu, cached_memopt, int32_t,
-					NULL);
-  cpu_features->use_cached_memopt = (cached_memfunc > 0);
-  TUNABLE_GET (glibc, cpu, hwcaps, tunable_val_t *,
-	       TUNABLE_CALLBACK (set_hwcaps));
+    /* The current IFUNC selection is always using the most recent
+       features which are available via AT_HWCAP or AT_HWCAP2.  But in
+       some scenarios it is useful to adjust this selection.
+
+       The environment variable:
+
+       GLIBC_TUNABLES=glibc.cpu.hwcaps=-xxx,yyy,....
+
+       Can be used to enable HWCAP/HWCAP2 feature yyy, disable HWCAP/HWCAP2
+       feature xxx, where the feature name is case-sensitive and has to match
+       the ones mentioned in the file{sysdeps/powerpc/dl-procinfo.c}. */
+
+    /* Copy the features from dl_powerpc_cpu_features, which contains the
+       features provided by AT_HWCAP and AT_HWCAP2.  */
+    struct cpu_features *cpu_features = &GLRO(dl_powerpc_cpu_features);
+    unsigned long int tcbv_hwcap = cpu_features->hwcap;
+    unsigned long int tcbv_hwcap2 = cpu_features->hwcap2;
+
+    struct tunable_str_comma_state_t ts;
+    tunable_str_comma_init(&ts, valp);
+
+    struct tunable_str_comma_t t;
+    while (tunable_str_comma_next(&ts, &t)) {
+        if (t.len == 0) {
+            continue;
+        }
+
+        size_t offset = 0;
+        for (int i = 0; i < __dl_hwcap_info_size; ++i) {
+            const char *hwcap_name = __dl_hwcap_names + offset;
+            size_t hwcap_name_len = strlen(hwcap_name);
+            /* Check the tunable name on the supported list.  */
+            if (tunable_str_comma_strcmp(&t, hwcap_name, hwcap_name_len)) {
+                switch (__dl_hwcap_info[i].hwcap) {
+                    case AT_HWCAP:
+                        set_hwcap_bit(&cpu_features->hwcap, t.disable, tcbv_hwcap,
+                                      __dl_hwcap_info[i].value);
+                        break;
+
+                    case AT_HWCAP2:
+                        set_hwcap_bit(&cpu_features->hwcap2, t.disable, tcbv_hwcap2,
+                                      __dl_hwcap_info[i].value);
+                        break;
+
+                        /* Ignore unknown values.  */
+                }
+            }
+            offset += hwcap_name_len + 1;
+        }
+    }
+}
+
+static inline void init_cpu_features(struct cpu_features *cpu_features, uint64_t hwcaps[])
+{
+    /* Fill the cpu_features with the supported hwcaps
+       which are set by __tcb_parse_hwcap_and_convert_at_platform.  */
+    cpu_features->hwcap = hwcaps[0];
+    cpu_features->hwcap2 = hwcaps[1];
+    cpu_features->hwcap3 = hwcaps[2];
+    cpu_features->hwcap4 = hwcaps[3];
+    /* Default is to use aligned memory access on optimized function unless
+       tunables is enable, since for this case user can explicit disable
+       unaligned optimizations.  */
+    int32_t cached_memfunc = TUNABLE_GET(glibc, cpu, cached_memopt, int32_t,
+                                         NULL);
+    cpu_features->use_cached_memopt = (cached_memfunc > 0);
+    TUNABLE_GET(glibc, cpu, hwcaps, tunable_val_t *,
+                TUNABLE_CALLBACK(set_hwcaps));
 }

@@ -21,17 +21,17 @@
 #include "soft-supp.h"
 #include <signal.h>
 
-void
-__atomic_feupdateenv (const fenv_t *envp)
+void __atomic_feupdateenv(const fenv_t *envp)
 {
-  fenv_union_t u;
-  int saved_exceptions = __sim_exceptions_thread;
+    fenv_union_t u;
+    int saved_exceptions = __sim_exceptions_thread;
 
-  /* This function postdates the global variables being turned into
-     compat symbols, so no need to set them.  */
-  u.fenv = *envp;
-  __sim_exceptions_thread |= u.l[0];
-  __sim_disabled_exceptions_thread = u.l[1];
-  if (saved_exceptions & ~__sim_disabled_exceptions_thread)
-    raise (SIGFPE);
+    /* This function postdates the global variables being turned into
+       compat symbols, so no need to set them.  */
+    u.fenv = *envp;
+    __sim_exceptions_thread |= u.l[0];
+    __sim_disabled_exceptions_thread = u.l[1];
+    if (saved_exceptions & ~__sim_disabled_exceptions_thread) {
+        raise(SIGFPE);
+    }
 }

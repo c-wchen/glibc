@@ -19,16 +19,15 @@
 #include <fenv_libc.h>
 #include <fpu_control.h>
 
-int
-feenableexcept (int excepts)
+int feenableexcept(int excepts)
 {
-  fexcept_t temp, old_exc, new_flags;
+    fexcept_t temp, old_exc, new_flags;
 
-  _FPU_GETCW (temp);
-  old_exc = (temp & FPC_EXCEPTION_MASK) >> FPC_EXCEPTION_MASK_SHIFT;
-  new_flags = (temp | (((unsigned int) excepts & FE_ALL_EXCEPT)
-		       << FPC_EXCEPTION_MASK_SHIFT));
-  _FPU_SETCW (new_flags);
+    _FPU_GETCW(temp);
+    old_exc = (temp & FPC_EXCEPTION_MASK) >> FPC_EXCEPTION_MASK_SHIFT;
+    new_flags = (temp | (((unsigned int) excepts & FE_ALL_EXCEPT)
+                         << FPC_EXCEPTION_MASK_SHIFT));
+    _FPU_SETCW(new_flags);
 
-  return old_exc;
+    return old_exc;
 }

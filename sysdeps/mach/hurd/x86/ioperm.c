@@ -24,34 +24,32 @@
 #include <mach/i386/mach_i386.h>
 #endif
 
-int
-ioperm (unsigned long int from, unsigned long int num, int turn_on)
+int ioperm(unsigned long int from, unsigned long int num, int turn_on)
 {
 #if ! HAVE_I386_IO_PERM_MODIFY
-  return __hurd_fail (ENOSYS);
+    return __hurd_fail(ENOSYS);
 #else
-  error_t err;
-  device_t devmaster;
+    error_t err;
+    device_t devmaster;
 
-  /* With the device master port we get a capability that represents
-     this range of io ports.  */
-  err = __get_privileged_ports (NULL, &devmaster);
-  if (! err)
-    {
-      io_perm_t perm;
-      err = __i386_io_perm_create (devmaster, from, from + num - 1, &perm);
-      __mach_port_deallocate (__mach_task_self (), devmaster);
-      if (! err)
-	{
-	  /* Now we add or remove that set from our task's bitmap.  */
-	  err = __i386_io_perm_modify (__mach_task_self (), perm, turn_on);
-	  __mach_port_deallocate (__mach_task_self (), perm);
-	}
+    /* With the device master port we get a capability that represents
+       this range of io ports.  */
+    err = __get_privileged_ports(NULL, &devmaster);
+    if (! err) {
+        io_perm_t perm;
+        err = __i386_io_perm_create(devmaster, from, from + num - 1, &perm);
+        __mach_port_deallocate(__mach_task_self(), devmaster);
+        if (! err) {
+            /* Now we add or remove that set from our task's bitmap.  */
+            err = __i386_io_perm_modify(__mach_task_self(), perm, turn_on);
+            __mach_port_deallocate(__mach_task_self(), perm);
+        }
 
-      if (err == MIG_BAD_ID)	/* Old kernels don't have these RPCs.  */
-	err = ENOSYS;
+        if (err == MIG_BAD_ID) {  /* Old kernels don't have these RPCs.  */
+            err = ENOSYS;
+        }
     }
 
-  return err ? __hurd_fail (err) : 0;
+    return err ? __hurd_fail(err) : 0;
 #endif
 }

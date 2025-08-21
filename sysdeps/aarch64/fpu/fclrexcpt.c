@@ -19,20 +19,20 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-int
-feclearexcept (int excepts)
+int feclearexcept(int excepts)
 {
-  fpu_fpsr_t fpsr;
-  fpu_fpsr_t fpsr_new;
+    fpu_fpsr_t fpsr;
+    fpu_fpsr_t fpsr_new;
 
-  excepts &= FE_ALL_EXCEPT;
+    excepts &= FE_ALL_EXCEPT;
 
-  _FPU_GETFPSR (fpsr);
-  fpsr_new = fpsr & ~excepts;
+    _FPU_GETFPSR(fpsr);
+    fpsr_new = fpsr & ~excepts;
 
-  if (fpsr != fpsr_new)
-    _FPU_SETFPSR (fpsr_new);
+    if (fpsr != fpsr_new) {
+        _FPU_SETFPSR(fpsr_new);
+    }
 
-  return 0;
+    return 0;
 }
-libm_hidden_def (feclearexcept)
+libm_hidden_def(feclearexcept)

@@ -20,16 +20,17 @@
 
 /* Duplicate FD to FD2, closing the old FD2 and making FD2 be
    open on the same file as FD is.  Return FD2 or -1.  */
-int
-__dup2 (int fd, int fd2)
+int __dup2(int fd, int fd2)
 {
-  int flags = 0;
+    int flags = 0;
 
-  if (fd2 == fd)
-    /* See the comment in dup3.  */
-    flags = -1;
+    if (fd2 == fd)
+        /* See the comment in dup3.  */
+    {
+        flags = -1;
+    }
 
-  return __dup3 (fd, fd2, flags);
+    return __dup3(fd, fd2, flags);
 }
-libc_hidden_def (__dup2)
-weak_alias (__dup2, dup2)
+libc_hidden_def(__dup2)
+weak_alias(__dup2, dup2)

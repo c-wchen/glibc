@@ -28,10 +28,9 @@
 
 #include <math-narrow.h>
 
-double
-__dsqrtl (_Float128 x)
+double __dsqrtl(_Float128 x)
 {
-  NARROW_SQRT_ROUND_TO_ODD (x, double, union ieee854_long_double, l,
-			    mantissa3);
+    NARROW_SQRT_ROUND_TO_ODD(x, double, union ieee854_long_double, l,
+                             mantissa3);
 }
-libm_alias_double_ldouble (sqrt)
+libm_alias_double_ldouble(sqrt)

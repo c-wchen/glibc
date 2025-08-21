@@ -34,49 +34,48 @@
 /* Defined in brk.c.  */
 extern void *__curbrk;
 
-void *
-_dl_early_allocate (size_t size)
+void *_dl_early_allocate(size_t size)
 {
-  void *result;
+    void *result;
 
-  if (__curbrk != NULL)
-    /* If the break has been initialized, brk must have run before,
-       so just call it once more.  */
+    if (__curbrk != NULL)
+        /* If the break has been initialized, brk must have run before,
+           so just call it once more.  */
     {
-      result = __sbrk (size);
-      if (result == (void *) -1)
-        result = NULL;
-    }
-  else
-    {
-      /* If brk has not been invoked, there is no need to update
-         __curbrk.  The first call to brk will take care of that.  */
-      void *previous = __brk_call (NULL);
-      result = __brk_call (previous + size);
-      if (result == previous)
-        result = NULL;
-      else
-        result = previous;
+        result = __sbrk(size);
+        if (result == (void *) -1) {
+            result = NULL;
+        }
+    } else {
+        /* If brk has not been invoked, there is no need to update
+           __curbrk.  The first call to brk will take care of that.  */
+        void *previous = __brk_call(NULL);
+        result = __brk_call(previous + size);
+        if (result == previous) {
+            result = NULL;
+        } else {
+            result = previous;
+        }
     }
 
-  /* If brk fails, fall back to mmap.  This can happen due to
-     unfortunate ASLR layout decisions and kernel bugs, particularly
-     for static PIE.  */
-  if (result == NULL)
-    {
-      long int ret;
-      int prot = PROT_READ | PROT_WRITE;
-      int flags = MAP_PRIVATE | MAP_ANONYMOUS;
+    /* If brk fails, fall back to mmap.  This can happen due to
+       unfortunate ASLR layout decisions and kernel bugs, particularly
+       for static PIE.  */
+    if (result == NULL) {
+        long int ret;
+        int prot = PROT_READ | PROT_WRITE;
+        int flags = MAP_PRIVATE | MAP_ANONYMOUS;
 #ifdef __NR_mmap2
-      ret = MMAP_CALL_INTERNAL (mmap2, 0, size, prot, flags, -1, 0);
+        ret = MMAP_CALL_INTERNAL(mmap2, 0, size, prot, flags, -1, 0);
 #else
-      ret = MMAP_CALL_INTERNAL (mmap, 0, size, prot, flags, -1, 0);
+        ret = MMAP_CALL_INTERNAL(mmap, 0, size, prot, flags, -1, 0);
 #endif
-      if (INTERNAL_SYSCALL_ERROR_P (ret))
-        result = NULL;
-      else
-        result = (void *) ret;
+        if (INTERNAL_SYSCALL_ERROR_P(ret)) {
+            result = NULL;
+        } else {
+            result = (void *) ret;
+        }
     }
 
-  return result;
+    return result;
 }

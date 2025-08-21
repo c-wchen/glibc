@@ -24,29 +24,31 @@
 const char _dl_hwcaps_subdirs[] = "x86-64-v4:x86-64-v3:x86-64-v2";
 enum { subdirs_count = 3 }; /* Number of components in _dl_hwcaps_subdirs.  */
 
-uint32_t
-_dl_hwcaps_subdirs_active (void)
+uint32_t _dl_hwcaps_subdirs_active(void)
 {
-  const struct cpu_features *cpu_features = __get_cpu_features ();
-  unsigned int isa_level = get_isa_level (cpu_features);
-  int active = 0;
+    const struct cpu_features *cpu_features = __get_cpu_features();
+    unsigned int isa_level = get_isa_level(cpu_features);
+    int active = 0;
 
-  /* Test in reverse preference order.  */
+    /* Test in reverse preference order.  */
 
-  /* x86-64-v2.  */
-  if (!(isa_level & GNU_PROPERTY_X86_ISA_1_V2))
-    return _dl_hwcaps_subdirs_build_bitmask (subdirs_count, active);
-  ++active;
+    /* x86-64-v2.  */
+    if (!(isa_level & GNU_PROPERTY_X86_ISA_1_V2)) {
+        return _dl_hwcaps_subdirs_build_bitmask(subdirs_count, active);
+    }
+    ++active;
 
-  /* x86-64-v3.  */
-  if (!(isa_level & GNU_PROPERTY_X86_ISA_1_V3))
-    return _dl_hwcaps_subdirs_build_bitmask (subdirs_count, active);
-  ++active;
+    /* x86-64-v3.  */
+    if (!(isa_level & GNU_PROPERTY_X86_ISA_1_V3)) {
+        return _dl_hwcaps_subdirs_build_bitmask(subdirs_count, active);
+    }
+    ++active;
 
-  /* x86-64-v4.  */
-  if (!(isa_level & GNU_PROPERTY_X86_ISA_1_V4))
-    return _dl_hwcaps_subdirs_build_bitmask (subdirs_count, active);
-  ++active;
+    /* x86-64-v4.  */
+    if (!(isa_level & GNU_PROPERTY_X86_ISA_1_V4)) {
+        return _dl_hwcaps_subdirs_build_bitmask(subdirs_count, active);
+    }
+    ++active;
 
-  return _dl_hwcaps_subdirs_build_bitmask (subdirs_count, active);
+    return _dl_hwcaps_subdirs_build_bitmask(subdirs_count, active);
 }

@@ -23,30 +23,27 @@
 
 
 /* Create a directory named PATH relative to FD with protections MODE.  */
-int
-mkdirat (int fd, const char *path, mode_t mode)
+int mkdirat(int fd, const char *path, mode_t mode)
 {
-  if (path == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (path == NULL) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  if (fd != AT_FDCWD && path[0] != '/')
-    {
-      /* Check FD is associated with a directory.  */
-      struct stat64 st;
-      if (__fstat64 (fd, &st) != 0)
-	return -1;
+    if (fd != AT_FDCWD && path[0] != '/') {
+        /* Check FD is associated with a directory.  */
+        struct stat64 st;
+        if (__fstat64(fd, &st) != 0) {
+            return -1;
+        }
 
-      if (!S_ISDIR (st.st_mode))
-	{
-	  __set_errno (ENOTDIR);
-	  return -1;
-	}
+        if (!S_ISDIR(st.st_mode)) {
+            __set_errno(ENOTDIR);
+            return -1;
+        }
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (mkdirat)
+stub_warning(mkdirat)

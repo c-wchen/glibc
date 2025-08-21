@@ -22,11 +22,11 @@
 
 void _Qp_xtoq(long double *c, const long a)
 {
-  FP_DECL_EX;
-  FP_DECL_Q(C);
-  long b = a;
+    FP_DECL_EX;
+    FP_DECL_Q(C);
+    long b = a;
 
-  FP_FROM_INT_Q(C, b, 64, unsigned long);
-  FP_PACK_RAW_QP(c, C);
-  QP_NO_EXCEPTIONS;
+    FP_FROM_INT_Q(C, b, 64, unsigned long);
+    FP_PACK_RAW_QP(c, C);
+    QP_NO_EXCEPTIONS;
 }

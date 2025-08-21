@@ -26,39 +26,38 @@
 
 static volatile uintptr_t handler_stackaddr;
 
-static void
-handler (int unused)
+static void handler(int unused)
 {
-  int var;
-  handler_stackaddr = (uintptr_t) &var;
+    int var;
+    handler_stackaddr = (uintptr_t) &var;
 }
 
-int
-do_test (void)
+int do_test(void)
 {
-  void *sstk = xalloc_sigstack (0);
+    void *sstk = xalloc_sigstack(0);
 
-  unsigned char *sp;
-  size_t size;
-  xget_sigstack_location (sstk, &sp, &size);
-  printf ("signal stack installed: sp=%p size=%zu\n", sp, size);
+    unsigned char *sp;
+    size_t size;
+    xget_sigstack_location(sstk, &sp, &size);
+    printf("signal stack installed: sp=%p size=%zu\n", sp, size);
 
-  struct sigaction sa;
-  sa.sa_handler = handler;
-  sa.sa_flags   = SA_RESTART | SA_ONSTACK;
-  sigfillset (&sa.sa_mask);
-  if (sigaction (SIGUSR1, &sa, 0))
-    FAIL_RET ("sigaction (SIGUSR1, handler): %m\n");
+    struct sigaction sa;
+    sa.sa_handler = handler;
+    sa.sa_flags   = SA_RESTART | SA_ONSTACK;
+    sigfillset(&sa.sa_mask);
+    if (sigaction(SIGUSR1, &sa, 0)) {
+        FAIL_RET("sigaction (SIGUSR1, handler): %m\n");
+    }
 
-  raise (SIGUSR1);
+    raise(SIGUSR1);
 
-  uintptr_t haddr = handler_stackaddr;
-  printf ("address of handler local variable: %p\n", (void *)haddr);
-  TEST_VERIFY ((uintptr_t)sp < haddr);
-  TEST_VERIFY (haddr < (uintptr_t)sp + size);
+    uintptr_t haddr = handler_stackaddr;
+    printf("address of handler local variable: %p\n", (void *)haddr);
+    TEST_VERIFY((uintptr_t)sp < haddr);
+    TEST_VERIFY(haddr < (uintptr_t)sp + size);
 
-  xfree_sigstack (sstk);
-  return 0;
+    xfree_sigstack(sstk);
+    return 0;
 }
 
 #include <support/test-driver.c>

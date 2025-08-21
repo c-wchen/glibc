@@ -20,11 +20,10 @@
 #include <tst-file-align.h>
 #include <tst-stack-align.h>
 
-int foo __attribute__ ((aligned (ALIGN))) = 1;
+int foo __attribute__((aligned(ALIGN))) = 1;
 
-void
-do_load_test (void)
+void do_load_test(void)
 {
-  printf ("foo: %p\n", &foo);
-  TEST_VERIFY (is_aligned (&foo, ALIGN) == 0);
+    printf("foo: %p\n", &foo);
+    TEST_VERIFY(is_aligned(&foo, ALIGN) == 0);
 }

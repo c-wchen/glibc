@@ -31,12 +31,11 @@
 /* iofopen.c defines _IO_fopen64/fopen64 as aliases if O_LARGEFILE==0.  */
 #if defined O_LARGEFILE && O_LARGEFILE != 0
 
-FILE *
-_IO_fopen64 (const char *filename, const char *mode)
+FILE *_IO_fopen64(const char *filename, const char *mode)
 {
-  return __fopen_internal (filename, mode, 0);
+    return __fopen_internal(filename, mode, 0);
 }
 
-weak_alias (_IO_fopen64, fopen64)
+weak_alias(_IO_fopen64, fopen64)
 
 #endif

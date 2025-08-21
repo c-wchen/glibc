@@ -31,5 +31,5 @@
 # define stat __stat64_t64
 
 # include <posix/globfree.c>
-libc_hidden_def (__globfree64_time64)
+libc_hidden_def(__globfree64_time64)
 #endif

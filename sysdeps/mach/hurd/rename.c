@@ -19,8 +19,7 @@
 #include <hurd.h>
 
 /* Rename the file OLD to NEW.  */
-int
-rename (const char *old, const char *new)
+int rename(const char *old, const char *new)
 {
-  return __renameat2 (AT_FDCWD, old, AT_FDCWD, new, 0);
+    return __renameat2(AT_FDCWD, old, AT_FDCWD, new, 0);
 }

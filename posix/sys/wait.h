@@ -16,11 +16,11 @@
    <https://www.gnu.org/licenses/>.  */
 
 /*
- *	POSIX Standard: 3.2.1 Wait for Process Termination	<sys/wait.h>
+ *  POSIX Standard: 3.2.1 Wait for Process Termination  <sys/wait.h>
  */
 
-#ifndef	_SYS_WAIT_H
-#define	_SYS_WAIT_H	1
+#ifndef _SYS_WAIT_H
+#define _SYS_WAIT_H 1
 
 #include <features.h>
 
@@ -51,22 +51,22 @@ typedef __pid_t pid_t;
 /* This will define all the `__W*' macros.  */
 # include <bits/waitstatus.h>
 
-# define WEXITSTATUS(status)	__WEXITSTATUS (status)
-# define WTERMSIG(status)	__WTERMSIG (status)
-# define WSTOPSIG(status)	__WSTOPSIG (status)
-# define WIFEXITED(status)	__WIFEXITED (status)
-# define WIFSIGNALED(status)	__WIFSIGNALED (status)
-# define WIFSTOPPED(status)	__WIFSTOPPED (status)
+# define WEXITSTATUS(status)    __WEXITSTATUS (status)
+# define WTERMSIG(status)   __WTERMSIG (status)
+# define WSTOPSIG(status)   __WSTOPSIG (status)
+# define WIFEXITED(status)  __WIFEXITED (status)
+# define WIFSIGNALED(status)    __WIFSIGNALED (status)
+# define WIFSTOPPED(status) __WIFSTOPPED (status)
 # ifdef __WIFCONTINUED
-#  define WIFCONTINUED(status)	__WIFCONTINUED (status)
+#  define WIFCONTINUED(status)  __WIFCONTINUED (status)
 # endif
-#endif	/* <stdlib.h> not included.  */
+#endif  /* <stdlib.h> not included.  */
 
-#ifdef	__USE_MISC
-# define WCOREFLAG		__WCOREFLAG
-# define WCOREDUMP(status)	__WCOREDUMP (status)
-# define W_EXITCODE(ret, sig)	__W_EXITCODE (ret, sig)
-# define W_STOPCODE(sig)	__W_STOPCODE (sig)
+#ifdef  __USE_MISC
+# define WCOREFLAG      __WCOREFLAG
+# define WCOREDUMP(status)  __WCOREDUMP (status)
+# define W_EXITCODE(ret, sig)   __W_EXITCODE (ret, sig)
+# define W_STOPCODE(sig)    __W_STOPCODE (sig)
 #endif
 
 /* The following values are used by the `waitid' function.  */
@@ -80,12 +80,12 @@ typedef __pid_t pid_t;
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
-extern __pid_t wait (int *__stat_loc);
+extern __pid_t wait(int *__stat_loc);
 
-#ifdef	__USE_MISC
+#ifdef  __USE_MISC
 /* Special values for the PID argument to `waitpid' and `wait4'.  */
-# define WAIT_ANY	(-1)	/* Any process.  */
-# define WAIT_MYPGRP	0	/* Any process in my process group.  */
+# define WAIT_ANY   (-1)    /* Any process.  */
+# define WAIT_MYPGRP    0   /* Any process in my process group.  */
 #endif
 
 /* Wait for a child matching PID to die.
@@ -103,7 +103,7 @@ extern __pid_t wait (int *__stat_loc);
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
-extern __pid_t waitpid (__pid_t __pid, int *__stat_loc, int __options);
+extern __pid_t waitpid(__pid_t __pid, int *__stat_loc, int __options);
 
 #if defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K8
 # ifndef __id_t_defined
@@ -124,8 +124,8 @@ typedef __id_t id_t;
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
-extern int waitid (idtype_t __idtype, __id_t __id, siginfo_t *__infop,
-		   int __options);
+extern int waitid(idtype_t __idtype, __id_t __id, siginfo_t *__infop,
+                  int __options);
 #endif
 
 #if defined __USE_MISC \
@@ -140,13 +140,13 @@ struct rusage;
    WUNTRACED bit is set in OPTIONS, return status for stopped children;
    otherwise don't.  */
 # ifndef __USE_TIME64_REDIRECTS
-extern __pid_t wait3 (int *__stat_loc, int __options,
-		      struct rusage * __usage) __THROWNL;
+extern __pid_t wait3(int *__stat_loc, int __options,
+                     struct rusage *__usage) __THROWNL;
 # else
 #  ifdef __REDIRECT_NTHNL
-extern __pid_t __REDIRECT_NTHNL (wait3, (int *__stat_loc, int __options,
-                                         struct rusage * __usage),
-                                 __wait3_time64);
+extern __pid_t __REDIRECT_NTHNL(wait3, (int *__stat_loc, int __options,
+                                        struct rusage *__usage),
+                                __wait3_time64);
 #  else
 #   define wait3 __wait3_time64
 #  endif
@@ -156,13 +156,13 @@ extern __pid_t __REDIRECT_NTHNL (wait3, (int *__stat_loc, int __options,
 #ifdef __USE_MISC
 # ifndef __USE_TIME64_REDIRECTS
 /* PID is like waitpid.  Other args are like wait3.  */
-extern __pid_t wait4 (__pid_t __pid, int *__stat_loc, int __options,
-		      struct rusage *__usage) __THROWNL;
+extern __pid_t wait4(__pid_t __pid, int *__stat_loc, int __options,
+                     struct rusage *__usage) __THROWNL;
 # else
 #  ifdef __REDIRECT_NTHNL
-extern __pid_t __REDIRECT_NTHNL (wait4, (__pid_t __pid, int *__stat_loc,
-                                         int __options, struct rusage *__usage),
-                                 __wait4_time64);
+extern __pid_t __REDIRECT_NTHNL(wait4, (__pid_t __pid, int *__stat_loc,
+                                        int __options, struct rusage *__usage),
+                                __wait4_time64);
 #  else
 #   define wait4 __wait4_time64
 #  endif

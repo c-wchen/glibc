@@ -28,13 +28,13 @@
 #include <libm-alias-double.h>
 #include <math-narrow-alias.h>
 
-extern double __fma_ia32 (double x, double y, double z) attribute_hidden;
-extern double __fma_fma (double x, double y, double z) attribute_hidden;
+extern double __fma_ia32(double x, double y, double z) attribute_hidden;
+extern double __fma_fma(double x, double y, double z) attribute_hidden;
 
-libm_ifunc (__fma,
-	    CPU_FEATURE_USABLE (FMA) ? __fma_fma : __fma_ia32);
-libm_alias_double (__fma, fma)
-libm_alias_double_narrow (__fma, fma)
+libm_ifunc(__fma,
+           CPU_FEATURE_USABLE(FMA) ? __fma_fma : __fma_ia32);
+libm_alias_double(__fma, fma)
+libm_alias_double_narrow(__fma, fma)
 
 #define __fma __fma_ia32
 

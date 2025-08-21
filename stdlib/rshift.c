@@ -32,47 +32,44 @@ along with the GNU MP Library; see the file COPYING.LIB.  If not, see
    2. If the result is to be written over the input, WP must be <= UP.
 */
 
-mp_limb_t
-mpn_rshift (register mp_ptr wp,
-	    register mp_srcptr up, mp_size_t usize,
-	    register unsigned int cnt)
+mp_limb_t mpn_rshift(register mp_ptr wp,
+                     register mp_srcptr up, mp_size_t usize,
+                     register unsigned int cnt)
 {
-  register mp_limb_t high_limb, low_limb;
-  register unsigned sh_1, sh_2;
-  register mp_size_t i;
-  mp_limb_t retval;
+    register mp_limb_t high_limb, low_limb;
+    register unsigned sh_1, sh_2;
+    register mp_size_t i;
+    mp_limb_t retval;
 
-  assert (usize != 0 && cnt != 0);
+    assert(usize != 0 && cnt != 0);
 
-  sh_1 = cnt;
+    sh_1 = cnt;
 
 #if 0
-  if (sh_1 == 0)
-    {
-      if (wp != up)
-	{
-	  /* Copy from low end to high end, to allow specified input/output
-	     overlapping.  */
-	  for (i = 0; i < usize; i++)
-	    wp[i] = up[i];
-	}
-      return usize;
+    if (sh_1 == 0) {
+        if (wp != up) {
+            /* Copy from low end to high end, to allow specified input/output
+               overlapping.  */
+            for (i = 0; i < usize; i++) {
+                wp[i] = up[i];
+            }
+        }
+        return usize;
     }
 #endif
 
-  wp -= 1;
-  sh_2 = BITS_PER_MP_LIMB - sh_1;
-  high_limb = up[0];
-  retval = high_limb << sh_2;
-  low_limb = high_limb;
+    wp -= 1;
+    sh_2 = BITS_PER_MP_LIMB - sh_1;
+    high_limb = up[0];
+    retval = high_limb << sh_2;
+    low_limb = high_limb;
 
-  for (i = 1; i < usize; i++)
-    {
-      high_limb = up[i];
-      wp[i] = (low_limb >> sh_1) | (high_limb << sh_2);
-      low_limb = high_limb;
+    for (i = 1; i < usize; i++) {
+        high_limb = up[i];
+        wp[i] = (low_limb >> sh_1) | (high_limb << sh_2);
+        low_limb = high_limb;
     }
-  wp[i] = low_limb >> sh_1;
+    wp[i] = low_limb >> sh_1;
 
-  return retval;
+    return retval;
 }

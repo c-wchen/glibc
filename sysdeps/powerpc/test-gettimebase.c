@@ -26,21 +26,21 @@
 
 #include <sys/platform/ppc.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  uint64_t t1, t2, t3;
-  t1 = __ppc_get_timebase ();
-  printf ("Time Base = %"PRIu64"\n", t1);
-  t2 = __ppc_get_timebase ();
-  printf ("Time Base = %"PRIu64"\n", t2);
-  t3 = __ppc_get_timebase ();
-  printf ("Time Base = %"PRIu64"\n", t3);
-  if (t1 != t2 && t1 != t3 && t2 != t3)
-    return 0;
+    uint64_t t1, t2, t3;
+    t1 = __ppc_get_timebase();
+    printf("Time Base = %"PRIu64"\n", t1);
+    t2 = __ppc_get_timebase();
+    printf("Time Base = %"PRIu64"\n", t2);
+    t3 = __ppc_get_timebase();
+    printf("Time Base = %"PRIu64"\n", t3);
+    if (t1 != t2 && t1 != t3 && t2 != t3) {
+        return 0;
+    }
 
-  printf ("Fail: timebase reads should always be different.\n");
-  return 1;
+    printf("Fail: timebase reads should always be different.\n");
+    return 1;
 }
 
 #include <support/test-driver.c>

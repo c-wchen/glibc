@@ -21,47 +21,47 @@
 /* Return the `struct tm' representation of *T in UTC,
    using *TP to store the result.  */
 struct tm *
-__gmtime64_r (const __time64_t *t, struct tm *tp)
+__gmtime64_r(const __time64_t *t, struct tm *tp)
 {
-  return __tz_convert (*t, 0, tp);
+    return __tz_convert(*t, 0, tp);
 }
 
 /* Provide a 32-bit variant if needed.  */
 
 #if __TIMESIZE != 64
 
-libc_hidden_def (__gmtime64_r)
+libc_hidden_def(__gmtime64_r)
 
 struct tm *
-__gmtime_r (const time_t *t, struct tm *tp)
+__gmtime_r(const time_t *t, struct tm *tp)
 {
-  __time64_t t64 = *t;
-  return __gmtime64_r (&t64, tp);
+    __time64_t t64 = *t;
+    return __gmtime64_r(&t64, tp);
 }
 
 #endif
 
-libc_hidden_def (__gmtime_r)
-weak_alias (__gmtime_r, gmtime_r)
+libc_hidden_def(__gmtime_r)
+weak_alias(__gmtime_r, gmtime_r)
 
 /* Return the `struct tm' representation of *T in UTC.  */
 struct tm *
-__gmtime64 (const __time64_t *t)
+__gmtime64(const __time64_t *t)
 {
-  return __tz_convert (*t, 0, &_tmbuf);
+    return __tz_convert(*t, 0, &_tmbuf);
 }
 
 /* Provide a 32-bit variant if needed.  */
 
 #if __TIMESIZE != 64
 
-libc_hidden_def (__gmtime64)
+libc_hidden_def(__gmtime64)
 
 struct tm *
-gmtime (const time_t *t)
+gmtime(const time_t *t)
 {
-  __time64_t t64 = *t;
-  return __gmtime64 (&t64);
+    __time64_t t64 = *t;
+    return __gmtime64(&t64);
 }
 
 #endif

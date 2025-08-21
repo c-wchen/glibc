@@ -16,23 +16,22 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _SYS_RAW_H
-#define _SYS_RAW_H	1
+#define _SYS_RAW_H  1
 
 #include <stdint.h>
 #include <sys/ioctl.h>
 
 /* The major device number for raw devices.  */
-#define RAW_MAJOR	162
+#define RAW_MAJOR   162
 
 /* `ioctl' commands for raw devices.  */
 #define RAW_SETBIND     _IO(0xac, 0)
 #define RAW_GETBIND     _IO(0xac, 1)
 
-struct raw_config_request
-{
-  int raw_minor;
-  uint64_t block_major;
-  uint64_t block_minor;
+struct raw_config_request {
+    int raw_minor;
+    uint64_t block_major;
+    uint64_t block_minor;
 };
 
 #endif /* sys/raw.h */

@@ -26,9 +26,8 @@
    must be always 1 and PT_TLS segment exist in the binary, otherwise it
    would not link.  */
 
-void *
-__tls_get_addr (tls_index *ti)
+void *__tls_get_addr(tls_index *ti)
 {
-  dtv_t *dtv = THREAD_DTV ();
-  return (char *) dtv[1].pointer.val + ti->ti_offset;
+    dtv_t *dtv = THREAD_DTV();
+    return (char *) dtv[1].pointer.val + ti->ti_offset;
 }

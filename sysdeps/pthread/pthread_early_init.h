@@ -19,11 +19,10 @@
 #ifndef _PTHREAD_EARLY_INIT_H
 #define _PTHREAD_EARLY_INIT_H 1
 
-static inline void
-__pthread_early_init (void)
+static inline void __pthread_early_init(void)
 {
-  /* The generic version does not require any additional
-     initialization.  */
+    /* The generic version does not require any additional
+       initialization.  */
 }
 
 #endif  /* _PTHREAD_EARLY_INIT_H */

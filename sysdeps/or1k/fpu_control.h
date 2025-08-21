@@ -86,4 +86,4 @@ typedef unsigned int fpu_control_t;
 /* Default control word set at startup.  */
 extern fpu_control_t __fpu_control;
 
-#endif	/* fpu_control.h */
+#endif  /* fpu_control.h */

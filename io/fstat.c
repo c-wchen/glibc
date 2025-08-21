@@ -18,15 +18,13 @@
 #include <sys/stat.h>
 #include <errno.h>
 
-int
-__fstat (int fd, struct stat *buf)
+int __fstat(int fd, struct stat *buf)
 {
-  if (fd < 0)
-    {
-      __set_errno (EBADF);
-      return -1;
+    if (fd < 0) {
+        __set_errno(EBADF);
+        return -1;
     }
-  return __fstatat (fd, "", buf, AT_EMPTY_PATH);
+    return __fstatat(fd, "", buf, AT_EMPTY_PATH);
 }
 
-weak_alias (__fstat, fstat)
+weak_alias(__fstat, fstat)

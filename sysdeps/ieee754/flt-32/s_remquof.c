@@ -25,86 +25,80 @@ static const float zero = 0.0;
 #include <libm-alias-float.h>
 
 
-float
-__remquof (float x, float y, int *quo)
+float __remquof(float x, float y, int *quo)
 {
-  int32_t hx,hy;
-  uint32_t sx;
-  int cquo, qs;
+    int32_t hx, hy;
+    uint32_t sx;
+    int cquo, qs;
 
-  GET_FLOAT_WORD (hx, x);
-  GET_FLOAT_WORD (hy, y);
-  sx = hx & 0x80000000;
-  qs = sx ^ (hy & 0x80000000);
-  hy &= 0x7fffffff;
-  hx &= 0x7fffffff;
+    GET_FLOAT_WORD(hx, x);
+    GET_FLOAT_WORD(hy, y);
+    sx = hx & 0x80000000;
+    qs = sx ^ (hy & 0x80000000);
+    hy &= 0x7fffffff;
+    hx &= 0x7fffffff;
 
-  /* Purge off exception values.  */
-  if (hy == 0)
-    return (x * y) / (x * y); 			/* y = 0 */
-  if ((hx >= 0x7f800000)			/* x not finite */
-      || (hy > 0x7f800000))			/* y is NaN */
-    return (x * y) / (x * y);
-
-  if (hy <= 0x7dffffff)
-    x = __ieee754_fmodf (x, 8 * y);		/* now x < 8y */
-
-  if ((hx - hy) == 0)
-    {
-      *quo = qs ? -1 : 1;
-      return zero * x;
+    /* Purge off exception values.  */
+    if (hy == 0) {
+        return (x * y) / (x * y);    /* y = 0 */
+    }
+    if ((hx >= 0x7f800000)            /* x not finite */
+        || (hy > 0x7f800000)) {       /* y is NaN */
+        return (x * y) / (x * y);
     }
 
-  x  = fabsf (x);
-  y  = fabsf (y);
-  cquo = 0;
-
-  if (hy <= 0x7e7fffff && x >= 4 * y)
-    {
-      x -= 4 * y;
-      cquo += 4;
-    }
-  if (hy <= 0x7effffff && x >= 2 * y)
-    {
-      x -= 2 * y;
-      cquo += 2;
+    if (hy <= 0x7dffffff) {
+        x = __ieee754_fmodf(x, 8 * y);    /* now x < 8y */
     }
 
-  if (hy < 0x01000000)
-    {
-      if (x + x > y)
-	{
-	  x -= y;
-	  ++cquo;
-	  if (x + x >= y)
-	    {
-	      x -= y;
-	      ++cquo;
-	    }
-	}
-    }
-  else
-    {
-      float y_half = 0.5 * y;
-      if (x > y_half)
-	{
-	  x -= y;
-	  ++cquo;
-	  if (x >= y_half)
-	    {
-	      x -= y;
-	      ++cquo;
-	    }
-	}
+    if ((hx - hy) == 0) {
+        *quo = qs ? -1 : 1;
+        return zero * x;
     }
 
-  *quo = qs ? -cquo : cquo;
+    x  = fabsf(x);
+    y  = fabsf(y);
+    cquo = 0;
 
-  /* Ensure correct sign of zero result in round-downward mode.  */
-  if (x == 0.0f)
-    x = 0.0f;
-  if (sx)
-    x = -x;
-  return x;
+    if (hy <= 0x7e7fffff && x >= 4 * y) {
+        x -= 4 * y;
+        cquo += 4;
+    }
+    if (hy <= 0x7effffff && x >= 2 * y) {
+        x -= 2 * y;
+        cquo += 2;
+    }
+
+    if (hy < 0x01000000) {
+        if (x + x > y) {
+            x -= y;
+            ++cquo;
+            if (x + x >= y) {
+                x -= y;
+                ++cquo;
+            }
+        }
+    } else {
+        float y_half = 0.5 * y;
+        if (x > y_half) {
+            x -= y;
+            ++cquo;
+            if (x >= y_half) {
+                x -= y;
+                ++cquo;
+            }
+        }
+    }
+
+    *quo = qs ? -cquo : cquo;
+
+    /* Ensure correct sign of zero result in round-downward mode.  */
+    if (x == 0.0f) {
+        x = 0.0f;
+    }
+    if (sx) {
+        x = -x;
+    }
+    return x;
 }
-libm_alias_float (__remquo, remquo)
+libm_alias_float(__remquo, remquo)

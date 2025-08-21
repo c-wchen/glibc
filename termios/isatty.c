@@ -19,13 +19,12 @@
 #include <unistd.h>
 
 /* Return 1 if FD is a terminal, 0 if not.  */
-int
-__isatty (int fd)
+int __isatty(int fd)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-weak_alias (__isatty, isatty)
+weak_alias(__isatty, isatty)
 
-stub_warning (isatty)
+stub_warning(isatty)

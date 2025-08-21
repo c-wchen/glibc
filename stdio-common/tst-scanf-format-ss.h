@@ -25,49 +25,49 @@
 static char *sscanf_buf;
 static size_t sscanf_buf_size;
 
-static void __attribute__ ((destructor))
-scanf_under_test_fini (void)
+static void __attribute__((destructor))
+scanf_under_test_fini(void)
 {
-  free (sscanf_buf);
+    free(sscanf_buf);
 }
 
-#define scanf_under_test(...)						\
-({									\
-  __label__ out;							\
-  size_t i = 0;								\
-  int result;								\
-  int ch;								\
-									\
-  do									\
-    {									\
-      ch = read_input ();						\
-      if (ch < 0)							\
-	{								\
-	  result = ch;							\
-	  goto out;							\
-	}								\
-      if (i == sscanf_buf_size)						\
-	{								\
-	  sscanf_buf_size += SIZE_CHUNK;				\
-	  /* Add an extra byte for the terminating null character.  */	\
-	  sscanf_buf = xrealloc (sscanf_buf, sscanf_buf_size + 1);	\
-	}								\
-      sscanf_buf[i++] = ch;						\
-    }									\
-  while (ch != ':');							\
-  sscanf_buf[i++] = '\0';						\
-									\
-  ch = ungetc (ch, stdin);						\
-  if (ch == EOF)							\
-    {									\
-      result = INPUT_ERROR;						\
-      goto out;								\
-    }									\
-									\
-  result = sscanf (sscanf_buf, __VA_ARGS__);				\
-  if (result == EOF)							\
-    result = INPUT_EOF;							\
-									\
-out:									\
-  result;								\
+#define scanf_under_test(...)                       \
+({                                  \
+  __label__ out;                            \
+  size_t i = 0;                             \
+  int result;                               \
+  int ch;                               \
+                                    \
+  do                                    \
+    {                                   \
+      ch = read_input ();                       \
+      if (ch < 0)                           \
+    {                               \
+      result = ch;                          \
+      goto out;                         \
+    }                               \
+      if (i == sscanf_buf_size)                     \
+    {                               \
+      sscanf_buf_size += SIZE_CHUNK;                \
+      /* Add an extra byte for the terminating null character.  */  \
+      sscanf_buf = xrealloc (sscanf_buf, sscanf_buf_size + 1);  \
+    }                               \
+      sscanf_buf[i++] = ch;                     \
+    }                                   \
+  while (ch != ':');                            \
+  sscanf_buf[i++] = '\0';                       \
+                                    \
+  ch = ungetc (ch, stdin);                      \
+  if (ch == EOF)                            \
+    {                                   \
+      result = INPUT_ERROR;                     \
+      goto out;                             \
+    }                                   \
+                                    \
+  result = sscanf (sscanf_buf, __VA_ARGS__);                \
+  if (result == EOF)                            \
+    result = INPUT_EOF;                         \
+                                    \
+out:                                    \
+  result;                               \
 })

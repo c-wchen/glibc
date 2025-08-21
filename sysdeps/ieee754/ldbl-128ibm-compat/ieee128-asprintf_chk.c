@@ -19,21 +19,21 @@
 #include <stdarg.h>
 #include <libio/libioP.h>
 
-extern int
-___ieee128___asprintf_chk (char **string_ptr, int flag, const char *format, ...)
+extern int ___ieee128___asprintf_chk(char **string_ptr, int flag, const char *format, ...)
 {
-  va_list ap;
-  int done;
+    va_list ap;
+    int done;
 
-  unsigned int mode = PRINTF_LDBL_USES_FLOAT128;
-  if (flag > 0)
-    mode |= PRINTF_FORTIFY;
+    unsigned int mode = PRINTF_LDBL_USES_FLOAT128;
+    if (flag > 0) {
+        mode |= PRINTF_FORTIFY;
+    }
 
-  va_start (ap, format);
-  done = __vasprintf_internal (string_ptr, format, ap, mode);
-  va_end (ap);
+    va_start(ap, format);
+    done = __vasprintf_internal(string_ptr, format, ap, mode);
+    va_end(ap);
 
-  return done;
+    return done;
 }
-hidden_def (___ieee128___asprintf_chk)
-strong_alias (___ieee128___asprintf_chk, __asprintf_chkieee128)
+hidden_def(___ieee128___asprintf_chk)
+strong_alias(___ieee128___asprintf_chk, __asprintf_chkieee128)

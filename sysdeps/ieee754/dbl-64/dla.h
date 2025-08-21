@@ -45,7 +45,7 @@
 /* z+zz = x+y exactly.                                                 */
 
 #define  EADD(x,y,z,zz)  \
-	   z=(x)+(y);  zz=(fabs(x)>fabs(y)) ? (((x)-(z))+(y)) : (((y)-(z))+(x));
+       z=(x)+(y);  zz=(fabs(x)>fabs(y)) ? (((x)-(z))+(y)) : (((y)-(z))+(x));
 
 
 /* Exact subtraction of two single-length floating point numbers, Dekker. */
@@ -53,7 +53,7 @@
 /* z+zz = x-y exactly.                                                    */
 
 #define  ESUB(x,y,z,zz)  \
-	   z=(x)-(y);  zz=(fabs(x)>fabs(y)) ? (((x)-(z))-(y)) : ((x)-((y)+(z)));
+       z=(x)-(y);  zz=(fabs(x)>fabs(y)) ? (((x)-(z))-(y)) : ((x)-((y)+(z)));
 
 
 #ifdef __FP_FAST_FMA
@@ -85,13 +85,13 @@
 
 #ifdef DLA_FMS
 # define  MUL12(x, y, z, zz)        \
-	   EMULV(x, y, z, zz)
+       EMULV(x, y, z, zz)
 #else
 # define  MUL12(x, y, z, zz)        \
     ({  __typeof__ (x) __p, hx, tx, hy, ty, __q; \
-	   __p=CN*(x);  hx=((x)-__p)+__p;  tx=(x)-hx;  \
-	   __p=CN*(y);  hy=((y)-__p)+__p;  ty=(y)-hy;  \
-	   __p=hx*hy;  __q=hx*ty+tx*hy; z=__p+__q;  zz=((__p-z)+__q)+tx*ty; \
+       __p=CN*(x);  hx=((x)-__p)+__p;  tx=(x)-hx;  \
+       __p=CN*(y);  hy=((y)-__p)+__p;  ty=(y)-hy;  \
+       __p=hx*hy;  __q=hx*ty+tx*hy; z=__p+__q;  zz=((__p-z)+__q)+tx*ty; \
     })
 #endif
 
@@ -104,8 +104,8 @@
 
 #define  ADD2(x, xx, y, yy, z, zz, r, s)                   \
   r = (x) + (y);  s = (fabs (x) > fabs (y)) ?                \
-		      (((((x) - r) + (y)) + (yy)) + (xx)) : \
-		      (((((y) - r) + (x)) + (xx)) + (yy));  \
+              (((((x) - r) + (y)) + (yy)) + (xx)) : \
+              (((((y) - r) + (x)) + (xx)) + (yy));  \
   z = r + s;  zz = (r - z) + s;
 
 
@@ -117,8 +117,8 @@
 
 #define  SUB2(x, xx, y, yy, z, zz, r, s)                   \
   r = (x) - (y);  s = (fabs (x) > fabs (y)) ?                \
-		      (((((x) - r) - (y)) - (yy)) + (xx)) : \
-		      ((((x) - ((y) + r)) + (xx)) - (yy));  \
+              (((((x) - r) - (y)) - (yy)) + (xx)) : \
+              ((((x) - ((y) + r)) + (xx)) - (yy));  \
   z = r + s;  zz = (r - z) + s;
 
 
@@ -140,8 +140,8 @@
 /* are temporary storage variables of type double.                           */
 
 #define  DIV2(x, xx, y, yy, z, zz, c, cc, u, uu)  \
-	   c=(x)/(y);   MUL12(c,y,u,uu);          \
-	   cc=(((((x)-u)-uu)+(xx))-c*(yy))/(y);   z=c+cc;   zz=(c-z)+cc;
+       c=(x)/(y);   MUL12(c,y,u,uu);          \
+       cc=(((((x)-u)-uu)+(xx))-c*(yy))/(y);   z=c+cc;   zz=(c-z)+cc;
 
 
 /* Double-length addition, slower but more accurate than ADD2.               */

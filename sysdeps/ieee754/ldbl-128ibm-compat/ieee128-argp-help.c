@@ -19,24 +19,23 @@
 #include <argp.h>
 #include <libio/libioP.h>
 
-void
-___ieee128_argp_error (const struct argp_state *state, const char *fmt, ...)
+void ___ieee128_argp_error(const struct argp_state *state, const char *fmt, ...)
 {
-  va_list ap;
-  va_start (ap, fmt);
-  __argp_error_internal (state, fmt, ap, PRINTF_LDBL_USES_FLOAT128);
-  va_end (ap);
+    va_list ap;
+    va_start(ap, fmt);
+    __argp_error_internal(state, fmt, ap, PRINTF_LDBL_USES_FLOAT128);
+    va_end(ap);
 }
-strong_alias (___ieee128_argp_error, __argp_errorieee128)
+strong_alias(___ieee128_argp_error, __argp_errorieee128)
 
 void
-___ieee128_argp_failure (const struct argp_state *state, int status,
-			int errnum, const char *fmt, ...)
+___ieee128_argp_failure(const struct argp_state *state, int status,
+                        int errnum, const char *fmt, ...)
 {
-  va_list ap;
-  va_start (ap, fmt);
-  __argp_failure_internal (state, status, errnum, fmt, ap,
-			   PRINTF_LDBL_USES_FLOAT128);
-  va_end (ap);
+    va_list ap;
+    va_start(ap, fmt);
+    __argp_failure_internal(state, status, errnum, fmt, ap,
+                            PRINTF_LDBL_USES_FLOAT128);
+    va_end(ap);
 }
-strong_alias (___ieee128_argp_failure, __argp_failureieee128)
+strong_alias(___ieee128_argp_failure, __argp_failureieee128)

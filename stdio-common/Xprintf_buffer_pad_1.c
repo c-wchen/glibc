@@ -20,25 +20,26 @@
 #include <string.h>
 
 void
-Xprintf (buffer_pad_1) (struct Xprintf_buffer *buf, CHAR_T ch, size_t count)
+Xprintf(buffer_pad_1)(struct Xprintf_buffer *buf, CHAR_T ch, size_t count)
 {
-  if (__glibc_unlikely (Xprintf_buffer_has_failed (buf)))
-    return;
-
-  do
-    {
-      /* Proactively make room.  __*printf_buffer_pad has already
-         checked for a zero-length write, so this function is only
-         called when there is actually data to write.  */
-      if (buf->write_ptr == buf->write_end && !Xprintf_buffer_flush (buf))
+    if (__glibc_unlikely(Xprintf_buffer_has_failed(buf))) {
         return;
-      assert (buf->write_ptr != buf->write_end);
-      size_t to_fill = buf->write_end - buf->write_ptr;
-      if (to_fill > count)
-        to_fill = count;
-      MEMSET (buf->write_ptr, ch, to_fill);
-      buf->write_ptr += to_fill;
-      count -= to_fill;
     }
-  while (count > 0);
+
+    do {
+        /* Proactively make room.  __*printf_buffer_pad has already
+           checked for a zero-length write, so this function is only
+           called when there is actually data to write.  */
+        if (buf->write_ptr == buf->write_end && !Xprintf_buffer_flush(buf)) {
+            return;
+        }
+        assert(buf->write_ptr != buf->write_end);
+        size_t to_fill = buf->write_end - buf->write_ptr;
+        if (to_fill > count) {
+            to_fill = count;
+        }
+        MEMSET(buf->write_ptr, ch, to_fill);
+        buf->write_ptr += to_fill;
+        count -= to_fill;
+    } while (count > 0);
 }

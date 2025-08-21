@@ -20,12 +20,11 @@
 
 /* Make all changes done to all files on the file system associated
    with FD actually appear on disk.  */
-int
-syncfs (int fd)
+int syncfs(int fd)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
 
-stub_warning (syncfs)
+stub_warning(syncfs)

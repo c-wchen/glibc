@@ -23,17 +23,16 @@
 /* Generate a (hopefully) unique temporary filename
    in DIR (if applicable), using template TMPL.
    KIND determines what to do with that name.  It may be one of:
-     __GT_FILE:		create a file and return a read-write fd.
-     __GT_BIGFILE:	same, but use open64() (or equivalent).
-     __GT_DIR:		create a directory.
-     __GT_NOCREATE:	just find a name not currently in use.
+     __GT_FILE:     create a file and return a read-write fd.
+     __GT_BIGFILE:  same, but use open64() (or equivalent).
+     __GT_DIR:      create a directory.
+     __GT_NOCREATE: just find a name not currently in use.
  */
 
-int
-__gen_tempname (char *tmpl, int suffixlen, int flags, int kind)
+int __gen_tempname(char *tmpl, int suffixlen, int flags, int kind)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (__gen_tempname)
+stub_warning(__gen_tempname)

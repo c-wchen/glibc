@@ -31,90 +31,88 @@
 #define CLOCK_USE_ATTR_CLOCK (-1)
 
 #if defined _POSIX_CLOCK_SELECTION && _POSIX_CLOCK_SELECTION >= 0
-static int
-run_test (clockid_t attr_clock, clockid_t wait_clock)
+static int run_test(clockid_t attr_clock, clockid_t wait_clock)
 {
-  pthread_condattr_t condattr;
-  pthread_cond_t cond;
-  pthread_mutexattr_t mutattr;
-  pthread_mutex_t mut;
+    pthread_condattr_t condattr;
+    pthread_cond_t cond;
+    pthread_mutexattr_t mutattr;
+    pthread_mutex_t mut;
 
-  verbose_printf ("attr_clock = %d\n", (int) attr_clock);
+    verbose_printf("attr_clock = %d\n", (int) attr_clock);
 
-  TEST_COMPARE (pthread_condattr_init (&condattr), 0);
-  TEST_COMPARE (pthread_condattr_setclock (&condattr, attr_clock), 0);
+    TEST_COMPARE(pthread_condattr_init(&condattr), 0);
+    TEST_COMPARE(pthread_condattr_setclock(&condattr, attr_clock), 0);
 
-  clockid_t attr_clock_read;
-  TEST_COMPARE (pthread_condattr_getclock (&condattr, &attr_clock_read), 0);
-  TEST_COMPARE (attr_clock, attr_clock_read);
+    clockid_t attr_clock_read;
+    TEST_COMPARE(pthread_condattr_getclock(&condattr, &attr_clock_read), 0);
+    TEST_COMPARE(attr_clock, attr_clock_read);
 
-  TEST_COMPARE (pthread_cond_init (&cond, &condattr), 0);
-  TEST_COMPARE (pthread_condattr_destroy (&condattr), 0);
+    TEST_COMPARE(pthread_cond_init(&cond, &condattr), 0);
+    TEST_COMPARE(pthread_condattr_destroy(&condattr), 0);
 
-  xpthread_mutexattr_init (&mutattr);
-  xpthread_mutexattr_settype (&mutattr, PTHREAD_MUTEX_ERRORCHECK);
-  xpthread_mutex_init (&mut, &mutattr);
-  xpthread_mutexattr_destroy (&mutattr);
+    xpthread_mutexattr_init(&mutattr);
+    xpthread_mutexattr_settype(&mutattr, PTHREAD_MUTEX_ERRORCHECK);
+    xpthread_mutex_init(&mut, &mutattr);
+    xpthread_mutexattr_destroy(&mutattr);
 
-  xpthread_mutex_lock (&mut);
-  TEST_COMPARE (pthread_mutex_lock (&mut), EDEADLK);
+    xpthread_mutex_lock(&mut);
+    TEST_COMPARE(pthread_mutex_lock(&mut), EDEADLK);
 
-  struct timespec ts_timeout;
-  xclock_gettime (wait_clock == CLOCK_USE_ATTR_CLOCK ? attr_clock : wait_clock,
-                  &ts_timeout);
+    struct timespec ts_timeout;
+    xclock_gettime(wait_clock == CLOCK_USE_ATTR_CLOCK ? attr_clock : wait_clock,
+                   &ts_timeout);
 
-  /* Wait one second.  */
-  ++ts_timeout.tv_sec;
+    /* Wait one second.  */
+    ++ts_timeout.tv_sec;
 
-  if (wait_clock == CLOCK_USE_ATTR_CLOCK) {
-    TEST_COMPARE (pthread_cond_timedwait (&cond, &mut, &ts_timeout), ETIMEDOUT);
-    TEST_TIMESPEC_BEFORE_NOW (ts_timeout, attr_clock);
-  } else {
-    TEST_COMPARE (pthread_cond_clockwait (&cond, &mut, wait_clock, &ts_timeout),
-                  ETIMEDOUT);
-    TEST_TIMESPEC_BEFORE_NOW (ts_timeout, wait_clock);
-  }
+    if (wait_clock == CLOCK_USE_ATTR_CLOCK) {
+        TEST_COMPARE(pthread_cond_timedwait(&cond, &mut, &ts_timeout), ETIMEDOUT);
+        TEST_TIMESPEC_BEFORE_NOW(ts_timeout, attr_clock);
+    } else {
+        TEST_COMPARE(pthread_cond_clockwait(&cond, &mut, wait_clock, &ts_timeout),
+                     ETIMEDOUT);
+        TEST_TIMESPEC_BEFORE_NOW(ts_timeout, wait_clock);
+    }
 
-  xpthread_mutex_unlock (&mut);
-  xpthread_mutex_destroy (&mut);
-  TEST_COMPARE (pthread_cond_destroy (&cond), 0);
+    xpthread_mutex_unlock(&mut);
+    xpthread_mutex_destroy(&mut);
+    TEST_COMPARE(pthread_cond_destroy(&cond), 0);
 
-  return 0;
+    return 0;
 }
 #endif
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
 #if !defined _POSIX_CLOCK_SELECTION || _POSIX_CLOCK_SELECTION == -1
 
-  FAIL_UNSUPPORTED ("_POSIX_CLOCK_SELECTION not supported, test skipped");
+    FAIL_UNSUPPORTED("_POSIX_CLOCK_SELECTION not supported, test skipped");
 
 #else
 
-  run_test (CLOCK_REALTIME, CLOCK_USE_ATTR_CLOCK);
+    run_test(CLOCK_REALTIME, CLOCK_USE_ATTR_CLOCK);
 
 # if defined _POSIX_MONOTONIC_CLOCK && _POSIX_MONOTONIC_CLOCK >= 0
 #  if _POSIX_MONOTONIC_CLOCK == 0
-  int e = sysconf (_SC_MONOTONIC_CLOCK);
-  if (e < 0)
-    puts ("CLOCK_MONOTONIC not supported");
-  else if (e == 0)
-      FAIL_RET ("sysconf (_SC_MONOTONIC_CLOCK) must not return 0");
-  else
+    int e = sysconf(_SC_MONOTONIC_CLOCK);
+    if (e < 0) {
+        puts("CLOCK_MONOTONIC not supported");
+    } else if (e == 0) {
+        FAIL_RET("sysconf (_SC_MONOTONIC_CLOCK) must not return 0");
+    } else
 #  endif
     {
-      run_test (CLOCK_MONOTONIC, CLOCK_USE_ATTR_CLOCK);
-      run_test (CLOCK_REALTIME, CLOCK_MONOTONIC);
-      run_test (CLOCK_MONOTONIC, CLOCK_MONOTONIC);
-      run_test (CLOCK_MONOTONIC, CLOCK_REALTIME);
+        run_test(CLOCK_MONOTONIC, CLOCK_USE_ATTR_CLOCK);
+        run_test(CLOCK_REALTIME, CLOCK_MONOTONIC);
+        run_test(CLOCK_MONOTONIC, CLOCK_MONOTONIC);
+        run_test(CLOCK_MONOTONIC, CLOCK_REALTIME);
     }
 # else
-  puts ("_POSIX_MONOTONIC_CLOCK not defined");
+    puts("_POSIX_MONOTONIC_CLOCK not defined");
 # endif
 
-  return 0;
+    return 0;
 #endif
 }
 

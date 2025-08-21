@@ -25,21 +25,21 @@
 #include <support/support.h>
 #include <unistd.h>
 
-int
-main (int argc, char **argv)
+int main(int argc, char **argv)
 {
-  /* Run ldconfig to populate the cache.  */
-  {
-    char *command = xasprintf ("%s/ldconfig", support_install_rootsbindir);
-    if (system (command) != 0)
-      return 1;
-    free (command);
-  }
+    /* Run ldconfig to populate the cache.  */
+    {
+        char *command = xasprintf("%s/ldconfig", support_install_rootsbindir);
+        if (system(command) != 0) {
+            return 1;
+        }
+        free(command);
+    }
 
-  /* Reuse tst-glibc-hwcaps.  Since this code is running in a
-     container, we can launch it directly.  */
-  char *path = xasprintf ("%s/elf/tst-glibc-hwcaps", support_objdir_root);
-  execv (path, argv);
-  printf ("error: execv of %s failed: %m\n", path);
-  return 1;
+    /* Reuse tst-glibc-hwcaps.  Since this code is running in a
+       container, we can launch it directly.  */
+    char *path = xasprintf("%s/elf/tst-glibc-hwcaps", support_objdir_root);
+    execv(path, argv);
+    printf("error: execv of %s failed: %m\n", path);
+    return 1;
 }

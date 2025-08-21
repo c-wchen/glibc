@@ -24,11 +24,11 @@
      false: Continue processing the properties.
      true : Stop processing the properties.
  */
-static inline bool __attribute__ ((always_inline))
-read_gnu_property (unsigned int *isal_level, uint32_t type, uint32_t
-		   datasz, void *data)
+static inline bool __attribute__((always_inline))
+read_gnu_property(unsigned int *isal_level, uint32_t type, uint32_t
+                  datasz, void *data)
 {
-  return true;
+    return true;
 }
 
 #endif

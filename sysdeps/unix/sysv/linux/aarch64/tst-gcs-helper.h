@@ -26,14 +26,14 @@
 #include <stdio.h>
 #include <sys/auxv.h>
 
-static bool __check_gcs_status (void)
+static bool __check_gcs_status(void)
 {
-  register unsigned long x16 asm ("x16");
-  asm volatile (
-    "mov	x16, #1 /* _CHKFEAT_GCS */\n"
-    "hint	40 /* CHKFEAT_X16 */\n"
-    : "=r" (x16));
-  return x16 ^ 1;
+    register unsigned long x16 asm("x16");
+    asm volatile(
+        "mov	x16, #1 /* _CHKFEAT_GCS */\n"
+        "hint	40 /* CHKFEAT_X16 */\n"
+        : "=r"(x16));
+    return x16 ^ 1;
 }
 
 #endif // POINTER_GUARD_H

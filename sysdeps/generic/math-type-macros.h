@@ -24,15 +24,15 @@
 
    M_LIT(x)   - Paste the type specific suffix onto the constant x.
    M_MLIT(x)  - Paste the type specific suffix used by the macro
-		constants in math.h, i.e M_PI or M_PIl.
+        constants in math.h, i.e M_PI or M_PIl.
    M_PFX      - The prefixed used by float.h macros like FLT_MANT_DIG.
    M_SUF(x)   - Paste the the type specific suffix used by functions
-		i.e expf expl exp.
+        i.e expf expl exp.
    FLOAT      - Resolves to the C typename of M_TYPE.
    CFLOAT     - Resolves to the complex typename of M_TYPE.
    M_STRTO_NAN - Resolves to the internal libc function which
-		converts a string into the appropriate FLOAT nan
-		value.
+        converts a string into the appropriate FLOAT nan
+        value.
    M_SET_RESTORE_ROUND - Resolves to a SET_RESTORE_ROUND call for M_TYPE.
 
   declare_mgen_alias(from,to)
@@ -88,12 +88,12 @@
 #endif
 
 #ifndef declare_mgen_finite_alias_s
-# define declare_mgen_finite_alias_s(from,to)	\
+# define declare_mgen_finite_alias_s(from,to)   \
   declare_mgen_finite_alias_x (from, to)
 #endif
 
 #ifndef declare_mgen_finite_alias
-# define declare_mgen_finite_alias(from, to)	\
+# define declare_mgen_finite_alias(from, to)    \
   declare_mgen_finite_alias_s (M_SUF (from), M_SUF (to))
 #endif
 

@@ -3,8 +3,7 @@
 #undef qgcvt
 
 attribute_hidden
-char *
-qgcvt (double val, int ndigit, char *buf)
+char *qgcvt(double val, int ndigit, char *buf)
 {
-  return gcvt (val, ndigit, buf);
+    return gcvt(val, ndigit, buf);
 }

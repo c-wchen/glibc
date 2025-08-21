@@ -31,4 +31,4 @@
 /* Get the full set of definitions.  */
 #include_next <tls.h>
 
-#endif	/* tls.h */
+#endif  /* tls.h */

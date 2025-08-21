@@ -21,53 +21,53 @@
 #include <stdint.h>
 #include <sys/ucontext.h>
 
-void
-__makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
+void __makecontext(ucontext_t *ucp, void (*func)(void), int argc, ...)
 {
-  extern void __startcontext (void) attribute_hidden;
-  unsigned long int sp, *r;
-  va_list vl;
-  int i, reg_args, stack_args;
+    extern void __startcontext(void) attribute_hidden;
+    unsigned long int sp, *r;
+    va_list vl;
+    int i, reg_args, stack_args;
 
-  sp = ((unsigned long int) ucp->uc_stack.ss_sp + ucp->uc_stack.ss_size) & ~7;
+    sp = ((unsigned long int) ucp->uc_stack.ss_sp + ucp->uc_stack.ss_size) & ~7;
 
-  ucp->uc_mcontext.__sp = sp;
-  ucp->uc_mcontext.__fp = 0;
+    ucp->uc_mcontext.__sp = sp;
+    ucp->uc_mcontext.__fp = 0;
 
-  /* __startcontext is sort of trampoline to invoke @func
-     From setcontext pov, the resume address is __startcontext,
-     set it up in BLINK place holder.  */
+    /* __startcontext is sort of trampoline to invoke @func
+       From setcontext pov, the resume address is __startcontext,
+       set it up in BLINK place holder.  */
 
-  ucp->uc_mcontext.__blink = (unsigned long int) &__startcontext;
+    ucp->uc_mcontext.__blink = (unsigned long int) &__startcontext;
 
-  /* __startcontext passed 2 types of args
-       - args to @func setup in canonical r0-r7
-       - @func and next function in r14,r15.   */
+    /* __startcontext passed 2 types of args
+         - args to @func setup in canonical r0-r7
+         - @func and next function in r14,r15.   */
 
-  ucp->uc_mcontext.__r14 = (unsigned long int) func;
-  ucp->uc_mcontext.__r15 = (unsigned long int) ucp->uc_link;
+    ucp->uc_mcontext.__r14 = (unsigned long int) func;
+    ucp->uc_mcontext.__r15 = (unsigned long int) ucp->uc_link;
 
-  r = &ucp->uc_mcontext.__r0;
+    r = &ucp->uc_mcontext.__r0;
 
-  va_start (vl, argc);
+    va_start(vl, argc);
 
-  reg_args = argc > 8 ? 8 : argc;
-  for (i = 0; i < reg_args; i++)
-    *r-- = va_arg (vl, unsigned long int);
-
-  stack_args = argc - reg_args;
-
-  if (__glibc_unlikely (stack_args > 0))
-    {
-      sp -= stack_args * sizeof (unsigned long int);
-      ucp->uc_mcontext.__sp = sp;
-      r = (unsigned long int *) sp;
-
-      for (i = 0; i < stack_args; i++)
-        *r++ = va_arg (vl, unsigned long int);
+    reg_args = argc > 8 ? 8 : argc;
+    for (i = 0; i < reg_args; i++) {
+        *r-- = va_arg(vl, unsigned long int);
     }
 
-  va_end (vl);
+    stack_args = argc - reg_args;
+
+    if (__glibc_unlikely(stack_args > 0)) {
+        sp -= stack_args * sizeof(unsigned long int);
+        ucp->uc_mcontext.__sp = sp;
+        r = (unsigned long int *) sp;
+
+        for (i = 0; i < stack_args; i++) {
+            *r++ = va_arg(vl, unsigned long int);
+        }
+    }
+
+    va_end(vl);
 }
 
-weak_alias (__makecontext, makecontext)
+weak_alias(__makecontext, makecontext)

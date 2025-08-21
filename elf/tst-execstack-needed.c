@@ -7,28 +7,26 @@
 #include <unistd.h>
 #include <error.h>
 
-extern void tryme (void);	/* from tst-execstack-mod.so */
+extern void tryme(void);    /* from tst-execstack-mod.so */
 
-static void deeper (void (*f) (void));
+static void deeper(void (*f)(void));
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  tryme ();
+    tryme();
 
-  /* Test that growing the stack region gets new executable pages too.  */
-  deeper (&tryme);
+    /* Test that growing the stack region gets new executable pages too.  */
+    deeper(&tryme);
 
-  return 0;
+    return 0;
 }
 
-static void
-deeper (void (*f) (void))
+static void deeper(void (*f)(void))
 {
-  char stack[1100 * 1024];
-  explicit_bzero (stack, sizeof stack);
-  (*f) ();
-  memfrob (stack, sizeof stack);
+    char stack[1100 * 1024];
+    explicit_bzero(stack, sizeof stack);
+    (*f)();
+    memfrob(stack, sizeof stack);
 }
 
 #include <support/test-driver.c>

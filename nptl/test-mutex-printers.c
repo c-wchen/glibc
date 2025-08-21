@@ -27,125 +27,125 @@
 #define PASS 0
 #define FAIL 1
 
-static int test_status_destroyed (pthread_mutex_t *mutex);
-static int test_status_no_robust (pthread_mutex_t *mutex,
-				  pthread_mutexattr_t *attr);
-static int test_status_robust (pthread_mutex_t *mutex,
-			       pthread_mutexattr_t *attr);
-static int test_locking_state_robust (pthread_mutex_t *mutex);
-static void *thread_func (void *arg);
-static int test_recursive_locks (pthread_mutex_t *mutex,
-				 pthread_mutexattr_t *attr);
+static int test_status_destroyed(pthread_mutex_t *mutex);
+static int test_status_no_robust(pthread_mutex_t *mutex,
+                                 pthread_mutexattr_t *attr);
+static int test_status_robust(pthread_mutex_t *mutex,
+                              pthread_mutexattr_t *attr);
+static int test_locking_state_robust(pthread_mutex_t *mutex);
+static void *thread_func(void *arg);
+static int test_recursive_locks(pthread_mutex_t *mutex,
+                                pthread_mutexattr_t *attr);
 
-int
-main (void)
+int main(void)
 {
-  pthread_mutex_t mutex;
-  pthread_mutexattr_t attr;
-  int result = FAIL;
+    pthread_mutex_t mutex;
+    pthread_mutexattr_t attr;
+    int result = FAIL;
 
-  if (pthread_mutexattr_init (&attr) == 0
-      && test_status_destroyed (&mutex) == PASS
-      && test_status_no_robust (&mutex, &attr) == PASS
-      && test_status_robust (&mutex, &attr) == PASS
-      && test_recursive_locks (&mutex, &attr) == PASS)
-    result = PASS;
-  /* Else, one of the pthread_mutex* functions failed.  */
+    if (pthread_mutexattr_init(&attr) == 0
+        && test_status_destroyed(&mutex) == PASS
+        && test_status_no_robust(&mutex, &attr) == PASS
+        && test_status_robust(&mutex, &attr) == PASS
+        && test_recursive_locks(&mutex, &attr) == PASS) {
+        result = PASS;
+    }
+    /* Else, one of the pthread_mutex* functions failed.  */
 
-  return result;
+    return result;
 }
 
 /* Initializes MUTEX, then destroys it.  */
-static int
-test_status_destroyed (pthread_mutex_t *mutex)
+static int test_status_destroyed(pthread_mutex_t *mutex)
 {
-  int result = FAIL;
+    int result = FAIL;
 
-  if (pthread_mutex_init (mutex, NULL) == 0
-      && pthread_mutex_destroy (mutex) == 0)
-    result = PASS; /* Test status (destroyed).  */
+    if (pthread_mutex_init(mutex, NULL) == 0
+        && pthread_mutex_destroy(mutex) == 0) {
+        result = PASS;    /* Test status (destroyed).  */
+    }
 
-  return result;
+    return result;
 }
 
 /* Tests locking of non-robust mutexes.  */
-static int
-test_status_no_robust (pthread_mutex_t *mutex, pthread_mutexattr_t *attr)
+static int test_status_no_robust(pthread_mutex_t *mutex, pthread_mutexattr_t *attr)
 {
-  int result = FAIL;
+    int result = FAIL;
 
-  if (pthread_mutexattr_setrobust (attr, PTHREAD_MUTEX_STALLED) == 0
-      && pthread_mutex_init (mutex, attr) == 0
-      && pthread_mutex_lock (mutex) == 0 /* Test status (non-robust).  */
-      && pthread_mutex_unlock (mutex) == 0
-      && pthread_mutex_destroy (mutex) == 0)
-    result = PASS;
+    if (pthread_mutexattr_setrobust(attr, PTHREAD_MUTEX_STALLED) == 0
+        && pthread_mutex_init(mutex, attr) == 0
+        && pthread_mutex_lock(mutex) == 0  /* Test status (non-robust).  */
+        && pthread_mutex_unlock(mutex) == 0
+        && pthread_mutex_destroy(mutex) == 0) {
+        result = PASS;
+    }
 
-  return result;
+    return result;
 }
 
 /* Tests locking of robust mutexes.  */
-static int
-test_status_robust (pthread_mutex_t *mutex, pthread_mutexattr_t *attr)
+static int test_status_robust(pthread_mutex_t *mutex, pthread_mutexattr_t *attr)
 {
-  int result = FAIL;
+    int result = FAIL;
 
-  if (pthread_mutexattr_setrobust (attr, PTHREAD_MUTEX_ROBUST) == 0
-      && pthread_mutex_init (mutex, attr) == 0
-      && test_locking_state_robust (mutex) == PASS /* Test status (robust).  */
-      && pthread_mutex_destroy (mutex) == 0)
-    result = PASS;
+    if (pthread_mutexattr_setrobust(attr, PTHREAD_MUTEX_ROBUST) == 0
+        && pthread_mutex_init(mutex, attr) == 0
+        && test_locking_state_robust(mutex) == PASS  /* Test status (robust).  */
+        && pthread_mutex_destroy(mutex) == 0) {
+        result = PASS;
+    }
 
-  return result;
+    return result;
 }
 
 /* Tests locking and state corruption of robust mutexes.  We'll mark it as
    inconsistent, then not recoverable.  */
-static int
-test_locking_state_robust (pthread_mutex_t *mutex)
+static int test_locking_state_robust(pthread_mutex_t *mutex)
 {
-  int result = FAIL;
-  pthread_t thread;
+    int result = FAIL;
+    pthread_t thread;
 
-  if (pthread_create (&thread, NULL, thread_func, mutex) == 0 /* Create.  */
-      && pthread_join (thread, NULL) == 0
-      && pthread_mutex_lock (mutex) == EOWNERDEAD /* Test locking (robust).  */
-      && pthread_mutex_unlock (mutex) == 0)
-    result = PASS;
+    if (pthread_create(&thread, NULL, thread_func, mutex) == 0  /* Create.  */
+        && pthread_join(thread, NULL) == 0
+        && pthread_mutex_lock(mutex) == EOWNERDEAD  /* Test locking (robust).  */
+        && pthread_mutex_unlock(mutex) == 0) {
+        result = PASS;
+    }
 
-  return result;
+    return result;
 }
 
 /* Function to be called by the child thread when testing robust mutexes.  */
-static void *
-thread_func (void *arg)
+static void *thread_func(void *arg)
 {
-  pthread_mutex_t *mutex = (pthread_mutex_t *)arg;
+    pthread_mutex_t *mutex = (pthread_mutex_t *)arg;
 
-  if (pthread_mutex_lock (mutex) != 0) /* Thread function.  */
-    exit (FAIL);
+    if (pthread_mutex_lock(mutex) != 0) { /* Thread function.  */
+        exit(FAIL);
+    }
 
-  /* Thread terminates without unlocking the mutex, thus marking it as
-     inconsistent.  */
-  return NULL;
+    /* Thread terminates without unlocking the mutex, thus marking it as
+       inconsistent.  */
+    return NULL;
 }
 
 /* Tests locking the mutex multiple times in a row.  */
-static int
-test_recursive_locks (pthread_mutex_t *mutex, pthread_mutexattr_t *attr)
+static int test_recursive_locks(pthread_mutex_t *mutex, pthread_mutexattr_t *attr)
 {
-  int result = FAIL;
+    int result = FAIL;
 
-  if (pthread_mutexattr_settype (attr, PTHREAD_MUTEX_RECURSIVE) == 0
-      && pthread_mutex_init (mutex, attr) == 0
-      && pthread_mutex_lock (mutex) == 0
-      && pthread_mutex_lock (mutex) == 0
-      && pthread_mutex_lock (mutex) == 0 /* Test recursive locks.  */
-      && pthread_mutex_unlock (mutex) == 0
-      && pthread_mutex_unlock (mutex) == 0
-      && pthread_mutex_unlock (mutex) == 0
-      && pthread_mutex_destroy (mutex) == 0)
-    result = PASS;
+    if (pthread_mutexattr_settype(attr, PTHREAD_MUTEX_RECURSIVE) == 0
+        && pthread_mutex_init(mutex, attr) == 0
+        && pthread_mutex_lock(mutex) == 0
+        && pthread_mutex_lock(mutex) == 0
+        && pthread_mutex_lock(mutex) == 0  /* Test recursive locks.  */
+        && pthread_mutex_unlock(mutex) == 0
+        && pthread_mutex_unlock(mutex) == 0
+        && pthread_mutex_unlock(mutex) == 0
+        && pthread_mutex_destroy(mutex) == 0) {
+        result = PASS;
+    }
 
-  return result;
+    return result;
 }

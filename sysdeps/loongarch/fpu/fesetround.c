@@ -19,26 +19,27 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-int
-__fesetround (int round)
+int __fesetround(int round)
 {
-  fpu_control_t cw;
+    fpu_control_t cw;
 
-  if ((round & ~_FPU_RC_MASK) != 0)
-    /* ROUND is no valid rounding mode.  */
-    return 1;
+    if ((round & ~_FPU_RC_MASK) != 0)
+        /* ROUND is no valid rounding mode.  */
+    {
+        return 1;
+    }
 
-  /* Get current state.  */
-  _FPU_GETCW (cw);
+    /* Get current state.  */
+    _FPU_GETCW(cw);
 
-  /* Set rounding bits.  */
-  cw &= ~_FPU_RC_MASK;
-  cw |= round;
-  /* Set new state.  */
-  _FPU_SETCW (cw);
+    /* Set rounding bits.  */
+    cw &= ~_FPU_RC_MASK;
+    cw |= round;
+    /* Set new state.  */
+    _FPU_SETCW(cw);
 
-  return 0;
+    return 0;
 }
 
-libm_hidden_def (__fesetround) weak_alias (__fesetround, fesetround)
-libm_hidden_weak (fesetround)
+libm_hidden_def(__fesetround) weak_alias(__fesetround, fesetround)
+libm_hidden_weak(fesetround)

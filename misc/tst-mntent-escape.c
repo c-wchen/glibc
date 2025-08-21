@@ -22,80 +22,83 @@
 #include <string.h>
 #include <support/check.h>
 
-struct const_mntent
-{
-  const char *mnt_fsname;
-  const char *mnt_dir;
-  const char *mnt_type;
-  const char *mnt_opts;
-  int mnt_freq;
-  int mnt_passno;
-  const char *expected;
+struct const_mntent {
+    const char *mnt_fsname;
+    const char *mnt_dir;
+    const char *mnt_type;
+    const char *mnt_opts;
+    int mnt_freq;
+    int mnt_passno;
+    const char *expected;
 };
 
-struct const_mntent tests[] =
-{
-    {"/dev/hda1", "/some dir", "ext2", "defaults", 1, 2,
-     "/dev/hda1 /some\\040dir ext2 defaults 1 2\n"},
-    {"device name", "/some dir", "tmpfs", "defaults", 1, 2,
-     "device\\040name /some\\040dir tmpfs defaults 1 2\n"},
-    {" ", "/some dir", "tmpfs", "defaults", 1, 2,
-     "\\040 /some\\040dir tmpfs defaults 1 2\n"},
-    {"\t", "/some dir", "tmpfs", "defaults", 1, 2,
-     "\\011 /some\\040dir tmpfs defaults 1 2\n"},
-    {"\\", "/some dir", "tmpfs", "defaults", 1, 2,
-     "\\134 /some\\040dir tmpfs defaults 1 2\n"},
-};
-
-static int
-do_test (void)
-{
-  for (int i = 0; i < sizeof (tests) / sizeof (struct const_mntent); i++)
+struct const_mntent tests[] = {
     {
-      char buf[128];
-      struct mntent *ret, curtest;
-      FILE *fp = fmemopen (buf, sizeof (buf), "w+");
+        "/dev/hda1", "/some dir", "ext2", "defaults", 1, 2,
+        "/dev/hda1 /some\\040dir ext2 defaults 1 2\n"
+    },
+    {
+        "device name", "/some dir", "tmpfs", "defaults", 1, 2,
+        "device\\040name /some\\040dir tmpfs defaults 1 2\n"
+    },
+    {
+        " ", "/some dir", "tmpfs", "defaults", 1, 2,
+        "\\040 /some\\040dir tmpfs defaults 1 2\n"
+    },
+    {
+        "\t", "/some dir", "tmpfs", "defaults", 1, 2,
+        "\\011 /some\\040dir tmpfs defaults 1 2\n"
+    },
+    {
+        "\\", "/some dir", "tmpfs", "defaults", 1, 2,
+        "\\134 /some\\040dir tmpfs defaults 1 2\n"
+    },
+};
 
-      if (fp == NULL)
-	{
-	  printf ("Failed to open file\n");
-	  return 1;
-	}
+static int do_test(void)
+{
+    for (int i = 0; i < sizeof(tests) / sizeof(struct const_mntent); i++) {
+        char buf[128];
+        struct mntent *ret, curtest;
+        FILE *fp = fmemopen(buf, sizeof(buf), "w+");
 
-      curtest.mnt_fsname = strdupa (tests[i].mnt_fsname);
-      curtest.mnt_dir = strdupa (tests[i].mnt_dir);
-      curtest.mnt_type = strdupa (tests[i].mnt_type);
-      curtest.mnt_opts = strdupa (tests[i].mnt_opts);
-      curtest.mnt_freq = tests[i].mnt_freq;
-      curtest.mnt_passno = tests[i].mnt_passno;
+        if (fp == NULL) {
+            printf("Failed to open file\n");
+            return 1;
+        }
 
-      if (addmntent (fp, &curtest) != 0)
-	{
-	  support_record_failure ();
-	  continue;
-	}
+        curtest.mnt_fsname = strdupa(tests[i].mnt_fsname);
+        curtest.mnt_dir = strdupa(tests[i].mnt_dir);
+        curtest.mnt_type = strdupa(tests[i].mnt_type);
+        curtest.mnt_opts = strdupa(tests[i].mnt_opts);
+        curtest.mnt_freq = tests[i].mnt_freq;
+        curtest.mnt_passno = tests[i].mnt_passno;
 
-      TEST_COMPARE_STRING (buf, tests[i].expected);
+        if (addmntent(fp, &curtest) != 0) {
+            support_record_failure();
+            continue;
+        }
 
-      rewind (fp);
-      ret = getmntent (fp);
-      if (ret == NULL)
-	{
-	  support_record_failure ();
-	  continue;
-	}
+        TEST_COMPARE_STRING(buf, tests[i].expected);
 
-      TEST_COMPARE_STRING(tests[i].mnt_fsname, ret->mnt_fsname);
-      TEST_COMPARE_STRING(tests[i].mnt_dir, ret->mnt_dir);
-      TEST_COMPARE_STRING(tests[i].mnt_type, ret->mnt_type);
-      TEST_COMPARE_STRING(tests[i].mnt_opts, ret->mnt_opts);
-      TEST_COMPARE(tests[i].mnt_freq, ret->mnt_freq);
-      TEST_COMPARE(tests[i].mnt_passno, ret->mnt_passno);
+        rewind(fp);
+        ret = getmntent(fp);
+        if (ret == NULL) {
+            support_record_failure();
+            continue;
+        }
 
-      fclose (fp);
+        TEST_COMPARE_STRING(tests[i].mnt_fsname, ret->mnt_fsname);
+        TEST_COMPARE_STRING(tests[i].mnt_dir, ret->mnt_dir);
+        TEST_COMPARE_STRING(tests[i].mnt_type, ret->mnt_type);
+        TEST_COMPARE_STRING(tests[i].mnt_opts, ret->mnt_opts);
+        TEST_COMPARE(tests[i].mnt_freq, ret->mnt_freq);
+        TEST_COMPARE(tests[i].mnt_passno, ret->mnt_passno);
+
+        fclose(fp);
     }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -26,11 +26,10 @@
 
 #include <libio/strfile.h>
 
-int
-__isoc99_vsscanf (const char *string, const char *format, va_list args)
+int __isoc99_vsscanf(const char *string, const char *format, va_list args)
 {
-  _IO_strfile sf;
-  FILE *f = _IO_strfile_read (&sf, string);
-  return __vfscanf_internal (f, format, args, SCANF_ISOC99_A);
+    _IO_strfile sf;
+    FILE *f = _IO_strfile_read(&sf, string);
+    return __vfscanf_internal(f, format, args, SCANF_ISOC99_A);
 }
-libc_hidden_def (__isoc99_vsscanf)
+libc_hidden_def(__isoc99_vsscanf)

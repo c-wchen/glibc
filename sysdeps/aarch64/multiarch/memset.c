@@ -27,51 +27,57 @@
 # include <string.h>
 # include <init-arch.h>
 
-extern __typeof (__redirect_memset) __libc_memset;
+extern __typeof(__redirect_memset) __libc_memset;
 
-extern __typeof (__redirect_memset) __memset_zva64 attribute_hidden;
-extern __typeof (__redirect_memset) __memset_emag attribute_hidden;
-extern __typeof (__redirect_memset) __memset_kunpeng attribute_hidden;
-extern __typeof (__redirect_memset) __memset_a64fx attribute_hidden;
-extern __typeof (__redirect_memset) __memset_generic attribute_hidden;
-extern __typeof (__redirect_memset) __memset_mops attribute_hidden;
-extern __typeof (__redirect_memset) __memset_oryon1 attribute_hidden;
-extern __typeof (__redirect_memset) __memset_sve_zva64 attribute_hidden;
+extern __typeof(__redirect_memset) __memset_zva64 attribute_hidden;
+extern __typeof(__redirect_memset) __memset_emag attribute_hidden;
+extern __typeof(__redirect_memset) __memset_kunpeng attribute_hidden;
+extern __typeof(__redirect_memset) __memset_a64fx attribute_hidden;
+extern __typeof(__redirect_memset) __memset_generic attribute_hidden;
+extern __typeof(__redirect_memset) __memset_mops attribute_hidden;
+extern __typeof(__redirect_memset) __memset_oryon1 attribute_hidden;
+extern __typeof(__redirect_memset) __memset_sve_zva64 attribute_hidden;
 
-static inline __typeof (__redirect_memset) *
-select_memset_ifunc (void)
+static inline __typeof(__redirect_memset) *
+select_memset_ifunc(void)
 {
-  INIT_ARCH ();
+    INIT_ARCH();
 
-  if (mops)
-    return __memset_mops;
-
-  if (sve)
-    {
-      if (IS_A64FX (midr) && zva_size == 256)
-	return __memset_a64fx;
-
-      if (prefer_sve_ifuncs && zva_size == 64)
-	return __memset_sve_zva64;
+    if (mops) {
+        return __memset_mops;
     }
 
-  if (IS_ORYON1 (midr) && zva_size == 64)
-    return __memset_oryon1;
+    if (sve) {
+        if (IS_A64FX(midr) && zva_size == 256) {
+            return __memset_a64fx;
+        }
 
-  if (IS_KUNPENG920 (midr))
-    return __memset_kunpeng;
+        if (prefer_sve_ifuncs && zva_size == 64) {
+            return __memset_sve_zva64;
+        }
+    }
 
-  if (IS_EMAG (midr))
-    return __memset_emag;
+    if (IS_ORYON1(midr) && zva_size == 64) {
+        return __memset_oryon1;
+    }
 
-  if (zva_size == 64)
-    return __memset_zva64;
+    if (IS_KUNPENG920(midr)) {
+        return __memset_kunpeng;
+    }
 
-  return __memset_generic;
+    if (IS_EMAG(midr)) {
+        return __memset_emag;
+    }
+
+    if (zva_size == 64) {
+        return __memset_zva64;
+    }
+
+    return __memset_generic;
 }
 
-libc_ifunc (__libc_memset, select_memset_ifunc ());
+libc_ifunc(__libc_memset, select_memset_ifunc());
 
 # undef memset
-strong_alias (__libc_memset, memset);
+strong_alias(__libc_memset, memset);
 #endif

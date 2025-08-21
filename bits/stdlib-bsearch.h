@@ -16,35 +16,31 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-__extern_inline void *
-bsearch (const void *__key, const void *__base, size_t __nmemb, size_t __size,
-	 __compar_fn_t __compar)
+__extern_inline void *bsearch(const void *__key, const void *__base, size_t __nmemb, size_t __size,
+                              __compar_fn_t __compar)
 {
-  const void *__p;
-  int __comparison;
+    const void *__p;
+    int __comparison;
 
-  while (__nmemb)
-    {
-      __p = (const void *) (((const char *) __base) + ((__nmemb >> 1) * __size));
-      __comparison = (*__compar) (__key, __p);
-      if (__comparison == 0)
-	{
+    while (__nmemb) {
+        __p = (const void *)(((const char *) __base) + ((__nmemb >> 1) * __size));
+        __comparison = (*__compar)(__key, __p);
+        if (__comparison == 0) {
 #if __GNUC_PREREQ(4, 6)
 # pragma GCC diagnostic push
 # pragma GCC diagnostic ignored "-Wcast-qual"
 #endif
-	  return (void *) __p;
+            return (void *) __p;
 #if __GNUC_PREREQ(4, 6)
 # pragma GCC diagnostic pop
 #endif
-	}
-      if (__comparison > 0)
-	{
-	  __base = ((const char *) __p) + __size;
-	  --__nmemb;
-	}
-      __nmemb >>= 1;
+        }
+        if (__comparison > 0) {
+            __base = ((const char *) __p) + __size;
+            --__nmemb;
+        }
+        __nmemb >>= 1;
     }
 
-  return NULL;
+    return NULL;
 }

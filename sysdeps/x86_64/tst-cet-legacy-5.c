@@ -31,59 +31,56 @@
 # define CET_MAYBE_DISABLED 0
 #endif
 
-static void
-do_test_1 (const char *modname, bool fail)
+static void do_test_1(const char *modname, bool fail)
 {
-  int (*fp) (void);
-  void *h;
+    int (*fp)(void);
+    void *h;
 
-  /* NB: dlopen should never fail on non-CET platforms.  If SHSTK is
-     disabled, assuming IBT is also disabled.  */
-  bool cet_enabled = _get_ssp () != 0 && !CET_MAYBE_DISABLED;
-  if (!cet_enabled)
-    fail = false;
-
-  h = dlopen (modname, RTLD_LAZY);
-  if (h == NULL)
-    {
-      const char *err = dlerror ();
-      if (fail)
-	{
-	  if (strstr (err, "rebuild shared object with SHSTK support enabled")
-	      == NULL)
-	    FAIL_EXIT1 ("incorrect dlopen '%s' error: %s\n", modname, err);
-
-	  return;
-	}
-
-      FAIL_EXIT1 ("cannot open '%s': %s\n", modname, err);
+    /* NB: dlopen should never fail on non-CET platforms.  If SHSTK is
+       disabled, assuming IBT is also disabled.  */
+    bool cet_enabled = _get_ssp() != 0 && !CET_MAYBE_DISABLED;
+    if (!cet_enabled) {
+        fail = false;
     }
 
-  if (fail)
-    FAIL_EXIT1 ("dlopen should have failed\n");
+    h = dlopen(modname, RTLD_LAZY);
+    if (h == NULL) {
+        const char *err = dlerror();
+        if (fail) {
+            if (strstr(err, "rebuild shared object with SHSTK support enabled")
+                == NULL) {
+                FAIL_EXIT1("incorrect dlopen '%s' error: %s\n", modname, err);
+            }
 
-  fp = dlsym (h, "test");
-  if (fp == NULL)
-    {
-      printf ("cannot get symbol 'test': %s\n", dlerror ());
-      exit (1);
+            return;
+        }
+
+        FAIL_EXIT1("cannot open '%s': %s\n", modname, err);
     }
 
-  if (fp () != 0)
-    {
-      puts ("test () != 0");
-      exit (1);
+    if (fail) {
+        FAIL_EXIT1("dlopen should have failed\n");
     }
 
-  dlclose (h);
+    fp = dlsym(h, "test");
+    if (fp == NULL) {
+        printf("cannot get symbol 'test': %s\n", dlerror());
+        exit(1);
+    }
+
+    if (fp() != 0) {
+        puts("test () != 0");
+        exit(1);
+    }
+
+    dlclose(h);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  do_test_1 ("tst-cet-legacy-mod-5a.so", true);
-  do_test_1 ("tst-cet-legacy-mod-5b.so", false);
-  return 0;
+    do_test_1("tst-cet-legacy-mod-5a.so", true);
+    do_test_1("tst-cet-legacy-mod-5b.so", false);
+    return 0;
 }
 
 #include <support/test-driver.c>

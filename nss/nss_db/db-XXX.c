@@ -36,14 +36,14 @@
    NEED_H_ERRNO - defined iff an arg `int *herrnop' is used.
 */
 
-#define ENTNAME_r	CONCAT(ENTNAME,_r)
+#define ENTNAME_r   CONCAT(ENTNAME,_r)
 
 #include <paths.h>
-#define	DBFILE		_PATH_VARDB DATABASE ".db"
+#define DBFILE      _PATH_VARDB DATABASE ".db"
 
 #ifdef NEED_H_ERRNO
-# define H_ERRNO_PROTO	, int *herrnop
-# define H_ERRNO_ARG	, herrnop
+# define H_ERRNO_PROTO  , int *herrnop
+# define H_ERRNO_ARG    , herrnop
 # define H_ERRNO_SET(val) (*herrnop = (val))
 #else
 # define H_ERRNO_PROTO
@@ -54,7 +54,7 @@
 /* State for this database.  */
 static struct nss_db_map state;
 /* Lock to protect the state and global variables.  */
-__libc_lock_define (static , lock);
+__libc_lock_define(static, lock);
 
 /* Maintenance of the shared handle open on the database.  */
 static int keep_db;
@@ -63,43 +63,41 @@ static const char *entidx;
 
 /* Open the database.  */
 enum nss_status
-CONCAT(_nss_db_set,ENTNAME) (int stayopen)
-{
-  enum nss_status status;
+CONCAT(_nss_db_set, ENTNAME)(int stayopen) {
+    enum nss_status status;
 
-  __libc_lock_lock (lock);
+    __libc_lock_lock(lock);
 
-  status = internal_setent (DBFILE, &state);
+    status = internal_setent(DBFILE, &state);
 
-  if (status == NSS_STATUS_SUCCESS)
+    if (status == NSS_STATUS_SUCCESS)
     {
-      /* Remember STAYOPEN flag.  */
-      keep_db |= stayopen;
+        /* Remember STAYOPEN flag.  */
+        keep_db |= stayopen;
 
-      /* Reset the sequential index.  */
-      entidx  = NULL;
+        /* Reset the sequential index.  */
+        entidx  = NULL;
     }
 
-  __libc_lock_unlock (lock);
+    __libc_lock_unlock(lock);
 
-  return status;
+    return status;
 }
 
 
 /* Close it again.  */
 enum nss_status
-CONCAT(_nss_db_end,ENTNAME) (void)
-{
-  __libc_lock_lock (lock);
+CONCAT(_nss_db_end, ENTNAME)(void) {
+    __libc_lock_lock(lock);
 
-  internal_endent (&state);
+    internal_endent(&state);
 
-  /* Reset STAYOPEN flag.  */
-  keep_db = 0;
+    /* Reset STAYOPEN flag.  */
+    keep_db = 0;
 
-  __libc_lock_unlock (lock);
+    __libc_lock_unlock(lock);
 
-  return NSS_STATUS_SUCCESS;
+    return NSS_STATUS_SUCCESS;
 }
 
 
@@ -121,103 +119,103 @@ CONCAT(_nss_db_end,ENTNAME) (void)
    to the lookup key arguments and does `break;' if they match.  */
 
 #define DB_LOOKUP(name, db_char, keysize, keypattern, break_if_match, proto...)\
-enum nss_status								      \
- _nss_db_get##name##_r (proto, struct STRUCTURE *result,		      \
-			char *buffer, size_t buflen, int *errnop H_ERRNO_PROTO)\
-{									      \
-  struct parser_data *data = (void *) buffer;				      \
-									      \
-  if (buflen < sizeof *data)						      \
-    {									      \
-      *errnop = ERANGE;							      \
-      H_ERRNO_SET (NETDB_INTERNAL);					      \
-      return NSS_STATUS_TRYAGAIN;					      \
-    }									      \
-									      \
-  struct nss_db_map state = { NULL, 0 };				      \
-  enum nss_status status = internal_setent (DBFILE, &state);		      \
-  if (status != NSS_STATUS_SUCCESS)					      \
-    {									      \
-      *errnop = errno;							      \
-      H_ERRNO_SET (NETDB_INTERNAL);					      \
-      return status;							      \
-    }									      \
-									      \
-  const struct nss_db_header *header = state.header;			      \
-  int i;								      \
-  for (i = 0; i < header->ndbs; ++i)					      \
-    if (header->dbs[i].id == db_char)					      \
-      break;								      \
-  if (i == header->ndbs)						      \
-    {									      \
-      status = NSS_STATUS_UNAVAIL;					      \
-      goto out;								      \
-    }									      \
-									      \
-  char *key;								      \
-  if (db_char == '.')							      \
-    key = (char *) IGNOREPATTERN keypattern;				      \
-  else									      \
-    {									      \
-      const size_t size = (keysize) + 1;				      \
-      key = alloca (size);						      \
-									      \
-      KEYPRINTF keypattern;						      \
-    }									      \
-									      \
-  const stridx_t *hashtable						      \
-    = (const stridx_t *) ((const char *) header				      \
-			  + header->dbs[i].hashoffset);			      \
-  const char *valstrtab = (const char *) header + header->valstroffset;	      \
-  uint32_t hashval = __hash_string (key);				      \
-  size_t hidx = hashval % header->dbs[i].hashsize;			      \
-  size_t hval2 = 1 + hashval % (header->dbs[i].hashsize - 2);		      \
-									      \
-  status = NSS_STATUS_NOTFOUND;						      \
-  while (hashtable[hidx] != ~((stridx_t) 0))				      \
-    {									      \
-      const char *valstr = valstrtab + hashtable[hidx];			      \
-      size_t len = strlen (valstr) + 1;					      \
-      if (len > buflen)							      \
-	{								      \
-	  /* No room to copy the data to.  */				      \
-	  *errnop = ERANGE;						      \
-	  H_ERRNO_SET (NETDB_INTERNAL);					      \
-	  status = NSS_STATUS_TRYAGAIN;					      \
-	  break;							      \
-	}								      \
-									      \
-      /* Copy the string to a place where it can be modified.  */	      \
-      char *p = memcpy (buffer, valstr, len);				      \
-									      \
+enum nss_status                                   \
+ _nss_db_get##name##_r (proto, struct STRUCTURE *result,              \
+            char *buffer, size_t buflen, int *errnop H_ERRNO_PROTO)\
+{                                         \
+  struct parser_data *data = (void *) buffer;                     \
+                                          \
+  if (buflen < sizeof *data)                              \
+    {                                         \
+      *errnop = ERANGE;                               \
+      H_ERRNO_SET (NETDB_INTERNAL);                       \
+      return NSS_STATUS_TRYAGAIN;                         \
+    }                                         \
+                                          \
+  struct nss_db_map state = { NULL, 0 };                      \
+  enum nss_status status = internal_setent (DBFILE, &state);              \
+  if (status != NSS_STATUS_SUCCESS)                       \
+    {                                         \
+      *errnop = errno;                                \
+      H_ERRNO_SET (NETDB_INTERNAL);                       \
+      return status;                                  \
+    }                                         \
+                                          \
+  const struct nss_db_header *header = state.header;                  \
+  int i;                                      \
+  for (i = 0; i < header->ndbs; ++i)                          \
+    if (header->dbs[i].id == db_char)                         \
+      break;                                      \
+  if (i == header->ndbs)                              \
+    {                                         \
+      status = NSS_STATUS_UNAVAIL;                        \
+      goto out;                                   \
+    }                                         \
+                                          \
+  char *key;                                      \
+  if (db_char == '.')                                 \
+    key = (char *) IGNOREPATTERN keypattern;                      \
+  else                                        \
+    {                                         \
+      const size_t size = (keysize) + 1;                      \
+      key = alloca (size);                            \
+                                          \
+      KEYPRINTF keypattern;                           \
+    }                                         \
+                                          \
+  const stridx_t *hashtable                           \
+    = (const stridx_t *) ((const char *) header                   \
+              + header->dbs[i].hashoffset);               \
+  const char *valstrtab = (const char *) header + header->valstroffset;       \
+  uint32_t hashval = __hash_string (key);                     \
+  size_t hidx = hashval % header->dbs[i].hashsize;                \
+  size_t hval2 = 1 + hashval % (header->dbs[i].hashsize - 2);             \
+                                          \
+  status = NSS_STATUS_NOTFOUND;                           \
+  while (hashtable[hidx] != ~((stridx_t) 0))                      \
+    {                                         \
+      const char *valstr = valstrtab + hashtable[hidx];               \
+      size_t len = strlen (valstr) + 1;                       \
+      if (len > buflen)                               \
+    {                                     \
+      /* No room to copy the data to.  */                     \
+      *errnop = ERANGE;                           \
+      H_ERRNO_SET (NETDB_INTERNAL);                       \
+      status = NSS_STATUS_TRYAGAIN;                       \
+      break;                                  \
+    }                                     \
+                                          \
+      /* Copy the string to a place where it can be modified.  */         \
+      char *p = memcpy (buffer, valstr, len);                     \
+                                          \
       int err = parse_line (p, result, data, buflen, errnop EXTRA_ARGS);      \
-									      \
+                                          \
       /* Advance before break_if_match, lest it uses continue to skip
-	 to the next entry.  */						      \
-      if ((hidx += hval2) >= header->dbs[i].hashsize)			      \
-	hidx -= header->dbs[i].hashsize;				      \
-									      \
-      if (err > 0)							      \
-	{								      \
-	  status = NSS_STATUS_SUCCESS;					      \
-	  break_if_match;						      \
-	  status = NSS_STATUS_NOTFOUND;					      \
-	}								      \
-      else if (err == -1)						      \
-	{								      \
-	  H_ERRNO_SET (NETDB_INTERNAL);					      \
-	  status = NSS_STATUS_TRYAGAIN;					      \
-	  break;							      \
-	}								      \
-    }									      \
-									      \
-  if (status == NSS_STATUS_NOTFOUND)					      \
-    H_ERRNO_SET (HOST_NOT_FOUND);					      \
-									      \
- out:									      \
-  internal_endent (&state);						      \
-									      \
-  return status;							      \
+     to the next entry.  */                           \
+      if ((hidx += hval2) >= header->dbs[i].hashsize)                 \
+    hidx -= header->dbs[i].hashsize;                      \
+                                          \
+      if (err > 0)                                \
+    {                                     \
+      status = NSS_STATUS_SUCCESS;                        \
+      break_if_match;                             \
+      status = NSS_STATUS_NOTFOUND;                       \
+    }                                     \
+      else if (err == -1)                             \
+    {                                     \
+      H_ERRNO_SET (NETDB_INTERNAL);                       \
+      status = NSS_STATUS_TRYAGAIN;                       \
+      break;                                  \
+    }                                     \
+    }                                         \
+                                          \
+  if (status == NSS_STATUS_NOTFOUND)                          \
+    H_ERRNO_SET (HOST_NOT_FOUND);                         \
+                                          \
+ out:                                         \
+  internal_endent (&state);                           \
+                                          \
+  return status;                                  \
 }
 
 #define KEYPRINTF(pattern, args...) snprintf (key, size, pattern ,##args)
@@ -228,84 +226,80 @@ enum nss_status								      \
 
 /* Return the next entry from the database file, doing locking.  */
 enum nss_status
-CONCAT(_nss_db_get,ENTNAME_r) (struct STRUCTURE *result, char *buffer,
-			       size_t buflen, int *errnop H_ERRNO_PROTO)
-{
-  /* Return next entry in host file.  */
-  enum nss_status status;
-  struct parser_data *data = (void *) buffer;
+CONCAT(_nss_db_get, ENTNAME_r)(struct STRUCTURE *result, char *buffer,
+                               size_t buflen, int *errnop H_ERRNO_PROTO) {
+    /* Return next entry in host file.  */
+    enum nss_status status;
+    struct parser_data *data = (void *) buffer;
 
-  if (buflen < sizeof *data)
+    if (buflen < sizeof * data)
     {
-      *errnop = ERANGE;
-      H_ERRNO_SET (NETDB_INTERNAL);
-      return NSS_STATUS_TRYAGAIN;
+        *errnop = ERANGE;
+        H_ERRNO_SET(NETDB_INTERNAL);
+        return NSS_STATUS_TRYAGAIN;
     }
 
-  __libc_lock_lock (lock);
+    __libc_lock_lock(lock);
 
-  if (state.header == NULL)
+    if (state.header == NULL)
     {
-      status = internal_setent (DBFILE, &state);
-      if (status != NSS_STATUS_SUCCESS)
-	{
-	  *errnop = errno;
-	  H_ERRNO_SET (NETDB_INTERNAL);
-	  goto out;
-	}
-      entidx = NULL;
+        status = internal_setent(DBFILE, &state);
+        if (status != NSS_STATUS_SUCCESS) {
+            *errnop = errno;
+            H_ERRNO_SET(NETDB_INTERNAL);
+            goto out;
+        }
+        entidx = NULL;
     }
 
-  /* Start from the beginning if freshly initialized or reset
-     requested by set*ent.  */
-  if (entidx == NULL)
-    entidx = (const char *) state.header + state.header->valstroffset;
-
-  status = NSS_STATUS_UNAVAIL;
-  if (state.header != MAP_FAILED)
+    /* Start from the beginning if freshly initialized or reset
+       requested by set*ent.  */
+    if (entidx == NULL)
     {
-      const char *const end = ((const char *) state.header
-			       + state.header->valstroffset
-			       + state.header->valstrlen);
-      while (entidx < end)
-	{
-	  const char *next = strchr (entidx, '\0') + 1;
-	  size_t len = next - entidx;
-
-	  if (len > buflen)
-	    {
-	      /* No room to copy the data to.  */
-	      *errnop = ERANGE;
-	      H_ERRNO_SET (NETDB_INTERNAL);
-	      status = NSS_STATUS_TRYAGAIN;
-	      break;
-	    }
-
-	  /* Copy the string to a place where it can be modified.  */
-	  char *p = memcpy (buffer, entidx, len);
-
-	  int err = parse_line (p, result, data, buflen, errnop EXTRA_ARGS);
-
-	  if (err > 0)
-	    {
-	      status = NSS_STATUS_SUCCESS;
-	      entidx = next;
-	      break;
-	    }
-	  if (err < 0)
-	    {
-	      H_ERRNO_SET (NETDB_INTERNAL);
-	      status = NSS_STATUS_TRYAGAIN;
-	      break;
-	    }
-
-	  /* Continue with the next record, this one is ill-formed.  */
-	  entidx = next;
-	}
+        entidx = (const char *) state.header + state.header->valstroffset;
     }
 
- out:
-  __libc_lock_unlock (lock);
+    status = NSS_STATUS_UNAVAIL;
+    if (state.header != MAP_FAILED)
+    {
+        const char *const end = ((const char *) state.header
+                                 + state.header->valstroffset
+                                 + state.header->valstrlen);
+        while (entidx < end) {
+            const char *next = strchr(entidx, '\0') + 1;
+            size_t len = next - entidx;
 
-  return status;
+            if (len > buflen) {
+                /* No room to copy the data to.  */
+                *errnop = ERANGE;
+                H_ERRNO_SET(NETDB_INTERNAL);
+                status = NSS_STATUS_TRYAGAIN;
+                break;
+            }
+
+            /* Copy the string to a place where it can be modified.  */
+            char *p = memcpy(buffer, entidx, len);
+
+            int err = parse_line(p, result, data, buflen, errnop EXTRA_ARGS);
+
+            if (err > 0) {
+                status = NSS_STATUS_SUCCESS;
+                entidx = next;
+                break;
+            }
+            if (err < 0) {
+                H_ERRNO_SET(NETDB_INTERNAL);
+                status = NSS_STATUS_TRYAGAIN;
+                break;
+            }
+
+            /* Continue with the next record, this one is ill-formed.  */
+            entidx = next;
+        }
+    }
+
+out:
+    __libc_lock_unlock(lock);
+
+    return status;
 }

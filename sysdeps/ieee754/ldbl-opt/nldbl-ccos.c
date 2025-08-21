@@ -2,8 +2,7 @@
 #include <complex.h>
 
 double _Complex
-attribute_hidden
-ccosl (double _Complex x)
+attribute_hidden ccosl(double _Complex x)
 {
-  return ccos (x);
+    return ccos(x);
 }

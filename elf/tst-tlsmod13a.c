@@ -1,9 +1,8 @@
-__thread int b[2] __attribute__ ((tls_model ("initial-exec")));
+__thread int b[2] __attribute__((tls_model("initial-exec")));
 
-extern int foo (void);
+extern int foo(void);
 
-int
-bar (void)
+int bar(void)
 {
-  return foo () + b[0];
+    return foo() + b[0];
 }

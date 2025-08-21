@@ -35,7 +35,7 @@
 /* In the default version of this header, long double is
    ABI-compatible with double.  */
 #ifndef __NO_LONG_DOUBLE_MATH
-# define __NO_LONG_DOUBLE_MATH	1
+# define __NO_LONG_DOUBLE_MATH  1
 #endif
 
 /* The macro __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI is used to determine the

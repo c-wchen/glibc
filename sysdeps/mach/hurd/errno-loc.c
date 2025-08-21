@@ -23,12 +23,11 @@
    use a weak __errno_location using rtld_errno, which will be overridden by the
    libc definition.  */
 static int rtld_errno;
-int * weak_function
-__errno_location (void)
+int *weak_function __errno_location(void)
 {
-  return &rtld_errno;
+    return &rtld_errno;
 }
-libc_hidden_weak (__errno_location)
+libc_hidden_weak(__errno_location)
 #else
 #include "../../../csu/errno-loc.c"
 #endif

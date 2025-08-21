@@ -25,34 +25,31 @@
 #include <tls.h>
 #include <rseq-internal.h>
 
-static inline bool
-rseq_thread_registered (void)
+static inline bool rseq_thread_registered(void)
 {
-  return RSEQ_GETMEM_ONCE (cpu_id) >= 0;
+    return RSEQ_GETMEM_ONCE(cpu_id) >= 0;
 }
 
-static inline int
-sys_rseq (struct rseq *rseq_abi, uint32_t rseq_len, int flags, uint32_t sig)
+static inline int sys_rseq(struct rseq *rseq_abi, uint32_t rseq_len, int flags, uint32_t sig)
 {
-  return syscall (__NR_rseq, rseq_abi, rseq_len, flags, sig);
+    return syscall(__NR_rseq, rseq_abi, rseq_len, flags, sig);
 }
 
-static inline bool
-rseq_available (void)
+static inline bool rseq_available(void)
 {
-  int rc;
+    int rc;
 
-  rc = sys_rseq (NULL, 0, 0, 0);
-  if (rc != -1)
-    FAIL_EXIT1 ("Unexpected rseq return value %d", rc);
-  switch (errno)
-    {
-    case ENOSYS:
-      return false;
-    case EINVAL:
-      /* rseq is implemented, but detected an invalid rseq_len parameter.  */
-      return true;
-    default:
-      FAIL_EXIT1 ("Unexpected rseq error %s", strerror (errno));
+    rc = sys_rseq(NULL, 0, 0, 0);
+    if (rc != -1) {
+        FAIL_EXIT1("Unexpected rseq return value %d", rc);
+    }
+    switch (errno) {
+        case ENOSYS:
+            return false;
+        case EINVAL:
+            /* rseq is implemented, but detected an invalid rseq_len parameter.  */
+            return true;
+        default:
+            FAIL_EXIT1("Unexpected rseq error %s", strerror(errno));
     }
 }

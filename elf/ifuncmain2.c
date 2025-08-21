@@ -3,12 +3,12 @@
 
 #include <stdlib.h>
 
-extern int foo1 (void);
+extern int foo1(void);
 
-int
-main (void)
+int main(void)
 {
-  if (foo1 () != -1)
-    abort ();
-  return 0;
+    if (foo1() != -1) {
+        abort();
+    }
+    return 0;
 }

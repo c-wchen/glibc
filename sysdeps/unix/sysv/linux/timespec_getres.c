@@ -19,32 +19,31 @@
 #include <time.h>
 
 /* Set TS to resolution of time base BASE.  */
-int
-__timespec_getres64 (struct __timespec64 *ts, int base)
+int __timespec_getres64(struct __timespec64 *ts, int base)
 {
-  if (base == TIME_UTC)
-    {
-      __clock_getres64 (CLOCK_REALTIME, ts);
-      return base;
+    if (base == TIME_UTC) {
+        __clock_getres64(CLOCK_REALTIME, ts);
+        return base;
     }
-  return 0;
+    return 0;
 }
 
 #if __TIMESIZE != 64
-libc_hidden_def (__timespec_getres64)
+libc_hidden_def(__timespec_getres64)
 
 int
-__timespec_getres (struct timespec *ts, int base)
+__timespec_getres(struct timespec *ts, int base)
 {
-  int ret;
-  struct __timespec64 tp64;
+    int ret;
+    struct __timespec64 tp64;
 
-  ret = __timespec_getres64 (&tp64, base);
+    ret = __timespec_getres64(&tp64, base);
 
-  if (ret == TIME_UTC && ts != NULL)
-    *ts = valid_timespec64_to_timespec (tp64);
+    if (ret == TIME_UTC && ts != NULL) {
+        *ts = valid_timespec64_to_timespec(tp64);
+    }
 
-  return ret;
+    return ret;
 }
 #endif
-strong_alias (__timespec_getres, timespec_getres);
+strong_alias(__timespec_getres, timespec_getres);

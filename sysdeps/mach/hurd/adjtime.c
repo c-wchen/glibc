@@ -23,30 +23,32 @@
    If OLDDELTA is not NULL, it is filled in with the amount
    of time adjustment remaining to be done from the last `__adjtime' call.
    This call is restricted to the super-user.  */
-int
-__adjtime (const struct timeval *delta, struct timeval *olddelta)
+int __adjtime(const struct timeval *delta, struct timeval *olddelta)
 {
-  error_t err;
-  mach_port_t hostpriv;
-  struct timeval dummy;
+    error_t err;
+    mach_port_t hostpriv;
+    struct timeval dummy;
 
-  err = __get_privileged_ports (&hostpriv, NULL);
-  if (err)
-    return __hurd_fail (EPERM);
+    err = __get_privileged_ports(&hostpriv, NULL);
+    if (err) {
+        return __hurd_fail(EPERM);
+    }
 
-  if (olddelta == NULL)
-    olddelta = &dummy;
+    if (olddelta == NULL) {
+        olddelta = &dummy;
+    }
 
-  err = __host_adjust_time (hostpriv,
-			    /* `time_value_t' and `struct timeval' are in
-                               fact identical with the names changed.  */
-			    *(time_value_t *) delta,
-			    (time_value_t *) olddelta);
-  __mach_port_deallocate (__mach_task_self (), hostpriv);
+    err = __host_adjust_time(hostpriv,
+                             /* `time_value_t' and `struct timeval' are in
+                                            fact identical with the names changed.  */
+                             * (time_value_t *) delta,
+                             (time_value_t *) olddelta);
+    __mach_port_deallocate(__mach_task_self(), hostpriv);
 
-  if (err)
-    return __hurd_fail (err);
-  return 0;
+    if (err) {
+        return __hurd_fail(err);
+    }
+    return 0;
 }
 
-weak_alias (__adjtime, adjtime)
+weak_alias(__adjtime, adjtime)

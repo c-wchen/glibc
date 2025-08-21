@@ -19,12 +19,11 @@
 #include <nss_module.h>
 #include <nss_files.h>
 
-void
-__nss_files_functions (nss_module_functions_untyped pointers)
+void __nss_files_functions(nss_module_functions_untyped pointers)
 {
-  void **fptr = pointers;
+    void **fptr = pointers;
 
-  /* Functions which are not implemented.  */
+    /* Functions which are not implemented.  */
 #define _nss_files_getcanonname_r NULL
 #define _nss_files_gethostbyaddr2_r NULL
 #define _nss_files_getpublickey NULL

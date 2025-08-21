@@ -31,13 +31,12 @@
 #define CLOCK_USE_TIMEDJOIN (-1)
 
 
-static void *
-tf (void *arg)
+static void *tf(void *arg)
 {
-  struct timespec ts = make_timespec(0, 100000);
-  nanosleep(&ts, NULL);
+    struct timespec ts = make_timespec(0, 100000);
+    nanosleep(&ts, NULL);
 
-  return (void *) 42l;
+    return (void *) 42l;
 }
 
 
@@ -45,30 +44,29 @@ tf (void *arg)
  * passed a timeout parameter of NULL. We can't actually wait forever, but we
  * can be sure that we did at least wait for some time by checking the exit
  * status of the thread. */
-static int
-do_test_clock (clockid_t clockid)
+static int do_test_clock(clockid_t clockid)
 {
-  pthread_t th = xpthread_create (NULL, tf, NULL);
+    pthread_t th = xpthread_create(NULL, tf, NULL);
 
-  void *status;
-  int val = (clockid == CLOCK_USE_TIMEDJOIN)
-    ? pthread_timedjoin_np (th, &status, NULL)
-    : pthread_clockjoin_np (th, &status, clockid, NULL);
-  TEST_COMPARE (val, 0);
+    void *status;
+    int val = (clockid == CLOCK_USE_TIMEDJOIN)
+              ? pthread_timedjoin_np(th, &status, NULL)
+              : pthread_clockjoin_np(th, &status, clockid, NULL);
+    TEST_COMPARE(val, 0);
 
-  if (status != (void *) 42l)
-    FAIL_EXIT1 ("return value %p, expected %p\n", status, (void *) 42l);
+    if (status != (void *) 42l) {
+        FAIL_EXIT1("return value %p, expected %p\n", status, (void *) 42l);
+    }
 
-  return 0;
+    return 0;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  do_test_clock (CLOCK_USE_TIMEDJOIN);
-  do_test_clock (CLOCK_REALTIME);
-  do_test_clock (CLOCK_MONOTONIC);
-  return 0;
+    do_test_clock(CLOCK_USE_TIMEDJOIN);
+    do_test_clock(CLOCK_REALTIME);
+    do_test_clock(CLOCK_MONOTONIC);
+    return 0;
 }
 
 #include <support/test-driver.c>

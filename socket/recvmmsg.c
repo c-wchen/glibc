@@ -21,11 +21,10 @@
 
 /* Receive up to VLEN messages as described by VMESSAGES from socket FD.
    Returns the number of bytes read or -1 for errors.  */
-int
-recvmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags,
-	  struct timespec *tmo)
+int recvmmsg(int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags,
+             struct timespec *tmo)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (recvmmsg)
+stub_warning(recvmmsg)

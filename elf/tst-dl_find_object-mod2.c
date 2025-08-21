@@ -2,13 +2,12 @@
 
 char mod2_data;
 
-void
-mod2_function (void (*f) (void))
+void mod2_function(void (*f)(void))
 {
-  /* Make sure this is not a tail call and unwind information is
-     therefore needed.  */
-  f ();
-  f ();
+    /* Make sure this is not a tail call and unwind information is
+       therefore needed.  */
+    f();
+    f();
 }
 
 /* Used to verify that _dl_find_object after static dlopen works.  */

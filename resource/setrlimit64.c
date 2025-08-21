@@ -22,19 +22,20 @@
 /* Set the soft and hard limits for RESOURCE to *RLIMITS.
    Only the super-user can increase hard limits.
    Return 0 if successful, -1 if not (and sets errno).  */
-int
-setrlimit64 (enum __rlimit_resource resource, const struct rlimit64 *rlimits)
+int setrlimit64(enum __rlimit_resource resource, const struct rlimit64 *rlimits)
 {
-  struct rlimit rlimits32;
+    struct rlimit rlimits32;
 
-  if (rlimits->rlim_cur >= RLIM_INFINITY)
-    rlimits32.rlim_cur = RLIM_INFINITY;
-  else
-    rlimits32.rlim_cur = rlimits->rlim_cur;
-  if (rlimits->rlim_max >= RLIM_INFINITY)
-    rlimits32.rlim_max = RLIM_INFINITY;
-  else
-    rlimits32.rlim_max = rlimits->rlim_max;
+    if (rlimits->rlim_cur >= RLIM_INFINITY) {
+        rlimits32.rlim_cur = RLIM_INFINITY;
+    } else {
+        rlimits32.rlim_cur = rlimits->rlim_cur;
+    }
+    if (rlimits->rlim_max >= RLIM_INFINITY) {
+        rlimits32.rlim_max = RLIM_INFINITY;
+    } else {
+        rlimits32.rlim_max = rlimits->rlim_max;
+    }
 
-  return __setrlimit (resource, &rlimits32);
+    return __setrlimit(resource, &rlimits32);
 }

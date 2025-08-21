@@ -25,13 +25,12 @@
    This call is restricted to the super-user.
    This operation is considered obsolete, kernel support may not be
    available on all architectures.  */
-int
-__settimezone (const struct timezone *tz)
+int __settimezone(const struct timezone *tz)
 {
 #ifdef __NR_settimeofday
-  return INLINE_SYSCALL_CALL (settimeofday, NULL, tz);
+    return INLINE_SYSCALL_CALL(settimeofday, NULL, tz);
 #else
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 #endif
 }

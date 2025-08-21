@@ -21,8 +21,7 @@
 #undef daddl
 
 double
-attribute_hidden
-daddl (double x, double y)
+attribute_hidden daddl(double x, double y)
 {
-  return __nldbl_daddl (x, y);
+    return __nldbl_daddl(x, y);
 }

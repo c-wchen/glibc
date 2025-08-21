@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _JIS0212_H
-#define _JIS0212_H	1
+#define _JIS0212_H  1
 
 #include <assert.h>
 #include <gconv.h>
@@ -25,11 +25,10 @@
 
 
 /* Struct for table with indices in mapping table.  */
-struct jisx0212_idx
-{
-  uint16_t start;
-  uint16_t end;
-  uint16_t idx;
+struct jisx0212_idx {
+    uint16_t start;
+    uint16_t end;
+    uint16_t idx;
 };
 
 /* Conversion table.  */
@@ -40,69 +39,78 @@ extern const struct jisx0212_idx __jisx0212_from_ucs_idx[];
 extern const char __jisx0212_from_ucs[][2];
 
 
-static inline uint32_t
-__attribute ((always_inline))
-jisx0212_to_ucs4 (const unsigned char **s, size_t avail, unsigned char offset)
+static inline uint32_t __attribute((always_inline))
+jisx0212_to_ucs4(const unsigned char **s, size_t avail, unsigned char offset)
 {
-  const struct jisx0212_idx *rp = __jisx0212_to_ucs_idx;
-  unsigned char ch = *(*s);
-  unsigned char ch2;
-  uint32_t wch = 0;
-  int idx;
+    const struct jisx0212_idx *rp = __jisx0212_to_ucs_idx;
+    unsigned char ch = *(*s);
+    unsigned char ch2;
+    uint32_t wch = 0;
+    int idx;
 
-  if (ch < offset || (ch - offset) < 0x22 || (ch - offset) > 0x6d)
-    return __UNKNOWN_10646_CHAR;
+    if (ch < offset || (ch - offset) < 0x22 || (ch - offset) > 0x6d) {
+        return __UNKNOWN_10646_CHAR;
+    }
 
-  if (avail < 2)
-    return 0;
+    if (avail < 2) {
+        return 0;
+    }
 
-  ch2 = (*s)[1];
-  if (ch2 < offset || (ch2 - offset) <= 0x20 || (ch2 - offset) >= 0x7f)
-    return __UNKNOWN_10646_CHAR;
+    ch2 = (*s)[1];
+    if (ch2 < offset || (ch2 - offset) <= 0x20 || (ch2 - offset) >= 0x7f) {
+        return __UNKNOWN_10646_CHAR;
+    }
 
-  idx = (ch - offset - 0x21) * 94 + (ch2 - offset - 0x21);
+    idx = (ch - offset - 0x21) * 94 + (ch2 - offset - 0x21);
 
-  while (idx > rp->end)
-    ++rp;
-  if (idx >= rp->start)
-    wch = __jisx0212_to_ucs[rp->idx + idx - rp->start];
+    while (idx > rp->end) {
+        ++rp;
+    }
+    if (idx >= rp->start) {
+        wch = __jisx0212_to_ucs[rp->idx + idx - rp->start];
+    }
 
-  if (wch != L'\0')
-    (*s) += 2;
-  else
-    wch = __UNKNOWN_10646_CHAR;
+    if (wch != L'\0') {
+        (*s) += 2;
+    } else {
+        wch = __UNKNOWN_10646_CHAR;
+    }
 
-  return wch;
+    return wch;
 }
 
 
-static inline size_t
-__attribute ((always_inline))
-ucs4_to_jisx0212 (uint32_t wch, unsigned char *s, size_t avail)
+static inline size_t __attribute((always_inline))
+ucs4_to_jisx0212(uint32_t wch, unsigned char *s, size_t avail)
 {
-  const struct jisx0212_idx *rp = __jisx0212_from_ucs_idx;
-  unsigned int ch = (unsigned int) wch;
-  const char *cp;
+    const struct jisx0212_idx *rp = __jisx0212_from_ucs_idx;
+    unsigned int ch = (unsigned int) wch;
+    const char *cp;
 
-  if (ch >= 0xffff)
-    return __UNKNOWN_10646_CHAR;
-  while (ch > rp->end)
-    ++rp;
-  if (ch >= rp->start)
-    cp = __jisx0212_from_ucs[rp->idx + ch - rp->start];
-  else
-    return __UNKNOWN_10646_CHAR;
+    if (ch >= 0xffff) {
+        return __UNKNOWN_10646_CHAR;
+    }
+    while (ch > rp->end) {
+        ++rp;
+    }
+    if (ch >= rp->start) {
+        cp = __jisx0212_from_ucs[rp->idx + ch - rp->start];
+    } else {
+        return __UNKNOWN_10646_CHAR;
+    }
 
-  if (cp[0] == '\0')
-    return __UNKNOWN_10646_CHAR;
+    if (cp[0] == '\0') {
+        return __UNKNOWN_10646_CHAR;
+    }
 
-  s[0] = cp[0];
-  assert (cp[1] != '\0');
-  if (avail < 2)
-    return 0;
+    s[0] = cp[0];
+    assert(cp[1] != '\0');
+    if (avail < 2) {
+        return 0;
+    }
 
-  s[1] = cp[1];
-  return 2;
+    s[1] = cp[1];
+    return 2;
 }
 
 #endif /* jis0212.h */

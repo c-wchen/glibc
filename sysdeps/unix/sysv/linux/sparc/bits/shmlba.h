@@ -23,7 +23,7 @@
 __BEGIN_DECLS
 
 /* Segment low boundary address multiple.  */
-#define SHMLBA		(__getshmlba ())
-extern int __getshmlba (void) __attribute__ ((__const__));
+#define SHMLBA      (__getshmlba ())
+extern int __getshmlba(void) __attribute__((__const__));
 
 __END_DECLS

@@ -20,8 +20,8 @@
 
 
 struct __res_state *
-__res_state (void)
+__res_state(void)
 {
-  return __resp;
+    return __resp;
 }
-libc_hidden_def (__res_state)
+libc_hidden_def(__res_state)

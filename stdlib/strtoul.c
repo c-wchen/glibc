@@ -15,6 +15,6 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define	UNSIGNED	1
+#define UNSIGNED    1
 
 #include "strtol.c"

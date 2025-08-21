@@ -24,15 +24,14 @@
 /* Table containing width information.  */
 extern const char *__ctype32_width attribute_hidden;
 
-static __inline int
-internal_wcwidth (wchar_t wc)
+static __inline int internal_wcwidth(wchar_t wc)
 {
-  unsigned char res;
+    unsigned char res;
 
-  /* The tables have been prepared in such a way that
-     1. wc == L'\0' yields res = 0,
-     2. !iswprint (wc) implies res = '\xff'.  */
-  res = wcwidth_table_lookup (_NL_CURRENT (LC_CTYPE, _NL_CTYPE_WIDTH), wc);
+    /* The tables have been prepared in such a way that
+       1. wc == L'\0' yields res = 0,
+       2. !iswprint (wc) implies res = '\xff'.  */
+    res = wcwidth_table_lookup(_NL_CURRENT(LC_CTYPE, _NL_CTYPE_WIDTH), wc);
 
-  return res == (unsigned char) '\xff' ? -1 : (int) res;
+    return res == (unsigned char) '\xff' ? -1 : (int) res;
 }

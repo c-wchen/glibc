@@ -24,60 +24,57 @@
 
 /* Define bits representing the exception.  We use the bit positions
    of the appropriate bits in the FPU control word.  */
-enum
-  {
+enum {
     FE_INEXACT =
-# define FE_INEXACT	0x04
-      FE_INEXACT,
+# define FE_INEXACT 0x04
+        FE_INEXACT,
     FE_UNDERFLOW =
-# define FE_UNDERFLOW	0x08
-      FE_UNDERFLOW,
+# define FE_UNDERFLOW   0x08
+        FE_UNDERFLOW,
     FE_OVERFLOW =
-# define FE_OVERFLOW	0x10
-      FE_OVERFLOW,
+# define FE_OVERFLOW    0x10
+        FE_OVERFLOW,
     FE_DIVBYZERO =
-# define FE_DIVBYZERO	0x20
-      FE_DIVBYZERO,
+# define FE_DIVBYZERO   0x20
+        FE_DIVBYZERO,
     FE_INVALID =
-# define FE_INVALID	0x40
-      FE_INVALID,
-  };
+# define FE_INVALID 0x40
+        FE_INVALID,
+};
 
 # define FE_ALL_EXCEPT \
-	(FE_INEXACT | FE_DIVBYZERO | FE_UNDERFLOW | FE_OVERFLOW | FE_INVALID)
+    (FE_INEXACT | FE_DIVBYZERO | FE_UNDERFLOW | FE_OVERFLOW | FE_INVALID)
 
 /* The MIPS FPU supports all of the four defined rounding modes.  We
    use again the bit positions in the FPU control word as the values
    for the appropriate macros.  */
-enum
-  {
+enum {
     FE_TONEAREST =
-# define FE_TONEAREST	0x0
-      FE_TONEAREST,
+# define FE_TONEAREST   0x0
+        FE_TONEAREST,
     FE_TOWARDZERO =
-# define FE_TOWARDZERO	0x1
-      FE_TOWARDZERO,
+# define FE_TOWARDZERO  0x1
+        FE_TOWARDZERO,
     FE_UPWARD =
-# define FE_UPWARD	0x2
-      FE_UPWARD,
+# define FE_UPWARD  0x2
+        FE_UPWARD,
     FE_DOWNWARD =
-# define FE_DOWNWARD	0x3
-      FE_DOWNWARD
-  };
+# define FE_DOWNWARD    0x3
+        FE_DOWNWARD
+};
 
 #else
 
 /* In the soft-float case, only rounding to nearest is supported, with
    no exceptions.  */
 
-enum
-  {
+enum {
     __FE_UNDEFINED = -1,
 
     FE_TONEAREST =
-# define FE_TONEAREST	0x0
-      FE_TONEAREST
-  };
+# define FE_TONEAREST   0x0
+        FE_TONEAREST
+};
 
 # define FE_ALL_EXCEPT 0
 
@@ -90,14 +87,13 @@ typedef unsigned short int fexcept_t;
 
 /* Type representing floating-point environment.  This function corresponds
    to the layout of the block written by the `fstenv'.  */
-typedef struct
-  {
+typedef struct {
     unsigned int __fp_control_register;
-  }
+}
 fenv_t;
 
 /* If the default argument is used we use this value.  */
-#define FE_DFL_ENV	((const fenv_t *) -1)
+#define FE_DFL_ENV  ((const fenv_t *) -1)
 
 #if defined __USE_GNU && defined __mips_hard_float
 /* Floating-point environment where none of the exception is masked.  */
@@ -109,5 +105,5 @@ fenv_t;
 typedef unsigned int femode_t;
 
 /* Default floating-point control modes.  */
-# define FE_DFL_MODE	((const femode_t *) -1L)
+# define FE_DFL_MODE    ((const femode_t *) -1L)
 #endif

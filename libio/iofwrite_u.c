@@ -29,25 +29,25 @@
 
 #undef fwrite_unlocked
 
-size_t
-fwrite_unlocked (const void *buf, size_t size, size_t count, FILE *fp)
+size_t fwrite_unlocked(const void *buf, size_t size, size_t count, FILE *fp)
 {
-  size_t request = size * count;
-  size_t written = 0;
-  CHECK_FILE (fp, 0);
-  if (request == 0)
-    return 0;
-  if (_IO_fwide (fp, -1) == -1)
-    {
-      written = _IO_sputn (fp, (const char *) buf, request);
-      /* We have written all of the input in case the return value indicates
-	 this or EOF is returned.  The latter is a special case where we
-	 simply did not manage to flush the buffer.  But the data is in the
-	 buffer and therefore written as far as fwrite is concerned.  */
-      if (written == request || written == EOF)
-	return count;
+    size_t request = size * count;
+    size_t written = 0;
+    CHECK_FILE(fp, 0);
+    if (request == 0) {
+        return 0;
+    }
+    if (_IO_fwide(fp, -1) == -1) {
+        written = _IO_sputn(fp, (const char *) buf, request);
+        /* We have written all of the input in case the return value indicates
+        this or EOF is returned.  The latter is a special case where we
+         simply did not manage to flush the buffer.  But the data is in the
+         buffer and therefore written as far as fwrite is concerned.  */
+        if (written == request || written == EOF) {
+            return count;
+        }
     }
 
-  return written / size;
+    return written / size;
 }
-libc_hidden_def (fwrite_unlocked)
+libc_hidden_def(fwrite_unlocked)

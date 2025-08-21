@@ -16,7 +16,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _ICONV_PROG_H
-#define _ICONV_PROG_H	1
+#define _ICONV_PROG_H   1
 
 #include <stdio.h>
 
@@ -27,12 +27,12 @@
 extern int omit_invalid;
 
 /* Perform the conversion using a charmap or two.  */
-extern int charmap_conversion (const char *from_code,
-			       struct charmap_t *from_charmap,
-			       const char *to_code,
-			       struct charmap_t *to_charmap,
-			       int argc, int remaining, char *argv[],
-			       const char *output_file);
+extern int charmap_conversion(const char *from_code,
+                              struct charmap_t *from_charmap,
+                              const char *to_code,
+                              struct charmap_t *to_charmap,
+                              int argc, int remaining, char *argv[],
+                              const char *output_file);
 
 
-#endif	/* iconv_prog.h */
+#endif  /* iconv_prog.h */

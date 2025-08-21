@@ -18,10 +18,9 @@
 #include <sys/mount.h>
 #include <sysdep.h>
 
-int
-__umount (const char *name)
+int __umount(const char *name)
 {
-  return __umount2 (name, 0);
+    return __umount2(name, 0);
 }
 
-weak_alias (__umount, umount);
+weak_alias(__umount, umount);

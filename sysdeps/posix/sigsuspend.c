@@ -23,29 +23,29 @@
 
 /* Change the set of blocked signals to SET,
    wait until a signal arrives, and restore the set of blocked signals.  */
-int
-__sigsuspend (const sigset_t *set)
+int __sigsuspend(const sigset_t *set)
 {
-  sigset_t oset;
-  int save;
+    sigset_t oset;
+    int save;
 
-  if (set == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (set == NULL) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  if (sigprocmask (SIG_SETMASK, set, &oset) < 0)
+    if (sigprocmask(SIG_SETMASK, set, &oset) < 0) {
+        return -1;
+    }
+
+    (void) pause();
+    save = errno;
+
+    if (sigprocmask(SIG_SETMASK, &oset, (sigset_t *) NULL) < 0) {
+        return -1;
+    }
+
+    __set_errno(save);
     return -1;
-
-  (void) pause();
-  save = errno;
-
-  if (sigprocmask (SIG_SETMASK, &oset, (sigset_t *) NULL) < 0)
-    return -1;
-
-  __set_errno (save);
-  return -1;
 }
-libc_hidden_def (__sigsuspend)
-weak_alias (__sigsuspend, sigsuspend)
+libc_hidden_def(__sigsuspend)
+weak_alias(__sigsuspend, sigsuspend)

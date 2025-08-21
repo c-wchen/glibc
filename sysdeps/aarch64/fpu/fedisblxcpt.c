@@ -19,18 +19,18 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-int
-fedisableexcept (int excepts)
+int fedisableexcept(int excepts)
 {
-  fpu_control_t fpcr;
-  fpu_control_t fpcr_new;
+    fpu_control_t fpcr;
+    fpu_control_t fpcr_new;
 
-  _FPU_GETCW (fpcr);
-  excepts &= FE_ALL_EXCEPT;
-  fpcr_new = fpcr & ~(excepts << FE_EXCEPT_SHIFT);
+    _FPU_GETCW(fpcr);
+    excepts &= FE_ALL_EXCEPT;
+    fpcr_new = fpcr & ~(excepts << FE_EXCEPT_SHIFT);
 
-  if (fpcr != fpcr_new)
-    _FPU_SETCW (fpcr_new);
+    if (fpcr != fpcr_new) {
+        _FPU_SETCW(fpcr_new);
+    }
 
-  return (fpcr >> FE_EXCEPT_SHIFT) & FE_ALL_EXCEPT;
+    return (fpcr >> FE_EXCEPT_SHIFT) & FE_ALL_EXCEPT;
 }

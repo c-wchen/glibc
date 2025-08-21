@@ -18,10 +18,9 @@
 
 #include <fenv.h>
 
-int
-fegetexcept (void)
+int fegetexcept(void)
 {
-  /* All exception traps are disabled.  */
-  return 0;
+    /* All exception traps are disabled.  */
+    return 0;
 }
-stub_warning (fegetexcept)
+stub_warning(fegetexcept)

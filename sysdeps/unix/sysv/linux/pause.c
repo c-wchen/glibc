@@ -22,13 +22,12 @@
 
 /* Suspend the process until a signal arrives.
    This always returns -1 and sets errno to EINTR.  */
-int
-__libc_pause (void)
+int __libc_pause(void)
 {
 #ifdef __NR_pause
-  return SYSCALL_CANCEL (pause);
+    return SYSCALL_CANCEL(pause);
 #else
-  return SYSCALL_CANCEL (ppoll, NULL, 0, NULL, NULL);
+    return SYSCALL_CANCEL(ppoll, NULL, 0, NULL, NULL);
 #endif
 }
-weak_alias (__libc_pause, pause)
+weak_alias(__libc_pause, pause)

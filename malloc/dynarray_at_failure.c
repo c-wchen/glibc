@@ -19,17 +19,16 @@
 #include <dynarray.h>
 #include <stdio.h>
 
-void
-__libc_dynarray_at_failure (size_t size, size_t index)
+void __libc_dynarray_at_failure(size_t size, size_t index)
 {
 #ifdef _LIBC
-  char buf[200];
-  __snprintf (buf, sizeof (buf), "Fatal glibc error: "
-              "array index %zu not less than array length %zu\n",
-              index, size);
- __libc_fatal (buf);
+    char buf[200];
+    __snprintf(buf, sizeof(buf), "Fatal glibc error: "
+               "array index %zu not less than array length %zu\n",
+               index, size);
+    __libc_fatal(buf);
 #else
- abort ();
+    abort();
 #endif
 }
-libc_hidden_def (__libc_dynarray_at_failure)
+libc_hidden_def(__libc_dynarray_at_failure)

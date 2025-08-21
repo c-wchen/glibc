@@ -28,106 +28,95 @@
 #include <libc-diag.h>
 
 
-const char *locs[] =
-{
-  "C", "de_DE.ISO-8859-1", "de_DE.UTF-8", "ja_JP.EUC-JP"
+const char *locs[] = {
+    "C", "de_DE.ISO-8859-1", "de_DE.UTF-8", "ja_JP.EUC-JP"
 };
 
 char large[50000];
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char buf[25];
-  size_t i;
-  int res = 0;
-  int fd;
+    char buf[25];
+    size_t i;
+    int res = 0;
+    int fd;
 
-  mtrace ();
+    mtrace();
 
-  strcpy (buf, "/tmp/test-vfprintfXXXXXX");
-  fd = mkstemp (buf);
-  if (fd == -1)
-    {
-      printf ("cannot open temporary file: %m\n");
-      exit (1);
+    strcpy(buf, "/tmp/test-vfprintfXXXXXX");
+    fd = mkstemp(buf);
+    if (fd == -1) {
+        printf("cannot open temporary file: %m\n");
+        exit(1);
     }
-  unlink (buf);
+    unlink(buf);
 
-  for (i = 0; i < array_length (locs); ++i)
-    {
-      FILE *fp;
-      struct stat st;
-      int fd2;
+    for (i = 0; i < array_length(locs); ++i) {
+        FILE *fp;
+        struct stat st;
+        int fd2;
 
-      setlocale (LC_ALL, locs[i]);
+        setlocale(LC_ALL, locs[i]);
 
-      memset (large, '\1', sizeof (large));
-      large[sizeof (large) - 1] = '\0';
+        memset(large, '\1', sizeof(large));
+        large[sizeof(large) - 1] = '\0';
 
-      fd2 = dup (fd);
-      if (fd2 == -1)
-	{
-	  printf ("cannot dup for locale %s: %m\n",
-		  setlocale (LC_ALL, NULL));
-	  exit (1);
-	}
+        fd2 = dup(fd);
+        if (fd2 == -1) {
+            printf("cannot dup for locale %s: %m\n",
+                   setlocale(LC_ALL, NULL));
+            exit(1);
+        }
 
-      if (ftruncate (fd2, 0) != 0)
-	{
-	  printf ("cannot truncate file for locale %s: %m\n",
-		  setlocale (LC_ALL, NULL));
-	  exit (1);
-	}
+        if (ftruncate(fd2, 0) != 0) {
+            printf("cannot truncate file for locale %s: %m\n",
+                   setlocale(LC_ALL, NULL));
+            exit(1);
+        }
 
-      fp = fdopen (fd2, "a");
-      if (fp == NULL)
-	{
-	  printf ("cannot create FILE for locale %s: %m\n",
-		  setlocale (LC_ALL, NULL));
-	  exit (1);
-	}
+        fp = fdopen(fd2, "a");
+        if (fp == NULL) {
+            printf("cannot create FILE for locale %s: %m\n",
+                   setlocale(LC_ALL, NULL));
+            exit(1);
+        }
 
-      fprintf (fp, "%s", large);
-      fprintf (fp, "%.*s", 30000, large);
-      large[20000] = '\0';
-      /* We're testing a large format string here and need to generate it
-         to avoid this source file being ridiculous.  So disable the warning
-         about a generated format string.  */
-      DIAG_PUSH_NEEDS_COMMENT;
-      DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wformat-security");
-      fprintf (fp, large);
-      DIAG_POP_NEEDS_COMMENT;
-      fprintf (fp, "%-1.300000000s", "hello");
+        fprintf(fp, "%s", large);
+        fprintf(fp, "%.*s", 30000, large);
+        large[20000] = '\0';
+        /* We're testing a large format string here and need to generate it
+           to avoid this source file being ridiculous.  So disable the warning
+           about a generated format string.  */
+        DIAG_PUSH_NEEDS_COMMENT;
+        DIAG_IGNORE_NEEDS_COMMENT(4.9, "-Wformat-security");
+        fprintf(fp, large);
+        DIAG_POP_NEEDS_COMMENT;
+        fprintf(fp, "%-1.300000000s", "hello");
 
-      if (fflush (fp) != 0 || ferror (fp) != 0 || fclose (fp) != 0)
-	{
-	  printf ("write error for locale %s: %m\n",
-		  setlocale (LC_ALL, NULL));
-	  exit (1);
-	}
+        if (fflush(fp) != 0 || ferror(fp) != 0 || fclose(fp) != 0) {
+            printf("write error for locale %s: %m\n",
+                   setlocale(LC_ALL, NULL));
+            exit(1);
+        }
 
-      if (fstat (fd, &st) != 0)
-	{
-	  printf ("cannot stat for locale %s: %m\n",
-		  setlocale (LC_ALL, NULL));
-	  exit (1);
-	}
-      else if (st.st_size != 50000 + 30000 + 19999 + 5)
-	{
-	  printf ("file size incorrect for locale %s: %jd instead of %jd\n",
-		  setlocale (LC_ALL, NULL),
-		  (intmax_t) st.st_size,
-		  (intmax_t) 50000 + 30000 + 19999 + 5);
-	  res = 1;
-	}
-      else
-	printf ("locale %s OK\n", setlocale (LC_ALL, NULL));
+        if (fstat(fd, &st) != 0) {
+            printf("cannot stat for locale %s: %m\n",
+                   setlocale(LC_ALL, NULL));
+            exit(1);
+        } else if (st.st_size != 50000 + 30000 + 19999 + 5) {
+            printf("file size incorrect for locale %s: %jd instead of %jd\n",
+                   setlocale(LC_ALL, NULL),
+                   (intmax_t) st.st_size,
+                   (intmax_t) 50000 + 30000 + 19999 + 5);
+            res = 1;
+        } else {
+            printf("locale %s OK\n", setlocale(LC_ALL, NULL));
+        }
     }
 
-  close (fd);
+    close(fd);
 
-  return res;
+    return res;
 }
 
 #define TEST_FUNCTION do_test ()

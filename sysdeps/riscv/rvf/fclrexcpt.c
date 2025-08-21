@@ -19,10 +19,9 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-int
-feclearexcept (int excepts)
+int feclearexcept(int excepts)
 {
-  asm volatile ("csrc fflags, %0" : : "r" (excepts));
-  return 0;
+    asm volatile("csrc fflags, %0" : : "r"(excepts));
+    return 0;
 }
-libm_hidden_def (feclearexcept)
+libm_hidden_def(feclearexcept)

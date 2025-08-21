@@ -19,9 +19,8 @@
 #include <sched.h>
 #include <sysdep.h>
 
-int
-sched_getattr (pid_t pid, struct sched_attr *attr, unsigned int size,
-               unsigned int flags)
+int sched_getattr(pid_t pid, struct sched_attr *attr, unsigned int size,
+                  unsigned int flags)
 {
-  return INLINE_SYSCALL_CALL (sched_getattr, pid, attr, size, flags);
+    return INLINE_SYSCALL_CALL(sched_getattr, pid, attr, size, flags);
 }

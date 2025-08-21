@@ -24,22 +24,19 @@
 
 /* Returns the size of the extra TLS block, it must always be a multiple of the
    alignment.  */
-static inline size_t
-_dl_extra_tls_get_size (void)
+static inline size_t _dl_extra_tls_get_size(void)
 {
-	return 0;
+    return 0;
 }
 
 /* Returns the alignment requirements of the extra TLS block.  */
-static inline size_t
-_dl_extra_tls_get_align (void)
+static inline size_t _dl_extra_tls_get_align(void)
 {
-	return 0;
+    return 0;
 }
 
 /* Record the offset of the extra TLS block from the thread pointer.  */
-static inline void
-_dl_extra_tls_set_offset (ptrdiff_t tls_offset __attribute__ ((unused)))
+static inline void _dl_extra_tls_set_offset(ptrdiff_t tls_offset __attribute__((unused)))
 {
 }
 

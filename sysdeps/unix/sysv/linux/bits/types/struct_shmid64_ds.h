@@ -23,8 +23,7 @@
 #if __TIMESIZE == 64
 # define __shmid64_ds shmid_ds
 #else
-struct __shmid64_ds
-{
+struct __shmid64_ds {
 # include <bits/types/struct_shmid64_ds_helper.h>
 };
 #endif

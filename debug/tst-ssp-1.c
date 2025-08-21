@@ -21,24 +21,23 @@
 #include <signal.h>
 
 static void
-__attribute_optimization_barrier__
-test (char *foo)
+__attribute_optimization_barrier__ test(char *foo)
 {
-  int i;
+    int i;
 
-  /* smash stack */
-  for (i = 0; i <= 400; i++)
-    foo[i] = 42;
+    /* smash stack */
+    for (i = 0; i <= 400; i++) {
+        foo[i] = 42;
+    }
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char foo[30];
+    char foo[30];
 
-  test (foo);
+    test(foo);
 
-  return 1; /* fail */
+    return 1; /* fail */
 }
 
 #define EXPECTED_SIGNAL SIGABRT

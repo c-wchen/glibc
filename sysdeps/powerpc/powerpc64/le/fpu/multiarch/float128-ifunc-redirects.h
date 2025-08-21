@@ -21,20 +21,20 @@
 
 #include <float128-ifunc-macros.h>
 
-F128_REDIR_PFX_R (sqrtf128, __,);
-F128_REDIR_PFX_R (rintf128, __,);
-F128_REDIR_PFX_R (ceilf128, __,);
-F128_REDIR_PFX_R (floorf128, __,);
-F128_REDIR_PFX_R (truncf128, __,);
-F128_REDIR_PFX_R (roundf128, __,);
-F128_REDIR_PFX_R (fabsf128, __,);
-F128_REDIR_PFX_R (fmaf128, __,);
+F128_REDIR_PFX_R(sqrtf128, __,);
+F128_REDIR_PFX_R(rintf128, __,);
+F128_REDIR_PFX_R(ceilf128, __,);
+F128_REDIR_PFX_R(floorf128, __,);
+F128_REDIR_PFX_R(truncf128, __,);
+F128_REDIR_PFX_R(roundf128, __,);
+F128_REDIR_PFX_R(fabsf128, __,);
+F128_REDIR_PFX_R(fmaf128, __,);
 
-extern __typeof (ldexpf128) F128_SFX_APPEND (__ldexpf128);
+extern __typeof(ldexpf128) F128_SFX_APPEND(__ldexpf128);
 
 #define __ldexpf128 F128_SFX_APPEND (__ldexpf128)
 
-extern __typeof (log1pf128) F128_SFX_APPEND (__w_log1pf128);
+extern __typeof(log1pf128) F128_SFX_APPEND(__w_log1pf128);
 
 #define __w_log1pf128 F128_SFX_APPEND (__w_log1pf128)
 
@@ -42,7 +42,7 @@ extern __typeof (log1pf128) F128_SFX_APPEND (__w_log1pf128);
    Ensure some internally called functions are still called
    without going through the PLT.  Note, this code is only
    included when building libm.  */
-hidden_proto (__fpclassifyf128)
-hidden_proto (__issignalingf128)
+hidden_proto(__fpclassifyf128)
+hidden_proto(__issignalingf128)
 
 #endif /* _FLOAT128_IFUNC_REDIRECTS */

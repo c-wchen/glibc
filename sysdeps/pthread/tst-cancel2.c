@@ -24,74 +24,66 @@
 static int fd[2];
 
 
-static void *
-tf (void *arg)
+static void *tf(void *arg)
 {
-  /* The buffer size must be larger than the pipe size so that the
-     write blocks.  */
-  char buf[100000];
+    /* The buffer size must be larger than the pipe size so that the
+       write blocks.  */
+    char buf[100000];
 
-  while (write (fd[1], buf, sizeof (buf)) > 0);
-  /* The write can return -1/EPIPE if the pipe was closed before the
-     thread calls write, which signals a side-effect that must be
-     signaled to the thread.  */
-  pthread_testcancel ();
+    while (write(fd[1], buf, sizeof(buf)) > 0);
+    /* The write can return -1/EPIPE if the pipe was closed before the
+       thread calls write, which signals a side-effect that must be
+       signaled to the thread.  */
+    pthread_testcancel();
 
-  return (void *) 42l;
+    return (void *) 42l;
 }
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  pthread_t th;
-  void *r;
-  struct sigaction sa;
+    pthread_t th;
+    void *r;
+    struct sigaction sa;
 
-  sa.sa_handler = SIG_IGN;
-  sigemptyset (&sa.sa_mask);
-  sa.sa_flags = 0;
+    sa.sa_handler = SIG_IGN;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
 
-  if (sigaction (SIGPIPE, &sa, NULL) != 0)
-    {
-      puts ("sigaction failed");
-      return 1;
+    if (sigaction(SIGPIPE, &sa, NULL) != 0) {
+        puts("sigaction failed");
+        return 1;
     }
 
-  if (pipe (fd) != 0)
-    {
-      puts ("pipe failed");
-      return 1;
+    if (pipe(fd) != 0) {
+        puts("pipe failed");
+        return 1;
     }
 
-  if (pthread_create (&th, NULL, tf, NULL) != 0)
-    {
-      puts ("create failed");
-      return 1;
+    if (pthread_create(&th, NULL, tf, NULL) != 0) {
+        puts("create failed");
+        return 1;
     }
 
-  if (pthread_cancel (th) != 0)
-    {
-      puts ("cancel failed");
-      return 1;
+    if (pthread_cancel(th) != 0) {
+        puts("cancel failed");
+        return 1;
     }
 
-  /* This will cause the write in the child to return.  */
-  close (fd[0]);
+    /* This will cause the write in the child to return.  */
+    close(fd[0]);
 
-  if (pthread_join (th, &r) != 0)
-    {
-      puts ("join failed");
-      return 1;
+    if (pthread_join(th, &r) != 0) {
+        puts("join failed");
+        return 1;
     }
 
-  if (r != PTHREAD_CANCELED)
-    {
-      printf ("result is wrong: expected %p, got %p\n", PTHREAD_CANCELED, r);
-      return 1;
+    if (r != PTHREAD_CANCELED) {
+        printf("result is wrong: expected %p, got %p\n", PTHREAD_CANCELED, r);
+        return 1;
     }
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

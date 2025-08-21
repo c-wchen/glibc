@@ -24,9 +24,8 @@
 #include <xstatconv.h>
 
 /* Get information about the file NAME in BUF.  */
-int
-__fxstatat64 (int vers, int fd, const char *file, struct stat64 *st, int flag)
+int __fxstatat64(int vers, int fd, const char *file, struct stat64 *st, int flag)
 {
-  return INLINE_SYSCALL_CALL (fstatat64, fd, file, st, flag);
+    return INLINE_SYSCALL_CALL(fstatat64, fd, file, st, flag);
 }
-strong_alias (__fxstatat64, __fxstatat);
+strong_alias(__fxstatat64, __fxstatat);

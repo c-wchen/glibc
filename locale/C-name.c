@@ -22,21 +22,20 @@
 /* This table's entries are taken from ISO 14652, the table in section
    4.9 "LC_NAME".  */
 
-const struct __locale_data _nl_C_LC_NAME attribute_hidden =
-{
-  _nl_C_name,
-  NULL, 0, 0,			/* no file mapped */
-  NULL,				/* No cached data.  */
-  UNDELETABLE,
-  0,
-  7,
-  {
-    { .string = "%p%t%g%t%m%t%f" },
-    { .string = "" },
-    { .string = "" },
-    { .string = "" },
-    { .string = "" },
-    { .string = "" },
-    { .string = _nl_C_codeset }
-  }
+const struct __locale_data _nl_C_LC_NAME attribute_hidden = {
+    _nl_C_name,
+    NULL, 0, 0,           /* no file mapped */
+    NULL,             /* No cached data.  */
+    UNDELETABLE,
+    0,
+    7,
+    {
+        { .string = "%p%t%g%t%m%t%f" },
+        { .string = "" },
+        { .string = "" },
+        { .string = "" },
+        { .string = "" },
+        { .string = "" },
+        { .string = _nl_C_codeset }
+    }
 };

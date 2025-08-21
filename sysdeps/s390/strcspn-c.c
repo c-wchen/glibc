@@ -23,7 +23,7 @@
 #  define STRCSPN STRCSPN_C
 #  if defined SHARED && IS_IN (libc)
 #   undef libc_hidden_builtin_def
-#   define libc_hidden_builtin_def(name)			\
+#   define libc_hidden_builtin_def(name)            \
   __hidden_ver1 (__strcspn_c, __GI_strcspn, __strcspn_c);
 #  endif
 # endif

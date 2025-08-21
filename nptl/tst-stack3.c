@@ -31,68 +31,58 @@
 
 static int seen;
 
-static void *
-tf (void *p)
+static void *tf(void *p)
 {
-  ++seen;
-  return NULL;
+    ++seen;
+    return NULL;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  mtrace ();
+    mtrace();
 
-  void *stack;
-  int res = posix_memalign (&stack, getpagesize (), 4 * PTHREAD_STACK_MIN);
-  if (res)
-    {
-      printf ("malloc failed %s\n", strerror (res));
-      return 1;
+    void *stack;
+    int res = posix_memalign(&stack, getpagesize(), 4 * PTHREAD_STACK_MIN);
+    if (res) {
+        printf("malloc failed %s\n", strerror(res));
+        return 1;
     }
 
-  pthread_attr_t attr;
-  pthread_attr_init (&attr);
+    pthread_attr_t attr;
+    pthread_attr_init(&attr);
 
-  int result = 0;
-  res = pthread_attr_setstack (&attr, stack, 4 * PTHREAD_STACK_MIN);
-  if (res)
-    {
-      printf ("pthread_attr_setstack failed %d\n", res);
-      result = 1;
+    int result = 0;
+    res = pthread_attr_setstack(&attr, stack, 4 * PTHREAD_STACK_MIN);
+    if (res) {
+        printf("pthread_attr_setstack failed %d\n", res);
+        result = 1;
     }
 
-  for (int i = 0; i < 16; ++i)
-    {
-      /* Create the thread.  */
-      pthread_t th;
-      res = pthread_create (&th, &attr, tf, NULL);
-      if (res)
-	{
-	  printf ("pthread_create failed %d\n", res);
-	  result = 1;
-	}
-      else
-	{
-	  res = pthread_join (th, NULL);
-	  if (res)
-	    {
-	      printf ("pthread_join failed %d\n", res);
-	      result = 1;
-	    }
-	}
+    for (int i = 0; i < 16; ++i) {
+        /* Create the thread.  */
+        pthread_t th;
+        res = pthread_create(&th, &attr, tf, NULL);
+        if (res) {
+            printf("pthread_create failed %d\n", res);
+            result = 1;
+        } else {
+            res = pthread_join(th, NULL);
+            if (res) {
+                printf("pthread_join failed %d\n", res);
+                result = 1;
+            }
+        }
     }
 
-  pthread_attr_destroy (&attr);
+    pthread_attr_destroy(&attr);
 
-  if (seen != 16)
-    {
-      printf ("seen %d != 16\n", seen);
-      result = 1;
+    if (seen != 16) {
+        printf("seen %d != 16\n", seen);
+        result = 1;
     }
 
-  free (stack);
-  return result;
+    free(stack);
+    return result;
 }
 
 #define TEST_FUNCTION do_test ()

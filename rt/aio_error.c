@@ -31,28 +31,27 @@
 #include <pthreadP.h>
 #include <shlib-compat.h>
 
-int
-__aio_error (const struct aiocb *aiocbp)
+int __aio_error(const struct aiocb *aiocbp)
 {
-  int ret;
+    int ret;
 
-  /* Acquire the mutex to make sure all operations for this request are
-     complete.  */
-  __pthread_mutex_lock (&__aio_requests_mutex);
-  ret = aiocbp->__error_code;
-  __pthread_mutex_unlock (&__aio_requests_mutex);
+    /* Acquire the mutex to make sure all operations for this request are
+       complete.  */
+    __pthread_mutex_lock(&__aio_requests_mutex);
+    ret = aiocbp->__error_code;
+    __pthread_mutex_unlock(&__aio_requests_mutex);
 
-  return ret;
+    return ret;
 }
 
 #if PTHREAD_IN_LIBC
-versioned_symbol (libc, __aio_error, aio_error, GLIBC_2_34);
-versioned_symbol (libc, __aio_error, aio_error64, GLIBC_2_34);
+versioned_symbol(libc, __aio_error, aio_error, GLIBC_2_34);
+versioned_symbol(libc, __aio_error, aio_error64, GLIBC_2_34);
 # if OTHER_SHLIB_COMPAT (librt, GLIBC_2_1, GLIBC_2_34)
-compat_symbol (librt, __aio_error, aio_error, GLIBC_2_1);
-compat_symbol (librt, __aio_error, aio_error64, GLIBC_2_1);
+compat_symbol(librt, __aio_error, aio_error, GLIBC_2_1);
+compat_symbol(librt, __aio_error, aio_error64, GLIBC_2_1);
 # endif
 #else /* !PTHREAD_IN_LIBC */
-strong_alias (__aio_error, aio_error)
-weak_alias (__aio_error, aio_error64)
+strong_alias(__aio_error, aio_error)
+weak_alias(__aio_error, aio_error64)
 #endif /* !PTHREAD_IN_LIBC */

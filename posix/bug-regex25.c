@@ -24,32 +24,29 @@
 const char *str1 = "\xa3\xd8\xa3\xc9\xa3\xc9";
 const char *str2 = "\xa3\xd8\xa3\xc9";
 
-int
-main (void)
+int main(void)
 {
-  setlocale (LC_ALL, "ja_JP.eucJP");
+    setlocale(LC_ALL, "ja_JP.eucJP");
 
-  re_set_syntax (RE_SYNTAX_SED);
+    re_set_syntax(RE_SYNTAX_SED);
 
-  struct re_pattern_buffer re;
-  memset (&re, 0, sizeof (re));
+    struct re_pattern_buffer re;
+    memset(&re, 0, sizeof(re));
 
-  struct re_registers regs;
-  memset (&regs, 0, sizeof (regs));
+    struct re_registers regs;
+    memset(&regs, 0, sizeof(regs));
 
-  re_compile_pattern ("$", 1, &re);
+    re_compile_pattern("$", 1, &re);
 
-  int ret = 0, r = re_search (&re, str1, 4, 0, 4, &regs);
-  if (r != 4)
-    {
-      printf ("First re_search returned %d\n", r);
-      ret = 1;
+    int ret = 0, r = re_search(&re, str1, 4, 0, 4, &regs);
+    if (r != 4) {
+        printf("First re_search returned %d\n", r);
+        ret = 1;
     }
-  r = re_search (&re, str2, 4, 0, 4, &regs);
-  if (r != 4)
-    {
-      printf ("Second re_search returned %d\n", r);
-      ret = 1;
+    r = re_search(&re, str2, 4, 0, 4, &regs);
+    if (r != 4) {
+        printf("Second re_search returned %d\n", r);
+        ret = 1;
     }
-  return ret;
+    return ret;
 }

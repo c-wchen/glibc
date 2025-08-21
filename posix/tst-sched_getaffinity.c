@@ -22,27 +22,26 @@
 
 /* NB: this test may fail on system with more than 32k cpus.  */
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* The values are larger than the default cpu_set_t.  */
-  const int bufsize[] = { 1<<11, 1<<12, 1<<13, 1<<14, 1<<15, 1<<16, 1<<17 };
-  int cpucount[array_length (bufsize)];
+    /* The values are larger than the default cpu_set_t.  */
+    const int bufsize[] = { 1 << 11, 1 << 12, 1 << 13, 1 << 14, 1 << 15, 1 << 16, 1 << 17 };
+    int cpucount[array_length(bufsize)];
 
-  for (int i = 0; i < array_length (bufsize); i++)
-    {
-      cpu_set_t *cpuset = CPU_ALLOC (bufsize[i]);
-      TEST_VERIFY (cpuset != NULL);
-      size_t size = CPU_ALLOC_SIZE (bufsize[i]);
-      TEST_COMPARE (sched_getaffinity (0, size, cpuset), 0);
-      cpucount[i] = CPU_COUNT_S (size, cpuset);
-      CPU_FREE (cpuset);
+    for (int i = 0; i < array_length(bufsize); i++) {
+        cpu_set_t *cpuset = CPU_ALLOC(bufsize[i]);
+        TEST_VERIFY(cpuset != NULL);
+        size_t size = CPU_ALLOC_SIZE(bufsize[i]);
+        TEST_COMPARE(sched_getaffinity(0, size, cpuset), 0);
+        cpucount[i] = CPU_COUNT_S(size, cpuset);
+        CPU_FREE(cpuset);
     }
 
-  for (int i = 0; i < array_length (cpucount) - 1; i++)
-    TEST_COMPARE (cpucount[i], cpucount[i + 1]);
+    for (int i = 0; i < array_length(cpucount) - 1; i++) {
+        TEST_COMPARE(cpucount[i], cpucount[i + 1]);
+    }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

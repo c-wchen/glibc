@@ -21,51 +21,48 @@
 #include <termios.h>
 
 /* Return the output baud rate stored in *TERMIOS_P.  */
-speed_t
-__cfgetospeed (const struct termios *termios_p)
+speed_t __cfgetospeed(const struct termios *termios_p)
 {
-  return termios_p->__ospeed;
+    return termios_p->__ospeed;
 }
-libc_hidden_def (__cfgetospeed)
-weak_alias (__cfgetospeed, cfgetospeed)
+libc_hidden_def(__cfgetospeed)
+weak_alias(__cfgetospeed, cfgetospeed)
 
 /* Return the input baud rate stored in *TERMIOS_P.  */
 speed_t
-__cfgetispeed (const struct termios *termios_p)
+__cfgetispeed(const struct termios *termios_p)
 {
-  return termios_p->__ispeed;
+    return termios_p->__ispeed;
 }
-libc_hidden_def (__cfgetispeed)
-weak_alias (__cfgetispeed, cfgetispeed)
+libc_hidden_def(__cfgetispeed)
+weak_alias(__cfgetispeed, cfgetispeed)
 
 /* Set the output baud rate stored in *TERMIOS_P to SPEED.  */
 int
-__cfsetospeed (struct termios *termios_p, speed_t speed)
+__cfsetospeed(struct termios *termios_p, speed_t speed)
 {
-  if (termios_p == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (termios_p == NULL) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  termios_p->__ospeed = speed;
-  return 0;
+    termios_p->__ospeed = speed;
+    return 0;
 }
-libc_hidden_def (__cfsetospeed)
-weak_alias (__cfsetospeed, cfsetospeed)
+libc_hidden_def(__cfsetospeed)
+weak_alias(__cfsetospeed, cfsetospeed)
 
 /* Set the input baud rate stored in *TERMIOS_P to SPEED.  */
 int
-__cfsetispeed (struct termios *termios_p, speed_t speed)
+__cfsetispeed(struct termios *termios_p, speed_t speed)
 {
-  if (termios_p == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (termios_p == NULL) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  termios_p->__ispeed = speed;
-  return 0;
+    termios_p->__ispeed = speed;
+    return 0;
 }
-libc_hidden_def (__cfsetispeed)
-weak_alias (__cfsetispeed, cfsetispeed)
+libc_hidden_def(__cfsetispeed)
+weak_alias(__cfsetispeed, cfsetispeed)

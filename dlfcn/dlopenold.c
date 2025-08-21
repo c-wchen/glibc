@@ -26,15 +26,14 @@
 #include <shlib-compat.h>
 #if OTHER_SHLIB_COMPAT (libdl, GLIBC_2_0, GLIBC_2_1)
 
-struct dlopen_args
-{
-  /* The arguments for dlopen_doit.  */
-  const char *file;
-  int mode;
-  /* The return value of dlopen_doit.  */
-  void *new;
-  /* Address of the caller.  */
-  const void *caller;
+struct dlopen_args {
+    /* The arguments for dlopen_doit.  */
+    const char *file;
+    int mode;
+    /* The return value of dlopen_doit.  */
+    void *new;
+    /* Address of the caller.  */
+    const void *caller;
 };
 
 
@@ -46,34 +45,35 @@ struct dlopen_args
 #endif
 
 
-static void
-dlopen_doit (void *a)
+static void dlopen_doit(void *a)
 {
-  struct dlopen_args *args = (struct dlopen_args *) a;
+    struct dlopen_args *args = (struct dlopen_args *) a;
 
-  args->new = GLRO(dl_open) (args->file ?: "", args->mode | __RTLD_DLOPEN,
-			     args->caller,
-			     args->file == NULL ? LM_ID_BASE : NS,
-			     __libc_argc, __libc_argv, __environ);
+    args->new = GLRO(dl_open)(args->file ? : "", args->mode | __RTLD_DLOPEN,
+                              args->caller,
+                              args->file == NULL ? LM_ID_BASE : NS,
+                              __libc_argc, __libc_argv, __environ);
 }
 
-extern void *__dlopen_nocheck (const char *file, int mode);
-void *
-__dlopen_nocheck (const char *file, int mode)
+extern void *__dlopen_nocheck(const char *file, int mode);
+void *__dlopen_nocheck(const char *file, int mode)
 {
-  struct dlopen_args args;
-  args.file = file;
-  args.caller = RETURN_ADDRESS (0);
+    struct dlopen_args args;
+    args.file = file;
+    args.caller = RETURN_ADDRESS(0);
 
-  if ((mode & RTLD_BINDING_MASK) == 0)
-    /* By default assume RTLD_LAZY.  */
-    mode |= RTLD_LAZY;
-  args.mode = mode;
+    if ((mode & RTLD_BINDING_MASK) == 0)
+        /* By default assume RTLD_LAZY.  */
+    {
+        mode |= RTLD_LAZY;
+    }
+    args.mode = mode;
 
-  if (GLRO (dl_dlfcn_hook) != NULL)
-    return GLRO (dl_dlfcn_hook)->dlopen (file, mode, RETURN_ADDRESS (0));
+    if (GLRO(dl_dlfcn_hook) != NULL) {
+        return GLRO(dl_dlfcn_hook)->dlopen(file, mode, RETURN_ADDRESS(0));
+    }
 
-  return _dlerror_run (dlopen_doit, &args) ? NULL : args.new;
+    return _dlerror_run(dlopen_doit, &args) ? NULL : args.new;
 }
-compat_symbol (libdl, __dlopen_nocheck, dlopen, GLIBC_2_0);
+compat_symbol(libdl, __dlopen_nocheck, dlopen, GLIBC_2_0);
 #endif

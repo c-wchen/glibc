@@ -24,8 +24,7 @@
    relocations can only cover a 32-bit range, and glibc-internal TLS
    variables such as errno end up outside that range.  */
 
-int
-main (void)
+int main(void)
 {
-  return 0;
+    return 0;
 }

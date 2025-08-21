@@ -30,40 +30,36 @@ typedef op_t find_t;
 /* This function returns 0xff for each byte that is
    equal between X1 and X2.  */
 
-static __always_inline find_t
-find_eq_all (op_t x1, op_t x2)
+static __always_inline find_t find_eq_all(op_t x1, op_t x2)
 {
-  return __builtin_cmpb (x1, x2);
+    return __builtin_cmpb(x1, x2);
 }
 
 /* This function returns 0xff for each byte that is zero in X.  */
 
-static __always_inline find_t
-find_zero_all (op_t x)
+static __always_inline find_t find_zero_all(op_t x)
 {
-  return find_eq_all (x, 0);
+    return find_eq_all(x, 0);
 }
 
 /* Identify zero bytes in X1 or equality between X1 and X2.  */
 
-static __always_inline find_t
-find_zero_eq_all (op_t x1, op_t x2)
+static __always_inline find_t find_zero_eq_all(op_t x1, op_t x2)
 {
-  return find_zero_all (x1) | find_eq_all (x1, x2);
+    return find_zero_all(x1) | find_eq_all(x1, x2);
 }
 
 /* Identify zero bytes in X1 or inequality between X1 and X2.  */
 
-static __always_inline find_t
-find_zero_ne_all (op_t x1, op_t x2)
+static __always_inline find_t find_zero_ne_all(op_t x1, op_t x2)
 {
-  return find_zero_all (x1) | ~find_eq_all (x1, x2);
+    return find_zero_all(x1) | ~find_eq_all(x1, x2);
 }
 
 /* Define the "inexact" versions in terms of the exact versions.  */
-# define find_zero_low		find_zero_all
-# define find_eq_low		find_eq_all
-# define find_zero_eq_low	find_zero_eq_all
+# define find_zero_low      find_zero_all
+# define find_eq_low        find_eq_all
+# define find_zero_eq_low   find_zero_eq_all
 #else
 # include <sysdeps/generic/string-fza.h>
 #endif /* _ARCH_PWR6  */

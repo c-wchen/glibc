@@ -20,17 +20,17 @@
 #include <support/check.h>
 #include <support/xunistd.h>
 
-long
-xsysconf (int name)
+long xsysconf(int name)
 {
-  /* Detect errors by a changed errno value, in case -1 is a valid
-     value.  Make sure that the caller does not see the zero value for
-     errno.  */
-  int old_errno = errno;
-  errno = 0;
-  long result = sysconf (name);
-  if (result == -1 && errno != 0)
-    FAIL_EXIT1 ("sysconf (%d): %m", name);
-  errno = old_errno;
-  return result;
+    /* Detect errors by a changed errno value, in case -1 is a valid
+       value.  Make sure that the caller does not see the zero value for
+       errno.  */
+    int old_errno = errno;
+    errno = 0;
+    long result = sysconf(name);
+    if (result == -1 && errno != 0) {
+        FAIL_EXIT1("sysconf (%d): %m", name);
+    }
+    errno = old_errno;
+    return result;
 }

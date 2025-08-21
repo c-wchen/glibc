@@ -21,19 +21,18 @@
 
 
 CFLOAT
-M_DECL_FUNC (__cproj) (CFLOAT x)
+M_DECL_FUNC(__cproj)(CFLOAT x)
 {
-  if (isinf (__real__ x) || isinf (__imag__ x))
-    {
-      CFLOAT res;
+    if (isinf(__real__ x) || isinf(__imag__ x)) {
+        CFLOAT res;
 
-      __real__ res = INFINITY;
-      __imag__ res = M_COPYSIGN (0, __imag__ x);
+        __real__ res = INFINITY;
+        __imag__ res = M_COPYSIGN(0, __imag__ x);
 
-      return res;
+        return res;
     }
 
-  return x;
+    return x;
 }
 
-declare_mgen_alias (__cproj, cproj)
+declare_mgen_alias(__cproj, cproj)

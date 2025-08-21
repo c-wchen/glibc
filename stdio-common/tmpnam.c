@@ -24,29 +24,31 @@ static char tmpnam_buffer[L_tmpnam];
 /* Generate a unique filename in P_tmpdir.
 
    This function is *not* thread safe!  */
-char *
-tmpnam (char s[L_tmpnam])
+char *tmpnam(char s[L_tmpnam])
 {
-  /* By using two buffers we manage to be thread safe in the case
-     where S != NULL.  */
-  char tmpbufmem[L_tmpnam];
-  char *tmpbuf = s ?: tmpbufmem;
+    /* By using two buffers we manage to be thread safe in the case
+       where S != NULL.  */
+    char tmpbufmem[L_tmpnam];
+    char *tmpbuf = s ? : tmpbufmem;
 
-  /* In the following call we use the buffer pointed to by S if
-     non-NULL although we don't know the size.  But we limit the size
-     to L_tmpnam characters in any case.  */
-  if (__builtin_expect (__path_search (tmpbuf, L_tmpnam, NULL, NULL, 0),
-			0))
-    return NULL;
+    /* In the following call we use the buffer pointed to by S if
+       non-NULL although we don't know the size.  But we limit the size
+       to L_tmpnam characters in any case.  */
+    if (__builtin_expect(__path_search(tmpbuf, L_tmpnam, NULL, NULL, 0),
+                         0)) {
+        return NULL;
+    }
 
-  if (__glibc_unlikely (__gen_tempname (tmpbuf, 0, 0, __GT_NOCREATE)))
-    return NULL;
+    if (__glibc_unlikely(__gen_tempname(tmpbuf, 0, 0, __GT_NOCREATE))) {
+        return NULL;
+    }
 
-  if (s == NULL)
-    return (char *) memcpy (tmpnam_buffer, tmpbuf, L_tmpnam);
+    if (s == NULL) {
+        return (char *) memcpy(tmpnam_buffer, tmpbuf, L_tmpnam);
+    }
 
-  return s;
+    return s;
 }
 
-link_warning (tmpnam,
-	      "the use of `tmpnam' is dangerous, better use `mkstemp'")
+link_warning(tmpnam,
+             "the use of `tmpnam' is dangerous, better use `mkstemp'")

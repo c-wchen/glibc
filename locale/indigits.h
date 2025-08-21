@@ -24,73 +24,68 @@
    -1 this means it is not yet decided which form it is and we have to
    search through all available digits.  Otherwise we know which script
    the digits are from.  */
-static inline int
-indigit_value (const char **s, size_t *len, int *decided)
+static inline int indigit_value(const char **s, size_t *len, int *decided)
 {
-  int from_level;
-  int to_level;
-  const char *mbdigits[10];
-  int i;
-  int n;
+    int from_level;
+    int to_level;
+    const char *mbdigits[10];
+    int i;
+    int n;
 
-  if (*decided != -1)
-    from_level = to_level = *decided;
-  else
-    {
-      from_level = 0;
-      to_level = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_INDIGITS_MB_LEN) - 1;
-      assert (from_level <= to_level);
+    if (*decided != -1) {
+        from_level = to_level = *decided;
+    } else {
+        from_level = 0;
+        to_level = _NL_CURRENT_WORD(LC_CTYPE, _NL_CTYPE_INDIGITS_MB_LEN) - 1;
+        assert(from_level <= to_level);
     }
 
-  /* In this round we get the pointer to the digit strings and also perform
-     the first round of comparisons.  */
-  for (n = 0; n < 10; ++n)
-    {
-      size_t dlen;
+    /* In this round we get the pointer to the digit strings and also perform
+       the first round of comparisons.  */
+    for (n = 0; n < 10; ++n) {
+        size_t dlen;
 
-      /* Get the string for the digits with value N.  */
-      mbdigits[n] = _NL_CURRENT (LC_CTYPE, _NL_CTYPE_INDIGITS0_MB + n);
-      dlen = strlen (mbdigits[n]);
+        /* Get the string for the digits with value N.  */
+        mbdigits[n] = _NL_CURRENT(LC_CTYPE, _NL_CTYPE_INDIGITS0_MB + n);
+        dlen = strlen(mbdigits[n]);
 
-      if (from_level == 0 && dlen <= *len
-	  && memcmp (*s, mbdigits[n], dlen) == 0)
-	{
-	  /* Found it.  */
-	  *s += dlen;
-	  *len -= dlen;
-	  if (*decided == -1)
-	    *decided = 0;
-	  return n;
-	}
+        if (from_level == 0 && dlen <= *len
+            && memcmp(*s, mbdigits[n], dlen) == 0) {
+            /* Found it.  */
+            *s += dlen;
+            *len -= dlen;
+            if (*decided == -1) {
+                *decided = 0;
+            }
+            return n;
+        }
 
-      /* Advance the pointer to the next string.  */
-      mbdigits[n] += dlen + 1;
+        /* Advance the pointer to the next string.  */
+        mbdigits[n] += dlen + 1;
     }
 
-  /* Now perform the remaining tests.  */
-  for (i = 1; i <= to_level; ++i)
-    {
-      /* Search all ten digits of this level.  */
-      for (n = 0; n < 10; ++n)
-	{
-	  size_t dlen = strlen (mbdigits[n]);
+    /* Now perform the remaining tests.  */
+    for (i = 1; i <= to_level; ++i) {
+        /* Search all ten digits of this level.  */
+        for (n = 0; n < 10; ++n) {
+            size_t dlen = strlen(mbdigits[n]);
 
-	  if (i >= from_level && dlen <= *len
-	      && memcmp (*s, mbdigits[n], dlen) == 0)
-	    {
-	      /* Found it.  */
-	      *s += dlen;
-	      *len -= dlen;
-	      if (*decided == -1)
-		*decided = from_level;
-	      return n;
-	    }
+            if (i >= from_level && dlen <= *len
+                && memcmp(*s, mbdigits[n], dlen) == 0) {
+                /* Found it.  */
+                *s += dlen;
+                *len -= dlen;
+                if (*decided == -1) {
+                    *decided = from_level;
+                }
+                return n;
+            }
 
-	  /* Advance the pointer to the next string.  */
-	  mbdigits[n] += dlen + 1;
-	}
+            /* Advance the pointer to the next string.  */
+            mbdigits[n] += dlen + 1;
+        }
     }
 
-  /* If we reach this point no matching digit was found.  */
-  return -1;
+    /* If we reach this point no matching digit was found.  */
+    return -1;
 }

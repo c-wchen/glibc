@@ -21,7 +21,7 @@
 /* Get the conversion table.  */
 #include <ebcdic-fi-se.h>
 
-#define CHARSET_NAME	"EBCDIC-FI-SE//"
-#define HAS_HOLES	1	/* Not all 256 character are defined.  */
+#define CHARSET_NAME    "EBCDIC-FI-SE//"
+#define HAS_HOLES   1   /* Not all 256 character are defined.  */
 
 #include <8bit-generic.c>

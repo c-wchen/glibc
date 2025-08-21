@@ -21,15 +21,14 @@
 #include <libm-alias-double.h>
 #include <round_to_integer.h>
 
-double
-__floor (double x)
+double __floor(double x)
 {
 #ifdef _ARCH_PWR5X
-  return __builtin_floor (x);
+    return __builtin_floor(x);
 #else
-  return round_to_integer_double (FLOOR, x);
+    return round_to_integer_double(FLOOR, x);
 #endif
 }
 #ifndef __floor
-libm_alias_double (__floor, floor)
+libm_alias_double(__floor, floor)
 #endif

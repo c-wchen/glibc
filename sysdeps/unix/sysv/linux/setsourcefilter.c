@@ -23,39 +23,38 @@
 #include "getsourcefilter.h"
 
 
-int
-setsourcefilter (int s, uint32_t interface, const struct sockaddr *group,
-		 socklen_t grouplen, uint32_t fmode, uint32_t numsrc,
-		 const struct sockaddr_storage *slist)
+int setsourcefilter(int s, uint32_t interface, const struct sockaddr *group,
+                    socklen_t grouplen, uint32_t fmode, uint32_t numsrc,
+                    const struct sockaddr_storage *slist)
 {
-  /* We have to create an struct ip_msfilter object which we can pass
-     to the kernel.  */
-  size_t needed = GROUP_FILTER_SIZE (numsrc);
+    /* We have to create an struct ip_msfilter object which we can pass
+       to the kernel.  */
+    size_t needed = GROUP_FILTER_SIZE(numsrc);
 
-  struct scratch_buffer buf;
-  scratch_buffer_init (&buf);
-  if (!scratch_buffer_set_array_size (&buf, 1, needed))
-    return -1;
-  struct group_filter *gf = buf.data;
-
-  gf->gf_interface = interface;
-  memcpy (&gf->gf_group, group, grouplen);
-  gf->gf_fmode = fmode;
-  gf->gf_numsrc = numsrc;
-  memcpy (gf->gf_slist, slist, numsrc * sizeof (struct sockaddr_storage));
-
-  /* We need to provide the appropriate socket level value.  */
-  int result;
-  int sol = __get_sol (group->sa_family, grouplen);
-  if (sol == -1)
-    {
-      __set_errno (EINVAL);
-      result = -1;
+    struct scratch_buffer buf;
+    scratch_buffer_init(&buf);
+    if (!scratch_buffer_set_array_size(&buf, 1, needed)) {
+        return -1;
     }
-  else
-    result = __setsockopt (s, sol, MCAST_MSFILTER, gf, needed);
+    struct group_filter *gf = buf.data;
 
-  scratch_buffer_free (&buf);
+    gf->gf_interface = interface;
+    memcpy(&gf->gf_group, group, grouplen);
+    gf->gf_fmode = fmode;
+    gf->gf_numsrc = numsrc;
+    memcpy(gf->gf_slist, slist, numsrc * sizeof(struct sockaddr_storage));
 
-  return result;
+    /* We need to provide the appropriate socket level value.  */
+    int result;
+    int sol = __get_sol(group->sa_family, grouplen);
+    if (sol == -1) {
+        __set_errno(EINVAL);
+        result = -1;
+    } else {
+        result = __setsockopt(s, sol, MCAST_MSFILTER, gf, needed);
+    }
+
+    scratch_buffer_free(&buf);
+
+    return result;
 }

@@ -22,25 +22,22 @@
 #if WANT_ERRNO
 # include <errno.h>
 /* NOINLINE reduces code size.  */
-NOINLINE static float
-with_errnof (float y, int e)
+NOINLINE static float with_errnof(float y, int e)
 {
-  errno = e;
-  return y;
+    errno = e;
+    return y;
 }
 
-NOINLINE static int
-with_errnof_i (int y, int e)
+NOINLINE static int with_errnof_i(int y, int e)
 {
-  errno = e;
-  return y;
+    errno = e;
+    return y;
 }
 
-NOINLINE static long int
-with_errnof_li (long int y, int e)
+NOINLINE static long int with_errnof_li(long int y, int e)
 {
-  errno = e;
-  return y;
+    errno = e;
+    return y;
 }
 #else
 # define with_errnof(x, e) (x)
@@ -48,68 +45,59 @@ with_errnof_li (long int y, int e)
 # define with_errnof_li(x, x) (x)
 #endif
 
-attribute_hidden float
-__math_edomf (float y)
+attribute_hidden float __math_edomf(float y)
 {
-  return with_errnof (y, EDOM);
+    return with_errnof(y, EDOM);
 }
 
 /* NOINLINE prevents fenv semantics breaking optimizations.  */
-NOINLINE static float
-xflowf (uint32_t sign, float y)
+NOINLINE static float xflowf(uint32_t sign, float y)
 {
-  y = (sign ? -y : y) * y;
-  return with_errnof (y, ERANGE);
+    y = (sign ? -y : y) * y;
+    return with_errnof(y, ERANGE);
 }
 
-attribute_hidden float
-__math_uflowf (uint32_t sign)
+attribute_hidden float __math_uflowf(uint32_t sign)
 {
-  return xflowf (sign, 0x1p-95f);
+    return xflowf(sign, 0x1p - 95f);
 }
 
 #if WANT_ERRNO_UFLOW
 /* Underflows to zero in some non-nearest rounding mode, setting errno
    is valid even if the result is non-zero, but in the subnormal range.  */
-attribute_hidden float
-__math_may_uflowf (uint32_t sign)
+attribute_hidden float __math_may_uflowf(uint32_t sign)
 {
-  return xflowf (sign, 0x1.4p-75f);
+    return xflowf(sign, 0x1.4p - 75f);
 }
 #endif
 
-attribute_hidden float
-__math_oflowf (uint32_t sign)
+attribute_hidden float __math_oflowf(uint32_t sign)
 {
-  return xflowf (sign, 0x1p97f);
+    return xflowf(sign, 0x1p97f);
 }
 
-attribute_hidden float
-__math_divzerof (uint32_t sign)
+attribute_hidden float __math_divzerof(uint32_t sign)
 {
-  float y = 0;
-  return with_errnof ((sign ? -1 : 1) / y, ERANGE);
+    float y = 0;
+    return with_errnof((sign ? -1 : 1) / y, ERANGE);
 }
 
-attribute_hidden float
-__math_invalidf (float x)
+attribute_hidden float __math_invalidf(float x)
 {
-  float y = (x - x) / (x - x);
-  return isnan (x) ? y : with_errnof (y, EDOM);
+    float y = (x - x) / (x - x);
+    return isnan(x) ? y : with_errnof(y, EDOM);
 }
 
-attribute_hidden int
-__math_invalidf_i (int x)
+attribute_hidden int __math_invalidf_i(int x)
 {
-  float y = 0.0f / 0.0f;
-  math_force_eval (y);
-  return with_errnof_i (x, EDOM);
+    float y = 0.0f / 0.0f;
+    math_force_eval(y);
+    return with_errnof_i(x, EDOM);
 }
 
-attribute_hidden long int
-__math_invalidf_li (long int x)
+attribute_hidden long int __math_invalidf_li(long int x)
 {
-  float y = 0.0f / 0.0f;
-  math_force_eval (y);
-  return with_errnof_li (x, EDOM);
+    float y = 0.0f / 0.0f;
+    math_force_eval(y);
+    return with_errnof_li(x, EDOM);
 }

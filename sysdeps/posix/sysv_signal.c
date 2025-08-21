@@ -17,7 +17,7 @@
 
 #include <errno.h>
 #include <signal.h>
-#include <string.h>	/* For the real memset prototype.  */
+#include <string.h> /* For the real memset prototype.  */
 #include <sigsetops.h>
 
 /* Tolerate non-threads versions of Posix */
@@ -33,26 +33,25 @@
 
 /* Set the handler for the signal SIG to HANDLER,
    returning the old handler, or SIG_ERR on error.  */
-__sighandler_t
-__sysv_signal (int sig, __sighandler_t handler)
+__sighandler_t __sysv_signal(int sig, __sighandler_t handler)
 {
-  struct sigaction act, oact;
+    struct sigaction act, oact;
 
-  /* Check signal extents to protect __sigismember.  */
-  if (handler == SIG_ERR || sig < 1 || sig >= NSIG)
-    {
-      __set_errno (EINVAL);
-      return SIG_ERR;
+    /* Check signal extents to protect __sigismember.  */
+    if (handler == SIG_ERR || sig < 1 || sig >= NSIG) {
+        __set_errno(EINVAL);
+        return SIG_ERR;
     }
 
-  act.sa_handler = handler;
-  __sigemptyset (&act.sa_mask);
-  act.sa_flags = SA_ONESHOT | SA_NOMASK | SA_INTERRUPT;
-  act.sa_flags &= ~SA_RESTART;
-  if (__sigaction (sig, &act, &oact) < 0)
-    return SIG_ERR;
+    act.sa_handler = handler;
+    __sigemptyset(&act.sa_mask);
+    act.sa_flags = SA_ONESHOT | SA_NOMASK | SA_INTERRUPT;
+    act.sa_flags &= ~SA_RESTART;
+    if (__sigaction(sig, &act, &oact) < 0) {
+        return SIG_ERR;
+    }
 
-  return oact.sa_handler;
+    return oact.sa_handler;
 }
 
-weak_alias (__sysv_signal, sysv_signal)
+weak_alias(__sysv_signal, sysv_signal)

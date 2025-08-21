@@ -26,34 +26,31 @@
 
 #include <libioP.h>
 
-off64_t
-_IO_seekpos_unlocked (FILE *fp, off64_t pos, int mode)
+off64_t _IO_seekpos_unlocked(FILE *fp, off64_t pos, int mode)
 {
-  /* If we have a backup buffer, get rid of it, since the __seekoff
-     callback may not know to do the right thing about it.
-     This may be over-kill, but it'll do for now. TODO */
-  if (_IO_fwide (fp, 0) <= 0)
-    {
-      if (_IO_have_backup (fp))
-	_IO_free_backup_area (fp);
-    }
-  else
-    {
-      if (_IO_have_wbackup (fp))
-	_IO_free_wbackup_area (fp);
+    /* If we have a backup buffer, get rid of it, since the __seekoff
+       callback may not know to do the right thing about it.
+       This may be over-kill, but it'll do for now. TODO */
+    if (_IO_fwide(fp, 0) <= 0) {
+        if (_IO_have_backup(fp)) {
+            _IO_free_backup_area(fp);
+        }
+    } else {
+        if (_IO_have_wbackup(fp)) {
+            _IO_free_wbackup_area(fp);
+        }
     }
 
-  return _IO_SEEKOFF (fp, pos, 0, mode);
+    return _IO_SEEKOFF(fp, pos, 0, mode);
 }
 
 
-off64_t
-_IO_seekpos (FILE *fp, off64_t pos, int mode)
+off64_t _IO_seekpos(FILE *fp, off64_t pos, int mode)
 {
-  off64_t retval;
+    off64_t retval;
 
-  _IO_acquire_lock (fp);
-  retval = _IO_seekpos_unlocked (fp, pos, mode);
-  _IO_release_lock (fp);
-  return retval;
+    _IO_acquire_lock(fp);
+    retval = _IO_seekpos_unlocked(fp, pos, mode);
+    _IO_release_lock(fp);
+    return retval;
 }

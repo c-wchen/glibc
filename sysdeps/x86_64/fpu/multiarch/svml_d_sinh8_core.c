@@ -19,9 +19,9 @@
 #define SYMBOL_NAME _ZGVeN8v_sinh
 #include "ifunc-mathvec-avx512-skx.h"
 
-libc_ifunc_redirected (REDIRECT_NAME, SYMBOL_NAME, IFUNC_SELECTOR ());
+libc_ifunc_redirected(REDIRECT_NAME, SYMBOL_NAME, IFUNC_SELECTOR());
 
 #ifdef SHARED
-__hidden_ver1 (_ZGVeN8v_sinh, __GI__ZGVeN8v_sinh, __redirect__ZGVeN8v_sinh)
-  __attribute__ ((visibility ("hidden")));
+__hidden_ver1(_ZGVeN8v_sinh, __GI__ZGVeN8v_sinh, __redirect__ZGVeN8v_sinh)
+__attribute__((visibility("hidden")));
 #endif

@@ -19,21 +19,20 @@
 #include "thrd_priv.h"
 #include <shlib-compat.h>
 
-int
-__thrd_create (thrd_t *thr, thrd_start_t func, void *arg)
+int __thrd_create(thrd_t *thr, thrd_start_t func, void *arg)
 {
-  _Static_assert (sizeof (thrd_t) == sizeof (pthread_t),
-		  "sizeof (thrd_t) != sizeof (pthread_t)");
+    _Static_assert(sizeof(thrd_t) == sizeof(pthread_t),
+                   "sizeof (thrd_t) != sizeof (pthread_t)");
 
-  int err_code = __pthread_create (thr, ATTR_C11_THREAD,
-				   (void* (*) (void*))func, arg);
-  return thrd_err_map (err_code);
+    int err_code = __pthread_create(thr, ATTR_C11_THREAD,
+                                    (void *(*)(void *))func, arg);
+    return thrd_err_map(err_code);
 }
 #if PTHREAD_IN_LIBC
-versioned_symbol (libc, __thrd_create, thrd_create, GLIBC_2_34);
+versioned_symbol(libc, __thrd_create, thrd_create, GLIBC_2_34);
 # if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_28, GLIBC_2_34)
-compat_symbol (libc, __thrd_create, thrd_create, GLIBC_2_28);
+compat_symbol(libc, __thrd_create, thrd_create, GLIBC_2_28);
 # endif
 #else /* !PTHREAD_IN_LIBC */
-strong_alias (__thrd_create, thrd_create)
+strong_alias(__thrd_create, thrd_create)
 #endif

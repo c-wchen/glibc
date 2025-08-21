@@ -24,11 +24,10 @@
 
 #include <pt-internal.h>
 
-error_t
-__pthread_sigstate (struct __pthread *thread, int how,
-		    const sigset_t *set, sigset_t *oset, int clear_pending)
+error_t __pthread_sigstate(struct __pthread *thread, int how,
+                           const sigset_t *set, sigset_t *oset, int clear_pending)
 {
-  return __sigthreadmask (_hurd_thread_sigstate (thread->kernel_thread),
-			  how, set, oset, clear_pending);
+    return __sigthreadmask(_hurd_thread_sigstate(thread->kernel_thread),
+                           how, set, oset, clear_pending);
 }
-libc_hidden_def (__pthread_sigstate)
+libc_hidden_def(__pthread_sigstate)

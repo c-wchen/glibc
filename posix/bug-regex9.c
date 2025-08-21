@@ -25,41 +25,36 @@
 
 static const char text[] = "#! /bin/sh";
 
-int
-main (void)
+int main(void)
 {
-  regex_t re;
-  regmatch_t rm[2];
-  int n;
+    regex_t re;
+    regmatch_t rm[2];
+    int n;
 
-  mtrace ();
+    mtrace();
 
-  n = regcomp (&re, "^#! */.*/(k|ba||pdk|z)sh", REG_EXTENDED);
-  if (n != 0)
-    {
-      char buf[500];
-      regerror (n, &re, buf, sizeof (buf));
-      printf ("regcomp failed: %s\n", buf);
-      exit (1);
+    n = regcomp(&re, "^#! */.*/(k|ba||pdk|z)sh", REG_EXTENDED);
+    if (n != 0) {
+        char buf[500];
+        regerror(n, &re, buf, sizeof(buf));
+        printf("regcomp failed: %s\n", buf);
+        exit(1);
     }
 
-  for (n = 0; n < 20; ++n)
-    {
-      if (regexec (&re, text, 2, rm, 0))
-	{
-	  puts ("regexec failed");
-	  exit (2);
-	}
-      if (rm[0].rm_so != 0 || rm[0].rm_eo != 10
-	  || rm[1].rm_so != 8 || rm[1].rm_eo != 8)
-	{
-	  printf ("regexec match failure: %d %d %d %d\n",
-		  rm[0].rm_so, rm[0].rm_eo, rm[1].rm_so, rm[1].rm_eo);
-	  exit (3);
-	}
+    for (n = 0; n < 20; ++n) {
+        if (regexec(&re, text, 2, rm, 0)) {
+            puts("regexec failed");
+            exit(2);
+        }
+        if (rm[0].rm_so != 0 || rm[0].rm_eo != 10
+            || rm[1].rm_so != 8 || rm[1].rm_eo != 8) {
+            printf("regexec match failure: %d %d %d %d\n",
+                   rm[0].rm_so, rm[0].rm_eo, rm[1].rm_so, rm[1].rm_eo);
+            exit(3);
+        }
     }
 
-  regfree (&re);
+    regfree(&re);
 
-  return 0;
+    return 0;
 }

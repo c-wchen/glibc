@@ -10,11 +10,11 @@
 #undef wcstoull
 #undef wcstouq
 #undef __isoc23_wcstoull
-strong_alias (__wcstoul_internal, __wcstoull_internal)
-libc_hidden_ver (__wcstoul_internal, __wcstoull_internal)
-weak_alias (wcstoul, wcstoull)
-weak_alias (wcstoul, wcstouq)
-weak_alias (wcstoul, wcstoumax)
-weak_alias (__isoc23_wcstoul, __isoc23_wcstoull)
-libc_hidden_ver (__isoc23_wcstoul, __isoc23_wcstoull)
-weak_alias (__isoc23_wcstoul, __isoc23_wcstoumax)
+strong_alias(__wcstoul_internal, __wcstoull_internal)
+libc_hidden_ver(__wcstoul_internal, __wcstoull_internal)
+weak_alias(wcstoul, wcstoull)
+weak_alias(wcstoul, wcstouq)
+weak_alias(wcstoul, wcstoumax)
+weak_alias(__isoc23_wcstoul, __isoc23_wcstoull)
+libc_hidden_ver(__isoc23_wcstoul, __isoc23_wcstoull)
+weak_alias(__isoc23_wcstoul, __isoc23_wcstoumax)

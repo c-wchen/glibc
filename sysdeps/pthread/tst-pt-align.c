@@ -21,47 +21,46 @@
 #include <stdio.h>
 #include <tst-stack-align.h>
 
-static void *
-tf (void *arg)
+static void *tf(void *arg)
 {
-  bool ok = true;
+    bool ok = true;
 
-  puts ("in thread");
+    puts("in thread");
 
-  if (TEST_STACK_ALIGN ())
-    ok = false;
+    if (TEST_STACK_ALIGN()) {
+        ok = false;
+    }
 
-  return ok ? NULL : (void *) -1l;
+    return ok ? NULL : (void *) -1l;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  bool ok = true;
+    bool ok = true;
 
-  puts ("in main");
+    puts("in main");
 
-  if (TEST_STACK_ALIGN ())
-    ok = false;
-
-  pthread_t th;
-  if (pthread_create (&th, NULL, tf, NULL) != 0)
-    {
-      puts ("create failed");
-      return 1;
+    if (TEST_STACK_ALIGN()) {
+        ok = false;
     }
 
-  void *res;
-  if (pthread_join (th, &res) != 0)
-    {
-      puts ("join failed");
-      return 1;
+    pthread_t th;
+    if (pthread_create(&th, NULL, tf, NULL) != 0) {
+        puts("create failed");
+        return 1;
     }
 
-  if (res != NULL)
-    ok = false;
+    void *res;
+    if (pthread_join(th, &res) != 0) {
+        puts("join failed");
+        return 1;
+    }
 
-  return ok ? 0 : 1;
+    if (res != NULL) {
+        ok = false;
+    }
+
+    return ok ? 0 : 1;
 }
 
 

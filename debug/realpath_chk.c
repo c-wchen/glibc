@@ -22,47 +22,46 @@
 #include <errno.h>
 
 
-char *
-__realpath_chk (const char *buf, char *resolved, size_t resolvedlen)
+char *__realpath_chk(const char *buf, char *resolved, size_t resolvedlen)
 {
 #ifdef PATH_MAX
-  if (resolvedlen < PATH_MAX)
-    __chk_fail ();
+    if (resolvedlen < PATH_MAX) {
+        __chk_fail();
+    }
 
-  return __realpath (buf, resolved);
+    return __realpath(buf, resolved);
 #else
-  long int pathmax;
+    long int pathmax;
 
-  if (buf == NULL)
-    {
-      __set_errno (EINVAL);
-      return NULL;
+    if (buf == NULL) {
+        __set_errno(EINVAL);
+        return NULL;
     }
 
-  pathmax = __pathconf (buf, _PC_PATH_MAX);
-  if (pathmax != -1)
-    {
-      /* We do have a fixed limit.  */
-      if (resolvedlen < pathmax)
-	__chk_fail ();
+    pathmax = __pathconf(buf, _PC_PATH_MAX);
+    if (pathmax != -1) {
+        /* We do have a fixed limit.  */
+        if (resolvedlen < pathmax) {
+            __chk_fail();
+        }
 
-      return __realpath (buf, resolved);
+        return __realpath(buf, resolved);
     }
 
-  /* Since there is no fixed limit we check whether the size is large
-     enough.  */
-  char *res = __realpath (buf, NULL);
-  if (res != NULL)
-    {
-      size_t actlen = strlen (res) + 1;
-      if (actlen > resolvedlen)
-	__chk_fail ();
+    /* Since there is no fixed limit we check whether the size is large
+       enough.  */
+    char *res = __realpath(buf, NULL);
+    if (res != NULL) {
+        size_t actlen = strlen(res) + 1;
+        if (actlen > resolvedlen) {
+            __chk_fail();
+        }
 
-      memcpy (resolved, res, actlen);
-      free (res);
-      res = resolved;
+        memcpy(resolved, res, actlen);
+        free(res);
+        res = resolved;
     }
 
-  return res;
+    return res;
 #endif
 }

@@ -39,42 +39,40 @@
 const size_t kNumThreads = 1024;
 const size_t kNumHandlers = 1024;
 
-static void *
-threadfunc (void *unused)
+static void *threadfunc(void *unused)
 {
-  size_t i;
-  for (i = 0; i < kNumHandlers; ++i) {
-    CALL_ATEXIT;
-  }
-  return NULL;
+    size_t i;
+    for (i = 0; i < kNumHandlers; ++i) {
+        CALL_ATEXIT;
+    }
+    return NULL;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  size_t i;
-  pthread_attr_t attr;
+    size_t i;
+    pthread_attr_t attr;
 
-  xpthread_attr_init (&attr);
-  xpthread_attr_setdetachstate (&attr, 1);
+    xpthread_attr_init(&attr);
+    xpthread_attr_setdetachstate(&attr, 1);
 
-  /* With default 8MiB Linux stack size, creating 1024 threads can cause
-     VM exhausiton on 32-bit machines.  Reduce stack size of each thread to
-     128KiB for a maximum required VM size of 128MiB.  */
-  size_t kStacksize =
+    /* With default 8MiB Linux stack size, creating 1024 threads can cause
+       VM exhausiton on 32-bit machines.  Reduce stack size of each thread to
+       128KiB for a maximum required VM size of 128MiB.  */
+    size_t kStacksize =
 #ifdef PTHREAD_STACK_MIN
-    0x20000 < PTHREAD_STACK_MIN ? PTHREAD_STACK_MIN :
+        0x20000 < PTHREAD_STACK_MIN ? PTHREAD_STACK_MIN :
 #endif
-    0x20000;
+        0x20000;
 
-  xpthread_attr_setstacksize (&attr, kStacksize);
+    xpthread_attr_setstacksize(&attr, kStacksize);
 
-  for (i = 0; i < kNumThreads; ++i) {
-    xpthread_create (&attr, threadfunc, NULL);
-  }
-  xpthread_attr_destroy (&attr);
+    for (i = 0; i < kNumThreads; ++i) {
+        xpthread_create(&attr, threadfunc, NULL);
+    }
+    xpthread_attr_destroy(&attr);
 
-  CALL_EXIT;
+    CALL_EXIT;
 }
 
 #define TEST_FUNCTION do_test

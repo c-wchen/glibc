@@ -16,22 +16,21 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef	__jmp_buf_tag_defined
-#define	__jmp_buf_tag_defined 1
+#ifndef __jmp_buf_tag_defined
+#define __jmp_buf_tag_defined 1
 
-#include <bits/setjmp.h>		/* Get `__jmp_buf'.  */
+#include <bits/setjmp.h>        /* Get `__jmp_buf'.  */
 #include <bits/types/__sigset_t.h>
 
 /* Calling environment, plus possibly a saved signal mask.  */
-struct __jmp_buf_tag
-  {
+struct __jmp_buf_tag {
     /* NOTE: The machine-dependent definitions of `__sigsetjmp'
        assume that a `jmp_buf' begins with a `__jmp_buf' and that
        `__mask_was_saved' follows it.  Do not move these members
        or add others before it.  */
-    __jmp_buf __jmpbuf;		/* Calling environment.  */
-    int __mask_was_saved;	/* Saved the signal mask?  */
-    __sigset_t __saved_mask;	/* Saved signal mask.  */
-  };
+    __jmp_buf __jmpbuf;     /* Calling environment.  */
+    int __mask_was_saved;   /* Saved the signal mask?  */
+    __sigset_t __saved_mask;    /* Saved signal mask.  */
+};
 
 #endif

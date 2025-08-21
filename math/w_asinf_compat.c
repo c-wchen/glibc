@@ -24,18 +24,16 @@
 
 #if LIBM_SVID_COMPAT
 /* wrapper asinf */
-float
-__asinf (float x)
+float __asinf(float x)
 {
-  if (__builtin_expect (isgreater (fabsf (x), 1.0f), 0)
-      && _LIB_VERSION != _IEEE_)
-    {
-      /* asin(|x|>1) */
-      feraiseexcept (FE_INVALID);
-      return __kernel_standard_f (x, x, 102);
+    if (__builtin_expect(isgreater(fabsf(x), 1.0f), 0)
+        && _LIB_VERSION != _IEEE_) {
+        /* asin(|x|>1) */
+        feraiseexcept(FE_INVALID);
+        return __kernel_standard_f(x, x, 102);
     }
 
-  return __ieee754_asinf (x);
+    return __ieee754_asinf(x);
 }
-libm_alias_float (__asin, asin)
+libm_alias_float(__asin, asin)
 #endif

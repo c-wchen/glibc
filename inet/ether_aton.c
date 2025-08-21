@@ -19,9 +19,9 @@
 
 
 struct ether_addr *
-ether_aton (const char *asc)
+ether_aton(const char *asc)
 {
-  static struct ether_addr result;
+    static struct ether_addr result;
 
-  return ether_aton_r (asc, &result);
+    return ether_aton_r(asc, &result);
 }

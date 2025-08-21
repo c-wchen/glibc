@@ -23,7 +23,7 @@
 #ifdef __USE_MISC
 # define CBAUD   0x0000100f
 # define CBAUDEX 0x00001000
-# define CIBAUD	 0x100f0000	/* input baud rate */
+# define CIBAUD  0x100f0000 /* input baud rate */
 # define IBSHIFT 16
 #endif
 

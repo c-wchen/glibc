@@ -24,26 +24,26 @@
 
 /* Store at most BUFLEN characters of the pathname of the terminal FD is
    open on in BUF.  Return 0 on success, -1 otherwise.  */
-int
-__ttyname_r (int fd, char *buf, size_t buflen)
+int __ttyname_r(int fd, char *buf, size_t buflen)
 {
-  error_t err;
-  string_t nodename;
-  size_t len;
+    error_t err;
+    string_t nodename;
+    size_t len;
 
-  if (err = HURD_DPORT_USE (fd, __term_get_nodename (port, nodename)))
-    {
-      if (err == MIG_BAD_ID || err == EOPNOTSUPP)
-        err = ENOTTY;
-      return __hurd_dfail (fd, err), errno;
+    if (err = HURD_DPORT_USE(fd, __term_get_nodename(port, nodename))) {
+        if (err == MIG_BAD_ID || err == EOPNOTSUPP) {
+            err = ENOTTY;
+        }
+        return __hurd_dfail(fd, err), errno;
     }
 
-  len = strlen (nodename) + 1;
-  if (len > buflen)
-    return __hurd_fail (ERANGE), ERANGE;
+    len = strlen(nodename) + 1;
+    if (len > buflen) {
+        return __hurd_fail(ERANGE), ERANGE;
+    }
 
-  memcpy (buf, nodename, len);
-  return 0;
+    memcpy(buf, nodename, len);
+    return 0;
 }
-libc_hidden_def (__ttyname_r)
-weak_alias (__ttyname_r, ttyname_r)
+libc_hidden_def(__ttyname_r)
+weak_alias(__ttyname_r, ttyname_r)

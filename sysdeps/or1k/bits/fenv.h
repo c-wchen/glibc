@@ -23,28 +23,27 @@
 
 #ifdef __or1k_hard_float__
 /* Define bits representing exceptions in the FPCSR status word.  */
-enum
-  {
+enum {
     FE_OVERFLOW =
-#define FE_OVERFLOW	(1 << 3)
-      FE_OVERFLOW,
+#define FE_OVERFLOW (1 << 3)
+        FE_OVERFLOW,
     FE_UNDERFLOW =
-#define FE_UNDERFLOW	(1 << 4)
-      FE_UNDERFLOW,
+#define FE_UNDERFLOW    (1 << 4)
+        FE_UNDERFLOW,
     FE_INEXACT =
-#define FE_INEXACT	(1 << 8)
-      FE_INEXACT,
+#define FE_INEXACT  (1 << 8)
+        FE_INEXACT,
     FE_INVALID =
-#define FE_INVALID	(1 << 9)
-      FE_INVALID,
+#define FE_INVALID  (1 << 9)
+        FE_INVALID,
     FE_DIVBYZERO =
-#define FE_DIVBYZERO	(1 << 11)
-      FE_DIVBYZERO,
-  };
+#define FE_DIVBYZERO    (1 << 11)
+        FE_DIVBYZERO,
+};
 
 /* All supported exceptions.  */
-#define FE_ALL_EXCEPT	\
-	(FE_INVALID | FE_DIVBYZERO | FE_OVERFLOW | FE_UNDERFLOW | FE_INEXACT)
+#define FE_ALL_EXCEPT   \
+    (FE_INVALID | FE_DIVBYZERO | FE_OVERFLOW | FE_UNDERFLOW | FE_INEXACT)
 
 /* Define bits representing rounding modes in the FPCSR Rmode field.  */
 #define FE_TONEAREST  (0x0 << 1)
@@ -57,14 +56,13 @@ enum
 /* In the soft-float case only rounding to nearest is supported, with
    no exceptions.  */
 
-enum
-  {
+enum {
     __FE_UNDEFINED = -1,
 
     FE_TONEAREST =
-# define FE_TONEAREST	0x0
-      FE_TONEAREST
-  };
+# define FE_TONEAREST   0x0
+        FE_TONEAREST
+};
 
 # define FE_ALL_EXCEPT 0
 
@@ -77,12 +75,12 @@ typedef unsigned int fexcept_t;
 typedef unsigned int fenv_t;
 
 /* If the default argument is used we use this value.  */
-#define FE_DFL_ENV	((const fenv_t *) -1l)
+#define FE_DFL_ENV  ((const fenv_t *) -1l)
 
 #if __GLIBC_USE (IEC_60559_BFP_EXT_C23)
 /* Type representing floating-point control modes.  */
 typedef unsigned int femode_t;
 
 /* Default floating-point control modes.  */
-# define FE_DFL_MODE	((const femode_t *) -1L)
+# define FE_DFL_MODE    ((const femode_t *) -1L)
 #endif

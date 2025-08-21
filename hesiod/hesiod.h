@@ -39,12 +39,12 @@
 #ifndef _HESIOD_H_INCLUDED
 #define _HESIOD_H_INCLUDED
 
-int		hesiod_init (void **context) attribute_hidden;
-void		hesiod_end (void *context) attribute_hidden;
-char *		hesiod_to_bind (void *context, const char *name,
-				const char *type) attribute_hidden;
-char **		hesiod_resolve (void *context, const char *name,
-				const char *type) attribute_hidden;
-void		hesiod_free_list (void *context, char **list) attribute_hidden;
+int     hesiod_init(void **context) attribute_hidden;
+void        hesiod_end(void *context) attribute_hidden;
+char       *hesiod_to_bind(void *context, const char *name,
+                           const char *type) attribute_hidden;
+char      **hesiod_resolve(void *context, const char *name,
+                           const char *type) attribute_hidden;
+void        hesiod_free_list(void *context, char **list) attribute_hidden;
 
 #endif /*_HESIOD_H_INCLUDED*/

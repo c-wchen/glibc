@@ -38,8 +38,8 @@ struct winsize;
     accordingly.
 
     Terminates the process on failure (like xmalloc).  */
-extern void support_openpty (int *a_outer, int *a_inner, char **a_name,
-                             const struct termios *termp,
-                             const struct winsize *winp);
+extern void support_openpty(int *a_outer, int *a_inner, char **a_name,
+                            const struct termios *termp,
+                            const struct winsize *winp);
 
 #endif

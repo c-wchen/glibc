@@ -4,23 +4,21 @@
 #include "testobj.h"
 
 
-int
-obj5func1 (int a __attribute__ ((unused)))
+int obj5func1(int a __attribute__((unused)))
 {
-  return 66;
+    return 66;
 }
 
-int
-obj5func2 (int a)
+int obj5func2(int a)
 {
-  return foo (a) + 44;
+    return foo(a) + 44;
 }
 
-int
-preload (int a)
+int preload(int a)
 {
-  int (*fp) (int) = dlsym (RTLD_NEXT, "preload");
-  if (fp != NULL)
-    return fp (a) + 10;
-  return 10;
+    int (*fp)(int) = dlsym(RTLD_NEXT, "preload");
+    if (fp != NULL) {
+        return fp(a) + 10;
+    }
+    return 10;
 }

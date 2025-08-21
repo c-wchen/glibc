@@ -21,7 +21,7 @@
 /* Get the conversion table.  */
 #define TABLES <sami-ws2.h>
 
-#define CHARSET_NAME	"WIN-SAMI-2//"
-#define HAS_HOLES	1	/* Not all 256 character are defined.  */
+#define CHARSET_NAME    "WIN-SAMI-2//"
+#define HAS_HOLES   1   /* Not all 256 character are defined.  */
 
 #include <8bit-gap.c>

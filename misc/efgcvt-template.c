@@ -41,38 +41,36 @@ static char FCVT_BUFFER[MAXDIG];
 static char ECVT_BUFFER[MAXDIG];
 static char *FCVT_BUFPTR;
 
-char *
-__FCVT (FLOAT_TYPE value, int ndigit, int *decpt, int *sign)
+char *__FCVT(FLOAT_TYPE value, int ndigit, int *decpt, int *sign)
 {
-  if (FCVT_BUFPTR == NULL)
-    {
-      if (__FCVT_R (value, ndigit, decpt, sign, FCVT_BUFFER, MAXDIG) != -1)
-	return FCVT_BUFFER;
+    if (FCVT_BUFPTR == NULL) {
+        if (__FCVT_R(value, ndigit, decpt, sign, FCVT_BUFFER, MAXDIG) != -1) {
+            return FCVT_BUFFER;
+        }
 
-      FCVT_BUFPTR = (char *) malloc (FCVT_MAXDIG);
-      if (FCVT_BUFPTR == NULL)
-	return FCVT_BUFFER;
+        FCVT_BUFPTR = (char *) malloc(FCVT_MAXDIG);
+        if (FCVT_BUFPTR == NULL) {
+            return FCVT_BUFFER;
+        }
     }
 
-  (void) __FCVT_R (value, ndigit, decpt, sign, FCVT_BUFPTR, FCVT_MAXDIG);
+    (void) __FCVT_R(value, ndigit, decpt, sign, FCVT_BUFPTR, FCVT_MAXDIG);
 
-  return FCVT_BUFPTR;
+    return FCVT_BUFPTR;
 }
 
 
-char *
-__ECVT (FLOAT_TYPE value, int ndigit, int *decpt, int *sign)
+char *__ECVT(FLOAT_TYPE value, int ndigit, int *decpt, int *sign)
 {
-  (void) __ECVT_R (value, ndigit, decpt, sign, ECVT_BUFFER, MAXDIG);
+    (void) __ECVT_R(value, ndigit, decpt, sign, ECVT_BUFFER, MAXDIG);
 
-  return ECVT_BUFFER;
+    return ECVT_BUFFER;
 }
 
-char *
-__GCVT (FLOAT_TYPE value, int ndigit, char *buf)
+char *__GCVT(FLOAT_TYPE value, int ndigit, char *buf)
 {
-  SPRINTF (buf, "%.*" FLOAT_FMT_FLAG "g", MIN (ndigit, NDIGIT_MAX), value);
-  return buf;
+    SPRINTF(buf, "%.*" FLOAT_FMT_FLAG "g", MIN(ndigit, NDIGIT_MAX), value);
+    return buf;
 }
 
-weak_alias (FCVT_BUFPTR, __EFGCVT_FREEMEM_PTR);
+weak_alias(FCVT_BUFPTR, __EFGCVT_FREEMEM_PTR);

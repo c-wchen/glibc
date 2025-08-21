@@ -18,17 +18,17 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-extern void check_val_init (void);
-extern void check_val_fini (void);
+extern void check_val_init(void);
+extern void check_val_fini(void);
 
-__attribute__ ((__constructor__))
-void construct (void)
+__attribute__((__constructor__))
+void construct(void)
 {
-  check_val_init ();
+    check_val_init();
 }
 
-__attribute__ ((__destructor__))
-void destruct (void)
+__attribute__((__destructor__))
+void destruct(void)
 {
-  check_val_fini ();
+    check_val_fini();
 }

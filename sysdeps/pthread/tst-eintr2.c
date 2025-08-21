@@ -33,55 +33,51 @@ static pthread_mutex_t m1 = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t m2 = PTHREAD_MUTEX_INITIALIZER;
 
 
-static void *
-tf1 (void *arg)
+static void *tf1(void *arg)
 {
-  struct timespec ts = timespec_add (xclock_now (CLOCK_REALTIME),
-                                     make_timespec (10000, 0));
+    struct timespec ts = timespec_add(xclock_now(CLOCK_REALTIME),
+                                      make_timespec(10000, 0));
 
-  /* This call must never return.  */
-  int e = pthread_mutex_timedlock (&m1, &ts);
-  char buf[100];
-  printf ("tf1: mutex_timedlock returned: %s\n",
-	  strerror_r (e, buf, sizeof (buf)));
+    /* This call must never return.  */
+    int e = pthread_mutex_timedlock(&m1, &ts);
+    char buf[100];
+    printf("tf1: mutex_timedlock returned: %s\n",
+           strerror_r(e, buf, sizeof(buf)));
 
-  exit (1);
+    exit(1);
 }
 
 
-static void *
-tf2 (void *arg)
+static void *tf2(void *arg)
 {
-  while (1)
-    {
-      TEST_COMPARE (pthread_mutex_lock (&m2), 0);
-      TEST_COMPARE (pthread_mutex_unlock (&m2), 0);
+    while (1) {
+        TEST_COMPARE(pthread_mutex_lock(&m2), 0);
+        TEST_COMPARE(pthread_mutex_unlock(&m2), 0);
 
-      struct timespec ts = { .tv_sec = 0, .tv_nsec = 10000000 };
-      nanosleep (&ts, NULL);
+        struct timespec ts = { .tv_sec = 0, .tv_nsec = 10000000 };
+        nanosleep(&ts, NULL);
     }
-  return NULL;
+    return NULL;
 }
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  TEST_COMPARE (pthread_mutex_lock (&m1), 0);
+    TEST_COMPARE(pthread_mutex_lock(&m1), 0);
 
-  setup_eintr (SIGUSR1, NULL);
+    setup_eintr(SIGUSR1, NULL);
 
-  char buf[100];
-  xpthread_create (NULL, tf1, NULL);
-  xpthread_create (NULL, tf2, NULL);
+    char buf[100];
+    xpthread_create(NULL, tf1, NULL);
+    xpthread_create(NULL, tf2, NULL);
 
-  delayed_exit (3);
-  /* This call must never return.  */
-  int e = pthread_mutex_lock (&m1);
-  printf ("main: mutex_lock returned: %s\n",
-	  strerror_r (e, buf, sizeof (buf)));
+    delayed_exit(3);
+    /* This call must never return.  */
+    int e = pthread_mutex_lock(&m1);
+    printf("main: mutex_lock returned: %s\n",
+           strerror_r(e, buf, sizeof(buf)));
 
-  return 1;
+    return 1;
 }
 
 #include <support/test-driver.c>

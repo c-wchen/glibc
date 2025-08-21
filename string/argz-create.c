@@ -23,30 +23,31 @@
 /* Make a '\0' separated arg vector from a unix argv vector, returning it in
    ARGZ, and the total length in LEN.  If a memory allocation error occurs,
    ENOMEM is returned, otherwise 0.  */
-error_t
-__argz_create (char *const argv[], char **argz, size_t *len)
+error_t __argz_create(char *const argv[], char **argz, size_t *len)
 {
-  int argc;
-  size_t tlen = 0;
-  char *const *ap;
-  char *p;
+    int argc;
+    size_t tlen = 0;
+    char *const *ap;
+    char *p;
 
-  for (argc = 0; argv[argc] != NULL; ++argc)
-    tlen += strlen (argv[argc]) + 1;
-
-  if (tlen == 0)
-    *argz = NULL;
-  else
-    {
-      *argz = malloc (tlen);
-      if (*argz == NULL)
-	return ENOMEM;
-
-      for (p = *argz, ap = argv; *ap; ++ap, ++p)
-	p = __stpcpy (p, *ap);
+    for (argc = 0; argv[argc] != NULL; ++argc) {
+        tlen += strlen(argv[argc]) + 1;
     }
-  *len = tlen;
 
-  return 0;
+    if (tlen == 0) {
+        *argz = NULL;
+    } else {
+        *argz = malloc(tlen);
+        if (*argz == NULL) {
+            return ENOMEM;
+        }
+
+        for (p = *argz, ap = argv; *ap; ++ap, ++p) {
+            p = __stpcpy(p, *ap);
+        }
+    }
+    *len = tlen;
+
+    return 0;
 }
-weak_alias (__argz_create, argz_create)
+weak_alias(__argz_create, argz_create)

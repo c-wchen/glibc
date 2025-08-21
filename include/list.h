@@ -16,7 +16,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _LIST_H
-#define _LIST_H	1
+#define _LIST_H 1
 
 /* Internal: doubly linked lists.  */
 
@@ -37,37 +37,33 @@
 
 
 /* Add new element at the head of the list.  */
-static inline void
-list_add (list_t *newp, list_t *head)
+static inline void list_add(list_t *newp, list_t *head)
 {
-  newp->next = head->next;
-  newp->prev = head;
-  head->next->prev = newp;
-  atomic_write_barrier ();
-  head->next = newp;
+    newp->next = head->next;
+    newp->prev = head;
+    head->next->prev = newp;
+    atomic_write_barrier();
+    head->next = newp;
 }
 
 
 /* Remove element from list.  */
-static inline void
-list_del (list_t *elem)
+static inline void list_del(list_t *elem)
 {
-  elem->next->prev = elem->prev;
-  elem->prev->next = elem->next;
+    elem->next->prev = elem->prev;
+    elem->prev->next = elem->next;
 }
 
 
 /* Join two lists.  */
-static inline void
-list_splice (list_t *add, list_t *head)
+static inline void list_splice(list_t *add, list_t *head)
 {
-  /* Do nothing if the list which gets added is empty.  */
-  if (add != add->next)
-    {
-      add->next->prev = head;
-      add->prev->next = head->next;
-      head->next->prev = add->prev;
-      head->next = add->next;
+    /* Do nothing if the list which gets added is empty.  */
+    if (add != add->next) {
+        add->next->prev = head;
+        add->prev->next = head->next;
+        head->next->prev = add->prev;
+        head->next = add->next;
     }
 }
 
@@ -95,4 +91,4 @@ list_splice (list_t *add, list_t *head)
        pos != (head); \
        pos = p, p = pos->prev)
 
-#endif	/* list.h */
+#endif  /* list.h */

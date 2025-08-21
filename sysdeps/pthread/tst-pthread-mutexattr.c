@@ -21,38 +21,33 @@
 #include <string.h>
 #include <pthread.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  pthread_mutexattr_t attr;
-  int kind;
-  int error;
+    pthread_mutexattr_t attr;
+    int kind;
+    int error;
 
-  error = pthread_mutexattr_init (&attr);
-  if (error)
-    {
-      printf ("pthread_mutexattr_init: %s\n", strerror (error));
-      return 1;
+    error = pthread_mutexattr_init(&attr);
+    if (error) {
+        printf("pthread_mutexattr_init: %s\n", strerror(error));
+        return 1;
     }
-  error = pthread_mutexattr_settype (&attr, PTHREAD_MUTEX_DEFAULT);
-  if (error)
-    {
-      printf ("pthread_mutexattr_settype (1): %s\n", strerror (error));
-      return 1;
+    error = pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_DEFAULT);
+    if (error) {
+        printf("pthread_mutexattr_settype (1): %s\n", strerror(error));
+        return 1;
     }
-  error = pthread_mutexattr_gettype (&attr, &kind);
-  if (error)
-    {
-      printf ("pthread_mutexattr_gettype: %s\n", strerror (error));
-      return 1;
+    error = pthread_mutexattr_gettype(&attr, &kind);
+    if (error) {
+        printf("pthread_mutexattr_gettype: %s\n", strerror(error));
+        return 1;
     }
-  error = pthread_mutexattr_settype (&attr, kind);
-  if (error)
-    {
-      printf ("pthread_mutexattr_settype (2): %s\n", strerror (error));
-      return 1;
+    error = pthread_mutexattr_settype(&attr, kind);
+    if (error) {
+        printf("pthread_mutexattr_settype (2): %s\n", strerror(error));
+        return 1;
     }
-  return 0;
+    return 0;
 }
 
 

@@ -25,41 +25,40 @@
 #include <uname-values.h>
 
 /* Put information about the system in NAME.  */
-int
-__uname (struct utsname *name)
+int __uname(struct utsname *name)
 {
-  int save;
+    int save;
 
-  if (name == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (name == NULL) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  save = errno;
-  if (__gethostname (name->nodename, sizeof (name->nodename)) < 0)
-    {
-      if (errno == ENOSYS)
-	{
-	  /* Hostname is meaningless for this machine.  */
-	  name->nodename[0] = '\0';
-	  __set_errno (save);
-	}
-#ifdef	ENAMETOOLONG
-      else if (errno == ENAMETOOLONG)
-	/* The name was truncated.  */
-	__set_errno (save);
+    save = errno;
+    if (__gethostname(name->nodename, sizeof(name->nodename)) < 0) {
+        if (errno == ENOSYS) {
+            /* Hostname is meaningless for this machine.  */
+            name->nodename[0] = '\0';
+            __set_errno(save);
+        }
+#ifdef  ENAMETOOLONG
+        else if (errno == ENAMETOOLONG)
+            /* The name was truncated.  */
+        {
+            __set_errno(save);
+        }
 #endif
-      else
-	return -1;
+        else {
+            return -1;
+        }
     }
-  strncpy (name->sysname, UNAME_SYSNAME, sizeof (name->sysname));
-  strncpy (name->release, UNAME_RELEASE, sizeof (name->release));
-  strncpy (name->version, UNAME_VERSION, sizeof (name->version));
-  strncpy (name->machine, UNAME_MACHINE, sizeof (name->machine));
+    strncpy(name->sysname, UNAME_SYSNAME, sizeof(name->sysname));
+    strncpy(name->release, UNAME_RELEASE, sizeof(name->release));
+    strncpy(name->version, UNAME_VERSION, sizeof(name->version));
+    strncpy(name->machine, UNAME_MACHINE, sizeof(name->machine));
 
-  return 0;
+    return 0;
 }
-weak_alias (__uname, uname)
-libc_hidden_def (__uname)
-libc_hidden_def (uname)
+weak_alias(__uname, uname)
+libc_hidden_def(__uname)
+libc_hidden_def(uname)

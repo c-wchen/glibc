@@ -18,7 +18,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef FIX_FP_INT_COMPARE_INVALID_H
-#define FIX_FP_INT_COMPARE_INVALID_H	1
+#define FIX_FP_INT_COMPARE_INVALID_H    1
 
 /* Define this macro to 1 to work around ordered comparison operators
    in C failing to raise the "invalid" exception for NaN operands.  */

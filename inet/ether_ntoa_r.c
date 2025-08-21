@@ -20,13 +20,12 @@
 #include <netinet/if_ether.h>
 
 
-char *
-ether_ntoa_r (const struct ether_addr *addr, char *buf)
+char *ether_ntoa_r(const struct ether_addr *addr, char *buf)
 {
-  sprintf (buf, "%x:%x:%x:%x:%x:%x",
-	   addr->ether_addr_octet[0], addr->ether_addr_octet[1],
-	   addr->ether_addr_octet[2], addr->ether_addr_octet[3],
-	   addr->ether_addr_octet[4], addr->ether_addr_octet[5]);
-  return buf;
+    sprintf(buf, "%x:%x:%x:%x:%x:%x",
+            addr->ether_addr_octet[0], addr->ether_addr_octet[1],
+            addr->ether_addr_octet[2], addr->ether_addr_octet[3],
+            addr->ether_addr_octet[4], addr->ether_addr_octet[5]);
+    return buf;
 }
-libc_hidden_def (ether_ntoa_r)
+libc_hidden_def(ether_ntoa_r)

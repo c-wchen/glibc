@@ -21,45 +21,40 @@
 typedef uint16_t gidx_t;
 
 
-struct gconvcache_header
-{
-  uint32_t magic;
-  gidx_t string_offset;
-  gidx_t hash_offset;
-  gidx_t hash_size;
-  gidx_t module_offset;
-  gidx_t otherconv_offset;
+struct gconvcache_header {
+    uint32_t magic;
+    gidx_t string_offset;
+    gidx_t hash_offset;
+    gidx_t hash_size;
+    gidx_t module_offset;
+    gidx_t otherconv_offset;
 };
 
-struct hash_entry
-{
-  gidx_t string_offset;
-  gidx_t module_idx;
+struct hash_entry {
+    gidx_t string_offset;
+    gidx_t module_idx;
 };
 
-struct module_entry
-{
-  gidx_t canonname_offset;
-  gidx_t fromdir_offset;
-  gidx_t fromname_offset;
-  gidx_t todir_offset;
-  gidx_t toname_offset;
-  gidx_t extra_offset;
+struct module_entry {
+    gidx_t canonname_offset;
+    gidx_t fromdir_offset;
+    gidx_t fromname_offset;
+    gidx_t todir_offset;
+    gidx_t toname_offset;
+    gidx_t extra_offset;
 };
 
-struct extra_entry
-{
-  gidx_t module_cnt;
-  struct extra_entry_module
-  {
-    gidx_t outname_offset;
-    gidx_t dir_offset;
-    gidx_t name_offset;
-  } module[0];
+struct extra_entry {
+    gidx_t module_cnt;
+    struct extra_entry_module {
+        gidx_t outname_offset;
+        gidx_t dir_offset;
+        gidx_t name_offset;
+    } module[0];
 };
 
 
-#define GCONVCACHE_MAGIC	0x20010324
+#define GCONVCACHE_MAGIC    0x20010324
 
 
-#define GCONV_MODULES_CACHE	GCONV_DIR "/gconv-modules.cache"
+#define GCONV_MODULES_CACHE GCONV_DIR "/gconv-modules.cache"

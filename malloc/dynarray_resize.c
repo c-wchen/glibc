@@ -22,43 +22,41 @@
 #include <stdlib.h>
 #include <string.h>
 
-bool
-__libc_dynarray_resize (struct dynarray_header *list, size_t size,
-                        void *scratch, size_t element_size)
+bool __libc_dynarray_resize(struct dynarray_header *list, size_t size,
+                            void *scratch, size_t element_size)
 {
-  /* The existing allocation provides sufficient room.  */
-  if (size <= list->allocated)
-    {
-      list->used = size;
-      return true;
+    /* The existing allocation provides sufficient room.  */
+    if (size <= list->allocated) {
+        list->used = size;
+        return true;
     }
 
-  /* Otherwise, use size as the new allocation size.  The caller is
-     expected to provide the final size of the array, so there is no
-     over-allocation here.  */
+    /* Otherwise, use size as the new allocation size.  The caller is
+       expected to provide the final size of the array, so there is no
+       over-allocation here.  */
 
-  size_t new_size_bytes;
-  if (INT_MULTIPLY_WRAPV (size, element_size, &new_size_bytes))
-    {
-      /* Overflow.  */
-      __set_errno (ENOMEM);
-      return false;
+    size_t new_size_bytes;
+    if (INT_MULTIPLY_WRAPV(size, element_size, &new_size_bytes)) {
+        /* Overflow.  */
+        __set_errno(ENOMEM);
+        return false;
     }
-  void *new_array;
-  if (list->array == scratch)
-    {
-      /* The previous array was not heap-allocated.  */
-      new_array = malloc (new_size_bytes);
-      if (new_array != NULL && list->array != NULL)
-        memcpy (new_array, list->array, list->used * element_size);
+    void *new_array;
+    if (list->array == scratch) {
+        /* The previous array was not heap-allocated.  */
+        new_array = malloc(new_size_bytes);
+        if (new_array != NULL && list->array != NULL) {
+            memcpy(new_array, list->array, list->used * element_size);
+        }
+    } else {
+        new_array = realloc(list->array, new_size_bytes);
     }
-  else
-    new_array = realloc (list->array, new_size_bytes);
-  if (new_array == NULL)
-    return false;
-  list->array = new_array;
-  list->allocated = size;
-  list->used = size;
-  return true;
+    if (new_array == NULL) {
+        return false;
+    }
+    list->array = new_array;
+    list->allocated = size;
+    list->used = size;
+    return true;
 }
-libc_hidden_def (__libc_dynarray_resize)
+libc_hidden_def(__libc_dynarray_resize)

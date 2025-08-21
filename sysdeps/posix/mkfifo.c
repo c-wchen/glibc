@@ -21,8 +21,7 @@
 #include <sys/types.h>
 
 /* Create a named pipe (FIFO) named PATH with protections MODE.  */
-int
-mkfifo (const char *path, mode_t mode)
+int mkfifo(const char *path, mode_t mode)
 {
-  return __mknod (path, mode | S_IFIFO, 0);
+    return __mknod(path, mode | S_IFIFO, 0);
 }

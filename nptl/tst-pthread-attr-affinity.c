@@ -26,36 +26,34 @@
 
 
 #define RETURN_IF_FAIL(f, ...) \
-  ({									      \
-    int ret = f (__VA_ARGS__);						      \
-    if (ret != 0)							      \
-      {									      \
-	printf ("%s:%d: %s returned %d (errno = %d)\n", __FILE__, __LINE__,   \
-		#f, ret, errno);					      \
-	return ret;							      \
-      }									      \
+  ({                                          \
+    int ret = f (__VA_ARGS__);                            \
+    if (ret != 0)                                 \
+      {                                       \
+    printf ("%s:%d: %s returned %d (errno = %d)\n", __FILE__, __LINE__,   \
+        #f, ret, errno);                          \
+    return ret;                               \
+      }                                       \
   })
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  for (int i = 0; i < 10; i++)
-    {
-      pthread_attr_t attr;
-      cpu_set_t *cpuset = CPU_ALLOC (512);
-      size_t cpusetsize = CPU_ALLOC_SIZE (512);
-      CPU_ZERO_S (cpusetsize, cpuset);
+    for (int i = 0; i < 10; i++) {
+        pthread_attr_t attr;
+        cpu_set_t *cpuset = CPU_ALLOC(512);
+        size_t cpusetsize = CPU_ALLOC_SIZE(512);
+        CPU_ZERO_S(cpusetsize, cpuset);
 
-      RETURN_IF_FAIL (pthread_attr_init, &attr);
-      RETURN_IF_FAIL (pthread_attr_setaffinity_np, &attr, cpusetsize, cpuset);
-      CPU_FREE (cpuset);
+        RETURN_IF_FAIL(pthread_attr_init, &attr);
+        RETURN_IF_FAIL(pthread_attr_setaffinity_np, &attr, cpusetsize, cpuset);
+        CPU_FREE(cpuset);
 
-      cpuset = CPU_ALLOC (1);
-      cpusetsize = CPU_ALLOC_SIZE (1);
-      RETURN_IF_FAIL (pthread_attr_getaffinity_np, &attr, cpusetsize, cpuset);
-      CPU_FREE (cpuset);
+        cpuset = CPU_ALLOC(1);
+        cpusetsize = CPU_ALLOC_SIZE(1);
+        RETURN_IF_FAIL(pthread_attr_getaffinity_np, &attr, cpusetsize, cpuset);
+        CPU_FREE(cpuset);
     }
-  return 0;
+    return 0;
 }
 
 

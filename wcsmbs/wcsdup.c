@@ -20,15 +20,15 @@
 #include <stdlib.h>
 
 
-/* Duplicate S, returning an identical malloc'd string.	 */
-wchar_t *
-wcsdup (const wchar_t *s)
+/* Duplicate S, returning an identical malloc'd string.  */
+wchar_t *wcsdup(const wchar_t *s)
 {
-  size_t len = (__wcslen (s) + 1) * sizeof (wchar_t);
-  void *new = malloc (len);
+    size_t len = (__wcslen(s) + 1) * sizeof(wchar_t);
+    void *new = malloc(len);
 
-  if (new == NULL)
-    return NULL;
+    if (new == NULL) {
+        return NULL;
+    }
 
-  return (wchar_t *) memcpy (new, (void *) s, len);
+    return (wchar_t *) memcpy(new, (void *) s, len);
 }

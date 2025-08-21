@@ -24,10 +24,9 @@
    -1 this means it is not yet decided which form it is and we have to
    search through all available digits.  Otherwise we know which script
    the digits are from.  */
-static inline wchar_t
-outdigitwc_value (int n)
+static inline wchar_t outdigitwc_value(int n)
 {
-  assert (0 <= n && n <= 9);
+    assert(0 <= n && n <= 9);
 
-  return _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_OUTDIGIT0_WC + n);
+    return _NL_CURRENT_WORD(LC_CTYPE, _NL_CTYPE_OUTDIGIT0_WC + n);
 }

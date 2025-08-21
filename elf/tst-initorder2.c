@@ -1,20 +1,19 @@
 #include <stdio.h>
 
 #ifndef NAME
-int
-main (void)
+int main(void)
 {
-  puts ("main");
+    puts("main");
 }
 #else
-static void __attribute__ ((constructor))
-init (void)
+static void __attribute__((constructor))
+init(void)
 {
-  puts ("init: " NAME);
+    puts("init: " NAME);
 }
-static void __attribute__ ((destructor))
-fini (void)
+static void __attribute__((destructor))
+fini(void)
 {
-  puts ("fini: " NAME);
+    puts("fini: " NAME);
 }
 #endif

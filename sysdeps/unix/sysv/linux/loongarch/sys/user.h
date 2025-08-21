@@ -21,22 +21,21 @@
 
 #include <stdint.h>
 
-struct user_regs_struct
-{
-  /* Saved main processor registers. */
-  uint64_t regs[32];
+struct user_regs_struct {
+    /* Saved main processor registers. */
+    uint64_t regs[32];
 
-  /* Saved special registers. */
-  uint64_t orig_a0;
-  uint64_t csr_era;
-  uint64_t csr_badv;
-  uint64_t reserved[10];
+    /* Saved special registers. */
+    uint64_t orig_a0;
+    uint64_t csr_era;
+    uint64_t csr_badv;
+    uint64_t reserved[10];
 };
 
 struct user_fp_struct {
-  uint64_t    fpr[32];
-  uint64_t    fcc;
-  uint32_t    fcsr;
+    uint64_t    fpr[32];
+    uint64_t    fcc;
+    uint32_t    fcsr;
 };
 
 #endif /* _SYS_USER_H */

@@ -1,6 +1,6 @@
 /*-
  * Copyright (c) 1983, 1989, 1993
- *	The Regents of the University of California.  All rights reserved.
+ *  The Regents of the University of California.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -26,11 +26,11 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	@(#)routed.h	8.1 (Berkeley) 6/2/93
+ *  @(#)routed.h    8.1 (Berkeley) 6/2/93
  */
 
 #ifndef _PROTOCOLS_ROUTED_H
-#define	_PROTOCOLS_ROUTED_H 1
+#define _PROTOCOLS_ROUTED_H 1
 
 #include <sys/socket.h>
 /*
@@ -40,41 +40,41 @@
  * by changing 32-bit net numbers to sockaddr's and
  * padding stuff to 32-bit boundaries.
  */
-#define	RIPVERSION	1
+#define RIPVERSION  1
 
 struct netinfo {
-	struct	sockaddr rip_dst;	/* destination net/host */
-	int	rip_metric;		/* cost of route */
+    struct  sockaddr rip_dst;   /* destination net/host */
+    int rip_metric;     /* cost of route */
 };
 
 struct rip {
-	unsigned char	rip_cmd;		/* request/response */
-	unsigned char	rip_vers;		/* protocol version # */
-	unsigned char	rip_res1[2];		/* pad to 32-bit boundary */
-	union {
-		struct	netinfo ru_nets[1];	/* variable length... */
-		char	ru_tracefile[1];	/* ditto ... */
-	} ripun;
-#define	rip_nets	ripun.ru_nets
-#define	rip_tracefile	ripun.ru_tracefile
+    unsigned char   rip_cmd;        /* request/response */
+    unsigned char   rip_vers;       /* protocol version # */
+    unsigned char   rip_res1[2];        /* pad to 32-bit boundary */
+    union {
+        struct  netinfo ru_nets[1]; /* variable length... */
+        char    ru_tracefile[1];    /* ditto ... */
+    } ripun;
+#define rip_nets    ripun.ru_nets
+#define rip_tracefile   ripun.ru_tracefile
 };
 
 /*
  * Packet types.
  */
-#define	RIPCMD_REQUEST		1	/* want info */
-#define	RIPCMD_RESPONSE		2	/* responding to request */
-#define	RIPCMD_TRACEON		3	/* turn tracing on */
-#define	RIPCMD_TRACEOFF		4	/* turn it off */
+#define RIPCMD_REQUEST      1   /* want info */
+#define RIPCMD_RESPONSE     2   /* responding to request */
+#define RIPCMD_TRACEON      3   /* turn tracing on */
+#define RIPCMD_TRACEOFF     4   /* turn it off */
 
-#define	RIPCMD_MAX		5
+#define RIPCMD_MAX      5
 #ifdef RIPCMDS
 char *ripcmds[RIPCMD_MAX] =
-  { "#0", "REQUEST", "RESPONSE", "TRACEON", "TRACEOFF" };
+{ "#0", "REQUEST", "RESPONSE", "TRACEON", "TRACEOFF" };
 #endif
 
-#define	HOPCNT_INFINITY		16	/* per Xerox NS */
-#define	MAXPACKETSIZE		512	/* max broadcast size */
+#define HOPCNT_INFINITY     16  /* per Xerox NS */
+#define MAXPACKETSIZE       512 /* max broadcast size */
 
 /*
  * Timer values used in managing the routing table.
@@ -89,13 +89,13 @@ char *ripcmds[RIPCMD_MAX] =
  * but held onto until GARBAGE_TIME so that others may
  * see it "be deleted".
  */
-#define	TIMER_RATE		30	/* alarm clocks every 30 seconds */
+#define TIMER_RATE      30  /* alarm clocks every 30 seconds */
 
-#define	SUPPLY_INTERVAL		30	/* time to supply tables */
-#define	MIN_WAITTIME		2	/* min. interval to broadcast changes */
-#define	MAX_WAITTIME		5	/* max. time to delay changes */
+#define SUPPLY_INTERVAL     30  /* time to supply tables */
+#define MIN_WAITTIME        2   /* min. interval to broadcast changes */
+#define MAX_WAITTIME        5   /* max. time to delay changes */
 
-#define	EXPIRE_TIME		180	/* time to mark entry invalid */
-#define	GARBAGE_TIME		240	/* time to garbage collect */
+#define EXPIRE_TIME     180 /* time to mark entry invalid */
+#define GARBAGE_TIME        240 /* time to garbage collect */
 
 #endif /* protocols/routed.h */

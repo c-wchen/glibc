@@ -26,5 +26,5 @@
 # define SYMBOL_NAME wcsrchr
 # include "ifunc-sse2.h"
 
-libc_ifunc_redirected (__redirect_wcsrchr, wcsrchr, IFUNC_SELECTOR ());
+libc_ifunc_redirected(__redirect_wcsrchr, wcsrchr, IFUNC_SELECTOR());
 #endif

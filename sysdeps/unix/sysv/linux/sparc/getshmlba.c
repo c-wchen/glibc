@@ -19,21 +19,20 @@
 #include <sys/shm.h>
 #include <ldsodefs.h>
 
-int
-__getshmlba (void)
+int __getshmlba(void)
 {
-  uint64_t hwcap = GLRO(dl_hwcap);
-  int pgsz = GLRO(dl_pagesize);
+    uint64_t hwcap = GLRO(dl_hwcap);
+    int pgsz = GLRO(dl_pagesize);
 
-  if (hwcap & HWCAP_SPARC_V9)
-    {
-      if (pgsz < (16 * 1024))
-	return 16 * 1024;
-      else
-	return pgsz;
+    if (hwcap & HWCAP_SPARC_V9) {
+        if (pgsz < (16 * 1024)) {
+            return 16 * 1024;
+        } else {
+            return pgsz;
+        }
+    } else if (!(hwcap & HWCAP_SPARC_FLUSH)) {
+        return 64 * 1024;
+    } else {
+        return 256 * 1024;
     }
-  else if (!(hwcap & HWCAP_SPARC_FLUSH))
-    return 64 * 1024;
-  else
-    return 256 * 1024;
 }

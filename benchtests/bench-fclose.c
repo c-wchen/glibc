@@ -23,53 +23,52 @@
 #include "bench-timing.h"
 #include "json-lib.h"
 
-#define NUM_FILES	1000000
-#define NUM_FCLOSE	100
+#define NUM_FILES   1000000
+#define NUM_FCLOSE  100
 
-int
-main (int argc, char **argv)
+int main(int argc, char **argv)
 {
-  json_ctx_t json_ctx;
-  json_init (&json_ctx, 0, stdout);
-  json_document_begin (&json_ctx);
+    json_ctx_t json_ctx;
+    json_init(&json_ctx, 0, stdout);
+    json_document_begin(&json_ctx);
 
-  json_attr_string (&json_ctx, "timing_type", TIMING_TYPE);
-  json_attr_object_begin (&json_ctx, "functions");
-  json_attr_object_begin (&json_ctx, "fclose");
+    json_attr_string(&json_ctx, "timing_type", TIMING_TYPE);
+    json_attr_object_begin(&json_ctx, "functions");
+    json_attr_object_begin(&json_ctx, "fclose");
 
-  FILE *ff, *keep[NUM_FCLOSE];
-  int i;
+    FILE *ff, *keep[NUM_FCLOSE];
+    int i;
 
-  for (i = 0; i < NUM_FILES; i++)
-    {
-      ff = fdopen (STDIN_FILENO, "r");
-      if (!ff)
-	{
-	  fprintf (stderr, "### failed to fdopen: %m\n");
-	  return EXIT_FAILURE;
-	}
-      if (i < NUM_FCLOSE)
-	keep[i] = ff;
+    for (i = 0; i < NUM_FILES; i++) {
+        ff = fdopen(STDIN_FILENO, "r");
+        if (!ff) {
+            fprintf(stderr, "### failed to fdopen: %m\n");
+            return EXIT_FAILURE;
+        }
+        if (i < NUM_FCLOSE) {
+            keep[i] = ff;
+        }
     }
 
-  timing_t start, stop, elapsed;
+    timing_t start, stop, elapsed;
 
-  TIMING_NOW (start);
+    TIMING_NOW(start);
 
-  for (i = 0; i < NUM_FCLOSE; i++)
-    fclose (keep[i]);
+    for (i = 0; i < NUM_FCLOSE; i++) {
+        fclose(keep[i]);
+    }
 
-  TIMING_NOW (stop);
+    TIMING_NOW(stop);
 
-  TIMING_DIFF (elapsed, start, stop);
+    TIMING_DIFF(elapsed, start, stop);
 
-  json_attr_uint (&json_ctx, "number of FILEs", NUM_FILES);
-  json_attr_uint (&json_ctx, "number of fclose calls", NUM_FCLOSE);
-  json_attr_uint (&json_ctx, "duration", elapsed);
+    json_attr_uint(&json_ctx, "number of FILEs", NUM_FILES);
+    json_attr_uint(&json_ctx, "number of fclose calls", NUM_FCLOSE);
+    json_attr_uint(&json_ctx, "duration", elapsed);
 
-  json_attr_object_end (&json_ctx);
-  json_attr_object_end (&json_ctx);
-  json_document_end (&json_ctx);
+    json_attr_object_end(&json_ctx);
+    json_attr_object_end(&json_ctx);
+    json_document_end(&json_ctx);
 
-  return 0;
+    return 0;
 }

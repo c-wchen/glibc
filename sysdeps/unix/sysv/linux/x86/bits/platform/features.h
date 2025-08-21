@@ -22,27 +22,26 @@
 
 /* Bits in the feature_1 field in TCB.  */
 
-enum
-{
-  x86_feature_1_ibt		= 1U << 0,
-  x86_feature_1_shstk		= 1U << 1
+enum {
+    x86_feature_1_ibt     = 1U << 0,
+    x86_feature_1_shstk       = 1U << 1
 };
 
-static __inline__ bool
-x86_cpu_cet_active (unsigned int __index)
+static __inline__ bool x86_cpu_cet_active(unsigned int __index)
 {
 #ifdef __x86_64__
-  unsigned int __feature_1;
+    unsigned int __feature_1;
 # ifdef __LP64__
-  __asm__ ("mov %%fs:72, %0" : "=r" (__feature_1));
+    __asm__("mov %%fs:72, %0" : "=r"(__feature_1));
 # else
-  __asm__ ("mov %%fs:40, %0" : "=r" (__feature_1));
+    __asm__("mov %%fs:40, %0" : "=r"(__feature_1));
 # endif
-  if (__index == x86_cpu_IBT)
-    return __feature_1 & x86_feature_1_ibt;
-  else
-    return __feature_1 & x86_feature_1_shstk;
+    if (__index == x86_cpu_IBT) {
+        return __feature_1 & x86_feature_1_ibt;
+    } else {
+        return __feature_1 & x86_feature_1_shstk;
+    }
 #else
-  return false;
+    return false;
 #endif
 }

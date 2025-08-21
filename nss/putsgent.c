@@ -21,61 +21,58 @@
 #include <gshadow.h>
 #include <nss.h>
 
-#define _S(x)	x ? x : ""
+#define _S(x)   x ? x : ""
 
 
 /* Write an entry to the given stream.
    This must know the format of the group file.  */
-int
-putsgent (const struct sgrp *g, FILE *stream)
+int putsgent(const struct sgrp *g, FILE *stream)
 {
-  int errors = 0;
+    int errors = 0;
 
-  if (g->sg_namp == NULL || !__nss_valid_field (g->sg_namp)
-      || !__nss_valid_field (g->sg_passwd)
-      || !__nss_valid_list_field (g->sg_adm)
-      || !__nss_valid_list_field (g->sg_mem))
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (g->sg_namp == NULL || !__nss_valid_field(g->sg_namp)
+        || !__nss_valid_field(g->sg_passwd)
+        || !__nss_valid_list_field(g->sg_adm)
+        || !__nss_valid_list_field(g->sg_mem)) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  _IO_flockfile (stream);
+    _IO_flockfile(stream);
 
-  if (fprintf (stream, "%s:%s:", g->sg_namp, _S (g->sg_passwd)) < 0)
-    ++errors;
+    if (fprintf(stream, "%s:%s:", g->sg_namp, _S(g->sg_passwd)) < 0) {
+        ++errors;
+    }
 
-  bool first = true;
-  char **sp = g->sg_adm;
-  if (sp != NULL)
-    while (*sp != NULL)
-      {
-	if (fprintf (stream, "%s%s", first ? "" : ",", *sp++) < 0)
-	  {
-	    ++errors;
-	    break;
-	  }
-	first = false;
-      }
-  if (putc_unlocked (':', stream) == EOF)
-    ++errors;
+    bool first = true;
+    char **sp = g->sg_adm;
+    if (sp != NULL)
+        while (*sp != NULL) {
+            if (fprintf(stream, "%s%s", first ? "" : ",", *sp++) < 0) {
+                ++errors;
+                break;
+            }
+            first = false;
+        }
+    if (putc_unlocked(':', stream) == EOF) {
+        ++errors;
+    }
 
-  first = true;
-  sp = g->sg_mem;
-  if (sp != NULL)
-    while (*sp != NULL)
-      {
-	if (fprintf (stream, "%s%s", first ? "" : ",", *sp++) < 0)
-	  {
-	    ++errors;
-	    break;
-	  }
-	first = false;
-      }
-  if (putc_unlocked ('\n', stream) == EOF)
-    ++errors;
+    first = true;
+    sp = g->sg_mem;
+    if (sp != NULL)
+        while (*sp != NULL) {
+            if (fprintf(stream, "%s%s", first ? "" : ",", *sp++) < 0) {
+                ++errors;
+                break;
+            }
+            first = false;
+        }
+    if (putc_unlocked('\n', stream) == EOF) {
+        ++errors;
+    }
 
-  _IO_funlockfile (stream);
+    _IO_funlockfile(stream);
 
-  return errors ? -1 : 0;
+    return errors ? -1 : 0;
 }

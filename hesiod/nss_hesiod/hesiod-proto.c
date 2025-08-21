@@ -24,7 +24,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-NSS_DECLARE_MODULE_FUNCTIONS (hesiod)
+NSS_DECLARE_MODULE_FUNCTIONS(hesiod)
 
 /* Declare a parser for Hesiod protocol entries.  Although the format
    of the entries is identical to those in /etc/protocols, here is no
@@ -34,110 +34,100 @@ NSS_DECLARE_MODULE_FUNCTIONS (hesiod)
 
 struct protoent_data {};
 
-#define TRAILING_LIST_MEMBER		p_aliases
-#define TRAILING_LIST_SEPARATOR_P	isspace
+#define TRAILING_LIST_MEMBER        p_aliases
+#define TRAILING_LIST_SEPARATOR_P   isspace
 #include <nss/nss_files/files-parse.c>
 LINE_PARSER
 ("#",
- STRING_FIELD (result->p_name, isspace, 1);
- INT_FIELD (result->p_proto, isspace, 1, 10,);
- )
+ STRING_FIELD(result->p_name, isspace, 1);
+ INT_FIELD(result->p_proto, isspace, 1, 10,);
+)
 
-enum nss_status
-_nss_hesiod_setprotoent (int stayopen)
-{
-  return NSS_STATUS_SUCCESS;
+enum nss_status _nss_hesiod_setprotoent(int stayopen) {
+    return NSS_STATUS_SUCCESS;
 }
 
-enum nss_status
-_nss_hesiod_endprotoent (void)
-{
-  return NSS_STATUS_SUCCESS;
+enum nss_status _nss_hesiod_endprotoent(void) {
+    return NSS_STATUS_SUCCESS;
 }
 
-static enum nss_status
-lookup (const char *name, const char *type, struct protoent *proto,
-	char *buffer, size_t buflen, int *errnop)
-{
-  struct parser_data *data = (void *) buffer;
-  size_t linebuflen;
-  void *context;
-  char **list, **item;
-  int parse_res;
-  int found;
-  int olderr = errno;
+static enum nss_status lookup(const char *name, const char *type, struct protoent *proto,
+                              char *buffer, size_t buflen, int *errnop) {
+    struct parser_data *data = (void *) buffer;
+    size_t linebuflen;
+    void *context;
+    char **list, * *item;
+    int parse_res;
+    int found;
+    int olderr = errno;
 
-  if (hesiod_init (&context) < 0)
-    return NSS_STATUS_UNAVAIL;
-
-  list = hesiod_resolve (context, name, type);
-  if (list == NULL)
+    if (hesiod_init(&context) < 0)
     {
-      int err = errno;
-      hesiod_end (context);
-      __set_errno (olderr);
-      return err == ENOENT ? NSS_STATUS_NOTFOUND : NSS_STATUS_UNAVAIL;
+        return NSS_STATUS_UNAVAIL;
     }
 
-  linebuflen = buffer + buflen - data->linebuffer;
-
-  item = list;
-  found = 0;
-  do
+    list = hesiod_resolve(context, name, type);
+    if (list == NULL)
     {
-      size_t len = strlen (*item) + 1;
-
-      if (linebuflen < len)
-	{
-	  hesiod_free_list (context, list);
-	  hesiod_end (context);
-	  *errnop = ERANGE;
-	  return NSS_STATUS_TRYAGAIN;
-	}
-
-      memcpy (data->linebuffer, *item, len);
-
-      parse_res = parse_line (buffer, proto, data, buflen, errnop);
-      if (parse_res == -1)
-	{
-	  hesiod_free_list (context, list);
-	  hesiod_end (context);
-	  return NSS_STATUS_TRYAGAIN;
-	}
-
-      if (parse_res > 0)
-	found = 1;
-
-      ++item;
-    }
-  while (*item != NULL && !found);
-
-  hesiod_free_list (context, list);
-  hesiod_end (context);
-
-  if (found == 0)
-    {
-      __set_errno (olderr);
-      return NSS_STATUS_NOTFOUND;
+        int err = errno;
+        hesiod_end(context);
+        __set_errno(olderr);
+        return err == ENOENT ? NSS_STATUS_NOTFOUND : NSS_STATUS_UNAVAIL;
     }
 
-  return NSS_STATUS_SUCCESS;
+    linebuflen = buffer + buflen - data->linebuffer;
+
+    item = list;
+    found = 0;
+    do
+    {
+        size_t len = strlen(*item) + 1;
+
+        if (linebuflen < len) {
+            hesiod_free_list(context, list);
+            hesiod_end(context);
+            *errnop = ERANGE;
+            return NSS_STATUS_TRYAGAIN;
+        }
+
+        memcpy(data->linebuffer, *item, len);
+
+        parse_res = parse_line(buffer, proto, data, buflen, errnop);
+        if (parse_res == -1) {
+            hesiod_free_list(context, list);
+            hesiod_end(context);
+            return NSS_STATUS_TRYAGAIN;
+        }
+
+        if (parse_res > 0) {
+            found = 1;
+        }
+
+        ++item;
+    } while (*item != NULL && !found);
+
+    hesiod_free_list(context, list);
+    hesiod_end(context);
+
+    if (found == 0)
+    {
+        __set_errno(olderr);
+        return NSS_STATUS_NOTFOUND;
+    }
+
+    return NSS_STATUS_SUCCESS;
 }
 
-enum nss_status
-_nss_hesiod_getprotobyname_r (const char *name, struct protoent *proto,
-			      char *buffer, size_t buflen, int *errnop)
-{
-  return lookup (name, "protocol", proto, buffer, buflen, errnop);
+enum nss_status _nss_hesiod_getprotobyname_r(const char *name, struct protoent *proto,
+        char *buffer, size_t buflen, int *errnop) {
+    return lookup(name, "protocol", proto, buffer, buflen, errnop);
 }
 
-enum nss_status
-_nss_hesiod_getprotobynumber_r (const int protocol, struct protoent *proto,
-				char *buffer, size_t buflen, int *errnop)
-{
-  char protostr[21];
+enum nss_status _nss_hesiod_getprotobynumber_r(const int protocol, struct protoent *proto,
+        char *buffer, size_t buflen, int *errnop) {
+    char protostr[21];
 
-  snprintf (protostr, sizeof protostr, "%d", protocol);
+    snprintf(protostr, sizeof protostr, "%d", protocol);
 
-  return lookup (protostr, "protonum", proto, buffer, buflen, errnop);
+    return lookup(protostr, "protonum", proto, buffer, buflen, errnop);
 }

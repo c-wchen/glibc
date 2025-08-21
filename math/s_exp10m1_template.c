@@ -22,24 +22,22 @@
 #include <math-underflow.h>
 
 FLOAT
-M_DECL_FUNC (__exp10m1) (FLOAT x)
+M_DECL_FUNC(__exp10m1)(FLOAT x)
 {
-  if (isgreaterequal (x, M_LIT (-0.5)) && islessequal (x, M_LIT (0.5)))
-    {
-      FLOAT ret = M_SUF (__expm1) (M_MLIT (M_LN10) * x);
-      math_check_force_underflow (ret);
-      return ret;
+    if (isgreaterequal(x, M_LIT(-0.5)) && islessequal(x, M_LIT(0.5))) {
+        FLOAT ret = M_SUF(__expm1)(M_MLIT(M_LN10) * x);
+        math_check_force_underflow(ret);
+        return ret;
+    } else if (isgreater(x, M_MANT_DIG / 3 + M_LIT(2.0))) {
+        FLOAT ret = M_SUF(__ieee754_exp10)(x);
+        if (!isfinite(ret) && isfinite(x)) {
+            __set_errno(ERANGE);
+        }
+        return ret;
+    } else if (isless(x, -(M_MANT_DIG / 3) - M_LIT(2.0))) {
+        return M_LIT(-1.0);
+    } else {
+        return M_SUF(__ieee754_exp10)(x) - M_LIT(1.0);
     }
-  else if (isgreater (x, M_MANT_DIG / 3 + M_LIT (2.0)))
-    {
-      FLOAT ret = M_SUF (__ieee754_exp10) (x);
-      if (!isfinite (ret) && isfinite (x))
-	__set_errno (ERANGE);
-      return ret;
-    }
-  else if (isless (x, -(M_MANT_DIG / 3) - M_LIT (2.0)))
-    return M_LIT (-1.0);
-  else
-    return M_SUF (__ieee754_exp10) (x) - M_LIT (1.0);
 }
-declare_mgen_alias (__exp10m1, exp10m1);
+declare_mgen_alias(__exp10m1, exp10m1);

@@ -21,10 +21,11 @@
 #include "mathimpl.h"
 
 FLOAT
-M_DECL_FUNC (__sin) (FLOAT x)
+M_DECL_FUNC(__sin)(FLOAT x)
 {
-  if (__m81_test (x) & __M81_COND_INF)
-    __set_errno (EDOM);
-  return __m81_u(M_SUF (__sin)) (x);
+    if (__m81_test(x) & __M81_COND_INF) {
+        __set_errno(EDOM);
+    }
+    return __m81_u(M_SUF(__sin))(x);
 }
-declare_mgen_alias (__sin, sin)
+declare_mgen_alias(__sin, sin)

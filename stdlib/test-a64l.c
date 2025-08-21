@@ -21,17 +21,15 @@
 #include <string.h>
 
 /* Prototype for our test function.  */
-extern int do_test (int argc, char *argv[]);
+extern int do_test(int argc, char *argv[]);
 #include <test-skeleton.c>
 
-struct a64l_test
-{
-  const char *base64;
-  long int value;
+struct a64l_test {
+    const char *base64;
+    long int value;
 };
 
-static const struct a64l_test tests[] =
-  {
+static const struct a64l_test tests[] = {
     { "./", 64 },
     { "", 0 },
     { "/", 1 },
@@ -43,37 +41,33 @@ static const struct a64l_test tests[] =
     { "z1", 0xff },
     { "1", 0x3 },
     { NULL, 0 }
-  };
+};
 
-int
-do_test (int argc, char ** argv)
+int do_test(int argc, char **argv)
 {
-  const struct a64l_test *at;
-  long int l;
-  const char *s;
-  int status = 0;
+    const struct a64l_test *at;
+    long int l;
+    const char *s;
+    int status = 0;
 
-  for (at = tests; at->base64 != NULL; ++at)
-    {
-      printf ("a64l (\"%s\")", at->base64);
-      l = a64l (at->base64);
-      if (l == at->value)
-	puts ("\tOK");
-      else
-	{
-	  printf ("\tBAD\n  returns %ld, expected %ld\n", l, at->value);
-	  status = 1;
-	}
-      printf ("l64a (%ld)", at->value);
-      s = l64a (at->value);
-      if (strcmp (s, at->base64) == 0)
-	puts ("\tOK");
-      else
-	{
-	  printf ("\tBAD\n  returns \"%s\", expected \"%s\"\n", s, at->base64);
-	  status = 1;
-	}
+    for (at = tests; at->base64 != NULL; ++at) {
+        printf("a64l (\"%s\")", at->base64);
+        l = a64l(at->base64);
+        if (l == at->value) {
+            puts("\tOK");
+        } else {
+            printf("\tBAD\n  returns %ld, expected %ld\n", l, at->value);
+            status = 1;
+        }
+        printf("l64a (%ld)", at->value);
+        s = l64a(at->value);
+        if (strcmp(s, at->base64) == 0) {
+            puts("\tOK");
+        } else {
+            printf("\tBAD\n  returns \"%s\", expected \"%s\"\n", s, at->base64);
+            status = 1;
+        }
     }
 
-  return status ? EXIT_FAILURE : EXIT_SUCCESS;
+    return status ? EXIT_FAILURE : EXIT_SUCCESS;
 }

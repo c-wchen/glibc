@@ -26,20 +26,21 @@
 #include <libm-alias-ldouble.h>
 
 #if LIBM_SVID_COMPAT
-long double
-__exp10l (long double x)
+long double __exp10l(long double x)
 {
-  long double z = __ieee754_exp10l (x);
-  if (__builtin_expect (!isfinite (z) || z == 0, 0)
-      && isfinite (x) && _LIB_VERSION != _IEEE_)
-    /* exp10l overflow (246) if x > 0, underflow (247) if x < 0.  */
-    return __kernel_standard_l (x, x, 246 + !!signbit (x));
+    long double z = __ieee754_exp10l(x);
+    if (__builtin_expect(!isfinite(z) || z == 0, 0)
+        && isfinite(x) && _LIB_VERSION != _IEEE_)
+        /* exp10l overflow (246) if x > 0, underflow (247) if x < 0.  */
+    {
+        return __kernel_standard_l(x, x, 246 + !!signbit(x));
+    }
 
-  return z;
+    return z;
 }
-libm_alias_ldouble (__exp10, exp10)
+libm_alias_ldouble(__exp10, exp10)
 # if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_27)
-strong_alias (__exp10l, __pow10l)
-compat_symbol (libm, __pow10l, pow10l, GLIBC_2_1);
+strong_alias(__exp10l, __pow10l)
+compat_symbol(libm, __pow10l, pow10l, GLIBC_2_1);
 # endif
 #endif

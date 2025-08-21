@@ -110,7 +110,7 @@
 #endif
 
 /* Type of the control word.  */
-typedef unsigned int fpu_control_t __attribute__ ((__mode__ (__SI__)));
+typedef unsigned int fpu_control_t __attribute__((__mode__(__SI__)));
 
 /* Default control word set at startup.  */
 extern fpu_control_t __fpu_control;

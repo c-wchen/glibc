@@ -23,98 +23,93 @@
 #include <xstatconv.h>
 #include <sys/syscall.h>
 
-int
-__xstat_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
+int __xstat_conv(int vers, struct kernel_stat *kbuf, void *ubuf)
 {
-  switch (vers)
-    {
-    case _STAT_VER_KERNEL:
-      *(struct kernel_stat *) ubuf = *kbuf;
-      break;
+    switch (vers) {
+        case _STAT_VER_KERNEL:
+            *(struct kernel_stat *) ubuf = *kbuf;
+            break;
 
-    case _STAT_VER_GLIBC2:
-      {
-	struct glibc2_stat *buf = ubuf;
+        case _STAT_VER_GLIBC2: {
+            struct glibc2_stat *buf = ubuf;
 
-	buf->st_dev = kbuf->st_dev;
-	buf->st_ino = kbuf->st_ino;
-	buf->st_mode = kbuf->st_mode;
-	buf->st_nlink = kbuf->st_nlink;
-	buf->st_uid = kbuf->st_uid;
-	buf->st_gid = kbuf->st_gid;
-	buf->st_rdev = kbuf->st_rdev;
-	buf->st_size = kbuf->st_size;
-	buf->st_atime_sec = kbuf->st_atime_sec;
-	buf->st_mtime_sec = kbuf->st_mtime_sec;
-	buf->st_ctime_sec = kbuf->st_ctime_sec;
-	buf->st_blksize = kbuf->st_blksize;
-	buf->st_blocks = kbuf->st_blocks;
-	buf->st_flags = kbuf->st_flags;
-	buf->st_gen = kbuf->st_gen;
-      }
-      break;
+            buf->st_dev = kbuf->st_dev;
+            buf->st_ino = kbuf->st_ino;
+            buf->st_mode = kbuf->st_mode;
+            buf->st_nlink = kbuf->st_nlink;
+            buf->st_uid = kbuf->st_uid;
+            buf->st_gid = kbuf->st_gid;
+            buf->st_rdev = kbuf->st_rdev;
+            buf->st_size = kbuf->st_size;
+            buf->st_atime_sec = kbuf->st_atime_sec;
+            buf->st_mtime_sec = kbuf->st_mtime_sec;
+            buf->st_ctime_sec = kbuf->st_ctime_sec;
+            buf->st_blksize = kbuf->st_blksize;
+            buf->st_blocks = kbuf->st_blocks;
+            buf->st_flags = kbuf->st_flags;
+            buf->st_gen = kbuf->st_gen;
+        }
+        break;
 
-    case _STAT_VER_GLIBC2_1:
-      {
-	struct glibc21_stat *buf = ubuf;
+        case _STAT_VER_GLIBC2_1: {
+            struct glibc21_stat *buf = ubuf;
 
-	buf->st_dev = kbuf->st_dev;
-	buf->st_ino = kbuf->st_ino;
-	buf->st_mode = kbuf->st_mode;
-	buf->st_nlink = kbuf->st_nlink;
-	buf->st_uid = kbuf->st_uid;
-	buf->st_gid = kbuf->st_gid;
-	buf->st_rdev = kbuf->st_rdev;
-	buf->st_size = kbuf->st_size;
-	buf->st_atime_sec = kbuf->st_atime_sec;
-	buf->st_mtime_sec = kbuf->st_mtime_sec;
-	buf->st_ctime_sec = kbuf->st_ctime_sec;
-	buf->st_blocks = kbuf->st_blocks;
-	buf->st_blksize = kbuf->st_blksize;
-	buf->st_flags = kbuf->st_flags;
-	buf->st_gen = kbuf->st_gen;
-	buf->__pad3 = 0;
-	buf->__glibc_reserved[0] = 0;
-	buf->__glibc_reserved[1] = 0;
-	buf->__glibc_reserved[2] = 0;
-	buf->__glibc_reserved[3] = 0;
-      }
-      break;
+            buf->st_dev = kbuf->st_dev;
+            buf->st_ino = kbuf->st_ino;
+            buf->st_mode = kbuf->st_mode;
+            buf->st_nlink = kbuf->st_nlink;
+            buf->st_uid = kbuf->st_uid;
+            buf->st_gid = kbuf->st_gid;
+            buf->st_rdev = kbuf->st_rdev;
+            buf->st_size = kbuf->st_size;
+            buf->st_atime_sec = kbuf->st_atime_sec;
+            buf->st_mtime_sec = kbuf->st_mtime_sec;
+            buf->st_ctime_sec = kbuf->st_ctime_sec;
+            buf->st_blocks = kbuf->st_blocks;
+            buf->st_blksize = kbuf->st_blksize;
+            buf->st_flags = kbuf->st_flags;
+            buf->st_gen = kbuf->st_gen;
+            buf->__pad3 = 0;
+            buf->__glibc_reserved[0] = 0;
+            buf->__glibc_reserved[1] = 0;
+            buf->__glibc_reserved[2] = 0;
+            buf->__glibc_reserved[3] = 0;
+        }
+        break;
 
-    case _STAT_VER_GLIBC2_3_4:
-      {
-	struct stat64 *buf = ubuf;
+        case _STAT_VER_GLIBC2_3_4: {
+            struct stat64 *buf = ubuf;
 
-	buf->st_dev = kbuf->st_dev;
-	buf->st_ino = kbuf->st_ino;
-	buf->st_rdev = kbuf->st_rdev;
-	buf->st_size = kbuf->st_size;
-	buf->st_blocks = kbuf->st_blocks;
+            buf->st_dev = kbuf->st_dev;
+            buf->st_ino = kbuf->st_ino;
+            buf->st_rdev = kbuf->st_rdev;
+            buf->st_size = kbuf->st_size;
+            buf->st_blocks = kbuf->st_blocks;
 
-	buf->st_mode = kbuf->st_mode;
-	buf->st_uid = kbuf->st_uid;
-	buf->st_gid = kbuf->st_gid;
-	buf->st_blksize = kbuf->st_blksize;
-	buf->st_nlink = kbuf->st_nlink;
-	buf->__pad0 = 0;
+            buf->st_mode = kbuf->st_mode;
+            buf->st_uid = kbuf->st_uid;
+            buf->st_gid = kbuf->st_gid;
+            buf->st_blksize = kbuf->st_blksize;
+            buf->st_nlink = kbuf->st_nlink;
+            buf->__pad0 = 0;
 
-	buf->st_atim.tv_sec = kbuf->st_atime_sec;
-	buf->st_atim.tv_nsec = 0;
-	buf->st_mtim.tv_sec = kbuf->st_mtime_sec;
-	buf->st_mtim.tv_nsec = 0;
-	buf->st_ctim.tv_sec = kbuf->st_ctime_sec;
-	buf->st_ctim.tv_nsec = 0;
+            buf->st_atim.tv_sec = kbuf->st_atime_sec;
+            buf->st_atim.tv_nsec = 0;
+            buf->st_mtim.tv_sec = kbuf->st_mtime_sec;
+            buf->st_mtim.tv_nsec = 0;
+            buf->st_ctim.tv_sec = kbuf->st_ctime_sec;
+            buf->st_ctim.tv_nsec = 0;
 
-	buf->__glibc_reserved[0] = 0;
-	buf->__glibc_reserved[1] = 0;
-	buf->__glibc_reserved[2] = 0;
-      }
-      break;
+            buf->__glibc_reserved[0] = 0;
+            buf->__glibc_reserved[1] = 0;
+            buf->__glibc_reserved[2] = 0;
+        }
+        break;
 
-    default:
-      __set_errno (EINVAL);
-      return -1;
+        default:
+            __set_errno(EINVAL);
+            return -1;
     }
 
-  return 0;
+    return 0;
 }

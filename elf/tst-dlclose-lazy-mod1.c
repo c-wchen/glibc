@@ -19,18 +19,19 @@
 /* This function is called from exported_function below.  It is only
    defined in this module.  The weak attribute mimics how G++
    implements vague linkage for C++.  */
-void __attribute__ ((weak))
-lazily_bound_exported_function (void)
+void __attribute__((weak))
+lazily_bound_exported_function(void)
 {
 }
 
 /* Called from tst-dlclose-lazy-mod2.so.  */
-void
-exported_function (int call_it)
+void exported_function(int call_it)
 {
-  if (call_it)
-    /* Previous to the fix this would crash when called during dlclose
-       since symbols from the DSO were no longer available for binding
-       (bug 30425) after the DSO started being closed by dlclose.  */
-    lazily_bound_exported_function ();
+    if (call_it)
+        /* Previous to the fix this would crash when called during dlclose
+           since symbols from the DSO were no longer available for binding
+           (bug 30425) after the DSO started being closed by dlclose.  */
+    {
+        lazily_bound_exported_function();
+    }
 }

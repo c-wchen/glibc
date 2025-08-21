@@ -20,17 +20,16 @@
 #include <sys/fanotify.h>
 #include <sysdep.h>
 
-int
-__fanotify_mark (int fd, unsigned int flags, uint64_t mask, int dirfd,
-	         const char *pathname)
+int __fanotify_mark(int fd, unsigned int flags, uint64_t mask, int dirfd,
+                    const char *pathname)
 {
-  return INLINE_SYSCALL_CALL (fanotify_mark, fd, flags, SYSCALL_LL64 (mask),
-			      dirfd, pathname);
+    return INLINE_SYSCALL_CALL(fanotify_mark, fd, flags, SYSCALL_LL64(mask),
+                               dirfd, pathname);
 }
 #ifdef VERSION_fanotify_mark
 # include <shlib-compat.h>
-versioned_symbol (libc, __fanotify_mark, fanotify_mark,
-		  VERSION_fanotify_mark);
+versioned_symbol(libc, __fanotify_mark, fanotify_mark,
+                 VERSION_fanotify_mark);
 #else
-weak_alias (__fanotify_mark, fanotify_mark)
+weak_alias(__fanotify_mark, fanotify_mark)
 #endif

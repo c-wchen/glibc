@@ -19,14 +19,12 @@
 /* foo calls bar with indirect branch via PLT.  PLT rewrite should
    change it to direct branch.  */
 
-const char *
-bar (void)
+const char *bar(void)
 {
-  return "PLT rewrite works";
+    return "PLT rewrite works";
 }
 
-const char *
-foo (void)
+const char *foo(void)
 {
-  return bar ();
+    return bar();
 }

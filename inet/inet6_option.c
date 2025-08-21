@@ -22,58 +22,58 @@
 #include <sys/param.h>
 
 
-static void
-add_pad (struct cmsghdr *cmsg, int len)
+static void add_pad(struct cmsghdr *cmsg, int len)
 {
-  unsigned char *p = CMSG_DATA (cmsg) + cmsg->cmsg_len - CMSG_LEN (0);
+    unsigned char *p = CMSG_DATA(cmsg) + cmsg->cmsg_len - CMSG_LEN(0);
 
-  if (len == 1)
-    /* Special handling for 1, a one-byte solution.  */
-    *p++ = IP6OPT_PAD1;
-  else if (len != 0)
+    if (len == 1)
+        /* Special handling for 1, a one-byte solution.  */
     {
-      /* Multibyte padding.  */
-      *p++ = IP6OPT_PADN;
-      *p++ = len - 2;	/* Discount the two header bytes.  */
-      /* The rest is filled with zero.  */
-      memset (p, '\0', len - 2);
-      p += len - 2;
+        *p++ = IP6OPT_PAD1;
+    } else if (len != 0) {
+        /* Multibyte padding.  */
+        *p++ = IP6OPT_PADN;
+        *p++ = len - 2;   /* Discount the two header bytes.  */
+        /* The rest is filled with zero.  */
+        memset(p, '\0', len - 2);
+        p += len - 2;
     }
 
-  /* Account for the bytes.  */
-  cmsg->cmsg_len += len;
+    /* Account for the bytes.  */
+    cmsg->cmsg_len += len;
 }
 
 
-static int
-get_opt_end (const uint8_t **result, const uint8_t *startp,
-	     const uint8_t *endp)
+static int get_opt_end(const uint8_t **result, const uint8_t *startp,
+                       const uint8_t *endp)
 {
-  if (startp >= endp)
-    /* Out of bounds.  */
-    return -1;
-
-  if (*startp == IP6OPT_PAD1)
+    if (startp >= endp)
+        /* Out of bounds.  */
     {
-      /* Just this one byte.  */
-      *result = startp + 1;
-      return 0;
+        return -1;
     }
 
-  /* Now we know there must be at least two bytes.  */
-  if (startp + 2 > endp
-      /* Now we can get the length byte.  */
-      || startp + startp[1] + 2 > endp)
-    return -1;
+    if (*startp == IP6OPT_PAD1) {
+        /* Just this one byte.  */
+        *result = startp + 1;
+        return 0;
+    }
 
-  *result = startp + startp[1] + 2;
+    /* Now we know there must be at least two bytes.  */
+    if (startp + 2 > endp
+        /* Now we can get the length byte.  */
+        || startp + startp[1] + 2 > endp) {
+        return -1;
+    }
 
-  return 0;
+    *result = startp + startp[1] + 2;
+
+    return 0;
 }
 
 
-static uint8_t *option_alloc (struct cmsghdr *cmsg, int datalen, int multx,
-			      int plusy);
+static uint8_t *option_alloc(struct cmsghdr *cmsg, int datalen, int multx,
+                             int plusy);
 
 
 /* RFC 2292, 6.3.1
@@ -85,16 +85,15 @@ static uint8_t *option_alloc (struct cmsghdr *cmsg, int datalen, int multx,
    defining the option, which must include any pad bytes at the
    beginning (the value y in the alignment term "xn + y"), the type
    byte, the length byte, and the option data.  */
-int
-inet6_option_space (int nbytes)
+int inet6_option_space(int nbytes)
 {
-  /* Add room for the extension header.  */
-  nbytes += sizeof (struct ip6_ext);
+    /* Add room for the extension header.  */
+    nbytes += sizeof(struct ip6_ext);
 
-  return CMSG_SPACE (roundup (nbytes, 8));
+    return CMSG_SPACE(roundup(nbytes, 8));
 }
-link_warning (inet6_option_space,
-	      "inet6_option_space is obsolete, use the RFC 3542 interfaces")
+link_warning(inet6_option_space,
+             "inet6_option_space is obsolete, use the RFC 3542 interfaces")
 
 
 /* RFC 2292, 6.3.2
@@ -103,31 +102,32 @@ link_warning (inet6_option_space,
    contain either Hop-by-Hop or Destination options.  It returns 0 on
    success or -1 on an error.  */
 int
-inet6_option_init (void *bp, struct cmsghdr **cmsgp, int type)
+inet6_option_init(void *bp, struct cmsghdr **cmsgp, int type)
 {
-  /* Only Hop-by-Hop or Destination options allowed.  */
-  if (type != IPV6_HOPOPTS && type != IPV6_DSTOPTS)
-    return -1;
+    /* Only Hop-by-Hop or Destination options allowed.  */
+    if (type != IPV6_HOPOPTS && type != IPV6_DSTOPTS) {
+        return -1;
+    }
 
-  /* BP is a pointer to the previously allocated space.  */
-  struct cmsghdr *newp = (struct cmsghdr *) bp;
+    /* BP is a pointer to the previously allocated space.  */
+    struct cmsghdr *newp = (struct cmsghdr *) bp;
 
-  /* Initialize the message header.
+    /* Initialize the message header.
 
-     Length: No data yet, only the cmsghdr struct.  */
-  newp->cmsg_len = CMSG_LEN (0);
-  /* Originating protocol: obviously IPv6.  */
-  newp->cmsg_level = IPPROTO_IPV6;
-  /* Message type.  */
-  newp->cmsg_type = type;
+       Length: No data yet, only the cmsghdr struct.  */
+    newp->cmsg_len = CMSG_LEN(0);
+    /* Originating protocol: obviously IPv6.  */
+    newp->cmsg_level = IPPROTO_IPV6;
+    /* Message type.  */
+    newp->cmsg_type = type;
 
-  /* Pass up the result.  */
-  *cmsgp = newp;
+    /* Pass up the result.  */
+    *cmsgp = newp;
 
-  return 0;
+    return 0;
 }
-link_warning (inet6_option_init,
-	      "inet6_option_init is obsolete, use the RFC 3542 interfaces")
+link_warning(inet6_option_init,
+             "inet6_option_init is obsolete, use the RFC 3542 interfaces")
 
 
 /* RFC 2292, 6.3.3
@@ -137,29 +137,31 @@ link_warning (inet6_option_init,
    inet6_option_init().  This function returns 0 if it succeeds or -1 on
    an error.  */
 int
-inet6_option_append (struct cmsghdr *cmsg, const uint8_t *typep, int multx,
-		     int plusy)
+inet6_option_append(struct cmsghdr *cmsg, const uint8_t *typep, int multx,
+                    int plusy)
 {
-  /* typep is a pointer to the 8-bit option type.  It is assumed that this
-     field is immediately followed by the 8-bit option data length field,
-     which is then followed immediately by the option data.
+    /* typep is a pointer to the 8-bit option type.  It is assumed that this
+       field is immediately followed by the 8-bit option data length field,
+       which is then followed immediately by the option data.
 
-     The option types IP6OPT_PAD1 and IP6OPT_PADN also must be handled.  */
-  int len = typep[0] == IP6OPT_PAD1 ? 1 : typep[1] + 2;
+       The option types IP6OPT_PAD1 and IP6OPT_PADN also must be handled.  */
+    int len = typep[0] == IP6OPT_PAD1 ? 1 : typep[1] + 2;
 
-  /* Get the pointer to the space in the message.  */
-  uint8_t *ptr = option_alloc (cmsg, len, multx, plusy);
-  if (ptr == NULL)
-    /* Some problem with the parameters.  */
-    return -1;
+    /* Get the pointer to the space in the message.  */
+    uint8_t *ptr = option_alloc(cmsg, len, multx, plusy);
+    if (ptr == NULL)
+        /* Some problem with the parameters.  */
+    {
+        return -1;
+    }
 
-  /* Copy the content.  */
-  memcpy (ptr, typep, len);
+    /* Copy the content.  */
+    memcpy(ptr, typep, len);
 
-  return 0;
+    return 0;
 }
-link_warning (inet6_option_append,
-	      "inet6_option_append is obsolete, use the RFC 3542 interfaces")
+link_warning(inet6_option_append,
+             "inet6_option_append is obsolete, use the RFC 3542 interfaces")
 
 
 /* RFC 2292, 6.3.4
@@ -170,56 +172,57 @@ link_warning (inet6_option_append,
    option type field that starts the option on success, or NULL on an
    error.  */
 static uint8_t *
-option_alloc (struct cmsghdr *cmsg, int datalen, int multx, int plusy)
+option_alloc(struct cmsghdr *cmsg, int datalen, int multx, int plusy)
 {
-  /* The RFC limits the value of the alignment values.  */
-  if ((multx != 1 && multx != 2 && multx != 4 && multx != 8)
-      || ! (plusy >= 0 && plusy <= 7))
-    return NULL;
-
-  /* Current data size.  */
-  int dsize = cmsg->cmsg_len - CMSG_LEN (0);
-
-  /* The first two bytes of the option are for the extended header.  */
-  if (__glibc_unlikely (dsize == 0))
-    {
-      cmsg->cmsg_len += sizeof (struct ip6_ext);
-      dsize = sizeof (struct ip6_ext);
+    /* The RFC limits the value of the alignment values.  */
+    if ((multx != 1 && multx != 2 && multx != 4 && multx != 8)
+        || !(plusy >= 0 && plusy <= 7)) {
+        return NULL;
     }
 
-  /* First add padding.  */
-  add_pad (cmsg, ((multx - (dsize & (multx - 1))) & (multx - 1)) + plusy);
+    /* Current data size.  */
+    int dsize = cmsg->cmsg_len - CMSG_LEN(0);
 
-  /* Return the pointer to the start of the option space.  */
-  uint8_t *result = CMSG_DATA (cmsg) + cmsg->cmsg_len - CMSG_LEN (0);
-  cmsg->cmsg_len += datalen;
+    /* The first two bytes of the option are for the extended header.  */
+    if (__glibc_unlikely(dsize == 0)) {
+        cmsg->cmsg_len += sizeof(struct ip6_ext);
+        dsize = sizeof(struct ip6_ext);
+    }
 
-  /* The extended option header length is measured in 8-byte groups.
-     To represent the current length we might have to add padding.  */
-  dsize = cmsg->cmsg_len - CMSG_LEN (0);
-  add_pad (cmsg, (8 - (dsize & (8 - 1))) & (8 - 1));
+    /* First add padding.  */
+    add_pad(cmsg, ((multx - (dsize & (multx - 1))) & (multx - 1)) + plusy);
 
-  /* Record the new length of the option.  */
-  assert (((cmsg->cmsg_len - CMSG_LEN (0)) % 8) == 0);
-  int len8b = (cmsg->cmsg_len - CMSG_LEN (0)) / 8 - 1;
-  if (len8b >= 256)
-    /* Too long.  */
-    return NULL;
+    /* Return the pointer to the start of the option space.  */
+    uint8_t *result = CMSG_DATA(cmsg) + cmsg->cmsg_len - CMSG_LEN(0);
+    cmsg->cmsg_len += datalen;
 
-  struct ip6_ext *ie = (void *) CMSG_DATA (cmsg);
-  ie->ip6e_len = len8b;
+    /* The extended option header length is measured in 8-byte groups.
+       To represent the current length we might have to add padding.  */
+    dsize = cmsg->cmsg_len - CMSG_LEN(0);
+    add_pad(cmsg, (8 - (dsize & (8 - 1))) & (8 - 1));
 
-  return result;
+    /* Record the new length of the option.  */
+    assert(((cmsg->cmsg_len - CMSG_LEN(0)) % 8) == 0);
+    int len8b = (cmsg->cmsg_len - CMSG_LEN(0)) / 8 - 1;
+    if (len8b >= 256)
+        /* Too long.  */
+    {
+        return NULL;
+    }
+
+    struct ip6_ext *ie = (void *) CMSG_DATA(cmsg);
+    ie->ip6e_len = len8b;
+
+    return result;
 }
 
 
-uint8_t *
-inet6_option_alloc (struct cmsghdr *cmsg, int datalen, int multx, int plusy)
+uint8_t *inet6_option_alloc(struct cmsghdr *cmsg, int datalen, int multx, int plusy)
 {
-  return option_alloc (cmsg, datalen, multx, plusy);
+    return option_alloc(cmsg, datalen, multx, plusy);
 }
-link_warning (inet6_option_alloc,
-	      "inet6_option_alloc is obsolete, use the RFC 3542 interfaces")
+link_warning(inet6_option_alloc,
+             "inet6_option_alloc is obsolete, use the RFC 3542 interfaces")
 
 
 /* RFC 2292, 6.3.5
@@ -232,51 +235,56 @@ link_warning (inet6_option_alloc,
    to be processed, the return value is -1 and *tptrp is NULL.  If an
    error occurs, the return value is -1 and *tptrp is not NULL.  */
 int
-inet6_option_next (const struct cmsghdr *cmsg, uint8_t **tptrp)
+inet6_option_next(const struct cmsghdr *cmsg, uint8_t **tptrp)
 {
-  /* Make sure it is an option of the right type.  */
-  if (cmsg->cmsg_level != IPPROTO_IPV6
-      || (cmsg->cmsg_type != IPV6_HOPOPTS && cmsg->cmsg_type != IPV6_DSTOPTS))
-    return -1;
-
-  /* Pointer to the extension header.  We only compute the address, we
-     don't access anything yet.  */
-  const struct ip6_ext *ip6e = (const struct ip6_ext *) CMSG_DATA (cmsg);
-
-  /* Make sure the message is long enough.  */
-  if (cmsg->cmsg_len < CMSG_LEN (sizeof (struct ip6_ext))
-      /* Now we can access the extension header.  */
-      || cmsg->cmsg_len < CMSG_LEN ((ip6e->ip6e_len + 1) * 8))
-    /* Too small.  */
-    return -1;
-
-  /* Determine the address of the byte past the message.  */
-  const uint8_t *endp = CMSG_DATA (cmsg) + (ip6e->ip6e_len + 1) * 8;
-
-  const uint8_t *result;
-  if (*tptrp == NULL)
-    /* This is the first call, return the first option if there is one.  */
-    result = (const uint8_t *) (ip6e + 1);
-  else
-    {
-      /* Make sure *TPTRP points to a beginning of a new option in
-	 the message.  The upper limit is checked in get_opt_end.  */
-      if (*tptrp < (const uint8_t *) (ip6e + 1))
-	return -1;
-
-      /* Get the beginning of the next option.  */
-      if (get_opt_end (&result, *tptrp, endp) != 0)
-	return -1;
+    /* Make sure it is an option of the right type.  */
+    if (cmsg->cmsg_level != IPPROTO_IPV6
+        || (cmsg->cmsg_type != IPV6_HOPOPTS && cmsg->cmsg_type != IPV6_DSTOPTS)) {
+        return -1;
     }
 
-  /* We know where the next option starts.  */
-  *tptrp = (uint8_t *) result;
+    /* Pointer to the extension header.  We only compute the address, we
+       don't access anything yet.  */
+    const struct ip6_ext *ip6e = (const struct ip6_ext *) CMSG_DATA(cmsg);
 
-  /* Check the option is fully represented in the message.  */
-  return get_opt_end (&result, result, endp);
+    /* Make sure the message is long enough.  */
+    if (cmsg->cmsg_len < CMSG_LEN(sizeof(struct ip6_ext))
+        /* Now we can access the extension header.  */
+        || cmsg->cmsg_len < CMSG_LEN((ip6e->ip6e_len + 1) * 8))
+        /* Too small.  */
+    {
+        return -1;
+    }
+
+    /* Determine the address of the byte past the message.  */
+    const uint8_t *endp = CMSG_DATA(cmsg) + (ip6e->ip6e_len + 1) * 8;
+
+    const uint8_t *result;
+    if (*tptrp == NULL)
+        /* This is the first call, return the first option if there is one.  */
+    {
+        result = (const uint8_t *)(ip6e + 1);
+    } else {
+        /* Make sure *TPTRP points to a beginning of a new option in
+        the message.  The upper limit is checked in get_opt_end.  */
+        if (*tptrp < (const uint8_t *)(ip6e + 1)) {
+            return -1;
+        }
+
+        /* Get the beginning of the next option.  */
+        if (get_opt_end(&result, *tptrp, endp) != 0) {
+            return -1;
+        }
+    }
+
+    /* We know where the next option starts.  */
+    *tptrp = (uint8_t *) result;
+
+    /* Check the option is fully represented in the message.  */
+    return get_opt_end(&result, result, endp);
 }
-link_warning (inet6_option_next,
-	      "inet6_option_next is obsolete, use the RFC 3542 interfaces")
+link_warning(inet6_option_next,
+             "inet6_option_next is obsolete, use the RFC 3542 interfaces")
 
 
 /* RFC 2292, 6.3.6
@@ -288,60 +296,64 @@ link_warning (inet6_option_next,
    pointer to cmsghdr structure of which cmsg_level equals IPPROTO_IPV6
    and cmsg_type equals either IPV6_HOPOPTS or IPV6_DSTOPTS.  */
 int
-inet6_option_find (const struct cmsghdr *cmsg, uint8_t **tptrp, int type)
+inet6_option_find(const struct cmsghdr *cmsg, uint8_t **tptrp, int type)
 {
-  /* Make sure it is an option of the right type.  */
-  if (cmsg->cmsg_level != IPPROTO_IPV6
-      || (cmsg->cmsg_type != IPV6_HOPOPTS && cmsg->cmsg_type != IPV6_DSTOPTS))
-    return -1;
-
-  /* Pointer to the extension header.  We only compute the address, we
-     don't access anything yet.  */
-  const struct ip6_ext *ip6e = (const struct ip6_ext *) CMSG_DATA (cmsg);
-
-  /* Make sure the message is long enough.  */
-  if (cmsg->cmsg_len < CMSG_LEN (sizeof (struct ip6_ext))
-      /* Now we can access the extension header.  */
-      || cmsg->cmsg_len < CMSG_LEN ((ip6e->ip6e_len + 1) * 8))
-    /* Too small.  */
-    return -1;
-
-  /* Determine the address of the byte past the message.  */
-  const uint8_t *endp = CMSG_DATA (cmsg) + (ip6e->ip6e_len + 1) * 8;
-
-  const uint8_t *next;
-  if (*tptrp == NULL)
-    /* This is the first call, return the first option if there is one.  */
-    next = (const uint8_t *) (ip6e + 1);
-  else
-    {
-      /* Make sure *TPTRP points to a beginning of a new option in
-	 the message.  The upper limit is checked in get_opt_end.  */
-      if (*tptrp < (const uint8_t *) (ip6e + 1))
-	return -1;
-
-      /* Get the beginning of the next option.  */
-      if (get_opt_end (&next, *tptrp, endp) != 0)
-	return -1;
+    /* Make sure it is an option of the right type.  */
+    if (cmsg->cmsg_level != IPPROTO_IPV6
+        || (cmsg->cmsg_type != IPV6_HOPOPTS && cmsg->cmsg_type != IPV6_DSTOPTS)) {
+        return -1;
     }
 
-  /* Now search for the appropriate typed entry.  */
-  const uint8_t *result;
-  do
+    /* Pointer to the extension header.  We only compute the address, we
+       don't access anything yet.  */
+    const struct ip6_ext *ip6e = (const struct ip6_ext *) CMSG_DATA(cmsg);
+
+    /* Make sure the message is long enough.  */
+    if (cmsg->cmsg_len < CMSG_LEN(sizeof(struct ip6_ext))
+        /* Now we can access the extension header.  */
+        || cmsg->cmsg_len < CMSG_LEN((ip6e->ip6e_len + 1) * 8))
+        /* Too small.  */
     {
-      result = next;
-
-      /* Get the end of this entry.  */
-      if (get_opt_end (&next, result, endp) != 0)
-	return -1;
+        return -1;
     }
-  while (*result != type);
 
-  /* We know where the next option starts.  */
-  *tptrp = (uint8_t *) result;
+    /* Determine the address of the byte past the message.  */
+    const uint8_t *endp = CMSG_DATA(cmsg) + (ip6e->ip6e_len + 1) * 8;
 
-  /* Success.  */
-  return 0;
+    const uint8_t *next;
+    if (*tptrp == NULL)
+        /* This is the first call, return the first option if there is one.  */
+    {
+        next = (const uint8_t *)(ip6e + 1);
+    } else {
+        /* Make sure *TPTRP points to a beginning of a new option in
+        the message.  The upper limit is checked in get_opt_end.  */
+        if (*tptrp < (const uint8_t *)(ip6e + 1)) {
+            return -1;
+        }
+
+        /* Get the beginning of the next option.  */
+        if (get_opt_end(&next, *tptrp, endp) != 0) {
+            return -1;
+        }
+    }
+
+    /* Now search for the appropriate typed entry.  */
+    const uint8_t *result;
+    do {
+        result = next;
+
+        /* Get the end of this entry.  */
+        if (get_opt_end(&next, result, endp) != 0) {
+            return -1;
+        }
+    } while (*result != type);
+
+    /* We know where the next option starts.  */
+    *tptrp = (uint8_t *) result;
+
+    /* Success.  */
+    return 0;
 }
-link_warning (inet6_option_find,
-	      "inet6_option_find is obsolete, use the RFC 3542 interfaces")
+link_warning(inet6_option_find,
+             "inet6_option_find is obsolete, use the RFC 3542 interfaces")

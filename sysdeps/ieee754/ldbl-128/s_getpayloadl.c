@@ -21,42 +21,39 @@
 #include <libm-alias-ldouble.h>
 #include <stdint.h>
 
-_Float128
-__getpayloadl (const _Float128 *x)
+_Float128 __getpayloadl(const _Float128 *x)
 {
-  uint64_t hx, lx;
-  GET_LDOUBLE_WORDS64 (hx, lx, *x);
-  if ((hx & 0x7fff000000000000ULL) != 0x7fff000000000000ULL
-      || ((hx & 0xffffffffffffULL) | lx) == 0)
-    return -1;
-  hx &= 0x7fffffffffffULL;
-  /* Construct the representation of the return value directly, since
-     128-bit integers may not be available.  */
-  int lz;
-  if (hx == 0)
-    {
-      if (lx == 0)
-	return 0.0L;
-      else
-	lz = __builtin_clzll (lx) + 64;
+    uint64_t hx, lx;
+    GET_LDOUBLE_WORDS64(hx, lx, *x);
+    if ((hx & 0x7fff000000000000ULL) != 0x7fff000000000000ULL
+        || ((hx & 0xffffffffffffULL) | lx) == 0) {
+        return -1;
     }
-  else
-    lz = __builtin_clzll (hx);
-  int shift = lz - 15;
-  if (shift >= 64)
-    {
-      hx = lx << (shift - 64);
-      lx = 0;
+    hx &= 0x7fffffffffffULL;
+    /* Construct the representation of the return value directly, since
+       128-bit integers may not be available.  */
+    int lz;
+    if (hx == 0) {
+        if (lx == 0) {
+            return 0.0L;
+        } else {
+            lz = __builtin_clzll(lx) + 64;
+        }
+    } else {
+        lz = __builtin_clzll(hx);
     }
-  else
-    {
-      /* 2 <= SHIFT <= 63.  */
-      hx = (hx << shift) | (lx >> (64 - shift));
-      lx <<= shift;
+    int shift = lz - 15;
+    if (shift >= 64) {
+        hx = lx << (shift - 64);
+        lx = 0;
+    } else {
+        /* 2 <= SHIFT <= 63.  */
+        hx = (hx << shift) | (lx >> (64 - shift));
+        lx <<= shift;
     }
-  hx = (hx & 0xffffffffffffULL) | ((0x3fffULL + 127 - lz) << 48);
-  _Float128 ret;
-  SET_LDOUBLE_WORDS64 (ret, hx, lx);
-  return ret;
+    hx = (hx & 0xffffffffffffULL) | ((0x3fffULL + 127 - lz) << 48);
+    _Float128 ret;
+    SET_LDOUBLE_WORDS64(ret, hx, lx);
+    return ret;
 }
-libm_alias_ldouble (__getpayload, getpayload)
+libm_alias_ldouble(__getpayload, getpayload)

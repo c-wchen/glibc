@@ -24,13 +24,12 @@
    peer and *ADDR_LEN to the address's actual length, and return the
    new socket's descriptor, or -1 for errors.  The operation can be influenced
    by the FLAGS parameter.  */
-int
-__libc_accept4 (int fd, __SOCKADDR_ARG addr, socklen_t *addr_len, int flags)
+int __libc_accept4(int fd, __SOCKADDR_ARG addr, socklen_t *addr_len, int flags)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-weak_alias (__libc_accept4, accept4)
+weak_alias(__libc_accept4, accept4)
 
 
-stub_warning (accept4)
+stub_warning(accept4)

@@ -25,28 +25,27 @@
 
 static const char text[] = "This is a test; this is a test";
 
-int
-main (void)
+int main(void)
 {
-  regex_t re;
-  regmatch_t rm[2];
-  int n;
+    regex_t re;
+    regmatch_t rm[2];
+    int n;
 
-  mtrace ();
+    mtrace();
 
-  n = regcomp (&re, "a test", REG_EXTENDED);
-  if (n != 0)
-    {
-      char buf[500];
-      regerror (n, &re, buf, sizeof (buf));
-      printf ("regcomp failed: %s\n", buf);
-      exit (1);
+    n = regcomp(&re, "a test", REG_EXTENDED);
+    if (n != 0) {
+        char buf[500];
+        regerror(n, &re, buf, sizeof(buf));
+        printf("regcomp failed: %s\n", buf);
+        exit(1);
     }
 
-  for (n = 0; n < 20; ++n)
-    regexec (&re, text, 2, rm, 0);
+    for (n = 0; n < 20; ++n) {
+        regexec(&re, text, 2, rm, 0);
+    }
 
-  regfree (&re);
+    regfree(&re);
 
-  return 0;
+    return 0;
 }

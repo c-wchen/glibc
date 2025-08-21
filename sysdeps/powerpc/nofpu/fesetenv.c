@@ -19,28 +19,27 @@
 #include "soft-fp.h"
 #include "soft-supp.h"
 
-int
-__fesetenv (const fenv_t *envp)
+int __fesetenv(const fenv_t *envp)
 {
-  fenv_union_t u;
+    fenv_union_t u;
 
-  u.fenv = *envp;
-  __sim_exceptions_thread = u.l[0] & FE_ALL_EXCEPT;
-  SIM_SET_GLOBAL (__sim_exceptions_global, __sim_exceptions_thread);
-  __sim_round_mode_thread = u.l[0] & 0x3;
-  SIM_SET_GLOBAL (__sim_round_mode_global, __sim_round_mode_thread);
-  __sim_disabled_exceptions_thread = u.l[1];
-  SIM_SET_GLOBAL (__sim_disabled_exceptions_global,
-		  __sim_disabled_exceptions_thread);
-  return 0;
+    u.fenv = *envp;
+    __sim_exceptions_thread = u.l[0] & FE_ALL_EXCEPT;
+    SIM_SET_GLOBAL(__sim_exceptions_global, __sim_exceptions_thread);
+    __sim_round_mode_thread = u.l[0] & 0x3;
+    SIM_SET_GLOBAL(__sim_round_mode_global, __sim_round_mode_thread);
+    __sim_disabled_exceptions_thread = u.l[1];
+    SIM_SET_GLOBAL(__sim_disabled_exceptions_global,
+                   __sim_disabled_exceptions_thread);
+    return 0;
 }
 
 #include <shlib-compat.h>
 #if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
-strong_alias (__fesetenv, __old_fesetenv)
-compat_symbol (libm, __old_fesetenv, fesetenv, GLIBC_2_1);
+strong_alias(__fesetenv, __old_fesetenv)
+compat_symbol(libm, __old_fesetenv, fesetenv, GLIBC_2_1);
 #endif
 
-libm_hidden_def (__fesetenv)
-libm_hidden_ver (__fesetenv, fesetenv)
-versioned_symbol (libm, __fesetenv, fesetenv, GLIBC_2_2);
+libm_hidden_def(__fesetenv)
+libm_hidden_ver(__fesetenv, fesetenv)
+versioned_symbol(libm, __fesetenv, fesetenv, GLIBC_2_2);

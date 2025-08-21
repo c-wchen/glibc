@@ -21,34 +21,38 @@
 #include <hurd/id.h>
 
 /* Get the effective group ID of the calling process.  */
-gid_t
-__getegid (void)
+gid_t __getegid(void)
 {
-  error_t err;
-  gid_t egid;
+    error_t err;
+    gid_t egid;
 
 retry:
-  HURD_CRITICAL_BEGIN;
-  __mutex_lock (&_hurd_id.lock);
+    HURD_CRITICAL_BEGIN;
+    __mutex_lock(&_hurd_id.lock);
 
-  if (err = _hurd_check_ids ())
-    egid = __hurd_fail (err);
-  else if (_hurd_id.gen.ngids >= 1)
-    egid = _hurd_id.gen.gids[0];
-  else if (_hurd_id.aux.ngids >= 1)
-    /* We have no effective gids.  Return the real gid.  */
-    egid = _hurd_id.aux.gids[0];
-  else
-    /* We do not even have a real gid.  */
-    egid = __hurd_fail (EGRATUITOUS);
+    if (err = _hurd_check_ids()) {
+        egid = __hurd_fail(err);
+    } else if (_hurd_id.gen.ngids >= 1) {
+        egid = _hurd_id.gen.gids[0];
+    } else if (_hurd_id.aux.ngids >= 1)
+        /* We have no effective gids.  Return the real gid.  */
+    {
+        egid = _hurd_id.aux.gids[0];
+    } else
+        /* We do not even have a real gid.  */
+    {
+        egid = __hurd_fail(EGRATUITOUS);
+    }
 
-  __mutex_unlock (&_hurd_id.lock);
-  HURD_CRITICAL_END;
-  if (egid == -1 && errno == EINTR)
-    /* Got a signal while inside an RPC of the critical section, retry again */
-    goto retry;
+    __mutex_unlock(&_hurd_id.lock);
+    HURD_CRITICAL_END;
+    if (egid == -1 && errno == EINTR)
+        /* Got a signal while inside an RPC of the critical section, retry again */
+    {
+        goto retry;
+    }
 
-  return egid;
+    return egid;
 }
 
-weak_alias (__getegid, getegid)
+weak_alias(__getegid, getegid)

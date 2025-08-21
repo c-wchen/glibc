@@ -22,13 +22,13 @@
 #include <shlib-compat.h>
 
 struct __pthread_cancelation_handler **
-___pthread_get_cleanup_stack (void)
+___pthread_get_cleanup_stack(void)
 {
-  return &__pthread_cleanup_stack;
+    return &__pthread_cleanup_stack;
 }
-versioned_symbol (libc, ___pthread_get_cleanup_stack, __pthread_get_cleanup_stack, GLIBC_2_21);
-libc_hidden_ver (___pthread_get_cleanup_stack, __pthread_get_cleanup_stack)
+versioned_symbol(libc, ___pthread_get_cleanup_stack, __pthread_get_cleanup_stack, GLIBC_2_21);
+libc_hidden_ver(___pthread_get_cleanup_stack, __pthread_get_cleanup_stack)
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_21)
-compat_symbol (libpthread, ___pthread_get_cleanup_stack, __pthread_get_cleanup_stack, GLIBC_2_12);
+compat_symbol(libpthread, ___pthread_get_cleanup_stack, __pthread_get_cleanup_stack, GLIBC_2_12);
 #endif

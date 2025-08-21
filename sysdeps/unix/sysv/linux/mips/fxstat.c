@@ -23,21 +23,19 @@
 #include <xstatconv.h>
 
 /* Get information about the file NAME in BUF.  */
-int
-__fxstat (int vers, int fd, struct stat *buf)
+int __fxstat(int vers, int fd, struct stat *buf)
 {
-  switch (vers)
-    {
-    case _STAT_VER_KERNEL:
-      return INLINE_SYSCALL_CALL (fstat, fd, buf);
+    switch (vers) {
+        case _STAT_VER_KERNEL:
+            return INLINE_SYSCALL_CALL(fstat, fd, buf);
 
-    default:
-      {
-	struct kernel_stat kbuf;
-	int r = INTERNAL_SYSCALL_CALL (fstat, fd, &kbuf);
-	if (r == 0)
-	  return  __xstat_conv (vers, &kbuf, buf);
-	return INLINE_SYSCALL_ERROR_RETURN_VALUE (-r);
-      }
+        default: {
+            struct kernel_stat kbuf;
+            int r = INTERNAL_SYSCALL_CALL(fstat, fd, &kbuf);
+            if (r == 0) {
+                return  __xstat_conv(vers, &kbuf, buf);
+            }
+            return INLINE_SYSCALL_ERROR_RETURN_VALUE(-r);
+        }
     }
 }

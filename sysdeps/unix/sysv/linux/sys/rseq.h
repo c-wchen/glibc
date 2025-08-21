@@ -16,7 +16,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _SYS_RSEQ_H
-#define _SYS_RSEQ_H	1
+#define _SYS_RSEQ_H 1
 
 /* Architecture-specific rseq signature.  */
 #include <bits/rseq.h>
@@ -42,39 +42,34 @@
 #else /* __GLIBC_HAVE_KERNEL_RSEQ */
 /* We use a copy of the include/uapi/linux/rseq.h kernel header.  */
 
-enum rseq_cpu_id_state
-  {
+enum rseq_cpu_id_state {
     RSEQ_CPU_ID_UNINITIALIZED = -1,
     RSEQ_CPU_ID_REGISTRATION_FAILED = -2,
-  };
+};
 
-enum rseq_flags
-  {
+enum rseq_flags {
     RSEQ_FLAG_UNREGISTER = (1 << 0),
-  };
+};
 
-enum rseq_cs_flags_bit
-  {
+enum rseq_cs_flags_bit {
     RSEQ_CS_FLAG_NO_RESTART_ON_PREEMPT_BIT = 0,
     RSEQ_CS_FLAG_NO_RESTART_ON_SIGNAL_BIT = 1,
     RSEQ_CS_FLAG_NO_RESTART_ON_MIGRATE_BIT = 2,
-  };
+};
 
-enum rseq_cs_flags
-  {
+enum rseq_cs_flags {
     RSEQ_CS_FLAG_NO_RESTART_ON_PREEMPT =
-      (1U << RSEQ_CS_FLAG_NO_RESTART_ON_PREEMPT_BIT),
+        (1U << RSEQ_CS_FLAG_NO_RESTART_ON_PREEMPT_BIT),
     RSEQ_CS_FLAG_NO_RESTART_ON_SIGNAL =
-      (1U << RSEQ_CS_FLAG_NO_RESTART_ON_SIGNAL_BIT),
+        (1U << RSEQ_CS_FLAG_NO_RESTART_ON_SIGNAL_BIT),
     RSEQ_CS_FLAG_NO_RESTART_ON_MIGRATE =
-      (1U << RSEQ_CS_FLAG_NO_RESTART_ON_MIGRATE_BIT),
-  };
+        (1U << RSEQ_CS_FLAG_NO_RESTART_ON_MIGRATE_BIT),
+};
 
 /* struct rseq_cs is aligned on 32 bytes to ensure it is always
    contained within a single cache-line.  It is usually declared as
    link-time constant data.  */
-struct rseq_cs
-  {
+struct rseq_cs {
     /* Version of this structure.  */
     uint32_t version;
     /* enum rseq_cs_flags.  */
@@ -83,14 +78,13 @@ struct rseq_cs
     /* Offset from start_ip.  */
     uint64_t post_commit_offset;
     uint64_t abort_ip;
-  } __attribute__ ((__aligned__ (32)));
+} __attribute__((__aligned__(32)));
 
 /* struct rseq is aligned on 32 bytes to ensure it is always
    contained within a single cache-line.
 
    A single struct rseq per thread is allowed.  */
-struct rseq
-  {
+struct rseq {
     /* Restartable sequences cpu_id_start field.  Updated by the
        kernel.  Read by user-space with single-copy atomicity
        semantics.  This field should only be read by the thread which
@@ -163,7 +157,7 @@ struct rseq
        32-bit.  Contains the current thread's concurrency ID (allocated
        uniquely within a memory map).  */
     uint32_t mm_cid;
-  } __attribute__ ((__aligned__ (32)));
+} __attribute__((__aligned__(32)));
 
 #endif /* __GLIBC_HAVE_KERNEL_RSEQ */
 

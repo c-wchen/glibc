@@ -23,33 +23,30 @@
 
 int mod1_status;
 
-static void __attribute__ ((constructor))
-init (void)
+static void __attribute__((constructor))
+init(void)
 {
-  puts ("info: tst-dlopen-constructor-null-mod1.so constructor");
+    puts("info: tst-dlopen-constructor-null-mod1.so constructor");
 
-  void *handle = dlopen (NULL, RTLD_LAZY);
-  if (handle == NULL)
-    {
-      printf ("error: %s\n", dlerror ());
-      exit (1);
+    void *handle = dlopen(NULL, RTLD_LAZY);
+    if (handle == NULL) {
+        printf("error: %s\n", dlerror());
+        exit(1);
     }
-  puts ("info: dlopen returned");
-  if (dlsym (handle, "malloc") != malloc)
-    {
-      puts ("error: dlsym did not produce expected result");
-      exit (1);
+    puts("info: dlopen returned");
+    if (dlsym(handle, "malloc") != malloc) {
+        puts("error: dlsym did not produce expected result");
+        exit(1);
     }
-  dlclose (handle);
+    dlclose(handle);
 
-  /* Check that the second module's constructor has not executed.   */
-  if (getenv ("mod2_status") != NULL)
-    {
-      printf ("error: mod2_status environment variable set: %s\n",
-              getenv ("mod2_status"));
-      exit (1);
+    /* Check that the second module's constructor has not executed.   */
+    if (getenv("mod2_status") != NULL) {
+        printf("error: mod2_status environment variable set: %s\n",
+               getenv("mod2_status"));
+        exit(1);
     }
 
-  /* Communicate to the second module that the constructor executed.   */
-  mod1_status = 1;
+    /* Communicate to the second module that the constructor executed.   */
+    mod1_status = 1;
 }

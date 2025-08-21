@@ -10,8 +10,8 @@
 #include <sysdeps/ieee754/ldbl-128/s_isinfl.c>
 #if !IS_IN (libm)
 # undef __isinfl
-hidden_ver (___isinfl, __isinfl)
-_weak_alias (___isinfl, ____isinfl)
-long_double_symbol (libc, ____isinfl, isinfl);
-long_double_symbol (libc, ___isinfl, __isinfl);
+hidden_ver(___isinfl, __isinfl)
+_weak_alias(___isinfl, ____isinfl)
+long_double_symbol(libc, ____isinfl, isinfl);
+long_double_symbol(libc, ___isinfl, __isinfl);
 #endif

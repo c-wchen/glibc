@@ -24,39 +24,37 @@
 #include <stddef.h>
 
 /* This type corresponds to members of the _res.sort_list array.  */
-struct resolv_sortlist_entry
-{
-  struct in_addr addr;
-  uint32_t mask;
+struct resolv_sortlist_entry {
+    struct in_addr addr;
+    uint32_t mask;
 };
 
 /* Extended resolver state associated with res_state objects.  Client
    code can reach this state through a struct resolv_context
    object.  */
-struct resolv_conf
-{
-  /* Reference counter.  The object is deallocated once it reaches
-     zero.  For internal use within resolv_conf only.  */
-  size_t __refcount;
+struct resolv_conf {
+    /* Reference counter.  The object is deallocated once it reaches
+       zero.  For internal use within resolv_conf only.  */
+    size_t __refcount;
 
-  /* List of IPv4 and IPv6 name server addresses.  */
-  const struct sockaddr **nameserver_list;
-  size_t nameserver_list_size;
+    /* List of IPv4 and IPv6 name server addresses.  */
+    const struct sockaddr **nameserver_list;
+    size_t nameserver_list_size;
 
-  /* The domain names forming the search list.  */
-  const char *const *search_list;
-  size_t search_list_size;
+    /* The domain names forming the search list.  */
+    const char *const *search_list;
+    size_t search_list_size;
 
-  /* IPv4 address preference rules.  */
-  const struct resolv_sortlist_entry *sort_list;
-  size_t sort_list_size;
+    /* IPv4 address preference rules.  */
+    const struct resolv_sortlist_entry *sort_list;
+    size_t sort_list_size;
 
-  /* _res.options has type unsigned long, but we can only use 32 bits
-     for portability across all architectures.  */
-  unsigned int options;
-  unsigned int retrans;         /* Timeout.  */
-  unsigned int retry;           /* Number of times to retry.  */
-  unsigned int ndots; /* Dots needed for initial non-search query.  */
+    /* _res.options has type unsigned long, but we can only use 32 bits
+       for portability across all architectures.  */
+    unsigned int options;
+    unsigned int retrans;         /* Timeout.  */
+    unsigned int retry;           /* Number of times to retry.  */
+    unsigned int ndots; /* Dots needed for initial non-search query.  */
 };
 
 /* The functions below are for use by the res_init resolv.conf parser
@@ -71,37 +69,37 @@ struct file_change_detection;
    the struct __res_state object.  If CHANGE is not null, file change
    detection data is written to *CHANGE, based on the state of the
    file after reading it.  */
-struct resolv_conf *__resolv_conf_load (struct __res_state *preinit,
-                                        struct file_change_detection *change)
-  attribute_hidden __attribute__ ((warn_unused_result));
+struct resolv_conf *__resolv_conf_load(struct __res_state *preinit,
+                                       struct file_change_detection *change)
+attribute_hidden __attribute__((warn_unused_result));
 
 /* Return a configuration object for the current /etc/resolv.conf
    settings, or NULL on failure.  The object is cached.  */
-struct resolv_conf *__resolv_conf_get_current (void)
-  attribute_hidden __attribute__ ((warn_unused_result));
+struct resolv_conf *__resolv_conf_get_current(void)
+attribute_hidden __attribute__((warn_unused_result));
 
 /* Return the extended resolver state for *RESP, or NULL if it cannot
    be determined.  A call to this function must be paired with a call
    to __resolv_conf_put.  */
-struct resolv_conf *__resolv_conf_get (struct __res_state *) attribute_hidden;
+struct resolv_conf *__resolv_conf_get(struct __res_state *) attribute_hidden;
 
 /* Converse of __resolv_conf_get.  */
-void __resolv_conf_put (struct resolv_conf *) attribute_hidden;
+void __resolv_conf_put(struct resolv_conf *) attribute_hidden;
 
 /* Allocate a new struct resolv_conf object and copy the
    pre-configured values from *INIT.  Return NULL on allocation
    failure.  The object must be deallocated using
    __resolv_conf_put.  */
-struct resolv_conf *__resolv_conf_allocate (const struct resolv_conf *init)
-  attribute_hidden __attribute__ ((nonnull (1), warn_unused_result));
+struct resolv_conf *__resolv_conf_allocate(const struct resolv_conf *init)
+attribute_hidden __attribute__((nonnull(1), warn_unused_result));
 
 /* Associate an existing extended resolver state with *RESP.  Return
    false on allocation failure.  In addition, update *RESP with the
    overlapping non-extended resolver state.  */
-bool __resolv_conf_attach (struct __res_state *, struct resolv_conf *)
-  attribute_hidden;
+bool __resolv_conf_attach(struct __res_state *, struct resolv_conf *)
+attribute_hidden;
 
 /* Detach the extended resolver state from *RESP.  */
-void __resolv_conf_detach (struct __res_state *resp) attribute_hidden;
+void __resolv_conf_detach(struct __res_state *resp) attribute_hidden;
 
 #endif /* RESOLV_STATE_H */

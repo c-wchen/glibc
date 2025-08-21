@@ -21,10 +21,9 @@
 #include <libc-lock.h>
 #include <pthreadP.h>
 
-void
-_longjmp_unwind (jmp_buf env, int val)
+void _longjmp_unwind(jmp_buf env, int val)
 {
-  char local_var;
+    char local_var;
 
-  __pthread_cleanup_upto (env->__jmpbuf, &local_var);
+    __pthread_cleanup_upto(env->__jmpbuf, &local_var);
 }

@@ -21,35 +21,36 @@
 
 #include <pt-internal.h>
 
-int
-__sem_waitfast (struct new_sem *isem, int definitive_result)
+int __sem_waitfast(struct new_sem *isem, int definitive_result)
 {
 #if __HAVE_64B_ATOMICS
-  uint64_t d = atomic_load_relaxed (&isem->data);
+    uint64_t d = atomic_load_relaxed(&isem->data);
 
-  do
-    {
-      if ((d & SEM_VALUE_MASK) == 0)
-	break;
-      if (atomic_compare_exchange_weak_acquire (&isem->data, &d, d - 1))
-	/* Successful down.  */
-	return 0;
-    }
-  while (definitive_result);
-  return -1;
+    do {
+        if ((d & SEM_VALUE_MASK) == 0) {
+            break;
+        }
+        if (atomic_compare_exchange_weak_acquire(&isem->data, &d, d - 1))
+            /* Successful down.  */
+        {
+            return 0;
+        }
+    } while (definitive_result);
+    return -1;
 #else
-  unsigned v = atomic_load_relaxed (&isem->value);
+    unsigned v = atomic_load_relaxed(&isem->value);
 
-  do
-    {
-      if ((v >> SEM_VALUE_SHIFT) == 0)
-	break;
-      if (atomic_compare_exchange_weak_acquire (&isem->value,
-	    &v, v - (1 << SEM_VALUE_SHIFT)))
-	/* Successful down.  */
-	return 0;
-    }
-  while (definitive_result);
-  return -1;
+    do {
+        if ((v >> SEM_VALUE_SHIFT) == 0) {
+            break;
+        }
+        if (atomic_compare_exchange_weak_acquire(&isem->value,
+                &v, v - (1 << SEM_VALUE_SHIFT)))
+            /* Successful down.  */
+        {
+            return 0;
+        }
+    } while (definitive_result);
+    return -1;
 #endif
 }

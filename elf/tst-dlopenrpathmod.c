@@ -19,16 +19,14 @@
 #include <stdio.h>
 
 
-int
-foo (void)
+int foo(void)
 {
-  void *p = dlopen ("in-subdir.so", RTLD_LAZY|RTLD_LOCAL);
-  if (p != NULL)
-    {
-      dlclose (p);
-      return 0;
+    void *p = dlopen("in-subdir.so", RTLD_LAZY | RTLD_LOCAL);
+    if (p != NULL) {
+        dlclose(p);
+        return 0;
     }
 
-  puts ("couldn't open in-subdir.so from foo");
-  return 1;
+    puts("couldn't open in-subdir.so from foo");
+    return 1;
 }

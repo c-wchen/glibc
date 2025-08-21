@@ -43,9 +43,9 @@
 #endif
 
 #if SHLIB_COMPAT(libc, GLOB_LSTAT_VERSION, GLIBC_2_27)
-compat_symbol (libc, __glob_lstat_compat, glob, GLOB_LSTAT_VERSION);
+compat_symbol(libc, __glob_lstat_compat, glob, GLOB_LSTAT_VERSION);
 # if XSTAT_IS_XSTAT64
-strong_alias (__glob_lstat_compat, __glob64_lstat_compat)
-compat_symbol (libc, __glob64_lstat_compat, glob64, GLOB_LSTAT_VERSION);
+strong_alias(__glob_lstat_compat, __glob64_lstat_compat)
+compat_symbol(libc, __glob64_lstat_compat, glob64, GLOB_LSTAT_VERSION);
 # endif
 #endif

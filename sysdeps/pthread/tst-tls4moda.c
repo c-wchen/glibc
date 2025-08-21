@@ -18,31 +18,28 @@
 #include <stddef.h>
 #include <stdlib.h>
 
-static __thread unsigned char foo [32]
-  __attribute__ ((tls_model ("initial-exec"), aligned (sizeof (void *))));
+static __thread unsigned char foo [32] __attribute__((tls_model("initial-exec"), aligned(sizeof(void *))));
 
-void
-test1 (void)
+void test1(void)
 {
-  size_t s;
+    size_t s;
 
-  for (s = 0; s < sizeof (foo); ++s)
-    {
-      if (foo [s])
-	abort ();
-      foo [s] = s;
+    for (s = 0; s < sizeof(foo); ++s) {
+        if (foo [s]) {
+            abort();
+        }
+        foo [s] = s;
     }
 }
 
-void
-test2 (void)
+void test2(void)
 {
-  size_t s;
+    size_t s;
 
-  for (s = 0; s < sizeof (foo); ++s)
-    {
-      if (foo [s] != s)
-	abort ();
-      foo [s] = sizeof (foo) - s;
+    for (s = 0; s < sizeof(foo); ++s) {
+        if (foo [s] != s) {
+            abort();
+        }
+        foo [s] = sizeof(foo) - s;
     }
 }

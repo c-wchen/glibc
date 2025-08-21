@@ -24,75 +24,60 @@
 #include <unistd.h>
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  sem_t s;
+    sem_t s;
 
-  if (sem_init (&s, 0, SEM_VALUE_MAX))
-    {
-      printf ("sem_init: %m\n");
-      return 1;
-    }
-
-  int result = 0;
-
-  int value = 0xdeadbeef;
-  if (sem_getvalue (&s, &value))
-    {
-      printf ("sem_getvalue: %m\n");
-      result = 1;
-    }
-  else
-    {
-      printf ("sem_getvalue after init: %d\n", value);
-      if (value != SEM_VALUE_MAX)
-	{
-	  printf ("\tshould be %d\n", SEM_VALUE_MAX);
-	  result = 1;
-	}
+    if (sem_init(&s, 0, SEM_VALUE_MAX)) {
+        printf("sem_init: %m\n");
+        return 1;
     }
 
-  errno = 0;
-  if (sem_post(&s) == 0)
-    {
-      puts ("sem_post at SEM_VALUE_MAX succeeded!");
-      result = 1;
-    }
-  else
-    {
-      printf ("sem_post at SEM_VALUE_MAX: %m (%d)\n", errno);
-      if (errno != EOVERFLOW)
-	{
-	  printf ("\tshould be %s (EOVERFLOW = %d)\n",
-		  strerror (EOVERFLOW), EOVERFLOW);
-	  result = 1;
-	}
+    int result = 0;
+
+    int value = 0xdeadbeef;
+    if (sem_getvalue(&s, &value)) {
+        printf("sem_getvalue: %m\n");
+        result = 1;
+    } else {
+        printf("sem_getvalue after init: %d\n", value);
+        if (value != SEM_VALUE_MAX) {
+            printf("\tshould be %d\n", SEM_VALUE_MAX);
+            result = 1;
+        }
     }
 
-  value = 0xbad1d00d;
-  if (sem_getvalue (&s, &value))
-    {
-      printf ("sem_getvalue: %m\n");
-      result = 1;
-    }
-  else
-    {
-      printf ("sem_getvalue after post: %d\n", value);
-      if (value != SEM_VALUE_MAX)
-	{
-	  printf ("\tshould be %d\n", SEM_VALUE_MAX);
-	  result = 1;
-	}
+    errno = 0;
+    if (sem_post(&s) == 0) {
+        puts("sem_post at SEM_VALUE_MAX succeeded!");
+        result = 1;
+    } else {
+        printf("sem_post at SEM_VALUE_MAX: %m (%d)\n", errno);
+        if (errno != EOVERFLOW) {
+            printf("\tshould be %s (EOVERFLOW = %d)\n",
+                   strerror(EOVERFLOW), EOVERFLOW);
+            result = 1;
+        }
     }
 
-  if (sem_destroy (&s))
-    {
-      printf ("sem_destroy: %m\n");
-      result = 1;
+    value = 0xbad1d00d;
+    if (sem_getvalue(&s, &value)) {
+        printf("sem_getvalue: %m\n");
+        result = 1;
+    } else {
+        printf("sem_getvalue after post: %d\n", value);
+        if (value != SEM_VALUE_MAX) {
+            printf("\tshould be %d\n", SEM_VALUE_MAX);
+            result = 1;
+        }
     }
 
-  return result;
+    if (sem_destroy(&s)) {
+        printf("sem_destroy: %m\n");
+        result = 1;
+    }
+
+    return result;
 }
 
 #define TEST_FUNCTION do_test ()

@@ -25,10 +25,9 @@
 
 /* Change the access time of the file associated with FD to TSP[0] and
    the modification time of FILE to TSP[1].  */
-int
-futimens (int fd, const struct timespec tsp[2])
+int futimens(int fd, const struct timespec tsp[2])
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (futimens)
+stub_warning(futimens)

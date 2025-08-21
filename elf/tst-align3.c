@@ -20,18 +20,17 @@
 #include <tst-file-align.h>
 #include <tst-stack-align.h>
 
-int bar __attribute__ ((aligned (ALIGN))) = 1;
+int bar __attribute__((aligned(ALIGN))) = 1;
 
-extern void do_load_test (void);
+extern void do_load_test(void);
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  printf ("bar: %p\n", &bar);
-  TEST_VERIFY (is_aligned (&bar, ALIGN) == 0);
+    printf("bar: %p\n", &bar);
+    TEST_VERIFY(is_aligned(&bar, ALIGN) == 0);
 
-  do_load_test ();
-  return 0;
+    do_load_test();
+    return 0;
 }
 
 #include <support/test-driver.c>

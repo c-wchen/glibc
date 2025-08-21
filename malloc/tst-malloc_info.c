@@ -29,73 +29,69 @@
    threads have performed their allocations.  */
 static pthread_barrier_t barrier;
 
-enum
-  {
+enum {
     /* Number of threads performing allocations.  */
     thread_count  = 4,
 
     /* Amount of memory allocation per thread.  This should be large
        enough to cause the allocation of multiple heaps per arena.  */
     per_thread_allocations
-      = sizeof (void *) == 4 ? 16 * 1024 * 1024 : 128 * 1024 * 1024,
-  };
+    = sizeof(void *) == 4 ? 16 * 1024 * 1024 : 128 * 1024 * 1024,
+};
 
-static void *
-allocation_thread_function (void *closure)
+static void *allocation_thread_function(void *closure)
 {
-  struct list
-  {
-    struct list *next;
-    long dummy[4];
-  };
+    struct list {
+        struct list *next;
+        long dummy[4];
+    };
 
-  struct list *head = NULL;
-  size_t allocated = 0;
-  while (allocated < per_thread_allocations)
-    {
-      struct list *new_head = xmalloc (sizeof (*new_head));
-      allocated += sizeof (*new_head);
-      new_head->next = head;
-      head = new_head;
+    struct list *head = NULL;
+    size_t allocated = 0;
+    while (allocated < per_thread_allocations) {
+        struct list *new_head = xmalloc(sizeof(*new_head));
+        allocated += sizeof(*new_head);
+        new_head->next = head;
+        head = new_head;
     }
 
-  xpthread_barrier_wait (&barrier);
+    xpthread_barrier_wait(&barrier);
 
-  /* Main thread prints first statistics here.  */
+    /* Main thread prints first statistics here.  */
 
-  xpthread_barrier_wait (&barrier);
+    xpthread_barrier_wait(&barrier);
 
-  while (head != NULL)
-    {
-      struct list *next_head = head->next;
-      free (head);
-      head = next_head;
+    while (head != NULL) {
+        struct list *next_head = head->next;
+        free(head);
+        head = next_head;
     }
 
-  return NULL;
+    return NULL;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  xpthread_barrier_init (&barrier, NULL, thread_count + 1);
+    xpthread_barrier_init(&barrier, NULL, thread_count + 1);
 
-  pthread_t threads[thread_count];
-  for (size_t i = 0; i < array_length (threads); ++i)
-    threads[i] = xpthread_create (NULL, allocation_thread_function, NULL);
+    pthread_t threads[thread_count];
+    for (size_t i = 0; i < array_length(threads); ++i) {
+        threads[i] = xpthread_create(NULL, allocation_thread_function, NULL);
+    }
 
-  xpthread_barrier_wait (&barrier);
-  puts ("info: After allocation:");
-  malloc_info (0, stdout);
+    xpthread_barrier_wait(&barrier);
+    puts("info: After allocation:");
+    malloc_info(0, stdout);
 
-  xpthread_barrier_wait (&barrier);
-  for (size_t i = 0; i < array_length (threads); ++i)
-    xpthread_join (threads[i]);
+    xpthread_barrier_wait(&barrier);
+    for (size_t i = 0; i < array_length(threads); ++i) {
+        xpthread_join(threads[i]);
+    }
 
-  puts ("\ninfo: After deallocation:");
-  malloc_info (0, stdout);
+    puts("\ninfo: After deallocation:");
+    malloc_info(0, stdout);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

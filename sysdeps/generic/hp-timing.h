@@ -17,14 +17,14 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _HP_TIMING_H
-#define _HP_TIMING_H	1
+#define _HP_TIMING_H    1
 
 #include <time.h>
 #include <stdint.h>
 #include <hp-timing-common.h>
 
 /* It should not be used for ld.so.  */
-#define HP_TIMING_INLINE	(0)
+#define HP_TIMING_INLINE    (0)
 
 typedef uint64_t hp_timing_t;
 
@@ -33,18 +33,18 @@ typedef uint64_t hp_timing_t;
    vDSO symbol.  */
 #ifdef _ISOMAC
 # define HP_TIMING_NOW(var) \
-({								\
-  struct timespec tv;						\
-  clock_gettime (CLOCK_MONOTONIC, &tv);				\
-  (var) = (tv.tv_nsec + UINT64_C(1000000000) * tv.tv_sec);	\
+({                              \
+  struct timespec tv;                       \
+  clock_gettime (CLOCK_MONOTONIC, &tv);             \
+  (var) = (tv.tv_nsec + UINT64_C(1000000000) * tv.tv_sec);  \
 })
 #else
 # define HP_TIMING_NOW(var) \
-({								\
-  struct __timespec64 tv;						\
-  __clock_gettime64 (CLOCK_MONOTONIC, &tv);			\
-  (var) = (tv.tv_nsec + UINT64_C(1000000000) * tv.tv_sec);	\
+({                              \
+  struct __timespec64 tv;                       \
+  __clock_gettime64 (CLOCK_MONOTONIC, &tv);         \
+  (var) = (tv.tv_nsec + UINT64_C(1000000000) * tv.tv_sec);  \
 })
 #endif
 
-#endif	/* hp-timing.h */
+#endif  /* hp-timing.h */

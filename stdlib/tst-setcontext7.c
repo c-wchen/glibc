@@ -25,73 +25,63 @@
 static ucontext_t ctx[5];
 static atomic_int done;
 
-static void
-f1 (void)
+static void f1(void)
 {
-  puts ("start f1");
-  if (!done)
-    {
-      if (getcontext (&ctx[2]) != 0)
-	{
-	  printf ("%s: getcontext: %m\n", __FUNCTION__);
-	  exit (EXIT_FAILURE);
-	}
-      if (done)
-	{
-	  puts ("set context in f1");
-	  if (setcontext (&ctx[3]) != 0)
-	    {
-	      printf ("%s: setcontext: %m\n", __FUNCTION__);
-	      exit (EXIT_FAILURE);
-	    }
-	}
+    puts("start f1");
+    if (!done) {
+        if (getcontext(&ctx[2]) != 0) {
+            printf("%s: getcontext: %m\n", __FUNCTION__);
+            exit(EXIT_FAILURE);
+        }
+        if (done) {
+            puts("set context in f1");
+            if (setcontext(&ctx[3]) != 0) {
+                printf("%s: setcontext: %m\n", __FUNCTION__);
+                exit(EXIT_FAILURE);
+            }
+        }
     }
-  done++;
-  puts ("swap contexts in f1");
-  if (swapcontext (&ctx[4], &ctx[2]) != 0)
-    {
-      printf ("%s: setcontext: %m\n", __FUNCTION__);
-      exit (EXIT_FAILURE);
+    done++;
+    puts("swap contexts in f1");
+    if (swapcontext(&ctx[4], &ctx[2]) != 0) {
+        printf("%s: setcontext: %m\n", __FUNCTION__);
+        exit(EXIT_FAILURE);
     }
-  puts ("end f1");
-  exit (done == 2 ? EXIT_SUCCESS : EXIT_FAILURE);
+    puts("end f1");
+    exit(done == 2 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char st1[32768];
-  puts ("making contexts");
-  if (getcontext (&ctx[0]) != 0)
-    {
-      printf ("%s: getcontext: %m\n", __FUNCTION__);
-      exit (EXIT_FAILURE);
+    char st1[32768];
+    puts("making contexts");
+    if (getcontext(&ctx[0]) != 0) {
+        printf("%s: getcontext: %m\n", __FUNCTION__);
+        exit(EXIT_FAILURE);
     }
-  if (getcontext (&ctx[1]) != 0)
-    {
-      printf ("%s: getcontext: %m\n", __FUNCTION__);
-      exit (EXIT_FAILURE);
+    if (getcontext(&ctx[1]) != 0) {
+        printf("%s: getcontext: %m\n", __FUNCTION__);
+        exit(EXIT_FAILURE);
     }
-  ctx[1].uc_stack.ss_sp = st1;
-  ctx[1].uc_stack.ss_size = sizeof st1;
-  ctx[1].uc_link = &ctx[0];
-  makecontext (&ctx[1], (void (*) (void)) f1, 0);
-  puts ("swap contexts");
-  if (swapcontext (&ctx[3], &ctx[1]) != 0)
-    {
-      printf ("%s: setcontext: %m\n", __FUNCTION__);
-      exit (EXIT_FAILURE);
+    ctx[1].uc_stack.ss_sp = st1;
+    ctx[1].uc_stack.ss_size = sizeof st1;
+    ctx[1].uc_link = &ctx[0];
+    makecontext(&ctx[1], (void (*)(void)) f1, 0);
+    puts("swap contexts");
+    if (swapcontext(&ctx[3], &ctx[1]) != 0) {
+        printf("%s: setcontext: %m\n", __FUNCTION__);
+        exit(EXIT_FAILURE);
     }
-  if (done != 1)
-    exit (EXIT_FAILURE);
-  done++;
-  puts ("set context");
-  if (setcontext (&ctx[4]) != 0)
-    {
-      printf ("%s: setcontext: %m\n", __FUNCTION__);
-      exit (EXIT_FAILURE);
+    if (done != 1) {
+        exit(EXIT_FAILURE);
     }
-  exit (EXIT_FAILURE);
+    done++;
+    puts("set context");
+    if (setcontext(&ctx[4]) != 0) {
+        printf("%s: setcontext: %m\n", __FUNCTION__);
+        exit(EXIT_FAILURE);
+    }
+    exit(EXIT_FAILURE);
 }
 
 #include <support/test-driver.c>

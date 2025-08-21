@@ -18,9 +18,8 @@
 
 #include <support/xthread.h>
 
-void
-xpthread_mutex_destroy (pthread_mutex_t *mutex)
+void xpthread_mutex_destroy(pthread_mutex_t *mutex)
 {
-  xpthread_check_return ("pthread_mutex_destroy",
-                         pthread_mutex_destroy (mutex));
+    xpthread_check_return("pthread_mutex_destroy",
+                          pthread_mutex_destroy(mutex));
 }

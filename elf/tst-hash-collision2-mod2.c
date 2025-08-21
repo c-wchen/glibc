@@ -20,177 +20,149 @@
 
 /* Names with hash collisions for classic ELF hash.  */
 
-int
-HxxxynpHxxxynpHxxxynpfoo (void)
+int HxxxynpHxxxynpHxxxynpfoo(void)
 {
-  return 4;
+    return 4;
 }
 
-int
-HxxxynpHxxxynpHxxxynpHxxxynpfoo (void)
+int HxxxynpHxxxynpHxxxynpHxxxynpfoo(void)
 {
-  return 5;
+    return 5;
 }
 
 
 /* Names with hash collisions for GNU hash.  */
 
-int
-gliinmgliinmgliinmbar (void)
+int gliinmgliinmgliinmbar(void)
 {
-  return 7;
+    return 7;
 }
 
-int
-gliinmgliinmgliinmgliinmbar (void)
+int gliinmgliinmgliinmgliinmbar(void)
 {
-  return 6;
+    return 6;
 }
 
 
 /* Names with specific hash values for each hash (see
    tst-hash-collision1.c for details).  */
 
-int
-HxxyipP (void)
+int HxxyipP(void)
 {
-  return 14;
+    return 14;
 }
 
-int
-HxxykNp (void)
+int HxxykNp(void)
 {
-  return 15;
+    return 15;
 }
 
-int
-HxxxzaA (void)
+int HxxxzaA(void)
 {
-  return 19;
+    return 19;
 }
 
-int
-Hxxxz_a (void)
+int Hxxxz_a(void)
 {
-  return 20;
+    return 20;
 }
 
-int
-HxxxzaB (void)
+int HxxxzaB(void)
 {
-  return 24;
+    return 24;
 }
 
-int
-Hxxxz_b (void)
+int Hxxxz_b(void)
 {
-  return 25;
+    return 25;
 }
 
-int
-gliePJ (void)
+int gliePJ(void)
 {
-  return 29;
+    return 29;
 }
 
-int
-gljCpk (void)
+int gljCpk(void)
 {
-  return 30;
+    return 30;
 }
 
-int
-gliePK (void)
+int gliePK(void)
 {
-  return 34;
+    return 34;
 }
 
-int
-gljCpl (void)
+int gljCpl(void)
 {
-  return 35;
+    return 35;
 }
 
-int
-gliePL (void)
+int gliePL(void)
 {
-  return 39;
+    return 39;
 }
 
-int
-gljCpm (void)
+int gljCpm(void)
 {
-  return 40;
+    return 40;
 }
 
-int
-Adfn9ru (void)
+int Adfn9ru(void)
 {
-  return 44;
+    return 44;
 }
 
-int
-Adfn9sT (void)
+int Adfn9sT(void)
 {
-  return 45;
+    return 45;
 }
 
-int
-Adfn9rv (void)
+int Adfn9rv(void)
 {
-  return 49;
+    return 49;
 }
 
-int
-Adfn9sU (void)
+int Adfn9sU(void)
 {
-  return 50;
+    return 50;
 }
 
-int
-Adfn9rw (void)
+int Adfn9rw(void)
 {
-  return 54;
+    return 54;
 }
 
-int
-Adfn9sV (void)
+int Adfn9sV(void)
 {
-  return 55;
+    return 55;
 }
 
-int
-Adfn9rx (void)
+int Adfn9rx(void)
 {
-  return 59;
+    return 59;
 }
 
-int
-Adfn9sW (void)
+int Adfn9sW(void)
 {
-  return 60;
+    return 60;
 }
 
-int
-gliePH (void)
+int gliePH(void)
 {
-  return 64;
+    return 64;
 }
 
-int
-gljCpi (void)
+int gljCpi(void)
 {
-  return 65;
+    return 65;
 }
 
-int
-gliePI (void)
+int gliePI(void)
 {
-  return 69;
+    return 69;
 }
 
-int
-gljCpj (void)
+int gljCpj(void)
 {
-  return 70;
+    return 70;
 }

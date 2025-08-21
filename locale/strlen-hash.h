@@ -25,26 +25,23 @@
 /* Defines the so called `hashpjw' function by P.J. Weinberger
    [see Aho/Sethi/Ullman, COMPILERS: Principles, Techniques and Tools,
    1986, 1987 Bell Telephone Laboratories, Inc.]  */
-static size_t hash_string (const char *__str_param, size_t __len);
+static size_t hash_string(const char *__str_param, size_t __len);
 
-static inline size_t
-hash_string (const char *str_param, size_t len)
+static inline size_t hash_string(const char *str_param, size_t len)
 {
-  size_t hval, g;
-  const char *end_str = str_param + len;
+    size_t hval, g;
+    const char *end_str = str_param + len;
 
-  /* Compute the hash value for the given string.  */
-  hval = len;
-  while (str_param != end_str)
-    {
-      hval <<= 4;
-      hval += (size_t) *str_param++;
-      g = hval & ((size_t) 0xf << (HASHWORDBITS - 4));
-      if (g != 0)
-	{
-	  hval ^= g >> (HASHWORDBITS - 8);
-	  hval ^= g;
-	}
+    /* Compute the hash value for the given string.  */
+    hval = len;
+    while (str_param != end_str) {
+        hval <<= 4;
+        hval += (size_t) * str_param++;
+        g = hval & ((size_t) 0xf << (HASHWORDBITS - 4));
+        if (g != 0) {
+            hval ^= g >> (HASHWORDBITS - 8);
+            hval ^= g;
+        }
     }
-  return hval;
+    return hval;
 }

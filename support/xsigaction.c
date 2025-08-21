@@ -19,9 +19,9 @@
 #include <support/check.h>
 #include <support/xsignal.h>
 
-void
-xsigaction (int sig, const struct sigaction *newact, struct sigaction *oldact)
+void xsigaction(int sig, const struct sigaction *newact, struct sigaction *oldact)
 {
-  if (sigaction (sig, newact, oldact))
-    FAIL_EXIT1 ("sigaction (%d): %m" , sig);
+    if (sigaction(sig, newact, oldact)) {
+        FAIL_EXIT1("sigaction (%d): %m", sig);
+    }
 }

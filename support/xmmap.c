@@ -20,12 +20,11 @@
 #include <support/xunistd.h>
 #include <sys/mman.h>
 
-void *
-xmmap (void *addr, size_t length, int prot, int flags, int fd)
+void *xmmap(void *addr, size_t length, int prot, int flags, int fd)
 {
-  void *result = mmap (addr, length, prot, flags, fd, 0);
-  if (result == MAP_FAILED)
-    FAIL_EXIT1 ("mmap of %zu bytes, prot=0x%x, flags=0x%x: %m",
-                length, prot, flags);
-  return result;
+    void *result = mmap(addr, length, prot, flags, fd, 0);
+    if (result == MAP_FAILED)
+        FAIL_EXIT1("mmap of %zu bytes, prot=0x%x, flags=0x%x: %m",
+                   length, prot, flags);
+    return result;
 }

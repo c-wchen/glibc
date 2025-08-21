@@ -20,16 +20,14 @@
 #include <pthread.h>
 
 /* Raise the signal SIG.  */
-int
-raise (int sig)
+int raise(int sig)
 {
-  int ret = __pthread_kill (__pthread_self (), sig);
-  if (ret != 0)
-    {
-      __set_errno (ret);
-      ret = -1;
+    int ret = __pthread_kill(__pthread_self(), sig);
+    if (ret != 0) {
+        __set_errno(ret);
+        ret = -1;
     }
-  return ret;
+    return ret;
 }
-libc_hidden_def (raise)
-weak_alias (raise, gsignal)
+libc_hidden_def(raise)
+weak_alias(raise, gsignal)

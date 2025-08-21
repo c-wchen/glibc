@@ -24,95 +24,88 @@
 #include <float.h>
 #include <ieee754.h>
 
-long long
-__llroundl (long double x)
+long long __llroundl(long double x)
 {
-  double xh, xl;
-  long long res, hi, lo;
+    double xh, xl;
+    long long res, hi, lo;
 
-  ldbl_unpack (x, &xh, &xl);
+    ldbl_unpack(x, &xh, &xl);
 
-  /* Limit the range of values handled by the conversion to long long.
-     We do this because we aren't sure whether that conversion properly
-     raises FE_INVALID.  */
-  if (__builtin_expect
-      ((__builtin_fabs (xh) <= -(double) (-__LONG_LONG_MAX__ - 1)), 1)
+    /* Limit the range of values handled by the conversion to long long.
+       We do this because we aren't sure whether that conversion properly
+       raises FE_INVALID.  */
+    if (__builtin_expect
+        ((__builtin_fabs(xh) <= -(double)(-__LONG_LONG_MAX__ - 1)), 1)
 #if !defined (FE_INVALID)
-      || 1
+        || 1
 #endif
-    )
-    {
-      if (__glibc_unlikely ((xh == -(double) (-__LONG_LONG_MAX__ - 1))))
-	{
-	  /* When XH is 9223372036854775808.0, converting to long long will
-	     overflow, resulting in an invalid operation.  However, XL might
-	     be negative and of sufficient magnitude that the overall long
-	     double is in fact in range.  Avoid raising an exception.  In any
-	     case we need to convert this value specially, because
-	     the converted value is not exactly represented as a double
-	     thus subtracting HI from XH suffers rounding error.  */
-	  hi = __LONG_LONG_MAX__;
-	  xh = 1.0;
-	}
-      else
-	{
-	  hi = (long long) xh;
-	  xh -= hi;
-	}
-      ldbl_canonicalize (&xh, &xl);
+       ) {
+        if (__glibc_unlikely((xh == -(double)(-__LONG_LONG_MAX__ - 1)))) {
+            /* When XH is 9223372036854775808.0, converting to long long will
+               overflow, resulting in an invalid operation.  However, XL might
+               be negative and of sufficient magnitude that the overall long
+               double is in fact in range.  Avoid raising an exception.  In any
+               case we need to convert this value specially, because
+               the converted value is not exactly represented as a double
+               thus subtracting HI from XH suffers rounding error.  */
+            hi = __LONG_LONG_MAX__;
+            xh = 1.0;
+        } else {
+            hi = (long long) xh;
+            xh -= hi;
+        }
+        ldbl_canonicalize(&xh, &xl);
 
-      lo = (long long) xh;
+        lo = (long long) xh;
 
-      /* Peg at max/min values, assuming that the above conversions do so.
-         Strictly speaking, we can return anything for values that overflow,
-         but this is more useful.  */
-      if (__glibc_unlikely (__builtin_add_overflow (hi, lo, &res)))
-	goto overflow;
+        /* Peg at max/min values, assuming that the above conversions do so.
+           Strictly speaking, we can return anything for values that overflow,
+           but this is more useful.  */
+        if (__glibc_unlikely(__builtin_add_overflow(hi, lo, &res))) {
+            goto overflow;
+        }
 
-      xh -= lo;
-      ldbl_canonicalize (&xh, &xl);
+        xh -= lo;
+        ldbl_canonicalize(&xh, &xl);
 
-      if (xh > 0.5)
-	{
-	  if (__glibc_unlikely (__builtin_add_overflow (res, 1, &res)))
-	    goto overflow;
-	}
-      else if (xh == 0.5)
-	{
-	  if (xl > 0.0 || (xl == 0.0 && res >= 0))
-	    if (__glibc_unlikely (__builtin_add_overflow (res, 1, &res)))
-	      goto overflow;
-	}
-      else if (-xh > 0.5)
-	{
-	  if (__glibc_unlikely (__builtin_add_overflow (res, -1, &res)))
-	    goto overflow;
-	}
-      else if (-xh == 0.5)
-	{
-	  if (xl < 0.0 || (xl == 0.0 && res <= 0))
-	    if (__glibc_unlikely (__builtin_add_overflow (res, -1, &res)))
-	      goto overflow;
-	}
+        if (xh > 0.5) {
+            if (__glibc_unlikely(__builtin_add_overflow(res, 1, &res))) {
+                goto overflow;
+            }
+        } else if (xh == 0.5) {
+            if (xl > 0.0 || (xl == 0.0 && res >= 0))
+                if (__glibc_unlikely(__builtin_add_overflow(res, 1, &res))) {
+                    goto overflow;
+                }
+        } else if (-xh > 0.5) {
+            if (__glibc_unlikely(__builtin_add_overflow(res, -1, &res))) {
+                goto overflow;
+            }
+        } else if (-xh == 0.5) {
+            if (xl < 0.0 || (xl == 0.0 && res <= 0))
+                if (__glibc_unlikely(__builtin_add_overflow(res, -1, &res))) {
+                    goto overflow;
+                }
+        }
 
-      return res;
-    }
-  else
-    {
-      if (xh > 0.0)
-	hi = __LONG_LONG_MAX__;
-      else if (xh < 0.0)
-	hi = -__LONG_LONG_MAX__ - 1;
-      else
-	/* Nan */
-	hi = 0;
+        return res;
+    } else {
+        if (xh > 0.0) {
+            hi = __LONG_LONG_MAX__;
+        } else if (xh < 0.0) {
+            hi = -__LONG_LONG_MAX__ - 1;
+        } else
+            /* Nan */
+        {
+            hi = 0;
+        }
     }
 
 overflow:
 #ifdef FE_INVALID
-  feraiseexcept (FE_INVALID);
+    feraiseexcept(FE_INVALID);
 #endif
-  return hi;
+    return hi;
 }
 
-long_double_symbol (libm, __llroundl, llroundl);
+long_double_symbol(libm, __llroundl, llroundl);

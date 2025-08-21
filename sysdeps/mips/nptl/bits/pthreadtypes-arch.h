@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _BITS_PTHREADTYPES_ARCH_H
-#define _BITS_PTHREADTYPES_ARCH_H	1
+#define _BITS_PTHREADTYPES_ARCH_H   1
 
 #include <bits/endian.h>
 
@@ -41,4 +41,4 @@
 #define __LOCK_ALIGNMENT
 #define __ONCE_ALIGNMENT
 
-#endif	/* bits/pthreadtypes.h */
+#endif  /* bits/pthreadtypes.h */

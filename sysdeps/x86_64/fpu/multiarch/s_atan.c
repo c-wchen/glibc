@@ -20,13 +20,13 @@
 #if MINIMUM_X86_ISA_LEVEL < AVX2_X86_ISA_LEVEL
 # include <libm-alias-double.h>
 
-extern double __redirect_atan (double);
+extern double __redirect_atan(double);
 
 # define SYMBOL_NAME atan
 # include "ifunc-avx-fma4.h"
 
-libc_ifunc_redirected (__redirect_atan, __atan, IFUNC_SELECTOR ());
-libm_alias_double (__atan, atan)
+libc_ifunc_redirected(__redirect_atan, __atan, IFUNC_SELECTOR());
+libm_alias_double(__atan, atan)
 
 # define __atan __atan_sse2
 #endif

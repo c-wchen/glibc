@@ -21,8 +21,8 @@
 
 #ifndef SHARED
 
-asm ("memset = __memset_ia32");
-asm ("memcmp = __memcmp_ia32");
+asm("memset = __memset_ia32");
+asm("memcmp = __memcmp_ia32");
 
 #endif /* SHARED */
 

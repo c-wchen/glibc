@@ -19,9 +19,8 @@
 #include <stdio.h>
 
 /* Read formatted input from STDIN according to the format string FORMAT.  */
-int
-__isoc23_vscanf (const char *format, va_list args)
+int __isoc23_vscanf(const char *format, va_list args)
 {
-  return __vfscanf_internal (stdin, format, args,
-			     SCANF_ISOC99_A | SCANF_ISOC23_BIN_CST);
+    return __vfscanf_internal(stdin, format, args,
+                              SCANF_ISOC99_A | SCANF_ISOC23_BIN_CST);
 }

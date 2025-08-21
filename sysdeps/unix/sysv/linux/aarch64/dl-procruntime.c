@@ -22,16 +22,16 @@
 
 #if !IS_IN (ldconfig)
 # if !defined PROCINFO_DECL && defined SHARED
-  ._dl_aarch64_gcs
+._dl_aarch64_gcs
 # else
 PROCINFO_CLASS unsigned long _dl_aarch64_gcs
 # endif
 # ifndef PROCINFO_DECL
-= 0
+    = 0
 # endif
 # if !defined SHARED || defined PROCINFO_DECL
-;
+      ;
 # else
-,
+      ,
 # endif
 #endif

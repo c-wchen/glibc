@@ -18,31 +18,33 @@
 
 #include <fenv_libc.h>
 
-int
-feenableexcept (int excepts)
+int feenableexcept(int excepts)
 {
-  fenv_union_t fe, curr;
-  int result, new;
+    fenv_union_t fe, curr;
+    int result, new;
 
-  /* Get current exception mask to return.  */
-  fe.fenv = curr.fenv = fegetenv_control ();
-  result = fenv_reg_to_exceptions (fe.l);
+    /* Get current exception mask to return.  */
+    fe.fenv = curr.fenv = fegetenv_control();
+    result = fenv_reg_to_exceptions(fe.l);
 
-  if ((excepts & FE_ALL_INVALID) == FE_ALL_INVALID)
-    excepts = (excepts | FE_INVALID) & ~ FE_ALL_INVALID;
+    if ((excepts & FE_ALL_INVALID) == FE_ALL_INVALID) {
+        excepts = (excepts | FE_INVALID) & ~ FE_ALL_INVALID;
+    }
 
-  new = fenv_exceptions_to_reg (excepts);
+    new = fenv_exceptions_to_reg(excepts);
 
-  if (fenv_reg_to_exceptions (new) != excepts)
-    return -1;
+    if (fenv_reg_to_exceptions(new) != excepts) {
+        return -1;
+    }
 
-  /* Sets the new exception mask.  */
-  fe.l |= new;
+    /* Sets the new exception mask.  */
+    fe.l |= new;
 
-  if (fe.l != curr.l)
-    fesetenv_control (fe.fenv);
+    if (fe.l != curr.l) {
+        fesetenv_control(fe.fenv);
+    }
 
-  __TEST_AND_EXIT_NON_STOP (0ULL, fe.l);
+    __TEST_AND_EXIT_NON_STOP(0ULL, fe.l);
 
-  return result;
+    return result;
 }

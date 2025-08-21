@@ -26,19 +26,18 @@
    was wanted there is no way to signal an error using one of the
    available methods.  The committee chose to signal an error by a
    normal program exit with the exit code 127.  */
-#define SPAWN_ERROR	127
+#define SPAWN_ERROR 127
 
 
 /* Spawn a new process executing PATH with the attributes describes in *ATTRP.
    Before running the process perform the actions described in FILE-ACTIONS. */
-int
-__spawni (pid_t *pid, const char *file,
-	  const posix_spawn_file_actions_t *file_actions,
-	  const posix_spawnattr_t *attrp, char *const argv[],
-	  char *const envp[], int xflags)
+int __spawni(pid_t *pid, const char *file,
+             const posix_spawn_file_actions_t *file_actions,
+             const posix_spawnattr_t *attrp, char *const argv[],
+             char *const envp[], int xflags)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (__spawni)
+stub_warning(__spawni)

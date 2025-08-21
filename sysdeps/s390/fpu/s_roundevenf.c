@@ -22,17 +22,16 @@
 # include <math.h>
 # include <libm-alias-float.h>
 
-float
-__roundevenf (float x)
+float __roundevenf(float x)
 {
-  float y;
-  /* The z196 zarch "load fp integer" (fiebra) instruction is rounding
-     x to the nearest integer with "ties to even" rounding mode
-     (M3-field: 4) where inexact exceptions are suppressed (M4-field: 4).  */
-  __asm__ ("fiebra %0,4,%1,4" : "=f" (y) : "f" (x));
-  return y;
+    float y;
+    /* The z196 zarch "load fp integer" (fiebra) instruction is rounding
+       x to the nearest integer with "ties to even" rounding mode
+       (M3-field: 4) where inexact exceptions are suppressed (M4-field: 4).  */
+    __asm__("fiebra %0,4,%1,4" : "=f"(y) : "f"(x));
+    return y;
 }
-libm_alias_float (__roundeven, roundeven)
+libm_alias_float(__roundeven, roundeven)
 
 #else
 # include <sysdeps/ieee754/flt-32/s_roundevenf.c>

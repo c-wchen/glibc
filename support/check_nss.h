@@ -28,14 +28,14 @@ __BEGIN_DECLS
    to be formatted according to the support_format_* functions in
    <support/format_nss.h>).  If there is a difference, a delayed test
    failure is recorded, and a diff is written to standard output.  */
-void check_addrinfo (const char *query_description,
-                     struct addrinfo *, int ret, const char *expected);
-void check_dns_packet (const char *query_description,
-                       const unsigned char *, size_t, const char *expected);
-void check_hostent (const char *query_description,
-                    struct hostent *, const char *expected);
-void check_netent (const char *query_description,
-                   struct netent *, const char *expected);
+void check_addrinfo(const char *query_description,
+                    struct addrinfo *, int ret, const char *expected);
+void check_dns_packet(const char *query_description,
+                      const unsigned char *, size_t, const char *expected);
+void check_hostent(const char *query_description,
+                   struct hostent *, const char *expected);
+void check_netent(const char *query_description,
+                  struct netent *, const char *expected);
 
 __END_DECLS
 

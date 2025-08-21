@@ -57,52 +57,50 @@
 #  include <netiucv/iucv.h>
 # endif
 
-int
-__libc_sa_len (sa_family_t af)
+int __libc_sa_len(sa_family_t af)
 {
-  switch (af)
-    {
+    switch (af) {
 # ifdef HAVE_NETATALK_AT_H
-    case AF_APPLETALK:
-      return sizeof (struct sockaddr_at);
+        case AF_APPLETALK:
+            return sizeof(struct sockaddr_at);
 # endif
 # ifdef HAVE_NETASH_ASH_H
-    case AF_ASH:
-      return sizeof (struct sockaddr_ash);
+        case AF_ASH:
+            return sizeof(struct sockaddr_ash);
 # endif
 # ifdef HAVE_NETAX25_AX25_H
-    case AF_AX25:
-      return sizeof (struct sockaddr_ax25);
+        case AF_AX25:
+            return sizeof(struct sockaddr_ax25);
 # endif
 # ifdef HAVE_NETECONET_EC_H
-    case AF_ECONET:
-      return sizeof (struct sockaddr_ec);
+        case AF_ECONET:
+            return sizeof(struct sockaddr_ec);
 # endif
-    case AF_INET:
-      return sizeof (struct sockaddr_in);
-    case AF_INET6:
-      return sizeof (struct sockaddr_in6);
+        case AF_INET:
+            return sizeof(struct sockaddr_in);
+        case AF_INET6:
+            return sizeof(struct sockaddr_in6);
 # ifdef HAVE_NETIPX_IPX_H
-    case AF_IPX:
-      return sizeof (struct sockaddr_ipx);
+        case AF_IPX:
+            return sizeof(struct sockaddr_ipx);
 # endif
 # ifdef HAVE_NETIUCV_IUCV_H
-    case AF_IUCV:
-      return sizeof (struct sockaddr_iucv);
+        case AF_IUCV:
+            return sizeof(struct sockaddr_iucv);
 # endif
-    case AF_LOCAL:
-      return sizeof (struct sockaddr_un);
+        case AF_LOCAL:
+            return sizeof(struct sockaddr_un);
 # ifdef HAVE_NETPACKET_PACKET_H
-    case AF_PACKET:
-      return sizeof (struct sockaddr_ll);
+        case AF_PACKET:
+            return sizeof(struct sockaddr_ll);
 # endif
 # ifdef HAVE_NETROSE_ROSE_H
-    case AF_ROSE:
-      return sizeof (struct sockaddr_rose);
+        case AF_ROSE:
+            return sizeof(struct sockaddr_rose);
 # endif
     }
-  return 0;
+    return 0;
 }
-libc_hidden_def (__libc_sa_len)
+libc_hidden_def(__libc_sa_len)
 
 #endif  /* Not _HAVE_SA_LEN.  */

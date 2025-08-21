@@ -25,28 +25,27 @@
 #include <support/check.h>
 #include <support/xdlfcn.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  TEST_VERIFY (dlsym (NULL, "no_delete_mod_function") == NULL);
+    TEST_VERIFY(dlsym(NULL, "no_delete_mod_function") == NULL);
 
-  /* This is expected to fail because of the missing dependency.  */
-  puts ("info: attempting to load tst-dlopenfailmod1.so");
-  TEST_VERIFY (dlopen ("tst-dlopenfailmod1.so", RTLD_LAZY) == NULL);
-  const char *message = dlerror ();
-  TEST_COMPARE_STRING (message,
-                       "tst-dlopenfail-missingmod.so:"
-                       " cannot open shared object file:"
-                       " No such file or directory");
+    /* This is expected to fail because of the missing dependency.  */
+    puts("info: attempting to load tst-dlopenfailmod1.so");
+    TEST_VERIFY(dlopen("tst-dlopenfailmod1.so", RTLD_LAZY) == NULL);
+    const char *message = dlerror();
+    TEST_COMPARE_STRING(message,
+                        "tst-dlopenfail-missingmod.so:"
+                        " cannot open shared object file:"
+                        " No such file or directory");
 
-  /* Open a small shared object.  With a dangling GL (dl_initfirst)
-     pointer, this is likely to crash because there is no longer any
-     mapped text segment there (bug 25396).  */
+    /* Open a small shared object.  With a dangling GL (dl_initfirst)
+       pointer, this is likely to crash because there is no longer any
+       mapped text segment there (bug 25396).  */
 
-  puts ("info: attempting to load tst-dlopenfailmod3.so");
-  xdlclose (xdlopen ("tst-dlopenfailmod3.so", RTLD_NOW));
+    puts("info: attempting to load tst-dlopenfailmod3.so");
+    xdlclose(xdlopen("tst-dlopenfailmod3.so", RTLD_NOW));
 
-  return 0;
+    return 0;
 }
 
 /* Do not perturb the dangling link map.  With M_PERTURB, the link map

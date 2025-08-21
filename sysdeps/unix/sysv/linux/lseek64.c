@@ -23,38 +23,37 @@
 #include <errno.h>
 #include <shlib-compat.h>
 
-off64_t
-__lseek64 (int fd, off64_t offset, int whence)
+off64_t __lseek64(int fd, off64_t offset, int whence)
 {
 #ifdef __NR_llseek
 # define __NR__llseek __NR_llseek
 #endif
 
 #ifdef __NR__llseek
-  loff_t res;
-  int rc = INLINE_SYSCALL_CALL (_llseek, fd,
-				(long) (((uint64_t) (offset)) >> 32),
-				(long) offset, &res, whence);
-  return rc ?: res;
+    loff_t res;
+    int rc = INLINE_SYSCALL_CALL(_llseek, fd,
+                                 (long)(((uint64_t)(offset)) >> 32),
+                                 (long) offset, &res, whence);
+    return rc ? : res;
 #else
-  return INLINE_SYSCALL_CALL (lseek, fd, offset, whence);
+    return INLINE_SYSCALL_CALL(lseek, fd, offset, whence);
 #endif
 }
 
 #ifdef  __OFF_T_MATCHES_OFF64_T
-weak_alias (__lseek64, lseek)
-weak_alias (__lseek64, __lseek)
-strong_alias (__lseek64, __libc_lseek)
-libc_hidden_def (__lseek)
+weak_alias(__lseek64, lseek)
+weak_alias(__lseek64, __lseek)
+strong_alias(__lseek64, __libc_lseek)
+libc_hidden_def(__lseek)
 #endif
 
-strong_alias (__lseek64, __libc_lseek64)
-weak_alias (__lseek64, lseek64)
+strong_alias(__lseek64, __libc_lseek64)
+weak_alias(__lseek64, lseek64)
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_28)
-compat_symbol (libc, __lseek64, llseek, GLIBC_2_0);
+compat_symbol(libc, __lseek64, llseek, GLIBC_2_0);
 #endif
 
 #if !IS_IN(rtld) && OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1, GLIBC_2_2)
-compat_symbol (libc, __lseek64, lseek64, GLIBC_2_2);
+compat_symbol(libc, __lseek64, lseek64, GLIBC_2_2);
 #endif

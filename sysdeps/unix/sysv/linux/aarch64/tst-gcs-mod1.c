@@ -18,10 +18,10 @@
 
 #include <stdio.h>
 
-int fun2 (void); // tst-gcs-mod2.c
+int fun2(void);  // tst-gcs-mod2.c
 
-int fun1 (void)
+int fun1(void)
 {
-  puts ("called function fun1");
-  return fun2 ();
+    puts("called function fun1");
+    return fun2();
 }

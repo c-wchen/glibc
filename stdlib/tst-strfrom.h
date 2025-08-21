@@ -44,77 +44,75 @@
 #define INF INFINITY + 0.0
 #define NAN_ NAN + 0.0
 
-struct test_input
-{
-  STRUCT_FOREACH_FLOAT_FTYPE
+struct test_input {
+    STRUCT_FOREACH_FLOAT_FTYPE
 };
 struct test {
-  const char *s;
-  const char *fmt;
-  int size;
-  int rc;
-  struct test_input t;
+    const char *s;
+    const char *fmt;
+    int size;
+    int rc;
+    struct test_input t;
 };
-#define TEST(s, fmt, size, rc, val)				\
-  {								\
-    s, fmt, size, rc, { GEN_TEST_STRTOD_FOREACH (ENTRY, val) }	\
+#define TEST(s, fmt, size, rc, val)             \
+  {                             \
+    s, fmt, size, rc, { GEN_TEST_STRTOD_FOREACH (ENTRY, val) }  \
   }
 /* Hexadecimal tests.  */
-struct htests
-{
-  const char *fmt;
-  const char *exp[4];
-  struct test_input t;
+struct htests {
+    const char *fmt;
+    const char *exp[4];
+    struct test_input t;
 };
-#define HTEST(fmt, exp1, exp2, exp3, exp4, val)				  \
-  {									  \
+#define HTEST(fmt, exp1, exp2, exp3, exp4, val)               \
+  {                                   \
     fmt, exp1, exp2, exp3, exp4, { GEN_TEST_STRTOD_FOREACH (ENTRY, val) } \
   }
 
-#define TEST_STRFROM(FSUF, FTYPE, FTOSTR, LSUF, CSUF)			\
-static int								\
-test_ ## FSUF (void)							\
-{									\
-  char buf[50], sbuf[5];						\
-  int status = 0;							\
-  int i, rc = 0, rc1 = 0;						\
-  for (i = 0; i < sizeof (stest) / sizeof (stest[0]); i++)		\
-    {									\
-      rc = FTOSTR (sbuf, stest[i].size, stest[i].fmt, stest[i].t.FSUF);	\
-      rc1 = (strcmp (sbuf, stest[i].s) != 0) || (rc != stest[i].rc);	\
-      if (rc1)								\
-	{								\
-	  printf (#FTOSTR ": got %s (%d), expected %s (%d)\n",		\
-		  sbuf, rc, stest[i].s, stest[i].rc);			\
-	  status++;							\
-	}								\
-    }									\
-  for (i = 0; i < sizeof (tests) / sizeof (tests[0]); i++)		\
-    {									\
-      rc = FTOSTR (buf, tests[i].size, tests[i].fmt, tests[i].t.FSUF);	\
-      rc1 = (strcmp (buf, tests[i].s) != 0) || (rc != tests[i].rc);	\
-      if (rc1)								\
-	{								\
-	  printf (#FTOSTR ": got %s (%d), expected %s (%d)\n",		\
-		  buf, rc, tests[i].s, tests[i].rc);			\
-	  status++;							\
-	}								\
-    }									\
-  for (i = 0; i < sizeof (htest) / sizeof (htest[0]); i++)		\
-    {									\
-      rc = FTOSTR (buf, 50, htest[i].fmt, htest[i].t.FSUF);		\
-      if (strcmp (buf, htest[i].exp[0]) == 0				\
-	  || strcmp (buf, htest[i].exp[1]) == 0				\
-	  || strcmp (buf, htest[i].exp[2]) == 0				\
-	  || strcmp (buf, htest[i].exp[3]) == 0)			\
-	continue;							\
-      else								\
-	{								\
-	  printf (#FTOSTR ": got %s (%d), expected %s or %s or %s "	\
-		  "or %s\n", buf, rc, htest[i].exp[0], htest[i].exp[1],	\
-		  htest[i].exp[2], htest[i].exp[3]);			\
-	  status++;							\
-	}								\
-    }									\
-  return status;							\
+#define TEST_STRFROM(FSUF, FTYPE, FTOSTR, LSUF, CSUF)           \
+static int                              \
+test_ ## FSUF (void)                            \
+{                                   \
+  char buf[50], sbuf[5];                        \
+  int status = 0;                           \
+  int i, rc = 0, rc1 = 0;                       \
+  for (i = 0; i < sizeof (stest) / sizeof (stest[0]); i++)      \
+    {                                   \
+      rc = FTOSTR (sbuf, stest[i].size, stest[i].fmt, stest[i].t.FSUF); \
+      rc1 = (strcmp (sbuf, stest[i].s) != 0) || (rc != stest[i].rc);    \
+      if (rc1)                              \
+    {                               \
+      printf (#FTOSTR ": got %s (%d), expected %s (%d)\n",      \
+          sbuf, rc, stest[i].s, stest[i].rc);           \
+      status++;                         \
+    }                               \
+    }                                   \
+  for (i = 0; i < sizeof (tests) / sizeof (tests[0]); i++)      \
+    {                                   \
+      rc = FTOSTR (buf, tests[i].size, tests[i].fmt, tests[i].t.FSUF);  \
+      rc1 = (strcmp (buf, tests[i].s) != 0) || (rc != tests[i].rc); \
+      if (rc1)                              \
+    {                               \
+      printf (#FTOSTR ": got %s (%d), expected %s (%d)\n",      \
+          buf, rc, tests[i].s, tests[i].rc);            \
+      status++;                         \
+    }                               \
+    }                                   \
+  for (i = 0; i < sizeof (htest) / sizeof (htest[0]); i++)      \
+    {                                   \
+      rc = FTOSTR (buf, 50, htest[i].fmt, htest[i].t.FSUF);     \
+      if (strcmp (buf, htest[i].exp[0]) == 0                \
+      || strcmp (buf, htest[i].exp[1]) == 0             \
+      || strcmp (buf, htest[i].exp[2]) == 0             \
+      || strcmp (buf, htest[i].exp[3]) == 0)            \
+    continue;                           \
+      else                              \
+    {                               \
+      printf (#FTOSTR ": got %s (%d), expected %s or %s or %s " \
+          "or %s\n", buf, rc, htest[i].exp[0], htest[i].exp[1], \
+          htest[i].exp[2], htest[i].exp[3]);            \
+      status++;                         \
+    }                               \
+    }                                   \
+  return status;                            \
 }

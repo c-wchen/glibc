@@ -26,60 +26,59 @@
 #include <support/timespec.h>
 #include <support/xthread.h>
 
-static void *
-tf (void *arg)
+static void *tf(void *arg)
 {
-  pause ();
-  return NULL;
+    pause();
+    return NULL;
 }
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  const clockid_t clocks[] = {
-    CLOCK_REALTIME,
-    CLOCK_MONOTONIC,
-    CLOCK_PROCESS_CPUTIME_ID,
-    CLOCK_THREAD_CPUTIME_ID,
-    CLOCK_THREAD_CPUTIME_ID,
-    CLOCK_MONOTONIC_RAW,
-    CLOCK_REALTIME_COARSE,
-    CLOCK_MONOTONIC_COARSE,
+    const clockid_t clocks[] = {
+        CLOCK_REALTIME,
+        CLOCK_MONOTONIC,
+        CLOCK_PROCESS_CPUTIME_ID,
+        CLOCK_THREAD_CPUTIME_ID,
+        CLOCK_THREAD_CPUTIME_ID,
+        CLOCK_MONOTONIC_RAW,
+        CLOCK_REALTIME_COARSE,
+        CLOCK_MONOTONIC_COARSE,
 #ifdef CLOCK_BOOTTIME
-    CLOCK_BOOTTIME,
+        CLOCK_BOOTTIME,
 #endif
 #ifdef CLOCK_REALTIME_ALARM
-    CLOCK_REALTIME_ALARM,
+        CLOCK_REALTIME_ALARM,
 #endif
 #ifdef CLOCK_BOOTTIME_ALARM
-    CLOCK_BOOTTIME_ALARM,
+        CLOCK_BOOTTIME_ALARM,
 #endif
 #ifdef CLOCK_TAI
-    CLOCK_TAI
+        CLOCK_TAI
 #endif
-  };
+    };
 
-  pthread_t thr = xpthread_create (NULL, tf, NULL);
+    pthread_t thr = xpthread_create(NULL, tf, NULL);
 
-  for (int t = 0; t < array_length (clocks); t++)
-    {
-      /* Create a valid timeout to check for ETIMEDOUT on valid clocks.  */
-      struct timespec tmo;
-      if (clock_gettime (clocks[t], &tmo) == -1)
-	/* For clocks not supported, create a large timeout (it should
-	   fail early with EINVAL).  */
-	tmo = make_timespec (-1, 0);
-      else
-	tmo = timespec_add (tmo, make_timespec (0, 100000000));
+    for (int t = 0; t < array_length(clocks); t++) {
+        /* Create a valid timeout to check for ETIMEDOUT on valid clocks.  */
+        struct timespec tmo;
+        if (clock_gettime(clocks[t], &tmo) == -1)
+            /* For clocks not supported, create a large timeout (it should
+               fail early with EINVAL).  */
+        {
+            tmo = make_timespec(-1, 0);
+        } else {
+            tmo = timespec_add(tmo, make_timespec(0, 100000000));
+        }
 
-      int ret = clocks[t] == CLOCK_REALTIME || clocks[t] == CLOCK_MONOTONIC
-		? ETIMEDOUT : EINVAL;
+        int ret = clocks[t] == CLOCK_REALTIME || clocks[t] == CLOCK_MONOTONIC
+                  ? ETIMEDOUT : EINVAL;
 
-      TEST_COMPARE (pthread_clockjoin_np (thr, NULL, clocks[t], &tmo), ret);
+        TEST_COMPARE(pthread_clockjoin_np(thr, NULL, clocks[t], &tmo), ret);
     }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

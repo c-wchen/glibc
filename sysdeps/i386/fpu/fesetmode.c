@@ -25,29 +25,30 @@
    exception.  */
 #define FE_ALL_EXCEPT_X86 (FE_ALL_EXCEPT | __FE_DENORM)
 
-int
-fesetmode (const femode_t *modep)
+int fesetmode(const femode_t *modep)
 {
-  fpu_control_t cw;
-  if (modep == FE_DFL_MODE)
-    cw = _FPU_DEFAULT;
-  else
-    cw = modep->__control_word;
-  _FPU_SETCW (cw);
-  if (CPU_FEATURE_USABLE (SSE))
-    {
-      unsigned int mxcsr;
-      __asm__ ("stmxcsr %0" : "=m" (mxcsr));
-      /* Preserve SSE exception flags but restore other state in
-	 MXCSR.  */
-      mxcsr &= FE_ALL_EXCEPT_X86;
-      if (modep == FE_DFL_MODE)
-	/* Default MXCSR state has all bits zero except for those
-	   masking exceptions.  */
-	mxcsr |= FE_ALL_EXCEPT_X86 << 7;
-      else
-	mxcsr |= modep->__mxcsr & ~FE_ALL_EXCEPT_X86;
-      __asm__ ("ldmxcsr %0" : : "m" (mxcsr));
+    fpu_control_t cw;
+    if (modep == FE_DFL_MODE) {
+        cw = _FPU_DEFAULT;
+    } else {
+        cw = modep->__control_word;
     }
-  return 0;
+    _FPU_SETCW(cw);
+    if (CPU_FEATURE_USABLE(SSE)) {
+        unsigned int mxcsr;
+        __asm__("stmxcsr %0" : "=m"(mxcsr));
+        /* Preserve SSE exception flags but restore other state in
+        MXCSR.  */
+        mxcsr &= FE_ALL_EXCEPT_X86;
+        if (modep == FE_DFL_MODE)
+            /* Default MXCSR state has all bits zero except for those
+               masking exceptions.  */
+        {
+            mxcsr |= FE_ALL_EXCEPT_X86 << 7;
+        } else {
+            mxcsr |= modep->__mxcsr & ~FE_ALL_EXCEPT_X86;
+        }
+        __asm__("ldmxcsr %0" : : "m"(mxcsr));
+    }
+    return 0;
 }

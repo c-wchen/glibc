@@ -21,38 +21,38 @@
 
 TST_WCSLEN tst_wcslen_loc [] = {
 
-  {   { Twcslen, TST_LOC_de },
-      {
-	{ /*input.*/ { { 0x00D1,0x00D2,0x00D3,0x0000 } },  /* #01 */
-	  /*expect*/ { 0,1,3,                        },
-	},
-	{ /*input.*/ { { 0x0000 }                      },  /* #02 */
-	  /*expect*/ { 0,1,0,                        },
-	},
-	{ .is_last = 1 }
-      }
-  },
-  {   { Twcslen, TST_LOC_enUS },
-      {
-	{ /*input.*/ { { 0x0041,0x0042,0x0043,0x0000 } },  /* #01 */
-	  /*expect*/ { 0,1,3,                        },
-	},
-	{ /*input.*/ { { 0x0000 }                      },  /* #02 */
-	  /*expect*/ { 0,1,0,                        },
-	},
-	{ .is_last = 1 }
-      }
-  },
-  {   { Twcslen, TST_LOC_eucJP },
-      {
-	{ /*input.*/ { { 0x3041,0x3042,0x3043,0x0000 } },  /* #01 */
-	  /*expect*/ { 0,1,3,                        },
-	},
-	{ /*input.*/ { { 0x0000 }                      },  /* #02 */
-	  /*expect*/ { 0,1,0,                        },
-	},
-	{ .is_last = 1 }
-      }
-  },
-  {   { Twcslen, TST_LOC_end }}
+    {   { Twcslen, TST_LOC_de },
+        {
+            { /*input.*/ { { 0x00D1, 0x00D2, 0x00D3, 0x0000 } }, /* #01 */
+                /*expect*/ { 0, 1, 3,                        },
+            },
+            { /*input.*/ { { 0x0000 }                      },  /* #02 */
+                /*expect*/ { 0, 1, 0,                        },
+            },
+            { .is_last = 1 }
+        }
+    },
+    {   { Twcslen, TST_LOC_enUS },
+        {
+            { /*input.*/ { { 0x0041, 0x0042, 0x0043, 0x0000 } }, /* #01 */
+                /*expect*/ { 0, 1, 3,                        },
+            },
+            { /*input.*/ { { 0x0000 }                      },  /* #02 */
+                /*expect*/ { 0, 1, 0,                        },
+            },
+            { .is_last = 1 }
+        }
+    },
+    {   { Twcslen, TST_LOC_eucJP },
+        {
+            { /*input.*/ { { 0x3041, 0x3042, 0x3043, 0x0000 } }, /* #01 */
+                /*expect*/ { 0, 1, 3,                        },
+            },
+            { /*input.*/ { { 0x0000 }                      },  /* #02 */
+                /*expect*/ { 0, 1, 0,                        },
+            },
+            { .is_last = 1 }
+        }
+    },
+    {   { Twcslen, TST_LOC_end }}
 };

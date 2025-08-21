@@ -19,8 +19,7 @@
 
 
 /* Execute PATH with arguments ARGV and environment from `environ'.  */
-int
-execv (const char *path, char *const argv[])
+int execv(const char *path, char *const argv[])
 {
-  return __execve (path, argv, __environ);
+    return __execve(path, argv, __environ);
 }

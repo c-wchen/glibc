@@ -23,56 +23,49 @@
 #include <tst-stack-align.h>
 
 ucontext_t ucp, ucp2;
-char st1[262144] __attribute__((aligned (16)));
+char st1[262144] __attribute__((aligned(16)));
 
-void
-cf (int i, int j)
+void cf(int i, int j)
 {
-  if (i != 78 || j != 274)
-    {
-      printf ("i %d j %d\n", i, j);
-      exit (1);
-    }
-  else if (TEST_STACK_ALIGN ())
-    {
-      puts ("insufficiently aligned stack");
-      exit (2);
+    if (i != 78 || j != 274) {
+        printf("i %d j %d\n", i, j);
+        exit(1);
+    } else if (TEST_STACK_ALIGN()) {
+        puts("insufficiently aligned stack");
+        exit(2);
     }
 }
 
-int
-do_test (void)
+int do_test(void)
 {
-  for (size_t j = 32; j < 64; j += sizeof (long))
-    {
-      if (getcontext (&ucp) != 0)
-	{
-	  if (errno == ENOSYS)
-	    {
-	      puts ("context handling not supported");
-	      return 0;
-	    }
+    for (size_t j = 32; j < 64; j += sizeof(long)) {
+        if (getcontext(&ucp) != 0) {
+            if (errno == ENOSYS) {
+                puts("context handling not supported");
+                return 0;
+            }
 
-	  puts ("getcontext failed");
-	  return 1;
-	}
-      ucp.uc_link = &ucp2;
-      ucp.uc_stack.ss_sp = st1;
-      ucp.uc_stack.ss_size = sizeof (st1) - j;
-      memset (&st1[sizeof (st1) - j], 0x55, j);
-      makecontext (&ucp, (void (*) (void)) cf, 2, 78, 274);
-      if (swapcontext (&ucp2, &ucp) != 0)
-	{
-	  puts ("swapcontext failed");
-	  return 1;
-	}
+            puts("getcontext failed");
+            return 1;
+        }
+        ucp.uc_link = &ucp2;
+        ucp.uc_stack.ss_sp = st1;
+        ucp.uc_stack.ss_size = sizeof(st1) - j;
+        memset(&st1[sizeof(st1) - j], 0x55, j);
+        makecontext(&ucp, (void (*)(void)) cf, 2, 78, 274);
+        if (swapcontext(&ucp2, &ucp) != 0) {
+            puts("swapcontext failed");
+            return 1;
+        }
 
-      for (size_t i = j; i > 0; i--)
-	if (st1[sizeof (st1) - j + i - 1] != 0x55)
-	  { printf ("fail %zd %zd\n", i, j); break; }
+        for (size_t i = j; i > 0; i--)
+            if (st1[sizeof(st1) - j + i - 1] != 0x55) {
+                printf("fail %zd %zd\n", i, j);
+                break;
+            }
     }
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

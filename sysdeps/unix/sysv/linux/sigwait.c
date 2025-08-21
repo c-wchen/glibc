@@ -19,21 +19,22 @@
 #include <sysdep-cancel.h>
 #include <errno.h>
 
-int
-__sigwait (const sigset_t *set, int *sig)
+int __sigwait(const sigset_t *set, int *sig)
 {
-  siginfo_t si;
-  int ret;
-  do
-    ret = __sigtimedwait (set, &si, NULL);
-  /* Applications do not expect sigwait to return with EINTR, and the
-     error code is not specified by POSIX.  */
-  while (ret < 0 && errno == EINTR);
-  if (ret < 0)
-    return errno;
-  *sig = si.si_signo;
-  return 0;
+    siginfo_t si;
+    int ret;
+    do {
+        ret = __sigtimedwait(set, &si, NULL);
+    }
+    /* Applications do not expect sigwait to return with EINTR, and the
+       error code is not specified by POSIX.  */
+    while (ret < 0 && errno == EINTR);
+    if (ret < 0) {
+        return errno;
+    }
+    *sig = si.si_signo;
+    return 0;
 }
-libc_hidden_def (__sigwait)
-weak_alias (__sigwait, sigwait)
-strong_alias (__sigwait, __libc_sigwait)
+libc_hidden_def(__sigwait)
+weak_alias(__sigwait, sigwait)
+strong_alias(__sigwait, __libc_sigwait)

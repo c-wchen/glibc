@@ -2,8 +2,7 @@
 #include <complex.h>
 
 double _Complex
-attribute_hidden
-clogl (double _Complex x)
+attribute_hidden clogl(double _Complex x)
 {
-  return clog (x);
+    return clog(x);
 }

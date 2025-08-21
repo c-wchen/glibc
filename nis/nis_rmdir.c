@@ -21,21 +21,22 @@
 #include "nis_xdr.h"
 #include "nis_intern.h"
 
-nis_error
-nis_rmdir (const_nis_name dir, const nis_server *server)
+nis_error nis_rmdir(const_nis_name dir, const nis_server *server)
 {
-  nis_error res, res2;
+    nis_error res, res2;
 
-  if (server == NULL)
-    return NIS_SYSTEMERROR;
+    if (server == NULL) {
+        return NIS_SYSTEMERROR;
+    }
 
-  res2 = __do_niscall2 (server, 1, NIS_RMDIR,
-			(xdrproc_t) _xdr_nis_name,
-			(caddr_t) &dir, (xdrproc_t) _xdr_nis_error,
-			(caddr_t) &res, 0, NULL);
-  if (res2 != NIS_SUCCESS)
-    return res2;
+    res2 = __do_niscall2(server, 1, NIS_RMDIR,
+                         (xdrproc_t) _xdr_nis_name,
+                         (caddr_t) &dir, (xdrproc_t) _xdr_nis_error,
+                         (caddr_t) &res, 0, NULL);
+    if (res2 != NIS_SUCCESS) {
+        return res2;
+    }
 
-  return res;
+    return res;
 }
-libnsl_hidden_nolink_def (nis_rmdir, GLIBC_2_1)
+libnsl_hidden_nolink_def(nis_rmdir, GLIBC_2_1)

@@ -19,7 +19,7 @@
 #include <stdbit.h>
 
 _Bool
-(stdc_has_single_bit_us) (unsigned short x)
+(stdc_has_single_bit_us)(unsigned short x)
 {
-  return stdc_has_single_bit_us (x);
+    return stdc_has_single_bit_us(x);
 }

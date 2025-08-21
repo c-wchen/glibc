@@ -27,16 +27,16 @@
 # include <ifunc-resolve.h>
 
 # if HAVE_STRNCMP_C
-extern __typeof (__redirect_strncmp) STRNCMP_C attribute_hidden;
+extern __typeof(__redirect_strncmp) STRNCMP_C attribute_hidden;
 # endif
 
 # if HAVE_STRNCMP_Z13
-extern __typeof (__redirect_strncmp) STRNCMP_Z13 attribute_hidden;
+extern __typeof(__redirect_strncmp) STRNCMP_Z13 attribute_hidden;
 # endif
 
-s390_libc_ifunc_expr (__redirect_strncmp, strncmp,
-		      (HAVE_STRNCMP_Z13 && (hwcap & HWCAP_S390_VX))
-		      ? STRNCMP_Z13
-		      : STRNCMP_DEFAULT
-		      )
+s390_libc_ifunc_expr(__redirect_strncmp, strncmp,
+                     (HAVE_STRNCMP_Z13 &&(hwcap &HWCAP_S390_VX))
+                     ? STRNCMP_Z13
+                     : STRNCMP_DEFAULT
+                    )
 #endif /* HAVE_STRNCMP_IFUNC  */

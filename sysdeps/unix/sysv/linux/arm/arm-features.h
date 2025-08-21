@@ -22,7 +22,7 @@
 #ifndef __ASSEMBLER__
 # include <ldsodefs.h>
 
-# define ARM_HAVE_VFP	(GLRO (dl_hwcap) & HWCAP_ARM_VFP)
+# define ARM_HAVE_VFP   (GLRO (dl_hwcap) & HWCAP_ARM_VFP)
 #endif
 
 #include_next <arm-features.h>

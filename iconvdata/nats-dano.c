@@ -21,7 +21,7 @@
 /* Get the conversion table.  */
 #define TABLES <nats-dano.h>
 
-#define CHARSET_NAME	"NATS-DANO//"
-#define HAS_HOLES	1	/* Not all 256 character are defined.  */
+#define CHARSET_NAME    "NATS-DANO//"
+#define HAS_HOLES   1   /* Not all 256 character are defined.  */
 
 #include <8bit-gap.c>

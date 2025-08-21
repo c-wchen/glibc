@@ -17,17 +17,16 @@
 
 #include <unistd.h>
 
-extern void m (void);
+extern void m(void);
 
-int
-main (void)
+int main(void)
 {
-  alarm (5);
+    alarm(5);
 
-  m ();
+    m();
 
-  /* The destructor is supposed to run now.  Make sure that if it is
-     not we will notice it by using 42 as the exit code.  In case the
-     destructor is run it will terminate with status zero.  */
-  return 42;
+    /* The destructor is supposed to run now.  Make sure that if it is
+       not we will notice it by using 42 as the exit code.  In case the
+       destructor is run it will terminate with status zero.  */
+    return 42;
 }

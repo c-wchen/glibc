@@ -22,17 +22,17 @@
 # include <shlib-compat.h>
 # include "init-arch.h"
 
-extern __typeof (__rawmemchr) __rawmemchr_ppc attribute_hidden;
-extern __typeof (__rawmemchr) __rawmemchr_power7 attribute_hidden;
+extern __typeof(__rawmemchr) __rawmemchr_ppc attribute_hidden;
+extern __typeof(__rawmemchr) __rawmemchr_power7 attribute_hidden;
 # undef __rawmemchr
 
 /* Avoid DWARF definition DIE on ifunc symbol so that GDB can handle
    ifunc symbol properly.  */
-libc_ifunc_redirected (__redirect___rawmemchr, __rawmemchr,
-		       (hwcap & PPC_FEATURE_HAS_VSX)
-		       ? __rawmemchr_power7
-		       : __rawmemchr_ppc);
-weak_alias (__rawmemchr, rawmemchr)
+libc_ifunc_redirected(__redirect___rawmemchr, __rawmemchr,
+                      (hwcap &PPC_FEATURE_HAS_VSX)
+                      ? __rawmemchr_power7
+                      : __rawmemchr_ppc);
+weak_alias(__rawmemchr, rawmemchr)
 #else
 #include <string/rawmemchr.c>
 #endif

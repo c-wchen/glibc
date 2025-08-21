@@ -20,12 +20,11 @@
 #include <sys/types.h>
 
 /* Get the real user ID of the calling process.  */
-uid_t
-__getuid (void)
+uid_t __getuid(void)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (getuid)
+stub_warning(getuid)
 
-weak_alias (__getuid, getuid)
+weak_alias(__getuid, getuid)

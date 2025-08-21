@@ -54,19 +54,20 @@
    buffer (BUF->base.failed) and propagate any error to the inner
    buffer (BUF->next->failed), so essentially in the other
    direction.  */
-static void Xprintf (buffer_do_flush) (struct Xprintf_buffer *buf);
+static void Xprintf(buffer_do_flush)(struct Xprintf_buffer *buf);
 
-bool
-Xprintf_buffer_flush (struct Xprintf_buffer *buf)
+bool Xprintf_buffer_flush(struct Xprintf_buffer *buf)
 {
-  if (__glibc_unlikely (Xprintf_buffer_has_failed (buf)))
-    return false;
+    if (__glibc_unlikely(Xprintf_buffer_has_failed(buf))) {
+        return false;
+    }
 
-  Xprintf (buffer_do_flush) (buf);
-  if (Xprintf_buffer_has_failed (buf))
-    return false;
+    Xprintf(buffer_do_flush)(buf);
+    if (Xprintf_buffer_has_failed(buf)) {
+        return false;
+    }
 
-  /* Ensure that the flush has made available some bytes.  */
-  assert (buf->write_ptr != buf->write_end);
-  return true;
+    /* Ensure that the flush has made available some bytes.  */
+    assert(buf->write_ptr != buf->write_end);
+    return true;
 }

@@ -22,25 +22,24 @@
 #include <sys/types.h>
 
 /* Flags for `semop'.  */
-#define SEM_UNDO	0x1000		/* undo the operation on exit */
+#define SEM_UNDO    0x1000      /* undo the operation on exit */
 
 /* Commands for `semctl'.  */
-#define GETPID		11		/* get sempid */
-#define GETVAL		12		/* get semval */
-#define GETALL		13		/* get all semval's */
-#define GETNCNT		14		/* get semncnt */
-#define GETZCNT		15		/* get semzcnt */
-#define SETVAL		16		/* set semval */
-#define SETALL		17		/* set all semval's */
+#define GETPID      11      /* get sempid */
+#define GETVAL      12      /* get semval */
+#define GETALL      13      /* get all semval's */
+#define GETNCNT     14      /* get semncnt */
+#define GETZCNT     15      /* get semzcnt */
+#define SETVAL      16      /* set semval */
+#define SETALL      17      /* set all semval's */
 
 
 /* Data structure describing a set of semaphores.  */
-struct semid_ds
-{
-  struct ipc_perm sem_perm;		/* operation permission struct */
-  __time_t sem_otime;			/* last semop() time */
-  __time_t sem_ctime;			/* last time changed by semctl() */
-  unsigned short int sem_nsems;		/* number of semaphores in set */
+struct semid_ds {
+    struct ipc_perm sem_perm;     /* operation permission struct */
+    __time_t sem_otime;           /* last semop() time */
+    __time_t sem_ctime;           /* last time changed by semctl() */
+    unsigned short int sem_nsems;     /* number of semaphores in set */
 };
 
 /* The user should define a union like the following to use it for arguments
@@ -48,13 +47,13 @@ struct semid_ds
 
    union semun
    {
-     int val;				<= value for SETVAL
-     struct semid_ds *buf;		<= buffer for IPC_STAT & IPC_SET
-     unsigned short int *array;		<= array for GETALL & SETALL
-     struct seminfo *__buf;		<= buffer for IPC_INFO
+     int val;               <= value for SETVAL
+     struct semid_ds *buf;      <= buffer for IPC_STAT & IPC_SET
+     unsigned short int *array;     <= array for GETALL & SETALL
+     struct seminfo *__buf;     <= buffer for IPC_INFO
    };
 
    Previous versions of this file used to define this union but this is
    incorrect.  One can test the macro _SEM_SEMUN_UNDEFINED to see whether
    one must define the union or not.  */
-#define _SEM_SEMUN_UNDEFINED	1
+#define _SEM_SEMUN_UNDEFINED    1

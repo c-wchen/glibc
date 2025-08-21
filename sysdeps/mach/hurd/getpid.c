@@ -20,12 +20,11 @@
 #include <hurd.h>
 
 /* Get the process ID of the calling process.  */
-pid_t
-__getpid (void)
+pid_t __getpid(void)
 {
-  /* Assumes atomic word fetch and store, so doesn't lock _hurd_pid_lock.  */
-  return _hurd_pid;
+    /* Assumes atomic word fetch and store, so doesn't lock _hurd_pid_lock.  */
+    return _hurd_pid;
 }
-libc_hidden_def (__getpid)
-weak_alias (__getpid, getpid)
-libc_hidden_weak (getpid)
+libc_hidden_def(__getpid)
+weak_alias(__getpid, getpid)
+libc_hidden_weak(getpid)

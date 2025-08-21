@@ -25,71 +25,73 @@
 
 /* Return resource usage information on process indicated by WHO
    and put it in *USAGE.  Returns 0 for success, -1 for failure.  */
-int
-__getrusage (enum __rusage_who who, struct rusage *usage)
+int __getrusage(enum __rusage_who who, struct rusage *usage)
 {
-  struct task_basic_info bi;
-  struct task_events_info ei;
-  struct task_thread_times_info tti;
-  mach_msg_type_number_t count;
-  error_t err;
+    struct task_basic_info bi;
+    struct task_events_info ei;
+    struct task_thread_times_info tti;
+    mach_msg_type_number_t count;
+    error_t err;
 
-  switch (who)
-    {
-    case RUSAGE_SELF:
-      count = TASK_BASIC_INFO_COUNT;
-      err = __task_info (__mach_task_self (), TASK_BASIC_INFO,
-			 (task_info_t) &bi, &count);
-      if (err)
-	return __hurd_fail (err);
+    switch (who) {
+        case RUSAGE_SELF:
+            count = TASK_BASIC_INFO_COUNT;
+            err = __task_info(__mach_task_self(), TASK_BASIC_INFO,
+                              (task_info_t) &bi, &count);
+            if (err) {
+                return __hurd_fail(err);
+            }
 
-      count = TASK_EVENTS_INFO_COUNT;
-      err = __task_info (__mach_task_self (), TASK_EVENTS_INFO,
-			 (task_info_t) &ei, &count);
-      if (err == KERN_INVALID_ARGUMENT)	/* microkernel doesn't implement it */
-	memset (&ei, 0, sizeof ei);
-      else if (err)
-	return __hurd_fail (err);
+            count = TASK_EVENTS_INFO_COUNT;
+            err = __task_info(__mach_task_self(), TASK_EVENTS_INFO,
+                              (task_info_t) &ei, &count);
+            if (err == KERN_INVALID_ARGUMENT) { /* microkernel doesn't implement it */
+                memset(&ei, 0, sizeof ei);
+            } else if (err) {
+                return __hurd_fail(err);
+            }
 
-      count = TASK_THREAD_TIMES_INFO_COUNT;
-      err = __task_info (__mach_task_self (), TASK_THREAD_TIMES_INFO,
-			 (task_info_t) &tti, &count);
-      if (err)
-	return __hurd_fail (err);
+            count = TASK_THREAD_TIMES_INFO_COUNT;
+            err = __task_info(__mach_task_self(), TASK_THREAD_TIMES_INFO,
+                              (task_info_t) &tti, &count);
+            if (err) {
+                return __hurd_fail(err);
+            }
 
-      time_value_add (&bi.user_time, &tti.user_time);
-      time_value_add (&bi.system_time, &tti.system_time);
+            time_value_add(&bi.user_time, &tti.user_time);
+            time_value_add(&bi.system_time, &tti.system_time);
 
-      memset (usage, 0, sizeof (struct rusage));
+            memset(usage, 0, sizeof(struct rusage));
 
-      usage->ru_utime.tv_sec = bi.user_time.seconds;
-      usage->ru_utime.tv_usec = bi.user_time.microseconds;
-      usage->ru_stime.tv_sec = bi.system_time.seconds;
-      usage->ru_stime.tv_usec = bi.system_time.microseconds;
+            usage->ru_utime.tv_sec = bi.user_time.seconds;
+            usage->ru_utime.tv_usec = bi.user_time.microseconds;
+            usage->ru_stime.tv_sec = bi.system_time.seconds;
+            usage->ru_stime.tv_usec = bi.system_time.microseconds;
 
-      /* These statistics map only approximately.  */
-      usage->ru_majflt = ei.pageins;
-      usage->ru_minflt = ei.faults - ei.pageins;
-      usage->ru_msgsnd = ei.messages_sent; /* Mach IPC, not SysV IPC */
-      usage->ru_msgrcv = ei.messages_received; /* Mach IPC, not SysV IPC */
-      break;
+            /* These statistics map only approximately.  */
+            usage->ru_majflt = ei.pageins;
+            usage->ru_minflt = ei.faults - ei.pageins;
+            usage->ru_msgsnd = ei.messages_sent; /* Mach IPC, not SysV IPC */
+            usage->ru_msgrcv = ei.messages_received; /* Mach IPC, not SysV IPC */
+            break;
 
-    case RUSAGE_CHILDREN:
+        case RUSAGE_CHILDREN:
 #ifdef HAVE_HURD_PROC_GETCHILDREN_RUSAGE
-      err = __USEPORT (PROC, __proc_getchildren_rusage (port, usage));
-      if (err)
-	return __hurd_fail (err);
+            err = __USEPORT(PROC, __proc_getchildren_rusage(port, usage));
+            if (err) {
+                return __hurd_fail(err);
+            }
 #else
-      memset (usage, 0, sizeof (struct rusage));
+            memset(usage, 0, sizeof(struct rusage));
 #endif
 
-      break;
+            break;
 
-    default:
-      return EINVAL;
+        default:
+            return EINVAL;
     }
 
-  return 0;
+    return 0;
 }
 
-weak_alias (__getrusage, getrusage)
+weak_alias(__getrusage, getrusage)

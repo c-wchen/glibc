@@ -31,25 +31,24 @@
 #  define SHLIB_COMPAT(a, b, c) 0
 # endif
 
-int
-__new_getrlimit (enum __rlimit_resource resource, struct rlimit *rlim)
+int __new_getrlimit(enum __rlimit_resource resource, struct rlimit *rlim)
 {
-  return INLINE_SYSCALL_CALL (ugetrlimit, resource, rlim);
+    return INLINE_SYSCALL_CALL(ugetrlimit, resource, rlim);
 }
-weak_alias (__new_getrlimit, __getrlimit)
-hidden_weak (__getrlimit)
+weak_alias(__new_getrlimit, __getrlimit)
+hidden_weak(__getrlimit)
 
 # if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
 /* Back compatible 2Gig limited rlimit.  */
 int
-__old_getrlimit (enum __rlimit_resource resource, struct rlimit *rlim)
+__old_getrlimit(enum __rlimit_resource resource, struct rlimit *rlim)
 {
-  return INLINE_SYSCALL_CALL (getrlimit, resource, rlim);
+    return INLINE_SYSCALL_CALL(getrlimit, resource, rlim);
 }
-compat_symbol (libc, __old_getrlimit, getrlimit, GLIBC_2_0);
-versioned_symbol (libc, __new_getrlimit, getrlimit, GLIBC_2_2);
+compat_symbol(libc, __old_getrlimit, getrlimit, GLIBC_2_0);
+versioned_symbol(libc, __new_getrlimit, getrlimit, GLIBC_2_2);
 # else
-weak_alias (__new_getrlimit, getrlimit)
+weak_alias(__new_getrlimit, getrlimit)
 # endif
 
 #endif /* __RLIM_T_MATCHES_RLIM64_T  */

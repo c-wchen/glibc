@@ -22,17 +22,17 @@
 #endif
 
 /* Find the first occurrence of WC in WCS.  */
-wchar_t *
-__wcschrnul (const wchar_t *wcs, const wchar_t wc)
+wchar_t *__wcschrnul(const wchar_t *wcs, const wchar_t wc)
 {
-  while (*wcs != L'\0')
-    if (*wcs == wc)
-      break;
-    else
-      ++wcs;
+    while (*wcs != L'\0')
+        if (*wcs == wc) {
+            break;
+        } else {
+            ++wcs;
+        }
 
-  return (wchar_t *) wcs;
+    return (wchar_t *) wcs;
 }
 #ifndef WCSCHRNUL
-weak_alias (__wcschrnul, wcschrnul)
+weak_alias(__wcschrnul, wcschrnul)
 #endif

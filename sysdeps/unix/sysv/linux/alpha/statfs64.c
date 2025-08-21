@@ -21,31 +21,30 @@
 #include <kernel_stat.h>
 
 /* Return information about the filesystem on which FILE resides.  */
-int
-__statfs64 (const char *file, struct statfs64 *buf)
+int __statfs64(const char *file, struct statfs64 *buf)
 {
-  int r = INLINE_SYSCALL_CALL (statfs64, file, sizeof (*buf), buf);
+    int r = INLINE_SYSCALL_CALL(statfs64, file, sizeof(*buf), buf);
 #if __ASSUME_STATFS64 == 0
-  if (r == -1 && errno == ENOSYS)
-    {
-      struct statfs buf32;
-      if (__statfs (file, &buf32) < 0)
-	return -1;
+    if (r == -1 && errno == ENOSYS) {
+        struct statfs buf32;
+        if (__statfs(file, &buf32) < 0) {
+            return -1;
+        }
 
-      buf->f_type = buf32.f_type;
-      buf->f_bsize = buf32.f_bsize;
-      buf->f_blocks = buf32.f_blocks;
-      buf->f_bfree = buf32.f_bfree;
-      buf->f_bavail = buf32.f_bavail;
-      buf->f_files = buf32.f_files;
-      buf->f_ffree = buf32.f_ffree;
-      buf->f_fsid = buf32.f_fsid;
-      buf->f_namelen = buf32.f_namelen;
-      buf->f_frsize = buf32.f_frsize;
-      buf->f_flags = buf32.f_flags;
-      memcpy (buf->f_spare, buf32.f_spare, sizeof (buf32.f_spare));
+        buf->f_type = buf32.f_type;
+        buf->f_bsize = buf32.f_bsize;
+        buf->f_blocks = buf32.f_blocks;
+        buf->f_bfree = buf32.f_bfree;
+        buf->f_bavail = buf32.f_bavail;
+        buf->f_files = buf32.f_files;
+        buf->f_ffree = buf32.f_ffree;
+        buf->f_fsid = buf32.f_fsid;
+        buf->f_namelen = buf32.f_namelen;
+        buf->f_frsize = buf32.f_frsize;
+        buf->f_flags = buf32.f_flags;
+        memcpy(buf->f_spare, buf32.f_spare, sizeof(buf32.f_spare));
     }
 #endif
-  return r;
+    return r;
 }
-weak_alias (__statfs64, statfs64)
+weak_alias(__statfs64, statfs64)

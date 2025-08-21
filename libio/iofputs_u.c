@@ -28,16 +28,16 @@
 #include <stdio.h>
 #include <string.h>
 
-int
-__fputs_unlocked (const char *str, FILE *fp)
+int __fputs_unlocked(const char *str, FILE *fp)
 {
-  size_t len = strlen (str);
-  int result = EOF;
-  CHECK_FILE (fp, EOF);
-  if (_IO_fwide (fp, -1) == -1 && _IO_sputn (fp, str, len) == len)
-    result = 1;
-  return result;
+    size_t len = strlen(str);
+    int result = EOF;
+    CHECK_FILE(fp, EOF);
+    if (_IO_fwide(fp, -1) == -1 && _IO_sputn(fp, str, len) == len) {
+        result = 1;
+    }
+    return result;
 }
-libc_hidden_def (__fputs_unlocked)
-weak_alias (__fputs_unlocked, fputs_unlocked)
-libc_hidden_weak (fputs_unlocked)
+libc_hidden_def(__fputs_unlocked)
+weak_alias(__fputs_unlocked, fputs_unlocked)
+libc_hidden_weak(fputs_unlocked)

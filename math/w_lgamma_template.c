@@ -30,14 +30,16 @@
 #define M_CALL_FUNC(x) M_CALL_FUNC_X (x)
 
 FLOAT
-M_DECL_FUNC (__lgamma) (FLOAT x)
+M_DECL_FUNC(__lgamma)(FLOAT x)
 {
-  FLOAT y = M_CALL_FUNC (M_SUF (__ieee754_lgamma)) (x, &__signgam);
-  if (__glibc_unlikely (!isfinite (y)) && isfinite (x))
-    /* Pole error: lgamma(integer x<0).  Or overflow.  */
-    __set_errno (ERANGE);
-  return y;
+    FLOAT y = M_CALL_FUNC(M_SUF(__ieee754_lgamma))(x, &__signgam);
+    if (__glibc_unlikely(!isfinite(y)) && isfinite(x))
+        /* Pole error: lgamma(integer x<0).  Or overflow.  */
+    {
+        __set_errno(ERANGE);
+    }
+    return y;
 }
-declare_mgen_alias (__lgamma, lgamma)
+declare_mgen_alias(__lgamma, lgamma)
 
 #endif /* __USE_WRAPPER_TEMPLATE.  */

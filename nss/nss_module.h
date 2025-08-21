@@ -26,78 +26,73 @@
 
 /* Typed function pointers for all functions that can be defined by a
    service module.  */
-struct nss_module_functions
-{
+struct nss_module_functions {
 #undef DEFINE_NSS_FUNCTION
 #define DEFINE_NSS_FUNCTION(f) nss_##f *f;
 #include "function.def"
 };
 
 /* Number of elements of the nss_module_functions_untyped array.  */
-enum
-  {
-    nss_module_functions_count = (sizeof (struct nss_module_functions)
-                                  / sizeof (void *))
-  };
+enum {
+    nss_module_functions_count = (sizeof(struct nss_module_functions)
+                                  / sizeof(void *))
+};
 
 /* Untyped version of struct nss_module_functions, for consistent
    processing purposes.  */
 typedef void *nss_module_functions_untyped[nss_module_functions_count];
 
 /* Locate the nss_files functions, as if by dlopen/dlsym.  */
-void __nss_files_functions (nss_module_functions_untyped pointers)
-  attribute_hidden;
+void __nss_files_functions(nss_module_functions_untyped pointers)
+attribute_hidden;
 
 /* Initialization state of a NSS module.  */
-enum nss_module_state
-{
-  nss_module_uninitialized,
-  nss_module_loaded,
-  nss_module_failed,
+enum nss_module_state {
+    nss_module_uninitialized,
+    nss_module_loaded,
+    nss_module_failed,
 };
 
 /* A NSS service module (potentially unloaded).  Client code should
    use the functions below.  */
-struct nss_module
-{
-  /* Actual type is enum nss_module_state.  Use int due to atomic
-     access.  Used in a double-checked locking idiom.  */
-  int state;
+struct nss_module {
+    /* Actual type is enum nss_module_state.  Use int due to atomic
+       access.  Used in a double-checked locking idiom.  */
+    int state;
 
-  /* The function pointers in the module.  */
-  union
-  {
-    struct nss_module_functions typed;
-    nss_module_functions_untyped untyped;
-  } functions;
+    /* The function pointers in the module.  */
+    union {
+        struct nss_module_functions typed;
+        nss_module_functions_untyped untyped;
+    } functions;
 
-  /* Only used for __libc_freeres unloading.  */
-  void *handle;
+    /* Only used for __libc_freeres unloading.  */
+    void *handle;
 
-  /* The next module in the list. */
-  struct nss_module *next;
+    /* The next module in the list. */
+    struct nss_module *next;
 
-  /* The name of the module (as it appears in /etc/nsswitch.conf).  */
-  char name[];
+    /* The name of the module (as it appears in /etc/nsswitch.conf).  */
+    char name[];
 };
 
 /* Allocates the NSS module NAME (of NAME_LENGTH bytes) and places it
    into the global list.  If it already exists in the list, return the
    pre-existing module.  This does not actually load the module.
    Returns NULL on memory allocation failure.  */
-struct nss_module *__nss_module_allocate (const char *name,
-                                          size_t name_length) attribute_hidden;
+struct nss_module *__nss_module_allocate(const char *name,
+        size_t name_length) attribute_hidden;
 
 /* Ensures that MODULE is in a loaded or failed state.  */
-bool __nss_module_load (struct nss_module *module) attribute_hidden;
+bool __nss_module_load(struct nss_module *module) attribute_hidden;
 
 /* Ensures that MODULE is loaded and returns a pointer to the function
    NAME defined in it.  Returns NULL if MODULE could not be loaded, or
    if the function NAME is not defined in the module.  */
-void *__nss_module_get_function (struct nss_module *module, const char *name)
-  attribute_hidden;
+void *__nss_module_get_function(struct nss_module *module, const char *name)
+attribute_hidden;
 
 /* Block attempts to dlopen any module we haven't already opened.  */
-void __nss_module_disable_loading (void);
+void __nss_module_disable_loading(void);
 
 #endif /* NSS_MODULE_H */

@@ -25,18 +25,16 @@
 #undef __conjf
 #undef conjf
 
-c1_cfloat_rettype
-__c1_conjf (c1_cfloat_decl (z))
+c1_cfloat_rettype __c1_conjf(c1_cfloat_decl(z))
 {
-  _Complex float r = ~ c1_cfloat_value (z);
-  return c1_cfloat_return (r);
+    _Complex float r = ~ c1_cfloat_value(z);
+    return c1_cfloat_return(r);
 }
 
-c2_cfloat_rettype
-__c2_conjf (c2_cfloat_decl (z))
+c2_cfloat_rettype __c2_conjf(c2_cfloat_decl(z))
 {
-  _Complex float r = ~ c2_cfloat_value (z);
-  return c2_cfloat_return (r);
+    _Complex float r = ~ c2_cfloat_value(z);
+    return c2_cfloat_return(r);
 }
 
-cfloat_versions (conj);
+cfloat_versions(conj);

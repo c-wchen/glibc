@@ -20,11 +20,11 @@
 #include <hurd.h>
 
 /* Set the login name returned by `getlogin'.  */
-int
-setlogin (const char *name)
+int setlogin(const char *name)
 {
-  error_t err;
-  if (err = __USEPORT (PROC, __proc_setlogin (port, name)))
-    return __hurd_fail (err);
-  return 0;
+    error_t err;
+    if (err = __USEPORT(PROC, __proc_setlogin(port, name))) {
+        return __hurd_fail(err);
+    }
+    return 0;
 }

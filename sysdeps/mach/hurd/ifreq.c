@@ -22,43 +22,39 @@
 #include <sys/mman.h>
 
 
-void
-__ifreq (struct ifreq **ifreqs, int *num_ifs, int sockfd)
+void __ifreq(struct ifreq **ifreqs, int *num_ifs, int sockfd)
 {
-  file_t server;
+    file_t server;
 
-  server = _hurd_socket_server (PF_INET, 0);
-  if (server == MACH_PORT_NULL)
-    {
-    out:
-      *num_ifs = 0;
-      *ifreqs = NULL;
-    }
-  else
-    {
-      char *data = NULL;
-      mach_msg_type_number_t len = 0;
-      error_t err = __pfinet_siocgifconf (server, -1, &data, &len);
-      if (err == MACH_SEND_INVALID_DEST || err == MIG_SERVER_DIED)
-	{
-	  /* On the first use of the socket server during the operation,
-	     allow for the old server port dying.  */
-	  server = _hurd_socket_server (PF_INET, 1);
-	  if (server == MACH_PORT_NULL)
-	    goto out;
-	  err = __pfinet_siocgifconf (server, -1, (data_t *) ifreqs, &len);
-	}
-      if (err)
-	goto out;
+    server = _hurd_socket_server(PF_INET, 0);
+    if (server == MACH_PORT_NULL) {
+out:
+        *num_ifs = 0;
+        *ifreqs = NULL;
+    } else {
+        char *data = NULL;
+        mach_msg_type_number_t len = 0;
+        error_t err = __pfinet_siocgifconf(server, -1, &data, &len);
+        if (err == MACH_SEND_INVALID_DEST || err == MIG_SERVER_DIED) {
+            /* On the first use of the socket server during the operation,
+               allow for the old server port dying.  */
+            server = _hurd_socket_server(PF_INET, 1);
+            if (server == MACH_PORT_NULL) {
+                goto out;
+            }
+            err = __pfinet_siocgifconf(server, -1, (data_t *) ifreqs, &len);
+        }
+        if (err) {
+            goto out;
+        }
 
-      if (len % sizeof (struct ifreq) != 0)
-	{
-	  __munmap (data, len);
-	  __hurd_fail (EGRATUITOUS);
-	  goto out;
-	}
-      *num_ifs = len / sizeof (struct ifreq);
-      *ifreqs = (struct ifreq *) data;
+        if (len % sizeof(struct ifreq) != 0) {
+            __munmap(data, len);
+            __hurd_fail(EGRATUITOUS);
+            goto out;
+        }
+        *num_ifs = len / sizeof(struct ifreq);
+        *ifreqs = (struct ifreq *) data;
     }
 
 }

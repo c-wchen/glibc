@@ -20,28 +20,25 @@
 #include <sys/types.h>
 
 /* Seek to OFFSET on FD, starting from WHENCE.  */
-off64_t
-__libc_lseek64 (int fd, off64_t offset, int whence)
+off64_t __libc_lseek64(int fd, off64_t offset, int whence)
 {
-  if (fd < 0)
-    {
-      __set_errno (EBADF);
-      return -1;
+    if (fd < 0) {
+        __set_errno(EBADF);
+        return -1;
     }
-  switch (whence)
-    {
-    case SEEK_SET:
-    case SEEK_CUR:
-    case SEEK_END:
-      break;
-    default:
-      __set_errno (EINVAL);
-      return -1;
+    switch (whence) {
+        case SEEK_SET:
+        case SEEK_CUR:
+        case SEEK_END:
+            break;
+        default:
+            __set_errno(EINVAL);
+            return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-weak_alias (__libc_lseek64, __lseek64)
-weak_alias (__libc_lseek64, lseek64)
-stub_warning (lseek64)
+weak_alias(__libc_lseek64, __lseek64)
+weak_alias(__libc_lseek64, lseek64)
+stub_warning(lseek64)

@@ -22,14 +22,14 @@
 #include <stdlib.h>
 #include <support/check.h>
 
-void
-xsendto (int fd, const void *buf, size_t buflen, int flags,
-         const struct sockaddr *sa, socklen_t salen)
+void xsendto(int fd, const void *buf, size_t buflen, int flags,
+             const struct sockaddr *sa, socklen_t salen)
 {
-  ssize_t ret = sendto (fd, buf, buflen, flags, sa, salen);
-  if (ret < 0)
-    FAIL_EXIT1 ("sendto (%d), %zu bytes, family %d: %m",
-                fd, buflen, sa->sa_family);
-  if (ret != buflen)
-    FAIL_EXIT1 ("sendto (%d) sent %zd bytes instead of %zu", fd, ret, buflen);
+    ssize_t ret = sendto(fd, buf, buflen, flags, sa, salen);
+    if (ret < 0)
+        FAIL_EXIT1("sendto (%d), %zu bytes, family %d: %m",
+                   fd, buflen, sa->sa_family);
+    if (ret != buflen) {
+        FAIL_EXIT1("sendto (%d) sent %zd bytes instead of %zu", fd, ret, buflen);
+    }
 }

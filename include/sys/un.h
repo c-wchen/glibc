@@ -7,7 +7,7 @@
    The caller should always use sizeof (struct sockaddr_un) as the
    socket address length, disregaring the length of PATHNAME.
    Only concrete (non-abstract) pathnames are supported.  */
-int __sockaddr_un_set (struct sockaddr_un *addr, const char *pathname)
-  attribute_hidden;
+int __sockaddr_un_set(struct sockaddr_un *addr, const char *pathname)
+attribute_hidden;
 
 #endif /* _ISOMAC */

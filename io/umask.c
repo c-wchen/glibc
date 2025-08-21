@@ -20,12 +20,11 @@
 #include <sys/types.h>
 
 /* Set the file creation mask to MASK, returning the old mask.  */
-mode_t
-__umask (mode_t mask)
+mode_t __umask(mode_t mask)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (umask)
+stub_warning(umask)
 
-weak_alias (__umask, umask)
+weak_alias(__umask, umask)

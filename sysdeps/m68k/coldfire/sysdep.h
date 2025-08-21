@@ -37,4 +37,4 @@
 # define PCREL_OP(OP, SRC, DST, TMP, PC) \
   "move.l #" SRC " - ., " TMP "\n\t" OP " (-8, " PC ", " TMP "), " DST
 
-#endif	/* __ASSEMBLER__ */
+#endif  /* __ASSEMBLER__ */

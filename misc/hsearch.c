@@ -22,27 +22,24 @@ static struct hsearch_data htab;
 
 
 /* Define the non-reentrant function using the reentrant counterparts.  */
-ENTRY *
-hsearch (ENTRY item, ACTION action)
+ENTRY *hsearch(ENTRY item, ACTION action)
 {
-  ENTRY *result;
+    ENTRY *result;
 
-  (void) __hsearch_r (item, action, &result, &htab);
+    (void) __hsearch_r(item, action, &result, &htab);
 
-  return result;
+    return result;
 }
 
 
-int
-hcreate (size_t nel)
+int hcreate(size_t nel)
 {
-  return __hcreate_r (nel, &htab);
+    return __hcreate_r(nel, &htab);
 }
 
 
-void
-__hdestroy (void)
+void __hdestroy(void)
 {
-  __hdestroy_r (&htab);
+    __hdestroy_r(&htab);
 }
-weak_alias (__hdestroy, hdestroy)
+weak_alias(__hdestroy, hdestroy)

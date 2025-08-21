@@ -19,10 +19,9 @@
 #include <pthread.h>
 #include <pt-internal.h>
 
-int
-pthread_setschedprio (pthread_t thread, int prio)
+int pthread_setschedprio(pthread_t thread, int prio)
 {
-  return ENOSYS;
+    return ENOSYS;
 }
 
-stub_warning (pthread_setschedprio)
+stub_warning(pthread_setschedprio)

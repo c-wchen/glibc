@@ -18,9 +18,8 @@
 
 #include <fenv_private.h>
 
-int
-fetestexcept (int excepts)
+int fetestexcept(int excepts)
 {
-  return libc_fetestexcept_s390 (excepts);
+    return libc_fetestexcept_s390(excepts);
 }
-libm_hidden_def (fetestexcept)
+libm_hidden_def(fetestexcept)

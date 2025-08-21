@@ -19,16 +19,15 @@
 #include <support/check.h>
 #include <support/xstdio.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  xfclose (stdin);
-  xfclose (stdout);
-  xfclose (stderr);
-  FILE *f = xfopen ("/dev/null", "w");
-  fprintf (f, "final\n");
-  xfclose (f);
-  return 0;
+    xfclose(stdin);
+    xfclose(stdout);
+    xfclose(stderr);
+    FILE *f = xfopen("/dev/null", "w");
+    fprintf(f, "final\n");
+    xfclose(f);
+    return 0;
 }
 
 #include <support/test-driver.c>

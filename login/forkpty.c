@@ -22,39 +22,39 @@
 #include <pty.h>
 #include <shlib-compat.h>
 
-int
-__forkpty (int *pptmx, char *name, const struct termios *termp,
-	   const struct winsize *winp)
+int __forkpty(int *pptmx, char *name, const struct termios *termp,
+              const struct winsize *winp)
 {
-  int ptmx, terminal, pid;
+    int ptmx, terminal, pid;
 
-  if (openpty (&ptmx, &terminal, name, termp, winp) == -1)
-    return -1;
+    if (openpty(&ptmx, &terminal, name, termp, winp) == -1) {
+        return -1;
+    }
 
-  switch (pid = __fork ())
-    {
-    case -1:
-      __close (ptmx);
-      __close (terminal);
-      return -1;
-    case 0:
-      /* Child.  */
-      __close (ptmx);
-      if (login_tty (terminal))
-	_exit (1);
+    switch (pid = __fork()) {
+        case -1:
+            __close(ptmx);
+            __close(terminal);
+            return -1;
+        case 0:
+            /* Child.  */
+            __close(ptmx);
+            if (login_tty(terminal)) {
+                _exit(1);
+            }
 
-      return 0;
-    default:
-      /* Parent.  */
-      *pptmx = ptmx;
-      __close (terminal);
+            return 0;
+        default:
+            /* Parent.  */
+            *pptmx = ptmx;
+            __close(terminal);
 
-      return pid;
+            return pid;
     }
 }
-versioned_symbol (libc, __forkpty, forkpty, GLIBC_2_34);
-libc_hidden_ver (__forkpty, forkpty)
+versioned_symbol(libc, __forkpty, forkpty, GLIBC_2_34);
+libc_hidden_ver(__forkpty, forkpty)
 
 #if OTHER_SHLIB_COMPAT (libutil, GLIBC_2_0, GLIBC_2_34)
-compat_symbol (libutil, __forkpty, forkpty, GLIBC_2_0);
+compat_symbol(libutil, __forkpty, forkpty, GLIBC_2_0);
 #endif

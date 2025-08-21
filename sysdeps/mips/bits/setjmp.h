@@ -25,8 +25,7 @@
 
 #include <sgidefs.h>
 
-typedef struct __jmp_buf_internal_tag
-  {
+typedef struct __jmp_buf_internal_tag {
 #if _MIPS_SIM == _ABIO32
     /* Program counter.  */
     void *__pc;
@@ -68,6 +67,6 @@ typedef struct __jmp_buf_internal_tag
 #else
     double __fpregs[6];
 #endif
-  } __jmp_buf[1];
+} __jmp_buf[1];
 
 #endif /* _MIPS_BITS_SETJMP_H */

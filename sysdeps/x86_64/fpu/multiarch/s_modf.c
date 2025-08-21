@@ -30,8 +30,8 @@
 # define SYMBOL_NAME modf
 # include "ifunc-sse4_1-avx.h"
 
-libc_ifunc_redirected (__redirect_modf, __modf, IFUNC_SELECTOR ());
-libm_alias_double (__modf, modf)
+libc_ifunc_redirected(__redirect_modf, __modf, IFUNC_SELECTOR());
+libm_alias_double(__modf, modf)
 # if MINIMUM_X86_ISA_LEVEL == SSE4_1_X86_ISA_LEVEL
 #  define __modf __modf_sse41
 # else

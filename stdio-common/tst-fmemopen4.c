@@ -23,48 +23,42 @@
 
 
 /* Check if fflush does not reset the file position.  */
-static int
-do_test (void)
+static int do_test(void)
 {
-  char buffer[500] = "x";
+    char buffer[500] = "x";
 
-  FILE *stream = fmemopen (buffer, sizeof (buffer), "r+");
-  if (stream == NULL)
-    {
-      printf ("error: fmemopen could not open stream\n");
-      return 1;
+    FILE *stream = fmemopen(buffer, sizeof(buffer), "r+");
+    if (stream == NULL) {
+        printf("error: fmemopen could not open stream\n");
+        return 1;
     }
 
-  const char test[] = "test";
+    const char test[] = "test";
 
-  size_t r = fwrite (test, sizeof (char), sizeof (test), stream);
-  if (r != sizeof (test))
-    {
-      printf ("error: fwrite returned %zu, expected %zu\n", r, sizeof (test));
-      return 1;
+    size_t r = fwrite(test, sizeof(char), sizeof(test), stream);
+    if (r != sizeof(test)) {
+        printf("error: fwrite returned %zu, expected %zu\n", r, sizeof(test));
+        return 1;
     }
 
-  r = ftell (stream);
-  if (r != sizeof (test))
-    {
-      printf ("error: ftell return %zu, expected %zu\n", r, sizeof (test));
-      return 1;
+    r = ftell(stream);
+    if (r != sizeof(test)) {
+        printf("error: ftell return %zu, expected %zu\n", r, sizeof(test));
+        return 1;
     }
 
-  if (fflush (stream) != 0)
-    {
-      printf ("error: fflush failed\n");
-      return 1;
+    if (fflush(stream) != 0) {
+        printf("error: fflush failed\n");
+        return 1;
     }
 
-  r = ftell (stream);
-  if (r != sizeof (test))
-    {
-      printf ("error: ftell return %zu, expected %zu\n", r, sizeof (test));
-      return 1;
+    r = ftell(stream);
+    if (r != sizeof(test)) {
+        printf("error: ftell return %zu, expected %zu\n", r, sizeof(test));
+        return 1;
     }
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

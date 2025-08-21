@@ -16,6 +16,6 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define	USE_WIDE_CHAR	1
+#define USE_WIDE_CHAR   1
 
 #include <stdlib/strtol.c>

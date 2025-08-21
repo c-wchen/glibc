@@ -4,4 +4,4 @@
 #include <libintl.h>
 
 const char _libc_intl_domainname[] = "libc";
-libc_hidden_data_def (_libc_intl_domainname)
+libc_hidden_data_def(_libc_intl_domainname)

@@ -22,28 +22,24 @@
 /* Defined for the benefit of tst-skeleton-thread-affinity.c, included
    below.  */
 
-static int
-setaffinity (size_t size, const cpu_set_t *set)
+static int setaffinity(size_t size, const cpu_set_t *set)
 {
-  int ret = pthread_setaffinity_np (pthread_self (), size, set);
-  if (ret != 0)
-    {
-      errno = ret;
-      return -1;
+    int ret = pthread_setaffinity_np(pthread_self(), size, set);
+    if (ret != 0) {
+        errno = ret;
+        return -1;
     }
-  return 0;
+    return 0;
 }
 
-static int
-getaffinity (size_t size, cpu_set_t *set)
+static int getaffinity(size_t size, cpu_set_t *set)
 {
-  int ret = pthread_getaffinity_np (pthread_self (), size, set);
-  if (ret != 0)
-    {
-      errno = ret;
-      return -1;
+    int ret = pthread_getaffinity_np(pthread_self(), size, set);
+    if (ret != 0) {
+        errno = ret;
+        return -1;
     }
-  return 0;
+    return 0;
 }
 
 #include "tst-skeleton-thread-affinity.c"

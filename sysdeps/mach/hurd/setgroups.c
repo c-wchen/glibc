@@ -22,45 +22,47 @@
 #include <hurd/id.h>
 
 /* Set the group set for the current user to GROUPS (N of them).  */
-int
-setgroups (size_t n, const gid_t *groups)
+int setgroups(size_t n, const gid_t *groups)
 {
-  error_t err;
-  auth_t newauth;
-  size_t i;
-  gid_t new[n];
+    error_t err;
+    auth_t newauth;
+    size_t i;
+    gid_t new[n];
 
-  /* Fault before taking locks.  */
-  for (i = 0; i < n; ++i)
-    new[i] = groups[i];
+    /* Fault before taking locks.  */
+    for (i = 0; i < n; ++i) {
+        new[i] = groups[i];
+    }
 
 retry:
-  HURD_CRITICAL_BEGIN;
-  __mutex_lock (&_hurd_id.lock);
-  err = _hurd_check_ids ();
-  if (! err)
-    {
-      /* Get a new auth port using those IDs.  */
-      err = __USEPORT (AUTH,
-		       __auth_makeauth (port, NULL, MACH_MSG_TYPE_COPY_SEND, 0,
-					_hurd_id.gen.uids, _hurd_id.gen.nuids,
-					_hurd_id.aux.uids, _hurd_id.aux.nuids,
-					new, n,
-					_hurd_id.aux.gids, _hurd_id.aux.ngids,
-					&newauth));
+    HURD_CRITICAL_BEGIN;
+    __mutex_lock(&_hurd_id.lock);
+    err = _hurd_check_ids();
+    if (! err) {
+        /* Get a new auth port using those IDs.  */
+        err = __USEPORT(AUTH,
+                        __auth_makeauth(port, NULL, MACH_MSG_TYPE_COPY_SEND, 0,
+                                        _hurd_id.gen.uids, _hurd_id.gen.nuids,
+                                        _hurd_id.aux.uids, _hurd_id.aux.nuids,
+                                        new, n,
+                                        _hurd_id.aux.gids, _hurd_id.aux.ngids,
+                                        &newauth));
     }
-  __mutex_unlock (&_hurd_id.lock);
-  HURD_CRITICAL_END;
-  if (err == EINTR)
-    /* Got a signal while inside an RPC of the critical section, retry again */
-    goto retry;
+    __mutex_unlock(&_hurd_id.lock);
+    HURD_CRITICAL_END;
+    if (err == EINTR)
+        /* Got a signal while inside an RPC of the critical section, retry again */
+    {
+        goto retry;
+    }
 
-  if (err)
-    return __hurd_fail (err);
+    if (err) {
+        return __hurd_fail(err);
+    }
 
-  /* Install the new auth port and reauthenticate everything.  */
-  err = __setauth (newauth);
-  __mach_port_deallocate (__mach_task_self (), newauth);
-  return err;
+    /* Install the new auth port and reauthenticate everything.  */
+    err = __setauth(newauth);
+    __mach_port_deallocate(__mach_task_self(), newauth);
+    return err;
 }
-libc_hidden_def (setgroups)
+libc_hidden_def(setgroups)

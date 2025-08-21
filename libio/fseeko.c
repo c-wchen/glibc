@@ -31,21 +31,20 @@
 #include "libioP.h"
 #include "stdio.h"
 
-int
-__fseeko (FILE *fp, off_t offset, int whence)
+int __fseeko(FILE *fp, off_t offset, int whence)
 {
-  int result;
-  CHECK_FILE (fp, -1);
-  _IO_acquire_lock (fp);
-  result = _IO_fseek (fp, offset, whence);
-  _IO_release_lock (fp);
-  return result;
+    int result;
+    CHECK_FILE(fp, -1);
+    _IO_acquire_lock(fp);
+    result = _IO_fseek(fp, offset, whence);
+    _IO_release_lock(fp);
+    return result;
 }
-weak_alias (__fseeko, fseeko)
+weak_alias(__fseeko, fseeko)
 
 #ifdef __OFF_T_MATCHES_OFF64_T
-weak_alias (__fseeko, fseeko64)
+weak_alias(__fseeko, fseeko64)
 # undef __fseeko64
-strong_alias (__fseeko, __fseeko64)
-libc_hidden_ver (__fseeko, __fseeko64)
+strong_alias(__fseeko, __fseeko64)
+libc_hidden_ver(__fseeko, __fseeko64)
 #endif

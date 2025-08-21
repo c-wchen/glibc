@@ -21,10 +21,9 @@
 
 
 /* Retrieve the CPU affinity mask for a particular process.  */
-int
-sched_setaffinity (pid_t pid, size_t cpusetsize, const cpu_set_t *cpuset)
+int sched_setaffinity(pid_t pid, size_t cpusetsize, const cpu_set_t *cpuset)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (sched_setaffinity)
+stub_warning(sched_setaffinity)

@@ -20,127 +20,118 @@
 #define TEST_NAME "strtok"
 #include "bench-string.h"
 
-typedef char *(*proto_t) (const char *, const char *);
+typedef char *(*proto_t)(const char *, const char *);
 
-IMPL (strtok, 1)
+IMPL(strtok, 1)
 
 static void
-do_one_test (impl_t * impl, const char *s1, const char *s2)
+do_one_test(impl_t *impl, const char *s1, const char *s2)
 {
-  size_t i, iters = INNER_LOOP_ITERS_MEDIUM;
-  timing_t start, stop, cur;
-  TIMING_NOW (start);
-  for (i = 0; i < iters; ++i)
-    {
-      CALL (impl, s1, s2);
-      CALL (impl, NULL, s2);
-      CALL (impl, NULL, s2);
+    size_t i, iters = INNER_LOOP_ITERS_MEDIUM;
+    timing_t start, stop, cur;
+    TIMING_NOW(start);
+    for (i = 0; i < iters; ++i) {
+        CALL(impl, s1, s2);
+        CALL(impl, NULL, s2);
+        CALL(impl, NULL, s2);
     }
-  TIMING_NOW (stop);
+    TIMING_NOW(stop);
 
-  TIMING_DIFF (cur, start, stop);
+    TIMING_DIFF(cur, start, stop);
 
-  TIMING_PRINT_MEAN ((double) cur, (double) iters);
+    TIMING_PRINT_MEAN((double) cur, (double) iters);
 }
 
 
-static void
-do_test (size_t align1, size_t align2, size_t len1, size_t len2, int fail)
+static void do_test(size_t align1, size_t align2, size_t len1, size_t len2, int fail)
 {
-  char *s2 = (char *) (buf2 + align2);
-  static const char d[] = "1234567890abcdef";
+    char *s2 = (char *)(buf2 + align2);
+    static const char d[] = "1234567890abcdef";
 #define dl (sizeof (d) - 1)
-  char *ss2 = s2;
-  for (size_t l = len2; l > 0; l = l > dl ? l - dl : 0)
-    {
-      size_t t = l > dl ? dl : l;
-      ss2 = mempcpy (ss2, d, t);
+    char *ss2 = s2;
+    for (size_t l = len2; l > 0; l = l > dl ? l - dl : 0) {
+        size_t t = l > dl ? dl : l;
+        ss2 = mempcpy(ss2, d, t);
     }
-  s2[len2] = '\0';
+    s2[len2] = '\0';
 
-  printf ("Length %4zd/%zd, alignment %2zd/%2zd, %s:",
-	  len1, len2, align1, align2, fail ? "fail" : "found");
+    printf("Length %4zd/%zd, alignment %2zd/%2zd, %s:",
+           len1, len2, align1, align2, fail ? "fail" : "found");
 
-  FOR_EACH_IMPL (impl, 0)
-  {
-    char *s1 = (char *) (buf1 + align1);
-    if (fail)
-      {
-	char *ss1 = s1;
-	for (size_t l = len1; l > 0; l = l > dl ? l - dl : 0)
-	  {
-	    size_t t = l > dl ? dl : l;
-	    memcpy (ss1, d, t);
-	    ++ss1[len2 > 7 ? 7 : len2 - 1];
-	    ss1 += t;
-	  }
-      }
-    else
-      {
-	memset (s1, '0', len1);
-	memcpy (s1 + (len1 - len2) - 2, s2, len2);
-	if ((len1 / len2) > 4)
-	  memcpy (s1 + (len1 - len2) - (3 * len2), s2, len2);
-      }
-    s1[len1] = '\0';
-    do_one_test (impl, s1, s2);
-  }
-  putchar ('\n');
+    FOR_EACH_IMPL(impl, 0) {
+        char *s1 = (char *)(buf1 + align1);
+        if (fail) {
+            char *ss1 = s1;
+            for (size_t l = len1; l > 0; l = l > dl ? l - dl : 0) {
+                size_t t = l > dl ? dl : l;
+                memcpy(ss1, d, t);
+                ++ss1[len2 > 7 ? 7 : len2 - 1];
+                ss1 += t;
+            }
+        } else {
+            memset(s1, '0', len1);
+            memcpy(s1 + (len1 - len2) - 2, s2, len2);
+            if ((len1 / len2) > 4) {
+                memcpy(s1 + (len1 - len2) - (3 * len2), s2, len2);
+            }
+        }
+        s1[len1] = '\0';
+        do_one_test(impl, s1, s2);
+    }
+    putchar('\n');
 }
 
-static int
-test_main (void)
+static int test_main(void)
 {
-  test_init ();
+    test_init();
 
-  printf ("%23s", "");
-  FOR_EACH_IMPL (impl, 0)
-    printf ("\t%s", impl->name);
-  putchar ('\n');
+    printf("%23s", "");
+    FOR_EACH_IMPL(impl, 0)
+    printf("\t%s", impl->name);
+    putchar('\n');
 
-  for (size_t klen = 2; klen < 32; ++klen)
-    for (size_t hlen = 2 * klen; hlen < 16 * klen; hlen += klen)
-      {
-	do_test (0, 0, hlen, klen, 0);
-	do_test (0, 0, hlen, klen, 1);
-	do_test (0, 3, hlen, klen, 0);
-	do_test (0, 3, hlen, klen, 1);
-	do_test (0, 9, hlen, klen, 0);
-	do_test (0, 9, hlen, klen, 1);
-	do_test (0, 15, hlen, klen, 0);
-	do_test (0, 15, hlen, klen, 1);
+    for (size_t klen = 2; klen < 32; ++klen)
+        for (size_t hlen = 2 * klen; hlen < 16 * klen; hlen += klen) {
+            do_test(0, 0, hlen, klen, 0);
+            do_test(0, 0, hlen, klen, 1);
+            do_test(0, 3, hlen, klen, 0);
+            do_test(0, 3, hlen, klen, 1);
+            do_test(0, 9, hlen, klen, 0);
+            do_test(0, 9, hlen, klen, 1);
+            do_test(0, 15, hlen, klen, 0);
+            do_test(0, 15, hlen, klen, 1);
 
-	do_test (3, 0, hlen, klen, 0);
-	do_test (3, 0, hlen, klen, 1);
-	do_test (3, 3, hlen, klen, 0);
-	do_test (3, 3, hlen, klen, 1);
-	do_test (3, 9, hlen, klen, 0);
-	do_test (3, 9, hlen, klen, 1);
-	do_test (3, 15, hlen, klen, 0);
-	do_test (3, 15, hlen, klen, 1);
+            do_test(3, 0, hlen, klen, 0);
+            do_test(3, 0, hlen, klen, 1);
+            do_test(3, 3, hlen, klen, 0);
+            do_test(3, 3, hlen, klen, 1);
+            do_test(3, 9, hlen, klen, 0);
+            do_test(3, 9, hlen, klen, 1);
+            do_test(3, 15, hlen, klen, 0);
+            do_test(3, 15, hlen, klen, 1);
 
-	do_test (9, 0, hlen, klen, 0);
-	do_test (9, 0, hlen, klen, 1);
-	do_test (9, 3, hlen, klen, 0);
-	do_test (9, 3, hlen, klen, 1);
-	do_test (9, 9, hlen, klen, 0);
-	do_test (9, 9, hlen, klen, 1);
-	do_test (9, 15, hlen, klen, 0);
-	do_test (9, 15, hlen, klen, 1);
+            do_test(9, 0, hlen, klen, 0);
+            do_test(9, 0, hlen, klen, 1);
+            do_test(9, 3, hlen, klen, 0);
+            do_test(9, 3, hlen, klen, 1);
+            do_test(9, 9, hlen, klen, 0);
+            do_test(9, 9, hlen, klen, 1);
+            do_test(9, 15, hlen, klen, 0);
+            do_test(9, 15, hlen, klen, 1);
 
-	do_test (15, 0, hlen, klen, 0);
-	do_test (15, 0, hlen, klen, 1);
-	do_test (15, 3, hlen, klen, 0);
-	do_test (15, 3, hlen, klen, 1);
-	do_test (15, 9, hlen, klen, 0);
-	do_test (15, 9, hlen, klen, 1);
-	do_test (15, 15, hlen, klen, 0);
-	do_test (15, 15, hlen, klen, 1);
-      }
-  do_test (0, 0, page_size - 1, 16, 0);
-  do_test (0, 0, page_size - 1, 16, 1);
+            do_test(15, 0, hlen, klen, 0);
+            do_test(15, 0, hlen, klen, 1);
+            do_test(15, 3, hlen, klen, 0);
+            do_test(15, 3, hlen, klen, 1);
+            do_test(15, 9, hlen, klen, 0);
+            do_test(15, 9, hlen, klen, 1);
+            do_test(15, 15, hlen, klen, 0);
+            do_test(15, 15, hlen, klen, 1);
+        }
+    do_test(0, 0, page_size - 1, 16, 0);
+    do_test(0, 0, page_size - 1, 16, 1);
 
-  return ret;
+    return ret;
 }
 
 #include <support/test-driver.c>

@@ -22,44 +22,42 @@
 
 /*
  * for non-zero, finite x
- *	x = frexp(arg,&exp);
+ *  x = frexp(arg,&exp);
  * return a double fp quantity x such that 0.5 <= |x| <1.0
  * and the corresponding binary exponent "exp". That is
- *	arg = x*2^exp.
+ *  arg = x*2^exp.
  * If arg is inf, 0.0, or NaN, then frexp(arg,&exp) returns arg
  * with *exp=0.
  */
 
 
-double
-__frexp (double x, int *eptr)
+double __frexp(double x, int *eptr)
 {
-  int64_t ix;
-  EXTRACT_WORDS64 (ix, x);
-  int32_t ex = 0x7ff & (ix >> 52);
-  int e = 0;
+    int64_t ix;
+    EXTRACT_WORDS64(ix, x);
+    int32_t ex = 0x7ff & (ix >> 52);
+    int e = 0;
 
-  if (__glibc_likely (ex != 0x7ff && x != 0.0))
+    if (__glibc_likely(ex != 0x7ff && x != 0.0)) {
+        /* Not zero and finite.  */
+        e = ex - 1022;
+        if (__glibc_unlikely(ex == 0)) {
+            /* Subnormal.  */
+            x *= 0x1p54;
+            EXTRACT_WORDS64(ix, x);
+            ex = 0x7ff & (ix >> 52);
+            e = ex - 1022 - 54;
+        }
+
+        ix = (ix & INT64_C(0x800fffffffffffff)) | INT64_C(0x3fe0000000000000);
+        INSERT_WORDS64(x, ix);
+    } else
+        /* Quiet signaling NaNs.  */
     {
-      /* Not zero and finite.  */
-      e = ex - 1022;
-      if (__glibc_unlikely (ex == 0))
-	{
-	  /* Subnormal.  */
-	  x *= 0x1p54;
-	  EXTRACT_WORDS64 (ix, x);
-	  ex = 0x7ff & (ix >> 52);
-	  e = ex - 1022 - 54;
-	}
-
-      ix = (ix & INT64_C (0x800fffffffffffff)) | INT64_C (0x3fe0000000000000);
-      INSERT_WORDS64 (x, ix);
+        x += x;
     }
-  else
-    /* Quiet signaling NaNs.  */
-    x += x;
 
-  *eptr = e;
-  return x;
+    *eptr = e;
+    return x;
 }
-libm_alias_double (__frexp, frexp)
+libm_alias_double(__frexp, frexp)

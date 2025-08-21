@@ -20,10 +20,9 @@
 #include <sys/uio.h>
 #include <sysdep-cancel.h>
 
-ssize_t
-__writev (int fd, const struct iovec *iov, int iovcnt)
+ssize_t __writev(int fd, const struct iovec *iov, int iovcnt)
 {
-  return SYSCALL_CANCEL (writev, fd, iov, iovcnt);
+    return SYSCALL_CANCEL(writev, fd, iov, iovcnt);
 }
-libc_hidden_def (__writev)
-weak_alias (__writev, writev)
+libc_hidden_def(__writev)
+weak_alias(__writev, writev)

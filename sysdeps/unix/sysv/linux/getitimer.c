@@ -22,40 +22,41 @@
 #include <sysdep.h>
 #include <tv32-compat.h>
 
-int
-__getitimer64 (__itimer_which_t which, struct __itimerval64 *curr_value)
+int __getitimer64(__itimer_which_t which, struct __itimerval64 *curr_value)
 {
 #if __KERNEL_OLD_TIMEVAL_MATCHES_TIMEVAL64
-  return INLINE_SYSCALL_CALL (getitimer, which, curr_value);
+    return INLINE_SYSCALL_CALL(getitimer, which, curr_value);
 #else
-  struct __itimerval32 curr_value_32;
+    struct __itimerval32 curr_value_32;
 
-  if (INLINE_SYSCALL_CALL (getitimer, which, &curr_value_32) == -1)
-    return -1;
+    if (INLINE_SYSCALL_CALL(getitimer, which, &curr_value_32) == -1) {
+        return -1;
+    }
 
-  curr_value->it_interval
-    = valid_timeval32_to_timeval64 (curr_value_32.it_interval);
-  curr_value->it_value
-    = valid_timeval32_to_timeval64 (curr_value_32.it_value);
-  return 0;
+    curr_value->it_interval
+        = valid_timeval32_to_timeval64(curr_value_32.it_interval);
+    curr_value->it_value
+        = valid_timeval32_to_timeval64(curr_value_32.it_value);
+    return 0;
 #endif
 }
 
 #if __TIMESIZE != 64
-libc_hidden_def (__getitimer64)
+libc_hidden_def(__getitimer64)
 int
-__getitimer (__itimer_which_t which, struct itimerval *curr_value)
+__getitimer(__itimer_which_t which, struct itimerval *curr_value)
 {
-  struct __itimerval64 val64;
-  if (__getitimer64 (which, &val64) != 0)
-    return -1;
+    struct __itimerval64 val64;
+    if (__getitimer64(which, &val64) != 0) {
+        return -1;
+    }
 
-  curr_value->it_interval
-    = valid_timeval64_to_timeval (val64.it_interval);
-  curr_value->it_value
-    = valid_timeval64_to_timeval (val64.it_value);
+    curr_value->it_interval
+        = valid_timeval64_to_timeval(val64.it_interval);
+    curr_value->it_value
+        = valid_timeval64_to_timeval(val64.it_value);
 
-  return 0;
+    return 0;
 }
 #endif
-weak_alias (__getitimer, getitimer)
+weak_alias(__getitimer, getitimer)

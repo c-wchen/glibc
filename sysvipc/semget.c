@@ -21,11 +21,10 @@
 /* Return identifier for array of NSEMS semaphores associated with
    KEY.  */
 
-int
-semget (key_t key, int nsems, int semflg)
+int semget(key_t key, int nsems, int semflg)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (semget)
+stub_warning(semget)

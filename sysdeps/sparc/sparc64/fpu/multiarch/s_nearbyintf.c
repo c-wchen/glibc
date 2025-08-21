@@ -20,11 +20,11 @@
 #include <sparc-ifunc.h>
 #include <libm-alias-float.h>
 
-extern __typeof (nearbyintf) __nearbyintf_vis3 attribute_hidden;
-extern __typeof (nearbyintf) __nearbyintf_generic attribute_hidden;
+extern __typeof(nearbyintf) __nearbyintf_vis3 attribute_hidden;
+extern __typeof(nearbyintf) __nearbyintf_generic attribute_hidden;
 
-sparc_libm_ifunc (__nearbyintf,
-		  hwcap & HWCAP_SPARC_VIS3
-		  ? __nearbyintf_vis3
-		  : __nearbyintf_generic);
-libm_alias_float (__nearbyint, nearbyint)
+sparc_libm_ifunc(__nearbyintf,
+                 hwcap &HWCAP_SPARC_VIS3
+                 ? __nearbyintf_vis3
+                 : __nearbyintf_generic);
+libm_alias_float(__nearbyint, nearbyint)

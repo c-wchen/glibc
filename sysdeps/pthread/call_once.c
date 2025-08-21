@@ -21,20 +21,19 @@
 
 #include "thrd_priv.h"
 
-void
-__call_once (once_flag *flag, void (*func)(void))
+void __call_once(once_flag *flag, void (*func)(void))
 {
-  _Static_assert (sizeof (once_flag) == sizeof (pthread_once_t),
-		  "sizeof (once_flag) != sizeof (pthread_once_t)");
-  _Static_assert (alignof (once_flag) == alignof (pthread_once_t),
-		  "alignof (once_flag) != alignof (pthread_once_t)");
-  __pthread_once ((pthread_once_t *) flag, func);
+    _Static_assert(sizeof(once_flag) == sizeof(pthread_once_t),
+                   "sizeof (once_flag) != sizeof (pthread_once_t)");
+    _Static_assert(alignof(once_flag) == alignof(pthread_once_t),
+                   "alignof (once_flag) != alignof (pthread_once_t)");
+    __pthread_once((pthread_once_t *) flag, func);
 }
 #if PTHREAD_IN_LIBC
-versioned_symbol (libc, __call_once, call_once, GLIBC_2_34);
+versioned_symbol(libc, __call_once, call_once, GLIBC_2_34);
 # if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_28, GLIBC_2_34)
-compat_symbol (libpthread, __call_once, call_once, GLIBC_2_28);
+compat_symbol(libpthread, __call_once, call_once, GLIBC_2_28);
 # endif
 #else /* !PTHREAD_IN_LIBC */
-strong_alias (__call_once, call_once)
+strong_alias(__call_once, call_once)
 #endif

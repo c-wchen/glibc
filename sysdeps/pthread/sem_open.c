@@ -35,191 +35,177 @@
 
 #define SEM_OPEN_FLAGS (O_RDWR | O_NOFOLLOW | O_CLOEXEC)
 
-sem_t *
-__sem_open (const char *name, int oflag, ...)
+sem_t *__sem_open(const char *name, int oflag, ...)
 {
-  int fd;
-  sem_t *result;
+    int fd;
+    sem_t *result;
 
-  /* Check that shared futexes are supported.  */
-  int err = futex_supports_pshared (PTHREAD_PROCESS_SHARED);
-  if (err != 0)
-    {
-      __set_errno (err);
-      return SEM_FAILED;
+    /* Check that shared futexes are supported.  */
+    int err = futex_supports_pshared(PTHREAD_PROCESS_SHARED);
+    if (err != 0) {
+        __set_errno(err);
+        return SEM_FAILED;
     }
 
-  struct shmdir_name dirname;
-  int ret = __shm_get_name (&dirname, name, true);
-  if (ret != 0)
-    {
-      __set_errno (ret);
-      return SEM_FAILED;
+    struct shmdir_name dirname;
+    int ret = __shm_get_name(&dirname, name, true);
+    if (ret != 0) {
+        __set_errno(ret);
+        return SEM_FAILED;
     }
 
-  /* Disable asynchronous cancellation.  */
-  int state = __pthread_setcancelstate (PTHREAD_CANCEL_DISABLE, &state);
+    /* Disable asynchronous cancellation.  */
+    int state = __pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &state);
 
-  /* If the semaphore object has to exist simply open it.  */
-  if ((oflag & O_CREAT) == 0 || (oflag & O_EXCL) == 0)
-    {
-    try_again:
-      fd = __open (dirname.name, (oflag & O_EXCL) | SEM_OPEN_FLAGS);
+    /* If the semaphore object has to exist simply open it.  */
+    if ((oflag & O_CREAT) == 0 || (oflag & O_EXCL) == 0) {
+try_again:
+        fd = __open(dirname.name, (oflag & O_EXCL) | SEM_OPEN_FLAGS);
 
-      if (fd == -1)
-	{
-	  /* If we are supposed to create the file try this next.  */
-	  if ((oflag & O_CREAT) != 0 && errno == ENOENT)
-	    goto try_create;
+        if (fd == -1) {
+            /* If we are supposed to create the file try this next.  */
+            if ((oflag & O_CREAT) != 0 && errno == ENOENT) {
+                goto try_create;
+            }
 
-	  /* Return.  errno is already set.  */
-	  result = SEM_FAILED;
-	}
-      else
-	/* Check whether we already have this semaphore mapped and
-	   create one if necessary.  */
-	result = __sem_check_add_mapping (name, fd, SEM_FAILED);
-    }
-  else
-    {
-      /* We have to open a temporary file first since it must have the
-	 correct form before we can start using it.  */
-      mode_t mode;
-      unsigned int value;
-      va_list ap;
+            /* Return.  errno is already set.  */
+            result = SEM_FAILED;
+        } else
+            /* Check whether we already have this semaphore mapped and
+               create one if necessary.  */
+        {
+            result = __sem_check_add_mapping(name, fd, SEM_FAILED);
+        }
+    } else {
+        /* We have to open a temporary file first since it must have the
+        correct form before we can start using it.  */
+        mode_t mode;
+        unsigned int value;
+        va_list ap;
 
-    try_create:
-      va_start (ap, oflag);
+try_create:
+        va_start(ap, oflag);
 
-      mode = va_arg (ap, mode_t);
-      value = va_arg (ap, unsigned int);
+        mode = va_arg(ap, mode_t);
+        value = va_arg(ap, unsigned int);
 
-      va_end (ap);
+        va_end(ap);
 
-      if (value > SEM_VALUE_MAX)
-	{
-	  __set_errno (EINVAL);
-	  result = SEM_FAILED;
-	  goto out;
-	}
+        if (value > SEM_VALUE_MAX) {
+            __set_errno(EINVAL);
+            result = SEM_FAILED;
+            goto out;
+        }
 
-      /* Create the initial file content.  */
-      union
-      {
-	sem_t initsem;
-	struct new_sem newsem;
-      } sem;
+        /* Create the initial file content.  */
+        union {
+            sem_t initsem;
+            struct new_sem newsem;
+        } sem;
 
-      __new_sem_open_init (&sem.newsem, value);
+        __new_sem_open_init(&sem.newsem, value);
 
-      /* Initialize the remaining bytes as well.  */
-      memset ((char *) &sem.initsem + sizeof (struct new_sem), '\0',
-	      sizeof (sem_t) - sizeof (struct new_sem));
+        /* Initialize the remaining bytes as well.  */
+        memset((char *) &sem.initsem + sizeof(struct new_sem), '\0',
+               sizeof(sem_t) - sizeof(struct new_sem));
 
-      char tmpfname[] = SHMDIR "sem.XXXXXX";
-      int retries = 0;
+        char tmpfname[] = SHMDIR "sem.XXXXXX";
+        int retries = 0;
 #define NRETRIES 50
-      while (1)
-	{
-	  /* We really want to use mktemp here.  We cannot use mkstemp
-	     since the file must be opened with a specific mode.  The
-	     mode cannot later be set since then we cannot apply the
-	     file create mask.  */
-	  if (__mktemp (tmpfname) == NULL)
-	    {
-	      result = SEM_FAILED;
-	      goto out;
-	    }
+        while (1) {
+            /* We really want to use mktemp here.  We cannot use mkstemp
+               since the file must be opened with a specific mode.  The
+               mode cannot later be set since then we cannot apply the
+               file create mask.  */
+            if (__mktemp(tmpfname) == NULL) {
+                result = SEM_FAILED;
+                goto out;
+            }
 
-	  /* Open the file.  Make sure we do not overwrite anything.  */
-	  fd = __open (tmpfname, O_CREAT | O_EXCL | SEM_OPEN_FLAGS, mode);
-	  if (fd == -1)
-	    {
-	      if (errno == EEXIST)
-		{
-		  if (++retries < NRETRIES)
-		    {
-		      /* Restore the six placeholder bytes before the
-			 null terminator before the next attempt.  */
-		      memcpy (tmpfname + sizeof (tmpfname) - 7, "XXXXXX", 6);
-		      continue;
-		    }
+            /* Open the file.  Make sure we do not overwrite anything.  */
+            fd = __open(tmpfname, O_CREAT | O_EXCL | SEM_OPEN_FLAGS, mode);
+            if (fd == -1) {
+                if (errno == EEXIST) {
+                    if (++retries < NRETRIES) {
+                        /* Restore the six placeholder bytes before the
+                        null terminator before the next attempt.  */
+                        memcpy(tmpfname + sizeof(tmpfname) - 7, "XXXXXX", 6);
+                        continue;
+                    }
 
-		  __set_errno (EAGAIN);
-		}
+                    __set_errno(EAGAIN);
+                }
 
-	      result = SEM_FAILED;
-	      goto out;
-	    }
+                result = SEM_FAILED;
+                goto out;
+            }
 
-	  /* We got a file.  */
-	  break;
-	}
+            /* We got a file.  */
+            break;
+        }
 
-      if (TEMP_FAILURE_RETRY (write (fd, &sem.initsem, sizeof (sem_t)))
-	  == sizeof (sem_t)
-	  /* Map the sem_t structure from the file.  */
-	  && (result = (sem_t *) __mmap (NULL, sizeof (sem_t),
-					 PROT_READ | PROT_WRITE, MAP_SHARED,
-					 fd, 0)) != MAP_FAILED)
-	{
-	  /* Create the file.  Don't overwrite an existing file.  */
-	  if (__link (tmpfname, dirname.name) != 0)
-	    {
-	      /* Undo the mapping.  */
-	      __munmap (result, sizeof (sem_t));
+        if (TEMP_FAILURE_RETRY(write(fd, &sem.initsem, sizeof(sem_t)))
+            == sizeof(sem_t)
+            /* Map the sem_t structure from the file.  */
+            && (result = (sem_t *) __mmap(NULL, sizeof(sem_t),
+                                          PROT_READ | PROT_WRITE, MAP_SHARED,
+                                          fd, 0)) != MAP_FAILED) {
+            /* Create the file.  Don't overwrite an existing file.  */
+            if (__link(tmpfname, dirname.name) != 0) {
+                /* Undo the mapping.  */
+                __munmap(result, sizeof(sem_t));
 
-	      /* Reinitialize 'result'.  */
-	      result = SEM_FAILED;
+                /* Reinitialize 'result'.  */
+                result = SEM_FAILED;
 
-	      /* This failed.  If O_EXCL is not set and the problem was
-		 that the file exists, try again.  */
-	      if ((oflag & O_EXCL) == 0 && errno == EEXIST)
-		{
-		  /* Remove the file.  */
-		  __unlink (tmpfname);
+                /* This failed.  If O_EXCL is not set and the problem was
+                that the file exists, try again.  */
+                if ((oflag & O_EXCL) == 0 && errno == EEXIST) {
+                    /* Remove the file.  */
+                    __unlink(tmpfname);
 
-		  /* Close the file.  */
-		  __close (fd);
+                    /* Close the file.  */
+                    __close(fd);
 
-		  goto try_again;
-		}
-	    }
-	  else
-	    /* Insert the mapping into the search tree.  This also
-	       determines whether another thread sneaked by and already
-	       added such a mapping despite the fact that we created it.  */
-	    result = __sem_check_add_mapping (name, fd, result);
-	}
+                    goto try_again;
+                }
+            } else
+                /* Insert the mapping into the search tree.  This also
+                   determines whether another thread sneaked by and already
+                   added such a mapping despite the fact that we created it.  */
+            {
+                result = __sem_check_add_mapping(name, fd, result);
+            }
+        }
 
-      /* Now remove the temporary name.  This should never fail.  If
-	 it fails we leak a file name.  Better fix the kernel.  */
-      __unlink (tmpfname);
+        /* Now remove the temporary name.  This should never fail.  If
+        it fails we leak a file name.  Better fix the kernel.  */
+        __unlink(tmpfname);
     }
 
-  /* Map the mmap error to the error we need.  */
-  if (MAP_FAILED != (void *) SEM_FAILED && result == MAP_FAILED)
-    result = SEM_FAILED;
+    /* Map the mmap error to the error we need.  */
+    if (MAP_FAILED != (void *) SEM_FAILED && result == MAP_FAILED) {
+        result = SEM_FAILED;
+    }
 
-  /* We don't need the file descriptor anymore.  */
-  if (fd != -1)
-    {
-      /* Do not disturb errno.  */
-      int save = errno;
-      __close (fd);
-      errno = save;
+    /* We don't need the file descriptor anymore.  */
+    if (fd != -1) {
+        /* Do not disturb errno.  */
+        int save = errno;
+        __close(fd);
+        errno = save;
     }
 
 out:
-  __pthread_setcancelstate (state, NULL);
+    __pthread_setcancelstate(state, NULL);
 
-  return result;
+    return result;
 }
 #if PTHREAD_IN_LIBC
-versioned_symbol (libc, __sem_open, sem_open, GLIBC_2_34);
+versioned_symbol(libc, __sem_open, sem_open, GLIBC_2_34);
 # if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1_1, GLIBC_2_34)
-compat_symbol (libpthread, __sem_open, sem_open, GLIBC_2_1_1);
+compat_symbol(libpthread, __sem_open, sem_open, GLIBC_2_1_1);
 # endif
 #else /* !PTHREAD_IN_LIBC */
-strong_alias (__sem_open, sem_open)
+strong_alias(__sem_open, sem_open)
 #endif

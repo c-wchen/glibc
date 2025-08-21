@@ -15,8 +15,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef	_SYS_RESOURCE_H
-#define	_SYS_RESOURCE_H	1
+#ifndef _SYS_RESOURCE_H
+#define _SYS_RESOURCE_H 1
 
 #include <features.h>
 
@@ -47,52 +47,52 @@ typedef int __priority_which_t;
 /* Put the soft and hard limits for RESOURCE in *RLIMITS.
    Returns 0 if successful, -1 if not (and sets errno).  */
 #ifndef __USE_FILE_OFFSET64
-extern int getrlimit (__rlimit_resource_t __resource,
-		      struct rlimit *__rlimits) __THROW __nonnull ((2));
+extern int getrlimit(__rlimit_resource_t __resource,
+                     struct rlimit *__rlimits) __THROW __nonnull((2));
 #else
 # ifdef __REDIRECT_NTH
-extern int __REDIRECT_NTH (getrlimit, (__rlimit_resource_t __resource,
-				       struct rlimit *__rlimits), getrlimit64)
-				       __nonnull ((2));
+extern int __REDIRECT_NTH(getrlimit, (__rlimit_resource_t __resource,
+                                      struct rlimit *__rlimits), getrlimit64)
+__nonnull((2));
 # else
 #  define getrlimit getrlimit64
 # endif
 #endif
 #ifdef __USE_LARGEFILE64
-extern int getrlimit64 (__rlimit_resource_t __resource,
-			struct rlimit64 *__rlimits) __THROW __nonnull ((2));
+extern int getrlimit64(__rlimit_resource_t __resource,
+                       struct rlimit64 *__rlimits) __THROW __nonnull((2));
 #endif
 
 /* Set the soft and hard limits for RESOURCE to *RLIMITS.
    Only the super-user can increase hard limits.
    Return 0 if successful, -1 if not (and sets errno).  */
 #ifndef __USE_FILE_OFFSET64
-extern int setrlimit (__rlimit_resource_t __resource,
-		      const struct rlimit *__rlimits) __THROW __nonnull ((2));
+extern int setrlimit(__rlimit_resource_t __resource,
+                     const struct rlimit *__rlimits) __THROW __nonnull((2));
 #else
 # ifdef __REDIRECT_NTH
-extern int __REDIRECT_NTH (setrlimit, (__rlimit_resource_t __resource,
-				       const struct rlimit *__rlimits),
-			   setrlimit64) __nonnull ((2));
+extern int __REDIRECT_NTH(setrlimit, (__rlimit_resource_t __resource,
+                                      const struct rlimit *__rlimits),
+                          setrlimit64) __nonnull((2));
 # else
 #  define setrlimit setrlimit64
 # endif
 #endif
 #ifdef __USE_LARGEFILE64
-extern int setrlimit64 (__rlimit_resource_t __resource,
-			const struct rlimit64 *__rlimits) __THROW
-			__nonnull ((2));
+extern int setrlimit64(__rlimit_resource_t __resource,
+                       const struct rlimit64 *__rlimits) __THROW
+__nonnull((2));
 #endif
 
 /* Return resource usage information on process indicated by WHO
    and put it in *USAGE.  Returns 0 for success, -1 for failure.  */
-extern int getrusage (__rusage_who_t __who, struct rusage *__usage) __THROW;
+extern int getrusage(__rusage_who_t __who, struct rusage *__usage) __THROW;
 
 #ifdef __USE_TIME64_REDIRECTS
 # if defined(__REDIRECT_NTH)
-extern int __REDIRECT_NTH (getrusage, (__rusage_who_t __who,
-                                       struct rusage *__usage),
-                           __getrusage64);
+extern int __REDIRECT_NTH(getrusage, (__rusage_who_t __who,
+                                      struct rusage *__usage),
+                          __getrusage64);
 # else
 # define getrusage __getrusage64
 # endif
@@ -102,13 +102,13 @@ extern int __REDIRECT_NTH (getrusage, (__rusage_who_t __who,
    (see above); if WHO is zero, the current process, process group, or user
    (as specified by WHO) is used.  A lower priority number means higher
    priority.  Priorities range from PRIO_MIN to PRIO_MAX (above).  */
-extern int getpriority (__priority_which_t __which, id_t __who) __THROW;
+extern int getpriority(__priority_which_t __which, id_t __who) __THROW;
 
 /* Set the priority of all processes specified by WHICH and WHO (see above)
    to PRIO.  Returns 0 on success, -1 on errors.  */
-extern int setpriority (__priority_which_t __which, id_t __who, int __prio)
-     __THROW;
+extern int setpriority(__priority_which_t __which, id_t __who, int __prio)
+__THROW;
 
 __END_DECLS
 
-#endif	/* sys/resource.h  */
+#endif  /* sys/resource.h  */

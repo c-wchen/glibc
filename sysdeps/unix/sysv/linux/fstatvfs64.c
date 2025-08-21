@@ -25,24 +25,24 @@
 #include <kernel_stat.h>
 
 /* Return information about the filesystem on which FD resides.  */
-int
-__fstatvfs64 (int fd, struct statvfs64 *buf)
+int __fstatvfs64(int fd, struct statvfs64 *buf)
 {
-  struct statfs64 fsbuf;
-  if (__fstatfs64 (fd, &fsbuf) < 0)
-    return -1;
+    struct statfs64 fsbuf;
+    if (__fstatfs64(fd, &fsbuf) < 0) {
+        return -1;
+    }
 
-  /* Convert the result.  */
-  __internal_statvfs64 (buf, &fsbuf);
+    /* Convert the result.  */
+    __internal_statvfs64(buf, &fsbuf);
 
-  return 0;
+    return 0;
 }
-weak_alias (__fstatvfs64, fstatvfs64)
+weak_alias(__fstatvfs64, fstatvfs64)
 
 #undef __fstatvfs
 #undef fstatvfs
 
 #if STATFS_IS_STATFS64
-weak_alias (__fstatvfs64, __fstatvfs)
-weak_alias (__fstatvfs64, fstatvfs)
+weak_alias(__fstatvfs64, __fstatvfs)
+weak_alias(__fstatvfs64, fstatvfs)
 #endif

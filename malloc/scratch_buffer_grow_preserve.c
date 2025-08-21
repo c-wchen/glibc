@@ -24,44 +24,39 @@
 #include <errno.h>
 #include <string.h>
 
-bool
-__libc_scratch_buffer_grow_preserve (struct scratch_buffer *buffer)
+bool __libc_scratch_buffer_grow_preserve(struct scratch_buffer *buffer)
 {
-  size_t new_length = 2 * buffer->length;
-  void *new_ptr;
+    size_t new_length = 2 * buffer->length;
+    void *new_ptr;
 
-  if (buffer->data == buffer->__space.__c)
-    {
-      /* Move buffer to the heap.  No overflow is possible because
-	 buffer->length describes a small buffer on the stack.  */
-      new_ptr = malloc (new_length);
-      if (new_ptr == NULL)
-	return false;
-      memcpy (new_ptr, buffer->__space.__c, buffer->length);
-    }
-  else
-    {
-      /* Buffer was already on the heap.  Check for overflow.  */
-      if (__glibc_likely (new_length >= buffer->length))
-	new_ptr = realloc (buffer->data, new_length);
-      else
-	{
-	  __set_errno (ENOMEM);
-	  new_ptr = NULL;
-	}
+    if (buffer->data == buffer->__space.__c) {
+        /* Move buffer to the heap.  No overflow is possible because
+        buffer->length describes a small buffer on the stack.  */
+        new_ptr = malloc(new_length);
+        if (new_ptr == NULL) {
+            return false;
+        }
+        memcpy(new_ptr, buffer->__space.__c, buffer->length);
+    } else {
+        /* Buffer was already on the heap.  Check for overflow.  */
+        if (__glibc_likely(new_length >= buffer->length)) {
+            new_ptr = realloc(buffer->data, new_length);
+        } else {
+            __set_errno(ENOMEM);
+            new_ptr = NULL;
+        }
 
-      if (__glibc_unlikely (new_ptr == NULL))
-	{
-	  /* Deallocate, but buffer must remain valid to free.  */
-	  free (buffer->data);
-	  scratch_buffer_init (buffer);
-	  return false;
-	}
+        if (__glibc_unlikely(new_ptr == NULL)) {
+            /* Deallocate, but buffer must remain valid to free.  */
+            free(buffer->data);
+            scratch_buffer_init(buffer);
+            return false;
+        }
     }
 
-  /* Install new heap-based buffer.  */
-  buffer->data = new_ptr;
-  buffer->length = new_length;
-  return true;
+    /* Install new heap-based buffer.  */
+    buffer->data = new_ptr;
+    buffer->length = new_length;
+    return true;
 }
-libc_hidden_def (__libc_scratch_buffer_grow_preserve)
+libc_hidden_def(__libc_scratch_buffer_grow_preserve)

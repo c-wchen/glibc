@@ -23,13 +23,12 @@
 /* Convert the `wchar_t' string in PWCS to a multibyte character string
    in S, writing no more than N characters.  Return the number of bytes
    written, or (size_t) -1 if an invalid `wchar_t' was found.  */
-size_t
-wcstombs (char *s, const wchar_t *pwcs, size_t n)
+size_t wcstombs(char *s, const wchar_t *pwcs, size_t n)
 {
-  mbstate_t state;
+    mbstate_t state;
 
-  memset (&state, '\0', sizeof state);
+    memset(&state, '\0', sizeof state);
 
-  /* Return how many we wrote (or maybe an error).  */
-  return __wcsrtombs (s, &pwcs, n, &state);
+    /* Return how many we wrote (or maybe an error).  */
+    return __wcsrtombs(s, &pwcs, n, &state);
 }

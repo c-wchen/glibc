@@ -20,11 +20,10 @@
 
 /* Run signals handlers on the stack specified by SS (if not NULL).
    If OSS is not NULL, it is filled in with the old signal stack status.  */
-int
-sigaltstack (const stack_t *ss, stack_t *oss)
+int sigaltstack(const stack_t *ss, stack_t *oss)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (sigaltstack)
+stub_warning(sigaltstack)

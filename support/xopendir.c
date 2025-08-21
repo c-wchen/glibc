@@ -20,11 +20,11 @@
 
 #include <support/check.h>
 
-DIR *
-xopendir (const char *path)
+DIR *xopendir(const char *path)
 {
-  DIR *result = opendir (path);
-  if (result == NULL)
-    FAIL_EXIT1 ("opendir (\"%s\"): %m", path);
-  return result;
+    DIR *result = opendir(path);
+    if (result == NULL) {
+        FAIL_EXIT1("opendir (\"%s\"): %m", path);
+    }
+    return result;
 }

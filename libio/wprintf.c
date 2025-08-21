@@ -22,16 +22,15 @@
 
 /* Write formatted output to stdout from the format string FORMAT.  */
 /* VARARGS1 */
-int
-__wprintf (const wchar_t *format, ...)
+int __wprintf(const wchar_t *format, ...)
 {
-  va_list arg;
-  int done;
+    va_list arg;
+    int done;
 
-  va_start (arg, format);
-  done = __vfwprintf_internal (stdout, format, arg, 0);
-  va_end (arg);
+    va_start(arg, format);
+    done = __vfwprintf_internal(stdout, format, arg, 0);
+    va_end(arg);
 
-  return done;
+    return done;
 }
-ldbl_strong_alias (__wprintf, wprintf)
+ldbl_strong_alias(__wprintf, wprintf)

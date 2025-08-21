@@ -23,13 +23,13 @@
 
 
 /* Copy SRC to DEST, returning the address of the terminating '\0' in DEST.  */
-char *
-__stpcpy_chk (char *dest, const char *src, size_t destlen)
+char *__stpcpy_chk(char *dest, const char *src, size_t destlen)
 {
-  size_t len = strlen (src);
-  if (len >= destlen)
-    __chk_fail ();
+    size_t len = strlen(src);
+    if (len >= destlen) {
+        __chk_fail();
+    }
 
-  return memcpy (dest, src, len + 1) + len;
+    return memcpy(dest, src, len + 1) + len;
 }
-libc_hidden_builtin_def (__stpcpy_chk)
+libc_hidden_builtin_def(__stpcpy_chk)

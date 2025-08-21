@@ -22,18 +22,16 @@
 
 
 /* Create a named pipe (FIFO) named PATH with protections MODE.  */
-int
-mkfifo (const char *path, mode_t mode)
+int mkfifo(const char *path, mode_t mode)
 {
-  if (path == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (path == NULL) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
 
-stub_warning (mkfifo)
+stub_warning(mkfifo)

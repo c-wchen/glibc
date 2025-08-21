@@ -26,4 +26,4 @@
 #include "login/getutxent.c"
 #undef getutxent
 
-default_symbol_version (__getutxent, getutxent, UTMP_COMPAT_BASE);
+default_symbol_version(__getutxent, getutxent, UTMP_COMPAT_BASE);

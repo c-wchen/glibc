@@ -19,20 +19,19 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _OR1K_GET_ROUNDING_MODE_H
-#define _OR1K_GET_ROUNDING_MODE_H	1
+#define _OR1K_GET_ROUNDING_MODE_H   1
 
 #include <fenv.h>
 #include <fpu_control.h>
 
 /* Return the floating-point rounding mode.  */
 
-static inline int
-get_rounding_mode (void)
+static inline int get_rounding_mode(void)
 {
-  fpu_control_t cw;
+    fpu_control_t cw;
 
-  _FPU_GETCW (cw);
-  return cw & _FPU_FPCSR_RM_MASK;
+    _FPU_GETCW(cw);
+    return cw & _FPU_FPCSR_RM_MASK;
 }
 
 #endif /* get-rounding-mode.h */

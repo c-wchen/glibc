@@ -19,22 +19,20 @@
 #include <argz.h>
 #include <string.h>
 
-char *
-__argz_next (const char *argz, size_t argz_len, const char *entry)
+char *__argz_next(const char *argz, size_t argz_len, const char *entry)
 {
-  if (entry)
-    {
-      if (entry < argz + argz_len)
-	entry = strchr (entry, '\0') + 1;
+    if (entry) {
+        if (entry < argz + argz_len) {
+            entry = strchr(entry, '\0') + 1;
+        }
 
-      return entry >= argz + argz_len ? NULL : (char *) entry;
+        return entry >= argz + argz_len ? NULL : (char *) entry;
+    } else if (argz_len > 0) {
+        return (char *) argz;
+    } else {
+        return NULL;
     }
-  else
-    if (argz_len > 0)
-      return (char *) argz;
-    else
-      return NULL;
 }
-libc_hidden_def (__argz_next)
-weak_alias (__argz_next, argz_next)
-libc_hidden_weak (argz_next)
+libc_hidden_def(__argz_next)
+weak_alias(__argz_next, argz_next)
+libc_hidden_weak(argz_next)

@@ -23,20 +23,21 @@
    If OLDDELTA is not NULL, it is filled in with the amount
    of time adjustment remaining to be done from the last `__adjtime' call.
    This call is restricted to the super-user.  */
-int
-__adjtime (const struct timeval *delta, struct timeval *olddelta)
+int __adjtime(const struct timeval *delta, struct timeval *olddelta)
 {
-  error_t err;
-  mach_port_t hostpriv;
+    error_t err;
+    mach_port_t hostpriv;
 
-  hostpriv = __pid2task (-1);
-  if (hostpriv == MACH_PORT_NULL)
-    return -1;
-  err = __host_adjust_time (hostpriv, delta, olddelta);
-  __mach_port_deallocate (__mach_task_self (), hostpriv);
-  if (err)
-    return __hurd_fail (err);
-  return 0;
+    hostpriv = __pid2task(-1);
+    if (hostpriv == MACH_PORT_NULL) {
+        return -1;
+    }
+    err = __host_adjust_time(hostpriv, delta, olddelta);
+    __mach_port_deallocate(__mach_task_self(), hostpriv);
+    if (err) {
+        return __hurd_fail(err);
+    }
+    return 0;
 }
 
-weak_alias (__adjtime, adjtime)
+weak_alias(__adjtime, adjtime)

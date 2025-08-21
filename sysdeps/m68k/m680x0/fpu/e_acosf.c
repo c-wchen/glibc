@@ -1,4 +1,4 @@
-#ifndef	FUNC
+#ifndef FUNC
 # define FUNC __ieee754_acosf
 # define FUNC_FINITE __acosf
 #endif

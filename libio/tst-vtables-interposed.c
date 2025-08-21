@@ -29,10 +29,9 @@ extern const struct _IO_jump_t _IO_wfile_jumps;
 #define _IO_wfile_jumps _IO_wfile_jumps
 #include "stdfiles.c"
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  return run_tests (false);
+    return run_tests(false);
 }
 
 /* Calling setvbuf in the test driver is not supported with our

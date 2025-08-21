@@ -48,33 +48,33 @@
 
 #if !IS_IN (ldconfig)
 # if !defined PROCINFO_DECL && defined SHARED
-  ._dl_powerpc_cpu_features
+._dl_powerpc_cpu_features
 # else
 PROCINFO_CLASS struct cpu_features _dl_powerpc_cpu_features
 # endif
 # ifndef PROCINFO_DECL
-= { }
+    = { }
 # endif
 # if !defined SHARED || defined PROCINFO_DECL
-;
+      ;
 # else
-,
+      ,
 # endif
 #endif
 
 #if !IS_IN (ldconfig)
 # if !defined PROCINFO_DECL && defined SHARED
-     ._dl_cache_line_size
+._dl_cache_line_size
 # else
 PROCINFO_CLASS int _dl_cache_line_size
 # endif
 # ifndef PROCINFO_DECL
-     = 0
+    = 0
 # endif
 # if !defined SHARED || defined PROCINFO_DECL
-;
+      ;
 # else
-,
+      ,
 # endif
 #endif
 

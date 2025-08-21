@@ -20,13 +20,11 @@
 #include <unistd.h>
 
 /* Truncate PATH to LENGTH bytes.  */
-int
-truncate64 (const char *path, off64_t length)
+int truncate64(const char *path, off64_t length)
 {
-  if ((off_t) length != length)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if ((off_t) length != length) {
+        __set_errno(EINVAL);
+        return -1;
     }
-  return __truncate (path, (off_t) length);
+    return __truncate(path, (off_t) length);
 }

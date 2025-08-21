@@ -21,26 +21,27 @@
 
 #include "testobj.h"
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* Resolve to foo@@v3 in nextmod3.so, instead of
-     foo@v1 or foo@v2.  */
-  int (*fp) (int) = dlsym (RTLD_DEFAULT, "foo");
-  int res = fp (0);
-  printf ("preload (0) = %d, %s\n", res, res == 3 ? "ok" : "wrong");
-  if (res != 3)
-    return 1;
+    /* Resolve to foo@@v3 in nextmod3.so, instead of
+       foo@v1 or foo@v2.  */
+    int (*fp)(int) = dlsym(RTLD_DEFAULT, "foo");
+    int res = fp(0);
+    printf("preload (0) = %d, %s\n", res, res == 3 ? "ok" : "wrong");
+    if (res != 3) {
+        return 1;
+    }
 
-  /* Resolve to foo@@v3 in nextmod3.so, instead of
-     foo@v1 or foo@v2.  */
-  fp = dlsym (RTLD_NEXT, "foo");
-  res = fp (0);
-  printf ("preload (0) = %d, %s\n", res, res == 3 ? "ok" : "wrong");
-  if (res != 3)
-    return 1;
+    /* Resolve to foo@@v3 in nextmod3.so, instead of
+       foo@v1 or foo@v2.  */
+    fp = dlsym(RTLD_NEXT, "foo");
+    res = fp(0);
+    printf("preload (0) = %d, %s\n", res, res == 3 ? "ok" : "wrong");
+    if (res != 3) {
+        return 1;
+    }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

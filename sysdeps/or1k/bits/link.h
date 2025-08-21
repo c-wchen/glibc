@@ -21,34 +21,32 @@
 #endif
 
 /* Registers for entry into PLT.  */
-typedef struct La_or1k_regs
-{
-  uint32_t lr_reg[6]; /* Args passed in r3-r8.  */
-  uint32_t lr_sp;     /* Register r1.  */
-  uint32_t lr_lr;     /* Register r9.  */
+typedef struct La_or1k_regs {
+    uint32_t lr_reg[6]; /* Args passed in r3-r8.  */
+    uint32_t lr_sp;     /* Register r1.  */
+    uint32_t lr_lr;     /* Register r9.  */
 } La_or1k_regs;
 
 /* Return values for calls from PLT.  */
-typedef struct La_or1k_retval
-{
-  /* Up to two 32-bit registers used for a return value.  */
-  uint32_t lrv_reg[2];
+typedef struct La_or1k_retval {
+    /* Up to two 32-bit registers used for a return value.  */
+    uint32_t lrv_reg[2];
 } La_or1k_retval;
 
 __BEGIN_DECLS
 
-extern Elf32_Addr la_or1k_gnu_pltenter (Elf32_Sym *__sym, unsigned int __ndx,
-					uintptr_t *__refcook,
-					uintptr_t *__defcook,
-					La_or1k_regs *__regs,
-					unsigned int *__flags,
-					const char *__symname,
-					long int *__framesizep);
-extern unsigned int la_or1k_gnu_pltexit (Elf32_Sym *__sym, unsigned int __ndx,
-					 uintptr_t *__refcook,
-					 uintptr_t *__defcook,
-					 const La_or1k_regs *__inregs,
-					 La_or1k_retval *__outregs,
-					 const char *__symname);
+extern Elf32_Addr la_or1k_gnu_pltenter(Elf32_Sym *__sym, unsigned int __ndx,
+                                       uintptr_t *__refcook,
+                                       uintptr_t *__defcook,
+                                       La_or1k_regs *__regs,
+                                       unsigned int *__flags,
+                                       const char *__symname,
+                                       long int *__framesizep);
+extern unsigned int la_or1k_gnu_pltexit(Elf32_Sym *__sym, unsigned int __ndx,
+                                        uintptr_t *__refcook,
+                                        uintptr_t *__defcook,
+                                        const La_or1k_regs *__inregs,
+                                        La_or1k_retval *__outregs,
+                                        const char *__symname);
 
 __END_DECLS

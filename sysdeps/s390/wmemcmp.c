@@ -23,17 +23,17 @@
 # include <ifunc-resolve.h>
 
 # if HAVE_WMEMCMP_C
-extern __typeof (__wmemcmp) WMEMCMP_C attribute_hidden;
+extern __typeof(__wmemcmp) WMEMCMP_C attribute_hidden;
 # endif
 
 # if HAVE_WMEMCMP_Z13
-extern __typeof (__wmemcmp) WMEMCMP_Z13 attribute_hidden;
+extern __typeof(__wmemcmp) WMEMCMP_Z13 attribute_hidden;
 # endif
 
-s390_libc_ifunc_expr (__wmemcmp, __wmemcmp,
-		      (HAVE_WMEMCMP_Z13 && (hwcap & HWCAP_S390_VX))
-		      ? WMEMCMP_Z13
-		      : WMEMCMP_DEFAULT
-		      )
-weak_alias (__wmemcmp, wmemcmp)
+s390_libc_ifunc_expr(__wmemcmp, __wmemcmp,
+                     (HAVE_WMEMCMP_Z13 &&(hwcap &HWCAP_S390_VX))
+                     ? WMEMCMP_Z13
+                     : WMEMCMP_DEFAULT
+                    )
+weak_alias(__wmemcmp, wmemcmp)
 #endif

@@ -26,25 +26,24 @@
 # include <math_private.h>
 # include <libm-alias-ldouble.h>
 
-long long int
-__llrintl (_Float128 x)
+long long int __llrintl(_Float128 x)
 {
-  long long int y;
-  /* The z196 zarch "convert to fixed" (cgxbra) instruction is rounding
-     according to current rounding mode (M3-field: 0).
-     First convert x with suppressed inexact exception and check if the
-     resulting value is beyond the target limits (indicated by cc=3;
-     Note: a nan is also indicated by cc=3).
-     If the resulting value is within the target limits, redo
-     without suppressing the inexact exception.  */
-  __asm__ ("cgxbra %0,0,%1,4 \n\t"
-	   "jo 1f \n\t"
-	   "cgxbra %0,0,%1,0 \n\t"
-	   "1:"
-	   : "=&d" (y) : "f" (x) : "cc");
-  return y;
+    long long int y;
+    /* The z196 zarch "convert to fixed" (cgxbra) instruction is rounding
+       according to current rounding mode (M3-field: 0).
+       First convert x with suppressed inexact exception and check if the
+       resulting value is beyond the target limits (indicated by cc=3;
+       Note: a nan is also indicated by cc=3).
+       If the resulting value is within the target limits, redo
+       without suppressing the inexact exception.  */
+    __asm__("cgxbra %0,0,%1,4 \n\t"
+            "jo 1f \n\t"
+            "cgxbra %0,0,%1,0 \n\t"
+            "1:"
+            : "=&d"(y) : "f"(x) : "cc");
+    return y;
 }
-libm_alias_ldouble (__llrint, llrint)
+libm_alias_ldouble(__llrint, llrint)
 
 #else
 # include <sysdeps/ieee754/ldbl-128/s_llrintl.c>

@@ -21,18 +21,18 @@
 
 #define FCSR_STATUS 0x1f1f0000
 
-int
-fesetmode (const femode_t *modep)
+int fesetmode(const femode_t *modep)
 {
-  fpu_control_t cw;
+    fpu_control_t cw;
 
-  _FPU_GETCW (cw);
-  cw &= FCSR_STATUS;
-  if (modep == FE_DFL_MODE)
-    cw |= _FPU_DEFAULT;
-  else
-    cw |= *modep & ~FCSR_STATUS;
-  _FPU_SETCW (cw);
+    _FPU_GETCW(cw);
+    cw &= FCSR_STATUS;
+    if (modep == FE_DFL_MODE) {
+        cw |= _FPU_DEFAULT;
+    } else {
+        cw |= *modep & ~FCSR_STATUS;
+    }
+    _FPU_SETCW(cw);
 
-  return 0;
+    return 0;
 }

@@ -1,7 +1,6 @@
-extern const char *foo (void);
+extern const char *foo(void);
 
-const char *
-foo (void)
+const char *foo(void)
 {
-  return __FILE__;
+    return __FILE__;
 }

@@ -19,40 +19,43 @@
 #include <array_length.h>
 
 int
-Xprintf (function_invoke) (void *buf,
-                           printf_function callback,
-                           union printf_arg *args_value,
-                           size_t ndata_args,
-                           struct printf_info *info)
+Xprintf(function_invoke)(void *buf,
+                         printf_function callback,
+                         union printf_arg *args_value,
+                         size_t ndata_args,
+                         struct printf_info *info)
 {
-  /* Most custom specifiers expect just one argument.  Use the heap
-     for larger argument arrays.  */
-  const void *onstack_args[4];
-  const void **args;
-  if (ndata_args <= array_length (onstack_args))
-    args = onstack_args;
-  else
-    {
-      args = calloc (ndata_args, sizeof (*args));
-      if (args == NULL)
-        return -1;
+    /* Most custom specifiers expect just one argument.  Use the heap
+       for larger argument arrays.  */
+    const void *onstack_args[4];
+    const void **args;
+    if (ndata_args <= array_length(onstack_args)) {
+        args = onstack_args;
+    } else {
+        args = calloc(ndata_args, sizeof(*args));
+        if (args == NULL) {
+            return -1;
+        }
     }
 
-  for (unsigned int i = 0; i < ndata_args; ++i)
-    args[i] = &args_value[i];
+    for (unsigned int i = 0; i < ndata_args; ++i) {
+        args[i] = &args_value[i];
+    }
 
-  struct Xprintf (buffer_as_file) s;
-  Xprintf (buffer_as_file_init) (&s, buf);
+    struct Xprintf(buffer_as_file) s;
+    Xprintf(buffer_as_file_init)(&s, buf);
 
-  /* Call the function.  */
-  int done = callback (Xprintf (buffer_as_file_get) (&s), info, args);
+    /* Call the function.  */
+    int done = callback(Xprintf(buffer_as_file_get)(&s), info, args);
 
-  if (!Xprintf (buffer_as_file_terminate) (&s))
-    done = -1;
+    if (!Xprintf(buffer_as_file_terminate)(&s)) {
+        done = -1;
+    }
 
-  if (args != onstack_args)
-    free (args);
+    if (args != onstack_args) {
+        free(args);
+    }
 
-  /* Potential error from the callback function.  */
-  return done;
+    /* Potential error from the callback function.  */
+    return done;
 }

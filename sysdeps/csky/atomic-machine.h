@@ -56,12 +56,12 @@
 #define __arch_compare_and_exchange_val_64_int(mem, newval, oldval, model) \
   (abort (), (__typeof (*mem)) 0)
 
-#define atomic_compare_and_exchange_bool_acq(mem, new, old)		\
-  __atomic_bool_bysize (__arch_compare_and_exchange_bool, int,		\
-			mem, new, old, __ATOMIC_ACQUIRE)
+#define atomic_compare_and_exchange_bool_acq(mem, new, old)     \
+  __atomic_bool_bysize (__arch_compare_and_exchange_bool, int,      \
+            mem, new, old, __ATOMIC_ACQUIRE)
 
-#define atomic_compare_and_exchange_val_acq(mem, new, old)		\
-  __atomic_val_bysize (__arch_compare_and_exchange_val, int,		\
-		       mem, new, old, __ATOMIC_ACQUIRE)
+#define atomic_compare_and_exchange_val_acq(mem, new, old)      \
+  __atomic_val_bysize (__arch_compare_and_exchange_val, int,        \
+               mem, new, old, __ATOMIC_ACQUIRE)
 
 #endif /* atomic-machine.h */

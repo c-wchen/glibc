@@ -29,36 +29,35 @@
 /* Open FILE with access OFLAG.  Interpret relative paths relative to
    the directory associated with FD.  If O_CREAT or O_TMPFILE is in OFLAG, a
    third argument is the file protection.  */
-int
-__openat (int fd, const char *file, int oflag, ...)
+int __openat(int fd, const char *file, int oflag, ...)
 {
-  mode_t mode;
-  io_t port;
-  int cancel_oldtype;
+    mode_t mode;
+    io_t port;
+    int cancel_oldtype;
 
-  if (__OPEN_NEEDS_MODE (oflag))
-    {
-      va_list arg;
-      va_start (arg, oflag);
-      mode = va_arg (arg, mode_t);
-      va_end (arg);
+    if (__OPEN_NEEDS_MODE(oflag)) {
+        va_list arg;
+        va_start(arg, oflag);
+        mode = va_arg(arg, mode_t);
+        va_end(arg);
+    } else {
+        mode = 0;
     }
-  else
-    mode = 0;
 
-  cancel_oldtype = LIBC_CANCEL_ASYNC();
-  port = __file_name_lookup_at (fd, 0, file, oflag, mode);
-  LIBC_CANCEL_RESET (cancel_oldtype);
+    cancel_oldtype = LIBC_CANCEL_ASYNC();
+    port = __file_name_lookup_at(fd, 0, file, oflag, mode);
+    LIBC_CANCEL_RESET(cancel_oldtype);
 
-  if (port == MACH_PORT_NULL)
-    return -1;
+    if (port == MACH_PORT_NULL) {
+        return -1;
+    }
 
-  return _hurd_intern_fd (port, oflag, 1);
+    return _hurd_intern_fd(port, oflag, 1);
 }
-libc_hidden_def (__openat)
-weak_alias (__openat, openat)
+libc_hidden_def(__openat)
+weak_alias(__openat, openat)
 
 /* openat64 is just the same as openat for us.  */
-weak_alias (__openat, __openat64)
-libc_hidden_weak (__openat64)
-weak_alias (__openat, openat64)
+weak_alias(__openat, __openat64)
+libc_hidden_weak(__openat64)
+weak_alias(__openat, openat64)

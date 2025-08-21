@@ -25,41 +25,36 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-static void
-callback (void *closure)
+static void callback(void *closure)
 {
-  int *result = closure;
-  struct stat before;
-  xstat ("/dev", &before);
-  if (chroot ("/dev") != 0)
-    {
-      *result = errno;
-      return;
+    int *result = closure;
+    struct stat before;
+    xstat("/dev", &before);
+    if (chroot("/dev") != 0) {
+        *result = errno;
+        return;
     }
-  struct stat after;
-  xstat ("/", &after);
-  TEST_VERIFY (before.st_dev == after.st_dev);
-  TEST_VERIFY (before.st_ino == after.st_ino);
-  *result = 0;
+    struct stat after;
+    xstat("/", &after);
+    TEST_VERIFY(before.st_dev == after.st_dev);
+    TEST_VERIFY(before.st_ino == after.st_ino);
+    *result = 0;
 }
 
-bool
-support_can_chroot (void)
+bool support_can_chroot(void)
 {
-  int *result = support_shared_allocate (sizeof (*result));
-  *result = 0;
-  support_isolate_in_subprocess (callback, result);
-  bool ok = *result == 0;
-  if (!ok)
-    {
-      static bool already_warned;
-      if (!already_warned)
-        {
-          already_warned = true;
-          errno = *result;
-          printf ("warning: this process does not support chroot: %m\n");
+    int *result = support_shared_allocate(sizeof(*result));
+    *result = 0;
+    support_isolate_in_subprocess(callback, result);
+    bool ok = *result == 0;
+    if (!ok) {
+        static bool already_warned;
+        if (!already_warned) {
+            already_warned = true;
+            errno = *result;
+            printf("warning: this process does not support chroot: %m\n");
         }
     }
-  support_shared_free (result);
-  return ok;
+    support_shared_free(result);
+    return ok;
 }

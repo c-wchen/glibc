@@ -32,7 +32,7 @@
 #include <stddef.h>
 #define __extern_inline __attribute__((noinline))
 #define __GNUC_PREREQ(x, y) 0
-typedef int (*__compar_fn_t) (const void *, const void *);
+typedef int (*__compar_fn_t)(const void *, const void *);
 #include <bits/stdlib-bsearch.h>
 #undef __extern_inline
 #undef __GNUC_PREREQ
@@ -42,96 +42,92 @@ typedef int (*__compar_fn_t) (const void *, const void *);
 
 int arr[ARRAY_SIZE];
 
-static int
-comp_asc (const void *p1, const void *p2)
+static int comp_asc(const void *p1, const void *p2)
 {
-  int x1 = *(int *) p1;
-  int x2 = *(int *) p2;
+    int x1 = *(int *) p1;
+    int x2 = *(int *) p2;
 
-  if (x1 < x2)
-    return -1;
-  if (x1 > x2)
-    return 1;
-  return 0;
+    if (x1 < x2) {
+        return -1;
+    }
+    if (x1 > x2) {
+        return 1;
+    }
+    return 0;
 }
 
-static int
-comp_desc (const void *p1, const void *p2)
+static int comp_desc(const void *p1, const void *p2)
 {
-  int x1 = *(int *) p1;
-  int x2 = *(int *) p2;
+    int x1 = *(int *) p1;
+    int x2 = *(int *) p2;
 
-  if (x1 > x2)
-    return -1;
-  if (x1 < x2)
-    return 1;
-  return 0;
+    if (x1 > x2) {
+        return -1;
+    }
+    if (x1 < x2) {
+        return 1;
+    }
+    return 0;
 }
 
-static void
-do_bench (json_ctx_t *json_ctx, bool ascending, bool contained)
+static void do_bench(json_ctx_t *json_ctx, bool ascending, bool contained)
 {
-  size_t i, iters = LOOP_ITERS;
-  timing_t start, stop, cur;
-  int key;
-  volatile __attribute__((__unused__)) void *res;
+    size_t i, iters = LOOP_ITERS;
+    timing_t start, stop, cur;
+    int key;
+    volatile __attribute__((__unused__)) void *res;
 
-  for (i = 0; i < ARRAY_SIZE; ++i)
-    {
-      arr[i] = (ascending ? i : ARRAY_SIZE - 1 - i) << 1;
+    for (i = 0; i < ARRAY_SIZE; ++i) {
+        arr[i] = (ascending ? i : ARRAY_SIZE - 1 - i) << 1;
     }
 
-  json_element_object_begin (json_ctx);
-  json_attr_uint (json_ctx, "array-size", ARRAY_SIZE);
-  json_attr_uint (json_ctx, "element-size", sizeof(arr[0]));
-  json_attr_string (json_ctx, "key-pattern", ascending ? "ascending" : "descending");
-  json_attr_string (json_ctx, "contained", contained ? "yes" : "no");
-  json_attr_string (json_ctx, "simple", "yes");
+    json_element_object_begin(json_ctx);
+    json_attr_uint(json_ctx, "array-size", ARRAY_SIZE);
+    json_attr_uint(json_ctx, "element-size", sizeof(arr[0]));
+    json_attr_string(json_ctx, "key-pattern", ascending ? "ascending" : "descending");
+    json_attr_string(json_ctx, "contained", contained ? "yes" : "no");
+    json_attr_string(json_ctx, "simple", "yes");
 
-  TIMING_NOW (start);
+    TIMING_NOW(start);
 
-  for (i = 0; i < iters; ++i)
-    {
-      key = (i % ARRAY_SIZE << 1) + !contained;
-      res = bsearch(&key, arr, ARRAY_SIZE, sizeof(arr[0]), ascending ? comp_asc : comp_desc);
+    for (i = 0; i < iters; ++i) {
+        key = (i % ARRAY_SIZE << 1) + !contained;
+        res = bsearch(&key, arr, ARRAY_SIZE, sizeof(arr[0]), ascending ? comp_asc : comp_desc);
     }
 
-  TIMING_NOW (stop);
+    TIMING_NOW(stop);
 
-  TIMING_DIFF (cur, start, stop);
+    TIMING_DIFF(cur, start, stop);
 
-  json_attr_double (json_ctx, "timing", (double) cur / (double) iters);
-  json_element_object_end (json_ctx);
+    json_attr_double(json_ctx, "timing", (double) cur / (double) iters);
+    json_element_object_end(json_ctx);
 }
 
-int
-do_test (void)
+int do_test(void)
 {
-  json_ctx_t json_ctx;
+    json_ctx_t json_ctx;
 
-  json_init (&json_ctx, 0, stdout);
+    json_init(&json_ctx, 0, stdout);
 
-  json_document_begin (&json_ctx);
-  json_attr_string (&json_ctx, "timing_type", TIMING_TYPE);
-  json_attr_object_begin (&json_ctx, "functions");
-  json_attr_object_begin (&json_ctx, TEST_NAME);
-  json_attr_string (&json_ctx, "bench-variant", "default");
-  json_array_begin (&json_ctx, "results");
+    json_document_begin(&json_ctx);
+    json_attr_string(&json_ctx, "timing_type", TIMING_TYPE);
+    json_attr_object_begin(&json_ctx, "functions");
+    json_attr_object_begin(&json_ctx, TEST_NAME);
+    json_attr_string(&json_ctx, "bench-variant", "default");
+    json_array_begin(&json_ctx, "results");
 
-  for (int ascending = 0; ascending < 2; ++ascending)
-    {
-      for (int contained = 0; contained < 2; ++contained)
-        {
-          do_bench(&json_ctx, ascending, contained);
+    for (int ascending = 0; ascending < 2; ++ascending) {
+        for (int contained = 0; contained < 2; ++contained) {
+            do_bench(&json_ctx, ascending, contained);
         }
     }
 
-  json_array_end (&json_ctx);
-  json_attr_object_end (&json_ctx);
-  json_attr_object_end (&json_ctx);
-  json_document_end (&json_ctx);
+    json_array_end(&json_ctx);
+    json_attr_object_end(&json_ctx);
+    json_attr_object_end(&json_ctx);
+    json_document_end(&json_ctx);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

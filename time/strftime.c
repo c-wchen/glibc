@@ -19,9 +19,8 @@
 #include <locale/localeinfo.h>
 
 
-size_t
-strftime (char *s, size_t maxsize, const char *format, const struct tm *tp)
+size_t strftime(char *s, size_t maxsize, const char *format, const struct tm *tp)
 {
-  return __strftime_l (s, maxsize, format, tp, _NL_CURRENT_LOCALE);
+    return __strftime_l(s, maxsize, format, tp, _NL_CURRENT_LOCALE);
 }
-libc_hidden_def (strftime)
+libc_hidden_def(strftime)

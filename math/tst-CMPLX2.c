@@ -22,121 +22,111 @@
 
 static int result;
 
-#define COMPARE_BODY(A, B, TYPE, COPYSIGN)				\
-  do {									\
-    TYPE s1 = COPYSIGN ((TYPE) 1.0, A);					\
-    TYPE s2 = COPYSIGN ((TYPE) 1.0, B);					\
-    if (s1 != s2)							\
-      result |= 1;							\
-    if ((__builtin_isnan (A) != 0) != (__builtin_isnan (B) != 0))	\
-      result |= 1;							\
-    if ((A != B) != (__builtin_isnan (A) != 0))				\
-      result |= 1;							\
+#define COMPARE_BODY(A, B, TYPE, COPYSIGN)              \
+  do {                                  \
+    TYPE s1 = COPYSIGN ((TYPE) 1.0, A);                 \
+    TYPE s2 = COPYSIGN ((TYPE) 1.0, B);                 \
+    if (s1 != s2)                           \
+      result |= 1;                          \
+    if ((__builtin_isnan (A) != 0) != (__builtin_isnan (B) != 0))   \
+      result |= 1;                          \
+    if ((A != B) != (__builtin_isnan (A) != 0))             \
+      result |= 1;                          \
   } while (0)
 
 #ifdef CMPLX
 
-static void
-comparef (float a, float b)
+static void comparef(float a, float b)
 {
-  COMPARE_BODY (a, b, float, __builtin_copysignf);
+    COMPARE_BODY(a, b, float, __builtin_copysignf);
 }
 
-static void
-compare (double a, double b)
+static void compare(double a, double b)
 {
-  COMPARE_BODY (a, b, double, __builtin_copysign);
+    COMPARE_BODY(a, b, double, __builtin_copysign);
 }
 
-static void
-comparel (long double a, long double b)
+static void comparel(long double a, long double b)
 {
-  COMPARE_BODY (a, b, long double, __builtin_copysignl);
+    COMPARE_BODY(a, b, long double, __builtin_copysignl);
 }
 
-static void
-comparecf (_Complex float a, float r, float i)
+static void comparecf(_Complex float a, float r, float i)
 {
-  comparef (__real__ a, r);
-  comparef (__imag__ a, i);
+    comparef(__real__ a, r);
+    comparef(__imag__ a, i);
 }
 
-static void
-comparec (_Complex double a, double r, double i)
+static void comparec(_Complex double a, double r, double i)
 {
-  compare (__real__ a, r);
-  compare (__imag__ a, i);
+    compare(__real__ a, r);
+    compare(__imag__ a, i);
 }
 
-static void
-comparecl (_Complex long double a, long double r, long double i)
+static void comparecl(_Complex long double a, long double r, long double i)
 {
-  comparel (__real__ a, r);
-  comparel (__imag__ a, i);
+    comparel(__real__ a, r);
+    comparel(__imag__ a, i);
 }
 
-#define VERIFY(A, B, TYPE, COMPARE, CL)			\
-  do {							\
-    TYPE a = A;						\
-    TYPE b = B;						\
-    _Complex TYPE cr = CL (a, b);			\
-    static _Complex TYPE cs = CL (A, B);		\
-    COMPARE (cr, A, B);					\
-    COMPARE (cs, A, B);					\
+#define VERIFY(A, B, TYPE, COMPARE, CL)         \
+  do {                          \
+    TYPE a = A;                     \
+    TYPE b = B;                     \
+    _Complex TYPE cr = CL (a, b);           \
+    static _Complex TYPE cs = CL (A, B);        \
+    COMPARE (cr, A, B);                 \
+    COMPARE (cs, A, B);                 \
   } while (0)
 
-#define ALL_CHECKS(PZ, NZ, NAN, INF, TYPE, COMPARE, CL)	\
-  do {							\
-    VERIFY (PZ, PZ, TYPE, COMPARE, CL);			\
-    VERIFY (PZ, NZ, TYPE, COMPARE, CL);			\
-    VERIFY (PZ, NAN, TYPE, COMPARE, CL);		\
-    VERIFY (PZ, INF, TYPE, COMPARE, CL);		\
-    VERIFY (NZ, PZ, TYPE, COMPARE, CL);			\
-    VERIFY (NZ, NZ, TYPE, COMPARE, CL);			\
-    VERIFY (NZ, NAN, TYPE, COMPARE, CL);		\
-    VERIFY (NZ, INF, TYPE, COMPARE, CL);		\
-    VERIFY (NAN, PZ, TYPE, COMPARE, CL);		\
-    VERIFY (NAN, NZ, TYPE, COMPARE, CL);		\
-    VERIFY (NAN, NAN, TYPE, COMPARE, CL);		\
-    VERIFY (NAN, INF, TYPE, COMPARE, CL);		\
-    VERIFY (INF, PZ, TYPE, COMPARE,CL);			\
-    VERIFY (INF, NZ, TYPE, COMPARE, CL);		\
-    VERIFY (INF, NAN, TYPE, COMPARE, CL);		\
-    VERIFY (INF, INF, TYPE, COMPARE, CL);		\
+#define ALL_CHECKS(PZ, NZ, NAN, INF, TYPE, COMPARE, CL) \
+  do {                          \
+    VERIFY (PZ, PZ, TYPE, COMPARE, CL);         \
+    VERIFY (PZ, NZ, TYPE, COMPARE, CL);         \
+    VERIFY (PZ, NAN, TYPE, COMPARE, CL);        \
+    VERIFY (PZ, INF, TYPE, COMPARE, CL);        \
+    VERIFY (NZ, PZ, TYPE, COMPARE, CL);         \
+    VERIFY (NZ, NZ, TYPE, COMPARE, CL);         \
+    VERIFY (NZ, NAN, TYPE, COMPARE, CL);        \
+    VERIFY (NZ, INF, TYPE, COMPARE, CL);        \
+    VERIFY (NAN, PZ, TYPE, COMPARE, CL);        \
+    VERIFY (NAN, NZ, TYPE, COMPARE, CL);        \
+    VERIFY (NAN, NAN, TYPE, COMPARE, CL);       \
+    VERIFY (NAN, INF, TYPE, COMPARE, CL);       \
+    VERIFY (INF, PZ, TYPE, COMPARE,CL);         \
+    VERIFY (INF, NZ, TYPE, COMPARE, CL);        \
+    VERIFY (INF, NAN, TYPE, COMPARE, CL);       \
+    VERIFY (INF, INF, TYPE, COMPARE, CL);       \
   } while (0)
 
-static void
-check_float (void)
+static void check_float(void)
 {
-  ALL_CHECKS (0.0f, -0.0f, __builtin_nanf (""), __builtin_inff (),
-	      float, comparecf, CMPLXF);
+    ALL_CHECKS(0.0f, -0.0f, __builtin_nanf(""), __builtin_inff(),
+               float, comparecf, CMPLXF);
 }
 
-static void
-check_double (void)
+static void check_double(void)
 {
-  ALL_CHECKS (0.0, -0.0, __builtin_nan (""), __builtin_inf (),
-	      double, comparec, CMPLX);
+    ALL_CHECKS(0.0, -0.0, __builtin_nan(""), __builtin_inf(),
+               double, comparec, CMPLX);
 }
 
-static void
-check_long_double (void)
+static void check_long_double(void)
 {
-  ALL_CHECKS (0.0l, -0.0l, __builtin_nanl (""), __builtin_infl (),
-	      long double, comparecl, CMPLXL);
+    ALL_CHECKS(0.0l, -0.0l, __builtin_nanl(""), __builtin_infl(),
+               long double, comparecl, CMPLXL);
 }
 #endif
 
-static int
-do_test (void)
+static int do_test(void)
 {
 #ifdef CMPLX
-  check_float ();
-  check_double ();
-  check_long_double ();
+    check_float();
+    check_double();
+    check_long_double();
 #endif
 
-  return result;
+    return result;
 }
 
 #define TEST_FUNCTION do_test ()

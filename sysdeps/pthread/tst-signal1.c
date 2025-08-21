@@ -32,159 +32,143 @@ static sigset_t ss;
 static pthread_barrier_t *b;
 
 
-static void *
-tf (void *arg)
+static void *tf(void *arg)
 {
-  sigdelset (&ss, SIGINT);
+    sigdelset(&ss, SIGINT);
 
-  if (pthread_sigmask (SIG_SETMASK, &ss, NULL) != 0)
-    {
-      puts ("2nd pthread_sigmask failed");
-      exit (1);
+    if (pthread_sigmask(SIG_SETMASK, &ss, NULL) != 0) {
+        puts("2nd pthread_sigmask failed");
+        exit(1);
     }
 
-  pthread_barrier_wait (b);
+    pthread_barrier_wait(b);
 
-  int sig;
-  int res = sigwait (&ss, &sig);
-  if (res == 0)
-    {
-      printf ("sigwait returned successfully with signal %d\n", sig);
-      exit (1);
+    int sig;
+    int res = sigwait(&ss, &sig);
+    if (res == 0) {
+        printf("sigwait returned successfully with signal %d\n", sig);
+        exit(1);
     }
 
-  printf ("sigwait returned with %s (%d)\n", strerror (res), res);
+    printf("sigwait returned with %s (%d)\n", strerror(res), res);
 
-  return NULL;
+    return NULL;
 }
 
 
-static void
-receiver (void)
+static void receiver(void)
 {
-  pthread_t th;
+    pthread_t th;
 
-  /* Make sure the process doesn't run forever.  */
-  alarm (10);
+    /* Make sure the process doesn't run forever.  */
+    alarm(10);
 
-  sigfillset (&ss);
+    sigfillset(&ss);
 
-  if (pthread_sigmask (SIG_SETMASK, &ss, NULL) != 0)
-    {
-      puts ("1st pthread_sigmask failed");
-      exit (1);
+    if (pthread_sigmask(SIG_SETMASK, &ss, NULL) != 0) {
+        puts("1st pthread_sigmask failed");
+        exit(1);
     }
 
-  if (pthread_create (&th, NULL, tf, NULL) != 0)
-    {
-      puts ("pthread_create failed");
-      exit (1);
+    if (pthread_create(&th, NULL, tf, NULL) != 0) {
+        puts("pthread_create failed");
+        exit(1);
     }
 
-  if (pthread_join (th, NULL) == 0)
-    {
-      puts ("thread joined?!");
-      exit (1);
+    if (pthread_join(th, NULL) == 0) {
+        puts("thread joined?!");
+        exit(1);
     }
 
-  _exit (0);
+    _exit(0);
 }
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  xsignal (SIGINT, SIG_DFL);
+    xsignal(SIGINT, SIG_DFL);
 
-  char tmp[] = "/tmp/tst-signal1-XXXXXX";
+    char tmp[] = "/tmp/tst-signal1-XXXXXX";
 
-  int fd = mkstemp (tmp);
-  if (fd == -1)
-    {
-      puts ("mkstemp failed");
-      exit (1);
+    int fd = mkstemp(tmp);
+    if (fd == -1) {
+        puts("mkstemp failed");
+        exit(1);
     }
 
-  unlink (tmp);
+    unlink(tmp);
 
-  int i;
-  for (i = 0; i < 20; ++i)
-    xwrite (fd, "foobar xyzzy", 12);
-
-  b = mmap (NULL, sizeof (pthread_barrier_t), PROT_READ | PROT_WRITE,
-	    MAP_SHARED, fd, 0);
-  if (b == MAP_FAILED)
-    {
-      puts ("mmap failed");
-      exit (1);
+    int i;
+    for (i = 0; i < 20; ++i) {
+        xwrite(fd, "foobar xyzzy", 12);
     }
 
-  pthread_barrierattr_t ba;
-  if (pthread_barrierattr_init (&ba) != 0)
-    {
-      puts ("barrierattr_init failed");
-      exit (1);
+    b = mmap(NULL, sizeof(pthread_barrier_t), PROT_READ | PROT_WRITE,
+             MAP_SHARED, fd, 0);
+    if (b == MAP_FAILED) {
+        puts("mmap failed");
+        exit(1);
     }
 
-  if (pthread_barrierattr_setpshared (&ba, PTHREAD_PROCESS_SHARED) != 0)
-    {
-      puts ("barrierattr_setpshared failed");
-      exit (1);
+    pthread_barrierattr_t ba;
+    if (pthread_barrierattr_init(&ba) != 0) {
+        puts("barrierattr_init failed");
+        exit(1);
     }
 
-  if (pthread_barrier_init (b, &ba, 2) != 0)
-    {
-      puts ("barrier_init failed");
-      exit (1);
+    if (pthread_barrierattr_setpshared(&ba, PTHREAD_PROCESS_SHARED) != 0) {
+        puts("barrierattr_setpshared failed");
+        exit(1);
     }
 
-  if (pthread_barrierattr_destroy (&ba) != 0)
-    {
-      puts ("barrierattr_destroy failed");
-      exit (1);
+    if (pthread_barrier_init(b, &ba, 2) != 0) {
+        puts("barrier_init failed");
+        exit(1);
     }
 
-  pid_t pid = fork ();
-  if (pid == -1)
-    {
-      puts ("fork failed");
-      exit (1);
+    if (pthread_barrierattr_destroy(&ba) != 0) {
+        puts("barrierattr_destroy failed");
+        exit(1);
     }
 
-  if (pid == 0)
-    receiver ();
-
-  pthread_barrier_wait (b);
-
-  /* Wait a bit more.  */
-  struct timespec ts = { .tv_sec = 0, .tv_nsec = 10000000 };
-  nanosleep (&ts, NULL);
-
-  /* Send the signal.  */
-  puts ("sending the signal now");
-  kill (pid, SIGINT);
-
-  /* Wait for the process to terminate.  */
-  int status;
-  if (TEMP_FAILURE_RETRY (waitpid (pid, &status, 0)) != pid)
-    {
-      puts ("wrong child reported terminated");
-      exit (1);
+    pid_t pid = fork();
+    if (pid == -1) {
+        puts("fork failed");
+        exit(1);
     }
 
-  if (!WIFSIGNALED (status))
-    {
-      puts ("child wasn't signalled");
-      exit (1);
+    if (pid == 0) {
+        receiver();
     }
 
-  if (WTERMSIG (status) != SIGINT)
-    {
-      puts ("child not terminated with SIGINT");
-      exit (1);
+    pthread_barrier_wait(b);
+
+    /* Wait a bit more.  */
+    struct timespec ts = { .tv_sec = 0, .tv_nsec = 10000000 };
+    nanosleep(&ts, NULL);
+
+    /* Send the signal.  */
+    puts("sending the signal now");
+    kill(pid, SIGINT);
+
+    /* Wait for the process to terminate.  */
+    int status;
+    if (TEMP_FAILURE_RETRY(waitpid(pid, &status, 0)) != pid) {
+        puts("wrong child reported terminated");
+        exit(1);
     }
 
-  return 0;
+    if (!WIFSIGNALED(status)) {
+        puts("child wasn't signalled");
+        exit(1);
+    }
+
+    if (WTERMSIG(status) != SIGINT) {
+        puts("child not terminated with SIGINT");
+        exit(1);
+    }
+
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

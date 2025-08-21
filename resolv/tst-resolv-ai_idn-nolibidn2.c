@@ -23,129 +23,126 @@
 #include <support/xdlfcn.h>
 
 /* Tests for getaddrinfo.  */
-static void
-gai_tests (void)
+static void gai_tests(void)
 {
-  /* No CNAME.  */
-  check_ai ("non-idn.example", 0,
-            "address: STREAM/TCP 192.0.2.110 80\n");
-  check_ai ("non-idn.example", AI_IDN,
-            "flags: AI_IDN\n"
-            "address: STREAM/TCP 192.0.2.110 80\n");
-  check_ai ("non-idn.example", AI_IDN | AI_CANONNAME | AI_CANONIDN,
-            "flags: AI_CANONNAME AI_IDN AI_CANONIDN\n"
-            "canonname: non-idn.example\n"
-            "address: STREAM/TCP 192.0.2.110 80\n");
+    /* No CNAME.  */
+    check_ai("non-idn.example", 0,
+             "address: STREAM/TCP 192.0.2.110 80\n");
+    check_ai("non-idn.example", AI_IDN,
+             "flags: AI_IDN\n"
+             "address: STREAM/TCP 192.0.2.110 80\n");
+    check_ai("non-idn.example", AI_IDN | AI_CANONNAME | AI_CANONIDN,
+             "flags: AI_CANONNAME AI_IDN AI_CANONIDN\n"
+             "canonname: non-idn.example\n"
+             "address: STREAM/TCP 192.0.2.110 80\n");
 
-  /* This gets passed over the network to the server, so it will
-     result in an NXDOMAIN error.  */
-  check_ai (NAEMCHEN ".example", 0,
-            "error: Name or service not known\n");
-  /* Due to missing libidn2, this fails inside getaddrinfo.  */
-  check_ai (NAEMCHEN ".example", AI_IDN,
-            "error: Parameter string not correctly encoded\n");
-  check_ai (NAEMCHEN ".example", AI_IDN | AI_CANONNAME | AI_CANONIDN,
-            "error: Parameter string not correctly encoded\n");
+    /* This gets passed over the network to the server, so it will
+       result in an NXDOMAIN error.  */
+    check_ai(NAEMCHEN ".example", 0,
+             "error: Name or service not known\n");
+    /* Due to missing libidn2, this fails inside getaddrinfo.  */
+    check_ai(NAEMCHEN ".example", AI_IDN,
+             "error: Parameter string not correctly encoded\n");
+    check_ai(NAEMCHEN ".example", AI_IDN | AI_CANONNAME | AI_CANONIDN,
+             "error: Parameter string not correctly encoded\n");
 
-  /* Non-IDN CNAME.  */
-  check_ai ("with.cname.example", 0,
-            "address: STREAM/TCP 192.0.2.119 80\n");
-  check_ai ("with.cname.example", AI_IDN,
-            "flags: AI_IDN\n"
-            "address: STREAM/TCP 192.0.2.119 80\n");
-  check_ai ("with.cname.example", AI_IDN | AI_CANONNAME | AI_CANONIDN,
-            "flags: AI_CANONNAME AI_IDN AI_CANONIDN\n"
-            "canonname: non-idn-cname.example\n"
-            "address: STREAM/TCP 192.0.2.119 80\n");
+    /* Non-IDN CNAME.  */
+    check_ai("with.cname.example", 0,
+             "address: STREAM/TCP 192.0.2.119 80\n");
+    check_ai("with.cname.example", AI_IDN,
+             "flags: AI_IDN\n"
+             "address: STREAM/TCP 192.0.2.119 80\n");
+    check_ai("with.cname.example", AI_IDN | AI_CANONNAME | AI_CANONIDN,
+             "flags: AI_CANONNAME AI_IDN AI_CANONIDN\n"
+             "canonname: non-idn-cname.example\n"
+             "address: STREAM/TCP 192.0.2.119 80\n");
 
-  /* IDN CNAME.  */
-  check_ai ("With.idn-cname.example", 0,
-            "address: STREAM/TCP 192.0.2.87 80\n");
-  check_ai ("With.idn-cname.example", AI_IDN,
-            "flags: AI_IDN\n"
-            "address: STREAM/TCP 192.0.2.87 80\n");
-  check_ai ("With.idn-cname.example", AI_IDN | AI_CANONNAME,
-            "flags: AI_CANONNAME AI_IDN\n"
-            "canonname: " ANDERES_NAEMCHEN_IDNA ".example\n"
-            "address: STREAM/TCP 192.0.2.87 80\n");
-  check_ai ("With.idn-cname.example",
-            AI_IDN | AI_CANONNAME | AI_CANONIDN,
-            "flags: AI_CANONNAME AI_IDN AI_CANONIDN\n"
-            "canonname: " ANDERES_NAEMCHEN_IDNA ".example\n"
-            "address: STREAM/TCP 192.0.2.87 80\n");
+    /* IDN CNAME.  */
+    check_ai("With.idn-cname.example", 0,
+             "address: STREAM/TCP 192.0.2.87 80\n");
+    check_ai("With.idn-cname.example", AI_IDN,
+             "flags: AI_IDN\n"
+             "address: STREAM/TCP 192.0.2.87 80\n");
+    check_ai("With.idn-cname.example", AI_IDN | AI_CANONNAME,
+             "flags: AI_CANONNAME AI_IDN\n"
+             "canonname: " ANDERES_NAEMCHEN_IDNA ".example\n"
+             "address: STREAM/TCP 192.0.2.87 80\n");
+    check_ai("With.idn-cname.example",
+             AI_IDN | AI_CANONNAME | AI_CANONIDN,
+             "flags: AI_CANONNAME AI_IDN AI_CANONIDN\n"
+             "canonname: " ANDERES_NAEMCHEN_IDNA ".example\n"
+             "address: STREAM/TCP 192.0.2.87 80\n");
 
-  /* Non-IDN to IDN CNAME chain.  */
-  check_ai ("both.cname.idn-cname.example", 0,
-            "address: STREAM/TCP 192.0.2.98 80\n");
-  check_ai ("both.cname.idn-cname.example", AI_IDN,
-            "flags: AI_IDN\n"
-            "address: STREAM/TCP 192.0.2.98 80\n");
-  check_ai ("both.cname.idn-cname.example", AI_IDN | AI_CANONNAME,
-            "flags: AI_CANONNAME AI_IDN\n"
-            "canonname: " ANDERES_NAEMCHEN_IDNA ".example\n"
-            "address: STREAM/TCP 192.0.2.98 80\n");
-  check_ai ("both.cname.idn-cname.example",
-            AI_IDN | AI_CANONNAME | AI_CANONIDN,
-            "flags: AI_CANONNAME AI_IDN AI_CANONIDN\n"
-            "canonname: " ANDERES_NAEMCHEN_IDNA ".example\n"
-            "address: STREAM/TCP 192.0.2.98 80\n");
+    /* Non-IDN to IDN CNAME chain.  */
+    check_ai("both.cname.idn-cname.example", 0,
+             "address: STREAM/TCP 192.0.2.98 80\n");
+    check_ai("both.cname.idn-cname.example", AI_IDN,
+             "flags: AI_IDN\n"
+             "address: STREAM/TCP 192.0.2.98 80\n");
+    check_ai("both.cname.idn-cname.example", AI_IDN | AI_CANONNAME,
+             "flags: AI_CANONNAME AI_IDN\n"
+             "canonname: " ANDERES_NAEMCHEN_IDNA ".example\n"
+             "address: STREAM/TCP 192.0.2.98 80\n");
+    check_ai("both.cname.idn-cname.example",
+             AI_IDN | AI_CANONNAME | AI_CANONIDN,
+             "flags: AI_CANONNAME AI_IDN AI_CANONIDN\n"
+             "canonname: " ANDERES_NAEMCHEN_IDNA ".example\n"
+             "address: STREAM/TCP 192.0.2.98 80\n");
 }
 
 /* Tests for getnameinfo.  */
-static void
-gni_tests (void)
+static void gni_tests(void)
 {
-  /* All non-IDN an IDN results are the same due to lack of libidn2
-     support.  */
-  for (int do_ni_idn = 0; do_ni_idn < 2; ++do_ni_idn)
+    /* All non-IDN an IDN results are the same due to lack of libidn2
+       support.  */
+    for (int do_ni_idn = 0; do_ni_idn < 2; ++do_ni_idn) {
+        int flags = 0;
+        if (do_ni_idn) {
+            flags |= NI_IDN;
+        }
+
+        gni_test(gni_non_idn_name, flags, "non-idn.example");
+        gni_test(gni_non_idn_name, flags | NI_NUMERICHOST, "192.0.2.0");
+        gni_test(gni_non_idn_cname_to_non_idn_name, flags,
+                 "non-idn-name.example");
+        gni_test(gni_non_idn_cname_to_idn_name, flags,
+                 NAEMCHEN_IDNA ".example");
+        gni_test(gni_idn_name, flags, NAEMCHEN_IDNA ".example");
+        gni_test(gni_idn_cname_to_non_idn_name, flags, "non-idn-name.example");
+        gni_test(gni_idn_cname_to_idn_name, flags,
+                 ANDERES_NAEMCHEN_IDNA ".example");
+
+        /* Test encoding errors.  */
+        gni_test(gni_invalid_idn_1, flags, "xn---.example");
+        gni_test(gni_invalid_idn_2, flags, "xn--x.example");
+    }
+}
+
+static int do_test(void)
+{
+    void *handle = xdlopen("tst-no-libidn2.so", RTLD_LAZY);
     {
-      int flags = 0;
-      if (do_ni_idn)
-        flags |= NI_IDN;
+        /* Verify that this replaced libidn2.  */
+        void *handle2 = xdlopen(LIBIDN2_SONAME, RTLD_LAZY | RTLD_NOLOAD);
+        TEST_VERIFY(handle2 == handle);
+        xdlclose(handle2);
+    }
 
-      gni_test (gni_non_idn_name, flags, "non-idn.example");
-      gni_test (gni_non_idn_name, flags | NI_NUMERICHOST, "192.0.2.0");
-      gni_test (gni_non_idn_cname_to_non_idn_name, flags,
-                "non-idn-name.example");
-      gni_test (gni_non_idn_cname_to_idn_name, flags,
-                NAEMCHEN_IDNA ".example");
-      gni_test (gni_idn_name, flags, NAEMCHEN_IDNA ".example");
-      gni_test (gni_idn_cname_to_non_idn_name, flags, "non-idn-name.example");
-      gni_test (gni_idn_cname_to_idn_name, flags,
-                ANDERES_NAEMCHEN_IDNA ".example");
+    if (setlocale(LC_CTYPE, "en_US.UTF-8") == NULL) {
+        FAIL_EXIT1("setlocale: %m");
+    }
 
-      /* Test encoding errors.  */
-      gni_test (gni_invalid_idn_1, flags, "xn---.example");
-      gni_test (gni_invalid_idn_2, flags, "xn--x.example");
-}
-}
+    struct resolv_test *aux = resolv_test_start
+                              ((struct resolv_redirect_config) {
+        .response_callback = response,
+    });
 
-static int
-do_test (void)
-{
-  void *handle = xdlopen ("tst-no-libidn2.so", RTLD_LAZY);
-  {
-    /* Verify that this replaced libidn2.  */
-    void *handle2 = xdlopen (LIBIDN2_SONAME, RTLD_LAZY | RTLD_NOLOAD);
-    TEST_VERIFY (handle2 == handle);
-    xdlclose (handle2);
-  }
+    gai_tests();
+    gni_tests();
 
-  if (setlocale (LC_CTYPE, "en_US.UTF-8") == NULL)
-    FAIL_EXIT1 ("setlocale: %m");
-
-  struct resolv_test *aux = resolv_test_start
-    ((struct resolv_redirect_config)
-     {
-       .response_callback = response,
-     });
-
-  gai_tests ();
-  gni_tests ();
-
-  resolv_test_end (aux);
-  xdlclose (handle);
-  return 0;
+    resolv_test_end(aux);
+    xdlclose(handle);
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -23,26 +23,25 @@
 static int errors;
 
 template <class T>
-static void
-check_type ()
+static void check_type()
 {
-  T val = 0;
+    T val = 0;
 
-  /* Check if iscanonical is available in C++ mode (bug 22235).  */
-  if (iscanonical (val) == 0)
-    errors++;
+    /* Check if iscanonical is available in C++ mode (bug 22235).  */
+    if (iscanonical(val) == 0) {
+        errors++;
+    }
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  check_type<float> ();
-  check_type<double> ();
-  check_type<long double> ();
+    check_type<float> ();
+    check_type<double> ();
+    check_type<long double> ();
 #if __HAVE_DISTINCT_FLOAT128
-  check_type<_Float128> ();
+    check_type<_Float128> ();
 #endif
-  return errors != 0;
+    return errors != 0;
 }
 
 #include <support/test-driver.c>

@@ -6,16 +6,14 @@
 
 static __thread int var = 4;
 
-int
-test (void)
+int test(void)
 {
-  int *p = &var;
-  /* GCC assumes &var is never NULL, add optimization barrier.  */
-  asm volatile ("" : "+r" (p));
-  if (p == NULL || *p != 4)
-    {
-      printf ("fail %d %p\n", N, p);
-      return 1;
+    int *p = &var;
+    /* GCC assumes &var is never NULL, add optimization barrier.  */
+    asm volatile("" : "+r"(p));
+    if (p == NULL || *p != 4) {
+        printf("fail %d %p\n", N, p);
+        return 1;
     }
-  return 0;
+    return 0;
 }

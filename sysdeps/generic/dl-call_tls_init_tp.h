@@ -19,16 +19,15 @@
 #include <startup.h>
 #include <tls.h>
 
-static inline void
-_startup_fatal_tls_error (void)
+static inline void _startup_fatal_tls_error(void)
 {
-  _startup_fatal ("Fatal glibc error: Cannot allocate TLS block\n");
+    _startup_fatal("Fatal glibc error: Cannot allocate TLS block\n");
 }
 
-static inline void
-call_tls_init_tp (void *addr)
+static inline void call_tls_init_tp(void *addr)
 {
-  if (!TLS_INIT_TP (addr))
-    _startup_fatal_tls_error ();
-  __tls_init_tp ();
+    if (!TLS_INIT_TP(addr)) {
+        _startup_fatal_tls_error();
+    }
+    __tls_init_tp();
 }

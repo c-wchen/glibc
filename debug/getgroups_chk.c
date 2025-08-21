@@ -19,17 +19,16 @@
 #include <unistd.h>
 
 
-int
-__getgroups_chk (int size, __gid_t list[], size_t listlen)
+int __getgroups_chk(int size, __gid_t list[], size_t listlen)
 {
-  if (__glibc_unlikely (size < 0))
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (__glibc_unlikely(size < 0)) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  if (__glibc_unlikely (size * sizeof (__gid_t) > listlen))
-    __chk_fail ();
+    if (__glibc_unlikely(size * sizeof(__gid_t) > listlen)) {
+        __chk_fail();
+    }
 
-  return __getgroups (size, list);
+    return __getgroups(size, list);
 }

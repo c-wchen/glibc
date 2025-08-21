@@ -16,7 +16,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _BITS_PTHREADTYPES_ARCH_H
-#define _BITS_PTHREADTYPES_ARCH_H	1
+#define _BITS_PTHREADTYPES_ARCH_H   1
 
 #include <bits/wordsize.h>
 
@@ -52,4 +52,4 @@
 # define __cleanup_fct_attribute __attribute__ ((__regparm__ (1)))
 #endif
 
-#endif	/* bits/pthreadtypes.h */
+#endif  /* bits/pthreadtypes.h */

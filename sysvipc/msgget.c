@@ -21,11 +21,10 @@
 /* Return descriptor for message queue associated with KEY.  The MSGFLG
    parameter describes how to proceed with clashing of key values.  */
 
-int
-msgget (key_t key, int msgflg)
+int msgget(key_t key, int msgflg)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (msgget)
+stub_warning(msgget)

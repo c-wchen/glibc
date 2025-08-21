@@ -21,8 +21,7 @@
 #include <sys/ioctl.h>
 
 /* Flush pending data on FD.  */
-int
-tcflush (int fd, int queue_selector)
+int tcflush(int fd, int queue_selector)
 {
-  return __ioctl (fd, TCFLSH, queue_selector);
+    return __ioctl(fd, TCFLSH, queue_selector);
 }

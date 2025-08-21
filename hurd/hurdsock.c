@@ -23,8 +23,8 @@
 #include <hurd/paths.h>
 #include <stdio.h>
 #include <_itoa.h>
-#include <lock-intern.h>	/* For `struct mutex'.  */
-#include "hurdmalloc.h"		/* XXX */
+#include <lock-intern.h>    /* For `struct mutex'.  */
+#include "hurdmalloc.h"     /* XXX */
 #include "set-hooks.h"
 
 static struct mutex lock;
@@ -42,79 +42,81 @@ static int max_domain = -1;
    The library keeps all the server socket ports it has ever looked up,
    and does not look them up in /servers/socket more than once.  */
 
-socket_t
-_hurd_socket_server (int domain, int dead)
+socket_t _hurd_socket_server(int domain, int dead)
 {
-  socket_t server;
+    socket_t server;
 
-  if (domain < 0)
-    return __hurd_fail (EAFNOSUPPORT), MACH_PORT_NULL;
+    if (domain < 0) {
+        return __hurd_fail(EAFNOSUPPORT), MACH_PORT_NULL;
+    }
 
 retry:
-  HURD_CRITICAL_BEGIN;
-  __mutex_lock (&lock);
+    HURD_CRITICAL_BEGIN;
+    __mutex_lock(&lock);
 
-  if (domain > max_domain)
-    {
-      error_t save = errno;
-      file_t *new = realloc (servers, (domain + 1) * sizeof (file_t));
-      if (new != NULL)
-	{
-	  do
-	    new[++max_domain] = MACH_PORT_NULL;
-	  while (max_domain < domain);
-	  servers = new;
-	}
-      else
-	/* No space to cache the port; we will just fetch it anew below.  */
-	errno = save;
+    if (domain > max_domain) {
+        error_t save = errno;
+        file_t *new = realloc(servers, (domain + 1) * sizeof(file_t));
+        if (new != NULL) {
+            do {
+                new[++max_domain] = MACH_PORT_NULL;
+            } while (max_domain < domain);
+            servers = new;
+        } else
+            /* No space to cache the port; we will just fetch it anew below.  */
+        {
+            errno = save;
+        }
     }
 
-  if (dead && domain <= max_domain)
-    {
-      /* The user says the port we returned earlier (now in SERVERS[DOMAIN])
-	 was dead.  Clear the cache and fetch a new one below.  */
-      __mach_port_deallocate (__mach_task_self (), servers[domain]);
-      servers[domain] = MACH_PORT_NULL;
+    if (dead && domain <= max_domain) {
+        /* The user says the port we returned earlier (now in SERVERS[DOMAIN])
+        was dead.  Clear the cache and fetch a new one below.  */
+        __mach_port_deallocate(__mach_task_self(), servers[domain]);
+        servers[domain] = MACH_PORT_NULL;
     }
 
-  if (domain > max_domain || servers[domain] == MACH_PORT_NULL)
-    {
-      char name[sizeof (_SERVERS_SOCKET) + 100];
-      char *np = &name[sizeof (name)];
-      *--np = '\0';
-      np = _itoa (domain, np, 10, 0);
-      *--np = '/';
-      np -= sizeof (_SERVERS_SOCKET) - 1;
-      memcpy (np, _SERVERS_SOCKET, sizeof (_SERVERS_SOCKET) - 1);
-      server = __file_name_lookup (np, 0, 0);
-      if (domain <= max_domain)
-	servers[domain] = server;
+    if (domain > max_domain || servers[domain] == MACH_PORT_NULL) {
+        char name[sizeof(_SERVERS_SOCKET) + 100];
+        char *np = &name[sizeof(name)];
+        *--np = '\0';
+        np = _itoa(domain, np, 10, 0);
+        *--np = '/';
+        np -= sizeof(_SERVERS_SOCKET) - 1;
+        memcpy(np, _SERVERS_SOCKET, sizeof(_SERVERS_SOCKET) - 1);
+        server = __file_name_lookup(np, 0, 0);
+        if (domain <= max_domain) {
+            servers[domain] = server;
+        }
+    } else {
+        server = servers[domain];
     }
-  else
-    server = servers[domain];
 
-  if (server == MACH_PORT_NULL && errno == ENOENT)
-    /* If the server node is absent, we don't support that protocol.  */
-    __hurd_fail (EAFNOSUPPORT);
+    if (server == MACH_PORT_NULL && errno == ENOENT)
+        /* If the server node is absent, we don't support that protocol.  */
+    {
+        __hurd_fail(EAFNOSUPPORT);
+    }
 
-  __mutex_unlock (&lock);
-  HURD_CRITICAL_END;
-  if (server == MACH_PORT_NULL && errno == EINTR)
-    /* Got a signal while inside an RPC of the critical section, retry again */
-    goto retry;
+    __mutex_unlock(&lock);
+    HURD_CRITICAL_END;
+    if (server == MACH_PORT_NULL && errno == EINTR)
+        /* Got a signal while inside an RPC of the critical section, retry again */
+    {
+        goto retry;
+    }
 
-  return server;
+    return server;
 }
 
-static void attribute_used_retain
-init (void)
+static void attribute_used_retain init(void)
 {
-  int i;
+    int i;
 
-  __mutex_init (&lock);
+    __mutex_init(&lock);
 
-  for (i = 0; i < max_domain; ++i)
-    servers[i] = MACH_PORT_NULL;
+    for (i = 0; i < max_domain; ++i) {
+        servers[i] = MACH_PORT_NULL;
+    }
 }
-SET_RELHOOK (_hurd_preinit_hook, init);
+SET_RELHOOK(_hurd_preinit_hook, init);

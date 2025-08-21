@@ -17,11 +17,10 @@
 
 /* Emulate AT_MINSIGSTKSZ with XSAVE. */
 
-static inline void
-dl_check_minsigstacksize (const struct cpu_features *cpu_features)
+static inline void dl_check_minsigstacksize(const struct cpu_features *cpu_features)
 {
-  /* NB: Default to a constant MINSIGSTKSZ.  */
-  _Static_assert (__builtin_constant_p (MINSIGSTKSZ),
-		  "MINSIGSTKSZ is constant");
-  GLRO(dl_minsigstacksize) = MINSIGSTKSZ;
+    /* NB: Default to a constant MINSIGSTKSZ.  */
+    _Static_assert(__builtin_constant_p(MINSIGSTKSZ),
+                   "MINSIGSTKSZ is constant");
+    GLRO(dl_minsigstacksize) = MINSIGSTKSZ;
 }

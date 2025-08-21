@@ -26,21 +26,21 @@
    argument is taken as `struct mq_attr *', pointer to message queue
    attributes.  If the fourth argument is NULL, default attributes are
    used.  */
-mqd_t
-__mq_open (const char *name, int oflag, ...)
+mqd_t __mq_open(const char *name, int oflag, ...)
 {
-  __set_errno (ENOSYS);
-  return (mqd_t) -1;
+    __set_errno(ENOSYS);
+    return (mqd_t) -1;
 }
-strong_alias (__mq_open, mq_open);
-stub_warning (mq_open)
+strong_alias(__mq_open, mq_open);
+stub_warning(mq_open)
 
 mqd_t
-__mq_open_2 (const char *name, int oflag)
+__mq_open_2(const char *name, int oflag)
 {
-  if (oflag & O_CREAT)
-    __fortify_fail ("invalid mq_open call: O_CREAT without mode and attr");
+    if (oflag & O_CREAT) {
+        __fortify_fail("invalid mq_open call: O_CREAT without mode and attr");
+    }
 
-  return __mq_open (name, oflag);
+    return __mq_open(name, oflag);
 }
-stub_warning (__mq_open_2)
+stub_warning(__mq_open_2)

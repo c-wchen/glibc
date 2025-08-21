@@ -33,7 +33,7 @@
 # define STPCPY wcpcpy
 #endif /* !WIDE */
 
-IMPL (STPCPY, 1)
+IMPL(STPCPY, 1)
 
 /* Also check the generic implementation.  */
 #undef STPCPY
@@ -48,13 +48,13 @@ IMPL (STPCPY, 1)
 #ifndef WIDE
 # define STPCPY __stpcpy_default
 # include "string/stpcpy.c"
-IMPL (__stpcpy_default, 1)
+IMPL(__stpcpy_default, 1)
 #else
 # define __wcslen wcslen
 # define __wmemcpy wmemcpy
 # define WCPCPY __wcpcpy_default
 # include "wcsmbs/wcpcpy.c"
-IMPL (__wcpcpy_default, 1)
+IMPL(__wcpcpy_default, 1)
 #endif
 
 #undef CHAR

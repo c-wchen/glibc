@@ -19,11 +19,10 @@
 #include <string.h>
 
 /* Get process group ID from the attribute structure.  */
-int
-posix_spawnattr_getpgroup (const posix_spawnattr_t *attr, pid_t *pgroup)
+int posix_spawnattr_getpgroup(const posix_spawnattr_t *attr, pid_t *pgroup)
 {
-  /* Copy the process group ID.  */
-  *pgroup = attr->__pgrp;
+    /* Copy the process group ID.  */
+    *pgroup = attr->__pgrp;
 
-  return 0;
+    return 0;
 }

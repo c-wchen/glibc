@@ -20,20 +20,18 @@
 
 /* Set the handler for the signal SIG to HANDLER,
    returning the old handler, or SIG_ERR on error.  */
-__sighandler_t
-__sysv_signal (int sig, __sighandler_t handler)
+__sighandler_t __sysv_signal(int sig, __sighandler_t handler)
 {
-  /* Check signal extents to protect __sigismember.  */
-  if (handler == SIG_ERR || sig < 1 || sig >= NSIG)
-    {
-      __set_errno (EINVAL);
-      return SIG_ERR;
+    /* Check signal extents to protect __sigismember.  */
+    if (handler == SIG_ERR || sig < 1 || sig >= NSIG) {
+        __set_errno(EINVAL);
+        return SIG_ERR;
     }
 
-  __set_errno (ENOSYS);
+    __set_errno(ENOSYS);
 
-  return SIG_ERR;
+    return SIG_ERR;
 }
-weak_alias (__sysv_signal, sysv_signal)
+weak_alias(__sysv_signal, sysv_signal)
 
-stub_warning (sysv_signal)
+stub_warning(sysv_signal)

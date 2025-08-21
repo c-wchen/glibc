@@ -30,22 +30,21 @@ extern bool warn_ascii;
 extern bool warn_int_curr_symbol;
 
 /* Record verbose, warnings, or errors... */
-void record_verbose (FILE *stream, const char *format, ...);
-void record_warning (const char *format, ...);
-void record_error (int status, int errnum, const char *format, ...);
-void record_error_at_line (int status, int errnum,
-			   const char *filename, unsigned int linenum,
-			   const char *format, ...);
+void record_verbose(FILE *stream, const char *format, ...);
+void record_warning(const char *format, ...);
+void record_error(int status, int errnum, const char *format, ...);
+void record_error_at_line(int status, int errnum,
+                          const char *filename, unsigned int linenum,
+                          const char *format, ...);
 
 /* Locale related functionality for custom error functions.  */
-struct locale_state
-{
-   /* The current in-use locale.  */
-   char *cur_locale;
+struct locale_state {
+    /* The current in-use locale.  */
+    char *cur_locale;
 };
 
-struct locale_state push_locale (void);
-void pop_locale (struct locale_state ls);
+struct locale_state push_locale(void);
+void pop_locale(struct locale_state ls);
 
 
 #endif

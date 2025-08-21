@@ -26,16 +26,14 @@
 #undef __cargf
 #undef cargf
 
-float
-__c1_cargf (c1_cfloat_decl (x))
+float __c1_cargf(c1_cfloat_decl(x))
 {
-  return __atan2f (c1_cfloat_imag (x), c1_cfloat_real (x));
+    return __atan2f(c1_cfloat_imag(x), c1_cfloat_real(x));
 }
 
-float
-__c2_cargf (c2_cfloat_decl (x))
+float __c2_cargf(c2_cfloat_decl(x))
 {
-  return __atan2f (c2_cfloat_imag (x), c2_cfloat_real (x));
+    return __atan2f(c2_cfloat_imag(x), c2_cfloat_real(x));
 }
 
-cfloat_versions (carg);
+cfloat_versions(carg);

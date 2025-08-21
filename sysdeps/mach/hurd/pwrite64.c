@@ -20,18 +20,17 @@
 #include <sysdep-cancel.h>
 #include <not-cancel.h>
 
-ssize_t
-__libc_pwrite64 (int fd, const void *buf, size_t nbytes, off64_t offset)
+ssize_t __libc_pwrite64(int fd, const void *buf, size_t nbytes, off64_t offset)
 {
-  ssize_t ret;
-  int cancel_oldtype = LIBC_CANCEL_ASYNC();
-  ret = __pwrite64_nocancel (fd, buf, nbytes, offset);
-  LIBC_CANCEL_RESET (cancel_oldtype);
-  return ret;
+    ssize_t ret;
+    int cancel_oldtype = LIBC_CANCEL_ASYNC();
+    ret = __pwrite64_nocancel(fd, buf, nbytes, offset);
+    LIBC_CANCEL_RESET(cancel_oldtype);
+    return ret;
 }
 
 #ifndef __libc_pwrite64
-weak_alias (__libc_pwrite64, __pwrite64)
-libc_hidden_weak (__pwrite64)
-weak_alias (__libc_pwrite64, pwrite64)
+weak_alias(__libc_pwrite64, __pwrite64)
+libc_hidden_weak(__pwrite64)
+weak_alias(__libc_pwrite64, pwrite64)
 #endif

@@ -18,9 +18,8 @@
 
 #include <support/xthread.h>
 
-void
-xpthread_cond_wait (pthread_cond_t *cond, pthread_mutex_t *mutex)
+void xpthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
 {
-  xpthread_check_return
-    ("pthread_cond_wait", pthread_cond_wait (cond, mutex));
+    xpthread_check_return
+    ("pthread_cond_wait", pthread_cond_wait(cond, mutex));
 }

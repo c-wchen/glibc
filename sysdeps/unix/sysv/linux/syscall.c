@@ -19,25 +19,23 @@
 #include <stdarg.h>
 #include <sysdep.h>
 
-long int
-syscall (long int number, ...)
+long int syscall(long int number, ...)
 {
-  va_list args;
+    va_list args;
 
-  va_start (args, number);
-  long int a0 = va_arg (args, long int);
-  long int a1 = va_arg (args, long int);
-  long int a2 = va_arg (args, long int);
-  long int a3 = va_arg (args, long int);
-  long int a4 = va_arg (args, long int);
-  long int a5 = va_arg (args, long int);
-  va_end (args);
+    va_start(args, number);
+    long int a0 = va_arg(args, long int);
+    long int a1 = va_arg(args, long int);
+    long int a2 = va_arg(args, long int);
+    long int a3 = va_arg(args, long int);
+    long int a4 = va_arg(args, long int);
+    long int a5 = va_arg(args, long int);
+    va_end(args);
 
-  long int r = INTERNAL_SYSCALL_NCS_CALL (number, a0, a1, a2, a3, a4, a5);
-  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (r)))
-    {
-      __set_errno (-r);
-      return -1;
+    long int r = INTERNAL_SYSCALL_NCS_CALL(number, a0, a1, a2, a3, a4, a5);
+    if (__glibc_unlikely(INTERNAL_SYSCALL_ERROR_P(r))) {
+        __set_errno(-r);
+        return -1;
     }
-  return r;
+    return r;
 }

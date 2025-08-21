@@ -22,13 +22,13 @@
 #include <support/test-driver.h>
 #include <support/xsignal.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  if (!CPU_FEATURE_ACTIVE (SHSTK))
-    return EXIT_UNSUPPORTED;
+    if (!CPU_FEATURE_ACTIVE(SHSTK)) {
+        return EXIT_UNSUPPORTED;
+    }
 
-  return EXIT_FAILURE;
+    return EXIT_FAILURE;
 }
 
 #define EXPECTED_SIGNAL (CPU_FEATURE_ACTIVE (SHSTK) ? SIGSEGV : 0)

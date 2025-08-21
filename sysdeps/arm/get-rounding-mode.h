@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _ARM_GET_ROUNDING_MODE_H
-#define _ARM_GET_ROUNDING_MODE_H	1
+#define _ARM_GET_ROUNDING_MODE_H    1
 
 #include <arm-features.h>
 #include <fenv.h>
@@ -25,18 +25,18 @@
 
 /* Return the floating-point rounding mode.  */
 
-static inline int
-get_rounding_mode (void)
+static inline int get_rounding_mode(void)
 {
-  fpu_control_t fpscr;
+    fpu_control_t fpscr;
 
-  /* FE_TONEAREST is the only supported rounding mode
-     if a VFP unit isn't present.  */
-  if (!ARM_HAVE_VFP)
-    return FE_TONEAREST;
+    /* FE_TONEAREST is the only supported rounding mode
+       if a VFP unit isn't present.  */
+    if (!ARM_HAVE_VFP) {
+        return FE_TONEAREST;
+    }
 
-  _FPU_GETCW (fpscr);
-  return fpscr & _FPU_MASK_RM;
+    _FPU_GETCW(fpscr);
+    return fpscr & _FPU_MASK_RM;
 }
 
 #endif /* get-rounding-mode.h */

@@ -4,12 +4,11 @@
 #if __TIMESIZE == 64
 # define __timeb64 timeb
 #else
-struct __timeb64
-{
-  __time64_t time;
-  unsigned short int millitm;
-  short int timezone;
-  short int dstflag;
+struct __timeb64 {
+    __time64_t time;
+    unsigned short int millitm;
+    short int timezone;
+    short int dstflag;
 };
 #endif
 

@@ -20,16 +20,16 @@
 #include <fenv_private.h>
 #include <libm-alias-double.h>
 
-double
-__fmax (double x, double y)
+double __fmax(double x, double y)
 {
-  double res;
+    double res;
 
-  if (__glibc_unlikely ((_FCLASS (x) | _FCLASS (y)) & _FCLASS_SNAN))
-    return x + y;
-  else
-    asm ("fmax.d %0, %1, %2" : "=f" (res) : "f" (x), "f" (y));
+    if (__glibc_unlikely((_FCLASS(x) | _FCLASS(y)) & _FCLASS_SNAN)) {
+        return x + y;
+    } else {
+        asm("fmax.d %0, %1, %2" : "=f"(res) : "f"(x), "f"(y));
+    }
 
-  return res;
+    return res;
 }
-libm_alias_double (__fmax, fmax)
+libm_alias_double(__fmax, fmax)

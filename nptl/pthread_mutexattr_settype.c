@@ -19,40 +19,41 @@
 #include <pthreadP.h>
 #include <shlib-compat.h>
 
-int
-___pthread_mutexattr_settype (pthread_mutexattr_t *attr, int kind)
+int ___pthread_mutexattr_settype(pthread_mutexattr_t *attr, int kind)
 {
-  struct pthread_mutexattr *iattr;
+    struct pthread_mutexattr *iattr;
 
-  if (kind < PTHREAD_MUTEX_NORMAL || kind > PTHREAD_MUTEX_ADAPTIVE_NP)
-    return EINVAL;
+    if (kind < PTHREAD_MUTEX_NORMAL || kind > PTHREAD_MUTEX_ADAPTIVE_NP) {
+        return EINVAL;
+    }
 
-  /* Cannot distinguish between DEFAULT and NORMAL. So any settype
-     call disables elision for now.  */
-  if (kind == PTHREAD_MUTEX_NORMAL)
-    kind |= PTHREAD_MUTEX_NO_ELISION_NP;
+    /* Cannot distinguish between DEFAULT and NORMAL. So any settype
+       call disables elision for now.  */
+    if (kind == PTHREAD_MUTEX_NORMAL) {
+        kind |= PTHREAD_MUTEX_NO_ELISION_NP;
+    }
 
-  iattr = (struct pthread_mutexattr *) attr;
+    iattr = (struct pthread_mutexattr *) attr;
 
-  iattr->mutexkind = (iattr->mutexkind & PTHREAD_MUTEXATTR_FLAG_BITS) | kind;
+    iattr->mutexkind = (iattr->mutexkind & PTHREAD_MUTEXATTR_FLAG_BITS) | kind;
 
-  return 0;
+    return 0;
 }
-versioned_symbol (libc, ___pthread_mutexattr_settype,
-                  pthread_mutexattr_settype, GLIBC_2_34);
-libc_hidden_ver (___pthread_mutexattr_settype, __pthread_mutexattr_settype)
+versioned_symbol(libc, ___pthread_mutexattr_settype,
+                 pthread_mutexattr_settype, GLIBC_2_34);
+libc_hidden_ver(___pthread_mutexattr_settype, __pthread_mutexattr_settype)
 #ifndef SHARED
-strong_alias (___pthread_mutexattr_settype, __pthread_mutexattr_settype)
+strong_alias(___pthread_mutexattr_settype, __pthread_mutexattr_settype)
 #endif
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_34)
-compat_symbol (libpthread, ___pthread_mutexattr_settype,
-               pthread_mutexattr_setkind_np, GLIBC_2_0);
-compat_symbol (libpthread, ___pthread_mutexattr_settype,
-               __pthread_mutexattr_settype, GLIBC_2_0);
+compat_symbol(libpthread, ___pthread_mutexattr_settype,
+              pthread_mutexattr_setkind_np, GLIBC_2_0);
+compat_symbol(libpthread, ___pthread_mutexattr_settype,
+              __pthread_mutexattr_settype, GLIBC_2_0);
 #endif
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1, GLIBC_2_34)
-compat_symbol (libpthread, ___pthread_mutexattr_settype,
-               pthread_mutexattr_settype, GLIBC_2_1);
+compat_symbol(libpthread, ___pthread_mutexattr_settype,
+              pthread_mutexattr_settype, GLIBC_2_1);
 #endif

@@ -31,34 +31,32 @@ extern size_t __nptl_stack_cache_maxsize attribute_hidden;
 extern int32_t __nptl_stack_hugetlb;
 
 /* Check whether the stack is still used or not.  */
-static inline bool
-__nptl_stack_in_use (struct pthread *pd)
+static inline bool __nptl_stack_in_use(struct pthread *pd)
 {
-  return pd->tid <= 0;
+    return pd->tid <= 0;
 }
 
 /* Remove the stack ELEM from its list.  */
-void __nptl_stack_list_del (list_t *elem);
-libc_hidden_proto (__nptl_stack_list_del)
+void __nptl_stack_list_del(list_t *elem);
+libc_hidden_proto(__nptl_stack_list_del)
 
 /* Add ELEM to a stack list.  LIST can be either &GL (dl_stack_used)
    or &GL (dl_stack_cache).  */
-void __nptl_stack_list_add (list_t *elem, list_t *list);
-libc_hidden_proto (__nptl_stack_list_add)
+void __nptl_stack_list_add(list_t *elem, list_t *list);
+libc_hidden_proto(__nptl_stack_list_add)
 
 /* Free allocated stack.  */
-extern void __nptl_deallocate_stack (struct pthread *pd);
-libc_hidden_proto (__nptl_deallocate_stack)
+extern void __nptl_deallocate_stack(struct pthread *pd);
+libc_hidden_proto(__nptl_deallocate_stack)
 
 /* Free stacks until cache size is lower than LIMIT.  */
-void __nptl_free_stacks (size_t limit) attribute_hidden;
+void __nptl_free_stacks(size_t limit) attribute_hidden;
 
 /* Compute the size of the static TLS area based on data from the
    dynamic loader.  */
-static inline size_t
-__nptl_tls_static_size_for_stack (void)
+static inline size_t __nptl_tls_static_size_for_stack(void)
 {
-  return roundup (GLRO (dl_tls_static_size), GLRO (dl_tls_static_align));
+    return roundup(GLRO(dl_tls_static_size), GLRO(dl_tls_static_align));
 }
 
 #endif /* _NPTL_STACK_H */

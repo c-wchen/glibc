@@ -21,12 +21,11 @@
 #include <fenv_private.h>
 
 #include <stdio.h>
-int
-__fesetround (int round)
+int __fesetround(int round)
 {
-  libc_fesetround_vfp (round);
-  return 0;
+    libc_fesetround_vfp(round);
+    return 0;
 }
-libm_hidden_def (__fesetround)
-weak_alias (__fesetround, fesetround)
-libm_hidden_weak (fesetround)
+libm_hidden_def(__fesetround)
+weak_alias(__fesetround, fesetround)
+libm_hidden_weak(fesetround)

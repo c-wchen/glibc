@@ -19,16 +19,15 @@
 #include "soft-fp.h"
 #include "soft-supp.h"
 
-int
-fesetmode (const femode_t *modep)
+int fesetmode(const femode_t *modep)
 {
-  fenv_union_t u;
+    fenv_union_t u;
 
-  u.fenv = *modep;
-  __sim_round_mode_thread = u.l[0];
-  SIM_SET_GLOBAL (__sim_round_mode_global, __sim_round_mode_thread);
-  __sim_disabled_exceptions_thread = u.l[1];
-  SIM_SET_GLOBAL (__sim_disabled_exceptions_global,
-		  __sim_disabled_exceptions_thread);
-  return 0;
+    u.fenv = *modep;
+    __sim_round_mode_thread = u.l[0];
+    SIM_SET_GLOBAL(__sim_round_mode_global, __sim_round_mode_thread);
+    __sim_disabled_exceptions_thread = u.l[1];
+    SIM_SET_GLOBAL(__sim_disabled_exceptions_global,
+                   __sim_disabled_exceptions_thread);
+    return 0;
 }

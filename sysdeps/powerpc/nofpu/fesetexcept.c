@@ -18,11 +18,10 @@
 
 #include "soft-supp.h"
 
-int
-fesetexcept (int excepts)
+int fesetexcept(int excepts)
 {
-  __sim_exceptions_thread |= (excepts & FE_ALL_EXCEPT);
-  SIM_SET_GLOBAL (__sim_exceptions_global, __sim_exceptions_thread);
+    __sim_exceptions_thread |= (excepts & FE_ALL_EXCEPT);
+    SIM_SET_GLOBAL(__sim_exceptions_global, __sim_exceptions_thread);
 
-  return 0;
+    return 0;
 }

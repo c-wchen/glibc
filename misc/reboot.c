@@ -21,13 +21,12 @@
 #include <libc-diag.h>
 
 /* Reboot the system.  */
-int
-reboot (int howto)
+int reboot(int howto)
 {
-  ignore_value (howto);
+    ignore_value(howto);
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (reboot)
+stub_warning(reboot)

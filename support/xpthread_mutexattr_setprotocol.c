@@ -18,9 +18,8 @@
 
 #include <support/xthread.h>
 
-void
-xpthread_mutexattr_setprotocol (pthread_mutexattr_t *attr, int flag)
+void xpthread_mutexattr_setprotocol(pthread_mutexattr_t *attr, int flag)
 {
-  xpthread_check_return ("pthread_mutexattr_setprotocol",
-                         pthread_mutexattr_setprotocol (attr, flag));
+    xpthread_check_return("pthread_mutexattr_setprotocol",
+                          pthread_mutexattr_setprotocol(attr, flag));
 }

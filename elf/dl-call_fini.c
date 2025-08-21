@@ -19,32 +19,33 @@
 #include <ldsodefs.h>
 #include <sysdep.h>
 
-void
-_dl_call_fini (void *closure_map)
+void _dl_call_fini(void *closure_map)
 {
-  struct link_map *map = closure_map;
+    struct link_map *map = closure_map;
 
-  /* When debugging print a message first.  */
-  if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_IMPCALLS))
-    _dl_debug_printf ("\ncalling fini: %s [%lu]\n\n", map->l_name, map->l_ns);
-
-  /* Make sure nothing happens if we are called twice.  */
-  map->l_init_called = 0;
-
-  ElfW(Dyn) *fini_array = map->l_info[DT_FINI_ARRAY];
-  if (fini_array != NULL)
-    {
-      ElfW(Addr) *array = (ElfW(Addr) *) (map->l_addr
-                                          + fini_array->d_un.d_ptr);
-      size_t sz = (map->l_info[DT_FINI_ARRAYSZ]->d_un.d_val
-                   / sizeof (ElfW(Addr)));
-
-      while (sz-- > 0)
-        ((fini_t) array[sz]) ();
+    /* When debugging print a message first.  */
+    if (__glibc_unlikely(GLRO(dl_debug_mask) & DL_DEBUG_IMPCALLS)) {
+        _dl_debug_printf("\ncalling fini: %s [%lu]\n\n", map->l_name, map->l_ns);
     }
 
-  /* Next try the old-style destructor.  */
-  ElfW(Dyn) *fini = map->l_info[DT_FINI];
-  if (fini != NULL)
-    DL_CALL_DT_FINI (map, ((void *) map->l_addr + fini->d_un.d_ptr));
+    /* Make sure nothing happens if we are called twice.  */
+    map->l_init_called = 0;
+
+    ElfW(Dyn) *fini_array = map->l_info[DT_FINI_ARRAY];
+    if (fini_array != NULL) {
+        ElfW(Addr) *array = (ElfW(Addr) *)(map->l_addr
+                                           + fini_array->d_un.d_ptr);
+        size_t sz = (map->l_info[DT_FINI_ARRAYSZ]->d_un.d_val
+                     / sizeof(ElfW(Addr)));
+
+        while (sz-- > 0) {
+            ((fini_t) array[sz])();
+        }
+    }
+
+    /* Next try the old-style destructor.  */
+    ElfW(Dyn) *fini = map->l_info[DT_FINI];
+    if (fini != NULL) {
+        DL_CALL_DT_FINI(map, ((void *) map->l_addr + fini->d_un.d_ptr));
+    }
 }

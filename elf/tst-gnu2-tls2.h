@@ -18,12 +18,11 @@
 
 #include <stdint.h>
 
-struct tls
-{
-  int64_t a, b, c, d;
+struct tls {
+    int64_t a, b, c, d;
 };
 
-extern struct tls *apply_tls (struct tls *);
+extern struct tls *apply_tls(struct tls *);
 
 /* An architecture can define them to verify that clobber caller-saved
    registers aren't changed by the implicit TLSDESC call.  */

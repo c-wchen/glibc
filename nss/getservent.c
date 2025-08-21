@@ -18,8 +18,8 @@
 #include <netdb.h>
 
 
-#define LOOKUP_TYPE	struct servent
-#define	GETFUNC_NAME	getservent
-#define BUFLEN		1024
+#define LOOKUP_TYPE struct servent
+#define GETFUNC_NAME    getservent
+#define BUFLEN      1024
 
 #include "../nss/getXXent.c"

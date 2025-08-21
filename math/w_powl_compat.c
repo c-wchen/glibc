@@ -23,41 +23,42 @@
 
 #if LIBM_SVID_COMPAT
 /* wrapper powl */
-long double
-__powl (long double x, long double y)
+long double __powl(long double x, long double y)
 {
-  long double z = __ieee754_powl (x, y);
-  if (__glibc_unlikely (!isfinite (z)))
+    long double z = __ieee754_powl(x, y);
+    if (__glibc_unlikely(!isfinite(z))) {
+        if (_LIB_VERSION != _IEEE_) {
+            if (isfinite(x) && isfinite(y)) {
+                if (isnan(z))
+                    /* pow neg**non-int */
+                {
+                    return __kernel_standard_l(x, y, 224);
+                } else if (x == 0.0L && y < 0.0L) {
+                    if (signbit(x) && signbit(z))
+                        /* pow(-0.0,negative) */
+                    {
+                        return __kernel_standard_l(x, y, 223);
+                    } else
+                        /* pow(+0.0,negative) */
+                    {
+                        return __kernel_standard_l(x, y, 243);
+                    }
+                } else
+                    /* pow overflow */
+                {
+                    return __kernel_standard_l(x, y, 221);
+                }
+            }
+        }
+    } else if (__builtin_expect(z == 0.0L, 0)
+               && isfinite(x) && x != 0 && isfinite(y)
+               && _LIB_VERSION != _IEEE_)
+        /* pow underflow */
     {
-      if (_LIB_VERSION != _IEEE_)
-	{
-	  if (isfinite (x) && isfinite (y))
-	    {
-	      if (isnan (z))
-		/* pow neg**non-int */
-		return __kernel_standard_l (x, y, 224);
-	      else if (x == 0.0L && y < 0.0L)
-		{
-		  if (signbit (x) && signbit (z))
-		    /* pow(-0.0,negative) */
-		    return __kernel_standard_l (x, y, 223);
-		  else
-		    /* pow(+0.0,negative) */
-		    return __kernel_standard_l (x, y, 243);
-		}
-	      else
-		/* pow overflow */
-		return __kernel_standard_l (x, y, 221);
-	    }
-	}
+        return __kernel_standard_l(x, y, 222);
     }
-  else if (__builtin_expect (z == 0.0L, 0)
-	   && isfinite (x) && x != 0 && isfinite (y)
-	   && _LIB_VERSION != _IEEE_)
-    /* pow underflow */
-    return __kernel_standard_l (x, y, 222);
 
-  return z;
+    return z;
 }
-libm_alias_ldouble (__pow, pow)
+libm_alias_ldouble(__pow, pow)
 #endif

@@ -21,19 +21,18 @@
 #include <float.h>
 #include <math.h>
 
-int
-__feraiseexcept (int excepts)
+int __feraiseexcept(int excepts)
 {
-  unsigned int fpsr;
+    unsigned int fpsr;
 
-  /* currently raised exceptions are not cleared.  */
-  _FPU_GETS (fpsr);
-  fpsr |= excepts;
+    /* currently raised exceptions are not cleared.  */
+    _FPU_GETS(fpsr);
+    fpsr |= excepts;
 
-  _FPU_SETS (fpsr);
+    _FPU_SETS(fpsr);
 
-  return 0;
+    return 0;
 }
-libm_hidden_def (__feraiseexcept)
-weak_alias (__feraiseexcept, feraiseexcept)
-libm_hidden_weak (feraiseexcept)
+libm_hidden_def(__feraiseexcept)
+weak_alias(__feraiseexcept, feraiseexcept)
+libm_hidden_weak(feraiseexcept)

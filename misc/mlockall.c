@@ -24,11 +24,10 @@
    until unlocked by a call to the `munlockall', until the process exits,
    or until the process calls `execve'.  */
 
-int
-mlockall (int flags)
+int mlockall(int flags)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (mlockall)
+stub_warning(mlockall)

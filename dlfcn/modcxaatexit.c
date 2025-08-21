@@ -19,22 +19,20 @@
 #include <stdlib.h>
 #include <dso_handle.h>
 
-extern void fluffy (void *p);
-extern void bar (void *p);
+extern void fluffy(void *p);
+extern void bar(void *p);
 
 int global;
 
-void
-fluffy (void *p)
+void fluffy(void *p)
 {
-  printf ("This is %s\n", __FUNCTION__);
-  *(int *) p = global = 1;
+    printf("This is %s\n", __FUNCTION__);
+    *(int *) p = global = 1;
 }
 
 
-void
-bar (void *p)
+void bar(void *p)
 {
-  printf ("This is %s\n", __FUNCTION__);
-  __cxa_atexit (fluffy, p, __dso_handle);
+    printf("This is %s\n", __FUNCTION__);
+    __cxa_atexit(fluffy, p, __dso_handle);
 }

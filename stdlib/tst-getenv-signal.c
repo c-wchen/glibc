@@ -36,59 +36,58 @@ static pthread_barrier_t barrier;
 static pthread_t main_thread;
 
 /* Send SIGUSR1 signals to main_thread.  */
-static void *
-signal_thread (void *ignored)
+static void *signal_thread(void *ignored)
 {
-  xpthread_barrier_wait (&barrier);
-  while (__atomic_load_n (&running, __ATOMIC_RELAXED))
-    xpthread_kill (main_thread, SIGUSR1);
-  return NULL;
+    xpthread_barrier_wait(&barrier);
+    while (__atomic_load_n(&running, __ATOMIC_RELAXED)) {
+        xpthread_kill(main_thread, SIGUSR1);
+    }
+    return NULL;
 }
 
 /* Call getenv from a signal handler.  */
-static void
-signal_handler (int signo)
+static void signal_handler(int signo)
 {
-  TEST_COMPARE_STRING (getenv ("unset_variable"), NULL);
-  char *value = getenv ("set_variable");
-  TEST_VERIFY (strncmp (value, "value", strlen ("value")) == 0);
+    TEST_COMPARE_STRING(getenv("unset_variable"), NULL);
+    char *value = getenv("set_variable");
+    TEST_VERIFY(strncmp(value, "value", strlen("value")) == 0);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* Added to the environment using putenv.  */
-  char *variables[30];
-  for (int i = 0; i < array_length (variables); ++i)
-    variables[i] = xasprintf ("v%d=%d", i, i);
-
-  xsignal (SIGUSR1, signal_handler);
-  TEST_COMPARE (setenv ("set_variable", "value", 1), 0);
-  xraise (SIGUSR1);
-  main_thread = pthread_self ();
-  xpthread_barrier_init (&barrier, NULL, 2);
-  pthread_t thr = xpthread_create (NULL, signal_thread, NULL);
-  xpthread_barrier_wait (&barrier);
-
-  for (int i = 0; i < array_length (variables); ++i)
-    {
-      char buf[30];
-      TEST_COMPARE (setenv ("temporary_variable", "1", 1), 0);
-      snprintf (buf, sizeof (buf), "V%d", i);
-      TEST_COMPARE (setenv (buf, buf + 1, 1), 0);
-      TEST_COMPARE (putenv (variables[i]), 0);
-      snprintf (buf, sizeof (buf), "value%d", i);
-      TEST_COMPARE (setenv ("set_variable", buf, 1), 0);
-      TEST_COMPARE (unsetenv ("temporary_variable"), 0);
+    /* Added to the environment using putenv.  */
+    char *variables[30];
+    for (int i = 0; i < array_length(variables); ++i) {
+        variables[i] = xasprintf("v%d=%d", i, i);
     }
 
-  __atomic_store_n (&running, false, __ATOMIC_RELAXED);
-  xpthread_join (thr);
-  xpthread_barrier_destroy (&barrier);
+    xsignal(SIGUSR1, signal_handler);
+    TEST_COMPARE(setenv("set_variable", "value", 1), 0);
+    xraise(SIGUSR1);
+    main_thread = pthread_self();
+    xpthread_barrier_init(&barrier, NULL, 2);
+    pthread_t thr = xpthread_create(NULL, signal_thread, NULL);
+    xpthread_barrier_wait(&barrier);
 
-  for (int i = 0; i < array_length (variables); ++i)
-    free (variables[i]);
-  return 0;
+    for (int i = 0; i < array_length(variables); ++i) {
+        char buf[30];
+        TEST_COMPARE(setenv("temporary_variable", "1", 1), 0);
+        snprintf(buf, sizeof(buf), "V%d", i);
+        TEST_COMPARE(setenv(buf, buf + 1, 1), 0);
+        TEST_COMPARE(putenv(variables[i]), 0);
+        snprintf(buf, sizeof(buf), "value%d", i);
+        TEST_COMPARE(setenv("set_variable", buf, 1), 0);
+        TEST_COMPARE(unsetenv("temporary_variable"), 0);
+    }
+
+    __atomic_store_n(&running, false, __ATOMIC_RELAXED);
+    xpthread_join(thr);
+    xpthread_barrier_destroy(&barrier);
+
+    for (int i = 0; i < array_length(variables); ++i) {
+        free(variables[i]);
+    }
+    return 0;
 }
 
 #include <support/test-driver.c>

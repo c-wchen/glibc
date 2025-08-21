@@ -31,17 +31,15 @@
 
 #define IFS " \n\t"
 
-struct test_case_struct
-{
-  int retval;
-  const char *env;
-  const char *words;
-  int flags;
-  size_t wordc;
-  const char *wordv[10];
-  const char *ifs;
-} static test_case[] =
-  {
+struct test_case_struct {
+    int retval;
+    const char *env;
+    const char *words;
+    int flags;
+    size_t wordc;
+    const char *wordv[10];
+    const char *ifs;
+} static test_case[] = {
     /* Simple word- and field-splitting */
     { 0, NULL, "one", 0, 1, { "one", }, IFS },
     { 0, NULL, "one two", 0, 2, { "one", "two", }, IFS },
@@ -65,21 +63,43 @@ struct test_case_struct
     { 0, NULL, "$(echo :abc\\ )", 0, 2, { "", "abc", }, ": " },
     { 0, ":abc:", "$(echo $var)", 0, 2, { "", "abc", }, ":" },
     { 0, NULL, ":abc:", 0, 1, { ":abc:", }, ":" },
-    { 0, NULL, "$(echo :abc:)def", 0, 3, { "", "abc", "def", },
-      ":" },
+    {
+        0, NULL, "$(echo :abc:)def", 0, 3, { "", "abc", "def", },
+        ":"
+    },
     { 0, NULL, "$(echo abc:de)f", 0, 2, { "abc", "def", }, ":" },
-    { 0, NULL, "$(echo abc:de)f:ghi", 0, 2, { "abc", "def:ghi", },
-      ":" },
-    { 0, NULL, "abc:d$(echo ef:ghi)", 0, 2, { "abc:def", "ghi", },
-      ":" },
-    { 0, "abc:", "$var$(echo def:ghi)", 0, 3, { "abc", "def",
-							  "ghi", }, ":" },
-    { 0, "abc:d", "$var$(echo ef:ghi)", 0, 3, { "abc", "def",
-							  "ghi", }, ":" },
-    { 0, "def:ghi", "$(echo abc:)$var", 0, 3, { "abc", "def",
-							  "ghi", }, ":" },
-    { 0, "ef:ghi", "$(echo abc:d)$var", 0, 3, { "abc", "def",
-							  "ghi", }, ":" },
+    {
+        0, NULL, "$(echo abc:de)f:ghi", 0, 2, { "abc", "def:ghi", },
+        ":"
+    },
+    {
+        0, NULL, "abc:d$(echo ef:ghi)", 0, 2, { "abc:def", "ghi", },
+        ":"
+    },
+    {
+        0, "abc:", "$var$(echo def:ghi)", 0, 3, {
+            "abc", "def",
+            "ghi",
+        }, ":"
+    },
+    {
+        0, "abc:d", "$var$(echo ef:ghi)", 0, 3, {
+            "abc", "def",
+            "ghi",
+        }, ":"
+    },
+    {
+        0, "def:ghi", "$(echo abc:)$var", 0, 3, {
+            "abc", "def",
+            "ghi",
+        }, ":"
+    },
+    {
+        0, "ef:ghi", "$(echo abc:d)$var", 0, 3, {
+            "abc", "def",
+            "ghi",
+        }, ":"
+    },
 
     /* Simple parameter expansion */
     { 0, "foo", "${var}", 0, 1, { "foo", }, IFS },
@@ -192,7 +212,7 @@ struct test_case_struct
     /* Flags not already covered (testit() has special handling for these) */
     { 0, NULL, "one two", WRDE_DOOFFS, 2, { "one", "two", }, IFS },
     { 0, NULL, "appended", WRDE_APPEND, 3, { "pre1", "pre2", "appended", }, IFS },
-    { 0, NULL, "appended", WRDE_DOOFFS|WRDE_APPEND, 3, { "pre1", "pre2", "appended", }, IFS },
+    { 0, NULL, "appended", WRDE_DOOFFS | WRDE_APPEND, 3, { "pre1", "pre2", "appended", }, IFS },
 
     /* Things that should fail */
     { WRDE_BADCHAR, NULL, "new\nline", 0, 0, { NULL, }, "" /* \n not IFS */ },
@@ -218,242 +238,235 @@ struct test_case_struct
     { WRDE_SYNTAX, NULL, "`\\", 0, 0, { NULL, }, IFS },     /* BZ 18042  */
     { WRDE_SYNTAX, NULL, "${", 0, 0, { NULL, }, IFS },      /* BZ 18043  */
     { WRDE_SYNTAX, NULL, "L${a:", 0, 0, { NULL, }, IFS },   /* BZ 18043#c4  */
-  };
+};
 
-static int testit (struct test_case_struct *tc);
+static int testit(struct test_case_struct *tc);
 static int tests;
 
-static void
-command_line_test (const char *words)
+static void command_line_test(const char *words)
 {
-  wordexp_t we;
-  int i;
-  int retval = wordexp (words, &we, 0);
-  printf ("info: wordexp returned %d\n", retval);
-  for (i = 0; i < we.we_wordc; i++)
-    printf ("info: we_wordv[%d] = \"%s\"\n", i, we.we_wordv[i]);
+    wordexp_t we;
+    int i;
+    int retval = wordexp(words, &we, 0);
+    printf("info: wordexp returned %d\n", retval);
+    for (i = 0; i < we.we_wordc; i++) {
+        printf("info: we_wordv[%d] = \"%s\"\n", i, we.we_wordv[i]);
+    }
 }
 
-static int
-do_test (int argc, char *argv[])
+static int do_test(int argc, char *argv[])
 {
-  const char *globfile[] = { "one", "two", "three" };
-  char tmpdir[32];
-  struct passwd *pw;
-  const char *cwd;
-  int test;
-  struct test_case_struct ts;
+    const char *globfile[] = { "one", "two", "three" };
+    char tmpdir[32];
+    struct passwd *pw;
+    const char *cwd;
+    int test;
+    struct test_case_struct ts;
 
-  if (argc > 1)
-    {
-      command_line_test (argv[1]);
-      return 0;
+    if (argc > 1) {
+        command_line_test(argv[1]);
+        return 0;
     }
 
-  cwd = getcwd (NULL, 0);
+    cwd = getcwd(NULL, 0);
 
-  /* Set up arena for pathname expansion */
-  if (!tmpnam (tmpdir))
-    {
-      printf ("Failed to create a temporary directory with a unique name: %m");
-      return 1;
+    /* Set up arena for pathname expansion */
+    if (!tmpnam(tmpdir)) {
+        printf("Failed to create a temporary directory with a unique name: %m");
+        return 1;
     }
-  xmkdir (tmpdir, S_IRWXU);
-  TEST_VERIFY_EXIT (chdir (tmpdir) == 0);
+    xmkdir(tmpdir, S_IRWXU);
+    TEST_VERIFY_EXIT(chdir(tmpdir) == 0);
 
-  for (int i = 0; i < array_length (globfile); ++i)
-    {
-      int fd = xopen (globfile[i], O_WRONLY|O_CREAT|O_TRUNC,
-		      S_IRUSR | S_IWUSR);
-      xclose (fd);
+    for (int i = 0; i < array_length(globfile); ++i) {
+        int fd = xopen(globfile[i], O_WRONLY | O_CREAT | O_TRUNC,
+                       S_IRUSR | S_IWUSR);
+        xclose(fd);
     }
 
-  for (test = 0; test < array_length (test_case); test++)
-    TEST_COMPARE (testit (&test_case[test]), 0);
-
-  /* Tilde-expansion tests. */
-  pw = getpwnam ("root");
-  if (pw != NULL)
-    {
-      ts.retval = 0;
-      ts.env = NULL;
-      ts.words = "~root ";
-      ts.flags = 0;
-      ts.wordc = 1;
-      ts.wordv[0] = pw->pw_dir;
-      ts.ifs = IFS;
-
-      TEST_COMPARE (testit (&ts), 0);
-
-      ts.retval = 0;
-      ts.env = pw->pw_dir;
-      ts.words = "${var#~root}x";
-      ts.flags = 0;
-      ts.wordc = 1;
-      ts.wordv[0] = "x";
-      ts.ifs = IFS;
-
-      TEST_COMPARE (testit (&ts), 0);
+    for (test = 0; test < array_length(test_case); test++) {
+        TEST_COMPARE(testit(&test_case[test]), 0);
     }
 
-  /* "~" expands to value of $HOME when HOME is set */
+    /* Tilde-expansion tests. */
+    pw = getpwnam("root");
+    if (pw != NULL) {
+        ts.retval = 0;
+        ts.env = NULL;
+        ts.words = "~root ";
+        ts.flags = 0;
+        ts.wordc = 1;
+        ts.wordv[0] = pw->pw_dir;
+        ts.ifs = IFS;
 
-  setenv ("HOME", "/dummy/home", 1);
-  ts.retval = 0;
-  ts.env = NULL;
-  ts.words = "~ ~/foo";
-  ts.flags = 0;
-  ts.wordc = 2;
-  ts.wordv[0] = "/dummy/home";
-  ts.wordv[1] = "/dummy/home/foo";
-  ts.ifs = IFS;
+        TEST_COMPARE(testit(&ts), 0);
 
-  TEST_COMPARE (testit (&ts), 0);
+        ts.retval = 0;
+        ts.env = pw->pw_dir;
+        ts.words = "${var#~root}x";
+        ts.flags = 0;
+        ts.wordc = 1;
+        ts.wordv[0] = "x";
+        ts.ifs = IFS;
 
-  /* "~" expands to home dir from passwd file if HOME is not set */
-
-  pw = getpwuid (getuid ());
-  if (pw != NULL)
-    {
-      unsetenv ("HOME");
-      ts.retval = 0;
-      ts.env = NULL;
-      ts.words = "~";
-      ts.flags = 0;
-      ts.wordc = 1;
-      ts.wordv[0] = pw->pw_dir;
-      ts.ifs = IFS;
-
-      TEST_COMPARE (testit (&ts), 0);
+        TEST_COMPARE(testit(&ts), 0);
     }
 
-  puts ("tests completed, now cleaning up");
+    /* "~" expands to value of $HOME when HOME is set */
 
-  /* Clean up */
-  for (int i = 0; i < array_length (globfile); ++i)
-    remove (globfile[i]);
+    setenv("HOME", "/dummy/home", 1);
+    ts.retval = 0;
+    ts.env = NULL;
+    ts.words = "~ ~/foo";
+    ts.flags = 0;
+    ts.wordc = 2;
+    ts.wordv[0] = "/dummy/home";
+    ts.wordv[1] = "/dummy/home/foo";
+    ts.ifs = IFS;
 
-  if (cwd == NULL)
-    cwd = "..";
+    TEST_COMPARE(testit(&ts), 0);
 
-  xchdir (cwd);
-  rmdir (tmpdir);
+    /* "~" expands to home dir from passwd file if HOME is not set */
 
-  return 0;
+    pw = getpwuid(getuid());
+    if (pw != NULL) {
+        unsetenv("HOME");
+        ts.retval = 0;
+        ts.env = NULL;
+        ts.words = "~";
+        ts.flags = 0;
+        ts.wordc = 1;
+        ts.wordv[0] = pw->pw_dir;
+        ts.ifs = IFS;
+
+        TEST_COMPARE(testit(&ts), 0);
+    }
+
+    puts("tests completed, now cleaning up");
+
+    /* Clean up */
+    for (int i = 0; i < array_length(globfile); ++i) {
+        remove(globfile[i]);
+    }
+
+    if (cwd == NULL) {
+        cwd = "..";
+    }
+
+    xchdir(cwd);
+    rmdir(tmpdir);
+
+    return 0;
 }
 
 struct support_next_to_fault
-at_page_end (const char *words)
+at_page_end(const char *words)
 {
-  const size_t words_size = strlen (words) + 1;
-  struct support_next_to_fault ntf
-    = support_next_to_fault_allocate (words_size);
+    const size_t words_size = strlen(words) + 1;
+    struct support_next_to_fault ntf
+        = support_next_to_fault_allocate(words_size);
 
-  /* Includes terminating NUL.  */
-  memcpy (ntf.buffer, words, words_size);
+    /* Includes terminating NUL.  */
+    memcpy(ntf.buffer, words, words_size);
 
-  return ntf;
+    return ntf;
 }
 
-static int
-testit (struct test_case_struct *tc)
+static int testit(struct test_case_struct *tc)
 {
-  int retval;
-  wordexp_t we, sav_we;
-  char *dummy;
-  int bzzzt = 0;
-  int start_offs = 0;
-  int i;
+    int retval;
+    wordexp_t we, sav_we;
+    char *dummy;
+    int bzzzt = 0;
+    int start_offs = 0;
+    int i;
 
-  if (tc->env)
-    setenv ("var", tc->env, 1);
-  else
-    unsetenv ("var");
-
-  if (tc->ifs)
-    setenv ("IFS", tc->ifs, 1);
-  else
-    unsetenv ("IFS");
-
-  sav_we.we_wordc = 99;
-  sav_we.we_wordv = &dummy;
-  sav_we.we_offs = 3;
-  we = sav_we;
-
-  printf ("info: test %d (%s): ", ++tests, tc->words);
-  fflush (NULL);
-  struct support_next_to_fault words = at_page_end (tc->words);
-
-  if (tc->flags & WRDE_APPEND)
-    {
-      /* initial wordexp() call, to be appended to */
-      if (wordexp ("pre1 pre2", &we, tc->flags & ~WRDE_APPEND) != 0)
-        {
-	  printf ("info: FAILED setup\n");
-	  return 1;
-	}
-    }
-  retval = wordexp (words.buffer, &we, tc->flags);
-
-  if (tc->flags & WRDE_DOOFFS)
-      start_offs = sav_we.we_offs;
-
-  if (retval != tc->retval || (retval == 0 && we.we_wordc != tc->wordc))
-    bzzzt = 1;
-  else if (retval == 0)
-    {
-      for (i = 0; i < start_offs; ++i)
-	if (we.we_wordv[i] != NULL)
-	  {
-	    bzzzt = 1;
-	    break;
-	  }
-
-      for (i = 0; i < we.we_wordc; ++i)
-	if (we.we_wordv[i+start_offs] == NULL
-	    || strcmp (tc->wordv[i], we.we_wordv[i+start_offs]) != 0)
-	  {
-	    bzzzt = 1;
-	    break;
-	  }
+    if (tc->env) {
+        setenv("var", tc->env, 1);
+    } else {
+        unsetenv("var");
     }
 
-  if (bzzzt)
-    {
-      printf ("FAILED\n");
-      printf ("info: Test words: <%s>, need retval %d, wordc %zd\n",
-	      tc->words, tc->retval, tc->wordc);
-      if (start_offs != 0)
-	printf ("(preceded by %d NULLs)\n", start_offs);
-      printf ("Got retval %d, wordc %zd: ", retval, we.we_wordc);
-      if (retval == 0 || retval == WRDE_NOSPACE)
-	{
-	  for (i = 0; i < we.we_wordc + start_offs; ++i)
-	    if (we.we_wordv[i] == NULL)
-	      printf ("NULL ");
-	    else
-	      printf ("<%s> ", we.we_wordv[i]);
-	}
-      printf ("\n");
+    if (tc->ifs) {
+        setenv("IFS", tc->ifs, 1);
+    } else {
+        unsetenv("IFS");
     }
-  else if (retval != 0 && retval != WRDE_NOSPACE
-	   && (we.we_wordc != sav_we.we_wordc
-	       || we.we_wordv != sav_we.we_wordv
-	       || we.we_offs != sav_we.we_offs))
-    {
-      bzzzt = 1;
-      printf ("FAILED to restore wordexp_t members\n");
+
+    sav_we.we_wordc = 99;
+    sav_we.we_wordv = &dummy;
+    sav_we.we_offs = 3;
+    we = sav_we;
+
+    printf("info: test %d (%s): ", ++tests, tc->words);
+    fflush(NULL);
+    struct support_next_to_fault words = at_page_end(tc->words);
+
+    if (tc->flags & WRDE_APPEND) {
+        /* initial wordexp() call, to be appended to */
+        if (wordexp("pre1 pre2", &we, tc->flags & ~WRDE_APPEND) != 0) {
+            printf("info: FAILED setup\n");
+            return 1;
+        }
     }
-  else
-    printf ("OK\n");
+    retval = wordexp(words.buffer, &we, tc->flags);
 
-  if (retval == 0 || retval == WRDE_NOSPACE)
-    wordfree (&we);
+    if (tc->flags & WRDE_DOOFFS) {
+        start_offs = sav_we.we_offs;
+    }
 
-  support_next_to_fault_free (&words);
+    if (retval != tc->retval || (retval == 0 && we.we_wordc != tc->wordc)) {
+        bzzzt = 1;
+    } else if (retval == 0) {
+        for (i = 0; i < start_offs; ++i)
+            if (we.we_wordv[i] != NULL) {
+                bzzzt = 1;
+                break;
+            }
 
-  fflush (NULL);
-  return bzzzt;
+        for (i = 0; i < we.we_wordc; ++i)
+            if (we.we_wordv[i + start_offs] == NULL
+                || strcmp(tc->wordv[i], we.we_wordv[i + start_offs]) != 0) {
+                bzzzt = 1;
+                break;
+            }
+    }
+
+    if (bzzzt) {
+        printf("FAILED\n");
+        printf("info: Test words: <%s>, need retval %d, wordc %zd\n",
+               tc->words, tc->retval, tc->wordc);
+        if (start_offs != 0) {
+            printf("(preceded by %d NULLs)\n", start_offs);
+        }
+        printf("Got retval %d, wordc %zd: ", retval, we.we_wordc);
+        if (retval == 0 || retval == WRDE_NOSPACE) {
+            for (i = 0; i < we.we_wordc + start_offs; ++i)
+                if (we.we_wordv[i] == NULL) {
+                    printf("NULL ");
+                } else {
+                    printf("<%s> ", we.we_wordv[i]);
+                }
+        }
+        printf("\n");
+    } else if (retval != 0 && retval != WRDE_NOSPACE
+               && (we.we_wordc != sav_we.we_wordc
+                   || we.we_wordv != sav_we.we_wordv
+                   || we.we_offs != sav_we.we_offs)) {
+        bzzzt = 1;
+        printf("FAILED to restore wordexp_t members\n");
+    } else {
+        printf("OK\n");
+    }
+
+    if (retval == 0 || retval == WRDE_NOSPACE) {
+        wordfree(&we);
+    }
+
+    support_next_to_fault_free(&words);
+
+    fflush(NULL);
+    return bzzzt;
 }
 
 #define TEST_FUNCTION_ARGV do_test

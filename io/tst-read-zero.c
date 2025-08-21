@@ -23,17 +23,17 @@
 #include <unistd.h>
 #include <support/check.h>
 
-int
-do_test (void)
+int do_test(void)
 {
-  struct test_st {} test_info[16];
-  int fd = open ("/dev/zero", O_RDONLY, 0);
+    struct test_st {} test_info[16];
+    int fd = open("/dev/zero", O_RDONLY, 0);
 
-  if (fd == -1)
-    FAIL_UNSUPPORTED ("Unable to open /dev/zero: %m");
+    if (fd == -1) {
+        FAIL_UNSUPPORTED("Unable to open /dev/zero: %m");
+    }
 
-  TEST_VERIFY_EXIT (read (fd, test_info, sizeof(test_info)) == 0);
-  return 0;
+    TEST_VERIFY_EXIT(read(fd, test_info, sizeof(test_info)) == 0);
+    return 0;
 }
 
 #include <support/test-driver.c>

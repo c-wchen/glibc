@@ -46,15 +46,13 @@
 # define ALL_ENVIRONMENTS_DEFINED 1
 #endif
 
-struct conf
-  {
+struct conf {
     const char *name;
     const int call_name;
     const enum { SYSCONF, CONFSTR, PATHCONF } call;
-  };
+};
 
-static const struct conf vars[] =
-  {
+static const struct conf vars[] = {
     { "LINK_MAX", _PC_LINK_MAX, PATHCONF },
     { "_POSIX_LINK_MAX", _PC_LINK_MAX, PATHCONF },
     { "MAX_CANON", _PC_MAX_CANON, PATHCONF },
@@ -164,10 +162,14 @@ static const struct conf vars[] =
     { "_POSIX_THREAD_PRIORITY_SCHEDULING", _SC_THREAD_PRIORITY_SCHEDULING, SYSCONF },
     { "_POSIX_THREAD_PRIO_INHERIT", _SC_THREAD_PRIO_INHERIT, SYSCONF },
     { "_POSIX_THREAD_PRIO_PROTECT", _SC_THREAD_PRIO_PROTECT, SYSCONF },
-    { "_POSIX_THREAD_ROBUST_PRIO_INHERIT", _SC_THREAD_ROBUST_PRIO_INHERIT,
-      SYSCONF },
-    { "_POSIX_THREAD_ROBUST_PRIO_PROTECT", _SC_THREAD_ROBUST_PRIO_PROTECT,
-      SYSCONF },
+    {
+        "_POSIX_THREAD_ROBUST_PRIO_INHERIT", _SC_THREAD_ROBUST_PRIO_INHERIT,
+        SYSCONF
+    },
+    {
+        "_POSIX_THREAD_ROBUST_PRIO_PROTECT", _SC_THREAD_ROBUST_PRIO_PROTECT,
+        SYSCONF
+    },
     { "_POSIX_THREAD_PROCESS_SHARED", _SC_THREAD_PROCESS_SHARED, SYSCONF },
     { "_POSIX_THREAD_SAFE_FUNCTIONS", _SC_THREAD_SAFE_FUNCTIONS, SYSCONF },
     { "_POSIX_TIMERS", _SC_TIMERS, SYSCONF },
@@ -406,307 +408,300 @@ static const struct conf vars[] =
     { "_POSIX_RAW_SOCKETS", _SC_RAW_SOCKETS, SYSCONF },
 
     { NULL, 0, SYSCONF }
-  };
+};
 
 
 extern const char *__progname;
 
 
-static void
-usage (void)
+static void usage(void)
 {
-  fprintf (stderr,
-	   _("Usage: %s [-v specification] variable_name [pathname]\n"),
-	   __progname);
-  fprintf (stderr,
-	   _("       %s -a [pathname]\n"), __progname);
-  exit (2);
+    fprintf(stderr,
+            _("Usage: %s [-v specification] variable_name [pathname]\n"),
+            __progname);
+    fprintf(stderr,
+            _("       %s -a [pathname]\n"), __progname);
+    exit(2);
 }
 
 
-static void
-print_all (const char *path)
+static void print_all(const char *path)
 {
-  const struct conf *c;
-  size_t clen;
-  long int value;
-  char *cvalue;
-  for (c = vars; c->name != NULL; ++c) {
-    printf("%-35s", c->name);
-    switch (c->call) {
-      case PATHCONF:
-	value = pathconf (path, c->call_name);
-	if (value != -1) {
-	  printf("%ld", value);
-	}
-	printf("\n");
-	break;
-      case SYSCONF:
-	value = sysconf (c->call_name);
-	if (value == -1l) {
-	  if (c->call_name == _SC_UINT_MAX
-	    || c->call_name == _SC_ULONG_MAX)
-	    printf ("%lu", value);
-	}
-	else {
-	  printf ("%ld", value);
-	}
-	printf ("\n");
-	break;
-      case CONFSTR:
-	clen = confstr (c->call_name, (char *) NULL, 0);
-	cvalue = (char *) malloc (clen);
-	if (cvalue == NULL)
-	  error (3, 0, _("memory exhausted"));
-	if (confstr (c->call_name, cvalue, clen) != clen)
-	  error (3, errno, "confstr");
-	printf ("%.*s\n", (int) clen, cvalue);
-	free (cvalue);
-	break;
+    const struct conf *c;
+    size_t clen;
+    long int value;
+    char *cvalue;
+    for (c = vars; c->name != NULL; ++c) {
+        printf("%-35s", c->name);
+        switch (c->call) {
+            case PATHCONF:
+                value = pathconf(path, c->call_name);
+                if (value != -1) {
+                    printf("%ld", value);
+                }
+                printf("\n");
+                break;
+            case SYSCONF:
+                value = sysconf(c->call_name);
+                if (value == -1l) {
+                    if (c->call_name == _SC_UINT_MAX
+                        || c->call_name == _SC_ULONG_MAX) {
+                        printf("%lu", value);
+                    }
+                } else {
+                    printf("%ld", value);
+                }
+                printf("\n");
+                break;
+            case CONFSTR:
+                clen = confstr(c->call_name, (char *) NULL, 0);
+                cvalue = (char *) malloc(clen);
+                if (cvalue == NULL) {
+                    error(3, 0, _("memory exhausted"));
+                }
+                if (confstr(c->call_name, cvalue, clen) != clen) {
+                    error(3, errno, "confstr");
+                }
+                printf("%.*s\n", (int) clen, cvalue);
+                free(cvalue);
+                break;
+        }
     }
-  }
-  exit (0);
+    exit(0);
 }
 
-int
-main (int argc, char *argv[])
+int main(int argc, char *argv[])
 {
-  const struct conf *c;
+    const struct conf *c;
 
-  /* Set locale.  Do not set LC_ALL because the other categories must
-     not be affected (according to POSIX.2).  */
-  setlocale (LC_CTYPE, "");
-  setlocale (LC_MESSAGES, "");
+    /* Set locale.  Do not set LC_ALL because the other categories must
+       not be affected (according to POSIX.2).  */
+    setlocale(LC_CTYPE, "");
+    setlocale(LC_MESSAGES, "");
 
-  /* Initialize the message catalog.  */
-  textdomain (PACKAGE);
+    /* Initialize the message catalog.  */
+    textdomain(PACKAGE);
 
-  if (argc > 1 && strcmp (argv[1], "--version") == 0)
-    {
-      printf ("getconf %s%s\n", PKGVERSION, VERSION);
-      printf (gettext ("\
+    if (argc > 1 && strcmp(argv[1], "--version") == 0) {
+        printf("getconf %s%s\n", PKGVERSION, VERSION);
+        printf(gettext("\
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
 "), "2024");
-      printf (gettext ("Written by %s.\n"), "Roland McGrath");
-      return 0;
+        printf(gettext("Written by %s.\n"), "Roland McGrath");
+        return 0;
     }
 
-  if (argc > 1 && strcmp (argv[1], "--help") == 0)
-    {
-      printf (gettext ("\
+    if (argc > 1 && strcmp(argv[1], "--help") == 0) {
+        printf(gettext("\
 Usage: getconf [-v SPEC] VAR\n\
   or:  getconf [-v SPEC] PATH_VAR PATH\n\
 \n\
 Get the configuration value for variable VAR, or for variable PATH_VAR\n\
 for path PATH.  If SPEC is given, give values for compilation\n\
 environment SPEC.\n\n"));
-      printf (gettext ("For bug reporting instructions, please see:\n\
+        printf(gettext("For bug reporting instructions, please see:\n\
 %s.\n"), REPORT_BUGS_TO);
-      return 0;
+        return 0;
     }
 
 #ifdef ALL_ENVIRONMENTS_DEFINED
-  if (argc > 1 && strncmp (argv[1], "-v", 2) == 0)
-    {
-      if (argv[1][2] == '\0')
-	{
-	  if (argc < 3)
-	    usage ();
+    if (argc > 1 && strncmp(argv[1], "-v", 2) == 0) {
+        if (argv[1][2] == '\0') {
+            if (argc < 3) {
+                usage();
+            }
 
-	  argv += 2;
-	  argc -= 2;
-	}
-      else
-	{
-	  argv += 1;
-	  argc -= 1;
-	}
+            argv += 2;
+            argc -= 2;
+        } else {
+            argv += 1;
+            argc -= 1;
+        }
     }
 #else
-  const char *getconf_dir = getenv ("GETCONF_DIR") ?: GETCONF_DIR;
-  size_t getconf_dirlen = strlen (getconf_dir);
+    const char *getconf_dir = getenv("GETCONF_DIR") ? : GETCONF_DIR;
+    size_t getconf_dirlen = strlen(getconf_dir);
 
-  const char *spec = NULL;
-  char buf[sizeof "POSIX_V6_LPBIG_OFFBIG"];
-  char *argv0 = argv[0];
-  if (argc > 1 && strncmp (argv[1], "-v", 2) == 0)
-    {
-      if (argv[1][2] == '\0')
-	{
-	  if (argc < 3)
-	    usage ();
+    const char *spec = NULL;
+    char buf[sizeof "POSIX_V6_LPBIG_OFFBIG"];
+    char *argv0 = argv[0];
+    if (argc > 1 && strncmp(argv[1], "-v", 2) == 0) {
+        if (argv[1][2] == '\0') {
+            if (argc < 3) {
+                usage();
+            }
 
-	  spec = argv[2];
-	  argv += 2;
-	  argc -= 2;
-	}
-      else
-	{
-	  spec = &argv[1][2];
-	  argv += 1;
-	  argc -= 1;
-	}
-    }
-  else
-    {
-      char default_name[getconf_dirlen + sizeof "/default"];
-      memcpy (mempcpy (default_name, getconf_dir, getconf_dirlen),
-	      "/default", sizeof "/default");
-      int len = readlink (default_name, buf, sizeof buf - 1);
-      if (len > 0)
-	{
-	  buf[len] = '\0';
-	  spec = buf;
-	}
+            spec = argv[2];
+            argv += 2;
+            argc -= 2;
+        } else {
+            spec = &argv[1][2];
+            argv += 1;
+            argc -= 1;
+        }
+    } else {
+        char default_name[getconf_dirlen + sizeof "/default"];
+        memcpy(mempcpy(default_name, getconf_dir, getconf_dirlen),
+               "/default", sizeof "/default");
+        int len = readlink(default_name, buf, sizeof buf - 1);
+        if (len > 0) {
+            buf[len] = '\0';
+            spec = buf;
+        }
     }
 
-  /* Check for the specifications we know.  */
-  if (spec != NULL)
-    {
-      size_t i;
-      for (i = 0; i < nspecs; ++i)
-	if (strcmp (spec, specs[i].name) == 0)
-	  break;
+    /* Check for the specifications we know.  */
+    if (spec != NULL) {
+        size_t i;
+        for (i = 0; i < nspecs; ++i)
+            if (strcmp(spec, specs[i].name) == 0) {
+                break;
+            }
 
-      if (i == nspecs)
-	error (2, 0, _("unknown specification \"%s\""), spec);
+        if (i == nspecs) {
+            error(2, 0, _("unknown specification \"%s\""), spec);
+        }
 
-      switch (specs[i].num)
-	{
+        switch (specs[i].num) {
 # ifndef _XBS5_ILP32_OFF32
-	  case _SC_XBS5_ILP32_OFF32:
+            case _SC_XBS5_ILP32_OFF32:
 # endif
 # ifndef _XBS5_ILP32_OFFBIG
-	  case _SC_XBS5_ILP32_OFFBIG:
+            case _SC_XBS5_ILP32_OFFBIG:
 # endif
 # ifndef _XBS5_LP64_OFF64
-	  case _SC_XBS5_LP64_OFF64:
+            case _SC_XBS5_LP64_OFF64:
 # endif
 # ifndef _XBS5_LPBIG_OFFBIG
-	  case _SC_XBS5_LPBIG_OFFBIG:
+            case _SC_XBS5_LPBIG_OFFBIG:
 # endif
 # ifndef _POSIX_V6_ILP32_OFF32
-	  case _SC_V6_ILP32_OFF32:
+            case _SC_V6_ILP32_OFF32:
 # endif
 # ifndef _POSIX_V6_ILP32_OFFBIG
-	  case _SC_V6_ILP32_OFFBIG:
+            case _SC_V6_ILP32_OFFBIG:
 # endif
 # ifndef _POSIX_V6_LP64_OFF64
-	  case _SC_V6_LP64_OFF64:
+            case _SC_V6_LP64_OFF64:
 # endif
 # ifndef _POSIX_V6_LPBIG_OFFBIG
-	  case _SC_V6_LPBIG_OFFBIG:
+            case _SC_V6_LPBIG_OFFBIG:
 # endif
 # ifndef _POSIX_V7_ILP32_OFF32
-	  case _SC_V7_ILP32_OFF32:
+            case _SC_V7_ILP32_OFF32:
 # endif
 # ifndef _POSIX_V7_ILP32_OFFBIG
-	  case _SC_V7_ILP32_OFFBIG:
+            case _SC_V7_ILP32_OFFBIG:
 # endif
 # ifndef _POSIX_V7_LP64_OFF64
-	  case _SC_V7_LP64_OFF64:
+            case _SC_V7_LP64_OFF64:
 # endif
 # ifndef _POSIX_V7_LPBIG_OFFBIG
-	  case _SC_V7_LPBIG_OFFBIG:
+            case _SC_V7_LPBIG_OFFBIG:
 # endif
-	    {
-	      const char *args[argc + 3];
-	      size_t spec_len = strlen (spec);
-	      char getconf_name[getconf_dirlen + 1 + spec_len + 1];
-	      memcpy (mempcpy (mempcpy (getconf_name, getconf_dir,
-					getconf_dirlen),
-			       "/", 1), spec, spec_len + 1);
-	      args[0] = argv0;
-	      args[1] = "-v";
-	      args[2] = spec;
-	      memcpy (&args[3], &argv[1], argc * sizeof (argv[1]));
-	      execv (getconf_name, (char * const *) args);
-	      error (4, errno, _("Couldn't execute %s"), getconf_name);
-	    }
-	  default:
-	    break;
-	}
+            {
+                const char *args[argc + 3];
+                size_t spec_len = strlen(spec);
+                char getconf_name[getconf_dirlen + 1 + spec_len + 1];
+                memcpy(mempcpy(mempcpy(getconf_name, getconf_dir,
+                                       getconf_dirlen),
+                               "/", 1), spec, spec_len + 1);
+                args[0] = argv0;
+                args[1] = "-v";
+                args[2] = spec;
+                memcpy(&args[3], &argv[1], argc * sizeof(argv[1]));
+                execv(getconf_name, (char *const *) args);
+                error(4, errno, _("Couldn't execute %s"), getconf_name);
+            }
+            default:
+                break;
+        }
     }
 #endif
 
-  if (argc > 1 && strcmp (argv[1], "-a") == 0)
-    {
-      if (argc == 2)
-	print_all ("/");
-      else if (argc == 3)
-	print_all (argv[2]);
-      else
-	usage ();
+    if (argc > 1 && strcmp(argv[1], "-a") == 0) {
+        if (argc == 2) {
+            print_all("/");
+        } else if (argc == 3) {
+            print_all(argv[2]);
+        } else {
+            usage();
+        }
     }
 
-  int ai = 1;
-  if (argc > ai && strcmp (argv[ai], "--") == 0)
-    ++ai;
+    int ai = 1;
+    if (argc > ai && strcmp(argv[ai], "--") == 0) {
+        ++ai;
+    }
 
-  if (argc - ai < 1 || argc - ai > 2)
-    usage ();
+    if (argc - ai < 1 || argc - ai > 2) {
+        usage();
+    }
 
-  for (c = vars; c->name != NULL; ++c)
-    if (strcmp (c->name, argv[ai]) == 0
-	|| (strncmp (c->name, "_POSIX_", 7) == 0
-	    && strcmp (c->name + 7, argv[ai]) == 0))
-      {
-	long int value;
-	size_t clen;
-	char *cvalue;
-	switch (c->call)
-	  {
-	  case PATHCONF:
-	    if (argc - ai < 2)
-	      usage ();
-	    errno = 0;
-	    value = pathconf (argv[ai + 1], c->call_name);
-	    if (value == -1)
-	      {
-		if (errno)
-		  error (3, errno, "pathconf: %s", argv[ai + 1]);
-		else
-		  puts (_("undefined"));
-	      }
-	    else
-	      printf ("%ld\n", value);
-	    exit (0);
+    for (c = vars; c->name != NULL; ++c)
+        if (strcmp(c->name, argv[ai]) == 0
+            || (strncmp(c->name, "_POSIX_", 7) == 0
+                && strcmp(c->name + 7, argv[ai]) == 0)) {
+            long int value;
+            size_t clen;
+            char *cvalue;
+            switch (c->call) {
+                case PATHCONF:
+                    if (argc - ai < 2) {
+                        usage();
+                    }
+                    errno = 0;
+                    value = pathconf(argv[ai + 1], c->call_name);
+                    if (value == -1) {
+                        if (errno) {
+                            error(3, errno, "pathconf: %s", argv[ai + 1]);
+                        } else {
+                            puts(_("undefined"));
+                        }
+                    } else {
+                        printf("%ld\n", value);
+                    }
+                    exit(0);
 
-	  case SYSCONF:
-	    if (argc - ai > 1)
-	      usage ();
-	    value = sysconf (c->call_name);
-	    if (value == -1l)
-	      {
-		if (c->call_name == _SC_UINT_MAX
-		    || c->call_name == _SC_ULONG_MAX)
-		  printf ("%lu\n", value);
-		else
-		  puts (_("undefined"));
-	      }
-	    else
-	      printf ("%ld\n", value);
-	    exit (0);
+                case SYSCONF:
+                    if (argc - ai > 1) {
+                        usage();
+                    }
+                    value = sysconf(c->call_name);
+                    if (value == -1l) {
+                        if (c->call_name == _SC_UINT_MAX
+                            || c->call_name == _SC_ULONG_MAX) {
+                            printf("%lu\n", value);
+                        } else {
+                            puts(_("undefined"));
+                        }
+                    } else {
+                        printf("%ld\n", value);
+                    }
+                    exit(0);
 
-	  case CONFSTR:
-	    if (argc - ai > 1)
-	      usage ();
-	    clen = confstr (c->call_name, (char *) NULL, 0);
-	    cvalue = (char *) malloc (clen);
-	    if (cvalue == NULL)
-	      error (3, 0, _("memory exhausted"));
+                case CONFSTR:
+                    if (argc - ai > 1) {
+                        usage();
+                    }
+                    clen = confstr(c->call_name, (char *) NULL, 0);
+                    cvalue = (char *) malloc(clen);
+                    if (cvalue == NULL) {
+                        error(3, 0, _("memory exhausted"));
+                    }
 
-	    if (confstr (c->call_name, cvalue, clen) != clen)
-	      error (3, errno, "confstr");
+                    if (confstr(c->call_name, cvalue, clen) != clen) {
+                        error(3, errno, "confstr");
+                    }
 
-	    printf ("%.*s\n", (int) clen, cvalue);
-	    exit (0);
-	  }
-      }
+                    printf("%.*s\n", (int) clen, cvalue);
+                    exit(0);
+            }
+        }
 
-  error (2, 0, _("Unrecognized variable `%s'"), argv[ai]);
-  /* NOTREACHED */
-  return 2;
+    error(2, 0, _("Unrecognized variable `%s'"), argv[ai]);
+    /* NOTREACHED */
+    return 2;
 }

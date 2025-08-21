@@ -25,87 +25,81 @@
 static const _Float128 zero = 0.0;
 
 
-_Float128
-__remquol (_Float128 x, _Float128 y, int *quo)
+_Float128 __remquol(_Float128 x, _Float128 y, int *quo)
 {
-  int64_t hx,hy;
-  uint64_t sx,lx,ly,qs;
-  int cquo;
+    int64_t hx, hy;
+    uint64_t sx, lx, ly, qs;
+    int cquo;
 
-  GET_LDOUBLE_WORDS64 (hx, lx, x);
-  GET_LDOUBLE_WORDS64 (hy, ly, y);
-  sx = hx & 0x8000000000000000ULL;
-  qs = sx ^ (hy & 0x8000000000000000ULL);
-  hy &= 0x7fffffffffffffffLL;
-  hx &= 0x7fffffffffffffffLL;
+    GET_LDOUBLE_WORDS64(hx, lx, x);
+    GET_LDOUBLE_WORDS64(hy, ly, y);
+    sx = hx & 0x8000000000000000ULL;
+    qs = sx ^ (hy & 0x8000000000000000ULL);
+    hy &= 0x7fffffffffffffffLL;
+    hx &= 0x7fffffffffffffffLL;
 
-  /* Purge off exception values.  */
-  if ((hy | ly) == 0)
-    return (x * y) / (x * y); 			/* y = 0 */
-  if ((hx >= 0x7fff000000000000LL)		/* x not finite */
-      || ((hy >= 0x7fff000000000000LL)		/* y is NaN */
-	  && (((hy - 0x7fff000000000000LL) | ly) != 0)))
-    return (x * y) / (x * y);
-
-  if (hy <= 0x7ffbffffffffffffLL)
-    x = __ieee754_fmodl (x, 8 * y);              /* now x < 8y */
-
-  if (((hx - hy) | (lx - ly)) == 0)
-    {
-      *quo = qs ? -1 : 1;
-      return zero * x;
+    /* Purge off exception values.  */
+    if ((hy | ly) == 0) {
+        return (x * y) / (x * y);    /* y = 0 */
+    }
+    if ((hx >= 0x7fff000000000000LL)      /* x not finite */
+        || ((hy >= 0x7fff000000000000LL)      /* y is NaN */
+            && (((hy - 0x7fff000000000000LL) | ly) != 0))) {
+        return (x * y) / (x * y);
     }
 
-  x  = fabsl (x);
-  y  = fabsl (y);
-  cquo = 0;
-
-  if (hy <= 0x7ffcffffffffffffLL && x >= 4 * y)
-    {
-      x -= 4 * y;
-      cquo += 4;
-    }
-  if (hy <= 0x7ffdffffffffffffLL && x >= 2 * y)
-    {
-      x -= 2 * y;
-      cquo += 2;
+    if (hy <= 0x7ffbffffffffffffLL) {
+        x = __ieee754_fmodl(x, 8 * y);    /* now x < 8y */
     }
 
-  if (hy < 0x0002000000000000LL)
-    {
-      if (x + x > y)
-	{
-	  x -= y;
-	  ++cquo;
-	  if (x + x >= y)
-	    {
-	      x -= y;
-	      ++cquo;
-	    }
-	}
-    }
-  else
-    {
-      _Float128 y_half = L(0.5) * y;
-      if (x > y_half)
-	{
-	  x -= y;
-	  ++cquo;
-	  if (x >= y_half)
-	    {
-	      x -= y;
-	      ++cquo;
-	    }
-	}
+    if (((hx - hy) | (lx - ly)) == 0) {
+        *quo = qs ? -1 : 1;
+        return zero * x;
     }
 
-  *quo = qs ? -cquo : cquo;
+    x  = fabsl(x);
+    y  = fabsl(y);
+    cquo = 0;
 
-  /* Ensure correct sign of zero result in round-downward mode.  */
-  if (x == 0)
-    x = 0;
-  if (sx)
-    x = -x;
-  return x;
+    if (hy <= 0x7ffcffffffffffffLL && x >= 4 * y) {
+        x -= 4 * y;
+        cquo += 4;
+    }
+    if (hy <= 0x7ffdffffffffffffLL && x >= 2 * y) {
+        x -= 2 * y;
+        cquo += 2;
+    }
+
+    if (hy < 0x0002000000000000LL) {
+        if (x + x > y) {
+            x -= y;
+            ++cquo;
+            if (x + x >= y) {
+                x -= y;
+                ++cquo;
+            }
+        }
+    } else {
+        _Float128 y_half = L(0.5) * y;
+        if (x > y_half) {
+            x -= y;
+            ++cquo;
+            if (x >= y_half) {
+                x -= y;
+                ++cquo;
+            }
+        }
+    }
+
+    *quo = qs ? -cquo : cquo;
+
+    /* Ensure correct sign of zero result in round-downward mode.  */
+    if (x == 0) {
+        x = 0;
+    }
+    if (sx) {
+        x = -x;
+    }
+    return x;
 }
-libm_alias_ldouble (__remquo, remquo)
+libm_alias_ldouble(__remquo, remquo)

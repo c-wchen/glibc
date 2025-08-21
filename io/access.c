@@ -20,19 +20,17 @@
 #include <unistd.h>
 
 /* Test for access to FILE.  */
-int
-__access (const char *file, int type)
+int __access(const char *file, int type)
 {
-  if (file == NULL || (type & ~(R_OK|W_OK|X_OK|F_OK)) != 0)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (file == NULL || (type & ~(R_OK | W_OK | X_OK | F_OK)) != 0) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (__access)
-stub_warning (access)
+libc_hidden_def(__access)
+stub_warning(access)
 
-weak_alias (__access, access)
+weak_alias(__access, access)

@@ -19,13 +19,11 @@
 
 
 /* Set TS to calendar time based in time base BASE.  */
-int
-timespec_get (struct timespec *ts, int base)
+int timespec_get(struct timespec *ts, int base)
 {
-  if (base == TIME_UTC)
-    {
-      __clock_gettime (CLOCK_REALTIME, ts);
-      return base;
+    if (base == TIME_UTC) {
+        __clock_gettime(CLOCK_REALTIME, ts);
+        return base;
     }
-  return 0;
+    return 0;
 }

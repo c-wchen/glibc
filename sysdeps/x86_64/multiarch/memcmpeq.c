@@ -26,10 +26,10 @@
 # define SYMBOL_NAME __memcmpeq
 # include "ifunc-memcmpeq.h"
 
-libc_ifunc_redirected (__redirect___memcmpeq, __memcmpeq, IFUNC_SELECTOR ());
+libc_ifunc_redirected(__redirect___memcmpeq, __memcmpeq, IFUNC_SELECTOR());
 
 # ifdef SHARED
-__hidden_ver1 (__memcmpeq, __GI___memcmpeq, __redirect___memcmpeq)
-    __attribute__ ((visibility ("hidden"))) __attribute_copy__ (__memcmpeq);
+__hidden_ver1(__memcmpeq, __GI___memcmpeq, __redirect___memcmpeq)
+__attribute__((visibility("hidden"))) __attribute_copy__(__memcmpeq);
 # endif
 #endif

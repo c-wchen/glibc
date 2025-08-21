@@ -21,18 +21,16 @@
 
 /* Type for data associated with a signal.  */
 #ifdef __USE_POSIX199309
-union sigval
-{
-  int sival_int;
-  void *sival_ptr;
+union sigval {
+    int sival_int;
+    void *sival_ptr;
 };
 
 typedef union sigval __sigval_t;
 #else
-union __sigval
-{
-  int __sival_int;
-  void *__sival_ptr;
+union __sigval {
+    int __sival_int;
+    void *__sival_ptr;
 };
 
 typedef union __sigval __sigval_t;

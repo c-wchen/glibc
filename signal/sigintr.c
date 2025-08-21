@@ -21,11 +21,10 @@
 /* If INTERRUPT is nonzero, make signal SIG interrupt system calls
    (causing them to fail with EINTR); if INTERRUPT is zero, make system
    calls be restarted after signal SIG.  */
-int
-siginterrupt (int sig, int interrupt)
+int siginterrupt(int sig, int interrupt)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (siginterrupt)
+stub_warning(siginterrupt)

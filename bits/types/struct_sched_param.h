@@ -20,9 +20,8 @@
 #define _BITS_TYPES_STRUCT_SCHED_PARAM 1
 
 /* Data structure to describe a process' schedulability.  */
-struct sched_param
-{
-  int sched_priority;
+struct sched_param {
+    int sched_priority;
 };
 
 #endif /* bits/types/struct_sched_param.h */

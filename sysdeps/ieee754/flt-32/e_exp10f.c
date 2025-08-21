@@ -134,72 +134,74 @@
 #define C __exp2f_data.poly_scaled
 #define SHIFT __exp2f_data.shift
 
-static inline uint32_t
-top13 (float x)
+static inline uint32_t top13(float x)
 {
-  return asuint (x) >> 19;
+    return asuint(x) >> 19;
 }
 
-float
-__exp10f (float x)
+float __exp10f(float x)
 {
-  uint32_t abstop;
-  uint64_t ki, t;
-  double kd, xd, z, r, r2, y, s;
+    uint32_t abstop;
+    uint64_t ki, t;
+    double kd, xd, z, r, r2, y, s;
 
-  xd = (double) x;
-  abstop = top13 (x) & 0xfff; /* Ignore sign.  */
-  if (__glibc_unlikely (abstop >= top13 (38.0f)))
-    {
-      /* |x| >= 38 or x is nan.  */
-      if (asuint (x) == asuint (-INFINITY))
-        return 0.0f;
-      if (abstop >= top13 (INFINITY))
-        return x + x;
-      /* 0x26.8826ap0 is the largest value such that 10^x < 2^128.  */
-      if (x > 0x26.8826ap0f)
-        return __math_oflowf (0);
-      /* -0x2d.278d4p0 is the smallest value such that 10^x > 2^-150.  */
-      if (x < -0x2d.278d4p0f)
-        return __math_uflowf (0);
+    xd = (double) x;
+    abstop = top13(x) & 0xfff;  /* Ignore sign.  */
+    if (__glibc_unlikely(abstop >= top13(38.0f))) {
+        /* |x| >= 38 or x is nan.  */
+        if (asuint(x) == asuint(-INFINITY)) {
+            return 0.0f;
+        }
+        if (abstop >= top13(INFINITY)) {
+            return x + x;
+        }
+        /* 0x26.8826ap0 is the largest value such that 10^x < 2^128.  */
+        if (x > 0x26.8826ap0f) {
+            return __math_oflowf(0);
+        }
+        /* -0x2d.278d4p0 is the smallest value such that 10^x > 2^-150.  */
+        if (x < -0x2d.278d4p0f) {
+            return __math_uflowf(0);
+        }
 #if WANT_ERRNO_UFLOW
-      if (x < -0x2c.da7cfp0)
-        return __math_may_uflowf (0);
+        if (x < -0x2c.da7cfp0) {
+            return __math_may_uflowf(0);
+        }
 #endif
-      /* the smallest value such that 10^x >= 2^-126 (normal range)
-         is x = -0x25.ee060p0 */
-      /* we go through here for 2014929 values out of 2060451840
-         (not counting NaN and infinities, i.e., about 0.1% */
+        /* the smallest value such that 10^x >= 2^-126 (normal range)
+           is x = -0x25.ee060p0 */
+        /* we go through here for 2014929 values out of 2060451840
+           (not counting NaN and infinities, i.e., about 0.1% */
     }
 
-  /* x*N*Ln10/Ln2 = k + r with r in [-1/2, 1/2] and int k.  */
-  z = InvLn10N * xd;
-  /* |xd| < 38 thus |z| < 1216 */
+    /* x*N*Ln10/Ln2 = k + r with r in [-1/2, 1/2] and int k.  */
+    z = InvLn10N * xd;
+    /* |xd| < 38 thus |z| < 1216 */
 #if TOINT_INTRINSICS
-  kd = roundtoint (z);
-  ki = converttoint (z);
+    kd = roundtoint(z);
+    ki = converttoint(z);
 #else
 # define SHIFT __exp2f_data.shift
-  kd = math_narrow_eval ((double) (z + SHIFT)); /* Needs to be double.  */
-  ki = asuint64 (kd);
-  kd -= SHIFT;
+    kd = math_narrow_eval((double)(z + SHIFT));   /* Needs to be double.  */
+    ki = asuint64(kd);
+    kd -= SHIFT;
 #endif
-  r = z - kd;
+    r = z - kd;
 
-  /* 10^x = 10^(k/N) * 10^(r/N) ~= s * (C0*r^3 + C1*r^2 + C2*r + 1)  */
-  t = T[ki % N];
-  t += ki << (52 - EXP2F_TABLE_BITS);
-  s = asdouble (t);
-  z = C[0] * r + C[1];
-  r2 = r * r;
-  y = C[2] * r + 1;
-  y = z * r2 + y;
-  y = y * s;
-  return (float) y;
+    /* 10^x = 10^(k/N) * 10^(r/N) ~= s * (C0*r^3 + C1*r^2 + C2*r + 1)  */
+    t = T[ki % N];
+    t += ki << (52 - EXP2F_TABLE_BITS);
+    s = asdouble(t);
+    z = C[0] * r + C[1];
+    r2 = r * r;
+    y = C[2] * r + 1;
+    y = z * r2 + y;
+    y = y * s;
+    return (float) y;
 }
 #ifndef __exp10f
-strong_alias (__exp10f, __ieee754_exp10f)
-libm_alias_finite (__ieee754_exp10f, __exp10f)
+strong_alias(__exp10f, __ieee754_exp10f)
+libm_alias_finite(__ieee754_exp10f, __exp10f)
 /* For architectures that already provided exp10f without SVID support, there
    is no need to add a new version.  */
 #if !LIBM_SVID_COMPAT
@@ -207,6 +209,6 @@ libm_alias_finite (__ieee754_exp10f, __exp10f)
 #else
 # define EXP10F_VERSION GLIBC_2_32
 #endif
-versioned_symbol (libm, __exp10f, exp10f, EXP10F_VERSION);
-libm_alias_float_other (__exp10, exp10)
+versioned_symbol(libm, __exp10f, exp10f, EXP10F_VERSION);
+libm_alias_float_other(__exp10, exp10)
 #endif

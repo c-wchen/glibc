@@ -20,7 +20,7 @@
 #include <stdint.h>
 #define TABLES <iso8859-11.h>
 
-#define CHARSET_NAME	"ISO-8859-11//"
-#define HAS_HOLES	1	/* Not all 256 character are defined.  */
+#define CHARSET_NAME    "ISO-8859-11//"
+#define HAS_HOLES   1   /* Not all 256 character are defined.  */
 
 #include <8bit-gap.c>

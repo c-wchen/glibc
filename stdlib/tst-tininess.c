@@ -21,48 +21,41 @@
 #include <stdio.h>
 #include <tininess.h>
 
-volatile float a = 0x1.fffp-126;
-volatile float b = 0x1.0008p-1;
+volatile float a = 0x1.fffp - 126;
+volatile float b = 0x1.0008p - 1;
 volatile float c;
 volatile float m = FLT_MIN;
 volatile float mm;
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int result = 0;
+    int result = 0;
 #ifdef FE_UNDERFLOW
-  feclearexcept (FE_ALL_EXCEPT);
-  mm = m * m;
-  if (!fetestexcept (FE_UNDERFLOW))
-    {
-      puts ("underflow exception not supported at runtime, cannot test");
-      return 0;
+    feclearexcept(FE_ALL_EXCEPT);
+    mm = m * m;
+    if (!fetestexcept(FE_UNDERFLOW)) {
+        puts("underflow exception not supported at runtime, cannot test");
+        return 0;
     }
-  feclearexcept (FE_ALL_EXCEPT);
-  c = a * b;
-  if (fetestexcept (FE_UNDERFLOW))
-    {
-      if (TININESS_AFTER_ROUNDING)
-	{
-	  puts ("tininess.h says after rounding, "
-		"but detected before rounding");
-	  result = 1;
-	}
-    }
-  else
-    {
-      if (!TININESS_AFTER_ROUNDING)
-	{
-	  puts ("tininess.h says before rounding, "
-		"but detected after rounding");
-	  result = 1;
-	}
+    feclearexcept(FE_ALL_EXCEPT);
+    c = a * b;
+    if (fetestexcept(FE_UNDERFLOW)) {
+        if (TININESS_AFTER_ROUNDING) {
+            puts("tininess.h says after rounding, "
+                 "but detected before rounding");
+            result = 1;
+        }
+    } else {
+        if (!TININESS_AFTER_ROUNDING) {
+            puts("tininess.h says before rounding, "
+                 "but detected after rounding");
+            result = 1;
+        }
     }
 #else
-  puts ("underflow exception not supported at compile time, cannot test");
+    puts("underflow exception not supported at compile time, cannot test");
 #endif
-  return result;
+    return result;
 }
 
 #define TEST_FUNCTION do_test ()

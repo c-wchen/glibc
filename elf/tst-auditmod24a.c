@@ -36,81 +36,77 @@
 # define TEST_FUNC "tst_audit24a"
 #endif
 
-unsigned int
-la_version (unsigned int version)
+unsigned int la_version(unsigned int version)
 {
-  return LAV_CURRENT;
+    return LAV_CURRENT;
 }
 
-unsigned int
-la_objopen (struct link_map *map, Lmid_t lmid, uintptr_t *cookie)
+unsigned int la_objopen(struct link_map *map, Lmid_t lmid, uintptr_t *cookie)
 {
-  const char *p = strrchr (map->l_name, '/');
-  const char *l_name = p == NULL ? TEST_NAME : p + 1;
+    const char *p = strrchr(map->l_name, '/');
+    const char *l_name = p == NULL ? TEST_NAME : p + 1;
 
-  uintptr_t ck = -1;
-  if (strcmp (l_name, TEST_MOD "mod1.so") == 0)
-    ck = AUDIT24MOD1_COOKIE;
-  else if (strcmp (l_name, TEST_MOD "mod2.so") == 0)
-    ck = AUDIT24MOD2_COOKIE;
-  else if (strcmp (l_name, TEST_NAME) == 0)
-    ck = AUDIT24_COOKIE;
+    uintptr_t ck = -1;
+    if (strcmp(l_name, TEST_MOD "mod1.so") == 0) {
+        ck = AUDIT24MOD1_COOKIE;
+    } else if (strcmp(l_name, TEST_MOD "mod2.so") == 0) {
+        ck = AUDIT24MOD2_COOKIE;
+    } else if (strcmp(l_name, TEST_NAME) == 0) {
+        ck = AUDIT24_COOKIE;
+    }
 
-  *cookie = ck;
-  return ck == -1 ? 0 : LA_FLG_BINDFROM | LA_FLG_BINDTO;
+    *cookie = ck;
+    return ck == -1 ? 0 : LA_FLG_BINDFROM | LA_FLG_BINDTO;
 }
 
-static int
-tst_func1 (void)
+static int tst_func1(void)
 {
-  return 1;
+    return 1;
 }
 
-static int
-tst_func2 (void)
+static int tst_func2(void)
 {
-  return 10;
+    return 10;
 }
 
 #if __ELF_NATIVE_CLASS == 64
 uintptr_t
-la_symbind64 (Elf64_Sym *sym, unsigned int ndx,
-	      uintptr_t *refcook, uintptr_t *defcook,
-	      unsigned int *flags, const char *symname)
+la_symbind64(Elf64_Sym *sym, unsigned int ndx,
+             uintptr_t *refcook, uintptr_t *defcook,
+             unsigned int *flags, const char *symname)
 #else
 uintptr_t
-la_symbind32 (Elf32_Sym *sym, unsigned int ndx,
-	      uintptr_t *refcook, uintptr_t *defcook,
-	      unsigned int *flags, const char *symname)
+la_symbind32(Elf32_Sym *sym, unsigned int ndx,
+             uintptr_t *refcook, uintptr_t *defcook,
+             unsigned int *flags, const char *symname)
 #endif
 {
-  if (*refcook == AUDIT24_COOKIE)
-    {
-      if (*defcook == AUDIT24MOD1_COOKIE)
-	{
-	  /* Check if bind-now symbols are advertised to not call the PLT
-	     hooks.  */
-	  test_symbind_flags (*flags);
+    if (*refcook == AUDIT24_COOKIE) {
+        if (*defcook == AUDIT24MOD1_COOKIE) {
+            /* Check if bind-now symbols are advertised to not call the PLT
+               hooks.  */
+            test_symbind_flags(*flags);
 
-	  if (strcmp (symname, TEST_FUNC "mod1_func1") == 0)
-	    return (uintptr_t) tst_func1;
-	  else if (strcmp (symname, TEST_FUNC "mod1_func2") == 0)
-	    return sym->st_value;
-	  abort ();
-	}
-      if (*defcook == AUDIT24MOD2_COOKIE
-	  && (strcmp (symname, TEST_FUNC "mod2_func1") == 0))
-	{
-	  test_symbind_flags (*flags);
+            if (strcmp(symname, TEST_FUNC "mod1_func1") == 0) {
+                return (uintptr_t) tst_func1;
+            } else if (strcmp(symname, TEST_FUNC "mod1_func2") == 0) {
+                return sym->st_value;
+            }
+            abort();
+        }
+        if (*defcook == AUDIT24MOD2_COOKIE
+            && (strcmp(symname, TEST_FUNC "mod2_func1") == 0)) {
+            test_symbind_flags(*flags);
 
-	  return (uintptr_t) tst_func2;
-	}
+            return (uintptr_t) tst_func2;
+        }
 
-      /* malloc functions.  */
-      return sym->st_value;
+        /* malloc functions.  */
+        return sym->st_value;
     }
 
-  if (symname[0] != '\0')
-    abort ();
-  return sym->st_value;
+    if (symname[0] != '\0') {
+        abort();
+    }
+    return sym->st_value;
 }

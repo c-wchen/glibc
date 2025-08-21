@@ -27,17 +27,15 @@
 
 typedef intmax_t tunable_num_t;
 
-typedef union
-{
-  tunable_num_t numval;
-  struct tunable_str_t
-  {
-    const char *str;
-    size_t len;
-  } strval;
+typedef union {
+    tunable_num_t numval;
+    struct tunable_str_t {
+        const char *str;
+        size_t len;
+    } strval;
 } tunable_val_t;
 
-typedef void (*tunable_callback_t) (tunable_val_t *);
+typedef void (*tunable_callback_t)(tunable_val_t *);
 
 /* Full name for a tunable is top_ns.tunable_ns.id.  */
 #define TUNABLE_NAME_S(top,ns,id) #top "." #ns "." #id
@@ -47,19 +45,19 @@ typedef void (*tunable_callback_t) (tunable_val_t *);
 
 #include "dl-tunable-list.h"
 
-extern void __tunables_init (char **);
-extern void __tunables_print (void);
-extern bool __tunable_is_initialized (tunable_id_t);
-extern void __tunable_get_val (tunable_id_t, void *, tunable_callback_t);
-extern void __tunable_set_val (tunable_id_t, tunable_val_t *, tunable_num_t *,
-			       tunable_num_t *);
-extern void __tunable_get_default (tunable_id_t id, void *valp);
-rtld_hidden_proto (__tunables_init)
-rtld_hidden_proto (__tunables_print)
-rtld_hidden_proto (__tunable_is_initialized)
-rtld_hidden_proto (__tunable_get_val)
-rtld_hidden_proto (__tunable_set_val)
-rtld_hidden_proto (__tunable_get_default)
+extern void __tunables_init(char **);
+extern void __tunables_print(void);
+extern bool __tunable_is_initialized(tunable_id_t);
+extern void __tunable_get_val(tunable_id_t, void *, tunable_callback_t);
+extern void __tunable_set_val(tunable_id_t, tunable_val_t *, tunable_num_t *,
+                              tunable_num_t *);
+extern void __tunable_get_default(tunable_id_t id, void *valp);
+rtld_hidden_proto(__tunables_init)
+rtld_hidden_proto(__tunables_print)
+rtld_hidden_proto(__tunable_is_initialized)
+rtld_hidden_proto(__tunable_get_val)
+rtld_hidden_proto(__tunable_set_val)
+rtld_hidden_proto(__tunable_get_default)
 
 /* Define TUNABLE_GET and TUNABLE_SET in short form if TOP_NAMESPACE and
    TUNABLE_NAMESPACE are defined.  This is useful shorthand to get and set
@@ -75,7 +73,7 @@ rtld_hidden_proto (__tunable_get_default)
   TUNABLE_SET_FULL (TOP_NAMESPACE, TUNABLE_NAMESPACE, __id, __val)
 # define TUNABLE_SET_WITH_BOUNDS(__id, __val, __min, __max) \
   TUNABLE_SET_WITH_BOUNDS_FULL (TOP_NAMESPACE, TUNABLE_NAMESPACE, __id, \
-				__val, __min, __max)
+                __val, __min, __max)
 #else
 # define TUNABLE_IS_INITIALIZED(__top, __ns, __id) \
   TUNABLE_IS_INITIALIZED_FULL(__top, __ns, __id)
@@ -91,44 +89,44 @@ rtld_hidden_proto (__tunable_get_default)
 
 /* Return whether the tunable was initialized by the environment variable.  */
 #define TUNABLE_IS_INITIALIZED_FULL(__top, __ns, __id) \
-({									      \
-  tunable_id_t id = TUNABLE_ENUM_NAME (__top, __ns, __id);		      \
-  __tunable_is_initialized (id);					      \
+({                                        \
+  tunable_id_t id = TUNABLE_ENUM_NAME (__top, __ns, __id);            \
+  __tunable_is_initialized (id);                          \
 })
 
 /* Return the default value of the tunable.  */
 #define TUNABLE_GET_DEFAULT_FULL(__top, __ns, __id, __type) \
-({									      \
-  tunable_id_t id = TUNABLE_ENUM_NAME (__top, __ns, __id);		      \
-  __type __ret;								      \
-  __tunable_get_default (id, &__ret);					      \
-  __ret;								      \
+({                                        \
+  tunable_id_t id = TUNABLE_ENUM_NAME (__top, __ns, __id);            \
+  __type __ret;                                   \
+  __tunable_get_default (id, &__ret);                         \
+  __ret;                                      \
 })
 
 /* Get and return a tunable value.  If the tunable was set externally and __CB
    is defined then call __CB before returning the value.  */
 #define TUNABLE_GET_FULL(__top, __ns, __id, __type, __cb) \
-({									      \
-  tunable_id_t id = TUNABLE_ENUM_NAME (__top, __ns, __id);		      \
-  __type ret;								      \
-  __tunable_get_val (id, &ret, __cb);					      \
-  ret;									      \
+({                                        \
+  tunable_id_t id = TUNABLE_ENUM_NAME (__top, __ns, __id);            \
+  __type ret;                                     \
+  __tunable_get_val (id, &ret, __cb);                         \
+  ret;                                        \
 })
 
 /* Set a tunable value.  */
 #define TUNABLE_SET_FULL(__top, __ns, __id, __val) \
-({									      \
-  __tunable_set_val (TUNABLE_ENUM_NAME (__top, __ns, __id),		      \
-		     & (tunable_val_t) {.numval = __val}, NULL, NULL);	      \
+({                                        \
+  __tunable_set_val (TUNABLE_ENUM_NAME (__top, __ns, __id),           \
+             & (tunable_val_t) {.numval = __val}, NULL, NULL);        \
 })
 
 /* Set a tunable value together with min/max values.  */
 #define TUNABLE_SET_WITH_BOUNDS_FULL(__top, __ns, __id,__val, __min, __max)  \
-({									      \
-  __tunable_set_val (TUNABLE_ENUM_NAME (__top, __ns, __id),		      \
-		     & (tunable_val_t) {.numval = __val},		      \
-		     & (tunable_num_t) {__min},				      \
-		     & (tunable_num_t) {__max});			      \
+({                                        \
+  __tunable_set_val (TUNABLE_ENUM_NAME (__top, __ns, __id),           \
+             & (tunable_val_t) {.numval = __val},             \
+             & (tunable_num_t) {__min},                   \
+             & (tunable_num_t) {__max});                  \
 })
 
 /* Namespace sanity for callback functions.  Use this macro to keep the
@@ -136,36 +134,38 @@ rtld_hidden_proto (__tunable_get_default)
 #define TUNABLE_CALLBACK(__name) _dl_tunable_ ## __name
 
 static __always_inline bool
-tunable_val_lt (tunable_num_t lhs, tunable_num_t rhs, bool unsigned_cmp)
+tunable_val_lt(tunable_num_t lhs, tunable_num_t rhs, bool unsigned_cmp)
 {
-  if (unsigned_cmp)
-    return (uintmax_t) lhs < (uintmax_t) rhs;
-  else
-    return lhs < rhs;
+    if (unsigned_cmp) {
+        return (uintmax_t) lhs < (uintmax_t) rhs;
+    } else {
+        return lhs < rhs;
+    }
 }
 
-static __always_inline bool
-tunable_val_gt (tunable_num_t lhs, tunable_num_t rhs, bool unsigned_cmp)
+static __always_inline bool tunable_val_gt(tunable_num_t lhs, tunable_num_t rhs, bool unsigned_cmp)
 {
-  if (unsigned_cmp)
-    return (uintmax_t) lhs > (uintmax_t) rhs;
-  else
-    return lhs > rhs;
+    if (unsigned_cmp) {
+        return (uintmax_t) lhs > (uintmax_t) rhs;
+    } else {
+        return lhs > rhs;
+    }
 }
 
 /* Compare two name strings, bounded by the name hardcoded in glibc.  */
-static __always_inline bool
-tunable_is_name (const char *orig, const char *envname)
+static __always_inline bool tunable_is_name(const char *orig, const char *envname)
 {
-  for (;*orig != '\0' && *envname != '\0'; envname++, orig++)
-    if (*orig != *envname)
-      break;
+    for (; *orig != '\0' && *envname != '\0'; envname++, orig++)
+        if (*orig != *envname) {
+            break;
+        }
 
-  /* The ENVNAME is immediately followed by a value.  */
-  if (*orig == '\0' && *envname == '=')
-    return true;
-  else
-    return false;
+    /* The ENVNAME is immediately followed by a value.  */
+    if (*orig == '\0' && *envname == '=') {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 #endif

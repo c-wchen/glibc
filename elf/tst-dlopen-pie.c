@@ -25,25 +25,25 @@
 #include <support/check.h>
 #include <support/support.h>
 
-static void
-test_mode (int mode)
+static void test_mode(int mode)
 {
-  char *pie_path = xasprintf ("%s/elf/tst-pie1", support_objdir_root);
-  if (dlopen (pie_path, mode) != NULL)
-    FAIL_EXIT1 ("dlopen succeeded unexpectedly (%d)", mode);
-  const char *message = dlerror ();
-  const char *expected
-    = "cannot dynamically load position-independent executable";
-  if (strstr (message, expected) == NULL)
-    FAIL_EXIT1 ("unexpected error message (mode %d): %s", mode, message);
+    char *pie_path = xasprintf("%s/elf/tst-pie1", support_objdir_root);
+    if (dlopen(pie_path, mode) != NULL) {
+        FAIL_EXIT1("dlopen succeeded unexpectedly (%d)", mode);
+    }
+    const char *message = dlerror();
+    const char *expected
+        = "cannot dynamically load position-independent executable";
+    if (strstr(message, expected) == NULL) {
+        FAIL_EXIT1("unexpected error message (mode %d): %s", mode, message);
+    }
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  test_mode (RTLD_LAZY);
-  test_mode (RTLD_NOW);
-  return 0;
+    test_mode(RTLD_LAZY);
+    test_mode(RTLD_NOW);
+    return 0;
 }
 
 #include <support/test-driver.c>

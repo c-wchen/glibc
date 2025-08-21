@@ -23,19 +23,18 @@
 
 static void *handle;
 
-static void __attribute__ ((constructor))
-init (void)
+static void __attribute__((constructor))
+init(void)
 {
-  handle = dlopen ("tst-dlopen-nodelete-reloc-mod11.so", RTLD_NOW);
-  if (handle == NULL)
-    {
-      printf ("error: dlopen in module 10: %s\n", dlerror ());
-      _exit (1);
+    handle = dlopen("tst-dlopen-nodelete-reloc-mod11.so", RTLD_NOW);
+    if (handle == NULL) {
+        printf("error: dlopen in module 10: %s\n", dlerror());
+        _exit(1);
     }
 }
 
-static void __attribute__ ((destructor))
-fini (void)
+static void __attribute__((destructor))
+fini(void)
 {
-  dlclose (handle);
+    dlclose(handle);
 }

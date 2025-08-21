@@ -19,19 +19,18 @@
 
 /* Determine number of column positions required for first N wide
    characters (or fewer if S ends before this) in S.  */
-int
-wcswidth (const wchar_t *s, size_t n)
+int wcswidth(const wchar_t *s, size_t n)
 {
-  int result = 0;
+    int result = 0;
 
-  while (n-- > 0 && *s != L'\0')
-    {
-      int now = internal_wcwidth (*s);
-      if (now == -1)
-	return -1;
-      result += now;
-      ++s;
+    while (n-- > 0 && *s != L'\0') {
+        int now = internal_wcwidth(*s);
+        if (now == -1) {
+            return -1;
+        }
+        result += now;
+        ++s;
     }
 
-  return result;
+    return result;
 }

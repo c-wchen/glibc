@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef FIX_FP_INT_CONVERT_OVERFLOW_H
-#define FIX_FP_INT_CONVERT_OVERFLOW_H	1
+#define FIX_FP_INT_CONVERT_OVERFLOW_H   1
 
 /* As of GCC 5, the generic libgcc2.c conversions from floating point
    to long long may not raise the correct exceptions on overflow (and

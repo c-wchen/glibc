@@ -23,12 +23,11 @@
 /* Convert the string of multibyte characters in S to `wchar_t's in
    PWCS, writing no more than N.  Return the number written,
    or (size_t) -1 if an invalid multibyte character is encountered.  */
-size_t
-mbstowcs (wchar_t *pwcs, const char *s, size_t n)
+size_t mbstowcs(wchar_t *pwcs, const char *s, size_t n)
 {
-  mbstate_t state;
+    mbstate_t state;
 
-  memset (&state, '\0', sizeof state);
-  /* Return how many we wrote (or maybe an error).  */
-  return __mbsrtowcs (pwcs, &s, n, &state);
+    memset(&state, '\0', sizeof state);
+    /* Return how many we wrote (or maybe an error).  */
+    return __mbsrtowcs(pwcs, &s, n, &state);
 }

@@ -19,30 +19,26 @@
 #include <dlfcn.h>
 #include <stdio.h>
 
-int
-do_test (void)
+int do_test(void)
 {
-  puts ("Start");
-  void *h = dlopen ("$ORIGIN/tst-audit12mod1.so", RTLD_LAZY);
-  if (h == NULL)
-    {
-      printf ("module not loaded: %s\n", dlerror ());
-      return 1;
+    puts("Start");
+    void *h = dlopen("$ORIGIN/tst-audit12mod1.so", RTLD_LAZY);
+    if (h == NULL) {
+        printf("module not loaded: %s\n", dlerror());
+        return 1;
     }
-  int (*fp) (void) = (int (*) (void)) dlsym (h, "f1");
-  if (fp == NULL)
-    {
-      printf ("function f1 not found: %s\n", dlerror ());
-      return 1;
+    int (*fp)(void) = (int (*)(void)) dlsym(h, "f1");
+    if (fp == NULL) {
+        printf("function f1 not found: %s\n", dlerror());
+        return 1;
     }
-  int res = fp ();
-  if (res != 43)
-    {
-      puts ("incorrect function f2 called");
-      return 1;
+    int res = fp();
+    if (res != 43) {
+        puts("incorrect function f2 called");
+        return 1;
     }
-  printf ("%d is OK\n", res);
-  return 0;
+    printf("%d is OK\n", res);
+    return 0;
 }
 
 #include <support/test-driver.c>

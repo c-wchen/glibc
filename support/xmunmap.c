@@ -20,9 +20,9 @@
 #include <support/xunistd.h>
 #include <sys/mman.h>
 
-void
-xmunmap (void *addr, size_t length)
+void xmunmap(void *addr, size_t length)
 {
-  if (munmap (addr, length) != 0)
-    FAIL_EXIT1 ("munmap of %zu bytes: %m", length);
+    if (munmap(addr, length) != 0) {
+        FAIL_EXIT1("munmap of %zu bytes: %m", length);
+    }
 }

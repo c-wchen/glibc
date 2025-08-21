@@ -22,32 +22,31 @@
 #include <libm-alias-double.h>
 #include <stdint.h>
 
-double
-__rint (double x)
+double __rint(double x)
 {
-  bool nan;
-  double mag;
+    bool nan;
+    double mag;
 
-  nan = isnan (x);
-  mag = fabs (x);
+    nan = isnan(x);
+    mag = fabs(x);
 
-  if (nan)
-    return x + x;
-
-  if (mag < (1ULL << __DBL_MANT_DIG__))
-    {
-      int64_t i;
-      double new_x;
-
-      asm ("fcvt.l.d %0, %1" : "=r" (i) : "f" (x));
-      asm ("fcvt.d.l %0, %1" : "=f" (new_x) : "r" (i));
-
-      /* rint(-0) == -0, and in general we'll always have the same
-	 sign as our input.  */
-      x = copysign (new_x, x);
+    if (nan) {
+        return x + x;
     }
 
-  return x;
+    if (mag < (1ULL << __DBL_MANT_DIG__)) {
+        int64_t i;
+        double new_x;
+
+        asm("fcvt.l.d %0, %1" : "=r"(i) : "f"(x));
+        asm("fcvt.d.l %0, %1" : "=f"(new_x) : "r"(i));
+
+        /* rint(-0) == -0, and in general we'll always have the same
+        sign as our input.  */
+        x = copysign(new_x, x);
+    }
+
+    return x;
 }
 
-libm_alias_double (__rint, rint)
+libm_alias_double(__rint, rint)

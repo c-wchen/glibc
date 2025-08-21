@@ -19,12 +19,11 @@
 #include <sys/statvfs.h>
 
 /* Return information about the filesystem on which FILE resides.  */
-int
-__statvfs64 (const char *file, struct statvfs64 *buf)
+int __statvfs64(const char *file, struct statvfs64 *buf)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-weak_alias (__statvfs64, statvfs64)
+weak_alias(__statvfs64, statvfs64)
 
-stub_warning (statvfs64)
+stub_warning(statvfs64)

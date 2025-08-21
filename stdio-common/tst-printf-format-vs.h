@@ -27,38 +27,34 @@
 static struct support_next_to_fault ntf;
 
 #define PREPARE printf_under_test_init
-static void
-printf_under_test_init (int argc, char **argv)
+static void printf_under_test_init(int argc, char **argv)
 {
-  ntf = support_next_to_fault_allocate (SPRINTF_BUFFER_SIZE);
+    ntf = support_next_to_fault_allocate(SPRINTF_BUFFER_SIZE);
 }
 
-static void __attribute__ ((destructor))
-printf_under_test_fini (void)
+static void __attribute__((destructor))
+printf_under_test_fini(void)
 {
-  support_next_to_fault_free (&ntf);
+    support_next_to_fault_free(&ntf);
 }
 
-static int
-printf_under_test (const char *restrict fmt, ...)
+static int printf_under_test(const char *restrict fmt, ...)
 {
-  char *str = ntf.buffer;
-  va_list ap;
-  int result;
+    char *str = ntf.buffer;
+    va_list ap;
+    int result;
 
-  va_start (ap, fmt);
-  result = vsprintf (str, fmt, ap);
-  va_end (ap);
-  if (result < 0)
-    {
-      perror ("vsprintf");
-      goto out;
+    va_start(ap, fmt);
+    result = vsprintf(str, fmt, ap);
+    va_end(ap);
+    if (result < 0) {
+        perror("vsprintf");
+        goto out;
     }
-  if (fwrite (str, sizeof (*str), result, stdout) != result)
-    {
-      perror ("fwrite");
-      result = -1;
+    if (fwrite(str, sizeof(*str), result, stdout) != result) {
+        perror("fwrite");
+        result = -1;
     }
 out:
-  return result;
+    return result;
 }

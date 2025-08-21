@@ -25,99 +25,97 @@
 static const char outname[] = OBJPFX "tst_putwc.temp";
 
 /* Prototype for our test function.  */
-int do_test (void);
+int do_test(void);
 #define TEST_FUNCTION do_test ()
 
 /* This defines the `main' function and some more.  */
 #include <test-skeleton.c>
 
-int
-do_test (void)
+int do_test(void)
 {
-  const wchar_t str[] = L"This is a test of putwc\n";
-  wchar_t buf[100];
-  size_t n = 0;
-  FILE *fp;
-  int res = 0;
+    const wchar_t str[] = L"This is a test of putwc\n";
+    wchar_t buf[100];
+    size_t n = 0;
+    FILE *fp;
+    int res = 0;
 
-  add_temp_file (outname);
+    add_temp_file(outname);
 
-  fp = fopen (outname, "w+");
-  if (fp == NULL)
-    error (EXIT_FAILURE, errno, "cannot open temporary file");
-
-  for (n = 0; str[n] != L'\0'; ++n)
-    putwc (str[n], fp);
-
-  /* First try reading after rewinding.  */
-  rewind (fp);
-
-  wmemset (buf, L'\0', sizeof (buf) / sizeof (buf[0]));
-  n = 0;
-  while (! feof (fp) && n < sizeof (buf) - 1)
-    {
-      buf[n] = getwc (fp);
-      if (buf[n] == WEOF)
-	break;
-      ++n;
-    }
-  buf[n] = L'\0';
-
-  if (wcscmp (buf, L"This is a test of putwc\n") != 0)
-    {
-      puts ("first comparison failed");
-      res = 1;
+    fp = fopen(outname, "w+");
+    if (fp == NULL) {
+        error(EXIT_FAILURE, errno, "cannot open temporary file");
     }
 
-  /* Now close the file, open it again, and read again.  */
-  if (fclose (fp) != 0)
-    {
-      printf ("failure during fclose: %m\n");
-      res = 1;
+    for (n = 0; str[n] != L'\0'; ++n) {
+        putwc(str[n], fp);
     }
 
-  fp = fopen (outname, "r");
-  if (fp == NULL)
-    {
-      printf ("cannot reopen file: %m\n");
-      return 1;
+    /* First try reading after rewinding.  */
+    rewind(fp);
+
+    wmemset(buf, L'\0', sizeof(buf) / sizeof(buf[0]));
+    n = 0;
+    while (! feof(fp) && n < sizeof(buf) - 1) {
+        buf[n] = getwc(fp);
+        if (buf[n] == WEOF) {
+            break;
+        }
+        ++n;
+    }
+    buf[n] = L'\0';
+
+    if (wcscmp(buf, L"This is a test of putwc\n") != 0) {
+        puts("first comparison failed");
+        res = 1;
     }
 
-  /* We can remove the file now.  */
-  remove (outname);
-
-  wmemset (buf, L'\0', sizeof (buf) / sizeof (buf[0]));
-  n = 0;
-  while (! feof (fp) && n < sizeof (buf) - 1)
-    {
-      buf[n] = getwc (fp);
-      if (buf[n] == WEOF)
-	break;
-      ++n;
-    }
-  buf[n] = L'\0';
-
-  if (wcscmp (buf, L"This is a test of putwc\n") != 0)
-    {
-      puts ("second comparison failed");
-      res = 1;
+    /* Now close the file, open it again, and read again.  */
+    if (fclose(fp) != 0) {
+        printf("failure during fclose: %m\n");
+        res = 1;
     }
 
-  if (fclose (fp) != 0)
-    {
-      printf ("failure during fclose: %m\n");
-      res = 1;
+    fp = fopen(outname, "r");
+    if (fp == NULL) {
+        printf("cannot reopen file: %m\n");
+        return 1;
     }
 
-  /* Next test: write a bit more than a few bytes.  */
-  fp = fopen (outname, "w");
-  if (fp == NULL)
-    error (EXIT_FAILURE, errno, "cannot open temporary file");
+    /* We can remove the file now.  */
+    remove(outname);
 
-  for (n = 0; n < 4098; ++n)
-    putwc (n & 255, fp);
+    wmemset(buf, L'\0', sizeof(buf) / sizeof(buf[0]));
+    n = 0;
+    while (! feof(fp) && n < sizeof(buf) - 1) {
+        buf[n] = getwc(fp);
+        if (buf[n] == WEOF) {
+            break;
+        }
+        ++n;
+    }
+    buf[n] = L'\0';
 
-  fclose (fp);
+    if (wcscmp(buf, L"This is a test of putwc\n") != 0) {
+        puts("second comparison failed");
+        res = 1;
+    }
 
-  return res;
+    if (fclose(fp) != 0) {
+        printf("failure during fclose: %m\n");
+        res = 1;
+    }
+
+    /* Next test: write a bit more than a few bytes.  */
+    fp = fopen(outname, "w");
+    if (fp == NULL) {
+        error(EXIT_FAILURE, errno, "cannot open temporary file");
+    }
+
+    for (n = 0; n < 4098; ++n) {
+        putwc(n & 255, fp);
+    }
+
+    fclose(fp);
+
+    return res;
 }

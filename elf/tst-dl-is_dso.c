@@ -20,16 +20,15 @@
 #include <gnu/lib-names.h>
 #include <support/check.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* Official ABI names.  */
-  TEST_VERIFY (_dl_is_dso (LIBC_SO));
-  TEST_VERIFY (_dl_is_dso (LD_SO));
-  /* Version-based names.  The version number does not matter.  */
-  TEST_VERIFY (_dl_is_dso ("libc-2.12.so"));
-  TEST_VERIFY (_dl_is_dso ("ld-2.12.so"));
-  return 0;
+    /* Official ABI names.  */
+    TEST_VERIFY(_dl_is_dso(LIBC_SO));
+    TEST_VERIFY(_dl_is_dso(LD_SO));
+    /* Version-based names.  The version number does not matter.  */
+    TEST_VERIFY(_dl_is_dso("libc-2.12.so"));
+    TEST_VERIFY(_dl_is_dso("ld-2.12.so"));
+    return 0;
 }
 
 #include <support/test-driver.c>

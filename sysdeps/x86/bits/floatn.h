@@ -28,12 +28,12 @@
    support, for x86_64 and x86.  Intel SYCL compiler doesn't support
    _Float128: https://github.com/intel/llvm/issues/16903
   */
-#if (defined __x86_64__							\
-     ? __GNUC_PREREQ (4, 3)						\
+#if (defined __x86_64__                         \
+     ? __GNUC_PREREQ (4, 3)                     \
      : (defined __GNU__ ? __GNUC_PREREQ (4, 5) : __GNUC_PREREQ (4, 4))) \
-    || (__glibc_clang_prereq (3, 9)					\
-	&& (!defined __INTEL_LLVM_COMPILER				\
-	    || !defined SYCL_LANGUAGE_VERSION))
+    || (__glibc_clang_prereq (3, 9)                 \
+    && (!defined __INTEL_LLVM_COMPILER              \
+        || !defined SYCL_LANGUAGE_VERSION))
 # define __HAVE_FLOAT128 1
 #else
 # define __HAVE_FLOAT128 0
@@ -80,7 +80,7 @@
       || defined __clang__
 /* Add a typedef for older GCC compilers which don't natively support
    _Complex _Float128.  */
-typedef _Complex float __cfloat128 __attribute__ ((__mode__ (__TC__)));
+typedef _Complex float __cfloat128 __attribute__((__mode__(__TC__)));
 #   define __CFLOAT128 __cfloat128
 #  else
 #   define __CFLOAT128 _Complex _Float128

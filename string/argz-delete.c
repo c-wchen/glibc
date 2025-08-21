@@ -21,20 +21,18 @@
 #include <stdlib.h>
 
 /* Delete ENTRY from ARGZ & ARGZ_LEN, if any.  */
-void
-argz_delete (char **argz, size_t *argz_len, char *entry)
+void argz_delete(char **argz, size_t *argz_len, char *entry)
 {
-  if (entry)
-    /* Get rid of the old value for NAME.  */
+    if (entry)
+        /* Get rid of the old value for NAME.  */
     {
-      size_t entry_len = strlen (entry) + 1;
-      *argz_len -= entry_len;
-      memmove (entry, entry + entry_len, *argz_len - (entry - *argz));
-      if (*argz_len == 0)
-	{
-	  free (*argz);
-	  *argz = NULL;
-	}
+        size_t entry_len = strlen(entry) + 1;
+        *argz_len -= entry_len;
+        memmove(entry, entry + entry_len, *argz_len - (entry - *argz));
+        if (*argz_len == 0) {
+            free(*argz);
+            *argz = NULL;
+        }
     }
 }
-libc_hidden_def (argz_delete)
+libc_hidden_def(argz_delete)

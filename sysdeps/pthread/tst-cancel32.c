@@ -28,46 +28,45 @@
 #define NITER     1000
 #define NTHREADS     8
 
-static void
-tf_cleanup (void *arg)
+static void tf_cleanup(void *arg)
 {
 }
 
-static void *
-tf (void *closure)
+static void *tf(void *closure)
 {
-  pthread_cleanup_push (tf_cleanup, NULL);
-  for (;;)
-    {
-      /* The only possible failure for pthread_setcanceltype is an
-	 invalid state type.  */
-      pthread_setcanceltype (PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
-      pthread_setcanceltype (PTHREAD_CANCEL_DEFERRED, NULL);
+    pthread_cleanup_push(tf_cleanup, NULL);
+    for (;;) {
+        /* The only possible failure for pthread_setcanceltype is an
+        invalid state type.  */
+        pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
+        pthread_setcanceltype(PTHREAD_CANCEL_DEFERRED, NULL);
     }
-  pthread_cleanup_pop (1);
+    pthread_cleanup_pop(1);
 
-  return NULL;
+    return NULL;
 }
 
-static void
-poll_threads (int nthreads)
+static void poll_threads(int nthreads)
 {
-  pthread_t thr[nthreads];
-  for (int i = 0; i < nthreads; i++)
-    thr[i] = xpthread_create (NULL, tf, NULL);
-  for (int i = 0; i < nthreads; i++)
-    xpthread_cancel (thr[i]);
-  for (int i = 0; i < nthreads; i++)
-    xpthread_join (thr[i]);
+    pthread_t thr[nthreads];
+    for (int i = 0; i < nthreads; i++) {
+        thr[i] = xpthread_create(NULL, tf, NULL);
+    }
+    for (int i = 0; i < nthreads; i++) {
+        xpthread_cancel(thr[i]);
+    }
+    for (int i = 0; i < nthreads; i++) {
+        xpthread_join(thr[i]);
+    }
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  for (int k = 0; k < NITER; k++)
-    poll_threads (NTHREADS);
+    for (int k = 0; k < NITER; k++) {
+        poll_threads(NTHREADS);
+    }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

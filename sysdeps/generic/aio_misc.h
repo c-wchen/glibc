@@ -16,33 +16,30 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _AIO_MISC_H
-#define _AIO_MISC_H	1
+#define _AIO_MISC_H 1
 
 #include <aio.h>
 #include <pthread.h>
 
 
 /* Extend the operation enum.  */
-enum
-{
-  LIO_DSYNC = LIO_NOP + 1,
-  LIO_SYNC,
-  LIO_READ64 = LIO_READ | 128,
-  LIO_WRITE64 = LIO_WRITE | 128
+enum {
+    LIO_DSYNC = LIO_NOP + 1,
+    LIO_SYNC,
+    LIO_READ64 = LIO_READ | 128,
+    LIO_WRITE64 = LIO_WRITE | 128
 };
 
 
 /* Union of the two request types.  */
-typedef union
-  {
+typedef union {
     struct aiocb aiocb;
     struct aiocb64 aiocb64;
-  } aiocb_union;
+} aiocb_union;
 
 
 /* Used to synchronize.  */
-struct waitlist
-  {
+struct waitlist {
     struct waitlist *next;
 
     /* The next two fields is used in synchronous `lio_listio' operations.  */
@@ -54,23 +51,21 @@ struct waitlist
     volatile unsigned int *counterp;
     /* The next field is used in asynchronous `lio_listio' operations.  */
     struct sigevent *sigevp;
-  };
+};
 
 
 /* Status of a request.  */
-enum
-{
-  no,
-  queued,
-  yes,
-  allocated,
-  done
+enum {
+    no,
+    queued,
+    yes,
+    allocated,
+    done
 };
 
 
 /* Used to queue requests..  */
-struct requestlist
-  {
+struct requestlist {
     int running;
 
     struct requestlist *last_fd;
@@ -83,7 +78,7 @@ struct requestlist
 
     /* List of waiting processes.  */
     struct waitlist *waiting;
-  };
+};
 
 
 /* Lock for global I/O list of requests.  */
@@ -91,32 +86,32 @@ extern pthread_mutex_t __aio_requests_mutex attribute_hidden;
 
 
 /* Enqueue request.  */
-extern struct requestlist *__aio_enqueue_request (aiocb_union *aiocbp,
-						  int operation)
-  attribute_hidden;
+extern struct requestlist *__aio_enqueue_request(aiocb_union *aiocbp,
+        int operation)
+attribute_hidden;
 
 /* Find request entry for given AIO control block.  */
-extern struct requestlist *__aio_find_req (aiocb_union *elem) attribute_hidden;
+extern struct requestlist *__aio_find_req(aiocb_union *elem) attribute_hidden;
 
 /* Find request entry for given file descriptor.  */
-extern struct requestlist *__aio_find_req_fd (int fildes) attribute_hidden;
+extern struct requestlist *__aio_find_req_fd(int fildes) attribute_hidden;
 
 /* Remove request from the list.  */
-extern void __aio_remove_request (struct requestlist *last,
-				  struct requestlist *req, int all)
-  attribute_hidden;
+extern void __aio_remove_request(struct requestlist *last,
+                                 struct requestlist *req, int all)
+attribute_hidden;
 
 /* Release the entry for the request.  */
-extern void __aio_free_request (struct requestlist *req) attribute_hidden;
+extern void __aio_free_request(struct requestlist *req) attribute_hidden;
 
 /* Notify initiator of request and tell this everybody listening.  */
-extern void __aio_notify (struct requestlist *req) attribute_hidden;
+extern void __aio_notify(struct requestlist *req) attribute_hidden;
 
 /* Notify initiator of request.  */
-extern int __aio_notify_only (struct sigevent *sigev) attribute_hidden;
+extern int __aio_notify_only(struct sigevent *sigev) attribute_hidden;
 
 /* Send the signal.  */
-extern int __aio_sigqueue (int sig, const union sigval val, pid_t caller_pid)
-  attribute_hidden;
+extern int __aio_sigqueue(int sig, const union sigval val, pid_t caller_pid)
+attribute_hidden;
 
 #endif /* aio_misc.h */

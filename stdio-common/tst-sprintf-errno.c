@@ -24,80 +24,79 @@
 
 /* GCC does not yet know about the %#m specifier.  */
 DIAG_PUSH_NEEDS_COMMENT;
-DIAG_IGNORE_NEEDS_COMMENT_GCC (11, "-Wformat=");
+DIAG_IGNORE_NEEDS_COMMENT_GCC(11, "-Wformat=");
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char buf[64];
+    char buf[64];
 
-  errno = EINVAL;
-  TEST_COMPARE (sprintf (buf, "%m"), 16);
-  TEST_COMPARE_STRING (buf, "Invalid argument");
+    errno = EINVAL;
+    TEST_COMPARE(sprintf(buf, "%m"), 16);
+    TEST_COMPARE_STRING(buf, "Invalid argument");
 
-  errno = EINVAL;
-  TEST_COMPARE (sprintf (buf, "%#m"), 6);
-  TEST_COMPARE_STRING (buf, "EINVAL");
+    errno = EINVAL;
+    TEST_COMPARE(sprintf(buf, "%#m"), 6);
+    TEST_COMPARE_STRING(buf, "EINVAL");
 
-  errno = 0;
-  TEST_COMPARE (sprintf (buf, "%m"), 7);
-  TEST_COMPARE_STRING (buf, "Success");
+    errno = 0;
+    TEST_COMPARE(sprintf(buf, "%m"), 7);
+    TEST_COMPARE_STRING(buf, "Success");
 
-  errno = 0;
-  TEST_COMPARE (sprintf (buf, "%#m"), 1);
-  TEST_COMPARE_STRING (buf, "0");
+    errno = 0;
+    TEST_COMPARE(sprintf(buf, "%#m"), 1);
+    TEST_COMPARE_STRING(buf, "0");
 
-  errno = -1;
+    errno = -1;
 #ifdef __GNU__
-  TEST_COMPARE (sprintf (buf, "%m"), 39);
-  TEST_COMPARE_STRING (buf, "Error in unknown error system: FFFFFFFF");
+    TEST_COMPARE(sprintf(buf, "%m"), 39);
+    TEST_COMPARE_STRING(buf, "Error in unknown error system: FFFFFFFF");
 #else
-  TEST_COMPARE (sprintf (buf, "%m"), 16);
-  TEST_COMPARE_STRING (buf, "Unknown error -1");
+    TEST_COMPARE(sprintf(buf, "%m"), 16);
+    TEST_COMPARE_STRING(buf, "Unknown error -1");
 #endif
 
-  errno = -1;
-  TEST_COMPARE (sprintf (buf, "%#m"), 2);
-  TEST_COMPARE_STRING (buf, "-1");
+    errno = -1;
+    TEST_COMPARE(sprintf(buf, "%#m"), 2);
+    TEST_COMPARE_STRING(buf, "-1");
 
-  errno = 1002003;
+    errno = 1002003;
 #ifdef __GNU__
-  TEST_COMPARE (sprintf (buf, "%m"), 42);
-  TEST_COMPARE_STRING (buf, "(system kern) error with unknown subsystem");
+    TEST_COMPARE(sprintf(buf, "%m"), 42);
+    TEST_COMPARE_STRING(buf, "(system kern) error with unknown subsystem");
 #else
-  TEST_COMPARE (sprintf (buf, "%m"), 21);
-  TEST_COMPARE_STRING (buf, "Unknown error 1002003");
+    TEST_COMPARE(sprintf(buf, "%m"), 21);
+    TEST_COMPARE_STRING(buf, "Unknown error 1002003");
 #endif
 
-  errno = 1002003;
-  TEST_COMPARE (sprintf (buf, "%#m"), 7);
-  TEST_COMPARE_STRING (buf, "1002003");
+    errno = 1002003;
+    TEST_COMPARE(sprintf(buf, "%#m"), 7);
+    TEST_COMPARE_STRING(buf, "1002003");
 
-  errno = EINVAL;
-  TEST_COMPARE (sprintf (buf, "%20m"), 20);
-  TEST_COMPARE_STRING (buf, "    Invalid argument");
+    errno = EINVAL;
+    TEST_COMPARE(sprintf(buf, "%20m"), 20);
+    TEST_COMPARE_STRING(buf, "    Invalid argument");
 
-  errno = EINVAL;
-  TEST_COMPARE (sprintf (buf, "%#20m"), 20);
-  TEST_COMPARE_STRING (buf, "              EINVAL");
+    errno = EINVAL;
+    TEST_COMPARE(sprintf(buf, "%#20m"), 20);
+    TEST_COMPARE_STRING(buf, "              EINVAL");
 
-  errno = EINVAL;
-  TEST_COMPARE (sprintf (buf, "%-20m"), 20);
-  TEST_COMPARE_STRING (buf, "Invalid argument    ");
+    errno = EINVAL;
+    TEST_COMPARE(sprintf(buf, "%-20m"), 20);
+    TEST_COMPARE_STRING(buf, "Invalid argument    ");
 
-  errno = EINVAL;
-  TEST_COMPARE (sprintf (buf, "%-#20m"), 20);
-  TEST_COMPARE_STRING (buf, "EINVAL              ");
+    errno = EINVAL;
+    TEST_COMPARE(sprintf(buf, "%-#20m"), 20);
+    TEST_COMPARE_STRING(buf, "EINVAL              ");
 
-  errno = 0;
-  TEST_COMPARE (sprintf (buf, "%-20m"), 20);
-  TEST_COMPARE_STRING (buf, "Success             ");
+    errno = 0;
+    TEST_COMPARE(sprintf(buf, "%-20m"), 20);
+    TEST_COMPARE_STRING(buf, "Success             ");
 
-  errno = 0;
-  TEST_COMPARE (sprintf (buf, "%-#20m"), 20);
-  TEST_COMPARE_STRING (buf, "0                   ");
+    errno = 0;
+    TEST_COMPARE(sprintf(buf, "%-#20m"), 20);
+    TEST_COMPARE_STRING(buf, "0                   ");
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

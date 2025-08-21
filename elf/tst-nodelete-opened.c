@@ -21,48 +21,42 @@
 #include <dlfcn.h>
 #include <stdio.h>
 
-int
-do_test (void)
+int do_test(void)
 {
-  void *h1 = dlopen ("$ORIGIN/tst-nodelete-opened-lib.so", RTLD_LAZY);
-  if (h1 == NULL)
-    {
-      printf ("h1: failed to open DSO: %s\n", dlerror ());
-      return 1;
+    void *h1 = dlopen("$ORIGIN/tst-nodelete-opened-lib.so", RTLD_LAZY);
+    if (h1 == NULL) {
+        printf("h1: failed to open DSO: %s\n", dlerror());
+        return 1;
     }
 
-  void *h2 = dlopen ("$ORIGIN/tst-nodelete-opened-lib.so",
-		     RTLD_LAZY | RTLD_NODELETE);
-  if (h2 == NULL)
-    {
-      printf ("h2: failed to open DSO: %s\n", dlerror ());
-      return 1;
+    void *h2 = dlopen("$ORIGIN/tst-nodelete-opened-lib.so",
+                      RTLD_LAZY | RTLD_NODELETE);
+    if (h2 == NULL) {
+        printf("h2: failed to open DSO: %s\n", dlerror());
+        return 1;
     }
 
-  int *foo = dlsym (h2, "foo_var");
-  if (foo == NULL)
-    {
-      printf ("failed to load symbol foo_var: %s\n", dlerror ());
-      return 1;
+    int *foo = dlsym(h2, "foo_var");
+    if (foo == NULL) {
+        printf("failed to load symbol foo_var: %s\n", dlerror());
+        return 1;
     }
 
-  if (dlclose (h1) != 0)
-    {
-      printf ("h1: dlclose failed: %s\n", dlerror ());
-      return 1;
+    if (dlclose(h1) != 0) {
+        printf("h1: dlclose failed: %s\n", dlerror());
+        return 1;
     }
 
-  if (dlclose (h2) != 0)
-    {
-      printf ("h2: dlclose failed: %s\n", dlerror ());
-      return 1;
+    if (dlclose(h2) != 0) {
+        printf("h2: dlclose failed: %s\n", dlerror());
+        return 1;
     }
 
-  /* This FOO dereference will crash with a segfault if the DSO was
-     unloaded.  */
-  printf ("foo == %d\n", *foo);
+    /* This FOO dereference will crash with a segfault if the DSO was
+       unloaded.  */
+    printf("foo == %d\n", *foo);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -18,13 +18,12 @@
 #include <sys/socket.h>
 #include <socketcall.h>
 
-int
-__bind (int fd, __CONST_SOCKADDR_ARG addr, socklen_t len)
+int __bind(int fd, __CONST_SOCKADDR_ARG addr, socklen_t len)
 {
 #ifdef __ASSUME_BIND_SYSCALL
-  return INLINE_SYSCALL_CALL (bind, fd, addr.__sockaddr__, len);
+    return INLINE_SYSCALL_CALL(bind, fd, addr.__sockaddr__, len);
 #else
-  return SOCKETCALL (bind, fd, addr.__sockaddr__, len, 0, 0, 0);
+    return SOCKETCALL(bind, fd, addr.__sockaddr__, len, 0, 0, 0);
 #endif
 }
-weak_alias (__bind, bind)
+weak_alias(__bind, bind)

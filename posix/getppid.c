@@ -20,12 +20,11 @@
 
 
 /* Get the parent process ID of the calling process.  */
-int
-__getppid (void)
+int __getppid(void)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (getppid)
+stub_warning(getppid)
 
-weak_alias (__getppid, getppid)
+weak_alias(__getppid, getppid)

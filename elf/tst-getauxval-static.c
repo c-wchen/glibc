@@ -23,44 +23,42 @@
 #include <support/xdlfcn.h>
 #include <sys/auxv.h>
 
-unsigned long getauxval_wrapper (unsigned long type, int *errnop);
+unsigned long getauxval_wrapper(unsigned long type, int *errnop);
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  unsigned long outer_random = getauxval (AT_RANDOM);
-  if (outer_random == 0)
-    FAIL_UNSUPPORTED ("getauxval does not support AT_RANDOM");
+    unsigned long outer_random = getauxval(AT_RANDOM);
+    if (outer_random == 0) {
+        FAIL_UNSUPPORTED("getauxval does not support AT_RANDOM");
+    }
 
-  unsigned long missing_auxv_type;
-  for (missing_auxv_type = AT_RANDOM + 1; ; ++missing_auxv_type)
-    {
-      errno = 0;
-      if (getauxval (missing_auxv_type) == 0 && errno != 0)
-        {
-          TEST_COMPARE (errno, ENOENT);
-          break;
+    unsigned long missing_auxv_type;
+    for (missing_auxv_type = AT_RANDOM + 1; ; ++missing_auxv_type) {
+        errno = 0;
+        if (getauxval(missing_auxv_type) == 0 && errno != 0) {
+            TEST_COMPARE(errno, ENOENT);
+            break;
         }
     }
-  printf ("info: first missing type: %lu\n", missing_auxv_type);
+    printf("info: first missing type: %lu\n", missing_auxv_type);
 
-  void *handle = xdlopen ("tst-auxvalmod.so", RTLD_LAZY);
-  void *ptr = xdlsym (handle, "getauxval_wrapper");
+    void *handle = xdlopen("tst-auxvalmod.so", RTLD_LAZY);
+    void *ptr = xdlsym(handle, "getauxval_wrapper");
 
-  __typeof__ (getauxval_wrapper) *wrapper = ptr;
-  int inner_errno = 0;
-  unsigned long inner_random = wrapper (AT_RANDOM, &inner_errno);
-  TEST_COMPARE (outer_random, inner_random);
+    __typeof__(getauxval_wrapper) *wrapper = ptr;
+    int inner_errno = 0;
+    unsigned long inner_random = wrapper(AT_RANDOM, &inner_errno);
+    TEST_COMPARE(outer_random, inner_random);
 
-  inner_errno = 0;
-  TEST_COMPARE (wrapper (missing_auxv_type, &inner_errno), 0);
-  TEST_COMPARE (inner_errno, ENOENT);
+    inner_errno = 0;
+    TEST_COMPARE(wrapper(missing_auxv_type, &inner_errno), 0);
+    TEST_COMPARE(inner_errno, ENOENT);
 
-  TEST_COMPARE (getauxval (AT_HWCAP), wrapper (AT_HWCAP, &inner_errno));
-  TEST_COMPARE (getauxval (AT_HWCAP2), wrapper (AT_HWCAP2, &inner_errno));
+    TEST_COMPARE(getauxval(AT_HWCAP), wrapper(AT_HWCAP, &inner_errno));
+    TEST_COMPARE(getauxval(AT_HWCAP2), wrapper(AT_HWCAP2, &inner_errno));
 
-  xdlclose (handle);
-  return 0;
+    xdlclose(handle);
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -21,42 +21,40 @@
 #include <support/check.h>
 #include <support/xthread.h>
 
-static void *
-tf (void *arg)
+static void *tf(void *arg)
 {
-  {
-    sigset_t set;
-    sigemptyset (&set);
-    TEST_COMPARE (pthread_sigmask (SIG_BLOCK, 0, &set), 0);
-    TEST_COMPARE (sigisemptyset (&set), 1);
-  }
+    {
+        sigset_t set;
+        sigemptyset(&set);
+        TEST_COMPARE(pthread_sigmask(SIG_BLOCK, 0, &set), 0);
+        TEST_COMPARE(sigisemptyset(&set), 1);
+    }
 
-  {
-    sigset_t set;
-    sigfillset (&set);
-    TEST_COMPARE (pthread_sigmask (SIG_BLOCK, 0, &set), 0);
-    TEST_COMPARE (sigisemptyset (&set), 1);
-  }
+    {
+        sigset_t set;
+        sigfillset(&set);
+        TEST_COMPARE(pthread_sigmask(SIG_BLOCK, 0, &set), 0);
+        TEST_COMPARE(sigisemptyset(&set), 1);
+    }
 
-  return NULL;
+    return NULL;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* Ensure current SIG_BLOCK mask empty.  */
-  {
-    sigset_t set;
-    sigemptyset (&set);
-    TEST_COMPARE (sigprocmask (SIG_BLOCK, &set, 0), 0);
-  }
+    /* Ensure current SIG_BLOCK mask empty.  */
+    {
+        sigset_t set;
+        sigemptyset(&set);
+        TEST_COMPARE(sigprocmask(SIG_BLOCK, &set, 0), 0);
+    }
 
-  {
-    pthread_t thr = xpthread_create (NULL, tf, NULL);
-    xpthread_join (thr);
-  }
+    {
+        pthread_t thr = xpthread_create(NULL, tf, NULL);
+        xpthread_join(thr);
+    }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -19,49 +19,44 @@
 #include <hurd/signal.h>
 #include <assert.h>
 
-void
-hurd_preempt_signals (struct hurd_signal_preemptor *preemptor)
+void hurd_preempt_signals(struct hurd_signal_preemptor *preemptor)
 {
-  __mutex_lock (&_hurd_siglock);
-  preemptor->next = _hurdsig_preemptors;
-  _hurdsig_preemptors = preemptor;
-  _hurdsig_preempted_set |= preemptor->signals;
-  __mutex_unlock (&_hurd_siglock);
+    __mutex_lock(&_hurd_siglock);
+    preemptor->next = _hurdsig_preemptors;
+    _hurdsig_preemptors = preemptor;
+    _hurdsig_preempted_set |= preemptor->signals;
+    __mutex_unlock(&_hurd_siglock);
 }
 
-void
-hurd_unpreempt_signals (struct hurd_signal_preemptor *preemptor)
+void hurd_unpreempt_signals(struct hurd_signal_preemptor *preemptor)
 {
-  struct hurd_signal_preemptor **p;
-  sigset_t preempted = 0;
+    struct hurd_signal_preemptor **p;
+    sigset_t preempted = 0;
 
-  __mutex_lock (&_hurd_siglock);
+    __mutex_lock(&_hurd_siglock);
 
-  p = &_hurdsig_preemptors;
-  while (*p)
-    if (*p == preemptor)
-      {
-	/* Found it; take it off the chain.  */
-	*p = (*p)->next;
-	if ((preemptor->signals & preempted) != preemptor->signals)
-	  {
-	    /* This might have been the only preemptor for some
-	       of those signals, so we must collect the full mask
-	       from the others.  */
-	    struct hurd_signal_preemptor *pp;
-	    for (pp = *p; pp; pp = pp->next)
-	      preempted |= pp->signals;
-	    _hurdsig_preempted_set = preempted;
-	  }
-	__mutex_unlock (&_hurd_siglock);
-	return;
-      }
-    else
-      {
-	preempted |= (*p)->signals;
-	p = &(*p)->next;
-      }
+    p = &_hurdsig_preemptors;
+    while (*p)
+        if (*p == preemptor) {
+            /* Found it; take it off the chain.  */
+            *p = (*p)->next;
+            if ((preemptor->signals & preempted) != preemptor->signals) {
+                /* This might have been the only preemptor for some
+                   of those signals, so we must collect the full mask
+                   from the others.  */
+                struct hurd_signal_preemptor *pp;
+                for (pp = *p; pp; pp = pp->next) {
+                    preempted |= pp->signals;
+                }
+                _hurdsig_preempted_set = preempted;
+            }
+            __mutex_unlock(&_hurd_siglock);
+            return;
+        } else {
+            preempted |= (*p)->signals;
+            p = &(*p)->next;
+        }
 
-  __mutex_unlock (&_hurd_siglock); /* Avoid deadlock during death rattle.  */
-  assert (! "removing absent preemptor");
+    __mutex_unlock(&_hurd_siglock);  /* Avoid deadlock during death rattle.  */
+    assert(! "removing absent preemptor");
 }

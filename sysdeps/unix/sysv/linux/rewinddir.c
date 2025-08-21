@@ -22,20 +22,19 @@
 #include <dirstream.h>
 
 /* Rewind DIRP to the beginning of the directory.  */
-void
-__rewinddir (DIR *dirp)
+void __rewinddir(DIR *dirp)
 {
 #if IS_IN (libc)
-  __libc_lock_lock (dirp->lock);
+    __libc_lock_lock(dirp->lock);
 #endif
-  (void) __lseek (dirp->fd, (off_t) 0, SEEK_SET);
-  dirp->filepos = 0;
-  dirp->offset = 0;
-  dirp->size = 0;
-  dirp->errcode = 0;
+    (void) __lseek(dirp->fd, (off_t) 0, SEEK_SET);
+    dirp->filepos = 0;
+    dirp->offset = 0;
+    dirp->size = 0;
+    dirp->errcode = 0;
 #if IS_IN (libc)
-  __libc_lock_unlock (dirp->lock);
+    __libc_lock_unlock(dirp->lock);
 #endif
 }
-libc_hidden_def (__rewinddir)
-weak_alias (__rewinddir, rewinddir)
+libc_hidden_def(__rewinddir)
+weak_alias(__rewinddir, rewinddir)

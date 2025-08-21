@@ -57,19 +57,19 @@
 #define GAMMA_ALIAS (USE_AS_COMPAT ? HAVE_LGAMMA_COMPAT : !HAVE_LGAMMA_COMPAT)
 
 /* How to call the underlying lgamma_r function.  */
-#define CALL_LGAMMA(TYPE, FUNC, ARG)			\
-  ({							\
-    TYPE lgamma_tmp;					\
-    int local_signgam;					\
-    if (USE_AS_COMPAT)					\
-      {							\
-	lgamma_tmp = FUNC ((ARG), &local_signgam);	\
-	if (_LIB_VERSION != _ISOC_)			\
-	  signgam = __signgam = local_signgam;		\
-      }							\
-    else						\
-      lgamma_tmp = FUNC ((ARG), &__signgam);		\
-    lgamma_tmp;						\
+#define CALL_LGAMMA(TYPE, FUNC, ARG)            \
+  ({                            \
+    TYPE lgamma_tmp;                    \
+    int local_signgam;                  \
+    if (USE_AS_COMPAT)                  \
+      {                         \
+    lgamma_tmp = FUNC ((ARG), &local_signgam);  \
+    if (_LIB_VERSION != _ISOC_)         \
+      signgam = __signgam = local_signgam;      \
+      }                         \
+    else                        \
+      lgamma_tmp = FUNC ((ARG), &__signgam);        \
+    lgamma_tmp;                     \
   })
 
 #endif /* lgamma-compat.h.  */

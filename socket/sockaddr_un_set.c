@@ -21,21 +21,19 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 
-int
-__sockaddr_un_set (struct sockaddr_un *addr, const char *pathname)
+int __sockaddr_un_set(struct sockaddr_un *addr, const char *pathname)
 {
-  size_t name_length = strlen (pathname);
+    size_t name_length = strlen(pathname);
 
-  /* The kernel supports names of exactly sizeof (addr->sun_path)
-     bytes, without a null terminator, but userspace does not; see the
-     SUN_LEN macro.  */
-  if (name_length >= sizeof (addr->sun_path))
-    {
-      __set_errno (EINVAL);     /* Error code used by the kernel.  */
-      return -1;
+    /* The kernel supports names of exactly sizeof (addr->sun_path)
+       bytes, without a null terminator, but userspace does not; see the
+       SUN_LEN macro.  */
+    if (name_length >= sizeof(addr->sun_path)) {
+        __set_errno(EINVAL);      /* Error code used by the kernel.  */
+        return -1;
     }
 
-  addr->sun_family = AF_UNIX;
-  memcpy (addr->sun_path, pathname, name_length + 1);
-  return 0;
+    addr->sun_family = AF_UNIX;
+    memcpy(addr->sun_path, pathname, name_length + 1);
+    return 0;
 }

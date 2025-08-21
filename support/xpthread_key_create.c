@@ -17,12 +17,11 @@
 
 #include <support/xthread.h>
 
-pthread_key_t
-xpthread_key_create (void (*destr_function) (void *))
+pthread_key_t xpthread_key_create(void (*destr_function)(void *))
 {
-  pthread_key_t key;
+    pthread_key_t key;
 
-  xpthread_check_return ("pthread_key_create",
-                         pthread_key_create (&key, destr_function));
-  return key;
+    xpthread_check_return("pthread_key_create",
+                          pthread_key_create(&key, destr_function));
+    return key;
 }

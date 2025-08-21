@@ -21,10 +21,9 @@
 /* This routine is jumped to by all the syscall handlers, to stash
    an error number into errno.  ERROR is the negative error number
    returned from the x86 kernel.  */
-int
-__attribute__ ((__regparm__ (1)))
-__syscall_error (int error)
+int __attribute__((__regparm__(1)))
+__syscall_error(int error)
 {
-  __set_errno (-error);
-  return -1;
+    __set_errno(-error);
+    return -1;
 }

@@ -32,29 +32,31 @@
 #define m81(func) __m81_u(s(func))
 
 float_type
-s(__ieee754_scalb) (float_type x, float_type fn)
+s(__ieee754_scalb)(float_type x, float_type fn)
 {
-  float_type retval;
-  unsigned long x_cond = __m81_test (x);
-  unsigned long fn_cond = __m81_test (fn);
+    float_type retval;
+    unsigned long x_cond = __m81_test(x);
+    unsigned long fn_cond = __m81_test(fn);
 
-  if ((x_cond | fn_cond) & __M81_COND_NAN)
-    return x * fn;
-
-  if (fn_cond & __M81_COND_INF)
-    {
-      if (!(fn_cond & __M81_COND_NEG))
-	return x * fn;
-      else if (x_cond & __M81_COND_ZERO)
-	return x;
-      else
-	return x / -fn;
+    if ((x_cond | fn_cond) & __M81_COND_NAN) {
+        return x * fn;
     }
 
-  if (m81(__rint) (fn) != fn)
-    return (x - x) / (x - x);
+    if (fn_cond & __M81_COND_INF) {
+        if (!(fn_cond & __M81_COND_NEG)) {
+            return x * fn;
+        } else if (x_cond & __M81_COND_ZERO) {
+            return x;
+        } else {
+            return x / -fn;
+        }
+    }
 
-  __asm ("fscale%.x %1, %0" : "=f" (retval) : "f" (fn), "0" (x));
-  return retval;
+    if (m81(__rint)(fn) != fn) {
+        return (x - x) / (x - x);
+    }
+
+    __asm("fscale%.x %1, %0" : "=f"(retval) : "f"(fn), "0"(x));
+    return retval;
 }
-libm_alias_finite (s(__ieee754_scalb), s (__scalb))
+libm_alias_finite(s(__ieee754_scalb), s(__scalb))

@@ -21,29 +21,26 @@
 #include <string.h>
 #include <time.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int result = 0;
+    int result = 0;
 
-  setenv ("TZ", TZDEFRULES, 1);
-  tzset ();
-  const char *stdtz = strdup (tzname[0]);
-  setenv ("TZ", "STD-1DST", 1);
-  tzset ();
-  if (strcmp (tzname[0], "STD") != 0)
-    {
-      printf ("FAIL: TZ=STD-1DST, tzname[0] = %s\n", tzname[0]);
-      result = 1;
+    setenv("TZ", TZDEFRULES, 1);
+    tzset();
+    const char *stdtz = strdup(tzname[0]);
+    setenv("TZ", "STD-1DST", 1);
+    tzset();
+    if (strcmp(tzname[0], "STD") != 0) {
+        printf("FAIL: TZ=STD-1DST, tzname[0] = %s\n", tzname[0]);
+        result = 1;
     }
-  setenv ("TZ", TZDEFRULES, 1);
-  tzset ();
-  if (strcmp (tzname[0], stdtz) != 0)
-    {
-      printf ("FAIL: TZ=%s, tzname[0] = %s\n", TZDEFRULES, tzname[0]);
-      result = 1;
+    setenv("TZ", TZDEFRULES, 1);
+    tzset();
+    if (strcmp(tzname[0], stdtz) != 0) {
+        printf("FAIL: TZ=%s, tzname[0] = %s\n", TZDEFRULES, tzname[0]);
+        result = 1;
     }
-  return result;
+    return result;
 }
 
 #define TEST_FUNCTION do_test ()

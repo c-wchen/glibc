@@ -21,14 +21,14 @@
 # include <math.h>
 # include <libm-alias-finite.h>
 
-extern double __redirect_ieee754_pow (double, double);
+extern double __redirect_ieee754_pow(double, double);
 
 # define SYMBOL_NAME ieee754_pow
 # include "ifunc-fma4.h"
 
-libc_ifunc_redirected (__redirect_ieee754_pow,
-		       __ieee754_pow, IFUNC_SELECTOR ());
-libm_alias_finite (__ieee754_pow, __pow)
+libc_ifunc_redirected(__redirect_ieee754_pow,
+                      __ieee754_pow, IFUNC_SELECTOR());
+libm_alias_finite(__ieee754_pow, __pow)
 
 # define __pow __ieee754_pow_sse2
 #endif

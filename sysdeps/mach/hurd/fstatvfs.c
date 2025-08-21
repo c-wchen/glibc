@@ -18,11 +18,10 @@
 #include <sys/statfs.h>
 #include <sys/statvfs.h>
 
-int
-fstatvfs (int fd, struct statvfs *buf)
+int fstatvfs(int fd, struct statvfs *buf)
 {
-  /* `struct statvfs' is in fact identical to `struct statfs' so we
-     can simply call fstatfs.  */
-  return __fstatfs (fd, (struct statfs *)buf);
+    /* `struct statvfs' is in fact identical to `struct statfs' so we
+       can simply call fstatfs.  */
+    return __fstatfs(fd, (struct statfs *)buf);
 }
-libc_hidden_def (fstatvfs)
+libc_hidden_def(fstatvfs)

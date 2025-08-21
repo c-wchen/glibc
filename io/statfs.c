@@ -21,13 +21,12 @@
 #include <stddef.h>
 
 /* Return information about the filesystem on which FILE resides.  */
-int
-__statfs (const char *file, struct statfs *buf)
+int __statfs(const char *file, struct statfs *buf)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (__statfs)
-weak_alias (__statfs, statfs)
+libc_hidden_def(__statfs)
+weak_alias(__statfs, statfs)
 
-stub_warning (statfs)
+stub_warning(statfs)

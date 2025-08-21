@@ -25,58 +25,52 @@
 static int nrunning = 1;
 
 
-static void
-final_test (void)
+static void final_test(void)
 {
-  puts ("final_test has been called");
+    puts("final_test has been called");
 
 #define THE_SIGNAL SIGUSR1
-  kill (getpid (), SIGUSR1);
+    kill(getpid(), SIGUSR1);
 }
 
 
-static void *
-tf (void *a)
+static void *tf(void *a)
 {
-  if (pthread_join ((pthread_t) a, NULL) != 0)
-    {
-      printf ("join failed while %d are running\n", nrunning);
-      _exit (1);
+    if (pthread_join((pthread_t) a, NULL) != 0) {
+        printf("join failed while %d are running\n", nrunning);
+        _exit(1);
     }
 
-  printf ("%2d left\n", --nrunning);
+    printf("%2d left\n", --nrunning);
 
-  return NULL;
+    return NULL;
 }
 
 
-int
-do_test (void)
+int do_test(void)
 {
 #define N 20
-  pthread_t t[N];
-  pthread_t last = pthread_self ();
-  int i;
+    pthread_t t[N];
+    pthread_t last = pthread_self();
+    int i;
 
-  atexit (final_test);
+    atexit(final_test);
 
-  printf ("starting %d + 1 threads\n", N);
-  for (i = 0; i < N; ++i)
-    {
-      if (pthread_create (&t[i], NULL, tf, (void *) last) != 0)
-	{
-	  puts ("create failed");
-	  _exit (1);
-	}
+    printf("starting %d + 1 threads\n", N);
+    for (i = 0; i < N; ++i) {
+        if (pthread_create(&t[i], NULL, tf, (void *) last) != 0) {
+            puts("create failed");
+            _exit(1);
+        }
 
-      ++nrunning;
+        ++nrunning;
 
-      last = t[i];
+        last = t[i];
     }
 
-  printf ("%2d left\n", --nrunning);
+    printf("%2d left\n", --nrunning);
 
-  pthread_exit (NULL);
+    pthread_exit(NULL);
 }
 
 

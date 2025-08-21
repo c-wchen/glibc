@@ -23,8 +23,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 
-struct sock_extended_err
-  {
+struct sock_extended_err {
     uint32_t ee_errno;
     uint8_t ee_origin;
     uint8_t ee_type;
@@ -32,14 +31,14 @@ struct sock_extended_err
     uint8_t ee_pad;
     uint32_t ee_info;
     uint32_t ee_data;
-  };
+};
 
 #define SO_EE_ORIGIN_NONE  0
 #define SO_EE_ORIGIN_LOCAL 1
 #define SO_EE_ORIGIN_ICMP  2
 #define SO_EE_ORIGIN_ICMP6 3
 
-#define SO_EE_OFFENDER(see)	\
+#define SO_EE_OFFENDER(see) \
   ((struct sockaddr *)(((struct sock_extended_err)(see))+1))
 
 #endif /* bits/errqueue.h */

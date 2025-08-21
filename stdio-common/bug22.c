@@ -19,58 +19,59 @@
 #define SN2 MAKE_STR(N2)
 #define SN3 MAKE_STR(N3)
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int ret;
+    int ret;
 
-  FILE *fp = fopen ("/dev/null", "w");
-  if (fp == NULL)
-    {
-      puts ("cannot open /dev/null");
-      return 1;
+    FILE *fp = fopen("/dev/null", "w");
+    if (fp == NULL) {
+        puts("cannot open /dev/null");
+        return 1;
     }
 
-  /* GCC 9 warns about output of more than INT_MAX characters; this is
-     deliberately tested here.  */
-  DIAG_PUSH_NEEDS_COMMENT;
+    /* GCC 9 warns about output of more than INT_MAX characters; this is
+       deliberately tested here.  */
+    DIAG_PUSH_NEEDS_COMMENT;
 #if __GNUC_PREREQ (7, 0)
-  DIAG_IGNORE_NEEDS_COMMENT (9, "-Wformat-overflow=");
+    DIAG_IGNORE_NEEDS_COMMENT(9, "-Wformat-overflow=");
 #endif
-  ret = fprintf (fp, "%" SN "d", 1);
-  DIAG_POP_NEEDS_COMMENT;
-  printf ("ret = %d\n", ret);
-  if (ret != -1 || errno != EOVERFLOW)
-	  return 1;
+    ret = fprintf(fp, "%" SN "d", 1);
+    DIAG_POP_NEEDS_COMMENT;
+    printf("ret = %d\n", ret);
+    if (ret != -1 || errno != EOVERFLOW) {
+        return 1;
+    }
 
-  /* GCC 9 warns about output of more than INT_MAX characters; this is
-     deliberately tested here.  */
-  DIAG_PUSH_NEEDS_COMMENT;
+    /* GCC 9 warns about output of more than INT_MAX characters; this is
+       deliberately tested here.  */
+    DIAG_PUSH_NEEDS_COMMENT;
 #if __GNUC_PREREQ (7, 0)
-  DIAG_IGNORE_NEEDS_COMMENT (9, "-Wformat-overflow=");
+    DIAG_IGNORE_NEEDS_COMMENT(9, "-Wformat-overflow=");
 #endif
-  ret = fprintf (fp, "%." SN "d", 1);
-  DIAG_POP_NEEDS_COMMENT;
-  printf ("ret = %d\n", ret);
-  if (ret != -1 || errno != EOVERFLOW)
-	  return 1;
+    ret = fprintf(fp, "%." SN "d", 1);
+    DIAG_POP_NEEDS_COMMENT;
+    printf("ret = %d\n", ret);
+    if (ret != -1 || errno != EOVERFLOW) {
+        return 1;
+    }
 
-  ret = fprintf (fp, "%." SN3 "d", 1);
-  printf ("ret = %d\n", ret);
-  if (ret != N3)
-	  return 1;
+    ret = fprintf(fp, "%." SN3 "d", 1);
+    printf("ret = %d\n", ret);
+    if (ret != N3) {
+        return 1;
+    }
 
-  /* GCC 9 warns about output of more than INT_MAX characters; this is
-     deliberately tested here.  */
-  DIAG_PUSH_NEEDS_COMMENT;
+    /* GCC 9 warns about output of more than INT_MAX characters; this is
+       deliberately tested here.  */
+    DIAG_PUSH_NEEDS_COMMENT;
 #if __GNUC_PREREQ (7, 0)
-  DIAG_IGNORE_NEEDS_COMMENT (9, "-Wformat-overflow=");
+    DIAG_IGNORE_NEEDS_COMMENT(9, "-Wformat-overflow=");
 #endif
-  ret = fprintf (fp, "%" SN2 "d%" SN2 "d", 1, 1);
-  DIAG_POP_NEEDS_COMMENT;
-  printf ("ret = %d\n", ret);
+    ret = fprintf(fp, "%" SN2 "d%" SN2 "d", 1, 1);
+    DIAG_POP_NEEDS_COMMENT;
+    printf("ret = %d\n", ret);
 
-  return ret != -1 || errno != EOVERFLOW;
+    return ret != -1 || errno != EOVERFLOW;
 }
 
 #define TIMEOUT 60

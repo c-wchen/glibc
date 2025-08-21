@@ -26,26 +26,26 @@
 
 /* tbegin.  */
 .macro TBEGIN
-	.long 0x7c00051d
+.long 0x7c00051d
 .endm
 
 /* tend. 0  */
 .macro TEND
-	.long 0x7c00055d
+.long 0x7c00055d
 .endm
 
 /* tabort. code  */
 .macro TABORT code
-	.byte 0x7c
-	.byte \code
-	.byte 0x07
-	.byte 0x1d
+.byte 0x7c
+.byte \code
+.byte 0x07
+.byte 0x1d
 .endm
 
 /*"TEXASR - Transaction EXception And Summary Register"
    mfspr %dst,130  */
 .macro TEXASR dst
-	mfspr \dst,130
+mfspr \dst, 130
 .endm
 
 #else
@@ -74,48 +74,48 @@
 #define _TEXASRU_FAILURE_PERSISTENT(TEXASRU) \
   _TEXASRU_EXTRACT_BITS(TEXASRU, 7, 1)
 
-#define _tbegin()			\
-  ({ unsigned int __ret;		\
-     asm volatile (			\
-       TBEGIN "\t\n"			\
-       "mfcr   %0\t\n"			\
-       "rlwinm %0,%0,3,1\t\n"		\
-       "xori %0,%0,1\t\n"		\
-       : "=r" (__ret) :			\
-       : "cr0", "memory");		\
-     __ret;				\
+#define _tbegin()           \
+  ({ unsigned int __ret;        \
+     asm volatile (         \
+       TBEGIN "\t\n"            \
+       "mfcr   %0\t\n"          \
+       "rlwinm %0,%0,3,1\t\n"       \
+       "xori %0,%0,1\t\n"       \
+       : "=r" (__ret) :         \
+       : "cr0", "memory");      \
+     __ret;             \
   })
 
-#define _tend()				\
-  ({ unsigned int __ret;		\
-     asm volatile (			\
-       TEND "\t\n"			\
-       "mfcr   %0\t\n"			\
-       "rlwinm %0,%0,3,1\t\n"		\
-       "xori %0,%0,1\t\n"		\
-       : "=r" (__ret) :			\
-       : "cr0", "memory");		\
-     __ret;				\
+#define _tend()             \
+  ({ unsigned int __ret;        \
+     asm volatile (         \
+       TEND "\t\n"          \
+       "mfcr   %0\t\n"          \
+       "rlwinm %0,%0,3,1\t\n"       \
+       "xori %0,%0,1\t\n"       \
+       : "=r" (__ret) :         \
+       : "cr0", "memory");      \
+     __ret;             \
   })
 
-#define _tabort(__code)			\
-  ({ unsigned int __ret;		\
-     asm volatile (			\
-       TABORT "\t\n"			\
-       "mfcr   %0\t\n"			\
-       "rlwinm %0,%0,3,1\t\n"		\
-       "xori %0,%0,1\t\n"		\
-       : "=r" (__ret) : "r" (__code)	\
-       : "cr0", "memory");		\
-     __ret;				\
+#define _tabort(__code)         \
+  ({ unsigned int __ret;        \
+     asm volatile (         \
+       TABORT "\t\n"            \
+       "mfcr   %0\t\n"          \
+       "rlwinm %0,%0,3,1\t\n"       \
+       "xori %0,%0,1\t\n"       \
+       : "=r" (__ret) : "r" (__code)    \
+       : "cr0", "memory");      \
+     __ret;             \
   })
 
-#define _texasru()			\
-  ({ unsigned long __ret;		\
-     asm volatile (			\
-       "mfspr %0,131\t\n"		\
-       : "=r" (__ret));			\
-     __ret;				\
+#define _texasru()          \
+  ({ unsigned long __ret;       \
+     asm volatile (         \
+       "mfspr %0,131\t\n"       \
+       : "=r" (__ret));         \
+     __ret;             \
   })
 
 #define __libc_tbegin(tdb)       _tbegin ()
@@ -127,33 +127,33 @@
 # include <htmintrin.h>
 
 # ifdef __TM_FENCE__
-   /* New GCC behavior.  */
+/* New GCC behavior.  */
 #  define __libc_tbegin(R)  __builtin_tbegin (R)
 #  define __libc_tend(R)    __builtin_tend (R)
 #  define __libc_tabort(R)  __builtin_tabort (R)
 # else
-   /* Workaround an old GCC behavior. Earlier releases of GCC 4.9 and 5.0,
-      didn't use to treat __builtin_tbegin, __builtin_tend and
-      __builtin_tabort as compiler barriers, moving instructions into and
-      out the transaction.
-      Remove this when glibc drops support for GCC 5.0.  */
-#  define __libc_tbegin(R)			\
-   ({ __asm__ volatile("" ::: "memory");	\
-     unsigned int __ret = __builtin_tbegin (R);	\
-     __asm__ volatile("" ::: "memory");		\
-     __ret;					\
+/* Workaround an old GCC behavior. Earlier releases of GCC 4.9 and 5.0,
+   didn't use to treat __builtin_tbegin, __builtin_tend and
+   __builtin_tabort as compiler barriers, moving instructions into and
+   out the transaction.
+   Remove this when glibc drops support for GCC 5.0.  */
+#  define __libc_tbegin(R)          \
+   ({ __asm__ volatile("" ::: "memory");    \
+     unsigned int __ret = __builtin_tbegin (R); \
+     __asm__ volatile("" ::: "memory");     \
+     __ret;                 \
    })
-#  define __libc_tabort(R)			\
-  ({ __asm__ volatile("" ::: "memory");		\
-    unsigned int __ret = __builtin_tabort (R);	\
-    __asm__ volatile("" ::: "memory");		\
-    __ret;					\
+#  define __libc_tabort(R)          \
+  ({ __asm__ volatile("" ::: "memory");     \
+    unsigned int __ret = __builtin_tabort (R);  \
+    __asm__ volatile("" ::: "memory");      \
+    __ret;                  \
   })
-#  define __libc_tend(R)			\
-   ({ __asm__ volatile("" ::: "memory");	\
-     unsigned int __ret = __builtin_tend (R);	\
-     __asm__ volatile("" ::: "memory");		\
-     __ret;					\
+#  define __libc_tend(R)            \
+   ({ __asm__ volatile("" ::: "memory");    \
+     unsigned int __ret = __builtin_tend (R);   \
+     __asm__ volatile("" ::: "memory");     \
+     __ret;                 \
    })
 # endif /* __TM_FENCE__  */
 #endif /* __HTM__  */

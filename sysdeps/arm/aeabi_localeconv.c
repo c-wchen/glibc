@@ -18,7 +18,7 @@
 #include <locale.h>
 
 struct lconv *
-__aeabi_localeconv (void)
+__aeabi_localeconv(void)
 {
-  return __localeconv ();
+    return __localeconv();
 }

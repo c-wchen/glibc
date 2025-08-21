@@ -18,11 +18,11 @@
 #include <unistd.h>
 
 
-int
-__ttyname_r_chk (int fd, char *buf, size_t buflen, size_t nreal)
+int __ttyname_r_chk(int fd, char *buf, size_t buflen, size_t nreal)
 {
-  if (buflen > nreal)
-    __chk_fail ();
+    if (buflen > nreal) {
+        __chk_fail();
+    }
 
-  return __ttyname_r (fd, buf, buflen);
+    return __ttyname_r(fd, buf, buflen);
 }

@@ -21,28 +21,27 @@
 #include <support/support.h>
 #include <support/check.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  iconv_t cd;
-  /* An input sequence that shares a common prefix with a transliteration
-     rule.  */
-  char input[] = "ÄÅ";
-  char *inptr = input;
-  char outbuf[10];
-  char *outptr = outbuf;
-  size_t inlen = sizeof (input), outlen = sizeof (outbuf);
-  size_t n;
+    iconv_t cd;
+    /* An input sequence that shares a common prefix with a transliteration
+       rule.  */
+    char input[] = "ÄÅ";
+    char *inptr = input;
+    char outbuf[10];
+    char *outptr = outbuf;
+    size_t inlen = sizeof(input), outlen = sizeof(outbuf);
+    size_t n;
 
-  xsetlocale (LC_CTYPE, "tst-translit");
+    xsetlocale(LC_CTYPE, "tst-translit");
 
-  cd = iconv_open ("ASCII//TRANSLIT", "UTF-8");
-  TEST_VERIFY (cd != (iconv_t) -1);
+    cd = iconv_open("ASCII//TRANSLIT", "UTF-8");
+    TEST_VERIFY(cd != (iconv_t) -1);
 
-  /* This call used to loop infinitely.  */
-  n = iconv (cd, &inptr, &inlen, &outptr, &outlen);
-  TEST_VERIFY (iconv_close (cd) == 0);
-  return n == 0;
+    /* This call used to loop infinitely.  */
+    n = iconv(cd, &inptr, &inlen, &outptr, &outlen);
+    TEST_VERIFY(iconv_close(cd) == 0);
+    return n == 0;
 }
 
 #include <support/test-driver.c>

@@ -24,44 +24,42 @@
 
 #if LIBM_SVID_COMPAT
 /* wrapper j1 */
-double
-__j1 (double x)
+double __j1(double x)
 {
-  if (__builtin_expect (isgreater (fabs (x), X_TLOSS), 0)
-      && _LIB_VERSION != _IEEE_ && _LIB_VERSION != _POSIX_)
-    /* j1(|x|>X_TLOSS) */
-    return __kernel_standard (x, x, 36);
+    if (__builtin_expect(isgreater(fabs(x), X_TLOSS), 0)
+        && _LIB_VERSION != _IEEE_ && _LIB_VERSION != _POSIX_)
+        /* j1(|x|>X_TLOSS) */
+    {
+        return __kernel_standard(x, x, 36);
+    }
 
-  return __ieee754_j1 (x);
+    return __ieee754_j1(x);
 }
-libm_alias_double (__j1, j1)
+libm_alias_double(__j1, j1)
 
 
 /* wrapper y1 */
 double
-__y1 (double x)
+__y1(double x)
 {
-  if (__builtin_expect (islessequal (x, 0.0) || isgreater (x, X_TLOSS), 0)
-      && _LIB_VERSION != _IEEE_)
-    {
-      if (x < 0.0)
-	{
-	  /* d = zero/(x-x) */
-	  __feraiseexcept (FE_INVALID);
-	  return __kernel_standard (x, x, 11);
-	}
-      else if (x == 0.0)
-	{
-	  /* d = -one/(x-x) */
-	  __feraiseexcept (FE_DIVBYZERO);
-	  return __kernel_standard (x, x, 10);
-	}
-      else if (_LIB_VERSION != _POSIX_)
-	/* y1(x>X_TLOSS) */
-	return __kernel_standard (x, x, 37);
+    if (__builtin_expect(islessequal(x, 0.0) || isgreater(x, X_TLOSS), 0)
+        && _LIB_VERSION != _IEEE_) {
+        if (x < 0.0) {
+            /* d = zero/(x-x) */
+            __feraiseexcept(FE_INVALID);
+            return __kernel_standard(x, x, 11);
+        } else if (x == 0.0) {
+            /* d = -one/(x-x) */
+            __feraiseexcept(FE_DIVBYZERO);
+            return __kernel_standard(x, x, 10);
+        } else if (_LIB_VERSION != _POSIX_)
+            /* y1(x>X_TLOSS) */
+        {
+            return __kernel_standard(x, x, 37);
+        }
     }
 
-  return __ieee754_y1 (x);
+    return __ieee754_y1(x);
 }
-libm_alias_double (__y1, y1)
+libm_alias_double(__y1, y1)
 #endif

@@ -8,7 +8,7 @@
 
    The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
@@ -24,18 +24,17 @@
 unsigned long int __fork_generation attribute_hidden;
 
 
-static void
-clear_once_control (void *arg)
+static void clear_once_control(void *arg)
 {
-  pthread_once_t *once_control = (pthread_once_t *) arg;
+    pthread_once_t *once_control = (pthread_once_t *) arg;
 
-  /* Reset to the uninitialized state here.  We don't need a stronger memory
-     order because we do not need to make any other of our writes visible to
-     other threads that see this value: This function will be called if we
-     get interrupted (see __pthread_once), so all we need to relay to other
-     threads is the state being reset again.  */
-  atomic_store_relaxed (once_control, 0);
-  futex_wake ((unsigned int *) once_control, INT_MAX, FUTEX_PRIVATE);
+    /* Reset to the uninitialized state here.  We don't need a stronger memory
+       order because we do not need to make any other of our writes visible to
+       other threads that see this value: This function will be called if we
+       get interrupted (see __pthread_once), so all we need to relay to other
+       threads is the state being reset again.  */
+    atomic_store_relaxed(once_control, 0);
+    futex_wake((unsigned int *) once_control, INT_MAX, FUTEX_PRIVATE);
 }
 
 
@@ -62,93 +61,88 @@ clear_once_control (void *arg)
    XXX: We split out this slow path because current compilers do not generate
    as efficient code when the fast path in __pthread_once below is not in a
    separate function.  */
-static int
-__attribute__ ((noinline))
-__pthread_once_slow (pthread_once_t *once_control, void (*init_routine) (void))
+static int __attribute__((noinline))
+__pthread_once_slow(pthread_once_t *once_control, void (*init_routine)(void))
 {
-  while (1)
-    {
-      int val, newval;
+    while (1) {
+        int val, newval;
 
-      /* We need acquire memory order for this load because if the value
-         signals that initialization has finished, we need to see any
-         data modifications done during initialization.  */
-      val = atomic_load_acquire (once_control);
-      do
-	{
-	  /* Check if the initialization has already been done.  */
-	  if (__glibc_likely ((val & __PTHREAD_ONCE_DONE) != 0))
-	    return 0;
+        /* We need acquire memory order for this load because if the value
+           signals that initialization has finished, we need to see any
+           data modifications done during initialization.  */
+        val = atomic_load_acquire(once_control);
+        do {
+            /* Check if the initialization has already been done.  */
+            if (__glibc_likely((val & __PTHREAD_ONCE_DONE) != 0)) {
+                return 0;
+            }
 
-	  /* We try to set the state to in-progress and having the current
-	     fork generation.  We don't need atomic accesses for the fork
-	     generation because it's immutable in a particular process, and
-	     forked child processes start with a single thread that modified
-	     the generation.  */
-	  newval = __fork_generation | __PTHREAD_ONCE_INPROGRESS;
-	  /* We need acquire memory order here for the same reason as for the
-	     load from once_control above.  */
-	}
-      while (__glibc_unlikely (!atomic_compare_exchange_weak_acquire (
-	  once_control, &val, newval)));
+            /* We try to set the state to in-progress and having the current
+               fork generation.  We don't need atomic accesses for the fork
+               generation because it's immutable in a particular process, and
+               forked child processes start with a single thread that modified
+               the generation.  */
+            newval = __fork_generation | __PTHREAD_ONCE_INPROGRESS;
+            /* We need acquire memory order here for the same reason as for the
+               load from once_control above.  */
+        } while (__glibc_unlikely(!atomic_compare_exchange_weak_acquire(
+                                      once_control, &val, newval)));
 
-      /* Check if another thread already runs the initializer.	*/
-      if ((val & __PTHREAD_ONCE_INPROGRESS) != 0)
-	{
-	  /* Check whether the initializer execution was interrupted by a
-	     fork.  We know that for both values, __PTHREAD_ONCE_INPROGRESS
-	     is set and __PTHREAD_ONCE_DONE is not.  */
-	  if (val == newval)
-	    {
-	      /* Same generation, some other thread was faster.  Wait and
-		 retry.  */
-	      futex_wait_simple ((unsigned int *) once_control,
-				 (unsigned int) newval, FUTEX_PRIVATE);
-	      continue;
-	    }
-	}
+        /* Check if another thread already runs the initializer.  */
+        if ((val & __PTHREAD_ONCE_INPROGRESS) != 0) {
+            /* Check whether the initializer execution was interrupted by a
+               fork.  We know that for both values, __PTHREAD_ONCE_INPROGRESS
+               is set and __PTHREAD_ONCE_DONE is not.  */
+            if (val == newval) {
+                /* Same generation, some other thread was faster.  Wait and
+                retry.  */
+                futex_wait_simple((unsigned int *) once_control,
+                                  (unsigned int) newval, FUTEX_PRIVATE);
+                continue;
+            }
+        }
 
-      /* This thread is the first here.  Do the initialization.
-	 Register a cleanup handler so that in case the thread gets
-	 interrupted the initialization can be restarted.  */
-      pthread_cleanup_combined_push (clear_once_control, once_control);
+        /* This thread is the first here.  Do the initialization.
+        Register a cleanup handler so that in case the thread gets
+         interrupted the initialization can be restarted.  */
+        pthread_cleanup_combined_push(clear_once_control, once_control);
 
-      init_routine ();
+        init_routine();
 
-      pthread_cleanup_combined_pop (0);
+        pthread_cleanup_combined_pop(0);
 
 
-      /* Mark *once_control as having finished the initialization.  We need
-         release memory order here because we need to synchronize with other
-         threads that want to use the initialized data.  */
-      atomic_store_release (once_control, __PTHREAD_ONCE_DONE);
+        /* Mark *once_control as having finished the initialization.  We need
+           release memory order here because we need to synchronize with other
+           threads that want to use the initialized data.  */
+        atomic_store_release(once_control, __PTHREAD_ONCE_DONE);
 
-      /* Wake up all other threads.  */
-      futex_wake ((unsigned int *) once_control, INT_MAX, FUTEX_PRIVATE);
-      break;
+        /* Wake up all other threads.  */
+        futex_wake((unsigned int *) once_control, INT_MAX, FUTEX_PRIVATE);
+        break;
     }
 
-  return 0;
+    return 0;
 }
 
-int
-___pthread_once (pthread_once_t *once_control, void (*init_routine) (void))
+int ___pthread_once(pthread_once_t *once_control, void (*init_routine)(void))
 {
-  /* Fast path.  See __pthread_once_slow.  */
-  int val;
-  val = atomic_load_acquire (once_control);
-  if (__glibc_likely ((val & __PTHREAD_ONCE_DONE) != 0))
-    return 0;
-  else
-    return __pthread_once_slow (once_control, init_routine);
+    /* Fast path.  See __pthread_once_slow.  */
+    int val;
+    val = atomic_load_acquire(once_control);
+    if (__glibc_likely((val & __PTHREAD_ONCE_DONE) != 0)) {
+        return 0;
+    } else {
+        return __pthread_once_slow(once_control, init_routine);
+    }
 }
-libc_hidden_ver (___pthread_once, __pthread_once)
+libc_hidden_ver(___pthread_once, __pthread_once)
 #ifndef SHARED
-strong_alias (___pthread_once, __pthread_once)
+strong_alias(___pthread_once, __pthread_once)
 #endif
 
-versioned_symbol (libc, ___pthread_once, pthread_once, GLIBC_2_34);
+versioned_symbol(libc, ___pthread_once, pthread_once, GLIBC_2_34);
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_34)
-compat_symbol (libpthread, ___pthread_once, __pthread_once, GLIBC_2_0);
-compat_symbol (libpthread, ___pthread_once, pthread_once, GLIBC_2_0);
+compat_symbol(libpthread, ___pthread_once, __pthread_once, GLIBC_2_0);
+compat_symbol(libpthread, ___pthread_once, pthread_once, GLIBC_2_0);
 #endif

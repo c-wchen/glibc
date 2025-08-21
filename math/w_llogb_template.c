@@ -23,25 +23,25 @@
 #include <fenv.h>
 
 long int
-M_DECL_FUNC (__llogb) (FLOAT x)
+M_DECL_FUNC(__llogb)(FLOAT x)
 {
-  int r = M_SUF (__ieee754_ilogb) (x);
-  long int lr = r;
-  if (__glibc_unlikely (r == FP_ILOGB0)
-      || __glibc_unlikely (r == FP_ILOGBNAN)
-      || __glibc_unlikely (r == INT_MAX))
-    {
+    int r = M_SUF(__ieee754_ilogb)(x);
+    long int lr = r;
+    if (__glibc_unlikely(r == FP_ILOGB0)
+        || __glibc_unlikely(r == FP_ILOGBNAN)
+        || __glibc_unlikely(r == INT_MAX)) {
 #if LONG_MAX != INT_MAX
-      if (r == FP_ILOGB0)
-	lr = FP_LLOGB0;
-      else if (r == FP_ILOGBNAN)
-	lr = FP_LLOGBNAN;
-      else
-	lr = LONG_MAX;
+        if (r == FP_ILOGB0) {
+            lr = FP_LLOGB0;
+        } else if (r == FP_ILOGBNAN) {
+            lr = FP_LLOGBNAN;
+        } else {
+            lr = LONG_MAX;
+        }
 #endif
-      __set_errno (EDOM);
-      __feraiseexcept (FE_INVALID);
+        __set_errno(EDOM);
+        __feraiseexcept(FE_INVALID);
     }
-  return lr;
+    return lr;
 }
-declare_mgen_alias (__llogb, llogb)
+declare_mgen_alias(__llogb, llogb)

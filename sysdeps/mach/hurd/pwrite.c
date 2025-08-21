@@ -22,13 +22,12 @@
 
 /* Write NBYTES of BUF to FD at given position OFFSET without changing
    the file position.  Return the number written, or -1.  */
-ssize_t
-__libc_pwrite (int fd, const void *buf, size_t nbytes, off_t offset)
+ssize_t __libc_pwrite(int fd, const void *buf, size_t nbytes, off_t offset)
 {
-  return __libc_pwrite64 (fd, buf, nbytes, (off64_t) offset);
+    return __libc_pwrite64(fd, buf, nbytes, (off64_t) offset);
 }
 
 #ifndef __libc_pwrite
-strong_alias (__libc_pwrite, __pwrite)
-weak_alias (__libc_pwrite, pwrite)
+strong_alias(__libc_pwrite, __pwrite)
+weak_alias(__libc_pwrite, pwrite)
 #endif

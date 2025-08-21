@@ -19,34 +19,33 @@
 #include <wchar.h>
 #include <sys/param.h>
 
-wchar_t *
-__fgetws_chk (wchar_t *buf, size_t size, int n, FILE *fp)
+wchar_t *__fgetws_chk(wchar_t *buf, size_t size, int n, FILE *fp)
 {
-  size_t count;
-  wchar_t *result;
-  int old_error;
-  CHECK_FILE (fp, NULL);
-  if (n <= 0)
-    return NULL;
-  _IO_acquire_lock (fp);
-  /* This is very tricky since a file descriptor may be in the
-     non-blocking mode. The error flag doesn't mean much in this
-     case. We return an error only when there is a new error. */
-  old_error = fp->_flags & _IO_ERR_SEEN;
-  fp->_flags &= ~_IO_ERR_SEEN;
-  count = _IO_getwline (fp, buf, MIN ((size_t) n - 1, size), L'\n', 1);
-  /* If we read in some bytes and errno is EAGAIN, that error will
-     be reported for next read. */
-  if (count == 0 || (_IO_ferror_unlocked (fp) && errno != EAGAIN))
-    result = NULL;
-  else if (count >= size)
-    __chk_fail ();
-  else
-    {
-      buf[count] = '\0';
-      result = buf;
+    size_t count;
+    wchar_t *result;
+    int old_error;
+    CHECK_FILE(fp, NULL);
+    if (n <= 0) {
+        return NULL;
     }
-  fp->_flags |= old_error;
-  _IO_release_lock (fp);
-  return result;
+    _IO_acquire_lock(fp);
+    /* This is very tricky since a file descriptor may be in the
+       non-blocking mode. The error flag doesn't mean much in this
+       case. We return an error only when there is a new error. */
+    old_error = fp->_flags & _IO_ERR_SEEN;
+    fp->_flags &= ~_IO_ERR_SEEN;
+    count = _IO_getwline(fp, buf, MIN((size_t) n - 1, size), L'\n', 1);
+    /* If we read in some bytes and errno is EAGAIN, that error will
+       be reported for next read. */
+    if (count == 0 || (_IO_ferror_unlocked(fp) && errno != EAGAIN)) {
+        result = NULL;
+    } else if (count >= size) {
+        __chk_fail();
+    } else {
+        buf[count] = '\0';
+        result = buf;
+    }
+    fp->_flags |= old_error;
+    _IO_release_lock(fp);
+    return result;
 }

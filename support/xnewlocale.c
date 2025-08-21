@@ -20,12 +20,11 @@
 
 #include <locale.h>
 
-locale_t
-xnewlocale (int category_mask, const char *locale, locale_t base)
+locale_t xnewlocale(int category_mask, const char *locale, locale_t base)
 {
-  locale_t r = newlocale (category_mask, locale, base);
-  if (r == (locale_t) 0)
-    FAIL_EXIT1 ("error: newlocale (%d, \"%s\", %p)\n", category_mask,
-		locale, base);
-  return r;
+    locale_t r = newlocale(category_mask, locale, base);
+    if (r == (locale_t) 0)
+        FAIL_EXIT1("error: newlocale (%d, \"%s\", %p)\n", category_mask,
+                   locale, base);
+    return r;
 }

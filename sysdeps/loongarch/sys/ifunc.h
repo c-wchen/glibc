@@ -19,10 +19,9 @@
 #ifndef _SYS_IFUNC_H
 #define _SYS_IFUNC_H
 
-struct __ifunc_arg_t
-{
-  unsigned long _size; /* Size of the struct, so it can grow.  */
-  unsigned long _hwcap;
+struct __ifunc_arg_t {
+    unsigned long _size; /* Size of the struct, so it can grow.  */
+    unsigned long _hwcap;
 };
 
 typedef struct __ifunc_arg_t __ifunc_arg_t;

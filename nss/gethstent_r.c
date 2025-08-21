@@ -18,15 +18,15 @@
 #include <netdb.h>
 
 
-#define LOOKUP_TYPE	struct hostent
-#define SETFUNC_NAME	sethostent
-#define	GETFUNC_NAME	gethostent
-#define	ENDFUNC_NAME	endhostent
-#define DATABASE_NAME	hosts
-#define STAYOPEN	int stayopen
-#define STAYOPEN_VAR	stayopen
-#define NEED_H_ERRNO	1
-#define NEED__RES	1
+#define LOOKUP_TYPE struct hostent
+#define SETFUNC_NAME    sethostent
+#define GETFUNC_NAME    gethostent
+#define ENDFUNC_NAME    endhostent
+#define DATABASE_NAME   hosts
+#define STAYOPEN    int stayopen
+#define STAYOPEN_VAR    stayopen
+#define NEED_H_ERRNO    1
+#define NEED__RES   1
 
 /* Special name for the lookup function.  */
 #define DB_LOOKUP_FCT __nss_hosts_lookup2

@@ -31,23 +31,23 @@
    arguments described by PROTO.  Use `text_set_element (NAME, FUNCTION)'
    from include/libc-symbols.h to add a function to the hook.  */
 
-# define DEFINE_HOOK(NAME, PROTO)		\
+# define DEFINE_HOOK(NAME, PROTO)       \
   typedef void __##NAME##_hook_function_t PROTO; \
   symbol_set_define (NAME)
 
-# define DECLARE_HOOK(NAME, PROTO)		\
+# define DECLARE_HOOK(NAME, PROTO)      \
   typedef void __##NAME##_hook_function_t PROTO;\
   symbol_set_declare (NAME)
 
 /* Run all the functions hooked on the set called NAME.
    Each function is called like this: `function ARGS'.  */
 
-# define RUN_HOOK(NAME, ARGS)						      \
-do {									      \
-  void *const *ptr;						      \
-  for (ptr = (void *const *) symbol_set_first_element (NAME);		      \
-       ! symbol_set_end_p (NAME, ptr); ++ptr)				      \
-    (*(__##NAME##_hook_function_t *) *ptr) ARGS;			      \
+# define RUN_HOOK(NAME, ARGS)                             \
+do {                                          \
+  void *const *ptr;                           \
+  for (ptr = (void *const *) symbol_set_first_element (NAME);             \
+       ! symbol_set_end_p (NAME, ptr); ++ptr)                     \
+    (*(__##NAME##_hook_function_t *) *ptr) ARGS;                  \
 } while (0)
 
 /* Define a hook variable with NAME and PROTO, and a function called RUNNER
@@ -61,14 +61,14 @@ extern void runner proto; void runner proto { RUN_HOOK (name, args); }
 /* This is similar to RUN_RELHOOK, but the hooks were registered with
  * SET_RELHOOK so that a relative offset was computed by the linker
  * rather than an absolute address by the dynamic linker. */
-#  define RUN_RELHOOK(NAME, ARGS)				      \
-do {								      \
-  void *const *ptr;						      \
-  for (ptr = (void *const *) symbol_set_first_element (NAME);	      \
-       ! symbol_set_end_p (NAME, ptr); ++ptr) {			      \
-    __##NAME##_hook_function_t *f =				      \
-	(void*) ((uintptr_t) ptr + (ptrdiff_t) *ptr);		      \
-    (*f) ARGS;							      \
+#  define RUN_RELHOOK(NAME, ARGS)                     \
+do {                                      \
+  void *const *ptr;                           \
+  for (ptr = (void *const *) symbol_set_first_element (NAME);         \
+       ! symbol_set_end_p (NAME, ptr); ++ptr) {               \
+    __##NAME##_hook_function_t *f =                   \
+    (void*) ((uintptr_t) ptr + (ptrdiff_t) *ptr);             \
+    (*f) ARGS;                                \
   } \
 } while (0)
 # else

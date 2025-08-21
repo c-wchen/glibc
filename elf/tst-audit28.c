@@ -21,15 +21,14 @@
 #include <support/check.h>
 #include <support/xdlfcn.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* Check that the audit module has been loaded.  */
-  void *handle = xdlopen ("mapped to libc", RTLD_LOCAL | RTLD_NOW);
-  TEST_VERIFY (handle
-	       == xdlopen (LIBC_SO, RTLD_LOCAL | RTLD_NOW | RTLD_NOLOAD));
+    /* Check that the audit module has been loaded.  */
+    void *handle = xdlopen("mapped to libc", RTLD_LOCAL | RTLD_NOW);
+    TEST_VERIFY(handle
+                == xdlopen(LIBC_SO, RTLD_LOCAL | RTLD_NOW | RTLD_NOLOAD));
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

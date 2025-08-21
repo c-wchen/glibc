@@ -24,18 +24,17 @@
 #include <stdlib.h>
 
 /* Free storage allocated in PGLOB by a previous `glob' call.  */
-void
-globfree (glob_t *pglob)
+void globfree(glob_t *pglob)
 {
-  if (pglob->gl_pathv != NULL)
-    {
-      size_t i;
-      for (i = 0; i < pglob->gl_pathc; ++i)
-        free (pglob->gl_pathv[pglob->gl_offs + i]);
-      free (pglob->gl_pathv);
-      pglob->gl_pathv = NULL;
+    if (pglob->gl_pathv != NULL) {
+        size_t i;
+        for (i = 0; i < pglob->gl_pathc; ++i) {
+            free(pglob->gl_pathv[pglob->gl_offs + i]);
+        }
+        free(pglob->gl_pathv);
+        pglob->gl_pathv = NULL;
     }
 }
 #ifndef globfree
-libc_hidden_def (globfree)
+libc_hidden_def(globfree)
 #endif

@@ -21,12 +21,11 @@
 
 
 /* Get the SCHED_RR interval for the named process.  */
-int
-__sched_rr_get_interval (pid_t pid, struct timespec *t)
+int __sched_rr_get_interval(pid_t pid, struct timespec *t)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (sched_rr_get_interval)
+stub_warning(sched_rr_get_interval)
 
-weak_alias (__sched_rr_get_interval, sched_rr_get_interval)
+weak_alias(__sched_rr_get_interval, sched_rr_get_interval)

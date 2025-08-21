@@ -27,6 +27,6 @@
   __hidden_ver1 (__rawmemchr_ppc, __GI___rawmemchr, __rawmemchr_ppc);
 #endif
 
-extern __typeof (rawmemchr) __rawmemchr_ppc attribute_hidden;
+extern __typeof(rawmemchr) __rawmemchr_ppc attribute_hidden;
 
 #include <string/rawmemchr.c>

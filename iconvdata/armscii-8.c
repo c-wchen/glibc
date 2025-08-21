@@ -20,18 +20,17 @@
 #include <stdint.h>
 
 /* Definitions used in the body of the `gconv' function.  */
-#define CHARSET_NAME		"ARMSCII-8//"
-#define FROM_LOOP		from_armscii_8
-#define TO_LOOP			to_armscii_8
-#define DEFINE_INIT		1
-#define DEFINE_FINI		1
-#define MIN_NEEDED_FROM		1
-#define MIN_NEEDED_TO		4
-#define ONE_DIRECTION		0
+#define CHARSET_NAME        "ARMSCII-8//"
+#define FROM_LOOP       from_armscii_8
+#define TO_LOOP         to_armscii_8
+#define DEFINE_INIT     1
+#define DEFINE_FINI     1
+#define MIN_NEEDED_FROM     1
+#define MIN_NEEDED_TO       4
+#define ONE_DIRECTION       0
 
 
-static const uint16_t map_from_armscii_8[0xfe - 0xa2 + 1] =
-  {
+static const uint16_t map_from_armscii_8[0xfe - 0xa2 + 1] = {
     0x0587, 0x0589, 0x0029, 0x0028, 0x00bb, 0x00ab, 0x2014, 0x002e,
     0x055d, 0x002c, 0x002d, 0x058a, 0x2026, 0x055c, 0x055b, 0x055e,
     0x0531, 0x0561, 0x0532, 0x0562, 0x0533, 0x0563, 0x0534, 0x0564,
@@ -44,54 +43,53 @@ static const uint16_t map_from_armscii_8[0xfe - 0xa2 + 1] =
     0x054d, 0x057d, 0x054e, 0x057e, 0x054f, 0x057f, 0x0550, 0x0580,
     0x0551, 0x0581, 0x0552, 0x0582, 0x0553, 0x0583, 0x0554, 0x0584,
     0x0555, 0x0585, 0x0556, 0x0586, 0x055a
-  };
+};
 
 
 /* First define the conversion function from ARMSCII-8 to UCS4.  */
-#define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
-#define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
-#define LOOPFCT			FROM_LOOP
+#define MIN_NEEDED_INPUT    MIN_NEEDED_FROM
+#define MIN_NEEDED_OUTPUT   MIN_NEEDED_TO
+#define LOOPFCT         FROM_LOOP
 #define BODY \
-  {									      \
-    uint_fast8_t ch = *inptr;						      \
-									      \
-    if (ch <= 0xa0)							      \
-      {									      \
+  {                                       \
+    uint_fast8_t ch = *inptr;                             \
+                                          \
+    if (ch <= 0xa0)                               \
+      {                                       \
         /* Upto and including 0xa0 the ARMSCII-8 corresponds to Unicode.  */  \
-        *((uint32_t *) outptr) = ch;					      \
-        outptr += sizeof (uint32_t);					      \
-      }									      \
-    else if (ch >= 0xa2 && ch <= 0xfe)					      \
-      {									      \
-        /* Use the table.  */						      \
-        *((uint32_t *) outptr) = map_from_armscii_8[ch - 0xa2];		      \
-        outptr += sizeof (uint32_t);					      \
-      }									      \
-    else								      \
-      {									      \
-	/* This is an illegal character.  */				      \
-	STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
-      }									      \
-									      \
-    ++inptr;								      \
+        *((uint32_t *) outptr) = ch;                          \
+        outptr += sizeof (uint32_t);                          \
+      }                                       \
+    else if (ch >= 0xa2 && ch <= 0xfe)                        \
+      {                                       \
+        /* Use the table.  */                             \
+        *((uint32_t *) outptr) = map_from_armscii_8[ch - 0xa2];           \
+        outptr += sizeof (uint32_t);                          \
+      }                                       \
+    else                                      \
+      {                                       \
+    /* This is an illegal character.  */                      \
+    STANDARD_FROM_LOOP_ERR_HANDLER (1);                   \
+      }                                       \
+                                          \
+    ++inptr;                                      \
   }
 #define LOOP_NEED_FLAGS
 #define ONEBYTE_BODY \
-  {									      \
-    if (c <= 0xa0)							      \
+  {                                       \
+    if (c <= 0xa0)                                \
       /* Upto and including 0xa0 the ARMSCII-8 corresponds to Unicode.  */    \
-      return c;								      \
-    else if (c >= 0xa2 && c <= 0xfe)					      \
-      /* Use the table.  */						      \
-      return map_from_armscii_8[c - 0xa2];				      \
-    else								      \
-      return WEOF;							      \
+      return c;                                   \
+    else if (c >= 0xa2 && c <= 0xfe)                          \
+      /* Use the table.  */                           \
+      return map_from_armscii_8[c - 0xa2];                    \
+    else                                      \
+      return WEOF;                                \
   }
 #include <iconv/loop.c>
 
 
-static const unsigned char map_to_armscii_8[0x58a - 0x531 + 1] =
-  {
+static const unsigned char map_to_armscii_8[0x58a - 0x531 + 1] = {
     0xb2, 0xb4, 0xb6, 0xb8, 0xba, 0xbc, 0xbe, 0xc0,
     0xc2, 0xc4, 0xc6, 0xc8, 0xca, 0xcc, 0xce, 0xd0,
     0xd2, 0xd4, 0xd6, 0xd8, 0xda, 0xdc, 0xde, 0xe0,
@@ -104,48 +102,48 @@ static const unsigned char map_to_armscii_8[0x58a - 0x531 + 1] =
     0xe3, 0xe5, 0xe7, 0xe9, 0xeb, 0xed, 0xef, 0xf1,
     0xf3, 0xf5, 0xf7, 0xf9, 0xfb, 0xfd, 0xa2, 0x00,
     0xa3, 0xad
-  };
+};
 
 
 /* Next, define the other direction.  */
-#define MIN_NEEDED_INPUT	MIN_NEEDED_TO
-#define MIN_NEEDED_OUTPUT	MIN_NEEDED_FROM
-#define LOOPFCT			TO_LOOP
+#define MIN_NEEDED_INPUT    MIN_NEEDED_TO
+#define MIN_NEEDED_OUTPUT   MIN_NEEDED_FROM
+#define LOOPFCT         TO_LOOP
 #define BODY \
-  {									      \
-    uint32_t ch = *((const uint32_t *) inptr);				      \
-									      \
-    if (ch <= 0xa0)							      \
+  {                                       \
+    uint32_t ch = *((const uint32_t *) inptr);                    \
+                                          \
+    if (ch <= 0xa0)                               \
       /* Upto and including 0xa0 the ARMSCII-8 corresponds to Unicode.  */    \
-      *outptr = (unsigned char) ch;					      \
-    else if (ch == 0xab)						      \
-      *outptr = 0xa7;							      \
-    else if (ch == 0xbb)						      \
-      *outptr = 0xa6;							      \
-    else if (ch >= 0x531 && ch <= 0x58a)				      \
-      {									      \
-	unsigned char oc = map_to_armscii_8[ch - 0x531];		      \
-									      \
-	if (oc == 0)							      \
-	  /* No valid mapping.  */					      \
-	  goto err;							      \
-									      \
-	*outptr = oc;							      \
-      }									      \
-    else if (ch == 0x2014)						      \
-      *outptr = 0xa8;							      \
-    else if (ch == 0x2026)						      \
-      *outptr = 0xae;							      \
-    else								      \
-      {									      \
-	UNICODE_TAG_HANDLER (ch, 4);					      \
-									      \
-	/* We have an illegal character.  */				      \
-      err:								      \
-	STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
-      }									      \
-    ++outptr;								      \
-    inptr += 4;								      \
+      *outptr = (unsigned char) ch;                       \
+    else if (ch == 0xab)                              \
+      *outptr = 0xa7;                                 \
+    else if (ch == 0xbb)                              \
+      *outptr = 0xa6;                                 \
+    else if (ch >= 0x531 && ch <= 0x58a)                      \
+      {                                       \
+    unsigned char oc = map_to_armscii_8[ch - 0x531];              \
+                                          \
+    if (oc == 0)                                  \
+      /* No valid mapping.  */                        \
+      goto err;                               \
+                                          \
+    *outptr = oc;                                 \
+      }                                       \
+    else if (ch == 0x2014)                            \
+      *outptr = 0xa8;                                 \
+    else if (ch == 0x2026)                            \
+      *outptr = 0xae;                                 \
+    else                                      \
+      {                                       \
+    UNICODE_TAG_HANDLER (ch, 4);                          \
+                                          \
+    /* We have an illegal character.  */                      \
+      err:                                    \
+    STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
+      }                                       \
+    ++outptr;                                     \
+    inptr += 4;                                   \
   }
 #define LOOP_NEED_FLAGS
 #include <iconv/loop.c>

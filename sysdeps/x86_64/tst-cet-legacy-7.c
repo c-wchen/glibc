@@ -22,17 +22,16 @@
 
 /* Check that mmapped legacy code works with -fcf-protection=none.  */
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  void (*funcp) (void);
-  funcp = xmmap (NULL, 0x1000, PROT_EXEC | PROT_READ | PROT_WRITE,
-		 MAP_ANONYMOUS | MAP_PRIVATE, -1);
-  printf ("mmap = %p\n", funcp);
-  /* Write RET instruction.  */
-  *(char *) funcp = 0xc3;
-  funcp ();
-  return 0;
+    void (*funcp)(void);
+    funcp = xmmap(NULL, 0x1000, PROT_EXEC | PROT_READ | PROT_WRITE,
+                  MAP_ANONYMOUS | MAP_PRIVATE, -1);
+    printf("mmap = %p\n", funcp);
+    /* Write RET instruction.  */
+    *(char *) funcp = 0xc3;
+    funcp();
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -6,36 +6,36 @@
 #include <locale.h>
 
 /* Now define the internal interfaces.  */
-extern char *__gettext (const char *__msgid)
-     __attribute_format_arg__ (1);
-extern char *__dgettext (const char *__domainname,
-			 const char *__msgid)
-     __attribute_format_arg__ (2);
-extern char *__dcgettext (const char *__domainname,
-			  const char *__msgid, int __category)
-     __attribute_format_arg__ (2);
-libc_hidden_proto (__dcgettext)
+extern char *__gettext(const char *__msgid)
+__attribute_format_arg__(1);
+extern char *__dgettext(const char *__domainname,
+                        const char *__msgid)
+__attribute_format_arg__(2);
+extern char *__dcgettext(const char *__domainname,
+                         const char *__msgid, int __category)
+__attribute_format_arg__(2);
+libc_hidden_proto(__dcgettext)
 
-extern char *__ngettext (const char *__msgid1, const char *__msgid2,
-			 unsigned long int __n)
-     __attribute_format_arg__ (1) __attribute_format_arg__ (2);
-extern char *__dngettext (const char *__domainname,
-			  const char *__msgid1, const char *__msgid2,
-			  unsigned long int __n)
-     __attribute_format_arg__ (2) __attribute_format_arg__ (3);
-extern char *__dcngettext (const char *__domainname,
-			   const char *__msgid1, const char *__msgid2,
-			   unsigned long int __n, int __category)
-     __attribute_format_arg__ (2) __attribute_format_arg__ (3);
+extern char *__ngettext(const char *__msgid1, const char *__msgid2,
+                        unsigned long int __n)
+__attribute_format_arg__(1) __attribute_format_arg__(2);
+extern char *__dngettext(const char *__domainname,
+                         const char *__msgid1, const char *__msgid2,
+                         unsigned long int __n)
+__attribute_format_arg__(2) __attribute_format_arg__(3);
+extern char *__dcngettext(const char *__domainname,
+                          const char *__msgid1, const char *__msgid2,
+                          unsigned long int __n, int __category)
+__attribute_format_arg__(2) __attribute_format_arg__(3);
 
-extern char *__textdomain (const char *__domainname);
-extern char *__bindtextdomain (const char *__domainname,
-			       const char *__dirname);
-extern char *__bind_textdomain_codeset (const char *__domainname,
-					const char *__codeset);
+extern char *__textdomain(const char *__domainname);
+extern char *__bindtextdomain(const char *__domainname,
+                              const char *__dirname);
+extern char *__bind_textdomain_codeset(const char *__domainname,
+                                       const char *__codeset);
 
 extern const char _libc_intl_domainname[];
-libc_hidden_proto (_libc_intl_domainname)
+libc_hidden_proto(_libc_intl_domainname)
 
 /* _ marks its argument, a string literal, for translation, and
    performs translation at run time if the LC_MESSAGES locale category
@@ -63,7 +63,7 @@ libc_hidden_proto (_libc_intl_domainname)
    translated create unnecessary work for the translation team.  We
    continue to use N_ because it helps mark translatable strings.  */
 # undef N_
-# define N_(msgid)	msgid
+# define N_(msgid)  msgid
 
 # endif /* !_ISOMAC */
 #endif

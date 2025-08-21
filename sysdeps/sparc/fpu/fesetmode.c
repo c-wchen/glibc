@@ -22,18 +22,18 @@
 
 #define FPU_CONTROL_BITS 0xcfc00000UL
 
-int
-fesetmode (const femode_t *modep)
+int fesetmode(const femode_t *modep)
 {
-  femode_t fsr;
+    femode_t fsr;
 
-  __fenv_stfsr (fsr);
-  fsr &= ~FPU_CONTROL_BITS;
-  if (modep == FE_DFL_MODE)
-    fsr |= _FPU_DEFAULT;
-  else
-    fsr |= *modep & FPU_CONTROL_BITS;
-  __fenv_ldfsr (fsr);
+    __fenv_stfsr(fsr);
+    fsr &= ~FPU_CONTROL_BITS;
+    if (modep == FE_DFL_MODE) {
+        fsr |= _FPU_DEFAULT;
+    } else {
+        fsr |= *modep & FPU_CONTROL_BITS;
+    }
+    __fenv_ldfsr(fsr);
 
-  return 0;
+    return 0;
 }

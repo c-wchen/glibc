@@ -19,21 +19,22 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-int
-fesetmode (const femode_t *modep)
+int fesetmode(const femode_t *modep)
 {
-  fpu_control_t cw;
-  fpu_control_t cw_new;
+    fpu_control_t cw;
+    fpu_control_t cw_new;
 
-  _FPU_GETCW (cw);
-  cw_new = cw & ~_FPU_FPCSR_RM_MASK;
-  if (modep == FE_DFL_MODE)
-    cw_new |= (_FPU_DEFAULT & _FPU_FPCSR_RM_MASK);
-  else
-    cw_new |= (*modep & _FPU_FPCSR_RM_MASK);
-  if (cw != cw_new)
-    _FPU_SETCW (cw_new);
+    _FPU_GETCW(cw);
+    cw_new = cw & ~_FPU_FPCSR_RM_MASK;
+    if (modep == FE_DFL_MODE) {
+        cw_new |= (_FPU_DEFAULT & _FPU_FPCSR_RM_MASK);
+    } else {
+        cw_new |= (*modep & _FPU_FPCSR_RM_MASK);
+    }
+    if (cw != cw_new) {
+        _FPU_SETCW(cw_new);
+    }
 
-  /* Success.  */
-  return 0;
+    /* Success.  */
+    return 0;
 }

@@ -1,4 +1,3 @@
-struct testdat
-{
-  void *next;
+struct testdat {
+    void *next;
 } testdat;

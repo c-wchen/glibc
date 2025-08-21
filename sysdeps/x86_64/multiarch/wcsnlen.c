@@ -27,6 +27,6 @@
 # define GENERIC generic
 # include "ifunc-wcslen.h"
 
-libc_ifunc_redirected (__redirect_wcsnlen, __wcsnlen, IFUNC_SELECTOR ());
-weak_alias (__wcsnlen, wcsnlen);
+libc_ifunc_redirected(__redirect_wcsnlen, __wcsnlen, IFUNC_SELECTOR());
+weak_alias(__wcsnlen, wcsnlen);
 #endif

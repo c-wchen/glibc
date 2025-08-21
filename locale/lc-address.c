@@ -18,4 +18,4 @@
 
 #include "localeinfo.h"
 
-_NL_CURRENT_DEFINE (LC_ADDRESS);
+_NL_CURRENT_DEFINE(LC_ADDRESS);

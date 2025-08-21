@@ -18,8 +18,8 @@
 
 #include <bits/floatn.h>
 
-#define FLOAT		long double
-#define STRFROM		strfroml
+#define FLOAT       long double
+#define STRFROM     strfroml
 
 #if __HAVE_FLOAT128 && !__HAVE_DISTINCT_FLOAT128
 # define strfromf128 __hide_strfromf128
@@ -40,8 +40,8 @@
 #include "strfrom-skeleton.c"
 
 #if __HAVE_FLOAT128 && !__HAVE_DISTINCT_FLOAT128
-weak_alias (strfroml, strfromf128)
+weak_alias(strfroml, strfromf128)
 #endif
 #if __HAVE_FLOAT64X_LONG_DOUBLE
-weak_alias (strfroml, strfromf64x)
+weak_alias(strfroml, strfromf64x)
 #endif

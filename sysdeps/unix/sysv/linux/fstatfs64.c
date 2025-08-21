@@ -25,19 +25,18 @@
 #undef fstatfs
 
 /* Return information about the filesystem on which FD resides.  */
-int
-__fstatfs64 (int fd, struct statfs64 *buf)
+int __fstatfs64(int fd, struct statfs64 *buf)
 {
 #ifdef __NR_fstatfs64
-  return INLINE_SYSCALL_CALL (fstatfs64, fd, sizeof (*buf), buf);
+    return INLINE_SYSCALL_CALL(fstatfs64, fd, sizeof(*buf), buf);
 #else
-  return INLINE_SYSCALL_CALL (fstatfs, fd, buf);
+    return INLINE_SYSCALL_CALL(fstatfs, fd, buf);
 #endif
 }
-weak_alias (__fstatfs64, fstatfs64)
+weak_alias(__fstatfs64, fstatfs64)
 
 #if STATFS_IS_STATFS64
-weak_alias (__fstatfs64, __fstatfs)
-weak_alias (__fstatfs64, fstatfs)
-libc_hidden_ver (__fstatfs64, __fstatfs)
+weak_alias(__fstatfs64, __fstatfs)
+weak_alias(__fstatfs64, fstatfs)
+libc_hidden_ver(__fstatfs64, __fstatfs)
 #endif

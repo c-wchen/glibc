@@ -25,38 +25,37 @@
 #ifndef __ASSUME_TIME64_SYSCALL
 #include <sysdeps/unix/sysv/linux/pselect32.c>
 #elif !defined __ASSUME_PSELECT
-int
-__pselect32 (int nfds, fd_set *readfds, fd_set *writefds,
-	     fd_set *exceptfds, const struct __timespec64 *timeout,
-	     const sigset_t *sigmask)
+int __pselect32(int nfds, fd_set *readfds, fd_set *writefds,
+                fd_set *exceptfds, const struct __timespec64 *timeout,
+                const sigset_t *sigmask)
 {
-  /* The fallback uses 'select' which shows the race condition regarding
-     signal mask set/restore, requires two additional syscalls, and has
-     a worse timeout precision (microseconds instead of nanoseconds).  */
+    /* The fallback uses 'select' which shows the race condition regarding
+       signal mask set/restore, requires two additional syscalls, and has
+       a worse timeout precision (microseconds instead of nanoseconds).  */
 
-  struct timeval tv32, *ptv32 = NULL;
-  if (timeout != NULL)
-    {
-      if (! valid_nanoseconds (timeout->tv_nsec))
-	{
-	  __set_errno (EINVAL);
-	  return -1;
-	}
+    struct timeval tv32, *ptv32 = NULL;
+    if (timeout != NULL) {
+        if (! valid_nanoseconds(timeout->tv_nsec)) {
+            __set_errno(EINVAL);
+            return -1;
+        }
 
-      tv32 = valid_timespec64_to_timeval (*timeout);
-      ptv32 = &tv32;
+        tv32 = valid_timespec64_to_timeval(*timeout);
+        ptv32 = &tv32;
     }
 
-  sigset_t savemask;
-  if (sigmask != NULL)
-    __sigprocmask (SIG_SETMASK, sigmask, &savemask);
+    sigset_t savemask;
+    if (sigmask != NULL) {
+        __sigprocmask(SIG_SETMASK, sigmask, &savemask);
+    }
 
-  /* select itself is a cancellation entrypoint.  */
-  int ret = __select (nfds, readfds, writefds, exceptfds, ptv32);
+    /* select itself is a cancellation entrypoint.  */
+    int ret = __select(nfds, readfds, writefds, exceptfds, ptv32);
 
-  if (sigmask != NULL)
-    __sigprocmask (SIG_SETMASK, &savemask, NULL);
+    if (sigmask != NULL) {
+        __sigprocmask(SIG_SETMASK, &savemask, NULL);
+    }
 
-  return ret;
+    return ret;
 }
 #endif /* __ASSUME_PSELECT  */

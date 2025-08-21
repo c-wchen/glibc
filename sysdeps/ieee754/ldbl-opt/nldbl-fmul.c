@@ -21,8 +21,7 @@
 #undef fmull
 
 float
-attribute_hidden
-fmull (double x, double y)
+attribute_hidden fmull(double x, double y)
 {
-  return fmul (x, y);
+    return fmul(x, y);
 }

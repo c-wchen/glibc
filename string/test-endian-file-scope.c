@@ -21,24 +21,23 @@
 
 int i;
 
-size_t s0 = sizeof (htobe16 (i));
-size_t s1 = sizeof (htole16 (i));
-size_t s2 = sizeof (be16toh (i));
-size_t s3 = sizeof (le16toh (i));
-size_t s4 = sizeof (htobe32 (i));
-size_t s5 = sizeof (htole32 (i));
-size_t s6 = sizeof (be32toh (i));
-size_t s7 = sizeof (le32toh (i));
-size_t s8 = sizeof (htobe64 (i));
-size_t s9 = sizeof (htole64 (i));
-size_t s10 = sizeof (be64toh (i));
-size_t s11 = sizeof (le64toh (i));
+size_t s0 = sizeof(htobe16(i));
+size_t s1 = sizeof(htole16(i));
+size_t s2 = sizeof(be16toh(i));
+size_t s3 = sizeof(le16toh(i));
+size_t s4 = sizeof(htobe32(i));
+size_t s5 = sizeof(htole32(i));
+size_t s6 = sizeof(be32toh(i));
+size_t s7 = sizeof(le32toh(i));
+size_t s8 = sizeof(htobe64(i));
+size_t s9 = sizeof(htole64(i));
+size_t s10 = sizeof(be64toh(i));
+size_t s11 = sizeof(le64toh(i));
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* This is a compilation test.  */
-  return 0;
+    /* This is a compilation test.  */
+    return 0;
 }
 
 #include <support/test-driver.c>

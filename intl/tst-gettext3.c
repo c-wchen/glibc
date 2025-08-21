@@ -23,38 +23,35 @@
 #include <stdlib.h>
 #include <string.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char *s;
-  int result = 0;
+    char *s;
+    int result = 0;
 
-  unsetenv ("LANGUAGE");
-  unsetenv ("OUTPUT_CHARSET");
-  textdomain ("codeset");
-  bindtextdomain ("codeset", OBJPFX "domaindir");
+    unsetenv("LANGUAGE");
+    unsetenv("OUTPUT_CHARSET");
+    textdomain("codeset");
+    bindtextdomain("codeset", OBJPFX "domaindir");
 
-  setlocale (LC_ALL, "de_DE.ISO-8859-1");
+    setlocale(LC_ALL, "de_DE.ISO-8859-1");
 
-  /* Here we expect output in ISO-8859-1.  */
-  s = gettext ("cheese");
-  if (strcmp (s, "K\344se"))
-    {
-      printf ("call 1 returned: %s\n", s);
-      result = 1;
+    /* Here we expect output in ISO-8859-1.  */
+    s = gettext("cheese");
+    if (strcmp(s, "K\344se")) {
+        printf("call 1 returned: %s\n", s);
+        result = 1;
     }
 
-  setlocale (LC_ALL, "de_DE.UTF-8");
+    setlocale(LC_ALL, "de_DE.UTF-8");
 
-  /* Here we expect output in UTF-8.  */
-  s = gettext ("cheese");
-  if (strcmp (s, "K\303\244se"))
-    {
-      printf ("call 2 returned: %s\n", s);
-      result = 1;
+    /* Here we expect output in UTF-8.  */
+    s = gettext("cheese");
+    if (strcmp(s, "K\303\244se")) {
+        printf("call 2 returned: %s\n", s);
+        result = 1;
     }
 
-  return result;
+    return result;
 }
 
 #define TEST_FUNCTION do_test ()

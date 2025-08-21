@@ -30,6 +30,6 @@
 # define SYMBOL_NAME rint
 # include "ifunc-sse4_1.h"
 
-libc_ifunc_redirected (__redirect_rint, __rint, IFUNC_SELECTOR ());
-libm_alias_double (__rint, rint)
+libc_ifunc_redirected(__redirect_rint, __rint, IFUNC_SELECTOR());
+libm_alias_double(__rint, rint)
 #endif

@@ -27,25 +27,26 @@
 #include "libioP.h"
 #include <stdio.h>
 
-size_t
-__fread_unlocked_chk (void *__restrict ptr, size_t ptrlen,
-		      size_t size, size_t n, FILE *__restrict stream)
+size_t __fread_unlocked_chk(void *__restrict ptr, size_t ptrlen,
+                            size_t size, size_t n, FILE *__restrict stream)
 {
-  size_t bytes_requested = size * n;
-  if (__builtin_expect ((n | size)
-			>= (((size_t) 1) << (8 * sizeof (size_t) / 2)), 0))
-    {
-      if (size != 0 && bytes_requested / size != n)
-	__chk_fail ();
+    size_t bytes_requested = size * n;
+    if (__builtin_expect((n | size)
+                         >= (((size_t) 1) << (8 * sizeof(size_t) / 2)), 0)) {
+        if (size != 0 && bytes_requested / size != n) {
+            __chk_fail();
+        }
     }
 
-  if (__glibc_unlikely (bytes_requested > ptrlen))
-    __chk_fail ();
+    if (__glibc_unlikely(bytes_requested > ptrlen)) {
+        __chk_fail();
+    }
 
-  CHECK_FILE (stream, 0);
-  if (bytes_requested == 0)
-    return 0;
+    CHECK_FILE(stream, 0);
+    if (bytes_requested == 0) {
+        return 0;
+    }
 
-  size_t bytes_read = _IO_sgetn (stream, (char *) ptr, bytes_requested);
-  return bytes_requested == bytes_read ? n : bytes_read / size;
+    size_t bytes_read = _IO_sgetn(stream, (char *) ptr, bytes_requested);
+    return bytes_requested == bytes_read ? n : bytes_read / size;
 }

@@ -23,14 +23,15 @@
 
 #if LIBM_SVID_COMPAT
 /* wrapper acosl */
-long double
-__acoshl (long double x)
+long double __acoshl(long double x)
 {
-  if (__builtin_expect (isless (x, 1.0L), 0) && _LIB_VERSION != _IEEE_)
-    /* acosh(x<1) */
-    return __kernel_standard_l (x, x, 229);
+    if (__builtin_expect(isless(x, 1.0L), 0) && _LIB_VERSION != _IEEE_)
+        /* acosh(x<1) */
+    {
+        return __kernel_standard_l(x, x, 229);
+    }
 
-  return __ieee754_acoshl (x);
+    return __ieee754_acoshl(x);
 }
-libm_alias_ldouble (__acosh, acosh)
+libm_alias_ldouble(__acosh, acosh)
 #endif

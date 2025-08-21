@@ -24,72 +24,63 @@
 static int fd[2];
 
 
-static void *
-tf (void *arg)
+static void *tf(void *arg)
 {
-  char buf[100];
+    char buf[100];
 
-  if (read (fd[0], buf, sizeof (buf)) == sizeof (buf))
-    {
-      puts ("read succeeded");
-      return (void *) 1l;
+    if (read(fd[0], buf, sizeof(buf)) == sizeof(buf)) {
+        puts("read succeeded");
+        return (void *) 1l;
     }
 
-  return NULL;
+    return NULL;
 }
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  pthread_t th;
-  void *r;
-  struct sigaction sa;
+    pthread_t th;
+    void *r;
+    struct sigaction sa;
 
-  sa.sa_handler = SIG_IGN;
-  sigemptyset (&sa.sa_mask);
-  sa.sa_flags = 0;
+    sa.sa_handler = SIG_IGN;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
 
-  if (sigaction (SIGPIPE, &sa, NULL) != 0)
-    {
-      puts ("sigaction failed");
-      return 1;
+    if (sigaction(SIGPIPE, &sa, NULL) != 0) {
+        puts("sigaction failed");
+        return 1;
     }
 
-  if (pipe (fd) != 0)
-    {
-      puts ("pipe failed");
-      return 1;
+    if (pipe(fd) != 0) {
+        puts("pipe failed");
+        return 1;
     }
 
-  if (pthread_create (&th, NULL, tf, NULL) != 0)
-    {
-      puts ("create failed");
-      return 1;
+    if (pthread_create(&th, NULL, tf, NULL) != 0) {
+        puts("create failed");
+        return 1;
     }
 
-  if (pthread_cancel (th) != 0)
-    {
-      puts ("cancel failed");
-      return 1;
+    if (pthread_cancel(th) != 0) {
+        puts("cancel failed");
+        return 1;
     }
 
-  /* This will cause the read in the child to return.  */
-  close (fd[0]);
+    /* This will cause the read in the child to return.  */
+    close(fd[0]);
 
-  if (pthread_join (th, &r) != 0)
-    {
-      puts ("join failed");
-      return 1;
+    if (pthread_join(th, &r) != 0) {
+        puts("join failed");
+        return 1;
     }
 
-  if (r != PTHREAD_CANCELED)
-    {
-      puts ("result is wrong");
-      return 1;
+    if (r != PTHREAD_CANCELED) {
+        puts("result is wrong");
+        return 1;
     }
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

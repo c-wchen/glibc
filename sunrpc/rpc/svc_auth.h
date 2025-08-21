@@ -32,7 +32,7 @@
  */
 
 #ifndef _RPC_SVC_AUTH_H
-#define _RPC_SVC_AUTH_H	1
+#define _RPC_SVC_AUTH_H 1
 
 #include <features.h>
 #include <rpc/svc.h>
@@ -42,8 +42,8 @@ __BEGIN_DECLS
 /*
  * Server side authenticator
  */
-extern enum auth_stat _authenticate (struct svc_req *__rqst,
-				     struct rpc_msg *__msg) __THROW;
+extern enum auth_stat _authenticate(struct svc_req *__rqst,
+                                    struct rpc_msg *__msg) __THROW;
 
 __END_DECLS
 

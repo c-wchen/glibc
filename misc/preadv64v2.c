@@ -20,12 +20,11 @@
 #include <sys/uio.h>
 
 /* Same as preadv64 but with an additional flag argument.  */
-ssize_t
-preadv64v2 (int fd, const struct iovec *vector, int count, off64_t offset,
-	    int flags)
+ssize_t preadv64v2(int fd, const struct iovec *vector, int count, off64_t offset,
+                   int flags)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (preadv64v2)
+stub_warning(preadv64v2)

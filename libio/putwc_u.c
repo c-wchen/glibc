@@ -18,10 +18,9 @@
 #include "libioP.h"
 #include <wchar.h>
 
-wint_t
-putwc_unlocked (wchar_t wc, FILE *fp)
+wint_t putwc_unlocked(wchar_t wc, FILE *fp)
 {
-  CHECK_FILE (fp, WEOF);
-  return _IO_putwc_unlocked (wc, fp);
+    CHECK_FILE(fp, WEOF);
+    return _IO_putwc_unlocked(wc, fp);
 }
-libc_hidden_def (putwc_unlocked)
+libc_hidden_def(putwc_unlocked)

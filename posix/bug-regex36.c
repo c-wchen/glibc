@@ -19,11 +19,10 @@
 #include <mcheck.h>
 #include <regex.h>
 
-int
-main (int argc, char **argv)
+int main(int argc, char **argv)
 {
-  regex_t r;
-  mtrace ();
-  regcomp (&r, "[a]\\|[a]\\{-2,}", 0);
-  regfree (&r);
+    regex_t r;
+    mtrace();
+    regcomp(&r, "[a]\\|[a]\\{-2,}", 0);
+    regfree(&r);
 }

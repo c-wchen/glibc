@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef FIX_FP_INT_CONVERT_OVERFLOW_H
-#define FIX_FP_INT_CONVERT_OVERFLOW_H	1
+#define FIX_FP_INT_CONVERT_OVERFLOW_H   1
 
 /* Define these macros to 1 to workaround conversions of out-of-range
    floating-point numbers to integer types failing to raise the

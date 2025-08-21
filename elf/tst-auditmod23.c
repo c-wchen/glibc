@@ -23,23 +23,20 @@
 #include <string.h>
 #include <sys/auxv.h>
 
-unsigned int
-la_version (unsigned int version)
+unsigned int la_version(unsigned int version)
 {
-  return LAV_CURRENT;
+    return LAV_CURRENT;
 }
 
-struct map_desc_t
-{
-  char *lname;
-  uintptr_t laddr;
-  Lmid_t lmid;
+struct map_desc_t {
+    char *lname;
+    uintptr_t laddr;
+    Lmid_t lmid;
 };
 
-void
-la_activity (uintptr_t *cookie, unsigned int flag)
+void la_activity(uintptr_t *cookie, unsigned int flag)
 {
-  fprintf (stderr, "%s: %d %"PRIxPTR"\n", __func__, flag, (uintptr_t) cookie);
+    fprintf(stderr, "%s: %d %"PRIxPTR"\n", __func__, flag, (uintptr_t) cookie);
 }
 
 unsigned int

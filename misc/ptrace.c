@@ -29,80 +29,78 @@
    appear (those that are used for the particular request) as:
      pid_t PID, void *ADDR, int DATA, void *ADDR2
    after PID.  */
-int
-ptrace (enum __ptrace_request request, ...)
+int ptrace(enum __ptrace_request request, ...)
 {
-  pid_t pid;
-  void *addr;
-  void *addr2;
-  int data;
-  va_list ap;
+    pid_t pid;
+    void *addr;
+    void *addr2;
+    int data;
+    va_list ap;
 
-  switch (request)
-    {
-    case PTRACE_TRACEME:
-    case PTRACE_CONT:
-    case PTRACE_KILL:
-    case PTRACE_SINGLESTEP:
-    case PTRACE_ATTACH:
-    case PTRACE_DETACH:
-      break;
+    switch (request) {
+        case PTRACE_TRACEME:
+        case PTRACE_CONT:
+        case PTRACE_KILL:
+        case PTRACE_SINGLESTEP:
+        case PTRACE_ATTACH:
+        case PTRACE_DETACH:
+            break;
 
-    case PTRACE_PEEKTEXT:
-    case PTRACE_PEEKDATA:
-    case PTRACE_PEEKUSER:
-    case PTRACE_GETREGS:
-    case PTRACE_SETREGS:
+        case PTRACE_PEEKTEXT:
+        case PTRACE_PEEKDATA:
+        case PTRACE_PEEKUSER:
+        case PTRACE_GETREGS:
+        case PTRACE_SETREGS:
 #ifdef PTRACE_GETFPREGS
-    case PTRACE_GETFPGEGS:
+        case PTRACE_GETFPGEGS:
 #endif
-    case PTRACE_SETFPREGS:
-    case PTRACE_GETFPAREGS:
-    case PTRACE_SETFPAREGS:
-      va_start (ap, request);
-      pid = va_arg (ap, pid_t);
-      addr = va_arg (ap, void *);
-      va_end (ap);
-      ignore_value (pid);
-      ignore_value (addr);
-      break;
+        case PTRACE_SETFPREGS:
+        case PTRACE_GETFPAREGS:
+        case PTRACE_SETFPAREGS:
+            va_start(ap, request);
+            pid = va_arg(ap, pid_t);
+            addr = va_arg(ap, void *);
+            va_end(ap);
+            ignore_value(pid);
+            ignore_value(addr);
+            break;
 
-    case PTRACE_POKETEXT:
-    case PTRACE_POKEDATA:
-    case PTRACE_POKEUSER:
-      va_start (ap, request);
-      pid = va_arg (ap, pid_t);
-      addr = va_arg (ap, void *);
-      data = va_arg (ap, int);
-      va_end (ap);
-      ignore_value (pid);
-      ignore_value (addr);
-      ignore_value (data);
-      break;
+        case PTRACE_POKETEXT:
+        case PTRACE_POKEDATA:
+        case PTRACE_POKEUSER:
+            va_start(ap, request);
+            pid = va_arg(ap, pid_t);
+            addr = va_arg(ap, void *);
+            data = va_arg(ap, int);
+            va_end(ap);
+            ignore_value(pid);
+            ignore_value(addr);
+            ignore_value(data);
+            break;
 
-    case PTRACE_READDATA:
-    case PTRACE_WRITEDATA:
-    case PTRACE_READTEXT:
-    case PTRACE_WRITETEXT:
-      va_start (ap, request);
-      pid = va_arg (ap, pid_t);
-      addr = va_arg (ap, void *);
-      data = va_arg (ap, int);
-      addr2 = va_arg (ap, void *);
-      va_end (ap);
-      ignore_value (pid);
-      ignore_value (addr);
-      ignore_value (data);
-      ignore_value (addr2);
-      break;
+        case PTRACE_READDATA:
+        case PTRACE_WRITEDATA:
+        case PTRACE_READTEXT:
+        case PTRACE_WRITETEXT:
+            va_start(ap, request);
+            pid = va_arg(ap, pid_t);
+            addr = va_arg(ap, void *);
+            data = va_arg(ap, int);
+            addr2 = va_arg(ap, void *);
+            va_end(ap);
+            ignore_value(pid);
+            ignore_value(addr);
+            ignore_value(data);
+            ignore_value(addr2);
+            break;
 
-    default:
-      __set_errno (EINVAL);
-      return -1;
+        default:
+            __set_errno(EINVAL);
+            return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (ptrace)
+stub_warning(ptrace)

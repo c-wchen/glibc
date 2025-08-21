@@ -16,17 +16,17 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef	_MACH_SETUP_THREAD_H
+#ifndef _MACH_SETUP_THREAD_H
 
-#define	_MACH_SETUP_THREAD_H	1
+#define _MACH_SETUP_THREAD_H    1
 
 #include <mach.h>
 
 /* Like mach_setup_thread (), but suitable for setting up function
    calls.  */
-kern_return_t __mach_setup_thread_call (task_t task, thread_t thread,
-					void *function,
-					vm_address_t *stack_base,
-					vm_size_t *stack_size);
+kern_return_t __mach_setup_thread_call(task_t task, thread_t thread,
+                                       void *function,
+                                       vm_address_t *stack_base,
+                                       vm_size_t *stack_size);
 
-#endif	/* mach/setup-thread.h */
+#endif  /* mach/setup-thread.h */

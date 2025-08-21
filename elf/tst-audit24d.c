@@ -19,18 +19,17 @@
 #include <support/check.h>
 #include <support/support.h>
 
-int tst_audit24dmod1_func1 (void);
-int tst_audit24dmod1_func2 (void);
-int tst_audit24dmod2_func1 (void);
+int tst_audit24dmod1_func1(void);
+int tst_audit24dmod1_func2(void);
+int tst_audit24dmod2_func1(void);
 
-int
-do_test (void)
+int do_test(void)
 {
-  TEST_COMPARE (tst_audit24dmod1_func1 (), 1);
-  TEST_COMPARE (tst_audit24dmod1_func2 (), 32);
-  TEST_COMPARE (tst_audit24dmod2_func1 (), 10);
+    TEST_COMPARE(tst_audit24dmod1_func1(), 1);
+    TEST_COMPARE(tst_audit24dmod1_func2(), 32);
+    TEST_COMPARE(tst_audit24dmod2_func1(), 10);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

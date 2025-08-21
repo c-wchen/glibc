@@ -20,8 +20,7 @@
 
 extern int undefined_mod16;
 
-int
-global_function_mod16 (void)
+int global_function_mod16(void)
 {
-  return undefined_mod16;
+    return undefined_mod16;
 }

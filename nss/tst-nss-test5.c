@@ -31,78 +31,77 @@
    commented) between the given and expected entries.  */
 
 static struct passwd pwd_table[] = {
-  PWD (100),  /* baseline, matches */
-  PWD (300),  /* wrong name and uid */
-  PWD_N (200, NULL), /* missing name */
-  PWD (60), /* unexpected name */
-  { .pw_name = (char *)"name20000",  .pw_passwd = (char *) "*", .pw_uid = 20000,  \
-    .pw_gid = 200, .pw_gecos = (char *) "*", .pw_dir = (char *) "*",	\
-    .pw_shell = (char *) "*" }, /* wrong gid */
-  { .pw_name = (char *)"name2",  .pw_passwd = (char *) "x", .pw_uid = 2,  \
-    .pw_gid = 2, .pw_gecos = (char *) "y", .pw_dir = (char *) "z",	\
-    .pw_shell = (char *) "*" }, /* spot check other text fields */
-  PWD_LAST ()
+    PWD(100),   /* baseline, matches */
+    PWD(300),   /* wrong name and uid */
+    PWD_N(200, NULL),  /* missing name */
+    PWD(60),  /* unexpected name */
+    {
+        .pw_name = (char *)"name20000",  .pw_passwd = (char *) "*", .pw_uid = 20000,  \
+        .pw_gid = 200, .pw_gecos = (char *) "*", .pw_dir = (char *) "*",    \
+        .pw_shell = (char *) "*"
+    }, /* wrong gid */
+    {
+        .pw_name = (char *)"name2",  .pw_passwd = (char *) "x", .pw_uid = 2,  \
+        .pw_gid = 2, .pw_gecos = (char *) "y", .pw_dir = (char *) "z",  \
+        .pw_shell = (char *) "*"
+    }, /* spot check other text fields */
+    PWD_LAST()
 };
 
 static struct passwd exp_table[] = {
-  PWD (100),
-  PWD (30),
-  PWD (200),
-  PWD_N (60, NULL),
-  PWD (20000),
-  PWD (2),
-  PWD_LAST ()
+    PWD(100),
+    PWD(30),
+    PWD(200),
+    PWD_N(60, NULL),
+    PWD(20000),
+    PWD(2),
+    PWD_LAST()
 };
 
-void
-_nss_test1_init_hook(test_tables *t)
+void _nss_test1_init_hook(test_tables *t)
 {
-  t->pwd_table = pwd_table;
+    t->pwd_table = pwd_table;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int retval = 0;
-  int i;
-  struct passwd *p;
+    int retval = 0;
+    int i;
+    struct passwd *p;
 
-  __nss_configure_lookup ("passwd", "test1");
+    __nss_configure_lookup("passwd", "test1");
 
-  setpwent ();
+    setpwent();
 
-  i = 0;
-  for (p = getpwent ();
-       p != NULL && ! PWD_ISLAST (& exp_table[i]);
-       ++i, p = getpwent ())
-    retval += compare_passwds (i, p, & exp_table[i]);
-
-  endpwent ();
-
-
-  if (p)
-    {
-      printf ("FAIL: [?] passwd entry %u.%s unexpected\n", p->pw_uid, p->pw_name);
-      ++retval;
+    i = 0;
+    for (p = getpwent();
+         p != NULL && ! PWD_ISLAST(& exp_table[i]);
+         ++i, p = getpwent()) {
+        retval += compare_passwds(i, p, & exp_table[i]);
     }
-  if (! PWD_ISLAST (& exp_table[i]))
-    {
-      printf ("FAIL: [%d] passwd entry %u.%s missing\n", i,
-	      exp_table[i].pw_uid, exp_table[i].pw_name);
-      ++retval;
+
+    endpwent();
+
+
+    if (p) {
+        printf("FAIL: [?] passwd entry %u.%s unexpected\n", p->pw_uid, p->pw_name);
+        ++retval;
+    }
+    if (! PWD_ISLAST(& exp_table[i])) {
+        printf("FAIL: [%d] passwd entry %u.%s missing\n", i,
+               exp_table[i].pw_uid, exp_table[i].pw_name);
+        ++retval;
     }
 
 #define EXPECTED 9
-  if (retval == EXPECTED)
-    {
-      if (retval > 0)
-	printf ("PASS: Found %d expected errors\n", retval);
-      return 0;
-    }
-  else
-    {
-      printf ("FAIL: Found %d errors, expected %d\n", retval, EXPECTED);
-      return 1;
+    if (retval == EXPECTED) {
+        if (retval > 0) {
+            printf("PASS: Found %d expected errors\n", retval);
+        }
+        return 0;
+    } else {
+        printf("FAIL: Found %d errors, expected %d\n", retval, EXPECTED);
+        return 1;
     }
 }
 

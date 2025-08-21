@@ -19,38 +19,40 @@
 #include "thread_dbP.h"
 
 
-td_err_e
-td_thr_getfpregs (const td_thrhandle_t *th, prfpregset_t *regset)
+td_err_e td_thr_getfpregs(const td_thrhandle_t *th, prfpregset_t *regset)
 {
-  psaddr_t cancelhandling, tid;
-  td_err_e err;
+    psaddr_t cancelhandling, tid;
+    td_err_e err;
 
-  LOG ("td_thr_getfpregs");
+    LOG("td_thr_getfpregs");
 
-  if (th->th_unique == NULL)
-    /* Special case for the main thread before initialization.  */
-    return ps_lgetfpregs (th->th_ta_p->ph, ps_getpid (th->th_ta_p->ph),
-			  regset) != PS_OK ? TD_ERR : TD_OK;
+    if (th->th_unique == NULL)
+        /* Special case for the main thread before initialization.  */
+        return ps_lgetfpregs(th->th_ta_p->ph, ps_getpid(th->th_ta_p->ph),
+                             regset) != PS_OK ? TD_ERR : TD_OK;
 
-  /* We have to get the state and the PID for this thread.  */
-  err = DB_GET_FIELD (cancelhandling, th->th_ta_p, th->th_unique, pthread,
-		      cancelhandling, 0);
-  if (err != TD_OK)
-    return err;
-
-  /* If the thread already terminated we return all zeroes.  */
-  if (((int) (uintptr_t) cancelhandling) & TERMINATED_BITMASK)
-    memset (regset, '\0', sizeof (*regset));
-  /* Otherwise get the register content through the callback.  */
-  else
-    {
-      err = DB_GET_FIELD (tid, th->th_ta_p, th->th_unique, pthread, tid, 0);
-      if (err != TD_OK)
-	return err;
-
-      if (ps_lgetfpregs (th->th_ta_p->ph, (uintptr_t) tid, regset) != PS_OK)
-	return TD_ERR;
+    /* We have to get the state and the PID for this thread.  */
+    err = DB_GET_FIELD(cancelhandling, th->th_ta_p, th->th_unique, pthread,
+                       cancelhandling, 0);
+    if (err != TD_OK) {
+        return err;
     }
 
-  return TD_OK;
+    /* If the thread already terminated we return all zeroes.  */
+    if (((int)(uintptr_t) cancelhandling) & TERMINATED_BITMASK) {
+        memset(regset, '\0', sizeof(*regset));
+    }
+    /* Otherwise get the register content through the callback.  */
+    else {
+        err = DB_GET_FIELD(tid, th->th_ta_p, th->th_unique, pthread, tid, 0);
+        if (err != TD_OK) {
+            return err;
+        }
+
+        if (ps_lgetfpregs(th->th_ta_p->ph, (uintptr_t) tid, regset) != PS_OK) {
+            return TD_ERR;
+        }
+    }
+
+    return TD_OK;
 }

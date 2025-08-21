@@ -24,150 +24,147 @@
 
 #include <dl-hwcaps.h>
 
-void
-_dl_usage (const char *argv0, const char *wrong_option)
+void _dl_usage(const char *argv0, const char *wrong_option)
 {
-  if (wrong_option != NULL)
-    _dl_error_printf ("%s: unrecognized option '%s'\n", argv0, wrong_option);
-  else
-    _dl_error_printf ("%s: missing program name\n", argv0);
-  _dl_error_printf ("Try '%s --help' for more information.\n", argv0);
-  _exit (EXIT_FAILURE);
+    if (wrong_option != NULL) {
+        _dl_error_printf("%s: unrecognized option '%s'\n", argv0, wrong_option);
+    } else {
+        _dl_error_printf("%s: missing program name\n", argv0);
+    }
+    _dl_error_printf("Try '%s --help' for more information.\n", argv0);
+    _exit(EXIT_FAILURE);
 }
 
-void
-_dl_version (void)
+void _dl_version(void)
 {
-  _dl_printf ("\
+    _dl_printf("\
 ld.so " PKGVERSION RELEASE " release version " VERSION ".\n\
 Copyright (C) 2025 Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.\n\
 There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A\n\
 PARTICULAR PURPOSE.\n\
 ");
-  _exit (EXIT_SUCCESS);
+    _exit(EXIT_SUCCESS);
 }
 
 /* Print part of the library search path (from a single source).  */
-static void
-print_search_path_for_help_1 (struct r_search_path_elem **list)
+static void print_search_path_for_help_1(struct r_search_path_elem **list)
 {
-  if (list == NULL || list == (void *) -1)
-    /* Path is missing or marked as inactive.  */
-    return;
-
-  for (; *list != NULL; ++list)
+    if (list == NULL || list == (void *) -1)
+        /* Path is missing or marked as inactive.  */
     {
-      _dl_write (STDOUT_FILENO, "  ", 2);
-      const char *name = (*list)->dirname;
-      size_t namelen = (*list)->dirnamelen;
-      if (namelen == 0)
+        return;
+    }
+
+    for (; *list != NULL; ++list) {
+        _dl_write(STDOUT_FILENO, "  ", 2);
+        const char *name = (*list)->dirname;
+        size_t namelen = (*list)->dirnamelen;
+        if (namelen == 0) {
+            /* The empty string denotes the current directory.  */
+            name = ".";
+            namelen = 1;
+        } else if (namelen > 1)
+            /* Remove the trailing slash.  */
         {
-          /* The empty string denotes the current directory.  */
-          name = ".";
-          namelen = 1;
+            --namelen;
         }
-      else if (namelen > 1)
-        /* Remove the trailing slash.  */
-        --namelen;
-      _dl_write (STDOUT_FILENO, name, namelen);
-      _dl_printf (" (%s)\n", (*list)->what);
+        _dl_write(STDOUT_FILENO, name, namelen);
+        _dl_printf(" (%s)\n", (*list)->what);
     }
 }
 
 /* Prints the library search path.  See _dl_init_paths in dl-load.c
    how this information is populated.  */
-static void
-print_search_path_for_help (struct dl_main_state *state)
+static void print_search_path_for_help(struct dl_main_state *state)
 {
-  if (__rtld_search_dirs.dirs == NULL)
-    /* The run-time search paths have not yet been initialized.  */
-    call_init_paths (state);
+    if (__rtld_search_dirs.dirs == NULL)
+        /* The run-time search paths have not yet been initialized.  */
+    {
+        call_init_paths(state);
+    }
 
-  _dl_printf ("\nShared library search path:\n");
+    _dl_printf("\nShared library search path:\n");
 
-  /* The print order should reflect the processing in
-     _dl_map_object.  */
+    /* The print order should reflect the processing in
+       _dl_map_object.  */
 
-  struct link_map *map = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
-  if (map != NULL)
-    print_search_path_for_help_1 (map->l_rpath_dirs.dirs);
+    struct link_map *map = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
+    if (map != NULL) {
+        print_search_path_for_help_1(map->l_rpath_dirs.dirs);
+    }
 
-  print_search_path_for_help_1 (__rtld_env_path_list.dirs);
+    print_search_path_for_help_1(__rtld_env_path_list.dirs);
 
-  if (map != NULL)
-    print_search_path_for_help_1 (map->l_runpath_dirs.dirs);
+    if (map != NULL) {
+        print_search_path_for_help_1(map->l_runpath_dirs.dirs);
+    }
 
-  if (!GLRO(dl_inhibit_cache))
-    _dl_printf ("  (libraries located via %s)\n", LD_SO_CACHE);
+    if (!GLRO(dl_inhibit_cache)) {
+        _dl_printf("  (libraries located via %s)\n", LD_SO_CACHE);
+    }
 
-  print_search_path_for_help_1 (__rtld_search_dirs.dirs);
+    print_search_path_for_help_1(__rtld_search_dirs.dirs);
 }
 
 /* Print the header for print_hwcaps_subdirectories.  */
-static void
-print_hwcaps_subdirectories_header (bool *nothing_printed)
+static void print_hwcaps_subdirectories_header(bool *nothing_printed)
 {
-  if (*nothing_printed)
-    {
-      _dl_printf ("\n\
+    if (*nothing_printed) {
+        _dl_printf("\n\
 Subdirectories of glibc-hwcaps directories, in priority order:\n");
-      *nothing_printed = false;
+        *nothing_printed = false;
     }
 }
 
 /* Print the HWCAP name itself, indented.  */
-static void
-print_hwcaps_subdirectories_name (const struct dl_hwcaps_split *split)
+static void print_hwcaps_subdirectories_name(const struct dl_hwcaps_split *split)
 {
-  _dl_write (STDOUT_FILENO, "  ", 2);
-  _dl_write (STDOUT_FILENO, split->segment, split->length);
+    _dl_write(STDOUT_FILENO, "  ", 2);
+    _dl_write(STDOUT_FILENO, split->segment, split->length);
 }
 
 /* Print the list of recognized glibc-hwcaps subdirectories.  */
-static void
-print_hwcaps_subdirectories (const struct dl_main_state *state)
+static void print_hwcaps_subdirectories(const struct dl_main_state *state)
 {
-  bool nothing_printed = true;
-  struct dl_hwcaps_split split;
+    bool nothing_printed = true;
+    struct dl_hwcaps_split split;
 
-  /* The prepended glibc-hwcaps subdirectories.  */
-  _dl_hwcaps_split_init (&split, state->glibc_hwcaps_prepend);
-  while (_dl_hwcaps_split (&split))
-    {
-      print_hwcaps_subdirectories_header (&nothing_printed);
-      print_hwcaps_subdirectories_name (&split);
-      _dl_printf (" (searched)\n");
+    /* The prepended glibc-hwcaps subdirectories.  */
+    _dl_hwcaps_split_init(&split, state->glibc_hwcaps_prepend);
+    while (_dl_hwcaps_split(&split)) {
+        print_hwcaps_subdirectories_header(&nothing_printed);
+        print_hwcaps_subdirectories_name(&split);
+        _dl_printf(" (searched)\n");
     }
 
-  /* The built-in glibc-hwcaps subdirectories.  Do the filtering
-     manually, so that more precise diagnostics are possible.  */
-  uint32_t mask = _dl_hwcaps_subdirs_active ();
-  _dl_hwcaps_split_init (&split, _dl_hwcaps_subdirs);
-  while (_dl_hwcaps_split (&split))
-    {
-      print_hwcaps_subdirectories_header (&nothing_printed);
-      print_hwcaps_subdirectories_name (&split);
-      bool listed = _dl_hwcaps_contains (state->glibc_hwcaps_mask,
-                                         split.segment, split.length);
-      if (mask & 1)
-        _dl_printf (" (supported, %s)\n", listed ? "searched" : "masked");
-      else if (!listed)
-        _dl_printf (" (masked)\n");
-      else
-        _dl_printf ("\n");
-      mask >>= 1;
+    /* The built-in glibc-hwcaps subdirectories.  Do the filtering
+       manually, so that more precise diagnostics are possible.  */
+    uint32_t mask = _dl_hwcaps_subdirs_active();
+    _dl_hwcaps_split_init(&split, _dl_hwcaps_subdirs);
+    while (_dl_hwcaps_split(&split)) {
+        print_hwcaps_subdirectories_header(&nothing_printed);
+        print_hwcaps_subdirectories_name(&split);
+        bool listed = _dl_hwcaps_contains(state->glibc_hwcaps_mask,
+                                          split.segment, split.length);
+        if (mask & 1) {
+            _dl_printf(" (supported, %s)\n", listed ? "searched" : "masked");
+        } else if (!listed) {
+            _dl_printf(" (masked)\n");
+        } else {
+            _dl_printf("\n");
+        }
+        mask >>= 1;
     }
 
-  if (nothing_printed)
-    _dl_printf ("\n\
+    if (nothing_printed)
+        _dl_printf("\n\
 No subdirectories of glibc-hwcaps directories are searched.\n");
 }
 
-void
-_dl_help (const char *argv0, struct dl_main_state *state)
+void _dl_help(const char *argv0, struct dl_main_state *state)
 {
-  _dl_printf ("\
+    _dl_printf("\
 Usage: %s [OPTION]... EXECUTABLE-FILE [ARGS-FOR-PROGRAM...]\n\
 You have invoked 'ld.so', the program interpreter for dynamically-linked\n\
 ELF programs.  Usually, the program interpreter is invoked automatically\n\
@@ -203,8 +200,8 @@ setting environment variables (which would be inherited by subprocesses).\n\
 \n\
 This program interpreter self-identifies as: " RTLD "\n\
 ",
-              argv0);
-  print_search_path_for_help (state);
-  print_hwcaps_subdirectories (state);
-  _exit (EXIT_SUCCESS);
+               argv0);
+    print_search_path_for_help(state);
+    print_hwcaps_subdirectories(state);
+    _exit(EXIT_SUCCESS);
 }

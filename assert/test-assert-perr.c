@@ -16,73 +16,75 @@
 jmp_buf rec;
 char buf[160];
 
-static void
-sigabrt (int unused)
+static void sigabrt(int unused)
 {
-  longjmp (rec, 1);  /* recover control */
+    longjmp(rec, 1);   /* recover control */
 }
 
 #undef NDEBUG
 #include <assert.h>
-static void
-assert1 (void)
+static void assert1(void)
 {
-  assert_perror (1);
+    assert_perror(1);
 }
 
-static void
-assert2 (void)
+static void assert2(void)
 {
-  assert_perror (0);
+    assert_perror(0);
 }
 
 #define NDEBUG
 #include <assert.h>
-static void
-assert3 (void)
+static void assert3(void)
 {
-  assert_perror (2);
+    assert_perror(2);
 }
 
-int
-main(void)
+int main(void)
 {
-  volatile int failed = 1;  /* safety in presence of longjmp() */
+    volatile int failed = 1;  /* safety in presence of longjmp() */
 
-  fclose (stderr);
-  stderr = tmpfile ();
-  if (!stderr)
-    abort ();
+    fclose(stderr);
+    stderr = tmpfile();
+    if (!stderr) {
+        abort();
+    }
 
-  signal (SIGABRT, sigabrt);
+    signal(SIGABRT, sigabrt);
 
-  if (!setjmp (rec))
-    assert1 ();
-  else
-    failed = 0;  /* should happen */
+    if (!setjmp(rec)) {
+        assert1();
+    } else {
+        failed = 0;    /* should happen */
+    }
 
-  if (!setjmp (rec))
-    assert2 ();
-  else
-    failed = 1; /* should not happen */
+    if (!setjmp(rec)) {
+        assert2();
+    } else {
+        failed = 1;    /* should not happen */
+    }
 
-  if (!setjmp (rec))
-    assert3 ();
-  else
-    failed = 1; /* should not happen */
+    if (!setjmp(rec)) {
+        assert3();
+    } else {
+        failed = 1;    /* should not happen */
+    }
 
-  rewind (stderr);
-  xfgets (buf, 160, stderr);
-  if (!strstr(buf, strerror (1)))
-    failed = 1;
+    rewind(stderr);
+    xfgets(buf, 160, stderr);
+    if (!strstr(buf, strerror(1))) {
+        failed = 1;
+    }
 
-  xfgets (buf, 160, stderr);
-  if (strstr (buf, strerror (0)))
-    failed = 1;
+    xfgets(buf, 160, stderr);
+    if (strstr(buf, strerror(0))) {
+        failed = 1;
+    }
 
-  xfgets (buf, 160, stderr);
-  if (strstr (buf, strerror (2)))
-    failed = 1;
+    xfgets(buf, 160, stderr);
+    if (strstr(buf, strerror(2))) {
+        failed = 1;
+    }
 
-  return failed;
+    return failed;
 }

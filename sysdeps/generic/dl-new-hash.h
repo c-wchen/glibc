@@ -62,47 +62,45 @@
 # define __asm_reassociation_barrier(...)
 #endif
 
-static __always_inline uint32_t
-__attribute__ ((unused))
-_dl_new_hash (const char *str)
+static __always_inline uint32_t __attribute__((unused))
+_dl_new_hash(const char *str)
 {
-  const unsigned char *s = (const unsigned char *) str;
-  unsigned int h = 5381;
-  unsigned int c0, c1;
-  for (;;)
-    {
-      c0 = s[0];
-      /* Since hashed string is normally not empty, this is unlikely on the
-	 first iteration of the loop.  */
-      if (__glibc_unlikely (c0 == 0))
-	return h;
+    const unsigned char *s = (const unsigned char *) str;
+    unsigned int h = 5381;
+    unsigned int c0, c1;
+    for (;;) {
+        c0 = s[0];
+        /* Since hashed string is normally not empty, this is unlikely on the
+        first iteration of the loop.  */
+        if (__glibc_unlikely(c0 == 0)) {
+            return h;
+        }
 
-      c1 = s[1];
-      if (c1 == 0)
-	{
-	  /* Ideal computational order is:
-	 c0 += h;
-	 h *= 32;
-	 h += c0;  */
-	  c0 += h;
-	  __asm_reassociation_barrier("" : "+r"(h) : "r"(c0));
-	  h = h * 32 + c0;
-	  return h;
-	}
+        c1 = s[1];
+        if (c1 == 0) {
+            /* Ideal computational order is:
+            c0 += h;
+            h *= 32;
+            h += c0;  */
+            c0 += h;
+            __asm_reassociation_barrier("" : "+r"(h) : "r"(c0));
+            h = h * 32 + c0;
+            return h;
+        }
 
-      /* Ideal computational order is:
-	 c1 += c0;
-	 h *= 33 * 33;
-	 c0 *= 32;
-	 c1 += c0;
-	 h  += c1;  */
-      c1 += c0;
-      __asm_reassociation_barrier("" : "+r"(c1), "+r"(c0));
-      h *= 33 * 33;
-      c1 += c0 * 32;
-      __asm_reassociation_barrier("" : "+r"(c1));
-      h += c1;
-      s += 2;
+        /* Ideal computational order is:
+        c1 += c0;
+         h *= 33 * 33;
+         c0 *= 32;
+         c1 += c0;
+         h  += c1;  */
+        c1 += c0;
+        __asm_reassociation_barrier("" : "+r"(c1), "+r"(c0));
+        h *= 33 * 33;
+        c1 += c0 * 32;
+        __asm_reassociation_barrier("" : "+r"(c1));
+        h += c1;
+        s += 2;
     }
 }
 

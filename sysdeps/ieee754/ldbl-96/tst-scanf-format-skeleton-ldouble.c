@@ -21,11 +21,11 @@
 #include <string.h>
 
 #undef compare_real
-#define compare_real(x, y)						\
-({									\
-  ieee_long_double_shape_type ux = { .value = x }, uy = { .value = y };	\
-  (ux.parts.lsw == uy.parts.lsw && ux.parts.msw == uy.parts.msw		\
-   && ux.parts.sign_exponent == uy.parts.sign_exponent);	 	\
+#define compare_real(x, y)                      \
+({                                  \
+  ieee_long_double_shape_type ux = { .value = x }, uy = { .value = y }; \
+  (ux.parts.lsw == uy.parts.lsw && ux.parts.msw == uy.parts.msw     \
+   && ux.parts.sign_exponent == uy.parts.sign_exponent);        \
 })
 
 typedef long double type_t;

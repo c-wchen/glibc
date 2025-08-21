@@ -57,7 +57,7 @@
 # define wmemchr __wmemchr
 # define wmempcpy __wmempcpy
 # define fnmatch __fnmatch
-extern int fnmatch (const char *pattern, const char *string, int flags);
+extern int fnmatch(const char *pattern, const char *string, int flags);
 #endif
 
 #ifdef _LIBC
@@ -155,139 +155,208 @@ static int posixly_correct;
    for a member of the portable character set is the same code point as
    its single-byte encoding, we can use a simplified method to convert the
    string to a multibyte character string.  */
-static wctype_t
-is_char_class (const wchar_t *wcs)
+static wctype_t is_char_class(const wchar_t *wcs)
 {
-  char s[CHAR_CLASS_MAX_LENGTH + 1];
-  char *cp = s;
+    char s[CHAR_CLASS_MAX_LENGTH + 1];
+    char *cp = s;
 
-  do
-    {
-      /* Test for a printable character from the portable character set.  */
+    do {
+        /* Test for a printable character from the portable character set.  */
 #ifdef _LIBC
-      if (*wcs < 0x20 || *wcs > 0x7e
-          || *wcs == 0x24 || *wcs == 0x40 || *wcs == 0x60)
-        return (wctype_t) 0;
+        if (*wcs < 0x20 || *wcs > 0x7e
+            || *wcs == 0x24 || *wcs == 0x40 || *wcs == 0x60) {
+            return (wctype_t) 0;
+        }
 #else
-      switch (*wcs)
-        {
-        case L' ': case L'!': case L'"': case L'#': case L'%':
-        case L'&': case L'\'': case L'(': case L')': case L'*':
-        case L'+': case L',': case L'-': case L'.': case L'/':
-        case L'0': case L'1': case L'2': case L'3': case L'4':
-        case L'5': case L'6': case L'7': case L'8': case L'9':
-        case L':': case L';': case L'<': case L'=': case L'>':
-        case L'?':
-        case L'A': case L'B': case L'C': case L'D': case L'E':
-        case L'F': case L'G': case L'H': case L'I': case L'J':
-        case L'K': case L'L': case L'M': case L'N': case L'O':
-        case L'P': case L'Q': case L'R': case L'S': case L'T':
-        case L'U': case L'V': case L'W': case L'X': case L'Y':
-        case L'Z':
-        case L'[': case L'\\': case L']': case L'^': case L'_':
-        case L'a': case L'b': case L'c': case L'd': case L'e':
-        case L'f': case L'g': case L'h': case L'i': case L'j':
-        case L'k': case L'l': case L'm': case L'n': case L'o':
-        case L'p': case L'q': case L'r': case L's': case L't':
-        case L'u': case L'v': case L'w': case L'x': case L'y':
-        case L'z': case L'{': case L'|': case L'}': case L'~':
-          break;
-        default:
-          return (wctype_t) 0;
+        switch (*wcs) {
+            case L' ':
+            case L'!':
+            case L'"':
+            case L'#':
+            case L'%':
+            case L'&':
+            case L'\'':
+            case L'(':
+            case L')':
+            case L'*':
+            case L'+':
+            case L',':
+            case L'-':
+            case L'.':
+            case L'/':
+            case L'0':
+            case L'1':
+            case L'2':
+            case L'3':
+            case L'4':
+            case L'5':
+            case L'6':
+            case L'7':
+            case L'8':
+            case L'9':
+            case L':':
+            case L';':
+            case L'<':
+            case L'=':
+            case L'>':
+            case L'?':
+            case L'A':
+            case L'B':
+            case L'C':
+            case L'D':
+            case L'E':
+            case L'F':
+            case L'G':
+            case L'H':
+            case L'I':
+            case L'J':
+            case L'K':
+            case L'L':
+            case L'M':
+            case L'N':
+            case L'O':
+            case L'P':
+            case L'Q':
+            case L'R':
+            case L'S':
+            case L'T':
+            case L'U':
+            case L'V':
+            case L'W':
+            case L'X':
+            case L'Y':
+            case L'Z':
+            case L'[':
+            case L'\\':
+            case L']':
+            case L'^':
+            case L'_':
+            case L'a':
+            case L'b':
+            case L'c':
+            case L'd':
+            case L'e':
+            case L'f':
+            case L'g':
+            case L'h':
+            case L'i':
+            case L'j':
+            case L'k':
+            case L'l':
+            case L'm':
+            case L'n':
+            case L'o':
+            case L'p':
+            case L'q':
+            case L'r':
+            case L's':
+            case L't':
+            case L'u':
+            case L'v':
+            case L'w':
+            case L'x':
+            case L'y':
+            case L'z':
+            case L'{':
+            case L'|':
+            case L'}':
+            case L'~':
+                break;
+            default:
+                return (wctype_t) 0;
         }
 #endif
 
-      /* Avoid overrunning the buffer.  */
-      if (cp == s + CHAR_CLASS_MAX_LENGTH)
-        return (wctype_t) 0;
+        /* Avoid overrunning the buffer.  */
+        if (cp == s + CHAR_CLASS_MAX_LENGTH) {
+            return (wctype_t) 0;
+        }
 
-      *cp++ = (char) *wcs++;
-    }
-  while (*wcs != L'\0');
+        *cp++ = (char) * wcs++;
+    } while (*wcs != L'\0');
 
-  *cp = '\0';
+    *cp = '\0';
 
-  return wctype (s);
+    return wctype(s);
 }
 #define IS_CHAR_CLASS(string) is_char_class (string)
 
 #include "fnmatch_loop.c"
 
-static int
-fnmatch_convert_to_wide (const char *str, struct scratch_buffer *buf,
-                         size_t *n)
+static int fnmatch_convert_to_wide(const char *str, struct scratch_buffer *buf,
+                                   size_t *n)
 {
-  mbstate_t ps;
-  memset (&ps, '\0', sizeof (ps));
+    mbstate_t ps;
+    memset(&ps, '\0', sizeof(ps));
 
-  size_t nw = buf->length / sizeof (wchar_t);
-  *n = strnlen (str, nw - 1);
-  if (__glibc_likely (*n < nw))
-    {
-      const char *p = str;
-      *n = mbsrtowcs (buf->data, &p, *n + 1, &ps);
-      if (__glibc_unlikely (*n == (size_t) -1))
-        /* Something wrong.
-           XXX Do we have to set 'errno' to something which mbsrtows hasn't
-           already done?  */
+    size_t nw = buf->length / sizeof(wchar_t);
+    *n = strnlen(str, nw - 1);
+    if (__glibc_likely(*n < nw)) {
+        const char *p = str;
+        *n = mbsrtowcs(buf->data, &p, *n + 1, &ps);
+        if (__glibc_unlikely(*n == (size_t) -1))
+            /* Something wrong.
+               XXX Do we have to set 'errno' to something which mbsrtows hasn't
+               already done?  */
+        {
+            return -1;
+        }
+        if (p == NULL) {
+            return 0;
+        }
+        memset(&ps, '\0', sizeof(ps));
+    }
+
+    *n = mbsrtowcs(NULL, &str, 0, &ps);
+    if (__glibc_unlikely(*n == (size_t) -1)) {
         return -1;
-      if (p == NULL)
-        return 0;
-      memset (&ps, '\0', sizeof (ps));
     }
-
-  *n = mbsrtowcs (NULL, &str, 0, &ps);
-  if (__glibc_unlikely (*n == (size_t) -1))
-    return -1;
-  if (!scratch_buffer_set_array_size (buf, *n + 1, sizeof (wchar_t)))
-    {
-      __set_errno (ENOMEM);
-      return -2;
+    if (!scratch_buffer_set_array_size(buf, *n + 1, sizeof(wchar_t))) {
+        __set_errno(ENOMEM);
+        return -2;
     }
-  assert (mbsinit (&ps));
-  mbsrtowcs (buf->data, &str, *n + 1, &ps);
-  return 0;
+    assert(mbsinit(&ps));
+    mbsrtowcs(buf->data, &str, *n + 1, &ps);
+    return 0;
 }
 
-int
-fnmatch (const char *pattern, const char *string, int flags)
+int fnmatch(const char *pattern, const char *string, int flags)
 {
-  if (__glibc_unlikely (MB_CUR_MAX != 1))
-    {
-      size_t n;
-      struct scratch_buffer wpattern;
-      scratch_buffer_init (&wpattern);
-      struct scratch_buffer wstring;
-      scratch_buffer_init (&wstring);
-      int r;
+    if (__glibc_unlikely(MB_CUR_MAX != 1)) {
+        size_t n;
+        struct scratch_buffer wpattern;
+        scratch_buffer_init(&wpattern);
+        struct scratch_buffer wstring;
+        scratch_buffer_init(&wstring);
+        int r;
 
-      /* Convert the strings into wide characters.  Any conversion issue
-         fallback to the ascii version.  */
-      r = fnmatch_convert_to_wide (pattern, &wpattern, &n);
-      if (r == 0)
-        {
-          r = fnmatch_convert_to_wide (string, &wstring, &n);
-          if (r == 0)
-            r = internal_fnwmatch (wpattern.data, wstring.data,
-                                   (wchar_t *) wstring.data + n,
-                                   flags & FNM_PERIOD, flags, NULL);
+        /* Convert the strings into wide characters.  Any conversion issue
+           fallback to the ascii version.  */
+        r = fnmatch_convert_to_wide(pattern, &wpattern, &n);
+        if (r == 0) {
+            r = fnmatch_convert_to_wide(string, &wstring, &n);
+            if (r == 0)
+                r = internal_fnwmatch(wpattern.data, wstring.data,
+                                      (wchar_t *) wstring.data + n,
+                                      flags & FNM_PERIOD, flags, NULL);
         }
 
-      scratch_buffer_free (&wstring);
-      scratch_buffer_free (&wpattern);
+        scratch_buffer_free(&wstring);
+        scratch_buffer_free(&wpattern);
 
-      if (r == -2 || r == 0)
-        return r;
+        if (r == -2 || r == 0) {
+            return r;
+        }
     }
 
-  return internal_fnmatch (pattern, string, string + strlen (string),
-                           flags & FNM_PERIOD, flags, NULL);
+    return internal_fnmatch(pattern, string, string + strlen(string),
+                            flags & FNM_PERIOD, flags, NULL);
 }
 
 #undef fnmatch
-versioned_symbol (libc, __fnmatch, fnmatch, GLIBC_2_2_3);
+versioned_symbol(libc, __fnmatch, fnmatch, GLIBC_2_2_3);
 #if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_2_3)
-strong_alias (__fnmatch, __fnmatch_old)
-compat_symbol (libc, __fnmatch_old, fnmatch, GLIBC_2_0);
+strong_alias(__fnmatch, __fnmatch_old)
+compat_symbol(libc, __fnmatch_old, fnmatch, GLIBC_2_0);
 #endif
-libc_hidden_ver (__fnmatch, fnmatch)
+libc_hidden_ver(__fnmatch, fnmatch)

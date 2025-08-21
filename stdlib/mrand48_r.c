@@ -17,12 +17,12 @@
 
 #include <stdlib.h>
 
-int
-mrand48_r (struct drand48_data *buffer, long int *result)
+int mrand48_r(struct drand48_data *buffer, long int *result)
 {
-  /* Be generous for the arguments, detect some errors.  */
-  if (buffer == NULL)
-   return -1;
+    /* Be generous for the arguments, detect some errors.  */
+    if (buffer == NULL) {
+        return -1;
+    }
 
-  return __jrand48_r (buffer->__x, buffer, result);
+    return __jrand48_r(buffer->__x, buffer, result);
 }

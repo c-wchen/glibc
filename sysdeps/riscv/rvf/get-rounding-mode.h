@@ -21,12 +21,11 @@
 
 /* Return the floating-point rounding mode.  */
 
-static inline int
-get_rounding_mode (void)
+static inline int get_rounding_mode(void)
 {
-  int rm;
-  asm volatile ("frrm %0" : "=r" (rm));
-  return rm;
+    int rm;
+    asm volatile("frrm %0" : "=r"(rm));
+    return rm;
 }
 
 #endif /* get-rounding-mode.h */

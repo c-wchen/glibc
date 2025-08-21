@@ -25,11 +25,11 @@
    /proc/ (procfs) filesystem is mounted.  If not, the process exits
    with an UNSUPPORTED result code.  */
 
-void
-support_need_proc (const char *why_msg)
+void support_need_proc(const char *why_msg)
 {
 #ifdef __linux__
-  if (access ("/proc/self/maps", R_OK))
-    FAIL_UNSUPPORTED ("/proc is not available, %s", why_msg);
+    if (access("/proc/self/maps", R_OK)) {
+        FAIL_UNSUPPORTED("/proc is not available, %s", why_msg);
+    }
 #endif
 }

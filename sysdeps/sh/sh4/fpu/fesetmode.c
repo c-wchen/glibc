@@ -21,18 +21,18 @@
 
 #define FPU_STATUS 0x3f07c
 
-int
-fesetmode (const femode_t *modep)
+int fesetmode(const femode_t *modep)
 {
-  fpu_control_t fpscr;
+    fpu_control_t fpscr;
 
-  _FPU_GETCW (fpscr);
-  fpscr &= FPU_STATUS;
-  if (modep == FE_DFL_MODE)
-    fpscr |= _FPU_DEFAULT;
-  else
-    fpscr |= *modep & ~FPU_STATUS;
-  _FPU_SETCW (fpscr);
+    _FPU_GETCW(fpscr);
+    fpscr &= FPU_STATUS;
+    if (modep == FE_DFL_MODE) {
+        fpscr |= _FPU_DEFAULT;
+    } else {
+        fpscr |= *modep & ~FPU_STATUS;
+    }
+    _FPU_SETCW(fpscr);
 
-  return 0;
+    return 0;
 }

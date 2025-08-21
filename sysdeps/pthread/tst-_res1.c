@@ -24,44 +24,45 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-void *tf (void *resp)
+void *tf(void *resp)
 {
-  if (resp == &_res || resp == __res_state ())
-    abort ();
-  _res.retry = 24;
-  return NULL;
+    if (resp == &_res || resp == __res_state()) {
+        abort();
+    }
+    _res.retry = 24;
+    return NULL;
 }
 
-void do_test (struct __res_state *resp)
+void do_test(struct __res_state *resp)
 {
-  if (resp != &_res || resp != __res_state ())
-    abort ();
-  if (_res.retry != 12)
-    abort ();
+    if (resp != &_res || resp != __res_state()) {
+        abort();
+    }
+    if (_res.retry != 12) {
+        abort();
+    }
 }
 
-int main (void)
+int main(void)
 {
 #undef _res
-  extern struct __res_state _res;
-  pthread_t th;
+    extern struct __res_state _res;
+    pthread_t th;
 
-  _res.retry = 12;
-  if (pthread_create (&th, NULL, tf, &_res) != 0)
-    {
-      puts ("create failed");
-      exit (1);
+    _res.retry = 12;
+    if (pthread_create(&th, NULL, tf, &_res) != 0) {
+        puts("create failed");
+        exit(1);
     }
 
-  do_test (&_res);
+    do_test(&_res);
 
-  if (pthread_join (th, NULL) != 0)
-    {
-      puts ("join failed");
-      exit (1);
+    if (pthread_join(th, NULL) != 0) {
+        puts("join failed");
+        exit(1);
     }
 
-  do_test (&_res);
+    do_test(&_res);
 
-  exit (0);
+    exit(0);
 }

@@ -24,38 +24,38 @@
 #include <pwd.h>
 #include <string.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  __nss_configure_lookup ("passwd", "files test_errno");
+    __nss_configure_lookup("passwd", "files test_errno");
 
-  errno = 0;
-  setpwent ();
-  TEST_COMPARE (errno, 0);
+    errno = 0;
+    setpwent();
+    TEST_COMPARE(errno, 0);
 
-  bool root_seen = false;
-  while (true)
-    {
-      errno = 0;
-      struct passwd *e = getpwent ();
-      if (e == NULL)
-        break;
-      if (strcmp (e->pw_name, "root"))
-        root_seen = true;
+    bool root_seen = false;
+    while (true) {
+        errno = 0;
+        struct passwd *e = getpwent();
+        if (e == NULL) {
+            break;
+        }
+        if (strcmp(e->pw_name, "root")) {
+            root_seen = true;
+        }
     }
 
-  TEST_COMPARE (errno, 0);
-  TEST_VERIFY (root_seen);
+    TEST_COMPARE(errno, 0);
+    TEST_VERIFY(root_seen);
 
-  errno = 0;
-  endpwent ();
-  TEST_COMPARE (errno, 0);
+    errno = 0;
+    endpwent();
+    TEST_COMPARE(errno, 0);
 
-  TEST_COMPARE_STRING (getenv ("_nss_test_errno_setpwent"), "yes");
-  TEST_COMPARE_STRING (getenv ("_nss_test_errno_getpwent_r"), "yes");
-  TEST_COMPARE_STRING (getenv ("_nss_test_errno_endpwent"), "yes");
+    TEST_COMPARE_STRING(getenv("_nss_test_errno_setpwent"), "yes");
+    TEST_COMPARE_STRING(getenv("_nss_test_errno_getpwent_r"), "yes");
+    TEST_COMPARE_STRING(getenv("_nss_test_errno_endpwent"), "yes");
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

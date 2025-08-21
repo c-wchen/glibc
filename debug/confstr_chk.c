@@ -18,11 +18,11 @@
 #include <unistd.h>
 
 
-size_t
-__confstr_chk (int name, char *buf, size_t len, size_t buflen)
+size_t __confstr_chk(int name, char *buf, size_t len, size_t buflen)
 {
-  if (__glibc_unlikely (buflen < len))
-    __chk_fail ();
+    if (__glibc_unlikely(buflen < len)) {
+        __chk_fail();
+    }
 
-  return confstr (name, buf, len);
+    return confstr(name, buf, len);
 }

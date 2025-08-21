@@ -18,9 +18,8 @@
 #include <termios_internals.h>
 
 /* Return 1 if FD is a terminal, 0 if not, without changing errno  */
-int
-__isatty_nostatus (int fd)
+int __isatty_nostatus(int fd)
 {
-  struct termios2 k_termios;
-  return INTERNAL_SYSCALL_CALL (ioctl, fd, TCGETS2, &k_termios) == 0;
+    struct termios2 k_termios;
+    return INTERNAL_SYSCALL_CALL(ioctl, fd, TCGETS2, &k_termios) == 0;
 }

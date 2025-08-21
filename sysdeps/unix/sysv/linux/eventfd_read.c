@@ -20,8 +20,7 @@
 #include <sys/eventfd.h>
 
 
-int
-eventfd_read (int fd, eventfd_t *value)
+int eventfd_read(int fd, eventfd_t *value)
 {
-  return __read (fd, value, sizeof (eventfd_t)) != sizeof (eventfd_t) ? -1 : 0;
+    return __read(fd, value, sizeof(eventfd_t)) != sizeof(eventfd_t) ? -1 : 0;
 }

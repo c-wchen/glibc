@@ -30,8 +30,8 @@
 
 #if MMAP2_PAGE_UNIT == -1ULL
 static uint64_t page_unit;
-# define MMAP_CHECK_PAGE_UNIT()			\
-  if (page_unit == 0)				\
+# define MMAP_CHECK_PAGE_UNIT()         \
+  if (page_unit == 0)               \
     page_unit = __getpagesize ();
 # undef MMAP2_PAGE_UNIT
 # define MMAP2_PAGE_UNIT page_unit

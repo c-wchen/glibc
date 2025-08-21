@@ -22,10 +22,9 @@
 #include "statconv.c"
 
 /* Get information about the file descriptor FD in BUF.  */
-int
-__fstat (int fd, struct stat *buf)
+int __fstat(int fd, struct stat *buf)
 {
-  struct stat64 buf64;
-  return __fstat64 (fd, &buf64) ?: stat64_conv (buf, &buf64);
+    struct stat64 buf64;
+    return __fstat64(fd, &buf64) ? : stat64_conv(buf, &buf64);
 }
-weak_alias (__fstat, fstat)
+weak_alias(__fstat, fstat)

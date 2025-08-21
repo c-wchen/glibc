@@ -19,12 +19,11 @@
 #include <string.h>
 
 /* Store signal mask for the new process from ATTR in SIGMASK.  */
-int
-posix_spawnattr_getsigmask (const posix_spawnattr_t *attr,
-			    sigset_t *sigmask)
+int posix_spawnattr_getsigmask(const posix_spawnattr_t *attr,
+                               sigset_t *sigmask)
 {
-  /* Copy the sigset_t data to the user buffer.  */
-  memcpy (sigmask, &attr->__ss, sizeof (sigset_t));
+    /* Copy the sigset_t data to the user buffer.  */
+    memcpy(sigmask, &attr->__ss, sizeof(sigset_t));
 
-  return 0;
+    return 0;
 }

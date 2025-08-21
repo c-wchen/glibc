@@ -1,8 +1,7 @@
 #include "nldbl-compat.h"
 
 double
-attribute_hidden
-acospil (double x)
+attribute_hidden acospil(double x)
 {
-  return acospi (x);
+    return acospi(x);
 }

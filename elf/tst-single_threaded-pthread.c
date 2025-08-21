@@ -31,39 +31,39 @@ static pthread_barrier_t barrier1;
 static pthread_barrier_t barrier2;
 
 /* Defined in tst-single-threaded-mod1.so.  */
-_Bool single_threaded_1 (void);
+_Bool single_threaded_1(void);
 
 /* Initialized via dlsym.  */
-static _Bool (*single_threaded_2) (void);
-static _Bool (*single_threaded_3) (void);
-static _Bool (*single_threaded_4) (void);
+static _Bool(*single_threaded_2)(void);
+static _Bool(*single_threaded_3)(void);
+static _Bool(*single_threaded_4)(void);
 
-static void *
-threadfunc (void *closure)
+static void *threadfunc(void *closure)
 {
-  TEST_VERIFY (!__libc_single_threaded);
-  TEST_VERIFY (!single_threaded_1 ());
-  TEST_VERIFY (!single_threaded_2 ());
+    TEST_VERIFY(!__libc_single_threaded);
+    TEST_VERIFY(!single_threaded_1());
+    TEST_VERIFY(!single_threaded_2());
 
-  /* Wait until the main thread loads more functions.  */
-  xpthread_barrier_wait (&barrier1);
+    /* Wait until the main thread loads more functions.  */
+    xpthread_barrier_wait(&barrier1);
 
-  TEST_VERIFY (!__libc_single_threaded);
-  TEST_VERIFY (!single_threaded_1 ());
-  TEST_VERIFY (!single_threaded_2 ());
-  TEST_VERIFY (!single_threaded_3 ());
-  TEST_VERIFY (!single_threaded_4 ());
+    TEST_VERIFY(!__libc_single_threaded);
+    TEST_VERIFY(!single_threaded_1());
+    TEST_VERIFY(!single_threaded_2());
+    TEST_VERIFY(!single_threaded_3());
+    TEST_VERIFY(!single_threaded_4());
 
-  /* Second thread waits on second barrier, too.  */
-  if (closure != NULL)
-    xpthread_barrier_wait (&barrier2);
-  TEST_VERIFY (!__libc_single_threaded);
-  TEST_VERIFY (!single_threaded_1 ());
-  TEST_VERIFY (!single_threaded_2 ());
-  TEST_VERIFY (!single_threaded_3 ());
-  TEST_VERIFY (!single_threaded_4 ());
+    /* Second thread waits on second barrier, too.  */
+    if (closure != NULL) {
+        xpthread_barrier_wait(&barrier2);
+    }
+    TEST_VERIFY(!__libc_single_threaded);
+    TEST_VERIFY(!single_threaded_1());
+    TEST_VERIFY(!single_threaded_2());
+    TEST_VERIFY(!single_threaded_3());
+    TEST_VERIFY(!single_threaded_4());
 
-  return NULL;
+    return NULL;
 }
 
 /* Used for closure arguments to the subprocess function.  */
@@ -72,103 +72,104 @@ static char expected_true = 1;
 
 /* A subprocess inherits currently inherits the single-threaded state
    of the parent process.  */
-static void
-subprocess (void *closure)
+static void subprocess(void *closure)
 {
-  const char *expected = closure;
-  TEST_COMPARE (__libc_single_threaded, *expected);
-  TEST_COMPARE (single_threaded_1 (), *expected);
-  if (single_threaded_2 != NULL)
-    TEST_COMPARE (single_threaded_2 (), *expected);
-  if (single_threaded_3 != NULL)
-    TEST_COMPARE (single_threaded_3 (), *expected);
-  if (single_threaded_4 != NULL)
-    TEST_VERIFY (!single_threaded_4 ());
+    const char *expected = closure;
+    TEST_COMPARE(__libc_single_threaded, *expected);
+    TEST_COMPARE(single_threaded_1(), *expected);
+    if (single_threaded_2 != NULL) {
+        TEST_COMPARE(single_threaded_2(), *expected);
+    }
+    if (single_threaded_3 != NULL) {
+        TEST_COMPARE(single_threaded_3(), *expected);
+    }
+    if (single_threaded_4 != NULL) {
+        TEST_VERIFY(!single_threaded_4());
+    }
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  printf ("info: main __libc_single_threaded address: %p\n",
-          &__libc_single_threaded);
-  TEST_VERIFY (__libc_single_threaded);
-  TEST_VERIFY (single_threaded_1 ());
-  support_isolate_in_subprocess (subprocess, &expected_true);
+    printf("info: main __libc_single_threaded address: %p\n",
+           &__libc_single_threaded);
+    TEST_VERIFY(__libc_single_threaded);
+    TEST_VERIFY(single_threaded_1());
+    support_isolate_in_subprocess(subprocess, &expected_true);
 
-  void *handle_mod2 = xdlopen ("tst-single_threaded-mod2.so", RTLD_LAZY);
-  single_threaded_2 = xdlsym (handle_mod2, "single_threaded_2");
-  TEST_VERIFY (single_threaded_2 ());
+    void *handle_mod2 = xdlopen("tst-single_threaded-mod2.so", RTLD_LAZY);
+    single_threaded_2 = xdlsym(handle_mod2, "single_threaded_2");
+    TEST_VERIFY(single_threaded_2());
 
-  /* Two threads plus main thread.  */
-  xpthread_barrier_init (&barrier1, NULL, 3);
+    /* Two threads plus main thread.  */
+    xpthread_barrier_init(&barrier1, NULL, 3);
 
-  /* Main thread and second thread.  */
-  xpthread_barrier_init (&barrier2, NULL, 2);
+    /* Main thread and second thread.  */
+    xpthread_barrier_init(&barrier2, NULL, 2);
 
-  pthread_t thr1 = xpthread_create (NULL, threadfunc, NULL);
-  TEST_VERIFY (!__libc_single_threaded);
-  TEST_VERIFY (!single_threaded_1 ());
-  TEST_VERIFY (!single_threaded_2 ());
-  support_isolate_in_subprocess (subprocess, &expected_false);
+    pthread_t thr1 = xpthread_create(NULL, threadfunc, NULL);
+    TEST_VERIFY(!__libc_single_threaded);
+    TEST_VERIFY(!single_threaded_1());
+    TEST_VERIFY(!single_threaded_2());
+    support_isolate_in_subprocess(subprocess, &expected_false);
 
-  pthread_t thr2 = xpthread_create (NULL, threadfunc, &thr2);
-  TEST_VERIFY (!__libc_single_threaded);
-  TEST_VERIFY (!single_threaded_1 ());
-  TEST_VERIFY (!single_threaded_2 ());
-  support_isolate_in_subprocess (subprocess, &expected_false);
+    pthread_t thr2 = xpthread_create(NULL, threadfunc, &thr2);
+    TEST_VERIFY(!__libc_single_threaded);
+    TEST_VERIFY(!single_threaded_1());
+    TEST_VERIFY(!single_threaded_2());
+    support_isolate_in_subprocess(subprocess, &expected_false);
 
-  /* Delayed library load, while already multi-threaded.  */
-  void *handle_mod3 = xdlopen ("tst-single_threaded-mod3.so", RTLD_LAZY);
-  single_threaded_3 = xdlsym (handle_mod3, "single_threaded_3");
-  TEST_VERIFY (!__libc_single_threaded);
-  TEST_VERIFY (!single_threaded_1 ());
-  TEST_VERIFY (!single_threaded_2 ());
-  TEST_VERIFY (!single_threaded_3 ());
-  support_isolate_in_subprocess (subprocess, &expected_false);
+    /* Delayed library load, while already multi-threaded.  */
+    void *handle_mod3 = xdlopen("tst-single_threaded-mod3.so", RTLD_LAZY);
+    single_threaded_3 = xdlsym(handle_mod3, "single_threaded_3");
+    TEST_VERIFY(!__libc_single_threaded);
+    TEST_VERIFY(!single_threaded_1());
+    TEST_VERIFY(!single_threaded_2());
+    TEST_VERIFY(!single_threaded_3());
+    support_isolate_in_subprocess(subprocess, &expected_false);
 
-  /* Same with dlmopen.  */
-  void *handle_mod4 = dlmopen (LM_ID_NEWLM, "tst-single_threaded-mod4.so",
-                               RTLD_LAZY);
-  single_threaded_4 = xdlsym (handle_mod4, "single_threaded_4");
-  TEST_VERIFY (!__libc_single_threaded);
-  TEST_VERIFY (!single_threaded_1 ());
-  TEST_VERIFY (!single_threaded_2 ());
-  TEST_VERIFY (!single_threaded_3 ());
-  TEST_VERIFY (!single_threaded_4 ());
-  support_isolate_in_subprocess (subprocess, &expected_false);
+    /* Same with dlmopen.  */
+    void *handle_mod4 = dlmopen(LM_ID_NEWLM, "tst-single_threaded-mod4.so",
+                                RTLD_LAZY);
+    single_threaded_4 = xdlsym(handle_mod4, "single_threaded_4");
+    TEST_VERIFY(!__libc_single_threaded);
+    TEST_VERIFY(!single_threaded_1());
+    TEST_VERIFY(!single_threaded_2());
+    TEST_VERIFY(!single_threaded_3());
+    TEST_VERIFY(!single_threaded_4());
+    support_isolate_in_subprocess(subprocess, &expected_false);
 
-  /* Run the newly loaded functions from the other threads as
-     well.  */
-  xpthread_barrier_wait (&barrier1);
-  TEST_VERIFY (!__libc_single_threaded);
-  TEST_VERIFY (!single_threaded_1 ());
-  TEST_VERIFY (!single_threaded_2 ());
-  TEST_VERIFY (!single_threaded_3 ());
-  TEST_VERIFY (!single_threaded_4 ());
-  support_isolate_in_subprocess (subprocess, &expected_false);
+    /* Run the newly loaded functions from the other threads as
+       well.  */
+    xpthread_barrier_wait(&barrier1);
+    TEST_VERIFY(!__libc_single_threaded);
+    TEST_VERIFY(!single_threaded_1());
+    TEST_VERIFY(!single_threaded_2());
+    TEST_VERIFY(!single_threaded_3());
+    TEST_VERIFY(!single_threaded_4());
+    support_isolate_in_subprocess(subprocess, &expected_false);
 
-  /* Join first thread.  This should not bring us back into
-     single-threaded mode.  */
-  xpthread_join (thr1);
-  TEST_VERIFY (!__libc_single_threaded);
-  TEST_VERIFY (!single_threaded_1 ());
-  TEST_VERIFY (!single_threaded_2 ());
-  TEST_VERIFY (!single_threaded_3 ());
-  TEST_VERIFY (!single_threaded_4 ());
-  support_isolate_in_subprocess (subprocess, &expected_false);
+    /* Join first thread.  This should not bring us back into
+       single-threaded mode.  */
+    xpthread_join(thr1);
+    TEST_VERIFY(!__libc_single_threaded);
+    TEST_VERIFY(!single_threaded_1());
+    TEST_VERIFY(!single_threaded_2());
+    TEST_VERIFY(!single_threaded_3());
+    TEST_VERIFY(!single_threaded_4());
+    support_isolate_in_subprocess(subprocess, &expected_false);
 
-  /* We may be back in single-threaded mode after joining both
-     threads, but this is not guaranteed.  */
-  xpthread_barrier_wait (&barrier2);
-  xpthread_join (thr2);
-  printf ("info: __libc_single_threaded after joining all threads: %d\n",
-          __libc_single_threaded);
+    /* We may be back in single-threaded mode after joining both
+       threads, but this is not guaranteed.  */
+    xpthread_barrier_wait(&barrier2);
+    xpthread_join(thr2);
+    printf("info: __libc_single_threaded after joining all threads: %d\n",
+           __libc_single_threaded);
 
-  xdlclose (handle_mod4);
-  xdlclose (handle_mod3);
-  xdlclose (handle_mod2);
+    xdlclose(handle_mod4);
+    xdlclose(handle_mod3);
+    xdlclose(handle_mod2);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

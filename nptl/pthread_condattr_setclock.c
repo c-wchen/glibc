@@ -23,29 +23,30 @@
 #include "pthreadP.h"
 
 
-int
-__pthread_condattr_setclock (pthread_condattr_t *attr, clockid_t clock_id)
+int __pthread_condattr_setclock(pthread_condattr_t *attr, clockid_t clock_id)
 {
-  /* Only a few clocks are allowed.  */
-  if (clock_id != CLOCK_MONOTONIC && clock_id != CLOCK_REALTIME)
-    /* If more clocks are allowed some day the storing of the clock ID
-       in the pthread_cond_t structure needs to be adjusted.  */
-    return EINVAL;
+    /* Only a few clocks are allowed.  */
+    if (clock_id != CLOCK_MONOTONIC && clock_id != CLOCK_REALTIME)
+        /* If more clocks are allowed some day the storing of the clock ID
+           in the pthread_cond_t structure needs to be adjusted.  */
+    {
+        return EINVAL;
+    }
 
-  /* Make sure the value fits in the bits we reserved.  */
-  assert (clock_id < (1 << COND_CLOCK_BITS));
+    /* Make sure the value fits in the bits we reserved.  */
+    assert(clock_id < (1 << COND_CLOCK_BITS));
 
-  int *valuep = &((struct pthread_condattr *) attr)->value;
+    int *valuep = &((struct pthread_condattr *) attr)->value;
 
-  *valuep = ((*valuep & ~(((1 << COND_CLOCK_BITS) - 1) << 1))
-	     | (clock_id << 1));
+    *valuep = ((*valuep & ~(((1 << COND_CLOCK_BITS) - 1) << 1))
+               | (clock_id << 1));
 
-  return 0;
+    return 0;
 }
-versioned_symbol (libc, __pthread_condattr_setclock,
-		  pthread_condattr_setclock, GLIBC_2_34);
+versioned_symbol(libc, __pthread_condattr_setclock,
+                 pthread_condattr_setclock, GLIBC_2_34);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_3_3, GLIBC_2_34)
-compat_symbol (libpthread, __pthread_condattr_setclock,
-	       pthread_condattr_setclock, GLIBC_2_3_3);
+compat_symbol(libpthread, __pthread_condattr_setclock,
+              pthread_condattr_setclock, GLIBC_2_3_3);
 #endif

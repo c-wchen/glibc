@@ -28,10 +28,10 @@
   ((unsigned long int) (val) > -4096UL)
 
 #ifndef SYSCALL_ERROR_LABEL
-# define SYSCALL_ERROR_LABEL(sc_err)					\
-  ({									\
-    __set_errno (sc_err);						\
-    -1L;								\
+# define SYSCALL_ERROR_LABEL(sc_err)                    \
+  ({                                    \
+    __set_errno (sc_err);                       \
+    -1L;                                \
   })
 #endif
 
@@ -39,12 +39,12 @@
    call.  It sets the errno and returns -1 on a failure, or the syscall
    return value otherwise.  */
 #undef INLINE_SYSCALL
-#define INLINE_SYSCALL(name, nr, args...)				\
-  ({									\
-    long int sc_ret = INTERNAL_SYSCALL (name, nr, args);		\
-    __glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (sc_ret))		\
-    ? SYSCALL_ERROR_LABEL (INTERNAL_SYSCALL_ERRNO (sc_ret))		\
-    : sc_ret;								\
+#define INLINE_SYSCALL(name, nr, args...)               \
+  ({                                    \
+    long int sc_ret = INTERNAL_SYSCALL (name, nr, args);        \
+    __glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (sc_ret))        \
+    ? SYSCALL_ERROR_LABEL (INTERNAL_SYSCALL_ERRNO (sc_ret))     \
+    : sc_ret;                               \
   })
 
 #undef INTERNAL_SYSCALL_ERRNO
@@ -54,9 +54,9 @@
    internal function, __syscall_error, which sets errno and returns -1.
    We use -1l, instead of -1, so that it can be casted to (void *).  */
 #define INLINE_SYSCALL_ERROR_RETURN_VALUE(err)  \
-  ({						\
-    __set_errno (err);				\
-    -1l;					\
+  ({                        \
+    __set_errno (err);              \
+    -1l;                    \
   })
 
 /* Provide a dummy argument that can be used to force register

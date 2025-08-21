@@ -18,16 +18,15 @@
 
 #include <fenv.h>
 
-int
-__fegetround (void)
+int __fegetround(void)
 {
 #ifdef FE_TONEAREST
-  return FE_TONEAREST;
+    return FE_TONEAREST;
 #else
-  return 0;
+    return 0;
 #endif
 }
-libm_hidden_def (__fegetround)
-weak_alias (__fegetround, fegetround)
-libm_hidden_weak (fegetround)
-stub_warning (fegetround)
+libm_hidden_def(__fegetround)
+weak_alias(__fegetround, fegetround)
+libm_hidden_weak(fegetround)
+stub_warning(fegetround)

@@ -25,24 +25,23 @@
 
 /* Set the soft limit for RESOURCE to be VALUE.
    Returns 0 for success, -1 for failure.  */
-int
-vlimit (enum __vlimit_resource resource, int value)
+int vlimit(enum __vlimit_resource resource, int value)
 {
-  if (resource >= LIM_CPU && resource <= LIM_MAXRSS)
-    {
-      /* The rlimit codes happen to each be one less
-	 than the corresponding vlimit codes.  */
-      enum __rlimit_resource rlimit_res =
-	(enum __rlimit_resource) ((int) resource - 1);
-      struct rlimit lims;
+    if (resource >= LIM_CPU && resource <= LIM_MAXRSS) {
+        /* The rlimit codes happen to each be one less
+        than the corresponding vlimit codes.  */
+        enum __rlimit_resource rlimit_res =
+            (enum __rlimit_resource)((int) resource - 1);
+        struct rlimit lims;
 
-      if (__getrlimit (rlimit_res, &lims) < 0)
-	return -1;
+        if (__getrlimit(rlimit_res, &lims) < 0) {
+            return -1;
+        }
 
-      lims.rlim_cur = value;
-      return __setrlimit (rlimit_res, &lims);
+        lims.rlim_cur = value;
+        return __setrlimit(rlimit_res, &lims);
     }
 
-  __set_errno (EINVAL);
-  return -1;
+    __set_errno(EINVAL);
+    return -1;
 }

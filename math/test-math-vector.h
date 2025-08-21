@@ -28,28 +28,28 @@
 #define FUNC_TEST(function) WRAPPER_NAME (FUNC (function))
 
 /* This macro is used in VECTOR_WRAPPER macros for vector tests.  */
-#define TEST_VEC_LOOP(vec, len) 				\
-  do								\
-    {								\
-      for (i = 1; i < len; i++)					\
-        {							\
-          if ((FLOAT) vec[0] != (FLOAT) vec[i])			\
-            {							\
-              vec[0] = (FLOAT) vec[0] + 0.1;			\
-	      break;						\
-            }							\
-        }							\
-    }								\
+#define TEST_VEC_LOOP(vec, len)                 \
+  do                                \
+    {                               \
+      for (i = 1; i < len; i++)                 \
+        {                           \
+          if ((FLOAT) vec[0] != (FLOAT) vec[i])         \
+            {                           \
+              vec[0] = (FLOAT) vec[0] + 0.1;            \
+          break;                        \
+            }                           \
+        }                           \
+    }                               \
   while (0)
 
-#define INIT_VEC_LOOP(vec, val, len)				\
-  do								\
-    {								\
-      for (i = 0; i < len; i++)					\
-        {							\
-          vec[i] = val;						\
-        }							\
-    }								\
+#define INIT_VEC_LOOP(vec, val, len)                \
+  do                                \
+    {                               \
+      for (i = 0; i < len; i++)                 \
+        {                           \
+          vec[i] = val;                     \
+        }                           \
+    }                               \
   while (0)
 
 #define WRAPPER_DECL_f(function) extern FLOAT function (FLOAT);
@@ -58,43 +58,43 @@
 
 /* Wrapper from scalar to vector function.  */
 #define VECTOR_WRAPPER(scalar_func, vector_func) \
-extern VEC_TYPE vector_func (VEC_TYPE);		\
-FLOAT scalar_func (FLOAT x)			\
-{						\
-  int i;					\
-  VEC_TYPE mx;					\
-  INIT_VEC_LOOP (mx, x, VEC_LEN);		\
-  VEC_TYPE mr = vector_func (mx);		\
-  TEST_VEC_LOOP (mr, VEC_LEN);			\
-  return ((FLOAT) mr[0]);			\
+extern VEC_TYPE vector_func (VEC_TYPE);     \
+FLOAT scalar_func (FLOAT x)         \
+{                       \
+  int i;                    \
+  VEC_TYPE mx;                  \
+  INIT_VEC_LOOP (mx, x, VEC_LEN);       \
+  VEC_TYPE mr = vector_func (mx);       \
+  TEST_VEC_LOOP (mr, VEC_LEN);          \
+  return ((FLOAT) mr[0]);           \
 }
 
 /* Wrapper from scalar 2 argument function to vector one.  */
-#define VECTOR_WRAPPER_ff(scalar_func, vector_func) 	\
-extern VEC_TYPE vector_func (VEC_TYPE, VEC_TYPE);	\
-FLOAT scalar_func (FLOAT x, FLOAT y)		\
-{						\
-  int i;					\
-  VEC_TYPE mx, my;				\
-  INIT_VEC_LOOP (mx, x, VEC_LEN);		\
-  INIT_VEC_LOOP (my, y, VEC_LEN);		\
-  VEC_TYPE mr = vector_func (mx, my);		\
-  TEST_VEC_LOOP (mr, VEC_LEN);			\
-  return ((FLOAT) mr[0]);			\
+#define VECTOR_WRAPPER_ff(scalar_func, vector_func)     \
+extern VEC_TYPE vector_func (VEC_TYPE, VEC_TYPE);   \
+FLOAT scalar_func (FLOAT x, FLOAT y)        \
+{                       \
+  int i;                    \
+  VEC_TYPE mx, my;              \
+  INIT_VEC_LOOP (mx, x, VEC_LEN);       \
+  INIT_VEC_LOOP (my, y, VEC_LEN);       \
+  VEC_TYPE mr = vector_func (mx, my);       \
+  TEST_VEC_LOOP (mr, VEC_LEN);          \
+  return ((FLOAT) mr[0]);           \
 }
 
 /* Wrapper from scalar 3 argument function to vector one.  */
-#define VECTOR_WRAPPER_fFF(scalar_func, vector_func) 	\
-extern void vector_func (VEC_TYPE, VEC_TYPE *, VEC_TYPE *);	\
-void scalar_func (FLOAT x, FLOAT * r, FLOAT * r1)		\
-{						\
-  int i;					\
-  VEC_TYPE mx, mr, mr1;				\
-  INIT_VEC_LOOP (mx, x, VEC_LEN);		\
-  vector_func (mx, &mr, &mr1);			\
-  TEST_VEC_LOOP (mr, VEC_LEN);			\
-  TEST_VEC_LOOP (mr1, VEC_LEN);			\
-  *r = (FLOAT) mr[0];				\
-  *r1 = (FLOAT) mr1[0];				\
-  return;					\
+#define VECTOR_WRAPPER_fFF(scalar_func, vector_func)    \
+extern void vector_func (VEC_TYPE, VEC_TYPE *, VEC_TYPE *); \
+void scalar_func (FLOAT x, FLOAT * r, FLOAT * r1)       \
+{                       \
+  int i;                    \
+  VEC_TYPE mx, mr, mr1;             \
+  INIT_VEC_LOOP (mx, x, VEC_LEN);       \
+  vector_func (mx, &mr, &mr1);          \
+  TEST_VEC_LOOP (mr, VEC_LEN);          \
+  TEST_VEC_LOOP (mr1, VEC_LEN);         \
+  *r = (FLOAT) mr[0];               \
+  *r1 = (FLOAT) mr1[0];             \
+  return;                   \
 }

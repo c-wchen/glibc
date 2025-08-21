@@ -2,11 +2,10 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  printf( "main\n" );
-  exit(EXIT_SUCCESS);
+    printf("main\n");
+    exit(EXIT_SUCCESS);
 }
 
 #include <support/test-driver.c>

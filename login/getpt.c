@@ -20,23 +20,22 @@
 
 /* Open the master side of a pseudoterminal and return its file
    descriptor, or -1 on error. */
-int
-__getpt (void)
+int __getpt(void)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (__getpt)
-weak_alias (__getpt, getpt)
+libc_hidden_def(__getpt)
+weak_alias(__getpt, getpt)
 
 /* We cannot define posix_openpt in general for BSD systems.  */
 int
-__posix_openpt (int oflag)
+__posix_openpt(int oflag)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-weak_alias (__posix_openpt, posix_openpt)
+weak_alias(__posix_openpt, posix_openpt)
 
-stub_warning (getpt)
-stub_warning (posix_openpt)
+stub_warning(getpt)
+stub_warning(posix_openpt)

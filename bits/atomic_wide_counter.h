@@ -22,14 +22,12 @@
 /* Counter that is monotonically increasing (by less than 2**31 per
    increment), with a single writer, and an arbitrary number of
    readers.  */
-typedef union
-{
-  __extension__ unsigned long long int __value64;
-  struct
-  {
-    unsigned int __low;
-    unsigned int __high;
-  } __value32;
+typedef union {
+    __extension__ unsigned long long int __value64;
+    struct {
+        unsigned int __low;
+        unsigned int __high;
+    } __value32;
 } __atomic_wide_counter;
 
 #endif /* _BITS_ATOMIC_WIDE_COUNTER_H */

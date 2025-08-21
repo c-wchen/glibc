@@ -19,19 +19,18 @@
 #include <fnmatch.h>
 #include <support/check.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* An unterminated bracket expression should be rescanned, treating the
-     open bracket as a normal character.  The backslash causes the close
-     bracket to be treated as a normal character, not ending the bracket
-     expression.  */
-  TEST_VERIFY (fnmatch ("[", "[", 0) == 0);
-  TEST_VERIFY (fnmatch ("[[", "[[", 0) == 0);
-  TEST_VERIFY (fnmatch ("[\\]", "[]", 0) == 0);
-  TEST_VERIFY (fnmatch ("[[\\]", "[[]", 0) == 0);
+    /* An unterminated bracket expression should be rescanned, treating the
+       open bracket as a normal character.  The backslash causes the close
+       bracket to be treated as a normal character, not ending the bracket
+       expression.  */
+    TEST_VERIFY(fnmatch("[", "[", 0) == 0);
+    TEST_VERIFY(fnmatch("[[", "[[", 0) == 0);
+    TEST_VERIFY(fnmatch("[\\]", "[]", 0) == 0);
+    TEST_VERIFY(fnmatch("[[\\]", "[[]", 0) == 0);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

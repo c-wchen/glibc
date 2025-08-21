@@ -23,12 +23,11 @@
 #define _HAVE_STRUCT_OLD_TERMIOS 1
 
 #define OLD_NCCS 32
-struct old_termios
-{
-  tcflag_t c_iflag;		/* input mode flags */
-  tcflag_t c_oflag;		/* output mode flags */
-  tcflag_t c_cflag;		/* control mode flags */
-  tcflag_t c_lflag;		/* local mode flags */
-  cc_t c_line;			/* line discipline */
-  cc_t c_cc[OLD_NCCS];		/* control characters */
+struct old_termios {
+    tcflag_t c_iflag;     /* input mode flags */
+    tcflag_t c_oflag;     /* output mode flags */
+    tcflag_t c_cflag;     /* control mode flags */
+    tcflag_t c_lflag;     /* local mode flags */
+    cc_t c_line;          /* line discipline */
+    cc_t c_cc[OLD_NCCS];      /* control characters */
 };

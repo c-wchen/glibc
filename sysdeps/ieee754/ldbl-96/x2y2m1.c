@@ -30,10 +30,9 @@
    It is given that 1 > X >= Y >= epsilon / 2, and that X^2 + Y^2 >=
    0.5.  */
 
-double
-__x2y2m1 (double x, double y)
+double __x2y2m1(double x, double y)
 {
-  return (double) __x2y2m1l (x, y);
+    return (double) __x2y2m1l(x, y);
 }
 
 #endif

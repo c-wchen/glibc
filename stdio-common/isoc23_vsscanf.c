@@ -17,12 +17,11 @@
 
 #include <libio/strfile.h>
 
-int
-__isoc23_vsscanf (const char *string, const char *format, va_list args)
+int __isoc23_vsscanf(const char *string, const char *format, va_list args)
 {
-  _IO_strfile sf;
-  FILE *f = _IO_strfile_read (&sf, string);
-  return __vfscanf_internal (f, format, args,
-			     SCANF_ISOC99_A | SCANF_ISOC23_BIN_CST);
+    _IO_strfile sf;
+    FILE *f = _IO_strfile_read(&sf, string);
+    return __vfscanf_internal(f, format, args,
+                              SCANF_ISOC99_A | SCANF_ISOC23_BIN_CST);
 }
-libc_hidden_def (__isoc23_vsscanf)
+libc_hidden_def(__isoc23_vsscanf)

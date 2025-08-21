@@ -19,10 +19,9 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-int
-__euidaccess (const char *file, int type)
+int __euidaccess(const char *file, int type)
 {
-  return __faccessat (AT_FDCWD, file, type, AT_EACCESS);
+    return __faccessat(AT_FDCWD, file, type, AT_EACCESS);
 }
-weak_alias (__euidaccess, euidaccess)
-weak_alias (__euidaccess, eaccess)
+weak_alias(__euidaccess, euidaccess)
+weak_alias(__euidaccess, eaccess)

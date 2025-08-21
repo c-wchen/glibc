@@ -21,11 +21,10 @@
 
 extern int foo;
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  TEST_COMPARE (foo, -1);
-  return 0;
+    TEST_COMPARE(foo, -1);
+    return 0;
 }
 
 #include <support/test-driver.c>

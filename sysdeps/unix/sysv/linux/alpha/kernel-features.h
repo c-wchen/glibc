@@ -28,8 +28,8 @@
 # define __ASSUME_STATFS64 0
 #endif
 
-#define __ASSUME_RECV_SYSCALL	1
-#define __ASSUME_SEND_SYSCALL	1
+#define __ASSUME_RECV_SYSCALL   1
+#define __ASSUME_SEND_SYSCALL   1
 
 /* Support for the renameat2 syscall was added in 3.17.  */
 #if __LINUX_KERNEL_VERSION < 0x031100

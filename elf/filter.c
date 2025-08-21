@@ -2,18 +2,17 @@
 #include <stdio.h>
 #include <string.h>
 
-extern const char *foo (void);
+extern const char *foo(void);
 
-int
-main (void)
+int main(void)
 {
-  const char *s;
+    const char *s;
 
-  mtrace ();
+    mtrace();
 
-  s = foo ();
+    s = foo();
 
-  printf ("called `foo' from `%s'\n", s);
+    printf("called `foo' from `%s'\n", s);
 
-  return strcmp (s, "filtmod2.c");
+    return strcmp(s, "filtmod2.c");
 }

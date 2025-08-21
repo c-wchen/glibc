@@ -20,8 +20,7 @@
 #include <stdint.h>
 
 void
-attribute_hidden
-__check_native (uint32_t a1_index, int *a1_native,
-		uint32_t a2_index, int *a2_native)
+attribute_hidden __check_native(uint32_t a1_index, int *a1_native,
+                                uint32_t a2_index, int *a2_native)
 {
 }

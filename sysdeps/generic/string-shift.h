@@ -26,27 +26,28 @@
 
 /* Return the mask WORD shifted based on S_INT address value, to ignore
    values not presented in the aligned word read.  */
-static __always_inline find_t
-shift_find (find_t word, uintptr_t s)
+static __always_inline find_t shift_find(find_t word, uintptr_t s)
 {
-  if (__BYTE_ORDER == __LITTLE_ENDIAN)
-    return word >> (CHAR_BIT * (s % sizeof (op_t)));
-  else
-    return word << (CHAR_BIT * (s % sizeof (op_t)));
+    if (__BYTE_ORDER == __LITTLE_ENDIAN) {
+        return word >> (CHAR_BIT * (s % sizeof(op_t)));
+    } else {
+        return word << (CHAR_BIT * (s % sizeof(op_t)));
+    }
 }
 
 /* Mask off the bits defined for the S alignment value, or return WORD if
    S is 0.  */
-static __always_inline find_t
-shift_find_last (find_t word, uintptr_t s)
+static __always_inline find_t shift_find_last(find_t word, uintptr_t s)
 {
-  s = s % sizeof (op_t);
-  if (s == 0)
-    return word;
-  if (__BYTE_ORDER == __LITTLE_ENDIAN)
-    return word & ~(((op_t)-1) << (s * CHAR_BIT));
-  else
-    return word & ~(((op_t)-1) >> (s * CHAR_BIT));
+    s = s % sizeof(op_t);
+    if (s == 0) {
+        return word;
+    }
+    if (__BYTE_ORDER == __LITTLE_ENDIAN) {
+        return word & ~(((op_t) -1) << (s * CHAR_BIT));
+    } else {
+        return word & ~(((op_t) -1) >> (s * CHAR_BIT));
+    }
 }
 
 #endif /* _STRING_SHIFT_H */

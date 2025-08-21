@@ -20,25 +20,24 @@
 #include <errno.h>
 #include <sys/mman.h>
 
-int
-__pkey_get (int key)
+int __pkey_get(int key)
 {
-  if (key < 0 || key > PKEY_MAX)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (key < 0 || key > PKEY_MAX) {
+        __set_errno(EINVAL);
+        return -1;
     }
-  unsigned int index = pkey_index (key);
-  unsigned long int amr = pkey_read ();
-  unsigned int bits = (amr >> index) & 3;
+    unsigned int index = pkey_index(key);
+    unsigned long int amr = pkey_read();
+    unsigned int bits = (amr >> index) & 3;
 
-  /* Translate from AMR values.  PKEY_AMR_READ standing alone is not
-     currently representable.  */
-  if (bits & PKEY_AMR_READ)
-    return PKEY_DISABLE_ACCESS;
-  else if (bits == PKEY_AMR_WRITE)
-    return PKEY_DISABLE_WRITE;
-  return 0;
+    /* Translate from AMR values.  PKEY_AMR_READ standing alone is not
+       currently representable.  */
+    if (bits & PKEY_AMR_READ) {
+        return PKEY_DISABLE_ACCESS;
+    } else if (bits == PKEY_AMR_WRITE) {
+        return PKEY_DISABLE_WRITE;
+    }
+    return 0;
 }
-libc_hidden_def (__pkey_get)
-weak_alias (__pkey_get, pkey_get)
+libc_hidden_def(__pkey_get)
+weak_alias(__pkey_get, pkey_get)

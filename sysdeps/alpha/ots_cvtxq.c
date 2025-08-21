@@ -18,22 +18,21 @@
 
 #include "local-soft-fp.h"
 
-long
-_OtsCvtXQ (long al, long ah, long _round)
+long _OtsCvtXQ(long al, long ah, long _round)
 {
-  FP_DECL_EX;
-  FP_DECL_Q(A);
-  unsigned long r;
-  long s;
+    FP_DECL_EX;
+    FP_DECL_Q(A);
+    unsigned long r;
+    long s;
 
-  /* If bit 3 is set, then integer overflow detection is requested.  */
-  s = _round & 8 ? 1 : -1;
-  _round = _round & 3;
+    /* If bit 3 is set, then integer overflow detection is requested.  */
+    s = _round & 8 ? 1 : -1;
+    _round = _round & 3;
 
-  FP_INIT_ROUNDMODE;
-  AXP_UNPACK_RAW_Q(A, a);
-  FP_TO_INT_Q(r, A, 64, s);
-  FP_HANDLE_EXCEPTIONS;
+    FP_INIT_ROUNDMODE;
+    AXP_UNPACK_RAW_Q(A, a);
+    FP_TO_INT_Q(r, A, 64, s);
+    FP_HANDLE_EXCEPTIONS;
 
-  return r;
+    return r;
 }

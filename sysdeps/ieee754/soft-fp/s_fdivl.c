@@ -33,35 +33,34 @@
    versions of GCC, it may be where R is defined using a macro or it
    may be where the macro is defined.  This happens only with -O1.  */
 DIAG_PUSH_NEEDS_COMMENT;
-DIAG_IGNORE_NEEDS_COMMENT (8, "-Wmaybe-uninitialized");
+DIAG_IGNORE_NEEDS_COMMENT(8, "-Wmaybe-uninitialized");
 #include <soft-fp.h>
 #include <single.h>
 #include <quad.h>
 
-float
-__fdivl (_Float128 x, _Float128 y)
+float __fdivl(_Float128 x, _Float128 y)
 {
-  FP_DECL_EX;
-  FP_DECL_Q (X);
-  FP_DECL_Q (Y);
-  FP_DECL_Q (R);
-  FP_DECL_S (RN);
-  float ret;
+    FP_DECL_EX;
+    FP_DECL_Q(X);
+    FP_DECL_Q(Y);
+    FP_DECL_Q(R);
+    FP_DECL_S(RN);
+    float ret;
 
-  FP_INIT_ROUNDMODE;
-  FP_UNPACK_Q (X, x);
-  FP_UNPACK_Q (Y, y);
-  FP_DIV_Q (R, X, Y);
+    FP_INIT_ROUNDMODE;
+    FP_UNPACK_Q(X, x);
+    FP_UNPACK_Q(Y, y);
+    FP_DIV_Q(R, X, Y);
 #if _FP_W_TYPE_SIZE < 64
-  FP_TRUNC_COOKED (S, Q, 1, 4, RN, R);
+    FP_TRUNC_COOKED(S, Q, 1, 4, RN, R);
 #else
-  FP_TRUNC_COOKED (S, Q, 1, 2, RN, R);
+    FP_TRUNC_COOKED(S, Q, 1, 2, RN, R);
 #endif
-  FP_PACK_S (ret, RN);
-  FP_HANDLE_EXCEPTIONS;
-  CHECK_NARROW_DIV (ret, x, y);
-  return ret;
+    FP_PACK_S(ret, RN);
+    FP_HANDLE_EXCEPTIONS;
+    CHECK_NARROW_DIV(ret, x, y);
+    return ret;
 }
 DIAG_POP_NEEDS_COMMENT;
 
-libm_alias_float_ldouble (div)
+libm_alias_float_ldouble(div)

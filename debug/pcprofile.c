@@ -29,62 +29,58 @@ static int active;
 static int fd;
 
 
-static void
-__attribute__ ((constructor))
-install (void)
+static void __attribute__((constructor))
+install(void)
 {
-  /* See whether the environment variable `PCPROFILE_OUTPUT' is defined.
-     If yes, it should name a FIFO.  We open it and mark ourself as active.  */
-  const char *outfile = getenv ("PCPROFILE_OUTPUT");
+    /* See whether the environment variable `PCPROFILE_OUTPUT' is defined.
+       If yes, it should name a FIFO.  We open it and mark ourself as active.  */
+    const char *outfile = getenv("PCPROFILE_OUTPUT");
 
-  if (outfile != NULL && *outfile != '\0')
-    {
-      fd = open (outfile, O_RDWR | O_CREAT, 0666);
+    if (outfile != NULL && *outfile != '\0') {
+        fd = open(outfile, O_RDWR | O_CREAT, 0666);
 
-      if (fd != -1)
-	{
-	  uint32_t word;
+        if (fd != -1) {
+            uint32_t word;
 
-	  active = 1;
+            active = 1;
 
-	  /* Write a magic word which tells the reader about the byte
-	     order and the size of the following entries.  */
-	  word = 0xdeb00000 | sizeof (void *);
-	  if (TEMP_FAILURE_RETRY (write (fd, &word, 4)) != 4)
-	    {
-	      /* If even this fails we shouldn't try further.  */
-	      close (fd);
-	      fd = -1;
-	      active = 0;
-	    }
-	}
+            /* Write a magic word which tells the reader about the byte
+               order and the size of the following entries.  */
+            word = 0xdeb00000 | sizeof(void *);
+            if (TEMP_FAILURE_RETRY(write(fd, &word, 4)) != 4) {
+                /* If even this fails we shouldn't try further.  */
+                close(fd);
+                fd = -1;
+                active = 0;
+            }
+        }
     }
 }
 
 
-static void
-__attribute__ ((destructor))
-uninstall (void)
+static void __attribute__((destructor))
+uninstall(void)
 {
-  if (active)
-    close (fd);
+    if (active) {
+        close(fd);
+    }
 }
 
 
-void
-__cyg_profile_func_enter (void *this_fn, void *call_site)
+void __cyg_profile_func_enter(void *this_fn, void *call_site)
 {
-  void *buf[2];
+    void *buf[2];
 
-  if (! active)
-    return;
+    if (! active) {
+        return;
+    }
 
-  /* Now write out the current position and that of the caller.  We do
-     this now, and don't cache the because we want real-time output.  */
-  buf[0] = this_fn;
-  buf[1] = call_site;
+    /* Now write out the current position and that of the caller.  We do
+       this now, and don't cache the because we want real-time output.  */
+    buf[0] = this_fn;
+    buf[1] = call_site;
 
-  write (fd, buf, sizeof buf);
+    write(fd, buf, sizeof buf);
 }
 /* We don't handle entry and exit differently here.  */
-strong_alias (__cyg_profile_func_enter, __cyg_profile_func_exit)
+strong_alias(__cyg_profile_func_enter, __cyg_profile_func_exit)

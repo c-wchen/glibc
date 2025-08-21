@@ -34,30 +34,30 @@
 # define ASM_LONG_DOUBLE_IN_VR 0
 #endif
 
-#define math_opt_barrier(x)						\
-  ({ __typeof (x) __x = (x);						\
-    if (! ASM_LONG_DOUBLE_IN_VR						\
-	&& (__builtin_types_compatible_p (__typeof (x), _Float128)	\
-	    || __builtin_types_compatible_p (__typeof (x), long double)	\
-	    )								\
-	)								\
-      __asm__ ("# math_opt_barrier_f128 %0" : "+fm" (__x));		\
-    else								\
-      __asm__ ("# math_opt_barrier %0"					\
-	       : "+f" ASM_CONSTRAINT_VR "m" (__x));			\
+#define math_opt_barrier(x)                     \
+  ({ __typeof (x) __x = (x);                        \
+    if (! ASM_LONG_DOUBLE_IN_VR                     \
+    && (__builtin_types_compatible_p (__typeof (x), _Float128)  \
+        || __builtin_types_compatible_p (__typeof (x), long double) \
+        )                               \
+    )                               \
+      __asm__ ("# math_opt_barrier_f128 %0" : "+fm" (__x));     \
+    else                                \
+      __asm__ ("# math_opt_barrier %0"                  \
+           : "+f" ASM_CONSTRAINT_VR "m" (__x));         \
     __x; })
-#define math_force_eval(x)						\
-  ({ __typeof (x) __x = (x);						\
-    if (! ASM_LONG_DOUBLE_IN_VR						\
-	&& (__builtin_types_compatible_p (__typeof (x), _Float128)	\
-	    || __builtin_types_compatible_p (__typeof (x), long double) \
-	    )								\
-	)								\
-      __asm__ __volatile__ ("# math_force_eval_f128 %0"			\
-			    : : "fm" (__x));				\
-    else								\
-      __asm__ __volatile__ ("# math_force_eval %0"			\
-			    : : "f" ASM_CONSTRAINT_VR "m" (__x));	\
+#define math_force_eval(x)                      \
+  ({ __typeof (x) __x = (x);                        \
+    if (! ASM_LONG_DOUBLE_IN_VR                     \
+    && (__builtin_types_compatible_p (__typeof (x), _Float128)  \
+        || __builtin_types_compatible_p (__typeof (x), long double) \
+        )                               \
+    )                               \
+      __asm__ __volatile__ ("# math_force_eval_f128 %0"         \
+                : : "fm" (__x));                \
+    else                                \
+      __asm__ __volatile__ ("# math_force_eval %0"          \
+                : : "f" ASM_CONSTRAINT_VR "m" (__x));   \
   })
 
 #endif

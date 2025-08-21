@@ -21,24 +21,21 @@
 
 #include <support/check.h>
 
-static void
-mod_prepare (void)
+static void mod_prepare(void)
 {
 }
 
-static void
-mod_parent (void)
+static void mod_parent(void)
 {
 }
 
-static void
-mod_child (void)
+static void mod_child(void)
 {
 }
 
-int atfork3mod_func (void)
+int atfork3mod_func(void)
 {
-  TEST_COMPARE (pthread_atfork (mod_prepare, mod_parent, mod_child), 0);
+    TEST_COMPARE(pthread_atfork(mod_prepare, mod_parent, mod_child), 0);
 
-  return 0;
+    return 0;
 }

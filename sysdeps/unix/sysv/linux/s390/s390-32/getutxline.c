@@ -26,4 +26,4 @@
 #include "login/getutxline.c"
 #undef getutxline
 
-default_symbol_version (__getutxline, getutxline, UTMP_COMPAT_BASE);
+default_symbol_version(__getutxline, getutxline, UTMP_COMPAT_BASE);

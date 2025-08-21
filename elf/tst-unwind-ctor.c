@@ -16,12 +16,11 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-extern void dummy (void);
+extern void dummy(void);
 
-int
-main (void)
+int main(void)
 {
-  /* Just call a dummy function in the shared library.  The actual test
-     runs in its constructor.  */
-  dummy ();
+    /* Just call a dummy function in the shared library.  The actual test
+       runs in its constructor.  */
+    dummy();
 }

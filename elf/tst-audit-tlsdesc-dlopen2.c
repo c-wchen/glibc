@@ -19,28 +19,26 @@
 #include <support/xdlfcn.h>
 #include <stdio.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  puts ("info: start of main program");
+    puts("info: start of main program");
 
-  /* Load TLS-using modules, to trigger DTV resizing.  The dynamic
-     linker will load them again (requiring their own TLS) because the
-     dlopen calls from the auditor were in the auditing namespace.  */
-  for (int i = 1; i <= 19; ++i)
-    {
-      char dso[30];
-      snprintf (dso, sizeof (dso), "tst-tlsmod17a%d.so", i);
-      char sym[30];
-      snprintf (sym, sizeof(sym), "tlsmod17a%d", i);
+    /* Load TLS-using modules, to trigger DTV resizing.  The dynamic
+       linker will load them again (requiring their own TLS) because the
+       dlopen calls from the auditor were in the auditing namespace.  */
+    for (int i = 1; i <= 19; ++i) {
+        char dso[30];
+        snprintf(dso, sizeof(dso), "tst-tlsmod17a%d.so", i);
+        char sym[30];
+        snprintf(sym, sizeof(sym), "tlsmod17a%d", i);
 
-      void *handle = xdlopen (dso, RTLD_LAZY);
-      int (*func) (void) = xdlsym (handle, sym);
-      /* Trigger TLS allocation.  */
-      func ();
+        void *handle = xdlopen(dso, RTLD_LAZY);
+        int (*func)(void) = xdlsym(handle, sym);
+        /* Trigger TLS allocation.  */
+        func();
     }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

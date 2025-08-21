@@ -31,87 +31,82 @@
 
 static const char inputfile[] = "../iconvdata/testdata/ISO-8859-1";
 
-static int
-do_bz17916 (void)
+static int do_bz17916(void)
 {
-  /* BZ #17916 -- check invalid large ccs= case.  */
-  struct rlimit rl;
-  getrlimit (RLIMIT_STACK, &rl);
-  rl.rlim_cur = 1024 * 1024;
-  setrlimit (RLIMIT_STACK, &rl);
+    /* BZ #17916 -- check invalid large ccs= case.  */
+    struct rlimit rl;
+    getrlimit(RLIMIT_STACK, &rl);
+    rl.rlim_cur = 1024 * 1024;
+    setrlimit(RLIMIT_STACK, &rl);
 
-  const size_t sz = 2 * 1024 * 1024;
-  char *ccs = xmalloc (sz);
-  strcpy (ccs, "r,ccs=");
-  memset (ccs + 6, 'A', sz - 6 - 1);
-  ccs[sz - 1] = '\0';
+    const size_t sz = 2 * 1024 * 1024;
+    char *ccs = xmalloc(sz);
+    strcpy(ccs, "r,ccs=");
+    memset(ccs + 6, 'A', sz - 6 - 1);
+    ccs[sz - 1] = '\0';
 
-  FILE *fp = fopen (inputfile, ccs);
-  if (fp != NULL)
-    {
-      printf ("unexpected success\n");
-      free (ccs);
-      fclose (fp);
-      return 1;
+    FILE *fp = fopen(inputfile, ccs);
+    if (fp != NULL) {
+        printf("unexpected success\n");
+        free(ccs);
+        fclose(fp);
+        return 1;
     }
 
-  free (ccs);
+    free(ccs);
 
-  return 0;
+    return 0;
 }
 
-static int
-do_bz18906 (void)
+static int do_bz18906(void)
 {
-  /* BZ #18906 -- check processing of ,ccs= as flags case.  */
+    /* BZ #18906 -- check processing of ,ccs= as flags case.  */
 
-  const char *ccs = "r,ccs=+ISO-8859-1";
-  size_t retval;
+    const char *ccs = "r,ccs=+ISO-8859-1";
+    size_t retval;
 
-  FILE *fp = fopen (inputfile, ccs);
-  int flags;
+    FILE *fp = fopen(inputfile, ccs);
+    int flags;
 
-  TEST_VERIFY (fp != NULL);
+    TEST_VERIFY(fp != NULL);
 
-  if (fp != NULL)
-    {
-      flags = fcntl (fileno (fp), F_GETFL);
-      retval = ((flags & O_ACCMODE) == O_RDWR);
-      retval |= ((flags & O_ACCMODE) == O_WRONLY);
-      TEST_COMPARE (retval, false);
-      fclose (fp);
+    if (fp != NULL) {
+        flags = fcntl(fileno(fp), F_GETFL);
+        retval = ((flags & O_ACCMODE) == O_RDWR);
+        retval |= ((flags & O_ACCMODE) == O_WRONLY);
+        TEST_COMPARE(retval, false);
+        fclose(fp);
     }
 
-  return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  FILE *fp;
+    FILE *fp;
 
-  mtrace ();
+    mtrace();
 
-  xsetlocale (LC_ALL, "de_DE.UTF-8");
+    xsetlocale(LC_ALL, "de_DE.UTF-8");
 
-  fp = xfopen (inputfile, "r,ccs=ISO-8859-1");
+    fp = xfopen(inputfile, "r,ccs=ISO-8859-1");
 
-  while (! feof_unlocked (fp))
-    {
-      wchar_t buf[200];
+    while (! feof_unlocked(fp)) {
+        wchar_t buf[200];
 
-      if (fgetws_unlocked (buf, sizeof (buf) / sizeof (buf[0]), fp) == NULL)
-	break;
+        if (fgetws_unlocked(buf, sizeof(buf) / sizeof(buf[0]), fp) == NULL) {
+            break;
+        }
 
-      fputws (buf, stdout);
+        fputws(buf, stdout);
     }
 
-  xfclose (fp);
+    xfclose(fp);
 
-  TEST_COMPARE (do_bz17916 (), 0);
-  TEST_COMPARE (do_bz18906 (), 0);
+    TEST_COMPARE(do_bz17916(), 0);
+    TEST_COMPARE(do_bz18906(), 0);
 
-  return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }
 
 #include <support/test-driver.c>

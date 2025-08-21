@@ -37,11 +37,10 @@
 
 /* Like __inet_pton_length, but use strlen (SRC) as the length of
    SRC.  */
-int
-__inet_pton (int af, const char *src, void *dst)
+int __inet_pton(int af, const char *src, void *dst)
 {
-  return __inet_pton_length (af, src, strlen (src), dst);
+    return __inet_pton_length(af, src, strlen(src), dst);
 }
-libc_hidden_def (__inet_pton)
-weak_alias (__inet_pton, inet_pton)
-libc_hidden_weak (inet_pton)
+libc_hidden_def(__inet_pton)
+weak_alias(__inet_pton, inet_pton)
+libc_hidden_weak(inet_pton)

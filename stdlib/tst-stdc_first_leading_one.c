@@ -18,8 +18,7 @@
 
 #include <tst-stdbit.h>
 
-static const struct stdbit_test inputs[] =
-  {
+static const struct stdbit_test inputs[] = {
     { 0ULL, 0, 0, 0, 0 },
     { 0x1ULL, 8, 16, 32, 64 },
     { 0x2ULL, 7, 15, 31, 63 },
@@ -74,15 +73,14 @@ static const struct stdbit_test inputs[] =
     { 0x8000000000000001ULL, 8, 16, 32, 1 },
     { 0xfffffffffffffffeULL, 1, 1, 1, 1 },
     { 0xffffffffffffffffULL, 1, 1, 1, 1 },
-  };
+};
 
-TEST_STDBIT_UI_TOPLEVEL (stdc_first_leading_one);
+TEST_STDBIT_UI_TOPLEVEL(stdc_first_leading_one);
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  TEST_STDBIT_UI (stdc_first_leading_one, inputs);
-  return 0;
+    TEST_STDBIT_UI(stdc_first_leading_one, inputs);
+    return 0;
 }
 
 #include <support/test-driver.c>

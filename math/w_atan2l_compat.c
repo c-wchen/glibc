@@ -27,18 +27,19 @@
 
 
 #if LIBM_SVID_COMPAT
-long double
-__atan2l (long double y, long double x)
+long double __atan2l(long double y, long double x)
 {
-  long double z;
+    long double z;
 
-  if (__builtin_expect (x == 0.0L && y == 0.0L, 0) && _LIB_VERSION == _SVID_)
-    return __kernel_standard_l (y, x, 203); /* atan2(+-0,+-0) */
+    if (__builtin_expect(x == 0.0L && y == 0.0L, 0) && _LIB_VERSION == _SVID_) {
+        return __kernel_standard_l(y, x, 203);    /* atan2(+-0,+-0) */
+    }
 
-  z = __ieee754_atan2l (y, x);
-  if (__glibc_unlikely (z == 0.0L && y != 0.0L && isfinite (x)))
-    __set_errno (ERANGE);
-  return z;
+    z = __ieee754_atan2l(y, x);
+    if (__glibc_unlikely(z == 0.0L && y != 0.0L && isfinite(x))) {
+        __set_errno(ERANGE);
+    }
+    return z;
 }
-libm_alias_ldouble (__atan2, atan2)
+libm_alias_ldouble(__atan2, atan2)
 #endif

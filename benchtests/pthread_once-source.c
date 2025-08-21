@@ -19,7 +19,6 @@
 
 static pthread_once_t once = PTHREAD_ONCE_INIT;
 
-static void
-once_handler (void)
+static void once_handler(void)
 {
 }

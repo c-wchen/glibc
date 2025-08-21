@@ -18,12 +18,11 @@
 
 #include <support/xthread.h>
 
-pthread_t
-xpthread_create (pthread_attr_t *attr,
-                 void *(*thread_func) (void *), void *closure)
+pthread_t xpthread_create(pthread_attr_t *attr,
+                          void *(*thread_func)(void *), void *closure)
 {
-  pthread_t thr;
-  xpthread_check_return
-    ("pthread_create", pthread_create (&thr, attr, thread_func, closure));
-  return thr;
+    pthread_t thr;
+    xpthread_check_return
+    ("pthread_create", pthread_create(&thr, attr, thread_func, closure));
+    return thr;
 }

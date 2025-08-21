@@ -25,7 +25,7 @@
 #undef __clogf
 #undef clogf
 
-static _Complex float internal_clogf (_Complex float x);
+static _Complex float internal_clogf(_Complex float x);
 
 #define M_DECL_FUNC(f) internal_clogf
 #include <math-type-macros-float.h>
@@ -37,18 +37,16 @@ static _Complex float internal_clogf (_Complex float x);
 #include <math/s_clog_template.c>
 #include "cfloat-compat.h"
 
-c1_cfloat_rettype
-__c1_clogf (c1_cfloat_decl (x))
+c1_cfloat_rettype __c1_clogf(c1_cfloat_decl(x))
 {
-  _Complex float r = internal_clogf (c1_cfloat_value (x));
-  return c1_cfloat_return (r);
+    _Complex float r = internal_clogf(c1_cfloat_value(x));
+    return c1_cfloat_return(r);
 }
 
-c2_cfloat_rettype
-__c2_clogf (c2_cfloat_decl (x))
+c2_cfloat_rettype __c2_clogf(c2_cfloat_decl(x))
 {
-  _Complex float r = internal_clogf (c2_cfloat_value (x));
-  return c2_cfloat_return (r);
+    _Complex float r = internal_clogf(c2_cfloat_value(x));
+    return c2_cfloat_return(r);
 }
 
-cfloat_versions (clog);
+cfloat_versions(clog);

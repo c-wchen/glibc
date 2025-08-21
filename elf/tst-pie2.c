@@ -22,19 +22,17 @@
 
 static int g;
 
-void init_g (void) __attribute__((constructor));
+void init_g(void) __attribute__((constructor));
 
-void
-init_g (void)
+void init_g(void)
 {
-  assert (g == 0);
-  g += 1;
+    assert(g == 0);
+    g += 1;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

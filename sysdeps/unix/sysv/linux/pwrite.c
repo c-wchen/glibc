@@ -21,18 +21,17 @@
 
 #ifndef __OFF_T_MATCHES_OFF64_T
 
-ssize_t
-__libc_pwrite (int fd, const void *buf, size_t count, off_t offset)
+ssize_t __libc_pwrite(int fd, const void *buf, size_t count, off_t offset)
 {
-  return SYSCALL_CANCEL (pwrite64, fd, buf, count, SYSCALL_LL_PRW (offset));
+    return SYSCALL_CANCEL(pwrite64, fd, buf, count, SYSCALL_LL_PRW(offset));
 }
 
-strong_alias (__libc_pwrite, __pwrite)
-libc_hidden_weak (__pwrite)
-weak_alias (__libc_pwrite, pwrite)
+strong_alias(__libc_pwrite, __pwrite)
+libc_hidden_weak(__pwrite)
+weak_alias(__libc_pwrite, pwrite)
 
 # if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1, GLIBC_2_2)
-compat_symbol (libc, __libc_pwrite, pwrite, GLIBC_2_2);
+compat_symbol(libc, __libc_pwrite, pwrite, GLIBC_2_2);
 # endif
 
 #endif

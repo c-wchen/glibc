@@ -22,17 +22,16 @@
 # include <math.h>
 # include <libm-alias-double.h>
 
-double
-__roundeven (double x)
+double __roundeven(double x)
 {
-  double y;
-  /* The z196 zarch "load fp integer" (fidbra) instruction is rounding
-     x to the nearest integer with "ties to even" rounding mode
-     (M3-field: 4) where inexact exceptions are suppressed (M4-field: 4).  */
-  __asm__ ("fidbra %0,4,%1,4" : "=f" (y) : "f" (x));
-  return y;
+    double y;
+    /* The z196 zarch "load fp integer" (fidbra) instruction is rounding
+       x to the nearest integer with "ties to even" rounding mode
+       (M3-field: 4) where inexact exceptions are suppressed (M4-field: 4).  */
+    __asm__("fidbra %0,4,%1,4" : "=f"(y) : "f"(x));
+    return y;
 }
-libm_alias_double (__roundeven, roundeven)
+libm_alias_double(__roundeven, roundeven)
 
 #else
 # include <sysdeps/ieee754/dbl-64/s_roundeven.c>

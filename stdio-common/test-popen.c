@@ -19,86 +19,78 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static void
-write_data (FILE *stream)
+static void write_data(FILE *stream)
 {
-  int i;
-  for (i=0; i<100; i++)
-    fprintf (stream, "%d\n", i);
-  if (ferror (stream))
-    {
-      fprintf (stderr, "Output to stream failed.\n");
-      exit (1);
+    int i;
+    for (i = 0; i < 100; i++) {
+        fprintf(stream, "%d\n", i);
+    }
+    if (ferror(stream)) {
+        fprintf(stderr, "Output to stream failed.\n");
+        exit(1);
     }
 }
 
-static void
-read_data (FILE *stream)
+static void read_data(FILE *stream)
 {
-  int i, j;
+    int i, j;
 
-  for (i=0; i<100; i++)
-    {
-      if (fscanf (stream, "%d\n", &j) != 1 || j != i)
-	{
-	  if (ferror (stream))
-	    perror ("fscanf");
-	  puts ("Test FAILED!");
-	  exit (1);
-	}
+    for (i = 0; i < 100; i++) {
+        if (fscanf(stream, "%d\n", &j) != 1 || j != i) {
+            if (ferror(stream)) {
+                perror("fscanf");
+            }
+            puts("Test FAILED!");
+            exit(1);
+        }
     }
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  FILE *output, *input;
-  int wstatus, rstatus;
+    FILE *output, *input;
+    int wstatus, rstatus;
 
-  /* We must remove this entry to assure the `cat' binary does not use
-     the perhaps incompatible new shared libraries.  */
-  unsetenv ("LD_LIBRARY_PATH");
+    /* We must remove this entry to assure the `cat' binary does not use
+       the perhaps incompatible new shared libraries.  */
+    unsetenv("LD_LIBRARY_PATH");
 
-  output = popen ("/bin/cat >" OBJPFX "tstpopen.tmp", "w");
-  if (output == NULL)
-    {
-      perror ("popen");
-      puts ("Test FAILED!");
-      exit (1);
+    output = popen("/bin/cat >" OBJPFX "tstpopen.tmp", "w");
+    if (output == NULL) {
+        perror("popen");
+        puts("Test FAILED!");
+        exit(1);
     }
-  write_data (output);
-  wstatus = pclose (output);
-  printf ("writing pclose returned %d\n", wstatus);
-  input = popen ("/bin/cat " OBJPFX "tstpopen.tmp", "r");
-  if (input == NULL)
-    {
-      perror (OBJPFX "tstpopen.tmp");
-      puts ("Test FAILED!");
-      exit (1);
+    write_data(output);
+    wstatus = pclose(output);
+    printf("writing pclose returned %d\n", wstatus);
+    input = popen("/bin/cat " OBJPFX "tstpopen.tmp", "r");
+    if (input == NULL) {
+        perror(OBJPFX "tstpopen.tmp");
+        puts("Test FAILED!");
+        exit(1);
     }
-  read_data (input);
-  rstatus = pclose (input);
-  printf ("reading pclose returned %d\n", rstatus);
+    read_data(input);
+    rstatus = pclose(input);
+    printf("reading pclose returned %d\n", rstatus);
 
-  remove (OBJPFX "tstpopen.tmp");
+    remove(OBJPFX "tstpopen.tmp");
 
-  errno = 0;
-  output = popen ("/bin/cat", "m");
-  if (output != NULL)
-    {
-      puts ("popen called with illegal mode does not return NULL");
-      puts ("Test FAILED!");
-      exit (1);
+    errno = 0;
+    output = popen("/bin/cat", "m");
+    if (output != NULL) {
+        puts("popen called with illegal mode does not return NULL");
+        puts("Test FAILED!");
+        exit(1);
     }
-  if (errno != EINVAL)
-    {
-      puts ("popen called with illegal mode does not set errno to EINVAL");
-      puts ("Test FAILED!");
-      exit (1);
+    if (errno != EINVAL) {
+        puts("popen called with illegal mode does not set errno to EINVAL");
+        puts("Test FAILED!");
+        exit(1);
     }
 
-  puts (wstatus | rstatus  ? "Test FAILED!" : "Test succeeded.");
-  return (wstatus | rstatus);
+    puts(wstatus | rstatus  ? "Test FAILED!" : "Test succeeded.");
+    return (wstatus | rstatus);
 }
 
 #define TEST_FUNCTION do_test ()

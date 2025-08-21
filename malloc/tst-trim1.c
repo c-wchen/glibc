@@ -7,49 +7,49 @@
 
 static void *arr[N];
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  for (int i = 0; i < N; ++i)
-    {
-      size_t size = random () % 16384;
+    for (int i = 0; i < N; ++i) {
+        size_t size = random() % 16384;
 
-      if ((arr[i] = malloc (size)) == NULL)
-	{
-	nomem:
-	  puts ("not enough memory");
-	  return 0;
-	}
+        if ((arr[i] = malloc(size)) == NULL) {
+nomem:
+            puts("not enough memory");
+            return 0;
+        }
 
-      memset (arr[i], size, size);
+        memset(arr[i], size, size);
     }
 
-  void *p = malloc (256);
-  if (p == NULL)
-    goto nomem;
-  memset (p, 1, 256);
+    void *p = malloc(256);
+    if (p == NULL) {
+        goto nomem;
+    }
+    memset(p, 1, 256);
 
-  puts ("==================================================================");
+    puts("==================================================================");
 
-  for (int i = 0; i < N; ++i)
-    if (i % 13 != 0)
-      free (arr[i]);
+    for (int i = 0; i < N; ++i)
+        if (i % 13 != 0) {
+            free(arr[i]);
+        }
 
-  puts ("==================================================================");
+    puts("==================================================================");
 
-  malloc_trim (0);
+    malloc_trim(0);
 
-  puts ("==================================================================");
+    puts("==================================================================");
 
-  p = malloc (30000);
-  if (p == NULL)
-    goto nomem;
+    p = malloc(30000);
+    if (p == NULL) {
+        goto nomem;
+    }
 
-  memset (p, 2, 30000);
+    memset(p, 2, 30000);
 
-  malloc_trim (0);
+    malloc_trim(0);
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

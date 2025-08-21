@@ -24,16 +24,16 @@
 # undef wcsspn
 # include <ifunc-resolve.h>
 # if HAVE_WCSSPN_C
-extern __typeof (__redirect_wcsspn) WCSSPN_C attribute_hidden;
+extern __typeof(__redirect_wcsspn) WCSSPN_C attribute_hidden;
 # endif
 
 # if HAVE_WCSSPN_Z13
-extern __typeof (__redirect_wcsspn) WCSSPN_Z13 attribute_hidden;
+extern __typeof(__redirect_wcsspn) WCSSPN_Z13 attribute_hidden;
 # endif
 
-s390_libc_ifunc_expr (__redirect_wcsspn, wcsspn,
-		      (HAVE_WCSSPN_Z13 && (hwcap & HWCAP_S390_VX))
-		      ? WCSSPN_Z13
-		      : WCSSPN_DEFAULT
-		      )
+s390_libc_ifunc_expr(__redirect_wcsspn, wcsspn,
+                     (HAVE_WCSSPN_Z13 &&(hwcap &HWCAP_S390_VX))
+                     ? WCSSPN_Z13
+                     : WCSSPN_DEFAULT
+                    )
 #endif

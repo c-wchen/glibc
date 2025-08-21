@@ -24,100 +24,97 @@
 
 /* Make calling thread wait for termination of thread THREAD.  Return
    the exit status of the thread in *STATUS.  */
-static int
-__pthread_join_common (pthread_t thread, void **status, int try,
-		       clockid_t clockid,
-		       const struct timespec *abstime)
+static int __pthread_join_common(pthread_t thread, void **status, int try,
+                                 clockid_t clockid,
+                                 const struct timespec *abstime)
 {
-  struct __pthread *pthread;
-  int err = 0;
+    struct __pthread *pthread;
+    int err = 0;
 
-  /* Lookup the thread structure for THREAD.  */
-  pthread = __pthread_getid (thread);
-  if (pthread == NULL)
-    return ESRCH;
-
-  if (pthread == _pthread_self ())
-    return EDEADLK;
-
-  __pthread_mutex_lock (&pthread->state_lock);
-
-  if (try == 0)
-    {
-      pthread_cleanup_push ((void (*)(void *)) __pthread_mutex_unlock,
-			    &pthread->state_lock);
-
-      /* Rely on pthread_cond_wait being a cancellation point to make
-	 pthread_join one too.  */
-      while (pthread->state == PTHREAD_JOINABLE && err != ETIMEDOUT && err != EINVAL)
-	err = __pthread_cond_clockwait (&pthread->state_cond,
-					&pthread->state_lock,
-					clockid, abstime);
-
-      pthread_cleanup_pop (0);
-
-      if (err == EINVAL)
-	{
-	  __pthread_mutex_unlock (&pthread->state_lock);
-	  return err;
-	}
+    /* Lookup the thread structure for THREAD.  */
+    pthread = __pthread_getid(thread);
+    if (pthread == NULL) {
+        return ESRCH;
     }
 
-  switch (pthread->state)
-    {
-    case PTHREAD_JOINABLE:
-      __pthread_mutex_unlock (&pthread->state_lock);
-      if (err != ETIMEDOUT)
-	err = EBUSY;
-      break;
-
-    case PTHREAD_EXITED:
-      /* THREAD has already exited.  Salvage its exit status.  */
-      if (status != NULL)
-	*status = pthread->status;
-
-      __pthread_mutex_unlock (&pthread->state_lock);
-
-      __pthread_dealloc (pthread);
-      break;
-
-    default:
-      /* Thou shalt not join non-joinable threads!  */
-      __pthread_mutex_unlock (&pthread->state_lock);
-      err = EINVAL;
-      break;
+    if (pthread == _pthread_self()) {
+        return EDEADLK;
     }
 
-  return err;
+    __pthread_mutex_lock(&pthread->state_lock);
+
+    if (try
+            == 0) {
+            pthread_cleanup_push((void (*)(void *)) __pthread_mutex_unlock,
+                                 &pthread->state_lock);
+
+            /* Rely on pthread_cond_wait being a cancellation point to make
+            pthread_join one too.  */
+            while (pthread->state == PTHREAD_JOINABLE && err != ETIMEDOUT && err != EINVAL)
+                err = __pthread_cond_clockwait(&pthread->state_cond,
+                                               &pthread->state_lock,
+                                               clockid, abstime);
+
+            pthread_cleanup_pop(0);
+
+            if (err == EINVAL) {
+                __pthread_mutex_unlock(&pthread->state_lock);
+                return err;
+            }
+        }
+
+    switch (pthread->state) {
+        case PTHREAD_JOINABLE:
+            __pthread_mutex_unlock(&pthread->state_lock);
+            if (err != ETIMEDOUT) {
+                err = EBUSY;
+            }
+            break;
+
+        case PTHREAD_EXITED:
+            /* THREAD has already exited.  Salvage its exit status.  */
+            if (status != NULL) {
+                *status = pthread->status;
+            }
+
+            __pthread_mutex_unlock(&pthread->state_lock);
+
+            __pthread_dealloc(pthread);
+            break;
+
+        default:
+            /* Thou shalt not join non-joinable threads!  */
+            __pthread_mutex_unlock(&pthread->state_lock);
+            err = EINVAL;
+            break;
+    }
+
+    return err;
 }
 
-int
-__pthread_join (pthread_t thread, void **status)
+int __pthread_join(pthread_t thread, void **status)
 {
-  return __pthread_join_common (thread, status, 0, CLOCK_REALTIME, NULL);
+    return __pthread_join_common(thread, status, 0, CLOCK_REALTIME, NULL);
 }
-weak_alias (__pthread_join, pthread_join);
+weak_alias(__pthread_join, pthread_join);
 
-int
-__pthread_tryjoin_np (pthread_t thread, void **status)
+int __pthread_tryjoin_np(pthread_t thread, void **status)
 {
-  return __pthread_join_common (thread, status, 1, CLOCK_REALTIME, NULL);
+    return __pthread_join_common(thread, status, 1, CLOCK_REALTIME, NULL);
 }
-weak_alias (__pthread_tryjoin_np, pthread_tryjoin_np);
+weak_alias(__pthread_tryjoin_np, pthread_tryjoin_np);
 
-int
-__pthread_timedjoin_np (pthread_t thread, void **status,
-			const struct timespec *abstime)
+int __pthread_timedjoin_np(pthread_t thread, void **status,
+                           const struct timespec *abstime)
 {
-  return __pthread_join_common (thread, status, 0, CLOCK_REALTIME, abstime);
+    return __pthread_join_common(thread, status, 0, CLOCK_REALTIME, abstime);
 }
-weak_alias (__pthread_timedjoin_np, pthread_timedjoin_np);
+weak_alias(__pthread_timedjoin_np, pthread_timedjoin_np);
 
-int
-__pthread_clockjoin_np (pthread_t thread, void **status,
-			clockid_t clockid,
-			const struct timespec *abstime)
+int __pthread_clockjoin_np(pthread_t thread, void **status,
+                           clockid_t clockid,
+                           const struct timespec *abstime)
 {
-  return __pthread_join_common (thread, status, 0, clockid, abstime);
+    return __pthread_join_common(thread, status, 0, clockid, abstime);
 }
-weak_alias (__pthread_clockjoin_np, pthread_clockjoin_np);
+weak_alias(__pthread_clockjoin_np, pthread_clockjoin_np);

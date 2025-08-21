@@ -24,23 +24,24 @@
 #include <stdio.h>
 #include <sys/signal.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
 #define COUNT 20
-  char * volatile ptrs[COUNT];
-  int i;
+    char *volatile ptrs[COUNT];
+    int i;
 
-  /* Allocate enough small chunks so that when we free them all, the tcache
-     is full, and the first one we freed is at the end of its linked list.  */
-  for (i = 0; i < COUNT; i++)
-    ptrs[i] = malloc (20);
-  for (i = 0; i < COUNT; i++)
-    free (ptrs[i]);
-  free (ptrs[0]);
+    /* Allocate enough small chunks so that when we free them all, the tcache
+       is full, and the first one we freed is at the end of its linked list.  */
+    for (i = 0; i < COUNT; i++) {
+        ptrs[i] = malloc(20);
+    }
+    for (i = 0; i < COUNT; i++) {
+        free(ptrs[i]);
+    }
+    free(ptrs[0]);
 
-  printf("FAIL: tcache double free\n");
-  return 1;
+    printf("FAIL: tcache double free\n");
+    return 1;
 }
 
 #define TEST_FUNCTION do_test

@@ -21,6 +21,6 @@
 #endif
 
 /* tcsetattr uses these.  */
-#define	TCSANOW		0
-#define	TCSADRAIN	1
-#define	TCSAFLUSH	2
+#define TCSANOW     0
+#define TCSADRAIN   1
+#define TCSAFLUSH   2

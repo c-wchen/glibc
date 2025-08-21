@@ -50,176 +50,176 @@
 /* Trigonometric functions.  */
 
 /* Arc cosine of X.  */
-__MATHCALL_VEC (acos,, (_Mdouble_ __x));
+__MATHCALL_VEC(acos,, (_Mdouble_ __x));
 /* Arc sine of X.  */
-__MATHCALL_VEC (asin,, (_Mdouble_ __x));
+__MATHCALL_VEC(asin,, (_Mdouble_ __x));
 /* Arc tangent of X.  */
-__MATHCALL_VEC (atan,, (_Mdouble_ __x));
+__MATHCALL_VEC(atan,, (_Mdouble_ __x));
 /* Arc tangent of Y/X.  */
-__MATHCALL_VEC (atan2,, (_Mdouble_ __y, _Mdouble_ __x));
+__MATHCALL_VEC(atan2,, (_Mdouble_ __y, _Mdouble_ __x));
 
 /* Cosine of X.  */
-__MATHCALL_VEC (cos,, (_Mdouble_ __x));
+__MATHCALL_VEC(cos,, (_Mdouble_ __x));
 /* Sine of X.  */
-__MATHCALL_VEC (sin,, (_Mdouble_ __x));
+__MATHCALL_VEC(sin,, (_Mdouble_ __x));
 /* Tangent of X.  */
-__MATHCALL_VEC (tan,, (_Mdouble_ __x));
+__MATHCALL_VEC(tan,, (_Mdouble_ __x));
 
 #if __GLIBC_USE (IEC_60559_FUNCS_EXT_C23)
 /* Arc cosine of X, divided by pi.  */
-__MATHCALL (acospi,, (_Mdouble_ __x));
-__MATHCALL_VEC (acospi,, (_Mdouble_ __x));
+__MATHCALL(acospi,, (_Mdouble_ __x));
+__MATHCALL_VEC(acospi,, (_Mdouble_ __x));
 /* Arc sine of X, divided by pi.  */
-__MATHCALL (asinpi,, (_Mdouble_ __x));
-__MATHCALL_VEC (asinpi,, (_Mdouble_ __x));
+__MATHCALL(asinpi,, (_Mdouble_ __x));
+__MATHCALL_VEC(asinpi,, (_Mdouble_ __x));
 /* Arc tangent of X, divided by pi.  */
-__MATHCALL (atanpi,, (_Mdouble_ __x));
-__MATHCALL_VEC (atanpi,, (_Mdouble_ __x));
+__MATHCALL(atanpi,, (_Mdouble_ __x));
+__MATHCALL_VEC(atanpi,, (_Mdouble_ __x));
 /* Arc tangent of Y/X, divided by pi.  */
-__MATHCALL (atan2pi,, (_Mdouble_ __y, _Mdouble_ __x));
-__MATHCALL_VEC (atan2pi,, (_Mdouble_ __y, _Mdouble_ __x));
+__MATHCALL(atan2pi,, (_Mdouble_ __y, _Mdouble_ __x));
+__MATHCALL_VEC(atan2pi,, (_Mdouble_ __y, _Mdouble_ __x));
 
 /* Cosine of pi * X.  */
-__MATHCALL_VEC (cospi,, (_Mdouble_ __x));
+__MATHCALL_VEC(cospi,, (_Mdouble_ __x));
 /* Sine of pi * X.  */
-__MATHCALL_VEC (sinpi,, (_Mdouble_ __x));
+__MATHCALL_VEC(sinpi,, (_Mdouble_ __x));
 /* Tangent of pi * X.  */
-__MATHCALL_VEC (tanpi,, (_Mdouble_ __x));
+__MATHCALL_VEC(tanpi,, (_Mdouble_ __x));
 #endif
 
 /* Hyperbolic functions.  */
 
 /* Hyperbolic cosine of X.  */
-__MATHCALL_VEC (cosh,, (_Mdouble_ __x));
+__MATHCALL_VEC(cosh,, (_Mdouble_ __x));
 /* Hyperbolic sine of X.  */
-__MATHCALL_VEC (sinh,, (_Mdouble_ __x));
+__MATHCALL_VEC(sinh,, (_Mdouble_ __x));
 /* Hyperbolic tangent of X.  */
-__MATHCALL_VEC (tanh,, (_Mdouble_ __x));
+__MATHCALL_VEC(tanh,, (_Mdouble_ __x));
 
 #ifdef __USE_GNU
 /* Cosine and sine of X.  */
-__MATHDECL_VEC (void,sincos,,
-		(_Mdouble_ __x, _Mdouble_ *__sinx, _Mdouble_ *__cosx));
+__MATHDECL_VEC(void, sincos,,
+               (_Mdouble_ __x, _Mdouble_ *__sinx, _Mdouble_ *__cosx));
 #endif
 
 #if defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
 /* Hyperbolic arc cosine of X.  */
-__MATHCALL_VEC (acosh,, (_Mdouble_ __x));
+__MATHCALL_VEC(acosh,, (_Mdouble_ __x));
 /* Hyperbolic arc sine of X.  */
-__MATHCALL_VEC (asinh,, (_Mdouble_ __x));
+__MATHCALL_VEC(asinh,, (_Mdouble_ __x));
 /* Hyperbolic arc tangent of X.  */
-__MATHCALL_VEC (atanh,, (_Mdouble_ __x));
+__MATHCALL_VEC(atanh,, (_Mdouble_ __x));
 #endif
 
 /* Exponential and logarithmic functions.  */
 
 /* Exponential function of X.  */
-__MATHCALL_VEC (exp,, (_Mdouble_ __x));
+__MATHCALL_VEC(exp,, (_Mdouble_ __x));
 
 /* Break VALUE into a normalized fraction and an integral power of 2.  */
-__MATHCALL (frexp,, (_Mdouble_ __x, int *__exponent));
+__MATHCALL(frexp,, (_Mdouble_ __x, int *__exponent));
 
 /* X times (two to the EXP power).  */
-__MATHCALL (ldexp,, (_Mdouble_ __x, int __exponent));
+__MATHCALL(ldexp,, (_Mdouble_ __x, int __exponent));
 
 /* Natural logarithm of X.  */
-__MATHCALL_VEC (log,, (_Mdouble_ __x));
+__MATHCALL_VEC(log,, (_Mdouble_ __x));
 
 /* Base-ten logarithm of X.  */
-__MATHCALL_VEC (log10,, (_Mdouble_ __x));
+__MATHCALL_VEC(log10,, (_Mdouble_ __x));
 
 /* Break VALUE into integral and fractional parts.  */
-__MATHCALL (modf,, (_Mdouble_ __x, _Mdouble_ *__iptr)) __nonnull ((2));
+__MATHCALL(modf,, (_Mdouble_ __x, _Mdouble_ *__iptr)) __nonnull((2));
 
 #if __GLIBC_USE (IEC_60559_FUNCS_EXT_C23)
 /* Compute exponent to base ten.  */
-__MATHCALL_VEC (exp10,, (_Mdouble_ __x));
+__MATHCALL_VEC(exp10,, (_Mdouble_ __x));
 
 /* Return exp2(X) - 1.  */
-__MATHCALL (exp2m1,, (_Mdouble_ __x));
+__MATHCALL(exp2m1,, (_Mdouble_ __x));
 
 /* Return exp10(X) - 1.  */
-__MATHCALL (exp10m1,, (_Mdouble_ __x));
+__MATHCALL(exp10m1,, (_Mdouble_ __x));
 
 /* Return log2(1 + X).  */
-__MATHCALL (log2p1,, (_Mdouble_ __x));
+__MATHCALL(log2p1,, (_Mdouble_ __x));
 
 /* Return log10(1 + X).  */
-__MATHCALL (log10p1,, (_Mdouble_ __x));
+__MATHCALL(log10p1,, (_Mdouble_ __x));
 
 /* Return log(1 + X).  */
-__MATHCALL_VEC (logp1,, (_Mdouble_ __x));
+__MATHCALL_VEC(logp1,, (_Mdouble_ __x));
 #endif
 
 #if defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
 /* Return exp(X) - 1.  */
-__MATHCALL_VEC (expm1,, (_Mdouble_ __x));
+__MATHCALL_VEC(expm1,, (_Mdouble_ __x));
 
 /* Return log(1 + X).  */
-__MATHCALL_VEC (log1p,, (_Mdouble_ __x));
+__MATHCALL_VEC(log1p,, (_Mdouble_ __x));
 
 /* Return the base 2 signed integral exponent of X.  */
-__MATHCALL (logb,, (_Mdouble_ __x));
+__MATHCALL(logb,, (_Mdouble_ __x));
 #endif
 
 #ifdef __USE_ISOC99
 /* Compute base-2 exponential of X.  */
-__MATHCALL_VEC (exp2,, (_Mdouble_ __x));
+__MATHCALL_VEC(exp2,, (_Mdouble_ __x));
 
 /* Compute base-2 logarithm of X.  */
-__MATHCALL_VEC (log2,, (_Mdouble_ __x));
+__MATHCALL_VEC(log2,, (_Mdouble_ __x));
 #endif
 
 
 /* Power functions.  */
 
 /* Return X to the Y power.  */
-__MATHCALL_VEC (pow,, (_Mdouble_ __x, _Mdouble_ __y));
+__MATHCALL_VEC(pow,, (_Mdouble_ __x, _Mdouble_ __y));
 
 /* Return the square root of X.  */
-__MATHCALL (sqrt,, (_Mdouble_ __x));
+__MATHCALL(sqrt,, (_Mdouble_ __x));
 
 #if defined __USE_XOPEN || defined __USE_ISOC99
 /* Return `sqrt(X*X + Y*Y)'.  */
-__MATHCALL_VEC (hypot,, (_Mdouble_ __x, _Mdouble_ __y));
+__MATHCALL_VEC(hypot,, (_Mdouble_ __x, _Mdouble_ __y));
 #endif
 
 #if defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
 /* Return the cube root of X.  */
-__MATHCALL_VEC (cbrt,, (_Mdouble_ __x));
+__MATHCALL_VEC(cbrt,, (_Mdouble_ __x));
 #endif
 
 #if __GLIBC_USE (IEC_60559_FUNCS_EXT_C23)
 /* Return 1+X to the Y power.  */
-__MATHCALL (compoundn,, (_Mdouble_ __x, long long int __y));
+__MATHCALL(compoundn,, (_Mdouble_ __x, long long int __y));
 
 /* Return X to the Y power.  */
-__MATHCALL (pown,, (_Mdouble_ __x, long long int __y));
+__MATHCALL(pown,, (_Mdouble_ __x, long long int __y));
 
 /* Return X to the Y power.  */
-__MATHCALL (powr,, (_Mdouble_ __x, _Mdouble_ __y));
+__MATHCALL(powr,, (_Mdouble_ __x, _Mdouble_ __y));
 
 /* Return the Yth root of X.  */
-__MATHCALL (rootn,, (_Mdouble_ __x, long long int __y));
+__MATHCALL(rootn,, (_Mdouble_ __x, long long int __y));
 
 /* Return the reciprocal of the square root of X.  */
-__MATHCALL (rsqrt,, (_Mdouble_ __x));
+__MATHCALL(rsqrt,, (_Mdouble_ __x));
 #endif
 
 
 /* Nearest integer, absolute value, and remainder functions.  */
 
 /* Smallest integral value not less than X.  */
-__MATHCALLX (ceil,, (_Mdouble_ __x), (__const__));
+__MATHCALLX(ceil,, (_Mdouble_ __x), (__const__));
 
 /* Absolute value of X.  */
-__MATHCALLX (fabs,, (_Mdouble_ __x), (__const__));
+__MATHCALLX(fabs,, (_Mdouble_ __x), (__const__));
 
 /* Largest integer not greater than X.  */
-__MATHCALLX (floor,, (_Mdouble_ __x), (__const__));
+__MATHCALLX(floor,, (_Mdouble_ __x), (__const__));
 
 /* Floating-point modulo remainder of X/Y.  */
-__MATHCALL (fmod,, (_Mdouble_ __x, _Mdouble_ __y));
+__MATHCALL(fmod,, (_Mdouble_ __x, _Mdouble_ __y));
 
 #ifdef __USE_MISC
 # if ((!defined __cplusplus \
@@ -228,33 +228,33 @@ __MATHCALL (fmod,, (_Mdouble_ __x, _Mdouble_ __y));
       && !__MATH_DECLARING_FLOATN
 /* Return 0 if VALUE is finite or NaN, +1 if it
    is +Infinity, -1 if it is -Infinity.  */
-__MATHDECL_ALIAS (int,isinf,, (_Mdouble_ __value), isinf)
-  __attribute__ ((__const__));
+__MATHDECL_ALIAS(int, isinf,, (_Mdouble_ __value), isinf)
+__attribute__((__const__));
 # endif
 
 # if !__MATH_DECLARING_FLOATN
 /* Return nonzero if VALUE is finite and not NaN.  */
-__MATHDECL_ALIAS (int,finite,, (_Mdouble_ __value), finite)
-  __attribute__ ((__const__));
+__MATHDECL_ALIAS(int, finite,, (_Mdouble_ __value), finite)
+__attribute__((__const__));
 
 /* Return the remainder of X/Y.  */
-__MATHCALL (drem,, (_Mdouble_ __x, _Mdouble_ __y));
+__MATHCALL(drem,, (_Mdouble_ __x, _Mdouble_ __y));
 
 
 /* Return the fractional part of X after dividing out `ilogb (X)'.  */
-__MATHCALL (significand,, (_Mdouble_ __x));
+__MATHCALL(significand,, (_Mdouble_ __x));
 # endif
 
 #endif /* Use misc.  */
 
 #ifdef __USE_ISOC99
 /* Return X with its signed changed to Y's.  */
-__MATHCALLX (copysign,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
+__MATHCALLX(copysign,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
 #endif
 
 #ifdef __USE_ISOC99
 /* Return representation of qNaN for double type.  */
-__MATHCALL (nan,, (const char *__tagb));
+__MATHCALL(nan,, (const char *__tagb));
 #endif
 
 
@@ -264,38 +264,38 @@ __MATHCALL (nan,, (const char *__tagb));
        || __MATH_DECLARING_DOUBLE == 0)) /* isnanf or isnanl don't.  */ \
       && !__MATH_DECLARING_FLOATN
 /* Return nonzero if VALUE is not a number.  */
-__MATHDECL_ALIAS (int,isnan,, (_Mdouble_ __value), isnan)
-  __attribute__ ((__const__));
+__MATHDECL_ALIAS(int, isnan,, (_Mdouble_ __value), isnan)
+__attribute__((__const__));
 # endif
 #endif
 
 #if defined __USE_MISC || (defined __USE_XOPEN && __MATH_DECLARING_DOUBLE)
 /* Bessel functions.  */
-__MATHCALL (j0,, (_Mdouble_));
-__MATHCALL (j1,, (_Mdouble_));
-__MATHCALL (jn,, (int, _Mdouble_));
-__MATHCALL (y0,, (_Mdouble_));
-__MATHCALL (y1,, (_Mdouble_));
-__MATHCALL (yn,, (int, _Mdouble_));
+__MATHCALL(j0,, (_Mdouble_));
+__MATHCALL(j1,, (_Mdouble_));
+__MATHCALL(jn,, (int, _Mdouble_));
+__MATHCALL(y0,, (_Mdouble_));
+__MATHCALL(y1,, (_Mdouble_));
+__MATHCALL(yn,, (int, _Mdouble_));
 #endif
 
 
 #if defined __USE_XOPEN || defined __USE_ISOC99
 /* Error and gamma functions.  */
-__MATHCALL_VEC (erf,, (_Mdouble_));
-__MATHCALL_VEC (erfc,, (_Mdouble_));
-__MATHCALL (lgamma,, (_Mdouble_));
+__MATHCALL_VEC(erf,, (_Mdouble_));
+__MATHCALL_VEC(erfc,, (_Mdouble_));
+__MATHCALL(lgamma,, (_Mdouble_));
 #endif
 
 #ifdef __USE_ISOC99
 /* True gamma function.  */
-__MATHCALL (tgamma,, (_Mdouble_));
+__MATHCALL(tgamma,, (_Mdouble_));
 #endif
 
 #if defined __USE_MISC || (defined __USE_XOPEN && !defined __USE_XOPEN2K)
 # if !__MATH_DECLARING_FLOATN
 /* Obsolete alias for `lgamma'.  */
-__MATHCALL (gamma,, (_Mdouble_));
+__MATHCALL(gamma,, (_Mdouble_));
 # endif
 #endif
 
@@ -303,188 +303,186 @@ __MATHCALL (gamma,, (_Mdouble_));
 /* Reentrant version of lgamma.  This function uses the global variable
    `signgam'.  The reentrant version instead takes a pointer and stores
    the value through it.  */
-__MATHCALL (lgamma,_r, (_Mdouble_, int *__signgamp));
+__MATHCALL(lgamma, _r, (_Mdouble_, int *__signgamp));
 #endif
 
 
 #if defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
 /* Return the integer nearest X in the direction of the
    prevailing rounding mode.  */
-__MATHCALL (rint,, (_Mdouble_ __x));
+__MATHCALL(rint,, (_Mdouble_ __x));
 
 /* Return X + epsilon if X < Y, X - epsilon if X > Y.  */
-__MATHCALL (nextafter,, (_Mdouble_ __x, _Mdouble_ __y));
+__MATHCALL(nextafter,, (_Mdouble_ __x, _Mdouble_ __y));
 # if defined __USE_ISOC99 && !defined __LDBL_COMPAT && !__MATH_DECLARING_FLOATN
-__MATHCALL (nexttoward,, (_Mdouble_ __x, long double __y));
+__MATHCALL(nexttoward,, (_Mdouble_ __x, long double __y));
 # endif
 
 # if __GLIBC_USE (IEC_60559_BFP_EXT_C23) || __MATH_DECLARING_FLOATN
 /* Return X - epsilon.  */
-__MATHCALL (nextdown,, (_Mdouble_ __x));
+__MATHCALL(nextdown,, (_Mdouble_ __x));
 /* Return X + epsilon.  */
-__MATHCALL (nextup,, (_Mdouble_ __x));
+__MATHCALL(nextup,, (_Mdouble_ __x));
 # endif
 
 /* Return the remainder of integer division X / Y with infinite precision.  */
-__MATHCALL (remainder,, (_Mdouble_ __x, _Mdouble_ __y));
+__MATHCALL(remainder,, (_Mdouble_ __x, _Mdouble_ __y));
 
 # ifdef __USE_ISOC99
 /* Return X times (2 to the Nth power).  */
-__MATHCALL (scalbn,, (_Mdouble_ __x, int __n));
+__MATHCALL(scalbn,, (_Mdouble_ __x, int __n));
 # endif
 
 /* Return the binary exponent of X, which must be nonzero.  */
-__MATHDECL (int,ilogb,, (_Mdouble_ __x));
+__MATHDECL(int, ilogb,, (_Mdouble_ __x));
 #endif
 
 #if __GLIBC_USE (IEC_60559_BFP_EXT_C23) || __MATH_DECLARING_FLOATN
 /* Like ilogb, but returning long int.  */
-__MATHDECL (long int, llogb,, (_Mdouble_ __x));
+__MATHDECL(long int, llogb,, (_Mdouble_ __x));
 #endif
 
 #ifdef __USE_ISOC99
 /* Return X times (2 to the Nth power).  */
-__MATHCALL (scalbln,, (_Mdouble_ __x, long int __n));
+__MATHCALL(scalbln,, (_Mdouble_ __x, long int __n));
 
 /* Round X to integral value in floating-point format using current
    rounding direction, but do not raise inexact exception.  */
-__MATHCALL (nearbyint,, (_Mdouble_ __x));
+__MATHCALL(nearbyint,, (_Mdouble_ __x));
 
 /* Round X to nearest integral value, rounding halfway cases away from
    zero.  */
-__MATHCALLX (round,, (_Mdouble_ __x), (__const__));
+__MATHCALLX(round,, (_Mdouble_ __x), (__const__));
 
 /* Round X to the integral value in floating-point format nearest but
    not larger in magnitude.  */
-__MATHCALLX (trunc,, (_Mdouble_ __x), (__const__));
+__MATHCALLX(trunc,, (_Mdouble_ __x), (__const__));
 
 /* Compute remainder of X and Y and put in *QUO a value with sign of x/y
    and magnitude congruent `mod 2^n' to the magnitude of the integral
    quotient x/y, with n >= 3.  */
-__MATHCALL (remquo,, (_Mdouble_ __x, _Mdouble_ __y, int *__quo));
+__MATHCALL(remquo,, (_Mdouble_ __x, _Mdouble_ __y, int *__quo));
 
 
 /* Conversion functions.  */
 
 /* Round X to nearest integral value according to current rounding
    direction.  */
-__MATHDECL (long int,lrint,, (_Mdouble_ __x));
-__extension__
-__MATHDECL (long long int,llrint,, (_Mdouble_ __x));
+__MATHDECL(long int, lrint,, (_Mdouble_ __x));
+__extension__ __MATHDECL(long long int, llrint,, (_Mdouble_ __x));
 
 /* Round X to nearest integral value, rounding halfway cases away from
    zero.  */
-__MATHDECL (long int,lround,, (_Mdouble_ __x));
-__extension__
-__MATHDECL (long long int,llround,, (_Mdouble_ __x));
+__MATHDECL(long int, lround,, (_Mdouble_ __x));
+__extension__ __MATHDECL(long long int, llround,, (_Mdouble_ __x));
 
 
 /* Return positive difference between X and Y.  */
-__MATHCALL (fdim,, (_Mdouble_ __x, _Mdouble_ __y));
+__MATHCALL(fdim,, (_Mdouble_ __x, _Mdouble_ __y));
 
 # if !__MATH_DECLARING_FLOATN || defined __USE_GNU || !__GLIBC_USE (ISOC23)
 /* Return maximum numeric value from X and Y.  */
-__MATHCALLX (fmax,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
+__MATHCALLX(fmax,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
 
 /* Return minimum numeric value from X and Y.  */
-__MATHCALLX (fmin,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
+__MATHCALLX(fmin,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
 # endif
 
 /* Multiply-add function computed as a ternary operation.  */
-__MATHCALL (fma,, (_Mdouble_ __x, _Mdouble_ __y, _Mdouble_ __z));
+__MATHCALL(fma,, (_Mdouble_ __x, _Mdouble_ __y, _Mdouble_ __z));
 #endif /* Use ISO C99.  */
 
 #if __GLIBC_USE (IEC_60559_BFP_EXT_C23) || __MATH_DECLARING_FLOATN
 /* Round X to nearest integer value, rounding halfway cases to even.  */
-__MATHCALLX (roundeven,, (_Mdouble_ __x), (__const__));
+__MATHCALLX(roundeven,, (_Mdouble_ __x), (__const__));
 
 /* Round X to nearest signed integer value, not raising inexact, with
    control of rounding direction and width of result.  */
-__MATHDECL (__intmax_t, fromfp,, (_Mdouble_ __x, int __round,
-				  unsigned int __width));
+__MATHDECL(__intmax_t, fromfp,, (_Mdouble_ __x, int __round,
+                                 unsigned int __width));
 
 /* Round X to nearest unsigned integer value, not raising inexact,
    with control of rounding direction and width of result.  */
-__MATHDECL (__uintmax_t, ufromfp,, (_Mdouble_ __x, int __round,
-				    unsigned int __width));
+__MATHDECL(__uintmax_t, ufromfp,, (_Mdouble_ __x, int __round,
+                                   unsigned int __width));
 
 /* Round X to nearest signed integer value, raising inexact for
    non-integers, with control of rounding direction and width of
    result.  */
-__MATHDECL (__intmax_t, fromfpx,, (_Mdouble_ __x, int __round,
-				   unsigned int __width));
+__MATHDECL(__intmax_t, fromfpx,, (_Mdouble_ __x, int __round,
+                                  unsigned int __width));
 
 /* Round X to nearest unsigned integer value, raising inexact for
    non-integers, with control of rounding direction and width of
    result.  */
-__MATHDECL (__uintmax_t, ufromfpx,, (_Mdouble_ __x, int __round,
-				     unsigned int __width));
+__MATHDECL(__uintmax_t, ufromfpx,, (_Mdouble_ __x, int __round,
+                                    unsigned int __width));
 
 /* Canonicalize floating-point representation.  */
-__MATHDECL_1 (int, canonicalize,, (_Mdouble_ *__cx, const _Mdouble_ *__x));
+__MATHDECL_1(int, canonicalize,, (_Mdouble_ *__cx, const _Mdouble_ *__x));
 #endif
 
-#if (__GLIBC_USE (IEC_60559_BFP_EXT)				\
-     || (__MATH_DECLARING_FLOATN				\
-	 && (defined __USE_GNU || !__GLIBC_USE (ISOC23))))
+#if (__GLIBC_USE (IEC_60559_BFP_EXT)                \
+     || (__MATH_DECLARING_FLOATN                \
+     && (defined __USE_GNU || !__GLIBC_USE (ISOC23))))
 /* Return value with maximum magnitude.  */
-__MATHCALLX (fmaxmag,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
+__MATHCALLX(fmaxmag,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
 
 /* Return value with minimum magnitude.  */
-__MATHCALLX (fminmag,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
+__MATHCALLX(fminmag,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
 #endif
 
 #if __GLIBC_USE (ISOC23)
 /* Return maximum value from X and Y.  */
-__MATHCALLX (fmaximum,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
+__MATHCALLX(fmaximum,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
 
 /* Return minimum value from X and Y.  */
-__MATHCALLX (fminimum,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
+__MATHCALLX(fminimum,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
 
 /* Return maximum numeric value from X and Y.  */
-__MATHCALLX (fmaximum_num,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
+__MATHCALLX(fmaximum_num,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
 
 /* Return minimum numeric value from X and Y.  */
-__MATHCALLX (fminimum_num,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
+__MATHCALLX(fminimum_num,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
 
 /* Return value with maximum magnitude.  */
-__MATHCALLX (fmaximum_mag,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
+__MATHCALLX(fmaximum_mag,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
 
 /* Return value with minimum magnitude.  */
-__MATHCALLX (fminimum_mag,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
+__MATHCALLX(fminimum_mag,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
 
 /* Return numeric value with maximum magnitude.  */
-__MATHCALLX (fmaximum_mag_num,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
+__MATHCALLX(fmaximum_mag_num,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
 
 /* Return numeric value with minimum magnitude.  */
-__MATHCALLX (fminimum_mag_num,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
+__MATHCALLX(fminimum_mag_num,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
 #endif
 
 #if __GLIBC_USE (IEC_60559_EXT) || __MATH_DECLARING_FLOATN
 /* Total order operation.  */
-__MATHDECL_1 (int, totalorder,, (const _Mdouble_ *__x,
-				 const _Mdouble_ *__y))
-     __attribute_pure__;
+__MATHDECL_1(int, totalorder,, (const _Mdouble_ *__x,
+                                const _Mdouble_ *__y))
+__attribute_pure__;
 
 /* Total order operation on absolute values.  */
-__MATHDECL_1 (int, totalordermag,, (const _Mdouble_ *__x,
-				    const _Mdouble_ *__y))
-     __attribute_pure__;
+__MATHDECL_1(int, totalordermag,, (const _Mdouble_ *__x,
+                                   const _Mdouble_ *__y))
+__attribute_pure__;
 
 /* Get NaN payload.  */
-__MATHCALL (getpayload,, (const _Mdouble_ *__x));
+__MATHCALL(getpayload,, (const _Mdouble_ *__x));
 
 /* Set quiet NaN payload.  */
-__MATHDECL_1 (int, setpayload,, (_Mdouble_ *__x, _Mdouble_ __payload));
+__MATHDECL_1(int, setpayload,, (_Mdouble_ *__x, _Mdouble_ __payload));
 
 /* Set signaling NaN payload.  */
-__MATHDECL_1 (int, setpayloadsig,, (_Mdouble_ *__x, _Mdouble_ __payload));
+__MATHDECL_1(int, setpayloadsig,, (_Mdouble_ *__x, _Mdouble_ __payload));
 #endif
 
 #if (defined __USE_MISC || (defined __USE_XOPEN_EXTENDED \
-			    && __MATH_DECLARING_DOUBLE	  \
-			    && !defined __USE_XOPEN2K8))  \
+                && __MATH_DECLARING_DOUBLE    \
+                && !defined __USE_XOPEN2K8))  \
      && !__MATH_DECLARING_FLOATN
 /* Return X times (2 to the Nth power).  */
-__MATHCALL (scalb,, (_Mdouble_ __x, _Mdouble_ __n));
+__MATHCALL(scalb,, (_Mdouble_ __x, _Mdouble_ __n));
 #endif

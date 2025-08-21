@@ -24,11 +24,11 @@
 #include <tls.h>
 
 /* For Linux we can use the system call table in the header file
-	/usr/include/asm/unistd.h
+    /usr/include/asm/unistd.h
    of the kernel.  But these symbols do not follow the SYS_* syntax
    so we have to redefine the `SYS_ify' macro here.  */
 #undef SYS_ify
-#define SYS_ify(syscall_name)	(__NR_##syscall_name)
+#define SYS_ify(syscall_name)   (__NR_##syscall_name)
 
 
 #ifdef __ASSEMBLER__
@@ -46,8 +46,8 @@
 
 #define _IMM1 #-1
 #define _IMM12 #-12
-#undef	PSEUDO
-#define	PSEUDO(name, syscall_name, args) \
+#undef  PSEUDO
+#define PSEUDO(name, syscall_name, args) \
  .text; \
  ENTRY (name); \
     DO_CALL (syscall_name, args); \
@@ -60,56 +60,56 @@
     SYSCALL_ERROR_HANDLER; \
  .Lpseudo_end:
 
-#undef	PSEUDO_END
-#define	PSEUDO_END(name) \
+#undef  PSEUDO_END
+#define PSEUDO_END(name) \
   END (name)
 
-#undef	PSEUDO_NOERRNO
-#define	PSEUDO_NOERRNO(name, syscall_name, args) \
+#undef  PSEUDO_NOERRNO
+#define PSEUDO_NOERRNO(name, syscall_name, args) \
  .text; \
  ENTRY (name); \
     DO_CALL (syscall_name, args)
 
-#undef	PSEUDO_END_NOERRNO
-#define	PSEUDO_END_NOERRNO(name) \
+#undef  PSEUDO_END_NOERRNO
+#define PSEUDO_END_NOERRNO(name) \
   END (name)
 
 #define ret_NOERRNO ret
 
-#define	PSEUDO_ERRVAL(name, syscall_name, args) \
+#define PSEUDO_ERRVAL(name, syscall_name, args) \
  .text; \
  ENTRY (name); \
     DO_CALL (syscall_name, args);
 
-#undef	PSEUDO_END_ERRVAL
-#define	PSEUDO_END_ERRVAL(name) \
+#undef  PSEUDO_END_ERRVAL
+#define PSEUDO_END_ERRVAL(name) \
   END (name)
 
 #define ret_ERRVAL ret
 
 #ifndef PIC
-# define SYSCALL_ERROR_HANDLER	\
-	mov.l 0f,r1; \
-	jmp @r1; \
-	 mov r0,r4; \
-	.align 2; \
+# define SYSCALL_ERROR_HANDLER  \
+    mov.l 0f,r1; \
+    jmp @r1; \
+     mov r0,r4; \
+    .align 2; \
      0: .long __syscall_error
 #else
 # if RTLD_PRIVATE_ERRNO
-#  define SYSCALL_ERROR_HANDLER	\
-	neg r0,r1; \
-	mov r12,r2; \
-	cfi_register (r12, r2); \
-	mov.l 0f,r12; \
-	mova 0f,r0; \
-	add r0,r12; \
-	mov.l 1f,r0; \
-	mov.l r1,@(r0,r12); \
-	mov r2,r12; \
-	cfi_restore (r12); \
-	bra .Lpseudo_end; \
-	 mov _IMM1,r0; \
-	.align 2; \
+#  define SYSCALL_ERROR_HANDLER \
+    neg r0,r1; \
+    mov r12,r2; \
+    cfi_register (r12, r2); \
+    mov.l 0f,r12; \
+    mova 0f,r0; \
+    add r0,r12; \
+    mov.l 1f,r0; \
+    mov.l r1,@(r0,r12); \
+    mov r2,r12; \
+    cfi_restore (r12); \
+    bra .Lpseudo_end; \
+     mov _IMM1,r0; \
+    .align 2; \
      0: .long _GLOBAL_OFFSET_TABLE_; \
      1: .long rtld_errno@GOTOFF
 
@@ -121,81 +121,81 @@
 #   define SYSCALL_ERROR_ERRNO errno
 #  endif
 #  define SYSCALL_ERROR_HANDLER \
-	neg r0,r1; \
-	mov r12,r2; \
-	cfi_register (r12, r2); \
-	mov.l 0f,r12; \
-	mova 0f,r0; \
-	add r0,r12; \
-	mov.l 1f,r0; \
-	stc gbr, r4; \
-	mov.l @(r0,r12),r0; \
-	mov r2,r12; \
-	cfi_restore (r12); \
-	add r4,r0; \
-	mov.l r1,@r0; \
-	bra .Lpseudo_end; \
-	 mov _IMM1,r0; \
-	.align 2; \
+    neg r0,r1; \
+    mov r12,r2; \
+    cfi_register (r12, r2); \
+    mov.l 0f,r12; \
+    mova 0f,r0; \
+    add r0,r12; \
+    mov.l 1f,r0; \
+    stc gbr, r4; \
+    mov.l @(r0,r12),r0; \
+    mov r2,r12; \
+    cfi_restore (r12); \
+    add r4,r0; \
+    mov.l r1,@r0; \
+    bra .Lpseudo_end; \
+     mov _IMM1,r0; \
+    .align 2; \
      0: .long _GLOBAL_OFFSET_TABLE_; \
      1: .long SYSCALL_ERROR_ERRNO@GOTTPOFF
 # else
 /* Store (-r0) into errno through the GOT.  */
-#  define SYSCALL_ERROR_HANDLER						      \
-	neg r0,r1; \
-	mov r12,r2; \
-	cfi_register (r12, r2); \
-	mov.l 0f,r12; \
-	mova 0f,r0; \
-	add r0,r12; \
-	mov.l 1f,r0; \
-	mov.l @(r0,r12),r0; \
-	mov r2,r12; \
-	cfi_restore (r12); \
-	mov.l r1,@r0; \
-	bra .Lpseudo_end; \
-	 mov _IMM1,r0; \
-	.align 2; \
+#  define SYSCALL_ERROR_HANDLER                           \
+    neg r0,r1; \
+    mov r12,r2; \
+    cfi_register (r12, r2); \
+    mov.l 0f,r12; \
+    mova 0f,r0; \
+    add r0,r12; \
+    mov.l 1f,r0; \
+    mov.l @(r0,r12),r0; \
+    mov r2,r12; \
+    cfi_restore (r12); \
+    mov.l r1,@r0; \
+    bra .Lpseudo_end; \
+     mov _IMM1,r0; \
+    .align 2; \
      0: .long _GLOBAL_OFFSET_TABLE_; \
      1: .long errno@GOT
-# endif	/* _LIBC_REENTRANT */
-#endif	/* PIC */
+# endif /* _LIBC_REENTRANT */
+#endif  /* PIC */
 
 # ifdef NEED_SYSCALL_INST_PAD
 #  define SYSCALL_INST_PAD \
-	or r0,r0; or r0,r0; or r0,r0; or r0,r0; or r0,r0
+    or r0,r0; or r0,r0; or r0,r0; or r0,r0; or r0,r0
 # else
 #  define SYSCALL_INST_PAD
 # endif
 
-#define SYSCALL_INST0	trapa #0x10
-#define SYSCALL_INST1	trapa #0x11
-#define SYSCALL_INST2	trapa #0x12
-#define SYSCALL_INST3	trapa #0x13
-#define SYSCALL_INST4	trapa #0x14
-#define SYSCALL_INST5	mov.l @(0,r15),r0; trapa #0x15
-#define SYSCALL_INST6	mov.l @(0,r15),r0; mov.l @(4,r15),r1; trapa #0x16
+#define SYSCALL_INST0   trapa #0x10
+#define SYSCALL_INST1   trapa #0x11
+#define SYSCALL_INST2   trapa #0x12
+#define SYSCALL_INST3   trapa #0x13
+#define SYSCALL_INST4   trapa #0x14
+#define SYSCALL_INST5   mov.l @(0,r15),r0; trapa #0x15
+#define SYSCALL_INST6   mov.l @(0,r15),r0; mov.l @(4,r15),r1; trapa #0x16
 
-#undef	DO_CALL
-#define DO_CALL(syscall_name, args)	\
-    mov.l 1f,r3;			\
-    SYSCALL_INST##args;			\
-    SYSCALL_INST_PAD;			\
-    bra 2f;				\
-     nop;				\
-    .align 2;				\
- 1: .long SYS_ify (syscall_name);	\
+#undef  DO_CALL
+#define DO_CALL(syscall_name, args) \
+    mov.l 1f,r3;            \
+    SYSCALL_INST##args;         \
+    SYSCALL_INST_PAD;           \
+    bra 2f;             \
+     nop;               \
+    .align 2;               \
+ 1: .long SYS_ify (syscall_name);   \
  2:
 
 #else /* not __ASSEMBLER__ */
 
-#define SYSCALL_INST_STR0	"trapa #0x10\n\t"
-#define SYSCALL_INST_STR1	"trapa #0x11\n\t"
-#define SYSCALL_INST_STR2	"trapa #0x12\n\t"
-#define SYSCALL_INST_STR3	"trapa #0x13\n\t"
-#define SYSCALL_INST_STR4	"trapa #0x14\n\t"
-#define SYSCALL_INST_STR5	"trapa #0x15\n\t"
-#define SYSCALL_INST_STR6	"trapa #0x16\n\t"
+#define SYSCALL_INST_STR0   "trapa #0x10\n\t"
+#define SYSCALL_INST_STR1   "trapa #0x11\n\t"
+#define SYSCALL_INST_STR2   "trapa #0x12\n\t"
+#define SYSCALL_INST_STR3   "trapa #0x13\n\t"
+#define SYSCALL_INST_STR4   "trapa #0x14\n\t"
+#define SYSCALL_INST_STR5   "trapa #0x15\n\t"
+#define SYSCALL_INST_STR6   "trapa #0x16\n\t"
 
 # ifdef NEED_SYSCALL_INST_PAD
 #  define SYSCALL_INST_PAD "\
@@ -206,113 +206,113 @@
 
 #define ASMFMT_0
 #define ASMFMT_1 \
-	, "r" (r4)
+    , "r" (r4)
 #define ASMFMT_2 \
-	, "r" (r4), "r" (r5)
+    , "r" (r4), "r" (r5)
 #define ASMFMT_3 \
-	, "r" (r4), "r" (r5), "r" (r6)
+    , "r" (r4), "r" (r5), "r" (r6)
 #define ASMFMT_4 \
-	, "r" (r4), "r" (r5), "r" (r6), "r" (r7)
+    , "r" (r4), "r" (r5), "r" (r6), "r" (r7)
 #define ASMFMT_5 \
-	, "r" (r4), "r" (r5), "r" (r6), "r" (r7), "0" (r0)
+    , "r" (r4), "r" (r5), "r" (r6), "r" (r7), "0" (r0)
 #define ASMFMT_6 \
-	, "r" (r4), "r" (r5), "r" (r6), "r" (r7), "0" (r0), "r" (r1)
+    , "r" (r4), "r" (r5), "r" (r6), "r" (r7), "0" (r0), "r" (r1)
 #define ASMFMT_7 \
-	, "r" (r4), "r" (r5), "r" (r6), "r" (r7), "0" (r0), "r" (r1), "r" (r2)
+    , "r" (r4), "r" (r5), "r" (r6), "r" (r7), "0" (r0), "r" (r1), "r" (r2)
 
 #define SUBSTITUTE_ARGS_0()
 #define SUBSTITUTE_ARGS_1(arg1) \
-	long int _arg1 = (long int) (arg1);				      \
-	register long int r4 asm ("%r4") = (long int) (_arg1)
+    long int _arg1 = (long int) (arg1);                   \
+    register long int r4 asm ("%r4") = (long int) (_arg1)
 #define SUBSTITUTE_ARGS_2(arg1, arg2) \
-	long int _arg1 = (long int) (arg1);				      \
-	long int _arg2 = (long int) (arg2);				      \
-	register long int r4 asm ("%r4") = (long int) (_arg1);		      \
-	register long int r5 asm ("%r5") = (long int) (_arg2)
+    long int _arg1 = (long int) (arg1);                   \
+    long int _arg2 = (long int) (arg2);                   \
+    register long int r4 asm ("%r4") = (long int) (_arg1);            \
+    register long int r5 asm ("%r5") = (long int) (_arg2)
 #define SUBSTITUTE_ARGS_3(arg1, arg2, arg3) \
-	long int _arg1 = (long int) (arg1);				      \
-	long int _arg2 = (long int) (arg2);				      \
-	long int _arg3 = (long int) (arg3);				      \
-	register long int r4 asm ("%r4") = (long int) (_arg1);		      \
-	register long int r5 asm ("%r5") = (long int) (_arg2);		      \
-	register long int r6 asm ("%r6") = (long int) (_arg3)
+    long int _arg1 = (long int) (arg1);                   \
+    long int _arg2 = (long int) (arg2);                   \
+    long int _arg3 = (long int) (arg3);                   \
+    register long int r4 asm ("%r4") = (long int) (_arg1);            \
+    register long int r5 asm ("%r5") = (long int) (_arg2);            \
+    register long int r6 asm ("%r6") = (long int) (_arg3)
 #define SUBSTITUTE_ARGS_4(arg1, arg2, arg3, arg4) \
-	long int _arg1 = (long int) (arg1);				      \
-	long int _arg2 = (long int) (arg2);				      \
-	long int _arg3 = (long int) (arg3);				      \
-	long int _arg4 = (long int) (arg4);				      \
-	register long int r4 asm ("%r4") = (long int) (_arg1);		      \
-	register long int r5 asm ("%r5") = (long int) (_arg2);		      \
-	register long int r6 asm ("%r6") = (long int) (_arg3);		      \
-	register long int r7 asm ("%r7") = (long int) (_arg4)
+    long int _arg1 = (long int) (arg1);                   \
+    long int _arg2 = (long int) (arg2);                   \
+    long int _arg3 = (long int) (arg3);                   \
+    long int _arg4 = (long int) (arg4);                   \
+    register long int r4 asm ("%r4") = (long int) (_arg1);            \
+    register long int r5 asm ("%r5") = (long int) (_arg2);            \
+    register long int r6 asm ("%r6") = (long int) (_arg3);            \
+    register long int r7 asm ("%r7") = (long int) (_arg4)
 #define SUBSTITUTE_ARGS_5(arg1, arg2, arg3, arg4, arg5) \
-	long int _arg1 = (long int) (arg1);				      \
-	long int _arg2 = (long int) (arg2);				      \
-	long int _arg3 = (long int) (arg3);				      \
-	long int _arg4 = (long int) (arg4);				      \
-	long int _arg5 = (long int) (arg5);				      \
-	register long int r4 asm ("%r4") = (long int) (_arg1);		      \
-	register long int r5 asm ("%r5") = (long int) (_arg2);		      \
-	register long int r6 asm ("%r6") = (long int) (_arg3);		      \
-	register long int r7 asm ("%r7") = (long int) (_arg4);		      \
-	register long int r0 asm ("%r0") = (long int) (_arg5)
+    long int _arg1 = (long int) (arg1);                   \
+    long int _arg2 = (long int) (arg2);                   \
+    long int _arg3 = (long int) (arg3);                   \
+    long int _arg4 = (long int) (arg4);                   \
+    long int _arg5 = (long int) (arg5);                   \
+    register long int r4 asm ("%r4") = (long int) (_arg1);            \
+    register long int r5 asm ("%r5") = (long int) (_arg2);            \
+    register long int r6 asm ("%r6") = (long int) (_arg3);            \
+    register long int r7 asm ("%r7") = (long int) (_arg4);            \
+    register long int r0 asm ("%r0") = (long int) (_arg5)
 #define SUBSTITUTE_ARGS_6(arg1, arg2, arg3, arg4, arg5, arg6) \
-	long int _arg1 = (long int) (arg1);				      \
-	long int _arg2 = (long int) (arg2);				      \
-	long int _arg3 = (long int) (arg3);				      \
-	long int _arg4 = (long int) (arg4);				      \
-	long int _arg5 = (long int) (arg5);				      \
-	long int _arg6 = (long int) (arg6);				      \
-	register long int r4 asm ("%r4") = (long int)(_arg1);		      \
-	register long int r5 asm ("%r5") = (long int) (_arg2);		      \
-	register long int r6 asm ("%r6") = (long int) (_arg3);		      \
-	register long int r7 asm ("%r7") = (long int) (_arg4);		      \
-	register long int r0 asm ("%r0") = (long int) (_arg5);		      \
-	register long int r1 asm ("%r1") = (long int) (_arg6)
+    long int _arg1 = (long int) (arg1);                   \
+    long int _arg2 = (long int) (arg2);                   \
+    long int _arg3 = (long int) (arg3);                   \
+    long int _arg4 = (long int) (arg4);                   \
+    long int _arg5 = (long int) (arg5);                   \
+    long int _arg6 = (long int) (arg6);                   \
+    register long int r4 asm ("%r4") = (long int)(_arg1);             \
+    register long int r5 asm ("%r5") = (long int) (_arg2);            \
+    register long int r6 asm ("%r6") = (long int) (_arg3);            \
+    register long int r7 asm ("%r7") = (long int) (_arg4);            \
+    register long int r0 asm ("%r0") = (long int) (_arg5);            \
+    register long int r1 asm ("%r1") = (long int) (_arg6)
 #define SUBSTITUTE_ARGS_7(arg1, arg2, arg3, arg4, arg5, arg6, arg7) \
-	long int _arg1 = (long int) (arg1);				      \
-	long int _arg2 = (long int) (arg2);				      \
-	long int _arg3 = (long int) (arg3);				      \
-	long int _arg4 = (long int) (arg4);				      \
-	long int _arg5 = (long int) (arg5);				      \
-	long int _arg6 = (long int) (arg6);				      \
-	long int _arg7 = (long int) (arg7);				      \
-	register long int r4 asm ("%r4") = (long int) (_arg1);		      \
-	register long int r5 asm ("%r5") = (long int) (_arg2);		      \
-	register long int r6 asm ("%r6") = (long int) (_arg3);		      \
-	register long int r7 asm ("%r7") = (long int) (_arg4);		      \
-	register long int r0 asm ("%r0") = (long int) (_arg5);		      \
-	register long int r1 asm ("%r1") = (long int) (_arg6);		      \
-	register long int r2 asm ("%r2") = (long int) (_arg7)
+    long int _arg1 = (long int) (arg1);                   \
+    long int _arg2 = (long int) (arg2);                   \
+    long int _arg3 = (long int) (arg3);                   \
+    long int _arg4 = (long int) (arg4);                   \
+    long int _arg5 = (long int) (arg5);                   \
+    long int _arg6 = (long int) (arg6);                   \
+    long int _arg7 = (long int) (arg7);                   \
+    register long int r4 asm ("%r4") = (long int) (_arg1);            \
+    register long int r5 asm ("%r5") = (long int) (_arg2);            \
+    register long int r6 asm ("%r6") = (long int) (_arg3);            \
+    register long int r7 asm ("%r7") = (long int) (_arg4);            \
+    register long int r0 asm ("%r0") = (long int) (_arg5);            \
+    register long int r1 asm ("%r1") = (long int) (_arg6);            \
+    register long int r2 asm ("%r2") = (long int) (_arg7)
 
 #undef INTERNAL_SYSCALL
 #define INTERNAL_SYSCALL(name, nr, args...) \
-  ({									      \
-    unsigned long int resultvar;					      \
-    register long int r3 asm ("%r3") = SYS_ify (name);			      \
-    SUBSTITUTE_ARGS_##nr(args);						      \
-									      \
-    asm volatile (SYSCALL_INST_STR##nr SYSCALL_INST_PAD			      \
-		  : "=z" (resultvar)					      \
-		  : "r" (r3) ASMFMT_##nr				      \
-		  : "memory", "t");					      \
-									      \
+  ({                                          \
+    unsigned long int resultvar;                          \
+    register long int r3 asm ("%r3") = SYS_ify (name);                \
+    SUBSTITUTE_ARGS_##nr(args);                           \
+                                          \
+    asm volatile (SYSCALL_INST_STR##nr SYSCALL_INST_PAD               \
+          : "=z" (resultvar)                          \
+          : "r" (r3) ASMFMT_##nr                      \
+          : "memory", "t");                       \
+                                          \
     (int) resultvar; })
 
 /* The _NCS variant allows non-constant syscall numbers.  */
 #define INTERNAL_SYSCALL_NCS(name, nr, args...) \
-  ({									      \
-    unsigned long int resultvar;					      \
-    register long int r3 asm ("%r3") = (name);				      \
-    SUBSTITUTE_ARGS_##nr(args);						      \
-									      \
-    asm volatile (SYSCALL_INST_STR##nr SYSCALL_INST_PAD			      \
-		  : "=z" (resultvar)					      \
-		  : "r" (r3) ASMFMT_##nr				      \
-		  : "memory", "t");					      \
-									      \
+  ({                                          \
+    unsigned long int resultvar;                          \
+    register long int r3 asm ("%r3") = (name);                    \
+    SUBSTITUTE_ARGS_##nr(args);                           \
+                                          \
+    asm volatile (SYSCALL_INST_STR##nr SYSCALL_INST_PAD               \
+          : "=z" (resultvar)                          \
+          : "r" (r3) ASMFMT_##nr                      \
+          : "memory", "t");                       \
+                                          \
     (int) resultvar; })
 
-#endif	/* __ASSEMBLER__ */
+#endif  /* __ASSEMBLER__ */
 
 #endif /* linux/sh/sysdep.h */

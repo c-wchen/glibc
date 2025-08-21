@@ -26,23 +26,23 @@
 
 /* Check that mmapped legacy code trigges segfault with -fcf-protection.  */
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  void (*funcp) (void);
-  funcp = xmmap (NULL, 0x1000, PROT_EXEC | PROT_READ | PROT_WRITE,
-		 MAP_ANONYMOUS | MAP_PRIVATE, -1);
-  printf ("mmap = %p\n", funcp);
-  /* Write RET instruction.  */
-  *(char *) funcp = 0xc3;
-  funcp ();
+    void (*funcp)(void);
+    funcp = xmmap(NULL, 0x1000, PROT_EXEC | PROT_READ | PROT_WRITE,
+                  MAP_ANONYMOUS | MAP_PRIVATE, -1);
+    printf("mmap = %p\n", funcp);
+    /* Write RET instruction.  */
+    *(char *) funcp = 0xc3;
+    funcp();
 
-  /* NB: This test should trigger SIGSEGV when IBT is active.  We should
-     reach here if IBT isn't active.  */
-  if (!CPU_FEATURE_ACTIVE (IBT))
-    return EXIT_UNSUPPORTED;
+    /* NB: This test should trigger SIGSEGV when IBT is active.  We should
+       reach here if IBT isn't active.  */
+    if (!CPU_FEATURE_ACTIVE(IBT)) {
+        return EXIT_UNSUPPORTED;
+    }
 
-  return EXIT_FAILURE;
+    return EXIT_FAILURE;
 }
 
 #define EXPECTED_SIGNAL (CPU_FEATURE_ACTIVE (IBT) ? SIGSEGV : 0)

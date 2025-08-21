@@ -24,41 +24,41 @@
 
 /* Add an action to FILE-ACTIONS which tells the implementation to call
    `open' for the given file during the `spawn' call.  */
-int
-__posix_spawn_file_actions_addopen (posix_spawn_file_actions_t *file_actions,
-				    int fd, const char *path, int oflag,
-				    mode_t mode)
+int __posix_spawn_file_actions_addopen(posix_spawn_file_actions_t *file_actions,
+                                       int fd, const char *path, int oflag,
+                                       mode_t mode)
 {
-  struct __spawn_action *rec;
+    struct __spawn_action *rec;
 
-  if (!__spawn_valid_fd (fd))
-    return EBADF;
-
-  char *path_copy = __strdup (path);
-  if (path_copy == NULL)
-    return ENOMEM;
-
-  /* Allocate more memory if needed.  */
-  if (file_actions->__used == file_actions->__allocated
-      && __posix_spawn_file_actions_realloc (file_actions) != 0)
-    {
-      /* This can only mean we ran out of memory.  */
-      free (path_copy);
-      return ENOMEM;
+    if (!__spawn_valid_fd(fd)) {
+        return EBADF;
     }
 
-  /* Add the new value.  */
-  rec = &file_actions->__actions[file_actions->__used];
-  rec->tag = spawn_do_open;
-  rec->action.open_action.fd = fd;
-  rec->action.open_action.path = path_copy;
-  rec->action.open_action.oflag = oflag;
-  rec->action.open_action.mode = mode;
+    char *path_copy = __strdup(path);
+    if (path_copy == NULL) {
+        return ENOMEM;
+    }
 
-  /* Account for the new entry.  */
-  ++file_actions->__used;
+    /* Allocate more memory if needed.  */
+    if (file_actions->__used == file_actions->__allocated
+        && __posix_spawn_file_actions_realloc(file_actions) != 0) {
+        /* This can only mean we ran out of memory.  */
+        free(path_copy);
+        return ENOMEM;
+    }
 
-  return 0;
+    /* Add the new value.  */
+    rec = &file_actions->__actions[file_actions->__used];
+    rec->tag = spawn_do_open;
+    rec->action.open_action.fd = fd;
+    rec->action.open_action.path = path_copy;
+    rec->action.open_action.oflag = oflag;
+    rec->action.open_action.mode = mode;
+
+    /* Account for the new entry.  */
+    ++file_actions->__used;
+
+    return 0;
 }
-weak_alias (__posix_spawn_file_actions_addopen,
-	    posix_spawn_file_actions_addopen)
+weak_alias(__posix_spawn_file_actions_addopen,
+           posix_spawn_file_actions_addopen)

@@ -22,17 +22,15 @@
    glibc's internal use).  Make sure that this is possible without
    introducing linker failures due to duplicate symbols.  */
 
-char *
-getenv (const char *ignored)
+char *getenv(const char *ignored)
 {
-  return NULL;
+    return NULL;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  TEST_COMPARE_STRING (getenv ("PATH"), NULL);
-  return 0;
+    TEST_COMPARE_STRING(getenv("PATH"), NULL);
+    return 0;
 }
 
 #include <support/test-driver.c>

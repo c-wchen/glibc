@@ -1,8 +1,7 @@
 #include <stdio.h>
 
-int
-foo (int x)
+int foo(int x)
 {
-  puts ("foo");
-  return x * 2;
+    puts("foo");
+    return x * 2;
 }

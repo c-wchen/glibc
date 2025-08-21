@@ -26,74 +26,80 @@
 
 static int errors = 0;
 
-static void
-merror (const char *msg)
+static void merror(const char *msg)
 {
-  ++errors;
-  printf ("Error: %s\n", msg);
+    ++errors;
+    printf("Error: %s\n", msg);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  void *p, *q;
-  int save;
+    void *p, *q;
+    int save;
 
-  srandom (time (NULL));
+    srandom(time(NULL));
 
-  errno = 0;
+    errno = 0;
 
-  DIAG_PUSH_NEEDS_COMMENT;
+    DIAG_PUSH_NEEDS_COMMENT;
 #if __GNUC_PREREQ (7, 0)
-  /* GCC 7 warns about too-large allocations; here we want to test
-     that they fail.  */
-  DIAG_IGNORE_NEEDS_COMMENT (7, "-Walloc-size-larger-than=");
+    /* GCC 7 warns about too-large allocations; here we want to test
+       that they fail.  */
+    DIAG_IGNORE_NEEDS_COMMENT(7, "-Walloc-size-larger-than=");
 #endif
-  p = malloc (-1);
-  DIAG_POP_NEEDS_COMMENT;
-  save = errno;
+    p = malloc(-1);
+    DIAG_POP_NEEDS_COMMENT;
+    save = errno;
 
-  if (p != NULL)
-    merror ("malloc (-1) succeeded.");
+    if (p != NULL) {
+        merror("malloc (-1) succeeded.");
+    }
 
-  if (p == NULL && save != ENOMEM)
-    merror ("errno is not set correctly");
+    if (p == NULL && save != ENOMEM) {
+        merror("errno is not set correctly");
+    }
 
-  p = malloc (10);
-  if (p == NULL)
-    merror ("malloc (10) failed.");
+    p = malloc(10);
+    if (p == NULL) {
+        merror("malloc (10) failed.");
+    }
 
-  /* realloc (p, 0) == free (p).  */
-  p = realloc (p, 0);
-  if (p != NULL)
-    merror ("realloc (p, 0) failed.");
+    /* realloc (p, 0) == free (p).  */
+    p = realloc(p, 0);
+    if (p != NULL) {
+        merror("realloc (p, 0) failed.");
+    }
 
-  p = malloc (0);
-  if (p == NULL)
-    merror ("malloc (0) failed.");
+    p = malloc(0);
+    if (p == NULL) {
+        merror("malloc (0) failed.");
+    }
 
-  p = realloc (p, 0);
-  if (p != NULL)
-    merror ("realloc (p, 0) failed.");
+    p = realloc(p, 0);
+    if (p != NULL) {
+        merror("realloc (p, 0) failed.");
+    }
 
-  p = malloc (513 * 1024);
-  if (p == NULL)
-    merror ("malloc (513K) failed.");
+    p = malloc(513 * 1024);
+    if (p == NULL) {
+        merror("malloc (513K) failed.");
+    }
 
-  DIAG_PUSH_NEEDS_COMMENT;
+    DIAG_PUSH_NEEDS_COMMENT;
 #if __GNUC_PREREQ (7, 0)
-  /* GCC 7 warns about too-large allocations; here we want to test
-     that they fail.  */
-  DIAG_IGNORE_NEEDS_COMMENT (7, "-Walloc-size-larger-than=");
+    /* GCC 7 warns about too-large allocations; here we want to test
+       that they fail.  */
+    DIAG_IGNORE_NEEDS_COMMENT(7, "-Walloc-size-larger-than=");
 #endif
-  q = malloc (-512 * 1024);
-  DIAG_POP_NEEDS_COMMENT;
-  if (q != NULL)
-    merror ("malloc (-512K) succeeded.");
+    q = malloc(-512 * 1024);
+    DIAG_POP_NEEDS_COMMENT;
+    if (q != NULL) {
+        merror("malloc (-512K) succeeded.");
+    }
 
-  free (p);
+    free(p);
 
-  return errors != 0;
+    return errors != 0;
 }
 
 #define TEST_FUNCTION do_test ()

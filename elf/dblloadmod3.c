@@ -1,8 +1,7 @@
-extern int bar (void);
-extern int baz (void);
+extern int bar(void);
+extern int baz(void);
 
-int
-bar (void)
+int bar(void)
 {
-  return 32 + baz ();
+    return 32 + baz();
 }

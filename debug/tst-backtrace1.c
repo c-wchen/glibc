@@ -23,61 +23,55 @@
 void *bt_array[BT_SIZE];
 int bt_cnt;
 
-int
-do_bt (void)
+int do_bt(void)
 {
-  bt_cnt = backtrace (bt_array, BT_SIZE);
-  return 56;
+    bt_cnt = backtrace(bt_array, BT_SIZE);
+    return 56;
 }
 
-int
-call_do_bt (void)
+int call_do_bt(void)
 {
-  return do_bt () + 1;
+    return do_bt() + 1;
 }
 
-void *
-tf (void *arg)
+void *tf(void *arg)
 {
-  if (call_do_bt () != 57)
-    return (void *) 1L;
-  return NULL;
+    if (call_do_bt() != 57) {
+        return (void *) 1L;
+    }
+    return NULL;
 }
 
-int
-do_test (void)
+int do_test(void)
 {
-  pthread_t th;
-  if (pthread_create (&th, NULL, tf, NULL))
-    {
-      puts ("create failed");
-      return 1;
+    pthread_t th;
+    if (pthread_create(&th, NULL, tf, NULL)) {
+        puts("create failed");
+        return 1;
     }
 
-  void *res;
-  if (pthread_join (th, &res))
-    {
-      puts ("join failed");
-      return 1;
+    void *res;
+    if (pthread_join(th, &res)) {
+        puts("join failed");
+        return 1;
     }
 
-  if (res != NULL)
-    {
-      puts ("thread failed");
-      return 1;
+    if (res != NULL) {
+        puts("thread failed");
+        return 1;
     }
 
-  char **text = backtrace_symbols (bt_array, bt_cnt);
-  if (text == NULL)
-    {
-      puts ("backtrace_symbols failed");
-      return 1;
+    char **text = backtrace_symbols(bt_array, bt_cnt);
+    if (text == NULL) {
+        puts("backtrace_symbols failed");
+        return 1;
     }
 
-  for (int i = 0; i < bt_cnt; ++i)
-    puts (text[i]);
+    for (int i = 0; i < bt_cnt; ++i) {
+        puts(text[i]);
+    }
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

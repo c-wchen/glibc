@@ -24,28 +24,25 @@
 #include <stdlib.h>
 
 attribute_hidden
-void
-__aeabi_unwind_cpp_pr0 (void)
+void __aeabi_unwind_cpp_pr0(void)
 {
 #if !IS_IN (rtld)
-  abort ();
+    abort();
 #endif
 }
 
 attribute_hidden
-void
-__aeabi_unwind_cpp_pr1 (void)
+void __aeabi_unwind_cpp_pr1(void)
 {
 #if !IS_IN (rtld)
-  abort ();
+    abort();
 #endif
 }
 
 attribute_hidden
-void
-__aeabi_unwind_cpp_pr2 (void)
+void __aeabi_unwind_cpp_pr2(void)
 {
 #if !IS_IN (rtld)
-  abort ();
+    abort();
 #endif
 }

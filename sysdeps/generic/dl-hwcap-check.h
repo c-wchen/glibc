@@ -19,10 +19,9 @@
 #ifndef _DL_HWCAP_CHECK_H
 #define _DL_HWCAP_CHECK_H
 
-static inline void
-dl_hwcap_check (void)
+static inline void dl_hwcap_check(void)
 {
-  /* The generic implementation does not perform any checks.  */
+    /* The generic implementation does not perform any checks.  */
 }
 
 #endif /* _DL_HWCAP_CHECK_H */

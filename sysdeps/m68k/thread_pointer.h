@@ -19,12 +19,11 @@
 #ifndef _SYS_THREAD_POINTER_H
 #define _SYS_THREAD_POINTER_H
 
-extern void * __m68k_read_tp (void);
+extern void *__m68k_read_tp(void);
 
-static inline void *
-__thread_pointer (void)
+static inline void *__thread_pointer(void)
 {
-  return __m68k_read_tp ();
+    return __m68k_read_tp();
 }
 
 #endif /* _SYS_THREAD_POINTER_H */

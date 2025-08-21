@@ -26,5 +26,5 @@
 # define SYMBOL_NAME strncmp
 # include "ifunc-ssse3-sse4_2.h"
 
-libc_ifunc_redirected (__redirect_strncmp, strncmp, IFUNC_SELECTOR ());
+libc_ifunc_redirected(__redirect_strncmp, strncmp, IFUNC_SELECTOR());
 #endif

@@ -20,12 +20,12 @@
 
 /* Check that the user-supplied size does not exceed the
    compiler-determined size, and then forward to strlcat.  */
-size_t
-__strlcat_chk (char *__restrict s1, const char *__restrict s2,
-	       size_t n, size_t s1len)
+size_t __strlcat_chk(char *__restrict s1, const char *__restrict s2,
+                     size_t n, size_t s1len)
 {
-  if (__glibc_unlikely (s1len < n))
-    __chk_fail ();
+    if (__glibc_unlikely(s1len < n)) {
+        __chk_fail();
+    }
 
-  return __strlcat (s1, s2, n);
+    return __strlcat(s1, s2, n);
 }

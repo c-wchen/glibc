@@ -21,17 +21,16 @@
 #include <support/support.h>
 
 struct resolv_response_context *
-resolv_response_context_duplicate (const struct resolv_response_context *ctx)
+resolv_response_context_duplicate(const struct resolv_response_context *ctx)
 {
-  struct resolv_response_context *result = xmalloc (sizeof (*result));
-  memcpy (result, ctx, sizeof (*result));
-  if (result->client_address != NULL)
-    {
-      result->client_address = xmalloc (result->client_address_length);
-      memcpy (result->client_address, ctx->client_address,
-              result->client_address_length);
+    struct resolv_response_context *result = xmalloc(sizeof(*result));
+    memcpy(result, ctx, sizeof(*result));
+    if (result->client_address != NULL) {
+        result->client_address = xmalloc(result->client_address_length);
+        memcpy(result->client_address, ctx->client_address,
+               result->client_address_length);
     }
-  result->query_buffer = xmalloc (result->query_length);
-  memcpy (result->query_buffer, ctx->query_buffer, result->query_length);
-  return result;
+    result->query_buffer = xmalloc(result->query_length);
+    memcpy(result->query_buffer, ctx->query_buffer, result->query_length);
+    return result;
 }

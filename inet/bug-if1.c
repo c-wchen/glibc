@@ -22,30 +22,26 @@
 #include <net/if.h>
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char buf[IF_NAMESIZE];
-  /* Index 0 is always invalid (see RFC 3493).  */
-  char *cp = if_indextoname (0, buf);
-  if (cp != NULL)
-    {
-      printf ("invalid index returned result \"%s\"\n", cp);
-      return 1;
-    }
-  else if (errno != ENXIO)
-    {
-      int err = errno;
-      char errbuf1[256];
-      char errbuf2[256];
+    char buf[IF_NAMESIZE];
+    /* Index 0 is always invalid (see RFC 3493).  */
+    char *cp = if_indextoname(0, buf);
+    if (cp != NULL) {
+        printf("invalid index returned result \"%s\"\n", cp);
+        return 1;
+    } else if (errno != ENXIO) {
+        int err = errno;
+        char errbuf1[256];
+        char errbuf2[256];
 
-      printf ("errno = %d (%s), expected %d (%s)\n",
-	      err, strerror_r (err, errbuf1, sizeof (errbuf1)),
-	      ENXIO, strerror_r (ENXIO, errbuf2, sizeof (errbuf2)));
-      return 1;
+        printf("errno = %d (%s), expected %d (%s)\n",
+               err, strerror_r(err, errbuf1, sizeof(errbuf1)),
+               ENXIO, strerror_r(ENXIO, errbuf2, sizeof(errbuf2)));
+        return 1;
     }
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

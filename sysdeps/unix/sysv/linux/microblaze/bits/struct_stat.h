@@ -21,49 +21,48 @@
 #endif
 
 #ifndef _BITS_STRUCT_STAT_H
-#define _BITS_STRUCT_STAT_H	1
+#define _BITS_STRUCT_STAT_H 1
 
 #ifndef __USE_FILE_OFFSET64
-struct stat
-{
+struct stat {
 #ifdef __USE_TIME64_REDIRECTS
 # include <bits/struct_stat_time64_helper.h>
 #else
-        __dev_t         st_dev;     /* Device.  */
-        __ino_t         st_ino;     /* File serial number.  */
-        __mode_t        st_mode;    /* File mode.  */
-        __nlink_t       st_nlink;   /* Link count.  */
-        __uid_t         st_uid;     /* User ID of the file's owner.  */
-        __gid_t         st_gid;     /* Group ID of the file's group.  */
-        __dev_t         st_rdev;    /* Device number, if device.  */
-        unsigned long   __pad2;
-        __off_t         st_size;    /* Size of file, in bytes.  */
-        __blksize_t     st_blksize; /* Optimal block size for I/O.  */
-        int             __pad3;
-        __blkcnt_t      st_blocks;  /* Number 512-byte blocks allocated.  */
+    __dev_t         st_dev;     /* Device.  */
+    __ino_t         st_ino;     /* File serial number.  */
+    __mode_t        st_mode;    /* File mode.  */
+    __nlink_t       st_nlink;   /* Link count.  */
+    __uid_t         st_uid;     /* User ID of the file's owner.  */
+    __gid_t         st_gid;     /* Group ID of the file's group.  */
+    __dev_t         st_rdev;    /* Device number, if device.  */
+    unsigned long   __pad2;
+    __off_t         st_size;    /* Size of file, in bytes.  */
+    __blksize_t     st_blksize; /* Optimal block size for I/O.  */
+    int             __pad3;
+    __blkcnt_t      st_blocks;  /* Number 512-byte blocks allocated.  */
 # ifdef __USE_XOPEN2K8
-        /* Nanosecond resolution timestamps are stored in a format
-         * equivalent to 'struct timespec'. This is the type used
-         * whenever possible but the Unix namespace rules do not allow the
-         * identifier 'timespec' to appear in the <sys/stat.h> header.
-         * Therefore we have to handle the use of this header in strictly
-         * standard-compliant sources special.  */
-        struct timespec         st_atim; /* Time of last access.  */
-        struct timespec         st_mtim; /* Time of last modification.  */
-        struct timespec         st_ctim; /* Time of last status change.  */
+    /* Nanosecond resolution timestamps are stored in a format
+     * equivalent to 'struct timespec'. This is the type used
+     * whenever possible but the Unix namespace rules do not allow the
+     * identifier 'timespec' to appear in the <sys/stat.h> header.
+     * Therefore we have to handle the use of this header in strictly
+     * standard-compliant sources special.  */
+    struct timespec         st_atim; /* Time of last access.  */
+    struct timespec         st_mtim; /* Time of last modification.  */
+    struct timespec         st_ctim; /* Time of last status change.  */
 #  define st_atime st_atim.tv_sec         /* Backward compatibility.  */
 #  define st_mtime st_mtim.tv_sec
 #  define st_ctime st_ctim.tv_sec
 # else
-        __time_t                st_atime;     /* Time of last access.  */
-        unsigned long int       st_atimensec; /* Nscecs of last access.  */
-        __time_t                st_mtime;     /* Time of last modification.  */
-        unsigned long int       st_mtimensec; /* Nsecs of last modification.  */
-        __time_t                st_ctime;     /* Time of last status change.  */
-        unsigned long int       st_ctimensec; /* Nsecs of last status change.  */
+    __time_t                st_atime;     /* Time of last access.  */
+    unsigned long int       st_atimensec; /* Nscecs of last access.  */
+    __time_t                st_mtime;     /* Time of last modification.  */
+    unsigned long int       st_mtimensec; /* Nsecs of last modification.  */
+    __time_t                st_ctime;     /* Time of last status change.  */
+    unsigned long int       st_ctimensec; /* Nsecs of last status change.  */
 # endif
-        unsigned int            __glibc_reserved4;
-        unsigned int            __glibc_reserved5;
+    unsigned int            __glibc_reserved4;
+    unsigned int            __glibc_reserved5;
 #endif /* __USE_TIME64_REDIRECTS  */
 };
 #else /* __USE_FILE_OFFSET64 */
@@ -72,91 +71,89 @@ struct stat
  * type for st_dev and st_rdev. Several architectures uses pads after st_dev
  * but this approach covers BIG and LITTLE endian. I think it is better to
  * create one ifdef to separate stats structures.  */
-struct stat
-{
+struct stat {
 #ifdef __USE_TIME64_REDIRECTS
 # include <bits/struct_stat_time64_helper.h>
 #else
-        unsigned long long      st_dev;     /* Device.  */
-        __ino64_t               st_ino;     /* 32bit file serial number.  */
-        __mode_t                st_mode;    /* File mode.  */
-        __nlink_t               st_nlink;   /* Link count.  */
-        __uid_t                 st_uid;     /* User ID of the file's owner.  */
-        __gid_t                 st_gid;     /* Group ID of the file's group.  */
-        unsigned long long      st_rdev;    /* Device number, if device.  */
-        unsigned long long      __pad2;
-        __off64_t               st_size;    /* Size of file, in bytes.  */
-        __blksize_t             st_blksize; /* Optimal block size for I/O.  */
-        int                     __pad3;
-        __blkcnt64_t            st_blocks;  /* Number 512-byte blocks allocated.  */
+    unsigned long long      st_dev;     /* Device.  */
+    __ino64_t               st_ino;     /* 32bit file serial number.  */
+    __mode_t                st_mode;    /* File mode.  */
+    __nlink_t               st_nlink;   /* Link count.  */
+    __uid_t                 st_uid;     /* User ID of the file's owner.  */
+    __gid_t                 st_gid;     /* Group ID of the file's group.  */
+    unsigned long long      st_rdev;    /* Device number, if device.  */
+    unsigned long long      __pad2;
+    __off64_t               st_size;    /* Size of file, in bytes.  */
+    __blksize_t             st_blksize; /* Optimal block size for I/O.  */
+    int                     __pad3;
+    __blkcnt64_t            st_blocks;  /* Number 512-byte blocks allocated.  */
 # ifdef __USE_XOPEN2K8
-        /* Nanosecond resolution timestamps are stored in a format
-         * equivalent to 'struct timespec'. This is the type used
-         * whenever possible but the Unix namespace rules do not allow the
-         * identifier 'timespec' to appear in the <sys/stat.h> header.
-         * Therefore we have to handle the use of this header in strictly
-         * standard-compliant sources special.  */
-        struct timespec         st_atim;      /* Time of last access.  */
-        struct timespec         st_mtim;      /* Time of last modification.  */
-        struct timespec         st_ctim;      /* Time of last status change.  */
+    /* Nanosecond resolution timestamps are stored in a format
+     * equivalent to 'struct timespec'. This is the type used
+     * whenever possible but the Unix namespace rules do not allow the
+     * identifier 'timespec' to appear in the <sys/stat.h> header.
+     * Therefore we have to handle the use of this header in strictly
+     * standard-compliant sources special.  */
+    struct timespec         st_atim;      /* Time of last access.  */
+    struct timespec         st_mtim;      /* Time of last modification.  */
+    struct timespec         st_ctim;      /* Time of last status change.  */
 #  define st_atime st_atim.tv_sec              /* Backward compatibility.  */
 #  define st_mtime st_mtim.tv_sec
 #  define st_ctime st_ctim.tv_sec
 # else
-        __time_t                st_atime;     /* Time of last access.  */
-        unsigned long int       st_atimensec; /* Nscecs of last access.  */
-        __time_t                st_mtime;     /* Time of last modification.  */
-        unsigned long int       st_mtimensec; /* Nsecs of last modification.  */
-        __time_t                st_ctime;     /* Time of last status change.  */
-        unsigned long int       st_ctimensec; /* Nsecs of last status change.  */
+    __time_t                st_atime;     /* Time of last access.  */
+    unsigned long int       st_atimensec; /* Nscecs of last access.  */
+    __time_t                st_mtime;     /* Time of last modification.  */
+    unsigned long int       st_mtimensec; /* Nsecs of last modification.  */
+    __time_t                st_ctime;     /* Time of last status change.  */
+    unsigned long int       st_ctimensec; /* Nsecs of last status change.  */
 # endif
-        unsigned int            __glibc_reserved4;
-        unsigned int            __glibc_reserved5;
+    unsigned int            __glibc_reserved4;
+    unsigned int            __glibc_reserved5;
 # endif /* __USE_TIME64_REDIRECTS */
 };
 #endif /* __USE_FILE_OFFSET64 */
 
 #ifdef __USE_LARGEFILE64
-struct stat64
-{
+struct stat64 {
 # ifdef __USE_TIME64_REDIRECTS
 #  include <bits/struct_stat_time64_helper.h>
 # else
-        unsigned long long      st_dev;     /* Device.  */
-        __ino64_t               st_ino;     /* 32bit file serial number.  */
-        __mode_t                st_mode;    /* File mode.  */
-        __nlink_t               st_nlink;   /* Link count.  */
-        __uid_t                 st_uid;     /* User ID of the file's owner.  */
-        __gid_t                 st_gid;     /* Group ID of the file's group.  */
-        unsigned long long      st_rdev;    /* Device number, if device.  */
-        unsigned long long      __pad2;
-        __off64_t               st_size;    /* Size of file, in bytes.  */
-        __blksize_t             st_blksize; /* Optimal block size for I/O.  */
-        int                     __pad3;
-        __blkcnt64_t            st_blocks;  /* Number 512-byte blocks allocated.  */
+    unsigned long long      st_dev;     /* Device.  */
+    __ino64_t               st_ino;     /* 32bit file serial number.  */
+    __mode_t                st_mode;    /* File mode.  */
+    __nlink_t               st_nlink;   /* Link count.  */
+    __uid_t                 st_uid;     /* User ID of the file's owner.  */
+    __gid_t                 st_gid;     /* Group ID of the file's group.  */
+    unsigned long long      st_rdev;    /* Device number, if device.  */
+    unsigned long long      __pad2;
+    __off64_t               st_size;    /* Size of file, in bytes.  */
+    __blksize_t             st_blksize; /* Optimal block size for I/O.  */
+    int                     __pad3;
+    __blkcnt64_t            st_blocks;  /* Number 512-byte blocks allocated.  */
 #  ifdef __USE_XOPEN2K8
-        /* Nanosecond resolution timestamps are stored in a format
-         * equivalent to 'struct timespec'. This is the type used
-         * whenever possible but the Unix namespace rules do not allow the
-         * identifier 'timespec' to appear in the <sys/stat.h> header.
-         * Therefore we have to handle the use of this header in strictly
-         * standard-compliant sources special.  */
-        struct timespec         st_atim;    /* Time of last access.  */
-        struct timespec         st_mtim;    /* Time of last modification.  */
-        struct timespec         st_ctim;    /* Time of last status change.  */
+    /* Nanosecond resolution timestamps are stored in a format
+     * equivalent to 'struct timespec'. This is the type used
+     * whenever possible but the Unix namespace rules do not allow the
+     * identifier 'timespec' to appear in the <sys/stat.h> header.
+     * Therefore we have to handle the use of this header in strictly
+     * standard-compliant sources special.  */
+    struct timespec         st_atim;    /* Time of last access.  */
+    struct timespec         st_mtim;    /* Time of last modification.  */
+    struct timespec         st_ctim;    /* Time of last status change.  */
 #   define st_atime st_atim.tv_sec           /* Backward compatibility.  */
 #   define st_mtime st_mtim.tv_sec
 #   define st_ctime st_ctim.tv_sec
 #  else
-        __time_t                st_atime;     /* Time of last access.  */
-        unsigned long int       st_atimensec; /* Nscecs of last access.  */
-        __time_t                st_mtime;     /* Time of last modification.  */
-        unsigned long int       st_mtimensec; /* Nsecs of last modification.  */
-        __time_t                st_ctime;     /* Time of last status change.  */
-        unsigned long int       st_ctimensec; /* Nsecs of last status change.  */
+    __time_t                st_atime;     /* Time of last access.  */
+    unsigned long int       st_atimensec; /* Nscecs of last access.  */
+    __time_t                st_mtime;     /* Time of last modification.  */
+    unsigned long int       st_mtimensec; /* Nsecs of last modification.  */
+    __time_t                st_ctime;     /* Time of last status change.  */
+    unsigned long int       st_ctimensec; /* Nsecs of last status change.  */
 #  endif
-        unsigned int            __glibc_reserved4;
-        unsigned int            __glibc_reserved5;
+    unsigned int            __glibc_reserved4;
+    unsigned int            __glibc_reserved5;
 # endif /* __USE_TIME64_REDIRECTS */
 };
 #endif

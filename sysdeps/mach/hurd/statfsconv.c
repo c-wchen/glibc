@@ -20,28 +20,27 @@
 #include <errno.h>
 #include <hurd.h>
 
-static inline int
-statfs64_conv (struct statfs *buf, const struct statfs64 *buf64)
+static inline int statfs64_conv(struct statfs *buf, const struct statfs64 *buf64)
 {
-# define DO(memb)							      \
-  buf->memb = buf64->memb;						      \
+# define DO(memb)                                 \
+  buf->memb = buf64->memb;                            \
   if (sizeof buf->memb != sizeof buf64->memb && buf->memb != buf64->memb)     \
     return __hurd_fail (EOVERFLOW);
 
-  DO (f_type);
-  DO (f_bsize);
-  DO (f_blocks);
-  DO (f_bfree);
-  DO (f_bavail);
-  DO (f_files);
-  DO (f_ffree);
-  DO (f_fsid);
-  DO (f_namelen);
-  DO (f_favail);
-  DO (f_frsize);
-  DO (f_flag);
+    DO(f_type);
+    DO(f_bsize);
+    DO(f_blocks);
+    DO(f_bfree);
+    DO(f_bavail);
+    DO(f_files);
+    DO(f_ffree);
+    DO(f_fsid);
+    DO(f_namelen);
+    DO(f_favail);
+    DO(f_frsize);
+    DO(f_flag);
 
 # undef DO
 
-  return 0;
+    return 0;
 }

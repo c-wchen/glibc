@@ -17,30 +17,27 @@
 
 #include "vismod.h"
 
-int
-protitcpt (void)
+int protitcpt(void)
 {
-  return 0x4000000;
+    return 0x4000000;
 }
-asm (".protected protitcpt");
+asm(".protected protitcpt");
 
-int
-callitcpt3 (void)
+int callitcpt3(void)
 {
-  return protitcpt () + 0x10000000;
+    return protitcpt() + 0x10000000;
 }
 
 int
-(*getitcpt3 (void)) (void)
+(*getitcpt3(void))(void)
 {
-  return protitcpt;
+    return protitcpt;
 }
 
 const char *protvaritcpt = __FILE__;
-asm (".protected protvaritcpt");
+asm(".protected protvaritcpt");
 
-const char **
-getvaritcpt3 (void)
+const char **getvaritcpt3(void)
 {
-  return &protvaritcpt;
+    return &protvaritcpt;
 }

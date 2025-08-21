@@ -20,13 +20,12 @@
 #include <shlib-compat.h>
 #include <pt-internal.h>
 
-int
-__pthread_attr_destroy (pthread_attr_t *attr)
+int __pthread_attr_destroy(pthread_attr_t *attr)
 {
-  return 0;
+    return 0;
 }
-versioned_symbol (libc, __pthread_attr_destroy, pthread_attr_destroy, GLIBC_2_21);
+versioned_symbol(libc, __pthread_attr_destroy, pthread_attr_destroy, GLIBC_2_21);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_21)
-compat_symbol (libc, __pthread_attr_destroy, pthread_attr_destroy, GLIBC_2_12);
+compat_symbol(libc, __pthread_attr_destroy, pthread_attr_destroy, GLIBC_2_12);
 #endif

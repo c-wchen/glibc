@@ -20,36 +20,34 @@
 #include <stdio.h>
 #include <unistd.h>
 
-static int do_test (void);
+static int do_test(void);
 
 #define TEST_FUNCTION do_test ()
 #include "../test-skeleton.c"
 
-static void *tf (void *a)
+static void *tf(void *a)
 {
-  flockfile (stdout);
-  /* This call should never return.  */
-  return a;
+    flockfile(stdout);
+    /* This call should never return.  */
+    return a;
 }
 
 
-int
-do_test (void)
+int do_test(void)
 {
-  pthread_t th;
+    pthread_t th;
 
-  flockfile (stdout);
+    flockfile(stdout);
 
-  if (pthread_create (&th, NULL, tf, NULL) != 0)
-    {
-      write_message ("create failed\n");
-      _exit (1);
+    if (pthread_create(&th, NULL, tf, NULL) != 0) {
+        write_message("create failed\n");
+        _exit(1);
     }
 
-  delayed__exit (1);
-  xpthread_join (th);
+    delayed__exit(1);
+    xpthread_join(th);
 
-  puts ("join returned");
+    puts("join returned");
 
-  return 1;
+    return 1;
 }

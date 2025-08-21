@@ -19,17 +19,16 @@
 #include <fenv.h>
 #include <fenv_private.h>
 
-int
-feenableexcept (int excepts)
+int feenableexcept(int excepts)
 {
-  fenv_t new_exc, old_exc;
+    fenv_t new_exc, old_exc;
 
-  __fenv_stfsr (new_exc);
+    __fenv_stfsr(new_exc);
 
-  old_exc = (new_exc >> 18) & FE_ALL_EXCEPT;
-  new_exc |= (((fenv_t)excepts & FE_ALL_EXCEPT) << 18);
+    old_exc = (new_exc >> 18) & FE_ALL_EXCEPT;
+    new_exc |= (((fenv_t)excepts & FE_ALL_EXCEPT) << 18);
 
-  __fenv_ldfsr (new_exc);
+    __fenv_ldfsr(new_exc);
 
-  return old_exc;
+    return old_exc;
 }

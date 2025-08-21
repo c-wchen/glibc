@@ -20,50 +20,41 @@
 #include <math.h>
 
 CFLOAT
-M_DECL_FUNC (__casinh) (CFLOAT x)
+M_DECL_FUNC(__casinh)(CFLOAT x)
 {
-  CFLOAT res;
-  int rcls = fpclassify (__real__ x);
-  int icls = fpclassify (__imag__ x);
+    CFLOAT res;
+    int rcls = fpclassify(__real__ x);
+    int icls = fpclassify(__imag__ x);
 
-  if (rcls <= FP_INFINITE || icls <= FP_INFINITE)
-    {
-      if (icls == FP_INFINITE)
-	{
-	  __real__ res = M_COPYSIGN (M_HUGE_VAL, __real__ x);
+    if (rcls <= FP_INFINITE || icls <= FP_INFINITE) {
+        if (icls == FP_INFINITE) {
+            __real__ res = M_COPYSIGN(M_HUGE_VAL, __real__ x);
 
-	  if (rcls == FP_NAN)
-	    __imag__ res = M_NAN;
-	  else
-	    __imag__ res = M_COPYSIGN ((rcls >= FP_ZERO
-				        ? M_MLIT (M_PI_2) : M_MLIT (M_PI_4)),
-				       __imag__ x);
-	}
-      else if (rcls <= FP_INFINITE)
-	{
-	  __real__ res = __real__ x;
-	  if ((rcls == FP_INFINITE && icls >= FP_ZERO)
-	      || (rcls == FP_NAN && icls == FP_ZERO))
-	    __imag__ res = M_COPYSIGN (0, __imag__ x);
-	  else
-	    __imag__ res = M_NAN;
-	}
-      else
-	{
-	  __real__ res = M_NAN;
-	  __imag__ res = M_NAN;
-	}
-    }
-  else if (rcls == FP_ZERO && icls == FP_ZERO)
-    {
-      res = x;
-    }
-  else
-    {
-      res = M_SUF (__kernel_casinh) (x, 0);
+            if (rcls == FP_NAN) {
+                __imag__ res = M_NAN;
+            } else
+                __imag__ res = M_COPYSIGN((rcls >= FP_ZERO
+                                           ? M_MLIT(M_PI_2) : M_MLIT(M_PI_4)),
+                                          __imag__ x);
+        } else if (rcls <= FP_INFINITE) {
+            __real__ res = __real__ x;
+            if ((rcls == FP_INFINITE && icls >= FP_ZERO)
+                || (rcls == FP_NAN && icls == FP_ZERO)) {
+                __imag__ res = M_COPYSIGN(0, __imag__ x);
+            } else {
+                __imag__ res = M_NAN;
+            }
+        } else {
+            __real__ res = M_NAN;
+            __imag__ res = M_NAN;
+        }
+    } else if (rcls == FP_ZERO && icls == FP_ZERO) {
+        res = x;
+    } else {
+        res = M_SUF(__kernel_casinh)(x, 0);
     }
 
-  return res;
+    return res;
 }
 
-declare_mgen_alias (__casinh, casinh)
+declare_mgen_alias(__casinh, casinh)

@@ -23,31 +23,27 @@
   do                                                                          \
     {                                                                         \
       if (!supported ())                                                      \
-	return 77;                                                            \
+    return 77;                                                            \
     }                                                                         \
   while (0)
 
-static bool
-supported (void)
+static bool supported(void)
 {
 #if defined REQUIRE_AVX
-  if (!CPU_FEATURE_ACTIVE (AVX))
-    {
-      printf ("AVX not supported.");
-      return false;
+    if (!CPU_FEATURE_ACTIVE(AVX)) {
+        printf("AVX not supported.");
+        return false;
     }
 #elif defined REQUIRE_AVX2
-  if (!CPU_FEATURE_ACTIVE (AVX2))
-    {
-      printf ("AVX2 not supported.");
-      return false;
+    if (!CPU_FEATURE_ACTIVE(AVX2)) {
+        printf("AVX2 not supported.");
+        return false;
     }
 #elif defined REQUIRE_AVX512F
-  if (!CPU_FEATURE_ACTIVE (AVX512F))
-    {
-      printf ("AVX512F not supported.");
-      return false;
+    if (!CPU_FEATURE_ACTIVE(AVX512F)) {
+        printf("AVX512F not supported.");
+        return false;
     }
 #endif
-  return true;
+    return true;
 }

@@ -21,8 +21,7 @@
 
 #include <bits/types.h>  /* for __fsid_t and __fsblkcnt_t.  */
 
-struct statfs
-  {
+struct statfs {
     int f_type;
     int f_bsize;
 #ifndef __USE_FILE_OFFSET64
@@ -43,11 +42,10 @@ struct statfs
     int f_frsize;
     int f_flags;
     int f_spare[4];
-  };
+};
 
 #ifdef __USE_LARGEFILE64
-struct statfs64
-  {
+struct statfs64 {
     int f_type;
     int f_bsize;
     __fsblkcnt64_t f_blocks;
@@ -60,7 +58,7 @@ struct statfs64
     int f_frsize;
     int f_flags;
     int f_spare[4];
-  };
+};
 #endif
 
 /* Tell code we have this member.  */

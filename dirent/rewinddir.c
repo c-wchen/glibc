@@ -21,14 +21,13 @@
 
 
 /* Rewind DIRP to the beginning of the directory.  */
-void
-__rewinddir (DIR *dirp)
+void __rewinddir(DIR *dirp)
 {
-  __set_errno (ENOSYS);
-  /* No way to indicate failure.	*/
+    __set_errno(ENOSYS);
+    /* No way to indicate failure.    */
 }
-libc_hidden_def (__rewinddir)
-weak_alias (__rewinddir, rewinddir)
+libc_hidden_def(__rewinddir)
+weak_alias(__rewinddir, rewinddir)
 
 
-stub_warning (rewinddir)
+stub_warning(rewinddir)

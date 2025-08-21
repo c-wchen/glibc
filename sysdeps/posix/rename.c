@@ -20,29 +20,27 @@
 #include <errno.h>
 
 /* Rename the file OLD to NEW.  */
-int
-rename (const char *old, const char *new)
+int rename(const char *old, const char *new)
 {
-  int save = errno;
-  if (__link (old, new) < 0)
-    {
-      if (errno == EEXIST)
-	{
-	  __set_errno (save);
-	  /* Race condition, required for 1003.1 conformance.  */
-	  if (__unlink (new) < 0
-	      || __link (old, new) < 0)
-	    return -1;
-	}
-      else
-	return -1;
+    int save = errno;
+    if (__link(old, new) < 0) {
+        if (errno == EEXIST) {
+            __set_errno(save);
+            /* Race condition, required for 1003.1 conformance.  */
+            if (__unlink(new) < 0
+                || __link(old, new) < 0) {
+                return -1;
+            }
+        } else {
+            return -1;
+        }
     }
-  if (__unlink (old) < 0)
-    {
-      save = errno;
-      if (__unlink (new) == 0)
-	__set_errno (save);
-      return -1;
+    if (__unlink(old) < 0) {
+        save = errno;
+        if (__unlink(new) == 0) {
+            __set_errno(save);
+        }
+        return -1;
     }
-  return 0;
+    return 0;
 }

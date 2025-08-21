@@ -15,13 +15,13 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef	_SYS_DIR_H
-#define	_SYS_DIR_H	1
+#ifndef _SYS_DIR_H
+#define _SYS_DIR_H  1
 
 #include <features.h>
 
 #include <dirent.h>
 
-#define	direct	dirent
+#define direct  dirent
 
-#endif	/* sys/dir.h  */
+#endif  /* sys/dir.h  */

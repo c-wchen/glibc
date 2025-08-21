@@ -19,7 +19,7 @@
 #include <stdbit.h>
 
 unsigned long int
-(stdc_bit_floor_ul) (unsigned long int x)
+(stdc_bit_floor_ul)(unsigned long int x)
 {
-  return stdc_bit_floor_ul (x);
+    return stdc_bit_floor_ul(x);
 }

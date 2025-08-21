@@ -24,16 +24,16 @@
    double sNaN value will already raise an INVALID exception as well
    as turn the sNaN into a qNaN, rendering certain tests infeasible in
    this scenario.  <https://gcc.gnu.org/PR56831>.  */
-#define SNAN_TESTS_float	0
-#define SNAN_TESTS_double	0
-#define SNAN_TESTS_long_double	1
+#define SNAN_TESTS_float    0
+#define SNAN_TESTS_double   0
+#define SNAN_TESTS_long_double  1
 
 /* Before GCC 7, there is no built-in function to provide a __float128
    sNaN, so most sNaN tests for this type cannot work.  */
 #if __GNUC_PREREQ (7, 0)
-# define SNAN_TESTS_float128	1
+# define SNAN_TESTS_float128    1
 #else
-# define SNAN_TESTS_float128	0
+# define SNAN_TESTS_float128    0
 #endif
 
 #endif /* math-tests-snan.h.  */

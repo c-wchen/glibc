@@ -24,19 +24,19 @@
 struct La_csky_regs;
 struct La_csky_retval;
 
-#define ARCH_PLTENTER_MEMBERS	\
-    Elf32_Addr (*csky_gnu_pltenter) (Elf32_Sym *, unsigned int,		      \
-					 uintptr_t *, uintptr_t *,	      \
-					 struct La_csky_regs *,		      \
-					 unsigned int *, const char *,	      \
-					 long int *);
+#define ARCH_PLTENTER_MEMBERS   \
+    Elf32_Addr (*csky_gnu_pltenter) (Elf32_Sym *, unsigned int,           \
+                     uintptr_t *, uintptr_t *,        \
+                     struct La_csky_regs *,           \
+                     unsigned int *, const char *,        \
+                     long int *);
 
-#define ARCH_PLTEXIT_MEMBERS	\
-    unsigned int (*csky_gnu_pltexit) (Elf32_Sym *, unsigned int,	       \
-					  uintptr_t *, uintptr_t *,	       \
-					  const struct La_csky_regs *,	       \
-					  struct La_csky_retval *,	       \
-					  const char *);
+#define ARCH_PLTEXIT_MEMBERS    \
+    unsigned int (*csky_gnu_pltexit) (Elf32_Sym *, unsigned int,           \
+                      uintptr_t *, uintptr_t *,        \
+                      const struct La_csky_regs *,         \
+                      struct La_csky_retval *,         \
+                      const char *);
 
 #include_next <ldsodefs.h>
 #endif

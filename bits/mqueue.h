@@ -21,10 +21,9 @@
 
 typedef int mqd_t;
 
-struct mq_attr
-{
-  long int mq_flags;	/* Message queue flags.  */
-  long int mq_maxmsg;	/* Maximum number of messages.  */
-  long int mq_msgsize;	/* Maximum message size.  */
-  long int mq_curmsgs;	/* Number of messages currently queued.  */
+struct mq_attr {
+    long int mq_flags;    /* Message queue flags.  */
+    long int mq_maxmsg;   /* Maximum number of messages.  */
+    long int mq_msgsize;  /* Maximum message size.  */
+    long int mq_curmsgs;  /* Number of messages currently queued.  */
 };

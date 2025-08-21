@@ -19,16 +19,16 @@
 #include "thread_dbP.h"
 
 
-td_err_e
-td_ta_get_ph (const td_thragent_t *ta, struct ps_prochandle **ph)
+td_err_e td_ta_get_ph(const td_thragent_t *ta, struct ps_prochandle **ph)
 {
-  LOG ("td_ta_get_ph");
+    LOG("td_ta_get_ph");
 
-  /* Test whether the TA parameter is ok.  */
-  if (! ta_ok (ta))
-    return TD_BADTA;
+    /* Test whether the TA parameter is ok.  */
+    if (! ta_ok(ta)) {
+        return TD_BADTA;
+    }
 
-  *ph = ta->ph;
+    *ph = ta->ph;
 
-  return TD_OK;
+    return TD_OK;
 }

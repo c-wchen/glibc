@@ -30,13 +30,12 @@ bool may_finalize_mod6 = false;
    not marked NODELETE.  */
 template struct unique_symbol<6>;
 
-static void __attribute__ ((destructor))
-fini (void)
+static void __attribute__((destructor))
+fini(void)
 {
-  if (!may_finalize_mod6)
-    {
-      puts ("error: tst-dlopen-nodelete-reloc-mod6.so destructor"
-            " called too early");
-      _exit (1);
+    if (!may_finalize_mod6) {
+        puts("error: tst-dlopen-nodelete-reloc-mod6.so destructor"
+             " called too early");
+        _exit(1);
     }
 }

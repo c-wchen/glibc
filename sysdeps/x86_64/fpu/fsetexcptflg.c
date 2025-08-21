@@ -19,39 +19,38 @@
 #include <fenv.h>
 #include <math.h>
 
-int
-fesetexceptflag (const fexcept_t *flagp, int excepts)
+int fesetexceptflag(const fexcept_t *flagp, int excepts)
 {
-  /* The flags can be set in the 387 unit or in the SSE unit.
-     When we need to clear a flag, we need to do so in both units,
-     due to the way fetestexcept() is implemented.
-     When we need to set a flag, it is sufficient to do it in the SSE unit,
-     because that is guaranteed to not trap.  */
+    /* The flags can be set in the 387 unit or in the SSE unit.
+       When we need to clear a flag, we need to do so in both units,
+       due to the way fetestexcept() is implemented.
+       When we need to set a flag, it is sufficient to do it in the SSE unit,
+       because that is guaranteed to not trap.  */
 
-  fenv_t temp;
-  unsigned int mxcsr;
+    fenv_t temp;
+    unsigned int mxcsr;
 
-  excepts &= FE_ALL_EXCEPT;
+    excepts &= FE_ALL_EXCEPT;
 
-  /* Get the current x87 FPU environment.  We have to do this since we
-     cannot separately set the status word.  */
-  __asm__ ("fnstenv %0" : "=m" (*&temp));
+    /* Get the current x87 FPU environment.  We have to do this since we
+       cannot separately set the status word.  */
+    __asm__("fnstenv %0" : "=m"( *&temp));
 
-  /* Clear relevant flags.  */
-  temp.__status_word &= ~(excepts & ~ *flagp);
+    /* Clear relevant flags.  */
+    temp.__status_word &= ~(excepts & ~ *flagp);
 
-  /* Store the new status word (along with the rest of the environment).  */
-  __asm__ ("fldenv %0" : : "m" (*&temp));
+    /* Store the new status word (along with the rest of the environment).  */
+    __asm__("fldenv %0" : : "m"( *&temp));
 
-  /* And now similarly for SSE.  */
-  __asm__ ("stmxcsr %0" : "=m" (*&mxcsr));
+    /* And now similarly for SSE.  */
+    __asm__("stmxcsr %0" : "=m"( *&mxcsr));
 
-  /* Clear or set relevant flags.  */
-  mxcsr ^= (mxcsr ^ *flagp) & excepts;
+    /* Clear or set relevant flags.  */
+    mxcsr ^= (mxcsr ^ *flagp) & excepts;
 
-  /* Put the new data in effect.  */
-  __asm__ ("ldmxcsr %0" : : "m" (*&mxcsr));
+    /* Put the new data in effect.  */
+    __asm__("ldmxcsr %0" : : "m"( *&mxcsr));
 
-  /* Success.  */
-  return 0;
+    /* Success.  */
+    return 0;
 }

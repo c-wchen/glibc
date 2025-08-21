@@ -20,9 +20,9 @@
 #ifndef _DL_MINIMAL_MALLOC_H
 #define _DL_MINIMAL_MALLOC_H
 
-extern void *__minimal_malloc (size_t n) attribute_hidden;
-extern void *__minimal_calloc (size_t nmemb, size_t size) attribute_hidden;
-extern void __minimal_free (void *ptr) attribute_hidden;
-extern void *__minimal_realloc (void *ptr, size_t n) attribute_hidden;
+extern void *__minimal_malloc(size_t n) attribute_hidden;
+extern void *__minimal_calloc(size_t nmemb, size_t size) attribute_hidden;
+extern void __minimal_free(void *ptr) attribute_hidden;
+extern void *__minimal_realloc(void *ptr, size_t n) attribute_hidden;
 
 #endif

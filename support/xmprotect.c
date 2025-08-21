@@ -20,9 +20,9 @@
 #include <support/xunistd.h>
 #include <sys/mman.h>
 
-void
-xmprotect (void *addr, size_t length, int prot)
+void xmprotect(void *addr, size_t length, int prot)
 {
-  if (mprotect (addr, length, prot) != 0)
-    FAIL_EXIT1 ("mprotect (%p, %zu, 0x%x): %m", addr, length, prot);
+    if (mprotect(addr, length, prot) != 0) {
+        FAIL_EXIT1("mprotect (%p, %zu, 0x%x): %m", addr, length, prot);
+    }
 }

@@ -23,18 +23,17 @@
 
 /* Return the pathname of the terminal FD is open on, or NULL on errors.
    The returned storage is good only until the next call to this function.  */
-char *
-ttyname (int fd)
+char *ttyname(int fd)
 {
-  error_t err;
-  static string_t nodename;
+    error_t err;
+    static string_t nodename;
 
-  if (err = HURD_DPORT_USE (fd, __term_get_nodename (port, nodename)))
-    {
-      if (err == MIG_BAD_ID || err == EOPNOTSUPP)
-	err = ENOTTY;
-      return __hurd_dfail (fd, err), NULL;
+    if (err = HURD_DPORT_USE(fd, __term_get_nodename(port, nodename))) {
+        if (err == MIG_BAD_ID || err == EOPNOTSUPP) {
+            err = ENOTTY;
+        }
+        return __hurd_dfail(fd, err), NULL;
     }
 
-  return nodename;
+    return nodename;
 }

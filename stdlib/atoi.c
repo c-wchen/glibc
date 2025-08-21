@@ -17,13 +17,12 @@
 
 #include <stdlib.h>
 
-#undef	atoi
+#undef  atoi
 
 
 /* Convert a string to an int.  */
-int
-atoi (const char *nptr)
+int atoi(const char *nptr)
 {
-  return (int) strtol (nptr, (char **) NULL, 10);
+    return (int) strtol(nptr, (char **) NULL, 10);
 }
-libc_hidden_def (atoi)
+libc_hidden_def(atoi)

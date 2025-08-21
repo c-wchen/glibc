@@ -24,25 +24,23 @@
 #include <shlib-compat.h>
 #include "exit.h"
 
-void
-__new_quick_exit (int status)
+void __new_quick_exit(int status)
 {
-  /* The new quick_exit, following C++11 18.5.12, does not run object
-     destructors.   While C11 says nothing about object destructors,
-     since it has none, the intent is to run the registered
-     at_quick_exit handlers and then run _Exit immediately without
-     disturbing the state of the process and threads.  */
-  __run_exit_handlers (status, &__quick_exit_funcs, false, false);
+    /* The new quick_exit, following C++11 18.5.12, does not run object
+       destructors.   While C11 says nothing about object destructors,
+       since it has none, the intent is to run the registered
+       at_quick_exit handlers and then run _Exit immediately without
+       disturbing the state of the process and threads.  */
+    __run_exit_handlers(status, &__quick_exit_funcs, false, false);
 }
-versioned_symbol (libc, __new_quick_exit, quick_exit, GLIBC_2_24);
+versioned_symbol(libc, __new_quick_exit, quick_exit, GLIBC_2_24);
 
 #if SHLIB_COMPAT(libc, GLIBC_2_10, GLIBC_2_24)
 void
-attribute_compat_text_section
-__old_quick_exit (int status)
+attribute_compat_text_section __old_quick_exit(int status)
 {
-  /* The old quick_exit runs thread_local destructors.  */
-  __run_exit_handlers (status, &__quick_exit_funcs, false, true);
+    /* The old quick_exit runs thread_local destructors.  */
+    __run_exit_handlers(status, &__quick_exit_funcs, false, true);
 }
-compat_symbol (libc, __old_quick_exit, quick_exit, GLIBC_2_10);
+compat_symbol(libc, __old_quick_exit, quick_exit, GLIBC_2_10);
 #endif

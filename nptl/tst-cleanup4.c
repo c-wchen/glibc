@@ -24,179 +24,165 @@
 #include <support/xunistd.h>
 
 /* LinuxThreads pthread_cleanup_{push,pop} helpers.  */
-extern void _pthread_cleanup_push (struct _pthread_cleanup_buffer *__buffer,
-                                   void (*__routine) (void *),
-                                   void *__arg);
-compat_symbol_reference (libpthread, _pthread_cleanup_push,
-                         _pthread_cleanup_push, GLIBC_2_0);
-extern void _pthread_cleanup_pop (struct _pthread_cleanup_buffer *__buffer,
-                                  int __execute);
-compat_symbol_reference (libpthread, _pthread_cleanup_pop,
-                         _pthread_cleanup_pop, GLIBC_2_0);
+extern void _pthread_cleanup_push(struct _pthread_cleanup_buffer *__buffer,
+                                  void (*__routine)(void *),
+                                  void *__arg);
+compat_symbol_reference(libpthread, _pthread_cleanup_push,
+                        _pthread_cleanup_push, GLIBC_2_0);
+extern void _pthread_cleanup_pop(struct _pthread_cleanup_buffer *__buffer,
+                                 int __execute);
+compat_symbol_reference(libpthread, _pthread_cleanup_pop,
+                        _pthread_cleanup_pop, GLIBC_2_0);
 
 static int fds[2];
 static pthread_barrier_t b2;
 static int global;
 
 /* Defined in tst-cleanup4aux.c, never compiled with -fexceptions.  */
-extern void fn5 (void);
-extern void fn7 (void);
-extern void fn9 (void);
+extern void fn5(void);
+extern void fn7(void);
+extern void fn9(void);
 
-void
-clh (void *arg)
+void clh(void *arg)
 {
-  int val = (long int) arg;
+    int val = (long int) arg;
 
-  printf ("clh (%d)\n", val);
+    printf("clh (%d)\n", val);
 
-  global *= val;
-  global += val;
+    global *= val;
+    global += val;
 }
 
 
 static __attribute__((noinline)) void
-fn_read (void)
+fn_read(void)
 {
-  int r = pthread_barrier_wait (&b2);
-  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
-    {
-      printf ("%s: barrier_wait failed\n", __FUNCTION__);
-      exit (1);
+    int r = pthread_barrier_wait(&b2);
+    if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD) {
+        printf("%s: barrier_wait failed\n", __FUNCTION__);
+        exit(1);
     }
 
-  char c;
-  xread (fds[0], &c, 1);
+    char c;
+    xread(fds[0], &c, 1);
 }
 
 
 __attribute__((noinline)) void
-fn0 (void)
+fn0(void)
 {
-  pthread_cleanup_push (clh, (void *) 1l);
+    pthread_cleanup_push(clh, (void *) 1l);
 
-  fn_read ();
+    fn_read();
 
-  pthread_cleanup_pop (1);
+    pthread_cleanup_pop(1);
 }
 
 
 __attribute__((noinline)) void
-fn1 (void)
+fn1(void)
 {
-  /* This is the old LinuxThreads pthread_cleanup_{push,pop}.  */
-  struct _pthread_cleanup_buffer b;
-  _pthread_cleanup_push (&b, clh, (void *) 2l);
+    /* This is the old LinuxThreads pthread_cleanup_{push,pop}.  */
+    struct _pthread_cleanup_buffer b;
+    _pthread_cleanup_push(&b, clh, (void *) 2l);
 
-  fn0 ();
+    fn0();
 
-  _pthread_cleanup_pop (&b, 1);
+    _pthread_cleanup_pop(&b, 1);
 }
 
 
 static __attribute__((noinline)) void
-fn2 (void)
+fn2(void)
 {
-  pthread_cleanup_push (clh, (void *) 3l);
+    pthread_cleanup_push(clh, (void *) 3l);
 
-  fn1 ();
+    fn1();
 
-  pthread_cleanup_pop (1);
+    pthread_cleanup_pop(1);
 }
 
 
-static void *
-tf (void *a)
+static void *tf(void *a)
 {
-  switch ((long) a)
-    {
-    case 0:
-      fn2 ();
-      break;
-    case 1:
-      fn5 ();
-      break;
-    case 2:
-      fn7 ();
-      break;
-    case 3:
-      fn9 ();
-      break;
+    switch ((long) a) {
+        case 0:
+            fn2();
+            break;
+        case 1:
+            fn5();
+            break;
+        case 2:
+            fn7();
+            break;
+        case 3:
+            fn9();
+            break;
     }
 
-  return NULL;
+    return NULL;
 }
 
 
-int
-do_test (void)
+int do_test(void)
 {
-  int result = 0;
+    int result = 0;
 
-  if (pipe (fds) != 0)
-    {
-      puts ("pipe failed");
-      exit (1);
+    if (pipe(fds) != 0) {
+        puts("pipe failed");
+        exit(1);
     }
 
-  if (pthread_barrier_init (&b2, NULL, 2) != 0)
-    {
-      puts ("b2 init failed");
-      exit (1);
+    if (pthread_barrier_init(&b2, NULL, 2) != 0) {
+        puts("b2 init failed");
+        exit(1);
     }
 
-  const int expect[] =
-    {
-      15,	/* 1 2 3 */
-      276,	/* 1 4 5 6 */
-      120,	/* 1 7 8 */
-      460	/* 1 2 9 10 */
+    const int expect[] = {
+        15,   /* 1 2 3 */
+        276,  /* 1 4 5 6 */
+        120,  /* 1 7 8 */
+        460   /* 1 2 9 10 */
     };
 
-  long i;
-  for (i = 0; i < 4; ++i)
-    {
-      global = 0;
+    long i;
+    for (i = 0; i < 4; ++i) {
+        global = 0;
 
-      printf ("test %ld\n", i);
+        printf("test %ld\n", i);
 
-      pthread_t th;
-      if (pthread_create (&th, NULL, tf, (void *) i) != 0)
-	{
-	  puts ("create failed");
-	  exit (1);
-	}
+        pthread_t th;
+        if (pthread_create(&th, NULL, tf, (void *) i) != 0) {
+            puts("create failed");
+            exit(1);
+        }
 
-      int e = pthread_barrier_wait (&b2);
-      if (e != 0 && e != PTHREAD_BARRIER_SERIAL_THREAD)
-	{
-	  printf ("%s: barrier_wait failed\n", __FUNCTION__);
-	  exit (1);
-	}
+        int e = pthread_barrier_wait(&b2);
+        if (e != 0 && e != PTHREAD_BARRIER_SERIAL_THREAD) {
+            printf("%s: barrier_wait failed\n", __FUNCTION__);
+            exit(1);
+        }
 
-      pthread_cancel (th);
+        pthread_cancel(th);
 
-      void *r;
-      if ((e = pthread_join (th, &r)) != 0)
-	{
-	  printf ("join failed: %d\n", e);
-	  _exit (1);
-	}
+        void *r;
+        if ((e = pthread_join(th, &r)) != 0) {
+            printf("join failed: %d\n", e);
+            _exit(1);
+        }
 
-      if (r != PTHREAD_CANCELED)
-	{
-	  puts ("thread not canceled");
-	  exit (1);
-	}
+        if (r != PTHREAD_CANCELED) {
+            puts("thread not canceled");
+            exit(1);
+        }
 
-      if (global != expect[i])
-	{
-	  printf ("global = %d, expected %d\n", global, expect[i]);
-	  result = 1;
-	}
+        if (global != expect[i]) {
+            printf("global = %d, expected %d\n", global, expect[i]);
+            result = 1;
+        }
     }
 
-  return result;
+    return result;
 }
 
 #define TEST_FUNCTION do_test ()

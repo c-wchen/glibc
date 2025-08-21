@@ -28,11 +28,10 @@
 #include <stdio.h>
 #include <set-freeres.h>
 
-int
-__fcloseall (void)
+int __fcloseall(void)
 {
-  /* Close all streams.  */
-  return _IO_cleanup ();
+    /* Close all streams.  */
+    return _IO_cleanup();
 }
 
-weak_alias (__fcloseall, fcloseall)
+weak_alias(__fcloseall, fcloseall)

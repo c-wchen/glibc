@@ -20,25 +20,25 @@
 #include <sys/resource.h>
 #include <sys/types.h>
 
-pid_t
-__wait3_time64 (int *stat_loc, int options, struct __rusage64 *usage)
+pid_t __wait3_time64(int *stat_loc, int options, struct __rusage64 *usage)
 {
-  return __wait4_time64 (WAIT_ANY, stat_loc, options, usage);
+    return __wait4_time64(WAIT_ANY, stat_loc, options, usage);
 }
 #if __TIMESIZE != 64
-libc_hidden_def (__wait3_time64)
+libc_hidden_def(__wait3_time64)
 
 pid_t
-__wait3 (int *stat_loc, int options, struct rusage *usage)
+__wait3(int *stat_loc, int options, struct rusage *usage)
 {
-  struct __rusage64 usage64;
-  pid_t ret = __wait3_time64 (stat_loc, options,
-			      usage != NULL ? &usage64 : NULL);
-  if (ret > 0 && usage != NULL)
-     rusage64_to_rusage (&usage64, usage);
+    struct __rusage64 usage64;
+    pid_t ret = __wait3_time64(stat_loc, options,
+                               usage != NULL ? &usage64 : NULL);
+    if (ret > 0 && usage != NULL) {
+        rusage64_to_rusage(&usage64, usage);
+    }
 
-  return ret;
+    return ret;
 }
 #endif
 
-weak_alias (__wait3, wait3)
+weak_alias(__wait3, wait3)

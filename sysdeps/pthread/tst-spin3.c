@@ -20,33 +20,30 @@
 #include <stdio.h>
 #include <unistd.h>
 
-static int do_test (void);
+static int do_test(void);
 
 #define TEST_FUNCTION do_test ()
 #include "../test-skeleton.c"
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  pthread_spinlock_t s;
+    pthread_spinlock_t s;
 
-  if (pthread_spin_init (&s, PTHREAD_PROCESS_PRIVATE) != 0)
-    {
-      puts ("spin_init failed");
-      return 1;
+    if (pthread_spin_init(&s, PTHREAD_PROCESS_PRIVATE) != 0) {
+        puts("spin_init failed");
+        return 1;
     }
 
-  if (pthread_spin_lock (&s) != 0)
-    {
-      puts ("1st spin_lock failed");
-      return 1;
+    if (pthread_spin_lock(&s) != 0) {
+        puts("1st spin_lock failed");
+        return 1;
     }
 
-  delayed_exit (1);
+    delayed_exit(1);
 
-  /* This call should never return.  */
-  xpthread_spin_lock (&s);
+    /* This call should never return.  */
+    xpthread_spin_lock(&s);
 
-  puts ("2nd spin_lock returned");
-  return 1;
+    puts("2nd spin_lock returned");
+    return 1;
 }

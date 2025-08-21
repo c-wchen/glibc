@@ -22,35 +22,35 @@
 
 /* If compiled for profiling, call `_mcount' at the start of each
    function.  */
-#ifdef	PROF
+#ifdef  PROF
 /* The mcount code relies on a the return address being on the stack
    to locate our caller and so it can restore it; so store one just
    for its benefit.  */
-# define CALL_MCOUNT							      \
-  mflr  r0;								      \
-  stw   r0,4(r1);							      \
-  cfi_offset (lr, 4);							      \
+# define CALL_MCOUNT                                  \
+  mflr  r0;                                   \
+  stw   r0,4(r1);                                 \
+  cfi_offset (lr, 4);                                 \
   bl    JUMPTARGET(_mcount);
 #else  /* PROF */
-# define CALL_MCOUNT		/* Do nothing.  */
+# define CALL_MCOUNT        /* Do nothing.  */
 #endif /* PROF */
 
-#define	ENTRY(name)							      \
-  .globl C_SYMBOL_NAME(name);						      \
-  .type C_SYMBOL_NAME(name),@function;					      \
-  .align ALIGNARG(2);							      \
-  C_LABEL(name)								      \
-  cfi_startproc;							      \
+#define ENTRY(name)                               \
+  .globl C_SYMBOL_NAME(name);                             \
+  .type C_SYMBOL_NAME(name),@function;                        \
+  .align ALIGNARG(2);                                 \
+  C_LABEL(name)                                   \
+  cfi_startproc;                                  \
   CALL_MCOUNT
 
 #define ENTRY_TOCLESS(name) ENTRY(name)
 
 /* helper macro for accessing the 32-bit powerpc GOT. */
 
-#define	SETUP_GOT_ACCESS(regname,GOT_LABEL)				      \
-	bcl	20,31,GOT_LABEL	;					      \
-GOT_LABEL:			;					      \
-	mflr	(regname)
+#define SETUP_GOT_ACCESS(regname,GOT_LABEL)                   \
+    bcl 20,31,GOT_LABEL ;                         \
+GOT_LABEL:          ;                         \
+    mflr    (regname)
 
 #define EALIGN_W_0  /* No words to insert.  */
 #define EALIGN_W_1  nop
@@ -64,38 +64,38 @@ GOT_LABEL:			;					      \
 /* EALIGN is like ENTRY, but does alignment to 'words'*4 bytes
    past a 2^align boundary.  */
 #ifdef PROF
-# define EALIGN(name, alignt, words)					      \
-  .globl C_SYMBOL_NAME(name);						      \
-  .type C_SYMBOL_NAME(name),@function;					      \
-  .align ALIGNARG(2);							      \
-  C_LABEL(name)								      \
-  cfi_startproc;							      \
-  CALL_MCOUNT								      \
-  b 0f;									      \
-  .align ALIGNARG(alignt);						      \
-  EALIGN_W_##words;							      \
+# define EALIGN(name, alignt, words)                          \
+  .globl C_SYMBOL_NAME(name);                             \
+  .type C_SYMBOL_NAME(name),@function;                        \
+  .align ALIGNARG(2);                                 \
+  C_LABEL(name)                                   \
+  cfi_startproc;                                  \
+  CALL_MCOUNT                                     \
+  b 0f;                                       \
+  .align ALIGNARG(alignt);                            \
+  EALIGN_W_##words;                               \
   0:
 #else /* PROF */
-# define EALIGN(name, alignt, words)					      \
-  .globl C_SYMBOL_NAME(name);						      \
-  .type C_SYMBOL_NAME(name),@function;					      \
-  .align ALIGNARG(alignt);						      \
-  EALIGN_W_##words;							      \
-  C_LABEL(name)								      \
+# define EALIGN(name, alignt, words)                          \
+  .globl C_SYMBOL_NAME(name);                             \
+  .type C_SYMBOL_NAME(name),@function;                        \
+  .align ALIGNARG(alignt);                            \
+  EALIGN_W_##words;                               \
+  C_LABEL(name)                                   \
   cfi_startproc;
 #endif
 
-#undef	END
-#define END(name)							      \
-  cfi_endproc;								      \
+#undef  END
+#define END(name)                                 \
+  cfi_endproc;                                    \
   ASM_SIZE_DIRECTIVE(name)
 
-#define DO_CALL(syscall)						      \
-    li 0,syscall;							      \
+#define DO_CALL(syscall)                              \
+    li 0,syscall;                                 \
     DO_CALL_SC
 
 #define DO_CALL_SC \
-	sc
+    sc
 
 #undef JUMPTARGET
 #ifdef PIC
@@ -115,47 +115,47 @@ GOT_LABEL:			;					      \
 #define TAIL_CALL_SYSCALL_ERROR \
     b __syscall_error@local
 
-#define PSEUDO(name, syscall_name, args)				      \
-  .section ".text";							      \
-  ENTRY (name)								      \
+#define PSEUDO(name, syscall_name, args)                      \
+  .section ".text";                               \
+  ENTRY (name)                                    \
     DO_CALL (SYS_ify (syscall_name));
 
 #define RET_SC \
     bnslr+;
 
-#define PSEUDO_RET							      \
-    RET_SC;								      \
+#define PSEUDO_RET                                \
+    RET_SC;                                   \
     TAIL_CALL_SYSCALL_ERROR
 #define ret PSEUDO_RET
 
-#undef	PSEUDO_END
-#define	PSEUDO_END(name)						      \
+#undef  PSEUDO_END
+#define PSEUDO_END(name)                              \
   END (name)
 
-#define PSEUDO_NOERRNO(name, syscall_name, args)			      \
-  .section ".text";							      \
-  ENTRY (name)								      \
+#define PSEUDO_NOERRNO(name, syscall_name, args)                  \
+  .section ".text";                               \
+  ENTRY (name)                                    \
     DO_CALL (SYS_ify (syscall_name));
 
-#define PSEUDO_RET_NOERRNO						      \
+#define PSEUDO_RET_NOERRNO                            \
     blr
 #define ret_NOERRNO PSEUDO_RET_NOERRNO
 
-#undef	PSEUDO_END_NOERRNO
-#define	PSEUDO_END_NOERRNO(name)					      \
+#undef  PSEUDO_END_NOERRNO
+#define PSEUDO_END_NOERRNO(name)                          \
   END (name)
 
-#define PSEUDO_ERRVAL(name, syscall_name, args)				      \
-  .section ".text";							      \
-  ENTRY (name)								      \
+#define PSEUDO_ERRVAL(name, syscall_name, args)                   \
+  .section ".text";                               \
+  ENTRY (name)                                    \
     DO_CALL (SYS_ify (syscall_name));
 
-#define PSEUDO_RET_ERRVAL						      \
+#define PSEUDO_RET_ERRVAL                             \
     blr
 #define ret_ERRVAL PSEUDO_RET_ERRVAL
 
-#undef	PSEUDO_END_ERRVAL
-#define	PSEUDO_END_ERRVAL(name)						      \
+#undef  PSEUDO_END_ERRVAL
+#define PSEUDO_END_ERRVAL(name)                           \
   END (name)
 
 /* Local labels stripped out by the linker.  */
@@ -175,24 +175,24 @@ GOT_LABEL:			;					      \
 #  if IS_IN (rtld)
 /* Inside ld.so we use the local alias to avoid runtime GOT
    relocations.  */
-#   define __GLRO(rOUT, rGOT, member, offset)				\
-	lwz     rOUT,_rtld_local_ro@got(rGOT);				\
-	lwz     rOUT,offset(rOUT)
+#   define __GLRO(rOUT, rGOT, member, offset)               \
+    lwz     rOUT,_rtld_local_ro@got(rGOT);              \
+    lwz     rOUT,offset(rOUT)
 #  else
-#   define __GLRO(rOUT, rGOT, member, offset)				\
-	lwz     rOUT,_rtld_global_ro@got(rGOT);				\
-	lwz     rOUT,offset(rOUT)
+#   define __GLRO(rOUT, rGOT, member, offset)               \
+    lwz     rOUT,_rtld_global_ro@got(rGOT);             \
+    lwz     rOUT,offset(rOUT)
 #  endif
 # else
-#  define __GLRO(rOUT, rGOT, member, offset)				\
-	lwz     rOUT,member@got(rGOT);					\
-	lwz     rOUT,0(rOUT)
+#  define __GLRO(rOUT, rGOT, member, offset)                \
+    lwz     rOUT,member@got(rGOT);                  \
+    lwz     rOUT,0(rOUT)
 # endif
 #else
 /* Position-dependent code does not require access to the GOT.  */
-# define __GLRO(rOUT, rGOT, member, offset)				\
-	lis     rOUT,(member)@ha;					\
-	lwz     rOUT,(member)@l(rOUT)
-#endif	/* PIC */
+# define __GLRO(rOUT, rGOT, member, offset)             \
+    lis     rOUT,(member)@ha;                   \
+    lwz     rOUT,(member)@l(rOUT)
+#endif  /* PIC */
 
-#endif	/* __ASSEMBLER__ */
+#endif  /* __ASSEMBLER__ */

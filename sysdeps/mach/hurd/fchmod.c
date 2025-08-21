@@ -22,15 +22,15 @@
 #include <hurd/fd.h>
 
 /* Change the permissions of the file referenced by FD to MODE.  */
-int
-__fchmod (int fd, mode_t mode)
+int __fchmod(int fd, mode_t mode)
 {
-  error_t err;
+    error_t err;
 
-  if (err = HURD_DPORT_USE (fd, __file_chmod (port, mode)))
-    return __hurd_dfail (fd, err);
+    if (err = HURD_DPORT_USE(fd, __file_chmod(port, mode))) {
+        return __hurd_dfail(fd, err);
+    }
 
-  return 0;
+    return 0;
 }
 
-weak_alias (__fchmod, fchmod)
+weak_alias(__fchmod, fchmod)

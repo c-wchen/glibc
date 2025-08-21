@@ -25,43 +25,41 @@
 # define aio_start_notify_thread __aio_start_notify_thread
 # define aio_create_helper_thread __aio_create_helper_thread
 
-extern inline void
-__aio_start_notify_thread (void)
+extern inline void __aio_start_notify_thread(void)
 {
-  sigset_t ss;
-  sigemptyset (&ss);
-  INTERNAL_SYSCALL_CALL (rt_sigprocmask, SIG_SETMASK, &ss, NULL,
-			 __NSIG_BYTES);
+    sigset_t ss;
+    sigemptyset(&ss);
+    INTERNAL_SYSCALL_CALL(rt_sigprocmask, SIG_SETMASK, &ss, NULL,
+                          __NSIG_BYTES);
 }
 
-extern inline int
-__aio_create_helper_thread (pthread_t *threadp, void *(*tf) (void *),
-			    void *arg)
+extern inline int __aio_create_helper_thread(pthread_t *threadp, void *(*tf)(void *),
+        void *arg)
 {
-  pthread_attr_t attr;
+    pthread_attr_t attr;
 
-  /* Make sure the thread is created detached.  */
-  __pthread_attr_init (&attr);
-  __pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
+    /* Make sure the thread is created detached.  */
+    __pthread_attr_init(&attr);
+    __pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
 
-  /* The helper thread needs only very little resources.  */
-  __pthread_attr_setstacksize (&attr, __pthread_get_minstack (&attr));
+    /* The helper thread needs only very little resources.  */
+    __pthread_attr_setstacksize(&attr, __pthread_get_minstack(&attr));
 
-  /* Block all signals in the helper thread.  To do this thoroughly we
-     temporarily have to block all signals here.  */
-  sigset_t ss;
-  sigset_t oss;
-  sigfillset (&ss);
-  INTERNAL_SYSCALL_CALL (rt_sigprocmask, SIG_SETMASK, &ss, &oss,
-			 __NSIG_BYTES);
+    /* Block all signals in the helper thread.  To do this thoroughly we
+       temporarily have to block all signals here.  */
+    sigset_t ss;
+    sigset_t oss;
+    sigfillset(&ss);
+    INTERNAL_SYSCALL_CALL(rt_sigprocmask, SIG_SETMASK, &ss, &oss,
+                          __NSIG_BYTES);
 
-  int ret = __pthread_create (threadp, &attr, tf, arg);
+    int ret = __pthread_create(threadp, &attr, tf, arg);
 
-  /* Restore the signal mask.  */
-  INTERNAL_SYSCALL_CALL (rt_sigprocmask, SIG_SETMASK, &oss, NULL,
-			 __NSIG_BYTES);
+    /* Restore the signal mask.  */
+    INTERNAL_SYSCALL_CALL(rt_sigprocmask, SIG_SETMASK, &oss, NULL,
+                          __NSIG_BYTES);
 
-  __pthread_attr_destroy (&attr);
-  return ret;
+    __pthread_attr_destroy(&attr);
+    return ret;
 }
 #endif

@@ -21,16 +21,14 @@
 
 /* Send COUNT bytes from file associated with IN_FD starting at OFFSET to
    descriptor OUT_FD.  */
-ssize_t
-sendfile (int out_fd, int in_fd, off_t *offset, size_t count)
+ssize_t sendfile(int out_fd, int in_fd, off_t *offset, size_t count)
 {
-  if (offset == NULL || sizeof (off_t) == sizeof (off64_t))
-    return __sendfile64 (out_fd, in_fd, (off64_t *) offset, count);
-  else
-    {
-      off64_t ofs = *offset;
-      ssize_t ret = __sendfile64 (out_fd, in_fd, &ofs, count);
-      *offset = ofs;
-      return ret;
+    if (offset == NULL || sizeof(off_t) == sizeof(off64_t)) {
+        return __sendfile64(out_fd, in_fd, (off64_t *) offset, count);
+    } else {
+        off64_t ofs = *offset;
+        ssize_t ret = __sendfile64(out_fd, in_fd, &ofs, count);
+        *offset = ofs;
+        return ret;
     }
 }

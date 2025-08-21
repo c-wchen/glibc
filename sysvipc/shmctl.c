@@ -20,11 +20,10 @@
 
 /* Provide operations to control over shared memory segments.  */
 
-int
-shmctl (int shmid, int cmd, struct shmid_ds *buf)
+int shmctl(int shmid, int cmd, struct shmid_ds *buf)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (shmctl)
+stub_warning(shmctl)

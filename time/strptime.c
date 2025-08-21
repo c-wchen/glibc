@@ -26,9 +26,8 @@
 #include <locale/localeinfo.h>
 
 
-char *
-strptime (const char *buf, const char *format, struct tm *tm)
+char *strptime(const char *buf, const char *format, struct tm *tm)
 {
-  return __strptime_internal (buf, format, tm, NULL, _NL_CURRENT_LOCALE);
+    return __strptime_internal(buf, format, tm, NULL, _NL_CURRENT_LOCALE);
 }
-libc_hidden_def (strptime)
+libc_hidden_def(strptime)

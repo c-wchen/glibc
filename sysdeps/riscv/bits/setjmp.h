@@ -19,8 +19,7 @@
 #ifndef _RISCV_BITS_SETJMP_H
 #define _RISCV_BITS_SETJMP_H
 
-typedef struct __jmp_buf_internal_tag
-  {
+typedef struct __jmp_buf_internal_tag {
     /* Program counter.  */
     long int __pc;
     /* Callee-saved registers.  */
@@ -30,10 +29,10 @@ typedef struct __jmp_buf_internal_tag
 
     /* Callee-saved floating point registers.  */
 #if defined __riscv_float_abi_double
-   double __fpregs[12];
+    double __fpregs[12];
 #elif !defined __riscv_float_abi_soft
 # error unsupported FLEN
 #endif
-  } __jmp_buf[1];
+} __jmp_buf[1];
 
 #endif /* _RISCV_BITS_SETJMP_H */

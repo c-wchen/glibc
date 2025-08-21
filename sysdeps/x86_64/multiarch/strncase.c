@@ -28,8 +28,8 @@
 # define SYMBOL_NAME strncasecmp
 # include "ifunc-strcasecmp.h"
 
-libc_ifunc_redirected (__redirect_strncasecmp, __strncasecmp,
-		       IFUNC_SELECTOR ());
+libc_ifunc_redirected(__redirect_strncasecmp, __strncasecmp,
+                      IFUNC_SELECTOR());
 
-weak_alias (__strncasecmp, strncasecmp)
+weak_alias(__strncasecmp, strncasecmp)
 #endif

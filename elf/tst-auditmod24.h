@@ -19,11 +19,11 @@
 #ifndef _TST_AUDITMOD24_H
 #define _TST_AUDITMOD24_H
 
-static void
-test_symbind_flags (unsigned int flags)
+static void test_symbind_flags(unsigned int flags)
 {
-  if ((flags & (LA_SYMB_NOPLTENTER | LA_SYMB_NOPLTEXIT)) == 0)
-    abort ();
+    if ((flags & (LA_SYMB_NOPLTENTER | LA_SYMB_NOPLTEXIT)) == 0) {
+        abort();
+    }
 }
 
 #endif

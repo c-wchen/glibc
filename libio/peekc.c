@@ -29,13 +29,12 @@
 
 #undef _IO_peekc
 
-int
-_IO_peekc_locked (FILE *fp)
+int _IO_peekc_locked(FILE *fp)
 {
-  int result;
-  CHECK_FILE (fp, EOF);
-  _IO_acquire_lock (fp);
-  result = _IO_peekc_unlocked (fp);
-  _IO_release_lock (fp);
-  return result;
+    int result;
+    CHECK_FILE(fp, EOF);
+    _IO_acquire_lock(fp);
+    result = _IO_peekc_unlocked(fp);
+    _IO_release_lock(fp);
+    return result;
 }

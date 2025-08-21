@@ -19,11 +19,10 @@
 #include <libio/libioP.h>
 #include <stdio.h>
 
-extern int
-___ieee128_isoc99_vfscanf (FILE *fp, const char *format, va_list ap)
+extern int ___ieee128_isoc99_vfscanf(FILE *fp, const char *format, va_list ap)
 {
-  int mode_flags = SCANF_ISOC99_A | SCANF_LDBL_USES_FLOAT128;
-  return __vfscanf_internal (fp, format, ap, mode_flags);
+    int mode_flags = SCANF_ISOC99_A | SCANF_LDBL_USES_FLOAT128;
+    return __vfscanf_internal(fp, format, ap, mode_flags);
 }
-strong_alias (___ieee128_isoc99_vfscanf, __isoc99_vfscanfieee128)
-hidden_def (___ieee128_isoc99_vfscanf)
+strong_alias(___ieee128_isoc99_vfscanf, __isoc99_vfscanfieee128)
+hidden_def(___ieee128_isoc99_vfscanf)

@@ -30,35 +30,34 @@
 # define FCNTL_ADJUST_CMD(__cmd) __cmd
 #endif
 
-int
-__fcntl64_nocancel (int fd, int cmd, ...)
+int __fcntl64_nocancel(int fd, int cmd, ...)
 {
-  va_list ap;
-  void *arg;
+    va_list ap;
+    void *arg;
 
-  va_start (ap, cmd);
-  arg = va_arg (ap, void *);
-  va_end (ap);
+    va_start(ap, cmd);
+    arg = va_arg(ap, void *);
+    va_end(ap);
 
-  cmd = FCNTL_ADJUST_CMD (cmd);
+    cmd = FCNTL_ADJUST_CMD(cmd);
 
-  return __fcntl64_nocancel_adjusted (fd, cmd, arg);
+    return __fcntl64_nocancel_adjusted(fd, cmd, arg);
 }
-hidden_def (__fcntl64_nocancel)
+hidden_def(__fcntl64_nocancel)
 
 int
-__fcntl64_nocancel_adjusted (int fd, int cmd, void *arg)
+__fcntl64_nocancel_adjusted(int fd, int cmd, void *arg)
 {
-  if (cmd == F_GETOWN)
-    {
-      struct f_owner_ex fex;
-      int res = INTERNAL_SYSCALL_CALL (fcntl64, fd, F_GETOWN_EX, &fex);
-      if (!INTERNAL_SYSCALL_ERROR_P (res))
-	return fex.type == F_OWNER_GID ? -fex.pid : fex.pid;
+    if (cmd == F_GETOWN) {
+        struct f_owner_ex fex;
+        int res = INTERNAL_SYSCALL_CALL(fcntl64, fd, F_GETOWN_EX, &fex);
+        if (!INTERNAL_SYSCALL_ERROR_P(res)) {
+            return fex.type == F_OWNER_GID ? -fex.pid : fex.pid;
+        }
 
-      return INLINE_SYSCALL_ERROR_RETURN_VALUE
-        (INTERNAL_SYSCALL_ERRNO (res));
+        return INLINE_SYSCALL_ERROR_RETURN_VALUE
+               (INTERNAL_SYSCALL_ERRNO(res));
     }
 
-  return INLINE_SYSCALL_CALL (fcntl64, fd, cmd, (void *) arg);
+    return INLINE_SYSCALL_CALL(fcntl64, fd, cmd, (void *) arg);
 }

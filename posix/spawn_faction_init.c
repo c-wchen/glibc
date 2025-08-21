@@ -25,30 +25,30 @@
 
 /* Function used to increase the size of the allocated array.  This
    function is called from the `add'-functions.  */
-int
-__posix_spawn_file_actions_realloc (posix_spawn_file_actions_t *file_actions)
+int __posix_spawn_file_actions_realloc(posix_spawn_file_actions_t *file_actions)
 {
-  int newalloc = file_actions->__allocated + 8;
-  void *newmem = realloc (file_actions->__actions,
-			  newalloc * sizeof (struct __spawn_action));
+    int newalloc = file_actions->__allocated + 8;
+    void *newmem = realloc(file_actions->__actions,
+                           newalloc * sizeof(struct __spawn_action));
 
-  if (newmem == NULL)
-    /* Not enough memory.  */
-    return ENOMEM;
+    if (newmem == NULL)
+        /* Not enough memory.  */
+    {
+        return ENOMEM;
+    }
 
-  file_actions->__actions = (struct __spawn_action *) newmem;
-  file_actions->__allocated = newalloc;
+    file_actions->__actions = (struct __spawn_action *) newmem;
+    file_actions->__allocated = newalloc;
 
-  return 0;
+    return 0;
 }
 
 
 /* Initialize data structure for file attribute for `spawn' call.  */
-int
-__posix_spawn_file_actions_init (posix_spawn_file_actions_t *file_actions)
+int __posix_spawn_file_actions_init(posix_spawn_file_actions_t *file_actions)
 {
-  /* Simply clear all the elements.  */
-  memset (file_actions, '\0', sizeof (*file_actions));
-  return 0;
+    /* Simply clear all the elements.  */
+    memset(file_actions, '\0', sizeof(*file_actions));
+    return 0;
 }
-weak_alias (__posix_spawn_file_actions_init, posix_spawn_file_actions_init)
+weak_alias(__posix_spawn_file_actions_init, posix_spawn_file_actions_init)

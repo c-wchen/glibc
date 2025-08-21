@@ -30,34 +30,33 @@
 
 #ifndef __OFF_T_MATCHES_OFF64_T
 
-int
-_IO_new_fsetpos64 (FILE *fp, const fpos64_t *posp)
+int _IO_new_fsetpos64(FILE *fp, const fpos64_t *posp)
 {
-  int result;
-  CHECK_FILE (fp, EOF);
-  _IO_acquire_lock (fp);
-  if (_IO_seekpos_unlocked (fp, posp->__pos, _IOS_INPUT|_IOS_OUTPUT)
-      == _IO_pos_BAD)
-    {
-      /* ANSI explicitly requires setting errno to a positive value on
-	 failure.  */
-      if (errno == 0)
-	__set_errno (EIO);
-      result = EOF;
+    int result;
+    CHECK_FILE(fp, EOF);
+    _IO_acquire_lock(fp);
+    if (_IO_seekpos_unlocked(fp, posp->__pos, _IOS_INPUT | _IOS_OUTPUT)
+        == _IO_pos_BAD) {
+        /* ANSI explicitly requires setting errno to a positive value on
+        failure.  */
+        if (errno == 0) {
+            __set_errno(EIO);
+        }
+        result = EOF;
+    } else {
+        result = 0;
+        if (fp->_mode > 0 && __libio_codecvt_encoding(fp->_codecvt) < 0)
+            /* This is a stateful encoding, safe the state.  */
+        {
+            fp->_wide_data->_IO_state = posp->__state;
+        }
     }
-  else
-    {
-      result = 0;
-      if (fp->_mode > 0 && __libio_codecvt_encoding (fp->_codecvt) < 0)
-	/* This is a stateful encoding, safe the state.  */
-	fp->_wide_data->_IO_state = posp->__state;
-    }
-  _IO_release_lock (fp);
-  return result;
+    _IO_release_lock(fp);
+    return result;
 }
 
-strong_alias (_IO_new_fsetpos64, __new_fsetpos64)
-versioned_symbol (libc, __new_fsetpos64, fsetpos64, GLIBC_2_2);
-versioned_symbol (libc, _IO_new_fsetpos64, _IO_fsetpos64, GLIBC_2_2);
+strong_alias(_IO_new_fsetpos64, __new_fsetpos64)
+versioned_symbol(libc, __new_fsetpos64, fsetpos64, GLIBC_2_2);
+versioned_symbol(libc, _IO_new_fsetpos64, _IO_fsetpos64, GLIBC_2_2);
 
 #endif

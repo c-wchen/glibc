@@ -16,8 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-static inline bool
-_dl_audit_check_version (unsigned int lav)
+static inline bool _dl_audit_check_version(unsigned int lav)
 {
-  return lav <= LAV_CURRENT;
+    return lav <= LAV_CURRENT;
 }

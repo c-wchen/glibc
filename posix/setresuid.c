@@ -21,13 +21,12 @@
 
 /* Set the real user ID, effective user ID, and saved-set user ID,
    of the calling process to RUID, EUID, and SUID, respectively.  */
-int
-__setresuid (uid_t ruid, uid_t euid, uid_t suid)
+int __setresuid(uid_t ruid, uid_t euid, uid_t suid)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (__setresuid)
-stub_warning (setresuid)
+libc_hidden_def(__setresuid)
+stub_warning(setresuid)
 
-weak_alias (__setresuid, setresuid)
+weak_alias(__setresuid, setresuid)

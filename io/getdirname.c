@@ -24,20 +24,21 @@
    If the environment variable `PWD' is set, and its value is correct,
    that value is used.  */
 
-char *
-get_current_dir_name (void)
+char *get_current_dir_name(void)
 {
-  char *pwd;
-  struct __stat64_t64 dotstat, pwdstat;
+    char *pwd;
+    struct __stat64_t64 dotstat, pwdstat;
 
-  pwd = getenv ("PWD");
-  if (pwd != NULL
-      && __stat64_time64 (".", &dotstat) == 0
-      && __stat64_time64 (pwd, &pwdstat) == 0
-      && pwdstat.st_dev == dotstat.st_dev
-      && pwdstat.st_ino == dotstat.st_ino)
-    /* The PWD value is correct.  Use it.  */
-    return __strdup (pwd);
+    pwd = getenv("PWD");
+    if (pwd != NULL
+        && __stat64_time64(".", &dotstat) == 0
+        && __stat64_time64(pwd, &pwdstat) == 0
+        && pwdstat.st_dev == dotstat.st_dev
+        && pwdstat.st_ino == dotstat.st_ino)
+        /* The PWD value is correct.  Use it.  */
+    {
+        return __strdup(pwd);
+    }
 
-  return __getcwd ((char *) NULL, 0);
+    return __getcwd((char *) NULL, 0);
 }

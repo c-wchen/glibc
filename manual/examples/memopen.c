@@ -19,16 +19,16 @@
 
 static char buffer[] = "foobar";
 
-int
-main (void)
+int main(void)
 {
-  int ch;
-  FILE *stream;
+    int ch;
+    FILE *stream;
 
-  stream = fmemopen (buffer, strlen (buffer), "r");
-  while ((ch = fgetc (stream)) != EOF)
-    printf ("Got %c\n", ch);
-  fclose (stream);
+    stream = fmemopen(buffer, strlen(buffer), "r");
+    while ((ch = fgetc(stream)) != EOF) {
+        printf("Got %c\n", ch);
+    }
+    fclose(stream);
 
-  return 0;
+    return 0;
 }

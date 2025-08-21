@@ -20,25 +20,25 @@
 
 #undef _IO_putc
 
-int
-_IO_putc (int c, FILE *fp)
+int _IO_putc(int c, FILE *fp)
 {
-  int result;
-  CHECK_FILE (fp, EOF);
-  if (!_IO_need_lock (fp))
-    return _IO_putc_unlocked (c, fp);
-  _IO_acquire_lock (fp);
-  result = _IO_putc_unlocked (c, fp);
-  _IO_release_lock (fp);
-  return result;
+    int result;
+    CHECK_FILE(fp, EOF);
+    if (!_IO_need_lock(fp)) {
+        return _IO_putc_unlocked(c, fp);
+    }
+    _IO_acquire_lock(fp);
+    result = _IO_putc_unlocked(c, fp);
+    _IO_release_lock(fp);
+    return result;
 }
-libc_hidden_def (_IO_putc)
+libc_hidden_def(_IO_putc)
 
 #undef putc
 
-weak_alias (_IO_putc, putc)
+weak_alias(_IO_putc, putc)
 
 #ifndef _IO_MTSAFE_IO
 #undef putc_unlocked
-weak_alias (_IO_putc, putc_unlocked)
+weak_alias(_IO_putc, putc_unlocked)
 #endif

@@ -27,8 +27,7 @@
 #include "libioP.h"
 #include "stdio.h"
 
-void
-setbuf (FILE *fp, char *buf)
+void setbuf(FILE *fp, char *buf)
 {
-  _IO_setbuffer (fp, buf, BUFSIZ);
+    _IO_setbuffer(fp, buf, BUFSIZ);
 }

@@ -32,107 +32,98 @@ PERFORMANCE OF THIS SOFTWARE.
 
 
 
-struct a_test
-{
-  int expected;
-  const char * pattern;
-  const char * data;
+struct a_test {
+    int expected;
+    const char *pattern;
+    const char *data;
 };
 
-static const struct a_test the_tests[] =
-{
+static const struct a_test the_tests[] = {
 #include "testcases.h"
-  {-1, 0, 0}
+    {-1, 0, 0}
 };
 
 
 
 
-static int
-run_a_test (int id, const struct a_test * t)
+static int run_a_test(int id, const struct a_test *t)
 {
-  static const char * last_pattern = 0;
-  static regex_t r;
-  int err;
-  char errmsg[100];
-  int x;
-  regmatch_t regs[10];
+    static const char *last_pattern = 0;
+    static regex_t r;
+    int err;
+    char errmsg[100];
+    int x;
+    regmatch_t regs[10];
 
-  if (!last_pattern || strcmp (last_pattern, t->pattern))
-    {
-      if (last_pattern)
-	regfree (&r);
-      last_pattern = t->pattern;
-      err = regcomp (&r, t->pattern, REG_EXTENDED);
-      if (err)
-	{
-	  if (t->expected == 2)
-	    {
-	      puts (" OK.");
-	      return 0;
-	    }
-	  if (last_pattern)
-	    regfree (&r);
-	  last_pattern = NULL;
-	  regerror (err, &r, errmsg, 100);
-	  printf (" FAIL: %s.\n", errmsg);
-	  return 1;
-	}
-      else if (t->expected == 2)
-	{
-	  printf ("test %d\n", id);
-	  printf ("pattern \"%s\" successful compilation not expected\n",
-		  t->pattern);
-	  return 1;
-	}
+    if (!last_pattern || strcmp(last_pattern, t->pattern)) {
+        if (last_pattern) {
+            regfree(&r);
+        }
+        last_pattern = t->pattern;
+        err = regcomp(&r, t->pattern, REG_EXTENDED);
+        if (err) {
+            if (t->expected == 2) {
+                puts(" OK.");
+                return 0;
+            }
+            if (last_pattern) {
+                regfree(&r);
+            }
+            last_pattern = NULL;
+            regerror(err, &r, errmsg, 100);
+            printf(" FAIL: %s.\n", errmsg);
+            return 1;
+        } else if (t->expected == 2) {
+            printf("test %d\n", id);
+            printf("pattern \"%s\" successful compilation not expected\n",
+                   t->pattern);
+            return 1;
+        }
     }
 
-  err = regexec (&r, t->data, 10, regs, 0);
+    err = regexec(&r, t->data, 10, regs, 0);
 
-  if (err != t->expected)
-    {
-      printf ("test %d\n", id);
-      printf ("pattern \"%s\" data \"%s\" wanted %d got %d\n",
-	      t->pattern, t->data, t->expected, err);
-      for (x = 0; x < 10; ++x)
-	printf ("reg %d == (%d, %d) %.*s\n",
-		x,
-		regs[x].rm_so,
-		regs[x].rm_eo,
-		regs[x].rm_eo - regs[x].rm_so,
-		t->data + regs[x].rm_so);
-      return 1;
+    if (err != t->expected) {
+        printf("test %d\n", id);
+        printf("pattern \"%s\" data \"%s\" wanted %d got %d\n",
+               t->pattern, t->data, t->expected, err);
+        for (x = 0; x < 10; ++x)
+            printf("reg %d == (%d, %d) %.*s\n",
+                   x,
+                   regs[x].rm_so,
+                   regs[x].rm_eo,
+                   regs[x].rm_eo - regs[x].rm_so,
+                   t->data + regs[x].rm_so);
+        return 1;
     }
-  puts (" OK.");
-  return 0;
+    puts(" OK.");
+    return 0;
 }
 
 
 
-int
-main (int argc, char * argv[])
+int main(int argc, char *argv[])
 {
-  int x;
-  int lo;
-  int hi;
-  int res = 0;
+    int x;
+    int lo;
+    int hi;
+    int res = 0;
 
-  lo = 0;
-  hi = (sizeof (the_tests) / sizeof (the_tests[0])) - 1;
+    lo = 0;
+    hi = (sizeof(the_tests) / sizeof(the_tests[0])) - 1;
 
-  if (argc > 1)
-    {
-      lo = atoi (argv[1]);
-      hi = lo + 1;
+    if (argc > 1) {
+        lo = atoi(argv[1]);
+        hi = lo + 1;
 
-      if (argc > 2)
-	hi = atoi (argv[2]);
+        if (argc > 2) {
+            hi = atoi(argv[2]);
+        }
     }
 
-  for (x = lo; x < hi; ++x)
-    {
-      printf ("#%d:", x);
-      res |= run_a_test (x, &the_tests[x]);
+    for (x = lo; x < hi; ++x) {
+        printf("#%d:", x);
+        res |= run_a_test(x, &the_tests[x]);
     }
-  return res != 0;
+    return res != 0;
 }

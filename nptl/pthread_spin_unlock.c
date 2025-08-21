@@ -20,19 +20,18 @@
 #include <atomic.h>
 #include <shlib-compat.h>
 
-int
-__pthread_spin_unlock (pthread_spinlock_t *lock)
+int __pthread_spin_unlock(pthread_spinlock_t *lock)
 {
-  /* The atomic_store_release synchronizes-with the atomic_exchange_acquire
-     or atomic_compare_exchange_weak_acquire in pthread_spin_lock /
-     pthread_spin_trylock.  */
-  atomic_store_release (lock, 0);
-  return 0;
+    /* The atomic_store_release synchronizes-with the atomic_exchange_acquire
+       or atomic_compare_exchange_weak_acquire in pthread_spin_lock /
+       pthread_spin_trylock.  */
+    atomic_store_release(lock, 0);
+    return 0;
 }
-versioned_symbol (libc, __pthread_spin_unlock, pthread_spin_unlock,
-                  GLIBC_2_34);
+versioned_symbol(libc, __pthread_spin_unlock, pthread_spin_unlock,
+                 GLIBC_2_34);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
-compat_symbol (libpthread, __pthread_spin_unlock, pthread_spin_unlock,
-               GLIBC_2_2);
+compat_symbol(libpthread, __pthread_spin_unlock, pthread_spin_unlock,
+              GLIBC_2_2);
 #endif

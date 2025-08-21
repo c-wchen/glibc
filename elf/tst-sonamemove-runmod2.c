@@ -18,7 +18,6 @@
 
 /* In the test scenario, this function was originally in
    tst-sonamemove-runmod1.so.  */
-void
-moved_function (void)
+void moved_function(void)
 {
 }

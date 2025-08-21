@@ -20,12 +20,11 @@
 
 /* Make PATH be the root directory (the starting point for absolute paths).
    This call is restricted to the super-user.  */
-int
-chroot (const char *path)
+int chroot(const char *path)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
 
-stub_warning (chroot)
+stub_warning(chroot)

@@ -21,23 +21,22 @@
 #include <stdio.h>
 #include <gnu/lib-names.h>
 
-void
-__pthread_exit (void *value)
+void __pthread_exit(void *value)
 {
-  {
-    struct unwind_link *unwind_link = __libc_unwind_link_get ();
-    if (unwind_link == NULL)
-      __libc_fatal (LIBGCC_S_SO
-                    " must be installed for pthread_exit to work\n");
-  }
+    {
+        struct unwind_link *unwind_link = __libc_unwind_link_get();
+        if (unwind_link == NULL)
+            __libc_fatal(LIBGCC_S_SO
+                         " must be installed for pthread_exit to work\n");
+    }
 
-  __do_cancel (value);
+    __do_cancel(value);
 }
-libc_hidden_def (__pthread_exit)
-weak_alias (__pthread_exit, pthread_exit)
+libc_hidden_def(__pthread_exit)
+weak_alias(__pthread_exit, pthread_exit)
 
 /* Ensure that the unwinder is always linked in (the __pthread_unwind
    reference from __do_cancel is weak).  Use ___pthread_unwind_next
    (three underscores) to produce a strong reference to the same
    file.  */
-PTHREAD_STATIC_FN_REQUIRE (___pthread_unwind_next)
+PTHREAD_STATIC_FN_REQUIRE(___pthread_unwind_next)

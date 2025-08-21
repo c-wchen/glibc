@@ -22,4 +22,4 @@
 #define TYPE       float
 #define FE_OPTION  FE_TOWARDZERO
 #include "s_nearestint_387_template.c"
-libm_alias_float (__trunc, trunc)
+libm_alias_float(__trunc, trunc)

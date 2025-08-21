@@ -22,13 +22,12 @@
    For connectionless socket types, just set the default address to send to
    and the only address from which to accept transmissions.
    Return 0 on success, -1 for errors.  */
-int
-__connect (int fd, __CONST_SOCKADDR_ARG addr, socklen_t len)
+int __connect(int fd, __CONST_SOCKADDR_ARG addr, socklen_t len)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-weak_alias (__connect, connect)
-libc_hidden_def (__connect)
+weak_alias(__connect, connect)
+libc_hidden_def(__connect)
 
-stub_warning (connect)
+stub_warning(connect)

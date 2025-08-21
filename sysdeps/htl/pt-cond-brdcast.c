@@ -21,28 +21,26 @@
 #include <pt-internal.h>
 
 /* Unblock all threads that are blocked on condition variable COND.  */
-int
-__pthread_cond_broadcast (pthread_cond_t *cond)
+int __pthread_cond_broadcast(pthread_cond_t *cond)
 {
-  struct __pthread *wakeup;
+    struct __pthread *wakeup;
 
-  __pthread_spin_wait (&cond->__lock);
-  while ((wakeup = cond->__queue))
-    {
-      __pthread_dequeue (wakeup);
-      __pthread_spin_unlock (&cond->__lock);
-      /* Wake it up without spin held, so it may have a chance to really
-         preempt us */
-      __pthread_wakeup (wakeup);
-      __pthread_spin_wait (&cond->__lock);
+    __pthread_spin_wait(&cond->__lock);
+    while ((wakeup = cond->__queue)) {
+        __pthread_dequeue(wakeup);
+        __pthread_spin_unlock(&cond->__lock);
+        /* Wake it up without spin held, so it may have a chance to really
+           preempt us */
+        __pthread_wakeup(wakeup);
+        __pthread_spin_wait(&cond->__lock);
     }
-  __pthread_spin_unlock (&cond->__lock);
+    __pthread_spin_unlock(&cond->__lock);
 
-  return 0;
+    return 0;
 }
-libc_hidden_def (__pthread_cond_broadcast)
-versioned_symbol (libc, __pthread_cond_broadcast, pthread_cond_broadcast, GLIBC_2_21);
+libc_hidden_def(__pthread_cond_broadcast)
+versioned_symbol(libc, __pthread_cond_broadcast, pthread_cond_broadcast, GLIBC_2_21);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_21)
-compat_symbol (libc, __pthread_cond_broadcast, pthread_cond_broadcast, GLIBC_2_12);
+compat_symbol(libc, __pthread_cond_broadcast, pthread_cond_broadcast, GLIBC_2_12);
 #endif

@@ -23,31 +23,32 @@
 #include <hurd.h>
 
 /* Return the time used by the program so far (user time + system time).  */
-clock_t
-clock (void)
+clock_t clock(void)
 {
-  struct task_basic_info bi;
-  struct task_thread_times_info tti;
-  mach_msg_type_number_t count;
-  clock_t total;
-  error_t err;
+    struct task_basic_info bi;
+    struct task_thread_times_info tti;
+    mach_msg_type_number_t count;
+    clock_t total;
+    error_t err;
 
-  count = TASK_BASIC_INFO_COUNT;
-  err = __task_info (__mach_task_self (), TASK_BASIC_INFO,
-		     (task_info_t) &bi, &count);
-  if (err)
-    return __hurd_fail (err);
+    count = TASK_BASIC_INFO_COUNT;
+    err = __task_info(__mach_task_self(), TASK_BASIC_INFO,
+                      (task_info_t) &bi, &count);
+    if (err) {
+        return __hurd_fail(err);
+    }
 
-  count = TASK_THREAD_TIMES_INFO_COUNT;
-  err = __task_info (__mach_task_self (), TASK_THREAD_TIMES_INFO,
-		     (task_info_t) &tti, &count);
-  if (err)
-    return __hurd_fail (err);
+    count = TASK_THREAD_TIMES_INFO_COUNT;
+    err = __task_info(__mach_task_self(), TASK_THREAD_TIMES_INFO,
+                      (task_info_t) &tti, &count);
+    if (err) {
+        return __hurd_fail(err);
+    }
 
-  total = bi.user_time.seconds * 1000000 + bi.user_time.microseconds;
-  total += tti.user_time.seconds * 1000000 + tti.user_time.microseconds;
-  total += bi.system_time.seconds * 1000000 + bi.system_time.microseconds;
-  total += tti.system_time.seconds * 1000000 + tti.system_time.microseconds;
+    total = bi.user_time.seconds * 1000000 + bi.user_time.microseconds;
+    total += tti.user_time.seconds * 1000000 + tti.user_time.microseconds;
+    total += bi.system_time.seconds * 1000000 + bi.system_time.microseconds;
+    total += tti.system_time.seconds * 1000000 + tti.system_time.microseconds;
 
-  return total;
+    return total;
 }

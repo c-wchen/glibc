@@ -21,23 +21,22 @@
 #endif
 
 #define NCCS 32
-struct termios
-  {
-    tcflag_t c_iflag;		/* input mode flags */
-    tcflag_t c_oflag;		/* output mode flags */
-    tcflag_t c_cflag;		/* control mode flags */
-    tcflag_t c_lflag;		/* local mode flags */
-    cc_t c_line;			/* line discipline */
-    cc_t c_cc[NCCS];		/* control characters */
+struct termios {
+    tcflag_t c_iflag;       /* input mode flags */
+    tcflag_t c_oflag;       /* output mode flags */
+    tcflag_t c_cflag;       /* control mode flags */
+    tcflag_t c_lflag;       /* local mode flags */
+    cc_t c_line;            /* line discipline */
+    cc_t c_cc[NCCS];        /* control characters */
     /* Input and output baud rates.  */
     __extension__ union {
-      speed_t __ispeed;
-      speed_t c_ispeed;
+        speed_t __ispeed;
+        speed_t c_ispeed;
     };
 #define _HAVE_STRUCT_TERMIOS_C_ISPEED 1
     __extension__ union {
-      speed_t __ospeed;
-      speed_t c_ospeed;
+        speed_t __ospeed;
+        speed_t c_ospeed;
     };
 #define _HAVE_STRUCT_TERMIOS_C_OSPEED 1
-  };
+};

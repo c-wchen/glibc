@@ -16,14 +16,14 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _DBG_LOG_H
-#define _DBG_LOG_H	1
+#define _DBG_LOG_H  1
 
 extern int debug_level;
 
-extern void dbg_log (const char *str, ...)
-     __attribute__ ((__format__ (__printf__, 1, 2)));;
+extern void dbg_log(const char *str, ...)
+__attribute__((__format__(__printf__, 1, 2)));;
 
-extern void set_logfile (const char *logfile);
-extern int init_logfile (void);
+extern void set_logfile(const char *logfile);
+extern int init_logfile(void);
 
 #endif

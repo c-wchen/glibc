@@ -26,35 +26,32 @@
 #define PAYLOAD_DIG 51
 #define EXPLICIT_MANT_DIG 52
 
-int
-FUNC (long double *x, long double payload)
+int FUNC(long double *x, long double payload)
 {
-  double hi, lo;
-  uint64_t hx, lx;
+    double hi, lo;
+    uint64_t hx, lx;
 
-  ldbl_unpack (payload, &hi, &lo);
-  EXTRACT_WORDS64 (hx, hi);
-  EXTRACT_WORDS64 (lx, lo);
-  int exponent = hx >> EXPLICIT_MANT_DIG;
-  /* Test if argument is (a) negative or too large; (b) too small,
-     except for 0 when allowed; (c) not an integer.  All valid
-     arguments have the low part zero.  */
-  if ((lx & 0x7fffffffffffffffULL) != 0
-      || exponent >= BIAS + PAYLOAD_DIG
-      || (exponent < BIAS && !(SET_HIGH_BIT && hx == 0))
-      || (hx & ((1ULL << (BIAS + EXPLICIT_MANT_DIG - exponent)) - 1)) != 0)
-    {
-      *x = 0.0L;
-      return 1;
+    ldbl_unpack(payload, &hi, &lo);
+    EXTRACT_WORDS64(hx, hi);
+    EXTRACT_WORDS64(lx, lo);
+    int exponent = hx >> EXPLICIT_MANT_DIG;
+    /* Test if argument is (a) negative or too large; (b) too small,
+       except for 0 when allowed; (c) not an integer.  All valid
+       arguments have the low part zero.  */
+    if ((lx & 0x7fffffffffffffffULL) != 0
+        || exponent >= BIAS + PAYLOAD_DIG
+        || (exponent < BIAS && !(SET_HIGH_BIT && hx == 0))
+        || (hx & ((1ULL << (BIAS + EXPLICIT_MANT_DIG - exponent)) - 1)) != 0) {
+        *x = 0.0L;
+        return 1;
     }
-  if (hx != 0)
-    {
-      hx &= (1ULL << EXPLICIT_MANT_DIG) - 1;
-      hx |= 1ULL << EXPLICIT_MANT_DIG;
-      hx >>= BIAS + EXPLICIT_MANT_DIG - exponent;
+    if (hx != 0) {
+        hx &= (1ULL << EXPLICIT_MANT_DIG) - 1;
+        hx |= 1ULL << EXPLICIT_MANT_DIG;
+        hx >>= BIAS + EXPLICIT_MANT_DIG - exponent;
     }
-  hx |= 0x7ff0000000000000ULL | (SET_HIGH_BIT ? 0x8000000000000ULL : 0);
-  INSERT_WORDS64 (hi, hx);
-  *x = ldbl_pack (hi, 0.0);
-  return 0;
+    hx |= 0x7ff0000000000000ULL | (SET_HIGH_BIT ? 0x8000000000000ULL : 0);
+    INSERT_WORDS64(hi, hx);
+    *x = ldbl_pack(hi, 0.0);
+    return 0;
 }

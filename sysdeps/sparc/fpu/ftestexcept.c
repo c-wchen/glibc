@@ -19,13 +19,12 @@
 #include <fenv.h>
 #include <fenv_private.h>
 
-int
-fetestexcept (int excepts)
+int fetestexcept(int excepts)
 {
-  fenv_t tmp;
+    fenv_t tmp;
 
-  __fenv_stfsr (tmp);
+    __fenv_stfsr(tmp);
 
-  return tmp & excepts & FE_ALL_EXCEPT;
+    return tmp & excepts & FE_ALL_EXCEPT;
 }
-libm_hidden_def (fetestexcept)
+libm_hidden_def(fetestexcept)

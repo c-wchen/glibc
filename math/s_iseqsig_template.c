@@ -23,20 +23,20 @@
 #include <fix-fp-int-compare-invalid.h>
 
 int
-M_DECL_FUNC (__iseqsig) (FLOAT x, FLOAT y)
+M_DECL_FUNC(__iseqsig)(FLOAT x, FLOAT y)
 {
-  /* Comparing <= and >= is sufficient to determine both whether X and
-     Y are equal, and whether they are unordered, while raising the
-     "invalid" exception if they are unordered.  */
-  bool cmp1 = x <= y;
-  bool cmp2 = x >= y;
-  if (cmp1 && cmp2)
-    return 1;
-  else if (!cmp1 && !cmp2)
-    {
-      if (FIX_COMPARE_INVALID)
-	__feraiseexcept (FE_INVALID);
-      __set_errno (EDOM);
+    /* Comparing <= and >= is sufficient to determine both whether X and
+       Y are equal, and whether they are unordered, while raising the
+       "invalid" exception if they are unordered.  */
+    bool cmp1 = x <= y;
+    bool cmp2 = x >= y;
+    if (cmp1 && cmp2) {
+        return 1;
+    } else if (!cmp1 && !cmp2) {
+        if (FIX_COMPARE_INVALID) {
+            __feraiseexcept(FE_INVALID);
+        }
+        __set_errno(EDOM);
     }
-  return 0;
+    return 0;
 }

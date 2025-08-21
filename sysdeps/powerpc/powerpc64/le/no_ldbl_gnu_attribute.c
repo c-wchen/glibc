@@ -23,8 +23,7 @@ long double _not_used;
 
 /* Some older GCC versions need a little more convincing to
    generate .gnu.attributes.  */
-double
-foo (double d)
+double foo(double d)
 {
-  return d;
+    return d;
 }

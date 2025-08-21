@@ -17,17 +17,16 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _BITS_TYPES_STRUCT___PTHREAD_CONDATTR
-#define _BITS_TYPES_STRUCT___PTHREAD_CONDATTR	1
+#define _BITS_TYPES_STRUCT___PTHREAD_CONDATTR   1
 
 #include <bits/types.h>
 
 enum __pthread_process_shared;
 
 /* User visible part of a condition attribute variable.  */
-struct __pthread_condattr
-{
-  enum __pthread_process_shared __pshared;
-  __clockid_t __clock;
+struct __pthread_condattr {
+    enum __pthread_process_shared __pshared;
+    __clockid_t __clock;
 };
 
 #endif /* bits/types/struct___pthread_condattr.h */

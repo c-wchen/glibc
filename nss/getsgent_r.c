@@ -18,15 +18,15 @@
 #include <gshadow.h>
 
 
-#define LOOKUP_TYPE		struct sgrp
-#define SETFUNC_NAME		setsgent
-#define	GETFUNC_NAME		getsgent
-#define	ENDFUNC_NAME		endsgent
-#define DATABASE_NAME		gshadow
-#define BUFLEN			1024
-#define NO_COMPAT_NEEDED	1
+#define LOOKUP_TYPE     struct sgrp
+#define SETFUNC_NAME        setsgent
+#define GETFUNC_NAME        getsgent
+#define ENDFUNC_NAME        endsgent
+#define DATABASE_NAME       gshadow
+#define BUFLEN          1024
+#define NO_COMPAT_NEEDED    1
 
 /* There is no nscd support for the shadow file.  */
-#undef	USE_NSCD
+#undef  USE_NSCD
 
 #include "../nss/getXXent_r.c"

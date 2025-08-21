@@ -19,89 +19,88 @@
 #include <libc-misc.h>
 #include <sys/platform/x86.h>
 
-enum isa
-{
-  none,
-  sse2,
-  sse4_2,
-  avx,
-  avx2,
-  avx512f
+enum isa {
+    none,
+    sse2,
+    sse4_2,
+    avx,
+    avx2,
+    avx512f
 };
 
 enum isa
-test_inhibit_stack_protector
-get_isa (void)
+test_inhibit_stack_protector get_isa(void) {
+    if (CPU_FEATURE_ACTIVE(AVX512F))
+    {
+        return avx512f;
+    }
+    if (CPU_FEATURE_ACTIVE(AVX2))
+    {
+        return avx2;
+    }
+    if (CPU_FEATURE_ACTIVE(AVX))
+    {
+        return avx;
+    }
+    if (CPU_FEATURE_ACTIVE(SSE4_2))
+    {
+        return sse4_2;
+    }
+    if (CPU_FEATURE_ACTIVE(SSE2))
+    {
+        return sse2;
+    }
+    return none;
+}
+
+static int isa_sse2(void)
 {
-  if (CPU_FEATURE_ACTIVE (AVX512F))
-    return avx512f;
-  if (CPU_FEATURE_ACTIVE (AVX2))
-    return avx2;
-  if (CPU_FEATURE_ACTIVE (AVX))
-    return avx;
-  if (CPU_FEATURE_ACTIVE (SSE4_2))
-    return sse4_2;
-  if (CPU_FEATURE_ACTIVE (SSE2))
     return sse2;
-  return none;
 }
 
-static int
-isa_sse2 (void)
+static int isa_sse4_2(void)
 {
-  return sse2;
+    return sse4_2;
 }
 
-static int
-isa_sse4_2 (void)
+static int isa_avx(void)
 {
-  return sse4_2;
+    return avx;
 }
 
-static int
-isa_avx (void)
+static int isa_avx2(void)
 {
-  return avx;
+    return avx2;
 }
 
-static int
-isa_avx2 (void)
+static int isa_avx512f(void)
 {
-  return avx2;
+    return avx512f;
 }
 
-static int
-isa_avx512f (void)
+static int isa_none(void)
 {
-  return avx512f;
+    return none;
 }
 
-static int
-isa_none (void)
-{
-  return none;
-}
-
-int foo (void) __attribute__ ((ifunc ("foo_ifunc")));
+int foo(void) __attribute__((ifunc("foo_ifunc")));
 
 void *
-test_inhibit_stack_protector
-foo_ifunc (void)
+test_inhibit_stack_protector foo_ifunc(void)
 {
-  switch (get_isa ())
-    {
-    case avx512f:
-      return isa_avx512f;
-    case avx2:
-      return isa_avx2;
-    case avx:
-      return isa_avx;
-    case sse4_2:
-      return isa_sse4_2;
-    case sse2:
-      return isa_sse2;
-    default:
-      break;
+    switch (get_isa()) {
+        case avx512f:
+            return isa_avx512f;
+        case avx2:
+            return isa_avx2;
+        case avx:
+            return isa_avx;
+        case sse4_2:
+            return isa_sse4_2;
+        case sse2:
+            return isa_sse2;
+        default:
+            break;
     }
-  return isa_none;
+    return isa_none;
 }

@@ -27,37 +27,35 @@
 #define SIZE 4096
 
 /* Wrap free with a function to prevent gcc from optimizing it out.  */
-static void
-__attribute__((noinline))
-call_free (void *ptr)
+static void __attribute__((noinline))
+call_free(void *ptr)
 {
-  free (ptr);
+    free(ptr);
 #if __GNUC_PREREQ (12, 0)
-  /* Ignore a valid warning about using a pointer made indeterminate
-     by a prior call to free().  */
-  DIAG_IGNORE_NEEDS_COMMENT (12, "-Wuse-after-free");
+    /* Ignore a valid warning about using a pointer made indeterminate
+       by a prior call to free().  */
+    DIAG_IGNORE_NEEDS_COMMENT(12, "-Wuse-after-free");
 #endif
-  *(size_t *)(ptr - sizeof (size_t)) = 1;
+    *(size_t *)(ptr - sizeof(size_t)) = 1;
 #if __GNUC_PREREQ (12, 0)
-  DIAG_POP_NEEDS_COMMENT;
+    DIAG_POP_NEEDS_COMMENT;
 #endif
 }
 
-int
-do_test (void)
+int do_test(void)
 {
-  void *ptr1 = malloc (SIZE);
-  void *ptr2 = malloc (SIZE);
+    void *ptr1 = malloc(SIZE);
+    void *ptr2 = malloc(SIZE);
 
-  /* Avoid unwanted output to TTY after an expected memory corruption.  */
-  ignore_stderr();
+    /* Avoid unwanted output to TTY after an expected memory corruption.  */
+    ignore_stderr();
 
-  call_free (ptr1);
-  ptr1 = malloc (SIZE);
+    call_free(ptr1);
+    ptr1 = malloc(SIZE);
 
-  /* Not reached.  The return statement is to put ptr2 into use so that gcc
-     doesn't optimize out that malloc call.  */
-  return (ptr1 == ptr2);
+    /* Not reached.  The return statement is to put ptr2 into use so that gcc
+       doesn't optimize out that malloc call.  */
+    return (ptr1 == ptr2);
 }
 
 #define EXPECTED_SIGNAL SIGABRT

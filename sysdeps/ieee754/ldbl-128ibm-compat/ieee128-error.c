@@ -26,26 +26,26 @@
 #define IEEE128_DECL(name) ___ieee128_##name
 
 void
-IEEE128_DECL (error) (int status, int errnum, const char *message, ...)
+IEEE128_DECL(error)(int status, int errnum, const char *message, ...)
 {
-  va_list ap;
-  va_start (ap, message);
-  __error_internal (status, errnum, message, ap,
-		    PRINTF_LDBL_USES_FLOAT128);
-  va_end (ap);
+    va_list ap;
+    va_start(ap, message);
+    __error_internal(status, errnum, message, ap,
+                     PRINTF_LDBL_USES_FLOAT128);
+    va_end(ap);
 }
-IEEE128_ALIAS (error)
+IEEE128_ALIAS(error)
 
 void
-IEEE128_DECL (error_at_line) (int status, int errnum,
-			      const char *file_name,
-			      unsigned int line_number,
-			      const char *message, ...)
+IEEE128_DECL(error_at_line)(int status, int errnum,
+                            const char *file_name,
+                            unsigned int line_number,
+                            const char *message, ...)
 {
-  va_list ap;
-  va_start (ap, message);
-  __error_at_line_internal (status, errnum, file_name, line_number,
-			    message, ap, PRINTF_LDBL_USES_FLOAT128);
-  va_end (ap);
+    va_list ap;
+    va_start(ap, message);
+    __error_at_line_internal(status, errnum, file_name, line_number,
+                             message, ap, PRINTF_LDBL_USES_FLOAT128);
+    va_end(ap);
 }
-IEEE128_ALIAS (error_at_line)
+IEEE128_ALIAS(error_at_line)

@@ -19,22 +19,21 @@
 #include <time.h>
 #include <support/check.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  {
-    struct timespec ts;
-    TEST_COMPARE (timespec_get (&ts, 0), 0);
-  }
+    {
+        struct timespec ts;
+        TEST_COMPARE(timespec_get(&ts, 0), 0);
+    }
 
-  {
-    struct timespec ts;
-    TEST_COMPARE (timespec_get (&ts, TIME_UTC), TIME_UTC);
-    TEST_VERIFY (ts.tv_nsec >= 0);
-    TEST_VERIFY (ts.tv_nsec < 1000000000);
-  }
+    {
+        struct timespec ts;
+        TEST_COMPARE(timespec_get(&ts, TIME_UTC), TIME_UTC);
+        TEST_VERIFY(ts.tv_nsec >= 0);
+        TEST_VERIFY(ts.tv_nsec < 1000000000);
+    }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

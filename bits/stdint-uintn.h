@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _BITS_STDINT_UINTN_H
-#define _BITS_STDINT_UINTN_H	1
+#define _BITS_STDINT_UINTN_H    1
 
 #include <bits/types.h>
 

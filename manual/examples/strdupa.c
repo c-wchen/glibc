@@ -21,16 +21,14 @@
 
 const char path[] = _PATH_STDPATH;
 
-int
-main (void)
+int main(void)
 {
-  char *wr_path = strdupa (path);
-  char *cp = strtok (wr_path, ":");
+    char *wr_path = strdupa(path);
+    char *cp = strtok(wr_path, ":");
 
-  while (cp != NULL)
-    {
-      puts (cp);
-      cp = strtok (NULL, ":");
+    while (cp != NULL) {
+        puts(cp);
+        cp = strtok(NULL, ":");
     }
-  return 0;
+    return 0;
 }

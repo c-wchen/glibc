@@ -23,7 +23,11 @@
 #include <lowlevellock.h>
 
 
-typedef struct { int lock; int cnt; void *owner; } _IO_lock_t;
+typedef struct {
+    int lock;
+    int cnt;
+    void *owner;
+} _IO_lock_t;
 #define _IO_lock_t_defined 1
 
 #define _IO_lock_initializer { LLL_LOCK_INITIALIZER, 0, NULL }
@@ -35,52 +39,52 @@ typedef struct { int lock; int cnt; void *owner; } _IO_lock_t;
   ((void) 0)
 
 #define _IO_lock_lock(_name) \
-  do {									      \
-    void *__self = THREAD_SELF;						      \
-    if (SINGLE_THREAD_P && (_name).owner == NULL)			      \
-      {									      \
-	(_name).lock = LLL_LOCK_INITIALIZER_LOCKED;			      \
-	(_name).owner = __self;						      \
-      }									      \
-    else if ((_name).owner != __self)					      \
-      {									      \
-	lll_lock ((_name).lock, LLL_PRIVATE);				      \
-	(_name).owner = __self;						      \
-      }									      \
-    else								      \
-      ++(_name).cnt;							      \
+  do {                                        \
+    void *__self = THREAD_SELF;                           \
+    if (SINGLE_THREAD_P && (_name).owner == NULL)                 \
+      {                                       \
+    (_name).lock = LLL_LOCK_INITIALIZER_LOCKED;               \
+    (_name).owner = __self;                           \
+      }                                       \
+    else if ((_name).owner != __self)                         \
+      {                                       \
+    lll_lock ((_name).lock, LLL_PRIVATE);                     \
+    (_name).owner = __self;                           \
+      }                                       \
+    else                                      \
+      ++(_name).cnt;                                  \
   } while (0)
 
 #define _IO_lock_trylock(_name) \
-  ({									      \
-    int __result = 0;							      \
-    void *__self = THREAD_SELF;						      \
-    if ((_name).owner != __self)					      \
-      {									      \
-        if (lll_trylock ((_name).lock) == 0)				      \
-	  (_name).owner = __self;					      \
-        else								      \
-          __result = EBUSY;						      \
-      }									      \
-    else								      \
-      ++(_name).cnt;							      \
-    __result;								      \
+  ({                                          \
+    int __result = 0;                                 \
+    void *__self = THREAD_SELF;                           \
+    if ((_name).owner != __self)                          \
+      {                                       \
+        if (lll_trylock ((_name).lock) == 0)                      \
+      (_name).owner = __self;                         \
+        else                                      \
+          __result = EBUSY;                           \
+      }                                       \
+    else                                      \
+      ++(_name).cnt;                                  \
+    __result;                                     \
   })
 
 #define _IO_lock_unlock(_name) \
-  do {									      \
-    if (SINGLE_THREAD_P && (_name).cnt == 0)				      \
-      {									      \
-	(_name).owner = NULL;						      \
-	(_name).lock = 0;						      \
-      }									      \
-    else if ((_name).cnt == 0)						      \
-      {									      \
-	(_name).owner = NULL;						      \
-	lll_unlock ((_name).lock, LLL_PRIVATE);				      \
-      }									      \
-    else								      \
-      --(_name).cnt;							      \
+  do {                                        \
+    if (SINGLE_THREAD_P && (_name).cnt == 0)                      \
+      {                                       \
+    (_name).owner = NULL;                             \
+    (_name).lock = 0;                             \
+      }                                       \
+    else if ((_name).cnt == 0)                            \
+      {                                       \
+    (_name).owner = NULL;                             \
+    lll_unlock ((_name).lock, LLL_PRIVATE);                   \
+      }                                       \
+    else                                      \
+      --(_name).cnt;                                  \
   } while (0)
 
 
@@ -96,10 +100,10 @@ typedef struct { int lock; int cnt; void *owner; } _IO_lock_t;
 
 # ifdef __EXCEPTIONS
 #  define _IO_acquire_lock(_fp) \
-  do {									      \
-    FILE *_IO_acquire_lock_file						      \
-	__attribute__((cleanup (_IO_acquire_lock_fct)))			      \
-	= (_fp);							      \
+  do {                                        \
+    FILE *_IO_acquire_lock_file                           \
+    __attribute__((cleanup (_IO_acquire_lock_fct)))               \
+    = (_fp);                                  \
     _IO_flockfile (_IO_acquire_lock_file);
 # else
 #  define _IO_acquire_lock(_fp) _IO_acquire_lock_needs_exceptions_enabled

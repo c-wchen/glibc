@@ -37,87 +37,81 @@ static pthread_barrier_t bar_ctor_finish;
 static pthread_barrier_t bar_dtor;
 static pthread_mutex_t user_lock = PTHREAD_MUTEX_INITIALIZER;
 
-void
-ctor (void)
+void ctor(void)
 {
-  xpthread_barrier_wait (&bar_ctor);
-  dprintf (1, "thread 1: in ctor: started.\n");
-  xpthread_mutex_lock (&user_lock);
-  dprintf (1, "thread 1: in ctor: locked user_lock.\n");
-  xpthread_mutex_unlock (&user_lock);
-  dprintf (1, "thread 1: in ctor: unlocked user_lock.\n");
-  dprintf (1, "thread 1: in ctor: done.\n");
-  xpthread_barrier_wait (&bar_ctor_finish);
+    xpthread_barrier_wait(&bar_ctor);
+    dprintf(1, "thread 1: in ctor: started.\n");
+    xpthread_mutex_lock(&user_lock);
+    dprintf(1, "thread 1: in ctor: locked user_lock.\n");
+    xpthread_mutex_unlock(&user_lock);
+    dprintf(1, "thread 1: in ctor: unlocked user_lock.\n");
+    dprintf(1, "thread 1: in ctor: done.\n");
+    xpthread_barrier_wait(&bar_ctor_finish);
 }
 
-void
-dtor (void)
+void dtor(void)
 {
-  xpthread_barrier_wait (&bar_dtor);
-  dprintf (1, "thread 1: in dtor: started.\n");
-  xpthread_mutex_lock (&user_lock);
-  dprintf (1, "thread 1: in dtor: locked user_lock.\n");
-  xpthread_mutex_unlock (&user_lock);
-  dprintf (1, "thread 1: in dtor: unlocked user_lock.\n");
-  dprintf (1, "thread 1: in dtor: done.\n");
+    xpthread_barrier_wait(&bar_dtor);
+    dprintf(1, "thread 1: in dtor: started.\n");
+    xpthread_mutex_lock(&user_lock);
+    dprintf(1, "thread 1: in dtor: locked user_lock.\n");
+    xpthread_mutex_unlock(&user_lock);
+    dprintf(1, "thread 1: in dtor: unlocked user_lock.\n");
+    dprintf(1, "thread 1: in dtor: done.\n");
 }
 
-static void *
-thread3 (void *a)
+static void *thread3(void *a)
 {
-  dprintf (1, "thread 3: started.\n");
-  dprintf (1, "thread 3: done.\n");
-  return 0;
+    dprintf(1, "thread 3: started.\n");
+    dprintf(1, "thread 3: done.\n");
+    return 0;
 }
 
-static void *
-thread2 (void *a)
+static void *thread2(void *a)
 {
-  pthread_t t3;
-  dprintf (1, "thread 2: started.\n");
+    pthread_t t3;
+    dprintf(1, "thread 2: started.\n");
 
-  xpthread_mutex_lock (&user_lock);
-  dprintf (1, "thread 2: locked user_lock.\n");
-  xpthread_barrier_wait (&bar_ctor);
-  t3 = xpthread_create (0, thread3, 0);
-  xpthread_mutex_unlock (&user_lock);
-  dprintf (1, "thread 2: unlocked user_lock.\n");
-  xpthread_join (t3);
-  xpthread_barrier_wait (&bar_ctor_finish);
+    xpthread_mutex_lock(&user_lock);
+    dprintf(1, "thread 2: locked user_lock.\n");
+    xpthread_barrier_wait(&bar_ctor);
+    t3 = xpthread_create(0, thread3, 0);
+    xpthread_mutex_unlock(&user_lock);
+    dprintf(1, "thread 2: unlocked user_lock.\n");
+    xpthread_join(t3);
+    xpthread_barrier_wait(&bar_ctor_finish);
 
-  xpthread_mutex_lock (&user_lock);
-  dprintf (1, "thread 2: locked user_lock.\n");
-  xpthread_barrier_wait (&bar_dtor);
-  t3 = xpthread_create (0, thread3, 0);
-  xpthread_mutex_unlock (&user_lock);
-  dprintf (1, "thread 2: unlocked user_lock.\n");
-  xpthread_join (t3);
+    xpthread_mutex_lock(&user_lock);
+    dprintf(1, "thread 2: locked user_lock.\n");
+    xpthread_barrier_wait(&bar_dtor);
+    t3 = xpthread_create(0, thread3, 0);
+    xpthread_mutex_unlock(&user_lock);
+    dprintf(1, "thread 2: unlocked user_lock.\n");
+    xpthread_join(t3);
 
-  dprintf (1, "thread 2: done.\n");
-  return 0;
+    dprintf(1, "thread 2: done.\n");
+    return 0;
 }
 
-static void
-thread1 (void)
+static void thread1(void)
 {
-  dprintf (1, "thread 1: started.\n");
-  xpthread_barrier_init (&bar_ctor, NULL, 2);
-  xpthread_barrier_init (&bar_ctor_finish, NULL, 2);
-  xpthread_barrier_init (&bar_dtor, NULL, 2);
-  pthread_t t2 = xpthread_create (0, thread2, 0);
-  void *p = xdlopen ("tst-create1mod.so", RTLD_NOW | RTLD_GLOBAL);
-  dprintf (1, "thread 1: dlopen done.\n");
-  xdlclose (p);
-  dprintf (1, "thread 1: dlclose done.\n");
-  xpthread_join (t2);
-  dprintf (1, "thread 1: done.\n");
+    dprintf(1, "thread 1: started.\n");
+    xpthread_barrier_init(&bar_ctor, NULL, 2);
+    xpthread_barrier_init(&bar_ctor_finish, NULL, 2);
+    xpthread_barrier_init(&bar_dtor, NULL, 2);
+    pthread_t t2 = xpthread_create(0, thread2, 0);
+    void *p = xdlopen("tst-create1mod.so", RTLD_NOW | RTLD_GLOBAL);
+    dprintf(1, "thread 1: dlopen done.\n");
+    xdlclose(p);
+    dprintf(1, "thread 1: dlclose done.\n");
+    xpthread_join(t2);
+    dprintf(1, "thread 1: done.\n");
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  thread1 ();
-  return 0;
+    thread1();
+    return 0;
 }
 
 #include <support/test-driver.c>

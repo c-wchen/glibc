@@ -24,25 +24,24 @@
 #include <support/xunistd.h>
 #include <unistd.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* The test below assumes that pvalloc rounds up the allocation size
-     to at least 8.  */
-  TEST_VERIFY (xsysconf (_SC_PAGESIZE) >= 8);
+    /* The test below assumes that pvalloc rounds up the allocation size
+       to at least 8.  */
+    TEST_VERIFY(xsysconf(_SC_PAGESIZE) >= 8);
 
-  void *p = pvalloc (5);
-  TEST_VERIFY_EXIT (p != NULL);
+    void *p = pvalloc(5);
+    TEST_VERIFY_EXIT(p != NULL);
 
-  /* This is valid assuming the page size is at least 8 because
-     pvalloc rounds up the allocation size to a multiple of the page
-     size.  Due to bug 25041, this used to trigger a compiler
-     warning.  */
-  strcpy (p, "abcdefg");
+    /* This is valid assuming the page size is at least 8 because
+       pvalloc rounds up the allocation size to a multiple of the page
+       size.  Due to bug 25041, this used to trigger a compiler
+       warning.  */
+    strcpy(p, "abcdefg");
 
-  asm ("" : : "g" (p) : "memory"); /* Optimization barrier.  */
-  TEST_VERIFY (malloc_usable_size (p) >= xsysconf (_SC_PAGESIZE));
-  return 0;
+    asm("" : : "g"(p) : "memory");   /* Optimization barrier.  */
+    TEST_VERIFY(malloc_usable_size(p) >= xsysconf(_SC_PAGESIZE));
+    return 0;
 }
 
 #include <support/test-driver.c>

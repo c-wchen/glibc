@@ -19,7 +19,7 @@
 #include <stdbit.h>
 
 unsigned long int
-(stdc_bit_ceil_ul) (unsigned long int x)
+(stdc_bit_ceil_ul)(unsigned long int x)
 {
-  return stdc_bit_ceil_ul (x);
+    return stdc_bit_ceil_ul(x);
 }

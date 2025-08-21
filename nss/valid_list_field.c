@@ -23,13 +23,14 @@ static const char invalid_characters[] = NSS_INVALID_FIELD_CHARACTERS ",";
 
 /* Check that all list members match the field syntax requirements and
    do not contain the character ','.  */
-_Bool
-__nss_valid_list_field (char **list)
+_Bool __nss_valid_list_field(char **list)
 {
-  if (list == NULL)
+    if (list == NULL) {
+        return true;
+    }
+    for (; *list != NULL; ++list)
+        if (strpbrk(*list, invalid_characters) != NULL) {
+            return false;
+        }
     return true;
-  for (; *list != NULL; ++list)
-    if (strpbrk (*list, invalid_characters) != NULL)
-      return false;
-  return true;
 }

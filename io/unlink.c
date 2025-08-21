@@ -21,18 +21,16 @@
 
 
 /* Remove the link named NAME.  */
-int
-__unlink (const char *name)
+int __unlink(const char *name)
 {
-  if (name == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (name == NULL) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (unlink)
+stub_warning(unlink)
 
-weak_alias (__unlink, unlink)
+weak_alias(__unlink, unlink)

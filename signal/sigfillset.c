@@ -21,17 +21,15 @@
 #include <sigsetops.h>
 
 /* Set all signals in SET.  */
-int
-sigfillset (sigset_t *set)
+int sigfillset(sigset_t *set)
 {
-  if (set == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (set == NULL) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  __sigfillset (set);
-  clear_internal_signals (set);
-  return 0;
+    __sigfillset(set);
+    clear_internal_signals(set);
+    return 0;
 }
-libc_hidden_def (sigfillset)
+libc_hidden_def(sigfillset)

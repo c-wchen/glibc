@@ -25,21 +25,21 @@
 
 #include <locale.h>
 
-extern float ____strtof_l_internal (const char *, char **, int, locale_t);
+extern float ____strtof_l_internal(const char *, char **, int, locale_t);
 
-#define	FLOAT		float
-#define	FLT		FLT
+#define FLOAT       float
+#define FLT     FLT
 #ifdef USE_WIDE_CHAR
-# define STRTOF		wcstof_l
-# define __STRTOF	__wcstof_l
-# define STRTOF_NAN	__wcstof_nan
+# define STRTOF     wcstof_l
+# define __STRTOF   __wcstof_l
+# define STRTOF_NAN __wcstof_nan
 #else
-# define STRTOF		strtof_l
-# define __STRTOF	__strtof_l
-# define STRTOF_NAN	__strtof_nan
+# define STRTOF     strtof_l
+# define __STRTOF   __strtof_l
+# define STRTOF_NAN __strtof_nan
 #endif
-#define	MPN2FLOAT	__mpn_construct_float
-#define	FLOAT_HUGE_VAL	HUGE_VALF
+#define MPN2FLOAT   __mpn_construct_float
+#define FLOAT_HUGE_VAL  HUGE_VALF
 
 #include "strtod_l.c"
 
@@ -47,8 +47,8 @@ extern float ____strtof_l_internal (const char *, char **, int, locale_t);
 # undef strtof32_l
 # undef wcstof32_l
 # ifdef USE_WIDE_CHAR
-weak_alias (wcstof_l, wcstof32_l)
+weak_alias(wcstof_l, wcstof32_l)
 # else
-weak_alias (strtof_l, strtof32_l)
+weak_alias(strtof_l, strtof32_l)
 # endif
 #endif

@@ -20,19 +20,17 @@
 #include <errno.h>
 #include <sys/mman.h>
 
-int
-__pkey_set (int key, unsigned int rights)
+int __pkey_set(int key, unsigned int rights)
 {
-  if (key < 0 || key > 15 || rights > 3)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (key < 0 || key > 15 || rights > 3) {
+        __set_errno(EINVAL);
+        return -1;
     }
-  unsigned int mask = 3 << (2 * key);
-  unsigned int pkru = pkey_read ();
-  pkru = (pkru & ~mask) | (rights << (2 * key));
-  pkey_write (pkru);
-  return 0;
+    unsigned int mask = 3 << (2 * key);
+    unsigned int pkru = pkey_read();
+    pkru = (pkru & ~mask) | (rights << (2 * key));
+    pkey_write(pkru);
+    return 0;
 }
-libc_hidden_def (__pkey_set)
-weak_alias (__pkey_set, pkey_set)
+libc_hidden_def(__pkey_set)
+weak_alias(__pkey_set, pkey_set)

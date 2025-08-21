@@ -24,9 +24,9 @@
 #endif
 
 /* Minimum stack size for a signal handler.  */
-#define MINSIGSTKSZ	2048
+#define MINSIGSTKSZ 2048
 
 /* System default stack size.  */
-#define SIGSTKSZ	8192
+#define SIGSTKSZ    8192
 
 #endif /* bits/sigstack.h */

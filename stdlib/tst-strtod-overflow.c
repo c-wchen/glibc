@@ -25,27 +25,24 @@
 #define EXPONENT "e-2147483649"
 #define SIZE 214748364
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  struct support_blob_repeat repeat = support_blob_repeat_allocate
-    ("0", 1, 1 + SIZE + sizeof (EXPONENT));
-  if (repeat.size == 0)
-    {
-      puts ("warning: memory allocation failed, cannot test for overflow");
-      return EXIT_UNSUPPORTED;
+    struct support_blob_repeat repeat = support_blob_repeat_allocate
+                                        ("0", 1, 1 + SIZE + sizeof(EXPONENT));
+    if (repeat.size == 0) {
+        puts("warning: memory allocation failed, cannot test for overflow");
+        return EXIT_UNSUPPORTED;
     }
-  char *p = repeat.start;
-  p[0] = '1';
-  memcpy (p + 1 + SIZE, EXPONENT, sizeof (EXPONENT));
-  double d = strtod (p, NULL);
-  if (d != 0)
-    {
-      printf ("error: strtod returned wrong value: %a\n", d);
-      return 1;
+    char *p = repeat.start;
+    p[0] = '1';
+    memcpy(p + 1 + SIZE, EXPONENT, sizeof(EXPONENT));
+    double d = strtod(p, NULL);
+    if (d != 0) {
+        printf("error: strtod returned wrong value: %a\n", d);
+        return 1;
     }
-  support_blob_repeat_free (&repeat);
-  return 0;
+    support_blob_repeat_free(&repeat);
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

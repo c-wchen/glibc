@@ -1,6 +1,5 @@
-extern void c_function (void);
+extern void c_function(void);
 
-void
-c_function (void)
+void c_function(void)
 {
 }

@@ -18,8 +18,7 @@
 
 #include <ldsodefs.h>
 
-const struct cpu_features *
-_dl_larch_get_cpu_features (void)
+const struct cpu_features *_dl_larch_get_cpu_features(void)
 {
-  return &GLRO(dl_larch_cpu_features);
+    return &GLRO(dl_larch_cpu_features);
 }

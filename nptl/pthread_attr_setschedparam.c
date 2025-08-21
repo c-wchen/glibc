@@ -20,23 +20,23 @@
 #include "pthreadP.h"
 
 
-int
-__pthread_attr_setschedparam (pthread_attr_t *attr,
-			      const struct sched_param *param)
+int __pthread_attr_setschedparam(pthread_attr_t *attr,
+                                 const struct sched_param *param)
 {
-  struct pthread_attr *iattr = (struct pthread_attr *) attr;
+    struct pthread_attr *iattr = (struct pthread_attr *) attr;
 
-  int ret = check_sched_priority_attr (param->sched_priority,
-				       iattr->schedpolicy);
-  if (ret)
-    return ret;
+    int ret = check_sched_priority_attr(param->sched_priority,
+                                        iattr->schedpolicy);
+    if (ret) {
+        return ret;
+    }
 
-  /* Copy the new values.  */
-  memcpy (&iattr->schedparam, param, sizeof (struct sched_param));
+    /* Copy the new values.  */
+    memcpy(&iattr->schedparam, param, sizeof(struct sched_param));
 
-  /* Remember we set the value.  */
-  iattr->flags |= ATTR_FLAG_SCHED_SET;
+    /* Remember we set the value.  */
+    iattr->flags |= ATTR_FLAG_SCHED_SET;
 
-  return 0;
+    return 0;
 }
-strong_alias (__pthread_attr_setschedparam, pthread_attr_setschedparam)
+strong_alias(__pthread_attr_setschedparam, pthread_attr_setschedparam)

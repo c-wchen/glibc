@@ -19,28 +19,27 @@
 #include <netdb.h>
 #include <nss.h>
 
-#define ENTNAME		protoent
-#define DATABASE	"protocols"
+#define ENTNAME     protoent
+#define DATABASE    "protocols"
 
 struct protoent_data {};
 
-#define TRAILING_LIST_MEMBER		p_aliases
-#define TRAILING_LIST_SEPARATOR_P	isspace
+#define TRAILING_LIST_MEMBER        p_aliases
+#define TRAILING_LIST_SEPARATOR_P   isspace
 #include "files-parse.c"
 LINE_PARSER
 ("#",
- STRING_FIELD (result->p_name, isspace, 1);
- INT_FIELD (result->p_proto, isspace, 1, 10,);
- )
+ STRING_FIELD(result->p_name, isspace, 1);
+ INT_FIELD(result->p_proto, isspace, 1, 10,);
+)
 
 #include GENERIC
 
-DB_LOOKUP (protobyname, '.', 0, ("%s", name),
-	   LOOKUP_NAME (p_name, p_aliases),
-	   const char *name)
+DB_LOOKUP(protobyname, '.', 0, ("%s", name),
+          LOOKUP_NAME(p_name, p_aliases),
+          const char *name)
 
-DB_LOOKUP (protobynumber, '=', 20, ("%zd", (ssize_t) proto),
-	   {
-	     if (result->p_proto == proto)
-	       break;
-	   }, int proto)
+DB_LOOKUP(protobynumber, '=', 20, ("%zd", (ssize_t) proto), {
+    if (result->p_proto == proto)
+        break;
+}, int proto)

@@ -19,12 +19,11 @@
 #include <sys/statfs.h>
 
 /* Return information about the filesystem on which FILE resides.  */
-int
-__statfs64 (const char *file, struct statfs64 *buf)
+int __statfs64(const char *file, struct statfs64 *buf)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-weak_alias (__statfs64, statfs64)
+weak_alias(__statfs64, statfs64)
 
-stub_warning (statfs64)
+stub_warning(statfs64)

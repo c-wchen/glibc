@@ -16,13 +16,12 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-int *x (void);
+int *x(void);
 
-int
-do_test (void)
+int do_test(void)
 {
-  x ();
-  return 0;
+    x();
+    return 0;
 }
 
 #include <support/test-driver.c>

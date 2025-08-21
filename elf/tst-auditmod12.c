@@ -22,22 +22,19 @@
 #include <string.h>
 #include <unistd.h>
 
-unsigned int
-la_version (unsigned int version)
+unsigned int la_version(unsigned int version)
 {
-  return version;
+    return version;
 }
 
-char *
-la_objsearch (const char *name, uintptr_t *cookie, unsigned int flag)
+char *la_objsearch(const char *name, uintptr_t *cookie, unsigned int flag)
 {
-  const char target[] = "tst-audit12mod2.so";
+    const char target[] = "tst-audit12mod2.so";
 
-  size_t namelen = strlen (name);
-  if (namelen >= sizeof (target) - 1
-      && strcmp (name + namelen - (sizeof (target) - 1), target) == 0)
-    {
-      return (char *) "$ORIGIN/tst-audit12mod3.so";
+    size_t namelen = strlen(name);
+    if (namelen >= sizeof(target) - 1
+        && strcmp(name + namelen - (sizeof(target) - 1), target) == 0) {
+        return (char *) "$ORIGIN/tst-audit12mod3.so";
     }
-  return (char *) name;
+    return (char *) name;
 }

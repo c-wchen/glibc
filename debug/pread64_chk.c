@@ -19,11 +19,11 @@
 #include <sys/param.h>
 
 
-ssize_t
-__pread64_chk (int fd, void *buf, size_t nbytes, off64_t offset, size_t buflen)
+ssize_t __pread64_chk(int fd, void *buf, size_t nbytes, off64_t offset, size_t buflen)
 {
-  if (nbytes > buflen)
-    __chk_fail ();
+    if (nbytes > buflen) {
+        __chk_fail();
+    }
 
-  return __libc_pread64 (fd, buf, nbytes, offset);
+    return __libc_pread64(fd, buf, nbytes, offset);
 }

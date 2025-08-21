@@ -27,28 +27,25 @@
 #define PAYLOAD_DIG 51
 #define EXPLICIT_MANT_DIG 52
 
-int
-FUNC (double *x, double payload)
+int FUNC(double *x, double payload)
 {
-  uint64_t ix;
-  EXTRACT_WORDS64 (ix, payload);
-  int exponent = ix >> EXPLICIT_MANT_DIG;
-  /* Test if argument is (a) negative or too large; (b) too small,
-     except for 0 when allowed; (c) not an integer.  */
-  if (exponent >= BIAS + PAYLOAD_DIG
-      || (exponent < BIAS && !(SET_HIGH_BIT && ix == 0))
-      || (ix & ((1ULL << (BIAS + EXPLICIT_MANT_DIG - exponent)) - 1)) != 0)
-    {
-      INSERT_WORDS64 (*x, 0);
-      return 1;
+    uint64_t ix;
+    EXTRACT_WORDS64(ix, payload);
+    int exponent = ix >> EXPLICIT_MANT_DIG;
+    /* Test if argument is (a) negative or too large; (b) too small,
+       except for 0 when allowed; (c) not an integer.  */
+    if (exponent >= BIAS + PAYLOAD_DIG
+        || (exponent < BIAS && !(SET_HIGH_BIT && ix == 0))
+        || (ix & ((1ULL << (BIAS + EXPLICIT_MANT_DIG - exponent)) - 1)) != 0) {
+        INSERT_WORDS64(*x, 0);
+        return 1;
     }
-  if (ix != 0)
-    {
-      ix &= (1ULL << EXPLICIT_MANT_DIG) - 1;
-      ix |= 1ULL << EXPLICIT_MANT_DIG;
-      ix >>= BIAS + EXPLICIT_MANT_DIG - exponent;
+    if (ix != 0) {
+        ix &= (1ULL << EXPLICIT_MANT_DIG) - 1;
+        ix |= 1ULL << EXPLICIT_MANT_DIG;
+        ix >>= BIAS + EXPLICIT_MANT_DIG - exponent;
     }
-  ix |= 0x7ff0000000000000ULL | (SET_HIGH_BIT ? 0x8000000000000ULL : 0);
-  INSERT_WORDS64 (*x, ix);
-  return 0;
+    ix |= 0x7ff0000000000000ULL | (SET_HIGH_BIT ? 0x8000000000000ULL : 0);
+    INSERT_WORDS64(*x, ix);
+    return 0;
 }

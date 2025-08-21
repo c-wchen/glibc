@@ -1,7 +1,6 @@
 #include <stdio.h>
 
-int
-main( int argc, char *argv[] )
+int main(int argc, char *argv[])
 {
-  printf( "main\n" );
+    printf("main\n");
 }

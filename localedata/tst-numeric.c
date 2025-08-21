@@ -36,36 +36,32 @@
 #define EXIT_SETLOCALE 2
 #define EXIT_SNPRINTF 3
 
-int
-main (int argc, char *argv[])
+int main(int argc, char *argv[])
 {
-  char s[200];
-  double val;
+    char s[200];
+    double val;
 
-  /* Make sure to read the value before setting of the locale, as
-     strtod() is locale-dependent. */
-  val = strtod (argv[3], NULL);
+    /* Make sure to read the value before setting of the locale, as
+       strtod() is locale-dependent. */
+    val = strtod(argv[3], NULL);
 
-  if (setlocale (LC_ALL, argv[1]) == NULL)
-    {
-      fprintf (stderr, "setlocale(LC_ALL, \"%s\"): %m\n", argv[1]);
-      exit (EXIT_SETLOCALE);
+    if (setlocale(LC_ALL, argv[1]) == NULL) {
+        fprintf(stderr, "setlocale(LC_ALL, \"%s\"): %m\n", argv[1]);
+        exit(EXIT_SETLOCALE);
     }
 
-  if (snprintf (s, sizeof (s), argv[2], val) == -1)
-    {
-      perror ("snprintf");
-      exit (EXIT_SNPRINTF);
+    if (snprintf(s, sizeof(s), argv[2], val) == -1) {
+        perror("snprintf");
+        exit(EXIT_SNPRINTF);
     }
 
-  if (strcmp (s, argv[4]) != 0)
-    {
-      printf ("\
+    if (strcmp(s, argv[4]) != 0) {
+        printf("\
 locale: \"%s\", format: \"%s\", expected: \"%s\", got: \"%s\" => %s\n",
-	      argv[1], argv[2], argv[4], s,
-	      strcmp (s, argv[4]) != 0 ? "false" : "correct");
-      exit (EXIT_FAILURE);
+               argv[1], argv[2], argv[4], s,
+               strcmp(s, argv[4]) != 0 ? "false" : "correct");
+        exit(EXIT_FAILURE);
     }
 
-  return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }

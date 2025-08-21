@@ -19,11 +19,11 @@
 #include <fcntl.h>
 #include <stdio.h>
 
-int
-__open_2 (const char *file, int oflag)
+int __open_2(const char *file, int oflag)
 {
-  if (__OPEN_NEEDS_MODE (oflag))
-    __fortify_fail ("invalid open call: O_CREAT or O_TMPFILE without mode");
+    if (__OPEN_NEEDS_MODE(oflag)) {
+        __fortify_fail("invalid open call: O_CREAT or O_TMPFILE without mode");
+    }
 
-  return __open (file, oflag);
+    return __open(file, oflag);
 }

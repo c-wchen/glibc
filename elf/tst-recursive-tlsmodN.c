@@ -21,8 +21,7 @@
 
 __thread int VAR;
 
-int
-FUNC (void)
+int FUNC(void)
 {
-  return VAR;
+    return VAR;
 }

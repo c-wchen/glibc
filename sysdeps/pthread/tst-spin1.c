@@ -19,36 +19,31 @@
 #include <stdio.h>
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  pthread_spinlock_t s;
+    pthread_spinlock_t s;
 
-  if (pthread_spin_init (&s, PTHREAD_PROCESS_PRIVATE) != 0)
-    {
-      puts ("spin_init failed");
-      return 1;
+    if (pthread_spin_init(&s, PTHREAD_PROCESS_PRIVATE) != 0) {
+        puts("spin_init failed");
+        return 1;
     }
 
-  if (pthread_spin_lock (&s) != 0)
-    {
-      puts ("spin_lock failed");
-      return 1;
+    if (pthread_spin_lock(&s) != 0) {
+        puts("spin_lock failed");
+        return 1;
     }
 
-  if (pthread_spin_unlock (&s) != 0)
-    {
-      puts ("spin_unlock failed");
-      return 1;
+    if (pthread_spin_unlock(&s) != 0) {
+        puts("spin_unlock failed");
+        return 1;
     }
 
-  if (pthread_spin_destroy (&s) != 0)
-    {
-      puts ("spin_destroy failed");
-      return 1;
+    if (pthread_spin_destroy(&s) != 0) {
+        puts("spin_destroy failed");
+        return 1;
     }
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

@@ -21,62 +21,61 @@
 #include <support/check.h>
 
 #if __GNUC_PREREQ (5, 0)
-static int
-do_test (void)
+static int do_test(void)
 {
-  char *str;
-  char strb[32];
-  time_t t;
+    char *str;
+    char strb[32];
+    time_t t;
 
-  /* Use glibc time zone extension "TZ=:" to to guarantee that UTC
-     without leap seconds is used for the test.  */
-  TEST_VERIFY_EXIT (setenv ("TZ", ":", 1) == 0);
-  tzset ();
+    /* Use glibc time zone extension "TZ=:" to to guarantee that UTC
+       without leap seconds is used for the test.  */
+    TEST_VERIFY_EXIT(setenv("TZ", ":", 1) == 0);
+    tzset();
 
-  /* Check if the epoch time can be converted.  */
-  t = 0;
-  str = ctime (&t);
-  TEST_COMPARE_STRING (str, "Thu Jan  1 00:00:00 1970\n");
+    /* Check if the epoch time can be converted.  */
+    t = 0;
+    str = ctime(&t);
+    TEST_COMPARE_STRING(str, "Thu Jan  1 00:00:00 1970\n");
 
-  /* Same as before but with ctime_r.  */
-  str = ctime_r (&t, strb);
-  TEST_VERIFY (str == strb);
-  TEST_COMPARE_STRING (str, "Thu Jan  1 00:00:00 1970\n");
+    /* Same as before but with ctime_r.  */
+    str = ctime_r(&t, strb);
+    TEST_VERIFY(str == strb);
+    TEST_COMPARE_STRING(str, "Thu Jan  1 00:00:00 1970\n");
 
-  /* Check if the max time value for 32 bit time_t can be converted.  */
-  t = 0x7fffffff;
-  str = ctime (&t);
-  TEST_COMPARE_STRING (str, "Tue Jan 19 03:14:07 2038\n");
+    /* Check if the max time value for 32 bit time_t can be converted.  */
+    t = 0x7fffffff;
+    str = ctime(&t);
+    TEST_COMPARE_STRING(str, "Tue Jan 19 03:14:07 2038\n");
 
-  /* Same as before but with ctime_r.  */
-  str = ctime_r (&t, strb);
-  TEST_VERIFY (str == strb);
-  TEST_COMPARE_STRING (str, "Tue Jan 19 03:14:07 2038\n");
+    /* Same as before but with ctime_r.  */
+    str = ctime_r(&t, strb);
+    TEST_VERIFY(str == strb);
+    TEST_COMPARE_STRING(str, "Tue Jan 19 03:14:07 2038\n");
 
-  /* Check if we run on port with 32 bit time_t size */
-  time_t tov;
-  if (__builtin_add_overflow (t, 1, &tov))
+    /* Check if we run on port with 32 bit time_t size */
+    time_t tov;
+    if (__builtin_add_overflow(t, 1, &tov)) {
+        return 0;
+    }
+
+    /* Check if the time is converted after 32 bit time_t overflow.  */
+    str = ctime(&tov);
+    TEST_COMPARE_STRING(str, "Tue Jan 19 03:14:08 2038\n");
+
+    /* Same as before but with ctime_r.  */
+    str = ctime_r(&tov, strb);
+    TEST_VERIFY(str == strb);
+    TEST_COMPARE_STRING(str, "Tue Jan 19 03:14:08 2038\n");
+
     return 0;
-
-  /* Check if the time is converted after 32 bit time_t overflow.  */
-  str = ctime (&tov);
-  TEST_COMPARE_STRING (str, "Tue Jan 19 03:14:08 2038\n");
-
-  /* Same as before but with ctime_r.  */
-  str = ctime_r (&tov, strb);
-  TEST_VERIFY (str == strb);
-  TEST_COMPARE_STRING (str, "Tue Jan 19 03:14:08 2038\n");
-
-  return 0;
 }
 
 #include <support/test-driver.c>
 #else
 #include <support/test-driver.h>
 
-int
-main (void)
+int main(void)
 {
-  return EXIT_UNSUPPORTED;
+    return EXIT_UNSUPPORTED;
 }
 #endif

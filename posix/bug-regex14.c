@@ -23,30 +23,26 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int
-main (void)
+int main(void)
 {
-  const char *err;
-  size_t i;
-  int ret = 0;
+    const char *err;
+    size_t i;
+    int ret = 0;
 
-  mtrace ();
+    mtrace();
 
-  for (i = 0; i < 100; ++i)
-    {
-      err = re_comp ("a t.st");
-      if (err)
-	{
-	  printf ("re_comp failed: %s\n", err);
-	  ret = 1;
-	}
+    for (i = 0; i < 100; ++i) {
+        err = re_comp("a t.st");
+        if (err) {
+            printf("re_comp failed: %s\n", err);
+            ret = 1;
+        }
 
-      if (! re_exec ("This is a test."))
-	{
-	  printf ("re_exec failed\n");
-	  ret = 1;
-	}
+        if (! re_exec("This is a test.")) {
+            printf("re_exec failed\n");
+            ret = 1;
+        }
     }
 
-  return ret;
+    return ret;
 }

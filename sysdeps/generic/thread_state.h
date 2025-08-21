@@ -24,11 +24,11 @@
 
 /* This lets the kernel define architecture-specific registers for a new
    thread.  */
-#define MACHINE_NEW_THREAD_STATE_FLAVOR	<machine>_NEW_THREAD_STATE
+#define MACHINE_NEW_THREAD_STATE_FLAVOR <machine>_NEW_THREAD_STATE
 /* This makes the kernel load all architectures-specific registers for the
    thread.  */
-#define MACHINE_THREAD_STATE_FLAVOR	<machine>_THREAD_STATE
-#define MACHINE_THREAD_STATE_COUNT	<machine>_THREAD_STATE_COUNT
+#define MACHINE_THREAD_STATE_FLAVOR <machine>_THREAD_STATE
+#define MACHINE_THREAD_STATE_COUNT  <machine>_THREAD_STATE_COUNT
 
 #define machine_thread_state <machine>_thread_state
 
@@ -44,8 +44,7 @@
    which are filled in; and a member `struct machine_thread_state basic'.
    On some machines those are the only members (e.g. i386); on others,
    there are several relevant flavors of thread state (e.g. mips).  */
-struct machine_thread_all_state
-  {
-    int set;			/* Mask of bits (1 << FLAVOR).  */
+struct machine_thread_all_state {
+    int set;            /* Mask of bits (1 << FLAVOR).  */
     struct <machine>_thread_state basic;
-  };
+};

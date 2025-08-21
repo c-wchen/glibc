@@ -24,114 +24,89 @@
 #include <float.h>
 
 CFLOAT
-M_DECL_FUNC (__ccosh) (CFLOAT x)
+M_DECL_FUNC(__ccosh)(CFLOAT x)
 {
-  CFLOAT retval;
-  int rcls = fpclassify (__real__ x);
-  int icls = fpclassify (__imag__ x);
+    CFLOAT retval;
+    int rcls = fpclassify(__real__ x);
+    int icls = fpclassify(__imag__ x);
 
-  if (__glibc_likely (rcls >= FP_ZERO))
-    {
-      /* Real part is finite.  */
-      if (__glibc_likely (icls >= FP_ZERO))
-	{
-	  /* Imaginary part is finite.  */
-	  const int t = (int) ((M_MAX_EXP - 1) * M_MLIT (M_LN2));
-	  FLOAT sinix, cosix;
+    if (__glibc_likely(rcls >= FP_ZERO)) {
+        /* Real part is finite.  */
+        if (__glibc_likely(icls >= FP_ZERO)) {
+            /* Imaginary part is finite.  */
+            const int t = (int)((M_MAX_EXP - 1) * M_MLIT(M_LN2));
+            FLOAT sinix, cosix;
 
-	  if (__glibc_likely (M_FABS (__imag__ x) > M_MIN))
-	    {
-	      M_SINCOS (__imag__ x, &sinix, &cosix);
-	    }
-	  else
-	    {
-	      sinix = __imag__ x;
-	      cosix = 1;
-	    }
+            if (__glibc_likely(M_FABS(__imag__ x) > M_MIN)) {
+                M_SINCOS(__imag__ x, &sinix, &cosix);
+            } else {
+                sinix = __imag__ x;
+                cosix = 1;
+            }
 
-	  if (M_FABS (__real__ x) > t)
-	    {
-	      FLOAT exp_t = M_EXP (t);
-	      FLOAT rx = M_FABS (__real__ x);
-	      if (signbit (__real__ x))
-		sinix = -sinix;
-	      rx -= t;
-	      sinix *= exp_t / 2;
-	      cosix *= exp_t / 2;
-	      if (rx > t)
-		{
-		  rx -= t;
-		  sinix *= exp_t;
-		  cosix *= exp_t;
-		}
-	      if (rx > t)
-		{
-		  /* Overflow (original real part of x > 3t).  */
-		  __real__ retval = M_MAX * cosix;
-		  __imag__ retval = M_MAX * sinix;
-		}
-	      else
-		{
-		  FLOAT exp_val = M_EXP (rx);
-		  __real__ retval = exp_val * cosix;
-		  __imag__ retval = exp_val * sinix;
-		}
-	    }
-	  else
-	    {
-	      __real__ retval = M_COSH (__real__ x) * cosix;
-	      __imag__ retval = M_SINH (__real__ x) * sinix;
-	    }
+            if (M_FABS(__real__ x) > t) {
+                FLOAT exp_t = M_EXP(t);
+                FLOAT rx = M_FABS(__real__ x);
+                if (signbit(__real__ x)) {
+                    sinix = -sinix;
+                }
+                rx -= t;
+                sinix *= exp_t / 2;
+                cosix *= exp_t / 2;
+                if (rx > t) {
+                    rx -= t;
+                    sinix *= exp_t;
+                    cosix *= exp_t;
+                }
+                if (rx > t) {
+                    /* Overflow (original real part of x > 3t).  */
+                    __real__ retval = M_MAX * cosix;
+                    __imag__ retval = M_MAX * sinix;
+                } else {
+                    FLOAT exp_val = M_EXP(rx);
+                    __real__ retval = exp_val * cosix;
+                    __imag__ retval = exp_val * sinix;
+                }
+            } else {
+                __real__ retval = M_COSH(__real__ x) * cosix;
+                __imag__ retval = M_SINH(__real__ x) * sinix;
+            }
 
-	  math_check_force_underflow_complex (retval);
-	}
-      else
-	{
-	  __imag__ retval = __real__ x == 0 ? 0 : M_NAN;
-	  __real__ retval = __imag__ x - __imag__ x;
-	}
-    }
-  else if (rcls == FP_INFINITE)
-    {
-      /* Real part is infinite.  */
-      if (__glibc_likely (icls > FP_ZERO))
-	{
-	  /* Imaginary part is finite.  */
-	  FLOAT sinix, cosix;
+            math_check_force_underflow_complex(retval);
+        } else {
+            __imag__ retval = __real__ x == 0 ? 0 : M_NAN;
+            __real__ retval = __imag__ x - __imag__ x;
+        }
+    } else if (rcls == FP_INFINITE) {
+        /* Real part is infinite.  */
+        if (__glibc_likely(icls > FP_ZERO)) {
+            /* Imaginary part is finite.  */
+            FLOAT sinix, cosix;
 
-	  if (__glibc_likely (M_FABS (__imag__ x) > M_MIN))
-	    {
-	      M_SINCOS (__imag__ x, &sinix, &cosix);
-	    }
-	  else
-	    {
-	      sinix = __imag__ x;
-	      cosix = 1;
-	    }
+            if (__glibc_likely(M_FABS(__imag__ x) > M_MIN)) {
+                M_SINCOS(__imag__ x, &sinix, &cosix);
+            } else {
+                sinix = __imag__ x;
+                cosix = 1;
+            }
 
-	  __real__ retval = M_COPYSIGN (M_HUGE_VAL, cosix);
-	  __imag__ retval = (M_COPYSIGN (M_HUGE_VAL, sinix)
-			     * M_COPYSIGN (1, __real__ x));
-	}
-      else if (icls == FP_ZERO)
-	{
-	  /* Imaginary part is 0.0.  */
-	  __real__ retval = M_HUGE_VAL;
-	  __imag__ retval = __imag__ x * M_COPYSIGN (1, __real__ x);
-	}
-      else
-	{
-	  __real__ retval = M_HUGE_VAL;
-	  __imag__ retval = __imag__ x - __imag__ x;
-	}
-    }
-  else
-    {
-      __real__ retval = M_NAN;
-      __imag__ retval = __imag__ x == 0 ? __imag__ x : M_NAN;
+            __real__ retval = M_COPYSIGN(M_HUGE_VAL, cosix);
+            __imag__ retval = (M_COPYSIGN(M_HUGE_VAL, sinix)
+                               * M_COPYSIGN(1, __real__ x));
+        } else if (icls == FP_ZERO) {
+            /* Imaginary part is 0.0.  */
+            __real__ retval = M_HUGE_VAL;
+            __imag__ retval = __imag__ x * M_COPYSIGN(1, __real__ x);
+        } else {
+            __real__ retval = M_HUGE_VAL;
+            __imag__ retval = __imag__ x - __imag__ x;
+        }
+    } else {
+        __real__ retval = M_NAN;
+        __imag__ retval = __imag__ x == 0 ? __imag__ x : M_NAN;
     }
 
-  return retval;
+    return retval;
 }
 
-declare_mgen_alias (__ccosh, ccosh);
+declare_mgen_alias(__ccosh, ccosh);

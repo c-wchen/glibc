@@ -26,29 +26,27 @@
 
 /* Close the directory stream DIRP.
    Return 0 if successful, -1 if not.  */
-int
-__closedir (DIR *dirp)
+int __closedir(DIR *dirp)
 {
-  int fd;
+    int fd;
 
-  if (dirp == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (dirp == NULL) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  /* We do not try to synchronize access here.  If some other thread
-     still uses this handle it is a big mistake and that thread
-     deserves all the bad data it gets.  */
+    /* We do not try to synchronize access here.  If some other thread
+       still uses this handle it is a big mistake and that thread
+       deserves all the bad data it gets.  */
 
-  fd = dirp->fd;
+    fd = dirp->fd;
 
 #if IS_IN (libc)
-  __libc_lock_fini (dirp->lock);
+    __libc_lock_fini(dirp->lock);
 #endif
 
-  free ((void *) dirp);
+    free((void *) dirp);
 
-  return __close_nocancel (fd);
+    return __close_nocancel(fd);
 }
-weak_alias (__closedir, closedir)
+weak_alias(__closedir, closedir)

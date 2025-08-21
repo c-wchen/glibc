@@ -24,53 +24,55 @@
 #include <support/support.h>
 #include <unistd.h>
 
-void
-support_wait_for_thread_exit (void)
+void support_wait_for_thread_exit(void)
 {
 #ifdef __linux__
-  DIR *proc_self_task = opendir ("/proc/self/task");
-  TEST_VERIFY_EXIT (proc_self_task != NULL);
+    DIR *proc_self_task = opendir("/proc/self/task");
+    TEST_VERIFY_EXIT(proc_self_task != NULL);
 
-  while (true)
-    {
-      errno = 0;
-      struct dirent *e = readdir (proc_self_task);
-      if (e == NULL && errno != 0)
-        FAIL_EXIT1 ("readdir: %m");
-      if (e == NULL)
-        {
-          /* Only the main thread remains.  Testing may continue.  */
-          closedir (proc_self_task);
-          return;
+    while (true) {
+        errno = 0;
+        struct dirent *e = readdir(proc_self_task);
+        if (e == NULL && errno != 0) {
+            FAIL_EXIT1("readdir: %m");
+        }
+        if (e == NULL) {
+            /* Only the main thread remains.  Testing may continue.  */
+            closedir(proc_self_task);
+            return;
         }
 
-      /* In some kernels, "0" entries denote a thread that has just
-         exited.  */
-      if (strcmp (e->d_name, ".") == 0 || strcmp (e->d_name, "..") == 0
-          || strcmp (e->d_name, "0") == 0)
-        continue;
+        /* In some kernels, "0" entries denote a thread that has just
+           exited.  */
+        if (strcmp(e->d_name, ".") == 0 || strcmp(e->d_name, "..") == 0
+            || strcmp(e->d_name, "0") == 0) {
+            continue;
+        }
 
-      int task_tid = atoi (e->d_name);
-      if (task_tid <= 0)
-        FAIL_EXIT1 ("Invalid /proc/self/task entry: %s", e->d_name);
+        int task_tid = atoi(e->d_name);
+        if (task_tid <= 0) {
+            FAIL_EXIT1("Invalid /proc/self/task entry: %s", e->d_name);
+        }
 
-      if (task_tid == gettid ())
-        /* The current thread.  Keep scanning for other
-           threads.  */
-        continue;
+        if (task_tid == gettid())
+            /* The current thread.  Keep scanning for other
+               threads.  */
+        {
+            continue;
+        }
 
-      /* task_tid does not refer to this thread here, i.e., there is
-         another running thread.  */
+        /* task_tid does not refer to this thread here, i.e., there is
+           another running thread.  */
 
-      /* Small timeout to give the thread a chance to exit.  */
-      usleep (50 * 1000);
+        /* Small timeout to give the thread a chance to exit.  */
+        usleep(50 * 1000);
 
-      /* Start scanning the directory from the start.  */
-      rewinddir (proc_self_task);
+        /* Start scanning the directory from the start.  */
+        rewinddir(proc_self_task);
     }
 #else
-  /* Use a large timeout because we cannot verify that the thread has
-     exited.  */
-  usleep (5 * 1000 * 1000);
+    /* Use a large timeout because we cannot verify that the thread has
+       exited.  */
+    usleep(5 * 1000 * 1000);
 #endif
 }

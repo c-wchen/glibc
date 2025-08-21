@@ -27,7 +27,7 @@
  */
 
 #ifndef _ARPA_NAMESER_COMPAT_
-#define	_ARPA_NAMESER_COMPAT_
+#define _ARPA_NAMESER_COMPAT_
 
 #include <endian.h>
 
@@ -39,86 +39,86 @@
  */
 
 typedef struct {
-	unsigned	id :16;		/*%< query identification number */
+    unsigned    id : 16;    /*%< query identification number */
 #if __BYTE_ORDER == __BIG_ENDIAN
-			/* fields in third byte */
-	unsigned	qr: 1;		/*%< response flag */
-	unsigned	opcode: 4;	/*%< purpose of message */
-	unsigned	aa: 1;		/*%< authoritative answer */
-	unsigned	tc: 1;		/*%< truncated message */
-	unsigned	rd: 1;		/*%< recursion desired */
-			/* fields in fourth byte */
-	unsigned	ra: 1;		/*%< recursion available */
-	unsigned	unused :1;	/*%< unused bits (MBZ as of 4.9.3a3) */
-	unsigned	ad: 1;		/*%< authentic data from named */
-	unsigned	cd: 1;		/*%< checking disabled by resolver */
-	unsigned	rcode :4;	/*%< response code */
+    /* fields in third byte */
+    unsigned    qr: 1;      /*%< response flag */
+    unsigned    opcode: 4;  /*%< purpose of message */
+    unsigned    aa: 1;      /*%< authoritative answer */
+    unsigned    tc: 1;      /*%< truncated message */
+    unsigned    rd: 1;      /*%< recursion desired */
+    /* fields in fourth byte */
+    unsigned    ra: 1;      /*%< recursion available */
+    unsigned    unused : 1; /*%< unused bits (MBZ as of 4.9.3a3) */
+    unsigned    ad: 1;      /*%< authentic data from named */
+    unsigned    cd: 1;      /*%< checking disabled by resolver */
+    unsigned    rcode : 4;  /*%< response code */
 #endif
 #if __BYTE_ORDER == __LITTLE_ENDIAN || __BYTE_ORDER == __PDP_ENDIAN
-			/* fields in third byte */
-	unsigned	rd :1;		/*%< recursion desired */
-	unsigned	tc :1;		/*%< truncated message */
-	unsigned	aa :1;		/*%< authoritative answer */
-	unsigned	opcode :4;	/*%< purpose of message */
-	unsigned	qr :1;		/*%< response flag */
-			/* fields in fourth byte */
-	unsigned	rcode :4;	/*%< response code */
-	unsigned	cd: 1;		/*%< checking disabled by resolver */
-	unsigned	ad: 1;		/*%< authentic data from named */
-	unsigned	unused :1;	/*%< unused bits (MBZ as of 4.9.3a3) */
-	unsigned	ra :1;		/*%< recursion available */
+    /* fields in third byte */
+    unsigned    rd : 1;     /*%< recursion desired */
+    unsigned    tc : 1;     /*%< truncated message */
+    unsigned    aa : 1;     /*%< authoritative answer */
+    unsigned    opcode : 4; /*%< purpose of message */
+    unsigned    qr : 1;     /*%< response flag */
+    /* fields in fourth byte */
+    unsigned    rcode : 4;  /*%< response code */
+    unsigned    cd: 1;      /*%< checking disabled by resolver */
+    unsigned    ad: 1;      /*%< authentic data from named */
+    unsigned    unused : 1; /*%< unused bits (MBZ as of 4.9.3a3) */
+    unsigned    ra : 1;     /*%< recursion available */
 #endif
-			/* remaining bytes */
-	unsigned	qdcount :16;	/*%< number of question entries */
-	unsigned	ancount :16;	/*%< number of answer entries */
-	unsigned	nscount :16;	/*%< number of authority entries */
-	unsigned	arcount :16;	/*%< number of resource entries */
+    /* remaining bytes */
+    unsigned    qdcount : 16;   /*%< number of question entries */
+    unsigned    ancount : 16;   /*%< number of answer entries */
+    unsigned    nscount : 16;   /*%< number of authority entries */
+    unsigned    arcount : 16;   /*%< number of resource entries */
 } HEADER;
 
-#define PACKETSZ	NS_PACKETSZ
-#define MAXDNAME	NS_MAXDNAME
-#define MAXCDNAME	NS_MAXCDNAME
-#define MAXLABEL	NS_MAXLABEL
-#define	HFIXEDSZ	NS_HFIXEDSZ
-#define QFIXEDSZ	NS_QFIXEDSZ
-#define RRFIXEDSZ	NS_RRFIXEDSZ
-#define	INT32SZ		NS_INT32SZ
-#define	INT16SZ		NS_INT16SZ
-#define INT8SZ		NS_INT8SZ
-#define	INADDRSZ	NS_INADDRSZ
-#define	IN6ADDRSZ	NS_IN6ADDRSZ
-#define	INDIR_MASK	NS_CMPRSFLGS
-#define NAMESERVER_PORT	NS_DEFAULTPORT
+#define PACKETSZ    NS_PACKETSZ
+#define MAXDNAME    NS_MAXDNAME
+#define MAXCDNAME   NS_MAXCDNAME
+#define MAXLABEL    NS_MAXLABEL
+#define HFIXEDSZ    NS_HFIXEDSZ
+#define QFIXEDSZ    NS_QFIXEDSZ
+#define RRFIXEDSZ   NS_RRFIXEDSZ
+#define INT32SZ     NS_INT32SZ
+#define INT16SZ     NS_INT16SZ
+#define INT8SZ      NS_INT8SZ
+#define INADDRSZ    NS_INADDRSZ
+#define IN6ADDRSZ   NS_IN6ADDRSZ
+#define INDIR_MASK  NS_CMPRSFLGS
+#define NAMESERVER_PORT NS_DEFAULTPORT
 
-#define S_ZONE		ns_s_zn
-#define S_PREREQ	ns_s_pr
-#define S_UPDATE	ns_s_ud
-#define S_ADDT		ns_s_ar
+#define S_ZONE      ns_s_zn
+#define S_PREREQ    ns_s_pr
+#define S_UPDATE    ns_s_ud
+#define S_ADDT      ns_s_ar
 
-#define QUERY		ns_o_query
-#define IQUERY		ns_o_iquery
-#define STATUS		ns_o_status
-#define	NS_NOTIFY_OP	ns_o_notify
-#define	NS_UPDATE_OP	ns_o_update
+#define QUERY       ns_o_query
+#define IQUERY      ns_o_iquery
+#define STATUS      ns_o_status
+#define NS_NOTIFY_OP    ns_o_notify
+#define NS_UPDATE_OP    ns_o_update
 
-#define NOERROR		ns_r_noerror
-#define FORMERR		ns_r_formerr
-#define SERVFAIL	ns_r_servfail
-#define NXDOMAIN	ns_r_nxdomain
-#define NOTIMP		ns_r_notimpl
-#define REFUSED		ns_r_refused
-#define YXDOMAIN	ns_r_yxdomain
-#define YXRRSET		ns_r_yxrrset
-#define NXRRSET		ns_r_nxrrset
-#define NOTAUTH		ns_r_notauth
-#define NOTZONE		ns_r_notzone
-/*#define BADSIG		ns_r_badsig*/
-/*#define BADKEY		ns_r_badkey*/
-/*#define BADTIME		ns_r_badtime*/
+#define NOERROR     ns_r_noerror
+#define FORMERR     ns_r_formerr
+#define SERVFAIL    ns_r_servfail
+#define NXDOMAIN    ns_r_nxdomain
+#define NOTIMP      ns_r_notimpl
+#define REFUSED     ns_r_refused
+#define YXDOMAIN    ns_r_yxdomain
+#define YXRRSET     ns_r_yxrrset
+#define NXRRSET     ns_r_nxrrset
+#define NOTAUTH     ns_r_notauth
+#define NOTZONE     ns_r_notzone
+/*#define BADSIG        ns_r_badsig*/
+/*#define BADKEY        ns_r_badkey*/
+/*#define BADTIME       ns_r_badtime*/
 
 
-#define DELETE		ns_uop_delete
-#define ADD		ns_uop_add
+#define DELETE      ns_uop_delete
+#define ADD     ns_uop_add
 
 #define T_A ns_t_a
 #define T_NS ns_t_ns
@@ -205,17 +205,17 @@ typedef struct {
 #define T_TA ns_t_ta
 #define T_DLV ns_t_dlv
 
-#define C_IN		ns_c_in
-#define C_CHAOS		ns_c_chaos
-#define C_HS		ns_c_hs
+#define C_IN        ns_c_in
+#define C_CHAOS     ns_c_chaos
+#define C_HS        ns_c_hs
 /* BIND_UPDATE */
-#define C_NONE		ns_c_none
-#define C_ANY		ns_c_any
+#define C_NONE      ns_c_none
+#define C_ANY       ns_c_any
 
-#define	GETSHORT		NS_GET16
-#define	GETLONG			NS_GET32
-#define	PUTSHORT		NS_PUT16
-#define	PUTLONG			NS_PUT32
+#define GETSHORT        NS_GET16
+#define GETLONG         NS_GET32
+#define PUTSHORT        NS_PUT16
+#define PUTLONG         NS_PUT32
 
 #endif /* _ARPA_NAMESER_COMPAT_ */
 /*! \file */

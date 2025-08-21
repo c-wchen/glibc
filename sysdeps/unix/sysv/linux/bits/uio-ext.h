@@ -26,30 +26,30 @@
 __BEGIN_DECLS
 
 /* Read from another process' address space.  */
-extern ssize_t process_vm_readv (pid_t __pid, const struct iovec *__lvec,
-				 unsigned long int __liovcnt,
-				 const struct iovec *__rvec,
-				 unsigned long int __riovcnt,
-				 unsigned long int __flags)
-  __THROW;
+extern ssize_t process_vm_readv(pid_t __pid, const struct iovec *__lvec,
+                                unsigned long int __liovcnt,
+                                const struct iovec *__rvec,
+                                unsigned long int __riovcnt,
+                                unsigned long int __flags)
+__THROW;
 
 /* Write to another process' address space.  */
-extern ssize_t process_vm_writev (pid_t __pid, const struct iovec *__lvec,
-				  unsigned long int __liovcnt,
-				  const struct iovec *__rvec,
-				  unsigned long int __riovcnt,
-				  unsigned long int __flags)
-  __THROW;
+extern ssize_t process_vm_writev(pid_t __pid, const struct iovec *__lvec,
+                                 unsigned long int __liovcnt,
+                                 const struct iovec *__rvec,
+                                 unsigned long int __riovcnt,
+                                 unsigned long int __flags)
+__THROW;
 
 /* Flags for preadv2/pwritev2.  */
-#define RWF_HIPRI	0x00000001 /* High priority request.  */
-#define RWF_DSYNC	0x00000002 /* per-IO O_DSYNC.  */
-#define RWF_SYNC	0x00000004 /* per-IO O_SYNC.  */
-#define RWF_NOWAIT	0x00000008 /* per-IO nonblocking mode.  */
-#define RWF_APPEND	0x00000010 /* per-IO O_APPEND.  */
-#define RWF_NOAPPEND	0x00000020 /* per-IO negation of O_APPEND */
-#define RWF_ATOMIC	0x00000040 /* Write is to be issued with torn-write
-				      prevention.  */
+#define RWF_HIPRI   0x00000001 /* High priority request.  */
+#define RWF_DSYNC   0x00000002 /* per-IO O_DSYNC.  */
+#define RWF_SYNC    0x00000004 /* per-IO O_SYNC.  */
+#define RWF_NOWAIT  0x00000008 /* per-IO nonblocking mode.  */
+#define RWF_APPEND  0x00000010 /* per-IO O_APPEND.  */
+#define RWF_NOAPPEND    0x00000020 /* per-IO negation of O_APPEND */
+#define RWF_ATOMIC  0x00000040 /* Write is to be issued with torn-write
+                      prevention.  */
 
 __END_DECLS
 

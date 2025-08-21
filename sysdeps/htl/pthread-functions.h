@@ -17,34 +17,33 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _PTHREAD_FUNCTIONS_H
-#define _PTHREAD_FUNCTIONS_H	1
+#define _PTHREAD_FUNCTIONS_H    1
 
 #include <pthread.h>
 
-void __pthread_exit (void *) __attribute__ ((__noreturn__));
+void __pthread_exit(void *) __attribute__((__noreturn__));
 
-void _cthreads_flockfile (FILE *);
-void _cthreads_funlockfile (FILE *);
-int _cthreads_ftrylockfile (FILE *);
+void _cthreads_flockfile(FILE *);
+void _cthreads_funlockfile(FILE *);
+int _cthreads_ftrylockfile(FILE *);
 
 /* Data type shared with libc.  The libc uses it to pass on calls to
    the thread functions.  Wine pokes directly into this structure,
    so if possible avoid breaking it and append new hooks to the end.  */
-struct pthread_functions
-{
-  void (*ptr___pthread_exit) (void *) __attribute__ ((__noreturn__));
-  void (*ptr__IO_flockfile) (FILE *);
-  void (*ptr__IO_funlockfile) (FILE *);
-  int (*ptr__IO_ftrylockfile) (FILE *);
+struct pthread_functions {
+    void (*ptr___pthread_exit)(void *) __attribute__((__noreturn__));
+    void (*ptr__IO_flockfile)(FILE *);
+    void (*ptr__IO_funlockfile)(FILE *);
+    int (*ptr__IO_ftrylockfile)(FILE *);
 };
 
 /* Variable in libc.so.  */
 extern struct pthread_functions __libc_pthread_functions attribute_hidden;
 extern int __libc_pthread_functions_init attribute_hidden;
 
-void __libc_pthread_init (const struct pthread_functions *functions);
+void __libc_pthread_init(const struct pthread_functions *functions);
 
 #define PTHFCT_CALL(fct, params) \
     __libc_pthread_functions.fct params
 
-#endif	/* pthread-functions.h */
+#endif  /* pthread-functions.h */

@@ -20,11 +20,10 @@
 
 /* If we don't have vfork, fork is close enough.  */
 
-__pid_t
-__vfork (void)
+__pid_t __vfork(void)
 {
-  return __fork ();
+    return __fork();
 }
-libc_hidden_def (__vfork)
+libc_hidden_def(__vfork)
 
-weak_alias (__vfork, vfork)
+weak_alias(__vfork, vfork)

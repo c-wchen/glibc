@@ -26,48 +26,46 @@
 #endif
 
 #ifdef __linux__
-static int
-utimesat_call (const char *path, const struct __timespec64 tsp[2])
+static int utimesat_call(const char *path, const struct __timespec64 tsp[2])
 {
 # ifndef __NR_utimensat_time64
 #  define __NR_utimensat_time64 __NR_utimensat
 # endif
-  return syscall (__NR_utimensat_time64, AT_FDCWD, path, &tsp[0], 0);
+    return syscall(__NR_utimensat_time64, AT_FDCWD, path, &tsp[0], 0);
 }
 #endif
 
-bool
-support_path_support_time64_value (const char *path, int64_t at, int64_t mt)
+bool support_path_support_time64_value(const char *path, int64_t at, int64_t mt)
 {
 #ifdef __linux__
-  /* Obtain the original timestamps to restore at the end.  */
-  struct statx ostx;
-  TEST_VERIFY_EXIT (statx (AT_FDCWD, path, 0, STATX_BASIC_STATS, &ostx) == 0);
+    /* Obtain the original timestamps to restore at the end.  */
+    struct statx ostx;
+    TEST_VERIFY_EXIT(statx(AT_FDCWD, path, 0, STATX_BASIC_STATS, &ostx) == 0);
 
-  const struct __timespec64 tsp[] = { { at, 0 }, { mt, 0 } };
+    const struct __timespec64 tsp[] = { { at, 0 }, { mt, 0 } };
 
-  /* Return is kernel does not support __NR_utimensat_time64.  */
-  if (utimesat_call (path, tsp) == -1)
-    return false;
+    /* Return is kernel does not support __NR_utimensat_time64.  */
+    if (utimesat_call(path, tsp) == -1) {
+        return false;
+    }
 
-  /* Verify if the last access and last modification time match the ones
-     obtained with statx.  */
-  struct statx stx;
-  TEST_VERIFY_EXIT (statx (AT_FDCWD, path, 0, STATX_BASIC_STATS, &stx) == 0);
+    /* Verify if the last access and last modification time match the ones
+       obtained with statx.  */
+    struct statx stx;
+    TEST_VERIFY_EXIT(statx(AT_FDCWD, path, 0, STATX_BASIC_STATS, &stx) == 0);
 
-  bool support = stx.stx_atime.tv_sec == tsp[0].tv_sec
-		 && stx.stx_mtime.tv_sec == tsp[1].tv_sec;
+    bool support = stx.stx_atime.tv_sec == tsp[0].tv_sec
+                   && stx.stx_mtime.tv_sec == tsp[1].tv_sec;
 
-  /* Reset to original timestamps.  */
-  const struct __timespec64 otsp[] =
-  {
-    { ostx.stx_atime.tv_sec, ostx.stx_atime.tv_nsec },
-    { ostx.stx_mtime.tv_sec, ostx.stx_mtime.tv_nsec },
-  };
-  TEST_VERIFY_EXIT (utimesat_call (path, otsp) == 0);
+    /* Reset to original timestamps.  */
+    const struct __timespec64 otsp[] = {
+        { ostx.stx_atime.tv_sec, ostx.stx_atime.tv_nsec },
+        { ostx.stx_mtime.tv_sec, ostx.stx_mtime.tv_nsec },
+    };
+    TEST_VERIFY_EXIT(utimesat_call(path, otsp) == 0);
 
-  return support;
+    return support;
 #else
-  return true;
+    return true;
 #endif
 }

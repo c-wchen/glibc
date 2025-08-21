@@ -19,8 +19,7 @@
 #include "nldbl-compat.h"
 
 double
-attribute_hidden
-fminimum_numl (double x, double y)
+attribute_hidden fminimum_numl(double x, double y)
 {
-  return fminimum_num (x, y);
+    return fminimum_num(x, y);
 }

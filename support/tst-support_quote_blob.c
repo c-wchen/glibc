@@ -21,41 +21,40 @@
 #include <string.h>
 #include <stdlib.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* Check handling of the empty blob, both with and without trailing
-     NUL byte.  */
-  char *p = support_quote_blob ("", 0);
-  TEST_COMPARE (strlen (p), 0);
-  free (p);
-  p = support_quote_blob ("X", 0);
-  TEST_COMPARE (strlen (p), 0);
-  free (p);
+    /* Check handling of the empty blob, both with and without trailing
+       NUL byte.  */
+    char *p = support_quote_blob("", 0);
+    TEST_COMPARE(strlen(p), 0);
+    free(p);
+    p = support_quote_blob("X", 0);
+    TEST_COMPARE(strlen(p), 0);
+    free(p);
 
-  /* Check escaping of backslash-escaped characters, and lack of
-     escaping for other shell meta-characters.  */
-  p = support_quote_blob ("$()*?`@[]{}~\'\"X", 14);
-  TEST_COMPARE (strcmp (p, "$()*?`@[]{}~\\'\\\""), 0);
-  free (p);
+    /* Check escaping of backslash-escaped characters, and lack of
+       escaping for other shell meta-characters.  */
+    p = support_quote_blob("$()*?`@[]{}~\'\"X", 14);
+    TEST_COMPARE(strcmp(p, "$()*?`@[]{}~\\'\\\""), 0);
+    free(p);
 
-  /* Check lack of escaping for letters and digits.  */
+    /* Check lack of escaping for letters and digits.  */
 #define LETTERS_AND_DIGTS                       \
   "abcdefghijklmnopqrstuvwxyz"                  \
   "ABCDEFGHIJKLMNOPQRSTUVWXYZ"                  \
   "0123456789"
-  p = support_quote_blob (LETTERS_AND_DIGTS "@", 2 * 26 + 10);
-  TEST_COMPARE (strcmp (p, LETTERS_AND_DIGTS), 0);
-  free (p);
+    p = support_quote_blob(LETTERS_AND_DIGTS "@", 2 * 26 + 10);
+    TEST_COMPARE(strcmp(p, LETTERS_AND_DIGTS), 0);
+    free(p);
 
-  /* Check escaping of control characters and other non-printable
-     characters.  */
-  p = support_quote_blob ("\r\n\t\a\b\f\v\1\177\200\377\0@", 14);
-  TEST_COMPARE (strcmp (p, "\\r\\n\\t\\a\\b\\f\\v\\001"
+    /* Check escaping of control characters and other non-printable
+       characters.  */
+    p = support_quote_blob("\r\n\t\a\b\f\v\1\177\200\377\0@", 14);
+    TEST_COMPARE(strcmp(p, "\\r\\n\\t\\a\\b\\f\\v\\001"
                         "\\177\\200\\377\\000@\\000"), 0);
-  free (p);
+    free(p);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

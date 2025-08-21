@@ -31,25 +31,24 @@
 #include <support/test-driver.h>
 #include <support/xthread.h>
 
-void *
-thr (void *in)
+void *thr(void *in)
 {
-  return in;
+    return in;
 }
 
-int
-do_test (void)
+int do_test(void)
 {
-  clockid_t c;
-  pthread_t t = xpthread_create (NULL, thr, NULL);
+    clockid_t c;
+    pthread_t t = xpthread_create(NULL, thr, NULL);
 
-  int ret = 0;
-  while ((ret = pthread_getcpuclockid (t, &c)) == 0)
-    sched_yield ();
+    int ret = 0;
+    while ((ret = pthread_getcpuclockid(t, &c)) == 0) {
+        sched_yield();
+    }
 
-  TEST_COMPARE (ret, ESRCH);
+    TEST_COMPARE(ret, ESRCH);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -18,5 +18,5 @@
 
 #include <runtime-linker.h>
 
-const char __invoke_dynamic_linker__[] __attribute__ ((section (".interp")))
-  = RUNTIME_LINKER;
+const char __invoke_dynamic_linker__[] __attribute__((section(".interp")))
+    = RUNTIME_LINKER;

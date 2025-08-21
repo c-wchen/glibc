@@ -19,14 +19,13 @@
 #include <math.h>
 #include <string.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char buf[2] = { '2', 0 };
-  float a = nanf (buf);
-  buf[0] = '3';
-  float b = nanf (buf);
-  return memcmp (&a, &b, sizeof (float)) == 0;
+    char buf[2] = { '2', 0 };
+    float a = nanf(buf);
+    buf[0] = '3';
+    float b = nanf(buf);
+    return memcmp(&a, &b, sizeof(float)) == 0;
 }
 
 #include <support/test-driver.c>

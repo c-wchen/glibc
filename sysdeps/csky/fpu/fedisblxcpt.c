@@ -20,22 +20,21 @@
 #include <fenv_libc.h>
 #include <fpu_control.h>
 
-int
-fedisableexcept (int excepts)
+int fedisableexcept(int excepts)
 {
-  unsigned int new_exc, old_exc;
+    unsigned int new_exc, old_exc;
 
-  /* Get the current control word.  */
-  _FPU_GETCW (new_exc);
+    /* Get the current control word.  */
+    _FPU_GETCW(new_exc);
 
-  old_exc = (new_exc & ENABLE_MASK) >> ENABLE_SHIFT;
+    old_exc = (new_exc & ENABLE_MASK) >> ENABLE_SHIFT;
 
-  /* Get the except disable mask.  */
-  excepts &= FE_ALL_EXCEPT;
-  new_exc &= ~(excepts << ENABLE_SHIFT);
+    /* Get the except disable mask.  */
+    excepts &= FE_ALL_EXCEPT;
+    new_exc &= ~(excepts << ENABLE_SHIFT);
 
-  /* Put the new data in effect.  */
-  _FPU_SETCW (new_exc);
+    /* Put the new data in effect.  */
+    _FPU_SETCW(new_exc);
 
-  return old_exc;
+    return old_exc;
 }

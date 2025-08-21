@@ -23,39 +23,35 @@
 
 static sigjmp_buf jmpbuf;
 
-static void
-sig_handler (int signo)
+static void sig_handler(int signo)
 {
-  siglongjmp (jmpbuf, 1);
+    siglongjmp(jmpbuf, 1);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char *p = NULL;
-  /* gcc can overwrite the success written value by scheduling instructions
-     around sprintf.  It is allowed to do this since according to C99 the first
-     argument of sprintf is a character array and NULL is not a valid character
-     array.  Mark the return value as volatile so that it gets reloaded on
-     return.  */
-  volatile int ret = 0;
+    char *p = NULL;
+    /* gcc can overwrite the success written value by scheduling instructions
+       around sprintf.  It is allowed to do this since according to C99 the first
+       argument of sprintf is a character array and NULL is not a valid character
+       array.  Mark the return value as volatile so that it gets reloaded on
+       return.  */
+    volatile int ret = 0;
 
-  if (signal (SIGSEGV, &sig_handler) == SIG_ERR)
-    {
-      perror ("installing SIGSEGV handler");
-      return 1;
+    if (signal(SIGSEGV, &sig_handler) == SIG_ERR) {
+        perror("installing SIGSEGV handler");
+        return 1;
     }
 
-  puts ("Attempting to sprintf to null ptr");
-  if (setjmp (jmpbuf))
-    {
-      puts ("Exiting main...");
-      return ret;
+    puts("Attempting to sprintf to null ptr");
+    if (setjmp(jmpbuf)) {
+        puts("Exiting main...");
+        return ret;
     }
 
-  sprintf (p, "This should segv\n");
+    sprintf(p, "This should segv\n");
 
-  return 1;
+    return 1;
 }
 
 #define TEST_FUNCTION do_test ()

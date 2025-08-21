@@ -45,7 +45,7 @@
 # endif
 #endif
 
-#if __X86_ISA_V1 && defined __GCC_HAVE_SYNC_COMPARE_AND_SWAP		      \
+#if __X86_ISA_V1 && defined __GCC_HAVE_SYNC_COMPARE_AND_SWAP              \
     && defined HAVE_X86_LAHF_SAHF && defined __POPCNT__ && defined __SSE3__   \
     && defined __SSSE3__ && defined __SSE4_1__ && defined __SSE4_2__
 /* NB: ISAs in x86-64 ISA level v2 are used.  */

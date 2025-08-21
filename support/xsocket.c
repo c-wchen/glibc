@@ -22,11 +22,11 @@
 #include <stdlib.h>
 #include <support/check.h>
 
-int
-xsocket (int domain, int type, int protocol)
+int xsocket(int domain, int type, int protocol)
 {
-  int fd = socket (domain, type, protocol);
-  if (fd < 0)
-    FAIL_EXIT1 ("socket (%d, %d, %d): %m\n", domain, type, protocol);
-  return fd;
+    int fd = socket(domain, type, protocol);
+    if (fd < 0) {
+        FAIL_EXIT1("socket (%d, %d, %d): %m\n", domain, type, protocol);
+    }
+    return fd;
 }

@@ -20,23 +20,23 @@
 #include <futex-internal.h>
 #include <shlib-compat.h>
 
-int
-__pthread_condattr_setpshared (pthread_condattr_t *attr, int pshared)
+int __pthread_condattr_setpshared(pthread_condattr_t *attr, int pshared)
 {
-  int err = futex_supports_pshared (pshared);
-  if (err != 0)
-    return err;
+    int err = futex_supports_pshared(pshared);
+    if (err != 0) {
+        return err;
+    }
 
-  int *valuep = &((struct pthread_condattr *) attr)->value;
+    int *valuep = &((struct pthread_condattr *) attr)->value;
 
-  *valuep = (*valuep & ~1) | (pshared != PTHREAD_PROCESS_PRIVATE);
+    *valuep = (*valuep & ~1) | (pshared != PTHREAD_PROCESS_PRIVATE);
 
-  return 0;
+    return 0;
 }
-versioned_symbol (libc, __pthread_condattr_setpshared,
-                  pthread_condattr_setpshared, GLIBC_2_34);
+versioned_symbol(libc, __pthread_condattr_setpshared,
+                 pthread_condattr_setpshared, GLIBC_2_34);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
-compat_symbol (libpthread, __pthread_condattr_setpshared,
-               pthread_condattr_setpshared, GLIBC_2_2);
+compat_symbol(libpthread, __pthread_condattr_setpshared,
+              pthread_condattr_setpshared, GLIBC_2_2);
 #endif

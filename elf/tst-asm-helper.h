@@ -28,20 +28,20 @@
 #define FEATURE_1_GCS 4
 
 /* Add a NT_GNU_PROPERTY_TYPE_0 note.  */
-#define GNU_PROPERTY(type, value)	\
-  .section .note.gnu.property, "a";	\
-  .p2align 3;				\
-  .word 4;				\
-  .word 16;				\
-  .word 5;				\
-  .asciz "GNU";				\
-  .word type;				\
-  .word 4;				\
-  .word value;				\
-  .word 0;				\
+#define GNU_PROPERTY(type, value)   \
+  .section .note.gnu.property, "a"; \
+  .p2align 3;               \
+  .word 4;              \
+  .word 16;             \
+  .word 5;              \
+  .asciz "GNU";             \
+  .word type;               \
+  .word 4;              \
+  .word value;              \
+  .word 0;              \
   .text
 
 /* Add GNU property note with the supported features to all asm code
    where sysdep.h is included.  */
-GNU_PROPERTY (FEATURE_1_AND, FEATURE_1_BTI|FEATURE_1_PAC|FEATURE_1_GCS)
+GNU_PROPERTY(FEATURE_1_AND, FEATURE_1_BTI | FEATURE_1_PAC | FEATURE_1_GCS)
 #endif

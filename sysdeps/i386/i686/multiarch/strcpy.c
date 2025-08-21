@@ -26,5 +26,5 @@
 # define SYMBOL_NAME strcpy
 # include "ifunc-sse2-ssse3.h"
 
-libc_ifunc_redirected (__redirect_strcpy, strcpy, IFUNC_SELECTOR ());
+libc_ifunc_redirected(__redirect_strcpy, strcpy, IFUNC_SELECTOR());
 #endif

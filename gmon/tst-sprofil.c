@@ -22,148 +22,144 @@
 
 #include <bits/wordsize.h>
 
-#define NELEMS(a)	(sizeof (a)/sizeof ((a)[0]))
+#define NELEMS(a)   (sizeof (a)/sizeof ((a)[0]))
 
-size_t taddr[] =
-  {
-    0x00001000,		/* elf32/hppa */
-    0x08048000,		/* Linux elf32/x86 */
-    0x80000000,		/* Linux elf32/m68k */
-    0x00400000,		/* Linux elf32/mips */
-    0x01800000,		/* Linux elf32/ppc */
-    0x00010000		/* Linux elf32/sparc */
+size_t taddr[] = {
+    0x00001000,     /* elf32/hppa */
+    0x08048000,     /* Linux elf32/x86 */
+    0x80000000,     /* Linux elf32/m68k */
+    0x00400000,     /* Linux elf32/mips */
+    0x01800000,     /* Linux elf32/ppc */
+    0x00010000      /* Linux elf32/sparc */
 #if __WORDSIZE > 32
     ,
-    0x0000000120000000,	/* Linux elf64/alpha */
-    0x4000000000001000,	/* elf64/hppa */
-    0x0000000100000000	/* Linux elf64/sparc */
+    0x0000000120000000, /* Linux elf64/alpha */
+    0x4000000000001000, /* elf64/hppa */
+    0x0000000100000000  /* Linux elf64/sparc */
 #endif
-  };
+};
 
-unsigned int buf[NELEMS (taddr)][0x10000 / sizeof (int)];
-unsigned int bshort[5][0x100 / sizeof (int)];
-unsigned int blong[1][0x1000 / sizeof (int)];
-unsigned int vlong[1][0x2000 / sizeof (int)];
+unsigned int buf[NELEMS(taddr)][0x10000 / sizeof(int)];
+unsigned int bshort[5][0x100 / sizeof(int)];
+unsigned int blong[1][0x1000 / sizeof(int)];
+unsigned int vlong[1][0x2000 / sizeof(int)];
 
-static long int
-fac (long int n)
+static long int fac(long int n)
 {
-  if (n == 0)
-    return 1;
-  return n * fac (n - 1);
+    if (n == 0) {
+        return 1;
+    }
+    return n * fac(n - 1);
 }
 
-int
-main (int argc, char **argv)
+int main(int argc, char **argv)
 {
-  unsigned int ovfl = 0, profcnt = 0;
-  struct timeval tv, start;
-  struct prof prof[32];
-  double t_tick, delta;
-  long int sum = 0;
-  int i, j;
+    unsigned int ovfl = 0, profcnt = 0;
+    struct timeval tv, start;
+    struct prof prof[32];
+    double t_tick, delta;
+    long int sum = 0;
+    int i, j;
 
-  for (i = 0; i < NELEMS (taddr); ++i)
-    {
-      prof[profcnt].pr_base = buf[i];
-      prof[profcnt].pr_size = sizeof (buf[i]);
-      prof[profcnt].pr_off = taddr[i];
-      prof[profcnt].pr_scale = 0x10000;
-      ++profcnt;
+    for (i = 0; i < NELEMS(taddr); ++i) {
+        prof[profcnt].pr_base = buf[i];
+        prof[profcnt].pr_size = sizeof(buf[i]);
+        prof[profcnt].pr_off = taddr[i];
+        prof[profcnt].pr_scale = 0x10000;
+        ++profcnt;
     }
 
-  prof[profcnt].pr_base = blong[0];
-  prof[profcnt].pr_size = sizeof (blong[0]);
-  prof[profcnt].pr_off = 0x80001000;
-  prof[profcnt].pr_scale = 0x10000;
-  ++profcnt;
+    prof[profcnt].pr_base = blong[0];
+    prof[profcnt].pr_size = sizeof(blong[0]);
+    prof[profcnt].pr_off = 0x80001000;
+    prof[profcnt].pr_scale = 0x10000;
+    ++profcnt;
 
-  prof[profcnt].pr_base = bshort[0];
-  prof[profcnt].pr_size = sizeof (bshort[0]);
-  prof[profcnt].pr_off = 0x80000080;
-  prof[profcnt].pr_scale = 0x10000;
-  ++profcnt;
+    prof[profcnt].pr_base = bshort[0];
+    prof[profcnt].pr_size = sizeof(bshort[0]);
+    prof[profcnt].pr_off = 0x80000080;
+    prof[profcnt].pr_scale = 0x10000;
+    ++profcnt;
 
-  prof[profcnt].pr_base = bshort[1];
-  prof[profcnt].pr_size = sizeof (bshort[1]);
-  prof[profcnt].pr_off = 0x80000f80;
-  prof[profcnt].pr_scale = 0x10000;
-  ++profcnt;
+    prof[profcnt].pr_base = bshort[1];
+    prof[profcnt].pr_size = sizeof(bshort[1]);
+    prof[profcnt].pr_off = 0x80000f80;
+    prof[profcnt].pr_scale = 0x10000;
+    ++profcnt;
 
-  prof[profcnt].pr_base = bshort[2];
-  prof[profcnt].pr_size = sizeof (bshort[2]);
-  prof[profcnt].pr_off = 0x80001080;
-  prof[profcnt].pr_scale = 0x10000;
-  ++profcnt;
+    prof[profcnt].pr_base = bshort[2];
+    prof[profcnt].pr_size = sizeof(bshort[2]);
+    prof[profcnt].pr_off = 0x80001080;
+    prof[profcnt].pr_scale = 0x10000;
+    ++profcnt;
 
-  prof[profcnt].pr_base = bshort[3];
-  prof[profcnt].pr_size = sizeof (bshort[3]);
-  prof[profcnt].pr_off = 0x80001f80;
-  prof[profcnt].pr_scale = 0x10000;
-  ++profcnt;
+    prof[profcnt].pr_base = bshort[3];
+    prof[profcnt].pr_size = sizeof(bshort[3]);
+    prof[profcnt].pr_off = 0x80001f80;
+    prof[profcnt].pr_scale = 0x10000;
+    ++profcnt;
 
-  prof[profcnt].pr_base = bshort[4];
-  prof[profcnt].pr_size = sizeof (bshort[4]);
-  prof[profcnt].pr_off = 0x80002080;
-  prof[profcnt].pr_scale = 0x10000;
-  ++profcnt;
+    prof[profcnt].pr_base = bshort[4];
+    prof[profcnt].pr_size = sizeof(bshort[4]);
+    prof[profcnt].pr_off = 0x80002080;
+    prof[profcnt].pr_scale = 0x10000;
+    ++profcnt;
 
-  prof[profcnt].pr_base = vlong[0];
-  prof[profcnt].pr_size = sizeof (vlong[0]);
-  prof[profcnt].pr_off = 0x80000080;
-  prof[profcnt].pr_scale = 0x10000;
-  ++profcnt;
+    prof[profcnt].pr_base = vlong[0];
+    prof[profcnt].pr_size = sizeof(vlong[0]);
+    prof[profcnt].pr_off = 0x80000080;
+    prof[profcnt].pr_scale = 0x10000;
+    ++profcnt;
 
-  /* Set up overflow counter (must be last on Irix).  */
-  prof[profcnt].pr_base = &ovfl;
-  prof[profcnt].pr_size = sizeof (ovfl);
-  prof[profcnt].pr_off = 0;
-  prof[profcnt].pr_scale = 2;
-  ++profcnt;
+    /* Set up overflow counter (must be last on Irix).  */
+    prof[profcnt].pr_base = &ovfl;
+    prof[profcnt].pr_size = sizeof(ovfl);
+    prof[profcnt].pr_off = 0;
+    prof[profcnt].pr_scale = 2;
+    ++profcnt;
 
-  /* Turn it on.  */
-  if (sprofil (prof, profcnt, &tv, PROF_UINT) < 0)
-    {
-      if (errno == ENOSYS)
-	exit (0);
-      perror ("sprofil");
-      exit (1);
+    /* Turn it on.  */
+    if (sprofil(prof, profcnt, &tv, PROF_UINT) < 0) {
+        if (errno == ENOSYS) {
+            exit(0);
+        }
+        perror("sprofil");
+        exit(1);
     }
 
-  t_tick = tv.tv_sec + 1e-6 * tv.tv_usec;
-  printf ("profiling period = %g ms\n", 1e3 * t_tick);
+    t_tick = tv.tv_sec + 1e-6 * tv.tv_usec;
+    printf("profiling period = %g ms\n", 1e3 * t_tick);
 
-  gettimeofday (&start, NULL);
-  do
-    {
-      for (i = 0; i < 21; ++i)
-	sum += fac (i);
+    gettimeofday(&start, NULL);
+    do {
+        for (i = 0; i < 21; ++i) {
+            sum += fac(i);
+        }
 
-      gettimeofday (&tv, NULL);
-      timersub (&tv, &start, &tv);
-      delta = tv.tv_sec + 1e-6 * tv.tv_usec;
+        gettimeofday(&tv, NULL);
+        timersub(&tv, &start, &tv);
+        delta = tv.tv_sec + 1e-6 * tv.tv_usec;
+    } while (delta < 1000 * t_tick);
+
+    printf("sum = 0x%lx\n", sum);
+
+    /* Turn it off.  */
+    if (sprofil(NULL, 0, NULL, 0) < 0) {
+        if (errno == ENOSYS) {
+            exit(0);
+        }
+        perror("sprofil");
+        exit(1);
     }
-  while (delta < 1000 * t_tick);
 
-  printf ("sum = 0x%lx\n", sum);
+    printf("overflow = %u\n", ovfl);
+    for (i = 0; i < NELEMS(taddr); ++i)
+        for (j = 0; j < 0x10000 / sizeof(int); ++j)
+            if (buf[i][j] != 0)
+                printf("%0*zx\t%u\t(buffer %d)\n",
+                       (int)(sizeof(size_t) * 2),
+                       (taddr[i] + ((char *) &buf[i][j] - (char *) &buf[i][0])),
+                       buf[i][j], i);
 
-  /* Turn it off.  */
-  if (sprofil (NULL, 0, NULL, 0) < 0)
-    {
-      if (errno == ENOSYS)
-	exit (0);
-      perror ("sprofil");
-      exit (1);
-    }
-
-  printf ("overflow = %u\n", ovfl);
-  for (i = 0; i < NELEMS (taddr); ++i)
-    for (j = 0; j < 0x10000 / sizeof (int); ++j)
-      if (buf[i][j] != 0)
-	printf ("%0*zx\t%u\t(buffer %d)\n",
-		(int) (sizeof (size_t) * 2),
-		(taddr[i] + ((char *) &buf[i][j] - (char *) &buf[i][0])),
-		buf[i][j], i);
-
-  return 0;
+    return 0;
 }

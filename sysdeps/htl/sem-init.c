@@ -22,18 +22,18 @@
 #include <hurd.h>
 #include <pt-internal.h>
 
-int
-__sem_init (sem_t *sem, int pshared, unsigned value)
+int __sem_init(sem_t *sem, int pshared, unsigned value)
 {
 #ifdef SEM_VALUE_MAX
-  if (value > SEM_VALUE_MAX)
-    return __hurd_fail (EINVAL);
+    if (value > SEM_VALUE_MAX) {
+        return __hurd_fail(EINVAL);
+    }
 #endif
 
-  struct new_sem *isem = (struct new_sem *) sem;
+    struct new_sem *isem = (struct new_sem *) sem;
 
-  *isem = (struct new_sem) __SEMAPHORE_INITIALIZER (value, pshared);
-  return 0;
+    *isem = (struct new_sem) __SEMAPHORE_INITIALIZER(value, pshared);
+    return 0;
 }
 
-strong_alias (__sem_init, sem_init);
+strong_alias(__sem_init, sem_init);

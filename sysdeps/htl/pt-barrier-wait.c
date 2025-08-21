@@ -21,56 +21,52 @@
 #include <shlib-compat.h>
 #include <pt-internal.h>
 
-int
-__pthread_barrier_wait (pthread_barrier_t *barrier)
+int __pthread_barrier_wait(pthread_barrier_t *barrier)
 {
-  __pthread_spin_wait (&barrier->__lock);
-  if (--barrier->__pending == 0)
-    {
-      barrier->__pending = barrier->__count;
+    __pthread_spin_wait(&barrier->__lock);
+    if (--barrier->__pending == 0) {
+        barrier->__pending = barrier->__count;
 
-      if (barrier->__count == 1)
-	__pthread_spin_unlock (&barrier->__lock);
-      else
-	{
-	  struct __pthread *wakeup;
-	  unsigned n = 0;
+        if (barrier->__count == 1) {
+            __pthread_spin_unlock(&barrier->__lock);
+        } else {
+            struct __pthread *wakeup;
+            unsigned n = 0;
 
-	  __pthread_queue_iterate (barrier->__queue, wakeup)
-	    n++;
+            __pthread_queue_iterate(barrier->__queue, wakeup)
+            n++;
 
-	  {
-	    struct __pthread *wakeups[n];
-	    unsigned i = 0;
+            {
+                struct __pthread *wakeups[n];
+                unsigned i = 0;
 
-	    __pthread_dequeuing_iterate (barrier->__queue, wakeup)
-	      wakeups[i++] = wakeup;
+                __pthread_dequeuing_iterate(barrier->__queue, wakeup)
+                wakeups[i++] = wakeup;
 
-	    barrier->__queue = NULL;
-	    __pthread_spin_unlock (&barrier->__lock);
+                barrier->__queue = NULL;
+                __pthread_spin_unlock(&barrier->__lock);
 
-	    for (i = 0; i < n; i++)
-	      __pthread_wakeup (wakeups[i]);
-	  }
-	}
+                for (i = 0; i < n; i++) {
+                    __pthread_wakeup(wakeups[i]);
+                }
+            }
+        }
 
-      return PTHREAD_BARRIER_SERIAL_THREAD;
-    }
-  else
-    {
-      struct __pthread *self = _pthread_self ();
+        return PTHREAD_BARRIER_SERIAL_THREAD;
+    } else {
+        struct __pthread *self = _pthread_self();
 
-      /* Add ourselves to the list of waiters.  */
-      __pthread_enqueue (&barrier->__queue, self);
-      __pthread_spin_unlock (&barrier->__lock);
+        /* Add ourselves to the list of waiters.  */
+        __pthread_enqueue(&barrier->__queue, self);
+        __pthread_spin_unlock(&barrier->__lock);
 
-      __pthread_block (self);
-      return 0;
+        __pthread_block(self);
+        return 0;
     }
 }
-libc_hidden_def (__pthread_barrier_wait)
-versioned_symbol (libc, __pthread_barrier_wait, pthread_barrier_wait, GLIBC_2_42);
+libc_hidden_def(__pthread_barrier_wait)
+versioned_symbol(libc, __pthread_barrier_wait, pthread_barrier_wait, GLIBC_2_42);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_42)
-compat_symbol (libpthread, __pthread_barrier_wait, pthread_barrier_wait, GLIBC_2_12);
+compat_symbol(libpthread, __pthread_barrier_wait, pthread_barrier_wait, GLIBC_2_12);
 #endif

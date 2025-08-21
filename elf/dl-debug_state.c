@@ -23,8 +23,7 @@
    examining the r_brk member of struct r_debug, but GDB 4.15 in fact looks
    for this particular symbol name in the PT_INTERP file.  Therefore,
    this function must not be inlined.  */
-void
-_dl_debug_state (void)
+void _dl_debug_state(void)
 {
 }
-rtld_hidden_def (_dl_debug_state)
+rtld_hidden_def(_dl_debug_state)

@@ -17,16 +17,15 @@
 
 
 /* The hashing function used for the table with collation symbols.  */
-static int32_t __attribute__ ((pure, unused))
-elem_hash (const char *str, int32_t n)
+static int32_t __attribute__((pure, unused))
+elem_hash(const char *str, int32_t n)
 {
-  int32_t result = n;
+    int32_t result = n;
 
-  while (n-- > 0)
-    {
-      result <<= 3;
-      result += *str++;
+    while (n-- > 0) {
+        result <<= 3;
+        result += *str++;
     }
 
-  return result;
+    return result;
 }

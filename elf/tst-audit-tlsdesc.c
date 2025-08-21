@@ -21,40 +21,38 @@
 
 extern __thread int global1;
 extern __thread int global2;
-void *get_local1 (void);
-void set_global2 (int v);
-void *get_local2 (void);
+void *get_local1(void);
+void set_global2(int v);
+void *get_local2(void);
 
-static void *
-thr_func (void *clousure)
+static void *thr_func(void *clousure)
 {
-  TEST_COMPARE (global1, 0);
-  ++global1;
-  TEST_COMPARE (global2, 0);
-  ++global2;
-  TEST_COMPARE (global2, 1);
+    TEST_COMPARE(global1, 0);
+    ++global1;
+    TEST_COMPARE(global2, 0);
+    ++global2;
+    TEST_COMPARE(global2, 1);
 
-  set_global2 (10);
-  TEST_COMPARE (global2, 10);
+    set_global2(10);
+    TEST_COMPARE(global2, 10);
 
-  int *local1 = get_local1 ();
-  TEST_COMPARE (*local1, 0);
-  ++*local1;
+    int *local1 = get_local1();
+    TEST_COMPARE(*local1, 0);
+    ++*local1;
 
-  int *local2 = get_local2 ();
-  TEST_COMPARE (*local2, 0);
-  ++*local2;
+    int *local2 = get_local2();
+    TEST_COMPARE(*local2, 0);
+    ++*local2;
 
-  return 0;
+    return 0;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  pthread_t thr = xpthread_create (NULL, thr_func, NULL);
-  void *r = xpthread_join (thr);
-  TEST_VERIFY (r == NULL);
-  return 0;
+    pthread_t thr = xpthread_create(NULL, thr_func, NULL);
+    void *r = xpthread_join(thr);
+    TEST_VERIFY(r == NULL);
+    return 0;
 }
 
 #include <support/test-driver.c>

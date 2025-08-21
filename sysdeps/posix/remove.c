@@ -26,18 +26,19 @@
 #endif
 
 
-int
-remove (const char *file)
+int remove(const char *file)
 {
-  /* First try to unlink since this is more frequently the necessary action. */
-  if (__unlink (file) != 0
-      /* If it is indeed a directory...  */
-      && (IS_NO_DIRECTORY_ERROR
-	  /* ...try to remove it.  */
-	  || __rmdir (file) != 0))
-    /* Cannot remove the object for whatever reason.  */
-    return -1;
+    /* First try to unlink since this is more frequently the necessary action. */
+    if (__unlink(file) != 0
+        /* If it is indeed a directory...  */
+        && (IS_NO_DIRECTORY_ERROR
+            /* ...try to remove it.  */
+            || __rmdir(file) != 0))
+        /* Cannot remove the object for whatever reason.  */
+    {
+        return -1;
+    }
 
-  return 0;
+    return 0;
 }
-libc_hidden_def (remove)
+libc_hidden_def(remove)

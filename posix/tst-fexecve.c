@@ -23,66 +23,68 @@
 #include <support/check.h>
 
 /* Try executing "/bin/sh -c true", using FD opened on /bin/sh.  */
-static int
-try_fexecve (int fd)
+static int try_fexecve(int fd)
 {
-  pid_t pid = fork ();
+    pid_t pid = fork();
 
-  if (pid == 0)
-    {
-      static const char *const argv[] = {
-	"/bin/sh", "-c", "true", NULL
-      };
-      fexecve (fd, (char *const *) argv, environ);
-      _exit (errno);
+    if (pid == 0) {
+        static const char *const argv[] = {
+            "/bin/sh", "-c", "true", NULL
+        };
+        fexecve(fd, (char *const *) argv, environ);
+        _exit(errno);
     }
-  if (pid < 0)
-    FAIL_RET ("fork failed: %m");
-
-  pid_t termpid;
-  int status;
-  termpid = TEMP_FAILURE_RETRY (waitpid (pid, &status, 0));
-  if (termpid == -1)
-    FAIL_RET ("waitpid failed: %m");
-  if (termpid != pid)
-    FAIL_RET ("waitpid returned %ld != %ld",
-	      (long int) termpid, (long int) pid);
-  if (!WIFEXITED (status))
-    FAIL_RET ("child hasn't exited normally");
-
-  /* If fexecve is unimplemented mark this test as UNSUPPORTED.  */
-  if (WEXITSTATUS (status) == ENOSYS)
-    FAIL_UNSUPPORTED ("fexecve is unimplemented");
-
-  if (WEXITSTATUS (status) != 0)
-    {
-      errno = WEXITSTATUS (status);
-      FAIL_RET ("fexecve failed: %m");
+    if (pid < 0) {
+        FAIL_RET("fork failed: %m");
     }
-  return 0;
+
+    pid_t termpid;
+    int status;
+    termpid = TEMP_FAILURE_RETRY(waitpid(pid, &status, 0));
+    if (termpid == -1) {
+        FAIL_RET("waitpid failed: %m");
+    }
+    if (termpid != pid)
+        FAIL_RET("waitpid returned %ld != %ld",
+                 (long int) termpid, (long int) pid);
+    if (!WIFEXITED(status)) {
+        FAIL_RET("child hasn't exited normally");
+    }
+
+    /* If fexecve is unimplemented mark this test as UNSUPPORTED.  */
+    if (WEXITSTATUS(status) == ENOSYS) {
+        FAIL_UNSUPPORTED("fexecve is unimplemented");
+    }
+
+    if (WEXITSTATUS(status) != 0) {
+        errno = WEXITSTATUS(status);
+        FAIL_RET("fexecve failed: %m");
+    }
+    return 0;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int fd;
-  int ret;
+    int fd;
+    int ret;
 
-  fd = open ("/bin/sh", O_RDONLY);
-  if (fd < 0)
-    FAIL_UNSUPPORTED ("/bin/sh cannot be opened: %m");
-  ret = try_fexecve (fd);
-  close (fd);
+    fd = open("/bin/sh", O_RDONLY);
+    if (fd < 0) {
+        FAIL_UNSUPPORTED("/bin/sh cannot be opened: %m");
+    }
+    ret = try_fexecve(fd);
+    close(fd);
 
 #ifdef O_PATH
-  fd = open ("/bin/sh", O_RDONLY | O_PATH);
-  if (fd < 0)
-    FAIL_UNSUPPORTED ("/bin/sh cannot be opened (O_PATH): %m");
-  ret |= try_fexecve (fd);
-  close (fd);
+    fd = open("/bin/sh", O_RDONLY | O_PATH);
+    if (fd < 0) {
+        FAIL_UNSUPPORTED("/bin/sh cannot be opened (O_PATH): %m");
+    }
+    ret |= try_fexecve(fd);
+    close(fd);
 #endif
 
-  return ret;
+    return ret;
 }
 
 #include <support/test-driver.c>

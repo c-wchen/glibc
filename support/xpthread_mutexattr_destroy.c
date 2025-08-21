@@ -18,9 +18,8 @@
 
 #include <support/xthread.h>
 
-void
-xpthread_mutexattr_destroy (pthread_mutexattr_t *attr)
+void xpthread_mutexattr_destroy(pthread_mutexattr_t *attr)
 {
-  xpthread_check_return ("pthread_mutexattr_destroy",
-                         pthread_mutexattr_destroy (attr));
+    xpthread_check_return("pthread_mutexattr_destroy",
+                          pthread_mutexattr_destroy(attr));
 }

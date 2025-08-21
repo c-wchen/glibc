@@ -47,29 +47,28 @@
 /* Facility bit 201: arch15/z17: CPU: Concurrent-Functions Facility  */
 #define S390_STFLE_BIT201_ARCH15_CON (1ULL << 6)
 
-#define S390_IS_ARCH15(STFLE_BITS)					\
-  ((((STFLE_BITS) & S390_STFLE_BIT84_ARCH15_MIE4) != 0)			\
-   && (((STFLE_BITS) & S390_STFLE_BIT198_ARCH15_VXRS_EXT3) != 0)	\
-   && (((STFLE_BITS) & S390_STFLE_BIT199_ARCH15_VXRS_PDE3) != 0)	\
+#define S390_IS_ARCH15(STFLE_BITS)                  \
+  ((((STFLE_BITS) & S390_STFLE_BIT84_ARCH15_MIE4) != 0)         \
+   && (((STFLE_BITS) & S390_STFLE_BIT198_ARCH15_VXRS_EXT3) != 0)    \
+   && (((STFLE_BITS) & S390_STFLE_BIT199_ARCH15_VXRS_PDE3) != 0)    \
    && (((STFLE_BITS) & S390_STFLE_BIT201_ARCH15_CON) != 0))
 
-#define S390_IS_ARCH13_MIE3(STFLE_BITS)			\
+#define S390_IS_ARCH13_MIE3(STFLE_BITS)         \
   (((STFLE_BITS) & S390_STFLE_BIT61_ARCH13_MIE3) != 0)
 
-#define S390_IS_Z196(STFLE_BITS)		\
+#define S390_IS_Z196(STFLE_BITS)        \
   (((STFLE_BITS) & S390_STFLE_BIT45_Z196) != 0)
 
-#define S390_IS_Z10(STFLE_BITS)			\
+#define S390_IS_Z10(STFLE_BITS)         \
   (((STFLE_BITS) & S390_STFLE_BIT34_Z10) != 0)
 
-struct cpu_features
-{
-  unsigned long int hwcap;
-  unsigned long int __reserved_hwcap2;
-  unsigned long long __reserved;
-  unsigned long long stfle_orig;
-  unsigned long long stfle_filtered;
-  unsigned long long __reserved2[11];
+struct cpu_features {
+    unsigned long int hwcap;
+    unsigned long int __reserved_hwcap2;
+    unsigned long long __reserved;
+    unsigned long long stfle_orig;
+    unsigned long long stfle_filtered;
+    unsigned long long __reserved2[11];
 };
 
 #endif /* __CPU_FEATURES_S390X_H  */

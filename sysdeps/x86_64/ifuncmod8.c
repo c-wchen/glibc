@@ -18,20 +18,18 @@
 
 #include <emmintrin.h>
 
-void * foo_ifunc (void) __asm__ ("foo");
+void *foo_ifunc(void) __asm__("foo");
 __asm__(".type foo, %gnu_indirect_function");
 
-static float
-foo_impl (float x)
+static float foo_impl(float x)
 {
-  return x + 1;
+    return x + 1;
 }
 
 void *
-inhibit_stack_protector
-foo_ifunc (void)
+inhibit_stack_protector foo_ifunc(void)
 {
-  __m128i xmm = _mm_set1_epi32 (-1);
-  asm volatile ("movdqa %0, %%xmm0" : : "x" (xmm) : "xmm0" );
-  return foo_impl;
+    __m128i xmm = _mm_set1_epi32(-1);
+    asm volatile("movdqa %0, %%xmm0" : : "x"(xmm) : "xmm0");
+    return foo_impl;
 }

@@ -20,18 +20,16 @@
 #include <unistd.h>
 
 /* Change the current directory to PATH.  */
-int
-__chdir (const char *path)
+int __chdir(const char *path)
 {
-  if (path == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (path == NULL) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (chdir)
+stub_warning(chdir)
 
-weak_alias (__chdir, chdir)
+weak_alias(__chdir, chdir)

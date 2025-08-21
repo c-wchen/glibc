@@ -23,24 +23,24 @@
 #endif
 
 /* Find the last occurrence of WC in WCS.  */
-wchar_t *
-WCSRCHR (const wchar_t *wcs, const wchar_t wc)
+wchar_t *WCSRCHR(const wchar_t *wcs, const wchar_t wc)
 {
-  wchar_t *retval = NULL;
+    wchar_t *retval = NULL;
 
-#define ITERATION(index)		\
-  ({					\
-    if (*wcs == wc)			\
-      retval = (wchar_t*) wcs;		\
-    *wcs++ != L'\0';	\
+#define ITERATION(index)        \
+  ({                    \
+    if (*wcs == wc)         \
+      retval = (wchar_t*) wcs;      \
+    *wcs++ != L'\0';    \
   })
 
 #ifndef UNROLL_NTIMES
 # define UNROLL_NTIMES 1
 #endif
 
-  while (1)
-    UNROLL_REPEAT (UNROLL_NTIMES, ITERATION);
+    while (1) {
+        UNROLL_REPEAT(UNROLL_NTIMES, ITERATION);
+    }
 
-  return retval;
+    return retval;
 }

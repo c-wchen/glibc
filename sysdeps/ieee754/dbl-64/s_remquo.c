@@ -25,86 +25,80 @@
 static const double zero = 0.0;
 
 
-double
-__remquo (double x, double y, int *quo)
+double __remquo(double x, double y, int *quo)
 {
-  int64_t hx, hy;
-  uint64_t sx, qs;
-  int cquo;
+    int64_t hx, hy;
+    uint64_t sx, qs;
+    int cquo;
 
-  EXTRACT_WORDS64 (hx, x);
-  EXTRACT_WORDS64 (hy, y);
-  sx = hx & UINT64_C(0x8000000000000000);
-  qs = sx ^ (hy & UINT64_C(0x8000000000000000));
-  hy &= UINT64_C(0x7fffffffffffffff);
-  hx &= UINT64_C(0x7fffffffffffffff);
+    EXTRACT_WORDS64(hx, x);
+    EXTRACT_WORDS64(hy, y);
+    sx = hx & UINT64_C(0x8000000000000000);
+    qs = sx ^ (hy & UINT64_C(0x8000000000000000));
+    hy &= UINT64_C(0x7fffffffffffffff);
+    hx &= UINT64_C(0x7fffffffffffffff);
 
-  /* Purge off exception values.  */
-  if (__glibc_unlikely (hy == 0))
-    return (x * y) / (x * y);			/* y = 0 */
-  if (__builtin_expect (hx >= UINT64_C(0x7ff0000000000000) /* x not finite */
-			|| hy > UINT64_C(0x7ff0000000000000), 0))/* y is NaN */
-    return (x * y) / (x * y);
-
-  if (hy <= UINT64_C(0x7fbfffffffffffff))
-    x = __ieee754_fmod (x, 8 * y);		/* now x < 8y */
-
-  if (__glibc_unlikely (hx == hy))
-    {
-      *quo = qs ? -1 : 1;
-      return zero * x;
+    /* Purge off exception values.  */
+    if (__glibc_unlikely(hy == 0)) {
+        return (x * y) / (x * y);    /* y = 0 */
+    }
+    if (__builtin_expect(hx >= UINT64_C(0x7ff0000000000000)  /* x not finite */
+                         || hy > UINT64_C(0x7ff0000000000000), 0)) { /* y is NaN */
+        return (x * y) / (x * y);
     }
 
-  x = fabs (x);
-  INSERT_WORDS64 (y, hy);
-  cquo = 0;
-
-  if (hy <= UINT64_C(0x7fcfffffffffffff) && x >= 4 * y)
-    {
-      x -= 4 * y;
-      cquo += 4;
-    }
-  if (hy <= UINT64_C(0x7fdfffffffffffff) && x >= 2 * y)
-    {
-      x -= 2 * y;
-      cquo += 2;
+    if (hy <= UINT64_C(0x7fbfffffffffffff)) {
+        x = __ieee754_fmod(x, 8 * y);    /* now x < 8y */
     }
 
-  if (hy < UINT64_C(0x0020000000000000))
-    {
-      if (x + x > y)
-	{
-	  x -= y;
-	  ++cquo;
-	  if (x + x >= y)
-	    {
-	      x -= y;
-	      ++cquo;
-	    }
-	}
-    }
-  else
-    {
-      double y_half = 0.5 * y;
-      if (x > y_half)
-	{
-	  x -= y;
-	  ++cquo;
-	  if (x >= y_half)
-	    {
-	      x -= y;
-	      ++cquo;
-	    }
-	}
+    if (__glibc_unlikely(hx == hy)) {
+        *quo = qs ? -1 : 1;
+        return zero * x;
     }
 
-  *quo = qs ? -cquo : cquo;
+    x = fabs(x);
+    INSERT_WORDS64(y, hy);
+    cquo = 0;
 
-  /* Ensure correct sign of zero result in round-downward mode.  */
-  if (x == 0.0)
-    x = 0.0;
-  if (sx)
-    x = -x;
-  return x;
+    if (hy <= UINT64_C(0x7fcfffffffffffff) && x >= 4 * y) {
+        x -= 4 * y;
+        cquo += 4;
+    }
+    if (hy <= UINT64_C(0x7fdfffffffffffff) && x >= 2 * y) {
+        x -= 2 * y;
+        cquo += 2;
+    }
+
+    if (hy < UINT64_C(0x0020000000000000)) {
+        if (x + x > y) {
+            x -= y;
+            ++cquo;
+            if (x + x >= y) {
+                x -= y;
+                ++cquo;
+            }
+        }
+    } else {
+        double y_half = 0.5 * y;
+        if (x > y_half) {
+            x -= y;
+            ++cquo;
+            if (x >= y_half) {
+                x -= y;
+                ++cquo;
+            }
+        }
+    }
+
+    *quo = qs ? -cquo : cquo;
+
+    /* Ensure correct sign of zero result in round-downward mode.  */
+    if (x == 0.0) {
+        x = 0.0;
+    }
+    if (sx) {
+        x = -x;
+    }
+    return x;
 }
-libm_alias_double (__remquo, remquo)
+libm_alias_double(__remquo, remquo)

@@ -20,17 +20,16 @@
 #include <math.h>
 #include <fenv_private.h>
 
-TYPE
-FUNC (TYPE x)
+TYPE FUNC(TYPE x)
 {
-  fenv_t fenv;
-  TYPE r;
+    fenv_t fenv;
+    TYPE r;
 
-  libc_feholdexcept_setround_387 (&fenv, FE_OPTION);
-  asm volatile ("frndint" : "=t" (r) : "0" (x));
-  /* Preserve "invalid" exceptions from sNaN input.  */
-  fenv.__status_word |= libc_fetestexcept_387 (FE_INVALID);
-  libc_fesetenv_387 (&fenv);
+    libc_feholdexcept_setround_387(&fenv, FE_OPTION);
+    asm volatile("frndint" : "=t"(r) : "0"(x));
+    /* Preserve "invalid" exceptions from sNaN input.  */
+    fenv.__status_word |= libc_fetestexcept_387(FE_INVALID);
+    libc_fesetenv_387(&fenv);
 
-  return r;
+    return r;
 }

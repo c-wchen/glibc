@@ -25,11 +25,10 @@
 #define _EXTERN_INLINE __extern_inline
 #endif
 
-_EXTERN_INLINE void *
-__thread_stack_pointer (void)
+_EXTERN_INLINE void *__thread_stack_pointer(void)
 {
-  register void *__sp__ ("{STACK-POINTER}");
-  return __sp__;
+    register void *__sp__("{STACK-POINTER}");
+    return __sp__;
 }
 
-#endif	/* machine-sp.h */
+#endif  /* machine-sp.h */

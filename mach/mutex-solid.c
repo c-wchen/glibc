@@ -23,13 +23,11 @@
    pthread is not used, and `mutexes' are in fact just spin locks (and
    some unused storage).  */
 
-void
-__mutex_lock_solid (void *lock)
+void __mutex_lock_solid(void *lock)
 {
-  __spin_lock_solid (lock);
+    __spin_lock_solid(lock);
 }
 
-void
-__mutex_unlock_solid (void *lock)
+void __mutex_unlock_solid(void *lock)
 {
 }

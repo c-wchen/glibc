@@ -20,17 +20,16 @@
 
 #undef putchar
 
-int
-putchar (int c)
+int putchar(int c)
 {
-  int result;
-  _IO_acquire_lock (stdout);
-  result = _IO_putc_unlocked (c, stdout);
-  _IO_release_lock (stdout);
-  return result;
+    int result;
+    _IO_acquire_lock(stdout);
+    result = _IO_putc_unlocked(c, stdout);
+    _IO_release_lock(stdout);
+    return result;
 }
 
 #if defined weak_alias && !defined _IO_MTSAFE_IO
 #undef putchar_unlocked
-weak_alias (putchar, putchar_unlocked)
+weak_alias(putchar, putchar_unlocked)
 #endif

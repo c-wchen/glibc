@@ -19,9 +19,8 @@
 #include <math.h>
 #include <math-narrow.h>
 
-double
-__daddl (long double x, long double y)
+double __daddl(long double x, long double y)
 {
-  NARROW_ADD_TRIVIAL (x, y, double);
+    NARROW_ADD_TRIVIAL(x, y, double);
 }
-libm_alias_double_ldouble (add)
+libm_alias_double_ldouble(add)

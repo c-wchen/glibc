@@ -32,21 +32,21 @@ extern int selinux_enabled;
 struct avc_cache_stats;
 
 /* Initialize the userspace AVC.  */
-extern void nscd_avc_init (void);
+extern void nscd_avc_init(void);
 /* Determine if we are running on an SELinux kernel.  */
-extern void nscd_selinux_enabled (int *selinux_enabled);
+extern void nscd_selinux_enabled(int *selinux_enabled);
 /* Check if the client has permission for the request type.  */
-extern int nscd_request_avc_has_perm (int fd, request_type req);
+extern int nscd_request_avc_has_perm(int fd, request_type req);
 /* Initialize AVC statistic information.  */
-extern void nscd_avc_cache_stats (struct avc_cache_stats *cstats);
+extern void nscd_avc_cache_stats(struct avc_cache_stats *cstats);
 /* Display statistics on AVC usage.  */
-extern void nscd_avc_print_stats (struct avc_cache_stats *cstats);
+extern void nscd_avc_print_stats(struct avc_cache_stats *cstats);
 
 # ifdef HAVE_LIBCAP
 /* Preserve capabilities to connect to the audit daemon. */
-extern cap_t preserve_capabilities (void);
+extern cap_t preserve_capabilities(void);
 /* Install final capabilities.  */
-extern void install_real_capabilities (cap_t new_caps);
+extern void install_real_capabilities(cap_t new_caps);
 # endif
 #else
 # define selinux_enabled 0

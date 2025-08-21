@@ -17,21 +17,21 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _BITS_PTHREADTYPES_ARCH_H
-#define _BITS_PTHREADTYPES_ARCH_H	1
+#define _BITS_PTHREADTYPES_ARCH_H   1
 
 #include <bits/endian.h>
 
-#define __SIZEOF_PTHREAD_ATTR_T		64
-#define __SIZEOF_PTHREAD_MUTEX_T	48
-#define __SIZEOF_PTHREAD_MUTEXATTR_T	8
-#define __SIZEOF_PTHREAD_CONDATTR_T	8
-#define __SIZEOF_PTHREAD_RWLOCK_T	56
-#define __SIZEOF_PTHREAD_BARRIER_T	32
+#define __SIZEOF_PTHREAD_ATTR_T     64
+#define __SIZEOF_PTHREAD_MUTEX_T    48
+#define __SIZEOF_PTHREAD_MUTEXATTR_T    8
+#define __SIZEOF_PTHREAD_CONDATTR_T 8
+#define __SIZEOF_PTHREAD_RWLOCK_T   56
+#define __SIZEOF_PTHREAD_BARRIER_T  32
 #define __SIZEOF_PTHREAD_BARRIERATTR_T  8
 #define __SIZEOF_PTHREAD_COND_T         48
-#define __SIZEOF_PTHREAD_RWLOCKATTR_T	8
+#define __SIZEOF_PTHREAD_RWLOCKATTR_T   8
 
 #define __LOCK_ALIGNMENT
 #define __ONCE_ALIGNMENT
 
-#endif	/* bits/pthreadtypes.h */
+#endif  /* bits/pthreadtypes.h */

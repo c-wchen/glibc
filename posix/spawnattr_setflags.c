@@ -19,27 +19,27 @@
 #include <spawn.h>
 #include <string.h>
 
-#define ALL_FLAGS (POSIX_SPAWN_RESETIDS					      \
-		   | POSIX_SPAWN_SETPGROUP				      \
-		   | POSIX_SPAWN_SETSIGDEF				      \
-		   | POSIX_SPAWN_SETSIGMASK				      \
-		   | POSIX_SPAWN_SETSCHEDPARAM				      \
-		   | POSIX_SPAWN_SETSCHEDULER				      \
-		   | POSIX_SPAWN_SETSID					      \
-		   | POSIX_SPAWN_USEVFORK				      \
-		   | POSIX_SPAWN_SETCGROUP)
+#define ALL_FLAGS (POSIX_SPAWN_RESETIDS                       \
+           | POSIX_SPAWN_SETPGROUP                    \
+           | POSIX_SPAWN_SETSIGDEF                    \
+           | POSIX_SPAWN_SETSIGMASK                   \
+           | POSIX_SPAWN_SETSCHEDPARAM                    \
+           | POSIX_SPAWN_SETSCHEDULER                     \
+           | POSIX_SPAWN_SETSID                       \
+           | POSIX_SPAWN_USEVFORK                     \
+           | POSIX_SPAWN_SETCGROUP)
 
 /* Store flags in the attribute structure.  */
-int
-__posix_spawnattr_setflags (posix_spawnattr_t *attr, short int flags)
+int __posix_spawnattr_setflags(posix_spawnattr_t *attr, short int flags)
 {
-  /* Check no invalid bits are set.  */
-  if (flags & ~ALL_FLAGS)
-    return EINVAL;
+    /* Check no invalid bits are set.  */
+    if (flags & ~ALL_FLAGS) {
+        return EINVAL;
+    }
 
-  /* Store the flag word.  */
-  attr->__flags = flags;
+    /* Store the flag word.  */
+    attr->__flags = flags;
 
-  return 0;
+    return 0;
 }
-weak_alias (__posix_spawnattr_setflags, posix_spawnattr_setflags)
+weak_alias(__posix_spawnattr_setflags, posix_spawnattr_setflags)

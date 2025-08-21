@@ -26,19 +26,20 @@
    used.  If not and if DIR is not NULL, that value is checked.  If
    that fails, P_tmpdir is tried and finally "/tmp".  The storage for
    the filename is allocated by `malloc'.  */
-char *
-tempnam (const char *dir, const char *pfx)
+char *tempnam(const char *dir, const char *pfx)
 {
-  char buf[FILENAME_MAX];
+    char buf[FILENAME_MAX];
 
-  if (__path_search (buf, FILENAME_MAX, dir, pfx, 1))
-    return NULL;
+    if (__path_search(buf, FILENAME_MAX, dir, pfx, 1)) {
+        return NULL;
+    }
 
-  if (__gen_tempname (buf, 0, 0, __GT_NOCREATE))
-    return NULL;
+    if (__gen_tempname(buf, 0, 0, __GT_NOCREATE)) {
+        return NULL;
+    }
 
-  return __strdup (buf);
+    return __strdup(buf);
 }
 
-link_warning (tempnam,
-	      "the use of `tempnam' is dangerous, better use `mkstemp'")
+link_warning(tempnam,
+             "the use of `tempnam' is dangerous, better use `mkstemp'")

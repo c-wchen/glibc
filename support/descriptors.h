@@ -27,21 +27,21 @@ struct support_descriptors;
 /* Record the currently open file descriptors and store them in the
    returned list.  Terminate the process if the listing operation
    fails.  */
-struct support_descriptors *support_descriptors_list (void);
+struct support_descriptors *support_descriptors_list(void);
 
 /* Deallocate the list of descriptors.  */
-void support_descriptors_free (struct support_descriptors *);
+void support_descriptors_free(struct support_descriptors *);
 
 /* Write the list of descriptors to STREAM, adding PREFIX to each
    line.  */
-void support_descriptors_dump (struct support_descriptors *,
-                               const char *prefix, FILE *stream);
+void support_descriptors_dump(struct support_descriptors *,
+                              const char *prefix, FILE *stream);
 
 /* Check for file descriptor leaks and other file descriptor changes:
    Compare the current list of descriptors with the passed list.
    Record a test failure if there are additional open descriptors,
    descriptors have been closed, or if a change in file descriptor can
    be detected.  */
-void support_descriptors_check (struct support_descriptors *);
+void support_descriptors_check(struct support_descriptors *);
 
 #endif /* SUPPORT_DESCRIPTORS_H */

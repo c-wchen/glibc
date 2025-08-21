@@ -5,18 +5,18 @@
 
 #include <emmintrin.h>
 
-extern __m128i audit_test (__m128i, __m128i, __m128i, __m128i,
-			   __m128i, __m128i, __m128i, __m128i);
-static int
-do_test (void)
+extern __m128i audit_test(__m128i, __m128i, __m128i, __m128i,
+                          __m128i, __m128i, __m128i, __m128i);
+static int do_test(void)
 {
-  __m128i xmm = _mm_setzero_si128 ();
-  __m128i ret = audit_test (xmm, xmm, xmm, xmm, xmm, xmm, xmm, xmm);
+    __m128i xmm = _mm_setzero_si128();
+    __m128i ret = audit_test(xmm, xmm, xmm, xmm, xmm, xmm, xmm, xmm);
 
-  if (memcmp (&xmm, &ret, sizeof (ret)))
-    abort ();
+    if (memcmp(&xmm, &ret, sizeof(ret))) {
+        abort();
+    }
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

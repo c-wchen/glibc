@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef NAN_HIGH_ORDER_BIT_H
-#define NAN_HIGH_ORDER_BIT_H	1
+#define NAN_HIGH_ORDER_BIT_H    1
 
 #ifdef __mips_nan2008
 /* MIPS aligned to IEEE 754-2008.  */

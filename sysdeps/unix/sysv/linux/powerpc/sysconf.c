@@ -20,52 +20,48 @@
 #include <unistd.h>
 #include <sys/auxv.h>
 
-static long linux_sysconf (int name);
+static long linux_sysconf(int name);
 
-static inline long
-auxv2sysconf_cache_associativity (unsigned long type)
+static inline long auxv2sysconf_cache_associativity(unsigned long type)
 {
-  return (__getauxval (type) & 0xffff0000) >> 16;
+    return (__getauxval(type) & 0xffff0000) >> 16;
 }
 
-static inline long
-auxv2sysconf_cache_linesize (unsigned long type)
+static inline long auxv2sysconf_cache_linesize(unsigned long type)
 {
-  return __getauxval (type) & 0xffff;
+    return __getauxval(type) & 0xffff;
 }
 
 /* Get the value of the system variable NAME.  */
-long int
-__sysconf (int name)
+long int __sysconf(int name)
 {
-  switch (name)
-    {
-      case _SC_LEVEL1_ICACHE_SIZE:
-	return __getauxval (AT_L1I_CACHESIZE);
-      case _SC_LEVEL1_ICACHE_ASSOC:
-	return auxv2sysconf_cache_associativity (AT_L1I_CACHEGEOMETRY);
-      case _SC_LEVEL1_ICACHE_LINESIZE:
-	return auxv2sysconf_cache_linesize (AT_L1I_CACHEGEOMETRY);
-      case _SC_LEVEL1_DCACHE_SIZE:
-	return __getauxval (AT_L1D_CACHESIZE);
-      case _SC_LEVEL1_DCACHE_ASSOC:
-	return auxv2sysconf_cache_associativity (AT_L1D_CACHEGEOMETRY);
-      case _SC_LEVEL1_DCACHE_LINESIZE:
-	return auxv2sysconf_cache_linesize (AT_L1D_CACHEGEOMETRY);
-      case _SC_LEVEL2_CACHE_SIZE:
-	return __getauxval (AT_L2_CACHESIZE);
-      case _SC_LEVEL2_CACHE_ASSOC:
-	return auxv2sysconf_cache_associativity (AT_L2_CACHEGEOMETRY);
-      case _SC_LEVEL2_CACHE_LINESIZE:
-	return auxv2sysconf_cache_linesize (AT_L2_CACHEGEOMETRY);
-      case _SC_LEVEL3_CACHE_SIZE:
-	return __getauxval (AT_L3_CACHESIZE);
-      case _SC_LEVEL3_CACHE_ASSOC:
-	return auxv2sysconf_cache_associativity (AT_L3_CACHEGEOMETRY);
-      case _SC_LEVEL3_CACHE_LINESIZE:
-	return auxv2sysconf_cache_linesize (AT_L3_CACHEGEOMETRY);
-      default:
-	return linux_sysconf (name);
+    switch (name) {
+        case _SC_LEVEL1_ICACHE_SIZE:
+            return __getauxval(AT_L1I_CACHESIZE);
+        case _SC_LEVEL1_ICACHE_ASSOC:
+            return auxv2sysconf_cache_associativity(AT_L1I_CACHEGEOMETRY);
+        case _SC_LEVEL1_ICACHE_LINESIZE:
+            return auxv2sysconf_cache_linesize(AT_L1I_CACHEGEOMETRY);
+        case _SC_LEVEL1_DCACHE_SIZE:
+            return __getauxval(AT_L1D_CACHESIZE);
+        case _SC_LEVEL1_DCACHE_ASSOC:
+            return auxv2sysconf_cache_associativity(AT_L1D_CACHEGEOMETRY);
+        case _SC_LEVEL1_DCACHE_LINESIZE:
+            return auxv2sysconf_cache_linesize(AT_L1D_CACHEGEOMETRY);
+        case _SC_LEVEL2_CACHE_SIZE:
+            return __getauxval(AT_L2_CACHESIZE);
+        case _SC_LEVEL2_CACHE_ASSOC:
+            return auxv2sysconf_cache_associativity(AT_L2_CACHEGEOMETRY);
+        case _SC_LEVEL2_CACHE_LINESIZE:
+            return auxv2sysconf_cache_linesize(AT_L2_CACHEGEOMETRY);
+        case _SC_LEVEL3_CACHE_SIZE:
+            return __getauxval(AT_L3_CACHESIZE);
+        case _SC_LEVEL3_CACHE_ASSOC:
+            return auxv2sysconf_cache_associativity(AT_L3_CACHEGEOMETRY);
+        case _SC_LEVEL3_CACHE_LINESIZE:
+            return auxv2sysconf_cache_linesize(AT_L3_CACHEGEOMETRY);
+        default:
+            return linux_sysconf(name);
     }
 }
 

@@ -26,27 +26,29 @@
    transition-types array does not contain at least both one DST and one
    normal time members).  */
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  if (setenv ("TZ", "XT5", 1) != 0)
-    FAIL_EXIT1 ("setenv: %m");
+    if (setenv("TZ", "XT5", 1) != 0) {
+        FAIL_EXIT1("setenv: %m");
+    }
 
-  errno = 0;
-  tzset ();
-  if (errno != 0)
-    /* This is not a test failure because checking errno this way is
-       not a documented way for determining tzset success.  We do this
-       only to gather additional diagnostics.  */
-    printf ("warning: tzset set errno to %d (%m)", errno);
+    errno = 0;
+    tzset();
+    if (errno != 0)
+        /* This is not a test failure because checking errno this way is
+           not a documented way for determining tzset success.  We do this
+           only to gather additional diagnostics.  */
+    {
+        printf("warning: tzset set errno to %d (%m)", errno);
+    }
 
-  /* Sanity-check that we got the right abbreviation for DST.  For
-     normal time, we're likely to get "-00" (the "unspecified" marker),
-     even though the POSIX timezone string says "-04".  Let's not test
-     that.  */
-  TEST_COMPARE_STRING (tzname[1], "-03");
+    /* Sanity-check that we got the right abbreviation for DST.  For
+       normal time, we're likely to get "-00" (the "unspecified" marker),
+       even though the POSIX timezone string says "-04".  Let's not test
+       that.  */
+    TEST_COMPARE_STRING(tzname[1], "-03");
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

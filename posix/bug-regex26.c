@@ -20,17 +20,16 @@
 #include <regex.h>
 #include <string.h>
 
-int
-main (void)
+int main(void)
 {
-  struct re_pattern_buffer r;
-  struct re_registers s;
-  setlocale (LC_ALL, "en_US.UTF-8");
-  memset (&r, 0, sizeof (r));
-  memset (&s, 0, sizeof (s));
-  re_set_syntax (RE_SYNTAX_GREP | RE_HAT_LISTS_NOT_NEWLINE | RE_ICASE);
-  re_compile_pattern ("insert into", 11, &r);
-  re_search (&r, "\xFF\0\x12\xA2\xAA\xC4\xB1,K\x12\xC4\xB1*\xACK",
-	     15, 0, 15, &s);
-  return 0;
+    struct re_pattern_buffer r;
+    struct re_registers s;
+    setlocale(LC_ALL, "en_US.UTF-8");
+    memset(&r, 0, sizeof(r));
+    memset(&s, 0, sizeof(s));
+    re_set_syntax(RE_SYNTAX_GREP | RE_HAT_LISTS_NOT_NEWLINE | RE_ICASE);
+    re_compile_pattern("insert into", 11, &r);
+    re_search(&r, "\xFF\0\x12\xA2\xAA\xC4\xB1,K\x12\xC4\xB1*\xACK",
+              15, 0, 15, &s);
+    return 0;
 }

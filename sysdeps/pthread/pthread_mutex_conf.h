@@ -19,10 +19,9 @@
 #ifndef _PTHREAD_MUTEX_CONF_H
 #define _PTHREAD_MUTEX_CONF_H 1
 
-static inline void
-__pthread_tunables_init (void)
+static inline void __pthread_tunables_init(void)
 {
-  /* The generic version does not have any tunables to init.  */
+    /* The generic version does not have any tunables to init.  */
 }
 
 #endif

@@ -33,8 +33,7 @@
   int __##name##_pad __attribute__((__aligned__ (__alignof__ (type64)))); type name
 #endif
 
-struct statfs
-  {
+struct statfs {
     __SWORD_TYPE f_type;
     __SWORD_TYPE f_bsize;
     __field64(__fsblkcnt_t, __fsblkcnt64_t, f_blocks);
@@ -47,13 +46,12 @@ struct statfs
     __SWORD_TYPE f_frsize;
     __SWORD_TYPE f_flags;
     __SWORD_TYPE f_spare[4];
-  };
+};
 
 #undef __field64
 
 #ifdef __USE_LARGEFILE64
-struct statfs64
-  {
+struct statfs64 {
     __SWORD_TYPE f_type;
     __SWORD_TYPE f_bsize;
     __fsblkcnt64_t f_blocks;
@@ -66,7 +64,7 @@ struct statfs64
     __SWORD_TYPE f_frsize;
     __SWORD_TYPE f_flags;
     __SWORD_TYPE f_spare[4];
-  };
+};
 #endif
 
 /* Tell code we have these members.  */

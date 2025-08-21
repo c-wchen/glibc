@@ -24,24 +24,19 @@
 
 #if LIBM_SVID_COMPAT
 /* wrapper log10f(x) */
-float
-__log10f (float x)
+float __log10f(float x)
 {
-  if (__builtin_expect (islessequal (x, 0.0f), 0) && _LIB_VERSION != _IEEE_)
-    {
-      if (x == 0.0f)
-	{
-	  feraiseexcept (FE_DIVBYZERO);
-	  return __kernel_standard_f (x, x, 118); /* log10(0) */
-	}
-      else
-	{
-	  feraiseexcept (FE_INVALID);
-	  return __kernel_standard_f (x, x, 119); /* log10(x<0) */
-	}
+    if (__builtin_expect(islessequal(x, 0.0f), 0) && _LIB_VERSION != _IEEE_) {
+        if (x == 0.0f) {
+            feraiseexcept(FE_DIVBYZERO);
+            return __kernel_standard_f(x, x, 118);  /* log10(0) */
+        } else {
+            feraiseexcept(FE_INVALID);
+            return __kernel_standard_f(x, x, 119);  /* log10(x<0) */
+        }
     }
 
-  return  __ieee754_log10f (x);
+    return  __ieee754_log10f(x);
 }
-libm_alias_float (__log10, log10)
+libm_alias_float(__log10, log10)
 #endif

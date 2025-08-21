@@ -28,22 +28,22 @@
 #include <string.h>
 #include <limits.h>
 
-int
-_IO_puts (const char *str)
+int _IO_puts(const char *str)
 {
-  int result = EOF;
-  size_t len = strlen (str);
-  _IO_acquire_lock (stdout);
+    int result = EOF;
+    size_t len = strlen(str);
+    _IO_acquire_lock(stdout);
 
-  if ((_IO_vtable_offset (stdout) != 0
-       || _IO_fwide (stdout, -1) == -1)
-      && _IO_sputn (stdout, str, len) == len
-      && _IO_putc_unlocked ('\n', stdout) != EOF)
-    result = MIN (INT_MAX, len + 1);
+    if ((_IO_vtable_offset(stdout) != 0
+         || _IO_fwide(stdout, -1) == -1)
+        && _IO_sputn(stdout, str, len) == len
+        && _IO_putc_unlocked('\n', stdout) != EOF) {
+        result = MIN(INT_MAX, len + 1);
+    }
 
-  _IO_release_lock (stdout);
-  return result;
+    _IO_release_lock(stdout);
+    return result;
 }
 
-weak_alias (_IO_puts, puts)
-libc_hidden_def (_IO_puts)
+weak_alias(_IO_puts, puts)
+libc_hidden_def(_IO_puts)

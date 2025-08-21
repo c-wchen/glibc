@@ -17,11 +17,11 @@
    <https://www.gnu.org/licenses/>.  */
 
 /* Prevent compiler to optimize away call.  */
-#define DO_NOT_OPTIMIZE_OUT(value)		  \
-  ({						  \
-    __typeof (value) __v = (value);		  \
+#define DO_NOT_OPTIMIZE_OUT(value)        \
+  ({                          \
+    __typeof (value) __v = (value);       \
     asm volatile ("" : : "r,m" (__v) : "memory"); \
-    __v;					  \
+    __v;                      \
   })
 
 #ifndef START_ITER
@@ -32,4 +32,4 @@
    executing a small loop with many memory accesses.  START_ITER controls
    the number of iterations.  */
 
-void bench_start (void);
+void bench_start(void);

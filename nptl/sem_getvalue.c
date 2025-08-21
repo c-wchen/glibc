@@ -21,39 +21,37 @@
 #include <atomic.h>
 
 
-int
-__new_sem_getvalue (sem_t *sem, int *sval)
+int __new_sem_getvalue(sem_t *sem, int *sval)
 {
-  struct new_sem *isem = (struct new_sem *) sem;
+    struct new_sem *isem = (struct new_sem *) sem;
 
-  /* XXX Check for valid SEM parameter.  */
-  /* FIXME This uses relaxed MO, even though POSIX specifies that this function
-     should be linearizable.  However, its debatable whether linearizability
-     is the right requirement.  We need to follow up with POSIX and, if
-     necessary, use a stronger MO here and elsewhere (e.g., potentially
-     release MO in all places where we consume a token).  */
+    /* XXX Check for valid SEM parameter.  */
+    /* FIXME This uses relaxed MO, even though POSIX specifies that this function
+       should be linearizable.  However, its debatable whether linearizability
+       is the right requirement.  We need to follow up with POSIX and, if
+       necessary, use a stronger MO here and elsewhere (e.g., potentially
+       release MO in all places where we consume a token).  */
 
 #if __HAVE_64B_ATOMICS
-  *sval = atomic_load_relaxed (&isem->data) & SEM_VALUE_MASK;
+    *sval = atomic_load_relaxed(&isem->data) & SEM_VALUE_MASK;
 #else
-  *sval = atomic_load_relaxed (&isem->value) >> SEM_VALUE_SHIFT;
+    *sval = atomic_load_relaxed(&isem->value) >> SEM_VALUE_SHIFT;
 #endif
 
-  return 0;
+    return 0;
 }
-versioned_symbol (libc, __new_sem_getvalue, sem_getvalue, GLIBC_2_34);
+versioned_symbol(libc, __new_sem_getvalue, sem_getvalue, GLIBC_2_34);
 
 #if OTHER_SHLIB_COMPAT(libpthread, GLIBC_2_1, GLIBC_2_34)
-compat_symbol (libpthread, __new_sem_getvalue, sem_getvalue, GLIBC_2_1);
+compat_symbol(libpthread, __new_sem_getvalue, sem_getvalue, GLIBC_2_1);
 #endif
 
 #if OTHER_SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_1)
-int
-__old_sem_getvalue (sem_t *sem, int *sval)
+int __old_sem_getvalue(sem_t *sem, int *sval)
 {
-  struct old_sem *isem = (struct old_sem *) sem;
-  *sval = isem->value;
-  return 0;
+    struct old_sem *isem = (struct old_sem *) sem;
+    *sval = isem->value;
+    return 0;
 }
-compat_symbol (libpthread, __old_sem_getvalue, sem_getvalue, GLIBC_2_0);
+compat_symbol(libpthread, __old_sem_getvalue, sem_getvalue, GLIBC_2_0);
 #endif

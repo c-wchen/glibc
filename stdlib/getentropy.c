@@ -21,11 +21,10 @@
 
 /* Write LENGTH bytes of randomness starting at BUFFER.  Return 0 on
    success and -1 on failure.  */
-int
-getentropy (void *buffer, size_t length)
+int getentropy(void *buffer, size_t length)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (getentropy)
+stub_warning(getentropy)

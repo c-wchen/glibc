@@ -1,6 +1,6 @@
 #include <wchar.h>
 
-extern int fclose (FILE*);
+extern int fclose(FILE *);
 
 #if defined __GNUC__ && __GNUC__ >= 11
 /* Verify that calling fclose on the result of open_wmemstream doesn't
@@ -11,23 +11,23 @@ extern int fclose (FILE*);
 #pragma GCC diagnostic error "-Wmismatched-dealloc"
 #endif
 
-int test_open_wmemstream_no_stdio (void)
+int test_open_wmemstream_no_stdio(void)
 {
-  {
-    wchar_t *buf;
-    size_t size;
-    FILE *f = open_wmemstream (&buf, &size);
-    fclose (f);
-  }
+    {
+        wchar_t *buf;
+        size_t size;
+        FILE *f = open_wmemstream(&buf, &size);
+        fclose(f);
+    }
 
-  {
-    FILE* (*pf)(wchar_t**, size_t*) = open_wmemstream;
-    wchar_t *buf;
-    size_t size;
-    FILE *f = pf (&buf, &size);
-    fclose (f);
-  }
-  return 0;
+    {
+        FILE* (*pf)(wchar_t **, size_t *) = open_wmemstream;
+        wchar_t *buf;
+        size_t size;
+        FILE *f = pf(&buf, &size);
+        fclose(f);
+    }
+    return 0;
 }
 
 #if defined __GNUC__ && __GNUC__ >= 11

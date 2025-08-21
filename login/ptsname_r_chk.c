@@ -18,11 +18,11 @@
 #include <stdlib.h>
 
 
-int
-__ptsname_r_chk (int fd, char *buf, size_t buflen, size_t nreal)
+int __ptsname_r_chk(int fd, char *buf, size_t buflen, size_t nreal)
 {
-  if (buflen > nreal)
-    __chk_fail ();
+    if (buflen > nreal) {
+        __chk_fail();
+    }
 
-  return __ptsname_r (fd, buf, buflen);
+    return __ptsname_r(fd, buf, buflen);
 }

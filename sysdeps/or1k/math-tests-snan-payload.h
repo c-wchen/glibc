@@ -21,6 +21,6 @@
 
 /* OpenRISC floating-point instructions do not preserve NaN
    payloads.  */
-#define SNAN_TESTS_PRESERVE_PAYLOAD	0
+#define SNAN_TESTS_PRESERVE_PAYLOAD 0
 
 #endif /* math-tests-snan-payload.h */

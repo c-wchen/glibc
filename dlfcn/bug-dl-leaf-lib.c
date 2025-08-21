@@ -35,36 +35,36 @@
 static int val = 1;
 static int called = 0;
 
-void check_val_init (void)
+void check_val_init(void)
 {
-  called = 1;
-  assert (val == 2);
+    called = 1;
+    assert(val == 2);
 }
 
-void check_val_fini (void)
+void check_val_fini(void)
 {
-  called = 2;
-  assert (val == 4);
+    called = 2;
+    assert(val == 4);
 }
 
-int lib_main (void)
+int lib_main(void)
 {
-  int ret __attribute__ ((unused));
-  void *hdl;
+    int ret __attribute__((unused));
+    void *hdl;
 
-  /* Make sure the constructor sees the updated val.  */
-  val = 2;
-  hdl = dlopen ("bug-dl-leaf-lib-cb.so", RTLD_GLOBAL | RTLD_LAZY);
-  val = 3;
-  assert (hdl);
-  assert (called == 1);
+    /* Make sure the constructor sees the updated val.  */
+    val = 2;
+    hdl = dlopen("bug-dl-leaf-lib-cb.so", RTLD_GLOBAL | RTLD_LAZY);
+    val = 3;
+    assert(hdl);
+    assert(called == 1);
 
-  /* Make sure the destructor sees the updated val.  */
-  val = 4;
-  ret = dlclose (hdl);
-  val = 5;
-  assert (ret == 0);
-  assert (called == 2);
+    /* Make sure the destructor sees the updated val.  */
+    val = 4;
+    ret = dlclose(hdl);
+    val = 5;
+    assert(ret == 0);
+    assert(called == 2);
 
-  return !val;
+    return !val;
 }

@@ -28,53 +28,52 @@ static int restart;
 #define CMDLINE_OPTIONS \
   { "restart", no_argument, &restart, 1 },
 
-extern int do_test (int argc, char *argv[]);
+extern int do_test(int argc, char *argv[]);
 
-extern int in_dso_1 (void);
-extern int in_dso_2 (void);
+extern int in_dso_1(void);
+extern int in_dso_2(void);
 
-static int
-check (void)
+static int check(void)
 {
-  if (in_dso_1 () != 0x1234678)
-    {
-      puts ("in_dso_1 () != 0x1234678");
-      exit (1);
+    if (in_dso_1() != 0x1234678) {
+        puts("in_dso_1 () != 0x1234678");
+        exit(1);
     }
 
-  if (in_dso_2 () != 0xbadbeef)
-    {
-      puts ("in_dso_2 () != 0xbadbeef");
-      exit (1);
+    if (in_dso_2() != 0xbadbeef) {
+        puts("in_dso_2 () != 0xbadbeef");
+        exit(1);
     }
 
-  return 0;
+    return 0;
 }
 
-int
-do_test (int argc, char *argv[])
+int do_test(int argc, char *argv[])
 {
-  /* We must have
-     - one or four parameters left if called initially
-       + path for ld.so		optional
-       + "--library-path"	optional
-       + the library path	optional
-       + the application name
-  */
+    /* We must have
+       - one or four parameters left if called initially
+         + path for ld.so     optional
+         + "--library-path"   optional
+         + the library path   optional
+         + the application name
+    */
 
-  if (restart)
-    return check ();
+    if (restart) {
+        return check();
+    }
 
-  if (argc != 2 && argc != 5)
-    FAIL_EXIT1 ("wrong number of arguments (%d)", argc);
+    if (argc != 2 && argc != 5) {
+        FAIL_EXIT1("wrong number of arguments (%d)", argc);
+    }
 
-  if (argc == 5)
-    execl (argv[1], argv[1], argv[2], argv[3], argv[4], "--direct",
-	   "--restart",  NULL);
-  else
-    execl (argv[1], argv[1], "--direct", "--restart",  NULL);
+    if (argc == 5)
+        execl(argv[1], argv[1], argv[2], argv[3], argv[4], "--direct",
+              "--restart",  NULL);
+    else {
+        execl(argv[1], argv[1], "--direct", "--restart",  NULL);
+    }
 
-  return -1;
+    return -1;
 }
 
 #define TEST_FUNCTION_ARGV do_test

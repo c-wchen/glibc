@@ -20,37 +20,37 @@
 #include <stdlib.h>
 #include <ucontext.h>
 
-extern void __start_context (ucontext_t *ucp);
+extern void __start_context(ucontext_t *ucp);
 
-void
-__makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
+void __makecontext(ucontext_t *ucp, void (*func)(void), int argc, ...)
 {
-  extern void __makecontext_ret (void);
-  unsigned long *sp, *topsp;
-  va_list ap;
-  int i;
+    extern void __makecontext_ret(void);
+    unsigned long *sp, *topsp;
+    va_list ap;
+    int i;
 
-  sp = (unsigned long *) ((long) ucp->uc_stack.ss_sp + ucp->uc_stack.ss_size);
-  sp -= (argc > 6 ? argc : 6) + 32;
-  sp = (unsigned long *) (((long) sp) & -16L);
-  topsp = sp + (argc > 6 ? argc : 6) + 16;
+    sp = (unsigned long *)((long) ucp->uc_stack.ss_sp + ucp->uc_stack.ss_size);
+    sp -= (argc > 6 ? argc : 6) + 32;
+    sp = (unsigned long *)(((long) sp) & -16L);
+    topsp = sp + (argc > 6 ? argc : 6) + 16;
 
-  ucp->uc_mcontext.mc_gregs[MC_PC] = (long) func;
-  ucp->uc_mcontext.mc_gregs[MC_NPC] = ((long) func) + 4;
-  ucp->uc_mcontext.mc_gregs[MC_O6] = ((long) sp) - 0x7ff;
-  ucp->uc_mcontext.mc_gregs[MC_O7] = ((long) __start_context) - 8;
-  ucp->uc_mcontext.mc_fp = ((long) topsp) - 0x7ff;
-  ucp->uc_mcontext.mc_i7 = 0;
-  topsp[14] = 0;
-  topsp[15] = 0;
-  sp[8] = (long) ucp->uc_link;
-  va_start (ap, argc);
-  for (i = 0; i < argc; ++i)
-    if (i < 6)
-      ucp->uc_mcontext.mc_gregs[MC_O0 + i] = va_arg (ap, long);
-    else
-      sp[16 + i] = va_arg (ap, long);
-  va_end (ap);
+    ucp->uc_mcontext.mc_gregs[MC_PC] = (long) func;
+    ucp->uc_mcontext.mc_gregs[MC_NPC] = ((long) func) + 4;
+    ucp->uc_mcontext.mc_gregs[MC_O6] = ((long) sp) - 0x7ff;
+    ucp->uc_mcontext.mc_gregs[MC_O7] = ((long) __start_context) - 8;
+    ucp->uc_mcontext.mc_fp = ((long) topsp) - 0x7ff;
+    ucp->uc_mcontext.mc_i7 = 0;
+    topsp[14] = 0;
+    topsp[15] = 0;
+    sp[8] = (long) ucp->uc_link;
+    va_start(ap, argc);
+    for (i = 0; i < argc; ++i)
+        if (i < 6) {
+            ucp->uc_mcontext.mc_gregs[MC_O0 + i] = va_arg(ap, long);
+        } else {
+            sp[16 + i] = va_arg(ap, long);
+        }
+    va_end(ap);
 }
 
-weak_alias (__makecontext, makecontext)
+weak_alias(__makecontext, makecontext)

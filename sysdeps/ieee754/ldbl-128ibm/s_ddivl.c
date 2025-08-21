@@ -19,9 +19,8 @@
 #include <math.h>
 #include <math-narrow.h>
 
-double
-__ddivl (long double x, long double y)
+double __ddivl(long double x, long double y)
 {
-  NARROW_DIV_TRIVIAL (x, y, double);
+    NARROW_DIV_TRIVIAL(x, y, double);
 }
-libm_alias_double_ldouble (div)
+libm_alias_double_ldouble(div)

@@ -26,14 +26,13 @@
 #endif /* WIDE */
 #include "bench-string.h"
 
-CHAR *
-generic_stpcpy (CHAR *dst, const CHAR *src)
+CHAR *generic_stpcpy(CHAR *dst, const CHAR *src)
 {
-  size_t len = STRLEN (src);
-  return (CHAR *) MEMCPY (dst, src, len + 1) + len;
+    size_t len = STRLEN(src);
+    return (CHAR *) MEMCPY(dst, src, len + 1) + len;
 }
 
-IMPL (STPCPY, 1)
-IMPL (generic_stpcpy, 0)
+IMPL(STPCPY, 1)
+IMPL(generic_stpcpy, 0)
 
 #include "bench-strcpy.c"

@@ -17,8 +17,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-int
-in_dso_1 (void)
+int in_dso_1(void)
 {
-  return 0x1234678;
+    return 0x1234678;
 }

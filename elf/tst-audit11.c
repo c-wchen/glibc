@@ -19,17 +19,15 @@
 #include <dlfcn.h>
 #include <stdio.h>
 
-int
-do_test (void)
+int do_test(void)
 {
-  puts ("Start");
-  if (dlopen ("$ORIGIN/tst-audit11mod1.so", RTLD_LAZY) == NULL)
-    {
-      printf ("module not loaded: %s\n", dlerror ());
-      return 1;
+    puts("Start");
+    if (dlopen("$ORIGIN/tst-audit11mod1.so", RTLD_LAZY) == NULL) {
+        printf("module not loaded: %s\n", dlerror());
+        return 1;
     }
-  puts ("OK");
-  return 0;
+    puts("OK");
+    return 0;
 }
 
 #include <support/test-driver.c>

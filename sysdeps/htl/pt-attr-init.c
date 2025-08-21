@@ -20,17 +20,16 @@
 #include <shlib-compat.h>
 #include <pt-internal.h>
 
-int
-__pthread_attr_init (pthread_attr_t *attr)
+int __pthread_attr_init(pthread_attr_t *attr)
 {
-  ASSERT_TYPE_SIZE (pthread_attr_t, __SIZEOF_PTHREAD_ATTR_T);
+    ASSERT_TYPE_SIZE(pthread_attr_t, __SIZEOF_PTHREAD_ATTR_T);
 
-  *attr = __pthread_default_attr;
-  return 0;
+    *attr = __pthread_default_attr;
+    return 0;
 }
-libc_hidden_def (__pthread_attr_init)
-versioned_symbol (libc, __pthread_attr_init, pthread_attr_init, GLIBC_2_21);
+libc_hidden_def(__pthread_attr_init)
+versioned_symbol(libc, __pthread_attr_init, pthread_attr_init, GLIBC_2_21);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_21)
-compat_symbol (libc, __pthread_attr_init, pthread_attr_init, GLIBC_2_12);
+compat_symbol(libc, __pthread_attr_init, pthread_attr_init, GLIBC_2_12);
 #endif

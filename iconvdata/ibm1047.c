@@ -21,7 +21,7 @@
 /* Get the conversion table.  */
 #include <ibm1047.h>
 
-#define CHARSET_NAME	"IBM1047//"
-#define HAS_HOLES	1	/* Not all 256 character are defined.  */
+#define CHARSET_NAME    "IBM1047//"
+#define HAS_HOLES   1   /* Not all 256 character are defined.  */
 
 #include <8bit-generic.c>

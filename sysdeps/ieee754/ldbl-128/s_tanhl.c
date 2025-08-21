@@ -44,54 +44,48 @@
 
 static const _Float128 one = 1.0, two = 2.0, tiny = L(1.0e-4900);
 
-_Float128
-__tanhl (_Float128 x)
+_Float128 __tanhl(_Float128 x)
 {
-  _Float128 t, z;
-  uint32_t jx, ix;
-  ieee854_long_double_shape_type u;
+    _Float128 t, z;
+    uint32_t jx, ix;
+    ieee854_long_double_shape_type u;
 
-  /* Words of |x|. */
-  u.value = x;
-  jx = u.parts32.w0;
-  ix = jx & 0x7fffffff;
-  /* x is INF or NaN */
-  if (ix >= 0x7fff0000)
-    {
-      /* for NaN it's not important which branch: tanhl(NaN) = NaN */
-      if (jx & 0x80000000)
-	return one / x - one;	/* tanhl(-inf)= -1; */
-      else
-	return one / x + one;	/* tanhl(+inf)=+1 */
+    /* Words of |x|. */
+    u.value = x;
+    jx = u.parts32.w0;
+    ix = jx & 0x7fffffff;
+    /* x is INF or NaN */
+    if (ix >= 0x7fff0000) {
+        /* for NaN it's not important which branch: tanhl(NaN) = NaN */
+        if (jx & 0x80000000) {
+            return one / x - one;    /* tanhl(-inf)= -1; */
+        } else {
+            return one / x + one;    /* tanhl(+inf)=+1 */
+        }
     }
 
-  /* |x| < 40 */
-  if (ix < 0x40044000)
-    {
-      if (u.value == 0)
-	return x;		/* x == +- 0 */
-      if (ix < 0x3fc60000)	/* |x| < 2^-57 */
-	{
-	  math_check_force_underflow (x);
-	  return x * (one + tiny); /* tanh(small) = small */
-	}
-      u.parts32.w0 = ix;	/* Absolute value of x.  */
-      if (ix >= 0x3fff0000)
-	{			/* |x| >= 1  */
-	  t = __expm1l (two * u.value);
-	  z = one - two / (t + two);
-	}
-      else
-	{
-	  t = __expm1l (-two * u.value);
-	  z = -t / (t + two);
-	}
-      /* |x| > 40, return +-1 */
+    /* |x| < 40 */
+    if (ix < 0x40044000) {
+        if (u.value == 0) {
+            return x;    /* x == +- 0 */
+        }
+        if (ix < 0x3fc60000) { /* |x| < 2^-57 */
+            math_check_force_underflow(x);
+            return x * (one + tiny); /* tanh(small) = small */
+        }
+        u.parts32.w0 = ix;    /* Absolute value of x.  */
+        if (ix >= 0x3fff0000) {
+            /* |x| >= 1  */
+            t = __expm1l(two * u.value);
+            z = one - two / (t + two);
+        } else {
+            t = __expm1l(-two * u.value);
+            z = -t / (t + two);
+        }
+        /* |x| > 40, return +-1 */
+    } else {
+        z = one - tiny;       /* raised inexact flag */
     }
-  else
-    {
-      z = one - tiny;		/* raised inexact flag */
-    }
-  return (jx & 0x80000000) ? -z : z;
+    return (jx & 0x80000000) ? -z : z;
 }
-libm_alias_ldouble (__tanh, tanh)
+libm_alias_ldouble(__tanh, tanh)

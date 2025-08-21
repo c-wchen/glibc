@@ -22,19 +22,18 @@
 /* This table's entries are taken from ISO 14652, the table in section
    4.11 "LC_TELEPHONE".  */
 
-const struct __locale_data _nl_C_LC_TELEPHONE attribute_hidden =
-{
-  _nl_C_name,
-  NULL, 0, 0,			/* no file mapped */
-  NULL,				/* No cached data.  */
-  UNDELETABLE,
-  0,
-  5,
-  {
-    { .string = "+%c %a %l" },
-    { .string = "" },
-    { .string = "" },
-    { .string = "" },
-    { .string = _nl_C_codeset }
-  }
+const struct __locale_data _nl_C_LC_TELEPHONE attribute_hidden = {
+    _nl_C_name,
+    NULL, 0, 0,           /* no file mapped */
+    NULL,             /* No cached data.  */
+    UNDELETABLE,
+    0,
+    5,
+    {
+        { .string = "+%c %a %l" },
+        { .string = "" },
+        { .string = "" },
+        { .string = "" },
+        { .string = _nl_C_codeset }
+    }
 };

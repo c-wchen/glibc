@@ -31,58 +31,56 @@
 #include <bench-util.c>
 #define D_ITERS 200000
 
-int
-main (int argc, char **argv)
+int main(int argc, char **argv)
 {
-  unsigned long i, k;
-  timing_t start, end;
-  json_ctx_t json_ctx;
+    unsigned long i, k;
+    timing_t start, end;
+    json_ctx_t json_ctx;
 
 #ifdef INIT_ARCH
-  INIT_ARCH ();
+    INIT_ARCH();
 #endif
 
-  bench_start ();
+    bench_start();
 
 #ifdef BENCH_INIT
-  BENCH_INIT ();
+    BENCH_INIT();
 #endif
 
-  json_init (&json_ctx, 2, stdout);
+    json_init(&json_ctx, 2, stdout);
 
-  /* Begin function.  */
-  json_attr_object_begin (&json_ctx, FUNCNAME);
+    /* Begin function.  */
+    json_attr_object_begin(&json_ctx, FUNCNAME);
 
-  for (int v = 0; v < NUM_VARIANTS; v++)
-    {
-      double d_total_time = 0;
-      timing_t cur;
-      for (k = 0; k < D_ITERS; k++)
-	{
-	  TIMING_NOW (start);
-	  for (i = 0; i < NUM_SAMPLES (v); i++)
-	    BENCH_FUNC (v, i);
-	  TIMING_NOW (end);
+    for (int v = 0; v < NUM_VARIANTS; v++) {
+        double d_total_time = 0;
+        timing_t cur;
+        for (k = 0; k < D_ITERS; k++) {
+            TIMING_NOW(start);
+            for (i = 0; i < NUM_SAMPLES(v); i++) {
+                BENCH_FUNC(v, i);
+            }
+            TIMING_NOW(end);
 
-	  TIMING_DIFF (cur, start, end);
+            TIMING_DIFF(cur, start, end);
 
-	  TIMING_ACCUM (d_total_time, cur);
-	}
-      double d_total_data_set = D_ITERS * NUM_SAMPLES (v) * STRIDE;
+            TIMING_ACCUM(d_total_time, cur);
+        }
+        double d_total_data_set = D_ITERS * NUM_SAMPLES(v) * STRIDE;
 
-      /* Begin variant.  */
-      json_attr_object_begin (&json_ctx, VARIANT (v));
+        /* Begin variant.  */
+        json_attr_object_begin(&json_ctx, VARIANT(v));
 
-      json_attr_double (&json_ctx, "duration", d_total_time);
-      json_attr_double (&json_ctx, "iterations", d_total_data_set);
-      json_attr_double (&json_ctx, "mean", d_total_time / d_total_data_set);
+        json_attr_double(&json_ctx, "duration", d_total_time);
+        json_attr_double(&json_ctx, "iterations", d_total_data_set);
+        json_attr_double(&json_ctx, "mean", d_total_time / d_total_data_set);
 
-      /* End variant.  */
-      json_attr_object_end (&json_ctx);
+        /* End variant.  */
+        json_attr_object_end(&json_ctx);
     }
 
-  /* End function.  */
-  json_attr_object_end (&json_ctx);
+    /* End function.  */
+    json_attr_object_end(&json_ctx);
 
-  return 0;
+    return 0;
 }

@@ -20,23 +20,21 @@
 #include <support/check.h>
 #include <time.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  void *p1;
-  int i;
+    void *p1;
+    int i;
 
-  srandom (time (NULL));
+    srandom(time(NULL));
 
-  for (i = 0; i < 1024; i++)
-  {
-    size_t size = random () & 0xffff;
+    for (i = 0; i < 1024; i++) {
+        size_t size = random() & 0xffff;
 
-    p1 = malloc (size);
-    TEST_VERIFY (p1 != NULL);
-  }
+        p1 = malloc(size);
+        TEST_VERIFY(p1 != NULL);
+    }
 
-  return 0;
+    return 0;
 }
 
 

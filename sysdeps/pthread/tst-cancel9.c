@@ -26,97 +26,87 @@
 static pthread_barrier_t b;
 
 
-static void
-cleanup (void *arg)
+static void cleanup(void *arg)
 {
-  fputs ("in cleanup\n", stdout);
+    fputs("in cleanup\n", stdout);
 }
 
 
-static void *
-tf (void *arg)
+static void *tf(void *arg)
 {
-  int fd = open ("/dev/null", O_RDWR);
-  if (fd == -1)
-    {
-      puts ("cannot open /dev/null");
-      exit (1);
+    int fd = open("/dev/null", O_RDWR);
+    if (fd == -1) {
+        puts("cannot open /dev/null");
+        exit(1);
     }
-  FILE *fp = fdopen (fd, "w");
-  if (fp == NULL)
-    {
-      puts ("fdopen failed");
-      exit (1);
+    FILE *fp = fdopen(fd, "w");
+    if (fp == NULL) {
+        puts("fdopen failed");
+        exit(1);
     }
 
-  pthread_cleanup_push (cleanup, NULL);
+    pthread_cleanup_push(cleanup, NULL);
 
-  int e = pthread_barrier_wait (&b);
-  if (e != 0 && e != PTHREAD_BARRIER_SERIAL_THREAD)
-    {
-      puts ("barrier_wait failed");
-      exit (1);
+    int e = pthread_barrier_wait(&b);
+    if (e != 0 && e != PTHREAD_BARRIER_SERIAL_THREAD) {
+        puts("barrier_wait failed");
+        exit(1);
     }
 
-  while (1)
-    /* fprintf() uses write() which is a cancallation point.  */
-    fprintf (fp, "foo");
+    while (1)
+        /* fprintf() uses write() which is a cancallation point.  */
+    {
+        fprintf(fp, "foo");
+    }
 
-  pthread_cleanup_pop (0);
+    pthread_cleanup_pop(0);
 
-  return NULL;
+    return NULL;
 }
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  if (pthread_barrier_init (&b, NULL, 2) != 0)
-    {
-      puts ("barrier_init failed");
-      exit (1);
+    if (pthread_barrier_init(&b, NULL, 2) != 0) {
+        puts("barrier_init failed");
+        exit(1);
     }
 
-  pthread_t th;
-  if (pthread_create (&th, NULL, tf, NULL) != 0)
-    {
-      puts ("create failed");
-      return 1;
+    pthread_t th;
+    if (pthread_create(&th, NULL, tf, NULL) != 0) {
+        puts("create failed");
+        return 1;
     }
 
-  int e = pthread_barrier_wait (&b);
-  if (e != 0 && e != PTHREAD_BARRIER_SERIAL_THREAD)
-    {
-      puts ("barrier_wait failed");
-      exit (1);
+    int e = pthread_barrier_wait(&b);
+    if (e != 0 && e != PTHREAD_BARRIER_SERIAL_THREAD) {
+        puts("barrier_wait failed");
+        exit(1);
     }
 
-  sleep (1);
+    sleep(1);
 
-  puts ("cancel now");
+    puts("cancel now");
 
-  if (pthread_cancel (th) != 0)
-    {
-      puts ("cancel failed");
-      exit (1);
+    if (pthread_cancel(th) != 0) {
+        puts("cancel failed");
+        exit(1);
     }
 
-  puts ("waiting for the child");
+    puts("waiting for the child");
 
-  void *r;
-  if (pthread_join (th, &r) != 0)
-    {
-      puts ("join failed");
-      exit (1);
+    void *r;
+    if (pthread_join(th, &r) != 0) {
+        puts("join failed");
+        exit(1);
     }
 
-  if (r != PTHREAD_CANCELED)
-    {
-      puts ("thread wasn't canceled");
-      exit (1);
+    if (r != PTHREAD_CANCELED) {
+        puts("thread wasn't canceled");
+        exit(1);
     }
 
-  return 0;
+    return 0;
 }
 
 

@@ -21,9 +21,8 @@
 
 #include <pt-internal.h>
 
-void
-__pthread_sigstate_destroy (struct __pthread *thread)
+void __pthread_sigstate_destroy(struct __pthread *thread)
 {
-  _hurd_sigstate_delete (thread->kernel_thread);
+    _hurd_sigstate_delete(thread->kernel_thread);
 }
-libc_hidden_def (__pthread_sigstate_destroy)
+libc_hidden_def(__pthread_sigstate_destroy)

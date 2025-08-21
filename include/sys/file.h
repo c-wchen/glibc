@@ -4,7 +4,7 @@
 # ifndef _ISOMAC
 
 /* Now define the internal interfaces.  */
-extern int __flock (int __fd, int __operation);
+extern int __flock(int __fd, int __operation);
 
 # endif /* !_ISOMAC */
 #endif

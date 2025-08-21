@@ -60,48 +60,49 @@
 #include <not-cancel.h>
 
 const char *const h_errlist[] = {
-	N_("Resolver Error 0 (no error)"),
-	N_("Unknown host"),			/* 1 HOST_NOT_FOUND */
-	N_("Host name lookup failure"),		/* 2 TRY_AGAIN */
-	N_("Unknown server error"),		/* 3 NO_RECOVERY */
-	N_("No address associated with name"),	/* 4 NO_ADDRESS */
+    N_("Resolver Error 0 (no error)"),
+    N_("Unknown host"),         /* 1 HOST_NOT_FOUND */
+    N_("Host name lookup failure"),     /* 2 TRY_AGAIN */
+    N_("Unknown server error"),     /* 3 NO_RECOVERY */
+    N_("No address associated with name"),  /* 4 NO_ADDRESS */
 };
-const int	h_nerr = { sizeof h_errlist / sizeof h_errlist[0] };
+const int   h_nerr = { sizeof h_errlist / sizeof h_errlist[0] };
 
 /*
  * herror --
- *	print the error indicated by the h_errno value.
+ *  print the error indicated by the h_errno value.
  */
-void
-herror(const char *s) {
-	struct iovec iov[4], *v = iov;
+void herror(const char *s)
+{
+    struct iovec iov[4], *v = iov;
 
-	if (s != NULL && *s != '\0') {
-		v->iov_base = (/*noconst*/ char *)s;
-		v->iov_len = strlen(s);
-		v++;
-		v->iov_base = (char *) ": ";
-		v->iov_len = 2;
-		v++;
-	}
-	v->iov_base = (char *)hstrerror(h_errno);
-	v->iov_len = strlen(v->iov_base);
-	v++;
-	v->iov_base = (char *) "\n";
-	v->iov_len = 1;
-	__writev_nocancel_nostatus(STDERR_FILENO, iov, (v - iov) + 1);
+    if (s != NULL && *s != '\0') {
+        v->iov_base = (/*noconst*/ char *)s;
+        v->iov_len = strlen(s);
+        v++;
+        v->iov_base = (char *) ": ";
+        v->iov_len = 2;
+        v++;
+    }
+    v->iov_base = (char *)hstrerror(h_errno);
+    v->iov_len = strlen(v->iov_base);
+    v++;
+    v->iov_base = (char *) "\n";
+    v->iov_len = 1;
+    __writev_nocancel_nostatus(STDERR_FILENO, iov, (v - iov) + 1);
 }
 
 /*
  * hstrerror --
- *	return the string associated with a given "host" errno value.
+ *  return the string associated with a given "host" errno value.
  */
-const char *
-hstrerror(int err) {
-	if (err < 0)
-		return _("Resolver internal error");
-	else if (err < h_nerr)
-		return _(h_errlist[err]);
-	return _("Unknown resolver error");
+const char *hstrerror(int err)
+{
+    if (err < 0) {
+        return _("Resolver internal error");
+    } else if (err < h_nerr) {
+        return _(h_errlist[err]);
+    }
+    return _("Unknown resolver error");
 }
-libc_hidden_def (hstrerror)
+libc_hidden_def(hstrerror)

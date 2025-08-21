@@ -19,9 +19,8 @@
 #include "soft-fp.h"
 #include "soft-supp.h"
 
-int
-fetestexcept (int x)
+int fetestexcept(int x)
 {
-  return __sim_exceptions_thread & x;
+    return __sim_exceptions_thread & x;
 }
-libm_hidden_def (fetestexcept)
+libm_hidden_def(fetestexcept)

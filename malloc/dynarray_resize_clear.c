@@ -19,17 +19,17 @@
 #include <dynarray.h>
 #include <string.h>
 
-bool
-__libc_dynarray_resize_clear (struct dynarray_header *list, size_t size,
-                              void *scratch, size_t element_size)
+bool __libc_dynarray_resize_clear(struct dynarray_header *list, size_t size,
+                                  void *scratch, size_t element_size)
 {
-  size_t old_size = list->used;
-  if (!__libc_dynarray_resize (list, size, scratch, element_size))
-    return false;
-  /* __libc_dynarray_resize already checked for overflow.  */
-  char *array = list->array;
-  memset (array + (old_size * element_size), 0,
-          (size - old_size) * element_size);
-  return true;
+    size_t old_size = list->used;
+    if (!__libc_dynarray_resize(list, size, scratch, element_size)) {
+        return false;
+    }
+    /* __libc_dynarray_resize already checked for overflow.  */
+    char *array = list->array;
+    memset(array + (old_size * element_size), 0,
+           (size - old_size) * element_size);
+    return true;
 }
-libc_hidden_def (__libc_dynarray_resize_clear)
+libc_hidden_def(__libc_dynarray_resize_clear)

@@ -30,7 +30,7 @@
  */
 
 #if 0
-#ident	"@(#)xcrypt.c	1.11	94/08/23 SMI"
+#ident  "@(#)xcrypt.c	1.11	94/08/23 SMI"
 #endif
 
 #if !defined(lint) && defined(SCCSIDS)
@@ -49,52 +49,52 @@ static char sccsid[] = "@(#)xcrypt.c 1.3 89/03/24 Copyr 1986 Sun Micro";
 #include <rpc/des_crypt.h>
 #include <shlib-compat.h>
 
-static const char hex[16] =
-{
-  '0', '1', '2', '3', '4', '5', '6', '7',
-  '8', '9', 'a', 'b', 'c', 'd', 'e', 'f',
+static const char hex[16] = {
+    '0', '1', '2', '3', '4', '5', '6', '7',
+    '8', '9', 'a', 'b', 'c', 'd', 'e', 'f',
 };
 
 
 #ifdef _LIBC
 # define hexval(c) \
-  (c >= '0' && c <= '9'							      \
-   ? c - '0'								      \
-   : ({	int upp = toupper (c);						      \
-	upp >= 'A' && upp <= 'Z' ? upp - 'A' + 10 : -1; }))
+  (c >= '0' && c <= '9'                               \
+   ? c - '0'                                      \
+   : ({ int upp = toupper (c);                            \
+    upp >= 'A' && upp <= 'Z' ? upp - 'A' + 10 : -1; }))
 #else
-static char hexval (char);
+static char hexval(char);
 #endif
 
-static void hex2bin (int, char *, char *);
-static void bin2hex (int, unsigned char *, char *);
-void passwd2des_internal (char *pw, char *key);
+static void hex2bin(int, char *, char *);
+static void bin2hex(int, unsigned char *, char *);
+void passwd2des_internal(char *pw, char *key);
 #ifdef _LIBC
-libc_hidden_proto (passwd2des_internal)
+libc_hidden_proto(passwd2des_internal)
 #endif
 
 /*
  * Turn password into DES key
  */
 void
-passwd2des_internal (char *pw, char *key)
+passwd2des_internal(char *pw, char *key)
 {
-  int i;
+    int i;
 
-  memset (key, 0, 8);
-  for (i = 0; *pw && i < 8; ++i)
-    key[i] ^= *pw++ << 1;
+    memset(key, 0, 8);
+    for (i = 0; *pw && i < 8; ++i) {
+        key[i] ^= *pw++ << 1;
+    }
 
-  des_setparity (key);
+    des_setparity(key);
 }
 
 #ifdef _LIBC
-libc_hidden_def (passwd2des_internal)
+libc_hidden_def(passwd2des_internal)
 libc_sunrpc_symbol(passwd2des_internal, passwd2des, GLIBC_2_1)
 #else
-void passwd2des (char *pw, char *key)
+void passwd2des(char *pw, char *key)
 {
-  return passwd2des_internal (pw, key);
+    return passwd2des_internal(pw, key);
 }
 #endif
 
@@ -103,32 +103,30 @@ void passwd2des (char *pw, char *key)
  * The secret key is passed and returned in hex notation.
  * Its length must be a multiple of 16 hex digits (64 bits).
  */
-int
-xencrypt (char *secret, char *passwd)
+int xencrypt(char *secret, char *passwd)
 {
-  char key[8];
-  char ivec[8];
-  char *buf;
-  int err;
-  int len;
+    char key[8];
+    char ivec[8];
+    char *buf;
+    int err;
+    int len;
 
-  len = strlen (secret) / 2;
-  buf = malloc ((unsigned) len);
-  hex2bin (len, secret, buf);
-  passwd2des_internal (passwd, key);
-  memset (ivec, 0, 8);
+    len = strlen(secret) / 2;
+    buf = malloc((unsigned) len);
+    hex2bin(len, secret, buf);
+    passwd2des_internal(passwd, key);
+    memset(ivec, 0, 8);
 
-  err = cbc_crypt (key, buf, len, DES_ENCRYPT | DES_HW, ivec);
-  if (DES_FAILED (err))
-    {
-      free (buf);
-      return 0;
+    err = cbc_crypt(key, buf, len, DES_ENCRYPT | DES_HW, ivec);
+    if (DES_FAILED(err)) {
+        free(buf);
+        return 0;
     }
-  bin2hex (len, (unsigned char *) buf, secret);
-  free (buf);
-  return 1;
+    bin2hex(len, (unsigned char *) buf, secret);
+    free(buf);
+    return 1;
 }
-libc_hidden_nolink_sunrpc (xencrypt, GLIBC_2_0)
+libc_hidden_nolink_sunrpc(xencrypt, GLIBC_2_0)
 
 /*
  * Decrypt secret key using passwd
@@ -136,78 +134,76 @@ libc_hidden_nolink_sunrpc (xencrypt, GLIBC_2_0)
  * Once again, the length is a multiple of 16 hex digits
  */
 int
-xdecrypt (char *secret, char *passwd)
+xdecrypt(char *secret, char *passwd)
 {
-  char key[8];
-  char ivec[8];
-  char *buf;
-  int err;
-  int len;
+    char key[8];
+    char ivec[8];
+    char *buf;
+    int err;
+    int len;
 
-  len = strlen (secret) / 2;
-  buf = malloc ((unsigned) len);
+    len = strlen(secret) / 2;
+    buf = malloc((unsigned) len);
 
-  hex2bin (len, secret, buf);
-  passwd2des_internal (passwd, key);
-  memset (ivec, 0, 8);
+    hex2bin(len, secret, buf);
+    passwd2des_internal(passwd, key);
+    memset(ivec, 0, 8);
 
-  err = cbc_crypt (key, buf, len, DES_DECRYPT | DES_HW, ivec);
-  if (DES_FAILED (err))
-    {
-      free (buf);
-      return 0;
+    err = cbc_crypt(key, buf, len, DES_DECRYPT | DES_HW, ivec);
+    if (DES_FAILED(err)) {
+        free(buf);
+        return 0;
     }
-  bin2hex (len, (unsigned char *) buf, secret);
-  free (buf);
-  return 1;
+    bin2hex(len, (unsigned char *) buf, secret);
+    free(buf);
+    return 1;
 }
 #ifdef EXPORT_RPC_SYMBOLS
-libc_hidden_def (xdecrypt)
+libc_hidden_def(xdecrypt)
 #else
-libc_hidden_nolink_sunrpc (xdecrypt, GLIBC_2_1)
+libc_hidden_nolink_sunrpc(xdecrypt, GLIBC_2_1)
 #endif
 
 /*
  * Hex to binary conversion
  */
 static void
-hex2bin (int len, char *hexnum, char *binnum)
+hex2bin(int len, char *hexnum, char *binnum)
 {
-  int i;
+    int i;
 
-  for (i = 0; i < len; i++)
-    *binnum++ = 16 * hexval (hexnum[2 * i]) + hexval (hexnum[2 * i + 1]);
+    for (i = 0; i < len; i++) {
+        *binnum++ = 16 * hexval(hexnum[2 * i]) + hexval(hexnum[2 * i + 1]);
+    }
 }
 
 /*
  * Binary to hex conversion
  */
-static void
-bin2hex (int len, unsigned char *binnum, char *hexnum)
+static void bin2hex(int len, unsigned char *binnum, char *hexnum)
 {
-  int i;
-  unsigned val;
+    int i;
+    unsigned val;
 
-  for (i = 0; i < len; i++)
-    {
-      val = binnum[i];
-      hexnum[i * 2] = hex[val >> 4];
-      hexnum[i * 2 + 1] = hex[val & 0xf];
+    for (i = 0; i < len; i++) {
+        val = binnum[i];
+        hexnum[i * 2] = hex[val >> 4];
+        hexnum[i * 2 + 1] = hex[val & 0xf];
     }
-  hexnum[len * 2] = 0;
+    hexnum[len * 2] = 0;
 }
 
 #ifndef _LIBC
-static char
-hexval (char c)
+static char hexval(char c)
 {
-  if (c >= '0' && c <= '9')
-    return (c - '0');
-  else if (c >= 'a' && c <= 'z')
-    return (c - 'a' + 10);
-  else if (c >= 'A' && c <= 'Z')
-    return (c - 'A' + 10);
-  else
-    return -1;
+    if (c >= '0' && c <= '9') {
+        return (c - '0');
+    } else if (c >= 'a' && c <= 'z') {
+        return (c - 'a' + 10);
+    } else if (c >= 'A' && c <= 'Z') {
+        return (c - 'A' + 10);
+    } else {
+        return -1;
+    }
 }
 #endif

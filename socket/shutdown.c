@@ -24,12 +24,11 @@
      1 = No more transmissions;
      2 = No more receptions or transmissions.
    Returns 0 on success, -1 for errors.  */
-int
-shutdown (int fd, int how)
+int shutdown(int fd, int how)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
 
-stub_warning (shutdown)
+stub_warning(shutdown)

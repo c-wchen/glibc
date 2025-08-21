@@ -20,23 +20,22 @@
 #include <support/xthread.h>
 #include <support/check.h>
 
-static volatile __thread int out __attribute__ ((tls_model ("initial-exec")));
+static volatile __thread int out __attribute__((tls_model("initial-exec")));
 
-static void *
-tf (void *arg)
+static void *tf(void *arg)
 {
-  TEST_COMPARE (out, 0);
-  out = isspace (' ');
-  return NULL;
+    TEST_COMPARE(out, 0);
+    out = isspace(' ');
+    return NULL;
 }
 
-int main (int argc, char *argv[])
+int main(int argc, char *argv[])
 {
-  TEST_COMPARE (out, 0);
-  out = isspace (' ');
+    TEST_COMPARE(out, 0);
+    out = isspace(' ');
 
-  pthread_t t = xpthread_create (NULL, tf, NULL);
-  xpthread_join (t);
+    pthread_t t = xpthread_create(NULL, tf, NULL);
+    xpthread_join(t);
 
-  return 0;
+    return 0;
 }

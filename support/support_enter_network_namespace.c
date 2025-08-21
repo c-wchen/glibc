@@ -30,46 +30,43 @@
 
 static bool in_uts_namespace;
 
-bool
-support_enter_network_namespace (void)
+bool support_enter_network_namespace(void)
 {
 #ifdef CLONE_NEWUTS
-  if (unshare (CLONE_NEWUTS) == 0)
-    in_uts_namespace = true;
-  else
-    printf ("warning: unshare (CLONE_NEWUTS) failed: %m\n");
+    if (unshare(CLONE_NEWUTS) == 0) {
+        in_uts_namespace = true;
+    } else {
+        printf("warning: unshare (CLONE_NEWUTS) failed: %m\n");
+    }
 #endif
 
 #ifdef CLONE_NEWNET
-  if (unshare (CLONE_NEWNET) == 0)
-    {
-      /* Bring up the loopback interface.  */
-      int fd = xsocket (AF_UNIX, SOCK_DGRAM | SOCK_CLOEXEC, 0);
-      struct ifreq req;
-      strcpy (req.ifr_name, "lo");
-      TEST_VERIFY_EXIT (ioctl (fd, SIOCGIFFLAGS, &req) == 0);
-      bool already_up = req.ifr_flags & IFF_UP;
-      if (already_up)
-        /* This means that we likely have not achieved isolation from
-           the parent namespace.  */
-        printf ("warning: loopback interface already exists"
-                " in new network namespace\n");
-      else
-        {
-          req.ifr_flags |= IFF_UP | IFF_RUNNING;
-          TEST_VERIFY_EXIT (ioctl (fd, SIOCSIFFLAGS, &req) == 0);
+    if (unshare(CLONE_NEWNET) == 0) {
+        /* Bring up the loopback interface.  */
+        int fd = xsocket(AF_UNIX, SOCK_DGRAM | SOCK_CLOEXEC, 0);
+        struct ifreq req;
+        strcpy(req.ifr_name, "lo");
+        TEST_VERIFY_EXIT(ioctl(fd, SIOCGIFFLAGS, &req) == 0);
+        bool already_up = req.ifr_flags & IFF_UP;
+        if (already_up)
+            /* This means that we likely have not achieved isolation from
+               the parent namespace.  */
+            printf("warning: loopback interface already exists"
+                   " in new network namespace\n");
+        else {
+            req.ifr_flags |= IFF_UP | IFF_RUNNING;
+            TEST_VERIFY_EXIT(ioctl(fd, SIOCSIFFLAGS, &req) == 0);
         }
-      xclose (fd);
+        xclose(fd);
 
-      return !already_up;
+        return !already_up;
     }
 #endif
-  printf ("warning: could not enter network namespace\n");
-  return false;
+    printf("warning: could not enter network namespace\n");
+    return false;
 }
 
-bool
-support_in_uts_namespace (void)
+bool support_in_uts_namespace(void)
 {
-  return in_uts_namespace;
+    return in_uts_namespace;
 }

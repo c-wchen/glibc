@@ -29,100 +29,94 @@
 
 extern char *__progname;
 
-#define VA(call)							      \
-{									      \
-  va_list ap;								      \
-  va_start (ap, format);						      \
-  call;									      \
-  va_end (ap);								      \
+#define VA(call)                                  \
+{                                         \
+  va_list ap;                                     \
+  va_start (ap, format);                              \
+  call;                                       \
+  va_end (ap);                                    \
 }
 
-void
-__vwarnx_internal (const char *format, __gnuc_va_list ap,
-		   unsigned int mode_flags)
+void __vwarnx_internal(const char *format, __gnuc_va_list ap,
+                       unsigned int mode_flags)
 {
-  flockfile (stderr);
-  __fxprintf (stderr, "%s: ", __progname);
-  if (format != NULL)
-    __vfxprintf (stderr, format, ap, mode_flags);
-  __fxprintf (stderr, "\n");
-  funlockfile (stderr);
-}
-
-void
-__vwarn_internal (const char *format, __gnuc_va_list ap,
-		   unsigned int mode_flags)
-{
-  int error = errno;
-
-  flockfile (stderr);
-  if (format != NULL)
-    {
-      __fxprintf (stderr, "%s: ", __progname);
-      __vfxprintf (stderr, format, ap, mode_flags);
-      __set_errno (error);
-      __fxprintf (stderr, ": %m\n");
+    flockfile(stderr);
+    __fxprintf(stderr, "%s: ", __progname);
+    if (format != NULL) {
+        __vfxprintf(stderr, format, ap, mode_flags);
     }
-  else
-    {
-      __set_errno (error);
-      __fxprintf (stderr, "%s: %m\n", __progname);
+    __fxprintf(stderr, "\n");
+    funlockfile(stderr);
+}
+
+void __vwarn_internal(const char *format, __gnuc_va_list ap,
+                      unsigned int mode_flags)
+{
+    int error = errno;
+
+    flockfile(stderr);
+    if (format != NULL) {
+        __fxprintf(stderr, "%s: ", __progname);
+        __vfxprintf(stderr, format, ap, mode_flags);
+        __set_errno(error);
+        __fxprintf(stderr, ": %m\n");
+    } else {
+        __set_errno(error);
+        __fxprintf(stderr, "%s: %m\n", __progname);
     }
-  funlockfile (stderr);
+    funlockfile(stderr);
 }
 
-void
-vwarn (const char *format, __gnuc_va_list ap)
+void vwarn(const char *format, __gnuc_va_list ap)
 {
-  __vwarn_internal (format, ap, 0);
+    __vwarn_internal(format, ap, 0);
 }
-libc_hidden_def (vwarn)
+libc_hidden_def(vwarn)
 
 void
-vwarnx (const char *format, __gnuc_va_list ap)
+vwarnx(const char *format, __gnuc_va_list ap)
 {
-  __vwarnx_internal (format, ap, 0);
+    __vwarnx_internal(format, ap, 0);
 }
-libc_hidden_def (vwarnx)
+libc_hidden_def(vwarnx)
 
 void
-warn (const char *format, ...)
+warn(const char *format, ...)
 {
-  VA (vwarn (format, ap))
+    VA(vwarn(format, ap))
 }
-libc_hidden_def (warn)
+libc_hidden_def(warn)
 
 void
-warnx (const char *format, ...)
+warnx(const char *format, ...)
 {
-  VA (vwarnx (format, ap))
+    VA(vwarnx(format, ap))
 }
-libc_hidden_def (warnx)
+libc_hidden_def(warnx)
 
 void
-verr (int status, const char *format, __gnuc_va_list ap)
+verr(int status, const char *format, __gnuc_va_list ap)
 {
-  vwarn (format, ap);
-  exit (status);
+    vwarn(format, ap);
+    exit(status);
 }
-libc_hidden_def (verr)
+libc_hidden_def(verr)
 
 void
-verrx (int status, const char *format, __gnuc_va_list ap)
+verrx(int status, const char *format, __gnuc_va_list ap)
 {
-  vwarnx (format, ap);
-  exit (status);
+    vwarnx(format, ap);
+    exit(status);
 }
-libc_hidden_def (verrx)
+libc_hidden_def(verrx)
 
 void
-err (int status, const char *format, ...)
+err(int status, const char *format, ...)
 {
-  VA (verr (status, format, ap))
+    VA(verr(status, format, ap))
 }
 
-void
-errx (int status, const char *format, ...)
+void errx(int status, const char *format, ...)
 {
-  VA (verrx (status, format, ap))
+    VA(verrx(status, format, ap))
 }

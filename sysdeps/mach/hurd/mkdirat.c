@@ -23,22 +23,24 @@
 #include <hurd/fd.h>
 #include <string.h>
 
-int
-__mkdirat (int fd, const char *path, mode_t mode)
+int __mkdirat(int fd, const char *path, mode_t mode)
 {
-  error_t err;
-  const char *name;
-  file_t parent;
-  if (!strcmp (path, "/"))
-    return __hurd_fail (EEXIST);
-  parent = __directory_name_split_at (fd, path, (char **) &name);
-  if (parent == MACH_PORT_NULL)
-    return -1;
-  err = __dir_mkdir (parent, name, mode & ~_hurd_umask);
-  __mach_port_deallocate (__mach_task_self (), parent);
-  if (err)
-    return __hurd_fail (err);
-  return 0;
+    error_t err;
+    const char *name;
+    file_t parent;
+    if (!strcmp(path, "/")) {
+        return __hurd_fail(EEXIST);
+    }
+    parent = __directory_name_split_at(fd, path, (char **) &name);
+    if (parent == MACH_PORT_NULL) {
+        return -1;
+    }
+    err = __dir_mkdir(parent, name, mode & ~_hurd_umask);
+    __mach_port_deallocate(__mach_task_self(), parent);
+    if (err) {
+        return __hurd_fail(err);
+    }
+    return 0;
 }
 
-weak_alias (__mkdirat, mkdirat)
+weak_alias(__mkdirat, mkdirat)

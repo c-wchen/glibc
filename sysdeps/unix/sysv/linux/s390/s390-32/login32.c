@@ -24,14 +24,13 @@
 # include "utmp-convert.h"
 
 /* Write the given entry into utmp and wtmp.  */
-void
-login32 (const struct utmp32 *entry)
+void login32(const struct utmp32 *entry)
 {
-  struct utmp in64;
+    struct utmp in64;
 
-  utmp_convert32to64 (entry, &in64);
-  login (&in64);
+    utmp_convert32to64(entry, &in64);
+    login(&in64);
 }
 
-symbol_version (login32, login, GLIBC_2.0);
+symbol_version(login32, login, GLIBC_2.0);
 #endif

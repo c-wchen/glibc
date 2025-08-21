@@ -16,7 +16,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _SYS_FSUID_H
-#define _SYS_FSUID_H	1
+#define _SYS_FSUID_H    1
 
 #include <features.h>
 #include <sys/types.h>
@@ -25,10 +25,10 @@ __BEGIN_DECLS
 
 /* Change uid used for file access control to UID, without affecting
    other privileges (such as who can send signals at the process).  */
-extern int setfsuid (__uid_t __uid) __THROW;
+extern int setfsuid(__uid_t __uid) __THROW;
 
 /* Ditto for group id. */
-extern int setfsgid (__gid_t __gid) __THROW;
+extern int setfsgid(__gid_t __gid) __THROW;
 
 __END_DECLS
 

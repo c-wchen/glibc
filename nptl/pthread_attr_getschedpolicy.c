@@ -18,16 +18,15 @@
 #include "pthreadP.h"
 
 
-int
-__pthread_attr_getschedpolicy (const pthread_attr_t *attr, int *policy)
+int __pthread_attr_getschedpolicy(const pthread_attr_t *attr, int *policy)
 {
-  struct pthread_attr *iattr;
+    struct pthread_attr *iattr;
 
-  iattr = (struct pthread_attr *) attr;
+    iattr = (struct pthread_attr *) attr;
 
-  /* Store the current values.  */
-  *policy = iattr->schedpolicy;
+    /* Store the current values.  */
+    *policy = iattr->schedpolicy;
 
-  return 0;
+    return 0;
 }
-strong_alias (__pthread_attr_getschedpolicy, pthread_attr_getschedpolicy)
+strong_alias(__pthread_attr_getschedpolicy, pthread_attr_getschedpolicy)

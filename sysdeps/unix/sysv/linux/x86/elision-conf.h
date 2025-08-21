@@ -26,12 +26,11 @@
 
 /* Should make sure there is no false sharing on this.  */
 
-struct elision_config
-{
-  int skip_lock_busy;
-  int skip_lock_internal_abort;
-  int retry_try_xbegin;
-  int skip_trylock_internal_abort;
+struct elision_config {
+    int skip_lock_busy;
+    int skip_lock_internal_abort;
+    int retry_try_xbegin;
+    int skip_trylock_internal_abort;
 };
 
 extern struct elision_config __elision_aconf attribute_hidden;

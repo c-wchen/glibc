@@ -20,19 +20,18 @@
 #include <strfile.h>
 #include <libioP.h>
 
-extern int
-___ieee128_sscanf (const char *string, const char *format, ...)
+extern int ___ieee128_sscanf(const char *string, const char *format, ...)
 {
-  va_list arg;
-  int done;
+    va_list arg;
+    int done;
 
-  _IO_strfile sf;
-  FILE *fp = _IO_strfile_read (&sf, string);
+    _IO_strfile sf;
+    FILE *fp = _IO_strfile_read(&sf, string);
 
-  va_start (arg, format);
-  done = __vfscanf_internal (fp, format, arg, SCANF_LDBL_USES_FLOAT128);
-  va_end (arg);
+    va_start(arg, format);
+    done = __vfscanf_internal(fp, format, arg, SCANF_LDBL_USES_FLOAT128);
+    va_end(arg);
 
-  return done;
+    return done;
 }
-strong_alias (___ieee128_sscanf, __sscanfieee128)
+strong_alias(___ieee128_sscanf, __sscanfieee128)

@@ -22,36 +22,31 @@
 
 static bool errors;
 
-void
-check_size (const char *name1, size_t size1,
-            const char *name2, size_t size2)
+void check_size(const char *name1, size_t size1,
+                const char *name2, size_t size2)
 {
-  const char *prefix;
-  const char *op;
-  if (size1 != size2)
-    {
-      prefix = "error";
-      op = "!=";
-      errors = true;
+    const char *prefix;
+    const char *op;
+    if (size1 != size2) {
+        prefix = "error";
+        op = "!=";
+        errors = true;
+    } else {
+        prefix = "info";
+        op = "==";
     }
-  else
-    {
-      prefix = "info";
-      op = "==";
-    }
-  printf ("%s: sizeof (%s) [%zu] %s sizeof (%s) [%zu]\n",
-          prefix, name1, size1, op, name2, size2);
+    printf("%s: sizeof (%s) [%zu] %s sizeof (%s) [%zu]\n",
+           prefix, name1, size1, op, name2, size2);
 }
 
 #define CHECK_SIZE(type1, type2) \
   check_size (#type1, sizeof (type1), #type2, sizeof (type2))
 
-int
-do_test (void)
+int do_test(void)
 {
-  CHECK_SIZE (struct if_dqblk, struct dqblk);
-  CHECK_SIZE (struct if_dqinfo, struct dqinfo);
-  return errors;
+    CHECK_SIZE(struct if_dqblk, struct dqblk);
+    CHECK_SIZE(struct if_dqinfo, struct dqinfo);
+    return errors;
 }
 
 #define TEST_FUNCTION do_test ()

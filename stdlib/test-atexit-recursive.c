@@ -25,50 +25,47 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-static void
-atexit_cb (void)
+static void atexit_cb(void)
 {
 }
 
-static void
-atexit_last (void)
+static void atexit_last(void)
 {
-  _exit (1);
+    _exit(1);
 }
 
-static void
-atexit_recursive (void)
+static void atexit_recursive(void)
 {
-  atexit (&atexit_cb);
-  atexit (&atexit_last);
+    atexit(&atexit_cb);
+    atexit(&atexit_last);
 }
 
-_Noreturn static void
-test_and_exit (int count)
+_Noreturn static void test_and_exit(int count)
 {
-  for (int i = 0; i < count; ++i)
-    atexit (&atexit_cb);
-  atexit (&atexit_recursive);
-  exit (0);
+    for (int i = 0; i < count; ++i) {
+        atexit(&atexit_cb);
+    }
+    atexit(&atexit_recursive);
+    exit(0);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  for (int i = 0; i < 100; ++i)
-    if (xfork () == 0)
-      test_and_exit (i);
+    for (int i = 0; i < 100; ++i)
+        if (xfork() == 0) {
+            test_and_exit(i);
+        }
 
-  for (int i = 0; i < 100; ++i)
-    {
-      int status;
-      xwaitpid (0, &status, 0);
-      if (!WIFEXITED (status))
-	FAIL_EXIT1 ("Failed iterations %d", i);
-      TEST_COMPARE (WEXITSTATUS (status), 1);
+    for (int i = 0; i < 100; ++i) {
+        int status;
+        xwaitpid(0, &status, 0);
+        if (!WIFEXITED(status)) {
+            FAIL_EXIT1("Failed iterations %d", i);
+        }
+        TEST_COMPARE(WEXITSTATUS(status), 1);
     }
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test

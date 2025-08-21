@@ -41,12 +41,12 @@
 /* Interruptible version of __gsync_wait.  */
 extern kern_return_t __gsync_wait_intr
 (
-	mach_port_t task,
-	vm_offset_t addr,
-	unsigned val1,
-	unsigned val2,
-	natural_t msec,
-	int flags
+    mach_port_t task,
+    vm_offset_t addr,
+    unsigned val1,
+    unsigned val2,
+    natural_t msec,
+    int flags
 );
 
 /* Wait on address PTR, without blocking if its contents

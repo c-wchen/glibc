@@ -17,40 +17,36 @@
 
 #include <search.h>
 
-struct twalk_with_twalk_r_closure
-{
-  void (*action) (const void *, VISIT, int);
-  int depth;
+struct twalk_with_twalk_r_closure {
+    void (*action)(const void *, VISIT, int);
+    int depth;
 };
 
-static void
-twalk_with_twalk_r_action (const void *nodep, VISIT which, void *closure0)
+static void twalk_with_twalk_r_action(const void *nodep, VISIT which, void *closure0)
 {
-  struct twalk_with_twalk_r_closure *closure = closure0;
+    struct twalk_with_twalk_r_closure *closure = closure0;
 
-  switch (which)
-    {
-    case leaf:
-      closure->action (nodep, which, closure->depth);
-      break;
-    case preorder:
-      closure->action (nodep, which, closure->depth);
-      ++closure->depth;
-      break;
-    case postorder:
-      /* The preorder action incremented the depth.  */
-      closure->action (nodep, which, closure->depth - 1);
-      break;
-    case endorder:
-      --closure->depth;
-      closure->action (nodep, which, closure->depth);
-      break;
+    switch (which) {
+        case leaf:
+            closure->action(nodep, which, closure->depth);
+            break;
+        case preorder:
+            closure->action(nodep, which, closure->depth);
+            ++closure->depth;
+            break;
+        case postorder:
+            /* The preorder action incremented the depth.  */
+            closure->action(nodep, which, closure->depth - 1);
+            break;
+        case endorder:
+            --closure->depth;
+            closure->action(nodep, which, closure->depth);
+            break;
     }
 }
 
-void
-twalk (const void *root, void (*action) (const void *, VISIT, int))
+void twalk(const void *root, void (*action)(const void *, VISIT, int))
 {
-  struct twalk_with_twalk_r_closure closure = { action, 0 };
-  twalk_r (root, twalk_with_twalk_r_action, &closure);
+    struct twalk_with_twalk_r_closure closure = { action, 0 };
+    twalk_r(root, twalk_with_twalk_r_action, &closure);
 }

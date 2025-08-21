@@ -15,9 +15,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-static void
-cleanup (void *cleanup_should_fail)
+static void cleanup(void *cleanup_should_fail)
 {
-  printf ("Main thread got cancelled and is being cleaned up now\n");
-  exit (*(int *)cleanup_should_fail);
+    printf("Main thread got cancelled and is being cleaned up now\n");
+    exit(*(int *)cleanup_should_fail);
 }

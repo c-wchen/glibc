@@ -23,27 +23,27 @@
 /* Create a linked list of `struct ifaddrs' structures, one for each
    network interface on the host machine.  If successful, store the
    list in *IFAP and return 0.  On errors, return -1 and set `errno'.  */
-int
-__getifaddrs (struct ifaddrs **ifap)
+int __getifaddrs(struct ifaddrs **ifap)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-weak_alias (__getifaddrs, getifaddrs)
-libc_hidden_def (__getifaddrs)
-libc_hidden_weak (getifaddrs)
-stub_warning (getifaddrs)
+weak_alias(__getifaddrs, getifaddrs)
+libc_hidden_def(__getifaddrs)
+libc_hidden_weak(getifaddrs)
+stub_warning(getifaddrs)
 
 void
-__freeifaddrs (struct ifaddrs *ifa)
+__freeifaddrs(struct ifaddrs *ifa)
 {
-  if (ifa == NULL)
-    return;			/* a la free, why not? */
+    if (ifa == NULL) {
+        return;    /* a la free, why not? */
+    }
 
-  /* Can't be called properly if getifaddrs never succeeded.  */
-  abort ();
+    /* Can't be called properly if getifaddrs never succeeded.  */
+    abort();
 }
-weak_alias (__freeifaddrs, freeifaddrs)
-libc_hidden_def (__freeifaddrs)
-libc_hidden_weak (freeifaddrs)
-stub_warning (freeifaddrs)
+weak_alias(__freeifaddrs, freeifaddrs)
+libc_hidden_def(__freeifaddrs)
+libc_hidden_weak(freeifaddrs)
+stub_warning(freeifaddrs)

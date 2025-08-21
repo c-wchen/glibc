@@ -51,172 +51,171 @@ static int restart;
    final NULL.  */
 static char *spargs[8];
 
-static inline char *
-startswith (const char *s, const char *prefix)
+static inline char *startswith(const char *s, const char *prefix)
 {
-  size_t l = strlen (prefix);
-  if (strncmp (s, prefix, l) == 0)
-    return (char *) s + l;
-  return NULL;
+    size_t l = strlen(prefix);
+    if (strncmp(s, prefix, l) == 0) {
+        return (char *) s + l;
+    }
+    return NULL;
 }
 
-static char *
-get_cgroup (void)
+static char *get_cgroup(void)
 {
-  FILE *f = fopen ("/proc/self/cgroup", "re");
-  if (f == NULL)
-    FAIL_UNSUPPORTED ("no cgroup defined for the process: %m");
-
-  char *cgroup = NULL;
-
-  char *line = NULL;
-  size_t linesiz = 0;
-  while (xgetline (&line, &linesiz, f) > 0)
-    {
-      char *entry = startswith (line, "0:");
-      if (entry == NULL)
-	continue;
-
-      entry = strchr (entry, ':');
-      if (entry == NULL)
-	continue;
-
-      cgroup = entry + 1;
-      size_t l = strlen (cgroup);
-      if (cgroup[l - 1] == '\n')
-	cgroup[l - 1] = '\0';
-
-      cgroup = xstrdup (entry + 1);
-      break;
+    FILE *f = fopen("/proc/self/cgroup", "re");
+    if (f == NULL) {
+        FAIL_UNSUPPORTED("no cgroup defined for the process: %m");
     }
 
-  xfclose (f);
-  free (line);
+    char *cgroup = NULL;
 
-  return cgroup;
+    char *line = NULL;
+    size_t linesiz = 0;
+    while (xgetline(&line, &linesiz, f) > 0) {
+        char *entry = startswith(line, "0:");
+        if (entry == NULL) {
+            continue;
+        }
+
+        entry = strchr(entry, ':');
+        if (entry == NULL) {
+            continue;
+        }
+
+        cgroup = entry + 1;
+        size_t l = strlen(cgroup);
+        if (cgroup[l - 1] == '\n') {
+            cgroup[l - 1] = '\0';
+        }
+
+        cgroup = xstrdup(entry + 1);
+        break;
+    }
+
+    xfclose(f);
+    free(line);
+
+    return cgroup;
 }
 
 
 /* Called on process re-execution.  */
-static void
-handle_restart (int argc, char *argv[])
+static void handle_restart(int argc, char *argv[])
 {
-  assert (argc == 1);
-  char *newcgroup = argv[0];
+    assert(argc == 1);
+    char *newcgroup = argv[0];
 
-  char *current_cgroup = get_cgroup ();
-  TEST_VERIFY_EXIT (current_cgroup != NULL);
-  TEST_COMPARE_STRING (newcgroup, current_cgroup);
+    char *current_cgroup = get_cgroup();
+    TEST_VERIFY_EXIT(current_cgroup != NULL);
+    TEST_COMPARE_STRING(newcgroup, current_cgroup);
 }
 
-static int
-do_test_cgroup_failure (pid_t *pid, int cgroup)
+static int do_test_cgroup_failure(pid_t *pid, int cgroup)
 {
-  posix_spawnattr_t attr;
-  TEST_COMPARE (posix_spawnattr_init (&attr), 0);
-  TEST_COMPARE (posix_spawnattr_setflags (&attr, POSIX_SPAWN_SETCGROUP), 0);
-  TEST_COMPARE (posix_spawnattr_setcgroup_np (&attr, cgroup), 0);
+    posix_spawnattr_t attr;
+    TEST_COMPARE(posix_spawnattr_init(&attr), 0);
+    TEST_COMPARE(posix_spawnattr_setflags(&attr, POSIX_SPAWN_SETCGROUP), 0);
+    TEST_COMPARE(posix_spawnattr_setcgroup_np(&attr, cgroup), 0);
 
-  int cgetgroup;
-  TEST_COMPARE (posix_spawnattr_getcgroup_np (&attr, &cgetgroup), 0);
-  TEST_COMPARE (cgroup, cgetgroup);
+    int cgetgroup;
+    TEST_COMPARE(posix_spawnattr_getcgroup_np(&attr, &cgetgroup), 0);
+    TEST_COMPARE(cgroup, cgetgroup);
 
-  return posix_spawn (pid, spargs[0], NULL, &attr, spargs, environ);
+    return posix_spawn(pid, spargs[0], NULL, &attr, spargs, environ);
 }
 
-static int
-create_new_cgroup (char **newcgroup)
+static int create_new_cgroup(char **newcgroup)
 {
-  struct statfs fs;
-  if (statfs (CGROUPFS, &fs) < 0)
-    {
-      if (errno == ENOENT)
-	FAIL_UNSUPPORTED ("no cgroupv2 mount found");
-      FAIL_EXIT1 ("statfs (%s): %m\n", CGROUPFS);
+    struct statfs fs;
+    if (statfs(CGROUPFS, &fs) < 0) {
+        if (errno == ENOENT) {
+            FAIL_UNSUPPORTED("no cgroupv2 mount found");
+        }
+        FAIL_EXIT1("statfs (%s): %m\n", CGROUPFS);
     }
 
-  if (!F_TYPE_EQUAL (fs.f_type, CGROUP2_SUPER_MAGIC))
-    FAIL_UNSUPPORTED ("%s is not a cgroupv2 (expected %#jx, got %#jx)",
-		      CGROUPFS, (intmax_t) CGROUP2_SUPER_MAGIC,
-		      (intmax_t) fs.f_type);
+    if (!F_TYPE_EQUAL(fs.f_type, CGROUP2_SUPER_MAGIC))
+        FAIL_UNSUPPORTED("%s is not a cgroupv2 (expected %#jx, got %#jx)",
+                         CGROUPFS, (intmax_t) CGROUP2_SUPER_MAGIC,
+                         (intmax_t) fs.f_type);
 
-  char *cgroup = get_cgroup ();
-  TEST_VERIFY_EXIT (cgroup != NULL);
-  *newcgroup = xasprintf ("%s/%s", cgroup, CGROUP_TEST);
-  char *cgpath = xasprintf ("%s%s/%s", CGROUPFS, cgroup, CGROUP_TEST);
-  free (cgroup);
+    char *cgroup = get_cgroup();
+    TEST_VERIFY_EXIT(cgroup != NULL);
+    *newcgroup = xasprintf("%s/%s", cgroup, CGROUP_TEST);
+    char *cgpath = xasprintf("%s%s/%s", CGROUPFS, cgroup, CGROUP_TEST);
+    free(cgroup);
 
-  if (mkdir (cgpath, 0755) == -1 && errno != EEXIST)
-    {
-      if (errno == EACCES || errno == EPERM || errno == EROFS)
-	FAIL_UNSUPPORTED ("can not create a new cgroupv2 group");
-      FAIL_EXIT1 ("mkdir (%s): %m", cgpath);
+    if (mkdir(cgpath, 0755) == -1 && errno != EEXIST) {
+        if (errno == EACCES || errno == EPERM || errno == EROFS) {
+            FAIL_UNSUPPORTED("can not create a new cgroupv2 group");
+        }
+        FAIL_EXIT1("mkdir (%s): %m", cgpath);
     }
-  add_temp_file (cgpath);
+    add_temp_file(cgpath);
 
-  return xopen (cgpath, O_DIRECTORY | O_RDONLY | O_CLOEXEC, 0666);
+    return xopen(cgpath, O_DIRECTORY | O_RDONLY | O_CLOEXEC, 0666);
 }
 
-static int
-do_test (int argc, char *argv[])
+static int do_test(int argc, char *argv[])
 {
-  /* We must have either:
+    /* We must have either:
 
-     - one or four parameters if called initially:
-       + argv[1]: path for ld.so        optional
-       + argv[2]: "--library-path"      optional
-       + argv[3]: the library path      optional
-       + argv[4]: the application name
+       - one or four parameters if called initially:
+         + argv[1]: path for ld.so        optional
+         + argv[2]: "--library-path"      optional
+         + argv[3]: the library path      optional
+         + argv[4]: the application name
 
-     - six parameters left if called through re-execution:
-       + argv[4/1]: the application name
-       + argv[5/2]: the created cgroup
+       - six parameters left if called through re-execution:
+         + argv[4/1]: the application name
+         + argv[5/2]: the created cgroup
 
-     * When built with --enable-hardcoded-path-in-tests or issued without
-       using the loader directly.  */
+       * When built with --enable-hardcoded-path-in-tests or issued without
+         using the loader directly.  */
 
-  if (restart)
-    {
-      handle_restart (argc - 1, &argv[1]);
-      return 0;
+    if (restart) {
+        handle_restart(argc - 1, &argv[1]);
+        return 0;
     }
 
-  TEST_VERIFY_EXIT (argc == 2 || argc == 5);
+    TEST_VERIFY_EXIT(argc == 2 || argc == 5);
 
-  char *newcgroup;
-  int cgroup = create_new_cgroup (&newcgroup);
+    char *newcgroup;
+    int cgroup = create_new_cgroup(&newcgroup);
 
-  int i;
-  for (i = 0; i < argc - 1; i++)
-    spargs[i] = argv[i + 1];
-  spargs[i++] = (char *) "--direct";
-  spargs[i++] = (char *) "--restart";
-  spargs[i++] = (char *) newcgroup;
-  spargs[i] = NULL;
+    int i;
+    for (i = 0; i < argc - 1; i++) {
+        spargs[i] = argv[i + 1];
+    }
+    spargs[i++] = (char *) "--direct";
+    spargs[i++] = (char *) "--restart";
+    spargs[i++] = (char *) newcgroup;
+    spargs[i] = NULL;
 
-  /* Check if invalid cgroups returns an error.  */
-  {
-    int r = do_test_cgroup_failure (NULL, -1);
-    if (r == EOPNOTSUPP)
-      FAIL_UNSUPPORTED ("posix_spawn POSIX_SPAWN_SETCGROUP is not supported");
-    TEST_COMPARE (r, EINVAL);
-  }
+    /* Check if invalid cgroups returns an error.  */
+    {
+        int r = do_test_cgroup_failure(NULL, -1);
+        if (r == EOPNOTSUPP) {
+            FAIL_UNSUPPORTED("posix_spawn POSIX_SPAWN_SETCGROUP is not supported");
+        }
+        TEST_COMPARE(r, EINVAL);
+    }
 
-  {
-    pid_t pid;
-    TEST_COMPARE (do_test_cgroup_failure (&pid, cgroup), 0);
+    {
+        pid_t pid;
+        TEST_COMPARE(do_test_cgroup_failure(&pid, cgroup), 0);
 
-    siginfo_t sinfo;
-    TEST_COMPARE (waitid (P_PID, pid, &sinfo, WEXITED), 0);
-    TEST_COMPARE (sinfo.si_signo, SIGCHLD);
-    TEST_COMPARE (sinfo.si_code, CLD_EXITED);
-    TEST_COMPARE (sinfo.si_status, 0);
-  }
+        siginfo_t sinfo;
+        TEST_COMPARE(waitid(P_PID, pid, &sinfo, WEXITED), 0);
+        TEST_COMPARE(sinfo.si_signo, SIGCHLD);
+        TEST_COMPARE(sinfo.si_code, CLD_EXITED);
+        TEST_COMPARE(sinfo.si_status, 0);
+    }
 
-  xclose (cgroup);
-  free (newcgroup);
+    xclose(cgroup);
+    free(newcgroup);
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION_ARGV do_test

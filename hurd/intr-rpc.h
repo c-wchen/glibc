@@ -21,4 +21,4 @@
 
 #include <hurd/signal.h>
 
-#define	__mach_msg	_hurd_intr_rpc_mach_msg
+#define __mach_msg  _hurd_intr_rpc_mach_msg

@@ -23,46 +23,44 @@
    appropriate enable bits in the FPU status word (which,
    coincidentally, are the same as the flag bits, but shifted right by
    27 bits).  */
-enum
-{
-  FE_INVALID =
-#define FE_INVALID	(1<<4) /* V */
-    FE_INVALID,
-  FE_DIVBYZERO =
-#define FE_DIVBYZERO	(1<<3) /* Z */
-    FE_DIVBYZERO,
-  FE_OVERFLOW =
-#define FE_OVERFLOW	(1<<2) /* O */
-    FE_OVERFLOW,
-  FE_UNDERFLOW =
-#define FE_UNDERFLOW	(1<<1) /* U */
-    FE_UNDERFLOW,
-  FE_INEXACT =
-#define FE_INEXACT	(1<<0) /* I */
-    FE_INEXACT,
+enum {
+    FE_INVALID =
+#define FE_INVALID  (1<<4) /* V */
+        FE_INVALID,
+    FE_DIVBYZERO =
+#define FE_DIVBYZERO    (1<<3) /* Z */
+        FE_DIVBYZERO,
+    FE_OVERFLOW =
+#define FE_OVERFLOW (1<<2) /* O */
+        FE_OVERFLOW,
+    FE_UNDERFLOW =
+#define FE_UNDERFLOW    (1<<1) /* U */
+        FE_UNDERFLOW,
+    FE_INEXACT =
+#define FE_INEXACT  (1<<0) /* I */
+        FE_INEXACT,
 };
 
 #define FE_ALL_EXCEPT \
-	(FE_INEXACT | FE_DIVBYZERO | FE_UNDERFLOW | FE_OVERFLOW | FE_INVALID)
+    (FE_INEXACT | FE_DIVBYZERO | FE_UNDERFLOW | FE_OVERFLOW | FE_INVALID)
 
 /* The PA-RISC FPU supports all of the four defined rounding modes.
    We use the values of the RM field in the floating point status
    register for the appropriate macros.  */
-enum
-  {
+enum {
     FE_TONEAREST =
-#define FE_TONEAREST	(0 << 9)
-      FE_TONEAREST,
+#define FE_TONEAREST    (0 << 9)
+        FE_TONEAREST,
     FE_TOWARDZERO =
-#define FE_TOWARDZERO	(1 << 9)
-      FE_TOWARDZERO,
+#define FE_TOWARDZERO   (1 << 9)
+        FE_TOWARDZERO,
     FE_UPWARD =
-#define FE_UPWARD	(2 << 9)
-      FE_UPWARD,
+#define FE_UPWARD   (2 << 9)
+        FE_UPWARD,
     FE_DOWNWARD =
-#define FE_DOWNWARD	(3 << 9)
-      FE_DOWNWARD,
-  };
+#define FE_DOWNWARD (3 << 9)
+        FE_DOWNWARD,
+};
 
 /* Type representing exception flags. */
 typedef unsigned int fexcept_t;
@@ -75,10 +73,9 @@ typedef unsigned int fexcept_t;
    fenv functions must accept unaligned input, align the input, and
    then use assembly to store fr0. This is a performance hit, but
    means the ABI is stable. */
-typedef struct
-{
-  unsigned int __status_word;
-  unsigned int __exception[7];
+typedef struct {
+    unsigned int __status_word;
+    unsigned int __exception[7];
 } fenv_t;
 
 /* If the default argument is used we use this value.  */
@@ -86,7 +83,7 @@ typedef struct
 
 #ifdef __USE_GNU
 /* Floating-point environment where none of the exceptions are masked.  */
-# define FE_NOMASK_ENV	((const fenv_t *) -2)
+# define FE_NOMASK_ENV  ((const fenv_t *) -2)
 #endif
 
 #if __GLIBC_USE (IEC_60559_BFP_EXT_C23)
@@ -94,5 +91,5 @@ typedef struct
 typedef unsigned int femode_t;
 
 /* Default floating-point control modes.  */
-# define FE_DFL_MODE	((const femode_t *) -1L)
+# define FE_DFL_MODE    ((const femode_t *) -1L)
 #endif

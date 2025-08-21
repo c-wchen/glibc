@@ -19,10 +19,9 @@
 #include <stdlib.h>
 #include <support/resolv_test.h>
 
-void
-resolv_response_context_free (struct resolv_response_context *ctx)
+void resolv_response_context_free(struct resolv_response_context *ctx)
 {
-  free (ctx->query_buffer);
-  free (ctx->client_address);
-  free (ctx);
+    free(ctx->query_buffer);
+    free(ctx->client_address);
+    free(ctx);
 }

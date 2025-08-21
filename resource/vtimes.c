@@ -25,34 +25,33 @@
    (This is the frequency of the machine's power supply, in Hz.)  */
 # define VTIMES_UNITS_PER_SECOND 60
 
-struct vtimes
-{
-  /* User time used in units of 1/VTIMES_UNITS_PER_SECOND seconds.  */
-  int vm_utime;
-  /* System time used in units of 1/VTIMES_UNITS_PER_SECOND seconds.  */
-  int vm_stime;
+struct vtimes {
+    /* User time used in units of 1/VTIMES_UNITS_PER_SECOND seconds.  */
+    int vm_utime;
+    /* System time used in units of 1/VTIMES_UNITS_PER_SECOND seconds.  */
+    int vm_stime;
 
-  /* Amount of data and stack memory used (kilobyte-seconds).  */
-  unsigned int vm_idsrss;
-  /* Amount of text memory used (kilobyte-seconds).  */
-  unsigned int vm_ixrss;
-  /* Maximum resident set size (text, data, and stack) (kilobytes).  */
-  int vm_maxrss;
+    /* Amount of data and stack memory used (kilobyte-seconds).  */
+    unsigned int vm_idsrss;
+    /* Amount of text memory used (kilobyte-seconds).  */
+    unsigned int vm_ixrss;
+    /* Maximum resident set size (text, data, and stack) (kilobytes).  */
+    int vm_maxrss;
 
-  /* Number of hard page faults (i.e. those that required I/O).  */
-  int vm_majflt;
-  /* Number of soft page faults (i.e. those serviced by reclaiming
-     a page from the list of pages awaiting reallocation.  */
-  int vm_minflt;
+    /* Number of hard page faults (i.e. those that required I/O).  */
+    int vm_majflt;
+    /* Number of soft page faults (i.e. those serviced by reclaiming
+       a page from the list of pages awaiting reallocation.  */
+    int vm_minflt;
 
-  /* Number of times a process was swapped out of physical memory.  */
-  int vm_nswap;
+    /* Number of times a process was swapped out of physical memory.  */
+    int vm_nswap;
 
-  /* Number of input operations via the file system.  Note: This
-     and `ru_oublock' do not include operations with the cache.  */
-  int vm_inblk;
-  /* Number of output operations via the file system.  */
-  int vm_oublk;
+    /* Number of input operations via the file system.  Note: This
+       and `ru_oublock' do not include operations with the cache.  */
+    int vm_inblk;
+    /* Number of output operations via the file system.  */
+    int vm_oublk;
 };
 
 /* Return the number of 1/VTIMES_UNITS_PER_SECOND-second
@@ -63,39 +62,38 @@ struct vtimes
 
 /* If VT is not NULL, write statistics for WHO into *VT.
    Return 0 for success, -1 for failure.  */
-static int
-vtimes_one (struct vtimes *vt, enum __rusage_who who)
+static int vtimes_one(struct vtimes *vt, enum __rusage_who who)
 {
-  if (vt != NULL)
-    {
-      struct rusage usage;
+    if (vt != NULL) {
+        struct rusage usage;
 
-      if (__getrusage (who, &usage) < 0)
-	return -1;
+        if (__getrusage(who, &usage) < 0) {
+            return -1;
+        }
 
-      vt->vm_utime = TIMEVAL_TO_VTIMES (usage.ru_utime);
-      vt->vm_stime = TIMEVAL_TO_VTIMES (usage.ru_stime);
-      vt->vm_idsrss = usage.ru_idrss + usage.ru_isrss;
-      vt->vm_majflt = usage.ru_majflt;
-      vt->vm_minflt = usage.ru_minflt;
-      vt->vm_nswap = usage.ru_nswap;
-      vt->vm_inblk = usage.ru_inblock;
-      vt->vm_oublk = usage.ru_oublock;
+        vt->vm_utime = TIMEVAL_TO_VTIMES(usage.ru_utime);
+        vt->vm_stime = TIMEVAL_TO_VTIMES(usage.ru_stime);
+        vt->vm_idsrss = usage.ru_idrss + usage.ru_isrss;
+        vt->vm_majflt = usage.ru_majflt;
+        vt->vm_minflt = usage.ru_minflt;
+        vt->vm_nswap = usage.ru_nswap;
+        vt->vm_inblk = usage.ru_inblock;
+        vt->vm_oublk = usage.ru_oublock;
     }
-  return 0;
+    return 0;
 }
 
 /* If CURRENT is not NULL, write statistics for the current process into
    *CURRENT.  If CHILD is not NULL, write statistics for all terminated child
    processes into *CHILD.  Returns 0 for success, -1 for failure.  */
-int
-__vtimes (struct vtimes *current, struct vtimes *child)
+int __vtimes(struct vtimes *current, struct vtimes *child)
 {
-  if (vtimes_one (current, RUSAGE_SELF) < 0
-      || vtimes_one (child, RUSAGE_CHILDREN) < 0)
-    return -1;
-  return 0;
+    if (vtimes_one(current, RUSAGE_SELF) < 0
+        || vtimes_one(child, RUSAGE_CHILDREN) < 0) {
+        return -1;
+    }
+    return 0;
 }
-compat_symbol (libc, __vtimes, vtimes, GLIBC_2_0);
+compat_symbol(libc, __vtimes, vtimes, GLIBC_2_0);
 
 #endif /* SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_33)  */

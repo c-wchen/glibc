@@ -18,11 +18,10 @@
 #include <errno.h>
 #include <sys/xattr.h>
 
-int
-fremovexattr (int __fd, const char *__name)
+int fremovexattr(int __fd, const char *__name)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (fremovexattr)
+stub_warning(fremovexattr)

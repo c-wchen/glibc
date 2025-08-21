@@ -36,18 +36,19 @@ static size_t nsamples;
 static size_t pc_offset;
 static u_int pc_scale;
 
-static inline void
-profil_count (uintptr_t pc)
+static inline void profil_count(uintptr_t pc)
 {
-  size_t i = (pc - pc_offset) / 2;
+    size_t i = (pc - pc_offset) / 2;
 
-  if (sizeof (unsigned long long int) > sizeof (size_t))
-    i = (unsigned long long int) i * pc_scale / 65536;
-  else
-    i = i / 65536 * pc_scale + i % 65536 * pc_scale / 65536;
+    if (sizeof(unsigned long long int) > sizeof(size_t)) {
+        i = (unsigned long long int) i * pc_scale / 65536;
+    } else {
+        i = i / 65536 * pc_scale + i % 65536 * pc_scale / 65536;
+    }
 
-  if (i < nsamples)
-    ++samples[i];
+    if (i < nsamples) {
+        ++samples[i];
+    }
 }
 
 /* Get the machine-dependent definition of `__profil_counter', the signal
@@ -61,67 +62,69 @@ profil_count (uintptr_t pc)
    SAMPLE_BUFFER[((PC - OFFSET) / 2) * SCALE / 65536].  If SCALE is zero,
    disable profiling.  Returns zero on success, -1 on error.  */
 
-int
-__profil (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
+int __profil(u_short *sample_buffer, size_t size, size_t offset, u_int scale)
 {
-  struct sigaction act;
-  struct itimerval timer;
+    struct sigaction act;
+    struct itimerval timer;
 #if !IS_IN (rtld)
-  static struct sigaction oact;
-  static struct itimerval otimer;
+    static struct sigaction oact;
+    static struct itimerval otimer;
 # define oact_ptr &oact
 # define otimer_ptr &otimer
 
-  if (sample_buffer == NULL)
-    {
-      /* Disable profiling.  */
-      if (samples == NULL)
-	/* Wasn't turned on.  */
-	return 0;
+    if (sample_buffer == NULL) {
+        /* Disable profiling.  */
+        if (samples == NULL)
+            /* Wasn't turned on.  */
+        {
+            return 0;
+        }
 
-      if (__setitimer (ITIMER_PROF, &otimer, NULL) < 0)
-	return -1;
-      samples = NULL;
-      return __libc_sigaction (SIGPROF, &oact, NULL);
+        if (__setitimer(ITIMER_PROF, &otimer, NULL) < 0) {
+            return -1;
+        }
+        samples = NULL;
+        return __libc_sigaction(SIGPROF, &oact, NULL);
     }
 
- if (samples)
-    {
-      /* Was already turned on.  Restore old timer and signal handler
-	 first.  */
-      if (__setitimer (ITIMER_PROF, &otimer, NULL) < 0
-	  || __libc_sigaction (SIGPROF, &oact, NULL) < 0)
-	return -1;
+    if (samples) {
+        /* Was already turned on.  Restore old timer and signal handler
+        first.  */
+        if (__setitimer(ITIMER_PROF, &otimer, NULL) < 0
+            || __libc_sigaction(SIGPROF, &oact, NULL) < 0) {
+            return -1;
+        }
     }
 #else
- /* In ld.so profiling should never be disabled once it runs.  */
- //assert (sample_buffer != NULL);
+    /* In ld.so profiling should never be disabled once it runs.  */
+//assert (sample_buffer != NULL);
 # define oact_ptr NULL
 # define otimer_ptr NULL
 #endif
 
-  samples = sample_buffer;
-  nsamples = size / sizeof *samples;
-  pc_offset = offset;
-  pc_scale = scale;
+    samples = sample_buffer;
+    nsamples = size / sizeof * samples;
+    pc_offset = offset;
+    pc_scale = scale;
 
 #ifdef SA_SIGINFO
-  act.sa_sigaction = __profil_counter;
-  act.sa_flags = SA_SIGINFO;
+    act.sa_sigaction = __profil_counter;
+    act.sa_flags = SA_SIGINFO;
 #else
-  act.sa_handler = __profil_counter;
-  act.sa_flags = 0;
+    act.sa_handler = __profil_counter;
+    act.sa_flags = 0;
 #endif
-  act.sa_flags |= SA_RESTART;
-  __sigfillset (&act.sa_mask);
-  if (__libc_sigaction (SIGPROF, &act, oact_ptr) < 0)
-    return -1;
+    act.sa_flags |= SA_RESTART;
+    __sigfillset(&act.sa_mask);
+    if (__libc_sigaction(SIGPROF, &act, oact_ptr) < 0) {
+        return -1;
+    }
 
-  timer.it_value.tv_sec = 0;
-  timer.it_value.tv_usec = 1000000 / __profile_frequency ();
-  timer.it_interval = timer.it_value;
-  return __setitimer (ITIMER_PROF, &timer, otimer_ptr);
+    timer.it_value.tv_sec = 0;
+    timer.it_value.tv_usec = 1000000 / __profile_frequency();
+    timer.it_interval = timer.it_value;
+    return __setitimer(ITIMER_PROF, &timer, otimer_ptr);
 }
-weak_alias (__profil, profil)
+weak_alias(__profil, profil)
 
 #endif

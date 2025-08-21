@@ -26,10 +26,10 @@
 # define SYMBOL_NAME strncpy
 # include "ifunc-strncpy.h"
 
-libc_ifunc_redirected (__redirect_strncpy, strncpy, IFUNC_SELECTOR ());
+libc_ifunc_redirected(__redirect_strncpy, strncpy, IFUNC_SELECTOR());
 
 # ifdef SHARED
-__hidden_ver1 (strncpy, __GI_strncpy, __redirect_strncpy)
-  __attribute__ ((visibility ("hidden"))) __attribute_copy__ (strncpy);
+__hidden_ver1(strncpy, __GI_strncpy, __redirect_strncpy)
+__attribute__((visibility("hidden"))) __attribute_copy__(strncpy);
 # endif
 #endif

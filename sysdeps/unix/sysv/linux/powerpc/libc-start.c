@@ -36,84 +36,82 @@
 #define INIT_MAIN_ARGS
 #include <csu/libc-start.c>
 
-struct startup_info
-  {
+struct startup_info {
     void *sda_base;
-    int (*main) (int, char **, char **, void *);
-    int (*init) (int, char **, char **, void *);
-    void (*fini) (void);
-  };
+    int (*main)(int, char **, char **, void *);
+    int (*init)(int, char **, char **, void *);
+    void (*fini)(void);
+};
 
-int
-__libc_start_main_impl (int argc, char **argv,
-			char **ev,
-			ElfW (auxv_t) * auxvec,
-			void (*rtld_fini) (void),
-			struct startup_info *stinfo,
-			char **stack_on_entry)
+int __libc_start_main_impl(int argc, char **argv,
+                           char **ev,
+                           ElfW(auxv_t) * auxvec,
+                           void (*rtld_fini)(void),
+                           struct startup_info *stinfo,
+                           char **stack_on_entry)
 {
-  /* the PPC SVR4 ABI says that the top thing on the stack will
-     be a NULL pointer, so if not we assume that we're being called
-     as a statically-linked program by Linux...  */
-  if (*stack_on_entry != NULL)
-    {
-      char **temp;
-      /* ...in which case, we have argc as the top thing on the
-         stack, followed by argv (NULL-terminated), envp (likewise),
-         and the auxiliary vector.  */
-      /* 32/64-bit agnostic load from stack */
-      argc = *(long int *) stack_on_entry;
-      argv = stack_on_entry + 1;
-      ev = argv + argc + 1;
+    /* the PPC SVR4 ABI says that the top thing on the stack will
+       be a NULL pointer, so if not we assume that we're being called
+       as a statically-linked program by Linux...  */
+    if (*stack_on_entry != NULL) {
+        char **temp;
+        /* ...in which case, we have argc as the top thing on the
+           stack, followed by argv (NULL-terminated), envp (likewise),
+           and the auxiliary vector.  */
+        /* 32/64-bit agnostic load from stack */
+        argc = *(long int *) stack_on_entry;
+        argv = stack_on_entry + 1;
+        ev = argv + argc + 1;
 #ifdef HAVE_AUX_VECTOR
-      temp = ev;
-      while (*temp != NULL)
-	++temp;
-      auxvec = (ElfW (auxv_t) *)++ temp;
+        temp = ev;
+        while (*temp != NULL) {
+            ++temp;
+        }
+        auxvec = (ElfW(auxv_t) *)++ temp;
 #endif
-      rtld_fini = NULL;
+        rtld_fini = NULL;
     }
 
-  for (ElfW (auxv_t) * av = auxvec; av->a_type != AT_NULL; ++av)
-    switch (av->a_type)
-      {
-      /* For the static case, we also need _dl_hwcap, _dl_hwcap2 and
-         _dl_platform, so we can call
-         __tcb_parse_hwcap_and_convert_at_platform ().  */
+    for (ElfW(auxv_t) * av = auxvec; av->a_type != AT_NULL; ++av)
+        switch (av->a_type) {
+                /* For the static case, we also need _dl_hwcap, _dl_hwcap2 and
+                   _dl_platform, so we can call
+                   __tcb_parse_hwcap_and_convert_at_platform ().  */
 #ifndef SHARED
-      case AT_HWCAP:
-	_dl_hwcap = (unsigned long int) av->a_un.a_val;
-	break;
-      case AT_HWCAP2:
-	_dl_hwcap2 = (unsigned long int) av->a_un.a_val;
-	break;
-      case AT_HWCAP3:
-	_dl_hwcap3 = (unsigned long int) av->a_un.a_val;
-	break;
-      case AT_HWCAP4:
-	_dl_hwcap4 = (unsigned long int) av->a_un.a_val;
-	break;
-      case AT_PLATFORM:
-	_dl_platform = (void *) av->a_un.a_val;
-	break;
+            case AT_HWCAP:
+                _dl_hwcap = (unsigned long int) av->a_un.a_val;
+                break;
+            case AT_HWCAP2:
+                _dl_hwcap2 = (unsigned long int) av->a_un.a_val;
+                break;
+            case AT_HWCAP3:
+                _dl_hwcap3 = (unsigned long int) av->a_un.a_val;
+                break;
+            case AT_HWCAP4:
+                _dl_hwcap4 = (unsigned long int) av->a_un.a_val;
+                break;
+            case AT_PLATFORM:
+                _dl_platform = (void *) av->a_un.a_val;
+                break;
 #endif
-      }
+        }
 
-  /* Initialize hwcap/hwcap2 and platform data so it can be copied to
-     the TCB later in __libc_setup_tls (). (static case only).  */
+    /* Initialize hwcap/hwcap2 and platform data so it can be copied to
+       the TCB later in __libc_setup_tls (). (static case only).  */
 #ifndef SHARED
-  __tcb_parse_hwcap_and_convert_at_platform ();
+    __tcb_parse_hwcap_and_convert_at_platform();
 #endif
 
-  void *stmain = stinfo->main;
+    void *stmain = stinfo->main;
 #if ENABLE_STATIC_PIE && !defined SHARED
-  struct link_map *map = _dl_get_dl_main_map ();
-  if (!map->l_relocated)
-    stmain = (char *) stmain + elf_machine_load_address ();
+    struct link_map *map = _dl_get_dl_main_map();
+    if (!map->l_relocated) {
+        stmain = (char *) stmain + elf_machine_load_address();
+    }
 #endif
 
-  return generic_start_main (stmain, argc, argv, auxvec,
-			     NULL, NULL, rtld_fini,
-			     stack_on_entry);
+    return generic_start_main(stmain, argc, argv, auxvec,
+                              NULL, NULL, rtld_fini,
+                              stack_on_entry);
 }
 DEFINE_LIBC_START_MAIN_VERSION

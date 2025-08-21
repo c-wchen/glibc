@@ -19,18 +19,17 @@
 #include <stdarg.h>
 #include <libio/libioP.h>
 
-extern int
-___ieee128_isoc23_scanf (const char *format, ...)
+extern int ___ieee128_isoc23_scanf(const char *format, ...)
 {
-  va_list arg;
-  int done;
-  int mode_flags =
-    SCANF_ISOC99_A | SCANF_ISOC23_BIN_CST | SCANF_LDBL_USES_FLOAT128;
+    va_list arg;
+    int done;
+    int mode_flags =
+        SCANF_ISOC99_A | SCANF_ISOC23_BIN_CST | SCANF_LDBL_USES_FLOAT128;
 
-  va_start (arg, format);
-  done = __vfscanf_internal (stdin, format, arg, mode_flags);
-  va_end (arg);
+    va_start(arg, format);
+    done = __vfscanf_internal(stdin, format, arg, mode_flags);
+    va_end(arg);
 
-  return done;
+    return done;
 }
-strong_alias (___ieee128_isoc23_scanf, __isoc23_scanfieee128)
+strong_alias(___ieee128_isoc23_scanf, __isoc23_scanfieee128)

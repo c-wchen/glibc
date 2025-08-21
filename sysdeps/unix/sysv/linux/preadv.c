@@ -22,22 +22,21 @@
 
 # ifdef __ASSUME_PREADV
 
-ssize_t
-preadv (int fd, const struct iovec *vector, int count, off_t offset)
+ssize_t preadv(int fd, const struct iovec *vector, int count, off_t offset)
 {
-  return SYSCALL_CANCEL (preadv, fd, vector, count, LO_HI_LONG (offset));
+    return SYSCALL_CANCEL(preadv, fd, vector, count, LO_HI_LONG(offset));
 }
 # else
-static ssize_t __atomic_preadv_replacement (int, const struct iovec *,
-					    int, off_t);
-ssize_t
-preadv (int fd, const struct iovec *vector, int count, off_t offset)
+static ssize_t __atomic_preadv_replacement(int, const struct iovec *,
+        int, off_t);
+ssize_t preadv(int fd, const struct iovec *vector, int count, off_t offset)
 {
-  ssize_t result = SYSCALL_CANCEL (preadv, fd, vector, count,
-				   LO_HI_LONG (offset));
-  if (result >= 0 || errno != ENOSYS)
-    return result;
-  return __atomic_preadv_replacement (fd, vector, count, offset);
+    ssize_t result = SYSCALL_CANCEL(preadv, fd, vector, count,
+                                    LO_HI_LONG(offset));
+    if (result >= 0 || errno != ENOSYS) {
+        return result;
+    }
+    return __atomic_preadv_replacement(fd, vector, count, offset);
 }
 #  define PREADV static __atomic_preadv_replacement
 #  define PREAD __pread
@@ -45,5 +44,5 @@ preadv (int fd, const struct iovec *vector, int count, off_t offset)
 #  include <sysdeps/posix/preadv_common.c>
 # endif /* __ASSUME_PREADV  */
 
-libc_hidden_def (preadv)
+libc_hidden_def(preadv)
 #endif

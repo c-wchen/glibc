@@ -24,25 +24,26 @@
 /* Set the process group ID of the process matching PID to PGID.
    If PID is zero, the current process's process group ID is set.
    If PGID is zero, the process ID of the process is used.  */
-int
-__setpgid (pid_t pid, pid_t pgid)
+int __setpgid(pid_t pid, pid_t pgid)
 {
-  error_t err;
-  unsigned int stamp;
+    error_t err;
+    unsigned int stamp;
 
-  stamp = _hurd_pids_changed_stamp; /* Atomic fetch.  */
+    stamp = _hurd_pids_changed_stamp; /* Atomic fetch.  */
 
-  if (err = __USEPORT (PROC, __proc_setpgrp (port, pid, pgid)))
-    return __hurd_fail (err);
+    if (err = __USEPORT(PROC, __proc_setpgrp(port, pid, pgid))) {
+        return __hurd_fail(err);
+    }
 
-  if (pid == 0 || pid == _hurd_pid)
-    /* Synchronize with the signal thread to make sure we have
-       received and processed proc_newids before returning to the user.  */
-    while (_hurd_pids_changed_stamp == stamp)
-      lll_wait (_hurd_pids_changed_stamp, stamp, 0);
+    if (pid == 0 || pid == _hurd_pid)
+        /* Synchronize with the signal thread to make sure we have
+           received and processed proc_newids before returning to the user.  */
+        while (_hurd_pids_changed_stamp == stamp) {
+            lll_wait(_hurd_pids_changed_stamp, stamp, 0);
+        }
 
-  return 0;
+    return 0;
 
 }
-libc_hidden_def (__setpgid)
-weak_alias (__setpgid, setpgid)
+libc_hidden_def(__setpgid)
+weak_alias(__setpgid, setpgid)

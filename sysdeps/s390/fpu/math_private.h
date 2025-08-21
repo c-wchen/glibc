@@ -25,26 +25,24 @@
 #ifdef HAVE_S390_MIN_Z196_ZARCH_ASM_SUPPORT
 # define TOINT_INTRINSICS 1
 
-static inline double_t
-roundtoint (double_t x)
+static inline double_t roundtoint(double_t x)
 {
-  double_t y;
-  /* The z196 zarch "load fp integer" (fidbra) instruction is rounding
-     x to the nearest integer with ties away from zero (M3-field: 1)
-     where inexact exceptions are suppressed (M4-field: 4).  */
-  __asm__ ("fidbra %0,1,%1,4" : "=f" (y) : "f" (x));
-  return y;
+    double_t y;
+    /* The z196 zarch "load fp integer" (fidbra) instruction is rounding
+       x to the nearest integer with ties away from zero (M3-field: 1)
+       where inexact exceptions are suppressed (M4-field: 4).  */
+    __asm__("fidbra %0,1,%1,4" : "=f"(y) : "f"(x));
+    return y;
 }
 
-static inline int32_t
-converttoint (double_t x)
+static inline int32_t converttoint(double_t x)
 {
-  int32_t y;
-  /* The z196 zarch "convert to fixed" (cfdbra) instruction is rounding
-     x to the nearest integer with ties away from zero (M3-field: 1)
-     where inexact exceptions are suppressed (M4-field: 4).  */
-  __asm__ ("cfdbra %0,1,%1,4" : "=d" (y) : "f" (x) : "cc");
-  return y;
+    int32_t y;
+    /* The z196 zarch "convert to fixed" (cfdbra) instruction is rounding
+       x to the nearest integer with ties away from zero (M3-field: 1)
+       where inexact exceptions are suppressed (M4-field: 4).  */
+    __asm__("cfdbra %0,1,%1,4" : "=d"(y) : "f"(x) : "cc");
+    return y;
 }
 #endif
 

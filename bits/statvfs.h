@@ -30,8 +30,7 @@
    and retain binary compatibility, we would need to assign a new message
    number.  */
 
-struct statvfs
-  {
+struct statvfs {
     unsigned long int f_bsize;
     unsigned long int f_frsize;
 #ifndef __USE_FILE_OFFSET64
@@ -53,11 +52,10 @@ struct statvfs
     unsigned long int f_flag;
     unsigned long int f_namemax;
     unsigned int f_spare[6];
-  };
+};
 
 #ifdef __USE_LARGEFILE64
-struct statvfs64
-  {
+struct statvfs64 {
     unsigned long int f_bsize;
     unsigned long int f_frsize;
     __fsblkcnt64_t f_blocks;
@@ -70,14 +68,13 @@ struct statvfs64
     unsigned long int f_flag;
     unsigned long int f_namemax;
     unsigned int f_spare[6];
-  };
+};
 #endif
 
 /* Definitions for the flag in `f_flag'.  */
-enum
-{
-  ST_RDONLY = 1,
-#define ST_RDONLY	ST_RDONLY
-  ST_NOSUID = 2
-#define ST_NOSUID	ST_NOSUID
+enum {
+    ST_RDONLY = 1,
+#define ST_RDONLY   ST_RDONLY
+    ST_NOSUID = 2
+#define ST_NOSUID   ST_NOSUID
 };

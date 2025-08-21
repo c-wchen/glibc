@@ -37,13 +37,13 @@
    Offsets and lengths are bytes or (parenthetical references) to the
    values in other fields.
 
-offset	length	contents
-0	4	length of name
-4	4	length of data
-8	4	note type
-12	(0)	vendor name
-		- null-terminated ASCII string, padded to 4-byte alignment
-12+(0)	(4)	note data,
+offset  length  contents
+0   4   length of name
+4   4   length of data
+8   4   note type
+12  (0) vendor name
+        - null-terminated ASCII string, padded to 4-byte alignment
+12+(0)  (4) note data,
 
    The GNU project and cooperating development efforts (including the
    Linux community) use note type 1 and a vendor name string of "GNU"
@@ -56,22 +56,23 @@ offset	length	contents
 #include <link.h>
 #include <stdint.h>
 #include <config.h>
-#include <abi-tag.h>		/* OS-specific ABI tag value */
+#include <abi-tag.h>        /* OS-specific ABI tag value */
 
 /* The linker (GNU ld 2.8 and later) recognizes an allocated section whose
    name begins with `.note' and creates a PT_NOTE program header entry
    pointing at it. */
 
-__attribute__ ((used, aligned (4), section (".note.ABI-tag")))
-static const struct
-{
-  ElfW(Nhdr) nhdr;
-  char name[4];
-  int32_t desc[4];
+__attribute__((used, aligned(4), section(".note.ABI-tag")))
+static const struct {
+    ElfW(Nhdr) nhdr;
+    char name[4];
+    int32_t desc[4];
 } __abi_tag = {
-  { .n_namesz = sizeof __abi_tag.name,
-    .n_descsz = sizeof __abi_tag.desc,
-    .n_type = 1 },
-  "GNU",
-  { __ABI_TAG_OS, __ABI_TAG_VERSION }
+    {
+        .n_namesz = sizeof __abi_tag.name,
+        .n_descsz = sizeof __abi_tag.desc,
+        .n_type = 1
+    },
+    "GNU",
+    { __ABI_TAG_OS, __ABI_TAG_VERSION }
 };

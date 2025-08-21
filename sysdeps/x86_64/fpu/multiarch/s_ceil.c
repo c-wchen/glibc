@@ -30,6 +30,6 @@
 # define SYMBOL_NAME ceil
 # include "ifunc-sse4_1.h"
 
-libc_ifunc_redirected (__redirect_ceil, __ceil, IFUNC_SELECTOR ());
-libm_alias_double (__ceil, ceil)
+libc_ifunc_redirected(__redirect_ceil, __ceil, IFUNC_SELECTOR());
+libm_alias_double(__ceil, ceil)
 #endif

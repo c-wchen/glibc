@@ -18,10 +18,9 @@
 #include <unistd.h>
 
 /* Return the system page size.  */
-int
-__getpagesize (void)
+int __getpagesize(void)
 {
-  return __sysconf (_SC_PAGESIZE);
+    return __sysconf(_SC_PAGESIZE);
 }
-libc_hidden_def (__getpagesize)
-weak_alias (__getpagesize, getpagesize)
+libc_hidden_def(__getpagesize)
+weak_alias(__getpagesize, getpagesize)

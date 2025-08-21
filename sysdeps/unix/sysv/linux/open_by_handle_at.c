@@ -21,8 +21,7 @@
 #include <sys/stat.h>
 #include <sysdep-cancel.h>
 
-int
-open_by_handle_at (int mount_fd, struct file_handle *handle, int flags)
+int open_by_handle_at(int mount_fd, struct file_handle *handle, int flags)
 {
-  return SYSCALL_CANCEL (open_by_handle_at, mount_fd, handle, flags);
+    return SYSCALL_CANCEL(open_by_handle_at, mount_fd, handle, flags);
 }

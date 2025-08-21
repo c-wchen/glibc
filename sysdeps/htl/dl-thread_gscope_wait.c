@@ -20,48 +20,47 @@
 #include <pthread.h>
 #include <htl/pt-internal.h>
 
-static inline int *
-thread_gscope_flag (struct __pthread *t)
+static inline int *thread_gscope_flag(struct __pthread *t)
 {
 #if TLS_TCB_AT_TP
-  return &t->tcb->gscope_flag;
+    return &t->tcb->gscope_flag;
 #elif TLS_DTV_AT_TP
-  return &((tcbprehead_t *) t->tcb - 1)->gscope_flag;
+    return &((tcbprehead_t *) t->tcb - 1)->gscope_flag;
 #else
 # error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 #endif
 }
 
-void
-__thread_gscope_wait (void)
+void __thread_gscope_wait(void)
 {
-  size_t i;
-  struct __pthread *t;
-  int *gscope_flagp;
+    size_t i;
+    struct __pthread *t;
+    int *gscope_flagp;
 
-  __libc_rwlock_rdlock (GL (dl_pthread_threads_lock));
+    __libc_rwlock_rdlock(GL(dl_pthread_threads_lock));
 
-  /* Iterate over the list of threads.  */
-  for (i = 0; i < GL (dl_pthread_num_threads); ++i)
-    {
-      t = GL (dl_pthread_threads[i]);
-      if (t == NULL || *thread_gscope_flag (t) == THREAD_GSCOPE_FLAG_UNUSED)
-        continue;
+    /* Iterate over the list of threads.  */
+    for (i = 0; i < GL(dl_pthread_num_threads); ++i) {
+        t = GL(dl_pthread_threads[i]);
+        if (t == NULL || *thread_gscope_flag(t) == THREAD_GSCOPE_FLAG_UNUSED) {
+            continue;
+        }
 
-      gscope_flagp = thread_gscope_flag (t);
+        gscope_flagp = thread_gscope_flag(t);
 
-      /* We have to wait until this thread is done with the global
-         scope.  First tell the thread that we are waiting and
-         possibly have to be woken.  */
-      if (atomic_compare_and_exchange_bool_acq (gscope_flagp,
-                                                THREAD_GSCOPE_FLAG_WAIT,
-                                                THREAD_GSCOPE_FLAG_USED))
-        continue;
+        /* We have to wait until this thread is done with the global
+           scope.  First tell the thread that we are waiting and
+           possibly have to be woken.  */
+        if (atomic_compare_and_exchange_bool_acq(gscope_flagp,
+                THREAD_GSCOPE_FLAG_WAIT,
+                THREAD_GSCOPE_FLAG_USED)) {
+            continue;
+        }
 
-      do
-        lll_wait (gscope_flagp, THREAD_GSCOPE_FLAG_WAIT, LLL_PRIVATE);
-      while (*gscope_flagp == THREAD_GSCOPE_FLAG_WAIT);
+        do {
+            lll_wait(gscope_flagp, THREAD_GSCOPE_FLAG_WAIT, LLL_PRIVATE);
+        } while (*gscope_flagp == THREAD_GSCOPE_FLAG_WAIT);
     }
 
-  __libc_rwlock_unlock (GL (dl_pthread_threads_lock));
+    __libc_rwlock_unlock(GL(dl_pthread_threads_lock));
 }

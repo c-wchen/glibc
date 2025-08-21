@@ -23,10 +23,9 @@
 #include <linkat_common.h>
 
 /* Make a link to FROM called TO.  */
-int
-__link (const char *from, const char *to)
+int __link(const char *from, const char *to)
 {
-  return __linkat_common (AT_FDCWD, from, AT_FDCWD, to, 0, 0);
+    return __linkat_common(AT_FDCWD, from, AT_FDCWD, to, 0, 0);
 }
 
-weak_alias (__link, link)
+weak_alias(__link, link)

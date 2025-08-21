@@ -34,85 +34,80 @@
 #include <support/xunistd.h>
 #include <wchar.h>
 
-static int
-call_vscanf (const char *format, ...)
+static int call_vscanf(const char *format, ...)
 {
-  va_list ap;
-  va_start (ap, format);
-  int ret = vscanf (format, ap);
-  va_end (ap);
-  return ret;
+    va_list ap;
+    va_start(ap, format);
+    int ret = vscanf(format, ap);
+    va_end(ap);
+    return ret;
 }
 
-static int
-call_vwscanf (const wchar_t *format, ...)
+static int call_vwscanf(const wchar_t *format, ...)
 {
-  va_list ap;
-  va_start (ap, format);
-  int ret = vwscanf (format, ap);
-  va_end (ap);
-  return ret;
+    va_list ap;
+    va_start(ap, format);
+    int ret = vwscanf(format, ap);
+    va_end(ap);
+    return ret;
 }
 
-static void
-narrow (const char *path)
+static void narrow(const char *path)
 {
-  FILE *old_stdin = stdin;
-  stdin = xfopen (path, "r");
+    FILE *old_stdin = stdin;
+    stdin = xfopen(path, "r");
 
-  TEST_COMPARE (getchar (), 'a');
-  TEST_COMPARE (getchar_unlocked (), 'b');
-  char ch = 1;
-  TEST_COMPARE (scanf ("%c", &ch), 1);
-  TEST_COMPARE (ch, 'c');
-  TEST_COMPARE (call_vscanf ("%c", &ch), 1);
-  TEST_COMPARE (ch, 'd');
-  char buf[8];
-  memset (buf, 'X', sizeof (buf));
+    TEST_COMPARE(getchar(), 'a');
+    TEST_COMPARE(getchar_unlocked(), 'b');
+    char ch = 1;
+    TEST_COMPARE(scanf("%c", &ch), 1);
+    TEST_COMPARE(ch, 'c');
+    TEST_COMPARE(call_vscanf("%c", &ch), 1);
+    TEST_COMPARE(ch, 'd');
+    char buf[8];
+    memset(buf, 'X', sizeof(buf));
 
-  /* Legacy interface.  */
-  extern char *gets (char *);
-  TEST_VERIFY (gets (buf) == buf);
-  TEST_COMPARE_BLOB (buf, sizeof (buf), "ef\0XXXXX", sizeof (buf));
+    /* Legacy interface.  */
+    extern char *gets(char *);
+    TEST_VERIFY(gets(buf) == buf);
+    TEST_COMPARE_BLOB(buf, sizeof(buf), "ef\0XXXXX", sizeof(buf));
 
-  fclose (stdin);
-  stdin = old_stdin;
+    fclose(stdin);
+    stdin = old_stdin;
 }
 
-static void
-wide (const char *path)
+static void wide(const char *path)
 {
-  FILE *old_stdin = stdin;
-  stdin = xfopen (path, "r");
+    FILE *old_stdin = stdin;
+    stdin = xfopen(path, "r");
 
-  TEST_COMPARE (getwchar (), L'a');
-  TEST_COMPARE (getwchar_unlocked (), L'b');
-  wchar_t ch = 1;
-  TEST_COMPARE (wscanf (L"%lc", &ch), 1);
-  TEST_COMPARE (ch, L'c');
-  TEST_COMPARE (call_vwscanf (L"%lc", &ch), 1);
-  TEST_COMPARE (ch, L'd');
+    TEST_COMPARE(getwchar(), L'a');
+    TEST_COMPARE(getwchar_unlocked(), L'b');
+    wchar_t ch = 1;
+    TEST_COMPARE(wscanf(L"%lc", &ch), 1);
+    TEST_COMPARE(ch, L'c');
+    TEST_COMPARE(call_vwscanf(L"%lc", &ch), 1);
+    TEST_COMPARE(ch, L'd');
 
-  fclose (stdin);
-  stdin = old_stdin;
+    fclose(stdin);
+    stdin = old_stdin;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char *path;
-  {
-    int fd = create_temp_file ("tst-bz24153-", &path);
-    TEST_VERIFY_EXIT (fd >= 0);
-    xwrite (fd, "abcdef", strlen ("abcdef"));
-    xclose (fd);
-  }
+    char *path;
+    {
+        int fd = create_temp_file("tst-bz24153-", &path);
+        TEST_VERIFY_EXIT(fd >= 0);
+        xwrite(fd, "abcdef", strlen("abcdef"));
+        xclose(fd);
+    }
 
-  narrow (path);
-  wide (path);
+    narrow(path);
+    wide(path);
 
-  free (path);
-  return 0;
+    free(path);
+    return 0;
 }
 
 #include <support/test-driver.c>

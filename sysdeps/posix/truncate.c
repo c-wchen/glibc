@@ -22,23 +22,25 @@
 #include <fcntl.h>
 
 /* Truncate PATH to LENGTH bytes.  */
-int
-__truncate (const char *path, off_t length)
+int __truncate(const char *path, off_t length)
 {
-  int fd, ret, save;
+    int fd, ret, save;
 
-  fd = __open (path, O_WRONLY | (length == 0 ? O_TRUNC : 0));
-  if (fd < 0)
-    return -1;
+    fd = __open(path, O_WRONLY | (length == 0 ? O_TRUNC : 0));
+    if (fd < 0) {
+        return -1;
+    }
 
-  if (length == 0)
-    ret = 0;
-  else
-    ret = __ftruncate (fd, length);
-  save = errno;
-  (void) __close (fd);
-  if (ret < 0)
-    __set_errno (save);
-  return ret;
+    if (length == 0) {
+        ret = 0;
+    } else {
+        ret = __ftruncate(fd, length);
+    }
+    save = errno;
+    (void) __close(fd);
+    if (ret < 0) {
+        __set_errno(save);
+    }
+    return ret;
 }
-weak_alias (__truncate, truncate)
+weak_alias(__truncate, truncate)

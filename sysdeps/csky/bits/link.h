@@ -21,35 +21,33 @@
 #endif
 
 /* Registers for entry into PLT on C-SKY.  */
-typedef struct La_csky_regs
-{
-  uint32_t lr_reg[4];
-  uint32_t lr_sp;
-  uint32_t lr_lr;
+typedef struct La_csky_regs {
+    uint32_t lr_reg[4];
+    uint32_t lr_sp;
+    uint32_t lr_lr;
 } La_csky_regs;
 
 /* Return values for calls from PLT on C-SKY.  */
-typedef struct La_csky_retval
-{
-  /* Up to four integer registers can be used for a return value.  */
-  uint32_t lrv_reg[4];
-  uint32_t lrv_v0;
+typedef struct La_csky_retval {
+    /* Up to four integer registers can be used for a return value.  */
+    uint32_t lrv_reg[4];
+    uint32_t lrv_v0;
 } La_csky_retval;
 
 __BEGIN_DECLS
 
-extern Elf32_Addr la_csky_gnu_pltenter (Elf32_Sym *__sym, unsigned int __ndx,
-					uintptr_t *__refcook,
-					uintptr_t *__defcook,
-					La_csky_regs *__regs,
-					unsigned int *__flags,
-					const char *__symname,
-					long int *__framesizep);
-extern unsigned int la_csky_gnu_pltexit (Elf32_Sym *__sym, unsigned int __ndx,
-					 uintptr_t *__refcook,
-					 uintptr_t *__defcook,
-					 const La_csky_regs *__inregs,
-					 La_csky_retval *__outregs,
-					 const char *__symname);
+extern Elf32_Addr la_csky_gnu_pltenter(Elf32_Sym *__sym, unsigned int __ndx,
+                                       uintptr_t *__refcook,
+                                       uintptr_t *__defcook,
+                                       La_csky_regs *__regs,
+                                       unsigned int *__flags,
+                                       const char *__symname,
+                                       long int *__framesizep);
+extern unsigned int la_csky_gnu_pltexit(Elf32_Sym *__sym, unsigned int __ndx,
+                                        uintptr_t *__refcook,
+                                        uintptr_t *__defcook,
+                                        const La_csky_regs *__inregs,
+                                        La_csky_retval *__outregs,
+                                        const char *__symname);
 
 __END_DECLS

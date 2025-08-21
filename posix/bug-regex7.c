@@ -24,67 +24,55 @@
 #include <regex.h>
 
 
-int
-main (void)
+int main(void)
 {
-  struct re_pattern_buffer regex;
-  struct re_registers regs;
-  const char *s;
-  int match, n;
-  int result = 0;
+    struct re_pattern_buffer regex;
+    struct re_registers regs;
+    const char *s;
+    int match, n;
+    int result = 0;
 
-  memset (&regex, '\0', sizeof (regex));
-  regs.start = regs.end = NULL;
-  regs.num_regs = 0;
-  s = re_compile_pattern ("a", 1, &regex);
-  if (s != NULL)
-    {
-      puts ("failed to compile pattern \"a\"");
-      result = 1;
-    }
-  else
-    {
-      match = re_search (&regex, "baobab", 6, 0, 6, &regs);
-      n = 1;
-      if (match != 1)
-	{
-	  printf ("re_search returned %d, expected 1\n", match);
-	  result = 1;
-	}
-      else if (regs.num_regs <= n || regs.start[n] != -1 || regs.end[n] != -1)
-	{
-	  puts ("re_search failed to fill the -1 sentinel");
-	  result = 1;
-	}
+    memset(&regex, '\0', sizeof(regex));
+    regs.start = regs.end = NULL;
+    regs.num_regs = 0;
+    s = re_compile_pattern("a", 1, &regex);
+    if (s != NULL) {
+        puts("failed to compile pattern \"a\"");
+        result = 1;
+    } else {
+        match = re_search(&regex, "baobab", 6, 0, 6, &regs);
+        n = 1;
+        if (match != 1) {
+            printf("re_search returned %d, expected 1\n", match);
+            result = 1;
+        } else if (regs.num_regs <= n || regs.start[n] != -1 || regs.end[n] != -1) {
+            puts("re_search failed to fill the -1 sentinel");
+            result = 1;
+        }
     }
 
-  free (regex.buffer);
-  memset (&regex, '\0', sizeof (regex));
+    free(regex.buffer);
+    memset(&regex, '\0', sizeof(regex));
 
-  s = re_compile_pattern ("\\(\\(\\(a\\)\\)\\)", 13, &regex);
-  if (s != NULL)
-    {
-      puts ("failed to compile pattern /\\(\\(\\(a\\)\\)\\)/");
-      result = 1;
-    }
-  else
-    {
-      match = re_match (&regex, "apl", 3, 0, &regs);
-      n = 4;
-      if (match != 1)
-	{
-	  printf ("re_match returned %d, expected 1\n", match);
-	  result = 1;
-	}
-      else if (regs.num_regs <= n || regs.start[n] != -1 || regs.end[n] != -1)
-	{
-	  puts ("re_match failed to fill the -1 sentinel");
-	  result = 1;
-	}
+    s = re_compile_pattern("\\(\\(\\(a\\)\\)\\)", 13, &regex);
+    if (s != NULL) {
+        puts("failed to compile pattern /\\(\\(\\(a\\)\\)\\)/");
+        result = 1;
+    } else {
+        match = re_match(&regex, "apl", 3, 0, &regs);
+        n = 4;
+        if (match != 1) {
+            printf("re_match returned %d, expected 1\n", match);
+            result = 1;
+        } else if (regs.num_regs <= n || regs.start[n] != -1 || regs.end[n] != -1) {
+            puts("re_match failed to fill the -1 sentinel");
+            result = 1;
+        }
     }
 
-  if (result == 0)
-    puts (" -> OK");
+    if (result == 0) {
+        puts(" -> OK");
+    }
 
-  return result;
+    return result;
 }

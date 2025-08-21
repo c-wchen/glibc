@@ -20,41 +20,43 @@
 #include <math_private.h>
 #include <stdint.h>
 
-int
-__iscanonicall (long double x)
+int __iscanonicall(long double x)
 {
-  double xhi, xlo;
-  uint64_t hx, lx;
+    double xhi, xlo;
+    uint64_t hx, lx;
 
-  ldbl_unpack (x, &xhi, &xlo);
-  EXTRACT_WORDS64 (hx, xhi);
-  EXTRACT_WORDS64 (lx, xlo);
-  int64_t ix = hx & 0x7fffffffffffffffULL;
-  int64_t iy = lx & 0x7fffffffffffffffULL;
-  int hexp = (ix & 0x7ff0000000000000LL) >> 52;
-  int lexp = (iy & 0x7ff0000000000000LL) >> 52;
+    ldbl_unpack(x, &xhi, &xlo);
+    EXTRACT_WORDS64(hx, xhi);
+    EXTRACT_WORDS64(lx, xlo);
+    int64_t ix = hx & 0x7fffffffffffffffULL;
+    int64_t iy = lx & 0x7fffffffffffffffULL;
+    int hexp = (ix & 0x7ff0000000000000LL) >> 52;
+    int lexp = (iy & 0x7ff0000000000000LL) >> 52;
 
-  if (iy == 0)
-    /* Low part 0 is always OK.  */
-    return 1;
-
-  if (hexp == 0x7ff)
-    /* If a NaN, the low part does not matter.  If an infinity, the
-       low part must be 0, in which case we have already returned.  */
-    return ix != 0x7ff0000000000000LL;
-
-  /* The high part is finite and the low part is nonzero.  There must
-     be sufficient difference between the exponents.  */
-  bool low_p2;
-  if (lexp == 0)
+    if (iy == 0)
+        /* Low part 0 is always OK.  */
     {
-      /* Adjust the exponent for subnormal low part.  */
-      lexp = 12 - __builtin_clzll (iy);
-      low_p2 = iy == (1LL << (51 + lexp));
+        return 1;
     }
-  else
-    low_p2 = (iy & 0xfffffffffffffLL) == 0;
-  int expdiff = hexp - lexp;
-  return expdiff > 53 || (expdiff == 53 && low_p2 && (ix & 1) == 0);
+
+    if (hexp == 0x7ff)
+        /* If a NaN, the low part does not matter.  If an infinity, the
+           low part must be 0, in which case we have already returned.  */
+    {
+        return ix != 0x7ff0000000000000LL;
+    }
+
+    /* The high part is finite and the low part is nonzero.  There must
+       be sufficient difference between the exponents.  */
+    bool low_p2;
+    if (lexp == 0) {
+        /* Adjust the exponent for subnormal low part.  */
+        lexp = 12 - __builtin_clzll(iy);
+        low_p2 = iy == (1LL << (51 + lexp));
+    } else {
+        low_p2 = (iy & 0xfffffffffffffLL) == 0;
+    }
+    int expdiff = hexp - lexp;
+    return expdiff > 53 || (expdiff == 53 && low_p2 && (ix & 1) == 0);
 }
-libm_hidden_def (__iscanonicall)
+libm_hidden_def(__iscanonicall)

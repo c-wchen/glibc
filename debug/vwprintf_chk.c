@@ -19,12 +19,11 @@
 
 
 /* Write formatted output to stdout from the format string FORMAT.  */
-int
-__vwprintf_chk (int flag, const wchar_t *format, va_list ap)
+int __vwprintf_chk(int flag, const wchar_t *format, va_list ap)
 {
-  /* For flag > 0 (i.e. __USE_FORTIFY_LEVEL > 1) request that %n
-     can only come from read-only format strings.  */
-  unsigned int mode = (flag > 0) ? PRINTF_FORTIFY : 0;
+    /* For flag > 0 (i.e. __USE_FORTIFY_LEVEL > 1) request that %n
+       can only come from read-only format strings.  */
+    unsigned int mode = (flag > 0) ? PRINTF_FORTIFY : 0;
 
-  return __vfwprintf_internal (stdout, format, ap, mode);
+    return __vfwprintf_internal(stdout, format, ap, mode);
 }

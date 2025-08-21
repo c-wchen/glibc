@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _DL_VDSO_H
-#define _DL_VDSO_H	1
+#define _DL_VDSO_H  1
 
 #include <ldsodefs.h>
 #include <dl-hash.h>
@@ -34,25 +34,25 @@
 #endif
 
 /* Functions for resolving symbols in the VDSO link map.  */
-static inline void *
-dl_vdso_vsym (const char *name)
+static inline void *dl_vdso_vsym(const char *name)
 {
-  struct link_map *map = GLRO (dl_sysinfo_map);
-  if (map == NULL)
-    return NULL;
+    struct link_map *map = GLRO(dl_sysinfo_map);
+    if (map == NULL) {
+        return NULL;
+    }
 
-  /* Use a WEAK REF so we don't error out if the symbol is not found.  */
-  ElfW (Sym) wsym = { 0 };
-  wsym.st_info = (unsigned char) ELFW (ST_INFO (STB_WEAK, STT_NOTYPE));
+    /* Use a WEAK REF so we don't error out if the symbol is not found.  */
+    ElfW(Sym) wsym = { 0 };
+    wsym.st_info = (unsigned char) ELFW(ST_INFO(STB_WEAK, STT_NOTYPE));
 
-  const struct r_found_version rfv = { VDSO_NAME, VDSO_HASH, 1, NULL };
+    const struct r_found_version rfv = { VDSO_NAME, VDSO_HASH, 1, NULL };
 
-  /* Search the scope of the vdso map.  */
-  const ElfW (Sym) *ref = &wsym;
-  lookup_t result = GLRO (dl_lookup_symbol_x) (name, map, &ref,
-					       map->l_local_scope,
-					       &rfv, 0, 0, NULL);
-  return ref != NULL ? DL_SYMBOL_ADDRESS (result, ref) : NULL;
+    /* Search the scope of the vdso map.  */
+    const ElfW(Sym) *ref = &wsym;
+    lookup_t result = GLRO(dl_lookup_symbol_x)(name, map, &ref,
+                      map->l_local_scope,
+                      &rfv, 0, 0, NULL);
+    return ref != NULL ? DL_SYMBOL_ADDRESS(result, ref) : NULL;
 }
 
 #endif /* dl-vdso.h */

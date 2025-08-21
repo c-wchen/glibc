@@ -18,13 +18,13 @@
 #include <arpa/inet.h>
 #include <stdio.h>
 
-int
-__inet_pton_chk (int af, const char *src, void *dst, size_t dst_size)
+int __inet_pton_chk(int af, const char *src, void *dst, size_t dst_size)
 {
-  if ((af == AF_INET && dst_size < 4)
-      || (af == AF_INET6 && dst_size < 16))
-    __chk_fail ();
+    if ((af == AF_INET && dst_size < 4)
+        || (af == AF_INET6 && dst_size < 16)) {
+        __chk_fail();
+    }
 
-  return __inet_pton (af, src, dst);
+    return __inet_pton(af, src, dst);
 }
-libc_hidden_def (__inet_pton_chk)
+libc_hidden_def(__inet_pton_chk)

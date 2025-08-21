@@ -28,239 +28,237 @@
 static int srv;
 static struct sockaddr_in srv_addr;
 
-static int
-do_sendto (const struct sockaddr_in *addr, int payload)
+static int do_sendto(const struct sockaddr_in *addr, int payload)
 {
-  int s = xsocket (AF_INET, SOCK_DGRAM | SOCK_CLOEXEC, 0);
-  xconnect (s, (const struct sockaddr *) addr, sizeof (*addr));
+    int s = xsocket(AF_INET, SOCK_DGRAM | SOCK_CLOEXEC, 0);
+    xconnect(s, (const struct sockaddr *) addr, sizeof(*addr));
 
-  xsendto (s, &payload, sizeof (payload), 0, (const struct sockaddr *) addr,
-	   sizeof (*addr));
+    xsendto(s, &payload, sizeof(payload), 0, (const struct sockaddr *) addr,
+            sizeof(*addr));
 
-  xclose (s);
+    xclose(s);
 
-  return 0;
+    return 0;
 }
 
-static void
-do_recvmsg_ancillary (bool use_multi_call, struct mmsghdr *mmhdr,
-		      void *msgbuf, size_t msgbuflen, int exp_payload)
+static void do_recvmsg_ancillary(bool use_multi_call, struct mmsghdr *mmhdr,
+                                 void *msgbuf, size_t msgbuflen, int exp_payload)
 {
-  int payload;
-  struct iovec iov =
-    {
-      .iov_base = &payload,
-      .iov_len = sizeof (payload)
+    int payload;
+    struct iovec iov = {
+        .iov_base = &payload,
+        .iov_len = sizeof(payload)
     };
-  mmhdr->msg_hdr.msg_name = NULL;
-  mmhdr->msg_hdr.msg_iov = &iov;
-  mmhdr->msg_hdr.msg_iovlen = 1;
-  mmhdr->msg_hdr.msg_control = msgbuf;
-  mmhdr->msg_hdr.msg_controllen = msgbuflen;
+    mmhdr->msg_hdr.msg_name = NULL;
+    mmhdr->msg_hdr.msg_iov = &iov;
+    mmhdr->msg_hdr.msg_iovlen = 1;
+    mmhdr->msg_hdr.msg_control = msgbuf;
+    mmhdr->msg_hdr.msg_controllen = msgbuflen;
 
-  int r;
-  if (use_multi_call)
-    {
-      r = recvmmsg (srv, mmhdr, 1, 0, NULL);
-      if (r >= 0)
-	r = mmhdr->msg_len;
+    int r;
+    if (use_multi_call) {
+        r = recvmmsg(srv, mmhdr, 1, 0, NULL);
+        if (r >= 0) {
+            r = mmhdr->msg_len;
+        }
+    } else {
+        r = recvmsg(srv, &mmhdr->msg_hdr, 0);
     }
-  else
-    r = recvmsg (srv, &mmhdr->msg_hdr, 0);
-  TEST_COMPARE (r, sizeof (int));
-  TEST_COMPARE (payload, exp_payload);
+    TEST_COMPARE(r, sizeof(int));
+    TEST_COMPARE(payload, exp_payload);
 }
 
 /* Check if recvmsg create the additional 64 bit timestamp if only 32 bit
    is enabled for 64 bit recvmsg symbol.  */
-static void
-do_test_large_buffer (bool mc)
+static void do_test_large_buffer(bool mc)
 {
-  struct mmsghdr mmhdr = { };
-  /* It should be large enough for either timeval/timespec and the
-     64 time type as well.  */
+    struct mmsghdr mmhdr = { };
+    /* It should be large enough for either timeval/timespec and the
+       64 time type as well.  */
 
-  union
-  {
-    struct cmsghdr cmsghdr;
-    char msgbuf[512];
-  } control;
+    union {
+        struct cmsghdr cmsghdr;
+        char msgbuf[512];
+    } control;
 
-  /* Enable 32 bit timeval precision and check if no 64 bit timeval stamp
-     is created.  */
-  {
-    int r = setsockopt (srv, SOL_SOCKET, COMPAT_SO_TIMESTAMP_OLD, &(int){1},
-			sizeof (int));
-    TEST_VERIFY_EXIT (r != -1);
-
-    do_sendto (&srv_addr, 42);
-    do_recvmsg_ancillary (mc, &mmhdr, &control, sizeof control, 42);
-
-    bool found_timestamp = false;
-    for (struct cmsghdr *cmsg = CMSG_FIRSTHDR (&mmhdr.msg_hdr);
-	 cmsg != NULL;
-	 cmsg = CMSG_NXTHDR (&mmhdr.msg_hdr, cmsg))
+    /* Enable 32 bit timeval precision and check if no 64 bit timeval stamp
+       is created.  */
     {
-      if (cmsg->cmsg_level != SOL_SOCKET)
-	continue;
+        int r = setsockopt(srv, SOL_SOCKET, COMPAT_SO_TIMESTAMP_OLD, &(int) {
+            1
+        },
+        sizeof(int));
+        TEST_VERIFY_EXIT(r != -1);
 
-      if (sizeof (time_t) > 4 && cmsg->cmsg_type == COMPAT_SO_TIMESTAMP_NEW)
-	found_timestamp = true;
-      else
-	TEST_VERIFY (cmsg->cmsg_type != COMPAT_SO_TIMESTAMP_NEW);
+        do_sendto(&srv_addr, 42);
+        do_recvmsg_ancillary(mc, &mmhdr, &control, sizeof control, 42);
+
+        bool found_timestamp = false;
+        for (struct cmsghdr *cmsg = CMSG_FIRSTHDR(&mmhdr.msg_hdr);
+             cmsg != NULL;
+             cmsg = CMSG_NXTHDR(&mmhdr.msg_hdr, cmsg)) {
+            if (cmsg->cmsg_level != SOL_SOCKET) {
+                continue;
+            }
+
+            if (sizeof(time_t) > 4 && cmsg->cmsg_type == COMPAT_SO_TIMESTAMP_NEW) {
+                found_timestamp = true;
+            } else {
+                TEST_VERIFY(cmsg->cmsg_type != COMPAT_SO_TIMESTAMP_NEW);
+            }
+        }
+
+        TEST_COMPARE(found_timestamp, sizeof(time_t) > 4);
     }
 
-    TEST_COMPARE (found_timestamp, sizeof (time_t) > 4);
-  }
-
-  /* Same as before, but for timespec.  */
-  {
-    int r = setsockopt (srv, SOL_SOCKET, COMPAT_SO_TIMESTAMPNS_OLD, &(int){1},
-			sizeof (int));
-    TEST_VERIFY_EXIT (r != -1);
-
-    do_sendto (&srv_addr, 42);
-    do_recvmsg_ancillary (mc, &mmhdr, &control, sizeof control, 42);
-
-    bool found_timestamp = false;
-    for (struct cmsghdr *cmsg = CMSG_FIRSTHDR (&mmhdr.msg_hdr);
-	 cmsg != NULL;
-	 cmsg = CMSG_NXTHDR (&mmhdr.msg_hdr, cmsg))
+    /* Same as before, but for timespec.  */
     {
-      if (cmsg->cmsg_level != SOL_SOCKET)
-	continue;
+        int r = setsockopt(srv, SOL_SOCKET, COMPAT_SO_TIMESTAMPNS_OLD, &(int) {
+            1
+        },
+        sizeof(int));
+        TEST_VERIFY_EXIT(r != -1);
 
-      if (sizeof (time_t) > 4 && cmsg->cmsg_type == COMPAT_SO_TIMESTAMPNS_NEW)
-	found_timestamp = true;
-      else
-	TEST_VERIFY (cmsg->cmsg_type != COMPAT_SO_TIMESTAMPNS_NEW);
+        do_sendto(&srv_addr, 42);
+        do_recvmsg_ancillary(mc, &mmhdr, &control, sizeof control, 42);
+
+        bool found_timestamp = false;
+        for (struct cmsghdr *cmsg = CMSG_FIRSTHDR(&mmhdr.msg_hdr);
+             cmsg != NULL;
+             cmsg = CMSG_NXTHDR(&mmhdr.msg_hdr, cmsg)) {
+            if (cmsg->cmsg_level != SOL_SOCKET) {
+                continue;
+            }
+
+            if (sizeof(time_t) > 4 && cmsg->cmsg_type == COMPAT_SO_TIMESTAMPNS_NEW) {
+                found_timestamp = true;
+            } else {
+                TEST_VERIFY(cmsg->cmsg_type != COMPAT_SO_TIMESTAMPNS_NEW);
+            }
+        }
+
+        TEST_COMPARE(found_timestamp, sizeof(time_t) > 4);
     }
-
-    TEST_COMPARE (found_timestamp, sizeof (time_t) > 4);
-  }
 }
 
 /* Check if recvmsg does not create the additional 64 bit timestamp if
    only 32 bit timestamp is enabled if the ancillary buffer is not large
    enough.  Also checks if MSG_CTRUNC is set iff for 64 bit recvmsg
    symbol.  */
-static void
-do_test_small_buffer (bool mc)
+static void do_test_small_buffer(bool mc)
 {
-  struct mmsghdr mmhdr = { };
+    struct mmsghdr mmhdr = { };
 
-  /* Enable 32 bit timeval precision and check if no 64 bit timeval stamp
-     is created.  */
-  {
-    int r = setsockopt (srv, SOL_SOCKET, COMPAT_SO_TIMESTAMP_OLD, &(int){1},
-			sizeof (int));
-    TEST_VERIFY_EXIT (r != -1);
-
-    union
+    /* Enable 32 bit timeval precision and check if no 64 bit timeval stamp
+       is created.  */
     {
-      struct cmsghdr cmsghdr;
-      char msgbuf[CMSG_SPACE (sizeof (struct timeval))];
-    } control;
+        int r = setsockopt(srv, SOL_SOCKET, COMPAT_SO_TIMESTAMP_OLD, &(int) {
+            1
+        },
+        sizeof(int));
+        TEST_VERIFY_EXIT(r != -1);
 
-    do_sendto (&srv_addr, 42);
-    do_recvmsg_ancillary (mc, &mmhdr, &control, sizeof control, 42);
+        union {
+            struct cmsghdr cmsghdr;
+            char msgbuf[CMSG_SPACE(sizeof(struct timeval))];
+        } control;
 
-    bool found_timestamp = false;
-    for (struct cmsghdr *cmsg = CMSG_FIRSTHDR (&mmhdr.msg_hdr);
-	 cmsg != NULL;
-	 cmsg = CMSG_NXTHDR (&mmhdr.msg_hdr, cmsg))
-    {
-      if (cmsg->cmsg_level != SOL_SOCKET)
-	continue;
+        do_sendto(&srv_addr, 42);
+        do_recvmsg_ancillary(mc, &mmhdr, &control, sizeof control, 42);
 
-      if (sizeof (time_t) > 4 && cmsg->cmsg_type == COMPAT_SO_TIMESTAMP_NEW)
-	found_timestamp = true;
-      else
-	TEST_VERIFY (cmsg->cmsg_type != COMPAT_SO_TIMESTAMP_NEW);
+        bool found_timestamp = false;
+        for (struct cmsghdr *cmsg = CMSG_FIRSTHDR(&mmhdr.msg_hdr);
+             cmsg != NULL;
+             cmsg = CMSG_NXTHDR(&mmhdr.msg_hdr, cmsg)) {
+            if (cmsg->cmsg_level != SOL_SOCKET) {
+                continue;
+            }
+
+            if (sizeof(time_t) > 4 && cmsg->cmsg_type == COMPAT_SO_TIMESTAMP_NEW) {
+                found_timestamp = true;
+            } else {
+                TEST_VERIFY(cmsg->cmsg_type != COMPAT_SO_TIMESTAMP_NEW);
+            }
+        }
+
+        if (sizeof(time_t) > 4) {
+            TEST_VERIFY((mmhdr.msg_hdr.msg_flags & MSG_CTRUNC));
+            TEST_COMPARE(found_timestamp, 0);
+        } else {
+            TEST_VERIFY(!(mmhdr.msg_hdr.msg_flags & MSG_CTRUNC));
+            TEST_COMPARE(found_timestamp, 0);
+        }
     }
 
-    if (sizeof (time_t) > 4)
-      {
-	TEST_VERIFY ((mmhdr.msg_hdr.msg_flags & MSG_CTRUNC));
-	TEST_COMPARE (found_timestamp, 0);
-      }
-    else
-      {
-	TEST_VERIFY (!(mmhdr.msg_hdr.msg_flags & MSG_CTRUNC));
-	TEST_COMPARE (found_timestamp, 0);
-      }
-  }
-
-  /* Same as before, but for timespec.  */
-  {
-    int r = setsockopt (srv, SOL_SOCKET, COMPAT_SO_TIMESTAMPNS_OLD, &(int){1},
-			sizeof (int));
-    TEST_VERIFY_EXIT (r != -1);
-
-    union
+    /* Same as before, but for timespec.  */
     {
-      struct cmsghdr cmsghdr;
-      char msgbuf[CMSG_SPACE (sizeof (struct timespec))];
-    } control;
+        int r = setsockopt(srv, SOL_SOCKET, COMPAT_SO_TIMESTAMPNS_OLD, &(int) {
+            1
+        },
+        sizeof(int));
+        TEST_VERIFY_EXIT(r != -1);
 
-    do_sendto (&srv_addr, 42);
-    do_recvmsg_ancillary (mc, &mmhdr, &control, sizeof control, 42);
+        union {
+            struct cmsghdr cmsghdr;
+            char msgbuf[CMSG_SPACE(sizeof(struct timespec))];
+        } control;
 
-    bool found_timestamp = false;
-    for (struct cmsghdr *cmsg = CMSG_FIRSTHDR (&mmhdr.msg_hdr);
-	 cmsg != NULL;
-	 cmsg = CMSG_NXTHDR (&mmhdr.msg_hdr, cmsg))
-    {
-      if (cmsg->cmsg_level != SOL_SOCKET)
-	continue;
+        do_sendto(&srv_addr, 42);
+        do_recvmsg_ancillary(mc, &mmhdr, &control, sizeof control, 42);
 
-      if (sizeof (time_t) > 4 && cmsg->cmsg_type == COMPAT_SO_TIMESTAMPNS_NEW)
-	found_timestamp = true;
-      else
-	TEST_VERIFY (cmsg->cmsg_type != COMPAT_SO_TIMESTAMPNS_NEW);
+        bool found_timestamp = false;
+        for (struct cmsghdr *cmsg = CMSG_FIRSTHDR(&mmhdr.msg_hdr);
+             cmsg != NULL;
+             cmsg = CMSG_NXTHDR(&mmhdr.msg_hdr, cmsg)) {
+            if (cmsg->cmsg_level != SOL_SOCKET) {
+                continue;
+            }
+
+            if (sizeof(time_t) > 4 && cmsg->cmsg_type == COMPAT_SO_TIMESTAMPNS_NEW) {
+                found_timestamp = true;
+            } else {
+                TEST_VERIFY(cmsg->cmsg_type != COMPAT_SO_TIMESTAMPNS_NEW);
+            }
+        }
+
+        if (sizeof(time_t) > 4) {
+            TEST_VERIFY((mmhdr.msg_hdr.msg_flags & MSG_CTRUNC));
+            TEST_COMPARE(found_timestamp, 0);
+        } else {
+            TEST_VERIFY((mmhdr.msg_hdr.msg_flags & MSG_CTRUNC) == 0);
+            TEST_COMPARE(found_timestamp, 0);
+        }
     }
-
-    if (sizeof (time_t) > 4)
-      {
-	TEST_VERIFY ((mmhdr.msg_hdr.msg_flags & MSG_CTRUNC));
-	TEST_COMPARE (found_timestamp, 0);
-      }
-    else
-      {
-	TEST_VERIFY ((mmhdr.msg_hdr.msg_flags & MSG_CTRUNC) == 0);
-	TEST_COMPARE (found_timestamp, 0);
-      }
-  }
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* This test only make sense for ABIs that support 32 bit time_t socket
-     timestampss.  */
-  if (sizeof (time_t) > 4 && __TIMESIZE == 64)
+    /* This test only make sense for ABIs that support 32 bit time_t socket
+       timestampss.  */
+    if (sizeof(time_t) > 4 && __TIMESIZE == 64) {
+        return 0;
+    }
+
+    srv = xsocket(AF_INET, SOCK_DGRAM, 0);
+    srv_addr = (struct sockaddr_in) {
+        .sin_family = AF_INET,
+        .sin_addr = {.s_addr = htonl(INADDR_LOOPBACK) },
+    };
+    xbind(srv, (struct sockaddr *) &srv_addr, sizeof(srv_addr));
+    {
+        socklen_t sa_len = sizeof(srv_addr);
+        xgetsockname(srv, (struct sockaddr *) &srv_addr, &sa_len);
+        TEST_VERIFY(sa_len == sizeof(srv_addr));
+    }
+
+    /* Check recvmsg;  */
+    do_test_large_buffer(false);
+    do_test_small_buffer(false);
+    /* Check recvmmsg.  */
+    do_test_large_buffer(true);
+    do_test_small_buffer(true);
+
     return 0;
-
-  srv = xsocket (AF_INET, SOCK_DGRAM, 0);
-  srv_addr = (struct sockaddr_in) {
-    .sin_family = AF_INET,
-    .sin_addr = {.s_addr = htonl (INADDR_LOOPBACK) },
-  };
-  xbind (srv, (struct sockaddr *) &srv_addr, sizeof (srv_addr));
-  {
-    socklen_t sa_len = sizeof (srv_addr);
-    xgetsockname (srv, (struct sockaddr *) &srv_addr, &sa_len);
-    TEST_VERIFY (sa_len == sizeof (srv_addr));
-  }
-
-  /* Check recvmsg;  */
-  do_test_large_buffer (false);
-  do_test_small_buffer (false);
-  /* Check recvmmsg.  */
-  do_test_large_buffer (true);
-  do_test_small_buffer (true);
-
-  return 0;
 }
 
 #include <support/test-driver.c>

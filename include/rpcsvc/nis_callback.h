@@ -3,8 +3,8 @@
 
 # ifndef _ISOMAC
 
-libnsl_hidden_proto (xdr_obj_p)
-libnsl_hidden_proto (xdr_cback_data)
+libnsl_hidden_proto(xdr_obj_p)
+libnsl_hidden_proto(xdr_cback_data)
 
 # endif /* !_ISOMAC */
 #endif

@@ -23,23 +23,21 @@
 #include <support/xthread.h>
 #include <support/xsignal.h>
 
-static void *
-threadfunc (void *closure)
+static void *threadfunc(void *closure)
 {
-  sigset_t sigmask;
-  sigfillset (&sigmask);
-  xpthread_sigmask (SIG_SETMASK, &sigmask, NULL);
-  xpthread_kill (pthread_self (), SIGUSR1);
-  pthread_exit (NULL);
-  return NULL;
+    sigset_t sigmask;
+    sigfillset(&sigmask);
+    xpthread_sigmask(SIG_SETMASK, &sigmask, NULL);
+    xpthread_kill(pthread_self(), SIGUSR1);
+    pthread_exit(NULL);
+    return NULL;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  pthread_t thr = xpthread_create (NULL, threadfunc, NULL);
-  xpthread_join (thr);
-  return 0;
+    pthread_t thr = xpthread_create(NULL, threadfunc, NULL);
+    xpthread_join(thr);
+    return 0;
 }
 
 #include <support/test-driver.c>

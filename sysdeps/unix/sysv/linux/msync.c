@@ -19,8 +19,7 @@
 #include <sys/mman.h>
 #include <sysdep-cancel.h>
 
-int
-msync (void *addr, size_t length, int flags)
+int msync(void *addr, size_t length, int flags)
 {
-  return SYSCALL_CANCEL (msync, addr, length, flags);
+    return SYSCALL_CANCEL(msync, addr, length, flags);
 }

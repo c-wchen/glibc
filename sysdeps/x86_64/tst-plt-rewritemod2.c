@@ -21,12 +21,11 @@
 
 #include <support/check.h>
 
-int (*func_p) (void);
-extern int func (void);
+int (*func_p)(void);
+extern int func(void);
 
-void
-foo (void)
+void foo(void)
 {
-  TEST_VERIFY (func () == 0xbadbeef);
-  TEST_VERIFY (func_p () == 0xbadbeef);
+    TEST_VERIFY(func() == 0xbadbeef);
+    TEST_VERIFY(func_p() == 0xbadbeef);
 }

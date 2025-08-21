@@ -15,8 +15,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef	_UTMP_H
-#define	_UTMP_H	1
+#ifndef _UTMP_H
+#define _UTMP_H 1
 
 #include <features.h>
 
@@ -29,67 +29,67 @@ __BEGIN_DECLS
 #include <bits/utmp.h>
 
 /* Compatibility names for the strings of the canonical file names.  */
-#define UTMP_FILE	_PATH_UTMP
-#define UTMP_FILENAME	_PATH_UTMP
-#define WTMP_FILE	_PATH_WTMP
-#define WTMP_FILENAME	_PATH_WTMP
+#define UTMP_FILE   _PATH_UTMP
+#define UTMP_FILENAME   _PATH_UTMP
+#define WTMP_FILE   _PATH_WTMP
+#define WTMP_FILENAME   _PATH_WTMP
 
 
 
 /* Make FD be the controlling terminal, stdin, stdout, and stderr;
    then close FD.  Returns 0 on success, nonzero on error.  */
-extern int login_tty (int __fd) __THROW;
+extern int login_tty(int __fd) __THROW;
 
 
 /* Write the given entry into utmp and wtmp.  */
-extern void login (const struct utmp *__entry) __THROW;
+extern void login(const struct utmp *__entry) __THROW;
 
 /* Write the utmp entry to say the user on UT_LINE has logged out.  */
-extern int logout (const char *__ut_line) __THROW;
+extern int logout(const char *__ut_line) __THROW;
 
 /* Append to wtmp an entry for the current time and the given info.  */
-extern void logwtmp (const char *__ut_line, const char *__ut_name,
-		     const char *__ut_host) __THROW;
+extern void logwtmp(const char *__ut_line, const char *__ut_name,
+                    const char *__ut_host) __THROW;
 
 /* Append entry UTMP to the wtmp-like file WTMP_FILE.  */
-extern void updwtmp (const char *__wtmp_file, const struct utmp *__utmp)
-     __THROW;
+extern void updwtmp(const char *__wtmp_file, const struct utmp *__utmp)
+__THROW;
 
 /* Change name of the utmp file to be examined.  */
-extern int utmpname (const char *__file) __THROW;
+extern int utmpname(const char *__file) __THROW;
 
 /* Read next entry from a utmp-like file.  */
-extern struct utmp *getutent (void) __THROW;
+extern struct utmp *getutent(void) __THROW;
 
 /* Reset the input stream to the beginning of the file.  */
-extern void setutent (void) __THROW;
+extern void setutent(void) __THROW;
 
 /* Close the current open file.  */
-extern void endutent (void) __THROW;
+extern void endutent(void) __THROW;
 
 /* Search forward from the current point in the utmp file until the
    next entry with a ut_type matching ID->ut_type.  */
-extern struct utmp *getutid (const struct utmp *__id) __THROW;
+extern struct utmp *getutid(const struct utmp *__id) __THROW;
 
 /* Search forward from the current point in the utmp file until the
    next entry with a ut_line matching LINE->ut_line.  */
-extern struct utmp *getutline (const struct utmp *__line) __THROW;
+extern struct utmp *getutline(const struct utmp *__line) __THROW;
 
 /* Write out entry pointed to by UTMP_PTR into the utmp file.  */
-extern struct utmp *pututline (const struct utmp *__utmp_ptr) __THROW;
+extern struct utmp *pututline(const struct utmp *__utmp_ptr) __THROW;
 
 
-#ifdef	__USE_MISC
+#ifdef  __USE_MISC
 /* Reentrant versions of the file for handling utmp files.  */
-extern int getutent_r (struct utmp *__buffer, struct utmp **__result) __THROW;
+extern int getutent_r(struct utmp *__buffer, struct utmp **__result) __THROW;
 
-extern int getutid_r (const struct utmp *__id, struct utmp *__buffer,
-		      struct utmp **__result) __THROW;
+extern int getutid_r(const struct utmp *__id, struct utmp *__buffer,
+                     struct utmp **__result) __THROW;
 
-extern int getutline_r (const struct utmp *__line,
-			struct utmp *__buffer, struct utmp **__result) __THROW;
+extern int getutline_r(const struct utmp *__line,
+                       struct utmp *__buffer, struct utmp **__result) __THROW;
 
-#endif	/* Use misc.  */
+#endif  /* Use misc.  */
 
 __END_DECLS
 

@@ -23,72 +23,62 @@
 
 static int global;
 
-static void *
-tf (void *a)
+static void *tf(void *a)
 {
-  global = 1;
+    global = 1;
 
-  return 0;
+    return 0;
 }
 
 
-int
-do_test (void)
+int do_test(void)
 {
-  pthread_t th;
-  pthread_attr_t at;
+    pthread_t th;
+    pthread_attr_t at;
 
-  if (pthread_attr_init (&at) != 0)
-    {
-      puts ("attr_init failed");
-      return 1;
+    if (pthread_attr_init(&at) != 0) {
+        puts("attr_init failed");
+        return 1;
     }
 
-  if (pthread_attr_setschedpolicy (&at, SCHED_OTHER) != 0)
-    {
-      puts ("attr_setschedpolicy failed");
-      return 1;
+    if (pthread_attr_setschedpolicy(&at, SCHED_OTHER) != 0) {
+        puts("attr_setschedpolicy failed");
+        return 1;
     }
 
-  struct sched_param pa;
-  if (sched_getparam (getpid (), &pa) != 0)
-    {
-      puts ("sched_getschedparam failed");
-      return 1;
+    struct sched_param pa;
+    if (sched_getparam(getpid(), &pa) != 0) {
+        puts("sched_getschedparam failed");
+        return 1;
     }
 
-  if (pthread_attr_setschedparam (&at, &pa) != 0)
-    {
-      puts ("attr_setschedparam failed");
-      return 1;
+    if (pthread_attr_setschedparam(&at, &pa) != 0) {
+        puts("attr_setschedparam failed");
+        return 1;
     }
 
-  if (pthread_attr_setinheritsched (&at, PTHREAD_EXPLICIT_SCHED) != 0)
-    {
-      puts ("attr_setinheritsched failed");
-      return 1;
+    if (pthread_attr_setinheritsched(&at, PTHREAD_EXPLICIT_SCHED) != 0) {
+        puts("attr_setinheritsched failed");
+        return 1;
     }
 
-  if (pthread_create (&th, &at, tf, NULL) != 0)
-    {
-      puts ("create failed");
-      return 1;
+    if (pthread_create(&th, &at, tf, NULL) != 0) {
+        puts("create failed");
+        return 1;
     }
 
-  int e = pthread_join (th, NULL);
-  if (e != 0)
-    {
-      printf ("join failed: %d\n", e);
-      return 1;
+    int e = pthread_join(th, NULL);
+    if (e != 0) {
+        printf("join failed: %d\n", e);
+        return 1;
     }
 
-  if (global == 0)
-    {
-      puts ("thread didn't run");
-      return 1;
+    if (global == 0) {
+        puts("thread didn't run");
+        return 1;
     }
 
-  return 0;
+    return 0;
 }
 
 

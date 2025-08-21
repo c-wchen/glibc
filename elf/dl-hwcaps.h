@@ -29,20 +29,18 @@
 
 /* Used by _dl_hwcaps_split below, to split strings at ':'
    separators.  */
-struct dl_hwcaps_split
-{
-  const char *segment;          /* Start of the current segment.  */
-  size_t length;                /* Number of bytes until ':' or NUL.  */
+struct dl_hwcaps_split {
+    const char *segment;          /* Start of the current segment.  */
+    size_t length;                /* Number of bytes until ':' or NUL.  */
 };
 
 /* Prepare *S to parse SUBJECT, for future _dl_hwcaps_split calls.  If
    SUBJECT is NULL, it is treated as the empty string.  */
-static inline void
-_dl_hwcaps_split_init (struct dl_hwcaps_split *s, const char *subject)
+static inline void _dl_hwcaps_split_init(struct dl_hwcaps_split *s, const char *subject)
 {
-  s->segment = subject;
-  /* The initial call to _dl_hwcaps_split will not skip anything.  */
-  s->length = 0;
+    s->segment = subject;
+    /* The initial call to _dl_hwcaps_split will not skip anything.  */
+    s->length = 0;
 }
 
 /* Extract the next non-empty string segment, up to ':' or the null
@@ -50,17 +48,16 @@ _dl_hwcaps_split_init (struct dl_hwcaps_split *s, const char *subject)
    the end of the string was reached.  On success, S->segment is the
    start of the segment found, and S->length is its length.
    (Typically, S->segment[S->length] is not null.)  */
-_Bool _dl_hwcaps_split (struct dl_hwcaps_split *s) attribute_hidden;
+_Bool _dl_hwcaps_split(struct dl_hwcaps_split *s) attribute_hidden;
 
 /* Similar to dl_hwcaps_split, but with bit-based and name-based
    masking.  */
-struct dl_hwcaps_split_masked
-{
-  struct dl_hwcaps_split split;
+struct dl_hwcaps_split_masked {
+    struct dl_hwcaps_split split;
 
-  /* For used by the iterator implementation.  */
-  const char *mask;
-  uint32_t bitmask;
+    /* For used by the iterator implementation.  */
+    const char *mask;
+    uint32_t bitmask;
 };
 
 /* Prepare *S for iteration with _dl_hwcaps_split_masked.  Only HWCAP
@@ -68,25 +65,24 @@ struct dl_hwcaps_split_masked
    MASK will be returned.  SUBJECT must not contain empty HWCAP names.
    If MASK is NULL, no name-based masking is applied.  Likewise for
    BITMASK if BITMASK is -1 (infinite number of bits).  */
-static inline void
-_dl_hwcaps_split_masked_init (struct dl_hwcaps_split_masked *s,
-                              const char *subject,
-                              uint32_t bitmask, const char *mask)
+static inline void _dl_hwcaps_split_masked_init(struct dl_hwcaps_split_masked *s,
+        const char *subject,
+        uint32_t bitmask, const char *mask)
 {
-  _dl_hwcaps_split_init (&s->split, subject);
-  s->bitmask = bitmask;
-  s->mask = mask;
+    _dl_hwcaps_split_init(&s->split, subject);
+    s->bitmask = bitmask;
+    s->mask = mask;
 }
 
 /* Like _dl_hwcaps_split, but apply masking.  */
-_Bool _dl_hwcaps_split_masked (struct dl_hwcaps_split_masked *s)
-  attribute_hidden;
+_Bool _dl_hwcaps_split_masked(struct dl_hwcaps_split_masked *s)
+attribute_hidden;
 
 /* Returns true if the colon-separated HWCAP list HWCAPS contains the
    capability NAME (with length NAME_LENGTH).  If HWCAPS is NULL, the
    function returns true.  */
-_Bool _dl_hwcaps_contains (const char *hwcaps, const char *name,
-                           size_t name_length) attribute_hidden;
+_Bool _dl_hwcaps_contains(const char *hwcaps, const char *name,
+                          size_t name_length) attribute_hidden;
 
 /* Colon-separated string of glibc-hwcaps subdirectories, without the
    "glibc-hwcaps/" prefix.  The most preferred subdirectory needs to
@@ -99,41 +95,41 @@ extern const char _dl_hwcaps_subdirs[] attribute_hidden;
    _dl_hwcaps_subdirs, bit 1 to the second substring, and so on.
    There is no direct correspondence between HWCAP bitmasks and this
    bitmask.  */
-uint32_t _dl_hwcaps_subdirs_active (void) attribute_hidden;
+uint32_t _dl_hwcaps_subdirs_active(void) attribute_hidden;
 
 /* Returns a bitmask that marks the last ACTIVE subdirectories in a
    _dl_hwcaps_subdirs_active string (containing SUBDIRS directories in
    total) as active.  Intended for use in _dl_hwcaps_subdirs_active
    implementations (if a contiguous tail of the list in
    _dl_hwcaps_subdirs is selected).  */
-static inline uint32_t
-_dl_hwcaps_subdirs_build_bitmask (int subdirs, int active)
+static inline uint32_t _dl_hwcaps_subdirs_build_bitmask(int subdirs, int active)
 {
-  /* Leading subdirectories that are not active.  */
-  int inactive = subdirs - active;
-  if (inactive == 32)
-    return 0;
+    /* Leading subdirectories that are not active.  */
+    int inactive = subdirs - active;
+    if (inactive == 32) {
+        return 0;
+    }
 
-  uint32_t mask;
-  if (subdirs != 32)
-    mask = (1U << subdirs) - 1;
-  else
-    mask = -1;
-  return mask ^ ((1U << inactive) - 1);
+    uint32_t mask;
+    if (subdirs != 32) {
+        mask = (1U << subdirs) - 1;
+    } else {
+        mask = -1;
+    }
+    return mask ^ ((1U << inactive) - 1);
 }
 
 /* Pre-computed glibc-hwcaps subdirectory priorities.  Used in
    dl-cache.c to quickly find the proprieties for the stored HWCAP
    names.  */
-struct dl_hwcaps_priority
-{
-  /* The name consists of name_length bytes at name (not necessarily
-     null-terminated).  */
-  const char *name;
-  uint32_t name_length;
+struct dl_hwcaps_priority {
+    /* The name consists of name_length bytes at name (not necessarily
+       null-terminated).  */
+    const char *name;
+    uint32_t name_length;
 
-  /* Priority of this name.  A positive number.  */
-  uint32_t priority;
+    /* Priority of this name.  A positive number.  */
+    uint32_t priority;
 };
 
 /* Pre-computed hwcaps priorities.  Set up by

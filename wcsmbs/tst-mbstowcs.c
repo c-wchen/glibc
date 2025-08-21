@@ -20,31 +20,30 @@
 #include <string.h>
 #include <support/check.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char string[] = { '1', '2', '3' , '4', '5', '\0' };
-  size_t len = strlen (string);
-  wchar_t wstring[] = { L'1', L'2', L'3', L'4', L'5', L'\0' };
+    char string[] = { '1', '2', '3', '4', '5', '\0' };
+    size_t len = strlen(string);
+    wchar_t wstring[] = { L'1', L'2', L'3', L'4', L'5', L'\0' };
 #define NUM_WCHAR 6
-  wchar_t wout[NUM_WCHAR];
-  size_t result;
+    wchar_t wout[NUM_WCHAR];
+    size_t result;
 
-  /* The input ASCII string in the C/POSIX locale must convert
-     to the matching WSTRING.  */
-  result = mbstowcs (wout, string, NUM_WCHAR);
-  TEST_VERIFY (result == (NUM_WCHAR - 1));
-  TEST_COMPARE_BLOB (wstring, sizeof (wchar_t) * (NUM_WCHAR - 1),
-		     wout, sizeof (wchar_t) * result);
+    /* The input ASCII string in the C/POSIX locale must convert
+       to the matching WSTRING.  */
+    result = mbstowcs(wout, string, NUM_WCHAR);
+    TEST_VERIFY(result == (NUM_WCHAR - 1));
+    TEST_COMPARE_BLOB(wstring, sizeof(wchar_t) * (NUM_WCHAR - 1),
+                      wout, sizeof(wchar_t) * result);
 
-  /* The input ASCII string in the C/POSIX locale must be the
-     same length when using mbstowcs to compute the length of
-     the string required in the conversion.  Using mbstowcs
-     in this way is an XSI extension to POSIX.  */
-  result = mbstowcs (NULL, string, len);
-  TEST_VERIFY (result == len);
+    /* The input ASCII string in the C/POSIX locale must be the
+       same length when using mbstowcs to compute the length of
+       the string required in the conversion.  Using mbstowcs
+       in this way is an XSI extension to POSIX.  */
+    result = mbstowcs(NULL, string, len);
+    TEST_VERIFY(result == len);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

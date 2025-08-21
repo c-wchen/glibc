@@ -23,12 +23,11 @@
    If the calling process is the super-user, the real
    and effective group IDs, and the saved set-group-ID to GID;
    if not, the effective group ID is set to GID.  */
-int
-__setgid (gid_t gid)
+int __setgid(gid_t gid)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (setgid)
+stub_warning(setgid)
 
-weak_alias (__setgid, setgid)
+weak_alias(__setgid, setgid)

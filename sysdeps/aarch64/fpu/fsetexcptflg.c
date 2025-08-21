@@ -19,23 +19,23 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-int
-fesetexceptflag (const fexcept_t *flagp, int excepts)
+int fesetexceptflag(const fexcept_t *flagp, int excepts)
 {
-  fpu_fpsr_t fpsr;
-  fpu_fpsr_t fpsr_new;
+    fpu_fpsr_t fpsr;
+    fpu_fpsr_t fpsr_new;
 
-  /* Get the current environment.  */
-  _FPU_GETFPSR (fpsr);
-  excepts &= FE_ALL_EXCEPT;
+    /* Get the current environment.  */
+    _FPU_GETFPSR(fpsr);
+    excepts &= FE_ALL_EXCEPT;
 
-  /* Set the desired exception mask.  */
-  fpsr_new = fpsr & ~excepts;
-  fpsr_new |= *flagp & excepts;
+    /* Set the desired exception mask.  */
+    fpsr_new = fpsr & ~excepts;
+    fpsr_new |= *flagp & excepts;
 
-  /* Save state back to the FPU.  */
-  if (fpsr != fpsr_new)
-    _FPU_SETFPSR (fpsr_new);
+    /* Save state back to the FPU.  */
+    if (fpsr != fpsr_new) {
+        _FPU_SETFPSR(fpsr_new);
+    }
 
-  return 0;
+    return 0;
 }

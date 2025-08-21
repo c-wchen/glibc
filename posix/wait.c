@@ -19,9 +19,8 @@
 
 /* Wait for a child to die.  When one does, put its status in *STAT_LOC
    and return its process ID.  For errors, return (pid_t) -1.  */
-__pid_t
-__wait (int *stat_loc)
+__pid_t __wait(int *stat_loc)
 {
-  return __waitpid (WAIT_ANY, stat_loc, 0);
+    return __waitpid(WAIT_ANY, stat_loc, 0);
 }
-weak_alias (__wait, wait)
+weak_alias(__wait, wait)

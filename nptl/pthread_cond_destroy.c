@@ -37,26 +37,24 @@
    Thus, we can assume that all waiters that are still accessing the condvar
    have been woken.  We wait until they have confirmed to have woken up by
    decrementing __wrefs.  */
-int
-__pthread_cond_destroy (pthread_cond_t *cond)
+int __pthread_cond_destroy(pthread_cond_t *cond)
 {
-  LIBC_PROBE (cond_destroy, 1, cond);
+    LIBC_PROBE(cond_destroy, 1, cond);
 
-  /* Set the wake request flag.  We could also spin, but destruction that is
-     concurrent with still-active waiters is probably neither common nor
-     performance critical.  Acquire MO to synchronize with waiters confirming
-     that they finished.  */
-  unsigned int wrefs = atomic_fetch_or_acquire (&cond->__data.__wrefs, 4);
-  int private = __condvar_get_private (wrefs);
-  while (wrefs >> 3 != 0)
-    {
-      futex_wait_simple (&cond->__data.__wrefs, wrefs, private);
-      /* See above.  */
-      wrefs = atomic_load_acquire (&cond->__data.__wrefs);
+    /* Set the wake request flag.  We could also spin, but destruction that is
+       concurrent with still-active waiters is probably neither common nor
+       performance critical.  Acquire MO to synchronize with waiters confirming
+       that they finished.  */
+    unsigned int wrefs = atomic_fetch_or_acquire(&cond->__data.__wrefs, 4);
+    int private = __condvar_get_private(wrefs);
+    while (wrefs >> 3 != 0) {
+        futex_wait_simple(&cond->__data.__wrefs, wrefs, private);
+        /* See above.  */
+        wrefs = atomic_load_acquire(&cond->__data.__wrefs);
     }
-  /* The memory the condvar occupies can now be reused.  */
-  return 0;
+    /* The memory the condvar occupies can now be reused.  */
+    return 0;
 }
-libc_hidden_def (__pthread_cond_destroy)
-versioned_symbol (libc, __pthread_cond_destroy,
-		  pthread_cond_destroy, GLIBC_2_3_2);
+libc_hidden_def(__pthread_cond_destroy)
+versioned_symbol(libc, __pthread_cond_destroy,
+                 pthread_cond_destroy, GLIBC_2_3_2);

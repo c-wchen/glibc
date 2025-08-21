@@ -20,26 +20,26 @@
 #include <pthreadP.h>
 #include <pt-internal.h>
 
-int __pthread_enable_asynccancel (void)
+int __pthread_enable_asynccancel(void)
 {
-  struct __pthread *p = _pthread_self ();
-  int oldtype;
+    struct __pthread *p = _pthread_self();
+    int oldtype;
 
-  __pthread_mutex_lock (&p->cancel_lock);
-  oldtype = p->cancel_type;
-  p->cancel_type = PTHREAD_CANCEL_ASYNCHRONOUS;
-  __pthread_mutex_unlock (&p->cancel_lock);
+    __pthread_mutex_lock(&p->cancel_lock);
+    oldtype = p->cancel_type;
+    p->cancel_type = PTHREAD_CANCEL_ASYNCHRONOUS;
+    __pthread_mutex_unlock(&p->cancel_lock);
 
-  __pthread_testcancel ();
+    __pthread_testcancel();
 
-  return oldtype;
+    return oldtype;
 }
 
-void __pthread_disable_asynccancel (int oldtype)
+void __pthread_disable_asynccancel(int oldtype)
 {
-  struct __pthread *p = _pthread_self ();
+    struct __pthread *p = _pthread_self();
 
-  __pthread_mutex_lock (&p->cancel_lock);
-  p->cancel_type = oldtype;
-  __pthread_mutex_unlock (&p->cancel_lock);
+    __pthread_mutex_lock(&p->cancel_lock);
+    p->cancel_type = oldtype;
+    __pthread_mutex_unlock(&p->cancel_lock);
 }

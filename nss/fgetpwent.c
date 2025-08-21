@@ -24,64 +24,64 @@
 
 
 /* We need to protect the dynamic buffer handling.  */
-__libc_lock_define_initialized (static, lock);
+__libc_lock_define_initialized(static, lock);
 
 static char *buffer;
 
 /* Read one entry from the given stream.  */
 struct passwd *
-fgetpwent (FILE *stream)
+fgetpwent(FILE *stream)
 {
-  static size_t buffer_size;
-  static struct passwd resbuf;
-  fpos_t pos;
-  struct passwd *result;
-  int save;
+    static size_t buffer_size;
+    static struct passwd resbuf;
+    fpos_t pos;
+    struct passwd *result;
+    int save;
 
-  if (fgetpos (stream, &pos) != 0)
-    return NULL;
-
-  /* Get lock.  */
-  __libc_lock_lock (lock);
-
-  /* Allocate buffer if not yet available.  */
-  if (buffer == NULL)
-    {
-      buffer_size = NSS_BUFLEN_PASSWD;
-      buffer = malloc (buffer_size);
+    if (fgetpos(stream, &pos) != 0) {
+        return NULL;
     }
 
-  while (buffer != NULL
-	 && (__fgetpwent_r (stream, &resbuf, buffer, buffer_size, &result)
-	     == ERANGE))
-    {
-      char *new_buf;
-      buffer_size += NSS_BUFLEN_PASSWD;
-      new_buf = realloc (buffer, buffer_size);
-      if (new_buf == NULL)
-	{
-	  /* We are out of memory.  Free the current buffer so that the
-	     process gets a chance for a normal termination.  */
-	  save = errno;
-	  free (buffer);
-	  __set_errno (save);
-	}
-      buffer = new_buf;
+    /* Get lock.  */
+    __libc_lock_lock(lock);
 
-      /* Reset the stream.  */
-      if (fsetpos (stream, &pos) != 0)
-	buffer = NULL;
+    /* Allocate buffer if not yet available.  */
+    if (buffer == NULL) {
+        buffer_size = NSS_BUFLEN_PASSWD;
+        buffer = malloc(buffer_size);
     }
 
-  if (buffer == NULL)
-    result = NULL;
+    while (buffer != NULL
+           && (__fgetpwent_r(stream, &resbuf, buffer, buffer_size, &result)
+               == ERANGE)) {
+        char *new_buf;
+        buffer_size += NSS_BUFLEN_PASSWD;
+        new_buf = realloc(buffer, buffer_size);
+        if (new_buf == NULL) {
+            /* We are out of memory.  Free the current buffer so that the
+               process gets a chance for a normal termination.  */
+            save = errno;
+            free(buffer);
+            __set_errno(save);
+        }
+        buffer = new_buf;
 
-  /* Release lock.  Preserve error value.  */
-  save = errno;
-  __libc_lock_unlock (lock);
-  __set_errno (save);
+        /* Reset the stream.  */
+        if (fsetpos(stream, &pos) != 0) {
+            buffer = NULL;
+        }
+    }
 
-  return result;
+    if (buffer == NULL) {
+        result = NULL;
+    }
+
+    /* Release lock.  Preserve error value.  */
+    save = errno;
+    __libc_lock_unlock(lock);
+    __set_errno(save);
+
+    return result;
 }
 
-weak_alias (buffer, __libc_fgetpwent_freemem_ptr)
+weak_alias(buffer, __libc_fgetpwent_freemem_ptr)

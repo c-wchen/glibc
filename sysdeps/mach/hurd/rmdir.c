@@ -21,19 +21,20 @@
 #include <hurd.h>
 
 /* Remove the directory FILE_NAME.  */
-int
-__rmdir (const char *file_name)
+int __rmdir(const char *file_name)
 {
-  error_t err;
-  const char *name;
-  file_t parent = __directory_name_split (file_name, (char **) &name);
-  if (parent == MACH_PORT_NULL)
-    return -1;
-  err = __dir_rmdir (parent, name);
-  __mach_port_deallocate (__mach_task_self (), parent);
-  if (err)
-    return __hurd_fail (err);
-  return 0;
+    error_t err;
+    const char *name;
+    file_t parent = __directory_name_split(file_name, (char **) &name);
+    if (parent == MACH_PORT_NULL) {
+        return -1;
+    }
+    err = __dir_rmdir(parent, name);
+    __mach_port_deallocate(__mach_task_self(), parent);
+    if (err) {
+        return __hurd_fail(err);
+    }
+    return 0;
 }
 
-weak_alias (__rmdir, rmdir)
+weak_alias(__rmdir, rmdir)

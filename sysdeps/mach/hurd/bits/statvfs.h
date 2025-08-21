@@ -27,8 +27,7 @@
    `fstatvfs'.  Please keep this file in sync with <bits/statfs.h>,
    and pay attention to the note in that file.  */
 
-struct statvfs
-  {
+struct statvfs {
     unsigned int f_type;
     unsigned long int f_bsize;
 #ifndef __USE_FILE_OFFSET64
@@ -45,7 +44,7 @@ struct statvfs
     __fsfilcnt64_t f_ffree;
 #endif
     __fsid_t f_fsid;
-    unsigned long int f_namemax;	/* NOTE: f_namelen in `struct statfs'.  */
+    unsigned long int f_namemax;    /* NOTE: f_namelen in `struct statfs'.  */
 #ifndef __USE_FILE_OFFSET64
     __fsfilcnt_t f_favail;
 #else
@@ -54,11 +53,10 @@ struct statvfs
     unsigned long int f_frsize;
     unsigned long int f_flag;
     unsigned int f_spare[3];
-  };
+};
 
 #ifdef __USE_LARGEFILE64
-struct statvfs64
-  {
+struct statvfs64 {
     unsigned int f_type;
     unsigned long int f_bsize;
     __fsblkcnt64_t f_blocks;
@@ -72,26 +70,25 @@ struct statvfs64
     unsigned long int f_frsize;
     unsigned long int f_flag;
     unsigned int f_spare[3];
-  };
+};
 #endif
 
 /* Definitions for the flag in `f_flag'.
    The values for the non-standard flags come from Linux.  */
-enum
-{
-  ST_RDONLY = 1,
-#define ST_RDONLY	ST_RDONLY
-  ST_NOSUID = 2
-#define ST_NOSUID	ST_NOSUID
+enum {
+    ST_RDONLY = 1,
+#define ST_RDONLY   ST_RDONLY
+    ST_NOSUID = 2
+#define ST_NOSUID   ST_NOSUID
 #ifdef __USE_GNU
-  ,
-  ST_NOEXEC = 8,
-# define ST_NOEXEC	ST_NOEXEC
-  ST_SYNCHRONOUS = 16,
-# define ST_SYNCHRONOUS	ST_SYNCHRONOUS
-  ST_NOATIME = 32,		/* Do not update access times.  */
-# define ST_NOATIME	ST_NOATIME
-  ST_RELATIME = 64		/* Update atime relative to mtime/ctime.  */
-# define ST_RELATIME	ST_RELATIME
+    ,
+    ST_NOEXEC = 8,
+# define ST_NOEXEC  ST_NOEXEC
+    ST_SYNCHRONOUS = 16,
+# define ST_SYNCHRONOUS ST_SYNCHRONOUS
+    ST_NOATIME = 32,      /* Do not update access times.  */
+# define ST_NOATIME ST_NOATIME
+    ST_RELATIME = 64      /* Update atime relative to mtime/ctime.  */
+# define ST_RELATIME    ST_RELATIME
 #endif
 };

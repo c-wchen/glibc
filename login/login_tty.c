@@ -1,6 +1,6 @@
 /*-
  * Copyright (c) 1990, 1993
- *	The Regents of the University of California.  All rights reserved.
+ *  The Regents of the University of California.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -39,44 +39,47 @@ static char sccsid[] = "@(#)login_tty.c	8.1 (Berkeley) 6/4/93";
 #include <utmp.h>
 #include <shlib-compat.h>
 
-int
-__login_tty (int fd)
+int __login_tty(int fd)
 {
-	__setsid();
+    __setsid();
 #ifdef TIOCSCTTY
-	if (__ioctl(fd, TIOCSCTTY, NULL) == -1)
-		return (-1);
+    if (__ioctl(fd, TIOCSCTTY, NULL) == -1) {
+        return (-1);
+    }
 #else
-	{
-	  /* This might work.  */
-	  char *fdname = ttyname (fd);
-	  int newfd;
-	  if (fdname)
-	    {
-	      if (fd != 0)
-		_close (0);
-	      if (fd != 1)
-		__close (1);
-	      if (fd != 2)
-		__close (2);
-	      newfd = __open64 (fdname, O_RDWR);
-	      __close (newfd);
-	    }
-	}
+    {
+        /* This might work.  */
+        char *fdname = ttyname(fd);
+        int newfd;
+        if (fdname) {
+            if (fd != 0) {
+                _close(0);
+            }
+            if (fd != 1) {
+                __close(1);
+            }
+            if (fd != 2) {
+                __close(2);
+            }
+            newfd = __open64(fdname, O_RDWR);
+            __close(newfd);
+        }
+    }
 #endif
-	while (__dup2(fd, 0) == -1 && errno == EBUSY)
-	  ;
-	while (__dup2(fd, 1) == -1 && errno == EBUSY)
-	  ;
-	while (__dup2(fd, 2) == -1 && errno == EBUSY)
-	  ;
-	if (fd > 2)
-		__close(fd);
-	return (0);
+    while (__dup2(fd, 0) == -1 && errno == EBUSY)
+        ;
+    while (__dup2(fd, 1) == -1 && errno == EBUSY)
+        ;
+    while (__dup2(fd, 2) == -1 && errno == EBUSY)
+        ;
+    if (fd > 2) {
+        __close(fd);
+    }
+    return (0);
 }
-versioned_symbol (libc, __login_tty, login_tty, GLIBC_2_34);
-libc_hidden_ver (__login_tty, login_tty)
+versioned_symbol(libc, __login_tty, login_tty, GLIBC_2_34);
+libc_hidden_ver(__login_tty, login_tty)
 
 #if OTHER_SHLIB_COMPAT (libutil, GLIBC_2_0, GLIBC_2_34)
-compat_symbol (libutil, __login_tty, login_tty, GLIBC_2_0);
+compat_symbol(libutil, __login_tty, login_tty, GLIBC_2_0);
 #endif

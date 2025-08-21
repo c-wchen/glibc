@@ -34,63 +34,57 @@
 static jmp_buf jmpbuf;
 static ucontext_t ctx;
 
-static void f2 (void);
+static void f2(void);
 
 static void
-__attribute_optimization_barrier__
-f1 (void)
+__attribute_optimization_barrier__ f1(void)
 {
-  printf ("start f1\n");
-  f2 ();
+    printf("start f1\n");
+    f2();
 }
 
 static void
-__attribute_optimization_barrier__
-f2 (void)
+__attribute_optimization_barrier__ f2(void)
 {
-  printf ("start f2\n");
-  if (setcontext (&ctx) != 0)
-    {
-      printf ("%s: setcontext: %m\n", __FUNCTION__);
-      exit (EXIT_FAILURE);
+    printf("start f2\n");
+    if (setcontext(&ctx) != 0) {
+        printf("%s: setcontext: %m\n", __FUNCTION__);
+        exit(EXIT_FAILURE);
     }
 }
 
-static void
-f3 (void)
+static void f3(void)
 {
-  printf ("start f3\n");
-  longjmp (jmpbuf, 1);
+    printf("start f3\n");
+    longjmp(jmpbuf, 1);
 }
 
 static int
-__attribute_optimization_barrier__
-do_test_1 (void)
+__attribute_optimization_barrier__ do_test_1(void)
 {
-  char st1[32768];
+    char st1[32768];
 
-  if (setjmp (jmpbuf) != 0)
-    return 0;
-
-  puts ("making contexts");
-  if (getcontext (&ctx) != 0)
-    {
-      printf ("%s: getcontext: %m\n", __FUNCTION__);
-      exit (EXIT_FAILURE);
+    if (setjmp(jmpbuf) != 0) {
+        return 0;
     }
-  ctx.uc_stack.ss_sp = st1;
-  ctx.uc_stack.ss_size = sizeof st1;
-  ctx.uc_link = NULL;
-  makecontext (&ctx, (void (*) (void)) f3, 0);
-  f1 ();
-  puts ("FAIL: returned from f1 ()");
-  exit (EXIT_FAILURE);
+
+    puts("making contexts");
+    if (getcontext(&ctx) != 0) {
+        printf("%s: getcontext: %m\n", __FUNCTION__);
+        exit(EXIT_FAILURE);
+    }
+    ctx.uc_stack.ss_sp = st1;
+    ctx.uc_stack.ss_size = sizeof st1;
+    ctx.uc_link = NULL;
+    makecontext(&ctx, (void (*)(void)) f3, 0);
+    f1();
+    puts("FAIL: returned from f1 ()");
+    exit(EXIT_FAILURE);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  return do_test_1 ();
+    return do_test_1();
 }
 
 #include <support/test-driver.c>

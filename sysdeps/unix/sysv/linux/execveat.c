@@ -22,11 +22,10 @@
 
 /* Execute the file FD refers to, overlaying the running program image.
    ARGV and ENVP are passed to the new program, as for 'execve'.  */
-int
-execveat (int dirfd, const char *path, char *const argv[], char *const envp[],
-          int flags)
+int execveat(int dirfd, const char *path, char *const argv[], char *const envp[],
+             int flags)
 {
-  /* Avoid implicit array coercion in syscall macros.  */
-  return INLINE_SYSCALL_CALL (execveat, dirfd, path, &argv[0], &envp[0],
-			      flags);
+    /* Avoid implicit array coercion in syscall macros.  */
+    return INLINE_SYSCALL_CALL(execveat, dirfd, path, &argv[0], &envp[0],
+                               flags);
 }

@@ -21,17 +21,18 @@
 /* Generate a unique temporary file name from TEMPLATE.
    The last six characters of TEMPLATE must be "XXXXXX";
    they are replaced with a string that makes the filename unique.  */
-char *
-__mktemp (char *template)
+char *__mktemp(char *template)
 {
-  if (__gen_tempname (template, 0, 0, __GT_NOCREATE) < 0)
-    /* We return the null string if we can't find a unique file name.  */
-    template[0] = '\0';
+    if (__gen_tempname(template, 0, 0, __GT_NOCREATE) < 0)
+        /* We return the null string if we can't find a unique file name.  */
+    {
+        template[0] = '\0';
+    }
 
-  return template;
+    return template;
 }
-libc_hidden_def (__mktemp)
-weak_alias (__mktemp, mktemp)
+libc_hidden_def(__mktemp)
+weak_alias(__mktemp, mktemp)
 
-link_warning (mktemp, "the use of `mktemp' is dangerous, "
-		      "better use `mkstemp' or `mkdtemp'")
+link_warning(mktemp, "the use of `mktemp' is dangerous, "
+             "better use `mkstemp' or `mkdtemp'")

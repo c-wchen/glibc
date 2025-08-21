@@ -19,7 +19,7 @@
 #include <stdbit.h>
 
 unsigned int
-(stdc_bit_width_ul) (unsigned long int x)
+(stdc_bit_width_ul)(unsigned long int x)
 {
-  return stdc_bit_width_ul (x);
+    return stdc_bit_width_ul(x);
 }

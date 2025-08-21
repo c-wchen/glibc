@@ -17,7 +17,7 @@
 
 #include <stdio.h>
 #include <stdio_ext.h>
-#include <string.h>		/* For string function builtin redirect.  */
+#include <string.h>     /* For string function builtin redirect.  */
 #include <termios.h>
 #include <unistd.h>
 
@@ -35,90 +35,88 @@
 #define TCSASOFT 0
 #endif
 
-static void
-call_fclose (void *arg)
+static void call_fclose(void *arg)
 {
-  if (arg != NULL)
-    fclose (arg);
+    if (arg != NULL) {
+        fclose(arg);
+    }
 }
 
-char *
-getpass (const char *prompt)
+char *getpass(const char *prompt)
 {
-  FILE *in, *out;
-  struct termios s, t;
-  int tty_changed;
-  static char *buf;
-  static size_t bufsize;
-  ssize_t nread;
+    FILE *in, *out;
+    struct termios s, t;
+    int tty_changed;
+    static char *buf;
+    static size_t bufsize;
+    ssize_t nread;
 
-  /* Try to write to and read from the terminal if we can.
-     If we can't open the terminal, use stderr and stdin.  */
+    /* Try to write to and read from the terminal if we can.
+       If we can't open the terminal, use stderr and stdin.  */
 
-  in = fopen ("/dev/tty", "w+ce");
-  if (in == NULL)
-    {
-      in = stdin;
-      out = stderr;
-    }
-  else
-    {
-      /* We do the locking ourselves.  */
-      __fsetlocking (in, FSETLOCKING_BYCALLER);
+    in = fopen("/dev/tty", "w+ce");
+    if (in == NULL) {
+        in = stdin;
+        out = stderr;
+    } else {
+        /* We do the locking ourselves.  */
+        __fsetlocking(in, FSETLOCKING_BYCALLER);
 
-      out = in;
+        out = in;
     }
 
-  /* Make sure the stream we opened is closed even if the thread is
-     canceled.  */
-  __libc_cleanup_push (call_fclose, in == out ? in : NULL);
+    /* Make sure the stream we opened is closed even if the thread is
+       canceled.  */
+    __libc_cleanup_push(call_fclose, in == out ? in : NULL);
 
-  flockfile (out);
+    flockfile(out);
 
-  /* Turn echoing off if it is on now.  */
+    /* Turn echoing off if it is on now.  */
 
-  if (__tcgetattr (fileno (in), &t) == 0)
-    {
-      /* Save the old one. */
-      s = t;
-      /* Tricky, tricky. */
-      t.c_lflag &= ~(ECHO|ISIG);
-      tty_changed = (__tcsetattr (fileno (in), TCSAFLUSH|TCSASOFT, &t) == 0);
-    }
-  else
-    tty_changed = 0;
-
-  /* Write the prompt.  */
-  __fxprintf (out, "%s", prompt);
-  __fflush_unlocked (out);
-
-  /* Read the password.  */
-  nread = __getline (&buf, &bufsize, in);
-  if (buf != NULL)
-    {
-      if (nread < 0)
-	buf[0] = '\0';
-      else if (buf[nread - 1] == '\n')
-	{
-	  /* Remove the newline.  */
-	  buf[nread - 1] = '\0';
-	  if (tty_changed)
-	    /* Write the newline that was not echoed.  */
-	    __fxprintf (out, "\n");
-	}
+    if (__tcgetattr(fileno(in), &t) == 0) {
+        /* Save the old one. */
+        s = t;
+        /* Tricky, tricky. */
+        t.c_lflag &= ~(ECHO | ISIG);
+        tty_changed = (__tcsetattr(fileno(in), TCSAFLUSH | TCSASOFT, &t) == 0);
+    } else {
+        tty_changed = 0;
     }
 
-  /* Restore the original setting.  */
-  if (tty_changed)
-    (void) __tcsetattr (fileno (in), TCSAFLUSH|TCSASOFT, &s);
+    /* Write the prompt.  */
+    __fxprintf(out, "%s", prompt);
+    __fflush_unlocked(out);
 
-  funlockfile (out);
+    /* Read the password.  */
+    nread = __getline(&buf, &bufsize, in);
+    if (buf != NULL) {
+        if (nread < 0) {
+            buf[0] = '\0';
+        } else if (buf[nread - 1] == '\n') {
+            /* Remove the newline.  */
+            buf[nread - 1] = '\0';
+            if (tty_changed)
+                /* Write the newline that was not echoed.  */
+            {
+                __fxprintf(out, "\n");
+            }
+        }
+    }
 
-  __libc_cleanup_pop (0);
+    /* Restore the original setting.  */
+    if (tty_changed) {
+        (void) __tcsetattr(fileno(in), TCSAFLUSH | TCSASOFT, &s);
+    }
 
-  if (in != stdin)
-    /* We opened the terminal; now close it.  */
-    fclose (in);
+    funlockfile(out);
 
-  return buf;
+    __libc_cleanup_pop(0);
+
+    if (in != stdin)
+        /* We opened the terminal; now close it.  */
+    {
+        fclose(in);
+    }
+
+    return buf;
 }

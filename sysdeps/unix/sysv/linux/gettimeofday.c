@@ -28,70 +28,73 @@
 # include <dl-vdso.h>
 # include <libc-vdso.h>
 
-static int
-__gettimeofday_syscall (struct timeval *restrict tv, void *restrict tz)
+static int __gettimeofday_syscall(struct timeval *restrict tv, void *restrict tz)
 {
-  if (__glibc_unlikely (tz != NULL))
-    memset (tz, 0, sizeof *tz);
-  return INLINE_SYSCALL_CALL (gettimeofday, tv, tz);
+    if (__glibc_unlikely(tz != NULL)) {
+        memset(tz, 0, sizeof * tz);
+    }
+    return INLINE_SYSCALL_CALL(gettimeofday, tv, tz);
 }
 
 # undef INIT_ARCH
 # define INIT_ARCH()
-libc_ifunc (__gettimeofday,
-	    GLRO(dl_vdso_gettimeofday) != NULL
-	    ? VDSO_IFUNC_RET (GLRO(dl_vdso_gettimeofday))
-	    : (void *) __gettimeofday_syscall)
+libc_ifunc(__gettimeofday,
+           GLRO(dl_vdso_gettimeofday) != NULL
+           ? VDSO_IFUNC_RET(GLRO(dl_vdso_gettimeofday))
+           : (void *) __gettimeofday_syscall)
 
 # else
 int
-__gettimeofday (struct timeval *restrict tv, void *restrict tz)
+__gettimeofday(struct timeval *restrict tv, void *restrict tz)
 {
-  if (__glibc_unlikely (tz != NULL))
-    memset (tz, 0, sizeof *tz);
+    if (__glibc_unlikely(tz != NULL)) {
+        memset(tz, 0, sizeof * tz);
+    }
 
-  return INLINE_VSYSCALL (gettimeofday, 2, tv, tz);
+    return INLINE_VSYSCALL(gettimeofday, 2, tv, tz);
 }
 # endif
-weak_alias (__gettimeofday, gettimeofday)
+weak_alias(__gettimeofday, gettimeofday)
 #else /* USE_IFUNC_GETTIMEOFDAY  */
 /* Conversion of gettimeofday function to support 64 bit time on archs
    with __WORDSIZE == 32 and __TIMESIZE == 32/64  */
 #include <errno.h>
 
 int
-__gettimeofday64 (struct __timeval64 *restrict tv, void *restrict tz)
+__gettimeofday64(struct __timeval64 *restrict tv, void *restrict tz)
 {
-  if (__glibc_unlikely (tz != 0))
-    memset (tz, 0, sizeof (struct timezone));
+    if (__glibc_unlikely(tz != 0)) {
+        memset(tz, 0, sizeof(struct timezone));
+    }
 
-  struct __timespec64 ts64;
-  if (__clock_gettime64 (CLOCK_REALTIME, &ts64))
-	  return -1;
+    struct __timespec64 ts64;
+    if (__clock_gettime64(CLOCK_REALTIME, &ts64)) {
+        return -1;
+    }
 
-  *tv = timespec64_to_timeval64 (ts64);
-  return 0;
+    *tv = timespec64_to_timeval64(ts64);
+    return 0;
 }
 
 # if __TIMESIZE != 64
-libc_hidden_def (__gettimeofday64)
+libc_hidden_def(__gettimeofday64)
 
 int
-__gettimeofday (struct timeval *restrict tv, void *restrict tz)
+__gettimeofday(struct timeval *restrict tv, void *restrict tz)
 {
-  struct __timeval64 tv64;
-  if (__gettimeofday64 (&tv64, tz))
-	  return -1;
-
-  if (! in_time_t_range (tv64.tv_sec))
-    {
-      __set_errno (EOVERFLOW);
-      return -1;
+    struct __timeval64 tv64;
+    if (__gettimeofday64(&tv64, tz)) {
+        return -1;
     }
 
-  *tv = valid_timeval64_to_timeval (tv64);
-  return 0;
+    if (! in_time_t_range(tv64.tv_sec)) {
+        __set_errno(EOVERFLOW);
+        return -1;
+    }
+
+    *tv = valid_timeval64_to_timeval(tv64);
+    return 0;
 }
 # endif
-weak_alias (__gettimeofday, gettimeofday)
+weak_alias(__gettimeofday, gettimeofday)
 #endif

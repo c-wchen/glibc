@@ -19,20 +19,19 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-int
-fedisableexcept (int excepts)
+int fedisableexcept(int excepts)
 {
-  fpu_control_t temp, old_exc;
+    fpu_control_t temp, old_exc;
 
-  /* Get the current control register contents.  */
-  _FPU_GETCW (temp);
+    /* Get the current control register contents.  */
+    _FPU_GETCW(temp);
 
-  old_exc = (temp >> 5) & FE_ALL_EXCEPT;
+    old_exc = (temp >> 5) & FE_ALL_EXCEPT;
 
-  excepts &= FE_ALL_EXCEPT;
+    excepts &= FE_ALL_EXCEPT;
 
-  temp &= ~(excepts << 5);
-  _FPU_SETCW (temp);
+    temp &= ~(excepts << 5);
+    _FPU_SETCW(temp);
 
-  return old_exc;
+    return old_exc;
 }

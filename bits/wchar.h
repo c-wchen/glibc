@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _BITS_WCHAR_H
-#define _BITS_WCHAR_H	1
+#define _BITS_WCHAR_H   1
 
 /* The fallback definitions, for when __WCHAR_MAX__ or __WCHAR_MIN__
    are not defined, give the right value and type as long as both int
@@ -31,19 +31,19 @@
    to define __WCHAR_MAX in the unsigned case.  */
 
 #ifdef __WCHAR_MAX__
-# define __WCHAR_MAX	__WCHAR_MAX__
+# define __WCHAR_MAX    __WCHAR_MAX__
 #elif L'\0' - 1 > 0
-# define __WCHAR_MAX	(0xffffffffu + L'\0')
+# define __WCHAR_MAX    (0xffffffffu + L'\0')
 #else
-# define __WCHAR_MAX	(0x7fffffff + L'\0')
+# define __WCHAR_MAX    (0x7fffffff + L'\0')
 #endif
 
 #ifdef __WCHAR_MIN__
-# define __WCHAR_MIN	__WCHAR_MIN__
+# define __WCHAR_MIN    __WCHAR_MIN__
 #elif L'\0' - 1 > 0
-# define __WCHAR_MIN	(L'\0' + 0)
+# define __WCHAR_MIN    (L'\0' + 0)
 #else
-# define __WCHAR_MIN	(-__WCHAR_MAX - 1)
+# define __WCHAR_MIN    (-__WCHAR_MAX - 1)
 #endif
 
-#endif	/* bits/wchar.h */
+#endif  /* bits/wchar.h */

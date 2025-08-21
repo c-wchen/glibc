@@ -10,7 +10,7 @@
 
    The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
@@ -81,10 +81,10 @@
 
 /* Calls __libc_fatal with an error message.  Convenience function for
    concrete implementations of the futex interface.  */
-static __always_inline __attribute__ ((__noreturn__)) void
-futex_fatal_error (void)
+static __always_inline __attribute__((__noreturn__)) void
+futex_fatal_error(void)
 {
-  __libc_fatal ("The futex facility returned an unexpected error code.\n");
+    __libc_fatal("The futex facility returned an unexpected error code.\n");
 }
 
 
@@ -98,15 +98,15 @@ futex_fatal_error (void)
 /* Returns EINVAL if PSHARED is neither PTHREAD_PROCESS_PRIVATE nor
    PTHREAD_PROCESS_SHARED; otherwise, returns 0 if PSHARED is supported, and
    ENOTSUP if not.  */
-static __always_inline int
-futex_supports_pshared (int pshared)
+static __always_inline int futex_supports_pshared(int pshared)
 {
-  if (__glibc_likely (pshared == PTHREAD_PROCESS_PRIVATE))
-    return 0;
-  else if (pshared == PTHREAD_PROCESS_SHARED)
-    return 0;
-  else
-    return EINVAL;
+    if (__glibc_likely(pshared == PTHREAD_PROCESS_PRIVATE)) {
+        return 0;
+    } else if (pshared == PTHREAD_PROCESS_SHARED) {
+        return 0;
+    } else {
+        return EINVAL;
+    }
 }
 
 /* Atomically wrt other futex operations on the same futex, this blocks iff
@@ -140,26 +140,24 @@ futex_supports_pshared (int pshared)
    seq_cst fence; this allows one to avoid an explicit seq_cst fence before
    a futex_wait call when synchronizing similar to Dekker synchronization.
    However, we make no such guarantee here.  */
-static __always_inline int
-futex_wait (unsigned int *futex_word, unsigned int expected, int private)
+static __always_inline int futex_wait(unsigned int *futex_word, unsigned int expected, int private)
 {
-  int err = lll_futex_timed_wait (futex_word, expected, NULL, private);
-  switch (err)
-    {
-    case 0:
-    case -EAGAIN:
-    case -EINTR:
-      return -err;
+    int err = lll_futex_timed_wait(futex_word, expected, NULL, private);
+    switch (err) {
+        case 0:
+        case -EAGAIN:
+        case -EINTR:
+            return -err;
 
-    case -ETIMEDOUT: /* Cannot have happened as we provided no timeout.  */
-    case -EFAULT: /* Must have been caused by a glibc or application bug.  */
-    case -EINVAL: /* Either due to wrong alignment or due to the timeout not
-		     being normalized.  Must have been caused by a glibc or
-		     application bug.  */
-    case -ENOSYS: /* Must have been caused by a glibc bug.  */
-    /* No other errors are documented at this time.  */
-    default:
-      futex_fatal_error ();
+        case -ETIMEDOUT: /* Cannot have happened as we provided no timeout.  */
+        case -EFAULT: /* Must have been caused by a glibc or application bug.  */
+        case -EINVAL: /* Either due to wrong alignment or due to the timeout not
+             being normalized.  Must have been caused by a glibc or
+             application bug.  */
+        case -ENOSYS: /* Must have been caused by a glibc bug.  */
+        /* No other errors are documented at this time.  */
+        default:
+            futex_fatal_error();
     }
 }
 
@@ -170,19 +168,17 @@ futex_wait (unsigned int *futex_word, unsigned int expected, int private)
      while (atomic_load_relaxed (&futex_word) == 23)
        futex_wait_simple (&futex_word, 23, FUTEX_PRIVATE);
    This is common enough to make providing this wrapper worthwhile.  */
-static __always_inline void
-futex_wait_simple (unsigned int *futex_word, unsigned int expected,
-		   int private)
+static __always_inline void futex_wait_simple(unsigned int *futex_word, unsigned int expected,
+        int private)
 {
-  ignore_value (futex_wait (futex_word, expected, private));
+    ignore_value(futex_wait(futex_word, expected, private));
 }
 
 /* Check whether the specified clockid is supported by
    futex_abstimed_wait and futex_abstimed_wait_cancelable.  */
-static __always_inline int
-futex_abstimed_supported_clockid (clockid_t clockid)
+static __always_inline int futex_abstimed_supported_clockid(clockid_t clockid)
 {
-  return lll_futex_supported_clockid (clockid);
+    return lll_futex_supported_clockid(clockid);
 }
 
 /* Atomically wrt other futex operations on the same futex, this unblocks the
@@ -203,26 +199,25 @@ futex_abstimed_supported_clockid (clockid_t clockid)
    has potentially been reused due to POSIX' requirements on synchronization
    object destruction (see above); therefore, we must not report or abort
    on most errors.  */
-static __always_inline void
-futex_wake (unsigned int* futex_word, int processes_to_wake, int private)
+static __always_inline void futex_wake(unsigned int *futex_word, int processes_to_wake, int private)
 {
-  int res = lll_futex_wake (futex_word, processes_to_wake, private);
-  /* No error.  Ignore the number of woken processes.  */
-  if (res >= 0)
-    return;
-  switch (res)
-    {
-    case -EFAULT: /* Could have happened due to memory reuse.  */
-    case -EINVAL: /* Could be either due to incorrect alignment (a bug in
-		     glibc or in the application) or due to memory being
-		     reused for a PI futex.  We cannot distinguish between the
-		     two causes, and one of them is correct use, so we do not
-		     act in this case.  */
-      return;
-    case -ENOSYS: /* Must have been caused by a glibc bug.  */
-    /* No other errors are documented at this time.  */
-    default:
-      futex_fatal_error ();
+    int res = lll_futex_wake(futex_word, processes_to_wake, private);
+    /* No error.  Ignore the number of woken processes.  */
+    if (res >= 0) {
+        return;
+    }
+    switch (res) {
+        case -EFAULT: /* Could have happened due to memory reuse.  */
+        case -EINVAL: /* Could be either due to incorrect alignment (a bug in
+             glibc or in the application) or due to memory being
+             reused for a PI futex.  We cannot distinguish between the
+             two causes, and one of them is correct use, so we do not
+             act in this case.  */
+            return;
+        case -ENOSYS: /* Must have been caused by a glibc bug.  */
+        /* No other errors are documented at this time.  */
+        default:
+            futex_fatal_error();
     }
 }
 
@@ -250,8 +245,8 @@ futex_wake (unsigned int* futex_word, int processes_to_wake, int private)
        futex.
      - ETIMEDOUT if the ABSTIME expires.
 */
-int __futex_lock_pi64 (int *futex_word, clockid_t clockid,
-		       const struct __timespec64 *abstime, int private);
+int __futex_lock_pi64(int *futex_word, clockid_t clockid,
+                      const struct __timespec64 *abstime, int private);
 
 /* Wakes the top priority waiter that called a futex_lock_pi operation on
    the futex.
@@ -259,31 +254,29 @@ int __futex_lock_pi64 (int *futex_word, clockid_t clockid,
    Returns the same values as futex_lock_pi under those same conditions;
    additionally, returns EPERM when the caller is not allowed to attach
    itself to the futex.  */
-static __always_inline int
-futex_unlock_pi (unsigned int *futex_word, int private)
+static __always_inline int futex_unlock_pi(unsigned int *futex_word, int private)
 {
-  int err = lll_futex_timed_unlock_pi (futex_word, private);
-  switch (err)
-    {
-    case 0:
-    case -EAGAIN:
-    case -EINTR:
-    case -ETIMEDOUT:
-    case -ESRCH:
-    case -EDEADLK:
-    case -ENOSYS:
-    case -EPERM:  /*  The caller is not allowed to attach itself to the futex.
-		      Used to check if PI futexes are supported by the
-		      kernel.  */
-      return -err;
+    int err = lll_futex_timed_unlock_pi(futex_word, private);
+    switch (err) {
+        case 0:
+        case -EAGAIN:
+        case -EINTR:
+        case -ETIMEDOUT:
+        case -ESRCH:
+        case -EDEADLK:
+        case -ENOSYS:
+        case -EPERM:  /*  The caller is not allowed to attach itself to the futex.
+              Used to check if PI futexes are supported by the
+              kernel.  */
+            return -err;
 
-    case -EINVAL: /* Either due to wrong alignment or due to the timeout not
-		     being normalized.  Must have been caused by a glibc or
-		     application bug.  */
-    case -EFAULT: /* Must have been caused by a glibc or application bug.  */
-    /* No other errors are documented at this time.  */
-    default:
-      futex_fatal_error ();
+        case -EINVAL: /* Either due to wrong alignment or due to the timeout not
+             being normalized.  Must have been caused by a glibc or
+             application bug.  */
+        case -EFAULT: /* Must have been caused by a glibc or application bug.  */
+        /* No other errors are documented at this time.  */
+        default:
+            futex_fatal_error();
     }
 }
 
@@ -298,37 +291,33 @@ futex_unlock_pi (unsigned int *futex_word, int private)
    additionally, returns ETIMEDOUT if the timeout expired.
 
    The call acts as a cancellation entrypoint.  */
-int
-__futex_abstimed_wait_cancelable64 (unsigned int* futex_word,
-                                    unsigned int expected, clockid_t clockid,
-                                    const struct __timespec64* abstime,
-                                    int private);
-libc_hidden_proto (__futex_abstimed_wait_cancelable64);
+int __futex_abstimed_wait_cancelable64(unsigned int *futex_word,
+                                       unsigned int expected, clockid_t clockid,
+                                       const struct __timespec64 *abstime,
+                                       int private);
+libc_hidden_proto(__futex_abstimed_wait_cancelable64);
 
-int
-__futex_abstimed_wait64 (unsigned int* futex_word, unsigned int expected,
-                         clockid_t clockid,
-                         const struct __timespec64* abstime,
-                         int private);
-libc_hidden_proto (__futex_abstimed_wait64);
+int __futex_abstimed_wait64(unsigned int *futex_word, unsigned int expected,
+                            clockid_t clockid,
+                            const struct __timespec64 *abstime,
+                            int private);
+libc_hidden_proto(__futex_abstimed_wait64);
 
 
-static __always_inline int
-__futex_clocklock64 (int *futex, clockid_t clockid,
-                     const struct __timespec64 *abstime, int private)
+static __always_inline int __futex_clocklock64(int *futex, clockid_t clockid,
+        const struct __timespec64 *abstime, int private)
 {
-  if (__glibc_unlikely (atomic_compare_and_exchange_bool_acq (futex, 1, 0)))
-    {
-      while (atomic_exchange_acquire (futex, 2) != 0)
-        {
-	  int err = 0;
-          err = __futex_abstimed_wait64 ((unsigned int *) futex, 2, clockid,
-					 abstime, private);
-          if (err == EINVAL || err == ETIMEDOUT || err == EOVERFLOW)
-            return err;
+    if (__glibc_unlikely(atomic_compare_and_exchange_bool_acq(futex, 1, 0))) {
+        while (atomic_exchange_acquire(futex, 2) != 0) {
+            int err = 0;
+            err = __futex_abstimed_wait64((unsigned int *) futex, 2, clockid,
+                                          abstime, private);
+            if (err == EINVAL || err == ETIMEDOUT || err == EOVERFLOW) {
+                return err;
+            }
         }
     }
-  return 0;
+    return 0;
 }
 
 #endif  /* futex-internal.h */

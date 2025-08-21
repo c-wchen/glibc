@@ -26,55 +26,51 @@
 #include <support/xthread.h>
 #include <support/xunistd.h>
 
-static void
-popen_and_pclose (void)
+static void popen_and_pclose(void)
 {
-  FILE *f = popen ("true", "r");
-  TEST_VERIFY_EXIT (f != NULL);
-  pclose (f);
-  return;
+    FILE *f = popen("true", "r");
+    TEST_VERIFY_EXIT(f != NULL);
+    pclose(f);
+    return;
 }
 
-static atomic_bool done = ATOMIC_VAR_INIT (0);
+static atomic_bool done = ATOMIC_VAR_INIT(0);
 
-static void *
-popen_and_pclose_forever (__attribute__ ((unused))
-                          void *arg)
+static void *popen_and_pclose_forever(__attribute__((unused))
+                                      void *arg)
 {
-  while (!atomic_load_explicit (&done, memory_order_acquire))
-    popen_and_pclose ();
-  return NULL;
+    while (!atomic_load_explicit(&done, memory_order_acquire)) {
+        popen_and_pclose();
+    }
+    return NULL;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
 
-  /* Repeatedly call popen in a loop during the entire test.  */
-  pthread_t t = xpthread_create (NULL, popen_and_pclose_forever, NULL);
+    /* Repeatedly call popen in a loop during the entire test.  */
+    pthread_t t = xpthread_create(NULL, popen_and_pclose_forever, NULL);
 
-  /* Repeatedly fork off and reap child processes one-by-one.
-     Each child calls popen once, then exits, leading to the possibility
-     that a child forks *during* our own popen call, thus inheriting any
-     intermediate popen state, possibly including lock state(s).  */
-  for (int i = 0; i < 100; i++)
-    {
-      int cpid = xfork ();
+    /* Repeatedly fork off and reap child processes one-by-one.
+       Each child calls popen once, then exits, leading to the possibility
+       that a child forks *during* our own popen call, thus inheriting any
+       intermediate popen state, possibly including lock state(s).  */
+    for (int i = 0; i < 100; i++) {
+        int cpid = xfork();
 
-      if (cpid == 0)
-        {
-          popen_and_pclose ();
-          _exit (0);
+        if (cpid == 0) {
+            popen_and_pclose();
+            _exit(0);
+        } else {
+            xwaitpid(cpid, NULL, 0);
         }
-      else
-        xwaitpid (cpid, NULL, 0);
     }
 
-  /* Stop calling popen.  */
-  atomic_store_explicit (&done, 1, memory_order_release);
-  xpthread_join (t);
+    /* Stop calling popen.  */
+    atomic_store_explicit(&done, 1, memory_order_release);
+    xpthread_join(t);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

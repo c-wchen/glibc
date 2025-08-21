@@ -27,49 +27,47 @@
 #include "../libio/libioP.h"
 #include <limits.h>
 
-char *
-__gets_chk (char *buf, size_t size)
+char *__gets_chk(char *buf, size_t size)
 {
-  size_t count;
-  int ch;
-  char *retval;
+    size_t count;
+    int ch;
+    char *retval;
 
-  if (size == 0)
-    __chk_fail ();
+    if (size == 0) {
+        __chk_fail();
+    }
 
-  _IO_acquire_lock (stdin);
-  ch = _IO_getc_unlocked (stdin);
-  if (ch == EOF)
-    {
-      retval = NULL;
-      goto unlock_return;
+    _IO_acquire_lock(stdin);
+    ch = _IO_getc_unlocked(stdin);
+    if (ch == EOF) {
+        retval = NULL;
+        goto unlock_return;
     }
-  if (ch == '\n')
-    count = 0;
-  else
-    {
-      /* This is very tricky since a file descriptor may be in the
-	 non-blocking mode. The error flag doesn't mean much in this
-	 case. We return an error only when there is a new error. */
-      int old_error = stdin->_flags & _IO_ERR_SEEN;
-      stdin->_flags &= ~_IO_ERR_SEEN;
-      buf[0] = (char) ch;
-      count = _IO_getline (stdin, buf + 1, size - 1, '\n', 0) + 1;
-      if (stdin->_flags & _IO_ERR_SEEN)
-	{
-	  retval = NULL;
-	  goto unlock_return;
-	}
-      else
-	stdin->_flags |= old_error;
+    if (ch == '\n') {
+        count = 0;
+    } else {
+        /* This is very tricky since a file descriptor may be in the
+        non-blocking mode. The error flag doesn't mean much in this
+         case. We return an error only when there is a new error. */
+        int old_error = stdin->_flags & _IO_ERR_SEEN;
+        stdin->_flags &= ~_IO_ERR_SEEN;
+        buf[0] = (char) ch;
+        count = _IO_getline(stdin, buf + 1, size - 1, '\n', 0) + 1;
+        if (stdin->_flags & _IO_ERR_SEEN) {
+            retval = NULL;
+            goto unlock_return;
+        } else {
+            stdin->_flags |= old_error;
+        }
     }
-  if (count >= size)
-    __chk_fail ();
-  buf[count] = 0;
-  retval = buf;
+    if (count >= size) {
+        __chk_fail();
+    }
+    buf[count] = 0;
+    retval = buf;
 unlock_return:
-  _IO_release_lock (stdin);
-  return retval;
+    _IO_release_lock(stdin);
+    return retval;
 }
 
-link_warning (__gets_chk, "the `gets' function is dangerous and should not be used.")
+link_warning(__gets_chk, "the `gets' function is dangerous and should not be used.")

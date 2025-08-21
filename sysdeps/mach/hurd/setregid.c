@@ -22,78 +22,71 @@
 #include <hurd/id.h>
 #include <string.h>
 
-int
-__setregid (gid_t rgid, gid_t egid)
+int __setregid(gid_t rgid, gid_t egid)
 {
-  auth_t newauth;
-  error_t err;
+    auth_t newauth;
+    error_t err;
 
 retry:
-  HURD_CRITICAL_BEGIN;
-  __mutex_lock (&_hurd_id.lock);
-  err = _hurd_check_ids ();
+    HURD_CRITICAL_BEGIN;
+    __mutex_lock(&_hurd_id.lock);
+    err = _hurd_check_ids();
 
-  if (!err)
-    {
-      /* Make a new auth handle which has RGID as the real gid,
-	 and EGID as the first element in the list of effective gids.  */
+    if (!err) {
+        /* Make a new auth handle which has RGID as the real gid,
+        and EGID as the first element in the list of effective gids.  */
 
-      gid_t *newgen, *newaux;
-      size_t ngen, naux;
+        gid_t *newgen, *newaux;
+        size_t ngen, naux;
 
-      newgen = _hurd_id.gen.gids;
-      ngen = _hurd_id.gen.ngids;
-      if (egid != -1)
-	{
-	  if (_hurd_id.gen.ngids == 0)
-	    {
-	      /* No effective gids now.  The new set will be just GID.  */
-	      newgen = &egid;
-	      ngen = 1;
-	    }
-	  else
-	    {
-	      _hurd_id.gen.gids[0] = egid;
-	      _hurd_id.valid = 0;
-	    }
-	}
+        newgen = _hurd_id.gen.gids;
+        ngen = _hurd_id.gen.ngids;
+        if (egid != -1) {
+            if (_hurd_id.gen.ngids == 0) {
+                /* No effective gids now.  The new set will be just GID.  */
+                newgen = &egid;
+                ngen = 1;
+            } else {
+                _hurd_id.gen.gids[0] = egid;
+                _hurd_id.valid = 0;
+            }
+        }
 
-      newaux = _hurd_id.aux.gids;
-      naux = _hurd_id.aux.ngids;
-      if (rgid != -1)
-	{
-	  if (_hurd_id.aux.ngids == 0)
-	    {
-	      newaux = &rgid;
-	      naux = 1;
-	    }
-	  else
-	    {
-	      _hurd_id.aux.gids[0] = rgid;
-	      _hurd_id.valid = 0;
-	    }
-	}
+        newaux = _hurd_id.aux.gids;
+        naux = _hurd_id.aux.ngids;
+        if (rgid != -1) {
+            if (_hurd_id.aux.ngids == 0) {
+                newaux = &rgid;
+                naux = 1;
+            } else {
+                _hurd_id.aux.gids[0] = rgid;
+                _hurd_id.valid = 0;
+            }
+        }
 
-      err = __USEPORT (AUTH, __auth_makeauth
-		       (port, NULL, MACH_MSG_TYPE_COPY_SEND, 0,
-			_hurd_id.gen.uids, _hurd_id.gen.nuids,
-			_hurd_id.aux.uids, _hurd_id.aux.nuids,
-			newgen, ngen, newaux, naux,
-			&newauth));
+        err = __USEPORT(AUTH, __auth_makeauth
+                        (port, NULL, MACH_MSG_TYPE_COPY_SEND, 0,
+                         _hurd_id.gen.uids, _hurd_id.gen.nuids,
+                         _hurd_id.aux.uids, _hurd_id.aux.nuids,
+                         newgen, ngen, newaux, naux,
+                         &newauth));
     }
-  __mutex_unlock (&_hurd_id.lock);
-  HURD_CRITICAL_END;
-  if (err == EINTR)
-    /* Got a signal while inside an RPC of the critical section, retry again */
-    goto retry;
+    __mutex_unlock(&_hurd_id.lock);
+    HURD_CRITICAL_END;
+    if (err == EINTR)
+        /* Got a signal while inside an RPC of the critical section, retry again */
+    {
+        goto retry;
+    }
 
-  if (err)
-    return __hurd_fail (err);
+    if (err) {
+        return __hurd_fail(err);
+    }
 
-  /* Install the new handle and reauthenticate everything.  */
-  err = __setauth (newauth);
-  __mach_port_deallocate (__mach_task_self (), newauth);
-  return err;
+    /* Install the new handle and reauthenticate everything.  */
+    err = __setauth(newauth);
+    __mach_port_deallocate(__mach_task_self(), newauth);
+    return err;
 }
 
-weak_alias (__setregid, setregid)
+weak_alias(__setregid, setregid)

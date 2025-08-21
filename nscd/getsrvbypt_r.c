@@ -17,13 +17,13 @@
 #include <netdb.h>
 
 
-#define LOOKUP_TYPE		struct servent
-#define FUNCTION_NAME		getservbyport
-#define DATABASE_NAME		services
-#define ADD_PARAMS		int port, const char *proto
-#define ADD_VARIABLES		port, proto
+#define LOOKUP_TYPE     struct servent
+#define FUNCTION_NAME       getservbyport
+#define DATABASE_NAME       services
+#define ADD_PARAMS      int port, const char *proto
+#define ADD_VARIABLES       port, proto
 
 /* We are nscd, so we don't want to be talking to ourselves.  */
-#undef	USE_NSCD
+#undef  USE_NSCD
 
 #include "../nss/getXXbyYY_r.c"

@@ -30,47 +30,45 @@
 #define MD_DECODE_SIGNAL_FRAME x86_64_decode_signal_frame
 
 #ifdef __LP64__
-#define RT_SIGRETURN_SYSCALL	0x050f0000000fc0c7ULL
+#define RT_SIGRETURN_SYSCALL    0x050f0000000fc0c7ULL
 #else
-#define RT_SIGRETURN_SYSCALL	0x050f40000201c0c7ULL
+#define RT_SIGRETURN_SYSCALL    0x050f40000201c0c7ULL
 #endif
 
-static _Unwind_Reason_Code
-x86_64_decode_signal_frame (frame *frame)
+static _Unwind_Reason_Code x86_64_decode_signal_frame(frame *frame)
 {
-  unsigned char *pc = (unsigned char *) frame->pc;
-  mcontext_t *st;
+    unsigned char *pc = (unsigned char *) frame->pc;
+    mcontext_t *st;
 
-  unsigned char pc0 = *(unsigned char *)(pc + 0);
-  unsigned long long pc1;
-  memcpy (&pc1, pc + 1, sizeof (unsigned long long));
+    unsigned char pc0 = *(unsigned char *)(pc + 0);
+    unsigned long long pc1;
+    memcpy(&pc1, pc + 1, sizeof(unsigned long long));
 
-  /* movq $__NR_rt_sigreturn, %rax ; syscall.  */
-  if ( pc0 == 0x48
-      && pc1 == RT_SIGRETURN_SYSCALL)
-    {
-      ucontext_t *uc_ = (ucontext_t *)frame->sp;
-      st = &uc_->uc_mcontext;
+    /* movq $__NR_rt_sigreturn, %rax ; syscall.  */
+    if (pc0 == 0x48
+        && pc1 == RT_SIGRETURN_SYSCALL) {
+        ucontext_t *uc_ = (ucontext_t *)frame->sp;
+        st = &uc_->uc_mcontext;
+    } else {
+        return _URC_END_OF_STACK;
     }
-  else
-    return _URC_END_OF_STACK;
 
-  frame->pc = (_Unwind_Ptr) st->gregs[REG_RIP];
-  frame->sp = (_Unwind_Ptr) st->gregs[REG_RSP];
-  frame->fp = (_Unwind_Ptr) st->gregs[REG_RBP];
-  return _URC_NO_REASON;
+    frame->pc = (_Unwind_Ptr) st->gregs[REG_RIP];
+    frame->sp = (_Unwind_Ptr) st->gregs[REG_RSP];
+    frame->fp = (_Unwind_Ptr) st->gregs[REG_RBP];
+    return _URC_NO_REASON;
 }
 
 #define MD_DETECT_OUTERMOST_FRAME x86_64_detect_outermost_frame
 
-static _Unwind_Reason_Code
-x86_64_detect_outermost_frame (frame *frame)
+static _Unwind_Reason_Code x86_64_detect_outermost_frame(frame *frame)
 {
-  /* Outermost frame has the frame pointer cleared.  */
-  if (frame->fp == 0)
-    return _URC_END_OF_STACK;
+    /* Outermost frame has the frame pointer cleared.  */
+    if (frame->fp == 0) {
+        return _URC_END_OF_STACK;
+    }
 
-  return _URC_NO_REASON;
+    return _URC_NO_REASON;
 }
 
 #endif /* ifdef __x86_64__  */

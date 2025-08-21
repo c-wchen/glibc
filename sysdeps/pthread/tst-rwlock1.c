@@ -19,96 +19,83 @@
 #include <stdio.h>
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  pthread_rwlock_t r;
+    pthread_rwlock_t r;
 
-  if (pthread_rwlock_init (&r, NULL) != 0)
-    {
-      puts ("rwlock_init failed");
-      return 1;
+    if (pthread_rwlock_init(&r, NULL) != 0) {
+        puts("rwlock_init failed");
+        return 1;
     }
-  puts ("rwlock_init succeeded");
+    puts("rwlock_init succeeded");
 
-  if (pthread_rwlock_rdlock (&r) != 0)
-    {
-      puts ("1st rwlock_rdlock failed");
-      return 1;
+    if (pthread_rwlock_rdlock(&r) != 0) {
+        puts("1st rwlock_rdlock failed");
+        return 1;
     }
-  puts ("1st rwlock_rdlock succeeded");
+    puts("1st rwlock_rdlock succeeded");
 
-  if (pthread_rwlock_rdlock (&r) != 0)
-    {
-      puts ("2nd rwlock_rdlock failed");
-      return 1;
+    if (pthread_rwlock_rdlock(&r) != 0) {
+        puts("2nd rwlock_rdlock failed");
+        return 1;
     }
-  puts ("2nd rwlock_rdlock succeeded");
+    puts("2nd rwlock_rdlock succeeded");
 
-  if (pthread_rwlock_unlock (&r) != 0)
-    {
-      puts ("1st rwlock_unlock failed");
-      return 1;
+    if (pthread_rwlock_unlock(&r) != 0) {
+        puts("1st rwlock_unlock failed");
+        return 1;
     }
-  puts ("1st rwlock_unlock succeeded");
+    puts("1st rwlock_unlock succeeded");
 
-  if (pthread_rwlock_unlock (&r) != 0)
-    {
-      puts ("2nd rwlock_unlock failed");
-      return 1;
+    if (pthread_rwlock_unlock(&r) != 0) {
+        puts("2nd rwlock_unlock failed");
+        return 1;
     }
-  puts ("2nd rwlock_unlock succeeded");
+    puts("2nd rwlock_unlock succeeded");
 
-  if (pthread_rwlock_wrlock (&r) != 0)
-    {
-      puts ("1st rwlock_wrlock failed");
-      return 1;
+    if (pthread_rwlock_wrlock(&r) != 0) {
+        puts("1st rwlock_wrlock failed");
+        return 1;
     }
-  puts ("1st rwlock_wrlock succeeded");
+    puts("1st rwlock_wrlock succeeded");
 
-  if (pthread_rwlock_unlock (&r) != 0)
-    {
-      puts ("3rd rwlock_unlock failed");
-      return 1;
+    if (pthread_rwlock_unlock(&r) != 0) {
+        puts("3rd rwlock_unlock failed");
+        return 1;
     }
-  puts ("3rd rwlock_unlock succeeded");
+    puts("3rd rwlock_unlock succeeded");
 
-  if (pthread_rwlock_wrlock (&r) != 0)
-    {
-      puts ("2nd rwlock_wrlock failed");
-      return 1;
+    if (pthread_rwlock_wrlock(&r) != 0) {
+        puts("2nd rwlock_wrlock failed");
+        return 1;
     }
-  puts ("2nd rwlock_wrlock succeeded");
+    puts("2nd rwlock_wrlock succeeded");
 
-  if (pthread_rwlock_unlock (&r) != 0)
-    {
-      puts ("4th rwlock_unlock failed");
-      return 1;
+    if (pthread_rwlock_unlock(&r) != 0) {
+        puts("4th rwlock_unlock failed");
+        return 1;
     }
-  puts ("4th rwlock_unlock succeeded");
+    puts("4th rwlock_unlock succeeded");
 
-  if (pthread_rwlock_rdlock (&r) != 0)
-    {
-      puts ("3rd rwlock_rdlock failed");
-      return 1;
+    if (pthread_rwlock_rdlock(&r) != 0) {
+        puts("3rd rwlock_rdlock failed");
+        return 1;
     }
-  puts ("3rd rwlock_rdlock succeeded");
+    puts("3rd rwlock_rdlock succeeded");
 
-  if (pthread_rwlock_unlock (&r) != 0)
-    {
-      puts ("5th rwlock_unlock failed");
-      return 1;
+    if (pthread_rwlock_unlock(&r) != 0) {
+        puts("5th rwlock_unlock failed");
+        return 1;
     }
-  puts ("5th rwlock_unlock succeeded");
+    puts("5th rwlock_unlock succeeded");
 
-  if (pthread_rwlock_destroy (&r) != 0)
-    {
-      puts ("rwlock_destroy failed");
-      return 1;
+    if (pthread_rwlock_destroy(&r) != 0) {
+        puts("rwlock_destroy failed");
+        return 1;
     }
-  puts ("rwlock_destroy succeeded");
+    puts("rwlock_destroy succeeded");
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

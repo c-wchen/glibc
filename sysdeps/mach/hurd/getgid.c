@@ -21,31 +21,34 @@
 #include <hurd/id.h>
 
 /* Get the real group ID of the calling process.  */
-gid_t
-__getgid (void)
+gid_t __getgid(void)
 {
-  error_t err;
-  gid_t gid;
+    error_t err;
+    gid_t gid;
 
 retry:
-  HURD_CRITICAL_BEGIN;
-  __mutex_lock (&_hurd_id.lock);
+    HURD_CRITICAL_BEGIN;
+    __mutex_lock(&_hurd_id.lock);
 
-  if (err = _hurd_check_ids ())
-    gid = __hurd_fail (err);
-  else if (_hurd_id.aux.ngids >= 1)
-    gid = _hurd_id.aux.gids[0];
-  else
-    /* We do not even have a real gid.  */
-    gid = __hurd_fail (EGRATUITOUS);
+    if (err = _hurd_check_ids()) {
+        gid = __hurd_fail(err);
+    } else if (_hurd_id.aux.ngids >= 1) {
+        gid = _hurd_id.aux.gids[0];
+    } else
+        /* We do not even have a real gid.  */
+    {
+        gid = __hurd_fail(EGRATUITOUS);
+    }
 
-  __mutex_unlock (&_hurd_id.lock);
-  HURD_CRITICAL_END;
-  if (gid == -1 && errno == EINTR)
-    /* Got a signal while inside an RPC of the critical section, retry again */
-    goto retry;
+    __mutex_unlock(&_hurd_id.lock);
+    HURD_CRITICAL_END;
+    if (gid == -1 && errno == EINTR)
+        /* Got a signal while inside an RPC of the critical section, retry again */
+    {
+        goto retry;
+    }
 
-  return gid;
+    return gid;
 }
 
-weak_alias (__getgid, getgid)
+weak_alias(__getgid, getgid)

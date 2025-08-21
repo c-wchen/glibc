@@ -19,18 +19,16 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-int
-__fesetenv (const fenv_t *envp)
+int __fesetenv(const fenv_t *envp)
 {
-  if (envp == FE_DFL_ENV)
-      _FPU_SETCW (_FPU_DEFAULT);
-  else
-    {
-      fpu_control_t temp = envp->__fpscr;
-      _FPU_SETCW (temp);
+    if (envp == FE_DFL_ENV) {
+        _FPU_SETCW(_FPU_DEFAULT);
+    } else {
+        fpu_control_t temp = envp->__fpscr;
+        _FPU_SETCW(temp);
     }
-  return 0;
+    return 0;
 }
-libm_hidden_def (__fesetenv)
-weak_alias (__fesetenv, fesetenv)
-libm_hidden_weak (fesetenv)
+libm_hidden_def(__fesetenv)
+weak_alias(__fesetenv, fesetenv)
+libm_hidden_weak(fesetenv)

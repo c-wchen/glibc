@@ -15,9 +15,9 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef	_SYS_KLOG_H
+#ifndef _SYS_KLOG_H
 
-#define	_SYS_KLOG_H	1
+#define _SYS_KLOG_H 1
 #include <features.h>
 
 __BEGIN_DECLS
@@ -26,7 +26,7 @@ __BEGIN_DECLS
    the kernel's syslog system call, but that name is easily confused
    with the user-level syslog facility, which is something completely
    different.  */
-extern int klogctl (int __type, char *__bufp, int __len) __THROW;
+extern int klogctl(int __type, char *__bufp, int __len) __THROW;
 
 __END_DECLS
 

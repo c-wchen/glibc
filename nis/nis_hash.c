@@ -22,12 +22,11 @@
 
 # include <nss.h>
 
-uint32_t
-__nis_hash (const void *keyarg, size_t len)
+uint32_t __nis_hash(const void *keyarg, size_t len)
 {
-  return __nss_hash (keyarg, len);
+    return __nss_hash(keyarg, len);
 }
 
-compat_symbol (libnsl, __nis_hash, __nis_hash, GLIBC_2_1);
+compat_symbol(libnsl, __nis_hash, __nis_hash, GLIBC_2_1);
 
 #endif

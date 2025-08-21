@@ -19,11 +19,10 @@
 #include <fenv.h>
 #include <fenv_private.h>
 
-int
-__fegetround (void)
+int __fegetround(void)
 {
-  return riscv_getround ();
+    return riscv_getround();
 }
-libm_hidden_def (__fegetround)
-weak_alias (__fegetround, fegetround)
-libm_hidden_weak (fegetround)
+libm_hidden_def(__fegetround)
+weak_alias(__fegetround, fegetround)
+libm_hidden_weak(fegetround)

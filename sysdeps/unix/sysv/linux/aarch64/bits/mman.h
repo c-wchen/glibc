@@ -23,8 +23,8 @@
 /* AArch64 specific definitions, should be in sync with
    arch/arm64/include/uapi/asm/mman.h.  */
 
-#define PROT_BTI	0x10
-#define PROT_MTE	0x20
+#define PROT_BTI    0x10
+#define PROT_MTE    0x20
 
 #ifdef __USE_GNU
 # define PKEY_UNRESTRICTED 0x0

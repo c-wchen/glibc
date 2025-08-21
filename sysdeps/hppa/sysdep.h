@@ -21,7 +21,7 @@
 #undef ASM_LINE_SEP
 #define ASM_LINE_SEP !
 
-#ifdef	__ASSEMBLER__
+#ifdef  __ASSEMBLER__
 
 /* Syntactic details of assembler.  */
 
@@ -33,41 +33,41 @@
    There is currently a bug in gdb which prevents us from specifying
    incomplete stabs information.  Fake some entries here which specify
    the current source file.  */
-#define	ENTRY(name)							      \
-  .SPACE $TEXT$							ASM_LINE_SEP  \
-  .SUBSPA $CODE$,QUAD=0,ALIGN=8,ACCESS=44,CODE_ONLY		ASM_LINE_SEP  \
-  .align ALIGNARG(4)						ASM_LINE_SEP  \
-  .NSUBSPA $CODE$,QUAD=0,ALIGN=8,ACCESS=44,CODE_ONLY		ASM_LINE_SEP  \
+#define ENTRY(name)                               \
+  .SPACE $TEXT$                         ASM_LINE_SEP  \
+  .SUBSPA $CODE$,QUAD=0,ALIGN=8,ACCESS=44,CODE_ONLY     ASM_LINE_SEP  \
+  .align ALIGNARG(4)                        ASM_LINE_SEP  \
+  .NSUBSPA $CODE$,QUAD=0,ALIGN=8,ACCESS=44,CODE_ONLY        ASM_LINE_SEP  \
   .EXPORT C_SYMBOL_NAME(name),ENTRY,PRIV_LEV=3,ARGW0=GR,RTNVAL=GR ASM_LINE_SEP\
-  C_LABEL(name)								      \
+  C_LABEL(name)                                   \
   CALL_MCOUNT
 
-#undef	END
-#define END(name)							      \
+#undef  END
+#define END(name)                                 \
   .PROCEND
 
 /* GCC does everything for us. */
-#ifdef	PROF
+#ifdef  PROF
 #define CALL_MCOUNT
 #else
-#define CALL_MCOUNT		/* Do nothing.  */
+#define CALL_MCOUNT     /* Do nothing.  */
 #endif
 
-#define	PSEUDO(name, syscall_name, args)				      \
-  ENTRY (name)								      \
+#define PSEUDO(name, syscall_name, args)                      \
+  ENTRY (name)                                    \
   DO_CALL (syscall_name, args)
 
-#undef	PSEUDO_END
-#define	PSEUDO_END(name)						      \
+#undef  PSEUDO_END
+#define PSEUDO_END(name)                              \
   END (name)
 
 #undef JUMPTARGET
-#define JUMPTARGET(name)	name
-#define SYSCALL_PIC_SETUP	/* Nothing.  */
+#define JUMPTARGET(name)    name
+#define SYSCALL_PIC_SETUP   /* Nothing.  */
 
 /* Local label name for asm code. */
 #ifndef L
-#define L(name)		name
+#define L(name)     name
 #endif
 
-#endif	/* __ASSEMBLER__ */
+#endif  /* __ASSEMBLER__ */

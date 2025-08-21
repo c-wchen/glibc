@@ -25,11 +25,10 @@
    The buffers are filled in the order specified.  Operates just like
    'pread' (see <unistd.h>) except that data are put in VECTOR instead
    of a contiguous buffer.  */
-ssize_t
-preadv64 (int fd, const struct iovec *vector, int count, off64_t offset)
+ssize_t preadv64(int fd, const struct iovec *vector, int count, off64_t offset)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (preadv64)
+stub_warning(preadv64)

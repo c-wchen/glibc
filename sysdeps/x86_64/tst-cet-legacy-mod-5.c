@@ -21,11 +21,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-extern void foo (void);
+extern void foo(void);
 
-int
-test (void)
+int test(void)
 {
-  foo ();
-  return 0;
+    foo();
+    return 0;
 }

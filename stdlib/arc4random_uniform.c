@@ -30,42 +30,44 @@
 
    The algorithm avoids modulo and divide operations, which might be costly
    depending on the architecture.  */
-uint32_t
-__arc4random_uniform (uint32_t n)
+uint32_t __arc4random_uniform(uint32_t n)
 {
-  if (n <= 1)
-    /* There is no valid return value for a zero limit, and 0 is the
-       only possible result for limit 1.  */
-    return 0;
-
-  /* Powers of two are easy.  */
-  if (powerof2 (n))
-    return __arc4random () & (n - 1);
-
-  /* mask is the smallest power of 2 minus 1 number larger than n.  */
-  int z = __builtin_clz (n);
-  uint32_t mask = ~UINT32_C(0) >> z;
-  int bits = CHAR_BIT * sizeof (uint32_t) - z;
-
-  while (1)
+    if (n <= 1)
+        /* There is no valid return value for a zero limit, and 0 is the
+           only possible result for limit 1.  */
     {
-      uint32_t value = __arc4random ();
+        return 0;
+    }
 
-      /* Return if the lower power of 2 minus 1 satisfy the condition.  */
-      uint32_t r = value & mask;
-      if (r < n)
-	return r;
+    /* Powers of two are easy.  */
+    if (powerof2(n)) {
+        return __arc4random() & (n - 1);
+    }
 
-      /* Otherwise check if remaining bits of entropy provides fits in the
-	 bound.  */
-      for (int bits_left = z; bits_left >= bits; bits_left -= bits)
-	{
-	  value >>= bits;
-	  r = value & mask;
-	  if (r < n)
-	    return r;
-	}
+    /* mask is the smallest power of 2 minus 1 number larger than n.  */
+    int z = __builtin_clz(n);
+    uint32_t mask = ~UINT32_C(0) >> z;
+    int bits = CHAR_BIT * sizeof(uint32_t) - z;
+
+    while (1) {
+        uint32_t value = __arc4random();
+
+        /* Return if the lower power of 2 minus 1 satisfy the condition.  */
+        uint32_t r = value & mask;
+        if (r < n) {
+            return r;
+        }
+
+        /* Otherwise check if remaining bits of entropy provides fits in the
+        bound.  */
+        for (int bits_left = z; bits_left >= bits; bits_left -= bits) {
+            value >>= bits;
+            r = value & mask;
+            if (r < n) {
+                return r;
+            }
+        }
     }
 }
-libc_hidden_def (__arc4random_uniform)
-weak_alias (__arc4random_uniform, arc4random_uniform)
+libc_hidden_def(__arc4random_uniform)
+weak_alias(__arc4random_uniform, arc4random_uniform)

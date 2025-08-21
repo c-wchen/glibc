@@ -19,9 +19,9 @@
 #include <support/check.h>
 #include <support/xunistd.h>
 
-void
-xunlink (const char *path)
+void xunlink(const char *path)
 {
-  if (unlink (path) != 0)
-    FAIL_EXIT1 ("unlink (\"%s\"): %m", path);
+    if (unlink(path) != 0) {
+        FAIL_EXIT1("unlink (\"%s\"): %m", path);
+    }
 }

@@ -17,13 +17,12 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef NAN_PSEUDO_NUMBER_H
-#define NAN_PSEUDO_NUMBER_H	1
+#define NAN_PSEUDO_NUMBER_H 1
 
 /* Pseudo numbers on x86 are always signaling.  */
-static inline int
-is_pseudo_signaling (uint32_t exi, uint32_t hxi)
+static inline int is_pseudo_signaling(uint32_t exi, uint32_t hxi)
 {
-  return ((exi & 0x7fff) && ((hxi & 0x80000000) == 0));
+    return ((exi & 0x7fff) && ((hxi & 0x80000000) == 0));
 }
 
 #endif /* nan-pseudo-number.h */

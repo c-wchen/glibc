@@ -21,14 +21,13 @@
 #include <sysdep.h>
 
 /* Change the owner and group of FILE.  */
-int
-__chown (const char *file, uid_t owner, gid_t group)
+int __chown(const char *file, uid_t owner, gid_t group)
 {
 #ifdef __NR_chown
-  return INLINE_SYSCALL_CALL (chown, file, owner, groups);
+    return INLINE_SYSCALL_CALL(chown, file, owner, groups);
 #else
-  return INLINE_SYSCALL_CALL (fchownat, AT_FDCWD, file, owner, group, 0);
+    return INLINE_SYSCALL_CALL(fchownat, AT_FDCWD, file, owner, group, 0);
 #endif
 }
-libc_hidden_def (__chown)
-weak_alias (__chown, chown)
+libc_hidden_def(__chown)
+weak_alias(__chown, chown)

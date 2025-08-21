@@ -23,19 +23,17 @@
   do                                                                          \
     {                                                                         \
       if (!supported ())                                                      \
-	return 77;                                                            \
+    return 77;                                                            \
     }                                                                         \
   while (0)
 
-static bool
-supported (void)
+static bool supported(void)
 {
 #if defined REQUIRE_SVE
-  if (!(getauxval (AT_HWCAP) & HWCAP_SVE))
-    {
-      printf ("SVE not supported.");
-      return false;
+    if (!(getauxval(AT_HWCAP) & HWCAP_SVE)) {
+        printf("SVE not supported.");
+        return false;
     }
 #endif
-  return true;
+    return true;
 }

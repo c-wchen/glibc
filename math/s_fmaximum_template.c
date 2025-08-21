@@ -19,15 +19,16 @@
 #include <math.h>
 
 FLOAT
-M_DECL_FUNC (__fmaximum) (FLOAT x, FLOAT y)
+M_DECL_FUNC(__fmaximum)(FLOAT x, FLOAT y)
 {
-  if (isgreater (x, y))
-    return x;
-  else if (isless (x, y))
-    return y;
-  else if (x == y)
-    return (M_COPYSIGN (1, x) >= M_COPYSIGN (1, y) ? x : y);
-  else
-    return x + y;
+    if (isgreater(x, y)) {
+        return x;
+    } else if (isless(x, y)) {
+        return y;
+    } else if (x == y) {
+        return (M_COPYSIGN(1, x) >= M_COPYSIGN(1, y) ? x : y);
+    } else {
+        return x + y;
+    }
 }
-declare_mgen_alias (__fmaximum, fmaximum);
+declare_mgen_alias(__fmaximum, fmaximum);

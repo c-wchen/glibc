@@ -18,8 +18,7 @@
 
 #include <math.h>
 
-int
-__signbitf (float x)
+int __signbitf(float x)
 {
-  return __builtin_signbitf (x);
+    return __builtin_signbitf(x);
 }

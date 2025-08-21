@@ -21,40 +21,39 @@
 #include <string.h>
 #include <stdlib.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char *p = support_quote_string ("");
-  TEST_COMPARE (strlen (p), 0);
-  free (p);
-  p = support_quote_string ("X");
-  TEST_COMPARE (strlen (p), 1);
-  TEST_COMPARE (p[0], 'X');
-  free (p);
+    char *p = support_quote_string("");
+    TEST_COMPARE(strlen(p), 0);
+    free(p);
+    p = support_quote_string("X");
+    TEST_COMPARE(strlen(p), 1);
+    TEST_COMPARE(p[0], 'X');
+    free(p);
 
-  /* Check escaping of backslash-escaped characters, and lack of
-     escaping for other shell meta-characters.  */
-  p = support_quote_string ("$()*?`@[]{}~\'\"X");
-  TEST_COMPARE (strcmp (p, "$()*?`@[]{}~\\'\\\"X"), 0);
-  free (p);
+    /* Check escaping of backslash-escaped characters, and lack of
+       escaping for other shell meta-characters.  */
+    p = support_quote_string("$()*?`@[]{}~\'\"X");
+    TEST_COMPARE(strcmp(p, "$()*?`@[]{}~\\'\\\"X"), 0);
+    free(p);
 
-  /* Check lack of escaping for letters and digits.  */
+    /* Check lack of escaping for letters and digits.  */
 #define LETTERS_AND_DIGTS                       \
   "abcdefghijklmnopqrstuvwxyz"                  \
   "ABCDEFGHIJKLMNOPQRSTUVWXYZ"                  \
   "0123456789"
-  p = support_quote_string (LETTERS_AND_DIGTS "@");
-  TEST_COMPARE (strcmp (p, LETTERS_AND_DIGTS "@"), 0);
-  free (p);
+    p = support_quote_string(LETTERS_AND_DIGTS "@");
+    TEST_COMPARE(strcmp(p, LETTERS_AND_DIGTS "@"), 0);
+    free(p);
 
-  /* Check escaping of control characters and other non-printable
-     characters.  */
-  p = support_quote_string ("\r\n\t\a\b\f\v\1\177\200\377@");
-  TEST_COMPARE (strcmp (p, "\\r\\n\\t\\a\\b\\f\\v\\001"
+    /* Check escaping of control characters and other non-printable
+       characters.  */
+    p = support_quote_string("\r\n\t\a\b\f\v\1\177\200\377@");
+    TEST_COMPARE(strcmp(p, "\\r\\n\\t\\a\\b\\f\\v\\001"
                         "\\177\\200\\377@"), 0);
-  free (p);
+    free(p);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

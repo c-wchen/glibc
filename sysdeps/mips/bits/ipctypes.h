@@ -21,7 +21,7 @@
  */
 
 #ifndef _BITS_IPCTYPES_H
-#define _BITS_IPCTYPES_H	1
+#define _BITS_IPCTYPES_H    1
 
 #include <bits/types.h>
 

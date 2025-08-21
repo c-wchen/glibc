@@ -19,44 +19,46 @@
 #include <hurd/id.h>
 
 /* Set the uid set for the current user to UIDS (N of them).  */
-int
-seteuids (int n, const uid_t *uids)
+int seteuids(int n, const uid_t *uids)
 {
-  error_t err;
-  auth_t newauth;
-  int i;
-  gid_t new[n];
+    error_t err;
+    auth_t newauth;
+    int i;
+    gid_t new[n];
 
-  /* Fault before taking locks.  */
-  for (i = 0; i < n; ++i)
-    new[i] = uids[i];
+    /* Fault before taking locks.  */
+    for (i = 0; i < n; ++i) {
+        new[i] = uids[i];
+    }
 
 retry:
-  HURD_CRITICAL_BEGIN;
-  __mutex_lock (&_hurd_id.lock);
-  err = _hurd_check_ids ();
-  if (! err)
-    {
-      /* Get a new auth port using those IDs.  */
-      err = __USEPORT (AUTH,
-		       __auth_makeauth (port, NULL, 0, 0,
-					new, n,
-					_hurd_id.aux.uids, _hurd_id.aux.nuids,
-					_hurd_id.gen.gids, _hurd_id.gen.ngids,
-					_hurd_id.aux.gids, _hurd_id.aux.ngids,
-					&newauth));
+    HURD_CRITICAL_BEGIN;
+    __mutex_lock(&_hurd_id.lock);
+    err = _hurd_check_ids();
+    if (! err) {
+        /* Get a new auth port using those IDs.  */
+        err = __USEPORT(AUTH,
+                        __auth_makeauth(port, NULL, 0, 0,
+                                        new, n,
+                                        _hurd_id.aux.uids, _hurd_id.aux.nuids,
+                                        _hurd_id.gen.gids, _hurd_id.gen.ngids,
+                                        _hurd_id.aux.gids, _hurd_id.aux.ngids,
+                                        &newauth));
     }
-  __mutex_unlock (&_hurd_id.lock);
-  HURD_CRITICAL_END;
-  if (err == EINTR)
-    /* Got a signal while inside an RPC of the critical section, retry again */
-    goto retry;
+    __mutex_unlock(&_hurd_id.lock);
+    HURD_CRITICAL_END;
+    if (err == EINTR)
+        /* Got a signal while inside an RPC of the critical section, retry again */
+    {
+        goto retry;
+    }
 
-  if (err)
-    return __hurd_fail (err);
+    if (err) {
+        return __hurd_fail(err);
+    }
 
-  /* Install the new auth port and reauthenticate everything.  */
-  err = __setauth (newauth);
-  __mach_port_deallocate (__mach_task_self (), newauth);
-  return err;
+    /* Install the new auth port and reauthenticate everything.  */
+    err = __setauth(newauth);
+    __mach_port_deallocate(__mach_task_self(), newauth);
+    return err;
 }

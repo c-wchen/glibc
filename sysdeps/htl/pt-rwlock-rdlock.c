@@ -21,21 +21,20 @@
 #include <shlib-compat.h>
 
 /* Implemented in pt-rwlock-timedrdlock.c.  */
-extern int __pthread_rwlock_timedrdlock_internal (struct __pthread_rwlock
-						  *rwlock,
-						  clockid_t clockid,
-						  const struct timespec
-						  *abstime);
+extern int __pthread_rwlock_timedrdlock_internal(struct __pthread_rwlock
+        *rwlock,
+        clockid_t clockid,
+        const struct timespec
+        *abstime);
 
 /* Acquire RWLOCK for reading, block if we can't get it.  */
-int
-__pthread_rwlock_rdlock (struct __pthread_rwlock *rwlock)
+int __pthread_rwlock_rdlock(struct __pthread_rwlock *rwlock)
 {
-  return __pthread_rwlock_timedrdlock_internal (rwlock, -1, 0);
+    return __pthread_rwlock_timedrdlock_internal(rwlock, -1, 0);
 }
-libc_hidden_def (__pthread_rwlock_rdlock)
-versioned_symbol (libc, __pthread_rwlock_rdlock, pthread_rwlock_rdlock, GLIBC_2_42);
+libc_hidden_def(__pthread_rwlock_rdlock)
+versioned_symbol(libc, __pthread_rwlock_rdlock, pthread_rwlock_rdlock, GLIBC_2_42);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_42)
-compat_symbol (libpthread, __pthread_rwlock_rdlock, pthread_rwlock_rdlock, GLIBC_2_12);
+compat_symbol(libpthread, __pthread_rwlock_rdlock, pthread_rwlock_rdlock, GLIBC_2_12);
 #endif

@@ -26,13 +26,12 @@
    tst-dlopen-nodelete-reloc-mod3.so.  */
 extern bool may_finalize_mod3;
 
-static void __attribute__ ((destructor))
-fini (void)
+static void __attribute__((destructor))
+fini(void)
 {
-  if (!may_finalize_mod3)
-    {
-      puts ("error: tst-dlopen-nodelete-reloc-mod5.so destructor"
-            " called too early");
-      _exit (1);
+    if (!may_finalize_mod3) {
+        puts("error: tst-dlopen-nodelete-reloc-mod5.so destructor"
+             " called too early");
+        _exit(1);
     }
 }

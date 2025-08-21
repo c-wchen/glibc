@@ -19,11 +19,10 @@
 #include <errno.h>
 #include <sys/mman.h>
 
-int
-__pkey_set (int key, unsigned int access_restrictions)
+int __pkey_set(int key, unsigned int access_restrictions)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (__pkey_set)
-weak_alias (__pkey_set, pkey_set)
+libc_hidden_def(__pkey_set)
+weak_alias(__pkey_set, pkey_set)

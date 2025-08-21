@@ -27,33 +27,31 @@
 #include "eintr.c"
 
 
-static void *
-tf (void *arg)
+static void *tf(void *arg)
 {
-  pthread_mutex_t m = PTHREAD_MUTEX_INITIALIZER;
-  xpthread_mutex_lock (&m);
-  /* This call must not return.  */
-  xpthread_mutex_lock (&m);
+    pthread_mutex_t m = PTHREAD_MUTEX_INITIALIZER;
+    xpthread_mutex_lock(&m);
+    /* This call must not return.  */
+    xpthread_mutex_lock(&m);
 
-  puts ("tf: mutex_lock returned");
-  exit (1);
+    puts("tf: mutex_lock returned");
+    exit(1);
 }
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  pthread_t self = pthread_self ();
+    pthread_t self = pthread_self();
 
-  setup_eintr (SIGUSR1, &self);
+    setup_eintr(SIGUSR1, &self);
 
-  pthread_t th = xpthread_create (NULL, tf, NULL);
+    pthread_t th = xpthread_create(NULL, tf, NULL);
 
-  delayed_exit (1);
-  /* This call must never return.  */
-  xpthread_join (th);
-  puts ("error: pthread_join returned");
-  return 1;
+    delayed_exit(1);
+    /* This call must never return.  */
+    xpthread_join(th);
+    puts("error: pthread_join returned");
+    return 1;
 }
 
 #include <support/test-driver.c>

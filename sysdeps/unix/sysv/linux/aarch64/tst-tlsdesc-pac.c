@@ -20,29 +20,26 @@
 #include <unwind.h>
 #include <support/xdlfcn.h>
 
-static _Unwind_Reason_Code
-unwind_callback (struct _Unwind_Context* context, void* closure)
+static _Unwind_Reason_Code unwind_callback(struct _Unwind_Context *context, void *closure)
 {
-  return _URC_NO_REASON;
+    return _URC_NO_REASON;
 }
 
 /* Assume that TLS variable from tst-tlsdesc-pac-mod.so will trigger
    the slow-path that allocates the required memory with malloc.  */
-void *
-malloc (size_t s)
+void *malloc(size_t s)
 {
-  _Unwind_Backtrace (unwind_callback, NULL);
-  return calloc (1, s);
+    _Unwind_Backtrace(unwind_callback, NULL);
+    return calloc(1, s);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  void *h = xdlopen ("tst-tlsdesc-pac-mod.so", RTLD_LAZY);
-  void (*func)(void) = xdlsym (h, "bar");
-  func ();
+    void *h = xdlopen("tst-tlsdesc-pac-mod.so", RTLD_LAZY);
+    void (*func)(void) = xdlsym(h, "bar");
+    func();
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

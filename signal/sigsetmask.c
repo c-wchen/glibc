@@ -18,12 +18,11 @@
 #include <errno.h>
 #include <signal.h>
 
-int
-__sigsetmask (int mask)
+int __sigsetmask(int mask)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (sigsetmask)
+stub_warning(sigsetmask)
 
-weak_alias (__sigsetmask, sigsetmask)
+weak_alias(__sigsetmask, sigsetmask)

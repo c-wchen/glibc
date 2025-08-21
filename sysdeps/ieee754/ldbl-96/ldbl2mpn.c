@@ -28,67 +28,61 @@
    number of bits (64 for long double) and an integral power of two
    (MPN frexpl). */
 
-mp_size_t
-__mpn_extract_long_double (mp_ptr res_ptr, mp_size_t size,
-			   int *expt, int *is_neg,
-			   long double value)
+mp_size_t __mpn_extract_long_double(mp_ptr res_ptr, mp_size_t size,
+                                    int *expt, int *is_neg,
+                                    long double value)
 {
-  union ieee854_long_double u;
-  u.d = value;
+    union ieee854_long_double u;
+    u.d = value;
 
-  *is_neg = u.ieee.negative;
-  *expt = (int) u.ieee.exponent - IEEE854_LONG_DOUBLE_BIAS;
+    *is_neg = u.ieee.negative;
+    *expt = (int) u.ieee.exponent - IEEE854_LONG_DOUBLE_BIAS;
 
 #if BITS_PER_MP_LIMB == 32
-  res_ptr[0] = u.ieee.mantissa1; /* Low-order 32 bits of fraction.  */
-  res_ptr[1] = u.ieee.mantissa0; /* High-order 32 bits.  */
-  #define N 2
+    res_ptr[0] = u.ieee.mantissa1; /* Low-order 32 bits of fraction.  */
+    res_ptr[1] = u.ieee.mantissa0; /* High-order 32 bits.  */
+#define N 2
 #elif BITS_PER_MP_LIMB == 64
-  /* Hopefully the compiler will combine the two bitfield extracts
-     and this composition into just the original quadword extract.  */
-  res_ptr[0] = ((mp_limb_t) u.ieee.mantissa0 << 32) | u.ieee.mantissa1;
-  #define N 1
+    /* Hopefully the compiler will combine the two bitfield extracts
+       and this composition into just the original quadword extract.  */
+    res_ptr[0] = ((mp_limb_t) u.ieee.mantissa0 << 32) | u.ieee.mantissa1;
+#define N 1
 #else
-  #error "mp_limb size " BITS_PER_MP_LIMB "not accounted for"
+#error "mp_limb size " BITS_PER_MP_LIMB "not accounted for"
 #endif
 
-  if (u.ieee.exponent == 0)
-    {
-      /* A biased exponent of zero is a special case.
-	 Either it is a zero or it is a denormal number.  */
-      if (res_ptr[0] == 0 && res_ptr[N - 1] == 0) /* Assumes N<=2.  */
-	/* It's zero.  */
-	*expt = 0;
-      else
-	{
-          /* It is a denormal number, meaning it has no implicit leading
-	     one bit, and its exponent is in fact the format minimum.  */
-	  int cnt;
+    if (u.ieee.exponent == 0) {
+        /* A biased exponent of zero is a special case.
+        Either it is a zero or it is a denormal number.  */
+        if (res_ptr[0] == 0 && res_ptr[N - 1] == 0) /* Assumes N<=2.  */
+            /* It's zero.  */
+        {
+            *expt = 0;
+        } else {
+            /* It is a denormal number, meaning it has no implicit leading
+            one bit, and its exponent is in fact the format minimum.  */
+            int cnt;
 
-	  if (res_ptr[N - 1] != 0)
-	    {
-	      count_leading_zeros (cnt, res_ptr[N - 1]);
-	      if (cnt != 0)
-		{
+            if (res_ptr[N - 1] != 0) {
+                count_leading_zeros(cnt, res_ptr[N - 1]);
+                if (cnt != 0) {
 #if N == 2
-	          res_ptr[N - 1] = res_ptr[N - 1] << cnt
-			           | (res_ptr[0] >> (BITS_PER_MP_LIMB - cnt));
-	          res_ptr[0] <<= cnt;
+                    res_ptr[N - 1] = res_ptr[N - 1] << cnt
+                                     | (res_ptr[0] >> (BITS_PER_MP_LIMB - cnt));
+                    res_ptr[0] <<= cnt;
 #else
-	          res_ptr[N - 1] <<= cnt;
+                    res_ptr[N - 1] <<= cnt;
 #endif
-		}
-	      *expt = LDBL_MIN_EXP - 1 - cnt;
-	    }
-	  else
-	    {
-	      count_leading_zeros (cnt, res_ptr[0]);
-	      res_ptr[N - 1] = res_ptr[0] << cnt;
-	      res_ptr[0] = 0;
-	      *expt = LDBL_MIN_EXP - 1 - BITS_PER_MP_LIMB - cnt;
-	    }
-	}
+                }
+                *expt = LDBL_MIN_EXP - 1 - cnt;
+            } else {
+                count_leading_zeros(cnt, res_ptr[0]);
+                res_ptr[N - 1] = res_ptr[0] << cnt;
+                res_ptr[0] = 0;
+                *expt = LDBL_MIN_EXP - 1 - BITS_PER_MP_LIMB - cnt;
+            }
+        }
     }
 
-  return N;
+    return N;
 }

@@ -18,32 +18,31 @@
 
 #include <fenv.h>
 
-int
-__feclearexcept (int excepts)
+int __feclearexcept(int excepts)
 {
-  fexcept_t fpsr;
+    fexcept_t fpsr;
 
-  /* Mask out unsupported bits/exceptions.  */
-  excepts &= FE_ALL_EXCEPT;
+    /* Mask out unsupported bits/exceptions.  */
+    excepts &= FE_ALL_EXCEPT;
 
-  /* Fetch the fpu status register.  */
-  __asm__ ("fmove%.l %/fpsr,%0" : "=dm" (fpsr));
+    /* Fetch the fpu status register.  */
+    __asm__("fmove%.l %/fpsr,%0" : "=dm"(fpsr));
 
-  /* Clear the relevant bits.  */
-  fpsr &= ~excepts;
+    /* Clear the relevant bits.  */
+    fpsr &= ~excepts;
 
-  /* Put the new data in effect.  */
-  __asm__ __volatile__ ("fmove%.l %0,%/fpsr" : : "dm" (fpsr));
+    /* Put the new data in effect.  */
+    __asm__ __volatile__("fmove%.l %0,%/fpsr" : : "dm"(fpsr));
 
-  /* Success.  */
-  return 0;
+    /* Success.  */
+    return 0;
 }
 
 #include <shlib-compat.h>
 #if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
-strong_alias (__feclearexcept, __old_feclearexcept)
-compat_symbol (libm, __old_feclearexcept, feclearexcept, GLIBC_2_1);
+strong_alias(__feclearexcept, __old_feclearexcept)
+compat_symbol(libm, __old_feclearexcept, feclearexcept, GLIBC_2_1);
 #endif
 
-libm_hidden_ver (__feclearexcept, feclearexcept)
-versioned_symbol (libm, __feclearexcept, feclearexcept, GLIBC_2_2);
+libm_hidden_ver(__feclearexcept, feclearexcept)
+versioned_symbol(libm, __feclearexcept, feclearexcept, GLIBC_2_2);

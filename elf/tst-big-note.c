@@ -18,9 +18,9 @@
 
 /* This file must be run from within a directory called "elf".  */
 
-int main (int argc, char *argv[])
+int main(int argc, char *argv[])
 {
-  /* Nothing to do here: merely linking against tst-big-note-lib.so triggers
-     the bug.  */
-  return 0;
+    /* Nothing to do here: merely linking against tst-big-note-lib.so triggers
+       the bug.  */
+    return 0;
 }

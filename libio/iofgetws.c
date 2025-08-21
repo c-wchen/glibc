@@ -27,40 +27,38 @@
 #include "libioP.h"
 #include <wchar.h>
 
-wchar_t *
-fgetws (wchar_t *buf, int n, FILE *fp)
+wchar_t *fgetws(wchar_t *buf, int n, FILE *fp)
 {
-  size_t count;
-  wchar_t *result;
-  int old_error;
-  CHECK_FILE (fp, NULL);
-  if (n <= 0)
-    return NULL;
-  if (__glibc_unlikely (n == 1))
-    {
-      /* Another irregular case: since we have to store a NUL byte and
-	 there is only room for exactly one byte, we don't have to
-	 read anything.  */
-      buf[0] = L'\0';
-      return buf;
+    size_t count;
+    wchar_t *result;
+    int old_error;
+    CHECK_FILE(fp, NULL);
+    if (n <= 0) {
+        return NULL;
     }
-  _IO_acquire_lock (fp);
-  /* This is very tricky since a file descriptor may be in the
-     non-blocking mode. The error flag doesn't mean much in this
-     case. We return an error only when there is a new error. */
-  old_error = fp->_flags & _IO_ERR_SEEN;
-  fp->_flags &= ~_IO_ERR_SEEN;
-  count = _IO_getwline (fp, buf, n - 1, L'\n', 1);
-  /* If we read in some bytes and errno is EAGAIN, that error will
-     be reported for next read. */
-  if (count == 0 || (_IO_ferror_unlocked (fp) && errno != EAGAIN))
-    result = NULL;
-  else
-    {
-      buf[count] = '\0';
-      result = buf;
+    if (__glibc_unlikely(n == 1)) {
+        /* Another irregular case: since we have to store a NUL byte and
+        there is only room for exactly one byte, we don't have to
+         read anything.  */
+        buf[0] = L'\0';
+        return buf;
     }
-  fp->_flags |= old_error;
-  _IO_release_lock (fp);
-  return result;
+    _IO_acquire_lock(fp);
+    /* This is very tricky since a file descriptor may be in the
+       non-blocking mode. The error flag doesn't mean much in this
+       case. We return an error only when there is a new error. */
+    old_error = fp->_flags & _IO_ERR_SEEN;
+    fp->_flags &= ~_IO_ERR_SEEN;
+    count = _IO_getwline(fp, buf, n - 1, L'\n', 1);
+    /* If we read in some bytes and errno is EAGAIN, that error will
+       be reported for next read. */
+    if (count == 0 || (_IO_ferror_unlocked(fp) && errno != EAGAIN)) {
+        result = NULL;
+    } else {
+        buf[count] = '\0';
+        result = buf;
+    }
+    fp->_flags |= old_error;
+    _IO_release_lock(fp);
+    return result;
 }

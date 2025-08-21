@@ -28,24 +28,24 @@
    an attempt to allocate it in surplus space on the fly.  If that
    can't be done, we fall back to the error that DF_STATIC_TLS is
    intended to produce.  */
-#define HAVE_STATIC_TLS(map, sym_map)					\
-    (__builtin_expect ((sym_map)->l_tls_offset != NO_TLS_OFFSET		\
-		       && ((sym_map)->l_tls_offset			\
-			   != FORCED_DYNAMIC_TLS_OFFSET), 1))
+#define HAVE_STATIC_TLS(map, sym_map)                   \
+    (__builtin_expect ((sym_map)->l_tls_offset != NO_TLS_OFFSET     \
+               && ((sym_map)->l_tls_offset          \
+               != FORCED_DYNAMIC_TLS_OFFSET), 1))
 
-#define CHECK_STATIC_TLS(map, sym_map)					\
-    do {								\
-      if (!HAVE_STATIC_TLS (map, sym_map))				\
-	_dl_allocate_static_tls (sym_map);				\
+#define CHECK_STATIC_TLS(map, sym_map)                  \
+    do {                                \
+      if (!HAVE_STATIC_TLS (map, sym_map))              \
+    _dl_allocate_static_tls (sym_map);              \
     } while (0)
 
-#define TRY_STATIC_TLS(map, sym_map)					\
-    (__builtin_expect ((sym_map)->l_tls_offset				\
-		       != FORCED_DYNAMIC_TLS_OFFSET, 1)			\
-     && (__builtin_expect ((sym_map)->l_tls_offset != NO_TLS_OFFSET, 1)	\
-	 || _dl_try_allocate_static_tls (sym_map, true) == 0))
+#define TRY_STATIC_TLS(map, sym_map)                    \
+    (__builtin_expect ((sym_map)->l_tls_offset              \
+               != FORCED_DYNAMIC_TLS_OFFSET, 1)         \
+     && (__builtin_expect ((sym_map)->l_tls_offset != NO_TLS_OFFSET, 1) \
+     || _dl_try_allocate_static_tls (sym_map, true) == 0))
 
-int _dl_try_allocate_static_tls (struct link_map *map, bool optional)
-  attribute_hidden;
+int _dl_try_allocate_static_tls(struct link_map *map, bool optional)
+attribute_hidden;
 
 #endif

@@ -9,7 +9,7 @@
 
    The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _LOWLEVELLOCK_H
-#define _LOWLEVELLOCK_H	1
+#define _LOWLEVELLOCK_H 1
 
 #include <atomic.h>
 #include <elision-conf.h>
@@ -65,21 +65,21 @@
 /* If LOCK is 0 (not acquired), set to 1 (acquired with no waiters) and return
    0.  Otherwise leave lock unchanged and return non-zero to indicate that the
    lock was not acquired.  */
-#define __lll_trylock(lock)	\
+#define __lll_trylock(lock) \
   __glibc_unlikely (atomic_compare_and_exchange_bool_acq ((lock), 1, 0))
-#define lll_trylock(lock)	\
+#define lll_trylock(lock)   \
    __lll_trylock (&(lock))
 
 /* If LOCK is 0 (not acquired), set to 2 (acquired, possibly with waiters) and
    return 0.  Otherwise leave lock unchanged and return non-zero to indicate
    that the lock was not acquired.  */
-#define lll_cond_trylock(lock)	\
+#define lll_cond_trylock(lock)  \
   __glibc_unlikely (atomic_compare_and_exchange_bool_acq (&(lock), 2, 0))
 
-extern void __lll_lock_wait_private (int *futex);
-libc_hidden_proto (__lll_lock_wait_private)
-extern void __lll_lock_wait (int *futex, int private);
-libc_hidden_proto (__lll_lock_wait)
+extern void __lll_lock_wait_private(int *futex);
+libc_hidden_proto(__lll_lock_wait_private)
+extern void __lll_lock_wait(int *futex, int private);
+libc_hidden_proto(__lll_lock_wait)
 
 /* This is an expression rather than a statement even though its value is
    void, so that it can be used in a comma expression or as an expression
@@ -104,7 +104,7 @@ libc_hidden_proto (__lll_lock_wait)
            __lll_lock_wait (__futex, private);                          \
        }                                                                \
    }))
-#define lll_lock(futex, private)	\
+#define lll_lock(futex, private)    \
   __lll_lock (&(futex), private)
 
 
@@ -125,10 +125,10 @@ libc_hidden_proto (__lll_lock_wait)
 #define lll_cond_lock(futex, private) __lll_cond_lock (&(futex), private)
 
 
-extern void __lll_lock_wake_private (int *futex);
-libc_hidden_proto (__lll_lock_wake_private)
-extern void __lll_lock_wake (int *futex, int private);
-libc_hidden_proto (__lll_lock_wake)
+extern void __lll_lock_wake_private(int *futex);
+libc_hidden_proto(__lll_lock_wake_private)
+extern void __lll_lock_wake(int *futex, int private);
+libc_hidden_proto(__lll_lock_wake)
 
 /* This is an expression rather than a statement even though its value is
    void, so that it can be used in a comma expression or as an expression
@@ -142,21 +142,21 @@ libc_hidden_proto (__lll_lock_wake)
    acquires the lock and when there will be no further lock acquisitions;
    thus, we must not access the lock after releasing it, or those accesses
    could be concurrent with mutex destruction or reuse of the memory.  */
-#define __lll_unlock(futex, private)					\
-  ((void)								\
-  ({									\
-     int *__futex = (futex);						\
-     int __private = (private);						\
-     int __oldval = atomic_exchange_release (__futex, 0);		\
-     if (__glibc_unlikely (__oldval > 1))				\
-       {								\
+#define __lll_unlock(futex, private)                    \
+  ((void)                               \
+  ({                                    \
+     int *__futex = (futex);                        \
+     int __private = (private);                     \
+     int __oldval = atomic_exchange_release (__futex, 0);       \
+     if (__glibc_unlikely (__oldval > 1))               \
+       {                                \
          if (__builtin_constant_p (private) && (private) == LLL_PRIVATE) \
            __lll_lock_wake_private (__futex);                           \
          else                                                           \
-           __lll_lock_wake (__futex, __private);			\
-       }								\
+           __lll_lock_wake (__futex, __private);            \
+       }                                \
    }))
-#define lll_unlock(futex, private)	\
+#define lll_unlock(futex, private)  \
   __lll_unlock (&(futex), private)
 
 
@@ -168,8 +168,8 @@ libc_hidden_proto (__lll_lock_wake)
    mutex implementation. */
 
 /* Initializers for lock.  */
-#define LLL_LOCK_INITIALIZER		(0)
-#define LLL_LOCK_INITIALIZER_LOCKED	(1)
+#define LLL_LOCK_INITIALIZER        (0)
+#define LLL_LOCK_INITIALIZER_LOCKED (1)
 
 /* Elision support.  */
 
@@ -179,39 +179,39 @@ libc_hidden_proto (__lll_lock_wake)
    in pthread_mutex_lock.  Disabled for suid programs.  Only used when
    elision is available.  */
 extern int __pthread_force_elision;
-libc_hidden_proto (__pthread_force_elision)
+libc_hidden_proto(__pthread_force_elision)
 
-extern void __lll_elision_init (void) attribute_hidden;
-extern int __lll_clocklock_elision (int *futex, short *adapt_count,
-                                    clockid_t clockid,
-				    const struct __timespec64 *timeout,
-				    int private);
-libc_hidden_proto (__lll_clocklock_elision)
+extern void __lll_elision_init(void) attribute_hidden;
+extern int __lll_clocklock_elision(int *futex, short *adapt_count,
+                                   clockid_t clockid,
+                                   const struct __timespec64 *timeout,
+                                   int private);
+libc_hidden_proto(__lll_clocklock_elision)
 
-extern int __lll_lock_elision (int *futex, short *adapt_count, int private);
-libc_hidden_proto (__lll_lock_elision)
+extern int __lll_lock_elision(int *futex, short *adapt_count, int private);
+libc_hidden_proto(__lll_lock_elision)
 
 # if ELISION_UNLOCK_NEEDS_ADAPT_COUNT
-extern int __lll_unlock_elision (int *lock, short *adapt_count, int private);
+extern int __lll_unlock_elision(int *lock, short *adapt_count, int private);
 # else
-extern int __lll_unlock_elision (int *lock, int private);
+extern int __lll_unlock_elision(int *lock, int private);
 # endif
-libc_hidden_proto (__lll_unlock_elision)
+libc_hidden_proto(__lll_unlock_elision)
 
-extern int __lll_trylock_elision (int *lock, short *adapt_count);
-libc_hidden_proto (__lll_trylock_elision)
+extern int __lll_trylock_elision(int *lock, short *adapt_count);
+libc_hidden_proto(__lll_trylock_elision)
 
 # define lll_clocklock_elision(futex, adapt_count, clockid, timeout, private) \
   __lll_clocklock_elision (&(futex), &(adapt_count), clockid, timeout, private)
-# define lll_lock_elision(futex, adapt_count, private)		\
+# define lll_lock_elision(futex, adapt_count, private)      \
   __lll_lock_elision (&(futex), &(adapt_count), private)
-# define lll_trylock_elision(futex, adapt_count)	\
+# define lll_trylock_elision(futex, adapt_count)    \
   __lll_trylock_elision (&(futex), &(adapt_count))
 # if ELISION_UNLOCK_NEEDS_ADAPT_COUNT
-#  define lll_unlock_elision(futex, adapt_count, private)	\
+#  define lll_unlock_elision(futex, adapt_count, private)   \
   __lll_unlock_elision (&(futex), &(adapt_count), private)
 # else
-#  define lll_unlock_elision(futex, adapt_count, private)	\
+#  define lll_unlock_elision(futex, adapt_count, private)   \
   __lll_unlock_elision (&(futex), private)
 # endif
 
@@ -264,7 +264,7 @@ libc_hidden_proto (__lll_trylock_elision)
 
 # define lll_clocklock_elision(futex, adapt_count, clockid, abstime, private) \
   __futex_clocklock64 (&(futex), clockid, abstime, private)
-# define lll_lock_elision(lock, try_lock, private)	\
+# define lll_lock_elision(lock, try_lock, private)  \
   ({ lll_lock (lock, private); 0; })
 # define lll_trylock_elision(a,t) lll_trylock(a)
 # define lll_unlock_elision(a,b,c) ({ lll_unlock (a,c); 0; })
@@ -272,4 +272,4 @@ libc_hidden_proto (__lll_trylock_elision)
 
 #endif /* !ENABLE_ELISION_SUPPORT */
 
-#endif	/* lowlevellock.h */
+#endif  /* lowlevellock.h */

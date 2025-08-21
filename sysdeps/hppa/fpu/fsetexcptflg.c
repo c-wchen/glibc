@@ -19,24 +19,24 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-int
-fesetexceptflag (const fexcept_t *flagp, int excepts)
+int fesetexceptflag(const fexcept_t *flagp, int excepts)
 {
-  fpu_control_t fpsr;
-  fpu_control_t fpsr_new;
+    fpu_control_t fpsr;
+    fpu_control_t fpsr_new;
 
-  /* Get the current status word. */
-  _FPU_GETCW (fpsr);
-  excepts &= FE_ALL_EXCEPT;
+    /* Get the current status word. */
+    _FPU_GETCW(fpsr);
+    excepts &= FE_ALL_EXCEPT;
 
-  /* Install new raised flags.  */
-  fpsr_new = fpsr & ~(excepts << _FPU_HPPA_SHIFT_FLAGS);
-  fpsr_new |= (*flagp & excepts) << _FPU_HPPA_SHIFT_FLAGS;
+    /* Install new raised flags.  */
+    fpsr_new = fpsr & ~(excepts << _FPU_HPPA_SHIFT_FLAGS);
+    fpsr_new |= (*flagp & excepts) << _FPU_HPPA_SHIFT_FLAGS;
 
-  /* Store the new status word.  */
-  if (fpsr != fpsr_new)
-    _FPU_SETCW (fpsr_new);
+    /* Store the new status word.  */
+    if (fpsr != fpsr_new) {
+        _FPU_SETCW(fpsr_new);
+    }
 
-  /* Success.  */
-  return 0;
+    /* Success.  */
+    return 0;
 }

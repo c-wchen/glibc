@@ -19,19 +19,18 @@
 
 #undef __fsetlocking
 
-int
-__fsetlocking (FILE *fp, int type)
+int __fsetlocking(FILE *fp, int type)
 {
-  int result = ((fp->_flags & _IO_USER_LOCK)
-		? FSETLOCKING_BYCALLER : FSETLOCKING_INTERNAL);
+    int result = ((fp->_flags & _IO_USER_LOCK)
+                  ? FSETLOCKING_BYCALLER : FSETLOCKING_INTERNAL);
 
-  if (type != FSETLOCKING_QUERY)
-    {
-      fp->_flags &= ~_IO_USER_LOCK;
-      if (type == FSETLOCKING_BYCALLER)
-	 fp->_flags |= _IO_USER_LOCK;
+    if (type != FSETLOCKING_QUERY) {
+        fp->_flags &= ~_IO_USER_LOCK;
+        if (type == FSETLOCKING_BYCALLER) {
+            fp->_flags |= _IO_USER_LOCK;
+        }
     }
 
-  return result;
+    return result;
 }
-libc_hidden_def (__fsetlocking)
+libc_hidden_def(__fsetlocking)

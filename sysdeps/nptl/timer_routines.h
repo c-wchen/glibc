@@ -17,7 +17,7 @@
    not, see <https://www.gnu.org/licenses/>.  */
 
 #ifndef _TIMER_ROUTINES_H
-#define _TIMER_ROUTINES_H	1
+#define _TIMER_ROUTINES_H   1
 
 #include <internaltypes.h>
 #include <string.h>
@@ -27,24 +27,23 @@
    or contain illegal values.  This version is NPTL-specific for
    performance reason.  One could use the access functions to get the
    values of all the fields of the attribute structure.  */
-static inline int
-thread_attr_compare (const pthread_attr_t *left, const pthread_attr_t *right)
+static inline int thread_attr_compare(const pthread_attr_t *left, const pthread_attr_t *right)
 {
-  struct pthread_attr *ileft = (struct pthread_attr *) left;
-  struct pthread_attr *iright = (struct pthread_attr *) right;
+    struct pthread_attr *ileft = (struct pthread_attr *) left;
+    struct pthread_attr *iright = (struct pthread_attr *) right;
 
-  return (ileft->flags == iright->flags
-	  && ileft->schedpolicy == iright->schedpolicy
-	  && (ileft->schedparam.sched_priority
-	      == iright->schedparam.sched_priority)
-	  && ileft->guardsize == iright->guardsize
-	  && ileft->stackaddr == iright->stackaddr
-	  && ileft->stacksize == iright->stacksize
-	  && ((ileft->cpuset == NULL && iright->cpuset == NULL)
-	      || (ileft->cpuset != NULL && iright->cpuset != NULL
-		  && ileft->cpusetsize == iright->cpusetsize
-		  && memcmp (ileft->cpuset, iright->cpuset,
-			     ileft->cpusetsize) == 0)));
+    return (ileft->flags == iright->flags
+            && ileft->schedpolicy == iright->schedpolicy
+            && (ileft->schedparam.sched_priority
+                == iright->schedparam.sched_priority)
+            && ileft->guardsize == iright->guardsize
+            && ileft->stackaddr == iright->stackaddr
+            && ileft->stacksize == iright->stacksize
+            && ((ileft->cpuset == NULL && iright->cpuset == NULL)
+                || (ileft->cpuset != NULL && iright->cpuset != NULL
+                    && ileft->cpusetsize == iright->cpusetsize
+                    && memcmp(ileft->cpuset, iright->cpuset,
+                              ileft->cpusetsize) == 0)));
 }
 
-#endif	/* timer_routines.h */
+#endif  /* timer_routines.h */

@@ -19,12 +19,11 @@
 #include <unistd.h>
 
 /* Return the current machine's Internet number.  */
-long int
-gethostid (void)
+long int gethostid(void)
 {
-  __set_errno (ENOSYS);
-  return -1L;
+    __set_errno(ENOSYS);
+    return -1L;
 }
 
 
-stub_warning (gethostid)
+stub_warning(gethostid)

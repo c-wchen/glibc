@@ -19,12 +19,11 @@
 #include <sys/statfs.h>
 
 /* Return information about the filesystem on which FD resides.  */
-int
-__fstatfs64 (int fd, struct statfs64 *buf)
+int __fstatfs64(int fd, struct statfs64 *buf)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-weak_alias (__fstatfs64, fstatfs64)
+weak_alias(__fstatfs64, fstatfs64)
 
-stub_warning (fstatfs64)
+stub_warning(fstatfs64)

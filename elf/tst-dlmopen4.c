@@ -29,59 +29,57 @@
 #define EW(x) ElfW(x)
 #include <dl-r_debug.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  ElfW(Dyn) *d;
-  struct r_debug_extended *debug = NULL;
+    ElfW(Dyn) *d;
+    struct r_debug_extended *debug = NULL;
 
-  for (d = _DYNAMIC; d->d_tag != DT_NULL; ++d)
-    {
-      debug = (struct r_debug_extended *) r_debug_address (d);
-      if (debug != NULL)
-	break;
+    for (d = _DYNAMIC; d->d_tag != DT_NULL; ++d) {
+        debug = (struct r_debug_extended *) r_debug_address(d);
+        if (debug != NULL) {
+            break;
+        }
     }
 
-  TEST_VERIFY_EXIT (debug != NULL);
-  TEST_COMPARE (debug->base.r_version, 1);
-  TEST_VERIFY_EXIT (debug->r_next == NULL);
+    TEST_VERIFY_EXIT(debug != NULL);
+    TEST_COMPARE(debug->base.r_version, 1);
+    TEST_VERIFY_EXIT(debug->r_next == NULL);
 
 #ifdef BUILD_FOR_PIC
-  /* In a PIC build, using _r_debug directly should give us the same
-     object.  */
-  TEST_VERIFY (&_r_debug == &debug->base);
+    /* In a PIC build, using _r_debug directly should give us the same
+       object.  */
+    TEST_VERIFY(&_r_debug == &debug->base);
 #endif
 #ifdef BUILD_FOR_NONPIC
-  TEST_COMPARE (_r_debug.r_version, 1);
+    TEST_COMPARE(_r_debug.r_version, 1);
 #endif
 
-  void *h = xdlmopen (LM_ID_NEWLM, "$ORIGIN/tst-dlmopen1mod.so",
-		      RTLD_LAZY);
+    void *h = xdlmopen(LM_ID_NEWLM, "$ORIGIN/tst-dlmopen1mod.so",
+                       RTLD_LAZY);
 
-  TEST_COMPARE (debug->base.r_version, 2);
-  TEST_VERIFY_EXIT (debug->r_next != NULL);
-  TEST_VERIFY_EXIT (debug->r_next->r_next == NULL);
-  TEST_VERIFY_EXIT (debug->r_next->base.r_map != NULL);
-  TEST_VERIFY_EXIT (debug->r_next->base.r_map->l_name != NULL);
-  const char *name = basename (debug->r_next->base.r_map->l_name);
-  TEST_COMPARE_STRING (name, "tst-dlmopen1mod.so");
+    TEST_COMPARE(debug->base.r_version, 2);
+    TEST_VERIFY_EXIT(debug->r_next != NULL);
+    TEST_VERIFY_EXIT(debug->r_next->r_next == NULL);
+    TEST_VERIFY_EXIT(debug->r_next->base.r_map != NULL);
+    TEST_VERIFY_EXIT(debug->r_next->base.r_map->l_name != NULL);
+    const char *name = basename(debug->r_next->base.r_map->l_name);
+    TEST_COMPARE_STRING(name, "tst-dlmopen1mod.so");
 
 #ifdef BUILD_FOR_NONPIC
-  /* If a copy relocation is used, it must be at version 1.  */
-  if (&_r_debug != &debug->base)
-    {
-      TEST_COMPARE (_r_debug.r_version, 1);
-      TEST_COMPARE ((uintptr_t) _r_debug.r_map,
-		    (uintptr_t) debug->base.r_map);
-      TEST_COMPARE (_r_debug.r_brk, debug->base.r_brk);
-      TEST_COMPARE (_r_debug.r_state, debug->base.r_state);
-      TEST_COMPARE (_r_debug.r_ldbase, debug->base.r_ldbase);
+    /* If a copy relocation is used, it must be at version 1.  */
+    if (&_r_debug != &debug->base) {
+        TEST_COMPARE(_r_debug.r_version, 1);
+        TEST_COMPARE((uintptr_t) _r_debug.r_map,
+                     (uintptr_t) debug->base.r_map);
+        TEST_COMPARE(_r_debug.r_brk, debug->base.r_brk);
+        TEST_COMPARE(_r_debug.r_state, debug->base.r_state);
+        TEST_COMPARE(_r_debug.r_ldbase, debug->base.r_ldbase);
     }
 #endif
 
-  xdlclose (h);
+    xdlclose(h);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -1,8 +1,7 @@
 #include "nldbl-compat.h"
 
 long int
-attribute_hidden
-lrintl (double x)
+attribute_hidden lrintl(double x)
 {
-  return lrint (x);
+    return lrint(x);
 }

@@ -19,8 +19,7 @@
 #include <mach.h>
 #include "thrd_priv.h"
 
-void
-thrd_yield (void)
+void thrd_yield(void)
 {
-  (void) __swtch ();
+    (void) __swtch();
 }

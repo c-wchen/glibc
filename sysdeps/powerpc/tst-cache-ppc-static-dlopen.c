@@ -22,33 +22,30 @@
 
 int test_cache(int *);
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int ret;
-  void *handle;
-  int (*test_cache) (int *);
+    int ret;
+    void *handle;
+    int (*test_cache)(int *);
 
-  handle = dlopen ("mod-cache-ppc.so", RTLD_LAZY | RTLD_LOCAL);
-  if (handle == NULL)
-    {
-      printf ("dlopen (mod-cache-ppc.so): %s\n", dlerror ());
-      return 1;
+    handle = dlopen("mod-cache-ppc.so", RTLD_LAZY | RTLD_LOCAL);
+    if (handle == NULL) {
+        printf("dlopen (mod-cache-ppc.so): %s\n", dlerror());
+        return 1;
     }
 
-  test_cache = dlsym (handle, "test_cache");
-  if (test_cache == NULL)
-    {
-      printf ("dlsym (test_cache): %s\n", dlerror ());
-      return 1;
+    test_cache = dlsym(handle, "test_cache");
+    if (test_cache == NULL) {
+        printf("dlsym (test_cache): %s\n", dlerror());
+        return 1;
     }
 
-  ret = test_cache(&errno);
+    ret = test_cache(&errno);
 
-  test_cache = NULL;
-  dlclose (handle);
+    test_cache = NULL;
+    dlclose(handle);
 
-  return ret;
+    return ret;
 }
 
 #include <support/test-driver.c>

@@ -27,9 +27,9 @@
    each byte, starting with the byte at the lowest address at the left,
    and proceeding to the byte with the highest address at the right.  */
 
-#define	__LITTLE_ENDIAN	1234
-#define	__BIG_ENDIAN	4321
-#define	__PDP_ENDIAN	3412
+#define __LITTLE_ENDIAN 1234
+#define __BIG_ENDIAN    4321
+#define __PDP_ENDIAN    3412
 
 /* This file defines `__BYTE_ORDER' for the particular machine.  */
 #include <bits/endianness.h>

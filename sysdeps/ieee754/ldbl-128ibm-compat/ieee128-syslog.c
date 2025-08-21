@@ -20,48 +20,49 @@
 #include <libioP.h>
 #include <syslog.h>
 
-void
-___ieee128_syslog (int pri, const char *fmt, ...)
+void ___ieee128_syslog(int pri, const char *fmt, ...)
 {
-  va_list ap;
+    va_list ap;
 
-  va_start (ap, fmt);
-  __vsyslog_internal (pri, fmt, ap, PRINTF_LDBL_USES_FLOAT128);
-  va_end (ap);
+    va_start(ap, fmt);
+    __vsyslog_internal(pri, fmt, ap, PRINTF_LDBL_USES_FLOAT128);
+    va_end(ap);
 }
-strong_alias (___ieee128_syslog, __syslogieee128)
-hidden_def (___ieee128_syslog)
-
-void
-___ieee128_vsyslog (int pri, const char *fmt, va_list ap)
-{
-  __vsyslog_internal (pri, fmt, ap, PRINTF_LDBL_USES_FLOAT128);
-}
-strong_alias (___ieee128_vsyslog, __vsyslogieee128)
+strong_alias(___ieee128_syslog, __syslogieee128)
+hidden_def(___ieee128_syslog)
 
 void
-___ieee128___syslog_chk (int pri, int flag, const char *fmt, ...)
+___ieee128_vsyslog(int pri, const char *fmt, va_list ap)
 {
-  va_list ap;
-
-  unsigned int mode = PRINTF_LDBL_USES_FLOAT128;
-  if (flag > 0)
-    mode |= PRINTF_FORTIFY;
-
-  va_start (ap, fmt);
-  __vsyslog_internal (pri, fmt, ap, mode);
-  va_end (ap);
+    __vsyslog_internal(pri, fmt, ap, PRINTF_LDBL_USES_FLOAT128);
 }
-hidden_def (___ieee128___syslog_chk)
-strong_alias (___ieee128___syslog_chk, __syslog_chkieee128)
+strong_alias(___ieee128_vsyslog, __vsyslogieee128)
 
 void
-___ieee128___vsyslog_chk (int pri, int flag, const char *fmt, va_list ap)
+___ieee128___syslog_chk(int pri, int flag, const char *fmt, ...)
 {
-  unsigned int mode = PRINTF_LDBL_USES_FLOAT128;
-  if (flag > 0)
-    mode |= PRINTF_FORTIFY;
+    va_list ap;
 
-  __vsyslog_internal (pri, fmt, ap, mode);
+    unsigned int mode = PRINTF_LDBL_USES_FLOAT128;
+    if (flag > 0) {
+        mode |= PRINTF_FORTIFY;
+    }
+
+    va_start(ap, fmt);
+    __vsyslog_internal(pri, fmt, ap, mode);
+    va_end(ap);
 }
-strong_alias (___ieee128___vsyslog_chk, __vsyslog_chkieee128)
+hidden_def(___ieee128___syslog_chk)
+strong_alias(___ieee128___syslog_chk, __syslog_chkieee128)
+
+void
+___ieee128___vsyslog_chk(int pri, int flag, const char *fmt, va_list ap)
+{
+    unsigned int mode = PRINTF_LDBL_USES_FLOAT128;
+    if (flag > 0) {
+        mode |= PRINTF_FORTIFY;
+    }
+
+    __vsyslog_internal(pri, fmt, ap, mode);
+}
+strong_alias(___ieee128___vsyslog_chk, __vsyslog_chkieee128)

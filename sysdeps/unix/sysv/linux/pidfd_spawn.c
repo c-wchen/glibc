@@ -19,12 +19,11 @@
 #include <spawn.h>
 #include "spawn_int.h"
 
-int
-pidfd_spawn (int *pidfd, const char *path,
-	     const posix_spawn_file_actions_t *file_actions,
-	     const posix_spawnattr_t *attrp, char *const argv[],
-	     char *const envp[])
+int pidfd_spawn(int *pidfd, const char *path,
+                const posix_spawn_file_actions_t *file_actions,
+                const posix_spawnattr_t *attrp, char *const argv[],
+                char *const envp[])
 {
-  return __spawni (pidfd, path, file_actions, attrp, argv, envp,
-		   SPAWN_XFLAGS_RET_PIDFD);
+    return __spawni(pidfd, path, file_actions, attrp, argv, envp,
+                    SPAWN_XFLAGS_RET_PIDFD);
 }

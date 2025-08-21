@@ -22,19 +22,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void
-support_test_verify_impl (const char *file, int line, const char *expr)
+void support_test_verify_impl(const char *file, int line, const char *expr)
 {
-  int saved_errno = errno;
-  support_record_failure ();
-  printf ("error: %s:%d: not true: %s\n", file, line, expr);
-  errno = saved_errno;
+    int saved_errno = errno;
+    support_record_failure();
+    printf("error: %s:%d: not true: %s\n", file, line, expr);
+    errno = saved_errno;
 }
 
-void
-support_test_verify_exit_impl (int status, const char *file, int line,
-                               const char *expr)
+void support_test_verify_exit_impl(int status, const char *file, int line,
+                                   const char *expr)
 {
-  support_test_verify_impl (file, line, expr);
-  exit (status);
+    support_test_verify_impl(file, line, expr);
+    exit(status);
 }

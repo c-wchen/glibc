@@ -23,11 +23,11 @@
 #include <support/check.h>
 #include <sys/wait.h>
 
-int
-xwaitpid (int pid, int *status, int flags)
+int xwaitpid(int pid, int *status, int flags)
 {
-  pid_t result = waitpid (pid, status, flags);
-  if (result < 0)
-    FAIL_EXIT1 ("waitpid: %m\n");
-  return result;
+    pid_t result = waitpid(pid, status, flags);
+    if (result < 0) {
+        FAIL_EXIT1("waitpid: %m\n");
+    }
+    return result;
 }

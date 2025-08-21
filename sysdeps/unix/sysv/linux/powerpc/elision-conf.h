@@ -26,14 +26,13 @@
 #define ELISION_UNLOCK_NEEDS_ADAPT_COUNT 1
 
 /* Should make sure there is no false sharing on this.  */
-struct elision_config
-{
-  int skip_lock_busy;
-  int skip_lock_internal_abort;
-  int skip_lock_out_of_tbegin_retries;
-  int try_tbegin;
-  int skip_trylock_internal_abort;
-} __attribute__ ((__aligned__ (128)));
+struct elision_config {
+    int skip_lock_busy;
+    int skip_lock_internal_abort;
+    int skip_lock_out_of_tbegin_retries;
+    int try_tbegin;
+    int skip_trylock_internal_abort;
+} __attribute__((__aligned__(128)));
 
 extern struct elision_config __elision_aconf attribute_hidden;
 

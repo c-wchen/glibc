@@ -24,10 +24,9 @@
 #include "statconv.c"
 
 /* Get file information about FILE in BUF.  */
-int
-__stat (const char *file, struct stat *buf)
+int __stat(const char *file, struct stat *buf)
 {
-  struct stat64 buf64;
-  return __fstatat64_common (AT_FDCWD, file, &buf64, 0, 0) ?: stat64_conv (buf, &buf64);
+    struct stat64 buf64;
+    return __fstatat64_common(AT_FDCWD, file, &buf64, 0, 0) ? : stat64_conv(buf, &buf64);
 }
-weak_alias (__stat, stat)
+weak_alias(__stat, stat)

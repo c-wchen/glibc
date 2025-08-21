@@ -46,8 +46,8 @@
 #include <w_ilogbf-impl.h>
 
 RET_TYPE
-M_DECL_FUNC (DECL_NAME) (float x)
+M_DECL_FUNC(DECL_NAME)(float x)
 {
-  return IMPL_NAME (x);
+    return IMPL_NAME(x);
 }
-libm_alias_float (DECL_NAME, FUNC_NAME);
+libm_alias_float(DECL_NAME, FUNC_NAME);

@@ -25,62 +25,64 @@
    according to HOW, which may be SIG_BLOCK, SIG_UNBLOCK or SIG_SETMASK.
    If OSET is not NULL, store the old set of blocked signals in *OSET.
    If CLEAR_PENDING is non-zero, the pending set is cleared.  */
-error_t
-__sigthreadmask (struct hurd_sigstate *ss, int how,
-	   const sigset_t *set, sigset_t *oset, int clear_pending)
+error_t __sigthreadmask(struct hurd_sigstate *ss, int how,
+                        const sigset_t *set, sigset_t *oset, int clear_pending)
 {
-  sigset_t old, new;
-  sigset_t pending;
+    sigset_t old, new;
+    sigset_t pending;
 
-  if (set != NULL)
-    new = *set;
-
-  assert (ss);
-  /* We are not supposed to change the global blocked state */
-  assert (ss != _hurd_global_sigstate);
-
-  _hurd_sigstate_lock (ss);
-
-  old = ss->blocked;
-
-  if (set != NULL)
-    {
-      switch (how)
-	{
-	case SIG_BLOCK:
-	  __sigorset (&ss->blocked, &ss->blocked, &new);
-	  break;
-
-	case SIG_UNBLOCK:
-	  ss->blocked &= ~new;
-	  break;
-
-	case SIG_SETMASK:
-	  ss->blocked = new;
-	  break;
-
-	default:
-	  _hurd_sigstate_unlock (ss);
-	  return EINVAL;
-	}
-
-      ss->blocked &= ~_SIG_CANT_MASK;
+    if (set != NULL) {
+        new = *set;
     }
 
-  if (clear_pending)
-    __sigemptyset (&ss->pending);
+    assert(ss);
+    /* We are not supposed to change the global blocked state */
+    assert(ss != _hurd_global_sigstate);
 
-  pending = _hurd_sigstate_pending (ss) & ~ss->blocked;
+    _hurd_sigstate_lock(ss);
 
-  _hurd_sigstate_unlock (ss);
+    old = ss->blocked;
 
-  if (oset != NULL)
-    *oset = old;
+    if (set != NULL) {
+        switch (how) {
+            case SIG_BLOCK:
+                __sigorset(&ss->blocked, &ss->blocked, &new);
+                break;
 
-  if (pending)
-    /* Send a message to the signal thread so it
-       will wake up and check for pending signals.  */
-    __msg_sig_post (_hurd_msgport, 0, 0, __mach_task_self ());
+            case SIG_UNBLOCK:
+                ss->blocked &= ~new;
+                break;
 
-  return 0;
+            case SIG_SETMASK:
+                ss->blocked = new;
+                break;
+
+            default:
+                _hurd_sigstate_unlock(ss);
+                return EINVAL;
+        }
+
+        ss->blocked &= ~_SIG_CANT_MASK;
+    }
+
+    if (clear_pending) {
+        __sigemptyset(&ss->pending);
+    }
+
+    pending = _hurd_sigstate_pending(ss) & ~ss->blocked;
+
+    _hurd_sigstate_unlock(ss);
+
+    if (oset != NULL) {
+        *oset = old;
+    }
+
+    if (pending)
+        /* Send a message to the signal thread so it
+           will wake up and check for pending signals.  */
+    {
+        __msg_sig_post(_hurd_msgport, 0, 0, __mach_task_self());
+    }
+
+    return 0;
 }

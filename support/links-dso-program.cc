@@ -15,14 +15,13 @@ using namespace std;
    such dependencies.
 */
 
-int
-main (int argc, char **argv)
+int main(int argc, char **argv)
 {
-  /* Complexity to keep gcc from optimizing this away.  */
-  cout << (argc > 1 ? argv[1] : "null");
+    /* Complexity to keep gcc from optimizing this away.  */
+    cout << (argc > 1 ? argv[1] : "null");
 #ifdef HAVE_SELINUX
-  /* This exists to force libselinux.so to be required.  */
-  cout << "selinux " << is_selinux_enabled ();
+    /* This exists to force libselinux.so to be required.  */
+    cout << "selinux " << is_selinux_enabled();
 #endif
-  return 0;
+    return 0;
 }

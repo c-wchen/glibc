@@ -23,27 +23,27 @@
 #endif
 
 /* Find the first occurrence of WC in WCS.  */
-wchar_t *
-WCSCHR (const wchar_t *wcs, const wchar_t wc)
+wchar_t *WCSCHR(const wchar_t *wcs, const wchar_t wc)
 {
-  wchar_t *dest = NULL;
+    wchar_t *dest = NULL;
 
-#define ITERATION(index)		\
-  ({					\
-    if (*wcs == wc)			\
-      dest = (wchar_t*) wcs;		\
-    dest == NULL && *wcs++ != L'\0';	\
+#define ITERATION(index)        \
+  ({                    \
+    if (*wcs == wc)         \
+      dest = (wchar_t*) wcs;        \
+    dest == NULL && *wcs++ != L'\0';    \
   })
 
 #ifndef UNROLL_NTIMES
 # define UNROLL_NTIMES 1
 #endif
 
-  while (1)
-    UNROLL_REPEAT (UNROLL_NTIMES, ITERATION);
+    while (1) {
+        UNROLL_REPEAT(UNROLL_NTIMES, ITERATION);
+    }
 
-  return dest;
+    return dest;
 }
-libc_hidden_def (__wcschr)
-weak_alias (__wcschr, wcschr)
-libc_hidden_weak (wcschr)
+libc_hidden_def(__wcschr)
+weak_alias(__wcschr, wcschr)
+libc_hidden_weak(wcschr)

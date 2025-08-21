@@ -51,27 +51,25 @@
  *
  */
 
-static enum auth_stat _svcauth_null (struct svc_req *, struct rpc_msg *);
-				/* no authentication */
-extern enum auth_stat _svcauth_unix (struct svc_req *, struct rpc_msg *);
-				/* unix style (uid, gids) */
-extern enum auth_stat _svcauth_short (struct svc_req *, struct rpc_msg *);
-				/* short hand unix style */
-extern enum auth_stat _svcauth_des (struct svc_req *, struct rpc_msg *);
-				/* des style */
+static enum auth_stat _svcauth_null(struct svc_req *, struct rpc_msg *);
+/* no authentication */
+extern enum auth_stat _svcauth_unix(struct svc_req *, struct rpc_msg *);
+/* unix style (uid, gids) */
+extern enum auth_stat _svcauth_short(struct svc_req *, struct rpc_msg *);
+/* short hand unix style */
+extern enum auth_stat _svcauth_des(struct svc_req *, struct rpc_msg *);
+/* des style */
 
-static const struct
-  {
-    enum auth_stat (*authenticator) (struct svc_req *, struct rpc_msg *);
-  }
-svcauthsw[] =
-{
-  { _svcauth_null },		/* AUTH_NULL */
-  { _svcauth_unix },		/* AUTH_UNIX */
-  { _svcauth_short },		/* AUTH_SHORT */
-  { _svcauth_des }		/* AUTH_DES */
+static const struct {
+    enum auth_stat(*authenticator)(struct svc_req *, struct rpc_msg *);
+}
+svcauthsw[] = {
+    { _svcauth_null },        /* AUTH_NULL */
+    { _svcauth_unix },        /* AUTH_UNIX */
+    { _svcauth_short },       /* AUTH_SHORT */
+    { _svcauth_des }      /* AUTH_DES */
 };
-#define	AUTH_MAX	3	/* HIGHEST AUTH NUMBER */
+#define AUTH_MAX    3   /* HIGHEST AUTH NUMBER */
 
 
 /*
@@ -92,24 +90,23 @@ svcauthsw[] =
  * There is an assumption that any flavour less than AUTH_NULL is
  * invalid.
  */
-enum auth_stat
-_authenticate (register struct svc_req *rqst, struct rpc_msg *msg)
-{
-  register int cred_flavor;
+enum auth_stat _authenticate(register struct svc_req *rqst, struct rpc_msg *msg) {
+    register int cred_flavor;
 
-  rqst->rq_cred = msg->rm_call.cb_cred;
-  rqst->rq_xprt->xp_verf.oa_flavor = _null_auth.oa_flavor;
-  rqst->rq_xprt->xp_verf.oa_length = 0;
-  cred_flavor = rqst->rq_cred.oa_flavor;
-  if ((cred_flavor <= AUTH_MAX) && (cred_flavor >= AUTH_NULL))
-    return (*(svcauthsw[cred_flavor].authenticator)) (rqst, msg);
+    rqst->rq_cred = msg->rm_call.cb_cred;
+    rqst->rq_xprt->xp_verf.oa_flavor = _null_auth.oa_flavor;
+    rqst->rq_xprt->xp_verf.oa_length = 0;
+    cred_flavor = rqst->rq_cred.oa_flavor;
+    if ((cred_flavor <= AUTH_MAX) && (cred_flavor >= AUTH_NULL))
+    {
+        return (*(svcauthsw[cred_flavor].authenticator))(rqst, msg);
+    }
 
-  return AUTH_REJECTEDCRED;
+    return AUTH_REJECTEDCRED;
 }
-libc_hidden_nolink_sunrpc (_authenticate, GLIBC_2_1)
+libc_hidden_nolink_sunrpc(_authenticate, GLIBC_2_1)
 
 static enum auth_stat
-_svcauth_null (struct svc_req *rqst, struct rpc_msg *msg)
-{
-  return AUTH_OK;
+_svcauth_null(struct svc_req *rqst, struct rpc_msg *msg) {
+    return AUTH_OK;
 }

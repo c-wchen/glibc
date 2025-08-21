@@ -42,28 +42,27 @@
 
 #define EXPECTED_STATUS 3
 
-static void
-handler (int unused)
+static void handler(int unused)
 {
-  _exit (EXPECTED_STATUS);
+    _exit(EXPECTED_STATUS);
 }
 
-int
-do_test (void)
+int do_test(void)
 {
-  void *sstk = xalloc_sigstack (0);
-  struct sigaction sa;
+    void *sstk = xalloc_sigstack(0);
+    struct sigaction sa;
 
-  sa.sa_handler = handler;
-  sa.sa_flags   = SA_RESTART | SA_ONSTACK;
-  sigfillset (&sa.sa_mask);
-  if (sigaction (SIGUSR1, &sa, 0))
-    FAIL_RET ("sigaction (SIGUSR1, handler): %m\n");
+    sa.sa_handler = handler;
+    sa.sa_flags   = SA_RESTART | SA_ONSTACK;
+    sigfillset(&sa.sa_mask);
+    if (sigaction(SIGUSR1, &sa, 0)) {
+        FAIL_RET("sigaction (SIGUSR1, handler): %m\n");
+    }
 
-  raise (SIGUSR1);
+    raise(SIGUSR1);
 
-  xfree_sigstack (sstk);
-  FAIL_RET ("test process was not terminated by _exit in signal handler");
+    xfree_sigstack(sstk);
+    FAIL_RET("test process was not terminated by _exit in signal handler");
 }
 
 #include <support/test-driver.c>

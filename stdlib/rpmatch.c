@@ -24,38 +24,38 @@
 
 /* Match against one of the response patterns, compiling the pattern
    first if necessary.  */
-static int
-try (const char *response,
+static int try
+    (const char *response,
      const int tag, const int match, const int nomatch,
      const char **lastp, regex_t *re)
 {
-  const char *pattern = nl_langinfo (tag);
-  if (pattern != *lastp)
-    {
-      /* The pattern has changed.  */
-      if (*lastp != NULL)
-        {
-          /* Free the old compiled pattern.  */
-          __regfree (re);
-          *lastp = NULL;
+    const char *pattern = nl_langinfo(tag);
+    if (pattern != *lastp) {
+        /* The pattern has changed.  */
+        if (*lastp != NULL) {
+            /* Free the old compiled pattern.  */
+            __regfree(re);
+            *lastp = NULL;
         }
-      /* Compile the pattern and cache it for future runs.  */
-      if (__regcomp (re, pattern, REG_EXTENDED) != 0)
-        return -1;
-      *lastp = pattern;
+        /* Compile the pattern and cache it for future runs.  */
+        if (__regcomp(re, pattern, REG_EXTENDED) != 0) {
+            return -1;
+        }
+        *lastp = pattern;
     }
 
-  /* Try the pattern.  */
-  return __regexec (re, response, 0, NULL, 0) == 0 ? match : nomatch;
+    /* Try the pattern.  */
+    return __regexec(re, response, 0, NULL, 0) == 0 ? match : nomatch;
 }
 
-int
-rpmatch (const char *response)
+int rpmatch(const char *response)
 {
-  /* We cache the response patterns and compiled regexps here.  */
-  static const char *yesexpr, *noexpr;
-  static regex_t yesre, nore;
+    /* We cache the response patterns and compiled regexps here.  */
+    static const char *yesexpr, *noexpr;
+    static regex_t yesre, nore;
 
-  return (try (response, YESEXPR, 1, 0, &yesexpr, &yesre) ?:
-	  try (response, NOEXPR, 0, -1, &noexpr, &nore));
+    return (try
+                (response, YESEXPR, 1, 0, &yesexpr, &yesre) ? :
+                try
+                    (response, NOEXPR, 0, -1, &noexpr, &nore));
 }

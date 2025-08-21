@@ -23,16 +23,15 @@
 
 /* Write formatted output to STREAM from the format string FORMAT.  */
 /* VARARGS2 */
-int
-__fwprintf (FILE *stream, const wchar_t *format, ...)
+int __fwprintf(FILE *stream, const wchar_t *format, ...)
 {
-  va_list arg;
-  int done;
+    va_list arg;
+    int done;
 
-  va_start (arg, format);
-  done = __vfwprintf_internal (stream, format, arg, 0);
-  va_end (arg);
+    va_start(arg, format);
+    done = __vfwprintf_internal(stream, format, arg, 0);
+    va_end(arg);
 
-  return done;
+    return done;
 }
-ldbl_weak_alias (__fwprintf, fwprintf)
+ldbl_weak_alias(__fwprintf, fwprintf)

@@ -18,11 +18,10 @@
 #include <errno.h>
 #include <not-cancel.h>
 
-void
-__writev_nocancel_nostatus (int fd, const struct iovec *vector, int count)
+void __writev_nocancel_nostatus(int fd, const struct iovec *vector, int count)
 {
-  int save = errno;
-  __writev_nocancel (fd, vector, count);
-  __set_errno (save);
+    int save = errno;
+    __writev_nocancel(fd, vector, count);
+    __set_errno(save);
 }
-libc_hidden_weak (__writev_nocancel_nostatus)
+libc_hidden_weak(__writev_nocancel_nostatus)

@@ -16,22 +16,22 @@
    <https://www.gnu.org/licenses/>.  */
 
 /*
- *	ISO C99 Standard: 7.2 Diagnostics	<assert.h>
+ *  ISO C99 Standard: 7.2 Diagnostics   <assert.h>
  */
 
-#ifdef	_ASSERT_H
+#ifdef  _ASSERT_H
 
-# undef	_ASSERT_H
-# undef	assert
+# undef _ASSERT_H
+# undef assert
 # undef __ASSERT_VOID_CAST
 
-# ifdef	__USE_GNU
+# ifdef __USE_GNU
 #  undef assert_perror
 # endif
 
-#endif /* assert.h	*/
+#endif /* assert.h  */
 
-#define	_ASSERT_H	1
+#define _ASSERT_H   1
 #include <features.h>
 
 #if defined __cplusplus && __GNUC_PREREQ (2,95)
@@ -45,9 +45,9 @@
    If NDEBUG is defined, do nothing.
    If not, and EXPRESSION is zero, print an error message and abort.  */
 
-#ifdef	NDEBUG
+#ifdef  NDEBUG
 
-# define assert(expr)		(__ASSERT_VOID_CAST (0))
+# define assert(expr)       (__ASSERT_VOID_CAST (0))
 
 /* void assert_perror (int errnum);
 
@@ -55,8 +55,8 @@
    error message with the error text for ERRNUM and abort.
    (This is a GNU extension.) */
 
-# ifdef	__USE_GNU
-#  define assert_perror(errnum)	(__ASSERT_VOID_CAST (0))
+# ifdef __USE_GNU
+#  define assert_perror(errnum) (__ASSERT_VOID_CAST (0))
 # endif
 
 #else /* Not NDEBUG.  */
@@ -64,20 +64,20 @@
 __BEGIN_DECLS
 
 /* This prints an "Assertion failed" message and aborts.  */
-extern void __assert_fail (const char *__assertion, const char *__file,
-			   unsigned int __line, const char *__function)
-     __THROW __attribute__ ((__noreturn__)) __COLD;
+extern void __assert_fail(const char *__assertion, const char *__file,
+                          unsigned int __line, const char *__function)
+__THROW __attribute__((__noreturn__)) __COLD;
 
 /* Likewise, but prints the error text for ERRNUM.  */
-extern void __assert_perror_fail (int __errnum, const char *__file,
-				  unsigned int __line, const char *__function)
-     __THROW __attribute__ ((__noreturn__)) __COLD;
+extern void __assert_perror_fail(int __errnum, const char *__file,
+                                 unsigned int __line, const char *__function)
+__THROW __attribute__((__noreturn__)) __COLD;
 
 
 /* The following is not at all used here but needed for standard
    compliance.  */
-extern void __assert (const char *__assertion, const char *__file, int __line)
-     __THROW __attribute__ ((__noreturn__)) __COLD;
+extern void __assert(const char *__assertion, const char *__file, int __line)
+__THROW __attribute__((__noreturn__)) __COLD;
 
 
 __END_DECLS
@@ -96,15 +96,15 @@ __END_DECLS
 #   define __ASSERT_FILE __FILE__
 #   define __ASSERT_LINE __LINE__
 #  endif
-#  define assert(expr)							\
-     (static_cast <bool> (expr)						\
-      ? void (0)							\
+#  define assert(expr)                          \
+     (static_cast <bool> (expr)                     \
+      ? void (0)                            \
       : __assert_fail (#expr, __ASSERT_FILE, __ASSERT_LINE,             \
                        __ASSERT_FUNCTION))
 # elif !defined __GNUC__ || defined __STRICT_ANSI__
-#  define assert(expr)							\
-    ((expr)								\
-     ? __ASSERT_VOID_CAST (0)						\
+#  define assert(expr)                          \
+    ((expr)                             \
+     ? __ASSERT_VOID_CAST (0)                       \
      : __assert_fail (#expr, __FILE__, __LINE__, __ASSERT_FUNCTION))
 # else
 /* The first occurrence of EXPR is not evaluated due to the sizeof,
@@ -112,19 +112,19 @@ __END_DECLS
    for the second occurrence.  The ternary operator is required to
    support function pointers and bit fields in this context, and to
    suppress the evaluation of variable length arrays.  */
-#  define assert(expr)							\
-  ((void) sizeof ((expr) ? 1 : 0), __extension__ ({			\
-      if (expr)								\
-        ; /* empty */							\
-      else								\
-        __assert_fail (#expr, __FILE__, __LINE__, __ASSERT_FUNCTION);	\
+#  define assert(expr)                          \
+  ((void) sizeof ((expr) ? 1 : 0), __extension__ ({         \
+      if (expr)                             \
+        ; /* empty */                           \
+      else                              \
+        __assert_fail (#expr, __FILE__, __LINE__, __ASSERT_FUNCTION);   \
     }))
 # endif
 
-# ifdef	__USE_GNU
-#  define assert_perror(errnum)						\
-  (!(errnum)								\
-   ? __ASSERT_VOID_CAST (0)						\
+# ifdef __USE_GNU
+#  define assert_perror(errnum)                     \
+  (!(errnum)                                \
+   ? __ASSERT_VOID_CAST (0)                     \
    : __assert_perror_fail ((errnum), __FILE__, __LINE__, __ASSERT_FUNCTION))
 # endif
 
@@ -134,22 +134,22 @@ __END_DECLS
    C9x has a similar variable called __func__, but prefer the GCC one since
    it demangles C++ function names.  */
 # if defined __cplusplus ? __GNUC_PREREQ (2, 6) : __GNUC_PREREQ (2, 4)
-#   define __ASSERT_FUNCTION	__extension__ __PRETTY_FUNCTION__
+#   define __ASSERT_FUNCTION    __extension__ __PRETTY_FUNCTION__
 # else
 #  if defined __STDC_VERSION__ && __STDC_VERSION__ >= 199901L
-#   define __ASSERT_FUNCTION	__func__
+#   define __ASSERT_FUNCTION    __func__
 #  else
-#   define __ASSERT_FUNCTION	((const char *) 0)
+#   define __ASSERT_FUNCTION    ((const char *) 0)
 #  endif
 # endif
 
 #endif /* NDEBUG.  */
 
 
-#if (defined __USE_ISOC11			\
-     && (!defined __STDC_VERSION__		\
-	 || __STDC_VERSION__ <= 201710L		\
-	 || !__GNUC_PREREQ (13, 0))		\
+#if (defined __USE_ISOC11           \
+     && (!defined __STDC_VERSION__      \
+     || __STDC_VERSION__ <= 201710L     \
+     || !__GNUC_PREREQ (13, 0))     \
      && !defined __cplusplus)
 # undef static_assert
 # define static_assert _Static_assert

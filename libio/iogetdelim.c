@@ -36,97 +36,89 @@
    necessary.  Returns the number of characters read (not including the
    null terminator), or -1 on error or EOF.  */
 
-ssize_t
-__getdelim (char **lineptr, size_t *n, int delimiter, FILE *fp)
+ssize_t __getdelim(char **lineptr, size_t *n, int delimiter, FILE *fp)
 {
-  ssize_t result;
-  ssize_t cur_len = 0;
-  ssize_t len;
+    ssize_t result;
+    ssize_t cur_len = 0;
+    ssize_t len;
 
-  CHECK_FILE (fp, -1);
-  _IO_acquire_lock (fp);
-  if (_IO_ferror_unlocked (fp))
-    {
-      result = -1;
-      goto unlock_return;
+    CHECK_FILE(fp, -1);
+    _IO_acquire_lock(fp);
+    if (_IO_ferror_unlocked(fp)) {
+        result = -1;
+        goto unlock_return;
     }
 
-  if (lineptr == NULL || n == NULL)
-    {
-      __set_errno (EINVAL);
-      fseterr_unlocked (fp);
-      result = -1;
-      goto unlock_return;
+    if (lineptr == NULL || n == NULL) {
+        __set_errno(EINVAL);
+        fseterr_unlocked(fp);
+        result = -1;
+        goto unlock_return;
     }
 
-  if (*lineptr == NULL || *n == 0)
-    {
-      *n = 120;
-      *lineptr = (char *) malloc (*n);
-      if (*lineptr == NULL)
-	{
-	  fseterr_unlocked (fp);
-	  result = -1;
-	  goto unlock_return;
-	}
+    if (*lineptr == NULL || *n == 0) {
+        *n = 120;
+        *lineptr = (char *) malloc(*n);
+        if (*lineptr == NULL) {
+            fseterr_unlocked(fp);
+            result = -1;
+            goto unlock_return;
+        }
     }
 
-  len = fp->_IO_read_end - fp->_IO_read_ptr;
-  if (len <= 0)
-    {
-      if (__underflow (fp) == EOF)
-	{
-	  result = -1;
-	  goto unlock_return;
-	}
-      len = fp->_IO_read_end - fp->_IO_read_ptr;
+    len = fp->_IO_read_end - fp->_IO_read_ptr;
+    if (len <= 0) {
+        if (__underflow(fp) == EOF) {
+            result = -1;
+            goto unlock_return;
+        }
+        len = fp->_IO_read_end - fp->_IO_read_ptr;
     }
 
-  for (;;)
-    {
-      size_t needed;
-      char *t;
-      t = (char *) memchr ((void *) fp->_IO_read_ptr, delimiter, len);
-      if (t != NULL)
-	len = (t - fp->_IO_read_ptr) + 1;
-      if (__glibc_unlikely (len >= SSIZE_MAX - cur_len))
-	{
-	  __set_errno (EOVERFLOW);
-	  fseterr_unlocked (fp);
-	  result = -1;
-	  goto unlock_return;
-	}
-      /* Make enough space for len+1 (for final NUL) bytes.  */
-      needed = cur_len + len + 1;
-      if (needed > *n)
-	{
-	  char *new_lineptr;
+    for (;;) {
+        size_t needed;
+        char *t;
+        t = (char *) memchr((void *) fp->_IO_read_ptr, delimiter, len);
+        if (t != NULL) {
+            len = (t - fp->_IO_read_ptr) + 1;
+        }
+        if (__glibc_unlikely(len >= SSIZE_MAX - cur_len)) {
+            __set_errno(EOVERFLOW);
+            fseterr_unlocked(fp);
+            result = -1;
+            goto unlock_return;
+        }
+        /* Make enough space for len+1 (for final NUL) bytes.  */
+        needed = cur_len + len + 1;
+        if (needed > *n) {
+            char *new_lineptr;
 
-	  if (needed < 2 * *n)
-	    needed = 2 * *n;  /* Be generous. */
-	  new_lineptr = (char *) realloc (*lineptr, needed);
-	  if (new_lineptr == NULL)
-	    {
-	      fseterr_unlocked (fp);
-	      result = -1;
-	      goto unlock_return;
-	    }
-	  *lineptr = new_lineptr;
-	  *n = needed;
-	}
-      memcpy (*lineptr + cur_len, (void *) fp->_IO_read_ptr, len);
-      fp->_IO_read_ptr += len;
-      cur_len += len;
-      if (t != NULL || __underflow (fp) == EOF)
-	break;
-      len = fp->_IO_read_end - fp->_IO_read_ptr;
+            if (needed < 2 * *n) {
+                needed = 2 * *n;    /* Be generous. */
+            }
+            new_lineptr = (char *) realloc(*lineptr, needed);
+            if (new_lineptr == NULL) {
+                fseterr_unlocked(fp);
+                result = -1;
+                goto unlock_return;
+            }
+            *lineptr = new_lineptr;
+            *n = needed;
+        }
+        memcpy(*lineptr + cur_len, (void *) fp->_IO_read_ptr, len);
+        fp->_IO_read_ptr += len;
+        cur_len += len;
+        if (t != NULL || __underflow(fp) == EOF) {
+            break;
+        }
+        len = fp->_IO_read_end - fp->_IO_read_ptr;
     }
-  (*lineptr)[cur_len] = '\0';
-  result = cur_len;
+    (*lineptr)[cur_len] = '\0';
+    result = cur_len;
 
 unlock_return:
-  _IO_release_lock (fp);
-  return result;
+    _IO_release_lock(fp);
+    return result;
 }
-libc_hidden_def (__getdelim)
-weak_alias (__getdelim, getdelim)
+libc_hidden_def(__getdelim)
+weak_alias(__getdelim, getdelim)

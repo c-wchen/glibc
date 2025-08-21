@@ -18,13 +18,13 @@
 
 #include <fenv.h>
 
-int
-feenableexcept (int excepts)
+int feenableexcept(int excepts)
 {
-  /* Signal failure if any exception traps are to be enabled.  */
-  if (excepts != 0)
-    return -1;
-  else
-    return 0;
+    /* Signal failure if any exception traps are to be enabled.  */
+    if (excepts != 0) {
+        return -1;
+    } else {
+        return 0;
+    }
 }
-stub_warning (feenableexcept)
+stub_warning(feenableexcept)

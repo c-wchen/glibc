@@ -27,15 +27,14 @@
    than gettimeofday, and for mostly architectures it is implemented through
    vDSO instead of a syscall.  Since the source is a system clock, the upper
    bits will have less entropy. */
-static inline uint32_t
-random_bits (void)
+static inline uint32_t random_bits(void)
 {
-  struct __timespec64 tv;
-  __clock_gettime64 (CLOCK_MONOTONIC, &tv);
-  /* Shuffle the lower bits to minimize the clock bias.  */
-  uint32_t ret = tv.tv_nsec ^ tv.tv_sec;
-  ret ^= (ret << 24) | (ret >> 8);
-  return ret;
+    struct __timespec64 tv;
+    __clock_gettime64(CLOCK_MONOTONIC, &tv);
+    /* Shuffle the lower bits to minimize the clock bias.  */
+    uint32_t ret = tv.tv_nsec ^ tv.tv_sec;
+    ret ^= (ret << 24) | (ret >> 8);
+    return ret;
 }
 
 #endif

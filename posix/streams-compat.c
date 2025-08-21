@@ -26,76 +26,70 @@
 struct strbuf;
 
 int
-attribute_compat_text_section
-fattach (int fildes, const char *path)
+attribute_compat_text_section fattach(int fildes, const char *path)
 {
-  __set_errno (ENOSYS);
-  return -1;
-}
-compat_symbol (libc, fattach, fattach, GLIBC_2_1);
-
-int
-attribute_compat_text_section
-fdetach (const char *path)
-{
-  __set_errno (ENOSYS);
-  return -1;
-}
-compat_symbol (libc, fdetach, fdetach, GLIBC_2_1);
-
-
-int
-attribute_compat_text_section
-getmsg (int fildes, struct strbuf *ctlptr, struct strbuf *dataptr, int *flagsp)
-{
-  __set_errno (ENOSYS);
-  return -1;
-}
-compat_symbol (libc, getmsg, getmsg, GLIBC_2_1);
-
-int
-attribute_compat_text_section
-getpmsg (int fildes, struct strbuf *ctlptr, struct strbuf *dataptr, int *bandp,
-	 int *flagsp)
-{
-  __set_errno (ENOSYS);
-  return -1;
-}
-compat_symbol (libc, getpmsg, getpmsg, GLIBC_2_1);
-
-int
-attribute_compat_text_section
-isastream (int fildes)
-{
-  /* In general we do not have a STREAMS implementation and therefore
-     return 0.  But for invalid file descriptors we have to return an
-     error.  */
-  if (__fcntl (fildes, F_GETFD) < 0)
+    __set_errno(ENOSYS);
     return -1;
-
-  /* No STREAM.  */
-  return 0;
 }
-compat_symbol (libc, isastream, isastream, GLIBC_2_1);
+compat_symbol(libc, fattach, fattach, GLIBC_2_1);
 
 int
-attribute_compat_text_section
-putmsg (int fildes, const struct strbuf *ctlptr, const struct strbuf *dataptr,
-	int flags)
+attribute_compat_text_section fdetach(const char *path)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-compat_symbol (libc, putmsg, putmsg, GLIBC_2_1);
+compat_symbol(libc, fdetach, fdetach, GLIBC_2_1);
+
 
 int
-attribute_compat_text_section
-putpmsg (int fildes, const struct strbuf *ctlptr, const struct strbuf *dataptr,
-	 int band, int flags)
+attribute_compat_text_section getmsg(int fildes, struct strbuf *ctlptr, struct strbuf *dataptr, int *flagsp)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-compat_symbol (libc, putpmsg, putpmsg, GLIBC_2_1);
+compat_symbol(libc, getmsg, getmsg, GLIBC_2_1);
+
+int
+attribute_compat_text_section getpmsg(int fildes, struct strbuf *ctlptr, struct strbuf *dataptr, int *bandp,
+                                      int *flagsp)
+{
+    __set_errno(ENOSYS);
+    return -1;
+}
+compat_symbol(libc, getpmsg, getpmsg, GLIBC_2_1);
+
+int
+attribute_compat_text_section isastream(int fildes)
+{
+    /* In general we do not have a STREAMS implementation and therefore
+       return 0.  But for invalid file descriptors we have to return an
+       error.  */
+    if (__fcntl(fildes, F_GETFD) < 0) {
+        return -1;
+    }
+
+    /* No STREAM.  */
+    return 0;
+}
+compat_symbol(libc, isastream, isastream, GLIBC_2_1);
+
+int
+attribute_compat_text_section putmsg(int fildes, const struct strbuf *ctlptr, const struct strbuf *dataptr,
+                                     int flags)
+{
+    __set_errno(ENOSYS);
+    return -1;
+}
+compat_symbol(libc, putmsg, putmsg, GLIBC_2_1);
+
+int
+attribute_compat_text_section putpmsg(int fildes, const struct strbuf *ctlptr, const struct strbuf *dataptr,
+                                      int band, int flags)
+{
+    __set_errno(ENOSYS);
+    return -1;
+}
+compat_symbol(libc, putpmsg, putpmsg, GLIBC_2_1);
 
 #endif /* SHLIB_COMPAT */

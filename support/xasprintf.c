@@ -23,14 +23,14 @@
 #include <stdlib.h>
 #include <support/check.h>
 
-char *
-xasprintf (const char *format, ...)
+char *xasprintf(const char *format, ...)
 {
-  va_list ap;
-  va_start (ap, format);
-  char *result;
-  if (vasprintf (&result, format, ap) < 0)
-    FAIL_EXIT1 ("asprintf: %m");
-  va_end (ap);
-  return result;
+    va_list ap;
+    va_start(ap, format);
+    char *result;
+    if (vasprintf(&result, format, ap) < 0) {
+        FAIL_EXIT1("asprintf: %m");
+    }
+    va_end(ap);
+    return result;
 }

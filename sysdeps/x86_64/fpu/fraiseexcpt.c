@@ -19,103 +19,97 @@
 #include <fenv.h>
 #include <math.h>
 
-int
-__feraiseexcept (int excepts)
+int __feraiseexcept(int excepts)
 {
-  /* Raise exceptions represented by EXPECTS.  But we must raise only
-     one signal at a time.  It is important that if the overflow/underflow
-     exception and the inexact exception are given at the same time,
-     the overflow/underflow exception follows the inexact exception.  */
+    /* Raise exceptions represented by EXPECTS.  But we must raise only
+       one signal at a time.  It is important that if the overflow/underflow
+       exception and the inexact exception are given at the same time,
+       the overflow/underflow exception follows the inexact exception.  */
 
-  /* First: invalid exception.  */
-  if ((FE_INVALID & excepts) != 0)
-    {
-      /* One example of an invalid operation is 0.0 / 0.0.  */
-      float f = 0.0;
+    /* First: invalid exception.  */
+    if ((FE_INVALID & excepts) != 0) {
+        /* One example of an invalid operation is 0.0 / 0.0.  */
+        float f = 0.0;
 
-      __asm__ __volatile__ ("divss %0, %0 " : "+x" (f));
-      (void) &f;
+        __asm__ __volatile__("divss %0, %0 " : "+x"(f));
+        (void) &f;
     }
 
-  /* Next: division by zero.  */
-  if ((FE_DIVBYZERO & excepts) != 0)
-    {
-      float f = 1.0;
-      float g = 0.0;
+    /* Next: division by zero.  */
+    if ((FE_DIVBYZERO & excepts) != 0) {
+        float f = 1.0;
+        float g = 0.0;
 
-      __asm__ __volatile__ ("divss %1, %0" : "+x" (f) : "x" (g));
-      (void) &f;
+        __asm__ __volatile__("divss %1, %0" : "+x"(f) : "x"(g));
+        (void) &f;
     }
 
-  /* Next: overflow.  */
-  if ((FE_OVERFLOW & excepts) != 0)
-    {
-      /* XXX: Is it ok to only set the x87 FPU?  */
-      /* There is no way to raise only the overflow flag.  Do it the
-	 hard way.  */
-      fenv_t temp;
+    /* Next: overflow.  */
+    if ((FE_OVERFLOW & excepts) != 0) {
+        /* XXX: Is it ok to only set the x87 FPU?  */
+        /* There is no way to raise only the overflow flag.  Do it the
+        hard way.  */
+        fenv_t temp;
 
-      /* Bah, we have to clear selected exceptions.  Since there is no
-	 `fldsw' instruction we have to do it the hard way.  */
-      __asm__ __volatile__ ("fnstenv %0" : "=m" (*&temp));
+        /* Bah, we have to clear selected exceptions.  Since there is no
+        `fldsw' instruction we have to do it the hard way.  */
+        __asm__ __volatile__("fnstenv %0" : "=m"( *&temp));
 
-      /* Set the relevant bits.  */
-      temp.__status_word |= FE_OVERFLOW;
+        /* Set the relevant bits.  */
+        temp.__status_word |= FE_OVERFLOW;
 
-      /* Put the new data in effect.  */
-      __asm__ __volatile__ ("fldenv %0" : : "m" (*&temp));
+        /* Put the new data in effect.  */
+        __asm__ __volatile__("fldenv %0" : : "m"( *&temp));
 
-      /* And raise the exception.  */
-      __asm__ __volatile__ ("fwait");
+        /* And raise the exception.  */
+        __asm__ __volatile__("fwait");
     }
 
-  /* Next: underflow.  */
-  if ((FE_UNDERFLOW & excepts) != 0)
-    {
-      /* XXX: Is it ok to only set the x87 FPU?  */
-      /* There is no way to raise only the underflow flag.  Do it the
-	 hard way.  */
-      fenv_t temp;
+    /* Next: underflow.  */
+    if ((FE_UNDERFLOW & excepts) != 0) {
+        /* XXX: Is it ok to only set the x87 FPU?  */
+        /* There is no way to raise only the underflow flag.  Do it the
+        hard way.  */
+        fenv_t temp;
 
-      /* Bah, we have to clear selected exceptions.  Since there is no
-	 `fldsw' instruction we have to do it the hard way.  */
-      __asm__ __volatile__ ("fnstenv %0" : "=m" (*&temp));
+        /* Bah, we have to clear selected exceptions.  Since there is no
+        `fldsw' instruction we have to do it the hard way.  */
+        __asm__ __volatile__("fnstenv %0" : "=m"( *&temp));
 
-      /* Set the relevant bits.  */
-      temp.__status_word |= FE_UNDERFLOW;
+        /* Set the relevant bits.  */
+        temp.__status_word |= FE_UNDERFLOW;
 
-      /* Put the new data in effect.  */
-      __asm__ __volatile__ ("fldenv %0" : : "m" (*&temp));
+        /* Put the new data in effect.  */
+        __asm__ __volatile__("fldenv %0" : : "m"( *&temp));
 
-      /* And raise the exception.  */
-      __asm__ __volatile__ ("fwait");
+        /* And raise the exception.  */
+        __asm__ __volatile__("fwait");
     }
 
-  /* Last: inexact.  */
-  if ((FE_INEXACT & excepts) != 0)
-    {
-      /* XXX: Is it ok to only set the x87 FPU?  */
-      /* There is no way to raise only the inexact flag.  Do it the
-	 hard way.  */
-      fenv_t temp;
+    /* Last: inexact.  */
+    if ((FE_INEXACT & excepts) != 0) {
+        /* XXX: Is it ok to only set the x87 FPU?  */
+        /* There is no way to raise only the inexact flag.  Do it the
+        hard way.  */
+        fenv_t temp;
 
-      /* Bah, we have to clear selected exceptions.  Since there is no
-	 `fldsw' instruction we have to do it the hard way.  */
-      __asm__ __volatile__ ("fnstenv %0" : "=m" (*&temp));
+        /* Bah, we have to clear selected exceptions.  Since there is no
+        `fldsw' instruction we have to do it the hard way.  */
+        __asm__ __volatile__("fnstenv %0" : "=m"( *&temp));
 
-      /* Set the relevant bits.  */
-      temp.__status_word |= FE_INEXACT;
+        /* Set the relevant bits.  */
+        temp.__status_word |= FE_INEXACT;
 
-      /* Put the new data in effect.  */
-      __asm__ __volatile__ ("fldenv %0" : : "m" (*&temp));
+        /* Put the new data in effect.  */
+        __asm__ __volatile__("fldenv %0" : : "m"( *&temp));
 
-      /* And raise the exception.  */
-      __asm__ __volatile__ ("fwait");
+        /* And raise the exception.  */
+        __asm__ __volatile__("fwait");
     }
 
-  /* Success.  */
-  return 0;
+    /* Success.  */
+    return 0;
 }
-libm_hidden_def (__feraiseexcept)
-weak_alias (__feraiseexcept, feraiseexcept)
-libm_hidden_weak (feraiseexcept)
+libm_hidden_def(__feraiseexcept)
+weak_alias(__feraiseexcept, feraiseexcept)
+libm_hidden_weak(feraiseexcept)

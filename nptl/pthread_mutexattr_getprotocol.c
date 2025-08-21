@@ -19,22 +19,21 @@
 #include <pthreadP.h>
 #include <shlib-compat.h>
 
-int
-__pthread_mutexattr_getprotocol (const pthread_mutexattr_t *attr, int *protocol)
+int __pthread_mutexattr_getprotocol(const pthread_mutexattr_t *attr, int *protocol)
 {
-  const struct pthread_mutexattr *iattr;
+    const struct pthread_mutexattr *iattr;
 
-  iattr = (const struct pthread_mutexattr *) attr;
+    iattr = (const struct pthread_mutexattr *) attr;
 
-  *protocol = ((iattr->mutexkind & PTHREAD_MUTEXATTR_PROTOCOL_MASK)
-	       >> PTHREAD_MUTEXATTR_PROTOCOL_SHIFT);
+    *protocol = ((iattr->mutexkind & PTHREAD_MUTEXATTR_PROTOCOL_MASK)
+                 >> PTHREAD_MUTEXATTR_PROTOCOL_SHIFT);
 
-  return 0;
+    return 0;
 }
-versioned_symbol (libc, __pthread_mutexattr_getprotocol,
-		  pthread_mutexattr_getprotocol, GLIBC_2_34);
+versioned_symbol(libc, __pthread_mutexattr_getprotocol,
+                 pthread_mutexattr_getprotocol, GLIBC_2_34);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_4, GLIBC_2_34)
-compat_symbol (libpthread, __pthread_mutexattr_getprotocol,
-               pthread_mutexattr_getprotocol, GLIBC_2_4);
+compat_symbol(libpthread, __pthread_mutexattr_getprotocol,
+              pthread_mutexattr_getprotocol, GLIBC_2_4);
 #endif

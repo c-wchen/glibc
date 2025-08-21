@@ -27,29 +27,29 @@
 #include <regdef.h>
 
 #define ENTRY(name) \
-  .globl name;								      \
-  .align 2;								      \
-  .ent name,0;								      \
-  name##:								      \
+  .globl name;                                    \
+  .align 2;                                   \
+  .ent name,0;                                    \
+  name##:                                     \
   cfi_startproc;
 
 #undef END
-#define	END(function)                                   \
-		cfi_endproc;				\
-		.end	function;		        \
-		.size	function,.-function
+#define END(function)                                   \
+        cfi_endproc;                \
+        .end    function;               \
+        .size   function,.-function
 
-#define ret	j ra ; nop
+#define ret j ra ; nop
 
 #undef PSEUDO_END
 #define PSEUDO_END(sym) cfi_endproc; .end sym; .size sym,.-sym
 
-#define PSEUDO_NOERRNO(name, syscall_name, args)	\
-  .align 2;						\
-  ENTRY(name)						\
-  .set nomips16;					\
-  .set noreorder;					\
-  li v0, SYS_ify(syscall_name);				\
+#define PSEUDO_NOERRNO(name, syscall_name, args)    \
+  .align 2;                     \
+  ENTRY(name)                       \
+  .set nomips16;                    \
+  .set noreorder;                   \
+  li v0, SYS_ify(syscall_name);             \
   syscall
 
 #undef PSEUDO_END_NOERRNO
@@ -57,12 +57,12 @@
 
 #define ret_NOERRNO ret
 
-#define PSEUDO_ERRVAL(name, syscall_name, args)	\
-  .align 2;						\
-  ENTRY(name)						\
-  .set nomips16;					\
-  .set noreorder;					\
-  li v0, SYS_ify(syscall_name);				\
+#define PSEUDO_ERRVAL(name, syscall_name, args) \
+  .align 2;                     \
+  ENTRY(name)                       \
+  .set nomips16;                    \
+  .set noreorder;                   \
+  li v0, SYS_ify(syscall_name);             \
   syscall
 
 #undef PSEUDO_END_ERRVAL
@@ -70,10 +70,10 @@
 
 #define ret_ERRVAL ret
 
-#define r0	v0
-#define r1	v1
+#define r0  v0
+#define r1  v1
 /* The mips move insn is d,s.  */
-#define MOVE(x,y)	move y , x
+#define MOVE(x,y)   move y , x
 
 #if _MIPS_SIM == _ABIO32
 # define L(label) $L ## label

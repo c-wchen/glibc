@@ -27,45 +27,45 @@
  * (pre-GNU) HISTORY
  *
  * Revision 2.2  92/01/16  00:08:10  rpd
- * 	Moved from user collection to mk collection.
+ *  Moved from user collection to mk collection.
  *
  * Revision 2.2  91/03/27  15:39:13  mrt
- * 	First checkin
+ *  First checkin
  *
  */
 /*
- *	File:	mach_error.h
- *	Author:	Douglas Orr, Carnegie Mellon University
- *	Date:	Mar. 1988
+ *  File:   mach_error.h
+ *  Author: Douglas Orr, Carnegie Mellon University
+ *  Date:   Mar. 1988
  *
- *	Definitions of routines in mach_error.c
+ *  Definitions of routines in mach_error.c
  */
 
-#ifndef	_MACH_ERROR_
-#define	_MACH_ERROR_	1
+#ifndef _MACH_ERROR_
+#define _MACH_ERROR_    1
 
 #include <mach/error.h>
 
-const char	*mach_error_string(
-/*
- *	Returns a string appropriate to the error argument given
- */
-	mach_error_t error_value
-				);
+const char  *mach_error_string(
+    /*
+     *  Returns a string appropriate to the error argument given
+     */
+    mach_error_t error_value
+);
 
-void		mach_error(
-/*
- *	Prints an appropriate message on the standard error stream
- */
-	char 		*str,
-	mach_error_t	error_value
-				);
+void        mach_error(
+    /*
+     *  Prints an appropriate message on the standard error stream
+     */
+    char        *str,
+    mach_error_t    error_value
+);
 
-const char	*mach_error_type(
-/*
- *	Returns a string with the error system, subsystem and code
-*/
-	mach_error_t	error_value
-				);
+const char  *mach_error_type(
+    /*
+     *  Returns a string with the error system, subsystem and code
+    */
+    mach_error_t    error_value
+);
 
-#endif	/* _MACH_ERROR_ */
+#endif  /* _MACH_ERROR_ */

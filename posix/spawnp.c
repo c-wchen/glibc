@@ -21,28 +21,26 @@
 
 /* Spawn a new process executing FILE with the attributes describes in *ATTRP.
    Before running the process perform the actions described in FILE-ACTIONS. */
-int
-__posix_spawnp (pid_t *pid, const char *file,
-		const posix_spawn_file_actions_t *file_actions,
-		const posix_spawnattr_t *attrp, char *const argv[],
-		char *const envp[])
+int __posix_spawnp(pid_t *pid, const char *file,
+                   const posix_spawn_file_actions_t *file_actions,
+                   const posix_spawnattr_t *attrp, char *const argv[],
+                   char *const envp[])
 {
-  return __spawni (pid, file, file_actions, attrp, argv, envp,
-		   SPAWN_XFLAGS_USE_PATH);
+    return __spawni(pid, file, file_actions, attrp, argv, envp,
+                    SPAWN_XFLAGS_USE_PATH);
 }
-versioned_symbol (libc, __posix_spawnp, posix_spawnp, GLIBC_2_15);
+versioned_symbol(libc, __posix_spawnp, posix_spawnp, GLIBC_2_15);
 
 
 #if SHLIB_COMPAT (libc, GLIBC_2_2, GLIBC_2_15)
 int
-attribute_compat_text_section
-__posix_spawnp_compat (pid_t *pid, const char *file,
-		       const posix_spawn_file_actions_t *file_actions,
-		       const posix_spawnattr_t *attrp, char *const argv[],
-		       char *const envp[])
+attribute_compat_text_section __posix_spawnp_compat(pid_t *pid, const char *file,
+        const posix_spawn_file_actions_t *file_actions,
+        const posix_spawnattr_t *attrp, char *const argv[],
+        char *const envp[])
 {
-  return __spawni (pid, file, file_actions, attrp, argv, envp,
-		   SPAWN_XFLAGS_USE_PATH | SPAWN_XFLAGS_TRY_SHELL);
+    return __spawni(pid, file, file_actions, attrp, argv, envp,
+                    SPAWN_XFLAGS_USE_PATH | SPAWN_XFLAGS_TRY_SHELL);
 }
-compat_symbol (libc, __posix_spawnp_compat, posix_spawnp, GLIBC_2_2);
+compat_symbol(libc, __posix_spawnp_compat, posix_spawnp, GLIBC_2_2);
 #endif

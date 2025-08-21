@@ -21,11 +21,10 @@
 /* Put the name of the current NIS domain in no more than LEN bytes of NAME.
    The result is null-terminated if LEN is large enough for the full
    name and the terminator.  */
-int
-getdomainname (char *name, size_t len)
+int getdomainname(char *name, size_t len)
 {
-  /* The NIS domain name is just the contents of the file /etc/nisdomain.  */
-  ssize_t n = _hurd_get_host_config ("/etc/nisdomain", name, len);
-  return n < 0 ? -1 : 0;
+    /* The NIS domain name is just the contents of the file /etc/nisdomain.  */
+    ssize_t n = _hurd_get_host_config("/etc/nisdomain", name, len);
+    return n < 0 ? -1 : 0;
 }
-libc_hidden_def (getdomainname)
+libc_hidden_def(getdomainname)

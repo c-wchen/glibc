@@ -41,115 +41,112 @@
 /*
  * This is the "network" that we will be moving data over
  */
-struct svcraw_private_s
-  {
+struct svcraw_private_s {
     char _raw_buf[UDPMSGSIZE];
     SVCXPRT server;
     XDR xdr_stream;
     char verf_body[MAX_AUTH_BYTES];
-  };
+};
 #define svcraw_private RPC_THREAD_VARIABLE(svcraw_private_s)
 
-static bool_t svcraw_recv (SVCXPRT *, struct rpc_msg *);
-static enum xprt_stat svcraw_stat (SVCXPRT *);
-static bool_t svcraw_getargs (SVCXPRT *, xdrproc_t, caddr_t);
-static bool_t svcraw_reply (SVCXPRT *, struct rpc_msg *);
-static bool_t svcraw_freeargs (SVCXPRT *, xdrproc_t, caddr_t);
-static void svcraw_destroy (SVCXPRT *);
+static bool_t svcraw_recv(SVCXPRT *, struct rpc_msg *);
+static enum xprt_stat svcraw_stat(SVCXPRT *);
+static bool_t svcraw_getargs(SVCXPRT *, xdrproc_t, caddr_t);
+static bool_t svcraw_reply(SVCXPRT *, struct rpc_msg *);
+static bool_t svcraw_freeargs(SVCXPRT *, xdrproc_t, caddr_t);
+static void svcraw_destroy(SVCXPRT *);
 
-static const struct xp_ops server_ops =
-{
-  svcraw_recv,
-  svcraw_stat,
-  svcraw_getargs,
-  svcraw_reply,
-  svcraw_freeargs,
-  svcraw_destroy
+static const struct xp_ops server_ops = {
+    svcraw_recv,
+    svcraw_stat,
+    svcraw_getargs,
+    svcraw_reply,
+    svcraw_freeargs,
+    svcraw_destroy
 };
 
-SVCXPRT *
-svcraw_create (void)
+SVCXPRT *svcraw_create(void)
 {
-  struct svcraw_private_s *srp = svcraw_private;
+    struct svcraw_private_s *srp = svcraw_private;
 
-  if (srp == NULL)
-    {
-      srp = (struct svcraw_private_s *) calloc (1, sizeof (*srp));
-      if (srp == NULL)
-	return NULL;
+    if (srp == NULL) {
+        srp = (struct svcraw_private_s *) calloc(1, sizeof(*srp));
+        if (srp == NULL) {
+            return NULL;
+        }
     }
-  srp->server.xp_sock = 0;
-  srp->server.xp_port = 0;
-  srp->server.xp_ops = (struct xp_ops *) &server_ops;
-  srp->server.xp_verf.oa_base = srp->verf_body;
-  xdrmem_create (&srp->xdr_stream, srp->_raw_buf, UDPMSGSIZE, XDR_FREE);
-  return &srp->server;
+    srp->server.xp_sock = 0;
+    srp->server.xp_port = 0;
+    srp->server.xp_ops = (struct xp_ops *) &server_ops;
+    srp->server.xp_verf.oa_base = srp->verf_body;
+    xdrmem_create(&srp->xdr_stream, srp->_raw_buf, UDPMSGSIZE, XDR_FREE);
+    return &srp->server;
 }
-libc_hidden_nolink_sunrpc (svcraw_create, GLIBC_2_0)
+libc_hidden_nolink_sunrpc(svcraw_create, GLIBC_2_0)
 
 static enum xprt_stat
-svcraw_stat (SVCXPRT *xprt)
-{
-  return XPRT_IDLE;
+svcraw_stat(SVCXPRT *xprt) {
+    return XPRT_IDLE;
 }
 
-static bool_t
-svcraw_recv (SVCXPRT *xprt, struct rpc_msg *msg)
+static bool_t svcraw_recv(SVCXPRT *xprt, struct rpc_msg *msg)
 {
-  struct svcraw_private_s *srp = svcraw_private;
-  XDR *xdrs;
+    struct svcraw_private_s *srp = svcraw_private;
+    XDR *xdrs;
 
-  if (srp == NULL)
-    return FALSE;
-  xdrs = &srp->xdr_stream;
-  xdrs->x_op = XDR_DECODE;
-  XDR_SETPOS (xdrs, 0);
-  if (!xdr_callmsg (xdrs, msg))
-    return FALSE;
-  return TRUE;
+    if (srp == NULL) {
+        return FALSE;
+    }
+    xdrs = &srp->xdr_stream;
+    xdrs->x_op = XDR_DECODE;
+    XDR_SETPOS(xdrs, 0);
+    if (!xdr_callmsg(xdrs, msg)) {
+        return FALSE;
+    }
+    return TRUE;
 }
 
-static bool_t
-svcraw_reply (SVCXPRT *xprt, struct rpc_msg *msg)
+static bool_t svcraw_reply(SVCXPRT *xprt, struct rpc_msg *msg)
 {
-  struct svcraw_private_s *srp = svcraw_private;
-  XDR *xdrs;
+    struct svcraw_private_s *srp = svcraw_private;
+    XDR *xdrs;
 
-  if (srp == NULL)
-    return FALSE;
-  xdrs = &srp->xdr_stream;
-  xdrs->x_op = XDR_ENCODE;
-  XDR_SETPOS (xdrs, 0);
-  if (!xdr_replymsg (xdrs, msg))
-    return FALSE;
-  (void) XDR_GETPOS (xdrs);	/* called just for overhead */
-  return TRUE;
+    if (srp == NULL) {
+        return FALSE;
+    }
+    xdrs = &srp->xdr_stream;
+    xdrs->x_op = XDR_ENCODE;
+    XDR_SETPOS(xdrs, 0);
+    if (!xdr_replymsg(xdrs, msg)) {
+        return FALSE;
+    }
+    (void) XDR_GETPOS(xdrs);  /* called just for overhead */
+    return TRUE;
 }
 
-static bool_t
-svcraw_getargs (SVCXPRT *xprt, xdrproc_t xdr_args, caddr_t args_ptr)
+static bool_t svcraw_getargs(SVCXPRT *xprt, xdrproc_t xdr_args, caddr_t args_ptr)
 {
-  struct svcraw_private_s *srp = svcraw_private;
+    struct svcraw_private_s *srp = svcraw_private;
 
-  if (srp == NULL)
-    return FALSE;
-  return (*xdr_args) (&srp->xdr_stream, args_ptr);
+    if (srp == NULL) {
+        return FALSE;
+    }
+    return (*xdr_args)(&srp->xdr_stream, args_ptr);
 }
 
-static bool_t
-svcraw_freeargs (SVCXPRT *xprt, xdrproc_t xdr_args, caddr_t args_ptr)
+static bool_t svcraw_freeargs(SVCXPRT *xprt, xdrproc_t xdr_args, caddr_t args_ptr)
 {
-  struct svcraw_private_s *srp = svcraw_private;
-  XDR *xdrs;
+    struct svcraw_private_s *srp = svcraw_private;
+    XDR *xdrs;
 
-  if (srp == NULL)
-    return FALSE;
-  xdrs = &srp->xdr_stream;
-  xdrs->x_op = XDR_FREE;
-  return (*xdr_args) (xdrs, args_ptr);
+    if (srp == NULL) {
+        return FALSE;
+    }
+    xdrs = &srp->xdr_stream;
+    xdrs->x_op = XDR_FREE;
+    return (*xdr_args)(xdrs, args_ptr);
 }
 
-static void
-svcraw_destroy (SVCXPRT *xprt)
+static void svcraw_destroy(SVCXPRT *xprt)
 {
 }

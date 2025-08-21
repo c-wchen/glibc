@@ -21,11 +21,11 @@
 #include <stdlib.h>
 
 static __thread int tdata1 = 1;
-static __thread int tdata2 __attribute__ ((aligned (0x10))) = 2;
-static __thread int tdata3 __attribute__ ((aligned (0x1000))) = 4;
+static __thread int tdata2 __attribute__((aligned(0x10))) = 2;
+static __thread int tdata3 __attribute__((aligned(0x1000))) = 4;
 static __thread int tbss1;
-static __thread int tbss2 __attribute__ ((aligned (0x10)));
-static __thread int tbss3 __attribute__ ((aligned (0x1000)));
+static __thread int tbss2 __attribute__((aligned(0x10)));
+static __thread int tbss3 __attribute__((aligned(0x1000)));
 
 #ifndef NO_LIB
 extern __thread int mod_tdata1;
@@ -36,49 +36,46 @@ extern __thread int mod_tbss2;
 extern __thread int mod_tbss3;
 #endif
 
-static int
-test_one (const char *which, unsigned int alignment, int *var, int value)
+static int test_one(const char *which, unsigned int alignment, int *var, int value)
 {
-  uintptr_t addr = (uintptr_t) var;
-  unsigned int misalign = addr & (alignment - 1);
+    uintptr_t addr = (uintptr_t) var;
+    unsigned int misalign = addr & (alignment - 1);
 
-  printf ("%s TLS address %p %% %u = %u\n",
-          which, (void *) var, alignment, misalign);
+    printf("%s TLS address %p %% %u = %u\n",
+           which, (void *) var, alignment, misalign);
 
-  int got = *var;
-  if (got != value)
-    {
-      printf ("%s value %d should be %d\n", which, got, value);
-      return 1;
+    int got = *var;
+    if (got != value) {
+        printf("%s value %d should be %d\n", which, got, value);
+        return 1;
     }
 
-  return misalign != 0;
+    return misalign != 0;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int fail = 0;
+    int fail = 0;
 
-  fail |= test_one ("tdata1", 4, &tdata1, 1);
-  fail |= test_one ("tdata2", 0x10, &tdata2, 2);
-  fail |= test_one ("tdata3", 0x1000, &tdata3, 4);
+    fail |= test_one("tdata1", 4, &tdata1, 1);
+    fail |= test_one("tdata2", 0x10, &tdata2, 2);
+    fail |= test_one("tdata3", 0x1000, &tdata3, 4);
 
-  fail |= test_one ("tbss1", 4, &tbss1, 0);
-  fail |= test_one ("tbss2", 0x10, &tbss2, 0);
-  fail |= test_one ("tbss3", 0x1000, &tbss3, 0);
+    fail |= test_one("tbss1", 4, &tbss1, 0);
+    fail |= test_one("tbss2", 0x10, &tbss2, 0);
+    fail |= test_one("tbss3", 0x1000, &tbss3, 0);
 
 #ifndef NO_LIB
-  fail |= test_one ("mod_tdata1", 4, &mod_tdata1, 1);
-  fail |= test_one ("mod_tdata2", 0x10, &mod_tdata2, 2);
-  fail |= test_one ("mod_tdata3", 0x1000, &mod_tdata3, 4);
+    fail |= test_one("mod_tdata1", 4, &mod_tdata1, 1);
+    fail |= test_one("mod_tdata2", 0x10, &mod_tdata2, 2);
+    fail |= test_one("mod_tdata3", 0x1000, &mod_tdata3, 4);
 
-  fail |= test_one ("mod_tbss1", 4, &mod_tbss1, 0);
-  fail |= test_one ("mod_tbss2", 0x10, &mod_tbss2, 0);
-  fail |= test_one ("mod_tbss3", 0x1000, &mod_tbss3, 0);
+    fail |= test_one("mod_tbss1", 4, &mod_tbss1, 0);
+    fail |= test_one("mod_tbss2", 0x10, &mod_tbss2, 0);
+    fail |= test_one("mod_tbss3", 0x1000, &mod_tbss3, 0);
 #endif
 
-  return fail ? EXIT_FAILURE : EXIT_SUCCESS;
+    return fail ? EXIT_FAILURE : EXIT_SUCCESS;
 }
 
 #include <support/test-driver.c>

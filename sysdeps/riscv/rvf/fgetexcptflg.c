@@ -19,12 +19,11 @@
 #include <fenv.h>
 #include <fenv_private.h>
 
-int
-fegetexceptflag (fexcept_t *flagp, int excepts)
+int fegetexceptflag(fexcept_t *flagp, int excepts)
 {
-  /* Get the current exceptions.  */
-  *flagp = riscv_getflags () & excepts;
+    /* Get the current exceptions.  */
+    *flagp = riscv_getflags() & excepts;
 
-  /* Success.  */
-  return 0;
+    /* Success.  */
+    return 0;
 }

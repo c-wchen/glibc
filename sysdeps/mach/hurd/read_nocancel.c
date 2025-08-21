@@ -21,10 +21,9 @@
 #include <not-cancel.h>
 
 /* Read NBYTES into BUF from FD.  Return the number read or -1.  */
-ssize_t
-__read_nocancel (int fd, void *buf, size_t nbytes)
+ssize_t __read_nocancel(int fd, void *buf, size_t nbytes)
 {
-  error_t err = HURD_FD_USE (fd, _hurd_fd_read (descriptor, buf, &nbytes, -1));
-  return err ? __hurd_dfail (fd, err) : nbytes;
+    error_t err = HURD_FD_USE(fd, _hurd_fd_read(descriptor, buf, &nbytes, -1));
+    return err ? __hurd_dfail(fd, err) : nbytes;
 }
-libc_hidden_weak (__read_nocancel)
+libc_hidden_weak(__read_nocancel)

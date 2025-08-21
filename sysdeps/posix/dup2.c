@@ -22,35 +22,35 @@
 
 /* Duplicate FD to FD2, closing the old FD2 and making FD2 be
    open the same file as FD is.  Return FD2 or -1.  */
-int
-__dup2 (int fd, int fd2)
+int __dup2(int fd, int fd2)
 {
-  int save;
+    int save;
 
-  if (fd2 < 0
+    if (fd2 < 0
 #ifdef OPEN_MAX
-      || fd2 >= OPEN_MAX
+        || fd2 >= OPEN_MAX
 #endif
-)
-    {
-      __set_errno (EBADF);
-      return -1;
+       ) {
+        __set_errno(EBADF);
+        return -1;
     }
 
-  /* Check if FD is kosher.  */
-  if (fcntl (fd, F_GETFL) < 0)
-    return -1;
+    /* Check if FD is kosher.  */
+    if (fcntl(fd, F_GETFL) < 0) {
+        return -1;
+    }
 
-  if (fd == fd2)
-    return fd2;
+    if (fd == fd2) {
+        return fd2;
+    }
 
-  /* This is not atomic.  */
+    /* This is not atomic.  */
 
-  save = errno;
-  (void) close (fd2);
-  __set_errno (save);
+    save = errno;
+    (void) close(fd2);
+    __set_errno(save);
 
-  return fcntl (fd, F_DUPFD, fd2);
+    return fcntl(fd, F_DUPFD, fd2);
 }
-libc_hidden_def (__dup2)
-weak_alias (__dup2, dup2)
+libc_hidden_def(__dup2)
+weak_alias(__dup2, dup2)

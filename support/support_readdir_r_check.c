@@ -20,16 +20,14 @@
 
 #include <support/check.h>
 
-int
-support_readdir_r_check (const char *name, int result, void *buf, void *ptr)
+int support_readdir_r_check(const char *name, int result, void *buf, void *ptr)
 {
-  if (result != 0)
-    {
-      errno = result;
-      FAIL_EXIT1 ("%s: %m", name);
+    if (result != 0) {
+        errno = result;
+        FAIL_EXIT1("%s: %m", name);
     }
-  if (buf != ptr)
-    FAIL_EXIT1 ("%s: buffer pointer and returned pointer differ: %p != %p",
-                name, buf, ptr);
-  return result;
+    if (buf != ptr)
+        FAIL_EXIT1("%s: buffer pointer and returned pointer differ: %p != %p",
+                   name, buf, ptr);
+    return result;
 }

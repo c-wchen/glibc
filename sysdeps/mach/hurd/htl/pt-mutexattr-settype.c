@@ -24,18 +24,18 @@
 #include <hurdlock.h>
 #include <shlib-compat.h>
 
-int
-__pthread_mutexattr_settype (pthread_mutexattr_t *attrp, int type)
+int __pthread_mutexattr_settype(pthread_mutexattr_t *attrp, int type)
 {
-  if (type < 0 || type > __PTHREAD_MUTEX_RECURSIVE)
-    return EINVAL;
+    if (type < 0 || type > __PTHREAD_MUTEX_RECURSIVE) {
+        return EINVAL;
+    }
 
-  attrp->__mutex_type = type;
-  return 0;
+    attrp->__mutex_type = type;
+    return 0;
 }
-libc_hidden_def (__pthread_mutexattr_settype)
-versioned_symbol (libc, __pthread_mutexattr_settype, pthread_mutexattr_settype, GLIBC_2_41);
+libc_hidden_def(__pthread_mutexattr_settype)
+versioned_symbol(libc, __pthread_mutexattr_settype, pthread_mutexattr_settype, GLIBC_2_41);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_41)
-compat_symbol (libpthread, __pthread_mutexattr_settype,pthread_mutexattr_settype, GLIBC_2_12);
+compat_symbol(libpthread, __pthread_mutexattr_settype, pthread_mutexattr_settype, GLIBC_2_12);
 #endif

@@ -18,13 +18,12 @@
 #include <sys/socket.h>
 #include <socketcall.h>
 
-int
-listen (int fd, int backlog)
+int listen(int fd, int backlog)
 {
 #ifdef __ASSUME_LISTEN_SYSCALL
-  return INLINE_SYSCALL_CALL (listen, fd, backlog);
+    return INLINE_SYSCALL_CALL(listen, fd, backlog);
 #else
-  return SOCKETCALL (listen, fd, backlog);
+    return SOCKETCALL(listen, fd, backlog);
 #endif
 }
-weak_alias (listen, __listen);
+weak_alias(listen, __listen);

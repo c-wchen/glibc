@@ -19,41 +19,38 @@
 #include <endian.h>
 #include <stdint.h>
 
-static inline uintptr_t __attribute__ ((always_inline))
-_dl_setup_stack_chk_guard (void *dl_random)
+static inline uintptr_t __attribute__((always_inline))
+_dl_setup_stack_chk_guard(void *dl_random)
 {
-  union
-  {
-    uintptr_t num;
-    unsigned char bytes[sizeof (uintptr_t)];
-  } ret = { 0 };
+    union {
+        uintptr_t num;
+        unsigned char bytes[sizeof(uintptr_t)];
+    } ret = { 0 };
 
-  if (dl_random == NULL)
-    {
-      ret.bytes[sizeof (ret) - 1] = 255;
-      ret.bytes[sizeof (ret) - 2] = '\n';
-    }
-  else
-    {
-      memcpy (ret.bytes, dl_random, sizeof (ret));
+    if (dl_random == NULL) {
+        ret.bytes[sizeof(ret) - 1] = 255;
+        ret.bytes[sizeof(ret) - 2] = '\n';
+    } else {
+        memcpy(ret.bytes, dl_random, sizeof(ret));
 #if BYTE_ORDER == LITTLE_ENDIAN
-      ret.num &= ~(uintptr_t) 0xff;
+        ret.num &= ~(uintptr_t) 0xff;
 #elif BYTE_ORDER == BIG_ENDIAN
-      ret.num &= ~((uintptr_t) 0xff << (8 * (sizeof (ret) - 1)));
+        ret.num &= ~((uintptr_t) 0xff << (8 * (sizeof(ret) - 1)));
 #else
 # error "BYTE_ORDER unknown"
 #endif
     }
-  return ret.num;
+    return ret.num;
 }
 
-static inline uintptr_t __attribute__ ((always_inline))
-_dl_setup_pointer_guard (void *dl_random, uintptr_t stack_chk_guard)
+static inline uintptr_t __attribute__((always_inline))
+_dl_setup_pointer_guard(void *dl_random, uintptr_t stack_chk_guard)
 {
-  uintptr_t ret;
-  if (dl_random == NULL)
-    ret = stack_chk_guard;
-  else
-    memcpy (&ret, (char *) dl_random + sizeof (ret), sizeof (ret));
-  return ret;
+    uintptr_t ret;
+    if (dl_random == NULL) {
+        ret = stack_chk_guard;
+    } else {
+        memcpy(&ret, (char *) dl_random + sizeof(ret), sizeof(ret));
+    }
+    return ret;
 }

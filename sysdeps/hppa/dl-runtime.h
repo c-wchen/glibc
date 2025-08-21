@@ -17,18 +17,17 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-ElfW(Word) _dl_fix_reloc_arg (struct fdesc *, struct link_map *);
-rtld_hidden_proto (_dl_fix_reloc_arg)
+ElfW(Word) _dl_fix_reloc_arg(struct fdesc *, struct link_map *);
+rtld_hidden_proto(_dl_fix_reloc_arg)
 
 /* Clear PA_GP_RELOC bit in relocation offset.  */
 static inline uintptr_t
-reloc_offset (uintptr_t plt0, uintptr_t pltn)
+reloc_offset(uintptr_t plt0, uintptr_t pltn)
 {
-  return pltn & ~PA_GP_RELOC;
+    return pltn & ~PA_GP_RELOC;
 }
 
-static inline uintptr_t
-reloc_index (uintptr_t plt0, uintptr_t pltn, size_t size)
+static inline uintptr_t reloc_index(uintptr_t plt0, uintptr_t pltn, size_t size)
 {
-  return (pltn & ~PA_GP_RELOC )/ size;
+    return (pltn & ~PA_GP_RELOC) / size;
 }

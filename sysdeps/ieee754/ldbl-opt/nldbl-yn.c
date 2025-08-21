@@ -1,8 +1,7 @@
 #include "nldbl-compat.h"
 
 double
-attribute_hidden
-ynl (int n, double x)
+attribute_hidden ynl(int n, double x)
 {
-  return yn (n, x);
+    return yn(n, x);
 }

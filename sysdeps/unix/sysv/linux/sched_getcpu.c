@@ -21,22 +21,20 @@
 #include <sysdep-vdso.h>
 #include <rseq-internal.h>
 
-static int
-vsyscall_sched_getcpu (void)
+static int vsyscall_sched_getcpu(void)
 {
-  unsigned int cpu;
-  int r = -1;
+    unsigned int cpu;
+    int r = -1;
 #ifdef HAVE_GETCPU_VSYSCALL
-  r = INLINE_VSYSCALL (getcpu, 3, &cpu, NULL, NULL);
+    r = INLINE_VSYSCALL(getcpu, 3, &cpu, NULL, NULL);
 #else
-  r = INLINE_SYSCALL_CALL (getcpu, &cpu, NULL, NULL);
+    r = INLINE_SYSCALL_CALL(getcpu, &cpu, NULL, NULL);
 #endif
-  return r == -1 ? r : cpu;
+    return r == -1 ? r : cpu;
 }
 
-int
-sched_getcpu (void)
+int sched_getcpu(void)
 {
-  int cpu_id = RSEQ_GETMEM_ONCE (cpu_id);
-  return __glibc_likely (cpu_id >= 0) ? cpu_id : vsyscall_sched_getcpu ();
+    int cpu_id = RSEQ_GETMEM_ONCE(cpu_id);
+    return __glibc_likely(cpu_id >= 0) ? cpu_id : vsyscall_sched_getcpu();
 }

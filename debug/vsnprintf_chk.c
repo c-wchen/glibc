@@ -20,17 +20,17 @@
 
 /* Write formatted output into S, according to the format
    string FORMAT, writing no more than MAXLEN characters.  */
-int
-___vsnprintf_chk (char *s, size_t maxlen, int flag, size_t slen,
-		  const char *format, va_list ap)
+int ___vsnprintf_chk(char *s, size_t maxlen, int flag, size_t slen,
+                     const char *format, va_list ap)
 {
-  if (__glibc_unlikely (slen < maxlen))
-    __chk_fail ();
+    if (__glibc_unlikely(slen < maxlen)) {
+        __chk_fail();
+    }
 
-  /* For flag > 0 (i.e. __USE_FORTIFY_LEVEL > 1) request that %n
-     can only come from read-only format strings.  */
-  unsigned int mode = (flag > 0) ? PRINTF_FORTIFY : 0;
+    /* For flag > 0 (i.e. __USE_FORTIFY_LEVEL > 1) request that %n
+       can only come from read-only format strings.  */
+    unsigned int mode = (flag > 0) ? PRINTF_FORTIFY : 0;
 
-  return __vsnprintf_internal (s, maxlen, format, ap, mode);
+    return __vsnprintf_internal(s, maxlen, format, ap, mode);
 }
-ldbl_strong_alias (___vsnprintf_chk, __vsnprintf_chk)
+ldbl_strong_alias(___vsnprintf_chk, __vsnprintf_chk)

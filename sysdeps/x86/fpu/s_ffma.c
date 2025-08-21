@@ -36,15 +36,14 @@
    x86 macros will work with only the SSE state and that is
    sufficient.  */
 # undef libc_feholdexcept_setround
-# define libc_feholdexcept_setround	default_libc_feholdexcept_setround
+# define libc_feholdexcept_setround default_libc_feholdexcept_setround
 # undef libc_feupdateenv_test
-# define libc_feupdateenv_test		default_libc_feupdateenv_test
+# define libc_feupdateenv_test      default_libc_feupdateenv_test
 #endif
 
-float
-__ffma (double x, double y, double z)
+float __ffma(double x, double y, double z)
 {
-  NARROW_FMA_ROUND_TO_ODD (x, y, z, float, union ieee754_double, , mantissa1,
-			   false);
+    NARROW_FMA_ROUND_TO_ODD(x, y, z, float, union ieee754_double,, mantissa1,
+                            false);
 }
-libm_alias_float_double (fma)
+libm_alias_float_double(fma)

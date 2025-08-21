@@ -27,7 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-static int do_test (void);
+static int do_test(void);
 #include <support/xthread.h>
 #include <support/xdlfcn.h>
 #include <support/check.h>
@@ -39,73 +39,70 @@ __thread char maintls[1000];
 static pthread_barrier_t barrier;
 
 /* Forces multi-threaded behaviour.  */
-static void *
-blocked_thread_func (void *closure)
+static void *blocked_thread_func(void *closure)
 {
-  xpthread_barrier_wait (&barrier);
-  /* TLS load and access tests run here in the main thread.  */
-  xpthread_barrier_wait (&barrier);
-  return NULL;
+    xpthread_barrier_wait(&barrier);
+    /* TLS load and access tests run here in the main thread.  */
+    xpthread_barrier_wait(&barrier);
+    return NULL;
 }
 
-static void *
-load_and_access (const char *mod, const char *func)
+static void *load_and_access(const char *mod, const char *func)
 {
-  /* Load module with TLS.  */
-  void *p = xdlopen (mod, RTLD_NOW);
-  /* Access the TLS variable to ensure it is allocated.  */
-  void (*f) (void) = (void (*) (void))xdlsym (p, func);
-  f ();
-  return p;
+    /* Load module with TLS.  */
+    void *p = xdlopen(mod, RTLD_NOW);
+    /* Access the TLS variable to ensure it is allocated.  */
+    void (*f)(void) = (void (*)(void))xdlsym(p, func);
+    f();
+    return p;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  void *mods[6];
+    void *mods[6];
 
-  {
-    int ret = pthread_barrier_init (&barrier, NULL, 2);
-    if (ret != 0)
-      {
-        errno = ret;
-        printf ("error: pthread_barrier_init: %m\n");
-        exit (1);
-      }
-  }
+    {
+        int ret = pthread_barrier_init(&barrier, NULL, 2);
+        if (ret != 0) {
+            errno = ret;
+            printf("error: pthread_barrier_init: %m\n");
+            exit(1);
+        }
+    }
 
-  pthread_t blocked_thread = xpthread_create (NULL, blocked_thread_func, NULL);
-  xpthread_barrier_wait (&barrier);
+    pthread_t blocked_thread = xpthread_create(NULL, blocked_thread_func, NULL);
+    xpthread_barrier_wait(&barrier);
 
-  printf ("maintls[%zu]:\t %p .. %p\n",
-	   sizeof maintls, maintls, maintls + sizeof maintls);
-  memset (maintls, 1, sizeof maintls);
+    printf("maintls[%zu]:\t %p .. %p\n",
+           sizeof maintls, maintls, maintls + sizeof maintls);
+    memset(maintls, 1, sizeof maintls);
 
-  /* Load modules with dynamic TLS (may use surplus static TLS
-     opportunistically).  */
-  mods[0] = load_and_access ("tst-tls-ie-mod0.so", "access0");
-  mods[1] = load_and_access ("tst-tls-ie-mod1.so", "access1");
-  mods[2] = load_and_access ("tst-tls-ie-mod2.so", "access2");
-  mods[3] = load_and_access ("tst-tls-ie-mod3.so", "access3");
-  /* Load modules with initial-exec TLS (can only use surplus static TLS).  */
-  mods[4] = load_and_access ("tst-tls-ie-mod4.so", "access4");
-  mods[5] = load_and_access ("tst-tls-ie-mod5.so", "access5");
+    /* Load modules with dynamic TLS (may use surplus static TLS
+       opportunistically).  */
+    mods[0] = load_and_access("tst-tls-ie-mod0.so", "access0");
+    mods[1] = load_and_access("tst-tls-ie-mod1.so", "access1");
+    mods[2] = load_and_access("tst-tls-ie-mod2.so", "access2");
+    mods[3] = load_and_access("tst-tls-ie-mod3.so", "access3");
+    /* Load modules with initial-exec TLS (can only use surplus static TLS).  */
+    mods[4] = load_and_access("tst-tls-ie-mod4.so", "access4");
+    mods[5] = load_and_access("tst-tls-ie-mod5.so", "access5");
 
-  /* Here 1152 bytes of surplus static TLS is in use and at most 512 bytes
-     are available (depending on TLS optimizations).  */
-  printf ("The next dlopen should fail...\n");
-  void *p = dlopen ("tst-tls-ie-mod6.so", RTLD_NOW);
-  if (p != NULL)
-    FAIL_EXIT1 ("error: expected dlopen to fail because there is "
-		"not enough surplus static TLS.\n");
-  printf ("...OK failed with: %s.\n", dlerror ());
+    /* Here 1152 bytes of surplus static TLS is in use and at most 512 bytes
+       are available (depending on TLS optimizations).  */
+    printf("The next dlopen should fail...\n");
+    void *p = dlopen("tst-tls-ie-mod6.so", RTLD_NOW);
+    if (p != NULL)
+        FAIL_EXIT1("error: expected dlopen to fail because there is "
+                   "not enough surplus static TLS.\n");
+    printf("...OK failed with: %s.\n", dlerror());
 
-  xpthread_barrier_wait (&barrier);
-  xpthread_join (blocked_thread);
+    xpthread_barrier_wait(&barrier);
+    xpthread_join(blocked_thread);
 
-  /* Close the modules.  */
-  for (int i = 0; i < 6; ++i)
-    xdlclose (mods[i]);
+    /* Close the modules.  */
+    for (int i = 0; i < 6; ++i) {
+        xdlclose(mods[i]);
+    }
 
-  return 0;
+    return 0;
 }

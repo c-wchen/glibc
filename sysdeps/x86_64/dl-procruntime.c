@@ -44,21 +44,21 @@
 
 #if !IS_IN (ldconfig)
 # if !defined PROCINFO_DECL && defined SHARED
-  ._dl_x86_feature_1
+._dl_x86_feature_1
 # else
 PROCINFO_CLASS unsigned int _dl_x86_feature_1
 # endif
 # ifndef PROCINFO_DECL
-= 0
+    = 0
 # endif
 # if !defined SHARED || defined PROCINFO_DECL
-;
+      ;
 # else
-,
+      ,
 # endif
 
 # if !defined PROCINFO_DECL && defined SHARED
-  ._dl_x86_feature_control
+._dl_x86_feature_control
 # else
 PROCINFO_CLASS struct dl_x86_feature_control _dl_x86_feature_control
 # endif
@@ -67,7 +67,7 @@ PROCINFO_CLASS struct dl_x86_feature_control _dl_x86_feature_control
     .ibt = DEFAULT_DL_X86_CET_CONTROL,
     .shstk = DEFAULT_DL_X86_CET_CONTROL,
     .plt_rewrite = plt_rewrite_none,
-  }
+}
 # endif
 # if !defined SHARED || defined PROCINFO_DECL
 ;

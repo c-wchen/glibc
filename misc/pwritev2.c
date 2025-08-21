@@ -20,12 +20,11 @@
 #include <sys/uio.h>
 
 /* Same as pwritev but with an additional flags argument.  */
-ssize_t
-pwritev2 (int fd, const struct iovec *vector, int count, off_t offset,
-	  int flags)
+ssize_t pwritev2(int fd, const struct iovec *vector, int count, off_t offset,
+                 int flags)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (pwritev2)
+stub_warning(pwritev2)

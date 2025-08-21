@@ -43,47 +43,42 @@
    buffer.  The underlying write () returns EPIPE, which fwrite () must
    propagate.  */
 
-int
-main (void)
+int main(void)
 {
-  int i;
-  size_t rc;
-  /* Ensure the string we send has a new line because we're dealing
-     with a lined-buffered stream.  */
-  const char *s = "hello world\n";
-  const size_t len = strlen(s);
+    int i;
+    size_t rc;
+    /* Ensure the string we send has a new line because we're dealing
+       with a lined-buffered stream.  */
+    const char *s = "hello world\n";
+    const size_t len = strlen(s);
 
-  /* Ensure that fwrite buffers the output before writing to stdout.  */
-  setlinebuf(stdout);
-  /* Ignore SIGPIPE in order to catch the EPIPE returned by the
-     underlying call to write().  */
-  xsignal(SIGPIPE, SIG_IGN);
+    /* Ensure that fwrite buffers the output before writing to stdout.  */
+    setlinebuf(stdout);
+    /* Ignore SIGPIPE in order to catch the EPIPE returned by the
+       underlying call to write().  */
+    xsignal(SIGPIPE, SIG_IGN);
 
-  for (i = 1; i <= ITERATIONS; i++)
-    {
-      /* Keep writing to stdout.  The test succeeds if fwrite () returns an
-         error.  */
-      if ((rc = fwrite(s, 1, len, stdout)) < len)
-	{
-	  /* An error happened.  Check if ferror () does return an error
-	     and that it is indeed EPIPE.  */
-	  TEST_COMPARE (ferror (stdout), 1);
-	  TEST_COMPARE (errno, EPIPE);
-	  fprintf(stderr, "Success: i=%d. fwrite returned %zu < %zu "
-			  "and errno=EPIPE\n",
-		  i, rc, len);
-	  /* The test succeeded!  */
-	  return 0;
-	}
-      else
-	{
-	  /* fwrite () was able to write all the contents.  Check if no errors
-	     have been reported and try again.  */
-	  TEST_COMPARE (ferror (stdout), 0);
-	  TEST_COMPARE (errno, 0);
-	}
+    for (i = 1; i <= ITERATIONS; i++) {
+        /* Keep writing to stdout.  The test succeeds if fwrite () returns an
+           error.  */
+        if ((rc = fwrite(s, 1, len, stdout)) < len) {
+            /* An error happened.  Check if ferror () does return an error
+               and that it is indeed EPIPE.  */
+            TEST_COMPARE(ferror(stdout), 1);
+            TEST_COMPARE(errno, EPIPE);
+            fprintf(stderr, "Success: i=%d. fwrite returned %zu < %zu "
+                    "and errno=EPIPE\n",
+                    i, rc, len);
+            /* The test succeeded!  */
+            return 0;
+        } else {
+            /* fwrite () was able to write all the contents.  Check if no errors
+               have been reported and try again.  */
+            TEST_COMPARE(ferror(stdout), 0);
+            TEST_COMPARE(errno, 0);
+        }
     }
 
-  fprintf(stderr, "Error: fwrite did not return an error\n");
-  return 1;
+    fprintf(stderr, "Error: fwrite did not return an error\n");
+    return 1;
 }

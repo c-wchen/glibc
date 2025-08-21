@@ -24,69 +24,66 @@
 #include <hurdlock.h>
 #include <unistd.h>
 
-int
-__pthread_mutex_clocklock (pthread_mutex_t *mtxp,
-			   clockid_t clockid,
-			   const struct timespec *tsp)
+int __pthread_mutex_clocklock(pthread_mutex_t *mtxp,
+                              clockid_t clockid,
+                              const struct timespec *tsp)
 {
-  struct __pthread *self;
-  int ret, flags = mtxp->__flags & GSYNC_SHARED;
+    struct __pthread *self;
+    int ret, flags = mtxp->__flags & GSYNC_SHARED;
 
-  switch (MTX_TYPE (mtxp))
-    {
-    case PT_MTX_NORMAL:
-      ret = lll_abstimed_lock (mtxp->__lock, tsp, flags, clockid);
-      break;
+    switch (MTX_TYPE(mtxp)) {
+        case PT_MTX_NORMAL:
+            ret = lll_abstimed_lock(mtxp->__lock, tsp, flags, clockid);
+            break;
 
-    case PT_MTX_RECURSIVE:
-      self = _pthread_self ();
-      if (mtx_owned_p (mtxp, self, flags))
-	{
-	  if (__glibc_unlikely (mtxp->__cnt + 1 == 0))
-	    return EAGAIN;
+        case PT_MTX_RECURSIVE:
+            self = _pthread_self();
+            if (mtx_owned_p(mtxp, self, flags)) {
+                if (__glibc_unlikely(mtxp->__cnt + 1 == 0)) {
+                    return EAGAIN;
+                }
 
-	  ++mtxp->__cnt;
-	  ret = 0;
-	}
-      else if ((ret = lll_abstimed_lock (mtxp->__lock, tsp, flags, clockid)) == 0)
-	{
-	  mtx_set_owner (mtxp, self, flags);
-	  mtxp->__cnt = 1;
-	}
+                ++mtxp->__cnt;
+                ret = 0;
+            } else if ((ret = lll_abstimed_lock(mtxp->__lock, tsp, flags, clockid)) == 0) {
+                mtx_set_owner(mtxp, self, flags);
+                mtxp->__cnt = 1;
+            }
 
-      break;
+            break;
 
-    case PT_MTX_ERRORCHECK:
-      self = _pthread_self ();
-      if (mtx_owned_p (mtxp, self, flags))
-	ret = EDEADLK;
-      else if ((ret = lll_abstimed_lock (mtxp->__lock, tsp, flags, clockid)) == 0)
-	mtx_set_owner (mtxp, self, flags);
+        case PT_MTX_ERRORCHECK:
+            self = _pthread_self();
+            if (mtx_owned_p(mtxp, self, flags)) {
+                ret = EDEADLK;
+            } else if ((ret = lll_abstimed_lock(mtxp->__lock, tsp, flags, clockid)) == 0) {
+                mtx_set_owner(mtxp, self, flags);
+            }
 
-      break;
+            break;
 
-    case PT_MTX_NORMAL | PTHREAD_MUTEX_ROBUST:
-    case PT_MTX_RECURSIVE | PTHREAD_MUTEX_ROBUST:
-    case PT_MTX_ERRORCHECK | PTHREAD_MUTEX_ROBUST:
-      self = _pthread_self ();
-      ROBUST_LOCK (self, mtxp, lll_robust_abstimed_lock, tsp, flags, clockid);
-      break;
+        case PT_MTX_NORMAL | PTHREAD_MUTEX_ROBUST:
+        case PT_MTX_RECURSIVE | PTHREAD_MUTEX_ROBUST:
+        case PT_MTX_ERRORCHECK | PTHREAD_MUTEX_ROBUST:
+            self = _pthread_self();
+            ROBUST_LOCK(self, mtxp, lll_robust_abstimed_lock, tsp, flags, clockid);
+            break;
 
-    default:
-      ret = EINVAL;
-      break;
+        default:
+            ret = EINVAL;
+            break;
     }
 
-  return ret;
+    return ret;
 }
-libc_hidden_def (__pthread_mutex_clocklock)
-weak_alias (__pthread_mutex_clocklock, pthread_mutex_clocklock)
+libc_hidden_def(__pthread_mutex_clocklock)
+weak_alias(__pthread_mutex_clocklock, pthread_mutex_clocklock)
 
 int
-__pthread_mutex_timedlock (pthread_mutex_t *mutex,
-			   const struct timespec *tsp)
+__pthread_mutex_timedlock(pthread_mutex_t *mutex,
+                          const struct timespec *tsp)
 {
-  return __pthread_mutex_clocklock (mutex, CLOCK_REALTIME, tsp);
+    return __pthread_mutex_clocklock(mutex, CLOCK_REALTIME, tsp);
 }
-libc_hidden_def (__pthread_mutex_timedlock)
-weak_alias (__pthread_mutex_timedlock, pthread_mutex_timedlock)
+libc_hidden_def(__pthread_mutex_timedlock)
+weak_alias(__pthread_mutex_timedlock, pthread_mutex_timedlock)

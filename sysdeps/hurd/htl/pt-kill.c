@@ -23,33 +23,36 @@
 
 #include <pt-internal.h>
 
-int
-__pthread_kill (pthread_t thread, int sig)
+int __pthread_kill(pthread_t thread, int sig)
 {
-  struct __pthread *pthread;
-  struct hurd_signal_detail detail;
-  struct hurd_sigstate *ss;
+    struct __pthread *pthread;
+    struct hurd_signal_detail detail;
+    struct hurd_sigstate *ss;
 
-  /* Lookup the thread structure for THREAD.  */
-  pthread = __pthread_getid (thread);
-  if (pthread == NULL)
-    return ESRCH;
+    /* Lookup the thread structure for THREAD.  */
+    pthread = __pthread_getid(thread);
+    if (pthread == NULL) {
+        return ESRCH;
+    }
 
-  if (pthread->kernel_thread == MACH_PORT_DEAD)
-    /* The pthread ID is still valid but we cannot send a signal any more.  */
-    return 0;
+    if (pthread->kernel_thread == MACH_PORT_DEAD)
+        /* The pthread ID is still valid but we cannot send a signal any more.  */
+    {
+        return 0;
+    }
 
-  ss = _hurd_thread_sigstate (pthread->kernel_thread);
-  assert (ss);
+    ss = _hurd_thread_sigstate(pthread->kernel_thread);
+    assert(ss);
 
-  if (sig == 0)
-    return 0;
+    if (sig == 0) {
+        return 0;
+    }
 
-  detail.exc = 0;
-  detail.code = sig;
-  detail.error = 0;
+    detail.exc = 0;
+    detail.code = sig;
+    detail.error = 0;
 
-  __spin_lock (&ss->lock);
-  return _hurd_raise_signal (ss, sig, &detail);
+    __spin_lock(&ss->lock);
+    return _hurd_raise_signal(ss, sig, &detail);
 }
-strong_alias (__pthread_kill, pthread_kill)
+strong_alias(__pthread_kill, pthread_kill)

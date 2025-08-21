@@ -26,23 +26,22 @@ along with the GNU MP Library; see the file COPYING.LIB.  If not, see
    the two arguments.
    Return 1 if OP1 > OP2, 0 if they are equal, and -1 if OP1 < OP2.  */
 
-int
-mpn_cmp (mp_srcptr op1_ptr, mp_srcptr op2_ptr, mp_size_t size)
+int mpn_cmp(mp_srcptr op1_ptr, mp_srcptr op2_ptr, mp_size_t size)
 {
-  mp_size_t i;
-  mp_limb_t op1_word, op2_word;
+    mp_size_t i;
+    mp_limb_t op1_word, op2_word;
 
-  for (i = size - 1; i >= 0; i--)
-    {
-      op1_word = op1_ptr[i];
-      op2_word = op2_ptr[i];
-      if (op1_word != op2_word)
-	goto diff;
+    for (i = size - 1; i >= 0; i--) {
+        op1_word = op1_ptr[i];
+        op2_word = op2_ptr[i];
+        if (op1_word != op2_word) {
+            goto diff;
+        }
     }
-  return 0;
- diff:
-  /* This can *not* be simplified to
-	op2_word - op2_word
-     since that expression might give signed overflow.  */
-  return (op1_word > op2_word) ? 1 : -1;
+    return 0;
+diff:
+    /* This can *not* be simplified to
+    op2_word - op2_word
+       since that expression might give signed overflow.  */
+    return (op1_word > op2_word) ? 1 : -1;
 }

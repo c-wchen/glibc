@@ -21,8 +21,8 @@
 #define OFF_T off64_t
 #include <sysdeps/posix/preadv_common.c>
 
-libc_hidden_def (preadv64)
+libc_hidden_def(preadv64)
 #ifdef __OFF_T_MATCHES_OFF64_T
-strong_alias (preadv64, preadv)
-libc_hidden_def (preadv)
+strong_alias(preadv64, preadv)
+libc_hidden_def(preadv)
 #endif

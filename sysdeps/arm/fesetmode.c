@@ -23,23 +23,26 @@
 /* NZCV flags, QC bit, IDC bit and bits for IEEE exception status.  */
 #define FPU_STATUS_BITS 0xf800009f
 
-int
-fesetmode (const femode_t *modep)
+int fesetmode(const femode_t *modep)
 {
-  fpu_control_t fpscr, new_fpscr;
+    fpu_control_t fpscr, new_fpscr;
 
-  if (!ARM_HAVE_VFP)
-    /* Nothing to do.  */
+    if (!ARM_HAVE_VFP)
+        /* Nothing to do.  */
+    {
+        return 0;
+    }
+
+    _FPU_GETCW(fpscr);
+    if (modep == FE_DFL_MODE) {
+        new_fpscr = (fpscr & (_FPU_RESERVED | FPU_STATUS_BITS)) | _FPU_DEFAULT;
+    } else {
+        new_fpscr = (fpscr & FPU_STATUS_BITS) | (*modep & ~FPU_STATUS_BITS);
+    }
+
+    if (((new_fpscr ^ fpscr) & ~_FPU_MASK_NZCV) != 0) {
+        _FPU_SETCW(new_fpscr);
+    }
+
     return 0;
-
-  _FPU_GETCW (fpscr);
-  if (modep == FE_DFL_MODE)
-    new_fpscr = (fpscr & (_FPU_RESERVED | FPU_STATUS_BITS)) | _FPU_DEFAULT;
-  else
-    new_fpscr = (fpscr & FPU_STATUS_BITS) | (*modep & ~FPU_STATUS_BITS);
-
-  if (((new_fpscr ^ fpscr) & ~_FPU_MASK_NZCV) != 0)
-    _FPU_SETCW (new_fpscr);
-
-  return 0;
 }

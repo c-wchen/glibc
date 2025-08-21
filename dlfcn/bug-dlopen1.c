@@ -3,9 +3,9 @@
 
 #include <dlfcn.h>
 
-int main (void)
+int main(void)
 {
-  dlopen ("gnu-gettext-GetURL$1", RTLD_GLOBAL | RTLD_LAZY);
-  dlopen ("gnu-gettext-GetURL${1", RTLD_GLOBAL | RTLD_LAZY);
-  return 0;
+    dlopen("gnu-gettext-GetURL$1", RTLD_GLOBAL | RTLD_LAZY);
+    dlopen("gnu-gettext-GetURL${1", RTLD_GLOBAL | RTLD_LAZY);
+    return 0;
 }

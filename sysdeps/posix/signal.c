@@ -21,32 +21,31 @@
 #include <sigsetops.h>
 #include <internal-signals.h>
 
-sigset_t _sigintr attribute_hidden;		/* Set by siginterrupt.  */
+sigset_t _sigintr attribute_hidden;     /* Set by siginterrupt.  */
 
 /* Set the handler for the signal SIG to HANDLER,
    returning the old handler, or SIG_ERR on error.  */
-__sighandler_t
-__bsd_signal (int sig, __sighandler_t handler)
+__sighandler_t __bsd_signal(int sig, __sighandler_t handler)
 {
-  struct sigaction act, oact;
+    struct sigaction act, oact;
 
-  /* Check signal extents to protect __sigismember.  */
-  if (handler == SIG_ERR || sig < 1 || sig >= NSIG
-      || is_internal_signal (sig))
-    {
-      __set_errno (EINVAL);
-      return SIG_ERR;
+    /* Check signal extents to protect __sigismember.  */
+    if (handler == SIG_ERR || sig < 1 || sig >= NSIG
+        || is_internal_signal(sig)) {
+        __set_errno(EINVAL);
+        return SIG_ERR;
     }
 
-  act.sa_handler = handler;
-  __sigemptyset (&act.sa_mask);
-  __sigaddset (&act.sa_mask, sig);
-  act.sa_flags = __sigismember (&_sigintr, sig) ? 0 : SA_RESTART;
-  if (__sigaction (sig, &act, &oact) < 0)
-    return SIG_ERR;
+    act.sa_handler = handler;
+    __sigemptyset(&act.sa_mask);
+    __sigaddset(&act.sa_mask, sig);
+    act.sa_flags = __sigismember(&_sigintr, sig) ? 0 : SA_RESTART;
+    if (__sigaction(sig, &act, &oact) < 0) {
+        return SIG_ERR;
+    }
 
-  return oact.sa_handler;
+    return oact.sa_handler;
 }
-weak_alias (__bsd_signal, bsd_signal)
-weak_alias (__bsd_signal, signal)
-weak_alias (__bsd_signal, ssignal)
+weak_alias(__bsd_signal, bsd_signal)
+weak_alias(__bsd_signal, signal)
+weak_alias(__bsd_signal, ssignal)

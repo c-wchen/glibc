@@ -19,16 +19,15 @@
 #include <stdarg.h>
 #include <libio/libioP.h>
 
-extern int
-___ieee128_scanf (const char *format, ...)
+extern int ___ieee128_scanf(const char *format, ...)
 {
-  va_list arg;
-  int done;
+    va_list arg;
+    int done;
 
-  va_start (arg, format);
-  done = __vfscanf_internal (stdin, format, arg, SCANF_LDBL_USES_FLOAT128);
-  va_end (arg);
+    va_start(arg, format);
+    done = __vfscanf_internal(stdin, format, arg, SCANF_LDBL_USES_FLOAT128);
+    va_end(arg);
 
-  return done;
+    return done;
 }
-strong_alias (___ieee128_scanf, __scanfieee128)
+strong_alias(___ieee128_scanf, __scanfieee128)

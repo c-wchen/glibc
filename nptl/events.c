@@ -20,14 +20,13 @@
 
 #include "pthreadP.h"
 
-void
-__nptl_create_event (void)
+void __nptl_create_event(void)
 {
 }
-libc_hidden_def (__nptl_create_event)
+libc_hidden_def(__nptl_create_event)
 
 void
-__nptl_death_event (void)
+__nptl_death_event(void)
 {
 }
-libc_hidden_def (__nptl_death_event)
+libc_hidden_def(__nptl_death_event)

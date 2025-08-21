@@ -56,8 +56,7 @@ const cldouble Vcldouble1 = 1, Vcldouble2 = 2, Vcldouble4 = 3;
 const int Vint1 = 1, Vint2 = 2, Vint3 = 3;
 const long int Vlong1 = 1, Vlong2 = 2, Vlong3 = 3;
 const long long int Vllong1 = 1, Vllong2 = 2, Vllong3 = 3;
-enum
-  {
+enum {
     Tfloat = 0,
     Tcfloat,
     Tdouble,
@@ -70,9 +69,8 @@ enum
     Tcldouble = Tcdouble,
 #endif
     Tlast
-  };
-enum
-  {
+};
+enum {
     C_cos = 0,
     C_fabs,
     C_cabs,
@@ -85,180 +83,174 @@ enum
     C_pow,
     C_fma,
     C_last
-  };
+};
 int count;
 int counts[Tlast][C_last];
 
 #define TEST_TYPE_ONLY(expr, rettype) \
-  do								\
-    {								\
-      __typeof__ (expr) texpr = 0;				\
-      __typeof__ (rettype) ttype = 0, *ptype;			\
-      if (sizeof (expr) != sizeof (rettype))			\
-	FAIL ("type");						\
-      if (__alignof__ (expr) != __alignof__ (rettype))		\
-	FAIL ("type");						\
-      __asm ("" : "=r" (ptype) : "0" (&ttype), "r" (&texpr));	\
-      if (&texpr == ptype)					\
-	FAIL ("type");						\
-    }								\
+  do                                \
+    {                               \
+      __typeof__ (expr) texpr = 0;              \
+      __typeof__ (rettype) ttype = 0, *ptype;           \
+      if (sizeof (expr) != sizeof (rettype))            \
+    FAIL ("type");                      \
+      if (__alignof__ (expr) != __alignof__ (rettype))      \
+    FAIL ("type");                      \
+      __asm ("" : "=r" (ptype) : "0" (&ttype), "r" (&texpr));   \
+      if (&texpr == ptype)                  \
+    FAIL ("type");                      \
+    }                               \
   while (0)
 #define TEST2(expr, type, rettype, fn) \
-  do								\
-    {								\
-      __typeof__ (expr) texpr = 0;				\
-      TEST_TYPE_ONLY (expr, rettype);				\
-      if (count != 0)						\
-	FAIL ("internal error");				\
-      if (counts[T##type][C_##fn] != 0)				\
-	FAIL ("internal error");				\
-      texpr = expr;						\
-      __asm __volatile ("" : : "r" (&texpr));			\
-      if (count != 1 || counts[T##type][C_##fn] != 1)		\
-	{							\
-	  FAIL ("wrong function called, "#fn" ("#type")");	\
-	  memset (counts, 0, sizeof (counts));			\
-	}							\
-      count = 0;						\
-      counts[T##type][C_##fn] = 0;				\
-    }								\
+  do                                \
+    {                               \
+      __typeof__ (expr) texpr = 0;              \
+      TEST_TYPE_ONLY (expr, rettype);               \
+      if (count != 0)                       \
+    FAIL ("internal error");                \
+      if (counts[T##type][C_##fn] != 0)             \
+    FAIL ("internal error");                \
+      texpr = expr;                     \
+      __asm __volatile ("" : : "r" (&texpr));           \
+      if (count != 1 || counts[T##type][C_##fn] != 1)       \
+    {                           \
+      FAIL ("wrong function called, "#fn" ("#type")");  \
+      memset (counts, 0, sizeof (counts));          \
+    }                           \
+      count = 0;                        \
+      counts[T##type][C_##fn] = 0;              \
+    }                               \
   while (0)
 #define TEST(expr, type, fn) TEST2(expr, type, type, fn)
 
-int
-test_cos (const int Vint4, const long long int Vllong4)
+int test_cos(const int Vint4, const long long int Vllong4)
 {
-  TEST (cos (vfloat1), float, cos);
-  TEST (cos (vdouble1), double, cos);
-  TEST (cos (vldouble1), ldouble, cos);
-  TEST (cos (vint1), double, cos);
-  TEST (cos (vllong1), double, cos);
-  TEST (cos (vcfloat1), cfloat, cos);
-  TEST (cos (vcdouble1), cdouble, cos);
-  TEST (cos (vcldouble1), cldouble, cos);
-  TEST (cos (Vfloat1), float, cos);
-  TEST (cos (Vdouble1), double, cos);
-  TEST (cos (Vldouble1), ldouble, cos);
-  TEST (cos (Vint1), double, cos);
-  TEST (cos (Vllong1), double, cos);
-  TEST (cos (Vcfloat1), cfloat, cos);
-  TEST (cos (Vcdouble1), cdouble, cos);
-  TEST (cos (Vcldouble1), cldouble, cos);
+    TEST(cos(vfloat1), float, cos);
+    TEST(cos(vdouble1), double, cos);
+    TEST(cos(vldouble1), ldouble, cos);
+    TEST(cos(vint1), double, cos);
+    TEST(cos(vllong1), double, cos);
+    TEST(cos(vcfloat1), cfloat, cos);
+    TEST(cos(vcdouble1), cdouble, cos);
+    TEST(cos(vcldouble1), cldouble, cos);
+    TEST(cos(Vfloat1), float, cos);
+    TEST(cos(Vdouble1), double, cos);
+    TEST(cos(Vldouble1), ldouble, cos);
+    TEST(cos(Vint1), double, cos);
+    TEST(cos(Vllong1), double, cos);
+    TEST(cos(Vcfloat1), cfloat, cos);
+    TEST(cos(Vcdouble1), cdouble, cos);
+    TEST(cos(Vcldouble1), cldouble, cos);
 
-  return 0;
+    return 0;
 }
 
-int
-test_fabs (const int Vint4, const long long int Vllong4)
+int test_fabs(const int Vint4, const long long int Vllong4)
 {
-  int result = 0;
+    int result = 0;
 
-  TEST (fabs (vfloat1), float, fabs);
-  TEST (fabs (vdouble1), double, fabs);
-  TEST (fabs (vldouble1), ldouble, fabs);
-  TEST (fabs (vint1), double, fabs);
-  TEST (fabs (vllong1), double, fabs);
-  TEST (fabs (vcfloat1), float, cabs);
-  TEST (fabs (vcdouble1), double, cabs);
-  TEST (fabs (vcldouble1), ldouble, cabs);
-  TEST (fabs (Vfloat1), float, fabs);
-  TEST (fabs (Vdouble1), double, fabs);
-  TEST (fabs (Vldouble2), ldouble, fabs);
+    TEST(fabs(vfloat1), float, fabs);
+    TEST(fabs(vdouble1), double, fabs);
+    TEST(fabs(vldouble1), ldouble, fabs);
+    TEST(fabs(vint1), double, fabs);
+    TEST(fabs(vllong1), double, fabs);
+    TEST(fabs(vcfloat1), float, cabs);
+    TEST(fabs(vcdouble1), double, cabs);
+    TEST(fabs(vcldouble1), ldouble, cabs);
+    TEST(fabs(Vfloat1), float, fabs);
+    TEST(fabs(Vdouble1), double, fabs);
+    TEST(fabs(Vldouble2), ldouble, fabs);
 #ifndef __OPTIMIZE__
-  /* GCC is too smart to optimize these out.  */
-  TEST (fabs (Vint1), double, fabs);
-  TEST (fabs (Vllong1), double, fabs);
+    /* GCC is too smart to optimize these out.  */
+    TEST(fabs(Vint1), double, fabs);
+    TEST(fabs(Vllong1), double, fabs);
 #else
-  TEST_TYPE_ONLY (fabs (vllong1), double);
-  TEST_TYPE_ONLY (fabs (vllong1), double);
+    TEST_TYPE_ONLY(fabs(vllong1), double);
+    TEST_TYPE_ONLY(fabs(vllong1), double);
 #endif
-  TEST (fabs (Vint4), double, fabs);
-  TEST (fabs (Vllong4), double, fabs);
-  TEST (fabs (Vcfloat1), float, cabs);
-  TEST (fabs (Vcdouble1), double, cabs);
-  TEST (fabs (Vcldouble1), ldouble, cabs);
+    TEST(fabs(Vint4), double, fabs);
+    TEST(fabs(Vllong4), double, fabs);
+    TEST(fabs(Vcfloat1), float, cabs);
+    TEST(fabs(Vcdouble1), double, cabs);
+    TEST(fabs(Vcldouble1), ldouble, cabs);
 
-  return result;
+    return result;
 }
 
-int
-test_conj (const int Vint4, const long long int Vllong4)
+int test_conj(const int Vint4, const long long int Vllong4)
 {
-  int result = 0;
-  TEST (conj (vfloat1), cfloat, conj);
-  TEST (conj (vdouble1), cdouble, conj);
-  TEST (conj (vldouble1), cldouble, conj);
-  TEST (conj (vint1), cdouble, conj);
-  TEST (conj (vllong1), cdouble, conj);
-  TEST (conj (vcfloat1), cfloat, conj);
-  TEST (conj (vcdouble1), cdouble, conj);
-  TEST (conj (vcldouble1), cldouble, conj);
-  TEST (conj (Vfloat1), cfloat, conj);
-  TEST (conj (Vdouble1), cdouble, conj);
-  TEST (conj (Vldouble1), cldouble, conj);
-  TEST (conj (Vint1), cdouble, conj);
-  TEST (conj (Vllong1), cdouble, conj);
-  TEST (conj (Vcfloat1), cfloat, conj);
-  TEST (conj (Vcdouble1), cdouble, conj);
-  TEST (conj (Vcldouble1), cldouble, conj);
+    int result = 0;
+    TEST(conj(vfloat1), cfloat, conj);
+    TEST(conj(vdouble1), cdouble, conj);
+    TEST(conj(vldouble1), cldouble, conj);
+    TEST(conj(vint1), cdouble, conj);
+    TEST(conj(vllong1), cdouble, conj);
+    TEST(conj(vcfloat1), cfloat, conj);
+    TEST(conj(vcdouble1), cdouble, conj);
+    TEST(conj(vcldouble1), cldouble, conj);
+    TEST(conj(Vfloat1), cfloat, conj);
+    TEST(conj(Vdouble1), cdouble, conj);
+    TEST(conj(Vldouble1), cldouble, conj);
+    TEST(conj(Vint1), cdouble, conj);
+    TEST(conj(Vllong1), cdouble, conj);
+    TEST(conj(Vcfloat1), cfloat, conj);
+    TEST(conj(Vcdouble1), cdouble, conj);
+    TEST(conj(Vcldouble1), cldouble, conj);
 
-  return result;
+    return result;
 }
 
-int
-test_expm1 (const int Vint4, const long long int Vllong4)
+int test_expm1(const int Vint4, const long long int Vllong4)
 {
-  int result = 0;
+    int result = 0;
 
-  TEST (expm1 (vfloat1), float, expm1);
-  TEST (expm1 (vdouble1), double, expm1);
-  TEST (expm1 (vldouble1), ldouble, expm1);
-  TEST (expm1 (vint1), double, expm1);
-  TEST (expm1 (vllong1), double, expm1);
-  TEST (expm1 (Vfloat1), float, expm1);
-  TEST (expm1 (Vdouble1), double, expm1);
-  TEST (expm1 (Vldouble1), ldouble, expm1);
-  TEST (expm1 (Vint1), double, expm1);
-  TEST (expm1 (Vllong1), double, expm1);
+    TEST(expm1(vfloat1), float, expm1);
+    TEST(expm1(vdouble1), double, expm1);
+    TEST(expm1(vldouble1), ldouble, expm1);
+    TEST(expm1(vint1), double, expm1);
+    TEST(expm1(vllong1), double, expm1);
+    TEST(expm1(Vfloat1), float, expm1);
+    TEST(expm1(Vdouble1), double, expm1);
+    TEST(expm1(Vldouble1), ldouble, expm1);
+    TEST(expm1(Vint1), double, expm1);
+    TEST(expm1(Vllong1), double, expm1);
 
-  return result;
+    return result;
 }
 
-int
-test_lrint (const int Vint4, const long long int Vllong4)
+int test_lrint(const int Vint4, const long long int Vllong4)
 {
-  int result = 0;
-  TEST2 (lrint (vfloat1), float, long int, lrint);
-  TEST2 (lrint (vdouble1), double, long int, lrint);
-  TEST2 (lrint (vldouble1), ldouble, long int, lrint);
-  TEST2 (lrint (vint1), double, long int, lrint);
-  TEST2 (lrint (vllong1), double, long int, lrint);
-  TEST2 (lrint (Vfloat1), float, long int, lrint);
-  TEST2 (lrint (Vdouble1), double, long int, lrint);
-  TEST2 (lrint (Vldouble1), ldouble, long int, lrint);
-  TEST2 (lrint (Vint1), double, long int, lrint);
-  TEST2 (lrint (Vllong1), double, long int, lrint);
+    int result = 0;
+    TEST2(lrint(vfloat1), float, long int, lrint);
+    TEST2(lrint(vdouble1), double, long int, lrint);
+    TEST2(lrint(vldouble1), ldouble, long int, lrint);
+    TEST2(lrint(vint1), double, long int, lrint);
+    TEST2(lrint(vllong1), double, long int, lrint);
+    TEST2(lrint(Vfloat1), float, long int, lrint);
+    TEST2(lrint(Vdouble1), double, long int, lrint);
+    TEST2(lrint(Vldouble1), ldouble, long int, lrint);
+    TEST2(lrint(Vint1), double, long int, lrint);
+    TEST2(lrint(Vllong1), double, long int, lrint);
 
-  return result;
+    return result;
 }
 
-int
-test_ldexp (const int Vint4, const long long int Vllong4)
+int test_ldexp(const int Vint4, const long long int Vllong4)
 {
-  int result = 0;
+    int result = 0;
 
-  TEST (ldexp (vfloat1, 6), float, ldexp);
-  TEST (ldexp (vdouble1, 6), double, ldexp);
-  TEST (ldexp (vldouble1, 6), ldouble, ldexp);
-  TEST (ldexp (vint1, 6), double, ldexp);
-  TEST (ldexp (vllong1, 6), double, ldexp);
-  TEST (ldexp (Vfloat1, 6), float, ldexp);
-  TEST (ldexp (Vdouble1, 6), double, ldexp);
-  TEST (ldexp (Vldouble1, 6), ldouble, ldexp);
-  TEST (ldexp (Vint1, 6), double, ldexp);
-  TEST (ldexp (Vllong1, 6), double, ldexp);
+    TEST(ldexp(vfloat1, 6), float, ldexp);
+    TEST(ldexp(vdouble1, 6), double, ldexp);
+    TEST(ldexp(vldouble1, 6), ldouble, ldexp);
+    TEST(ldexp(vint1, 6), double, ldexp);
+    TEST(ldexp(vllong1, 6), double, ldexp);
+    TEST(ldexp(Vfloat1, 6), float, ldexp);
+    TEST(ldexp(Vdouble1, 6), double, ldexp);
+    TEST(ldexp(Vldouble1, 6), ldouble, ldexp);
+    TEST(ldexp(Vint1, 6), double, ldexp);
+    TEST(ldexp(Vllong1, 6), double, ldexp);
 
-  return result;
+    return result;
 }
 
 #define FIRST(x, y) (y, x)
@@ -338,110 +330,102 @@ test_ldexp (const int Vint4, const long long int Vllong4)
   NON_LDBL_CTEST (fn, FIRST, Vcdouble2, cdouble, fnt); \
   NON_LDBL_CTEST (fn, SECOND, Vcdouble2, cdouble, fnt);
 
-int
-test_atan2 (const int Vint4, const long long int Vllong4)
+int test_atan2(const int Vint4, const long long int Vllong4)
 {
-  int result = 0;
+    int result = 0;
 
-  BINARY_TEST (atan2, atan2);
+    BINARY_TEST(atan2, atan2);
 
-  return result;
+    return result;
 }
 
-int
-test_remquo (const int Vint4, const long long int Vllong4)
+int test_remquo(const int Vint4, const long long int Vllong4)
 {
-  int result = 0;
-  int quo = 0;
+    int result = 0;
+    int quo = 0;
 
 #define my_remquo(x, y) remquo (x, y, &quo)
-  BINARY_TEST (my_remquo, remquo);
+    BINARY_TEST(my_remquo, remquo);
 #undef my_remquo
 
-  return result;
+    return result;
 }
 
-int
-test_pow (const int Vint4, const long long int Vllong4)
+int test_pow(const int Vint4, const long long int Vllong4)
 {
-  int result = 0;
+    int result = 0;
 
-  BINARY_CTEST (pow, pow);
+    BINARY_CTEST(pow, pow);
 
-  return result;
+    return result;
 }
 
 /* Testing all arguments of fma would be just too expensive,
    so test just some.  */
 
-int
-test_fma_1 (const int Vint4, const long long int Vllong4)
+int test_fma_1(const int Vint4, const long long int Vllong4)
 {
-  int result = 0;
+    int result = 0;
 
 #define my_fma(x, y) fma (x, y, vfloat3)
-  BINARY_TEST (my_fma, fma);
+    BINARY_TEST(my_fma, fma);
 #undef my_fma
 
-  return result;
+    return result;
 }
 
-int
-test_fma_2 (const int Vint4, const long long int Vllong4)
+int test_fma_2(const int Vint4, const long long int Vllong4)
 {
-  int result = 0;
+    int result = 0;
 
 #define my_fma(x, y) fma (x, vfloat3, y)
-  BINARY_TEST (my_fma, fma);
+    BINARY_TEST(my_fma, fma);
 #undef my_fma
 
-  return result;
+    return result;
 }
 
-int
-test_fma_3 (const int Vint4, const long long int Vllong4)
+int test_fma_3(const int Vint4, const long long int Vllong4)
 {
-  int result = 0;
+    int result = 0;
 
 #define my_fma(x, y) fma (Vfloat3, x, y)
-  BINARY_TEST (my_fma, fma);
+    BINARY_TEST(my_fma, fma);
 #undef my_fma
 
-  return result;
+    return result;
 }
 
-int
-test_fma_4 (const int Vint4, const long long int Vllong4)
+int test_fma_4(const int Vint4, const long long int Vllong4)
 {
-  int result = 0;
-  TEST (fma (vdouble1, Vdouble2, vllong3), double, fma);
-  TEST (fma (vint1, Vint2, vint3), double, fma);
-  TEST (fma (Vldouble1, vldouble2, Vldouble3), ldouble, fma);
-  TEST (fma (vldouble1, vint2, Vdouble3), ldouble, fma);
+    int result = 0;
+    TEST(fma(vdouble1, Vdouble2, vllong3), double, fma);
+    TEST(fma(vint1, Vint2, vint3), double, fma);
+    TEST(fma(Vldouble1, vldouble2, Vldouble3), ldouble, fma);
+    TEST(fma(vldouble1, vint2, Vdouble3), ldouble, fma);
 
-  return result;
+    return result;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int result;
+    int result;
 
-  result = test_cos (vint1, vllong1);
-  result |= test_fabs (vint1, vllong1);
-  result |= test_conj (vint1, vllong1);
-  result |= test_expm1 (vint1, vllong1);
-  result |= test_lrint (vint1, vllong1);
-  result |= test_ldexp (vint1, vllong1);
-  result |= test_atan2 (vint1, vllong1);
-  result |= test_remquo (vint1, vllong1);
-  result |= test_pow (vint1, vllong1);
-  result |= test_fma_1 (vint1, vllong1);
-  result |= test_fma_2 (vint1, vllong1);
-  result |= test_fma_3 (vint1, vllong1);
-  result |= test_fma_4 (vint1, vllong1);
+    result = test_cos(vint1, vllong1);
+    result |= test_fabs(vint1, vllong1);
+    result |= test_conj(vint1, vllong1);
+    result |= test_expm1(vint1, vllong1);
+    result |= test_lrint(vint1, vllong1);
+    result |= test_ldexp(vint1, vllong1);
+    result |= test_atan2(vint1, vllong1);
+    result |= test_remquo(vint1, vllong1);
+    result |= test_pow(vint1, vllong1);
+    result |= test_fma_1(vint1, vllong1);
+    result |= test_fma_2(vint1, vllong1);
+    result |= test_fma_3(vint1, vllong1);
+    result |= test_fma_4(vint1, vllong1);
 
-  return result;
+    return result;
 }
 
 /* Now generate the three functions.  */
@@ -482,107 +466,107 @@ do_test (void)
 #endif
 
 TYPE
-(F(cos)) (TYPE x)
+(F(cos))(TYPE x)
 {
-  counts[T][C_cos]++;
-  P ();
-  return x;
+    counts[T][C_cos]++;
+    P();
+    return x;
 }
 
 CTYPE
-(F(ccos)) (CTYPE x)
+(F(ccos))(CTYPE x)
 {
-  counts[C][C_cos]++;
-  P ();
-  return x;
+    counts[C][C_cos]++;
+    P();
+    return x;
 }
 
 TYPE
-(F(fabs)) (TYPE x)
+(F(fabs))(TYPE x)
 {
-  counts[T][C_fabs]++;
-  P ();
-  return x;
+    counts[T][C_fabs]++;
+    P();
+    return x;
 }
 
 TYPE
-(F(cabs)) (CTYPE x)
+(F(cabs))(CTYPE x)
 {
-  counts[T][C_cabs]++;
-  P ();
-  return x;
+    counts[T][C_cabs]++;
+    P();
+    return x;
 }
 
 CTYPE
-(F(conj)) (CTYPE x)
+(F(conj))(CTYPE x)
 {
-  counts[C][C_conj]++;
-  P ();
-  return x;
+    counts[C][C_conj]++;
+    P();
+    return x;
 }
 
 TYPE
-(F(expm1)) (TYPE x)
+(F(expm1))(TYPE x)
 {
-  counts[T][C_expm1]++;
-  P ();
-  return x;
+    counts[T][C_expm1]++;
+    P();
+    return x;
 }
 
 long int
-(F(lrint)) (TYPE x)
+(F(lrint))(TYPE x)
 {
-  counts[T][C_lrint]++;
-  P ();
-  return x;
+    counts[T][C_lrint]++;
+    P();
+    return x;
 }
 
 TYPE
-(F(ldexp)) (TYPE x, int y)
+(F(ldexp))(TYPE x, int y)
 {
-  counts[T][C_ldexp]++;
-  P ();
-  return x + y;
+    counts[T][C_ldexp]++;
+    P();
+    return x + y;
 }
 
 TYPE
-(F(atan2)) (TYPE x, TYPE y)
+(F(atan2))(TYPE x, TYPE y)
 {
-  counts[T][C_atan2]++;
-  P ();
-  return x + y;
+    counts[T][C_atan2]++;
+    P();
+    return x + y;
 }
 
 TYPE
-(F(remquo)) (TYPE x, TYPE y, int *z)
+(F(remquo))(TYPE x, TYPE y, int *z)
 {
-  counts[T][C_remquo]++;
-  P ();
-  return x + y + *z;
+    counts[T][C_remquo]++;
+    P();
+    return x + y + *z;
 }
 
 TYPE
-(F(pow)) (TYPE x, TYPE y)
+(F(pow))(TYPE x, TYPE y)
 {
-  counts[T][C_pow]++;
-  P ();
-  return x + y;
+    counts[T][C_pow]++;
+    P();
+    return x + y;
 }
 
 CTYPE
-(F(cpow)) (CTYPE x, CTYPE y)
+(F(cpow))(CTYPE x, CTYPE y)
 {
-  counts[C][C_pow]++;
-  P ();
-  return x + y;
+    counts[C][C_pow]++;
+    P();
+    return x + y;
 }
 
 TYPE
-(F(fma)) (TYPE x, TYPE y, TYPE z)
+(F(fma))(TYPE x, TYPE y, TYPE z)
 {
-  counts[T][C_fma]++;
-  P ();
-  return x + y + z;
+    counts[T][C_fma]++;
+    P();
+    return x + y + z;
 }
 
 #undef F

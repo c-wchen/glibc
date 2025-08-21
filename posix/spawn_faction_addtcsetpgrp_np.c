@@ -21,30 +21,32 @@
 #include <unistd.h>
 #include <spawn_int.h>
 
-int
-__posix_spawn_file_actions_addtcsetpgrp_np (posix_spawn_file_actions_t
-					    *file_actions, int tcfd)
+int __posix_spawn_file_actions_addtcsetpgrp_np(posix_spawn_file_actions_t
+        *file_actions, int tcfd)
 {
-  struct __spawn_action *rec;
+    struct __spawn_action *rec;
 
-  if (!__spawn_valid_fd (tcfd))
-    return EBADF;
+    if (!__spawn_valid_fd(tcfd)) {
+        return EBADF;
+    }
 
-  /* Allocate more memory if needed.  */
-  if (file_actions->__used == file_actions->__allocated
-      && __posix_spawn_file_actions_realloc (file_actions) != 0)
-    /* This can only mean we ran out of memory.  */
-    return ENOMEM;
+    /* Allocate more memory if needed.  */
+    if (file_actions->__used == file_actions->__allocated
+        && __posix_spawn_file_actions_realloc(file_actions) != 0)
+        /* This can only mean we ran out of memory.  */
+    {
+        return ENOMEM;
+    }
 
-  /* Add the new value.  */
-  rec = &file_actions->__actions[file_actions->__used];
-  rec->tag = spawn_do_tcsetpgrp;
-  rec->action.setpgrp_action.fd = tcfd;
+    /* Add the new value.  */
+    rec = &file_actions->__actions[file_actions->__used];
+    rec->tag = spawn_do_tcsetpgrp;
+    rec->action.setpgrp_action.fd = tcfd;
 
-  /* Account for the new entry.  */
-  ++file_actions->__used;
+    /* Account for the new entry.  */
+    ++file_actions->__used;
 
-  return 0;
+    return 0;
 }
-weak_alias (__posix_spawn_file_actions_addtcsetpgrp_np,
-	    posix_spawn_file_actions_addtcsetpgrp_np)
+weak_alias(__posix_spawn_file_actions_addtcsetpgrp_np,
+           posix_spawn_file_actions_addtcsetpgrp_np)

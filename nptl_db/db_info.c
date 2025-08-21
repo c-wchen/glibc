@@ -26,15 +26,13 @@
 typedef struct pthread pthread;
 typedef struct pthread_key_struct pthread_key_struct;
 typedef struct pthread_key_data pthread_key_data;
-typedef struct
-{
-  struct pthread_key_data data[PTHREAD_KEY_2NDLEVEL_SIZE];
+typedef struct {
+    struct pthread_key_data data[PTHREAD_KEY_2NDLEVEL_SIZE];
 }
 pthread_key_data_level2;
 
-typedef struct
-{
-  union dtv dtv[UINT32_MAX / 2 / sizeof (union dtv)]; /* No constant bound.  */
+typedef struct {
+    union dtv dtv[UINT32_MAX / 2 / sizeof(union dtv)];  /* No constant bound.  */
 } dtv;
 
 typedef struct link_map link_map;
@@ -51,8 +49,8 @@ typedef struct dtv_slotinfo dtv_slotinfo;
   DB_DEFINE_DESC (name, 8 * sizeof (obj), 1, offset);
 #define ARRAY_DESC(name, offset, obj) \
   DB_DEFINE_DESC (name, \
-		  8 * sizeof (obj)[0], sizeof (obj) / sizeof (obj)[0], \
-		  offset);
+          8 * sizeof (obj)[0], sizeof (obj) / sizeof (obj)[0], \
+          offset);
 /* Flexible arrays do not have a length that can be determined.  */
 #define FLEXIBLE_ARRAY_DESC(name, offset, obj) \
   DB_DEFINE_DESC (name, 8 * sizeof (obj)[0], 0, offset);
@@ -63,9 +61,9 @@ typedef struct dtv_slotinfo dtv_slotinfo;
 /* Special case hack.  If TLS_TCB_SIZE == 0 (on PowerPC), there is no TCB
    containing the DTV at the TP, but actually the TCB lies behind the TP,
    i.e. at the very end of the area covered by TLS_PRE_TCB_SIZE.  */
-DESC (_thread_db_pthread_dtvp,
-      TLS_PRE_TCB_SIZE + offsetof (tcbhead_t, dtv)
-      - (TLS_TCB_SIZE == 0 ? sizeof (tcbhead_t) : 0), union dtv *)
+DESC(_thread_db_pthread_dtvp,
+     TLS_PRE_TCB_SIZE + offsetof(tcbhead_t, dtv)
+     - (TLS_TCB_SIZE == 0 ? sizeof(tcbhead_t) : 0), union dtv *)
 #endif
 
 
@@ -73,16 +71,16 @@ DESC (_thread_db_pthread_dtvp,
   const uint32_t _thread_db_sizeof_##type = sizeof (type);
 #define DB_STRUCT_FIELD(type, field) \
   DESC (_thread_db_##type##_##field, \
-	offsetof (type, field), ((type *) 0)->field)
+    offsetof (type, field), ((type *) 0)->field)
 #define DB_STRUCT_ARRAY_FIELD(type, field) \
   ARRAY_DESC (_thread_db_##type##_##field, \
-	      offsetof (type, field), ((type *) 0)->field)
+          offsetof (type, field), ((type *) 0)->field)
 #define DB_STRUCT_FLEXIBLE_ARRAY(type, field) \
   FLEXIBLE_ARRAY_DESC (_thread_db_##type##_##field, \
-		       offsetof (type, field), ((type *) 0)->field)
+               offsetof (type, field), ((type *) 0)->field)
 #define DB_VARIABLE(name) DESC (_thread_db_##name, 0, name)
 #define DB_ARRAY_VARIABLE(name) ARRAY_DESC (_thread_db_##name, 0, name)
-#define DB_SYMBOL(name)	/* Nothing.  */
+#define DB_SYMBOL(name) /* Nothing.  */
 #define DB_FUNCTION(name) /* Nothing.  */
 #include "structs.def"
 #undef DB_STRUCT
@@ -104,7 +102,7 @@ DESC (_thread_db_pthread_dtvp,
   const uint32_t _thread_db_const_thread_area = (value);
 # define REGISTER_THREAD_AREA(bits, regofs, scale) \
   DB_DEFINE_DESC (_thread_db_register##bits##_thread_area, \
-		  bits, (scale), (regofs));
+          bits, (scale), (regofs));
 # define REGISTER(bits, size, regofs, bias) \
   DB_DEFINE_DESC (_thread_db_register##bits, size, (uint32_t)(bias), (regofs));
 

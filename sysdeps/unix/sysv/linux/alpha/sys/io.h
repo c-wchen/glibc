@@ -15,9 +15,9 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef	_SYS_IO_H
+#ifndef _SYS_IO_H
 
-#define	_SYS_IO_H	1
+#define _SYS_IO_H   1
 #include <features.h>
 
 __BEGIN_DECLS
@@ -29,65 +29,64 @@ __BEGIN_DECLS
    Portability note: not all Linux platforms support this call.  Most
    platforms based on the PC I/O architecture probably will, however.
    E.g., Linux/Alpha for Alpha PCs supports this.  */
-extern int ioperm (unsigned long int __from, unsigned long int __num,
-		   int __turn_on) __THROW;
+extern int ioperm(unsigned long int __from, unsigned long int __num,
+                  int __turn_on) __THROW;
 
 /* Set the I/O privilege level to LEVEL.  If LEVEL>3, permission to
    access any I/O port is granted.  This call requires root
    privileges. */
-extern int iopl (int __level) __THROW;
+extern int iopl(int __level) __THROW;
 
 /* Return the physical address of the DENSE I/O memory or NULL if none
    is available (e.g. on a jensen).  */
-extern unsigned long int _bus_base (void) __THROW __attribute__ ((const));
-extern unsigned long int bus_base (void) __THROW __attribute__ ((const));
+extern unsigned long int _bus_base(void) __THROW __attribute__((const));
+extern unsigned long int bus_base(void) __THROW __attribute__((const));
 
 /* Return the physical address of the SPARSE I/O memory.  */
-extern unsigned long _bus_base_sparse (void) __THROW __attribute__ ((const));
-extern unsigned long bus_base_sparse (void) __THROW __attribute__ ((const));
+extern unsigned long _bus_base_sparse(void) __THROW __attribute__((const));
+extern unsigned long bus_base_sparse(void) __THROW __attribute__((const));
 
 /* Return the HAE shift used by the SPARSE I/O memory.  */
-extern int _hae_shift (void) __THROW __attribute__ ((const));
-extern int hae_shift (void) __THROW __attribute__ ((const));
+extern int _hae_shift(void) __THROW __attribute__((const));
+extern int hae_shift(void) __THROW __attribute__((const));
 
 /* Previous three are deprecated in favour of the following, which
    knows about multiple PCI "hoses".  Provide the PCI bus and dfn
    numbers just as to pciconfig_read/write.  */
 
-enum __pciconfig_iobase_which
-{
-  IOBASE_HOSE = 0,		/* Return hose index. */
-  IOBASE_SPARSE_MEM = 1,	/* Return physical memory addresses.  */
-  IOBASE_DENSE_MEM = 2,
-  IOBASE_SPARSE_IO = 3,
-  IOBASE_DENSE_IO = 4
+enum __pciconfig_iobase_which {
+    IOBASE_HOSE = 0,      /* Return hose index. */
+    IOBASE_SPARSE_MEM = 1,    /* Return physical memory addresses.  */
+    IOBASE_DENSE_MEM = 2,
+    IOBASE_SPARSE_IO = 3,
+    IOBASE_DENSE_IO = 4
 };
 
 extern long pciconfig_iobase(enum __pciconfig_iobase_which __which,
-			     unsigned long int __bus,
-			     unsigned long int __dfn)
-     __THROW __attribute__ ((const));
+                             unsigned long int __bus,
+                             unsigned long int __dfn)
+__THROW __attribute__((const));
 
 /* Access PCI space protected from machine checks.  */
-extern int pciconfig_read (unsigned long int __bus,
-			   unsigned long int __dfn,
-			   unsigned long int __off,
-			   unsigned long int __len,
-			   unsigned char *__buf) __THROW;
+extern int pciconfig_read(unsigned long int __bus,
+                          unsigned long int __dfn,
+                          unsigned long int __off,
+                          unsigned long int __len,
+                          unsigned char *__buf) __THROW;
 
-extern int pciconfig_write (unsigned long int __bus,
-			    unsigned long int __dfn,
-			    unsigned long int __off,
-			    unsigned long int __len,
-			    unsigned char *__buf) __THROW;
+extern int pciconfig_write(unsigned long int __bus,
+                           unsigned long int __dfn,
+                           unsigned long int __off,
+                           unsigned long int __len,
+                           unsigned char *__buf) __THROW;
 
 /* Userspace declarations.  */
-extern unsigned int inb (unsigned long __port) __THROW;
-extern unsigned int inw (unsigned long __port) __THROW;
-extern unsigned int inl (unsigned long __port) __THROW;
-extern void outb (unsigned char __b, unsigned long __port) __THROW;
-extern void outw (unsigned short __w, unsigned long __port) __THROW;
-extern void outl (unsigned int __l, unsigned long __port) __THROW;
+extern unsigned int inb(unsigned long __port) __THROW;
+extern unsigned int inw(unsigned long __port) __THROW;
+extern unsigned int inl(unsigned long __port) __THROW;
+extern void outb(unsigned char __b, unsigned long __port) __THROW;
+extern void outw(unsigned short __w, unsigned long __port) __THROW;
+extern void outl(unsigned int __l, unsigned long __port) __THROW;
 
 __END_DECLS
 

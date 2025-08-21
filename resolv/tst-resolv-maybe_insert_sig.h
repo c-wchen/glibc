@@ -23,10 +23,9 @@
    called.  */
 static volatile bool insert_sig;
 
-static void
-maybe_insert_sig (struct resolv_response_builder *b, const char *owner)
+static void maybe_insert_sig(struct resolv_response_builder *b, const char *owner)
 {
-  resolv_response_open_record (b, owner, C_IN, T_SIG, 60);
-  resolv_response_add_data (b, "", 1);
-  resolv_response_close_record (b);
+    resolv_response_open_record(b, owner, C_IN, T_SIG, 60);
+    resolv_response_add_data(b, "", 1);
+    resolv_response_close_record(b);
 }

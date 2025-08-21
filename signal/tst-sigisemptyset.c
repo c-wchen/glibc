@@ -20,87 +20,86 @@
 
 #include <support/check.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  {
-    sigset_t set;
-    sigemptyset (&set);
-    TEST_COMPARE (sigisemptyset (&set), 1);
-  }
+    {
+        sigset_t set;
+        sigemptyset(&set);
+        TEST_COMPARE(sigisemptyset(&set), 1);
+    }
 
-  {
-    sigset_t set;
-    sigfillset (&set);
-    TEST_COMPARE (sigisemptyset (&set), 0);
-  }
+    {
+        sigset_t set;
+        sigfillset(&set);
+        TEST_COMPARE(sigisemptyset(&set), 0);
+    }
 
-  {
-    sigset_t setfill, setempty, set;
-    sigfillset (&setfill);
-    sigemptyset (&setempty);
+    {
+        sigset_t setfill, setempty, set;
+        sigfillset(&setfill);
+        sigemptyset(&setempty);
 
-    sigorset (&set, &setfill, &setempty);
-    TEST_COMPARE (sigisemptyset (&set), 0);
+        sigorset(&set, &setfill, &setempty);
+        TEST_COMPARE(sigisemptyset(&set), 0);
 
-    sigandset (&set, &setfill, &setempty);
-    TEST_COMPARE (sigisemptyset (&set), 1);
-  }
+        sigandset(&set, &setfill, &setempty);
+        TEST_COMPARE(sigisemptyset(&set), 1);
+    }
 
-  /* Ensure current SIG_BLOCK mask empty.  */
-  {
-    sigset_t set;
-    sigemptyset (&set);
-    TEST_COMPARE (sigprocmask (SIG_BLOCK, &set, 0), 0);
-  }
+    /* Ensure current SIG_BLOCK mask empty.  */
+    {
+        sigset_t set;
+        sigemptyset(&set);
+        TEST_COMPARE(sigprocmask(SIG_BLOCK, &set, 0), 0);
+    }
 
-  {
-    sigset_t set;
-    sigemptyset (&set);
-    TEST_COMPARE (sigprocmask (SIG_BLOCK, 0, &set), 0);
-    TEST_COMPARE (sigisemptyset (&set), 1);
-  }
+    {
+        sigset_t set;
+        sigemptyset(&set);
+        TEST_COMPARE(sigprocmask(SIG_BLOCK, 0, &set), 0);
+        TEST_COMPARE(sigisemptyset(&set), 1);
+    }
 
-  {
-    sigset_t set;
-    sigfillset (&set);
-    TEST_COMPARE (sigprocmask (SIG_BLOCK, 0, &set), 0);
-    TEST_COMPARE (sigisemptyset (&set), 1);
-  }
+    {
+        sigset_t set;
+        sigfillset(&set);
+        TEST_COMPARE(sigprocmask(SIG_BLOCK, 0, &set), 0);
+        TEST_COMPARE(sigisemptyset(&set), 1);
+    }
 
-  /* Block all signals.  */
-  {
-    sigset_t set;
-    sigfillset (&set);
-    TEST_COMPARE (sigprocmask (SIG_BLOCK, &set, 0), 0);
-  }
+    /* Block all signals.  */
+    {
+        sigset_t set;
+        sigfillset(&set);
+        TEST_COMPARE(sigprocmask(SIG_BLOCK, &set, 0), 0);
+    }
 
-  {
-    sigset_t set;
-    sigemptyset (&set);
-    TEST_COMPARE (sigpending (&set), 0);
-    TEST_COMPARE (sigisemptyset (&set), 1);
-  }
+    {
+        sigset_t set;
+        sigemptyset(&set);
+        TEST_COMPARE(sigpending(&set), 0);
+        TEST_COMPARE(sigisemptyset(&set), 1);
+    }
 
-  {
-    sigset_t set;
-    sigfillset (&set);
-    TEST_COMPARE (sigpending (&set), 0);
-    TEST_COMPARE (sigisemptyset (&set), 1);
-  }
+    {
+        sigset_t set;
+        sigfillset(&set);
+        TEST_COMPARE(sigpending(&set), 0);
+        TEST_COMPARE(sigisemptyset(&set), 1);
+    }
 
-  {
-    sigset_t set;
-    for (int sig = 1; sig <= NSIG; sig++)
-      {
-	sigemptyset (&set);
-	if (sigaddset (&set, sig) < 0)
-	  continue;
-	TEST_COMPARE (sigisemptyset (&set), 0);
-      }
-  }
+    {
+        sigset_t set;
+        for (int sig = 1; sig <= NSIG; sig++) {
+            sigemptyset(&set);
+            if (sigaddset(&set, sig) < 0) {
+                continue;
+            }
+            TEST_COMPARE(sigisemptyset(&set), 0);
+        }
+    }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -20,53 +20,44 @@
 #include <errno.h>
 #include <stdbool.h>
 
-int
-__ns_name_length_uncompressed (const unsigned char *p,
-                                const unsigned char *eom)
+int __ns_name_length_uncompressed(const unsigned char *p,
+                                  const unsigned char *eom)
 {
-  const unsigned char *start = p;
+    const unsigned char *start = p;
 
-  while (true)
-    {
-      if (p == eom)
-        {
-          /* Truncated packet: no room for label length.  */
-          __set_errno (EMSGSIZE);
-          return -1;
+    while (true) {
+        if (p == eom) {
+            /* Truncated packet: no room for label length.  */
+            __set_errno(EMSGSIZE);
+            return -1;
         }
 
-      unsigned char b = *p;
-      ++p;
-      if (b == 0)
-        {
-          /* Root label.  */
-          size_t length = p - start;
-          if (length > NS_MAXCDNAME)
-            {
-              /* Domain name too long.  */
-              __set_errno (EMSGSIZE);
-              return -1;
+        unsigned char b = *p;
+        ++p;
+        if (b == 0) {
+            /* Root label.  */
+            size_t length = p - start;
+            if (length > NS_MAXCDNAME) {
+                /* Domain name too long.  */
+                __set_errno(EMSGSIZE);
+                return -1;
             }
-          return length;
+            return length;
         }
 
-      if (b <= 63)
-        {
-          /* Regular label.  */
-          if (b <= eom - p)
-            p += b;
-          else
-            {
-              /* Truncated packet: label incomplete.  */
-              __set_errno (EMSGSIZE);
-              return -1;
+        if (b <= 63) {
+            /* Regular label.  */
+            if (b <= eom - p) {
+                p += b;
+            } else {
+                /* Truncated packet: label incomplete.  */
+                __set_errno(EMSGSIZE);
+                return -1;
             }
-        }
-      else
-        {
-          /* Compression reference or corrupted label length.  */
-          __set_errno (EMSGSIZE);
-          return -1;
+        } else {
+            /* Compression reference or corrupted label length.  */
+            __set_errno(EMSGSIZE);
+            return -1;
         }
     }
 }

@@ -20,22 +20,22 @@
 #include <setxid.h>
 
 
-int
-seteuid (uid_t uid)
+int seteuid(uid_t uid)
 {
-  int result;
+    int result;
 
-  if (uid == (uid_t) ~0)
-    return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
+    if (uid == (uid_t) ~0) {
+        return INLINE_SYSCALL_ERROR_RETURN_VALUE(EINVAL);
+    }
 
 #ifdef __NR_setresuid32
-  result = INLINE_SETXID_SYSCALL (setresuid32, 3, -1, uid, -1);
+    result = INLINE_SETXID_SYSCALL(setresuid32, 3, -1, uid, -1);
 #else
-  result = INLINE_SETXID_SYSCALL (setresuid, 3, -1, uid, -1);
+    result = INLINE_SETXID_SYSCALL(setresuid, 3, -1, uid, -1);
 #endif
 
-  return result;
+    return result;
 }
 #ifndef seteuid
-libc_hidden_def (seteuid)
+libc_hidden_def(seteuid)
 #endif

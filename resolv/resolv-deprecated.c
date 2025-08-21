@@ -29,28 +29,24 @@
 #include <arpa/nameser.h>
 #include <resolv.h>
 
-int
-ns_makecanon (const char *src, char *dst, size_t dstsize)
+int ns_makecanon(const char *src, char *dst, size_t dstsize)
 {
-  return __libc_ns_makecanon (src, dst, dstsize);
+    return __libc_ns_makecanon(src, dst, dstsize);
 }
 
-int
-ns_samename (const char *a, const char *b)
+int ns_samename(const char *a, const char *b)
 {
-  return __libc_ns_samename (a, b);
+    return __libc_ns_samename(a, b);
 }
 
-int
-res_nameinquery (const char *name, int type, int class,
-                 const unsigned char *buf, const unsigned char *eom)
+int res_nameinquery(const char *name, int type, int class,
+                    const unsigned char *buf, const unsigned char *eom)
 {
-  return __libc_res_nameinquery (name, type, class, buf, eom);
+    return __libc_res_nameinquery(name, type, class, buf, eom);
 }
 
-int
-res_queriesmatch (const unsigned char *buf1, const unsigned char *eom1,
-                  const unsigned char *buf2, const unsigned char *eom2)
+int res_queriesmatch(const unsigned char *buf1, const unsigned char *eom1,
+                     const unsigned char *buf2, const unsigned char *eom2)
 {
-  return __libc_res_queriesmatch (buf1, eom1, buf2, eom2);
+    return __libc_res_queriesmatch(buf1, eom1, buf2, eom2);
 }

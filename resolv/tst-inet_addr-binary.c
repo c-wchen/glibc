@@ -20,11 +20,10 @@
 
 #include <support/check.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  TEST_COMPARE (inet_addr ("0b101"), (in_addr_t) -1);
-  return 0;
+    TEST_COMPARE(inet_addr("0b101"), (in_addr_t) -1);
+    return 0;
 }
 
 #include <support/test-driver.c>

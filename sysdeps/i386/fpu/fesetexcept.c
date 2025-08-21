@@ -19,51 +19,46 @@
 #include <fenv.h>
 #include <ldsodefs.h>
 
-int
-fesetexcept (int excepts)
+int fesetexcept(int excepts)
 {
-  /* The flags can be set in the 387 unit or in the SSE unit.  To set a flag,
-     it is sufficient to do it in the SSE unit, because that is guaranteed to
-     not trap.  However, on i386 CPUs that have only a 387 unit, set the flags
-     in the 387, as long as this cannot trap.  */
+    /* The flags can be set in the 387 unit or in the SSE unit.  To set a flag,
+       it is sufficient to do it in the SSE unit, because that is guaranteed to
+       not trap.  However, on i386 CPUs that have only a 387 unit, set the flags
+       in the 387, as long as this cannot trap.  */
 
-  excepts &= FE_ALL_EXCEPT;
+    excepts &= FE_ALL_EXCEPT;
 
-  if (CPU_FEATURE_USABLE (SSE))
-    {
-      /* Get the control word of the SSE unit.  */
-      unsigned int mxcsr;
-      __asm__ ("stmxcsr %0" : "=m" (*&mxcsr));
+    if (CPU_FEATURE_USABLE(SSE)) {
+        /* Get the control word of the SSE unit.  */
+        unsigned int mxcsr;
+        __asm__("stmxcsr %0" : "=m"( *&mxcsr));
 
-      /* Set relevant flags.  */
-      mxcsr |= excepts;
+        /* Set relevant flags.  */
+        mxcsr |= excepts;
 
-      /* Put the new data in effect.  */
-      __asm__ ("ldmxcsr %0" : : "m" (*&mxcsr));
-    }
-  else
-    {
-      fenv_t temp;
+        /* Put the new data in effect.  */
+        __asm__("ldmxcsr %0" : : "m"( *&mxcsr));
+    } else {
+        fenv_t temp;
 
-      /* Note: fnstenv masks all floating-point exceptions until the fldenv
-	 or fldcw below.  */
-      __asm__ ("fnstenv %0" : "=m" (*&temp));
+        /* Note: fnstenv masks all floating-point exceptions until the fldenv
+        or fldcw below.  */
+        __asm__("fnstenv %0" : "=m"( *&temp));
 
-      /* Set relevant flags.  */
-      temp.__status_word |= excepts;
+        /* Set relevant flags.  */
+        temp.__status_word |= excepts;
 
-      if ((~temp.__control_word) & excepts)
-	{
-	  /* Setting the exception flags may trigger a trap (at the next
-	     floating-point instruction, but that does not matter).
-	     ISO C23 (7.6.4.4) does not allow it.  */
-	  __asm__ volatile ("fldcw %0" : : "m" (*&temp.__control_word));
-	  return -1;
-	}
+        if ((~temp.__control_word) & excepts) {
+            /* Setting the exception flags may trigger a trap (at the next
+               floating-point instruction, but that does not matter).
+               ISO C23 (7.6.4.4) does not allow it.  */
+            __asm__ volatile("fldcw %0" : : "m"( *&temp.__control_word));
+            return -1;
+        }
 
-      /* Store the new status word (along with the rest of the environment).  */
-      __asm__ ("fldenv %0" : : "m" (*&temp));
+        /* Store the new status word (along with the rest of the environment).  */
+        __asm__("fldenv %0" : : "m"( *&temp));
     }
 
-  return 0;
+    return 0;
 }

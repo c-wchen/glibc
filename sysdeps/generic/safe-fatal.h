@@ -21,14 +21,13 @@
 
 #include <abort-instr.h>
 
-static inline void
-__safe_fatal (void)
+static inline void __safe_fatal(void)
 {
 #ifdef ABORT_INSTRUCTION
-  /* This is not guaranteed to be free from the possibility of deadlock,
-     since it might generate a signal that can be caught.  But it's better
-     than nothing.  */
-  ABORT_INSTRUCTION;
+    /* This is not guaranteed to be free from the possibility of deadlock,
+       since it might generate a signal that can be caught.  But it's better
+       than nothing.  */
+    ABORT_INSTRUCTION;
 #else
 # error Need an OS-specific or machine-specific safe-fatal.h
 #endif

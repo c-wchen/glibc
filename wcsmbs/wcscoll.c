@@ -27,5 +27,5 @@
 #include "../string/strcoll.c"
 
 #ifndef USE_IN_EXTENDED_LOCALE_MODEL
-weak_alias (__wcscoll, wcscoll)
+weak_alias(__wcscoll, wcscoll)
 #endif

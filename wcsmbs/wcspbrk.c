@@ -22,15 +22,15 @@
 #endif
 
 /* Find the first occurrence in WCS of any wide-character in ACCEPT.  */
-wchar_t *
-wcspbrk (const wchar_t *wcs, const wchar_t *accept)
+wchar_t *wcspbrk(const wchar_t *wcs, const wchar_t *accept)
 {
-  while (*wcs != L'\0')
-    if (wcschr (accept, *wcs) == NULL)
-      ++wcs;
-    else
-      return (wchar_t *) wcs;
+    while (*wcs != L'\0')
+        if (wcschr(accept, *wcs) == NULL) {
+            ++wcs;
+        } else {
+            return (wchar_t *) wcs;
+        }
 
-  return NULL;
+    return NULL;
 }
-libc_hidden_def (wcspbrk)
+libc_hidden_def(wcspbrk)

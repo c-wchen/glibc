@@ -24,87 +24,81 @@
 #include "dirstream.h"
 
 /* Read a directory entry from DIRP.  */
-int
-__readdir64_r (DIR *dirp, struct dirent64 *entry, struct dirent64 **result)
+int __readdir64_r(DIR *dirp, struct dirent64 *entry, struct dirent64 **result)
 {
-  struct dirent64 *dp;
-  error_t err = 0;
+    struct dirent64 *dp;
+    error_t err = 0;
 
-  if (dirp == NULL)
-    return __hurd_fail (EINVAL), EINVAL;
+    if (dirp == NULL) {
+        return __hurd_fail(EINVAL), EINVAL;
+    }
 
-  __libc_lock_lock (dirp->__lock);
+    __libc_lock_lock(dirp->__lock);
 
-  do
-    {
-      if (dirp->__ptr - dirp->__data >= dirp->__size)
-	{
-	  /* We've emptied out our buffer.  Refill it.  */
+    do {
+        if (dirp->__ptr - dirp->__data >= dirp->__size) {
+            /* We've emptied out our buffer.  Refill it.  */
 
-	  char *data = dirp->__data;
-	  mach_msg_type_number_t data_size = dirp->__size;
-	  int nentries;
+            char *data = dirp->__data;
+            mach_msg_type_number_t data_size = dirp->__size;
+            int nentries;
 
-	  if (err = HURD_FD_PORT_USE (dirp->__fd,
-				      __dir_readdir (port,
-						     &data, &data_size,
-						     dirp->__entry_ptr,
-						     -1, 0, &nentries)))
-	    {
-	      __hurd_fail (err);
-	      dp = NULL;
-	      break;
-	    }
+            if (err = HURD_FD_PORT_USE(dirp->__fd,
+                                       __dir_readdir(port,
+                                               &data, &data_size,
+                                               dirp->__entry_ptr,
+                                               -1, 0, &nentries))) {
+                __hurd_fail(err);
+                dp = NULL;
+                break;
+            }
 
-	  dirp->__size = data_size;
-	  /* DATA now corresponds to entry index DIRP->__entry_ptr.  */
-	  dirp->__entry_data = dirp->__entry_ptr;
+            dirp->__size = data_size;
+            /* DATA now corresponds to entry index DIRP->__entry_ptr.  */
+            dirp->__entry_data = dirp->__entry_ptr;
 
-	  if (data != dirp->__data)
-	    {
-	      /* The data was passed out of line, so our old buffer is no
-		 longer useful.  Deallocate the old buffer and reset our
-		 information for the new buffer.  */
-	      __vm_deallocate (__mach_task_self (),
-			       (vm_address_t) dirp->__data,
-			       dirp->__allocation);
-	      dirp->__data = data;
-	      dirp->__allocation = round_page (dirp->__size);
-	    }
+            if (data != dirp->__data) {
+                /* The data was passed out of line, so our old buffer is no
+                longer useful.  Deallocate the old buffer and reset our
+                 information for the new buffer.  */
+                __vm_deallocate(__mach_task_self(),
+                                (vm_address_t) dirp->__data,
+                                dirp->__allocation);
+                dirp->__data = data;
+                dirp->__allocation = round_page(dirp->__size);
+            }
 
-	  /* Reset the pointer into the buffer.  */
-	  dirp->__ptr = dirp->__data;
+            /* Reset the pointer into the buffer.  */
+            dirp->__ptr = dirp->__data;
 
-	  if (nentries == 0)
-	    {
-	      /* End of file.  */
-	      dp = NULL;
-	      break;
-	    }
+            if (nentries == 0) {
+                /* End of file.  */
+                dp = NULL;
+                break;
+            }
 
-	  /* We trust the filesystem to return correct data and so we
-	     ignore NENTRIES.  */
-	}
+            /* We trust the filesystem to return correct data and so we
+               ignore NENTRIES.  */
+        }
 
-      dp = (struct dirent64 *) dirp->__ptr;
-      dirp->__ptr += dp->d_reclen;
-      ++dirp->__entry_ptr;
+        dp = (struct dirent64 *) dirp->__ptr;
+        dirp->__ptr += dp->d_reclen;
+        ++dirp->__entry_ptr;
 
-      /* Loop to ignore deleted files.  */
+        /* Loop to ignore deleted files.  */
     } while (dp->d_fileno == 0);
 
-  if (dp)
-    {
-      *entry = *dp;
-      memcpy (entry->d_name, dp->d_name, dp->d_namlen + 1);
-      *result = entry;
+    if (dp) {
+        *entry = *dp;
+        memcpy(entry->d_name, dp->d_name, dp->d_namlen + 1);
+        *result = entry;
+    } else {
+        *result = NULL;
     }
-  else
-    *result = NULL;
 
-  __libc_lock_unlock (dirp->__lock);
+    __libc_lock_unlock(dirp->__lock);
 
-  return dp ? 0 : err ? errno : 0;
+    return dp ? 0 : err ? errno : 0;
 }
 
-weak_alias (__readdir64_r, readdir64_r)
+weak_alias(__readdir64_r, readdir64_r)

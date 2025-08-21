@@ -16,7 +16,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _SYS_UCONTEXT_H
-#define _SYS_UCONTEXT_H	1
+#define _SYS_UCONTEXT_H 1
 
 #include <features.h>
 
@@ -31,11 +31,10 @@
 #endif
 
 /* Type for a program status word.  */
-typedef struct
-{
-  unsigned long __ctx(mask);
-  unsigned long __ctx(addr);
-} __attribute__ ((__aligned__(8))) __psw_t;
+typedef struct {
+    unsigned long __ctx(mask);
+    unsigned long __ctx(addr);
+} __attribute__((__aligned__(8))) __psw_t;
 
 /* Type for a general-purpose register.  */
 typedef unsigned long greg_t;
@@ -54,39 +53,35 @@ typedef unsigned long greg_t;
 # define NGREG __NGREG
 #endif
 /* Must match kernels psw_t alignment.  */
-typedef greg_t gregset_t[__NGREG] __attribute__ ((__aligned__(8)));
+typedef greg_t gregset_t[__NGREG] __attribute__((__aligned__(8)));
 
-typedef union
-  {
+typedef union {
     double  __ctx(d);
     float   __ctx(f);
-  } fpreg_t;
+} fpreg_t;
 
 /* Register set for the floating-point registers.  */
-typedef struct
-  {
+typedef struct {
     unsigned int __ctx(fpc);
     fpreg_t __ctx(fprs)[16];
-  } fpregset_t;
+} fpregset_t;
 
 /* Context to describe whole processor state.  */
-typedef struct
-  {
+typedef struct {
     __psw_t __ctx(psw);
     unsigned long __ctx(gregs)[16];
     unsigned int __ctx(aregs)[16];
     fpregset_t __ctx(fpregs);
-  } mcontext_t;
+} mcontext_t;
 
 /* Userlevel context.  */
-typedef struct ucontext_t
-  {
+typedef struct ucontext_t {
     unsigned long int __ctx(uc_flags);
     struct ucontext_t *uc_link;
     stack_t uc_stack;
     mcontext_t uc_mcontext;
     sigset_t uc_sigmask;
-  } ucontext_t;
+} ucontext_t;
 
 #undef __ctx
 

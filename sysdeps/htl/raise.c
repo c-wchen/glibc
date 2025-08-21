@@ -30,27 +30,24 @@
 #pragma weak _dl_pthread_threads
 #endif
 
-int
-raise (int signo)
+int raise(int signo)
 {
-  /* According to POSIX, if we implement threads (and we do), then
-     "the effect of the raise() function shall be equivalent to
-     calling: pthread_kill(pthread_self(), sig);"  */
+    /* According to POSIX, if we implement threads (and we do), then
+       "the effect of the raise() function shall be equivalent to
+       calling: pthread_kill(pthread_self(), sig);"  */
 
-  if (__pthread_kill != NULL && GL (dl_pthread_threads) != NULL)
-    {
-      int err;
-      err = __pthread_kill (__pthread_self (), signo);
-      if (err)
-	{
-	  errno = err;
-	  return -1;
-	}
-      return 0;
+    if (__pthread_kill != NULL && GL(dl_pthread_threads) != NULL) {
+        int err;
+        err = __pthread_kill(__pthread_self(), signo);
+        if (err) {
+            errno = err;
+            return -1;
+        }
+        return 0;
+    } else {
+        return __kill(__getpid(), signo);
     }
-  else
-    return __kill (__getpid (), signo);
 }
 
-libc_hidden_def (raise)
-weak_alias (raise, gsignal)
+libc_hidden_def(raise)
+weak_alias(raise, gsignal)

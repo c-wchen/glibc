@@ -21,36 +21,36 @@
 #include <stddef.h>
 #include <string.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  void *handle = xdlopen ("tst-version-hash-zero-mod.so", RTLD_NOW);
+    void *handle = xdlopen("tst-version-hash-zero-mod.so", RTLD_NOW);
 
-  /* This used to crash because some struct r_found_version entries
-     with hash zero did not have valid version strings.  */
-  TEST_VERIFY (xdlvsym (handle, "global_variable", "PPPPPPPPPPPP") != NULL);
+    /* This used to crash because some struct r_found_version entries
+       with hash zero did not have valid version strings.  */
+    TEST_VERIFY(xdlvsym(handle, "global_variable", "PPPPPPPPPPPP") != NULL);
 
-  /* Consistency check.  */
-  TEST_VERIFY (xdlsym (handle, "global_variable")
-               == xdlvsym (handle, "global_variable", "PPPPPPPPPPPP"));
+    /* Consistency check.  */
+    TEST_VERIFY(xdlsym(handle, "global_variable")
+                == xdlvsym(handle, "global_variable", "PPPPPPPPPPPP"));
 
-  /* This symbol version is supposed to be missing.  */
-  TEST_VERIFY (dlvsym (handle, "global_variable", "OTHER_VERSION") == NULL);
+    /* This symbol version is supposed to be missing.  */
+    TEST_VERIFY(dlvsym(handle, "global_variable", "OTHER_VERSION") == NULL);
 
-  /* tst-version-hash-zero-refmod.so references
-     global_variable@@OTHER_VERSION and is expected to fail to load.
-     dlvsym sets the hidden flag during lookup.  Relocation does not,
-     so this exercises a different failure case.  */
-  TEST_VERIFY_EXIT (dlopen ("tst-version-hash-zero-refmod.so", RTLD_NOW)
-                    == NULL);
-  const char *message = dlerror ();
-  if (strstr (message,
-              ": undefined symbol: global_variable, version OTHER_VERSION")
-      == NULL)
-    FAIL_EXIT1 ("unexpected dlopen failure: %s", message);
+    /* tst-version-hash-zero-refmod.so references
+       global_variable@@OTHER_VERSION and is expected to fail to load.
+       dlvsym sets the hidden flag during lookup.  Relocation does not,
+       so this exercises a different failure case.  */
+    TEST_VERIFY_EXIT(dlopen("tst-version-hash-zero-refmod.so", RTLD_NOW)
+                     == NULL);
+    const char *message = dlerror();
+    if (strstr(message,
+               ": undefined symbol: global_variable, version OTHER_VERSION")
+        == NULL) {
+        FAIL_EXIT1("unexpected dlopen failure: %s", message);
+    }
 
-  xdlclose (handle);
-  return 0;
+    xdlclose(handle);
+    return 0;
 }
 
 #include <support/test-driver.c>

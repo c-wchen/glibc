@@ -23,23 +23,20 @@
 char string1[STRING_SIZE];
 
 __attribute_optimization_barrier__
-static int
-prepare (void)
+static int prepare(void)
 {
-  memset (string1, 'a', STRING_SIZE);
-  return EXIT_SUCCESS;
+    memset(string1, 'a', STRING_SIZE);
+    return EXIT_SUCCESS;
 }
 
 __attribute_optimization_barrier__
-static int
-function (void)
+static int function(void)
 {
-  memset (string1, 'a', STRING_SIZE);
-  return 0;
+    memset(string1, 'a', STRING_SIZE);
+    return 0;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  return do_test_1 ("memset", LOOP, prepare, function);
+    return do_test_1("memset", LOOP, prepare, function);
 }

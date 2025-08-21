@@ -20,88 +20,82 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define SET	0
-#define ADD	1
-#define REMOVE	2
+#define SET 0
+#define ADD 1
+#define REMOVE  2
 
-#define leq(l,r)	(((r) - (l)) <= ~0ULL / 2)
+#define leq(l,r)    (((r) - (l)) <= ~0ULL / 2)
 
-static int
-callback (struct dl_phdr_info *info, size_t size, void *ptr)
+static int callback(struct dl_phdr_info *info, size_t size, void *ptr)
 {
-  static int last_adds = 0, last_subs = 0;
-  intptr_t cmd = (intptr_t) ptr;
+    static int last_adds = 0, last_subs = 0;
+    intptr_t cmd = (intptr_t) ptr;
 
-  printf ("  size = %zu\n", size);
-  if (size < (offsetof (struct dl_phdr_info, dlpi_subs)
-	      + sizeof (info->dlpi_subs)))
-    {
-      fprintf (stderr, "dl_iterate_phdr failed to pass dlpi_adds/dlpi_subs\n");
-      exit (5);
+    printf("  size = %zu\n", size);
+    if (size < (offsetof(struct dl_phdr_info, dlpi_subs)
+                + sizeof(info->dlpi_subs))) {
+        fprintf(stderr, "dl_iterate_phdr failed to pass dlpi_adds/dlpi_subs\n");
+        exit(5);
     }
 
-  printf ("  dlpi_adds = %Lu dlpi_subs = %Lu\n",
-	  info->dlpi_adds, info->dlpi_subs);
+    printf("  dlpi_adds = %Lu dlpi_subs = %Lu\n",
+           info->dlpi_adds, info->dlpi_subs);
 
-  switch (cmd)
-    {
-    case SET:
-      break;
+    switch (cmd) {
+        case SET:
+            break;
 
-    case ADD:
-      if (leq (info->dlpi_adds, last_adds))
-	{
-	  fprintf (stderr, "dlpi_adds failed to get incremented!\n");
-	  exit (3);
-	}
-      break;
+        case ADD:
+            if (leq(info->dlpi_adds, last_adds)) {
+                fprintf(stderr, "dlpi_adds failed to get incremented!\n");
+                exit(3);
+            }
+            break;
 
-    case REMOVE:
-      if (leq (info->dlpi_subs, last_subs))
-	{
-	  fprintf (stderr, "dlpi_subs failed to get incremented!\n");
-	  exit (4);
-	}
-      break;
+        case REMOVE:
+            if (leq(info->dlpi_subs, last_subs)) {
+                fprintf(stderr, "dlpi_subs failed to get incremented!\n");
+                exit(4);
+            }
+            break;
     }
-  last_adds = info->dlpi_adds;
-  last_subs = info->dlpi_subs;
-  return -1;
+    last_adds = info->dlpi_adds;
+    last_subs = info->dlpi_subs;
+    return -1;
 }
 
-static void *
-load (const char *path)
+static void *load(const char *path)
 {
-  void *handle;
+    void *handle;
 
-  printf ("loading `%s'\n", path);
-  handle = dlopen (path, RTLD_LAZY);
-  if (!handle)
-    exit (1);
-  dl_iterate_phdr (callback, (void *)(intptr_t) ADD);
-  return handle;
+    printf("loading `%s'\n", path);
+    handle = dlopen(path, RTLD_LAZY);
+    if (!handle) {
+        exit(1);
+    }
+    dl_iterate_phdr(callback, (void *)(intptr_t) ADD);
+    return handle;
 }
 
-static void
-unload (const char *path, void *handle)
+static void unload(const char *path, void *handle)
 {
-  printf ("unloading `%s'\n", path);
-  if (dlclose (handle) < 0)
-    exit (2);
-  dl_iterate_phdr (callback, (void *)(intptr_t) REMOVE);
+    printf("unloading `%s'\n", path);
+    if (dlclose(handle) < 0) {
+        exit(2);
+    }
+    dl_iterate_phdr(callback, (void *)(intptr_t) REMOVE);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  void *handle1, *handle2;
+    void *handle1, *handle2;
 
-  dl_iterate_phdr (callback, (void *)(intptr_t) SET);
-  handle1 = load ("firstobj.so");
-  handle2 = load ("globalmod1.so");
-  unload ("firstobj.so", handle1);
-  unload ("globalmod1.so", handle2);
-  return 0;
+    dl_iterate_phdr(callback, (void *)(intptr_t) SET);
+    handle1 = load("firstobj.so");
+    handle2 = load("globalmod1.so");
+    unload("firstobj.so", handle1);
+    unload("globalmod1.so", handle2);
+    return 0;
 }
 
 #include <support/test-driver.c>

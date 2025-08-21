@@ -27,12 +27,12 @@
    special bits MODE and device number DEV (which can be constructed
    from major and minor device numbers with the `makedev' macro
    above).  */
-int
-__xmknodat (int vers, int fd, const char *path, mode_t mode, dev_t *dev)
+int __xmknodat(int vers, int fd, const char *path, mode_t mode, dev_t *dev)
 {
-  if (vers != _MKNOD_VER)
-    return __hurd_fail (EINVAL);
+    if (vers != _MKNOD_VER) {
+        return __hurd_fail(EINVAL);
+    }
 
-  return __mknodat (fd, path, mode, *dev);
+    return __mknodat(fd, path, mode, *dev);
 }
 #endif

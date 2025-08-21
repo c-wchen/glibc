@@ -23,14 +23,14 @@
 
 #if LIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_33)
 
-int
-__lxstat (int vers, const char *file, struct stat *buf)
+int __lxstat(int vers, const char *file, struct stat *buf)
 {
-  if (vers != _STAT_VER)
-    return __hurd_fail (EINVAL);
+    if (vers != _STAT_VER) {
+        return __hurd_fail(EINVAL);
+    }
 
-  return __lstat (file, buf);
+    return __lstat(file, buf);
 }
-weak_alias (__lxstat, _lxstat)
+weak_alias(__lxstat, _lxstat)
 
 #endif

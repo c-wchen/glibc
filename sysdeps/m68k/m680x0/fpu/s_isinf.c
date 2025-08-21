@@ -28,11 +28,11 @@
 #define __CONCATX(a,b) __CONCAT(a,b)
 
 int
-__CONCATX(__,FUNC) (float_type x)
+__CONCATX(__, FUNC)(float_type x)
 {
-  return __m81_u(__CONCATX(__,FUNC))(x);
+    return __m81_u(__CONCATX(__, FUNC))(x);
 }
 
 #define hidden_defx(a) hidden_def(a)
-hidden_defx(__CONCATX(__,FUNC))
-weak_alias (__CONCATX(__,FUNC), FUNC)
+hidden_defx(__CONCATX(__, FUNC))
+weak_alias(__CONCATX(__, FUNC), FUNC)

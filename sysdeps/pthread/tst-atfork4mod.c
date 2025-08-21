@@ -23,26 +23,22 @@
    asked to.  The atfork handlers should never be executed because the
    library is unloaded before fork is called by the test program.  */
 
-static void
-prepare (void)
+static void prepare(void)
 {
-  abort ();
+    abort();
 }
 
-static void
-parent (void)
+static void parent(void)
 {
-  abort ();
+    abort();
 }
 
-static void
-child (void)
+static void child(void)
 {
-  abort ();
+    abort();
 }
 
-void
-reg_atfork_handlers (void)
+void reg_atfork_handlers(void)
 {
-  pthread_atfork (prepare, parent, child);
+    pthread_atfork(prepare, parent, child);
 }

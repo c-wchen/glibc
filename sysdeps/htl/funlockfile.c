@@ -20,12 +20,11 @@
 #include <libc-lockP.h>
 
 
-void
-__funlockfile (FILE *stream)
+void __funlockfile(FILE *stream)
 {
 #ifdef SHARED
-  __libc_ptf_call (_IO_funlockfile, (stream), 0);
+    __libc_ptf_call(_IO_funlockfile, (stream), 0);
 #endif
 }
-weak_alias (__funlockfile, _IO_funlockfile)
-weak_alias (__funlockfile, funlockfile)
+weak_alias(__funlockfile, _IO_funlockfile)
+weak_alias(__funlockfile, funlockfile)

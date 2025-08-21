@@ -26,31 +26,32 @@
 #include <unistd.h>
 #include <errno.h>
 
-static int
-do_test (int argc, char **argv)
+static int do_test(int argc, char **argv)
 {
-  if (argc == 2)
-    return 0;
+    if (argc == 2) {
+        return 0;
+    }
 
-  char envname[] = "FOOBAR";
-  char *filename = program_invocation_name;
-  char *newargv[] = {filename, filename, NULL};
-  char *newenviron[] = {envname, NULL};
+    char envname[] = "FOOBAR";
+    char *filename = program_invocation_name;
+    char *newargv[] = {filename, filename, NULL};
+    char *newenviron[] = {envname, NULL};
 
-   /* This was reported in Fedora:
+    /* This was reported in Fedora:
 
-      https://bugzilla.redhat.com/show_bug.cgi?id=1414589
+       https://bugzilla.redhat.com/show_bug.cgi?id=1414589
 
-      If one of the environment variables has no value, then the environment
-      traversal must skip and also advance to the next environment entry.  The
-      bug in question would cause this test to hang in an infinite loop.  */
-  int ret = execve (filename, newargv, newenviron);
+       If one of the environment variables has no value, then the environment
+       traversal must skip and also advance to the next environment entry.  The
+       bug in question would cause this test to hang in an infinite loop.  */
+    int ret = execve(filename, newargv, newenviron);
 
-  if (ret != 0)
-    printf ("execve failed: %m");
+    if (ret != 0) {
+        printf("execve failed: %m");
+    }
 
-  /* We will reach here only if we fail execve.  */
-  return 1;
+    /* We will reach here only if we fail execve.  */
+    return 1;
 }
 
 #define TEST_FUNCTION_ARGV do_test

@@ -20,18 +20,18 @@
 #include <ldsodefs.h>
 #include <shlib-compat.h>
 
-int
-__dlclose (void *handle)
+int __dlclose(void *handle)
 {
 #ifdef SHARED
-  if (GLRO (dl_dlfcn_hook) != NULL)
-    return GLRO (dl_dlfcn_hook)->dlclose (handle);
+    if (GLRO(dl_dlfcn_hook) != NULL) {
+        return GLRO(dl_dlfcn_hook)->dlclose(handle);
+    }
 #endif
 
-  return _dlerror_run (GLRO (dl_close), handle) ? -1 : 0;
+    return _dlerror_run(GLRO(dl_close), handle) ? -1 : 0;
 }
-versioned_symbol (libc, __dlclose, dlclose, GLIBC_2_34);
+versioned_symbol(libc, __dlclose, dlclose, GLIBC_2_34);
 
 #if OTHER_SHLIB_COMPAT (libdl, GLIBC_2_0, GLIBC_2_34)
-compat_symbol (libdl, __dlclose, dlclose, GLIBC_2_0);
+compat_symbol(libdl, __dlclose, dlclose, GLIBC_2_0);
 #endif

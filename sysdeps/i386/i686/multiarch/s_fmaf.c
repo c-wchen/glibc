@@ -23,12 +23,12 @@
 #include <init-arch.h>
 #include <libm-alias-float.h>
 
-extern float __fmaf_ia32 (float x, float y, float z) attribute_hidden;
-extern float __fmaf_fma (float x, float y, float z) attribute_hidden;
+extern float __fmaf_ia32(float x, float y, float z) attribute_hidden;
+extern float __fmaf_fma(float x, float y, float z) attribute_hidden;
 
-libm_ifunc (__fmaf,
-	    CPU_FEATURE_USABLE (FMA) ? __fmaf_fma : __fmaf_ia32);
-libm_alias_float (__fma, fma)
+libm_ifunc(__fmaf,
+           CPU_FEATURE_USABLE(FMA) ? __fmaf_fma : __fmaf_ia32);
+libm_alias_float(__fma, fma)
 
 #define __fmaf __fmaf_ia32
 

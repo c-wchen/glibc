@@ -29,8 +29,7 @@
 
 #undef getwchar_unlocked
 
-wint_t
-getwchar_unlocked (void)
+wint_t getwchar_unlocked(void)
 {
-  return _IO_getwc_unlocked (stdin);
+    return _IO_getwc_unlocked(stdin);
 }

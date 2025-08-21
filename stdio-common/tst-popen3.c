@@ -24,15 +24,14 @@
 #include <support/check.h>
 #include <support/xunistd.h>
 
-int
-do_test (void)
+int do_test(void)
 {
-  xunlink (_PATH_BSHELL);
+    xunlink(_PATH_BSHELL);
 
-  FILE *f = popen ("/non-existent", "r");
-  TEST_VERIFY (f == NULL);
-  TEST_COMPARE (errno, ENOENT);
-  return 0;
+    FILE *f = popen("/non-existent", "r");
+    TEST_VERIFY(f == NULL);
+    TEST_COMPARE(errno, ENOENT);
+    return 0;
 }
 
 #include <support/test-driver.c>

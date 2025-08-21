@@ -23,15 +23,14 @@
 
 /* Send COUNT bytes from file associated with IN_FD starting at OFFSET to
    descriptor OUT_FD.  */
-ssize_t
-sendfile64 (int out_fd, int in_fd, off64_t *offset, size_t count)
+ssize_t sendfile64(int out_fd, int in_fd, off64_t *offset, size_t count)
 {
 #ifndef __NR_sendfile64
 # define __NR_sendfile64 __NR_sendfile
 #endif
-  return INLINE_SYSCALL_CALL (sendfile64, out_fd, in_fd, offset, count);
+    return INLINE_SYSCALL_CALL(sendfile64, out_fd, in_fd, offset, count);
 }
 
 #ifdef __OFF_T_MATCHES_OFF64_T
-strong_alias (sendfile64, sendfile)
+strong_alias(sendfile64, sendfile)
 #endif

@@ -19,17 +19,17 @@
 #include <wctype.h>
 
 /* Define the lookup function.  */
-#define USE_IN_EXTENDED_LOCALE_MODEL	1
+#define USE_IN_EXTENDED_LOCALE_MODEL    1
 #include "wchar-lookup.h"
 
-wint_t
-__towctrans_l (wint_t wc, wctrans_t desc, locale_t locale)
+wint_t __towctrans_l(wint_t wc, wctrans_t desc, locale_t locale)
 {
-  /* If the user passes in an invalid DESC valid (the one returned from
-     `__wctrans_l' in case of an error) simply return the value.  */
-  if (desc == (wctrans_t) 0)
-    return wc;
+    /* If the user passes in an invalid DESC valid (the one returned from
+       `__wctrans_l' in case of an error) simply return the value.  */
+    if (desc == (wctrans_t) 0) {
+        return wc;
+    }
 
-  return wctrans_table_lookup ((const char *) desc, wc);
+    return wctrans_table_lookup((const char *) desc, wc);
 }
-weak_alias (__towctrans_l, towctrans_l)
+weak_alias(__towctrans_l, towctrans_l)

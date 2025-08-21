@@ -19,10 +19,9 @@
 #ifndef _SYS_THREAD_POINTER_H
 #define _SYS_THREAD_POINTER_H
 
-static inline void *
-__thread_pointer (void)
+static inline void *__thread_pointer(void)
 {
-  return __builtin_thread_pointer ();
+    return __builtin_thread_pointer();
 }
 
 #endif /* _SYS_THREAD_POINTER_H */

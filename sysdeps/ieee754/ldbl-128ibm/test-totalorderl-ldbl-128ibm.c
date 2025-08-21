@@ -21,52 +21,46 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-struct test
-{
-  double hi, lo1, lo2;
+struct test {
+    double hi, lo1, lo2;
 };
 
-static const struct test tests[] =
-  {
-    { __builtin_nan (""), 1, __builtin_nans ("") },
-    { -__builtin_nan (""), 1, __builtin_nans ("") },
-    { __builtin_nans (""), 1, __builtin_nan ("") },
-    { -__builtin_nans (""), 1, __builtin_nan ("") },
-    { __builtin_inf (), 0.0, -0.0 },
-    { -__builtin_inf (), 0.0, -0.0 },
+static const struct test tests[] = {
+    { __builtin_nan(""), 1, __builtin_nans("") },
+    { -__builtin_nan(""), 1, __builtin_nans("") },
+    { __builtin_nans(""), 1, __builtin_nan("") },
+    { -__builtin_nans(""), 1, __builtin_nan("") },
+    { __builtin_inf(), 0.0, -0.0 },
+    { -__builtin_inf(), 0.0, -0.0 },
     { 1.5, 0.0, -0.0 },
-  };
+};
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int result = 0;
+    int result = 0;
 
-  for (size_t i = 0; i < sizeof (tests) / sizeof (tests[0]); i++)
-    {
-      long double ldx = ldbl_pack (tests[i].hi, tests[i].lo1);
-      long double ldy = ldbl_pack (tests[i].hi, tests[i].lo2);
-      bool to1 = totalorderl (&ldx, &ldy);
-      bool to2 = totalorderl (&ldy, &ldx);
-      if (to1 && to2)
-	printf ("PASS: test %zu\n", i);
-      else
-	{
-	  printf ("FAIL: test %zu\n", i);
-	  result = 1;
-	}
-      to1 = totalordermagl (&ldx, &ldy);
-      to2 = totalordermagl (&ldy, &ldx);
-      if (to1 && to2)
-	printf ("PASS: test %zu (totalordermagl)\n", i);
-      else
-	{
-	  printf ("FAIL: test %zu (totalordermagl)\n", i);
-	  result = 1;
-	}
+    for (size_t i = 0; i < sizeof(tests) / sizeof(tests[0]); i++) {
+        long double ldx = ldbl_pack(tests[i].hi, tests[i].lo1);
+        long double ldy = ldbl_pack(tests[i].hi, tests[i].lo2);
+        bool to1 = totalorderl(&ldx, &ldy);
+        bool to2 = totalorderl(&ldy, &ldx);
+        if (to1 && to2) {
+            printf("PASS: test %zu\n", i);
+        } else {
+            printf("FAIL: test %zu\n", i);
+            result = 1;
+        }
+        to1 = totalordermagl(&ldx, &ldy);
+        to2 = totalordermagl(&ldy, &ldx);
+        if (to1 && to2) {
+            printf("PASS: test %zu (totalordermagl)\n", i);
+        } else {
+            printf("FAIL: test %zu (totalordermagl)\n", i);
+            result = 1;
+        }
     }
 
-  return result;
+    return result;
 }
 
 #define TEST_FUNCTION do_test ()

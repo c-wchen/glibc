@@ -27,16 +27,14 @@
    characters before a suffix of length SUFFIXLEN of TEMPLATE must be
    "XXXXXX"; they are replaced with a string that makes the filename
    unique.  Then open the file and return a fd. */
-int
-mkstemps64 (char *template, int suffixlen)
+int mkstemps64(char *template, int suffixlen)
 {
-  if (suffixlen < 0)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (suffixlen < 0) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  return __gen_tempname (template, suffixlen, O_LARGEFILE, __GT_FILE);
+    return __gen_tempname(template, suffixlen, O_LARGEFILE, __GT_FILE);
 }
 
 #endif

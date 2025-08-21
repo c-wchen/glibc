@@ -24,12 +24,11 @@
 #include <socketcall.h>
 #include <kernel-features.h>
 
-int
-accept4 (int fd, __SOCKADDR_ARG addr, socklen_t *addr_len, int flags)
+int accept4(int fd, __SOCKADDR_ARG addr, socklen_t *addr_len, int flags)
 {
 #ifdef __ASSUME_ACCEPT4_SYSCALL
-  return SYSCALL_CANCEL (accept4, fd, addr.__sockaddr__, addr_len, flags);
+    return SYSCALL_CANCEL(accept4, fd, addr.__sockaddr__, addr_len, flags);
 #else
-  return SOCKETCALL_CANCEL (accept4, fd, addr.__sockaddr__, addr_len, flags);
+    return SOCKETCALL_CANCEL(accept4, fd, addr.__sockaddr__, addr_len, flags);
 #endif
 }

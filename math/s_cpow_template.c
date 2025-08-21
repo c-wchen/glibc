@@ -20,9 +20,9 @@
 #include <math.h>
 
 CFLOAT
-M_DECL_FUNC (__cpow) (CFLOAT x, CFLOAT c)
+M_DECL_FUNC(__cpow)(CFLOAT x, CFLOAT c)
 {
-  return M_SUF (__cexp) (c * M_SUF (__clog) (x));
+    return M_SUF(__cexp)(c * M_SUF(__clog)(x));
 }
 
-declare_mgen_alias (__cpow, cpow)
+declare_mgen_alias(__cpow, cpow)

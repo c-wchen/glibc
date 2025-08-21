@@ -27,40 +27,37 @@ static once_flag flag = ONCE_FLAG_INIT;
 
 static int value = 0;
 
-static void
-do_once (void)
+static void do_once(void)
 {
-  value++;
+    value++;
 }
 
-static int
-func (void* data)
+static int func(void *data)
 {
-  call_once (&flag, do_once);
-  thrd_exit (thrd_success);
+    call_once(&flag, do_once);
+    thrd_exit(thrd_success);
 }
 
 #define N 20
 
-int
-do_test (void)
+int do_test(void)
 {
-  thrd_t ids[N];
+    thrd_t ids[N];
 
-  for (int i = 0; i < N; ++i)
-    {
-      if (thrd_create (&ids[i], func, NULL) != thrd_success)
-	FAIL_EXIT1 ("thrd_create failed");
+    for (int i = 0; i < N; ++i) {
+        if (thrd_create(&ids[i], func, NULL) != thrd_success) {
+            FAIL_EXIT1("thrd_create failed");
+        }
     }
 
-  /* Join threads.  */
-  for (int i = 0; i < N; ++i)
-    {
-      if (thrd_join (ids[i], NULL) != thrd_success)
-	FAIL_EXIT1 ("thrd_join failed");
+    /* Join threads.  */
+    for (int i = 0; i < N; ++i) {
+        if (thrd_join(ids[i], NULL) != thrd_success) {
+            FAIL_EXIT1("thrd_join failed");
+        }
     }
 
-  return (value != 1);
+    return (value != 1);
 }
 
 #include <support/test-driver.c>

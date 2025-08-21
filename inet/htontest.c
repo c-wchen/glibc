@@ -23,15 +23,15 @@
 
 #if BYTE_ORDER == BIG_ENDIAN
 # define TEST(orig, swapped, fct) \
-  if ((fct (orig)) != (orig)) {						      \
-    printf ("Failed for %s -> %#x\n", #fct "(" #orig ")", fct (orig));	      \
-    result = 1;								      \
+  if ((fct (orig)) != (orig)) {                           \
+    printf ("Failed for %s -> %#x\n", #fct "(" #orig ")", fct (orig));        \
+    result = 1;                                   \
   }
 #elif BYTE_ORDER == LITTLE_ENDIAN
 # define TEST(orig, swapped, fct) \
-  if ((fct (orig)) != (swapped)) {					      \
-    printf ("Failed for %s -> %#x\n", #fct "(" #orig ")", fct (orig));	      \
-    result = 1;								      \
+  if ((fct (orig)) != (swapped)) {                        \
+    printf ("Failed for %s -> %#x\n", #fct "(" #orig ")", fct (orig));        \
+    result = 1;                                   \
   }
 #else
 # error "Bah, what kind of system do you use?"
@@ -40,30 +40,29 @@
 uint32_t lo = 0x67452301;
 uint16_t foo = 0x1234;
 
-int
-main (void)
+int main(void)
 {
-  int result = 0;
+    int result = 0;
 
-  TEST (0x67452301, 0x01234567, htonl);
-  TEST (0x67452301, 0x01234567, (htonl));
-  TEST (0x67452301, 0x01234567, ntohl);
-  TEST (0x67452301, 0x01234567, (ntohl));
+    TEST(0x67452301, 0x01234567, htonl);
+    TEST(0x67452301, 0x01234567, (htonl));
+    TEST(0x67452301, 0x01234567, ntohl);
+    TEST(0x67452301, 0x01234567, (ntohl));
 
-  TEST (lo, 0x01234567, htonl);
-  TEST (lo, 0x01234567, (htonl));
-  TEST (lo, 0x01234567, ntohl);
-  TEST (lo, 0x01234567, (ntohl));
+    TEST(lo, 0x01234567, htonl);
+    TEST(lo, 0x01234567, (htonl));
+    TEST(lo, 0x01234567, ntohl);
+    TEST(lo, 0x01234567, (ntohl));
 
-  TEST (0x1234, 0x3412, htons);
-  TEST (0x1234, 0x3412, (htons));
-  TEST (0x1234, 0x3412, ntohs);
-  TEST (0x1234, 0x3412, (ntohs));
+    TEST(0x1234, 0x3412, htons);
+    TEST(0x1234, 0x3412, (htons));
+    TEST(0x1234, 0x3412, ntohs);
+    TEST(0x1234, 0x3412, (ntohs));
 
-  TEST (foo, 0x3412, htons);
-  TEST (foo, 0x3412, (htons));
-  TEST (foo, 0x3412, ntohs);
-  TEST (foo, 0x3412, (ntohs));
+    TEST(foo, 0x3412, htons);
+    TEST(foo, 0x3412, (htons));
+    TEST(foo, 0x3412, ntohs);
+    TEST(foo, 0x3412, (ntohs));
 
-  return result;
+    return result;
 }

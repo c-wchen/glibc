@@ -19,10 +19,9 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-int
-fegetexcept (void)
+int fegetexcept(void)
 {
-  fpu_control_t fpcr;
-  _FPU_GETCW (fpcr);
-  return (fpcr >> FE_EXCEPT_SHIFT) & FE_ALL_EXCEPT;
+    fpu_control_t fpcr;
+    _FPU_GETCW(fpcr);
+    return (fpcr >> FE_EXCEPT_SHIFT) & FE_ALL_EXCEPT;
 }

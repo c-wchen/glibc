@@ -30,17 +30,16 @@
 # define inhibit_loop_to_libcall
 #endif
 
-typedef struct
-{
-  const char *name;
-  void (*fn) (void);
-  long test;
+typedef struct {
+    const char *name;
+    void (*fn)(void);
+    long test;
 } impl_t;
 extern impl_t __start_impls[], __stop_impls[];
 
 #define IMPL(name, test) \
-  impl_t tst_ ## name							\
-  __attribute__ ((section ("impls"), aligned (sizeof (void *))))	\
+  impl_t tst_ ## name                           \
+  __attribute__ ((section ("impls"), aligned (sizeof (void *))))    \
        = { __STRING (name), (void (*) (void))name, test };
 
 #ifdef TEST_MAIN
@@ -139,8 +138,8 @@ size_t iterations = 100000;
 #  define ITERATIONS_OPTIONS \
      { "iterations", required_argument, NULL, OPT_ITERATIONS },
 #  define ITERATIONS_PROCESS \
-     case OPT_ITERATIONS:						      \
-       iterations = strtoul (optarg, NULL, 0);				      \
+     case OPT_ITERATIONS:                             \
+       iterations = strtoul (optarg, NULL, 0);                    \
        break;
 #  define ITERATIONS iterations
 # else
@@ -149,34 +148,34 @@ size_t iterations = 100000;
 # endif
 
 # define CMDLINE_OPTIONS ITERATIONS_OPTIONS \
-    { "random", no_argument, NULL, OPT_RANDOM },			      \
+    { "random", no_argument, NULL, OPT_RANDOM },                  \
     { "seed", required_argument, NULL, OPT_SEED },
 
-static void __attribute__ ((used))
-cmdline_process_function (int c)
+static void __attribute__((used))
+cmdline_process_function(int c)
 {
-  switch (c)
-    {
-      ITERATIONS_PROCESS
-      case OPT_RANDOM:
-	{
-	  int fdr = open ("/dev/urandom", O_RDONLY);
-	  if (fdr < 0 || read (fdr, &seed, sizeof (seed)) != sizeof (seed))
-	    seed = time (NULL);
-	  if (fdr >= 0)
-	    close (fdr);
-	  do_srandom = 1;
-	  break;
-	}
+    switch (c) {
+            ITERATIONS_PROCESS
+        case OPT_RANDOM: {
+            int fdr = open("/dev/urandom", O_RDONLY);
+            if (fdr < 0 || read(fdr, &seed, sizeof(seed)) != sizeof(seed)) {
+                seed = time(NULL);
+            }
+            if (fdr >= 0) {
+                close(fdr);
+            }
+            do_srandom = 1;
+            break;
+        }
 
-      case OPT_SEED:
-	seed = strtoul (optarg, NULL, 0);
-	do_srandom = 1;
-      break;
+        case OPT_SEED:
+            seed = strtoul(optarg, NULL, 0);
+            do_srandom = 1;
+            break;
     }
 }
 # define CMDLINE_PROCESS cmdline_process_function
-# define CALL(impl, ...)	\
+# define CALL(impl, ...)    \
     (* (proto_t) (impl)->fn) (__VA_ARGS__)
 
 # ifdef TEST_NAME
@@ -187,47 +186,47 @@ static int impl_count = -1;
 static impl_t *impl_array;
 
 #  define FOR_EACH_IMPL(impl, notall) \
-     impl_t *impl;							      \
-     int count;								      \
-     if (impl_count == -1)						      \
-       {								      \
-	 impl_count = 0;						      \
-	 if (func_count != 0)						      \
-	   {								      \
-	     int f;							      \
-	     impl_t *skip = NULL, *a;					      \
-	     for (impl = __start_impls; impl < __stop_impls; ++impl)	      \
-	       if (strcmp (impl->name, TEST_NAME) == 0)			      \
-		 skip = impl;						      \
-	       else							      \
-		 impl_count++;						      \
-	     a = impl_array = xmalloc ((impl_count + func_count) *	      \
-				       sizeof (impl_t));		      \
-	     for (impl = __start_impls; impl < __stop_impls; ++impl)	      \
-	       if (impl != skip)					      \
-		 *a++ = *impl;						      \
-	     for (f = 0; f < func_count; f++)				      \
-	       if (func_list[f].usable)					      \
-		 {							      \
-		   a->name = func_list[f].name;				      \
-		   a->fn = func_list[f].fn;				      \
-		   a->test = 1;						      \
-		   a++;							      \
-		 }							      \
-	     impl_count = a - impl_array;				      \
-	   }								      \
-	 else								      \
-	   {								      \
-	     impl_count = __stop_impls - __start_impls;			      \
-	     impl_array = __start_impls;				      \
-	   }								      \
-       }								      \
-     impl = impl_array;							      \
-     for (count = 0; count < impl_count; ++count, ++impl)		      \
+     impl_t *impl;                                \
+     int count;                                   \
+     if (impl_count == -1)                            \
+       {                                      \
+     impl_count = 0;                              \
+     if (func_count != 0)                             \
+       {                                      \
+         int f;                               \
+         impl_t *skip = NULL, *a;                         \
+         for (impl = __start_impls; impl < __stop_impls; ++impl)          \
+           if (strcmp (impl->name, TEST_NAME) == 0)               \
+         skip = impl;                             \
+           else                               \
+         impl_count++;                            \
+         a = impl_array = xmalloc ((impl_count + func_count) *        \
+                       sizeof (impl_t));              \
+         for (impl = __start_impls; impl < __stop_impls; ++impl)          \
+           if (impl != skip)                          \
+         *a++ = *impl;                            \
+         for (f = 0; f < func_count; f++)                     \
+           if (func_list[f].usable)                       \
+         {                                \
+           a->name = func_list[f].name;                   \
+           a->fn = func_list[f].fn;                   \
+           a->test = 1;                           \
+           a++;                               \
+         }                                \
+         impl_count = a - impl_array;                     \
+       }                                      \
+     else                                     \
+       {                                      \
+         impl_count = __stop_impls - __start_impls;               \
+         impl_array = __start_impls;                      \
+       }                                      \
+       }                                      \
+     impl = impl_array;                               \
+     for (count = 0; count < impl_count; ++count, ++impl)             \
        if (!notall || impl->test)
 # else /* !TEST_NAME */
 #  define FOR_EACH_IMPL(impl, notall) \
-     for (impl_t *impl = __start_impls; impl < __stop_impls; ++impl)	      \
+     for (impl_t *impl = __start_impls; impl < __stop_impls; ++impl)          \
        if (!notall || impl->test)
 # endif /* !TEST_NAME */
 
@@ -238,72 +237,69 @@ static impl_t *impl_array;
 unsigned char *buf1, *buf2;
 static size_t buf1_size, buf2_size, page_size;
 
-static void
-init_sizes (void)
+static void init_sizes(void)
 {
-  page_size = 2 * getpagesize ();
+    page_size = 2 * getpagesize();
 # ifdef MIN_PAGE_SIZE
-  if (page_size < MIN_PAGE_SIZE)
-    page_size = MIN_PAGE_SIZE;
+    if (page_size < MIN_PAGE_SIZE) {
+        page_size = MIN_PAGE_SIZE;
+    }
 # endif
 
-  buf1_size = BUF1PAGES * page_size;
-  buf2_size = page_size;
+    buf1_size = BUF1PAGES * page_size;
+    buf2_size = page_size;
 }
 
-static void
-exit_error (const char *id, const char *func)
+static void exit_error(const char *id, const char *func)
 {
-  error (EXIT_FAILURE, errno, "%s: %s failed", id, func);
+    error(EXIT_FAILURE, errno, "%s: %s failed", id, func);
 }
 
 /* Allocate a buffer of size SIZE with a guard page at the end.  */
-static void
-alloc_buf (const char *id, size_t size, unsigned char **retbuf)
+static void alloc_buf(const char *id, size_t size, unsigned char **retbuf)
 {
-  size_t alloc_size = size + page_size;
+    size_t alloc_size = size + page_size;
 
-  if (*retbuf != NULL)
-    {
-	int ret = munmap (*retbuf, alloc_size);
-	if (ret != 0)
-	  exit_error (id, "munmap");
+    if (*retbuf != NULL) {
+        int ret = munmap(*retbuf, alloc_size);
+        if (ret != 0) {
+            exit_error(id, "munmap");
+        }
     }
 
-  unsigned char *buf = mmap (0, alloc_size, PROT_READ | PROT_WRITE,
-			     MAP_PRIVATE | MAP_ANON, -1, 0);
+    unsigned char *buf = mmap(0, alloc_size, PROT_READ | PROT_WRITE,
+                              MAP_PRIVATE | MAP_ANON, -1, 0);
 
-  if (buf == MAP_FAILED)
-    exit_error (id, "mmap");
-  if (mprotect (buf + size, page_size, PROT_NONE))
-    exit_error (id, "mprotect");
+    if (buf == MAP_FAILED) {
+        exit_error(id, "mmap");
+    }
+    if (mprotect(buf + size, page_size, PROT_NONE)) {
+        exit_error(id, "mprotect");
+    }
 
-  *retbuf = buf;
+    *retbuf = buf;
 }
 
-static void
-alloc_bufs (void)
+static void alloc_bufs(void)
 {
-  alloc_buf ("buf1", buf1_size, &buf1);
-  alloc_buf ("buf2", buf2_size, &buf2);
+    alloc_buf("buf1", buf1_size, &buf1);
+    alloc_buf("buf2", buf2_size, &buf2);
 }
 
-static void
-test_init (void)
+static void test_init(void)
 {
 # ifdef TEST_NAME
-  func_count = __libc_ifunc_impl_list (TEST_NAME, func_list,
-				       (sizeof func_list
-					/ sizeof func_list[0]));
+    func_count = __libc_ifunc_impl_list(TEST_NAME, func_list,
+                                        (sizeof func_list
+                                         / sizeof func_list[0]));
 # endif
 
-  init_sizes ();
-  alloc_bufs ();
+    init_sizes();
+    alloc_bufs();
 
-  if (do_srandom)
-    {
-      printf ("Setting seed to 0x%x\n", seed);
-      srandom (seed);
+    if (do_srandom) {
+        printf("Setting seed to 0x%x\n", seed);
+        srandom(seed);
     }
 }
 

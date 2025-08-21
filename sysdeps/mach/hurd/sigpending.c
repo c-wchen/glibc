@@ -23,20 +23,20 @@
 
 /* Store in SET all signals that are blocked and pending.  */
 /* XXX should be __sigpending ? */
-int
-sigpending (sigset_t *set)
+int sigpending(sigset_t *set)
 {
-  struct hurd_sigstate *ss;
-  sigset_t pending;
+    struct hurd_sigstate *ss;
+    sigset_t pending;
 
-  if (set == NULL)
-    return __hurd_fail (EINVAL);
+    if (set == NULL) {
+        return __hurd_fail(EINVAL);
+    }
 
-  ss = _hurd_self_sigstate ();
-  _hurd_sigstate_lock (ss);
-  pending = _hurd_sigstate_pending (ss);
-  _hurd_sigstate_unlock (ss);
+    ss = _hurd_self_sigstate();
+    _hurd_sigstate_lock(ss);
+    pending = _hurd_sigstate_pending(ss);
+    _hurd_sigstate_unlock(ss);
 
-  *set = pending;
-  return 0;
+    *set = pending;
+    return 0;
 }

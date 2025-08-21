@@ -26,12 +26,12 @@
 /* Create a device file named PATH, with permission and special bits MODE
    and device number DEV (which can be constructed from major and minor
    device numbers with the `makedev' macro above).  */
-int
-__xmknod (int vers, const char *path, mode_t mode, dev_t *dev)
+int __xmknod(int vers, const char *path, mode_t mode, dev_t *dev)
 {
-  if (vers != _MKNOD_VER)
-    return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
+    if (vers != _MKNOD_VER) {
+        return INLINE_SYSCALL_ERROR_RETURN_VALUE(EINVAL);
+    }
 
-  return __mknodat (AT_FDCWD, path, mode, *dev);
+    return __mknodat(AT_FDCWD, path, mode, *dev);
 }
 #endif

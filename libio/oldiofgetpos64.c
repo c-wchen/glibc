@@ -31,30 +31,30 @@
 #if SHLIB_COMPAT (libc, GLIBC_2_1, GLIBC_2_2)
 
 int
-attribute_compat_text_section
-_IO_old_fgetpos64 (FILE *fp, __fpos64_t *posp)
+attribute_compat_text_section _IO_old_fgetpos64(FILE *fp, __fpos64_t *posp)
 {
-  off64_t pos;
-  CHECK_FILE (fp, EOF);
-  _IO_acquire_lock (fp);
-  pos = _IO_seekoff_unlocked (fp, 0, _IO_seek_cur, 0);
-  if (_IO_in_backup (fp) && pos != _IO_pos_BAD)
-    pos -= fp->_IO_save_end - fp->_IO_save_base;
-  _IO_release_lock (fp);
-  if (pos == _IO_pos_BAD)
-    {
-      /* ANSI explicitly requires setting errno to a positive value on
-	 failure.  */
-      if (errno == 0)
-	__set_errno (EIO);
-      return EOF;
+    off64_t pos;
+    CHECK_FILE(fp, EOF);
+    _IO_acquire_lock(fp);
+    pos = _IO_seekoff_unlocked(fp, 0, _IO_seek_cur, 0);
+    if (_IO_in_backup(fp) && pos != _IO_pos_BAD) {
+        pos -= fp->_IO_save_end - fp->_IO_save_base;
     }
-  posp->__pos = pos;
-  return 0;
+    _IO_release_lock(fp);
+    if (pos == _IO_pos_BAD) {
+        /* ANSI explicitly requires setting errno to a positive value on
+        failure.  */
+        if (errno == 0) {
+            __set_errno(EIO);
+        }
+        return EOF;
+    }
+    posp->__pos = pos;
+    return 0;
 }
 
-compat_symbol (libc, _IO_old_fgetpos64, _IO_fgetpos64, GLIBC_2_1);
-strong_alias (_IO_old_fgetpos64, __old_fgetpos64)
-compat_symbol (libc, __old_fgetpos64, fgetpos64, GLIBC_2_1);
+compat_symbol(libc, _IO_old_fgetpos64, _IO_fgetpos64, GLIBC_2_1);
+strong_alias(_IO_old_fgetpos64, __old_fgetpos64)
+compat_symbol(libc, __old_fgetpos64, fgetpos64, GLIBC_2_1);
 
 #endif

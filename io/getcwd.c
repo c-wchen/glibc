@@ -26,14 +26,13 @@
    an array is allocated with `malloc'; the array is SIZE
    bytes long, unless SIZE <= 0, in which case it is as
    big as necessary.  */
-char *
-__getcwd (char *buf, size_t size)
+char *__getcwd(char *buf, size_t size)
 {
-  __set_errno (ENOSYS);
-  return NULL;
+    __set_errno(ENOSYS);
+    return NULL;
 }
-libc_hidden_def (__getcwd)
-weak_alias (__getcwd, getcwd)
+libc_hidden_def(__getcwd)
+weak_alias(__getcwd, getcwd)
 
-stub_warning (__getcwd)
-stub_warning (getcwd)
+stub_warning(__getcwd)
+stub_warning(getcwd)

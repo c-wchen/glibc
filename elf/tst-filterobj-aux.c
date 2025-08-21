@@ -21,13 +21,13 @@
 #include "tst-filterobj-filtee.h"
 
 /* We never want to see the output of the auxiliary object.  */
-const char *get_text (void)
+const char *get_text(void)
 {
-  return "Hello from auxiliary filter object (FAIL)";
+    return "Hello from auxiliary filter object (FAIL)";
 }
 
 /* The filtee doesn't implement this symbol, so this should resolve.  */
-const char *get_text2 (void)
+const char *get_text2(void)
 {
-  return "Hello from auxiliary filter object (PASS)";
+    return "Hello from auxiliary filter object (PASS)";
 }

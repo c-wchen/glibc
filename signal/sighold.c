@@ -20,13 +20,13 @@
 #include <stddef.h>
 #include <signal.h>
 
-int
-sighold (int sig)
+int sighold(int sig)
 {
-  sigset_t set;
+    sigset_t set;
 
-  sigemptyset (&set);
-  if (sigaddset (&set, sig) < 0)
-    return -1;
-  return __sigprocmask (SIG_BLOCK, &set, NULL);
+    sigemptyset(&set);
+    if (sigaddset(&set, sig) < 0) {
+        return -1;
+    }
+    return __sigprocmask(SIG_BLOCK, &set, NULL);
 }

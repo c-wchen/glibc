@@ -22,10 +22,9 @@
 #include <aio_misc.h>
 
 int
-attribute_hidden
-__aio_sigqueue (int sig, const union sigval val, pid_t caller_pid)
+attribute_hidden __aio_sigqueue(int sig, const union sigval val, pid_t caller_pid)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (__aio_sigqueue)
+stub_warning(__aio_sigqueue)

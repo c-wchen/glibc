@@ -20,36 +20,37 @@
 #include <stdbool.h>
 
 /* Convert ASCII letters to upper case.  */
-static inline int
-ascii_toupper (unsigned char ch)
+static inline int ascii_toupper(unsigned char ch)
 {
-  if (ch >= 'a' && ch <= 'z')
-    return ch - 'a' + 'A';
-  else
-    return ch;
+    if (ch >= 'a' && ch <= 'z') {
+        return ch - 'a' + 'A';
+    } else {
+        return ch;
+    }
 }
 
-bool
-__ns_samebinaryname (const unsigned char *a, const unsigned char *b)
+bool __ns_samebinaryname(const unsigned char *a, const unsigned char *b)
 {
-  while (*a != 0 && *b != 0)
-    {
-      if (*a != *b)
-        /* Different label length.  */
-        return false;
-      int labellen = *a;
-      ++a;
-      ++b;
-      for (int i = 0; i < labellen; ++i)
+    while (*a != 0 && *b != 0) {
+        if (*a != *b)
+            /* Different label length.  */
         {
-          if (*a != *b && ascii_toupper (*a) != ascii_toupper (*b))
-            /* Different character in label.  */
             return false;
-          ++a;
-          ++b;
+        }
+        int labellen = *a;
+        ++a;
+        ++b;
+        for (int i = 0; i < labellen; ++i) {
+            if (*a != *b && ascii_toupper(*a) != ascii_toupper(*b))
+                /* Different character in label.  */
+            {
+                return false;
+            }
+            ++a;
+            ++b;
         }
     }
 
-  /* Match if both names are at the root label.  */
-  return *a == 0 && *b == 0;
+    /* Match if both names are at the root label.  */
+    return *a == 0 && *b == 0;
 }

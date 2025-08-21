@@ -30,6 +30,6 @@
 # define SYMBOL_NAME rintf
 # include "ifunc-sse4_1.h"
 
-libc_ifunc_redirected (__redirect_rintf, __rintf, IFUNC_SELECTOR ());
-libm_alias_float (__rint, rint)
+libc_ifunc_redirected(__redirect_rintf, __rintf, IFUNC_SELECTOR());
+libm_alias_float(__rint, rint)
 #endif

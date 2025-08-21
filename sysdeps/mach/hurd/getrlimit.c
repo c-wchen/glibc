@@ -22,23 +22,23 @@
 
 /* Put the soft and hard limits for RESOURCE in *RLIMITS.
    Returns 0 if successful, -1 if not (and sets errno).  */
-int
-__getrlimit (enum __rlimit_resource resource, struct rlimit *rlimits)
+int __getrlimit(enum __rlimit_resource resource, struct rlimit *rlimits)
 {
-  struct rlimit lim;
+    struct rlimit lim;
 
-  if (rlimits == NULL || (unsigned int) resource >= RLIMIT_NLIMITS)
-    return __hurd_fail (EINVAL);
+    if (rlimits == NULL || (unsigned int) resource >= RLIMIT_NLIMITS) {
+        return __hurd_fail(EINVAL);
+    }
 
-  HURD_CRITICAL_BEGIN;
-  __mutex_lock (&_hurd_rlimit_lock);
-  lim = _hurd_rlimits[resource];
-  __mutex_unlock (&_hurd_rlimit_lock);
-  HURD_CRITICAL_END;
+    HURD_CRITICAL_BEGIN;
+    __mutex_lock(&_hurd_rlimit_lock);
+    lim = _hurd_rlimits[resource];
+    __mutex_unlock(&_hurd_rlimit_lock);
+    HURD_CRITICAL_END;
 
-  *rlimits = lim;
+    *rlimits = lim;
 
-  return 0;
+    return 0;
 }
-libc_hidden_def (__getrlimit)
-weak_alias (__getrlimit, getrlimit)
+libc_hidden_def(__getrlimit)
+weak_alias(__getrlimit, getrlimit)

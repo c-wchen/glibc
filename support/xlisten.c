@@ -22,9 +22,9 @@
 #include <stdlib.h>
 #include <support/check.h>
 
-void
-xlisten (int fd, int backlog)
+void xlisten(int fd, int backlog)
 {
-  if (listen (fd, backlog) != 0)
-    FAIL_EXIT1 ("listen (%d, %d): %m", fd, backlog);
+    if (listen(fd, backlog) != 0) {
+        FAIL_EXIT1("listen (%d, %d): %m", fd, backlog);
+    }
 }

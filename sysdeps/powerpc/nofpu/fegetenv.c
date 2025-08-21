@@ -19,26 +19,25 @@
 #include "soft-fp.h"
 #include "soft-supp.h"
 
-int
-__fegetenv (fenv_t *envp)
+int __fegetenv(fenv_t *envp)
 {
-  fenv_union_t u;
+    fenv_union_t u;
 
-  u.l[0] = __sim_exceptions_thread;
-  u.l[0] |= __sim_round_mode_thread;
-  u.l[1] = __sim_disabled_exceptions_thread;
+    u.l[0] = __sim_exceptions_thread;
+    u.l[0] |= __sim_round_mode_thread;
+    u.l[1] = __sim_disabled_exceptions_thread;
 
-  *envp = u.fenv;
+    *envp = u.fenv;
 
-  return 0;
+    return 0;
 }
 
 #include <shlib-compat.h>
 #if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
-strong_alias (__fegetenv, __old_fegetenv)
-compat_symbol (libm, __old_fegetenv, fegetenv, GLIBC_2_1);
+strong_alias(__fegetenv, __old_fegetenv)
+compat_symbol(libm, __old_fegetenv, fegetenv, GLIBC_2_1);
 #endif
 
-libm_hidden_def (__fegetenv)
-libm_hidden_ver (__fegetenv, fegetenv)
-versioned_symbol (libm, __fegetenv, fegetenv, GLIBC_2_2);
+libm_hidden_def(__fegetenv)
+libm_hidden_ver(__fegetenv, fegetenv)
+versioned_symbol(libm, __fegetenv, fegetenv, GLIBC_2_2);

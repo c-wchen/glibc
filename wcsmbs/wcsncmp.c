@@ -25,45 +25,46 @@
    returning less than, equal to or greater than zero
    if S1 is lexicographically less than, equal to or
    greater than S2.  */
-int
-WCSNCMP (const wchar_t *s1, const wchar_t *s2, size_t n)
+int WCSNCMP(const wchar_t *s1, const wchar_t *s2, size_t n)
 {
-  wchar_t c1 = L'\0';
-  wchar_t c2 = L'\0';
+    wchar_t c1 = L'\0';
+    wchar_t c2 = L'\0';
 
-  if (n >= 4)
-    {
-      size_t n4 = n >> 2;
-      do
-	{
-	  c1 = *s1++;
-	  c2 = *s2++;
-	  if (c1 == L'\0' || c1 != c2)
-	    return c1 > c2 ? 1 : (c1 < c2 ? -1 : 0);
-	  c1 = *s1++;
-	  c2 = *s2++;
-	  if (c1 == L'\0' || c1 != c2)
-	    return c1 > c2 ? 1 : (c1 < c2 ? -1 : 0);
-	  c1 = *s1++;
-	  c2 = *s2++;
-	  if (c1 == L'\0' || c1 != c2)
-	    return c1 > c2 ? 1 : (c1 < c2 ? -1 : 0);
-	  c1 = *s1++;
-	  c2 = *s2++;
-	  if (c1 == L'\0' || c1 != c2)
-	    return c1 > c2 ? 1 : (c1 < c2 ? -1 : 0);
-	} while (--n4 > 0);
-      n &= 3;
+    if (n >= 4) {
+        size_t n4 = n >> 2;
+        do {
+            c1 = *s1++;
+            c2 = *s2++;
+            if (c1 == L'\0' || c1 != c2) {
+                return c1 > c2 ? 1 : (c1 < c2 ? -1 : 0);
+            }
+            c1 = *s1++;
+            c2 = *s2++;
+            if (c1 == L'\0' || c1 != c2) {
+                return c1 > c2 ? 1 : (c1 < c2 ? -1 : 0);
+            }
+            c1 = *s1++;
+            c2 = *s2++;
+            if (c1 == L'\0' || c1 != c2) {
+                return c1 > c2 ? 1 : (c1 < c2 ? -1 : 0);
+            }
+            c1 = *s1++;
+            c2 = *s2++;
+            if (c1 == L'\0' || c1 != c2) {
+                return c1 > c2 ? 1 : (c1 < c2 ? -1 : 0);
+            }
+        } while (--n4 > 0);
+        n &= 3;
     }
 
-  while (n > 0)
-    {
-      c1 = *s1++;
-      c2 = *s2++;
-      if (c1 == L'\0' || c1 != c2)
-	return c1 > c2 ? 1 : (c1 < c2 ? -1 : 0);
-      n--;
+    while (n > 0) {
+        c1 = *s1++;
+        c2 = *s2++;
+        if (c1 == L'\0' || c1 != c2) {
+            return c1 > c2 ? 1 : (c1 < c2 ? -1 : 0);
+        }
+        n--;
     }
 
-  return 0;
+    return 0;
 }

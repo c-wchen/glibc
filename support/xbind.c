@@ -22,9 +22,9 @@
 #include <stdlib.h>
 #include <support/check.h>
 
-void
-xbind (int fd, const struct sockaddr *sa, socklen_t sa_len)
+void xbind(int fd, const struct sockaddr *sa, socklen_t sa_len)
 {
-  if (bind (fd, sa, sa_len) != 0)
-    FAIL_EXIT1 ("bind (%d), family %d: %m", fd, sa->sa_family);
+    if (bind(fd, sa, sa_len) != 0) {
+        FAIL_EXIT1("bind (%d), family %d: %m", fd, sa->sa_family);
+    }
 }

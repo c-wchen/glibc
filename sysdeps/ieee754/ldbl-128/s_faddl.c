@@ -24,10 +24,9 @@
 
 #include <math-narrow.h>
 
-float
-__faddl (_Float128 x, _Float128 y)
+float __faddl(_Float128 x, _Float128 y)
 {
-  NARROW_ADD_ROUND_TO_ODD (x, y, float, union ieee854_long_double, l,
-			   mantissa3);
+    NARROW_ADD_ROUND_TO_ODD(x, y, float, union ieee854_long_double, l,
+                            mantissa3);
 }
-libm_alias_float_ldouble (add)
+libm_alias_float_ldouble(add)

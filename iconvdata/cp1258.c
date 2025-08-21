@@ -24,32 +24,32 @@
 #define NELEMS(arr) (sizeof (arr) / sizeof (arr[0]))
 
 /* Definitions used in the body of the `gconv' function.  */
-#define CHARSET_NAME		"CP1258//"
-#define FROM_LOOP		from_cp1258
-#define TO_LOOP			to_cp1258
-#define DEFINE_INIT		1
-#define DEFINE_FINI		1
-#define ONE_DIRECTION		0
-#define FROM_LOOP_MIN_NEEDED_FROM	1
-#define FROM_LOOP_MAX_NEEDED_FROM	1
-#define FROM_LOOP_MIN_NEEDED_TO		4
-#define FROM_LOOP_MAX_NEEDED_TO		4
-#define TO_LOOP_MIN_NEEDED_FROM		4
-#define TO_LOOP_MAX_NEEDED_FROM		4
-#define TO_LOOP_MIN_NEEDED_TO		1
-#define TO_LOOP_MAX_NEEDED_TO		2
+#define CHARSET_NAME        "CP1258//"
+#define FROM_LOOP       from_cp1258
+#define TO_LOOP         to_cp1258
+#define DEFINE_INIT     1
+#define DEFINE_FINI     1
+#define ONE_DIRECTION       0
+#define FROM_LOOP_MIN_NEEDED_FROM   1
+#define FROM_LOOP_MAX_NEEDED_FROM   1
+#define FROM_LOOP_MIN_NEEDED_TO     4
+#define FROM_LOOP_MAX_NEEDED_TO     4
+#define TO_LOOP_MIN_NEEDED_FROM     4
+#define TO_LOOP_MAX_NEEDED_FROM     4
+#define TO_LOOP_MIN_NEEDED_TO       1
+#define TO_LOOP_MAX_NEEDED_TO       2
 #define PREPARE_LOOP \
-  int saved_state;							      \
+  int saved_state;                                \
   int *statep = &data->__statep->__count;
-#define EXTRA_LOOP_ARGS		, statep
+#define EXTRA_LOOP_ARGS     , statep
 
 
 /* Since we might have to reset input pointer we must be able to save
    and restore the state.  */
 #define SAVE_RESET_STATE(Save) \
-  if (Save)								      \
-    saved_state = *statep;						      \
-  else									      \
+  if (Save)                                   \
+    saved_state = *statep;                            \
+  else                                        \
     *statep = saved_state
 
 
@@ -61,36 +61,35 @@
    the output state to the initial state.  This has to be done during the
    flushing.  */
 #define EMIT_SHIFT_TO_INIT \
-  if (data->__statep->__count != 0)					      \
-    {									      \
-      if (FROM_DIRECTION)						      \
-	{								      \
-	  if (__glibc_likely (outbuf + 4 <= outend))			      \
-	    {								      \
-	      /* Write out the last character.  */			      \
-	      *((uint32_t *) outbuf) = data->__statep->__count >> 3;	      \
-	      outbuf += sizeof (uint32_t);				      \
-	      data->__statep->__count = 0;				      \
-	    }								      \
-	  else								      \
-	    /* We don't have enough room in the output buffer.  */	      \
-	    status = __GCONV_FULL_OUTPUT;				      \
-	}								      \
-      else								      \
-	/* We don't use shift states in the TO_DIRECTION.  */		      \
-	data->__statep->__count = 0;					      \
+  if (data->__statep->__count != 0)                       \
+    {                                         \
+      if (FROM_DIRECTION)                             \
+    {                                     \
+      if (__glibc_likely (outbuf + 4 <= outend))                  \
+        {                                     \
+          /* Write out the last character.  */                \
+          *((uint32_t *) outbuf) = data->__statep->__count >> 3;          \
+          outbuf += sizeof (uint32_t);                    \
+          data->__statep->__count = 0;                    \
+        }                                     \
+      else                                    \
+        /* We don't have enough room in the output buffer.  */        \
+        status = __GCONV_FULL_OUTPUT;                     \
+    }                                     \
+      else                                    \
+    /* We don't use shift states in the TO_DIRECTION.  */             \
+    data->__statep->__count = 0;                          \
     }
 
 
 /* First define the conversion function from CP1258 to UCS4.  */
 
-static const uint16_t to_ucs4[128] =
-  {
+static const uint16_t to_ucs4[128] = {
     /* 0x80 */
     0x20AC,      0, 0x201A, 0x0192, 0x201E, 0x2026, 0x2020, 0x2021,
     0x02C6, 0x2030,      0, 0x2039, 0x0152,      0,      0,      0,
     /* 0x90 */
-	 0, 0x2018, 0x2019, 0x201C, 0x201D, 0x2022, 0x2013, 0x2014,
+    0, 0x2018, 0x2019, 0x201C, 0x201D, 0x2022, 0x2013, 0x2014,
     0x02DC, 0x2122,      0, 0x203A, 0x0153,      0,      0, 0x0178,
     /* 0xA0 */
     0x00A0, 0x00A1, 0x00A2, 0x00A3, 0x00A4, 0x00A5, 0x00A6, 0x00A7,
@@ -110,18 +109,16 @@ static const uint16_t to_ucs4[128] =
     /* 0xF0 */
     0x0111, 0x00F1, 0x0323, 0x00F3, 0x00F4, 0x01A1, 0x00F6, 0x00F7,
     0x00F8, 0x00F9, 0x00FA, 0x00FB, 0x00FC, 0x01B0, 0x20AB, 0x00FF,
-  };
+};
 
 /* CP1258 contains five combining characters:
    0x0300, 0x0301, 0x0303, 0x0309, 0x0323.  */
 
 /* Composition tables for each of the relevant combining characters.  */
-static const struct
-{
-  uint16_t base;
-  uint16_t composed;
-} comp_table_data[] =
-  {
+static const struct {
+    uint16_t base;
+    uint16_t composed;
+} comp_table_data[] = {
 #define COMP_TABLE_IDX_0300 0
 #define COMP_TABLE_LEN_0300 31
     { 0x0041, 0x00C0 },
@@ -343,166 +340,163 @@ static const struct
     { 0x01AF, 0x1EF0 },
     { 0x01B0, 0x1EF1 },
 #define COMP_TABLE_IDX_END (COMP_TABLE_IDX_0323 + COMP_TABLE_LEN_0323)
-  };
+};
 /* Compile-time verification of table size.  */
-typedef int verify1[(NELEMS (comp_table_data) == COMP_TABLE_IDX_END) - 1];
+typedef int verify1[(NELEMS(comp_table_data) == COMP_TABLE_IDX_END) - 1];
 
-static const struct
-{
-  unsigned int idx;
-  unsigned int len;
-} comp_table[5] =
-  {
+static const struct {
+    unsigned int idx;
+    unsigned int len;
+} comp_table[5] = {
     { COMP_TABLE_IDX_0300, COMP_TABLE_LEN_0300 },
     { COMP_TABLE_IDX_0301, COMP_TABLE_LEN_0301 },
     { COMP_TABLE_IDX_0303, COMP_TABLE_LEN_0303 },
     { COMP_TABLE_IDX_0309, COMP_TABLE_LEN_0309 },
     { COMP_TABLE_IDX_0323, COMP_TABLE_LEN_0323 }
-  };
+};
 
-#define MIN_NEEDED_INPUT	FROM_LOOP_MIN_NEEDED_FROM
-#define MAX_NEEDED_INPUT	FROM_LOOP_MAX_NEEDED_FROM
-#define MIN_NEEDED_OUTPUT	FROM_LOOP_MIN_NEEDED_TO
-#define MAX_NEEDED_OUTPUT	FROM_LOOP_MAX_NEEDED_TO
-#define LOOPFCT			FROM_LOOP
+#define MIN_NEEDED_INPUT    FROM_LOOP_MIN_NEEDED_FROM
+#define MAX_NEEDED_INPUT    FROM_LOOP_MAX_NEEDED_FROM
+#define MIN_NEEDED_OUTPUT   FROM_LOOP_MIN_NEEDED_TO
+#define MAX_NEEDED_OUTPUT   FROM_LOOP_MAX_NEEDED_TO
+#define LOOPFCT         FROM_LOOP
 #define BODY \
-  {									      \
-    uint32_t ch = *inptr;						      \
-    uint32_t last_ch;							      \
-    int must_buffer_ch;							      \
-									      \
-    if (ch >= 0x80)							      \
-      {									      \
-	ch = to_ucs4[ch - 0x80];					      \
-	if (__glibc_unlikely (ch == L'\0'))				      \
-	  {								      \
-	    /* This is an illegal character.  */			      \
-	    STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
-	  }								      \
-      }									      \
-									      \
-    /* Determine whether there is a buffered character pending.  */	      \
-    last_ch = *statep >> 3;						      \
-									      \
+  {                                       \
+    uint32_t ch = *inptr;                             \
+    uint32_t last_ch;                                 \
+    int must_buffer_ch;                               \
+                                          \
+    if (ch >= 0x80)                               \
+      {                                       \
+    ch = to_ucs4[ch - 0x80];                          \
+    if (__glibc_unlikely (ch == L'\0'))                   \
+      {                                   \
+        /* This is an illegal character.  */                  \
+        STANDARD_FROM_LOOP_ERR_HANDLER (1);                   \
+      }                                   \
+      }                                       \
+                                          \
+    /* Determine whether there is a buffered character pending.  */       \
+    last_ch = *statep >> 3;                           \
+                                          \
     /* We have to buffer ch if it is a possible match in comp_table_data.  */ \
-    must_buffer_ch = (ch >= 0x0041 && ch <= 0x01b0);			      \
-									      \
-    if (last_ch)							      \
-      {									      \
-	if (ch >= 0x0300 && ch < 0x0340)				      \
-	  {								      \
-	    /* See whether last_ch and ch can be combined.  */		      \
-	    unsigned int i, i1, i2;					      \
-									      \
-	    switch (ch)							      \
-	      {								      \
-	      case 0x0300:						      \
-		i = 0;							      \
-		break;							      \
-	      case 0x0301:						      \
-		i = 1;							      \
-		break;							      \
-	      case 0x0303:						      \
-		i = 2;							      \
-		break;							      \
-	      case 0x0309:						      \
-		i = 3;							      \
-		break;							      \
-	      case 0x0323:						      \
-		i = 4;							      \
-		break;							      \
-	      default:							      \
-		abort ();						      \
-	      }								      \
-									      \
-	    i1 = comp_table[i].idx;					      \
-	    i2 = i1 + comp_table[i].len - 1;				      \
-									      \
-	    if (last_ch >= comp_table_data[i1].base			      \
-		&& last_ch <= comp_table_data[i2].base)			      \
-	      {								      \
-		for (;;)						      \
-		  {							      \
-		    i = (i1 + i2) >> 1;					      \
-		    if (last_ch == comp_table_data[i].base)		      \
-		      break;						      \
-		    if (last_ch < comp_table_data[i].base)		      \
-		      {							      \
-			if (i1 == i)					      \
-			  goto not_combining;				      \
-			i2 = i;						      \
-		      }							      \
-		    else						      \
-		      {							      \
-			if (i1 != i)					      \
-			  i1 = i;					      \
-			else						      \
-			  {						      \
-			    i = i2;					      \
-			    if (last_ch == comp_table_data[i].base)	      \
-			      break;					      \
-			    goto not_combining;				      \
-			  }						      \
-		      }							      \
-		  }							      \
-		last_ch = comp_table_data[i].composed;			      \
-		/* Output the combined character.  */			      \
-		put32 (outptr, last_ch);				      \
-		outptr += 4;						      \
-		*statep = 0;						      \
-		++inptr;						      \
-		continue;						      \
-	      }								      \
-	  }								      \
-									      \
-      not_combining:							      \
-	/* Output the buffered character.  */				      \
-	put32 (outptr, last_ch);					      \
-	outptr += 4;							      \
-	*statep = 0;							      \
-									      \
-	/* If we don't have enough room to output ch as well, then deal	      \
-	   with it in another round.  */				      \
-	if (!must_buffer_ch && __builtin_expect (outptr + 4 > outend, 0))     \
-	  continue;							      \
-      }									      \
-									      \
-    if (must_buffer_ch)							      \
-      *statep = ch << 3;						      \
-    else								      \
-      {									      \
-	put32 (outptr, ch);						      \
-	outptr += 4;							      \
-      }									      \
-    ++inptr;								      \
+    must_buffer_ch = (ch >= 0x0041 && ch <= 0x01b0);                  \
+                                          \
+    if (last_ch)                                  \
+      {                                       \
+    if (ch >= 0x0300 && ch < 0x0340)                      \
+      {                                   \
+        /* See whether last_ch and ch can be combined.  */            \
+        unsigned int i, i1, i2;                       \
+                                          \
+        switch (ch)                               \
+          {                                   \
+          case 0x0300:                            \
+        i = 0;                                \
+        break;                                \
+          case 0x0301:                            \
+        i = 1;                                \
+        break;                                \
+          case 0x0303:                            \
+        i = 2;                                \
+        break;                                \
+          case 0x0309:                            \
+        i = 3;                                \
+        break;                                \
+          case 0x0323:                            \
+        i = 4;                                \
+        break;                                \
+          default:                                \
+        abort ();                             \
+          }                                   \
+                                          \
+        i1 = comp_table[i].idx;                       \
+        i2 = i1 + comp_table[i].len - 1;                      \
+                                          \
+        if (last_ch >= comp_table_data[i1].base               \
+        && last_ch <= comp_table_data[i2].base)               \
+          {                                   \
+        for (;;)                              \
+          {                               \
+            i = (i1 + i2) >> 1;                       \
+            if (last_ch == comp_table_data[i].base)           \
+              break;                              \
+            if (last_ch < comp_table_data[i].base)            \
+              {                               \
+            if (i1 == i)                          \
+              goto not_combining;                     \
+            i2 = i;                           \
+              }                               \
+            else                              \
+              {                               \
+            if (i1 != i)                          \
+              i1 = i;                         \
+            else                              \
+              {                           \
+                i = i2;                       \
+                if (last_ch == comp_table_data[i].base)       \
+                  break;                          \
+                goto not_combining;                   \
+              }                           \
+              }                               \
+          }                               \
+        last_ch = comp_table_data[i].composed;                \
+        /* Output the combined character.  */                 \
+        put32 (outptr, last_ch);                      \
+        outptr += 4;                              \
+        *statep = 0;                              \
+        ++inptr;                              \
+        continue;                             \
+          }                                   \
+      }                                   \
+                                          \
+      not_combining:                                  \
+    /* Output the buffered character.  */                     \
+    put32 (outptr, last_ch);                          \
+    outptr += 4;                                  \
+    *statep = 0;                                  \
+                                          \
+    /* If we don't have enough room to output ch as well, then deal       \
+       with it in another round.  */                      \
+    if (!must_buffer_ch && __builtin_expect (outptr + 4 > outend, 0))     \
+      continue;                               \
+      }                                       \
+                                          \
+    if (must_buffer_ch)                               \
+      *statep = ch << 3;                              \
+    else                                      \
+      {                                       \
+    put32 (outptr, ch);                           \
+    outptr += 4;                                  \
+      }                                       \
+    ++inptr;                                      \
   }
 #define LOOP_NEED_FLAGS
-#define EXTRA_LOOP_DECLS	, int *statep
+#define EXTRA_LOOP_DECLS    , int *statep
 #define ONEBYTE_BODY \
-  {									      \
-    uint32_t ch;							      \
-									      \
-    if (c < 0x80)							      \
-      ch = c;								      \
-    else								      \
-      {									      \
-	ch = to_ucs4[c - 0x80];						      \
-	if (ch == L'\0')						      \
-	  return WEOF;							      \
-      }									      \
-    if (ch >= 0x0041 && ch <= 0x01b0)					      \
-      return WEOF;							      \
-    return ch;								      \
+  {                                       \
+    uint32_t ch;                                  \
+                                          \
+    if (c < 0x80)                                 \
+      ch = c;                                     \
+    else                                      \
+      {                                       \
+    ch = to_ucs4[c - 0x80];                           \
+    if (ch == L'\0')                              \
+      return WEOF;                                \
+      }                                       \
+    if (ch >= 0x0041 && ch <= 0x01b0)                         \
+      return WEOF;                                \
+    return ch;                                    \
   }
 #include <iconv/loop.c>
 
 
 /* Next, define the conversion function from UCS4 to CP1258.  */
 
-static const unsigned char from_ucs4[] =
-  {
+static const unsigned char from_ucs4[] = {
 #define FROM_IDX_00 0
-			    0xc4, 0xc5, 0xc6, 0xc7, /* 0x00c4-0x00c7 */
+    0xc4, 0xc5, 0xc6, 0xc7, /* 0x00c4-0x00c7 */
     0xc8, 0xc9, 0xca, 0xcb, 0x00, 0xcd, 0xce, 0xcf, /* 0x00c8-0x00cf */
     0x00, 0xd1, 0x00, 0xd3, 0xd4, 0x00, 0xd6, 0xd7, /* 0x00d0-0x00d7 */
     0xd8, 0xd9, 0xda, 0xdb, 0xdc, 0x00, 0x00, 0xdf, /* 0x00d8-0x00df */
@@ -514,7 +508,7 @@ static const unsigned char from_ucs4[] =
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, /* 0x0108-0x010f */
     0xd0, 0xf0,                                     /* 0x0110-0x0111 */
 #define FROM_IDX_01 (FROM_IDX_00 + 78)
-		0x8c, 0x9c, 0x00, 0x00, 0x00, 0x00, /* 0x0152-0x0157 */
+    0x8c, 0x9c, 0x00, 0x00, 0x00, 0x00, /* 0x0152-0x0157 */
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, /* 0x0158-0x015f */
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, /* 0x0160-0x0167 */
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, /* 0x0168-0x016f */
@@ -528,7 +522,7 @@ static const unsigned char from_ucs4[] =
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xdd, /* 0x01a8-0x01af */
     0xfd,                                           /* 0x01b0-0x01b0 */
 #define FROM_IDX_02 (FROM_IDX_01 + 95)
-					0x88, 0x00, /* 0x02c6-0x02c7 */
+    0x88, 0x00, /* 0x02c6-0x02c7 */
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, /* 0x02c8-0x02cf */
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, /* 0x02d0-0x02d7 */
     0x00, 0x00, 0x00, 0x00, 0x98,                   /* 0x02d8-0x02dc */
@@ -539,25 +533,23 @@ static const unsigned char from_ucs4[] =
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, /* 0x0318-0x031f */
     0x00, 0x00, 0x00, 0xf2,                         /* 0x0320-0x0323 */
 #define FROM_IDX_20 (FROM_IDX_03 + 36)
-		      0x96, 0x97, 0x00, 0x00, 0x00, /* 0x2013-0x2017 */
+    0x96, 0x97, 0x00, 0x00, 0x00, /* 0x2013-0x2017 */
     0x91, 0x92, 0x82, 0x00, 0x93, 0x94, 0x84, 0x00, /* 0x2018-0x201f */
     0x86, 0x87, 0x95, 0x00, 0x00, 0x00, 0x85, 0x00, /* 0x2020-0x2027 */
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, /* 0x2028-0x202f */
     0x89, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, /* 0x2030-0x2037 */
     0x00, 0x8b, 0x9b,                               /* 0x2038-0x203a */
 #define FROM_IDX_FF (FROM_IDX_20 + 40)
-  };
+};
 /* Compile-time verification of table size.  */
-typedef int verify2[(NELEMS (from_ucs4) == FROM_IDX_FF) - 1];
+typedef int verify2[(NELEMS(from_ucs4) == FROM_IDX_FF) - 1];
 
 /* Decomposition table for the relevant Unicode characters. */
-static const struct
-{
-  uint16_t composed;
-  uint32_t base:8;
-  uint32_t comb1:8;
-} decomp_table[] =
-  {
+static const struct {
+    uint16_t composed;
+    uint32_t base: 8;
+    uint32_t comb1: 8;
+} decomp_table[] = {
     { 0x00c0, 0x41, 0xcc },
     { 0x00c1, 0x41, 0xec },
     { 0x00c3, 0x41, 0xde },
@@ -757,114 +749,114 @@ static const struct
     { 0x1ef9, 0x79, 0xde },
     { 0x1fed, 0xa8, 0xcc },
     { 0x1fee, 0xa8, 0xec },
-  };
+};
 
-#define MIN_NEEDED_INPUT	TO_LOOP_MIN_NEEDED_FROM
-#define MAX_NEEDED_INPUT	TO_LOOP_MAX_NEEDED_FROM
-#define MIN_NEEDED_OUTPUT	TO_LOOP_MIN_NEEDED_TO
-#define MAX_NEEDED_OUTPUT	TO_LOOP_MAX_NEEDED_TO
-#define LOOPFCT			TO_LOOP
+#define MIN_NEEDED_INPUT    TO_LOOP_MIN_NEEDED_FROM
+#define MAX_NEEDED_INPUT    TO_LOOP_MAX_NEEDED_FROM
+#define MIN_NEEDED_OUTPUT   TO_LOOP_MIN_NEEDED_TO
+#define MAX_NEEDED_OUTPUT   TO_LOOP_MAX_NEEDED_TO
+#define LOOPFCT         TO_LOOP
 #define BODY \
-  {									      \
-    uint32_t ch = get32 (inptr);					      \
-									      \
-    if (ch < 0x0080 || (ch >= 0x00a0 && ch < 0x00c3))			      \
-      {									      \
-	*outptr++ = ch;							      \
-	inptr += 4;							      \
-      }									      \
-    else								      \
-      {									      \
-	unsigned char res;						      \
-									      \
-	if (ch >= 0x00c4 && ch < 0x0112)				      \
-	  res = from_ucs4[ch - 0x00c4 + FROM_IDX_00];			      \
-	else if (ch >= 0x0152 && ch < 0x01b1)				      \
-	  res = from_ucs4[ch - 0x0152 + FROM_IDX_01];			      \
-	else if (ch >= 0x02c6 && ch < 0x02dd)				      \
-	  res = from_ucs4[ch - 0x02c6 + FROM_IDX_02];			      \
-	else if (ch >= 0x0300 && ch < 0x0324)				      \
-	  res = from_ucs4[ch - 0x0300 + FROM_IDX_03];			      \
-	else if (ch >= 0x0340 && ch < 0x0342) /* Vietnamese tone marks */     \
-	  res = from_ucs4[ch - 0x0340 + FROM_IDX_03];			      \
-	else if (ch >= 0x2013 && ch < 0x203b)				      \
-	  res = from_ucs4[ch - 0x2013 + FROM_IDX_20];			      \
-	else if (ch == 0x20ab)						      \
-	  res = 0xfe;							      \
-	else if (ch == 0x20ac)						      \
-	  res = 0x80;							      \
-	else if (ch == 0x2122)						      \
-	  res = 0x99;							      \
-	else								      \
-	  {								      \
-	    UNICODE_TAG_HANDLER (ch, 4);				      \
-	    res = 0;							      \
-	  }								      \
-									      \
-	if (__glibc_likely (res != 0))					      \
-	  {								      \
-	    *outptr++ = res;						      \
-	    inptr += 4;							      \
-	  }								      \
-	else								      \
-	  {								      \
-	    /* Try canonical decomposition.  */				      \
-	    unsigned int i1, i2;					      \
-									      \
-	    i1 = 0;							      \
-	    i2 = sizeof (decomp_table) / sizeof (decomp_table[0]) - 1;	      \
-	    if (ch >= decomp_table[i1].composed				      \
-		&& ch <= decomp_table[i2].composed)			      \
-	      {								      \
-		unsigned int i;						      \
-									      \
-		for (;;)						      \
-		  {							      \
-		    i = (i1 + i2) >> 1;					      \
-		    if (ch == decomp_table[i].composed)			      \
-		      break;						      \
-		    if (ch < decomp_table[i].composed)			      \
-		      {							      \
-			if (i1 == i)					      \
-			  goto failed;					      \
-			i2 = i;						      \
-		      }							      \
-		    else						      \
-		      {							      \
-			if (i1 != i)					      \
-			  i1 = i;					      \
-			else						      \
-			  {						      \
-			    i = i2;					      \
-			    if (ch == decomp_table[i].composed)		      \
-			      break;					      \
-			    goto failed;				      \
-			  }						      \
-		      }							      \
-		  }							      \
-									      \
-		/* See whether we have room for two bytes.  */		      \
-		if (__glibc_unlikely (outptr + 1 >= outend))		      \
-		  {							      \
-		    result = __GCONV_FULL_OUTPUT;			      \
-		    break;						      \
-		  }							      \
-									      \
-		/* Found a canonical decomposition.  */			      \
-		*outptr++ = decomp_table[i].base;			      \
-		*outptr++ = decomp_table[i].comb1;			      \
-		inptr += 4;						      \
-		continue;						      \
-	      }								      \
-									      \
-	  failed:							      \
-	    /* This is an illegal character.  */			      \
-	    STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
-	  }								      \
-      }									      \
+  {                                       \
+    uint32_t ch = get32 (inptr);                          \
+                                          \
+    if (ch < 0x0080 || (ch >= 0x00a0 && ch < 0x00c3))                 \
+      {                                       \
+    *outptr++ = ch;                               \
+    inptr += 4;                               \
+      }                                       \
+    else                                      \
+      {                                       \
+    unsigned char res;                            \
+                                          \
+    if (ch >= 0x00c4 && ch < 0x0112)                      \
+      res = from_ucs4[ch - 0x00c4 + FROM_IDX_00];                 \
+    else if (ch >= 0x0152 && ch < 0x01b1)                     \
+      res = from_ucs4[ch - 0x0152 + FROM_IDX_01];                 \
+    else if (ch >= 0x02c6 && ch < 0x02dd)                     \
+      res = from_ucs4[ch - 0x02c6 + FROM_IDX_02];                 \
+    else if (ch >= 0x0300 && ch < 0x0324)                     \
+      res = from_ucs4[ch - 0x0300 + FROM_IDX_03];                 \
+    else if (ch >= 0x0340 && ch < 0x0342) /* Vietnamese tone marks */     \
+      res = from_ucs4[ch - 0x0340 + FROM_IDX_03];                 \
+    else if (ch >= 0x2013 && ch < 0x203b)                     \
+      res = from_ucs4[ch - 0x2013 + FROM_IDX_20];                 \
+    else if (ch == 0x20ab)                            \
+      res = 0xfe;                                 \
+    else if (ch == 0x20ac)                            \
+      res = 0x80;                                 \
+    else if (ch == 0x2122)                            \
+      res = 0x99;                                 \
+    else                                      \
+      {                                   \
+        UNICODE_TAG_HANDLER (ch, 4);                      \
+        res = 0;                                  \
+      }                                   \
+                                          \
+    if (__glibc_likely (res != 0))                        \
+      {                                   \
+        *outptr++ = res;                              \
+        inptr += 4;                               \
+      }                                   \
+    else                                      \
+      {                                   \
+        /* Try canonical decomposition.  */                   \
+        unsigned int i1, i2;                          \
+                                          \
+        i1 = 0;                               \
+        i2 = sizeof (decomp_table) / sizeof (decomp_table[0]) - 1;        \
+        if (ch >= decomp_table[i1].composed                   \
+        && ch <= decomp_table[i2].composed)               \
+          {                                   \
+        unsigned int i;                           \
+                                          \
+        for (;;)                              \
+          {                               \
+            i = (i1 + i2) >> 1;                       \
+            if (ch == decomp_table[i].composed)               \
+              break;                              \
+            if (ch < decomp_table[i].composed)                \
+              {                               \
+            if (i1 == i)                          \
+              goto failed;                        \
+            i2 = i;                           \
+              }                               \
+            else                              \
+              {                               \
+            if (i1 != i)                          \
+              i1 = i;                         \
+            else                              \
+              {                           \
+                i = i2;                       \
+                if (ch == decomp_table[i].composed)           \
+                  break;                          \
+                goto failed;                      \
+              }                           \
+              }                               \
+          }                               \
+                                          \
+        /* See whether we have room for two bytes.  */            \
+        if (__glibc_unlikely (outptr + 1 >= outend))              \
+          {                               \
+            result = __GCONV_FULL_OUTPUT;                 \
+            break;                            \
+          }                               \
+                                          \
+        /* Found a canonical decomposition.  */               \
+        *outptr++ = decomp_table[i].base;                 \
+        *outptr++ = decomp_table[i].comb1;                \
+        inptr += 4;                           \
+        continue;                             \
+          }                                   \
+                                          \
+      failed:                                 \
+        /* This is an illegal character.  */                  \
+        STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
+      }                                   \
+      }                                       \
   }
 #define LOOP_NEED_FLAGS
-#define EXTRA_LOOP_DECLS	, int *statep
+#define EXTRA_LOOP_DECLS    , int *statep
 #include <iconv/loop.c>
 
 

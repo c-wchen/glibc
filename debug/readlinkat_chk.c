@@ -19,13 +19,13 @@
 #include <sys/param.h>
 
 
-ssize_t
-__readlinkat_chk (int fd, const char *__restrict path,
-		  char *__restrict buf, size_t len,
-		  size_t buflen)
+ssize_t __readlinkat_chk(int fd, const char *__restrict path,
+                         char *__restrict buf, size_t len,
+                         size_t buflen)
 {
-  if (len > buflen)
-    __chk_fail ();
+    if (len > buflen) {
+        __chk_fail();
+    }
 
-  return readlinkat (fd, path, buf, len);
+    return readlinkat(fd, path, buf, len);
 }

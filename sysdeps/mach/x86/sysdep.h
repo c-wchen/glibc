@@ -35,7 +35,7 @@
 
 #ifndef __ASSEMBLER__
 void return_to_trampoline(intptr_t *sp, void *pc, intptr_t retval)
-    __attribute__((__noreturn__));
+__attribute__((__noreturn__));
 #endif
 
 #define RETURN_TO return_to_trampoline

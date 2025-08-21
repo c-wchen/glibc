@@ -23,53 +23,48 @@
 # define S "%ls"
 #endif
 
-struct testcase
-{
-  double value;
-  const CHAR_T *fmt;
-  const CHAR_T *expect;
+struct testcase {
+    double value;
+    const CHAR_T *fmt;
+    const CHAR_T *expect;
 };
 
-static const struct testcase testcases[] =
-  {
-    { 0x0.0030p+0, L_("%a"),		L_("0x1.8p-11") },
-    { 0x0.0040p+0, L_("%a"),		L_("0x1p-10") },
-    { 0x0.0030p+0, L_("%040a"),		L_("0x00000000000000000000000000000001.8p-11") },
-    { 0x0.0040p+0, L_("%040a"),		L_("0x0000000000000000000000000000000001p-10") },
-    { 0x0.0040p+0, L_("%40a"),		L_("                                 0x1p-10") },
-    { 0x0.0040p+0, L_("%#40a"),		L_("                                0x1.p-10") },
-    { 0x0.0040p+0, L_("%-40a"),		L_("0x1p-10                                 ") },
-    { 0x0.0040p+0, L_("%#-40a"),	L_("0x1.p-10                                ") },
-    { 0x0.0030p+0, L_("%040e"),		L_("00000000000000000000000000007.324219e-04") },
-    { 0x0.0040p+0, L_("%040e"),		L_("00000000000000000000000000009.765625e-04") },
-  };
+static const struct testcase testcases[] = {
+    { 0x0.0030p + 0, L_("%a"),        L_("0x1.8p-11") },
+    { 0x0.0040p + 0, L_("%a"),        L_("0x1p-10") },
+    { 0x0.0030p + 0, L_("%040a"),     L_("0x00000000000000000000000000000001.8p-11") },
+    { 0x0.0040p + 0, L_("%040a"),     L_("0x0000000000000000000000000000000001p-10") },
+    { 0x0.0040p + 0, L_("%40a"),      L_("                                 0x1p-10") },
+    { 0x0.0040p + 0, L_("%#40a"),     L_("                                0x1.p-10") },
+    { 0x0.0040p + 0, L_("%-40a"),     L_("0x1p-10                                 ") },
+    { 0x0.0040p + 0, L_("%#-40a"),    L_("0x1.p-10                                ") },
+    { 0x0.0030p + 0, L_("%040e"),     L_("00000000000000000000000000007.324219e-04") },
+    { 0x0.0040p + 0, L_("%040e"),     L_("00000000000000000000000000009.765625e-04") },
+};
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  const struct testcase *t;
-  int result = 0;
+    const struct testcase *t;
+    int result = 0;
 
-  for (t = testcases; t < array_end (testcases); ++t)
-    {
-      CHAR_T buf[1024];
-      int n = SPRINT (buf, array_length (buf), t->fmt, t->value);
-      if (n != STR_LEN (t->expect) || STR_CMP (buf, t->expect) != 0)
-	{
-	  /* clang do not handle %Z format.  */
-	  DIAG_PUSH_NEEDS_COMMENT_CLANG;
-	  DIAG_IGNORE_NEEDS_COMMENT_CLANG (13, "-Wformat");
-	  PRINT (L_("" S "\tExpected \"" S "\" (%Zu)\n\tGot      \""
-		    S "\" (%d, %Zu)\n"),
-		 t->fmt, t->expect, STR_LEN (t->expect),
-		 buf, n, STR_LEN (buf));
-	  DIAG_POP_NEEDS_COMMENT_CLANG;
-	  result = 1;
-	}
+    for (t = testcases; t < array_end(testcases); ++t) {
+        CHAR_T buf[1024];
+        int n = SPRINT(buf, array_length(buf), t->fmt, t->value);
+        if (n != STR_LEN(t->expect) || STR_CMP(buf, t->expect) != 0) {
+            /* clang do not handle %Z format.  */
+            DIAG_PUSH_NEEDS_COMMENT_CLANG;
+            DIAG_IGNORE_NEEDS_COMMENT_CLANG(13, "-Wformat");
+            PRINT(L_("" S "\tExpected \"" S "\" (%Zu)\n\tGot      \""
+                     S "\" (%d, %Zu)\n"),
+                  t->fmt, t->expect, STR_LEN(t->expect),
+                  buf, n, STR_LEN(buf));
+            DIAG_POP_NEEDS_COMMENT_CLANG;
+            result = 1;
+        }
     }
 
-  return result;
+    return result;
 }
 
 #define TEST_FUNCTION do_test ()

@@ -20,14 +20,13 @@
 #include <shlib-compat.h>
 #include <pt-internal.h>
 
-int
-__pthread_attr_getguardsize (const pthread_attr_t *attr, size_t * guardsize)
+int __pthread_attr_getguardsize(const pthread_attr_t *attr, size_t *guardsize)
 {
-  *guardsize = attr->__guardsize;
-  return 0;
+    *guardsize = attr->__guardsize;
+    return 0;
 }
-versioned_symbol (libpthread, __pthread_attr_getguardsize, pthread_attr_getguardsize, GLIBC_2_41);
+versioned_symbol(libpthread, __pthread_attr_getguardsize, pthread_attr_getguardsize, GLIBC_2_41);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_41)
-compat_symbol (libpthread, __pthread_attr_getguardsize, pthread_attr_getguardsize, GLIBC_2_12);
+compat_symbol(libpthread, __pthread_attr_getguardsize, pthread_attr_getguardsize, GLIBC_2_12);
 #endif

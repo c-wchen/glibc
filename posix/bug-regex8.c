@@ -24,59 +24,52 @@
 #include <regex.h>
 
 
-int
-main (void)
+int main(void)
 {
-  struct re_pattern_buffer regex;
-  const char *s;
-  int match[4];
+    struct re_pattern_buffer regex;
+    const char *s;
+    int match[4];
 
-  memset (&regex, '\0', sizeof (regex));
+    memset(&regex, '\0', sizeof(regex));
 
-  s = re_compile_pattern ("xy$", 3, &regex);
-  if (s != NULL)
-    {
-      puts ("failed to compile pattern \"xy$\"");
-      return 1;
-    }
-  else
-    match[0] = re_match_2(&regex,"xyz",3,NULL,0,0,NULL,2);
-
-  free (regex.buffer);
-  memset (&regex, '\0', sizeof (regex));
-
-  s = re_compile_pattern ("xy\\>", 4, &regex);
-  if (s != NULL)
-    {
-      puts ("failed to compile pattern \"xy\\>\"");
-      return 1;
-    }
-  else
-    match[1] = re_search_2(&regex,"xyz",3,NULL,0,0,2,NULL,2);
-
-  free (regex.buffer);
-  memset (&regex, '\0', sizeof (regex));
-
-  s = re_compile_pattern ("xy \\<", 5, &regex);
-  if (s != NULL)
-    {
-      puts ("failed to compile pattern \"xy \\<\"");
-      return 1;
-    }
-  else
-    {
-      match[2] = re_match_2(&regex,"xy  ",4,NULL,0,0,NULL,3);
-      match[3] = re_match_2(&regex,"xy z",4,NULL,0,0,NULL,3);
+    s = re_compile_pattern("xy$", 3, &regex);
+    if (s != NULL) {
+        puts("failed to compile pattern \"xy$\"");
+        return 1;
+    } else {
+        match[0] = re_match_2(&regex, "xyz", 3, NULL, 0, 0, NULL, 2);
     }
 
-  if (match[0] != -1 || match[1] != -1 || match[2] != -1 || match[3] != 3)
-    {
-      printf ("re_{match,search}_2 returned %d,%d,%d,%d, expected -1,-1,-1,3\n",
-		match[0], match[1], match[2], match[3]);
-      return 1;
+    free(regex.buffer);
+    memset(&regex, '\0', sizeof(regex));
+
+    s = re_compile_pattern("xy\\>", 4, &regex);
+    if (s != NULL) {
+        puts("failed to compile pattern \"xy\\>\"");
+        return 1;
+    } else {
+        match[1] = re_search_2(&regex, "xyz", 3, NULL, 0, 0, 2, NULL, 2);
     }
 
-  puts (" -> OK");
+    free(regex.buffer);
+    memset(&regex, '\0', sizeof(regex));
 
-  return 0;
+    s = re_compile_pattern("xy \\<", 5, &regex);
+    if (s != NULL) {
+        puts("failed to compile pattern \"xy \\<\"");
+        return 1;
+    } else {
+        match[2] = re_match_2(&regex, "xy  ", 4, NULL, 0, 0, NULL, 3);
+        match[3] = re_match_2(&regex, "xy z", 4, NULL, 0, 0, NULL, 3);
+    }
+
+    if (match[0] != -1 || match[1] != -1 || match[2] != -1 || match[3] != 3) {
+        printf("re_{match,search}_2 returned %d,%d,%d,%d, expected -1,-1,-1,3\n",
+               match[0], match[1], match[2], match[3]);
+        return 1;
+    }
+
+    puts(" -> OK");
+
+    return 0;
 }

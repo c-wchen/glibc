@@ -20,10 +20,9 @@
 
 /* Register notification upon message arrival to an empty message queue
    MQDES.  */
-int
-mq_notify (mqd_t mqdes, const struct sigevent *notification)
+int mq_notify(mqd_t mqdes, const struct sigevent *notification)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (mq_notify)
+stub_warning(mq_notify)

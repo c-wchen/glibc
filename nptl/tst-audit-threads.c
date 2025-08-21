@@ -39,54 +39,53 @@
 int num_threads;
 pthread_barrier_t barrier;
 
-void
-sync_all (int num)
+void sync_all(int num)
 {
-  pthread_barrier_wait (&barrier);
+    pthread_barrier_wait(&barrier);
 }
 
-void
-call_all_ret_nums (void)
+void call_all_ret_nums(void)
 {
-  /* Call each function one at a time from all threads.  */
+    /* Call each function one at a time from all threads.  */
 #define callnum
 #include "tst-audit-threads.h"
 #undef callnum
 }
 
-void *
-thread_main (void *unused)
+void *thread_main(void *unused)
 {
-  call_all_ret_nums ();
-  return NULL;
+    call_all_ret_nums();
+    return NULL;
 }
 
 #define STR2(X) #X
 #define STR(X) STR2(X)
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int i;
-  pthread_t *threads;
+    int i;
+    pthread_t *threads;
 
-  num_threads = get_nprocs ();
-  if (num_threads <= 1)
-    num_threads = 2;
+    num_threads = get_nprocs();
+    if (num_threads <= 1) {
+        num_threads = 2;
+    }
 
-  /* Used to synchronize all the threads after calling each retNumN.  */
-  xpthread_barrier_init (&barrier, NULL, num_threads);
+    /* Used to synchronize all the threads after calling each retNumN.  */
+    xpthread_barrier_init(&barrier, NULL, num_threads);
 
-  threads = (pthread_t *) xcalloc (num_threads, sizeof (pthread_t));
-  for (i = 0; i < num_threads; i++)
-    threads[i] = xpthread_create(NULL, thread_main, NULL);
+    threads = (pthread_t *) xcalloc(num_threads, sizeof(pthread_t));
+    for (i = 0; i < num_threads; i++) {
+        threads[i] = xpthread_create(NULL, thread_main, NULL);
+    }
 
-  for (i = 0; i < num_threads; i++)
-    xpthread_join(threads[i]);
+    for (i = 0; i < num_threads; i++) {
+        xpthread_join(threads[i]);
+    }
 
-  free (threads);
+    free(threads);
 
-  return 0;
+    return 0;
 }
 
 /* This test usually takes less than 3s to run.  However, there are cases that

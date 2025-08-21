@@ -20,11 +20,11 @@
 
 #include <support/check.h>
 
-void *
-support_readdir_check (const char *name, void *result, int saved_errno)
+void *support_readdir_check(const char *name, void *result, int saved_errno)
 {
-  if (result == NULL && errno != 0)
-    FAIL_EXIT1 ("%s: %m", name);
-  errno = saved_errno;
-  return result;
+    if (result == NULL && errno != 0) {
+        FAIL_EXIT1("%s: %m", name);
+    }
+    errno = saved_errno;
+    return result;
 }

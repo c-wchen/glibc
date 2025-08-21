@@ -20,13 +20,12 @@
 
 /* Perform the I/O control operation specified by REQUEST on FD.
    The actual type and use of ARG and the return value depend on REQUEST.  */
-int
-__ioctl (int fd, unsigned long int request, ...)
+int __ioctl(int fd, unsigned long int request, ...)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (ioctl)
+stub_warning(ioctl)
 
-libc_hidden_def (__ioctl)
-weak_alias (__ioctl, ioctl)
+libc_hidden_def(__ioctl)
+weak_alias(__ioctl, ioctl)

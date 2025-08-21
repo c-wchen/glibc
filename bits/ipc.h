@@ -22,25 +22,24 @@
 #include <bits/types.h>
 
 /* Mode bits for `msgget', `semget', and `shmget'.  */
-#define IPC_CREAT	01000		/* create key if key does not exist */
-#define IPC_EXCL	02000		/* fail if key exists */
-#define IPC_NOWAIT	04000		/* return error on wait */
+#define IPC_CREAT   01000       /* create key if key does not exist */
+#define IPC_EXCL    02000       /* fail if key exists */
+#define IPC_NOWAIT  04000       /* return error on wait */
 
 /* Control commands for `msgctl', `semctl', and `shmctl'.  */
-#define IPC_RMID	0		/* remove identifier */
-#define IPC_SET		1		/* set `ipc_perm' options */
-#define IPC_STAT	2		/* get `ipc_perm' options */
+#define IPC_RMID    0       /* remove identifier */
+#define IPC_SET     1       /* set `ipc_perm' options */
+#define IPC_STAT    2       /* get `ipc_perm' options */
 
 /* Special key values.  */
-#define IPC_PRIVATE	((key_t) 0)	/* private key */
+#define IPC_PRIVATE ((key_t) 0) /* private key */
 
 
 /* Data structure used to pass permission information to IPC operations.  */
-struct ipc_perm
-  {
-    __uid_t uid;			/* owner's user ID */
-    __gid_t gid;			/* owner's group ID */
-    __uid_t cuid;			/* creator's user ID */
-    __gid_t cgid;			/* creator's group ID */
-    __mode_t mode;			/* read/write permission */
-  };
+struct ipc_perm {
+    __uid_t uid;            /* owner's user ID */
+    __gid_t gid;            /* owner's group ID */
+    __uid_t cuid;           /* creator's user ID */
+    __gid_t cgid;           /* creator's group ID */
+    __mode_t mode;          /* read/write permission */
+};

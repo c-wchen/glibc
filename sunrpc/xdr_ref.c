@@ -43,7 +43,7 @@
 #include <libio/iolibio.h>
 #include <shlib-compat.h>
 
-#define LASTUNSIGNED	((u_int)0-1)
+#define LASTUNSIGNED    ((u_int)0-1)
 
 /*
  * XDR an indirect pointer
@@ -54,46 +54,42 @@
  * size is the size of the referenced structure.
  * proc is the routine to handle the referenced structure.
  */
-bool_t
-xdr_reference (XDR *xdrs,
-	       /* the pointer to work on */
-	       caddr_t *pp,
-	       /* size of the object pointed to */
-	       u_int size,
-	       /* xdr routine to handle the object */
-	       xdrproc_t proc)
+bool_t xdr_reference(XDR *xdrs,
+                     /* the pointer to work on */
+                     caddr_t *pp,
+                     /* size of the object pointed to */
+                     u_int size,
+                     /* xdr routine to handle the object */
+                     xdrproc_t proc)
 {
-  caddr_t loc = *pp;
-  bool_t stat;
+    caddr_t loc = *pp;
+    bool_t stat;
 
-  if (loc == NULL)
-    switch (xdrs->x_op)
-      {
-      case XDR_FREE:
-	return TRUE;
+    if (loc == NULL)
+        switch (xdrs->x_op) {
+            case XDR_FREE:
+                return TRUE;
 
-      case XDR_DECODE:
-	*pp = loc = (caddr_t) calloc (1, size);
-	if (loc == NULL)
-	  {
-	    (void) __fxprintf (NULL, "%s: %s", __func__, _("out of memory\n"));
-	    return FALSE;
-	  }
-	break;
-      default:
-	break;
-      }
+            case XDR_DECODE:
+                *pp = loc = (caddr_t) calloc(1, size);
+                if (loc == NULL) {
+                    (void) __fxprintf(NULL, "%s: %s", __func__, _("out of memory\n"));
+                    return FALSE;
+                }
+                break;
+            default:
+                break;
+        }
 
-  stat = (*proc) (xdrs, loc, LASTUNSIGNED);
+    stat = (*proc)(xdrs, loc, LASTUNSIGNED);
 
-  if (xdrs->x_op == XDR_FREE)
-    {
-      mem_free (loc, size);
-      *pp = NULL;
+    if (xdrs->x_op == XDR_FREE) {
+        mem_free(loc, size);
+        *pp = NULL;
     }
-  return stat;
+    return stat;
 }
-libc_hidden_nolink_sunrpc (xdr_reference, GLIBC_2_0)
+libc_hidden_nolink_sunrpc(xdr_reference, GLIBC_2_0)
 
 
 /*
@@ -116,25 +112,23 @@ libc_hidden_nolink_sunrpc (xdr_reference, GLIBC_2_0)
  *
  */
 bool_t
-xdr_pointer (XDR *xdrs, char **objpp, u_int obj_size, xdrproc_t xdr_obj)
+xdr_pointer(XDR *xdrs, char **objpp, u_int obj_size, xdrproc_t xdr_obj)
 {
 
-  bool_t more_data;
+    bool_t more_data;
 
-  more_data = (*objpp != NULL);
-  if (!xdr_bool (xdrs, &more_data))
-    {
-      return FALSE;
+    more_data = (*objpp != NULL);
+    if (!xdr_bool(xdrs, &more_data)) {
+        return FALSE;
     }
-  if (!more_data)
-    {
-      *objpp = NULL;
-      return TRUE;
+    if (!more_data) {
+        *objpp = NULL;
+        return TRUE;
     }
-  return xdr_reference (xdrs, objpp, obj_size, xdr_obj);
+    return xdr_reference(xdrs, objpp, obj_size, xdr_obj);
 }
 #ifdef EXPORT_RPC_SYMBOLS
-libc_hidden_def (xdr_pointer)
+libc_hidden_def(xdr_pointer)
 #else
-libc_hidden_nolink_sunrpc (xdr_pointer, GLIBC_2_0)
+libc_hidden_nolink_sunrpc(xdr_pointer, GLIBC_2_0)
 #endif

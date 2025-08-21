@@ -18,9 +18,8 @@
 
 #include <fenv.h>
 
-int
-fesetexcept (int excepts)
+int fesetexcept(int excepts)
 {
-  asm volatile ("csrs fflags, %0" : : "r" (excepts));
-  return 0;
+    asm volatile("csrs fflags, %0" : : "r"(excepts));
+    return 0;
 }

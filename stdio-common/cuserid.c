@@ -21,12 +21,11 @@
 /* Return the username of the caller.
    If S is not NULL, it points to a buffer of at least L_cuserid bytes
    into which the name is copied; otherwise, a static buffer is used.  */
-char *
-cuserid (char *s)
+char *cuserid(char *s)
 {
-  __set_errno (ENOSYS);
-  return NULL;
+    __set_errno(ENOSYS);
+    return NULL;
 }
 
 
-stub_warning (cuserid)
+stub_warning(cuserid)

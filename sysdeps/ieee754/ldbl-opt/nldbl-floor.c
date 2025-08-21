@@ -1,8 +1,7 @@
 #include "nldbl-compat.h"
 
 double
-attribute_hidden
-floorl (double x)
+attribute_hidden floorl(double x)
 {
-  return floor (x);
+    return floor(x);
 }

@@ -26,7 +26,7 @@
 #   if HAVE_STRSTR_C || STRSTR_Z13_ONLY_USED_AS_FALLBACK
 #    define libc_hidden_builtin_def(name)
 #   else
-#    define libc_hidden_builtin_def(name)		\
+#    define libc_hidden_builtin_def(name)       \
   __hidden_ver1 (__strstr_vx, __GI_strstr, __strstr_vx);
 #   endif
 #  endif
@@ -35,16 +35,16 @@
 # include <string.h>
 
 # ifdef USE_MULTIARCH
-extern __typeof (strchr) __strchr_vx attribute_hidden;
+extern __typeof(strchr) __strchr_vx attribute_hidden;
 #  define strchr __strchr_vx
 
-extern __typeof (strlen) __strlen_vx attribute_hidden;
+extern __typeof(strlen) __strlen_vx attribute_hidden;
 #  define strlen __strlen_vx
 
-extern __typeof (__strnlen) __strnlen_vx attribute_hidden;
+extern __typeof(__strnlen) __strnlen_vx attribute_hidden;
 #  define __strnlen __strnlen_vx
 
-extern __typeof (memcmp) __memcmp_z196 attribute_hidden;
+extern __typeof(memcmp) __memcmp_z196 attribute_hidden;
 #  define memcmp __memcmp_z196
 # endif
 

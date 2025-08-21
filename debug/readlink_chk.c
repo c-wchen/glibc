@@ -23,12 +23,12 @@
 #endif
 
 
-ssize_t
-__readlink_chk (const char *__restrict path, char *__restrict buf, size_t len,
-		size_t buflen)
+ssize_t __readlink_chk(const char *__restrict path, char *__restrict buf, size_t len,
+                       size_t buflen)
 {
-  if (len > buflen)
-    __chk_fail ();
+    if (len > buflen) {
+        __chk_fail();
+    }
 
-  return __readlink (path, buf, len);
+    return __readlink(path, buf, len);
 }

@@ -23,29 +23,29 @@
 
 /* Discover the tick frequency of the machine if something goes wrong,
    we return 0, an impossible hertz.  */
-extern int __profile_frequency (void);
-libc_hidden_proto (__profile_frequency)
+extern int __profile_frequency(void);
+libc_hidden_proto(__profile_frequency)
 
 /* Hooks for the instrumenting functions.  */
-extern void __cyg_profile_func_enter (void *this_fn, void *call_site);
-extern void __cyg_profile_func_exit (void *this_fn, void *call_site);
+extern void __cyg_profile_func_enter(void *this_fn, void *call_site);
+extern void __cyg_profile_func_exit(void *this_fn, void *call_site);
 
 /* Free all allocated resources.  */
-extern void __libc_freeres (void);
-libc_hidden_proto (__libc_freeres)
+extern void __libc_freeres(void);
+libc_hidden_proto(__libc_freeres)
 
 /* Free resources stored in thread-local variables on thread exit.  */
-extern void __libc_thread_freeres (void)
+extern void __libc_thread_freeres(void)
 #if PTHREAD_IN_LIBC
-  attribute_hidden
+attribute_hidden
 #endif
-  ;
+;
 
 /* Define and initialize `__progname' et. al.  */
-extern void __init_misc (int, char **, char **) attribute_hidden;
+extern void __init_misc(int, char **, char **) attribute_hidden;
 
 # if IS_IN (rtld)
-extern __typeof (__profile_frequency) __profile_frequency attribute_hidden;
+extern __typeof(__profile_frequency) __profile_frequency attribute_hidden;
 # endif
 
 #ifdef SHARED

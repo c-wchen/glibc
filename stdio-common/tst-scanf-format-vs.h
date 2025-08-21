@@ -26,52 +26,47 @@
 static char *sscanf_buf;
 static size_t sscanf_buf_size;
 
-static void __attribute__ ((destructor))
-scanf_under_test_fini (void)
+static void __attribute__((destructor))
+scanf_under_test_fini(void)
 {
-  free (sscanf_buf);
+    free(sscanf_buf);
 }
 
-static int
-scanf_under_test (const char *restrict fmt, ...)
+static int scanf_under_test(const char *restrict fmt, ...)
 {
-  size_t i = 0;
-  va_list ap;
-  int result;
-  int ch;
+    size_t i = 0;
+    va_list ap;
+    int result;
+    int ch;
 
-  do
-    {
-      ch = read_input ();
-      if (ch < 0)
-	{
-	  result = ch;
-	  goto out;
-	}
-      if (i == sscanf_buf_size)
-	{
-	  sscanf_buf_size += SIZE_CHUNK;
-	  /* Add an extra byte for the terminating null character.  */
-	  sscanf_buf = xrealloc (sscanf_buf, sscanf_buf_size + 1);
-	}
-      sscanf_buf[i++] = ch;
-    }
-  while (ch != ':');
-  sscanf_buf[i++] = '\0';
+    do {
+        ch = read_input();
+        if (ch < 0) {
+            result = ch;
+            goto out;
+        }
+        if (i == sscanf_buf_size) {
+            sscanf_buf_size += SIZE_CHUNK;
+            /* Add an extra byte for the terminating null character.  */
+            sscanf_buf = xrealloc(sscanf_buf, sscanf_buf_size + 1);
+        }
+        sscanf_buf[i++] = ch;
+    } while (ch != ':');
+    sscanf_buf[i++] = '\0';
 
-  ch = ungetc (ch, stdin);
-  if (ch == EOF)
-    {
-      result = INPUT_ERROR;
-      goto out;
+    ch = ungetc(ch, stdin);
+    if (ch == EOF) {
+        result = INPUT_ERROR;
+        goto out;
     }
 
-  va_start (ap, fmt);
-  result = vsscanf (sscanf_buf, fmt, ap);
-  va_end (ap);
-  if (result == EOF)
-    result = INPUT_EOF;
+    va_start(ap, fmt);
+    result = vsscanf(sscanf_buf, fmt, ap);
+    va_end(ap);
+    if (result == EOF) {
+        result = INPUT_EOF;
+    }
 
 out:
-  return result;
+    return result;
 }

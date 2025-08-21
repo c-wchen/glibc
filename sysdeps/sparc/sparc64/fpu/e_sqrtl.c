@@ -21,11 +21,10 @@
 
 extern void _Qp_sqrt(long double *, const long double *);
 
-long double
-__ieee754_sqrtl (long double x)
+long double __ieee754_sqrtl(long double x)
 {
-  long double ret;
-  _Qp_sqrt (&ret, &x);
-  return ret;
+    long double ret;
+    _Qp_sqrt(&ret, &x);
+    return ret;
 }
-libm_alias_finite (__ieee754_sqrtl, __sqrtl)
+libm_alias_finite(__ieee754_sqrtl, __sqrtl)

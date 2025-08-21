@@ -25,6 +25,6 @@ static char rcsid[] = "$NetBSD: s_fabsf.c,v 1.4 1995/05/10 20:47:15 jtc Exp $";
 
 float __fabsf(float x)
 {
-  return __builtin_fabsf (x);
+    return __builtin_fabsf(x);
 }
-libm_alias_float (__fabs, fabs)
+libm_alias_float(__fabs, fabs)

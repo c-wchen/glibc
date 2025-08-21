@@ -22,12 +22,11 @@
 #include <stdlib.h>
 #include <pthreadP.h>
 
-static inline struct tls_internal_t *
-__glibc_tls_internal (void)
+static inline struct tls_internal_t *__glibc_tls_internal(void)
 {
-  return &THREAD_SELF->tls_state;
+    return &THREAD_SELF->tls_state;
 }
 
-extern void __glibc_tls_internal_free (void) attribute_hidden;
+extern void __glibc_tls_internal_free(void) attribute_hidden;
 
 #endif

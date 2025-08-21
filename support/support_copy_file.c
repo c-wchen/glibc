@@ -21,23 +21,24 @@
 #include <support/support.h>
 #include <support/xunistd.h>
 
-void
-support_copy_file (const char *from, const char *to)
+void support_copy_file(const char *from, const char *to)
 {
-  struct stat st;
-  xstat (from, &st);
-  int fd_from = xopen (from, O_RDONLY, 0);
-  mode_t mode = st.st_mode & 0777;
-  int fd_to = xopen (to, O_WRONLY | O_TRUNC | O_CREAT, mode);
-  ssize_t ret = support_copy_file_range (fd_from, NULL, fd_to, NULL,
-                                         st.st_size, 0);
-  if (ret < 0)
-    FAIL_EXIT1 ("copying from \"%s\" to \"%s\": %m", from, to);
-  if (ret != st.st_size)
-    FAIL_EXIT1 ("copying from \"%s\" to \"%s\": only %zd of %llu bytes copied",
-                from, to, ret, (unsigned long long int) st.st_size);
-  if (fchmod (fd_to, mode) < 0)
-    FAIL_EXIT1 ("fchmod on %s to 0%o: %m", to, mode);
-  xclose (fd_to);
-  xclose (fd_from);
+    struct stat st;
+    xstat(from, &st);
+    int fd_from = xopen(from, O_RDONLY, 0);
+    mode_t mode = st.st_mode & 0777;
+    int fd_to = xopen(to, O_WRONLY | O_TRUNC | O_CREAT, mode);
+    ssize_t ret = support_copy_file_range(fd_from, NULL, fd_to, NULL,
+                                          st.st_size, 0);
+    if (ret < 0) {
+        FAIL_EXIT1("copying from \"%s\" to \"%s\": %m", from, to);
+    }
+    if (ret != st.st_size)
+        FAIL_EXIT1("copying from \"%s\" to \"%s\": only %zd of %llu bytes copied",
+                   from, to, ret, (unsigned long long int) st.st_size);
+    if (fchmod(fd_to, mode) < 0) {
+        FAIL_EXIT1("fchmod on %s to 0%o: %m", to, mode);
+    }
+    xclose(fd_to);
+    xclose(fd_from);
 }

@@ -18,18 +18,18 @@
 
 #include <stdio.h>
 
-static void __attribute__ ((constructor))
-init (void)
+static void __attribute__((constructor))
+init(void)
 {
-  puts ("info: tst-dlmopen-twice-mod1.so loaded");
-  fflush (stdout);
+    puts("info: tst-dlmopen-twice-mod1.so loaded");
+    fflush(stdout);
 }
 
-static void __attribute__ ((destructor))
-fini (void)
+static void __attribute__((destructor))
+fini(void)
 {
-  puts ("info: tst-dlmopen-twice-mod1.so about to be unloaded");
-  fflush (stdout);
+    puts("info: tst-dlmopen-twice-mod1.so about to be unloaded");
+    fflush(stdout);
 }
 
 /* Large allocation.  The second module does not have this, so it

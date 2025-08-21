@@ -3,8 +3,7 @@
 #undef __strtold_internal
 
 double
-attribute_hidden
-__strtold_internal (const char *nptr, char **endptr, int group)
+attribute_hidden __strtold_internal(const char *nptr, char **endptr, int group)
 {
-  return __strtod_internal (nptr, endptr, group);
+    return __strtod_internal(nptr, endptr, group);
 }

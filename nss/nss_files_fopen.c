@@ -21,27 +21,26 @@
 #include <errno.h>
 #include <stdio_ext.h>
 
-FILE *
-__nss_files_fopen (const char *path)
+FILE *__nss_files_fopen(const char *path)
 {
-  FILE *fp = fopen (path, "rce");
-  if (fp == NULL)
-    return NULL;
-
-  /* The stream is not shared across threads.  */
-  __fsetlocking (fp, FSETLOCKING_BYCALLER);
-
-  /* This tells libio that the file is seekable, and that fp->_offset
-     is correct, ensuring that __ftello64 is efficient (bug 26257).  */
-  if (__fseeko64 (fp, 0, SEEK_SET) < 0)
-    {
-      /* nss_files requires seekable files, to deal with repeated
-         reads of the same line after reporting ERANGE.  */
-      fclose (fp);
-      __set_errno (ESPIPE);
-      return NULL;
+    FILE *fp = fopen(path, "rce");
+    if (fp == NULL) {
+        return NULL;
     }
 
-  return fp;
+    /* The stream is not shared across threads.  */
+    __fsetlocking(fp, FSETLOCKING_BYCALLER);
+
+    /* This tells libio that the file is seekable, and that fp->_offset
+       is correct, ensuring that __ftello64 is efficient (bug 26257).  */
+    if (__fseeko64(fp, 0, SEEK_SET) < 0) {
+        /* nss_files requires seekable files, to deal with repeated
+           reads of the same line after reporting ERANGE.  */
+        fclose(fp);
+        __set_errno(ESPIPE);
+        return NULL;
+    }
+
+    return fp;
 }
-libc_hidden_def (__nss_files_fopen)
+libc_hidden_def(__nss_files_fopen)

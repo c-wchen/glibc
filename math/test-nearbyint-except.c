@@ -29,57 +29,58 @@
 
 static bool any_supported = false;
 
-#define TEST_FUNC(NAME, FLOAT, SUFFIX)					\
-static int								\
-NAME (void)								\
-{									\
-  int result = 0;							\
-  if (!EXCEPTION_TESTS (FLOAT))						\
-    return 0;								\
-  any_supported = true;							\
-  volatile FLOAT a, b __attribute__ ((unused));				\
-  a = 1.0;								\
-  /* nearbyint must not clear already-raised exceptions.  */		\
-  feraiseexcept (FE_ALL_EXCEPT);					\
-  b = nearbyint ## SUFFIX (a);						\
-  if (fetestexcept (FE_ALL_EXCEPT) == FE_ALL_EXCEPT)			\
-    puts ("PASS: " #FLOAT);						\
-  else									\
-    {									\
-      puts ("FAIL: " #FLOAT);						\
-      result = 1;							\
-    }									\
-  /* But it mustn't lose exceptions from sNaN arguments.  */		\
-  if (SNAN_TESTS (FLOAT))						\
-    {									\
-      static volatile FLOAT snan = __builtin_nans ## SUFFIX ("");	\
-      volatile FLOAT c __attribute__ ((unused));			\
-      feclearexcept (FE_ALL_EXCEPT);					\
-      c = nearbyint ## SUFFIX (snan);					\
-      if (fetestexcept (FE_INVALID) == FE_INVALID)			\
-	puts ("PASS: " #FLOAT " sNaN");					\
-      else								\
-	{								\
-	  puts ("FAIL: " #FLOAT " sNaN");				\
-	  result = 1;							\
-	}								\
-    }									\
-  return result;							\
+#define TEST_FUNC(NAME, FLOAT, SUFFIX)                  \
+static int                              \
+NAME (void)                             \
+{                                   \
+  int result = 0;                           \
+  if (!EXCEPTION_TESTS (FLOAT))                     \
+    return 0;                               \
+  any_supported = true;                         \
+  volatile FLOAT a, b __attribute__ ((unused));             \
+  a = 1.0;                              \
+  /* nearbyint must not clear already-raised exceptions.  */        \
+  feraiseexcept (FE_ALL_EXCEPT);                    \
+  b = nearbyint ## SUFFIX (a);                      \
+  if (fetestexcept (FE_ALL_EXCEPT) == FE_ALL_EXCEPT)            \
+    puts ("PASS: " #FLOAT);                     \
+  else                                  \
+    {                                   \
+      puts ("FAIL: " #FLOAT);                       \
+      result = 1;                           \
+    }                                   \
+  /* But it mustn't lose exceptions from sNaN arguments.  */        \
+  if (SNAN_TESTS (FLOAT))                       \
+    {                                   \
+      static volatile FLOAT snan = __builtin_nans ## SUFFIX ("");   \
+      volatile FLOAT c __attribute__ ((unused));            \
+      feclearexcept (FE_ALL_EXCEPT);                    \
+      c = nearbyint ## SUFFIX (snan);                   \
+      if (fetestexcept (FE_INVALID) == FE_INVALID)          \
+    puts ("PASS: " #FLOAT " sNaN");                 \
+      else                              \
+    {                               \
+      puts ("FAIL: " #FLOAT " sNaN");               \
+      result = 1;                           \
+    }                               \
+    }                                   \
+  return result;                            \
 }
 
-TEST_FUNC (float_test, float, f)
-TEST_FUNC (double_test, double, )
-TEST_FUNC (ldouble_test, long double, l)
+TEST_FUNC(float_test, float, f)
+TEST_FUNC(double_test, double,)
+TEST_FUNC(ldouble_test, long double, l)
 
 static int
-do_test (void)
+do_test(void)
 {
-  int result = float_test ();
-  result |= double_test ();
-  result |= ldouble_test ();
-  if (!any_supported)
-    return 77;
-  return result;
+    int result = float_test();
+    result |= double_test();
+    result |= ldouble_test();
+    if (!any_supported) {
+        return 77;
+    }
+    return result;
 }
 
 #define TEST_FUNCTION do_test ()

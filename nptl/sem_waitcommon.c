@@ -9,7 +9,7 @@
 
    The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
@@ -78,20 +78,18 @@
    is still executing.  */
 
 #if !__HAVE_64B_ATOMICS
-static void
-__sem_wait_32_finish (struct new_sem *sem);
+static void __sem_wait_32_finish(struct new_sem *sem);
 #endif
 
-static void
-__sem_wait_cleanup (void *arg)
+static void __sem_wait_cleanup(void *arg)
 {
-  struct new_sem *sem = (struct new_sem *) arg;
+    struct new_sem *sem = (struct new_sem *) arg;
 
 #if __HAVE_64B_ATOMICS
-  /* Stop being registered as a waiter.  See below for MO.  */
-  atomic_fetch_add_relaxed (&sem->data, -((uint64_t) 1 << SEM_NWAITERS_SHIFT));
+    /* Stop being registered as a waiter.  See below for MO.  */
+    atomic_fetch_add_relaxed(&sem->data, -((uint64_t) 1 << SEM_NWAITERS_SHIFT));
 #else
-  __sem_wait_32_finish (sem);
+    __sem_wait_32_finish(sem);
 #endif
 }
 
@@ -100,259 +98,246 @@ __sem_wait_cleanup (void *arg)
    puts the call site into an exception region, and thus the
    cleanups get properly run.  TODO still necessary?  Other futex_wait
    users don't seem to need it.  */
-static int
-__attribute__ ((noinline))
-do_futex_wait (struct new_sem *sem, clockid_t clockid,
-	       const struct __timespec64 *abstime)
+static int __attribute__((noinline))
+do_futex_wait(struct new_sem *sem, clockid_t clockid,
+              const struct __timespec64 *abstime)
 {
-  int err;
+    int err;
 
 #if __HAVE_64B_ATOMICS
-  err = __futex_abstimed_wait_cancelable64 (
-      (unsigned int *) &sem->data + SEM_VALUE_OFFSET, 0,
-      clockid, abstime,
-      sem->private);
+    err = __futex_abstimed_wait_cancelable64(
+              (unsigned int *) &sem->data + SEM_VALUE_OFFSET, 0,
+              clockid, abstime,
+              sem->private);
 #else
-  err = __futex_abstimed_wait_cancelable64 (&sem->value, SEM_NWAITERS_MASK,
-					    clockid, abstime, sem->private);
+    err = __futex_abstimed_wait_cancelable64(&sem->value, SEM_NWAITERS_MASK,
+            clockid, abstime, sem->private);
 #endif
 
-  return err;
+    return err;
 }
 
 /* Fast path: Try to grab a token without blocking.  */
-static int
-__new_sem_wait_fast (struct new_sem *sem, int definitive_result)
+static int __new_sem_wait_fast(struct new_sem *sem, int definitive_result)
 {
-  /* We need acquire MO if we actually grab a token, so that this
-     synchronizes with all token providers (i.e., the RMW operation we read
-     from or all those before it in modification order; also see sem_post).
-     We do not need to guarantee any ordering if we observed that there is
-     no token (POSIX leaves it unspecified whether functions that fail
-     synchronize memory); thus, relaxed MO is sufficient for the initial load
-     and the failure path of the CAS.  If the weak CAS fails and we need a
-     definitive result, retry.  */
+    /* We need acquire MO if we actually grab a token, so that this
+       synchronizes with all token providers (i.e., the RMW operation we read
+       from or all those before it in modification order; also see sem_post).
+       We do not need to guarantee any ordering if we observed that there is
+       no token (POSIX leaves it unspecified whether functions that fail
+       synchronize memory); thus, relaxed MO is sufficient for the initial load
+       and the failure path of the CAS.  If the weak CAS fails and we need a
+       definitive result, retry.  */
 #if __HAVE_64B_ATOMICS
-  uint64_t d = atomic_load_relaxed (&sem->data);
-  do
-    {
-      if ((d & SEM_VALUE_MASK) == 0)
-	break;
-      if (atomic_compare_exchange_weak_acquire (&sem->data, &d, d - 1))
-	return 0;
-    }
-  while (definitive_result);
-  return -1;
+    uint64_t d = atomic_load_relaxed(&sem->data);
+    do {
+        if ((d & SEM_VALUE_MASK) == 0) {
+            break;
+        }
+        if (atomic_compare_exchange_weak_acquire(&sem->data, &d, d - 1)) {
+            return 0;
+        }
+    } while (definitive_result);
+    return -1;
 #else
-  unsigned int v = atomic_load_relaxed (&sem->value);
-  do
-    {
-      if ((v >> SEM_VALUE_SHIFT) == 0)
-	break;
-      if (atomic_compare_exchange_weak_acquire (&sem->value,
-	  &v, v - (1 << SEM_VALUE_SHIFT)))
-	return 0;
-    }
-  while (definitive_result);
-  return -1;
+    unsigned int v = atomic_load_relaxed(&sem->value);
+    do {
+        if ((v >> SEM_VALUE_SHIFT) == 0) {
+            break;
+        }
+        if (atomic_compare_exchange_weak_acquire(&sem->value,
+                &v, v - (1 << SEM_VALUE_SHIFT))) {
+            return 0;
+        }
+    } while (definitive_result);
+    return -1;
 #endif
 }
 
 /* Slow path that blocks.  */
-static int
-__attribute__ ((noinline))
-__new_sem_wait_slow64 (struct new_sem *sem, clockid_t clockid,
-		       const struct __timespec64 *abstime)
+static int __attribute__((noinline))
+__new_sem_wait_slow64(struct new_sem *sem, clockid_t clockid,
+                      const struct __timespec64 *abstime)
 {
-  int err = 0;
+    int err = 0;
 
 #if __HAVE_64B_ATOMICS
-  /* Add a waiter.  Relaxed MO is sufficient because we can rely on the
-     ordering provided by the RMW operations we use.  */
-  uint64_t d = atomic_fetch_add_relaxed (&sem->data,
-      (uint64_t) 1 << SEM_NWAITERS_SHIFT);
+    /* Add a waiter.  Relaxed MO is sufficient because we can rely on the
+       ordering provided by the RMW operations we use.  */
+    uint64_t d = atomic_fetch_add_relaxed(&sem->data,
+                                          (uint64_t) 1 << SEM_NWAITERS_SHIFT);
 
-  pthread_cleanup_push (__sem_wait_cleanup, sem);
+    pthread_cleanup_push(__sem_wait_cleanup, sem);
 
-  /* Wait for a token to be available.  Retry until we can grab one.  */
-  for (;;)
-    {
-      /* If there is no token available, sleep until there is.  */
-      if ((d & SEM_VALUE_MASK) == 0)
-	{
-	  err = do_futex_wait (sem, clockid, abstime);
-	  /* A futex return value of 0 or EAGAIN is due to a real or spurious
-	     wake-up, or due to a change in the number of tokens.  We retry in
-	     these cases.
-	     If we timed out, forward this to the caller.
-	     EINTR is returned if we are interrupted by a signal; we
-	     forward this to the caller.  (See futex_wait and related
-	     documentation.  Before Linux 2.6.22, EINTR was also returned on
-	     spurious wake-ups; we only support more recent Linux versions,
-	     so do not need to consider this here.)  */
-	  if (err == ETIMEDOUT || err == EINTR || err == EOVERFLOW)
-	    {
-	      __set_errno (err);
-	      err = -1;
-	      /* Stop being registered as a waiter.  */
-	      atomic_fetch_add_relaxed (&sem->data,
-		  -((uint64_t) 1 << SEM_NWAITERS_SHIFT));
-	      break;
-	    }
-	  /* Relaxed MO is sufficient; see below.  */
-	  d = atomic_load_relaxed (&sem->data);
-	}
-      else
-	{
-	  /* Try to grab both a token and stop being a waiter.  We need
-	     acquire MO so this synchronizes with all token providers (i.e.,
-	     the RMW operation we read from or all those before it in
-	     modification order; also see sem_post).  On the failure path,
-	     relaxed MO is sufficient because we only eventually need the
-	     up-to-date value; the futex_wait or the CAS perform the real
-	     work.  */
-	  if (atomic_compare_exchange_weak_acquire (&sem->data,
-	      &d, d - 1 - ((uint64_t) 1 << SEM_NWAITERS_SHIFT)))
-	    {
-	      err = 0;
-	      break;
-	    }
-	}
+    /* Wait for a token to be available.  Retry until we can grab one.  */
+    for (;;) {
+        /* If there is no token available, sleep until there is.  */
+        if ((d & SEM_VALUE_MASK) == 0) {
+            err = do_futex_wait(sem, clockid, abstime);
+            /* A futex return value of 0 or EAGAIN is due to a real or spurious
+               wake-up, or due to a change in the number of tokens.  We retry in
+               these cases.
+               If we timed out, forward this to the caller.
+               EINTR is returned if we are interrupted by a signal; we
+               forward this to the caller.  (See futex_wait and related
+               documentation.  Before Linux 2.6.22, EINTR was also returned on
+               spurious wake-ups; we only support more recent Linux versions,
+               so do not need to consider this here.)  */
+            if (err == ETIMEDOUT || err == EINTR || err == EOVERFLOW) {
+                __set_errno(err);
+                err = -1;
+                /* Stop being registered as a waiter.  */
+                atomic_fetch_add_relaxed(&sem->data,
+                                         -((uint64_t) 1 << SEM_NWAITERS_SHIFT));
+                break;
+            }
+            /* Relaxed MO is sufficient; see below.  */
+            d = atomic_load_relaxed(&sem->data);
+        } else {
+            /* Try to grab both a token and stop being a waiter.  We need
+               acquire MO so this synchronizes with all token providers (i.e.,
+               the RMW operation we read from or all those before it in
+               modification order; also see sem_post).  On the failure path,
+               relaxed MO is sufficient because we only eventually need the
+               up-to-date value; the futex_wait or the CAS perform the real
+               work.  */
+            if (atomic_compare_exchange_weak_acquire(&sem->data,
+                    &d, d - 1 - ((uint64_t) 1 << SEM_NWAITERS_SHIFT))) {
+                err = 0;
+                break;
+            }
+        }
     }
 
-  pthread_cleanup_pop (0);
+    pthread_cleanup_pop(0);
 #else
-  /* The main difference to the 64b-atomics implementation is that we need to
-     access value and nwaiters in separate steps, and that the nwaiters bit
-     in the value can temporarily not be set even if nwaiters is nonzero.
-     We work around incorrectly unsetting the nwaiters bit by letting sem_wait
-     set the bit again and waking the number of waiters that could grab a
-     token.  There are two additional properties we need to ensure:
-     (1) We make sure that whenever unsetting the bit, we see the increment of
-     nwaiters by the other thread that set the bit.  IOW, we will notice if
-     we make a mistake.
-     (2) When setting the nwaiters bit, we make sure that we see the unsetting
-     of the bit by another waiter that happened before us.  This avoids having
-     to blindly set the bit whenever we need to block on it.  We set/unset
-     the bit while having incremented nwaiters (i.e., are a registered
-     waiter), and the problematic case only happens when one waiter indeed
-     followed another (i.e., nwaiters was never larger than 1); thus, this
-     works similarly as with a critical section using nwaiters (see the MOs
-     and related comments below).
+    /* The main difference to the 64b-atomics implementation is that we need to
+       access value and nwaiters in separate steps, and that the nwaiters bit
+       in the value can temporarily not be set even if nwaiters is nonzero.
+       We work around incorrectly unsetting the nwaiters bit by letting sem_wait
+       set the bit again and waking the number of waiters that could grab a
+       token.  There are two additional properties we need to ensure:
+       (1) We make sure that whenever unsetting the bit, we see the increment of
+       nwaiters by the other thread that set the bit.  IOW, we will notice if
+       we make a mistake.
+       (2) When setting the nwaiters bit, we make sure that we see the unsetting
+       of the bit by another waiter that happened before us.  This avoids having
+       to blindly set the bit whenever we need to block on it.  We set/unset
+       the bit while having incremented nwaiters (i.e., are a registered
+       waiter), and the problematic case only happens when one waiter indeed
+       followed another (i.e., nwaiters was never larger than 1); thus, this
+       works similarly as with a critical section using nwaiters (see the MOs
+       and related comments below).
 
-     An alternative approach would be to unset the bit after decrementing
-     nwaiters; however, that would result in needing Dekker-like
-     synchronization and thus full memory barriers.  We also would not be able
-     to prevent misspeculation, so this alternative scheme does not seem
-     beneficial.  */
-  unsigned int v;
+       An alternative approach would be to unset the bit after decrementing
+       nwaiters; however, that would result in needing Dekker-like
+       synchronization and thus full memory barriers.  We also would not be able
+       to prevent misspeculation, so this alternative scheme does not seem
+       beneficial.  */
+    unsigned int v;
 
-  /* Add a waiter.  We need acquire MO so this synchronizes with the release
-     MO we use when decrementing nwaiters below; it ensures that if another
-     waiter unset the bit before us, we see that and set it again.  Also see
-     property (2) above.  */
-  atomic_fetch_add_acquire (&sem->nwaiters, 1);
+    /* Add a waiter.  We need acquire MO so this synchronizes with the release
+       MO we use when decrementing nwaiters below; it ensures that if another
+       waiter unset the bit before us, we see that and set it again.  Also see
+       property (2) above.  */
+    atomic_fetch_add_acquire(&sem->nwaiters, 1);
 
-  pthread_cleanup_push (__sem_wait_cleanup, sem);
+    pthread_cleanup_push(__sem_wait_cleanup, sem);
 
-  /* Wait for a token to be available.  Retry until we can grab one.  */
-  /* We do not need any ordering wrt. to this load's reads-from, so relaxed
-     MO is sufficient.  The acquire MO above ensures that in the problematic
-     case, we do see the unsetting of the bit by another waiter.  */
-  v = atomic_load_relaxed (&sem->value);
-  do
-    {
-      do
-	{
-	  /* We are about to block, so make sure that the nwaiters bit is
-	     set.  We need release MO on the CAS to ensure that when another
-	     waiter unsets the nwaiters bit, it will also observe that we
-	     incremented nwaiters in the meantime (also see the unsetting of
-	     the bit below).  Relaxed MO on CAS failure is sufficient (see
-	     above).  */
-	  do
-	    {
-	      if ((v & SEM_NWAITERS_MASK) != 0)
-		break;
-	    }
-	  while (!atomic_compare_exchange_weak_release (&sem->value,
-	      &v, v | SEM_NWAITERS_MASK));
-	  /* If there is no token, wait.  */
-	  if ((v >> SEM_VALUE_SHIFT) == 0)
-	    {
-	      /* See __HAVE_64B_ATOMICS variant.  */
-	      err = do_futex_wait (sem, clockid, abstime);
-	      if (err == ETIMEDOUT || err == EINTR)
-		{
-		  __set_errno (err);
-		  err = -1;
-		  goto error;
-		}
-	      err = 0;
-	      /* We blocked, so there might be a token now.  Relaxed MO is
-		 sufficient (see above).  */
-	      v = atomic_load_relaxed (&sem->value);
-	    }
-	}
-      /* If there is no token, we must not try to grab one.  */
-      while ((v >> SEM_VALUE_SHIFT) == 0);
+    /* Wait for a token to be available.  Retry until we can grab one.  */
+    /* We do not need any ordering wrt. to this load's reads-from, so relaxed
+       MO is sufficient.  The acquire MO above ensures that in the problematic
+       case, we do see the unsetting of the bit by another waiter.  */
+    v = atomic_load_relaxed(&sem->value);
+    do {
+        do {
+            /* We are about to block, so make sure that the nwaiters bit is
+               set.  We need release MO on the CAS to ensure that when another
+               waiter unsets the nwaiters bit, it will also observe that we
+               incremented nwaiters in the meantime (also see the unsetting of
+               the bit below).  Relaxed MO on CAS failure is sufficient (see
+               above).  */
+            do {
+                if ((v & SEM_NWAITERS_MASK) != 0) {
+                    break;
+                }
+            } while (!atomic_compare_exchange_weak_release(&sem->value,
+                     &v, v | SEM_NWAITERS_MASK));
+            /* If there is no token, wait.  */
+            if ((v >> SEM_VALUE_SHIFT) == 0) {
+                /* See __HAVE_64B_ATOMICS variant.  */
+                err = do_futex_wait(sem, clockid, abstime);
+                if (err == ETIMEDOUT || err == EINTR) {
+                    __set_errno(err);
+                    err = -1;
+                    goto error;
+                }
+                err = 0;
+                /* We blocked, so there might be a token now.  Relaxed MO is
+                sufficient (see above).  */
+                v = atomic_load_relaxed(&sem->value);
+            }
+        }
+        /* If there is no token, we must not try to grab one.  */
+        while ((v >> SEM_VALUE_SHIFT) == 0);
     }
-  /* Try to grab a token.  We need acquire MO so this synchronizes with
-     all token providers (i.e., the RMW operation we read from or all those
-     before it in modification order; also see sem_post).  */
-  while (!atomic_compare_exchange_weak_acquire (&sem->value,
-      &v, v - (1 << SEM_VALUE_SHIFT)));
+    /* Try to grab a token.  We need acquire MO so this synchronizes with
+       all token providers (i.e., the RMW operation we read from or all those
+       before it in modification order; also see sem_post).  */
+    while (!atomic_compare_exchange_weak_acquire(&sem->value,
+            &v, v - (1 << SEM_VALUE_SHIFT)));
 
 error:
-  pthread_cleanup_pop (0);
+    pthread_cleanup_pop(0);
 
-  __sem_wait_32_finish (sem);
+    __sem_wait_32_finish(sem);
 #endif
 
-  return err;
+    return err;
 }
 
 /* Stop being a registered waiter (non-64b-atomics code only).  */
 #if !__HAVE_64B_ATOMICS
-static void
-__sem_wait_32_finish (struct new_sem *sem)
+static void __sem_wait_32_finish(struct new_sem *sem)
 {
-  /* The nwaiters bit is still set, try to unset it now if this seems
-     necessary.  We do this before decrementing nwaiters so that the unsetting
-     is visible to other waiters entering after us.  Relaxed MO is sufficient
-     because we are just speculating here; a stronger MO would not prevent
-     misspeculation.  */
-  unsigned int wguess = atomic_load_relaxed (&sem->nwaiters);
-  if (wguess == 1)
-    /* We might be the last waiter, so unset.  This needs acquire MO so that
-       it synchronizes with the release MO when setting the bit above; if we
-       overwrite someone else that set the bit, we'll read in the following
-       decrement of nwaiters at least from that release sequence, so we'll
-       see if the other waiter is still active or if another writer entered
-       in the meantime (i.e., using the check below).  */
-    atomic_fetch_and_acquire (&sem->value, ~SEM_NWAITERS_MASK);
-
-  /* Now stop being a waiter, and see whether our guess was correct.
-     This needs release MO so that it synchronizes with the acquire MO when
-     a waiter increments nwaiters; this makes sure that newer writers see that
-     we reset the waiters_present bit.  */
-  unsigned int wfinal = atomic_fetch_add_release (&sem->nwaiters, -1);
-  if (wfinal > 1 && wguess == 1)
+    /* The nwaiters bit is still set, try to unset it now if this seems
+       necessary.  We do this before decrementing nwaiters so that the unsetting
+       is visible to other waiters entering after us.  Relaxed MO is sufficient
+       because we are just speculating here; a stronger MO would not prevent
+       misspeculation.  */
+    unsigned int wguess = atomic_load_relaxed(&sem->nwaiters);
+    if (wguess == 1)
+        /* We might be the last waiter, so unset.  This needs acquire MO so that
+           it synchronizes with the release MO when setting the bit above; if we
+           overwrite someone else that set the bit, we'll read in the following
+           decrement of nwaiters at least from that release sequence, so we'll
+           see if the other waiter is still active or if another writer entered
+           in the meantime (i.e., using the check below).  */
     {
-      /* We guessed wrong, and so need to clean up after the mistake and
-         unblock any waiters that could have not been woken.  There is no
-         additional ordering that we need to set up, so relaxed MO is
-         sufficient.  */
-      unsigned int v = atomic_fetch_or_relaxed (&sem->value,
-						SEM_NWAITERS_MASK);
-      /* If there are available tokens, then wake as many waiters.  If there
-         aren't any, then there is no need to wake anyone because there is
-         none to grab for another waiter.  If tokens become available
-         subsequently, then the respective sem_post calls will do the wake-up
-         due to us having set the nwaiters bit again.  */
-      v >>= SEM_VALUE_SHIFT;
-      if (v > 0)
-	futex_wake (&sem->value, v, sem->private);
+        atomic_fetch_and_acquire(&sem->value, ~SEM_NWAITERS_MASK);
+    }
+
+    /* Now stop being a waiter, and see whether our guess was correct.
+       This needs release MO so that it synchronizes with the acquire MO when
+       a waiter increments nwaiters; this makes sure that newer writers see that
+       we reset the waiters_present bit.  */
+    unsigned int wfinal = atomic_fetch_add_release(&sem->nwaiters, -1);
+    if (wfinal > 1 && wguess == 1) {
+        /* We guessed wrong, and so need to clean up after the mistake and
+           unblock any waiters that could have not been woken.  There is no
+           additional ordering that we need to set up, so relaxed MO is
+           sufficient.  */
+        unsigned int v = atomic_fetch_or_relaxed(&sem->value,
+                         SEM_NWAITERS_MASK);
+        /* If there are available tokens, then wake as many waiters.  If there
+           aren't any, then there is no need to wake anyone because there is
+           none to grab for another waiter.  If tokens become available
+           subsequently, then the respective sem_post calls will do the wake-up
+           due to us having set the nwaiters bit again.  */
+        v >>= SEM_VALUE_SHIFT;
+        if (v > 0) {
+            futex_wake(&sem->value, v, sem->private);
+        }
     }
 }
 #endif

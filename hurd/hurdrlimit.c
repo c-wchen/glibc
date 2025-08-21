@@ -30,28 +30,26 @@ struct rlimit _hurd_rlimits[RLIM_NLIMITS] = { { 0, }, };
    mutex_init is still required below just in case of unexec.  */
 struct mutex _hurd_rlimit_lock = { SPIN_LOCK_INITIALIZER, };
 
-static void attribute_used_retain
-init_rlimit (void)
+static void attribute_used_retain init_rlimit(void)
 {
-  int i;
+    int i;
 
-  __mutex_init (&_hurd_rlimit_lock);
+    __mutex_init(&_hurd_rlimit_lock);
 
-  for (i = 0; i < RLIM_NLIMITS; ++i)
-    {
-      if (_hurd_rlimits[i].rlim_max == 0)
-	_hurd_rlimits[i].rlim_max = RLIM_INFINITY;
-      if (_hurd_rlimits[i].rlim_cur == 0)
+    for (i = 0; i < RLIM_NLIMITS; ++i) {
+        if (_hurd_rlimits[i].rlim_max == 0) {
+            _hurd_rlimits[i].rlim_max = RLIM_INFINITY;
+        }
+        if (_hurd_rlimits[i].rlim_cur == 0)
 #define I(lim, val) case RLIMIT_##lim: _hurd_rlimits[i].rlim_cur = (val); break
-	switch (i)
-	  {
-	    I (NOFILE, 1024);	/* Linux 2.2.12 uses this initial value.  */
+            switch (i) {
+                    I(NOFILE, 1024);    /* Linux 2.2.12 uses this initial value.  */
 
-	  default:
-	    _hurd_rlimits[i].rlim_cur = _hurd_rlimits[i].rlim_max;
-	    break;
-	  }
-#undef	I
+                default:
+                    _hurd_rlimits[i].rlim_cur = _hurd_rlimits[i].rlim_max;
+                    break;
+            }
+#undef  I
     }
 }
-SET_RELHOOK (_hurd_preinit_hook, init_rlimit);
+SET_RELHOOK(_hurd_preinit_hook, init_rlimit);

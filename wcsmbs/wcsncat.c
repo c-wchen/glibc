@@ -22,18 +22,17 @@
 #endif
 
 /* Append no more than N wide-character of SRC onto DEST.  */
-wchar_t *
-WCSNCAT (wchar_t *dest, const wchar_t *src, size_t n)
+wchar_t *WCSNCAT(wchar_t *dest, const wchar_t *src, size_t n)
 {
-  wchar_t *ret = dest;
+    wchar_t *ret = dest;
 
-  /* Find the end of dest.  */
-  dest += __wcslen (dest);
+    /* Find the end of dest.  */
+    dest += __wcslen(dest);
 
-  size_t ds = __wcsnlen (src, n);
+    size_t ds = __wcsnlen(src, n);
 
-  dest[ds] = L'\0';
-  __wmemcpy (dest, src, ds);
+    dest[ds] = L'\0';
+    __wmemcpy(dest, src, ds);
 
-  return ret;
+    return ret;
 }

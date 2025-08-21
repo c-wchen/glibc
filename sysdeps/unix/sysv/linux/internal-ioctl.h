@@ -18,8 +18,7 @@
 
 /* Architecture ports may choose to override this default implementation
    to provide architecture specific ioctl support.  */
-static inline bool
-__ioctl_arch (int *r, int fd, unsigned long request, void *arg)
+static inline bool __ioctl_arch(int *r, int fd, unsigned long request, void *arg)
 {
-  return false;
+    return false;
 }

@@ -21,41 +21,33 @@
 
 
 CFLOAT
-M_DECL_FUNC (__casin) (CFLOAT x)
+M_DECL_FUNC(__casin)(CFLOAT x)
 {
-  CFLOAT res;
+    CFLOAT res;
 
-  if (isnan (__real__ x) || isnan (__imag__ x))
-    {
-      if (__real__ x == 0)
-	{
-	  res = x;
-	}
-      else if (isinf (__real__ x) || isinf (__imag__ x))
-	{
-	  __real__ res = M_NAN;
-	  __imag__ res = M_COPYSIGN (M_HUGE_VAL, __imag__ x);
-	}
-      else
-	{
-	  __real__ res = M_NAN;
-	  __imag__ res = M_NAN;
-	}
-    }
-  else
-    {
-      CFLOAT y;
+    if (isnan(__real__ x) || isnan(__imag__ x)) {
+        if (__real__ x == 0) {
+            res = x;
+        } else if (isinf(__real__ x) || isinf(__imag__ x)) {
+            __real__ res = M_NAN;
+            __imag__ res = M_COPYSIGN(M_HUGE_VAL, __imag__ x);
+        } else {
+            __real__ res = M_NAN;
+            __imag__ res = M_NAN;
+        }
+    } else {
+        CFLOAT y;
 
-      __real__ y = -__imag__ x;
-      __imag__ y = __real__ x;
+        __real__ y = -__imag__ x;
+        __imag__ y = __real__ x;
 
-      y = M_SUF (__casinh) (y);
+        y = M_SUF(__casinh)(y);
 
-      __real__ res = __imag__ y;
-      __imag__ res = -__real__ y;
+        __real__ res = __imag__ y;
+        __imag__ res = -__real__ y;
     }
 
-  return res;
+    return res;
 }
 
-declare_mgen_alias (__casin, casin)
+declare_mgen_alias(__casin, casin)

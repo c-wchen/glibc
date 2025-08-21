@@ -36,7 +36,7 @@
 # define GLOB_ATTRIBUTE attribute_compat_text_section
 
 /* Avoid calling gl_lstat with GLOB_ALTDIRFUNC.  */
-# define COMPILE_GLOB64	1
+# define COMPILE_GLOB64 1
 # define struct_stat    struct stat64
 # define struct_stat64  struct stat64
 # define GLOB_LSTAT     gl_stat
@@ -51,6 +51,6 @@
 #  else
 #   define GLOB_LSTAT_START_VER GLIBC_2_1
 #  endif
-compat_symbol (libc, __glob64_lstat_compat, glob64, GLOB_LSTAT_START_VER);
+compat_symbol(libc, __glob64_lstat_compat, glob64, GLOB_LSTAT_START_VER);
 # endif
 #endif /* XSTAT_IS_XSTAT64  */

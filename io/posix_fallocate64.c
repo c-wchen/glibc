@@ -20,9 +20,8 @@
 
 /* Reserve storage for the data of the file associated with FD.  */
 
-int
-posix_fallocate64 (int fd, __off64_t offset, __off64_t len)
+int posix_fallocate64(int fd, __off64_t offset, __off64_t len)
 {
-  return ENOSYS;
+    return ENOSYS;
 }
-stub_warning (posix_fallocate64)
+stub_warning(posix_fallocate64)

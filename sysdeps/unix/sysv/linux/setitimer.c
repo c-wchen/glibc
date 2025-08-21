@@ -22,69 +22,68 @@
 #include <sysdep.h>
 #include <tv32-compat.h>
 
-int
-__setitimer64 (__itimer_which_t which,
-               const struct __itimerval64 *restrict new_value,
-               struct __itimerval64 *restrict old_value)
+int __setitimer64(__itimer_which_t which,
+                  const struct __itimerval64 *restrict new_value,
+                  struct __itimerval64 *restrict old_value)
 {
 #if __KERNEL_OLD_TIMEVAL_MATCHES_TIMEVAL64
-  return INLINE_SYSCALL_CALL (setitimer, which, new_value, old_value);
+    return INLINE_SYSCALL_CALL(setitimer, which, new_value, old_value);
 #else
-  struct __itimerval32 new_value_32;
+    struct __itimerval32 new_value_32;
 
-  if (! in_int32_t_range (new_value->it_interval.tv_sec)
-      || ! in_int32_t_range (new_value->it_value.tv_sec))
-    {
-      __set_errno (EOVERFLOW);
-      return -1;
+    if (! in_int32_t_range(new_value->it_interval.tv_sec)
+        || ! in_int32_t_range(new_value->it_value.tv_sec)) {
+        __set_errno(EOVERFLOW);
+        return -1;
     }
-  new_value_32.it_interval
-    = valid_timeval64_to_timeval32 (new_value->it_interval);
-  new_value_32.it_value
-    = valid_timeval64_to_timeval32 (new_value->it_value);
+    new_value_32.it_interval
+        = valid_timeval64_to_timeval32(new_value->it_interval);
+    new_value_32.it_value
+        = valid_timeval64_to_timeval32(new_value->it_value);
 
-  if (old_value == NULL)
-    return INLINE_SYSCALL_CALL (setitimer, which, &new_value_32, NULL);
+    if (old_value == NULL) {
+        return INLINE_SYSCALL_CALL(setitimer, which, &new_value_32, NULL);
+    }
 
-  struct __itimerval32 old_value_32;
-  if (INLINE_SYSCALL_CALL (setitimer, which, &new_value_32, &old_value_32)
-      == -1)
-    return -1;
+    struct __itimerval32 old_value_32;
+    if (INLINE_SYSCALL_CALL(setitimer, which, &new_value_32, &old_value_32)
+        == -1) {
+        return -1;
+    }
 
-  old_value->it_interval
-     = valid_timeval32_to_timeval64 (old_value_32.it_interval);
-  old_value->it_value
-     = valid_timeval32_to_timeval64 (old_value_32.it_value);
-  return 0;
+    old_value->it_interval
+        = valid_timeval32_to_timeval64(old_value_32.it_interval);
+    old_value->it_value
+        = valid_timeval32_to_timeval64(old_value_32.it_value);
+    return 0;
 #endif
 }
 
 #if __TIMESIZE != 64
-libc_hidden_def (__setitimer64)
+libc_hidden_def(__setitimer64)
 int
-__setitimer (__itimer_which_t which,
-             const struct itimerval *restrict new_value,
-             struct itimerval *restrict old_value)
+__setitimer(__itimer_which_t which,
+            const struct itimerval *restrict new_value,
+            struct itimerval *restrict old_value)
 {
-  int ret;
-  struct __itimerval64 new64, old64;
+    int ret;
+    struct __itimerval64 new64, old64;
 
-  new64.it_interval
-    = valid_timeval_to_timeval64 (new_value->it_interval);
-  new64.it_value
-    = valid_timeval_to_timeval64 (new_value->it_value);
+    new64.it_interval
+        = valid_timeval_to_timeval64(new_value->it_interval);
+    new64.it_value
+        = valid_timeval_to_timeval64(new_value->it_value);
 
-  ret = __setitimer64 (which, &new64, old_value ? &old64 : NULL);
+    ret = __setitimer64(which, &new64, old_value ? &old64 : NULL);
 
-  if (ret == 0 && old_value != NULL)
-    {
-      old_value->it_interval
-        = valid_timeval64_to_timeval (old64.it_interval);
-      old_value->it_value
-        = valid_timeval64_to_timeval (old64.it_value);
+    if (ret == 0 && old_value != NULL) {
+        old_value->it_interval
+            = valid_timeval64_to_timeval(old64.it_interval);
+        old_value->it_value
+            = valid_timeval64_to_timeval(old64.it_value);
     }
 
-  return ret;
+    return ret;
 }
 #endif
-weak_alias (__setitimer, setitimer)
+weak_alias(__setitimer, setitimer)

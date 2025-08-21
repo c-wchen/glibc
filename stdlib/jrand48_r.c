@@ -17,17 +17,17 @@
 
 #include <stdlib.h>
 
-int
-__jrand48_r (unsigned short int xsubi[3], struct drand48_data *buffer,
-	     long int *result)
+int __jrand48_r(unsigned short int xsubi[3], struct drand48_data *buffer,
+                long int *result)
 {
-  /* Compute next state.  */
-  if (__drand48_iterate (xsubi, buffer) < 0)
-    return -1;
+    /* Compute next state.  */
+    if (__drand48_iterate(xsubi, buffer) < 0) {
+        return -1;
+    }
 
-  /* Store the result.  */
-  *result = (int32_t) ((xsubi[2] << 16) | xsubi[1]);
+    /* Store the result.  */
+    *result = (int32_t)((xsubi[2] << 16) | xsubi[1]);
 
-  return 0;
+    return 0;
 }
-weak_alias (__jrand48_r, jrand48_r)
+weak_alias(__jrand48_r, jrand48_r)

@@ -18,9 +18,8 @@
 
 #include <support/xthread.h>
 
-void
-xpthread_barrier_destroy (pthread_barrier_t *barrier)
+void xpthread_barrier_destroy(pthread_barrier_t *barrier)
 {
-  xpthread_check_return ("pthread_barrier_destroy",
-                         pthread_barrier_destroy (barrier));
+    xpthread_check_return("pthread_barrier_destroy",
+                          pthread_barrier_destroy(barrier));
 }

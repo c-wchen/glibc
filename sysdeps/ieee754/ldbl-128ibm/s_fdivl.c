@@ -19,9 +19,8 @@
 #include <math.h>
 #include <math-narrow.h>
 
-float
-__fdivl (long double x, long double y)
+float __fdivl(long double x, long double y)
 {
-  NARROW_DIV_TRIVIAL (x, y, float);
+    NARROW_DIV_TRIVIAL(x, y, float);
 }
-libm_alias_float_ldouble (div)
+libm_alias_float_ldouble(div)

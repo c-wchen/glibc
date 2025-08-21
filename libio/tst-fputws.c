@@ -20,18 +20,18 @@
 #include <stdio.h>
 #include <wchar.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  const wchar_t str[] = L"\xbe\n";
+    const wchar_t str[] = L"\xbe\n";
 
-  setlocale (LC_ALL, "en_US.UTF-8");
-  setvbuf (stdout, NULL, _IONBF, 0);
+    setlocale(LC_ALL, "en_US.UTF-8");
+    setvbuf(stdout, NULL, _IONBF, 0);
 
-  if (fputws (str, stdout) < 0)
-    return 1;
+    if (fputws(str, stdout) < 0) {
+        return 1;
+    }
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

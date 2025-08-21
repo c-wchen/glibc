@@ -23,16 +23,16 @@
 # include <ifunc-resolve.h>
 
 # if HAVE_WCSNCMP_C
-extern __typeof (wcsncmp) WCSNCMP_C attribute_hidden;
+extern __typeof(wcsncmp) WCSNCMP_C attribute_hidden;
 # endif
 
 # if HAVE_WCSNCMP_Z13
-extern __typeof (wcsncmp) WCSNCMP_Z13 attribute_hidden;
+extern __typeof(wcsncmp) WCSNCMP_Z13 attribute_hidden;
 # endif
 
-s390_libc_ifunc_expr (wcsncmp, wcsncmp,
-		      (HAVE_WCSNCMP_Z13 && (hwcap & HWCAP_S390_VX))
-		      ? WCSNCMP_Z13
-		      : WCSNCMP_DEFAULT
-		      )
+s390_libc_ifunc_expr(wcsncmp, wcsncmp,
+                     (HAVE_WCSNCMP_Z13 &&(hwcap &HWCAP_S390_VX))
+                     ? WCSNCMP_Z13
+                     : WCSNCMP_DEFAULT
+                    )
 #endif

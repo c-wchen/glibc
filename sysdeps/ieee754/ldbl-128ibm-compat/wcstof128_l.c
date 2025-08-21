@@ -17,4 +17,4 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include "../float128/wcstof128_l.c"
-weak_alias (wcstof128_l, __wcstoieee128_l)
+weak_alias(wcstof128_l, __wcstoieee128_l)

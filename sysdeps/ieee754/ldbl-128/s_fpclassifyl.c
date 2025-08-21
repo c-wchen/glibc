@@ -21,22 +21,22 @@
 #include <math_private.h>
 
 
-int
-__fpclassifyl (_Float128 x)
+int __fpclassifyl(_Float128 x)
 {
-  uint64_t hx, lx;
-  int retval = FP_NORMAL;
+    uint64_t hx, lx;
+    int retval = FP_NORMAL;
 
-  GET_LDOUBLE_WORDS64 (hx, lx, x);
-  lx |= (hx & 0x0000ffffffffffffLL);
-  hx &= 0x7fff000000000000LL;
-  if ((hx | lx) == 0)
-    retval = FP_ZERO;
-  else if (hx == 0)
-    retval = FP_SUBNORMAL;
-  else if (hx == 0x7fff000000000000LL)
-    retval = lx != 0 ? FP_NAN : FP_INFINITE;
+    GET_LDOUBLE_WORDS64(hx, lx, x);
+    lx |= (hx & 0x0000ffffffffffffLL);
+    hx &= 0x7fff000000000000LL;
+    if ((hx | lx) == 0) {
+        retval = FP_ZERO;
+    } else if (hx == 0) {
+        retval = FP_SUBNORMAL;
+    } else if (hx == 0x7fff000000000000LL) {
+        retval = lx != 0 ? FP_NAN : FP_INFINITE;
+    }
 
-  return retval;
+    return retval;
 }
-libm_hidden_def (__fpclassifyl)
+libm_hidden_def(__fpclassifyl)

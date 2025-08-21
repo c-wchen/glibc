@@ -30,79 +30,76 @@ const char *fmt2 = "\e[34m";
   do { perror(msg); exit(EXIT_FAILURE); } while (0)
 
 __attribute_optimization_barrier__
-static void
-func4(ucontext_t *uocp, ucontext_t *ucp, const char *str, const char *fmt)
+static void func4(ucontext_t *uocp, ucontext_t *ucp, const char *str, const char *fmt)
 {
-  printf("      %sfunc4: %s\e[0m\n", fmt, str);
-  if (swapcontext(uocp, ucp) == -1)
-    handle_error("swapcontext");
-  printf("      %sfunc4: returning\e[0m\n", fmt);
+    printf("      %sfunc4: %s\e[0m\n", fmt, str);
+    if (swapcontext(uocp, ucp) == -1) {
+        handle_error("swapcontext");
+    }
+    printf("      %sfunc4: returning\e[0m\n", fmt);
 }
 
 __attribute_optimization_barrier__
-static void
-func3(ucontext_t *uocp, ucontext_t *ucp, const char *str, const char *fmt)
+static void func3(ucontext_t *uocp, ucontext_t *ucp, const char *str, const char *fmt)
 {
-  printf("    %sfunc3: func4(uocp, ucp, str)\e[0m\n", fmt);
-  func4(uocp, ucp, str, fmt);
-  printf("    %sfunc3: returning\e[0m\n", fmt);
+    printf("    %sfunc3: func4(uocp, ucp, str)\e[0m\n", fmt);
+    func4(uocp, ucp, str, fmt);
+    printf("    %sfunc3: returning\e[0m\n", fmt);
 }
 
 __attribute_optimization_barrier__
-static void
-func1(void)
+static void func1(void)
 {
-  while ( 1 )
-    {
-      printf("  \e[31mfunc1: func3(&uctx_func1, &uctx_main, str1)\e[0m\n");
-      func3( &uctx_func1, &uctx_main, str1, fmt1);
+    while (1) {
+        printf("  \e[31mfunc1: func3(&uctx_func1, &uctx_main, str1)\e[0m\n");
+        func3(&uctx_func1, &uctx_main, str1, fmt1);
     }
 }
 
 __attribute_optimization_barrier__
-static void
-func2(void)
+static void func2(void)
 {
-  while ( 1 )
-    {
-      printf("  \e[34mfunc2: func3(&uctx_func2, &uctx_main, str2)\e[0m\n");
-      func3(&uctx_func2, &uctx_main, str2, fmt2);
+    while (1) {
+        printf("  \e[34mfunc2: func3(&uctx_func2, &uctx_main, str2)\e[0m\n");
+        func3(&uctx_func2, &uctx_main, str2, fmt2);
     }
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char func1_stack[16384];
-  char func2_stack[16384];
-  int i;
+    char func1_stack[16384];
+    char func2_stack[16384];
+    int i;
 
-  if (getcontext(&uctx_func1) == -1)
-    handle_error("getcontext");
-  uctx_func1.uc_stack.ss_sp = func1_stack;
-  uctx_func1.uc_stack.ss_size = sizeof (func1_stack);
-  uctx_func1.uc_link = &uctx_main;
-  makecontext(&uctx_func1, func1, 0);
+    if (getcontext(&uctx_func1) == -1) {
+        handle_error("getcontext");
+    }
+    uctx_func1.uc_stack.ss_sp = func1_stack;
+    uctx_func1.uc_stack.ss_size = sizeof(func1_stack);
+    uctx_func1.uc_link = &uctx_main;
+    makecontext(&uctx_func1, func1, 0);
 
-  if (getcontext(&uctx_func2) == -1)
-    handle_error("getcontext");
-  uctx_func2.uc_stack.ss_sp = func2_stack;
-  uctx_func2.uc_stack.ss_size = sizeof (func2_stack);
-  uctx_func2.uc_link = &uctx_func1;
-  makecontext(&uctx_func2, func2, 0);
+    if (getcontext(&uctx_func2) == -1) {
+        handle_error("getcontext");
+    }
+    uctx_func2.uc_stack.ss_sp = func2_stack;
+    uctx_func2.uc_stack.ss_size = sizeof(func2_stack);
+    uctx_func2.uc_link = &uctx_func1;
+    makecontext(&uctx_func2, func2, 0);
 
-  for ( i = 0; i < 4; i++ )
-    {
-      if (swapcontext(&uctx_main, &uctx_func1) == -1)
-	handle_error("swapcontext");
-      printf("        \e[35mmain: swapcontext(&uctx_main, &uctx_func2)\n\e[0m");
-      if (swapcontext(&uctx_main, &uctx_func2) == -1)
-	handle_error("swapcontext");
-      printf("        \e[35mmain: swapcontext(&uctx_main, &uctx_func1)\n\e[0m");
+    for (i = 0; i < 4; i++) {
+        if (swapcontext(&uctx_main, &uctx_func1) == -1) {
+            handle_error("swapcontext");
+        }
+        printf("        \e[35mmain: swapcontext(&uctx_main, &uctx_func2)\n\e[0m");
+        if (swapcontext(&uctx_main, &uctx_func2) == -1) {
+            handle_error("swapcontext");
+        }
+        printf("        \e[35mmain: swapcontext(&uctx_main, &uctx_func1)\n\e[0m");
     }
 
-  printf("main: exiting\n");
-  exit(EXIT_SUCCESS);
+    printf("main: exiting\n");
+    exit(EXIT_SUCCESS);
 }
 
 #include <support/test-driver.c>

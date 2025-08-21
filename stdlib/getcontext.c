@@ -18,12 +18,11 @@
 #include <errno.h>
 #include <ucontext.h>
 
-int
-getcontext (ucontext_t *ucp)
+int getcontext(ucontext_t *ucp)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
 
-stub_warning (getcontext)
+stub_warning(getcontext)

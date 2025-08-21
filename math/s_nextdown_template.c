@@ -20,9 +20,9 @@
 
 /* Return the greatest floating-point number less than X.  */
 FLOAT
-M_DECL_FUNC (__nextdown) (FLOAT x)
+M_DECL_FUNC(__nextdown)(FLOAT x)
 {
-  return -M_SUF (__nextup) (-x);
+    return -M_SUF(__nextup)(-x);
 }
 
-declare_mgen_alias (__nextdown, nextdown);
+declare_mgen_alias(__nextdown, nextdown);

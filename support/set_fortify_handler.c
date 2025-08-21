@@ -20,15 +20,14 @@
 
 #include <signal.h>
 
-void
-set_fortify_handler (void (*handler) (int sig))
+void set_fortify_handler(void (*handler)(int sig))
 {
-  struct sigaction sa;
+    struct sigaction sa;
 
-  sa.sa_handler = handler;
-  sa.sa_flags = 0;
-  sigemptyset (&sa.sa_mask);
+    sa.sa_handler = handler;
+    sa.sa_flags = 0;
+    sigemptyset(&sa.sa_mask);
 
-  sigaction (SIGABRT, &sa, NULL);
-  ignore_stderr ();
+    sigaction(SIGABRT, &sa, NULL);
+    ignore_stderr();
 }

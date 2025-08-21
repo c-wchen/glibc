@@ -19,9 +19,8 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-int
-fegetmode (femode_t *modep)
+int fegetmode(femode_t *modep)
 {
-  _FPU_GETCW (*modep);
-  return 0;
+    _FPU_GETCW(*modep);
+    return 0;
 }

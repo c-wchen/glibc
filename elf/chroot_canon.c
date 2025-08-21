@@ -36,141 +36,137 @@
    must exist and NAME must be absolute filename.  The result is malloc'd.
    The returned name includes the CHROOT prefix.  */
 
-char *
-chroot_canon (const char *chroot, const char *name)
+char *chroot_canon(const char *chroot, const char *name)
 {
-  char *rpath;
-  char *dest;
-  char *extra_buf = NULL;
-  char *rpath_root;
-  const char *start;
-  const char *end;
-  const char *rpath_limit;
-  int num_links = 0;
-  size_t chroot_len = strlen (chroot);
+    char *rpath;
+    char *dest;
+    char *extra_buf = NULL;
+    char *rpath_root;
+    const char *start;
+    const char *end;
+    const char *rpath_limit;
+    int num_links = 0;
+    size_t chroot_len = strlen(chroot);
 
-  if (chroot_len < 1)
-    {
-      __set_errno (EINVAL);
-      return NULL;
+    if (chroot_len < 1) {
+        __set_errno(EINVAL);
+        return NULL;
     }
 
-  rpath = xmalloc (chroot_len + PATH_MAX);
+    rpath = xmalloc(chroot_len + PATH_MAX);
 
-  rpath_limit = rpath + chroot_len + PATH_MAX;
+    rpath_limit = rpath + chroot_len + PATH_MAX;
 
-  rpath_root = (char *) mempcpy (rpath, chroot, chroot_len) - 1;
-  if (*rpath_root != '/')
-    *++rpath_root = '/';
-  dest = rpath_root + 1;
-
-  for (start = end = name; *start; start = end)
-    {
-      struct stat st;
-
-      /* Skip sequence of multiple path-separators.  */
-      while (*start == '/')
-	++start;
-
-      /* Find end of path component.  */
-      for (end = start; *end && *end != '/'; ++end)
-	/* Nothing.  */;
-
-      if (end - start == 0)
-	break;
-      else if (end - start == 1 && start[0] == '.')
-	/* nothing */;
-      else if (end - start == 2 && start[0] == '.' && start[1] == '.')
-	{
-	  /* Back up to previous component, ignore if at root already.  */
-	  if (dest > rpath_root + 1)
-	    while ((--dest)[-1] != '/');
-	}
-      else
-	{
-	  size_t new_size;
-
-	  if (dest[-1] != '/')
-	    *dest++ = '/';
-
-	  if (dest + (end - start) >= rpath_limit)
-	    {
-	      ptrdiff_t dest_offset = dest - rpath;
-	      char *new_rpath;
-
-	      new_size = rpath_limit - rpath;
-	      if (end - start + 1 > PATH_MAX)
-		new_size += end - start + 1;
-	      else
-		new_size += PATH_MAX;
-	      new_rpath = (char *) xrealloc (rpath, new_size);
-	      rpath = new_rpath;
-	      rpath_limit = rpath + new_size;
-
-	      dest = rpath + dest_offset;
-	    }
-
-	  dest = mempcpy (dest, start, end - start);
-	  *dest = '\0';
-
-	  if (lstat (rpath, &st) < 0)
-	    {
-	      if (*end == '\0')
-		goto done;
-	      goto error;
-	    }
-
-	  if (S_ISLNK (st.st_mode))
-	    {
-	      char *buf = alloca (PATH_MAX);
-	      size_t len;
-
-	      if (++num_links > MIN_ELOOP_THRESHOLD)
-		{
-		  __set_errno (ELOOP);
-		  goto error;
-		}
-
-	      ssize_t n = readlink (rpath, buf, PATH_MAX - 1);
-	      if (n < 0)
-		{
-		  if (*end == '\0')
-		    goto done;
-		  goto error;
-		}
-	      buf[n] = '\0';
-
-	      if (!extra_buf)
-		extra_buf = alloca (PATH_MAX);
-
-	      len = strlen (end);
-	      if (len >= PATH_MAX - n)
-		{
-		  __set_errno (ENAMETOOLONG);
-		  goto error;
-		}
-
-	      /* Careful here, end may be a pointer into extra_buf... */
-	      memmove (&extra_buf[n], end, len + 1);
-	      name = end = memcpy (extra_buf, buf, n);
-
-	      if (buf[0] == '/')
-		dest = rpath_root + 1;	/* It's an absolute symlink */
-	      else
-		/* Back up to previous component, ignore if at root already: */
-		if (dest > rpath_root + 1)
-		  while ((--dest)[-1] != '/');
-	    }
-	}
+    rpath_root = (char *) mempcpy(rpath, chroot, chroot_len) - 1;
+    if (*rpath_root != '/') {
+        *++rpath_root = '/';
     }
- done:
-  if (dest > rpath_root + 1 && dest[-1] == '/')
-    --dest;
-  *dest = '\0';
+    dest = rpath_root + 1;
 
-  return rpath;
+    for (start = end = name; *start; start = end) {
+        struct stat st;
 
- error:
-  free (rpath);
-  return NULL;
+        /* Skip sequence of multiple path-separators.  */
+        while (*start == '/') {
+            ++start;
+        }
+
+        /* Find end of path component.  */
+        for (end = start; *end && *end != '/'; ++end)
+            /* Nothing.  */;
+
+        if (end - start == 0) {
+            break;
+        } else if (end - start == 1 && start[0] == '.')
+            /* nothing */;
+        else if (end - start == 2 && start[0] == '.' && start[1] == '.') {
+            /* Back up to previous component, ignore if at root already.  */
+            if (dest > rpath_root + 1)
+                while ((--dest)[-1] != '/');
+        } else {
+            size_t new_size;
+
+            if (dest[-1] != '/') {
+                *dest++ = '/';
+            }
+
+            if (dest + (end - start) >= rpath_limit) {
+                ptrdiff_t dest_offset = dest - rpath;
+                char *new_rpath;
+
+                new_size = rpath_limit - rpath;
+                if (end - start + 1 > PATH_MAX) {
+                    new_size += end - start + 1;
+                } else {
+                    new_size += PATH_MAX;
+                }
+                new_rpath = (char *) xrealloc(rpath, new_size);
+                rpath = new_rpath;
+                rpath_limit = rpath + new_size;
+
+                dest = rpath + dest_offset;
+            }
+
+            dest = mempcpy(dest, start, end - start);
+            *dest = '\0';
+
+            if (lstat(rpath, &st) < 0) {
+                if (*end == '\0') {
+                    goto done;
+                }
+                goto error;
+            }
+
+            if (S_ISLNK(st.st_mode)) {
+                char *buf = alloca(PATH_MAX);
+                size_t len;
+
+                if (++num_links > MIN_ELOOP_THRESHOLD) {
+                    __set_errno(ELOOP);
+                    goto error;
+                }
+
+                ssize_t n = readlink(rpath, buf, PATH_MAX - 1);
+                if (n < 0) {
+                    if (*end == '\0') {
+                        goto done;
+                    }
+                    goto error;
+                }
+                buf[n] = '\0';
+
+                if (!extra_buf) {
+                    extra_buf = alloca(PATH_MAX);
+                }
+
+                len = strlen(end);
+                if (len >= PATH_MAX - n) {
+                    __set_errno(ENAMETOOLONG);
+                    goto error;
+                }
+
+                /* Careful here, end may be a pointer into extra_buf... */
+                memmove(&extra_buf[n], end, len + 1);
+                name = end = memcpy(extra_buf, buf, n);
+
+                if (buf[0] == '/') {
+                    dest = rpath_root + 1;    /* It's an absolute symlink */
+                } else
+                    /* Back up to previous component, ignore if at root already: */
+                    if (dest > rpath_root + 1)
+                        while ((--dest)[-1] != '/');
+            }
+        }
+    }
+done:
+    if (dest > rpath_root + 1 && dest[-1] == '/') {
+        --dest;
+    }
+    *dest = '\0';
+
+    return rpath;
+
+error:
+    free(rpath);
+    return NULL;
 }

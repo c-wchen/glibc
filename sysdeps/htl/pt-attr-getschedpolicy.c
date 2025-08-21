@@ -20,15 +20,14 @@
 #include <shlib-compat.h>
 #include <pt-internal.h>
 
-int
-__pthread_attr_getschedpolicy (const pthread_attr_t *attr, int *policy)
+int __pthread_attr_getschedpolicy(const pthread_attr_t *attr, int *policy)
 {
-  *policy = attr->__schedpolicy;
-  return 0;
+    *policy = attr->__schedpolicy;
+    return 0;
 }
 
-versioned_symbol (libc, __pthread_attr_getschedpolicy, pthread_attr_getschedpolicy, GLIBC_2_21);
+versioned_symbol(libc, __pthread_attr_getschedpolicy, pthread_attr_getschedpolicy, GLIBC_2_21);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_21)
-compat_symbol (libc, __pthread_attr_getschedpolicy, pthread_attr_getschedpolicy, GLIBC_2_12);
+compat_symbol(libc, __pthread_attr_getschedpolicy, pthread_attr_getschedpolicy, GLIBC_2_12);
 #endif

@@ -20,9 +20,8 @@
 
 /* Execute FILE, searching in the `PATH' environment variable if it contains
    no slashes, with arguments ARGV and environment from `environ'.  */
-int
-execvp (const char *file, char *const argv[])
+int execvp(const char *file, char *const argv[])
 {
-  return __execvpe (file, argv, __environ);
+    return __execvpe(file, argv, __environ);
 }
-libc_hidden_def (execvp)
+libc_hidden_def(execvp)

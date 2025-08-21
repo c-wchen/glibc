@@ -23,19 +23,19 @@
 #include "nsswitch.h"
 
 /*******************************************************************\
-|* Here we assume several symbols to be defined:		   *|
-|*								   *|
-|* LOOKUP_TYPE   - the return type of the function		   *|
-|*								   *|
-|* GETFUNC_NAME  - name of the non-reentrant getXXXent function	   *|
-|*								   *|
-|* BUFLEN	 - size of static buffer			   *|
-|*								   *|
-|* Optionally the following vars can be defined:		   *|
-|*								   *|
+|* Here we assume several symbols to be defined:           *|
+|*                                 *|
+|* LOOKUP_TYPE   - the return type of the function         *|
+|*                                 *|
+|* GETFUNC_NAME  - name of the non-reentrant getXXXent function    *|
+|*                                 *|
+|* BUFLEN    - size of static buffer               *|
+|*                                 *|
+|* Optionally the following vars can be defined:           *|
+|*                                 *|
 |* NEED_H_ERRNO  - an extra parameter will be passed to point to   *|
-|*		   the global `h_errno' variable.		   *|
-|*								   *|
+|*         the global `h_errno' variable.          *|
+|*                                 *|
 \*******************************************************************/
 
 /* To make the real sources a bit prettier.  */
@@ -58,42 +58,41 @@
 #endif
 
 /* Prototype of the reentrant version.  */
-extern int INTERNAL (REENTRANT_GETNAME) (LOOKUP_TYPE *resbuf, char *buffer,
-					 size_t buflen, LOOKUP_TYPE **result
-					 H_ERRNO_PARM) attribute_hidden;
+extern int INTERNAL(REENTRANT_GETNAME)(LOOKUP_TYPE *resbuf, char *buffer,
+                                       size_t buflen, LOOKUP_TYPE **result
+                                       H_ERRNO_PARM) attribute_hidden;
 
 /* We need to protect the dynamic buffer handling.  */
-__libc_lock_define_initialized (static, lock);
+__libc_lock_define_initialized(static, lock);
 
 /* This points to the static buffer used.  */
 static char *buffer;
 
-weak_alias (buffer, FREEMEM_NAME)
+weak_alias(buffer, FREEMEM_NAME)
 
 LOOKUP_TYPE *
-GETFUNC_NAME (void)
+GETFUNC_NAME(void)
 {
-  static size_t buffer_size;
-  static union
-  {
-    LOOKUP_TYPE l;
-    void *ptr;
-  } resbuf;
-  LOOKUP_TYPE *result;
-  int save;
+    static size_t buffer_size;
+    static union {
+        LOOKUP_TYPE l;
+        void *ptr;
+    } resbuf;
+    LOOKUP_TYPE *result;
+    int save;
 
-  /* Get lock.  */
-  __libc_lock_lock (lock);
+    /* Get lock.  */
+    __libc_lock_lock(lock);
 
-  result = (LOOKUP_TYPE *)
-    __nss_getent ((getent_r_function) INTERNAL (REENTRANT_GETNAME),
-		  &resbuf.ptr, &buffer, BUFLEN, &buffer_size,
-		  H_ERRNO_VAR);
+    result = (LOOKUP_TYPE *)
+             __nss_getent((getent_r_function) INTERNAL(REENTRANT_GETNAME),
+                          &resbuf.ptr, &buffer, BUFLEN, &buffer_size,
+                          H_ERRNO_VAR);
 
-  save = errno;
-  __libc_lock_unlock (lock);
-  __set_errno (save);
-  return result;
+    save = errno;
+    __libc_lock_unlock(lock);
+    __set_errno(save);
+    return result;
 }
 
-nss_interface_function (GETFUNC_NAME)
+nss_interface_function(GETFUNC_NAME)

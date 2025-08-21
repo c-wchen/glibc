@@ -18,11 +18,10 @@
 
 #include <signal.h>
 
-int
-siggetmask (void)
+int siggetmask(void)
 {
-  return __sigblock (0);
+    return __sigblock(0);
 }
 
-link_warning (siggetmask,
-	      "warning: `siggetmask' is obsolete; `sigprocmask' is best")
+link_warning(siggetmask,
+             "warning: `siggetmask' is obsolete; `sigprocmask' is best")

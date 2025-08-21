@@ -21,53 +21,52 @@
 #include <kernel-features.h>
 #include <shlib-compat.h>
 
-static const struct pthread_barrierattr default_barrierattr =
-  {
+static const struct pthread_barrierattr default_barrierattr = {
     .pshared = PTHREAD_PROCESS_PRIVATE
-  };
+};
 
 
-int
-___pthread_barrier_init (pthread_barrier_t *barrier,
-			const pthread_barrierattr_t *attr, unsigned int count)
+int ___pthread_barrier_init(pthread_barrier_t *barrier,
+                            const pthread_barrierattr_t *attr, unsigned int count)
 {
-  ASSERT_TYPE_SIZE (pthread_barrier_t, __SIZEOF_PTHREAD_BARRIER_T);
-  ASSERT_PTHREAD_INTERNAL_SIZE (pthread_barrier_t,
-				struct pthread_barrier);
+    ASSERT_TYPE_SIZE(pthread_barrier_t, __SIZEOF_PTHREAD_BARRIER_T);
+    ASSERT_PTHREAD_INTERNAL_SIZE(pthread_barrier_t,
+                                 struct pthread_barrier);
 
-  struct pthread_barrier *ibarrier;
+    struct pthread_barrier *ibarrier;
 
-  /* XXX EINVAL is not specified by POSIX as a possible error code for COUNT
-     being too large.  See pthread_barrier_wait for the reason for the
-     comparison with BARRIER_IN_THRESHOLD.  */
-  if (__glibc_unlikely (count == 0 || count >= BARRIER_IN_THRESHOLD))
-    return EINVAL;
+    /* XXX EINVAL is not specified by POSIX as a possible error code for COUNT
+       being too large.  See pthread_barrier_wait for the reason for the
+       comparison with BARRIER_IN_THRESHOLD.  */
+    if (__glibc_unlikely(count == 0 || count >= BARRIER_IN_THRESHOLD)) {
+        return EINVAL;
+    }
 
-  const struct pthread_barrierattr *iattr
-    = (attr != NULL
-       ? (struct pthread_barrierattr *) attr
-       : &default_barrierattr);
+    const struct pthread_barrierattr *iattr
+        = (attr != NULL
+           ? (struct pthread_barrierattr *) attr
+           : &default_barrierattr);
 
-  ibarrier = (struct pthread_barrier *) barrier;
+    ibarrier = (struct pthread_barrier *) barrier;
 
-  /* Initialize the individual fields.  */
-  ibarrier->in = 0;
-  ibarrier->out = 0;
-  ibarrier->count = count;
-  ibarrier->current_round = 0;
-  ibarrier->shared = (iattr->pshared == PTHREAD_PROCESS_PRIVATE
-		      ? FUTEX_PRIVATE : FUTEX_SHARED);
+    /* Initialize the individual fields.  */
+    ibarrier->in = 0;
+    ibarrier->out = 0;
+    ibarrier->count = count;
+    ibarrier->current_round = 0;
+    ibarrier->shared = (iattr->pshared == PTHREAD_PROCESS_PRIVATE
+                        ? FUTEX_PRIVATE : FUTEX_SHARED);
 
-  return 0;
+    return 0;
 }
-versioned_symbol (libc, ___pthread_barrier_init, pthread_barrier_init,
-                  GLIBC_2_34);
-libc_hidden_ver (___pthread_barrier_init, __pthread_barrier_init)
+versioned_symbol(libc, ___pthread_barrier_init, pthread_barrier_init,
+                 GLIBC_2_34);
+libc_hidden_ver(___pthread_barrier_init, __pthread_barrier_init)
 #ifndef SHARED
-strong_alias (___pthread_barrier_init, __pthread_barrier_init)
+strong_alias(___pthread_barrier_init, __pthread_barrier_init)
 #endif
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
-compat_symbol (libpthread, ___pthread_barrier_init, pthread_barrier_init,
-               GLIBC_2_2);
+compat_symbol(libpthread, ___pthread_barrier_init, pthread_barrier_init,
+              GLIBC_2_2);
 #endif

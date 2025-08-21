@@ -28,6 +28,6 @@
 # define SYMBOL_NAME wcscmp
 # include "ifunc-sse2.h"
 
-libc_ifunc_redirected (__redirect_wcscmp, __wcscmp, IFUNC_SELECTOR ());
-weak_alias (__wcscmp, wcscmp);
+libc_ifunc_redirected(__redirect_wcscmp, __wcscmp, IFUNC_SELECTOR());
+weak_alias(__wcscmp, wcscmp);
 #endif

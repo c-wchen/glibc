@@ -21,8 +21,7 @@
 #include <sys/ioctl.h>
 
 /* Suspend or restart transmission on FD.  */
-int
-tcflow (int fd, int action)
+int tcflow(int fd, int action)
 {
-  return __ioctl (fd, TCXONC, action);
+    return __ioctl(fd, TCXONC, action);
 }

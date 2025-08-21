@@ -18,39 +18,33 @@
 
 static __thread int ld;
 
-int *
-get_ld (void)
+int *get_ld(void)
 {
-  return &ld;
+    return &ld;
 }
 
-void
-set_ld (int i)
+void set_ld(int i)
 {
-  ld = i;
+    ld = i;
 }
 
-int
-test_ld (int i)
+int test_ld(int i)
 {
-  return ld == i;
+    return ld == i;
 }
 extern __thread int gd;
 
-int *
-get_gd (void)
+int *get_gd(void)
 {
-  return &gd;
+    return &gd;
 }
 
-void
-set_gd (int i)
+void set_gd(int i)
 {
-  gd = i;
+    gd = i;
 }
 
-int
-test_gd (int i)
+int test_gd(int i)
 {
-  return gd == i;
+    return gd == i;
 }

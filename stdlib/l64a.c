@@ -18,38 +18,37 @@
 #include <stdlib.h>
 
 /* Conversion table.  */
-static const char conv_table[64] =
-{
-  '.', '/', '0', '1', '2', '3', '4', '5',
-  '6', '7', '8', '9', 'A', 'B', 'C', 'D',
-  'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
-  'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
-  'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b',
-  'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
-  'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r',
-  's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
+static const char conv_table[64] = {
+    '.', '/', '0', '1', '2', '3', '4', '5',
+    '6', '7', '8', '9', 'A', 'B', 'C', 'D',
+    'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
+    'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+    'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b',
+    'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
+    'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r',
+    's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
 };
 
-char *
-l64a (long int n)
+char *l64a(long int n)
 {
-  unsigned long int m = (unsigned long int) n;
-  static char result[7];
-  int cnt;
+    unsigned long int m = (unsigned long int) n;
+    static char result[7];
+    int cnt;
 
-  /* The standard says that only 32 bits are used.  */
-  m &= 0xffffffff;
+    /* The standard says that only 32 bits are used.  */
+    m &= 0xffffffff;
 
-  if (m == 0ul)
-    /* The value for N == 0 is defined to be the empty string. */
-    return (char *) "";
-
-  for (cnt = 0; m > 0ul; ++cnt)
+    if (m == 0ul)
+        /* The value for N == 0 is defined to be the empty string. */
     {
-      result[cnt] = conv_table[m & 0x3f];
-      m >>= 6;
+        return (char *) "";
     }
-  result[cnt] = '\0';
 
-  return result;
+    for (cnt = 0; m > 0ul; ++cnt) {
+        result[cnt] = conv_table[m & 0x3f];
+        m >>= 6;
+    }
+    result[cnt] = '\0';
+
+    return result;
 }

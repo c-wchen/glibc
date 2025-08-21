@@ -22,24 +22,21 @@
 static const uintptr_t
 address __attribute__((section(".text"))) = (uintptr_t) &address;
 
-static uintptr_t
-foo_impl (void)
+static uintptr_t foo_impl(void)
 {
-  return address;
+    return address;
 }
 
-void *
-__attribute__((noinline))
-foo (void)
+void *__attribute__((noinline))
+foo(void)
 {
-  return (void*) foo_impl;
+    return (void *) foo_impl;
 }
-__asm__ (".type foo, %gnu_indirect_function");
+__asm__(".type foo, %gnu_indirect_function");
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  return (uintptr_t) foo () != 0 ? 0 : 1;
+    return (uintptr_t) foo() != 0 ? 0 : 1;
 }
 
 #include <support/test-driver.c>

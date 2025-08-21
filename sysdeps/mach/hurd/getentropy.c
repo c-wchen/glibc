@@ -24,36 +24,38 @@
 
 /* Write LENGTH bytes of randomness starting at BUFFER.  Return 0 on
    success and -1 on failure.  */
-int
-getentropy (void *buffer, size_t length)
+int getentropy(void *buffer, size_t length)
 {
-  /* The interface is documented to return EIO for buffer lengths
-     longer than 256 bytes.  */
-  if (length > 256)
-    return __hurd_fail (EIO);
-
-  /* Try to fill the buffer completely.  Even with the 256 byte limit
-     above, we might still receive an EINTR error (when blocking
-     during boot).  */
-  void *end = buffer + length;
-  while (buffer < end)
-    {
-      /* NB: No cancellation point.  */
-      ssize_t bytes = __getrandom (buffer, end - buffer, 0);
-      if (bytes < 0)
-        {
-          if (errno == EINTR)
-            /* Try again if interrupted by a signal.  */
-            continue;
-          else
-            return -1;
-        }
-      if (bytes == 0)
-        /* No more bytes available.  This should not happen under
-           normal circumstances.  */
-        return __hurd_fail (EIO);
-      /* Try again in case of a short read.  */
-      buffer += bytes;
+    /* The interface is documented to return EIO for buffer lengths
+       longer than 256 bytes.  */
+    if (length > 256) {
+        return __hurd_fail(EIO);
     }
-  return 0;
+
+    /* Try to fill the buffer completely.  Even with the 256 byte limit
+       above, we might still receive an EINTR error (when blocking
+       during boot).  */
+    void *end = buffer + length;
+    while (buffer < end) {
+        /* NB: No cancellation point.  */
+        ssize_t bytes = __getrandom(buffer, end - buffer, 0);
+        if (bytes < 0) {
+            if (errno == EINTR)
+                /* Try again if interrupted by a signal.  */
+            {
+                continue;
+            } else {
+                return -1;
+            }
+        }
+        if (bytes == 0)
+            /* No more bytes available.  This should not happen under
+               normal circumstances.  */
+        {
+            return __hurd_fail(EIO);
+        }
+        /* Try again in case of a short read.  */
+        buffer += bytes;
+    }
+    return 0;
 }

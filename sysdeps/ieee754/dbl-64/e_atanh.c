@@ -20,17 +20,17 @@
    Method :
       1.Reduced x to positive by atanh(-x) = -atanh(x)
       2.For x>=0.5
-		    1              2x                          x
-	atanh(x) = --- * log(1 + -------) = 0.5 * log1p(2 * --------)
-		    2             1 - x                      1 - x
+            1              2x                          x
+    atanh(x) = --- * log(1 + -------) = 0.5 * log1p(2 * --------)
+            2             1 - x                      1 - x
 
-	For x<0.5
-	atanh(x) = 0.5*log1p(2x+2x*x/(1-x))
+    For x<0.5
+    atanh(x) = 0.5*log1p(2x+2x*x/(1-x))
 
    Special cases:
-	atanh(x) is NaN if |x| > 1 with signal;
-	atanh(NaN) is that NaN with no signal;
-	atanh(+-1) is +-INF with signal.
+    atanh(x) is NaN if |x| > 1 with signal;
+    atanh(NaN) is that NaN with no signal;
+    atanh(+-1) is +-INF with signal.
 
  */
 
@@ -49,36 +49,32 @@ static const double huge = 1e300;
 #endif
 
 SECTION
-double
-__ieee754_atanh (double x)
+double __ieee754_atanh(double x)
 {
-  double xa = fabs (x);
-  double t;
-  if (isless (xa, 0.5))
-    {
-      if (__glibc_unlikely (xa < 0x1.0p-28))
-	{
-	  math_force_eval (huge + x);
-	  math_check_force_underflow (x);
-	  return x;
-	}
+    double xa = fabs(x);
+    double t;
+    if (isless(xa, 0.5)) {
+        if (__glibc_unlikely(xa < 0x1.0p - 28)) {
+            math_force_eval(huge + x);
+            math_check_force_underflow(x);
+            return x;
+        }
 
-      t = xa + xa;
-      t = 0.5 * __log1p (t + t * xa / (1.0 - xa));
-    }
-  else if (__glibc_likely (isless (xa, 1.0)))
-    t = 0.5 * __log1p ((xa + xa) / (1.0 - xa));
-  else
-    {
-      if (isgreater (xa, 1.0))
-	return (x - x) / (x - x);
+        t = xa + xa;
+        t = 0.5 * __log1p(t + t * xa / (1.0 - xa));
+    } else if (__glibc_likely(isless(xa, 1.0))) {
+        t = 0.5 * __log1p((xa + xa) / (1.0 - xa));
+    } else {
+        if (isgreater(xa, 1.0)) {
+            return (x - x) / (x - x);
+        }
 
-      return x / 0.0;
+        return x / 0.0;
     }
 
-  return copysign (t, x);
+    return copysign(t, x);
 }
 
 #ifndef __ieee754_atanh
-libm_alias_finite (__ieee754_atanh, __atanh)
+libm_alias_finite(__ieee754_atanh, __atanh)
 #endif

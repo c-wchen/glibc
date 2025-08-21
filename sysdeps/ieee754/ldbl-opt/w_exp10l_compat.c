@@ -10,8 +10,8 @@
    it now needs to be redefined to define the compat symbol at version
    LONG_DOUBLE_COMPAT_VERSION.  */
 #  undef compat_symbol
-#  define compat_symbol(lib, local, symbol, version)	\
+#  define compat_symbol(lib, local, symbol, version)    \
   compat_symbol_reference (lib, local, symbol, version)
-compat_symbol (libm, __pow10l, pow10l, LONG_DOUBLE_COMPAT_VERSION);
+compat_symbol(libm, __pow10l, pow10l, LONG_DOUBLE_COMPAT_VERSION);
 # endif
 #endif

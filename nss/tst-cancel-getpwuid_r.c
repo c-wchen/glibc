@@ -46,136 +46,126 @@ sem_t started;
 char *wbuf;
 long wbufsz;
 
-void
-worker_free (void *arg)
+void worker_free(void *arg)
 {
-  free (arg);
+    free(arg);
 }
 
-static void *
-worker (void *arg)
+static void *worker(void *arg)
 {
-  int ret;
-  unsigned int iter = 0;
-  struct passwd pwbuf, *pw;
-  uid_t uid;
+    int ret;
+    unsigned int iter = 0;
+    struct passwd pwbuf, *pw;
+    uid_t uid;
 
-  uid = geteuid ();
+    uid = geteuid();
 
-  /* Use a reasonable sized buffer.  Note that _SC_GETPW_R_SIZE_MAX is
-     just a hint and not any kind of maximum value.  */
-  wbufsz = sysconf (_SC_GETPW_R_SIZE_MAX);
-  if (wbufsz == -1)
-    wbufsz = 1024;
-  wbuf = xmalloc (wbufsz);
+    /* Use a reasonable sized buffer.  Note that _SC_GETPW_R_SIZE_MAX is
+       just a hint and not any kind of maximum value.  */
+    wbufsz = sysconf(_SC_GETPW_R_SIZE_MAX);
+    if (wbufsz == -1) {
+        wbufsz = 1024;
+    }
+    wbuf = xmalloc(wbufsz);
 
-  pthread_cleanup_push (worker_free, wbuf);
-  sem_post (&started);
-  while (1)
-    {
-      iter++;
+    pthread_cleanup_push(worker_free, wbuf);
+    sem_post(&started);
+    while (1) {
+        iter++;
 
-      ret = getpwuid_r (uid, &pwbuf, wbuf, wbufsz, &pw);
+        ret = getpwuid_r(uid, &pwbuf, wbuf, wbufsz, &pw);
 
-      /* The call to getpwuid_r may not cancel so we need to test
-	 for cancellation after some number of iterations of the
-	 function.  Choose an arbitrary 100,000 iterations of running
-	 getpwuid_r in a tight cancellation loop before testing for
-	 cancellation.  */
-      if (iter > 100000)
-	pthread_testcancel ();
+        /* The call to getpwuid_r may not cancel so we need to test
+        for cancellation after some number of iterations of the
+         function.  Choose an arbitrary 100,000 iterations of running
+         getpwuid_r in a tight cancellation loop before testing for
+         cancellation.  */
+        if (iter > 100000) {
+            pthread_testcancel();
+        }
 
-      if (ret == ERANGE)
-	{
-	  /* Increase the buffer size.  */
-	  free (wbuf);
-	  wbufsz = wbufsz * 2;
-	  wbuf = xmalloc (wbufsz);
-	}
+        if (ret == ERANGE) {
+            /* Increase the buffer size.  */
+            free(wbuf);
+            wbufsz = wbufsz * 2;
+            wbuf = xmalloc(wbufsz);
+        }
 
     }
-  pthread_cleanup_pop (1);
+    pthread_cleanup_pop(1);
 
-  return NULL;
+    return NULL;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int ret;
-  char *buf;
-  long bufsz;
-  void *retval;
-  struct passwd pwbuf, *pw;
-  pthread_t thread;
+    int ret;
+    char *buf;
+    long bufsz;
+    void *retval;
+    struct passwd pwbuf, *pw;
+    pthread_t thread;
 
-  /* Configure the test to only use files. We control the files plugin
-     as part of glibc so we assert that it should be deferred
-     cancellation safe.  */
-  __nss_configure_lookup ("passwd", "files");
+    /* Configure the test to only use files. We control the files plugin
+       as part of glibc so we assert that it should be deferred
+       cancellation safe.  */
+    __nss_configure_lookup("passwd", "files");
 
-  /* Use a reasonable sized buffer.  Note that  _SC_GETPW_R_SIZE_MAX is
-     just a hint and not any kind of maximum value.  */
-  bufsz = sysconf (_SC_GETPW_R_SIZE_MAX);
-  if (bufsz == -1)
-    bufsz = 1024;
-  buf = xmalloc (bufsz);
+    /* Use a reasonable sized buffer.  Note that  _SC_GETPW_R_SIZE_MAX is
+       just a hint and not any kind of maximum value.  */
+    bufsz = sysconf(_SC_GETPW_R_SIZE_MAX);
+    if (bufsz == -1) {
+        bufsz = 1024;
+    }
+    buf = xmalloc(bufsz);
 
-  sem_init (&started, 0, 0);
+    sem_init(&started, 0, 0);
 
-  pthread_create (&thread, NULL, worker, NULL);
+    pthread_create(&thread, NULL, worker, NULL);
 
-  do
-  {
-    ret = sem_wait (&started);
-    if (ret == -1 && errno != EINTR)
-      {
-        printf ("FAIL: Failed to wait for second thread to start.\n");
-	exit (EXIT_FAILURE);
-      }
-  }
-  while (ret != 0);
+    do {
+        ret = sem_wait(&started);
+        if (ret == -1 && errno != EINTR) {
+            printf("FAIL: Failed to wait for second thread to start.\n");
+            exit(EXIT_FAILURE);
+        }
+    } while (ret != 0);
 
-  printf ("INFO: Cancelling thread\n");
-  if ((ret = pthread_cancel (thread)) != 0)
-    {
-      printf ("FAIL: Failed to cancel thread. Returned %d\n", ret);
-      exit (EXIT_FAILURE);
+    printf("INFO: Cancelling thread\n");
+    if ((ret = pthread_cancel(thread)) != 0) {
+        printf("FAIL: Failed to cancel thread. Returned %d\n", ret);
+        exit(EXIT_FAILURE);
     }
 
-  printf ("INFO: Joining...\n");
-  pthread_join (thread, &retval);
-  if (retval != PTHREAD_CANCELED)
-    {
-      printf ("FAIL: Thread was not cancelled.\n");
-      exit (EXIT_FAILURE);
+    printf("INFO: Joining...\n");
+    pthread_join(thread, &retval);
+    if (retval != PTHREAD_CANCELED) {
+        printf("FAIL: Thread was not cancelled.\n");
+        exit(EXIT_FAILURE);
     }
-  printf ("INFO: Joined, trying getpwuid_r call\n");
+    printf("INFO: Joined, trying getpwuid_r call\n");
 
-  /* Before the fix in 312be3f9f5eab1643d7dcc7728c76d413d4f2640 for this
-     issue the cancellation point could happen in any number of internal
-     calls, and therefore locks would be left held and the following
-     call to getpwuid_r would block and the test would time out.  */
-  do
-    {
-      ret = getpwuid_r (geteuid (), &pwbuf, buf, bufsz, &pw);
-      if (ret == ERANGE)
-	{
-	  /* Increase the buffer size.  */
-	  free (buf);
-	  bufsz = bufsz * 2;
-	  buf = xmalloc (bufsz);
-	}
-    }
-  while (ret == ERANGE);
+    /* Before the fix in 312be3f9f5eab1643d7dcc7728c76d413d4f2640 for this
+       issue the cancellation point could happen in any number of internal
+       calls, and therefore locks would be left held and the following
+       call to getpwuid_r would block and the test would time out.  */
+    do {
+        ret = getpwuid_r(geteuid(), &pwbuf, buf, bufsz, &pw);
+        if (ret == ERANGE) {
+            /* Increase the buffer size.  */
+            free(buf);
+            bufsz = bufsz * 2;
+            buf = xmalloc(bufsz);
+        }
+    } while (ret == ERANGE);
 
-  free (buf);
+    free(buf);
 
-  /* Before the fix we would never get here.  */
-  printf ("PASS: Canceled getpwuid_r successfully"
-	  " and called it again without blocking.\n");
+    /* Before the fix we would never get here.  */
+    printf("PASS: Canceled getpwuid_r successfully"
+           " and called it again without blocking.\n");
 
-  return 0;
+    return 0;
 }
 
 #define TIMEOUT 900

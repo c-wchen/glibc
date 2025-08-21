@@ -20,12 +20,11 @@
 #include <unistd.h>
 
 /* Duplicate FD, returning a new file descriptor open on the same file.  */
-int
-__dup (int fd)
+int __dup(int fd)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (dup)
+stub_warning(dup)
 
-weak_alias (__dup, dup)
+weak_alias(__dup, dup)

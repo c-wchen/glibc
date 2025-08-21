@@ -19,8 +19,8 @@
 #if IS_IN (libc)
 # include <string.h>
 # define strcasecmp_l __strcasecmp_l_ppc
-extern __typeof (__strcasecmp_l) __strcasecmp_l_ppc attribute_hidden;
-extern __typeof (__strcasecmp_l) __strcasecmp_l_power7 attribute_hidden;
+extern __typeof(__strcasecmp_l) __strcasecmp_l_ppc attribute_hidden;
+extern __typeof(__strcasecmp_l) __strcasecmp_l_power7 attribute_hidden;
 #endif
 
 #include <string/strcasecmp_l.c>
@@ -30,11 +30,11 @@ extern __typeof (__strcasecmp_l) __strcasecmp_l_power7 attribute_hidden;
 # include <shlib-compat.h>
 # include "init-arch.h"
 
-extern __typeof (__strcasecmp_l) __libc_strcasecmp_l;
-libc_ifunc (__libc_strcasecmp_l,
-	    (hwcap & PPC_FEATURE_ARCH_2_06)
-            ? __strcasecmp_l_power7
-            : __strcasecmp_l_ppc);
+extern __typeof(__strcasecmp_l) __libc_strcasecmp_l;
+libc_ifunc(__libc_strcasecmp_l,
+           (hwcap &PPC_FEATURE_ARCH_2_06)
+           ? __strcasecmp_l_power7
+           : __strcasecmp_l_ppc);
 
-weak_alias (__libc_strcasecmp_l, strcasecmp_l)
+weak_alias(__libc_strcasecmp_l, strcasecmp_l)
 #endif

@@ -22,70 +22,69 @@
 #include <thread_state.h>
 
 
-error_t
-hurd_thread_cancel (thread_t thread)
+error_t hurd_thread_cancel(thread_t thread)
 {
-  struct hurd_sigstate *ss = _hurd_thread_sigstate (thread);
-  struct machine_thread_all_state state;
-  int state_change;
-  error_t err;
+    struct hurd_sigstate *ss = _hurd_thread_sigstate(thread);
+    struct machine_thread_all_state state;
+    int state_change;
+    error_t err;
 
-  if (! ss)
-    return EINVAL;
-  if (ss == _hurd_self_sigstate ())
-    {
-      /* We are cancelling ourselves, so it is easy to succeed
-	 quickly.  Since this function is not a cancellation point, we
-	 just leave the flag set pending the next cancellation point
-	 (hurd_check_cancel or RPC) and return success.  */
-      ss->cancel = 1;
-      return 0;
+    if (! ss) {
+        return EINVAL;
+    }
+    if (ss == _hurd_self_sigstate()) {
+        /* We are cancelling ourselves, so it is easy to succeed
+        quickly.  Since this function is not a cancellation point, we
+         just leave the flag set pending the next cancellation point
+         (hurd_check_cancel or RPC) and return success.  */
+        ss->cancel = 1;
+        return 0;
     }
 
-  assert (! __spin_lock_locked (&ss->critical_section_lock));
-  __spin_lock (&ss->critical_section_lock);
-  __spin_lock (&ss->lock);
-  err = __thread_suspend (thread);
-  __spin_unlock (&ss->lock);
+    assert(! __spin_lock_locked(&ss->critical_section_lock));
+    __spin_lock(&ss->critical_section_lock);
+    __spin_lock(&ss->lock);
+    err = __thread_suspend(thread);
+    __spin_unlock(&ss->lock);
 
-  if (! err)
-    {
-      /* Set the flag telling the thread its operation is being cancelled.  */
-      ss->cancel = 1;
+    if (! err) {
+        /* Set the flag telling the thread its operation is being cancelled.  */
+        ss->cancel = 1;
 
-      /* Interrupt any interruptible RPC now in progress.  */
-      state.set = 0;
-      _hurdsig_abort_rpcs (ss, 0, 0, &state, &state_change, NULL);
-      if (state_change)
-	err = __thread_set_state (thread, MACHINE_THREAD_STATE_FLAVOR,
-				  (natural_t *) &state.basic,
-				  MACHINE_THREAD_STATE_COUNT);
+        /* Interrupt any interruptible RPC now in progress.  */
+        state.set = 0;
+        _hurdsig_abort_rpcs(ss, 0, 0, &state, &state_change, NULL);
+        if (state_change)
+            err = __thread_set_state(thread, MACHINE_THREAD_STATE_FLAVOR,
+                                     (natural_t *) &state.basic,
+                                     MACHINE_THREAD_STATE_COUNT);
 
-      if (ss->cancel_hook)
-	/* The code being cancelled has a special wakeup function.
-	   Calling this should make the thread wake up and check the
-	   cancellation flag.  */
-	(*ss->cancel_hook) ();
+        if (ss->cancel_hook)
+            /* The code being cancelled has a special wakeup function.
+               Calling this should make the thread wake up and check the
+               cancellation flag.  */
+        {
+            (*ss->cancel_hook)();
+        }
 
-      __thread_resume (thread);
+        __thread_resume(thread);
     }
 
-  _hurd_critical_section_unlock (ss);
-  return err;
+    _hurd_critical_section_unlock(ss);
+    return err;
 }
 
 
-int
-hurd_check_cancel (void)
+int hurd_check_cancel(void)
 {
-  struct hurd_sigstate *ss = _hurd_self_sigstate ();
-  int cancel;
+    struct hurd_sigstate *ss = _hurd_self_sigstate();
+    int cancel;
 
-  __spin_lock (&ss->lock);
-  assert (! __spin_lock_locked (&ss->critical_section_lock));
-  cancel = ss->cancel;
-  ss->cancel = 0;
-  __spin_unlock (&ss->lock);
+    __spin_lock(&ss->lock);
+    assert(! __spin_lock_locked(&ss->critical_section_lock));
+    cancel = ss->cancel;
+    ss->cancel = 0;
+    __spin_unlock(&ss->lock);
 
-  return cancel;
+    return cancel;
 }

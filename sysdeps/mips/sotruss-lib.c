@@ -24,94 +24,91 @@
 #if _MIPS_SIM == _ABIO32
 
 ElfW(Addr)
-la_mips_o32_gnu_pltenter (ElfW(Sym) *sym __attribute__ ((unused)),
-			  unsigned int ndx __attribute__ ((unused)),
-			  uintptr_t *refcook, uintptr_t *defcook,
-			  La_mips_32_regs *regs, unsigned int *flags,
-			  const char *symname, long int *framesizep)
+la_mips_o32_gnu_pltenter(ElfW(Sym) *sym __attribute__((unused)),
+                         unsigned int ndx __attribute__((unused)),
+                         uintptr_t *refcook, uintptr_t *defcook,
+                         La_mips_32_regs *regs, unsigned int *flags,
+                         const char *symname, long int *framesizep)
 {
-  print_enter (refcook, defcook, symname,
-	       regs->lr_reg[0], regs->lr_reg[1], regs->lr_reg[2],
-	       *flags);
+    print_enter(refcook, defcook, symname,
+                regs->lr_reg[0], regs->lr_reg[1], regs->lr_reg[2],
+                *flags);
 
-  /* No need to copy anything, we will not need the parameters in any case.  */
-  *framesizep = 0;
+    /* No need to copy anything, we will not need the parameters in any case.  */
+    *framesizep = 0;
 
-  return sym->st_value;
+    return sym->st_value;
 }
 
-unsigned int
-la_mips_o32_gnu_pltexit (ElfW(Sym) *sym, unsigned int ndx, uintptr_t *refcook,
-			 uintptr_t *defcook,
-			 const struct La_mips_32_regs *inregs,
-			 struct La_mips_32_retval *outregs,
-			 const char *symname)
+unsigned int la_mips_o32_gnu_pltexit(ElfW(Sym) *sym, unsigned int ndx, uintptr_t *refcook,
+                                     uintptr_t *defcook,
+                                     const struct La_mips_32_regs *inregs,
+                                     struct La_mips_32_retval *outregs,
+                                     const char *symname)
 {
-  print_exit (refcook, defcook, symname, outregs->lrv_v0);
+    print_exit(refcook, defcook, symname, outregs->lrv_v0);
 
-  return 0;
+    return 0;
 }
 
 #elif _MIPS_SIM == _ABIN32
 
 ElfW(Addr)
-la_mips_n32_gnu_pltenter (ElfW(Sym) *sym __attribute__ ((unused)),
-			  unsigned int ndx __attribute__ ((unused)),
-			  uintptr_t *refcook, uintptr_t *defcook,
-			  La_mips_64_regs *regs, unsigned int *flags,
-			  const char *symname, long int *framesizep)
+la_mips_n32_gnu_pltenter(ElfW(Sym) *sym __attribute__((unused)),
+                         unsigned int ndx __attribute__((unused)),
+                         uintptr_t *refcook, uintptr_t *defcook,
+                         La_mips_64_regs *regs, unsigned int *flags,
+                         const char *symname, long int *framesizep)
 {
-  print_enter (refcook, defcook, symname,
-	       regs->lr_reg[0], regs->lr_reg[1], regs->lr_reg[2],
-	       *flags);
+    print_enter(refcook, defcook, symname,
+                regs->lr_reg[0], regs->lr_reg[1], regs->lr_reg[2],
+                *flags);
 
-  /* No need to copy anything, we will not need the parameters in any case.  */
-  *framesizep = 0;
+    /* No need to copy anything, we will not need the parameters in any case.  */
+    *framesizep = 0;
 
-  return sym->st_value;
+    return sym->st_value;
 }
 
-unsigned int
-la_mips_n32_gnu_pltexit (ElfW(Sym) *sym, unsigned int ndx, uintptr_t *refcook,
-			 uintptr_t *defcook,
-			 const struct La_mips_64_regs *inregs,
-			 struct La_mips_64_retval *outregs,
-			 const char *symname)
+unsigned int la_mips_n32_gnu_pltexit(ElfW(Sym) *sym, unsigned int ndx, uintptr_t *refcook,
+                                     uintptr_t *defcook,
+                                     const struct La_mips_64_regs *inregs,
+                                     struct La_mips_64_retval *outregs,
+                                     const char *symname)
 {
-  print_exit (refcook, defcook, symname, outregs->lrv_v0);
+    print_exit(refcook, defcook, symname, outregs->lrv_v0);
 
-  return 0;
+    return 0;
 }
 
 #else
 
 ElfW(Addr)
-la_mips_n64_gnu_pltenter (ElfW(Sym) *sym __attribute__ ((unused)),
-			  unsigned int ndx __attribute__ ((unused)),
-			  uintptr_t *refcook, uintptr_t *defcook,
-			  La_mips_64_regs *regs, unsigned int *flags,
-			  const char *symname, long int *framesizep)
+la_mips_n64_gnu_pltenter(ElfW(Sym) *sym __attribute__((unused)),
+                         unsigned int ndx __attribute__((unused)),
+                         uintptr_t *refcook, uintptr_t *defcook,
+                         La_mips_64_regs *regs, unsigned int *flags,
+                         const char *symname, long int *framesizep)
 {
-  print_enter (refcook, defcook, symname,
-	       regs->lr_reg[0], regs->lr_reg[1], regs->lr_reg[2],
-	       *flags);
+    print_enter(refcook, defcook, symname,
+                regs->lr_reg[0], regs->lr_reg[1], regs->lr_reg[2],
+                *flags);
 
-  /* No need to copy anything, we will not need the parameters in any case.  */
-  *framesizep = 0;
+    /* No need to copy anything, we will not need the parameters in any case.  */
+    *framesizep = 0;
 
-  return sym->st_value;
+    return sym->st_value;
 }
 
-unsigned int
-la_mips_n64_gnu_pltexit (ElfW(Sym) *sym, unsigned int ndx, uintptr_t *refcook,
-			 uintptr_t *defcook,
-			 const struct La_mips_64_regs *inregs,
-			 struct La_mips_64_retval *outregs,
-			 const char *symname)
+unsigned int la_mips_n64_gnu_pltexit(ElfW(Sym) *sym, unsigned int ndx, uintptr_t *refcook,
+                                     uintptr_t *defcook,
+                                     const struct La_mips_64_regs *inregs,
+                                     struct La_mips_64_retval *outregs,
+                                     const char *symname)
 {
-  print_exit (refcook, defcook, symname, outregs->lrv_v0);
+    print_exit(refcook, defcook, symname, outregs->lrv_v0);
 
-  return 0;
+    return 0;
 }
 
 #endif

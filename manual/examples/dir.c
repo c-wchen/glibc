@@ -21,21 +21,20 @@
 #include <dirent.h>
 /*@end group*/
 
-int
-main (void)
+int main(void)
 {
-  DIR *dp;
-  struct dirent *ep;
+    DIR *dp;
+    struct dirent *ep;
 
-  dp = opendir ("./");
-  if (dp != NULL)
-    {
-      while (ep = readdir (dp))
-	puts (ep->d_name);
-      (void) closedir (dp);
+    dp = opendir("./");
+    if (dp != NULL) {
+        while (ep = readdir(dp)) {
+            puts(ep->d_name);
+        }
+        (void) closedir(dp);
+    } else {
+        perror("Couldn't open the directory");
     }
-  else
-    perror ("Couldn't open the directory");
 
-  return 0;
+    return 0;
 }

@@ -19,15 +19,15 @@
 #include "thread_dbP.h"
 
 
-td_err_e
-td_ta_setconcurrency (const td_thragent_t *ta, int level)
+td_err_e td_ta_setconcurrency(const td_thragent_t *ta, int level)
 {
-  /* This is something LinuxThreads does not need to support.  */
-  LOG ("td_ta_setconcurrency");
+    /* This is something LinuxThreads does not need to support.  */
+    LOG("td_ta_setconcurrency");
 
-  /* Test whether the TA parameter is ok.  */
-  if (! ta_ok (ta))
-    return TD_BADTA;
+    /* Test whether the TA parameter is ok.  */
+    if (! ta_ok(ta)) {
+        return TD_BADTA;
+    }
 
-  return TD_NOCAPAB;
+    return TD_NOCAPAB;
 }

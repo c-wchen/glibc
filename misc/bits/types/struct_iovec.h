@@ -23,10 +23,9 @@
 #include <stddef.h>
 
 /* Structure for scatter/gather I/O.  */
-struct iovec
-  {
-    void *iov_base;	/* Pointer to data.  */
-    size_t iov_len;	/* Length of data.  */
-  };
+struct iovec {
+    void *iov_base; /* Pointer to data.  */
+    size_t iov_len; /* Length of data.  */
+};
 
 #endif

@@ -16,9 +16,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-_Noreturn static __always_inline void
-__libc_start_call_main (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
-                        int argc, char **argv MAIN_AUXVEC_DECL)
+_Noreturn static __always_inline void __libc_start_call_main(int (*main)(int, char **, char **MAIN_AUXVEC_DECL),
+        int argc, char **argv MAIN_AUXVEC_DECL)
 {
-  exit (main (argc, argv, __environ MAIN_AUXVEC_PARAM));
+    exit(main(argc, argv, __environ MAIN_AUXVEC_PARAM));
 }

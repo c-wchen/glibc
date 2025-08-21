@@ -27,51 +27,48 @@
    given that |X| >= |Y| and the values are small enough that no
    overflow occurs.  */
 
-static inline void
-add_split (_Float128 *hi, _Float128 *lo, _Float128 x, _Float128 y)
+static inline void add_split(_Float128 *hi, _Float128 *lo, _Float128 x, _Float128 y)
 {
-  /* Apply Dekker's algorithm.  */
-  *hi = x + y;
-  *lo = (x - *hi) + y;
+    /* Apply Dekker's algorithm.  */
+    *hi = x + y;
+    *lo = (x - *hi) + y;
 }
 
 /* Compare absolute values of floating-point values pointed to by P
    and Q for qsort.  */
 
-static int
-compare (const void *p, const void *q)
+static int compare(const void *p, const void *q)
 {
-  _Float128 pld = fabsl (*(const _Float128 *) p);
-  _Float128 qld = fabsl (*(const _Float128 *) q);
-  if (pld < qld)
-    return -1;
-  else if (pld == qld)
-    return 0;
-  else
-    return 1;
+    _Float128 pld = fabsl(*(const _Float128 *) p);
+    _Float128 qld = fabsl(*(const _Float128 *) q);
+    if (pld < qld) {
+        return -1;
+    } else if (pld == qld) {
+        return 0;
+    } else {
+        return 1;
+    }
 }
 
 /* Return X^2 + Y^2 - 1, computed without large cancellation error.
    It is given that 1 > X >= Y >= epsilon / 2, and that X^2 + Y^2 >=
    0.5.  */
 
-_Float128
-__x2y2m1l (_Float128 x, _Float128 y)
+_Float128 __x2y2m1l(_Float128 x, _Float128 y)
 {
-  _Float128 vals[5];
-  SET_RESTORE_ROUNDL (FE_TONEAREST);
-  mul_splitl (&vals[1], &vals[0], x, x);
-  mul_splitl (&vals[3], &vals[2], y, y);
-  vals[4] = -1;
-  qsort (vals, 5, sizeof (_Float128), compare);
-  /* Add up the values so that each element of VALS has absolute value
-     at most equal to the last set bit of the next nonzero
-     element.  */
-  for (size_t i = 0; i <= 3; i++)
-    {
-      add_split (&vals[i + 1], &vals[i], vals[i + 1], vals[i]);
-      qsort (vals + i + 1, 4 - i, sizeof (_Float128), compare);
+    _Float128 vals[5];
+    SET_RESTORE_ROUNDL(FE_TONEAREST);
+    mul_splitl(&vals[1], &vals[0], x, x);
+    mul_splitl(&vals[3], &vals[2], y, y);
+    vals[4] = -1;
+    qsort(vals, 5, sizeof(_Float128), compare);
+    /* Add up the values so that each element of VALS has absolute value
+       at most equal to the last set bit of the next nonzero
+       element.  */
+    for (size_t i = 0; i <= 3; i++) {
+        add_split(&vals[i + 1], &vals[i], vals[i + 1], vals[i]);
+        qsort(vals + i + 1, 4 - i, sizeof(_Float128), compare);
     }
-  /* Now any error from this addition will be small.  */
-  return vals[4] + vals[3] + vals[2] + vals[1] + vals[0];
+    /* Now any error from this addition will be small.  */
+    return vals[4] + vals[3] + vals[2] + vals[1] + vals[0];
 }

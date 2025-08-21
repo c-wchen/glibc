@@ -19,11 +19,11 @@
 #include <fcntl.h>
 #include <stdio.h>
 
-int
-__openat64_2 (int fd, const char *file, int oflag)
+int __openat64_2(int fd, const char *file, int oflag)
 {
-  if (__OPEN_NEEDS_MODE (oflag))
-    __fortify_fail ("invalid openat64 call: O_CREAT or O_TMPFILE without mode");
+    if (__OPEN_NEEDS_MODE(oflag)) {
+        __fortify_fail("invalid openat64 call: O_CREAT or O_TMPFILE without mode");
+    }
 
-  return __openat64 (fd, file, oflag);
+    return __openat64(fd, file, oflag);
 }

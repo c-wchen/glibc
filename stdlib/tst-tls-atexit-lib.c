@@ -19,19 +19,18 @@
 #include <stdlib.h>
 #include <dso_handle.h>
 
-typedef struct
-{
-  void *val;
+typedef struct {
+    void *val;
 } A;
 
 /* We only care about the destructor.  */
-void A_dtor (void *obj)
+void A_dtor(void *obj)
 {
-  ((A *)obj)->val = obj;
+    ((A *)obj)->val = obj;
 }
 
-void reg_dtor (void)
+void reg_dtor(void)
 {
-  static __thread A b;
-  __cxa_thread_atexit_impl (A_dtor, &b, __dso_handle);
+    static __thread A b;
+    __cxa_thread_atexit_impl(A_dtor, &b, __dso_handle);
 }

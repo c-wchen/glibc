@@ -23,32 +23,31 @@
 char string1[STRING_SIZE];
 
 __attribute_optimization_barrier__
-static int
-prepare (void)
+static int prepare(void)
 {
-  memset (string1, 'a', STRING_SIZE);
-  string1[100] = 'c';
-  string1[STRING_SIZE - 100] = 'c';
-  char *p = memchr (string1, 'c', STRING_SIZE);
-  if (p == &string1[100])
-    return EXIT_SUCCESS;
-  else
-    return EXIT_FAILURE;
+    memset(string1, 'a', STRING_SIZE);
+    string1[100] = 'c';
+    string1[STRING_SIZE - 100] = 'c';
+    char *p = memchr(string1, 'c', STRING_SIZE);
+    if (p == &string1[100]) {
+        return EXIT_SUCCESS;
+    } else {
+        return EXIT_FAILURE;
+    }
 }
 
 __attribute_optimization_barrier__
-static int
-function (void)
+static int function(void)
 {
-  char *p = memchr (string1, 'c', STRING_SIZE);
-  if (p == &string1[100])
-    return 0;
-  else
-    return 1;
+    char *p = memchr(string1, 'c', STRING_SIZE);
+    if (p == &string1[100]) {
+        return 0;
+    } else {
+        return 1;
+    }
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  return do_test_1 ("memchr", LOOP, prepare, function);
+    return do_test_1("memchr", LOOP, prepare, function);
 }

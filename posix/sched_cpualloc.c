@@ -19,8 +19,7 @@
 #include <stdlib.h>
 
 
-cpu_set_t *
-__sched_cpualloc (size_t count)
+cpu_set_t *__sched_cpualloc(size_t count)
 {
-  return malloc (CPU_ALLOC_SIZE (count));
+    return malloc(CPU_ALLOC_SIZE(count));
 }

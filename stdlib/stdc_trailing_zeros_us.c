@@ -19,7 +19,7 @@
 #include <stdbit.h>
 
 unsigned int
-(stdc_trailing_zeros_us) (unsigned short x)
+(stdc_trailing_zeros_us)(unsigned short x)
 {
-  return stdc_trailing_zeros_us (x);
+    return stdc_trailing_zeros_us(x);
 }

@@ -20,12 +20,11 @@
 #include <sys/types.h>
 #include <dirent.h>
 
-ssize_t
-__getdirentries (int fd, char *buf, size_t nbytes, off_t *basep)
+ssize_t __getdirentries(int fd, char *buf, size_t nbytes, off_t *basep)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-weak_alias (__getdirentries, getdirentries)
+weak_alias(__getdirentries, getdirentries)
 
-stub_warning (getdirentries)
+stub_warning(getdirentries)

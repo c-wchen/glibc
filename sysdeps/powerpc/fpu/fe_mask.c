@@ -23,10 +23,9 @@
    the FE0/FE1 bits in the MSR.  MSR update is privileged, so this will
    normally involve a syscall.  */
 
-const fenv_t *
-__fe_mask_env(void)
+const fenv_t *__fe_mask_env(void)
 {
-  __set_errno (ENOSYS);
-  return FE_DFL_ENV;
+    __set_errno(ENOSYS);
+    return FE_DFL_ENV;
 }
-stub_warning (__fe_mask_env)
+stub_warning(__fe_mask_env)

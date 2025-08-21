@@ -31,10 +31,10 @@
 
 #ifdef __FLT_EVAL_METHOD__
 # if __FLT_EVAL_METHOD__ == -1
-#  define __GLIBC_FLT_EVAL_METHOD	0
+#  define __GLIBC_FLT_EVAL_METHOD   0
 # else
-#  define __GLIBC_FLT_EVAL_METHOD	__FLT_EVAL_METHOD__
+#  define __GLIBC_FLT_EVAL_METHOD   __FLT_EVAL_METHOD__
 # endif
 #else
-# define __GLIBC_FLT_EVAL_METHOD	0
+# define __GLIBC_FLT_EVAL_METHOD    0
 #endif

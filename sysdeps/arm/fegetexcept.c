@@ -21,16 +21,16 @@
 #include <arm-features.h>
 
 
-int
-fegetexcept (void)
+int fegetexcept(void)
 {
-  fpu_control_t fpscr;
+    fpu_control_t fpscr;
 
-  /* Return with all exceptions disabled if a VFP unit isn't present.  */
-  if (!ARM_HAVE_VFP)
-    return 0;
+    /* Return with all exceptions disabled if a VFP unit isn't present.  */
+    if (!ARM_HAVE_VFP) {
+        return 0;
+    }
 
-  _FPU_GETCW (fpscr);
+    _FPU_GETCW(fpscr);
 
-  return (fpscr >> FE_EXCEPT_SHIFT) & FE_ALL_EXCEPT;
+    return (fpscr >> FE_EXCEPT_SHIFT) & FE_ALL_EXCEPT;
 }

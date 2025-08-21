@@ -19,24 +19,22 @@
 #ifndef hashval_t
 # define hashval_t unsigned long int
 #endif
-#include <limits.h>		/* For CHAR_BIT.  */
+#include <limits.h>     /* For CHAR_BIT.  */
 
-hashval_t
-compute_hashval (const void *key, size_t keylen)
+hashval_t compute_hashval(const void *key, size_t keylen)
 {
-  size_t cnt;
-  hashval_t hval;
+    size_t cnt;
+    hashval_t hval;
 
-  /* Compute the hash value for the given string.  The algorithm
-     is taken from [Aho,Sethi,Ullman], modified to reduce the number of
-     collisions for short strings with very varied bit patterns.
-     See http://www.clisp.org/haible/hashfunc.html.  */
-  cnt = 0;
-  hval = keylen;
-  while (cnt < keylen)
-    {
-      hval = (hval << 9) | (hval >> (sizeof hval * CHAR_BIT - 9));
-      hval += (hashval_t) ((const unsigned char *) key)[cnt++];
+    /* Compute the hash value for the given string.  The algorithm
+       is taken from [Aho,Sethi,Ullman], modified to reduce the number of
+       collisions for short strings with very varied bit patterns.
+       See http://www.clisp.org/haible/hashfunc.html.  */
+    cnt = 0;
+    hval = keylen;
+    while (cnt < keylen) {
+        hval = (hval << 9) | (hval >> (sizeof hval * CHAR_BIT - 9));
+        hval += (hashval_t)((const unsigned char *) key)[cnt++];
     }
-  return hval != 0 ? hval : ~((hashval_t) 0);
+    return hval != 0 ? hval : ~((hashval_t) 0);
 }

@@ -21,14 +21,14 @@
 #include <hurd.h>
 #include <hurd/xattr.h>
 
-ssize_t
-listxattr (const char *path, char *list, size_t size)
+ssize_t listxattr(const char *path, char *list, size_t size)
 {
-  error_t err;
-  file_t port = __file_name_lookup (path, 0, 0);
-  if (port == MACH_PORT_NULL)
-    return -1;
-  err = _hurd_xattr_list (port, list, &size);
-  __mach_port_deallocate (__mach_task_self (), port);
-  return err ? __hurd_fail (err) : size;
+    error_t err;
+    file_t port = __file_name_lookup(path, 0, 0);
+    if (port == MACH_PORT_NULL) {
+        return -1;
+    }
+    err = _hurd_xattr_list(port, list, &size);
+    __mach_port_deallocate(__mach_task_self(), port);
+    return err ? __hurd_fail(err) : size;
 }

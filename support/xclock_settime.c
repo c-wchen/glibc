@@ -20,15 +20,15 @@
 #include <support/check.h>
 #include <support/xtime.h>
 
-void
-xclock_settime (clockid_t clockid,
-                const struct timespec *ts)
+void xclock_settime(clockid_t clockid,
+                    const struct timespec *ts)
 {
-  if (getenv (SETTIME_ENV_NAME) == NULL)
-    FAIL_UNSUPPORTED ("clock_settime is executed only when "\
-                      SETTIME_ENV_NAME" is set\n");
+    if (getenv(SETTIME_ENV_NAME) == NULL)
+        FAIL_UNSUPPORTED("clock_settime is executed only when "\
+                         SETTIME_ENV_NAME" is set\n");
 
-  int ret = clock_settime (clockid, ts);
-  if (ret < 0)
-    FAIL_EXIT1 ("clock_settime (%d): %m", clockid);
+    int ret = clock_settime(clockid, ts);
+    if (ret < 0) {
+        FAIL_EXIT1("clock_settime (%d): %m", clockid);
+    }
 }

@@ -25,7 +25,7 @@
 #  if defined SHARED && IS_IN (libc)
 #   undef libc_hidden_def
 #   if ! defined HAVE_S390_MIN_Z13_ZARCH_ASM_SUPPORT
-#    define libc_hidden_def(name)			\
+#    define libc_hidden_def(name)           \
   __hidden_ver1 (__wcspbrk_c, __GI_wcspbrk, __wcspbrk_c);
 #   else
 #    define libc_hidden_def(name)

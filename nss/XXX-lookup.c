@@ -19,18 +19,18 @@
 #include "nsswitch.h"
 
 /*******************************************************************\
-|* Here we assume one symbol to be defined:			   *|
-|* 								   *|
-|* DATABASE_NAME - name of the database the function accesses	   *|
-|*		   (e.g., hosts, services, ...)			   *|
-|* 								   *|
-|* One additional symbol may optionally be defined:		   *|
-|* 								   *|
+|* Here we assume one symbol to be defined:            *|
+|*                                 *|
+|* DATABASE_NAME - name of the database the function accesses      *|
+|*         (e.g., hosts, services, ...)            *|
+|*                                 *|
+|* One additional symbol may optionally be defined:        *|
+|*                                 *|
 |* ALTERNATE_NAME - name of another service which is examined in   *|
 |*                  case DATABASE_NAME is not found                *|
-|* 								   *|
-|* DEFAULT_CONFIG - string for default conf (e.g. "files dns")	   *|
-|* 								   *|
+|*                                 *|
+|* DEFAULT_CONFIG - string for default conf (e.g. "files dns")     *|
+|*                                 *|
 \*******************************************************************/
 
 #define DB_LOOKUP_FCT CONCAT3_1 (__nss_, DATABASE_NAME, _lookup2)
@@ -46,19 +46,19 @@
 #define STRINGIFY1(Name) STRINGIFY2 (Name)
 #define STRINGIFY2(Name) #Name
 
-int
-DB_LOOKUP_FCT (nss_action_list *ni, const char *fct_name, const char *fct2_name,
-	       void **fctp)
+int DB_LOOKUP_FCT(nss_action_list *ni, const char *fct_name, const char *fct2_name,
+                  void **fctp)
 {
-  if (! __nss_database_get (DATABASE_NAME_ID, &DATABASE_NAME_SYMBOL))
-    return -1;
+    if (! __nss_database_get(DATABASE_NAME_ID, &DATABASE_NAME_SYMBOL)) {
+        return -1;
+    }
 
-  *ni = DATABASE_NAME_SYMBOL;
+    *ni = DATABASE_NAME_SYMBOL;
 
-  /* We want to know about it if we've somehow got a NULL action list;
-   in the past, we had bad state if seccomp interfered with setup. */
-  assert(*ni != NULL);
+    /* We want to know about it if we've somehow got a NULL action list;
+     in the past, we had bad state if seccomp interfered with setup. */
+    assert(*ni != NULL);
 
-  return __nss_lookup (ni, fct_name, fct2_name, fctp);
+    return __nss_lookup(ni, fct_name, fct2_name, fctp);
 }
-libc_hidden_def (DB_LOOKUP_FCT)
+libc_hidden_def(DB_LOOKUP_FCT)

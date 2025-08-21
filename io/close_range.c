@@ -21,24 +21,24 @@
 #include <unistd.h>
 
 /* Close the file descriptors from FIRST up to LAST, inclusive.  */
-int
-__close_range (unsigned int first, unsigned int last,
-	       int flags)
+int __close_range(unsigned int first, unsigned int last,
+                  int flags)
 {
-  if (first > last || flags != 0)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (first > last || flags != 0) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  int maxfd = __getdtablesize ();
-  if (maxfd == -1)
-    return -1;
+    int maxfd = __getdtablesize();
+    if (maxfd == -1) {
+        return -1;
+    }
 
-  for (int i = first; i <= last && i < maxfd; i++)
-    __close_nocancel_nostatus (i);
+    for (int i = first; i <= last && i < maxfd; i++) {
+        __close_nocancel_nostatus(i);
+    }
 
-  return 0;
+    return 0;
 }
-libc_hidden_def (__close_range)
-weak_alias (__close_range, close_range)
+libc_hidden_def(__close_range)
+weak_alias(__close_range, close_range)

@@ -1,8 +1,7 @@
 #include <stdio.h>
 
-int
-baz (int x)
+int baz(int x)
 {
-  puts ("in baz");
-  return x * 4;
+    puts("in baz");
+    return x * 4;
 }

@@ -18,8 +18,7 @@
 
 extern char absolute;
 
-void *
-get_absolute (void)
+void *get_absolute(void)
 {
-  return &absolute;
+    return &absolute;
 }

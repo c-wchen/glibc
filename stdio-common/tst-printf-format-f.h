@@ -18,12 +18,12 @@
 
 #include <stdio.h>
 
-#define printf_under_test(...)						\
-({									\
-  int result;								\
-									\
-  result = fprintf (stdout, __VA_ARGS__);				\
-  if (result < 0)							\
-    perror ("fprintf");							\
-  result;								\
+#define printf_under_test(...)                      \
+({                                  \
+  int result;                               \
+                                    \
+  result = fprintf (stdout, __VA_ARGS__);               \
+  if (result < 0)                           \
+    perror ("fprintf");                         \
+  result;                               \
 })

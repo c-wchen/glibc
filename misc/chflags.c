@@ -21,19 +21,17 @@
 
 /* Change the flags of FILE to FLAGS.  */
 
-int chflags (const char *file, unsigned long int flags) __THROW;
+int chflags(const char *file, unsigned long int flags) __THROW;
 
-int
-chflags (const char *file, unsigned long int flags)
+int chflags(const char *file, unsigned long int flags)
 {
-  if (file == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (file == NULL) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-stub_warning (chflags)
+stub_warning(chflags)

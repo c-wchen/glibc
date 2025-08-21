@@ -28,60 +28,56 @@
 
 struct __printf_buffer;
 
-struct __printf_buffer_as_file
-{
-  /* Interface to libio.  */
-  FILE stream;
-  const struct _IO_jump_t *vtable;
+struct __printf_buffer_as_file {
+    /* Interface to libio.  */
+    FILE stream;
+    const struct _IO_jump_t *vtable;
 
-  /* Pointer to the underlying buffer.  */
-  struct __printf_buffer *next;
+    /* Pointer to the underlying buffer.  */
+    struct __printf_buffer *next;
 };
 
 /* Initialization *FP so that data written to its FILE * stream ends
    up in NEXT.  */
-void __printf_buffer_as_file_init (struct __printf_buffer_as_file *fp,
-                                   struct __printf_buffer *next)
-  attribute_hidden;
+void __printf_buffer_as_file_init(struct __printf_buffer_as_file *fp,
+                                  struct __printf_buffer *next)
+attribute_hidden;
 
 /* Returns the FILE * that can be used to write data to the
    buffer.  */
-static inline FILE *
-__printf_buffer_as_file_get (struct __printf_buffer_as_file *file)
+static inline FILE *__printf_buffer_as_file_get(struct __printf_buffer_as_file *file)
 {
-  return &file->stream;
+    return &file->stream;
 }
 
 /* Transfers all pending data from the FILE * to the underlying
    buffer.  Returns true if there have been no errors.  */
-bool __printf_buffer_as_file_terminate (struct __printf_buffer_as_file *)
-  attribute_hidden;
+bool __printf_buffer_as_file_terminate(struct __printf_buffer_as_file *)
+attribute_hidden;
 
 /* Wide variant follows.  */
 
 struct __wprintf_buffer;
-struct __wprintf_buffer_as_file
-{
-  /* Interface to libio.  */
-  FILE stream;
-  const struct _IO_jump_t *vtable;
-  struct _IO_wide_data wide_stream;
+struct __wprintf_buffer_as_file {
+    /* Interface to libio.  */
+    FILE stream;
+    const struct _IO_jump_t *vtable;
+    struct _IO_wide_data wide_stream;
 
-  /* Pointer to the underlying buffer.  */
-  struct __wprintf_buffer *next;
+    /* Pointer to the underlying buffer.  */
+    struct __wprintf_buffer *next;
 };
 
-void __wprintf_buffer_as_file_init (struct __wprintf_buffer_as_file *fp,
-                                    struct __wprintf_buffer *next)
-  attribute_hidden;
+void __wprintf_buffer_as_file_init(struct __wprintf_buffer_as_file *fp,
+                                   struct __wprintf_buffer *next)
+attribute_hidden;
 
-static inline FILE *
-__wprintf_buffer_as_file_get (struct __wprintf_buffer_as_file *file)
+static inline FILE *__wprintf_buffer_as_file_get(struct __wprintf_buffer_as_file *file)
 {
-  return &file->stream;
+    return &file->stream;
 }
 
-bool __wprintf_buffer_as_file_terminate (struct __wprintf_buffer_as_file *)
-  attribute_hidden;
+bool __wprintf_buffer_as_file_terminate(struct __wprintf_buffer_as_file *)
+attribute_hidden;
 
 #endif /* PRINTF_BUFFER_AS_FILE_H */

@@ -19,47 +19,45 @@
 #ifndef GLOB_INTERNAL_H
 # define GLOB_INTERNAL_H
 
-enum
-{
-  GLOBPAT_NONE      = 0x0,
-  GLOBPAT_SPECIAL   = 0x1,
-  GLOBPAT_BACKSLASH = 0x2,
-  GLOBPAT_BRACKET   = 0x4
+enum {
+    GLOBPAT_NONE      = 0x0,
+    GLOBPAT_SPECIAL   = 0x1,
+    GLOBPAT_BACKSLASH = 0x2,
+    GLOBPAT_BRACKET   = 0x4
 };
 
-static inline int
-__glob_pattern_type (const char *pattern, int quote)
+static inline int __glob_pattern_type(const char *pattern, int quote)
 {
-  const char *p;
-  int ret = GLOBPAT_NONE;
+    const char *p;
+    int ret = GLOBPAT_NONE;
 
-  for (p = pattern; *p != '\0'; ++p)
-    switch (*p)
-      {
-      case '?':
-      case '*':
-        return GLOBPAT_SPECIAL;
+    for (p = pattern; *p != '\0'; ++p)
+        switch (*p) {
+            case '?':
+            case '*':
+                return GLOBPAT_SPECIAL;
 
-      case '\\':
-        if (quote)
-          {
-            if (p[1] != '\0')
-              ++p;
-            ret |= GLOBPAT_BACKSLASH;
-          }
-        break;
+            case '\\':
+                if (quote) {
+                    if (p[1] != '\0') {
+                        ++p;
+                    }
+                    ret |= GLOBPAT_BACKSLASH;
+                }
+                break;
 
-      case '[':
-        ret |= GLOBPAT_BRACKET;
-        break;
+            case '[':
+                ret |= GLOBPAT_BRACKET;
+                break;
 
-      case ']':
-        if (ret & 4)
-          return GLOBPAT_SPECIAL;
-        break;
-      }
+            case ']':
+                if (ret & 4) {
+                    return GLOBPAT_SPECIAL;
+                }
+                break;
+        }
 
-  return ret;
+    return ret;
 }
 
 #endif /* GLOB_INTERNAL_H  */

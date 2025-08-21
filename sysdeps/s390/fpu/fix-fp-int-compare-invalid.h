@@ -18,7 +18,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef FIX_FP_INT_COMPARE_INVALID_H
-#define FIX_FP_INT_COMPARE_INVALID_H	1
+#define FIX_FP_INT_COMPARE_INVALID_H    1
 
 /* GCC uses unordered comparison instructions like cebr (Short BFP COMPARE)
    when it should use ordered comparison instructions like kebr

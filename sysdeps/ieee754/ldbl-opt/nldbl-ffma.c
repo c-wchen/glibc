@@ -21,8 +21,7 @@
 #undef ffmal
 
 float
-attribute_hidden
-ffmal (double x, double y, double z)
+attribute_hidden ffmal(double x, double y, double z)
 {
-  return ffma (x, y, z);
+    return ffma(x, y, z);
 }

@@ -19,14 +19,14 @@
 /* Find the maximum prefix of the string between BEGIN and END which
    satisfies the grouping rules.  It is assumed that at least one digit
    follows BEGIN directly.  */
-extern const wchar_t *__correctly_grouped_prefixwc (const wchar_t *begin,
-						    const wchar_t *end,
-						    wchar_t thousands,
-						    const char *grouping)
-     attribute_hidden;
+extern const wchar_t *__correctly_grouped_prefixwc(const wchar_t *begin,
+        const wchar_t *end,
+        wchar_t thousands,
+        const char *grouping)
+attribute_hidden;
 
-extern const char *__correctly_grouped_prefixmb (const char *begin,
-						 const char *end,
-						 const char *thousands,
-						 const char *grouping)
-     attribute_hidden;
+extern const char *__correctly_grouped_prefixmb(const char *begin,
+        const char *end,
+        const char *thousands,
+        const char *grouping)
+attribute_hidden;

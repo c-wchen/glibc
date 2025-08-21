@@ -30,37 +30,37 @@
    malloc implementation which sets errno to ENOMEM and calls the original
    malloc.  */
 void
-*malloc (size_t size)
+*malloc(size_t size)
 {
-  static void *(*real_malloc) (size_t size);
+    static void *(*real_malloc)(size_t size);
 
-  if (!real_malloc)
-    real_malloc = dlsym (RTLD_NEXT, "malloc");
+    if (!real_malloc) {
+        real_malloc = dlsym(RTLD_NEXT, "malloc");
+    }
 
-  errno = ENOMEM;
+    errno = ENOMEM;
 
-  return (*real_malloc) (size);
+    return (*real_malloc)(size);
 }
 
 /* strerror must not change the value of errno.  Unfortunately due to GCC bug
    #88576, this happens when -fmath-errno is used.  This simple test checks
    that it doesn't happen.  */
-static int
-do_test (void)
+static int do_test(void)
 {
-  char *msg;
+    char *msg;
 
-  errno = 0;
-  msg = strerror (-3);
-  (void) msg;
-  TEST_COMPARE (errno, 0);
+    errno = 0;
+    msg = strerror(-3);
+    (void) msg;
+    TEST_COMPARE(errno, 0);
 
-  locale_t l = xnewlocale (LC_ALL_MASK, "C", NULL);
-  msg = strerror_l (-3, l);
-  (void) msg;
-  TEST_COMPARE (errno, 0);
+    locale_t l = xnewlocale(LC_ALL_MASK, "C", NULL);
+    msg = strerror_l(-3, l);
+    (void) msg;
+    TEST_COMPARE(errno, 0);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

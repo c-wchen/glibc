@@ -22,9 +22,8 @@
 #include <libm-alias-double.h>
 #include <round_to_integer.h>
 
-double
-__nearbyint (double x)
+double __nearbyint(double x)
 {
-  return round_to_integer_double (NEARBYINT, x);
+    return round_to_integer_double(NEARBYINT, x);
 }
-libm_alias_double (__nearbyint, nearbyint)
+libm_alias_double(__nearbyint, nearbyint)

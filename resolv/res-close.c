@@ -90,53 +90,51 @@
 
 /* Close all open sockets.  If FREE_ADDR is true, deallocate any
    separately allocated name server addresses.  */
-void
-__res_iclose (res_state statp, bool free_addr)
+void __res_iclose(res_state statp, bool free_addr)
 {
-  if (statp->_vcsock >= 0)
-    {
-      __close_nocancel_nostatus (statp->_vcsock);
-      statp->_vcsock = -1;
-      statp->_flags &= ~(RES_F_VC | RES_F_CONN);
+    if (statp->_vcsock >= 0) {
+        __close_nocancel_nostatus(statp->_vcsock);
+        statp->_vcsock = -1;
+        statp->_flags &= ~(RES_F_VC | RES_F_CONN);
     }
-  for (int ns = 0; ns < statp->nscount; ns++)
-    if (statp->_u._ext.nsaddrs[ns] != NULL)
-      {
-        if (statp->_u._ext.nssocks[ns] != -1)
-          {
-            __close_nocancel_nostatus (statp->_u._ext.nssocks[ns]);
-            statp->_u._ext.nssocks[ns] = -1;
-          }
-        if (free_addr)
-          {
-            free (statp->_u._ext.nsaddrs[ns]);
-            statp->_u._ext.nsaddrs[ns] = NULL;
-          }
-      }
-  if (free_addr)
-    __resolv_conf_detach (statp);
+    for (int ns = 0; ns < statp->nscount; ns++)
+        if (statp->_u._ext.nsaddrs[ns] != NULL) {
+            if (statp->_u._ext.nssocks[ns] != -1) {
+                __close_nocancel_nostatus(statp->_u._ext.nssocks[ns]);
+                statp->_u._ext.nssocks[ns] = -1;
+            }
+            if (free_addr) {
+                free(statp->_u._ext.nsaddrs[ns]);
+                statp->_u._ext.nsaddrs[ns] = NULL;
+            }
+        }
+    if (free_addr) {
+        __resolv_conf_detach(statp);
+    }
 }
-libc_hidden_def (__res_iclose)
+libc_hidden_def(__res_iclose)
 
 void
-res_nclose (res_state statp)
+res_nclose(res_state statp)
 {
-  __res_iclose (statp, true);
+    __res_iclose(statp, true);
 }
-libc_hidden_def (__res_nclose)
+libc_hidden_def(__res_nclose)
 
 /* This is called when a thread is exiting to free resources held in _res.  */
 void
-__res_thread_freeres (void)
+__res_thread_freeres(void)
 {
-  __resolv_context_freeres ();
+    __resolv_context_freeres();
 
-  if (_res.nscount == 0)
-    /* Never called res_ninit.  */
-    return;
+    if (_res.nscount == 0)
+        /* Never called res_ninit.  */
+    {
+        return;
+    }
 
-  __res_iclose (&_res, true);           /* Close any VC sockets.  */
+    __res_iclose(&_res, true);            /* Close any VC sockets.  */
 
-  /* Make sure we do a full re-initialization the next time.  */
-  _res.options = 0;
+    /* Make sure we do a full re-initialization the next time.  */
+    _res.options = 0;
 }

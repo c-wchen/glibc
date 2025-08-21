@@ -20,11 +20,10 @@
 
 /* Change the set of blocked signals to SET,
    wait until a signal arrives, and restore the set of blocked signals.  */
-int
-__sigsuspend (const sigset_t *set)
+int __sigsuspend(const sigset_t *set)
 {
-  return SYSCALL_CANCEL (rt_sigsuspend, set, __NSIG_BYTES);
+    return SYSCALL_CANCEL(rt_sigsuspend, set, __NSIG_BYTES);
 }
-libc_hidden_def (__sigsuspend)
-weak_alias (__sigsuspend, sigsuspend)
-strong_alias (__sigsuspend, __libc_sigsuspend)
+libc_hidden_def(__sigsuspend)
+weak_alias(__sigsuspend, sigsuspend)
+strong_alias(__sigsuspend, __libc_sigsuspend)

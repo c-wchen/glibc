@@ -26,55 +26,53 @@
 #include <support/support.h>
 #include <stdbool.h>
 
-static int
-test_sigtimedwait_timeout (bool zero_tmo)
+static int test_sigtimedwait_timeout(bool zero_tmo)
 {
-  /* We wait for half a second.  */
-  struct timespec ts;
-  xclock_gettime (CLOCK_REALTIME, &ts);
-  struct timespec timeout = make_timespec (0, zero_tmo ? 0 : TIMESPEC_HZ/2);
-  ts = timespec_add (ts, timeout);
+    /* We wait for half a second.  */
+    struct timespec ts;
+    xclock_gettime(CLOCK_REALTIME, &ts);
+    struct timespec timeout = make_timespec(0, zero_tmo ? 0 : TIMESPEC_HZ / 2);
+    ts = timespec_add(ts, timeout);
 
-  /* Set sigset to just wait for timeout.  */
-  sigset_t ss_usr1;
-  sigemptyset (&ss_usr1);
-  sigaddset (&ss_usr1, SIGUSR1);
+    /* Set sigset to just wait for timeout.  */
+    sigset_t ss_usr1;
+    sigemptyset(&ss_usr1);
+    sigaddset(&ss_usr1, SIGUSR1);
 
-  int ret = sigtimedwait (&ss_usr1, NULL, &timeout);
-  if (ret != -1)
-    FAIL_EXIT1 ("sigtimedwait failed: %m\n");
+    int ret = sigtimedwait(&ss_usr1, NULL, &timeout);
+    if (ret != -1) {
+        FAIL_EXIT1("sigtimedwait failed: %m\n");
+    }
 
-  TEST_TIMESPEC_NOW_OR_AFTER (CLOCK_REALTIME, ts);
+    TEST_TIMESPEC_NOW_OR_AFTER(CLOCK_REALTIME, ts);
 
-  return 0;
+    return 0;
 }
 
-static void
-test_sigtimedwait_large_timeout (void)
+static void test_sigtimedwait_large_timeout(void)
 {
-  support_create_timer (0, 100000000, false, NULL);
-  struct timespec ts = { TYPE_MAXIMUM (time_t), 0 };
+    support_create_timer(0, 100000000, false, NULL);
+    struct timespec ts = { TYPE_MAXIMUM(time_t), 0 };
 
-  sigset_t ss_usr1;
-  sigemptyset (&ss_usr1);
-  sigaddset (&ss_usr1, SIGUSR1);
+    sigset_t ss_usr1;
+    sigemptyset(&ss_usr1);
+    sigaddset(&ss_usr1, SIGUSR1);
 
-  TEST_COMPARE (sigtimedwait (&ss_usr1, NULL, &ts), -1);
-  TEST_VERIFY (errno == EINTR || errno == EOVERFLOW);
+    TEST_COMPARE(sigtimedwait(&ss_usr1, NULL, &ts), -1);
+    TEST_VERIFY(errno == EINTR || errno == EOVERFLOW);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* Check if sigtimedwait exits immediately.  */
-  test_sigtimedwait_timeout (true);
+    /* Check if sigtimedwait exits immediately.  */
+    test_sigtimedwait_timeout(true);
 
-  /* Check if sigtimedwait exits after specified timeout.  */
-  test_sigtimedwait_timeout (false);
+    /* Check if sigtimedwait exits after specified timeout.  */
+    test_sigtimedwait_timeout(false);
 
-  test_sigtimedwait_large_timeout ();
+    test_sigtimedwait_large_timeout();
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -21,7 +21,7 @@
 /* Specify the conversion table.  */
 #define TABLES <ibm874.h>
 
-#define CHARSET_NAME	"IBM874//"
-#define HAS_HOLES	1	/* Not all 256 character are defined.  */
+#define CHARSET_NAME    "IBM874//"
+#define HAS_HOLES   1   /* Not all 256 character are defined.  */
 
 #include <8bit-gap.c>

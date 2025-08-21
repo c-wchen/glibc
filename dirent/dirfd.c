@@ -20,13 +20,12 @@
 #include <dirstream.h>
 #include <errno.h>
 
-int
-__dirfd (DIR *dirp)
+int __dirfd(DIR *dirp)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
-weak_alias (__dirfd, dirfd)
-stub_warning (dirfd)
-libc_hidden_def (dirfd)
+weak_alias(__dirfd, dirfd)
+stub_warning(dirfd)
+libc_hidden_def(dirfd)

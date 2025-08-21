@@ -23,8 +23,8 @@
 #undef libc_hidden_def
 #define libc_hidden_def(name)
 
-extern typeof (strcpy) __strcpy_power9;
-extern typeof (strlen) __strlen_power10;
+extern typeof(strcpy) __strcpy_power9;
+extern typeof(strlen) __strlen_power10;
 
 #define strcpy __strcpy_power9
 #define strlen __strlen_power10

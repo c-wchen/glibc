@@ -28,66 +28,59 @@
 #include <math-use-builtins.h>
 
 
-long long int
-__llrintf (float x)
+long long int __llrintf(float x)
 {
 #if USE_LLRINTF_BUILTIN
-  return __builtin_llrintf (x);
+    return __builtin_llrintf(x);
 #else
-  /* Use generic implementation.  */
-  static const float two23[2] =
-  {
-    8.3886080000e+06, /* 0x4B000000 */
-   -8.3886080000e+06, /* 0xCB000000 */
-  };
+    /* Use generic implementation.  */
+    static const float two23[2] = {
+        8.3886080000e+06, /* 0x4B000000 */
+        -8.3886080000e+06, /* 0xCB000000 */
+    };
 
-  int32_t j0;
-  uint32_t i0;
-  float w;
-  float t;
-  long long int result;
-  int sx;
+    int32_t j0;
+    uint32_t i0;
+    float w;
+    float t;
+    long long int result;
+    int sx;
 
-  GET_FLOAT_WORD (i0, x);
+    GET_FLOAT_WORD(i0, x);
 
-  sx = i0 >> 31;
-  j0 = ((i0 >> 23) & 0xff) - 0x7f;
-  i0 &= 0x7fffff;
-  i0 |= 0x800000;
+    sx = i0 >> 31;
+    j0 = ((i0 >> 23) & 0xff) - 0x7f;
+    i0 &= 0x7fffff;
+    i0 |= 0x800000;
 
-  if (j0 < (int32_t) (sizeof (long long int) * 8) - 1)
-    {
-      if (j0 >= 23)
-	result = (long long int) i0 << (j0 - 23);
-      else
-	{
-	  w = math_narrow_eval (two23[sx] + x);
-	  t = w - two23[sx];
-	  GET_FLOAT_WORD (i0, t);
-	  j0 = ((i0 >> 23) & 0xff) - 0x7f;
-	  i0 &= 0x7fffff;
-	  i0 |= 0x800000;
+    if (j0 < (int32_t)(sizeof(long long int) * 8) - 1) {
+        if (j0 >= 23) {
+            result = (long long int) i0 << (j0 - 23);
+        } else {
+            w = math_narrow_eval(two23[sx] + x);
+            t = w - two23[sx];
+            GET_FLOAT_WORD(i0, t);
+            j0 = ((i0 >> 23) & 0xff) - 0x7f;
+            i0 &= 0x7fffff;
+            i0 |= 0x800000;
 
-	  result = (j0 < 0 ? 0 : i0 >> (23 - j0));
-	}
-    }
-  else
-    {
+            result = (j0 < 0 ? 0 : i0 >> (23 - j0));
+        }
+    } else {
 #ifdef FE_INVALID
-      /* The number is too large.  Unless it rounds to LLONG_MIN,
-	 FE_INVALID must be raised and the return value is
-	 unspecified.  */
-      if (FIX_FLT_LLONG_CONVERT_OVERFLOW && x != (float) LLONG_MIN)
-	{
-	  feraiseexcept (FE_INVALID);
-	  return sx == 0 ? LLONG_MAX : LLONG_MIN;
-	}
+        /* The number is too large.  Unless it rounds to LLONG_MIN,
+        FE_INVALID must be raised and the return value is
+         unspecified.  */
+        if (FIX_FLT_LLONG_CONVERT_OVERFLOW && x != (float) LLONG_MIN) {
+            feraiseexcept(FE_INVALID);
+            return sx == 0 ? LLONG_MAX : LLONG_MIN;
+        }
 #endif
-      return (long long int) x;
+        return (long long int) x;
     }
 
-  return sx ? -result : result;
+    return sx ? -result : result;
 #endif /* ! USE_LLRINTF_BUILTIN  */
 }
 
-libm_alias_float (__llrint, llrint)
+libm_alias_float(__llrint, llrint)

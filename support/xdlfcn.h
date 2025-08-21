@@ -24,11 +24,11 @@
 __BEGIN_DECLS
 
 /* Each of these terminates process on failure with relevant error message.  */
-void *xdlopen (const char *filename, int flags);
-void *xdlmopen (Lmid_t lmid, const char *filename, int flags);
-void *xdlsym (void *handle, const char *symbol);
-void *xdlvsym (void *handle, const char *symbol, const char *version);
-void xdlclose (void *handle);
+void *xdlopen(const char *filename, int flags);
+void *xdlmopen(Lmid_t lmid, const char *filename, int flags);
+void *xdlsym(void *handle, const char *symbol);
+void *xdlvsym(void *handle, const char *symbol, const char *version);
+void xdlclose(void *handle);
 
 __END_DECLS
 

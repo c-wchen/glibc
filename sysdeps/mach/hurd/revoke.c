@@ -20,21 +20,22 @@
 #include <errno.h>
 #include <hurd.h>
 
-int
-__revoke (const char *file_name)
+int __revoke(const char *file_name)
 {
-  error_t err;
-  file_t file = __file_name_lookup (file_name, 0, 0);
+    error_t err;
+    file_t file = __file_name_lookup(file_name, 0, 0);
 
-  if (file == MACH_PORT_NULL)
-    return -1;
+    if (file == MACH_PORT_NULL) {
+        return -1;
+    }
 
-  err = __io_revoke (file);
-  __mach_port_deallocate (__mach_task_self (), file);
+    err = __io_revoke(file);
+    __mach_port_deallocate(__mach_task_self(), file);
 
-  if (err)
-    return __hurd_fail (err);
-  return 0;
+    if (err) {
+        return __hurd_fail(err);
+    }
+    return 0;
 }
 
-weak_alias (__revoke, revoke)
+weak_alias(__revoke, revoke)

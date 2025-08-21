@@ -23,10 +23,9 @@
    the FE0/FE1 bits in the MSR.  MSR update is privileged, so this will
    normally involve a syscall.  */
 
-const fenv_t *
-__fe_nomask_env_priv (void)
+const fenv_t *__fe_nomask_env_priv(void)
 {
-  __set_errno (ENOSYS);
-  return FE_ENABLED_ENV;
+    __set_errno(ENOSYS);
+    return FE_ENABLED_ENV;
 }
-stub_warning (__fe_nomask_env_priv)
+stub_warning(__fe_nomask_env_priv)

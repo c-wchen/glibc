@@ -18,8 +18,7 @@
 
 #include <support/xthread.h>
 
-void
-xpthread_detach (pthread_t thr)
+void xpthread_detach(pthread_t thr)
 {
-  xpthread_check_return ("pthread_detach", pthread_detach (thr));
+    xpthread_check_return("pthread_detach", pthread_detach(thr));
 }

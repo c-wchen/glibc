@@ -22,78 +22,74 @@
 #include <errno.h>
 #include <string.h>
 
-int
-__nss_readline (FILE *fp, char *buf, size_t len, off64_t *poffset)
+int __nss_readline(FILE *fp, char *buf, size_t len, off64_t *poffset)
 {
-  /* We need space for at least one character, the line terminator,
-     and the NUL byte.  */
-  if (len < 3)
-    {
-      *poffset = -1;
-      __set_errno (ERANGE);
-      return ERANGE;
+    /* We need space for at least one character, the line terminator,
+       and the NUL byte.  */
+    if (len < 3) {
+        *poffset = -1;
+        __set_errno(ERANGE);
+        return ERANGE;
     }
 
-  while (true)
-    {
-      /* Keep original offset for retries.  */
-      *poffset = __ftello64 (fp);
+    while (true) {
+        /* Keep original offset for retries.  */
+        *poffset = __ftello64(fp);
 
-      buf[len - 1] = '\xff';        /* Marker to recognize truncation.  */
-      if (__fgets_unlocked (buf, len, fp) == NULL)
+        buf[len - 1] = '\xff';        /* Marker to recognize truncation.  */
+        if (__fgets_unlocked(buf, len, fp) == NULL) {
+            if (__feof_unlocked(fp)) {
+                __set_errno(ENOENT);
+                return ENOENT;
+            } else {
+                /* Any other error.  Do not return ERANGE in this case
+                   because the caller would retry.  */
+                if (errno == ERANGE) {
+                    __set_errno(EINVAL);
+                }
+                return errno;
+            }
+        } else if (buf[len - 1] != '\xff')
+            /* The buffer is too small.  Arrange for re-reading the same
+               line on the next call.  */
         {
-          if (__feof_unlocked (fp))
-            {
-              __set_errno (ENOENT);
-              return ENOENT;
-            }
-          else
-            {
-              /* Any other error.  Do not return ERANGE in this case
-                 because the caller would retry.  */
-              if (errno == ERANGE)
-                __set_errno (EINVAL);
-              return errno;
-            }
+            return __nss_readline_seek(fp, *poffset);
         }
-      else if (buf[len - 1] != '\xff')
-        /* The buffer is too small.  Arrange for re-reading the same
-           line on the next call.  */
-        return __nss_readline_seek (fp, *poffset);
 
-      /* __fgets_unlocked succeeded.  */
+        /* __fgets_unlocked succeeded.  */
 
-      /* Remove leading whitespace.  */
-      char *p = buf;
-      while (isspace (*p))
-        ++p;
-      if (*p == '\0' || *p == '#')
-        /* Skip empty lines and comments.  */
-        continue;
-      if (p != buf)
-        memmove (buf, p, strlen (p));
+        /* Remove leading whitespace.  */
+        char *p = buf;
+        while (isspace(*p)) {
+            ++p;
+        }
+        if (*p == '\0' || *p == '#')
+            /* Skip empty lines and comments.  */
+        {
+            continue;
+        }
+        if (p != buf) {
+            memmove(buf, p, strlen(p));
+        }
 
-      /* Return line to the caller.  */
-      return 0;
+        /* Return line to the caller.  */
+        return 0;
     }
 }
-libc_hidden_def (__nss_readline)
+libc_hidden_def(__nss_readline)
 
 int
-__nss_readline_seek (FILE *fp, off64_t offset)
+__nss_readline_seek(FILE *fp, off64_t offset)
 {
-  if (offset < 0 /* __ftello64 failed.  */
-      || __fseeko64 (fp, offset, SEEK_SET) < 0)
-    {
-      /* Without seeking support, it is not possible to
-         re-read the same line, so this is a hard failure.  */
-      fseterr_unlocked (fp);
-      __set_errno (ESPIPE);
-      return ESPIPE;
-    }
-  else
-    {
-      __set_errno (ERANGE);
-      return ERANGE;
+    if (offset < 0 /* __ftello64 failed.  */
+        || __fseeko64(fp, offset, SEEK_SET) < 0) {
+        /* Without seeking support, it is not possible to
+           re-read the same line, so this is a hard failure.  */
+        fseterr_unlocked(fp);
+        __set_errno(ESPIPE);
+        return ESPIPE;
+    } else {
+        __set_errno(ERANGE);
+        return ERANGE;
     }
 }

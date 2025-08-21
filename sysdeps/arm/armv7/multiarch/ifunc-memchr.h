@@ -16,13 +16,13 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-__typeof (REDIRECT_NAME) OPTIMIZE (neon) attribute_hidden;
-__typeof (REDIRECT_NAME) OPTIMIZE (noneon) attribute_hidden;
+__typeof(REDIRECT_NAME) OPTIMIZE(neon) attribute_hidden;
+__typeof(REDIRECT_NAME) OPTIMIZE(noneon) attribute_hidden;
 
-static inline void *
-IFUNC_SELECTOR (int hwcap)
+static inline void *IFUNC_SELECTOR(int hwcap)
 {
-  if (hwcap & HWCAP_ARM_NEON)
-    return OPTIMIZE (neon);
-  return OPTIMIZE (noneon);
+    if (hwcap & HWCAP_ARM_NEON) {
+        return OPTIMIZE(neon);
+    }
+    return OPTIMIZE(noneon);
 }

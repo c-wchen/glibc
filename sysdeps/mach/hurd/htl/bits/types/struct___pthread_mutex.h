@@ -17,24 +17,22 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _BITS_TYPES_STRUCT___PTHREAD_MUTEX_H
-#define _BITS_TYPES_STRUCT___PTHREAD_MUTEX_H	1
+#define _BITS_TYPES_STRUCT___PTHREAD_MUTEX_H    1
 
 #include <bits/types/struct___pthread_mutexattr.h>
 
 /* User visible part of a mutex.  */
-struct __pthread_mutex
-{
-  unsigned int __lock;
-  unsigned int __owner_id;
-  unsigned int __cnt;
-  int __shpid;
-  int __type;
-  int __flags;
-  union
-  {
-    unsigned int __reserved[2];
-    void *__pointer_aligned;
-  };
+struct __pthread_mutex {
+    unsigned int __lock;
+    unsigned int __owner_id;
+    unsigned int __cnt;
+    int __shpid;
+    int __type;
+    int __flags;
+    union {
+        unsigned int __reserved[2];
+        void *__pointer_aligned;
+    };
 };
 
 /* Static mutex initializers. */

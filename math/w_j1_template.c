@@ -27,26 +27,28 @@
 # include <math_private.h>
 
 FLOAT
-M_DECL_FUNC (__j1) (FLOAT x)
+M_DECL_FUNC(__j1)(FLOAT x)
 {
-  return M_SUF (__ieee754_j1) (x);
+    return M_SUF(__ieee754_j1)(x);
 }
-declare_mgen_alias (__j1, j1)
+declare_mgen_alias(__j1, j1)
 
 FLOAT
-M_DECL_FUNC (__y1) (FLOAT x)
+M_DECL_FUNC(__y1)(FLOAT x)
 {
-  if (__glibc_unlikely (islessequal (x, M_LIT (0.0))))
-    {
-      if (x < 0)
-	/* Domain error: y1(x<0).  */
-	__set_errno (EDOM);
-      else if (x == 0)
-	/* Pole error: y1(0).  */
-	__set_errno (ERANGE);
+    if (__glibc_unlikely(islessequal(x, M_LIT(0.0)))) {
+        if (x < 0)
+            /* Domain error: y1(x<0).  */
+        {
+            __set_errno(EDOM);
+        } else if (x == 0)
+            /* Pole error: y1(0).  */
+        {
+            __set_errno(ERANGE);
+        }
     }
-  return M_SUF (__ieee754_y1) (x);
+    return M_SUF(__ieee754_y1)(x);
 }
-declare_mgen_alias (__y1, y1)
+declare_mgen_alias(__y1, y1)
 
 #endif /* __USE_WRAPPER_TEMPLATE.  */

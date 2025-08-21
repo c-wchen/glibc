@@ -46,66 +46,66 @@ static double zero = 0.0;
    comments in k_standard.c for details), with arguments X and Y,
    returning the appropriate return value for that function.  */
 
-long double
-__kernel_standard_l (long double x, long double y, int type)
+long double __kernel_standard_l(long double x, long double y, int type)
 {
-  double dx, dy;
-  struct exception exc;
-  fenv_t env;
+    double dx, dy;
+    struct exception exc;
+    fenv_t env;
 
-  feholdexcept (&env);
-  dx = x;
-  dy = y;
-  math_force_eval (dx);
-  math_force_eval (dy);
-  fesetenv (&env);
+    feholdexcept(&env);
+    dx = x;
+    dy = y;
+    math_force_eval(dx);
+    math_force_eval(dy);
+    fesetenv(&env);
 
-  switch (type)
-    {
-    case 221:
-      /* powl (x, y) overflow.  */
-      exc.arg1 = dx;
-      exc.arg2 = dy;
-      exc.type = OVERFLOW;
-      exc.name = (char *) "powl";
-      if (_LIB_VERSION == _SVID_)
-	{
-	  exc.retval = HUGE;
-	  y *= 0.5;
-	  if (x < zero && rintl (y) != y)
-	    exc.retval = -HUGE;
-	}
-      else
-	{
-	  exc.retval = HUGE_VAL;
-	  y *= 0.5;
-	  if (x < zero && rintl (y) != y)
-	    exc.retval = -HUGE_VAL;
-	}
-      if (_LIB_VERSION == _POSIX_)
-	__set_errno (ERANGE);
-      else if (!matherr (&exc))
-	__set_errno (ERANGE);
-      return exc.retval;
+    switch (type) {
+        case 221:
+            /* powl (x, y) overflow.  */
+            exc.arg1 = dx;
+            exc.arg2 = dy;
+            exc.type = OVERFLOW;
+            exc.name = (char *) "powl";
+            if (_LIB_VERSION == _SVID_) {
+                exc.retval = HUGE;
+                y *= 0.5;
+                if (x < zero && rintl(y) != y) {
+                    exc.retval = -HUGE;
+                }
+            } else {
+                exc.retval = HUGE_VAL;
+                y *= 0.5;
+                if (x < zero && rintl(y) != y) {
+                    exc.retval = -HUGE_VAL;
+                }
+            }
+            if (_LIB_VERSION == _POSIX_) {
+                __set_errno(ERANGE);
+            } else if (!matherr(&exc)) {
+                __set_errno(ERANGE);
+            }
+            return exc.retval;
 
-    case 222:
-      /* powl (x, y) underflow.  */
-      exc.arg1 = dx;
-      exc.arg2 = dy;
-      exc.type = UNDERFLOW;
-      exc.name = (char *) "powl";
-      exc.retval = zero;
-      y *= 0.5;
-      if (x < zero && rintl (y) != y)
-	exc.retval = -zero;
-      if (_LIB_VERSION == _POSIX_)
-	__set_errno (ERANGE);
-      else if (!matherr (&exc))
-	__set_errno (ERANGE);
-      return exc.retval;
+        case 222:
+            /* powl (x, y) underflow.  */
+            exc.arg1 = dx;
+            exc.arg2 = dy;
+            exc.type = UNDERFLOW;
+            exc.name = (char *) "powl";
+            exc.retval = zero;
+            y *= 0.5;
+            if (x < zero && rintl(y) != y) {
+                exc.retval = -zero;
+            }
+            if (_LIB_VERSION == _POSIX_) {
+                __set_errno(ERANGE);
+            } else if (!matherr(&exc)) {
+                __set_errno(ERANGE);
+            }
+            return exc.retval;
 
-    default:
-      return __kernel_standard (dx, dy, type);
+        default:
+            return __kernel_standard(dx, dy, type);
     }
 }
 #endif

@@ -18,10 +18,9 @@
 
 #include <stddef.h>
 
-struct int_array
-{
-  int *array;
-  size_t length;
+struct int_array {
+    int *array;
+    size_t length;
 };
 
 #define DYNARRAY_STRUCT dynarray_int
@@ -30,10 +29,9 @@ struct int_array
 #define DYNARRAY_FINAL_TYPE struct int_array
 #include <malloc/dynarray-skeleton.c>
 
-struct str_array
-{
-  char **array;
-  size_t length;
+struct str_array {
+    char **array;
+    size_t length;
 };
 
 #define DYNARRAY_STRUCT dynarray_str

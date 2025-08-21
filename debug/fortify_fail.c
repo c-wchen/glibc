@@ -17,10 +17,9 @@
 
 #include <stdio.h>
 
-void
-__attribute__ ((noreturn))
-__fortify_fail (const char *msg)
+void __attribute__((noreturn))
+__fortify_fail(const char *msg)
 {
-  __libc_message ("*** %s ***: terminated\n", msg);
+    __libc_message("*** %s ***: terminated\n", msg);
 }
-libc_hidden_def (__fortify_fail)
+libc_hidden_def(__fortify_fail)

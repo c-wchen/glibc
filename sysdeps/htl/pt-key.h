@@ -25,9 +25,9 @@
 #define PTHREAD_STATIC_KEYS 4
 
 #define PTHREAD_KEY_MEMBERS \
-  void **thread_specifics;		/* This is only resized by the thread, and always growing */ \
-  unsigned thread_specifics_size;	/* Number of entries in thread_specifics */ \
-  void *static_thread_specifics[PTHREAD_STATIC_KEYS];	/* Static storage for a few entries */
+  void **thread_specifics;      /* This is only resized by the thread, and always growing */ \
+  unsigned thread_specifics_size;   /* Number of entries in thread_specifics */ \
+  void *static_thread_specifics[PTHREAD_STATIC_KEYS];   /* Static storage for a few entries */
 
 #define PTHREAD_KEY_INVALID (void *) (-1)
 
@@ -40,7 +40,7 @@
    Normally, we just add new keys to the end of the array and realloc
    it as necessary.  The pthread_key_create routine may decide to
    rescan the array if __PTHREAD_KEY_FREE is large.  */
-extern void (**__pthread_key_destructors) (void *arg);
+extern void (**__pthread_key_destructors)(void *arg);
 extern int __pthread_key_size;
 extern int __pthread_key_count;
 /* Number of invalid elements in the array.  Does not include elements
@@ -58,26 +58,24 @@ extern pthread_once_t __pthread_key_once;
 
 #include <assert.h>
 
-static inline void
-__pthread_key_lock_ready (void)
+static inline void __pthread_key_lock_ready(void)
 {
-  void do_init (void)
-  {
-    int err;
-    pthread_mutexattr_t attr;
+    void do_init(void) {
+        int err;
+        pthread_mutexattr_t attr;
 
-    err = __pthread_mutexattr_init (&attr);
-    assert_perror (err);
+        err = __pthread_mutexattr_init(&attr);
+        assert_perror(err);
 
-    err = __pthread_mutexattr_settype (&attr, PTHREAD_MUTEX_RECURSIVE);
-    assert_perror (err);
+        err = __pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
+        assert_perror(err);
 
-    err = __pthread_mutex_init (&__pthread_key_lock, &attr);
-    assert_perror (err);
+        err = __pthread_mutex_init(&__pthread_key_lock, &attr);
+        assert_perror(err);
 
-    err = __pthread_mutexattr_destroy (&attr);
-    assert_perror (err);
-  }
+        err = __pthread_mutexattr_destroy(&attr);
+        assert_perror(err);
+    }
 
-  __pthread_once (&__pthread_key_once, do_init);
+    __pthread_once(&__pthread_key_once, do_init);
 }

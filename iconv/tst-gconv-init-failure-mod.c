@@ -21,29 +21,26 @@
 #include <support/check.h>
 #include <support/support.h>
 
-int
-gconv (struct __gconv_step *step,
-       struct __gconv_step_data *data,
-       const unsigned char **inptrp,
-       const unsigned char *inend,
-       unsigned char **outbufstart, size_t *irreversible,
-       int do_flush, int consume_incomplete)
+int gconv(struct __gconv_step *step,
+          struct __gconv_step_data *data,
+          const unsigned char **inptrp,
+          const unsigned char *inend,
+          unsigned char **outbufstart, size_t *irreversible,
+          int do_flush, int consume_incomplete)
 {
-  FAIL_EXIT1 ("gconv called");
-  return __GCONV_INTERNAL_ERROR;
+    FAIL_EXIT1("gconv called");
+    return __GCONV_INTERNAL_ERROR;
 }
 
-int
-gconv_init (struct __gconv_step *ignored)
+int gconv_init(struct __gconv_step *ignored)
 {
-  write_message ("info: gconv_init called, returning error\n");
-  errno = ENOMEM;
-  return __GCONV_NOMEM;
+    write_message("info: gconv_init called, returning error\n");
+    errno = ENOMEM;
+    return __GCONV_NOMEM;
 }
 
-int
-gconv_end (struct __gconv_step *ignored)
+int gconv_end(struct __gconv_step *ignored)
 {
-  FAIL_EXIT1 ("gconv_end called");
-  return __GCONV_INTERNAL_ERROR;
+    FAIL_EXIT1("gconv_end called");
+    return __GCONV_INTERNAL_ERROR;
 }

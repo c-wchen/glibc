@@ -21,21 +21,19 @@
 int global;
 int *ip;
 
-extern void dummy (void);
-extern void foo (void *p);
+extern void dummy(void);
+extern void foo(void *p);
 
-void
-dummy (void)
+void dummy(void)
 {
-  printf ("This is %s\n", __FUNCTION__);
-  *ip = global = 1;
+    printf("This is %s\n", __FUNCTION__);
+    *ip = global = 1;
 }
 
 
-void
-foo (void *p)
+void foo(void *p)
 {
-  printf ("This is %s\n", __FUNCTION__);
-  atexit (dummy);
-  ip = p;
+    printf("This is %s\n", __FUNCTION__);
+    atexit(dummy);
+    ip = p;
 }

@@ -36,60 +36,56 @@
 
 struct support_chroot *chroot_env;
 
-static void
-prepare (int argc, char **argv)
+static void prepare(int argc, char **argv)
 {
-  int ret;
-  char *content;
-  char *entry = malloc (STRING_SIZE);
-  struct rlimit lim;
-  getrlimit (RLIMIT_STACK, &lim);
-  lim.rlim_cur = STACK_LIM;
-  setrlimit (RLIMIT_STACK, &lim);
-  if (entry == NULL)
-    {
-      puts ("malloc failed, cannot test");
-      exit (1);
+    int ret;
+    char *content;
+    char *entry = malloc(STRING_SIZE);
+    struct rlimit lim;
+    getrlimit(RLIMIT_STACK, &lim);
+    lim.rlim_cur = STACK_LIM;
+    setrlimit(RLIMIT_STACK, &lim);
+    if (entry == NULL) {
+        puts("malloc failed, cannot test");
+        exit(1);
     }
-  memset (entry, 'A', STRING_SIZE);
-  entry[STRING_SIZE - 1] = 0;
-  ret = asprintf (&content, "%s\n%s\nnet3 %s\n",
-    "net1 x0000000000Ff.077", /* legal 255.63.0.0 */
-    "net2 xFF00000000.0.0.0", /* illegal */
-    entry /* illegal */);
-  if (ret == -1)
-    {
-      puts ("asprintf failed, cannot test");
-      exit (1);
+    memset(entry, 'A', STRING_SIZE);
+    entry[STRING_SIZE - 1] = 0;
+    ret = asprintf(&content, "%s\n%s\nnet3 %s\n",
+                   "net1 x0000000000Ff.077", /* legal 255.63.0.0 */
+                   "net2 xFF00000000.0.0.0", /* illegal */
+                   entry /* illegal */);
+    if (ret == -1) {
+        puts("asprintf failed, cannot test");
+        exit(1);
     }
-  free (entry);
-  chroot_env = support_chroot_create
-    ((struct support_chroot_configuration)
-     {
-       .networks = content
-     });
+    free(entry);
+    chroot_env = support_chroot_create
+    ((struct support_chroot_configuration) {
+        .networks = content
+    });
 
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  support_become_root ();
-  if (!support_can_chroot ())
-    return EXIT_UNSUPPORTED;
+    support_become_root();
+    if (!support_can_chroot()) {
+        return EXIT_UNSUPPORTED;
+    }
 
-  __nss_configure_lookup ("networks", "files");
-  xdlopen (LIBNSS_FILES_SO, RTLD_NOW);
+    __nss_configure_lookup("networks", "files");
+    xdlopen(LIBNSS_FILES_SO, RTLD_NOW);
 
-  xchroot (chroot_env->path_chroot);
+    xchroot(chroot_env->path_chroot);
 
-  check_netent ("net1", getnetbyname ("net1"),
-    "name: net1\n"
-    "net: 0xff3f0000\n");
-  check_netent ("net2", getnetbyname ("net2"), "error: HOST_NOT_FOUND\n");
+    check_netent("net1", getnetbyname("net1"),
+                 "name: net1\n"
+                 "net: 0xff3f0000\n");
+    check_netent("net2", getnetbyname("net2"), "error: HOST_NOT_FOUND\n");
 
-  support_chroot_free (chroot_env);
-  return 0;
+    support_chroot_free(chroot_env);
+    return 0;
 }
 
 #define PREPARE prepare

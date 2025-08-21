@@ -20,15 +20,14 @@
 #include <sysdep.h>
 
 /* Change the protections of FILE to MODE.  */
-int
-__chmod (const char *file, mode_t mode)
+int __chmod(const char *file, mode_t mode)
 {
 #ifdef __NR_chmod
-  return INLINE_SYSCALL_CALL (chmod, file, mode);
+    return INLINE_SYSCALL_CALL(chmod, file, mode);
 #else
-  return INLINE_SYSCALL_CALL (fchmodat, AT_FDCWD, file, mode);
+    return INLINE_SYSCALL_CALL(fchmodat, AT_FDCWD, file, mode);
 #endif
 }
 
-libc_hidden_def (__chmod)
-weak_alias (__chmod, chmod)
+libc_hidden_def(__chmod)
+weak_alias(__chmod, chmod)

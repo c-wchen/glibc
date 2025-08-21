@@ -27,15 +27,14 @@
    'get_fast_jitter' is minimal overhead "randomness" when such
    randomness helps performance.  Adding high overhead the function
    defeats the purpose.  */
-static inline uint32_t
-get_fast_jitter (void)
+static inline uint32_t get_fast_jitter(void)
 {
 # if HP_TIMING_INLINE
-  hp_timing_t jitter;
-  HP_TIMING_NOW (jitter);
-  return (uint32_t) jitter;
+    hp_timing_t jitter;
+    HP_TIMING_NOW(jitter);
+    return (uint32_t) jitter;
 # else
-  return 0;
+    return 0;
 # endif
 }
 

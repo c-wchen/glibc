@@ -21,14 +21,12 @@
 
 #include <unistd.h>
 
-void
-xpthread_sigmask (int how, const sigset_t *set, sigset_t *oldset)
+void xpthread_sigmask(int how, const sigset_t *set, sigset_t *oldset)
 {
-  if (pthread_sigmask (how, set, oldset) != 0)
-    {
-      write_message ("error: pthread_setmask failed\n");
-      /* Do not use exit because pthread_sigmask can be called from a
-         signal handler.  */
-      _exit (1);
+    if (pthread_sigmask(how, set, oldset) != 0) {
+        write_message("error: pthread_setmask failed\n");
+        /* Do not use exit because pthread_sigmask can be called from a
+           signal handler.  */
+        _exit(1);
     }
 }

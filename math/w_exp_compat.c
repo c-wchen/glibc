@@ -21,30 +21,30 @@
 #include <libm-alias-double.h>
 
 #if LIBM_SVID_COMPAT && (SHLIB_COMPAT (libm, GLIBC_2_0, GLIBC_2_29) \
-			 || defined NO_LONG_DOUBLE \
-			 || defined LONG_DOUBLE_COMPAT)
+             || defined NO_LONG_DOUBLE \
+             || defined LONG_DOUBLE_COMPAT)
 /* wrapper exp */
-double
-__exp_compat (double x)
+double __exp_compat(double x)
 {
-  double z = __ieee754_exp (x);
-  if (__builtin_expect (!isfinite (z) || z == 0, 0)
-      && isfinite (x) && _LIB_VERSION != _IEEE_)
-    return __kernel_standard (x, x, 6 + !!signbit (x));
+    double z = __ieee754_exp(x);
+    if (__builtin_expect(!isfinite(z) || z == 0, 0)
+        && isfinite(x) && _LIB_VERSION != _IEEE_) {
+        return __kernel_standard(x, x, 6 + !!signbit(x));
+    }
 
-  return z;
+    return z;
 }
 # if SHLIB_COMPAT (libm, GLIBC_2_0, GLIBC_2_29)
-compat_symbol (libm, __exp_compat, exp, GLIBC_2_0);
+compat_symbol(libm, __exp_compat, exp, GLIBC_2_0);
 # endif
 # ifdef NO_LONG_DOUBLE
-weak_alias (__exp_compat, expl)
+weak_alias(__exp_compat, expl)
 # endif
 # ifdef LONG_DOUBLE_COMPAT
 /* Work around gas bug "multiple versions for symbol".  */
-weak_alias (__exp_compat, __exp_compat_alias)
+weak_alias(__exp_compat, __exp_compat_alias)
 
-LONG_DOUBLE_COMPAT_CHOOSE_libm_expl (
-  compat_symbol (libm, __exp_compat_alias, expl, FIRST_VERSION_libm_expl), );
+LONG_DOUBLE_COMPAT_CHOOSE_libm_expl(
+    compat_symbol(libm, __exp_compat_alias, expl, FIRST_VERSION_libm_expl),);
 # endif
 #endif

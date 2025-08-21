@@ -23,6 +23,6 @@
 #include <stddef.h>
 #include <locale.h>
 
-#define UNSIGNED	1
+#define UNSIGNED    1
 
 #include "wcstol_l.c"

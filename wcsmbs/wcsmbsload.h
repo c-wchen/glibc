@@ -16,7 +16,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _WCSMBSLOAD_H
-#define _WCSMBSLOAD_H	1
+#define _WCSMBSLOAD_H   1
 
 #include <locale.h>
 #include <wchar.h>
@@ -24,52 +24,51 @@
 
 
 /* Contains pointers to the used functions in the `gconv' modules.  */
-struct gconv_fcts
-  {
+struct gconv_fcts {
     struct __gconv_step *towc;
     size_t towc_nsteps;
     struct __gconv_step *tomb;
     size_t tomb_nsteps;
-  };
+};
 
 /* Set of currently active conversion functions.  */
 extern const struct gconv_fcts __wcsmbs_gconv_fcts_c attribute_hidden;
 
 /* Load conversion functions for the currently selected locale.  */
-extern void __wcsmbs_load_conv (struct __locale_data *new_category)
-     attribute_hidden;
+extern void __wcsmbs_load_conv(struct __locale_data *new_category)
+attribute_hidden;
 
 /* Clone the current `__wcsmbs_load_conv' value.  */
-extern void __wcsmbs_clone_conv (struct gconv_fcts *copy)
-     attribute_hidden;
+extern void __wcsmbs_clone_conv(struct gconv_fcts *copy)
+attribute_hidden;
 
 /* Find the conversion functions for converting to and from NAME.  */
-extern int __wcsmbs_named_conv (struct gconv_fcts *copy, const char *name)
-     attribute_hidden;
+extern int __wcsmbs_named_conv(struct gconv_fcts *copy, const char *name)
+attribute_hidden;
 
 /* Function used for the `private.cleanup' hook.  */
-extern void _nl_cleanup_ctype (struct __locale_data *) attribute_hidden;
+extern void _nl_cleanup_ctype(struct __locale_data *) attribute_hidden;
 
 
 #include <iconv/gconv_int.h>
 
 
 /* Load the function implementation if necessary.  */
-extern struct __gconv_step *__wcsmbs_getfct (const char *to, const char *from,
-					     size_t *nstepsp)
-     attribute_hidden;
+extern struct __gconv_step *__wcsmbs_getfct(const char *to, const char *from,
+        size_t *nstepsp)
+attribute_hidden;
 
 extern const struct __locale_data _nl_C_LC_CTYPE attribute_hidden;
 
 /* Check whether the LC_CTYPE locale changed since the last call.
    Update the pointers appropriately.  */
-static inline const struct gconv_fcts *
-get_gconv_fcts (struct __locale_data *data)
+static inline const struct gconv_fcts *get_gconv_fcts(struct __locale_data *data)
 {
-  struct lc_ctype_data *private = data->private;
-  if (private->fcts == NULL)
-    __wcsmbs_load_conv (data);
-  return private->fcts;
+    struct lc_ctype_data *private = data->private;
+    if (private->fcts == NULL) {
+        __wcsmbs_load_conv(data);
+    }
+    return private->fcts;
 }
 
-#endif	/* wcsmbsload.h */
+#endif  /* wcsmbsload.h */

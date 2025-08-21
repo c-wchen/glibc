@@ -29,11 +29,11 @@
 
 #undef fputwc_unlocked
 
-wint_t
-fputwc_unlocked (wchar_t wc, FILE *fp)
+wint_t fputwc_unlocked(wchar_t wc, FILE *fp)
 {
-  CHECK_FILE (fp, WEOF);
-  if (_IO_fwide (fp, 1) < 0)
-    return WEOF;
-  return _IO_putwc_unlocked (wc, fp);
+    CHECK_FILE(fp, WEOF);
+    if (_IO_fwide(fp, 1) < 0) {
+        return WEOF;
+    }
+    return _IO_putwc_unlocked(wc, fp);
 }

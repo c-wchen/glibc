@@ -32,7 +32,7 @@
 # define SYMBOL_NAME mempcpy
 # include "ifunc-memmove.h"
 
-libc_ifunc_redirected (__redirect_mempcpy, __mempcpy, IFUNC_SELECTOR ());
+libc_ifunc_redirected(__redirect_mempcpy, __mempcpy, IFUNC_SELECTOR());
 
-weak_alias (__mempcpy, mempcpy)
+weak_alias(__mempcpy, mempcpy)
 #endif

@@ -23,17 +23,16 @@
 #include <socketcall.h>
 #include <kernel-features.h>
 
-int
-__sendmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags)
+int __sendmmsg(int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags)
 {
 #ifdef __ASSUME_SENDMMSG_SYSCALL
-  return SYSCALL_CANCEL (sendmmsg, fd, vmessages, vlen, flags);
+    return SYSCALL_CANCEL(sendmmsg, fd, vmessages, vlen, flags);
 #else
-  return SOCKETCALL_CANCEL (sendmmsg, fd, vmessages, vlen, flags);
+    return SOCKETCALL_CANCEL(sendmmsg, fd, vmessages, vlen, flags);
 #endif
 }
-libc_hidden_def (__sendmmsg)
-weak_alias (__sendmmsg, sendmmsg)
+libc_hidden_def(__sendmmsg)
+weak_alias(__sendmmsg, sendmmsg)
 #if __TIMESIZE != 64
-weak_alias (__sendmmsg, __sendmmsg64)
+weak_alias(__sendmmsg, __sendmmsg64)
 #endif

@@ -20,48 +20,46 @@
 #include <support/xthread.h>
 #include <support/xdlfcn.h>
 
-static void *
-thr_func (void *mod)
+static void *thr_func(void *mod)
 {
-  int* (*get_global1)(void) = xdlsym (mod, "get_global1");
-  int* (*get_global2)(void) = xdlsym (mod, "get_global2");
-  void (*set_global2)(int) = xdlsym (mod, "set_global2");
-  int* (*get_local1)(void) = xdlsym (mod, "get_local1");
-  int* (*get_local2)(void) = xdlsym (mod, "get_local2");
+    int *(*get_global1)(void) = xdlsym(mod, "get_global1");
+    int *(*get_global2)(void) = xdlsym(mod, "get_global2");
+    void (*set_global2)(int) = xdlsym(mod, "set_global2");
+    int *(*get_local1)(void) = xdlsym(mod, "get_local1");
+    int *(*get_local2)(void) = xdlsym(mod, "get_local2");
 
-  int *global1 = get_global1 ();
-  TEST_COMPARE (*global1, 0);
-  ++*global1;
+    int *global1 = get_global1();
+    TEST_COMPARE(*global1, 0);
+    ++*global1;
 
-  int *global2 = get_global2 ();
-  TEST_COMPARE (*global2, 0);
-  ++*global2;
-  TEST_COMPARE (*global2, 1);
+    int *global2 = get_global2();
+    TEST_COMPARE(*global2, 0);
+    ++*global2;
+    TEST_COMPARE(*global2, 1);
 
-  set_global2 (10);
-  TEST_COMPARE (*global2, 10);
+    set_global2(10);
+    TEST_COMPARE(*global2, 10);
 
-  int *local1 = get_local1 ();
-  TEST_COMPARE (*local1, 0);
-  ++*local1;
+    int *local1 = get_local1();
+    TEST_COMPARE(*local1, 0);
+    ++*local1;
 
-  int *local2 = get_local2 ();
-  TEST_COMPARE (*local2, 0);
-  ++*local2;
+    int *local2 = get_local2();
+    TEST_COMPARE(*local2, 0);
+    ++*local2;
 
-  return 0;
+    return 0;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  void *mod = xdlopen ("tst-audit-tlsdesc-mod1.so", RTLD_LAZY);
+    void *mod = xdlopen("tst-audit-tlsdesc-mod1.so", RTLD_LAZY);
 
-  pthread_t thr = xpthread_create (NULL, thr_func, mod);
-  void *r = xpthread_join (thr);
-  TEST_VERIFY (r == NULL);
+    pthread_t thr = xpthread_create(NULL, thr_func, mod);
+    void *r = xpthread_join(thr);
+    TEST_VERIFY(r == NULL);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

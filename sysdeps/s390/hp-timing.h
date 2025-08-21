@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _HP_TIMING_S390_H
-#define _HP_TIMING_S390_H	1
+#define _HP_TIMING_S390_H   1
 
 /* The stckf instruction is available starting with z9-109 zarch CPUs.
    As there is no extra configure check for z9-109, the z10 one is used.  */
@@ -28,15 +28,15 @@
    Note: Bit 51 is incremented every 0.000 001s = 1us.  */
 typedef unsigned long long int hp_timing_t;
 
-# define HP_TIMING_INLINE	(1)
+# define HP_TIMING_INLINE   (1)
 
-# define HP_TIMING_NOW(VAR)						\
-  do {									\
-    __asm__ __volatile__ ("stckf %0" : "=Q" (VAR) : : "cc");		\
+# define HP_TIMING_NOW(VAR)                     \
+  do {                                  \
+    __asm__ __volatile__ ("stckf %0" : "=Q" (VAR) : : "cc");        \
   } while (0)
 
 #else
 # include_next <hp-timing.h>
 #endif
 
-#endif	/* hp-timing.h */
+#endif  /* hp-timing.h */

@@ -20,24 +20,23 @@
 
 #include <dirent.h>
 
-struct __old_dirent64
-  {
+struct __old_dirent64 {
     __ino_t d_ino;
     __off64_t d_off;
     unsigned short int d_reclen;
     unsigned char d_type;
-    char d_name[256];		/* We must not include limits.h! */
-  };
+    char d_name[256];       /* We must not include limits.h! */
+};
 
 /* Now define the internal interfaces.  */
-extern struct __old_dirent64 *__old_readdir64 (DIR *__dirp);
-libc_hidden_proto (__old_readdir64);
-extern int __old_readdir64_r (DIR *__dirp, struct __old_dirent64 *__entry,
-			  struct __old_dirent64 **__result);
-int __old_scandir64 (const char * __dir,
-		     struct __old_dirent64 *** __namelist,
-		     int (*__selector) (const struct __old_dirent64 *),
-		     int (*__cmp) (const struct __old_dirent64 **,
-				   const struct __old_dirent64 **));
+extern struct __old_dirent64 *__old_readdir64(DIR *__dirp);
+libc_hidden_proto(__old_readdir64);
+extern int __old_readdir64_r(DIR *__dirp, struct __old_dirent64 *__entry,
+                             struct __old_dirent64 **__result);
+int __old_scandir64(const char *__dir,
+                    struct __old_dirent64  ***__namelist,
+                    int (*__selector)(const struct __old_dirent64 *),
+                    int (*__cmp)(const struct __old_dirent64 **,
+                                 const struct __old_dirent64 **));
 
 #endif

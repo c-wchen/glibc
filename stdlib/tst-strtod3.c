@@ -21,66 +21,65 @@
 # define IF_FLOAT128(x)
 #endif
 
-#define TEST_STRTOD(FSUF, FTYPE, FTOSTR, LSUF, CSUF)			\
-static const struct							\
-{									\
-  const char *in;							\
-  const char *out;							\
-  FTYPE expected;							\
-} tests_strto ## FSUF[] =						\
-  {									\
-    { "000,,,e1", ",,,e1", 0.0 ## LSUF },				\
-    { "000e1", "", 0.0 ## LSUF },					\
-    { "000,1e1", ",1e1", 0.0 ## LSUF }					\
-  };									\
-									\
-static int								\
-test_strto ## FSUF (void)						\
-{									\
-  int status = 0;							\
-									\
-  for (int i = 0;							\
+#define TEST_STRTOD(FSUF, FTYPE, FTOSTR, LSUF, CSUF)            \
+static const struct                         \
+{                                   \
+  const char *in;                           \
+  const char *out;                          \
+  FTYPE expected;                           \
+} tests_strto ## FSUF[] =                       \
+  {                                 \
+    { "000,,,e1", ",,,e1", 0.0 ## LSUF },               \
+    { "000e1", "", 0.0 ## LSUF },                   \
+    { "000,1e1", ",1e1", 0.0 ## LSUF }                  \
+  };                                    \
+                                    \
+static int                              \
+test_strto ## FSUF (void)                       \
+{                                   \
+  int status = 0;                           \
+                                    \
+  for (int i = 0;                           \
        i < sizeof (tests_strto ## FSUF) / sizeof (tests_strto ## FSUF[0]); \
-       ++i)								\
-    {									\
-      char *ep;								\
+       ++i)                             \
+    {                                   \
+      char *ep;                             \
       FTYPE r = __strto ## FSUF ## _internal (tests_strto ## FSUF[i].in, \
-					      &ep, 1);			\
-									\
-      if (strcmp (ep, tests_strto ## FSUF[i].out) != 0)			\
-	{								\
-	  printf ("%d: got rest string \"%s\", expected \"%s\"\n",	\
-		  i, ep, tests_strto ## FSUF[i].out);			\
-	  status = 1;							\
-	}								\
-									\
-      if (r != tests_strto ## FSUF[i].expected)				\
-	{								\
-	  char buf1[FSTRLENMAX], buf2[FSTRLENMAX];			\
-	  FTOSTR (buf1, sizeof (buf1), "%g", r);			\
-	  FTOSTR (buf2, sizeof (buf2), "%g",				\
-		  tests_strto ## FSUF[i].expected);			\
-	  printf ("%d: got wrong results %s, expected %s\n",		\
-		  i, buf1, buf2);					\
-	  status = 1;							\
-	}								\
-    }									\
-									\
-  return status;							\
+                          &ep, 1);          \
+                                    \
+      if (strcmp (ep, tests_strto ## FSUF[i].out) != 0)         \
+    {                               \
+      printf ("%d: got rest string \"%s\", expected \"%s\"\n",  \
+          i, ep, tests_strto ## FSUF[i].out);           \
+      status = 1;                           \
+    }                               \
+                                    \
+      if (r != tests_strto ## FSUF[i].expected)             \
+    {                               \
+      char buf1[FSTRLENMAX], buf2[FSTRLENMAX];          \
+      FTOSTR (buf1, sizeof (buf1), "%g", r);            \
+      FTOSTR (buf2, sizeof (buf2), "%g",                \
+          tests_strto ## FSUF[i].expected);         \
+      printf ("%d: got wrong results %s, expected %s\n",        \
+          i, buf1, buf2);                   \
+      status = 1;                           \
+    }                               \
+    }                                   \
+                                    \
+  return status;                            \
 }
 
-GEN_TEST_STRTOD_FOREACH (TEST_STRTOD)
+GEN_TEST_STRTOD_FOREACH(TEST_STRTOD)
 
 static int
-do_test (void)
+do_test(void)
 {
-  if (setlocale (LC_ALL, "en_US.ISO-8859-1") == NULL)
-    {
-      puts ("could not set locale");
-      return 1;
+    if (setlocale(LC_ALL, "en_US.ISO-8859-1") == NULL) {
+        puts("could not set locale");
+        return 1;
     }
 
-  return STRTOD_TEST_FOREACH (test_strto);
+    return STRTOD_TEST_FOREACH(test_strto);
 }
 
 #define TEST_FUNCTION do_test ()

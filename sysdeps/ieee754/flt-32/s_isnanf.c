@@ -27,11 +27,11 @@ static char rcsid[] = "$NetBSD: s_isnanf.c,v 1.4 1995/05/10 20:47:38 jtc Exp $";
 #undef __isnanf
 int __isnanf(float x)
 {
-	int32_t ix;
-	GET_FLOAT_WORD(ix,x);
-	ix &= 0x7fffffff;
-	ix = 0x7f800000 - ix;
-	return (int)(((uint32_t)(ix))>>31);
+    int32_t ix;
+    GET_FLOAT_WORD(ix, x);
+    ix &= 0x7fffffff;
+    ix = 0x7f800000 - ix;
+    return (int)(((uint32_t)(ix)) >> 31);
 }
-hidden_def (__isnanf)
-weak_alias (__isnanf, isnanf)
+hidden_def(__isnanf)
+weak_alias(__isnanf, isnanf)

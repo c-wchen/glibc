@@ -24,19 +24,20 @@
 #include <hurd.h>
 #include <hurd/fd.h>
 
-int
-__fchmodat (int fd, const char *file, mode_t mode, int flag)
+int __fchmodat(int fd, const char *file, mode_t mode, int flag)
 {
-  error_t err;
-  file_t port = __file_name_lookup_at (fd, flag, file, 0, 0);
-  if (port == MACH_PORT_NULL)
-    return -1;
-  err = __file_chmod (port, mode);
-  __mach_port_deallocate (__mach_task_self (), port);
-  if (err)
-    return __hurd_fail (err);
-  return 0;
+    error_t err;
+    file_t port = __file_name_lookup_at(fd, flag, file, 0, 0);
+    if (port == MACH_PORT_NULL) {
+        return -1;
+    }
+    err = __file_chmod(port, mode);
+    __mach_port_deallocate(__mach_task_self(), port);
+    if (err) {
+        return __hurd_fail(err);
+    }
+    return 0;
 }
 
-weak_alias (__fchmodat, fchmodat)
-libc_hidden_def (fchmodat)
+weak_alias(__fchmodat, fchmodat)
+libc_hidden_def(fchmodat)

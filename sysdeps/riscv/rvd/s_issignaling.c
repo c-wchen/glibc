@@ -19,9 +19,8 @@
 #include <math.h>
 #include <fenv_private.h>
 
-int
-__issignaling (double x)
+int __issignaling(double x)
 {
-  return (_FCLASS (x) & _FCLASS_SNAN) != 0;
+    return (_FCLASS(x) & _FCLASS_SNAN) != 0;
 }
-libm_hidden_def (__issignaling)
+libm_hidden_def(__issignaling)

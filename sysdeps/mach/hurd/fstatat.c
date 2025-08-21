@@ -22,11 +22,10 @@
 
 #include "statconv.c"
 
-int
-__fstatat (int fd, const char *filename, struct stat *buf, int flag)
+int __fstatat(int fd, const char *filename, struct stat *buf, int flag)
 {
-  struct stat64 buf64;
-  return (__fstatat64 (fd, filename, &buf64, flag)
-	  ?: stat64_conv (buf, &buf64));
+    struct stat64 buf64;
+    return (__fstatat64(fd, filename, &buf64, flag)
+            ? : stat64_conv(buf, &buf64));
 }
-weak_alias (__fstatat, fstatat)
+weak_alias(__fstatat, fstatat)

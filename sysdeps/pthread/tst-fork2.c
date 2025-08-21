@@ -26,63 +26,53 @@
 static pid_t initial_pid;
 
 
-static void *
-tf (void *arg)
+static void *tf(void *arg)
 {
-  if (getppid () != initial_pid)
-    {
-      printf ("getppid in thread returned %ld, expected %ld\n",
-	      (long int) getppid (), (long int) initial_pid);
-      return (void *) -1;
+    if (getppid() != initial_pid) {
+        printf("getppid in thread returned %ld, expected %ld\n",
+               (long int) getppid(), (long int) initial_pid);
+        return (void *) -1;
     }
 
-  return NULL;
+    return NULL;
 }
 
 
-int
-main (void)
+int main(void)
 {
-  initial_pid = getpid ();
+    initial_pid = getpid();
 
-  pid_t child = fork ();
-  if (child == 0)
-    {
-      if (getppid () != initial_pid)
-	{
-	  printf ("first getppid returned %ld, expected %ld\n",
-		  (long int) getppid (), (long int) initial_pid);
-	  exit (1);
-	}
+    pid_t child = fork();
+    if (child == 0) {
+        if (getppid() != initial_pid) {
+            printf("first getppid returned %ld, expected %ld\n",
+                   (long int) getppid(), (long int) initial_pid);
+            exit(1);
+        }
 
-      pthread_t th;
-      if (pthread_create (&th, NULL, tf, NULL) != 0)
-	{
-	  puts ("pthread_create failed");
-	  exit (1);
-	}
+        pthread_t th;
+        if (pthread_create(&th, NULL, tf, NULL) != 0) {
+            puts("pthread_create failed");
+            exit(1);
+        }
 
-      void *result;
-      if (pthread_join (th, &result) != 0)
-	{
-	  puts ("pthread_join failed");
-	  exit  (1);
-	}
+        void *result;
+        if (pthread_join(th, &result) != 0) {
+            puts("pthread_join failed");
+            exit(1);
+        }
 
-      exit (result == NULL ? 0 : 1);
-    }
-  else if (child == -1)
-    {
-      puts ("initial fork failed");
-      return 1;
+        exit(result == NULL ? 0 : 1);
+    } else if (child == -1) {
+        puts("initial fork failed");
+        return 1;
     }
 
-  int status;
-  if (TEMP_FAILURE_RETRY (waitpid (child, &status, 0)) != child)
-    {
-      printf ("waitpid failed: %m\n");
-      return 1;
+    int status;
+    if (TEMP_FAILURE_RETRY(waitpid(child, &status, 0)) != child) {
+        printf("waitpid failed: %m\n");
+        return 1;
     }
 
-  return status;
+    return status;
 }

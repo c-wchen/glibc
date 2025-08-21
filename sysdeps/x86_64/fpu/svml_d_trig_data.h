@@ -61,7 +61,7 @@
 #define __dSignMask             __lNZero
 
 .macro double_vector offset value
-.if .-__svml_d_trig_data != \offset
+.if . - __svml_d_trig_data != \offset
 .err
 .endif
 .rept 8

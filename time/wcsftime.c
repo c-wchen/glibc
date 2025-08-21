@@ -19,10 +19,9 @@
 #include <locale/localeinfo.h>
 
 
-size_t
-wcsftime (wchar_t *s, size_t maxsize, const wchar_t *format,
-	  const struct tm *tp)
+size_t wcsftime(wchar_t *s, size_t maxsize, const wchar_t *format,
+                const struct tm *tp)
 {
-  return __wcsftime_l (s, maxsize, format, tp, _NL_CURRENT_LOCALE);
+    return __wcsftime_l(s, maxsize, format, tp, _NL_CURRENT_LOCALE);
 }
-libc_hidden_def (wcsftime)
+libc_hidden_def(wcsftime)

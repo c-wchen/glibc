@@ -103,70 +103,68 @@
 
 #include <string.h>
 
-int
-main (int argc, char **argv)
+int main(int argc, char **argv)
 {
-  struct test_config test_config;
-  memset (&test_config, 0, sizeof (test_config));
+    struct test_config test_config;
+    memset(&test_config, 0, sizeof(test_config));
 
 #ifdef PREPARE
-  test_config.prepare_function = (PREPARE);
+    test_config.prepare_function = (PREPARE);
 #endif
 
 #if defined (TEST_FUNCTION) && defined (TEST_FUNCTON_ARGV)
 # error TEST_FUNCTION and TEST_FUNCTION_ARGV cannot be defined at the same time
 #endif
 #ifdef RUN_COMMAND_MODE
-  test_config.run_command_mode = 1;
+    test_config.run_command_mode = 1;
 #elif defined (TEST_FUNCTION)
-  test_config.test_function = TEST_FUNCTION;
+    test_config.test_function = TEST_FUNCTION;
 #elif defined (TEST_FUNCTION_ARGV)
-  test_config.test_function_argv = TEST_FUNCTION_ARGV;
+    test_config.test_function_argv = TEST_FUNCTION_ARGV;
 #else
-  test_config.test_function = do_test;
+    test_config.test_function = do_test;
 #endif
 
 #ifdef CLEANUP_HANDLER
-  test_config.cleanup_function = CLEANUP_HANDLER;
+    test_config.cleanup_function = CLEANUP_HANDLER;
 #endif
 
 #ifdef EXPECTED_SIGNAL
-  test_config.expected_signal = (EXPECTED_SIGNAL);
+    test_config.expected_signal = (EXPECTED_SIGNAL);
 #endif
 
 #ifdef EXPECTED_STATUS
-  test_config.expected_status = (EXPECTED_STATUS);
+    test_config.expected_status = (EXPECTED_STATUS);
 #endif
 
 #ifdef TEST_NO_MALLOPT
-  test_config.no_mallopt = 1;
+    test_config.no_mallopt = 1;
 #endif
 
 #ifdef TEST_NO_SETVBUF
-  test_config.no_setvbuf = 1;
+    test_config.no_setvbuf = 1;
 #endif
 
 #ifdef TIMEOUT
-  test_config.timeout = TIMEOUT;
+    test_config.timeout = TIMEOUT;
 #endif
 
 #ifdef CMDLINE_OPTIONS
-  struct option options[] =
-    {
-      CMDLINE_OPTIONS
-      TEST_DEFAULT_OPTIONS
-      { 0, }
+    struct option options[] = {
+        CMDLINE_OPTIONS
+        TEST_DEFAULT_OPTIONS
+        { 0, }
     };
-  test_config.options = &options;
+    test_config.options = &options;
 #endif
 #ifdef CMDLINE_PROCESS
-  test_config.cmdline_function = CMDLINE_PROCESS;
+    test_config.cmdline_function = CMDLINE_PROCESS;
 #endif
 #ifdef CMDLINE_OPTSTRING
-  test_config.optstring = "+" CMDLINE_OPTSTRING;
+    test_config.optstring = "+" CMDLINE_OPTSTRING;
 #else
-  test_config.optstring = "+";
+    test_config.optstring = "+";
 #endif
 
-  return support_test_main (argc, argv, &test_config);
+    return support_test_main(argc, argv, &test_config);
 }

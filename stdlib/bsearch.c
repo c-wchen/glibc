@@ -20,4 +20,4 @@
 #undef  __extern_inline
 #define __extern_inline /* Empty, so we get a normal definition.  */
 #include <bits/stdlib-bsearch.h>
-libc_hidden_def (bsearch)
+libc_hidden_def(bsearch)

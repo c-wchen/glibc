@@ -21,86 +21,75 @@
 #include <math-tests.h>
 #include <math-barriers.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int result = 0;
+    int result = 0;
 
-  fedisableexcept (FE_ALL_EXCEPT);
-  int ret = feraiseexcept (FE_ALL_EXCEPT);
-  if (ret != 0)
-    {
-      if (EXCEPTION_TESTS (float))
-	{
-	  puts ("feraiseexcept (FE_ALL_EXCEPT) failed");
-	  result = 1;
-	  return result;
-	}
-      else
-	{
-	  puts ("feraiseexcept (FE_ALL_EXCEPT) unsupported, cannot test");
-	  return 77;
-	}
+    fedisableexcept(FE_ALL_EXCEPT);
+    int ret = feraiseexcept(FE_ALL_EXCEPT);
+    if (ret != 0) {
+        if (EXCEPTION_TESTS(float)) {
+            puts("feraiseexcept (FE_ALL_EXCEPT) failed");
+            result = 1;
+            return result;
+        } else {
+            puts("feraiseexcept (FE_ALL_EXCEPT) unsupported, cannot test");
+            return 77;
+        }
     }
-  fexcept_t saved;
-  ret = fegetexceptflag (&saved, FE_ALL_EXCEPT);
-  if (ret != 0)
-    {
-      puts ("fegetexceptflag failed");
-      result = 1;
-      return result;
+    fexcept_t saved;
+    ret = fegetexceptflag(&saved, FE_ALL_EXCEPT);
+    if (ret != 0) {
+        puts("fegetexceptflag failed");
+        result = 1;
+        return result;
     }
-  feclearexcept (FE_ALL_EXCEPT);
+    feclearexcept(FE_ALL_EXCEPT);
 
-  ret = feenableexcept (FE_ALL_EXCEPT);
-  if (!EXCEPTION_ENABLE_SUPPORTED (FE_ALL_EXCEPT) && (ret == -1))
-    {
-      puts ("feenableexcept (FE_ALL_EXCEPT) not supported, cannot test");
-      return 77;
-    }
-  else if (ret != 0)
-    {
-      puts ("feenableexcept (FE_ALL_EXCEPT) failed");
-      result = 1;
+    ret = feenableexcept(FE_ALL_EXCEPT);
+    if (!EXCEPTION_ENABLE_SUPPORTED(FE_ALL_EXCEPT) && (ret == -1)) {
+        puts("feenableexcept (FE_ALL_EXCEPT) not supported, cannot test");
+        return 77;
+    } else if (ret != 0) {
+        puts("feenableexcept (FE_ALL_EXCEPT) failed");
+        result = 1;
     }
 
-  /* The test is that this does not cause exception traps.  For architectures
-     where setting the exception might result in traps the function should
-     return a nonzero value.
-     Also check if the function does not alter the exception mask.  */
-  ret = fesetexceptflag (&saved, FE_ALL_EXCEPT);
+    /* The test is that this does not cause exception traps.  For architectures
+       where setting the exception might result in traps the function should
+       return a nonzero value.
+       Also check if the function does not alter the exception mask.  */
+    ret = fesetexceptflag(&saved, FE_ALL_EXCEPT);
 
-  _Static_assert (!(EXCEPTION_SET_FORCES_TRAP && !EXCEPTION_TESTS(float)),
-		  "EXCEPTION_SET_FORCES_TRAP only makes sense if the "
-		  "architecture supports exceptions");
-  {
-    int exc_before = fegetexcept ();
-    ret = fesetexceptflag (&saved, FE_ALL_EXCEPT);
-    int exc_after = fegetexcept ();
-    if (exc_before != exc_after)
-      {
-	puts ("fesetexceptflag (FE_ALL_EXCEPT) changed the exceptions mask");
-	return 1;
-      }
-  }
-
-  /* Execute some floating-point operations, since on some CPUs exceptions
-     triggers a trap only at the next floating-point instruction.  */
-  volatile double a = 1.0;
-  volatile double b = a + a;
-  math_force_eval (b);
-  volatile long double al = 1.0L;
-  volatile long double bl = al + al;
-  math_force_eval (bl);
-
-  if (ret != 0 && !EXCEPTION_SET_FORCES_TRAP)
+    _Static_assert(!(EXCEPTION_SET_FORCES_TRAP && !EXCEPTION_TESTS(float)),
+                   "EXCEPTION_SET_FORCES_TRAP only makes sense if the "
+                   "architecture supports exceptions");
     {
-      puts ("fesetexceptflag failed");
-      result = 1;
+        int exc_before = fegetexcept();
+        ret = fesetexceptflag(&saved, FE_ALL_EXCEPT);
+        int exc_after = fegetexcept();
+        if (exc_before != exc_after) {
+            puts("fesetexceptflag (FE_ALL_EXCEPT) changed the exceptions mask");
+            return 1;
+        }
     }
-  feclearexcept (FE_ALL_EXCEPT);
 
-  return result;
+    /* Execute some floating-point operations, since on some CPUs exceptions
+       triggers a trap only at the next floating-point instruction.  */
+    volatile double a = 1.0;
+    volatile double b = a + a;
+    math_force_eval(b);
+    volatile long double al = 1.0L;
+    volatile long double bl = al + al;
+    math_force_eval(bl);
+
+    if (ret != 0 && !EXCEPTION_SET_FORCES_TRAP) {
+        puts("fesetexceptflag failed");
+        result = 1;
+    }
+    feclearexcept(FE_ALL_EXCEPT);
+
+    return result;
 }
 
 #define TEST_FUNCTION do_test ()

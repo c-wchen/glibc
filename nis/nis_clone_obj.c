@@ -22,46 +22,48 @@
 
 #include "nis_xdr.h"
 
-nis_object *
-nis_clone_object (const nis_object *src, nis_object *dest)
+nis_object *nis_clone_object(const nis_object *src, nis_object *dest)
 {
-  char *addr;
-  unsigned int size;
-  XDR xdrs;
-  nis_object *res = NULL;
+    char *addr;
+    unsigned int size;
+    XDR xdrs;
+    nis_object *res = NULL;
 
-  if (src == NULL)
-    return (NULL);
-
-  size = xdr_sizeof ((xdrproc_t)_xdr_nis_object, (char *) src);
-  if ((addr = calloc (1, size)) == NULL)
-    return NULL;
-
-  if (dest == NULL)
-    {
-      if ((res = calloc (1, sizeof (nis_object))) == NULL)
-	goto out;
-    }
-  else
-    res = dest;
-
-  xdrmem_create (&xdrs, addr, size, XDR_ENCODE);
-  if (!_xdr_nis_object (&xdrs, (nis_object *) src))
-    goto out2;
-  xdr_destroy (&xdrs);
-  xdrmem_create (&xdrs, addr, size, XDR_DECODE);
-  if (!_xdr_nis_object (&xdrs, res))
-    {
-    out2:
-      if (dest == NULL)
-	free (res);
-      res = NULL;
+    if (src == NULL) {
+        return (NULL);
     }
 
-  xdr_destroy (&xdrs);
- out:
-  free (addr);
+    size = xdr_sizeof((xdrproc_t)_xdr_nis_object, (char *) src);
+    if ((addr = calloc(1, size)) == NULL) {
+        return NULL;
+    }
 
-  return res;
+    if (dest == NULL) {
+        if ((res = calloc(1, sizeof(nis_object))) == NULL) {
+            goto out;
+        }
+    } else {
+        res = dest;
+    }
+
+    xdrmem_create(&xdrs, addr, size, XDR_ENCODE);
+    if (!_xdr_nis_object(&xdrs, (nis_object *) src)) {
+        goto out2;
+    }
+    xdr_destroy(&xdrs);
+    xdrmem_create(&xdrs, addr, size, XDR_DECODE);
+    if (!_xdr_nis_object(&xdrs, res)) {
+out2:
+        if (dest == NULL) {
+            free(res);
+        }
+        res = NULL;
+    }
+
+    xdr_destroy(&xdrs);
+out:
+    free(addr);
+
+    return res;
 }
-libnsl_hidden_nolink_def (nis_clone_object, GLIBC_2_1)
+libnsl_hidden_nolink_def(nis_clone_object, GLIBC_2_1)

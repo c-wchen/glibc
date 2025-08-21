@@ -22,19 +22,20 @@
 #include <hurd/fd.h>
 
 /* Get file-specific information about FILE.  */
-long int
-__pathconf (const char *file, int name)
+long int __pathconf(const char *file, int name)
 {
-  error_t err;
-  int value;			/* RPC returns an `int', not a `long int'.  */
-  file_t port = __file_name_lookup (file, 0, 0);
-  if (port == MACH_PORT_NULL)
-    return -1L;
-  err = __io_pathconf (port, name, &value);
-  __mach_port_deallocate (__mach_task_self (), port);
-  if (err)
-    return __hurd_fail (err), -1L;
-  return value;
+    error_t err;
+    int value;            /* RPC returns an `int', not a `long int'.  */
+    file_t port = __file_name_lookup(file, 0, 0);
+    if (port == MACH_PORT_NULL) {
+        return -1L;
+    }
+    err = __io_pathconf(port, name, &value);
+    __mach_port_deallocate(__mach_task_self(), port);
+    if (err) {
+        return __hurd_fail(err), -1L;
+    }
+    return value;
 }
 
-weak_alias (__pathconf, pathconf)
+weak_alias(__pathconf, pathconf)

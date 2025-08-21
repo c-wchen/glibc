@@ -21,12 +21,12 @@
 #define TEST_NAME "stpcpy_chk"
 #include "bench-string.h"
 
-extern void __attribute__ ((noreturn)) __chk_fail (void);
-extern char *normal_stpcpy (char *, const char *, size_t)
-  __asm ("stpcpy");
-extern char *__stpcpy_chk (char *, const char *, size_t);
+extern void __attribute__((noreturn)) __chk_fail(void);
+extern char *normal_stpcpy(char *, const char *, size_t)
+__asm("stpcpy");
+extern char *__stpcpy_chk(char *, const char *, size_t);
 
-IMPL (normal_stpcpy, 1)
-IMPL (__stpcpy_chk, 2)
+IMPL(normal_stpcpy, 1)
+IMPL(__stpcpy_chk, 2)
 
 #include "bench-strcpy_chk.c"

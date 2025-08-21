@@ -22,37 +22,38 @@
 #include <sysdep.h>
 #include <tv32-compat.h>
 
-int
-__getrusage64 (enum __rusage_who who, struct __rusage64 *usage)
+int __getrusage64(enum __rusage_who who, struct __rusage64 *usage)
 {
 #if __KERNEL_OLD_TIMEVAL_MATCHES_TIMEVAL64
-  return INLINE_SYSCALL_CALL (getrusage, who, usage);
+    return INLINE_SYSCALL_CALL(getrusage, who, usage);
 #else
-  struct __rusage32 usage32;
-  if (INLINE_SYSCALL_CALL (getrusage, who, &usage32) == -1)
-    return -1;
+    struct __rusage32 usage32;
+    if (INLINE_SYSCALL_CALL(getrusage, who, &usage32) == -1) {
+        return -1;
+    }
 
-  rusage32_to_rusage64 (&usage32, usage);
-  return 0;
+    rusage32_to_rusage64(&usage32, usage);
+    return 0;
 #endif
 }
 
 #if __TIMESIZE != 64
-libc_hidden_def (__getrusage64)
+libc_hidden_def(__getrusage64)
 int
-__getrusage (enum __rusage_who who, struct rusage *usage)
+__getrusage(enum __rusage_who who, struct rusage *usage)
 {
-  int ret ;
-  struct __rusage64 usage64;
+    int ret ;
+    struct __rusage64 usage64;
 
-  ret = __getrusage64 (who, &usage64);
+    ret = __getrusage64(who, &usage64);
 
-  if (ret != 0)
+    if (ret != 0) {
+        return ret;
+    }
+
+    rusage64_to_rusage(&usage64, usage);
+
     return ret;
-
-  rusage64_to_rusage (&usage64, usage);
-
-  return ret;
 }
 #endif
-weak_alias (__getrusage, getrusage)
+weak_alias(__getrusage, getrusage)

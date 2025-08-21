@@ -22,44 +22,46 @@
 #include <libm-alias-float.h>
 #include "mathimpl.h"
 
-long long int
-__llrintf (float x)
+long long int __llrintf(float x)
 {
-  int32_t e;
-  uint32_t i, s;
-  long long int result;
+    int32_t e;
+    uint32_t i, s;
+    long long int result;
 
-  x = __m81_u(__rintf) (x);
+    x = __m81_u(__rintf)(x);
 
-  GET_FLOAT_WORD (i, x);
+    GET_FLOAT_WORD(i, x);
 
-  e = ((i >> 23) & 0xff) - 0x7f;
-  if (e < 0)
-    return 0;
-  s = i;
-  i &= 0x7fffff;
-  i |= 0x800000;
-
-  if (e < 63)
-    {
-      if (e > 55)
-	result = (long long int) (i << (e - 55)) << 32;
-      else if (e > 31)
-	result = (((long long int) (i >> (55 - e)) << 32) | (i << (e - 23)));
-      else if (e > 23)
-	result = i << (e - 23);
-      else
-	result = i >> (23 - e);
-      if (s & 0x80000000)
-	result = -result;
+    e = ((i >> 23) & 0xff) - 0x7f;
+    if (e < 0) {
+        return 0;
     }
-  else
-    /* The number is too large or not finite.  The standard leaves it
-       undefined what to return when the number is too large to fit in a
-       `long long int'.  */
-    result = -1LL;
+    s = i;
+    i &= 0x7fffff;
+    i |= 0x800000;
 
-  return result;
+    if (e < 63) {
+        if (e > 55) {
+            result = (long long int)(i << (e - 55)) << 32;
+        } else if (e > 31) {
+            result = (((long long int)(i >> (55 - e)) << 32) | (i << (e - 23)));
+        } else if (e > 23) {
+            result = i << (e - 23);
+        } else {
+            result = i >> (23 - e);
+        }
+        if (s & 0x80000000) {
+            result = -result;
+        }
+    } else
+        /* The number is too large or not finite.  The standard leaves it
+           undefined what to return when the number is too large to fit in a
+           `long long int'.  */
+    {
+        result = -1LL;
+    }
+
+    return result;
 }
 
-libm_alias_float (__llrint, llrint)
+libm_alias_float(__llrint, llrint)

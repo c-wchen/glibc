@@ -28,16 +28,15 @@
 
 /* Read formatted input from stdin according to the format string FORMAT.  */
 /* VARARGS1 */
-int
-__wscanf (const wchar_t *format, ...)
+int __wscanf(const wchar_t *format, ...)
 {
-  va_list arg;
-  int done;
+    va_list arg;
+    int done;
 
-  va_start (arg, format);
-  done = __vfwscanf_internal (stdin, format, arg, 0);
-  va_end (arg);
+    va_start(arg, format);
+    done = __vfwscanf_internal(stdin, format, arg, 0);
+    va_end(arg);
 
-  return done;
+    return done;
 }
-ldbl_strong_alias (__wscanf, wscanf)
+ldbl_strong_alias(__wscanf, wscanf)

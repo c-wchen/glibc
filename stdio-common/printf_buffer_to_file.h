@@ -22,36 +22,34 @@
 #include <bits/types/FILE.h>
 #include <printf_buffer.h>
 
-struct __printf_buffer_to_file
-{
-  struct __printf_buffer base;
-  FILE *fp;
+struct __printf_buffer_to_file {
+    struct __printf_buffer base;
+    FILE *fp;
 
-  /* Staging buffer.  Used if fp does not have any available buffer
-     space.  */
-  char stage[PRINTF_BUFFER_SIZE_TO_FILE_STAGE];
+    /* Staging buffer.  Used if fp does not have any available buffer
+       space.  */
+    char stage[PRINTF_BUFFER_SIZE_TO_FILE_STAGE];
 };
 
 /* Initializes *BUF to write data to FP.  */
-void __printf_buffer_to_file_init (struct __printf_buffer_to_file *buf,
-                                   FILE *fp) attribute_hidden;
+void __printf_buffer_to_file_init(struct __printf_buffer_to_file *buf,
+                                  FILE *fp) attribute_hidden;
 
 /* Transfers any pending data in BUF to BUF->FP.  The return value
    follows the printf convention (number bytes written; or -1 for error).  */
-int __printf_buffer_to_file_done (struct __printf_buffer_to_file *buf)
-  attribute_hidden;
+int __printf_buffer_to_file_done(struct __printf_buffer_to_file *buf)
+attribute_hidden;
 
 /* Wide version below.  */
 
-struct __wprintf_buffer_to_file
-{
-  struct __wprintf_buffer base;
-  FILE *fp;
-  wchar_t stage[PRINTF_BUFFER_SIZE_TO_FILE_STAGE];
+struct __wprintf_buffer_to_file {
+    struct __wprintf_buffer base;
+    FILE *fp;
+    wchar_t stage[PRINTF_BUFFER_SIZE_TO_FILE_STAGE];
 };
-void __wprintf_buffer_to_file_init (struct __wprintf_buffer_to_file *buf,
-                                    FILE *fp) attribute_hidden;
-int __wprintf_buffer_to_file_done (struct __wprintf_buffer_to_file *buf)
-  attribute_hidden;
+void __wprintf_buffer_to_file_init(struct __wprintf_buffer_to_file *buf,
+                                   FILE *fp) attribute_hidden;
+int __wprintf_buffer_to_file_done(struct __wprintf_buffer_to_file *buf)
+attribute_hidden;
 
 #endif /* PRINTF_BUFFER_TO_FILE_H */

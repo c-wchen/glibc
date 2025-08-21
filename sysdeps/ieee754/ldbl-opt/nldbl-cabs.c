@@ -2,8 +2,7 @@
 #include <complex.h>
 
 double
-attribute_hidden
-cabsl (double _Complex x)
+attribute_hidden cabsl(double _Complex x)
 {
-  return cabs (x);
+    return cabs(x);
 }

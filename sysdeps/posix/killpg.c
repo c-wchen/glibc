@@ -22,14 +22,12 @@
 /* Send SIG to all processes in process group PGRP.
    If PGRP is zero, send SIG to all processes in
    the current process's process group.  */
-int
-killpg (__pid_t pgrp, int sig)
+int killpg(__pid_t pgrp, int sig)
 {
-  if (pgrp < 0)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (pgrp < 0) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  return __kill (- pgrp, sig);
+    return __kill(- pgrp, sig);
 }

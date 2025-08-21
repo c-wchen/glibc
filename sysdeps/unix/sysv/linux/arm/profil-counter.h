@@ -19,19 +19,18 @@
 #include <signal.h>
 #include <sigcontextinfo.h>
 
-void
-__profil_counter (int signo, siginfo_t *_si, void *scp)
+void __profil_counter(int signo, siginfo_t *_si, void *scp)
 {
-  profil_count (sigcontext_get_pc (scp));
+    profil_count(sigcontext_get_pc(scp));
 
-  /* This is a hack to prevent the compiler from implementing the
-     above function call as a sibcall.  The sibcall would overwrite
-     the signal context.  */
-  asm volatile ("");
+    /* This is a hack to prevent the compiler from implementing the
+       above function call as a sibcall.  The sibcall would overwrite
+       the signal context.  */
+    asm volatile("");
 }
 #ifndef __profil_counter
 # include <shlib-compat.h>
 # if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_31)
-compat_symbol (libc, __profil_counter, profil_counter, GLIBC_2_0);
+compat_symbol(libc, __profil_counter, profil_counter, GLIBC_2_0);
 # endif
 #endif

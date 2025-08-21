@@ -20,27 +20,27 @@
 #include "sv_math.h"
 #include "sv_log1pf_inline.h"
 
-static svfloat32_t NOINLINE
-special_case (svfloat32_t x, svbool_t special)
+static svfloat32_t NOINLINE special_case(svfloat32_t x, svbool_t special)
 {
-  return sv_call_f32 (log1pf, x, sv_log1pf_inline (x, svptrue_b32 ()),
-		      special);
+    return sv_call_f32(log1pf, x, sv_log1pf_inline(x, svptrue_b32()),
+                       special);
 }
 
 /* Vector log1pf approximation using polynomial on reduced interval. Worst-case
    error is 1.27 ULP very close to 0.5.
    _ZGVsMxv_log1pf(0x1.fffffep-2) got 0x1.9f324p-2
-				 want 0x1.9f323ep-2.  */
-svfloat32_t SV_NAME_F1 (log1p) (svfloat32_t x, svbool_t pg)
+                 want 0x1.9f323ep-2.  */
+svfloat32_t SV_NAME_F1(log1p)(svfloat32_t x, svbool_t pg)
 {
-  /* x < -1, Inf/Nan.  */
-  svbool_t special = svcmpeq (pg, svreinterpret_u32 (x), 0x7f800000);
-  special = svorn_z (pg, special, svcmpge (pg, x, -1));
+    /* x < -1, Inf/Nan.  */
+    svbool_t special = svcmpeq(pg, svreinterpret_u32(x), 0x7f800000);
+    special = svorn_z(pg, special, svcmpge(pg, x, -1));
 
-  if (__glibc_unlikely (svptest_any (pg, special)))
-    return special_case (x, special);
+    if (__glibc_unlikely(svptest_any(pg, special))) {
+        return special_case(x, special);
+    }
 
-  return sv_log1pf_inline (x, pg);
+    return sv_log1pf_inline(x, pg);
 }
 
-strong_alias (SV_NAME_F1 (log1p), SV_NAME_F1 (logp1))
+strong_alias(SV_NAME_F1(log1p), SV_NAME_F1(logp1))

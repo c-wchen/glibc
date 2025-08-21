@@ -27,12 +27,11 @@
    SIGALRM signal while inside `sleep' call, the handling of the SIGALRM
    signal afterwards is undefined.  There is no return value to indicate
    error, but if `sleep' returns SECONDS, it probably didn't work.  */
-unsigned int
-__sleep (unsigned int seconds)
+unsigned int __sleep(unsigned int seconds)
 {
-  __set_errno (ENOSYS);
-  return seconds;
+    __set_errno(ENOSYS);
+    return seconds;
 }
-weak_alias (__sleep, sleep)
+weak_alias(__sleep, sleep)
 
-stub_warning (sleep)
+stub_warning(sleep)

@@ -7,4 +7,4 @@
 #include "tsp_common.c"
 #include "dat_iswspace.c"
 
-TST_FUNC_ISW (SPACE, space);
+TST_FUNC_ISW(SPACE, space);

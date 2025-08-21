@@ -18,25 +18,25 @@
 
 #include <ldsodefs.h>
 
-int
-_dl_make_stack_executable (const void *stack_endp)
+int _dl_make_stack_executable(const void *stack_endp)
 {
-  /* This gives us the highest/lowest page that needs to be changed.  */
-  uintptr_t page = ((uintptr_t) stack_endp
-		    & -(intptr_t) GLRO(dl_pagesize));
+    /* This gives us the highest/lowest page that needs to be changed.  */
+    uintptr_t page = ((uintptr_t) stack_endp
+                      & -(intptr_t) GLRO(dl_pagesize));
 
-  if (__mprotect ((void *) page, GLRO(dl_pagesize),
-		  PROT_READ | PROT_WRITE | PROT_EXEC
+    if (__mprotect((void *) page, GLRO(dl_pagesize),
+                   PROT_READ | PROT_WRITE | PROT_EXEC
 #if _STACK_GROWS_DOWN
-		  | PROT_GROWSDOWN
+                   | PROT_GROWSDOWN
 #elif _STACK_GROWS_UP
-		  | PROT_GROWSUP
+                   | PROT_GROWSUP
 #endif
-		  ) != 0)
-    return errno;
+                  ) != 0) {
+        return errno;
+    }
 
-  /* Remember that we changed the permission.  */
-  GL(dl_stack_flags) |= PF_X;
+    /* Remember that we changed the permission.  */
+    GL(dl_stack_flags) |= PF_X;
 
-  return 0;
+    return 0;
 }

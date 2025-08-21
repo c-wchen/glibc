@@ -19,7 +19,7 @@
 #include <stdbit.h>
 
 unsigned int
-(stdc_leading_zeros_ui) (unsigned int x)
+(stdc_leading_zeros_ui)(unsigned int x)
 {
-  return stdc_leading_zeros_ui (x);
+    return stdc_leading_zeros_ui(x);
 }

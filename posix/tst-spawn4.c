@@ -26,32 +26,39 @@
 #include <support/temp_file.h>
 #include <tst-spawn.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char *scriptname;
-  int fd = create_temp_file ("tst-spawn4.", &scriptname);
-  TEST_VERIFY_EXIT (fd >= 0);
+    char *scriptname;
+    int fd = create_temp_file("tst-spawn4.", &scriptname);
+    TEST_VERIFY_EXIT(fd >= 0);
 
-  const char script[] = "echo it should not happen";
-  xwrite (fd, script, sizeof (script) - 1);
-  xclose (fd);
+    const char script[] = "echo it should not happen";
+    xwrite(fd, script, sizeof(script) - 1);
+    xclose(fd);
 
-  TEST_VERIFY_EXIT (chmod (scriptname, 0x775) == 0);
+    TEST_VERIFY_EXIT(chmod(scriptname, 0x775) == 0);
 
-  PID_T_TYPE pid;
-  int status;
+    PID_T_TYPE pid;
+    int status;
 
-  /* Check if scripts without shebang are correctly not executed.  */
-  status = POSIX_SPAWN (&pid, scriptname, NULL, NULL, (char *[]) { 0 },
-                        (char *[]) { 0 });
-  TEST_VERIFY_EXIT (status == ENOEXEC);
+    /* Check if scripts without shebang are correctly not executed.  */
+    status = POSIX_SPAWN(&pid, scriptname, NULL, NULL, (char *[]) {
+        0
+    },
+    (char *[]) {
+        0
+    });
+    TEST_VERIFY_EXIT(status == ENOEXEC);
 
-  status = POSIX_SPAWNP (&pid, scriptname, NULL, NULL, (char *[]) { 0 },
-                         (char *[]) { 0 });
-  TEST_VERIFY_EXIT (status == ENOEXEC);
+    status = POSIX_SPAWNP(&pid, scriptname, NULL, NULL, (char *[]) {
+        0
+    },
+    (char *[]) {
+        0
+    });
+    TEST_VERIFY_EXIT(status == ENOEXEC);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

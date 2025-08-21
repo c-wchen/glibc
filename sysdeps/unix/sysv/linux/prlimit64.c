@@ -21,19 +21,18 @@
 #undef prlimit
 #include <sysdep.h>
 
-int
-__prlimit64 (pid_t pid, enum __rlimit_resource resource,
-	     const struct rlimit64 *new_rlimit, struct rlimit64 *old_rlimit)
+int __prlimit64(pid_t pid, enum __rlimit_resource resource,
+                const struct rlimit64 *new_rlimit, struct rlimit64 *old_rlimit)
 {
-  return INLINE_SYSCALL_CALL (prlimit64, pid, resource, new_rlimit,
-			      old_rlimit);
+    return INLINE_SYSCALL_CALL(prlimit64, pid, resource, new_rlimit,
+                               old_rlimit);
 }
 #ifdef VERSION_prlimit64
 # include <shlib-compat.h>
-versioned_symbol (libc, __prlimit64, prlimit64, VERSION_prlimit64);
+versioned_symbol(libc, __prlimit64, prlimit64, VERSION_prlimit64);
 #else
-strong_alias (__prlimit64, prlimit64)
+strong_alias(__prlimit64, prlimit64)
 # if __RLIM_T_MATCHES_RLIM64_T
-strong_alias (prlimit64, prlimit)
+strong_alias(prlimit64, prlimit)
 # endif
 #endif

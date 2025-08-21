@@ -1,6 +1,5 @@
-extern void foo (void);
+extern void foo(void);
 
-void
-foo (void)
+void foo(void)
 {
 }

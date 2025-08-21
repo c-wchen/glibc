@@ -23,9 +23,10 @@
 #define REF_FMT "i"
 #define REF_VAL(v) ((((v) & 0xffff) ^ 0x8000) - 0x8000)
 typedef int type_t;
-static const type_t vals[] =
-  { SHRT_MIN - 123, SHRT_MIN - 1, SHRT_MIN, -123, -1, 0, 1, 42, SHRT_MAX,
-    SHRT_MAX + 1, SHRT_MAX + 42 };
+static const type_t vals[] = {
+    SHRT_MIN - 123, SHRT_MIN - 1, SHRT_MIN, -123, -1, 0, 1, 42, SHRT_MAX,
+    SHRT_MAX + 1, SHRT_MAX + 42
+};
 static const char length[] = "h";
 
 #include "tst-printf-format-skeleton.c"

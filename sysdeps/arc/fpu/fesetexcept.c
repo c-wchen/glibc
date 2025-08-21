@@ -19,14 +19,13 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-int
-fesetexcept (int excepts)
+int fesetexcept(int excepts)
 {
-  unsigned int fpsr;
+    unsigned int fpsr;
 
-  _FPU_GETS (fpsr);
-  fpsr |= excepts;
-  _FPU_SETS (fpsr);
+    _FPU_GETS(fpsr);
+    fpsr |= excepts;
+    _FPU_SETS(fpsr);
 
-  return 0;
+    return 0;
 }

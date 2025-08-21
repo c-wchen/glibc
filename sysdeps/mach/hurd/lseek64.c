@@ -20,14 +20,14 @@
 #include <hurd/fd.h>
 
 /* Seek to OFFSET on FD, starting from WHENCE.  */
-off64_t
-__libc_lseek64 (int fd, off64_t offset, int whence)
+off64_t __libc_lseek64(int fd, off64_t offset, int whence)
 {
-  error_t err;
-  if (err = HURD_DPORT_USE (fd, __io_seek (port, offset, whence, &offset)))
-    return __hurd_dfail (fd, err);
-  return offset;
+    error_t err;
+    if (err = HURD_DPORT_USE(fd, __io_seek(port, offset, whence, &offset))) {
+        return __hurd_dfail(fd, err);
+    }
+    return offset;
 }
 
-weak_alias (__libc_lseek64, __lseek64)
-weak_alias (__libc_lseek64, lseek64)
+weak_alias(__libc_lseek64, __lseek64)
+weak_alias(__libc_lseek64, lseek64)

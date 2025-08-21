@@ -23,47 +23,41 @@
 #include <unistd.h>
 #include <misc/sys/auxv.h>
 
-static int
-do_test (int argc, char *argv[])
+static int do_test(int argc, char *argv[])
 {
-  errno = 0;
-  const char *execfn = (const char *) getauxval (AT_NULL);
+    errno = 0;
+    const char *execfn = (const char *) getauxval(AT_NULL);
 
-  if (errno != ENOENT)
-    {
-      printf ("errno is %d rather than %d (ENOENT) on failure\n", errno,
-	      ENOENT);
-      return 1;
+    if (errno != ENOENT) {
+        printf("errno is %d rather than %d (ENOENT) on failure\n", errno,
+               ENOENT);
+        return 1;
     }
 
-  if (execfn != NULL)
-    {
-      printf ("getauxval return value is nonzero on failure\n");
-      return 1;
+    if (execfn != NULL) {
+        printf("getauxval return value is nonzero on failure\n");
+        return 1;
     }
 
-  errno = 0;
-  execfn = (const char *) getauxval (AT_EXECFN);
+    errno = 0;
+    execfn = (const char *) getauxval(AT_EXECFN);
 
-  if (execfn == NULL)
-    {
-      printf ("No AT_EXECFN found, AT_EXECFN test skipped\n");
-      return 0;
+    if (execfn == NULL) {
+        printf("No AT_EXECFN found, AT_EXECFN test skipped\n");
+        return 0;
     }
 
-  if (errno != 0)
-    {
-      printf ("errno erroneously set to %d on success\n", errno);
-      return 1;
+    if (errno != 0) {
+        printf("errno erroneously set to %d on success\n", errno);
+        return 1;
     }
 
-  if (strcmp (argv[0], execfn) != 0)
-    {
-      printf ("Mismatch: argv[0]: %s vs. AT_EXECFN: %s\n", argv[0], execfn);
-      return 1;
+    if (strcmp(argv[0], execfn) != 0) {
+        printf("Mismatch: argv[0]: %s vs. AT_EXECFN: %s\n", argv[0], execfn);
+        return 1;
     }
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION_ARGV do_test

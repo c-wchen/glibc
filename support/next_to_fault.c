@@ -23,54 +23,54 @@
 #include <sys/mman.h>
 #include <sys/param.h>
 
-static struct support_next_to_fault
-support_next_to_fault_allocate_any (size_t size, bool fault_after_alloc)
+static struct support_next_to_fault support_next_to_fault_allocate_any(size_t size, bool fault_after_alloc)
 {
-  long page_size = sysconf (_SC_PAGE_SIZE);
-  long protect_offset = 0;
-  long buffer_offset = page_size;
+    long page_size = sysconf(_SC_PAGE_SIZE);
+    long protect_offset = 0;
+    long buffer_offset = page_size;
 
-  TEST_VERIFY_EXIT (page_size > 0);
-  struct support_next_to_fault result;
-  result.region_size = roundup (size, page_size) + page_size;
-  if (size + page_size <= size || result.region_size <= size)
-    FAIL_EXIT1 ("%s (%zu): overflow", __func__, size);
-  result.region_start
-    = xmmap (NULL, result.region_size, PROT_READ | PROT_WRITE,
-             MAP_PRIVATE | MAP_ANONYMOUS, -1);
+    TEST_VERIFY_EXIT(page_size > 0);
+    struct support_next_to_fault result;
+    result.region_size = roundup(size, page_size) + page_size;
+    if (size + page_size <= size || result.region_size <= size) {
+        FAIL_EXIT1("%s (%zu): overflow", __func__, size);
+    }
+    result.region_start
+        = xmmap(NULL, result.region_size, PROT_READ | PROT_WRITE,
+                MAP_PRIVATE | MAP_ANONYMOUS, -1);
 
-  if (fault_after_alloc)
-    {
-      protect_offset = result.region_size - page_size;
-      buffer_offset = protect_offset - size;
+    if (fault_after_alloc) {
+        protect_offset = result.region_size - page_size;
+        buffer_offset = protect_offset - size;
     }
 
-  /* Unmap the page before or after the allocation.  */
-  xmprotect (result.region_start + protect_offset, page_size, PROT_NONE);
-  /* Align the allocation within the region so that it starts after or ends
-     just before the PROT_NONE page.  */
-  result.buffer = result.region_start + buffer_offset;
-  result.length = size;
-  return result;
+    /* Unmap the page before or after the allocation.  */
+    xmprotect(result.region_start + protect_offset, page_size, PROT_NONE);
+    /* Align the allocation within the region so that it starts after or ends
+       just before the PROT_NONE page.  */
+    result.buffer = result.region_start + buffer_offset;
+    result.length = size;
+    return result;
 }
 
 /* Unmapped a page after the buffer */
 struct support_next_to_fault
-support_next_to_fault_allocate (size_t size)
+support_next_to_fault_allocate(size_t size)
 {
-  return support_next_to_fault_allocate_any (size, true);
+    return support_next_to_fault_allocate_any(size, true);
 }
 
 /* Unmapped a page before the buffer */
 struct support_next_to_fault
-support_next_to_fault_allocate_before (size_t size)
+support_next_to_fault_allocate_before(size_t size)
 {
-  return support_next_to_fault_allocate_any (size, false);
+    return support_next_to_fault_allocate_any(size, false);
 }
 
-void
-support_next_to_fault_free (struct support_next_to_fault *ntf)
+void support_next_to_fault_free(struct support_next_to_fault *ntf)
 {
-  xmunmap (ntf->region_start, ntf->region_size);
-  *ntf = (struct support_next_to_fault) { NULL, };
+    xmunmap(ntf->region_start, ntf->region_size);
+    *ntf = (struct support_next_to_fault) {
+        NULL,
+    };
 }

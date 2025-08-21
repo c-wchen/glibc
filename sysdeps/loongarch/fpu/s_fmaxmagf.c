@@ -20,10 +20,9 @@
 #include <math.h>
 #include <libm-alias-float.h>
 
-float
-__fmaxmagf (float x, float y)
+float __fmaxmagf(float x, float y)
 {
-  asm volatile ("fmaxa.s \t%0, %1, %2" : "=f" (x) : "f" (x), "f" (y));
-  return x;
+    asm volatile("fmaxa.s \t%0, %1, %2" : "=f"(x) : "f"(x), "f"(y));
+    return x;
 }
-libm_alias_float (__fmaxmag, fmaxmag)
+libm_alias_float(__fmaxmag, fmaxmag)

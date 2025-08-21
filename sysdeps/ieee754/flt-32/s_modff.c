@@ -21,49 +21,45 @@
 #include "math_config.h"
 #include <math-use-builtins-trunc.h>
 
-float
-__modff (float x, float *iptr)
+float __modff(float x, float *iptr)
 {
-  uint32_t t = asuint (x);
+    uint32_t t = asuint(x);
 #if USE_TRUNCF_BUILTIN
-  if (is_inf (t))
-    {
-      *iptr = x;
-      return copysignf (0.0, x);
+    if (is_inf(t)) {
+        *iptr = x;
+        return copysignf(0.0, x);
     }
-  *iptr = truncf (x);
-  return copysignf (x - *iptr, x);
+    *iptr = truncf(x);
+    return copysignf(x - *iptr, x);
 #else
-  int e = get_exponent (t);
-  /* No fraction part.  */
-  if (e < MANTISSA_WIDTH)
-    {
-      if (e < 0)
-	{
-	  /* |x|<1 -> *iptr = +-0 */
-	  *iptr = asfloat (t & SIGN_MASK);
-	  return x;
-	}
+    int e = get_exponent(t);
+    /* No fraction part.  */
+    if (e < MANTISSA_WIDTH) {
+        if (e < 0) {
+            /* |x|<1 -> *iptr = +-0 */
+            *iptr = asfloat(t & SIGN_MASK);
+            return x;
+        }
 
-      uint32_t i = MANTISSA_MASK >> e;
-      if ((t & i) == 0)
-	{
-	  /* x in integral, return +-0  */
-	  *iptr = x;
-	  return asfloat (t & SIGN_MASK);
-	}
+        uint32_t i = MANTISSA_MASK >> e;
+        if ((t & i) == 0) {
+            /* x in integral, return +-0  */
+            *iptr = x;
+            return asfloat(t & SIGN_MASK);
+        }
 
-      *iptr = asfloat (t & ~i);
-      return x - *iptr;
+        *iptr = asfloat(t & ~i);
+        return x - *iptr;
     }
 
-  /* Set invalid operation for sNaN.  */
-  *iptr = x * 1.0f;
-  if ((e == 0x80) && (t & MANTISSA_MASK))
-    return *iptr;
-  return asfloat (t & SIGN_MASK);
+    /* Set invalid operation for sNaN.  */
+    *iptr = x * 1.0f;
+    if ((e == 0x80) && (t & MANTISSA_MASK)) {
+        return *iptr;
+    }
+    return asfloat(t & SIGN_MASK);
 #endif
 }
 #ifndef __modff
-libm_alias_float (__modf, modf)
+libm_alias_float(__modf, modf)
 #endif

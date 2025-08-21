@@ -18,16 +18,15 @@
 
 #include <fenv.h>
 
-int
-fetestexcept (int excepts)
+int fetestexcept(int excepts)
 {
-  int temp;
-  unsigned int mxscr;
+    int temp;
+    unsigned int mxscr;
 
-  /* Get current exceptions.  */
-  __asm__ ("fnstsw %0\n"
-	   "stmxcsr %1" : "=m" (*&temp), "=m" (*&mxscr));
+    /* Get current exceptions.  */
+    __asm__("fnstsw %0\n"
+            "stmxcsr %1" : "=m"( *&temp), "=m"( *&mxscr));
 
-  return (temp | mxscr) & excepts & FE_ALL_EXCEPT;
+    return (temp | mxscr) & excepts & FE_ALL_EXCEPT;
 }
-libm_hidden_def (fetestexcept)
+libm_hidden_def(fetestexcept)

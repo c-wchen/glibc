@@ -29,16 +29,16 @@
    X is small enough that factors quadratic in it can be
    neglected.  */
 
-double
-__gamma_product (double x, double x_eps, int n, double *eps)
+double __gamma_product(double x, double x_eps, int n, double *eps)
 {
-  long double x_full = (long double) x + (long double) x_eps;
-  long double ret = x_full;
-  for (int i = 1; i < n; i++)
-    ret *= x_full + i;
+    long double x_full = (long double) x + (long double) x_eps;
+    long double ret = x_full;
+    for (int i = 1; i < n; i++) {
+        ret *= x_full + i;
+    }
 
-  double fret = math_narrow_eval ((double) ret);
-  *eps = (ret - fret) / fret;
+    double fret = math_narrow_eval((double) ret);
+    *eps = (ret - fret) / fret;
 
-  return fret;
+    return fret;
 }

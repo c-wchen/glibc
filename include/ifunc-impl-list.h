@@ -17,19 +17,18 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _IFUNC_IMPL_LIST_H
-#define _IFUNC_IMPL_LIST_H	1
+#define _IFUNC_IMPL_LIST_H  1
 
 #include <stdbool.h>
 #include <stddef.h>
 
-struct libc_ifunc_impl
-{
-  /* The name of function to be tested.  */
-  const char *name;
-  /* The address of function to be tested.  */
-  void (*fn) (void);
-  /* True if this implementation is usable on this machine.  */
-  bool usable;
+struct libc_ifunc_impl {
+    /* The name of function to be tested.  */
+    const char *name;
+    /* The address of function to be tested.  */
+    void (*fn)(void);
+    /* True if this implementation is usable on this machine.  */
+    bool usable;
 };
 
 /* Add an IFUNC implementation, IMPL, for function FUNC, to ARRAY with
@@ -49,8 +48,8 @@ struct libc_ifunc_impl
 
 /* Fill ARRAY of MAX elements with IFUNC implementations for function
    NAME and return the number of valid entries.  */
-extern size_t __libc_ifunc_impl_list (const char *name,
-				      struct libc_ifunc_impl *array,
-				      size_t max);
+extern size_t __libc_ifunc_impl_list(const char *name,
+                                     struct libc_ifunc_impl *array,
+                                     size_t max);
 
 #endif /* ifunc-impl-list.h */

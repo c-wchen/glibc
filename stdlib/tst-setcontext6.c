@@ -25,53 +25,46 @@
 static ucontext_t ctx[3];
 static atomic_int done;
 
-static void
-f1 (void)
+static void f1(void)
 {
-  printf ("start f1\n");
-  if (!done)
-    {
-      if (getcontext (&ctx[2]) != 0)
-	{
-	  printf ("%s: getcontext: %m\n", __FUNCTION__);
-	  exit (EXIT_FAILURE);
-	}
-      if (done)
-	exit (EXIT_SUCCESS);
+    printf("start f1\n");
+    if (!done) {
+        if (getcontext(&ctx[2]) != 0) {
+            printf("%s: getcontext: %m\n", __FUNCTION__);
+            exit(EXIT_FAILURE);
+        }
+        if (done) {
+            exit(EXIT_SUCCESS);
+        }
     }
-  done++;
-  if (setcontext (&ctx[2]) != 0)
-    {
-      printf ("%s: setcontext: %m\n", __FUNCTION__);
-      exit (EXIT_FAILURE);
+    done++;
+    if (setcontext(&ctx[2]) != 0) {
+        printf("%s: setcontext: %m\n", __FUNCTION__);
+        exit(EXIT_FAILURE);
     }
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  char st1[32768];
-  puts ("making contexts");
-  if (getcontext (&ctx[0]) != 0)
-    {
-      printf ("%s: getcontext: %m\n", __FUNCTION__);
-      exit (EXIT_FAILURE);
+    char st1[32768];
+    puts("making contexts");
+    if (getcontext(&ctx[0]) != 0) {
+        printf("%s: getcontext: %m\n", __FUNCTION__);
+        exit(EXIT_FAILURE);
     }
-  if (getcontext (&ctx[1]) != 0)
-    {
-      printf ("%s: getcontext: %m\n", __FUNCTION__);
-      exit (EXIT_FAILURE);
+    if (getcontext(&ctx[1]) != 0) {
+        printf("%s: getcontext: %m\n", __FUNCTION__);
+        exit(EXIT_FAILURE);
     }
-  ctx[1].uc_stack.ss_sp = st1;
-  ctx[1].uc_stack.ss_size = sizeof st1;
-  ctx[1].uc_link = &ctx[0];
-  makecontext (&ctx[1], (void (*) (void)) f1, 0);
-  if (setcontext (&ctx[1]) != 0)
-    {
-      printf ("%s: setcontext: %m\n", __FUNCTION__);
-      exit (EXIT_FAILURE);
+    ctx[1].uc_stack.ss_sp = st1;
+    ctx[1].uc_stack.ss_size = sizeof st1;
+    ctx[1].uc_link = &ctx[0];
+    makecontext(&ctx[1], (void (*)(void)) f1, 0);
+    if (setcontext(&ctx[1]) != 0) {
+        printf("%s: setcontext: %m\n", __FUNCTION__);
+        exit(EXIT_FAILURE);
     }
-  exit (EXIT_FAILURE);
+    exit(EXIT_FAILURE);
 }
 
 #include <support/test-driver.c>

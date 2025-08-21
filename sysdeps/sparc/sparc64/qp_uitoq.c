@@ -22,11 +22,11 @@
 
 void _Qp_uitoq(long double *c, const unsigned int a)
 {
-  FP_DECL_EX;
-  FP_DECL_Q(C);
-  unsigned int b = a;
+    FP_DECL_EX;
+    FP_DECL_Q(C);
+    unsigned int b = a;
 
-  FP_FROM_INT_Q(C, b, 32, unsigned int);
-  FP_PACK_RAW_QP(c, C);
-  QP_NO_EXCEPTIONS;
+    FP_FROM_INT_Q(C, b, 32, unsigned int);
+    FP_PACK_RAW_QP(c, C);
+    QP_NO_EXCEPTIONS;
 }

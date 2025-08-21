@@ -30,27 +30,27 @@
 #endif
 
 /* Find the first occurrence of C in S or the final NUL byte.  */
-char *
-__strchrnul (const char *str, int c_in)
+char *__strchrnul(const char *str, int c_in)
 {
-  /* Align pointer to sizeof op_t.  */
-  uintptr_t s_int = (uintptr_t) str;
-  const op_t *word_ptr = (const op_t *) PTR_ALIGN_DOWN (str, sizeof (op_t));
+    /* Align pointer to sizeof op_t.  */
+    uintptr_t s_int = (uintptr_t) str;
+    const op_t *word_ptr = (const op_t *) PTR_ALIGN_DOWN(str, sizeof(op_t));
 
-  op_t repeated_c = repeat_bytes (c_in);
+    op_t repeated_c = repeat_bytes(c_in);
 
-  op_t word = *word_ptr;
-  find_t mask = shift_find (find_zero_eq_all (word, repeated_c), s_int);
-  if (mask != 0)
-    return (char *) str + index_first (mask);
+    op_t word = *word_ptr;
+    find_t mask = shift_find(find_zero_eq_all(word, repeated_c), s_int);
+    if (mask != 0) {
+        return (char *) str + index_first(mask);
+    }
 
-  do
-    word = *++word_ptr;
-  while (! has_zero_eq (word, repeated_c));
+    do {
+        word = *++word_ptr;
+    } while (! has_zero_eq(word, repeated_c));
 
-  return (char *) word_ptr + index_first_zero_eq (word, repeated_c);
+    return (char *) word_ptr + index_first_zero_eq(word, repeated_c);
 }
 #ifndef STRCHRNUL
-libc_hidden_def (__strchrnul)
-weak_alias (__strchrnul, strchrnul)
+libc_hidden_def(__strchrnul)
+weak_alias(__strchrnul, strchrnul)
 #endif

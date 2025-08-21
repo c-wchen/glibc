@@ -18,10 +18,9 @@
 #include <spawn.h>
 
 /* Initialize data structure for file attribute for `spawn' call.  */
-int
-__posix_spawnattr_destroy (posix_spawnattr_t *attr)
+int __posix_spawnattr_destroy(posix_spawnattr_t *attr)
 {
-  /* Nothing to do in the moment.  */
-  return 0;
+    /* Nothing to do in the moment.  */
+    return 0;
 }
-weak_alias (__posix_spawnattr_destroy, posix_spawnattr_destroy)
+weak_alias(__posix_spawnattr_destroy, posix_spawnattr_destroy)

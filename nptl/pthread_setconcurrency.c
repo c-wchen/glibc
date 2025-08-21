@@ -23,23 +23,23 @@
 int __concurrency_level;
 
 
-int
-__pthread_setconcurrency (int level)
+int __pthread_setconcurrency(int level)
 {
-  if (level < 0)
-    return EINVAL;
+    if (level < 0) {
+        return EINVAL;
+    }
 
-  __concurrency_level = level;
+    __concurrency_level = level;
 
-  /* XXX For ports which actually need to handle the concurrency level
-     some more code is probably needed here.  */
+    /* XXX For ports which actually need to handle the concurrency level
+       some more code is probably needed here.  */
 
-  return 0;
+    return 0;
 }
-versioned_symbol (libc, __pthread_setconcurrency, pthread_setconcurrency,
-                  GLIBC_2_34);
+versioned_symbol(libc, __pthread_setconcurrency, pthread_setconcurrency,
+                 GLIBC_2_34);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1, GLIBC_2_34)
-compat_symbol (libpthread, __pthread_setconcurrency, pthread_setconcurrency,
-               GLIBC_2_1);
+compat_symbol(libpthread, __pthread_setconcurrency, pthread_setconcurrency,
+              GLIBC_2_1);
 #endif

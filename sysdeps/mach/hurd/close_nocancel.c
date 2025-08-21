@@ -22,13 +22,12 @@
 #include <not-cancel.h>
 
 /* Close the file descriptor FD.  */
-int
-__close_nocancel (int fd)
+int __close_nocancel(int fd)
 {
-  error_t err;
+    error_t err;
 
-  err = HURD_FD_USE (fd, _hurd_fd_close (descriptor));
+    err = HURD_FD_USE(fd, _hurd_fd_close(descriptor));
 
-  return err ? __hurd_fail (err) : 0;
+    return err ? __hurd_fail(err) : 0;
 }
-libc_hidden_def (__close_nocancel)
+libc_hidden_def(__close_nocancel)

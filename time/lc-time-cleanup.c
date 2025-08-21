@@ -19,18 +19,16 @@
 #include "../locale/localeinfo.h"
 #include <stdlib.h>
 
-void
-_nl_cleanup_time (struct __locale_data *locale)
+void _nl_cleanup_time(struct __locale_data *locale)
 {
-  struct lc_time_data *const data = locale->private;
-  if (data != NULL)
-    {
-      locale->private = NULL;
+    struct lc_time_data *const data = locale->private;
+    if (data != NULL) {
+        locale->private = NULL;
 
-      free (data->eras);
-      free (data->alt_digits);
-      free (data->walt_digits);
+        free(data->eras);
+        free(data->alt_digits);
+        free(data->walt_digits);
 
-      free (data);
+        free(data);
     }
 }

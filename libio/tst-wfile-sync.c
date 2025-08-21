@@ -29,32 +29,31 @@
 
 static const char test_data[] = "This is a test of _IO_wfile_sync.";
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  static char *infile;
-  int infd;
-  FILE *infp;
+    static char *infile;
+    int infd;
+    FILE *infp;
 
-  infd = create_temp_file ("tst-wfile-sync-in-", &infile);
-  xwrite (infd, test_data, strlen (test_data));
-  xclose (infd);
+    infd = create_temp_file("tst-wfile-sync-in-", &infile);
+    xwrite(infd, test_data, strlen(test_data));
+    xclose(infd);
 
-  infd = xopen (infile, O_RDONLY, 0);
-  infp = fdopen (infd, "r");
+    infd = xopen(infile, O_RDONLY, 0);
+    infp = fdopen(infd, "r");
 
-  TEST_VERIFY_EXIT (setlocale (LC_ALL, "de_DE.UTF-8") != NULL);
-  /* Fill the stdio buffer and advance the read pointer.  */
-  TEST_VERIFY_EXIT (fgetwc (infp) != WEOF);
-  /* This calls _IO_wfile_sync, it should not crash.  */
-  TEST_VERIFY_EXIT (setvbuf (infp, NULL, _IONBF, 0) == 0);
-  /* Verify that the external file offset has been synchronized.  */
-  TEST_COMPARE (xlseek (infd, 0, SEEK_CUR), 1);
+    TEST_VERIFY_EXIT(setlocale(LC_ALL, "de_DE.UTF-8") != NULL);
+    /* Fill the stdio buffer and advance the read pointer.  */
+    TEST_VERIFY_EXIT(fgetwc(infp) != WEOF);
+    /* This calls _IO_wfile_sync, it should not crash.  */
+    TEST_VERIFY_EXIT(setvbuf(infp, NULL, _IONBF, 0) == 0);
+    /* Verify that the external file offset has been synchronized.  */
+    TEST_COMPARE(xlseek(infd, 0, SEEK_CUR), 1);
 
-  fclose (infp);
-  free (infile);
+    fclose(infp);
+    free(infile);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

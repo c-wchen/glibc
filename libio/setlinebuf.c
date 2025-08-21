@@ -29,8 +29,7 @@
 
 #undef setlinebuf
 
-void
-setlinebuf (FILE *stream)
+void setlinebuf(FILE *stream)
 {
-  _IO_setvbuf (stream, NULL, 1, 0);
+    _IO_setvbuf(stream, NULL, 1, 0);
 }

@@ -1,14 +1,12 @@
 #include <stdio.h>
-int
-foo (void)
+int foo(void)
 {
-  printf ("%s:%s\n", __FILE__, __func__);
-  return 1;
+    printf("%s:%s\n", __FILE__, __func__);
+    return 1;
 }
 
-int
-baz (void)
+int baz(void)
 {
-  printf ("%s:%s\n", __FILE__, __func__);
-  return 20;
+    printf("%s:%s\n", __FILE__, __func__);
+    return 20;
 }

@@ -40,10 +40,9 @@
 /* Get the thread descriptor definition.  */
 #include <nptl/descr.h>
 
-typedef struct
-{
-  dtv_t *dtv;
-  void *private;
+typedef struct {
+    dtv_t *dtv;
+    void *private;
 } tcbhead_t;
 
 /* This is the size of the initial TCB.  Because our TCB is before the thread
@@ -93,7 +92,7 @@ typedef struct
 /* Return the thread descriptor for the current thread.  */
 #define THREAD_SELF \
   ((struct pthread *) (READ_THREAD_POINTER () - TLS_TCB_OFFSET \
-		       - TLS_PRE_TCB_SIZE))
+               - TLS_PRE_TCB_SIZE))
 
 /* Value passed to 'clone' for initialization of the thread register.  */
 #define TLS_DEFINE_INIT_TP(tp, pd) \
@@ -120,9 +119,9 @@ typedef struct
   do \
     { \
       int __res = atomic_exchange_release (&THREAD_SELF->header.gscope_flag, \
-					   THREAD_GSCOPE_FLAG_UNUSED); \
+                       THREAD_GSCOPE_FLAG_UNUSED); \
       if (__res == THREAD_GSCOPE_FLAG_WAIT) \
-	lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1, LLL_PRIVATE); \
+    lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1, LLL_PRIVATE); \
     } \
   while (0)
 #define THREAD_GSCOPE_SET_FLAG() \

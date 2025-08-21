@@ -18,12 +18,11 @@
 #include <time.h>
 
 /* Return frequency of times().  */
-int
-__getclktck (void)
+int __getclktck(void)
 {
-#ifdef	CLK_TCK
-  return CLK_TCK;
+#ifdef  CLK_TCK
+    return CLK_TCK;
 #else
-  return 60;
+    return 60;
 #endif
 }

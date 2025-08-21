@@ -24,12 +24,11 @@
    after waiting the interval specified therein.  Additionally set the sigmask
    SIGMASK for this call.  Returns the number of ready descriptors, or -1 for
    errors.  */
-int
-__pselect (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
-	   const struct timespec *timeout, const sigset_t *sigmask)
+int __pselect(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
+              const struct timespec *timeout, const sigset_t *sigmask)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-weak_alias (__pselect, pselect)
-stub_warning (pselect)
+weak_alias(__pselect, pselect)
+stub_warning(pselect)

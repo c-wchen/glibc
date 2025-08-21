@@ -21,22 +21,22 @@
 # include <shlib-compat.h>
 # include "init-arch.h"
 
-extern __typeof (__memchr) __memchr_ppc attribute_hidden;
-extern __typeof (__memchr) __memchr_power7 attribute_hidden;
-extern __typeof (__memchr) __memchr_power8 attribute_hidden;
+extern __typeof(__memchr) __memchr_ppc attribute_hidden;
+extern __typeof(__memchr) __memchr_power7 attribute_hidden;
+extern __typeof(__memchr) __memchr_power8 attribute_hidden;
 
 /* Avoid DWARF definition DIE on ifunc symbol so that GDB can handle
    ifunc symbol properly.  */
-libc_ifunc (__memchr,
-	    (hwcap2 & PPC_FEATURE2_ARCH_2_07
-	     && hwcap & PPC_FEATURE_HAS_ALTIVEC)
-	    ? __memchr_power8 :
-	    (hwcap & PPC_FEATURE_ARCH_2_06)
-            ? __memchr_power7
-            : __memchr_ppc);
+libc_ifunc(__memchr,
+           (hwcap2 &PPC_FEATURE2_ARCH_2_07
+            &&hwcap &PPC_FEATURE_HAS_ALTIVEC)
+           ? __memchr_power8 :
+           (hwcap &PPC_FEATURE_ARCH_2_06)
+           ? __memchr_power7
+           : __memchr_ppc);
 
-weak_alias (__memchr, memchr)
-libc_hidden_builtin_def (memchr)
+weak_alias(__memchr, memchr)
+libc_hidden_builtin_def(memchr)
 #else
 #include <string/memchr.c>
 #endif

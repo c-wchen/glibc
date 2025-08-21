@@ -28,59 +28,46 @@ int sawown;
 int sawcur;
 
 
-static int
-callback (const char *fname, const struct stat *st, int flag)
+static int callback(const char *fname, const struct stat *st, int flag)
 {
-  printf ("%d: \"%s\" -> ", ++cnt, fname);
-  if (strcmp (fname, ".") == 0 && sawcur)
-    {
-      puts ("current directory reported twice");
-      result = 1;
-    }
-  else if (strcmp (fname, "./bug-ftw2.c") == 0 && sawown)
-    {
-      puts ("source file reported twice");
-      result = 1;
-    }
-  else if (fname[0] != '.')
-    {
-      puts ("missing '.' as first character");
-      result = 1;
-    }
-  else if (fname[1] != '\0' && fname[1] != '/')
-    {
-      puts ("no '/' in second position");
-      result = 1;
-    }
-  else
-    {
-      puts ("OK");
-      sawcur |= strcmp (fname, ".") == 0;
-      sawown |= strcmp (fname, "./bug-ftw2.c") == 0;
+    printf("%d: \"%s\" -> ", ++cnt, fname);
+    if (strcmp(fname, ".") == 0 && sawcur) {
+        puts("current directory reported twice");
+        result = 1;
+    } else if (strcmp(fname, "./bug-ftw2.c") == 0 && sawown) {
+        puts("source file reported twice");
+        result = 1;
+    } else if (fname[0] != '.') {
+        puts("missing '.' as first character");
+        result = 1;
+    } else if (fname[1] != '\0' && fname[1] != '/') {
+        puts("no '/' in second position");
+        result = 1;
+    } else {
+        puts("OK");
+        sawcur |= strcmp(fname, ".") == 0;
+        sawown |= strcmp(fname, "./bug-ftw2.c") == 0;
     }
 
-  return 0;
+    return 0;
 }
 
 
-int
-main (void)
+int main(void)
 {
-  mtrace ();
+    mtrace();
 
-  ftw (".", callback, 10);
+    ftw(".", callback, 10);
 
-  if (! sawcur)
-    {
-      puts ("current directory wasn't reported");
-      result = 1;
+    if (! sawcur) {
+        puts("current directory wasn't reported");
+        result = 1;
     }
 
-  if (! sawown)
-    {
-      puts ("source file wasn't reported");
-      result = 1;
+    if (! sawown) {
+        puts("source file wasn't reported");
+        result = 1;
     }
 
-  return result;
+    return result;
 }

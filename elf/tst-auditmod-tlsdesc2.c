@@ -22,38 +22,34 @@
 #include <stdio.h>
 #include <unistd.h>
 
-unsigned int
-la_version (unsigned int version)
+unsigned int la_version(unsigned int version)
 {
-  /* Open some modules, to trigger DTV resizing before the switch to
-     the main malloc.  */
-  for (int i = 1; i <= 19; ++i)
-    {
-      char dso[30];
-      snprintf (dso, sizeof (dso), "tst-tlsmod17a%d.so", i);
-      char sym[30];
-      snprintf (sym, sizeof(sym), "tlsmod17a%d", i);
+    /* Open some modules, to trigger DTV resizing before the switch to
+       the main malloc.  */
+    for (int i = 1; i <= 19; ++i) {
+        char dso[30];
+        snprintf(dso, sizeof(dso), "tst-tlsmod17a%d.so", i);
+        char sym[30];
+        snprintf(sym, sizeof(sym), "tlsmod17a%d", i);
 
-      void *handle = dlopen (dso, RTLD_LAZY);
-      if (handle == NULL)
-        {
-          printf ("error: dlmopen from auditor: %s\n", dlerror  ());
-          fflush (stdout);
-          _exit (1);
+        void *handle = dlopen(dso, RTLD_LAZY);
+        if (handle == NULL) {
+            printf("error: dlmopen from auditor: %s\n", dlerror());
+            fflush(stdout);
+            _exit(1);
         }
-      int (*func) (void) = dlsym (handle, sym);
-      if (func == NULL)
-        {
-          printf ("error: dlsym from auditor: %s\n", dlerror  ());
-          fflush (stdout);
-          _exit (1);
+        int (*func)(void) = dlsym(handle, sym);
+        if (func == NULL) {
+            printf("error: dlsym from auditor: %s\n", dlerror());
+            fflush(stdout);
+            _exit(1);
         }
-      /* Trigger TLS allocation.  */
-      func ();
+        /* Trigger TLS allocation.  */
+        func();
     }
 
-  puts ("info: TLS-using modules loaded from auditor");
-  fflush (stdout);
+    puts("info: TLS-using modules loaded from auditor");
+    fflush(stdout);
 
-  return LAV_CURRENT;
+    return LAV_CURRENT;
 }

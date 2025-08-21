@@ -21,35 +21,34 @@
 
 #include <sys/types.h>
 
-struct support_subprocess
-{
-  int stdout_pipe[2];
-  int stderr_pipe[2];
-  pid_t pid;
+struct support_subprocess {
+    int stdout_pipe[2];
+    int stderr_pipe[2];
+    pid_t pid;
 };
 
 /* Invoke CALLBACK (CLOSURE) in a subprocess created with fork and return
    its PID, a pipe redirected to STDOUT, and a pipe redirected to STDERR.  */
 struct support_subprocess support_subprocess
-  (void (*callback) (void *), void *closure);
+(void (*callback)(void *), void *closure);
 
 /* Issue FILE with ARGV arguments and ENVP environments by using posix_spawn
    and return is PID, a pipe redirected to STDOUT, and a pipe redirected to
    STDERR.  If ENVP is NULL the current environment variable is used.  */
 struct support_subprocess support_subprogram
-  (const char *file, char *const argv[], char *const envp[]);
+(const char *file, char *const argv[], char *const envp[]);
 
 /* Invoke program FILE with ARGV arguments by using posix_spawn and wait for it
    to complete.  Return program exit status.  */
 int support_subprogram_wait
-  (const char *file, char *const argv[]);
+(const char *file, char *const argv[]);
 
 /* Wait for the subprocess indicated by PROC::PID.  Return the status
    indicate by waitpid call.  */
-int support_process_wait (struct support_subprocess *proc);
+int support_process_wait(struct support_subprocess *proc);
 
 /* Terminate the subprocess indicated by PROC::PID, first with a SIGTERM and
    then with a SIGKILL.  Return the status as for waitpid call.  */
-int support_process_terminate (struct support_subprocess *proc);
+int support_process_terminate(struct support_subprocess *proc);
 
 #endif

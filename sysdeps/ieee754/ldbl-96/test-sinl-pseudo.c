@@ -20,22 +20,20 @@
 #include <math_ldbl.h>
 #include <stdint.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  for (int i = 0; i < 64; i++)
-    {
-      uint64_t sig = i == 63 ? 0 : 1ULL << i;
-      long double ld;
-      SET_LDOUBLE_WORDS (ld, 0x4141,
-			 sig >> 32, sig & 0xffffffffULL);
-      /* The requirement is that no stack overflow occurs when the
-	 pseudo-zero or unnormal goes through range reduction.  */
-      volatile long double ldr;
-      ldr = sinl (ld);
-      (void) ldr;
+    for (int i = 0; i < 64; i++) {
+        uint64_t sig = i == 63 ? 0 : 1ULL << i;
+        long double ld;
+        SET_LDOUBLE_WORDS(ld, 0x4141,
+                          sig >> 32, sig & 0xffffffffULL);
+        /* The requirement is that no stack overflow occurs when the
+        pseudo-zero or unnormal goes through range reduction.  */
+        volatile long double ldr;
+        ldr = sinl(ld);
+        (void) ldr;
     }
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -20,7 +20,7 @@
 /*  MODULE_NAME: urem.h                                                 */
 /*                                                                      */
 /*                                                                      */
-/* 	common data and variables definition for BIG or LITTLE ENDIAN   */
+/*  common data and variables definition for BIG or LITTLE ENDIAN   */
 /************************************************************************/
 
 #ifndef UREM_H
@@ -28,17 +28,17 @@
 
 #ifdef BIG_ENDI
 static const mynumber big = {{0x43380000, 0}},  /* 6755399441055744 */
-                     t128 = {{0x47f00000, 0}},  /*  2^ 128          */
-                    tm128 = {{0x37f00000, 0}},  /*  2^-128          */
-                      ZERO = {{0, 0}},          /*  0.0             */
-                     nZERO = {{0x80000000, 0}}; /* -0.0             */
+t128 = {{0x47f00000, 0}},  /*  2^ 128          */
+tm128 = {{0x37f00000, 0}},  /*  2^-128          */
+ZERO = {{0, 0}},          /*  0.0             */
+nZERO = {{0x80000000, 0}}; /* -0.0             */
 #else
 #ifdef LITTLE_ENDI
 static const mynumber big = {{0, 0x43380000}},  /* 6755399441055744 */
-                     t128 = {{0, 0x47f00000}},  /*  2^ 128          */
-                    tm128 = {{0, 0x37f00000}},  /*  2^-128          */
-                      ZERO = {{0, 0}},          /*  0.0             */
-                     nZERO = {{0, 0x80000000}}; /* -0.0             */
+t128 = {{0, 0x47f00000}},  /*  2^ 128          */
+tm128 = {{0, 0x37f00000}},  /*  2^-128          */
+ZERO = {{0, 0}},          /*  0.0             */
+nZERO = {{0, 0x80000000}}; /* -0.0             */
 #endif
 #endif
 

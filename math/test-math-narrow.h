@@ -16,11 +16,11 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define FUNC_TEST(function)						\
+#define FUNC_TEST(function)                     \
   FUNC_TEST_CONCAT (FUNC_NARROW_PREFIX, function, FUNC_NARROW_SUFFIX)
-#define FUNC_TEST_CONCAT(prefix, function, suffix)	\
+#define FUNC_TEST_CONCAT(prefix, function, suffix)  \
   _FUNC_TEST_CONCAT (prefix, function, suffix)
-#define _FUNC_TEST_CONCAT(prefix, function, suffix)	\
+#define _FUNC_TEST_CONCAT(prefix, function, suffix) \
   prefix ## function ## suffix
 #define TEST_MATHVEC 0
 #define TEST_NARROW 1

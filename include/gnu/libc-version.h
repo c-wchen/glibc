@@ -17,18 +17,18 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _GNU_LIBC_VERSION_H
-#define	_GNU_LIBC_VERSION_H	1
+#define _GNU_LIBC_VERSION_H 1
 
 #include <features.h>
 
 __BEGIN_DECLS
 
 /* Return string describing release status of currently running GNU libc.  */
-extern const char *gnu_get_libc_release (void) __THROW;
+extern const char *gnu_get_libc_release(void) __THROW;
 
 /* Return string describing version of currently running GNU libc.  */
-extern const char *gnu_get_libc_version (void) __THROW;
+extern const char *gnu_get_libc_version(void) __THROW;
 
 __END_DECLS
 
-#endif	/* gnu/libc-version.h */
+#endif  /* gnu/libc-version.h */

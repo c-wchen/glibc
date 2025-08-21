@@ -18,10 +18,9 @@
 
 #include <libioP.h>
 
-extern int
-___ieee128_vwscanf (const wchar_t *format, va_list ap)
+extern int ___ieee128_vwscanf(const wchar_t *format, va_list ap)
 {
-  return __vfwscanf_internal (stdin, format, ap,
-			      SCANF_LDBL_USES_FLOAT128);
+    return __vfwscanf_internal(stdin, format, ap,
+                               SCANF_LDBL_USES_FLOAT128);
 }
-strong_alias (___ieee128_vwscanf, __vwscanfieee128)
+strong_alias(___ieee128_vwscanf, __vwscanfieee128)

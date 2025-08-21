@@ -23,14 +23,15 @@
 
 #if LIBM_SVID_COMPAT
 /* wrapper acosh */
-double
-__acosh (double x)
+double __acosh(double x)
 {
-  if (__builtin_expect (isless (x,  1.0), 0) && _LIB_VERSION != _IEEE_)
-    /* acosh(x<1) */
-    return __kernel_standard (x, x, 29);
+    if (__builtin_expect(isless(x,  1.0), 0) && _LIB_VERSION != _IEEE_)
+        /* acosh(x<1) */
+    {
+        return __kernel_standard(x, x, 29);
+    }
 
-  return __ieee754_acosh (x);
+    return __ieee754_acosh(x);
 }
-libm_alias_double (__acosh, acosh)
+libm_alias_double(__acosh, acosh)
 #endif

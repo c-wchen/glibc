@@ -22,8 +22,7 @@
 /* Convert a multi-precision integer of the needed number of bits and an
    integral power of two to a `float'.  */
 
-float
-__mpn_construct_float (mp_srcptr frac_ptr, int expt, int negative)
+float __mpn_construct_float(mp_srcptr frac_ptr, int expt, int negative)
 {
 #error "__mpn_construct_float not implemented for this floating point format"
 }

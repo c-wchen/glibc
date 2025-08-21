@@ -21,9 +21,8 @@
 /* Advice the system about the expected behaviour of the application with
    respect to the file associated with FD.  */
 
-int
-posix_fadvise (int fd, __off_t offset, __off_t len, int advise)
+int posix_fadvise(int fd, __off_t offset, __off_t len, int advise)
 {
-  return ENOSYS;
+    return ENOSYS;
 }
-stub_warning (posix_fadvise)
+stub_warning(posix_fadvise)

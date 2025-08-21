@@ -23,38 +23,38 @@
 
 /* Fetch the real user ID, effective user ID, and saved-set user ID,
    of the calling process.  */
-int
-__getresuid (uid_t *ruid, uid_t *euid, uid_t *suid)
+int __getresuid(uid_t *ruid, uid_t *euid, uid_t *suid)
 {
-  error_t err;
+    error_t err;
 
 retry:
-  HURD_CRITICAL_BEGIN;
-  __mutex_lock (&_hurd_id.lock);
+    HURD_CRITICAL_BEGIN;
+    __mutex_lock(&_hurd_id.lock);
 
-  err = _hurd_check_ids ();
-  if (!err)
-    {
-      if (_hurd_id.aux.nuids < 1)
-	/* We do not even have a real UID.  */
-	err = EGRATUITOUS;
-      else
-	{
-	  uid_t real = _hurd_id.aux.uids[0];
+    err = _hurd_check_ids();
+    if (!err) {
+        if (_hurd_id.aux.nuids < 1)
+            /* We do not even have a real UID.  */
+        {
+            err = EGRATUITOUS;
+        } else {
+            uid_t real = _hurd_id.aux.uids[0];
 
-	  *ruid = real;
-	  *euid = _hurd_id.gen.nuids < 1 ? real : _hurd_id.gen.uids[0];
-	  *suid = _hurd_id.aux.nuids < 2 ? real : _hurd_id.aux.uids[1];
-	}
+            *ruid = real;
+            *euid = _hurd_id.gen.nuids < 1 ? real : _hurd_id.gen.uids[0];
+            *suid = _hurd_id.aux.nuids < 2 ? real : _hurd_id.aux.uids[1];
+        }
     }
 
-  __mutex_unlock (&_hurd_id.lock);
-  HURD_CRITICAL_END;
-  if (err == EINTR)
-    /* Got a signal while inside an RPC of the critical section, retry again */
-    goto retry;
+    __mutex_unlock(&_hurd_id.lock);
+    HURD_CRITICAL_END;
+    if (err == EINTR)
+        /* Got a signal while inside an RPC of the critical section, retry again */
+    {
+        goto retry;
+    }
 
-  return __hurd_fail (err);
+    return __hurd_fail(err);
 }
-libc_hidden_def (__getresuid)
-weak_alias (__getresuid, getresuid)
+libc_hidden_def(__getresuid)
+weak_alias(__getresuid, getresuid)

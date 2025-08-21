@@ -18,7 +18,7 @@
 
 #define __SIMD_DECL(function) __CONCAT (__DECL_SIMD_, function)
 
-#define __MATHCALL_VEC(function, suffix, args) 	\
+#define __MATHCALL_VEC(function, suffix, args)  \
   __SIMD_DECL (__MATH_PRECNAME (function, suffix)) \
   __MATHCALL (function, suffix, args)
 
@@ -26,12 +26,12 @@
   __SIMD_DECL (__MATH_PRECNAME (function, suffix)) \
   __MATHDECL(type, function,suffix, args)
 
-#define __MATHCALL(function,suffix, args)	\
+#define __MATHCALL(function,suffix, args)   \
   __MATHDECL (_Mdouble_,function,suffix, args)
 #define __MATHDECL(type, function,suffix, args) \
   __MATHDECL_1(type, function,suffix, args); \
   __MATHDECL_1(type, __CONCAT(__,function),suffix, args)
-#define __MATHCALLX(function,suffix, args, attrib)	\
+#define __MATHCALLX(function,suffix, args, attrib)  \
   __MATHDECLX (_Mdouble_,function,suffix, args, attrib)
 #define __MATHDECLX(type, function,suffix, args, attrib) \
   __MATHDECL_1(type, function,suffix, args) __attribute__ (attrib)

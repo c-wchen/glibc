@@ -18,14 +18,13 @@
 
 #include <support/xdlfcn.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  void *handle = xdlmopen (LM_ID_NEWLM, "tst-dlmopen-gethostbyname-mod.so",
-                           RTLD_NOW);
-  void (*call_gethostbyname) (void) = xdlsym (handle, "call_gethostbyname");
-  call_gethostbyname ();
-  return 0;
+    void *handle = xdlmopen(LM_ID_NEWLM, "tst-dlmopen-gethostbyname-mod.so",
+                            RTLD_NOW);
+    void (*call_gethostbyname)(void) = xdlsym(handle, "call_gethostbyname");
+    call_gethostbyname();
+    return 0;
 }
 
 #include <support/test-driver.c>

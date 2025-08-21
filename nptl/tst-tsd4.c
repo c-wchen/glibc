@@ -28,74 +28,64 @@ static pthread_key_t key;
 static int rounds;
 
 
-static void
-destr (void *arg)
+static void destr(void *arg)
 {
-  ++rounds;
+    ++rounds;
 
-  /* Use an arbitrary but valid pointer to avoid GCC warnings.  */
-  if (pthread_setspecific (key, (void *) &rounds) != 0)
-    {
-      puts ("destr: setspecific failed");
-      exit (1);
+    /* Use an arbitrary but valid pointer to avoid GCC warnings.  */
+    if (pthread_setspecific(key, (void *) &rounds) != 0) {
+        puts("destr: setspecific failed");
+        exit(1);
     }
 }
 
 
-static void *
-tf (void *arg)
+static void *tf(void *arg)
 {
-  /* Use an arbitrary but valid pointer to avoid GCC warnings.  */
-  if (pthread_setspecific (key, (void *) &rounds) != 0)
-    {
-      puts ("tf: setspecific failed");
-      exit (1);
+    /* Use an arbitrary but valid pointer to avoid GCC warnings.  */
+    if (pthread_setspecific(key, (void *) &rounds) != 0) {
+        puts("tf: setspecific failed");
+        exit(1);
     }
 
-  return NULL;
+    return NULL;
 }
 
 
 /* This test check non-standard behavior.  The standard does not
    require that the implementation has to stop calling TSD destructors
    when they are set over and over again.  But NPTL does.  */
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* Allocate two keys, both with destructors.  */
-  if (pthread_key_create (&key, destr) != 0)
-    {
-      puts ("key_create failed");
-      return 1;
+    /* Allocate two keys, both with destructors.  */
+    if (pthread_key_create(&key, destr) != 0) {
+        puts("key_create failed");
+        return 1;
     }
 
-  pthread_t th;
-  if (pthread_create (&th, NULL, tf, NULL) != 0)
-    {
-      puts ("create failed");
-      return 1;
+    pthread_t th;
+    if (pthread_create(&th, NULL, tf, NULL) != 0) {
+        puts("create failed");
+        return 1;
     }
 
-  if (pthread_join (th, NULL) != 0)
-    {
-      puts ("join failed");
-      return 1;
+    if (pthread_join(th, NULL) != 0) {
+        puts("join failed");
+        return 1;
     }
 
-  if (rounds < PTHREAD_DESTRUCTOR_ITERATIONS)
-    {
-      printf ("rounds == %d, PTHREAD_DESTRUCTOR_ITERATIONS = %d\n",
-	      rounds, PTHREAD_DESTRUCTOR_ITERATIONS);
-      return 1;
+    if (rounds < PTHREAD_DESTRUCTOR_ITERATIONS) {
+        printf("rounds == %d, PTHREAD_DESTRUCTOR_ITERATIONS = %d\n",
+               rounds, PTHREAD_DESTRUCTOR_ITERATIONS);
+        return 1;
     }
 
-  if (pthread_getspecific (key) != NULL)
-    {
-      puts ("key data != NULL");
-      return 1;
+    if (pthread_getspecific(key) != NULL) {
+        puts("key data != NULL");
+        return 1;
     }
 
-  return 0;
+    return 0;
 }
 
 

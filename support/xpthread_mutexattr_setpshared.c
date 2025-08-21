@@ -18,9 +18,8 @@
 
 #include <support/xthread.h>
 
-void
-xpthread_mutexattr_setpshared (pthread_mutexattr_t *attr, int flag)
+void xpthread_mutexattr_setpshared(pthread_mutexattr_t *attr, int flag)
 {
-  xpthread_check_return ("pthread_mutexattr_setpshared",
-                         pthread_mutexattr_setpshared (attr, flag));
+    xpthread_check_return("pthread_mutexattr_setpshared",
+                          pthread_mutexattr_setpshared(attr, flag));
 }

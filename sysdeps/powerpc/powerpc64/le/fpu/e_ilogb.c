@@ -21,21 +21,21 @@
 #include <stdbit.h>
 #include "math_config.h"
 
-int
-__ieee754_ilogb (double x)
+int __ieee754_ilogb(double x)
 {
-  uint64_t ux = asuint64 (x);
-  int ex = (ux & ~SIGN_MASK) >> MANTISSA_WIDTH;
-  if (ex == 0) /* zero or subnormal */
-    {
-      /* Clear sign and exponent */
-      ux <<= 12;
-      if (ux == 0)
-	return FP_ILOGB0;
-      /* subnormal  */
-      return -1023 - stdc_leading_zeros (ux);
+    uint64_t ux = asuint64(x);
+    int ex = (ux & ~SIGN_MASK) >> MANTISSA_WIDTH;
+    if (ex == 0) { /* zero or subnormal */
+        /* Clear sign and exponent */
+        ux <<= 12;
+        if (ux == 0) {
+            return FP_ILOGB0;
+        }
+        /* subnormal  */
+        return -1023 - stdc_leading_zeros(ux);
     }
-  if (ex == EXPONENT_MASK >> MANTISSA_WIDTH) /* NaN or Inf */
-    return ux << 12 ? FP_ILOGBNAN : INT_MAX;
-  return ex - 1023;
+    if (ex == EXPONENT_MASK >> MANTISSA_WIDTH) { /* NaN or Inf */
+        return ux << 12 ? FP_ILOGBNAN : INT_MAX;
+    }
+    return ex - 1023;
 }

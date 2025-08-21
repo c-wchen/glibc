@@ -19,6 +19,6 @@
 #include <nptl/libpthread-compat.c>
 
 #if SHLIB_COMPAT (libpthread, GLIBC_2_6, GLIBC_2_7)
-compat_symbol (libpthread, __libpthread_version_placeholder_1,
-               __libpthread_version_placeholder, GLIBC_2_6);
+compat_symbol(libpthread, __libpthread_version_placeholder_1,
+              __libpthread_version_placeholder, GLIBC_2_6);
 #endif

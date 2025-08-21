@@ -26,19 +26,20 @@ static char rcsid[] = "$NetBSD: $";
 #include <libm-alias-ldouble.h>
 
 #if LIBM_SVID_COMPAT
-long double __expl(long double x)	/* wrapper exp */
+long double __expl(long double x)   /* wrapper exp */
 {
 # ifdef _IEEE_LIBM
-	return __ieee754_expl(x);
+    return __ieee754_expl(x);
 # else
-	long double z = __ieee754_expl (x);
-	if (__glibc_unlikely (!isfinite (z) || z == 0)
-	    && isfinite (x) && _LIB_VERSION != _IEEE_)
-	  return __kernel_standard_l (x, x, 206 + !!signbit (x));
+    long double z = __ieee754_expl(x);
+    if (__glibc_unlikely(!isfinite(z) || z == 0)
+        && isfinite(x) && _LIB_VERSION != _IEEE_) {
+        return __kernel_standard_l(x, x, 206 + !!signbit(x));
+    }
 
-	return z;
+    return z;
 # endif
 }
-libm_hidden_def (__expl)
-libm_alias_ldouble (__exp, exp)
+libm_hidden_def(__expl)
+libm_alias_ldouble(__exp, exp)
 #endif

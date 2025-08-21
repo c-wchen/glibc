@@ -21,21 +21,21 @@
 /* Require TLS setup for the module.  */
 __thread int tlsvar;
 
-void ctor (void);
-void dtor (void);
+void ctor(void);
+void dtor(void);
 
-static void __attribute__ ((constructor))
-do_init (void)
+static void __attribute__((constructor))
+do_init(void)
 {
-  dprintf (1, "constructor started: %d.\n", tlsvar++);
-  ctor ();
-  dprintf (1, "constructor done: %d.\n", tlsvar++);
+    dprintf(1, "constructor started: %d.\n", tlsvar++);
+    ctor();
+    dprintf(1, "constructor done: %d.\n", tlsvar++);
 }
 
-static void __attribute__ ((destructor))
-do_end (void)
+static void __attribute__((destructor))
+do_end(void)
 {
-  dprintf (1, "destructor started: %d.\n", tlsvar++);
-  dtor ();
-  dprintf (1, "destructor done: %d.\n", tlsvar++);
+    dprintf(1, "destructor started: %d.\n", tlsvar++);
+    dtor();
+    dprintf(1, "destructor done: %d.\n", tlsvar++);
 }

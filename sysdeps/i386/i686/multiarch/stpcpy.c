@@ -30,7 +30,7 @@
 # define SYMBOL_NAME stpcpy
 # include "ifunc-sse2-ssse3.h"
 
-libc_ifunc_redirected (__redirect_stpcpy, __stpcpy, IFUNC_SELECTOR ());
+libc_ifunc_redirected(__redirect_stpcpy, __stpcpy, IFUNC_SELECTOR());
 
-weak_alias (__stpcpy, stpcpy)
+weak_alias(__stpcpy, stpcpy)
 #endif

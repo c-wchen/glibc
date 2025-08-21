@@ -25,7 +25,7 @@
 #  if ! defined (_FILE_OFFSET_BITS) || _FILE_OFFSET_BITS != 64
 #   error "_TIME_BITS=64 is allowed only with _FILE_OFFSET_BITS=64"
 #  endif
-#  define __USE_TIME_BITS64	1
+#  define __USE_TIME_BITS64 1
 # elif _TIME_BITS == 32
 #  if __TIMESIZE > 32
 #   error "_TIME_BITS=32 is not compatible with __TIMESIZE > 32"

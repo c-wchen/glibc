@@ -26,12 +26,11 @@
    4 = Return the maximum number of files that the calling process
        can open.
    Returns -1 on errors.  */
-long int
-__ulimit (int cmd, ...)
+long int __ulimit(int cmd, ...)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-weak_alias (__ulimit, ulimit)
+weak_alias(__ulimit, ulimit)
 
-stub_warning (ulimit)
+stub_warning(ulimit)

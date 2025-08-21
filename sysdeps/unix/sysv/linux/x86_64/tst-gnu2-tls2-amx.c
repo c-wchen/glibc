@@ -21,63 +21,62 @@
 #include <support/check.h>
 #include "tst-gnu2-tls2-amx.h"
 
-extern int arch_prctl (int, ...);
+extern int arch_prctl(int, ...);
 
-#define X86_XSTATE_TILECFG_ID	17
-#define X86_XSTATE_TILEDATA_ID	18
+#define X86_XSTATE_TILECFG_ID   17
+#define X86_XSTATE_TILEDATA_ID  18
 
 /* Initialize tile config.  */
 __attribute_optimization_barrier__
-static void
-init_tile_config (__tilecfg *tileinfo)
+static void init_tile_config(__tilecfg *tileinfo)
 {
-  int i;
-  tileinfo->palette_id = 1;
-  tileinfo->start_row = 0;
+    int i;
+    tileinfo->palette_id = 1;
+    tileinfo->start_row = 0;
 
-  tileinfo->colsb[0] = MAX_ROWS;
-  tileinfo->rows[0] = MAX_ROWS;
+    tileinfo->colsb[0] = MAX_ROWS;
+    tileinfo->rows[0] = MAX_ROWS;
 
-  for (i = 1; i < 4; ++i)
-  {
-    tileinfo->colsb[i] = MAX_COLS;
-    tileinfo->rows[i] = MAX_ROWS;
-  }
+    for (i = 1; i < 4; ++i) {
+        tileinfo->colsb[i] = MAX_COLS;
+        tileinfo->rows[i] = MAX_ROWS;
+    }
 
-  _tile_loadconfig (tileinfo);
+    _tile_loadconfig(tileinfo);
 }
 
-static bool
-enable_amx (void)
+static bool enable_amx(void)
 {
-  uint64_t bitmask;
-  if (arch_prctl (ARCH_GET_XCOMP_PERM, &bitmask) != 0)
-    return false;
+    uint64_t bitmask;
+    if (arch_prctl(ARCH_GET_XCOMP_PERM, &bitmask) != 0) {
+        return false;
+    }
 
-  if ((bitmask & (1 << X86_XSTATE_TILECFG_ID)) == 0)
-    return false;
+    if ((bitmask & (1 << X86_XSTATE_TILECFG_ID)) == 0) {
+        return false;
+    }
 
-  if (arch_prctl (ARCH_REQ_XCOMP_PERM, X86_XSTATE_TILEDATA_ID) != 0)
-    return false;
+    if (arch_prctl(ARCH_REQ_XCOMP_PERM, X86_XSTATE_TILEDATA_ID) != 0) {
+        return false;
+    }
 
-  /* Load tile configuration.  */
-  __tilecfg tile_data = { 0 };
-  init_tile_config (&tile_data);
+    /* Load tile configuration.  */
+    __tilecfg tile_data = { 0 };
+    init_tile_config(&tile_data);
 
-  return true;
+    return true;
 }
 
 /* An architecture can define it to clobber caller-saved registers in
    malloc below to verify that the implicit TLSDESC call won't change
    caller-saved registers.  */
-static void
-clear_tile_register (void)
+static void clear_tile_register(void)
 {
-  _tile_zero (2);
+    _tile_zero(2);
 }
 
 #define MOD(i) "tst-gnu2-tls2-amx-mod" #i ".so"
-#define IS_SUPPORTED()	enable_amx ()
+#define IS_SUPPORTED()  enable_amx ()
 #define PREPARE_MALLOC() clear_tile_register ()
 
 #include <elf/tst-gnu2-tls2.c>

@@ -20,19 +20,20 @@
 #include <fpu_control.h>
 #include <arm-features.h>
 
-int
-fesetexcept (int excepts)
+int fesetexcept(int excepts)
 {
-  fpu_control_t fpscr, new_fpscr;
+    fpu_control_t fpscr, new_fpscr;
 
-  /* Fail if a VFP unit isn't present unless nothing needs to be done.  */
-  if (!ARM_HAVE_VFP)
-    return (excepts != 0);
+    /* Fail if a VFP unit isn't present unless nothing needs to be done.  */
+    if (!ARM_HAVE_VFP) {
+        return (excepts != 0);
+    }
 
-  _FPU_GETCW (fpscr);
-  new_fpscr = fpscr | (excepts & FE_ALL_EXCEPT);
-  if (new_fpscr != fpscr)
-    _FPU_SETCW (new_fpscr);
+    _FPU_GETCW(fpscr);
+    new_fpscr = fpscr | (excepts & FE_ALL_EXCEPT);
+    if (new_fpscr != fpscr) {
+        _FPU_SETCW(new_fpscr);
+    }
 
-  return 0;
+    return 0;
 }

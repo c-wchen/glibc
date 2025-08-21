@@ -18,9 +18,8 @@
 
 #include "ifreq.h"
 
-void
-__ifreq (struct ifreq **ifreqs, int *num_ifs, int sockfd)
+void __ifreq(struct ifreq **ifreqs, int *num_ifs, int sockfd)
 {
-  *num_ifs = 0;
-  *ifreqs = NULL;
+    *num_ifs = 0;
+    *ifreqs = NULL;
 }

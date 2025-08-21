@@ -29,65 +29,58 @@ char tmpname[] = "fifoXXXXXX";
 
 
 /* Do the real work.  */
-static int
-real_test (void)
+static int real_test(void)
 {
-  DIR *dirp;
+    DIR *dirp;
 
-  /* This should not block for an FIFO.  */
-  dirp = opendir (tmpname);
+    /* This should not block for an FIFO.  */
+    dirp = opendir(tmpname);
 
-  /* Successful.  */
-  if (dirp != NULL)
-    {
-      /* Oh, oh, how can this work?  */
-      fputs ("`opendir' succeeded on a FIFO???\n", stdout);
-      closedir (dirp);
-      return 1;
+    /* Successful.  */
+    if (dirp != NULL) {
+        /* Oh, oh, how can this work?  */
+        fputs("`opendir' succeeded on a FIFO???\n", stdout);
+        closedir(dirp);
+        return 1;
     }
 
-  if (errno != ENOTDIR)
-    {
-      fprintf (stdout, "`opendir' return error `%s' instead of `%s'\n",
-	       strerror (errno), strerror (ENOTDIR));
-      return 1;
+    if (errno != ENOTDIR) {
+        fprintf(stdout, "`opendir' return error `%s' instead of `%s'\n",
+                strerror(errno), strerror(ENOTDIR));
+        return 1;
     }
 
-  return 0;
+    return 0;
 }
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int retval;
+    int retval;
 
-  if (mktemp (tmpname) == NULL)
-    {
-      perror ("mktemp");
-      return 1;
+    if (mktemp(tmpname) == NULL) {
+        perror("mktemp");
+        return 1;
     }
 
-  /* Try to generate a FIFO.  */
-  if (mknod (tmpname, 0600 | S_IFIFO, 0) < 0)
-    {
-      perror ("mknod");
-      /* We cannot make this an error.  */
-      return 0;
+    /* Try to generate a FIFO.  */
+    if (mknod(tmpname, 0600 | S_IFIFO, 0) < 0) {
+        perror("mknod");
+        /* We cannot make this an error.  */
+        return 0;
     }
 
-  retval = real_test ();
+    retval = real_test();
 
-  remove (tmpname);
+    remove(tmpname);
 
-  return retval;
+    return retval;
 }
 
 
-static void
-do_cleanup (void)
+static void do_cleanup(void)
 {
-  remove (tmpname);
+    remove(tmpname);
 }
 #define CLEANUP_HANDLER do_cleanup
 

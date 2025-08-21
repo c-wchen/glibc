@@ -21,29 +21,27 @@
 #include <pointer_guard.h>
 
 /* Register a function to be called by exit.  */
-int
-__on_exit (void (*func) (int status, void *arg), void *arg)
+int __on_exit(void (*func)(int status, void *arg), void *arg)
 {
-  struct exit_function *new;
+    struct exit_function *new;
 
-  /* As a QoI issue we detect NULL early with an assertion instead
-     of a SIGSEGV at program exit when the handler is run (bug 20544).  */
-  assert (func != NULL);
+    /* As a QoI issue we detect NULL early with an assertion instead
+       of a SIGSEGV at program exit when the handler is run (bug 20544).  */
+    assert(func != NULL);
 
-   __libc_lock_lock (__exit_funcs_lock);
-  new = __new_exitfn (&__exit_funcs);
+    __libc_lock_lock(__exit_funcs_lock);
+    new = __new_exitfn(&__exit_funcs);
 
-  if (new == NULL)
-    {
-      __libc_lock_unlock (__exit_funcs_lock);
-      return -1;
+    if (new == NULL) {
+        __libc_lock_unlock(__exit_funcs_lock);
+        return -1;
     }
 
-  PTR_MANGLE (func);
-  new->func.on.fn = func;
-  new->func.on.arg = arg;
-  new->flavor = ef_on;
-  __libc_lock_unlock (__exit_funcs_lock);
-  return 0;
+    PTR_MANGLE(func);
+    new->func.on.fn = func;
+    new->func.on.arg = arg;
+    new->flavor = ef_on;
+    __libc_lock_unlock(__exit_funcs_lock);
+    return 0;
 }
-weak_alias (__on_exit, on_exit)
+weak_alias(__on_exit, on_exit)

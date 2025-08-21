@@ -19,9 +19,9 @@
 #ifndef AARCH64_MATH_BARRIERS_H
 #define AARCH64_MATH_BARRIERS_H 1
 
-#define math_opt_barrier(x)					\
+#define math_opt_barrier(x)                 \
   ({ __typeof (x) __x = (x); __asm ("" : "+w" (__x)); __x; })
-#define math_force_eval(x)						\
+#define math_force_eval(x)                      \
   ({ __typeof (x) __x = (x); __asm __volatile__ ("" : : "w" (__x)); })
 
 #endif

@@ -19,14 +19,13 @@
 #include "soft-supp.h"
 #include <fenv.h>
 
-int
-feenableexcept (int exceptions)
+int feenableexcept(int exceptions)
 {
-  int old_exceptions = ~__sim_disabled_exceptions_thread & FE_ALL_EXCEPT;
+    int old_exceptions = ~__sim_disabled_exceptions_thread & FE_ALL_EXCEPT;
 
-  __sim_disabled_exceptions_thread &= ~exceptions;
-  SIM_SET_GLOBAL (__sim_disabled_exceptions_global,
-		  __sim_disabled_exceptions_thread);
+    __sim_disabled_exceptions_thread &= ~exceptions;
+    SIM_SET_GLOBAL(__sim_disabled_exceptions_global,
+                   __sim_disabled_exceptions_thread);
 
-  return old_exceptions;
+    return old_exceptions;
 }

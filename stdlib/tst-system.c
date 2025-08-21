@@ -32,192 +32,198 @@
 static char *tmpdir;
 static long int namemax;
 
-static void
-do_prepare (int argc, char *argv[])
+static void do_prepare(int argc, char *argv[])
 {
-  tmpdir = support_create_temp_directory ("tst-system-");
-  /* Include the last '/0'.  */
-  namemax = pathconf (tmpdir, _PC_NAME_MAX) + 1;
-  TEST_VERIFY_EXIT (namemax != -1);
+    tmpdir = support_create_temp_directory("tst-system-");
+    /* Include the last '/0'.  */
+    namemax = pathconf(tmpdir, _PC_NAME_MAX) + 1;
+    TEST_VERIFY_EXIT(namemax != -1);
 }
 #define PREPARE do_prepare
 
-struct args
-{
-  const char *command;
-  int exit_status;
-  int term_sig;
-  const char *path;
+struct args {
+    const char *command;
+    int exit_status;
+    int term_sig;
+    const char *path;
 };
 
-static void
-call_system (void *closure)
+static void call_system(void *closure)
 {
-  struct args *args = (struct args *) closure;
-  int ret;
+    struct args *args = (struct args *) closure;
+    int ret;
 
-  if (args->path != NULL)
-    TEST_COMPARE (setenv ("PATH", args->path, 1), 0);
-  ret = system (args->command);
-  if (args->term_sig == 0)
-    {
-      /* Expect regular termination.  */
-      TEST_VERIFY (WIFEXITED (ret) != 0);
-      TEST_COMPARE (WEXITSTATUS (ret), args->exit_status);
+    if (args->path != NULL) {
+        TEST_COMPARE(setenv("PATH", args->path, 1), 0);
     }
-  else
-    {
-      /* status_or_signal < 0.  Expect termination by signal.  */
-      TEST_VERIFY (WIFSIGNALED (ret) != 0);
-      TEST_COMPARE (WTERMSIG (ret), args->term_sig);
+    ret = system(args->command);
+    if (args->term_sig == 0) {
+        /* Expect regular termination.  */
+        TEST_VERIFY(WIFEXITED(ret) != 0);
+        TEST_COMPARE(WEXITSTATUS(ret), args->exit_status);
+    } else {
+        /* status_or_signal < 0.  Expect termination by signal.  */
+        TEST_VERIFY(WIFSIGNALED(ret) != 0);
+        TEST_COMPARE(WTERMSIG(ret), args->term_sig);
     }
 }
 
-static void *
-sleep_and_check_sigchld (void *closure)
+static void *sleep_and_check_sigchld(void *closure)
 {
-  double *seconds = (double *) closure;
-  char cmd[namemax];
-  sprintf (cmd, "sleep %lf" , *seconds);
-  TEST_COMPARE (system (cmd), 0);
-
-  sigset_t blocked = { };
-  TEST_COMPARE (sigprocmask (SIG_BLOCK, NULL, &blocked), 0);
-  TEST_COMPARE (sigismember (&blocked, SIGCHLD), 0);
-  return NULL;
-}
-
-static int
-do_test (void)
-{
-  TEST_VERIFY (system (NULL) != 0);
-
-  {
+    double *seconds = (double *) closure;
     char cmd[namemax];
-    memset (cmd, 'a', sizeof(cmd));
-    cmd[sizeof(cmd) - 1] = '\0';
+    sprintf(cmd, "sleep %lf", *seconds);
+    TEST_COMPARE(system(cmd), 0);
 
-    struct support_capture_subprocess result;
-    result = support_capture_subprocess (call_system,
-					 &(struct args) {
-					   cmd, 127, 0, tmpdir
-					 });
-    support_capture_subprocess_check (&result, "system", 0, sc_allow_stderr);
+    sigset_t blocked = { };
+    TEST_COMPARE(sigprocmask(SIG_BLOCK, NULL, &blocked), 0);
+    TEST_COMPARE(sigismember(&blocked, SIGCHLD), 0);
+    return NULL;
+}
 
-    char *returnerr = xasprintf ("%s: execing %s failed: "
-				 "No such file or directory",
-				 basename(_PATH_BSHELL), cmd);
-    TEST_COMPARE_STRING (result.err.buffer, returnerr);
-    free (returnerr);
-  }
+static int do_test(void)
+{
+    TEST_VERIFY(system(NULL) != 0);
 
-  {
-    char cmd[namemax + 1];
-    memset (cmd, 'a', sizeof(cmd));
-    cmd[sizeof(cmd) - 1] = '\0';
+    {
+        char cmd[namemax];
+        memset(cmd, 'a', sizeof(cmd));
+        cmd[sizeof(cmd) - 1] = '\0';
 
-    struct support_capture_subprocess result;
-    result = support_capture_subprocess (call_system,
-					 &(struct args) {
-					   cmd, 127, 0, tmpdir
-					 });
-    support_capture_subprocess_check (&result, "system", 0, sc_allow_stderr);
+        struct support_capture_subprocess result;
+        result = support_capture_subprocess(call_system,
+        &(struct args) {
+            cmd, 127, 0, tmpdir
+        });
+        support_capture_subprocess_check(&result, "system", 0, sc_allow_stderr);
 
-    char *returnerr = xasprintf ("%s: execing %s failed: "
-				 "File name too long",
-				 basename(_PATH_BSHELL), cmd);
-    TEST_COMPARE_STRING (result.err.buffer, returnerr);
-    free (returnerr);
-  }
+        char *returnerr = xasprintf("%s: execing %s failed: "
+                                    "No such file or directory",
+                                    basename(_PATH_BSHELL), cmd);
+        TEST_COMPARE_STRING(result.err.buffer, returnerr);
+        free(returnerr);
+    }
 
-  {
-    struct support_capture_subprocess result;
-    result = support_capture_subprocess (call_system,
-					 &(struct args) {
-					   "kill $$", 0, SIGTERM
-					 });
-    support_capture_subprocess_check (&result, "system", 0, sc_allow_none);
-  }
+    {
+        char cmd[namemax + 1];
+        memset(cmd, 'a', sizeof(cmd));
+        cmd[sizeof(cmd) - 1] = '\0';
 
-  {
-    struct support_capture_subprocess result;
-    result = support_capture_subprocess (call_system,
-					 &(struct args) { "echo ...", 0 });
-    support_capture_subprocess_check (&result, "system", 0, sc_allow_stdout);
-    TEST_COMPARE_STRING (result.out.buffer, "...\n");
-  }
+        struct support_capture_subprocess result;
+        result = support_capture_subprocess(call_system,
+        &(struct args) {
+            cmd, 127, 0, tmpdir
+        });
+        support_capture_subprocess_check(&result, "system", 0, sc_allow_stderr);
 
-  {
-    struct support_capture_subprocess result;
-    const char *cmd = "-echo";
-    result = support_capture_subprocess (call_system,
-					 &(struct args) { cmd, 127 });
-    support_capture_subprocess_check (&result, "system", 0, sc_allow_stderr |
-			sc_allow_stdout);
-    char *returnerr = xasprintf ("%s: execing -echo failed: "
-				 "No such file or directory",
-				 basename(_PATH_BSHELL));
-    TEST_COMPARE_STRING (result.err.buffer, returnerr);
-    free (returnerr);
-  }
+        char *returnerr = xasprintf("%s: execing %s failed: "
+                                    "File name too long",
+                                    basename(_PATH_BSHELL), cmd);
+        TEST_COMPARE_STRING(result.err.buffer, returnerr);
+        free(returnerr);
+    }
 
-  {
-    struct support_capture_subprocess result;
-    result = support_capture_subprocess (call_system,
-					 &(struct args) { "exit 1", 1 });
-    support_capture_subprocess_check (&result, "system", 0, sc_allow_none);
-  }
+    {
+        struct support_capture_subprocess result;
+        result = support_capture_subprocess(call_system,
+        &(struct args) {
+            "kill $$", 0, SIGTERM
+        });
+        support_capture_subprocess_check(&result, "system", 0, sc_allow_none);
+    }
 
-  {
-    struct stat64 st;
-    xstat64 (_PATH_BSHELL, &st);
-    mode_t mode = st.st_mode;
-    xchmod (_PATH_BSHELL, mode & ~(S_IXUSR | S_IXGRP | S_IXOTH));
+    {
+        struct support_capture_subprocess result;
+        result = support_capture_subprocess(call_system,
+        &(struct args) {
+            "echo ...", 0
+        });
+        support_capture_subprocess_check(&result, "system", 0, sc_allow_stdout);
+        TEST_COMPARE_STRING(result.out.buffer, "...\n");
+    }
 
-    struct support_capture_subprocess result;
-    result = support_capture_subprocess (call_system,
-					 &(struct args) {
-					   "exit 1", 127, 0
-					 });
-    support_capture_subprocess_check (&result, "system", 0, sc_allow_none);
+    {
+        struct support_capture_subprocess result;
+        const char *cmd = "-echo";
+        result = support_capture_subprocess(call_system,
+        &(struct args) {
+            cmd, 127
+        });
+        support_capture_subprocess_check(&result, "system", 0, sc_allow_stderr |
+                                         sc_allow_stdout);
+        char *returnerr = xasprintf("%s: execing -echo failed: "
+                                    "No such file or directory",
+                                    basename(_PATH_BSHELL));
+        TEST_COMPARE_STRING(result.err.buffer, returnerr);
+        free(returnerr);
+    }
 
-    xchmod (_PATH_BSHELL, st.st_mode);
-  }
+    {
+        struct support_capture_subprocess result;
+        result = support_capture_subprocess(call_system,
+        &(struct args) {
+            "exit 1", 1
+        });
+        support_capture_subprocess_check(&result, "system", 0, sc_allow_none);
+    }
 
-  {
-    pthread_t long_sleep_thread = xpthread_create (NULL,
-                                                   sleep_and_check_sigchld,
-                                                   &(double) { 0.2 });
-    pthread_t short_sleep_thread = xpthread_create (NULL,
-                                                    sleep_and_check_sigchld,
-                                                    &(double) { 0.1 });
-    xpthread_join (short_sleep_thread);
-    xpthread_join (long_sleep_thread);
-  }
+    {
+        struct stat64 st;
+        xstat64(_PATH_BSHELL, &st);
+        mode_t mode = st.st_mode;
+        xchmod(_PATH_BSHELL, mode & ~(S_IXUSR | S_IXGRP | S_IXOTH));
 
-  {
-    struct rlimit rlimit_orig, rlimit_new;
+        struct support_capture_subprocess result;
+        result = support_capture_subprocess(call_system,
+        &(struct args) {
+            "exit 1", 127, 0
+        });
+        support_capture_subprocess_check(&result, "system", 0, sc_allow_none);
 
-    if (getrlimit (RLIMIT_NPROC, &rlimit_orig) != 0)
-      FAIL_EXIT1 ("getrlimit (RLIMIT_NPROC) failed: %m");
+        xchmod(_PATH_BSHELL, st.st_mode);
+    }
 
-    /* Force failure for the system call */
-    rlimit_new.rlim_cur = 0;
-    rlimit_new.rlim_max = rlimit_orig.rlim_max;
+    {
+        pthread_t long_sleep_thread = xpthread_create(NULL,
+                                      sleep_and_check_sigchld,
+        &(double) {
+            0.2
+        });
+        pthread_t short_sleep_thread = xpthread_create(NULL,
+                                       sleep_and_check_sigchld,
+        &(double) {
+            0.1
+        });
+        xpthread_join(short_sleep_thread);
+        xpthread_join(long_sleep_thread);
+    }
 
-    if (setrlimit (RLIMIT_NPROC, &rlimit_new) != 0)
-      FAIL_EXIT1 ("setrlimit (RLIMIT_NPROC) failed: %m");
+    {
+        struct rlimit rlimit_orig, rlimit_new;
 
-    TEST_COMPARE (system (""), -1);
+        if (getrlimit(RLIMIT_NPROC, &rlimit_orig) != 0) {
+            FAIL_EXIT1("getrlimit (RLIMIT_NPROC) failed: %m");
+        }
 
-    /* Restore NPROC limit */
-    if (setrlimit (RLIMIT_NPROC, &rlimit_orig) != 0)
-      FAIL_EXIT1 ("setrlimit (RLIMIT_NPROC) failed: %m");
-  }
+        /* Force failure for the system call */
+        rlimit_new.rlim_cur = 0;
+        rlimit_new.rlim_max = rlimit_orig.rlim_max;
 
-  TEST_COMPARE (system (""), 0);
+        if (setrlimit(RLIMIT_NPROC, &rlimit_new) != 0) {
+            FAIL_EXIT1("setrlimit (RLIMIT_NPROC) failed: %m");
+        }
 
-  return 0;
+        TEST_COMPARE(system(""), -1);
+
+        /* Restore NPROC limit */
+        if (setrlimit(RLIMIT_NPROC, &rlimit_orig) != 0) {
+            FAIL_EXIT1("setrlimit (RLIMIT_NPROC) failed: %m");
+        }
+    }
+
+    TEST_COMPARE(system(""), 0);
+
+    return 0;
 }
 
 #include <support/test-driver.c>

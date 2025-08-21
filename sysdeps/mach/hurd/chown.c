@@ -21,10 +21,9 @@
 #include <hurd.h>
 
 /* Change the owner and group of FILE.  */
-int
-__chown (const char *file, uid_t owner, gid_t group)
+int __chown(const char *file, uid_t owner, gid_t group)
 {
-  return __fchownat (AT_FDCWD, file, owner, group, 0);
+    return __fchownat(AT_FDCWD, file, owner, group, 0);
 }
-libc_hidden_def (__chown)
-weak_alias (__chown, chown)
+libc_hidden_def(__chown)
+weak_alias(__chown, chown)

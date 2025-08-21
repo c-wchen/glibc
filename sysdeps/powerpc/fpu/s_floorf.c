@@ -21,15 +21,14 @@
 #include <libm-alias-float.h>
 #include <round_to_integer.h>
 
-float
-__floorf (float x)
+float __floorf(float x)
 {
 #ifdef _ARCH_PWR5X
-  return __builtin_floorf (x);
+    return __builtin_floorf(x);
 #else
-  return round_to_integer_float (FLOOR, x);
+    return round_to_integer_float(FLOOR, x);
 #endif
 }
 #ifndef __floorf
-libm_alias_float (__floor, floor)
+libm_alias_float(__floor, floor)
 #endif

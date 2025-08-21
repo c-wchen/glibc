@@ -7,7 +7,7 @@
 # else
 #  include <struct___timeb64.h>
 
-extern int __ftime64 (struct __timeb64 *) __nonnull ((1));
-libc_hidden_proto (__ftime64);
+extern int __ftime64(struct __timeb64 *) __nonnull((1));
+libc_hidden_proto(__ftime64);
 # endif
 #endif

@@ -3,8 +3,7 @@
 #undef __signbitl
 
 int
-attribute_hidden
-__signbitl (double x)
+attribute_hidden __signbitl(double x)
 {
-  return signbit (x);
+    return signbit(x);
 }

@@ -19,7 +19,7 @@
 #include <stdbit.h>
 
 unsigned int
-(stdc_count_ones_us) (unsigned short x)
+(stdc_count_ones_us)(unsigned short x)
 {
-  return stdc_count_ones_us (x);
+    return stdc_count_ones_us(x);
 }

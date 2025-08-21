@@ -16,11 +16,11 @@
    <https://www.gnu.org/licenses/>.  */
 
 /*
- *	POSIX Standard: 4.4 System Identification	<sys/utsname.h>
+ *  POSIX Standard: 4.4 System Identification   <sys/utsname.h>
  */
 
-#ifndef	_SYS_UTSNAME_H
-#define	_SYS_UTSNAME_H	1
+#ifndef _SYS_UTSNAME_H
+#define _SYS_UTSNAME_H  1
 
 #include <features.h>
 
@@ -45,8 +45,7 @@ __BEGIN_DECLS
 #endif
 
 /* Structure describing the system and machine.  */
-struct utsname
-  {
+struct utsname {
     /* Name of the implementation of the operating system.  */
     char sysname[_UTSNAME_SYSNAME_LENGTH];
 
@@ -69,7 +68,7 @@ struct utsname
     char __domainname[_UTSNAME_DOMAIN_LENGTH];
 # endif
 #endif
-  };
+};
 
 #ifdef __USE_MISC
 /* Note that SVID assumes all members have the same size.  */
@@ -78,7 +77,7 @@ struct utsname
 
 
 /* Put information about the system in NAME.  */
-extern int uname (struct utsname *__name) __THROW;
+extern int uname(struct utsname *__name) __THROW;
 
 
 __END_DECLS

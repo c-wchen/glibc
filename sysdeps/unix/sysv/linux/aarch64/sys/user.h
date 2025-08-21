@@ -17,21 +17,19 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _SYS_USER_H
-#define _SYS_USER_H	1
+#define _SYS_USER_H 1
 
-struct user_regs_struct
-{
-  unsigned long long regs[31];
-  unsigned long long sp;
-  unsigned long long pc;
-  unsigned long long pstate;
+struct user_regs_struct {
+    unsigned long long regs[31];
+    unsigned long long sp;
+    unsigned long long pc;
+    unsigned long long pstate;
 };
 
-struct user_fpsimd_struct
-{
-  __uint128_t  vregs[32];
-  unsigned int fpsr;
-  unsigned int fpcr;
+struct user_fpsimd_struct {
+    __uint128_t  vregs[32];
+    unsigned int fpsr;
+    unsigned int fpcr;
 };
 
 #endif

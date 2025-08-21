@@ -29,50 +29,49 @@
 
 static pthread_barrier_t barrier;
 
-static void
-thread_handler (union sigval sv)
+static void thread_handler(union sigval sv)
 {
-  sigset_t ss;
-  sigprocmask (SIG_BLOCK, NULL, &ss);
-  if (test_verbose > 0)
-    printf ("%s: blocked signal mask = { ", __func__);
-  for (int sig = 1; sig < NSIG; sig++)
-    {
-      /* POSIX timers threads created to handle SIGEV_THREAD block all
-	 signals except SIGKILL, SIGSTOP and glibc internals ones.  */
-      if (sigismember (&ss, sig))
-	{
-	  TEST_VERIFY (sig != SIGKILL && sig != SIGSTOP);
-	  TEST_VERIFY (!is_internal_signal (sig));
-	}
-      if (test_verbose && sigismember (&ss, sig))
-	printf ("%d, ", sig);
+    sigset_t ss;
+    sigprocmask(SIG_BLOCK, NULL, &ss);
+    if (test_verbose > 0) {
+        printf("%s: blocked signal mask = { ", __func__);
     }
-  if (test_verbose > 0)
-    printf ("}\n");
+    for (int sig = 1; sig < NSIG; sig++) {
+        /* POSIX timers threads created to handle SIGEV_THREAD block all
+        signals except SIGKILL, SIGSTOP and glibc internals ones.  */
+        if (sigismember(&ss, sig)) {
+            TEST_VERIFY(sig != SIGKILL && sig != SIGSTOP);
+            TEST_VERIFY(!is_internal_signal(sig));
+        }
+        if (test_verbose && sigismember(&ss, sig)) {
+            printf("%d, ", sig);
+        }
+    }
+    if (test_verbose > 0) {
+        printf("}\n");
+    }
 
-  xpthread_barrier_wait (&barrier);
+    xpthread_barrier_wait(&barrier);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  struct sigevent sev = { };
-  sev.sigev_notify = SIGEV_THREAD;
-  sev.sigev_notify_function = &thread_handler;
+    struct sigevent sev = { };
+    sev.sigev_notify = SIGEV_THREAD;
+    sev.sigev_notify_function = &thread_handler;
 
-  timer_t timerid;
-  TEST_COMPARE (timer_create (CLOCK_REALTIME, &sev, &timerid), 0);
+    timer_t timerid;
+    TEST_COMPARE(timer_create(CLOCK_REALTIME, &sev, &timerid), 0);
 
-  xpthread_barrier_init (&barrier, NULL, 2);
+    xpthread_barrier_init(&barrier, NULL, 2);
 
-  struct itimerspec trigger = { };
-  trigger.it_value.tv_nsec = 1000000;
-  TEST_COMPARE (timer_settime (timerid, 0, &trigger, NULL), 0);
+    struct itimerspec trigger = { };
+    trigger.it_value.tv_nsec = 1000000;
+    TEST_COMPARE(timer_settime(timerid, 0, &trigger, NULL), 0);
 
-  xpthread_barrier_wait (&barrier);
+    xpthread_barrier_wait(&barrier);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

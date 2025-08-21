@@ -21,42 +21,42 @@
 #include <sys/socket.h>
 
 /* Do some compile-time checks for the SOCK_* constants, which we rely on.  */
-_Static_assert (SOCK_CLOEXEC == O_CLOEXEC,
-    "SOCK_CLOEXEC is assumed to be the same as O_CLOEXEC");
-_Static_assert (((SOCK_MAX - 1) | SOCK_TYPE_MASK) == SOCK_TYPE_MASK,
-    "SOCK_TYPE_MASK must contain SOCK_MAX - 1");
-_Static_assert ((SOCK_CLOEXEC & SOCK_TYPE_MASK) == 0,
-    "SOCK_TYPE_MASK must not contain SOCK_CLOEXEC");
-_Static_assert ((SOCK_NONBLOCK & SOCK_TYPE_MASK) == 0,
-    "SOCK_TYPE_MASK must not contain SOCK_NONBLOCK");
+_Static_assert(SOCK_CLOEXEC == O_CLOEXEC,
+               "SOCK_CLOEXEC is assumed to be the same as O_CLOEXEC");
+_Static_assert(((SOCK_MAX - 1) | SOCK_TYPE_MASK) == SOCK_TYPE_MASK,
+               "SOCK_TYPE_MASK must contain SOCK_MAX - 1");
+_Static_assert((SOCK_CLOEXEC &SOCK_TYPE_MASK) == 0,
+               "SOCK_TYPE_MASK must not contain SOCK_CLOEXEC");
+_Static_assert((SOCK_NONBLOCK &SOCK_TYPE_MASK) == 0,
+               "SOCK_TYPE_MASK must not contain SOCK_NONBLOCK");
 
 
 /* Convert from SOCK_* flags to O_* flags.  */
 __extern_always_inline
-int
-sock_to_o_flags (int in)
+int sock_to_o_flags(int in)
 {
-  int out = 0;
+    int out = 0;
 
-  if (in & SOCK_NONBLOCK)
-    out |= O_NONBLOCK;
-  /* Others are passed through unfiltered.  */
-  out |= in & ~(SOCK_NONBLOCK);
+    if (in & SOCK_NONBLOCK) {
+        out |= O_NONBLOCK;
+    }
+    /* Others are passed through unfiltered.  */
+    out |= in & ~(SOCK_NONBLOCK);
 
-  return out;
+    return out;
 }
 
 /* Convert from O_* flags to SOCK_* flags.  */
 __extern_always_inline
-int
-o_to_sock_flags (int in)
+int o_to_sock_flags(int in)
 {
-  int out = 0;
+    int out = 0;
 
-  if (in & O_NONBLOCK)
-    out |= SOCK_NONBLOCK;
-  /* Others are passed through unfiltered.  */
-  out |= in & ~(O_NONBLOCK);
+    if (in & O_NONBLOCK) {
+        out |= SOCK_NONBLOCK;
+    }
+    /* Others are passed through unfiltered.  */
+    out |= in & ~(O_NONBLOCK);
 
-  return out;
+    return out;
 }

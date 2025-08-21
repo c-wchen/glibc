@@ -19,17 +19,18 @@
 #include <math.h>
 
 FLOAT
-M_DECL_FUNC (__remquo) (FLOAT x, FLOAT y, int *quo)
+M_DECL_FUNC(__remquo)(FLOAT x, FLOAT y, int *quo)
 {
-  FLOAT result;
-  int cquo, fpsr;
+    FLOAT result;
+    int cquo, fpsr;
 
-  __asm ("frem%.x %2,%0\n\tfmove%.l %/fpsr,%1"
-	 : "=f" (result), "=dm" (fpsr) : "f" (y), "0" (x));
-  cquo = (fpsr >> 16) & 0x7f;
-  if (fpsr & (1 << 23))
-    cquo = -cquo;
-  *quo = cquo;
-  return result;
+    __asm("frem%.x %2,%0\n\tfmove%.l %/fpsr,%1"
+          : "=f"(result), "=dm"(fpsr) : "f"(y), "0"(x));
+    cquo = (fpsr >> 16) & 0x7f;
+    if (fpsr & (1 << 23)) {
+        cquo = -cquo;
+    }
+    *quo = cquo;
+    return result;
 }
-declare_mgen_alias (__remquo, remquo)
+declare_mgen_alias(__remquo, remquo)

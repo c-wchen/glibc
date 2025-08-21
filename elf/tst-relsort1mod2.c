@@ -1,7 +1,6 @@
 #include <math.h>
 
-int
-foo (double d)
+int foo(double d)
 {
-  return floor (d) != 0.0;
+    return floor(d) != 0.0;
 }

@@ -47,15 +47,15 @@
 
 /* Globally enabled events.  */
 extern td_thr_events_t __nptl_threads_events;
-libc_hidden_proto (__nptl_threads_events)
+libc_hidden_proto(__nptl_threads_events)
 td_thr_events_t __nptl_threads_events;
-libc_hidden_data_def (__nptl_threads_events)
+libc_hidden_data_def(__nptl_threads_events)
 
 /* Pointer to descriptor with the last event.  */
 extern struct pthread *__nptl_last_event;
-libc_hidden_proto (__nptl_last_event)
+libc_hidden_proto(__nptl_last_event)
 struct pthread *__nptl_last_event;
-libc_hidden_data_def (__nptl_last_event)
+libc_hidden_data_def(__nptl_last_event)
 
 #ifdef SHARED
 /* This variable is used to access _rtld_global from libthread_db.  If
@@ -69,27 +69,26 @@ const char __nptl_version[] = VERSION;
 
 /* This performs the initialization necessary when going from
    single-threaded to multi-threaded mode for the first time.  */
-static void
-late_init (void)
+static void late_init(void)
 {
-  struct sigaction sa;
-  __sigemptyset (&sa.sa_mask);
+    struct sigaction sa;
+    __sigemptyset(&sa.sa_mask);
 
-  /* Install the handle to change the threads' uid/gid.  Use
-     SA_ONSTACK because the signal may be sent to threads that are
-     running with custom stacks.  (This is less likely for
-     SIGCANCEL.)  */
-  sa.sa_sigaction = __nptl_setxid_sighandler;
-  sa.sa_flags = SA_ONSTACK | SA_SIGINFO | SA_RESTART;
-  (void) __libc_sigaction (SIGSETXID, &sa, NULL);
+    /* Install the handle to change the threads' uid/gid.  Use
+       SA_ONSTACK because the signal may be sent to threads that are
+       running with custom stacks.  (This is less likely for
+       SIGCANCEL.)  */
+    sa.sa_sigaction = __nptl_setxid_sighandler;
+    sa.sa_flags = SA_ONSTACK | SA_SIGINFO | SA_RESTART;
+    (void) __libc_sigaction(SIGSETXID, &sa, NULL);
 
-  /* The parent process might have left the signals blocked.  Just in
-     case, unblock it.  We reuse the signal mask in the sigaction
-     structure.  It is already cleared.  */
-  __sigaddset (&sa.sa_mask, SIGCANCEL);
-  __sigaddset (&sa.sa_mask, SIGSETXID);
-  INTERNAL_SYSCALL_CALL (rt_sigprocmask, SIG_UNBLOCK, &sa.sa_mask,
-			 NULL, __NSIG_BYTES);
+    /* The parent process might have left the signals blocked.  Just in
+       case, unblock it.  We reuse the signal mask in the sigaction
+       structure.  It is already cleared.  */
+    __sigaddset(&sa.sa_mask, SIGCANCEL);
+    __sigaddset(&sa.sa_mask, SIGSETXID);
+    INTERNAL_SYSCALL_CALL(rt_sigprocmask, SIG_UNBLOCK, &sa.sa_mask,
+                          NULL, __NSIG_BYTES);
 }
 
 /* Code to allocate and deallocate a stack.  */
@@ -229,726 +228,719 @@ late_init (void)
    be set to true iff the thread actually started up but before calling
    the user code (*PD->start_routine).  */
 
-static int _Noreturn start_thread (void *arg);
+static int _Noreturn start_thread(void *arg);
 
-static int create_thread (struct pthread *pd, const struct pthread_attr *attr,
-			  bool *stopped_start, void *stackaddr,
-			  size_t stacksize, bool *thread_ran)
+static int create_thread(struct pthread *pd, const struct pthread_attr *attr,
+                         bool *stopped_start, void *stackaddr,
+                         size_t stacksize, bool *thread_ran)
 {
-  /* Determine whether the newly created threads has to be started
-     stopped since we have to set the scheduling parameters or set the
-     affinity.  */
-  bool need_setaffinity = (attr != NULL && attr->extension != NULL
-			   && attr->extension->cpuset != NULL);
-  if (attr != NULL
-      && (__glibc_unlikely (need_setaffinity)
-	  || __glibc_unlikely ((attr->flags & ATTR_FLAG_NOTINHERITSCHED) != 0)))
-    *stopped_start = true;
-
-  pd->stopped_start = *stopped_start;
-  if (__glibc_unlikely (*stopped_start))
-    lll_lock (pd->lock, LLL_PRIVATE);
-
-  /* We rely heavily on various flags the CLONE function understands:
-
-     CLONE_VM, CLONE_FS, CLONE_FILES
-	These flags select semantics with shared address space and
-	file descriptors according to what POSIX requires.
-
-     CLONE_SIGHAND, CLONE_THREAD
-	This flag selects the POSIX signal semantics and various
-	other kinds of sharing (itimers, POSIX timers, etc.).
-
-     CLONE_SETTLS
-	The sixth parameter to CLONE determines the TLS area for the
-	new thread.
-
-     CLONE_PARENT_SETTID
-	The kernels writes the thread ID of the newly created thread
-	into the location pointed to by the fifth parameters to CLONE.
-
-	Note that it would be semantically equivalent to use
-	CLONE_CHILD_SETTID but it is be more expensive in the kernel.
-
-     CLONE_CHILD_CLEARTID
-	The kernels clears the thread ID of a thread that has called
-	sys_exit() in the location pointed to by the seventh parameter
-	to CLONE.
-
-     The termination signal is chosen to be zero which means no signal
-     is sent.  */
-  const int clone_flags = (CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SYSVSEM
-			   | CLONE_SIGHAND | CLONE_THREAD
-			   | CLONE_SETTLS | CLONE_PARENT_SETTID
-			   | CLONE_CHILD_CLEARTID
-			   | 0);
-
-  TLS_DEFINE_INIT_TP (tp, pd);
-
-  struct clone_args args =
-    {
-      .flags = clone_flags,
-      .pidfd = (uintptr_t) &pd->tid,
-      .parent_tid = (uintptr_t) &pd->tid,
-      .child_tid = (uintptr_t) &pd->tid,
-      .stack = (uintptr_t) stackaddr,
-      .stack_size = stacksize,
-      .tls = (uintptr_t) tp,
-    };
-  int ret = __clone_internal (&args, &start_thread, pd);
-  if (__glibc_unlikely (ret == -1))
-    return errno;
-
-  /* It's started now, so if we fail below, we'll have to let it clean itself
-     up.  */
-  *thread_ran = true;
-
-  /* Now we have the possibility to set scheduling parameters etc.  */
-  if (attr != NULL)
-    {
-      /* Set the affinity mask if necessary.  */
-      if (need_setaffinity)
-	{
-	  assert (*stopped_start);
-
-	  int res = INTERNAL_SYSCALL_CALL (sched_setaffinity, pd->tid,
-					   attr->extension->cpusetsize,
-					   attr->extension->cpuset);
-	  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (res)))
-	    return INTERNAL_SYSCALL_ERRNO (res);
-	}
-
-      /* Set the scheduling parameters.  */
-      if ((attr->flags & ATTR_FLAG_NOTINHERITSCHED) != 0)
-	{
-	  assert (*stopped_start);
-
-	  int res = INTERNAL_SYSCALL_CALL (sched_setscheduler, pd->tid,
-					   pd->schedpolicy, &pd->schedparam);
-	  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (res)))
-	    return INTERNAL_SYSCALL_ERRNO (res);
-	}
+    /* Determine whether the newly created threads has to be started
+       stopped since we have to set the scheduling parameters or set the
+       affinity.  */
+    bool need_setaffinity = (attr != NULL && attr->extension != NULL
+                             && attr->extension->cpuset != NULL);
+    if (attr != NULL
+        && (__glibc_unlikely(need_setaffinity)
+            || __glibc_unlikely((attr->flags & ATTR_FLAG_NOTINHERITSCHED) != 0))) {
+        *stopped_start = true;
     }
 
-  return 0;
+    pd->stopped_start = *stopped_start;
+    if (__glibc_unlikely(*stopped_start)) {
+        lll_lock(pd->lock, LLL_PRIVATE);
+    }
+
+    /* We rely heavily on various flags the CLONE function understands:
+
+       CLONE_VM, CLONE_FS, CLONE_FILES
+    These flags select semantics with shared address space and
+    file descriptors according to what POSIX requires.
+
+       CLONE_SIGHAND, CLONE_THREAD
+    This flag selects the POSIX signal semantics and various
+    other kinds of sharing (itimers, POSIX timers, etc.).
+
+       CLONE_SETTLS
+    The sixth parameter to CLONE determines the TLS area for the
+    new thread.
+
+       CLONE_PARENT_SETTID
+    The kernels writes the thread ID of the newly created thread
+    into the location pointed to by the fifth parameters to CLONE.
+
+    Note that it would be semantically equivalent to use
+    CLONE_CHILD_SETTID but it is be more expensive in the kernel.
+
+       CLONE_CHILD_CLEARTID
+    The kernels clears the thread ID of a thread that has called
+    sys_exit() in the location pointed to by the seventh parameter
+    to CLONE.
+
+       The termination signal is chosen to be zero which means no signal
+       is sent.  */
+    const int clone_flags = (CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SYSVSEM
+                             | CLONE_SIGHAND | CLONE_THREAD
+                             | CLONE_SETTLS | CLONE_PARENT_SETTID
+                             | CLONE_CHILD_CLEARTID
+                             | 0);
+
+    TLS_DEFINE_INIT_TP(tp, pd);
+
+    struct clone_args args = {
+        .flags = clone_flags,
+        .pidfd = (uintptr_t) &pd->tid,
+        .parent_tid = (uintptr_t) &pd->tid,
+        .child_tid = (uintptr_t) &pd->tid,
+        .stack = (uintptr_t) stackaddr,
+        .stack_size = stacksize,
+        .tls = (uintptr_t) tp,
+    };
+    int ret = __clone_internal(&args, &start_thread, pd);
+    if (__glibc_unlikely(ret == -1)) {
+        return errno;
+    }
+
+    /* It's started now, so if we fail below, we'll have to let it clean itself
+       up.  */
+    *thread_ran = true;
+
+    /* Now we have the possibility to set scheduling parameters etc.  */
+    if (attr != NULL) {
+        /* Set the affinity mask if necessary.  */
+        if (need_setaffinity) {
+            assert(*stopped_start);
+
+            int res = INTERNAL_SYSCALL_CALL(sched_setaffinity, pd->tid,
+                                            attr->extension->cpusetsize,
+                                            attr->extension->cpuset);
+            if (__glibc_unlikely(INTERNAL_SYSCALL_ERROR_P(res))) {
+                return INTERNAL_SYSCALL_ERRNO(res);
+            }
+        }
+
+        /* Set the scheduling parameters.  */
+        if ((attr->flags & ATTR_FLAG_NOTINHERITSCHED) != 0) {
+            assert(*stopped_start);
+
+            int res = INTERNAL_SYSCALL_CALL(sched_setscheduler, pd->tid,
+                                            pd->schedpolicy, &pd->schedparam);
+            if (__glibc_unlikely(INTERNAL_SYSCALL_ERROR_P(res))) {
+                return INTERNAL_SYSCALL_ERRNO(res);
+            }
+        }
+    }
+
+    return 0;
 }
 
 /* Local function to start thread and handle cleanup.  */
-static int _Noreturn
-start_thread (void *arg)
+static int _Noreturn start_thread(void *arg)
 {
-  struct pthread *pd = arg;
+    struct pthread *pd = arg;
 
-  /* We are either in (a) or (b), and in either case we either own PD already
-     (2) or are about to own PD (1), and so our only restriction would be that
-     we can't free PD until we know we have ownership (see CONCURRENCY NOTES
-     above).  */
-  if (pd->stopped_start)
-    {
-      bool setup_failed = false;
+    /* We are either in (a) or (b), and in either case we either own PD already
+       (2) or are about to own PD (1), and so our only restriction would be that
+       we can't free PD until we know we have ownership (see CONCURRENCY NOTES
+       above).  */
+    if (pd->stopped_start) {
+        bool setup_failed = false;
 
-      /* Get the lock the parent locked to force synchronization.  */
-      lll_lock (pd->lock, LLL_PRIVATE);
+        /* Get the lock the parent locked to force synchronization.  */
+        lll_lock(pd->lock, LLL_PRIVATE);
 
-      /* We have ownership of PD now, for detached threads with setup failure
-	 we set it as joinable so the creating thread could synchronous join
-         and free any resource prior return to the pthread_create caller.  */
-      setup_failed = pd->setup_failed == 1;
-      if (setup_failed)
-	pd->joinid = NULL;
+        /* We have ownership of PD now, for detached threads with setup failure
+        we set it as joinable so the creating thread could synchronous join
+               and free any resource prior return to the pthread_create caller.  */
+        setup_failed = pd->setup_failed == 1;
+        if (setup_failed) {
+            pd->joinid = NULL;
+        }
 
-      /* And give it up right away.  */
-      lll_unlock (pd->lock, LLL_PRIVATE);
+        /* And give it up right away.  */
+        lll_unlock(pd->lock, LLL_PRIVATE);
 
-      if (setup_failed)
-	goto out;
+        if (setup_failed) {
+            goto out;
+        }
     }
 
-  /* Initialize resolver state pointer.  */
-  __resp = &pd->res;
+    /* Initialize resolver state pointer.  */
+    __resp = &pd->res;
 
-  /* Initialize pointers to locale data.  */
-  __ctype_init ();
+    /* Initialize pointers to locale data.  */
+    __ctype_init();
 
-  /* Name the thread stack if kernel supports it.  */
-  name_stack_maps (pd, true);
+    /* Name the thread stack if kernel supports it.  */
+    name_stack_maps(pd, true);
 
-  /* Register rseq TLS to the kernel.  */
-  {
-    bool do_rseq = THREAD_GETMEM (pd, flags) & ATTR_FLAG_DO_RSEQ;
-    if (!rseq_register_current_thread (pd, do_rseq) && do_rseq)
-      __libc_fatal ("Fatal glibc error: rseq registration failed\n");
-  }
+    /* Register rseq TLS to the kernel.  */
+    {
+        bool do_rseq = THREAD_GETMEM(pd, flags) & ATTR_FLAG_DO_RSEQ;
+        if (!rseq_register_current_thread(pd, do_rseq) && do_rseq) {
+            __libc_fatal("Fatal glibc error: rseq registration failed\n");
+        }
+    }
 
 #ifndef __ASSUME_SET_ROBUST_LIST
-  if (__nptl_set_robust_list_avail)
+    if (__nptl_set_robust_list_avail)
 #endif
     {
-      /* This call should never fail because the initial call in init.c
-	 succeeded.  */
-      INTERNAL_SYSCALL_CALL (set_robust_list, &pd->robust_head,
-			     sizeof (struct robust_list_head));
+        /* This call should never fail because the initial call in init.c
+        succeeded.  */
+        INTERNAL_SYSCALL_CALL(set_robust_list, &pd->robust_head,
+                              sizeof(struct robust_list_head));
     }
 
-  /* This is where the try/finally block should be created.  For
-     compilers without that support we do use setjmp.  */
-  struct pthread_unwind_buf unwind_buf;
+    /* This is where the try/finally block should be created.  For
+       compilers without that support we do use setjmp.  */
+    struct pthread_unwind_buf unwind_buf;
 
-  int not_first_call;
-  DIAG_PUSH_NEEDS_COMMENT;
+    int not_first_call;
+    DIAG_PUSH_NEEDS_COMMENT;
 #if __GNUC_PREREQ (7, 0)
-  /* This call results in a -Wstringop-overflow warning because struct
-     pthread_unwind_buf is smaller than jmp_buf.  setjmp and longjmp
-     do not use anything beyond the common prefix (they never access
-     the saved signal mask), so that is a false positive.  */
-  DIAG_IGNORE_NEEDS_COMMENT (11, "-Wstringop-overflow=");
+    /* This call results in a -Wstringop-overflow warning because struct
+       pthread_unwind_buf is smaller than jmp_buf.  setjmp and longjmp
+       do not use anything beyond the common prefix (they never access
+       the saved signal mask), so that is a false positive.  */
+    DIAG_IGNORE_NEEDS_COMMENT(11, "-Wstringop-overflow=");
 #endif
-  not_first_call = setjmp ((struct __jmp_buf_tag *) unwind_buf.cancel_jmp_buf);
-  DIAG_POP_NEEDS_COMMENT;
+    not_first_call = setjmp((struct __jmp_buf_tag *) unwind_buf.cancel_jmp_buf);
+    DIAG_POP_NEEDS_COMMENT;
 
-  /* No previous handlers.  NB: This must be done after setjmp since the
-     private space in the unwind jump buffer may overlap space used by
-     setjmp to store extra architecture-specific information which is
-     never used by the cancellation-specific __libc_unwind_longjmp.
+    /* No previous handlers.  NB: This must be done after setjmp since the
+       private space in the unwind jump buffer may overlap space used by
+       setjmp to store extra architecture-specific information which is
+       never used by the cancellation-specific __libc_unwind_longjmp.
 
-     The private space is allowed to overlap because the unwinder never
-     has to return through any of the jumped-to call frames, and thus
-     only a minimum amount of saved data need be stored, and for example,
-     need not include the process signal mask information. This is all
-     an optimization to reduce stack usage when pushing cancellation
-     handlers.  */
-  unwind_buf.priv.data.prev = NULL;
-  unwind_buf.priv.data.cleanup = NULL;
+       The private space is allowed to overlap because the unwinder never
+       has to return through any of the jumped-to call frames, and thus
+       only a minimum amount of saved data need be stored, and for example,
+       need not include the process signal mask information. This is all
+       an optimization to reduce stack usage when pushing cancellation
+       handlers.  */
+    unwind_buf.priv.data.prev = NULL;
+    unwind_buf.priv.data.cleanup = NULL;
 
-  /* Allow setxid from now onwards.  */
-  if (__glibc_unlikely (atomic_exchange_acquire (&pd->setxid_futex, 0) == -2))
-    futex_wake (&pd->setxid_futex, 1, FUTEX_PRIVATE);
-
-  if (__glibc_likely (! not_first_call))
-    {
-      /* Store the new cleanup handler info.  */
-      THREAD_SETMEM (pd, cleanup_jmp_buf, &unwind_buf);
-
-      internal_signal_restore_set (&pd->sigmask);
-
-      LIBC_PROBE (pthread_start, 3, (pthread_t) pd, pd->start_routine, pd->arg);
-
-      /* Run the code the user provided.  */
-      void *ret;
-      if (pd->c11)
-	{
-	  /* The function pointer of the c11 thread start is cast to an incorrect
-	     type on __pthread_create_2_1 call, however it is casted back to correct
-	     one so the call behavior is well-defined (it is assumed that pointers
-	     to void are able to represent all values of int.  */
-	  int (*start)(void*) = (int (*) (void*)) pd->start_routine;
-	  ret = (void*) (uintptr_t) start (pd->arg);
-	}
-      else
-	ret = pd->start_routine (pd->arg);
-      THREAD_SETMEM (pd, result, ret);
+    /* Allow setxid from now onwards.  */
+    if (__glibc_unlikely(atomic_exchange_acquire(&pd->setxid_futex, 0) == -2)) {
+        futex_wake(&pd->setxid_futex, 1, FUTEX_PRIVATE);
     }
 
-  /* Call destructors for the thread_local TLS variables.  */
-  call_function_static_weak (__call_tls_dtors);
+    if (__glibc_likely(! not_first_call)) {
+        /* Store the new cleanup handler info.  */
+        THREAD_SETMEM(pd, cleanup_jmp_buf, &unwind_buf);
 
-  /* Run the destructor for the thread-local data.  */
-  __nptl_deallocate_tsd ();
+        internal_signal_restore_set(&pd->sigmask);
 
-  /* Clean up any state libc stored in thread-local variables.  */
-  __libc_thread_freeres ();
+        LIBC_PROBE(pthread_start, 3, (pthread_t) pd, pd->start_routine, pd->arg);
 
-  /* Report the death of the thread if this is wanted.  */
-  if (__glibc_unlikely (pd->report_events))
-    {
-      /* See whether TD_DEATH is in any of the mask.  */
-      const int idx = __td_eventword (TD_DEATH);
-      const uint32_t mask = __td_eventmask (TD_DEATH);
-
-      if ((mask & (__nptl_threads_events.event_bits[idx]
-		   | pd->eventbuf.eventmask.event_bits[idx])) != 0)
-	{
-	  /* Yep, we have to signal the death.  Add the descriptor to
-	     the list but only if it is not already on it.  */
-	  if (pd->nextevent == NULL)
-	    {
-	      pd->eventbuf.eventnum = TD_DEATH;
-	      pd->eventbuf.eventdata = pd;
-
-	      do
-		pd->nextevent = __nptl_last_event;
-	      while (atomic_compare_and_exchange_bool_acq (&__nptl_last_event,
-							   pd, pd->nextevent));
-	    }
-
-	  /* Now call the function which signals the event.  See
-	     CONCURRENCY NOTES for the nptl_db interface comments.  */
-	  __nptl_death_event ();
-	}
+        /* Run the code the user provided.  */
+        void *ret;
+        if (pd->c11) {
+            /* The function pointer of the c11 thread start is cast to an incorrect
+               type on __pthread_create_2_1 call, however it is casted back to correct
+               one so the call behavior is well-defined (it is assumed that pointers
+               to void are able to represent all values of int.  */
+            int (*start)(void *) = (int (*)(void *)) pd->start_routine;
+            ret = (void *)(uintptr_t) start(pd->arg);
+        } else {
+            ret = pd->start_routine(pd->arg);
+        }
+        THREAD_SETMEM(pd, result, ret);
     }
 
-  /* The thread is exiting now.  Don't set this bit until after we've hit
-     the event-reporting breakpoint, so that td_thr_get_info on us while at
-     the breakpoint reports TD_THR_RUN state rather than TD_THR_ZOMBIE.  */
-  atomic_fetch_or_relaxed (&pd->cancelhandling, EXITING_BITMASK);
+    /* Call destructors for the thread_local TLS variables.  */
+    call_function_static_weak(__call_tls_dtors);
 
-  if (__glibc_unlikely (atomic_fetch_add_relaxed (&__nptl_nthreads, -1) == 1))
-    /* This was the last thread.  */
-    exit (0);
+    /* Run the destructor for the thread-local data.  */
+    __nptl_deallocate_tsd();
 
-  /* This prevents sending a signal from this thread to itself during
-     its final stages.  This must come after the exit call above
-     because atexit handlers must not run with signals blocked.
+    /* Clean up any state libc stored in thread-local variables.  */
+    __libc_thread_freeres();
 
-     Do not block SIGSETXID.  The setxid handshake below expects the
-     signal to be delivered.  (SIGSETXID cannot run application code,
-     nor does it use pthread_kill.)  Reuse the pd->sigmask space for
-     computing the signal mask, to save stack space.  */
-  internal_sigfillset (&pd->sigmask);
-  internal_sigdelset (&pd->sigmask, SIGSETXID);
-  INTERNAL_SYSCALL_CALL (rt_sigprocmask, SIG_BLOCK, &pd->sigmask, NULL,
-			 __NSIG_BYTES);
+    /* Report the death of the thread if this is wanted.  */
+    if (__glibc_unlikely(pd->report_events)) {
+        /* See whether TD_DEATH is in any of the mask.  */
+        const int idx = __td_eventword(TD_DEATH);
+        const uint32_t mask = __td_eventmask(TD_DEATH);
 
-  /* Tell __pthread_kill_internal that this thread is about to exit.
-     If there is a __pthread_kill_internal in progress, this delays
-     the thread exit until the signal has been queued by the kernel
-     (so that the TID used to send it remains valid).  */
-  __libc_lock_lock (pd->exit_lock);
-  pd->exiting = true;
-  __libc_lock_unlock (pd->exit_lock);
+        if ((mask & (__nptl_threads_events.event_bits[idx]
+                     | pd->eventbuf.eventmask.event_bits[idx])) != 0) {
+            /* Yep, we have to signal the death.  Add the descriptor to
+               the list but only if it is not already on it.  */
+            if (pd->nextevent == NULL) {
+                pd->eventbuf.eventnum = TD_DEATH;
+                pd->eventbuf.eventdata = pd;
+
+                do {
+                    pd->nextevent = __nptl_last_event;
+                } while (atomic_compare_and_exchange_bool_acq(&__nptl_last_event,
+                         pd, pd->nextevent));
+            }
+
+            /* Now call the function which signals the event.  See
+               CONCURRENCY NOTES for the nptl_db interface comments.  */
+            __nptl_death_event();
+        }
+    }
+
+    /* The thread is exiting now.  Don't set this bit until after we've hit
+       the event-reporting breakpoint, so that td_thr_get_info on us while at
+       the breakpoint reports TD_THR_RUN state rather than TD_THR_ZOMBIE.  */
+    atomic_fetch_or_relaxed(&pd->cancelhandling, EXITING_BITMASK);
+
+    if (__glibc_unlikely(atomic_fetch_add_relaxed(&__nptl_nthreads, -1) == 1))
+        /* This was the last thread.  */
+    {
+        exit(0);
+    }
+
+    /* This prevents sending a signal from this thread to itself during
+       its final stages.  This must come after the exit call above
+       because atexit handlers must not run with signals blocked.
+
+       Do not block SIGSETXID.  The setxid handshake below expects the
+       signal to be delivered.  (SIGSETXID cannot run application code,
+       nor does it use pthread_kill.)  Reuse the pd->sigmask space for
+       computing the signal mask, to save stack space.  */
+    internal_sigfillset(&pd->sigmask);
+    internal_sigdelset(&pd->sigmask, SIGSETXID);
+    INTERNAL_SYSCALL_CALL(rt_sigprocmask, SIG_BLOCK, &pd->sigmask, NULL,
+                          __NSIG_BYTES);
+
+    /* Tell __pthread_kill_internal that this thread is about to exit.
+       If there is a __pthread_kill_internal in progress, this delays
+       the thread exit until the signal has been queued by the kernel
+       (so that the TID used to send it remains valid).  */
+    __libc_lock_lock(pd->exit_lock);
+    pd->exiting = true;
+    __libc_lock_unlock(pd->exit_lock);
 
 #ifndef __ASSUME_SET_ROBUST_LIST
-  /* If this thread has any robust mutexes locked, handle them now.  */
+    /* If this thread has any robust mutexes locked, handle them now.  */
 # if __PTHREAD_MUTEX_HAVE_PREV
-  void *robust = pd->robust_head.list;
+    void *robust = pd->robust_head.list;
 # else
-  __pthread_slist_t *robust = pd->robust_list.__next;
+    __pthread_slist_t *robust = pd->robust_list.__next;
 # endif
-  /* We let the kernel do the notification if it is able to do so.
-     If we have to do it here there for sure are no PI mutexes involved
-     since the kernel support for them is even more recent.  */
-  if (!__nptl_set_robust_list_avail
-      && __builtin_expect (robust != (void *) &pd->robust_head, 0))
-    {
-      do
-	{
-	  struct __pthread_mutex_s *this = (struct __pthread_mutex_s *)
-	    ((char *) robust - offsetof (struct __pthread_mutex_s,
-					 __list.__next));
-	  robust = *((void **) robust);
+    /* We let the kernel do the notification if it is able to do so.
+       If we have to do it here there for sure are no PI mutexes involved
+       since the kernel support for them is even more recent.  */
+    if (!__nptl_set_robust_list_avail
+        && __builtin_expect(robust != (void *) &pd->robust_head, 0)) {
+        do {
+            struct __pthread_mutex_s *this = (struct __pthread_mutex_s *)
+                                             ((char *) robust - offsetof(struct __pthread_mutex_s,
+                                                     __list.__next));
+            robust = *((void **) robust);
 
 # if __PTHREAD_MUTEX_HAVE_PREV
-	  this->__list.__prev = NULL;
+            this->__list.__prev = NULL;
 # endif
-	  this->__list.__next = NULL;
+            this->__list.__next = NULL;
 
-	  atomic_fetch_or_acquire (&this->__lock, FUTEX_OWNER_DIED);
-	  futex_wake ((unsigned int *) &this->__lock, 1,
-		      /* XYZ */ FUTEX_SHARED);
-	}
-      while (robust != (void *) &pd->robust_head);
+            atomic_fetch_or_acquire(&this->__lock, FUTEX_OWNER_DIED);
+            futex_wake((unsigned int *) &this->__lock, 1,
+                       /* XYZ */ FUTEX_SHARED);
+        } while (robust != (void *) &pd->robust_head);
     }
 #endif
 
-  /* Release the vDSO getrandom per-thread buffer with all signal blocked,
-     to avoid creating a new free-state block during thread release.  */
-  __getrandom_vdso_release (pd);
+    /* Release the vDSO getrandom per-thread buffer with all signal blocked,
+       to avoid creating a new free-state block during thread release.  */
+    __getrandom_vdso_release(pd);
 
-  if (pd->stack_mode != ALLOCATE_GUARD_USER)
-    advise_stack_range (pd->stackblock, pd->stackblock_size, (uintptr_t) pd,
-			pd->guardsize);
+    if (pd->stack_mode != ALLOCATE_GUARD_USER)
+        advise_stack_range(pd->stackblock, pd->stackblock_size, (uintptr_t) pd,
+                           pd->guardsize);
 
-  if (__glibc_unlikely (pd->cancelhandling & SETXID_BITMASK))
-    {
-      /* Some other thread might call any of the setXid functions and expect
-	 us to reply.  In this case wait until we did that.  */
-      do
-	/* XXX This differs from the typical futex_wait_simple pattern in that
-	   the futex_wait condition (setxid_futex) is different from the
-	   condition used in the surrounding loop (cancelhandling).  We need
-	   to check and document why this is correct.  */
-	futex_wait_simple (&pd->setxid_futex, 0, FUTEX_PRIVATE);
-      while (pd->cancelhandling & SETXID_BITMASK);
+    if (__glibc_unlikely(pd->cancelhandling & SETXID_BITMASK)) {
+        /* Some other thread might call any of the setXid functions and expect
+        us to reply.  In this case wait until we did that.  */
+        do
+            /* XXX This differs from the typical futex_wait_simple pattern in that
+               the futex_wait condition (setxid_futex) is different from the
+               condition used in the surrounding loop (cancelhandling).  We need
+               to check and document why this is correct.  */
+        {
+            futex_wait_simple(&pd->setxid_futex, 0, FUTEX_PRIVATE);
+        } while (pd->cancelhandling & SETXID_BITMASK);
 
-      /* Reset the value so that the stack can be reused.  */
-      pd->setxid_futex = 0;
+        /* Reset the value so that the stack can be reused.  */
+        pd->setxid_futex = 0;
     }
 
-  /* If the thread is detached free the TCB.  */
-  if (IS_DETACHED (pd))
-    /* Free the TCB.  */
-    __nptl_free_tcb (pd);
+    /* If the thread is detached free the TCB.  */
+    if (IS_DETACHED(pd))
+        /* Free the TCB.  */
+    {
+        __nptl_free_tcb(pd);
+    }
 
-  /* Remove the associated name from the thread stack.  */
-  name_stack_maps (pd, false);
+    /* Remove the associated name from the thread stack.  */
+    name_stack_maps(pd, false);
 
 out:
-  /* We cannot call '_exit' here.  '_exit' will terminate the process.
+    /* We cannot call '_exit' here.  '_exit' will terminate the process.
 
-     The 'exit' implementation in the kernel will signal when the
-     process is really dead since 'clone' got passed the CLONE_CHILD_CLEARTID
-     flag.  The 'tid' field in the TCB will be set to zero.
+       The 'exit' implementation in the kernel will signal when the
+       process is really dead since 'clone' got passed the CLONE_CHILD_CLEARTID
+       flag.  The 'tid' field in the TCB will be set to zero.
 
-     rseq TLS is still registered at this point.  Rely on implicit
-     unregistration performed by the kernel on thread teardown.  This is not a
-     problem because the rseq TLS lives on the stack, and the stack outlives
-     the thread.  If TCB allocation is ever changed, additional steps may be
-     required, such as performing explicit rseq unregistration before
-     reclaiming the rseq TLS area memory.  It is NOT sufficient to block
-     signals because the kernel may write to the rseq area even without
-     signals.
+       rseq TLS is still registered at this point.  Rely on implicit
+       unregistration performed by the kernel on thread teardown.  This is not a
+       problem because the rseq TLS lives on the stack, and the stack outlives
+       the thread.  If TCB allocation is ever changed, additional steps may be
+       required, such as performing explicit rseq unregistration before
+       reclaiming the rseq TLS area memory.  It is NOT sufficient to block
+       signals because the kernel may write to the rseq area even without
+       signals.
 
-     The exit code is zero since in case all threads exit by calling
-     'pthread_exit' the exit status must be 0 (zero).  */
-  while (1)
-    INTERNAL_SYSCALL_CALL (exit, 0);
+       The exit code is zero since in case all threads exit by calling
+       'pthread_exit' the exit status must be 0 (zero).  */
+    while (1) {
+        INTERNAL_SYSCALL_CALL(exit, 0);
+    }
 
-  /* NOTREACHED */
+    /* NOTREACHED */
 }
 
 
 /* Return true iff obliged to report TD_CREATE events.  */
-static bool
-report_thread_creation (struct pthread *pd)
+static bool report_thread_creation(struct pthread *pd)
 {
-  if (__glibc_unlikely (THREAD_GETMEM (THREAD_SELF, report_events)))
-    {
-      /* The parent thread is supposed to report events.
-	 Check whether the TD_CREATE event is needed, too.  */
-      const size_t idx = __td_eventword (TD_CREATE);
-      const uint32_t mask = __td_eventmask (TD_CREATE);
+    if (__glibc_unlikely(THREAD_GETMEM(THREAD_SELF, report_events))) {
+        /* The parent thread is supposed to report events.
+        Check whether the TD_CREATE event is needed, too.  */
+        const size_t idx = __td_eventword(TD_CREATE);
+        const uint32_t mask = __td_eventmask(TD_CREATE);
 
-      return ((mask & (__nptl_threads_events.event_bits[idx]
-		       | pd->eventbuf.eventmask.event_bits[idx])) != 0);
+        return ((mask & (__nptl_threads_events.event_bits[idx]
+                         | pd->eventbuf.eventmask.event_bits[idx])) != 0);
     }
-  return false;
+    return false;
 }
 
 
-int
-__pthread_create_2_1 (pthread_t *newthread, const pthread_attr_t *attr,
-		      void *(*start_routine) (void *), void *arg)
+int __pthread_create_2_1(pthread_t *newthread, const pthread_attr_t *attr,
+                         void *(*start_routine)(void *), void *arg)
 {
-  void *stackaddr = NULL;
-  size_t stacksize = 0;
+    void *stackaddr = NULL;
+    size_t stacksize = 0;
 
-  /* Avoid a data race in the multi-threaded case, and call the
-     deferred initialization only once.  */
-  if (__libc_single_threaded_internal)
-    {
-      late_init ();
-      __libc_single_threaded_internal = 0;
-      /* __libc_single_threaded can be accessed through copy relocations, so
-	 it requires to update the external copy.  */
-      __libc_single_threaded = 0;
+    /* Avoid a data race in the multi-threaded case, and call the
+       deferred initialization only once.  */
+    if (__libc_single_threaded_internal) {
+        late_init();
+        __libc_single_threaded_internal = 0;
+        /* __libc_single_threaded can be accessed through copy relocations, so
+        it requires to update the external copy.  */
+        __libc_single_threaded = 0;
     }
 
-  const struct pthread_attr *iattr = (struct pthread_attr *) attr;
-  union pthread_attr_transparent default_attr;
-  bool destroy_default_attr = false;
-  bool c11 = (attr == ATTR_C11_THREAD);
-  if (iattr == NULL || c11)
-    {
-      int ret = __pthread_getattr_default_np (&default_attr.external);
-      if (ret != 0)
-	return ret;
-      destroy_default_attr = true;
-      iattr = &default_attr.internal;
+    const struct pthread_attr *iattr = (struct pthread_attr *) attr;
+    union pthread_attr_transparent default_attr;
+    bool destroy_default_attr = false;
+    bool c11 = (attr == ATTR_C11_THREAD);
+    if (iattr == NULL || c11) {
+        int ret = __pthread_getattr_default_np(&default_attr.external);
+        if (ret != 0) {
+            return ret;
+        }
+        destroy_default_attr = true;
+        iattr = &default_attr.internal;
     }
 
-  struct pthread *pd = NULL;
-  int err = allocate_stack (iattr, &pd, &stackaddr, &stacksize);
-  int retval = 0;
+    struct pthread *pd = NULL;
+    int err = allocate_stack(iattr, &pd, &stackaddr, &stacksize);
+    int retval = 0;
 
-  if (__glibc_unlikely (err != 0))
-    /* Something went wrong.  Maybe a parameter of the attributes is
-       invalid or we could not allocate memory.  Note we have to
-       translate error codes.  */
+    if (__glibc_unlikely(err != 0))
+        /* Something went wrong.  Maybe a parameter of the attributes is
+           invalid or we could not allocate memory.  Note we have to
+           translate error codes.  */
     {
-      retval = err == ENOMEM ? EAGAIN : err;
-      goto out;
+        retval = err == ENOMEM ? EAGAIN : err;
+        goto out;
     }
 
 
-  /* Initialize the TCB.  All initializations with zero should be
-     performed in 'get_cached_stack'.  This way we avoid doing this if
-     the stack freshly allocated with 'mmap'.  */
+    /* Initialize the TCB.  All initializations with zero should be
+       performed in 'get_cached_stack'.  This way we avoid doing this if
+       the stack freshly allocated with 'mmap'.  */
 
 #if TLS_TCB_AT_TP
-  /* Reference to the TCB itself.  */
-  pd->header.self = pd;
+    /* Reference to the TCB itself.  */
+    pd->header.self = pd;
 
-  /* Self-reference for TLS.  */
-  pd->header.tcb = pd;
+    /* Self-reference for TLS.  */
+    pd->header.tcb = pd;
 #endif
 
-  /* Store the address of the start routine and the parameter.  Since
-     we do not start the function directly the stillborn thread will
-     get the information from its thread descriptor.  */
-  pd->start_routine = start_routine;
-  pd->arg = arg;
-  pd->c11 = c11;
+    /* Store the address of the start routine and the parameter.  Since
+       we do not start the function directly the stillborn thread will
+       get the information from its thread descriptor.  */
+    pd->start_routine = start_routine;
+    pd->arg = arg;
+    pd->c11 = c11;
 
-  /* Copy the thread attribute flags.  */
-  struct pthread *self = THREAD_SELF;
-  pd->flags = ((iattr->flags & ~(ATTR_FLAG_SCHED_SET | ATTR_FLAG_POLICY_SET))
-	       | (self->flags & (ATTR_FLAG_SCHED_SET | ATTR_FLAG_POLICY_SET)));
+    /* Copy the thread attribute flags.  */
+    struct pthread *self = THREAD_SELF;
+    pd->flags = ((iattr->flags & ~(ATTR_FLAG_SCHED_SET | ATTR_FLAG_POLICY_SET))
+                 | (self->flags & (ATTR_FLAG_SCHED_SET | ATTR_FLAG_POLICY_SET)));
 
-  /* Inherit rseq registration state.  Without seccomp filters, rseq
-     registration will either always fail or always succeed.  */
-  if ((int) RSEQ_GETMEM_ONCE (cpu_id) >= 0)
-    pd->flags |= ATTR_FLAG_DO_RSEQ;
+    /* Inherit rseq registration state.  Without seccomp filters, rseq
+       registration will either always fail or always succeed.  */
+    if ((int) RSEQ_GETMEM_ONCE(cpu_id) >= 0) {
+        pd->flags |= ATTR_FLAG_DO_RSEQ;
+    }
 
-  /* Initialize the field for the ID of the thread which is waiting
-     for us.  This is a self-reference in case the thread is created
-     detached.  */
-  pd->joinid = iattr->flags & ATTR_FLAG_DETACHSTATE ? pd : NULL;
+    /* Initialize the field for the ID of the thread which is waiting
+       for us.  This is a self-reference in case the thread is created
+       detached.  */
+    pd->joinid = iattr->flags & ATTR_FLAG_DETACHSTATE ? pd : NULL;
 
-  /* The debug events are inherited from the parent.  */
-  pd->eventbuf = self->eventbuf;
+    /* The debug events are inherited from the parent.  */
+    pd->eventbuf = self->eventbuf;
 
 
-  /* Copy the parent's scheduling parameters.  The flags will say what
-     is valid and what is not.  */
-  pd->schedpolicy = self->schedpolicy;
-  pd->schedparam = self->schedparam;
+    /* Copy the parent's scheduling parameters.  The flags will say what
+       is valid and what is not.  */
+    pd->schedpolicy = self->schedpolicy;
+    pd->schedparam = self->schedparam;
 
-  /* Copy the stack guard canary.  */
+    /* Copy the stack guard canary.  */
 #ifdef THREAD_COPY_STACK_GUARD
-  THREAD_COPY_STACK_GUARD (pd);
+    THREAD_COPY_STACK_GUARD(pd);
 #endif
 
-  /* Copy the pointer guard value.  */
+    /* Copy the pointer guard value.  */
 #ifdef THREAD_COPY_POINTER_GUARD
-  THREAD_COPY_POINTER_GUARD (pd);
+    THREAD_COPY_POINTER_GUARD(pd);
 #endif
 
-  /* Setup tcbhead.  */
-  tls_setup_tcbhead (pd);
+    /* Setup tcbhead.  */
+    tls_setup_tcbhead(pd);
 
-  /* Verify the sysinfo bits were copied in allocate_stack if needed.  */
+    /* Verify the sysinfo bits were copied in allocate_stack if needed.  */
 #ifdef NEED_DL_SYSINFO
-  CHECK_THREAD_SYSINFO (pd);
+    CHECK_THREAD_SYSINFO(pd);
 #endif
 
-  /* Determine scheduling parameters for the thread.  */
-  if (__builtin_expect ((iattr->flags & ATTR_FLAG_NOTINHERITSCHED) != 0, 0)
-      && (iattr->flags & (ATTR_FLAG_SCHED_SET | ATTR_FLAG_POLICY_SET)) != 0)
-    {
-      /* Use the scheduling parameters the user provided.  */
-      if (iattr->flags & ATTR_FLAG_POLICY_SET)
-        {
-          pd->schedpolicy = iattr->schedpolicy;
-          pd->flags |= ATTR_FLAG_POLICY_SET;
+    /* Determine scheduling parameters for the thread.  */
+    if (__builtin_expect((iattr->flags & ATTR_FLAG_NOTINHERITSCHED) != 0, 0)
+        && (iattr->flags & (ATTR_FLAG_SCHED_SET | ATTR_FLAG_POLICY_SET)) != 0) {
+        /* Use the scheduling parameters the user provided.  */
+        if (iattr->flags & ATTR_FLAG_POLICY_SET) {
+            pd->schedpolicy = iattr->schedpolicy;
+            pd->flags |= ATTR_FLAG_POLICY_SET;
         }
-      if (iattr->flags & ATTR_FLAG_SCHED_SET)
-        {
-          /* The values were validated in pthread_attr_setschedparam.  */
-          pd->schedparam = iattr->schedparam;
-          pd->flags |= ATTR_FLAG_SCHED_SET;
+        if (iattr->flags & ATTR_FLAG_SCHED_SET) {
+            /* The values were validated in pthread_attr_setschedparam.  */
+            pd->schedparam = iattr->schedparam;
+            pd->flags |= ATTR_FLAG_SCHED_SET;
         }
 
-      if ((pd->flags & (ATTR_FLAG_SCHED_SET | ATTR_FLAG_POLICY_SET))
-          != (ATTR_FLAG_SCHED_SET | ATTR_FLAG_POLICY_SET))
-        collect_default_sched (pd);
+        if ((pd->flags & (ATTR_FLAG_SCHED_SET | ATTR_FLAG_POLICY_SET))
+            != (ATTR_FLAG_SCHED_SET | ATTR_FLAG_POLICY_SET)) {
+            collect_default_sched(pd);
+        }
     }
 
-  if (__glibc_unlikely (__nptl_nthreads == 1))
-    _IO_enable_locks ();
-
-  /* Pass the descriptor to the caller.  */
-  *newthread = (pthread_t) pd;
-
-  LIBC_PROBE (pthread_create, 4, newthread, attr, start_routine, arg);
-
-  /* One more thread.  We cannot have the thread do this itself, since it
-     might exist but not have been scheduled yet by the time we've returned
-     and need to check the value to behave correctly.  We must do it before
-     creating the thread, in case it does get scheduled first and then
-     might mistakenly think it was the only thread.  In the failure case,
-     we momentarily store a false value; this doesn't matter because there
-     is no kosher thing a signal handler interrupting us right here can do
-     that cares whether the thread count is correct.  */
-  atomic_fetch_add_relaxed (&__nptl_nthreads, 1);
-
-  /* Our local value of stopped_start and thread_ran can be accessed at
-     any time. The PD->stopped_start may only be accessed if we have
-     ownership of PD (see CONCURRENCY NOTES above).  */
-  bool stopped_start = false; bool thread_ran = false;
-
-  /* Block all signals, so that the new thread starts out with
-     signals disabled.  This avoids race conditions in the thread
-     startup.  */
-  internal_sigset_t original_sigmask;
-  internal_signal_block_all (&original_sigmask);
-
-  if (iattr->extension != NULL && iattr->extension->sigmask_set)
-    /* Use the signal mask in the attribute.  The internal signals
-       have already been filtered by the public
-       pthread_attr_setsigmask_np interface.  */
-    internal_sigset_from_sigset (&pd->sigmask, &iattr->extension->sigmask);
-  else
-    {
-      /* Conceptually, the new thread needs to inherit the signal mask
-	 of this thread.  Therefore, it needs to restore the saved
-	 signal mask of this thread, so save it in the startup
-	 information.  */
-      pd->sigmask = original_sigmask;
-      /* Reset the cancellation signal mask in case this thread is
-	 running cancellation.  */
-      internal_sigdelset (&pd->sigmask, SIGCANCEL);
+    if (__glibc_unlikely(__nptl_nthreads == 1)) {
+        _IO_enable_locks();
     }
 
-  /* Start the thread.  */
-  if (__glibc_unlikely (report_thread_creation (pd)))
+    /* Pass the descriptor to the caller.  */
+    *newthread = (pthread_t) pd;
+
+    LIBC_PROBE(pthread_create, 4, newthread, attr, start_routine, arg);
+
+    /* One more thread.  We cannot have the thread do this itself, since it
+       might exist but not have been scheduled yet by the time we've returned
+       and need to check the value to behave correctly.  We must do it before
+       creating the thread, in case it does get scheduled first and then
+       might mistakenly think it was the only thread.  In the failure case,
+       we momentarily store a false value; this doesn't matter because there
+       is no kosher thing a signal handler interrupting us right here can do
+       that cares whether the thread count is correct.  */
+    atomic_fetch_add_relaxed(&__nptl_nthreads, 1);
+
+    /* Our local value of stopped_start and thread_ran can be accessed at
+       any time. The PD->stopped_start may only be accessed if we have
+       ownership of PD (see CONCURRENCY NOTES above).  */
+    bool stopped_start = false;
+    bool thread_ran = false;
+
+    /* Block all signals, so that the new thread starts out with
+       signals disabled.  This avoids race conditions in the thread
+       startup.  */
+    internal_sigset_t original_sigmask;
+    internal_signal_block_all(&original_sigmask);
+
+    if (iattr->extension != NULL && iattr->extension->sigmask_set)
+        /* Use the signal mask in the attribute.  The internal signals
+           have already been filtered by the public
+           pthread_attr_setsigmask_np interface.  */
     {
-      stopped_start = true;
-
-      /* We always create the thread stopped at startup so we can
-	 notify the debugger.  */
-      retval = create_thread (pd, iattr, &stopped_start, stackaddr,
-			      stacksize, &thread_ran);
-      if (retval == 0)
-	{
-	  /* We retain ownership of PD until (a) (see CONCURRENCY NOTES
-	     above).  */
-
-	  /* Assert stopped_start is true in both our local copy and the
-	     PD copy.  */
-	  assert (stopped_start);
-	  assert (pd->stopped_start);
-
-	  /* Now fill in the information about the new thread in
-	     the newly created thread's data structure.  We cannot let
-	     the new thread do this since we don't know whether it was
-	     already scheduled when we send the event.  */
-	  pd->eventbuf.eventnum = TD_CREATE;
-	  pd->eventbuf.eventdata = pd;
-
-	  /* Enqueue the descriptor.  */
-	  do
-	    pd->nextevent = __nptl_last_event;
-	  while (atomic_compare_and_exchange_bool_acq (&__nptl_last_event,
-						       pd, pd->nextevent)
-		 != 0);
-
-	  /* Now call the function which signals the event.  See
-	     CONCURRENCY NOTES for the nptl_db interface comments.  */
-	  __nptl_create_event ();
-	}
+        internal_sigset_from_sigset(&pd->sigmask, &iattr->extension->sigmask);
+    } else {
+        /* Conceptually, the new thread needs to inherit the signal mask
+        of this thread.  Therefore, it needs to restore the saved
+         signal mask of this thread, so save it in the startup
+         information.  */
+        pd->sigmask = original_sigmask;
+        /* Reset the cancellation signal mask in case this thread is
+        running cancellation.  */
+        internal_sigdelset(&pd->sigmask, SIGCANCEL);
     }
-  else
-    retval = create_thread (pd, iattr, &stopped_start, stackaddr,
-			    stacksize, &thread_ran);
 
-  /* Return to the previous signal mask, after creating the new
-     thread.  */
-  internal_signal_restore_set (&original_sigmask);
+    /* Start the thread.  */
+    if (__glibc_unlikely(report_thread_creation(pd))) {
+        stopped_start = true;
 
-  if (__glibc_unlikely (retval != 0))
-    {
-      if (thread_ran)
-	/* State (c) and we not have PD ownership (see CONCURRENCY NOTES
-	   above).  We can assert that STOPPED_START must have been true
-	   because thread creation didn't fail, but thread attribute setting
-	   did.  */
+        /* We always create the thread stopped at startup so we can
+        notify the debugger.  */
+        retval = create_thread(pd, iattr, &stopped_start, stackaddr,
+                               stacksize, &thread_ran);
+        if (retval == 0) {
+            /* We retain ownership of PD until (a) (see CONCURRENCY NOTES
+               above).  */
+
+            /* Assert stopped_start is true in both our local copy and the
+               PD copy.  */
+            assert(stopped_start);
+            assert(pd->stopped_start);
+
+            /* Now fill in the information about the new thread in
+               the newly created thread's data structure.  We cannot let
+               the new thread do this since we don't know whether it was
+               already scheduled when we send the event.  */
+            pd->eventbuf.eventnum = TD_CREATE;
+            pd->eventbuf.eventdata = pd;
+
+            /* Enqueue the descriptor.  */
+            do {
+                pd->nextevent = __nptl_last_event;
+            } while (atomic_compare_and_exchange_bool_acq(&__nptl_last_event,
+                     pd, pd->nextevent)
+                     != 0);
+
+            /* Now call the function which signals the event.  See
+               CONCURRENCY NOTES for the nptl_db interface comments.  */
+            __nptl_create_event();
+        }
+    } else
+        retval = create_thread(pd, iattr, &stopped_start, stackaddr,
+                               stacksize, &thread_ran);
+
+    /* Return to the previous signal mask, after creating the new
+       thread.  */
+    internal_signal_restore_set(&original_sigmask);
+
+    if (__glibc_unlikely(retval != 0)) {
+        if (thread_ran)
+            /* State (c) and we not have PD ownership (see CONCURRENCY NOTES
+               above).  We can assert that STOPPED_START must have been true
+               because thread creation didn't fail, but thread attribute setting
+               did.  */
         {
-	  assert (stopped_start);
-	  /* Signal the created thread to release PD ownership and early
-	     exit so it could be joined.  */
-	  pd->setup_failed = 1;
-	  lll_unlock (pd->lock, LLL_PRIVATE);
+            assert(stopped_start);
+            /* Signal the created thread to release PD ownership and early
+               exit so it could be joined.  */
+            pd->setup_failed = 1;
+            lll_unlock(pd->lock, LLL_PRIVATE);
 
-	  /* Similar to pthread_join, but since thread creation has failed at
-	     startup there is no need to handle all the steps.  */
-	  pid_t tid;
-	  while ((tid = atomic_load_acquire (&pd->tid)) != 0)
-	    __futex_abstimed_wait_cancelable64 ((unsigned int *) &pd->tid,
-						tid, 0, NULL, LLL_SHARED);
+            /* Similar to pthread_join, but since thread creation has failed at
+               startup there is no need to handle all the steps.  */
+            pid_t tid;
+            while ((tid = atomic_load_acquire(&pd->tid)) != 0)
+                __futex_abstimed_wait_cancelable64((unsigned int *) &pd->tid,
+                                                   tid, 0, NULL, LLL_SHARED);
         }
 
-      /* State (c) or (d) and we have ownership of PD (see CONCURRENCY
-	 NOTES above).  */
+        /* State (c) or (d) and we have ownership of PD (see CONCURRENCY
+        NOTES above).  */
 
-      /* Oops, we lied for a second.  */
-      atomic_fetch_add_relaxed (&__nptl_nthreads, -1);
+        /* Oops, we lied for a second.  */
+        atomic_fetch_add_relaxed(&__nptl_nthreads, -1);
 
-      /* Free the resources.  */
-      __nptl_deallocate_stack (pd);
+        /* Free the resources.  */
+        __nptl_deallocate_stack(pd);
 
-      /* We have to translate error codes.  */
-      if (retval == ENOMEM)
-	retval = EAGAIN;
+        /* We have to translate error codes.  */
+        if (retval == ENOMEM) {
+            retval = EAGAIN;
+        }
+    } else {
+        /* We don't know if we have PD ownership.  Once we check the local
+           stopped_start we'll know if we're in state (a) or (b) (see
+        CONCURRENCY NOTES above).  */
+        if (stopped_start)
+            /* State (a), we own PD. The thread blocked on this lock either
+               because we're doing TD_CREATE event reporting, or for some
+               other reason that create_thread chose.  Now let it run
+               free.  */
+        {
+            lll_unlock(pd->lock, LLL_PRIVATE);
+        }
+
+        /* We now have for sure more than one thread.  The main thread might
+        not yet have the flag set.  No need to set the global variable
+         again if this is what we use.  */
+        THREAD_SETMEM(THREAD_SELF, header.multiple_threads, 1);
     }
-  else
-    {
-      /* We don't know if we have PD ownership.  Once we check the local
-         stopped_start we'll know if we're in state (a) or (b) (see
-	 CONCURRENCY NOTES above).  */
-      if (stopped_start)
-	/* State (a), we own PD. The thread blocked on this lock either
-	   because we're doing TD_CREATE event reporting, or for some
-	   other reason that create_thread chose.  Now let it run
-	   free.  */
-	lll_unlock (pd->lock, LLL_PRIVATE);
 
-      /* We now have for sure more than one thread.  The main thread might
-	 not yet have the flag set.  No need to set the global variable
-	 again if this is what we use.  */
-      THREAD_SETMEM (THREAD_SELF, header.multiple_threads, 1);
+out:
+    if (destroy_default_attr) {
+        __pthread_attr_destroy(&default_attr.external);
     }
 
- out:
-  if (destroy_default_attr)
-    __pthread_attr_destroy (&default_attr.external);
-
-  return retval;
+    return retval;
 }
-versioned_symbol (libc, __pthread_create_2_1, pthread_create, GLIBC_2_34);
-libc_hidden_ver (__pthread_create_2_1, __pthread_create)
+versioned_symbol(libc, __pthread_create_2_1, pthread_create, GLIBC_2_34);
+libc_hidden_ver(__pthread_create_2_1, __pthread_create)
 #ifndef SHARED
-strong_alias (__pthread_create_2_1, __pthread_create)
+strong_alias(__pthread_create_2_1, __pthread_create)
 #endif
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1, GLIBC_2_34)
-compat_symbol (libpthread, __pthread_create_2_1, pthread_create, GLIBC_2_1);
+compat_symbol(libpthread, __pthread_create_2_1, pthread_create, GLIBC_2_1);
 #endif
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_1)
-int
-__pthread_create_2_0 (pthread_t *newthread, const pthread_attr_t *attr,
-		      void *(*start_routine) (void *), void *arg)
+int __pthread_create_2_0(pthread_t *newthread, const pthread_attr_t *attr,
+                         void *(*start_routine)(void *), void *arg)
 {
-  /* The ATTR attribute is not really of type `pthread_attr_t *'.  It has
-     the old size and access to the new members might crash the program.
-     We convert the struct now.  */
-  struct pthread_attr new_attr;
+    /* The ATTR attribute is not really of type `pthread_attr_t *'.  It has
+       the old size and access to the new members might crash the program.
+       We convert the struct now.  */
+    struct pthread_attr new_attr;
 
-  if (attr != NULL)
-    {
-      struct pthread_attr *iattr = (struct pthread_attr *) attr;
-      size_t ps = __getpagesize ();
+    if (attr != NULL) {
+        struct pthread_attr *iattr = (struct pthread_attr *) attr;
+        size_t ps = __getpagesize();
 
-      /* Copy values from the user-provided attributes.  */
-      new_attr.schedparam = iattr->schedparam;
-      new_attr.schedpolicy = iattr->schedpolicy;
-      new_attr.flags = iattr->flags;
+        /* Copy values from the user-provided attributes.  */
+        new_attr.schedparam = iattr->schedparam;
+        new_attr.schedpolicy = iattr->schedpolicy;
+        new_attr.flags = iattr->flags;
 
-      /* Fill in default values for the fields not present in the old
-	 implementation.  */
-      new_attr.guardsize = ps;
-      new_attr.stackaddr = NULL;
-      new_attr.stacksize = 0;
-      new_attr.extension = NULL;
+        /* Fill in default values for the fields not present in the old
+        implementation.  */
+        new_attr.guardsize = ps;
+        new_attr.stackaddr = NULL;
+        new_attr.stacksize = 0;
+        new_attr.extension = NULL;
 
-      /* We will pass this value on to the real implementation.  */
-      attr = (pthread_attr_t *) &new_attr;
+        /* We will pass this value on to the real implementation.  */
+        attr = (pthread_attr_t *) &new_attr;
     }
 
-  return __pthread_create_2_1 (newthread, attr, start_routine, arg);
+    return __pthread_create_2_1(newthread, attr, start_routine, arg);
 }
-compat_symbol (libpthread, __pthread_create_2_0, pthread_create,
-	       GLIBC_2_0);
+compat_symbol(libpthread, __pthread_create_2_0, pthread_create,
+              GLIBC_2_0);
 #endif
 
 /* Information for libthread_db.  */
@@ -957,14 +949,14 @@ compat_symbol (libpthread, __pthread_create_2_0, pthread_create,
 
 /* If pthread_create is present, libgcc_eh.a and libsupc++.a expects some other POSIX thread
    functions to be present as well.  */
-PTHREAD_STATIC_FN_REQUIRE (__pthread_mutex_lock)
-PTHREAD_STATIC_FN_REQUIRE (__pthread_mutex_trylock)
-PTHREAD_STATIC_FN_REQUIRE (__pthread_mutex_unlock)
+PTHREAD_STATIC_FN_REQUIRE(__pthread_mutex_lock)
+PTHREAD_STATIC_FN_REQUIRE(__pthread_mutex_trylock)
+PTHREAD_STATIC_FN_REQUIRE(__pthread_mutex_unlock)
 
-PTHREAD_STATIC_FN_REQUIRE (__pthread_once)
-PTHREAD_STATIC_FN_REQUIRE (__pthread_cancel)
+PTHREAD_STATIC_FN_REQUIRE(__pthread_once)
+PTHREAD_STATIC_FN_REQUIRE(__pthread_cancel)
 
-PTHREAD_STATIC_FN_REQUIRE (__pthread_key_create)
-PTHREAD_STATIC_FN_REQUIRE (__pthread_key_delete)
-PTHREAD_STATIC_FN_REQUIRE (__pthread_setspecific)
-PTHREAD_STATIC_FN_REQUIRE (__pthread_getspecific)
+PTHREAD_STATIC_FN_REQUIRE(__pthread_key_create)
+PTHREAD_STATIC_FN_REQUIRE(__pthread_key_delete)
+PTHREAD_STATIC_FN_REQUIRE(__pthread_setspecific)
+PTHREAD_STATIC_FN_REQUIRE(__pthread_getspecific)

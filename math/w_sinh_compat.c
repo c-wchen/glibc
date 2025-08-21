@@ -20,15 +20,15 @@
 #include <libm-alias-double.h>
 
 #if LIBM_SVID_COMPAT
-double
-__sinh (double x)
+double __sinh(double x)
 {
-	double z = __ieee754_sinh (x);
-	if (__builtin_expect (!isfinite (z), 0) && isfinite (x)
-	    && _LIB_VERSION != _IEEE_)
-		return __kernel_standard (x, x, 25); /* sinh overflow */
+    double z = __ieee754_sinh(x);
+    if (__builtin_expect(!isfinite(z), 0) && isfinite(x)
+        && _LIB_VERSION != _IEEE_) {
+        return __kernel_standard(x, x, 25);    /* sinh overflow */
+    }
 
-	return z;
+    return z;
 }
-libm_alias_double (__sinh, sinh)
+libm_alias_double(__sinh, sinh)
 #endif

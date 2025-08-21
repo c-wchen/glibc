@@ -19,8 +19,7 @@
 #include "nldbl-compat.h"
 
 double
-attribute_hidden
-roundevenl (double x)
+attribute_hidden roundevenl(double x)
 {
-  return roundeven (x);
+    return roundeven(x);
 }

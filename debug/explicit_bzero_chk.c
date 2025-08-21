@@ -25,19 +25,19 @@
 
 #include <string.h>
 
-void
-__explicit_bzero_chk (void *dst, size_t len, size_t dstlen)
+void __explicit_bzero_chk(void *dst, size_t len, size_t dstlen)
 {
-  /* Inline __memset_chk to avoid a PLT reference to __memset_chk.  */
-  if (__glibc_unlikely (dstlen < len))
-    __chk_fail ();
-  memset (dst, '\0', len);
-  /* Compiler barrier.  */
-  asm volatile ("" ::: "memory");
+    /* Inline __memset_chk to avoid a PLT reference to __memset_chk.  */
+    if (__glibc_unlikely(dstlen < len)) {
+        __chk_fail();
+    }
+    memset(dst, '\0', len);
+    /* Compiler barrier.  */
+    asm volatile("" ::: "memory");
 }
 
 /* libc-internal references use the hidden
    __explicit_bzero_chk_internal symbol.  This is necessary if
    __explicit_bzero_chk is implemented as an IFUNC because some
    targets do not support hidden references to IFUNC symbols.  */
-strong_alias (__explicit_bzero_chk, __explicit_bzero_chk_internal)
+strong_alias(__explicit_bzero_chk, __explicit_bzero_chk_internal)

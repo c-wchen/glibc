@@ -20,30 +20,31 @@
 #include <math.h>
 #include <fpu_control.h>
 
-int
-fesetexceptflag (const fexcept_t *flagp, int excepts)
+int fesetexceptflag(const fexcept_t *flagp, int excepts)
 {
-  fexcept_t fpc, fpc_new;
+    fexcept_t fpc, fpc_new;
 
-  /* Get the current environment.  We have to do this since we cannot
-     separately set the status word.  */
-  _FPU_GETCW (fpc);
+    /* Get the current environment.  We have to do this since we cannot
+       separately set the status word.  */
+    _FPU_GETCW(fpc);
 
-  /* Clear the current exception bits.  */
-  fpc_new = fpc & ~((excepts & FE_ALL_EXCEPT) << FPC_FLAGS_SHIFT);
-  if ((fpc & FPC_NOT_FPU_EXCEPTION) == 0)
-    /* Bits 6, 7 of dxc-byte are zero,
-       thus bits 0-5 of dxc-byte correspond to the flag-bits.
-       Clear given exceptions in dxc-field.  */
-    fpc_new &= ~((excepts & FE_ALL_EXCEPT) << FPC_DXC_SHIFT);
+    /* Clear the current exception bits.  */
+    fpc_new = fpc & ~((excepts & FE_ALL_EXCEPT) << FPC_FLAGS_SHIFT);
+    if ((fpc & FPC_NOT_FPU_EXCEPTION) == 0)
+        /* Bits 6, 7 of dxc-byte are zero,
+           thus bits 0-5 of dxc-byte correspond to the flag-bits.
+           Clear given exceptions in dxc-field.  */
+    {
+        fpc_new &= ~((excepts & FE_ALL_EXCEPT) << FPC_DXC_SHIFT);
+    }
 
-  /* Set exceptions from flagp in flags-field.  */
-  fpc_new |= (*flagp & excepts & FE_ALL_EXCEPT) << FPC_FLAGS_SHIFT;
+    /* Set exceptions from flagp in flags-field.  */
+    fpc_new |= (*flagp & excepts & FE_ALL_EXCEPT) << FPC_FLAGS_SHIFT;
 
-  /* Store the new status word (along with the rest of the environment.
-     Possibly new exceptions are set but they won't get executed.  */
-  _FPU_SETCW (fpc_new);
+    /* Store the new status word (along with the rest of the environment.
+       Possibly new exceptions are set but they won't get executed.  */
+    _FPU_SETCW(fpc_new);
 
-  /* Success.  */
-  return 0;
+    /* Success.  */
+    return 0;
 }

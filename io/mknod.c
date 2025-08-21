@@ -18,10 +18,9 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-int
-__mknod (const char *path, mode_t mode, dev_t dev)
+int __mknod(const char *path, mode_t mode, dev_t dev)
 {
-  return __mknodat (AT_FDCWD, path, mode, dev);
+    return __mknodat(AT_FDCWD, path, mode, dev);
 }
-libc_hidden_def (__mknod)
-weak_alias (__mknod, mknod)
+libc_hidden_def(__mknod)
+weak_alias(__mknod, mknod)

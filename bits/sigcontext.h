@@ -24,13 +24,12 @@
 #endif
 
 /* State of this thread when the signal was taken.  */
-struct sigcontext
-  {
+struct sigcontext {
     int sc_onstack;
     __sigset_t sc_mask;
 
     /* Registers and such.  */
-  };
+};
 
 /* Signal subcodes should be defined here.  */
 

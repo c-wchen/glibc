@@ -23,41 +23,39 @@
 #include <support/xunistd.h>
 #include <unistd.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  {
-    /* Permissions on /dev/null (the opened descriptor) cannot be changed.  */
-    int fd = xopen ("/dev/null", O_RDWR, 0);
-    if (getuid () == 0)
-      puts ("info: /dev/null fchmod test skipped because of root privileges");
-    else
-      {
+    {
+        /* Permissions on /dev/null (the opened descriptor) cannot be changed.  */
+        int fd = xopen("/dev/null", O_RDWR, 0);
+        if (getuid() == 0) {
+            puts("info: /dev/null fchmod test skipped because of root privileges");
+        } else {
+            errno = 0;
+            TEST_COMPARE(fchmod(fd, 0), -1);
+            TEST_COMPARE(errno, EPERM);
+        }
+        xclose(fd);
+
+        /* Now testing an invalid file descriptor.   */
         errno = 0;
-        TEST_COMPARE (fchmod (fd, 0), -1);
-        TEST_COMPARE (errno, EPERM);
-      }
-    xclose (fd);
+        TEST_COMPARE(fchmod(fd, 0600), -1);
+        TEST_COMPARE(errno, EBADF);
+    }
 
-    /* Now testing an invalid file descriptor.   */
     errno = 0;
-    TEST_COMPARE (fchmod (fd, 0600), -1);
-    TEST_COMPARE (errno, EBADF);
-  }
+    TEST_COMPARE(fchmod(-1, 0600), -1);
+    TEST_COMPARE(errno, EBADF);
 
-  errno = 0;
-  TEST_COMPARE (fchmod (-1, 0600), -1);
-  TEST_COMPARE (errno, EBADF);
+    errno = 0;
+    TEST_COMPARE(fchmod(AT_FDCWD, 0600), -1);
+    TEST_COMPARE(errno, EBADF);
 
-  errno = 0;
-  TEST_COMPARE (fchmod (AT_FDCWD, 0600), -1);
-  TEST_COMPARE (errno, EBADF);
+    /* Linux supports fchmod on pretty much all file descriptors, so
+       there is no check for failure on specific types of descriptors
+       here.  */
 
-  /* Linux supports fchmod on pretty much all file descriptors, so
-     there is no check for failure on specific types of descriptors
-     here.  */
-
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

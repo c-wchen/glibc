@@ -26,51 +26,63 @@
    instead of calling compiler auxiliary functions.  */
 # include <string-optype.h>
 
-static __always_inline unsigned int
-index_first (find_t c)
+static __always_inline unsigned int index_first(find_t c)
 {
-  if (c & 0x80U)
-    return 0;
-  if (c & 0x8000U)
-    return 1;
-  if (c & 0x800000U)
-    return 2;
+    if (c & 0x80U) {
+        return 0;
+    }
+    if (c & 0x8000U) {
+        return 1;
+    }
+    if (c & 0x800000U) {
+        return 2;
+    }
 
-  if (sizeof (op_t) == 4)
-    return 3;
+    if (sizeof(op_t) == 4) {
+        return 3;
+    }
 
-  if (c & 0x80000000U)
-    return 3;
-  if (c & 0x8000000000UL)
-    return 4;
-  if (c & 0x800000000000UL)
-    return 5;
-  if (c & 0x80000000000000UL)
-    return 6;
-  return 7;
+    if (c & 0x80000000U) {
+        return 3;
+    }
+    if (c & 0x8000000000UL) {
+        return 4;
+    }
+    if (c & 0x800000000000UL) {
+        return 5;
+    }
+    if (c & 0x80000000000000UL) {
+        return 6;
+    }
+    return 7;
 }
 
-static __always_inline unsigned int
-index_last (find_t c)
+static __always_inline unsigned int index_last(find_t c)
 {
-  if (sizeof (op_t) == 8)
-    {
-      if (c & 0x8000000000000000UL)
-	return 7;
-      if (c & 0x80000000000000UL)
-	return 6;
-      if (c & 0x800000000000UL)
-	return 5;
-      if (c & 0x8000000000UL)
-	return 4;
+    if (sizeof(op_t) == 8) {
+        if (c & 0x8000000000000000UL) {
+            return 7;
+        }
+        if (c & 0x80000000000000UL) {
+            return 6;
+        }
+        if (c & 0x800000000000UL) {
+            return 5;
+        }
+        if (c & 0x8000000000UL) {
+            return 4;
+        }
     }
-  if (c & 0x80000000U)
-    return 3;
-  if (c & 0x800000U)
-    return 2;
-  if (c & 0x8000U)
-    return 1;
-  return 0;
+    if (c & 0x80000000U) {
+        return 3;
+    }
+    if (c & 0x800000U) {
+        return 2;
+    }
+    if (c & 0x8000U) {
+        return 1;
+    }
+    return 0;
 }
 #endif
 

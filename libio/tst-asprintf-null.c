@@ -21,31 +21,31 @@
 #include <support/check.h>
 #include <sys/resource.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  static const char sentinel[] = "sentinel";
-  char *buf = (char *) sentinel;
-  {
-    /* Avoid -Wformat-overflow warning.  */
-    const char *volatile format = "%2000000000d %2000000000d";
-    TEST_COMPARE (asprintf (&buf, format, 1, 2), -1);
-  }
-  if (errno != ENOMEM)
-    TEST_COMPARE (errno, EOVERFLOW);
-  TEST_VERIFY (buf == NULL);
+    static const char sentinel[] = "sentinel";
+    char *buf = (char *) sentinel;
+    {
+        /* Avoid -Wformat-overflow warning.  */
+        const char *volatile format = "%2000000000d %2000000000d";
+        TEST_COMPARE(asprintf(&buf, format, 1, 2), -1);
+    }
+    if (errno != ENOMEM) {
+        TEST_COMPARE(errno, EOVERFLOW);
+    }
+    TEST_VERIFY(buf == NULL);
 
-  /* Force ENOMEM in the test below.  */
-  struct rlimit rl;
-  TEST_COMPARE (getrlimit (RLIMIT_AS, &rl), 0);
-  rl.rlim_cur = 10 * 1024 * 1024;
-  TEST_COMPARE (setrlimit (RLIMIT_AS, &rl), 0);
+    /* Force ENOMEM in the test below.  */
+    struct rlimit rl;
+    TEST_COMPARE(getrlimit(RLIMIT_AS, &rl), 0);
+    rl.rlim_cur = 10 * 1024 * 1024;
+    TEST_COMPARE(setrlimit(RLIMIT_AS, &rl), 0);
 
-  buf = (char *) sentinel;
-  TEST_COMPARE (asprintf (&buf, "%20000000d", 1), -1);
-  TEST_COMPARE (errno, ENOMEM);
-  TEST_VERIFY (buf == NULL);
-  return 0;
+    buf = (char *) sentinel;
+    TEST_COMPARE(asprintf(&buf, "%20000000d", 1), -1);
+    TEST_COMPARE(errno, ENOMEM);
+    TEST_VERIFY(buf == NULL);
+    return 0;
 }
 
 #include <support/test-driver.c>

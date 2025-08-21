@@ -20,10 +20,9 @@
 #define _DL_TLS_H
 
 /* Type used for the representation of TLS information in the GOT.  */
-typedef struct
-{
-  unsigned long int ti_module;
-  unsigned long int ti_offset;
+typedef struct {
+    unsigned long int ti_module;
+    unsigned long int ti_offset;
 } tls_index;
 
 /* The DTV stores absolute addresses, but __tls_get_addr must return
@@ -35,7 +34,7 @@ typedef struct
 
 #ifdef SHARED
 
-extern unsigned long __tls_get_offset (unsigned long got_offset);
+extern unsigned long __tls_get_offset(unsigned long got_offset);
 
 # if IS_IN (rtld)
 
@@ -48,7 +47,7 @@ extern unsigned long __tls_get_offset (unsigned long got_offset);
    __tls_get_addr again.  */
 #  define __tls_get_addr __tls_get_addr
 
-extern void *__tls_get_addr (tls_index *ti) attribute_hidden;
+extern void *__tls_get_addr(tls_index *ti) attribute_hidden;
 /* Make a temporary alias of __tls_get_addr to remove the hidden
    attribute.  Then export __tls_get_addr as __tls_get_addr_internal
    for use from libc.  We do not want to export __tls_get_addr, but we
@@ -57,9 +56,9 @@ extern void *__tls_get_addr (tls_index *ti) attribute_hidden;
    be setup and that might not always be true. Either way it's more
    optimal to use __tls_get_addr directly (that's what
    __tls_get_offset does anyways).  */
-strong_alias (__tls_get_addr, __tls_get_addr_internal_tmp);
-versioned_symbol (ld, __tls_get_addr_internal_tmp,
-		  __tls_get_addr_internal, GLIBC_PRIVATE);
+strong_alias(__tls_get_addr, __tls_get_addr_internal_tmp);
+versioned_symbol(ld, __tls_get_addr_internal_tmp,
+                 __tls_get_addr_internal, GLIBC_PRIVATE);
 
 /* The special thing about the s390 TLS ABI is that we do not have the
    standard __tls_get_addr function but the __tls_get_offset function
@@ -94,7 +93,7 @@ __tls_get_offset:\n\
 ");
 #  endif
 # else /* IS_IN (rtld) */
-extern void *__tls_get_addr_internal (tls_index *ti);
+extern void *__tls_get_addr_internal(tls_index *ti);
 # endif /* !IS_IN (rtld) */
 
 /* Use the privately exported __tls_get_addr_internal instead of
@@ -102,8 +101,8 @@ extern void *__tls_get_addr_internal (tls_index *ti);
    linkage requiring the GOT pointer to be set up in r12.  The
    compiler will take care of setting up r12 only if itself issued the
    __tls_get_offset call.  */
-# define __TLS_GET_ADDR(__ti)					\
-  ({ __tls_get_addr_internal (__ti)				\
+# define __TLS_GET_ADDR(__ti)                   \
+  ({ __tls_get_addr_internal (__ti)             \
       + (unsigned long) __builtin_thread_pointer (); })
 
 #endif

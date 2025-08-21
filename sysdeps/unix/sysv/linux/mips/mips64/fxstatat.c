@@ -23,10 +23,9 @@
 #include <xstatconv.h>
 
 /* Get information about the file FD in BUF.  */
-int
-__fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
+int __fxstatat(int vers, int fd, const char *file, struct stat *st, int flag)
 {
-  struct kernel_stat kst;
-  int r = INLINE_SYSCALL_CALL (newfstatat, fd, file, &kst, flag);
-  return r ?: __xstat_conv (vers, &kst, st);
+    struct kernel_stat kst;
+    int r = INLINE_SYSCALL_CALL(newfstatat, fd, file, &kst, flag);
+    return r ? : __xstat_conv(vers, &kst, st);
 }

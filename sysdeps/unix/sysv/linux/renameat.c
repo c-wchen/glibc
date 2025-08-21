@@ -21,14 +21,13 @@
 #include <sysdep.h>
 #include <errno.h>
 
-int
-__renameat (int oldfd, const char *old, int newfd, const char *new)
+int __renameat(int oldfd, const char *old, int newfd, const char *new)
 {
 #ifdef __NR_renameat
-  return INLINE_SYSCALL_CALL (renameat, oldfd, old, newfd, new);
+    return INLINE_SYSCALL_CALL(renameat, oldfd, old, newfd, new);
 #else
-  return INLINE_SYSCALL_CALL (renameat2, oldfd, old, newfd, new, 0);
+    return INLINE_SYSCALL_CALL(renameat2, oldfd, old, newfd, new, 0);
 #endif
 }
-libc_hidden_def (__renameat)
-weak_alias (__renameat, renameat)
+libc_hidden_def(__renameat)
+weak_alias(__renameat, renameat)

@@ -21,13 +21,12 @@
 
 
 /* Set scheduling algorithm and/or parameters for a process.  */
-int
-__sched_setscheduler (pid_t pid, int policy, const struct sched_param *param)
+int __sched_setscheduler(pid_t pid, int policy, const struct sched_param *param)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (__sched_setscheduler)
-stub_warning (sched_setscheduler)
+libc_hidden_def(__sched_setscheduler)
+stub_warning(sched_setscheduler)
 
-weak_alias (__sched_setscheduler, sched_setscheduler)
+weak_alias(__sched_setscheduler, sched_setscheduler)

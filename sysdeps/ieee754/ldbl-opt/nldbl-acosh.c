@@ -1,8 +1,7 @@
 #include "nldbl-compat.h"
 
 double
-attribute_hidden
-acoshl (double x)
+attribute_hidden acoshl(double x)
 {
-  return acosh (x);
+    return acosh(x);
 }

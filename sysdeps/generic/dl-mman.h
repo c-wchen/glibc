@@ -17,6 +17,6 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-extern __typeof (__mmap) __mmap attribute_hidden;
-extern __typeof (__mprotect) __mprotect attribute_hidden;
-extern __typeof (__munmap) __munmap attribute_hidden;
+extern __typeof(__mmap) __mmap attribute_hidden;
+extern __typeof(__mprotect) __mprotect attribute_hidden;
+extern __typeof(__munmap) __munmap attribute_hidden;

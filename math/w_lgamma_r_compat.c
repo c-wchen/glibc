@@ -21,18 +21,17 @@
 
 
 #if LIBM_SVID_COMPAT
-double
-__lgamma_r(double x, int *signgamp)
+double __lgamma_r(double x, int *signgamp)
 {
-	double y = __ieee754_lgamma_r(x,signgamp);
-	if(__builtin_expect(!isfinite(y), 0)
-	   && isfinite(x) && _LIB_VERSION != _IEEE_)
-		return __kernel_standard(x, x,
-					 floor(x)==x&&x<=0.0
-					 ? 15 /* lgamma pole */
-					 : 14); /* lgamma overflow */
+    double y = __ieee754_lgamma_r(x, signgamp);
+    if (__builtin_expect(!isfinite(y), 0)
+        && isfinite(x) && _LIB_VERSION != _IEEE_)
+        return __kernel_standard(x, x,
+                                 floor(x) == x && x <= 0.0
+                                 ? 15 /* lgamma pole */
+                                 : 14); /* lgamma overflow */
 
-	return y;
+    return y;
 }
-libm_alias_double_r (__lgamma, lgamma, _r)
+libm_alias_double_r(__lgamma, lgamma, _r)
 #endif

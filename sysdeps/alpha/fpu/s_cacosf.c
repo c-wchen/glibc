@@ -25,7 +25,7 @@
 #undef __cacosf
 #undef cacosf
 
-static _Complex float internal_cacosf (_Complex float x);
+static _Complex float internal_cacosf(_Complex float x);
 
 #define M_DECL_FUNC(f) internal_cacosf
 #include <math-type-macros-float.h>
@@ -40,18 +40,16 @@ static _Complex float internal_cacosf (_Complex float x);
 
 #undef __cacosf
 
-c1_cfloat_rettype
-__c1_cacosf (c1_cfloat_decl (x))
+c1_cfloat_rettype __c1_cacosf(c1_cfloat_decl(x))
 {
-  _Complex float r = internal_cacosf (c1_cfloat_value (x));
-  return c1_cfloat_return (r);
+    _Complex float r = internal_cacosf(c1_cfloat_value(x));
+    return c1_cfloat_return(r);
 }
 
-c2_cfloat_rettype
-__c2_cacosf (c2_cfloat_decl (x))
+c2_cfloat_rettype __c2_cacosf(c2_cfloat_decl(x))
 {
-  _Complex float r = internal_cacosf (c2_cfloat_value (x));
-  return c2_cfloat_return (r);
+    _Complex float r = internal_cacosf(c2_cfloat_value(x));
+    return c2_cfloat_return(r);
 }
 
-cfloat_versions (cacos);
+cfloat_versions(cacos);

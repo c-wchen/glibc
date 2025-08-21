@@ -31,41 +31,37 @@
    pointer to the mapped file or a file handle for the file in H and
    return NSS_STATUS_SUCCESS.  On failure, return the appropriate
    lookup status.  */
-enum nss_status
-internal_setent (const char *file, struct nss_db_map *mapping)
-{
-  enum nss_status status = NSS_STATUS_UNAVAIL;
+enum nss_status internal_setent(const char *file, struct nss_db_map *mapping) {
+    enum nss_status status = NSS_STATUS_UNAVAIL;
 
-  int fd = __open_nocancel (file, O_RDONLY | O_LARGEFILE | O_CLOEXEC);
-  if (fd != -1)
+    int fd = __open_nocancel(file, O_RDONLY | O_LARGEFILE | O_CLOEXEC);
+    if (fd != -1)
     {
-      struct nss_db_header header;
+        struct nss_db_header header;
 
-      if (read (fd, &header, sizeof (header)) == sizeof (header))
-	{
-	  mapping->header = mmap (NULL, header.allocate, PROT_READ,
-				  MAP_PRIVATE, fd, 0);
-	  mapping->len = header.allocate;
-	  if (mapping->header != MAP_FAILED)
-	    status = NSS_STATUS_SUCCESS;
-	  else if (errno == ENOMEM)
-	    status = NSS_STATUS_TRYAGAIN;
-	}
+        if (read(fd, &header, sizeof(header)) == sizeof(header)) {
+            mapping->header = mmap(NULL, header.allocate, PROT_READ,
+                                   MAP_PRIVATE, fd, 0);
+            mapping->len = header.allocate;
+            if (mapping->header != MAP_FAILED) {
+                status = NSS_STATUS_SUCCESS;
+            } else if (errno == ENOMEM) {
+                status = NSS_STATUS_TRYAGAIN;
+            }
+        }
 
-      __close_nocancel_nostatus (fd);
+        __close_nocancel_nostatus(fd);
     }
 
-  return status;
+    return status;
 }
 
 
 /* Close the database.  */
-void
-internal_endent (struct nss_db_map *mapping)
+void internal_endent(struct nss_db_map *mapping)
 {
-  if (mapping->header != NULL)
-    {
-      munmap (mapping->header, mapping->len);
-      mapping->header = NULL;
+    if (mapping->header != NULL) {
+        munmap(mapping->header, mapping->len);
+        mapping->header = NULL;
     }
 }

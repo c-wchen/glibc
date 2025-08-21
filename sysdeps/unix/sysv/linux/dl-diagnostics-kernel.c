@@ -21,60 +21,53 @@
 #include <sys/utsname.h>
 
 /* Dump the auxiliary vector to standard output.  */
-static void
-print_auxv (void)
+static void print_auxv(void)
 {
-  /* See _dl_show_auxv.  The code below follows the general output
-     format for diagnostic dumps.  */
-  unsigned int index = 0;
-  for (ElfW(auxv_t) *av = GLRO(dl_auxv); av->a_type != AT_NULL; ++av)
-    {
-      _dl_printf ("auxv[0x%x].a_type=0x%lx\n"
-                  "auxv[0x%x].a_val",
-                  index, (unsigned long int) av->a_type, index);
-      if (av->a_type == AT_EXECFN
-          || av->a_type == AT_PLATFORM
-          || av->a_type == AT_BASE_PLATFORM)
-        {
-          /* The address of the strings is not useful at all, so print
-             the strings themselves.  */
-          _dl_printf ("_string=");
-          _dl_diagnostics_print_string ((const char *) av->a_un.a_val);
+    /* See _dl_show_auxv.  The code below follows the general output
+       format for diagnostic dumps.  */
+    unsigned int index = 0;
+    for (ElfW(auxv_t) *av = GLRO(dl_auxv); av->a_type != AT_NULL; ++av) {
+        _dl_printf("auxv[0x%x].a_type=0x%lx\n"
+                   "auxv[0x%x].a_val",
+                   index, (unsigned long int) av->a_type, index);
+        if (av->a_type == AT_EXECFN
+            || av->a_type == AT_PLATFORM
+            || av->a_type == AT_BASE_PLATFORM) {
+            /* The address of the strings is not useful at all, so print
+               the strings themselves.  */
+            _dl_printf("_string=");
+            _dl_diagnostics_print_string((const char *) av->a_un.a_val);
+        } else {
+            _dl_printf("=0x%lx", (unsigned long int) av->a_un.a_val);
         }
-      else
-        _dl_printf ("=0x%lx", (unsigned long int) av->a_un.a_val);
-      _dl_printf ("\n");
-      ++index;
+        _dl_printf("\n");
+        ++index;
     }
 }
 
 /* Print one uname entry.  */
-static void
-print_utsname_entry (const char *field, const char *value)
+static void print_utsname_entry(const char *field, const char *value)
 {
-  _dl_printf ("uname.");
-  _dl_diagnostics_print_labeled_string (field, value);
+    _dl_printf("uname.");
+    _dl_diagnostics_print_labeled_string(field, value);
 }
 
 /* Print information from uname, including the kernel version.  */
-static void
-print_uname (void)
+static void print_uname(void)
 {
-  struct utsname uts;
-  if (__uname (&uts) == 0)
-    {
-      print_utsname_entry ("sysname", uts.sysname);
-      print_utsname_entry ("nodename", uts.nodename);
-      print_utsname_entry ("release", uts.release);
-      print_utsname_entry ("version", uts.version);
-      print_utsname_entry ("machine", uts.machine);
-      print_utsname_entry ("domainname", uts.domainname);
+    struct utsname uts;
+    if (__uname(&uts) == 0) {
+        print_utsname_entry("sysname", uts.sysname);
+        print_utsname_entry("nodename", uts.nodename);
+        print_utsname_entry("release", uts.release);
+        print_utsname_entry("version", uts.version);
+        print_utsname_entry("machine", uts.machine);
+        print_utsname_entry("domainname", uts.domainname);
     }
 }
 
-void
-_dl_diagnostics_kernel (void)
+void _dl_diagnostics_kernel(void)
 {
-  print_auxv ();
-  print_uname ();
+    print_auxv();
+    print_uname();
 }

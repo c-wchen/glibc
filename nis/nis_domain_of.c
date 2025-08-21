@@ -18,25 +18,26 @@
 #include <rpcsvc/nis.h>
 #include <shlib-compat.h>
 
-nis_name
-nis_domain_of (const_nis_name name)
+nis_name nis_domain_of(const_nis_name name)
 {
-  static char result[NIS_MAXNAMELEN + 1];
+    static char result[NIS_MAXNAMELEN + 1];
 
-  return nis_domain_of_r (name, result, NIS_MAXNAMELEN);
+    return nis_domain_of_r(name, result, NIS_MAXNAMELEN);
 }
-libnsl_hidden_nolink_def (nis_domain_of, GLIBC_2_1)
+libnsl_hidden_nolink_def(nis_domain_of, GLIBC_2_1)
 
 const_nis_name
-__nis_domain_of (const_nis_name name)
+__nis_domain_of(const_nis_name name)
 {
-  const_nis_name cptr = strchr (name, '.');
+    const_nis_name cptr = strchr(name, '.');
 
-  if (cptr == NULL)
-    return "";
+    if (cptr == NULL) {
+        return "";
+    }
 
-  if (*++cptr == '\0')
-    return ".";
+    if (*++cptr == '\0') {
+        return ".";
+    }
 
-  return cptr;
+    return cptr;
 }

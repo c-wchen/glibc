@@ -21,10 +21,10 @@
 
 /* Read a directory entry from DIRP.  */
 struct dirent64 *
-__readdir64 (DIR *dirp)
+__readdir64(DIR *dirp)
 {
-  __set_errno (ENOSYS);
-  return NULL;
+    __set_errno(ENOSYS);
+    return NULL;
 }
-weak_alias (__readdir64, readdir64)
-stub_warning (readdir64)
+weak_alias(__readdir64, readdir64)
+stub_warning(readdir64)

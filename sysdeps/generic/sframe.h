@@ -16,17 +16,16 @@
    along with this program; see the file COPYING.  If not see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef	_SFRAME_H
-#define	_SFRAME_H
+#ifndef _SFRAME_H
+#define _SFRAME_H
 
 #include <sys/types.h>
 #include <limits.h>
 #include <stdint.h>
 #include <unwind.h>
 
-#ifdef	__cplusplus
-extern "C"
-{
+#ifdef  __cplusplus
+extern "C" {
 #endif
 
 /* SFrame format.
@@ -70,25 +69,25 @@ extern "C"
 
 
 /* SFrame format versions.  */
-#define SFRAME_VERSION_1	1
-#define SFRAME_VERSION_2	2
+#define SFRAME_VERSION_1    1
+#define SFRAME_VERSION_2    2
 /* SFrame magic number.  */
-#define SFRAME_MAGIC		0xdee2
+#define SFRAME_MAGIC        0xdee2
 /* Current version of SFrame format.  */
-#define SFRAME_VERSION	SFRAME_VERSION_2
+#define SFRAME_VERSION  SFRAME_VERSION_2
 
 /* Various flags for SFrame.  */
 
 /* Function Descriptor Entries are sorted on PC.  */
-#define SFRAME_F_FDE_SORTED		    0x1
+#define SFRAME_F_FDE_SORTED         0x1
 /* Functions preserve frame pointer.  */
-#define SFRAME_F_FRAME_POINTER		    0x2
+#define SFRAME_F_FRAME_POINTER          0x2
 /* Function start address in SFrame FDE is encoded as the distance from the
    location of the sfde_func_start_address to the start PC of the function.
    If absent, the function start address in SFrame FDE is encoded as the
    distance from the start of the SFrame FDE section to the start PC of the
    function.  */
-#define SFRAME_F_FDE_FUNC_START_PCREL	    0x4
+#define SFRAME_F_FDE_FUNC_START_PCREL       0x4
 
 /* Set of all defined flags in SFrame V2.  */
 #define SFRAME_V2_F_ALL_FLAGS \
@@ -104,9 +103,9 @@ extern "C"
 #define SFRAME_ABI_AMD64_ENDIAN_LITTLE     3 /* AMD64 little endian.  */
 
 /* SFrame FRE types.  */
-#define SFRAME_FRE_TYPE_ADDR1	0
-#define SFRAME_FRE_TYPE_ADDR2	1
-#define SFRAME_FRE_TYPE_ADDR4	2
+#define SFRAME_FRE_TYPE_ADDR1   0
+#define SFRAME_FRE_TYPE_ADDR2   1
+#define SFRAME_FRE_TYPE_ADDR4   2
 
 /* SFrame Function Descriptor Entry types.
 
@@ -131,83 +130,80 @@ extern "C"
    matching FRE.  */
 #define SFRAME_FDE_TYPE_PCMASK  1
 
-typedef struct sframe_preamble
-{
-  uint16_t sfp_magic;	/* Magic number (SFRAME_MAGIC).  */
-  uint8_t sfp_version;	/* Data format version number (SFRAME_VERSION).  */
-  uint8_t sfp_flags;	/* Flags.  */
-} __attribute__ ((packed)) sframe_preamble;
+typedef struct sframe_preamble {
+    uint16_t sfp_magic;   /* Magic number (SFRAME_MAGIC).  */
+    uint8_t sfp_version;  /* Data format version number (SFRAME_VERSION).  */
+    uint8_t sfp_flags;    /* Flags.  */
+} __attribute__((packed)) sframe_preamble;
 
-typedef struct sframe_header
-{
-  sframe_preamble sfh_preamble;
-  /* Information about the arch (endianness) and ABI.  */
-  uint8_t sfh_abi_arch;
-  /* Offset for the Frame Pointer (FP) from CFA may be fixed for some
-     ABIs (e.g, in AMD64 when -fno-omit-frame-pointer is used).  When fixed,
-     this field specifies the fixed stack frame offset and the individual
-     FREs do not need to track it.  When not fixed, it is set to
-     SFRAME_CFA_FIXED_FP_INVALID, and the individual FREs may provide
-     the applicable stack frame offset, if any.  */
-  int8_t sfh_cfa_fixed_fp_offset;
-  /* Offset for the Return Address from CFA is fixed for some ABIs
-     (e.g., AMD64 has it as CFA-8).  When fixed, the header specifies the
-     fixed stack frame offset and the individual FREs do not track it.  When
-     not fixed, it is set to SFRAME_CFA_FIXED_RA_INVALID, and individual
-     FREs provide the applicable stack frame offset, if any.  */
-  int8_t sfh_cfa_fixed_ra_offset;
-  /* Number of bytes making up the auxiliary header, if any.
-     Some ABI/arch, in the future, may use this space for extending the
-     information in SFrame header.  Auxiliary header is contained in
-     bytes sequentially following the sframe_header.  */
-  uint8_t sfh_auxhdr_len;
-  /* Number of SFrame FDEs in this SFrame section.  */
-  uint32_t sfh_num_fdes;
-  /* Number of SFrame Frame Row Entries.  */
-  uint32_t sfh_num_fres;
-  /* Number of bytes in the SFrame Frame Row Entry section.  */
-  uint32_t sfh_fre_len;
-  /* Offset of SFrame Function Descriptor Entry section.  */
-  uint32_t sfh_fdeoff;
-  /* Offset of SFrame Frame Row Entry section.  */
-  uint32_t sfh_freoff;
-} __attribute__ ((packed)) sframe_header;
+typedef struct sframe_header {
+    sframe_preamble sfh_preamble;
+    /* Information about the arch (endianness) and ABI.  */
+    uint8_t sfh_abi_arch;
+    /* Offset for the Frame Pointer (FP) from CFA may be fixed for some
+       ABIs (e.g, in AMD64 when -fno-omit-frame-pointer is used).  When fixed,
+       this field specifies the fixed stack frame offset and the individual
+       FREs do not need to track it.  When not fixed, it is set to
+       SFRAME_CFA_FIXED_FP_INVALID, and the individual FREs may provide
+       the applicable stack frame offset, if any.  */
+    int8_t sfh_cfa_fixed_fp_offset;
+    /* Offset for the Return Address from CFA is fixed for some ABIs
+       (e.g., AMD64 has it as CFA-8).  When fixed, the header specifies the
+       fixed stack frame offset and the individual FREs do not track it.  When
+       not fixed, it is set to SFRAME_CFA_FIXED_RA_INVALID, and individual
+       FREs provide the applicable stack frame offset, if any.  */
+    int8_t sfh_cfa_fixed_ra_offset;
+    /* Number of bytes making up the auxiliary header, if any.
+       Some ABI/arch, in the future, may use this space for extending the
+       information in SFrame header.  Auxiliary header is contained in
+       bytes sequentially following the sframe_header.  */
+    uint8_t sfh_auxhdr_len;
+    /* Number of SFrame FDEs in this SFrame section.  */
+    uint32_t sfh_num_fdes;
+    /* Number of SFrame Frame Row Entries.  */
+    uint32_t sfh_num_fres;
+    /* Number of bytes in the SFrame Frame Row Entry section.  */
+    uint32_t sfh_fre_len;
+    /* Offset of SFrame Function Descriptor Entry section.  */
+    uint32_t sfh_fdeoff;
+    /* Offset of SFrame Frame Row Entry section.  */
+    uint32_t sfh_freoff;
+} __attribute__((packed)) sframe_header;
 
-#define SFRAME_V1_HDR_SIZE(sframe_hdr)	\
+#define SFRAME_V1_HDR_SIZE(sframe_hdr)  \
   ((sizeof (sframe_header) + (sframe_hdr).sfh_auxhdr_len))
 
 /* Two possible keys for executable (instruction) pointers signing.  */
 #define SFRAME_AARCH64_PAUTH_KEY_A    0 /* Key A.  */
 #define SFRAME_AARCH64_PAUTH_KEY_B    1 /* Key B.  */
 
-typedef struct sframe_func_desc_entry
-{
-  /* Function start address.  Encoded as a signed offset, relative to the
-     beginning of the current FDE.  */
-  int32_t sfde_func_start_address;
-  /* Size of the function in bytes.  */
-  uint32_t sfde_func_size;
-  /* Offset of the first SFrame Frame Row Entry of the function, relative to the
-     beginning of the SFrame Frame Row Entry sub-section.  */
-  uint32_t sfde_func_start_fre_off;
-  /* Number of frame row entries for the function.  */
-  uint32_t sfde_func_num_fres;
-  /* Additional information for stack tracing from the function:
-     - 4-bits: Identify the FRE type used for the function.
-     - 1-bit: Identify the FDE type of the function - mask or inc.
-     - 1-bit: PAC authorization A/B key (aarch64).
-     - 2-bits: Unused.
-     ------------------------------------------------------------------------
-     |     Unused    |  PAC auth A/B key (aarch64) |  FDE type |   FRE type   |
-     |               |        Unused (amd64)       |           |              |
-     ------------------------------------------------------------------------
-     8               6                             5           4              0     */
-  uint8_t sfde_func_info;
-  /* Size of the block of repeating insns.  Used for SFrame FDEs of type
-     SFRAME_FDE_TYPE_PCMASK.  */
-  uint8_t sfde_func_rep_size;
-  uint16_t sfde_func_padding2;
-} __attribute__ ((packed)) sframe_func_desc_entry;
+typedef struct sframe_func_desc_entry {
+    /* Function start address.  Encoded as a signed offset, relative to the
+       beginning of the current FDE.  */
+    int32_t sfde_func_start_address;
+    /* Size of the function in bytes.  */
+    uint32_t sfde_func_size;
+    /* Offset of the first SFrame Frame Row Entry of the function, relative to the
+       beginning of the SFrame Frame Row Entry sub-section.  */
+    uint32_t sfde_func_start_fre_off;
+    /* Number of frame row entries for the function.  */
+    uint32_t sfde_func_num_fres;
+    /* Additional information for stack tracing from the function:
+       - 4-bits: Identify the FRE type used for the function.
+       - 1-bit: Identify the FDE type of the function - mask or inc.
+       - 1-bit: PAC authorization A/B key (aarch64).
+       - 2-bits: Unused.
+       ------------------------------------------------------------------------
+       |     Unused    |  PAC auth A/B key (aarch64) |  FDE type |   FRE type   |
+       |               |        Unused (amd64)       |           |              |
+       ------------------------------------------------------------------------
+       8               6                             5           4              0     */
+    uint8_t sfde_func_info;
+    /* Size of the block of repeating insns.  Used for SFrame FDEs of type
+       SFRAME_FDE_TYPE_PCMASK.  */
+    uint8_t sfde_func_rep_size;
+    uint16_t sfde_func_padding2;
+} __attribute__((packed)) sframe_func_desc_entry;
 
 /* Macros to compose and decompose function info in FDE.  */
 
@@ -216,9 +212,9 @@ typedef struct sframe_func_desc_entry
   (((SFRAME_AARCH64_PAUTH_KEY_A & 0x1) << 5) | \
    (((fde_type) & 0x1) << 4) | ((fre_enc_type) & 0xf))
 
-#define SFRAME_V1_FUNC_FRE_TYPE(data)	  ((data) & 0xf)
-#define SFRAME_V1_FUNC_FDE_TYPE(data)	  (((data) >> 4) & 0x1)
-#define SFRAME_V1_FUNC_PAUTH_KEY(data)	  (((data) >> 5) & 0x1)
+#define SFRAME_V1_FUNC_FRE_TYPE(data)     ((data) & 0xf)
+#define SFRAME_V1_FUNC_FDE_TYPE(data)     (((data) >> 4) & 0x1)
+#define SFRAME_V1_FUNC_PAUTH_KEY(data)    (((data) >> 5) & 0x1)
 
 /* Set the pauth key as indicated.  */
 #define SFRAME_V1_FUNC_INFO_UPDATE_PAUTH_KEY(pauth_key, fde_info) \
@@ -227,13 +223,13 @@ typedef struct sframe_func_desc_entry
 /* Size of stack frame offsets in an SFrame Frame Row Entry.  A single
    SFrame FRE has all offsets of the same size.  Offset size may vary
    across frame row entries.  */
-#define SFRAME_FRE_OFFSET_1B	  0
-#define SFRAME_FRE_OFFSET_2B	  1
-#define SFRAME_FRE_OFFSET_4B	  2
+#define SFRAME_FRE_OFFSET_1B      0
+#define SFRAME_FRE_OFFSET_2B      1
+#define SFRAME_FRE_OFFSET_4B      2
 
 /* An SFrame Frame Row Entry can be SP or FP based.  */
-#define SFRAME_BASE_REG_FP	0
-#define SFRAME_BASE_REG_SP	1
+#define SFRAME_BASE_REG_FP  0
+#define SFRAME_BASE_REG_SP  1
 
 /* The index at which a specific offset is presented in the variable length
    bytes of an FRE.  */
@@ -245,24 +241,23 @@ typedef struct sframe_func_desc_entry
    may or may not be tracked.  */
 #define SFRAME_FRE_FP_OFFSET_IDX    2
 
-typedef struct sframe_fre_info
-{
-  /* Information about
-     - 1 bit: base reg for CFA
-     - 4 bits: Number of offsets (N).  A value of upto 3 is allowed to track
-     all three of CFA, FP and RA (fixed implicit order).
-     - 2 bits: information about size of the offsets (S) in bytes.
-     Valid values are SFRAME_FRE_OFFSET_1B, SFRAME_FRE_OFFSET_2B,
-     SFRAME_FRE_OFFSET_4B
-     - 1 bit: Mangled RA state bit (aarch64 only).
-     ----------------------------------------------------------------------------------
-     | Mangled-RA (aarch64) |  Size of offsets   |   Number of offsets    |   base_reg |
-     |  Unused (amd64)      |                    |                        |            |
-     ----------------------------------------------------------------------------------
-     8                     7                    5                        1            0
+typedef struct sframe_fre_info {
+    /* Information about
+       - 1 bit: base reg for CFA
+       - 4 bits: Number of offsets (N).  A value of upto 3 is allowed to track
+       all three of CFA, FP and RA (fixed implicit order).
+       - 2 bits: information about size of the offsets (S) in bytes.
+       Valid values are SFRAME_FRE_OFFSET_1B, SFRAME_FRE_OFFSET_2B,
+       SFRAME_FRE_OFFSET_4B
+       - 1 bit: Mangled RA state bit (aarch64 only).
+       ----------------------------------------------------------------------------------
+       | Mangled-RA (aarch64) |  Size of offsets   |   Number of offsets    |   base_reg |
+       |  Unused (amd64)      |                    |                        |            |
+       ----------------------------------------------------------------------------------
+       8                     7                    5                        1            0
 
-     */
-  uint8_t fre_info;
+       */
+    uint8_t fre_info;
 } sframe_fre_info;
 
 /* Macros to compose and decompose FRE info.  */
@@ -276,10 +271,10 @@ typedef struct sframe_fre_info
 #define SFRAME_V1_FRE_INFO_UPDATE_MANGLED_RA_P(mangled_ra_p, fre_info) \
   ((((mangled_ra_p) & 0x1) << 7) | ((fre_info) & 0x7f))
 
-#define SFRAME_V1_FRE_CFA_BASE_REG_ID(data)	  ((data) & 0x1)
-#define SFRAME_V1_FRE_OFFSET_COUNT(data)	  (((data) >> 1) & 0xf)
-#define SFRAME_V1_FRE_OFFSET_SIZE(data)		  (((data) >> 5) & 0x3)
-#define SFRAME_V1_FRE_MANGLED_RA_P(data)	  (((data) >> 7) & 0x1)
+#define SFRAME_V1_FRE_CFA_BASE_REG_ID(data)   ((data) & 0x1)
+#define SFRAME_V1_FRE_OFFSET_COUNT(data)      (((data) >> 1) & 0xf)
+#define SFRAME_V1_FRE_OFFSET_SIZE(data)       (((data) >> 5) & 0x3)
+#define SFRAME_V1_FRE_MANGLED_RA_P(data)      (((data) >> 7) & 0x1)
 
 /* SFrame Frame Row Entry definitions.
 
@@ -296,7 +291,7 @@ typedef struct sframe_fre_info
    AMD64:
      offset1 (interpreted as CFA = BASE_REG + offset1)
       if FP is being tracked
-	offset2 (intrepreted as FP = CFA + offset2)
+    offset2 (intrepreted as FP = CFA + offset2)
       fi
 
     AARCH64:
@@ -310,13 +305,12 @@ typedef struct sframe_fre_info
 */
 
 /* Used when SFRAME_FRE_TYPE_ADDR1 is specified as FRE type.  */
-typedef struct sframe_frame_row_entry_addr1
-{
-  /* Start address of the frame row entry.  Encoded as an 1-byte unsigned
-     offset, relative to the start address of the function.  */
-  uint8_t sfre_start_address;
-  sframe_fre_info sfre_info;
-} __attribute__ ((packed)) sframe_frame_row_entry_addr1;
+typedef struct sframe_frame_row_entry_addr1 {
+    /* Start address of the frame row entry.  Encoded as an 1-byte unsigned
+       offset, relative to the start address of the function.  */
+    uint8_t sfre_start_address;
+    sframe_fre_info sfre_info;
+} __attribute__((packed)) sframe_frame_row_entry_addr1;
 
 /* Upper limit of start address in sframe_frame_row_entry_addr1
    is 0x100 (not inclusive).  */
@@ -324,13 +318,12 @@ typedef struct sframe_frame_row_entry_addr1
   (1ULL << ((SFRAME_FRE_TYPE_ADDR1 + 1) * 8))
 
 /* Used when SFRAME_FRE_TYPE_ADDR2 is specified as FRE type.  */
-typedef struct sframe_frame_row_entry_addr2
-{
-  /* Start address of the frame row entry.  Encoded as an 2-byte unsigned
-     offset, relative to the start address of the function.  */
-  uint16_t sfre_start_address;
-  sframe_fre_info sfre_info;
-} __attribute__ ((packed)) sframe_frame_row_entry_addr2;
+typedef struct sframe_frame_row_entry_addr2 {
+    /* Start address of the frame row entry.  Encoded as an 2-byte unsigned
+       offset, relative to the start address of the function.  */
+    uint16_t sfre_start_address;
+    sframe_fre_info sfre_info;
+} __attribute__((packed)) sframe_frame_row_entry_addr2;
 
 /* Upper limit of start address in sframe_frame_row_entry_addr2
    is 0x10000 (not inclusive).  */
@@ -338,13 +331,12 @@ typedef struct sframe_frame_row_entry_addr2
   (1ULL << ((SFRAME_FRE_TYPE_ADDR2 * 2) * 8))
 
 /* Used when SFRAME_FRE_TYPE_ADDR4 is specified as FRE type.  */
-typedef struct sframe_frame_row_entry_addr4
-{
-  /* Start address of the frame row entry.  Encoded as a 4-byte unsigned
-     offset, relative to the start address of the function.  */
-  uint32_t sfre_start_address;
-  sframe_fre_info sfre_info;
-} __attribute__ ((packed)) sframe_frame_row_entry_addr4;
+typedef struct sframe_frame_row_entry_addr4 {
+    /* Start address of the frame row entry.  Encoded as a 4-byte unsigned
+       offset, relative to the start address of the function.  */
+    uint32_t sfre_start_address;
+    sframe_fre_info sfre_info;
+} __attribute__((packed)) sframe_frame_row_entry_addr4;
 
 /* Upper limit of start address in sframe_frame_row_entry_addr2
    is 0x100000000 (not inclusive).  */
@@ -352,27 +344,26 @@ typedef struct sframe_frame_row_entry_addr4
   (1ULL << ((SFRAME_FRE_TYPE_ADDR4 * 2) * 8))
 
 /* Used to pass frame information to stack trace routine.  */
-typedef struct cframe
-{
-  _Unwind_Ptr pc;
-  _Unwind_Ptr sp;
-  _Unwind_Ptr fp;
+typedef struct cframe {
+    _Unwind_Ptr pc;
+    _Unwind_Ptr sp;
+    _Unwind_Ptr fp;
 } frame;
 
 /* SFrame stack tracing support.  */
-int __stacktrace_sframe (void **, int, frame *);
-libc_hidden_proto (__stacktrace_sframe);
+int __stacktrace_sframe(void **, int, frame *);
+libc_hidden_proto(__stacktrace_sframe);
 
 /* Helper used by SFrame tracing algorithm.  */
-_Unwind_Ptr __getPC (void);
-libc_hidden_proto (__getPC);
+_Unwind_Ptr __getPC(void);
+libc_hidden_proto(__getPC);
 
 /* Helper used by SFrame tracing algorithm.  */
-_Unwind_Ptr __getSP (void);
-libc_hidden_proto (__getSP);
+_Unwind_Ptr __getSP(void);
+libc_hidden_proto(__getSP);
 
-#ifdef	__cplusplus
+#ifdef  __cplusplus
 }
 #endif
 
-#endif				/* _SFRAME_H */
+#endif              /* _SFRAME_H */

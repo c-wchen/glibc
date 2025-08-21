@@ -19,43 +19,38 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int
-main (void)
+int main(void)
 {
-  const char fname[] = "modcxaatexit.so";
-  void *h;
-  void (*fp) (void *);
-  int v = 0;
+    const char fname[] = "modcxaatexit.so";
+    void *h;
+    void (*fp)(void *);
+    int v = 0;
 
-  h = dlopen (fname, RTLD_LAZY);
-  if (h == NULL)
-    {
-      printf ("cannot open \"%s\": %s\n", fname, dlerror ());
-      exit (1);
+    h = dlopen(fname, RTLD_LAZY);
+    if (h == NULL) {
+        printf("cannot open \"%s\": %s\n", fname, dlerror());
+        exit(1);
     }
 
-  fp = dlsym (h, "bar");
-  if (fp == NULL)
-    {
-      printf ("cannot find \"bar\": %s\n", dlerror ());
-      exit (1);
+    fp = dlsym(h, "bar");
+    if (fp == NULL) {
+        printf("cannot find \"bar\": %s\n", dlerror());
+        exit(1);
     }
 
-  fp (&v);
+    fp(&v);
 
-  if (dlclose (h) != 0)
-    {
-      printf ("cannot close \"%s\": %s\n", fname, dlerror ());
-      exit (1);
+    if (dlclose(h) != 0) {
+        printf("cannot close \"%s\": %s\n", fname, dlerror());
+        exit(1);
     }
 
-  if (v != 1)
-    {
-      puts ("module unload didn't change `v'");
-      exit (1);
+    if (v != 1) {
+        puts("module unload didn't change `v'");
+        exit(1);
     }
 
-  puts ("finishing now");
+    puts("finishing now");
 
-  return 0;
+    return 0;
 }

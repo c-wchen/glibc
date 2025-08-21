@@ -23,20 +23,18 @@
 
 /* Copy SRC to DEST, returning the address of the terminating L'\0' in
    DEST.  Check for overflows.  */
-wchar_t *
-__wcpcpy_chk (wchar_t *dest, const wchar_t *src, size_t destlen)
+wchar_t *__wcpcpy_chk(wchar_t *dest, const wchar_t *src, size_t destlen)
 {
-  wchar_t *wcp = (wchar_t *) dest - 1;
-  wint_t c;
+    wchar_t *wcp = (wchar_t *) dest - 1;
+    wint_t c;
 
-  do
-    {
-      if (__glibc_unlikely (destlen-- == 0))
-	__chk_fail ();
-      c = *src++;
-      *++wcp = c;
-    }
-  while (c != L'\0');
+    do {
+        if (__glibc_unlikely(destlen-- == 0)) {
+            __chk_fail();
+        }
+        c = *src++;
+        *++wcp = c;
+    } while (c != L'\0');
 
-  return wcp;
+    return wcp;
 }

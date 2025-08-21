@@ -23,17 +23,16 @@
 #include <support/xdlfcn.h>
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* Defined in tst-dlopen-tlsreinitmod3.so.  */
-  extern bool tlsreinitmod3_tested;
-  TEST_VERIFY (tlsreinitmod3_tested);
+    /* Defined in tst-dlopen-tlsreinitmod3.so.  */
+    extern bool tlsreinitmod3_tested;
+    TEST_VERIFY(tlsreinitmod3_tested);
 
-  /* This crashes if the libc.so.6 TLS image has been reverted.  */
-  TEST_VERIFY (!isupper ('@'));
+    /* This crashes if the libc.so.6 TLS image has been reverted.  */
+    TEST_VERIFY(!isupper('@'));
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

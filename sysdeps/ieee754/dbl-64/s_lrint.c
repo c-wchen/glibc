@@ -28,103 +28,91 @@
 #include <math-use-builtins.h>
 
 
-long int
-__lrint (double x)
+long int __lrint(double x)
 {
 #if USE_LRINT_BUILTIN
-  return __builtin_lrint (x);
+    return __builtin_lrint(x);
 #else
-  /* Use generic implementation.  */
-  static const double two52[2] =
-  {
-    4.50359962737049600000e+15, /* 0x43300000, 0x00000000 */
-   -4.50359962737049600000e+15, /* 0xC3300000, 0x00000000 */
-  };
+    /* Use generic implementation.  */
+    static const double two52[2] = {
+        4.50359962737049600000e+15, /* 0x43300000, 0x00000000 */
+        -4.50359962737049600000e+15, /* 0xC3300000, 0x00000000 */
+    };
 
-  int32_t j0;
-  uint32_t i0, i1;
-  double w;
-  double t;
-  long int result;
-  int sx;
+    int32_t j0;
+    uint32_t i0, i1;
+    double w;
+    double t;
+    long int result;
+    int sx;
 
-  EXTRACT_WORDS (i0, i1, x);
-  j0 = ((i0 >> 20) & 0x7ff) - 0x3ff;
-  sx = i0 >> 31;
-  i0 &= 0xfffff;
-  i0 |= 0x100000;
+    EXTRACT_WORDS(i0, i1, x);
+    j0 = ((i0 >> 20) & 0x7ff) - 0x3ff;
+    sx = i0 >> 31;
+    i0 &= 0xfffff;
+    i0 |= 0x100000;
 
-  if (j0 < 20)
-    {
-      w = math_narrow_eval (two52[sx] + x);
-      t = w - two52[sx];
-      EXTRACT_WORDS (i0, i1, t);
-      j0 = ((i0 >> 20) & 0x7ff) - 0x3ff;
-      i0 &= 0xfffff;
-      i0 |= 0x100000;
+    if (j0 < 20) {
+        w = math_narrow_eval(two52[sx] + x);
+        t = w - two52[sx];
+        EXTRACT_WORDS(i0, i1, t);
+        j0 = ((i0 >> 20) & 0x7ff) - 0x3ff;
+        i0 &= 0xfffff;
+        i0 |= 0x100000;
 
-      result = (j0 < 0 ? 0 : i0 >> (20 - j0));
-    }
-  else if (j0 < (int32_t) (8 * sizeof (long int)) - 1)
-    {
-      if (j0 >= 52)
-	result = ((long int) i0 << (j0 - 20)) | ((long int) i1 << (j0 - 52));
-      else
-	{
+        result = (j0 < 0 ? 0 : i0 >> (20 - j0));
+    } else if (j0 < (int32_t)(8 * sizeof(long int)) - 1) {
+        if (j0 >= 52) {
+            result = ((long int) i0 << (j0 - 20)) | ((long int) i1 << (j0 - 52));
+        } else {
 #if defined FE_INVALID || defined FE_INEXACT
-	  /* X < LONG_MAX + 1 implied by J0 < 31.  */
-	  if (sizeof (long int) == 4
-	      && x > (double) LONG_MAX)
-	    {
-	      /* In the event of overflow we must raise the "invalid"
-		 exception, but not "inexact".  */
-	      t = __nearbyint (x);
-	      feraiseexcept (t == LONG_MAX ? FE_INEXACT : FE_INVALID);
-	    }
-	  else
+            /* X < LONG_MAX + 1 implied by J0 < 31.  */
+            if (sizeof(long int) == 4
+                && x > (double) LONG_MAX) {
+                /* In the event of overflow we must raise the "invalid"
+                exception, but not "inexact".  */
+                t = __nearbyint(x);
+                feraiseexcept(t == LONG_MAX ? FE_INEXACT : FE_INVALID);
+            } else
 #endif
-	    {
-	      w = math_narrow_eval (two52[sx] + x);
-	      t = w - two52[sx];
-	    }
-	  EXTRACT_WORDS (i0, i1, t);
-	  j0 = ((i0 >> 20) & 0x7ff) - 0x3ff;
-	  i0 &= 0xfffff;
-	  i0 |= 0x100000;
+            {
+                w = math_narrow_eval(two52[sx] + x);
+                t = w - two52[sx];
+            }
+            EXTRACT_WORDS(i0, i1, t);
+            j0 = ((i0 >> 20) & 0x7ff) - 0x3ff;
+            i0 &= 0xfffff;
+            i0 |= 0x100000;
 
-	  if (j0 == 20)
-	    result = (long int) i0;
-	  else
-	    result = ((long int) i0 << (j0 - 20)) | (i1 >> (52 - j0));
-	}
-    }
-  else
-    {
-      /* The number is too large.  Unless it rounds to LONG_MIN,
-	 FE_INVALID must be raised and the return value is
-	 unspecified.  */
+            if (j0 == 20) {
+                result = (long int) i0;
+            } else {
+                result = ((long int) i0 << (j0 - 20)) | (i1 >> (52 - j0));
+            }
+        }
+    } else {
+        /* The number is too large.  Unless it rounds to LONG_MIN,
+        FE_INVALID must be raised and the return value is
+         unspecified.  */
 #if defined FE_INVALID || defined FE_INEXACT
-      if (sizeof (long int) == 4
-	  && x < (double) LONG_MIN
-	  && x > (double) LONG_MIN - 1.0)
-	{
-	  /* If truncation produces LONG_MIN, the cast will not raise
-	     the exception, but may raise "inexact".  */
-	  t = __nearbyint (x);
-	  feraiseexcept (t == LONG_MIN ? FE_INEXACT : FE_INVALID);
-	  return LONG_MIN;
-	}
-      else if (FIX_DBL_LONG_CONVERT_OVERFLOW && x != (double) LONG_MIN)
-	{
-	  feraiseexcept (FE_INVALID);
-	  return sx == 0 ? LONG_MAX : LONG_MIN;
-	}
+        if (sizeof(long int) == 4
+            && x < (double) LONG_MIN
+            && x > (double) LONG_MIN - 1.0) {
+            /* If truncation produces LONG_MIN, the cast will not raise
+               the exception, but may raise "inexact".  */
+            t = __nearbyint(x);
+            feraiseexcept(t == LONG_MIN ? FE_INEXACT : FE_INVALID);
+            return LONG_MIN;
+        } else if (FIX_DBL_LONG_CONVERT_OVERFLOW && x != (double) LONG_MIN) {
+            feraiseexcept(FE_INVALID);
+            return sx == 0 ? LONG_MAX : LONG_MIN;
+        }
 #endif
-      return (long int) x;
+        return (long int) x;
     }
 
-  return sx ? -result : result;
+    return sx ? -result : result;
 #endif /* ! USE_LRINT_BUILTIN  */
 }
 
-libm_alias_double (__lrint, lrint)
+libm_alias_double(__lrint, lrint)

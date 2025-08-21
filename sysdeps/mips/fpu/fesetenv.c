@@ -19,25 +19,25 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-int
-__fesetenv (const fenv_t *envp)
+int __fesetenv(const fenv_t *envp)
 {
-  fpu_control_t cw;
+    fpu_control_t cw;
 
-  /* Read first current state to flush fpu pipeline.  */
-  _FPU_GETCW (cw);
+    /* Read first current state to flush fpu pipeline.  */
+    _FPU_GETCW(cw);
 
-  if (envp == FE_DFL_ENV)
-    _FPU_SETCW (_FPU_DEFAULT);
-  else if (envp == FE_NOMASK_ENV)
-    _FPU_SETCW (_FPU_IEEE);
-  else
-    _FPU_SETCW (envp->__fp_control_register);
+    if (envp == FE_DFL_ENV) {
+        _FPU_SETCW(_FPU_DEFAULT);
+    } else if (envp == FE_NOMASK_ENV) {
+        _FPU_SETCW(_FPU_IEEE);
+    } else {
+        _FPU_SETCW(envp->__fp_control_register);
+    }
 
-  /* Success.  */
-  return 0;
+    /* Success.  */
+    return 0;
 }
 
-libm_hidden_def (__fesetenv)
-weak_alias (__fesetenv, fesetenv)
-libm_hidden_weak (fesetenv)
+libm_hidden_def(__fesetenv)
+weak_alias(__fesetenv, fesetenv)
+libm_hidden_weak(fesetenv)

@@ -19,13 +19,12 @@
 #include <string.h>
 
 /* Set signal mask for signals with default handling in ATTR to SIGDEFAULT.  */
-int
-__posix_spawnattr_setsigdefault (posix_spawnattr_t *attr,
-				 const sigset_t *sigdefault)
+int __posix_spawnattr_setsigdefault(posix_spawnattr_t *attr,
+                                    const sigset_t *sigdefault)
 {
-  /* Copy the sigset_t data to the user buffer.  */
-  memcpy (&attr->__sd, sigdefault, sizeof (sigset_t));
+    /* Copy the sigset_t data to the user buffer.  */
+    memcpy(&attr->__sd, sigdefault, sizeof(sigset_t));
 
-  return 0;
+    return 0;
 }
-weak_alias (__posix_spawnattr_setsigdefault, posix_spawnattr_setsigdefault)
+weak_alias(__posix_spawnattr_setsigdefault, posix_spawnattr_setsigdefault)

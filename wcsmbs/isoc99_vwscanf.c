@@ -20,8 +20,7 @@
 #include <wchar.h>
 
 /* Read formatted input from STDIN according to the format string FORMAT.  */
-int
-__isoc99_vwscanf (const wchar_t *format, va_list args)
+int __isoc99_vwscanf(const wchar_t *format, va_list args)
 {
-  return __vfwscanf_internal (stdin, format, args, SCANF_ISOC99_A);
+    return __vfwscanf_internal(stdin, format, args, SCANF_ISOC99_A);
 }

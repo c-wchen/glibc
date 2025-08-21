@@ -21,21 +21,20 @@
 #include <math-narrow-eval.h>
 #include <math-narrow.h>
 
-_Float32x
-__f32xaddf64 (_Float64 x, _Float64 y)
+_Float32x __f32xaddf64(_Float64 x, _Float64 y)
 {
-  /* To avoid double rounding, set double precision for the addition.
-     math_narrow_eval is still needed to eliminate excess range in the
-     case of overflow.  If the result of the addition is in the
-     subnormal range for double, it is exact, so no issues of double
-     rounding for subnormals arise.  */
-  fpu_control_t cw, cw_double;
-  _FPU_GETCW (cw);
-  cw_double = (cw & ~_FPU_EXTENDED) | _FPU_DOUBLE;
-  _FPU_SETCW (cw_double);
-  _Float32x ret = math_narrow_eval (x + y);
-  _FPU_SETCW (cw);
-  CHECK_NARROW_ADD (ret, x, y);
-  return ret;
+    /* To avoid double rounding, set double precision for the addition.
+       math_narrow_eval is still needed to eliminate excess range in the
+       case of overflow.  If the result of the addition is in the
+       subnormal range for double, it is exact, so no issues of double
+       rounding for subnormals arise.  */
+    fpu_control_t cw, cw_double;
+    _FPU_GETCW(cw);
+    cw_double = (cw & ~_FPU_EXTENDED) | _FPU_DOUBLE;
+    _FPU_SETCW(cw_double);
+    _Float32x ret = math_narrow_eval(x + y);
+    _FPU_SETCW(cw);
+    CHECK_NARROW_ADD(ret, x, y);
+    return ret;
 }
-libm_alias_float32x_float64 (add)
+libm_alias_float32x_float64(add)

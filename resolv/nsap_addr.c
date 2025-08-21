@@ -26,67 +26,72 @@
 #include <ctype.h>
 #include <resolv.h>
 
-static char
-xtob(int c) {
-	return (c - (((c >= '0') && (c <= '9')) ? '0' : '7'));
+static char xtob(int c)
+{
+    return (c - (((c >= '0') && (c <= '9')) ? '0' : '7'));
 }
 
-u_int
-inet_nsap_addr(const char *ascii, u_char *binary, int maxlen) {
-	u_char c, nib;
-	u_int len = 0;
+u_int inet_nsap_addr(const char *ascii, u_char *binary, int maxlen)
+{
+    u_char c, nib;
+    u_int len = 0;
 
-	while ((c = *ascii++) != '\0' && len < (u_int)maxlen) {
-		if (c == '.' || c == '+' || c == '/')
-			continue;
-		if (!isascii(c))
-			return (0);
-		c = toupper(c);
-		if (isxdigit(c)) {
-			nib = xtob(c);
-			c = *ascii++;
-			if (c != '\0') {
-				c = toupper(c);
-				if (isxdigit(c)) {
-					*binary++ = (nib << 4) | xtob(c);
-					len++;
-				} else
-					return (0);
-			}
-			else
-				return (0);
-		}
-		else
-			return (0);
-	}
-	return (len);
+    while ((c = *ascii++) != '\0' && len < (u_int)maxlen) {
+        if (c == '.' || c == '+' || c == '/') {
+            continue;
+        }
+        if (!isascii(c)) {
+            return (0);
+        }
+        c = toupper(c);
+        if (isxdigit(c)) {
+            nib = xtob(c);
+            c = *ascii++;
+            if (c != '\0') {
+                c = toupper(c);
+                if (isxdigit(c)) {
+                    *binary++ = (nib << 4) | xtob(c);
+                    len++;
+                } else {
+                    return (0);
+                }
+            } else {
+                return (0);
+            }
+        } else {
+            return (0);
+        }
+    }
+    return (len);
 }
 
-char *
-inet_nsap_ntoa(int binlen, const u_char *binary, char *ascii) {
-	int nib;
-	int i;
-	static char tmpbuf[255*2 + 128];
-	char *start;
+char *inet_nsap_ntoa(int binlen, const u_char *binary, char *ascii)
+{
+    int nib;
+    int i;
+    static char tmpbuf[255 * 2 + 128];
+    char *start;
 
-	if (ascii)
-		start = ascii;
-	else {
-		ascii = tmpbuf;
-		start = tmpbuf;
-	}
+    if (ascii) {
+        start = ascii;
+    } else {
+        ascii = tmpbuf;
+        start = tmpbuf;
+    }
 
-	if (binlen > 255)
-		binlen = 255;
+    if (binlen > 255) {
+        binlen = 255;
+    }
 
-	for (i = 0; i < binlen; i++) {
-		nib = *binary >> 4;
-		*ascii++ = nib + (nib < 10 ? '0' : '7');
-		nib = *binary++ & 0x0f;
-		*ascii++ = nib + (nib < 10 ? '0' : '7');
-		if (((i % 2) == 0 && (i + 1) < binlen))
-			*ascii++ = '.';
-	}
-	*ascii = '\0';
-	return (start);
+    for (i = 0; i < binlen; i++) {
+        nib = *binary >> 4;
+        *ascii++ = nib + (nib < 10 ? '0' : '7');
+        nib = *binary++ & 0x0f;
+        *ascii++ = nib + (nib < 10 ? '0' : '7');
+        if (((i % 2) == 0 && (i + 1) < binlen)) {
+            *ascii++ = '.';
+        }
+    }
+    *ascii = '\0';
+    return (start);
 }

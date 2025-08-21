@@ -19,10 +19,9 @@
 #include "thread_dbP.h"
 
 
-td_err_e
-td_thr_setxregs (const td_thrhandle_t *ta, const void *addr)
+td_err_e td_thr_setxregs(const td_thrhandle_t *ta, const void *addr)
 {
-  /* XXX This might have to be platform specific.  */
-  LOG ("td_thr_setxregs");
-  return TD_NOXREGS;
+    /* XXX This might have to be platform specific.  */
+    LOG("td_thr_setxregs");
+    return TD_NOXREGS;
 }

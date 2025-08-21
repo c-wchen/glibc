@@ -33,316 +33,285 @@
 #define TESTBUFLEN 4096
 
 static struct passwd pwd_table_1[] = {
-    PWD (100),
-    PWD (30),
-    PWD (200),
-    PWD (60),
-    PWD (20000),
-    PWD_LAST ()
-  };
+    PWD(100),
+    PWD(30),
+    PWD(200),
+    PWD(60),
+    PWD(20000),
+    PWD_LAST()
+};
 
-static const char *hostaddr_5[] =
-  {
-   "ABCd", "ABCD", "ABC4", NULL
-  };
+static const char *hostaddr_5[] = {
+    "ABCd", "ABCD", "ABC4", NULL
+};
 
-static const char *hostaddr_15[] =
-  {
-   "4321", "4322", NULL
-  };
+static const char *hostaddr_15[] = {
+    "4321", "4322", NULL
+};
 
-static const char *hostaddr_25[] =
-  {
-   "WXYZ", NULL
-  };
+static const char *hostaddr_25[] = {
+    "WXYZ", NULL
+};
 
 
 static struct hostent host_table_1[] = {
-  HOST (5),
-  HOST (15),
-  HOST (25),
-  HOST_LAST ()
+    HOST(5),
+    HOST(15),
+    HOST(25),
+    HOST_LAST()
 };
 
-void
-_nss_test1_init_hook(test_tables *t)
+void _nss_test1_init_hook(test_tables *t)
 {
-  t->pwd_table = pwd_table_1;
-  t->host_table = host_table_1;
+    t->pwd_table = pwd_table_1;
+    t->host_table = host_table_1;
 }
 
 /* The first of these must not appear in pwd_table_1.  */
 static struct passwd pwd_table_2[] = {
-    PWD (5),
+    PWD(5),
     PWD_N(200, "name30"),
-    PWD (16),
-    PWD_LAST ()
-  };
-
-static const char *hostaddr_6[] =
-  {
-   "mnop", NULL
-  };
-
-static const char *hostaddr_16[] =
-  {
-   "7890", "7891", NULL
-  };
-
-static const char *hostaddr_26[] =
-  {
-   "qwer", "qweR", NULL
-  };
-
-static struct hostent host_table_2[] = {
-  HOST (6),
-  HOST (16),
-  HOST (26),
-  HOST_LAST ()
+    PWD(16),
+    PWD_LAST()
 };
 
-void
-_nss_test2_init_hook(test_tables *t)
+static const char *hostaddr_6[] = {
+    "mnop", NULL
+};
+
+static const char *hostaddr_16[] = {
+    "7890", "7891", NULL
+};
+
+static const char *hostaddr_26[] = {
+    "qwer", "qweR", NULL
+};
+
+static struct hostent host_table_2[] = {
+    HOST(6),
+    HOST(16),
+    HOST(26),
+    HOST_LAST()
+};
+
+void _nss_test2_init_hook(test_tables *t)
 {
-  t->pwd_table = pwd_table_2;
-  t->host_table = host_table_2;
+    t->pwd_table = pwd_table_2;
+    t->host_table = host_table_2;
 }
 
-static void
-must_be_tests (struct passwd *pt, struct hostent *ht)
+static void must_be_tests(struct passwd *pt, struct hostent *ht)
 {
-  int i;
-  struct hostent *h;
+    int i;
+    struct hostent *h;
 
-  struct passwd *p;
-  for (i = 0; !PWD_ISLAST (&pt[i]); ++i)
-    {
-      p = getpwuid (pt[i].pw_uid);
-      TEST_VERIFY (p != NULL);
-      if (p != NULL)
-	{
-	  TEST_COMPARE_STRING (p->pw_name, pt[i].pw_name);
-	}
+    struct passwd *p;
+    for (i = 0; !PWD_ISLAST(&pt[i]); ++i) {
+        p = getpwuid(pt[i].pw_uid);
+        TEST_VERIFY(p != NULL);
+        if (p != NULL) {
+            TEST_COMPARE_STRING(p->pw_name, pt[i].pw_name);
+        }
     }
 
-  setpwent ();
-  for (i = 0; !PWD_ISLAST (&pt[i]); ++i)
-    {
-      p = getpwent ();
-      TEST_VERIFY (p != NULL);
-      if (p != NULL)
-	{
-	  TEST_COMPARE_STRING (p->pw_name, pt[i].pw_name);
-	  TEST_COMPARE (p->pw_uid, pt[i].pw_uid);
-	}
+    setpwent();
+    for (i = 0; !PWD_ISLAST(&pt[i]); ++i) {
+        p = getpwent();
+        TEST_VERIFY(p != NULL);
+        if (p != NULL) {
+            TEST_COMPARE_STRING(p->pw_name, pt[i].pw_name);
+            TEST_COMPARE(p->pw_uid, pt[i].pw_uid);
+        }
     }
-  endpwent ();
+    endpwent();
 
-  for (i = 0; !HOST_ISLAST (&ht[i]); ++i)
-    {
-      h = gethostbyname (ht[i].h_name);
-      TEST_VERIFY (h != NULL);
-      if (h != NULL)
-	{
-	  TEST_COMPARE_STRING (h->h_name, ht[i].h_name);
-	  TEST_COMPARE (h->h_addrtype, AF_INET);
-	  TEST_VERIFY (h->h_addr_list[0] != NULL);
-	  if (h->h_addr_list[0] != NULL)
-	    TEST_COMPARE_BLOB (h->h_addr_list[0], h->h_length,
-			       ht[i].h_addr_list[0], ht[i].h_length);
-	}
+    for (i = 0; !HOST_ISLAST(&ht[i]); ++i) {
+        h = gethostbyname(ht[i].h_name);
+        TEST_VERIFY(h != NULL);
+        if (h != NULL) {
+            TEST_COMPARE_STRING(h->h_name, ht[i].h_name);
+            TEST_COMPARE(h->h_addrtype, AF_INET);
+            TEST_VERIFY(h->h_addr_list[0] != NULL);
+            if (h->h_addr_list[0] != NULL)
+                TEST_COMPARE_BLOB(h->h_addr_list[0], h->h_length,
+                                  ht[i].h_addr_list[0], ht[i].h_length);
+        }
     }
 
-  for (i = 0; !HOST_ISLAST (&ht[i]); ++i)
-    {
-      struct hostent r, *rp;
-      char buf[TESTBUFLEN];
-      int herrno, res;
+    for (i = 0; !HOST_ISLAST(&ht[i]); ++i) {
+        struct hostent r, *rp;
+        char buf[TESTBUFLEN];
+        int herrno, res;
 
-      res = gethostbyname2_r (ht[i].h_name, AF_INET,
-			      &r, buf, TESTBUFLEN, &rp, &herrno);
-      TEST_COMPARE (res, 0);
-      if (res == 0)
-	{
-	  TEST_COMPARE_STRING (r.h_name, ht[i].h_name);
-	  TEST_COMPARE (r.h_addrtype, AF_INET);
-	  TEST_VERIFY (r.h_addr_list[0] != NULL);
-	  if (r.h_addr_list[0] != NULL)
-	    TEST_COMPARE_BLOB (r.h_addr_list[0], r.h_length,
-			       ht[i].h_addr_list[0], ht[i].h_length);
-	}
+        res = gethostbyname2_r(ht[i].h_name, AF_INET,
+                               &r, buf, TESTBUFLEN, &rp, &herrno);
+        TEST_COMPARE(res, 0);
+        if (res == 0) {
+            TEST_COMPARE_STRING(r.h_name, ht[i].h_name);
+            TEST_COMPARE(r.h_addrtype, AF_INET);
+            TEST_VERIFY(r.h_addr_list[0] != NULL);
+            if (r.h_addr_list[0] != NULL)
+                TEST_COMPARE_BLOB(r.h_addr_list[0], r.h_length,
+                                  ht[i].h_addr_list[0], ht[i].h_length);
+        }
     }
 
-  for (i = 0; !HOST_ISLAST (&ht[i]); ++i)
-    {
-      h = gethostbyaddr (ht[i].h_addr, 4, AF_INET);
-      TEST_VERIFY (h != NULL);
-      if (h != NULL)
-	{
-	  TEST_COMPARE_STRING (h->h_name, ht[i].h_name);
-	  TEST_VERIFY (h->h_addr_list[0] != NULL);
-	  if (h->h_addr_list[0] != NULL)
-	    TEST_COMPARE_BLOB (h->h_addr_list[0], h->h_length,
-			       ht[i].h_addr_list[0], ht[i].h_length);
-	}
+    for (i = 0; !HOST_ISLAST(&ht[i]); ++i) {
+        h = gethostbyaddr(ht[i].h_addr, 4, AF_INET);
+        TEST_VERIFY(h != NULL);
+        if (h != NULL) {
+            TEST_COMPARE_STRING(h->h_name, ht[i].h_name);
+            TEST_VERIFY(h->h_addr_list[0] != NULL);
+            if (h->h_addr_list[0] != NULL)
+                TEST_COMPARE_BLOB(h->h_addr_list[0], h->h_length,
+                                  ht[i].h_addr_list[0], ht[i].h_length);
+        }
     }
 
-  /* getaddrinfo */
+    /* getaddrinfo */
 
-  for (i = 0; !HOST_ISLAST (&ht[i]); ++i)
-    {
-      struct addrinfo *ap;
-      struct addrinfo hint;
-      int res, j;
+    for (i = 0; !HOST_ISLAST(&ht[i]); ++i) {
+        struct addrinfo *ap;
+        struct addrinfo hint;
+        int res, j;
 
-      memset (&hint, 0, sizeof (hint));
-      hint.ai_family = AF_INET;
-      hint.ai_socktype = SOCK_STREAM;
-      hint.ai_protocol = 0;
-      hint.ai_flags = 0;
+        memset(&hint, 0, sizeof(hint));
+        hint.ai_family = AF_INET;
+        hint.ai_socktype = SOCK_STREAM;
+        hint.ai_protocol = 0;
+        hint.ai_flags = 0;
 
-      ap = NULL;
-      res = getaddrinfo (ht[i].h_name, NULL, &hint, &ap);
-      TEST_COMPARE (res, 0);
-      TEST_VERIFY (ap != NULL);
-      if (res == 0 && ap != NULL)
-	{
-	  j = 0; /* which address in the list */
-	  while (ap)
-	    {
-	      TEST_COMPARE (ap->ai_family, AF_INET);
+        ap = NULL;
+        res = getaddrinfo(ht[i].h_name, NULL, &hint, &ap);
+        TEST_COMPARE(res, 0);
+        TEST_VERIFY(ap != NULL);
+        if (res == 0 && ap != NULL) {
+            j = 0; /* which address in the list */
+            while (ap) {
+                TEST_COMPARE(ap->ai_family, AF_INET);
 
-	      struct sockaddr_in *in = (struct sockaddr_in *)ap->ai_addr;
-	      unsigned char *up = (unsigned char *)&in->sin_addr;
+                struct sockaddr_in *in = (struct sockaddr_in *)ap->ai_addr;
+                unsigned char *up = (unsigned char *)&in->sin_addr;
 
-	      TEST_COMPARE_BLOB (up, 4, ht[i].h_addr_list[j], 4);
+                TEST_COMPARE_BLOB(up, 4, ht[i].h_addr_list[j], 4);
 
-	      ap = ap->ai_next;
-	      ++j;
-	    }
-	}
+                ap = ap->ai_next;
+                ++j;
+            }
+        }
     }
 
-  /* getnameinfo */
+    /* getnameinfo */
 
-  for (i = 0; !HOST_ISLAST (&ht[i]); ++i)
-    {
-      struct sockaddr_in addr;
-      int res;
-      char host_buf[NI_MAXHOST];
+    for (i = 0; !HOST_ISLAST(&ht[i]); ++i) {
+        struct sockaddr_in addr;
+        int res;
+        char host_buf[NI_MAXHOST];
 
-      memset (&addr, 0, sizeof (addr));
-      addr.sin_family = AF_INET;
-      addr.sin_port = 80;
-      memcpy (& addr.sin_addr, ht[i].h_addr_list[0], 4);
+        memset(&addr, 0, sizeof(addr));
+        addr.sin_family = AF_INET;
+        addr.sin_port = 80;
+        memcpy(& addr.sin_addr, ht[i].h_addr_list[0], 4);
 
-      res = getnameinfo ((struct sockaddr *) &addr, sizeof(addr),
-			 host_buf, sizeof(host_buf),
-			 NULL, 0, NI_NOFQDN);
+        res = getnameinfo((struct sockaddr *) &addr, sizeof(addr),
+                          host_buf, sizeof(host_buf),
+                          NULL, 0, NI_NOFQDN);
 
-      TEST_COMPARE (res, 0);
-      if (res == 0)
-	TEST_VERIFY (strcmp (ht[i].h_name, host_buf) == 0);
-      else
-	printf ("error %s\n", gai_strerror (res));
+        TEST_COMPARE(res, 0);
+        if (res == 0) {
+            TEST_VERIFY(strcmp(ht[i].h_name, host_buf) == 0);
+        } else {
+            printf("error %s\n", gai_strerror(res));
+        }
     }
 }
 
-static void
-must_be_1 (void)
+static void must_be_1(void)
 {
-  struct passwd *p;
+    struct passwd *p;
 
-  must_be_tests (pwd_table_1, host_table_1);
-  p = getpwnam("name5");
-  TEST_VERIFY (p == NULL);
+    must_be_tests(pwd_table_1, host_table_1);
+    p = getpwnam("name5");
+    TEST_VERIFY(p == NULL);
 }
 
-static void
-must_be_2 (void)
+static void must_be_2(void)
 {
-  struct passwd *p;
+    struct passwd *p;
 
-  must_be_tests (pwd_table_2, host_table_2);
-  p = getpwnam("name100");
-  TEST_VERIFY (p == NULL);
+    must_be_tests(pwd_table_2, host_table_2);
+    p = getpwnam("name100");
+    TEST_VERIFY(p == NULL);
 }
 
-static void
-xrename (const char *a, const char *b)
+static void xrename(const char *a, const char *b)
 {
-  int i = rename (a, b);
-  if (i != 0)
-    FAIL_EXIT1 ("rename(%s,%s) failed: %s\n", a, b, strerror(errno));
+    int i = rename(a, b);
+    if (i != 0) {
+        FAIL_EXIT1("rename(%s,%s) failed: %s\n", a, b, strerror(errno));
+    }
 }
 
 /* If the actions change while in the midst of doing a series of
    lookups, make sure they're consistent.  */
-static void
-test_cross_switch_consistency (void)
+static void test_cross_switch_consistency(void)
 {
-  int i;
-  struct passwd *p;
+    int i;
+    struct passwd *p;
 
-  /* We start by initiating a set/get/end loop on conf1.  */
-  setpwent ();
-  for (i = 0; !PWD_ISLAST (&pwd_table_1[i]); ++i)
-    {
-      p = getpwent ();
-      TEST_VERIFY (p != NULL);
-      if (p != NULL)
-	{
-	  TEST_COMPARE_STRING (p->pw_name, pwd_table_1[i].pw_name);
-	  TEST_COMPARE (p->pw_uid, pwd_table_1[i].pw_uid);
-	}
+    /* We start by initiating a set/get/end loop on conf1.  */
+    setpwent();
+    for (i = 0; !PWD_ISLAST(&pwd_table_1[i]); ++i) {
+        p = getpwent();
+        TEST_VERIFY(p != NULL);
+        if (p != NULL) {
+            TEST_COMPARE_STRING(p->pw_name, pwd_table_1[i].pw_name);
+            TEST_COMPARE(p->pw_uid, pwd_table_1[i].pw_uid);
+        }
 
-      /* After the first lookup, switch to conf2 and verify */
-      if (i == 0)
-	{
-	  xrename ("/etc/nsswitch.conf", "/etc/nsswitch.conf1");
-	  xrename ("/etc/nsswitch.conf2", "/etc/nsswitch.conf");
+        /* After the first lookup, switch to conf2 and verify */
+        if (i == 0) {
+            xrename("/etc/nsswitch.conf", "/etc/nsswitch.conf1");
+            xrename("/etc/nsswitch.conf2", "/etc/nsswitch.conf");
 
-	  p = getpwnam (pwd_table_2[0].pw_name);
-	  TEST_COMPARE (p->pw_uid, pwd_table_2[0].pw_uid);
-	}
+            p = getpwnam(pwd_table_2[0].pw_name);
+            TEST_COMPARE(p->pw_uid, pwd_table_2[0].pw_uid);
+        }
 
-      /* But the original loop should still be on conf1.  */
+        /* But the original loop should still be on conf1.  */
     }
-  endpwent ();
+    endpwent();
 
-  /* Make sure the set/get/end loop sees conf2 now.  */
-  setpwent ();
-  for (i = 0; !PWD_ISLAST (&pwd_table_2[i]); ++i)
-    {
-      p = getpwent ();
-      TEST_VERIFY (p != NULL);
-      if (p != NULL)
-	{
-	  TEST_COMPARE_STRING (p->pw_name, pwd_table_2[i].pw_name);
-	  TEST_COMPARE (p->pw_uid, pwd_table_2[i].pw_uid);
-	}
+    /* Make sure the set/get/end loop sees conf2 now.  */
+    setpwent();
+    for (i = 0; !PWD_ISLAST(&pwd_table_2[i]); ++i) {
+        p = getpwent();
+        TEST_VERIFY(p != NULL);
+        if (p != NULL) {
+            TEST_COMPARE_STRING(p->pw_name, pwd_table_2[i].pw_name);
+            TEST_COMPARE(p->pw_uid, pwd_table_2[i].pw_uid);
+        }
     }
-  endpwent ();
+    endpwent();
 
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* The test1 module was configured at program start.  */
-  must_be_1 ();
+    /* The test1 module was configured at program start.  */
+    must_be_1();
 
-  xrename ("/etc/nsswitch.conf", "/etc/nsswitch.conf1");
-  xrename ("/etc/nsswitch.conf2", "/etc/nsswitch.conf");
-  must_be_2 ();
+    xrename("/etc/nsswitch.conf", "/etc/nsswitch.conf1");
+    xrename("/etc/nsswitch.conf2", "/etc/nsswitch.conf");
+    must_be_2();
 
-  xrename ("/etc/nsswitch.conf", "/etc/nsswitch.conf2");
-  xrename ("/etc/nsswitch.conf1", "/etc/nsswitch.conf");
-  must_be_1 ();
+    xrename("/etc/nsswitch.conf", "/etc/nsswitch.conf2");
+    xrename("/etc/nsswitch.conf1", "/etc/nsswitch.conf");
+    must_be_1();
 
-  test_cross_switch_consistency ();
+    test_cross_switch_consistency();
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

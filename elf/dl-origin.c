@@ -24,32 +24,29 @@
 #include <dl-dst.h>
 
 
-const char *
-_dl_get_origin (void)
+const char *_dl_get_origin(void)
 {
-  char *result = (char *) -1;
-  /* We use the environment variable LD_ORIGIN_PATH.  If it is set make
-     a copy and strip out trailing slashes.  */
-  if (GLRO(dl_origin_path) != NULL)
-    {
-      size_t len = strlen (GLRO(dl_origin_path));
-      result = (char *) malloc (len + 1);
-      if (result == NULL)
-	result = (char *) -1;
-      else
-	{
-	  char *cp = __mempcpy (result, GLRO(dl_origin_path), len);
-	  while (cp > result + 1 && cp[-1] == '/')
-	    --cp;
-	  *cp = '\0';
-	}
+    char *result = (char *) -1;
+    /* We use the environment variable LD_ORIGIN_PATH.  If it is set make
+       a copy and strip out trailing slashes.  */
+    if (GLRO(dl_origin_path) != NULL) {
+        size_t len = strlen(GLRO(dl_origin_path));
+        result = (char *) malloc(len + 1);
+        if (result == NULL) {
+            result = (char *) -1;
+        } else {
+            char *cp = __mempcpy(result, GLRO(dl_origin_path), len);
+            while (cp > result + 1 && cp[-1] == '/') {
+                --cp;
+            }
+            *cp = '\0';
+        }
     }
 
-  return result;
+    return result;
 }
 
-char *
-_dl_canonicalize (int fd)
+char *_dl_canonicalize(int fd)
 {
-  return NULL;
+    return NULL;
 }

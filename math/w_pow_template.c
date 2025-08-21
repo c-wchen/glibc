@@ -27,26 +27,28 @@
 # include <math_private.h>
 
 FLOAT
-M_DECL_FUNC (__pow) (FLOAT x, FLOAT y)
+M_DECL_FUNC(__pow)(FLOAT x, FLOAT y)
 {
-  FLOAT z = M_SUF (__ieee754_pow) (x, y);
-  if (__glibc_unlikely (!isfinite (z)))
+    FLOAT z = M_SUF(__ieee754_pow)(x, y);
+    if (__glibc_unlikely(!isfinite(z))) {
+        if (isfinite(x) && isfinite(y)) {
+            if (isnan(z))
+                /* Domain error: pow(x<0,y=non-integer).  */
+            {
+                __set_errno(EDOM);
+            } else
+                /* Pole error: pow(x=0,y<0).  Or overflow.  */
+            {
+                __set_errno(ERANGE);
+            }
+        }
+    } else if (__glibc_unlikely(z == 0) && isfinite(x) && x != 0 && isfinite(y))
+        /* Underflow.  */
     {
-      if (isfinite (x) && isfinite (y))
-	{
-	  if (isnan (z))
-	    /* Domain error: pow(x<0,y=non-integer).  */
-	    __set_errno (EDOM);
-	  else
-	    /* Pole error: pow(x=0,y<0).  Or overflow.  */
-	    __set_errno (ERANGE);
-	}
+        __set_errno(ERANGE);
     }
-  else if (__glibc_unlikely (z == 0) && isfinite (x) && x != 0 && isfinite (y))
-    /* Underflow.  */
-    __set_errno (ERANGE);
-  return z;
+    return z;
 }
-declare_mgen_alias (__pow, pow)
+declare_mgen_alias(__pow, pow)
 
 #endif /* __USE_WRAPPER_TEMPLATE.  */

@@ -21,11 +21,11 @@
 #include <sparc-ifunc.h>
 #include <libm-alias-double.h>
 
-extern __typeof (rint) __rint_vis3 attribute_hidden;
-extern __typeof (rint) __rint_generic attribute_hidden;
+extern __typeof(rint) __rint_vis3 attribute_hidden;
+extern __typeof(rint) __rint_generic attribute_hidden;
 
-sparc_libm_ifunc (__rint,
-		  hwcap & HWCAP_SPARC_VIS3
-		  ? __rint_vis3
-		  : __rint_generic);
-libm_alias_double (__rint, rint)
+sparc_libm_ifunc(__rint,
+                 hwcap &HWCAP_SPARC_VIS3
+                 ? __rint_vis3
+                 : __rint_generic);
+libm_alias_double(__rint, rint)

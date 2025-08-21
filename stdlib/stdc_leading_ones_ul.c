@@ -19,7 +19,7 @@
 #include <stdbit.h>
 
 unsigned int
-(stdc_leading_ones_ul) (unsigned long int x)
+(stdc_leading_ones_ul)(unsigned long int x)
 {
-  return stdc_leading_ones_ul (x);
+    return stdc_leading_ones_ul(x);
 }

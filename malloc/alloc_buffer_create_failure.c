@@ -19,13 +19,12 @@
 #include <alloc_buffer.h>
 #include <stdio.h>
 
-void
-__libc_alloc_buffer_create_failure (void *start, size_t size)
+void __libc_alloc_buffer_create_failure(void *start, size_t size)
 {
-  char buf[200];
-  __snprintf (buf, sizeof (buf), "Fatal glibc error: "
-              "invalid allocation buffer of size %zu\n",
-              size);
-  __libc_fatal (buf);
+    char buf[200];
+    __snprintf(buf, sizeof(buf), "Fatal glibc error: "
+               "invalid allocation buffer of size %zu\n",
+               size);
+    __libc_fatal(buf);
 }
-libc_hidden_def (__libc_alloc_buffer_create_failure)
+libc_hidden_def(__libc_alloc_buffer_create_failure)

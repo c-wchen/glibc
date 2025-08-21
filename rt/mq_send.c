@@ -19,11 +19,10 @@
 #include <mqueue.h>
 
 /* Add message pointed by MSG_PTR to message queue MQDES.  */
-int
-mq_send (mqd_t mqdes, const char *msg_ptr, size_t msg_len,
-	 unsigned int msg_prio)
+int mq_send(mqd_t mqdes, const char *msg_ptr, size_t msg_len,
+            unsigned int msg_prio)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (mq_send)
+stub_warning(mq_send)

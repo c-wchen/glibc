@@ -22,11 +22,10 @@
 
 /* Change the access time of FILE to TSP[0] and
    the modification time of FILE to TSP[1].  */
-int
-utimensat (int fd, const char *file, const struct timespec tsp[2],
-	   int flags)
+int utimensat(int fd, const char *file, const struct timespec tsp[2],
+              int flags)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (utimensat)
+stub_warning(utimensat)

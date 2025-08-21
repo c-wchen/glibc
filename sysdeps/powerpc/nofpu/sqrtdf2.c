@@ -31,21 +31,20 @@
 #include <shlib-compat.h>
 
 #if SHLIB_COMPAT (libc, GLIBC_2_3_2, GLIBC_2_28)
-DFtype
-__sqrtdf2 (DFtype a)
+DFtype __sqrtdf2(DFtype a)
 {
-  FP_DECL_EX;
-  FP_DECL_D (A);
-  FP_DECL_D (R);
-  DFtype r;
+    FP_DECL_EX;
+    FP_DECL_D(A);
+    FP_DECL_D(R);
+    DFtype r;
 
-  FP_INIT_ROUNDMODE;
-  FP_UNPACK_D (A, a);
-  FP_SQRT_D (R, A);
-  FP_PACK_D (r, R);
-  FP_HANDLE_EXCEPTIONS;
+    FP_INIT_ROUNDMODE;
+    FP_UNPACK_D(A, a);
+    FP_SQRT_D(R, A);
+    FP_PACK_D(r, R);
+    FP_HANDLE_EXCEPTIONS;
 
-  return r;
+    return r;
 }
-compat_symbol (libc, __sqrtdf2, __sqrtdf2, GLIBC_2_3_2);
+compat_symbol(libc, __sqrtdf2, __sqrtdf2, GLIBC_2_3_2);
 #endif

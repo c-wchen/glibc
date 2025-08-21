@@ -18,16 +18,15 @@
 #include "pthreadP.h"
 
 
-int
-__pthread_attr_getdetachstate (const pthread_attr_t *attr, int *detachstate)
+int __pthread_attr_getdetachstate(const pthread_attr_t *attr, int *detachstate)
 {
-  struct pthread_attr *iattr;
+    struct pthread_attr *iattr;
 
-  iattr = (struct pthread_attr *) attr;
+    iattr = (struct pthread_attr *) attr;
 
-  *detachstate = (iattr->flags & ATTR_FLAG_DETACHSTATE
-		  ? PTHREAD_CREATE_DETACHED : PTHREAD_CREATE_JOINABLE);
+    *detachstate = (iattr->flags & ATTR_FLAG_DETACHSTATE
+                    ? PTHREAD_CREATE_DETACHED : PTHREAD_CREATE_JOINABLE);
 
-  return 0;
+    return 0;
 }
-strong_alias (__pthread_attr_getdetachstate, pthread_attr_getdetachstate)
+strong_alias(__pthread_attr_getdetachstate, pthread_attr_getdetachstate)

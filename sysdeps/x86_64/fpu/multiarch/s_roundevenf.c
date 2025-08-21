@@ -29,6 +29,6 @@
 # define SYMBOL_NAME roundevenf
 # include "ifunc-sse4_1.h"
 
-libc_ifunc_redirected (__redirect_roundevenf, __roundevenf, IFUNC_SELECTOR ());
-libm_alias_float (__roundeven, roundeven)
+libc_ifunc_redirected(__redirect_roundevenf, __roundevenf, IFUNC_SELECTOR());
+libm_alias_float(__roundeven, roundeven)
 #endif

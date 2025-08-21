@@ -18,8 +18,7 @@
 #include "wcwidth.h"
 
 /* Determine number of column positions required for CH.  */
-int
-wcwidth (wchar_t ch)
+int wcwidth(wchar_t ch)
 {
-  return internal_wcwidth (ch);
+    return internal_wcwidth(ch);
 }

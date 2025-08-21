@@ -22,36 +22,39 @@
 
 /* Public. */
 
-u_int
-ns_get16(const u_char *src) {
-	u_int dst;
+u_int ns_get16(const u_char *src)
+{
+    u_int dst;
 
-	NS_GET16(dst, src);
-	return (dst);
+    NS_GET16(dst, src);
+    return (dst);
 }
-libresolv_hidden_def (ns_get16)
-strong_alias (ns_get16, __ns_get16)
+libresolv_hidden_def(ns_get16)
+strong_alias(ns_get16, __ns_get16)
 
 u_long
-ns_get32(const u_char *src) {
-	u_long dst;
+ns_get32(const u_char *src)
+{
+    u_long dst;
 
-	NS_GET32(dst, src);
-	return (dst);
+    NS_GET32(dst, src);
+    return (dst);
 }
-libresolv_hidden_def (ns_get32)
-strong_alias (ns_get32, __ns_get32)
-
-void
-ns_put16(u_int src, u_char *dst) {
-	NS_PUT16(src, dst);
-}
-libresolv_hidden_def (ns_put16)
+libresolv_hidden_def(ns_get32)
+strong_alias(ns_get32, __ns_get32)
 
 void
-ns_put32(u_long src, u_char *dst) {
-	NS_PUT32(src, dst);
+ns_put16(u_int src, u_char *dst)
+{
+    NS_PUT16(src, dst);
 }
-libresolv_hidden_def (ns_put32)
+libresolv_hidden_def(ns_put16)
+
+void
+ns_put32(u_long src, u_char *dst)
+{
+    NS_PUT32(src, dst);
+}
+libresolv_hidden_def(ns_put32)
 
 /*! \file */

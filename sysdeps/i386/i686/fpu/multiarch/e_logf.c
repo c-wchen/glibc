@@ -16,27 +16,27 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-extern float __redirect_logf (float);
+extern float __redirect_logf(float);
 
 #define SYMBOL_NAME logf
 #include "ifunc-sse2.h"
 #include <libm-alias-finite.h>
 
-libc_ifunc_redirected (__redirect_logf, __logf, IFUNC_SELECTOR ());
+libc_ifunc_redirected(__redirect_logf, __logf, IFUNC_SELECTOR());
 
 #include <libm-alias-float.h>
 #ifdef SHARED
-__hidden_ver1 (__logf_ia32, __GI___logf, __redirect_logf)
-  __attribute__ ((visibility ("hidden"))) __THROW;
+__hidden_ver1(__logf_ia32, __GI___logf, __redirect_logf)
+__attribute__((visibility("hidden"))) __THROW;
 
-versioned_symbol (libm, __logf, logf, GLIBC_2_27);
-libm_alias_float_other (__log, log)
+versioned_symbol(libm, __logf, logf, GLIBC_2_27);
+libm_alias_float_other(__log, log)
 #else
-libm_alias_float (__log, log)
+libm_alias_float(__log, log)
 #endif
 
-strong_alias (__logf, __ieee754_logf)
-libm_alias_finite (__ieee754_logf, __logf)
+strong_alias(__logf, __ieee754_logf)
+libm_alias_finite(__ieee754_logf, __logf)
 
 #define __logf __logf_ia32
 #include <sysdeps/ieee754/flt-32/e_logf.c>

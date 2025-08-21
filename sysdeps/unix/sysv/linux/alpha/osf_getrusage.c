@@ -24,16 +24,16 @@
 #include <sys/resource.h>
 #include <tv32-compat.h>
 
-int
-__getrusage_tv32 (int who, struct __rusage32 *usage32)
+int __getrusage_tv32(int who, struct __rusage32 *usage32)
 {
-  struct rusage usage;
-  if (__getrusage (who, &usage) == -1)
-    return -1;
+    struct rusage usage;
+    if (__getrusage(who, &usage) == -1) {
+        return -1;
+    }
 
-  rusage64_to_rusage32 (&usage, usage32);
-  return 0;
+    rusage64_to_rusage32(&usage, usage32);
+    return 0;
 }
 
-compat_symbol (libc, __getrusage_tv32, getrusage, GLIBC_2_0);
+compat_symbol(libc, __getrusage_tv32, getrusage, GLIBC_2_0);
 #endif

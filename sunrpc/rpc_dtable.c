@@ -1,4 +1,4 @@
-/* @(#)rpc_dtablesize.c	2.1 88/07/29 4.0 RPCSRC */
+/* @(#)rpc_dtablesize.c 2.1 88/07/29 4.0 RPCSRC */
 /*
  * Copyright (c) 2010, Oracle America, Inc.
  * Redistribution and use in source and binary forms, with or without
@@ -37,14 +37,14 @@
  * Cache the result of getdtablesize(), so we don't have to do an
  * expensive system call every time.
  */
-int
-_rpc_dtablesize (void)
+int _rpc_dtablesize(void)
 {
-  static int size;
+    static int size;
 
-  if (size == 0)
-    size = __getdtablesize ();
+    if (size == 0) {
+        size = __getdtablesize();
+    }
 
-  return size;
+    return size;
 }
-libc_hidden_nolink_sunrpc (_rpc_dtablesize, GLIBC_2_0)
+libc_hidden_nolink_sunrpc(_rpc_dtablesize, GLIBC_2_0)

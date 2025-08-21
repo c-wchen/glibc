@@ -18,15 +18,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void
-bye (void)
+void bye(void)
 {
-  puts ("Goodbye, cruel world....");
+    puts("Goodbye, cruel world....");
 }
 
-int
-main (void)
+int main(void)
 {
-  atexit (bye);
-  exit (EXIT_SUCCESS);
+    atexit(bye);
+    exit(EXIT_SUCCESS);
 }

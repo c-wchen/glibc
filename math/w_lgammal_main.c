@@ -27,26 +27,26 @@
 
 #if BUILD_LGAMMA
 long double
-LGFUNC (__lgammal) (long double x)
+LGFUNC(__lgammal)(long double x)
 {
-	long double y = CALL_LGAMMA (long double, __ieee754_lgammal_r, x);
-	if(__builtin_expect(!isfinite(y), 0)
-	   && isfinite(x) && _LIB_VERSION != _IEEE_)
-		return __kernel_standard_l(x, x,
-					   floorl(x)==x&&x<=0.0L
-					   ? 215 /* lgamma pole */
-					   : 214); /* lgamma overflow */
+    long double y = CALL_LGAMMA(long double, __ieee754_lgammal_r, x);
+    if (__builtin_expect(!isfinite(y), 0)
+        && isfinite(x) && _LIB_VERSION != _IEEE_)
+        return __kernel_standard_l(x, x,
+                                   floorl(x) == x && x <= 0.0L
+                                   ? 215 /* lgamma pole */
+                                   : 214); /* lgamma overflow */
 
-	return y;
+    return y;
 }
 # if USE_AS_COMPAT
-compat_symbol (libm, __lgammal_compat, lgammal, LGAMMA_OLD_VER);
+compat_symbol(libm, __lgammal_compat, lgammal, LGAMMA_OLD_VER);
 # else
-versioned_symbol (libm, __lgammal, lgammal, LGAMMA_NEW_VER);
-libm_alias_ldouble_other (__lgamma, lgamma)
+versioned_symbol(libm, __lgammal, lgammal, LGAMMA_NEW_VER);
+libm_alias_ldouble_other(__lgamma, lgamma)
 # endif
 # if GAMMA_ALIAS
-strong_alias (LGFUNC (__lgammal), __gammal)
-weak_alias (__gammal, gammal)
+strong_alias(LGFUNC(__lgammal), __gammal)
+weak_alias(__gammal, gammal)
 # endif
 #endif

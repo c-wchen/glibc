@@ -19,9 +19,9 @@
 #include <support/check.h>
 #include <support/xunistd.h>
 
-void
-support_check_stat_fd (const char *name, int fd, int result)
+void support_check_stat_fd(const char *name, int fd, int result)
 {
-  if (result != 0)
-    FAIL_EXIT1 ("%s (%d): %m", name, fd);
+    if (result != 0) {
+        FAIL_EXIT1("%s (%d): %m", name, fd);
+    }
 }

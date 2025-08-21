@@ -23,20 +23,19 @@
 #include <support/check.h>
 #include <support/xstdio.h>
 
-void
-xopen_memstream (struct xmemstream *stream)
+void xopen_memstream(struct xmemstream *stream)
 {
-  int old_errno = errno;
-  *stream = (struct xmemstream) {};
-  stream->out = open_memstream (&stream->buffer, &stream->length);
-  if (stream->out == NULL)
-    FAIL_EXIT1 ("open_memstream: %m");
-  errno = old_errno;
+    int old_errno = errno;
+    *stream = (struct xmemstream) {};
+    stream->out = open_memstream(&stream->buffer, &stream->length);
+    if (stream->out == NULL) {
+        FAIL_EXIT1("open_memstream: %m");
+    }
+    errno = old_errno;
 }
 
-void
-xfclose_memstream (struct xmemstream *stream)
+void xfclose_memstream(struct xmemstream *stream)
 {
-  xfclose (stream->out);
-  stream->out = NULL;
+    xfclose(stream->out);
+    stream->out = NULL;
 }

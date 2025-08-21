@@ -18,12 +18,12 @@
 #include <netdb.h>
 
 
-#define LOOKUP_TYPE	struct hostent
-#define FUNCTION_NAME	gethostbyaddr
-#define DATABASE_NAME	hosts
-#define ADD_PARAMS	const void *addr, socklen_t len, int type
-#define ADD_VARIABLES	addr, len, type
-#define BUFLEN		1024
-#define NEED_H_ERRNO	1
+#define LOOKUP_TYPE struct hostent
+#define FUNCTION_NAME   gethostbyaddr
+#define DATABASE_NAME   hosts
+#define ADD_PARAMS  const void *addr, socklen_t len, int type
+#define ADD_VARIABLES   addr, len, type
+#define BUFLEN      1024
+#define NEED_H_ERRNO    1
 
 #include "../nss/getXXbyYY.c"

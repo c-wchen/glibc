@@ -18,30 +18,31 @@
 
 #include <fenv_libc.h>
 
-int
-fesetexcept (int excepts)
+int fesetexcept(int excepts)
 {
-  fenv_union_t u, n;
+    fenv_union_t u, n;
 
-  u.fenv = fegetenv_register ();
-  n.l = (u.l
-	 | (excepts & FPSCR_STICKY_BITS)
-	 /* Turn FE_INVALID into FE_INVALID_SOFTWARE.  */
-	 | (excepts >> ((31 - FPSCR_VX) - (31 - FPSCR_VXSOFT))
-	    & FE_INVALID_SOFTWARE));
-  if (n.l != u.l)
-    {
-      if (n.l & fenv_exceptions_to_reg (excepts))
-	/* Setting the exception flags may trigger a trap.  ISO C 23 § 7.6.4.4
-	    does not allow it.   */
-	return -1;
+    u.fenv = fegetenv_register();
+    n.l = (u.l
+           | (excepts & FPSCR_STICKY_BITS)
+           /* Turn FE_INVALID into FE_INVALID_SOFTWARE.  */
+           | (excepts >> ((31 - FPSCR_VX) - (31 - FPSCR_VXSOFT))
+              & FE_INVALID_SOFTWARE));
+    if (n.l != u.l) {
+        if (n.l & fenv_exceptions_to_reg(excepts))
+            /* Setting the exception flags may trigger a trap.  ISO C 23 § 7.6.4.4
+                does not allow it.   */
+        {
+            return -1;
+        }
 
-      fesetenv_register (n.fenv);
+        fesetenv_register(n.fenv);
 
-      /* Deal with FE_INVALID_SOFTWARE not being implemented on some chips.  */
-      if (excepts & FE_INVALID)
-	feraiseexcept (FE_INVALID);
+        /* Deal with FE_INVALID_SOFTWARE not being implemented on some chips.  */
+        if (excepts & FE_INVALID) {
+            feraiseexcept(FE_INVALID);
+        }
     }
 
-  return 0;
+    return 0;
 }

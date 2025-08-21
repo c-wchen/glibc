@@ -22,15 +22,15 @@
 #include <hurd/fd.h>
 
 /* Get information about the file descriptor FD in BUF.  */
-int
-__fstat64 (int fd, struct stat64 *buf)
+int __fstat64(int fd, struct stat64 *buf)
 {
-  error_t err;
+    error_t err;
 
-  if (err = HURD_DPORT_USE (fd, __io_stat (port, buf)))
-    return __hurd_dfail (fd, err);
+    if (err = HURD_DPORT_USE(fd, __io_stat(port, buf))) {
+        return __hurd_dfail(fd, err);
+    }
 
-  return 0;
+    return 0;
 }
-hidden_def (__fstat64)
-weak_alias (__fstat64, fstat64)
+hidden_def(__fstat64)
+weak_alias(__fstat64, fstat64)

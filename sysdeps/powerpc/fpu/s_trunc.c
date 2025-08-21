@@ -21,15 +21,14 @@
 #include <libm-alias-double.h>
 #include <round_to_integer.h>
 
-double
-__trunc (double x)
+double __trunc(double x)
 {
 #ifdef _ARCH_PWR5X
-  return __builtin_trunc (x);
+    return __builtin_trunc(x);
 #else
-  return round_to_integer_double (TRUNC, x);
+    return round_to_integer_double(TRUNC, x);
 #endif
 }
 #ifndef __trunc
-libm_alias_double (__trunc, trunc)
+libm_alias_double(__trunc, trunc)
 #endif

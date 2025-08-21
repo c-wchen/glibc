@@ -21,9 +21,8 @@
 #endif
 
 #ifdef __USE_EXTERN_INLINES
-__extern_inline double
-__NTH (atof (const char *__nptr))
+__extern_inline double __NTH(atof(const char *__nptr))
 {
-  return strtod (__nptr, (char **) NULL);
+    return strtod(__nptr, (char **) NULL);
 }
 #endif /* Optimizing and Inlining.  */

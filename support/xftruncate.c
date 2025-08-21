@@ -19,9 +19,9 @@
 #include <support/check.h>
 #include <support/xunistd.h>
 
-void
-xftruncate (int fd, long long length)
+void xftruncate(int fd, long long length)
 {
-  if (ftruncate64 (fd, length) != 0)
-    FAIL_EXIT1 ("ftruncate64 (%d, %lld): %m", fd, length);
+    if (ftruncate64(fd, length) != 0) {
+        FAIL_EXIT1("ftruncate64 (%d, %lld): %m", fd, length);
+    }
 }

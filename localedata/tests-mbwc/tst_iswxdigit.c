@@ -7,4 +7,4 @@
 #include "tsp_common.c"
 #include "dat_iswxdigit.c"
 
-TST_FUNC_ISW (XDIGIT, xdigit);
+TST_FUNC_ISW(XDIGIT, xdigit);

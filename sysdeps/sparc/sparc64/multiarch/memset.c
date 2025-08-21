@@ -27,7 +27,7 @@
 # define SYMBOL_NAME memset
 # include "ifunc-memset.h"
 
-sparc_libc_ifunc_redirected (__redirect_memset, memset, IFUNC_SELECTOR)
-sparc_ifunc_redirected_hidden_def (__redirect_memset, memset)
+sparc_libc_ifunc_redirected(__redirect_memset, memset, IFUNC_SELECTOR)
+sparc_ifunc_redirected_hidden_def(__redirect_memset, memset)
 
 #endif

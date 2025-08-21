@@ -20,19 +20,20 @@
 #include <string.h>
 
 void
-Xprintf (buffer_puts_1) (struct Xprintf_buffer *buf, const CHAR_T *s)
+Xprintf(buffer_puts_1)(struct Xprintf_buffer *buf, const CHAR_T *s)
 {
-  if (__glibc_unlikely (Xprintf_buffer_has_failed (buf)))
-    return;
-
-  while (*s != 0)
-    {
-      if (buf->write_ptr == buf->write_end && !Xprintf_buffer_flush (buf))
+    if (__glibc_unlikely(Xprintf_buffer_has_failed(buf))) {
         return;
-      assert (buf->write_ptr != buf->write_end);
-      size_t to_copy = STRNLEN (s, buf->write_end - buf->write_ptr);
-      MEMCPY (buf->write_ptr, s, to_copy);
-      buf->write_ptr += to_copy;
-      s += to_copy;
+    }
+
+    while (*s != 0) {
+        if (buf->write_ptr == buf->write_end && !Xprintf_buffer_flush(buf)) {
+            return;
+        }
+        assert(buf->write_ptr != buf->write_end);
+        size_t to_copy = STRNLEN(s, buf->write_end - buf->write_ptr);
+        MEMCPY(buf->write_ptr, s, to_copy);
+        buf->write_ptr += to_copy;
+        s += to_copy;
     }
 }

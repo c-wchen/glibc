@@ -16,8 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-int
-tst_audit18bmod1_func (void)
+int tst_audit18bmod1_func(void)
 {
-  return 10;
+    return 10;
 }

@@ -19,26 +19,26 @@
 #include "pthreadP.h"
 #include <shlib-compat.h>
 
-int
-__pthread_rwlockattr_setkind_np (pthread_rwlockattr_t *attr, int pref)
+int __pthread_rwlockattr_setkind_np(pthread_rwlockattr_t *attr, int pref)
 {
-  struct pthread_rwlockattr *iattr;
+    struct pthread_rwlockattr *iattr;
 
-  if (pref != PTHREAD_RWLOCK_PREFER_READER_NP
-      && pref != PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP
-      && __builtin_expect  (pref != PTHREAD_RWLOCK_PREFER_WRITER_NP, 0))
-    return EINVAL;
+    if (pref != PTHREAD_RWLOCK_PREFER_READER_NP
+        && pref != PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP
+        && __builtin_expect(pref != PTHREAD_RWLOCK_PREFER_WRITER_NP, 0)) {
+        return EINVAL;
+    }
 
-  iattr = (struct pthread_rwlockattr *) attr;
+    iattr = (struct pthread_rwlockattr *) attr;
 
-  iattr->lockkind = pref;
+    iattr->lockkind = pref;
 
-  return 0;
+    return 0;
 }
-versioned_symbol (libc, __pthread_rwlockattr_setkind_np,
-                  pthread_rwlockattr_setkind_np, GLIBC_2_34);
+versioned_symbol(libc, __pthread_rwlockattr_setkind_np,
+                 pthread_rwlockattr_setkind_np, GLIBC_2_34);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1, GLIBC_2_34)
-compat_symbol (libpthread, __pthread_rwlockattr_setkind_np,
-               pthread_rwlockattr_setkind_np, GLIBC_2_1);
+compat_symbol(libpthread, __pthread_rwlockattr_setkind_np,
+              pthread_rwlockattr_setkind_np, GLIBC_2_1);
 #endif

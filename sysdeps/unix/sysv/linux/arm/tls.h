@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _LINUX_ARM_TLS_H
-#define _LINUX_ARM_TLS_H	1
+#define _LINUX_ARM_TLS_H    1
 
 /* Almost everything is OS-independent and common for all NPTL on ARM.  */
 #include <sysdeps/arm/nptl/tls.h>
@@ -31,8 +31,8 @@
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.  */
 # define TLS_INIT_TP(tcbp) \
-  ({ long int result_var;						\
-     result_var = INTERNAL_SYSCALL_CALL (set_tls, (tcbp));		\
+  ({ long int result_var;                       \
+     result_var = INTERNAL_SYSCALL_CALL (set_tls, (tcbp));      \
      !INTERNAL_SYSCALL_ERROR_P (result_var); })
 
 #endif /* __ASSEMBLER__ */

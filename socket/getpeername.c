@@ -20,12 +20,11 @@
 
 /* Put the address of the peer connected to socket FD into *ADDR
    (which is *LEN bytes long), and its actual length into *LEN.  */
-int
-getpeername (int fd, __SOCKADDR_ARG addr, socklen_t *len)
+int getpeername(int fd, __SOCKADDR_ARG addr, socklen_t *len)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
 
-stub_warning (getpeername)
+stub_warning(getpeername)

@@ -29,28 +29,30 @@
    If we couldn't generate a unique filename or the file couldn't
    be opened, NULL is returned.  */
 FILE *
-attribute_compat_text_section
-__old_tmpfile (void)
+attribute_compat_text_section __old_tmpfile(void)
 {
-  char buf[FILENAME_MAX];
-  int fd;
-  FILE *f;
+    char buf[FILENAME_MAX];
+    int fd;
+    FILE *f;
 
-  if (__path_search (buf, FILENAME_MAX, NULL, "tmpf", 0))
-    return NULL;
-  fd = __gen_tempname (buf, 0, 0, __GT_FILE);
-  if (fd < 0)
-    return NULL;
+    if (__path_search(buf, FILENAME_MAX, NULL, "tmpf", 0)) {
+        return NULL;
+    }
+    fd = __gen_tempname(buf, 0, 0, __GT_FILE);
+    if (fd < 0) {
+        return NULL;
+    }
 
-  /* Note that this relies on the Unix semantics that
-     a file is not really removed until it is closed.  */
-  (void) __unlink (buf);
+    /* Note that this relies on the Unix semantics that
+       a file is not really removed until it is closed.  */
+    (void) __unlink(buf);
 
-  if ((f = _IO_old_fdopen (fd, "w+b")) == NULL)
-    __close (fd);
+    if ((f = _IO_old_fdopen(fd, "w+b")) == NULL) {
+        __close(fd);
+    }
 
-  return f;
+    return f;
 }
 
-compat_symbol (libc, __old_tmpfile, tmpfile, GLIBC_2_0);
+compat_symbol(libc, __old_tmpfile, tmpfile, GLIBC_2_0);
 #endif

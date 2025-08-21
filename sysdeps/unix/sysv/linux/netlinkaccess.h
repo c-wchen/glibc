@@ -25,35 +25,33 @@
 #include <linux/rtnetlink.h>
 
 
-struct netlink_res
-{
-  struct netlink_res *next;
-  struct nlmsghdr *nlh;
-  size_t size;			/* Size of response.  */
-  uint32_t seq;			/* sequential number we used.  */
+struct netlink_res {
+    struct netlink_res *next;
+    struct nlmsghdr *nlh;
+    size_t size;          /* Size of response.  */
+    uint32_t seq;         /* sequential number we used.  */
 };
 
 
-struct netlink_handle
-{
-  int fd;			/* Netlink file descriptor.  */
-  pid_t pid;			/* Process ID.  */
-  uint32_t seq;			/* The sequence number we use currently.  */
-  struct netlink_res *nlm_list;	/* Pointer to list of responses.  */
-  struct netlink_res *end_ptr;	/* For faster append of new entries.  */
+struct netlink_handle {
+    int fd;           /* Netlink file descriptor.  */
+    pid_t pid;            /* Process ID.  */
+    uint32_t seq;         /* The sequence number we use currently.  */
+    struct netlink_res *nlm_list; /* Pointer to list of responses.  */
+    struct netlink_res *end_ptr;  /* For faster append of new entries.  */
 };
 
 
-extern int __netlink_open (struct netlink_handle *h) attribute_hidden;
-extern void __netlink_close (struct netlink_handle *h) attribute_hidden;
-extern void __netlink_free_handle (struct netlink_handle *h)
-     attribute_hidden;
-extern int __netlink_request (struct netlink_handle *h, int type)
-     attribute_hidden;
+extern int __netlink_open(struct netlink_handle *h) attribute_hidden;
+extern void __netlink_close(struct netlink_handle *h) attribute_hidden;
+extern void __netlink_free_handle(struct netlink_handle *h)
+attribute_hidden;
+extern int __netlink_request(struct netlink_handle *h, int type)
+attribute_hidden;
 
 /* Terminate the process if RESULT is an invalid recvmsg result for
    the netlink socket FD.  */
-void __netlink_assert_response (int fd, ssize_t result);
-libc_hidden_proto (__netlink_assert_response)
+void __netlink_assert_response(int fd, ssize_t result);
+libc_hidden_proto(__netlink_assert_response)
 
 #endif /* netlinkaccess.h */

@@ -23,17 +23,16 @@
 
 #if LIBM_SVID_COMPAT
 /* wrapper atanh */
-double
-__atanh (double x)
+double __atanh(double x)
 {
-  if (__builtin_expect (isgreaterequal (fabs (x), 1.0), 0)
-      && _LIB_VERSION != _IEEE_)
-    return __kernel_standard (x, x,
-			      fabs (x) > 1.0
-			      ? 30		/* atanh(|x|>1) */
-			      : 31);		/* atanh(|x|==1) */
+    if (__builtin_expect(isgreaterequal(fabs(x), 1.0), 0)
+        && _LIB_VERSION != _IEEE_)
+        return __kernel_standard(x, x,
+                                 fabs(x) > 1.0
+                                 ? 30      /* atanh(|x|>1) */
+                                 : 31);        /* atanh(|x|==1) */
 
-  return __ieee754_atanh (x);
+    return __ieee754_atanh(x);
 }
-libm_alias_double (__atanh, atanh)
+libm_alias_double(__atanh, atanh)
 #endif

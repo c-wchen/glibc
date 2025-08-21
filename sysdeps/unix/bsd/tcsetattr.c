@@ -31,31 +31,28 @@
 
 
 /* Set the state of FD to *TERMIOS_P.  */
-int
-__tcsetattr (int fd, int optional_actions, const struct termios *termios_p)
+int __tcsetattr(int fd, int optional_actions, const struct termios *termios_p)
 {
-  struct termios myt;
+    struct termios myt;
 
-  if (optional_actions & TCSASOFT)
-    {
-      myt = *termios_p;
-      myt.c_cflag |= CIGNORE;
-      termios_p = &myt;
-      optional_actions &= ~TCSASOFT;
+    if (optional_actions & TCSASOFT) {
+        myt = *termios_p;
+        myt.c_cflag |= CIGNORE;
+        termios_p = &myt;
+        optional_actions &= ~TCSASOFT;
     }
 
-  switch (optional_actions)
-    {
-    case TCSANOW:
-      return __ioctl (fd, TIOCSETA, termios_p);
+    switch (optional_actions) {
+        case TCSANOW:
+            return __ioctl(fd, TIOCSETA, termios_p);
 
-    case TCSADRAIN:
-      return __ioctl (fd, TIOCSETAW, termios_p);
+        case TCSADRAIN:
+            return __ioctl(fd, TIOCSETAW, termios_p);
 
-    default:
-      return __ioctl (fd, TIOCSETAF, termios_p);
+        default:
+            return __ioctl(fd, TIOCSETAF, termios_p);
     }
 }
 
-libc_hidden_def (__tcsetattr)
-weak_alias (__tcsetattr, tcsetattr)
+libc_hidden_def(__tcsetattr)
+weak_alias(__tcsetattr, tcsetattr)

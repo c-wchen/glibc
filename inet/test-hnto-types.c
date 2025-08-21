@@ -23,17 +23,16 @@ int i;
 uint16_t u16;
 uint32_t u32;
 
-int
-do_test (void)
+int do_test(void)
 {
-  /* This is a compilation test.  */
-  extern __typeof (htons (i)) u16;
-  extern __typeof (ntohs (i)) u16;
-  extern __typeof (htonl (i)) u32;
-  extern __typeof (ntohl (i)) u32;
-  (void) u16;
-  (void) u32;
-  return 0;
+    /* This is a compilation test.  */
+    extern __typeof(htons(i)) u16;
+    extern __typeof(ntohs(i)) u16;
+    extern __typeof(htonl(i)) u32;
+    extern __typeof(ntohl(i)) u32;
+    (void) u16;
+    (void) u32;
+    return 0;
 }
 
 #include <support/test-driver.c>

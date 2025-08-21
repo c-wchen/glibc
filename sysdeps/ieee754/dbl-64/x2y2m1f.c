@@ -24,9 +24,8 @@
    It is given that 1 > X >= Y >= epsilon / 2, and that X^2 + Y^2 >=
    0.5.  */
 
-float
-__x2y2m1f (float x, float y)
+float __x2y2m1f(float x, float y)
 {
-  double dx = x, dy = y;
-  return (float) ((dx - 1) * (dx + 1) + dy * dy);
+    double dx = x, dy = y;
+    return (float)((dx - 1) * (dx + 1) + dy * dy);
 }

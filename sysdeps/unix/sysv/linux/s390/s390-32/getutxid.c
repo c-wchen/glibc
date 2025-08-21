@@ -26,4 +26,4 @@
 #include "login/getutxid.c"
 #undef getutxid
 
-default_symbol_version (__getutxid, getutxid, UTMP_COMPAT_BASE);
+default_symbol_version(__getutxid, getutxid, UTMP_COMPAT_BASE);

@@ -24,112 +24,110 @@
 
 #include <support/check.h>
 
-#define CLEAR_VARGS							\
-  va_start (args, format);						\
-  ldptr = va_arg (args, long double *);					\
-  fptr = va_arg (args, float *);					\
-  *ldptr = 0;								\
-  *fptr = 0;								\
+#define CLEAR_VARGS                         \
+  va_start (args, format);                      \
+  ldptr = va_arg (args, long double *);                 \
+  fptr = va_arg (args, float *);                    \
+  *ldptr = 0;                               \
+  *fptr = 0;                                \
   va_end (args);
 
-#define CHECK_VARGS							\
-  va_start (args, format);						\
-  ldptr = va_arg (args, long double *);					\
-  fptr = va_arg (args, float *);					\
-  va_end (args);							\
-  if (*ldptr == -1 && *fptr == -2 && ret == 2)				\
-    printf ("OK");							\
-  else									\
-    printf ("ERROR (%Lf %f %d)", *ldptr, *fptr, ret);			\
+#define CHECK_VARGS                         \
+  va_start (args, format);                      \
+  ldptr = va_arg (args, long double *);                 \
+  fptr = va_arg (args, float *);                    \
+  va_end (args);                            \
+  if (*ldptr == -1 && *fptr == -2 && ret == 2)              \
+    printf ("OK");                          \
+  else                                  \
+    printf ("ERROR (%Lf %f %d)", *ldptr, *fptr, ret);           \
   printf ("\n");
 
-#define CLEAR_VALUE							\
-  ld = 0;								\
+#define CLEAR_VALUE                         \
+  ld = 0;                               \
   f = 0;
 
-#define CHECK_VALUE							\
-  if (ld == -1 && f == -2 && ret == 2)					\
-    printf ("OK");							\
-  else									\
-    printf ("ERROR (%Lf %f %d)", ld, f, ret);				\
+#define CHECK_VALUE                         \
+  if (ld == -1 && f == -2 && ret == 2)                  \
+    printf ("OK");                          \
+  else                                  \
+    printf ("ERROR (%Lf %f %d)", ld, f, ret);               \
   printf ("\n");
 
-static void
-do_test_call (FILE *stream, CHAR *string, const CHAR *format, ...)
+static void do_test_call(FILE *stream, CHAR *string, const CHAR *format, ...)
 {
-  float f;
-  long double ld;
-  float *fptr;
-  long double *ldptr;
-  va_list args;
-  int ret;
+    float f;
+    long double ld;
+    float *fptr;
+    long double *ldptr;
+    va_list args;
+    int ret;
 
-  CLEAR_VALUE
-  printf ("fscanf: ");
-  ret = FSCANF (stream, format, &ld, &f);
-  CHECK_VALUE
+    CLEAR_VALUE
+    printf("fscanf: ");
+    ret = FSCANF(stream, format, &ld, &f);
+    CHECK_VALUE
 
-  CLEAR_VALUE
-  printf ("scanf: ");
-  ret = SCANF (format, &ld, &f);
-  CHECK_VALUE
+    CLEAR_VALUE
+    printf("scanf: ");
+    ret = SCANF(format, &ld, &f);
+    CHECK_VALUE
 
-  CLEAR_VALUE
-  printf ("sscanf: ");
-  ret = SSCANF (string, format, &ld, &f);
-  CHECK_VALUE
+    CLEAR_VALUE
+    printf("sscanf: ");
+    ret = SSCANF(string, format, &ld, &f);
+    CHECK_VALUE
 
-  CLEAR_VARGS
-  printf ("vfscanf: ");
-  va_start (args, format);
-  ret = VFSCANF (stream, format, args);
-  va_end (args);
-  CHECK_VARGS
+    CLEAR_VARGS
+    printf("vfscanf: ");
+    va_start(args, format);
+    ret = VFSCANF(stream, format, args);
+    va_end(args);
+    CHECK_VARGS
 
-  CLEAR_VARGS
-  printf ("vscanf: ");
-  va_start (args, format);
-  ret = VSCANF (format, args);
-  va_end (args);
-  CHECK_VARGS
+    CLEAR_VARGS
+    printf("vscanf: ");
+    va_start(args, format);
+    ret = VSCANF(format, args);
+    va_end(args);
+    CHECK_VARGS
 
-  CLEAR_VARGS
-  printf ("vsscanf: ");
-  va_start (args, format);
-  ret = VSSCANF (string, format, args);
-  va_end (args);
-  CHECK_VARGS
+    CLEAR_VARGS
+    printf("vsscanf: ");
+    va_start(args, format);
+    ret = VSSCANF(string, format, args);
+    va_end(args);
+    CHECK_VARGS
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  CHAR string[256];
-  float f;
-  long double ld;
+    CHAR string[256];
+    float f;
+    long double ld;
 
-  /* Scan in decimal notation.  */
-  STRCPY (string,
-	  L ("-1.0 -2.0\n")
-	  L ("-1.0 -2.0\n") );
-  do_test_call (stdin, string, L("%Lf %f"), &ld, &f);
+    /* Scan in decimal notation.  */
+    STRCPY(string,
+           L("-1.0 -2.0\n")
+           L("-1.0 -2.0\n"));
+    do_test_call(stdin, string, L("%Lf %f"), &ld, &f);
 
-  /* Scan in hexadecimal notation.  */
-  STRCPY (string,
-	  L ("-0x1.0p+0 -0x2.0p+0\n")
-	  L ("-0x1.0p+0 -0x2.0p+0\n") );
-  /* For ISO C99, scan the single-precision value with "%as" to test
-     that __isoc99_*scanf ignores the 's'.  For DEPRECATED_SCANF, do not
-     use "%as", because that would try to scan a string and allocate
-     space for it.  */
+    /* Scan in hexadecimal notation.  */
+    STRCPY(string,
+           L("-0x1.0p+0 -0x2.0p+0\n")
+           L("-0x1.0p+0 -0x2.0p+0\n"));
+    /* For ISO C99, scan the single-precision value with "%as" to test
+       that __isoc99_*scanf ignores the 's'.  For DEPRECATED_SCANF, do not
+       use "%as", because that would try to scan a string and allocate
+       space for it.  */
 #if __GLIBC_USE (DEPRECATED_SCANF)
 # define FMT "%La %a"
 #else
 # define FMT "%La %as"
 #endif
-  do_test_call (stdin, string, L(FMT), &ld, &f);
+    do_test_call(stdin, string, L(FMT), &ld, &f);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

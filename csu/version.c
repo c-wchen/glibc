@@ -24,53 +24,49 @@ static const char __libc_release[] = RELEASE;
 static const char __libc_version[] = VERSION;
 
 static const char banner[] =
-"GNU C Library "PKGVERSION RELEASE" release version "VERSION".\n\
+    "GNU C Library "PKGVERSION RELEASE" release version "VERSION".\n\
 Copyright (C) 2025 Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.\n\
 There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A\n\
 PARTICULAR PURPOSE.\n\
 Compiled by GNU CC version "__VERSION__".\n"
 #ifdef LIBC_ABIS_STRING
-LIBC_ABIS_STRING
+    LIBC_ABIS_STRING
 #endif
 #ifdef __LINUX_KERNEL_VERSION_STR
-"Minimum supported kernel: " __LINUX_KERNEL_VERSION_STR "\n"
+    "Minimum supported kernel: " __LINUX_KERNEL_VERSION_STR "\n"
 #endif
-"For bug reporting instructions, please see:\n\
+    "For bug reporting instructions, please see:\n\
 "REPORT_BUGS_TO".\n";
 
 #include <unistd.h>
 
-extern void __libc_print_version (void) attribute_hidden;
-void
-__libc_print_version (void)
+extern void __libc_print_version(void) attribute_hidden;
+void __libc_print_version(void)
 {
-  __write (STDOUT_FILENO, banner, sizeof banner - 1);
+    __write(STDOUT_FILENO, banner, sizeof banner - 1);
 }
 
-extern const char *__gnu_get_libc_release (void);
-const char *
-__gnu_get_libc_release (void)
+extern const char *__gnu_get_libc_release(void);
+const char *__gnu_get_libc_release(void)
 {
-  return __libc_release;
+    return __libc_release;
 }
-weak_alias (__gnu_get_libc_release, gnu_get_libc_release)
+weak_alias(__gnu_get_libc_release, gnu_get_libc_release)
 
-extern const char *__gnu_get_libc_version (void);
-const char *
-__gnu_get_libc_version (void)
+extern const char *__gnu_get_libc_version(void);
+const char *__gnu_get_libc_version(void)
 {
-  return __libc_version;
+    return __libc_version;
 }
-weak_alias (__gnu_get_libc_version, gnu_get_libc_version)
+weak_alias(__gnu_get_libc_version, gnu_get_libc_version)
 
 /* This function is the entry point for the shared object.
    Running the library as a program will get here.  */
 
-extern void __libc_main (void) __attribute__ ((noreturn));
-void
-__libc_main (void)
+extern void __libc_main(void) __attribute__((noreturn));
+void __libc_main(void)
 {
-  __libc_print_version ();
-  _exit (0);
+    __libc_print_version();
+    _exit(0);
 }

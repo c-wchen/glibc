@@ -21,7 +21,7 @@
 #include_next <kernel-features.h>
 
 #define __ASSUME_RECV_SYSCALL   1
-#define __ASSUME_SEND_SYSCALL	1
+#define __ASSUME_SEND_SYSCALL   1
 
 /* Support for the execveat syscall was added in 4.0.  */
 #if __LINUX_KERNEL_VERSION < 0x040000

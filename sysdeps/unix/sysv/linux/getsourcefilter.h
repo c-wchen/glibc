@@ -17,4 +17,4 @@
    <https://www.gnu.org/licenses/>.  */
 
 /* Defined in getsourcefilter.c.  */
-extern int __get_sol (int af, socklen_t len) attribute_hidden;
+extern int __get_sol(int af, socklen_t len) attribute_hidden;

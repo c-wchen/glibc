@@ -10,14 +10,12 @@
 #endif
 
 /* Conversion state information.  */
-typedef struct
-{
-  int __count;
-  union
-  {
-    __WINT_TYPE__ __wch;
-    char __wchb[4];
-  } __value;		/* Value so far.  */
+typedef struct {
+    int __count;
+    union {
+        __WINT_TYPE__ __wch;
+        char __wchb[4];
+    } __value;        /* Value so far.  */
 } __mbstate_t;
 
 #endif

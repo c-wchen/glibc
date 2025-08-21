@@ -31,31 +31,30 @@ enum { iterations = 5000 };
 static uid_t uid;
 
 /* Start routine for the threads.  */
-static void *
-setuid_thread (void *closure)
+static void *setuid_thread(void *closure)
 {
-  TEST_COMPARE (setuid (uid), 0);
-  return NULL;
+    TEST_COMPARE(setuid(uid), 0);
+    return NULL;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* The setxid machinery is still invoked even if the UID is
-     unchanged.  (The kernel might reset other credentials as part of
-     the system call.)  */
-  uid = getuid ();
+    /* The setxid machinery is still invoked even if the UID is
+       unchanged.  (The kernel might reset other credentials as part of
+       the system call.)  */
+    uid = getuid();
 
-  for (int i = 0; i < iterations; ++i)
-    {
-      pthread_t thread_ids[threads];
-      for (int j = 0; j < threads; ++j)
-        thread_ids[j] = xpthread_create (NULL, setuid_thread, NULL);
-      for (int j = 0; j < threads; ++j)
-        xpthread_join (thread_ids[j]);
+    for (int i = 0; i < iterations; ++i) {
+        pthread_t thread_ids[threads];
+        for (int j = 0; j < threads; ++j) {
+            thread_ids[j] = xpthread_create(NULL, setuid_thread, NULL);
+        }
+        for (int j = 0; j < threads; ++j) {
+            xpthread_join(thread_ids[j]);
+        }
     }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

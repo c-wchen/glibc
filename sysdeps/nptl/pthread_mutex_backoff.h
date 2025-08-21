@@ -18,18 +18,16 @@
 #ifndef _PTHREAD_MUTEX_BACKOFF_H
 #define _PTHREAD_MUTEX_BACKOFF_H 1
 
-static inline unsigned int
-get_jitter (void)
+static inline unsigned int get_jitter(void)
 {
-  /* Arch dependent random jitter, return 0 disables random.  */
-  return 0;
+    /* Arch dependent random jitter, return 0 disables random.  */
+    return 0;
 }
 
-static inline int
-get_next_backoff (int backoff)
+static inline int get_next_backoff(int backoff)
 {
-  /* Next backoff, return 1 disables mutex backoff.  */
-  return 1;
+    /* Next backoff, return 1 disables mutex backoff.  */
+    return 1;
 }
 
 #endif

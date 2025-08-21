@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _HP_TIMING_H
-#define _HP_TIMING_H	1
+#define _HP_TIMING_H    1
 
 #include <time.h>
 #include <stdint.h>
@@ -26,9 +26,9 @@
 
 /* Don't use inline timer in ld.so.  */
 #if IS_IN(rtld)
-# define HP_TIMING_INLINE	(0)
+# define HP_TIMING_INLINE   (0)
 #else
-# define HP_TIMING_INLINE	(1)
+# define HP_TIMING_INLINE   (1)
 #endif
 
 typedef uint64_t hp_timing_t;
@@ -38,10 +38,10 @@ typedef uint64_t hp_timing_t;
 
 /* Compute elapsed time in nanoseconds.  */
 #undef HP_TIMING_DIFF
-#define HP_TIMING_DIFF(Diff, Start, End)			\
-({  hp_timing_t freq;						\
-    __asm__ __volatile__ ("mrs %0, cntfrq_el0" : "=r" (freq));	\
+#define HP_TIMING_DIFF(Diff, Start, End)            \
+({  hp_timing_t freq;                       \
+    __asm__ __volatile__ ("mrs %0, cntfrq_el0" : "=r" (freq));  \
    (Diff) = (((End) - (Start)) * UINT64_C(1000000000 >> 6)) / (freq >> 6); \
 })
 
-#endif	/* hp-timing.h */
+#endif  /* hp-timing.h */

@@ -22,18 +22,20 @@
 #include <math-underflow.h>
 
 FLOAT
-M_DECL_FUNC (__atanpi) (FLOAT x)
+M_DECL_FUNC(__atanpi)(FLOAT x)
 {
-  FLOAT ret = math_narrow_eval (M_SUF (__atan) (x) / M_MLIT (M_PI));
-  if (__glibc_likely (!isnan (x)))
-    math_check_force_underflow (ret);
-  if (x != 0 && ret == 0)
-    __set_errno (ERANGE);
-  /* Ensure that rounding away from zero for both atan and the
-     division cannot yield a return value from atanpi with absolute
-     value greater than 0.5.  */
-  return (isgreater (M_FABS (ret), M_LIT (0.5))
-	  ? M_COPYSIGN (M_LIT (0.5), ret)
-	  : ret);
+    FLOAT ret = math_narrow_eval(M_SUF(__atan)(x) / M_MLIT(M_PI));
+    if (__glibc_likely(!isnan(x))) {
+        math_check_force_underflow(ret);
+    }
+    if (x != 0 && ret == 0) {
+        __set_errno(ERANGE);
+    }
+    /* Ensure that rounding away from zero for both atan and the
+       division cannot yield a return value from atanpi with absolute
+       value greater than 0.5.  */
+    return (isgreater(M_FABS(ret), M_LIT(0.5))
+            ? M_COPYSIGN(M_LIT(0.5), ret)
+            : ret);
 }
-declare_mgen_alias (__atanpi, atanpi);
+declare_mgen_alias(__atanpi, atanpi);

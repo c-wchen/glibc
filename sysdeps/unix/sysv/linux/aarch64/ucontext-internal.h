@@ -18,7 +18,7 @@
 
 #define SP_ALIGN_SIZE       15
 
-#define SP_ALIGN_MASK	   ~15
+#define SP_ALIGN_MASK      ~15
 
 /* Size of an X register in bytes. */
 #define SZREG                8

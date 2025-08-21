@@ -20,45 +20,44 @@
 /* Return the offset of the struct r_debug before relocation.  */
 
 static inline EW(Addr)
-E(r_debug_offset) (EW(Dyn) *d, int fd, EW(Addr) offset)
+E(r_debug_offset)(EW(Dyn) *d, int fd, EW(Addr) offset)
 {
-  switch (d->d_tag)
-    {
-    case DT_MIPS_RLD_MAP_REL:
-      offset += d->d_un.d_val;
-      break;
-    case DT_MIPS_RLD_MAP:
-      offset = d->d_un.d_ptr;
-      break;
-    default:
-      return 0;
+    switch (d->d_tag) {
+        case DT_MIPS_RLD_MAP_REL:
+            offset += d->d_un.d_val;
+            break;
+        case DT_MIPS_RLD_MAP:
+            offset = d->d_un.d_ptr;
+            break;
+        default:
+            return 0;
     }
 
-  if (pread (fd, &offset, sizeof (offset), offset) != sizeof (offset))
-    return 0;
+    if (pread(fd, &offset, sizeof(offset), offset) != sizeof(offset)) {
+        return 0;
+    }
 
-  return offset;
+    return offset;
 }
 #else
 /* Return the address of the struct r_debug after relocation.  */
 
 static inline EW(Addr)
-E(r_debug_address) (EW(Dyn) *d)
+E(r_debug_address)(EW(Dyn) *d)
 {
-  EW(Addr) ptr;
+    EW(Addr) ptr;
 
-  switch (d->d_tag)
-    {
-    case DT_MIPS_RLD_MAP_REL:
-      ptr = ((EW(Addr)) d) + d->d_un.d_val;
-      break;
-    case DT_MIPS_RLD_MAP:
-      ptr = d->d_un.d_ptr;
-      break;
-    default:
-      return 0;
+    switch (d->d_tag) {
+        case DT_MIPS_RLD_MAP_REL:
+            ptr = ((EW(Addr)) d) + d->d_un.d_val;
+            break;
+        case DT_MIPS_RLD_MAP:
+            ptr = d->d_un.d_ptr;
+            break;
+        default:
+            return 0;
     }
 
-  return *(EW(Addr) *) ptr;
+    return *(EW(Addr) *) ptr;
 }
 #endif

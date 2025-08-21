@@ -20,10 +20,9 @@
 #define _MACHINE_SP_H
 
 /* Return the current stack pointer.  */
-static inline uintptr_t
-__thread_stack_pointer (void)
+static inline uintptr_t __thread_stack_pointer(void)
 {
-  return (uintptr_t) CURRENT_STACK_FRAME;
+    return (uintptr_t) CURRENT_STACK_FRAME;
 }
 
-#endif	/* machine-sp.h */
+#endif  /* machine-sp.h */

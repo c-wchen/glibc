@@ -19,23 +19,23 @@
 #include <link.h>
 #include "thread_dbP.h"
 
-td_err_e
-td_thr_tls_get_addr (const td_thrhandle_t *th,
-		     psaddr_t map_address, size_t offset, psaddr_t *address)
+td_err_e td_thr_tls_get_addr(const td_thrhandle_t *th,
+                             psaddr_t map_address, size_t offset, psaddr_t *address)
 {
-  td_err_e err;
-  psaddr_t modid;
+    td_err_e err;
+    psaddr_t modid;
 
-  /* Get the TLS module ID from the `struct link_map' in the inferior.  */
-  err = DB_GET_FIELD (modid, th->th_ta_p, map_address, link_map,
-		      l_tls_modid, 0);
-  if (err == TD_NOCAPAB)
-    return TD_NOAPLIC;
-  if (err == TD_OK)
-    {
-      err = td_thr_tlsbase (th, (uintptr_t) modid, address);
-      if (err == TD_OK)
-	*address += offset;
+    /* Get the TLS module ID from the `struct link_map' in the inferior.  */
+    err = DB_GET_FIELD(modid, th->th_ta_p, map_address, link_map,
+                       l_tls_modid, 0);
+    if (err == TD_NOCAPAB) {
+        return TD_NOAPLIC;
     }
-  return err;
+    if (err == TD_OK) {
+        err = td_thr_tlsbase(th, (uintptr_t) modid, address);
+        if (err == TD_OK) {
+            *address += offset;
+        }
+    }
+    return err;
 }

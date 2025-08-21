@@ -28,57 +28,66 @@ static cnd_t cond;
 /* Mutex needed to signal and wait threads.  */
 static mtx_t mutex;
 
-static int
-signal_parent (void *arg)
+static int signal_parent(void *arg)
 {
-  /* Acquire the lock so that cnd_signal does not run until
-     cnd_timedwait has been called.  */
-  if (mtx_lock (&mutex) != thrd_success)
-    FAIL_EXIT1 ("mtx_lock failed");
-  if (cnd_signal (&cond) != thrd_success)
-    FAIL_EXIT1 ("cnd_signal failed");
-  if (mtx_unlock (&mutex) != thrd_success)
-    FAIL_EXIT1 ("mtx_unlock");
+    /* Acquire the lock so that cnd_signal does not run until
+       cnd_timedwait has been called.  */
+    if (mtx_lock(&mutex) != thrd_success) {
+        FAIL_EXIT1("mtx_lock failed");
+    }
+    if (cnd_signal(&cond) != thrd_success) {
+        FAIL_EXIT1("cnd_signal failed");
+    }
+    if (mtx_unlock(&mutex) != thrd_success) {
+        FAIL_EXIT1("mtx_unlock");
+    }
 
-  thrd_exit (thrd_success);
+    thrd_exit(thrd_success);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  thrd_t id;
-  struct timespec w_time;
+    thrd_t id;
+    struct timespec w_time;
 
-  if (cnd_init (&cond) != thrd_success)
-    FAIL_EXIT1 ("cnd_init failed");
-  if (mtx_init (&mutex, mtx_plain) != thrd_success)
-    FAIL_EXIT1 ("mtx_init failed");
-  if (mtx_lock (&mutex) != thrd_success)
-    FAIL_EXIT1 ("mtx_lock failed");
+    if (cnd_init(&cond) != thrd_success) {
+        FAIL_EXIT1("cnd_init failed");
+    }
+    if (mtx_init(&mutex, mtx_plain) != thrd_success) {
+        FAIL_EXIT1("mtx_init failed");
+    }
+    if (mtx_lock(&mutex) != thrd_success) {
+        FAIL_EXIT1("mtx_lock failed");
+    }
 
-  if (clock_gettime (CLOCK_REALTIME, &w_time) != 0)
-    FAIL_EXIT1 ("clock_gettime failed");
+    if (clock_gettime(CLOCK_REALTIME, &w_time) != 0) {
+        FAIL_EXIT1("clock_gettime failed");
+    }
 
-  /* This needs to be sufficiently long to prevent the cnd_timedwait
-     call from timing out.  */
-  w_time.tv_sec += 3600;
+    /* This needs to be sufficiently long to prevent the cnd_timedwait
+       call from timing out.  */
+    w_time.tv_sec += 3600;
 
-  if (thrd_create (&id, signal_parent, NULL) != thrd_success)
-    FAIL_EXIT1 ("thrd_create failed");
+    if (thrd_create(&id, signal_parent, NULL) != thrd_success) {
+        FAIL_EXIT1("thrd_create failed");
+    }
 
-  if (cnd_timedwait (&cond, &mutex, &w_time) != thrd_success)
-    FAIL_EXIT1 ("cnd_timedwait failed");
+    if (cnd_timedwait(&cond, &mutex, &w_time) != thrd_success) {
+        FAIL_EXIT1("cnd_timedwait failed");
+    }
 
-  if (thrd_join (id, NULL) != thrd_success)
-    FAIL_EXIT1 ("thrd_join failed");
+    if (thrd_join(id, NULL) != thrd_success) {
+        FAIL_EXIT1("thrd_join failed");
+    }
 
-  if (mtx_unlock (&mutex) != thrd_success)
-    FAIL_EXIT1 ("mtx_unlock");
+    if (mtx_unlock(&mutex) != thrd_success) {
+        FAIL_EXIT1("mtx_unlock");
+    }
 
-  mtx_destroy (&mutex);
-  cnd_destroy (&cond);
+    mtx_destroy(&mutex);
+    cnd_destroy(&cond);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

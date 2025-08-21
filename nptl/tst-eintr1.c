@@ -27,38 +27,35 @@
 #include "eintr.c"
 
 
-static void *
-tf2 (void *arg)
+static void *tf2(void *arg)
 {
-  return arg;
+    return arg;
 }
 
 
-static void *
-tf1 (void *arg)
+static void *tf1(void *arg)
 {
-  while (1)
-    {
-      pthread_t th = xpthread_create (NULL, tf2, NULL);
-      xpthread_join (th);
+    while (1) {
+        pthread_t th = xpthread_create(NULL, tf2, NULL);
+        xpthread_join(th);
     }
-  return NULL;
+    return NULL;
 }
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  setup_eintr (SIGUSR1, NULL);
+    setup_eintr(SIGUSR1, NULL);
 
-  int i;
-  for (i = 0; i < 10; ++i)
-    xpthread_create (NULL, tf1, NULL);
+    int i;
+    for (i = 0; i < 10; ++i) {
+        xpthread_create(NULL, tf1, NULL);
+    }
 
-  delayed_exit (3);
-  /* This call must never return.  */
-  (void) tf1 (NULL);
-  return 1;
+    delayed_exit(3);
+    /* This call must never return.  */
+    (void) tf1(NULL);
+    return 1;
 }
 
 #include <support/test-driver.c>

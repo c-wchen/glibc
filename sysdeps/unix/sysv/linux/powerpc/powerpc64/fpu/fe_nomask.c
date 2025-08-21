@@ -23,16 +23,15 @@
 #include <sys/prctl.h>
 #include <shlib-compat.h>
 
-const fenv_t *
-__fe_nomask_env_priv (void)
+const fenv_t *__fe_nomask_env_priv(void)
 {
 #if defined PR_SET_FPEXC && defined PR_FP_EXC_PRECISE
-  INTERNAL_SYSCALL_CALL (prctl, PR_SET_FPEXC, PR_FP_EXC_PRECISE);
+    INTERNAL_SYSCALL_CALL(prctl, PR_SET_FPEXC, PR_FP_EXC_PRECISE);
 #else
-  __set_errno (ENOSYS);
+    __set_errno(ENOSYS);
 #endif
-  return FE_ENABLED_ENV;
+    return FE_ENABLED_ENV;
 }
 #if SHLIB_COMPAT (libm, GLIBC_2_3, GLIBC_2_19)
-compat_symbol (libm, __fe_nomask_env_priv, __fe_nomask_env, GLIBC_2_3);
+compat_symbol(libm, __fe_nomask_env_priv, __fe_nomask_env, GLIBC_2_3);
 #endif

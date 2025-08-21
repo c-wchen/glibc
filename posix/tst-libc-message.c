@@ -22,27 +22,25 @@
 #include <support/check.h>
 #include <support/capture_subprocess.h>
 
-static _Noreturn void
-run_libc_message (void *closure)
+static _Noreturn void run_libc_message(void *closure)
 {
-  /* We only support 4 arguments.  Call with 5 to trigger failure.  */
-  __libc_message_impl ("%s %s %s %s %s\n", "1", "2", "3", "4", "5");
-  __builtin_unreachable ();
+    /* We only support 4 arguments.  Call with 5 to trigger failure.  */
+    __libc_message_impl("%s %s %s %s %s\n", "1", "2", "3", "4", "5");
+    __builtin_unreachable();
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  struct support_capture_subprocess result
-    = support_capture_subprocess (run_libc_message, NULL);
-  support_capture_subprocess_check (&result, "libc_message", -SIGABRT,
-				    sc_allow_stderr);
+    struct support_capture_subprocess result
+        = support_capture_subprocess(run_libc_message, NULL);
+    support_capture_subprocess_check(&result, "libc_message", -SIGABRT,
+                                     sc_allow_stderr);
 
-  TEST_COMPARE_STRING (result.err.buffer, IOVEC_MAX_ERR_MSG);
+    TEST_COMPARE_STRING(result.err.buffer, IOVEC_MAX_ERR_MSG);
 
-  support_capture_subprocess_free (&result);
+    support_capture_subprocess_free(&result);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

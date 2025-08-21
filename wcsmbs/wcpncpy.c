@@ -23,17 +23,17 @@
 
 /* Copy no more than N wide-characters of SRC to DEST, returning the
    address of the last character written into DEST.  */
-wchar_t *
-__wcpncpy (wchar_t *dest, const wchar_t *src, size_t n)
+wchar_t *__wcpncpy(wchar_t *dest, const wchar_t *src, size_t n)
 {
-  size_t size = __wcsnlen (src, n);
-  __wmemcpy (dest, src, size);
-  dest += size;
-  if (size == n)
-    return dest;
-  return wmemset (dest, L'\0', (n - size));
+    size_t size = __wcsnlen(src, n);
+    __wmemcpy(dest, src, size);
+    dest += size;
+    if (size == n) {
+        return dest;
+    }
+    return wmemset(dest, L'\0', (n - size));
 }
 
 #ifndef WCPNCPY
-weak_alias (__wcpncpy, wcpncpy)
+weak_alias(__wcpncpy, wcpncpy)
 #endif

@@ -21,19 +21,18 @@
 #include <sysdep-cancel.h>
 
 /* Create FILE with protections MODE.  */
-int
-__creat64 (const char *file, mode_t mode)
+int __creat64(const char *file, mode_t mode)
 {
 #if defined __OFF_T_MATCHES_OFF64_T && defined __NR_creat
-  return SYSCALL_CANCEL (creat, file, mode);
+    return SYSCALL_CANCEL(creat, file, mode);
 #else
-  /* We need to pass O_LARGEFILE.  */
-  return __open64 (file, O_WRONLY | O_CREAT | O_TRUNC, mode);
+    /* We need to pass O_LARGEFILE.  */
+    return __open64(file, O_WRONLY | O_CREAT | O_TRUNC, mode);
 #endif
 }
-weak_alias (__creat64, creat64)
+weak_alias(__creat64, creat64)
 
 #ifdef __OFF_T_MATCHES_OFF64_T
-strong_alias (__creat64, __creat)
-weak_alias (__creat64, creat)
+strong_alias(__creat64, __creat)
+weak_alias(__creat64, creat)
 #endif

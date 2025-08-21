@@ -64,24 +64,23 @@
   MATH_F64(function); \
   MATH_F64X(function);
 
-MATH_FUNCTION (acos);
-MATH_FUNCTION (asin);
-MATH_FUNCTION (exp);
-MATH_FUNCTION (floor);
-MATH_FUNCTION (ldexp);
-MATH_FUNCTION (log);
-MATH_FUNCTION (sin);
-MATH_FUNCTION (cabs);
-MATH_FUNCTION (cacos);
-MATH_FUNCTION (casin);
-MATH_FUNCTION (clog);
-MATH_FUNCTION (csin);
+MATH_FUNCTION(acos);
+MATH_FUNCTION(asin);
+MATH_FUNCTION(exp);
+MATH_FUNCTION(floor);
+MATH_FUNCTION(ldexp);
+MATH_FUNCTION(log);
+MATH_FUNCTION(sin);
+MATH_FUNCTION(cabs);
+MATH_FUNCTION(cacos);
+MATH_FUNCTION(casin);
+MATH_FUNCTION(clog);
+MATH_FUNCTION(csin);
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  /* This is a compilation test.  */
-  return 0;
+    /* This is a compilation test.  */
+    return 0;
 }
 
 #include <support/test-driver.c>

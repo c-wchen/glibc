@@ -21,24 +21,23 @@
 #include <support/support.h>
 #include <xunistd.h>
 
-char *
-xreadlink (const char *path)
+char *xreadlink(const char *path)
 {
-  struct scratch_buffer buf;
-  scratch_buffer_init (&buf);
+    struct scratch_buffer buf;
+    scratch_buffer_init(&buf);
 
-  while (true)
-    {
-      ssize_t count = readlink (path, buf.data, buf.length);
-      if (count < 0)
-        FAIL_EXIT1 ("readlink (\"%s\"): %m", path);
-      if (count < buf.length)
-        {
-          char *result = xstrndup (buf.data, count);
-          scratch_buffer_free (&buf);
-          return result;
+    while (true) {
+        ssize_t count = readlink(path, buf.data, buf.length);
+        if (count < 0) {
+            FAIL_EXIT1("readlink (\"%s\"): %m", path);
         }
-      if (!scratch_buffer_grow (&buf))
-        FAIL_EXIT1 ("scratch_buffer_grow in xreadlink");
+        if (count < buf.length) {
+            char *result = xstrndup(buf.data, count);
+            scratch_buffer_free(&buf);
+            return result;
+        }
+        if (!scratch_buffer_grow(&buf)) {
+            FAIL_EXIT1("scratch_buffer_grow in xreadlink");
+        }
     }
 }

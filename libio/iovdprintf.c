@@ -31,51 +31,46 @@
 #include <unistd.h>
 #include <printf_buffer.h>
 
-struct __printf_buffer_dprintf
-{
-  struct __printf_buffer base;
-  int fd;
+struct __printf_buffer_dprintf {
+    struct __printf_buffer base;
+    int fd;
 
-  char buf[PRINTF_BUFFER_SIZE_DPRINTF];
+    char buf[PRINTF_BUFFER_SIZE_DPRINTF];
 };
 
-void
-__printf_buffer_flush_dprintf (struct __printf_buffer_dprintf *buf)
+void __printf_buffer_flush_dprintf(struct __printf_buffer_dprintf *buf)
 {
-  char *p = buf->buf;
-  char *end = buf->base.write_ptr;
-  while (p < end)
-    {
-      ssize_t ret = TEMP_FAILURE_RETRY (write (buf->fd, p, end - p));
-      if (ret < 0)
-	{
-	  __printf_buffer_mark_failed (&buf->base);
-	  return;
-	}
-      p += ret;
+    char *p = buf->buf;
+    char *end = buf->base.write_ptr;
+    while (p < end) {
+        ssize_t ret = TEMP_FAILURE_RETRY(write(buf->fd, p, end - p));
+        if (ret < 0) {
+            __printf_buffer_mark_failed(&buf->base);
+            return;
+        }
+        p += ret;
     }
-  buf->base.written += buf->base.write_ptr - buf->base.write_base;
-  buf->base.write_ptr = buf->buf;
+    buf->base.written += buf->base.write_ptr - buf->base.write_base;
+    buf->base.write_ptr = buf->buf;
 }
 
-int
-__vdprintf_internal (int d, const char *format, va_list arg,
-		     unsigned int mode_flags)
+int __vdprintf_internal(int d, const char *format, va_list arg,
+                        unsigned int mode_flags)
 {
-  struct __printf_buffer_dprintf buf;
-  __printf_buffer_init (&buf.base, buf.buf, array_length (buf.buf),
-			__printf_buffer_mode_dprintf);
-  buf.fd = d;
-  __printf_buffer (&buf.base, format, arg, mode_flags);
-  if (__printf_buffer_has_failed (&buf.base))
-    return -1;
-  __printf_buffer_flush_dprintf (&buf);
-  return __printf_buffer_done (&buf.base);
+    struct __printf_buffer_dprintf buf;
+    __printf_buffer_init(&buf.base, buf.buf, array_length(buf.buf),
+                         __printf_buffer_mode_dprintf);
+    buf.fd = d;
+    __printf_buffer(&buf.base, format, arg, mode_flags);
+    if (__printf_buffer_has_failed(&buf.base)) {
+        return -1;
+    }
+    __printf_buffer_flush_dprintf(&buf);
+    return __printf_buffer_done(&buf.base);
 }
 
-int
-__vdprintf (int d, const char *format, va_list arg)
+int __vdprintf(int d, const char *format, va_list arg)
 {
-  return __vdprintf_internal (d, format, arg, 0);
+    return __vdprintf_internal(d, format, arg, 0);
 }
-ldbl_weak_alias (__vdprintf, vdprintf)
+ldbl_weak_alias(__vdprintf, vdprintf)

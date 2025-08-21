@@ -39,120 +39,123 @@
    rather than pthread_mutex_clocklock.  */
 #define CLOCK_USE_TIMEDLOCK (-1)
 
-static void
-do_test_clock (clockid_t clockid, int tmo_result)
+static void do_test_clock(clockid_t clockid, int tmo_result)
 {
-  const clockid_t clockid_for_get =
-    (clockid == CLOCK_USE_TIMEDLOCK) ? CLOCK_REALTIME : clockid;
-  size_t ps = sysconf (_SC_PAGESIZE);
-  char tmpfname[] = "/tmp/tst-mutex9.XXXXXX";
-  char data[ps];
-  void *mem;
-  int fd;
-  pthread_mutex_t *m;
-  pthread_mutexattr_t a;
-  pid_t pid;
+    const clockid_t clockid_for_get =
+        (clockid == CLOCK_USE_TIMEDLOCK) ? CLOCK_REALTIME : clockid;
+    size_t ps = sysconf(_SC_PAGESIZE);
+    char tmpfname[] = "/tmp/tst-mutex9.XXXXXX";
+    char data[ps];
+    void *mem;
+    int fd;
+    pthread_mutex_t *m;
+    pthread_mutexattr_t a;
+    pid_t pid;
 
-  fd = mkstemp (tmpfname);
-  if (fd == -1)
-      FAIL_EXIT1 ("cannot open temporary file: %m\n");
+    fd = mkstemp(tmpfname);
+    if (fd == -1) {
+        FAIL_EXIT1("cannot open temporary file: %m\n");
+    }
 
-  /* Make sure it is always removed.  */
-  unlink (tmpfname);
+    /* Make sure it is always removed.  */
+    unlink(tmpfname);
 
-  /* Create one page of data.  */
-  memset (data, '\0', ps);
+    /* Create one page of data.  */
+    memset(data, '\0', ps);
 
-  /* Write the data to the file.  */
-  xwrite (fd, data, ps);
+    /* Write the data to the file.  */
+    xwrite(fd, data, ps);
 
-  mem = xmmap (NULL, ps, PROT_READ | PROT_WRITE, MAP_SHARED, fd);
+    mem = xmmap(NULL, ps, PROT_READ | PROT_WRITE, MAP_SHARED, fd);
 
-  m = (pthread_mutex_t *) (((uintptr_t) mem + __alignof (pthread_mutex_t))
-			   & ~(__alignof (pthread_mutex_t) - 1));
+    m = (pthread_mutex_t *)(((uintptr_t) mem + __alignof(pthread_mutex_t))
+                            & ~(__alignof(pthread_mutex_t) - 1));
 
-  TEST_COMPARE (pthread_mutexattr_init (&a), 0);
+    TEST_COMPARE(pthread_mutexattr_init(&a), 0);
 
-  TEST_COMPARE (pthread_mutexattr_setpshared (&a, PTHREAD_PROCESS_SHARED), 0);
+    TEST_COMPARE(pthread_mutexattr_setpshared(&a, PTHREAD_PROCESS_SHARED), 0);
 
-  TEST_COMPARE (pthread_mutexattr_settype (&a, PTHREAD_MUTEX_RECURSIVE), 0);
+    TEST_COMPARE(pthread_mutexattr_settype(&a, PTHREAD_MUTEX_RECURSIVE), 0);
 
 #if defined ENABLE_PI
-  TEST_COMPARE (pthread_mutexattr_setprotocol (&a, PTHREAD_PRIO_INHERIT), 0);
+    TEST_COMPARE(pthread_mutexattr_setprotocol(&a, PTHREAD_PRIO_INHERIT), 0);
 #elif defined ENABLE_PP
-  TEST_COMPARE (pthread_mutexattr_setprotocol (&a, PTHREAD_PRIO_PROTECT), 0);
-  TEST_COMPARE (pthread_mutexattr_setprioceiling (&a, 6), 0);
+    TEST_COMPARE(pthread_mutexattr_setprotocol(&a, PTHREAD_PRIO_PROTECT), 0);
+    TEST_COMPARE(pthread_mutexattr_setprioceiling(&a, 6), 0);
 #endif
 
-  int e;
-  if ((e = pthread_mutex_init (m, &a)) != 0)
-    {
+    int e;
+    if ((e = pthread_mutex_init(m, &a)) != 0) {
 #ifdef ENABLE_PI
-      if (e == ENOTSUP)
-        FAIL_UNSUPPORTED ("PI mutexes unsupported");
+        if (e == ENOTSUP) {
+            FAIL_UNSUPPORTED("PI mutexes unsupported");
+        }
 #endif
-      FAIL_EXIT1 ("mutex_init failed");
+        FAIL_EXIT1("mutex_init failed");
     }
 
-  TEST_COMPARE (pthread_mutex_lock (m), 0);
+    TEST_COMPARE(pthread_mutex_lock(m), 0);
 
-  TEST_COMPARE (pthread_mutexattr_destroy (&a), 0);
+    TEST_COMPARE(pthread_mutexattr_destroy(&a), 0);
 
-  puts ("going to fork now");
-  pid = xfork ();
-  if (pid == 0)
-    {
-      if (pthread_mutex_trylock (m) == 0)
-        FAIL_EXIT1 ("child: mutex_trylock succeeded");
+    puts("going to fork now");
+    pid = xfork();
+    if (pid == 0) {
+        if (pthread_mutex_trylock(m) == 0) {
+            FAIL_EXIT1("child: mutex_trylock succeeded");
+        }
 
-      if (pthread_mutex_unlock (m) == 0)
-        FAIL_EXIT1 ("child: mutex_unlock succeeded");
+        if (pthread_mutex_unlock(m) == 0) {
+            FAIL_EXIT1("child: mutex_unlock succeeded");
+        }
 
-      const struct timespec ts = timespec_add (xclock_now (clockid_for_get),
-                                               make_timespec (0, 500000000));
+        const struct timespec ts = timespec_add(xclock_now(clockid_for_get),
+                                                make_timespec(0, 500000000));
 
-      if (clockid == CLOCK_USE_TIMEDLOCK)
-        TEST_COMPARE (pthread_mutex_timedlock (m, &ts), tmo_result);
-      else
-        TEST_COMPARE (pthread_mutex_clocklock (m, clockid, &ts), tmo_result);
+        if (clockid == CLOCK_USE_TIMEDLOCK) {
+            TEST_COMPARE(pthread_mutex_timedlock(m, &ts), tmo_result);
+        } else {
+            TEST_COMPARE(pthread_mutex_clocklock(m, clockid, &ts), tmo_result);
+        }
 
-      alarm (1);
+        alarm(1);
 
-      pthread_mutex_lock (m);
+        pthread_mutex_lock(m);
 
-      puts ("child: mutex_lock returned");
+        puts("child: mutex_lock returned");
 
-      exit (0);
+        exit(0);
     }
 
-  sleep (2);
+    sleep(2);
 
-  int status;
-  if (TEMP_FAILURE_RETRY (waitpid (pid, &status, 0)) != pid)
-    FAIL_EXIT1 ("waitpid failed");
-  if (! WIFSIGNALED (status))
-    FAIL_EXIT1 ("child not killed by signal");
-  TEST_COMPARE (WTERMSIG (status), SIGALRM);
+    int status;
+    if (TEMP_FAILURE_RETRY(waitpid(pid, &status, 0)) != pid) {
+        FAIL_EXIT1("waitpid failed");
+    }
+    if (! WIFSIGNALED(status)) {
+        FAIL_EXIT1("child not killed by signal");
+    }
+    TEST_COMPARE(WTERMSIG(status), SIGALRM);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
 #ifdef ENABLE_PP
-  init_tpp_test ();
+    init_tpp_test();
 #endif
 
-  int monotonic_result =
+    int monotonic_result =
 #ifdef ENABLE_PI
-    support_mutex_pi_monotonic () ? ETIMEDOUT : EINVAL;
+        support_mutex_pi_monotonic() ? ETIMEDOUT : EINVAL;
 #else
-    ETIMEDOUT;
+        ETIMEDOUT;
 #endif
 
-  do_test_clock (CLOCK_USE_TIMEDLOCK, ETIMEDOUT);
-  do_test_clock (CLOCK_REALTIME, ETIMEDOUT);
-  do_test_clock (CLOCK_MONOTONIC, monotonic_result);
-  return 0;
+    do_test_clock(CLOCK_USE_TIMEDLOCK, ETIMEDOUT);
+    do_test_clock(CLOCK_REALTIME, ETIMEDOUT);
+    do_test_clock(CLOCK_MONOTONIC, monotonic_result);
+    return 0;
 }
 
 #include <support/test-driver.c>

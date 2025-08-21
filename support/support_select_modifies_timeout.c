@@ -18,12 +18,11 @@
 
 #include <support/support.h>
 
-bool
-support_select_modifies_timeout (void)
+bool support_select_modifies_timeout(void)
 {
 #ifdef __linux__
-  return true;
+    return true;
 #else
-  return false;
+    return false;
 #endif
 }

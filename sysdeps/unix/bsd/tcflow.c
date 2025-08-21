@@ -23,33 +23,32 @@
 #include "bsdtty.h"
 
 /* Suspend or restart transmission on FD.  */
-int
-tcflow (int fd, int action)
+int tcflow(int fd, int action)
 {
-  switch (action)
-    {
-    case TCOOFF:
-      return __ioctl (fd, TIOCSTOP, (void *) NULL);
-    case TCOON:
-      return __ioctl (fd, TIOCSTART, (void *) NULL);
+    switch (action) {
+        case TCOOFF:
+            return __ioctl(fd, TIOCSTOP, (void *) NULL);
+        case TCOON:
+            return __ioctl(fd, TIOCSTART, (void *) NULL);
 
-    case TCIOFF:
-    case TCION:
-      {
-	/* This just writes the START or STOP character with
-	   `write'.  Is there another way to do this?  */
-	struct termios attr;
-	unsigned char c;
-	if (__tcgetattr (fd, &attr) < 0)
-	  return -1;
-	c = attr.c_cc[action == TCIOFF ? VSTOP : VSTART];
-	if (c != _POSIX_VDISABLE && write (fd, &c, 1) < 1)
-	  return -1;
-	return 0;
-      }
+        case TCIOFF:
+        case TCION: {
+            /* This just writes the START or STOP character with
+               `write'.  Is there another way to do this?  */
+            struct termios attr;
+            unsigned char c;
+            if (__tcgetattr(fd, &attr) < 0) {
+                return -1;
+            }
+            c = attr.c_cc[action == TCIOFF ? VSTOP : VSTART];
+            if (c != _POSIX_VDISABLE && write(fd, &c, 1) < 1) {
+                return -1;
+            }
+            return 0;
+        }
 
-    default:
-      __set_errno (EINVAL);
-      return -1;
+        default:
+            __set_errno(EINVAL);
+            return -1;
     }
 }

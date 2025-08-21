@@ -21,11 +21,10 @@
 #include <netinet/in.h>
 
 
-int
-getipv4sourcefilter (int s, struct in_addr interface, struct in_addr group,
-		     uint32_t *fmode, uint32_t *numsrc, struct in_addr *slist)
+int getipv4sourcefilter(int s, struct in_addr interface, struct in_addr group,
+                        uint32_t *fmode, uint32_t *numsrc, struct in_addr *slist)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (getipv4sourcefilter)
+stub_warning(getipv4sourcefilter)

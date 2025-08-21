@@ -24,12 +24,10 @@
    field in the lower 32 bits.  When the LEN field of 64-bit register
    is passed to string/memory function as the size_t parameter, only
    the lower 32 bits can be used.  */
-typedef struct
-{
-  union
-    {
-      size_t len;
-      void (*fn) (void);
+typedef struct {
+    union {
+        size_t len;
+        void (*fn)(void);
     };
-  void *p;
+    void *p;
 } parameter_t;

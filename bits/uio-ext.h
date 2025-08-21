@@ -24,10 +24,10 @@
 #endif
 
 /* Flags for preadv2/pwritev2.  */
-#define RWF_HIPRI	0x00000001 /* High priority request.  */
-#define RWF_DSYNC	0x00000002 /* per-IO O_DSYNC.  */
-#define RWF_SYNC	0x00000004 /* per-IO O_SYNC.  */
-#define RWF_NOWAIT	0x00000008 /* per-IO nonblocking mode.  */
-#define RWF_APPEND	0x00000010 /* per-IO O_APPEND.  */
+#define RWF_HIPRI   0x00000001 /* High priority request.  */
+#define RWF_DSYNC   0x00000002 /* per-IO O_DSYNC.  */
+#define RWF_SYNC    0x00000004 /* per-IO O_SYNC.  */
+#define RWF_NOWAIT  0x00000008 /* per-IO nonblocking mode.  */
+#define RWF_APPEND  0x00000010 /* per-IO O_APPEND.  */
 
 #endif /* sys/uio_ext.h */

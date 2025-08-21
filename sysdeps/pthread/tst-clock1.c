@@ -22,26 +22,24 @@
 #include <unistd.h>
 
 
-int
-do_test (void)
+int do_test(void)
 {
 #if defined _POSIX_THREAD_CPUTIME && _POSIX_THREAD_CPUTIME >= 0
-  clockid_t cl;
-  /* This is really only a linking-test here.  */
-  int e = pthread_getcpuclockid (pthread_self (), &cl);
-  if (e != 0)
-    {
+    clockid_t cl;
+    /* This is really only a linking-test here.  */
+    int e = pthread_getcpuclockid(pthread_self(), &cl);
+    if (e != 0) {
 # if _POSIX_THREAD_CPUTIME == 0
-      if (sysconf (_SC_THREAD_CPUTIME) >= 0)
+        if (sysconf(_SC_THREAD_CPUTIME) >= 0)
 # endif
-	{
-	  puts ("cpuclock advertised, but cannot get ID");
-	  exit (1);
-	}
+        {
+            puts("cpuclock advertised, but cannot get ID");
+            exit(1);
+        }
     }
 #endif
 
-  return 0;
+    return 0;
 }
 
 

@@ -52,10 +52,9 @@ typedef unsigned __int128 u128;
 # define u128_lshift(__x, __y)  (__x) << (__y)
 # define u128_rshift(__x, __y)  (__x) >> (__y)
 #else
-typedef struct
-{
-  uint64_t low;
-  uint64_t high;
+typedef struct {
+    uint64_t low;
+    uint64_t high;
 } u128;
 
 # define u128_high(__x)         (__x).high
@@ -64,86 +63,103 @@ typedef struct
 
 # define MASK32                 (UINT64_C(0xffffffff))
 
-static u128 u128_add (u128 x, u128 y)
+static u128 u128_add(u128 x, u128 y)
 {
-  bool carry = x.low + y.low < x.low;
-  return (u128) { .high = x.high + y.high + carry, .low = x.low + y.low };
+    bool carry = x.low + y.low < x.low;
+    return (u128) {
+        .high = x.high + y.high + carry, .low = x.low + y.low
+    };
 }
 
-static u128 u128_lshift (u128 x, unsigned int n)
+static u128 u128_lshift(u128 x, unsigned int n)
 {
-  switch (n)
-    {
-    case 0:         return x;
-    case 1 ... 63:  return (u128) { .high = (x.high << n) | (x.low >> (64 - n)),
-				    .low = x.low << n };
-    case 64 ...127: return (u128) { .high = x.low << (n - 64), .low = 0};
-    default:        return (u128) { .high = 0, .low = 0 };
+    switch (n) {
+        case 0:
+            return x;
+        case 1 ... 63:
+            return (u128) {
+                .high = (x.high << n) | (x.low >> (64 - n)),
+                .low = x.low << n
+            };
+        case 64 ...127:
+            return (u128) {
+                .high = x.low << (n - 64), .low = 0
+            };
+        default:
+            return (u128) {
+                .high = 0, .low = 0
+            };
     }
 }
 
-static u128 u128_rshift (u128 x, unsigned int n)
+static u128 u128_rshift(u128 x, unsigned int n)
 {
-  switch (n)
-    {
-    case 0:         return x;
-    case 1 ... 63:  return (u128) { .high = x.high >> n,
-				    .low = (x.high << (64 - n)) | (x.low >> n) };
-    case 64 ...127: return (u128) { .high = 0, .low = x.high >> (n - 64) };
-    default:        return (u128) { .high = 0, .low = 0 };
+    switch (n) {
+        case 0:
+            return x;
+        case 1 ... 63:
+            return (u128) {
+                .high = x.high >> n,
+                .low = (x.high << (64 - n)) | (x.low >> n)
+            };
+        case 64 ...127:
+            return (u128) {
+                .high = 0, .low = x.high >> (n - 64)
+            };
+        default:
+            return (u128) {
+                .high = 0, .low = 0
+            };
     }
 }
 
-static u128 u128_mul (u128 x, u128 y)
+static u128 u128_mul(u128 x, u128 y)
 {
-  if (x.high == 0 && y.high == 0)
-    {
-      uint64_t x0 = x.low & MASK32;
-      uint64_t x1 = x.low >> 32;
-      uint64_t y0 = y.low & MASK32;
-      uint64_t y1 = y.low >> 32;
-      u128 x0y0 = { .high = 0, .low = x0 * y0 };
-      u128 x0y1 = { .high = 0, .low = x0 * y1 };
-      u128 x1y0 = { .high = 0, .low = x1 * y0 };
-      u128 x1y1 = { .high = x1 * y1, .low = 0 };
-      /* x0y0 + ((x0y1 + x1y0) << 32) + x1y1  */
-      return u128_add (u128_add (x0y0,
-				 u128_lshift (u128_add (x0y1, x1y0),
-					      32)),
-		       x1y1);
+    if (x.high == 0 && y.high == 0) {
+        uint64_t x0 = x.low & MASK32;
+        uint64_t x1 = x.low >> 32;
+        uint64_t y0 = y.low & MASK32;
+        uint64_t y1 = y.low >> 32;
+        u128 x0y0 = { .high = 0, .low = x0 * y0 };
+        u128 x0y1 = { .high = 0, .low = x0 * y1 };
+        u128 x1y0 = { .high = 0, .low = x1 * y0 };
+        u128 x1y1 = { .high = x1 * y1, .low = 0 };
+        /* x0y0 + ((x0y1 + x1y0) << 32) + x1y1  */
+        return u128_add(u128_add(x0y0,
+                                 u128_lshift(u128_add(x0y1, x1y0),
+                                             32)),
+                        x1y1);
+    } else {
+        uint64_t x0 = x.low & MASK32;
+        uint64_t x1 = x.low >> 32;
+        uint64_t x2 = x.high & MASK32;
+        uint64_t x3 = x.high >> 32;
+        uint64_t y0 = y.low & MASK32;
+        uint64_t y1 = y.low >> 32;
+        uint64_t y2 = y.high & MASK32;
+        uint64_t y3 = y.high >> 32;
+        u128 x0y0 = { .high = 0, .low = x0 * y0 };
+        u128 x0y1 = { .high = 0, .low = x0 * y1 };
+        u128 x0y2 = { .high = 0, .low = x0 * y2 };
+        u128 x0y3 = { .high = 0, .low = x0 * y3 };
+        u128 x1y0 = { .high = 0, .low = x1 * y0 };
+        u128 x1y1 = { .high = 0, .low = x1 * y1 };
+        u128 x1y2 = { .high = 0, .low = x1 * y2 };
+        u128 x2y0 = { .high = 0, .low = x2 * y0 };
+        u128 x2y1 = { .high = 0, .low = x2 * y1 };
+        u128 x3y0 = { .high = 0, .low = x3 * y0 };
+        /* x0y0 + ((x0y1 + x1y0) << 32) + ((x0y2 + x1y1 + x2y0) << 64) +
+            ((x0y3 + x1y2 + x2y1 + x3y0) << 96)  */
+        u128 r0 = u128_add(x0y0,
+                           u128_lshift(u128_add(x0y1, x1y0),
+                                       32));
+        u128 r1 = u128_add(u128_lshift(u128_add(u128_add(x0y2, x1y1), x2y0),
+                                       64),
+                           u128_lshift(u128_add(u128_add(x0y3, x1y2),
+                                                u128_add(x2y1, x3y0)),
+                                       96));
+        return u128_add(r0, r1);
     }
-  else
-    {
-      uint64_t x0 = x.low & MASK32;
-      uint64_t x1 = x.low >> 32;
-      uint64_t x2 = x.high & MASK32;
-      uint64_t x3 = x.high >> 32;
-      uint64_t y0 = y.low & MASK32;
-      uint64_t y1 = y.low >> 32;
-      uint64_t y2 = y.high & MASK32;
-      uint64_t y3 = y.high >> 32;
-      u128 x0y0 = { .high = 0, .low = x0 * y0 };
-      u128 x0y1 = { .high = 0, .low = x0 * y1 };
-      u128 x0y2 = { .high = 0, .low = x0 * y2 };
-      u128 x0y3 = { .high = 0, .low = x0 * y3 };
-      u128 x1y0 = { .high = 0, .low = x1 * y0 };
-      u128 x1y1 = { .high = 0, .low = x1 * y1 };
-      u128 x1y2 = { .high = 0, .low = x1 * y2 };
-      u128 x2y0 = { .high = 0, .low = x2 * y0 };
-      u128 x2y1 = { .high = 0, .low = x2 * y1 };
-      u128 x3y0 = { .high = 0, .low = x3 * y0 };
-      /* x0y0 + ((x0y1 + x1y0) << 32) + ((x0y2 + x1y1 + x2y0) << 64) +
-          ((x0y3 + x1y2 + x2y1 + x3y0) << 96)  */
-      u128 r0 = u128_add (x0y0,
-			  u128_lshift (u128_add (x0y1, x1y0),
-				       32));
-      u128 r1 = u128_add (u128_lshift (u128_add (u128_add (x0y2, x1y1), x2y0),
-				       64),
-			  u128_lshift (u128_add (u128_add (x0y3, x1y2),
-						 u128_add (x2y1, x3y0)),
-				       96));
-      return u128_add (r0, r1);
-   }
 }
 #endif /* __SIZEOF_INT128__ */
 

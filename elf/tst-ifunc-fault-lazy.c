@@ -27,35 +27,33 @@
 
 # include <stddef.h>
 
-static void
-implementation (void)
+static void implementation(void)
 {
-  /* Produce a crash, without depending on any relocations.  */
-  volatile char *volatile p = NULL;
-  *p = 0;
+    /* Produce a crash, without depending on any relocations.  */
+    volatile char *volatile p = NULL;
+    *p = 0;
 }
 
 DIAG_PUSH_NEEDS_COMMENT_CLANG;
-DIAG_IGNORE_NEEDS_COMMENT_CLANG (13, "-Wunused-function");
-static __typeof__ (implementation) *
-resolver (void)
+DIAG_IGNORE_NEEDS_COMMENT_CLANG(13, "-Wunused-function");
+static __typeof__(implementation) *
+resolver(void)
 {
-  /* Produce a crash, without depending on any relocations.  */
-  volatile char *volatile p = NULL;
-  *p = 0;
-  return implementation;
+    /* Produce a crash, without depending on any relocations.  */
+    volatile char *volatile p = NULL;
+    *p = 0;
+    return implementation;
 }
 DIAG_POP_NEEDS_COMMENT_CLANG;
 
-static void magic (void) __attribute__ ((ifunc ("resolver")));
+static void magic(void) __attribute__((ifunc("resolver")));
 
-void (*magic_ptr) (void) = magic;
+void (*magic_ptr)(void) = magic;
 
 #endif /* HAVE_GCC_IFUNC */
 
 /* The program is expected not to run.  */
-int
-main (void)
+int main(void)
 {
-  return 1;
+    return 1;
 }

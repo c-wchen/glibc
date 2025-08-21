@@ -22,9 +22,8 @@
 
 #include <math-narrow.h>
 
-_Float32x
-__f32xaddf64 (_Float64 x, _Float64 y)
+_Float32x __f32xaddf64(_Float64 x, _Float64 y)
 {
-  NARROW_ADD_TRIVIAL (x, y, _Float32x);
+    NARROW_ADD_TRIVIAL(x, y, _Float32x);
 }
-libm_alias_float32x_float64 (add)
+libm_alias_float32x_float64(add)

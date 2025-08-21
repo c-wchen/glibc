@@ -23,6 +23,6 @@
 #include <stddef.h>
 #include <locale.h>
 
-#define QUAD	1
+#define QUAD    1
 
 #include <wcstol_l.c>

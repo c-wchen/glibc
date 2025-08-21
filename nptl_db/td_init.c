@@ -21,25 +21,23 @@
 int __td_debug;
 
 
-td_err_e
-td_init (void)
+td_err_e td_init(void)
 {
-  /* XXX We have to figure out what has to be done.  */
-  LOG ("td_init");
-  return TD_OK;
+    /* XXX We have to figure out what has to be done.  */
+    LOG("td_init");
+    return TD_OK;
 }
 
-bool
-__td_ta_rtld_global (td_thragent_t *ta)
+bool __td_ta_rtld_global(td_thragent_t *ta)
 {
-  if (ta->ta_addr__rtld_global == NULL)
-    {
-      psaddr_t rtldglobalp;
-      if (DB_GET_VALUE (rtldglobalp, ta, __nptl_rtld_global, 0) == TD_OK)
-        ta->ta_addr__rtld_global = rtldglobalp;
-      else
-        ta->ta_addr__rtld_global = (void *) -1;
+    if (ta->ta_addr__rtld_global == NULL) {
+        psaddr_t rtldglobalp;
+        if (DB_GET_VALUE(rtldglobalp, ta, __nptl_rtld_global, 0) == TD_OK) {
+            ta->ta_addr__rtld_global = rtldglobalp;
+        } else {
+            ta->ta_addr__rtld_global = (void *) -1;
+        }
     }
 
-  return ta->ta_addr__rtld_global != (void *)-1;
+    return ta->ta_addr__rtld_global != (void *) -1;
 }

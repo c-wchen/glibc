@@ -23,24 +23,23 @@
 #include <support/check.h>
 #include <support/test-driver.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  size_t old_size = getpagesize ();
-  char *old_addr = xmmap (NULL, old_size, PROT_READ | PROT_WRITE,
-			  MAP_PRIVATE | MAP_ANONYMOUS, -1);
-  old_addr[0] = 1;
-  old_addr[old_size - 1] = 2;
+    size_t old_size = getpagesize();
+    char *old_addr = xmmap(NULL, old_size, PROT_READ | PROT_WRITE,
+                           MAP_PRIVATE | MAP_ANONYMOUS, -1);
+    old_addr[0] = 1;
+    old_addr[old_size - 1] = 2;
 
-  /* Test MREMAP_MAYMOVE.  */
-  size_t new_size = old_size + old_size;
-  char *new_addr = mremap (old_addr, old_size, new_size, MREMAP_MAYMOVE);
-  TEST_VERIFY_EXIT (new_addr != MAP_FAILED);
-  new_addr[0] = 1;
-  new_addr[new_size - 1] = 2;
-  xmunmap (new_addr, new_size);
+    /* Test MREMAP_MAYMOVE.  */
+    size_t new_size = old_size + old_size;
+    char *new_addr = mremap(old_addr, old_size, new_size, MREMAP_MAYMOVE);
+    TEST_VERIFY_EXIT(new_addr != MAP_FAILED);
+    new_addr[0] = 1;
+    new_addr[new_size - 1] = 2;
+    xmunmap(new_addr, new_size);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

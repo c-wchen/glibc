@@ -22,11 +22,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void *
-xrealloc (void *p, size_t n)
+void *xrealloc(void *p, size_t n)
 {
-  void *result = realloc (p, n);
-  if (result == NULL && (n > 0 || p == NULL))
-    oom_error ("realloc", n);
-  return result;
+    void *result = realloc(p, n);
+    if (result == NULL && (n > 0 || p == NULL)) {
+        oom_error("realloc", n);
+    }
+    return result;
 }

@@ -19,11 +19,10 @@
 #include <math.h>
 #include <math-narrow.h>
 
-_Float32x
-__f32xmulf64 (_Float64 x, _Float64 y)
+_Float32x __f32xmulf64(_Float64 x, _Float64 y)
 {
-  /* To avoid double rounding, use round-to-odd on long double.  */
-  NARROW_MUL_ROUND_TO_ODD ((long double) x, (long double) y, double,
-			   union ieee854_long_double, l, mantissa1, false);
+    /* To avoid double rounding, use round-to-odd on long double.  */
+    NARROW_MUL_ROUND_TO_ODD((long double) x, (long double) y, double,
+                            union ieee854_long_double, l, mantissa1, false);
 }
-libm_alias_float32x_float64 (mul)
+libm_alias_float32x_float64(mul)

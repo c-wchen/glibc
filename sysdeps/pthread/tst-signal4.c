@@ -21,37 +21,32 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  sigset_t ss;
+    sigset_t ss;
 
-  sigemptyset (&ss);
+    sigemptyset(&ss);
 
-  int i;
-  for (i = 0; i < 10000; ++i)
-    {
-      long int r = random ();
+    int i;
+    for (i = 0; i < 10000; ++i) {
+        long int r = random();
 
-      if (r != SIG_BLOCK && r != SIG_SETMASK && r != SIG_UNBLOCK)
-	{
-	  int e = pthread_sigmask (r, &ss, NULL);
+        if (r != SIG_BLOCK && r != SIG_SETMASK && r != SIG_UNBLOCK) {
+            int e = pthread_sigmask(r, &ss, NULL);
 
-	  if (e == 0)
-	    {
-	      printf ("pthread_sigmask succeeded for how = %ld\n", r);
-	      exit (1);
-	    }
+            if (e == 0) {
+                printf("pthread_sigmask succeeded for how = %ld\n", r);
+                exit(1);
+            }
 
-	  if (e != EINVAL)
-	    {
-	      puts ("pthread_sigmask didn't return EINVAL");
-	      exit (1);
-	    }
-	}
+            if (e != EINVAL) {
+                puts("pthread_sigmask didn't return EINVAL");
+                exit(1);
+            }
+        }
     }
 
-  return 0;
+    return 0;
 }
 
 #define TEST_FUNCTION do_test ()

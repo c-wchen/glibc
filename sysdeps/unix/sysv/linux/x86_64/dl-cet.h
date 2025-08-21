@@ -19,60 +19,58 @@
 #include <asm/prctl.h>
 #include <features-offsets.h>
 
-static __always_inline int
-dl_cet_disable_cet (unsigned int cet_feature)
+static __always_inline int dl_cet_disable_cet(unsigned int cet_feature)
 {
-  if (cet_feature != GNU_PROPERTY_X86_FEATURE_1_SHSTK)
-    return -1;
-  long long int kernel_feature = ARCH_SHSTK_SHSTK;
-  return (int) INTERNAL_SYSCALL_CALL (arch_prctl, ARCH_SHSTK_DISABLE,
-				      kernel_feature);
-}
-
-static __always_inline int
-dl_cet_lock_cet (unsigned int cet_feature)
-{
-  if (cet_feature != GNU_PROPERTY_X86_FEATURE_1_SHSTK)
-    return -1;
-  /* Lock all SHSTK features.  */
-  long long int kernel_feature = -1;
-  return (int) INTERNAL_SYSCALL_CALL (arch_prctl, ARCH_SHSTK_LOCK,
-				      kernel_feature);
-}
-
-static __always_inline unsigned int
-dl_cet_get_cet_status (void)
-{
-  unsigned long long kernel_feature;
-  unsigned int status = 0;
-  if (INTERNAL_SYSCALL_CALL (arch_prctl, ARCH_SHSTK_STATUS,
-			     &kernel_feature) == 0)
-    {
-      if ((kernel_feature & ARCH_SHSTK_SHSTK) != 0)
-	status = GNU_PROPERTY_X86_FEATURE_1_SHSTK;
+    if (cet_feature != GNU_PROPERTY_X86_FEATURE_1_SHSTK) {
+        return -1;
     }
-  return status;
+    long long int kernel_feature = ARCH_SHSTK_SHSTK;
+    return (int) INTERNAL_SYSCALL_CALL(arch_prctl, ARCH_SHSTK_DISABLE,
+                                       kernel_feature);
 }
 
-static __always_inline bool
-dl_cet_ibt_enabled (void)
+static __always_inline int dl_cet_lock_cet(unsigned int cet_feature)
 {
-  unsigned int feature_1 = THREAD_GETMEM (THREAD_SELF,
-					  header.feature_1);
-  return (feature_1 & GNU_PROPERTY_X86_FEATURE_1_IBT) != 0;
+    if (cet_feature != GNU_PROPERTY_X86_FEATURE_1_SHSTK) {
+        return -1;
+    }
+    /* Lock all SHSTK features.  */
+    long long int kernel_feature = -1;
+    return (int) INTERNAL_SYSCALL_CALL(arch_prctl, ARCH_SHSTK_LOCK,
+                                       kernel_feature);
+}
+
+static __always_inline unsigned int dl_cet_get_cet_status(void)
+{
+    unsigned long long kernel_feature;
+    unsigned int status = 0;
+    if (INTERNAL_SYSCALL_CALL(arch_prctl, ARCH_SHSTK_STATUS,
+                              &kernel_feature) == 0) {
+        if ((kernel_feature & ARCH_SHSTK_SHSTK) != 0) {
+            status = GNU_PROPERTY_X86_FEATURE_1_SHSTK;
+        }
+    }
+    return status;
+}
+
+static __always_inline bool dl_cet_ibt_enabled(void)
+{
+    unsigned int feature_1 = THREAD_GETMEM(THREAD_SELF,
+                                           header.feature_1);
+    return (feature_1 & GNU_PROPERTY_X86_FEATURE_1_IBT) != 0;
 }
 
 /* Enable shadow stack with a macro to avoid shadow stack underflow.  */
-#define ENABLE_X86_CET(cet_feature)				\
-  if ((cet_feature & GNU_PROPERTY_X86_FEATURE_1_SHSTK))		\
-    {								\
-      long long int kernel_feature = ARCH_SHSTK_SHSTK;		\
-      INTERNAL_SYSCALL_CALL (arch_prctl, ARCH_SHSTK_ENABLE,	\
-			     kernel_feature);			\
+#define ENABLE_X86_CET(cet_feature)             \
+  if ((cet_feature & GNU_PROPERTY_X86_FEATURE_1_SHSTK))     \
+    {                               \
+      long long int kernel_feature = ARCH_SHSTK_SHSTK;      \
+      INTERNAL_SYSCALL_CALL (arch_prctl, ARCH_SHSTK_ENABLE, \
+                 kernel_feature);           \
     }
 
-#define X86_STRINGIFY_1(x)	#x
-#define X86_STRINGIFY(x)	X86_STRINGIFY_1 (x)
+#define X86_STRINGIFY_1(x)  #x
+#define X86_STRINGIFY(x)    X86_STRINGIFY_1 (x)
 
 /* Enable shadow stack before calling _dl_init if it is enabled in
    GL(dl_x86_feature_1).  Call _dl_setup_x86_features to setup shadow

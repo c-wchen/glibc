@@ -30,51 +30,49 @@
 #include <stdint.h>
 #include <printf_buffer.h>
 
-int
-__vsprintf_internal (char *string, size_t maxlen,
-		     const char *format, va_list args,
-		     unsigned int mode_flags)
+int __vsprintf_internal(char *string, size_t maxlen,
+                        const char *format, va_list args,
+                        unsigned int mode_flags)
 {
-  struct __printf_buffer buf;
+    struct __printf_buffer buf;
 
-  /* When called from fortified sprintf/vsprintf, erase the destination
-     buffer and try to detect overflows.  When called from regular
-     sprintf/vsprintf, do not erase the destination buffer, because
-     known user code relies on this behavior (even though its undefined
-     by ISO C), nor try to detect overflows.  */
-  if ((mode_flags & PRINTF_CHK) != 0)
-    {
-      string[0] = '\0';
-      /* In some cases, __sprintf_chk is called with an unknown buffer
-	 size (the special value -1).  Prevent pointer wraparound in
-	 this case and saturate to the end of the address space.  */
-      uintptr_t end;
-      if (__builtin_add_overflow ((uintptr_t) string, maxlen, &end))
-	end = -1;
-      __printf_buffer_init_end (&buf, string, (char *) end,
-			    __printf_buffer_mode_sprintf_chk);
+    /* When called from fortified sprintf/vsprintf, erase the destination
+       buffer and try to detect overflows.  When called from regular
+       sprintf/vsprintf, do not erase the destination buffer, because
+       known user code relies on this behavior (even though its undefined
+       by ISO C), nor try to detect overflows.  */
+    if ((mode_flags & PRINTF_CHK) != 0) {
+        string[0] = '\0';
+        /* In some cases, __sprintf_chk is called with an unknown buffer
+        size (the special value -1).  Prevent pointer wraparound in
+         this case and saturate to the end of the address space.  */
+        uintptr_t end;
+        if (__builtin_add_overflow((uintptr_t) string, maxlen, &end)) {
+            end = -1;
+        }
+        __printf_buffer_init_end(&buf, string, (char *) end,
+                                 __printf_buffer_mode_sprintf_chk);
+    } else
+        /* Use end of address space.  */
+        __printf_buffer_init_end(&buf, string, (char *) ~(uintptr_t) 0,
+                                 __printf_buffer_mode_sprintf);
+
+    __printf_buffer(&buf, format, args, mode_flags);
+
+    /* Write the NUL terminator if there is room.  Do not use the putc
+       operation to avoid overflowing the character write count.  */
+    if ((mode_flags & PRINTF_CHK) != 0 && buf.write_ptr == buf.write_end) {
+        __chk_fail();
     }
-  else
-    /* Use end of address space.  */
-    __printf_buffer_init_end (&buf, string, (char *) ~(uintptr_t) 0,
-			      __printf_buffer_mode_sprintf);
+    *buf.write_ptr = '\0';
 
-  __printf_buffer (&buf, format, args, mode_flags);
-
-  /* Write the NUL terminator if there is room.  Do not use the putc
-     operation to avoid overflowing the character write count.  */
-  if ((mode_flags & PRINTF_CHK) != 0 && buf.write_ptr == buf.write_end)
-    __chk_fail ();
-  *buf.write_ptr = '\0';
-
-  return __printf_buffer_done (&buf);
+    return __printf_buffer_done(&buf);
 }
 
-int
-__vsprintf (char *string, const char *format, va_list args)
+int __vsprintf(char *string, const char *format, va_list args)
 {
-  return __vsprintf_internal (string, -1, format, args, 0);
+    return __vsprintf_internal(string, -1, format, args, 0);
 }
 
-ldbl_strong_alias (__vsprintf, _IO_vsprintf)
-ldbl_weak_alias (__vsprintf, vsprintf)
+ldbl_strong_alias(__vsprintf, _IO_vsprintf)
+ldbl_weak_alias(__vsprintf, vsprintf)

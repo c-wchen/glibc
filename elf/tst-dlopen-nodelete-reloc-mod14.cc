@@ -30,13 +30,12 @@ bool may_finalize_mod14 = false;
    not marked NODELETE.  */
 template struct unique_symbol<14>;
 
-static void __attribute__ ((destructor))
-fini (void)
+static void __attribute__((destructor))
+fini(void)
 {
-  if (!may_finalize_mod14)
-    {
-      puts ("error: tst-dlopen-nodelete-reloc-mod14.so destructor"
-            " called too early");
-      _exit (1);
+    if (!may_finalize_mod14) {
+        puts("error: tst-dlopen-nodelete-reloc-mod14.so destructor"
+             " called too early");
+        _exit(1);
     }
 }

@@ -18,13 +18,12 @@
 
 #include <fenv.h>
 
-int
-__feholdexcept (fenv_t *envp)
+int __feholdexcept(fenv_t *envp)
 {
-  /* No exception traps to disable and no state to save.  */
-  return 0;
+    /* No exception traps to disable and no state to save.  */
+    return 0;
 }
-libm_hidden_def (__feholdexcept)
-weak_alias (__feholdexcept, feholdexcept)
-libm_hidden_weak (feholdexcept)
-stub_warning (feholdexcept)
+libm_hidden_def(__feholdexcept)
+weak_alias(__feholdexcept, feholdexcept)
+libm_hidden_weak(feholdexcept)
+stub_warning(feholdexcept)

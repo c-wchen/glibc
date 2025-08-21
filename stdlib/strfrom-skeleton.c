@@ -35,98 +35,100 @@
 #define ISDIGIT(Ch) isdigit (Ch)
 #include "stdio-common/printf-parse.h"
 
-int
-STRFROM (char *dest, size_t size, const char *format, FLOAT f)
+int STRFROM(char *dest, size_t size, const char *format, FLOAT f)
 {
-  struct __printf_buffer_snprintf buf;
+    struct __printf_buffer_snprintf buf;
 
-  /* Single-precision values need to be stored in a double type, because
-     __printf_fp_l and __printf_fphex do not accept the float type.  */
-  union {
-    double flt;
-    FLOAT value;
-  } fpnum;
-  const void *fpptr;
-  fpptr = &fpnum;
+    /* Single-precision values need to be stored in a double type, because
+       __printf_fp_l and __printf_fphex do not accept the float type.  */
+    union {
+        double flt;
+        FLOAT value;
+    } fpnum;
+    const void *fpptr;
+    fpptr = &fpnum;
 
-  /* Variables to control the output format.  */
-  int precision = -1; /* printf_fp and printf_fphex treat this internally.  */
-  int specifier;
-  struct printf_info info;
+    /* Variables to control the output format.  */
+    int precision = -1; /* printf_fp and printf_fphex treat this internally.  */
+    int specifier;
+    struct printf_info info;
 
-  /* Single-precision values need to be converted into double-precision,
-     because __printf_fp and __printf_fphex only accept double and long double
-     as the floating-point argument.  */
-  if (__builtin_types_compatible_p (FLOAT, float))
-    fpnum.flt = keep_sign_conversion (f);
-  else
-    fpnum.value = f;
-
-  /* Check if the first character in the format string is indeed the '%'
-     character.  Otherwise, abort.  */
-  if (*format == '%')
-    format++;
-  else
-    abort ();
-
-  /* The optional precision specification always starts with a '.'.  If such
-     character is present, read the precision.  */
-  if (*format == '.')
-    {
-      format++;
-
-      /* Parse the precision.  */
-      if (ISDIGIT (*format))
-	precision = read_int (&format);
-      /* If only the period is specified, the precision is taken as zero, as
-	 described in ISO/IEC 9899:2011, section 7.21.6.1, 4th paragraph, 3rd
-	 item.  */
-      else
-	precision = 0;
+    /* Single-precision values need to be converted into double-precision,
+       because __printf_fp and __printf_fphex only accept double and long double
+       as the floating-point argument.  */
+    if (__builtin_types_compatible_p(FLOAT, float)) {
+        fpnum.flt = keep_sign_conversion(f);
+    } else {
+        fpnum.value = f;
     }
 
-  /* Now there is only the conversion specifier to be read.  */
-  switch (*format)
-    {
-    case 'a':
-    case 'A':
-    case 'e':
-    case 'E':
-    case 'f':
-    case 'F':
-    case 'g':
-    case 'G':
-      specifier = *format;
-      break;
-    default:
-      abort ();
+    /* Check if the first character in the format string is indeed the '%'
+       character.  Otherwise, abort.  */
+    if (*format == '%') {
+        format++;
+    } else {
+        abort();
     }
 
-  /* Prepare the string buffer.  */
-  __printf_buffer_snprintf_init (&buf, dest, size);
+    /* The optional precision specification always starts with a '.'.  If such
+       character is present, read the precision.  */
+    if (*format == '.') {
+        format++;
 
-  /* Prepare the format specification for printf_fp.  */
-  memset (&info, '\0', sizeof (info));
+        /* Parse the precision.  */
+        if (ISDIGIT(*format)) {
+            precision = read_int(&format);
+        }
+        /* If only the period is specified, the precision is taken as zero, as
+        described in ISO/IEC 9899:2011, section 7.21.6.1, 4th paragraph, 3rd
+         item.  */
+        else {
+            precision = 0;
+        }
+    }
 
-  /* The functions strfromd and strfromf pass a floating-point number with
-     double precision to printf_fp, whereas strfroml passes a floating-point
-     number with long double precision.  The following line informs printf_fp
-     which type of floating-point number is being passed.  */
-  info.is_long_double = __builtin_types_compatible_p (FLOAT, long double);
+    /* Now there is only the conversion specifier to be read.  */
+    switch (*format) {
+        case 'a':
+        case 'A':
+        case 'e':
+        case 'E':
+        case 'f':
+        case 'F':
+        case 'g':
+        case 'G':
+            specifier = *format;
+            break;
+        default:
+            abort();
+    }
 
-  /* Similarly, the function strfromf128 passes a floating-point number in
-     _Float128 format to printf_fp.  */
+    /* Prepare the string buffer.  */
+    __printf_buffer_snprintf_init(&buf, dest, size);
+
+    /* Prepare the format specification for printf_fp.  */
+    memset(&info, '\0', sizeof(info));
+
+    /* The functions strfromd and strfromf pass a floating-point number with
+       double precision to printf_fp, whereas strfroml passes a floating-point
+       number with long double precision.  The following line informs printf_fp
+       which type of floating-point number is being passed.  */
+    info.is_long_double = __builtin_types_compatible_p(FLOAT, long double);
+
+    /* Similarly, the function strfromf128 passes a floating-point number in
+       _Float128 format to printf_fp.  */
 #if __HAVE_DISTINCT_FLOAT128
-  info.is_binary128 = __builtin_types_compatible_p (FLOAT, _Float128);
+    info.is_binary128 = __builtin_types_compatible_p(FLOAT, _Float128);
 #endif
 
-  /* Set info according to the format string.  */
-  info.prec = precision;
-  info.spec = specifier;
+    /* Set info according to the format string.  */
+    info.prec = precision;
+    info.spec = specifier;
 
-  if (info.spec != 'a' && info.spec != 'A')
-    __printf_fp_l_buffer (&buf.base, _NL_CURRENT_LOCALE, &info, &fpptr);
-  else
-    __printf_fphex_l_buffer (&buf.base, _NL_CURRENT_LOCALE, &info, &fpptr);
-  return __printf_buffer_snprintf_done (&buf);
+    if (info.spec != 'a' && info.spec != 'A') {
+        __printf_fp_l_buffer(&buf.base, _NL_CURRENT_LOCALE, &info, &fpptr);
+    } else {
+        __printf_fphex_l_buffer(&buf.base, _NL_CURRENT_LOCALE, &info, &fpptr);
+    }
+    return __printf_buffer_snprintf_done(&buf);
 }

@@ -20,19 +20,17 @@
 #include <fcntl.h>
 
 /* Perform file control operations on FD.  */
-int
-__fcntl64 (int fd, int cmd, ...)
+int __fcntl64(int fd, int cmd, ...)
 {
-  if (fd < 0)
-    {
-      __set_errno (EBADF);
-      return -1;
+    if (fd < 0) {
+        __set_errno(EBADF);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (__fcntl64)
-stub_warning (fcntl64)
+libc_hidden_def(__fcntl64)
+stub_warning(fcntl64)
 
-weak_alias (__fcntl64, fcntl64)
+weak_alias(__fcntl64, fcntl64)

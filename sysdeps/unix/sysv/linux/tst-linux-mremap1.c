@@ -24,40 +24,40 @@
 #include <support/test-driver.h>
 #include <mremap-failure.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  size_t old_size = getpagesize ();
-  size_t new_size = old_size;
-  char *old_addr = xmmap (NULL, old_size, PROT_READ | PROT_WRITE,
-			  MAP_PRIVATE | MAP_ANONYMOUS, -1);
-  old_addr[0] = 1;
-  old_addr[old_size - 1] = 2;
+    size_t old_size = getpagesize();
+    size_t new_size = old_size;
+    char *old_addr = xmmap(NULL, old_size, PROT_READ | PROT_WRITE,
+                           MAP_PRIVATE | MAP_ANONYMOUS, -1);
+    old_addr[0] = 1;
+    old_addr[old_size - 1] = 2;
 
-  /* Create an available 64-page mmap region.  */
-  size_t fixed_size = old_size * 64;
-  char *fixed_addr = xmmap (NULL, fixed_size, PROT_READ | PROT_WRITE,
-			    MAP_PRIVATE | MAP_ANONYMOUS, -1);
-  xmunmap (fixed_addr, fixed_size);
+    /* Create an available 64-page mmap region.  */
+    size_t fixed_size = old_size * 64;
+    char *fixed_addr = xmmap(NULL, fixed_size, PROT_READ | PROT_WRITE,
+                             MAP_PRIVATE | MAP_ANONYMOUS, -1);
+    xmunmap(fixed_addr, fixed_size);
 
-  /* Add 3 * pagesize.  */
-  fixed_size += 3 * old_size;
+    /* Add 3 * pagesize.  */
+    fixed_size += 3 * old_size;
 
-  /* Test MREMAP_DONTUNMAP.  It should return FIXED_ADDR created above.  */
-  char *new_addr = mremap (old_addr, old_size, new_size,
-			   MREMAP_DONTUNMAP | MREMAP_MAYMOVE,
-			   fixed_addr);
-  if (new_addr == MAP_FAILED)
-    return mremap_failure_exit (errno);
-  TEST_VERIFY_EXIT (fixed_addr == new_addr);
-  old_addr[0] = 3;
-  old_addr[old_size - 1] = 4;
-  new_addr[0] = 1;
-  new_addr[new_size - 1] = 2;
-  xmunmap (new_addr, new_size);
-  xmunmap (old_addr, old_size);
+    /* Test MREMAP_DONTUNMAP.  It should return FIXED_ADDR created above.  */
+    char *new_addr = mremap(old_addr, old_size, new_size,
+                            MREMAP_DONTUNMAP | MREMAP_MAYMOVE,
+                            fixed_addr);
+    if (new_addr == MAP_FAILED) {
+        return mremap_failure_exit(errno);
+    }
+    TEST_VERIFY_EXIT(fixed_addr == new_addr);
+    old_addr[0] = 3;
+    old_addr[old_size - 1] = 4;
+    new_addr[0] = 1;
+    new_addr[new_size - 1] = 2;
+    xmunmap(new_addr, new_size);
+    xmunmap(old_addr, old_size);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

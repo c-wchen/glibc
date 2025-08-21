@@ -22,9 +22,8 @@
 
 /* Synchronize at least the data part of a file with the underlying
    media.  */
-int
-fdatasync (int fd)
+int fdatasync(int fd)
 {
-  return SYSCALL_CANCEL (fdatasync, fd);
+    return SYSCALL_CANCEL(fdatasync, fd);
 }
-libc_hidden_def (fdatasync)
+libc_hidden_def(fdatasync)

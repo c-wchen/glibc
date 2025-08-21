@@ -16,7 +16,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _BITS_PTHREADTYPES_ARCH_H
-#define _BITS_PTHREADTYPES_ARCH_H	1
+#define _BITS_PTHREADTYPES_ARCH_H   1
 
 /* Linuxthread type sizes (bytes):
    sizeof(pthread_attr_t) = 0x24 (36)
@@ -43,4 +43,4 @@
 #define __LOCK_ALIGNMENT __attribute__ ((__aligned__(16)))
 #define __ONCE_ALIGNMENT
 
-#endif	/* bits/pthreadtypes.h */
+#endif  /* bits/pthreadtypes.h */

@@ -21,36 +21,29 @@
 #include <stdio.h>
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int result = 0;
+    int result = 0;
 
-  errno = 0;
-  if (sigaction (SIGCANCEL, NULL, NULL) == 0)
-    {
-      puts ("sigaction(SIGCANCEL) did not fail");
-      result = 1;
-    }
-  else if (errno != EINVAL)
-    {
-      puts ("sigaction(SIGCANCEL) did not set errno to EINVAL");
-      result = 1;
+    errno = 0;
+    if (sigaction(SIGCANCEL, NULL, NULL) == 0) {
+        puts("sigaction(SIGCANCEL) did not fail");
+        result = 1;
+    } else if (errno != EINVAL) {
+        puts("sigaction(SIGCANCEL) did not set errno to EINVAL");
+        result = 1;
     }
 
-  errno = 0;
-  if (sigaction (SIGSETXID, NULL, NULL) == 0)
-    {
-      puts ("sigaction(SIGSETXID) did not fail");
-      result = 1;
-    }
-  else if (errno != EINVAL)
-    {
-      puts ("sigaction(SIGSETXID) did not set errno to EINVAL");
-      result = 1;
+    errno = 0;
+    if (sigaction(SIGSETXID, NULL, NULL) == 0) {
+        puts("sigaction(SIGSETXID) did not fail");
+        result = 1;
+    } else if (errno != EINVAL) {
+        puts("sigaction(SIGSETXID) did not set errno to EINVAL");
+        result = 1;
     }
 
-  return result;
+    return result;
 }
 
 #define TEST_FUNCTION do_test ()

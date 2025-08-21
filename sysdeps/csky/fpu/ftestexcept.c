@@ -22,9 +22,8 @@
 #include <fenv_private.h>
 #include <stdio.h>
 
-int
-fetestexcept (int excepts)
+int fetestexcept(int excepts)
 {
-  return libc_fetestexcept_vfp (excepts);
+    return libc_fetestexcept_vfp(excepts);
 }
-libm_hidden_def (fetestexcept)
+libm_hidden_def(fetestexcept)

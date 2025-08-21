@@ -23,24 +23,24 @@
 #include <bits/types.h>
 #include <bits/sysmacros.h>
 
-#define __SYSMACROS_DECL_TEMPL(rtype, name, proto)			     \
+#define __SYSMACROS_DECL_TEMPL(rtype, name, proto)               \
   extern rtype gnu_dev_##name proto __THROW __attribute_const__;
 
-#define __SYSMACROS_IMPL_TEMPL(rtype, name, proto)			     \
-  __extension__ __extern_inline __attribute_const__ rtype		     \
+#define __SYSMACROS_IMPL_TEMPL(rtype, name, proto)               \
+  __extension__ __extern_inline __attribute_const__ rtype            \
   __NTH (gnu_dev_##name proto)
 
 __BEGIN_DECLS
 
-__SYSMACROS_DECLARE_MAJOR (__SYSMACROS_DECL_TEMPL)
-__SYSMACROS_DECLARE_MINOR (__SYSMACROS_DECL_TEMPL)
-__SYSMACROS_DECLARE_MAKEDEV (__SYSMACROS_DECL_TEMPL)
+__SYSMACROS_DECLARE_MAJOR(__SYSMACROS_DECL_TEMPL)
+__SYSMACROS_DECLARE_MINOR(__SYSMACROS_DECL_TEMPL)
+__SYSMACROS_DECLARE_MAKEDEV(__SYSMACROS_DECL_TEMPL)
 
 #ifdef __USE_EXTERN_INLINES
 
-__SYSMACROS_DEFINE_MAJOR (__SYSMACROS_IMPL_TEMPL)
-__SYSMACROS_DEFINE_MINOR (__SYSMACROS_IMPL_TEMPL)
-__SYSMACROS_DEFINE_MAKEDEV (__SYSMACROS_IMPL_TEMPL)
+__SYSMACROS_DEFINE_MAJOR(__SYSMACROS_IMPL_TEMPL)
+__SYSMACROS_DEFINE_MINOR(__SYSMACROS_IMPL_TEMPL)
+__SYSMACROS_DEFINE_MAKEDEV(__SYSMACROS_IMPL_TEMPL)
 
 #endif
 

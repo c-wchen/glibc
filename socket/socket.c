@@ -21,14 +21,13 @@
 /* Create a new socket of type TYPE in domain DOMAIN, using
    protocol PROTOCOL.  If PROTOCOL is zero, one is chosen automatically.
    Returns a file descriptor for the new socket, or -1 for errors.  */
-int
-__socket (int domain, int type, int protocol)
+int __socket(int domain, int type, int protocol)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
 
-libc_hidden_def (__socket)
-weak_alias (__socket, socket)
-stub_warning (socket)
+libc_hidden_def(__socket)
+weak_alias(__socket, socket)
+stub_warning(socket)

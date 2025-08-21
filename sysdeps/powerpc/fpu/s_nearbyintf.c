@@ -22,9 +22,8 @@
 #include <libm-alias-float.h>
 #include <round_to_integer.h>
 
-float
-__nearbyintf (float x)
+float __nearbyintf(float x)
 {
-  return round_to_integer_float (NEARBYINT, x);
+    return round_to_integer_float(NEARBYINT, x);
 }
-libm_alias_float (__nearbyint, nearbyint)
+libm_alias_float(__nearbyint, nearbyint)

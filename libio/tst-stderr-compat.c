@@ -25,27 +25,25 @@
 # include <support/check.h>
 
 extern FILE _IO_stderr_;
-compat_symbol_reference (libc, _IO_stderr_, _IO_stderr_, GLIBC_2_0);
-compat_symbol_reference (libc, fclose, fclose, GLIBC_2_0);
+compat_symbol_reference(libc, _IO_stderr_, _IO_stderr_, GLIBC_2_0);
+compat_symbol_reference(libc, fclose, fclose, GLIBC_2_0);
 
-__attribute__ ((weak, noclone, noinline))
+__attribute__((weak, noclone, noinline))
 void
-do_fclose (FILE *fp)
+do_fclose(FILE *fp)
 {
-  TEST_VERIFY_EXIT (fclose (fp) == 0);
+    TEST_VERIFY_EXIT(fclose(fp) == 0);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  do_fclose (&_IO_stderr_);
-  return 0;
+    do_fclose(&_IO_stderr_);
+    return 0;
 }
 #else
-static int
-do_test (void)
+static int do_test(void)
 {
-  return 0;
+    return 0;
 }
 #endif
 

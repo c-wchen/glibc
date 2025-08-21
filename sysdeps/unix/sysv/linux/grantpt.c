@@ -21,21 +21,22 @@
 #include <sys/ioctl.h>
 #include <termios.h>
 
-int
-grantpt (int fd)
+int grantpt(int fd)
 {
-  /* Without pt_chown on Linux, we have delegated the creation of the
-     pty node with the right group and permission mode to the kernel, and
-     non-root users are unlikely to be able to change it. Therefore let's
-     consider that POSIX enforcement is the responsibility of the whole
-     system and not only the GNU libc.   */
+    /* Without pt_chown on Linux, we have delegated the creation of the
+       pty node with the right group and permission mode to the kernel, and
+       non-root users are unlikely to be able to change it. Therefore let's
+       consider that POSIX enforcement is the responsibility of the whole
+       system and not only the GNU libc.   */
 
-  /* Verify that fd refers to a ptmx descriptor.  */
-  unsigned int ptyno;
-  int ret = __ioctl (fd, TIOCGPTN, &ptyno);
-  if (ret != 0 && errno == ENOTTY)
-    /* POSIX requires EINVAL instead of ENOTTY provided by the kernel.  */
-    __set_errno (EINVAL);
-  return ret;
+    /* Verify that fd refers to a ptmx descriptor.  */
+    unsigned int ptyno;
+    int ret = __ioctl(fd, TIOCGPTN, &ptyno);
+    if (ret != 0 && errno == ENOTTY)
+        /* POSIX requires EINVAL instead of ENOTTY provided by the kernel.  */
+    {
+        __set_errno(EINVAL);
+    }
+    return ret;
 }
-libc_hidden_def (grantpt)
+libc_hidden_def(grantpt)

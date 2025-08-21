@@ -23,6 +23,6 @@
 #include <s_clog10_template.c>
 
 #if LONG_DOUBLE_COMPAT (libm, FIRST_VERSION_libm___clog10l)
-strong_alias (__clog10, __clog10l_alias)
-compat_symbol (libm, __clog10l_alias, __clog10l, FIRST_VERSION_libm___clog10l);
+strong_alias(__clog10, __clog10l_alias)
+compat_symbol(libm, __clog10l_alias, __clog10l, FIRST_VERSION_libm___clog10l);
 #endif

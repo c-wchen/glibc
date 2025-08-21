@@ -27,52 +27,52 @@
    0 (if PREFIXED_NAME is non-NULL, setting *PREFIXED_NAME to the resulting
    prefixed path).  If FUN never returns 0, return the first non-ENOENT
    return value, or ENOENT if there is none.  */
-error_t
-file_name_path_scan (const char *file_name, const char *path,
-		     error_t (*fun)(const char *name),
-		     char **prefixed_name)
+error_t file_name_path_scan(const char *file_name, const char *path,
+                            error_t (*fun)(const char *name),
+                            char **prefixed_name)
 {
-  if (path == NULL || strchr (file_name, '/'))
-    {
-      if (prefixed_name)
-	*prefixed_name = 0;
-      return (*fun)(file_name);
-    }
-  else
-    {
-      error_t real_err = 0;
-      size_t file_name_len = strlen (file_name);
+    if (path == NULL || strchr(file_name, '/')) {
+        if (prefixed_name) {
+            *prefixed_name = 0;
+        }
+        return (*fun)(file_name);
+    } else {
+        error_t real_err = 0;
+        size_t file_name_len = strlen(file_name);
 
-      for (;;)
-	{
-	  error_t err;
-	  const char *next = strchr (path, ':') ?: path + strlen (path);
-	  size_t pfx_len = next - path;
-	  char pfxed_name[pfx_len + 2 + file_name_len + 1];
+        for (;;) {
+            error_t err;
+            const char *next = strchr(path, ':') ? : path + strlen(path);
+            size_t pfx_len = next - path;
+            char pfxed_name[pfx_len + 2 + file_name_len + 1];
 
-	  if (pfx_len == 0)
-	    pfxed_name[pfx_len++] = '.';
-	  else
-	    memcpy (pfxed_name, path, pfx_len);
-	  if (pfxed_name[pfx_len - 1] != '/')
-	    pfxed_name[pfx_len++] = '/';
-	  memcpy (pfxed_name + pfx_len, file_name, file_name_len + 1);
+            if (pfx_len == 0) {
+                pfxed_name[pfx_len++] = '.';
+            } else {
+                memcpy(pfxed_name, path, pfx_len);
+            }
+            if (pfxed_name[pfx_len - 1] != '/') {
+                pfxed_name[pfx_len++] = '/';
+            }
+            memcpy(pfxed_name + pfx_len, file_name, file_name_len + 1);
 
-	  err = (*fun)(pfxed_name);
-	  if (err == 0)
-	    {
-	      if (prefixed_name)
-		*prefixed_name = __strdup (pfxed_name);
-	      return 0;
-	    }
-	  if (!real_err && err != ENOENT)
-	    real_err = err;
+            err = (*fun)(pfxed_name);
+            if (err == 0) {
+                if (prefixed_name) {
+                    *prefixed_name = __strdup(pfxed_name);
+                }
+                return 0;
+            }
+            if (!real_err && err != ENOENT) {
+                real_err = err;
+            }
 
-	  if (*next == '\0')
-	    return real_err ?: ENOENT;
-	  else
-	    path = next + 1;
-	}
+            if (*next == '\0') {
+                return real_err ? : ENOENT;
+            } else {
+                path = next + 1;
+            }
+        }
     }
 }
 
@@ -85,38 +85,36 @@ file_name_path_scan (const char *file_name, const char *path,
    then if RESULT is looked up directly, *PREFIXED_NAME is set to NULL, and
    if it is looked up using a prefix from PATH, *PREFIXED_NAME is set to
    malloced storage containing the prefixed name.  */
-error_t
-__hurd_file_name_path_lookup (error_t (*use_init_port)
-			        (int which, error_t (*operate) (mach_port_t)),
-			      file_t (*get_dtable_port) (int fd),
-			      error_t (*lookup)
-			        (file_t dir, const char *name, int flags, mode_t mode,
-			         retry_type *do_retry, string_t retry_name,
-			         mach_port_t *result),
-			      const char *file_name, const char *path,
-			      int flags, mode_t mode,
-			      file_t *result, char **prefixed_name)
+error_t __hurd_file_name_path_lookup(error_t (*use_init_port)
+                                     (int which, error_t (*operate)(mach_port_t)),
+                                     file_t (*get_dtable_port)(int fd),
+                                     error_t (*lookup)
+                                     (file_t dir, const char *name, int flags, mode_t mode,
+                                      retry_type *do_retry, string_t retry_name,
+                                      mach_port_t *result),
+                                     const char *file_name, const char *path,
+                                     int flags, mode_t mode,
+                                     file_t *result, char **prefixed_name)
 {
-  error_t scan_lookup (const char *name)
-    {
-      return
-	__hurd_file_name_lookup (use_init_port, get_dtable_port, lookup,
-				 name, flags, mode, result);
+    error_t scan_lookup(const char *name) {
+        return
+            __hurd_file_name_lookup(use_init_port, get_dtable_port, lookup,
+                                    name, flags, mode, result);
     }
-  return file_name_path_scan (file_name, path, scan_lookup, prefixed_name);
+    return file_name_path_scan(file_name, path, scan_lookup, prefixed_name);
 }
-strong_alias (__hurd_file_name_path_lookup, hurd_file_name_path_lookup)
+strong_alias(__hurd_file_name_path_lookup, hurd_file_name_path_lookup)
 
 file_t
-file_name_path_lookup (const char *file_name, const char *path,
-		       int flags, mode_t mode, char **prefixed_name)
+file_name_path_lookup(const char *file_name, const char *path,
+                      int flags, mode_t mode, char **prefixed_name)
 {
-  error_t err;
-  file_t result;
+    error_t err;
+    file_t result;
 
-  err = __hurd_file_name_path_lookup (&_hurd_ports_use, &__getdport, 0,
-				      file_name, path, flags, mode,
-				      &result, prefixed_name);
+    err = __hurd_file_name_path_lookup(&_hurd_ports_use, &__getdport, 0,
+                                       file_name, path, flags, mode,
+                                       &result, prefixed_name);
 
-  return err ? (__hurd_fail (err), MACH_PORT_NULL) : result;
+    return err ? (__hurd_fail(err), MACH_PORT_NULL) : result;
 }

@@ -22,56 +22,57 @@
 
 
 #if LIBM_SVID_COMPAT && (SHLIB_COMPAT (libm, GLIBC_2_0, GLIBC_2_29) \
-			 || defined NO_LONG_DOUBLE \
-			 || defined LONG_DOUBLE_COMPAT)
+             || defined NO_LONG_DOUBLE \
+             || defined LONG_DOUBLE_COMPAT)
 /* wrapper pow */
-double
-__pow_compat (double x, double y)
+double __pow_compat(double x, double y)
 {
-  double z = __ieee754_pow (x, y);
-  if (__glibc_unlikely (!isfinite (z)))
+    double z = __ieee754_pow(x, y);
+    if (__glibc_unlikely(!isfinite(z))) {
+        if (_LIB_VERSION != _IEEE_) {
+            if (isfinite(x) && isfinite(y)) {
+                if (isnan(z))
+                    /* pow neg**non-int */
+                {
+                    return __kernel_standard(x, y, 24);
+                } else if (x == 0.0 && y < 0.0) {
+                    if (signbit(x) && signbit(z))
+                        /* pow(-0.0,negative) */
+                    {
+                        return __kernel_standard(x, y, 23);
+                    } else
+                        /* pow(+0.0,negative) */
+                    {
+                        return __kernel_standard(x, y, 43);
+                    }
+                } else
+                    /* pow overflow */
+                {
+                    return __kernel_standard(x, y, 21);
+                }
+            }
+        }
+    } else if (__builtin_expect(z == 0.0, 0)
+               && isfinite(x) && x != 0 && isfinite(y)
+               && _LIB_VERSION != _IEEE_)
+        /* pow underflow */
     {
-      if (_LIB_VERSION != _IEEE_)
-	{
-	  if (isfinite (x) && isfinite (y))
-	    {
-	      if (isnan (z))
-		/* pow neg**non-int */
-		return __kernel_standard (x, y, 24);
-	      else if (x == 0.0 && y < 0.0)
-		{
-		  if (signbit (x) && signbit (z))
-		    /* pow(-0.0,negative) */
-		    return __kernel_standard (x, y, 23);
-		  else
-		    /* pow(+0.0,negative) */
-		    return __kernel_standard (x, y, 43);
-		}
-	      else
-		/* pow overflow */
-		return __kernel_standard (x, y, 21);
-	    }
-	}
+        return __kernel_standard(x, y, 22);
     }
-  else if (__builtin_expect (z == 0.0, 0)
-	   && isfinite (x) && x != 0 && isfinite (y)
-	   && _LIB_VERSION != _IEEE_)
-    /* pow underflow */
-    return __kernel_standard (x, y, 22);
 
-  return z;
+    return z;
 }
 # if SHLIB_COMPAT (libm, GLIBC_2_0, GLIBC_2_29)
-compat_symbol (libm, __pow_compat, pow, GLIBC_2_0);
+compat_symbol(libm, __pow_compat, pow, GLIBC_2_0);
 # endif
 # ifdef NO_LONG_DOUBLE
-weak_alias (__pow_compat, powl)
+weak_alias(__pow_compat, powl)
 # endif
 # ifdef LONG_DOUBLE_COMPAT
 /* Work around gas bug "multiple versions for symbol".  */
-weak_alias (__pow_compat, __pow_compat_alias)
+weak_alias(__pow_compat, __pow_compat_alias)
 
-LONG_DOUBLE_COMPAT_CHOOSE_libm_powl (
-  compat_symbol (libm, __pow_compat_alias, powl, FIRST_VERSION_libm_powl), );
+LONG_DOUBLE_COMPAT_CHOOSE_libm_powl(
+    compat_symbol(libm, __pow_compat_alias, powl, FIRST_VERSION_libm_powl),);
 # endif
 #endif

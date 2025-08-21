@@ -27,11 +27,11 @@
 # define SYMBOL_NAME wcscmp
 # include "ifunc-avx2.h"
 
-libc_ifunc_redirected (__redirect_wcscmp, __wcscmp, IFUNC_SELECTOR ());
-weak_alias (__wcscmp, wcscmp)
+libc_ifunc_redirected(__redirect_wcscmp, __wcscmp, IFUNC_SELECTOR());
+weak_alias(__wcscmp, wcscmp)
 
 # ifdef SHARED
-__hidden_ver1 (__wcscmp, __GI___wcscmp, __redirect_wcscmp)
-  __attribute__ ((visibility ("hidden")));
+__hidden_ver1(__wcscmp, __GI___wcscmp, __redirect_wcscmp)
+__attribute__((visibility("hidden")));
 # endif
 #endif

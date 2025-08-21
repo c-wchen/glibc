@@ -21,7 +21,7 @@
 /* Get the conversion table.  */
 #define TABLES <greek7-old.h>
 
-#define CHARSET_NAME	"GREEK7-OLD//"
-#define HAS_HOLES	1	/* Not all 256 character are defined.  */
+#define CHARSET_NAME    "GREEK7-OLD//"
+#define HAS_HOLES   1   /* Not all 256 character are defined.  */
 
 #include <8bit-gap.c>

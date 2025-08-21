@@ -32,79 +32,74 @@
 #include "s_sin.c"
 
 void
-SECTION
-__sincos (double x, double *sinx, double *cosx)
+SECTION __sincos(double x, double *sinx, double *cosx)
 {
-  mynumber u;
-  int k;
+    mynumber u;
+    int k;
 
-  SET_RESTORE_ROUND_53BIT (FE_TONEAREST);
+    SET_RESTORE_ROUND_53BIT(FE_TONEAREST);
 
-  u.x = x;
-  k = u.i[HIGH_HALF] & 0x7fffffff;
+    u.x = x;
+    k = u.i[HIGH_HALF] & 0x7fffffff;
 
-  if (k < 0x400368fd)
-    {
-      double a, da, y;
-      /* |x| < 2^-27 => cos (x) = 1, sin (x) = x.  */
-      if (k < 0x3e400000)
-	{
-	  if (k < 0x3e500000)
-	    math_check_force_underflow (x);
-	  *sinx = x;
-	  *cosx = 1.0;
-	  return;
-	}
-      /* |x| < 0.855469.  */
-      else if (k < 0x3feb6000)
-	{
-	  *sinx = do_sin (x, 0);
-	  *cosx = do_cos (x, 0);
-	  return;
-	}
+    if (k < 0x400368fd) {
+        double a, da, y;
+        /* |x| < 2^-27 => cos (x) = 1, sin (x) = x.  */
+        if (k < 0x3e400000) {
+            if (k < 0x3e500000) {
+                math_check_force_underflow(x);
+            }
+            *sinx = x;
+            *cosx = 1.0;
+            return;
+        }
+        /* |x| < 0.855469.  */
+        else if (k < 0x3feb6000) {
+            *sinx = do_sin(x, 0);
+            *cosx = do_cos(x, 0);
+            return;
+        }
 
-      /* |x| < 2.426265.  */
-      y = hp0 - fabs (x);
-      a = y + hp1;
-      da = (y - a) + hp1;
-      *sinx = copysign (do_cos (a, da), x);
-      *cosx = do_sin (a, da);
-      return;
+        /* |x| < 2.426265.  */
+        y = hp0 - fabs(x);
+        a = y + hp1;
+        da = (y - a) + hp1;
+        *sinx = copysign(do_cos(a, da), x);
+        *cosx = do_sin(a, da);
+        return;
     }
-  /* |x| < 2^1024.  */
-  if (k < 0x7ff00000)
-    {
-      double a, da, xx;
-      unsigned int n;
+    /* |x| < 2^1024.  */
+    if (k < 0x7ff00000) {
+        double a, da, xx;
+        unsigned int n;
 
-      /* If |x| < 105414350 use simple range reduction.  */
-      n = k < 0x419921FB ? reduce_sincos (x, &a, &da) : __branred (x, &a, &da);
-      n = n & 3;
+        /* If |x| < 105414350 use simple range reduction.  */
+        n = k < 0x419921FB ? reduce_sincos(x, &a, &da) : __branred(x, &a, &da);
+        n = n & 3;
 
-      if (n == 1 || n == 2)
-	{
-	  a = -a;
-	  da = -da;
-	}
+        if (n == 1 || n == 2) {
+            a = -a;
+            da = -da;
+        }
 
-      if (n & 1)
-	{
-	  double *temp = cosx;
-	  cosx = sinx;
-	  sinx = temp;
-	}
+        if (n & 1) {
+            double *temp = cosx;
+            cosx = sinx;
+            sinx = temp;
+        }
 
-      *sinx = do_sin (a, da);
-      xx = do_cos (a, da);
-      *cosx = (n & 2) ? -xx : xx;
-      return;
+        *sinx = do_sin(a, da);
+        xx = do_cos(a, da);
+        *cosx = (n & 2) ? -xx : xx;
+        return;
     }
 
-  if (isinf (x))
-    __set_errno (EDOM);
+    if (isinf(x)) {
+        __set_errno(EDOM);
+    }
 
-  *sinx = *cosx = x / x;
+    *sinx = *cosx = x / x;
 }
 #ifndef __sincos
-libm_alias_double (__sincos, sincos)
+libm_alias_double(__sincos, sincos)
 #endif

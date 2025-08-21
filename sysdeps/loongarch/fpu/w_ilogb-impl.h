@@ -18,20 +18,18 @@
 
 #include <fpu_control.h>
 
-static inline RET_TYPE
-IMPL_NAME (double x)
+static inline RET_TYPE IMPL_NAME(double x)
 {
-  int x_cond;
-  asm volatile ("fclass.d \t%0, %1" : "=f" (x_cond) : "f" (x));
+    int x_cond;
+    asm volatile("fclass.d \t%0, %1" : "=f"(x_cond) : "f"(x));
 
-  if (__glibc_unlikely (x_cond & _FCLASS_ZERO))
-    return RET_INVALID (RET_LOGB0);
-  else if (__glibc_unlikely (x_cond & ( _FCLASS_NAN | _FCLASS_INF)))
-    return RET_INVALID (RET_LOGBNAN);
-  else
-    {
-      asm volatile ("fabs.d \t%0, %1" : "=f" (x) : "f" (x));
-      asm volatile ("flogb.d \t%0, %1" : "=f" (x) : "f" (x));
-      return x;
+    if (__glibc_unlikely(x_cond & _FCLASS_ZERO)) {
+        return RET_INVALID(RET_LOGB0);
+    } else if (__glibc_unlikely(x_cond & (_FCLASS_NAN | _FCLASS_INF))) {
+        return RET_INVALID(RET_LOGBNAN);
+    } else {
+        asm volatile("fabs.d \t%0, %1" : "=f"(x) : "f"(x));
+        asm volatile("flogb.d \t%0, %1" : "=f"(x) : "f"(x));
+        return x;
     }
 }

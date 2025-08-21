@@ -19,9 +19,9 @@
 #include <pwd.h>
 #include <nss.h>
 
-#define STRUCTURE	passwd
-#define ENTNAME		pwent
-#define DATABASE	"passwd"
+#define STRUCTURE   passwd
+#define ENTNAME     pwent
+#define DATABASE    "passwd"
 struct pwent_data {};
 
 /* Our parser function is already defined in fgetpwent_r.c, so use that
@@ -30,16 +30,14 @@ struct pwent_data {};
 #include "files-parse.c"
 #include GENERIC
 
-DB_LOOKUP (pwnam, '.', 0, ("%s", name),
-	   {
-	     if (name[0] != '+' && name[0] != '-'
-		 && ! strcmp (name, result->pw_name))
-	       break;
-	   }, const char *name)
+DB_LOOKUP(pwnam, '.', 0, ("%s", name), {
+    if (name[0] != '+' && name[0] != '-'
+        && ! strcmp(name, result->pw_name))
+        break;
+}, const char *name)
 
-DB_LOOKUP (pwuid, '=', 20, ("%lu", (unsigned long int) uid),
-	   {
-	     if (result->pw_uid == uid && result->pw_name[0] != '+'
-		 && result->pw_name[0] != '-')
-	       break;
-	   }, uid_t uid)
+DB_LOOKUP(pwuid, '=', 20, ("%lu", (unsigned long int) uid), {
+    if (result->pw_uid == uid && result->pw_name[0] != '+'
+        && result->pw_name[0] != '-')
+        break;
+}, uid_t uid)

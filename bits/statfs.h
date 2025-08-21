@@ -30,8 +30,7 @@
    and retain binary compatibility, we would need to assign a new message
    number.  */
 
-struct statfs
-  {
+struct statfs {
     unsigned int f_type;
     unsigned int f_bsize;
 #ifndef __USE_FILE_OFFSET64
@@ -50,11 +49,10 @@ struct statfs
     __fsid_t f_fsid;
     unsigned int f_namelen;
     unsigned int f_spare[6];
-  };
+};
 
 #ifdef __USE_LARGEFILE64
-struct statfs64
-  {
+struct statfs64 {
     unsigned int f_type;
     unsigned int f_bsize;
     __fsblkcnt64_t f_blocks;
@@ -65,5 +63,5 @@ struct statfs64
     __fsid_t f_fsid;
     unsigned int f_namelen;
     unsigned int f_spare[6];
-  };
+};
 #endif

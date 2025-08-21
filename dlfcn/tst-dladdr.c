@@ -25,49 +25,55 @@
 
 
 #define TEST_FUNCTION do_test ()
-extern int do_test (void);
+extern int do_test(void);
 
-int
-do_test (void)
+int do_test(void)
 {
-  void *handle;
-  int (*sym) (void); /* We load ref1 from glreflib1.c.  */
-  Dl_info info;
-  int ret;
+    void *handle;
+    int (*sym)(void);  /* We load ref1 from glreflib1.c.  */
+    Dl_info info;
+    int ret;
 
 
-  handle = dlopen ("glreflib1.so", RTLD_NOW);
-  if (handle == NULL)
-    error (EXIT_FAILURE, 0, "cannot load: glreflib1.so");
+    handle = dlopen("glreflib1.so", RTLD_NOW);
+    if (handle == NULL) {
+        error(EXIT_FAILURE, 0, "cannot load: glreflib1.so");
+    }
 
-  sym = dlsym (handle, "ref1");
-  if (sym == NULL)
-    error (EXIT_FAILURE, 0, "dlsym failed");
+    sym = dlsym(handle, "ref1");
+    if (sym == NULL) {
+        error(EXIT_FAILURE, 0, "dlsym failed");
+    }
 
-  memset (&info, 0, sizeof (info));
-  ret = dladdr (sym, &info);
+    memset(&info, 0, sizeof(info));
+    ret = dladdr(sym, &info);
 
-  if (ret == 0)
-    error (EXIT_FAILURE, 0, "dladdr failed");
+    if (ret == 0) {
+        error(EXIT_FAILURE, 0, "dladdr failed");
+    }
 
-  printf ("ret = %d\n", ret);
-  printf ("info.dli_fname = %p (\"%s\")\n", info.dli_fname, info.dli_fname);
-  printf ("info.dli_fbase = %p\n", info.dli_fbase);
-  printf ("info.dli_sname = %p (\"%s\")\n", info.dli_sname, info.dli_sname);
-  printf ("info.dli_saddr = %p\n", info.dli_saddr);
+    printf("ret = %d\n", ret);
+    printf("info.dli_fname = %p (\"%s\")\n", info.dli_fname, info.dli_fname);
+    printf("info.dli_fbase = %p\n", info.dli_fbase);
+    printf("info.dli_sname = %p (\"%s\")\n", info.dli_sname, info.dli_sname);
+    printf("info.dli_saddr = %p\n", info.dli_saddr);
 
-  if (info.dli_fname == NULL)
-    error (EXIT_FAILURE, 0, "dli_fname is NULL");
-  if (info.dli_fbase == NULL)
-    error (EXIT_FAILURE, 0, "dli_fbase is NULL");
-  if (info.dli_sname == NULL)
-    error (EXIT_FAILURE, 0, "dli_sname is NULL");
-  if (info.dli_saddr == NULL)
-    error (EXIT_FAILURE, 0, "dli_saddr is NULL");
+    if (info.dli_fname == NULL) {
+        error(EXIT_FAILURE, 0, "dli_fname is NULL");
+    }
+    if (info.dli_fbase == NULL) {
+        error(EXIT_FAILURE, 0, "dli_fbase is NULL");
+    }
+    if (info.dli_sname == NULL) {
+        error(EXIT_FAILURE, 0, "dli_sname is NULL");
+    }
+    if (info.dli_saddr == NULL) {
+        error(EXIT_FAILURE, 0, "dli_saddr is NULL");
+    }
 
-  dlclose (handle);
+    dlclose(handle);
 
-  return 0;
+    return 0;
 }
 
 

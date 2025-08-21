@@ -20,7 +20,7 @@
  */
 
 #ifndef _AIO_H
-#define _AIO_H	1
+#define _AIO_H  1
 
 #include <features.h>
 #include <sys/types.h>
@@ -31,182 +31,176 @@
 __BEGIN_DECLS
 
 /* Asynchronous I/O control block.  */
-struct aiocb
-{
-  int aio_fildes;		/* File descriptor.  */
-  int aio_lio_opcode;		/* Operation to be performed.  */
-  int aio_reqprio;		/* Request priority offset.  */
-  volatile void *aio_buf;	/* Location of buffer.  */
-  size_t aio_nbytes;		/* Length of transfer.  */
-  struct sigevent aio_sigevent;	/* Signal number and value.  */
+struct aiocb {
+    int aio_fildes;       /* File descriptor.  */
+    int aio_lio_opcode;       /* Operation to be performed.  */
+    int aio_reqprio;      /* Request priority offset.  */
+    volatile void *aio_buf;   /* Location of buffer.  */
+    size_t aio_nbytes;        /* Length of transfer.  */
+    struct sigevent aio_sigevent; /* Signal number and value.  */
 
-  /* Internal members.  */
-  struct aiocb *__next_prio;
-  int __abs_prio;
-  int __policy;
-  int __error_code;
-  __ssize_t __return_value;
+    /* Internal members.  */
+    struct aiocb *__next_prio;
+    int __abs_prio;
+    int __policy;
+    int __error_code;
+    __ssize_t __return_value;
 
 #ifndef __USE_FILE_OFFSET64
-  __off_t aio_offset;		/* File offset.  */
-  char __pad[sizeof (__off64_t) - sizeof (__off_t)];
+    __off_t aio_offset;       /* File offset.  */
+    char __pad[sizeof(__off64_t) - sizeof(__off_t)];
 #else
-  __off64_t aio_offset;		/* File offset.  */
+    __off64_t aio_offset;     /* File offset.  */
 #endif
-  char __glibc_reserved[32];
+    char __glibc_reserved[32];
 };
 
 /* The same for the 64bit offsets.  Please note that the members aio_fildes
    to __return_value have to be the same in aiocb and aiocb64.  */
 #ifdef __USE_LARGEFILE64
-struct aiocb64
-{
-  int aio_fildes;		/* File descriptor.  */
-  int aio_lio_opcode;		/* Operation to be performed.  */
-  int aio_reqprio;		/* Request priority offset.  */
-  volatile void *aio_buf;	/* Location of buffer.  */
-  size_t aio_nbytes;		/* Length of transfer.  */
-  struct sigevent aio_sigevent;	/* Signal number and value.  */
+struct aiocb64 {
+    int aio_fildes;       /* File descriptor.  */
+    int aio_lio_opcode;       /* Operation to be performed.  */
+    int aio_reqprio;      /* Request priority offset.  */
+    volatile void *aio_buf;   /* Location of buffer.  */
+    size_t aio_nbytes;        /* Length of transfer.  */
+    struct sigevent aio_sigevent; /* Signal number and value.  */
 
-  /* Internal members.  */
-  struct aiocb *__next_prio;
-  int __abs_prio;
-  int __policy;
-  int __error_code;
-  __ssize_t __return_value;
+    /* Internal members.  */
+    struct aiocb *__next_prio;
+    int __abs_prio;
+    int __policy;
+    int __error_code;
+    __ssize_t __return_value;
 
-  __off64_t aio_offset;		/* File offset.  */
-  char __glibc_reserved[32];
+    __off64_t aio_offset;     /* File offset.  */
+    char __glibc_reserved[32];
 };
 #endif
 
 
 #ifdef __USE_GNU
 /* To optimize the implementation one can use the following struct.  */
-struct aioinit
-  {
-    int aio_threads;		/* Maximum number of threads.  */
-    int aio_num;		/* Number of expected simultaneous requests.  */
-    int aio_locks;		/* Not used.  */
-    int aio_usedba;		/* Not used.  */
-    int aio_debug;		/* Not used.  */
-    int aio_numusers;		/* Not used.  */
-    int aio_idle_time;		/* Number of seconds before idle thread
-				   terminates.  */
+struct aioinit {
+    int aio_threads;        /* Maximum number of threads.  */
+    int aio_num;        /* Number of expected simultaneous requests.  */
+    int aio_locks;      /* Not used.  */
+    int aio_usedba;     /* Not used.  */
+    int aio_debug;      /* Not used.  */
+    int aio_numusers;       /* Not used.  */
+    int aio_idle_time;      /* Number of seconds before idle thread
+                   terminates.  */
     int aio_reserved;
-  };
+};
 #endif
 
 
 /* Return values of the aio_cancel function.  */
-enum
-{
-  AIO_CANCELED,
+enum {
+    AIO_CANCELED,
 #define AIO_CANCELED AIO_CANCELED
-  AIO_NOTCANCELED,
+    AIO_NOTCANCELED,
 #define AIO_NOTCANCELED AIO_NOTCANCELED
-  AIO_ALLDONE
+    AIO_ALLDONE
 #define AIO_ALLDONE AIO_ALLDONE
 };
 
 
 /* Operation codes for `aio_lio_opcode'.  */
-enum
-{
-  LIO_READ,
+enum {
+    LIO_READ,
 #define LIO_READ LIO_READ
-  LIO_WRITE,
+    LIO_WRITE,
 #define LIO_WRITE LIO_WRITE
-  LIO_NOP
+    LIO_NOP
 #define LIO_NOP LIO_NOP
 };
 
 
 /* Synchronization options for `lio_listio' function.  */
-enum
-{
-  LIO_WAIT,
+enum {
+    LIO_WAIT,
 #define LIO_WAIT LIO_WAIT
-  LIO_NOWAIT
+    LIO_NOWAIT
 #define LIO_NOWAIT LIO_NOWAIT
 };
 
 
 /* Allow user to specify optimization.  */
 #ifdef __USE_GNU
-extern void aio_init (const struct aioinit *__init) __THROW __nonnull ((1));
+extern void aio_init(const struct aioinit *__init) __THROW __nonnull((1));
 #endif
 
 
 #ifndef __USE_FILE_OFFSET64
 /* Enqueue read request for given number of bytes and the given priority.  */
-extern int aio_read (struct aiocb *__aiocbp) __THROW __nonnull ((1));
+extern int aio_read(struct aiocb *__aiocbp) __THROW __nonnull((1));
 /* Enqueue write request for given number of bytes and the given priority.  */
-extern int aio_write (struct aiocb *__aiocbp) __THROW __nonnull ((1));
+extern int aio_write(struct aiocb *__aiocbp) __THROW __nonnull((1));
 
 /* Initiate list of I/O requests.  */
-extern int lio_listio (int __mode,
-		       struct aiocb *const __list[__restrict_arr],
-		       int __nent, struct sigevent *__restrict __sig)
-  __THROW __nonnull ((2));
+extern int lio_listio(int __mode,
+                      struct aiocb *const __list[__restrict_arr],
+                      int __nent, struct sigevent *__restrict __sig)
+__THROW __nonnull((2));
 
 /* Retrieve error status associated with AIOCBP.  */
-extern int aio_error (const struct aiocb *__aiocbp) __THROW __nonnull ((1));
+extern int aio_error(const struct aiocb *__aiocbp) __THROW __nonnull((1));
 /* Return status associated with AIOCBP.  */
-extern __ssize_t aio_return (struct aiocb *__aiocbp) __THROW __nonnull ((1));
+extern __ssize_t aio_return(struct aiocb *__aiocbp) __THROW __nonnull((1));
 
 /* Try to cancel asynchronous I/O requests outstanding against file
    descriptor FILDES.  */
-extern int aio_cancel (int __fildes, struct aiocb *__aiocbp) __THROW;
+extern int aio_cancel(int __fildes, struct aiocb *__aiocbp) __THROW;
 
 /* Suspend calling thread until at least one of the asynchronous I/O
    operations referenced by LIST has completed.
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
-extern int aio_suspend (const struct aiocb *const __list[], int __nent,
-			const struct timespec *__restrict __timeout)
-  __nonnull ((1));
+extern int aio_suspend(const struct aiocb *const __list[], int __nent,
+                       const struct timespec *__restrict __timeout)
+__nonnull((1));
 
 /* Force all operations associated with file descriptor described by
    `aio_fildes' member of AIOCBP.  */
-extern int aio_fsync (int __operation, struct aiocb *__aiocbp)
-  __THROW __nonnull ((2));
+extern int aio_fsync(int __operation, struct aiocb *__aiocbp)
+__THROW __nonnull((2));
 #else
 # ifdef __REDIRECT_NTH
-extern int __REDIRECT_NTH (aio_read, (struct aiocb *__aiocbp), aio_read64)
-  __nonnull ((1));
-extern int __REDIRECT_NTH (aio_write, (struct aiocb *__aiocbp), aio_write64)
-  __nonnull ((1));
+extern int __REDIRECT_NTH(aio_read, (struct aiocb *__aiocbp), aio_read64)
+__nonnull((1));
+extern int __REDIRECT_NTH(aio_write, (struct aiocb *__aiocbp), aio_write64)
+__nonnull((1));
 
-extern int __REDIRECT_NTH (lio_listio,
-			   (int __mode,
-			    struct aiocb *const __list[__restrict_arr],
-			    int __nent, struct sigevent *__restrict __sig),
-			   lio_listio64) __nonnull ((2));
+extern int __REDIRECT_NTH(lio_listio,
+                          (int __mode,
+                           struct aiocb *const __list[__restrict_arr],
+                           int __nent, struct sigevent *__restrict __sig),
+                          lio_listio64) __nonnull((2));
 
-extern int __REDIRECT_NTH (aio_error, (const struct aiocb *__aiocbp),
-			   aio_error64) __nonnull ((1));
-extern __ssize_t __REDIRECT_NTH (aio_return, (struct aiocb *__aiocbp),
-				 aio_return64) __nonnull ((1));
+extern int __REDIRECT_NTH(aio_error, (const struct aiocb *__aiocbp),
+                          aio_error64) __nonnull((1));
+extern __ssize_t __REDIRECT_NTH(aio_return, (struct aiocb *__aiocbp),
+                                aio_return64) __nonnull((1));
 
-extern int __REDIRECT_NTH (aio_cancel,
-			   (int __fildes, struct aiocb *__aiocbp),
-			   aio_cancel64);
+extern int __REDIRECT_NTH(aio_cancel,
+                          (int __fildes, struct aiocb *__aiocbp),
+                          aio_cancel64);
 #  ifdef __USE_TIME64_REDIRECTS
-extern int __REDIRECT_NTH (aio_suspend,
-			   (const struct aiocb *const __list[], int __nent,
-			    const struct timespec *__restrict __timeout),
-			   __aio_suspend_time64) __nonnull ((1));
+extern int __REDIRECT_NTH(aio_suspend,
+                          (const struct aiocb *const __list[], int __nent,
+                           const struct timespec *__restrict __timeout),
+                          __aio_suspend_time64) __nonnull((1));
 #  else
-extern int __REDIRECT_NTH (aio_suspend,
-			   (const struct aiocb *const __list[], int __nent,
-			    const struct timespec *__restrict __timeout),
-			   aio_suspend64) __nonnull ((1));
+extern int __REDIRECT_NTH(aio_suspend,
+                          (const struct aiocb *const __list[], int __nent,
+                           const struct timespec *__restrict __timeout),
+                          aio_suspend64) __nonnull((1));
 #  endif
-extern int __REDIRECT_NTH (aio_fsync,
-			   (int __operation, struct aiocb *__aiocbp),
-			   aio_fsync64) __nonnull ((2));
+extern int __REDIRECT_NTH(aio_fsync,
+                          (int __operation, struct aiocb *__aiocbp),
+                          aio_fsync64) __nonnull((2));
 
 # else
 #  define aio_read aio_read64
@@ -225,27 +219,27 @@ extern int __REDIRECT_NTH (aio_fsync,
 #endif
 
 #ifdef __USE_LARGEFILE64
-extern int aio_read64 (struct aiocb64 *__aiocbp) __THROW __nonnull ((1));
-extern int aio_write64 (struct aiocb64 *__aiocbp) __THROW __nonnull ((1));
+extern int aio_read64(struct aiocb64 *__aiocbp) __THROW __nonnull((1));
+extern int aio_write64(struct aiocb64 *__aiocbp) __THROW __nonnull((1));
 
-extern int lio_listio64 (int __mode,
-			 struct aiocb64 *const __list[__restrict_arr],
-			 int __nent, struct sigevent *__restrict __sig)
-  __THROW __nonnull ((2));
+extern int lio_listio64(int __mode,
+                        struct aiocb64 *const __list[__restrict_arr],
+                        int __nent, struct sigevent *__restrict __sig)
+__THROW __nonnull((2));
 
-extern int aio_error64 (const struct aiocb64 *__aiocbp)
-  __THROW __nonnull ((1));
-extern __ssize_t aio_return64 (struct aiocb64 *__aiocbp)
-  __THROW __nonnull ((1));
+extern int aio_error64(const struct aiocb64 *__aiocbp)
+__THROW __nonnull((1));
+extern __ssize_t aio_return64(struct aiocb64 *__aiocbp)
+__THROW __nonnull((1));
 
-extern int aio_cancel64 (int __fildes, struct aiocb64 *__aiocbp) __THROW;
+extern int aio_cancel64(int __fildes, struct aiocb64 *__aiocbp) __THROW;
 
-extern int aio_suspend64 (const struct aiocb64 *const __list[], int __nent,
-			  const struct timespec *__restrict __timeout)
-  __THROW __nonnull ((1));
+extern int aio_suspend64(const struct aiocb64 *const __list[], int __nent,
+                         const struct timespec *__restrict __timeout)
+__THROW __nonnull((1));
 
-extern int aio_fsync64 (int __operation, struct aiocb64 *__aiocbp)
-  __THROW __nonnull ((2));
+extern int aio_fsync64(int __operation, struct aiocb64 *__aiocbp)
+__THROW __nonnull((2));
 #endif
 
 __END_DECLS

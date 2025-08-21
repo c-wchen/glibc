@@ -21,11 +21,11 @@
 #include <hurd.h>
 #include <hurd/fd.h>
 
-int
-syncfs (int fd)
+int syncfs(int fd)
 {
-  error_t err = HURD_DPORT_USE (fd, __file_syncfs (port, 1, 0));
-  if (err)
-    return __hurd_dfail (fd, err);
-  return 0;
+    error_t err = HURD_DPORT_USE(fd, __file_syncfs(port, 1, 0));
+    if (err) {
+        return __hurd_dfail(fd, err);
+    }
+    return 0;
 }

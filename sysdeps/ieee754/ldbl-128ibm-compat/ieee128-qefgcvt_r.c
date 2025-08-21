@@ -18,7 +18,7 @@
 
 /* When in IEEE long double mode, call ___ieee128_snprintf.  */
 #include <stdio.h>
-typeof (snprintf) ___ieee128_snprintf attribute_hidden;
+typeof(snprintf) ___ieee128_snprintf attribute_hidden;
 #define SNPRINTF ___ieee128_snprintf
 
 #define ECVT_R __qecvtieee128_r
@@ -30,5 +30,5 @@ typeof (snprintf) ___ieee128_snprintf attribute_hidden;
 
 #define cvt_symbol(local, symbol) \
   strong_alias (local, symbol)
-cvt_symbol (___qfcvtieee128_r, __qfcvtieee128_r);
-cvt_symbol (___qecvtieee128_r, __qecvtieee128_r);
+cvt_symbol(___qfcvtieee128_r, __qfcvtieee128_r);
+cvt_symbol(___qecvtieee128_r, __qecvtieee128_r);

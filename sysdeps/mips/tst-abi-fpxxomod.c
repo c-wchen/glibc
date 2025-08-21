@@ -15,8 +15,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-int
-fpxxo (void)
+int fpxxo(void)
 {
-  return 5 + 100;
+    return 5 + 100;
 }

@@ -47,14 +47,12 @@
 /* Round x to nearest int in all rounding modes, ties have to be rounded
    consistently with converttoint so the results match.  If the result
    would be outside of [-2^31, 2^31-1] then the semantics is unspecified.  */
-static inline double_t
-roundtoint (double_t x);
+static inline double_t roundtoint(double_t x);
 
 /* Convert x to nearest int in all rounding modes, ties have to be rounded
    consistently with roundtoint.  If the result is not representible in an
    int32_t then the semantics is unspecified.  */
-static inline int32_t
-converttoint (double_t x);
+static inline int32_t converttoint(double_t x);
 #endif
 
 #ifndef ROUNDEVEN_INTRINSICS
@@ -64,23 +62,29 @@ converttoint (double_t x);
 
 /* Round x to nearest integer value in floating-point format, rounding halfway
   cases to even.  If the input is non finite the result is unspecified.  */
-static inline double
-roundeven_finite (double x)
+static inline double roundeven_finite(double x)
 {
-  if (!isfinite (x))
-    __builtin_unreachable ();
-#if ROUNDEVEN_INTRINSICS
-  return roundeven (x);
-#else
-  double y = round (x);
-  if (fabs (x - y) == 0.5)
-    {
-      union { double f; uint64_t i; } u = {y};
-      union { double f; uint64_t i; } v = {y - copysign (1.0, x)};
-      if (__builtin_ctzll (v.i) > __builtin_ctzll (u.i))
-        y = v.f;
+    if (!isfinite(x)) {
+        __builtin_unreachable();
     }
-  return y;
+#if ROUNDEVEN_INTRINSICS
+    return roundeven(x);
+#else
+    double y = round(x);
+    if (fabs(x - y) == 0.5) {
+        union {
+            double f;
+            uint64_t i;
+        } u = {y};
+        union {
+            double f;
+            uint64_t i;
+        } v = {y - copysign(1.0, x)};
+        if (__builtin_ctzll(v.i) > __builtin_ctzll(u.i)) {
+            y = v.f;
+        }
+    }
+    return y;
 #endif
 }
 
@@ -89,77 +93,75 @@ roundeven_finite (double x)
 # define ROUNDEVENF_INTRINSICS 1
 #endif
 
-static inline float
-roundevenf_finite (float x)
+static inline float roundevenf_finite(float x)
 {
-  if (!isfinite (x))
-    __builtin_unreachable ();
-#if ROUNDEVENF_INTRINSICS
-  return roundevenf (x);
-#else
-  float y = roundf (x);
-  if (fabs (x - y) == 0.5)
-    {
-      union { float f; uint32_t i; } u = {y};
-      union { float f; uint32_t i; } v = {y - copysignf (1.0, x)};
-      if (__builtin_ctzl (v.i) > __builtin_ctzl (u.i))
-        y = v.f;
+    if (!isfinite(x)) {
+        __builtin_unreachable();
     }
-  return y;
+#if ROUNDEVENF_INTRINSICS
+    return roundevenf(x);
+#else
+    float y = roundf(x);
+    if (fabs(x - y) == 0.5) {
+        union {
+            float f;
+            uint32_t i;
+        } u = {y};
+        union {
+            float f;
+            uint32_t i;
+        } v = {y - copysignf(1.0, x)};
+        if (__builtin_ctzl(v.i) > __builtin_ctzl(u.i)) {
+            y = v.f;
+        }
+    }
+    return y;
 #endif
 }
 
-static inline uint32_t
-asuint (float f)
+static inline uint32_t asuint(float f)
 {
-  union
-  {
-    float f;
-    uint32_t i;
-  } u = {f};
-  return u.i;
+    union {
+        float f;
+        uint32_t i;
+    } u = {f};
+    return u.i;
 }
 
-static inline float
-asfloat (uint32_t i)
+static inline float asfloat(uint32_t i)
 {
-  union
-  {
-    uint32_t i;
-    float f;
-  } u = {i};
-  return u.f;
+    union {
+        uint32_t i;
+        float f;
+    } u = {i};
+    return u.f;
 }
 
-static inline uint64_t
-asuint64 (double f)
+static inline uint64_t asuint64(double f)
 {
-  union
-  {
-    double f;
-    uint64_t i;
-  } u = {f};
-  return u.i;
+    union {
+        double f;
+        uint64_t i;
+    } u = {f};
+    return u.i;
 }
 
-static inline double
-asdouble (uint64_t i)
+static inline double asdouble(uint64_t i)
 {
-  union
-  {
-    uint64_t i;
-    double f;
-  } u = {i};
-  return u.f;
+    union {
+        uint64_t i;
+        double f;
+    } u = {i};
+    return u.f;
 }
 
-static inline int
-issignalingf_inline (float x)
+static inline int issignalingf_inline(float x)
 {
-  uint32_t ix = asuint (x);
-  if (HIGH_ORDER_BIT_IS_SET_FOR_SNAN)
-    return (ix & 0x7fc00000) == 0x7fc00000;
-  return 2 * (ix ^ 0x00400000) > 2 * 0x7fc00000UL;
+    uint32_t ix = asuint(x);
+    if (HIGH_ORDER_BIT_IS_SET_FOR_SNAN) {
+        return (ix & 0x7fc00000) == 0x7fc00000;
+    }
+    return 2 * (ix ^ 0x00400000) > 2 * 0x7fc00000UL;
 }
 
 #define BIT_WIDTH       32
@@ -172,28 +174,24 @@ issignalingf_inline (float x)
 #define QUIET_NAN_MASK  0x00400000
 #define SIGN_MASK       0x80000000
 
-static inline bool
-is_nan (uint32_t x)
+static inline bool is_nan(uint32_t x)
 {
-  return (x & EXP_MANT_MASK) > EXPONENT_MASK;
+    return (x & EXP_MANT_MASK) > EXPONENT_MASK;
 }
 
-static inline bool
-is_inf (uint32_t x)
+static inline bool is_inf(uint32_t x)
 {
-  return (x << 1) == (EXPONENT_MASK << 1);
+    return (x << 1) == (EXPONENT_MASK << 1);
 }
 
-static inline uint32_t
-get_mantissa (uint32_t x)
+static inline uint32_t get_mantissa(uint32_t x)
 {
-  return x & MANTISSA_MASK;
+    return x & MANTISSA_MASK;
 }
 
-static inline int
-get_exponent (uint32_t x)
+static inline int get_exponent(uint32_t x)
 {
-  return (int)((x >> MANTISSA_WIDTH & 0xff) - EXPONENT_BIAS);
+    return (int)((x >> MANTISSA_WIDTH & 0xff) - EXPONENT_BIAS);
 }
 
 /* Convert integer number X, unbiased exponent EP, and sign S to double:
@@ -201,64 +199,57 @@ get_exponent (uint32_t x)
    result = X * 2^(EP+1 - exponent_bias)
 
    NB: zero is not supported.  */
-static inline double
-make_float (uint32_t x, int ep, uint32_t s)
+static inline double make_float(uint32_t x, int ep, uint32_t s)
 {
-  int lz = __builtin_clz (x) - EXPONENT_WIDTH;
-  x <<= lz;
-  ep -= lz;
+    int lz = __builtin_clz(x) - EXPONENT_WIDTH;
+    x <<= lz;
+    ep -= lz;
 
-  if (__glibc_unlikely (ep < 0 || x == 0))
-    {
-      x >>= -ep;
-      ep = 0;
+    if (__glibc_unlikely(ep < 0 || x == 0)) {
+        x >>= -ep;
+        ep = 0;
     }
-  return asfloat (s + x + (ep << MANTISSA_WIDTH));
+    return asfloat(s + x + (ep << MANTISSA_WIDTH));
 }
 
-attribute_hidden float __math_oflowf (uint32_t);
-attribute_hidden float __math_uflowf (uint32_t);
-attribute_hidden float __math_may_uflowf (uint32_t);
-attribute_hidden float __math_divzerof (uint32_t);
-attribute_hidden float __math_invalidf (float);
-attribute_hidden int __math_invalidf_i (int);
-attribute_hidden long int __math_invalidf_li (long int);
-attribute_hidden float __math_edomf (float x);
+attribute_hidden float __math_oflowf(uint32_t);
+attribute_hidden float __math_uflowf(uint32_t);
+attribute_hidden float __math_may_uflowf(uint32_t);
+attribute_hidden float __math_divzerof(uint32_t);
+attribute_hidden float __math_invalidf(float);
+attribute_hidden int __math_invalidf_i(int);
+attribute_hidden long int __math_invalidf_li(long int);
+attribute_hidden float __math_edomf(float x);
 
 /* Shared between expf, exp2f, exp10f, and powf.  */
 #define EXP2F_TABLE_BITS 5
 #define EXP2F_POLY_ORDER 3
-extern const struct exp2f_data
-{
-  uint64_t tab[1 << EXP2F_TABLE_BITS];
-  double shift_scaled;
-  double poly[EXP2F_POLY_ORDER];
-  double invln2_scaled;
-  double poly_scaled[EXP2F_POLY_ORDER];
-  double shift;
+extern const struct exp2f_data {
+    uint64_t tab[1 << EXP2F_TABLE_BITS];
+    double shift_scaled;
+    double poly[EXP2F_POLY_ORDER];
+    double invln2_scaled;
+    double poly_scaled[EXP2F_POLY_ORDER];
+    double shift;
 } __exp2f_data attribute_hidden;
 
 #define LOGF_TABLE_BITS 4
 #define LOGF_POLY_ORDER 4
-extern const struct logf_data
-{
-  struct
-  {
-    double invc, logc;
-  } tab[1 << LOGF_TABLE_BITS];
-  double ln2;
-  double poly[LOGF_POLY_ORDER - 1]; /* First order coefficient is 1.  */
+extern const struct logf_data {
+    struct {
+        double invc, logc;
+    } tab[1 << LOGF_TABLE_BITS];
+    double ln2;
+    double poly[LOGF_POLY_ORDER - 1]; /* First order coefficient is 1.  */
 } __logf_data attribute_hidden;
 
 #define LOG2F_TABLE_BITS 4
 #define LOG2F_POLY_ORDER 4
-extern const struct log2f_data
-{
-  struct
-  {
-    double invc, logc;
-  } tab[1 << LOG2F_TABLE_BITS];
-  double poly[LOG2F_POLY_ORDER];
+extern const struct log2f_data {
+    struct {
+        double invc, logc;
+    } tab[1 << LOG2F_TABLE_BITS];
+    double poly[LOG2F_POLY_ORDER];
 } __log2f_data attribute_hidden;
 
 #define POWF_LOG2_TABLE_BITS 4
@@ -269,13 +260,11 @@ extern const struct log2f_data
 # define POWF_SCALE_BITS 0
 #endif
 #define POWF_SCALE ((double) (1 << POWF_SCALE_BITS))
-extern const struct powf_log2_data
-{
-  struct
-  {
-    double invc, logc;
-  } tab[1 << POWF_LOG2_TABLE_BITS];
-  double poly[POWF_LOG2_POLY_ORDER];
+extern const struct powf_log2_data {
+    struct {
+        double invc, logc;
+    } tab[1 << POWF_LOG2_TABLE_BITS];
+    double poly[POWF_LOG2_POLY_ORDER];
 } __powf_log2_data attribute_hidden;
 
 #endif

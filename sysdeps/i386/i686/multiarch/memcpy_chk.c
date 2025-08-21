@@ -26,11 +26,11 @@
 # define SYMBOL_NAME memcpy_chk
 # include "ifunc-memmove.h"
 
-libc_ifunc_redirected (__redirect_memcpy_chk, __memcpy_chk,
-		       IFUNC_SELECTOR ());
+libc_ifunc_redirected(__redirect_memcpy_chk, __memcpy_chk,
+                      IFUNC_SELECTOR());
 # ifdef SHARED
-__hidden_ver1 (__memcpy_chk, __GI___memcpy_chk, __redirect_memcpy_chk)
-  __attribute__ ((visibility ("hidden"))) __attribute_copy__ (__memcpy_chk);
+__hidden_ver1(__memcpy_chk, __GI___memcpy_chk, __redirect_memcpy_chk)
+__attribute__((visibility("hidden"))) __attribute_copy__(__memcpy_chk);
 # endif
 #else
 # include <debug/memcpy_chk.c>

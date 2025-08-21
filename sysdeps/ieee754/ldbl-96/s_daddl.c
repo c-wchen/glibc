@@ -24,10 +24,9 @@
 
 #include <math-narrow.h>
 
-double
-__daddl (long double x, long double y)
+double __daddl(long double x, long double y)
 {
-  NARROW_ADD_ROUND_TO_ODD (x, y, double, union ieee854_long_double, l,
-			   mantissa1);
+    NARROW_ADD_ROUND_TO_ODD(x, y, double, union ieee854_long_double, l,
+                            mantissa1);
 }
-libm_alias_double_ldouble (add)
+libm_alias_double_ldouble(add)

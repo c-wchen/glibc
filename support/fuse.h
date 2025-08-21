@@ -33,50 +33,49 @@
 
 /* This function must be called furst, before support_fuse_mount, to
    prepare unprivileged mounting.  */
-void support_fuse_init (void);
+void support_fuse_init(void);
 
 /* This function can be called instead of support_fuse_init.  It does
    not use mount and user namespaces, so it requires root privileges,
    and cleanup after testing may be incomplete.  This is intended only
    for test development.  */
-void support_fuse_init_no_namespace (void);
+void support_fuse_init_no_namespace(void);
 
 /* Opaque type for tracking FUSE mount state.  */
 struct support_fuse;
 
 /* This function disables a mount point created using
    support_fuse_mount.  */
-void support_fuse_unmount (struct support_fuse *) __nonnull ((1));
+void support_fuse_unmount(struct support_fuse *) __nonnull((1));
 
 /* This function is called on a separate thread after calling
    support_fuse_mount.  F is the mount state, and CLOSURE the argument
    that was passed to support_fuse_mount.  The callback function is
    expected to call support_fuse_next to read packets from the kernel
    and handle them according to the test's need.  */
-typedef void (*support_fuse_callback) (struct support_fuse *f, void *closure);
+typedef void (*support_fuse_callback)(struct support_fuse *f, void *closure);
 
 /* This function creates a new mount point, implemented by CALLBACK.
    CLOSURE is passed to CALLBACK as the second argument.  */
-struct support_fuse *support_fuse_mount (support_fuse_callback callback,
-                                         void *closure)
-  __nonnull ((1)) __attr_dealloc (support_fuse_unmount, 1);
+struct support_fuse *support_fuse_mount(support_fuse_callback callback,
+                                        void *closure) __nonnull((1)) __attr_dealloc(support_fuse_unmount, 1);
 
 /* This function returns the path to the mount point for F.  The
    returned string is valid until support_fuse_unmount (F) is called.  */
-const char * support_fuse_mountpoint (struct support_fuse *f) __nonnull ((1));
+const char *support_fuse_mountpoint(struct support_fuse *f) __nonnull((1));
 
 
 /* Renders the OPCODE as a string (FUSE_* constant.  The caller must
    free the returned string.  */
-char * support_fuse_opcode (uint32_t opcode) __attr_dealloc_free;
+char *support_fuse_opcode(uint32_t opcode) __attr_dealloc_free;
 
 /* Use to provide a checked cast facility.  Use the
    support_fuse_in_cast macro below.  */
-void *support_fuse_cast_internal (struct fuse_in_header *, uint32_t)
-  __nonnull ((1));
-void *support_fuse_cast_name_internal (struct fuse_in_header *, uint32_t,
-                                       size_t skip, char **name)
-  __nonnull ((1));
+void *support_fuse_cast_internal(struct fuse_in_header *, uint32_t)
+__nonnull((1));
+void *support_fuse_cast_name_internal(struct fuse_in_header *, uint32_t,
+                                      size_t skip, char **name)
+__nonnull((1));
 
 /* The macro expansion support_fuse_in_cast (P, TYPE) casts the
    pointer INH to the appropriate type corresponding to the FUSE_TYPE
@@ -122,45 +121,45 @@ void *support_fuse_cast_name_internal (struct fuse_in_header *, uint32_t,
 
    By default, FUSE_FORGET responses are filtered.  See
    support_fuse_filter_forget for turning that off.  */
-struct fuse_in_header *support_fuse_next (struct support_fuse *f)
-  __nonnull ((1));
+struct fuse_in_header *support_fuse_next(struct support_fuse *f)
+__nonnull((1));
 
 /* This function can be called from a callback function to handle
    basic aspects of directories (OPENDIR, GETATTR, RELEASEDIR).
    inh->nodeid is used as the inode number for the directory.  This
    function must be called after support_fuse_next.  */
-bool support_fuse_handle_directory (struct support_fuse *f) __nonnull ((1));
+bool support_fuse_handle_directory(struct support_fuse *f) __nonnull((1));
 
 /* This function can be called from a callback function to handle
    access to the mount point itself, after call support_fuse_next.  */
-bool support_fuse_handle_mountpoint (struct support_fuse *f) __nonnull ((1));
+bool support_fuse_handle_mountpoint(struct support_fuse *f) __nonnull((1));
 
 /* If FILTER_ENABLED, future support_fuse_next calls will not return
    FUSE_FORGET events (and simply discared them, as they require no
    reply).  If !FILTER_ENABLED, the callback needs to handle
    FUSE_FORGET events and call support_fuse_no_reply.  */
-void support_fuse_filter_forget (struct support_fuse *f, bool filter_enabled)
-  __nonnull ((1));
+void support_fuse_filter_forget(struct support_fuse *f, bool filter_enabled)
+__nonnull((1));
 
 /* This function should be called from the callback function after
    support_fuse_next returned a non-null pointer.  It sends out a
    response packet on the FUSE device with the supplied payload data.  */
-void support_fuse_reply (struct support_fuse *f,
-                         const void *payload, size_t payload_size)
-  __nonnull ((1)) __attr_access ((__read_only__, 2, 3));
+void support_fuse_reply(struct support_fuse *f,
+                        const void *payload, size_t payload_size)
+__nonnull((1)) __attr_access((__read_only__, 2, 3));
 
 /* This function should be called from the callback function.  It
    replies to a request with an error indicator.  ERROR must be positive.  */
-void support_fuse_reply_error (struct support_fuse *f, uint32_t error)
-    __nonnull ((1));
+void support_fuse_reply_error(struct support_fuse *f, uint32_t error)
+__nonnull((1));
 
 /* This function should be called from the callback function.  It
    sends out an empty (but success-indicating) reply packet.  */
-void support_fuse_reply_empty (struct support_fuse *f) __nonnull ((1));
+void support_fuse_reply_empty(struct support_fuse *f) __nonnull((1));
 
 /* Do not send a reply.  Only to be used after a support_fuse_next
    call that returned a FUSE_FORGET event.  */
-void support_fuse_no_reply (struct support_fuse *f) __nonnull ((1));
+void support_fuse_no_reply(struct support_fuse *f) __nonnull((1));
 
 /* Specific reponse preparation functions.  The returned object can be
    updated as needed.  If a NODEID argument is present, it will be
@@ -170,28 +169,27 @@ void support_fuse_no_reply (struct support_fuse *f) __nonnull ((1));
    support_fuse_next.  The actual response must be sent using
    support_fuse_reply_prepared (or a support_fuse_reply_error call can
    be used to cancel the response).  */
-struct fuse_entry_out *support_fuse_prepare_entry (struct support_fuse *f,
-                                                   uint64_t nodeid)
-  __nonnull ((1));
-struct fuse_attr_out *support_fuse_prepare_attr (struct support_fuse *f)
-  __nonnull ((1));
+struct fuse_entry_out *support_fuse_prepare_entry(struct support_fuse *f,
+        uint64_t nodeid) __nonnull((1));
+struct fuse_attr_out *support_fuse_prepare_attr(struct support_fuse *f)
+__nonnull((1));
 
 /* Similar to the other support_fuse_prepare_* functions, but it
    prepares for two response packets.  They can be updated through the
    pointers written to *OUT_ENTRY and *OUT_OPEN prior to calling
    support_fuse_reply_prepared.  */
-void support_fuse_prepare_create (struct support_fuse *f,
-                                  uint64_t nodeid,
-                                  struct fuse_entry_out **out_entry,
-                                  struct fuse_open_out **out_open)
-  __nonnull ((1, 3, 4));
+void support_fuse_prepare_create(struct support_fuse *f,
+                                 uint64_t nodeid,
+                                 struct fuse_entry_out **out_entry,
+                                 struct fuse_open_out **out_open)
+__nonnull((1, 3, 4));
 
 
 /* Prepare sending a directory stream.  Must be called after
    support_fuse_next and before support_fuse_dirstream_add.    */
 struct support_fuse_dirstream;
-struct support_fuse_dirstream *support_fuse_prepare_readdir (struct
-                                                             support_fuse *f);
+struct support_fuse_dirstream *support_fuse_prepare_readdir(struct
+        support_fuse *f);
 
 /* Adds directory using D_INO, D_OFF, D_TYPE, D_NAME to the directory
    stream D.  Must be called after support_fuse_prepare_readdir.
@@ -204,14 +202,14 @@ struct support_fuse_dirstream *support_fuse_prepare_readdir (struct
    Returns true if the entry could be added to the buffer, or false if
    there was insufficient room.  Sending the buffer is delayed until
    support_fuse_reply_prepared is called.  */
-bool support_fuse_dirstream_add (struct support_fuse_dirstream *d,
-                                 uint64_t d_ino, uint64_t d_off,
-                                 uint32_t d_type,
-                                 const char *d_name);
+bool support_fuse_dirstream_add(struct support_fuse_dirstream *d,
+                                uint64_t d_ino, uint64_t d_off,
+                                uint32_t d_type,
+                                const char *d_name);
 
 /* Send a prepared response.  Must be called after one of the
    support_fuse_prepare_* functions and before the next
    support_fuse_next call.  */
-void support_fuse_reply_prepared (struct support_fuse *f) __nonnull ((1));
+void support_fuse_reply_prepared(struct support_fuse *f) __nonnull((1));
 
 #endif /* SUPPORT_FUSE_H */

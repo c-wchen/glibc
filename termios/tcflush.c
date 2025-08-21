@@ -19,23 +19,21 @@
 #include <termios.h>
 
 /* Flush pending data on FD.  */
-int
-tcflush (int fd, int queue_selector)
+int tcflush(int fd, int queue_selector)
 {
-  switch (queue_selector)
-    {
-    case TCIFLUSH:
-    case TCOFLUSH:
-    case TCIOFLUSH:
-      break;
+    switch (queue_selector) {
+        case TCIFLUSH:
+        case TCOFLUSH:
+        case TCIOFLUSH:
+            break;
 
-    default:
-      __set_errno (EINVAL);
-      return -1;
+        default:
+            __set_errno(EINVAL);
+            return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
 

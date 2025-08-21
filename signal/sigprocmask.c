@@ -22,27 +22,25 @@
 /* If SET is not NULL, modify the current set of blocked signals
    according to HOW, which may be SIG_BLOCK, SIG_UNBLOCK or SIG_SETMASK.
    If OSET is not NULL, store the old set of blocked signals in *OSET.  */
-int
-__sigprocmask (int how, const sigset_t *set, sigset_t *oset)
+int __sigprocmask(int how, const sigset_t *set, sigset_t *oset)
 {
-  switch (how)
-    {
-    case SIG_BLOCK:
-    case SIG_UNBLOCK:
-    case SIG_SETMASK:
-      break;
-    default:
-      __set_errno (EINVAL);
-      return -1;
+    switch (how) {
+        case SIG_BLOCK:
+        case SIG_UNBLOCK:
+        case SIG_SETMASK:
+            break;
+        default:
+            __set_errno(EINVAL);
+            return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
 /* No stub warning because abort calls __sigprocmask,
    and we don't want warnings for every use of abort on
    a system without safe signals.  */
 
-libc_hidden_def (__sigprocmask)
-weak_alias (__sigprocmask, sigprocmask)
+libc_hidden_def(__sigprocmask)
+weak_alias(__sigprocmask, sigprocmask)

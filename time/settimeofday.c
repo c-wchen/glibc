@@ -21,27 +21,24 @@
 
 /* Set the current time of day and timezone information.
    This call is restricted to the super-user.  */
-int
-__settimeofday (const struct timeval *tv, const struct timezone *tz)
+int __settimeofday(const struct timeval *tv, const struct timezone *tz)
 {
-  if (__glibc_unlikely (tz != 0))
-    {
-      if (tv != 0)
-	{
-	  __set_errno (EINVAL);
-	  return -1;
-	}
-      return __settimezone (tz);
+    if (__glibc_unlikely(tz != 0)) {
+        if (tv != 0) {
+            __set_errno(EINVAL);
+            return -1;
+        }
+        return __settimezone(tz);
     }
 
-  struct timespec ts;
-  TIMEVAL_TO_TIMESPEC (tv, &ts);
-  return __clock_settime (CLOCK_REALTIME, &ts);
+    struct timespec ts;
+    TIMEVAL_TO_TIMESPEC(tv, &ts);
+    return __clock_settime(CLOCK_REALTIME, &ts);
 }
 
 #ifdef VERSION_settimeofday
-weak_alias (__settimeofday, __settimeofday_w);
-default_symbol_version (__settimeofday_w, settimeofday, VERSION_settimeofday);
+weak_alias(__settimeofday, __settimeofday_w);
+default_symbol_version(__settimeofday_w, settimeofday, VERSION_settimeofday);
 #else
-weak_alias (__settimeofday, settimeofday);
+weak_alias(__settimeofday, settimeofday);
 #endif

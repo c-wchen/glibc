@@ -24,8 +24,7 @@
 
 /* First character denotes the comparison group: All names with the
    same first character are expected to compare equal.  */
-static const char *const cases[] =
-  {
+static const char *const cases[] = {
     " ",
     "1\001a", "1\001A",
     "2\002ab", "2\002aB", "2\002Ab", "2\002AB",
@@ -33,30 +32,27 @@ static const char *const cases[] =
     "w\003www\007example\003com", "w\003Www\007Example\003Com",
     "w\003WWW\007EXAMPLE\003COM",
     "W\003WWW", "W\003www",
-  };
+};
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  for (int i = 0; i < array_length (cases); ++i)
-    for (int j = 0; j < array_length (cases); ++j)
-      {
-        unsigned char *a = (unsigned char *) &cases[i][1];
-        unsigned char *b = (unsigned char *) &cases[j][1];
-        bool actual = __ns_samebinaryname (a, b);
-        bool expected = cases[i][0] == cases[j][0];
-        if (actual != expected)
-          {
-            char a1[NS_MAXDNAME];
-            TEST_VERIFY (ns_name_ntop (a, a1, sizeof (a1)) > 0);
-            char b1[NS_MAXDNAME];
-            TEST_VERIFY (ns_name_ntop (b, b1, sizeof (b1)) > 0);
-            printf ("error: \"%s\" \"%s\": expected %s\n",
-                    a1, b1, expected ? "equal" : "unqueal");
-            support_record_failure ();
-          }
-      }
-  return 0;
+    for (int i = 0; i < array_length(cases); ++i)
+        for (int j = 0; j < array_length(cases); ++j) {
+            unsigned char *a = (unsigned char *) &cases[i][1];
+            unsigned char *b = (unsigned char *) &cases[j][1];
+            bool actual = __ns_samebinaryname(a, b);
+            bool expected = cases[i][0] == cases[j][0];
+            if (actual != expected) {
+                char a1[NS_MAXDNAME];
+                TEST_VERIFY(ns_name_ntop(a, a1, sizeof(a1)) > 0);
+                char b1[NS_MAXDNAME];
+                TEST_VERIFY(ns_name_ntop(b, b1, sizeof(b1)) > 0);
+                printf("error: \"%s\" \"%s\": expected %s\n",
+                       a1, b1, expected ? "equal" : "unqueal");
+                support_record_failure();
+            }
+        }
+    return 0;
 }
 
 #include <support/test-driver.c>

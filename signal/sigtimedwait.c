@@ -19,14 +19,13 @@
 #include <errno.h>
 #include <signal.h>
 
-int
-__sigtimedwait (const sigset_t *set, siginfo_t *info,
-		const struct timespec *timeout)
+int __sigtimedwait(const sigset_t *set, siginfo_t *info,
+                   const struct timespec *timeout)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (__sigtimedwait)
-weak_alias (__sigtimedwait, sigtimedwait)
+libc_hidden_def(__sigtimedwait)
+weak_alias(__sigtimedwait, sigtimedwait)
 
-stub_warning (sigtimedwait)
+stub_warning(sigtimedwait)

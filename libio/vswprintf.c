@@ -29,38 +29,37 @@
 #include <printf.h>
 #include <printf_buffer.h>
 
-int
-__vswprintf_internal (wchar_t *string, size_t maxlen, const wchar_t *format,
-		      va_list args, unsigned int mode_flags)
+int __vswprintf_internal(wchar_t *string, size_t maxlen, const wchar_t *format,
+                         va_list args, unsigned int mode_flags)
 {
-  if (maxlen == 0)
-    /* Since we have to write at least the terminating L'\0' a buffer
-       length of zero always makes the function fail.  */
-    return -1;
-
-  struct __wprintf_buffer buf;
-  __wprintf_buffer_init (&buf, string, maxlen, __wprintf_buffer_mode_swprintf);
-
-  __wprintf_buffer (&buf, format, args, mode_flags);
-
-  if (buf.write_ptr == buf.write_end)
+    if (maxlen == 0)
+        /* Since we have to write at least the terminating L'\0' a buffer
+           length of zero always makes the function fail.  */
     {
-      /* Buffer has been filled exactly, excluding the null wide
-	 character.  This is an error because the null wide character
-	 is required.  */
-      buf.write_end[-1] = L'\0';
-      return -1;
+        return -1;
     }
 
-  buf.write_ptr[0] = L'\0';
+    struct __wprintf_buffer buf;
+    __wprintf_buffer_init(&buf, string, maxlen, __wprintf_buffer_mode_swprintf);
 
-  return __wprintf_buffer_done (&buf);
+    __wprintf_buffer(&buf, format, args, mode_flags);
+
+    if (buf.write_ptr == buf.write_end) {
+        /* Buffer has been filled exactly, excluding the null wide
+        character.  This is an error because the null wide character
+         is required.  */
+        buf.write_end[-1] = L'\0';
+        return -1;
+    }
+
+    buf.write_ptr[0] = L'\0';
+
+    return __wprintf_buffer_done(&buf);
 }
 
-int
-__vswprintf (wchar_t *string, size_t maxlen, const wchar_t *format,
-	     va_list args)
+int __vswprintf(wchar_t *string, size_t maxlen, const wchar_t *format,
+                va_list args)
 {
-  return __vswprintf_internal (string, maxlen, format, args, 0);
+    return __vswprintf_internal(string, maxlen, format, args, 0);
 }
-ldbl_weak_alias (__vswprintf, vswprintf)
+ldbl_weak_alias(__vswprintf, vswprintf)

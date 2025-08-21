@@ -16,7 +16,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #if defined _AIX && !defined __GNUC__
- #pragma alloca
+#pragma alloca
 #endif
 
 #if HAVE_CONFIG_H
@@ -41,47 +41,47 @@
 #  ifdef __GNUC__
 #   define alloca __builtin_alloca
 #  else
-extern char *alloca ();
+extern char *alloca();
 #  endif /* __GNUC__ */
 # endif /* HAVE_ALLOCA_H */
 #endif /* _LIBC */
 
 
 /* Put STRING, which is of the form "NAME=VALUE", in the environment.  */
-int
-putenv (char *string)
+int putenv(char *string)
 {
-  const char *const name_end = strchr (string, '=');
+    const char *const name_end = strchr(string, '=');
 
-  if (name_end != NULL)
-    {
-      char *name;
+    if (name_end != NULL) {
+        char *name;
 #ifdef _LIBC
-      int use_malloc = !__libc_use_alloca (name_end - string + 1);
-      if (__builtin_expect (use_malloc, 0))
-	{
-	  name = __strndup (string, name_end - string);
-	  if (name == NULL)
-	    return -1;
-	}
-      else
-	name = strndupa (string, name_end - string);
+        int use_malloc = !__libc_use_alloca(name_end - string + 1);
+        if (__builtin_expect(use_malloc, 0)) {
+            name = __strndup(string, name_end - string);
+            if (name == NULL) {
+                return -1;
+            }
+        } else {
+            name = strndupa(string, name_end - string);
+        }
 #else
 # define use_malloc 1
-      name = malloc (name_end - string + 1);
-      if (name == NULL)
-	return -1;
-      memcpy (name, string, name_end - string);
-      name[name_end - string] = '\0';
+        name = malloc(name_end - string + 1);
+        if (name == NULL) {
+            return -1;
+        }
+        memcpy(name, string, name_end - string);
+        name[name_end - string] = '\0';
 #endif
-      int result = __add_to_environ (name, NULL, string, 1);
+        int result = __add_to_environ(name, NULL, string, 1);
 
-      if (__glibc_unlikely (use_malloc))
-	free (name);
+        if (__glibc_unlikely(use_malloc)) {
+            free(name);
+        }
 
-      return result;
+        return result;
     }
 
-  __unsetenv (string);
-  return 0;
+    __unsetenv(string);
+    return 0;
 }

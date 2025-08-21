@@ -26,29 +26,29 @@
 
 /* Change the access time of FD to TSP[0] and
    the modification time of FD to TSP[1].  */
-int
-__futimens (int fd, const struct timespec tsp[2])
+int __futimens(int fd, const struct timespec tsp[2])
 {
-  struct timespec atime, mtime;
-  error_t err;
+    struct timespec atime, mtime;
+    error_t err;
 
-  err = utime_ts_from_tspec (tsp, &atime, &mtime);
-  if (err)
-    return err;
+    err = utime_ts_from_tspec(tsp, &atime, &mtime);
+    if (err) {
+        return err;
+    }
 
-  err = HURD_DPORT_USE (fd, __file_utimens (port, atime, mtime));
+    err = HURD_DPORT_USE(fd, __file_utimens(port, atime, mtime));
 
-  if (err == MIG_BAD_ID || err == EOPNOTSUPP)
-    {
-      time_value_t atim, mtim;
+    if (err == MIG_BAD_ID || err == EOPNOTSUPP) {
+        time_value_t atim, mtim;
 
-      err = utime_tvalue_from_tspec (tsp, &atim, &mtim);
-      if (err)
-	return err;
+        err = utime_tvalue_from_tspec(tsp, &atim, &mtim);
+        if (err) {
+            return err;
+        }
 
-      err = HURD_DPORT_USE (fd, __file_utimes (port, atim, mtim));
-  }
+        err = HURD_DPORT_USE(fd, __file_utimes(port, atim, mtim));
+    }
 
-  return err ? __hurd_dfail (fd, err) : 0;
+    return err ? __hurd_dfail(fd, err) : 0;
 }
-weak_alias (__futimens, futimens)
+weak_alias(__futimens, futimens)

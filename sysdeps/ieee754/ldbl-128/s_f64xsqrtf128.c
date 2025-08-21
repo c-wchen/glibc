@@ -26,13 +26,12 @@
 #undef _Float128
 
 #if __HAVE_FLOAT64X_LONG_DOUBLE && __HAVE_DISTINCT_FLOAT128
-_Float64x
-__f64xsqrtf128 (_Float128 x)
+_Float64x __f64xsqrtf128(_Float128 x)
 {
-  NARROW_SQRT_ROUND_TO_ODD (x, _Float64x, union ieee854_long_double, l,
-			    mantissa3);
+    NARROW_SQRT_ROUND_TO_ODD(x, _Float64x, union ieee854_long_double, l,
+                             mantissa3);
 }
-libm_alias_float64x_float128 (sqrt)
+libm_alias_float64x_float128(sqrt)
 #else
 /* Defined as an alias of sqrtl.  */
 #endif

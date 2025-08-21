@@ -24,12 +24,12 @@
 
 #if LIB_COMPAT(libc, GLIBC_2_4, GLIBC_2_33)
 
-int
-__fxstatat (int vers, int fd, const char *filename, struct stat *buf, int flag)
+int __fxstatat(int vers, int fd, const char *filename, struct stat *buf, int flag)
 {
-  if (vers != _STAT_VER)
-    return __hurd_fail (EINVAL);
+    if (vers != _STAT_VER) {
+        return __hurd_fail(EINVAL);
+    }
 
-  return __fstatat (fd, filename, buf, flag);
+    return __fstatat(fd, filename, buf, flag);
 }
 #endif

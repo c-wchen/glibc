@@ -18,16 +18,15 @@
 #include <limits.h>
 #include <stdlib.h>
 
-#undef	ullabs
+#undef  ullabs
 
 /* Return the absolute value of I.  */
-unsigned long long int
-ullabs (long long int i)
+unsigned long long int ullabs(long long int i)
 {
-  unsigned long long int j = i;
-  return i < 0 ? -j : i;
+    unsigned long long int j = i;
+    return i < 0 ? -j : i;
 }
 
 #if ULONG_MAX == UINT_MAX
-weak_alias (ullabs, uimaxabs)
+weak_alias(ullabs, uimaxabs)
 #endif

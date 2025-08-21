@@ -21,16 +21,16 @@
 #include <stdlib.h>
 
 struct alloc_buffer
-__libc_alloc_buffer_allocate (size_t size, void **pptr)
+__libc_alloc_buffer_allocate(size_t size, void **pptr)
 {
-  *pptr = malloc (size);
-  if (*pptr == NULL)
-    return (struct alloc_buffer)
-      {
+    *pptr = malloc(size);
+    if (*pptr == NULL)
+        return (struct alloc_buffer) {
         .__alloc_buffer_current = __ALLOC_BUFFER_INVALID_POINTER,
         .__alloc_buffer_end = __ALLOC_BUFFER_INVALID_POINTER
-      };
-  else
-    return alloc_buffer_create (*pptr, size);
+    };
+    else {
+        return alloc_buffer_create(*pptr, size);
+    }
 }
-libc_hidden_def (__libc_alloc_buffer_allocate)
+libc_hidden_def(__libc_alloc_buffer_allocate)

@@ -21,15 +21,14 @@
 /* Parse S into tokens separated by characters in DELIM.
    If S is NULL, the last string strtok() was called with is
    used.  For example:
-	char s[] = "-abc-=-def";
-	x = strtok(s, "-");		// x = "abc"
-	x = strtok(NULL, "-=");		// x = "def"
-	x = strtok(NULL, "=");		// x = NULL
-		// s = "abc\0=-def\0"
+    char s[] = "-abc-=-def";
+    x = strtok(s, "-");     // x = "abc"
+    x = strtok(NULL, "-=");     // x = "def"
+    x = strtok(NULL, "=");      // x = NULL
+        // s = "abc\0=-def\0"
 */
-char *
-strtok (char *s, const char *delim)
+char *strtok(char *s, const char *delim)
 {
-  static char *olds;
-  return __strtok_r (s, delim, &olds);
+    static char *olds;
+    return __strtok_r(s, delim, &olds);
 }

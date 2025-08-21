@@ -52,37 +52,37 @@
  * Calls the pmap service remotely to do get the maps.
  */
 struct pmaplist *
-pmap_getmaps (struct sockaddr_in *address)
+pmap_getmaps(struct sockaddr_in *address)
 {
-  struct pmaplist *head = (struct pmaplist *) NULL;
-  struct timeval minutetimeout;
-  CLIENT *client;
-  bool closeit = false;
+    struct pmaplist *head = (struct pmaplist *) NULL;
+    struct timeval minutetimeout;
+    CLIENT *client;
+    bool closeit = false;
 
-  minutetimeout.tv_sec = 60;
-  minutetimeout.tv_usec = 0;
-  address->sin_port = htons (PMAPPORT);
+    minutetimeout.tv_sec = 60;
+    minutetimeout.tv_usec = 0;
+    address->sin_port = htons(PMAPPORT);
 
-  /* Don't need a reserved port to get ports from the portmapper.  */
-  int socket = __get_socket (address);
-  if (socket != -1)
-    closeit = true;
-
-  client = clnttcp_create (address, PMAPPROG, PMAPVERS, &socket, 50, 500);
-  if (client != (CLIENT *) NULL)
-    {
-      if (CLNT_CALL (client, PMAPPROC_DUMP, (xdrproc_t)xdr_void, NULL,
-		     (xdrproc_t)xdr_pmaplist, (caddr_t)&head,
-		     minutetimeout) != RPC_SUCCESS)
-	{
-	  clnt_perror (client, _("pmap_getmaps.c: rpc problem"));
-	}
-      CLNT_DESTROY (client);
+    /* Don't need a reserved port to get ports from the portmapper.  */
+    int socket = __get_socket(address);
+    if (socket != -1) {
+        closeit = true;
     }
-  /* We only need to close the socket here if we opened  it.  */
-  if (closeit)
-    __close_nocancel (socket);
-  address->sin_port = 0;
-  return head;
+
+    client = clnttcp_create(address, PMAPPROG, PMAPVERS, &socket, 50, 500);
+    if (client != (CLIENT *) NULL) {
+        if (CLNT_CALL(client, PMAPPROC_DUMP, (xdrproc_t)xdr_void, NULL,
+                      (xdrproc_t)xdr_pmaplist, (caddr_t)&head,
+                      minutetimeout) != RPC_SUCCESS) {
+            clnt_perror(client, _("pmap_getmaps.c: rpc problem"));
+        }
+        CLNT_DESTROY(client);
+    }
+    /* We only need to close the socket here if we opened  it.  */
+    if (closeit) {
+        __close_nocancel(socket);
+    }
+    address->sin_port = 0;
+    return head;
 }
-libc_hidden_nolink_sunrpc (pmap_getmaps, GLIBC_2_0)
+libc_hidden_nolink_sunrpc(pmap_getmaps, GLIBC_2_0)

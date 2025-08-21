@@ -18,9 +18,8 @@
 
 #include <support/xthread.h>
 
-void
-xpthread_attr_setstack (pthread_attr_t *attr, void *stackaddr, size_t stacksize)
+void xpthread_attr_setstack(pthread_attr_t *attr, void *stackaddr, size_t stacksize)
 {
-  xpthread_check_return ("pthread_attr_setstack",
-			 pthread_attr_setstack (attr, stackaddr, stacksize));
+    xpthread_check_return("pthread_attr_setstack",
+                          pthread_attr_setstack(attr, stackaddr, stacksize));
 }

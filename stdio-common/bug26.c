@@ -18,21 +18,20 @@
 #include <stdio.h>
 #include <string.h>
 
-int
-main (void)
+int main(void)
 {
-  FILE *f;
-  int lost = 0;
-  int c;
-  double d;
-  char s[] = "+.e";
+    FILE *f;
+    int lost = 0;
+    int c;
+    double d;
+    char s[] = "+.e";
 
-  f = fmemopen (s, strlen (s), "r");
-  /* This should fail to parse a floating-point number, and leave 'e' in the
-     input.  */
-  lost |= (fscanf (f, "%lf", &d) != 0);
-  c = fgetc (f);
-  lost |= c != 'e';
-  puts (lost ? "Test FAILED!" : "Test succeeded.");
-  return lost;
+    f = fmemopen(s, strlen(s), "r");
+    /* This should fail to parse a floating-point number, and leave 'e' in the
+       input.  */
+    lost |= (fscanf(f, "%lf", &d) != 0);
+    c = fgetc(f);
+    lost |= c != 'e';
+    puts(lost ? "Test FAILED!" : "Test succeeded.");
+    return lost;
 }

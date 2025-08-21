@@ -23,12 +23,11 @@
    If the calling process is the super-user, the real
    and effective user IDs, and the saved set-user-ID to UID;
    if not, the effective user ID is set to UID.  */
-int
-__setuid (uid_t uid)
+int __setuid(uid_t uid)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (setuid)
+stub_warning(setuid)
 
-weak_alias (__setuid, setuid)
+weak_alias(__setuid, setuid)

@@ -21,37 +21,32 @@
 #include <unistd.h>
 #include <array_length.h>
 
-static struct
-{
-  const char *name;
-  int _SC_val;
-} sc_options[] =
-  {
+static struct {
+    const char *name;
+    int _SC_val;
+} sc_options[] = {
 #define N(name) { "_SC_"#name, _SC_##name }
-    N (LEVEL1_ICACHE_LINESIZE),
-    N (LEVEL1_DCACHE_LINESIZE),
-    N (LEVEL2_CACHE_LINESIZE)
-  };
+    N(LEVEL1_ICACHE_LINESIZE),
+    N(LEVEL1_DCACHE_LINESIZE),
+    N(LEVEL2_CACHE_LINESIZE)
+};
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int result = EXIT_SUCCESS;
+    int result = EXIT_SUCCESS;
 
-  for (int i = 0; i < array_length (sc_options); ++i)
-    {
-      long int scret = sysconf (sc_options[i]._SC_val);
-      if (scret < 0)
-	{
-	  printf ("sysconf (%s) returned < 0 (%ld)\n",
-		  sc_options[i].name, scret);
-	  result = EXIT_FAILURE;
-	}
-      else
-	printf ("sysconf (%s): %ld\n", sc_options[i].name, scret);
+    for (int i = 0; i < array_length(sc_options); ++i) {
+        long int scret = sysconf(sc_options[i]._SC_val);
+        if (scret < 0) {
+            printf("sysconf (%s) returned < 0 (%ld)\n",
+                   sc_options[i].name, scret);
+            result = EXIT_FAILURE;
+        } else {
+            printf("sysconf (%s): %ld\n", sc_options[i].name, scret);
+        }
     }
 
-  return result;
+    return result;
 }
 
 #include <support/test-driver.c>

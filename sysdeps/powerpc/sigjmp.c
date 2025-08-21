@@ -26,14 +26,13 @@
    before doing a `__setjmp' on ENV[0].__jmpbuf.
    Always return zero.  */
 
-int
-__vmx__sigjmp_save (sigjmp_buf env, int savemask)
+int __vmx__sigjmp_save(sigjmp_buf env, int savemask)
 {
-  env[0].__mask_was_saved = (savemask
-			     && __sigprocmask (SIG_BLOCK, (sigset_t *) NULL,
-					       &env[0].__saved_mask) == 0);
+    env[0].__mask_was_saved = (savemask
+                               && __sigprocmask(SIG_BLOCK, (sigset_t *) NULL,
+                                       &env[0].__saved_mask) == 0);
 
-  return 0;
+    return 0;
 }
 
-strong_alias (__vmx__sigjmp_save,__sigjmp_save)
+strong_alias(__vmx__sigjmp_save, __sigjmp_save)

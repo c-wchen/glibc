@@ -42,43 +42,41 @@
    (e.g., nss_database_hosts for hosts).  */
 #define NSS_DATABASE_LITERAL(name) nss_database_##name
 
-enum nss_database
-{
+enum nss_database {
 #define DEFINE_DATABASE(name) NSS_DATABASE_LITERAL (name),
 #include "databases.def"
 #undef DEFINE_DATABASE
 
-  /* Total number of databases.  */
-  NSS_DATABASE_COUNT
+    /* Total number of databases.  */
+    NSS_DATABASE_COUNT
 };
 
 /* Looks up the action list for DB and stores it in *ACTIONS.  Returns
    true on success or false on failure.  Success can mean that
    *ACTIONS is NULL.  */
-bool __nss_database_get (enum nss_database db, nss_action_list *actions);
-libc_hidden_proto (__nss_database_get)
+bool __nss_database_get(enum nss_database db, nss_action_list *actions);
+libc_hidden_proto(__nss_database_get)
 
 /* Like __nss_database_get, but does not reload /etc/nsswitch.conf
    from disk.  This assumes that there has been a previous successful
    __nss_database_get call (which may not have returned any data).  */
-nss_action_list __nss_database_get_noreload (enum nss_database db)
-  attribute_hidden;
+nss_action_list __nss_database_get_noreload(enum nss_database db)
+attribute_hidden;
 
 /* Internal type.  Exposed only for fork handling purposes.  */
-struct nss_database_data
-{
-  struct file_change_detection nsswitch_conf;
-  nss_action_list services[NSS_DATABASE_COUNT];
-  int reload_disabled;          /* Actually bool; int for atomic access.  */
-  bool initialized;
+struct nss_database_data {
+    struct file_change_detection nsswitch_conf;
+    nss_action_list services[NSS_DATABASE_COUNT];
+    int reload_disabled;          /* Actually bool; int for atomic access.  */
+    bool initialized;
 };
 
 /* Called by fork in the parent process, before forking.  */
-void __nss_database_fork_prepare_parent (struct nss_database_data *data)
-  attribute_hidden;
+void __nss_database_fork_prepare_parent(struct nss_database_data *data)
+attribute_hidden;
 
 /* Called by fork in the new subprocess, after forking.  */
-void __nss_database_fork_subprocess (struct nss_database_data *data)
-  attribute_hidden;
+void __nss_database_fork_subprocess(struct nss_database_data *data)
+attribute_hidden;
 
 #endif /* _NSS_DATABASE_H */

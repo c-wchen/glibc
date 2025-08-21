@@ -20,19 +20,18 @@
 #include "soft-fp.h"
 #include "soft-supp.h"
 
-void
-__atomic_feholdexcept (fenv_t *envp)
+void __atomic_feholdexcept(fenv_t *envp)
 {
-  fenv_union_t u;
+    fenv_union_t u;
 
-  u.l[0] = __sim_exceptions_thread;
-  /* The rounding mode is not changed by arithmetic, so no need to
-     save it.  */
-  u.l[1] = __sim_disabled_exceptions_thread;
-  *envp = u.fenv;
+    u.l[0] = __sim_exceptions_thread;
+    /* The rounding mode is not changed by arithmetic, so no need to
+       save it.  */
+    u.l[1] = __sim_disabled_exceptions_thread;
+    *envp = u.fenv;
 
-  /* This function postdates the global variables being turned into
-     compat symbols, so no need to set them.  */
-  __sim_exceptions_thread = 0;
-  __sim_disabled_exceptions_thread = FE_ALL_EXCEPT;
+    /* This function postdates the global variables being turned into
+       compat symbols, so no need to set them.  */
+    __sim_exceptions_thread = 0;
+    __sim_disabled_exceptions_thread = FE_ALL_EXCEPT;
 }

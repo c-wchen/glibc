@@ -19,12 +19,11 @@
 #include <string.h>
 
 /* Get scheduling policy from the attribute structure.  */
-int
-posix_spawnattr_getschedpolicy (const posix_spawnattr_t *attr,
-				int *schedpolicy)
+int posix_spawnattr_getschedpolicy(const posix_spawnattr_t *attr,
+                                   int *schedpolicy)
 {
-  /* Copy the scheduling policy.  */
-  *schedpolicy = attr->__policy;
+    /* Copy the scheduling policy.  */
+    *schedpolicy = attr->__policy;
 
-  return 0;
+    return 0;
 }

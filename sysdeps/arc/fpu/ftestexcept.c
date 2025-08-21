@@ -21,13 +21,12 @@
 #include <fenv_private.h>
 #include <stdio.h>
 
-int
-fetestexcept (int excepts)
+int fetestexcept(int excepts)
 {
-  unsigned int fpsr;
+    unsigned int fpsr;
 
-  _FPU_GETS (fpsr);
+    _FPU_GETS(fpsr);
 
-  return fpsr & excepts;
+    return fpsr & excepts;
 }
-libm_hidden_def (fetestexcept)
+libm_hidden_def(fetestexcept)

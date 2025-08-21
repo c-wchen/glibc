@@ -20,15 +20,14 @@
 #include <shlib-compat.h>
 #include <pt-internal.h>
 
-int
-__pthread_attr_getstackaddr (const pthread_attr_t *attr, void **stackaddr)
+int __pthread_attr_getstackaddr(const pthread_attr_t *attr, void **stackaddr)
 {
-  *stackaddr = attr->__stackaddr;
-  return 0;
+    *stackaddr = attr->__stackaddr;
+    return 0;
 }
-libc_hidden_def (__pthread_attr_getstackaddr)
-versioned_symbol (libc, __pthread_attr_getstackaddr, pthread_attr_getstackaddr, GLIBC_2_41);
+libc_hidden_def(__pthread_attr_getstackaddr)
+versioned_symbol(libc, __pthread_attr_getstackaddr, pthread_attr_getstackaddr, GLIBC_2_41);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_41)
-compat_symbol (libpthread, __pthread_attr_getstackaddr,pthread_attr_getstackaddr, GLIBC_2_12);
+compat_symbol(libpthread, __pthread_attr_getstackaddr, pthread_attr_getstackaddr, GLIBC_2_12);
 #endif

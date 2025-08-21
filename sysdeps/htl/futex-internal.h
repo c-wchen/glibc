@@ -10,7 +10,7 @@
 
    The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
@@ -25,15 +25,15 @@
 /* Returns EINVAL if PSHARED is neither PTHREAD_PROCESS_PRIVATE nor
    PTHREAD_PROCESS_SHARED; otherwise, returns 0 if PSHARED is supported, and
    ENOTSUP if not.  */
-static __always_inline int
-futex_supports_pshared (int pshared)
+static __always_inline int futex_supports_pshared(int pshared)
 {
-  if (__glibc_likely (pshared == PTHREAD_PROCESS_PRIVATE))
-    return 0;
-  else if (pshared == PTHREAD_PROCESS_SHARED)
-    return 0;
-  else
-    return EINVAL;
+    if (__glibc_likely(pshared == PTHREAD_PROCESS_PRIVATE)) {
+        return 0;
+    } else if (pshared == PTHREAD_PROCESS_SHARED) {
+        return 0;
+    } else {
+        return EINVAL;
+    }
 }
 
 #endif  /* futex-internal.h */

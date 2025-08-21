@@ -21,17 +21,16 @@
 #include <support/check.h>
 #include <support/support.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  xsetlocale (LC_ALL, "en_US.UTF-8");
-  /* From iso14651_t1_common:
-     collating-element <U004C_00B7> from "<U004C><U00B7>"
-     % decomposition of LATIN CAPITAL LETTER L WITH MIDDLE DOT */
-  TEST_VERIFY (fnmatch ("[[.L\xc2\xb7.]]", ".", 0) != 0);
-  TEST_VERIFY (fnmatch ("[[.L\xc2\xb7.]]", "L\xc2\xb7", 0) == 0);
+    xsetlocale(LC_ALL, "en_US.UTF-8");
+    /* From iso14651_t1_common:
+       collating-element <U004C_00B7> from "<U004C><U00B7>"
+       % decomposition of LATIN CAPITAL LETTER L WITH MIDDLE DOT */
+    TEST_VERIFY(fnmatch("[[.L\xc2\xb7.]]", ".", 0) != 0);
+    TEST_VERIFY(fnmatch("[[.L\xc2\xb7.]]", "L\xc2\xb7", 0) == 0);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -22,22 +22,23 @@
 #include <hurd.h>
 #include <pt-internal.h>
 
-int
-__sem_destroy (sem_t *sem)
+int __sem_destroy(sem_t *sem)
 {
-  struct new_sem *isem = (struct new_sem *) sem;
-  if (
+    struct new_sem *isem = (struct new_sem *) sem;
+    if (
 #if __HAVE_64B_ATOMICS
-      atomic_load_relaxed (&isem->data) >> SEM_NWAITERS_SHIFT
+        atomic_load_relaxed(&isem->data) >> SEM_NWAITERS_SHIFT
 #else
-      atomic_load_relaxed (&isem->value) & SEM_NWAITERS_MASK
-      || isem->nwaiters
+        atomic_load_relaxed(&isem->value) & SEM_NWAITERS_MASK
+        || isem->nwaiters
 #endif
-      )
-    /* There are threads waiting on *SEM.  */
-    return __hurd_fail (EBUSY);
+    )
+        /* There are threads waiting on *SEM.  */
+    {
+        return __hurd_fail(EBUSY);
+    }
 
-  return 0;
+    return 0;
 }
 
-strong_alias (__sem_destroy, sem_destroy);
+strong_alias(__sem_destroy, sem_destroy);

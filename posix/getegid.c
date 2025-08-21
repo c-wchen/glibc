@@ -19,12 +19,11 @@
 #include <unistd.h>
 
 /* Get the effective group ID of the calling process.  */
-__gid_t
-__getegid (void)
+__gid_t __getegid(void)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (getegid)
+stub_warning(getegid)
 
-weak_alias (__getegid, getegid)
+weak_alias(__getegid, getegid)

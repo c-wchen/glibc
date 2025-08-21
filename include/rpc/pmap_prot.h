@@ -3,8 +3,8 @@
 
 # ifndef _ISOMAC
 
-libc_hidden_proto (xdr_pmap)
-libc_hidden_proto (xdr_pmaplist)
+libc_hidden_proto(xdr_pmap)
+libc_hidden_proto(xdr_pmaplist)
 
 # endif /* !_ISOMAC */
 #endif /* rpc/pmap_prot.h */

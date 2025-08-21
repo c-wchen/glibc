@@ -17,19 +17,18 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _HPPA_GET_ROUNDING_MODE_H
-#define _HPPA_GET_ROUNDING_MODE_H	1
+#define _HPPA_GET_ROUNDING_MODE_H   1
 
 #include <fenv.h>
 #include <fpu_control.h>
 
 /* Return the floating-point rounding mode.  */
 
-static inline int
-get_rounding_mode (void)
+static inline int get_rounding_mode(void)
 {
-  fpu_control_t fc;
-  _FPU_GETCW (fc);
-  return fc & _FPU_HPPA_MASK_RM;
+    fpu_control_t fc;
+    _FPU_GETCW(fc);
+    return fc & _FPU_HPPA_MASK_RM;
 }
 
 #endif /* get-rounding-mode.h */

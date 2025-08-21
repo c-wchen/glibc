@@ -20,12 +20,12 @@
 #include <libm-alias-float.h>
 #include <math.h>
 
-extern void __sincosf_sse2 (float, float *, float *);
-extern void __sincosf_ia32 (float, float *, float *);
+extern void __sincosf_sse2(float, float *, float *);
+extern void __sincosf_ia32(float, float *, float *);
 
-libm_ifunc (__sincosf,
-	    CPU_FEATURE_USABLE (SSE2) ? __sincosf_sse2 : __sincosf_ia32);
-libm_alias_float (__sincos, sincos);
+libm_ifunc(__sincosf,
+           CPU_FEATURE_USABLE(SSE2) ? __sincosf_sse2 : __sincosf_ia32);
+libm_alias_float(__sincos, sincos);
 
 #define SINCOSF __sincosf_ia32
 #include <sysdeps/ieee754/flt-32/s_sincosf.c>

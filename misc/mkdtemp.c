@@ -23,11 +23,11 @@
    they are replaced with a string that makes the filename unique.
    The directory is created, mode 700, and its name is returned.
    (This function comes from OpenBSD.) */
-char *
-mkdtemp (char *template)
+char *mkdtemp(char *template)
 {
-  if (__gen_tempname (template, 0, 0, __GT_DIR))
-    return NULL;
-  else
-    return template;
+    if (__gen_tempname(template, 0, 0, __GT_DIR)) {
+        return NULL;
+    } else {
+        return template;
+    }
 }

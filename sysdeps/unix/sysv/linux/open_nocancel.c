@@ -26,21 +26,19 @@
 
 #ifndef __OFF_T_MATCHES_OFF64_T
 
-int
-__open_nocancel (const char *file, int oflag, ...)
+int __open_nocancel(const char *file, int oflag, ...)
 {
-  int mode = 0;
+    int mode = 0;
 
-  if (__OPEN_NEEDS_MODE (oflag))
-    {
-      va_list arg;
-      va_start (arg, oflag);
-      mode = va_arg (arg, int);
-      va_end (arg);
+    if (__OPEN_NEEDS_MODE(oflag)) {
+        va_list arg;
+        va_start(arg, oflag);
+        mode = va_arg(arg, int);
+        va_end(arg);
     }
 
-  return INLINE_SYSCALL_CALL (openat, AT_FDCWD, file, oflag, mode);
+    return INLINE_SYSCALL_CALL(openat, AT_FDCWD, file, oflag, mode);
 }
-hidden_def (__open_nocancel)
+hidden_def(__open_nocancel)
 
 #endif

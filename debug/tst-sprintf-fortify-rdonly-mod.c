@@ -22,35 +22,32 @@
 
 static const char *str2 = "F";
 static char writeable_format[10] = "%s";
-static char relro_format[10] __attribute__ ((section (".data.rel.ro"))) =
-  "%s%n%s%n";
+static char relro_format[10] __attribute__((section(".data.rel.ro"))) =
+    "%s%n%s%n";
 
-void
-init_writable (void)
+void init_writable(void)
 {
-  strcpy (writeable_format + 2, "%n%s%n");
+    strcpy(writeable_format + 2, "%n%s%n");
 }
 
-int
-sprintf_writable (int *n1, int *n2)
+int sprintf_writable(int *n1, int *n2)
 {
-  char buf[128];
-  return sprintf (buf, writeable_format, str2, n1, str2, n2);
+    char buf[128];
+    return sprintf(buf, writeable_format, str2, n1, str2, n2);
 }
 
-int
-sprintf_relro (int *n1, int *n2)
+int sprintf_relro(int *n1, int *n2)
 {
-  char buf[128];
-  return sprintf (buf, relro_format, str2, n1, str2, n2);
+    char buf[128];
+    return sprintf(buf, relro_format, str2, n1, str2, n2);
 }
 
-int
-sprintf_writable_malloc (int *n1, int *n2)
+int sprintf_writable_malloc(int *n1, int *n2)
 {
-  char buf[128];
-  char *buf2_malloc = strdup (writeable_format);
-  if (buf2_malloc == NULL)
-    abort ();
-  return sprintf (buf, buf2_malloc, str2, n1, str2, n2);
+    char buf[128];
+    char *buf2_malloc = strdup(writeable_format);
+    if (buf2_malloc == NULL) {
+        abort();
+    }
+    return sprintf(buf, buf2_malloc, str2, n1, str2, n2);
 }

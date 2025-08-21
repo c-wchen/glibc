@@ -19,31 +19,28 @@
 #include <termios.h>
 
 /* Suspend or restart transmission on FD.  */
-int
-tcflow (int fd, int action)
+int tcflow(int fd, int action)
 {
-  if (fd < 0)
-    {
-      __set_errno (EBADF);
-      return -1;
+    if (fd < 0) {
+        __set_errno(EBADF);
+        return -1;
     }
 
-  switch (action)
-    {
-    case TCOOFF:
-    case TCOON:
-    case TCIOFF:
-    case TCION:
-      break;
+    switch (action) {
+        case TCOOFF:
+        case TCOON:
+        case TCIOFF:
+        case TCION:
+            break;
 
-    default:
-      __set_errno (EINVAL);
-      return -1;
+        default:
+            __set_errno(EINVAL);
+            return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
 
 
-stub_warning (tcflow)
+stub_warning(tcflow)

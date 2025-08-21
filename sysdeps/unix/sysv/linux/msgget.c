@@ -22,12 +22,11 @@
 /* Return descriptor for message queue associated with KEY.  The MSGFLG
    parameter describes how to proceed with clashing of key values.  */
 
-int
-msgget (key_t key, int msgflg)
+int msgget(key_t key, int msgflg)
 {
 #ifdef __ASSUME_DIRECT_SYSVIPC_SYSCALLS
-  return INLINE_SYSCALL_CALL (msgget, key, msgflg);
+    return INLINE_SYSCALL_CALL(msgget, key, msgflg);
 #else
-  return INLINE_SYSCALL_CALL (ipc, IPCOP_msgget, key, msgflg, 0, NULL);
+    return INLINE_SYSCALL_CALL(ipc, IPCOP_msgget, key, msgflg, 0, NULL);
 #endif
 }

@@ -20,15 +20,14 @@
 #include <shlib-compat.h>
 #include <pt-internal.h>
 
-int
-__pthread_attr_getinheritsched (const pthread_attr_t *attr, int *inheritsched)
+int __pthread_attr_getinheritsched(const pthread_attr_t *attr, int *inheritsched)
 {
-  *inheritsched = attr->__inheritsched;
-  return 0;
+    *inheritsched = attr->__inheritsched;
+    return 0;
 }
 
-versioned_symbol (libc, __pthread_attr_getinheritsched, pthread_attr_getinheritsched, GLIBC_2_21);
+versioned_symbol(libc, __pthread_attr_getinheritsched, pthread_attr_getinheritsched, GLIBC_2_21);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_21)
-compat_symbol (libc, __pthread_attr_getinheritsched, pthread_attr_getinheritsched, GLIBC_2_12);
+compat_symbol(libc, __pthread_attr_getinheritsched, pthread_attr_getinheritsched, GLIBC_2_12);
 #endif

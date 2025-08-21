@@ -30,12 +30,11 @@
    terminate.  */
 static bool timeout;
 
-static void *
-timeout_thread_function (void *unused)
+static void *timeout_thread_function(void *unused)
 {
-  usleep (1000 * 1000);
-  __atomic_store_n (&timeout, true, __ATOMIC_RELAXED);
-  return NULL;
+    usleep(1000 * 1000);
+    __atomic_store_n(&timeout, true, __ATOMIC_RELAXED);
+    return NULL;
 }
 
 /* Used to synchronize the sending threads with the target thread and
@@ -50,74 +49,72 @@ static pthread_t target_thread;
    true.  */
 static bool exiting;
 
-static void *
-sender_thread_function (void *unused)
+static void *sender_thread_function(void *unused)
 {
-  while (true)
-    {
-      /* Wait until target_thread has been initialized.  The target
-         thread and main thread participate in this barrier.  */
-      xpthread_barrier_wait (&barrier_1);
+    while (true) {
+        /* Wait until target_thread has been initialized.  The target
+           thread and main thread participate in this barrier.  */
+        xpthread_barrier_wait(&barrier_1);
 
-      if (exiting)
-        break;
+        if (exiting) {
+            break;
+        }
 
-      xpthread_kill (target_thread, SIGUSR1);
+        xpthread_kill(target_thread, SIGUSR1);
 
-      /* Communicate that the signal has been sent.  The main thread
-         participates in this barrier.  */
-      xpthread_barrier_wait (&barrier_2);
+        /* Communicate that the signal has been sent.  The main thread
+           participates in this barrier.  */
+        xpthread_barrier_wait(&barrier_2);
     }
-  return NULL;
+    return NULL;
 }
 
-static void *
-target_thread_function (void *unused)
+static void *target_thread_function(void *unused)
 {
-  target_thread = pthread_self ();
-  xpthread_barrier_wait (&barrier_1);
-  return NULL;
+    target_thread = pthread_self();
+    xpthread_barrier_wait(&barrier_1);
+    return NULL;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  xsignal (SIGUSR1, SIG_IGN);
+    xsignal(SIGUSR1, SIG_IGN);
 
-  pthread_t thr_timeout = xpthread_create (NULL, timeout_thread_function, NULL);
+    pthread_t thr_timeout = xpthread_create(NULL, timeout_thread_function, NULL);
 
-  pthread_t threads[4];
-  xpthread_barrier_init (&barrier_1, NULL, array_length (threads) + 2);
-  xpthread_barrier_init (&barrier_2, NULL, array_length (threads) + 1);
+    pthread_t threads[4];
+    xpthread_barrier_init(&barrier_1, NULL, array_length(threads) + 2);
+    xpthread_barrier_init(&barrier_2, NULL, array_length(threads) + 1);
 
-  for (int i = 0; i < array_length (threads); ++i)
-    threads[i] = xpthread_create (NULL, sender_thread_function, NULL);
-
-  while (!__atomic_load_n (&timeout, __ATOMIC_RELAXED))
-    {
-      xpthread_create (NULL, target_thread_function, NULL);
-
-      /* Wait for the target thread to be set up and signal sending to
-         start.  */
-      xpthread_barrier_wait (&barrier_1);
-
-      /* Wait for signal sending to complete.  */
-      xpthread_barrier_wait (&barrier_2);
-
-      xpthread_join (target_thread);
+    for (int i = 0; i < array_length(threads); ++i) {
+        threads[i] = xpthread_create(NULL, sender_thread_function, NULL);
     }
 
-  exiting = true;
+    while (!__atomic_load_n(&timeout, __ATOMIC_RELAXED)) {
+        xpthread_create(NULL, target_thread_function, NULL);
 
-  /* Signal the sending threads to exit.  */
-  xpthread_create (NULL, target_thread_function, NULL);
-  xpthread_barrier_wait (&barrier_1);
+        /* Wait for the target thread to be set up and signal sending to
+           start.  */
+        xpthread_barrier_wait(&barrier_1);
 
-  for (int i = 0; i < array_length (threads); ++i)
-    xpthread_join (threads[i]);
-  xpthread_join (thr_timeout);
+        /* Wait for signal sending to complete.  */
+        xpthread_barrier_wait(&barrier_2);
 
-  return 0;
+        xpthread_join(target_thread);
+    }
+
+    exiting = true;
+
+    /* Signal the sending threads to exit.  */
+    xpthread_create(NULL, target_thread_function, NULL);
+    xpthread_barrier_wait(&barrier_1);
+
+    for (int i = 0; i < array_length(threads); ++i) {
+        xpthread_join(threads[i]);
+    }
+    xpthread_join(thr_timeout);
+
+    return 0;
 }
 
 #include <support/test-driver.c>

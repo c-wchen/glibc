@@ -24,71 +24,61 @@
 #include <stdbool.h>
 
 /* Data structure to contain the action information.  */
-struct __spawn_action
-{
-  enum
-  {
-    spawn_do_close,
-    spawn_do_dup2,
-    spawn_do_open,
-    spawn_do_chdir,
-    spawn_do_fchdir,
-    spawn_do_closefrom,
-    spawn_do_tcsetpgrp
-  } tag;
+struct __spawn_action {
+    enum {
+        spawn_do_close,
+        spawn_do_dup2,
+        spawn_do_open,
+        spawn_do_chdir,
+        spawn_do_fchdir,
+        spawn_do_closefrom,
+        spawn_do_tcsetpgrp
+    } tag;
 
-  union
-  {
-    struct
-    {
-      int fd;
-    } close_action;
-    struct
-    {
-      int fd;
-      int newfd;
-    } dup2_action;
-    struct
-    {
-      int fd;
-      char *path;
-      int oflag;
-      mode_t mode;
-    } open_action;
-    struct
-    {
-      char *path;
-    } chdir_action;
-    struct
-    {
-      int fd;
-    } fchdir_action;
-    struct
-    {
-      int from;
-    } closefrom_action;
-    struct
-    {
-      int fd;
-    } setpgrp_action;
-  } action;
+    union {
+        struct {
+            int fd;
+        } close_action;
+        struct {
+            int fd;
+            int newfd;
+        } dup2_action;
+        struct {
+            int fd;
+            char *path;
+            int oflag;
+            mode_t mode;
+        } open_action;
+        struct {
+            char *path;
+        } chdir_action;
+        struct {
+            int fd;
+        } fchdir_action;
+        struct {
+            int from;
+        } closefrom_action;
+        struct {
+            int fd;
+        } setpgrp_action;
+    } action;
 };
 
-#define SPAWN_XFLAGS_USE_PATH	0x1
-#define SPAWN_XFLAGS_TRY_SHELL	0x2
+#define SPAWN_XFLAGS_USE_PATH   0x1
+#define SPAWN_XFLAGS_TRY_SHELL  0x2
 #define SPAWN_XFLAGS_RET_PIDFD  0x4
 
-extern int __posix_spawn_file_actions_realloc (posix_spawn_file_actions_t *
-					       file_actions)
-     attribute_hidden;
+extern int __posix_spawn_file_actions_realloc(posix_spawn_file_actions_t *
+        file_actions)
+attribute_hidden;
 
-extern int __spawni (int *pid, const char *path,
-		     const posix_spawn_file_actions_t *file_actions,
-		     const posix_spawnattr_t *attrp, char *const argv[],
-		     char *const envp[], int xflags) attribute_hidden;
+extern int __spawni(int *pid, const char *path,
+                    const posix_spawn_file_actions_t *file_actions,
+                    const posix_spawnattr_t *attrp, char *const argv[],
+                    char *const envp[], int xflags) attribute_hidden;
 
 /* Return true if FD falls into the range valid for file descriptors.
    The check in this form is mandated by POSIX.  */
-bool __spawn_valid_fd (int fd) attribute_hidden;
+bool __spawn_valid_fd(int fd) attribute_hidden;
 
 #endif /* _SPAWN_INT_H */

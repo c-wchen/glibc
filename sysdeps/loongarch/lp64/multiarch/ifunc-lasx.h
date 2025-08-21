@@ -21,25 +21,25 @@
 #include <ifunc-init.h>
 
 #if !defined __loongarch_soft_float
-extern __typeof (REDIRECT_NAME) OPTIMIZE (lasx) attribute_hidden;
-extern __typeof (REDIRECT_NAME) OPTIMIZE (lsx) attribute_hidden;
+extern __typeof(REDIRECT_NAME) OPTIMIZE(lasx) attribute_hidden;
+extern __typeof(REDIRECT_NAME) OPTIMIZE(lsx) attribute_hidden;
 #endif
 
-extern __typeof (REDIRECT_NAME) OPTIMIZE (aligned) attribute_hidden;
-extern __typeof (REDIRECT_NAME) OPTIMIZE (unaligned) attribute_hidden;
+extern __typeof(REDIRECT_NAME) OPTIMIZE(aligned) attribute_hidden;
+extern __typeof(REDIRECT_NAME) OPTIMIZE(unaligned) attribute_hidden;
 
-static inline void *
-IFUNC_SELECTOR (void)
+static inline void *IFUNC_SELECTOR(void)
 {
 #if !defined __loongarch_soft_float
-  if (SUPPORT_LASX)
-    return OPTIMIZE (lasx);
-  else if (SUPPORT_LSX)
-    return OPTIMIZE (lsx);
-  else
+    if (SUPPORT_LASX) {
+        return OPTIMIZE(lasx);
+    } else if (SUPPORT_LSX) {
+        return OPTIMIZE(lsx);
+    } else
 #endif
-  if (SUPPORT_UAL)
-    return OPTIMIZE (unaligned);
-  else
-    return OPTIMIZE (aligned);
+        if (SUPPORT_UAL) {
+            return OPTIMIZE(unaligned);
+        } else {
+            return OPTIMIZE(aligned);
+        }
 }

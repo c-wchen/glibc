@@ -59,51 +59,49 @@
       }                                                 \
   } while (0)
 
-int
-do_test (void)
+int do_test(void)
 {
-  /* The easiest way to set up the conditions under which you can
-     notice whether the end-of-file indicator is sticky, is with a
-     pseudo-tty.  This is also the case which applications are most
-     likely to care about.  And it avoids any question of whether and
-     how it is legitimate to access the same physical file with two
-     independent FILE objects.  */
-  int outer_fd, inner_fd;
-  FILE *fp;
+    /* The easiest way to set up the conditions under which you can
+       notice whether the end-of-file indicator is sticky, is with a
+       pseudo-tty.  This is also the case which applications are most
+       likely to care about.  And it avoids any question of whether and
+       how it is legitimate to access the same physical file with two
+       independent FILE objects.  */
+    int outer_fd, inner_fd;
+    FILE *fp;
 
-  support_openpty (&outer_fd, &inner_fd, 0, 0, 0);
-  fp = fdopen (inner_fd, "r+");
-  if (!fp)
-    {
-      perror ("fdopen");
-      return 1;
+    support_openpty(&outer_fd, &inner_fd, 0, 0, 0);
+    fp = fdopen(inner_fd, "r+");
+    if (!fp) {
+        perror("fdopen");
+        return 1;
     }
 
-  XWRITE (outer_fd, "abc\n\004", "first line + EOF");
-  TEST_COMPARE (fgetc (fp), 'a');
-  TEST_COMPARE (fgetc (fp), 'b');
-  TEST_COMPARE (fgetc (fp), 'c');
-  TEST_COMPARE (fgetc (fp), '\n');
-  TEST_COMPARE (fgetc (fp), EOF);
+    XWRITE(outer_fd, "abc\n\004", "first line + EOF");
+    TEST_COMPARE(fgetc(fp), 'a');
+    TEST_COMPARE(fgetc(fp), 'b');
+    TEST_COMPARE(fgetc(fp), 'c');
+    TEST_COMPARE(fgetc(fp), '\n');
+    TEST_COMPARE(fgetc(fp), EOF);
 
-  TEST_VERIFY_EXIT (feof (fp));
-  TEST_VERIFY_EXIT (!ferror (fp));
+    TEST_VERIFY_EXIT(feof(fp));
+    TEST_VERIFY_EXIT(!ferror(fp));
 
-  XWRITE (outer_fd, "d\n", "second line");
+    XWRITE(outer_fd, "d\n", "second line");
 
-  /* At this point, there is a new full line of input waiting in the
-     kernelside input buffer, but we should still observe EOF from
-     stdio, because the end-of-file indicator has not been cleared.  */
-  TEST_COMPARE (fgetc (fp), EOF);
+    /* At this point, there is a new full line of input waiting in the
+       kernelside input buffer, but we should still observe EOF from
+       stdio, because the end-of-file indicator has not been cleared.  */
+    TEST_COMPARE(fgetc(fp), EOF);
 
-  /* Clearing EOF should reveal the next line of input.  */
-  clearerr (fp);
-  TEST_COMPARE (fgetc (fp), 'd');
-  TEST_COMPARE (fgetc (fp), '\n');
+    /* Clearing EOF should reveal the next line of input.  */
+    clearerr(fp);
+    TEST_COMPARE(fgetc(fp), 'd');
+    TEST_COMPARE(fgetc(fp), '\n');
 
-  fclose (fp);
-  close (outer_fd);
-  return 0;
+    fclose(fp);
+    close(outer_fd);
+    return 0;
 }
 
 #include <support/test-driver.c>

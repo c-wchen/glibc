@@ -19,11 +19,10 @@
 #include <sys/mount.h>
 #include <sysdep.h>
 
-int
-__umount2 (const char *special_file, int flags)
+int __umount2(const char *special_file, int flags)
 {
-  return INLINE_SYSCALL_CALL (umount2, special_file, flags);
+    return INLINE_SYSCALL_CALL(umount2, special_file, flags);
 }
-libc_hidden_def (__umount2)
+libc_hidden_def(__umount2)
 
-weak_alias (__umount2, umount2)
+weak_alias(__umount2, umount2)

@@ -17,10 +17,9 @@
 
 #include <sys/stat.h>
 
-int
-__stat (const char *file, struct stat *buf)
+int __stat(const char *file, struct stat *buf)
 {
-  return __fstatat (AT_FDCWD, file, buf, 0);
+    return __fstatat(AT_FDCWD, file, buf, 0);
 }
 
-weak_alias (__stat, stat)
+weak_alias(__stat, stat)

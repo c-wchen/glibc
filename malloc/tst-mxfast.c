@@ -24,34 +24,33 @@
 #include <libc-diag.h>
 #include <support/check.h>
 
-int
-do_test (void)
+int do_test(void)
 {
-  struct mallinfo m;
-  char *volatile p1;
-  char *volatile p2;
+    struct mallinfo m;
+    char *volatile p1;
+    char *volatile p2;
 
-  /* Arbitrary value; must be in default fastbin range.  */
-  p1 = malloc (3);
-  /* Something large so that p1 isn't a "top block" */
-  p2 = malloc (512);
-  free (p1);
+    /* Arbitrary value; must be in default fastbin range.  */
+    p1 = malloc(3);
+    /* Something large so that p1 isn't a "top block" */
+    p2 = malloc(512);
+    free(p1);
 
-  /* The test below covers the deprecated mallinfo function.  */
-  DIAG_PUSH_NEEDS_COMMENT;
-  DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wdeprecated-declarations");
+    /* The test below covers the deprecated mallinfo function.  */
+    DIAG_PUSH_NEEDS_COMMENT;
+    DIAG_IGNORE_NEEDS_COMMENT(4.9, "-Wdeprecated-declarations");
 
-  m = mallinfo ();
+    m = mallinfo();
 
-  DIAG_POP_NEEDS_COMMENT;
+    DIAG_POP_NEEDS_COMMENT;
 
-  /* This will fail if there are any blocks in the fastbins.  */
-  TEST_COMPARE (m.smblks, 0);
+    /* This will fail if there are any blocks in the fastbins.  */
+    TEST_COMPARE(m.smblks, 0);
 
-  /* To keep gcc happy.  */
-  free (p2);
+    /* To keep gcc happy.  */
+    free(p2);
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

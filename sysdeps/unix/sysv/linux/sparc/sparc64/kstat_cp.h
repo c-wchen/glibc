@@ -18,27 +18,26 @@
 
 #include <errno.h>
 
-static inline void
-__cp_stat64_kstat64 (struct stat64 *st64, const struct kernel_stat64 *kst64)
+static inline void __cp_stat64_kstat64(struct stat64 *st64, const struct kernel_stat64 *kst64)
 {
-  st64->st_dev = kst64->st_dev;
-  st64->__pad1 = 0;
-  st64->st_ino = kst64->st_ino;
-  st64->st_mode = kst64->st_mode;
-  st64->st_nlink = kst64->st_nlink;
-  st64->st_uid = kst64->st_uid;
-  st64->st_gid = kst64->st_gid;
-  st64->st_rdev = kst64->st_rdev;
-  st64->__pad2 = 0;
-  st64->st_size = kst64->st_size;
-  st64->st_blksize = kst64->st_blksize;
-  st64->st_blocks = kst64->st_blocks;
-  st64->st_atim.tv_sec = kst64->st_atime_sec;
-  st64->st_atim.tv_nsec = kst64->st_atime_nsec;
-  st64->st_mtim.tv_sec = kst64->st_mtime_sec;
-  st64->st_mtim.tv_nsec = kst64->st_mtime_nsec;
-  st64->st_ctim.tv_sec = kst64->st_ctime_sec;
-  st64->st_ctim.tv_nsec = kst64->st_ctime_nsec;
-  st64->__glibc_reserved4 = 0;
-  st64->__glibc_reserved5 = 0;
+    st64->st_dev = kst64->st_dev;
+    st64->__pad1 = 0;
+    st64->st_ino = kst64->st_ino;
+    st64->st_mode = kst64->st_mode;
+    st64->st_nlink = kst64->st_nlink;
+    st64->st_uid = kst64->st_uid;
+    st64->st_gid = kst64->st_gid;
+    st64->st_rdev = kst64->st_rdev;
+    st64->__pad2 = 0;
+    st64->st_size = kst64->st_size;
+    st64->st_blksize = kst64->st_blksize;
+    st64->st_blocks = kst64->st_blocks;
+    st64->st_atim.tv_sec = kst64->st_atime_sec;
+    st64->st_atim.tv_nsec = kst64->st_atime_nsec;
+    st64->st_mtim.tv_sec = kst64->st_mtime_sec;
+    st64->st_mtim.tv_nsec = kst64->st_mtime_nsec;
+    st64->st_ctim.tv_sec = kst64->st_ctime_sec;
+    st64->st_ctim.tv_nsec = kst64->st_ctime_nsec;
+    st64->__glibc_reserved4 = 0;
+    st64->__glibc_reserved5 = 0;
 }

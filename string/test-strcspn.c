@@ -41,38 +41,39 @@
 # define STRLEN wcslen
 #endif /* WIDE */
 
-typedef size_t (*proto_t) (const CHAR *, const CHAR *);
-size_t SIMPLE_STRCSPN (const CHAR *, const CHAR *);
-size_t STUPID_STRCSPN (const CHAR *, const CHAR *);
+typedef size_t (*proto_t)(const CHAR *, const CHAR *);
+size_t SIMPLE_STRCSPN(const CHAR *, const CHAR *);
+size_t STUPID_STRCSPN(const CHAR *, const CHAR *);
 
-IMPL (STUPID_STRCSPN, 0)
-IMPL (SIMPLE_STRCSPN, 0)
-IMPL (STRCSPN, 1)
+IMPL(STUPID_STRCSPN, 0)
+IMPL(SIMPLE_STRCSPN, 0)
+IMPL(STRCSPN, 1)
 
 size_t
-SIMPLE_STRCSPN (const CHAR *s, const CHAR *rej)
+SIMPLE_STRCSPN(const CHAR *s, const CHAR *rej)
 {
-  const CHAR *r, *str = s;
-  CHAR c;
+    const CHAR *r, *str = s;
+    CHAR c;
 
-  while ((c = *s++) != '\0')
-    for (r = rej; *r != '\0'; ++r)
-      if (*r == c)
-	return s - str - 1;
-  return s - str - 1;
+    while ((c = *s++) != '\0')
+        for (r = rej; *r != '\0'; ++r)
+            if (*r == c) {
+                return s - str - 1;
+            }
+    return s - str - 1;
 }
 
-size_t
-STUPID_STRCSPN (const CHAR *s, const CHAR *rej)
+size_t STUPID_STRCSPN(const CHAR *s, const CHAR *rej)
 {
-  size_t ns = STRLEN (s), nrej = STRLEN (rej);
-  size_t i, j;
+    size_t ns = STRLEN(s), nrej = STRLEN(rej);
+    size_t i, j;
 
-  for (i = 0; i < ns; ++i)
-    for (j = 0; j < nrej; ++j)
-      if (s[i] == rej[j])
-	return i;
-  return i;
+    for (i = 0; i < ns; ++i)
+        for (j = 0; j < nrej; ++j)
+            if (s[i] == rej[j]) {
+                return i;
+            }
+    return i;
 }
 
 #undef CHAR

@@ -20,14 +20,13 @@
 #include <unistd.h>
 #include <sysdep-cancel.h>
 
-int
-__access (const char *file, int type)
+int __access(const char *file, int type)
 {
 #ifdef __NR_access
-  return INLINE_SYSCALL_CALL (access, file, type);
+    return INLINE_SYSCALL_CALL(access, file, type);
 #else
-  return INLINE_SYSCALL_CALL (faccessat, AT_FDCWD, file, type);
+    return INLINE_SYSCALL_CALL(faccessat, AT_FDCWD, file, type);
 #endif
 }
-libc_hidden_def (__access)
-weak_alias (__access, access)
+libc_hidden_def(__access)
+weak_alias(__access, access)

@@ -23,73 +23,68 @@
 #include <futex-internal.h>
 
 
-int
-__new_sem_init (sem_t *sem, int pshared, unsigned int value)
+int __new_sem_init(sem_t *sem, int pshared, unsigned int value)
 {
-  ASSERT_PTHREAD_INTERNAL_SIZE (sem_t, struct new_sem);
+    ASSERT_PTHREAD_INTERNAL_SIZE(sem_t, struct new_sem);
 
-  /* Parameter sanity check.  */
-  if (__glibc_unlikely (value > SEM_VALUE_MAX))
-    {
-      __set_errno (EINVAL);
-      return -1;
+    /* Parameter sanity check.  */
+    if (__glibc_unlikely(value > SEM_VALUE_MAX)) {
+        __set_errno(EINVAL);
+        return -1;
     }
-  pshared = pshared != 0 ? PTHREAD_PROCESS_SHARED : PTHREAD_PROCESS_PRIVATE;
-  int err = futex_supports_pshared (pshared);
-  if (err != 0)
-    {
-      __set_errno (err);
-      return -1;
+    pshared = pshared != 0 ? PTHREAD_PROCESS_SHARED : PTHREAD_PROCESS_PRIVATE;
+    int err = futex_supports_pshared(pshared);
+    if (err != 0) {
+        __set_errno(err);
+        return -1;
     }
 
-  /* Map to the internal type.  */
-  struct new_sem *isem = (struct new_sem *) sem;
+    /* Map to the internal type.  */
+    struct new_sem *isem = (struct new_sem *) sem;
 
-  /* Use the values the caller provided.  */
+    /* Use the values the caller provided.  */
 #if __HAVE_64B_ATOMICS
-  isem->data = value;
+    isem->data = value;
 #else
-  isem->value = value << SEM_VALUE_SHIFT;
-  /* pad is used as a mutex on pre-v9 sparc and ignored otherwise.  */
-  isem->pad = 0;
-  isem->nwaiters = 0;
+    isem->value = value << SEM_VALUE_SHIFT;
+    /* pad is used as a mutex on pre-v9 sparc and ignored otherwise.  */
+    isem->pad = 0;
+    isem->nwaiters = 0;
 #endif
 
-  isem->private = (pshared == PTHREAD_PROCESS_PRIVATE
-		   ? FUTEX_PRIVATE : FUTEX_SHARED);
+    isem->private = (pshared == PTHREAD_PROCESS_PRIVATE
+                     ? FUTEX_PRIVATE : FUTEX_SHARED);
 
-  return 0;
+    return 0;
 }
-versioned_symbol (libc, __new_sem_init, sem_init, GLIBC_2_34);
+versioned_symbol(libc, __new_sem_init, sem_init, GLIBC_2_34);
 
 #if OTHER_SHLIB_COMPAT(libpthread, GLIBC_2_1, GLIBC_2_34)
-compat_symbol (libpthread, __new_sem_init, sem_init, GLIBC_2_1);
+compat_symbol(libpthread, __new_sem_init, sem_init, GLIBC_2_1);
 #endif
 
 #if OTHER_SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_1)
 int
-attribute_compat_text_section
-__old_sem_init (sem_t *sem, int pshared, unsigned int value)
+attribute_compat_text_section __old_sem_init(sem_t *sem, int pshared, unsigned int value)
 {
-  ASSERT_PTHREAD_INTERNAL_SIZE (sem_t, struct new_sem);
+    ASSERT_PTHREAD_INTERNAL_SIZE(sem_t, struct new_sem);
 
-  /* Parameter sanity check.  */
-  if (__glibc_unlikely (value > SEM_VALUE_MAX))
-    {
-      __set_errno (EINVAL);
-      return -1;
+    /* Parameter sanity check.  */
+    if (__glibc_unlikely(value > SEM_VALUE_MAX)) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  /* Map to the internal type.  */
-  struct old_sem *isem = (struct old_sem *) sem;
+    /* Map to the internal type.  */
+    struct old_sem *isem = (struct old_sem *) sem;
 
-  /* Use the value the user provided.  */
-  isem->value = value;
+    /* Use the value the user provided.  */
+    isem->value = value;
 
-  /* We cannot store the PSHARED attribute.  So we always use the
-     operations needed for shared semaphores.  */
+    /* We cannot store the PSHARED attribute.  So we always use the
+       operations needed for shared semaphores.  */
 
-  return 0;
+    return 0;
 }
-compat_symbol (libpthread, __old_sem_init, sem_init, GLIBC_2_0);
+compat_symbol(libpthread, __old_sem_init, sem_init, GLIBC_2_0);
 #endif

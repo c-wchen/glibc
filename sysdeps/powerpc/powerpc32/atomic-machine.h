@@ -25,8 +25,8 @@
     should be false.  */
 
 #if defined _ARCH_PWR6 || defined _ARCH_PWR6X
-# define MUTEX_HINT_ACQ	",1"
-# define MUTEX_HINT_REL	",0"
+# define MUTEX_HINT_ACQ ",1"
+# define MUTEX_HINT_REL ",0"
 #else
 # define MUTEX_HINT_ACQ
 # define MUTEX_HINT_REL
@@ -43,19 +43,19 @@
  * different version in sysdeps/powerpc/powerpc64/atomic-machine.h.
  */
 #define __arch_compare_and_exchange_bool_32_acq(mem, newval, oldval)         \
-({									      \
-  unsigned int __tmp;							      \
-  __asm __volatile (							      \
-		    "1:	lwarx	%0,0,%1" MUTEX_HINT_ACQ "\n"		      \
-		    "	subf.	%0,%2,%0\n"				      \
-		    "	bne	2f\n"					      \
-		    "	stwcx.	%3,0,%1\n"				      \
-		    "	bne-	1b\n"					      \
-		    "2:	" __ARCH_ACQ_INSTR				      \
-		    : "=&r" (__tmp)					      \
-		    : "b" (mem), "r" (oldval), "r" (newval)		      \
-		    : "cr0", "memory");					      \
-  __tmp != 0;								      \
+({                                        \
+  unsigned int __tmp;                                 \
+  __asm __volatile (                                  \
+            "1:	lwarx	%0,0,%1" MUTEX_HINT_ACQ "\n"            \
+            "	subf.	%0,%2,%0\n"                   \
+            "	bne	2f\n"                       \
+            "	stwcx.	%3,0,%1\n"                   \
+            "	bne-	1b\n"                          \
+            "2:	" __ARCH_ACQ_INSTR                    \
+            : "=&r" (__tmp)                       \
+            : "b" (mem), "r" (oldval), "r" (newval)           \
+            : "cr0", "memory");                       \
+  __tmp != 0;                                     \
 })
 
 /* Powerpc32 processors don't implement the 64-bit (doubleword) forms of
@@ -100,20 +100,20 @@
  * So if the build is using -mcpu=[power4,power5,power5+,970] we can
  * safely use lwsync.
  */
-# define atomic_read_barrier()	__asm ("lwsync" ::: "memory")
+# define atomic_read_barrier()  __asm ("lwsync" ::: "memory")
 /*
  * "light weight" sync can also be used for the release barrier.
  */
-# define __ARCH_REL_INSTR	"lwsync"
-# define atomic_write_barrier()	__asm ("lwsync" ::: "memory")
+# define __ARCH_REL_INSTR   "lwsync"
+# define atomic_write_barrier() __asm ("lwsync" ::: "memory")
 #else
 /*
  * Older powerpc32 processors don't support the new "light weight"
  * sync (lwsync).  So the only safe option is to use normal sync
  * for all powerpc32 applications.
  */
-# define atomic_read_barrier()	__asm ("sync" ::: "memory")
-# define atomic_write_barrier()	__asm ("sync" ::: "memory")
+# define atomic_read_barrier()  __asm ("sync" ::: "memory")
+# define atomic_write_barrier() __asm ("sync" ::: "memory")
 #endif
 
 /*

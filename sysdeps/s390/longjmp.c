@@ -32,20 +32,20 @@
 /* In glibc release 2.19 new versions of longjmp-functions were introduced,
    but were reverted before 2.20. Thus both versions are the same function.  */
 
-strong_alias (__libc_siglongjmp, __libc_longjmp)
+strong_alias(__libc_siglongjmp, __libc_longjmp)
 
-weak_alias (__libc_siglongjmp, __v1_longjmp)
-weak_alias (__libc_siglongjmp, __v2_longjmp)
-versioned_symbol (libc, __v1_longjmp, _longjmp, GLIBC_2_0);
-compat_symbol (libc, __v2_longjmp, _longjmp, GLIBC_2_19);
+weak_alias(__libc_siglongjmp, __v1_longjmp)
+weak_alias(__libc_siglongjmp, __v2_longjmp)
+versioned_symbol(libc, __v1_longjmp, _longjmp, GLIBC_2_0);
+compat_symbol(libc, __v2_longjmp, _longjmp, GLIBC_2_19);
 
-weak_alias (__libc_siglongjmp, __v1longjmp)
-weak_alias (__libc_siglongjmp, __v2longjmp)
-versioned_symbol (libc, __v1longjmp, longjmp, GLIBC_2_0);
-compat_symbol (libc, __v2longjmp, longjmp, GLIBC_2_19);
+weak_alias(__libc_siglongjmp, __v1longjmp)
+weak_alias(__libc_siglongjmp, __v2longjmp)
+versioned_symbol(libc, __v1longjmp, longjmp, GLIBC_2_0);
+compat_symbol(libc, __v2longjmp, longjmp, GLIBC_2_19);
 
-weak_alias (__libc_siglongjmp, __v1siglongjmp)
-weak_alias (__libc_siglongjmp, __v2siglongjmp)
-versioned_symbol (libc, __v1siglongjmp, siglongjmp, GLIBC_2_0);
-compat_symbol (libc, __v2siglongjmp, siglongjmp, GLIBC_2_19);
+weak_alias(__libc_siglongjmp, __v1siglongjmp)
+weak_alias(__libc_siglongjmp, __v2siglongjmp)
+versioned_symbol(libc, __v1siglongjmp, siglongjmp, GLIBC_2_0);
+compat_symbol(libc, __v2siglongjmp, siglongjmp, GLIBC_2_19);
 #endif /* SHARED && SHLIB_COMPAT (libc, GLIBC_2_19, GLIBC_2_20)  */

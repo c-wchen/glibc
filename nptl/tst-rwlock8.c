@@ -38,142 +38,126 @@
 static pthread_rwlock_t lock;
 
 
-static void *
-writer_thread (void *nr)
+static void *writer_thread(void *nr)
 {
-  struct timespec delay;
-  int n;
+    struct timespec delay;
+    int n;
 
-  delay.tv_sec = 0;
-  delay.tv_nsec = DELAY;
+    delay.tv_sec = 0;
+    delay.tv_nsec = DELAY;
 
-  for (n = 0; n < WRITETRIES; ++n)
-    {
-      printf ("writer thread %ld tries again\n", (long int) nr);
+    for (n = 0; n < WRITETRIES; ++n) {
+        printf("writer thread %ld tries again\n", (long int) nr);
 
-      if (pthread_rwlock_wrlock (&lock) != 0)
-	{
-	  puts ("wrlock failed");
-	  exit (1);
-	}
+        if (pthread_rwlock_wrlock(&lock) != 0) {
+            puts("wrlock failed");
+            exit(1);
+        }
 
-      printf ("writer thread %ld succeeded\n", (long int) nr);
+        printf("writer thread %ld succeeded\n", (long int) nr);
 
-      nanosleep (&delay, NULL);
+        nanosleep(&delay, NULL);
 
-      if (pthread_rwlock_unlock (&lock) != 0)
-	{
-	  puts ("unlock for writer failed");
-	  exit (1);
-	}
+        if (pthread_rwlock_unlock(&lock) != 0) {
+            puts("unlock for writer failed");
+            exit(1);
+        }
 
-      printf ("writer thread %ld released\n", (long int) nr);
+        printf("writer thread %ld released\n", (long int) nr);
     }
 
-  return NULL;
+    return NULL;
 }
 
 
-static void *
-reader_thread (void *nr)
+static void *reader_thread(void *nr)
 {
-  struct timespec delay;
-  int n;
+    struct timespec delay;
+    int n;
 
-  delay.tv_sec = 0;
-  delay.tv_nsec = DELAY;
+    delay.tv_sec = 0;
+    delay.tv_nsec = DELAY;
 
-  for (n = 0; n < READTRIES; ++n)
-    {
-      printf ("reader thread %ld tries again\n", (long int) nr);
+    for (n = 0; n < READTRIES; ++n) {
+        printf("reader thread %ld tries again\n", (long int) nr);
 
-      if (pthread_rwlock_rdlock (&lock) != 0)
-	{
-	  puts ("rdlock failed");
-	  exit (1);
-	}
+        if (pthread_rwlock_rdlock(&lock) != 0) {
+            puts("rdlock failed");
+            exit(1);
+        }
 
-      printf ("reader thread %ld succeeded\n", (long int) nr);
+        printf("reader thread %ld succeeded\n", (long int) nr);
 
-      nanosleep (&delay, NULL);
+        nanosleep(&delay, NULL);
 
-      if (pthread_rwlock_unlock (&lock) != 0)
-	{
-	  puts ("unlock for reader failed");
-	  exit (1);
-	}
+        if (pthread_rwlock_unlock(&lock) != 0) {
+            puts("unlock for reader failed");
+            exit(1);
+        }
 
-      printf ("reader thread %ld released\n", (long int) nr);
+        printf("reader thread %ld released\n", (long int) nr);
     }
 
-  return NULL;
+    return NULL;
 }
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  pthread_t thwr[NWRITERS];
-  pthread_t thrd[NREADERS];
-  int n;
-  void *res;
-  pthread_rwlockattr_t a;
+    pthread_t thwr[NWRITERS];
+    pthread_t thrd[NREADERS];
+    int n;
+    void *res;
+    pthread_rwlockattr_t a;
 
-  if (pthread_rwlockattr_init (&a) != 0)
-    {
-      puts ("rwlockattr_t failed");
-      exit (1);
+    if (pthread_rwlockattr_init(&a) != 0) {
+        puts("rwlockattr_t failed");
+        exit(1);
     }
 
-  if (pthread_rwlockattr_setkind_np (&a, KIND) != 0)
-    {
-      puts ("rwlockattr_setkind failed");
-      exit (1);
+    if (pthread_rwlockattr_setkind_np(&a, KIND) != 0) {
+        puts("rwlockattr_setkind failed");
+        exit(1);
     }
 
-  if (pthread_rwlock_init (&lock, &a) != 0)
-    {
-      puts ("rwlock_init failed");
-      exit (1);
+    if (pthread_rwlock_init(&lock, &a) != 0) {
+        puts("rwlock_init failed");
+        exit(1);
     }
 
-  /* Make standard error the same as standard output.  */
-  dup2 (1, 2);
+    /* Make standard error the same as standard output.  */
+    dup2(1, 2);
 
-  /* Make sure we see all message, even those on stdout.  */
-  setvbuf (stdout, NULL, _IONBF, 0);
+    /* Make sure we see all message, even those on stdout.  */
+    setvbuf(stdout, NULL, _IONBF, 0);
 
-  for (n = 0; n < NWRITERS; ++n)
-    if (pthread_create (&thwr[n], NULL, writer_thread,
-			(void *) (long int) n) != 0)
-      {
-	puts ("writer create failed");
-	exit (1);
-      }
+    for (n = 0; n < NWRITERS; ++n)
+        if (pthread_create(&thwr[n], NULL, writer_thread,
+                           (void *)(long int) n) != 0) {
+            puts("writer create failed");
+            exit(1);
+        }
 
-  for (n = 0; n < NREADERS; ++n)
-    if (pthread_create (&thrd[n], NULL, reader_thread,
-			(void *) (long int) n) != 0)
-      {
-	puts ("reader create failed");
-	exit (1);
-      }
+    for (n = 0; n < NREADERS; ++n)
+        if (pthread_create(&thrd[n], NULL, reader_thread,
+                           (void *)(long int) n) != 0) {
+            puts("reader create failed");
+            exit(1);
+        }
 
-  /* Wait for all the threads.  */
-  for (n = 0; n < NWRITERS; ++n)
-    if (pthread_join (thwr[n], &res) != 0)
-      {
-	puts ("writer join failed");
-	exit (1);
-      }
-  for (n = 0; n < NREADERS; ++n)
-    if (pthread_join (thrd[n], &res) != 0)
-      {
-	puts ("reader join failed");
-	exit (1);
-      }
+    /* Wait for all the threads.  */
+    for (n = 0; n < NWRITERS; ++n)
+        if (pthread_join(thwr[n], &res) != 0) {
+            puts("writer join failed");
+            exit(1);
+        }
+    for (n = 0; n < NREADERS; ++n)
+        if (pthread_join(thrd[n], &res) != 0) {
+            puts("reader join failed");
+            exit(1);
+        }
 
-  return 0;
+    return 0;
 }
 
 #define TIMEOUT 30

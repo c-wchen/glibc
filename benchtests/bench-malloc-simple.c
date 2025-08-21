@@ -39,152 +39,150 @@
 #define NUM_ALLOCS 4
 #define MAX_ALLOCS 1600
 
-typedef struct
-{
-  size_t iters;
-  size_t size;
-  int n;
-  timing_t elapsed;
+typedef struct {
+    size_t iters;
+    size_t size;
+    int n;
+    timing_t elapsed;
 } malloc_args;
 
-static void
-do_benchmark (malloc_args *args, int **arr)
+static void do_benchmark(malloc_args *args, int **arr)
 {
-  timing_t start, stop;
-  size_t iters = args->iters;
-  size_t size = args->size;
-  int n = args->n;
+    timing_t start, stop;
+    size_t iters = args->iters;
+    size_t size = args->size;
+    int n = args->n;
 
-  TIMING_NOW (start);
+    TIMING_NOW(start);
 
-  for (int j = 0; j < iters; j++)
-    {
-      for (int i = 0; i < n; i++)
-	arr[i] = TEST_FUNC (size);
+    for (int j = 0; j < iters; j++) {
+        for (int i = 0; i < n; i++) {
+            arr[i] = TEST_FUNC(size);
+        }
 
-      for (int i = 0; i < n; i++)
-	free (arr[i]);
+        for (int i = 0; i < n; i++) {
+            free(arr[i]);
+        }
     }
 
-  TIMING_NOW (stop);
+    TIMING_NOW(stop);
 
-  TIMING_DIFF (args->elapsed, start, stop);
+    TIMING_DIFF(args->elapsed, start, stop);
 }
 
 static malloc_args tests[3][NUM_ALLOCS];
 static int allocs[NUM_ALLOCS] = { 25, 100, 400, MAX_ALLOCS };
 
-static void *
-thread_test (void *p)
+static void *thread_test(void *p)
 {
-  int **arr = (int**)p;
+    int **arr = (int **)p;
 
-  /* Run benchmark multi-threaded.  */
-  for (int i = 0; i < NUM_ALLOCS; i++)
-    do_benchmark (&tests[2][i], arr);
-
-  return p;
-}
-
-void
-bench (unsigned long size)
-{
-  size_t iters = NUM_ITERS;
-  int **arr = (int**) malloc (MAX_ALLOCS * sizeof (void*));
-
-  for (int t = 0; t < 3; t++)
-    for (int i = 0; i < NUM_ALLOCS; i++)
-      {
-	tests[t][i].n = allocs[i];
-	tests[t][i].size = size;
-	tests[t][i].iters = iters / allocs[i];
-
-	/* Do a quick warmup run.  */
-	if (t == 0)
-	  do_benchmark (&tests[0][i], arr);
-      }
-
-  /* Run benchmark single threaded in main_arena.  */
-  for (int i = 0; i < NUM_ALLOCS; i++)
-    do_benchmark (&tests[0][i], arr);
-
-  /* Run benchmark in a thread_arena.  */
-  pthread_t t;
-  pthread_create (&t, NULL, thread_test, (void*)arr);
-  pthread_join (t, NULL);
-
-  /* Repeat benchmark in main_arena with SINGLE_THREAD_P == false.  */
-  for (int i = 0; i < NUM_ALLOCS; i++)
-    do_benchmark (&tests[1][i], arr);
-
-  free (arr);
-
-  json_ctx_t json_ctx;
-
-  json_init (&json_ctx, 0, stdout);
-
-  json_document_begin (&json_ctx);
-
-  json_attr_string (&json_ctx, "timing_type", TIMING_TYPE);
-
-  json_attr_object_begin (&json_ctx, "functions");
-
-  json_attr_object_begin (&json_ctx, TEST_NAME);
-
-  char s[100];
-  double iters2 = iters;
-
-  json_attr_object_begin (&json_ctx, "");
-  json_attr_double (&json_ctx, "malloc_block_size", size);
-
-  struct rusage usage;
-  getrusage (RUSAGE_SELF, &usage);
-  json_attr_double (&json_ctx, "max_rss", usage.ru_maxrss);
-
-  for (int i = 0; i < NUM_ALLOCS; i++)
-    {
-      sprintf (s, "main_arena_st_allocs_%04d_time", allocs[i]);
-      json_attr_double (&json_ctx, s, tests[0][i].elapsed / iters2);
+    /* Run benchmark multi-threaded.  */
+    for (int i = 0; i < NUM_ALLOCS; i++) {
+        do_benchmark(&tests[2][i], arr);
     }
 
-  for (int i = 0; i < NUM_ALLOCS; i++)
-    {
-      sprintf (s, "main_arena_mt_allocs_%04d_time", allocs[i]);
-      json_attr_double (&json_ctx, s, tests[1][i].elapsed / iters2);
-    }
-
-  for (int i = 0; i < NUM_ALLOCS; i++)
-    {
-      sprintf (s, "thread_arena__allocs_%04d_time", allocs[i]);
-      json_attr_double (&json_ctx, s, tests[2][i].elapsed / iters2);
-    }
-
-  json_attr_object_end (&json_ctx);
-
-  json_attr_object_end (&json_ctx);
-
-  json_attr_object_end (&json_ctx);
-
-  json_document_end (&json_ctx);
+    return p;
 }
 
-static void usage (const char *name)
+void bench(unsigned long size)
 {
-  fprintf (stderr, "%s: <alloc_size>\n", name);
-  exit (1);
+    size_t iters = NUM_ITERS;
+    int **arr = (int **) malloc(MAX_ALLOCS * sizeof(void *));
+
+    for (int t = 0; t < 3; t++)
+        for (int i = 0; i < NUM_ALLOCS; i++) {
+            tests[t][i].n = allocs[i];
+            tests[t][i].size = size;
+            tests[t][i].iters = iters / allocs[i];
+
+            /* Do a quick warmup run.  */
+            if (t == 0) {
+                do_benchmark(&tests[0][i], arr);
+            }
+        }
+
+    /* Run benchmark single threaded in main_arena.  */
+    for (int i = 0; i < NUM_ALLOCS; i++) {
+        do_benchmark(&tests[0][i], arr);
+    }
+
+    /* Run benchmark in a thread_arena.  */
+    pthread_t t;
+    pthread_create(&t, NULL, thread_test, (void *)arr);
+    pthread_join(t, NULL);
+
+    /* Repeat benchmark in main_arena with SINGLE_THREAD_P == false.  */
+    for (int i = 0; i < NUM_ALLOCS; i++) {
+        do_benchmark(&tests[1][i], arr);
+    }
+
+    free(arr);
+
+    json_ctx_t json_ctx;
+
+    json_init(&json_ctx, 0, stdout);
+
+    json_document_begin(&json_ctx);
+
+    json_attr_string(&json_ctx, "timing_type", TIMING_TYPE);
+
+    json_attr_object_begin(&json_ctx, "functions");
+
+    json_attr_object_begin(&json_ctx, TEST_NAME);
+
+    char s[100];
+    double iters2 = iters;
+
+    json_attr_object_begin(&json_ctx, "");
+    json_attr_double(&json_ctx, "malloc_block_size", size);
+
+    struct rusage usage;
+    getrusage(RUSAGE_SELF, &usage);
+    json_attr_double(&json_ctx, "max_rss", usage.ru_maxrss);
+
+    for (int i = 0; i < NUM_ALLOCS; i++) {
+        sprintf(s, "main_arena_st_allocs_%04d_time", allocs[i]);
+        json_attr_double(&json_ctx, s, tests[0][i].elapsed / iters2);
+    }
+
+    for (int i = 0; i < NUM_ALLOCS; i++) {
+        sprintf(s, "main_arena_mt_allocs_%04d_time", allocs[i]);
+        json_attr_double(&json_ctx, s, tests[1][i].elapsed / iters2);
+    }
+
+    for (int i = 0; i < NUM_ALLOCS; i++) {
+        sprintf(s, "thread_arena__allocs_%04d_time", allocs[i]);
+        json_attr_double(&json_ctx, s, tests[2][i].elapsed / iters2);
+    }
+
+    json_attr_object_end(&json_ctx);
+
+    json_attr_object_end(&json_ctx);
+
+    json_attr_object_end(&json_ctx);
+
+    json_document_end(&json_ctx);
 }
 
-int
-main (int argc, char **argv)
+static void usage(const char *name)
 {
-  long val = 16;
-  if (argc == 2)
-    val = strtol (argv[1], NULL, 0);
+    fprintf(stderr, "%s: <alloc_size>\n", name);
+    exit(1);
+}
 
-  if (argc > 2 || val <= 0)
-    usage (argv[0]);
+int main(int argc, char **argv)
+{
+    long val = 16;
+    if (argc == 2) {
+        val = strtol(argv[1], NULL, 0);
+    }
 
-  bench (val);
+    if (argc > 2 || val <= 0) {
+        usage(argv[0]);
+    }
 
-  return 0;
+    bench(val);
+
+    return 0;
 }

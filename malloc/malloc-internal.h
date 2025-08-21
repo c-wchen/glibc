@@ -26,21 +26,21 @@
 #include <calloc-clear-memory.h>
 
 /* Called in the parent process before a fork.  */
-void __malloc_fork_lock_parent (void) attribute_hidden;
+void __malloc_fork_lock_parent(void) attribute_hidden;
 
 /* Called in the parent process after a fork.  */
-void __malloc_fork_unlock_parent (void) attribute_hidden;
+void __malloc_fork_unlock_parent(void) attribute_hidden;
 
 /* Called in the child process after a fork.  */
-void __malloc_fork_unlock_child (void) attribute_hidden;
+void __malloc_fork_unlock_child(void) attribute_hidden;
 
 /* Called as part of the thread shutdown sequence.  */
-void __malloc_arena_thread_freeres (void) attribute_hidden;
+void __malloc_arena_thread_freeres(void) attribute_hidden;
 
 /* Activate a standard set of debugging hooks. */
-void __malloc_check_init (void) attribute_hidden;
+void __malloc_check_init(void) attribute_hidden;
 
 /* Initialize malloc.  */
-void __ptmalloc_init (void) attribute_hidden;
+void __ptmalloc_init(void) attribute_hidden;
 
 #endif /* _MALLOC_INTERNAL_H */

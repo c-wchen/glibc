@@ -23,13 +23,13 @@
 # error "Never include <bits/syslog-decl.h> directly; use <sys/syslog.h> instead."
 #endif
 
-extern void __syslog_chk (int __pri, int __flag, const char *__fmt, ...)
-     __attribute__ ((__format__ (__printf__, 3, 4)));
+extern void __syslog_chk(int __pri, int __flag, const char *__fmt, ...)
+__attribute__((__format__(__printf__, 3, 4)));
 
 #ifdef __USE_MISC
-extern void __vsyslog_chk (int __pri, int __flag, const char *__fmt,
-			   __gnuc_va_list __ap)
-     __attribute__ ((__format__ (__printf__, 3, 0)));
+extern void __vsyslog_chk(int __pri, int __flag, const char *__fmt,
+                          __gnuc_va_list __ap)
+__attribute__((__format__(__printf__, 3, 0)));
 #endif
 
 #endif

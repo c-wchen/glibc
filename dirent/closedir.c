@@ -22,12 +22,11 @@
 
 /* Close the directory stream DIRP.
    Return 0 if successful, -1 if not.  */
-int
-__closedir (DIR *dirp)
+int __closedir(DIR *dirp)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-weak_alias (__closedir, closedir)
+weak_alias(__closedir, closedir)
 
-stub_warning (closedir)
+stub_warning(closedir)

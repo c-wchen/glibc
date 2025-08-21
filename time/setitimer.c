@@ -22,19 +22,17 @@
 /* Set the timer WHICH to *NEW.  If OLD is not NULL,
    set *OLD to the old value of timer WHICH.
    Returns 0 on success, -1 on errors.  */
-int
-__setitimer (enum __itimer_which which, const struct itimerval *new,
-	     struct itimerval *old)
+int __setitimer(enum __itimer_which which, const struct itimerval *new,
+                struct itimerval *old)
 {
-  if (new == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (new == NULL) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (setitimer)
+stub_warning(setitimer)
 
-weak_alias (__setitimer, setitimer)
+weak_alias(__setitimer, setitimer)

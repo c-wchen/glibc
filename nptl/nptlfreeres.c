@@ -22,9 +22,8 @@
 
 /* Free libpthread.so resources.
    Note: Caller ensures we are called only once.  */
-void
-__libpthread_freeres (void)
+void __libpthread_freeres(void)
 {
-  call_function_static_weak (__default_pthread_attr_freeres);
-  __nptl_free_stacks (0);
+    call_function_static_weak(__default_pthread_attr_freeres);
+    __nptl_free_stacks(0);
 }

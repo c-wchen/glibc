@@ -19,25 +19,24 @@
 #include <fenv.h>
 #include <fenv_private.h>
 
-int
-__feholdexcept (fenv_t *envp)
+int __feholdexcept(fenv_t *envp)
 {
-  unsigned int fpcr;
-  unsigned int fpsr;
+    unsigned int fpcr;
+    unsigned int fpsr;
 
-  _FPU_GETCW (fpcr);
-  _FPU_GETS (fpsr);
+    _FPU_GETCW(fpcr);
+    _FPU_GETS(fpsr);
 
-  envp->__fpcr = fpcr;
-  envp->__fpsr = fpsr;
+    envp->__fpcr = fpcr;
+    envp->__fpsr = fpsr;
 
-  fpsr &= ~FE_ALL_EXCEPT;
+    fpsr &= ~FE_ALL_EXCEPT;
 
-  _FPU_SETCW (fpcr);
-  _FPU_SETS (fpsr);
+    _FPU_SETCW(fpcr);
+    _FPU_SETS(fpsr);
 
-  return 0;
+    return 0;
 }
-libm_hidden_def (__feholdexcept)
-weak_alias (__feholdexcept, feholdexcept)
-libm_hidden_weak (feholdexcept)
+libm_hidden_def(__feholdexcept)
+weak_alias(__feholdexcept, feholdexcept)
+libm_hidden_weak(feholdexcept)

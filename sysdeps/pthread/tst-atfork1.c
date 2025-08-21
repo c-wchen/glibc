@@ -26,93 +26,77 @@
 static int val;
 
 
-static void
-prepare1 (void)
+static void prepare1(void)
 {
-  val *= 2;
+    val *= 2;
 }
 
-static void
-prepare2 (void)
+static void prepare2(void)
 {
-  ++val;
+    ++val;
 }
 
-static void
-parent1 (void)
+static void parent1(void)
 {
-  val += 4;
+    val += 4;
 }
 
-static void
-parent2 (void)
+static void parent2(void)
 {
-  val *= 4;
+    val *= 4;
 }
 
-static void
-child1 (void)
+static void child1(void)
 {
-  val += 8;
+    val += 8;
 }
 
-static void
-child2 (void)
+static void child2(void)
 {
-  val *= 8;
+    val *= 8;
 }
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  pid_t pid;
-  int status = 0;
+    pid_t pid;
+    int status = 0;
 
-  if (pthread_atfork (prepare1, parent1, child1) != 0)
-    {
-      puts ("1st atfork failed");
-      exit (1);
+    if (pthread_atfork(prepare1, parent1, child1) != 0) {
+        puts("1st atfork failed");
+        exit(1);
     }
-  if (pthread_atfork (prepare2, parent2, child2) != 0)
-    {
-      puts ("2nd atfork failed");
-      exit (1);
+    if (pthread_atfork(prepare2, parent2, child2) != 0) {
+        puts("2nd atfork failed");
+        exit(1);
     }
 
-  pid = fork ();
-  if (pid == -1)
-    {
-      puts ("fork failed");
-      exit (1);
+    pid = fork();
+    if (pid == -1) {
+        puts("fork failed");
+        exit(1);
     }
 
-  if (pid != 0)
-    {
-      /* Parent.  */
-      if (val != 24)
-	{
-	  printf ("expected val=%d, got %d\n", 24, val);
-	  exit (1);
-	}
+    if (pid != 0) {
+        /* Parent.  */
+        if (val != 24) {
+            printf("expected val=%d, got %d\n", 24, val);
+            exit(1);
+        }
 
-      if (TEMP_FAILURE_RETRY (waitpid (pid, &status, 0)) != pid)
-	{
-	  puts ("waitpid failed");
-	  exit (1);
-	}
-    }
-  else
-    {
-      /* Child.  */
-      if (val != 80)
-	{
-	  printf ("expected val=%d, got %d\n", 80, val);
-	  exit (2);
-	}
+        if (TEMP_FAILURE_RETRY(waitpid(pid, &status, 0)) != pid) {
+            puts("waitpid failed");
+            exit(1);
+        }
+    } else {
+        /* Child.  */
+        if (val != 80) {
+            printf("expected val=%d, got %d\n", 80, val);
+            exit(2);
+        }
     }
 
-  return status;
+    return status;
 }
 
 #define TEST_FUNCTION do_test ()

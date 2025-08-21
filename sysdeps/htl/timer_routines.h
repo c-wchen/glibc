@@ -17,7 +17,7 @@
    not, see <https://www.gnu.org/licenses/>.  */
 
 #ifndef _TIMER_ROUTINES_H
-#define _TIMER_ROUTINES_H	1
+#define _TIMER_ROUTINES_H   1
 
 #include <bits/pthreadtypes.h>
 
@@ -26,21 +26,20 @@
    or contain illegal values.  This version is Hurd-specific for
    performance reason.  One could use the access functions to get the
    values of all the fields of the attribute structure.  */
-static inline int
-thread_attr_compare (const pthread_attr_t * left, const pthread_attr_t * right)
+static inline int thread_attr_compare(const pthread_attr_t *left, const pthread_attr_t *right)
 {
-  struct __pthread_attr *ileft = (struct __pthread_attr *) left;
-  struct __pthread_attr *iright = (struct __pthread_attr *) right;
+    struct __pthread_attr *ileft = (struct __pthread_attr *) left;
+    struct __pthread_attr *iright = (struct __pthread_attr *) right;
 
-  return ileft->__schedparam.__sched_priority
-	   == iright->__schedparam.__sched_priority
-	 && ileft->__stackaddr == iright->__stackaddr
-	 && ileft->__stacksize == iright->__stacksize
-	 && ileft->__guardsize == iright->__guardsize
-	 && ileft->__detachstate == iright->__detachstate
-	 && ileft->__inheritsched == iright->__inheritsched
-	 && ileft->__contentionscope == iright->__contentionscope
-	 && ileft->__schedpolicy == iright->__schedpolicy;
+    return ileft->__schedparam.__sched_priority
+           == iright->__schedparam.__sched_priority
+           && ileft->__stackaddr == iright->__stackaddr
+           && ileft->__stacksize == iright->__stacksize
+           && ileft->__guardsize == iright->__guardsize
+           && ileft->__detachstate == iright->__detachstate
+           && ileft->__inheritsched == iright->__inheritsched
+           && ileft->__contentionscope == iright->__contentionscope
+           && ileft->__schedpolicy == iright->__schedpolicy;
 }
 
 #endif /* timer_routines.h */

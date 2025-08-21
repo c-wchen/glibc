@@ -28,31 +28,29 @@
 
 /* Test GCONV_PATH to the directory containing the program
    executable.  */
-static void
-activate_test_gconv_modules (void)
+static void activate_test_gconv_modules(void)
 {
-  unsigned long ptr = getauxval (AT_EXECFN);
-  if (ptr == 0)
-    {
-      printf ("warning: AT_EXECFN not support, cannot run test\n");
-      exit (EXIT_UNSUPPORTED);
+    unsigned long ptr = getauxval(AT_EXECFN);
+    if (ptr == 0) {
+        printf("warning: AT_EXECFN not support, cannot run test\n");
+        exit(EXIT_UNSUPPORTED);
     }
-  char *test_program_directory = dirname (xstrdup ((const char *) ptr));
-  TEST_VERIFY (setenv ("GCONV_PATH", test_program_directory, 1) == 0);
-  free (test_program_directory);
+    char *test_program_directory = dirname(xstrdup((const char *) ptr));
+    TEST_VERIFY(setenv("GCONV_PATH", test_program_directory, 1) == 0);
+    free(test_program_directory);
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  activate_test_gconv_modules ();
+    activate_test_gconv_modules();
 
-  TEST_VERIFY (iconv_open ("UTF-8", "tst-gconv-init-failure//")
-               == (iconv_t) -1);
-  if (errno != ENOMEM)
-    FAIL_EXIT1 ("unexpected iconv_open error: %m");
+    TEST_VERIFY(iconv_open("UTF-8", "tst-gconv-init-failure//")
+                == (iconv_t) -1);
+    if (errno != ENOMEM) {
+        FAIL_EXIT1("unexpected iconv_open error: %m");
+    }
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

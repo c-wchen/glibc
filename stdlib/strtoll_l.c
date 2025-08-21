@@ -16,7 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define QUAD	1
+#define QUAD    1
 
 #include <features.h>
 #undef __GLIBC_USE_C23_STRTOL
@@ -24,7 +24,7 @@
 #include <locale.h>
 #include <stdbool.h>
 
-extern long long int ____strtoll_l_internal (const char *, char **, int, int,
-					     bool, locale_t);
+extern long long int ____strtoll_l_internal(const char *, char **, int, int,
+        bool, locale_t);
 
 #include <strtol_l.c>

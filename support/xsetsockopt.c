@@ -22,10 +22,9 @@
 #include <stdlib.h>
 #include <support/check.h>
 
-void
-xsetsockopt (int fd, int level, int name, const void *val, socklen_t vallen)
+void xsetsockopt(int fd, int level, int name, const void *val, socklen_t vallen)
 {
-  if (setsockopt (fd, level, name, val, vallen) != 0)
-    FAIL_EXIT1 ("setsockopt (%d, %d, %d), %zu bytes: %m",
-                fd, level, name, (size_t) vallen);
+    if (setsockopt(fd, level, name, val, vallen) != 0)
+        FAIL_EXIT1("setsockopt (%d, %d, %d), %zu bytes: %m",
+                   fd, level, name, (size_t) vallen);
 }

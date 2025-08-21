@@ -19,14 +19,13 @@
 #include <dirent.h>
 #undef scandir
 
-int
-scandir64 (const char *dir, struct dirent64 ***namelist,
-	   int (*select) (const struct dirent64 *),
-	   int (*cmp) (const struct dirent64 **, const struct dirent64 **))
+int scandir64(const char *dir, struct dirent64 ***namelist,
+              int (*select)(const struct dirent64 *),
+              int (*cmp)(const struct dirent64 **, const struct dirent64 **))
 {
-  return __scandir64_tail (__opendir (dir), namelist, select, cmp);
+    return __scandir64_tail(__opendir(dir), namelist, select, cmp);
 }
 
 #if _DIRENT_MATCHES_DIRENT64
-weak_alias (scandir64, scandir)
+weak_alias(scandir64, scandir)
 #endif

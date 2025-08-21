@@ -19,52 +19,51 @@
 #include <errno.h>
 #include <sys/sysinfo.h>
 
-int
-__get_nprocs_conf (void)
+int __get_nprocs_conf(void)
 {
-  /* We don't know how to determine the number.  Simply return always 1.  */
-  return 1;
+    /* We don't know how to determine the number.  Simply return always 1.  */
+    return 1;
 }
-libc_hidden_def (__get_nprocs_conf)
-weak_alias (__get_nprocs_conf, get_nprocs_conf)
+libc_hidden_def(__get_nprocs_conf)
+weak_alias(__get_nprocs_conf, get_nprocs_conf)
 
-link_warning (get_nprocs_conf, "warning: get_nprocs_conf will always return 1")
+link_warning(get_nprocs_conf, "warning: get_nprocs_conf will always return 1")
 
 
 
 int
-__get_nprocs (void)
+__get_nprocs(void)
 {
-  /* We don't know how to determine the number.  Simply return always 1.  */
-  return 1;
+    /* We don't know how to determine the number.  Simply return always 1.  */
+    return 1;
 }
-libc_hidden_def (__get_nprocs)
-weak_alias (__get_nprocs, get_nprocs)
+libc_hidden_def(__get_nprocs)
+weak_alias(__get_nprocs, get_nprocs)
 
-link_warning (get_nprocs, "warning: get_nprocs will always return 1")
+link_warning(get_nprocs, "warning: get_nprocs will always return 1")
 
 
 long int
-__get_phys_pages (void)
+__get_phys_pages(void)
 {
-  /* We have no general way to determine this value.  */
-  __set_errno (ENOSYS);
-  return -1;
+    /* We have no general way to determine this value.  */
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (__get_phys_pages)
-weak_alias (__get_phys_pages, get_phys_pages)
+libc_hidden_def(__get_phys_pages)
+weak_alias(__get_phys_pages, get_phys_pages)
 
-stub_warning (get_phys_pages)
+stub_warning(get_phys_pages)
 
 
 long int
-__get_avphys_pages (void)
+__get_avphys_pages(void)
 {
-  /* We have no general way to determine this value.  */
-  __set_errno (ENOSYS);
-  return -1;
+    /* We have no general way to determine this value.  */
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (__get_avphys_pages)
-weak_alias (__get_avphys_pages, get_avphys_pages)
+libc_hidden_def(__get_avphys_pages)
+weak_alias(__get_avphys_pages, get_avphys_pages)
 
-stub_warning (get_avphys_pages)
+stub_warning(get_avphys_pages)

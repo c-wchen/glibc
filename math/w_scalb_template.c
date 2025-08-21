@@ -26,30 +26,27 @@
 #include <math_private.h>
 
 /* Wrapper scalb */
-FLOAT M_DECL_FUNC (__scalb) (FLOAT x, FLOAT fn)
+FLOAT M_DECL_FUNC(__scalb)(FLOAT x, FLOAT fn)
 {
-  FLOAT z = M_SUF (__ieee754_scalb) (x, fn);
+    FLOAT z = M_SUF(__ieee754_scalb)(x, fn);
 
-  if (__glibc_unlikely (!isfinite (z) || z == M_LIT (0.0)))
-    {
-      if (isnan (z))
-	{
-	  if (!isnan (x) && !isnan (fn))
-	    __set_errno (EDOM);
-	}
-      else if (isinf (z))
-	{
-	  if (!isinf (x) && !isinf (fn))
-	    __set_errno (ERANGE);
-	}
-      else
-	{
-	  /* z == 0.  */
-	  if (x != M_LIT (0.0) && !isinf (fn))
-	    __set_errno (ERANGE);
-	}
+    if (__glibc_unlikely(!isfinite(z) || z == M_LIT(0.0))) {
+        if (isnan(z)) {
+            if (!isnan(x) && !isnan(fn)) {
+                __set_errno(EDOM);
+            }
+        } else if (isinf(z)) {
+            if (!isinf(x) && !isinf(fn)) {
+                __set_errno(ERANGE);
+            }
+        } else {
+            /* z == 0.  */
+            if (x != M_LIT(0.0) && !isinf(fn)) {
+                __set_errno(ERANGE);
+            }
+        }
     }
-  return z;
+    return z;
 }
 
 /* Don't provide _FloatN aliases for scalb which is a deprecated interface,
@@ -64,6 +61,6 @@ FLOAT M_DECL_FUNC (__scalb) (FLOAT x, FLOAT fn)
 #undef libm_alias_float128_other_r
 #define libm_alias_float128_other_r(from, to, r)
 
-declare_mgen_alias (__scalb, scalb);
+declare_mgen_alias(__scalb, scalb);
 
 #endif /* __USE_WRAPPER_TEMPLATE.  */

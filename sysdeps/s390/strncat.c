@@ -23,16 +23,16 @@
 # include <ifunc-resolve.h>
 
 # if HAVE_STRNCAT_C
-extern __typeof (__strncat) STRNCAT_C attribute_hidden;
+extern __typeof(__strncat) STRNCAT_C attribute_hidden;
 # endif
 
 # if HAVE_STRNCAT_Z13
-extern __typeof (__strncat) STRNCAT_Z13 attribute_hidden;
+extern __typeof(__strncat) STRNCAT_Z13 attribute_hidden;
 # endif
 
-s390_libc_ifunc_expr (__strncat, strncat,
-		      (HAVE_STRNCAT_Z13 && (hwcap & HWCAP_S390_VX))
-		      ? STRNCAT_Z13
-		      : STRNCAT_DEFAULT
-		      )
+s390_libc_ifunc_expr(__strncat, strncat,
+                     (HAVE_STRNCAT_Z13 &&(hwcap &HWCAP_S390_VX))
+                     ? STRNCAT_Z13
+                     : STRNCAT_DEFAULT
+                    )
 #endif

@@ -21,12 +21,11 @@
 
 #include_next <math_private.h>
 
-__extern_always_inline long double
-__NTH (__ieee754_atan2l (long double y, long double x))
+__extern_always_inline long double __NTH(__ieee754_atan2l(long double y, long double x))
 {
-  long double ret;
-  __asm__ __volatile__ ("fpatan" : "=t" (ret) : "0" (x), "u" (y) : "st(1)");
-  return ret;
+    long double ret;
+    __asm__ __volatile__("fpatan" : "=t"(ret) : "0"(x), "u"(y) : "st(1)");
+    return ret;
 }
 
 #endif

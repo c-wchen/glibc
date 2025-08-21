@@ -16,15 +16,13 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-void tst_audit25mod3_func1 (void);
+void tst_audit25mod3_func1(void);
 
-void
-tst_audit25mod1_func1 (void)
+void tst_audit25mod1_func1(void)
 {
-  tst_audit25mod3_func1 ();
+    tst_audit25mod3_func1();
 }
 
-void
-tst_audit25mod1_func2 (void)
+void tst_audit25mod1_func2(void)
 {
 }

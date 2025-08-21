@@ -19,11 +19,10 @@
 #include <errno.h>
 #include <sys/mman.h>
 
-int
-__pkey_get (int key)
+int __pkey_get(int key)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (__pkey_get)
-weak_alias (__pkey_get, pkey_get)
+libc_hidden_def(__pkey_get)
+weak_alias(__pkey_get, pkey_get)

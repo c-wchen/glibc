@@ -23,25 +23,23 @@
 
 __BEGIN_DECLS
 
-struct test_config
-{
-  void (*prepare_function) (int argc, char **argv);
-  int (*test_function) (void);
-  int (*test_function_argv) (int argc, char **argv);
-  void (*cleanup_function) (void);
-  void (*cmdline_function) (int);
-  const void *options;   /* Custom options if not NULL.  */
-  int timeout;           /* Test timeout in seconds.  */
-  int expected_status;   /* Expected exit status.  */
-  int expected_signal;   /* If non-zero, expect termination by signal.  */
-  char no_mallopt;       /* Boolean flag to disable mallopt.  */
-  char no_setvbuf;       /* Boolean flag to disable setvbuf.  */
-  char run_command_mode; /* Boolean flag to indicate run-command-mode.  */
-  const char *optstring; /* Short command line options.  */
+struct test_config {
+    void (*prepare_function)(int argc, char **argv);
+    int (*test_function)(void);
+    int (*test_function_argv)(int argc, char **argv);
+    void (*cleanup_function)(void);
+    void (*cmdline_function)(int);
+    const void *options;   /* Custom options if not NULL.  */
+    int timeout;           /* Test timeout in seconds.  */
+    int expected_status;   /* Expected exit status.  */
+    int expected_signal;   /* If non-zero, expect termination by signal.  */
+    char no_mallopt;       /* Boolean flag to disable mallopt.  */
+    char no_setvbuf;       /* Boolean flag to disable setvbuf.  */
+    char run_command_mode; /* Boolean flag to indicate run-command-mode.  */
+    const char *optstring; /* Short command line options.  */
 };
 
-enum
-  {
+enum {
     /* Test exit status which indicates that the feature is
        unsupported. */
     EXIT_UNSUPPORTED = 77,
@@ -54,7 +52,7 @@ enum
     /* Used for command line argument parsing.  */
     OPT_DIRECT = 1000,
     OPT_TESTDIR,
-  };
+};
 
 /* Options provided by the test driver.  */
 #define TEST_DEFAULT_OPTIONS                            \
@@ -78,7 +76,7 @@ extern unsigned int test_verbose;
       printf (__VA_ARGS__);                      \
   } while (0);
 
-int support_test_main (int argc, char **argv, const struct test_config *);
+int support_test_main(int argc, char **argv, const struct test_config *);
 
 __END_DECLS
 

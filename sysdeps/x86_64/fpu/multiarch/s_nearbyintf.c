@@ -29,7 +29,7 @@
 # define SYMBOL_NAME nearbyintf
 # include "ifunc-sse4_1.h"
 
-libc_ifunc_redirected (__redirect_nearbyintf, __nearbyintf,
-		       IFUNC_SELECTOR ());
-libm_alias_float (__nearbyint, nearbyint)
+libc_ifunc_redirected(__redirect_nearbyintf, __nearbyintf,
+                      IFUNC_SELECTOR());
+libm_alias_float(__nearbyint, nearbyint)
 #endif

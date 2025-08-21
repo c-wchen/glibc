@@ -23,16 +23,17 @@
 /* Change the flags of FILE to FLAGS.  */
 
 /* XXX shouldn't this be __chflags? */
-int
-chflags (const char *file, unsigned long int flags)
+int chflags(const char *file, unsigned long int flags)
 {
-  error_t err;
-  file_t port = __file_name_lookup (file, 0, 0);
-  if (port == MACH_PORT_NULL)
-    return -1;
-  err = __file_chflags (port, flags);
-  __mach_port_deallocate (__mach_task_self (), port);
-  if (err)
-    return __hurd_fail (err);
-  return 0;
+    error_t err;
+    file_t port = __file_name_lookup(file, 0, 0);
+    if (port == MACH_PORT_NULL) {
+        return -1;
+    }
+    err = __file_chflags(port, flags);
+    __mach_port_deallocate(__mach_task_self(), port);
+    if (err) {
+        return __hurd_fail(err);
+    }
+    return 0;
 }

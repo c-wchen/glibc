@@ -20,10 +20,9 @@
 #if !_DIRENT_MATCHES_DIRENT64
 # include <string.h>
 
-int
-versionsort (const struct dirent **a, const struct dirent **b)
+int versionsort(const struct dirent **a, const struct dirent **b)
 {
-  return __strverscmp ((*a)->d_name, (*b)->d_name);
+    return __strverscmp((*a)->d_name, (*b)->d_name);
 }
 
 #endif

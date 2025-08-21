@@ -22,16 +22,15 @@
 #include <support/check.h>
 #include <support/support.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
 #ifdef PATH_MAX
-  char buf[PATH_MAX + 1];
-  char *res = realpath (".", buf);
-  TEST_VERIFY (res == buf);
+    char buf[PATH_MAX + 1];
+    char *res = realpath(".", buf);
+    TEST_VERIFY(res == buf);
 #endif
 
-  return 0;
+    return 0;
 }
 
 #include <support/test-driver.c>

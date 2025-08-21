@@ -18,15 +18,14 @@
 
 #include <fenv_private.h>
 
-int
-__fesetenv (const fenv_t *envp)
+int __fesetenv(const fenv_t *envp)
 {
-  fenv_t env = libc_handle_user_fenv_s390 (envp);
-  libc_fesetenv_s390 (&env);
+    fenv_t env = libc_handle_user_fenv_s390(envp);
+    libc_fesetenv_s390(&env);
 
-  /* Success.  */
-  return 0;
+    /* Success.  */
+    return 0;
 }
-libm_hidden_def (__fesetenv)
-weak_alias (__fesetenv, fesetenv)
-libm_hidden_weak (fesetenv)
+libm_hidden_def(__fesetenv)
+weak_alias(__fesetenv, fesetenv)
+libm_hidden_weak(fesetenv)

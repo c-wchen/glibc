@@ -27,56 +27,55 @@
 static int temp_mq_fd;
 
 /* Add temporary files in list.  */
-static void
-__attribute__ ((unused))
-add_temp_mq (const char *name)
+static void __attribute__((unused))
+add_temp_mq(const char *name)
 {
-  struct iovec iov[2];
-  iov[0].iov_base = (char *) name;
-  iov[0].iov_len = strlen (name);
-  iov[1].iov_base = (char *) "\n";
-  iov[1].iov_len = 1;
-  if (writev (temp_mq_fd, iov, 2) != iov[0].iov_len + 1)
-    printf ("Could not record temp mq filename %s\n", name);
+    struct iovec iov[2];
+    iov[0].iov_base = (char *) name;
+    iov[0].iov_len = strlen(name);
+    iov[1].iov_base = (char *) "\n";
+    iov[1].iov_len = 1;
+    if (writev(temp_mq_fd, iov, 2) != iov[0].iov_len + 1) {
+        printf("Could not record temp mq filename %s\n", name);
+    }
 }
 
 /* Delete all temporary message queues.  */
-static void
-do_cleanup (void)
+static void do_cleanup(void)
 {
-  if (lseek (temp_mq_fd, 0, SEEK_SET) != 0)
-    return;
-
-  FILE *f = fdopen (temp_mq_fd, "r");
-  if (f == NULL)
-    return;
-
-  char *line = NULL;
-  size_t n = 0;
-  ssize_t rets;
-  while ((rets = getline (&line, &n, f)) > 0)
-    {
-      if (line[rets - 1] != '\n')
-        continue;
-
-      line[rets - 1] = '\0';
-      mq_unlink (line);
+    if (lseek(temp_mq_fd, 0, SEEK_SET) != 0) {
+        return;
     }
-  fclose (f);
+
+    FILE *f = fdopen(temp_mq_fd, "r");
+    if (f == NULL) {
+        return;
+    }
+
+    char *line = NULL;
+    size_t n = 0;
+    ssize_t rets;
+    while ((rets = getline(&line, &n, f)) > 0) {
+        if (line[rets - 1] != '\n') {
+            continue;
+        }
+
+        line[rets - 1] = '\0';
+        mq_unlink(line);
+    }
+    fclose(f);
 }
 
-static void
-do_prepare (void)
+static void do_prepare(void)
 {
-  char name [] = "/tmp/tst-mqueueN.XXXXXX";
-  temp_mq_fd = mkstemp (name);
-  if (temp_mq_fd == -1)
-    {
-      printf ("Could not create temporary file %s: %m\n", name);
-      exit (1);
+    char name [] = "/tmp/tst-mqueueN.XXXXXX";
+    temp_mq_fd = mkstemp(name);
+    if (temp_mq_fd == -1) {
+        printf("Could not create temporary file %s: %m\n", name);
+        exit(1);
     }
-  unlink (name);
+    unlink(name);
 }
 
 #define PREPARE(argc, argv) do_prepare ()
-#define CLEANUP_HANDLER	do_cleanup ()
+#define CLEANUP_HANDLER do_cleanup ()

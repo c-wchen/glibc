@@ -22,12 +22,11 @@
 
 
 /* Open a directory stream on FD.  */
-DIR *
-__fdopendir (int fd)
+DIR *__fdopendir(int fd)
 {
-  __set_errno (ENOSYS);
-  return NULL;
+    __set_errno(ENOSYS);
+    return NULL;
 }
-weak_alias (__fdopendir, fdopendir)
+weak_alias(__fdopendir, fdopendir)
 
-stub_warning (fdopendir)
+stub_warning(fdopendir)

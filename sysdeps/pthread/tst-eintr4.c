@@ -27,21 +27,20 @@
 #include "eintr.c"
 
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  pthread_t self = pthread_self ();
+    pthread_t self = pthread_self();
 
-  setup_eintr (SIGUSR1, &self);
+    setup_eintr(SIGUSR1, &self);
 
-  pthread_barrier_t b;
-  xpthread_barrier_init (&b, NULL, 2);
+    pthread_barrier_t b;
+    xpthread_barrier_init(&b, NULL, 2);
 
-  delayed_exit (1);
-  /* This call must never return.  */
-  xpthread_barrier_wait (&b);
-  puts ("error: pthread_barrier_wait returned");
-  return 1;
+    delayed_exit(1);
+    /* This call must never return.  */
+    xpthread_barrier_wait(&b);
+    puts("error: pthread_barrier_wait returned");
+    return 1;
 }
 
 #include <support/test-driver.c>

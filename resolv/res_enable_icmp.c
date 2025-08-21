@@ -20,18 +20,16 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 
-int
-__res_enable_icmp (int family, int fd)
+int __res_enable_icmp(int family, int fd)
 {
-  int one = 1;
-  switch (family)
-    {
-    case AF_INET:
-      return __setsockopt (fd, SOL_IP, IP_RECVERR, &one, sizeof (one));
-    case AF_INET6:
-      return __setsockopt (fd, SOL_IPV6, IPV6_RECVERR, &one, sizeof (one));
-    default:
-      __set_errno (EAFNOSUPPORT);
-      return -1;
+    int one = 1;
+    switch (family) {
+        case AF_INET:
+            return __setsockopt(fd, SOL_IP, IP_RECVERR, &one, sizeof(one));
+        case AF_INET6:
+            return __setsockopt(fd, SOL_IPV6, IPV6_RECVERR, &one, sizeof(one));
+        default:
+            __set_errno(EAFNOSUPPORT);
+            return -1;
     }
 }

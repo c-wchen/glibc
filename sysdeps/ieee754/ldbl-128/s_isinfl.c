@@ -14,16 +14,15 @@ static char rcsid[] = "$NetBSD: $";
 #include <math.h>
 #include <math_private.h>
 
-int
-__isinfl (_Float128 x)
+int __isinfl(_Float128 x)
 {
-	int64_t hx,lx;
-	GET_LDOUBLE_WORDS64(hx,lx,x);
-	lx |= (hx & 0x7fffffffffffffffLL) ^ 0x7fff000000000000LL;
-	lx |= -lx;
-	return ~(lx >> 63) & (hx >> 62);
+    int64_t hx, lx;
+    GET_LDOUBLE_WORDS64(hx, lx, x);
+    lx |= (hx & 0x7fffffffffffffffLL) ^ 0x7fff000000000000LL;
+    lx |= -lx;
+    return ~(lx >> 63) & (hx >> 62);
 }
-mathx_hidden_def (__isinfl)
+mathx_hidden_def(__isinfl)
 #ifndef isinfl
-weak_alias (__isinfl, isinfl)
+weak_alias(__isinfl, isinfl)
 #endif

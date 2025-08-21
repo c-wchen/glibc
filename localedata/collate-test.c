@@ -24,111 +24,104 @@
 #include <string.h>
 
 
-struct lines
-{
-  char *key;
-  char *line;
+struct lines {
+    char *key;
+    char *line;
 };
 
-static int xstrcoll (const void *, const void *);
+static int xstrcoll(const void *, const void *);
 
-static int
-signum (int n)
+static int signum(int n)
 {
-  return (0 < n) - (n < 0);
+    return (0 < n) - (n < 0);
 }
 
-int
-main (int argc, char *argv[])
+int main(int argc, char *argv[])
 {
-  int result = 0;
-  size_t nstrings, nstrings_max;
-  struct lines *strings;
-  char *line = NULL;
-  size_t len = 0;
-  size_t n;
+    int result = 0;
+    size_t nstrings, nstrings_max;
+    struct lines *strings;
+    char *line = NULL;
+    size_t len = 0;
+    size_t n;
 
-  if (argc < 2)
-    error (1, 0, "usage: %s <random seed>", argv[0]);
-
-  setlocale (LC_ALL, "");
-
-  nstrings_max = 100;
-  nstrings = 0;
-  strings = (struct lines *) malloc (nstrings_max * sizeof (struct lines));
-  if (strings == NULL)
-    {
-      perror (argv[0]);
-      exit (1);
+    if (argc < 2) {
+        error(1, 0, "usage: %s <random seed>", argv[0]);
     }
 
-  while (1)
-    {
-      int l;
-      if (getline (&line, &len, stdin) < 0)
-	break;
+    setlocale(LC_ALL, "");
 
-      if (nstrings == nstrings_max)
-	{
-	  strings = (struct lines *) realloc (strings,
-					      (nstrings_max *= 2)
-					       * sizeof (*strings));
-	  if (strings == NULL)
-	    {
-	      perror (argv[0]);
-	      exit (1);
-	    }
-	}
-      strings[nstrings].line = strdup (line);
-      l = strcspn (line, ":(;");
-      while (l > 0 && isspace (line[l - 1]))
-	--l;
-      strings[nstrings].key = strndup (line, l);
-      ++nstrings;
-    }
-  free (line);
-
-  /* First shuffle.  */
-  srandom (atoi (argv[1]));
-  for (n = 0; n < 10 * nstrings; ++n)
-    {
-      int r1, r2;
-      size_t idx1 = random () % nstrings;
-      size_t idx2 = random () % nstrings;
-      struct lines tmp = strings[idx1];
-      strings[idx1] = strings[idx2];
-      strings[idx2] = tmp;
-
-      /* While we are at it a first little test.  */
-      r1 = strcoll (strings[idx1].key, strings[idx2].key);
-      r2 = strcoll (strings[idx2].key, strings[idx1].key);
-
-      if (signum (r1) != - signum (r2))
-	printf ("`%s' and `%s' collate wrong: %d vs. %d\n",
-		strings[idx1].key, strings[idx2].key, r1, r2);
+    nstrings_max = 100;
+    nstrings = 0;
+    strings = (struct lines *) malloc(nstrings_max * sizeof(struct lines));
+    if (strings == NULL) {
+        perror(argv[0]);
+        exit(1);
     }
 
-  /* Now sort.  */
-  qsort (strings, nstrings, sizeof (struct lines), xstrcoll);
+    while (1) {
+        int l;
+        if (getline(&line, &len, stdin) < 0) {
+            break;
+        }
 
-  /* Print the result.  */
-  for (n = 0; n < nstrings; ++n)
-    {
-      fputs (strings[n].line, stdout);
-      free (strings[n].line);
-      free (strings[n].key);
+        if (nstrings == nstrings_max) {
+            strings = (struct lines *) realloc(strings,
+                                               (nstrings_max *= 2)
+                                               * sizeof(*strings));
+            if (strings == NULL) {
+                perror(argv[0]);
+                exit(1);
+            }
+        }
+        strings[nstrings].line = strdup(line);
+        l = strcspn(line, ":(;");
+        while (l > 0 && isspace(line[l - 1])) {
+            --l;
+        }
+        strings[nstrings].key = strndup(line, l);
+        ++nstrings;
     }
-  free (strings);
+    free(line);
 
-  return result;
+    /* First shuffle.  */
+    srandom(atoi(argv[1]));
+    for (n = 0; n < 10 * nstrings; ++n) {
+        int r1, r2;
+        size_t idx1 = random() % nstrings;
+        size_t idx2 = random() % nstrings;
+        struct lines tmp = strings[idx1];
+        strings[idx1] = strings[idx2];
+        strings[idx2] = tmp;
+
+        /* While we are at it a first little test.  */
+        r1 = strcoll(strings[idx1].key, strings[idx2].key);
+        r2 = strcoll(strings[idx2].key, strings[idx1].key);
+
+        if (signum(r1) != - signum(r2))
+            printf("`%s' and `%s' collate wrong: %d vs. %d\n",
+                   strings[idx1].key, strings[idx2].key, r1, r2);
+    }
+
+    /* Now sort.  */
+    qsort(strings, nstrings, sizeof(struct lines), xstrcoll);
+
+    /* Print the result.  */
+    for (n = 0; n < nstrings; ++n) {
+        fputs(strings[n].line, stdout);
+        free(strings[n].line);
+        free(strings[n].key);
+    }
+    free(strings);
+
+    return result;
 }
 
 
-static int
-xstrcoll (const void *ptr1, const void *ptr2)
+static int xstrcoll(const void *ptr1, const void *ptr2)
 {
-  const struct lines *l1 = (const struct lines *) ptr1;
-  const struct lines *l2 = (const struct lines *) ptr2;
+    const struct lines *l1 = (const struct lines *) ptr1;
+    const struct lines *l2 = (const struct lines *) ptr2;
 
-  return strcoll (l1->key, l2->key);
+    return strcoll(l1->key, l2->key);
 }

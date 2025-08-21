@@ -26,16 +26,16 @@
 #include <tv32-compat.h>
 
 pid_t
-attribute_compat_text_section
-__wait4_tv32 (pid_t pid, int *status, int options, struct __rusage32 *usage32)
+attribute_compat_text_section __wait4_tv32(pid_t pid, int *status, int options, struct __rusage32 *usage32)
 {
-  struct rusage usage;
-  pid_t child = __wait4 (pid, status, options, &usage);
+    struct rusage usage;
+    pid_t child = __wait4(pid, status, options, &usage);
 
-  if (child >= 0 && usage32 != NULL)
-    rusage64_to_rusage32 (&usage, usage32);
-  return child;
+    if (child >= 0 && usage32 != NULL) {
+        rusage64_to_rusage32(&usage, usage32);
+    }
+    return child;
 }
 
-compat_symbol (libc, __wait4_tv32, wait4, GLIBC_2_0);
+compat_symbol(libc, __wait4_tv32, wait4, GLIBC_2_0);
 #endif

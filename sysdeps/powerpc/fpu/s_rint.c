@@ -21,9 +21,8 @@
 #include <libm-alias-double.h>
 #include <round_to_integer.h>
 
-double
-__rint (double x)
+double __rint(double x)
 {
-  return round_to_integer_double (RINT, x);
+    return round_to_integer_double(RINT, x);
 }
-libm_alias_double (__rint, rint)
+libm_alias_double(__rint, rint)

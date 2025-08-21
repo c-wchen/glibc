@@ -20,61 +20,58 @@
 #endif
 
 /* Define bits representing exceptions in the FPU status word.  */
-enum
-  {
+enum {
     FE_INVALID =
-#define FE_INVALID	1
-      FE_INVALID,
+#define FE_INVALID  1
+        FE_INVALID,
     FE_DIVBYZERO =
-#define FE_DIVBYZERO	2
-      FE_DIVBYZERO,
+#define FE_DIVBYZERO    2
+        FE_DIVBYZERO,
     FE_OVERFLOW =
-#define FE_OVERFLOW	4
-      FE_OVERFLOW,
+#define FE_OVERFLOW 4
+        FE_OVERFLOW,
     FE_UNDERFLOW =
-#define FE_UNDERFLOW	8
-      FE_UNDERFLOW,
+#define FE_UNDERFLOW    8
+        FE_UNDERFLOW,
     FE_INEXACT =
-#define FE_INEXACT	16
-      FE_INEXACT,
-  };
+#define FE_INEXACT  16
+        FE_INEXACT,
+};
 
 /* Amount to shift by to convert an exception to a mask bit.  */
-#define FE_EXCEPT_SHIFT	8
+#define FE_EXCEPT_SHIFT 8
 
 /* All supported exceptions.  */
-#define FE_ALL_EXCEPT	\
-	(FE_INVALID | FE_DIVBYZERO | FE_OVERFLOW | FE_UNDERFLOW | FE_INEXACT)
+#define FE_ALL_EXCEPT   \
+    (FE_INVALID | FE_DIVBYZERO | FE_OVERFLOW | FE_UNDERFLOW | FE_INEXACT)
 
 /* VFP supports all of the four defined rounding modes.  */
-enum
-  {
+enum {
     FE_TONEAREST =
-#define FE_TONEAREST	0
-      FE_TONEAREST,
+#define FE_TONEAREST    0
+        FE_TONEAREST,
     FE_UPWARD =
-#define FE_UPWARD	0x400000
-      FE_UPWARD,
+#define FE_UPWARD   0x400000
+        FE_UPWARD,
     FE_DOWNWARD =
-#define FE_DOWNWARD	0x800000
-      FE_DOWNWARD,
+#define FE_DOWNWARD 0x800000
+        FE_DOWNWARD,
     FE_TOWARDZERO =
-#define FE_TOWARDZERO	0xc00000
-      FE_TOWARDZERO
-  };
+#define FE_TOWARDZERO   0xc00000
+        FE_TOWARDZERO
+};
 
 /* Type representing exception flags. */
 typedef unsigned int fexcept_t;
 
 /* Type representing floating-point environment.  */
-typedef struct
-  {
+typedef struct {
     unsigned int __cw;
-  }
+}
 fenv_t;
 
 /* If the default argument is used we use this value.  */
-#define FE_DFL_ENV	((const fenv_t *) -1l)
+#define FE_DFL_ENV  ((const fenv_t *) -1l)
 
 #ifdef __USE_GNU
 /* Floating-point environment where none of the exceptions are masked.  */
@@ -86,5 +83,5 @@ fenv_t;
 typedef unsigned int femode_t;
 
 /* Default floating-point control modes.  */
-# define FE_DFL_MODE	((const femode_t *) -1L)
+# define FE_DFL_MODE    ((const femode_t *) -1L)
 #endif

@@ -19,4 +19,4 @@
 
 #include <stdlib/labs.c>
 
-weak_alias (labs, imaxabs)
+weak_alias(labs, imaxabs)

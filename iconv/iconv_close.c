@@ -22,14 +22,12 @@
 #include <gconv_int.h>
 
 
-int
-iconv_close (iconv_t cd)
+int iconv_close(iconv_t cd)
 {
-  if (__glibc_unlikely (cd == (iconv_t *) -1L))
-    {
-      __set_errno (EBADF);
-      return -1;
+    if (__glibc_unlikely(cd == (iconv_t *) -1L)) {
+        __set_errno(EBADF);
+        return -1;
     }
 
-  return __gconv_close ((__gconv_t) cd) ? -1 : 0;
+    return __gconv_close((__gconv_t) cd) ? -1 : 0;
 }

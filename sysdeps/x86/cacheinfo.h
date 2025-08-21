@@ -22,7 +22,7 @@
 #include <cpu-features.h>
 
 #define TUNABLE_NAMESPACE cpu
-#include <unistd.h>		/* Get STDOUT_FILENO for _dl_printf.  */
+#include <unistd.h>     /* Get STDOUT_FILENO for _dl_printf.  */
 #include <elf/dl-tunables.h>
 
 #if IS_IN (libc)
@@ -55,40 +55,37 @@ long int __x86_rep_movsb_stop_threshold attribute_hidden;
    are used at runtime to tune implementation behavior.  */
 int __x86_string_control attribute_hidden;
 
-static void
-init_cacheinfo (void)
+static void init_cacheinfo(void)
 {
-  const struct cpu_features *cpu_features = __get_cpu_features ();
-  long int data = cpu_features->data_cache_size;
-  /* Round data cache size to multiple of 256 bytes.  */
-  data = data & ~255L;
-  if (data > 0)
-    {
-      __x86_data_cache_size_half = data / 2;
-      __x86_data_cache_size = data;
+    const struct cpu_features *cpu_features = __get_cpu_features();
+    long int data = cpu_features->data_cache_size;
+    /* Round data cache size to multiple of 256 bytes.  */
+    data = data & ~255L;
+    if (data > 0) {
+        __x86_data_cache_size_half = data / 2;
+        __x86_data_cache_size = data;
     }
 
-  long int shared = cpu_features->shared_cache_size;
-  /* Round shared cache size to multiple of 256 bytes.  */
-  shared = shared & ~255L;
-  if (shared > 0)
-    {
-      __x86_shared_cache_size_half = shared / 2;
-      __x86_shared_cache_size = shared;
+    long int shared = cpu_features->shared_cache_size;
+    /* Round shared cache size to multiple of 256 bytes.  */
+    shared = shared & ~255L;
+    if (shared > 0) {
+        __x86_shared_cache_size_half = shared / 2;
+        __x86_shared_cache_size = shared;
     }
 
-  __x86_shared_non_temporal_threshold
-    = cpu_features->non_temporal_threshold;
+    __x86_shared_non_temporal_threshold
+        = cpu_features->non_temporal_threshold;
 
-  __x86_memset_non_temporal_threshold
-      = cpu_features->memset_non_temporal_threshold;
+    __x86_memset_non_temporal_threshold
+        = cpu_features->memset_non_temporal_threshold;
 
-  __x86_rep_movsb_threshold = cpu_features->rep_movsb_threshold;
-  __x86_rep_stosb_threshold = cpu_features->rep_stosb_threshold;
-  __x86_rep_movsb_stop_threshold =  cpu_features->rep_movsb_stop_threshold;
+    __x86_rep_movsb_threshold = cpu_features->rep_movsb_threshold;
+    __x86_rep_stosb_threshold = cpu_features->rep_stosb_threshold;
+    __x86_rep_movsb_stop_threshold =  cpu_features->rep_movsb_stop_threshold;
 
-  if (CPU_FEATURES_ARCH_P (cpu_features, Avoid_Short_Distance_REP_MOVSB))
-    __x86_string_control
-      |= X86_STRING_CONTROL_AVOID_SHORT_DISTANCE_REP_MOVSB;
+    if (CPU_FEATURES_ARCH_P(cpu_features, Avoid_Short_Distance_REP_MOVSB))
+        __x86_string_control
+        |= X86_STRING_CONTROL_AVOID_SHORT_DISTANCE_REP_MOVSB;
 }
 #endif

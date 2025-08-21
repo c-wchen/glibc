@@ -20,17 +20,16 @@
 #include <shlib-compat.h>
 #include <pt-internal.h>
 
-int
-__pthread_condattr_init (pthread_condattr_t *attr)
+int __pthread_condattr_init(pthread_condattr_t *attr)
 {
-  ASSERT_TYPE_SIZE (pthread_condattr_t, __SIZEOF_PTHREAD_CONDATTR_T);
+    ASSERT_TYPE_SIZE(pthread_condattr_t, __SIZEOF_PTHREAD_CONDATTR_T);
 
-  *attr = __pthread_default_condattr;
-  return 0;
+    *attr = __pthread_default_condattr;
+    return 0;
 }
-libc_hidden_def (__pthread_condattr_init)
-versioned_symbol (libc, __pthread_condattr_init, pthread_condattr_init, GLIBC_2_21);
+libc_hidden_def(__pthread_condattr_init)
+versioned_symbol(libc, __pthread_condattr_init, pthread_condattr_init, GLIBC_2_21);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_21)
-compat_symbol (libc, __pthread_condattr_init, pthread_condattr_init, GLIBC_2_12);
+compat_symbol(libc, __pthread_condattr_init, pthread_condattr_init, GLIBC_2_12);
 #endif

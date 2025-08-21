@@ -21,40 +21,37 @@
 #include <support/check.h>
 
 /* Invalid comparison function that always returns -1.  */
-static int
-invalid_compare_1 (const void *a1, const void *b1)
+static int invalid_compare_1(const void *a1, const void *b1)
 {
-  const int *a = a1;
-  const int *b = b1;
-  /* Check that the marker value matches, which means that we are
-     likely within the array.  */
-  TEST_COMPARE (*a, 842523635);
-  TEST_COMPARE (*b, 842523635);
-  TEST_VERIFY_EXIT (*a == 842523635);
-  TEST_VERIFY_EXIT (*b == 842523635);
-  return -1;
+    const int *a = a1;
+    const int *b = b1;
+    /* Check that the marker value matches, which means that we are
+       likely within the array.  */
+    TEST_COMPARE(*a, 842523635);
+    TEST_COMPARE(*b, 842523635);
+    TEST_VERIFY_EXIT(*a == 842523635);
+    TEST_VERIFY_EXIT(*b == 842523635);
+    return -1;
 }
 
 /* Invalid comparison function that always returns 1.  */
-static int
-invalid_compare_2 (const void *a1, const void *b1)
+static int invalid_compare_2(const void *a1, const void *b1)
 {
-  const int *a = a1;
-  const int *b = b1;
-  TEST_COMPARE (*a, 842523635);
-  TEST_COMPARE (*b, 842523635);
-  TEST_VERIFY_EXIT (*a == 842523635);
-  TEST_VERIFY_EXIT (*b == 842523635);
-  return 1;
+    const int *a = a1;
+    const int *b = b1;
+    TEST_COMPARE(*a, 842523635);
+    TEST_COMPARE(*b, 842523635);
+    TEST_VERIFY_EXIT(*a == 842523635);
+    TEST_VERIFY_EXIT(*b == 842523635);
+    return 1;
 }
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  int array[] = {842523635, 842523635, 842523635, 842523635, 842523635};
-  qsort (array, array_length (array), sizeof (array[0]), invalid_compare_1);
-  qsort (array, array_length (array), sizeof (array[0]), invalid_compare_2);
-  return 0;
+    int array[] = {842523635, 842523635, 842523635, 842523635, 842523635};
+    qsort(array, array_length(array), sizeof(array[0]), invalid_compare_1);
+    qsort(array, array_length(array), sizeof(array[0]), invalid_compare_2);
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -19,19 +19,18 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-int
-feenableexcept (int excepts)
+int feenableexcept(int excepts)
 {
-  fpu_control_t temp, old_flag;
+    fpu_control_t temp, old_flag;
 
-  /* Get current exceptions.  */
-  _FPU_GETCW (temp);
+    /* Get current exceptions.  */
+    _FPU_GETCW(temp);
 
-  old_flag = (temp >> 5) & FE_ALL_EXCEPT;
-  excepts &= FE_ALL_EXCEPT;
+    old_flag = (temp >> 5) & FE_ALL_EXCEPT;
+    excepts &= FE_ALL_EXCEPT;
 
-  temp |= excepts << 5;
-  _FPU_SETCW (temp);
+    temp |= excepts << 5;
+    _FPU_SETCW(temp);
 
-  return old_flag;
+    return old_flag;
 }

@@ -23,8 +23,8 @@
 # include <stdlib.h>
 # include <string.h>
 #else
-char *malloc ();
-char *memcpy ();
+char *malloc();
+char *memcpy();
 #endif
 
 #undef __strdup
@@ -35,20 +35,20 @@ char *memcpy ();
 #endif
 
 /* Duplicate S, returning an identical malloc'd string.  */
-char *
-__strdup (const char *s)
+char *__strdup(const char *s)
 {
-  size_t len = strlen (s) + 1;
-  void *new = malloc (len);
+    size_t len = strlen(s) + 1;
+    void *new = malloc(len);
 
-  if (new == NULL)
-    return NULL;
+    if (new == NULL) {
+        return NULL;
+    }
 
-  return (char *) memcpy (new, s, len);
+    return (char *) memcpy(new, s, len);
 }
 #ifdef libc_hidden_def
-libc_hidden_def (__strdup)
+libc_hidden_def(__strdup)
 #endif
 #ifdef weak_alias
-weak_alias (__strdup, strdup)
+weak_alias(__strdup, strdup)
 #endif

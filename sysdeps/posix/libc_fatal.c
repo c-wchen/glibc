@@ -29,11 +29,10 @@
 #endif
 
 #ifndef WRITEV_FOR_FATAL
-# define WRITEV_FOR_FATAL	writev_for_fatal
-static bool
-writev_for_fatal (int fd, const struct iovec *iov, size_t niov, size_t total)
+# define WRITEV_FOR_FATAL   writev_for_fatal
+static bool writev_for_fatal(int fd, const struct iovec *iov, size_t niov, size_t total)
 {
-  return TEMP_FAILURE_RETRY (__writev (fd, iov, niov)) == total;
+    return TEMP_FAILURE_RETRY(__writev(fd, iov, niov)) == total;
 }
 #endif
 
@@ -42,108 +41,103 @@ writev_for_fatal (int fd, const struct iovec *iov, size_t niov, size_t total)
 #define IOVEC_MAX (LIBC_MESSAGE_MAX_ARGS * 2 + 1)
 
 /* Abort with an error message.  */
-void
-__libc_message_impl (const char *fmt, ...)
+void __libc_message_impl(const char *fmt, ...)
 {
-  va_list ap;
-  int fd = -1;
+    va_list ap;
+    int fd = -1;
 
 #ifdef FATAL_PREPARE
-  FATAL_PREPARE;
+    FATAL_PREPARE;
 #endif
 
-  if (fd == -1)
-    fd = STDERR_FILENO;
-
-  struct iovec iov[IOVEC_MAX];
-  int iovcnt = 0;
-  ssize_t total = 0;
-
-  va_start (ap, fmt);
-  const char *cp = fmt;
-  while (*cp != '\0')
-    {
-      /* Find the next "%s" or the end of the string.  */
-      const char *next = cp;
-      while (next[0] != '%' || next[1] != 's')
-	{
-	  next = __strchrnul (next + 1, '%');
-
-	  if (next[0] == '\0')
-	    break;
-	}
-
-      /* Determine what to print.  */
-      const char *str;
-      size_t len;
-      if (cp[0] == '%' && cp[1] == 's')
-	{
-	  str = va_arg (ap, const char *);
-	  len = strlen (str);
-	  cp += 2;
-	}
-      else
-	{
-	  str = cp;
-	  len = next - cp;
-	  cp = next;
-	}
-
-      iov[iovcnt].iov_base = (char *) str;
-      iov[iovcnt].iov_len = len;
-      total += len;
-      iovcnt++;
-
-      if (__glibc_unlikely (iovcnt > IOVEC_MAX))
-	{
-	  len = IOVEC_MAX_ERR_MSG_LEN;
-	  iov[0].iov_base = (char *) IOVEC_MAX_ERR_MSG;
-	  iov[0].iov_len = len;
-	  total = len;
-	  iovcnt = 1;
-	  break;
-	}
-    }
-  va_end (ap);
-
-  if (iovcnt > 0)
-    {
-      WRITEV_FOR_FATAL (fd, iov, iovcnt, total);
-
-      total = ALIGN_UP (total + sizeof (struct abort_msg_s) + 1,
-			GLRO(dl_pagesize));
-      struct abort_msg_s *buf = __mmap (NULL, total,
-					PROT_READ | PROT_WRITE,
-					MAP_ANON | MAP_PRIVATE, -1, 0);
-      if (__glibc_likely (buf != MAP_FAILED))
-	{
-	  buf->size = total;
-	  char *wp = buf->msg;
-	  for (int cnt = 0; cnt < iovcnt; ++cnt)
-	    wp = mempcpy (wp, iov[cnt].iov_base, iov[cnt].iov_len);
-	  *wp = '\0';
-
-	  __set_vma_name (buf, total, " glibc: fatal");
-
-	  /* We have to free the old buffer since the application might
-	     catch the SIGABRT signal.  */
-	  struct abort_msg_s *old = atomic_exchange_acquire (&__abort_msg,
-							     buf);
-	  if (old != NULL)
-	    __munmap (old, old->size);
-	}
+    if (fd == -1) {
+        fd = STDERR_FILENO;
     }
 
-  /* Kill the application.  */
-  abort ();
+    struct iovec iov[IOVEC_MAX];
+    int iovcnt = 0;
+    ssize_t total = 0;
+
+    va_start(ap, fmt);
+    const char *cp = fmt;
+    while (*cp != '\0') {
+        /* Find the next "%s" or the end of the string.  */
+        const char *next = cp;
+        while (next[0] != '%' || next[1] != 's') {
+            next = __strchrnul(next + 1, '%');
+
+            if (next[0] == '\0') {
+                break;
+            }
+        }
+
+        /* Determine what to print.  */
+        const char *str;
+        size_t len;
+        if (cp[0] == '%' && cp[1] == 's') {
+            str = va_arg(ap, const char *);
+            len = strlen(str);
+            cp += 2;
+        } else {
+            str = cp;
+            len = next - cp;
+            cp = next;
+        }
+
+        iov[iovcnt].iov_base = (char *) str;
+        iov[iovcnt].iov_len = len;
+        total += len;
+        iovcnt++;
+
+        if (__glibc_unlikely(iovcnt > IOVEC_MAX)) {
+            len = IOVEC_MAX_ERR_MSG_LEN;
+            iov[0].iov_base = (char *) IOVEC_MAX_ERR_MSG;
+            iov[0].iov_len = len;
+            total = len;
+            iovcnt = 1;
+            break;
+        }
+    }
+    va_end(ap);
+
+    if (iovcnt > 0) {
+        WRITEV_FOR_FATAL(fd, iov, iovcnt, total);
+
+        total = ALIGN_UP(total + sizeof(struct abort_msg_s) + 1,
+                         GLRO(dl_pagesize));
+        struct abort_msg_s *buf = __mmap(NULL, total,
+                                         PROT_READ | PROT_WRITE,
+                                         MAP_ANON | MAP_PRIVATE, -1, 0);
+        if (__glibc_likely(buf != MAP_FAILED)) {
+            buf->size = total;
+            char *wp = buf->msg;
+            for (int cnt = 0; cnt < iovcnt; ++cnt) {
+                wp = mempcpy(wp, iov[cnt].iov_base, iov[cnt].iov_len);
+            }
+            *wp = '\0';
+
+            __set_vma_name(buf, total, " glibc: fatal");
+
+            /* We have to free the old buffer since the application might
+               catch the SIGABRT signal.  */
+            struct abort_msg_s *old = atomic_exchange_acquire(&__abort_msg,
+                                      buf);
+            if (old != NULL) {
+                __munmap(old, old->size);
+            }
+        }
+    }
+
+    /* Kill the application.  */
+    abort();
 }
 
 
-void
-__libc_fatal (const char *message)
+void __libc_fatal(const char *message)
 {
-  /* The loop is added only to keep gcc happy.  */
-  while (1)
-    __libc_message ("%s", message);
+    /* The loop is added only to keep gcc happy.  */
+    while (1) {
+        __libc_message("%s", message);
+    }
 }
-libc_hidden_def (__libc_fatal)
+libc_hidden_def(__libc_fatal)

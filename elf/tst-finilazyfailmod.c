@@ -18,10 +18,10 @@
 
 /* An undefined function.  Calling it will cause a lazy binding
    failure.  */
-void undefined_function (void);
+void undefined_function(void);
 
-static void __attribute__ ((destructor))
-fini (void)
+static void __attribute__((destructor))
+fini(void)
 {
-  undefined_function ();
+    undefined_function();
 }

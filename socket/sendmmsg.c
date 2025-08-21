@@ -21,12 +21,11 @@
 
 /* Send a VLEN messages as described by VMESSAGES to socket FD.
    Returns the number of datagrams successfully written or -1 for errors.  */
-int
-__sendmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags)
+int __sendmmsg(int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-libc_hidden_def (__sendmmsg)
-weak_alias (__sendmmsg, sendmmsg)
-stub_warning (sendmmsg)
+libc_hidden_def(__sendmmsg)
+weak_alias(__sendmmsg, sendmmsg)
+stub_warning(sendmmsg)

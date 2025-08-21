@@ -20,12 +20,11 @@
 
 
 /* Get the effective user ID of the calling process.  */
-__uid_t
-__geteuid (void)
+__uid_t __geteuid(void)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (geteuid)
+stub_warning(geteuid)
 
-weak_alias (__geteuid, geteuid)
+weak_alias(__geteuid, geteuid)

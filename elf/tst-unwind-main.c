@@ -25,36 +25,35 @@
 # include <error.h>
 #endif
 
-static _Unwind_Reason_Code
-callback (struct _Unwind_Context *ctx, void *arg)
+static _Unwind_Reason_Code callback(struct _Unwind_Context *ctx, void *arg)
 {
-  return _URC_NO_REASON;
+    return _URC_NO_REASON;
 }
 
-static void *
-func (void *a)
+static void *func(void *a)
 {
-  /* Arrange for this test to be killed if _Unwind_Backtrace runs into an
-     endless loop.  We cannot use the test driver because the complete
-     call chain needs to be compiled with -funwind-tables so that
-     _Unwind_Backtrace is able to reach the start routine.  */
-  alarm (DEFAULT_TIMEOUT);
-  _Unwind_Backtrace (callback, 0);
-  return a;
+    /* Arrange for this test to be killed if _Unwind_Backtrace runs into an
+       endless loop.  We cannot use the test driver because the complete
+       call chain needs to be compiled with -funwind-tables so that
+       _Unwind_Backtrace is able to reach the start routine.  */
+    alarm(DEFAULT_TIMEOUT);
+    _Unwind_Backtrace(callback, 0);
+    return a;
 }
 
-int
-main (void)
+int main(void)
 {
 #if USE_PTHREADS
-  pthread_t thr;
-  int rc = pthread_create (&thr, NULL, &func, NULL);
-  if (rc)
-    error (1, rc, "pthread_create");
-  rc = pthread_join (thr, NULL);
-  if (rc)
-    error (1, rc, "pthread_join");
+    pthread_t thr;
+    int rc = pthread_create(&thr, NULL, &func, NULL);
+    if (rc) {
+        error(1, rc, "pthread_create");
+    }
+    rc = pthread_join(thr, NULL);
+    if (rc) {
+        error(1, rc, "pthread_join");
+    }
 #else
-  func (NULL);
+    func(NULL);
 #endif
 }

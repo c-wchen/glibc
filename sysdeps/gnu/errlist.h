@@ -594,7 +594,7 @@ _S(EBADRQC, N_("Invalid request code"))
 _S(EBADSLT, N_("Invalid slot"))
 #endif
 #if defined EDEADLOCK && EDEADLOCK != EDEADLK
-_S (EDEADLOCK, N_ ("File locking deadlock error"))
+_S(EDEADLOCK, N_("File locking deadlock error"))
 #endif
 #ifdef EBFONT
 _S(EBFONT, N_("Bad font file format"))

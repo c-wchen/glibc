@@ -20,25 +20,23 @@
 
 /* Read NBYTES into BUF from FD at the given position OFFSET without
    changing the file pointer.  Return the number read or -1.  */
-ssize_t
-__libc_pread (int fd, void *buf, size_t nbytes, off_t offset)
+ssize_t __libc_pread(int fd, void *buf, size_t nbytes, off_t offset)
 {
-  if (nbytes == 0)
-    return 0;
-  if (fd < 0)
-    {
-      __set_errno (EBADF);
-      return -1;
+    if (nbytes == 0) {
+        return 0;
     }
-  if (buf == NULL || offset < 0)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (fd < 0) {
+        __set_errno(EBADF);
+        return -1;
+    }
+    if (buf == NULL || offset < 0) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-strong_alias (__libc_pread, __pread)
-weak_alias (__libc_pread, pread)
-stub_warning (pread)
+strong_alias(__libc_pread, __pread)
+weak_alias(__libc_pread, pread)
+stub_warning(pread)

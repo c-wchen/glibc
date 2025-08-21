@@ -29,17 +29,16 @@
 #include "soft-fp.h"
 #include "brain.h"
 
-BFtype
-__floatdibf (DItype i)
+BFtype __floatdibf(DItype i)
 {
-  FP_DECL_EX;
-  FP_DECL_B (A);
-  BFtype a;
+    FP_DECL_EX;
+    FP_DECL_B(A);
+    BFtype a;
 
-  FP_INIT_ROUNDMODE;
-  FP_FROM_INT_B (A, i, DI_BITS, UDItype);
-  FP_PACK_RAW_B (a, A);
-  FP_HANDLE_EXCEPTIONS;
+    FP_INIT_ROUNDMODE;
+    FP_FROM_INT_B(A, i, DI_BITS, UDItype);
+    FP_PACK_RAW_B(a, A);
+    FP_HANDLE_EXCEPTIONS;
 
-  return a;
+    return a;
 }

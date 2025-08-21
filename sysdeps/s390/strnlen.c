@@ -27,17 +27,17 @@
 # include <ifunc-resolve.h>
 
 # if HAVE_STRNLEN_C
-extern __typeof (__redirect_strnlen) STRNLEN_C attribute_hidden;
+extern __typeof(__redirect_strnlen) STRNLEN_C attribute_hidden;
 # endif
 
 # if HAVE_STRNLEN_Z13
-extern __typeof (__redirect_strnlen) STRNLEN_Z13 attribute_hidden;
+extern __typeof(__redirect_strnlen) STRNLEN_Z13 attribute_hidden;
 # endif
 
-s390_libc_ifunc_expr (__redirect___strnlen, __strnlen,
-		      (HAVE_STRNLEN_Z13 && (hwcap & HWCAP_S390_VX))
-		      ? STRNLEN_Z13
-		      : STRNLEN_DEFAULT
-		      )
-weak_alias (__strnlen, strnlen)
+s390_libc_ifunc_expr(__redirect___strnlen, __strnlen,
+                     (HAVE_STRNLEN_Z13 &&(hwcap &HWCAP_S390_VX))
+                     ? STRNLEN_Z13
+                     : STRNLEN_DEFAULT
+                    )
+weak_alias(__strnlen, strnlen)
 #endif /* HAVE_STRNLEN_IFUNC  */

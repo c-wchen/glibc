@@ -21,12 +21,11 @@
 /* Read the contents of the symbolic link PATH into no more than
    LEN bytes of BUF.  The contents are not null-terminated.
    Returns the number of characters read, or -1 for errors.  */
-ssize_t
-__readlink (const char *path, char *buf, size_t len)
+ssize_t __readlink(const char *path, char *buf, size_t len)
 {
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-stub_warning (readlink)
+stub_warning(readlink)
 
-weak_alias (__readlink, readlink)
+weak_alias(__readlink, readlink)

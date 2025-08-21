@@ -21,8 +21,7 @@
 #undef dsubl
 
 double
-attribute_hidden
-dsubl (double x, double y)
+attribute_hidden dsubl(double x, double y)
 {
-  return __nldbl_dsubl (x, y);
+    return __nldbl_dsubl(x, y);
 }

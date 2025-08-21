@@ -19,11 +19,10 @@
 #include <sys/types.h>
 #include <sysdep-cancel.h>
 
-#undef	creat
+#undef  creat
 
 /* Create FILE with protections MODE.  */
-int
-creat (const char *file, mode_t mode)
+int creat(const char *file, mode_t mode)
 {
-  return __open (file, O_WRONLY|O_CREAT|O_TRUNC, mode);
+    return __open(file, O_WRONLY | O_CREAT | O_TRUNC, mode);
 }

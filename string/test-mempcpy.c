@@ -22,15 +22,16 @@
 #define TEST_NAME "mempcpy"
 #include "test-string.h"
 
-IMPL (mempcpy, 1)
+IMPL(mempcpy, 1)
 
 /* Naive implementation to verify results.  */
 char *
-simple_mempcpy (char *dst, const char *src, size_t n)
+simple_mempcpy(char *dst, const char *src, size_t n)
 {
-  while (n--)
-    *dst++ = *src++;
-  return dst;
+    while (n--) {
+        *dst++ = *src++;
+    }
+    return dst;
 }
 
 #include "test-memcpy.c"

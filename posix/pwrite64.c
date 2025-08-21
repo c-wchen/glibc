@@ -20,26 +20,24 @@
 
 /* Write NBYTES of BUF to FD at given position OFFSET without changing
    the file position.  Return the number written, or -1.  */
-ssize_t
-__libc_pwrite64 (int fd, const void *buf, size_t nbytes, off64_t offset)
+ssize_t __libc_pwrite64(int fd, const void *buf, size_t nbytes, off64_t offset)
 {
-  if (nbytes == 0)
-    return 0;
-  if (fd < 0)
-    {
-      __set_errno (EBADF);
-      return -1;
+    if (nbytes == 0) {
+        return 0;
     }
-  if (buf == NULL || offset < 0)
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (fd < 0) {
+        __set_errno(EBADF);
+        return -1;
+    }
+    if (buf == NULL || offset < 0) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+    __set_errno(ENOSYS);
+    return -1;
 }
-strong_alias (__libc_pwrite64, __pwrite64)
-libc_hidden_def (__pwrite64)
-weak_alias (__libc_pwrite64, pwrite64)
-stub_warning (pwrite64)
+strong_alias(__libc_pwrite64, __pwrite64)
+libc_hidden_def(__pwrite64)
+weak_alias(__libc_pwrite64, pwrite64)
+stub_warning(pwrite64)

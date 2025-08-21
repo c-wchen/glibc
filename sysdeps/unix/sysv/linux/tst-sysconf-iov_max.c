@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 /* Defined in tst-sysconf-iov_max-uapi.c.  */
-long uio_maxiov_value (void);
+long uio_maxiov_value(void);
 
 
 #include <limits.h>
@@ -25,16 +25,15 @@ long uio_maxiov_value (void);
 #include <sys/uio.h>
 #include <unistd.h>
 
-static int
-do_test (void)
+static int do_test(void)
 {
-  TEST_VERIFY (_XOPEN_IOV_MAX == 16); /* Value required by POSIX.  */
-  TEST_VERIFY (uio_maxiov_value () >= _XOPEN_IOV_MAX);
-  TEST_VERIFY (IOV_MAX == uio_maxiov_value ());
-  TEST_VERIFY (UIO_MAXIOV == uio_maxiov_value ());
-  TEST_VERIFY (sysconf (_SC_UIO_MAXIOV) == uio_maxiov_value ());
-  TEST_VERIFY (sysconf (_SC_IOV_MAX) == uio_maxiov_value ());
-  return 0;
+    TEST_VERIFY(_XOPEN_IOV_MAX == 16);  /* Value required by POSIX.  */
+    TEST_VERIFY(uio_maxiov_value() >= _XOPEN_IOV_MAX);
+    TEST_VERIFY(IOV_MAX == uio_maxiov_value());
+    TEST_VERIFY(UIO_MAXIOV == uio_maxiov_value());
+    TEST_VERIFY(sysconf(_SC_UIO_MAXIOV) == uio_maxiov_value());
+    TEST_VERIFY(sysconf(_SC_IOV_MAX) == uio_maxiov_value());
+    return 0;
 }
 
 #include <support/test-driver.c>

@@ -19,22 +19,20 @@
 #include "semaphoreP.h"
 #include <sem_routines.h>
 
-int
-__sem_close (sem_t *sem)
+int __sem_close(sem_t *sem)
 {
-  if (!__sem_remove_mapping (sem))
-    {
-      __set_errno (EINVAL);
-      return -1;
+    if (!__sem_remove_mapping(sem)) {
+        __set_errno(EINVAL);
+        return -1;
     }
 
-  return 0;
+    return 0;
 }
 #if PTHREAD_IN_LIBC
-versioned_symbol (libc, __sem_close, sem_close, GLIBC_2_34);
+versioned_symbol(libc, __sem_close, sem_close, GLIBC_2_34);
 # if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1_1, GLIBC_2_34)
-compat_symbol (libpthread, __sem_close, sem_close, GLIBC_2_1_1);
+compat_symbol(libpthread, __sem_close, sem_close, GLIBC_2_1_1);
 # endif
 #else /* !PTHREAD_IN_LIBC */
-strong_alias (__sem_close, sem_close)
+strong_alias(__sem_close, sem_close)
 #endif

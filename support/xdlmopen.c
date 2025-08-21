@@ -19,13 +19,13 @@
 #include <support/check.h>
 #include <support/xdlfcn.h>
 
-void *
-xdlmopen (Lmid_t lmid, const char *filename, int flags)
+void *xdlmopen(Lmid_t lmid, const char *filename, int flags)
 {
-  void *dso = dlmopen (lmid, filename, flags);
+    void *dso = dlmopen(lmid, filename, flags);
 
-  if (dso == NULL)
-    FAIL_EXIT1 ("error: dlmopen: %s\n", dlerror ());
+    if (dso == NULL) {
+        FAIL_EXIT1("error: dlmopen: %s\n", dlerror());
+    }
 
-  return dso;
+    return dso;
 }

@@ -18,14 +18,14 @@
 
 #include <libio/libioP.h>
 
-extern int
-___ieee128___vasprintf_chk (char **result_ptr, int flag, const char *format,
-			 va_list ap)
+extern int ___ieee128___vasprintf_chk(char **result_ptr, int flag, const char *format,
+                                      va_list ap)
 {
-  unsigned int mode = PRINTF_LDBL_USES_FLOAT128;
-  if (flag > 0)
-    mode |= PRINTF_FORTIFY;
+    unsigned int mode = PRINTF_LDBL_USES_FLOAT128;
+    if (flag > 0) {
+        mode |= PRINTF_FORTIFY;
+    }
 
-  return __vasprintf_internal (result_ptr, format, ap, mode);
+    return __vasprintf_internal(result_ptr, format, ap, mode);
 }
-strong_alias (___ieee128___vasprintf_chk, __vasprintf_chkieee128)
+strong_alias(___ieee128___vasprintf_chk, __vasprintf_chkieee128)
