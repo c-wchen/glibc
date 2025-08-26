@@ -28,11 +28,11 @@ wchar_t *WCSCHR(const wchar_t *wcs, const wchar_t wc)
     wchar_t *dest = NULL;
 
 #define ITERATION(index)        \
-  ({                    \
-    if (*wcs == wc)         \
-      dest = (wchar_t*) wcs;        \
-    dest == NULL && *wcs++ != L'\0';    \
-  })
+    ({                    \
+        if (*wcs == wc)         \
+            dest = (wchar_t*) wcs;        \
+        dest == NULL && *wcs++ != L'\0';    \
+    })
 
 #ifndef UNROLL_NTIMES
 # define UNROLL_NTIMES 1

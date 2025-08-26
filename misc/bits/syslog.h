@@ -46,7 +46,7 @@ __fortify_function_error_function __attribute_overloadable__ void syslog(int __p
 }
 #elif !defined __cplusplus
 # define syslog(pri, ...) \
-  __syslog_chk (pri, __USE_FORTIFY_LEVEL - 1, __VA_ARGS__)
+    __syslog_chk (pri, __USE_FORTIFY_LEVEL - 1, __VA_ARGS__)
 #endif
 
 

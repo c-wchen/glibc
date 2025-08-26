@@ -29,7 +29,7 @@
 #endif
 
 #define MATH_REDIRX(function, to) \
-  extern typeof (function) function __asm__ ("" # to);
+    extern typeof (function) function __asm__ ("" # to);
 #define MATH_REDIR(function) MATH_REDIRX (function, __ ## function)
 
 #if __HAVE_FLOAT32
@@ -57,12 +57,12 @@
 #endif
 
 #define MATH_FUNCTION(function) \
-  MATH_REDIR(function); \
-  MATH_REDIR(function ## f); \
-  MATH_F32(function); \
-  MATH_F32X(function); \
-  MATH_F64(function); \
-  MATH_F64X(function);
+    MATH_REDIR(function); \
+    MATH_REDIR(function ## f); \
+    MATH_F32(function); \
+    MATH_F32X(function); \
+    MATH_F64(function); \
+    MATH_F64X(function);
 
 MATH_FUNCTION(acos);
 MATH_FUNCTION(asin);

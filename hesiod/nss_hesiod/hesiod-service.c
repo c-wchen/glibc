@@ -44,16 +44,19 @@ LINE_PARSER
  INT_FIELD(result->s_port, ISSC_OR_SPACE, 10, 0, htons);
 )
 
-enum nss_status _nss_hesiod_setservent(int stayopen) {
+enum nss_status _nss_hesiod_setservent(int stayopen)
+{
     return NSS_STATUS_SUCCESS;
 }
 
-enum nss_status _nss_hesiod_endservent(void) {
+enum nss_status _nss_hesiod_endservent(void)
+{
     return NSS_STATUS_SUCCESS;
 }
 
 static enum nss_status lookup(const char *name, const char *type, const char *protocol,
-                              struct servent *serv, char *buffer, size_t buflen, int *errnop) {
+                              struct servent *serv, char *buffer, size_t buflen, int *errnop)
+{
     struct parser_data *data = (void *) buffer;
     size_t linebuflen;
     void *context;
@@ -62,14 +65,12 @@ static enum nss_status lookup(const char *name, const char *type, const char *pr
     int found;
     int olderr = errno;
 
-    if (hesiod_init(&context) < 0)
-    {
+    if (hesiod_init(&context) < 0) {
         return NSS_STATUS_UNAVAIL;
     }
 
     list = hesiod_resolve(context, name, type);
-    if (list == NULL)
-    {
+    if (list == NULL) {
         int err = errno;
         hesiod_end(context);
         __set_errno(olderr);
@@ -80,8 +81,7 @@ static enum nss_status lookup(const char *name, const char *type, const char *pr
 
     item = list;
     found = 0;
-    do
-    {
+    do {
         size_t len = strlen(*item) + 1;
 
         if (linebuflen < len) {
@@ -110,8 +110,7 @@ static enum nss_status lookup(const char *name, const char *type, const char *pr
     hesiod_free_list(context, list);
     hesiod_end(context);
 
-    if (found == 0)
-    {
+    if (found == 0) {
         __set_errno(olderr);
         return NSS_STATUS_NOTFOUND;
     }
@@ -121,13 +120,15 @@ static enum nss_status lookup(const char *name, const char *type, const char *pr
 
 enum nss_status _nss_hesiod_getservbyname_r(const char *name, const char *protocol,
         struct servent *serv,
-        char *buffer, size_t buflen, int *errnop) {
+        char *buffer, size_t buflen, int *errnop)
+{
     return lookup(name, "service", protocol, serv, buffer, buflen, errnop);
 }
 
 enum nss_status _nss_hesiod_getservbyport_r(const int port, const char *protocol,
         struct servent *serv,
-        char *buffer, size_t buflen, int *errnop) {
+        char *buffer, size_t buflen, int *errnop)
+{
     char portstr[6];      /* Port numbers are restricted to 16 bits. */
 
     snprintf(portstr, sizeof portstr, "%d", ntohs(port));

@@ -17,17 +17,17 @@
    <https://www.gnu.org/licenses/>.  */
 
 #define LOCK(lock)                                                            \
-  while (pthread_mutex_trylock (lock) != 0)                                   \
+    while (pthread_mutex_trylock (lock) != 0)                                   \
     {                                                                         \
-      non_critical_section (non_crt_len);                                     \
+        non_critical_section (non_crt_len);                                     \
     }
 
 #define UNLOCK(lock) pthread_mutex_unlock (lock)
 #define LOCK_INIT(lock, attr) pthread_mutex_init (lock, attr)
 #define LOCK_DESTROY(lock) pthread_mutex_destroy (lock)
 #define LOCK_ATTR_INIT(attr)                                                  \
-  pthread_mutexattr_init (attr);                                              \
-  pthread_mutexattr_settype (attr, PTHREAD_MUTEX_ADAPTIVE_NP);
+    pthread_mutexattr_init (attr);                                              \
+    pthread_mutexattr_settype (attr, PTHREAD_MUTEX_ADAPTIVE_NP);
 
 #define bench_lock_t pthread_mutex_t
 #define bench_lock_attr_t pthread_mutexattr_t

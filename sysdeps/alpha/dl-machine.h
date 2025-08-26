@@ -192,10 +192,10 @@ _dl_start_user:							\n\
    This is unused on Alpha.  */
 
 # define elf_machine_type_class(type)   \
-  (((type) == R_ALPHA_JMP_SLOT      \
-    || (type) == R_ALPHA_DTPMOD64   \
-    || (type) == R_ALPHA_DTPREL64   \
-    || (type) == R_ALPHA_TPREL64) * ELF_RTYPE_CLASS_PLT)
+    (((type) == R_ALPHA_JMP_SLOT      \
+      || (type) == R_ALPHA_DTPMOD64   \
+      || (type) == R_ALPHA_DTPREL64   \
+      || (type) == R_ALPHA_TPREL64) * ELF_RTYPE_CLASS_PLT)
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT     R_ALPHA_JMP_SLOT

@@ -23,18 +23,18 @@
 #define _FP_I_TYPE      long
 
 #define _FP_MUL_MEAT_S(R,X,Y)               \
-  _FP_MUL_MEAT_1_wide(_FP_WFRACBITS_S,R,X,Y,umul_ppmm)
+    _FP_MUL_MEAT_1_wide(_FP_WFRACBITS_S,R,X,Y,umul_ppmm)
 #define _FP_MUL_MEAT_D(R,X,Y)               \
-  _FP_MUL_MEAT_2_wide(_FP_WFRACBITS_D,R,X,Y,umul_ppmm)
+    _FP_MUL_MEAT_2_wide(_FP_WFRACBITS_D,R,X,Y,umul_ppmm)
 #define _FP_MUL_MEAT_Q(R,X,Y)               \
-  _FP_MUL_MEAT_4_wide(_FP_WFRACBITS_Q,R,X,Y,umul_ppmm)
+    _FP_MUL_MEAT_4_wide(_FP_WFRACBITS_Q,R,X,Y,umul_ppmm)
 
 #define _FP_MUL_MEAT_DW_S(R,X,Y)                \
-  _FP_MUL_MEAT_DW_1_wide(_FP_WFRACBITS_S,R,X,Y,umul_ppmm)
+    _FP_MUL_MEAT_DW_1_wide(_FP_WFRACBITS_S,R,X,Y,umul_ppmm)
 #define _FP_MUL_MEAT_DW_D(R,X,Y)                \
-  _FP_MUL_MEAT_DW_2_wide(_FP_WFRACBITS_D,R,X,Y,umul_ppmm)
+    _FP_MUL_MEAT_DW_2_wide(_FP_WFRACBITS_D,R,X,Y,umul_ppmm)
 #define _FP_MUL_MEAT_DW_Q(R,X,Y)                \
-  _FP_MUL_MEAT_DW_4_wide(_FP_WFRACBITS_Q,R,X,Y,umul_ppmm)
+    _FP_MUL_MEAT_DW_4_wide(_FP_WFRACBITS_Q,R,X,Y,umul_ppmm)
 
 
 #define _FP_DIV_MEAT_S(R,X,Y)   _FP_DIV_MEAT_1_loop(S,R,X,Y)
@@ -53,20 +53,20 @@
 
 /* Someone please check this.  */
 #define _FP_CHOOSENAN(fs, wc, R, X, Y, OP)          \
-  do {                              \
-    if ((_FP_FRAC_HIGH_RAW_##fs(X) & _FP_QNANBIT_##fs)      \
-    && !(_FP_FRAC_HIGH_RAW_##fs(Y) & _FP_QNANBIT_##fs)) \
-      {                             \
-    R##_s = Y##_s;                      \
-    _FP_FRAC_COPY_##wc(R,Y);                \
-      }                             \
-    else                            \
-      {                             \
-    R##_s = X##_s;                      \
-    _FP_FRAC_COPY_##wc(R,X);                \
-      }                             \
-    R##_c = FP_CLS_NAN;                     \
-  } while (0)
+    do {                              \
+        if ((_FP_FRAC_HIGH_RAW_##fs(X) & _FP_QNANBIT_##fs)      \
+            && !(_FP_FRAC_HIGH_RAW_##fs(Y) & _FP_QNANBIT_##fs)) \
+        {                             \
+            R##_s = Y##_s;                      \
+            _FP_FRAC_COPY_##wc(R,Y);                \
+        }                             \
+        else                            \
+        {                             \
+            R##_s = X##_s;                      \
+            _FP_FRAC_COPY_##wc(R,X);                \
+        }                             \
+        R##_c = FP_CLS_NAN;                     \
+    } while (0)
 
 /* Handle getting and setting rounding mode for soft fp operations.  */
 
@@ -86,25 +86,25 @@
      | FP_EX_INEXACT)
 
 #define _FP_DECL_EX \
-  unsigned int _fpcsr __attribute__ ((unused)) = FP_RND_NEAREST
+    unsigned int _fpcsr __attribute__ ((unused)) = FP_RND_NEAREST
 
 #define FP_ROUNDMODE (_fpcsr & FP_RND_MASK)
 
 #ifdef __or1k_hard_float__
 #define FP_INIT_ROUNDMODE                   \
-do {                                \
-  __asm__ volatile ("l.mfspr %0,r0,20" : "=r" (_fpcsr));    \
-} while (0)
+    do {                                \
+        __asm__ volatile ("l.mfspr %0,r0,20" : "=r" (_fpcsr));    \
+    } while (0)
 
 #define FP_HANDLE_EXCEPTIONS                    \
-do {                                \
-  if (__builtin_expect (_fex, 0))               \
-    {                               \
-      _fpcsr &= ~FP_EX_ALL;                 \
-      _fpcsr |= _fex;                       \
-      __asm__ volatile ("l.mtspr r0,%0,20" : : "r" (_fpcsr));   \
-    }                               \
-} while (0)
+    do {                                \
+        if (__builtin_expect (_fex, 0))               \
+        {                               \
+            _fpcsr &= ~FP_EX_ALL;                 \
+            _fpcsr |= _fex;                       \
+            __asm__ volatile ("l.mtspr r0,%0,20" : : "r" (_fpcsr));   \
+        }                               \
+    } while (0)
 #endif /* __or1k_hard_float__ */
 
 #define _FP_TININESS_AFTER_ROUNDING 0

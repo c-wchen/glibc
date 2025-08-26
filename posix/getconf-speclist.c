@@ -19,19 +19,19 @@
 #include <unistd.h>
 
 #define START_ENV_GROUP(VERSION)        \
-  /* Empty.  */
+    /* Empty.  */
 
 #define END_ENV_GROUP(VERSION)          \
-  /* Empty.  */
+    /* Empty.  */
 
 #define KNOWN_ABSENT_ENVIRONMENT(SC_PREFIX, ENV_PREFIX, SUFFIX) \
-  /* Empty.  */
+    /* Empty.  */
 
 #define KNOWN_PRESENT_ENVIRONMENT(SC_PREFIX, ENV_PREFIX, SUFFIX)    \
-  @@@PRESENT_##ENV_PREFIX##_##SUFFIX
+    @@@PRESENT_##ENV_PREFIX##_##SUFFIX
 
 #define UNKNOWN_ENVIRONMENT(SC_PREFIX, ENV_PREFIX, SUFFIX)  \
-  /* Empty.  */
+    /* Empty.  */
 
 #include "posix-envs.def"
 

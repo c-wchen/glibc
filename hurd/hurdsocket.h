@@ -25,6 +25,6 @@
    should to be used whenever reading a unix socket address, to cope with
    sun_path possibly not including a trailing \0.  */
 #define _hurd_sun_path_dupa(addr, len) \
-  strndupa ((addr)->sun_path, (len) - offsetof (struct sockaddr_un, sun_path))
+    strndupa ((addr)->sun_path, (len) - offsetof (struct sockaddr_un, sun_path))
 
 #endif /* hurdsocket.h */

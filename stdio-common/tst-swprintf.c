@@ -25,19 +25,19 @@ static int do_test(void)
     }
 
 #define CHECK(fmt, nexp, exp) \
-  n = swprintf (buf, array_length (buf), fmt, input);                 \
-  if (n != nexp)                                  \
+    n = swprintf (buf, array_length (buf), fmt, input);                 \
+    if (n != nexp)                                  \
     {                                         \
-      printf ("swprintf (.., .., L\"%ls\", \"%ls\") return %d, not %d\n",     \
-          fmt, (wchar_t*) input, (int) n, (int) nexp);            \
-      result = 1;                                 \
+        printf ("swprintf (.., .., L\"%ls\", \"%ls\") return %d, not %d\n",     \
+                fmt, (wchar_t*) input, (int) n, (int) nexp);            \
+        result = 1;                                 \
     }                                         \
-  else if (wcscmp (buf, exp) != 0)                        \
+    else if (wcscmp (buf, exp) != 0)                        \
     {                                         \
-      printf ("\
+        printf ("\
 swprintf (.., .., L\"%ls\", \"%ls\") produced \"%ls\", not \"%ls\"\n",	      \
-         fmt, (wchar_t *) input, buf, exp );                  \
-      result = 1;                                 \
+                fmt, (wchar_t *) input, buf, exp );                  \
+        result = 1;                                 \
     }
 
     CHECK(L"[%-6.0s]", 8, L"[      ]");

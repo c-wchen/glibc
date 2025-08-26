@@ -30,12 +30,12 @@
 extern char *__progname;
 
 #define VA(call)                                  \
-{                                         \
-  va_list ap;                                     \
-  va_start (ap, format);                              \
-  call;                                       \
-  va_end (ap);                                    \
-}
+    {                                         \
+        va_list ap;                                     \
+        va_start (ap, format);                              \
+        call;                                       \
+        va_end (ap);                                    \
+    }
 
 void __vwarnx_internal(const char *format, __gnuc_va_list ap,
                        unsigned int mode_flags)

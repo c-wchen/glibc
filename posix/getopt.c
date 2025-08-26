@@ -695,12 +695,12 @@ int _getopt_internal(int argc, char **argv, const char *optstring,
    POSIX and LSB both require these functions to take 'char *const *argv'
    even though this is incorrect (because of the permutation).  */
 #define GETOPT_ENTRY(NAME, POSIXLY_CORRECT)         \
-  int                               \
-  NAME (int argc, char *const *argv, const char *optstring) \
-  {                             \
-    return _getopt_internal (argc, (char **)argv, optstring,    \
-                 NULL, NULL, 0, POSIXLY_CORRECT);   \
-  }
+    int                               \
+    NAME (int argc, char *const *argv, const char *optstring) \
+    {                             \
+        return _getopt_internal (argc, (char **)argv, optstring,    \
+                                 NULL, NULL, 0, POSIXLY_CORRECT);   \
+    }
 
 #ifdef _LIBC
 GETOPT_ENTRY(getopt, 0)

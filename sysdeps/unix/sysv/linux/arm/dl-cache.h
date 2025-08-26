@@ -23,12 +23,12 @@
    compatible with either FLAG_ARM_LIBHF or FLAG_ARM_LIBSF.  */
 #ifdef __ARM_PCS_VFP
 # define _dl_cache_check_flags(flags) \
-  ((flags) == (FLAG_ARM_LIBHF | FLAG_ELF_LIBC6) \
-   || (flags) == FLAG_ELF_LIBC6)
+    ((flags) == (FLAG_ARM_LIBHF | FLAG_ELF_LIBC6) \
+     || (flags) == FLAG_ELF_LIBC6)
 #else
 # define _dl_cache_check_flags(flags) \
-  ((flags) == (FLAG_ARM_LIBSF | FLAG_ELF_LIBC6) \
-   || (flags) == FLAG_ELF_LIBC6)
+    ((flags) == (FLAG_ARM_LIBSF | FLAG_ELF_LIBC6) \
+     || (flags) == FLAG_ELF_LIBC6)
 #endif
 
 #include_next <dl-cache.h>

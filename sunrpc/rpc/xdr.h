@@ -97,7 +97,7 @@ enum xdr_op {
 #define RNDUP(x)  (((x) + BYTES_PER_XDR_UNIT - 1) & ~(BYTES_PER_XDR_UNIT - 1))
 #else /* this is the old routine */
 #define RNDUP(x)  ((((x) + BYTES_PER_XDR_UNIT - 1) / BYTES_PER_XDR_UNIT) \
-            * BYTES_PER_XDR_UNIT)
+                   * BYTES_PER_XDR_UNIT)
 #endif
 
 /*

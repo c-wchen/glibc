@@ -40,7 +40,7 @@
 /* Atomic operations on TLS memory.  */
 #ifndef THREAD_ATOMIC_CMPXCHG_VAL
 # define THREAD_ATOMIC_CMPXCHG_VAL(descr, member, new, old) \
-  atomic_compare_and_exchange_val_acq (&(descr)->member, new, old)
+    atomic_compare_and_exchange_val_acq (&(descr)->member, new, old)
 #endif
 
 static inline short max_adaptive_count(void)
@@ -108,20 +108,20 @@ enum {
 /* See concurrency notes regarding __kind in struct __pthread_mutex_s
    in sysdeps/nptl/bits/thread-shared-types.h.  */
 #define PTHREAD_MUTEX_TYPE(m) \
-  (atomic_load_relaxed (&((m)->__data.__kind)) & 127)
+    (atomic_load_relaxed (&((m)->__data.__kind)) & 127)
 /* Don't include NO_ELISION, as that type is always the same
    as the underlying lock type.  */
 #define PTHREAD_MUTEX_TYPE_ELISION(m) \
-  (atomic_load_relaxed (&((m)->__data.__kind))  \
-   & (127 | PTHREAD_MUTEX_ELISION_NP))
+    (atomic_load_relaxed (&((m)->__data.__kind))  \
+     & (127 | PTHREAD_MUTEX_ELISION_NP))
 
 #if LLL_PRIVATE == 0 && LLL_SHARED == 128
 # define PTHREAD_MUTEX_PSHARED(m) \
-  (atomic_load_relaxed (&((m)->__data.__kind)) & 128)
+    (atomic_load_relaxed (&((m)->__data.__kind)) & 128)
 #else
 # define PTHREAD_MUTEX_PSHARED(m) \
-  ((atomic_load_relaxed (&((m)->__data.__kind)) & 128)  \
-   ? LLL_SHARED : LLL_PRIVATE)
+    ((atomic_load_relaxed (&((m)->__data.__kind)) & 128)  \
+     ? LLL_SHARED : LLL_PRIVATE)
 #endif
 
 /* The kernel when waking robust mutexes on exit never uses
@@ -145,8 +145,8 @@ enum {
 #define PTHREAD_MUTEXATTR_FLAG_ROBUST       0x40000000
 #define PTHREAD_MUTEXATTR_FLAG_PSHARED      0x80000000
 #define PTHREAD_MUTEXATTR_FLAG_BITS \
-  (PTHREAD_MUTEXATTR_FLAG_ROBUST | PTHREAD_MUTEXATTR_FLAG_PSHARED \
-   | PTHREAD_MUTEXATTR_PROTOCOL_MASK | PTHREAD_MUTEXATTR_PRIO_CEILING_MASK)
+    (PTHREAD_MUTEXATTR_FLAG_ROBUST | PTHREAD_MUTEXATTR_FLAG_PSHARED \
+     | PTHREAD_MUTEXATTR_PROTOCOL_MASK | PTHREAD_MUTEXATTR_PRIO_CEILING_MASK)
 
 
 /* For the following, see pthread_rwlock_common.c.  */
@@ -155,9 +155,9 @@ enum {
 #define PTHREAD_RWLOCK_RWAITING     4
 #define PTHREAD_RWLOCK_READER_SHIFT 3
 #define PTHREAD_RWLOCK_READER_OVERFLOW  ((unsigned int) 1 \
-                     << (sizeof (unsigned int) * 8 - 1))
+        << (sizeof (unsigned int) * 8 - 1))
 #define PTHREAD_RWLOCK_WRHANDOVER   ((unsigned int) 1 \
-                     << (sizeof (unsigned int) * 8 - 1))
+                                     << (sizeof (unsigned int) * 8 - 1))
 #define PTHREAD_RWLOCK_FUTEX_USED   2
 
 
@@ -565,15 +565,15 @@ libc_hidden_proto(__pthread_cleanup_push)
    cancellation.  */
 # undef pthread_cleanup_push
 # define pthread_cleanup_push(routine,arg)              \
-  { struct _pthread_cleanup_buffer _buffer;             \
-  __pthread_cleanup_push (&_buffer, (routine), (arg));
+    { struct _pthread_cleanup_buffer _buffer;             \
+        __pthread_cleanup_push (&_buffer, (routine), (arg));
 
 extern void __pthread_cleanup_pop(struct _pthread_cleanup_buffer *buffer,
                                   int execute);
 libc_hidden_proto(__pthread_cleanup_pop)
 # undef pthread_cleanup_pop
 # define pthread_cleanup_pop(execute)                   \
-  __pthread_cleanup_pop (&_buffer, (execute)); }
+    __pthread_cleanup_pop (&_buffer, (execute)); }
 
 #if defined __EXCEPTIONS && !defined __cplusplus
 /* Structure to hold the cleanup handler information.  */
@@ -612,22 +612,22 @@ static inline void __pthread_cleanup_combined_routine_voidptr(void *__arg)
 }
 
 # define pthread_cleanup_combined_push(routine, arg) \
-  do {                                        \
-    void (*__cancel_routine) (void *) = (routine);                \
-    struct __pthread_cleanup_combined_frame __clframe                 \
-      __attribute__ ((__cleanup__ (__pthread_cleanup_combined_routine)))      \
-      = { .__cancel_routine = __cancel_routine, .__cancel_arg = (arg),        \
-      .__do_it = 1 };                             \
-    __pthread_cleanup_push (&__clframe.__buffer,                  \
-                __pthread_cleanup_combined_routine_voidptr,       \
-                &__clframe);
+    do {                                        \
+        void (*__cancel_routine) (void *) = (routine);                \
+        struct __pthread_cleanup_combined_frame __clframe                 \
+        __attribute__ ((__cleanup__ (__pthread_cleanup_combined_routine)))      \
+            = { .__cancel_routine = __cancel_routine, .__cancel_arg = (arg),        \
+                .__do_it = 1 };                             \
+        __pthread_cleanup_push (&__clframe.__buffer,                  \
+                                __pthread_cleanup_combined_routine_voidptr,       \
+                                &__clframe);
 
 # define pthread_cleanup_combined_pop(execute) \
     __pthread_cleanup_pop (&__clframe.__buffer, 0);               \
     __clframe.__do_it = 0;                            \
     if (execute)                                  \
-      __cancel_routine (__clframe.__cancel_arg);                  \
-  } while (0)
+        __cancel_routine (__clframe.__cancel_arg);                  \
+    } while (0)
 
 #endif /* __EXCEPTIONS && !defined __cplusplus */
 
@@ -710,20 +710,20 @@ static inline int check_stacksize_attr(size_t st)
 }
 
 #define ASSERT_TYPE_SIZE(type, size)                    \
-  _Static_assert (sizeof (type) == size,                \
-          "sizeof (" #type ") != " #size)
+    _Static_assert (sizeof (type) == size,                \
+                    "sizeof (" #type ") != " #size)
 
 #define ASSERT_PTHREAD_INTERNAL_SIZE(type, internal)            \
-  _Static_assert (sizeof ((type) { { 0 } }).__size >= sizeof (internal),\
-          "sizeof (" #type ".__size) < sizeof (" #internal ")")
+    _Static_assert (sizeof ((type) { { 0 } }).__size >= sizeof (internal),\
+    "sizeof (" #type ".__size) < sizeof (" #internal ")")
 
 #define ASSERT_PTHREAD_STRING(x) __STRING (x)
 #define ASSERT_PTHREAD_INTERNAL_OFFSET(type, member, offset)        \
-  _Static_assert (offsetof (type, member) == offset,            \
-          "offset of " #member " field of " #type " != "    \
-          ASSERT_PTHREAD_STRING (offset))
+    _Static_assert (offsetof (type, member) == offset,            \
+                    "offset of " #member " field of " #type " != "    \
+                    ASSERT_PTHREAD_STRING (offset))
 #define ASSERT_PTHREAD_INTERNAL_MEMBER_SIZE(type, member, mtype)    \
-  _Static_assert (sizeof (((type) { 0 }).member) != 8,  \
-          "sizeof (" #type "." #member ") != sizeof (" #mtype "))")
+    _Static_assert (sizeof (((type) { 0 }).member) != 8,  \
+    "sizeof (" #type "." #member ") != sizeof (" #mtype "))")
 
 #endif  /* pthreadP.h */

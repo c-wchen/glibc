@@ -14,10 +14,10 @@ int main(void)
     size_t i;
 
 #define FAIL() \
-  do {                          \
-    result = 1;                     \
-    printf ("test at line %d failed\n", __LINE__);  \
-  } while (0)
+    do {                          \
+        result = 1;                     \
+        printf ("test at line %d failed\n", __LINE__);  \
+    } while (0)
 
     setlocale(LC_ALL, "de_DE.UTF-8");
     DIAG_PUSH_NEEDS_COMMENT_CLANG;

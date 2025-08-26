@@ -41,7 +41,7 @@
    macro.  */
 #undef _NL_CURRENT
 #define _NL_CURRENT(category, item) \
-  (current->values[_NL_ITEM_INDEX (item)].string)
+    (current->values[_NL_ITEM_INDEX (item)].string)
 
 
 /* We have to overcome some problems with this implementation.  On the

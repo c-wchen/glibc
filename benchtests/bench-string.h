@@ -38,9 +38,9 @@ typedef struct {
 extern impl_t __start_impls[], __stop_impls[];
 
 #define IMPL(name, test) \
-  impl_t tst_ ## name                           \
-  __attribute__ ((section ("impls"), aligned (sizeof (void *))))    \
-       = { __STRING (name), (void (*) (void))name, test };
+    impl_t tst_ ## name                           \
+    __attribute__ ((section ("impls"), aligned (sizeof (void *))))    \
+        = { __STRING (name), (void (*) (void))name, test };
 
 #ifdef TEST_MAIN
 
@@ -136,11 +136,11 @@ unsigned int seed;
 # ifndef ITERATIONS
 size_t iterations = 100000;
 #  define ITERATIONS_OPTIONS \
-     { "iterations", required_argument, NULL, OPT_ITERATIONS },
+    { "iterations", required_argument, NULL, OPT_ITERATIONS },
 #  define ITERATIONS_PROCESS \
-     case OPT_ITERATIONS:                             \
-       iterations = strtoul (optarg, NULL, 0);                    \
-       break;
+    case OPT_ITERATIONS:                             \
+    iterations = strtoul (optarg, NULL, 0);                    \
+    break;
 #  define ITERATIONS iterations
 # else
 #  define ITERATIONS_OPTIONS
@@ -186,48 +186,48 @@ static int impl_count = -1;
 static impl_t *impl_array;
 
 #  define FOR_EACH_IMPL(impl, notall) \
-     impl_t *impl;                                \
-     int count;                                   \
-     if (impl_count == -1)                            \
-       {                                      \
-     impl_count = 0;                              \
-     if (func_count != 0)                             \
-       {                                      \
-         int f;                               \
-         impl_t *skip = NULL, *a;                         \
-         for (impl = __start_impls; impl < __stop_impls; ++impl)          \
-           if (strcmp (impl->name, TEST_NAME) == 0)               \
-         skip = impl;                             \
-           else                               \
-         impl_count++;                            \
-         a = impl_array = xmalloc ((impl_count + func_count) *        \
-                       sizeof (impl_t));              \
-         for (impl = __start_impls; impl < __stop_impls; ++impl)          \
-           if (impl != skip)                          \
-         *a++ = *impl;                            \
-         for (f = 0; f < func_count; f++)                     \
-           if (func_list[f].usable)                       \
-         {                                \
-           a->name = func_list[f].name;                   \
-           a->fn = func_list[f].fn;                   \
-           a->test = 1;                           \
-           a++;                               \
-         }                                \
-         impl_count = a - impl_array;                     \
-       }                                      \
-     else                                     \
-       {                                      \
-         impl_count = __stop_impls - __start_impls;               \
-         impl_array = __start_impls;                      \
-       }                                      \
-       }                                      \
-     impl = impl_array;                               \
-     for (count = 0; count < impl_count; ++count, ++impl)             \
-       if (!notall || impl->test)
+    impl_t *impl;                                \
+    int count;                                   \
+    if (impl_count == -1)                            \
+    {                                      \
+        impl_count = 0;                              \
+        if (func_count != 0)                             \
+        {                                      \
+            int f;                               \
+            impl_t *skip = NULL, *a;                         \
+            for (impl = __start_impls; impl < __stop_impls; ++impl)          \
+                if (strcmp (impl->name, TEST_NAME) == 0)               \
+                    skip = impl;                             \
+                else                               \
+                    impl_count++;                            \
+            a = impl_array = xmalloc ((impl_count + func_count) *        \
+                                      sizeof (impl_t));              \
+            for (impl = __start_impls; impl < __stop_impls; ++impl)          \
+                if (impl != skip)                          \
+                    *a++ = *impl;                            \
+            for (f = 0; f < func_count; f++)                     \
+                if (func_list[f].usable)                       \
+                {                                \
+                    a->name = func_list[f].name;                   \
+                    a->fn = func_list[f].fn;                   \
+                    a->test = 1;                           \
+                    a++;                               \
+                }                                \
+            impl_count = a - impl_array;                     \
+        }                                      \
+        else                                     \
+        {                                      \
+            impl_count = __stop_impls - __start_impls;               \
+            impl_array = __start_impls;                      \
+        }                                      \
+    }                                      \
+    impl = impl_array;                               \
+    for (count = 0; count < impl_count; ++count, ++impl)             \
+        if (!notall || impl->test)
 # else /* !TEST_NAME */
 #  define FOR_EACH_IMPL(impl, notall) \
-     for (impl_t *impl = __start_impls; impl < __stop_impls; ++impl)          \
-       if (!notall || impl->test)
+    for (impl_t *impl = __start_impls; impl < __stop_impls; ++impl)          \
+        if (!notall || impl->test)
 # endif /* !TEST_NAME */
 
 # ifndef BUF1PAGES

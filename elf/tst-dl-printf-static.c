@@ -26,20 +26,20 @@
 #define BUFSZ 64
 
 #define TEST(fmt, ...)                                                        \
-  do                                                                          \
+    do                                                                          \
     {                                                                         \
-      char str1[BUFSZ], str2[BUFSZ];                                          \
-      int len1 = snprintf (str1, BUFSZ, fmt, __VA_ARGS__);                    \
-      TEST_VERIFY_EXIT (len1 >= 0);                                           \
-      TEST_VERIFY_EXIT (len1 < BUFSZ);                                        \
-      _dl_dprintf (fds[1], fmt, __VA_ARGS__);                                 \
-      ssize_t len2 = read (fds[0], str2, BUFSZ);                              \
-      TEST_VERIFY_EXIT (len2 >= 0);                                           \
-      TEST_VERIFY_EXIT (len2 < BUFSZ);                                        \
-      str2[len2] = '\0';                                                      \
-      TEST_COMPARE_STRING (str1, str2);                                       \
+        char str1[BUFSZ], str2[BUFSZ];                                          \
+        int len1 = snprintf (str1, BUFSZ, fmt, __VA_ARGS__);                    \
+        TEST_VERIFY_EXIT (len1 >= 0);                                           \
+        TEST_VERIFY_EXIT (len1 < BUFSZ);                                        \
+        _dl_dprintf (fds[1], fmt, __VA_ARGS__);                                 \
+        ssize_t len2 = read (fds[0], str2, BUFSZ);                              \
+        TEST_VERIFY_EXIT (len2 >= 0);                                           \
+        TEST_VERIFY_EXIT (len2 < BUFSZ);                                        \
+        str2[len2] = '\0';                                                      \
+        TEST_COMPARE_STRING (str1, str2);                                       \
     }                                                                         \
-  while (0)
+    while (0)
 
 static int do_test(void)
 {

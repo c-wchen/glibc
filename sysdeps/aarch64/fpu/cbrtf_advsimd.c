@@ -25,7 +25,7 @@ const static struct data {
     float table[5];
 } data = {
     .poly = { /* Very rough approximation of cbrt(x) in [0.5, 1], generated with
-             FPMinimax.  */
+         FPMinimax.  */
         V4(0x1.c14e96p - 2), V4(0x1.dd2d3p - 1), V4(-0x1.08e81ap - 1),
         V4(0x1.2c74c2p - 3)
     },

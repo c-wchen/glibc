@@ -1165,15 +1165,15 @@ static void uw_update_context(struct _Unwind_Context *context, _Unwind_FrameStat
    level will be the return address and the CFA.  */
 
 #define uw_init_context(CONTEXT)                       \
-  do                                       \
+    do                                       \
     {                                      \
-      /* Do any necessary initialization to access arbitrary stack frames. \
-     On the SPARC, this means flushing the register windows.  */       \
-      __builtin_unwind_init ();                        \
-      uw_init_context_1 (CONTEXT, __builtin_dwarf_cfa (),          \
-             __builtin_return_address (0));            \
+        /* Do any necessary initialization to access arbitrary stack frames. \
+        On the SPARC, this means flushing the register windows.  */       \
+        __builtin_unwind_init ();                        \
+        uw_init_context_1 (CONTEXT, __builtin_dwarf_cfa (),          \
+                           __builtin_return_address (0));            \
     }                                      \
-  while (0)
+    while (0)
 
 static void uw_init_context_1(struct _Unwind_Context *context,
                               void *outer_cfa, void *outer_ra)
@@ -1210,13 +1210,13 @@ static void uw_init_context_1(struct _Unwind_Context *context,
    our caller.  */
 
 #define uw_install_context(CURRENT, TARGET)              \
-  do                                     \
+    do                                     \
     {                                    \
-      long offset = uw_install_context_1 ((CURRENT), (TARGET));      \
-      void *handler = __builtin_frob_return_addr ((TARGET)->ra);     \
-      __builtin_eh_return (offset, handler);                 \
+        long offset = uw_install_context_1 ((CURRENT), (TARGET));      \
+        void *handler = __builtin_frob_return_addr ((TARGET)->ra);     \
+        __builtin_eh_return (offset, handler);                 \
     }                                    \
-  while (0)
+    while (0)
 
 static inline void init_dwarf_reg_size_table(void)
 {

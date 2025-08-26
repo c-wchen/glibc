@@ -31,12 +31,12 @@
 #  if defined SHARED && IS_IN (libc)
 #   undef libc_hidden_def
 #   define libc_hidden_def(name)                \
-  strong_alias (__memmem_c, __memmem_c_1);          \
-  __hidden_ver1 (__memmem_c, __GI___memmem, __memmem_c);
+    strong_alias (__memmem_c, __memmem_c_1);          \
+    __hidden_ver1 (__memmem_c, __GI___memmem, __memmem_c);
 
 #   undef libc_hidden_weak
 #   define libc_hidden_weak(name)                   \
-  __hidden_ver1 (__memmem_c_1, __GI_memmem, __memmem_c_1) __attribute__((weak));
+    __hidden_ver1 (__memmem_c_1, __GI_memmem, __memmem_c_1) __attribute__((weak));
 #  endif
 
 #  undef weak_alias

@@ -23,14 +23,14 @@
 #include <sys/auxv.h>
 
 #define s390_libc_ifunc_expr_stfle_init()               \
-  const unsigned long long stfle_bits = features->stfle_filtered;
+    const unsigned long long stfle_bits = features->stfle_filtered;
 
 #define s390_libc_ifunc_expr_init()                 \
-  const struct cpu_features *features = &GLRO(dl_s390_cpu_features);    \
-  /* The hwcap from kernel is passed as argument, but we        \
-     explicitly use the hwcaps from cpu-features struct.   */       \
-  hwcap = features->hwcap;
+    const struct cpu_features *features = &GLRO(dl_s390_cpu_features);    \
+    /* The hwcap from kernel is passed as argument, but we        \
+       explicitly use the hwcaps from cpu-features struct.   */       \
+    hwcap = features->hwcap;
 
 #define s390_libc_ifunc_expr(TYPE_FUNC, FUNC, EXPR)     \
-  __ifunc (TYPE_FUNC, FUNC, EXPR, unsigned long int hwcap,  \
-       s390_libc_ifunc_expr_init);
+    __ifunc (TYPE_FUNC, FUNC, EXPR, unsigned long int hwcap,  \
+             s390_libc_ifunc_expr_init);

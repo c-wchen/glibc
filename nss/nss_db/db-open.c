@@ -31,12 +31,12 @@
    pointer to the mapped file or a file handle for the file in H and
    return NSS_STATUS_SUCCESS.  On failure, return the appropriate
    lookup status.  */
-enum nss_status internal_setent(const char *file, struct nss_db_map *mapping) {
+enum nss_status internal_setent(const char *file, struct nss_db_map *mapping)
+{
     enum nss_status status = NSS_STATUS_UNAVAIL;
 
     int fd = __open_nocancel(file, O_RDONLY | O_LARGEFILE | O_CLOEXEC);
-    if (fd != -1)
-    {
+    if (fd != -1) {
         struct nss_db_header header;
 
         if (read(fd, &header, sizeof(header)) == sizeof(header)) {

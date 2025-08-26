@@ -21,8 +21,8 @@
 
 # ifndef _ISOMAC
 #  define HURD_PREEMPT_SIGNAL_P(preemptor, signo, sigcode) \
-  (((preemptor)->signals & __sigmask (signo)) \
-   && (sigcode) >= (preemptor)->first && (sigcode) <= (preemptor)->last)
+    (((preemptor)->signals & __sigmask (signo)) \
+     && (sigcode) >= (preemptor)->first && (sigcode) <= (preemptor)->last)
 
 /* Signal preemptors applying to all threads; locked by _hurd_siglock.  */
 extern struct hurd_signal_preemptor *_hurdsig_preemptors;

@@ -50,14 +50,14 @@ typedef union {
 
 #if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_3_4)
 #define cfloat_versions_compat(func) \
-  compat_symbol (libm, __c1_##func, func, GLIBC_2_1)
+    compat_symbol (libm, __c1_##func, func, GLIBC_2_1)
 #else
 #define cfloat_versions_compat(func)
 #endif
 
 #define cfloat_versions(func) \
-  cfloat_versions_compat(func##f); \
-  versioned_symbol (libm, __c2_##func##f, func##f, GLIBC_2_3_4); \
-  extern typeof(__c2_##func##f) __##func##f attribute_hidden; \
-  strong_alias (__c2_##func##f, __##func##f); \
-  libm_alias_float_other (__##func, func)
+    cfloat_versions_compat(func##f); \
+    versioned_symbol (libm, __c2_##func##f, func##f, GLIBC_2_3_4); \
+    extern typeof(__c2_##func##f) __##func##f attribute_hidden; \
+    strong_alias (__c2_##func##f, __##func##f); \
+    libm_alias_float_other (__##func, func)

@@ -26,8 +26,8 @@
 #include <dl-tunables-parse.h>
 
 #define S390_COPY_CPU_FEATURES(SRC_PTR, DEST_PTR)   \
-  (DEST_PTR)->hwcap = (SRC_PTR)->hwcap;         \
-  (DEST_PTR)->stfle_filtered = (SRC_PTR)->stfle_filtered;
+    (DEST_PTR)->hwcap = (SRC_PTR)->hwcap;         \
+    (DEST_PTR)->stfle_filtered = (SRC_PTR)->stfle_filtered;
 
 static void
 TUNABLE_CALLBACK(set_hwcaps)(tunable_val_t *valp)

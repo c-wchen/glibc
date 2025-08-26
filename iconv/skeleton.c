@@ -216,30 +216,30 @@
    The ?:1 avoids division by zero warnings that gcc 3.2 emits even for
    obviously unreachable code.  */
 #  define RESET_INPUT_BUFFER \
-  if (FROM_DIRECTION)                                 \
+    if (FROM_DIRECTION)                                 \
     {                                         \
-      if (FROM_LOOP_MIN_NEEDED_FROM % FROM_LOOP_MIN_NEEDED_TO == 0)       \
-    *inptrp -= (outbuf - outerr)                          \
-           * (FROM_LOOP_MIN_NEEDED_FROM / FROM_LOOP_MIN_NEEDED_TO);   \
-      else if (FROM_LOOP_MIN_NEEDED_TO % FROM_LOOP_MIN_NEEDED_FROM == 0)      \
-    *inptrp -= (outbuf - outerr)                          \
-           / (FROM_LOOP_MIN_NEEDED_TO / FROM_LOOP_MIN_NEEDED_FROM     \
-              ? : 1);                             \
-      else                                    \
-    *inptrp -= ((outbuf - outerr) / FROM_LOOP_MIN_NEEDED_TO)          \
-           * FROM_LOOP_MIN_NEEDED_FROM;                   \
+        if (FROM_LOOP_MIN_NEEDED_FROM % FROM_LOOP_MIN_NEEDED_TO == 0)       \
+            *inptrp -= (outbuf - outerr)                          \
+                       * (FROM_LOOP_MIN_NEEDED_FROM / FROM_LOOP_MIN_NEEDED_TO);   \
+        else if (FROM_LOOP_MIN_NEEDED_TO % FROM_LOOP_MIN_NEEDED_FROM == 0)      \
+            *inptrp -= (outbuf - outerr)                          \
+                       / (FROM_LOOP_MIN_NEEDED_TO / FROM_LOOP_MIN_NEEDED_FROM     \
+                          ? : 1);                             \
+        else                                    \
+            *inptrp -= ((outbuf - outerr) / FROM_LOOP_MIN_NEEDED_TO)          \
+                       * FROM_LOOP_MIN_NEEDED_FROM;                   \
     }                                         \
-  else                                        \
+    else                                        \
     {                                         \
-      if (TO_LOOP_MIN_NEEDED_FROM % TO_LOOP_MIN_NEEDED_TO == 0)           \
-    *inptrp -= (outbuf - outerr)                          \
-           * (TO_LOOP_MIN_NEEDED_FROM / TO_LOOP_MIN_NEEDED_TO);       \
-      else if (TO_LOOP_MIN_NEEDED_TO % TO_LOOP_MIN_NEEDED_FROM == 0)          \
-    *inptrp -= (outbuf - outerr)                          \
-           / (TO_LOOP_MIN_NEEDED_TO / TO_LOOP_MIN_NEEDED_FROM ? : 1); \
-      else                                    \
-    *inptrp -= ((outbuf - outerr) / TO_LOOP_MIN_NEEDED_TO)            \
-           * TO_LOOP_MIN_NEEDED_FROM;                     \
+        if (TO_LOOP_MIN_NEEDED_FROM % TO_LOOP_MIN_NEEDED_TO == 0)           \
+            *inptrp -= (outbuf - outerr)                          \
+                       * (TO_LOOP_MIN_NEEDED_FROM / TO_LOOP_MIN_NEEDED_TO);       \
+        else if (TO_LOOP_MIN_NEEDED_TO % TO_LOOP_MIN_NEEDED_FROM == 0)          \
+            *inptrp -= (outbuf - outerr)                          \
+                       / (TO_LOOP_MIN_NEEDED_TO / TO_LOOP_MIN_NEEDED_FROM ? : 1); \
+        else                                    \
+            *inptrp -= ((outbuf - outerr) / TO_LOOP_MIN_NEEDED_TO)            \
+                       * TO_LOOP_MIN_NEEDED_FROM;                     \
     }
 # endif
 #endif

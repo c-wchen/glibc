@@ -44,7 +44,7 @@
     subi    sp, 4;              \
     stw lr, (sp, 0);            \
     grs t0, .Lgetpc;            \
-.Lgetpc:                    \
+    .Lgetpc:                    \
     lrw gb, .Lgetpc@GOTPC;      \
     addu    gb, t0;             \
     lrw t1, _mcount@PLT;        \

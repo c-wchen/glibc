@@ -41,24 +41,24 @@ extern int _des_crypt(char *, unsigned, struct desparams *);
  * Copy 8 bytes
  */
 #define COPY8(src, dst) { \
-    register char *a = (char *) dst; \
-    register char *b = (char *) src; \
-    *a++ = *b++; *a++ = *b++; *a++ = *b++; *a++ = *b++; \
-    *a++ = *b++; *a++ = *b++; *a++ = *b++; *a++ = *b++; \
-}
+        register char *a = (char *) dst; \
+        register char *b = (char *) src; \
+        *a++ = *b++; *a++ = *b++; *a++ = *b++; *a++ = *b++; \
+        *a++ = *b++; *a++ = *b++; *a++ = *b++; *a++ = *b++; \
+    }
 
 /*
  * Copy multiple of 8 bytes
  */
 #define DESCOPY(src, dst, len) { \
-    register char *a = (char *) dst; \
-    register char *b = (char *) src; \
-    register int i; \
-    for (i = (int) len; i > 0; i -= 8) { \
-        *a++ = *b++; *a++ = *b++; *a++ = *b++; *a++ = *b++; \
-        *a++ = *b++; *a++ = *b++; *a++ = *b++; *a++ = *b++; \
-    } \
-}
+        register char *a = (char *) dst; \
+        register char *b = (char *) src; \
+        register int i; \
+        for (i = (int) len; i > 0; i -= 8) { \
+            *a++ = *b++; *a++ = *b++; *a++ = *b++; *a++ = *b++; \
+            *a++ = *b++; *a++ = *b++; *a++ = *b++; *a++ = *b++; \
+        } \
+    }
 
 /*
  * Common code to cbc_crypt() & ecb_crypt()

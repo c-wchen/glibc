@@ -24114,136 +24114,136 @@ static const unsigned char __ucs_to_gb18030_tab2[][2] = {
 #define MIN_NEEDED_OUTPUT   MIN_NEEDED_TO
 #define LOOPFCT         FROM_LOOP
 #define BODY \
-  {                                       \
-    uint32_t ch = *inptr;                             \
-                                          \
-    if (ch <= 0x7f)                               \
-      ++inptr;                                    \
-    else                                      \
-      if (ch < 0x81 || ch > 0xfe)                         \
-    {                                     \
-      /* This is illegal.  */                         \
-      STANDARD_FROM_LOOP_ERR_HANDLER (1);                     \
-    }                                     \
-      else                                    \
-    {                                     \
-      /* Two or four byte character.  First test whether the next         \
-         byte is also available.  */                      \
-      uint32_t ch2;                               \
-      unsigned long int idx;                          \
-                                          \
-      if (inptr + 1 >= inend)                         \
-        {                                     \
-          /* The second byte is not available.  Store the             \
-         intermediate result.  */                     \
-          result = __GCONV_INCOMPLETE_INPUT;                  \
-          break;                                  \
-        }                                     \
-                                          \
-      ch2 = inptr[1];                             \
-                                          \
-      /* All second bytes of a multibyte character must be >= 0x30. */    \
-      if (ch2 < 0x30)                             \
-        STANDARD_FROM_LOOP_ERR_HANDLER (2);                   \
-                                          \
-      if (ch2 >= 0x30 && ch2 <= 0x39)                     \
-        {                                     \
-          /* A four-byte character */                     \
-          uint32_t ch3;                           \
-          uint32_t ch4;                           \
-                                          \
-          if (inptr + 3 >= inend)                         \
-        {                                 \
-          /* Not all bytes are available.  Store              \
-             the intermediate result.  */                 \
-          result = __GCONV_INCOMPLETE_INPUT;                  \
-          break;                              \
-        }                                 \
-                                          \
-          ch3 = inptr[2];                             \
-                                          \
-          if (ch3 < 0x81 || ch3 > 0xfe)                   \
-        {                                 \
-          /* This is an illegal character.  */                \
-          STANDARD_FROM_LOOP_ERR_HANDLER (3);                 \
-        }                                 \
-                                          \
-          ch4 = inptr[3];                             \
-                                          \
-          if (ch4 < 0x30 || ch4 > 0x39)                   \
-        {                                 \
-          /* This is an illegal character.  */                \
-          STANDARD_FROM_LOOP_ERR_HANDLER (4);                 \
-        }                                 \
-          idx = (((ch - 0x81) * 10 + (ch2 - 0x30)) * 126              \
-              + ch3 - 0x81) * 10 + ch4 - 0x30;                \
-                                          \
-          if (idx <= 0x333)                           \
-        ch = __fourbyte_to_ucs[idx];                      \
-          else if (idx >= 0x334 && idx <= 0x1d20)                 \
-        ch = idx + 0x11e;                         \
-          else if (idx >= 0x1d21 && idx <= 0x2402)                \
-        ch = __fourbyte_to_ucs[idx - 6637];               \
-          else if (idx >= 0x2403 && idx <= 0x2c40)                \
-        ch = idx + 0x240;                         \
-          else if (idx >= 0x2c41 && idx <= 0x4a78)                \
-        ch = __fourbyte_to_ucs[idx - 6637 - 2110];            \
-          else if (idx >= 0x4a79 && idx <= 0x82bc)                \
-        ch = idx + 0x5543;                        \
-          else if (idx >= 0x82bd && idx <= 0x830d)                \
-        ch = __fourbyte_to_ucs[idx - 6637 - 2110 - 14404];        \
-          else if (idx >= 0x830e && idx <= 0x93d4)                \
-        ch = idx + 0x6557;                        \
-          else if (idx >= 0x93d5 && idx <= 0x99e1)                \
-        ch = __fourbyte_to_ucs[idx - 6637 - 2110 - 14404 - 4295];     \
-          else if (idx >= 0x99e2 && idx <= 0x99fb)                \
-        ch = idx + 0x6604;                        \
-          else if (idx >= 0x2e248 && idx <= 0x12e247)             \
-        ch = idx - 0x1e248;                       \
-          else                                \
-        ch = 0;                               \
-                                          \
-          if (ch == 0 && *inptr != '\0')                      \
-        {                                 \
-          /* This is an illegal character.  */                \
-          STANDARD_FROM_LOOP_ERR_HANDLER (4);                 \
-        }                                 \
-                                          \
-          inptr += 4;                             \
-        }                                     \
-      else if (__glibc_likely (ch2 >= 0x40))                  \
-        {                                     \
-          /* A two-byte character */                      \
-          idx = (ch - 0x81) * 192 + (ch2 - 0x40);                 \
-                                          \
-          if (idx > 0x5E7E                            \
-          || (ch = __twobyte_to_ucs[idx],                 \
-              ch == 0 && *inptr != '\0'))                 \
-        {                                 \
-          /* This is an illegal character.  */            \
-          STANDARD_FROM_LOOP_ERR_HANDLER (2);             \
-        }                                 \
-                                          \
-          inptr += 2;                             \
-        }                                     \
-      else                                    \
-        {                                     \
-          /* This is an illegal character.  */                \
-          STANDARD_FROM_LOOP_ERR_HANDLER (2);                 \
-        }                                     \
-    }                                     \
-                                          \
-    *((uint32_t *) outptr) = ch;                          \
-    outptr += sizeof (uint32_t);                          \
-  }
+    {                                       \
+        uint32_t ch = *inptr;                             \
+        \
+        if (ch <= 0x7f)                               \
+            ++inptr;                                    \
+        else                                      \
+            if (ch < 0x81 || ch > 0xfe)                         \
+            {                                     \
+                /* This is illegal.  */                         \
+                STANDARD_FROM_LOOP_ERR_HANDLER (1);                     \
+            }                                     \
+            else                                    \
+            {                                     \
+                /* Two or four byte character.  First test whether the next         \
+                   byte is also available.  */                      \
+                uint32_t ch2;                               \
+                unsigned long int idx;                          \
+                \
+                if (inptr + 1 >= inend)                         \
+                {                                     \
+                    /* The second byte is not available.  Store the             \
+                    intermediate result.  */                     \
+                    result = __GCONV_INCOMPLETE_INPUT;                  \
+                    break;                                  \
+                }                                     \
+                \
+                ch2 = inptr[1];                             \
+                \
+                /* All second bytes of a multibyte character must be >= 0x30. */    \
+                if (ch2 < 0x30)                             \
+                    STANDARD_FROM_LOOP_ERR_HANDLER (2);                   \
+                \
+                if (ch2 >= 0x30 && ch2 <= 0x39)                     \
+                {                                     \
+                    /* A four-byte character */                     \
+                    uint32_t ch3;                           \
+                    uint32_t ch4;                           \
+                    \
+                    if (inptr + 3 >= inend)                         \
+                    {                                 \
+                        /* Not all bytes are available.  Store              \
+                           the intermediate result.  */                 \
+                        result = __GCONV_INCOMPLETE_INPUT;                  \
+                        break;                              \
+                    }                                 \
+                    \
+                    ch3 = inptr[2];                             \
+                    \
+                    if (ch3 < 0x81 || ch3 > 0xfe)                   \
+                    {                                 \
+                        /* This is an illegal character.  */                \
+                        STANDARD_FROM_LOOP_ERR_HANDLER (3);                 \
+                    }                                 \
+                    \
+                    ch4 = inptr[3];                             \
+                    \
+                    if (ch4 < 0x30 || ch4 > 0x39)                   \
+                    {                                 \
+                        /* This is an illegal character.  */                \
+                        STANDARD_FROM_LOOP_ERR_HANDLER (4);                 \
+                    }                                 \
+                    idx = (((ch - 0x81) * 10 + (ch2 - 0x30)) * 126              \
+                           + ch3 - 0x81) * 10 + ch4 - 0x30;                \
+                    \
+                    if (idx <= 0x333)                           \
+                        ch = __fourbyte_to_ucs[idx];                      \
+                    else if (idx >= 0x334 && idx <= 0x1d20)                 \
+                        ch = idx + 0x11e;                         \
+                    else if (idx >= 0x1d21 && idx <= 0x2402)                \
+                        ch = __fourbyte_to_ucs[idx - 6637];               \
+                    else if (idx >= 0x2403 && idx <= 0x2c40)                \
+                        ch = idx + 0x240;                         \
+                    else if (idx >= 0x2c41 && idx <= 0x4a78)                \
+                        ch = __fourbyte_to_ucs[idx - 6637 - 2110];            \
+                    else if (idx >= 0x4a79 && idx <= 0x82bc)                \
+                        ch = idx + 0x5543;                        \
+                    else if (idx >= 0x82bd && idx <= 0x830d)                \
+                        ch = __fourbyte_to_ucs[idx - 6637 - 2110 - 14404];        \
+                    else if (idx >= 0x830e && idx <= 0x93d4)                \
+                        ch = idx + 0x6557;                        \
+                    else if (idx >= 0x93d5 && idx <= 0x99e1)                \
+                        ch = __fourbyte_to_ucs[idx - 6637 - 2110 - 14404 - 4295];     \
+                    else if (idx >= 0x99e2 && idx <= 0x99fb)                \
+                        ch = idx + 0x6604;                        \
+                    else if (idx >= 0x2e248 && idx <= 0x12e247)             \
+                        ch = idx - 0x1e248;                       \
+                    else                                \
+                        ch = 0;                               \
+                    \
+                    if (ch == 0 && *inptr != '\0')                      \
+                    {                                 \
+                        /* This is an illegal character.  */                \
+                        STANDARD_FROM_LOOP_ERR_HANDLER (4);                 \
+                    }                                 \
+                    \
+                    inptr += 4;                             \
+                }                                     \
+                else if (__glibc_likely (ch2 >= 0x40))                  \
+                {                                     \
+                    /* A two-byte character */                      \
+                    idx = (ch - 0x81) * 192 + (ch2 - 0x40);                 \
+                    \
+                    if (idx > 0x5E7E                            \
+                        || (ch = __twobyte_to_ucs[idx],                 \
+                            ch == 0 && *inptr != '\0'))                 \
+                    {                                 \
+                        /* This is an illegal character.  */            \
+                        STANDARD_FROM_LOOP_ERR_HANDLER (2);             \
+                    }                                 \
+                    \
+                    inptr += 2;                             \
+                }                                     \
+                else                                    \
+                {                                     \
+                    /* This is an illegal character.  */                \
+                    STANDARD_FROM_LOOP_ERR_HANDLER (2);                 \
+                }                                     \
+            }                                     \
+        \
+        *((uint32_t *) outptr) = ch;                          \
+        outptr += sizeof (uint32_t);                          \
+    }
 #define LOOP_NEED_FLAGS
 #define ONEBYTE_BODY \
-  {                                       \
-    if (c < 0x80)                                 \
-      return c;                                   \
-    else                                      \
-      return WEOF;                                \
-  }
+    {                                       \
+        if (c < 0x80)                                 \
+            return c;                                   \
+        else                                      \
+            return WEOF;                                \
+    }
 #include <iconv/loop.c>
 
 
@@ -24253,148 +24253,148 @@ static const unsigned char __ucs_to_gb18030_tab2[][2] = {
 #define MAX_NEEDED_OUTPUT   MAX_NEEDED_FROM
 #define LOOPFCT         TO_LOOP
 #define BODY \
-  {                                       \
-    uint32_t ch = *((const uint32_t *) inptr);                    \
-                                          \
-    if (ch <= 0x7f)                               \
-      /* It's plain ASCII.  */                            \
-      *outptr++ = (unsigned char) ch;                         \
-    else                                      \
-      {                                       \
-    unsigned long int idx = 0;                        \
-    const unsigned char *cp = NULL;                       \
-    int len = 2;    /* This is the most common case.  */              \
-    if (ch <= 0x9FBB)                             \
-      {                                   \
-        cp = __ucs_to_gb18030_tab1[ch - 0x80];                \
-        if (*cp && *cp < 0x81)                        \
-          {                                   \
-        idx = (cp[0] - 0x20) * 256 + cp[1];               \
-        len = 4;                              \
-          }                                   \
-        if (cp[0] == 0 && cp[1] == 0)                     \
-          len = 0;                                \
-      }                                   \
-    else if (ch >= 0x9fbc && ch <= 0xD7ff)                    \
-      {                                   \
-        idx = ch - 0x5543;                            \
-        len = 4;                                  \
-      }                                   \
-    else if (ch >= 0xE000 && ch <= 0xE864)                    \
-      {                                   \
-        cp = __ucs_to_gb18030_tab2[ch - 0xE000];                  \
-        if ((cp[0] != 0 || cp[1] != 0) && cp[0] < 0x81)           \
-          {                                   \
-        idx = cp[0] * 256 + cp[1] + 7456;                 \
-        len = 4;                              \
-          }                                   \
-        else if (cp[0] == 0 && cp[1] == 0)                    \
-          len = 0;                                \
-      }                                   \
-    else if (ch >= 0xE865 && ch <= 0xF92B)                    \
-      {                                   \
-        idx = ch - 0x6557;                            \
-        len = 4;                                  \
-      }                                   \
-    else if (ch >= 0xF92C && ch <= 0xFFE5)                    \
-      {                                   \
-        cp = __ucs_to_gb18030_tab2[ch - 0xE000 - 4295];           \
-        if ((cp[0] != 0 || cp[1] != 0) && cp[0] < 0x81)           \
-          {                                   \
-        idx = cp[0] * 256 + cp[1] + 7456;                 \
-        len = 4;                              \
-          }                                   \
-        else if (cp[0] == 0 && cp[1] == 0)                    \
-          len = 0;                                \
-      }                                   \
-    else if (ch >= 0xFFE6 && ch <= 0xFFFF)                    \
-      {                                   \
-        idx = ch - 0x6604;                            \
-        len = 4;                                  \
-      }                                   \
-    else if (ch == 0x20087)                           \
-      {                                   \
-        idx = 0x3E2CF;                            \
-        len = 4;                                  \
-      }                       \
-    else if (ch == 0x20089)                           \
-      {                                   \
-        idx = 0x3E2D1;                            \
-        len = 4;                                  \
-      }                        \
-    else if (ch == 0x200CC)                           \
-      {                                   \
-        idx = 0x3E314;                            \
-        len = 4;                                  \
-      }                         \
-    else if (ch == 0x215d7)                           \
-      {                                   \
-        idx = 0x3F81F;                            \
-        len = 4;                                  \
-      }                         \
-    else if (ch == 0x2298F)                           \
-      {                                   \
-        idx = 0x40BD7;                            \
-        len = 4;                                  \
-      }                         \
-    else if (ch == 0x241FE)                           \
-      {                                   \
-        idx = 0x42446;                            \
-        len = 4;                                  \
-      }                         \
-    else if (ch >= 0x10000 && ch <= 0x10FFFF)                 \
-      {                                   \
-        idx = ch + 0x1E248;                           \
-        len = 4;                                  \
-      }                                   \
-    else                                      \
-      len = 0;                                \
-                                          \
-    if (__builtin_expect (len, 2) == 0                    \
-        || (len == 2 && __builtin_expect (cp[0], '\1') == '\0'))          \
-      {                                   \
-        /* Illegal character.  */                         \
-        STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
-      }                                   \
-                                          \
-    if (len == 2)                                 \
-      {                                   \
-        /* See whether there is enough room for the second byte we        \
-           write.  */                             \
-        if (cp[1] != '\0' && __builtin_expect (outptr + 1 >= outend, 0))  \
-          {                                   \
-        /* We have not enough room.  */                   \
-        result = __GCONV_FULL_OUTPUT;                     \
-        break;                                \
-          }                                   \
-                                          \
-        *outptr++ = cp[0];                            \
-        if (cp[1] != '\0')                            \
-          *outptr++ = cp[1];                          \
-      }                                   \
-    else /* len == 4 */                           \
-      {                                   \
-        /* See whether there is enough room for all four bytes we         \
-           write.  */                             \
-        if (__glibc_unlikely (outptr + 3 >= outend))              \
-          {                                   \
-        /* We have not enough room.  */                   \
-        result = __GCONV_FULL_OUTPUT;                     \
-        break;                                \
-          }                                   \
-                                          \
-        outptr[3] = (unsigned char)(idx % 10) + 0x30;             \
-        idx /= 10;                                \
-        outptr[2] = (unsigned char)(idx % 126) + 0x81;            \
-        idx /= 126;                               \
-        outptr[1] = (unsigned char)(idx % 10) + 0x30;             \
-        outptr[0] = (unsigned char)(idx / 10) + 0x81;             \
-        outptr += 4;                              \
-      }                                   \
-      }                                       \
-                                          \
-    inptr += 4;                                   \
-  }
+    {                                       \
+        uint32_t ch = *((const uint32_t *) inptr);                    \
+        \
+        if (ch <= 0x7f)                               \
+            /* It's plain ASCII.  */                            \
+            *outptr++ = (unsigned char) ch;                         \
+        else                                      \
+        {                                       \
+            unsigned long int idx = 0;                        \
+            const unsigned char *cp = NULL;                       \
+            int len = 2;    /* This is the most common case.  */              \
+            if (ch <= 0x9FBB)                             \
+            {                                   \
+                cp = __ucs_to_gb18030_tab1[ch - 0x80];                \
+                if (*cp && *cp < 0x81)                        \
+                {                                   \
+                    idx = (cp[0] - 0x20) * 256 + cp[1];               \
+                    len = 4;                              \
+                }                                   \
+                if (cp[0] == 0 && cp[1] == 0)                     \
+                    len = 0;                                \
+            }                                   \
+            else if (ch >= 0x9fbc && ch <= 0xD7ff)                    \
+            {                                   \
+                idx = ch - 0x5543;                            \
+                len = 4;                                  \
+            }                                   \
+            else if (ch >= 0xE000 && ch <= 0xE864)                    \
+            {                                   \
+                cp = __ucs_to_gb18030_tab2[ch - 0xE000];                  \
+                if ((cp[0] != 0 || cp[1] != 0) && cp[0] < 0x81)           \
+                {                                   \
+                    idx = cp[0] * 256 + cp[1] + 7456;                 \
+                    len = 4;                              \
+                }                                   \
+                else if (cp[0] == 0 && cp[1] == 0)                    \
+                    len = 0;                                \
+            }                                   \
+            else if (ch >= 0xE865 && ch <= 0xF92B)                    \
+            {                                   \
+                idx = ch - 0x6557;                            \
+                len = 4;                                  \
+            }                                   \
+            else if (ch >= 0xF92C && ch <= 0xFFE5)                    \
+            {                                   \
+                cp = __ucs_to_gb18030_tab2[ch - 0xE000 - 4295];           \
+                if ((cp[0] != 0 || cp[1] != 0) && cp[0] < 0x81)           \
+                {                                   \
+                    idx = cp[0] * 256 + cp[1] + 7456;                 \
+                    len = 4;                              \
+                }                                   \
+                else if (cp[0] == 0 && cp[1] == 0)                    \
+                    len = 0;                                \
+            }                                   \
+            else if (ch >= 0xFFE6 && ch <= 0xFFFF)                    \
+            {                                   \
+                idx = ch - 0x6604;                            \
+                len = 4;                                  \
+            }                                   \
+            else if (ch == 0x20087)                           \
+            {                                   \
+                idx = 0x3E2CF;                            \
+                len = 4;                                  \
+            }                       \
+            else if (ch == 0x20089)                           \
+            {                                   \
+                idx = 0x3E2D1;                            \
+                len = 4;                                  \
+            }                        \
+            else if (ch == 0x200CC)                           \
+            {                                   \
+                idx = 0x3E314;                            \
+                len = 4;                                  \
+            }                         \
+            else if (ch == 0x215d7)                           \
+            {                                   \
+                idx = 0x3F81F;                            \
+                len = 4;                                  \
+            }                         \
+            else if (ch == 0x2298F)                           \
+            {                                   \
+                idx = 0x40BD7;                            \
+                len = 4;                                  \
+            }                         \
+            else if (ch == 0x241FE)                           \
+            {                                   \
+                idx = 0x42446;                            \
+                len = 4;                                  \
+            }                         \
+            else if (ch >= 0x10000 && ch <= 0x10FFFF)                 \
+            {                                   \
+                idx = ch + 0x1E248;                           \
+                len = 4;                                  \
+            }                                   \
+            else                                      \
+                len = 0;                                \
+            \
+            if (__builtin_expect (len, 2) == 0                    \
+                || (len == 2 && __builtin_expect (cp[0], '\1') == '\0'))          \
+            {                                   \
+                /* Illegal character.  */                         \
+                STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
+            }                                   \
+            \
+            if (len == 2)                                 \
+            {                                   \
+                /* See whether there is enough room for the second byte we        \
+                   write.  */                             \
+                if (cp[1] != '\0' && __builtin_expect (outptr + 1 >= outend, 0))  \
+                {                                   \
+                    /* We have not enough room.  */                   \
+                    result = __GCONV_FULL_OUTPUT;                     \
+                    break;                                \
+                }                                   \
+                \
+                *outptr++ = cp[0];                            \
+                if (cp[1] != '\0')                            \
+                    *outptr++ = cp[1];                          \
+            }                                   \
+            else /* len == 4 */                           \
+            {                                   \
+                /* See whether there is enough room for all four bytes we         \
+                   write.  */                             \
+                if (__glibc_unlikely (outptr + 3 >= outend))              \
+                {                                   \
+                    /* We have not enough room.  */                   \
+                    result = __GCONV_FULL_OUTPUT;                     \
+                    break;                                \
+                }                                   \
+                \
+                outptr[3] = (unsigned char)(idx % 10) + 0x30;             \
+                idx /= 10;                                \
+                outptr[2] = (unsigned char)(idx % 126) + 0x81;            \
+                idx /= 126;                               \
+                outptr[1] = (unsigned char)(idx % 10) + 0x30;             \
+                outptr[0] = (unsigned char)(idx / 10) + 0x81;             \
+                outptr += 4;                              \
+            }                                   \
+        }                                       \
+        \
+        inptr += 4;                                   \
+    }
 #define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 

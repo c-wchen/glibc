@@ -55,5 +55,5 @@
    Yield a value less than N if and only if arithmetic overflow occurs.  */
 
 #define FLEXSIZEOF(type, member, n) \
-   ((offsetof (type, member) + FLEXALIGNOF (type) - 1 + (n)) \
-    & ~ (FLEXALIGNOF (type) - 1))
+    ((offsetof (type, member) + FLEXALIGNOF (type) - 1 + (n)) \
+     & ~ (FLEXALIGNOF (type) - 1))

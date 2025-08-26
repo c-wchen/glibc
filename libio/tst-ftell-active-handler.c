@@ -32,47 +32,47 @@ static int do_test(void);
 #include "../test-skeleton.c"
 
 #define get_handles_fdopen(filename, fd, fp, fd_mode, mode) \
-({                                        \
-  int ret = 0;                                    \
-  (fd) = open ((filename), (fd_mode), 0);                     \
-  if ((fd) == -1)                                 \
-    {                                         \
-      printf ("open failed: %m\n");                       \
-      ret = 1;                                    \
-    }                                         \
-  else                                        \
-    {                                         \
-      (fp) = fdopen ((fd), (mode));                       \
-      if ((fp) == NULL)                               \
-    {                                     \
-      printf ("fdopen failed: %m\n");                     \
-      close (fd);                                 \
-      ret = 1;                                \
-    }                                     \
-    }                                         \
-  ret;                                        \
-})
+    ({                                        \
+        int ret = 0;                                    \
+        (fd) = open ((filename), (fd_mode), 0);                     \
+        if ((fd) == -1)                                 \
+        {                                         \
+            printf ("open failed: %m\n");                       \
+            ret = 1;                                    \
+        }                                         \
+        else                                        \
+        {                                         \
+            (fp) = fdopen ((fd), (mode));                       \
+            if ((fp) == NULL)                               \
+            {                                     \
+                printf ("fdopen failed: %m\n");                     \
+                close (fd);                                 \
+                ret = 1;                                \
+            }                                     \
+        }                                         \
+        ret;                                        \
+    })
 
 #define get_handles_fopen(filename, fd, fp, mode) \
-({                                        \
-  int ret = 0;                                    \
-  (fp) = fopen ((filename), (mode));                          \
-  if ((fp) == NULL)                               \
-    {                                         \
-      printf ("fopen failed: %m\n");                          \
-      ret = 1;                                    \
-    }                                         \
-  else                                        \
-    {                                         \
-      (fd) = fileno (fp);                             \
-      if ((fd) == -1)                                 \
-    {                                     \
-      printf ("fileno failed: %m\n");                     \
-      ret = 1;                                \
-    }                                     \
-    }                                         \
-  ret;                                        \
-})
+    ({                                        \
+        int ret = 0;                                    \
+        (fp) = fopen ((filename), (mode));                          \
+        if ((fp) == NULL)                               \
+        {                                         \
+            printf ("fopen failed: %m\n");                          \
+            ret = 1;                                    \
+        }                                         \
+        else                                        \
+        {                                         \
+            (fd) = fileno (fp);                             \
+            if ((fd) == -1)                                 \
+            {                                     \
+                printf ("fileno failed: %m\n");                     \
+                ret = 1;                                \
+            }                                     \
+        }                                         \
+        ret;                                        \
+    })
 
 /* data points to either char_data or wide_data, depending on whether we're
    testing regular file mode or wide mode respectively.  Similarly,

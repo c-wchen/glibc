@@ -76,72 +76,72 @@ register struct pthread *__thread_self __asm__("%g7");
 /* Install the dtv pointer.  The pointer passed is to the element with
    index -1 which contain the length.  */
 # define INSTALL_DTV(descr, dtvp) \
-  ((tcbhead_t *) (descr))->dtv = (dtvp) + 1
+    ((tcbhead_t *) (descr))->dtv = (dtvp) + 1
 
 /* Install new dtv for current thread.  */
 # define INSTALL_NEW_DTV(DTV) \
-  (((tcbhead_t *) __thread_self)->dtv = (DTV))
+    (((tcbhead_t *) __thread_self)->dtv = (DTV))
 
 /* Return dtv of given thread descriptor.  */
 # define GET_DTV(descr) \
-  (((tcbhead_t *) (descr))->dtv)
+    (((tcbhead_t *) (descr))->dtv)
 
 /* Code to initially initialize the thread pointer.  */
 # define TLS_INIT_TP(descr) \
-  (__thread_self = (__typeof (__thread_self)) (descr), true)
+    (__thread_self = (__typeof (__thread_self)) (descr), true)
 
 /* Value passed to 'clone' for initialization of the thread register.  */
 # define TLS_DEFINE_INIT_TP(tp, pd) void *tp = (pd)
 
 /* Return the address of the dtv for the current thread.  */
 # define THREAD_DTV() \
-  (((tcbhead_t *) __thread_self)->dtv)
+    (((tcbhead_t *) __thread_self)->dtv)
 
 /* Return the thread descriptor for the current thread.  */
 #define THREAD_SELF  __thread_self
 
 /* Magic for libthread_db to know how to do THREAD_SELF.  */
 # define DB_THREAD_SELF \
-  REGISTER (32, 32, 10 * 4, 0) \
-  REGISTER (64, __WORDSIZE, (6 * 8) + (__WORDSIZE==64?0:4), 0)
+    REGISTER (32, 32, 10 * 4, 0) \
+    REGISTER (64, __WORDSIZE, (6 * 8) + (__WORDSIZE==64?0:4), 0)
 
 # include <tcb-access.h>
 
 /* Set the stack guard field in TCB head.  */
 #define THREAD_SET_STACK_GUARD(value) \
-  THREAD_SETMEM (THREAD_SELF, header.stack_guard, value)
+    THREAD_SETMEM (THREAD_SELF, header.stack_guard, value)
 # define THREAD_COPY_STACK_GUARD(descr) \
-  ((descr)->header.stack_guard \
-   = THREAD_GETMEM (THREAD_SELF, header.stack_guard))
+    ((descr)->header.stack_guard \
+     = THREAD_GETMEM (THREAD_SELF, header.stack_guard))
 
 /* Get/set the stack guard field in TCB head.  */
 #define THREAD_GET_POINTER_GUARD() \
-  THREAD_GETMEM (THREAD_SELF, header.pointer_guard)
+    THREAD_GETMEM (THREAD_SELF, header.pointer_guard)
 #define THREAD_SET_POINTER_GUARD(value) \
-  THREAD_SETMEM (THREAD_SELF, header.pointer_guard, value)
+    THREAD_SETMEM (THREAD_SELF, header.pointer_guard, value)
 # define THREAD_COPY_POINTER_GUARD(descr) \
-  ((descr)->header.pointer_guard = THREAD_GET_POINTER_GUARD ())
+    ((descr)->header.pointer_guard = THREAD_GET_POINTER_GUARD ())
 
 /* Get and set the global scope generation counter in struct pthread.  */
 #define THREAD_GSCOPE_FLAG_UNUSED 0
 #define THREAD_GSCOPE_FLAG_USED   1
 #define THREAD_GSCOPE_FLAG_WAIT   2
 #define THREAD_GSCOPE_RESET_FLAG() \
-  do                                         \
+    do                                         \
     { int __res                                  \
-    = atomic_exchange_release (&THREAD_SELF->header.gscope_flag,         \
-                   THREAD_GSCOPE_FLAG_UNUSED);           \
-      if (__res == THREAD_GSCOPE_FLAG_WAIT)                  \
-    lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1, LLL_PRIVATE);   \
+            = atomic_exchange_release (&THREAD_SELF->header.gscope_flag,         \
+                                       THREAD_GSCOPE_FLAG_UNUSED);           \
+        if (__res == THREAD_GSCOPE_FLAG_WAIT)                  \
+            lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1, LLL_PRIVATE);   \
     }                                        \
-  while (0)
+    while (0)
 #define THREAD_GSCOPE_SET_FLAG() \
-  do                                         \
+    do                                         \
     {                                        \
-      THREAD_SELF->header.gscope_flag = THREAD_GSCOPE_FLAG_USED;         \
-      atomic_write_barrier ();                           \
+        THREAD_SELF->header.gscope_flag = THREAD_GSCOPE_FLAG_USED;         \
+        atomic_write_barrier ();                           \
     }                                        \
-  while (0)
+    while (0)
 
 #endif /* !ASSEMBLER */
 

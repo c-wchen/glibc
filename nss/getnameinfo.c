@@ -220,7 +220,7 @@ static int check_sprintf_result(int result, size_t destlen)
    EAI_OVERFLOW in case the buffer is too small, or EAI_SYSTEM on any
    other error.  */
 #define CHECKED_SNPRINTF(dest, destlen, format, ...)            \
-  check_sprintf_result                          \
+    check_sprintf_result                          \
     (__snprintf (dest, destlen, format, __VA_ARGS__), destlen)
 
 /* Convert host name, AF_INET/AF_INET6 case, name only.  */

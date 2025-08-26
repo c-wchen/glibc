@@ -40,14 +40,14 @@
 #define PARTIAL_BYTES 4
 
 #define EXPECT_EVENT(opcode, state, expected_state)             \
-  {                                                             \
-    if (state != expected_state)                                \
-      {                                                         \
-    char *s = support_fuse_opcode (opcode);                 \
-    FAIL ("unexpected event %s at state %d", s, state);     \
-    free (s);                                               \
-      }                                                         \
-  }
+    {                                                             \
+        if (state != expected_state)                                \
+        {                                                         \
+            char *s = support_fuse_opcode (opcode);                 \
+            FAIL ("unexpected event %s at state %d", s, state);     \
+            free (s);                                               \
+        }                                                         \
+    }
 
 /* The goal of this test is to check that file position of a file stream is
    correctly updated when write () returns a partial write.

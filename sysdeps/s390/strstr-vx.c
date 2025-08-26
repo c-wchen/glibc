@@ -27,7 +27,7 @@
 #    define libc_hidden_builtin_def(name)
 #   else
 #    define libc_hidden_builtin_def(name)       \
-  __hidden_ver1 (__strstr_vx, __GI_strstr, __strstr_vx);
+    __hidden_ver1 (__strstr_vx, __GI_strstr, __strstr_vx);
 #   endif
 #  endif
 # endif

@@ -27,8 +27,8 @@
 
 /* Return true if PTR is sufficiently aligned for TYPE.  */
 #define IS_ALIGNED(ptr, type) \
-  ((((uintptr_t) ptr) & (__alloc_buffer_assert_align (__alignof (type)) - 1)) \
-   == 0)
+    ((((uintptr_t) ptr) & (__alloc_buffer_assert_align (__alignof (type)) - 1)) \
+     == 0)
 
 /* Structure with non-power-of-two size.  */
 struct twelve {

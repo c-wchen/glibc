@@ -376,22 +376,22 @@ LIBC_START_MAIN(int (*main)(int, char **, char **MAIN_AUXVEC_DECL),
    __libc_start_main_impl.  */
 #ifdef SHARED
 # define DEFINE_LIBC_START_MAIN_VERSION \
-  DEFINE_LIBC_START_MAIN_VERSION_1 \
-  strong_alias (__libc_start_main_impl, __libc_start_main_alias_2)  \
-  versioned_symbol (libc, __libc_start_main_alias_2, __libc_start_main, \
-            GLIBC_2_34);
+    DEFINE_LIBC_START_MAIN_VERSION_1 \
+    strong_alias (__libc_start_main_impl, __libc_start_main_alias_2)  \
+    versioned_symbol (libc, __libc_start_main_alias_2, __libc_start_main, \
+                      GLIBC_2_34);
 
 # if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_34)
 #  define DEFINE_LIBC_START_MAIN_VERSION_1 \
-  strong_alias (__libc_start_main_impl, __libc_start_main_alias_1)  \
-  compat_symbol (libc, __libc_start_main_alias_1, __libc_start_main, GLIBC_2_0);
+    strong_alias (__libc_start_main_impl, __libc_start_main_alias_1)  \
+    compat_symbol (libc, __libc_start_main_alias_1, __libc_start_main, GLIBC_2_0);
 #  else
 #  define DEFINE_LIBC_START_MAIN_VERSION_1
 # endif
 #else  /* !SHARED */
 /* Enable calling the function under its exported name.  */
 # define DEFINE_LIBC_START_MAIN_VERSION \
-  strong_alias (__libc_start_main_impl, __libc_start_main)
+    strong_alias (__libc_start_main_impl, __libc_start_main)
 #endif
 
 /* Only define the version information if LIBC_START_MAIN was not set.

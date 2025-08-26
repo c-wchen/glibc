@@ -22,7 +22,7 @@ int process_elf64_file(const char *file_name, const char *lib,
                        void *file_contents, size_t file_length);
 
 #define SUPPORTED_ELF_FLAGS \
-  (EF_LARCH_ABI_DOUBLE_FLOAT | EF_LARCH_ABI_SOFT_FLOAT)
+    (EF_LARCH_ABI_DOUBLE_FLOAT | EF_LARCH_ABI_SOFT_FLOAT)
 
 /* Returns 0 if everything is ok, != 0 in case of error.  */
 int process_elf_file(const char *file_name, const char *lib, int *flag,

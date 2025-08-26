@@ -89,11 +89,11 @@ static inline Elf32_Addr elf_machine_load_address(void)
    of the main executable's symbols, as for a COPY reloc.  */
 
 #define elf_machine_type_class(type) \
-  (((type) == R_OR1K_JMP_SLOT \
-   || (type) == R_OR1K_TLS_DTPMOD \
-   || (type) == R_OR1K_TLS_DTPOFF \
-   || (type) == R_OR1K_TLS_TPOFF) * ELF_RTYPE_CLASS_PLT \
-   | ((type) == R_OR1K_COPY) * ELF_RTYPE_CLASS_COPY)
+    (((type) == R_OR1K_JMP_SLOT \
+      || (type) == R_OR1K_TLS_DTPMOD \
+      || (type) == R_OR1K_TLS_DTPOFF \
+      || (type) == R_OR1K_TLS_TPOFF) * ELF_RTYPE_CLASS_PLT \
+     | ((type) == R_OR1K_COPY) * ELF_RTYPE_CLASS_COPY)
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT    R_OR1K_JMP_SLOT

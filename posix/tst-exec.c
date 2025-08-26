@@ -30,7 +30,7 @@ static int restart;
 
 
 #define CMDLINE_OPTIONS \
-  { "restart", no_argument, &restart, 1 },
+    { "restart", no_argument, &restart, 1 },
 
 /* Prototype for our test function.  */
 extern void do_prepare(int argc, char *argv[]);

@@ -26,7 +26,7 @@
 #  if defined SHARED && IS_IN (libc)
 #   undef libc_hidden_def
 #   define libc_hidden_def(name)                    \
-  __hidden_ver1 (__rawmemchr_c, __GI___rawmemchr, __rawmemchr_c);
+    __hidden_ver1 (__rawmemchr_c, __GI___rawmemchr, __rawmemchr_c);
 #  endif
 # endif
 

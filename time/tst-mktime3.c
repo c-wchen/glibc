@@ -29,11 +29,11 @@ static int do_test(void)
             return 1;
         }
 #define CHECK(name) \
-      if (tests[i].name != expected[i].name)            \
+    if (tests[i].name != expected[i].name)            \
     {                           \
-      printf ("test %d " #name " got %d expected %d\n", \
-          i, tests[i].name, expected[i].name);      \
-      return 1;                     \
+        printf ("test %d " #name " got %d expected %d\n", \
+                i, tests[i].name, expected[i].name);      \
+        return 1;                     \
     }
         CHECK(tm_sec)
         CHECK(tm_min)

@@ -28,18 +28,18 @@
 # define _FP_I_TYPE     long
 
 # define _FP_MUL_MEAT_S(R, X, Y)                \
-  _FP_MUL_MEAT_1_wide (_FP_WFRACBITS_S, R, X, Y, umul_ppmm)
+    _FP_MUL_MEAT_1_wide (_FP_WFRACBITS_S, R, X, Y, umul_ppmm)
 # define _FP_MUL_MEAT_D(R, X, Y)                \
-  _FP_MUL_MEAT_2_wide (_FP_WFRACBITS_D, R, X, Y, umul_ppmm)
+    _FP_MUL_MEAT_2_wide (_FP_WFRACBITS_D, R, X, Y, umul_ppmm)
 # define _FP_MUL_MEAT_Q(R, X, Y)                \
-  _FP_MUL_MEAT_4_wide (_FP_WFRACBITS_Q, R, X, Y, umul_ppmm)
+    _FP_MUL_MEAT_4_wide (_FP_WFRACBITS_Q, R, X, Y, umul_ppmm)
 
 # define _FP_MUL_MEAT_DW_S(R, X, Y)                 \
-  _FP_MUL_MEAT_DW_1_wide (_FP_WFRACBITS_S, R, X, Y, umul_ppmm)
+    _FP_MUL_MEAT_DW_1_wide (_FP_WFRACBITS_S, R, X, Y, umul_ppmm)
 # define _FP_MUL_MEAT_DW_D(R, X, Y)                 \
-  _FP_MUL_MEAT_DW_2_wide (_FP_WFRACBITS_D, R, X, Y, umul_ppmm)
+    _FP_MUL_MEAT_DW_2_wide (_FP_WFRACBITS_D, R, X, Y, umul_ppmm)
 # define _FP_MUL_MEAT_DW_Q(R, X, Y)                 \
-  _FP_MUL_MEAT_DW_4_wide (_FP_WFRACBITS_Q, R, X, Y, umul_ppmm)
+    _FP_MUL_MEAT_DW_4_wide (_FP_WFRACBITS_Q, R, X, Y, umul_ppmm)
 
 # define _FP_DIV_MEAT_S(R, X, Y)    _FP_DIV_MEAT_1_udiv_norm (S, R, X, Y)
 # define _FP_DIV_MEAT_D(R, X, Y)    _FP_DIV_MEAT_2_udiv (D, R, X, Y)
@@ -57,18 +57,18 @@
 # define _FP_I_TYPE     long long
 
 # define _FP_MUL_MEAT_S(R, X, Y)                    \
-  _FP_MUL_MEAT_1_imm (_FP_WFRACBITS_S, R, X, Y)
+    _FP_MUL_MEAT_1_imm (_FP_WFRACBITS_S, R, X, Y)
 # define _FP_MUL_MEAT_D(R, X, Y)                    \
-  _FP_MUL_MEAT_1_wide (_FP_WFRACBITS_D, R, X, Y, umul_ppmm)
+    _FP_MUL_MEAT_1_wide (_FP_WFRACBITS_D, R, X, Y, umul_ppmm)
 # define _FP_MUL_MEAT_Q(R, X, Y)                    \
-  _FP_MUL_MEAT_2_wide_3mul (_FP_WFRACBITS_Q, R, X, Y, umul_ppmm)
+    _FP_MUL_MEAT_2_wide_3mul (_FP_WFRACBITS_Q, R, X, Y, umul_ppmm)
 
 # define _FP_MUL_MEAT_DW_S(R, X, Y)                 \
-  _FP_MUL_MEAT_DW_1_imm (_FP_WFRACBITS_S, R, X, Y)
+    _FP_MUL_MEAT_DW_1_imm (_FP_WFRACBITS_S, R, X, Y)
 # define _FP_MUL_MEAT_DW_D(R, X, Y)                 \
-  _FP_MUL_MEAT_DW_1_wide (_FP_WFRACBITS_D, R, X, Y, umul_ppmm)
+    _FP_MUL_MEAT_DW_1_wide (_FP_WFRACBITS_D, R, X, Y, umul_ppmm)
 # define _FP_MUL_MEAT_DW_Q(R, X, Y)                 \
-  _FP_MUL_MEAT_DW_2_wide_3mul (_FP_WFRACBITS_Q, R, X, Y, umul_ppmm)
+    _FP_MUL_MEAT_DW_2_wide_3mul (_FP_WFRACBITS_Q, R, X, Y, umul_ppmm)
 
 # define _FP_DIV_MEAT_S(R, X, Y)    _FP_DIV_MEAT_1_imm (S, R, X, Y, _FP_DIV_HELP_imm)
 # define _FP_DIV_MEAT_D(R, X, Y)    _FP_DIV_MEAT_1_udiv_norm (D, R, X, Y)
@@ -88,11 +88,11 @@
 #define _FP_QNANNEGATEDP 0
 
 #define _FP_CHOOSENAN(fs, wc, R, X, Y, OP)  \
-  do {                      \
-    R##_s = _FP_NANSIGN_##fs;           \
-    _FP_FRAC_SET_##wc (R, _FP_NANFRAC_##fs);    \
-    R##_c = FP_CLS_NAN;             \
-  } while (0)
+    do {                      \
+        R##_s = _FP_NANSIGN_##fs;           \
+        _FP_FRAC_SET_##wc (R, _FP_NANFRAC_##fs);    \
+        R##_c = FP_CLS_NAN;             \
+    } while (0)
 
 #define _FP_DECL_EX     int _frm __attribute__ ((unused));
 #define FP_ROUNDMODE        _frm
@@ -112,15 +112,15 @@
 
 #ifdef __riscv_flen
 # define FP_INIT_ROUNDMODE          \
-do {                        \
-  __asm__ volatile ("frrm %0" : "=r" (_frm));   \
-} while (0)
+    do {                        \
+        __asm__ volatile ("frrm %0" : "=r" (_frm));   \
+    } while (0)
 
 # define FP_HANDLE_EXCEPTIONS                   \
-do {                                \
-  if (__builtin_expect (_fex, 0))               \
-    __asm__ volatile ("csrs fflags, %0" : : "rK" (_fex));   \
-} while (0)
+    do {                                \
+        if (__builtin_expect (_fex, 0))               \
+            __asm__ volatile ("csrs fflags, %0" : : "rK" (_fex));   \
+    } while (0)
 #else
 # define FP_INIT_ROUNDMODE  _frm = FP_RND_NEAREST
 #endif

@@ -136,12 +136,12 @@ No definition for %s category found"), "LC_TELEPHONE");
     }
 
 #define TEST_ELEM(cat) \
-  if (telephone->cat == NULL)                             \
+    if (telephone->cat == NULL)                             \
     {                                         \
-      if (verbose && ! nothing)                           \
-    record_warning (_("%s: field `%s' not defined"), "LC_TELEPHONE",      \
-            #cat);                            \
-      telephone->cat = "";                            \
+        if (verbose && ! nothing)                           \
+            record_warning (_("%s: field `%s' not defined"), "LC_TELEPHONE",      \
+                            #cat);                            \
+        telephone->cat = "";                            \
     }
 
     TEST_ELEM(int_select);
@@ -210,30 +210,30 @@ void telephone_read(struct linereader *ldfile, struct localedef_t *result,
 
         switch (nowtok) {
 #define STR_ELEM(cat) \
-    case tok_##cat:                               \
-      /* Ignore the rest of the line if we don't need the input of        \
-         this line.  */                           \
-      if (ignore_content)                             \
-        {                                     \
-          lr_ignore_rest (ldfile, 0);                     \
-          break;                                  \
-        }                                     \
-                                          \
-      arg = lr_token (ldfile, charmap, result, NULL, verbose);        \
-      if (arg->tok != tok_string)                         \
+case tok_##cat:                               \
+    /* Ignore the rest of the line if we don't need the input of        \
+       this line.  */                           \
+    if (ignore_content)                             \
+    {                                     \
+        lr_ignore_rest (ldfile, 0);                     \
+        break;                                  \
+    }                                     \
+    \
+    arg = lr_token (ldfile, charmap, result, NULL, verbose);        \
+    if (arg->tok != tok_string)                         \
         goto err_label;                           \
-      if (telephone->cat != NULL)                         \
+    if (telephone->cat != NULL)                         \
         lr_error (ldfile, _("%s: field `%s' declared more than once"),    \
-              "LC_TELEPHONE", #cat);                      \
-      else if (!ignore_content && arg->val.str.startmb == NULL)       \
-        {                                     \
-          lr_error (ldfile, _("%s: unknown character in field `%s'"),     \
-            "LC_TELEPHONE", #cat);                    \
-          telephone->cat = "";                        \
-        }                                     \
-      else if (!ignore_content)                       \
+                  "LC_TELEPHONE", #cat);                      \
+    else if (!ignore_content && arg->val.str.startmb == NULL)       \
+    {                                     \
+        lr_error (ldfile, _("%s: unknown character in field `%s'"),     \
+                  "LC_TELEPHONE", #cat);                    \
+        telephone->cat = "";                        \
+    }                                     \
+    else if (!ignore_content)                       \
         telephone->cat = arg->val.str.startmb;                \
-      break
+    break
 
                 STR_ELEM(tel_int_fmt);
                 STR_ELEM(tel_dom_fmt);

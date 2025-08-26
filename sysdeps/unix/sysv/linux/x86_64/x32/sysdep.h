@@ -52,13 +52,13 @@
    regular cast, resulting in zero or sign extension based on the
    signedness of the original type.  */
 # define ARGIFY(X) \
- ({                                 \
-    _Pragma ("GCC diagnostic push");                    \
-    _Pragma ("GCC diagnostic ignored \"-Wpointer-to-int-cast\"");   \
-    (__builtin_classify_type (X) == 5                   \
-     ? (uintptr_t) (X) : (int64_t) (X));                \
-    _Pragma ("GCC diagnostic pop");                 \
-  })
+    ({                                 \
+        _Pragma ("GCC diagnostic push");                    \
+        _Pragma ("GCC diagnostic ignored \"-Wpointer-to-int-cast\"");   \
+        (__builtin_classify_type (X) == 5                   \
+         ? (uintptr_t) (X) : (int64_t) (X));                \
+        _Pragma ("GCC diagnostic pop");                 \
+    })
 #endif  /* __ASSEMBLER__ */
 
 #endif /* linux/x86_64/x32/sysdep.h */

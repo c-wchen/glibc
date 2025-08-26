@@ -88,7 +88,8 @@ static struct link_map _dl_main_map = {
         .r_list = &(struct link_map *) { &_dl_main_map },
         .r_nlist = 1,
     },
-    .l_symbolic_searchlist = { .r_list = &(struct link_map *)
+    .l_symbolic_searchlist = {
+        .r_list = &(struct link_map *)
         {
             NULL
         }

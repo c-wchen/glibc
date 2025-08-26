@@ -27,16 +27,16 @@ rtld_hidden_proto(__chk_fail)
 
 # undef __LDBL_REDIR_DECL
 # define __LDBL_REDIR_DECL(func) \
-   extern __typeof(func) func __asm (__ASMNAME ("__GI____ieee128_" #func));
+    extern __typeof(func) func __asm (__ASMNAME ("__GI____ieee128_" #func));
 
 # undef libc_hidden_ldbl_proto
 # define libc_hidden_ldbl_proto(func, attrs...) \
-   extern __typeof(func) ___ieee128_ ## func; \
-   libc_hidden_proto (___ieee128_ ## func, ##attrs);
+    extern __typeof(func) ___ieee128_ ## func; \
+    libc_hidden_proto (___ieee128_ ## func, ##attrs);
 
 # undef __LDBL_REDIR2_DECL
 # define __LDBL_REDIR2_DECL(func) \
-   extern __typeof(__ ## func) __ ## func __asm (__ASMNAME ("__GI____ieee128___" #func));
+    extern __typeof(__ ## func) __ ## func __asm (__ASMNAME ("__GI____ieee128___" #func));
 
 #endif
 
@@ -45,11 +45,11 @@ rtld_hidden_proto(__chk_fail)
 
 #undef __REDIRECT_FORTIFY
 #define __REDIRECT_FORTIFY(name, proto, alias) \
-  __REDIRECT(name, proto, __GI_##alias)
+    __REDIRECT(name, proto, __GI_##alias)
 
 #undef __REDIRECT_FORTIFY_NTH
 #define __REDIRECT_FORTIFY_NTH(name, proto, alias) \
-  __REDIRECT_NTH(name, proto, __GI_##alias)
+    __REDIRECT_NTH(name, proto, __GI_##alias)
 
 #endif
 #endif /* defined SHARED */

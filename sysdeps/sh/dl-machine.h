@@ -196,10 +196,10 @@ __fpscr_values:\n\
    ELF_RTYPE_CLASS_COPY iff TYPE should not be allowed to resolve to one
    of the main executable's symbols, as for a COPY reloc.  */
 #define elf_machine_type_class(type) \
-  ((((type) == R_SH_JMP_SLOT || (type) == R_SH_TLS_DTPMOD32           \
-     || (type) == R_SH_TLS_DTPOFF32 || (type) == R_SH_TLS_TPOFF32)        \
-    * ELF_RTYPE_CLASS_PLT)                            \
-   | (((type) == R_SH_COPY) * ELF_RTYPE_CLASS_COPY))
+    ((((type) == R_SH_JMP_SLOT || (type) == R_SH_TLS_DTPMOD32           \
+       || (type) == R_SH_TLS_DTPOFF32 || (type) == R_SH_TLS_TPOFF32)        \
+      * ELF_RTYPE_CLASS_PLT)                            \
+     | (((type) == R_SH_COPY) * ELF_RTYPE_CLASS_COPY))
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT    R_SH_JMP_SLOT
@@ -254,28 +254,28 @@ elf_machine_rela(struct link_map *map, struct r_scope_elem *scope[],
     Elf32_Addr value;
 
 #define COPY_UNALIGNED_WORD(swp, twp, align) \
-  { \
-    void *__s = (swp), *__t = (twp); \
-    unsigned char *__s1 = __s, *__t1 = __t; \
-    unsigned short *__s2 = __s, *__t2 = __t; \
-    unsigned long *__s4 = __s, *__t4 = __t; \
-    switch ((align)) \
     { \
-    case 0: \
-      *__t4 = *__s4; \
-      break; \
-    case 2: \
-      *__t2++ = *__s2++; \
-      *__t2 = *__s2; \
-      break; \
-    default: \
-      *__t1++ = *__s1++; \
-      *__t1++ = *__s1++; \
-      *__t1++ = *__s1++; \
-      *__t1 = *__s1; \
-      break; \
-    } \
-  }
+        void *__s = (swp), *__t = (twp); \
+        unsigned char *__s1 = __s, *__t1 = __t; \
+        unsigned short *__s2 = __s, *__t2 = __t; \
+        unsigned long *__s4 = __s, *__t4 = __t; \
+        switch ((align)) \
+        { \
+            case 0: \
+                *__t4 = *__s4; \
+                break; \
+            case 2: \
+                *__t2++ = *__s2++; \
+                *__t2 = *__s2; \
+                break; \
+            default: \
+                *__t1++ = *__s1++; \
+                *__t1++ = *__s1++; \
+                *__t1++ = *__s1++; \
+                *__t1 = *__s1; \
+                break; \
+        } \
+    }
 
     if (__glibc_unlikely(r_type == R_SH_RELATIVE)) {
 #ifndef RTLD_BOOTSTRAP

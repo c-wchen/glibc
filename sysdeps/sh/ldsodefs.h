@@ -26,14 +26,14 @@ struct La_sh_retval;
 
 #define ARCH_PLTENTER_MEMBERS                       \
     uintptr_t (*sh_gnu_pltenter) (Elf32_Sym *, unsigned int, uintptr_t *, \
-                  uintptr_t *, struct La_sh_regs *, \
-                  unsigned int *, const char *name, \
-                  long int *framesizep)
+                                  uintptr_t *, struct La_sh_regs *, \
+                                  unsigned int *, const char *name, \
+                                  long int *framesizep)
 
 #define ARCH_PLTEXIT_MEMBERS                        \
     unsigned int (*sh_gnu_pltexit) (Elf32_Sym *, unsigned int, uintptr_t *, \
-                    uintptr_t *, const struct La_sh_regs *, \
-                    struct La_sh_retval *, const char *)
+                                    uintptr_t *, const struct La_sh_regs *, \
+                                    struct La_sh_retval *, const char *)
 
 #include_next <ldsodefs.h>
 

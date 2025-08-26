@@ -44,12 +44,12 @@ static void *nss_files_global_allocate(void *closure)
 }
 /* Like __nss_files_data_open, but does not perform the open call.  */
 static enum nss_status __nss_files_data_get(struct nss_files_per_file_data **pdata,
-        enum nss_files_file file, int *errnop, int *herrnop) {
+        enum nss_files_file file, int *errnop, int *herrnop)
+{
     struct nss_files_data *data = allocate_once(&nss_files_global,
                                   nss_files_global_allocate,
                                   NULL, NULL);
-    if (data == NULL)
-    {
+    if (data == NULL) {
         if (errnop != NULL) {
             *errnop = errno;
         }
@@ -67,11 +67,11 @@ static enum nss_status __nss_files_data_get(struct nss_files_per_file_data **pda
 
 /* Helper function for opening the backing file at PATH.  */
 static enum nss_status __nss_files_data_internal_open(struct nss_files_per_file_data *data,
-        const char *path) {
+        const char *path)
+{
     enum nss_status status = NSS_STATUS_SUCCESS;
 
-    if (data->stream == NULL)
-    {
+    if (data->stream == NULL) {
         data->stream = __nss_files_fopen(path);
 
         if (data->stream == NULL) {
@@ -85,16 +85,15 @@ static enum nss_status __nss_files_data_internal_open(struct nss_files_per_file_
 
 enum nss_status __nss_files_data_open(struct nss_files_per_file_data **pdata,
                                       enum nss_files_file file, const char *path,
-                                      int *errnop, int *herrnop) {
+                                      int *errnop, int *herrnop)
+{
     enum nss_status status = __nss_files_data_get(pdata, file, errnop, herrnop);
-    if (status != NSS_STATUS_SUCCESS)
-    {
+    if (status != NSS_STATUS_SUCCESS) {
         return status;
     }
 
     /* Be prepared that the set*ent function was not called before.  */
-    if ((*pdata)->stream == NULL)
-    {
+    if ((*pdata)->stream == NULL) {
         int saved_errno = errno;
         status = __nss_files_data_internal_open(*pdata, path);
         __set_errno(saved_errno);

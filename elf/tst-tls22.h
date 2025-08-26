@@ -67,44 +67,44 @@ struct one_thread_data {
 /* Store the addresses of variables prefixed by PFX in the structure
    pointed to by DST.  */
 #define STORE_ADDRS(DST, PFX)               \
-  do                            \
+    do                            \
     {                           \
-      (DST)->addr_tdata1 = (uintptr_t) &PFX ## _tdata1; \
-      (DST)->addr_tdata2 = (uintptr_t) &PFX ## _tdata2; \
-      (DST)->addr_tdata3 = (uintptr_t) &PFX ## _tdata3; \
-      (DST)->addr_tbss1 = (uintptr_t) &PFX ## _tbss1;   \
-      (DST)->addr_tbss2 = (uintptr_t) &PFX ## _tbss2;   \
-      (DST)->addr_tbss3 = (uintptr_t) &PFX ## _tbss3;   \
+        (DST)->addr_tdata1 = (uintptr_t) &PFX ## _tdata1; \
+        (DST)->addr_tdata2 = (uintptr_t) &PFX ## _tdata2; \
+        (DST)->addr_tdata3 = (uintptr_t) &PFX ## _tdata3; \
+        (DST)->addr_tbss1 = (uintptr_t) &PFX ## _tbss1;   \
+        (DST)->addr_tbss2 = (uintptr_t) &PFX ## _tbss2;   \
+        (DST)->addr_tbss3 = (uintptr_t) &PFX ## _tbss3;   \
     }                           \
-  while (0)
+    while (0)
 
 /* Store the values of variables prefixed by PFX in the structure
    pointed to by DST.  */
 #define STORE_VALUES(DST, PFX)          \
-  do                        \
+    do                        \
     {                       \
-      (DST)->val_tdata1 = PFX ## _tdata1;   \
-      (DST)->val_tdata2 = PFX ## _tdata2;   \
-      (DST)->val_tdata3 = PFX ## _tdata3;   \
-      (DST)->val_tbss1 = PFX ## _tbss1;     \
-      (DST)->val_tbss2 = PFX ## _tbss2;     \
-      (DST)->val_tbss3 = PFX ## _tbss3;     \
+        (DST)->val_tdata1 = PFX ## _tdata1;   \
+        (DST)->val_tdata2 = PFX ## _tdata2;   \
+        (DST)->val_tdata3 = PFX ## _tdata3;   \
+        (DST)->val_tbss1 = PFX ## _tbss1;     \
+        (DST)->val_tbss2 = PFX ## _tbss2;     \
+        (DST)->val_tbss3 = PFX ## _tbss3;     \
     }                       \
-  while (0)
+    while (0)
 
 /* Overwrite the values of variables prefixed by PFX with values
    starting with VAL.  */
 #define OVERWRITE_VALUES(PFX, VAL)      \
-  do                        \
+    do                        \
     {                       \
-      PFX ## _tdata1 = (VAL);           \
-      PFX ## _tdata2 = (VAL) + 1;       \
-      PFX ## _tdata3 = (VAL) + 2;       \
-      PFX ## _tbss1 = (VAL) + 3;        \
-      PFX ## _tbss2 = (VAL) + 4;        \
-      PFX ## _tbss3 = (VAL) + 5;        \
+        PFX ## _tdata1 = (VAL);           \
+        PFX ## _tdata2 = (VAL) + 1;       \
+        PFX ## _tdata3 = (VAL) + 2;       \
+        PFX ## _tbss1 = (VAL) + 3;        \
+        PFX ## _tbss2 = (VAL) + 4;        \
+        PFX ## _tbss3 = (VAL) + 5;        \
     }                       \
-  while (0)
+    while (0)
 
 void test_mod1(struct one_thread_data *data, int base_val);
 void test_mod2(struct one_thread_data *data, int base_val);

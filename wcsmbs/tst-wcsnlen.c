@@ -19,11 +19,11 @@
 #include <wchar.h>
 
 #define TEST(Str, Max, Exp) \
-  n = wcsnlen (L##Str, Max);                              \
-  if (n != Exp)                                   \
+    n = wcsnlen (L##Str, Max);                              \
+    if (n != Exp)                                   \
     {                                         \
-      result = 1;                                 \
-      printf ("wcsnlen (L\"%s\", %d) = %d, not %d\n", Str, Max, n, Exp);      \
+        result = 1;                                 \
+        printf ("wcsnlen (L\"%s\", %d) = %d, not %d\n", Str, Max, n, Exp);      \
     }
 
 static int do_test(void)

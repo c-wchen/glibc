@@ -43,7 +43,7 @@
 
 #define LOWCBAUD (CBAUD & (CBAUDEX-1))
 #define _cbix(x) (((x) & LOWCBAUD) | \
-          (CBAUDEX ? ((x) & CBAUDEX)/CBAUDEX * (LOWCBAUD+1) : 0))
+                  (CBAUDEX ? ((x) & CBAUDEX)/CBAUDEX * (LOWCBAUD+1) : 0))
 #define CBAUDMASK (LOWCBAUD | CBAUDEX)
 
 /* Compile time sanity checks for broken CBAUD or CIBAUD definitions */

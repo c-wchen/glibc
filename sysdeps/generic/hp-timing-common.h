@@ -48,12 +48,12 @@
 
 /* Write a decimal representation of the timing value into the given string.  */
 #define HP_TIMING_PRINT(Dest, Len, Val)                 \
-  do {                                  \
-    char __buf[HP_TIMING_PRINT_SIZE];                   \
-    char *__dest = (Dest);                      \
-    size_t __len = (Len);                       \
-    char *__cp = _itoa ((Val), __buf + sizeof (__buf), 10, 0);      \
-    size_t __cp_len = MIN (__buf + sizeof (__buf) - __cp, __len);   \
-    memcpy (__dest, __cp, __cp_len);                    \
-    __dest[__cp_len - 1] = '\0';                    \
-  } while (0)
+    do {                                  \
+        char __buf[HP_TIMING_PRINT_SIZE];                   \
+        char *__dest = (Dest);                      \
+        size_t __len = (Len);                       \
+        char *__cp = _itoa ((Val), __buf + sizeof (__buf), 10, 0);      \
+        size_t __cp_len = MIN (__buf + sizeof (__buf) - __cp, __len);   \
+        memcpy (__dest, __cp, __cp_len);                    \
+        __dest[__cp_len - 1] = '\0';                    \
+    } while (0)

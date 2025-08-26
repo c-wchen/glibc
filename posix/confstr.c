@@ -58,31 +58,31 @@ size_t __confstr(int name, char *buf, size_t len)
 
 #define START_ENV_GROUP(VERSION)        \
 case _CS_##VERSION##_WIDTH_RESTRICTED_ENVS: \
-  string_len = 0;
+    string_len = 0;
 
 #define END_ENV_GROUP(VERSION)          \
-  restenvs[string_len++] = '\0';        \
-  string = restenvs;            \
-  break;
+    restenvs[string_len++] = '\0';        \
+    string = restenvs;            \
+    break;
 
 #define KNOWN_ABSENT_ENVIRONMENT(SC_PREFIX, ENV_PREFIX, SUFFIX) \
-      /* Empty.  */
+    /* Empty.  */
 
 #define KNOWN_PRESENT_ENV_STRING(STR)       \
-  if (string_len > 0)           \
-restenvs[string_len++] = '\n';      \
-  memcpy (restenvs + string_len, STR,   \
-      sizeof STR - 1);          \
-  string_len += sizeof STR - 1;
+    if (string_len > 0)           \
+        restenvs[string_len++] = '\n';      \
+    memcpy (restenvs + string_len, STR,   \
+            sizeof STR - 1);          \
+    string_len += sizeof STR - 1;
 
 #define KNOWN_PRESENT_ENVIRONMENT(SC_PREFIX, ENV_PREFIX, SUFFIX)    \
-  KNOWN_PRESENT_ENV_STRING (#ENV_PREFIX "_" #SUFFIX)
+    KNOWN_PRESENT_ENV_STRING (#ENV_PREFIX "_" #SUFFIX)
 
 #define UNKNOWN_ENVIRONMENT(SC_PREFIX, ENV_PREFIX, SUFFIX)      \
-  if (__sysconf (_SC_##SC_PREFIX##_##SUFFIX) > 0)           \
-{                               \
-  KNOWN_PRESENT_ENVIRONMENT (SC_PREFIX, ENV_PREFIX, SUFFIX) \
-}
+    if (__sysconf (_SC_##SC_PREFIX##_##SUFFIX) > 0)           \
+    {                               \
+        KNOWN_PRESENT_ENVIRONMENT (SC_PREFIX, ENV_PREFIX, SUFFIX) \
+    }
 
 #include "posix-envs.def"
 

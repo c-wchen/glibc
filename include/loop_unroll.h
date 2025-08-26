@@ -65,14 +65,14 @@
 #define UNROLL_REPEAT_(N, X)  UNROLL_REPEAT__ (N, X)
 
 #define UNROLL_REPEAT(N, X)                \
-  (void) ({                                \
-    UNROLL_REPEAT_ (UNROLL_EXPAND(N), X);  \
-  })
+    (void) ({                                \
+        UNROLL_REPEAT_ (UNROLL_EXPAND(N), X);  \
+    })
 
 #define UNROLL_REPEAT_UPDATE(N, X, U)      \
-  (void) ({                                \
-    UNROLL_REPEAT_ (UNROLL_EXPAND(N), X);  \
-    UPDATE (N);                            \
-  })
+    (void) ({                                \
+        UNROLL_REPEAT_ (UNROLL_EXPAND(N), X);  \
+        UPDATE (N);                            \
+    })
 
 #endif

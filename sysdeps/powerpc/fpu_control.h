@@ -66,45 +66,45 @@ typedef unsigned int fpu_control_t;
 
 /* Macros for accessing the hardware control word.  */
 # define _FPU_GETCW(cw)                     \
-  ({union { double __d; unsigned long long __ll; } __u;     \
-    __asm__ __volatile__("mffs %0" : "=f" (__u.__d));       \
-    (cw) = (fpu_control_t) __u.__ll;                \
-    (fpu_control_t) __u.__ll;                   \
-  })
+    ({union { double __d; unsigned long long __ll; } __u;     \
+        __asm__ __volatile__("mffs %0" : "=f" (__u.__d));       \
+        (cw) = (fpu_control_t) __u.__ll;                \
+        (fpu_control_t) __u.__ll;                   \
+    })
 
 # define _FPU_GET_RC_ISA300()                       \
-  ({union { double __d; unsigned long long __ll; } __u;         \
-    __asm__ __volatile__(                       \
-      ".machine push; .machine \"power9\"; mffsl %0; .machine pop"  \
-      : "=f" (__u.__d));                        \
-    (fpu_control_t) (__u.__ll & _FPU_MASK_RC);              \
-  })
+    ({union { double __d; unsigned long long __ll; } __u;         \
+        __asm__ __volatile__(                       \
+                ".machine push; .machine \"power9\"; mffsl %0; .machine pop"  \
+                : "=f" (__u.__d));                        \
+        (fpu_control_t) (__u.__ll & _FPU_MASK_RC);              \
+    })
 
 # ifdef _ARCH_PWR9
 #  define _FPU_GET_RC() _FPU_GET_RC_ISA300()
 # elif defined __BUILTIN_CPU_SUPPORTS__
 #  define _FPU_GET_RC()                         \
-  ({fpu_control_t __rc;                         \
-    __rc = __glibc_likely (__builtin_cpu_supports ("arch_3_00"))    \
-      ? _FPU_GET_RC_ISA300 ()                       \
-      : _FPU_GETCW (__rc) & _FPU_MASK_RC;               \
-    __rc;                               \
-  })
+    ({fpu_control_t __rc;                         \
+        __rc = __glibc_likely (__builtin_cpu_supports ("arch_3_00"))    \
+               ? _FPU_GET_RC_ISA300 ()                       \
+               : _FPU_GETCW (__rc) & _FPU_MASK_RC;               \
+        __rc;                               \
+    })
 # else
 #  define _FPU_GET_RC()                     \
-  ({fpu_control_t __rc = _FPU_GETCW (__rc) & _FPU_MASK_RC;  \
-    __rc;                           \
-  })
+    ({fpu_control_t __rc = _FPU_GETCW (__rc) & _FPU_MASK_RC;  \
+        __rc;                           \
+    })
 # endif
 
 # define _FPU_SETCW(cw)                     \
-  { union { double __d; unsigned long long __ll; } __u;     \
-    register double __fr;                   \
-    __u.__ll = 0xfff80000LL << 32; /* This is a QNaN.  */   \
-    __u.__ll |= (cw) & 0xffffffffLL;                \
-    __fr = __u.__d;                     \
-    __asm__ __volatile__("mtfsf 255,%0" : : "f" (__fr));    \
-  }
+    { union { double __d; unsigned long long __ll; } __u;     \
+        register double __fr;                   \
+        __u.__ll = 0xfff80000LL << 32; /* This is a QNaN.  */   \
+        __u.__ll |= (cw) & 0xffffffffLL;                \
+        __fr = __u.__d;                     \
+        __asm__ __volatile__("mtfsf 255,%0" : : "f" (__fr));    \
+    }
 
 /* Default control word set at startup.  */
 extern fpu_control_t __fpu_control;

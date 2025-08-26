@@ -42,7 +42,7 @@ static void check(int actual, int expected, const char *actual_expr, int line)
 }
 
 #define CHECK(actual, expected) \
-  check ((actual), (expected), #actual, __LINE__)
+    check ((actual), (expected), #actual, __LINE__)
 
 template <class T>
 static void check_type()

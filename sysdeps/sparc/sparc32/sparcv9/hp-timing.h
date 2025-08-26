@@ -24,9 +24,9 @@
 typedef unsigned long long int hp_timing_t;
 
 #define HP_TIMING_NOW(Var) \
-      __asm__ __volatile__ ("rd %%tick, %L0\n\t" \
-                "srlx %L0, 32, %H0" \
-                : "=r" (Var))
+    __asm__ __volatile__ ("rd %%tick, %L0\n\t" \
+                          "srlx %L0, 32, %H0" \
+                          : "=r" (Var))
 
 #include <hp-timing-common.h>
 

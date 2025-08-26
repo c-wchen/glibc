@@ -601,20 +601,20 @@ environment SPEC.\n\n"));
 # ifndef _POSIX_V7_LPBIG_OFFBIG
             case _SC_V7_LPBIG_OFFBIG:
 # endif
-            {
-                const char *args[argc + 3];
-                size_t spec_len = strlen(spec);
-                char getconf_name[getconf_dirlen + 1 + spec_len + 1];
-                memcpy(mempcpy(mempcpy(getconf_name, getconf_dir,
-                                       getconf_dirlen),
-                               "/", 1), spec, spec_len + 1);
-                args[0] = argv0;
-                args[1] = "-v";
-                args[2] = spec;
-                memcpy(&args[3], &argv[1], argc * sizeof(argv[1]));
-                execv(getconf_name, (char *const *) args);
-                error(4, errno, _("Couldn't execute %s"), getconf_name);
-            }
+                {
+                    const char *args[argc + 3];
+                    size_t spec_len = strlen(spec);
+                    char getconf_name[getconf_dirlen + 1 + spec_len + 1];
+                    memcpy(mempcpy(mempcpy(getconf_name, getconf_dir,
+                                           getconf_dirlen),
+                                   "/", 1), spec, spec_len + 1);
+                    args[0] = argv0;
+                    args[1] = "-v";
+                    args[2] = spec;
+                    memcpy(&args[3], &argv[1], argc * sizeof(argv[1]));
+                    execv(getconf_name, (char *const *) args);
+                    error(4, errno, _("Couldn't execute %s"), getconf_name);
+                }
             default:
                 break;
         }

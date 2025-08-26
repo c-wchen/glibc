@@ -28,60 +28,60 @@
 #include <dl-symbol-redir-ifunc.h>
 
 #define CHECK_GLIBC_IFUNC_CPU_OFF(f, cpu_features, name, len)       \
-  _Static_assert (sizeof (#name) - 1 == len, #name " != " #len);    \
-  if (tunable_str_comma_strcmp_cte (&f, #name))             \
+    _Static_assert (sizeof (#name) - 1 == len, #name " != " #len);    \
+    if (tunable_str_comma_strcmp_cte (&f, #name))             \
     {                                   \
-      CPU_FEATURE_UNSET (cpu_features, name)                \
-      break;                                \
+        CPU_FEATURE_UNSET (cpu_features, name)                \
+        break;                                \
     }
 
 #define CHECK_GLIBC_IFUNC_CPU_BOTH(f, cpu_features, name, len)      \
-  _Static_assert (sizeof (#name) - 1 == len, #name " != " #len);    \
-  if (tunable_str_comma_strcmp_cte (&f, #name))             \
+    _Static_assert (sizeof (#name) - 1 == len, #name " != " #len);    \
+    if (tunable_str_comma_strcmp_cte (&f, #name))             \
     {                                   \
-      if (f.disable)                            \
-    CPU_FEATURE_UNSET (cpu_features, name)              \
-      else                              \
-    CPU_FEATURE_SET_ACTIVE (cpu_features, name)         \
-      break;                                \
+        if (f.disable)                            \
+            CPU_FEATURE_UNSET (cpu_features, name)              \
+            else                              \
+                CPU_FEATURE_SET_ACTIVE (cpu_features, name)         \
+                break;                                \
     }
 
 /* Disable a preferred feature NAME.  We don't enable a preferred feature
    which isn't available.  */
 #define CHECK_GLIBC_IFUNC_PREFERRED_OFF(f, cpu_features, name, len) \
-  _Static_assert (sizeof (#name) - 1 == len, #name " != " #len);    \
-  if (tunable_str_comma_strcmp_cte (&f, #name))             \
+    _Static_assert (sizeof (#name) - 1 == len, #name " != " #len);    \
+    if (tunable_str_comma_strcmp_cte (&f, #name))             \
     {                                   \
-      cpu_features->preferred[index_arch_##name]            \
-    &= ~bit_arch_##name;                        \
-      break;                                \
+        cpu_features->preferred[index_arch_##name]            \
+        &= ~bit_arch_##name;                        \
+        break;                                \
     }
 
 /* Enable/disable a preferred feature NAME.  */
 #define CHECK_GLIBC_IFUNC_PREFERRED_BOTH(f, cpu_features, name, len)    \
-  _Static_assert (sizeof (#name) - 1 == len, #name " != " #len);    \
-  if (tunable_str_comma_strcmp_cte (&f, #name))             \
+    _Static_assert (sizeof (#name) - 1 == len, #name " != " #len);    \
+    if (tunable_str_comma_strcmp_cte (&f, #name))             \
     {                                   \
-      if (f.disable)                            \
-    cpu_features->preferred[index_arch_##name] &= ~bit_arch_##name; \
-      else                              \
-    cpu_features->preferred[index_arch_##name] |= bit_arch_##name;  \
-      break;                                \
+        if (f.disable)                            \
+            cpu_features->preferred[index_arch_##name] &= ~bit_arch_##name; \
+        else                              \
+            cpu_features->preferred[index_arch_##name] |= bit_arch_##name;  \
+        break;                                \
     }
 
 /* Enable/disable a preferred feature NAME.  Enable a preferred feature
    only if the feature NEED is usable.  */
 #define CHECK_GLIBC_IFUNC_PREFERRED_NEED_BOTH(f, cpu_features, name,    \
-                          need, len)        \
-  _Static_assert (sizeof (#name) - 1 == len, #name " != " #len);    \
-  if (tunable_str_comma_strcmp_cte (&f, #name))             \
-    {                                   \
-      if (f.disable)                            \
-    cpu_features->preferred[index_arch_##name] &= ~bit_arch_##name; \
-      else if (CPU_FEATURE_USABLE_P (cpu_features, need))       \
-    cpu_features->preferred[index_arch_##name] |= bit_arch_##name;  \
-      break;                                \
-    }
+        need, len)        \
+_Static_assert (sizeof (#name) - 1 == len, #name " != " #len);    \
+if (tunable_str_comma_strcmp_cte (&f, #name))             \
+{                                   \
+    if (f.disable)                            \
+        cpu_features->preferred[index_arch_##name] &= ~bit_arch_##name; \
+    else if (CPU_FEATURE_USABLE_P (cpu_features, need))       \
+        cpu_features->preferred[index_arch_##name] |= bit_arch_##name;  \
+    break;                                \
+}
 
 attribute_hidden
 void

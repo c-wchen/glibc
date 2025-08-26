@@ -25,19 +25,19 @@
    fault. The aim is to check the behavior for negative values since the
    interface accepts signed int. */
 #define PREPARE_CPU_SET_TO_FAULT_BEFORE(X) \
-  struct support_next_to_fault local_##X = support_next_to_fault_allocate_before(sizeof(*X)); \
-  X = (cpu_set_t *) local_##X.buffer;
+    struct support_next_to_fault local_##X = support_next_to_fault_allocate_before(sizeof(*X)); \
+    X = (cpu_set_t *) local_##X.buffer;
 
 /* Create a mapping so that access to the page after the cpuset generates a
    fault. The aim is to check the behavior for values above CPU count since the
    interface accepts signed int. */
 #define PREPARE_CPU_SET_TO_FAULT(X) \
-  struct support_next_to_fault local_##X = support_next_to_fault_allocate(sizeof(*X)); \
-  X = (cpu_set_t *) local_##X.buffer;
+    struct support_next_to_fault local_##X = support_next_to_fault_allocate(sizeof(*X)); \
+    X = (cpu_set_t *) local_##X.buffer;
 
 #define PREPARE_CPU_SET(X) \
-  cpu_set_t local_##X = {}; \
-  X = &local_##X;
+    cpu_set_t local_##X = {}; \
+    X = &local_##X;
 
 #define GET_SIZE() (size_t) sizeof (cpu_set_t)
 
@@ -47,11 +47,11 @@
 #define LOCAL_CPU_ISSET(cpu, sz, cpusetp) CPU_ISSET(cpu, cpusetp)
 #define LOCAL_CPU_COUNT(sz, cpusetp) CPU_COUNT(cpusetp)
 #define LOCAL_CPU_AND(sz, destsetp, srcsetp1, srcsetp2) \
-  CPU_AND(destsetp, srcsetp1, srcsetp2)
+    CPU_AND(destsetp, srcsetp1, srcsetp2)
 #define LOCAL_CPU_OR(sz, destsetp, srcsetp1, srcsetp2) \
-  CPU_OR(destsetp, srcsetp1, srcsetp2)
+    CPU_OR(destsetp, srcsetp1, srcsetp2)
 #define LOCAL_CPU_XOR(sz, destsetp, srcsetp1, srcsetp2) \
-  CPU_XOR(destsetp, srcsetp1, srcsetp2)
+    CPU_XOR(destsetp, srcsetp1, srcsetp2)
 #define LOCAL_CPU_EQUAL(sz, setp1, setp2) CPU_EQUAL(setp1, setp2)
 
 #define CLEAN_CPU_SET(X)

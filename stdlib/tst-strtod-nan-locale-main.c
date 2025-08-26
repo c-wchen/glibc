@@ -33,20 +33,20 @@
 #define FNX(FN) CONCAT (FNPFX, FN)
 
 #define TEST_STRTOD(FSUF, FTYPE, FTOSTR, LSUF, CSUF)            \
-static int                              \
-test_strto ## FSUF (const char * loc, CHAR * s)             \
-{                                   \
-  CHAR *ep;                             \
-  FTYPE val = FNX (FSUF) (s, &ep);                  \
-  if (isnan (val) && *ep == 0)                      \
-    printf ("PASS: %s: " FNPFXS #FSUF " (" SFMT ")\n", loc, s);     \
-  else                                  \
+    static int                              \
+    test_strto ## FSUF (const char * loc, CHAR * s)             \
     {                                   \
-      printf ("FAIL: %s: " FNPFXS #FSUF " (" SFMT ")\n", loc, s);   \
-      return 1;                                 \
-    }                                   \
-  return 0;                             \
-}
+        CHAR *ep;                             \
+        FTYPE val = FNX (FSUF) (s, &ep);                  \
+        if (isnan (val) && *ep == 0)                      \
+            printf ("PASS: %s: " FNPFXS #FSUF " (" SFMT ")\n", loc, s);     \
+        else                                  \
+        {                                   \
+            printf ("FAIL: %s: " FNPFXS #FSUF " (" SFMT ")\n", loc, s);   \
+            return 1;                                 \
+        }                                   \
+        return 0;                             \
+    }
 GEN_TEST_STRTOD_FOREACH(TEST_STRTOD)
 
 static int

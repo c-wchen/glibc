@@ -200,9 +200,9 @@ static const char *get_nonempty_val(const char *in)
 }
 
 static enum nss_status nscd_getnetgrent(struct __netgrent *datap, char *buffer, size_t buflen,
-                                        int *errnop) {
-    if (datap->cursor >= datap->data + datap->data_size)
-    {
+                                        int *errnop)
+{
+    if (datap->cursor >= datap->data + datap->data_size) {
         return NSS_STATUS_UNAVAIL;
     }
 

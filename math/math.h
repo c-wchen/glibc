@@ -323,7 +323,7 @@ extern long double __REDIRECT_NTH(nexttowardl,
 
 #   undef __MATHDECL_1
 #   define __MATHDECL_1(type, function,suffix, args) \
-  __MATHREDIR(type, function, suffix, args, __CONCAT(function,suffix))
+    __MATHREDIR(type, function, suffix, args, __CONCAT(function,suffix))
 
 #  elif __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
 #   ifdef __REDIRECT_NTH
@@ -345,14 +345,14 @@ __attribute__((__const__));
 #   undef __MATHDECL_ALIAS
 
 #   define __REDIRTO(function, suffix) \
-  __ ## function ## ieee128 ## suffix
+    __ ## function ## ieee128 ## suffix
 #   define __REDIRTO_ALT(function, suffix) \
-  __ ## function ## f128 ## suffix
+    __ ## function ## f128 ## suffix
 
 #   define __MATHDECL_1(type, function, suffix, args) \
-  __MATHREDIR (type, function, suffix, args, __REDIRTO (function, suffix))
+    __MATHREDIR (type, function, suffix, args, __REDIRTO (function, suffix))
 #   define __MATHDECL_ALIAS(type, function, suffix, args, alias) \
-  __MATHREDIR (type, function, suffix, args, __REDIRTO_ALT (alias, suffix))
+    __MATHREDIR (type, function, suffix, args, __REDIRTO_ALT (alias, suffix))
 #  endif
 
 /* Include the file of declarations again, this time using `long double'
@@ -378,9 +378,9 @@ __attribute__((__const__));
 #   undef __MATHDECL_1
 #   undef __MATHDECL_ALIAS
 #   define __MATHDECL_1(type, function, suffix, args) \
-  __MATHDECL_1_IMPL(type, function, suffix, args)
+    __MATHDECL_1_IMPL(type, function, suffix, args)
 #   define __MATHDECL_ALIAS(type, function, suffix, args, alias) \
-  __MATHDECL_1(type, function, suffix, args)
+    __MATHDECL_1(type, function, suffix, args)
 #  endif
 # endif /* !(__NO_LONG_DOUBLE_MATH && _LIBC) || __LDBL_COMPAT */
 
@@ -519,12 +519,12 @@ __attribute__((__const__));
 #define __MATHCALL_NARROW_ARGS_2 (_Marg_ __x, _Marg_ __y)
 #define __MATHCALL_NARROW_ARGS_3 (_Marg_ __x, _Marg_ __y, _Marg_ __z)
 #define __MATHCALL_NARROW_NORMAL(func, nargs)           \
-  extern _Mret_ func __MATHCALL_NARROW_ARGS_ ## nargs __THROW
+    extern _Mret_ func __MATHCALL_NARROW_ARGS_ ## nargs __THROW
 #define __MATHCALL_NARROW_REDIR(func, redir, nargs)         \
-  extern _Mret_ __REDIRECT_NTH (func, __MATHCALL_NARROW_ARGS_ ## nargs, \
-                redir)
+    extern _Mret_ __REDIRECT_NTH (func, __MATHCALL_NARROW_ARGS_ ## nargs, \
+                                  redir)
 #define __MATHCALL_NARROW(func, redir, nargs)   \
-  __MATHCALL_NARROW_NORMAL (func, nargs)
+    __MATHCALL_NARROW_NORMAL (func, nargs)
 
 #if __GLIBC_USE (IEC_60559_BFP_EXT_C23)
 
@@ -544,13 +544,13 @@ __attribute__((__const__));
 #  define __MATHCALL_REDIR_NAME2(name) f ## name
 #  undef __MATHCALL_NARROW
 #  define __MATHCALL_NARROW(func, redir, nargs) \
-  __MATHCALL_NARROW_REDIR (func, redir, nargs)
+    __MATHCALL_NARROW_REDIR (func, redir, nargs)
 # elif __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
 #  define __MATHCALL_REDIR_NAME(name) __ ## f32 ## name ## ieee128
 #  define __MATHCALL_REDIR_NAME2(name) __ ## f32 ## name ## ieee128
 #  undef __MATHCALL_NARROW
 #  define __MATHCALL_NARROW(func, redir, nargs) \
-  __MATHCALL_NARROW_REDIR (func, redir, nargs)
+    __MATHCALL_NARROW_REDIR (func, redir, nargs)
 # endif
 # include <bits/mathcalls-narrow.h>
 # undef _Mret_
@@ -562,7 +562,7 @@ __attribute__((__const__));
 #  undef __MATHCALL_REDIR_NAME2
 #  undef __MATHCALL_NARROW
 #  define __MATHCALL_NARROW(func, redir, nargs) \
-  __MATHCALL_NARROW_NORMAL (func, nargs)
+    __MATHCALL_NARROW_NORMAL (func, nargs)
 # endif
 
 # define _Mret_ double
@@ -573,13 +573,13 @@ __attribute__((__const__));
 #  define __MATHCALL_REDIR_NAME2(name) name
 #  undef __MATHCALL_NARROW
 #  define __MATHCALL_NARROW(func, redir, nargs) \
-  __MATHCALL_NARROW_REDIR (func, redir, nargs)
+    __MATHCALL_NARROW_REDIR (func, redir, nargs)
 # elif __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
 #  define __MATHCALL_REDIR_NAME(name) __ ## f64 ## name ## ieee128
 #  define __MATHCALL_REDIR_NAME2(name) __ ## f64 ## name ## ieee128
 #  undef __MATHCALL_NARROW
 #  define __MATHCALL_NARROW(func, redir, nargs) \
-  __MATHCALL_NARROW_REDIR (func, redir, nargs)
+    __MATHCALL_NARROW_REDIR (func, redir, nargs)
 # endif
 # include <bits/mathcalls-narrow.h>
 # undef _Mret_
@@ -591,7 +591,7 @@ __attribute__((__const__));
 #  undef __MATHCALL_REDIR_NAME2
 #  undef __MATHCALL_NARROW
 #  define __MATHCALL_NARROW(func, redir, nargs) \
-  __MATHCALL_NARROW_NORMAL (func, nargs)
+    __MATHCALL_NARROW_NORMAL (func, nargs)
 # endif
 
 #endif
@@ -845,7 +845,7 @@ extern int signgam;
 #  error "Distinct _Float128 without distinct long double not supported."
 # endif
 # define __MATH_TG(TG_ARG, FUNC, ARGS)                  \
-  (sizeof (TG_ARG) == sizeof (float) ? FUNC ## f ARGS : FUNC ARGS)
+    (sizeof (TG_ARG) == sizeof (float) ? FUNC ## f ARGS : FUNC ARGS)
 #elif __HAVE_DISTINCT_FLOAT128
 # if __HAVE_GENERIC_SELECTION
 #  if __HAVE_FLOATN_NOT_TYPEDEF && __HAVE_FLOAT32
@@ -863,36 +863,36 @@ extern int signgam;
 #   define __MATH_TG_F64X(FUNC, ARGS)
 #  endif
 #  define __MATH_TG(TG_ARG, FUNC, ARGS) \
-     _Generic ((TG_ARG),            \
-           float: FUNC ## f ARGS,       \
-           __MATH_TG_F32 (FUNC, ARGS)   \
-           default: FUNC ARGS,      \
-           long double: FUNC ## l ARGS, \
-           __MATH_TG_F64X (FUNC, ARGS)  \
-           _Float128: FUNC ## f128 ARGS)
+    _Generic ((TG_ARG),            \
+              float: FUNC ## f ARGS,       \
+              __MATH_TG_F32 (FUNC, ARGS)   \
+              default: FUNC ARGS,      \
+                  long double: FUNC ## l ARGS, \
+                  __MATH_TG_F64X (FUNC, ARGS)  \
+                  _Float128: FUNC ## f128 ARGS)
 # else
 #  if __HAVE_FLOATN_NOT_TYPEDEF
 #   error "Non-typedef _FloatN but no _Generic."
 #  endif
 #  define __MATH_TG(TG_ARG, FUNC, ARGS)                 \
-     __builtin_choose_expr                      \
-     (__builtin_types_compatible_p (__typeof (TG_ARG), float),      \
-      FUNC ## f ARGS,                           \
-      __builtin_choose_expr                     \
-      (__builtin_types_compatible_p (__typeof (TG_ARG), double),    \
-       FUNC ARGS,                           \
-       __builtin_choose_expr                        \
-       (__builtin_types_compatible_p (__typeof (TG_ARG), long double),  \
-    FUNC ## l ARGS,                         \
-    FUNC ## f128 ARGS)))
+    __builtin_choose_expr                      \
+    (__builtin_types_compatible_p (__typeof (TG_ARG), float),      \
+     FUNC ## f ARGS,                           \
+     __builtin_choose_expr                     \
+     (__builtin_types_compatible_p (__typeof (TG_ARG), double),    \
+      FUNC ARGS,                           \
+      __builtin_choose_expr                        \
+      (__builtin_types_compatible_p (__typeof (TG_ARG), long double),  \
+       FUNC ## l ARGS,                         \
+       FUNC ## f128 ARGS)))
 # endif
 #else
 # define __MATH_TG(TG_ARG, FUNC, ARGS)      \
-  (sizeof (TG_ARG) == sizeof (float)        \
-   ? FUNC ## f ARGS             \
-   : sizeof (TG_ARG) == sizeof (double)     \
-   ? FUNC ARGS                  \
-   : FUNC ## l ARGS)
+    (sizeof (TG_ARG) == sizeof (float)        \
+     ? FUNC ## f ARGS             \
+     : sizeof (TG_ARG) == sizeof (double)     \
+     ? FUNC ARGS                  \
+     : FUNC ## l ARGS)
 #endif
 
 /* ISO C99 defines some generic macros which work on any data type.  */
@@ -932,7 +932,7 @@ with -Os.  No further use of this definition of fpclassify is
 expected in C++ mode, since libstdc++ provides its own version
 of fpclassify in cmath (which undefines fpclassify).  */
 #  define fpclassify(x) __builtin_fpclassify (FP_NAN, FP_INFINITE,        \
-     FP_NORMAL, FP_SUBNORMAL, FP_ZERO, x)
+        FP_NORMAL, FP_SUBNORMAL, FP_ZERO, x)
 # else
 #  define fpclassify(x) __MATH_TG ((x), __fpclassify, (x))
 # endif
@@ -1287,24 +1287,24 @@ extern "C++" {
 #  define isunordered(x, y) __builtin_isunordered(x, y)
 # else
 #  define isgreater(x, y) \
-  (__extension__ ({ __typeof__ (x) __x = (x); __typeof__ (y) __y = (y); \
-            !isunordered (__x, __y) && __x > __y; }))
+    (__extension__ ({ __typeof__ (x) __x = (x); __typeof__ (y) __y = (y); \
+        !isunordered (__x, __y) && __x > __y; }))
 #  define isgreaterequal(x, y) \
-  (__extension__ ({ __typeof__ (x) __x = (x); __typeof__ (y) __y = (y); \
-            !isunordered (__x, __y) && __x >= __y; }))
+    (__extension__ ({ __typeof__ (x) __x = (x); __typeof__ (y) __y = (y); \
+        !isunordered (__x, __y) && __x >= __y; }))
 #  define isless(x, y) \
-  (__extension__ ({ __typeof__ (x) __x = (x); __typeof__ (y) __y = (y); \
-            !isunordered (__x, __y) && __x < __y; }))
+    (__extension__ ({ __typeof__ (x) __x = (x); __typeof__ (y) __y = (y); \
+        !isunordered (__x, __y) && __x < __y; }))
 #  define islessequal(x, y) \
-  (__extension__ ({ __typeof__ (x) __x = (x); __typeof__ (y) __y = (y); \
-            !isunordered (__x, __y) && __x <= __y; }))
+    (__extension__ ({ __typeof__ (x) __x = (x); __typeof__ (y) __y = (y); \
+        !isunordered (__x, __y) && __x <= __y; }))
 #  define islessgreater(x, y) \
-  (__extension__ ({ __typeof__ (x) __x = (x); __typeof__ (y) __y = (y); \
-            !isunordered (__x, __y) && __x != __y; }))
+    (__extension__ ({ __typeof__ (x) __x = (x); __typeof__ (y) __y = (y); \
+        !isunordered (__x, __y) && __x != __y; }))
 /* isunordered must always check both operands first for signaling NaNs.  */
 #  define isunordered(x, y) \
-  (__extension__ ({ __typeof__ (x) __u = (x); __typeof__ (y) __v = (y); \
-            __u != __v && (__u != __u || __v != __v); }))
+    (__extension__ ({ __typeof__ (x) __u = (x); __typeof__ (y) __v = (y); \
+        __u != __v && (__u != __u || __v != __v); }))
 # endif
 #endif
 
@@ -1325,7 +1325,7 @@ extern "C++" {
    a NaN.  */
 # if !defined __cplusplus || (__cplusplus < 201103L && !defined __GNUC__)
 #  define iseqsig(x, y) \
-   __MATH_TG (__MATH_EVAL_FMT2 (x, y), __iseqsig, ((x), (y)))
+    __MATH_TG (__MATH_EVAL_FMT2 (x, y), __iseqsig, ((x), (y)))
 # else
 /* In C++ mode, __MATH_TG cannot be used, because it relies on
    __builtin_types_compatible_p, which is a C-only builtin.  Moreover,

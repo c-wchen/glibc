@@ -32,24 +32,24 @@
 libc_hidden_proto(_nss_files_endnetgrent)
 
 #define EXPAND(needed)                                \
-  do                                          \
+    do                                          \
     {                                         \
-      size_t old_cursor = result->cursor - result->data;              \
-      void *old_data = result->data;                          \
-                                          \
-      result->data_size += 512 > 2 * needed ? 512 : 2 * needed;           \
-      result->data = realloc (result->data, result->data_size);           \
-                                          \
-      if (result->data == NULL)                           \
-    {                                     \
-      free (old_data);                            \
-      status = NSS_STATUS_UNAVAIL;                        \
-      goto the_end;                               \
-    }                                     \
-                                          \
-      result->cursor = result->data + old_cursor;                 \
+        size_t old_cursor = result->cursor - result->data;              \
+        void *old_data = result->data;                          \
+        \
+        result->data_size += 512 > 2 * needed ? 512 : 2 * needed;           \
+        result->data = realloc (result->data, result->data_size);           \
+        \
+        if (result->data == NULL)                           \
+        {                                     \
+            free (old_data);                            \
+            status = NSS_STATUS_UNAVAIL;                        \
+            goto the_end;                               \
+        }                                     \
+        \
+        result->cursor = result->data + old_cursor;                 \
     }                                         \
-  while (0)
+    while (0)
 
 
 enum nss_status
@@ -184,25 +184,23 @@ strip_whitespace(char *str)
 }
 
 enum nss_status _nss_netgroup_parseline(char **cursor, struct __netgrent *result,
-                                        char *buffer, size_t buflen, int *errnop) {
+                                        char *buffer, size_t buflen, int *errnop)
+{
     enum nss_status status;
     const char *host, *user, *domain;
     char *cp = *cursor;
 
     /* Some sanity checks.  */
-    if (cp == NULL)
-    {
+    if (cp == NULL) {
         return NSS_STATUS_NOTFOUND;
     }
 
     /* First skip leading spaces.  */
-    while (isspace(*cp))
-    {
+    while (isspace(*cp)) {
         ++cp;
     }
 
-    if (*cp != '(')
-    {
+    if (*cp != '(') {
         /* We have a list of other netgroups.  */
         char *name = cp;
 
@@ -232,24 +230,21 @@ enum nss_status _nss_netgroup_parseline(char **cursor, struct __netgrent *result
     /* Match host name.  */
     host = ++cp;
     while (*cp != ',')
-        if (*cp++ == '\0')
-        {
+        if (*cp++ == '\0') {
             return result->first ? NSS_STATUS_NOTFOUND : NSS_STATUS_RETURN;
         }
 
     /* Match user name.  */
     user = ++cp;
     while (*cp != ',')
-        if (*cp++ == '\0')
-        {
+        if (*cp++ == '\0') {
             return result->first ? NSS_STATUS_NOTFOUND : NSS_STATUS_RETURN;
         }
 
     /* Match domain name.  */
     domain = ++cp;
     while (*cp != ')')
-        if (*cp++ == '\0')
-        {
+        if (*cp++ == '\0') {
             return result->first ? NSS_STATUS_NOTFOUND : NSS_STATUS_RETURN;
         }
     ++cp;
@@ -257,12 +252,10 @@ enum nss_status _nss_netgroup_parseline(char **cursor, struct __netgrent *result
 
     /* When we got here we have found an entry.  Before we can copy it
        to the private buffer we have to make sure it is big enough.  */
-    if (cp - host > buflen)
-    {
+    if (cp - host > buflen) {
         *errnop = ERANGE;
         status = NSS_STATUS_TRYAGAIN;
-    } else
-    {
+    } else {
         memcpy(buffer, host, cp - host);
         result->type = triple_val;
 

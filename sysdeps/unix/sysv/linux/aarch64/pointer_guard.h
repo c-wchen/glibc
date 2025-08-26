@@ -32,7 +32,7 @@
 # else
 extern uintptr_t __pointer_chk_guard_local attribute_relro attribute_hidden;
 #  define PTR_MANGLE(var) \
-  (var) = (__typeof (var)) ((uintptr_t) (var) ^ __pointer_chk_guard_local)
+    (var) = (__typeof (var)) ((uintptr_t) (var) ^ __pointer_chk_guard_local)
 #  define PTR_DEMANGLE(var)     PTR_MANGLE (var)
 # endif
 #else
@@ -47,7 +47,7 @@ extern uintptr_t __pointer_chk_guard_local attribute_relro attribute_hidden;
 #  include <stdint.h>
 extern uintptr_t __pointer_chk_guard attribute_relro;
 #  define PTR_MANGLE(var) \
-  (var) = (__typeof (var)) ((uintptr_t) (var) ^ __pointer_chk_guard)
+    (var) = (__typeof (var)) ((uintptr_t) (var) ^ __pointer_chk_guard)
 #  define PTR_DEMANGLE(var) PTR_MANGLE (var)
 # endif
 #endif

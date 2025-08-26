@@ -27,16 +27,16 @@
 /* Provide real-function versions of all the wctype macros.  */
 
 #define func(name, type) \
-  int __isw##name (wint_t wc, locale_t locale)                    \
-  {                                       \
-    if (isascii (wc))                                 \
-      return is##name ((int) wc, locale);                     \
-    size_t i = locale->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX (_NL_CTYPE_CLASS_OFFSET)].word + type; \
-    const char *desc = locale->__locales[LC_CTYPE]->values[i].string;         \
-    return wctype_table_lookup (desc, wc);                    \
-  }                                       \
-  libc_hidden_def (__isw##name)                           \
-  weak_alias (__isw##name, isw##name)
+    int __isw##name (wint_t wc, locale_t locale)                    \
+    {                                       \
+        if (isascii (wc))                                 \
+            return is##name ((int) wc, locale);                     \
+        size_t i = locale->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX (_NL_CTYPE_CLASS_OFFSET)].word + type; \
+        const char *desc = locale->__locales[LC_CTYPE]->values[i].string;         \
+        return wctype_table_lookup (desc, wc);                    \
+    }                                       \
+    libc_hidden_def (__isw##name)                           \
+    weak_alias (__isw##name, isw##name)
 
 func(alnum_l, __ISwalnum)
 func(alpha_l, __ISwalpha)

@@ -27,17 +27,17 @@ extern int __fgetpwent_r(FILE *__stream, struct passwd *__resultbuf,
 #include <nss.h>
 
 #define DECLARE_NSS_PROTOTYPES(service)                 \
-extern enum nss_status _nss_ ## service ## _setpwent (int);     \
-extern enum nss_status _nss_ ## service ## _endpwent (void);        \
-extern enum nss_status _nss_ ## service ## _getpwnam_r          \
-               (const char *name, struct passwd *pwd,       \
-            char *buffer, size_t buflen, int *errnop);  \
-extern enum nss_status _nss_ ## service ## _getpwuid_r          \
-               (uid_t uid, struct passwd *pwd,          \
-            char *buffer, size_t buflen, int *errnop);  \
-extern enum nss_status _nss_ ## service ##_getpwent_r           \
-               (struct passwd *result, char *buffer,        \
-            size_t buflen, int *errnop);
+    extern enum nss_status _nss_ ## service ## _setpwent (int);     \
+    extern enum nss_status _nss_ ## service ## _endpwent (void);        \
+    extern enum nss_status _nss_ ## service ## _getpwnam_r          \
+    (const char *name, struct passwd *pwd,       \
+     char *buffer, size_t buflen, int *errnop);  \
+    extern enum nss_status _nss_ ## service ## _getpwuid_r          \
+    (uid_t uid, struct passwd *pwd,          \
+     char *buffer, size_t buflen, int *errnop);  \
+    extern enum nss_status _nss_ ## service ##_getpwent_r           \
+    (struct passwd *result, char *buffer,        \
+     size_t buflen, int *errnop);
 
 DECLARE_NSS_PROTOTYPES(compat)
 DECLARE_NSS_PROTOTYPES(files)

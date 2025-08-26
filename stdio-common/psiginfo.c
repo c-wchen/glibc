@@ -109,11 +109,11 @@ void psiginfo(const siginfo_t *pinfo, const char *s)
         size_t offarr_len = 0;
         switch (pinfo->si_signo) {
 #define H(sig) \
-    case sig:                                 \
-      base = C(codestrs_, sig).str;                       \
-      offarr = C (codes_, sig);                       \
-      offarr_len = array_length (C (codes_, sig));                \
-      break
+case sig:                                 \
+    base = C(codestrs_, sig).str;                       \
+    offarr = C (codes_, sig);                       \
+    offarr_len = array_length (C (codes_, sig));                \
+    break
 
                 H(SIGILL);
                 H(SIGFPE);

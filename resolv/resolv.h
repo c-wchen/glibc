@@ -106,10 +106,10 @@ struct res_sym {
 #define RES_INIT    0x00000001  /* address initialized */
 #define RES_DEBUG   0x00000002  /* print debug messages */
 #define RES_AAONLY \
-  __glibc_macro_warning ("RES_AAONLY is deprecated") 0x00000004
+    __glibc_macro_warning ("RES_AAONLY is deprecated") 0x00000004
 #define RES_USEVC   0x00000008  /* use virtual circuit */
 #define RES_PRIMARY \
-  __glibc_macro_warning ("RES_PRIMARY is deprecated") 0x00000010
+    __glibc_macro_warning ("RES_PRIMARY is deprecated") 0x00000010
 #define RES_IGNTC   0x00000020  /* ignore trucation errors */
 #define RES_RECURSE 0x00000040  /* recursion desired */
 #define RES_DEFNAMES    0x00000080  /* use default domain name */
@@ -118,11 +118,11 @@ struct res_sym {
 #define RES_NOALIASES   0x00001000  /* shuts off HOSTALIASES feature */
 #define RES_ROTATE  0x00004000  /* rotate ns list after each query */
 #define RES_NOCHECKNAME \
-  __glibc_macro_warning ("RES_NOCHECKNAME is deprecated") 0x00008000
+    __glibc_macro_warning ("RES_NOCHECKNAME is deprecated") 0x00008000
 #define RES_KEEPTSIG \
-  __glibc_macro_warning ("RES_KEEPTSIG is deprecated") 0x00010000
+    __glibc_macro_warning ("RES_KEEPTSIG is deprecated") 0x00010000
 #define RES_BLAST \
-  __glibc_macro_warning ("RES_BLAST is deprecated") 0x00020000
+    __glibc_macro_warning ("RES_BLAST is deprecated") 0x00020000
 #define RES_USE_EDNS0   0x00100000  /* Use EDNS0.  */
 #define RES_SNGLKUP 0x00200000  /* one outstanding request at a time */
 #define RES_SNGLKUPREOP 0x00400000  /* -"-, but open new socket for each

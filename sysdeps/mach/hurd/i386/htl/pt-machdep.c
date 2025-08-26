@@ -25,16 +25,16 @@
 #include <mach/thread_status.h>
 
 #define HURD_TLS_DESC_DECL(desc, tcb)                         \
-  struct descriptor desc =                            \
+    struct descriptor desc =                            \
     {               /* low word: */                   \
-      0xffff            /* limit 0..15 */                 \
-      | (((unsigned int) (tcb)) << 16) /* base 0..15 */               \
-      ,             /* high word: */                  \
-      ((((unsigned int) (tcb)) >> 16) & 0xff) /* base 16..23 */           \
-      | ((0x12 | 0x60 | 0x80) << 8) /* access = ACC_DATA_W|ACC_PL_U|ACC_P */  \
-      | (0xf << 16)     /* limit 16..19 */                \
-      | ((4 | 8) << 20)     /* granularity = SZ_32|SZ_G */            \
-      | (((unsigned int) (tcb)) & 0xff000000) /* base 24..31 */           \
+        0xffff            /* limit 0..15 */                 \
+        | (((unsigned int) (tcb)) << 16) /* base 0..15 */               \
+        ,             /* high word: */                  \
+        ((((unsigned int) (tcb)) >> 16) & 0xff) /* base 16..23 */           \
+        | ((0x12 | 0x60 | 0x80) << 8) /* access = ACC_DATA_W|ACC_PL_U|ACC_P */  \
+        | (0xf << 16)     /* limit 16..19 */                \
+        | ((4 | 8) << 20)     /* granularity = SZ_32|SZ_G */            \
+        | (((unsigned int) (tcb)) & 0xff000000) /* base 24..31 */           \
     }
 
 int __thread_set_pcsptp(thread_t thread,

@@ -21,9 +21,9 @@ static int do_test(void)
     int result = 0;
 
 #define TEST(name, format, expected) \
-  printf ("%-12s expected = %-20" format "  actual = %" format "\n",          \
-      #name ":", expected, name);                         \
-  result |= name != expected
+    printf ("%-12s expected = %-20" format "  actual = %" format "\n",          \
+            #name ":", expected, name);                         \
+    result |= name != expected
 
     /* The limits from ISO C99.  */
 

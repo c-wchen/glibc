@@ -23,14 +23,14 @@
 
 #if __HAVE_FLOAT128 && !__HAVE_DISTINCT_FLOAT128
 # define libm_alias_ldouble_other_r_f128(from, to, r)   \
-  weak_alias (from ## l ## r, to ## f128 ## r)
+    weak_alias (from ## l ## r, to ## f128 ## r)
 #else
 # define libm_alias_ldouble_other_r_f128(from, to, r)
 #endif
 
 #if __HAVE_FLOAT64X_LONG_DOUBLE
 # define libm_alias_ldouble_other_r_f64x(from, to, r)   \
-  weak_alias (from ## l ## r, to ## f64x ## r)
+    weak_alias (from ## l ## r, to ## f64x ## r)
 #else
 # define libm_alias_ldouble_other_r_f64x(from, to, r)
 #endif
@@ -40,12 +40,12 @@
    ## R for each suffix of a supported _FloatN / _FloatNx
    floating-point type with the same format as long double.  */
 #define libm_alias_ldouble_other_r(from, to, r)     \
-  libm_alias_ldouble_other_r_f128 (from, to, r);    \
-  libm_alias_ldouble_other_r_f64x (from, to, r)
+    libm_alias_ldouble_other_r_f128 (from, to, r);    \
+    libm_alias_ldouble_other_r_f64x (from, to, r)
 
 /* Likewise, but without the R suffix.  */
 #define libm_alias_ldouble_other(from, to)  \
-  libm_alias_ldouble_other_r (from, to, )
+    libm_alias_ldouble_other_r (from, to, )
 
 /* Define aliases for a long double libm function that has internal
    name FROM ## l ## R and public names TO ## suffix ## R for each
@@ -56,8 +56,8 @@
    per format, not per type) or for obsolescent functions not provided
    for _FloatN types.  */
 #define libm_alias_ldouble_r(from, to, r)   \
-  weak_alias (from ## l ## r, to ## l ## r);    \
-  libm_alias_ldouble_other_r (from, to, r)
+    weak_alias (from ## l ## r, to ## l ## r);    \
+    libm_alias_ldouble_other_r (from, to, r)
 
 /* Likewise, but without the R suffix.  */
 #define libm_alias_ldouble(from, to) libm_alias_ldouble_r (from, to, )

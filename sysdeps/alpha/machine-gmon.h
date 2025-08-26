@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #define _MCOUNT_DECL(from, self) \
- void __mcount (u_long from, u_long self)
+    void __mcount (u_long from, u_long self)
 
 /* Call __mcount with our the return PC for our caller, and the return
    PC our caller will return to.  Empty since we use an assembly stub

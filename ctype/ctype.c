@@ -21,7 +21,7 @@
 /* Provide real-function versions of all the ctype macros.  */
 
 #define func(name, type) \
-  int name (int c) { return __isctype (c, type); }
+    int name (int c) { return __isctype (c, type); }
 
 func(isalnum, _ISalnum)
 func(isalpha, _ISalpha)
@@ -36,9 +36,9 @@ func(isupper, _ISupper)
 func(isxdigit, _ISxdigit)
 
 #define __ctype_tolower \
-  ((int32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TOLOWER) + 128)
+    ((int32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TOLOWER) + 128)
 #define __ctype_toupper \
-  ((int32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TOUPPER) + 128)
+    ((int32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TOUPPER) + 128)
 
 int
 tolower(int c)

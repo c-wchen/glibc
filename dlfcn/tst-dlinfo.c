@@ -33,12 +33,12 @@ static int do_test(void)
     }
 
 #define TRY(req, arg)                                 \
-  if (dlinfo (handle, req, arg) != 0)                         \
+    if (dlinfo (handle, req, arg) != 0)                         \
     {                                         \
-      printf ("dlinfo failed for %s: %s\n", #req, dlerror ());            \
-      status = 1;                                 \
+        printf ("dlinfo failed for %s: %s\n", #req, dlerror ());            \
+        status = 1;                                 \
     }                                         \
-  else
+    else
 
     struct link_map *l;
     TRY(RTLD_DI_LINKMAP, &l) {

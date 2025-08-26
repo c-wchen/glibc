@@ -394,66 +394,66 @@ static const char from_ucs4[][2] = {
 #define MIN_NEEDED_OUTPUT   MIN_NEEDED_TO
 #define LOOPFCT         FROM_LOOP
 #define BODY \
-  {                                       \
-    uint32_t ch = *inptr;                             \
-    int incr;                                     \
-                                          \
-    if (__builtin_expect (ch >= 0xc1, 0) && ch <= 0xcf)               \
-      {                                       \
-    /* Composed character.  First test whether the next byte          \
-       is also available.  */                         \
-    uint32_t ch2;                                 \
-                                          \
-    if (inptr + 1 >= inend)                           \
-      {                                   \
-        /* The second character is not available.  */             \
-        result = __GCONV_INCOMPLETE_INPUT;                    \
-        break;                                \
-      }                                   \
-                                          \
-    ch2 = inptr[1];                               \
-                                          \
-    if (__builtin_expect (ch2 < 0x20, 0)                      \
-        || __builtin_expect (ch2 >= 0x80, 0))                 \
-      {                                   \
-        /* This is illegal.  */                       \
-        STANDARD_FROM_LOOP_ERR_HANDLER (1);                   \
-      }                                   \
-    else                                      \
-      {                                   \
-        ch = to_ucs4_comb[ch - 0xc1][ch2 - 0x20];                 \
-        incr = 2;                                 \
-      }                                   \
-      }                                       \
-    else                                      \
-      {                                       \
-    ch = to_ucs4[ch];                             \
-    incr = 1;                                 \
-      }                                       \
-                                          \
-    if (__builtin_expect (ch == 0, 0) && *inptr != '\0')              \
-      {                                       \
-    /* This is an illegal character.  */                      \
-    STANDARD_FROM_LOOP_ERR_HANDLER (incr);                    \
-      }                                       \
-    else                                      \
-      {                                       \
-    put32 (outptr, ch);                           \
-    outptr += 4;                                  \
-      }                                       \
-                                          \
-    inptr += incr;                                \
-  }
+    {                                       \
+        uint32_t ch = *inptr;                             \
+        int incr;                                     \
+        \
+        if (__builtin_expect (ch >= 0xc1, 0) && ch <= 0xcf)               \
+        {                                       \
+            /* Composed character.  First test whether the next byte          \
+               is also available.  */                         \
+            uint32_t ch2;                                 \
+            \
+            if (inptr + 1 >= inend)                           \
+            {                                   \
+                /* The second character is not available.  */             \
+                result = __GCONV_INCOMPLETE_INPUT;                    \
+                break;                                \
+            }                                   \
+            \
+            ch2 = inptr[1];                               \
+            \
+            if (__builtin_expect (ch2 < 0x20, 0)                      \
+                || __builtin_expect (ch2 >= 0x80, 0))                 \
+            {                                   \
+                /* This is illegal.  */                       \
+                STANDARD_FROM_LOOP_ERR_HANDLER (1);                   \
+            }                                   \
+            else                                      \
+            {                                   \
+                ch = to_ucs4_comb[ch - 0xc1][ch2 - 0x20];                 \
+                incr = 2;                                 \
+            }                                   \
+        }                                       \
+        else                                      \
+        {                                       \
+            ch = to_ucs4[ch];                             \
+            incr = 1;                                 \
+        }                                       \
+        \
+        if (__builtin_expect (ch == 0, 0) && *inptr != '\0')              \
+        {                                       \
+            /* This is an illegal character.  */                      \
+            STANDARD_FROM_LOOP_ERR_HANDLER (incr);                    \
+        }                                       \
+        else                                      \
+        {                                       \
+            put32 (outptr, ch);                           \
+            outptr += 4;                                  \
+        }                                       \
+        \
+        inptr += incr;                                \
+    }
 #define LOOP_NEED_FLAGS
 #define ONEBYTE_BODY \
-  {                                       \
-    uint32_t ch = to_ucs4[c];                             \
-                                          \
-    if (__builtin_expect (ch == 0, 0) && c != '\0')               \
-      return WEOF;                                \
-    else                                      \
-      return ch;                                  \
-  }
+    {                                       \
+        uint32_t ch = to_ucs4[c];                             \
+        \
+        if (__builtin_expect (ch == 0, 0) && c != '\0')               \
+            return WEOF;                                \
+        else                                      \
+            return ch;                                  \
+    }
 #include <iconv/loop.c>
 
 
@@ -463,120 +463,120 @@ static const char from_ucs4[][2] = {
 #define MAX_NEEDED_OUTPUT   MAX_NEEDED_FROM
 #define LOOPFCT         TO_LOOP
 #define BODY \
-  {                                       \
-    char tmp[2];                                  \
-    uint32_t ch = get32 (inptr);                          \
-    const char *cp;                               \
-                                          \
-    if (__builtin_expect (ch >= sizeof (from_ucs4) / sizeof (from_ucs4[0]),   \
-    0))                                   \
-      {                                       \
-    if (ch == 0x2c7)                              \
-      cp = "\xcf\x20";                            \
-    else if (ch >= 0x2d8 && ch <= 0x2dd && ch != 0x2dc)           \
-      {                                   \
-        static const char map[6] = "\xc6\xc7\xca\xce\x00\xcd";        \
-                                          \
-        tmp[0] = map[ch - 0x2d8];                         \
-        tmp[1] = ' ';                             \
-        cp = tmp;                                 \
-      }                                   \
-    else if (ch >= 0x2014 && ch <= 0x201d)                    \
-      {                                   \
-        static const char map[10] =                       \
-          "\xd0\x00\x00\x00\xa9\xb9\x00\x00\xaa\xba";             \
-                                          \
-        tmp[0] = map[ch - 0x2014];                        \
-        if (tmp[0] == '\0')                           \
-          {                                   \
-        /* Illegal characters.  */                    \
-        STANDARD_TO_LOOP_ERR_HANDLER (4);                 \
-          }                                   \
-        tmp[1] = '\0';                            \
-        cp = tmp;                                 \
-      }                                   \
-    else if (ch >= 0x2122 && ch <= 0x2126)                    \
-      {                                   \
-        static const char map[5] =                        \
-          "\xd4\x00\x00\x00\xe0";                         \
-                                          \
-        tmp[0] = map[ch - 0x2122];                        \
-        if (tmp[0] == '\0')                           \
-          {                                   \
-        /* Illegal characters.  */                    \
-        STANDARD_TO_LOOP_ERR_HANDLER (4);                 \
-          }                                   \
-        tmp[1] = '\0';                            \
-        cp = tmp;                                 \
-      }                                   \
-    else if (ch >= 0x215b && ch <= 0x215e)                    \
-      {                                   \
-        tmp[0] = 0xdc + ch - 0x215b;                      \
-        tmp[1] = '\0';                            \
-        cp = tmp;                                 \
-      }                                   \
-    else if (ch >= 0x2190 && ch <= 0x2193)                    \
-      {                                   \
-        tmp[0] = 0xac + ch - 0x2190;                      \
-        tmp[1] = '\0';                            \
-        cp = tmp;                                 \
-      }                                   \
-    else if (ch == 0x2500)                            \
-      cp = "\xd6";                                \
-    else if (ch == 0x2502)                            \
-      cp = "\xd7";                                \
-    else if (ch == 0x253c)                            \
-      cp = "\xe5";                                \
-    else if (ch >= 0x2571 && ch <= 0x2572)                    \
-      {                                   \
-        tmp[0] = 0xd8 + ch - 0x2571;                      \
-        tmp[1] = '\0';                            \
-        cp = tmp;                                 \
-      }                                   \
-    else if (ch >= 0x25e2 && ch <= 0x25e3)                    \
-      {                                   \
-        tmp[0] = 0xda + ch - 0x25e2;                      \
-        tmp[1] = '\0';                            \
-        cp = tmp;                                 \
-      }                                   \
-    else if (__builtin_expect (ch, 0x266a) == 0x266a)             \
-      cp = "\xd5";                                \
-    else                                      \
-      {                                   \
-        UNICODE_TAG_HANDLER (ch, 4);                      \
-                                          \
-        /* Illegal characters.  */                        \
-        STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
-      }                                   \
-      }                                       \
-    else                                      \
-      {                                       \
-    cp = from_ucs4[ch];                           \
-                                          \
-    if (__builtin_expect (cp[0], '\1') == '\0' && ch != 0)            \
-      {                                   \
-        /* Illegal characters.  */                        \
-        STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
-      }                                   \
-      }                                       \
-                                          \
-    *outptr++ = cp[0];                                \
-    /* Now test for a possible second byte and write this if possible.  */    \
-    if (cp[1] != '\0')                                \
-      {                                       \
-    if (__glibc_unlikely (outptr >= outend))                  \
-      {                                   \
-        /* The result does not fit into the buffer.  */           \
-        --outptr;                                 \
-        result = __GCONV_FULL_OUTPUT;                     \
-        break;                                \
-      }                                   \
-                                          \
-    *outptr++ = cp[1];                            \
-      }                                       \
-                                          \
-    inptr += 4;                                   \
-  }
+    {                                       \
+        char tmp[2];                                  \
+        uint32_t ch = get32 (inptr);                          \
+        const char *cp;                               \
+        \
+        if (__builtin_expect (ch >= sizeof (from_ucs4) / sizeof (from_ucs4[0]),   \
+                              0))                                   \
+        {                                       \
+            if (ch == 0x2c7)                              \
+                cp = "\xcf\x20";                            \
+            else if (ch >= 0x2d8 && ch <= 0x2dd && ch != 0x2dc)           \
+            {                                   \
+                static const char map[6] = "\xc6\xc7\xca\xce\x00\xcd";        \
+                \
+                tmp[0] = map[ch - 0x2d8];                         \
+                tmp[1] = ' ';                             \
+                cp = tmp;                                 \
+            }                                   \
+            else if (ch >= 0x2014 && ch <= 0x201d)                    \
+            {                                   \
+                static const char map[10] =                       \
+                        "\xd0\x00\x00\x00\xa9\xb9\x00\x00\xaa\xba";             \
+                \
+                tmp[0] = map[ch - 0x2014];                        \
+                if (tmp[0] == '\0')                           \
+                {                                   \
+                    /* Illegal characters.  */                    \
+                    STANDARD_TO_LOOP_ERR_HANDLER (4);                 \
+                }                                   \
+                tmp[1] = '\0';                            \
+                cp = tmp;                                 \
+            }                                   \
+            else if (ch >= 0x2122 && ch <= 0x2126)                    \
+            {                                   \
+                static const char map[5] =                        \
+                        "\xd4\x00\x00\x00\xe0";                         \
+                \
+                tmp[0] = map[ch - 0x2122];                        \
+                if (tmp[0] == '\0')                           \
+                {                                   \
+                    /* Illegal characters.  */                    \
+                    STANDARD_TO_LOOP_ERR_HANDLER (4);                 \
+                }                                   \
+                tmp[1] = '\0';                            \
+                cp = tmp;                                 \
+            }                                   \
+            else if (ch >= 0x215b && ch <= 0x215e)                    \
+            {                                   \
+                tmp[0] = 0xdc + ch - 0x215b;                      \
+                tmp[1] = '\0';                            \
+                cp = tmp;                                 \
+            }                                   \
+            else if (ch >= 0x2190 && ch <= 0x2193)                    \
+            {                                   \
+                tmp[0] = 0xac + ch - 0x2190;                      \
+                tmp[1] = '\0';                            \
+                cp = tmp;                                 \
+            }                                   \
+            else if (ch == 0x2500)                            \
+                cp = "\xd6";                                \
+            else if (ch == 0x2502)                            \
+                cp = "\xd7";                                \
+            else if (ch == 0x253c)                            \
+                cp = "\xe5";                                \
+            else if (ch >= 0x2571 && ch <= 0x2572)                    \
+            {                                   \
+                tmp[0] = 0xd8 + ch - 0x2571;                      \
+                tmp[1] = '\0';                            \
+                cp = tmp;                                 \
+            }                                   \
+            else if (ch >= 0x25e2 && ch <= 0x25e3)                    \
+            {                                   \
+                tmp[0] = 0xda + ch - 0x25e2;                      \
+                tmp[1] = '\0';                            \
+                cp = tmp;                                 \
+            }                                   \
+            else if (__builtin_expect (ch, 0x266a) == 0x266a)             \
+                cp = "\xd5";                                \
+            else                                      \
+            {                                   \
+                UNICODE_TAG_HANDLER (ch, 4);                      \
+                \
+                /* Illegal characters.  */                        \
+                STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
+            }                                   \
+        }                                       \
+        else                                      \
+        {                                       \
+            cp = from_ucs4[ch];                           \
+            \
+            if (__builtin_expect (cp[0], '\1') == '\0' && ch != 0)            \
+            {                                   \
+                /* Illegal characters.  */                        \
+                STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
+            }                                   \
+        }                                       \
+        \
+        *outptr++ = cp[0];                                \
+        /* Now test for a possible second byte and write this if possible.  */    \
+        if (cp[1] != '\0')                                \
+        {                                       \
+            if (__glibc_unlikely (outptr >= outend))                  \
+            {                                   \
+                /* The result does not fit into the buffer.  */           \
+                --outptr;                                 \
+                result = __GCONV_FULL_OUTPUT;                     \
+                break;                                \
+            }                                   \
+            \
+            *outptr++ = cp[1];                            \
+        }                                       \
+        \
+        inptr += 4;                                   \
+    }
 #define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 

@@ -86,7 +86,7 @@ __BEGIN_DECLS
 
 #if __HAVE_FLOAT128X && __GLIBC_USE (IEC_60559_TYPES_EXT)
 # define CMPLXF128X(x, y)                   \
-  __builtin_complex ((_Float128x) (x), (_Float128x) (y))
+    __builtin_complex ((_Float128x) (x), (_Float128x) (y))
 #endif
 
 /* The file <bits/cmathcalls.h> contains the prototypes for all the
@@ -95,16 +95,16 @@ __BEGIN_DECLS
    and can declare the float versions `namef' and `__namef'.  */
 
 #define __MATHCALL(function, args)  \
-  __MATHDECL (_Mdouble_complex_,function, args)
+    __MATHDECL (_Mdouble_complex_,function, args)
 #define __MATHDECL_IMPL(type, function, args) \
-  __MATHDECL_1(type, function, args); \
-  __MATHDECL_1(type, __CONCAT(__,function), args)
+    __MATHDECL_1(type, function, args); \
+    __MATHDECL_1(type, __CONCAT(__,function), args)
 #define __MATHDECL(type, function, args) \
-  __MATHDECL_IMPL(type, function, args)
+    __MATHDECL_IMPL(type, function, args)
 #define __MATHDECL_1_IMPL(type, function, args) \
-  extern type __MATH_PRECNAME(function) args __THROW
+    extern type __MATH_PRECNAME(function) args __THROW
 #define __MATHDECL_1(type, function, args) \
-  __MATHDECL_1_IMPL(type, function, args)
+    __MATHDECL_1_IMPL(type, function, args)
 
 #define _Mdouble_       double
 #define __MATH_PRECNAME(name)   name
@@ -126,17 +126,17 @@ __BEGIN_DECLS
 # ifdef __LDBL_COMPAT
 #  undef __MATHDECL_1
 #  define __MATHDECL_1(type, function, args) \
-  extern type __REDIRECT_NTH(__MATH_PRECNAME(function), args, function)
+    extern type __REDIRECT_NTH(__MATH_PRECNAME(function), args, function)
 # elif __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
 #  undef __MATHDECL_1
 #  undef __MATHDECL
 #  define __REDIR_TO(function) \
-  __ ## function ## ieee128
+    __ ## function ## ieee128
 #  define __MATHDECL_1(type, function, alias, args) \
-  extern type __REDIRECT_NTH(__MATH_PRECNAME(function), args, alias)
+    extern type __REDIRECT_NTH(__MATH_PRECNAME(function), args, alias)
 #define __MATHDECL(type, function, args) \
-  __MATHDECL_1(type, function, __REDIR_TO(function), args); \
-  __MATHDECL_1(type, __CONCAT(__,function), __REDIR_TO(function), args)
+    __MATHDECL_1(type, function, __REDIR_TO(function), args); \
+    __MATHDECL_1(type, __CONCAT(__,function), __REDIR_TO(function), args)
 # endif
 
 # define _Mdouble_      long double
@@ -148,9 +148,9 @@ __BEGIN_DECLS
 #  undef __MATHDECL_1
 #  undef __MATHDECL
 #define __MATHDECL(type, function, args) \
-  __MATHDECL_IMPL(type, function, args)
+    __MATHDECL_IMPL(type, function, args)
 #  define __MATHDECL_1(type, function, args) \
-  __MATHDECL_1_IMPL(type, function, args)
+    __MATHDECL_1_IMPL(type, function, args)
 # endif
 #endif
 #undef  _Mdouble_

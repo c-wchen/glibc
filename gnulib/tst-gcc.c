@@ -41,13 +41,13 @@
 
 
 #define TEST(var) \
-  ({ int wrong = (__builtin_classify_type (__##var##_type)            \
-          != __##var##_type_class);                   \
-     printf ("%-15s is %d: %s\n",                         \
-         #var, __builtin_classify_type (__##var##_type),              \
-         wrong ? "WRONG" : "OK");                         \
-     wrong;                                   \
-  })
+    ({ int wrong = (__builtin_classify_type (__##var##_type)            \
+                        != __##var##_type_class);                   \
+        printf ("%-15s is %d: %s\n",                         \
+                #var, __builtin_classify_type (__##var##_type),              \
+                wrong ? "WRONG" : "OK");                         \
+        wrong;                                   \
+    })
 
 
 static int do_test(void)

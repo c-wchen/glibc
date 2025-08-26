@@ -48,11 +48,11 @@ unsigned long int __malloc_default_thp_pagesize(void)
     return r;
 }
 
-enum malloc_thp_mode_t __malloc_thp_mode(void) {
+enum malloc_thp_mode_t __malloc_thp_mode(void)
+{
     int fd = __open64_nocancel("/sys/kernel/mm/transparent_hugepage/enabled",
                                O_RDONLY);
-    if (fd == -1)
-    {
+    if (fd == -1) {
         return malloc_thp_mode_not_supported;
     }
 
@@ -62,15 +62,13 @@ enum malloc_thp_mode_t __malloc_thp_mode(void) {
 
     char str[sizeof(mode_always)];
     ssize_t s = __read_nocancel(fd, str, sizeof(str));
-    if (s >= sizeof str || s < 0)
-    {
+    if (s >= sizeof str || s < 0) {
         return malloc_thp_mode_not_supported;
     }
     str[s] = '\0';
     __close_nocancel(fd);
 
-    if (s == sizeof(mode_always) - 1)
-    {
+    if (s == sizeof(mode_always) - 1) {
         if (strcmp(str, mode_always) == 0) {
             return malloc_thp_mode_always;
         } else if (strcmp(str, mode_madvise) == 0) {

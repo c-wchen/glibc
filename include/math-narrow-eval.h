@@ -32,16 +32,16 @@
 #  define excess_precision(type) __builtin_types_compatible_p (type, float)
 # else
 #  define excess_precision(type) (__builtin_types_compatible_p (type, float) \
-                  || __builtin_types_compatible_p (type, \
-                                   double))
+                                  || __builtin_types_compatible_p (type, \
+                                          double))
 # endif
 # define math_narrow_eval(x)                    \
-  ({                                \
-    __typeof (x) math_narrow_eval_tmp = (x);            \
-    if (excess_precision (__typeof (math_narrow_eval_tmp))) \
-      __asm__ ("" : "+m" (math_narrow_eval_tmp));       \
-    math_narrow_eval_tmp;                   \
-   })
+    ({                                \
+        __typeof (x) math_narrow_eval_tmp = (x);            \
+        if (excess_precision (__typeof (math_narrow_eval_tmp))) \
+            __asm__ ("" : "+m" (math_narrow_eval_tmp));       \
+        math_narrow_eval_tmp;                   \
+    })
 #endif
 
 #endif /* math-narrow-eval.h */

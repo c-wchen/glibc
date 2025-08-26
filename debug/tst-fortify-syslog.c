@@ -44,12 +44,12 @@ static void handler(int sig)
 }
 
 #define CHK_FAIL_START                  \
-  chk_fail_ok = 1;                  \
-  if (! setjmp (chk_fail_buf))              \
+    chk_fail_ok = 1;                  \
+    if (! setjmp (chk_fail_buf))              \
     {
 #define CHK_FAIL_END                    \
-      chk_fail_ok = 0;                  \
-      FAIL ("not supposed to reach here");      \
+    chk_fail_ok = 0;                  \
+    FAIL ("not supposed to reach here");      \
     }
 
 static void call_vsyslog(int priority, const char *format, ...)

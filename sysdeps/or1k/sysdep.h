@@ -26,17 +26,17 @@
 
 /* Define an entry point visible from C.  */
 #define ENTRY(name)                                                           \
-  .globl C_SYMBOL_NAME(name);                                                 \
-  .type C_SYMBOL_NAME(name),@function;                                        \
-  .align 4;                                                                   \
-  C_LABEL(name)                                                               \
-  cfi_startproc;                                                              \
-  CALL_MCOUNT
+    .globl C_SYMBOL_NAME(name);                                                 \
+    .type C_SYMBOL_NAME(name),@function;                                        \
+    .align 4;                                                                   \
+    C_LABEL(name)                                                               \
+    cfi_startproc;                                                              \
+    CALL_MCOUNT
 
 #undef  END
 #define END(name)                                                             \
-  cfi_endproc;                                                                \
-  ASM_SIZE_DIRECTIVE(name)
+    cfi_endproc;                                                                \
+    ASM_SIZE_DIRECTIVE(name)
 
 /* Since C identifiers are not normally prefixed with an underscore
    on this system, the asm identifier `syscall_error' intrudes on the
@@ -52,7 +52,7 @@
     l.sw    4(r1), r3;                  \
     l.ori   r3, r9, 0;                  \
     l.j plt(_mcount);                   \
-     l.nop;                         \
+    l.nop;                         \
     l.lwz   r9, 0(r1);                  \
     l.lwz   r3, 4(r1);                  \
     l.addi  r1, r1, 8;
@@ -65,7 +65,7 @@
     l.movhi r15, hi(_mcount);               \
     l.ori   r15, r15, lo(_mcount);              \
     l.jr    r15;                        \
-     l.nop;                         \
+    l.nop;                         \
     l.lwz   r9, 0(r1);                  \
     l.lwz   r3, 4(r1);                  \
     l.addi  r1, r1, 8;

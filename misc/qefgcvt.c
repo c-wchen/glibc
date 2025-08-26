@@ -30,10 +30,10 @@
 
 #if LONG_DOUBLE_COMPAT (libc, GLIBC_2_0)
 # define cvt_symbol(local, symbol) \
-  versioned_symbol (libc, local, symbol, GLIBC_2_4)
+    versioned_symbol (libc, local, symbol, GLIBC_2_4)
 #else
 # define cvt_symbol(local, symbol) \
-  strong_alias (local, symbol)
+    strong_alias (local, symbol)
 #endif
 cvt_symbol(__qfcvt, qfcvt);
 cvt_symbol(__qecvt, qecvt);

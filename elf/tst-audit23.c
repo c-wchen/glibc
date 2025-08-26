@@ -36,8 +36,8 @@
 static int restart;
 static int do_dlclose;
 #define CMDLINE_OPTIONS \
-  { "restart", no_argument, &restart, 1 }, \
-  { "dlclose", no_argument, &do_dlclose, 1 }, \
+    { "restart", no_argument, &restart, 1 }, \
+    { "dlclose", no_argument, &do_dlclose, 1 }, \
 
 static int handle_restart(void)
 {

@@ -3,12 +3,12 @@
 # ifndef _ISOMAC
 #  include <stdbool.h>
 #  define RES_SET_H_ERRNO(r,x)          \
-  do                        \
+    do                        \
     {                       \
-      (r)->res_h_errno = x;         \
-      __set_h_errno(x);             \
+        (r)->res_h_errno = x;         \
+        __set_h_errno(x);             \
     }                       \
-  while (0)
+    while (0)
 # endif
 
 #include <resolv/resolv.h>

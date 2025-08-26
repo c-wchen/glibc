@@ -22,17 +22,17 @@
 #define STRINGIFY_1(name)   #name
 
 #define DB_STRUCT(type) \
-  DB_LOOKUP_NAME (SYM_SIZEOF_##type, _thread_db_sizeof_##type)
+    DB_LOOKUP_NAME (SYM_SIZEOF_##type, _thread_db_sizeof_##type)
 #define DB_STRUCT_FIELD(type, field) \
-  DB_LOOKUP_NAME (SYM_##type##_FIELD_##field, _thread_db_##type##_##field)
+    DB_LOOKUP_NAME (SYM_##type##_FIELD_##field, _thread_db_##type##_##field)
 #define DB_STRUCT_FLEXIBLE_ARRAY(type, field) DB_STRUCT_FIELD (type, field)
 #define DB_SYMBOL(name) \
-  DB_LOOKUP_NAME (SYM_##name, name)
+    DB_LOOKUP_NAME (SYM_##name, name)
 #define DB_FUNCTION(name) \
-  DB_LOOKUP_NAME (SYM_##name, DOT (name))
+    DB_LOOKUP_NAME (SYM_##name, DOT (name))
 #define DB_VARIABLE(name) \
-  DB_LOOKUP_NAME (SYM_##name, name) \
-  DB_LOOKUP_NAME (SYM_DESC_##name, _thread_db_##name)
+    DB_LOOKUP_NAME (SYM_##name, name) \
+    DB_LOOKUP_NAME (SYM_DESC_##name, _thread_db_##name)
 
 # include "structs.def"
 

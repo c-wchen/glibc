@@ -78,10 +78,10 @@ extern "C" {
 # endif
 # if FILE_SYSTEM_DRIVE_PREFIX_CAN_BE_RELATIVE
 #  define IS_ABSOLUTE_FILE_NAME(Filename) \
-     ISSLASH ((Filename)[FILE_SYSTEM_PREFIX_LEN (Filename)])
+    ISSLASH ((Filename)[FILE_SYSTEM_PREFIX_LEN (Filename)])
 # else
 #  define IS_ABSOLUTE_FILE_NAME(Filename) \
-     (ISSLASH ((Filename)[0]) || HAS_DEVICE (Filename))
+    (ISSLASH ((Filename)[0]) || HAS_DEVICE (Filename))
 # endif
 # define IS_RELATIVE_FILE_NAME(Filename) \
     (! (ISSLASH ((Filename)[0]) || HAS_DEVICE (Filename)))

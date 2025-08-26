@@ -107,8 +107,8 @@ double __kernel_standard(double x, double y, int type)
 
     /* The SVID struct exception uses a field "char *name;".  */
 # define CSTR(func) ((char *) (type < 100               \
-                  ? func                    \
-                  : (type < 200 ? func "f" : func "l")))
+                               ? func                    \
+                               : (type < 200 ? func "f" : func "l")))
 
 # ifdef _USE_WRITE
     (void) fflush(stdout);

@@ -13,7 +13,7 @@
    in string/endian.h on big endian systems.
    The same applies to htoleXX/leXXtoh on little endian systems.  */
 # define DIAG_IGNORE_NEEDS_COMMENT_TAUTOLOGICAL_COMPARE() \
-  DIAG_IGNORE_NEEDS_COMMENT (6, "-Wtautological-compare")
+    DIAG_IGNORE_NEEDS_COMMENT (6, "-Wtautological-compare")
 #else
 # define DIAG_IGNORE_NEEDS_COMMENT_TAUTOLOGICAL_COMPARE()
 #endif

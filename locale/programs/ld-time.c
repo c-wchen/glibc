@@ -162,17 +162,17 @@ No definition for %s category found"), "LC_TIME");
 
 #define noparen(arg1, argn...) arg1, ##argn
 #define TESTARR_ELEM(cat, val) \
-  if (!time->cat##_defined)                           \
+    if (!time->cat##_defined)                           \
     {                                         \
-      const char *initval[] = { noparen val };                    \
-      unsigned int i;                                 \
-                                          \
-      if (! nothing)                                      \
-    record_error (0, 0, _("%s: field `%s' not defined"),                  \
-              "LC_TIME", #cat);                           \
-                                          \
-      for (i = 0; i < sizeof (initval) / sizeof (initval[0]); ++i)        \
-    time->cat[i] = initval[i];                        \
+        const char *initval[] = { noparen val };                    \
+        unsigned int i;                                 \
+        \
+        if (! nothing)                                      \
+            record_error (0, 0, _("%s: field `%s' not defined"),                  \
+                          "LC_TIME", #cat);                           \
+        \
+        for (i = 0; i < sizeof (initval) / sizeof (initval[0]); ++i)        \
+            time->cat[i] = initval[i];                        \
     }
 
     TESTARR_ELEM(abday, ("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"));
@@ -186,13 +186,13 @@ No definition for %s category found"), "LC_TIME");
     TESTARR_ELEM(am_pm, ("AM", "PM"));
 
 #define TEST_ELEM(cat, initval) \
-  if (time->cat == NULL)                              \
+    if (time->cat == NULL)                              \
     {                                         \
-      if (! nothing)                                  \
-    record_error (0, 0, _("%s: field `%s' not defined"),              \
-              "LC_TIME", #cat);                           \
-                                          \
-      time->cat = initval;                            \
+        if (! nothing)                                  \
+            record_error (0, 0, _("%s: field `%s' not defined"),              \
+                          "LC_TIME", #cat);                           \
+        \
+        time->cat = initval;                            \
     }
 
     TEST_ELEM(d_t_fmt, "%a %b %e %H:%M:%S %Y");
@@ -704,82 +704,82 @@ void time_read(struct linereader *ldfile, struct localedef_t *result,
 
         switch (nowtok) {
 #define STRARR_ELEM(cat, min, max) \
-    case tok_##cat:                               \
-      /* Ignore the rest of the line if we don't need the input of        \
-         this line.  */                           \
-      if (ignore_content)                             \
-        {                                     \
-          lr_ignore_rest (ldfile, 0);                     \
-          break;                                  \
-        }                                     \
-                                          \
-      for (cnt = 0; cnt < max; ++cnt)                     \
-        {                                     \
-          now = lr_token (ldfile, charmap, result, repertoire, verbose);  \
-          if (now->tok == tok_eol)                        \
+case tok_##cat:                               \
+    /* Ignore the rest of the line if we don't need the input of        \
+       this line.  */                           \
+    if (ignore_content)                             \
+    {                                     \
+        lr_ignore_rest (ldfile, 0);                     \
+        break;                                  \
+    }                                     \
+    \
+    for (cnt = 0; cnt < max; ++cnt)                     \
+    {                                     \
+        now = lr_token (ldfile, charmap, result, repertoire, verbose);  \
+        if (now->tok == tok_eol)                        \
         {                                 \
-          if (cnt < min)                          \
-            lr_error (ldfile, _("%s: too few values for field `%s'"), \
-                  "LC_TIME", #cat);                   \
-          if (!ignore_content)                        \
-            do                                \
-              {                               \
-            time->cat[cnt] = "";                      \
-            time->w##cat[cnt] = empty_wstr;               \
-              }                               \
-            while (++cnt < max);                      \
-          break;                              \
+            if (cnt < min)                          \
+                lr_error (ldfile, _("%s: too few values for field `%s'"), \
+                          "LC_TIME", #cat);                   \
+            if (!ignore_content)                        \
+                do                                \
+                {                               \
+                    time->cat[cnt] = "";                      \
+                    time->w##cat[cnt] = empty_wstr;               \
+                }                               \
+                while (++cnt < max);                      \
+            break;                              \
         }                                 \
-          else if (now->tok != tok_string)                    \
-        goto err_label;                           \
-          else if (!ignore_content && (now->val.str.startmb == NULL       \
-                       || now->val.str.startwc == NULL))  \
+        else if (now->tok != tok_string)                    \
+            goto err_label;                           \
+        else if (!ignore_content && (now->val.str.startmb == NULL       \
+                                     || now->val.str.startwc == NULL))  \
         {                                 \
-          lr_error (ldfile, _("%s: unknown character in field `%s'"), \
-                "LC_TIME", #cat);                     \
-          time->cat[cnt] = "";                        \
-          time->w##cat[cnt] = empty_wstr;                 \
+            lr_error (ldfile, _("%s: unknown character in field `%s'"), \
+                      "LC_TIME", #cat);                     \
+            time->cat[cnt] = "";                        \
+            time->w##cat[cnt] = empty_wstr;                 \
         }                                 \
-          else if (!ignore_content)                       \
+        else if (!ignore_content)                       \
         {                                 \
-          time->cat[cnt] = now->val.str.startmb;              \
-          time->w##cat[cnt] = now->val.str.startwc;           \
+            time->cat[cnt] = now->val.str.startmb;              \
+            time->w##cat[cnt] = now->val.str.startwc;           \
         }                                 \
-                                          \
-          /* Match the semicolon.  */                     \
-          now = lr_token (ldfile, charmap, result, repertoire, verbose);  \
-          if (now->tok != tok_semicolon && now->tok != tok_eol)       \
-        break;                                \
-        }                                     \
-      if (now->tok != tok_eol)                        \
-        {                                     \
-          while (!ignore_content && cnt < min)                \
+        \
+        /* Match the semicolon.  */                     \
+        now = lr_token (ldfile, charmap, result, repertoire, verbose);  \
+        if (now->tok != tok_semicolon && now->tok != tok_eol)       \
+            break;                                \
+    }                                     \
+    if (now->tok != tok_eol)                        \
+    {                                     \
+        while (!ignore_content && cnt < min)                \
         {                                 \
-          time->cat[cnt] = "";                        \
-          time->w##cat[cnt++] = empty_wstr;               \
+            time->cat[cnt] = "";                        \
+            time->w##cat[cnt++] = empty_wstr;               \
         }                                 \
-                                          \
-          if (now->tok == tok_semicolon)                      \
+        \
+        if (now->tok == tok_semicolon)                      \
         {                                 \
-          now = lr_token (ldfile, charmap, result, repertoire,        \
-                  verbose);                   \
-          if (now->tok == tok_eol)                    \
-            lr_error (ldfile, _("extra trailing semicolon"));         \
-          else if (now->tok == tok_string)                \
+            now = lr_token (ldfile, charmap, result, repertoire,        \
+                            verbose);                   \
+            if (now->tok == tok_eol)                    \
+                lr_error (ldfile, _("extra trailing semicolon"));         \
+            else if (now->tok == tok_string)                \
             {                                 \
-              lr_error (ldfile, _("\
+                lr_error (ldfile, _("\
 %s: too many values for field `%s'"),					      \
-                "LC_TIME", #cat);                 \
-              lr_ignore_rest (ldfile, 0);                 \
+                          "LC_TIME", #cat);                 \
+                lr_ignore_rest (ldfile, 0);                 \
             }                                 \
-          else                                \
-            goto err_label;                       \
+            else                                \
+                goto err_label;                       \
         }                                 \
-          else                                \
-        goto err_label;                           \
-        }                                     \
-      time->cat##_defined = 1;                        \
-      break
+        else                                \
+            goto err_label;                           \
+    }                                     \
+    time->cat##_defined = 1;                        \
+    break
 
                 STRARR_ELEM(abday, 7, 7);
                 STRARR_ELEM(day, 7, 7);
@@ -827,35 +827,35 @@ void time_read(struct linereader *ldfile, struct localedef_t *result,
                 break;
 
 #define STR_ELEM(cat) \
-    case tok_##cat:                               \
-      /* Ignore the rest of the line if we don't need the input of        \
-         this line.  */                           \
-      if (ignore_content)                             \
-        {                                     \
-          lr_ignore_rest (ldfile, 0);                     \
-          break;                                  \
-        }                                     \
-                                          \
-      now = lr_token (ldfile, charmap, result, repertoire, verbose);      \
-      if (now->tok != tok_string)                         \
+case tok_##cat:                               \
+    /* Ignore the rest of the line if we don't need the input of        \
+       this line.  */                           \
+    if (ignore_content)                             \
+    {                                     \
+        lr_ignore_rest (ldfile, 0);                     \
+        break;                                  \
+    }                                     \
+    \
+    now = lr_token (ldfile, charmap, result, repertoire, verbose);      \
+    if (now->tok != tok_string)                         \
         goto err_label;                           \
-      else if (time->cat != NULL)                         \
+    else if (time->cat != NULL)                         \
         lr_error (ldfile, _("\
 %s: field `%s' declared more than once"), "LC_TIME", #cat);		      \
-      else if (!ignore_content && (now->val.str.startmb == NULL       \
-                       || now->val.str.startwc == NULL))      \
-        {                                     \
-          lr_error (ldfile, _("%s: unknown character in field `%s'"),     \
-            "LC_TIME", #cat);                     \
-          time->cat = "";                             \
-          time->w##cat = empty_wstr;                      \
-        }                                     \
-      else if (!ignore_content)                       \
-        {                                     \
-          time->cat = now->val.str.startmb;                   \
-          time->w##cat = now->val.str.startwc;                \
-        }                                     \
-      break
+    else if (!ignore_content && (now->val.str.startmb == NULL       \
+                                 || now->val.str.startwc == NULL))      \
+    {                                     \
+        lr_error (ldfile, _("%s: unknown character in field `%s'"),     \
+                  "LC_TIME", #cat);                     \
+        time->cat = "";                             \
+        time->w##cat = empty_wstr;                      \
+    }                                     \
+    else if (!ignore_content)                       \
+    {                                     \
+        time->cat = now->val.str.startmb;                   \
+        time->w##cat = now->val.str.startwc;                \
+    }                                     \
+    break
 
                 STR_ELEM(d_t_fmt);
                 STR_ELEM(d_fmt);
@@ -869,24 +869,24 @@ void time_read(struct linereader *ldfile, struct localedef_t *result,
                 STR_ELEM(date_fmt);
 
 #define INT_ELEM(cat) \
-    case tok_##cat:                               \
-      /* Ignore the rest of the line if we don't need the input of        \
-         this line.  */                           \
-      if (ignore_content)                             \
-        {                                     \
-          lr_ignore_rest (ldfile, 0);                     \
-          break;                                  \
-        }                                     \
-                                          \
-      now = lr_token (ldfile, charmap, result, repertoire, verbose);      \
-      if (now->tok != tok_number)                         \
+case tok_##cat:                               \
+    /* Ignore the rest of the line if we don't need the input of        \
+       this line.  */                           \
+    if (ignore_content)                             \
+    {                                     \
+        lr_ignore_rest (ldfile, 0);                     \
+        break;                                  \
+    }                                     \
+    \
+    now = lr_token (ldfile, charmap, result, repertoire, verbose);      \
+    if (now->tok != tok_number)                         \
         goto err_label;                           \
-      else if (time->cat != 0)                        \
+    else if (time->cat != 0)                        \
         lr_error (ldfile, _("%s: field `%s' declared more than once"),    \
-              "LC_TIME", #cat);                       \
-      else if (!ignore_content)                       \
+                  "LC_TIME", #cat);                       \
+    else if (!ignore_content)                       \
         time->cat = now->val.num;                         \
-      break
+    break
 
                 INT_ELEM(first_weekday);
                 INT_ELEM(first_workday);

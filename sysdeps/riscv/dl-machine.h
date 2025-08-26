@@ -44,14 +44,14 @@
 #define ELF_MACHINE_JMP_SLOT R_RISCV_JUMP_SLOT
 
 #define elf_machine_type_class(type)                \
-  ((ELF_RTYPE_CLASS_PLT * ((type) == ELF_MACHINE_JMP_SLOT   \
-     || (__WORDSIZE == 32 && (type) == R_RISCV_TLS_DTPREL32)    \
-     || (__WORDSIZE == 32 && (type) == R_RISCV_TLS_DTPMOD32)    \
-     || (__WORDSIZE == 32 && (type) == R_RISCV_TLS_TPREL32) \
-     || (__WORDSIZE == 64 && (type) == R_RISCV_TLS_DTPREL64)    \
-     || (__WORDSIZE == 64 && (type) == R_RISCV_TLS_DTPMOD64)    \
-     || (__WORDSIZE == 64 && (type) == R_RISCV_TLS_TPREL64)))   \
-   | (ELF_RTYPE_CLASS_COPY * ((type) == R_RISCV_COPY)))
+    ((ELF_RTYPE_CLASS_PLT * ((type) == ELF_MACHINE_JMP_SLOT   \
+                             || (__WORDSIZE == 32 && (type) == R_RISCV_TLS_DTPREL32)    \
+                             || (__WORDSIZE == 32 && (type) == R_RISCV_TLS_DTPMOD32)    \
+                             || (__WORDSIZE == 32 && (type) == R_RISCV_TLS_TPREL32) \
+                             || (__WORDSIZE == 64 && (type) == R_RISCV_TLS_DTPREL64)    \
+                             || (__WORDSIZE == 64 && (type) == R_RISCV_TLS_DTPMOD64)    \
+                             || (__WORDSIZE == 64 && (type) == R_RISCV_TLS_TPREL64)))   \
+     | (ELF_RTYPE_CLASS_COPY * ((type) == R_RISCV_COPY)))
 
 /* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int __attribute_used__ elf_machine_matches_host(const ElfW(Ehdr) *ehdr)
@@ -102,7 +102,7 @@ elf_machine_dynamic(void)
    its return value is the user program's entry point.  */
 
 #define RTLD_START asm (\
-    ".text\n\
+                        ".text\n\
 	" _RTLD_PROLOGUE (ENTRY_POINT) "\
 	mv a0, sp\n\
 	jal _dl_start\n\
@@ -130,9 +130,9 @@ elf_machine_dynamic(void)
 	# Jump to the user entry point.\n\
 	jr s0\n\
 	" _RTLD_EPILOGUE (ENTRY_POINT) \
-      _RTLD_EPILOGUE (_dl_start_user) "\
+                        _RTLD_EPILOGUE (_dl_start_user) "\
 	.previous" \
-);
+                       );
 
 /* Names of the architecture-specific auditing callback functions.  */
 #define ARCH_LA_PLTENTER riscv_gnu_pltenter

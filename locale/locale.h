@@ -157,18 +157,18 @@ extern locale_t newlocale(int __category_mask, const char *__locale,
 # define LC_MEASUREMENT_MASK    (1 << __LC_MEASUREMENT)
 # define LC_IDENTIFICATION_MASK (1 << __LC_IDENTIFICATION)
 # define LC_ALL_MASK        (LC_CTYPE_MASK \
-                 | LC_NUMERIC_MASK \
-                 | LC_TIME_MASK \
-                 | LC_COLLATE_MASK \
-                 | LC_MONETARY_MASK \
-                 | LC_MESSAGES_MASK \
-                 | LC_PAPER_MASK \
-                 | LC_NAME_MASK \
-                 | LC_ADDRESS_MASK \
-                 | LC_TELEPHONE_MASK \
-                 | LC_MEASUREMENT_MASK \
-                 | LC_IDENTIFICATION_MASK \
-                 )
+                             | LC_NUMERIC_MASK \
+                             | LC_TIME_MASK \
+                             | LC_COLLATE_MASK \
+                             | LC_MONETARY_MASK \
+                             | LC_MESSAGES_MASK \
+                             | LC_PAPER_MASK \
+                             | LC_NAME_MASK \
+                             | LC_ADDRESS_MASK \
+                             | LC_TELEPHONE_MASK \
+                             | LC_MEASUREMENT_MASK \
+                             | LC_IDENTIFICATION_MASK \
+                            )
 
 /* Return a duplicate of the set of locale in DATASET.  All usage
    counters are increased if necessary.  */

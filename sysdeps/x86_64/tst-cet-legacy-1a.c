@@ -26,7 +26,7 @@
 static int restart;
 
 #define CMDLINE_OPTIONS \
-  { "restart", no_argument, &restart, 1 },
+    { "restart", no_argument, &restart, 1 },
 
 extern int do_test(int argc, char *argv[]);
 

@@ -116,7 +116,7 @@ static int do_test(void)
     int result = 0;
 
 #define CHECK(exp) \
-  if (exp) { puts (#exp); result = 1; }
+    if (exp) { puts (#exp); result = 1; }
 
     printf("INFO: Checking C.\n");
     setlocale(LC_ALL, "C");

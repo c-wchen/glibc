@@ -99,7 +99,7 @@ struct signal_send_args {
     bool sleep;
 };
 #define SIGNAL_SEND_GET_ARG(arg, field) \
-  (((struct signal_send_args *)(arg))->field)
+    (((struct signal_send_args *)(arg))->field)
 
 /* Send SIGNO to the parent thread.  If SLEEP, wait a second between
    signals, otherwise use barriers to delay sending signals.  */

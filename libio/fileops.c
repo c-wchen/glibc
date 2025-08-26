@@ -99,7 +99,7 @@ extern struct __gconv_trans_data __libio_translit attribute_hidden;
 */
 
 #define CLOSED_FILEBUF_FLAGS \
-  (_IO_IS_FILEBUF+_IO_NO_READS+_IO_NO_WRITES+_IO_TIED_PUT_GET)
+    (_IO_IS_FILEBUF+_IO_NO_READS+_IO_NO_WRITES+_IO_TIED_PUT_GET)
 
 
 void _IO_new_file_init_internal(struct _IO_FILE_plus *fp)

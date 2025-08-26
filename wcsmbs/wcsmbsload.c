@@ -125,21 +125,21 @@ struct __gconv_step *__wcsmbs_getfct(const char *to, const char *from, size_t *n
    only the XPG form of the name includes this information we don't have
    to take care for the CEN form.  */
 #define extract_charset_name(str) \
-  ({                                          \
-    const char *cp = str;                             \
-    char *result = NULL;                              \
-                                          \
-    cp += strcspn (cp, "@.+,");                           \
-    if (*cp == '.')                               \
-      {                                       \
-    const char *endp = ++cp;                          \
-    while (*endp != '\0' && *endp != '@')                     \
-      ++endp;                                 \
-    if (endp != cp)                               \
-      result = strndupa (cp, endp - cp);                      \
-      }                                       \
-    result;                                   \
-  })
+    ({                                          \
+        const char *cp = str;                             \
+        char *result = NULL;                              \
+        \
+        cp += strcspn (cp, "@.+,");                           \
+        if (*cp == '.')                               \
+        {                                       \
+            const char *endp = ++cp;                          \
+            while (*endp != '\0' && *endp != '@')                     \
+                ++endp;                                 \
+            if (endp != cp)                               \
+                result = strndupa (cp, endp - cp);                      \
+        }                                       \
+        result;                                   \
+    })
 
 
 /* Some of the functions here must not be used while setlocale is called.  */

@@ -17,12 +17,12 @@
    <https://www.gnu.org/licenses/>.  */
 
 #define SET_NAN_PAYLOAD(flt, mant)      \
-  do                        \
+    do                        \
     {                       \
-      union ieee754_float u;            \
-      u.f = (flt);              \
-      u.ieee_nan.mantissa = (mant);     \
-      if (u.ieee.mantissa != 0)         \
-    (flt) = u.f;                \
+        union ieee754_float u;            \
+        u.f = (flt);              \
+        u.ieee_nan.mantissa = (mant);     \
+        if (u.ieee.mantissa != 0)         \
+            (flt) = u.f;                \
     }                       \
-  while (0)
+    while (0)

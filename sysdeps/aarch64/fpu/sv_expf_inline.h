@@ -29,10 +29,10 @@ struct sv_expf_data {
 
 /* Shift is 1.5*2^17 + 127.  */
 #define SV_EXPF_DATA                                                          \
-  {                                                                           \
-    .c1 = 0.5f, .inv_ln2 = 0x1.715476p+0f, .ln2_hi = 0x1.62e4p-1f,            \
-    .ln2_lo = 0x1.7f7d1cp-20f, .shift = 0x1.803f8p17f,                        \
-  }
+    {                                                                           \
+        .c1 = 0.5f, .inv_ln2 = 0x1.715476p+0f, .ln2_hi = 0x1.62e4p-1f,            \
+                               .ln2_lo = 0x1.7f7d1cp-20f, .shift = 0x1.803f8p17f,                        \
+    }
 
 static inline svfloat32_t expf_inline(svfloat32_t x, const svbool_t pg, const struct sv_expf_data *d)
 {

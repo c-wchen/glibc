@@ -24,28 +24,28 @@
 #define pointer_to_value(val) (&(val))
 
 #define initialize_value(val)                       \
-  memset (&val, 0xa5, sizeof (val))
+    memset (&val, 0xa5, sizeof (val))
 
 #define verify_input(f, val, count, errp)               \
-({                                  \
-  __label__ out;                            \
-  bool match = true;                            \
-  int err;                              \
-                                    \
-  UNSIGNED long long v = read_integer (&err);               \
-  if (err < 0)                              \
-    goto out;                               \
-  match = val == v;                         \
-                                    \
-out:                                    \
-  if (err || !match)                            \
-    {                                   \
-      printf ("error: %s:%d: input: %016llx\n",             \
-          __FILE__, __LINE__, (long long) val);         \
-      printf ("error: %s:%d: value: %016llx\n",             \
-          __FILE__, __LINE__, v);                   \
-    }                                   \
-                                    \
-  *errp = err;                              \
-  match;                                \
-})
+    ({                                  \
+        __label__ out;                            \
+        bool match = true;                            \
+        int err;                              \
+        \
+        UNSIGNED long long v = read_integer (&err);               \
+        if (err < 0)                              \
+            goto out;                               \
+        match = val == v;                         \
+        \
+    out:                                    \
+        if (err || !match)                            \
+        {                                   \
+            printf ("error: %s:%d: input: %016llx\n",             \
+                    __FILE__, __LINE__, (long long) val);         \
+            printf ("error: %s:%d: value: %016llx\n",             \
+                    __FILE__, __LINE__, v);                   \
+        }                                   \
+        \
+        *errp = err;                              \
+        match;                                \
+    })

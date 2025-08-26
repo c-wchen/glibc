@@ -31,33 +31,33 @@
 #define PLT_TRAMPOLINE_ENTRY_WORDS 6
 #define PLT_DOUBLE_SIZE (1<<13)
 #define PLT_ENTRY_START_WORDS(entry_number) \
-  (PLT_INITIAL_ENTRY_WORDS + (entry_number)*2               \
-   + ((entry_number) > PLT_DOUBLE_SIZE                  \
-      ? ((entry_number) - PLT_DOUBLE_SIZE)*2                \
-      : 0))
+    (PLT_INITIAL_ENTRY_WORDS + (entry_number)*2               \
+     + ((entry_number) > PLT_DOUBLE_SIZE                  \
+     ? ((entry_number) - PLT_DOUBLE_SIZE)*2                \
+     : 0))
 #define PLT_DATA_START_WORDS(num_entries) PLT_ENTRY_START_WORDS(num_entries)
 
 /* Macros to build PowerPC opcode words.  */
 #define OPCODE_ADDI(rd,ra,simm) \
-  (0x38000000 | (rd) << 21 | (ra) << 16 | ((simm) & 0xffff))
+    (0x38000000 | (rd) << 21 | (ra) << 16 | ((simm) & 0xffff))
 #define OPCODE_ADDIS(rd,ra,simm) \
-  (0x3c000000 | (rd) << 21 | (ra) << 16 | ((simm) & 0xffff))
+    (0x3c000000 | (rd) << 21 | (ra) << 16 | ((simm) & 0xffff))
 #define OPCODE_ADD(rd,ra,rb) \
-  (0x7c000214 | (rd) << 21 | (ra) << 16 | (rb) << 11)
+    (0x7c000214 | (rd) << 21 | (ra) << 16 | (rb) << 11)
 #define OPCODE_B(target) (0x48000000 | ((target) & 0x03fffffc))
 #define OPCODE_BA(target) (0x48000002 | ((target) & 0x03fffffc))
 #define OPCODE_BCTR() 0x4e800420
 #define OPCODE_LWZ(rd,d,ra) \
-  (0x80000000 | (rd) << 21 | (ra) << 16 | ((d) & 0xffff))
+    (0x80000000 | (rd) << 21 | (ra) << 16 | ((d) & 0xffff))
 #define OPCODE_LWZU(rd,d,ra) \
-  (0x84000000 | (rd) << 21 | (ra) << 16 | ((d) & 0xffff))
+    (0x84000000 | (rd) << 21 | (ra) << 16 | ((d) & 0xffff))
 #define OPCODE_MTCTR(rd) (0x7C0903A6 | (rd) << 21)
 #define OPCODE_RLWINM(ra,rs,sh,mb,me) \
-  (0x54000000 | (rs) << 21 | (ra) << 16 | (sh) << 11 | (mb) << 6 | (me) << 1)
+    (0x54000000 | (rs) << 21 | (ra) << 16 | (sh) << 11 | (mb) << 6 | (me) << 1)
 
 #define OPCODE_LI(rd,simm)    OPCODE_ADDI(rd,0,simm)
 #define OPCODE_ADDIS_HI(rd,ra,value) \
-  OPCODE_ADDIS(rd,ra,((value) + 0x8000) >> 16)
+    OPCODE_ADDIS(rd,ra,((value) + 0x8000) >> 16)
 #define OPCODE_LIS_HI(rd,value) OPCODE_ADDIS_HI(rd,0,value)
 #define OPCODE_SLWI(ra,rs,sh) OPCODE_RLWINM(ra,rs,sh,0,31-sh)
 
@@ -71,10 +71,10 @@
 /* Use this when you've modified some code, but it won't be in the
    instruction fetch queue (or when it doesn't matter if it is). */
 #define MODIFIED_CODE_NOQUEUE(where) \
-     do { PPC_DCBST(where); PPC_SYNC; PPC_ICBI(where); } while (0)
+    do { PPC_DCBST(where); PPC_SYNC; PPC_ICBI(where); } while (0)
 /* Use this when it might be in the instruction queue. */
 #define MODIFIED_CODE(where) \
-     do { PPC_DCBST(where); PPC_SYNC; PPC_ICBI(where); PPC_ISYNC; } while (0)
+    do { PPC_DCBST(where); PPC_SYNC; PPC_ICBI(where); PPC_ISYNC; } while (0)
 
 
 /* The idea here is that to conform to the ABI, we are supposed to try
@@ -550,40 +550,40 @@ void __process_machine_rela(struct link_map *map,
 
 #define DO_TLS_RELOC(suffix)                              \
 case R_PPC_DTPREL##suffix:                            \
-      /* During relocation all TLS symbols are defined and used.          \
-     Therefore the offset is already correct.  */                 \
-  if (sym_map != NULL)                            \
-do_reloc##suffix ("R_PPC_DTPREL"#suffix,                  \
-          TLS_DTPREL_VALUE (sym, reloc));             \
-  break;                                      \
+    /* During relocation all TLS symbols are defined and used.          \
+    Therefore the offset is already correct.  */                 \
+    if (sym_map != NULL)                            \
+        do_reloc##suffix ("R_PPC_DTPREL"#suffix,                  \
+                          TLS_DTPREL_VALUE (sym, reloc));             \
+    break;                                      \
 case R_PPC_TPREL##suffix:                             \
-  if (sym_map != NULL)                            \
-{                                     \
-  CHECK_STATIC_TLS (map, sym_map);                    \
-  do_reloc##suffix ("R_PPC_TPREL"#suffix,                 \
-            TLS_TPREL_VALUE (sym_map, sym, reloc));       \
-}                                     \
-  break;
+    if (sym_map != NULL)                            \
+    {                                     \
+        CHECK_STATIC_TLS (map, sym_map);                    \
+        do_reloc##suffix ("R_PPC_TPREL"#suffix,                 \
+                          TLS_TPREL_VALUE (sym_map, sym, reloc));       \
+    }                                     \
+    break;
 
-        inline void do_reloc16(const char *r_name, Elf32_Addr value) {
-            if (__glibc_unlikely(value > 0x7fff && value < 0xffff8000)) {
-                _dl_reloc_overflow(map, r_name, reloc_addr, refsym);
+            inline void do_reloc16(const char *r_name, Elf32_Addr value) {
+                if (__glibc_unlikely(value > 0x7fff && value < 0xffff8000)) {
+                    _dl_reloc_overflow(map, r_name, reloc_addr, refsym);
+                }
+                *(Elf32_Half *) reloc_addr = value;
             }
-            *(Elf32_Half *) reloc_addr = value;
-        }
-        inline void do_reloc16_LO(const char *r_name, Elf32_Addr value) {
-            *(Elf32_Half *) reloc_addr = value;
-        }
-        inline void do_reloc16_HI(const char *r_name, Elf32_Addr value) {
-            *(Elf32_Half *) reloc_addr = value >> 16;
-        }
-        inline void do_reloc16_HA(const char *r_name, Elf32_Addr value) {
-            *(Elf32_Half *) reloc_addr = (value + 0x8000) >> 16;
-        }
-        DO_TLS_RELOC(16)
-        DO_TLS_RELOC(16_LO)
-        DO_TLS_RELOC(16_HI)
-        DO_TLS_RELOC(16_HA)
+            inline void do_reloc16_LO(const char *r_name, Elf32_Addr value) {
+                *(Elf32_Half *) reloc_addr = value;
+            }
+            inline void do_reloc16_HI(const char *r_name, Elf32_Addr value) {
+                *(Elf32_Half *) reloc_addr = value >> 16;
+            }
+            inline void do_reloc16_HA(const char *r_name, Elf32_Addr value) {
+                *(Elf32_Half *) reloc_addr = (value + 0x8000) >> 16;
+            }
+            DO_TLS_RELOC(16)
+            DO_TLS_RELOC(16_LO)
+            DO_TLS_RELOC(16_HI)
+            DO_TLS_RELOC(16_HA)
 
         default:
             _dl_reloc_bad_type(map, rinfo, 0);

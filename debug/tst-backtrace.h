@@ -29,7 +29,7 @@ volatile int x;
 
 /* Called if the test fails.  */
 #define FAIL() \
-  do { printf ("Failure on line %d\n", __LINE__); ret = 1; } while (0)
+    do { printf ("Failure on line %d\n", __LINE__); ret = 1; } while (0)
 
 /* Use this attribute to prevent inlining, so that all expected frames
    are present.  */

@@ -7,11 +7,11 @@ int main(void)
     int retval = 0;
 
 #define TEST(expr, res) \
-  if (sizeof (expr) != res)                           \
+    if (sizeof (expr) != res)                           \
     {                                         \
-      printf ("sizeof(%s) == %zu, expected %zu\n", #expr,             \
-          sizeof (expr), (size_t) (res));                     \
-      retval = 1;                                     \
+        printf ("sizeof(%s) == %zu, expected %zu\n", #expr,             \
+                sizeof (expr), (size_t) (res));                     \
+        retval = 1;                                     \
     }
 
     TEST(creal(1.0), sizeof(double));

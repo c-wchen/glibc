@@ -38,7 +38,7 @@ struct __attribute_struct_may_alias__ sockaddr_un {
 
 /* Evaluate to actual length of the `sockaddr_un' structure.  */
 # define SUN_LEN(ptr) (offsetof (struct sockaddr_un, sun_path)            \
-              + strlen ((ptr)->sun_path))
+                       + strlen ((ptr)->sun_path))
 #endif
 
 __END_DECLS

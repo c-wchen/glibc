@@ -74,34 +74,34 @@
 
 #undef  DO_CALL
 #define DO_CALL(syscall_name) \
-  l.addi r11, r0, SYS_ify (syscall_name); \
-  l.sys 1; \
-   l.nop
+    l.addi r11, r0, SYS_ify (syscall_name); \
+    l.sys 1; \
+    l.nop
 
 #undef  PSEUDO
 #define PSEUDO(name, syscall_name, args) \
-  ENTRY (name); \
-  DO_CALL(syscall_name); \
-  /* if -4096 < ret < 0 holds, it's an error */ \
-  l.sfgeui r11, 0xf001; \
-  l.bf L(pseudo_end); \
-   l.nop
+    ENTRY (name); \
+    DO_CALL(syscall_name); \
+    /* if -4096 < ret < 0 holds, it's an error */ \
+    l.sfgeui r11, 0xf001; \
+    l.bf L(pseudo_end); \
+    l.nop
 
 #undef  PSEUDO_NOERRNO
 #define PSEUDO_NOERRNO(name, syscall_name, args)  \
-  ENTRY (name);           \
-  DO_CALL(syscall_name)
+    ENTRY (name);           \
+    DO_CALL(syscall_name)
 
 #undef  PSEUDO_END
 #define PSEUDO_END(name) \
-L(pseudo_end): \
-  l.j SYSCALL_ERROR_NAME; \
-  l.ori r3,r11,0; \
-  END (name)
+    L(pseudo_end): \
+        l.j SYSCALL_ERROR_NAME; \
+    l.ori r3,r11,0; \
+    END (name)
 
 #undef  PSEUDO_END_NOERRNO
 #define PSEUDO_END_NOERRNO(name) \
-  END (name)
+    END (name)
 
 #ifndef PIC
 /* For static code, on error jump to __syscall_error directly.  */
@@ -128,21 +128,21 @@ extern long int __syscall_error(long int neg_errno);
 #undef INTERNAL_SYSCALL_NCS
 #define INTERNAL_SYSCALL_NCS(number, nr, args...) \
     ({ unsigned long int __sys_result;              \
-      {                             \
-        long int _sc_ret = (long int) number;           \
-        LOAD_ARGS_##nr (args)                   \
-        register long int __sc_ret __asm__ ("r11") = _sc_ret;   \
-        __asm__ __volatile__ ("l.sys 1\n\t"             \
-                  " l.nop\n\t"              \
-                  : "+r" (__sc_ret)         \
-                  : ASM_ARGS_##nr           \
-                  : ASM_CLOBBERS_##nr           \
-                    "r12", "r13", "r15", "r17", "r19",  \
-                    "r21", "r23", "r25", "r27", "r29",  \
-                    "r31", "memory");           \
-        __sys_result = __sc_ret;                    \
-      }                             \
-      (long int) __sys_result; })
+        {                             \
+            long int _sc_ret = (long int) number;           \
+            LOAD_ARGS_##nr (args)                   \
+            register long int __sc_ret __asm__ ("r11") = _sc_ret;   \
+            __asm__ __volatile__ ("l.sys 1\n\t"             \
+                                  " l.nop\n\t"              \
+                                  : "+r" (__sc_ret)         \
+                                  : ASM_ARGS_##nr           \
+                                  : ASM_CLOBBERS_##nr           \
+                                  "r12", "r13", "r15", "r17", "r19",  \
+                                  "r21", "r23", "r25", "r27", "r29",  \
+                                  "r31", "memory");           \
+            __sys_result = __sc_ret;                    \
+        }                             \
+        (long int) __sys_result; })
 
 /* From here on we have nested macros that generate code for
    setting up syscall arguments.  */
@@ -153,43 +153,43 @@ extern long int __syscall_error(long int neg_errno);
 #define ASM_CLOBBERS_0  "r3", ASM_CLOBBERS_1
 
 #define LOAD_ARGS_1(a) \
-  long int _a = (long int)(a);                             \
-  register long int __a __asm__ ("r3") = _a;
+    long int _a = (long int)(a);                             \
+    register long int __a __asm__ ("r3") = _a;
 #define ASM_ARGS_1 "r" (__a)
 #define ASM_CLOBBERS_1  "r4", ASM_CLOBBERS_2
 
 #define LOAD_ARGS_2(a, b) \
-  long int _b = (long int)(b);                             \
-  LOAD_ARGS_1 (a)                                          \
-  register long int __b __asm__ ("r4") = _b;
+    long int _b = (long int)(b);                             \
+    LOAD_ARGS_1 (a)                                          \
+    register long int __b __asm__ ("r4") = _b;
 #define ASM_ARGS_2 ASM_ARGS_1, "r" (__b)
 #define ASM_CLOBBERS_2  "r5", ASM_CLOBBERS_3
 
 #define LOAD_ARGS_3(a, b, c) \
-  long int _c = (long int)(c);                             \
-  LOAD_ARGS_2 (a, b)                                       \
-  register long int __c __asm__ ("r5") = _c;
+    long int _c = (long int)(c);                             \
+    LOAD_ARGS_2 (a, b)                                       \
+    register long int __c __asm__ ("r5") = _c;
 #define ASM_ARGS_3 ASM_ARGS_2, "r" (__c)
 #define ASM_CLOBBERS_3  "r6", ASM_CLOBBERS_4
 
 #define LOAD_ARGS_4(a, b, c, d) \
     LOAD_ARGS_3 (a, b, c)                                  \
-  long int _d = (long int)(d);                             \
-  register long int __d __asm__ ("r6") = _d;
+    long int _d = (long int)(d);                             \
+    register long int __d __asm__ ("r6") = _d;
 #define ASM_ARGS_4 ASM_ARGS_3, "r" (__d)
 #define ASM_CLOBBERS_4  "r7", ASM_CLOBBERS_5
 
 #define LOAD_ARGS_5(a, b, c, d, e) \
-  long int _e = (long int)(e);                             \
-  LOAD_ARGS_4 (a, b, c, d)                                 \
-  register long int __e __asm__ ("r7") = _e;
+    long int _e = (long int)(e);                             \
+    LOAD_ARGS_4 (a, b, c, d)                                 \
+    register long int __e __asm__ ("r7") = _e;
 #define ASM_ARGS_5 ASM_ARGS_4, "r" (__e)
 #define ASM_CLOBBERS_5  "r8", ASM_CLOBBERS_6
 
 #define LOAD_ARGS_6(a, b, c, d, e, f) \
-  long int _f = (long int)(f);                             \
-  LOAD_ARGS_5 (a, b, c, d, e)                              \
-  register long int __f __asm__ ("r8") = _f;
+    long int _f = (long int)(f);                             \
+    LOAD_ARGS_5 (a, b, c, d, e)                              \
+    register long int __f __asm__ ("r8") = _f;
 #define ASM_ARGS_6 ASM_ARGS_5, "r" (__f)
 #define ASM_CLOBBERS_6
 

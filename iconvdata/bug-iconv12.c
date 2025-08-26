@@ -110,27 +110,27 @@ static int do_test(void)
        Converting directly from UTF-32LE to UTF-8|16 is needed,
        because e.g. s390x has iconv-modules which converts directly.  */
 #define RUN_UCS4_UTF32_INPUT(b0, b1, b2, b3, err, line)         \
-  buf[0] = b0;                              \
-  buf[1] = b1;                              \
-  buf[2] = b2;                              \
-  buf[3] = b3;                              \
-  fails += run_conversion ("UCS4", "UTF-8", buf, 4, err, line);     \
-  fails += run_conversion ("UCS4", "UTF-16LE", buf, 4, err, line);  \
-  fails += run_conversion ("UCS4", "UTF-16BE", buf, 4, err, line);  \
-  fails += run_conversion ("UCS4", "UTF-32LE", buf, 4, err, line);  \
-  fails += run_conversion ("UCS4", "UTF-32BE", buf, 4, err, line);  \
-  fails += run_conversion ("UTF-32BE", "WCHAR_T", buf, 4, err, line);   \
-  fails += run_conversion ("UTF-32BE", "UTF-8", buf, 4, err, line); \
-  fails += run_conversion ("UTF-32BE", "UTF-16LE", buf, 4, err, line);  \
-  fails += run_conversion ("UTF-32BE", "UTF-16BE", buf, 4, err, line);  \
-  buf[0] = b3;                              \
-  buf[1] = b2;                              \
-  buf[2] = b1;                              \
-  buf[3] = b0;                              \
-  fails += run_conversion ("UTF-32LE", "WCHAR_T", buf, 4, err, line);   \
-  fails += run_conversion ("UTF-32LE", "UTF-8", buf, 4, err, line); \
-  fails += run_conversion ("UTF-32LE", "UTF-16LE", buf, 4, err, line);  \
-  fails += run_conversion ("UTF-32LE", "UTF-16BE", buf, 4, err, line);
+    buf[0] = b0;                              \
+    buf[1] = b1;                              \
+    buf[2] = b2;                              \
+    buf[3] = b3;                              \
+    fails += run_conversion ("UCS4", "UTF-8", buf, 4, err, line);     \
+    fails += run_conversion ("UCS4", "UTF-16LE", buf, 4, err, line);  \
+    fails += run_conversion ("UCS4", "UTF-16BE", buf, 4, err, line);  \
+    fails += run_conversion ("UCS4", "UTF-32LE", buf, 4, err, line);  \
+    fails += run_conversion ("UCS4", "UTF-32BE", buf, 4, err, line);  \
+    fails += run_conversion ("UTF-32BE", "WCHAR_T", buf, 4, err, line);   \
+    fails += run_conversion ("UTF-32BE", "UTF-8", buf, 4, err, line); \
+    fails += run_conversion ("UTF-32BE", "UTF-16LE", buf, 4, err, line);  \
+    fails += run_conversion ("UTF-32BE", "UTF-16BE", buf, 4, err, line);  \
+    buf[0] = b3;                              \
+    buf[1] = b2;                              \
+    buf[2] = b1;                              \
+    buf[3] = b0;                              \
+    fails += run_conversion ("UTF-32LE", "WCHAR_T", buf, 4, err, line);   \
+    fails += run_conversion ("UTF-32LE", "UTF-8", buf, 4, err, line); \
+    fails += run_conversion ("UTF-32LE", "UTF-16LE", buf, 4, err, line);  \
+    fails += run_conversion ("UTF-32LE", "UTF-16BE", buf, 4, err, line);
 
     /* Use UCS4/UTF32 input of 0xD7FF.  */
     RUN_UCS4_UTF32_INPUT(0x0, 0x0, 0xD7, 0xFF, 0, __LINE__);
@@ -156,22 +156,22 @@ static int do_test(void)
        because e.g. s390x has iconv-modules which converts directly.
        Use len == 2 or 4 to specify one or two UTF-16 characters.  */
 #define RUN_UTF16_INPUT(b0, b1, b2, b3, len, err, line)         \
-  buf[0] = b0;                              \
-  buf[1] = b1;                              \
-  buf[2] = b2;                              \
-  buf[3] = b3;                              \
-  fails += run_conversion ("UTF-16BE", "WCHAR_T", buf, len, err, line); \
-  fails += run_conversion ("UTF-16BE", "UTF-8", buf, len, err, line);   \
-  fails += run_conversion ("UTF-16BE", "UTF-32LE", buf, len, err, line); \
-  fails += run_conversion ("UTF-16BE", "UTF-32BE", buf, len, err, line); \
-  buf[0] = b1;                              \
-  buf[1] = b0;                              \
-  buf[2] = b3;                              \
-  buf[3] = b2;                              \
-  fails += run_conversion ("UTF-16LE", "WCHAR_T", buf, len, err, line); \
-  fails += run_conversion ("UTF-16LE", "UTF-8", buf, len, err, line);   \
-  fails += run_conversion ("UTF-16LE", "UTF-32LE", buf, len, err, line); \
-  fails += run_conversion ("UTF-16LE", "UTF-32BE", buf, len, err, line);
+    buf[0] = b0;                              \
+    buf[1] = b1;                              \
+    buf[2] = b2;                              \
+    buf[3] = b3;                              \
+    fails += run_conversion ("UTF-16BE", "WCHAR_T", buf, len, err, line); \
+    fails += run_conversion ("UTF-16BE", "UTF-8", buf, len, err, line);   \
+    fails += run_conversion ("UTF-16BE", "UTF-32LE", buf, len, err, line); \
+    fails += run_conversion ("UTF-16BE", "UTF-32BE", buf, len, err, line); \
+    buf[0] = b1;                              \
+    buf[1] = b0;                              \
+    buf[2] = b3;                              \
+    buf[3] = b2;                              \
+    fails += run_conversion ("UTF-16LE", "WCHAR_T", buf, len, err, line); \
+    fails += run_conversion ("UTF-16LE", "UTF-8", buf, len, err, line);   \
+    fails += run_conversion ("UTF-16LE", "UTF-32LE", buf, len, err, line); \
+    fails += run_conversion ("UTF-16LE", "UTF-32BE", buf, len, err, line);
 
     /* Use UTF16 input of 0xD7FF.  */
     RUN_UTF16_INPUT(0xD7, 0xFF, 0xD7, 0xFF, 4, 0, __LINE__);
@@ -218,14 +218,14 @@ static int do_test(void)
        Converting directly from UTF-8 to UTF-16|32 is needed,
        because e.g. s390x has iconv-modules which converts directly.  */
 #define RUN_UTF8_3BYTE_INPUT(b0, b1, b2, err, line)         \
-  buf[0] = b0;                              \
-  buf[1] = b1;                              \
-  buf[2] = b2;                              \
-  fails += run_conversion ("UTF-8", "WCHAR_T", buf, 3, err, line);  \
-  fails += run_conversion ("UTF-8", "UTF-16LE", buf, 3, err, line); \
-  fails += run_conversion ("UTF-8", "UTF-16BE", buf, 3, err, line); \
-  fails += run_conversion ("UTF-8", "UTF-32LE", buf, 3, err, line); \
-  fails += run_conversion ("UTF-8", "UTF-32BE", buf, 3, err, line);
+    buf[0] = b0;                              \
+    buf[1] = b1;                              \
+    buf[2] = b2;                              \
+    fails += run_conversion ("UTF-8", "WCHAR_T", buf, 3, err, line);  \
+    fails += run_conversion ("UTF-8", "UTF-16LE", buf, 3, err, line); \
+    fails += run_conversion ("UTF-8", "UTF-16BE", buf, 3, err, line); \
+    fails += run_conversion ("UTF-8", "UTF-32LE", buf, 3, err, line); \
+    fails += run_conversion ("UTF-8", "UTF-32BE", buf, 3, err, line);
 
     /* Use UTF-8 input of 0xD7FF.  */
     RUN_UTF8_3BYTE_INPUT(0xED, 0x9F, 0xBF, 0, __LINE__);

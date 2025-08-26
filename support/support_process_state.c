@@ -27,14 +27,14 @@
 #include <support/xstdio.h>
 #include <support/check.h>
 
-enum support_process_state support_process_state_wait(pid_t pid, enum support_process_state state) {
+enum support_process_state support_process_state_wait(pid_t pid, enum support_process_state state)
+{
 #ifdef __linux__
     /* For Linux it does a polling check on /proc/<pid>/status checking on
        third field.  */
 
     /* It mimics the kernel states from fs/proc/array.c  */
-    static const struct process_states
-    {
+    static const struct process_states {
         enum support_process_state s;
         char v;
     } process_states[] = {
@@ -55,8 +55,7 @@ enum support_process_state support_process_state_wait(pid_t pid, enum support_pr
     char *line = NULL;
     size_t linesiz = 0;
 
-    for (;;)
-    {
+    for (;;) {
         char cur_state = -1;
         while (xgetline(&line, &linesiz, fstatus) > 0)
             if (strncmp(line, "State:", strlen("State:")) == 0) {
@@ -88,8 +87,7 @@ enum support_process_state support_process_state_wait(pid_t pid, enum support_pr
     xfclose(fstatus);
     /* Fallback to nanosleep if an invalid state is found.  */
 #endif
-    nanosleep(&(struct timespec)
-    {
+    nanosleep(&(struct timespec) {
         1, 0
     }, NULL);
 

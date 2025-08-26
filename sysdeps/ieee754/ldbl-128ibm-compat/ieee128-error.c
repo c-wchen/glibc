@@ -21,7 +21,7 @@
 #include <libio/libioP.h>
 
 #define IEEE128_ALIAS(name) \
-  strong_alias (___ieee128_##name, __##name##ieee128)
+    strong_alias (___ieee128_##name, __##name##ieee128)
 
 #define IEEE128_DECL(name) ___ieee128_##name
 

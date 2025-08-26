@@ -111,45 +111,45 @@ void _mp_default_free();
 
 /* Copy NLIMBS *limbs* from SRC to DST.  */
 #define MPN_COPY_INCR(DST, SRC, NLIMBS) \
-  do {                                  \
-    mp_size_t __i;                          \
-    for (__i = 0; __i < (NLIMBS); __i++)                \
-      (DST)[__i] = (SRC)[__i];                      \
-  } while (0)
+    do {                                  \
+        mp_size_t __i;                          \
+        for (__i = 0; __i < (NLIMBS); __i++)                \
+            (DST)[__i] = (SRC)[__i];                      \
+    } while (0)
 #define MPN_COPY_DECR(DST, SRC, NLIMBS) \
-  do {                                  \
-    mp_size_t __i;                          \
-    for (__i = (NLIMBS) - 1; __i >= 0; __i--)               \
-      (DST)[__i] = (SRC)[__i];                      \
-  } while (0)
+    do {                                  \
+        mp_size_t __i;                          \
+        for (__i = (NLIMBS) - 1; __i >= 0; __i--)               \
+            (DST)[__i] = (SRC)[__i];                      \
+    } while (0)
 #define MPN_COPY MPN_COPY_INCR
 
 /* Zero NLIMBS *limbs* AT DST.  */
 #define MPN_ZERO(DST, NLIMBS) \
-  do {                                  \
-    mp_size_t __i;                          \
-    for (__i = 0; __i < (NLIMBS); __i++)                \
-      (DST)[__i] = 0;                           \
-  } while (0)
+    do {                                  \
+        mp_size_t __i;                          \
+        for (__i = 0; __i < (NLIMBS); __i++)                \
+            (DST)[__i] = 0;                           \
+    } while (0)
 
 #define MPN_NORMALIZE(DST, NLIMBS) \
-  do {                                  \
-    while (NLIMBS > 0)                          \
-      {                                 \
-    if ((DST)[(NLIMBS) - 1] != 0)                   \
-      break;                            \
-    NLIMBS--;                           \
-      }                                 \
-  } while (0)
+    do {                                  \
+        while (NLIMBS > 0)                          \
+        {                                 \
+            if ((DST)[(NLIMBS) - 1] != 0)                   \
+                break;                            \
+            NLIMBS--;                           \
+        }                                 \
+    } while (0)
 #define MPN_NORMALIZE_NOT_ZERO(DST, NLIMBS) \
-  do {                                  \
-    while (1)                               \
-      {                                 \
-    if ((DST)[(NLIMBS) - 1] != 0)                   \
-      break;                            \
-    NLIMBS--;                           \
-      }                                 \
-  } while (0)
+    do {                                  \
+        while (1)                               \
+        {                                 \
+            if ((DST)[(NLIMBS) - 1] != 0)                   \
+                break;                            \
+            NLIMBS--;                           \
+        }                                 \
+    } while (0)
 
 /* Initialize the MP_INT X with space for NLIMBS limbs.
    X should be a temporary variable, and it will be automatically
@@ -157,26 +157,26 @@ void _mp_default_free();
    We use __x here to make it possible to accept both mpz_ptr and mpz_t
    arguments.  */
 #define MPZ_TMP_INIT(X, NLIMBS) \
-  do {                                  \
-    mpz_ptr __x = (X);                          \
-    __x->_mp_alloc = (NLIMBS);                      \
-    __x->_mp_d = (mp_ptr) TMP_ALLOC ((NLIMBS) * BYTES_PER_MP_LIMB); \
-  } while (0)
+    do {                                  \
+        mpz_ptr __x = (X);                          \
+        __x->_mp_alloc = (NLIMBS);                      \
+        __x->_mp_d = (mp_ptr) TMP_ALLOC ((NLIMBS) * BYTES_PER_MP_LIMB); \
+    } while (0)
 
 #define MPN_MUL_N_RECURSE(prodp, up, vp, size, tspace) \
-  do {                                  \
-    if ((size) < KARATSUBA_THRESHOLD)                   \
-      impn_mul_n_basecase (prodp, up, vp, size);            \
-    else                                \
-      impn_mul_n (prodp, up, vp, size, tspace);         \
-  } while (0);
+    do {                                  \
+        if ((size) < KARATSUBA_THRESHOLD)                   \
+            impn_mul_n_basecase (prodp, up, vp, size);            \
+        else                                \
+            impn_mul_n (prodp, up, vp, size, tspace);         \
+    } while (0);
 #define MPN_SQR_N_RECURSE(prodp, up, size, tspace) \
-  do {                                  \
-    if ((size) < KARATSUBA_THRESHOLD)                   \
-      impn_sqr_n_basecase (prodp, up, size);                \
-    else                                \
-      impn_sqr_n (prodp, up, size, tspace);             \
-  } while (0);
+    do {                                  \
+        if ((size) < KARATSUBA_THRESHOLD)                   \
+            impn_sqr_n_basecase (prodp, up, size);                \
+        else                                \
+            impn_sqr_n (prodp, up, size, tspace);             \
+    } while (0);
 
 /* Structure for conversion between internal binary format and
    strings in base 2..36.  */
@@ -209,70 +209,70 @@ extern mp_size_t __gmp_default_fp_limb_precision;
    (i.e., only ones).  For correct operation, the most significant bit of D
    has to be set.  Put the quotient in Q and the remainder in R.  */
 #define udiv_qrnnd_preinv(q, r, nh, nl, d, di) \
-  do {                                  \
-    mp_limb_t _ql __attribute__ ((unused));             \
-    mp_limb_t _q, _r;                           \
-    mp_limb_t _xh, _xl;                         \
-    umul_ppmm (_q, _ql, (nh), (di));                    \
-    _q += (nh);         /* DI is 2**BITS_PER_MP_LIMB too small */\
-    umul_ppmm (_xh, _xl, _q, (d));                  \
-    sub_ddmmss (_xh, _r, (nh), (nl), _xh, _xl);             \
-    if (_xh != 0)                           \
-      {                                 \
-    sub_ddmmss (_xh, _r, _xh, _r, 0, (d));              \
-    _q += 1;                            \
-    if (_xh != 0)                           \
-      {                             \
-        sub_ddmmss (_xh, _r, _xh, _r, 0, (d));          \
-        _q += 1;                            \
-      }                             \
-      }                                 \
-    if (_r >= (d))                          \
-      {                                 \
-    _r -= (d);                          \
-    _q += 1;                            \
-      }                                 \
-    (r) = _r;                               \
-    (q) = _q;                               \
-  } while (0)
+    do {                                  \
+        mp_limb_t _ql __attribute__ ((unused));             \
+        mp_limb_t _q, _r;                           \
+        mp_limb_t _xh, _xl;                         \
+        umul_ppmm (_q, _ql, (nh), (di));                    \
+        _q += (nh);         /* DI is 2**BITS_PER_MP_LIMB too small */\
+        umul_ppmm (_xh, _xl, _q, (d));                  \
+        sub_ddmmss (_xh, _r, (nh), (nl), _xh, _xl);             \
+        if (_xh != 0)                           \
+        {                                 \
+            sub_ddmmss (_xh, _r, _xh, _r, 0, (d));              \
+            _q += 1;                            \
+            if (_xh != 0)                           \
+            {                             \
+                sub_ddmmss (_xh, _r, _xh, _r, 0, (d));          \
+                _q += 1;                            \
+            }                             \
+        }                                 \
+        if (_r >= (d))                          \
+        {                                 \
+            _r -= (d);                          \
+            _q += 1;                            \
+        }                                 \
+        (r) = _r;                               \
+        (q) = _q;                               \
+    } while (0)
 /* Like udiv_qrnnd_preinv, but for any value D.  DNORM is D shifted left
    so that its most significant bit is set.  LGUP is ceil(log2(D)).  */
 #define udiv_qrnnd_preinv2gen(q, r, nh, nl, d, di, dnorm, lgup) \
-  do {                                  \
-    mp_limb_t n2, n10, n1, nadj, q1;                    \
-    mp_limb_t _xh, _xl;                         \
-    n2 = ((nh) << (BITS_PER_MP_LIMB - (lgup))) + ((nl) >> 1 >> (l - 1));\
-    n10 = (nl) << (BITS_PER_MP_LIMB - (lgup));              \
-    n1 = ((mp_limb_signed_t) n10 >> (BITS_PER_MP_LIMB - 1));        \
-    nadj = n10 + (n1 & (dnorm));                    \
-    umul_ppmm (_xh, _xl, di, n2 - n1);                  \
-    add_ssaaaa (_xh, _xl, _xh, _xl, 0, nadj);               \
-    q1 = ~(n2 + _xh);                           \
-    umul_ppmm (_xh, _xl, q1, d);                    \
-    add_ssaaaa (_xh, _xl, _xh, _xl, nh, nl);                \
-    _xh -= (d);                             \
-    (r) = _xl + ((d) & _xh);                        \
-    (q) = _xh - q1;                         \
-  } while (0)
+    do {                                  \
+        mp_limb_t n2, n10, n1, nadj, q1;                    \
+        mp_limb_t _xh, _xl;                         \
+        n2 = ((nh) << (BITS_PER_MP_LIMB - (lgup))) + ((nl) >> 1 >> (l - 1));\
+        n10 = (nl) << (BITS_PER_MP_LIMB - (lgup));              \
+        n1 = ((mp_limb_signed_t) n10 >> (BITS_PER_MP_LIMB - 1));        \
+        nadj = n10 + (n1 & (dnorm));                    \
+        umul_ppmm (_xh, _xl, di, n2 - n1);                  \
+        add_ssaaaa (_xh, _xl, _xh, _xl, 0, nadj);               \
+        q1 = ~(n2 + _xh);                           \
+        umul_ppmm (_xh, _xl, q1, d);                    \
+        add_ssaaaa (_xh, _xl, _xh, _xl, nh, nl);                \
+        _xh -= (d);                             \
+        (r) = _xl + ((d) & _xh);                        \
+        (q) = _xh - q1;                         \
+    } while (0)
 /* Exactly like udiv_qrnnd_preinv, but branch-free.  It is not clear which
    version to use.  */
 #define udiv_qrnnd_preinv2norm(q, r, nh, nl, d, di) \
-  do {                                  \
-    mp_limb_t n2, n10, n1, nadj, q1;                    \
-    mp_limb_t _xh, _xl;                         \
-    n2 = (nh);                              \
-    n10 = (nl);                             \
-    n1 = ((mp_limb_signed_t) n10 >> (BITS_PER_MP_LIMB - 1));        \
-    nadj = n10 + (n1 & (d));                        \
-    umul_ppmm (_xh, _xl, di, n2 - n1);                  \
-    add_ssaaaa (_xh, _xl, _xh, _xl, 0, nadj);               \
-    q1 = ~(n2 + _xh);                           \
-    umul_ppmm (_xh, _xl, q1, d);                    \
-    add_ssaaaa (_xh, _xl, _xh, _xl, nh, nl);                \
-    _xh -= (d);                             \
-    (r) = _xl + ((d) & _xh);                        \
-    (q) = _xh - q1;                         \
-  } while (0)
+    do {                                  \
+        mp_limb_t n2, n10, n1, nadj, q1;                    \
+        mp_limb_t _xh, _xl;                         \
+        n2 = (nh);                              \
+        n10 = (nl);                             \
+        n1 = ((mp_limb_signed_t) n10 >> (BITS_PER_MP_LIMB - 1));        \
+        nadj = n10 + (n1 & (d));                        \
+        umul_ppmm (_xh, _xl, di, n2 - n1);                  \
+        add_ssaaaa (_xh, _xl, _xh, _xl, 0, nadj);               \
+        q1 = ~(n2 + _xh);                           \
+        umul_ppmm (_xh, _xl, q1, d);                    \
+        add_ssaaaa (_xh, _xl, _xh, _xl, nh, nl);                \
+        _xh -= (d);                             \
+        (r) = _xl + ((d) & _xh);                        \
+        (q) = _xh - q1;                         \
+    } while (0)
 
 #if defined (__GNUC__)
 /* Define stuff for longlong.h.  */

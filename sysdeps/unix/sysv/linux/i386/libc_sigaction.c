@@ -25,19 +25,19 @@ extern void restore_rt(void) asm("__restore_rt") attribute_hidden;
 extern void restore(void) asm("__restore") attribute_hidden;
 
 #define SET_SA_RESTORER(kact, act)              \
-  ({                                \
-     if (GLRO(dl_sysinfo_dso) == NULL)              \
-       {                            \
-     (kact)->sa_flags |= SA_RESTORER;           \
-         (kact)->sa_restorer = (((act)->sa_flags & SA_SIGINFO)  \
-                   ? &restore_rt : &restore);   \
-       }                            \
-     else                           \
-       (kact)->sa_restorer = NULL;              \
-  })
+    ({                                \
+        if (GLRO(dl_sysinfo_dso) == NULL)              \
+        {                            \
+            (kact)->sa_flags |= SA_RESTORER;           \
+            (kact)->sa_restorer = (((act)->sa_flags & SA_SIGINFO)  \
+                                   ? &restore_rt : &restore);   \
+        }                            \
+        else                           \
+            (kact)->sa_restorer = NULL;              \
+    })
 
 #define RESET_SA_RESTORER(act, kact) \
-  (act)->sa_restorer = (kact)->sa_restorer
+    (act)->sa_restorer = (kact)->sa_restorer
 
 #include <sysdeps/unix/sysv/linux/libc_sigaction.c>
 
@@ -51,14 +51,14 @@ extern void restore(void) asm("__restore") attribute_hidden;
 
 #define RESTORE(name, syscall) RESTORE2 (name, syscall)
 #define RESTORE2(name, syscall) \
-asm                     \
-  (                     \
-   ".text\n"                    \
-   "	.align 16\n"               \
-   "__" #name ":\n"             \
-   "	movl $" #syscall ", %eax\n"        \
-   "	int  $0x80"                \
-   );
+    asm                     \
+    (                     \
+                          ".text\n"                    \
+                          "	.align 16\n"               \
+                          "__" #name ":\n"             \
+                          "	movl $" #syscall ", %eax\n"        \
+                          "	int  $0x80"                \
+    );
 
 /* The return code for realtime-signals.  */
 RESTORE(restore_rt, __NR_rt_sigreturn)
@@ -66,14 +66,14 @@ RESTORE(restore_rt, __NR_rt_sigreturn)
 /* For the boring old signals.  */
 #undef RESTORE2
 #define RESTORE2(name, syscall) \
-asm                     \
-  (                     \
-   ".text\n"                    \
-   "	.align 8\n"                \
-   "__" #name ":\n"             \
-   "	popl %eax\n"               \
-   "	movl $" #syscall ", %eax\n"        \
-   "	int  $0x80"                \
-   );
+    asm                     \
+    (                     \
+                          ".text\n"                    \
+                          "	.align 8\n"                \
+                          "__" #name ":\n"             \
+                          "	popl %eax\n"               \
+                          "	movl $" #syscall ", %eax\n"        \
+                          "	int  $0x80"                \
+    );
 
 RESTORE(restore, __NR_sigreturn)

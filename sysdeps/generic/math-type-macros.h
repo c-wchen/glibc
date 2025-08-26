@@ -84,17 +84,17 @@
 
 #ifndef declare_mgen_finite_alias_x
 #define declare_mgen_finite_alias_x(from, to)   \
-  libm_alias_finite (from, to)
+    libm_alias_finite (from, to)
 #endif
 
 #ifndef declare_mgen_finite_alias_s
 # define declare_mgen_finite_alias_s(from,to)   \
-  declare_mgen_finite_alias_x (from, to)
+    declare_mgen_finite_alias_x (from, to)
 #endif
 
 #ifndef declare_mgen_finite_alias
 # define declare_mgen_finite_alias(from, to)    \
-  declare_mgen_finite_alias_s (M_SUF (from), M_SUF (to))
+    declare_mgen_finite_alias_s (M_SUF (from), M_SUF (to))
 #endif
 
 #define __M_CONCAT(a,b) a ## b

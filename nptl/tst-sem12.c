@@ -21,11 +21,11 @@
 
 
 #define TF_PREPARE \
-  struct timespec ts; \
-  struct timeval tv; \
-  gettimeofday (&tv, NULL); \
-  TIMEVAL_TO_TIMESPEC (&tv, &ts); \
-  ts.tv_sec += 60;
+    struct timespec ts; \
+    struct timeval tv; \
+    gettimeofday (&tv, NULL); \
+    TIMEVAL_TO_TIMESPEC (&tv, &ts); \
+    ts.tv_sec += 60;
 
 #define SEM_WAIT(s) sem_timedwait (s, &ts)
 

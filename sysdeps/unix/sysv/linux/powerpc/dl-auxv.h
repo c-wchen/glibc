@@ -17,4 +17,4 @@
    <https://www.gnu.org/licenses/>.  */
 
 #define DL_PLATFORM_AUXV \
-  GLRO(dl_cache_line_size) = auxv_values[AT_DCACHEBSIZE];
+    GLRO(dl_cache_line_size) = auxv_values[AT_DCACHEBSIZE];

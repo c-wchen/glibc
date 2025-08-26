@@ -1110,7 +1110,7 @@ static int parse_comm(char **word, size_t *word_length, size_t *max_length,
 }
 
 #define CHAR_IN_SET(ch, char_set) \
-  (memchr (char_set "", ch, sizeof (char_set) - 1) != NULL)
+    (memchr (char_set "", ch, sizeof (char_set) - 1) != NULL)
 
 static int parse_param(char **word, size_t *word_length, size_t *max_length,
                        const char *words, size_t *offset, int flags, wordexp_t *pwordexp,

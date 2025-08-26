@@ -30,20 +30,20 @@ struct __pthread_cancelation_handler **__pthread_get_cleanup_stack(void);
 
 #define __pthread_cleanup_push(rt, rtarg) \
     { \
-      struct __pthread_cancelation_handler **__handlers \
-        = __pthread_get_cleanup_stack (); \
-      struct __pthread_cancelation_handler __handler = \
+        struct __pthread_cancelation_handler **__handlers \
+            = __pthread_get_cleanup_stack (); \
+        struct __pthread_cancelation_handler __handler = \
         { \
-          (rt), \
-          (rtarg), \
-          *__handlers \
+            (rt), \
+            (rtarg), \
+            *__handlers \
         }; \
-      *__handlers = &__handler;
+        *__handlers = &__handler;
 
 #define __pthread_cleanup_pop(execute) \
-      if (execute) \
+    if (execute) \
         __handler.__handler (__handler.__arg); \
-      *__handlers = __handler.__next; \
+    *__handlers = __handler.__next; \
     }
 
 #endif /* _BITS_CANCELATION_H */

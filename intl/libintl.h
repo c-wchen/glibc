@@ -29,7 +29,7 @@
 /* Provide information about the supported file formats.  Returns the
    maximum minor revision number supported for a given major revision.  */
 #define __GNU_GETTEXT_SUPPORTED_REVISION(major) \
-  ((major) == 0 ? 1 : -1)
+    ((major) == 0 ? 1 : -1)
 
 __BEGIN_DECLS
 
@@ -109,12 +109,12 @@ extern char *bind_textdomain_codeset(const char *__domainname,
 # define gettext(msgid) dgettext (NULL, msgid)
 
 # define dgettext(domainname, msgid) \
-  dcgettext (domainname, msgid, LC_MESSAGES)
+    dcgettext (domainname, msgid, LC_MESSAGES)
 
 # define ngettext(msgid1, msgid2, n) dngettext (NULL, msgid1, msgid2, n)
 
 # define dngettext(domainname, msgid1, msgid2, n) \
-  dcngettext (domainname, msgid1, msgid2, n, LC_MESSAGES)
+    dcngettext (domainname, msgid1, msgid2, n, LC_MESSAGES)
 
 #endif  /* Optimizing.  */
 

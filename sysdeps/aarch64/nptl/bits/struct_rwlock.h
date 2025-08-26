@@ -35,6 +35,6 @@ struct __pthread_rwlock_arch_t {
 };
 
 #define __PTHREAD_RWLOCK_INITIALIZER(__flags) \
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, __flags
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, __flags
 
 #endif

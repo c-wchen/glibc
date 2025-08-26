@@ -42,11 +42,11 @@ _itowa_word(_ITOA_WORD_TYPE value, wchar_t *buflim,
 
     switch (base) {
 #define SPECIAL(Base)                                 \
-    case Base:                                    \
-      do                                      \
-    *--bp = digits[value % Base];                         \
-      while ((value /= Base) != 0);                       \
-      break
+case Base:                                    \
+    do                                      \
+        *--bp = digits[value % Base];                         \
+    while ((value /= Base) != 0);                       \
+    break
 
             SPECIAL(10);
             SPECIAL(16);
@@ -63,7 +63,7 @@ _itowa_word(_ITOA_WORD_TYPE value, wchar_t *buflim,
 #if !_ITOA_NEEDED
 /* No need for special long long versions.  */
 # define _itowa(value, buf, base, upper_case) \
-  _itowa_word (value, buf, base, upper_case)
+    _itowa_word (value, buf, base, upper_case)
 #endif
 
 #endif  /* itowa.h */

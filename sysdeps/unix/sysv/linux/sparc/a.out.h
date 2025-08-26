@@ -33,17 +33,17 @@ enum machine_type {
 #define N_MACHTYPE(exec) ((enum machine_type)(((exec).a_info >> 16) & 0xff))
 #define N_FLAGS(exec)   (((exec).a_info >> 24) & 0xff)
 #define N_SET_INFO(exec, magic, type, flags) \
-  ((exec).a_info = ((magic) & 0xffff)                   \
-   | (((int)(type) & 0xff) << 16)                   \
-   | (((flags) & 0xff) << 24))
+    ((exec).a_info = ((magic) & 0xffff)                   \
+                     | (((int)(type) & 0xff) << 16)                   \
+                     | (((flags) & 0xff) << 24))
 #define N_SET_MAGIC(exec, magic) \
-  ((exec).a_info = ((exec).a_info & 0xffff0000) | ((magic) & 0xffff))
+    ((exec).a_info = ((exec).a_info & 0xffff0000) | ((magic) & 0xffff))
 #define N_SET_MACHTYPE(exec, machtype) \
-  ((exec).a_info =                          \
-   ((exec).a_info&0xff00ffff) | ((((int)(machtype))&0xff) << 16))
+    ((exec).a_info =                          \
+            ((exec).a_info&0xff00ffff) | ((((int)(machtype))&0xff) << 16))
 #define N_SET_FLAGS(exec, flags) \
-  ((exec).a_info =                          \
-   ((exec).a_info&0x00ffffff) | (((flags) & 0xff) << 24))
+    ((exec).a_info =                          \
+            ((exec).a_info&0x00ffffff) | (((flags) & 0xff) << 24))
 
 /* Code indicating object file or impure executable.  */
 #define OMAGIC 0407
@@ -61,24 +61,24 @@ enum machine_type {
 #define N_DRSIZE(a) ((a).a_drsize)
 #define N_SYMSIZE(a)    ((a).a_syms)
 #define N_BADMAG(x) \
-  (N_MAGIC(x) != OMAGIC && N_MAGIC(x) != NMAGIC             \
-   && N_MAGIC(x) != ZMAGIC && N_MAGIC(x) != QMAGIC)
+    (N_MAGIC(x) != OMAGIC && N_MAGIC(x) != NMAGIC             \
+     && N_MAGIC(x) != ZMAGIC && N_MAGIC(x) != QMAGIC)
 #define _N_HDROFF(x)    (1024 - sizeof (struct exec))
 #define N_TXTOFF(x) \
-  (N_MAGIC(x) == ZMAGIC ? 0 : sizeof (struct exec))
+    (N_MAGIC(x) == ZMAGIC ? 0 : sizeof (struct exec))
 #define N_DATOFF(x) (N_TXTOFF(x) + (x).a_text)
 #define N_TRELOFF(x)    (N_DATOFF(x) + (x).a_data)
 #define N_DRELOFF(x)    (N_TRELOFF(x) + N_TRSIZE(x))
 #define N_SYMOFF(x) \
-  (N_TXTOFF(x) + (x).a_text + (x).a_data + (x).a_trsize + (x).a_drsize)
+    (N_TXTOFF(x) + (x).a_text + (x).a_data + (x).a_trsize + (x).a_drsize)
 #define N_STROFF(x) (N_SYMOFF(x) + N_SYMSIZE(x))
 
 #define SPARC_PGSIZE    0x2000
 
 /* Address of text segment in memory after it is loaded.  */
 #define N_TXTADDR(x) \
- (unsigned long)(((N_MAGIC(x) == ZMAGIC) && ((x).a_entry < SPARC_PGSIZE)) \
-         ? 0 : SPARC_PGSIZE)
+    (unsigned long)(((N_MAGIC(x) == ZMAGIC) && ((x).a_entry < SPARC_PGSIZE)) \
+                    ? 0 : SPARC_PGSIZE)
 
 /* Address of data segment in memory after it is loaded.  */
 #define SEGMENT_SIZE    SPARC_PGSIZE
@@ -87,9 +87,9 @@ enum machine_type {
 #define _N_TXTENDADDR(x) (N_TXTADDR(x)+(x).a_text)
 
 #define N_DATADDR(x) \
-  (N_MAGIC(x)==OMAGIC                           \
-   ? (N_TXTADDR(x) + (x).a_text)                    \
-   : (unsigned long)(_N_SEGMENT_ROUND (_N_TXTENDADDR(x))))
+    (N_MAGIC(x)==OMAGIC                           \
+     ? (N_TXTADDR(x) + (x).a_text)                    \
+     : (unsigned long)(_N_SEGMENT_ROUND (_N_TXTENDADDR(x))))
 #define N_BSSADDR(x) (N_DATADDR(x) + (x).a_data)
 
 #if !defined (N_NLIST_DECLARED)

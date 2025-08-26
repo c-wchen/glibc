@@ -46,6 +46,6 @@ struct __pthread_mutex_s {
 #define __PTHREAD_MUTEX_HAVE_PREV       0
 
 #define __PTHREAD_MUTEX_INITIALIZER(__kind) \
-  0, 0, 0, __kind, { 0, 0, 0, 0 }, 0, { 0 }, 0, 0
+    0, 0, 0, __kind, { 0, 0, 0, 0 }, 0, { 0 }, 0, 0
 
 #endif

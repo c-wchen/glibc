@@ -2379,9 +2379,9 @@ void collate_output(struct localedef_t *locale, const struct charmap_t *charmap,
 
 
 static enum token_t skip_to(struct linereader *ldfile, struct locale_collate_t *collate,
-                            const struct charmap_t *charmap, int to_endif) {
-    while (1)
-    {
+                            const struct charmap_t *charmap, int to_endif)
+{
+    while (1) {
         struct token *now = lr_token(ldfile, charmap, NULL, NULL, 0);
         enum token_t nowtok = now->tok;
 

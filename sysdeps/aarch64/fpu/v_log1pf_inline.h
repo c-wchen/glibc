@@ -33,14 +33,14 @@ struct v_log1pf_data {
 /* Polynomial generated using FPMinimax in [-0.25, 0.5]. First two coefficients
    (1, -0.5) are not stored as they can be generated more efficiently.  */
 #define V_LOG1PF_CONSTANTS_TABLE                                              \
-  {                                                                           \
-    .c0 = 0x1.5555aap-2f, .c1 = V4 (-0x1.000038p-2f),                         \
-    .c2 = V4 (0x1.99675cp-3f), .c3 = -0x1.54ef78p-3f,                         \
-    .c4 = V4 (0x1.28a1f4p-3f), .c5 = -0x1.0da91p-3f,                          \
-    .c6 = V4 (0x1.abcb6p-4f), .c7 = -0x1.6f0d5ep-5f,                          \
-    .ln2 = V4 (0x1.62e43p-1f), .four = V4 (0x40800000),                       \
-    .three_quarters = V4 (0x3f400000)                                         \
-  }
+    {                                                                           \
+        .c0 = 0x1.5555aap-2f, .c1 = V4 (-0x1.000038p-2f),                         \
+                                    .c2 = V4 (0x1.99675cp-3f), .c3 = -0x1.54ef78p-3f,                         \
+                                            .c4 = V4 (0x1.28a1f4p-3f), .c5 = -0x1.0da91p-3f,                          \
+                                                    .c6 = V4 (0x1.abcb6p-4f), .c7 = -0x1.6f0d5ep-5f,                          \
+                                                            .ln2 = V4 (0x1.62e43p-1f), .four = V4 (0x40800000),                       \
+                                                                    .three_quarters = V4 (0x3f400000)                                         \
+    }
 
 static inline float32x4_t eval_poly(float32x4_t m, const struct v_log1pf_data *d)
 {

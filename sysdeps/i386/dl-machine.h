@@ -180,11 +180,11 @@ _dl_start_user:\n\
    ELF_RTYPE_CLASS_COPY iff TYPE should not be allowed to resolve to one
    of the main executable's symbols, as for a COPY reloc.  */
 # define elf_machine_type_class(type) \
-  ((((type) == R_386_JMP_SLOT || (type) == R_386_TLS_DTPMOD32             \
-     || (type) == R_386_TLS_DTPOFF32 || (type) == R_386_TLS_TPOFF32       \
-     || (type) == R_386_TLS_TPOFF || (type) == R_386_TLS_DESC)            \
-    * ELF_RTYPE_CLASS_PLT)                            \
-   | (((type) == R_386_COPY) * ELF_RTYPE_CLASS_COPY))
+    ((((type) == R_386_JMP_SLOT || (type) == R_386_TLS_DTPMOD32             \
+       || (type) == R_386_TLS_DTPOFF32 || (type) == R_386_TLS_TPOFF32       \
+       || (type) == R_386_TLS_TPOFF || (type) == R_386_TLS_DESC)            \
+      * ELF_RTYPE_CLASS_PLT)                            \
+     | (((type) == R_386_COPY) * ELF_RTYPE_CLASS_COPY))
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT    R_386_JMP_SLOT

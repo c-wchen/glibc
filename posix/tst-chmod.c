@@ -31,11 +31,11 @@
 
 
 #define OUT_OF_MEMORY \
-  do {                                        \
-    puts ("cannot allocate memory");                          \
-    result = 1;                                   \
-    goto fail;                                    \
-  } while (0)
+    do {                                        \
+        puts ("cannot allocate memory");                          \
+        result = 1;                                   \
+        goto fail;                                    \
+    } while (0)
 
 static int do_test(int argc, char *argv[])
 {

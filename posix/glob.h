@@ -55,13 +55,13 @@ typedef __SIZE_TYPE__ size_t;
 # define GLOB_TILDE_CHECK (1 << 14)/* Like GLOB_TILDE but return an error
                       if the user name is not available.  */
 # define __GLOB_FLAGS   (GLOB_ERR|GLOB_MARK|GLOB_NOSORT|GLOB_DOOFFS  \
-             |GLOB_NOESCAPE|GLOB_NOCHECK|GLOB_APPEND     \
-             |GLOB_PERIOD|GLOB_ALTDIRFUNC|GLOB_BRACE     \
-             |GLOB_NOMAGIC|GLOB_TILDE|GLOB_ONLYDIR|GLOB_TILDE_CHECK)
+                         |GLOB_NOESCAPE|GLOB_NOCHECK|GLOB_APPEND     \
+                         |GLOB_PERIOD|GLOB_ALTDIRFUNC|GLOB_BRACE     \
+                         |GLOB_NOMAGIC|GLOB_TILDE|GLOB_ONLYDIR|GLOB_TILDE_CHECK)
 #else
 # define __GLOB_FLAGS   (GLOB_ERR|GLOB_MARK|GLOB_NOSORT|GLOB_DOOFFS  \
-             |GLOB_NOESCAPE|GLOB_NOCHECK|GLOB_APPEND     \
-             |GLOB_PERIOD)
+                         |GLOB_NOESCAPE|GLOB_NOCHECK|GLOB_APPEND     \
+                         |GLOB_PERIOD)
 #endif
 
 /* Error returns from `glob'.  */

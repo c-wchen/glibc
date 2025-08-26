@@ -57,7 +57,7 @@ static const struct argp_option options[] = {
     {
         "time", 't', NULL, 0, N_("\
 Generate output linear to time (default is linear to number of function calls)\
-") 
+")
     },
     {
         "total", 'T', NULL, 0,

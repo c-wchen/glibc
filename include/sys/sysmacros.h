@@ -31,13 +31,13 @@ libc_hidden_proto(gnu_dev_makedev)
 
 # undef __SYSMACROS_DECL_TEMPL
 # define __SYSMACROS_DECL_TEMPL(rtype, name, proto) \
-  extern rtype __gnu_dev_##name proto           \
-  __THROW __attribute_const__ attribute_hidden;
+    extern rtype __gnu_dev_##name proto           \
+    __THROW __attribute_const__ attribute_hidden;
 
 # undef __SYSMACROS_IMPL_TEMPL
 # define __SYSMACROS_IMPL_TEMPL(rtype, name, proto)     \
-  __extension__ __extern_inline __attribute_const__ rtype   \
-  __NTH (__gnu_dev_##name proto)
+    __extension__ __extern_inline __attribute_const__ rtype   \
+    __NTH (__gnu_dev_##name proto)
 
 __SYSMACROS_DECLARE_MAJOR(__SYSMACROS_DECL_TEMPL)
 __SYSMACROS_DECLARE_MINOR(__SYSMACROS_DECL_TEMPL)

@@ -389,24 +389,24 @@ static int do_test(void)
     gl.gl_stat = my_stat;
 
 #define test(a, b, r, c...) \
-  fmt = a;                                    \
-  flags = GLOB_ALTDIRFUNC | b;                            \
-  errval = GLOB_FUNC (fmt, flags, NULL, &gl);                     \
-  if (errval != r)                                \
+    fmt = a;                                    \
+    flags = GLOB_ALTDIRFUNC | b;                            \
+    errval = GLOB_FUNC (fmt, flags, NULL, &gl);                     \
+    if (errval != r)                                \
     {                                         \
-      if (r == 0)                                 \
-    printf ("glob (\"%s\", %s) failed: %s\n", fmt, flagstr (flags),       \
-        errval >= 0 && errval < nglob_errstring               \
-        ? glob_errstring[errval] : "???");                \
-      else                                    \
-    printf ("glob (\"%s\", %s) did not fail\n", fmt, flagstr (flags));    \
-      result = 1;                                 \
+        if (r == 0)                                 \
+            printf ("glob (\"%s\", %s) failed: %s\n", fmt, flagstr (flags),       \
+                    errval >= 0 && errval < nglob_errstring               \
+                    ? glob_errstring[errval] : "???");                \
+        else                                    \
+            printf ("glob (\"%s\", %s) did not fail\n", fmt, flagstr (flags));    \
+        result = 1;                                 \
     }                                         \
-  else if (r == 0)                                \
-    result |= test_result (fmt, flags, &gl, (const char *[]) { c, NULL });    \
-  else                                        \
-    printf ("result for glob (\"%s\", %s) = %s\n\n", fmt, flagstr (flags),    \
-        errstr (errval))
+    else if (r == 0)                                \
+        result |= test_result (fmt, flags, &gl, (const char *[]) { c, NULL });    \
+    else                                        \
+        printf ("result for glob (\"%s\", %s) = %s\n\n", fmt, flagstr (flags),    \
+                errstr (errval))
 
     test("*/*/*", 0, 0,
          "dir1lev1/dir2lev2/dir1lev3",

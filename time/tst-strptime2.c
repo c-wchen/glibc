@@ -216,10 +216,10 @@ static int do_test(void)
 #define OPT_VERBOSE 10000
 
 #define CMDLINE_OPTIONS \
-  { "verbose", no_argument, NULL, OPT_VERBOSE, },
+    { "verbose", no_argument, NULL, OPT_VERBOSE, },
 
 #define CMDLINE_PROCESS \
-  case OPT_VERBOSE: \
+    case OPT_VERBOSE: \
     verbose = true; \
     break;
 

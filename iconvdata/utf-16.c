@@ -41,44 +41,44 @@
 #define ONE_DIRECTION       0
 #define FROM_DIRECTION      (dir == from_utf16)
 #define PREPARE_LOOP \
-  enum direction dir = ((struct utf16_data *) step->__data)->dir;         \
-  enum variant var = ((struct utf16_data *) step->__data)->var;           \
-  if (__glibc_unlikely (data->__invocation_counter == 0))             \
+    enum direction dir = ((struct utf16_data *) step->__data)->dir;         \
+    enum variant var = ((struct utf16_data *) step->__data)->var;           \
+    if (__glibc_unlikely (data->__invocation_counter == 0))             \
     {                                         \
-      if (var == UTF_16)                              \
-    {                                     \
-      if (FROM_DIRECTION)                             \
+        if (var == UTF_16)                              \
         {                                     \
-          /* We have to find out which byte order the file is         \
-         encoded in.  */                          \
-          if (inptr + 2 > inend)                          \
-        return (inptr == inend                        \
-            ? __GCONV_EMPTY_INPUT : __GCONV_INCOMPLETE_INPUT);    \
-                                          \
-          if (get16 (inptr) == BOM)                       \
-        /* Simply ignore the BOM character.  */               \
-        *inptrp = inptr += 2;                         \
-          else if (get16 (inptr) == BOM_OE)                   \
-        {                                 \
-          data->__flags |= __GCONV_SWAP;                  \
-          *inptrp = inptr += 2;                       \
-        }                                 \
+            if (FROM_DIRECTION)                             \
+            {                                     \
+                /* We have to find out which byte order the file is         \
+                encoded in.  */                          \
+                if (inptr + 2 > inend)                          \
+                    return (inptr == inend                        \
+                            ? __GCONV_EMPTY_INPUT : __GCONV_INCOMPLETE_INPUT);    \
+                \
+                if (get16 (inptr) == BOM)                       \
+                    /* Simply ignore the BOM character.  */               \
+                    *inptrp = inptr += 2;                         \
+                else if (get16 (inptr) == BOM_OE)                   \
+                {                                 \
+                    data->__flags |= __GCONV_SWAP;                  \
+                    *inptrp = inptr += 2;                       \
+                }                                 \
+            }                                     \
+            else if (!FROM_DIRECTION && !data->__internal_use)              \
+            {                                     \
+                /* Emit the Byte Order Mark.  */                    \
+                if (__glibc_unlikely (outbuf + 2 > outend))             \
+                    return __GCONV_FULL_OUTPUT;                   \
+                \
+                put16 (outbuf, BOM);                        \
+                outbuf += 2;                            \
+            }                                     \
         }                                     \
-      else if (!FROM_DIRECTION && !data->__internal_use)              \
-        {                                     \
-          /* Emit the Byte Order Mark.  */                    \
-          if (__glibc_unlikely (outbuf + 2 > outend))             \
-        return __GCONV_FULL_OUTPUT;                   \
-                                          \
-          put16 (outbuf, BOM);                        \
-          outbuf += 2;                            \
-        }                                     \
-    }                                     \
-      else if ((var == UTF_16LE && BYTE_ORDER == BIG_ENDIAN)              \
-           || (var == UTF_16BE && BYTE_ORDER == LITTLE_ENDIAN))       \
-    data->__flags |= __GCONV_SWAP;                        \
+        else if ((var == UTF_16LE && BYTE_ORDER == BIG_ENDIAN)              \
+                 || (var == UTF_16BE && BYTE_ORDER == LITTLE_ENDIAN))       \
+            data->__flags |= __GCONV_SWAP;                        \
     }                                         \
-  const int swap = data->__flags & __GCONV_SWAP;
+    const int swap = data->__flags & __GCONV_SWAP;
 #define EXTRA_LOOP_ARGS     , swap
 
 
@@ -176,74 +176,74 @@ void gconv_end(struct __gconv_step *data)
 #define MAX_NEEDED_OUTPUT   MAX_NEEDED_FROM
 #define LOOPFCT         TO_LOOP
 #define BODY \
-  {                                       \
-    uint32_t c = get32 (inptr);                           \
-                                          \
-    if (__glibc_unlikely (c >= 0xd800 && c < 0xe000))                 \
-      {                                       \
-    /* Surrogate characters in UCS-4 input are not valid.             \
-       We must catch this.  If we let surrogates pass through,        \
-       attackers could make a security hole exploit by            \
-       synthesizing any desired plane 1-16 character.  */             \
-    result = __gconv_mark_illegal_input (step_data);              \
-    if (! ignore_errors_p ())                         \
-      break;                                  \
-    inptr += 4;                               \
-    ++*irreversible;                              \
-    continue;                                 \
-      }                                       \
-                                          \
-    if (swap)                                     \
-      {                                       \
-    if (__glibc_unlikely (c >= 0x10000))                      \
-      {                                   \
-        if (__glibc_unlikely (c >= 0x110000))                 \
-          {                                   \
-        STANDARD_TO_LOOP_ERR_HANDLER (4);                 \
-          }                                   \
-                                          \
-        /* Generate a surrogate character.  */                \
-        if (__glibc_unlikely (outptr + 4 > outend))               \
-          {                                   \
-        /* Overflow in the output buffer.  */                 \
-        result = __GCONV_FULL_OUTPUT;                     \
-        break;                                \
-          }                                   \
-                                          \
-        put16 (outptr, bswap_16 (0xd7c0 + (c >> 10)));            \
-        outptr += 2;                              \
-        put16 (outptr, bswap_16 (0xdc00 + (c & 0x3ff)));              \
-      }                                   \
-    else                                      \
-      put16 (outptr, bswap_16 (c));                       \
-      }                                       \
-    else                                      \
-      {                                       \
-    if (__glibc_unlikely (c >= 0x10000))                      \
-      {                                   \
-        if (__glibc_unlikely (c >= 0x110000))                 \
-          {                                   \
-        STANDARD_TO_LOOP_ERR_HANDLER (4);                 \
-          }                                   \
-                                          \
-        /* Generate a surrogate character.  */                \
-        if (__glibc_unlikely (outptr + 4 > outend))               \
-          {                                   \
-        /* Overflow in the output buffer.  */                 \
-        result = __GCONV_FULL_OUTPUT;                     \
-        break;                                \
-          }                                   \
-                                          \
-        put16 (outptr, 0xd7c0 + (c >> 10));                   \
-        outptr += 2;                              \
-        put16 (outptr, 0xdc00 + (c & 0x3ff));                 \
-      }                                   \
-    else                                      \
-      put16 (outptr, c);                              \
-      }                                       \
-    outptr += 2;                                  \
-    inptr += 4;                                   \
-  }
+    {                                       \
+        uint32_t c = get32 (inptr);                           \
+        \
+        if (__glibc_unlikely (c >= 0xd800 && c < 0xe000))                 \
+        {                                       \
+            /* Surrogate characters in UCS-4 input are not valid.             \
+               We must catch this.  If we let surrogates pass through,        \
+               attackers could make a security hole exploit by            \
+               synthesizing any desired plane 1-16 character.  */             \
+            result = __gconv_mark_illegal_input (step_data);              \
+            if (! ignore_errors_p ())                         \
+                break;                                  \
+            inptr += 4;                               \
+            ++*irreversible;                              \
+            continue;                                 \
+        }                                       \
+        \
+        if (swap)                                     \
+        {                                       \
+            if (__glibc_unlikely (c >= 0x10000))                      \
+            {                                   \
+                if (__glibc_unlikely (c >= 0x110000))                 \
+                {                                   \
+                    STANDARD_TO_LOOP_ERR_HANDLER (4);                 \
+                }                                   \
+                \
+                /* Generate a surrogate character.  */                \
+                if (__glibc_unlikely (outptr + 4 > outend))               \
+                {                                   \
+                    /* Overflow in the output buffer.  */                 \
+                    result = __GCONV_FULL_OUTPUT;                     \
+                    break;                                \
+                }                                   \
+                \
+                put16 (outptr, bswap_16 (0xd7c0 + (c >> 10)));            \
+                outptr += 2;                              \
+                put16 (outptr, bswap_16 (0xdc00 + (c & 0x3ff)));              \
+            }                                   \
+            else                                      \
+                put16 (outptr, bswap_16 (c));                       \
+        }                                       \
+        else                                      \
+        {                                       \
+            if (__glibc_unlikely (c >= 0x10000))                      \
+            {                                   \
+                if (__glibc_unlikely (c >= 0x110000))                 \
+                {                                   \
+                    STANDARD_TO_LOOP_ERR_HANDLER (4);                 \
+                }                                   \
+                \
+                /* Generate a surrogate character.  */                \
+                if (__glibc_unlikely (outptr + 4 > outend))               \
+                {                                   \
+                    /* Overflow in the output buffer.  */                 \
+                    result = __GCONV_FULL_OUTPUT;                     \
+                    break;                                \
+                }                                   \
+                \
+                put16 (outptr, 0xd7c0 + (c >> 10));                   \
+                outptr += 2;                              \
+                put16 (outptr, 0xdc00 + (c & 0x3ff));                 \
+            }                                   \
+            else                                      \
+                put16 (outptr, c);                              \
+        }                                       \
+        outptr += 2;                                  \
+        inptr += 4;                                   \
+    }
 #define LOOP_NEED_FLAGS
 #define EXTRA_LOOP_DECLS \
     , int swap
@@ -256,95 +256,95 @@ void gconv_end(struct __gconv_step *data)
 #define MIN_NEEDED_OUTPUT   MIN_NEEDED_TO
 #define LOOPFCT         FROM_LOOP
 #define BODY \
-  {                                       \
-    uint16_t u1 = get16 (inptr);                          \
-                                          \
-    if (swap)                                     \
-      {                                       \
-    u1 = bswap_16 (u1);                           \
-                                          \
-    if (__builtin_expect (u1 < 0xd800, 1) || u1 > 0xdfff)             \
-      {                                   \
-        /* No surrogate.  */                          \
-        put32 (outptr, u1);                           \
-        inptr += 2;                               \
-      }                                   \
-    else                                      \
-      {                                   \
-        uint16_t u2;                              \
-                                          \
-        if (__glibc_unlikely (u1 >= 0xdc00))                  \
-          {                                   \
-        /* This is no valid first word for a surrogate.  */       \
-        STANDARD_FROM_LOOP_ERR_HANDLER (2);               \
-          }                                   \
-                                          \
-        /* It's a surrogate character.  At least the first word says      \
-           it is.  */                             \
-        if (__glibc_unlikely (inptr + 4 > inend))                 \
-          {                                   \
-        /* We don't have enough input for another complete input      \
-           character.  */                         \
-        result = __GCONV_INCOMPLETE_INPUT;                \
-        break;                                \
-          }                                   \
-                                          \
-        inptr += 2;                               \
-        u2 = bswap_16 (get16 (inptr));                    \
-        if (__builtin_expect (u2 < 0xdc00, 0)                 \
-        || __builtin_expect (u2 > 0xdfff, 0))                 \
-          {                                   \
-        /* This is no valid second word for a surrogate.  */          \
-        inptr -= 2;                           \
-        STANDARD_FROM_LOOP_ERR_HANDLER (2);               \
-          }                                   \
-                                          \
-        put32 (outptr, ((u1 - 0xd7c0) << 10) + (u2 - 0xdc00));        \
-        inptr += 2;                               \
-      }                                   \
-      }                                       \
-    else                                      \
-      {                                       \
-    if (__builtin_expect (u1 < 0xd800, 1) || u1 > 0xdfff)             \
-      {                                   \
-        /* No surrogate.  */                          \
-        put32 (outptr, u1);                           \
-        inptr += 2;                               \
-      }                                   \
-    else                                      \
-      {                                   \
-        if (__glibc_unlikely (u1 >= 0xdc00))                  \
-          {                                   \
-        /* This is no valid first word for a surrogate.  */       \
-        STANDARD_FROM_LOOP_ERR_HANDLER (2);               \
-          }                                   \
-                                          \
-        /* It's a surrogate character.  At least the first word says      \
-           it is.  */                             \
-        if (__glibc_unlikely (inptr + 4 > inend))                 \
-          {                                   \
-        /* We don't have enough input for another complete input      \
-           character.  */                         \
-        result = __GCONV_INCOMPLETE_INPUT;                \
-        break;                                \
-          }                                   \
-                                          \
-        inptr += 2;                               \
-        uint16_t u2 = get16 (inptr);                      \
-        if (__builtin_expect (u2 < 0xdc00, 0)                 \
-        || __builtin_expect (u2 > 0xdfff, 0))                 \
-          {                                   \
-        /* This is no valid second word for a surrogate.  */          \
-        inptr -= 2;                           \
-        STANDARD_FROM_LOOP_ERR_HANDLER (2);               \
-          }                                   \
-                                          \
-        put32 (outptr, ((u1 - 0xd7c0) << 10) + (u2 - 0xdc00));        \
-        inptr += 2;                               \
-      }                                   \
-      }                                       \
-    outptr += 4;                                  \
-  }
+    {                                       \
+        uint16_t u1 = get16 (inptr);                          \
+        \
+        if (swap)                                     \
+        {                                       \
+            u1 = bswap_16 (u1);                           \
+            \
+            if (__builtin_expect (u1 < 0xd800, 1) || u1 > 0xdfff)             \
+            {                                   \
+                /* No surrogate.  */                          \
+                put32 (outptr, u1);                           \
+                inptr += 2;                               \
+            }                                   \
+            else                                      \
+            {                                   \
+                uint16_t u2;                              \
+                \
+                if (__glibc_unlikely (u1 >= 0xdc00))                  \
+                {                                   \
+                    /* This is no valid first word for a surrogate.  */       \
+                    STANDARD_FROM_LOOP_ERR_HANDLER (2);               \
+                }                                   \
+                \
+                /* It's a surrogate character.  At least the first word says      \
+                   it is.  */                             \
+                if (__glibc_unlikely (inptr + 4 > inend))                 \
+                {                                   \
+                    /* We don't have enough input for another complete input      \
+                       character.  */                         \
+                    result = __GCONV_INCOMPLETE_INPUT;                \
+                    break;                                \
+                }                                   \
+                \
+                inptr += 2;                               \
+                u2 = bswap_16 (get16 (inptr));                    \
+                if (__builtin_expect (u2 < 0xdc00, 0)                 \
+                    || __builtin_expect (u2 > 0xdfff, 0))                 \
+                {                                   \
+                    /* This is no valid second word for a surrogate.  */          \
+                    inptr -= 2;                           \
+                    STANDARD_FROM_LOOP_ERR_HANDLER (2);               \
+                }                                   \
+                \
+                put32 (outptr, ((u1 - 0xd7c0) << 10) + (u2 - 0xdc00));        \
+                inptr += 2;                               \
+            }                                   \
+        }                                       \
+        else                                      \
+        {                                       \
+            if (__builtin_expect (u1 < 0xd800, 1) || u1 > 0xdfff)             \
+            {                                   \
+                /* No surrogate.  */                          \
+                put32 (outptr, u1);                           \
+                inptr += 2;                               \
+            }                                   \
+            else                                      \
+            {                                   \
+                if (__glibc_unlikely (u1 >= 0xdc00))                  \
+                {                                   \
+                    /* This is no valid first word for a surrogate.  */       \
+                    STANDARD_FROM_LOOP_ERR_HANDLER (2);               \
+                }                                   \
+                \
+                /* It's a surrogate character.  At least the first word says      \
+                   it is.  */                             \
+                if (__glibc_unlikely (inptr + 4 > inend))                 \
+                {                                   \
+                    /* We don't have enough input for another complete input      \
+                       character.  */                         \
+                    result = __GCONV_INCOMPLETE_INPUT;                \
+                    break;                                \
+                }                                   \
+                \
+                inptr += 2;                               \
+                uint16_t u2 = get16 (inptr);                      \
+                if (__builtin_expect (u2 < 0xdc00, 0)                 \
+                    || __builtin_expect (u2 > 0xdfff, 0))                 \
+                {                                   \
+                    /* This is no valid second word for a surrogate.  */          \
+                    inptr -= 2;                           \
+                    STANDARD_FROM_LOOP_ERR_HANDLER (2);               \
+                }                                   \
+                \
+                put32 (outptr, ((u1 - 0xd7c0) << 10) + (u2 - 0xdc00));        \
+                inptr += 2;                               \
+            }                                   \
+        }                                       \
+        outptr += 4;                                  \
+    }
 #define LOOP_NEED_FLAGS
 #define EXTRA_LOOP_DECLS \
     , int swap

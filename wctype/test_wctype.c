@@ -43,22 +43,22 @@ int main(int argc, char *argv[])
 
     for (ch = 0; ch < 256; ++ch) {
 #define TEST(test) \
-      do                                      \
+    do                                      \
     {                                     \
-      if ((is##test (ch) == 0) != (iswctype (ch, bit_##test) == 0))       \
+        if ((is##test (ch) == 0) != (iswctype (ch, bit_##test) == 0))       \
         {                                     \
-          printf ("`iswctype' class `%s' test "               \
-              "for character \\%o failed\n", #test, ch);          \
-          result = 1;                             \
+            printf ("`iswctype' class `%s' test "               \
+                    "for character \\%o failed\n", #test, ch);          \
+            result = 1;                             \
         }                                     \
-      if ((is##test (ch) == 0) != (isw##test (ch) == 0))              \
+        if ((is##test (ch) == 0) != (isw##test (ch) == 0))              \
         {                                     \
-          printf ("`isw%s' test for character \\%o failed\n",         \
-              #test, ch);                         \
-          result = 1;                             \
+            printf ("`isw%s' test for character \\%o failed\n",         \
+                    #test, ch);                         \
+            result = 1;                             \
         }                                     \
-     }                                    \
-      while (0)
+    }                                    \
+    while (0)
 
         TEST(alnum);
         TEST(alpha);

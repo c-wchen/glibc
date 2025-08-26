@@ -48,19 +48,19 @@
 #define S390_STFLE_BIT201_ARCH15_CON (1ULL << 6)
 
 #define S390_IS_ARCH15(STFLE_BITS)                  \
-  ((((STFLE_BITS) & S390_STFLE_BIT84_ARCH15_MIE4) != 0)         \
-   && (((STFLE_BITS) & S390_STFLE_BIT198_ARCH15_VXRS_EXT3) != 0)    \
-   && (((STFLE_BITS) & S390_STFLE_BIT199_ARCH15_VXRS_PDE3) != 0)    \
-   && (((STFLE_BITS) & S390_STFLE_BIT201_ARCH15_CON) != 0))
+    ((((STFLE_BITS) & S390_STFLE_BIT84_ARCH15_MIE4) != 0)         \
+     && (((STFLE_BITS) & S390_STFLE_BIT198_ARCH15_VXRS_EXT3) != 0)    \
+     && (((STFLE_BITS) & S390_STFLE_BIT199_ARCH15_VXRS_PDE3) != 0)    \
+     && (((STFLE_BITS) & S390_STFLE_BIT201_ARCH15_CON) != 0))
 
 #define S390_IS_ARCH13_MIE3(STFLE_BITS)         \
-  (((STFLE_BITS) & S390_STFLE_BIT61_ARCH13_MIE3) != 0)
+    (((STFLE_BITS) & S390_STFLE_BIT61_ARCH13_MIE3) != 0)
 
 #define S390_IS_Z196(STFLE_BITS)        \
-  (((STFLE_BITS) & S390_STFLE_BIT45_Z196) != 0)
+    (((STFLE_BITS) & S390_STFLE_BIT45_Z196) != 0)
 
 #define S390_IS_Z10(STFLE_BITS)         \
-  (((STFLE_BITS) & S390_STFLE_BIT34_Z10) != 0)
+    (((STFLE_BITS) & S390_STFLE_BIT34_Z10) != 0)
 
 struct cpu_features {
     unsigned long int hwcap;

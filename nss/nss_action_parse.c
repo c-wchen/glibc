@@ -30,8 +30,8 @@
 
 /* Skip whitespace in line[].  */
 #define SKIP_WS() \
-  while (line[0] != '\0' && isspace (line[0]))  \
-    ++line;
+    while (line[0] != '\0' && isspace (line[0]))  \
+        ++line;
 
 /* Read the source names:
         `( <source> ( "[" "!"? (<status> "=" <action> )+ "]" )? )*'

@@ -33,35 +33,35 @@ DIAG_IGNORE_NEEDS_COMMENT(12, "-Wformat-extra-args");
 #endif
 
 #define CHECK_SCANF1(EXPECTED, STR, FMT)                \
-  do                                    \
+    do                                    \
     {                                   \
-      var = ((typeof (var)) 0xabababab);                \
-      int ret = SSCANF (L_(STR), L_(FMT), &var);            \
-      TEST_COMPARE (var, (EXPECTED));                   \
-      TEST_COMPARE (ret, 1);                        \
+        var = ((typeof (var)) 0xabababab);                \
+        int ret = SSCANF (L_(STR), L_(FMT), &var);            \
+        TEST_COMPARE (var, (EXPECTED));                   \
+        TEST_COMPARE (ret, 1);                        \
     }                                   \
-  while (0)
+    while (0)
 
 #define CHECK_SCANF1N(EXPECTED, STR, FMT)               \
-  do                                    \
+    do                                    \
     {                                   \
-      var = ((typeof (var)) 0xabababab);                \
-      n = 123;                              \
-      int ret = SSCANF (L_(STR), L_(FMT), &var, &n);            \
-      TEST_COMPARE (var, (EXPECTED));                   \
-      TEST_COMPARE (n, STRLEN (L_(STR)));               \
-      TEST_COMPARE (ret, 1);                        \
+        var = ((typeof (var)) 0xabababab);                \
+        n = 123;                              \
+        int ret = SSCANF (L_(STR), L_(FMT), &var, &n);            \
+        TEST_COMPARE (var, (EXPECTED));                   \
+        TEST_COMPARE (n, STRLEN (L_(STR)));               \
+        TEST_COMPARE (ret, 1);                        \
     }                                   \
-  while (0)
+    while (0)
 
 #define CHECK_SCANF_ERR(OK, STR, FMT, ...)              \
-  do                                    \
+    do                                    \
     {                                   \
-      int ret = SSCANF (L_(STR), L_(FMT), __VA_ARGS__);         \
-      TEST_VERIFY (ret == (OK));                    \
-      TEST_COMPARE (errno, EINVAL);                 \
+        int ret = SSCANF (L_(STR), L_(FMT), __VA_ARGS__);         \
+        TEST_VERIFY (ret == (OK));                    \
+        TEST_COMPARE (errno, EINVAL);                 \
     }                                   \
-  while (0)
+    while (0)
 
 static void test_w8(void)
 {

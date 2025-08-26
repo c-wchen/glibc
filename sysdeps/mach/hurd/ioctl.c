@@ -47,15 +47,15 @@ int __ioctl(int fd, unsigned long int request, ...)
         MACH_MSG_TYPE_INTEGER_64
     };
 #define io2mach_type(count, type)   \
-  ((mach_msg_type_t) {          \
-   .msgt_name = mach_types[type],   \
-   .msgt_size = typesize(type) * 8, \
-   .msgt_number = count,        \
-   .msgt_inline = TRUE,         \
-   .msgt_longform = FALSE,      \
-   .msgt_deallocate = FALSE,        \
-   .msgt_unused = 0         \
-   })
+    ((mach_msg_type_t) {          \
+        .msgt_name = mach_types[type],   \
+                     .msgt_size = typesize(type) * 8, \
+                                  .msgt_number = count,        \
+                                          .msgt_inline = TRUE,         \
+                                                  .msgt_longform = FALSE,      \
+                                                          .msgt_deallocate = FALSE,        \
+                                                                  .msgt_unused = 0         \
+    })
 #endif
 
     /* Extract the type information encoded in the request.  */

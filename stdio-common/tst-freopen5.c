@@ -29,20 +29,20 @@
 #include <support/xstdio.h>
 
 #define START_TEST(DESC)            \
-  do                        \
+    do                        \
     {                       \
-      fds = support_descriptors_list ();    \
-      verbose_printf (DESC);            \
+        fds = support_descriptors_list ();    \
+        verbose_printf (DESC);            \
     }                       \
-  while (0)
+    while (0)
 
 #define END_TEST                \
-  do                        \
+    do                        \
     {                       \
-      support_descriptors_check (fds);      \
-      support_descriptors_free (fds);       \
+        support_descriptors_check (fds);      \
+        support_descriptors_free (fds);       \
     }                       \
-  while (0)
+    while (0)
 
 int do_test(void)
 {

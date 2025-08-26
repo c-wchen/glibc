@@ -37,12 +37,12 @@ int do_test(void)
     int i;
 
 #define TEST(fct, type) \
-  try (#fct, 0, fct ((type) 0), 0);                       \
-  for (i=0 ; i < 8 * sizeof (type); i++)                      \
-    try (#fct, 1ll << i, fct (((type) 1) << i), i + 1);               \
-  for (i=0 ; i < 8 * sizeof (type) ; i++)                     \
-    try (#fct, (~((type) 0) >> i) << i, fct ((~((type) 0) >> i) << i), i + 1);\
-  try (#fct, 0x80008000, fct ((type) 0x80008000), 16)
+    try (#fct, 0, fct ((type) 0), 0);                       \
+    for (i=0 ; i < 8 * sizeof (type); i++)                      \
+        try (#fct, 1ll << i, fct (((type) 1) << i), i + 1);               \
+    for (i=0 ; i < 8 * sizeof (type) ; i++)                     \
+        try (#fct, (~((type) 0) >> i) << i, fct ((~((type) 0) >> i) << i), i + 1);\
+    try (#fct, 0x80008000, fct ((type) 0x80008000), 16)
 
     TEST(ffs, int);
     TEST(ffsl, long int);

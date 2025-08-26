@@ -44,11 +44,11 @@
    not be thread-safe, but if the caller writes to a PLT slot it must do so in a
    thread-safe manner with all the required barriers.  */
 # define VDSO_IFUNC_RET(value)                           \
-  ({                                                     \
-    static Elf64_FuncDesc vdso_opd = { .fd_toc = ~0x0 }; \
-    vdso_opd.fd_func = (Elf64_Addr)value;                \
-    &vdso_opd;                                           \
-  })
+    ({                                                     \
+        static Elf64_FuncDesc vdso_opd = { .fd_toc = ~0x0 }; \
+        vdso_opd.fd_func = (Elf64_Addr)value;                \
+        &vdso_opd;                                           \
+    })
 
 #else
 # define VDSO_IFUNC_RET(value)  ((void *) (value))

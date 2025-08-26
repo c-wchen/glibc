@@ -32,17 +32,17 @@ typedef unsigned long long int hp_timing_t;
    in accurate clock cycles here so we don't do this.  */
 
 #define HP_TIMING_NOW(Var)                      \
-  do {                                  \
-    unsigned int hi, lo, tmp;                       \
-    __asm__ __volatile__ ("1:	mfspr	%0,269;"            \
-              "	mfspr	%1,268;"          \
-              "	mfspr	%2,269;"          \
-              "	cmpw	%0,%2;"                \
-              "	bne	1b;"                \
-              : "=&r" (hi), "=&r" (lo), "=&r" (tmp)     \
-              : : "cr0");                   \
-    Var = ((hp_timing_t) hi << 32) | lo;                \
-  } while (0)
+    do {                                  \
+        unsigned int hi, lo, tmp;                       \
+        __asm__ __volatile__ ("1:	mfspr	%0,269;"            \
+                              "	mfspr	%1,268;"          \
+                              "	mfspr	%2,269;"          \
+                              "	cmpw	%0,%2;"                \
+                              "	bne	1b;"                \
+                              : "=&r" (hi), "=&r" (lo), "=&r" (tmp)     \
+                              : : "cr0");                   \
+        Var = ((hp_timing_t) hi << 32) | lo;                \
+    } while (0)
 
 #include <hp-timing-common.h>
 

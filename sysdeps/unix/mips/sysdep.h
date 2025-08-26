@@ -27,17 +27,17 @@
 #include <regdef.h>
 
 #define ENTRY(name) \
-  .globl name;                                    \
-  .align 2;                                   \
-  .ent name,0;                                    \
-  name##:                                     \
-  cfi_startproc;
+    .globl name;                                    \
+    .align 2;                                   \
+    .ent name,0;                                    \
+    name##:                                     \
+    cfi_startproc;
 
 #undef END
 #define END(function)                                   \
-        cfi_endproc;                \
-        .end    function;               \
-        .size   function,.-function
+    cfi_endproc;                \
+    .end    function;               \
+    .size   function,.-function
 
 #define ret j ra ; nop
 
@@ -45,12 +45,12 @@
 #define PSEUDO_END(sym) cfi_endproc; .end sym; .size sym,.-sym
 
 #define PSEUDO_NOERRNO(name, syscall_name, args)    \
-  .align 2;                     \
-  ENTRY(name)                       \
-  .set nomips16;                    \
-  .set noreorder;                   \
-  li v0, SYS_ify(syscall_name);             \
-  syscall
+    .align 2;                     \
+    ENTRY(name)                       \
+    .set nomips16;                    \
+    .set noreorder;                   \
+    li v0, SYS_ify(syscall_name);             \
+    syscall
 
 #undef PSEUDO_END_NOERRNO
 #define PSEUDO_END_NOERRNO(sym) cfi_endproc; .end sym; .size sym,.-sym
@@ -58,12 +58,12 @@
 #define ret_NOERRNO ret
 
 #define PSEUDO_ERRVAL(name, syscall_name, args) \
-  .align 2;                     \
-  ENTRY(name)                       \
-  .set nomips16;                    \
-  .set noreorder;                   \
-  li v0, SYS_ify(syscall_name);             \
-  syscall
+    .align 2;                     \
+    ENTRY(name)                       \
+    .set nomips16;                    \
+    .set noreorder;                   \
+    li v0, SYS_ify(syscall_name);             \
+    syscall
 
 #undef PSEUDO_END_ERRVAL
 #define PSEUDO_END_ERRVAL(sym) cfi_endproc; .end sym; .size sym,.-sym

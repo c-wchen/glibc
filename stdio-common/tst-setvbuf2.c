@@ -49,7 +49,7 @@
    debug/dump macros will be helpful.  */
 #if 0
 # define debug printf ("\033[3%dm%s:%d\033[0m\n", \
-               (__LINE__ % 6) + 1, __FUNCTION__, __LINE__);
+                       (__LINE__ % 6) + 1, __FUNCTION__, __LINE__);
 
 static void dumpfp(FILE *fp)
 {

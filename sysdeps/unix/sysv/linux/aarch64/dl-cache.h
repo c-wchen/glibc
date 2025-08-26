@@ -21,25 +21,25 @@
 #define _DL_CACHE_DEFAULT_ID    (FLAG_AARCH64_LIB64 | FLAG_ELF_LIBC6)
 
 #define _dl_cache_check_flags(flags)                    \
-  ((flags) == _DL_CACHE_DEFAULT_ID)
+    ((flags) == _DL_CACHE_DEFAULT_ID)
 
 #define add_system_dir(dir) \
-  do                                \
+    do                                \
     {                               \
-      size_t len = strlen (dir);                \
-      char path[len + 6];                   \
-      memcpy (path, dir, len + 1);              \
-      if (len >= 6 && ! memcmp (path + len - 6, "/lib64", 6))   \
-    {                           \
-      len -= 2;                     \
-      path[len] = '\0';                 \
-    }                           \
-      add_dir (path);                       \
-      if (len >= 4 && ! memcmp (path + len - 4, "/lib", 4)) \
-    {                           \
-      memcpy (path + len, "64", 3);             \
-      add_dir (path);                   \
-    }                           \
+        size_t len = strlen (dir);                \
+        char path[len + 6];                   \
+        memcpy (path, dir, len + 1);              \
+        if (len >= 6 && ! memcmp (path + len - 6, "/lib64", 6))   \
+        {                           \
+            len -= 2;                     \
+            path[len] = '\0';                 \
+        }                           \
+        add_dir (path);                       \
+        if (len >= 4 && ! memcmp (path + len - 4, "/lib", 4)) \
+        {                           \
+            memcpy (path + len, "64", 3);             \
+            add_dir (path);                   \
+        }                           \
     } while (0)
 
 #include_next <dl-cache.h>

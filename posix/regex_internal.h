@@ -103,7 +103,7 @@
 # ifdef _LIBC
 #  undef gettext
 #  define gettext(msgid) \
-  __dcgettext (_libc_intl_domainname, msgid, LC_MESSAGES)
+    __dcgettext (_libc_intl_domainname, msgid, LC_MESSAGES)
 # endif
 #else
 # undef gettext
@@ -425,14 +425,14 @@ typedef struct re_dfa_t re_dfa_t;
 #endif
 
 #define re_string_peek_byte(pstr, offset) \
-  ((pstr)->mbs[(pstr)->cur_idx + offset])
+    ((pstr)->mbs[(pstr)->cur_idx + offset])
 #define re_string_fetch_byte(pstr) \
-  ((pstr)->mbs[(pstr)->cur_idx++])
+    ((pstr)->mbs[(pstr)->cur_idx++])
 #define re_string_first_byte(pstr, idx) \
-  ((idx) == (pstr)->valid_len || (pstr)->wcs[idx] != WEOF)
+    ((idx) == (pstr)->valid_len || (pstr)->wcs[idx] != WEOF)
 #define re_string_is_single_byte_char(pstr, idx) \
-  ((pstr)->wcs[idx] != WEOF && ((pstr)->valid_len == (idx) + 1 \
-                || (pstr)->wcs[(idx) + 1] != WEOF))
+    ((pstr)->wcs[idx] != WEOF && ((pstr)->valid_len == (idx) + 1 \
+                                  || (pstr)->wcs[(idx) + 1] != WEOF))
 #define re_string_eoi(pstr) ((pstr)->stop <= (pstr)->cur_idx)
 #define re_string_cur_idx(pstr) ((pstr)->cur_idx)
 #define re_string_get_buffer(pstr) ((pstr)->mbs)
@@ -474,7 +474,7 @@ struct bin_tree_t {
 typedef struct bin_tree_t bin_tree_t;
 
 #define BIN_TREE_STORAGE_SIZE \
-  ((1024 - sizeof (void *)) / sizeof (bin_tree_t))
+    ((1024 - sizeof (void *)) / sizeof (bin_tree_t))
 
 struct bin_tree_storage_t {
     struct bin_tree_storage_t *next;
@@ -499,16 +499,16 @@ typedef struct bin_tree_storage_t bin_tree_storage_t;
 #define IS_WIDE_NEWLINE(ch) ((ch) == WIDE_NEWLINE_CHAR)
 
 #define NOT_SATISFY_PREV_CONSTRAINT(constraint,context) \
- ((((constraint) & PREV_WORD_CONSTRAINT) && !IS_WORD_CONTEXT (context)) \
-  || ((constraint & PREV_NOTWORD_CONSTRAINT) && IS_WORD_CONTEXT (context)) \
-  || ((constraint & PREV_NEWLINE_CONSTRAINT) && !IS_NEWLINE_CONTEXT (context))\
-  || ((constraint & PREV_BEGBUF_CONSTRAINT) && !IS_BEGBUF_CONTEXT (context)))
+    ((((constraint) & PREV_WORD_CONSTRAINT) && !IS_WORD_CONTEXT (context)) \
+     || ((constraint & PREV_NOTWORD_CONSTRAINT) && IS_WORD_CONTEXT (context)) \
+     || ((constraint & PREV_NEWLINE_CONSTRAINT) && !IS_NEWLINE_CONTEXT (context))\
+     || ((constraint & PREV_BEGBUF_CONSTRAINT) && !IS_BEGBUF_CONTEXT (context)))
 
 #define NOT_SATISFY_NEXT_CONSTRAINT(constraint,context) \
- ((((constraint) & NEXT_WORD_CONSTRAINT) && !IS_WORD_CONTEXT (context)) \
-  || (((constraint) & NEXT_NOTWORD_CONSTRAINT) && IS_WORD_CONTEXT (context)) \
-  || (((constraint) & NEXT_NEWLINE_CONSTRAINT) && !IS_NEWLINE_CONTEXT (context)) \
-  || (((constraint) & NEXT_ENDBUF_CONSTRAINT) && !IS_ENDBUF_CONTEXT (context)))
+    ((((constraint) & NEXT_WORD_CONSTRAINT) && !IS_WORD_CONTEXT (context)) \
+     || (((constraint) & NEXT_NOTWORD_CONSTRAINT) && IS_WORD_CONTEXT (context)) \
+     || (((constraint) & NEXT_NEWLINE_CONSTRAINT) && !IS_NEWLINE_CONTEXT (context)) \
+     || (((constraint) & NEXT_ENDBUF_CONSTRAINT) && !IS_ENDBUF_CONTEXT (context)))
 
 struct re_dfastate_t {
     re_hashval_t hash;
@@ -664,7 +664,7 @@ struct re_dfa_t {
 
 #define re_node_set_init_empty(set) memset (set, '\0', sizeof (re_node_set))
 #define re_node_set_remove(set,id) \
-  (re_node_set_remove_at (set, re_node_set_contains (set, id) - 1))
+    (re_node_set_remove_at (set, re_node_set_contains (set, id) - 1))
 #define re_node_set_empty(p) ((p)->nelem = 0)
 #define re_node_set_free(set) re_free ((set)->elems)
 

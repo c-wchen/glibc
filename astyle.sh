@@ -50,6 +50,7 @@ ASTYLE_CMD_OPTION="                   \
 --align-reference=name                \
 --align-pointer=name                  \
 --unpad-paren                         \
+--indent-preprocessor                 \
 "
 
 for path in ${SCAN_PATH_ARR[@]}

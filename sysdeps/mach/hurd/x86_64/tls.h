@@ -83,13 +83,13 @@ _Static_assert(offsetof(tcbhead_t, __private_ss) == 0x70,
 
 
 # define THREAD_SELF                            \
-  (*(tcbhead_t * __seg_fs *) offsetof (tcbhead_t, tcb))
+    (*(tcbhead_t * __seg_fs *) offsetof (tcbhead_t, tcb))
 /* Read member of the thread descriptor directly.  */
 # define THREAD_GETMEM(descr, member)                   \
-  (*(__typeof (descr->member) __seg_fs *) offsetof (tcbhead_t, member))
+    (*(__typeof (descr->member) __seg_fs *) offsetof (tcbhead_t, member))
 /* Write member of the thread descriptor directly.  */
 # define THREAD_SETMEM(descr, member, value)                \
-  (*(__typeof (descr->member) __seg_fs *) offsetof (tcbhead_t, member) = value)
+    (*(__typeof (descr->member) __seg_fs *) offsetof (tcbhead_t, member) = value)
 
 
 /* Return the TCB address of a thread given its state.
@@ -119,17 +119,17 @@ THREAD_TCB(thread_t thread,
 
 /* Set the stack guard field in TCB head.  */
 # define THREAD_SET_STACK_GUARD(value)                  \
-  THREAD_SETMEM (THREAD_SELF, stack_guard, value)
+    THREAD_SETMEM (THREAD_SELF, stack_guard, value)
 # define THREAD_COPY_STACK_GUARD(descr)                 \
-  ((descr)->stack_guard                         \
-   = THREAD_GETMEM (THREAD_SELF, stack_guard))
+    ((descr)->stack_guard                         \
+     = THREAD_GETMEM (THREAD_SELF, stack_guard))
 
 /* Set the pointer guard field in the TCB head.  */
 # define THREAD_SET_POINTER_GUARD(value)                \
-  THREAD_SETMEM (THREAD_SELF, pointer_guard, value)
+    THREAD_SETMEM (THREAD_SELF, pointer_guard, value)
 # define THREAD_COPY_POINTER_GUARD(descr)               \
-  ((descr)->pointer_guard                       \
-   = THREAD_GETMEM (THREAD_SELF, pointer_guard))
+    ((descr)->pointer_guard                       \
+     = THREAD_GETMEM (THREAD_SELF, pointer_guard))
 
 /* From hurd.h, reproduced here to avoid a circular include.  */
 extern thread_t __hurd_thread_self(void);
@@ -222,18 +222,18 @@ _hurd_tls_init(tcbhead_t *tcb, bool full)
 # define THREAD_GSCOPE_FLAG_WAIT   2
 
 # define THREAD_GSCOPE_SET_FLAG() \
-  THREAD_SETMEM (THREAD_SELF, gscope_flag, THREAD_GSCOPE_FLAG_USED)
+    THREAD_SETMEM (THREAD_SELF, gscope_flag, THREAD_GSCOPE_FLAG_USED)
 
 # define THREAD_GSCOPE_RESET_FLAG() \
-  ({                                    \
-    int __flag;                             \
-    asm volatile ("xchgl %0, %%fs:%P1"                  \
-                  : "=r" (__flag)                   \
-                  : "i" (offsetof (tcbhead_t, gscope_flag)),        \
-                    "0" (THREAD_GSCOPE_FLAG_UNUSED));           \
-    if (__flag == THREAD_GSCOPE_FLAG_WAIT)              \
-      lll_wake (THREAD_SELF->gscope_flag, LLL_PRIVATE);         \
-  })
+    ({                                    \
+        int __flag;                             \
+        asm volatile ("xchgl %0, %%fs:%P1"                  \
+                      : "=r" (__flag)                   \
+                      : "i" (offsetof (tcbhead_t, gscope_flag)),        \
+                      "0" (THREAD_GSCOPE_FLAG_UNUSED));           \
+        if (__flag == THREAD_GSCOPE_FLAG_WAIT)              \
+            lll_wake (THREAD_SELF->gscope_flag, LLL_PRIVATE);         \
+    })
 
 
 

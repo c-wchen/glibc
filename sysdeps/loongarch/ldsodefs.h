@@ -26,16 +26,16 @@ struct La_loongarch_regs;
 struct La_loongarch_retval;
 
 #define ARCH_PLTENTER_MEMBERS \
-  ElfW (Addr) (*loongarch_gnu_pltenter) (ElfW (Sym) *, unsigned int, \
-                     uintptr_t *, uintptr_t *, \
-                     const struct La_loongarch_regs *, \
-                     unsigned int *, const char *name, \
-                     long int *framesizep);
+    ElfW (Addr) (*loongarch_gnu_pltenter) (ElfW (Sym) *, unsigned int, \
+                                           uintptr_t *, uintptr_t *, \
+                                           const struct La_loongarch_regs *, \
+                                           unsigned int *, const char *name, \
+                                           long int *framesizep);
 
 #define ARCH_PLTEXIT_MEMBERS \
-  unsigned int (*loongarch_gnu_pltexit) (ElfW (Sym) *, unsigned int, \
-        uintptr_t *, uintptr_t *, const struct La_loongarch_regs *, \
-        struct La_loongarch_retval *, const char *);
+    unsigned int (*loongarch_gnu_pltexit) (ElfW (Sym) *, unsigned int, \
+                                           uintptr_t *, uintptr_t *, const struct La_loongarch_regs *, \
+                                           struct La_loongarch_retval *, const char *);
 
 #include_next <ldsodefs.h>
 

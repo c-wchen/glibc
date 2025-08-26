@@ -38,11 +38,11 @@
 /* Install the dtv pointer.  The pointer passed is to the element with
    index -1 which contain the length.  */
 # define INSTALL_DTV(descr, dtvp) \
-  ((tcbhead_t *) (descr))->dtv = (dtvp) + 1
+    ((tcbhead_t *) (descr))->dtv = (dtvp) + 1
 
 /* Return dtv of given thread descriptor.  */
 # define GET_DTV(descr) \
-  (((tcbhead_t *) (descr))->dtv)
+    (((tcbhead_t *) (descr))->dtv)
 
 #endif /* !ASSEMBLER */
 

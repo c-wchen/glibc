@@ -61,22 +61,22 @@ long int __pathconf(const char *path, int name)
 
         case _PC_NAME_MAX:
 #ifdef  NAME_MAX
-        {
-            struct statvfs64 sv;
-            int save_errno = errno;
+            {
+                struct statvfs64 sv;
+                int save_errno = errno;
 
-            if (__statvfs64(path, &sv) < 0) {
-                if (errno == ENOSYS) {
-                    errno = save_errno;
-                    return NAME_MAX;
+                if (__statvfs64(path, &sv) < 0) {
+                    if (errno == ENOSYS) {
+                        errno = save_errno;
+                        return NAME_MAX;
+                    }
+                    return -1;
+                } else {
+                    return sv.f_namemax;
                 }
-                return -1;
-            } else {
-                return sv.f_namemax;
             }
-        }
 #else
-        return -1;
+            return -1;
 #endif
 
         case _PC_PATH_MAX:
@@ -120,19 +120,19 @@ long int __pathconf(const char *path, int name)
 
         case _PC_ASYNC_IO:
 #ifdef  _POSIX_ASYNC_IO
-        {
-            /* AIO is only allowed on regular files and block devices.  */
-            struct __stat64_t64 st;
+            {
+                /* AIO is only allowed on regular files and block devices.  */
+                struct __stat64_t64 st;
 
-            if (__stat64_time64(path, &st) < 0
-                || (! S_ISREG(st.st_mode) && ! S_ISBLK(st.st_mode))) {
-                return -1;
-            } else {
-                return 1;
+                if (__stat64_time64(path, &st) < 0
+                    || (! S_ISREG(st.st_mode) && ! S_ISBLK(st.st_mode))) {
+                    return -1;
+                } else {
+                    return 1;
+                }
             }
-        }
 #else
-        return -1;
+            return -1;
 #endif
 
         case _PC_PRIO_IO:

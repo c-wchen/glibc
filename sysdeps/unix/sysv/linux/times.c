@@ -34,11 +34,11 @@ clock_t __times(struct tms *buf)
          applications which pass in an invalid non-NULL BUF pointer.
          Note that Linux allows BUF to be NULL in which case we skip this.  */
 #define touch(v) \
-      do {                                    \
-    clock_t temp = v;                             \
-    asm volatile ("" : "+r" (temp));                      \
-    v = temp;                                 \
-      } while (0)
+    do {                                    \
+        clock_t temp = v;                             \
+        asm volatile ("" : "+r" (temp));                      \
+        v = temp;                                 \
+    } while (0)
         touch(buf->tms_utime);
         touch(buf->tms_stime);
         touch(buf->tms_cutime);

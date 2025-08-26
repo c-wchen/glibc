@@ -27,7 +27,7 @@ const char *fmt1 = "\e[31m";
 const char *fmt2 = "\e[34m";
 
 #define handle_error(msg) \
-  do { perror(msg); exit(EXIT_FAILURE); } while (0)
+    do { perror(msg); exit(EXIT_FAILURE); } while (0)
 
 __attribute_optimization_barrier__
 static void func4(ucontext_t *uocp, ucontext_t *ucp, const char *str, const char *fmt)

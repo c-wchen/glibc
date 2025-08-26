@@ -16,80 +16,80 @@ static int do_test(void)
     int s;
 
 #define T(no, fail, addr, fam, coraddr)                       \
-  s = getaddrinfo (addr, NULL, &hints, &ai_res);                  \
-  if (s != 0)                                     \
+    s = getaddrinfo (addr, NULL, &hints, &ai_res);                  \
+    if (s != 0)                                     \
     {                                         \
-      if (s != fail)                                  \
-    {                                     \
-      printf ("getaddrinfo test %d failed: %s\n", no, gai_strerror (s));  \
-      result = 1;                                 \
-    }                                     \
-      ai_res = NULL;                                  \
+        if (s != fail)                                  \
+        {                                     \
+            printf ("getaddrinfo test %d failed: %s\n", no, gai_strerror (s));  \
+            result = 1;                                 \
+        }                                     \
+        ai_res = NULL;                                  \
     }                                         \
-  else if (fail)                                  \
+    else if (fail)                                  \
     {                                         \
-      printf ("getaddrinfo test %d should have failed but did not\n", no);    \
-      result = 1;                                 \
+        printf ("getaddrinfo test %d should have failed but did not\n", no);    \
+        result = 1;                                 \
     }                                         \
-  else if (ai_res->ai_family != fam)                          \
+    else if (ai_res->ai_family != fam)                          \
     {                                         \
-      printf ("\
+        printf ("\
 getaddrinfo test %d return address of family %d, expected %d\n",	      \
-          no, ai_res->ai_family, fam);                    \
-      result = 1;                                 \
+                no, ai_res->ai_family, fam);                    \
+        result = 1;                                 \
     }                                         \
-  else if (fam == AF_INET)                            \
+    else if (fam == AF_INET)                            \
     {                                         \
-      if (ai_res->ai_addrlen != sizeof (struct sockaddr_in))              \
-    {                                     \
-      printf ("getaddrinfo test %d: address size %zu, expected %zu\n",    \
-          no, (size_t) ai_res->ai_addrlen,                \
-          sizeof (struct sockaddr_in));                   \
-      result = 1;                                 \
-    }                                     \
-      else if (strcmp (coraddr, \
-               inet_ntoa (((struct sockaddr_in *) ai_res->ai_addr)->sin_addr))\
-           != 0)                                  \
-    {                                     \
-      printf ("getaddrinfo test %d: got value %s, expected %s\n",         \
-          no,                                 \
-          inet_ntoa (((struct sockaddr_in *) ai_res->ai_addr)->sin_addr), \
-          coraddr);                           \
-      result = 1;                                 \
-    }                                     \
+        if (ai_res->ai_addrlen != sizeof (struct sockaddr_in))              \
+        {                                     \
+            printf ("getaddrinfo test %d: address size %zu, expected %zu\n",    \
+                    no, (size_t) ai_res->ai_addrlen,                \
+                    sizeof (struct sockaddr_in));                   \
+            result = 1;                                 \
+        }                                     \
+        else if (strcmp (coraddr, \
+                         inet_ntoa (((struct sockaddr_in *) ai_res->ai_addr)->sin_addr))\
+                 != 0)                                  \
+        {                                     \
+            printf ("getaddrinfo test %d: got value %s, expected %s\n",         \
+                    no,                                 \
+                    inet_ntoa (((struct sockaddr_in *) ai_res->ai_addr)->sin_addr), \
+                    coraddr);                           \
+            result = 1;                                 \
+        }                                     \
     }                                         \
-  else                                        \
+    else                                        \
     {                                         \
-      char buf[100];                                  \
-                                          \
-      if (ai_res->ai_addrlen != sizeof (struct sockaddr_in6))             \
-    {                                     \
-      printf ("getaddrinfo test %d: address size %zu, expected %zu\n",    \
-          no, (size_t) ai_res->ai_addrlen,                \
-          sizeof (struct sockaddr_in6));                  \
-      result = 1;                                 \
-    }                                     \
-      else if (strcmp (coraddr, \
-               inet_ntop (AF_INET6,                   \
-                  &((struct sockaddr_in6 *) ai_res->ai_addr)->sin6_addr,\
-                  buf, sizeof (buf)))                 \
-           != 0)                                  \
-    {                                     \
-      printf ("getaddrinfo test %d: got value %s, expected %s\n",         \
-          no,                                 \
-          inet_ntop (AF_INET6,                        \
-                 & ((struct sockaddr_in6 *) ai_res->ai_addr)->sin6_addr, \
-                 buf, sizeof (buf)),                  \
-          coraddr);                           \
-      result = 1;                                 \
-    }                                     \
+        char buf[100];                                  \
+        \
+        if (ai_res->ai_addrlen != sizeof (struct sockaddr_in6))             \
+        {                                     \
+            printf ("getaddrinfo test %d: address size %zu, expected %zu\n",    \
+                    no, (size_t) ai_res->ai_addrlen,                \
+                    sizeof (struct sockaddr_in6));                  \
+            result = 1;                                 \
+        }                                     \
+        else if (strcmp (coraddr, \
+                         inet_ntop (AF_INET6,                   \
+                                    &((struct sockaddr_in6 *) ai_res->ai_addr)->sin6_addr,\
+                                    buf, sizeof (buf)))                 \
+                 != 0)                                  \
+        {                                     \
+            printf ("getaddrinfo test %d: got value %s, expected %s\n",         \
+                    no,                                 \
+                    inet_ntop (AF_INET6,                        \
+                               & ((struct sockaddr_in6 *) ai_res->ai_addr)->sin6_addr, \
+                               buf, sizeof (buf)),                  \
+                    coraddr);                           \
+            result = 1;                                 \
+        }                                     \
     }                                         \
-  if (ai_res != NULL && ai_res->ai_next != NULL)                  \
+    if (ai_res != NULL && ai_res->ai_next != NULL)                  \
     {                                         \
-      puts ("expected only one result");                      \
-      result = 1;                                 \
+        puts ("expected only one result");                      \
+        result = 1;                                 \
     }                                         \
-  freeaddrinfo (ai_res)
+    freeaddrinfo (ai_res)
 
 
     memset(&hints, '\0', sizeof(hints));

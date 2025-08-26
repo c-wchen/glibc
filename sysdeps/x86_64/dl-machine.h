@@ -146,8 +146,8 @@ _dl_start_user:\n\
 	# Save %rsp value in %r13.\n\
 	mov %" RSP_LP ", % " R13_LP "\n\
 "\
-    RTLD_START_ENABLE_X86_FEATURES \
-"\
+                        RTLD_START_ENABLE_X86_FEATURES \
+                        "\
 	# Read the original argument count.\n\
 	mov (%rsp), %" RDX_LP "\n\
 	# Call _dl_init (struct link_map *main_map, int argc, char **argv, char **env)\n\
@@ -180,13 +180,13 @@ _dl_start_user:\n\
    ELF_RTYPE_CLASS_COPY iff TYPE should not be allowed to resolve to one
    of the main executable's symbols, as for a COPY reloc.  */
 #define elf_machine_type_class(type)                          \
-  ((((type) == R_X86_64_JUMP_SLOT                         \
-     || (type) == R_X86_64_DTPMOD64                       \
-     || (type) == R_X86_64_DTPOFF64                       \
-     || (type) == R_X86_64_TPOFF64                        \
-     || (type) == R_X86_64_TLSDESC)                       \
-    * ELF_RTYPE_CLASS_PLT)                            \
-   | (((type) == R_X86_64_COPY) * ELF_RTYPE_CLASS_COPY))
+    ((((type) == R_X86_64_JUMP_SLOT                         \
+       || (type) == R_X86_64_DTPMOD64                       \
+       || (type) == R_X86_64_DTPOFF64                       \
+       || (type) == R_X86_64_TPOFF64                        \
+       || (type) == R_X86_64_TLSDESC)                       \
+      * ELF_RTYPE_CLASS_PLT)                            \
+     | (((type) == R_X86_64_COPY) * ELF_RTYPE_CLASS_COPY))
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT    R_X86_64_JUMP_SLOT
@@ -537,7 +537,7 @@ elf_machine_lazy_rel(struct link_map *map, struct r_scope_elem *scope[],
 #if !defined ELF_DYNAMIC_AFTER_RELOC && !defined RTLD_BOOTSTRAP \
     && defined SHARED
 # define ELF_DYNAMIC_AFTER_RELOC(map, lazy) \
-  x86_64_dynamic_after_reloc (map, (lazy))
+    x86_64_dynamic_after_reloc (map, (lazy))
 
 # define JMP32_INSN_OPCODE  0xe9
 # define JMP32_INSN_SIZE    5

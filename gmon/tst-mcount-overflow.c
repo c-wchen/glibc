@@ -28,12 +28,12 @@
  * You need to define REP(n) before using this.
  */
 #define REPS \
-  REP(0) REP(1) REP(2) REP(3) REP(4) REP(5) REP(6) REP(7) \
-  REP(8) REP(9) REP(10) REP(11) REP(12) REP(13) REP(14) REP(15)
+    REP(0) REP(1) REP(2) REP(3) REP(4) REP(5) REP(6) REP(7) \
+    REP(8) REP(9) REP(10) REP(11) REP(12) REP(13) REP(14) REP(15)
 
 /* Defines 16 leaf functions named f1_0 to f1_15 */
 #define REP(n) \
-  __attribute__ ((weak)) __attribute_optimization_barrier__ void f1_##n (void) {};
+    __attribute__ ((weak)) __attribute_optimization_barrier__ void f1_##n (void) {};
 REPS
 #undef REP
 
@@ -49,8 +49,8 @@ f2(void)
 
 /* Defines 16 functions named f2_0 to f2_15, which all just call f2 */
 #define REP(n) \
-  __attribute__ ((weak)) __attribute_optimization_barrier__ void \
-  f2_##n (void) { f2(); PREVENT_TAIL_CALL; };
+    __attribute__ ((weak)) __attribute_optimization_barrier__ void \
+    f2_##n (void) { f2(); PREVENT_TAIL_CALL; };
 REPS
 #undef REP
 

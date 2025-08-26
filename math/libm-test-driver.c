@@ -64,8 +64,8 @@ const char test_msg[] = TEST_MSG;
 #endif
 
 #define TEST_NAN_PAYLOAD_CANONICALIZE   (SNAN_TESTS_PRESERVE_PAYLOAD    \
-                     ? TEST_NAN_PAYLOAD     \
-                     : 0)
+        ? TEST_NAN_PAYLOAD     \
+        : 0)
 
 const char qtype_str[] = TYPE_STR;
 
@@ -380,33 +380,33 @@ struct test_Ff_b1_data {
 /* Set the rounding mode, or restore the saved value.  */
 #define IF_ROUND_INIT_  /* Empty.  */
 #define IF_ROUND_INIT_FE_DOWNWARD       \
-  int save_round_mode = fegetround ();      \
-  if (ROUNDING_TESTS (FLOAT, FE_DOWNWARD)   \
-      && !TEST_MATHVEC              \
-      && fesetround (FE_DOWNWARD) == 0)
+    int save_round_mode = fegetround ();      \
+    if (ROUNDING_TESTS (FLOAT, FE_DOWNWARD)   \
+        && !TEST_MATHVEC              \
+        && fesetround (FE_DOWNWARD) == 0)
 #define IF_ROUND_INIT_FE_TONEAREST      \
-  int save_round_mode = fegetround ();      \
-  if (ROUNDING_TESTS (FLOAT, FE_TONEAREST)  \
-      && fesetround (FE_TONEAREST) == 0)
+    int save_round_mode = fegetround ();      \
+    if (ROUNDING_TESTS (FLOAT, FE_TONEAREST)  \
+        && fesetround (FE_TONEAREST) == 0)
 #define IF_ROUND_INIT_FE_TOWARDZERO     \
-  int save_round_mode = fegetround ();      \
-  if (ROUNDING_TESTS (FLOAT, FE_TOWARDZERO) \
-      && !TEST_MATHVEC              \
-      && fesetround (FE_TOWARDZERO) == 0)
+    int save_round_mode = fegetround ();      \
+    if (ROUNDING_TESTS (FLOAT, FE_TOWARDZERO) \
+        && !TEST_MATHVEC              \
+        && fesetround (FE_TOWARDZERO) == 0)
 #define IF_ROUND_INIT_FE_UPWARD         \
-  int save_round_mode = fegetround ();      \
-  if (ROUNDING_TESTS (FLOAT, FE_UPWARD)     \
-      && !TEST_MATHVEC              \
-      && fesetround (FE_UPWARD) == 0)
+    int save_round_mode = fegetround ();      \
+    if (ROUNDING_TESTS (FLOAT, FE_UPWARD)     \
+        && !TEST_MATHVEC              \
+        && fesetround (FE_UPWARD) == 0)
 #define ROUND_RESTORE_  /* Empty.  */
 #define ROUND_RESTORE_FE_DOWNWARD       \
-  fesetround (save_round_mode)
+    fesetround (save_round_mode)
 #define ROUND_RESTORE_FE_TONEAREST      \
-  fesetround (save_round_mode)
+    fesetround (save_round_mode)
 #define ROUND_RESTORE_FE_TOWARDZERO     \
-  fesetround (save_round_mode)
+    fesetround (save_round_mode)
 #define ROUND_RESTORE_FE_UPWARD         \
-  fesetround (save_round_mode)
+    fesetround (save_round_mode)
 
 /* Field name to use for a given rounding mode.  */
 #define RM_         rn
@@ -417,84 +417,84 @@ struct test_Ff_b1_data {
 
 /* Common setup for an individual test.  */
 #define COMMON_TEST_SETUP(ARG_STR)                  \
-  char *test_name;                          \
-  if (asprintf (&test_name, "%s (%s)", this_func, (ARG_STR)) == -1) \
-    abort ()
+    char *test_name;                          \
+    if (asprintf (&test_name, "%s (%s)", this_func, (ARG_STR)) == -1) \
+        abort ()
 
 /* Setup for a test with an extra output.  */
 #define EXTRA_OUTPUT_TEST_SETUP(ARG_STR, N)         \
-  char *extra##N##_name;                    \
-  if (asprintf (&extra##N##_name, "%s (%s) extra output " #N,   \
-        this_func, (ARG_STR)) == -1)            \
-    abort ()
+    char *extra##N##_name;                    \
+    if (asprintf (&extra##N##_name, "%s (%s) extra output " #N,   \
+                  this_func, (ARG_STR)) == -1)            \
+        abort ()
 
 /* Common cleanup after an individual test.  */
 #define COMMON_TEST_CLEANUP         \
-  free (test_name)
+    free (test_name)
 
 /* Cleanup for a test with an extra output.  */
 #define EXTRA_OUTPUT_TEST_CLEANUP(N)        \
-  free (extra##N##_name)
+    free (extra##N##_name)
 
 /* Run an individual test, including any required setup and checking
    of results, or loop over all tests in an array.  */
 #define RUN_TEST_1_f(ARG_STR, FUNC_NAME, ARG, EXPECTED,         \
-             EXCEPTIONS)                    \
-  do                                    \
+                     EXCEPTIONS)                    \
+do                                    \
     if (enable_test (EXCEPTIONS))                   \
-      {                                 \
-    COMMON_TEST_SETUP (ARG_STR);                    \
-    check_float (test_name, FUNC_TEST (FUNC_NAME) (ARG),        \
-             EXPECTED, EXCEPTIONS);             \
-    COMMON_TEST_CLEANUP;                        \
-      }                                 \
-  while (0)
+    {                                 \
+        COMMON_TEST_SETUP (ARG_STR);                    \
+        check_float (test_name, FUNC_TEST (FUNC_NAME) (ARG),        \
+                     EXPECTED, EXCEPTIONS);             \
+        COMMON_TEST_CLEANUP;                        \
+    }                                 \
+while (0)
 #define RUN_TEST_LOOP_1_f(FUNC_NAME, ARRAY, ROUNDING_MODE)      \
-  IF_ROUND_INIT_ ## ROUNDING_MODE                   \
+    IF_ROUND_INIT_ ## ROUNDING_MODE                   \
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++) \
-      RUN_TEST_1_f ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,  \
-            (ARRAY)[i].RM_##ROUNDING_MODE.expected,     \
-            (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);      \
-  ROUND_RESTORE_ ## ROUNDING_MODE
+        RUN_TEST_1_f ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,  \
+                      (ARRAY)[i].RM_##ROUNDING_MODE.expected,     \
+                      (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);      \
+    ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_LOOP_f_f RUN_TEST_LOOP_1_f
 #define RUN_TEST_LOOP_a_f RUN_TEST_LOOP_1_f
 #define RUN_TEST_fp_f(ARG_STR, FUNC_NAME, ARG, EXPECTED,        \
-             EXCEPTIONS)                    \
-  do                                    \
+                      EXCEPTIONS)                    \
+do                                    \
     if (enable_test (EXCEPTIONS))                   \
-      {                                 \
-    COMMON_TEST_SETUP (ARG_STR);                    \
-    check_float (test_name, FUNC_TEST (FUNC_NAME) (&(ARG)),     \
-             EXPECTED, EXCEPTIONS);             \
-    COMMON_TEST_CLEANUP;                        \
-      }                                 \
-  while (0)
+    {                                 \
+        COMMON_TEST_SETUP (ARG_STR);                    \
+        check_float (test_name, FUNC_TEST (FUNC_NAME) (&(ARG)),     \
+                     EXPECTED, EXCEPTIONS);             \
+        COMMON_TEST_CLEANUP;                        \
+    }                                 \
+while (0)
 #define RUN_TEST_LOOP_fp_f(FUNC_NAME, ARRAY, ROUNDING_MODE)     \
-  IF_ROUND_INIT_ ## ROUNDING_MODE                   \
+    IF_ROUND_INIT_ ## ROUNDING_MODE                   \
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++) \
-      RUN_TEST_fp_f ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg, \
-            (ARRAY)[i].RM_##ROUNDING_MODE.expected,     \
-            (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);      \
-  ROUND_RESTORE_ ## ROUNDING_MODE
+        RUN_TEST_fp_f ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg, \
+                       (ARRAY)[i].RM_##ROUNDING_MODE.expected,     \
+                       (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);      \
+    ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_2_f(ARG_STR, FUNC_NAME, ARG1, ARG2, EXPECTED,  \
-             EXCEPTIONS)                \
-  do                                \
+                     EXCEPTIONS)                \
+do                                \
     if (enable_test (EXCEPTIONS))               \
-      {                             \
-    COMMON_TEST_SETUP (ARG_STR);                \
-    check_float (test_name, FUNC_TEST (FUNC_NAME) (ARG1, ARG2), \
-             EXPECTED, EXCEPTIONS);         \
-    COMMON_TEST_CLEANUP;                    \
-      }                             \
-  while (0)
+    {                             \
+        COMMON_TEST_SETUP (ARG_STR);                \
+        check_float (test_name, FUNC_TEST (FUNC_NAME) (ARG1, ARG2), \
+                     EXPECTED, EXCEPTIONS);         \
+        COMMON_TEST_CLEANUP;                    \
+    }                             \
+while (0)
 #define RUN_TEST_LOOP_2_f(FUNC_NAME, ARRAY, ROUNDING_MODE)      \
-  IF_ROUND_INIT_ ## ROUNDING_MODE                   \
+    IF_ROUND_INIT_ ## ROUNDING_MODE                   \
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++) \
-      RUN_TEST_2_f ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg1, \
-            (ARRAY)[i].arg2,                    \
-            (ARRAY)[i].RM_##ROUNDING_MODE.expected,     \
-            (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);      \
-  ROUND_RESTORE_ ## ROUNDING_MODE
+        RUN_TEST_2_f ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg1, \
+                      (ARRAY)[i].arg2,                    \
+                      (ARRAY)[i].RM_##ROUNDING_MODE.expected,     \
+                      (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);      \
+    ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_ff_f RUN_TEST_2_f
 #define RUN_TEST_LOOP_ff_f RUN_TEST_LOOP_2_f
 #define RUN_TEST_LOOP_fj_f RUN_TEST_LOOP_2_f
@@ -508,514 +508,514 @@ struct test_Ff_b1_data {
 #define RUN_TEST_if_f RUN_TEST_2_f
 #define RUN_TEST_LOOP_if_f RUN_TEST_LOOP_2_f
 #define RUN_TEST_3_f(ARG_STR, FUNC_NAME, ARG1, ARG2, ARG3,      \
-             EXPECTED, EXCEPTIONS)              \
-  do                                    \
+                     EXPECTED, EXCEPTIONS)              \
+do                                    \
     if (enable_test (EXCEPTIONS))                   \
-      {                                 \
-    COMMON_TEST_SETUP (ARG_STR);                    \
-    check_float (test_name, FUNC_TEST (FUNC_NAME) (ARG1, ARG2, ARG3),   \
-             EXPECTED, EXCEPTIONS);             \
-    COMMON_TEST_CLEANUP;                        \
-      }                                 \
-  while (0)
+    {                                 \
+        COMMON_TEST_SETUP (ARG_STR);                    \
+        check_float (test_name, FUNC_TEST (FUNC_NAME) (ARG1, ARG2, ARG3),   \
+                     EXPECTED, EXCEPTIONS);             \
+        COMMON_TEST_CLEANUP;                        \
+    }                                 \
+while (0)
 #define RUN_TEST_LOOP_3_f(FUNC_NAME, ARRAY, ROUNDING_MODE)      \
-  IF_ROUND_INIT_ ## ROUNDING_MODE                   \
+    IF_ROUND_INIT_ ## ROUNDING_MODE                   \
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++) \
-      RUN_TEST_3_f ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg1, \
-            (ARRAY)[i].arg2, (ARRAY)[i].arg3,           \
-            (ARRAY)[i].RM_##ROUNDING_MODE.expected,     \
-            (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);      \
-  ROUND_RESTORE_ ## ROUNDING_MODE
+        RUN_TEST_3_f ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg1, \
+                      (ARRAY)[i].arg2, (ARRAY)[i].arg3,           \
+                      (ARRAY)[i].RM_##ROUNDING_MODE.expected,     \
+                      (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);      \
+    ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_LOOP_fff_f RUN_TEST_LOOP_3_f
 #define RUN_TEST_LOOP_aaa_f RUN_TEST_LOOP_3_f
 #define RUN_TEST_fiu_M(ARG_STR, FUNC_NAME, ARG1, ARG2, ARG3,        \
-               EXPECTED, EXCEPTIONS)                \
-  do                                    \
+                       EXPECTED, EXCEPTIONS)                \
+do                                    \
     if (enable_test (EXCEPTIONS))                   \
-      {                                 \
-    COMMON_TEST_SETUP (ARG_STR);                    \
-    check_intmax_t (test_name,                  \
-            FUNC_TEST (FUNC_NAME) (ARG1, ARG2, ARG3),   \
-            EXPECTED, EXCEPTIONS);              \
-    COMMON_TEST_CLEANUP;                        \
-      }                                 \
-  while (0)
+    {                                 \
+        COMMON_TEST_SETUP (ARG_STR);                    \
+        check_intmax_t (test_name,                  \
+                        FUNC_TEST (FUNC_NAME) (ARG1, ARG2, ARG3),   \
+                        EXPECTED, EXCEPTIONS);              \
+        COMMON_TEST_CLEANUP;                        \
+    }                                 \
+while (0)
 #define RUN_TEST_LOOP_fiu_M(FUNC_NAME, ARRAY, ROUNDING_MODE)        \
-  IF_ROUND_INIT_ ## ROUNDING_MODE                   \
+    IF_ROUND_INIT_ ## ROUNDING_MODE                   \
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++) \
-      RUN_TEST_fiu_M ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg1,   \
-              (ARRAY)[i].arg2, (ARRAY)[i].arg3,         \
-              (ARRAY)[i].RM_##ROUNDING_MODE.expected,       \
-              (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);    \
-  ROUND_RESTORE_ ## ROUNDING_MODE
+        RUN_TEST_fiu_M ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg1,   \
+                        (ARRAY)[i].arg2, (ARRAY)[i].arg3,         \
+                        (ARRAY)[i].RM_##ROUNDING_MODE.expected,       \
+                        (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);    \
+    ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_fiu_U(ARG_STR, FUNC_NAME, ARG1, ARG2, ARG3,        \
-               EXPECTED, EXCEPTIONS)                \
-  do                                    \
+                       EXPECTED, EXCEPTIONS)                \
+do                                    \
     if (enable_test (EXCEPTIONS))                   \
-      {                                 \
-    COMMON_TEST_SETUP (ARG_STR);                    \
-    check_uintmax_t (test_name,                 \
-             FUNC_TEST (FUNC_NAME) (ARG1, ARG2, ARG3),  \
-             EXPECTED, EXCEPTIONS);             \
-    COMMON_TEST_CLEANUP;                        \
-      }                                 \
-  while (0)
+    {                                 \
+        COMMON_TEST_SETUP (ARG_STR);                    \
+        check_uintmax_t (test_name,                 \
+                         FUNC_TEST (FUNC_NAME) (ARG1, ARG2, ARG3),  \
+                         EXPECTED, EXCEPTIONS);             \
+        COMMON_TEST_CLEANUP;                        \
+    }                                 \
+while (0)
 #define RUN_TEST_LOOP_fiu_U(FUNC_NAME, ARRAY, ROUNDING_MODE)        \
-  IF_ROUND_INIT_ ## ROUNDING_MODE                   \
+    IF_ROUND_INIT_ ## ROUNDING_MODE                   \
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++) \
-      RUN_TEST_fiu_U ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg1,   \
-              (ARRAY)[i].arg2, (ARRAY)[i].arg3,         \
-              (ARRAY)[i].RM_##ROUNDING_MODE.expected,       \
-              (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);    \
-  ROUND_RESTORE_ ## ROUNDING_MODE
+        RUN_TEST_fiu_U ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg1,   \
+                        (ARRAY)[i].arg2, (ARRAY)[i].arg3,         \
+                        (ARRAY)[i].RM_##ROUNDING_MODE.expected,       \
+                        (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);    \
+    ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_c_f(ARG_STR, FUNC_NAME, ARG1, ARG2, EXPECTED,      \
-             EXCEPTIONS)                    \
-  do                                    \
+                     EXCEPTIONS)                    \
+do                                    \
     if (enable_test (EXCEPTIONS))                   \
-      {                                 \
-    COMMON_TEST_SETUP (ARG_STR);                    \
-    check_float (test_name,                     \
-             FUNC_TEST (FUNC_NAME) (BUILD_COMPLEX (ARG1, ARG2)),\
-             EXPECTED, EXCEPTIONS);             \
-    COMMON_TEST_CLEANUP;                        \
-      }                                 \
-  while (0)
+    {                                 \
+        COMMON_TEST_SETUP (ARG_STR);                    \
+        check_float (test_name,                     \
+                     FUNC_TEST (FUNC_NAME) (BUILD_COMPLEX (ARG1, ARG2)),\
+                     EXPECTED, EXCEPTIONS);             \
+        COMMON_TEST_CLEANUP;                        \
+    }                                 \
+while (0)
 #define RUN_TEST_LOOP_c_f(FUNC_NAME, ARRAY, ROUNDING_MODE)      \
-  IF_ROUND_INIT_ ## ROUNDING_MODE                   \
+    IF_ROUND_INIT_ ## ROUNDING_MODE                   \
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++) \
-      RUN_TEST_c_f ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].argr, \
-            (ARRAY)[i].argc,                    \
-            (ARRAY)[i].RM_##ROUNDING_MODE.expected,     \
-            (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);      \
-  ROUND_RESTORE_ ## ROUNDING_MODE
+        RUN_TEST_c_f ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].argr, \
+                      (ARRAY)[i].argc,                    \
+                      (ARRAY)[i].RM_##ROUNDING_MODE.expected,     \
+                      (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);      \
+    ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_f_f1(ARG_STR, FUNC_NAME, ARG, EXPECTED,        \
-              EXCEPTIONS, EXTRA_VAR, EXTRA_TEST,        \
-              EXTRA_EXPECTED)                   \
-  do                                    \
+                      EXCEPTIONS, EXTRA_VAR, EXTRA_TEST,        \
+                      EXTRA_EXPECTED)                   \
+do                                    \
     if (enable_test (EXCEPTIONS))                   \
-      {                                 \
-    COMMON_TEST_SETUP (ARG_STR);                    \
-    (EXTRA_VAR) = (EXTRA_EXPECTED) == 0 ? 1 : 0;            \
-    check_float (test_name, FUNC_TEST (FUNC_NAME) (ARG), EXPECTED,  \
-             EXCEPTIONS);                   \
-    EXTRA_OUTPUT_TEST_SETUP (ARG_STR, 1);               \
-    if (EXTRA_TEST)                         \
-      check_int (extra1_name, EXTRA_VAR, EXTRA_EXPECTED, 0);    \
-    EXTRA_OUTPUT_TEST_CLEANUP (1);                  \
-    COMMON_TEST_CLEANUP;                        \
-      }                                 \
-  while (0)
+    {                                 \
+        COMMON_TEST_SETUP (ARG_STR);                    \
+        (EXTRA_VAR) = (EXTRA_EXPECTED) == 0 ? 1 : 0;            \
+        check_float (test_name, FUNC_TEST (FUNC_NAME) (ARG), EXPECTED,  \
+                     EXCEPTIONS);                   \
+        EXTRA_OUTPUT_TEST_SETUP (ARG_STR, 1);               \
+        if (EXTRA_TEST)                         \
+            check_int (extra1_name, EXTRA_VAR, EXTRA_EXPECTED, 0);    \
+        EXTRA_OUTPUT_TEST_CLEANUP (1);                  \
+        COMMON_TEST_CLEANUP;                        \
+    }                                 \
+while (0)
 #define RUN_TEST_LOOP_f_f1(FUNC_NAME, ARRAY, ROUNDING_MODE, EXTRA_VAR)  \
-  IF_ROUND_INIT_ ## ROUNDING_MODE                   \
+    IF_ROUND_INIT_ ## ROUNDING_MODE                   \
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++) \
-      RUN_TEST_f_f1 ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg, \
-             (ARRAY)[i].RM_##ROUNDING_MODE.expected,        \
-             (ARRAY)[i].RM_##ROUNDING_MODE.exceptions,      \
-             EXTRA_VAR,                     \
-             (ARRAY)[i].RM_##ROUNDING_MODE.extra_test,      \
-             (ARRAY)[i].RM_##ROUNDING_MODE.extra_expected); \
-  ROUND_RESTORE_ ## ROUNDING_MODE
+        RUN_TEST_f_f1 ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg, \
+                       (ARRAY)[i].RM_##ROUNDING_MODE.expected,        \
+                       (ARRAY)[i].RM_##ROUNDING_MODE.exceptions,      \
+                       EXTRA_VAR,                     \
+                       (ARRAY)[i].RM_##ROUNDING_MODE.extra_test,      \
+                       (ARRAY)[i].RM_##ROUNDING_MODE.extra_expected); \
+    ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_fF_f1(ARG_STR, FUNC_NAME, ARG, EXPECTED,       \
-               EXCEPTIONS, EXTRA_VAR, EXTRA_TEST,       \
-               EXTRA_EXPECTED)                  \
-  do                                    \
+                       EXCEPTIONS, EXTRA_VAR, EXTRA_TEST,       \
+                       EXTRA_EXPECTED)                  \
+do                                    \
     if (enable_test (EXCEPTIONS))                   \
-      {                                 \
-    COMMON_TEST_SETUP (ARG_STR);                    \
-    (EXTRA_VAR) = (EXTRA_EXPECTED) == 0 ? 1 : 0;            \
-    check_float (test_name, FUNC_TEST (FUNC_NAME) (ARG, &(EXTRA_VAR)),  \
-             EXPECTED, EXCEPTIONS);             \
-    EXTRA_OUTPUT_TEST_SETUP (ARG_STR, 1);               \
-    if (EXTRA_TEST)                         \
-      check_float (extra1_name, EXTRA_VAR, EXTRA_EXPECTED, 0);  \
-    EXTRA_OUTPUT_TEST_CLEANUP (1);                  \
-    COMMON_TEST_CLEANUP;                        \
-      }                                 \
-  while (0)
+    {                                 \
+        COMMON_TEST_SETUP (ARG_STR);                    \
+        (EXTRA_VAR) = (EXTRA_EXPECTED) == 0 ? 1 : 0;            \
+        check_float (test_name, FUNC_TEST (FUNC_NAME) (ARG, &(EXTRA_VAR)),  \
+                     EXPECTED, EXCEPTIONS);             \
+        EXTRA_OUTPUT_TEST_SETUP (ARG_STR, 1);               \
+        if (EXTRA_TEST)                         \
+            check_float (extra1_name, EXTRA_VAR, EXTRA_EXPECTED, 0);  \
+        EXTRA_OUTPUT_TEST_CLEANUP (1);                  \
+        COMMON_TEST_CLEANUP;                        \
+    }                                 \
+while (0)
 #define RUN_TEST_LOOP_fF_f1(FUNC_NAME, ARRAY, ROUNDING_MODE, EXTRA_VAR) \
-  IF_ROUND_INIT_ ## ROUNDING_MODE                   \
+    IF_ROUND_INIT_ ## ROUNDING_MODE                   \
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++) \
-      RUN_TEST_fF_f1 ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,    \
-              (ARRAY)[i].RM_##ROUNDING_MODE.expected,       \
-              (ARRAY)[i].RM_##ROUNDING_MODE.exceptions,     \
-              EXTRA_VAR,                    \
-              (ARRAY)[i].RM_##ROUNDING_MODE.extra_test,     \
-              (ARRAY)[i].RM_##ROUNDING_MODE.extra_expected);    \
-  ROUND_RESTORE_ ## ROUNDING_MODE
+        RUN_TEST_fF_f1 ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,    \
+                        (ARRAY)[i].RM_##ROUNDING_MODE.expected,       \
+                        (ARRAY)[i].RM_##ROUNDING_MODE.exceptions,     \
+                        EXTRA_VAR,                    \
+                        (ARRAY)[i].RM_##ROUNDING_MODE.extra_test,     \
+                        (ARRAY)[i].RM_##ROUNDING_MODE.extra_expected);    \
+    ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_fI_f1(ARG_STR, FUNC_NAME, ARG, EXPECTED,       \
-               EXCEPTIONS, EXTRA_VAR, EXTRA_TEST,       \
-               EXTRA_EXPECTED)                  \
-  do                                    \
+                       EXCEPTIONS, EXTRA_VAR, EXTRA_TEST,       \
+                       EXTRA_EXPECTED)                  \
+do                                    \
     if (enable_test (EXCEPTIONS))                   \
-      {                                 \
-    COMMON_TEST_SETUP (ARG_STR);                    \
-    (EXTRA_VAR) = (EXTRA_EXPECTED) == 0 ? 1 : 0;            \
-    check_float (test_name, FUNC_TEST (FUNC_NAME) (ARG, &(EXTRA_VAR)),  \
-             EXPECTED, EXCEPTIONS);             \
-    EXTRA_OUTPUT_TEST_SETUP (ARG_STR, 1);               \
-    if (EXTRA_TEST)                         \
-      check_int (extra1_name, EXTRA_VAR, EXTRA_EXPECTED, 0);    \
-    EXTRA_OUTPUT_TEST_CLEANUP (1);                  \
-    COMMON_TEST_CLEANUP;                        \
-      }                                 \
-  while (0)
+    {                                 \
+        COMMON_TEST_SETUP (ARG_STR);                    \
+        (EXTRA_VAR) = (EXTRA_EXPECTED) == 0 ? 1 : 0;            \
+        check_float (test_name, FUNC_TEST (FUNC_NAME) (ARG, &(EXTRA_VAR)),  \
+                     EXPECTED, EXCEPTIONS);             \
+        EXTRA_OUTPUT_TEST_SETUP (ARG_STR, 1);               \
+        if (EXTRA_TEST)                         \
+            check_int (extra1_name, EXTRA_VAR, EXTRA_EXPECTED, 0);    \
+        EXTRA_OUTPUT_TEST_CLEANUP (1);                  \
+        COMMON_TEST_CLEANUP;                        \
+    }                                 \
+while (0)
 #define RUN_TEST_LOOP_fI_f1(FUNC_NAME, ARRAY, ROUNDING_MODE, EXTRA_VAR) \
-  IF_ROUND_INIT_ ## ROUNDING_MODE                   \
+    IF_ROUND_INIT_ ## ROUNDING_MODE                   \
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++) \
-      RUN_TEST_fI_f1 ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,    \
-              (ARRAY)[i].RM_##ROUNDING_MODE.expected,       \
-              (ARRAY)[i].RM_##ROUNDING_MODE.exceptions,     \
-              EXTRA_VAR,                    \
-              (ARRAY)[i].RM_##ROUNDING_MODE.extra_test,     \
-              (ARRAY)[i].RM_##ROUNDING_MODE.extra_expected);    \
-  ROUND_RESTORE_ ## ROUNDING_MODE
+        RUN_TEST_fI_f1 ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,    \
+                        (ARRAY)[i].RM_##ROUNDING_MODE.expected,       \
+                        (ARRAY)[i].RM_##ROUNDING_MODE.exceptions,     \
+                        EXTRA_VAR,                    \
+                        (ARRAY)[i].RM_##ROUNDING_MODE.extra_test,     \
+                        (ARRAY)[i].RM_##ROUNDING_MODE.extra_expected);    \
+    ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_ffI_f1_mod8(ARG_STR, FUNC_NAME, ARG1, ARG2, EXPECTED,  \
-                 EXCEPTIONS, EXTRA_VAR, EXTRA_TEST,     \
-                 EXTRA_EXPECTED)                \
-  do                                    \
+                             EXCEPTIONS, EXTRA_VAR, EXTRA_TEST,     \
+                             EXTRA_EXPECTED)                \
+do                                    \
     if (enable_test (EXCEPTIONS))                   \
-      {                                 \
-    COMMON_TEST_SETUP (ARG_STR);                    \
-    (EXTRA_VAR) = (EXTRA_EXPECTED) == 0 ? 1 : 0;            \
-    check_float (test_name,                     \
-             FUNC_TEST (FUNC_NAME) (ARG1, ARG2, &(EXTRA_VAR)),  \
-             EXPECTED, EXCEPTIONS);             \
-    EXTRA_OUTPUT_TEST_SETUP (ARG_STR, 1);               \
-    if (EXTRA_TEST)                         \
-      check_int (extra1_name, (EXTRA_VAR) % 8, EXTRA_EXPECTED, 0);  \
-    EXTRA_OUTPUT_TEST_CLEANUP (1);                  \
-    COMMON_TEST_CLEANUP;                        \
-      }                                 \
-  while (0)
+    {                                 \
+        COMMON_TEST_SETUP (ARG_STR);                    \
+        (EXTRA_VAR) = (EXTRA_EXPECTED) == 0 ? 1 : 0;            \
+        check_float (test_name,                     \
+                     FUNC_TEST (FUNC_NAME) (ARG1, ARG2, &(EXTRA_VAR)),  \
+                     EXPECTED, EXCEPTIONS);             \
+        EXTRA_OUTPUT_TEST_SETUP (ARG_STR, 1);               \
+        if (EXTRA_TEST)                         \
+            check_int (extra1_name, (EXTRA_VAR) % 8, EXTRA_EXPECTED, 0);  \
+        EXTRA_OUTPUT_TEST_CLEANUP (1);                  \
+        COMMON_TEST_CLEANUP;                        \
+    }                                 \
+while (0)
 #define RUN_TEST_LOOP_ffI_f1_mod8(FUNC_NAME, ARRAY, ROUNDING_MODE,  \
-                  EXTRA_VAR)                \
-  IF_ROUND_INIT_ ## ROUNDING_MODE                   \
-    for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++) \
-      RUN_TEST_ffI_f1_mod8 ((ARRAY)[i].arg_str, FUNC_NAME,      \
-                (ARRAY)[i].arg1, (ARRAY)[i].arg2,       \
-                (ARRAY)[i].RM_##ROUNDING_MODE.expected, \
-                (ARRAY)[i].RM_##ROUNDING_MODE.exceptions,   \
-                EXTRA_VAR,                  \
-                (ARRAY)[i].RM_##ROUNDING_MODE.extra_test,   \
-                (ARRAY)[i].RM_##ROUNDING_MODE.extra_expected); \
-  ROUND_RESTORE_ ## ROUNDING_MODE
+                                  EXTRA_VAR)                \
+IF_ROUND_INIT_ ## ROUNDING_MODE                   \
+for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++) \
+    RUN_TEST_ffI_f1_mod8 ((ARRAY)[i].arg_str, FUNC_NAME,      \
+                          (ARRAY)[i].arg1, (ARRAY)[i].arg2,       \
+                          (ARRAY)[i].RM_##ROUNDING_MODE.expected, \
+                          (ARRAY)[i].RM_##ROUNDING_MODE.exceptions,   \
+                          EXTRA_VAR,                  \
+                          (ARRAY)[i].RM_##ROUNDING_MODE.extra_test,   \
+                          (ARRAY)[i].RM_##ROUNDING_MODE.extra_expected); \
+ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_Ff_b1(ARG_STR, FUNC_NAME, ARG, EXPECTED,       \
-               EXCEPTIONS, EXTRA_VAR, EXTRA_TEST,       \
-               EXTRA_EXPECTED)                  \
-  do                                    \
+                       EXCEPTIONS, EXTRA_VAR, EXTRA_TEST,       \
+                       EXTRA_EXPECTED)                  \
+do                                    \
     if (enable_test (EXCEPTIONS))                   \
-      {                                 \
-    COMMON_TEST_SETUP (ARG_STR);                    \
-    (EXTRA_VAR) = (EXTRA_EXPECTED) == 0 ? 1 : 0;            \
-    /* Clear any exceptions from comparison involving sNaN      \
-       EXTRA_EXPECTED.  */                      \
-    feclearexcept (FE_ALL_EXCEPT);                  \
-    check_bool (test_name, FUNC_TEST (FUNC_NAME) (&(EXTRA_VAR), \
-                              (ARG)),       \
-            EXPECTED, EXCEPTIONS);              \
-    EXTRA_OUTPUT_TEST_SETUP (ARG_STR, 1);               \
-    if (EXTRA_TEST)                         \
-      check_float (extra1_name, EXTRA_VAR, EXTRA_EXPECTED,      \
-               (EXCEPTIONS) & TEST_NAN_PAYLOAD);        \
-    EXTRA_OUTPUT_TEST_CLEANUP (1);                  \
-    COMMON_TEST_CLEANUP;                        \
-      }                                 \
-  while (0)
+    {                                 \
+        COMMON_TEST_SETUP (ARG_STR);                    \
+        (EXTRA_VAR) = (EXTRA_EXPECTED) == 0 ? 1 : 0;            \
+        /* Clear any exceptions from comparison involving sNaN      \
+           EXTRA_EXPECTED.  */                      \
+        feclearexcept (FE_ALL_EXCEPT);                  \
+        check_bool (test_name, FUNC_TEST (FUNC_NAME) (&(EXTRA_VAR), \
+                    (ARG)),       \
+                    EXPECTED, EXCEPTIONS);              \
+        EXTRA_OUTPUT_TEST_SETUP (ARG_STR, 1);               \
+        if (EXTRA_TEST)                         \
+            check_float (extra1_name, EXTRA_VAR, EXTRA_EXPECTED,      \
+                         (EXCEPTIONS) & TEST_NAN_PAYLOAD);        \
+        EXTRA_OUTPUT_TEST_CLEANUP (1);                  \
+        COMMON_TEST_CLEANUP;                        \
+    }                                 \
+while (0)
 #define RUN_TEST_LOOP_Ff_b1(FUNC_NAME, ARRAY, ROUNDING_MODE,        \
-                EXTRA_VAR)                  \
-  IF_ROUND_INIT_ ## ROUNDING_MODE                   \
-    for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++) \
-      RUN_TEST_Ff_b1 ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,    \
-              (ARRAY)[i].RM_##ROUNDING_MODE.expected,       \
-              (ARRAY)[i].RM_##ROUNDING_MODE.exceptions,     \
-              EXTRA_VAR,                    \
-              (ARRAY)[i].RM_##ROUNDING_MODE.extra_test,     \
-              (ARRAY)[i].RM_##ROUNDING_MODE.extra_expected);    \
-  ROUND_RESTORE_ ## ROUNDING_MODE
+                            EXTRA_VAR)                  \
+IF_ROUND_INIT_ ## ROUNDING_MODE                   \
+for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++) \
+    RUN_TEST_Ff_b1 ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,    \
+                    (ARRAY)[i].RM_##ROUNDING_MODE.expected,       \
+                    (ARRAY)[i].RM_##ROUNDING_MODE.exceptions,     \
+                    EXTRA_VAR,                    \
+                    (ARRAY)[i].RM_##ROUNDING_MODE.extra_test,     \
+                    (ARRAY)[i].RM_##ROUNDING_MODE.extra_expected);    \
+ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_Ffp_b1(ARG_STR, FUNC_NAME, ARG, EXPECTED,      \
-            EXCEPTIONS, EXTRA_VAR, EXTRA_TEST,      \
-            EXTRA_EXPECTED)                 \
-  do                                    \
+                        EXCEPTIONS, EXTRA_VAR, EXTRA_TEST,      \
+                        EXTRA_EXPECTED)                 \
+do                                    \
     if (enable_test (EXCEPTIONS))                   \
-      {                                 \
-    COMMON_TEST_SETUP (ARG_STR);                    \
-    (EXTRA_VAR) = (EXTRA_EXPECTED) == 0 ? 1 : 0;            \
-    check_bool (test_name, FUNC_TEST (FUNC_NAME) (&(EXTRA_VAR), \
-                              &(ARG)),      \
-            EXPECTED, EXCEPTIONS);              \
-    EXTRA_OUTPUT_TEST_SETUP (ARG_STR, 1);               \
-    if (EXTRA_TEST)                         \
-      check_float (extra1_name, EXTRA_VAR, EXTRA_EXPECTED,      \
-               (EXCEPTIONS) & TEST_NAN_PAYLOAD);        \
-    EXTRA_OUTPUT_TEST_CLEANUP (1);                  \
-    COMMON_TEST_CLEANUP;                        \
-      }                                 \
-  while (0)
+    {                                 \
+        COMMON_TEST_SETUP (ARG_STR);                    \
+        (EXTRA_VAR) = (EXTRA_EXPECTED) == 0 ? 1 : 0;            \
+        check_bool (test_name, FUNC_TEST (FUNC_NAME) (&(EXTRA_VAR), \
+                    &(ARG)),      \
+                    EXPECTED, EXCEPTIONS);              \
+        EXTRA_OUTPUT_TEST_SETUP (ARG_STR, 1);               \
+        if (EXTRA_TEST)                         \
+            check_float (extra1_name, EXTRA_VAR, EXTRA_EXPECTED,      \
+                         (EXCEPTIONS) & TEST_NAN_PAYLOAD);        \
+        EXTRA_OUTPUT_TEST_CLEANUP (1);                  \
+        COMMON_TEST_CLEANUP;                        \
+    }                                 \
+while (0)
 #define RUN_TEST_LOOP_Ffp_b1(FUNC_NAME, ARRAY, ROUNDING_MODE,       \
-                 EXTRA_VAR)                 \
-  IF_ROUND_INIT_ ## ROUNDING_MODE                   \
-    for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++) \
-      RUN_TEST_Ffp_b1 ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,   \
-               (ARRAY)[i].RM_##ROUNDING_MODE.expected,      \
-               (ARRAY)[i].RM_##ROUNDING_MODE.exceptions,    \
-               EXTRA_VAR,                   \
-               (ARRAY)[i].RM_##ROUNDING_MODE.extra_test,    \
-               (ARRAY)[i].RM_##ROUNDING_MODE.extra_expected);   \
-  ROUND_RESTORE_ ## ROUNDING_MODE
+                             EXTRA_VAR)                 \
+IF_ROUND_INIT_ ## ROUNDING_MODE                   \
+for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++) \
+    RUN_TEST_Ffp_b1 ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,   \
+                     (ARRAY)[i].RM_##ROUNDING_MODE.expected,      \
+                     (ARRAY)[i].RM_##ROUNDING_MODE.exceptions,    \
+                     EXTRA_VAR,                   \
+                     (ARRAY)[i].RM_##ROUNDING_MODE.extra_test,    \
+                     (ARRAY)[i].RM_##ROUNDING_MODE.extra_expected);   \
+ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_c_c(ARG_STR, FUNC_NAME, ARGR, ARGC, EXPR, EXPC,    \
-             EXCEPTIONS)                    \
-  do                                    \
+                     EXCEPTIONS)                    \
+do                                    \
     if (enable_test (EXCEPTIONS))                   \
-      {                                 \
-    COMMON_TEST_SETUP (ARG_STR);                    \
-    check_complex (test_name,                   \
-               FUNC_TEST (FUNC_NAME) (BUILD_COMPLEX (ARGR, ARGC)),  \
-               BUILD_COMPLEX (EXPR, EXPC), EXCEPTIONS);     \
-    COMMON_TEST_CLEANUP;                        \
-      }                                 \
-  while (0)
+    {                                 \
+        COMMON_TEST_SETUP (ARG_STR);                    \
+        check_complex (test_name,                   \
+                       FUNC_TEST (FUNC_NAME) (BUILD_COMPLEX (ARGR, ARGC)),  \
+                       BUILD_COMPLEX (EXPR, EXPC), EXCEPTIONS);     \
+        COMMON_TEST_CLEANUP;                        \
+    }                                 \
+while (0)
 #define RUN_TEST_LOOP_c_c(FUNC_NAME, ARRAY, ROUNDING_MODE)      \
-  IF_ROUND_INIT_ ## ROUNDING_MODE                   \
+    IF_ROUND_INIT_ ## ROUNDING_MODE                   \
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++) \
-      RUN_TEST_c_c ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].argr, \
-            (ARRAY)[i].argc,                    \
-            (ARRAY)[i].RM_##ROUNDING_MODE.expr,         \
-            (ARRAY)[i].RM_##ROUNDING_MODE.expc,         \
-            (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);      \
-  ROUND_RESTORE_ ## ROUNDING_MODE
+        RUN_TEST_c_c ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].argr, \
+                      (ARRAY)[i].argc,                    \
+                      (ARRAY)[i].RM_##ROUNDING_MODE.expr,         \
+                      (ARRAY)[i].RM_##ROUNDING_MODE.expc,         \
+                      (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);      \
+    ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_cc_c(ARG_STR, FUNC_NAME, ARG1R, ARG1C, ARG2R, ARG2C,   \
-              EXPR, EXPC, EXCEPTIONS)               \
-  do                                    \
+                      EXPR, EXPC, EXCEPTIONS)               \
+do                                    \
     if (enable_test (EXCEPTIONS))                   \
-      {                                 \
-    COMMON_TEST_SETUP (ARG_STR);                    \
-    check_complex (test_name,                   \
-               FUNC_TEST (FUNC_NAME) (BUILD_COMPLEX (ARG1R, ARG1C), \
-                          BUILD_COMPLEX (ARG2R, ARG2C)),    \
-               BUILD_COMPLEX (EXPR, EXPC), EXCEPTIONS);     \
-    COMMON_TEST_CLEANUP;                        \
-      }                                 \
-  while (0)
+    {                                 \
+        COMMON_TEST_SETUP (ARG_STR);                    \
+        check_complex (test_name,                   \
+                       FUNC_TEST (FUNC_NAME) (BUILD_COMPLEX (ARG1R, ARG1C), \
+                                              BUILD_COMPLEX (ARG2R, ARG2C)),    \
+                       BUILD_COMPLEX (EXPR, EXPC), EXCEPTIONS);     \
+        COMMON_TEST_CLEANUP;                        \
+    }                                 \
+while (0)
 #define RUN_TEST_LOOP_cc_c(FUNC_NAME, ARRAY, ROUNDING_MODE)     \
-  IF_ROUND_INIT_ ## ROUNDING_MODE                   \
+    IF_ROUND_INIT_ ## ROUNDING_MODE                   \
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++) \
-      RUN_TEST_cc_c ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg1r,   \
-             (ARRAY)[i].arg1c, (ARRAY)[i].arg2r,        \
-             (ARRAY)[i].arg2c,                  \
-             (ARRAY)[i].RM_##ROUNDING_MODE.expr,        \
-             (ARRAY)[i].RM_##ROUNDING_MODE.expc,        \
-             (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);     \
-  ROUND_RESTORE_ ## ROUNDING_MODE
+        RUN_TEST_cc_c ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg1r,   \
+                       (ARRAY)[i].arg1c, (ARRAY)[i].arg2r,        \
+                       (ARRAY)[i].arg2c,                  \
+                       (ARRAY)[i].RM_##ROUNDING_MODE.expr,        \
+                       (ARRAY)[i].RM_##ROUNDING_MODE.expc,        \
+                       (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);     \
+    ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_f_i(ARG_STR, FUNC_NAME, ARG, EXPECTED, EXCEPTIONS) \
-  do                                    \
-    if (enable_test (EXCEPTIONS))                   \
-      {                                 \
-    COMMON_TEST_SETUP (ARG_STR);                    \
-    check_int (test_name, FUNC_TEST (FUNC_NAME) (ARG), EXPECTED,    \
-           EXCEPTIONS);                     \
-    COMMON_TEST_CLEANUP;                        \
-      }                                 \
-  while (0)
+    do                                    \
+        if (enable_test (EXCEPTIONS))                   \
+        {                                 \
+            COMMON_TEST_SETUP (ARG_STR);                    \
+            check_int (test_name, FUNC_TEST (FUNC_NAME) (ARG), EXPECTED,    \
+                       EXCEPTIONS);                     \
+            COMMON_TEST_CLEANUP;                        \
+        }                                 \
+    while (0)
 #define RUN_TEST_LOOP_f_i(FUNC_NAME, ARRAY, ROUNDING_MODE)      \
-  IF_ROUND_INIT_ ## ROUNDING_MODE                   \
+    IF_ROUND_INIT_ ## ROUNDING_MODE                   \
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++) \
-      RUN_TEST_f_i ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,  \
-            (ARRAY)[i].RM_##ROUNDING_MODE.expected,     \
-            (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);      \
-  ROUND_RESTORE_ ## ROUNDING_MODE
+        RUN_TEST_f_i ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,  \
+                      (ARRAY)[i].RM_##ROUNDING_MODE.expected,     \
+                      (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);      \
+    ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_f_i_tg(ARG_STR, FUNC_NAME, ARG, EXPECTED,      \
-            EXCEPTIONS)                 \
-  do                                    \
+                        EXCEPTIONS)                 \
+do                                    \
     if (enable_test (EXCEPTIONS))                   \
-      {                                 \
-    COMMON_TEST_SETUP (ARG_STR);                    \
-    check_int (test_name, FUNC_NAME (ARG), EXPECTED, EXCEPTIONS);   \
-    COMMON_TEST_CLEANUP;                        \
-      }                                 \
-  while (0)
+    {                                 \
+        COMMON_TEST_SETUP (ARG_STR);                    \
+        check_int (test_name, FUNC_NAME (ARG), EXPECTED, EXCEPTIONS);   \
+        COMMON_TEST_CLEANUP;                        \
+    }                                 \
+while (0)
 #define RUN_TEST_LOOP_f_i_tg(FUNC_NAME, ARRAY, ROUNDING_MODE)       \
-  IF_ROUND_INIT_ ## ROUNDING_MODE                   \
+    IF_ROUND_INIT_ ## ROUNDING_MODE                   \
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++) \
-      RUN_TEST_f_i_tg ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,   \
-               (ARRAY)[i].RM_##ROUNDING_MODE.expected,      \
-               (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);   \
-  ROUND_RESTORE_ ## ROUNDING_MODE
+        RUN_TEST_f_i_tg ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,   \
+                         (ARRAY)[i].RM_##ROUNDING_MODE.expected,      \
+                         (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);   \
+    ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_LOOP_j_b_tg_u(FUNC_NAME, ARRAY, ROUNDING_MODE)     \
-  IF_ROUND_INIT_ ## ROUNDING_MODE                   \
-  for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)   \
-  RUN_TEST_f_b_tg ((ARRAY)[i].arg_str, FUNC_NAME,           \
-           (FLOAT)(ARRAY)[i].arg.value,             \
-           (ARRAY)[i].RM_##ROUNDING_MODE.expected,      \
-           (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);       \
-  ROUND_RESTORE_ ## ROUNDING_MODE
+    IF_ROUND_INIT_ ## ROUNDING_MODE                   \
+    for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)   \
+        RUN_TEST_f_b_tg ((ARRAY)[i].arg_str, FUNC_NAME,           \
+                         (FLOAT)(ARRAY)[i].arg.value,             \
+                         (ARRAY)[i].RM_##ROUNDING_MODE.expected,      \
+                         (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);       \
+    ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_LOOP_j_i_tg_u(FUNC_NAME, ARRAY, ROUNDING_MODE)     \
-  IF_ROUND_INIT_ ## ROUNDING_MODE                   \
-  for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)   \
-  RUN_TEST_f_i_tg ((ARRAY)[i].arg_str, FUNC_NAME,           \
-           (FLOAT)(ARRAY)[i].arg.value,             \
-           (ARRAY)[i].RM_##ROUNDING_MODE.expected,      \
-           (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);       \
-  ROUND_RESTORE_ ## ROUNDING_MODE
+    IF_ROUND_INIT_ ## ROUNDING_MODE                   \
+    for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)   \
+        RUN_TEST_f_i_tg ((ARRAY)[i].arg_str, FUNC_NAME,           \
+                         (FLOAT)(ARRAY)[i].arg.value,             \
+                         (ARRAY)[i].RM_##ROUNDING_MODE.expected,      \
+                         (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);       \
+    ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_ff_b(ARG_STR, FUNC_NAME, ARG1, ARG2, EXPECTED,     \
-              EXCEPTIONS)                   \
-  do                                    \
+                      EXCEPTIONS)                   \
+do                                    \
     if (enable_test (EXCEPTIONS))                   \
-      {                                 \
-    COMMON_TEST_SETUP (ARG_STR);                    \
-    check_bool (test_name, FUNC_TEST (FUNC_NAME) (ARG1, ARG2),  \
-            EXPECTED, EXCEPTIONS);              \
-    COMMON_TEST_CLEANUP;                        \
-      }                                 \
-  while (0)
+    {                                 \
+        COMMON_TEST_SETUP (ARG_STR);                    \
+        check_bool (test_name, FUNC_TEST (FUNC_NAME) (ARG1, ARG2),  \
+                    EXPECTED, EXCEPTIONS);              \
+        COMMON_TEST_CLEANUP;                        \
+    }                                 \
+while (0)
 #define RUN_TEST_LOOP_ff_b(FUNC_NAME, ARRAY, ROUNDING_MODE)     \
-  IF_ROUND_INIT_ ## ROUNDING_MODE                   \
+    IF_ROUND_INIT_ ## ROUNDING_MODE                   \
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++) \
-      RUN_TEST_ff_b ((ARRAY)[i].arg_str, FUNC_NAME,         \
-             (ARRAY)[i].arg1, (ARRAY)[i].arg2,          \
-             (ARRAY)[i].RM_##ROUNDING_MODE.expected,        \
-             (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);     \
-  ROUND_RESTORE_ ## ROUNDING_MODE
+        RUN_TEST_ff_b ((ARRAY)[i].arg_str, FUNC_NAME,         \
+                       (ARRAY)[i].arg1, (ARRAY)[i].arg2,          \
+                       (ARRAY)[i].RM_##ROUNDING_MODE.expected,        \
+                       (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);     \
+    ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_fpfp_b(ARG_STR, FUNC_NAME, ARG1, ARG2, EXPECTED,   \
-            EXCEPTIONS)                 \
-  do                                    \
+                        EXCEPTIONS)                 \
+do                                    \
     if (enable_test (EXCEPTIONS))                   \
-      {                                 \
-    COMMON_TEST_SETUP (ARG_STR);                    \
-    check_bool (test_name,                      \
-            FUNC_TEST (FUNC_NAME) (&(ARG1), &(ARG2)),       \
-            EXPECTED, EXCEPTIONS);              \
-    COMMON_TEST_CLEANUP;                        \
-      }                                 \
-  while (0)
+    {                                 \
+        COMMON_TEST_SETUP (ARG_STR);                    \
+        check_bool (test_name,                      \
+                    FUNC_TEST (FUNC_NAME) (&(ARG1), &(ARG2)),       \
+                    EXPECTED, EXCEPTIONS);              \
+        COMMON_TEST_CLEANUP;                        \
+    }                                 \
+while (0)
 #define RUN_TEST_LOOP_fpfp_b(FUNC_NAME, ARRAY, ROUNDING_MODE)       \
-  IF_ROUND_INIT_ ## ROUNDING_MODE                   \
+    IF_ROUND_INIT_ ## ROUNDING_MODE                   \
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++) \
-      RUN_TEST_fpfp_b ((ARRAY)[i].arg_str, FUNC_NAME,           \
-               (ARRAY)[i].arg1, (ARRAY)[i].arg2,        \
-               (ARRAY)[i].RM_##ROUNDING_MODE.expected,      \
-               (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);   \
-  ROUND_RESTORE_ ## ROUNDING_MODE
+        RUN_TEST_fpfp_b ((ARRAY)[i].arg_str, FUNC_NAME,           \
+                         (ARRAY)[i].arg1, (ARRAY)[i].arg2,        \
+                         (ARRAY)[i].RM_##ROUNDING_MODE.expected,      \
+                         (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);   \
+    ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_ff_i_tg(ARG_STR, FUNC_NAME, ARG1, ARG2, EXPECTED,  \
-             EXCEPTIONS)                    \
-  do                                    \
+                         EXCEPTIONS)                    \
+do                                    \
     if (enable_test (EXCEPTIONS))                   \
-      {                                 \
-    COMMON_TEST_SETUP (ARG_STR);                    \
-    check_int (test_name, FUNC_NAME (ARG1, ARG2), EXPECTED,     \
-           EXCEPTIONS);                     \
-    COMMON_TEST_CLEANUP;                        \
-      }                                 \
-  while (0)
+    {                                 \
+        COMMON_TEST_SETUP (ARG_STR);                    \
+        check_int (test_name, FUNC_NAME (ARG1, ARG2), EXPECTED,     \
+                   EXCEPTIONS);                     \
+        COMMON_TEST_CLEANUP;                        \
+    }                                 \
+while (0)
 #define RUN_TEST_LOOP_ff_i_tg(FUNC_NAME, ARRAY, ROUNDING_MODE)      \
-  IF_ROUND_INIT_ ## ROUNDING_MODE                   \
+    IF_ROUND_INIT_ ## ROUNDING_MODE                   \
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++) \
-      RUN_TEST_ff_i_tg ((ARRAY)[i].arg_str, FUNC_NAME,          \
-            (ARRAY)[i].arg1, (ARRAY)[i].arg2,       \
-            (ARRAY)[i].RM_##ROUNDING_MODE.expected,     \
-            (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);  \
-  ROUND_RESTORE_ ## ROUNDING_MODE
+        RUN_TEST_ff_i_tg ((ARRAY)[i].arg_str, FUNC_NAME,          \
+                          (ARRAY)[i].arg1, (ARRAY)[i].arg2,       \
+                          (ARRAY)[i].RM_##ROUNDING_MODE.expected,     \
+                          (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);  \
+    ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_f_b(ARG_STR, FUNC_NAME, ARG, EXPECTED, EXCEPTIONS) \
-  do                                    \
-    if (enable_test (EXCEPTIONS))                   \
-      {                                 \
-    COMMON_TEST_SETUP (ARG_STR);                    \
-    check_bool (test_name, FUNC_TEST (FUNC_NAME) (ARG), EXPECTED,   \
-            EXCEPTIONS);                    \
-    COMMON_TEST_CLEANUP;                        \
-      }                                 \
-  while (0)
+    do                                    \
+        if (enable_test (EXCEPTIONS))                   \
+        {                                 \
+            COMMON_TEST_SETUP (ARG_STR);                    \
+            check_bool (test_name, FUNC_TEST (FUNC_NAME) (ARG), EXPECTED,   \
+                        EXCEPTIONS);                    \
+            COMMON_TEST_CLEANUP;                        \
+        }                                 \
+    while (0)
 #define RUN_TEST_LOOP_f_b(FUNC_NAME, ARRAY, ROUNDING_MODE)      \
-  IF_ROUND_INIT_ ## ROUNDING_MODE                   \
+    IF_ROUND_INIT_ ## ROUNDING_MODE                   \
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++) \
-      RUN_TEST_f_b ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,  \
-            (ARRAY)[i].RM_##ROUNDING_MODE.expected,     \
-            (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);      \
-  ROUND_RESTORE_ ## ROUNDING_MODE
+        RUN_TEST_f_b ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,  \
+                      (ARRAY)[i].RM_##ROUNDING_MODE.expected,     \
+                      (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);      \
+    ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_f_b_tg(ARG_STR, FUNC_NAME, ARG, EXPECTED,      \
-            EXCEPTIONS)                 \
-  do                                    \
+                        EXCEPTIONS)                 \
+do                                    \
     if (enable_test (EXCEPTIONS))                   \
-      {                                 \
-    COMMON_TEST_SETUP (ARG_STR);                    \
-    check_bool (test_name, FUNC_NAME (ARG), EXPECTED, EXCEPTIONS);  \
-    COMMON_TEST_CLEANUP;                        \
-      }                                 \
-  while (0)
+    {                                 \
+        COMMON_TEST_SETUP (ARG_STR);                    \
+        check_bool (test_name, FUNC_NAME (ARG), EXPECTED, EXCEPTIONS);  \
+        COMMON_TEST_CLEANUP;                        \
+    }                                 \
+while (0)
 #define RUN_TEST_LOOP_f_b_tg(FUNC_NAME, ARRAY, ROUNDING_MODE)       \
-  IF_ROUND_INIT_ ## ROUNDING_MODE                   \
+    IF_ROUND_INIT_ ## ROUNDING_MODE                   \
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++) \
-      RUN_TEST_f_b_tg ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,   \
-               (ARRAY)[i].RM_##ROUNDING_MODE.expected,      \
-               (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);   \
-  ROUND_RESTORE_ ## ROUNDING_MODE
+        RUN_TEST_f_b_tg ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,   \
+                         (ARRAY)[i].RM_##ROUNDING_MODE.expected,      \
+                         (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);   \
+    ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_f_l(ARG_STR, FUNC_NAME, ARG, EXPECTED, EXCEPTIONS) \
-  do                                    \
-    if (enable_test (EXCEPTIONS))                   \
-      {                                 \
-    COMMON_TEST_SETUP (ARG_STR);                    \
-    check_long (test_name, FUNC_TEST (FUNC_NAME) (ARG), EXPECTED,   \
-            EXCEPTIONS);                    \
-    COMMON_TEST_CLEANUP;                        \
-      }                                 \
-  while (0)
+    do                                    \
+        if (enable_test (EXCEPTIONS))                   \
+        {                                 \
+            COMMON_TEST_SETUP (ARG_STR);                    \
+            check_long (test_name, FUNC_TEST (FUNC_NAME) (ARG), EXPECTED,   \
+                        EXCEPTIONS);                    \
+            COMMON_TEST_CLEANUP;                        \
+        }                                 \
+    while (0)
 #define RUN_TEST_LOOP_f_l(FUNC_NAME, ARRAY, ROUNDING_MODE)      \
-  IF_ROUND_INIT_ ## ROUNDING_MODE                   \
+    IF_ROUND_INIT_ ## ROUNDING_MODE                   \
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++) \
-      RUN_TEST_f_l ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,  \
-            (ARRAY)[i].RM_##ROUNDING_MODE.expected,     \
-            (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);      \
-  ROUND_RESTORE_ ## ROUNDING_MODE
+        RUN_TEST_f_l ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,  \
+                      (ARRAY)[i].RM_##ROUNDING_MODE.expected,     \
+                      (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);      \
+    ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_f_L(ARG_STR, FUNC_NAME, ARG, EXPECTED, EXCEPTIONS) \
-  do                                    \
-    if (enable_test (EXCEPTIONS))                   \
-      {                                 \
-    COMMON_TEST_SETUP (ARG_STR);                    \
-    check_longlong (test_name, FUNC_TEST (FUNC_NAME) (ARG),     \
-            EXPECTED, EXCEPTIONS);              \
-    COMMON_TEST_CLEANUP;                        \
-      }                                 \
-  while (0)
+    do                                    \
+        if (enable_test (EXCEPTIONS))                   \
+        {                                 \
+            COMMON_TEST_SETUP (ARG_STR);                    \
+            check_longlong (test_name, FUNC_TEST (FUNC_NAME) (ARG),     \
+                            EXPECTED, EXCEPTIONS);              \
+            COMMON_TEST_CLEANUP;                        \
+        }                                 \
+    while (0)
 #define RUN_TEST_LOOP_f_L(FUNC_NAME, ARRAY, ROUNDING_MODE)      \
-  IF_ROUND_INIT_ ## ROUNDING_MODE                   \
+    IF_ROUND_INIT_ ## ROUNDING_MODE                   \
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++) \
-      RUN_TEST_f_L ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,  \
-            (ARRAY)[i].RM_##ROUNDING_MODE.expected,     \
-            (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);      \
-  ROUND_RESTORE_ ## ROUNDING_MODE
+        RUN_TEST_f_L ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,  \
+                      (ARRAY)[i].RM_##ROUNDING_MODE.expected,     \
+                      (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);      \
+    ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_fFF_11(ARG_STR, FUNC_NAME, ARG, EXCEPTIONS,        \
-            EXTRA1_VAR, EXTRA1_TEST,            \
-            EXTRA1_EXPECTED, EXTRA2_VAR,            \
-            EXTRA2_TEST, EXTRA2_EXPECTED)           \
-  do                                    \
+                        EXTRA1_VAR, EXTRA1_TEST,            \
+                        EXTRA1_EXPECTED, EXTRA2_VAR,            \
+                        EXTRA2_TEST, EXTRA2_EXPECTED)           \
+do                                    \
     if (enable_test (EXCEPTIONS))                   \
-      {                                 \
-    COMMON_TEST_SETUP (ARG_STR);                    \
-    FUNC_TEST (FUNC_NAME) (ARG, &(EXTRA1_VAR), &(EXTRA2_VAR));  \
-    EXTRA_OUTPUT_TEST_SETUP (ARG_STR, 1);               \
-    if (EXTRA1_TEST)                        \
-      check_float (extra1_name, EXTRA1_VAR, EXTRA1_EXPECTED,    \
-               EXCEPTIONS);                 \
-    EXTRA_OUTPUT_TEST_CLEANUP (1);                  \
-    EXTRA_OUTPUT_TEST_SETUP (ARG_STR, 2);               \
-    if (EXTRA2_TEST)                        \
-      check_float (extra2_name, EXTRA2_VAR, EXTRA2_EXPECTED, 0);    \
-    EXTRA_OUTPUT_TEST_CLEANUP (2);                  \
-    COMMON_TEST_CLEANUP;                        \
-      }                                 \
-  while (0)
+    {                                 \
+        COMMON_TEST_SETUP (ARG_STR);                    \
+        FUNC_TEST (FUNC_NAME) (ARG, &(EXTRA1_VAR), &(EXTRA2_VAR));  \
+        EXTRA_OUTPUT_TEST_SETUP (ARG_STR, 1);               \
+        if (EXTRA1_TEST)                        \
+            check_float (extra1_name, EXTRA1_VAR, EXTRA1_EXPECTED,    \
+                         EXCEPTIONS);                 \
+        EXTRA_OUTPUT_TEST_CLEANUP (1);                  \
+        EXTRA_OUTPUT_TEST_SETUP (ARG_STR, 2);               \
+        if (EXTRA2_TEST)                        \
+            check_float (extra2_name, EXTRA2_VAR, EXTRA2_EXPECTED, 0);    \
+        EXTRA_OUTPUT_TEST_CLEANUP (2);                  \
+        COMMON_TEST_CLEANUP;                        \
+    }                                 \
+while (0)
 #define RUN_TEST_LOOP_fFF_11(FUNC_NAME, ARRAY, ROUNDING_MODE,       \
-                 EXTRA1_VAR, EXTRA2_VAR)            \
-  IF_ROUND_INIT_ ## ROUNDING_MODE                   \
-    for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++) \
-      RUN_TEST_fFF_11 ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,   \
-               (ARRAY)[i].RM_##ROUNDING_MODE.exceptions,    \
-               EXTRA1_VAR,                  \
-               (ARRAY)[i].RM_##ROUNDING_MODE.extra1_test,   \
-               (ARRAY)[i].RM_##ROUNDING_MODE.extra1_expected,   \
-               EXTRA2_VAR,                  \
-               (ARRAY)[i].RM_##ROUNDING_MODE.extra2_test,   \
-               (ARRAY)[i].RM_##ROUNDING_MODE.extra2_expected);  \
-  ROUND_RESTORE_ ## ROUNDING_MODE
+                             EXTRA1_VAR, EXTRA2_VAR)            \
+IF_ROUND_INIT_ ## ROUNDING_MODE                   \
+for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++) \
+    RUN_TEST_fFF_11 ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,   \
+                     (ARRAY)[i].RM_##ROUNDING_MODE.exceptions,    \
+                     EXTRA1_VAR,                  \
+                     (ARRAY)[i].RM_##ROUNDING_MODE.extra1_test,   \
+                     (ARRAY)[i].RM_##ROUNDING_MODE.extra1_expected,   \
+                     EXTRA2_VAR,                  \
+                     (ARRAY)[i].RM_##ROUNDING_MODE.extra2_test,   \
+                     (ARRAY)[i].RM_##ROUNDING_MODE.extra2_expected);  \
+ROUND_RESTORE_ ## ROUNDING_MODE
 
 #if TEST_MATHVEC
 # define TEST_SUFF VEC_SUFF
@@ -1039,49 +1039,49 @@ struct test_Ff_b1_data {
 
 /* Start and end the tests for a given function.  */
 #define START(FUN, SUFF, EXACT)                 \
-  CHECK_ARCH_EXT;                       \
-  const char *this_func                     \
-    = STR_CON3 (FUN, SUFF, TEST_SUFF) TEST_SUFF_STR;        \
-  init_max_error (this_func, EXACT, TEST_COND_any_ibm128)
+    CHECK_ARCH_EXT;                       \
+    const char *this_func                     \
+        = STR_CON3 (FUN, SUFF, TEST_SUFF) TEST_SUFF_STR;        \
+    init_max_error (this_func, EXACT, TEST_COND_any_ibm128)
 #define END                 \
-  check_max_error (this_func)
+    check_max_error (this_func)
 #define END_COMPLEX             \
-  check_complex_max_error (this_func)
+    check_complex_max_error (this_func)
 
 /* Run tests for a given function in all rounding modes.  */
 #define ALL_RM_TEST(FUNC, EXACT, ARRAY, LOOP_MACRO, END_MACRO, ...) \
-  do                                    \
+    do                                    \
     {                                   \
-      do                                \
-    {                               \
-      START (FUNC,, EXACT);                     \
-      LOOP_MACRO (FUNC, ARRAY, , ## __VA_ARGS__);           \
-      END_MACRO;                            \
-    }                               \
-      while (0);                            \
-      do                                \
-    {                               \
-      START (FUNC, _downward, EXACT);               \
-      LOOP_MACRO (FUNC, ARRAY, FE_DOWNWARD, ## __VA_ARGS__);    \
-      END_MACRO;                            \
-    }                               \
-      while (0);                            \
-      do                                \
-    {                               \
-      START (FUNC, _towardzero, EXACT);             \
-      LOOP_MACRO (FUNC, ARRAY, FE_TOWARDZERO, ## __VA_ARGS__);  \
-      END_MACRO;                            \
-    }                               \
-      while (0);                            \
-      do                                \
-    {                               \
-      START (FUNC, _upward, EXACT);             \
-      LOOP_MACRO (FUNC, ARRAY, FE_UPWARD, ## __VA_ARGS__);      \
-      END_MACRO;                            \
-    }                               \
-      while (0);                            \
+        do                                \
+        {                               \
+            START (FUNC,, EXACT);                     \
+            LOOP_MACRO (FUNC, ARRAY, , ## __VA_ARGS__);           \
+            END_MACRO;                            \
+        }                               \
+        while (0);                            \
+        do                                \
+        {                               \
+            START (FUNC, _downward, EXACT);               \
+            LOOP_MACRO (FUNC, ARRAY, FE_DOWNWARD, ## __VA_ARGS__);    \
+            END_MACRO;                            \
+        }                               \
+        while (0);                            \
+        do                                \
+        {                               \
+            START (FUNC, _towardzero, EXACT);             \
+            LOOP_MACRO (FUNC, ARRAY, FE_TOWARDZERO, ## __VA_ARGS__);  \
+            END_MACRO;                            \
+        }                               \
+        while (0);                            \
+        do                                \
+        {                               \
+            START (FUNC, _upward, EXACT);             \
+            LOOP_MACRO (FUNC, ARRAY, FE_UPWARD, ## __VA_ARGS__);      \
+            END_MACRO;                            \
+        }                               \
+        while (0);                            \
     }                                   \
-  while (0);
+    while (0);
 
 /* Short description of program.  */
 const char doc[] = "Math test suite: " TEST_MSG ;

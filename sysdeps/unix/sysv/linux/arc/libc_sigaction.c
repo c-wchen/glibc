@@ -21,10 +21,10 @@
 extern void __default_rt_sa_restorer(void);
 
 #define SET_SA_RESTORER(kact, act)              \
- ({                             \
-   (kact)->sa_restorer = __default_rt_sa_restorer;      \
-   (kact)->sa_flags |= SA_RESTORER;             \
- })
+    ({                             \
+        (kact)->sa_restorer = __default_rt_sa_restorer;      \
+        (kact)->sa_flags |= SA_RESTORER;             \
+    })
 
 #define RESET_SA_RESTORER(act, kact)
 

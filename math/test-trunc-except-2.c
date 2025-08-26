@@ -25,24 +25,24 @@
 #endif
 
 #define TEST_FUNC(NAME, FLOAT, SUFFIX)                  \
-static int                              \
-NAME (void)                             \
-{                                   \
-  int result = 0;                           \
-  volatile FLOAT a, b __attribute__ ((unused));             \
-  a = 1.5;                              \
-  /* trunc must work when traps on "inexact" are enabled.  */   \
-  b = trunc ## SUFFIX (a);                      \
-  /* And it must have left those traps enabled.  */         \
-  if (fegetexcept () == FE_INEXACT)                 \
-    puts ("PASS: " #FLOAT);                     \
-  else                                  \
+    static int                              \
+    NAME (void)                             \
     {                                   \
-      puts ("FAIL: " #FLOAT);                       \
-      result = 1;                           \
-    }                                   \
-  return result;                            \
-}
+        int result = 0;                           \
+        volatile FLOAT a, b __attribute__ ((unused));             \
+        a = 1.5;                              \
+        /* trunc must work when traps on "inexact" are enabled.  */   \
+        b = trunc ## SUFFIX (a);                      \
+        /* And it must have left those traps enabled.  */         \
+        if (fegetexcept () == FE_INEXACT)                 \
+            puts ("PASS: " #FLOAT);                     \
+        else                                  \
+        {                                   \
+            puts ("FAIL: " #FLOAT);                       \
+            result = 1;                           \
+        }                                   \
+        return result;                            \
+    }
 
 TEST_FUNC(float_test, float, f)
 TEST_FUNC(double_test, double,)

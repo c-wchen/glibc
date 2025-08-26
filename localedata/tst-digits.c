@@ -64,7 +64,7 @@ static struct printf_int_test {
     { 1234567, "%I'10d", ONE "," TWO THREE FOUR "," FIVE SIX SEVEN }
 };
 #define nprintf_int_tests \
-  (sizeof (printf_int_tests) / sizeof (printf_int_tests[0]))
+    (sizeof (printf_int_tests) / sizeof (printf_int_tests[0]))
 
 #define WZERO  L"\x2080"
 #define WONE   L"\x2081"
@@ -103,7 +103,7 @@ static struct wprintf_int_test {
     { 1234567, L"%I'10d", L" " WONE L"," WTWO WTHREE WFOUR L"," WFIVE WSIX WSEVEN }
 };
 #define nwprintf_int_tests \
-  (sizeof (wprintf_int_tests) / sizeof (wprintf_int_tests[0]))
+    (sizeof (wprintf_int_tests) / sizeof (wprintf_int_tests[0]))
 
 
 static int do_test(void)

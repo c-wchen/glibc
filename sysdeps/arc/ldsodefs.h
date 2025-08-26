@@ -26,17 +26,17 @@ struct La_arc_retval;
 
 #define ARCH_PLTENTER_MEMBERS                       \
     ElfW(Addr) (*arc_gnu_pltenter) (ElfW(Sym) *, unsigned int,  \
-                      uintptr_t *, uintptr_t *,     \
-                      const struct La_arc_regs *,   \
-                      unsigned int *, const char *, \
-                      long int *);
+                                    uintptr_t *, uintptr_t *,     \
+                                    const struct La_arc_regs *,   \
+                                    unsigned int *, const char *, \
+                                    long int *);
 
 #define ARCH_PLTEXIT_MEMBERS                        \
     unsigned int (*arc_gnu_pltexit) (ElfW(Sym) *, unsigned int, \
-                       uintptr_t *, uintptr_t *,    \
-                       const struct La_arc_regs *,  \
-                       struct La_arc_retval *,  \
-                       const char *);
+                                     uintptr_t *, uintptr_t *,    \
+                                     const struct La_arc_regs *,  \
+                                     struct La_arc_retval *,  \
+                                     const char *);
 
 #include_next <ldsodefs.h>
 

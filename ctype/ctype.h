@@ -85,14 +85,14 @@ __THROW __attribute__((__const__));
 
 #ifndef __cplusplus
 # define __isctype(c, type) \
-  ((*__ctype_b_loc ())[(int) (c)] & (unsigned short int) type)
+    ((*__ctype_b_loc ())[(int) (c)] & (unsigned short int) type)
 #elif defined __USE_EXTERN_INLINES
 # define __isctype_f(type) \
-  __extern_inline int                                 \
-  is##type (int __c) __THROW                              \
-  {                                       \
-    return (*__ctype_b_loc ())[(int) (__c)] & (unsigned short int) _IS##type; \
-  }
+    __extern_inline int                                 \
+    is##type (int __c) __THROW                              \
+    {                                       \
+        return (*__ctype_b_loc ())[(int) (__c)] & (unsigned short int) _IS##type; \
+    }
 #endif
 
 #define __isascii(c)    (((c) & ~0x7f) == 0)    /* If C is a 7 bit value.  */
@@ -152,21 +152,21 @@ __exctype(_tolower);
 
 /* This code is needed for the optimized mapping functions.  */
 #define __tobody(c, f, a, args) \
-  (__extension__                                  \
-   ({ int __res;                                  \
-      if (sizeof (c) > 1)                             \
-    {                                     \
-      if (__builtin_constant_p (c))                       \
+    (__extension__                                  \
+    ({ int __res;                                  \
+        if (sizeof (c) > 1)                             \
         {                                     \
-          int __c = (c);                              \
-          __res = __c < -128 || __c > 255 ? __c : (a)[__c];           \
+            if (__builtin_constant_p (c))                       \
+            {                                     \
+                int __c = (c);                              \
+                __res = __c < -128 || __c > 255 ? __c : (a)[__c];           \
+            }                                     \
+            else                                    \
+                __res = f args;                           \
         }                                     \
-      else                                    \
-        __res = f args;                           \
-    }                                     \
-      else                                    \
-    __res = (a)[(int) (c)];                           \
-      __res; }))
+        else                                    \
+            __res = (a)[(int) (c)];                           \
+        __res; }))
 
 #if !defined __NO_CTYPE
 # ifdef __isctype_f
@@ -237,10 +237,10 @@ __extern_inline int __NTH(toupper(int __c))
 /* These definitions are similar to the ones above but all functions
    take as an argument a handle for the locale which shall be used.  */
 #  define __isctype_l(c, type, locale) \
-  ((locale)->__ctype_b[(int) (c)] & (unsigned short int) type)
+    ((locale)->__ctype_b[(int) (c)] & (unsigned short int) type)
 
 # define __exctype_l(name)                            \
-  extern int name (int, locale_t) __THROW
+    extern int name (int, locale_t) __THROW
 
 /* The following names are all functions:
      int isCHARACTERISTIC(int c, locale_t *locale);
@@ -271,9 +271,9 @@ extern int toupper_l(int __c, locale_t __l) __THROW;
 
 # if __GNUC__ >= 2 && defined __OPTIMIZE__ && !defined __cplusplus
 #  define __tolower_l(c, locale) \
-  __tobody (c, __tolower_l, (locale)->__ctype_tolower, (c, locale))
+    __tobody (c, __tolower_l, (locale)->__ctype_tolower, (c, locale))
 #  define __toupper_l(c, locale) \
-  __tobody (c, __toupper_l, (locale)->__ctype_toupper, (c, locale))
+    __tobody (c, __toupper_l, (locale)->__ctype_toupper, (c, locale))
 #  define tolower_l(c, locale)  __tolower_l ((c), (locale))
 #  define toupper_l(c, locale)  __toupper_l ((c), (locale))
 # endif /* Optimizing gcc */

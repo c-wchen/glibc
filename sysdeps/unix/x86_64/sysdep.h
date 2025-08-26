@@ -24,8 +24,8 @@
    can include this one and then redefine DO_CALL.  */
 
 #define DO_CALL(syscall_name, args)                       \
-  lea SYS_ify (syscall_name), %rax;                       \
-  syscall
+    lea SYS_ify (syscall_name), %rax;                       \
+    syscall
 
 #define r0      %rax    /* Normal return-value register.  */
 #define r1      %rbx    /* Secondary return-value register.  */

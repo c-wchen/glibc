@@ -30,13 +30,13 @@
 
 #if LONG_DOUBLE_COMPAT (libc, GLIBC_2_0)
 # define cvt_symbol(local, symbol) \
-  cvt_symbol_1 (libc, local, APPEND (q, symbol), GLIBC_2_0); \
-  strong_alias (local, symbol)
+    cvt_symbol_1 (libc, local, APPEND (q, symbol), GLIBC_2_0); \
+    strong_alias (local, symbol)
 # define cvt_symbol_1(lib, local, symbol, version) \
-  compat_symbol (lib, local, symbol, version)
+    compat_symbol (lib, local, symbol, version)
 #else
 # define cvt_symbol(local, symbol) \
-  strong_alias (local, symbol)
+    strong_alias (local, symbol)
 #endif
 cvt_symbol(__fcvt, fcvt);
 cvt_symbol(__ecvt, ecvt);

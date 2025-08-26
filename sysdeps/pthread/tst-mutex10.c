@@ -84,8 +84,8 @@ static int do_test(void)
 #define OPT_ITERATIONS  10000
 #define OPT_THREADS 10001
 #define CMDLINE_OPTIONS                     \
-  { "iterations", required_argument, NULL, OPT_ITERATIONS },    \
-  { "threads", required_argument, NULL, OPT_THREADS },
+    { "iterations", required_argument, NULL, OPT_ITERATIONS },    \
+    { "threads", required_argument, NULL, OPT_THREADS },
 static void cmdline_process(int c)
 {
     long long int arg = strtoll(optarg, NULL, 0);

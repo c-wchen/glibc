@@ -23,7 +23,7 @@
    suffice (in particular, for a call to a function declared with
    attribute warn_unused_result).  */
 #define ignore_value(x) \
-  ({ __typeof__ (x) __ignored_value = (x); (void) __ignored_value; })
+    ({ __typeof__ (x) __ignored_value = (x); (void) __ignored_value; })
 
 /* The macros to control diagnostics are structured like this, rather
    than a single macro that both pushes and pops diagnostic state and
@@ -64,7 +64,7 @@
    macro should only be used if the diagnostic seems hard to fix (for
    example, optimization-related false positives).  */
 #define DIAG_IGNORE_NEEDS_COMMENT(version, option)     \
-  _Pragma (_DIAG_STR (GCC diagnostic ignored option))
+    _Pragma (_DIAG_STR (GCC diagnostic ignored option))
 
 /* Similar to DIAG_IGNORE_NEEDS_COMMENT the following macro ignores the
    diagnostic OPTION but only if optimizations for size are enabled.
@@ -76,7 +76,7 @@
    only for -Os.  */
 #ifdef __OPTIMIZE_SIZE__
 # define DIAG_IGNORE_Os_NEEDS_COMMENT(version, option) \
-  _Pragma (_DIAG_STR (GCC diagnostic ignored option))
+    _Pragma (_DIAG_STR (GCC diagnostic ignored option))
 #else
 # define DIAG_IGNORE_Os_NEEDS_COMMENT(version, option)
 #endif
@@ -85,12 +85,12 @@
    to suppress warning supported by the specific compiler.  */
 #ifndef __clang__
 # define DIAG_IGNORE_NEEDS_COMMENT_GCC(VERSION, WARNING) \
-  DIAG_IGNORE_NEEDS_COMMENT (VERSION, WARNING)
+    DIAG_IGNORE_NEEDS_COMMENT (VERSION, WARNING)
 # define DIAG_IGNORE_NEEDS_COMMENT_CLANG(version, option)
 #else
 # define DIAG_IGNORE_NEEDS_COMMENT_GCC(VERSION, WARNING)
 # define DIAG_IGNORE_NEEDS_COMMENT_CLANG(version, option) \
-  _Pragma (_DIAG_STR (clang diagnostic ignored option))
+    _Pragma (_DIAG_STR (clang diagnostic ignored option))
 #endif
 
 #endif /* libc-diag.h */

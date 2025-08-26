@@ -31,8 +31,8 @@
 #define NEED_H_ERRNO    1
 #define NEED__RES   1
 #define POSTPROCESS \
-  if (status == NSS_STATUS_SUCCESS)                       \
-    _res_hconf_reorder_addrs (resbuf);
+    if (status == NSS_STATUS_SUCCESS)                       \
+        _res_hconf_reorder_addrs (resbuf);
 
 #define HANDLE_DIGITS_DOTS  1
 #define HAVE_LOOKUP_BUFFER  1

@@ -27,9 +27,9 @@
     .weak    __sparc_get_pc_thunk.reg;              \
     .hidden  __sparc_get_pc_thunk.reg;              \
     .type    __sparc_get_pc_thunk.reg, #function;           \
-__sparc_get_pc_thunk.reg:                       \
+    __sparc_get_pc_thunk.reg:                       \
     jmp %o7 + 8;                        \
-     add    %o7, %reg, %##reg;                  \
+    add    %o7, %reg, %##reg;                  \
     .previous;                          \
     .endif;
 
@@ -51,7 +51,7 @@ __sparc_get_pc_thunk.reg:                       \
 #define SPARC_PIC_THUNK_CALL(reg)                   \
     sethi   %hi(_GLOBAL_OFFSET_TABLE_-4), %##reg;           \
     call    __sparc_get_pc_thunk.reg;               \
-     or %##reg, %lo(_GLOBAL_OFFSET_TABLE_+4), %##reg;
+    or %##reg, %lo(_GLOBAL_OFFSET_TABLE_+4), %##reg;
 
 #define SETUP_PIC_REG(reg)                      \
     SPARC_PIC_THUNK(reg)                        \
@@ -68,7 +68,7 @@ __sparc_get_pc_thunk.reg:                       \
     .align  4;          \
     .global C_SYMBOL_NAME(name);    \
     .type   name, @function;    \
-C_LABEL(name)               \
+    C_LABEL(name)               \
     cfi_startproc;
 
 #undef END
@@ -80,7 +80,7 @@ C_LABEL(name)               \
     .align  4;          \
     .global C_SYMBOL_NAME(name);    \
     .type   name, @function;    \
-C_LABEL(name)
+    C_LABEL(name)
 
 #define END_NOCFI(name)         \
     .size name, . - name

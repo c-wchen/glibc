@@ -12,8 +12,8 @@ extern int __signgam;
 
 # undef __MATHDECLX
 # define __MATHDECLX(type, function,suffix, args, attrib) \
-  __MATHDECL_1(type, function,suffix, args) __attribute__ (attrib); \
-  __MATHDECL_1(type, __CONCAT(__,function),suffix, args) __attribute__ (attrib)
+    __MATHDECL_1(type, function,suffix, args) __attribute__ (attrib); \
+    __MATHDECL_1(type, __CONCAT(__,function),suffix, args) __attribute__ (attrib)
 
 # if IS_IN (libc) || IS_IN (libm)
 hidden_proto(__finite)
@@ -73,21 +73,21 @@ typedef union {
 /* Get a 32 bit int from a float.  */
 #ifndef GET_FLOAT_WORD
 # define GET_FLOAT_WORD(i,d)                    \
-do {                                \
-  ieee_float_shape_type gf_u;                   \
-  gf_u.value = (d);                     \
-  (i) = gf_u.word;                      \
-} while (0)
+    do {                                \
+        ieee_float_shape_type gf_u;                   \
+        gf_u.value = (d);                     \
+        (i) = gf_u.word;                      \
+    } while (0)
 #endif
 
 /* Set a float from a 32 bit int.  */
 #ifndef SET_FLOAT_WORD
 # define SET_FLOAT_WORD(d,i)                    \
-do {                                \
-  ieee_float_shape_type sf_u;                   \
-  sf_u.word = (i);                      \
-  (d) = sf_u.value;                     \
-} while (0)
+    do {                                \
+        ieee_float_shape_type sf_u;                   \
+        sf_u.word = (i);                      \
+        (d) = sf_u.value;                     \
+    } while (0)
 #endif
 
 extern inline int __issignalingf(float x)
@@ -140,20 +140,20 @@ extern inline _Float128 fabsf128(_Float128 x)
    inline those functions as a single instruction.  Use an asm to
    avoid use of PLTs if it doesn't.  */
 #   define MATH_REDIRECT(FUNC, PREFIX, ARGS)            \
-  float (FUNC ## f) (ARGS (float)) asm (PREFIX #FUNC "f");  \
-  double (FUNC) (ARGS (double)) asm (PREFIX #FUNC );        \
-  MATH_REDIRECT_LDBL (FUNC, PREFIX, ARGS)           \
-  MATH_REDIRECT_F128 (FUNC, PREFIX, ARGS)
+    float (FUNC ## f) (ARGS (float)) asm (PREFIX #FUNC "f");  \
+    double (FUNC) (ARGS (double)) asm (PREFIX #FUNC );        \
+    MATH_REDIRECT_LDBL (FUNC, PREFIX, ARGS)           \
+    MATH_REDIRECT_F128 (FUNC, PREFIX, ARGS)
 #   if defined __NO_LONG_DOUBLE_MATH                \
        || __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
 #    define MATH_REDIRECT_LDBL(FUNC, PREFIX, ARGS)
 #   else
 #    define MATH_REDIRECT_LDBL(FUNC, PREFIX, ARGS)          \
-  long double (FUNC ## l) (ARGS (long double)) asm (PREFIX #FUNC "l");
+    long double (FUNC ## l) (ARGS (long double)) asm (PREFIX #FUNC "l");
 #   endif
 #   if __HAVE_DISTINCT_FLOAT128
 #    define MATH_REDIRECT_F128(FUNC, PREFIX, ARGS)          \
-  _Float128 (FUNC ## f128) (ARGS (_Float128)) asm (PREFIX #FUNC "f128");
+    _Float128 (FUNC ## f128) (ARGS (_Float128)) asm (PREFIX #FUNC "f128");
 #   else
 #    define MATH_REDIRECT_F128(FUNC, PREFIX, ARGS)
 #   endif

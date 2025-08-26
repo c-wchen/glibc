@@ -37,7 +37,7 @@ static struct {
     uint32_t num;
 } iso3166[] = {
 #define DEFINE_COUNTRY_CODE(Name, Ab2, Ab3, Num) \
-  { #Ab2, #Ab3, Num },
+    { #Ab2, #Ab3, Num },
 #include "iso-3166.def"
 };
 
@@ -48,11 +48,11 @@ static struct {
     const char lib[4];
 } iso639[] = {
 #define DEFINE_LANGUAGE_CODE(Name, Ab, Term, Lib) \
-  { #Ab, #Term, #Lib },
+    { #Ab, #Term, #Lib },
 #define DEFINE_LANGUAGE_CODE3(Name, Term, Lib) \
-  { "", #Term, #Lib },
+    { "", #Term, #Lib },
 #define DEFINE_LANGUAGE_CODE2(Name, Term) \
-  { "", #Term, "" },
+    { "", #Term, "" },
 #include "iso-639.def"
 };
 
@@ -160,11 +160,11 @@ No definition for %s category found"), "LC_ADDRESS");
     }
 
 #define TEST_ELEM(cat) \
-  if (address->cat == NULL)                           \
+    if (address->cat == NULL)                           \
     {                                         \
-      if (verbose && ! nothing)                           \
-    record_warning (_("%s: field `%s' not defined"), "LC_ADDRESS", #cat); \
-      address->cat = "";                              \
+        if (verbose && ! nothing)                           \
+            record_warning (_("%s: field `%s' not defined"), "LC_ADDRESS", #cat); \
+        address->cat = "";                              \
     }
 
     TEST_ELEM(country_name);
@@ -370,30 +370,30 @@ void address_read(struct linereader *ldfile, struct localedef_t *result,
 
         switch (nowtok) {
 #define STR_ELEM(cat) \
-    case tok_##cat:                               \
-      /* Ignore the rest of the line if we don't need the input of        \
-         this line.  */                           \
-      if (ignore_content)                             \
-        {                                     \
-          lr_ignore_rest (ldfile, 0);                     \
-          break;                                  \
-        }                                     \
-                                          \
-      arg = lr_token (ldfile, charmap, result, NULL, verbose);        \
-      if (arg->tok != tok_string)                         \
+case tok_##cat:                               \
+    /* Ignore the rest of the line if we don't need the input of        \
+       this line.  */                           \
+    if (ignore_content)                             \
+    {                                     \
+        lr_ignore_rest (ldfile, 0);                     \
+        break;                                  \
+    }                                     \
+    \
+    arg = lr_token (ldfile, charmap, result, NULL, verbose);        \
+    if (arg->tok != tok_string)                         \
         goto err_label;                           \
-      if (address->cat != NULL)                       \
+    if (address->cat != NULL)                       \
         lr_error (ldfile, _("\
 %s: field `%s' declared more than once"), "LC_ADDRESS", #cat);		      \
-      else if (!ignore_content && arg->val.str.startmb == NULL)       \
-        {                                     \
-          lr_error (ldfile, _("\
+    else if (!ignore_content && arg->val.str.startmb == NULL)       \
+    {                                     \
+        lr_error (ldfile, _("\
 %s: unknown character in field `%s'"), "LC_ADDRESS", #cat);		      \
-          address->cat = "";                          \
-        }                                     \
-      else if (!ignore_content)                       \
+        address->cat = "";                          \
+    }                                     \
+    else if (!ignore_content)                       \
         address->cat = arg->val.str.startmb;                  \
-      break
+    break
 
                 STR_ELEM(postal_fmt);
                 STR_ELEM(country_name);
@@ -407,62 +407,62 @@ void address_read(struct linereader *ldfile, struct localedef_t *result,
                 STR_ELEM(lang_lib);
 
 #define INT_STR_ELEM(cat) \
-    case tok_##cat:                               \
-      /* Ignore the rest of the line if we don't need the input of        \
-         this line.  */                           \
-      if (ignore_content)                             \
-        {                                     \
-          lr_ignore_rest (ldfile, 0);                     \
-          break;                                  \
-        }                                     \
-                                          \
-      arg = lr_token (ldfile, charmap, result, NULL, verbose);        \
-      if (arg->tok != tok_string && arg->tok != tok_number)           \
+case tok_##cat:                               \
+    /* Ignore the rest of the line if we don't need the input of        \
+       this line.  */                           \
+    if (ignore_content)                             \
+    {                                     \
+        lr_ignore_rest (ldfile, 0);                     \
+        break;                                  \
+    }                                     \
+    \
+    arg = lr_token (ldfile, charmap, result, NULL, verbose);        \
+    if (arg->tok != tok_string && arg->tok != tok_number)           \
         goto err_label;                           \
-      if (address->cat != NULL)                       \
+    if (address->cat != NULL)                       \
         lr_error (ldfile, _("\
 %s: field `%s' declared more than once"), "LC_ADDRESS", #cat);		      \
-      else if (!ignore_content && arg->tok == tok_string              \
-           && arg->val.str.startmb == NULL)               \
-        {                                     \
-          lr_error (ldfile, _("\
+    else if (!ignore_content && arg->tok == tok_string              \
+             && arg->val.str.startmb == NULL)               \
+    {                                     \
+        lr_error (ldfile, _("\
 %s: unknown character in field `%s'"), "LC_ADDRESS", #cat);		      \
-          address->cat = "";                          \
-        }                                     \
-      else if (!ignore_content)                       \
-        {                                     \
-          if (arg->tok == tok_string)                     \
-        address->cat = arg->val.str.startmb;                  \
-          else                                \
+        address->cat = "";                          \
+    }                                     \
+    else if (!ignore_content)                       \
+    {                                     \
+        if (arg->tok == tok_string)                     \
+            address->cat = arg->val.str.startmb;                  \
+        else                                \
         {                                 \
-          char *numbuf = (char *) xmalloc (21);               \
-          snprintf (numbuf, 21, "%ld", arg->val.num);             \
-          address->cat = numbuf;                      \
+            char *numbuf = (char *) xmalloc (21);               \
+            snprintf (numbuf, 21, "%ld", arg->val.num);             \
+            address->cat = numbuf;                      \
         }                                 \
-        }                                     \
-      break
+    }                                     \
+    break
 
                 INT_STR_ELEM(country_isbn);
 
 #define INT_ELEM(cat) \
-    case tok_##cat:                               \
-      /* Ignore the rest of the line if we don't need the input of        \
-         this line.  */                           \
-      if (ignore_content)                             \
-        {                                     \
-          lr_ignore_rest (ldfile, 0);                     \
-          break;                                  \
-        }                                     \
-                                          \
-      arg = lr_token (ldfile, charmap, result, NULL, verbose);        \
-      if (arg->tok != tok_number)                         \
+case tok_##cat:                               \
+    /* Ignore the rest of the line if we don't need the input of        \
+       this line.  */                           \
+    if (ignore_content)                             \
+    {                                     \
+        lr_ignore_rest (ldfile, 0);                     \
+        break;                                  \
+    }                                     \
+    \
+    arg = lr_token (ldfile, charmap, result, NULL, verbose);        \
+    if (arg->tok != tok_number)                         \
         goto err_label;                           \
-      else if (address->cat != 0)                         \
+    else if (address->cat != 0)                         \
         lr_error (ldfile, _("\
 %s: field `%s' declared more than once"), "LC_ADDRESS", #cat);		      \
-      else if (!ignore_content)                       \
+    else if (!ignore_content)                       \
         address->cat = arg->val.num;                      \
-      break
+    break
 
                 INT_ELEM(country_num);
 

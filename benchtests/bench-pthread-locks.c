@@ -52,8 +52,8 @@ typedef timing_t (*test_t)(long, int);
 #define START_ITERS 1000
 
 #define FILLER_GOES_HERE \
-  if (filler) \
-    do_filler ();
+    if (filler) \
+        do_filler ();
 
 /* Everyone loves a good fibonacci series.  This isn't quite one of
    them because we need larger values in fewer steps, in a way that

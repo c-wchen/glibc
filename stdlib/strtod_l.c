@@ -93,10 +93,10 @@ extern double ____strtod_l_internal(const char *, char **, int, locale_t);
    _NL_CURRENT_WORD macros.  */
 #undef _NL_CURRENT
 #define _NL_CURRENT(category, item) \
-  (current->values[_NL_ITEM_INDEX (item)].string)
+    (current->values[_NL_ITEM_INDEX (item)].string)
 #undef _NL_CURRENT_WORD
 #define _NL_CURRENT_WORD(category, item) \
-  ((uint32_t) current->values[_NL_ITEM_INDEX (item)].word)
+    ((uint32_t) current->values[_NL_ITEM_INDEX (item)].word)
 
 #if defined _LIBC || defined HAVE_WCHAR_H
 # include <wchar.h>
@@ -113,7 +113,7 @@ extern double ____strtod_l_internal(const char *, char **, int, locale_t);
 # define TOLOWER(Ch) __towlower_l ((Ch), loc)
 # define TOLOWER_C(Ch) __towlower_l ((Ch), _nl_C_locobj_ptr)
 # define STRNCASECMP(S1, S2, N) \
-  __wcsncasecmp_l ((S1), (S2), (N), _nl_C_locobj_ptr)
+    __wcsncasecmp_l ((S1), (S2), (N), _nl_C_locobj_ptr)
 #else
 # define STRING_TYPE char
 # define CHAR_TYPE char
@@ -124,7 +124,7 @@ extern double ____strtod_l_internal(const char *, char **, int, locale_t);
 # define TOLOWER(Ch) __tolower_l ((Ch), loc)
 # define TOLOWER_C(Ch) __tolower_l ((Ch), _nl_C_locobj_ptr)
 # define STRNCASECMP(S1, S2, N) \
-  __strncasecmp_l ((S1), (S2), (N), _nl_C_locobj_ptr)
+    __strncasecmp_l ((S1), (S2), (N), _nl_C_locobj_ptr)
 #endif
 
 
@@ -168,14 +168,14 @@ extern const mp_limb_t _tens_in_limb[MAX_DIG_PER_LIMB + 1];
 
 #define RETURN(val,end)                               \
     do { if (endptr != NULL) *endptr = (STRING_TYPE *) (end);             \
-     return val; } while (0)
+        return val; } while (0)
 
 /* Maximum size necessary for mpn integers to hold floating point
    numbers.  The largest number we need to hold is 10^n where 2^-n is
    1/4 ulp of the smallest representable value (that is, n = MANT_DIG
    - MIN_EXP + 2).  Approximate using 10^3 < 2^10.  */
 #define MPNSIZE     (howmany (1 + ((MANT_DIG - MIN_EXP + 2) * 10) / 3, \
-                  BITS_PER_MP_LIMB) + 2)
+                              BITS_PER_MP_LIMB) + 2)
 /* Declare an mpn integer variable that big.  */
 #define MPN_VAR(name)   mp_limb_t name[MPNSIZE]; mp_size_t name##size
 /* Copy an mpn integer value.  */
@@ -450,25 +450,25 @@ str_to_mpn(const STRING_TYPE *str, int digcnt, mp_limb_t *n, mp_size_t *nsize,
    Tege doesn't like this macro so I have to write it here myself. :)
    --drepper */
 #define __mpn_lshift_1(ptr, size, count, limb) \
-  do                                    \
+    do                                    \
     {                                   \
-      mp_limb_t *__ptr = (ptr);                     \
-      if (__builtin_constant_p (count) && count == BITS_PER_MP_LIMB)    \
-    {                               \
-      mp_size_t i;                          \
-      for (i = (size) - 1; i > 0; --i)              \
-        __ptr[i] = __ptr[i - 1];                    \
-      __ptr[0] = (limb);                        \
-    }                               \
-      else                              \
-    {                               \
-      /* We assume count > 0 && count < BITS_PER_MP_LIMB here.  */  \
-      unsigned int __count = (count);               \
-      (void) __mpn_lshift (__ptr, __ptr, size, __count);        \
-      __ptr[0] |= (limb) >> (BITS_PER_MP_LIMB - __count);       \
-    }                               \
+        mp_limb_t *__ptr = (ptr);                     \
+        if (__builtin_constant_p (count) && count == BITS_PER_MP_LIMB)    \
+        {                               \
+            mp_size_t i;                          \
+            for (i = (size) - 1; i > 0; --i)              \
+                __ptr[i] = __ptr[i - 1];                    \
+            __ptr[0] = (limb);                        \
+        }                               \
+        else                              \
+        {                               \
+            /* We assume count > 0 && count < BITS_PER_MP_LIMB here.  */  \
+            unsigned int __count = (count);               \
+            (void) __mpn_lshift (__ptr, __ptr, size, __count);        \
+            __ptr[0] |= (limb) >> (BITS_PER_MP_LIMB - __count);       \
+        }                               \
     }                                   \
-  while (0)
+    while (0)
 
 
 #define INTERNAL(x) INTERNAL1(x)
@@ -1437,40 +1437,40 @@ number_parsed:
                     udiv_qrnnd(quot, n, n, 0, d);
 
 #define got_limb                                  \
-      if (bits == 0)                              \
-    {                                 \
-      int cnt;                            \
-      if (quot == 0)                          \
+if (bits == 0)                              \
+{                                 \
+    int cnt;                            \
+    if (quot == 0)                          \
         cnt = BITS_PER_MP_LIMB;                   \
-      else                                \
+    else                                \
         count_leading_zeros (cnt, quot);                  \
-      exponent -= cnt;                        \
-      if (BITS_PER_MP_LIMB - cnt > MANT_DIG)              \
-        {                                 \
-          used = MANT_DIG + cnt;                      \
-          retval[0] = quot >> (BITS_PER_MP_LIMB - used);          \
-          bits = MANT_DIG + 1;                    \
-        }                                 \
-      else                                \
-        {                                 \
-          /* Note that we only clear the second element.  */      \
-          /* The conditional is determined at compile time.  */   \
-          if (RETURN_LIMB_SIZE > 1)                   \
-        retval[1] = 0;                        \
-          retval[0] = quot;                       \
-          bits = -cnt;                        \
-        }                                 \
-    }                                 \
-      else if (bits + BITS_PER_MP_LIMB <= MANT_DIG)           \
-    __mpn_lshift_1 (retval, RETURN_LIMB_SIZE, BITS_PER_MP_LIMB,   \
-            quot);                        \
-      else                                \
+    exponent -= cnt;                        \
+    if (BITS_PER_MP_LIMB - cnt > MANT_DIG)              \
     {                                 \
-      used = MANT_DIG - bits;                     \
-      if (used > 0)                           \
-        __mpn_lshift_1 (retval, RETURN_LIMB_SIZE, used, quot);    \
+        used = MANT_DIG + cnt;                      \
+        retval[0] = quot >> (BITS_PER_MP_LIMB - used);          \
+        bits = MANT_DIG + 1;                    \
     }                                 \
-      bits += BITS_PER_MP_LIMB
+    else                                \
+    {                                 \
+        /* Note that we only clear the second element.  */      \
+        /* The conditional is determined at compile time.  */   \
+        if (RETURN_LIMB_SIZE > 1)                   \
+            retval[1] = 0;                        \
+        retval[0] = quot;                       \
+        bits = -cnt;                        \
+    }                                 \
+}                                 \
+else if (bits + BITS_PER_MP_LIMB <= MANT_DIG)           \
+    __mpn_lshift_1 (retval, RETURN_LIMB_SIZE, BITS_PER_MP_LIMB,   \
+                    quot);                        \
+else                                \
+{                                 \
+    used = MANT_DIG - bits;                     \
+    if (used > 0)                           \
+        __mpn_lshift_1 (retval, RETURN_LIMB_SIZE, used, quot);    \
+}                                 \
+bits += BITS_PER_MP_LIMB
 
                     got_limb;
                 } while (bits <= MANT_DIG);

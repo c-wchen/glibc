@@ -38,10 +38,10 @@ weak_alias(_mcount, mcount)
 static void mcount_internal(u_long frompc, u_long selfpc);
 
 #define _MCOUNT_DECL(frompc, selfpc) \
-static inline void mcount_internal (u_long frompc, u_long selfpc)
+    static inline void mcount_internal (u_long frompc, u_long selfpc)
 
 #define MCOUNT \
-void _mcount (void)                               \
-{                                         \
-  mcount_internal ((u_long) RETURN_ADDRESS (1), (u_long) RETURN_ADDRESS (0)); \
-}
+    void _mcount (void)                               \
+    {                                         \
+        mcount_internal ((u_long) RETURN_ADDRESS (1), (u_long) RETURN_ADDRESS (0)); \
+    }

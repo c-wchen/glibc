@@ -35,9 +35,9 @@ static int do_test(void)
     bindtextdomain("translit", OBJPFX "domaindir");
 
 #define TEST(in, exp) \
-  s = gettext (in);                               \
-  puts (s);                                   \
-  result |= strcmp (s, exp) != 0;
+    s = gettext (in);                               \
+    puts (s);                                   \
+    result |= strcmp (s, exp) != 0;
 
     TEST("test", "<<(C) AEss>>");
     TEST("test", "<<(C) AEss>>");

@@ -6,30 +6,30 @@
 #include "tst-strtod.h"
 
 #define TEST_STRTOD(FSUF, FTYPE, FTOSTR, LSUF, CSUF)      \
-static int                        \
-test_strto ## FSUF (const char str[])             \
-{                             \
-  char *endp;                         \
-  int result = 0;                     \
-  puts (str);                         \
-  FTYPE d = strto ## FSUF (str, &endp);           \
-  if (!isnan (d))                     \
+    static int                        \
+    test_strto ## FSUF (const char str[])             \
     {                             \
-      puts ("strto" #FSUF " did not return NAN");     \
-      result = 1;                     \
-    }                             \
-  if (issignaling (d))                    \
-    {                             \
-      puts ("strto" #FSUF " returned a sNAN");        \
-      result = 1;                     \
-    }                             \
-  if (strcmp (endp, "something") != 0)            \
-    {                             \
-      puts ("strto" #FSUF " set incorrect end pointer");  \
-      result = 1;                     \
-    }                             \
-  return result;                      \
-}
+        char *endp;                         \
+        int result = 0;                     \
+        puts (str);                         \
+        FTYPE d = strto ## FSUF (str, &endp);           \
+        if (!isnan (d))                     \
+        {                             \
+            puts ("strto" #FSUF " did not return NAN");     \
+            result = 1;                     \
+        }                             \
+        if (issignaling (d))                    \
+        {                             \
+            puts ("strto" #FSUF " returned a sNAN");        \
+            result = 1;                     \
+        }                             \
+        if (strcmp (endp, "something") != 0)            \
+        {                             \
+            puts ("strto" #FSUF " set incorrect end pointer");  \
+            result = 1;                     \
+        }                             \
+        return result;                      \
+    }
 
 GEN_TEST_STRTOD_FOREACH(TEST_STRTOD);
 

@@ -49,10 +49,10 @@ __struct_timespec st_ctim;
    layout.  */
 # if __BYTE_ORDER == __BIG_ENDIAN
 #  define __fieldts64(name)                 \
-   __time64_t name; __int32_t :32; __int32_t name ## nsec
+    __time64_t name; __int32_t :32; __int32_t name ## nsec
 # else
 #  define __fieldts64(name)                 \
-   __time64_t name; __int32_t name ## nsec; __int32_t :32
+    __time64_t name; __int32_t name ## nsec; __int32_t :32
 # endif
 
 __fieldts64(st_atime);

@@ -48,9 +48,9 @@ struct Cookie {
 };
 
 #define VALIDATE_COOKIE() if (! cookie_valid) { \
-  FAIL ("call to %s after file closed", __FUNCTION__); \
-  return -1;    \
-  }
+        FAIL ("call to %s after file closed", __FUNCTION__); \
+        return -1;    \
+    }
 
 static ssize_t io_read(void *vcookie, char *buf, size_t size)
 {
@@ -129,20 +129,20 @@ FILE *io_open(const char *buffer, int buflen, const char *mode, void **vcookie)
 #define my_open(s,l,m) io_open (s, l, m, (void *) &cookie)
 
 #define TEST_COMPARE_0x11(buf, len)         \
-  TEST_COMPARE_BLOB (buf + (len), sizeof (buf) - (len), \
-             buf2, sizeof (buf) - (len));
+    TEST_COMPARE_BLOB (buf + (len), sizeof (buf) - (len), \
+                       buf2, sizeof (buf) - (len));
 
 #define check_flags(f, expected_eof, expected_err)  \
-  {                         \
-    if (expected_eof)                   \
-      TEST_VERIFY (feof (f) != 0);          \
-    else                        \
-      TEST_VERIFY (feof (f) == 0);          \
-    if (expected_err)                   \
-      TEST_VERIFY (ferror (f) != 0);            \
-    else                        \
-      TEST_VERIFY (ferror (f) == 0);            \
-  }
+    {                         \
+        if (expected_eof)                   \
+            TEST_VERIFY (feof (f) != 0);          \
+        else                        \
+            TEST_VERIFY (feof (f) == 0);          \
+        if (expected_err)                   \
+            TEST_VERIFY (ferror (f) != 0);            \
+        else                        \
+            TEST_VERIFY (ferror (f) == 0);            \
+    }
 
 static int do_test(void)
 {

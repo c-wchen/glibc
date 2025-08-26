@@ -87,8 +87,8 @@ typedef enum {
 static void pattern_fill(pattern_t ptn, unsigned char *start, int bitoffset, int count)
 {
 #define bitset(count, value) \
-      start[(count)/8] = (start[(count)/8] & ~(1 << 7-(count)%8)  \
-                          |  (value) << 7-(count)%8)
+    start[(count)/8] = (start[(count)/8] & ~(1 << 7-(count)%8)  \
+                        |  (value) << 7-(count)%8)
     int i;
 
     if (ptn >= 0 && ptn <= 0xf) {

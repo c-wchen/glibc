@@ -34,15 +34,15 @@ static int do_test(void);
 #include "../test-skeleton.c"
 
 #define CB(n) \
-static void                                   \
-cb##n (void)                                      \
-{                                         \
-  if (th[n] != pthread_self ())                           \
+    static void                                   \
+    cb##n (void)                                      \
     {                                         \
-      write_message ("wrong callback\n");                     \
-      _exit (1);                                  \
-    }                                         \
-}
+        if (th[n] != pthread_self ())                           \
+        {                                         \
+            write_message ("wrong callback\n");                     \
+            _exit (1);                                  \
+        }                                         \
+    }
 CB(0)
 CB(1)
 CB(2)

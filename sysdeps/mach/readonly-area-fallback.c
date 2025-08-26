@@ -20,7 +20,8 @@
 #include <stdint.h>
 #include <mach.h>
 
-enum readonly_error_type __readonly_area_fallback(const void *ptr, size_t size) {
+enum readonly_error_type __readonly_area_fallback(const void *ptr, size_t size)
+{
     vm_address_t region_address = (uintptr_t) ptr;
     vm_size_t region_length = size;
     vm_prot_t protection;
@@ -34,8 +35,7 @@ enum readonly_error_type __readonly_area_fallback(const void *ptr, size_t size) 
                        &region_address, &region_length,
                        &protection, &max_protection, &inheritance, &is_shared,
                        &object_name, &offset) == KERN_SUCCESS
-           && region_address <= (uintptr_t) ptr)
-    {
+           && region_address <= (uintptr_t) ptr) {
         region_address += region_length;
         if (region_address < (uintptr_t) ptr) {
             continue;

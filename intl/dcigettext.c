@@ -422,12 +422,12 @@ gl_rwlock_define_initialized(, _nl_state_lock attribute_hidden)
 static int enable_secure;
 # define ENABLE_SECURE (enable_secure == 1)
 # define DETERMINE_SECURE \
-  if (enable_secure == 0)                             \
+    if (enable_secure == 0)                             \
     {                                         \
-      if (getuid () != geteuid () || getgid () != getegid ())             \
-    enable_secure = 1;                            \
-      else                                    \
-    enable_secure = -1;                           \
+        if (getuid () != geteuid () || getgid () != getegid ())             \
+            enable_secure = 1;                            \
+        else                                    \
+            enable_secure = -1;                           \
     }
 #endif
 

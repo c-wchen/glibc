@@ -34,24 +34,24 @@ DIAG_IGNORE_NEEDS_COMMENT(12, "-Wformat-extra-args");
 #endif
 
 #define CHECK_PRINTF(EXPECTED, FMT, ...)                \
-  do                                    \
+    do                                    \
     {                                   \
-      int ret = SNPRINTF (buf, sizeof buf / sizeof buf[0], L_(FMT), \
-              __VA_ARGS__);                 \
-      TEST_COMPARE_STRING_MACRO (buf, L_(EXPECTED));            \
-      TEST_COMPARE (ret, STRLEN (L_(EXPECTED)));            \
+        int ret = SNPRINTF (buf, sizeof buf / sizeof buf[0], L_(FMT), \
+                            __VA_ARGS__);                 \
+        TEST_COMPARE_STRING_MACRO (buf, L_(EXPECTED));            \
+        TEST_COMPARE (ret, STRLEN (L_(EXPECTED)));            \
     }                                   \
-  while (0)
+    while (0)
 
 #define CHECK_PRINTF_ERR(FMT, ...)                  \
-  do                                    \
+    do                                    \
     {                                   \
-      int ret = SNPRINTF (buf, sizeof buf / sizeof buf[0], L_(FMT), \
-              __VA_ARGS__);                 \
-      TEST_VERIFY (ret < 0);                        \
-      TEST_COMPARE (errno, EINVAL);                 \
+        int ret = SNPRINTF (buf, sizeof buf / sizeof buf[0], L_(FMT), \
+                            __VA_ARGS__);                 \
+        TEST_VERIFY (ret < 0);                        \
+        TEST_COMPARE (errno, EINVAL);                 \
     }                                   \
-  while (0)
+    while (0)
 
 static void test_w8(void)
 {

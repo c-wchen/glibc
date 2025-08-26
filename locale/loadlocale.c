@@ -34,7 +34,7 @@
 
 static const size_t _nl_category_num_items[] = {
 #define DEFINE_CATEGORY(category, category_name, items, a) \
-  [category] = _NL_ITEM_INDEX (_NL_NUM_##category),
+    [category] = _NL_ITEM_INDEX (_NL_NUM_##category),
 #include "categories.def"
 #undef  DEFINE_CATEGORY
 };
@@ -46,16 +46,16 @@ static const size_t _nl_category_num_items[] = {
    the 'items' may be subarrays, which will cause the compiler to deduce
    an incorrect size from the initializer.  */
 #define DEFINE_CATEGORY(category, category_name, items, a) \
-static const enum value_type _nl_value_type_##category     \
-  [_NL_ITEM_INDEX (_NL_NUM_##category)] = { NO_PAREN items };
+    static const enum value_type _nl_value_type_##category     \
+    [_NL_ITEM_INDEX (_NL_NUM_##category)] = { NO_PAREN items };
 #define DEFINE_ELEMENT(element, element_name, optstd, type, rest...) \
-  [_NL_ITEM_INDEX (element)] = type,
+    [_NL_ITEM_INDEX (element)] = type,
 #include "categories.def"
 #undef DEFINE_CATEGORY
 
 static const enum value_type *const _nl_value_types[] = {
 #define DEFINE_CATEGORY(category, category_name, items, a) \
-  [category] = _nl_value_type_##category,
+    [category] = _nl_value_type_##category,
 #include "categories.def"
 #undef DEFINE_CATEGORY
 };
@@ -172,11 +172,11 @@ puntdata:
          _nl_value_type_LC_XYZ array.  There are all pointers.  */
         switch (category) {
 #define CATTEST(cat) \
-    case LC_##cat:                      \
-      if (cnt >= (sizeof (_nl_value_type_LC_##cat)      \
-              / sizeof (_nl_value_type_LC_##cat[0])))   \
+case LC_##cat:                      \
+    if (cnt >= (sizeof (_nl_value_type_LC_##cat)      \
+                / sizeof (_nl_value_type_LC_##cat[0])))   \
         goto puntdata;                  \
-      break
+    break
                 CATTEST(NUMERIC);
                 CATTEST(TIME);
                 CATTEST(COLLATE);

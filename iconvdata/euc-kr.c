@@ -66,43 +66,43 @@ euckr_from_ucs4(uint32_t ch, unsigned char *cp)
 #define MIN_NEEDED_OUTPUT   MIN_NEEDED_TO
 #define LOOPFCT         FROM_LOOP
 #define BODY \
-  {                                       \
-    uint32_t ch = *inptr;                             \
-                                          \
-    if (ch <= 0x9f)                               \
-      ++inptr;                                    \
-    else if (__glibc_unlikely (ch == 0xa0))                   \
-      {                                       \
-    /* This is illegal.  */                           \
-    STANDARD_FROM_LOOP_ERR_HANDLER (1);                   \
-      }                                       \
-    else                                      \
-      {                                       \
-    /* Two-byte character.  First test whether the next byte          \
-       is also available.  */                         \
-    ch = ksc5601_to_ucs4 (&inptr, inend - inptr, 0x80);           \
-    if (__glibc_unlikely (ch == 0))                       \
-      {                                   \
-        /* The second byte is not available.  */                  \
-        result = __GCONV_INCOMPLETE_INPUT;                    \
-        break;                                \
-      }                                   \
-    if (__glibc_unlikely (ch == __UNKNOWN_10646_CHAR))            \
-      /* This is an illegal character.  */                    \
-      STANDARD_FROM_LOOP_ERR_HANDLER (2);                     \
-      }                                       \
-                                          \
-    put32 (outptr, ch);                               \
-    outptr += 4;                                  \
-  }
+    {                                       \
+        uint32_t ch = *inptr;                             \
+        \
+        if (ch <= 0x9f)                               \
+            ++inptr;                                    \
+        else if (__glibc_unlikely (ch == 0xa0))                   \
+        {                                       \
+            /* This is illegal.  */                           \
+            STANDARD_FROM_LOOP_ERR_HANDLER (1);                   \
+        }                                       \
+        else                                      \
+        {                                       \
+            /* Two-byte character.  First test whether the next byte          \
+               is also available.  */                         \
+            ch = ksc5601_to_ucs4 (&inptr, inend - inptr, 0x80);           \
+            if (__glibc_unlikely (ch == 0))                       \
+            {                                   \
+                /* The second byte is not available.  */                  \
+                result = __GCONV_INCOMPLETE_INPUT;                    \
+                break;                                \
+            }                                   \
+            if (__glibc_unlikely (ch == __UNKNOWN_10646_CHAR))            \
+                /* This is an illegal character.  */                    \
+                STANDARD_FROM_LOOP_ERR_HANDLER (2);                     \
+        }                                       \
+        \
+        put32 (outptr, ch);                               \
+        outptr += 4;                                  \
+    }
 #define LOOP_NEED_FLAGS
 #define ONEBYTE_BODY \
-  {                                       \
-    if (c <= 0x9f)                                \
-      return c;                                   \
-    else                                      \
-      return WEOF;                                \
-  }
+    {                                       \
+        if (c <= 0x9f)                                \
+            return c;                                   \
+        else                                      \
+            return WEOF;                                \
+    }
 #include <iconv/loop.c>
 
 
@@ -112,38 +112,38 @@ euckr_from_ucs4(uint32_t ch, unsigned char *cp)
 #define MAX_NEEDED_OUTPUT   MAX_NEEDED_FROM
 #define LOOPFCT         TO_LOOP
 #define BODY \
-  {                                       \
-    uint32_t ch = get32 (inptr);                          \
-    unsigned char cp[2];                              \
-                                          \
-    /* Decomposing Hangul syllables not available in KS C 5601 into       \
-       Jamos should be considered either here or in euckr_from_ucs4() */      \
-    euckr_from_ucs4 (ch, cp);                             \
-                                          \
-    if (__builtin_expect (cp[0], '\1') == '\0' && ch != 0)            \
-      {                                       \
-    UNICODE_TAG_HANDLER (ch, 4);                          \
-                                          \
-    /* Illegal character.  */                         \
-    STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
-      }                                       \
-                                          \
-    *outptr++ = cp[0];                                \
-    /* Now test for a possible second byte and write this if possible.  */    \
-    if (cp[1] != '\0')                                \
-      {                                       \
-    if (__glibc_unlikely (outptr >= outend))                  \
-      {                                   \
-        /* The result does not fit into the buffer.  */           \
-        --outptr;                                 \
-        result = __GCONV_FULL_OUTPUT;                     \
-        break;                                \
-      }                                   \
-    *outptr++ = cp[1];                            \
-      }                                       \
-                                          \
-    inptr += 4;                                   \
-  }
+    {                                       \
+        uint32_t ch = get32 (inptr);                          \
+        unsigned char cp[2];                              \
+        \
+        /* Decomposing Hangul syllables not available in KS C 5601 into       \
+           Jamos should be considered either here or in euckr_from_ucs4() */      \
+        euckr_from_ucs4 (ch, cp);                             \
+        \
+        if (__builtin_expect (cp[0], '\1') == '\0' && ch != 0)            \
+        {                                       \
+            UNICODE_TAG_HANDLER (ch, 4);                          \
+            \
+            /* Illegal character.  */                         \
+            STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
+        }                                       \
+        \
+        *outptr++ = cp[0];                                \
+        /* Now test for a possible second byte and write this if possible.  */    \
+        if (cp[1] != '\0')                                \
+        {                                       \
+            if (__glibc_unlikely (outptr >= outend))                  \
+            {                                   \
+                /* The result does not fit into the buffer.  */           \
+                --outptr;                                 \
+                result = __GCONV_FULL_OUTPUT;                     \
+                break;                                \
+            }                                   \
+            *outptr++ = cp[1];                            \
+        }                                       \
+        \
+        inptr += 4;                                   \
+    }
 #define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 

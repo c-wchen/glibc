@@ -27,10 +27,10 @@
 
 #if _STACK_GROWS_DOWN
 # define FRAME_LEFT(frame, other, adj) \
-  ((uintptr_t) frame - adj >= (uintptr_t) other - adj)
+    ((uintptr_t) frame - adj >= (uintptr_t) other - adj)
 #elif _STACK_GROWS_UP
 # define FRAME_LEFT(frame, other, adj) \
-  ((uintptr_t) frame - adj <= (uintptr_t) other - adj)
+    ((uintptr_t) frame - adj <= (uintptr_t) other - adj)
 #else
 # error "Define either _STACK_GROWS_DOWN or _STACK_GROWS_UP"
 #endif

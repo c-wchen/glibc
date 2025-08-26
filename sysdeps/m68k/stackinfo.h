@@ -32,10 +32,10 @@
 
 /* Access to the stack pointer.  */
 #define stackinfo_get_sp() \
-  ({ void *p__; asm volatile ("move.l %%sp, %0" : "=r" (p__)); p__; })
+    ({ void *p__; asm volatile ("move.l %%sp, %0" : "=r" (p__)); p__; })
 #define stackinfo_sub_sp(ptr) \
-  ({ ptrdiff_t d__;                     \
-     asm volatile ("sub.l %%sp, %0" : "=r" (d__) : "0" (ptr));  \
-     d__; })
+    ({ ptrdiff_t d__;                     \
+        asm volatile ("sub.l %%sp, %0" : "=r" (d__) : "0" (ptr));  \
+        d__; })
 
 #endif  /* stackinfo.h */

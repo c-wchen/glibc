@@ -131,10 +131,10 @@
    _NL_CURRENT_WORD macros.  */
 #undef _NL_CURRENT
 #define _NL_CURRENT(category, item) \
-  (current->values[_NL_ITEM_INDEX (item)].string)
+    (current->values[_NL_ITEM_INDEX (item)].string)
 #undef _NL_CURRENT_WORD
 #define _NL_CURRENT_WORD(category, item) \
-  ((uint32_t) current->values[_NL_ITEM_INDEX (item)].word)
+    ((uint32_t) current->values[_NL_ITEM_INDEX (item)].word)
 
 #if defined _LIBC || defined HAVE_WCHAR_H
 # include <wchar.h>
@@ -184,13 +184,13 @@ extern const unsigned char __strtol_ull_rem_tab[] attribute_hidden;
 #endif
 
 #define DEF(TYPE, NAME)                            \
-  const TYPE NAME[] attribute_hidden =                     \
-  {                                    \
-    F(2), F(3), F(4), F(5), F(6), F(7), F(8), F(9), F(10),         \
-    F(11), F(12), F(13), F(14), F(15), F(16), F(17), F(18), F(19), F(20),  \
-    F(21), F(22), F(23), F(24), F(25), F(26), F(27), F(28), F(29), F(30),  \
-    F(31), F(32), F(33), F(34), F(35), F(36)                   \
-  }
+    const TYPE NAME[] attribute_hidden =                     \
+            {                                    \
+                                                 F(2), F(3), F(4), F(5), F(6), F(7), F(8), F(9), F(10),         \
+                                                 F(11), F(12), F(13), F(14), F(15), F(16), F(17), F(18), F(19), F(20),  \
+                                                 F(21), F(22), F(23), F(24), F(25), F(26), F(27), F(28), F(29), F(30),  \
+                                                 F(31), F(32), F(33), F(34), F(35), F(36)                   \
+            }
 
 #if !UNSIGNED && !defined (USE_WIDE_CHAR) && !defined (QUAD)
 # define F(X)   ULONG_MAX / X

@@ -21,8 +21,8 @@
 /* Provide real-function versions of all the ctype macros.  */
 
 #define func(name, type) \
-  int __##name (int c, locale_t l) { return __isctype_l (c, type, l); } \
-  weak_alias (__##name, name)
+    int __##name (int c, locale_t l) { return __isctype_l (c, type, l); } \
+    weak_alias (__##name, name)
 
 func(isalnum_l, _ISalnum)
 func(isalpha_l, _ISalpha)

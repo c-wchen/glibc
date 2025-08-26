@@ -30,7 +30,7 @@ static inline mach_port_t get(const int idx)
     return result;
 }
 #define GET(type, what, idx) \
-  type get##what (void) { return get (INIT_PORT_##idx); }
+    type get##what (void) { return get (INIT_PORT_##idx); }
 
 static inline int set(const int idx, mach_port_t new)
 {
@@ -38,10 +38,10 @@ static inline int set(const int idx, mach_port_t new)
     return err ? __hurd_fail(err) : 0;
 }
 #define SET(type, what, idx) \
-  int set##what (type new) { return set (INIT_PORT_##idx, new); }
+    int set##what (type new) { return set (INIT_PORT_##idx, new); }
 
 #define GETSET(type, what, idx) \
-  GET (type, what, idx) SET (type, what, idx)
+    GET (type, what, idx) SET (type, what, idx)
 
 GETSET(process_t, proc, PROC)
 GETSET(mach_port_t, cttyid, CTTYID)

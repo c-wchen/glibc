@@ -94,7 +94,7 @@
     .globl  C_SYMBOL_NAME(name);            \
     .type   C_SYMBOL_NAME(name),%function;      \
     .align  ALIGNARG(4);                \
-  C_LABEL(name)                     \
+    C_LABEL(name)                     \
     CFI_SECTIONS;                   \
     cfi_startproc;                  \
     CALL_MCOUNT
@@ -174,22 +174,22 @@
 #  define LDST_PCREL(OP, R, T, EXPR) \
     ldr T, 98f;                 \
     .subsection 2;                  \
-98: .word   EXPR - 99f - PC_OFS;            \
+    98: .word   EXPR - 99f - PC_OFS;            \
     .previous;                  \
-99: add T, T, pc;               \
+    99: add T, T, pc;               \
     OP  R, [T]
 # elif defined (ARCH_HAS_T2) && ARM_PCREL_MOVW_OK
 #  define LDST_PCREL(OP, R, T, EXPR)            \
     movw    T, #:lower16:EXPR - 99f - PC_OFS;   \
     movt    T, #:upper16:EXPR - 99f - PC_OFS;   \
-99: LDST_PC_INDEXED (OP, R, T, T)
+    99: LDST_PC_INDEXED (OP, R, T, T)
 # else
 #  define LDST_PCREL(OP, R, T, EXPR) \
     ldr T, 98f;                 \
     .subsection 2;                  \
-98: .word   EXPR - 99f - PC_OFS;            \
+    98: .word   EXPR - 99f - PC_OFS;            \
     .previous;                  \
-99: OP  R, [pc, T]
+    99: OP  R, [pc, T]
 # endif
 
 /* Load from a global SYMBOL + CONSTANT into R, using T.  */
@@ -206,21 +206,21 @@
     movt    T, #:upper16:99f - 98f - PC_OFS;            \
     .pushsection .rodata.cst4, "aM", %progbits, 4;          \
     .balign 4;                          \
-99: .word   SYMBOL##(GOT);                      \
+    99: .word   SYMBOL##(GOT);                      \
     .popsection;                            \
-97: add R, R, pc;                       \
-98: LDST_PC_INDEXED (ldr, T, T, T);                 \
+    97: add R, R, pc;                       \
+    98: LDST_PC_INDEXED (ldr, T, T, T);                 \
     LDST_INDEXED (ldr, R, T, R, T);                 \
     ldr R, [R, $CONSTANT]
 # else
 #  define LDR_GLOBAL(R, T, SYMBOL, CONSTANT)        \
     ldr T, 99f;                 \
     ldr R, 100f;                \
-98: add T, T, pc;               \
+    98: add T, T, pc;               \
     ldr T, [T, R];              \
     .subsection 2;                  \
-99: .word   _GLOBAL_OFFSET_TABLE_ - 98b - PC_OFS;   \
-100:    .word   SYMBOL##(GOT);              \
+    99: .word   _GLOBAL_OFFSET_TABLE_ - 98b - PC_OFS;   \
+    100:    .word   SYMBOL##(GOT);              \
     .previous;                  \
     ldr R, [T, $CONSTANT]
 # endif
@@ -231,10 +231,10 @@
    static case, LDR_GLOBAL is already optimal.  */
 # ifdef PIC
 #  define LDR_HIDDEN(R, T, SYMBOL, CONSTANT) \
-  LDST_PCREL (ldr, R, T, SYMBOL + CONSTANT)
+    LDST_PCREL (ldr, R, T, SYMBOL + CONSTANT)
 # else
 #  define LDR_HIDDEN(R, T, SYMBOL, CONSTANT) \
-  LDR_GLOBAL (R, T, SYMBOL, CONSTANT)
+    LDR_GLOBAL (R, T, SYMBOL, CONSTANT)
 # endif
 
 /* Cope with negative memory offsets, which thumb can't encode.

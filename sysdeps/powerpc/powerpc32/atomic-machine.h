@@ -43,32 +43,32 @@
  * different version in sysdeps/powerpc/powerpc64/atomic-machine.h.
  */
 #define __arch_compare_and_exchange_bool_32_acq(mem, newval, oldval)         \
-({                                        \
-  unsigned int __tmp;                                 \
-  __asm __volatile (                                  \
-            "1:	lwarx	%0,0,%1" MUTEX_HINT_ACQ "\n"            \
-            "	subf.	%0,%2,%0\n"                   \
-            "	bne	2f\n"                       \
-            "	stwcx.	%3,0,%1\n"                   \
-            "	bne-	1b\n"                          \
-            "2:	" __ARCH_ACQ_INSTR                    \
-            : "=&r" (__tmp)                       \
-            : "b" (mem), "r" (oldval), "r" (newval)           \
-            : "cr0", "memory");                       \
-  __tmp != 0;                                     \
-})
+    ({                                        \
+        unsigned int __tmp;                                 \
+        __asm __volatile (                                  \
+                "1:	lwarx	%0,0,%1" MUTEX_HINT_ACQ "\n"            \
+                "	subf.	%0,%2,%0\n"                   \
+                "	bne	2f\n"                       \
+                "	stwcx.	%3,0,%1\n"                   \
+                "	bne-	1b\n"                          \
+                "2:	" __ARCH_ACQ_INSTR                    \
+                : "=&r" (__tmp)                       \
+                : "b" (mem), "r" (oldval), "r" (newval)           \
+                : "cr0", "memory");                       \
+        __tmp != 0;                                     \
+    })
 
 /* Powerpc32 processors don't implement the 64-bit (doubleword) forms of
    load and reserve (ldarx) and store conditional (stdcx.) instructions.
    So for powerpc32 we stub out the 64-bit forms.  */
 #define __arch_compare_and_exchange_bool_64_acq(mem, newval, oldval) \
-  (abort (), 0)
+    (abort (), 0)
 
 #define __arch_compare_and_exchange_val_64_acq(mem, newval, oldval) \
-  (abort (), (__typeof (*mem)) 0)
+    (abort (), (__typeof (*mem)) 0)
 
 #define __arch_compare_and_exchange_val_64_rel(mem, newval, oldval) \
-  (abort (), (__typeof (*mem)) 0)
+    (abort (), (__typeof (*mem)) 0)
 
 #define __arch_atomic_exchange_64_acq(mem, value) \
     ({ abort (); (*mem) = (value); })

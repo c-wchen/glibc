@@ -67,15 +67,13 @@ static const char *write_mode_to_str(enum write_mode mode)
     }
 }
 
-static enum write_mode str_to_write_mode(const char *mode) {
-    if (strcmp(mode, "out_first") == 0)
-    {
+static enum write_mode str_to_write_mode(const char *mode)
+{
+    if (strcmp(mode, "out_first") == 0) {
         return out_first;
-    } else if (strcmp(mode, "err_first") == 0)
-    {
+    } else if (strcmp(mode, "err_first") == 0) {
         return err_first;
-    } else if (strcmp(mode, "interleave") == 0)
-    {
+    } else if (strcmp(mode, "interleave") == 0) {
         return interleave;
     }
     return write_mode_last;
@@ -351,6 +349,6 @@ static int do_test(int argc, char *argv[])
 }
 
 #define CMDLINE_OPTIONS \
-  { "restart", no_argument, &restart, 1 },
+    { "restart", no_argument, &restart, 1 },
 #define TEST_FUNCTION_ARGV do_test
 #include <support/test-driver.c>

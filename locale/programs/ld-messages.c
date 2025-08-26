@@ -226,34 +226,34 @@ void messages_read(struct linereader *ldfile, struct localedef_t *result,
 
         switch (nowtok) {
 #define STR_ELEM(cat) \
-    case tok_##cat:                               \
-      /* Ignore the rest of the line if we don't need the input of        \
-         this line.  */                           \
-      if (ignore_content)                             \
-        {                                     \
-          lr_ignore_rest (ldfile, 0);                     \
-          break;                                  \
-        }                                     \
-                                          \
-      if (messages->cat != NULL)                          \
-        {                                     \
-          lr_error (ldfile, _("\
+case tok_##cat:                               \
+    /* Ignore the rest of the line if we don't need the input of        \
+       this line.  */                           \
+    if (ignore_content)                             \
+    {                                     \
+        lr_ignore_rest (ldfile, 0);                     \
+        break;                                  \
+    }                                     \
+    \
+    if (messages->cat != NULL)                          \
+    {                                     \
+        lr_error (ldfile, _("\
 %s: field `%s' declared more than once"), "LC_MESSAGES", #cat);		      \
-          lr_ignore_rest (ldfile, 0);                     \
-          break;                                  \
-        }                                     \
-      now = lr_token (ldfile, charmap, result, repertoire, verbose);      \
-      if (now->tok != tok_string)                         \
+        lr_ignore_rest (ldfile, 0);                     \
+        break;                                  \
+    }                                     \
+    now = lr_token (ldfile, charmap, result, repertoire, verbose);      \
+    if (now->tok != tok_string)                         \
         goto syntax_error;                            \
-      else if (!ignore_content && now->val.str.startmb == NULL)       \
-        {                                     \
-          lr_error (ldfile, _("\
+    else if (!ignore_content && now->val.str.startmb == NULL)       \
+    {                                     \
+        lr_error (ldfile, _("\
 %s: unknown character in field `%s'"), "LC_MESSAGES", #cat);		      \
-          messages->cat = "";                         \
-        }                                     \
-      else if (!ignore_content)                       \
+        messages->cat = "";                         \
+    }                                     \
+    else if (!ignore_content)                       \
         messages->cat = now->val.str.startmb;                 \
-      break
+    break
 
                 STR_ELEM(yesexpr);
                 STR_ELEM(noexpr);

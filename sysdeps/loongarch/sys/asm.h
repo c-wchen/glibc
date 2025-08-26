@@ -49,7 +49,7 @@
     .globl symbol;          \
     .align aln;         \
     .type symbol, @function;    \
-symbol: \
+    symbol: \
     cfi_startproc;
 
 
@@ -60,7 +60,7 @@ symbol: \
     .text;              \
     .globl  symbol;         \
     .type   symbol, @function;  \
-symbol: \
+    symbol: \
     cfi_startproc;
 
 #define ENTRY_NO_ALIGN(symbol) LEAF_NO_ALIGN(symbol)
@@ -69,8 +69,8 @@ symbol: \
 /* Mark end of function.  */
 #undef END
 #define END(function) \
-  cfi_endproc; \
-  .size function, .- function;
+    cfi_endproc; \
+    .size function, .- function;
 
 /* Stack alignment.  */
 #define ALMASK ~15

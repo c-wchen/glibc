@@ -145,7 +145,7 @@ static const mbstate_t mbstate_zero;
    add one for integer division truncation;
    add one more for a minus sign if t is signed.  */
 #define INT_STRLEN_BOUND(t) \
- ((sizeof (t) * CHAR_BIT - TYPE_SIGNED (t)) * 302 / 1000 + 1 + TYPE_SIGNED (t))
+    ((sizeof (t) * CHAR_BIT - TYPE_SIGNED (t)) * 302 / 1000 + 1 + TYPE_SIGNED (t))
 
 #define TM_YEAR_BASE 1900
 
@@ -153,7 +153,7 @@ static const mbstate_t mbstate_zero;
 /* Nonzero if YEAR is a leap year (every 4 years,
    except every 100th isn't, and every 400th is).  */
 # define __isleap(year) \
-  ((year) % 4 == 0 && ((year) % 100 != 0 || (year) % 400 == 0))
+    ((year) % 4 == 0 && ((year) % 100 != 0 || (year) % 400 == 0))
 #endif
 
 
@@ -197,30 +197,30 @@ static const CHAR_T zeroes[16] = /* "0000000000000000" */
 };
 
 # define memset_space(P, Len) \
-  do {                                        \
-    int _len = (Len);                                 \
-                                          \
-    do                                        \
-      {                                       \
-    int _this = _len > 16 ? 16 : _len;                    \
-    (P) = MEMPCPY ((P), spaces, _this * sizeof (CHAR_T));             \
-    _len -= _this;                                \
-      }                                       \
-    while (_len > 0);                                 \
-  } while (0)
+    do {                                        \
+        int _len = (Len);                                 \
+        \
+        do                                        \
+        {                                       \
+            int _this = _len > 16 ? 16 : _len;                    \
+            (P) = MEMPCPY ((P), spaces, _this * sizeof (CHAR_T));             \
+            _len -= _this;                                \
+        }                                       \
+        while (_len > 0);                                 \
+    } while (0)
 
 # define memset_zero(P, Len) \
-  do {                                        \
-    int _len = (Len);                                 \
-                                          \
-    do                                        \
-      {                                       \
-    int _this = _len > 16 ? 16 : _len;                    \
-    (P) = MEMPCPY ((P), zeroes, _this * sizeof (CHAR_T));             \
-    _len -= _this;                                \
-      }                                       \
-    while (_len > 0);                                 \
-  } while (0)
+    do {                                        \
+        int _len = (Len);                                 \
+        \
+        do                                        \
+        {                                       \
+            int _this = _len > 16 ? 16 : _len;                    \
+            (P) = MEMPCPY ((P), zeroes, _this * sizeof (CHAR_T));             \
+            _len -= _this;                                \
+        }                                       \
+        while (_len > 0);                                 \
+    } while (0)
 #else
 # ifdef COMPILE_WIDE
 #  define memset_space(P, Len) (wmemset ((P), L' ', (Len)), (P) += (Len))
@@ -232,36 +232,36 @@ static const CHAR_T zeroes[16] = /* "0000000000000000" */
 #endif
 
 #define add(n, f)                                 \
-  do                                          \
+    do                                          \
     {                                         \
-      int _n = (n);                               \
-      int _delta = width - _n;                            \
-      int _incr = _n + (_delta > 0 ? _delta : 0);                 \
-      if ((size_t) _incr >= maxsize - i)                      \
-    return 0;                                 \
-      if (p)                                      \
-    {                                     \
-      if (_delta > 0)                             \
+        int _n = (n);                               \
+        int _delta = width - _n;                            \
+        int _incr = _n + (_delta > 0 ? _delta : 0);                 \
+        if ((size_t) _incr >= maxsize - i)                      \
+            return 0;                                 \
+        if (p)                                      \
         {                                     \
-          if (pad == L_('0'))                         \
-        memset_zero (p, _delta);                      \
-          else                                \
-        memset_space (p, _delta);                     \
+            if (_delta > 0)                             \
+            {                                     \
+                if (pad == L_('0'))                         \
+                    memset_zero (p, _delta);                      \
+                else                                \
+                    memset_space (p, _delta);                     \
+            }                                     \
+            f;                                      \
+            p += _n;                                \
         }                                     \
-      f;                                      \
-      p += _n;                                \
-    }                                     \
-      i += _incr;                                 \
+        i += _incr;                                 \
     } while (0)
 
 #define cpy(n, s) \
     add ((n),                                     \
-     if (to_lowcase)                              \
-       memcpy_lowcase (p, (s), _n LOCALE_ARG);                \
-     else if (to_uppcase)                             \
-       memcpy_uppcase (p, (s), _n LOCALE_ARG);                \
-     else                                     \
-       MEMCPY ((PTR) p, (const PTR) (s), _n))
+         if (to_lowcase)                              \
+         memcpy_lowcase (p, (s), _n LOCALE_ARG);                \
+         else if (to_uppcase)                             \
+             memcpy_uppcase (p, (s), _n LOCALE_ARG);                \
+             else                                     \
+                 MEMCPY ((PTR) p, (const PTR) (s), _n))
 
 #ifdef COMPILE_WIDE
 # ifndef USE_IN_EXTENDED_LOCALE_MODEL
@@ -280,7 +280,7 @@ static const CHAR_T zeroes[16] = /* "0000000000000000" */
 # define wcsftime       __wcsftime_l
 # undef _NL_CURRENT
 # define _NL_CURRENT(category, item) \
-  (current->values[_NL_ITEM_INDEX (item)].string)
+    (current->values[_NL_ITEM_INDEX (item)].string)
 # define LOCALE_PARAM , locale_t loc
 # define LOCALE_ARG , loc
 # define HELPER_LOCALE_ARG  , current
@@ -474,26 +474,26 @@ __strftime_internal(CHAR_T *s, size_t maxsize, const CHAR_T *format,
        only a few elements.  Dereference the pointers only if the format
        requires this.  Then it is ok to fail if the pointers are invalid.  */
 # define a_wkday \
-  ((const CHAR_T *) (tp->tm_wday < 0 || tp->tm_wday > 6              \
-             ? "?" : _NL_CURRENT (LC_TIME, NLW(ABDAY_1) + tp->tm_wday)))
+    ((const CHAR_T *) (tp->tm_wday < 0 || tp->tm_wday > 6              \
+                       ? "?" : _NL_CURRENT (LC_TIME, NLW(ABDAY_1) + tp->tm_wday)))
 # define f_wkday \
-  ((const CHAR_T *) (tp->tm_wday < 0 || tp->tm_wday > 6              \
-             ? "?" : _NL_CURRENT (LC_TIME, NLW(DAY_1) + tp->tm_wday)))
+    ((const CHAR_T *) (tp->tm_wday < 0 || tp->tm_wday > 6              \
+                       ? "?" : _NL_CURRENT (LC_TIME, NLW(DAY_1) + tp->tm_wday)))
 # define a_month \
-  ((const CHAR_T *) (tp->tm_mon < 0 || tp->tm_mon > 11               \
-             ? "?" : _NL_CURRENT (LC_TIME, NLW(ABMON_1) + tp->tm_mon)))
+    ((const CHAR_T *) (tp->tm_mon < 0 || tp->tm_mon > 11               \
+                       ? "?" : _NL_CURRENT (LC_TIME, NLW(ABMON_1) + tp->tm_mon)))
 # define f_month \
-  ((const CHAR_T *) (tp->tm_mon < 0 || tp->tm_mon > 11               \
-             ? "?" : _NL_CURRENT (LC_TIME, NLW(MON_1) + tp->tm_mon)))
+    ((const CHAR_T *) (tp->tm_mon < 0 || tp->tm_mon > 11               \
+                       ? "?" : _NL_CURRENT (LC_TIME, NLW(MON_1) + tp->tm_mon)))
 # define a_altmonth \
-  ((const CHAR_T *) (tp->tm_mon < 0 || tp->tm_mon > 11               \
-             ? "?" : _NL_CURRENT (LC_TIME, NLW(ABALTMON_1) + tp->tm_mon)))
+    ((const CHAR_T *) (tp->tm_mon < 0 || tp->tm_mon > 11               \
+                       ? "?" : _NL_CURRENT (LC_TIME, NLW(ABALTMON_1) + tp->tm_mon)))
 # define f_altmonth \
-  ((const CHAR_T *) (tp->tm_mon < 0 || tp->tm_mon > 11               \
-             ? "?" : _NL_CURRENT (LC_TIME, NLW(ALTMON_1) + tp->tm_mon)))
+    ((const CHAR_T *) (tp->tm_mon < 0 || tp->tm_mon > 11               \
+                       ? "?" : _NL_CURRENT (LC_TIME, NLW(ALTMON_1) + tp->tm_mon)))
 # define ampm \
-  ((const CHAR_T *) _NL_CURRENT (LC_TIME, tp->tm_hour > 11            \
-                 ? NLW(PM_STR) : NLW(AM_STR)))
+    ((const CHAR_T *) _NL_CURRENT (LC_TIME, tp->tm_hour > 11            \
+                                   ? NLW(PM_STR) : NLW(AM_STR)))
 
 # define aw_len STRLEN (a_wkday)
 # define am_len STRLEN (a_month)
@@ -502,9 +502,9 @@ __strftime_internal(CHAR_T *s, size_t maxsize, const CHAR_T *format,
 #else
 # if !HAVE_STRFTIME
 #  define f_wkday (tp->tm_wday < 0 || tp->tm_wday > 6   \
-           ? "?" : weekday_name[tp->tm_wday])
+                   ? "?" : weekday_name[tp->tm_wday])
 #  define f_month (tp->tm_mon < 0 || tp->tm_mon > 11    \
-           ? "?" : month_name[tp->tm_mon])
+                   ? "?" : month_name[tp->tm_mon])
 #  define a_wkday f_wkday
 #  define a_month f_month
 #  define a_altmonth a_month
@@ -783,21 +783,21 @@ __strftime_internal(CHAR_T *s, size_t maxsize, const CHAR_T *format,
         format_char = *f;
         switch (format_char) {
 #define DO_NUMBER(d, v)             \
-      do                    \
-        {                   \
-          digits = d > width ? d : width;   \
-          number_value = v;         \
-          goto do_number;           \
-        }                   \
-      while (0)
+    do                    \
+    {                   \
+        digits = d > width ? d : width;   \
+        number_value = v;         \
+        goto do_number;           \
+    }                   \
+    while (0)
 #define DO_NUMBER_SPACEPAD(d, v)        \
-      do                    \
-        {                   \
-          digits = d > width ? d : width;   \
-          number_value = v;         \
-          goto do_number_spacepad;      \
-        }                   \
-      while (0)
+    do                    \
+    {                   \
+        digits = d > width ? d : width;   \
+        number_value = v;         \
+        goto do_number_spacepad;      \
+    }                   \
+    while (0)
 
             case L_('%'):
                 if (modifier != 0) {

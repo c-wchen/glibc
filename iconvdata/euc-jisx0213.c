@@ -52,18 +52,18 @@
 #define TO_LOOP_MIN_NEEDED_TO       1
 #define TO_LOOP_MAX_NEEDED_TO       3
 #define PREPARE_LOOP \
-  int saved_state;                                \
-  int *statep = &data->__statep->__count;
+    int saved_state;                                \
+    int *statep = &data->__statep->__count;
 #define EXTRA_LOOP_ARGS     , statep
 
 
 /* Since we might have to reset input pointer we must be able to save
    and restore the state.  */
 #define SAVE_RESET_STATE(Save) \
-  if (Save)                                   \
-    saved_state = *statep;                            \
-  else                                        \
-    *statep = saved_state
+    if (Save)                                   \
+        saved_state = *statep;                            \
+    else                                        \
+        *statep = saved_state
 
 
 /* During EUC-JISX0213 to UCS-4 conversion, the COUNT element of the state
@@ -75,35 +75,35 @@
    the output state to the initial state.  This has to be done during the
    flushing.  */
 #define EMIT_SHIFT_TO_INIT \
-  if (data->__statep->__count != 0)                       \
+    if (data->__statep->__count != 0)                       \
     {                                         \
-      if (FROM_DIRECTION)                             \
-    {                                     \
-      if (__glibc_likely (outbuf + 4 <= outend))                  \
+        if (FROM_DIRECTION)                             \
         {                                     \
-          /* Write out the last character.  */                \
-          *((uint32_t *) outbuf) = data->__statep->__count >> 3;          \
-          outbuf += sizeof (uint32_t);                    \
-          data->__statep->__count = 0;                    \
+            if (__glibc_likely (outbuf + 4 <= outend))                  \
+            {                                     \
+                /* Write out the last character.  */                \
+                *((uint32_t *) outbuf) = data->__statep->__count >> 3;          \
+                outbuf += sizeof (uint32_t);                    \
+                data->__statep->__count = 0;                    \
+            }                                     \
+            else                                    \
+                /* We don't have enough room in the output buffer.  */        \
+                status = __GCONV_FULL_OUTPUT;                     \
         }                                     \
-      else                                    \
-        /* We don't have enough room in the output buffer.  */        \
-        status = __GCONV_FULL_OUTPUT;                     \
-    }                                     \
-      else                                    \
-    {                                     \
-      if (__glibc_likely (outbuf + 2 <= outend))                  \
+        else                                    \
         {                                     \
-          /* Write out the last character.  */                \
-          uint32_t lasttwo = data->__statep->__count >> 3;            \
-          *outbuf++ = (lasttwo >> 8) & 0xff;                  \
-          *outbuf++ = lasttwo & 0xff;                     \
-          data->__statep->__count = 0;                    \
+            if (__glibc_likely (outbuf + 2 <= outend))                  \
+            {                                     \
+                /* Write out the last character.  */                \
+                uint32_t lasttwo = data->__statep->__count >> 3;            \
+                *outbuf++ = (lasttwo >> 8) & 0xff;                  \
+                *outbuf++ = lasttwo & 0xff;                     \
+                data->__statep->__count = 0;                    \
+            }                                     \
+            else                                    \
+                /* We don't have enough room in the output buffer.  */        \
+                status = __GCONV_FULL_OUTPUT;                     \
         }                                     \
-      else                                    \
-        /* We don't have enough room in the output buffer.  */        \
-        status = __GCONV_FULL_OUTPUT;                     \
-    }                                     \
     }
 
 
@@ -114,129 +114,129 @@
 #define MAX_NEEDED_OUTPUT   FROM_LOOP_MAX_NEEDED_TO
 #define LOOPFCT         FROM_LOOP
 #define BODY \
-  {                                       \
-    uint32_t ch;                                  \
-                                          \
-    /* Determine whether there is a buffered character pending.  */       \
-    ch = *statep >> 3;                                \
-    if (__glibc_likely (ch == 0))                         \
-      {                                       \
-    /* No - so look at the next input byte.  */               \
-    ch = *inptr;                                  \
-                                          \
-    if (ch < 0x80)                                \
-      /* Plain ASCII character.  */                       \
-      ++inptr;                                \
-    else if ((ch >= 0xa1 && ch <= 0xfe) || ch == 0x8e || ch == 0x8f)      \
-      {                                   \
-        /* Two or three byte character.  */                   \
-        uint32_t ch2;                             \
-                                          \
-        if (__glibc_unlikely (inptr + 1 >= inend))                \
-          {                                   \
-        /* The second byte is not available.  */              \
-        result = __GCONV_INCOMPLETE_INPUT;                \
-        break;                                \
-          }                                   \
-                                          \
-        ch2 = inptr[1];                           \
-                                          \
-        /* The second byte must be >= 0xa1 and <= 0xfe.  */           \
-        if (__glibc_unlikely (ch2 < 0xa1 || ch2 > 0xfe))              \
-          {                                   \
-        /* This is an illegal character.  */                  \
-        STANDARD_FROM_LOOP_ERR_HANDLER (1);               \
-          }                                   \
-                                          \
-        if (ch == 0x8e)                           \
-          {                                   \
-        /* Half-width katakana.  */                   \
-        if (__glibc_unlikely (ch2 > 0xdf))                \
-          STANDARD_FROM_LOOP_ERR_HANDLER (1);                 \
-                                          \
-        ch = ch2 + 0xfec0;                        \
-        inptr += 2;                           \
-          }                                   \
-        else                                  \
-          {                                   \
-        const unsigned char *endp;                    \
-                                          \
-        if (ch == 0x8f)                           \
-          {                               \
-            /* JISX 0213 plane 2.  */                     \
-            uint32_t ch3;                         \
-                                          \
-            if (__glibc_unlikely (inptr + 2 >= inend))            \
-              {                               \
-            /* The third byte is not available.  */           \
-            result = __GCONV_INCOMPLETE_INPUT;            \
-            break;                            \
-              }                               \
-                                          \
-            ch3 = inptr[2];                       \
-            endp = inptr + 3;                         \
-                                          \
-            ch = jisx0213_to_ucs4 (0x200 - 0x80 + ch2, ch3 ^ 0x80);   \
-          }                               \
-        else                                  \
-          {                               \
-            /* JISX 0213 plane 1.  */                     \
-            endp = inptr + 2;                         \
-                                          \
-            ch = jisx0213_to_ucs4 (0x100 - 0x80 + ch, ch2 ^ 0x80);    \
-          }                               \
-                                          \
-        if (ch == 0)                              \
-          /* This is an illegal character.  */                \
-          STANDARD_FROM_LOOP_ERR_HANDLER (1);                 \
-                                          \
-        inptr = endp;                             \
-                                          \
-        if (ch < 0x80)                            \
-          {                               \
-            /* It's a combining character.  */                \
-            uint32_t u1 = __jisx0213_to_ucs_combining[ch - 1][0];     \
-            uint32_t u2 = __jisx0213_to_ucs_combining[ch - 1][1];     \
-                                          \
-            put32 (outptr, u1);                       \
-            outptr += 4;                          \
-                                          \
-            /* See whether we have room for two characters.  */       \
-            if (outptr + 4 <= outend)                     \
-              {                               \
-            put32 (outptr, u2);                   \
-            outptr += 4;                          \
-            continue;                         \
-              }                               \
-                                          \
-            /* Otherwise store only the first character now, and      \
-               put the second one into the queue.  */             \
-            *statep = u2 << 3;                        \
-            /* Tell the caller why we terminate the loop.  */         \
-            result = __GCONV_FULL_OUTPUT;                 \
-            break;                            \
-          }                               \
-          }                                   \
-      }                                   \
-    else                                      \
-      {                                   \
-        /* This is illegal.  */                       \
-        STANDARD_FROM_LOOP_ERR_HANDLER (1);                   \
-      }                                   \
-      }                                       \
-                                          \
-    put32 (outptr, ch);                               \
-    outptr += 4;                                  \
-  }
+    {                                       \
+        uint32_t ch;                                  \
+        \
+        /* Determine whether there is a buffered character pending.  */       \
+        ch = *statep >> 3;                                \
+        if (__glibc_likely (ch == 0))                         \
+        {                                       \
+            /* No - so look at the next input byte.  */               \
+            ch = *inptr;                                  \
+            \
+            if (ch < 0x80)                                \
+                /* Plain ASCII character.  */                       \
+                ++inptr;                                \
+            else if ((ch >= 0xa1 && ch <= 0xfe) || ch == 0x8e || ch == 0x8f)      \
+            {                                   \
+                /* Two or three byte character.  */                   \
+                uint32_t ch2;                             \
+                \
+                if (__glibc_unlikely (inptr + 1 >= inend))                \
+                {                                   \
+                    /* The second byte is not available.  */              \
+                    result = __GCONV_INCOMPLETE_INPUT;                \
+                    break;                                \
+                }                                   \
+                \
+                ch2 = inptr[1];                           \
+                \
+                /* The second byte must be >= 0xa1 and <= 0xfe.  */           \
+                if (__glibc_unlikely (ch2 < 0xa1 || ch2 > 0xfe))              \
+                {                                   \
+                    /* This is an illegal character.  */                  \
+                    STANDARD_FROM_LOOP_ERR_HANDLER (1);               \
+                }                                   \
+                \
+                if (ch == 0x8e)                           \
+                {                                   \
+                    /* Half-width katakana.  */                   \
+                    if (__glibc_unlikely (ch2 > 0xdf))                \
+                        STANDARD_FROM_LOOP_ERR_HANDLER (1);                 \
+                    \
+                    ch = ch2 + 0xfec0;                        \
+                    inptr += 2;                           \
+                }                                   \
+                else                                  \
+                {                                   \
+                    const unsigned char *endp;                    \
+                    \
+                    if (ch == 0x8f)                           \
+                    {                               \
+                        /* JISX 0213 plane 2.  */                     \
+                        uint32_t ch3;                         \
+                        \
+                        if (__glibc_unlikely (inptr + 2 >= inend))            \
+                        {                               \
+                            /* The third byte is not available.  */           \
+                            result = __GCONV_INCOMPLETE_INPUT;            \
+                            break;                            \
+                        }                               \
+                        \
+                        ch3 = inptr[2];                       \
+                        endp = inptr + 3;                         \
+                        \
+                        ch = jisx0213_to_ucs4 (0x200 - 0x80 + ch2, ch3 ^ 0x80);   \
+                    }                               \
+                    else                                  \
+                    {                               \
+                        /* JISX 0213 plane 1.  */                     \
+                        endp = inptr + 2;                         \
+                        \
+                        ch = jisx0213_to_ucs4 (0x100 - 0x80 + ch, ch2 ^ 0x80);    \
+                    }                               \
+                    \
+                    if (ch == 0)                              \
+                        /* This is an illegal character.  */                \
+                        STANDARD_FROM_LOOP_ERR_HANDLER (1);                 \
+                    \
+                    inptr = endp;                             \
+                    \
+                    if (ch < 0x80)                            \
+                    {                               \
+                        /* It's a combining character.  */                \
+                        uint32_t u1 = __jisx0213_to_ucs_combining[ch - 1][0];     \
+                        uint32_t u2 = __jisx0213_to_ucs_combining[ch - 1][1];     \
+                        \
+                        put32 (outptr, u1);                       \
+                        outptr += 4;                          \
+                        \
+                        /* See whether we have room for two characters.  */       \
+                        if (outptr + 4 <= outend)                     \
+                        {                               \
+                            put32 (outptr, u2);                   \
+                            outptr += 4;                          \
+                            continue;                         \
+                        }                               \
+                        \
+                        /* Otherwise store only the first character now, and      \
+                           put the second one into the queue.  */             \
+                        *statep = u2 << 3;                        \
+                        /* Tell the caller why we terminate the loop.  */         \
+                        result = __GCONV_FULL_OUTPUT;                 \
+                        break;                            \
+                    }                               \
+                }                                   \
+            }                                   \
+            else                                      \
+            {                                   \
+                /* This is illegal.  */                       \
+                STANDARD_FROM_LOOP_ERR_HANDLER (1);                   \
+            }                                   \
+        }                                       \
+        \
+        put32 (outptr, ch);                               \
+        outptr += 4;                                  \
+    }
 #define LOOP_NEED_FLAGS
 #define EXTRA_LOOP_DECLS    , int *statep
 #define ONEBYTE_BODY \
-  {                                       \
-    if (c < 0x80)                                 \
-      return c;                                   \
-    else                                      \
-      return WEOF;                                \
-  }
+    {                                       \
+        if (c < 0x80)                                 \
+            return c;                                   \
+        else                                      \
+            return WEOF;                                \
+    }
 #include <iconv/loop.c>
 
 
@@ -290,125 +290,125 @@ static const struct {
 #define MAX_NEEDED_OUTPUT   TO_LOOP_MAX_NEEDED_TO
 #define LOOPFCT         TO_LOOP
 #define BODY \
-  {                                       \
-    uint32_t ch = get32 (inptr);                          \
-                                          \
-    if ((*statep >> 3) != 0)                              \
-      {                                       \
-    /* Attempt to combine the last character with this one.  */       \
-    uint16_t lasttwo = *statep >> 3;                      \
-    unsigned int idx;                             \
-    unsigned int len;                             \
-                                          \
-    if (ch == 0x02e5)                             \
-      idx = COMP_TABLE_IDX_02E5, len = COMP_TABLE_LEN_02E5;           \
-    else if (ch == 0x02e9)                            \
-      idx = COMP_TABLE_IDX_02E9, len = COMP_TABLE_LEN_02E9;           \
-    else if (ch == 0x0300)                            \
-      idx = COMP_TABLE_IDX_0300, len = COMP_TABLE_LEN_0300;           \
-    else if (ch == 0x0301)                            \
-      idx = COMP_TABLE_IDX_0301, len = COMP_TABLE_LEN_0301;           \
-    else if (ch == 0x309a)                            \
-      idx = COMP_TABLE_IDX_309A, len = COMP_TABLE_LEN_309A;           \
-    else                                      \
-      goto not_combining;                             \
-                                          \
-    do                                    \
-      if (comp_table_data[idx].base == lasttwo)               \
-        break;                                \
-    while (++idx, --len > 0);                         \
-                                          \
-    if (len > 0)                                  \
-      {                                   \
-        /* Output the combined character.  */                 \
-        if (__glibc_unlikely (outptr + 1 >= outend))              \
-          {                                   \
-        result = __GCONV_FULL_OUTPUT;                     \
-        break;                                \
-          }                                   \
-        lasttwo = comp_table_data[idx].composed;                  \
-        *outptr++ = (lasttwo >> 8) & 0xff;                    \
-        *outptr++ = lasttwo & 0xff;                       \
-        *statep = 0;                              \
-        inptr += 4;                               \
-        continue;                                 \
-      }                                   \
-                                          \
-      not_combining:                                  \
-    /* Output the buffered character.  */                     \
-    if (__glibc_unlikely (outptr + 1 >= outend))                  \
-      {                                   \
-        result = __GCONV_FULL_OUTPUT;                     \
-        break;                                \
-      }                                   \
-    *outptr++ = (lasttwo >> 8) & 0xff;                    \
-    *outptr++ = lasttwo & 0xff;                       \
-    *statep = 0;                                  \
-    continue;                                 \
-      }                                       \
-                                          \
-    if (ch < 0x80)                                \
-      /* Plain ASCII character.  */                       \
-      *outptr++ = ch;                                 \
-    else if (ch >= 0xff61 && ch <= 0xff9f)                    \
-      {                                       \
-    /* Half-width katakana.  */                       \
-    if (__glibc_unlikely (outptr + 1 >= outend))                  \
-      {                                   \
-        result = __GCONV_FULL_OUTPUT;                     \
-        break;                                \
-      }                                   \
-    *outptr++ = 0x8e;                             \
-    *outptr++ = ch - 0xfec0;                          \
-      }                                       \
-    else                                      \
-      {                                       \
-    uint32_t jch = ucs4_to_jisx0213 (ch);                     \
-    if (jch == 0)                                 \
-      {                                   \
-        UNICODE_TAG_HANDLER (ch, 4);                      \
-                                          \
-        /* Illegal character.  */                         \
-        STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
-      }                                   \
-                                          \
-    if (jch & 0x0080)                             \
-      {                                   \
-        /* A possible match in comp_table_data.  We have to buffer it.  */\
-                                          \
-        /* We know it's a JISX 0213 plane 1 character.  */            \
-        assert ((jch & 0x8000) == 0);                     \
-                                          \
-        *statep = (jch | 0x8080) << 3;                    \
-        inptr += 4;                               \
-        continue;                                 \
-      }                                   \
-                                          \
-    if (jch & 0x8000)                             \
-      {                                   \
-        /* JISX 0213 plane 2.  */                         \
-        if (__glibc_unlikely (outptr + 2 >= outend))              \
-          {                                   \
-        result = __GCONV_FULL_OUTPUT;                     \
-        break;                                \
-          }                                   \
-        *outptr++ = 0x8f;                             \
-      }                                   \
-    else                                      \
-      {                                   \
-        /* JISX 0213 plane 1.  */                         \
-        if (__glibc_unlikely (outptr + 1 >= outend))              \
-          {                                   \
-        result = __GCONV_FULL_OUTPUT;                     \
-        break;                                \
-          }                                   \
-      }                                   \
-    *outptr++ = (jch >> 8) | 0x80;                        \
-    *outptr++ = (jch & 0xff) | 0x80;                      \
-      }                                       \
-                                          \
-    inptr += 4;                                   \
-  }
+    {                                       \
+        uint32_t ch = get32 (inptr);                          \
+        \
+        if ((*statep >> 3) != 0)                              \
+        {                                       \
+            /* Attempt to combine the last character with this one.  */       \
+            uint16_t lasttwo = *statep >> 3;                      \
+            unsigned int idx;                             \
+            unsigned int len;                             \
+            \
+            if (ch == 0x02e5)                             \
+                idx = COMP_TABLE_IDX_02E5, len = COMP_TABLE_LEN_02E5;           \
+            else if (ch == 0x02e9)                            \
+                idx = COMP_TABLE_IDX_02E9, len = COMP_TABLE_LEN_02E9;           \
+            else if (ch == 0x0300)                            \
+                idx = COMP_TABLE_IDX_0300, len = COMP_TABLE_LEN_0300;           \
+            else if (ch == 0x0301)                            \
+                idx = COMP_TABLE_IDX_0301, len = COMP_TABLE_LEN_0301;           \
+            else if (ch == 0x309a)                            \
+                idx = COMP_TABLE_IDX_309A, len = COMP_TABLE_LEN_309A;           \
+            else                                      \
+                goto not_combining;                             \
+            \
+            do                                    \
+                if (comp_table_data[idx].base == lasttwo)               \
+                    break;                                \
+            while (++idx, --len > 0);                         \
+            \
+            if (len > 0)                                  \
+            {                                   \
+                /* Output the combined character.  */                 \
+                if (__glibc_unlikely (outptr + 1 >= outend))              \
+                {                                   \
+                    result = __GCONV_FULL_OUTPUT;                     \
+                    break;                                \
+                }                                   \
+                lasttwo = comp_table_data[idx].composed;                  \
+                *outptr++ = (lasttwo >> 8) & 0xff;                    \
+                *outptr++ = lasttwo & 0xff;                       \
+                *statep = 0;                              \
+                inptr += 4;                               \
+                continue;                                 \
+            }                                   \
+            \
+    not_combining:                                  \
+            /* Output the buffered character.  */                     \
+            if (__glibc_unlikely (outptr + 1 >= outend))                  \
+            {                                   \
+                result = __GCONV_FULL_OUTPUT;                     \
+                break;                                \
+            }                                   \
+            *outptr++ = (lasttwo >> 8) & 0xff;                    \
+            *outptr++ = lasttwo & 0xff;                       \
+            *statep = 0;                                  \
+            continue;                                 \
+        }                                       \
+        \
+        if (ch < 0x80)                                \
+            /* Plain ASCII character.  */                       \
+            *outptr++ = ch;                                 \
+        else if (ch >= 0xff61 && ch <= 0xff9f)                    \
+        {                                       \
+            /* Half-width katakana.  */                       \
+            if (__glibc_unlikely (outptr + 1 >= outend))                  \
+            {                                   \
+                result = __GCONV_FULL_OUTPUT;                     \
+                break;                                \
+            }                                   \
+            *outptr++ = 0x8e;                             \
+            *outptr++ = ch - 0xfec0;                          \
+        }                                       \
+        else                                      \
+        {                                       \
+            uint32_t jch = ucs4_to_jisx0213 (ch);                     \
+            if (jch == 0)                                 \
+            {                                   \
+                UNICODE_TAG_HANDLER (ch, 4);                      \
+                \
+                /* Illegal character.  */                         \
+                STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
+            }                                   \
+            \
+            if (jch & 0x0080)                             \
+            {                                   \
+                /* A possible match in comp_table_data.  We have to buffer it.  */\
+                \
+                /* We know it's a JISX 0213 plane 1 character.  */            \
+                assert ((jch & 0x8000) == 0);                     \
+                \
+                *statep = (jch | 0x8080) << 3;                    \
+                inptr += 4;                               \
+                continue;                                 \
+            }                                   \
+            \
+            if (jch & 0x8000)                             \
+            {                                   \
+                /* JISX 0213 plane 2.  */                         \
+                if (__glibc_unlikely (outptr + 2 >= outend))              \
+                {                                   \
+                    result = __GCONV_FULL_OUTPUT;                     \
+                    break;                                \
+                }                                   \
+                *outptr++ = 0x8f;                             \
+            }                                   \
+            else                                      \
+            {                                   \
+                /* JISX 0213 plane 1.  */                         \
+                if (__glibc_unlikely (outptr + 1 >= outend))              \
+                {                                   \
+                    result = __GCONV_FULL_OUTPUT;                     \
+                    break;                                \
+                }                                   \
+            }                                   \
+            *outptr++ = (jch >> 8) | 0x80;                        \
+            *outptr++ = (jch & 0xff) | 0x80;                      \
+        }                                       \
+        \
+        inptr += 4;                                   \
+    }
 #define LOOP_NEED_FLAGS
 #define EXTRA_LOOP_DECLS    , int *statep
 #include <iconv/loop.c>

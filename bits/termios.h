@@ -298,7 +298,7 @@ struct termios {
 };
 
 #define _IOT_termios /* Hurd ioctl type field.  */ \
-  _IOT (_IOTS (tcflag_t), 4, _IOTS (cc_t), NCCS, _IOTS (speed_t), 2)
+    _IOT (_IOTS (tcflag_t), 4, _IOTS (cc_t), NCCS, _IOTS (speed_t), 2)
 
 /* Values for the OPTIONAL_ACTIONS argument to `tcsetattr'.  */
 #define TCSANOW     0   /* Change immediately.  */

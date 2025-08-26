@@ -48,7 +48,7 @@ static int test_lutimes_helper(const char *testfile, int fd, const char *testlin
 }
 
 #define TEST_CALL(fname, fd, lname, v1, v2) \
-  test_lutimes_helper (fname, fd, lname, (struct timeval[]) { { v1, 0 }, \
-                                                              { v2, 0 } })
+    test_lutimes_helper (fname, fd, lname, (struct timeval[]) { { v1, 0 }, \
+        { v2, 0 } })
 
 #include "tst-utimensat-skeleton.c"

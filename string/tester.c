@@ -144,16 +144,16 @@ static void test_strcmp(void)
 }
 
 #define SIMPLE_COPY(fn, n, str, ntest) \
-  do {                                        \
-    int __n;                                      \
-    char *cp;                                     \
-    for (__n = 0; __n < (int) sizeof (one); ++__n)                \
-      one[__n] = 'Z';                                 \
-    fn (one, str);                                \
-    for (cp = one, __n = 0; __n < n; ++__n, ++cp)                 \
-      check (*cp == '0' + (n % 10), ntest);                   \
-    check (*cp == '\0', ntest);                           \
-  } while (0)
+    do {                                        \
+        int __n;                                      \
+        char *cp;                                     \
+        for (__n = 0; __n < (int) sizeof (one); ++__n)                \
+            one[__n] = 'Z';                                 \
+        fn (one, str);                                \
+        for (cp = one, __n = 0; __n < n; ++__n, ++cp)                 \
+            check (*cp == '0' + (n % 10), ntest);                   \
+        check (*cp == '\0', ntest);                           \
+    } while (0)
 
 static void test_strcpy(void)
 {

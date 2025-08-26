@@ -32,34 +32,34 @@ struct La_x32_retval;
 
 #define ARCH_PLTENTER_MEMBERS                       \
     Elf32_Addr (*i86_gnu_pltenter) (Elf32_Sym *, unsigned int, uintptr_t *, \
-                    uintptr_t *, struct La_i86_regs *,  \
-                    unsigned int *, const char *name,   \
-                    long int *framesizep);      \
+                                    uintptr_t *, struct La_i86_regs *,  \
+                                    unsigned int *, const char *name,   \
+                                    long int *framesizep);      \
     Elf64_Addr (*x86_64_gnu_pltenter) (Elf64_Sym *, unsigned int,   \
-                       uintptr_t *,         \
-                       uintptr_t *, struct La_x86_64_regs *, \
-                       unsigned int *, const char *name, \
-                       long int *framesizep);       \
+                                       uintptr_t *,         \
+                                       uintptr_t *, struct La_x86_64_regs *, \
+                                       unsigned int *, const char *name, \
+                                       long int *framesizep);       \
     Elf32_Addr (*x32_gnu_pltenter) (Elf32_Sym *, unsigned int, uintptr_t *, \
-                    uintptr_t *, struct La_x32_regs *,  \
-                    unsigned int *, const char *name,   \
-                    long int *framesizep)
+                                    uintptr_t *, struct La_x32_regs *,  \
+                                    unsigned int *, const char *name,   \
+                                    long int *framesizep)
 
 #define ARCH_PLTEXIT_MEMBERS                        \
     unsigned int (*i86_gnu_pltexit) (Elf32_Sym *, unsigned int, uintptr_t *, \
-                     uintptr_t *, const struct La_i86_regs *, \
-                     struct La_i86_retval *, const char *); \
+                                     uintptr_t *, const struct La_i86_regs *, \
+                                     struct La_i86_retval *, const char *); \
     unsigned int (*x86_64_gnu_pltexit) (Elf64_Sym *, unsigned int,  \
-                    uintptr_t *,            \
-                    uintptr_t *,            \
-                    const struct La_x86_64_regs *,  \
-                    struct La_x86_64_retval *,  \
-                    const char *);          \
+                                        uintptr_t *,            \
+                                        uintptr_t *,            \
+                                        const struct La_x86_64_regs *,  \
+                                        struct La_x86_64_retval *,  \
+                                        const char *);          \
     unsigned int (*x32_gnu_pltexit) (Elf32_Sym *, unsigned int, uintptr_t *, \
-                     uintptr_t *,           \
-                     const struct La_x32_regs *,    \
-                     struct La_x86_64_retval *,     \
-                     const char *)
+                                     uintptr_t *,           \
+                                     const struct La_x32_regs *,    \
+                                     struct La_x86_64_retval *,     \
+                                     const char *)
 
 #include_next <ldsodefs.h>
 

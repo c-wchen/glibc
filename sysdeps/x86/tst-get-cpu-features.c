@@ -22,16 +22,16 @@
 #include <support/check.h>
 
 #define CHECK_CPU_FEATURE_PRESENT(name)     \
-  {                     \
-    if (CPU_FEATURE_PRESENT (name))     \
-      printf ("  " #name "\n");         \
-  }
+    {                     \
+        if (CPU_FEATURE_PRESENT (name))     \
+            printf ("  " #name "\n");         \
+    }
 
 #define CHECK_CPU_FEATURE_ACTIVE(name)  \
-  {                     \
-    if (CPU_FEATURE_ACTIVE(name))       \
-      printf ("  " #name "\n");         \
-  }
+    {                     \
+        if (CPU_FEATURE_ACTIVE(name))       \
+            printf ("  " #name "\n");         \
+    }
 
 static int do_test(void)
 {

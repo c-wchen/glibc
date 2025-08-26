@@ -21,15 +21,15 @@
 #include <libio/libioP.h>
 
 #define VA(call)                            \
-{                                   \
-  va_list ap;                               \
-  va_start (ap, format);                        \
-  IEEE128_CALL (call);                          \
-  va_end (ap);                              \
-}
+    {                                   \
+        va_list ap;                               \
+        va_start (ap, format);                        \
+        IEEE128_CALL (call);                          \
+        va_end (ap);                              \
+    }
 
 #define IEEE128_ALIAS(name) \
-  strong_alias (___ieee128_##name, __##name##ieee128)
+    strong_alias (___ieee128_##name, __##name##ieee128)
 
 #define IEEE128_DECL(name) ___ieee128_##name
 #define IEEE128_CALL(name) ___ieee128_##name

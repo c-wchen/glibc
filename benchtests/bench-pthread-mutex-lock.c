@@ -21,8 +21,8 @@
 #define LOCK_INIT(lock, attr) pthread_mutex_init (lock, attr)
 #define LOCK_DESTROY(lock) pthread_mutex_destroy (lock)
 #define LOCK_ATTR_INIT(attr)                                                  \
-  pthread_mutexattr_init (attr);                                              \
-  pthread_mutexattr_settype (attr, PTHREAD_MUTEX_ADAPTIVE_NP);
+    pthread_mutexattr_init (attr);                                              \
+    pthread_mutexattr_settype (attr, PTHREAD_MUTEX_ADAPTIVE_NP);
 
 #define bench_lock_t pthread_mutex_t
 #define bench_lock_attr_t pthread_mutexattr_t

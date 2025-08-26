@@ -288,48 +288,48 @@ static void one_check_b(const CHAR *s, int expected, char expected_c)
 }
 
 #define CHECK_SCNB(TYPE, MACRO, S, EXPECTED, EXPECTED_C)        \
-  do                                    \
+    do                                    \
     {                                   \
-      int ret;                              \
-      FILE *fp;                             \
-      TYPE ret_t;                           \
-      char ret_c;                           \
-      fp = xfopen (INFILE, "w");                    \
-      ret = FNX (fput, s) (S, fp);                  \
-      TEST_VERIFY_EXIT (0 <= ret);                  \
-      xfclose (fp);                         \
-      ret = FNX (s, scanf) (S, L_("%") MACRO " %c", &ret_t, &ret_c);    \
-      TEST_COMPARE (ret, 2);                        \
-      TEST_COMPARE (ret_t, EXPECTED);                   \
-      TEST_COMPARE (ret_c, EXPECTED_C);                 \
-      fp = xfopen (INFILE, "r");                    \
-      ret = FNX (f, scanf) (fp, L_("%") MACRO " %c", &ret_t, &ret_c);   \
-      TEST_COMPARE (ret, 2);                        \
-      TEST_COMPARE (ret_t, EXPECTED);                   \
-      TEST_COMPARE (ret_c, EXPECTED_C);                 \
-      xfclose (fp);                         \
-      fp = xfreopen (INFILE, "r", stdin);               \
-      ret = FNX (, scanf) (L_("%") MACRO " %c", &ret_t, &ret_c);    \
-      TEST_COMPARE (ret, 2);                        \
-      TEST_COMPARE (ret_t, EXPECTED);                   \
-      TEST_COMPARE (ret_c, EXPECTED_C);                 \
-      ret = wrap_vsscanf (S, L_("%") MACRO " %c", &ret_t, &ret_c);  \
-      TEST_COMPARE (ret, 2);                        \
-      TEST_COMPARE (ret_t, EXPECTED);                   \
-      TEST_COMPARE (ret_c, EXPECTED_C);                 \
-      fp = xfopen (INFILE, "r");                    \
-      ret = wrap_vfscanf (fp, L_("%") MACRO " %c", &ret_t, &ret_c); \
-      TEST_COMPARE (ret, 2);                        \
-      TEST_COMPARE (ret_t, EXPECTED);                   \
-      TEST_COMPARE (ret_c, EXPECTED_C);                 \
-      xfclose (fp);                         \
-      fp = xfreopen (INFILE, "r", stdin);               \
-      ret = wrap_vscanf (L_("%") MACRO " %c", &ret_t, &ret_c);      \
-      TEST_COMPARE (ret, 2);                        \
-      TEST_COMPARE (ret_t, EXPECTED);                   \
-      TEST_COMPARE (ret_c, EXPECTED_C);                 \
+        int ret;                              \
+        FILE *fp;                             \
+        TYPE ret_t;                           \
+        char ret_c;                           \
+        fp = xfopen (INFILE, "w");                    \
+        ret = FNX (fput, s) (S, fp);                  \
+        TEST_VERIFY_EXIT (0 <= ret);                  \
+        xfclose (fp);                         \
+        ret = FNX (s, scanf) (S, L_("%") MACRO " %c", &ret_t, &ret_c);    \
+        TEST_COMPARE (ret, 2);                        \
+        TEST_COMPARE (ret_t, EXPECTED);                   \
+        TEST_COMPARE (ret_c, EXPECTED_C);                 \
+        fp = xfopen (INFILE, "r");                    \
+        ret = FNX (f, scanf) (fp, L_("%") MACRO " %c", &ret_t, &ret_c);   \
+        TEST_COMPARE (ret, 2);                        \
+        TEST_COMPARE (ret_t, EXPECTED);                   \
+        TEST_COMPARE (ret_c, EXPECTED_C);                 \
+        xfclose (fp);                         \
+        fp = xfreopen (INFILE, "r", stdin);               \
+        ret = FNX (, scanf) (L_("%") MACRO " %c", &ret_t, &ret_c);    \
+        TEST_COMPARE (ret, 2);                        \
+        TEST_COMPARE (ret_t, EXPECTED);                   \
+        TEST_COMPARE (ret_c, EXPECTED_C);                 \
+        ret = wrap_vsscanf (S, L_("%") MACRO " %c", &ret_t, &ret_c);  \
+        TEST_COMPARE (ret, 2);                        \
+        TEST_COMPARE (ret_t, EXPECTED);                   \
+        TEST_COMPARE (ret_c, EXPECTED_C);                 \
+        fp = xfopen (INFILE, "r");                    \
+        ret = wrap_vfscanf (fp, L_("%") MACRO " %c", &ret_t, &ret_c); \
+        TEST_COMPARE (ret, 2);                        \
+        TEST_COMPARE (ret_t, EXPECTED);                   \
+        TEST_COMPARE (ret_c, EXPECTED_C);                 \
+        xfclose (fp);                         \
+        fp = xfreopen (INFILE, "r", stdin);               \
+        ret = wrap_vscanf (L_("%") MACRO " %c", &ret_t, &ret_c);      \
+        TEST_COMPARE (ret, 2);                        \
+        TEST_COMPARE (ret_t, EXPECTED);                   \
+        TEST_COMPARE (ret_c, EXPECTED_C);                 \
     }                                   \
-  while (0)
+    while (0)
 
 static void one_check_scnb(const CHAR *s, int expected, char expected_c)
 {

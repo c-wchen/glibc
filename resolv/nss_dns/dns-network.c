@@ -102,20 +102,19 @@ static enum nss_status getanswer_r(const querybuf *answer, int anslen,
 
 enum nss_status _nss_dns_getnetbyname_r(const char *name, struct netent *result,
                                         char *buffer, size_t buflen, int *errnop,
-                                        int *herrnop) {
+                                        int *herrnop)
+{
     /* Return entry for network with NAME.  */
-    union
-    {
-        querybuf *buf;
-        u_char *ptr;
-    } net_buffer;
+    union {
+            querybuf *buf;
+            u_char *ptr;
+        } net_buffer;
     querybuf *orig_net_buffer;
     int anslen;
     enum nss_status status;
 
     struct resolv_context *ctx = __resolv_context_get();
-    if (ctx == NULL)
-    {
+    if (ctx == NULL) {
         *errnop = errno;
         *herrnop = NETDB_INTERNAL;
         return NSS_STATUS_UNAVAIL;
@@ -124,10 +123,9 @@ enum nss_status _nss_dns_getnetbyname_r(const char *name, struct netent *result,
     net_buffer.buf = orig_net_buffer = (querybuf *) alloca(1024);
 
     anslen = __res_context_search
-    (ctx, name, C_IN, T_PTR, net_buffer.buf->buf,
-     1024, &net_buffer.ptr, NULL, NULL, NULL, NULL);
-    if (anslen < 0)
-    {
+             (ctx, name, C_IN, T_PTR, net_buffer.buf->buf,
+              1024, &net_buffer.ptr, NULL, NULL, NULL, NULL);
+    if (anslen < 0) {
         /* Nothing found.  */
         *errnop = errno;
         if (net_buffer.buf != orig_net_buffer) {
@@ -142,8 +140,7 @@ enum nss_status _nss_dns_getnetbyname_r(const char *name, struct netent *result,
 
     status = getanswer_r(net_buffer.buf, anslen, result, buffer, buflen,
                          errnop, herrnop, BYNAME);
-    if (net_buffer.buf != orig_net_buffer)
-    {
+    if (net_buffer.buf != orig_net_buffer) {
         free(net_buffer.buf);
     }
     __resolv_context_put(ctx);

@@ -52,16 +52,16 @@ int __open_catalog(const char *cat_name, const char *nlspath, const char *env_va
     } else {
         const char *run_nlspath = nlspath;
 #define ENOUGH(n)                                 \
-  if (__glibc_unlikely (bufact + (n) >= bufmax))                  \
+    if (__glibc_unlikely (bufact + (n) >= bufmax))                  \
     {                                         \
-      char *old_buf = buf;                            \
-      bufmax += (bufmax < 256 + (n)) ? 256 + (n) : bufmax;            \
-      buf = realloc (buf, bufmax);                        \
-      if (__glibc_unlikely (buf == NULL))                     \
-    {                                     \
-      free (old_buf);                             \
-      return -1;                                  \
-    }                                     \
+        char *old_buf = buf;                            \
+        bufmax += (bufmax < 256 + (n)) ? 256 + (n) : bufmax;            \
+        buf = realloc (buf, bufmax);                        \
+        if (__glibc_unlikely (buf == NULL))                     \
+        {                                     \
+            free (old_buf);                             \
+            return -1;                                  \
+        }                                     \
     }
 
         /* The RUN_NLSPATH variable contains a colon separated list of

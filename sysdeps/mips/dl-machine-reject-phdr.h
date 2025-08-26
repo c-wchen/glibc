@@ -30,11 +30,11 @@
 
 /* Reject an object with a debug message.  */
 #define REJECT(str, args...)                              \
-  {                                       \
-    if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_LIBS))           \
-      _dl_debug_printf (str, ##args);                         \
-    return true;                                  \
-  }
+    {                                       \
+        if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_LIBS))           \
+            _dl_debug_printf (str, ##args);                         \
+        return true;                                  \
+    }
 
 /* Search the program headers for the ABI Flags.  */
 

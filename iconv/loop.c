@@ -115,74 +115,74 @@
 /* To make it easier for the writers of the modules, we define a macro
    to test whether we have to ignore errors.  */
 #define ignore_errors_p() \
-  (irreversible != NULL && (flags & __GCONV_IGNORE_ERRORS))
+    (irreversible != NULL && (flags & __GCONV_IGNORE_ERRORS))
 
 
 /* Error handling for the FROM_LOOP direction, with ignoring of errors.
    Note that we cannot use the do while (0) trick since `break' and
    `continue' must reach certain points.  */
 #define STANDARD_FROM_LOOP_ERR_HANDLER(Incr) \
-  {                                       \
-    result = __gconv_mark_illegal_input (step_data);                  \
-    if (! ignore_errors_p ())                             \
-      break;                                      \
-                                          \
-    /* We ignore the invalid input byte sequence.  */                 \
-    inptr += (Incr);                                  \
-    ++*irreversible;                                  \
-    /* But we keep result == __GCONV_ILLEGAL_INPUT, because of the constraint \
-       that "iconv -c" must give the same exitcode as "iconv".  */        \
-    continue;                                     \
-  }
+    {                                       \
+        result = __gconv_mark_illegal_input (step_data);                  \
+        if (! ignore_errors_p ())                             \
+            break;                                      \
+        \
+        /* We ignore the invalid input byte sequence.  */                 \
+        inptr += (Incr);                                  \
+        ++*irreversible;                                  \
+        /* But we keep result == __GCONV_ILLEGAL_INPUT, because of the constraint \
+           that "iconv -c" must give the same exitcode as "iconv".  */        \
+        continue;                                     \
+    }
 
 /* Error handling for the TO_LOOP direction, with use of transliteration/
    transcription functions and ignoring of errors.  Note that we cannot use
    the do while (0) trick since `break' and `continue' must reach certain
    points.  */
 #define STANDARD_TO_LOOP_ERR_HANDLER(Incr) \
-  {                                       \
-    if (irreversible == NULL)                             \
-      {                                       \
-    /* This means we are in call from __gconv_transliterate.  In this     \
-       case we are not doing any error recovery ourselves.  */        \
-    result = __gconv_mark_illegal_input (step_data);              \
-    break;                                    \
-      }                                       \
-                                          \
-    /* If needed, flush any conversion state, so that __gconv_transliterate   \
-       starts with current shift state.  */                   \
-    UPDATE_PARAMS;                                \
-                                          \
-    /* First try the transliteration methods.  */                 \
-    if ((step_data->__flags & __GCONV_TRANSLIT) != 0)                 \
-      result = __gconv_transliterate                          \
-    (step, step_data, *inptrp,                        \
-     &inptr, inend, &outptr, irreversible);               \
-    else                                      \
-      result = __gconv_mark_illegal_input (step_data);                \
-                                          \
-    REINIT_PARAMS;                                \
-                                          \
-    /* If any of them recognized the input continue with the loop.  */        \
-    if (result != __GCONV_ILLEGAL_INPUT)                      \
-      {                                       \
-    if (__glibc_unlikely (result == __GCONV_FULL_OUTPUT))             \
-      break;                                  \
-                                          \
-    continue;                                 \
-      }                                       \
-                                          \
-    /* Next see whether we have to ignore the error.  If not, stop.  */       \
-    if (! ignore_errors_p ())                             \
-      break;                                      \
-                                          \
-    /* When we come here it means we ignore the character.  */            \
-    ++*irreversible;                                  \
-    inptr += Incr;                                \
-    /* But we keep result == __GCONV_ILLEGAL_INPUT, because of the constraint \
-       that "iconv -c" must give the same exitcode as "iconv".  */        \
-    continue;                                     \
-  }
+    {                                       \
+        if (irreversible == NULL)                             \
+        {                                       \
+            /* This means we are in call from __gconv_transliterate.  In this     \
+               case we are not doing any error recovery ourselves.  */        \
+            result = __gconv_mark_illegal_input (step_data);              \
+            break;                                    \
+        }                                       \
+        \
+        /* If needed, flush any conversion state, so that __gconv_transliterate   \
+           starts with current shift state.  */                   \
+        UPDATE_PARAMS;                                \
+        \
+        /* First try the transliteration methods.  */                 \
+        if ((step_data->__flags & __GCONV_TRANSLIT) != 0)                 \
+            result = __gconv_transliterate                          \
+                     (step, step_data, *inptrp,                        \
+                      &inptr, inend, &outptr, irreversible);               \
+        else                                      \
+            result = __gconv_mark_illegal_input (step_data);                \
+        \
+        REINIT_PARAMS;                                \
+        \
+        /* If any of them recognized the input continue with the loop.  */        \
+        if (result != __GCONV_ILLEGAL_INPUT)                      \
+        {                                       \
+            if (__glibc_unlikely (result == __GCONV_FULL_OUTPUT))             \
+                break;                                  \
+            \
+            continue;                                 \
+        }                                       \
+        \
+        /* Next see whether we have to ignore the error.  If not, stop.  */       \
+        if (! ignore_errors_p ())                             \
+            break;                                      \
+        \
+        /* When we come here it means we ignore the character.  */            \
+        ++*irreversible;                                  \
+        inptr += Incr;                                \
+        /* But we keep result == __GCONV_ILLEGAL_INPUT, because of the constraint \
+           that "iconv -c" must give the same exitcode as "iconv".  */        \
+        continue;                                     \
+    }
 
 
 /* With GCC 7 when compiling with -Os for 32-bit s390 the compiler
@@ -200,14 +200,14 @@ DIAG_IGNORE_Os_NEEDS_COMMENT(7, "-Wmaybe-uninitialized");
     operation, then they should be ignored."  This macro is usually
    called right before  STANDARD_TO_LOOP_ERR_HANDLER (Incr).  */
 #define UNICODE_TAG_HANDLER(Character, Incr) \
-  {                                       \
-    /* TAG characters are those in the range U+E0000..U+E007F.  */        \
-    if (((Character) >> 7) == (0xe0000 >> 7))                     \
-      {                                       \
-    inptr += Incr;                                \
-    continue;                                 \
-      }                                       \
-  }
+    {                                       \
+        /* TAG characters are those in the range U+E0000..U+E007F.  */        \
+        if (((Character) >> 7) == (0xe0000 >> 7))                     \
+        {                                       \
+            inptr += Incr;                                \
+            continue;                                 \
+        }                                       \
+    }
 DIAG_POP_NEEDS_COMMENT;
 
 

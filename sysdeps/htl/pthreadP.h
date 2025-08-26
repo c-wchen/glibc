@@ -232,8 +232,8 @@ weak_extern(__pthread_exit)
 #endif
 
 #define ASSERT_TYPE_SIZE(type, size)                    \
-  _Static_assert (sizeof (type) == size,                \
-          "sizeof (" #type ") != " #size)
+    _Static_assert (sizeof (type) == size,                \
+                    "sizeof (" #type ") != " #size)
 
 /* Special cleanup macros which register cleanup both using
    __pthread_cleanup_{push,pop} and using cleanup attribute.  This is needed

@@ -339,8 +339,8 @@ struct f_owner_ex {
 /* SYNC_FILE_RANGE_WRITE_AND_WAIT ensures all pages in the range are
    written to disk before returning.  */
 # define SYNC_FILE_RANGE_WRITE_AND_WAIT (SYNC_FILE_RANGE_WRITE      \
-                     | SYNC_FILE_RANGE_WAIT_BEFORE  \
-                     | SYNC_FILE_RANGE_WAIT_AFTER)
+        | SYNC_FILE_RANGE_WAIT_BEFORE  \
+        | SYNC_FILE_RANGE_WAIT_AFTER)
 
 /* Flags for SPLICE and VMSPLICE.  */
 # define SPLICE_F_MOVE      1   /* Move pages instead of copying.  */

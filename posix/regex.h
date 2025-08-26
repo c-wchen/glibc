@@ -218,35 +218,35 @@ extern reg_syntax_t re_syntax_options;
 # define RE_SYNTAX_EMACS 0
 
 # define RE_SYNTAX_AWK                          \
-  (RE_BACKSLASH_ESCAPE_IN_LISTS   | RE_DOT_NOT_NULL         \
-   | RE_NO_BK_PARENS              | RE_NO_BK_REFS           \
-   | RE_NO_BK_VBAR                | RE_NO_EMPTY_RANGES          \
-   | RE_DOT_NEWLINE       | RE_CONTEXT_INDEP_ANCHORS        \
-   | RE_CHAR_CLASSES                            \
-   | RE_UNMATCHED_RIGHT_PAREN_ORD | RE_NO_GNU_OPS)
+    (RE_BACKSLASH_ESCAPE_IN_LISTS   | RE_DOT_NOT_NULL         \
+     | RE_NO_BK_PARENS              | RE_NO_BK_REFS           \
+     | RE_NO_BK_VBAR                | RE_NO_EMPTY_RANGES          \
+     | RE_DOT_NEWLINE       | RE_CONTEXT_INDEP_ANCHORS        \
+     | RE_CHAR_CLASSES                            \
+     | RE_UNMATCHED_RIGHT_PAREN_ORD | RE_NO_GNU_OPS)
 
 # define RE_SYNTAX_GNU_AWK                      \
-  ((RE_SYNTAX_POSIX_EXTENDED | RE_BACKSLASH_ESCAPE_IN_LISTS     \
-    | RE_INVALID_INTERVAL_ORD)                      \
-   & ~(RE_DOT_NOT_NULL | RE_CONTEXT_INDEP_OPS               \
-      | RE_CONTEXT_INVALID_OPS ))
+    ((RE_SYNTAX_POSIX_EXTENDED | RE_BACKSLASH_ESCAPE_IN_LISTS     \
+      | RE_INVALID_INTERVAL_ORD)                      \
+     & ~(RE_DOT_NOT_NULL | RE_CONTEXT_INDEP_OPS               \
+         | RE_CONTEXT_INVALID_OPS ))
 
 # define RE_SYNTAX_POSIX_AWK                        \
-  (RE_SYNTAX_POSIX_EXTENDED | RE_BACKSLASH_ESCAPE_IN_LISTS      \
-   | RE_INTERVALS       | RE_NO_GNU_OPS             \
-   | RE_INVALID_INTERVAL_ORD)
+    (RE_SYNTAX_POSIX_EXTENDED | RE_BACKSLASH_ESCAPE_IN_LISTS      \
+     | RE_INTERVALS       | RE_NO_GNU_OPS             \
+     | RE_INVALID_INTERVAL_ORD)
 
 # define RE_SYNTAX_GREP                         \
-  ((RE_SYNTAX_POSIX_BASIC | RE_NEWLINE_ALT)             \
-   & ~(RE_CONTEXT_INVALID_DUP | RE_DOT_NOT_NULL))
+    ((RE_SYNTAX_POSIX_BASIC | RE_NEWLINE_ALT)             \
+     & ~(RE_CONTEXT_INVALID_DUP | RE_DOT_NOT_NULL))
 
 # define RE_SYNTAX_EGREP                        \
-  ((RE_SYNTAX_POSIX_EXTENDED | RE_INVALID_INTERVAL_ORD | RE_NEWLINE_ALT) \
-   & ~(RE_CONTEXT_INVALID_OPS | RE_DOT_NOT_NULL))
+    ((RE_SYNTAX_POSIX_EXTENDED | RE_INVALID_INTERVAL_ORD | RE_NEWLINE_ALT) \
+     & ~(RE_CONTEXT_INVALID_OPS | RE_DOT_NOT_NULL))
 
 /* POSIX grep -E behavior is no longer incompatible with GNU.  */
 # define RE_SYNTAX_POSIX_EGREP                      \
-  RE_SYNTAX_EGREP
+    RE_SYNTAX_EGREP
 
 /* P1003.2/D11.2, section 4.20.7.1, lines 5078ff.  */
 # define RE_SYNTAX_ED RE_SYNTAX_POSIX_BASIC
@@ -255,31 +255,31 @@ extern reg_syntax_t re_syntax_options;
 
 /* Syntax bits common to both basic and extended POSIX regex syntax.  */
 # define _RE_SYNTAX_POSIX_COMMON                    \
-  (RE_CHAR_CLASSES | RE_DOT_NEWLINE      | RE_DOT_NOT_NULL      \
-   | RE_INTERVALS  | RE_NO_EMPTY_RANGES)
+    (RE_CHAR_CLASSES | RE_DOT_NEWLINE      | RE_DOT_NOT_NULL      \
+     | RE_INTERVALS  | RE_NO_EMPTY_RANGES)
 
 # define RE_SYNTAX_POSIX_BASIC                      \
-  (_RE_SYNTAX_POSIX_COMMON | RE_BK_PLUS_QM | RE_CONTEXT_INVALID_DUP)
+    (_RE_SYNTAX_POSIX_COMMON | RE_BK_PLUS_QM | RE_CONTEXT_INVALID_DUP)
 
 /* Differs from ..._POSIX_BASIC only in that RE_BK_PLUS_QM becomes
    RE_LIMITED_OPS, i.e., \? \+ \| are not recognized.  Actually, this
    isn't minimal, since other operators, such as \`, aren't disabled.  */
 # define RE_SYNTAX_POSIX_MINIMAL_BASIC                  \
-  (_RE_SYNTAX_POSIX_COMMON | RE_LIMITED_OPS)
+    (_RE_SYNTAX_POSIX_COMMON | RE_LIMITED_OPS)
 
 # define RE_SYNTAX_POSIX_EXTENDED                   \
-  (_RE_SYNTAX_POSIX_COMMON  | RE_CONTEXT_INDEP_ANCHORS          \
-   | RE_CONTEXT_INDEP_OPS   | RE_NO_BK_BRACES               \
-   | RE_NO_BK_PARENS        | RE_NO_BK_VBAR             \
-   | RE_CONTEXT_INVALID_OPS | RE_UNMATCHED_RIGHT_PAREN_ORD)
+    (_RE_SYNTAX_POSIX_COMMON  | RE_CONTEXT_INDEP_ANCHORS          \
+     | RE_CONTEXT_INDEP_OPS   | RE_NO_BK_BRACES               \
+     | RE_NO_BK_PARENS        | RE_NO_BK_VBAR             \
+     | RE_CONTEXT_INVALID_OPS | RE_UNMATCHED_RIGHT_PAREN_ORD)
 
 /* Differs from ..._POSIX_EXTENDED in that RE_CONTEXT_INDEP_OPS is
    removed and RE_NO_BK_REFS is added.  */
 # define RE_SYNTAX_POSIX_MINIMAL_EXTENDED               \
-  (_RE_SYNTAX_POSIX_COMMON  | RE_CONTEXT_INDEP_ANCHORS          \
-   | RE_CONTEXT_INVALID_OPS | RE_NO_BK_BRACES               \
-   | RE_NO_BK_PARENS        | RE_NO_BK_REFS             \
-   | RE_NO_BK_VBAR      | RE_UNMATCHED_RIGHT_PAREN_ORD)
+    (_RE_SYNTAX_POSIX_COMMON  | RE_CONTEXT_INDEP_ANCHORS          \
+     | RE_CONTEXT_INVALID_OPS | RE_NO_BK_BRACES               \
+     | RE_NO_BK_PARENS        | RE_NO_BK_REFS             \
+     | RE_NO_BK_VBAR      | RE_UNMATCHED_RIGHT_PAREN_ORD)
 /* [[[end syntaxes]]] */
 
 /* Maximum number of duplicates an interval can allow.  POSIX-conforming

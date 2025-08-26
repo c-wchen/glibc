@@ -282,9 +282,9 @@ static bool res_vinit_1(FILE *fp, struct resolv_conf_parser *parser)
     }
 
 #define MATCH(line, name)                       \
-  (!strncmp ((line), name, sizeof (name) - 1)     \
-   && ((line)[sizeof (name) - 1] == ' '           \
-       || (line)[sizeof (name) - 1] == '\t'))
+    (!strncmp ((line), name, sizeof (name) - 1)     \
+     && ((line)[sizeof (name) - 1] == ' '           \
+         || (line)[sizeof (name) - 1] == '\t'))
 
     if (fp != NULL) {
         /* No threads use this stream.  */

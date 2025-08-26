@@ -4641,192 +4641,192 @@ static const unsigned char from_ucs4_extra[229][2] = {
 #define MIN_NEEDED_OUTPUT   MIN_NEEDED_TO
 #define LOOPFCT         FROM_LOOP
 #define BODY \
-  {                                       \
-    uint32_t ch = (uint32_t)inptr[0] & 0xff;                      \
-                                          \
-    if (ch < 0x8e || (ch >= 0x90 && ch <= 0x9f))                  \
-      ++inptr;                                    \
-    else if (ch == 0xff)                              \
-      {                                       \
-    /* This is illegal.  */                           \
-    if (! ignore_errors_p ())                         \
-      {                                   \
-        result = __gconv_mark_illegal_input (step_data);              \
-        break;                                \
-      }                                   \
-                                          \
-    ++inptr;                                  \
-    ++*irreversible;                              \
-    continue;                                 \
-      }                                       \
-    else                                      \
-      {                                       \
-    /* Two or more byte character.  First test whether the next       \
-       character is also available.  */                   \
-    unsigned char ch2;                            \
-                                          \
-    if (__glibc_unlikely (inptr + 1 >= inend))                \
-      {                                   \
-        /* The second character is not available.  Store the          \
-           intermediate result.  */                       \
-        result = __GCONV_INCOMPLETE_INPUT;                    \
-        break;                                \
-      }                                   \
-                                          \
-    ch2 = (unsigned char)inptr[1];                        \
-                                          \
-    /* All second bytes of a multibyte character must be >= 0xa1. */      \
-    if (__glibc_unlikely (ch2 < 0xa1))                    \
-      {                                   \
-        /* This is an illegal character.  */                  \
-        if (! ignore_errors_p ())                         \
-          {                                   \
-        result = __gconv_mark_illegal_input (step_data);          \
-        break;                                \
-          }                                   \
-                                          \
-        ++inptr;                                  \
-        ++*irreversible;                              \
-        continue;                                 \
-      }                                   \
-                                          \
-    if (__builtin_expect(ch == 0x8e, 0))                      \
-      {                                   \
-        /* This is code set 2: half-width katakana.  */           \
-        ch = jisx0201_to_ucs4 (ch2);                      \
-        /*if (__builtin_expect (ch, 0) == __UNKNOWN_10646_CHAR)*/         \
-        if (__glibc_unlikely (ch == __UNKNOWN_10646_CHAR))            \
-          {                                   \
-        /* Illegal character.  */                     \
-        if (! ignore_errors_p ())                     \
-          {                               \
-            /* This is an illegal character.  */              \
-            result = __gconv_mark_illegal_input (step_data);          \
-            break;                            \
-          }                               \
-          }                                   \
-                                          \
-        inptr += 2;                               \
-      }                                   \
-    else                                      \
-      {                                   \
-        const unsigned char *endp = inptr;                    \
-        int mblen = 1;                            \
-                                          \
-        if (__builtin_expect(ch == 0x8f, 0))                  \
-          {                                   \
-        if (inend - inptr < 3)                        \
-          ch = 0;                             \
-        else                                  \
-          {                               \
-            unsigned char ch3 = (unsigned char)inptr[2];          \
-            mblen = 3;                            \
-                                          \
-            if (__builtin_expect(ch3 == 0xff, 0)              \
-                || __builtin_expect(ch3 < 0xa1, 0))           \
-              ch = __UNKNOWN_10646_CHAR;                  \
-            else if (ch2 <= 0xf2)                     \
-              {                               \
-                endp = inptr + 1;                     \
-                                          \
-                /* This is code set 3: JIS X 0212-1990.  */       \
-                ch = jisx0212_to_ucs4 (&endp, inend - endp, 0x80);    \
-                                          \
-                if (ch == 0x00a6) /* BROKEN BAR */            \
-                  ch = 0xffe4;    /* FULLWIDTH BROKEN BAR */          \
-                else if (ch == __UNKNOWN_10646_CHAR)              \
-                  endp -= 1;                          \
-              }                               \
-            else if (ch2 <= 0xf4)                     \
-              {                               \
-                int idx = ((ch2-0xf3)*94 + ch3-0xa1) - (94-12);       \
-                                          \
-                if (0 <= idx && idx < 12 + 94)                \
-                  {                           \
-                if ((ch = cjk_block_ibm[idx]) != 0)           \
-                  endp = inptr + mblen;               \
-                else                          \
-                      ch = __UNKNOWN_10646_CHAR;              \
-                  }                           \
-                else                              \
-              ch = __UNKNOWN_10646_CHAR;                  \
-              }                               \
-            else if (ch2 <= 0xfe)                     \
-              {                               \
-                ch = 0xe3ac + (ch2 - 0xf5) * 94 + (ch3 - 0xa1);       \
-                endp = inptr + mblen;                     \
-              }                               \
-            else                              \
-              ch = __UNKNOWN_10646_CHAR;                  \
-          }                               \
-          }                                   \
-        else if (__builtin_expect(0xa1 <= ch, 1))                 \
-          {                                   \
-        mblen = 2;                            \
-                                          \
-        if (inend - inptr < 2)                        \
-          ch = 0;                             \
-        else if (__builtin_expect(ch2 == 0xff, 0))            \
-          ch = __UNKNOWN_10646_CHAR;                      \
-        else if (ch <= 0xa8)                          \
-          {                               \
-            if ((ch = cjk_block1[(ch-0xa1)*94 + (ch2-0xa1)]) != 0)    \
-              endp = inptr + mblen;                   \
-            else                              \
-              ch = __UNKNOWN_10646_CHAR;                  \
-          }                               \
-        else if (ch == 0xad)                          \
-          {                               \
-            if ((ch = cjk_block2[(ch-0xad)*94 + (ch2-0xa1)]) != 0)    \
-              endp = inptr + mblen;                   \
-            else                              \
-              ch = __UNKNOWN_10646_CHAR;                  \
-          }                               \
-        else if (ch <= 0xf4)                          \
-          {                               \
-            endp = inptr;                         \
-                                          \
-            /* This is code set 1: JIS X 0208.  */            \
-            ch = jisx0208_to_ucs4 (&endp, inend - inptr, 0x80);       \
-          }                               \
-        else if (ch <= 0xfe)                          \
-          {                               \
-            ch = 0xe000 + (ch - 0xf5) * 94 + (ch2 - 0xa1);        \
-            endp = inptr + mblen;                     \
-          }                               \
-            else                                  \
-          ch = __UNKNOWN_10646_CHAR;                      \
-          }                                   \
-        else                                  \
-          ch = __UNKNOWN_10646_CHAR;                      \
-                                          \
-        if (__builtin_expect (ch, 1) == 0)                    \
-          {                                   \
-        /* Not enough input available.  */                \
-        result = __GCONV_INCOMPLETE_INPUT;                \
-        break;                                \
-          }                                   \
-        if (__builtin_expect (ch, 0) == __UNKNOWN_10646_CHAR)         \
-          {                                   \
-        /* Illegal character.  */                     \
-        if (! ignore_errors_p ())                     \
-          {                               \
-            /* This is an illegal character.  */              \
-            result = __gconv_mark_illegal_input (step_data);          \
-            break;                            \
-          }                               \
-                                          \
-        inptr += mblen;                           \
-        ++*irreversible;                          \
-        continue;                             \
-          }                                   \
-        inptr = endp;                             \
-      }                                   \
-      }                                       \
-                                          \
-    put32 (outptr, ch);                               \
-    outptr += 4;                                  \
-  }
+    {                                       \
+        uint32_t ch = (uint32_t)inptr[0] & 0xff;                      \
+        \
+        if (ch < 0x8e || (ch >= 0x90 && ch <= 0x9f))                  \
+            ++inptr;                                    \
+        else if (ch == 0xff)                              \
+        {                                       \
+            /* This is illegal.  */                           \
+            if (! ignore_errors_p ())                         \
+            {                                   \
+                result = __gconv_mark_illegal_input (step_data);              \
+                break;                                \
+            }                                   \
+            \
+            ++inptr;                                  \
+            ++*irreversible;                              \
+            continue;                                 \
+        }                                       \
+        else                                      \
+        {                                       \
+            /* Two or more byte character.  First test whether the next       \
+               character is also available.  */                   \
+            unsigned char ch2;                            \
+            \
+            if (__glibc_unlikely (inptr + 1 >= inend))                \
+            {                                   \
+                /* The second character is not available.  Store the          \
+                   intermediate result.  */                       \
+                result = __GCONV_INCOMPLETE_INPUT;                    \
+                break;                                \
+            }                                   \
+            \
+            ch2 = (unsigned char)inptr[1];                        \
+            \
+            /* All second bytes of a multibyte character must be >= 0xa1. */      \
+            if (__glibc_unlikely (ch2 < 0xa1))                    \
+            {                                   \
+                /* This is an illegal character.  */                  \
+                if (! ignore_errors_p ())                         \
+                {                                   \
+                    result = __gconv_mark_illegal_input (step_data);          \
+                    break;                                \
+                }                                   \
+                \
+                ++inptr;                                  \
+                ++*irreversible;                              \
+                continue;                                 \
+            }                                   \
+            \
+            if (__builtin_expect(ch == 0x8e, 0))                      \
+            {                                   \
+                /* This is code set 2: half-width katakana.  */           \
+                ch = jisx0201_to_ucs4 (ch2);                      \
+                /*if (__builtin_expect (ch, 0) == __UNKNOWN_10646_CHAR)*/         \
+                if (__glibc_unlikely (ch == __UNKNOWN_10646_CHAR))            \
+                {                                   \
+                    /* Illegal character.  */                     \
+                    if (! ignore_errors_p ())                     \
+                    {                               \
+                        /* This is an illegal character.  */              \
+                        result = __gconv_mark_illegal_input (step_data);          \
+                        break;                            \
+                    }                               \
+                }                                   \
+                \
+                inptr += 2;                               \
+            }                                   \
+            else                                      \
+            {                                   \
+                const unsigned char *endp = inptr;                    \
+                int mblen = 1;                            \
+                \
+                if (__builtin_expect(ch == 0x8f, 0))                  \
+                {                                   \
+                    if (inend - inptr < 3)                        \
+                        ch = 0;                             \
+                    else                                  \
+                    {                               \
+                        unsigned char ch3 = (unsigned char)inptr[2];          \
+                        mblen = 3;                            \
+                        \
+                        if (__builtin_expect(ch3 == 0xff, 0)              \
+                            || __builtin_expect(ch3 < 0xa1, 0))           \
+                            ch = __UNKNOWN_10646_CHAR;                  \
+                        else if (ch2 <= 0xf2)                     \
+                        {                               \
+                            endp = inptr + 1;                     \
+                            \
+                            /* This is code set 3: JIS X 0212-1990.  */       \
+                            ch = jisx0212_to_ucs4 (&endp, inend - endp, 0x80);    \
+                            \
+                            if (ch == 0x00a6) /* BROKEN BAR */            \
+                                ch = 0xffe4;    /* FULLWIDTH BROKEN BAR */          \
+                            else if (ch == __UNKNOWN_10646_CHAR)              \
+                                endp -= 1;                          \
+                        }                               \
+                        else if (ch2 <= 0xf4)                     \
+                        {                               \
+                            int idx = ((ch2-0xf3)*94 + ch3-0xa1) - (94-12);       \
+                            \
+                            if (0 <= idx && idx < 12 + 94)                \
+                            {                           \
+                                if ((ch = cjk_block_ibm[idx]) != 0)           \
+                                    endp = inptr + mblen;               \
+                                else                          \
+                                    ch = __UNKNOWN_10646_CHAR;              \
+                            }                           \
+                            else                              \
+                                ch = __UNKNOWN_10646_CHAR;                  \
+                        }                               \
+                        else if (ch2 <= 0xfe)                     \
+                        {                               \
+                            ch = 0xe3ac + (ch2 - 0xf5) * 94 + (ch3 - 0xa1);       \
+                            endp = inptr + mblen;                     \
+                        }                               \
+                        else                              \
+                            ch = __UNKNOWN_10646_CHAR;                  \
+                    }                               \
+                }                                   \
+                else if (__builtin_expect(0xa1 <= ch, 1))                 \
+                {                                   \
+                    mblen = 2;                            \
+                    \
+                    if (inend - inptr < 2)                        \
+                        ch = 0;                             \
+                    else if (__builtin_expect(ch2 == 0xff, 0))            \
+                        ch = __UNKNOWN_10646_CHAR;                      \
+                    else if (ch <= 0xa8)                          \
+                    {                               \
+                        if ((ch = cjk_block1[(ch-0xa1)*94 + (ch2-0xa1)]) != 0)    \
+                            endp = inptr + mblen;                   \
+                        else                              \
+                            ch = __UNKNOWN_10646_CHAR;                  \
+                    }                               \
+                    else if (ch == 0xad)                          \
+                    {                               \
+                        if ((ch = cjk_block2[(ch-0xad)*94 + (ch2-0xa1)]) != 0)    \
+                            endp = inptr + mblen;                   \
+                        else                              \
+                            ch = __UNKNOWN_10646_CHAR;                  \
+                    }                               \
+                    else if (ch <= 0xf4)                          \
+                    {                               \
+                        endp = inptr;                         \
+                        \
+                        /* This is code set 1: JIS X 0208.  */            \
+                        ch = jisx0208_to_ucs4 (&endp, inend - inptr, 0x80);       \
+                    }                               \
+                    else if (ch <= 0xfe)                          \
+                    {                               \
+                        ch = 0xe000 + (ch - 0xf5) * 94 + (ch2 - 0xa1);        \
+                        endp = inptr + mblen;                     \
+                    }                               \
+                    else                                  \
+                        ch = __UNKNOWN_10646_CHAR;                      \
+                }                                   \
+                else                                  \
+                    ch = __UNKNOWN_10646_CHAR;                      \
+                \
+                if (__builtin_expect (ch, 1) == 0)                    \
+                {                                   \
+                    /* Not enough input available.  */                \
+                    result = __GCONV_INCOMPLETE_INPUT;                \
+                    break;                                \
+                }                                   \
+                if (__builtin_expect (ch, 0) == __UNKNOWN_10646_CHAR)         \
+                {                                   \
+                    /* Illegal character.  */                     \
+                    if (! ignore_errors_p ())                     \
+                    {                               \
+                        /* This is an illegal character.  */              \
+                        result = __gconv_mark_illegal_input (step_data);          \
+                        break;                            \
+                    }                               \
+                    \
+                    inptr += mblen;                           \
+                    ++*irreversible;                          \
+                    continue;                             \
+                }                                   \
+                inptr = endp;                             \
+            }                                   \
+        }                                       \
+        \
+        put32 (outptr, ch);                               \
+        outptr += 4;                                  \
+    }
 #define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 
@@ -4837,83 +4837,83 @@ static const unsigned char from_ucs4_extra[229][2] = {
 #define MAX_NEEDED_OUTPUT   MAX_NEEDED_FROM
 #define LOOPFCT         TO_LOOP
 #define BODY \
-  {                                       \
-    uint32_t ch = get32 (inptr);                          \
-    const unsigned char *cp;                              \
-    unsigned char pua[2];                             \
-                                          \
-    if (ch >= (sizeof (from_ucs4_lat1) / sizeof (from_ucs4_lat1[0])))         \
-      {                                       \
-    if (ch >= 0x0100 && ch <= 0x045f)                     \
-      cp = from_ucs4_greek[ch - 0x0100];                      \
-    else if (ch >= 0x2010 && ch <= 0x9fa5)                    \
-      cp = from_ucs4_cjk[ch - 0x2010];                    \
-    else if (ch >= 0xe000 && ch <= 0xe757)                    \
-          {                                   \
-        if (ch < 0xe3ac)                              \
-          {                                   \
-        pua[0] = (ch - 0xe000) / 94 + 0xf5;               \
-        pua[1] = (ch - 0xe000) % 94 + 0xa1;               \
-          }                                   \
-        else                                  \
-          {                                   \
-        pua[0] = (ch - 0xe3ac) / 94 + 0xf5;               \
-        pua[1] = (ch - 0xe3ac) % 94 + 0x21;               \
-          }                                   \
-        cp = (const unsigned char *)&pua[0];                  \
-      }                                   \
-    else if (ch >= 0xf929 && ch <= 0xfa2d)                    \
-      cp = from_ucs4_cjkcpt[ch - 0xf929];                     \
-    else if (__builtin_expect (ch >= 0xff01, 1)               \
-         && __builtin_expect (ch <= 0xffe5, 1))               \
-      cp = from_ucs4_extra[ch - 0xff01];                      \
-    else                                      \
-      {                                   \
-        UNICODE_TAG_HANDLER (ch, 4);                      \
-        /* Illegal character.  */                         \
-        cp = (const unsigned char *) "";                      \
-      }                                   \
-      }                                       \
-    else                                      \
-      cp = from_ucs4_lat1[ch];                            \
-                                          \
-    if (__builtin_expect (cp[0], '\1') == '\0' && ch != 0)            \
-      {                                       \
-    /* Illegal character.  */                         \
-    STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
-      }                                       \
-    else                                      \
-      {                                       \
-    *outptr = cp[0];                              \
-    /* Now test for a possible second byte and write this if possible.  */\
-    if (cp[1] != '\0')                            \
-      {                                   \
-        if (__glibc_unlikely (outptr + 1 >= outend))              \
-          {                                   \
-        /* The result does not fit into the buffer.  */           \
-        result = __GCONV_FULL_OUTPUT;                     \
-        break;                                \
-          }                                   \
-        if (__glibc_unlikely (cp[1] < 0x80))                  \
-          {                                   \
-        if (__glibc_unlikely (outptr + 2 >= outend))              \
-          {                               \
-            /* The result does not fit into the buffer.  */       \
-            result = __GCONV_FULL_OUTPUT;                 \
-            break;                            \
-          }                               \
-        *outptr = 0x8f;                           \
-        *++outptr = cp[0];                        \
-        *++outptr = cp[1] | 0x80;                     \
-          }                                   \
-        else                                  \
-          *++outptr = cp[1];                          \
-      }                                   \
-    ++outptr;                                 \
-      }                                       \
-                                          \
-    inptr += 4;                                   \
-  }
+    {                                       \
+        uint32_t ch = get32 (inptr);                          \
+        const unsigned char *cp;                              \
+        unsigned char pua[2];                             \
+        \
+        if (ch >= (sizeof (from_ucs4_lat1) / sizeof (from_ucs4_lat1[0])))         \
+        {                                       \
+            if (ch >= 0x0100 && ch <= 0x045f)                     \
+                cp = from_ucs4_greek[ch - 0x0100];                      \
+            else if (ch >= 0x2010 && ch <= 0x9fa5)                    \
+                cp = from_ucs4_cjk[ch - 0x2010];                    \
+            else if (ch >= 0xe000 && ch <= 0xe757)                    \
+            {                                   \
+                if (ch < 0xe3ac)                              \
+                {                                   \
+                    pua[0] = (ch - 0xe000) / 94 + 0xf5;               \
+                    pua[1] = (ch - 0xe000) % 94 + 0xa1;               \
+                }                                   \
+                else                                  \
+                {                                   \
+                    pua[0] = (ch - 0xe3ac) / 94 + 0xf5;               \
+                    pua[1] = (ch - 0xe3ac) % 94 + 0x21;               \
+                }                                   \
+                cp = (const unsigned char *)&pua[0];                  \
+            }                                   \
+            else if (ch >= 0xf929 && ch <= 0xfa2d)                    \
+                cp = from_ucs4_cjkcpt[ch - 0xf929];                     \
+            else if (__builtin_expect (ch >= 0xff01, 1)               \
+                     && __builtin_expect (ch <= 0xffe5, 1))               \
+                cp = from_ucs4_extra[ch - 0xff01];                      \
+            else                                      \
+            {                                   \
+                UNICODE_TAG_HANDLER (ch, 4);                      \
+                /* Illegal character.  */                         \
+                cp = (const unsigned char *) "";                      \
+            }                                   \
+        }                                       \
+        else                                      \
+            cp = from_ucs4_lat1[ch];                            \
+        \
+        if (__builtin_expect (cp[0], '\1') == '\0' && ch != 0)            \
+        {                                       \
+            /* Illegal character.  */                         \
+            STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
+        }                                       \
+        else                                      \
+        {                                       \
+            *outptr = cp[0];                              \
+            /* Now test for a possible second byte and write this if possible.  */\
+            if (cp[1] != '\0')                            \
+            {                                   \
+                if (__glibc_unlikely (outptr + 1 >= outend))              \
+                {                                   \
+                    /* The result does not fit into the buffer.  */           \
+                    result = __GCONV_FULL_OUTPUT;                     \
+                    break;                                \
+                }                                   \
+                if (__glibc_unlikely (cp[1] < 0x80))                  \
+                {                                   \
+                    if (__glibc_unlikely (outptr + 2 >= outend))              \
+                    {                               \
+                        /* The result does not fit into the buffer.  */       \
+                        result = __GCONV_FULL_OUTPUT;                 \
+                        break;                            \
+                    }                               \
+                    *outptr = 0x8f;                           \
+                    *++outptr = cp[0];                        \
+                    *++outptr = cp[1] | 0x80;                     \
+                }                                   \
+                else                                  \
+                    *++outptr = cp[1];                          \
+            }                                   \
+            ++outptr;                                 \
+        }                                       \
+        \
+        inptr += 4;                                   \
+    }
 #define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 

@@ -31,24 +31,24 @@
 
 /* The only basic operation needed is compare and exchange.  */
 #define atomic_compare_and_exchange_val_acq(mem, newval, oldval)    \
-  ({                                    \
-    /* Use temporary variables to workaround call-clobberness of    \
-       the registers.  */                       \
-    __typeof (mem) _mem = mem;                      \
-    __typeof (oldval) _oldval = oldval;                 \
-    __typeof (newval) _newval = newval;                 \
-    register uint32_t _d0 asm ("d0") = SYS_ify (atomic_cmpxchg_32); \
-    register uint32_t *_a0 asm ("a0") = (uint32_t *) _mem;      \
-    register uint32_t _d2 asm ("d2") = (uint32_t) _oldval;      \
-    register uint32_t _d1 asm ("d1") = (uint32_t) _newval;      \
-                                    \
-    asm ("trap #0"                          \
-     : "+d" (_d0), "+m" (*_a0)                  \
-     : "a" (_a0), "d" (_d2), "d" (_d1));                \
-    (__typeof (oldval)) _d0;                        \
-  })
+    ({                                    \
+        /* Use temporary variables to workaround call-clobberness of    \
+           the registers.  */                       \
+        __typeof (mem) _mem = mem;                      \
+        __typeof (oldval) _oldval = oldval;                 \
+        __typeof (newval) _newval = newval;                 \
+        register uint32_t _d0 asm ("d0") = SYS_ify (atomic_cmpxchg_32); \
+        register uint32_t *_a0 asm ("a0") = (uint32_t *) _mem;      \
+        register uint32_t _d2 asm ("d2") = (uint32_t) _oldval;      \
+        register uint32_t _d1 asm ("d1") = (uint32_t) _newval;      \
+        \
+        asm ("trap #0"                          \
+             : "+d" (_d0), "+m" (*_a0)                  \
+             : "a" (_a0), "d" (_d2), "d" (_d1));                \
+        (__typeof (oldval)) _d0;                        \
+    })
 
 # define atomic_full_barrier()              \
-  (INTERNAL_SYSCALL_CALL (atomic_barrier), (void) 0)
+    (INTERNAL_SYSCALL_CALL (atomic_barrier), (void) 0)
 
 #endif

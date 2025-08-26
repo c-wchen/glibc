@@ -630,7 +630,7 @@ weak_alias(_hurdsig_preemptors, _hurdsig_preempters)
 
 /* Mask of stop signals.  */
 #define STOPSIGS (__sigmask (SIGTTIN) | __sigmask (SIGTTOU) \
-          | __sigmask (SIGSTOP) | __sigmask (SIGTSTP))
+                  | __sigmask (SIGSTOP) | __sigmask (SIGTSTP))
 
 /* Actual delivery of a single signal.  Called with SS unlocked.  When
    the signal is delivered, return SS, locked (or, if SS was originally

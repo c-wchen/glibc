@@ -30,20 +30,20 @@
 #define FNX(FN) CONCAT (FNPFX, FN)
 
 #define TEST(LOC, STR, EXP_VAL, FN, TYPE, FMT)              \
-  do                                    \
+    do                                    \
     {                                   \
-      CHAR *ep;                             \
-      TYPE val = FNX (FN) (STR, &ep, 36);               \
-      printf ("%s: " FNPFXS #FN " (" SFMT ") == " FMT "\n", LOC, STR, val); \
-      if (val == (TYPE) (EXP_VAL) && *ep == 0)              \
-    printf ("PASS: %s: " FNPFXS #FN " (" SFMT ")\n", LOC, STR); \
-      else                              \
-    {                               \
-      printf ("FAIL: %s: " FNPFXS #FN " (" SFMT ")\n", LOC, STR);   \
-      result = 1;                           \
-    }                               \
+        CHAR *ep;                             \
+        TYPE val = FNX (FN) (STR, &ep, 36);               \
+        printf ("%s: " FNPFXS #FN " (" SFMT ") == " FMT "\n", LOC, STR, val); \
+        if (val == (TYPE) (EXP_VAL) && *ep == 0)              \
+            printf ("PASS: %s: " FNPFXS #FN " (" SFMT ")\n", LOC, STR); \
+        else                              \
+        {                               \
+            printf ("FAIL: %s: " FNPFXS #FN " (" SFMT ")\n", LOC, STR);   \
+            result = 1;                           \
+        }                               \
     }                                   \
-  while (0)
+    while (0)
 
 static int test_one_locale(const char *loc)
 {

@@ -63,7 +63,7 @@
 #define STRCAT_POSTFIX cat
 
 #define PRIMITIVE_OF_NAMER(underscores, prefix, postfix, ext)                 \
-  underscores##prefix##postfix##ext
+    underscores##prefix##postfix##ext
 
 #define OF_NAMER(...) PRIMITIVE_OF_NAMER (__VA_ARGS__)
 

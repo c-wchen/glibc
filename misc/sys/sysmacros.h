@@ -24,11 +24,11 @@
 #include <bits/sysmacros.h>
 
 #define __SYSMACROS_DECL_TEMPL(rtype, name, proto)               \
-  extern rtype gnu_dev_##name proto __THROW __attribute_const__;
+    extern rtype gnu_dev_##name proto __THROW __attribute_const__;
 
 #define __SYSMACROS_IMPL_TEMPL(rtype, name, proto)               \
-  __extension__ __extern_inline __attribute_const__ rtype            \
-  __NTH (gnu_dev_##name proto)
+    __extension__ __extern_inline __attribute_const__ rtype            \
+    __NTH (gnu_dev_##name proto)
 
 __BEGIN_DECLS
 

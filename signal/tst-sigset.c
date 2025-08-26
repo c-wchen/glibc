@@ -10,11 +10,11 @@ static int do_test(void)
     TEST_VERIFY(sigemptyset(&set) == 0);
 
 #define VERIFY(set, sig)            \
-  TEST_VERIFY (sigismember (&set, sig) == 0);   \
-  TEST_VERIFY (sigaddset (&set, sig) == 0); \
-  TEST_VERIFY (sigismember (&set, sig) != 0);   \
-  TEST_VERIFY (sigdelset (&set, sig) == 0); \
-  TEST_VERIFY (sigismember (&set, sig) == 0)
+    TEST_VERIFY (sigismember (&set, sig) == 0);   \
+    TEST_VERIFY (sigaddset (&set, sig) == 0); \
+    TEST_VERIFY (sigismember (&set, sig) != 0);   \
+    TEST_VERIFY (sigdelset (&set, sig) == 0); \
+    TEST_VERIFY (sigismember (&set, sig) == 0)
 
     /* ISO C99 signals.  */
     VERIFY(set, SIGINT);

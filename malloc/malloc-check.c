@@ -24,7 +24,7 @@
    tags, so fetch the tag at each location before dereferencing
    it.  */
 #define SAFE_CHAR_OFFSET(p,offset) \
-  ((unsigned char *) tag_at (((unsigned char *) p) + offset))
+    ((unsigned char *) tag_at (((unsigned char *) p) + offset))
 
 /* A simple, standard set of debugging hooks.  Overhead is `only' one
    byte per chunk; still this will catch most cases of double frees or

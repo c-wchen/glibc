@@ -27,68 +27,68 @@
 #define NBSP "\xc2\xa0"
 
 #define TEST_STRTOD(FSUF, FTYPE, FTOSTR, LSUF, CSUF)            \
-static const struct                         \
-{                                   \
-  const char *in;                           \
-  FTYPE expected;                           \
-} tests_strto ## FSUF[] =                       \
-  {                                 \
-    { "0", 0.0 ## LSUF },                       \
-    { "000", 0.0 ## LSUF },                     \
-    { "-0", -0.0 ## LSUF },                     \
-    { "-000", -0.0 ## LSUF },                       \
-    { "0,", 0.0 ## LSUF },                      \
-    { "-0,", -0.0 ## LSUF },                        \
-    { "0,0", 0.0 ## LSUF },                     \
-    { "-0,0", -0.0 ## LSUF },                       \
-    { "0e-10", 0.0 ## LSUF },                       \
-    { "-0e-10", -0.0 ## LSUF },                     \
-    { "0,e-10", 0.0 ## LSUF },                      \
-    { "-0,e-10", -0.0 ## LSUF },                    \
-    { "0,0e-10", 0.0 ## LSUF },                     \
-    { "-0,0e-10", -0.0 ## LSUF },                   \
-    { "0e-1000000", 0.0 ## LSUF },                  \
-    { "-0e-1000000", -0.0 ## LSUF },                    \
-    { "0,0e-1000000", 0.0 ## LSUF },                    \
-    { "-0,0e-1000000", -0.0 ## LSUF },                  \
-  };                                    \
-                                    \
-                                    \
-static int                              \
-test_strto ## FSUF (void)                       \
-{                                   \
-  int status = 0;                           \
-                                    \
-  for (int i = 0;                           \
-       i < sizeof (tests_strto ## FSUF) / sizeof (tests_strto ## FSUF[0]); \
-       ++i)                             \
+    static const struct                         \
     {                                   \
-      char *ep;                             \
-      FTYPE r = strto ## FSUF (tests_strto ## FSUF[i].in, &ep);     \
-                                    \
-      if (*ep != '\0')                          \
-    {                               \
-      printf ("%d: got rest string \"%s\", expected \"\"\n", i, ep); \
-      status = 1;                           \
-    }                               \
-                                    \
-      if (r != tests_strto ## FSUF[i].expected              \
-      || (copysign ## CSUF (10.0 ## LSUF, r)            \
-          != copysign ## CSUF (10.0 ## LSUF,            \
-                   tests_strto ## FSUF[i].expected)))   \
-    {                               \
-      char buf1[FSTRLENMAX], buf2[FSTRLENMAX];          \
-      FTOSTR (buf1, sizeof (buf1), "%g", r);            \
-      FTOSTR (buf2, sizeof (buf2), "%g",                \
-          tests_strto ## FSUF[i].expected);         \
-      printf ("%d: got wrong results %s, expected %s\n",        \
-          i, buf1, buf2);                   \
-      status = 1;                           \
-    }                               \
-    }                                   \
-                                    \
-  return status;                            \
-}
+        const char *in;                           \
+        FTYPE expected;                           \
+    } tests_strto ## FSUF[] =                       \
+            {                                 \
+                                              { "0", 0.0 ## LSUF },                       \
+                                              { "000", 0.0 ## LSUF },                     \
+                                              { "-0", -0.0 ## LSUF },                     \
+                                              { "-000", -0.0 ## LSUF },                       \
+                                              { "0,", 0.0 ## LSUF },                      \
+                                              { "-0,", -0.0 ## LSUF },                        \
+                                              { "0,0", 0.0 ## LSUF },                     \
+                                              { "-0,0", -0.0 ## LSUF },                       \
+                                              { "0e-10", 0.0 ## LSUF },                       \
+                                              { "-0e-10", -0.0 ## LSUF },                     \
+                                              { "0,e-10", 0.0 ## LSUF },                      \
+                                              { "-0,e-10", -0.0 ## LSUF },                    \
+                                              { "0,0e-10", 0.0 ## LSUF },                     \
+                                              { "-0,0e-10", -0.0 ## LSUF },                   \
+                                              { "0e-1000000", 0.0 ## LSUF },                  \
+                                              { "-0e-1000000", -0.0 ## LSUF },                    \
+                                              { "0,0e-1000000", 0.0 ## LSUF },                    \
+                                              { "-0,0e-1000000", -0.0 ## LSUF },                  \
+            };                                    \
+    \
+    \
+    static int                              \
+    test_strto ## FSUF (void)                       \
+    {                                   \
+        int status = 0;                           \
+        \
+        for (int i = 0;                           \
+             i < sizeof (tests_strto ## FSUF) / sizeof (tests_strto ## FSUF[0]); \
+             ++i)                             \
+        {                                   \
+            char *ep;                             \
+            FTYPE r = strto ## FSUF (tests_strto ## FSUF[i].in, &ep);     \
+            \
+            if (*ep != '\0')                          \
+            {                               \
+                printf ("%d: got rest string \"%s\", expected \"\"\n", i, ep); \
+                status = 1;                           \
+            }                               \
+            \
+            if (r != tests_strto ## FSUF[i].expected              \
+                || (copysign ## CSUF (10.0 ## LSUF, r)            \
+                    != copysign ## CSUF (10.0 ## LSUF,            \
+                                         tests_strto ## FSUF[i].expected)))   \
+            {                               \
+                char buf1[FSTRLENMAX], buf2[FSTRLENMAX];          \
+                FTOSTR (buf1, sizeof (buf1), "%g", r);            \
+                FTOSTR (buf2, sizeof (buf2), "%g",                \
+                        tests_strto ## FSUF[i].expected);         \
+                printf ("%d: got wrong results %s, expected %s\n",        \
+                        i, buf1, buf2);                   \
+                status = 1;                           \
+            }                               \
+        }                                   \
+        \
+        return status;                            \
+    }
 
 GEN_TEST_STRTOD_FOREACH(TEST_STRTOD)
 

@@ -23,39 +23,39 @@
 
 #undef INTERNAL_SYSCALL_NCS
 #define INTERNAL_SYSCALL_NCS(no, nr, args...)                     \
-  ({                                          \
-    DECLARGS_##nr(args)                               \
-    register unsigned long int _nr __asm__("1") = (unsigned long int)(no);    \
-    register long int _ret __asm__("2");                      \
-    __asm__ __volatile__ (                            \
-              "svc    0\n\t"                      \
-              : "=d" (_ret)                       \
-              : "d" (_nr) ASMFMT_##nr                 \
-              : "memory" );                       \
-    _ret; })
+    ({                                          \
+        DECLARGS_##nr(args)                               \
+        register unsigned long int _nr __asm__("1") = (unsigned long int)(no);    \
+        register long int _ret __asm__("2");                      \
+        __asm__ __volatile__ (                            \
+                "svc    0\n\t"                      \
+                : "=d" (_ret)                       \
+                : "d" (_nr) ASMFMT_##nr                 \
+                : "memory" );                       \
+        _ret; })
 
 #undef INTERNAL_SYSCALL
 #define INTERNAL_SYSCALL(name, nr, args...)             \
-  INTERNAL_SYSCALL_NCS(__NR_##name, nr, args)
+    INTERNAL_SYSCALL_NCS(__NR_##name, nr, args)
 
 #define DECLARGS_0()
 #define DECLARGS_1(arg1) \
-  register unsigned long int gpr2 __asm__ ("2") = (unsigned long int)(arg1);
+    register unsigned long int gpr2 __asm__ ("2") = (unsigned long int)(arg1);
 #define DECLARGS_2(arg1, arg2) \
-  DECLARGS_1(arg1) \
-  register unsigned long int gpr3 __asm__ ("3") = (unsigned long int)(arg2);
+    DECLARGS_1(arg1) \
+    register unsigned long int gpr3 __asm__ ("3") = (unsigned long int)(arg2);
 #define DECLARGS_3(arg1, arg2, arg3) \
-  DECLARGS_2(arg1, arg2) \
-  register unsigned long int gpr4 __asm__ ("4") = (unsigned long int)(arg3);
+    DECLARGS_2(arg1, arg2) \
+    register unsigned long int gpr4 __asm__ ("4") = (unsigned long int)(arg3);
 #define DECLARGS_4(arg1, arg2, arg3, arg4) \
-  DECLARGS_3(arg1, arg2, arg3) \
-  register unsigned long int gpr5 __asm__ ("5") = (unsigned long int)(arg4);
+    DECLARGS_3(arg1, arg2, arg3) \
+    register unsigned long int gpr5 __asm__ ("5") = (unsigned long int)(arg4);
 #define DECLARGS_5(arg1, arg2, arg3, arg4, arg5) \
-  DECLARGS_4(arg1, arg2, arg3, arg4) \
-  register unsigned long int gpr6 __asm__ ("6") = (unsigned long int)(arg5);
+    DECLARGS_4(arg1, arg2, arg3, arg4) \
+    register unsigned long int gpr6 __asm__ ("6") = (unsigned long int)(arg5);
 #define DECLARGS_6(arg1, arg2, arg3, arg4, arg5, arg6) \
-  DECLARGS_5(arg1, arg2, arg3, arg4, arg5) \
-  register unsigned long int gpr7 __asm__ ("7") = (unsigned long int)(arg6);
+    DECLARGS_5(arg1, arg2, arg3, arg4, arg5) \
+    register unsigned long int gpr7 __asm__ ("7") = (unsigned long int)(arg6);
 
 #define ASMFMT_0
 #define ASMFMT_1 , "0" (gpr2)

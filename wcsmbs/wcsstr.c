@@ -20,9 +20,9 @@
 #include <string.h>
 
 #define AVAILABLE(h, h_l, j, n_l)                   \
-  (((j) + (n_l) <= (h_l))                       \
-   || ((h_l) += __wcsnlen ((void*)((h) + (h_l)), (n_l) + 128),      \
-       (j) + (n_l) <= (h_l)))
+    (((j) + (n_l) <= (h_l))                       \
+     || ((h_l) += __wcsnlen ((void*)((h) + (h_l)), (n_l) + 128),      \
+         (j) + (n_l) <= (h_l)))
 #include "wcs-two-way.h"
 
 #ifndef WCSSTR

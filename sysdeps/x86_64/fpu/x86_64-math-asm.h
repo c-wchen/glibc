@@ -25,7 +25,7 @@
     .section .rodata.cst16,"aM",@progbits,16;   \
     .p2align 4;                 \
     .type ldbl_min,@object;             \
-ldbl_min:                       \
+    ldbl_min:                       \
     .byte 0, 0, 0, 0, 0, 0, 0, 0x80, 0x1, 0;    \
     .byte 0, 0, 0, 0, 0, 0;             \
     .size ldbl_min, .-ldbl_min;
@@ -44,7 +44,7 @@ ldbl_min:                       \
     fld %st(0);             \
     fmul    %st(0);             \
     fstp    %st(0);             \
-6464:
+    6464:
 
 /* Likewise, but the argument is not a NaN.  */
 #define LDBL_CHECK_FORCE_UFLOW_NONNAN       \
@@ -57,7 +57,7 @@ ldbl_min:                       \
     fld %st(0);             \
     fmul    %st(0);             \
     fstp    %st(0);             \
-6464:
+    6464:
 
 /* Likewise, but the argument is nonnegative and not a NaN.  */
 #define LDBL_CHECK_FORCE_UFLOW_NONNEG       \
@@ -69,6 +69,6 @@ ldbl_min:                       \
     fld %st(0);             \
     fmul    %st(0);             \
     fstp    %st(0);             \
-6464:
+    6464:
 
 #endif /* x86_64-math-asm.h.  */

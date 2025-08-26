@@ -54,8 +54,8 @@
 /* We need to address PTHREAD_KEYS_MAX key with PTHREAD_KEY_2NDLEVEL_SIZE
    keys in each subarray.  */
 #define PTHREAD_KEY_1STLEVEL_SIZE \
-  ((PTHREAD_KEYS_MAX + PTHREAD_KEY_2NDLEVEL_SIZE - 1) \
-   / PTHREAD_KEY_2NDLEVEL_SIZE)
+    ((PTHREAD_KEYS_MAX + PTHREAD_KEY_2NDLEVEL_SIZE - 1) \
+     / PTHREAD_KEY_2NDLEVEL_SIZE)
 
 
 
@@ -189,36 +189,36 @@ struct pthread {
 # define QUEUE_PTR_ADJUST (offsetof (__pthread_list_t, __next))
 
 # define ENQUEUE_MUTEX_BOTH(mutex, val)                       \
-  do {                                        \
-    __pthread_list_t *next = (__pthread_list_t *)                 \
-      ((((uintptr_t) THREAD_GETMEM (THREAD_SELF, robust_head.list)) & ~1ul)   \
-       - QUEUE_PTR_ADJUST);                           \
-    next->__prev = (void *) &mutex->__data.__list.__next;             \
-    mutex->__data.__list.__next = THREAD_GETMEM (THREAD_SELF,             \
-                         robust_head.list);       \
-    mutex->__data.__list.__prev = (void *) &THREAD_SELF->robust_head;         \
-    /* Ensure that the new list entry is ready before we insert it.  */       \
-    __asm ("" ::: "memory");                              \
-    THREAD_SETMEM (THREAD_SELF, robust_head.list,                 \
-           (void *) (((uintptr_t) &mutex->__data.__list.__next)       \
-                 | val));                         \
-  } while (0)
+    do {                                        \
+        __pthread_list_t *next = (__pthread_list_t *)                 \
+                                 ((((uintptr_t) THREAD_GETMEM (THREAD_SELF, robust_head.list)) & ~1ul)   \
+                                  - QUEUE_PTR_ADJUST);                           \
+        next->__prev = (void *) &mutex->__data.__list.__next;             \
+        mutex->__data.__list.__next = THREAD_GETMEM (THREAD_SELF,             \
+                                      robust_head.list);       \
+        mutex->__data.__list.__prev = (void *) &THREAD_SELF->robust_head;         \
+        /* Ensure that the new list entry is ready before we insert it.  */       \
+        __asm ("" ::: "memory");                              \
+        THREAD_SETMEM (THREAD_SELF, robust_head.list,                 \
+                       (void *) (((uintptr_t) &mutex->__data.__list.__next)       \
+                                 | val));                         \
+    } while (0)
 # define DEQUEUE_MUTEX(mutex) \
-  do {                                        \
-    __pthread_list_t *next = (__pthread_list_t *)                 \
-      ((char *) (((uintptr_t) mutex->__data.__list.__next) & ~1ul)        \
-       - QUEUE_PTR_ADJUST);                           \
-    next->__prev = mutex->__data.__list.__prev;                   \
-    __pthread_list_t *prev = (__pthread_list_t *)                 \
-      ((char *) (((uintptr_t) mutex->__data.__list.__prev) & ~1ul)        \
-       - QUEUE_PTR_ADJUST);                           \
-    prev->__next = mutex->__data.__list.__next;                   \
-    /* Ensure that we remove the entry from the list before we change the     \
-       __next pointer of the entry, which is read by the kernel.  */          \
-    __asm ("" ::: "memory");                              \
-    mutex->__data.__list.__prev = NULL;                       \
-    mutex->__data.__list.__next = NULL;                       \
-  } while (0)
+    do {                                        \
+        __pthread_list_t *next = (__pthread_list_t *)                 \
+                                 ((char *) (((uintptr_t) mutex->__data.__list.__next) & ~1ul)        \
+                                  - QUEUE_PTR_ADJUST);                           \
+        next->__prev = mutex->__data.__list.__prev;                   \
+        __pthread_list_t *prev = (__pthread_list_t *)                 \
+                                 ((char *) (((uintptr_t) mutex->__data.__list.__prev) & ~1ul)        \
+                                  - QUEUE_PTR_ADJUST);                           \
+        prev->__next = mutex->__data.__list.__next;                   \
+        /* Ensure that we remove the entry from the list before we change the     \
+           __next pointer of the entry, which is read by the kernel.  */          \
+        __asm ("" ::: "memory");                              \
+        mutex->__data.__list.__prev = NULL;                       \
+        mutex->__data.__list.__next = NULL;                       \
+    } while (0)
 #else
     union {
         __pthread_slist_t robust_list;
@@ -226,37 +226,37 @@ struct pthread {
     };
 
 # define ENQUEUE_MUTEX_BOTH(mutex, val)                       \
-  do {                                        \
-    mutex->__data.__list.__next                           \
-      = THREAD_GETMEM (THREAD_SELF, robust_list.__next);              \
-    /* Ensure that the new list entry is ready before we insert it.  */       \
-    __asm ("" ::: "memory");                              \
-    THREAD_SETMEM (THREAD_SELF, robust_list.__next,               \
-           (void *) (((uintptr_t) &mutex->__data.__list) | val));     \
-  } while (0)
+    do {                                        \
+        mutex->__data.__list.__next                           \
+            = THREAD_GETMEM (THREAD_SELF, robust_list.__next);              \
+        /* Ensure that the new list entry is ready before we insert it.  */       \
+        __asm ("" ::: "memory");                              \
+        THREAD_SETMEM (THREAD_SELF, robust_list.__next,               \
+                       (void *) (((uintptr_t) &mutex->__data.__list) | val));     \
+    } while (0)
 # define DEQUEUE_MUTEX(mutex) \
-  do {                                        \
-    __pthread_slist_t *runp = (__pthread_slist_t *)               \
-      (((uintptr_t) THREAD_GETMEM (THREAD_SELF, robust_list.__next)) & ~1ul); \
-    if (runp == &mutex->__data.__list)                        \
-      THREAD_SETMEM (THREAD_SELF, robust_list.__next, runp->__next);          \
-    else                                      \
-      {                                       \
-    __pthread_slist_t *next = (__pthread_slist_t *)           \
-      (((uintptr_t) runp->__next) & ~1ul);                    \
-    while (next != &mutex->__data.__list)                     \
-      {                                   \
-        runp = next;                              \
-        next = (__pthread_slist_t *) (((uintptr_t) runp->__next) & ~1ul); \
-      }                                   \
-                                          \
-    runp->__next = next->__next;                          \
-    /* Ensure that we remove the entry from the list before we change the \
-       __next pointer of the entry, which is read by the kernel.  */      \
-        __asm ("" ::: "memory");                          \
-    mutex->__data.__list.__next = NULL;                   \
-      }                                       \
-  } while (0)
+    do {                                        \
+        __pthread_slist_t *runp = (__pthread_slist_t *)               \
+                                  (((uintptr_t) THREAD_GETMEM (THREAD_SELF, robust_list.__next)) & ~1ul); \
+        if (runp == &mutex->__data.__list)                        \
+            THREAD_SETMEM (THREAD_SELF, robust_list.__next, runp->__next);          \
+        else                                      \
+        {                                       \
+            __pthread_slist_t *next = (__pthread_slist_t *)           \
+                                      (((uintptr_t) runp->__next) & ~1ul);                    \
+            while (next != &mutex->__data.__list)                     \
+            {                                   \
+                runp = next;                              \
+                next = (__pthread_slist_t *) (((uintptr_t) runp->__next) & ~1ul); \
+            }                                   \
+            \
+            runp->__next = next->__next;                          \
+            /* Ensure that we remove the entry from the list before we change the \
+               __next pointer of the entry, which is read by the kernel.  */      \
+            __asm ("" ::: "memory");                          \
+            mutex->__data.__list.__next = NULL;                   \
+        }                                       \
+    } while (0)
 #endif
 #define ENQUEUE_MUTEX(mutex) ENQUEUE_MUTEX_BOTH (mutex, 0)
 #define ENQUEUE_MUTEX_PI(mutex) ENQUEUE_MUTEX_BOTH (mutex, 1)
@@ -403,8 +403,8 @@ struct pthread {
     /* Amount of end padding, if any, in this structure.
        This definition relies on getrandom_buf being last.  */
 #define PTHREAD_STRUCT_END_PADDING \
-  (sizeof (struct pthread) - offsetof (struct pthread, getrandom_buf) \
-   + sizeof ((struct pthread) {}.getrandom_buf))
+    (sizeof (struct pthread) - offsetof (struct pthread, getrandom_buf) \
+    + sizeof ((struct pthread) {}.getrandom_buf))
 } __attribute((aligned(TCB_ALIGNMENT)));
 
 static inline bool cancel_enabled(int value)

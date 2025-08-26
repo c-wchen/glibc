@@ -24,12 +24,12 @@
 #define XSTATE_HELPERS_SUPPORTED 1
 #define XSTATE_BUFFER_SIZE 16
 #define SET_XSTATE(b) do {                                    \
-    asm volatile ("movups (%0),%%xmm0" :: "r" (b));           \
-  } while (0)
+        asm volatile ("movups (%0),%%xmm0" :: "r" (b));           \
+    } while (0)
 
 #define GET_XSTATE(b) do {                                    \
-    asm volatile ("movups %%xmm0,(%0)" :: "r" (b));           \
-  } while (0)
+        asm volatile ("movups %%xmm0,(%0)" :: "r" (b));           \
+    } while (0)
 
 #else
 #define XSTATE_HELPERS_SUPPORTED 0

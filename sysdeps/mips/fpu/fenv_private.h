@@ -29,7 +29,7 @@
 #include <fpu_control.h>
 
 #define _FPU_MASK_ALL (_FPU_MASK_V | _FPU_MASK_Z | _FPU_MASK_O \
-               |_FPU_MASK_U | _FPU_MASK_I | FE_ALL_EXCEPT)
+                       |_FPU_MASK_U | _FPU_MASK_I | FE_ALL_EXCEPT)
 
 static __always_inline void libc_feholdexcept_mips(fenv_t *envp)
 {

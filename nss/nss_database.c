@@ -169,7 +169,7 @@ static bool nss_database_select_default(struct nss_database_default_cache *cache
    null terminator.  */
 typedef char database_name[14];
 #define DEFINE_DATABASE(name) \
-  _Static_assert (sizeof (#name) <= sizeof (database_name), #name);
+    _Static_assert (sizeof (#name) <= sizeof (database_name), #name);
 #include "databases.def"
 #undef DEFINE_DATABASE
 

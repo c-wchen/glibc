@@ -34,12 +34,12 @@ typedef struct {
 
 /* Compute the value for a TPREL reloc.  */
 #define TLS_TPREL_VALUE(sym_map, sym, reloc)                \
-  ((sym_map)->l_tls_offset + (sym)->st_value + (reloc)->r_addend    \
-   - TLS_TP_OFFSET)
+    ((sym_map)->l_tls_offset + (sym)->st_value + (reloc)->r_addend    \
+     - TLS_TP_OFFSET)
 
 /* Compute the value for a DTPREL reloc.  */
 #define TLS_DTPREL_VALUE(sym, reloc)                \
-  ((sym)->st_value + (reloc)->r_addend - TLS_DTV_OFFSET)
+    ((sym)->st_value + (reloc)->r_addend - TLS_DTV_OFFSET)
 
 extern void *__tls_get_addr(tls_index *ti);
 

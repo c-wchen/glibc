@@ -44,26 +44,26 @@
 # define ORIG_FE_UPWARD 0
 #endif
 #define FE_CONSTRUCT_DISTINCT_VALUE(X, Y, Z) \
-  ((((X) & 1) | ((Y) & 2) | ((Z) & 4)) ^ 7)
+    ((((X) & 1) | ((Y) & 2) | ((Z) & 4)) ^ 7)
 #ifndef FE_DOWNWARD
 # define FE_DOWNWARD FE_CONSTRUCT_DISTINCT_VALUE (ORIG_FE_TONEAREST,    \
-                          ORIG_FE_TOWARDZERO,   \
-                          ORIG_FE_UPWARD)
+        ORIG_FE_TOWARDZERO,   \
+        ORIG_FE_UPWARD)
 #endif
 #ifndef FE_TONEAREST
 # define FE_TONEAREST FE_CONSTRUCT_DISTINCT_VALUE (FE_DOWNWARD,     \
-                           ORIG_FE_TOWARDZERO,  \
-                           ORIG_FE_UPWARD)
+        ORIG_FE_TOWARDZERO,  \
+        ORIG_FE_UPWARD)
 #endif
 #ifndef FE_TOWARDZERO
 # define FE_TOWARDZERO FE_CONSTRUCT_DISTINCT_VALUE (FE_DOWNWARD,    \
-                            FE_TONEAREST,   \
-                            ORIG_FE_UPWARD)
+        FE_TONEAREST,   \
+        ORIG_FE_UPWARD)
 #endif
 #ifndef FE_UPWARD
 # define FE_UPWARD FE_CONSTRUCT_DISTINCT_VALUE (FE_DOWNWARD,    \
-                        FE_TONEAREST,   \
-                        FE_TOWARDZERO)
+        FE_TONEAREST,   \
+        FE_TOWARDZERO)
 #endif
 
 /* Return the floating-point rounding mode.  */

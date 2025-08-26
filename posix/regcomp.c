@@ -3546,20 +3546,20 @@ build_charclass(RE_TRANSLATE_TYPE trans, bitset_t sbcset,
 #endif /* RE_ENABLE_I18N */
 
 #define BUILD_CHARCLASS_LOOP(ctype_func)    \
-  do {                      \
-    if (__glibc_unlikely (trans != NULL))           \
-      {                     \
-    for (i = 0; i < SBC_MAX; ++i)       \
-      if (ctype_func (i))           \
-        bitset_set (sbcset, trans[i]);  \
-      }                     \
-    else                    \
-      {                     \
-    for (i = 0; i < SBC_MAX; ++i)       \
-      if (ctype_func (i))           \
-        bitset_set (sbcset, i);     \
-      }                     \
-  } while (0)
+    do {                      \
+        if (__glibc_unlikely (trans != NULL))           \
+        {                     \
+            for (i = 0; i < SBC_MAX; ++i)       \
+                if (ctype_func (i))           \
+                    bitset_set (sbcset, trans[i]);  \
+        }                     \
+        else                    \
+        {                     \
+            for (i = 0; i < SBC_MAX; ++i)       \
+                if (ctype_func (i))           \
+                    bitset_set (sbcset, i);     \
+        }                     \
+    } while (0)
 
     if (strcmp(name, "alnum") == 0) {
         BUILD_CHARCLASS_LOOP(isalnum);

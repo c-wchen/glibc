@@ -19,4 +19,4 @@
 extern char *__libc_efgcvtieee128_freemem_ptr attribute_hidden;
 
 #define call_freeres_fp_funcs \
-  call_free_static_weak (__libc_efgcvtieee128_freemem_ptr)
+    call_free_static_weak (__libc_efgcvtieee128_freemem_ptr)

@@ -22,12 +22,12 @@
 #include <support/check.h>
 
 #define CHECK_SCANF_RET(OK, STR, FMT, ...)                                    \
-  do                                                                          \
+    do                                                                          \
     {                                                                         \
-      int ret = sscanf (STR, FMT, __VA_ARGS__);                               \
-      TEST_VERIFY (ret == (OK));                                              \
+        int ret = sscanf (STR, FMT, __VA_ARGS__);                               \
+        TEST_VERIFY (ret == (OK));                                              \
     }                                                                         \
-  while (0)
+    while (0)
 
 /* Valid nan types:
    1. nan

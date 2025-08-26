@@ -38,62 +38,62 @@
 #define MIN_NEEDED_OUTPUT   MIN_NEEDED_TO
 #define LOOPFCT         FROM_LOOP
 #define BODY \
-  {                                       \
-    uint32_t ch = *inptr;                             \
-                                          \
-    if (ch <= 0x7f)                               \
-      ++inptr;                                    \
-    else                                      \
-      if ((__builtin_expect (ch <= 0xa0, 0) && ch != 0x8e && ch != 0x8f)      \
-      || __builtin_expect (ch > 0xfe, 0))                     \
-    {                                     \
-      /* This is illegal.  */                         \
-      STANDARD_FROM_LOOP_ERR_HANDLER (1);                     \
-    }                                     \
-      else                                    \
-    {                                     \
-      /* Two or more byte character.  First test whether the          \
-         next byte is also available.  */                     \
-      const unsigned char *endp;                          \
-                                          \
-      if (__glibc_unlikely (inptr + 1 >= inend))                  \
-        {                                     \
-          /* The second character is not available.  Store            \
-         the intermediate result.  */                     \
-          result = __GCONV_INCOMPLETE_INPUT;                  \
-          break;                                  \
-        }                                     \
-                                          \
-      ch = inptr[1];                              \
-                                          \
-      /* All second bytes of a multibyte character must be >= 0xa1. */    \
-      if (__glibc_unlikely (ch < 0xa1))                   \
-        STANDARD_FROM_LOOP_ERR_HANDLER (1);                   \
-                                          \
-      /* This is code set 1: GB 2312-80.  */                  \
-      endp = inptr;                               \
-                                          \
-      ch = gb2312_to_ucs4 (&endp, 2, 0x80);                   \
-      if (__glibc_unlikely (ch == __UNKNOWN_10646_CHAR))              \
-        {                                     \
-          /* This is an illegal character.  */                \
-          STANDARD_FROM_LOOP_ERR_HANDLER (2);                 \
-        }                                     \
-                                          \
-      inptr += 2;                                 \
-    }                                     \
-                                          \
-    put32 (outptr, ch);                               \
-    outptr += 4;                                  \
-  }
+    {                                       \
+        uint32_t ch = *inptr;                             \
+        \
+        if (ch <= 0x7f)                               \
+            ++inptr;                                    \
+        else                                      \
+            if ((__builtin_expect (ch <= 0xa0, 0) && ch != 0x8e && ch != 0x8f)      \
+                || __builtin_expect (ch > 0xfe, 0))                     \
+            {                                     \
+                /* This is illegal.  */                         \
+                STANDARD_FROM_LOOP_ERR_HANDLER (1);                     \
+            }                                     \
+            else                                    \
+            {                                     \
+                /* Two or more byte character.  First test whether the          \
+                   next byte is also available.  */                     \
+                const unsigned char *endp;                          \
+                \
+                if (__glibc_unlikely (inptr + 1 >= inend))                  \
+                {                                     \
+                    /* The second character is not available.  Store            \
+                    the intermediate result.  */                     \
+                    result = __GCONV_INCOMPLETE_INPUT;                  \
+                    break;                                  \
+                }                                     \
+                \
+                ch = inptr[1];                              \
+                \
+                /* All second bytes of a multibyte character must be >= 0xa1. */    \
+                if (__glibc_unlikely (ch < 0xa1))                   \
+                    STANDARD_FROM_LOOP_ERR_HANDLER (1);                   \
+                \
+                /* This is code set 1: GB 2312-80.  */                  \
+                endp = inptr;                               \
+                \
+                ch = gb2312_to_ucs4 (&endp, 2, 0x80);                   \
+                if (__glibc_unlikely (ch == __UNKNOWN_10646_CHAR))              \
+                {                                     \
+                    /* This is an illegal character.  */                \
+                    STANDARD_FROM_LOOP_ERR_HANDLER (2);                 \
+                }                                     \
+                \
+                inptr += 2;                                 \
+            }                                     \
+        \
+        put32 (outptr, ch);                               \
+        outptr += 4;                                  \
+    }
 #define LOOP_NEED_FLAGS
 #define ONEBYTE_BODY \
-  {                                       \
-    if (c < 0x80)                                 \
-      return c;                                   \
-    else                                      \
-      return WEOF;                                \
-  }
+    {                                       \
+        if (c < 0x80)                                 \
+            return c;                                   \
+        else                                      \
+            return WEOF;                                \
+    }
 #include <iconv/loop.c>
 
 
@@ -103,40 +103,40 @@
 #define MAX_NEEDED_OUTPUT   MAX_NEEDED_FROM
 #define LOOPFCT         TO_LOOP
 #define BODY \
-  {                                       \
-    uint32_t ch = get32 (inptr);                          \
-                                          \
-    if (ch <= L'\x7f')                                \
-      /* It's plain ASCII.  */                            \
-      *outptr++ = (unsigned char) ch;                         \
-    else                                      \
-      {                                       \
-    size_t found;                                 \
-                                          \
-    found = ucs4_to_gb2312 (ch, outptr, outend - outptr);             \
-    if (__builtin_expect (found, 1) != 0)                     \
-      {                                   \
-        if (__builtin_expect (found, 0) == __UNKNOWN_10646_CHAR)          \
-          {                                   \
-        UNICODE_TAG_HANDLER (ch, 4);                      \
-                                          \
-        /* Illegal character.  */                     \
-        STANDARD_TO_LOOP_ERR_HANDLER (4);                 \
-          }                                   \
-                                          \
-        /* It's a GB 2312 character, adjust it for EUC-CN.  */        \
-        *outptr++ += 0x80;                            \
-        *outptr++ += 0x80;                            \
-      }                                   \
-    else                                      \
-      {                                   \
-        /* We ran out of space.  */                       \
-        result = __GCONV_FULL_OUTPUT;                     \
-        break;                                \
-      }                                   \
-      }                                       \
-    inptr += 4;                                   \
-  }
+    {                                       \
+        uint32_t ch = get32 (inptr);                          \
+        \
+        if (ch <= L'\x7f')                                \
+            /* It's plain ASCII.  */                            \
+            *outptr++ = (unsigned char) ch;                         \
+        else                                      \
+        {                                       \
+            size_t found;                                 \
+            \
+            found = ucs4_to_gb2312 (ch, outptr, outend - outptr);             \
+            if (__builtin_expect (found, 1) != 0)                     \
+            {                                   \
+                if (__builtin_expect (found, 0) == __UNKNOWN_10646_CHAR)          \
+                {                                   \
+                    UNICODE_TAG_HANDLER (ch, 4);                      \
+                    \
+                    /* Illegal character.  */                     \
+                    STANDARD_TO_LOOP_ERR_HANDLER (4);                 \
+                }                                   \
+                \
+                /* It's a GB 2312 character, adjust it for EUC-CN.  */        \
+                *outptr++ += 0x80;                            \
+                *outptr++ += 0x80;                            \
+            }                                   \
+            else                                      \
+            {                                   \
+                /* We ran out of space.  */                       \
+                result = __GCONV_FULL_OUTPUT;                     \
+                break;                                \
+            }                                   \
+        }                                       \
+        inptr += 4;                                   \
+    }
 #define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 

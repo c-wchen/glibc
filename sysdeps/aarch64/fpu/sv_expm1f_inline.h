@@ -31,12 +31,12 @@ struct sv_expm1f_data {
 
 /* Coefficients generated using fpminimax.  */
 #define SV_EXPM1F_DATA                                                        \
-  {                                                                           \
-    .c0 = 0x1.fffffep-2, .c1 = 0x1.5554aep-3, .inv_ln2 = 0x1.715476p+0f,      \
-    .c2 = 0x1.555736p-5, .c3 = 0x1.12287cp-7,                                 \
-                                                                              \
-    .c4 = 0x1.6b55a2p-10, .ln2_lo = 0x1.7f7d1cp-20f, .ln2_hi = 0x1.62e4p-1f,  \
-  }
+    {                                                                           \
+        .c0 = 0x1.fffffep-2, .c1 = 0x1.5554aep-3, .inv_ln2 = 0x1.715476p+0f,      \
+                                   .c2 = 0x1.555736p-5, .c3 = 0x1.12287cp-7,                                 \
+                                           \
+                                           .c4 = 0x1.6b55a2p-10, .ln2_lo = 0x1.7f7d1cp-20f, .ln2_hi = 0x1.62e4p-1f,  \
+    }
 
 static inline svfloat32_t expm1f_inline(svfloat32_t x, svbool_t pg, const struct sv_expm1f_data *d)
 {

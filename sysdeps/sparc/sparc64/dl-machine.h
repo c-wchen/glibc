@@ -42,13 +42,13 @@ static inline int elf_machine_matches_host(const Elf64_Ehdr *ehdr)
    invoked from functions that have no GOT references, and thus the compiler
    has no obligation to load the PIC register.  */
 #define LOAD_PIC_REG(PIC_REG)   \
-do {    Elf64_Addr tmp;     \
-    __asm("sethi %%hi(_GLOBAL_OFFSET_TABLE_-4), %1\n\t" \
-          "rd %%pc, %0\n\t" \
-          "add %1, %%lo(_GLOBAL_OFFSET_TABLE_+4), %1\n\t" \
-          "add %0, %1, %0" \
-          : "=r" (PIC_REG), "=r" (tmp)); \
-} while (0)
+    do {    Elf64_Addr tmp;     \
+        __asm("sethi %%hi(_GLOBAL_OFFSET_TABLE_-4), %1\n\t" \
+              "rd %%pc, %0\n\t" \
+              "add %1, %%lo(_GLOBAL_OFFSET_TABLE_+4), %1\n\t" \
+              "add %0, %1, %0" \
+              : "=r" (PIC_REG), "=r" (tmp)); \
+    } while (0)
 
 /* Return the link-time address of _DYNAMIC.  Conveniently, this is the
    first element of the GOT.  This must be inlined in a function which
@@ -108,10 +108,10 @@ static inline Elf64_Addr elf_machine_plt_value(struct link_map *map, const Elf64
    ELF_RTYPE_CLASS_COPY iff TYPE should not be allowed to resolve to one
    of the main executable's symbols, as for a COPY reloc.  */
 #define elf_machine_type_class(type) \
-  ((((type) == R_SPARC_JMP_SLOT                           \
-     || ((type) >= R_SPARC_TLS_GD_HI22 && (type) <= R_SPARC_TLS_TPOFF64))     \
-    * ELF_RTYPE_CLASS_PLT)                            \
-   | (((type) == R_SPARC_COPY) * ELF_RTYPE_CLASS_COPY))
+    ((((type) == R_SPARC_JMP_SLOT                           \
+       || ((type) >= R_SPARC_TLS_GD_HI22 && (type) <= R_SPARC_TLS_TPOFF64))     \
+      * ELF_RTYPE_CLASS_PLT)                            \
+     | (((type) == R_SPARC_COPY) * ELF_RTYPE_CLASS_COPY))
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT    R_SPARC_JMP_SLOT
@@ -202,7 +202,7 @@ static inline int elf_machine_runtime_setup(struct link_map *l, struct r_scope_e
 /* Undo the sub %sp, 6*8, %sp; add %sp, STACK_BIAS + 22*8, %o0 below
    (but w/o STACK_BIAS) to get at the value we want in __libc_stack_end.  */
 #define DL_STACK_END(cookie) \
-  ((void *) (((long) (cookie)) - (22 - 6) * 8))
+    ((void *) (((long) (cookie)) - (22 - 6) * 8))
 
 /* Initial entry point code for the dynamic linker.
    The C function `_dl_start' is the real entry point;
@@ -217,46 +217,46 @@ static inline int elf_machine_runtime_setup(struct link_map *l, struct r_scope_e
 #define __S(x)  __S1(x)
 
 #define RTLD_START __asm__ ( "\n"                   \
-"	.text\n"                          \
-"	.global	_start\n"                     \
-"	.type	_start, @function\n"                    \
-"	.align	32\n"                          \
-"_start:\n"                             \
-"   /* Make room for functions to drop their arguments on the stack.  */\n" \
-"	sub	%sp, 6*8, %sp\n"                  \
-"   /* Pass pointer to argument block to _dl_start.  */\n"      \
-"	call	_dl_start\n"                     \
-"	 add	 %sp," __S(STACK_BIAS) "+22*8,%o0\n"         \
-"	/* FALLTHRU */\n"                     \
-"	.size _start, .-_start\n"                 \
-"\n"                                    \
-"	.global	_dl_start_user\n"                 \
-"	.type	_dl_start_user, @function\n"                \
-"_dl_start_user:\n"                         \
-"   /* Load the GOT register.  */\n"                    \
-"1:	call	11f\n"                         \
-"	 sethi	%hi(_GLOBAL_OFFSET_TABLE_-(1b-.)), %l7\n"      \
-"11:	or	%l7, %lo(_GLOBAL_OFFSET_TABLE_-(1b-.)), %l7\n"      \
-"	add	%l7, %o7, %l7\n"                  \
-"   /* Save the user entry point address in %l0.  */\n"         \
-"	mov	%o0, %l0\n"                       \
-"	ldx	[%sp + " __S(STACK_BIAS) " + 22*8], %i5\n"        \
-"  /* %o0 = _dl_loaded, %o1 = argc, %o2 = argv, %o3 = envp.  */\n"  \
-""  RTLD_GOT_ADDRESS(%l7, %o0, _rtld_local)             \
-"	sllx	%i5, 3, %o3\n"                       \
-"	add	%sp, " __S(STACK_BIAS) " + 23*8, %o2\n"           \
-"	add	%o3, 8, %o3\n"                        \
-"	mov	%i5, %o1\n"                       \
-"	add	%o2, %o3, %o3\n"                  \
-"	call	_dl_init\n"                      \
-"	 ldx	[%o0], %o0\n"                        \
-"   /* Pass our finalizer function to the user in %g1.  */\n"       \
-       RTLD_GOT_ADDRESS(%l7, %g1, _dl_fini)             \
-"  /* Jump to the user's entry point and deallocate the extra stack we got.  */\n" \
-"	jmp	%l0\n"                            \
-"	 add	%sp, 6*8, %sp\n"                 \
-"	.size	_dl_start_user, . - _dl_start_user\n"           \
-"	.previous\n");
+                             "	.text\n"                          \
+                             "	.global	_start\n"                     \
+                             "	.type	_start, @function\n"                    \
+                             "	.align	32\n"                          \
+                             "_start:\n"                             \
+                             "   /* Make room for functions to drop their arguments on the stack.  */\n" \
+                             "	sub	%sp, 6*8, %sp\n"                  \
+                             "   /* Pass pointer to argument block to _dl_start.  */\n"      \
+                             "	call	_dl_start\n"                     \
+                             "	 add	 %sp," __S(STACK_BIAS) "+22*8,%o0\n"         \
+                             "	/* FALLTHRU */\n"                     \
+                             "	.size _start, .-_start\n"                 \
+                             "\n"                                    \
+                             "	.global	_dl_start_user\n"                 \
+                             "	.type	_dl_start_user, @function\n"                \
+                             "_dl_start_user:\n"                         \
+                             "   /* Load the GOT register.  */\n"                    \
+                             "1:	call	11f\n"                         \
+                             "	 sethi	%hi(_GLOBAL_OFFSET_TABLE_-(1b-.)), %l7\n"      \
+                             "11:	or	%l7, %lo(_GLOBAL_OFFSET_TABLE_-(1b-.)), %l7\n"      \
+                             "	add	%l7, %o7, %l7\n"                  \
+                             "   /* Save the user entry point address in %l0.  */\n"         \
+                             "	mov	%o0, %l0\n"                       \
+                             "	ldx	[%sp + " __S(STACK_BIAS) " + 22*8], %i5\n"        \
+                             "  /* %o0 = _dl_loaded, %o1 = argc, %o2 = argv, %o3 = envp.  */\n"  \
+                             ""  RTLD_GOT_ADDRESS(%l7, %o0, _rtld_local)             \
+                             "	sllx	%i5, 3, %o3\n"                       \
+                             "	add	%sp, " __S(STACK_BIAS) " + 23*8, %o2\n"           \
+                             "	add	%o3, 8, %o3\n"                        \
+                             "	mov	%i5, %o1\n"                       \
+                             "	add	%o2, %o3, %o3\n"                  \
+                             "	call	_dl_init\n"                      \
+                             "	 ldx	[%o0], %o0\n"                        \
+                             "   /* Pass our finalizer function to the user in %g1.  */\n"       \
+                             RTLD_GOT_ADDRESS(%l7, %g1, _dl_fini)             \
+                             "  /* Jump to the user's entry point and deallocate the extra stack we got.  */\n" \
+                             "	jmp	%l0\n"                            \
+                             "	 add	%sp, 6*8, %sp\n"                 \
+                             "	.size	_dl_start_user, . - _dl_start_user\n"           \
+                             "	.previous\n");
 
 #endif /* dl_machine_h */
 

@@ -52,7 +52,7 @@ libc_hidden_proto(__sim_disabled_exceptions_global);
 extern int __sim_round_mode_global;
 libc_hidden_proto(__sim_round_mode_global);
 # define SIM_COMPAT_SYMBOL(GLOBAL_NAME, NAME) \
-  compat_symbol (libc, GLOBAL_NAME, NAME, GLIBC_2_3_2)
+    compat_symbol (libc, GLOBAL_NAME, NAME, GLIBC_2_3_2)
 # define SIM_SET_GLOBAL(GLOBAL_VAR, THREAD_VAR) ((GLOBAL_VAR) = (THREAD_VAR))
 #else
 # define SIM_SET_GLOBAL(GLOBAL_VAR, THREAD_VAR) ((void) 0)

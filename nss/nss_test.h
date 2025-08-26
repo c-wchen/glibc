@@ -64,29 +64,29 @@ extern void _nss_test2_init_hook(test_tables *) __attribute__((weak));
 
 #define PWD(u) \
     { .pw_name = (char *) "name" #u, .pw_passwd = (char *) "*", .pw_uid = u,  \
-      .pw_gid = 100, .pw_gecos = (char *) "*", .pw_dir = (char *) "*",        \
-      .pw_shell = (char *) "*" }
+                 .pw_gid = 100, .pw_gecos = (char *) "*", .pw_dir = (char *) "*",        \
+                                            .pw_shell = (char *) "*" }
 
 #define PWD_N(u,n)                              \
     { .pw_name = (char *) n, .pw_passwd = (char *) "*", .pw_uid = u,  \
-      .pw_gid = 100, .pw_gecos = (char *) "*", .pw_dir = (char *) "*",        \
-      .pw_shell = (char *) "*" }
+                                          .pw_gid = 100, .pw_gecos = (char *) "*", .pw_dir = (char *) "*",        \
+                                                  .pw_shell = (char *) "*" }
 
 #define GRP(u) \
     { .gr_name = (char *) "name" #u, .gr_passwd = (char *) "*", .gr_gid = u, \
-      .gr_mem = (char **) group_##u }
+                 .gr_mem = (char **) group_##u }
 
 #define GRP_N(u,n,m)                             \
     { .gr_name = (char *) n, .gr_passwd = (char *) "*", .gr_gid = u, \
-      .gr_mem = (char **) m }
+                                          .gr_mem = (char **) m }
 
 #define SPWD(u) \
     { .sp_namp = (char *) "name" #u, .sp_pwdp = (char *) "passwd" #u }
 
 #define HOST(u)                             \
     { .h_name = (char *) "name" #u, .h_aliases = NULL, .h_addrtype = u, \
-      .h_length = 4,                            \
-      .h_addr_list = (char **) hostaddr_##u  }
+                .h_length = 4,                            \
+                            .h_addr_list = (char **) hostaddr_##u  }
 
 /*------------------------------------------------------------*/
 
@@ -133,7 +133,7 @@ compare_passwd_field(int i, struct passwd *p, const char *got,
 }
 
 #define COMPARE_PWD_FIELD(f) \
-  retval += compare_passwd_field (i, e, p->f, e->f, #f)
+    retval += compare_passwd_field (i, e, p->f, e->f, #f)
 
 /* Compare passwd to expected passwd, return number of "problems".
    "I" is the index into the testcase data.  */

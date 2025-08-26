@@ -36,66 +36,66 @@
 #define N_STR(VAL) STR_VAL(VAL)
 
 #define START_STATE(NAME)                   \
-case s_ ## NAME:                        \
-  {                             \
-    switch (obj)                        \
-      {
+    case s_ ## NAME:                        \
+    {                             \
+        switch (obj)                        \
+        {
 
 #define END_STATE                       \
-      default:                          \
-        return false;                       \
-      }                             \
-  break;                            \
-  }
+    default:                          \
+    return false;                       \
+    }                             \
+    break;                            \
+    }
 
 #define NEXT(OBJ, NEXT_STATE)                   \
-case o_ ## OBJ:                         \
-  current_fp_state = s_ ## NEXT_STATE;              \
-  break;
+    case o_ ## OBJ:                         \
+    current_fp_state = s_ ## NEXT_STATE;              \
+    break;
 
 #define NEXT_REQ_FR1(OBJ, NEXT_STATE)               \
-case o_ ## OBJ:                         \
-  {                             \
-    if (has_fr1)                        \
-      current_fp_state = s_ ## NEXT_STATE;          \
-    else                            \
-      return false;                     \
-  }                             \
-  break;
+    case o_ ## OBJ:                         \
+    {                             \
+        if (has_fr1)                        \
+            current_fp_state = s_ ## NEXT_STATE;          \
+        else                            \
+            return false;                     \
+    }                             \
+    break;
 
 #define NEXT_REQ_FR0(OBJ, NEXT_STATE)               \
-case o_ ## OBJ:                         \
-  {                             \
-    if (!is_r6                          \
-        || (is_r6 && has_fr1 && has_fre))           \
-      current_fp_state = s_ ## NEXT_STATE;          \
-    else                            \
-      return false;                     \
-  }                             \
-  break;
+    case o_ ## OBJ:                         \
+    {                             \
+        if (!is_r6                          \
+            || (is_r6 && has_fr1 && has_fre))           \
+            current_fp_state = s_ ## NEXT_STATE;          \
+        else                            \
+            return false;                     \
+    }                             \
+    break;
 
 #define NEXT_REQ_FRE(OBJ, NEXT_STATE)               \
-case o_ ## OBJ:                         \
-  {                             \
-    if (has_fr1 && has_fre)                 \
-      current_fp_state = s_ ## NEXT_STATE;          \
-    else                            \
-      return false;                     \
-  }                             \
-  break;
+    case o_ ## OBJ:                         \
+    {                             \
+        if (has_fr1 && has_fre)                 \
+            current_fp_state = s_ ## NEXT_STATE;          \
+        else                            \
+            return false;                     \
+    }                             \
+    break;
 
 #define NEXT_NO_MODE_CHANGE(OBJ, NEXT_STATE)            \
-case o_ ## OBJ:                         \
-  {                             \
-    if (current_mode_valid_p (s_ ## NEXT_STATE))            \
-      {                             \
-    current_fp_state = s_ ## NEXT_STATE;            \
-    cant_change_mode = true;                \
-      }                             \
-    else                            \
-      return false;                     \
-  }                             \
-  break;
+    case o_ ## OBJ:                         \
+    {                             \
+        if (current_mode_valid_p (s_ ## NEXT_STATE))            \
+        {                             \
+            current_fp_state = s_ ## NEXT_STATE;            \
+            cant_change_mode = true;                \
+        }                             \
+        else                            \
+            return false;                     \
+    }                             \
+    break;
 
 static const char *const shared_lib_names[] = {
     "tst-abi-fpanymod.so", "tst-abi-fpsoftmod.so", "tst-abi-fpsinglemod.so",

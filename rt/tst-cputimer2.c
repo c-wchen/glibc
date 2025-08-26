@@ -18,7 +18,7 @@ static clockid_t worker_thread_clock;
 
 #define TEST_CLOCK worker_thread_clock
 #define TEST_CLOCK_MISSING(clock) \
-  (setup_test () ? "thread CPU clock timer support" : NULL)
+    (setup_test () ? "thread CPU clock timer support" : NULL)
 
 /* This function is intended to rack up both user and system time.  */
 static void *chew_cpu(void *arg)

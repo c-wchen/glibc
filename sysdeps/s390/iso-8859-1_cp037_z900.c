@@ -172,69 +172,69 @@ static const unsigned char table_cp037_iso8859_1[256] __attribute__((aligned(8))
 # endif
 
 #define TR_LOOP(TABLE)                          \
-  {                                 \
-    size_t length = (inend - inptr < outend - outptr            \
-             ? inend - inptr : outend - outptr);        \
-                                    \
-    /* Process in 256 byte blocks.  */                  \
-    if (__builtin_expect (length >= 256, 0))                \
-      {                                 \
-    size_t blocks = length / 256;                   \
-    __asm__ __volatile__("0: mvc 0(256,%[R_OUT]),0(%[R_IN])\n\t"    \
-                 "   tr 0(256,%[R_OUT]),0(%[R_TBL])\n\t"    \
-                 "   la %[R_IN],256(%[R_IN])\n\t"       \
-                 "   la %[R_OUT],256(%[R_OUT])\n\t"     \
-                 BRANCH_ON_COUNT ([R_LI], 0b)       \
-                 : /* outputs */ [R_IN] "+a" (inptr)    \
-                   , [R_OUT] "+a" (outptr), [R_LI] "+d" (blocks) \
-                 : /* inputs */ [R_TBL] "a" (TABLE)     \
-                 : /* clobber list */ "memory"      \
-                 );                     \
-    length = length % 256;                      \
-      }                                 \
-                                    \
-    /* Process remaining 0...248 bytes in 8byte blocks.  */     \
-    if (length >= 8)                            \
-      {                                 \
-    size_t blocks = length / 8;                 \
-    for (int i = 0; i < blocks; i++)                \
-      {                             \
-        outptr[0] = TABLE[inptr[0]];                \
-        outptr[1] = TABLE[inptr[1]];                \
-        outptr[2] = TABLE[inptr[2]];                \
-        outptr[3] = TABLE[inptr[3]];                \
-        outptr[4] = TABLE[inptr[4]];                \
-        outptr[5] = TABLE[inptr[5]];                \
-        outptr[6] = TABLE[inptr[6]];                \
-        outptr[7] = TABLE[inptr[7]];                \
-        inptr += 8;                         \
-        outptr += 8;                        \
-      }                             \
-    length = length % 8;                        \
-      }                                 \
-                                    \
-    /* Process remaining 0...7 bytes.  */               \
-    switch (length)                         \
-      {                                 \
-      case 7: outptr[6] = TABLE[inptr[6]];              \
-    /* Fall through.  */                        \
-      case 6: outptr[5] = TABLE[inptr[5]];              \
-    /* Fall through.  */                        \
-      case 5: outptr[4] = TABLE[inptr[4]];              \
-    /* Fall through.  */                        \
-      case 4: outptr[3] = TABLE[inptr[3]];              \
-    /* Fall through.  */                        \
-      case 3: outptr[2] = TABLE[inptr[2]];              \
-    /* Fall through.  */                        \
-      case 2: outptr[1] = TABLE[inptr[1]];              \
-    /* Fall through.  */                        \
-      case 1: outptr[0] = TABLE[inptr[0]];              \
-    /* Fall through.  */                        \
-      case 0: break;                            \
-      }                                 \
-    inptr += length;                            \
-    outptr += length;                           \
-  }
+    {                                 \
+        size_t length = (inend - inptr < outend - outptr            \
+                         ? inend - inptr : outend - outptr);        \
+        \
+        /* Process in 256 byte blocks.  */                  \
+        if (__builtin_expect (length >= 256, 0))                \
+        {                                 \
+            size_t blocks = length / 256;                   \
+            __asm__ __volatile__("0: mvc 0(256,%[R_OUT]),0(%[R_IN])\n\t"    \
+                                 "   tr 0(256,%[R_OUT]),0(%[R_TBL])\n\t"    \
+                                 "   la %[R_IN],256(%[R_IN])\n\t"       \
+                                 "   la %[R_OUT],256(%[R_OUT])\n\t"     \
+                                 BRANCH_ON_COUNT ([R_LI], 0b)       \
+                                 : /* outputs */ [R_IN] "+a" (inptr)    \
+                                 , [R_OUT] "+a" (outptr), [R_LI] "+d" (blocks) \
+                                 : /* inputs */ [R_TBL] "a" (TABLE)     \
+                                 : /* clobber list */ "memory"      \
+                                );                     \
+            length = length % 256;                      \
+        }                                 \
+        \
+        /* Process remaining 0...248 bytes in 8byte blocks.  */     \
+        if (length >= 8)                            \
+        {                                 \
+            size_t blocks = length / 8;                 \
+            for (int i = 0; i < blocks; i++)                \
+            {                             \
+                outptr[0] = TABLE[inptr[0]];                \
+                outptr[1] = TABLE[inptr[1]];                \
+                outptr[2] = TABLE[inptr[2]];                \
+                outptr[3] = TABLE[inptr[3]];                \
+                outptr[4] = TABLE[inptr[4]];                \
+                outptr[5] = TABLE[inptr[5]];                \
+                outptr[6] = TABLE[inptr[6]];                \
+                outptr[7] = TABLE[inptr[7]];                \
+                inptr += 8;                         \
+                outptr += 8;                        \
+            }                             \
+            length = length % 8;                        \
+        }                                 \
+        \
+        /* Process remaining 0...7 bytes.  */               \
+        switch (length)                         \
+        {                                 \
+            case 7: outptr[6] = TABLE[inptr[6]];              \
+                /* Fall through.  */                        \
+            case 6: outptr[5] = TABLE[inptr[5]];              \
+                /* Fall through.  */                        \
+            case 5: outptr[4] = TABLE[inptr[4]];              \
+                /* Fall through.  */                        \
+            case 4: outptr[3] = TABLE[inptr[3]];              \
+                /* Fall through.  */                        \
+            case 3: outptr[2] = TABLE[inptr[2]];              \
+                /* Fall through.  */                        \
+            case 2: outptr[1] = TABLE[inptr[1]];              \
+                /* Fall through.  */                        \
+            case 1: outptr[0] = TABLE[inptr[0]];              \
+                /* Fall through.  */                        \
+            case 0: break;                            \
+        }                                 \
+        inptr += length;                            \
+        outptr += length;                           \
+    }
 
 
 /* First define the conversion function from ISO 8859-1 to CP037.  */

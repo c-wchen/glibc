@@ -22,17 +22,17 @@
 #include <locale.h>
 
 #define show(expr, nexp, wcexp, end) \
-  n = expr;                             \
-  printf (#expr " -> %zu", n);                      \
-  printf (", wc = %lu, src = buf+%td", (unsigned long int) wc,      \
-      src - (const char *) buf);                    \
-  if (n != (size_t) nexp || wc != wcexp || src != (const char *) (end)) \
+    n = expr;                             \
+    printf (#expr " -> %zu", n);                      \
+    printf (", wc = %lu, src = buf+%td", (unsigned long int) wc,      \
+            src - (const char *) buf);                    \
+    if (n != (size_t) nexp || wc != wcexp || src != (const char *) (end)) \
     {                                   \
-      printf (", expected %zu and %lu and buf+%td", (size_t) nexp,  \
-          (unsigned long int) wcexp, (end) - buf);          \
-      result = 1;                           \
+        printf (", expected %zu and %lu and buf+%td", (size_t) nexp,  \
+                (unsigned long int) wcexp, (end) - buf);          \
+        result = 1;                           \
     }                                   \
-  putc ('\n', stdout)
+    putc ('\n', stdout)
 
 static int do_test(void)
 {

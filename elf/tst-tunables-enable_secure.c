@@ -33,7 +33,7 @@
 
 static int restart;
 #define CMDLINE_OPTIONS \
-  { "restart", no_argument, &restart, 1 },
+    { "restart", no_argument, &restart, 1 },
 
 static const struct test_t {
     const char *env;

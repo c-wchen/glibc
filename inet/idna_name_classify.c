@@ -22,15 +22,15 @@
 #include <string.h>
 #include <wchar.h>
 
-enum idna_name_classification __idna_name_classify(const char *name) {
+enum idna_name_classification __idna_name_classify(const char *name)
+{
     mbstate_t mbs;
     memset(&mbs, 0, sizeof(mbs));
     const char *p = name;
     const char *end = p + strlen(p) + 1;
     bool nonascii = false;
     bool backslash = false;
-    while (true)
-    {
+    while (true) {
         wchar_t wc;
         size_t result = mbrtowc(&wc, p, end - p, &mbs);
         if (result == 0)
@@ -62,15 +62,13 @@ enum idna_name_classification __idna_name_classify(const char *name) {
         }
     }
 
-    if (nonascii)
-    {
+    if (nonascii) {
         if (backslash) {
             return idna_name_nonascii_backslash;
         } else {
             return idna_name_nonascii;
         }
-    } else
-    {
+    } else {
         return idna_name_ascii;
     }
 }

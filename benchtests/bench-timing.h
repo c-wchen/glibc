@@ -36,4 +36,4 @@ typedef hp_timing_t timing_t;
 #define TIMING_ACCUM(sum, diff) HP_TIMING_ACCUM_NT ((sum), (diff))
 
 #define TIMING_PRINT_MEAN(d_total_s, d_iters) \
-  printf ("\t%g", (d_total_s) / (d_iters))
+    printf ("\t%g", (d_total_s) / (d_iters))

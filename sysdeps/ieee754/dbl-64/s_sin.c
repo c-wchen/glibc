@@ -58,20 +58,20 @@
    The constants s1, s2, s3, etc. are pre-computed values of 1/3!, 1/5! and so
    on.  The result is returned to LHS.  */
 #define TAYLOR_SIN(xx, x, dx) \
-({                                        \
-  double t = ((POLYNOMIAL (xx)  * (x) - 0.5 * (dx))  * (xx) + (dx));          \
-  double res = (x) + t;                               \
-  res;                                        \
-})
+    ({                                        \
+        double t = ((POLYNOMIAL (xx)  * (x) - 0.5 * (dx))  * (xx) + (dx));          \
+        double res = (x) + t;                               \
+        res;                                        \
+    })
 
 #define SINCOS_TABLE_LOOKUP(u, sn, ssn, cs, ccs) \
-({                                        \
-  int4 k = u.i[LOW_HALF] << 2;                            \
-  sn = __sincostab.x[k];                              \
-  ssn = __sincostab.x[k + 1];                             \
-  cs = __sincostab.x[k + 2];                              \
-  ccs = __sincostab.x[k + 3];                             \
-})
+    ({                                        \
+        int4 k = u.i[LOW_HALF] << 2;                            \
+        sn = __sincostab.x[k];                              \
+        ssn = __sincostab.x[k + 1];                             \
+        cs = __sincostab.x[k + 2];                              \
+        ccs = __sincostab.x[k + 3];                             \
+    })
 
 #ifndef SECTION
 # define SECTION

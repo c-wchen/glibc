@@ -62,11 +62,11 @@ static __always_inline bool dl_cet_ibt_enabled(void)
 
 /* Enable shadow stack with a macro to avoid shadow stack underflow.  */
 #define ENABLE_X86_CET(cet_feature)             \
-  if ((cet_feature & GNU_PROPERTY_X86_FEATURE_1_SHSTK))     \
+    if ((cet_feature & GNU_PROPERTY_X86_FEATURE_1_SHSTK))     \
     {                               \
-      long long int kernel_feature = ARCH_SHSTK_SHSTK;      \
-      INTERNAL_SYSCALL_CALL (arch_prctl, ARCH_SHSTK_ENABLE, \
-                 kernel_feature);           \
+        long long int kernel_feature = ARCH_SHSTK_SHSTK;      \
+        INTERNAL_SYSCALL_CALL (arch_prctl, ARCH_SHSTK_ENABLE, \
+                               kernel_feature);           \
     }
 
 #define X86_STRINGIFY_1(x)  #x
@@ -76,7 +76,7 @@ static __always_inline bool dl_cet_ibt_enabled(void)
    GL(dl_x86_feature_1).  Call _dl_setup_x86_features to setup shadow
    stack.  */
 #define RTLD_START_ENABLE_X86_FEATURES \
-"\
+    "\
 	# Check if shadow stack is enabled in GL(dl_x86_feature_1).\n\
 	movl _rtld_local+" X86_STRINGIFY (RTLD_GLOBAL_DL_X86_FEATURE_1_OFFSET) "(%rip), %edx\n\
 	testl $" X86_STRINGIFY (X86_FEATURE_1_SHSTK) ", %edx\n\

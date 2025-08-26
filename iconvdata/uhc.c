@@ -3049,109 +3049,109 @@ static const char uhc_hangul_from_ucs[11172][2] = {
 #define MIN_NEEDED_OUTPUT   MIN_NEEDED_TO
 #define LOOPFCT         FROM_LOOP
 #define BODY \
-  {                                       \
-    uint32_t ch = (uint32_t) *inptr;                          \
-                                          \
-/* half-width Korean Currency WON sign                        \
-                                          \
-    if (ch == 0x5c)                               \
-      ch =  0x20a9;                               \
-    else if (ch <= 0x7f)                              \
-      ch = (uint32_t) ch;                             \
-*/                                        \
-    if (ch <= 0x7f)                               \
-      ++inptr;                                    \
-    else if (__builtin_expect (ch <= 0x80, 0)                     \
-         || __builtin_expect (ch >= 0xfe, 0)                  \
-         || __builtin_expect (ch == 0xc9, 0))                 \
-      {                                       \
-    /* This is illegal.  */                           \
-    STANDARD_FROM_LOOP_ERR_HANDLER (1);                   \
-      }                                       \
-    else                                      \
-      {                                       \
-    /* Two-byte character.  First test whether the next byte          \
-       is also available.  */                         \
-    uint32_t ch2;                                 \
-                                          \
-    if (__glibc_unlikely (inptr + 1 >= inend))                \
-      {                                   \
-        /* The second character is not available.  Store              \
-           the intermediate result.  */                   \
-        result = __GCONV_INCOMPLETE_INPUT;                    \
-        break;                                \
-      }                                   \
-                                          \
-    ch2 = inptr[1];                               \
-                                          \
-/*                                        \
-  Additional code points not present in EUC-KR                    \
-                                          \
-         1st byte             2nd byte                        \
-     0x81-0xa0            0x41-0x5a, 0x61-0x7a, 0x81-0xfe         total       \
-      (32)                 (26)   +    (26)   +    (126) = 178     5696       \
-                                          \
-     0xa1-0xc5            0x41-0x5a  0x61-0x7a  0x81-0xa0             \
-      (37)                  (26)  +   (26)    +    (32) =  84      3108       \
-                                          \
-     0xc6                 0x41-0x52                       \
-      (1)                    (18)                                   18        \
-                                          \
-                                                                    8822      \
-                                          \
-  8822(only in UHC) + 2350(both in EUC-KR and UHC) =  11,172              \
-*/                                        \
-                                          \
-    if (ch < 0xa1 || ch2 < 0xa1)                          \
-      {                                   \
-        if (__builtin_expect (ch > 0xc6, 0)                   \
-        || __builtin_expect (ch2 < 0x41, 0)               \
-        || __builtin_expect (ch2 > 0xfe, 0)               \
-        || (__builtin_expect (ch2 > 0x5a, 0) && ch2 < 0x61)       \
-        || (__builtin_expect (ch2 > 0x7a, 0) && ch2 < 0x81)       \
-        || (__builtin_expect (ch == 0xc6, 0) && ch2 > 0x52))          \
-          {                                   \
-        /* This is not legal.  */                     \
-        STANDARD_FROM_LOOP_ERR_HANDLER (1);               \
-          }                                   \
-                                          \
-        ch = uhc_extra_to_ucs[ch2 - 0x41                      \
-                 - (ch2 > 0x80 ? 12 : (ch2 > 0x60 ? 6 : 0))   \
-                 +  (ch < 0xa1                    \
-                     ? (ch - 0x81) * 178              \
-                     : 5696 + (ch - 0xa1) * 84)];         \
-                                          \
-        if (__glibc_unlikely (ch == 0))                   \
-          {                                   \
-        /* This is an illegal character.  */                  \
-        STANDARD_FROM_LOOP_ERR_HANDLER (2);               \
-          }                                   \
-                                          \
-        inptr += 2;                               \
-      }                                   \
-    else                                      \
-      {                                   \
-        ch = ksc5601_to_ucs4 (&inptr, 2, 0x80);               \
-        if (__builtin_expect (ch == __UNKNOWN_10646_CHAR, 0)          \
-        || __builtin_expect (ch == 0x327e, 0))                \
-          {                                   \
-        /* Illegal.  */                           \
-        STANDARD_FROM_LOOP_ERR_HANDLER (2);               \
-          }                                   \
-      }                                   \
-      }                                       \
-                                          \
-    put32 (outptr, ch);                               \
-    outptr += 4;                                  \
-  }
+    {                                       \
+        uint32_t ch = (uint32_t) *inptr;                          \
+        \
+        /* half-width Korean Currency WON sign                        \
+                                                  \
+            if (ch == 0x5c)                               \
+              ch =  0x20a9;                               \
+            else if (ch <= 0x7f)                              \
+              ch = (uint32_t) ch;                             \
+        */                                        \
+        if (ch <= 0x7f)                               \
+            ++inptr;                                    \
+        else if (__builtin_expect (ch <= 0x80, 0)                     \
+                 || __builtin_expect (ch >= 0xfe, 0)                  \
+                 || __builtin_expect (ch == 0xc9, 0))                 \
+        {                                       \
+            /* This is illegal.  */                           \
+            STANDARD_FROM_LOOP_ERR_HANDLER (1);                   \
+        }                                       \
+        else                                      \
+        {                                       \
+            /* Two-byte character.  First test whether the next byte          \
+               is also available.  */                         \
+            uint32_t ch2;                                 \
+            \
+            if (__glibc_unlikely (inptr + 1 >= inend))                \
+            {                                   \
+                /* The second character is not available.  Store              \
+                   the intermediate result.  */                   \
+                result = __GCONV_INCOMPLETE_INPUT;                    \
+                break;                                \
+            }                                   \
+            \
+            ch2 = inptr[1];                               \
+            \
+            /*                                        \
+              Additional code points not present in EUC-KR                    \
+                                                      \
+                     1st byte             2nd byte                        \
+                 0x81-0xa0            0x41-0x5a, 0x61-0x7a, 0x81-0xfe         total       \
+                  (32)                 (26)   +    (26)   +    (126) = 178     5696       \
+                                                      \
+                 0xa1-0xc5            0x41-0x5a  0x61-0x7a  0x81-0xa0             \
+                  (37)                  (26)  +   (26)    +    (32) =  84      3108       \
+                                                      \
+                 0xc6                 0x41-0x52                       \
+                  (1)                    (18)                                   18        \
+                                                      \
+                                                                                8822      \
+                                                      \
+              8822(only in UHC) + 2350(both in EUC-KR and UHC) =  11,172              \
+            */                                        \
+            \
+            if (ch < 0xa1 || ch2 < 0xa1)                          \
+            {                                   \
+                if (__builtin_expect (ch > 0xc6, 0)                   \
+                    || __builtin_expect (ch2 < 0x41, 0)               \
+                    || __builtin_expect (ch2 > 0xfe, 0)               \
+                    || (__builtin_expect (ch2 > 0x5a, 0) && ch2 < 0x61)       \
+                    || (__builtin_expect (ch2 > 0x7a, 0) && ch2 < 0x81)       \
+                    || (__builtin_expect (ch == 0xc6, 0) && ch2 > 0x52))          \
+                {                                   \
+                    /* This is not legal.  */                     \
+                    STANDARD_FROM_LOOP_ERR_HANDLER (1);               \
+                }                                   \
+                \
+                ch = uhc_extra_to_ucs[ch2 - 0x41                      \
+                                          - (ch2 > 0x80 ? 12 : (ch2 > 0x60 ? 6 : 0))   \
+                                          +  (ch < 0xa1                    \
+                                          ? (ch - 0x81) * 178              \
+                                          : 5696 + (ch - 0xa1) * 84)];         \
+                \
+                if (__glibc_unlikely (ch == 0))                   \
+                {                                   \
+                    /* This is an illegal character.  */                  \
+                    STANDARD_FROM_LOOP_ERR_HANDLER (2);               \
+                }                                   \
+                \
+                inptr += 2;                               \
+            }                                   \
+            else                                      \
+            {                                   \
+                ch = ksc5601_to_ucs4 (&inptr, 2, 0x80);               \
+                if (__builtin_expect (ch == __UNKNOWN_10646_CHAR, 0)          \
+                    || __builtin_expect (ch == 0x327e, 0))                \
+                {                                   \
+                    /* Illegal.  */                           \
+                    STANDARD_FROM_LOOP_ERR_HANDLER (2);               \
+                }                                   \
+            }                                   \
+        }                                       \
+        \
+        put32 (outptr, ch);                               \
+        outptr += 4;                                  \
+    }
 #define LOOP_NEED_FLAGS
 #define ONEBYTE_BODY \
-  {                                       \
-    if (c < 0x80)                                 \
-      return c;                                   \
-    else                                      \
-      return WEOF;                                \
-  }
+    {                                       \
+        if (c < 0x80)                                 \
+            return c;                                   \
+        else                                      \
+            return WEOF;                                \
+    }
 #include <iconv/loop.c>
 
 
@@ -3161,68 +3161,68 @@ static const char uhc_hangul_from_ucs[11172][2] = {
 #define MAX_NEEDED_OUTPUT   MAX_NEEDED_FROM
 #define LOOPFCT         TO_LOOP
 #define BODY \
-  {                                       \
-    uint32_t ch = get32 (inptr);                          \
-                                          \
-    if (ch <= 0x7f)                               \
-      /* XXX Think about 0x5c ; '\'.  */                      \
-      *outptr++ = ch;                                 \
-    else if (ch >= 0xac00 && ch <= 0xd7a3)                    \
-      {                                       \
-    const char *s = uhc_hangul_from_ucs[ch - 0xac00];             \
-                                          \
-    if (__glibc_unlikely (outptr + 2 > outend))               \
-      {                                   \
-        result = __GCONV_FULL_OUTPUT;                     \
-        break;                                \
-      }                                   \
-                                          \
-    *outptr++ = s[0];                             \
-    *outptr++ = s[1];                             \
-      }                                       \
-    else if ((ch >= 0x4e00 && ch <= 0x9fa5) || (ch >= 0xf900 && ch <= 0xfa0b))\
-      {                                       \
-    size_t written = ucs4_to_ksc5601_hanja (ch, outptr, outend - outptr); \
-                                          \
-    if (__glibc_unlikely (written == 0))                      \
-      {                                   \
-        result = __GCONV_FULL_OUTPUT;                     \
-        break;                                \
-      }                                   \
-    if (__glibc_unlikely (written == __UNKNOWN_10646_CHAR))           \
-      {                                   \
-        STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
-      }                                   \
-                                          \
-    *outptr++ |= 0x80;                            \
-    *outptr++ |= 0x80;                            \
-      }                                       \
-/* Half-width Korean Currency Won Sign                        \
-      else if (ch == 0x20a9)                              \
-        idx = 0x5c00;                                 \
-*/                                        \
-    else                                      \
-      {                                       \
-    size_t written = ucs4_to_ksc5601_sym (ch, outptr, outend - outptr);   \
-                                          \
-    if (__builtin_expect (ch == 0x327e, 0)                    \
-        || __builtin_expect (written == __UNKNOWN_10646_CHAR, 0))         \
-      {                                   \
-        UNICODE_TAG_HANDLER (ch, 4);                      \
-        STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
-      }                                   \
-    if (__glibc_unlikely (written == 0))                      \
-      {                                   \
-        result = __GCONV_FULL_OUTPUT;                     \
-        break;                                \
-      }                                   \
-                                          \
-    *outptr++ |= 0x80;                            \
-    *outptr++ |= 0x80;                            \
-      }                                       \
-                                          \
-    inptr += 4;                                   \
-  }
+    {                                       \
+        uint32_t ch = get32 (inptr);                          \
+        \
+        if (ch <= 0x7f)                               \
+            /* XXX Think about 0x5c ; '\'.  */                      \
+            *outptr++ = ch;                                 \
+        else if (ch >= 0xac00 && ch <= 0xd7a3)                    \
+        {                                       \
+            const char *s = uhc_hangul_from_ucs[ch - 0xac00];             \
+            \
+            if (__glibc_unlikely (outptr + 2 > outend))               \
+            {                                   \
+                result = __GCONV_FULL_OUTPUT;                     \
+                break;                                \
+            }                                   \
+            \
+            *outptr++ = s[0];                             \
+            *outptr++ = s[1];                             \
+        }                                       \
+        else if ((ch >= 0x4e00 && ch <= 0x9fa5) || (ch >= 0xf900 && ch <= 0xfa0b))\
+        {                                       \
+            size_t written = ucs4_to_ksc5601_hanja (ch, outptr, outend - outptr); \
+            \
+            if (__glibc_unlikely (written == 0))                      \
+            {                                   \
+                result = __GCONV_FULL_OUTPUT;                     \
+                break;                                \
+            }                                   \
+            if (__glibc_unlikely (written == __UNKNOWN_10646_CHAR))           \
+            {                                   \
+                STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
+            }                                   \
+            \
+            *outptr++ |= 0x80;                            \
+            *outptr++ |= 0x80;                            \
+        }                                       \
+        /* Half-width Korean Currency Won Sign                        \
+              else if (ch == 0x20a9)                              \
+                idx = 0x5c00;                                 \
+        */                                        \
+        else                                      \
+        {                                       \
+            size_t written = ucs4_to_ksc5601_sym (ch, outptr, outend - outptr);   \
+            \
+            if (__builtin_expect (ch == 0x327e, 0)                    \
+                || __builtin_expect (written == __UNKNOWN_10646_CHAR, 0))         \
+            {                                   \
+                UNICODE_TAG_HANDLER (ch, 4);                      \
+                STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
+            }                                   \
+            if (__glibc_unlikely (written == 0))                      \
+            {                                   \
+                result = __GCONV_FULL_OUTPUT;                     \
+                break;                                \
+            }                                   \
+            \
+            *outptr++ |= 0x80;                            \
+            *outptr++ |= 0x80;                            \
+        }                                       \
+        \
+        inptr += 4;                                   \
+    }
 #define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 

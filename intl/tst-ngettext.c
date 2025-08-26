@@ -39,16 +39,16 @@ static int do_test(void)
 
         tr = ngettext(strs[0], strs[1], i);
 #define TEST \
-      do                                      \
-    if (tr != strs[i != 1])                           \
-      {                                   \
-        if (strcmp (tr, strs[i != 1]) == 0)                   \
-          printf ("%lu: correct string, wrong pointer (%s)\n", i, tr);    \
-        else                                  \
-          printf ("%lu: wrong result (%s)\n", i, tr);             \
-        res = 1;                                  \
-      }                                   \
-      while (0)
+    do                                      \
+        if (tr != strs[i != 1])                           \
+        {                                   \
+            if (strcmp (tr, strs[i != 1]) == 0)                   \
+                printf ("%lu: correct string, wrong pointer (%s)\n", i, tr);    \
+            else                                  \
+                printf ("%lu: wrong result (%s)\n", i, tr);             \
+            res = 1;                                  \
+        }                                   \
+    while (0)
         TEST;
 
         tr = dngettext("messages", strs[0], strs[1], i);

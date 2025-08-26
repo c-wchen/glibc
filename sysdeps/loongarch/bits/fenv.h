@@ -41,7 +41,7 @@ enum {
 };
 
 #define FE_ALL_EXCEPT \
-  (FE_INEXACT | FE_DIVBYZERO | FE_UNDERFLOW | FE_OVERFLOW | FE_INVALID)
+    (FE_INEXACT | FE_DIVBYZERO | FE_UNDERFLOW | FE_OVERFLOW | FE_INVALID)
 
 /* The LoongArch FPU supports all of the four defined rounding modes.  We
    use again the bit positions in the FPU control word as the values

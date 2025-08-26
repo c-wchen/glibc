@@ -35,10 +35,10 @@ static bool check_relro(const struct link_map *l, uintptr_t start, uintptr_t end
     return dl_readonly_area_writable;
 }
 
-enum dl_readonly_area_error_type _dl_readonly_area(const void *ptr, size_t size) {
+enum dl_readonly_area_error_type _dl_readonly_area(const void *ptr, size_t size)
+{
     struct dl_find_object dlfo;
-    if (_dl_find_object((void *)ptr, &dlfo) != 0)
-    {
+    if (_dl_find_object((void *)ptr, &dlfo) != 0) {
         return dl_readonly_area_not_found;
     }
 
@@ -47,15 +47,14 @@ enum dl_readonly_area_error_type _dl_readonly_area(const void *ptr, size_t size)
     uintptr_t ptr_end = ptr_start + size;
 
     for (const ElfW(Phdr) *ph = l->l_phdr; ph < &l->l_phdr[l->l_phnum]; ++ph)
-        if (ph->p_type == PT_LOAD)
-        {
+        if (ph->p_type == PT_LOAD) {
             /* For segments with alignment larger than the page size,
                _dl_map_segment allocates additional space that is mark as
                PROT_NONE (so we can ignore).  */
             uintptr_t from = l->l_addr
-            + ALIGN_DOWN(ph->p_vaddr, GLRO(dl_pagesize));
+                             + ALIGN_DOWN(ph->p_vaddr, GLRO(dl_pagesize));
             uintptr_t to = l->l_addr
-            + ALIGN_UP(ph->p_vaddr + ph->p_filesz, GLRO(dl_pagesize));
+                           + ALIGN_UP(ph->p_vaddr + ph->p_filesz, GLRO(dl_pagesize));
 
             /* Found an entry that at least partially covers the area.  */
             if (from < ptr_end && to > ptr_start) {

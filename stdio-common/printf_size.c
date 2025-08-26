@@ -26,50 +26,50 @@
 #define PAD(f, c, n) (wide ? _IO_wpadn (f, c, n) : _IO_padn (f, c, n))
 #undef putc
 #define putc(c, f) (wide \
-            ? (int)_IO_putwc_unlocked (c, f) : _IO_putc_unlocked (c, f))
+                    ? (int)_IO_putwc_unlocked (c, f) : _IO_putc_unlocked (c, f))
 
 
 /* Macros for doing the actual output.  */
 
 #define outchar(ch)                               \
-  do                                          \
+    do                                          \
     {                                         \
-      const int outc = (ch);                              \
-      if (putc (outc, fp) == EOF)                         \
-    return -1;                                \
-      ++done;                                     \
+        const int outc = (ch);                              \
+        if (putc (outc, fp) == EOF)                         \
+            return -1;                                \
+        ++done;                                     \
     } while (0)
 
 #define PRINT(ptr, wptr, len)                             \
-  do                                          \
+    do                                          \
     {                                         \
-      size_t outlen = (len);                              \
-      if (len > 20)                               \
-    {                                     \
-      if (PUT (fp, wide ? (const char *) wptr : ptr, outlen) != outlen)   \
-        return -1;                                \
-      ptr += outlen;                              \
-      done += outlen;                             \
-    }                                     \
-      else                                    \
-    {                                     \
-      if (wide)                               \
-        while (outlen-- > 0)                          \
-          outchar (*wptr++);                          \
-      else                                    \
-        while (outlen-- > 0)                          \
-          outchar (*ptr++);                           \
-    }                                     \
+        size_t outlen = (len);                              \
+        if (len > 20)                               \
+        {                                     \
+            if (PUT (fp, wide ? (const char *) wptr : ptr, outlen) != outlen)   \
+                return -1;                                \
+            ptr += outlen;                              \
+            done += outlen;                             \
+        }                                     \
+        else                                    \
+        {                                     \
+            if (wide)                               \
+                while (outlen-- > 0)                          \
+                    outchar (*wptr++);                          \
+            else                                    \
+                while (outlen-- > 0)                          \
+                    outchar (*ptr++);                           \
+        }                                     \
     } while (0)
 
 #define PADN(ch, len)                                 \
-  do                                          \
+    do                                          \
     {                                         \
-      if (PAD (fp, ch, len) != len)                       \
-    return -1;                                \
-      done += len;                                \
+        if (PAD (fp, ch, len) != len)                       \
+            return -1;                                \
+        done += len;                                \
     }                                         \
-  while (0)
+    while (0)
 
 /* Prototype for helper functions.  */
 extern int __printf_fp(FILE *fp, const struct printf_info *info,
@@ -111,29 +111,29 @@ int __printf_size(FILE *fp, const struct printf_info *info,
     int wide = info->wide;
 
 #define PRINTF_SIZE_FETCH(FLOAT, VAR)                   \
-  {                                 \
-    (VAR) = *(const FLOAT *) args[0];                   \
-                                    \
-    /* Check for special values: not a number or infinity.  */      \
-    if (isnan (VAR))                            \
-      {                                 \
-    special = "nan";                        \
-    wspecial = L"nan";                      \
-    /* is_neg = 0; Already zero */                  \
-      }                                 \
-    else if (isinf (VAR))                       \
-      {                                 \
-    is_neg = signbit (VAR);                     \
-    special = "inf";                        \
-    wspecial = L"inf";                      \
-      }                                 \
-    else                                \
-      while ((VAR) >= divisor && tag[1] != '\0')            \
-    {                               \
-      (VAR) /= divisor;                     \
-      ++tag;                            \
-    }                               \
-  }
+    {                                 \
+        (VAR) = *(const FLOAT *) args[0];                   \
+        \
+        /* Check for special values: not a number or infinity.  */      \
+        if (isnan (VAR))                            \
+        {                                 \
+            special = "nan";                        \
+            wspecial = L"nan";                      \
+            /* is_neg = 0; Already zero */                  \
+        }                                 \
+        else if (isinf (VAR))                       \
+        {                                 \
+            is_neg = signbit (VAR);                     \
+            special = "inf";                        \
+            wspecial = L"inf";                      \
+        }                                 \
+        else                                \
+            while ((VAR) >= divisor && tag[1] != '\0')            \
+            {                               \
+                (VAR) /= divisor;                     \
+                ++tag;                            \
+            }                               \
+    }
 
     /* Fetch the argument value.  */
 #if __HAVE_DISTINCT_FLOAT128

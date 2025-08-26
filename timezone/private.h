@@ -309,9 +309,9 @@
 #endif
 #ifndef HAVE_STDINT_H
 # define HAVE_STDINT_H \
-   (199901 <= __STDC_VERSION__ \
-    || 2 < __GLIBC__ + (1 <= __GLIBC_MINOR__) \
-    || __CYGWIN__ || INTMAX_MAX)
+    (199901 <= __STDC_VERSION__ \
+     || 2 < __GLIBC__ + (1 <= __GLIBC_MINOR__) \
+     || __CYGWIN__ || INTMAX_MAX)
 #endif /* !defined HAVE_STDINT_H */
 
 #if HAVE_STDINT_H
@@ -849,10 +849,10 @@ ATTRIBUTE_PURE time_t time2posix_z(timezone_t, time_t);
    B bits are used, and where the highest-order used bit is considered
    to be a sign bit if T is signed.  */
 #define MAXVAL(t, b)                        \
-  ((t) (((t) 1 << ((b) - 1 - TYPE_SIGNED(t)))           \
-    - 1 + ((t) 1 << ((b) - 1 - TYPE_SIGNED(t)))))
+    ((t) (((t) 1 << ((b) - 1 - TYPE_SIGNED(t)))           \
+          - 1 + ((t) 1 << ((b) - 1 - TYPE_SIGNED(t)))))
 #define MINVAL(t, b)                        \
-  ((t) (TYPE_SIGNED(t) ? - TWOS_COMPLEMENT(t) - MAXVAL(t, b) : 0))
+    ((t) (TYPE_SIGNED(t) ? - TWOS_COMPLEMENT(t) - MAXVAL(t, b) : 0))
 
 /* The extreme time values, assuming no padding.  */
 #define TIME_T_MIN_NO_PADDING MINVAL(time_t, TYPE_BIT(time_t))
@@ -867,16 +867,16 @@ ATTRIBUTE_PURE time_t time2posix_z(timezone_t, time_t);
 #if HAVE__GENERIC
 # define TIME_T_MIN \
     _Generic((time_t) 0, \
-         signed char: SCHAR_MIN, short: SHRT_MIN, \
-         int: INT_MIN, long: LONG_MIN, long long: LLONG_MIN, \
-         default: TIME_T_MIN_NO_PADDING)
+             signed char: SCHAR_MIN, short: SHRT_MIN, \
+             int: INT_MIN, long: LONG_MIN, long long: LLONG_MIN, \
+             default: TIME_T_MIN_NO_PADDING)
 # define TIME_T_MAX \
     (TYPE_SIGNED(time_t) \
      ? _Generic((time_t) 0, \
-        signed char: SCHAR_MAX, short: SHRT_MAX, \
-        int: INT_MAX, long: LONG_MAX, long long: LLONG_MAX, \
-        default: TIME_T_MAX_NO_PADDING)             \
-     : (time_t) -1)
+                signed char: SCHAR_MAX, short: SHRT_MAX, \
+                int: INT_MAX, long: LONG_MAX, long long: LLONG_MAX, \
+                default: TIME_T_MAX_NO_PADDING)             \
+         : (time_t) -1)
 enum { SIGNED_PADDING_CHECK_NEEDED
        = _Generic((time_t) 0,
                   signed char: false, short: false,
@@ -904,7 +904,7 @@ static_assert(! TYPE_SIGNED(time_t) || ! SIGNED_PADDING_CHECK_NEEDED
 */
 #define INT_STRLEN_MAXIMUM(type) \
     ((TYPE_BIT(type) - TYPE_SIGNED(type)) * 302 / 1000 + \
-    1 + TYPE_SIGNED(type))
+     1 + TYPE_SIGNED(type))
 
 /*
 ** INITIALIZE(x)

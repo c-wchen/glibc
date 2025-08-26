@@ -34,16 +34,16 @@ struct libc_ifunc_impl {
 /* Add an IFUNC implementation, IMPL, for function FUNC, to ARRAY with
    USABLE at index I and advance I by one.  */
 #define IFUNC_IMPL_ADD(array, max, func, usable, impl) \
-  extern __typeof (func) impl attribute_hidden; \
-  if (n < max) (array)[n++] = (struct libc_ifunc_impl) { #impl, (void (*) (void)) impl, (usable) };
+    extern __typeof (func) impl attribute_hidden; \
+    if (n < max) (array)[n++] = (struct libc_ifunc_impl) { #impl, (void (*) (void)) impl, (usable) };
 
 /* Return the number of IFUNC implementations, N, for function FUNC if
    string NAME matches FUNC.  */
 #define IFUNC_IMPL(max, name, func, ...) \
-  if (strcmp (name, #func) == 0) \
+    if (strcmp (name, #func) == 0) \
     { size_t n = 0;\
-      __VA_ARGS__; \
-      return n; \
+        __VA_ARGS__; \
+        return n; \
     }
 
 /* Fill ARRAY of MAX elements with IFUNC implementations for function

@@ -45,12 +45,12 @@ static int do_test(locale_t l)
     size_t n;
 
 #define DO_TEST(TEST, RES) \
-  for (n = 0; n < sizeof (str) - 1; ++n)                      \
-    if ('0' + (TEST (str[n], l) != 0) != RES[n])                  \
-      {                                       \
-    printf ("%s(%c) failed\n", #TEST, str[n]);                \
-    result = 1;                               \
-      }
+    for (n = 0; n < sizeof (str) - 1; ++n)                      \
+        if ('0' + (TEST (str[n], l) != 0) != RES[n])                  \
+        {                                       \
+            printf ("%s(%c) failed\n", #TEST, str[n]);                \
+            result = 1;                               \
+        }
 
     DO_TEST(isdigit_l, exd);
     DO_TEST(isalpha_l, exa);

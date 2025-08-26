@@ -30,7 +30,7 @@
 
 #define sizeof_field(TYPE, MEMBER) sizeof ((((TYPE *)0)->MEMBER))
 #define offsetofend(TYPE, MEMBER) \
-  (offsetof (TYPE, MEMBER) + sizeof_field (TYPE, MEMBER))
+    (offsetof (TYPE, MEMBER) + sizeof_field (TYPE, MEMBER))
 
 _Static_assert(__alignof(struct clone_args) == 8,
                "__alignof (struct clone_args) != 8");

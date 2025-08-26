@@ -99,22 +99,22 @@ void *__memchr(const void *s, int xc, size_t n)
            reading across page boundary.  */
 #define CACHELINE_LOOP              \
     do {                    \
-      word i, next = s_align[0];        \
-      for (i = 0; i < 7; ++i)       \
+        word i, next = s_align[0];        \
+        for (i = 0; i < 7; ++i)       \
         {                   \
-          current = next;           \
-          next = s_align[1];        \
-          found = find (current, c);    \
-          if (unlikely (found))     \
-        goto found_it;          \
-          s_align++;            \
+            current = next;           \
+            next = s_align[1];        \
+            found = find (current, c);    \
+            if (unlikely (found))     \
+                goto found_it;          \
+            s_align++;            \
         }                   \
-      current = next;           \
-      found = find (current, c);        \
-      if (unlikely (found))         \
-        goto found_it;          \
-      s_align++;                \
-      n -= 64;              \
+        current = next;           \
+        found = find (current, c);        \
+        if (unlikely (found))         \
+            goto found_it;          \
+        s_align++;                \
+        n -= 64;              \
     } while (0)
 
         /* While there's still lots more data to potentially be read,

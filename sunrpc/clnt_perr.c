@@ -150,67 +150,67 @@ static const char rpc_errstr[] = {
     N_("RPC: Can't encode arguments")
     "\0"
 #define RPC_CANTDECODERES_IDX   (RPC_CANTENCODEARGS_IDX \
-                 + sizeof "RPC: Can't encode arguments")
+                                 + sizeof "RPC: Can't encode arguments")
     N_("RPC: Can't decode result")
     "\0"
 #define RPC_CANTSEND_IDX    (RPC_CANTDECODERES_IDX \
-                 + sizeof "RPC: Can't decode result")
+                             + sizeof "RPC: Can't decode result")
     N_("RPC: Unable to send")
     "\0"
 #define RPC_CANTRECV_IDX    (RPC_CANTSEND_IDX \
-                 + sizeof "RPC: Unable to send")
+                             + sizeof "RPC: Unable to send")
     N_("RPC: Unable to receive")
     "\0"
 #define RPC_TIMEDOUT_IDX    (RPC_CANTRECV_IDX \
-                 + sizeof "RPC: Unable to receive")
+                             + sizeof "RPC: Unable to receive")
     N_("RPC: Timed out")
     "\0"
 #define RPC_VERSMISMATCH_IDX    (RPC_TIMEDOUT_IDX \
-                 + sizeof "RPC: Timed out")
+                                 + sizeof "RPC: Timed out")
     N_("RPC: Incompatible versions of RPC")
     "\0"
 #define RPC_AUTHERROR_IDX   (RPC_VERSMISMATCH_IDX \
-                 + sizeof "RPC: Incompatible versions of RPC")
+                             + sizeof "RPC: Incompatible versions of RPC")
     N_("RPC: Authentication error")
     "\0"
 #define RPC_PROGUNAVAIL_IDX     (RPC_AUTHERROR_IDX \
-                 + sizeof "RPC: Authentication error")
+                                 + sizeof "RPC: Authentication error")
     N_("RPC: Program unavailable")
     "\0"
 #define RPC_PROGVERSMISMATCH_IDX (RPC_PROGUNAVAIL_IDX \
-                  + sizeof "RPC: Program unavailable")
+                                  + sizeof "RPC: Program unavailable")
     N_("RPC: Program/version mismatch")
     "\0"
 #define RPC_PROCUNAVAIL_IDX (RPC_PROGVERSMISMATCH_IDX \
-                 + sizeof "RPC: Program/version mismatch")
+                             + sizeof "RPC: Program/version mismatch")
     N_("RPC: Procedure unavailable")
     "\0"
 #define RPC_CANTDECODEARGS_IDX  (RPC_PROCUNAVAIL_IDX \
-                 + sizeof "RPC: Procedure unavailable")
+                                 + sizeof "RPC: Procedure unavailable")
     N_("RPC: Server can't decode arguments")
     "\0"
 #define RPC_SYSTEMERROR_IDX (RPC_CANTDECODEARGS_IDX \
-                 + sizeof "RPC: Server can't decode arguments")
+                             + sizeof "RPC: Server can't decode arguments")
     N_("RPC: Remote system error")
     "\0"
 #define RPC_UNKNOWNHOST_IDX (RPC_SYSTEMERROR_IDX \
-                 + sizeof "RPC: Remote system error")
+                             + sizeof "RPC: Remote system error")
     N_("RPC: Unknown host")
     "\0"
 #define RPC_UNKNOWNPROTO_IDX    (RPC_UNKNOWNHOST_IDX \
-                 + sizeof "RPC: Unknown host")
+                                 + sizeof "RPC: Unknown host")
     N_("RPC: Unknown protocol")
     "\0"
 #define RPC_PMAPFAILURE_IDX (RPC_UNKNOWNPROTO_IDX \
-                 + sizeof "RPC: Unknown protocol")
+                             + sizeof "RPC: Unknown protocol")
     N_("RPC: Port mapper failure")
     "\0"
 #define RPC_PROGNOTREGISTERED_IDX (RPC_PMAPFAILURE_IDX \
-                   + sizeof "RPC: Port mapper failure")
+                                   + sizeof "RPC: Port mapper failure")
     N_("RPC: Program not registered")
     "\0"
 #define RPC_FAILED_IDX      (RPC_PROGNOTREGISTERED_IDX \
-                 + sizeof "RPC: Program not registered")
+                             + sizeof "RPC: Program not registered")
     N_("RPC: Failed (unspecified error)")
 };
 
@@ -328,27 +328,27 @@ static const char auth_errstr[] = {
     N_("Invalid client credential")
     "\0"
 #define AUTH_REJECTEDCRED_IDX   (AUTH_BADCRED_IDX \
-                 + sizeof "Invalid client credential")
+                                 + sizeof "Invalid client credential")
     N_("Server rejected credential")
     "\0"
 #define AUTH_BADVERF_IDX    (AUTH_REJECTEDCRED_IDX \
-                 + sizeof "Server rejected credential")
+                             + sizeof "Server rejected credential")
     N_("Invalid client verifier")
     "\0"
 #define AUTH_REJECTEDVERF_IDX   (AUTH_BADVERF_IDX \
-                 + sizeof "Invalid client verifier")
+                                 + sizeof "Invalid client verifier")
     N_("Server rejected verifier")
     "\0"
 #define AUTH_TOOWEAK_IDX    (AUTH_REJECTEDVERF_IDX \
-                 + sizeof "Server rejected verifier")
+                             + sizeof "Server rejected verifier")
     N_("Client credential too weak")
     "\0"
 #define AUTH_INVALIDRESP_IDX    (AUTH_TOOWEAK_IDX \
-                 + sizeof "Client credential too weak")
+                                 + sizeof "Client credential too weak")
     N_("Invalid server verifier")
     "\0"
 #define AUTH_FAILED_IDX     (AUTH_INVALIDRESP_IDX \
-                 + sizeof "Invalid server verifier")
+                             + sizeof "Invalid server verifier")
     N_("Failed (unspecified error)")
 };
 

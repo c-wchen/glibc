@@ -32,7 +32,7 @@ struct tchars {
 };
 
 # define    _IOT_tchars /* Hurd ioctl type field.  */ \
-  _IOT (_IOTS (char), 6, 0, 0, 0, 0)
+    _IOT (_IOTS (char), 6, 0, 0, 0, 0)
 #endif
 
 #if defined TIOCGLTC || defined TIOCSLTC
@@ -47,7 +47,7 @@ struct ltchars {
 };
 
 # define    _IOT_ltchars    /* Hurd ioctl type field.  */ \
-  _IOT (_IOTS (char), 6, 0, 0, 0, 0)
+    _IOT (_IOTS (char), 6, 0, 0, 0, 0)
 #endif
 
 /* Type of ARG for TIOCGETP and TIOCSETP requests (and gtty and stty).  */
@@ -60,7 +60,7 @@ struct sgttyb {
 };
 
 #define _IOT_sgttyb /* Hurd ioctl type field.  */ \
-  _IOT (_IOTS (char), 4, _IOTS (short int), 1, 0, 0)
+    _IOT (_IOTS (char), 4, _IOTS (short int), 1, 0, 0)
 
 #if defined TIOCGWINSZ || defined TIOCSWINSZ
 /* Type of ARG for TIOCGWINSZ and TIOCSWINSZ requests.  */
@@ -74,7 +74,7 @@ struct winsize {
 };
 
 # define    _IOT_winsize    /* Hurd ioctl type field.  */ \
-  _IOT (_IOTS (unsigned short int), 4, 0, 0, 0, 0)
+    _IOT (_IOTS (unsigned short int), 4, 0, 0, 0, 0)
 #endif
 
 #if defined TIOCGSIZE || defined TIOCSSIZE

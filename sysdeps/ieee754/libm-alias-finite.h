@@ -26,12 +26,12 @@
    symbol so newer architectures do not require to support it.  */
 #if SHLIB_COMPAT (libm, GLIBC_2_15, GLIBC_2_31)
 # define libm_alias_finite(from, to)                \
-  libm_alias_finite1(from, to)
+    libm_alias_finite1(from, to)
 # define libm_alias_finite1(from, to)               \
-compat_symbol (libm,                        \
-           from,                        \
-           to ## _finite,                   \
-           FIRST_VERSION_libm_ ## to ## _finite);
+    compat_symbol (libm,                        \
+                   from,                        \
+                   to ## _finite,                   \
+                   FIRST_VERSION_libm_ ## to ## _finite);
 #else
 # define libm_alias_finite(from, to)
 #endif

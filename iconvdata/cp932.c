@@ -4529,114 +4529,114 @@ static const char from_ucs4_extra[229][2] = {
 #define MIN_NEEDED_OUTPUT   MIN_NEEDED_TO
 #define LOOPFCT         FROM_LOOP
 #define BODY \
-  {                                       \
-    uint32_t ch = *inptr;                             \
-                                          \
-    if (ch < 0x80)                                \
-      ++inptr;                                    \
-    else if (ch >= 0xa1 && ch <= 0xdf)                                        \
-      {                                                                       \
-    ch += 0xfec0;                                                         \
-    ++inptr;                                                              \
-      }                                       \
-    else if (__builtin_expect (ch, 0) == 0xa0                     \
-         || __builtin_expect (ch <= 0x80, 0)                  \
-         || __builtin_expect (ch > 0xfc, 0))                  \
-      {                                       \
-    /* These are illegal.  */                         \
-    if (! ignore_errors_p ())                         \
-      {                                   \
-        /* This is an illegal character.  */                  \
-        result = __gconv_mark_illegal_input (step_data);              \
-        break;                                \
-      }                                   \
-                                          \
-    ++inptr;                                  \
-    ++*irreversible;                              \
-    continue;                                 \
-      }                                       \
-    else                                      \
-      {                                       \
-    /* Two-byte character.  First test whether the next character         \
-       is also available.  */                         \
-    uint32_t ch2;                                 \
-    uint32_t idx;                             \
-                                          \
-    if (__glibc_unlikely (inptr + 1 >= inend))                \
-      {                                   \
-        /* The second character is not available.  Store              \
-           the intermediate result.  */                   \
-        result = __GCONV_INCOMPLETE_INPUT;                    \
-        break;                                \
-      }                                   \
-                                          \
-    ch2 = inptr[1];                               \
-    idx = ch * 256 + ch2;                             \
-    if (__builtin_expect (ch2 < 0x40, 0)                      \
-        || __builtin_expect (ch2 > 0xfc, 0)                   \
-        || __builtin_expect (ch2 == 0x7f, 0)                  \
-        || (__builtin_expect (idx > 0x84be, 0) && idx < 0x8740)       \
-        || (__builtin_expect (idx > 0x879c, 0) && idx < 0x889f)       \
-        || (__builtin_expect (idx > 0x88fc, 0) && idx < 0x8940)       \
-        || (__builtin_expect (idx > 0x9ffc, 0) && idx < 0xe040)       \
-        || (__builtin_expect (idx > 0xeaa4, 0) && idx < 0xed40)       \
-        || (__builtin_expect (idx > 0xeefc, 0) && idx < 0xf040)       \
-        || __builtin_expect (idx > 0xfc4b, 0))                \
-      {                                   \
-        /* This is illegal.  */                       \
-        if (! ignore_errors_p ())                         \
-          {                                   \
-        /* This is an illegal character.  */                  \
-        result = __gconv_mark_illegal_input (step_data);          \
-        break;                                \
-          }                                   \
-                                          \
-        ++inptr;                                  \
-        ++*irreversible;                              \
-        continue;                                 \
-      }                                   \
-                                          \
-    /* We could pack the data a bit more dense.  The second           \
-       byte will never be 0x7f and it will also be never              \
-       >0xfc.  But this would mean yet more `if's.  */            \
-    if (idx <= 0x84be)                            \
-      ch = cjk_block1[(ch - 0x81) * 192 + ch2 - 0x40];            \
-    else if (idx <= 0x879c)                           \
-      ch = cjk_block2[(ch - 0x87) * 192 + ch2 - 0x40];            \
-    else if (idx <= 0x88fc)                           \
-      ch = cjk_block3[(ch - 0x88) * 192 + ch2 - 0x9f];            \
-    else if (idx <= 0x9ffc)                           \
-      ch = cjk_block4[(ch - 0x89) * 192 + ch2 - 0x40];            \
-    else if (idx <= 0xeaa4)                           \
-      ch = cjk_block5[(ch - 0xe0) * 192 + ch2 - 0x40];            \
-    else if (idx <= 0xeefc)                           \
-      ch = cjk_block6[(ch - 0xed) * 192 + ch2 - 0x40];            \
-    else if (idx <= 0xf9fc)                           \
-      ch = (ch-0xf0)*188 + ch2-((ch2<0x7f)?0x40:0x41) + 0xe000;       \
-    else                                      \
-      ch = cjk_block7[(ch - 0xfa) * 192 + ch2 - 0x40];            \
-                                          \
-    if (__builtin_expect (ch, 1) == 0)                    \
-      {                                   \
-        /* This is an illegal character.  */                  \
-        if (! ignore_errors_p ())                         \
-          {                                   \
-        /* This is an illegal character.  */                  \
-        result = __gconv_mark_illegal_input (step_data);          \
-        break;                                \
-          }                                   \
-                                          \
-        inptr += 2;                               \
-        ++*irreversible;                              \
-        continue;                                 \
-      }                                   \
-                                          \
-    inptr += 2;                               \
-      }                                       \
-                                          \
-    put32 (outptr, ch);                               \
-    outptr += 4;                                  \
-  }
+    {                                       \
+        uint32_t ch = *inptr;                             \
+        \
+        if (ch < 0x80)                                \
+            ++inptr;                                    \
+        else if (ch >= 0xa1 && ch <= 0xdf)                                        \
+        {                                                                       \
+            ch += 0xfec0;                                                         \
+            ++inptr;                                                              \
+        }                                       \
+        else if (__builtin_expect (ch, 0) == 0xa0                     \
+                 || __builtin_expect (ch <= 0x80, 0)                  \
+                 || __builtin_expect (ch > 0xfc, 0))                  \
+        {                                       \
+            /* These are illegal.  */                         \
+            if (! ignore_errors_p ())                         \
+            {                                   \
+                /* This is an illegal character.  */                  \
+                result = __gconv_mark_illegal_input (step_data);              \
+                break;                                \
+            }                                   \
+            \
+            ++inptr;                                  \
+            ++*irreversible;                              \
+            continue;                                 \
+        }                                       \
+        else                                      \
+        {                                       \
+            /* Two-byte character.  First test whether the next character         \
+               is also available.  */                         \
+            uint32_t ch2;                                 \
+            uint32_t idx;                             \
+            \
+            if (__glibc_unlikely (inptr + 1 >= inend))                \
+            {                                   \
+                /* The second character is not available.  Store              \
+                   the intermediate result.  */                   \
+                result = __GCONV_INCOMPLETE_INPUT;                    \
+                break;                                \
+            }                                   \
+            \
+            ch2 = inptr[1];                               \
+            idx = ch * 256 + ch2;                             \
+            if (__builtin_expect (ch2 < 0x40, 0)                      \
+                || __builtin_expect (ch2 > 0xfc, 0)                   \
+                || __builtin_expect (ch2 == 0x7f, 0)                  \
+                || (__builtin_expect (idx > 0x84be, 0) && idx < 0x8740)       \
+                || (__builtin_expect (idx > 0x879c, 0) && idx < 0x889f)       \
+                || (__builtin_expect (idx > 0x88fc, 0) && idx < 0x8940)       \
+                || (__builtin_expect (idx > 0x9ffc, 0) && idx < 0xe040)       \
+                || (__builtin_expect (idx > 0xeaa4, 0) && idx < 0xed40)       \
+                || (__builtin_expect (idx > 0xeefc, 0) && idx < 0xf040)       \
+                || __builtin_expect (idx > 0xfc4b, 0))                \
+            {                                   \
+                /* This is illegal.  */                       \
+                if (! ignore_errors_p ())                         \
+                {                                   \
+                    /* This is an illegal character.  */                  \
+                    result = __gconv_mark_illegal_input (step_data);          \
+                    break;                                \
+                }                                   \
+                \
+                ++inptr;                                  \
+                ++*irreversible;                              \
+                continue;                                 \
+            }                                   \
+            \
+            /* We could pack the data a bit more dense.  The second           \
+               byte will never be 0x7f and it will also be never              \
+               >0xfc.  But this would mean yet more `if's.  */            \
+            if (idx <= 0x84be)                            \
+                ch = cjk_block1[(ch - 0x81) * 192 + ch2 - 0x40];            \
+            else if (idx <= 0x879c)                           \
+                ch = cjk_block2[(ch - 0x87) * 192 + ch2 - 0x40];            \
+            else if (idx <= 0x88fc)                           \
+                ch = cjk_block3[(ch - 0x88) * 192 + ch2 - 0x9f];            \
+            else if (idx <= 0x9ffc)                           \
+                ch = cjk_block4[(ch - 0x89) * 192 + ch2 - 0x40];            \
+            else if (idx <= 0xeaa4)                           \
+                ch = cjk_block5[(ch - 0xe0) * 192 + ch2 - 0x40];            \
+            else if (idx <= 0xeefc)                           \
+                ch = cjk_block6[(ch - 0xed) * 192 + ch2 - 0x40];            \
+            else if (idx <= 0xf9fc)                           \
+                ch = (ch-0xf0)*188 + ch2-((ch2<0x7f)?0x40:0x41) + 0xe000;       \
+            else                                      \
+                ch = cjk_block7[(ch - 0xfa) * 192 + ch2 - 0x40];            \
+            \
+            if (__builtin_expect (ch, 1) == 0)                    \
+            {                                   \
+                /* This is an illegal character.  */                  \
+                if (! ignore_errors_p ())                         \
+                {                                   \
+                    /* This is an illegal character.  */                  \
+                    result = __gconv_mark_illegal_input (step_data);          \
+                    break;                                \
+                }                                   \
+                \
+                inptr += 2;                               \
+                ++*irreversible;                              \
+                continue;                                 \
+            }                                   \
+            \
+            inptr += 2;                               \
+        }                                       \
+        \
+        put32 (outptr, ch);                               \
+        outptr += 4;                                  \
+    }
 #define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 
@@ -4647,64 +4647,64 @@ static const char from_ucs4_extra[229][2] = {
 #define MAX_NEEDED_OUTPUT   MAX_NEEDED_FROM
 #define LOOPFCT         TO_LOOP
 #define BODY \
-  {                                       \
-    uint32_t ch = get32 (inptr);                          \
-    const char *cp;                               \
-    unsigned char pua[2];                             \
-                                          \
-    if (ch >= (sizeof (from_ucs4_lat1) / sizeof (from_ucs4_lat1[0])))         \
-      {                                       \
-    if (ch >= 0x0391 && ch <= 0x0451)                     \
-      cp = from_ucs4_greek[ch - 0x391];                   \
-    else if (ch >= 0x2010 && ch <= 0x9fa0)                    \
-      cp = from_ucs4_cjk[ch - 0x2010];                    \
-    else if (ch >= 0xe000 && ch <= 0xe757)                    \
-      {                                   \
-        pua[0] = (ch - 0xe000) / 188 + 0xf0;                  \
-        pua[1] = (ch - 0xe000) % 188 + 0x40;                  \
-        if (pua[1] > 0x7e)                            \
-          pua[1]++;                               \
-        cp = (const char *)&(pua[0]);                     \
-      }                                   \
-    else if (ch >= 0xf929 && ch <= 0xfa2d)                    \
-      cp = from_ucs4_cjkcpt[ch - 0xf929];                     \
-    else if (__builtin_expect (ch >= 0xff01, 1)               \
-         && __builtin_expect (ch <= 0xffe5, 1))               \
-      cp = from_ucs4_extra[ch - 0xff01];                      \
-    else                                      \
-      {                                   \
-        UNICODE_TAG_HANDLER (ch, 4);                      \
-        /* Illegal character.  */                         \
-        cp = "";                                  \
-      }                                   \
-      }                                       \
-    else                                      \
-      cp = from_ucs4_lat1[ch];                            \
-                                          \
-    if (__builtin_expect (cp[0], '\1') == '\0' && ch != 0)            \
-      {                                       \
-    /* Illegal character.  */                         \
-    STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
-      }                                       \
-    else                                      \
-      {                                       \
-    *outptr = cp[0];                              \
-    /* Now test for a possible second byte and write this if possible.  */\
-    if (cp[1] != '\0')                            \
-      {                                   \
-        if (__glibc_unlikely (outptr + 1 >= outend))              \
-          {                                   \
-        /* The result does not fit into the buffer.  */           \
-        result = __GCONV_FULL_OUTPUT;                     \
-        break;                                \
-          }                                   \
-        *++outptr = cp[1];                            \
-      }                                   \
-    ++outptr;                                 \
-      }                                       \
-                                          \
-    inptr += 4;                                   \
-  }
+    {                                       \
+        uint32_t ch = get32 (inptr);                          \
+        const char *cp;                               \
+        unsigned char pua[2];                             \
+        \
+        if (ch >= (sizeof (from_ucs4_lat1) / sizeof (from_ucs4_lat1[0])))         \
+        {                                       \
+            if (ch >= 0x0391 && ch <= 0x0451)                     \
+                cp = from_ucs4_greek[ch - 0x391];                   \
+            else if (ch >= 0x2010 && ch <= 0x9fa0)                    \
+                cp = from_ucs4_cjk[ch - 0x2010];                    \
+            else if (ch >= 0xe000 && ch <= 0xe757)                    \
+            {                                   \
+                pua[0] = (ch - 0xe000) / 188 + 0xf0;                  \
+                pua[1] = (ch - 0xe000) % 188 + 0x40;                  \
+                if (pua[1] > 0x7e)                            \
+                    pua[1]++;                               \
+                cp = (const char *)&(pua[0]);                     \
+            }                                   \
+            else if (ch >= 0xf929 && ch <= 0xfa2d)                    \
+                cp = from_ucs4_cjkcpt[ch - 0xf929];                     \
+            else if (__builtin_expect (ch >= 0xff01, 1)               \
+                     && __builtin_expect (ch <= 0xffe5, 1))               \
+                cp = from_ucs4_extra[ch - 0xff01];                      \
+            else                                      \
+            {                                   \
+                UNICODE_TAG_HANDLER (ch, 4);                      \
+                /* Illegal character.  */                         \
+                cp = "";                                  \
+            }                                   \
+        }                                       \
+        else                                      \
+            cp = from_ucs4_lat1[ch];                            \
+        \
+        if (__builtin_expect (cp[0], '\1') == '\0' && ch != 0)            \
+        {                                       \
+            /* Illegal character.  */                         \
+            STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
+        }                                       \
+        else                                      \
+        {                                       \
+            *outptr = cp[0];                              \
+            /* Now test for a possible second byte and write this if possible.  */\
+            if (cp[1] != '\0')                            \
+            {                                   \
+                if (__glibc_unlikely (outptr + 1 >= outend))              \
+                {                                   \
+                    /* The result does not fit into the buffer.  */           \
+                    result = __GCONV_FULL_OUTPUT;                     \
+                    break;                                \
+                }                                   \
+                *++outptr = cp[1];                            \
+            }                                   \
+            ++outptr;                                 \
+        }                                       \
+        \
+        inptr += 4;                                   \
+    }
 #define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 

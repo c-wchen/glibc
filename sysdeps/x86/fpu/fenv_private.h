@@ -276,7 +276,7 @@ static __always_inline void libc_feresetround_387(fenv_t *e)
 /* The SSE rounding mode is used by soft-fp (libgcc and glibc) on
    x86_64, so that must be set for float128 computations.  */
 # define SET_RESTORE_ROUNDF128(RM) \
-  SET_RESTORE_ROUND_GENERIC (RM, libc_feholdsetround_sse, libc_feresetround_sse)
+    SET_RESTORE_ROUND_GENERIC (RM, libc_feholdsetround_sse, libc_feresetround_sse)
 # define libc_feholdexcept_setroundf128 libc_feholdexcept_setround_sse
 # define libc_feupdateenv_testf128  libc_feupdateenv_test_sse
 #else

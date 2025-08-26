@@ -51,72 +51,72 @@
    the negation of the return value in the kernel gets reverted.  */
 
 #define INTERNAL_VSYSCALL_CALL_TYPE(funcptr, type, nr, args...)         \
-  ({                                    \
-    register void *r0  __asm__ ("r0");                  \
-    register long int r3  __asm__ ("r3");               \
-    register long int r4  __asm__ ("r4");               \
-    register long int r5  __asm__ ("r5");               \
-    register long int r6  __asm__ ("r6");               \
-    register long int r7  __asm__ ("r7");               \
-    register long int r8  __asm__ ("r8");               \
-    register type rval  __asm__ ("r3");                     \
-    LOADARGS_##nr (funcptr, args);                  \
-    __asm__ __volatile__                        \
-      ("mtctr %0\n\t"                           \
-       "bctrl\n\t"                          \
-       MFCR0(%0) "\n\t"                         \
-       "0:"                             \
-       : "+r" (r0), "+r" (r3), "+r" (r4), "+r" (r5),  "+r" (r6),        \
+    ({                                    \
+        register void *r0  __asm__ ("r0");                  \
+        register long int r3  __asm__ ("r3");               \
+        register long int r4  __asm__ ("r4");               \
+        register long int r5  __asm__ ("r5");               \
+        register long int r6  __asm__ ("r6");               \
+        register long int r7  __asm__ ("r7");               \
+        register long int r8  __asm__ ("r8");               \
+        register type rval  __asm__ ("r3");                     \
+        LOADARGS_##nr (funcptr, args);                  \
+        __asm__ __volatile__                        \
+        ("mtctr %0\n\t"                           \
+         "bctrl\n\t"                          \
+         MFCR0(%0) "\n\t"                         \
+         "0:"                             \
+         : "+r" (r0), "+r" (r3), "+r" (r4), "+r" (r5),  "+r" (r6),        \
          "+r" (r7), "+r" (r8)                       \
-       : : "r9", "r10", "r11", "r12",                   \
-           "cr0", "cr1", "cr5", "cr6", "cr7",               \
-           "xer", "lr", "ctr", "memory");               \
-    __asm__ __volatile__ ("" : "=r" (rval) : "r" (r3));             \
-    (long int) r0 & (1 << 28) ? -rval : rval;               \
-  })
+         : : "r9", "r10", "r11", "r12",                   \
+         "cr0", "cr1", "cr5", "cr6", "cr7",               \
+         "xer", "lr", "ctr", "memory");               \
+        __asm__ __volatile__ ("" : "=r" (rval) : "r" (r3));             \
+        (long int) r0 & (1 << 28) ? -rval : rval;               \
+    })
 
 #define INTERNAL_VSYSCALL_CALL(funcptr, nr, args...)            \
-  INTERNAL_VSYSCALL_CALL_TYPE(funcptr, long int, nr, args)
+    INTERNAL_VSYSCALL_CALL_TYPE(funcptr, long int, nr, args)
 
 #define DECLARE_REGS                \
-  register long int r0  __asm__ ("r0");     \
-  register long int r3  __asm__ ("r3");     \
-  register long int r4  __asm__ ("r4");     \
-  register long int r5  __asm__ ("r5");     \
-  register long int r6  __asm__ ("r6");     \
-  register long int r7  __asm__ ("r7");     \
-  register long int r8  __asm__ ("r8");
+    register long int r0  __asm__ ("r0");     \
+    register long int r3  __asm__ ("r3");     \
+    register long int r4  __asm__ ("r4");     \
+    register long int r5  __asm__ ("r5");     \
+    register long int r6  __asm__ ("r6");     \
+    register long int r7  __asm__ ("r7");     \
+    register long int r8  __asm__ ("r8");
 
 #define SYSCALL_SCV(nr)             \
-  ({                        \
-    __asm__ __volatile__            \
-      (".machine \"push\"\n\t"          \
-       ".machine \"power9\"\n\t"        \
-       "scv 0\n\t"              \
-       ".machine \"pop\"\n\t"           \
-       "0:"                 \
-       : "+r" (r0),             \
-     "+r" (r3), "+r" (r4), "+r" (r5),   \
-     "+r" (r6), "+r" (r7), "+r" (r8)    \
-       : : "r9", "r10", "r11", "r12",       \
-     "cr0", "cr1", "cr5", "cr6", "cr7", \
-     "xer", "lr", "ctr", "memory");     \
-    r3;                 \
-  })
+    ({                        \
+        __asm__ __volatile__            \
+        (".machine \"push\"\n\t"          \
+         ".machine \"power9\"\n\t"        \
+         "scv 0\n\t"              \
+         ".machine \"pop\"\n\t"           \
+         "0:"                 \
+         : "+r" (r0),             \
+         "+r" (r3), "+r" (r4), "+r" (r5),   \
+         "+r" (r6), "+r" (r7), "+r" (r8)    \
+         : : "r9", "r10", "r11", "r12",       \
+         "cr0", "cr1", "cr5", "cr6", "cr7", \
+         "xer", "lr", "ctr", "memory");     \
+        r3;                 \
+    })
 
 #define SYSCALL_SC(nr)              \
-  ({                        \
-    __asm__ __volatile__            \
-      ("sc\n\t"             \
-       MFCR0(%0) "\n\t"             \
-       "0:"                 \
-       : "+r" (r0),             \
-     "+r" (r3), "+r" (r4), "+r" (r5),   \
-     "+r" (r6), "+r" (r7), "+r" (r8)    \
-       : : "r9", "r10", "r11", "r12",       \
-     "xer", "cr0", "ctr", "memory");    \
-    r0 & (1 << 28) ? -r3 : r3;          \
-  })
+    ({                        \
+        __asm__ __volatile__            \
+        ("sc\n\t"             \
+         MFCR0(%0) "\n\t"             \
+         "0:"                 \
+         : "+r" (r0),             \
+         "+r" (r3), "+r" (r4), "+r" (r5),   \
+         "+r" (r6), "+r" (r7), "+r" (r8)    \
+         : : "r9", "r10", "r11", "r12",       \
+         "xer", "cr0", "ctr", "memory");    \
+        r0 & (1 << 28) ? -r3 : r3;          \
+    })
 
 /* This will only be non-empty for 64-bit systems, see below.  */
 #define TRY_SYSCALL_SCV(nr)
@@ -138,8 +138,8 @@
 # if defined(USE_PPC_SCV) && !IS_IN(rtld)
 #  undef TRY_SYSCALL_SCV
 #  define TRY_SYSCALL_SCV(nr)                       \
-  CHECK_THREAD_POINTER && THREAD_GET_HWCAP() & PPC_FEATURE2_SCV ?   \
-      SYSCALL_SCV(nr) :
+    CHECK_THREAD_POINTER && THREAD_GET_HWCAP() & PPC_FEATURE2_SCV ?   \
+    SYSCALL_SCV(nr) :
 # endif
 
 #else
@@ -147,16 +147,16 @@
 #endif
 
 # define INTERNAL_SYSCALL_NCS(name, nr, args...)    \
-  ({                            \
-    DECLARE_REGS;                   \
-    LOADARGS_##nr (name, ##args);           \
-    TRY_SYSCALL_SCV(nr)                 \
-    SYSCALL_SC(nr);                 \
-  })
+    ({                            \
+        DECLARE_REGS;                   \
+        LOADARGS_##nr (name, ##args);           \
+        TRY_SYSCALL_SCV(nr)                 \
+        SYSCALL_SC(nr);                 \
+    })
 
 #undef INTERNAL_SYSCALL
 #define INTERNAL_SYSCALL(name, nr, args...)             \
-  INTERNAL_SYSCALL_NCS (__NR_##name, nr, args)
+    INTERNAL_SYSCALL_NCS (__NR_##name, nr, args)
 
 #define LOADARGS_0(name, dummy) \
     r0 = name
@@ -166,7 +166,7 @@
     extern void __illegally_sized_syscall_arg1 (void); \
     if (__builtin_classify_type (__arg1) != 5 \
         && sizeof (__arg1) > SYSCALL_ARG_SIZE) \
-      __illegally_sized_syscall_arg1 (); \
+        __illegally_sized_syscall_arg1 (); \
     r3 = _arg1
 #define LOADARGS_2(name, __arg1, __arg2) \
     long int _arg2 = (long int) (__arg2); \
@@ -174,7 +174,7 @@
     extern void __illegally_sized_syscall_arg2 (void); \
     if (__builtin_classify_type (__arg2) != 5 \
         && sizeof (__arg2) > SYSCALL_ARG_SIZE) \
-      __illegally_sized_syscall_arg2 (); \
+        __illegally_sized_syscall_arg2 (); \
     r4 = _arg2
 #define LOADARGS_3(name, __arg1, __arg2, __arg3) \
     long int _arg3 = (long int) (__arg3); \
@@ -182,7 +182,7 @@
     extern void __illegally_sized_syscall_arg3 (void); \
     if (__builtin_classify_type (__arg3) != 5 \
         && sizeof (__arg3) > SYSCALL_ARG_SIZE) \
-      __illegally_sized_syscall_arg3 (); \
+        __illegally_sized_syscall_arg3 (); \
     r5 = _arg3
 #define LOADARGS_4(name, __arg1, __arg2, __arg3, __arg4) \
     long int _arg4 = (long int) (__arg4); \
@@ -190,7 +190,7 @@
     extern void __illegally_sized_syscall_arg4 (void); \
     if (__builtin_classify_type (__arg4) != 5 \
         && sizeof (__arg4) > SYSCALL_ARG_SIZE) \
-      __illegally_sized_syscall_arg4 (); \
+        __illegally_sized_syscall_arg4 (); \
     r6 = _arg4
 #define LOADARGS_5(name, __arg1, __arg2, __arg3, __arg4, __arg5) \
     long int _arg5 = (long int) (__arg5); \
@@ -198,7 +198,7 @@
     extern void __illegally_sized_syscall_arg5 (void); \
     if (__builtin_classify_type (__arg5) != 5 \
         && sizeof (__arg5) > SYSCALL_ARG_SIZE) \
-      __illegally_sized_syscall_arg5 (); \
+        __illegally_sized_syscall_arg5 (); \
     r7 = _arg5
 #define LOADARGS_6(name, __arg1, __arg2, __arg3, __arg4, __arg5, __arg6) \
     long int _arg6 = (long int) (__arg6); \
@@ -206,7 +206,7 @@
     extern void __illegally_sized_syscall_arg6 (void); \
     if (__builtin_classify_type (__arg6) != 5 \
         && sizeof (__arg6) > SYSCALL_ARG_SIZE) \
-      __illegally_sized_syscall_arg6 (); \
+        __illegally_sized_syscall_arg6 (); \
     r8 = _arg6
 
 /* List of system calls which are supported as vsyscalls.  */

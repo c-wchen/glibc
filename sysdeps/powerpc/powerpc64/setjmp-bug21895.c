@@ -22,10 +22,10 @@
 
 /* Copy r1 address to a local variable.  */
 #define GET_STACK_POINTER(sp)     \
-  ({                  \
-    asm volatile ("mr %0, 1\n\t"  \
-          : "=r" (sp));   \
-  })
+    ({                  \
+        asm volatile ("mr %0, 1\n\t"  \
+                      : "=r" (sp));   \
+    })
 
 jmp_buf jb;
 void (*bar)(jmp_buf, unsigned long);

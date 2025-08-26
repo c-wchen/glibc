@@ -25,34 +25,34 @@
 #include <support/check.h>
 
 #define CLEAR_VARGS                         \
-  va_start (args, format);                      \
-  ldptr = va_arg (args, long double *);                 \
-  fptr = va_arg (args, float *);                    \
-  *ldptr = 0;                               \
-  *fptr = 0;                                \
-  va_end (args);
+    va_start (args, format);                      \
+    ldptr = va_arg (args, long double *);                 \
+    fptr = va_arg (args, float *);                    \
+    *ldptr = 0;                               \
+    *fptr = 0;                                \
+    va_end (args);
 
 #define CHECK_VARGS                         \
-  va_start (args, format);                      \
-  ldptr = va_arg (args, long double *);                 \
-  fptr = va_arg (args, float *);                    \
-  va_end (args);                            \
-  if (*ldptr == -1 && *fptr == -2 && ret == 2)              \
-    printf ("OK");                          \
-  else                                  \
-    printf ("ERROR (%Lf %f %d)", *ldptr, *fptr, ret);           \
-  printf ("\n");
+    va_start (args, format);                      \
+    ldptr = va_arg (args, long double *);                 \
+    fptr = va_arg (args, float *);                    \
+    va_end (args);                            \
+    if (*ldptr == -1 && *fptr == -2 && ret == 2)              \
+        printf ("OK");                          \
+    else                                  \
+        printf ("ERROR (%Lf %f %d)", *ldptr, *fptr, ret);           \
+    printf ("\n");
 
 #define CLEAR_VALUE                         \
-  ld = 0;                               \
-  f = 0;
+    ld = 0;                               \
+    f = 0;
 
 #define CHECK_VALUE                         \
-  if (ld == -1 && f == -2 && ret == 2)                  \
-    printf ("OK");                          \
-  else                                  \
-    printf ("ERROR (%Lf %f %d)", ld, f, ret);               \
-  printf ("\n");
+    if (ld == -1 && f == -2 && ret == 2)                  \
+        printf ("OK");                          \
+    else                                  \
+        printf ("ERROR (%Lf %f %d)", ld, f, ret);               \
+    printf ("\n");
 
 static void do_test_call(FILE *stream, CHAR *string, const CHAR *format, ...)
 {

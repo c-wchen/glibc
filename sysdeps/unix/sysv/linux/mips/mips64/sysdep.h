@@ -76,218 +76,218 @@
 #undef INTERNAL_SYSCALL
 #define INTERNAL_SYSCALL(name, nr, args...)         \
     internal_syscall##nr ("li\t%0, %2\t\t\t# " #name "\n\t",    \
-                  "IK" (SYS_ify (name)),            \
-                  0, args)
+                          "IK" (SYS_ify (name)),            \
+                          0, args)
 
 #undef INTERNAL_SYSCALL_NCS
 #define INTERNAL_SYSCALL_NCS(number, nr, args...)           \
     internal_syscall##nr (MOVE32 "\t%0, %2\n\t",            \
-                  "r" (__s0),               \
-                  number, args)
+                          "r" (__s0),               \
+                          number, args)
 
 #define internal_syscall0(v0_init, input, number, dummy...) \
-({                                  \
-    long int _sys_result;                       \
-                                    \
-    {                               \
-    register __syscall_arg_t __s0 asm ("$16") __attribute__ ((unused))\
-      = (number);                           \
-    register __syscall_arg_t __v0 asm ("$2");           \
-    register __syscall_arg_t __a3 asm ("$7");           \
-    __asm__ volatile (                      \
-    ".set\tnoreorder\n\t"                       \
-    v0_init                             \
-    "syscall\n\t"                           \
-    ".set reorder"                          \
-    : "=r" (__v0), "=r" (__a3)                  \
-    : input                             \
-    : __SYSCALL_CLOBBERS);                      \
-    _sys_result = __a3 != 0 ? -__v0 : __v0;             \
-    }                               \
-    _sys_result;                            \
-})
+    ({                                  \
+        long int _sys_result;                       \
+        \
+        {                               \
+            register __syscall_arg_t __s0 asm ("$16") __attribute__ ((unused))\
+                = (number);                           \
+            register __syscall_arg_t __v0 asm ("$2");           \
+            register __syscall_arg_t __a3 asm ("$7");           \
+            __asm__ volatile (                      \
+                                                    ".set\tnoreorder\n\t"                       \
+                                                    v0_init                             \
+                                                    "syscall\n\t"                           \
+                                                    ".set reorder"                          \
+                                                    : "=r" (__v0), "=r" (__a3)                  \
+                                                    : input                             \
+                                                    : __SYSCALL_CLOBBERS);                      \
+            _sys_result = __a3 != 0 ? -__v0 : __v0;             \
+        }                               \
+        _sys_result;                            \
+    })
 
 #define internal_syscall1(v0_init, input, number, arg1)     \
-({                                  \
-    long int _sys_result;                       \
-                                    \
-    {                               \
-    __syscall_arg_t _arg1 = __SSC (arg1);               \
-    register __syscall_arg_t __s0 asm ("$16") __attribute__ ((unused))\
-      = (number);                           \
-    register __syscall_arg_t __v0 asm ("$2");           \
-    register __syscall_arg_t __a0 asm ("$4") = _arg1;       \
-    register __syscall_arg_t __a3 asm ("$7");           \
-    __asm__ volatile (                      \
-    ".set\tnoreorder\n\t"                       \
-    v0_init                             \
-    "syscall\n\t"                           \
-    ".set reorder"                          \
-    : "=r" (__v0), "=r" (__a3)                  \
-    : input, "r" (__a0)                     \
-    : __SYSCALL_CLOBBERS);                      \
-    _sys_result = __a3 != 0 ? -__v0 : __v0;             \
-    }                               \
-    _sys_result;                            \
-})
+    ({                                  \
+        long int _sys_result;                       \
+        \
+        {                               \
+            __syscall_arg_t _arg1 = __SSC (arg1);               \
+            register __syscall_arg_t __s0 asm ("$16") __attribute__ ((unused))\
+                = (number);                           \
+            register __syscall_arg_t __v0 asm ("$2");           \
+            register __syscall_arg_t __a0 asm ("$4") = _arg1;       \
+            register __syscall_arg_t __a3 asm ("$7");           \
+            __asm__ volatile (                      \
+                                                    ".set\tnoreorder\n\t"                       \
+                                                    v0_init                             \
+                                                    "syscall\n\t"                           \
+                                                    ".set reorder"                          \
+                                                    : "=r" (__v0), "=r" (__a3)                  \
+                                                    : input, "r" (__a0)                     \
+                                                    : __SYSCALL_CLOBBERS);                      \
+            _sys_result = __a3 != 0 ? -__v0 : __v0;             \
+        }                               \
+        _sys_result;                            \
+    })
 
 #define internal_syscall2(v0_init, input, number, arg1, arg2)   \
-({                                  \
-    long int _sys_result;                       \
-                                    \
-    {                               \
-    __syscall_arg_t _arg1 = __SSC (arg1);               \
-    __syscall_arg_t _arg2 = __SSC (arg2);               \
-    register __syscall_arg_t __s0 asm ("$16") __attribute__ ((unused))\
-      = (number);                           \
-    register __syscall_arg_t __v0 asm ("$2");           \
-    register __syscall_arg_t __a0 asm ("$4") = _arg1;       \
-    register __syscall_arg_t __a1 asm ("$5") = _arg2;       \
-    register __syscall_arg_t __a3 asm ("$7");           \
-    __asm__ volatile (                      \
-    ".set\tnoreorder\n\t"                       \
-    v0_init                             \
-    "syscall\n\t"                           \
-    ".set\treorder"                         \
-    : "=r" (__v0), "=r" (__a3)                  \
-    : input, "r" (__a0), "r" (__a1)                 \
-    : __SYSCALL_CLOBBERS);                      \
-    _sys_result = __a3 != 0 ? -__v0 : __v0;             \
-    }                               \
-    _sys_result;                            \
-})
+    ({                                  \
+        long int _sys_result;                       \
+        \
+        {                               \
+            __syscall_arg_t _arg1 = __SSC (arg1);               \
+            __syscall_arg_t _arg2 = __SSC (arg2);               \
+            register __syscall_arg_t __s0 asm ("$16") __attribute__ ((unused))\
+                = (number);                           \
+            register __syscall_arg_t __v0 asm ("$2");           \
+            register __syscall_arg_t __a0 asm ("$4") = _arg1;       \
+            register __syscall_arg_t __a1 asm ("$5") = _arg2;       \
+            register __syscall_arg_t __a3 asm ("$7");           \
+            __asm__ volatile (                      \
+                                                    ".set\tnoreorder\n\t"                       \
+                                                    v0_init                             \
+                                                    "syscall\n\t"                           \
+                                                    ".set\treorder"                         \
+                                                    : "=r" (__v0), "=r" (__a3)                  \
+                                                    : input, "r" (__a0), "r" (__a1)                 \
+                                                    : __SYSCALL_CLOBBERS);                      \
+            _sys_result = __a3 != 0 ? -__v0 : __v0;             \
+        }                               \
+        _sys_result;                            \
+    })
 
 #define internal_syscall3(v0_init, input, number, arg1, arg2, arg3) \
-({                                  \
-    long int _sys_result;                       \
-                                    \
-    {                               \
-    __syscall_arg_t _arg1 = __SSC (arg1);               \
-    __syscall_arg_t _arg2 = __SSC (arg2);               \
-    __syscall_arg_t _arg3 = __SSC (arg3);               \
-    register __syscall_arg_t __s0 asm ("$16") __attribute__ ((unused))\
-      = (number);                           \
-    register __syscall_arg_t __v0 asm ("$2");           \
-    register __syscall_arg_t __a0 asm ("$4") = _arg1;       \
-    register __syscall_arg_t __a1 asm ("$5") = _arg2;       \
-    register __syscall_arg_t __a2 asm ("$6") = _arg3;       \
-    register __syscall_arg_t __a3 asm ("$7");           \
-    __asm__ volatile (                      \
-    ".set\tnoreorder\n\t"                       \
-    v0_init                             \
-    "syscall\n\t"                           \
-    ".set\treorder"                         \
-    : "=r" (__v0), "=r" (__a3)                  \
-    : input, "r" (__a0), "r" (__a1), "r" (__a2)         \
-    : __SYSCALL_CLOBBERS);                      \
-    _sys_result = __a3 != 0 ? -__v0 : __v0;             \
-    }                               \
-    _sys_result;                            \
-})
+    ({                                  \
+        long int _sys_result;                       \
+        \
+        {                               \
+            __syscall_arg_t _arg1 = __SSC (arg1);               \
+            __syscall_arg_t _arg2 = __SSC (arg2);               \
+            __syscall_arg_t _arg3 = __SSC (arg3);               \
+            register __syscall_arg_t __s0 asm ("$16") __attribute__ ((unused))\
+                = (number);                           \
+            register __syscall_arg_t __v0 asm ("$2");           \
+            register __syscall_arg_t __a0 asm ("$4") = _arg1;       \
+            register __syscall_arg_t __a1 asm ("$5") = _arg2;       \
+            register __syscall_arg_t __a2 asm ("$6") = _arg3;       \
+            register __syscall_arg_t __a3 asm ("$7");           \
+            __asm__ volatile (                      \
+                                                    ".set\tnoreorder\n\t"                       \
+                                                    v0_init                             \
+                                                    "syscall\n\t"                           \
+                                                    ".set\treorder"                         \
+                                                    : "=r" (__v0), "=r" (__a3)                  \
+                                                    : input, "r" (__a0), "r" (__a1), "r" (__a2)         \
+                                                    : __SYSCALL_CLOBBERS);                      \
+            _sys_result = __a3 != 0 ? -__v0 : __v0;             \
+        }                               \
+        _sys_result;                            \
+    })
 
 #define internal_syscall4(v0_init, input, number, arg1, arg2, arg3,     \
-              arg4)                     \
+                          arg4)                     \
 ({                                  \
     long int _sys_result;                       \
-                                    \
+    \
     {                               \
-    __syscall_arg_t _arg1 = __SSC (arg1);               \
-    __syscall_arg_t _arg2 = __SSC (arg2);               \
-    __syscall_arg_t _arg3 = __SSC (arg3);               \
-    __syscall_arg_t _arg4 = __SSC (arg4);               \
-    register __syscall_arg_t __s0 asm ("$16") __attribute__ ((unused))\
-      = (number);                           \
-    register __syscall_arg_t __v0 asm ("$2");           \
-    register __syscall_arg_t __a0 asm ("$4") = _arg1;       \
-    register __syscall_arg_t __a1 asm ("$5") = _arg2;       \
-    register __syscall_arg_t __a2 asm ("$6") = _arg3;       \
-    register __syscall_arg_t __a3 asm ("$7") = _arg4;       \
-    __asm__ volatile (                      \
-    ".set\tnoreorder\n\t"                       \
-    v0_init                             \
-    "syscall\n\t"                           \
-    ".set\treorder"                         \
-    : "=r" (__v0), "+r" (__a3)                  \
-    : input, "r" (__a0), "r" (__a1), "r" (__a2)         \
-    : __SYSCALL_CLOBBERS);                      \
-    _sys_result = __a3 != 0 ? -__v0 : __v0;             \
+        __syscall_arg_t _arg1 = __SSC (arg1);               \
+        __syscall_arg_t _arg2 = __SSC (arg2);               \
+        __syscall_arg_t _arg3 = __SSC (arg3);               \
+        __syscall_arg_t _arg4 = __SSC (arg4);               \
+        register __syscall_arg_t __s0 asm ("$16") __attribute__ ((unused))\
+            = (number);                           \
+        register __syscall_arg_t __v0 asm ("$2");           \
+        register __syscall_arg_t __a0 asm ("$4") = _arg1;       \
+        register __syscall_arg_t __a1 asm ("$5") = _arg2;       \
+        register __syscall_arg_t __a2 asm ("$6") = _arg3;       \
+        register __syscall_arg_t __a3 asm ("$7") = _arg4;       \
+        __asm__ volatile (                      \
+                                                ".set\tnoreorder\n\t"                       \
+                                                v0_init                             \
+                                                "syscall\n\t"                           \
+                                                ".set\treorder"                         \
+                                                : "=r" (__v0), "+r" (__a3)                  \
+                                                : input, "r" (__a0), "r" (__a1), "r" (__a2)         \
+                                                : __SYSCALL_CLOBBERS);                      \
+        _sys_result = __a3 != 0 ? -__v0 : __v0;             \
     }                               \
     _sys_result;                            \
 })
 
 #define internal_syscall5(v0_init, input, number, arg1, arg2, arg3,     \
-              arg4, arg5)                   \
+                          arg4, arg5)                   \
 ({                                  \
     long int _sys_result;                       \
-                                    \
+    \
     {                               \
-    __syscall_arg_t _arg1 = __SSC (arg1);               \
-    __syscall_arg_t _arg2 = __SSC (arg2);               \
-    __syscall_arg_t _arg3 = __SSC (arg3);               \
-    __syscall_arg_t _arg4 = __SSC (arg4);               \
-    __syscall_arg_t _arg5 = __SSC (arg5);               \
-    register __syscall_arg_t __s0 asm ("$16") __attribute__ ((unused))\
-      = (number);                           \
-    register __syscall_arg_t __v0 asm ("$2");           \
-    register __syscall_arg_t __a0 asm ("$4") = _arg1;       \
-    register __syscall_arg_t __a1 asm ("$5") = _arg2;       \
-    register __syscall_arg_t __a2 asm ("$6") = _arg3;       \
-    register __syscall_arg_t __a3 asm ("$7") = _arg4;       \
-    register __syscall_arg_t __a4 asm ("$8") = _arg5;       \
-    __asm__ volatile (                      \
-    ".set\tnoreorder\n\t"                       \
-    v0_init                             \
-    "syscall\n\t"                           \
-    ".set\treorder"                         \
-    : "=r" (__v0), "+r" (__a3)                  \
-    : input, "r" (__a0), "r" (__a1), "r" (__a2), "r" (__a4)     \
-    : __SYSCALL_CLOBBERS);                      \
-    _sys_result = __a3 != 0 ? -__v0 : __v0;             \
+        __syscall_arg_t _arg1 = __SSC (arg1);               \
+        __syscall_arg_t _arg2 = __SSC (arg2);               \
+        __syscall_arg_t _arg3 = __SSC (arg3);               \
+        __syscall_arg_t _arg4 = __SSC (arg4);               \
+        __syscall_arg_t _arg5 = __SSC (arg5);               \
+        register __syscall_arg_t __s0 asm ("$16") __attribute__ ((unused))\
+            = (number);                           \
+        register __syscall_arg_t __v0 asm ("$2");           \
+        register __syscall_arg_t __a0 asm ("$4") = _arg1;       \
+        register __syscall_arg_t __a1 asm ("$5") = _arg2;       \
+        register __syscall_arg_t __a2 asm ("$6") = _arg3;       \
+        register __syscall_arg_t __a3 asm ("$7") = _arg4;       \
+        register __syscall_arg_t __a4 asm ("$8") = _arg5;       \
+        __asm__ volatile (                      \
+                                                ".set\tnoreorder\n\t"                       \
+                                                v0_init                             \
+                                                "syscall\n\t"                           \
+                                                ".set\treorder"                         \
+                                                : "=r" (__v0), "+r" (__a3)                  \
+                                                : input, "r" (__a0), "r" (__a1), "r" (__a2), "r" (__a4)     \
+                                                : __SYSCALL_CLOBBERS);                      \
+        _sys_result = __a3 != 0 ? -__v0 : __v0;             \
     }                               \
     _sys_result;                            \
 })
 
 #define internal_syscall6(v0_init, input, number, arg1, arg2, arg3,     \
-              arg4, arg5, arg6)             \
+                          arg4, arg5, arg6)             \
 ({                                  \
     long int _sys_result;                       \
-                                    \
+    \
     {                               \
-    __syscall_arg_t _arg1 = __SSC (arg1);               \
-    __syscall_arg_t _arg2 = __SSC (arg2);               \
-    __syscall_arg_t _arg3 = __SSC (arg3);               \
-    __syscall_arg_t _arg4 = __SSC (arg4);               \
-    __syscall_arg_t _arg5 = __SSC (arg5);               \
-    __syscall_arg_t _arg6 = __SSC (arg6);               \
-    register __syscall_arg_t __s0 asm ("$16") __attribute__ ((unused))\
-      = (number);                           \
-    register __syscall_arg_t __v0 asm ("$2");           \
-    register __syscall_arg_t __a0 asm ("$4") = _arg1;       \
-    register __syscall_arg_t __a1 asm ("$5") = _arg2;       \
-    register __syscall_arg_t __a2 asm ("$6") = _arg3;       \
-    register __syscall_arg_t __a3 asm ("$7") = _arg4;       \
-    register __syscall_arg_t __a4 asm ("$8") = _arg5;       \
-    register __syscall_arg_t __a5 asm ("$9") = _arg6;       \
-    __asm__ volatile (                      \
-    ".set\tnoreorder\n\t"                       \
-    v0_init                             \
-    "syscall\n\t"                           \
-    ".set\treorder"                         \
-    : "=r" (__v0), "+r" (__a3)                  \
-    : input, "r" (__a0), "r" (__a1), "r" (__a2), "r" (__a4),    \
-      "r" (__a5)                            \
-    : __SYSCALL_CLOBBERS);                      \
-    _sys_result = __a3 != 0 ? -__v0 : __v0;             \
+        __syscall_arg_t _arg1 = __SSC (arg1);               \
+        __syscall_arg_t _arg2 = __SSC (arg2);               \
+        __syscall_arg_t _arg3 = __SSC (arg3);               \
+        __syscall_arg_t _arg4 = __SSC (arg4);               \
+        __syscall_arg_t _arg5 = __SSC (arg5);               \
+        __syscall_arg_t _arg6 = __SSC (arg6);               \
+        register __syscall_arg_t __s0 asm ("$16") __attribute__ ((unused))\
+            = (number);                           \
+        register __syscall_arg_t __v0 asm ("$2");           \
+        register __syscall_arg_t __a0 asm ("$4") = _arg1;       \
+        register __syscall_arg_t __a1 asm ("$5") = _arg2;       \
+        register __syscall_arg_t __a2 asm ("$6") = _arg3;       \
+        register __syscall_arg_t __a3 asm ("$7") = _arg4;       \
+        register __syscall_arg_t __a4 asm ("$8") = _arg5;       \
+        register __syscall_arg_t __a5 asm ("$9") = _arg6;       \
+        __asm__ volatile (                      \
+                                                ".set\tnoreorder\n\t"                       \
+                                                v0_init                             \
+                                                "syscall\n\t"                           \
+                                                ".set\treorder"                         \
+                                                : "=r" (__v0), "+r" (__a3)                  \
+                                                : input, "r" (__a0), "r" (__a1), "r" (__a2), "r" (__a4),    \
+                                                "r" (__a5)                            \
+                                                : __SYSCALL_CLOBBERS);                      \
+        _sys_result = __a3 != 0 ? -__v0 : __v0;             \
     }                               \
     _sys_result;                            \
 })
 
 #if __mips_isa_rev >= 6
 # define __SYSCALL_CLOBBERS "$1", "$3", "$10", "$11", "$12", "$13", \
-     "$14", "$15", "$24", "$25", "memory"
+    "$14", "$15", "$24", "$25", "memory"
 #else
 # define __SYSCALL_CLOBBERS "$1", "$3", "$10", "$11", "$12", "$13", \
-     "$14", "$15", "$24", "$25", "hi", "lo", "memory"
+    "$14", "$15", "$24", "$25", "hi", "lo", "memory"
 #endif
 
 #endif /* __ASSEMBLER__ */

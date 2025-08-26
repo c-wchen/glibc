@@ -31,7 +31,7 @@ struct mtop {
     int mt_count;       /* How many of them.  */
 };
 #define _IOT_mtop /* Hurd ioctl type field.  */ \
-  _IOT (_IOTS (short), 1, _IOTS (int), 1, 0, 0)
+    _IOT (_IOTS (short), 1, _IOTS (int), 1, 0, 0)
 
 /* Magnetic Tape operations [Not all operations supported by all drivers].  */
 #define MTRESET 0   /* +reset drive in case of problems.  */
@@ -91,7 +91,7 @@ struct mtget {
     __daddr_t mt_blkno;     /* Current block number.  */
 };
 #define _IOT_mtget /* Hurd ioctl type field.  */ \
-  _IOT (_IOTS (long), 7, 0, 0, 0, 0)
+    _IOT (_IOTS (long), 7, 0, 0, 0, 0)
 
 
 /* Constants for mt_type. Not all of these are supported, and
@@ -127,25 +127,25 @@ struct mt_tape_info {
 };
 
 #define MT_TAPE_INFO \
-  {                                       \
-    {MT_ISUNKNOWN,      "Unknown type of tape device"},           \
-    {MT_ISQIC02,        "Generic QIC-02 tape streamer"},          \
-    {MT_ISWT5150,       "Wangtek 5150, QIC-150"},             \
-    {MT_ISARCHIVE_5945L2,   "Archive 5945L-2"},               \
-    {MT_ISCMSJ500,      "CMS Jumbo 500"},                 \
-    {MT_ISTDC3610,      "Tandberg TDC 3610, QIC-24"},             \
-    {MT_ISARCHIVE_VP60I,    "Archive VP60i, QIC-02"},             \
-    {MT_ISARCHIVE_2150L,    "Archive Viper 2150L"},               \
-    {MT_ISARCHIVE_2060L,    "Archive Viper 2060L"},               \
-    {MT_ISARCHIVESC499, "Archive SC-499 QIC-36 controller"},          \
-    {MT_ISQIC02_ALL_FEATURES, "Generic QIC-02 tape, all features"},       \
-    {MT_ISWT5099EEN24,  "Wangtek 5099-een24, 60MB"},              \
-    {MT_ISTEAC_MT2ST,   "Teac MT-2ST 155mb data cassette drive"},     \
-    {MT_ISEVEREX_FT40A, "Everex FT40A, QIC-40"},              \
-    {MT_ISSCSI1,        "Generic SCSI-1 tape"},               \
-    {MT_ISSCSI2,        "Generic SCSI-2 tape"},               \
-    {0, NULL}                                 \
-  }
+    {                                       \
+        {MT_ISUNKNOWN,      "Unknown type of tape device"},           \
+        {MT_ISQIC02,        "Generic QIC-02 tape streamer"},          \
+        {MT_ISWT5150,       "Wangtek 5150, QIC-150"},             \
+        {MT_ISARCHIVE_5945L2,   "Archive 5945L-2"},               \
+        {MT_ISCMSJ500,      "CMS Jumbo 500"},                 \
+        {MT_ISTDC3610,      "Tandberg TDC 3610, QIC-24"},             \
+        {MT_ISARCHIVE_VP60I,    "Archive VP60i, QIC-02"},             \
+        {MT_ISARCHIVE_2150L,    "Archive Viper 2150L"},               \
+        {MT_ISARCHIVE_2060L,    "Archive Viper 2060L"},               \
+        {MT_ISARCHIVESC499, "Archive SC-499 QIC-36 controller"},          \
+        {MT_ISQIC02_ALL_FEATURES, "Generic QIC-02 tape, all features"},       \
+        {MT_ISWT5099EEN24,  "Wangtek 5099-een24, 60MB"},              \
+        {MT_ISTEAC_MT2ST,   "Teac MT-2ST 155mb data cassette drive"},     \
+        {MT_ISEVEREX_FT40A, "Everex FT40A, QIC-40"},              \
+        {MT_ISSCSI1,        "Generic SCSI-1 tape"},               \
+        {MT_ISSCSI2,        "Generic SCSI-2 tape"},               \
+        {0, NULL}                                 \
+    }
 
 
 /* Structure for MTIOCPOS - mag tape get position command.  */
@@ -154,7 +154,7 @@ struct mtpos {
     long int mt_blkno;  /* Current block number.  */
 };
 #define _IOT_mtpos /* Hurd ioctl type field.  */ \
-  _IOT_SIMPLE (long)
+    _IOT_SIMPLE (long)
 
 
 /* Structure for MTIOCGETCONFIG/MTIOCSETCONFIG primarily intended
@@ -184,7 +184,7 @@ struct mtconfiginfo {
     char reserved[10];
 };
 #define _IOT_mtconfiginfo /* Hurd ioctl type field.  */ \
-  _IOT (_IOTS (long), 2, _IOTS (short), 3, _IOTS (long), 1) /* XXX wrong */
+    _IOT (_IOTS (long), 2, _IOTS (short), 3, _IOTS (long), 1) /* XXX wrong */
 
 
 /* Magnetic tape I/O control commands.  */

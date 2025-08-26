@@ -53,8 +53,8 @@ static void exit_with_flush(int code)
 
 /* Take some time, so another thread potentially issue EXIT.  */
 #define SETUP_NANOSLEEP \
-  if (nanosleep (&(struct timespec) { .tv_sec = 0, .tv_nsec = 1000L },  \
-         NULL) != 0)                        \
+    if (nanosleep (&(struct timespec) { .tv_sec = 0, .tv_nsec = 1000L },  \
+    NULL) != 0)                        \
     FAIL_EXIT1 ("nanosleep: %m")
 
 static void fn0(void)

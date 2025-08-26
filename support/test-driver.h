@@ -56,9 +56,9 @@ enum {
 
 /* Options provided by the test driver.  */
 #define TEST_DEFAULT_OPTIONS                            \
-  { "verbose", no_argument, NULL, 'v' },                \
-  { "direct", no_argument, NULL, OPT_DIRECT },          \
-  { "test-dir", required_argument, NULL, OPT_TESTDIR }, \
+    { "verbose", no_argument, NULL, 'v' },                \
+    { "direct", no_argument, NULL, OPT_DIRECT },          \
+    { "test-dir", required_argument, NULL, OPT_TESTDIR }, \
 
 /* The directory the test should use for temporary files.  */
 extern const char *test_dir;
@@ -71,10 +71,10 @@ extern unsigned int test_verbose;
 /* Output that is only emitted if at least one --verbose argument was
    specified. */
 #define verbose_printf(...)                      \
-  do {                                           \
-    if (test_verbose > 0)                        \
-      printf (__VA_ARGS__);                      \
-  } while (0);
+    do {                                           \
+        if (test_verbose > 0)                        \
+            printf (__VA_ARGS__);                      \
+    } while (0);
 
 int support_test_main(int argc, char **argv, const struct test_config *);
 

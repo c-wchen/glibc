@@ -28,10 +28,10 @@
 
 /* Define r31 as thread pointer register.  */
 # define READ_THREAD_POINTER() \
-  ({ void *__result;                        \
-     __asm__ __volatile__ ("mov %0, r31"            \
-                           : "=r" (__result));          \
-     __result; })
+    ({ void *__result;                        \
+        __asm__ __volatile__ ("mov %0, r31"            \
+                              : "=r" (__result));          \
+        __result; })
 
 #else
 /* Define r31 as thread pointer register.  */
@@ -72,15 +72,15 @@ typedef struct {
 /* Install the dtv pointer.  The pointer passed is to the element with
    index -1 which contain the length.  */
 # define INSTALL_DTV(tcbp, dtvp) \
-  (((tcbhead_t *) (tcbp))->dtv = (dtvp) + 1)
+    (((tcbhead_t *) (tcbp))->dtv = (dtvp) + 1)
 
 /* Install new dtv for current thread.  */
 # define INSTALL_NEW_DTV(dtv) \
-  (THREAD_DTV() = (dtv))
+    (THREAD_DTV() = (dtv))
 
 /* Return dtv of given thread descriptor.  */
 # define GET_DTV(tcbp) \
-  (((tcbhead_t *) (tcbp))->dtv)
+    (((tcbhead_t *) (tcbp))->dtv)
 
 # define TLS_DEFINE_INIT_TP(tp, pd) void *tp = (pd) + 1
 
@@ -88,24 +88,24 @@ typedef struct {
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.  */
 # define TLS_INIT_TP(tcbp) \
-  ({ long int result_var;                       \
-     result_var = INTERNAL_SYSCALL_CALL (set_thread_area,       \
-                    (char *) (tcbp) + TLS_TCB_OFFSET);          \
-     !INTERNAL_SYSCALL_ERROR_P (result_var); })
+    ({ long int result_var;                       \
+        result_var = INTERNAL_SYSCALL_CALL (set_thread_area,       \
+                                            (char *) (tcbp) + TLS_TCB_OFFSET);          \
+        !INTERNAL_SYSCALL_ERROR_P (result_var); })
 
 /* Return the address of the dtv for the current thread.  */
 # define THREAD_DTV() \
-  (((tcbhead_t *) (READ_THREAD_POINTER () - TLS_TCB_OFFSET))->dtv)
+    (((tcbhead_t *) (READ_THREAD_POINTER () - TLS_TCB_OFFSET))->dtv)
 
 /* Return the thread descriptor for the current thread.  */
 # undef THREAD_SELF
 # define THREAD_SELF \
-  ((struct pthread *) (READ_THREAD_POINTER ()               \
-               - TLS_TCB_OFFSET - TLS_PRE_TCB_SIZE))
+    ((struct pthread *) (READ_THREAD_POINTER ()               \
+                         - TLS_TCB_OFFSET - TLS_PRE_TCB_SIZE))
 
 /* Magic for libthread_db to know how to do THREAD_SELF.  */
 # define DB_THREAD_SELF \
-  CONST_THREAD_AREA (32, sizeof (struct pthread))
+    CONST_THREAD_AREA (32, sizeof (struct pthread))
 
 # include <tcb-access.h>
 
@@ -114,21 +114,21 @@ typedef struct {
 # define THREAD_GSCOPE_FLAG_USED   1
 # define THREAD_GSCOPE_FLAG_WAIT   2
 # define THREAD_GSCOPE_RESET_FLAG() \
-  do                                          \
+    do                                          \
     { int __res                                   \
-    = atomic_exchange_release (&THREAD_SELF->header.gscope_flag,          \
-                   THREAD_GSCOPE_FLAG_UNUSED);            \
-      if (__res == THREAD_GSCOPE_FLAG_WAIT)                   \
-    lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1, LLL_PRIVATE);    \
+            = atomic_exchange_release (&THREAD_SELF->header.gscope_flag,          \
+                                       THREAD_GSCOPE_FLAG_UNUSED);            \
+        if (__res == THREAD_GSCOPE_FLAG_WAIT)                   \
+            lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1, LLL_PRIVATE);    \
     }                                         \
-  while (0)
+    while (0)
 # define THREAD_GSCOPE_SET_FLAG() \
-  do                                          \
+    do                                          \
     {                                         \
-      THREAD_SELF->header.gscope_flag = THREAD_GSCOPE_FLAG_USED;          \
-      atomic_write_barrier ();                            \
+        THREAD_SELF->header.gscope_flag = THREAD_GSCOPE_FLAG_USED;          \
+        atomic_write_barrier ();                            \
     }                                         \
-  while (0)
+    while (0)
 
 #endif /* __ASSEMBLER__ */
 

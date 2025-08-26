@@ -242,7 +242,7 @@ _Unwind_GetGR(_Unwind_Context *context, int regno)
 
 /* Return the address of the instruction, not the actual IP value.  */
 #define _Unwind_GetIP(context) \
-  (_Unwind_GetGR (context, 15) & ~(_Unwind_Word)1)
+    (_Unwind_GetGR (context, 15) & ~(_Unwind_Word)1)
 
 static inline void
 _Unwind_SetGR(_Unwind_Context *context, int regno, _Unwind_Word val)
@@ -253,7 +253,7 @@ _Unwind_SetGR(_Unwind_Context *context, int regno, _Unwind_Word val)
 /* The dwarf unwinder doesn't understand arm/thumb state.  We assume the
    landing pad uses the same instruction set as the call site.  */
 #define _Unwind_SetIP(context, val) \
-  _Unwind_SetGR (context, 15, val | (_Unwind_GetGR (context, 15) & 1))
+    _Unwind_SetGR (context, 15, val | (_Unwind_GetGR (context, 15) & 1))
 
 typedef _Unwind_Reason_Code(*_Unwind_Trace_Fn)
 (struct _Unwind_Context *, void *);

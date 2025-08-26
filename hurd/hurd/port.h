@@ -44,12 +44,12 @@ struct hurd_port {
 /* Also see HURD_PORT_USE_CANCEL.  */
 
 #define HURD_PORT_USE(portcell, expr)                         \
-  ({ struct hurd_port *const __p = (portcell);                    \
-     struct hurd_userlink __link;                         \
-     const mach_port_t port = _hurd_port_get (__p, &__link);              \
-     __typeof(expr) __result = (expr);                        \
-     _hurd_port_free (__p, &__link, port);                    \
-     __result; })
+    ({ struct hurd_port *const __p = (portcell);                    \
+        struct hurd_userlink __link;                         \
+        const mach_port_t port = _hurd_port_get (__p, &__link);              \
+        __typeof(expr) __result = (expr);                        \
+        _hurd_port_free (__p, &__link, port);                    \
+        __result; })
 
 
 #ifndef _HURD_PORT_H_EXTERN_INLINE

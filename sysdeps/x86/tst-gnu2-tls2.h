@@ -23,15 +23,15 @@ typedef long long v2di __attribute__((vector_size(16)));
 extern v2di v1, v2, v3;
 
 # define BEFORE_TLSDESC_CALL()                  \
-  v1 = __extension__(v2di){0, 0};               \
-  v2 = __extension__(v2di){0, 0};
+    v1 = __extension__(v2di){0, 0};               \
+    v2 = __extension__(v2di){0, 0};
 
 # define AFTER_TLSDESC_CALL()                   \
-  v3 = __extension__(v2di){0, 0};               \
-  asm volatile ("" : "+x" (v3));                \
-  union { v2di x; long long a[2]; } u;              \
-  u.x = v3;                         \
-  TEST_VERIFY_EXIT (u.a[0] == 0 && u.a[1] == 0);
+    v3 = __extension__(v2di){0, 0};               \
+    asm volatile ("" : "+x" (v3));                \
+    union { v2di x; long long a[2]; } u;              \
+    u.x = v3;                         \
+    TEST_VERIFY_EXIT (u.a[0] == 0 && u.a[1] == 0);
 #endif
 
 #include <elf/tst-gnu2-tls2.h>

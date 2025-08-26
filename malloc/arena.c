@@ -122,16 +122,16 @@ __libc_lock_define_initialized(static, list_lock);
    in the new arena. */
 
 #define arena_get(ptr, size) do { \
-      ptr = thread_arena;                             \
-      arena_lock (ptr, size);                             \
-  } while (0)
+        ptr = thread_arena;                             \
+        arena_lock (ptr, size);                             \
+    } while (0)
 
 #define arena_lock(ptr, size) do {                        \
-      if (ptr)                                    \
-        __libc_lock_lock (ptr->mutex);                        \
-      else                                    \
-        ptr = arena_get2 ((size), NULL);                      \
-  } while (0)
+        if (ptr)                                    \
+            __libc_lock_lock (ptr->mutex);                        \
+        else                                    \
+            ptr = arena_get2 ((size), NULL);                      \
+    } while (0)
 
 /* find the heap and corresponding arena for a given ptr */
 
@@ -212,13 +212,13 @@ void __malloc_fork_unlock_child(void)
 }
 
 #define TUNABLE_CALLBACK_FNDECL(__name, __type) \
-static __always_inline int do_ ## __name (__type value);              \
-static void                                   \
-TUNABLE_CALLBACK (__name) (tunable_val_t *valp)                   \
-{                                         \
-  __type value = (__type) (valp)->numval;                     \
-  do_ ## __name (value);                              \
-}
+    static __always_inline int do_ ## __name (__type value);              \
+    static void                                   \
+    TUNABLE_CALLBACK (__name) (tunable_val_t *valp)                   \
+    {                                         \
+        __type value = (__type) (valp)->numval;                     \
+        do_ ## __name (value);                              \
+    }
 
 TUNABLE_CALLBACK_FNDECL(set_mmap_threshold, size_t)
 TUNABLE_CALLBACK_FNDECL(set_mmaps_max, int32_t)

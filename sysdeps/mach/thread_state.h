@@ -26,15 +26,15 @@
 
 #ifndef MACHINE_THREAD_STATE_SET_PC
 #define MACHINE_THREAD_STATE_SET_PC(ts, pc) \
-  ((ts)->PC = (unsigned long int) (pc))
+    ((ts)->PC = (unsigned long int) (pc))
 #endif
 #ifndef MACHINE_THREAD_STATE_SET_SP
 #ifdef STACK_GROWTH_UP
 #define MACHINE_THREAD_STATE_SET_SP(ts, stack, size) \
-  ((ts)->SP = (unsigned long int) (stack))
+    ((ts)->SP = (unsigned long int) (stack))
 #else
 #define MACHINE_THREAD_STATE_SET_SP(ts, stack, size) \
-  ((ts)->SP = (unsigned long int) (stack) + (size))
+    ((ts)->SP = (unsigned long int) (stack) + (size))
 #endif
 #endif
 
@@ -43,8 +43,8 @@
    and SP.  */
 #ifndef MACHINE_THREAD_STATE_SETUP_CALL
 #define MACHINE_THREAD_STATE_SETUP_CALL(ts, stack, size, func) \
-  (MACHINE_THREAD_STATE_SET_PC (ts, func), \
-   MACHINE_THREAD_STATE_SET_SP (ts, stack, size))
+    (MACHINE_THREAD_STATE_SET_PC (ts, func), \
+     MACHINE_THREAD_STATE_SET_SP (ts, stack, size))
 #endif
 
 /* This copies architecture-specific bits from the current thread to the new

@@ -66,7 +66,8 @@ static const struct timeval timeout = {3, 0};
  */
 enum clnt_stat pmap_rmtcall(struct sockaddr_in *addr, u_long prog, u_long vers, u_long proc,
                             xdrproc_t xdrargs, caddr_t argsp, xdrproc_t xdrres, caddr_t resp,
-                            struct timeval tout, u_long *port_ptr) {
+                            struct timeval tout, u_long *port_ptr)
+{
     int socket = -1;
     CLIENT *client;
     struct rmtcallargs a;
@@ -75,8 +76,7 @@ enum clnt_stat pmap_rmtcall(struct sockaddr_in *addr, u_long prog, u_long vers, 
 
     addr->sin_port = htons(PMAPPORT);
     client = clntudp_create(addr, PMAPPROG, PMAPVERS, timeout, &socket);
-    if (client != (CLIENT *) NULL)
-    {
+    if (client != (CLIENT *) NULL) {
         a.prog = prog;
         a.vers = vers;
         a.proc = proc;
@@ -90,8 +90,7 @@ enum clnt_stat pmap_rmtcall(struct sockaddr_in *addr, u_long prog, u_long vers, 
                          (caddr_t)&a, (xdrproc_t)xdr_rmtcallres,
                          (caddr_t)&r, tout);
         CLNT_DESTROY(client);
-    } else
-    {
+    } else {
         stat = RPC_FAILED;
     }
     /* (void)__close(socket); CLNT_DESTROY already closed it */
@@ -208,7 +207,8 @@ enum clnt_stat clnt_broadcast( /* program number */
     /* pointer to results */
     caddr_t resultsp,
     /* call with each result obtained */
-    resultproc_t eachresult) {
+    resultproc_t eachresult)
+{
     enum clnt_stat stat = RPC_FAILED;
     AUTH *unix_auth = authunix_create_default();
     XDR xdr_stream;
@@ -235,15 +235,13 @@ enum clnt_stat clnt_broadcast( /* program number */
      * initialization: create a socket, a broadcast address, and
      * preserialize the arguments into a send buffer.
      */
-    if ((sock = __socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
-    {
+    if ((sock = __socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
         perror(_("Cannot create socket for broadcast rpc"));
         stat = RPC_CANTSEND;
         goto done_broad;
     }
 #ifdef SO_BROADCAST
-    if (__setsockopt(sock, SOL_SOCKET, SO_BROADCAST, &on, sizeof(on)) < 0)
-    {
+    if (__setsockopt(sock, SOL_SOCKET, SO_BROADCAST, &on, sizeof(on)) < 0) {
         perror(_("Cannot set socket option SO_BROADCAST"));
         stat = RPC_CANTSEND;
         goto done_broad;
@@ -276,8 +274,7 @@ enum clnt_stat clnt_broadcast( /* program number */
     r.results_ptr = resultsp;
     xdrmem_create(xdrs, outbuf, MAX_BROADCAST_SIZE, XDR_ENCODE);
     if ((!xdr_callmsg(xdrs, &msg))
-        || (!xdr_rmtcall_args(xdrs, &a)))
-    {
+        || (!xdr_rmtcall_args(xdrs, &a))) {
         stat = RPC_CANTENCODEARGS;
         goto done_broad;
     }
@@ -287,8 +284,7 @@ enum clnt_stat clnt_broadcast( /* program number */
      * Basic loop: broadcast a packet and wait a while for response(s).
      * The response timeout grows larger per iteration.
      */
-    for (t.tv_sec = 4; t.tv_sec <= 14; t.tv_sec += 2)
-    {
+    for (t.tv_sec = 4; t.tv_sec <= 14; t.tv_sec += 2) {
         for (i = 0; i < nets; i++) {
             baddr.sin_addr = addrs[i];
             if (__sendto(sock, outbuf, outlen, 0,

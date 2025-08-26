@@ -261,9 +261,9 @@ __alloc_buffer_alloc(struct alloc_buffer *buf, size_t size, size_t align)
    if there is not enough room in the buffer, or if the buffer has
    failed before.  */
 #define alloc_buffer_alloc(buf, type)               \
-  ((type *) __alloc_buffer_alloc                \
-   (buf, __alloc_buffer_assert_size (sizeof (type)),        \
-    __alloc_buffer_assert_align (__alignof__ (type))))
+    ((type *) __alloc_buffer_alloc                \
+     (buf, __alloc_buffer_assert_size (sizeof (type)),        \
+      __alloc_buffer_assert_align (__alignof__ (type))))
 
 /* Internal function.  Obtain a pointer to an object which is
    subsequently added.  */
@@ -314,8 +314,8 @@ __alloc_buffer_next(struct alloc_buffer *buf, size_t align)
    This manual length checking can easily introduce errors, so this
    coding style is not recommended.  */
 #define alloc_buffer_next(buf, type)                \
-  ((type *) __alloc_buffer_next                 \
-   (buf, __alloc_buffer_assert_align (__alignof__ (type))))
+    ((type *) __alloc_buffer_next                 \
+     (buf, __alloc_buffer_assert_align (__alignof__ (type))))
 
 /* Internal function.  Allocate an array.  */
 void *__libc_alloc_buffer_alloc_array(struct alloc_buffer *buf,
@@ -332,10 +332,10 @@ libc_hidden_proto(__libc_alloc_buffer_alloc_array)
    or if the buffer has failed before.  (Zero-length allocations from
    an empty buffer which has not yet failed succeed.)  */
 #define alloc_buffer_alloc_array(buf, type, count)       \
-  ((type *) __libc_alloc_buffer_alloc_array      \
-   (buf, __alloc_buffer_assert_size (sizeof (type)),     \
-    __alloc_buffer_assert_align (__alignof__ (type)),    \
-    count))
+    ((type *) __libc_alloc_buffer_alloc_array      \
+     (buf, __alloc_buffer_assert_size (sizeof (type)),     \
+      __alloc_buffer_assert_align (__alignof__ (type)),    \
+      count))
 
 /* Internal function.  See alloc_buffer_copy_bytes below.  */
 struct alloc_buffer __libc_alloc_buffer_copy_bytes(struct alloc_buffer,

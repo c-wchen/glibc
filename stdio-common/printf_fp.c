@@ -55,9 +55,9 @@
 #define MPN_VAR(name) mp_limb_t *name; mp_size_t name##size
 
 #define MPN_ASSIGN(dst,src)                           \
-  memcpy (dst, src, (dst##size = src##size) * sizeof (mp_limb_t))
+    memcpy (dst, src, (dst##size = src##size) * sizeof (mp_limb_t))
 #define MPN_GE(u,v) \
-  (u##size > v##size || (u##size == v##size && __mpn_cmp (u, v, u##size) >= 0))
+    (u##size > v##size || (u##size == v##size && __mpn_cmp (u, v, u##size) >= 0))
 
 extern mp_size_t __mpn_extract_double(mp_ptr res_ptr, mp_size_t size,
                                       int *expt, int *is_neg,
@@ -180,34 +180,34 @@ static void __printf_fp_buffer_1(struct __printf_buffer *buf, locale_t loc,
     p.expsign = 0;
 
 #define PRINTF_FP_FETCH(FLOAT, VAR, SUFFIX, MANT_DIG)           \
-  {                                 \
-    (VAR) = *(const FLOAT *) args[0];                   \
-                                    \
-    /* Check for special values: not a number or infinity.  */      \
-    if (isnan (VAR))                            \
-      {                                 \
-    is_neg = signbit (VAR);                     \
-    if (isupper (info->spec))                   \
-      special = "NAN";                      \
-    else                                \
-      special = "nan";                      \
-      }                                 \
-    else if (isinf (VAR))                       \
-      {                                 \
-    is_neg = signbit (VAR);                     \
-    if (isupper (info->spec))                   \
-      special = "INF";                      \
-    else                                \
-      special = "inf";                      \
-      }                                 \
-    else                                \
-      {                                 \
-    p.fracsize = __mpn_extract_##SUFFIX             \
-             (fp_input, array_length (fp_input),        \
-              &p.exponent, &is_neg, VAR);           \
-    to_shift = 1 + p.fracsize * BITS_PER_MP_LIMB - MANT_DIG;    \
-      }                                 \
-  }
+    {                                 \
+        (VAR) = *(const FLOAT *) args[0];                   \
+        \
+        /* Check for special values: not a number or infinity.  */      \
+        if (isnan (VAR))                            \
+        {                                 \
+            is_neg = signbit (VAR);                     \
+            if (isupper (info->spec))                   \
+                special = "NAN";                      \
+            else                                \
+                special = "nan";                      \
+        }                                 \
+        else if (isinf (VAR))                       \
+        {                                 \
+            is_neg = signbit (VAR);                     \
+            if (isupper (info->spec))                   \
+                special = "INF";                      \
+            else                                \
+                special = "inf";                      \
+        }                                 \
+        else                                \
+        {                                 \
+            p.fracsize = __mpn_extract_##SUFFIX             \
+                         (fp_input, array_length (fp_input),        \
+                          &p.exponent, &is_neg, VAR);           \
+            to_shift = 1 + p.fracsize * BITS_PER_MP_LIMB - MANT_DIG;    \
+        }                                 \
+    }
 
     /* Fetch the argument value.  */
 #if __HAVE_DISTINCT_FLOAT128
@@ -319,8 +319,8 @@ static void __printf_fp_buffer_1(struct __printf_buffer *buf, locale_t loc,
                          > _FPIO_CONST_OFFSET * BITS_PER_MP_LIMB)
                         && info->is_binary128) {
 #define _FLT128_FPIO_CONST_SHIFT \
-  (((FLT128_MANT_DIG + BITS_PER_MP_LIMB - 1) / BITS_PER_MP_LIMB) \
-   - _FPIO_CONST_OFFSET)
+    (((FLT128_MANT_DIG + BITS_PER_MP_LIMB - 1) / BITS_PER_MP_LIMB) \
+     - _FPIO_CONST_OFFSET)
                         /* 64bit const offset is not enough for
                         IEEE 854 quad long double (_Float128).  */
                         p.tmpsize = powers->arraysize + _FLT128_FPIO_CONST_SHIFT;
@@ -337,8 +337,8 @@ static void __printf_fp_buffer_1(struct __printf_buffer *buf, locale_t loc,
                         if (LDBL_MANT_DIG > _FPIO_CONST_OFFSET * BITS_PER_MP_LIMB
                             && info->is_long_double) {
 #define _FPIO_CONST_SHIFT \
-  (((LDBL_MANT_DIG + BITS_PER_MP_LIMB - 1) / BITS_PER_MP_LIMB) \
-   - _FPIO_CONST_OFFSET)
+    (((LDBL_MANT_DIG + BITS_PER_MP_LIMB - 1) / BITS_PER_MP_LIMB) \
+     - _FPIO_CONST_OFFSET)
                             /* 64bit const offset is not enough for
                             IEEE quad long double.  */
                             p.tmpsize = powers->arraysize + _FPIO_CONST_SHIFT;

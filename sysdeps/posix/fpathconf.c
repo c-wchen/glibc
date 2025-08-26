@@ -60,25 +60,25 @@ long int __fpathconf(int fd, int name)
 
         case _PC_NAME_MAX:
 #ifdef  NAME_MAX
-        {
-            struct statvfs64 sv;
-            int save_errno = errno;
+            {
+                struct statvfs64 sv;
+                int save_errno = errno;
 
-            if (__fstatvfs64(fd, &sv) < 0) {
-                if (errno == ENOSYS) {
-                    __set_errno(save_errno);
-                    return NAME_MAX;
-                } else if (errno == ENODEV) {
-                    __set_errno(EINVAL);
+                if (__fstatvfs64(fd, &sv) < 0) {
+                    if (errno == ENOSYS) {
+                        __set_errno(save_errno);
+                        return NAME_MAX;
+                    } else if (errno == ENODEV) {
+                        __set_errno(EINVAL);
+                    }
+
+                    return -1;
+                } else {
+                    return sv.f_namemax;
                 }
-
-                return -1;
-            } else {
-                return sv.f_namemax;
             }
-        }
 #else
-        return -1;
+            return -1;
 #endif
 
         case _PC_PATH_MAX:
@@ -122,19 +122,19 @@ long int __fpathconf(int fd, int name)
 
         case _PC_ASYNC_IO:
 #ifdef  _POSIX_ASYNC_IO
-        {
-            /* AIO is only allowed on regular files and block devices.  */
-            struct __stat64_t64 st;
+            {
+                /* AIO is only allowed on regular files and block devices.  */
+                struct __stat64_t64 st;
 
-            if (__fstat64_time64(fd, &st) < 0
-                || (! S_ISREG(st.st_mode) && ! S_ISBLK(st.st_mode))) {
-                return -1;
-            } else {
-                return 1;
+                if (__fstat64_time64(fd, &st) < 0
+                    || (! S_ISREG(st.st_mode) && ! S_ISBLK(st.st_mode))) {
+                    return -1;
+                } else {
+                    return 1;
+                }
             }
-        }
 #else
-        return -1;
+            return -1;
 #endif
 
         case _PC_PRIO_IO:

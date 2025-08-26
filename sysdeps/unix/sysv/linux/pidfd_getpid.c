@@ -28,7 +28,7 @@
 #define FDINFO_TO_FILENAME_PREFIX "/proc/self/fdinfo/"
 
 #define FDINFO_FILENAME_LEN \
-  (sizeof (FDINFO_TO_FILENAME_PREFIX) + INT_STRLEN_BOUND (int))
+    (sizeof (FDINFO_TO_FILENAME_PREFIX) + INT_STRLEN_BOUND (int))
 
 struct parse_fdinfo_t {
     bool found;

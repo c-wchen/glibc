@@ -32,22 +32,22 @@ struct v_log1p_data {
 
 /* Coefficients generated using Remez, deg=20, in [sqrt(2)/2-1, sqrt(2)-1].  */
 #define V_LOG1P_CONSTANTS_TABLE                                               \
-  {                                                                           \
-    .c0 = V2 (-0x1.ffffffffffffbp-2), .c1 = 0x1.55555555551a9p-2,             \
-    .c2 = V2 (-0x1.00000000008e3p-2), .c3 = 0x1.9999999a32797p-3,             \
-    .c4 = V2 (-0x1.555555552fecfp-3), .c5 = 0x1.249248e071e5ap-3,             \
-    .c6 = V2 (-0x1.ffffff8bf8482p-4), .c7 = 0x1.c71c8f07da57ap-4,             \
-    .c8 = V2 (-0x1.9999ca4ccb617p-4), .c9 = 0x1.7459ad2e1dfa3p-4,             \
-    .c10 = V2 (-0x1.554d2680a3ff2p-4), .c11 = 0x1.3b4c54d487455p-4,           \
-    .c12 = V2 (-0x1.2548a9ffe80e6p-4), .c13 = 0x1.0f389a24b2e07p-4,           \
-    .c14 = V2 (-0x1.eee4db15db335p-5), .c15 = 0x1.e95b494d4a5ddp-5,           \
-    .c16 = V2 (-0x1.15fdf07cb7c73p-4), .c17 = 0x1.0310b70800fcfp-4,           \
-    .c18 = -0x1.cfa7385bdb37ep-6,                                             \
-    .ln2 = { 0x1.62e42fefa3800p-1, 0x1.ef35793c76730p-45 },                   \
-    .hf_rt2_top = V2 (0x3fe6a09e00000000),                                    \
-    .one_m_hf_rt2_top = V2 (0x00095f6200000000),                              \
-    .umask = V2 (0x000fffff00000000), .one_top = V2 (0x3ff)                   \
-  }
+    {                                                                           \
+        .c0 = V2 (-0x1.ffffffffffffbp-2), .c1 = 0x1.55555555551a9p-2,             \
+                                                .c2 = V2 (-0x1.00000000008e3p-2), .c3 = 0x1.9999999a32797p-3,             \
+                                                        .c4 = V2 (-0x1.555555552fecfp-3), .c5 = 0x1.249248e071e5ap-3,             \
+                                                                .c6 = V2 (-0x1.ffffff8bf8482p-4), .c7 = 0x1.c71c8f07da57ap-4,             \
+                                                                        .c8 = V2 (-0x1.9999ca4ccb617p-4), .c9 = 0x1.7459ad2e1dfa3p-4,             \
+                                                                                .c10 = V2 (-0x1.554d2680a3ff2p-4), .c11 = 0x1.3b4c54d487455p-4,           \
+                                                                                        .c12 = V2 (-0x1.2548a9ffe80e6p-4), .c13 = 0x1.0f389a24b2e07p-4,           \
+                                                                                                .c14 = V2 (-0x1.eee4db15db335p-5), .c15 = 0x1.e95b494d4a5ddp-5,           \
+                                                                                                        .c16 = V2 (-0x1.15fdf07cb7c73p-4), .c17 = 0x1.0310b70800fcfp-4,           \
+                                                                                                                .c18 = -0x1.cfa7385bdb37ep-6,                                             \
+                                                                                                                        .ln2 = { 0x1.62e42fefa3800p-1, 0x1.ef35793c76730p-45 },                   \
+                                                                                                                                .hf_rt2_top = V2 (0x3fe6a09e00000000),                                    \
+                                                                                                                                        .one_m_hf_rt2_top = V2 (0x00095f6200000000),                              \
+                                                                                                                                                .umask = V2 (0x000fffff00000000), .one_top = V2 (0x3ff)                   \
+    }
 
 #define BottomMask v_u64 (0xffffffff)
 

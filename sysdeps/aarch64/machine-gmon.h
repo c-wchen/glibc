@@ -25,10 +25,10 @@
 static void mcount_internal(u_long frompc, u_long selfpc);
 
 #define _MCOUNT_DECL(frompc, selfpc) \
-static inline void mcount_internal (u_long frompc, u_long selfpc)
+    static inline void mcount_internal (u_long frompc, u_long selfpc)
 
 #define MCOUNT                                                    \
-void __mcount (void *frompc)                                      \
-{                                                                 \
-  mcount_internal ((u_long) frompc, (u_long) RETURN_ADDRESS (0)); \
-}
+    void __mcount (void *frompc)                                      \
+    {                                                                 \
+        mcount_internal ((u_long) frompc, (u_long) RETURN_ADDRESS (0)); \
+    }

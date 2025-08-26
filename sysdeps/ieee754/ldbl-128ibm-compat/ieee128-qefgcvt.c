@@ -47,7 +47,7 @@ typeof(qfcvt_r) ___qfcvtieee128_r;
 #include <efgcvt-template.c>
 
 #define cvt_symbol(local, symbol) \
-  strong_alias (local, symbol)
+    strong_alias (local, symbol)
 cvt_symbol(___qfcvtieee128, __qfcvtieee128);
 cvt_symbol(___qecvtieee128, __qecvtieee128);
 cvt_symbol(___qgcvtieee128, __qgcvtieee128);

@@ -35,25 +35,25 @@
 #undef PSEUDO
 #define PSEUDO(name, syscall_name, args)    \
     .text;                  \
-ENTRY(name);                    \
+    ENTRY(name);                    \
     LOADSYSCALL(syscall_name);      \
     ta      0x10;           \
     bcc     1f;         \
-     nop;                   \
+    nop;                   \
     SYSCALL_ERROR_HANDLER           \
-1:
+    1:
 
 #undef PSEUDO_NOERRNO
 #define PSEUDO_NOERRNO(name, syscall_name, args)\
     .text;                  \
-ENTRY(name);                    \
+    ENTRY(name);                    \
     LOADSYSCALL(syscall_name);      \
     ta      0x10;
 
 #undef PSEUDO_ERRVAL
 #define PSEUDO_ERRVAL(name, syscall_name, args) \
     .text;                  \
-ENTRY(name);                    \
+    ENTRY(name);                    \
     LOADSYSCALL(syscall_name);      \
     ta      0x10;
 
@@ -65,17 +65,17 @@ ENTRY(name);                    \
 # define SYSCALL_ERROR_HANDLER          \
     mov %o7, %g1;           \
     call    __syscall_error;        \
-     mov    %g1, %o7;
+    mov    %g1, %o7;
 #else
 # if RTLD_PRIVATE_ERRNO
 #  define SYSCALL_ERROR_HANDLER         \
-0:  SETUP_PIC_REG_LEAF(o2,g1)       \
+    0:  SETUP_PIC_REG_LEAF(o2,g1)       \
     sethi   %gdop_hix22(rtld_errno), %g1;   \
     xor %g1, %gdop_lox10(rtld_errno), %g1;\
     ld  [%o2 + %g1], %g1, %gdop(rtld_errno); \
     st  %o0, [%g1];         \
     jmp %o7 + 8;            \
-     mov    -1, %o0;
+    mov    -1, %o0;
 # elif defined _LIBC_REENTRANT
 
 #  if IS_IN (libc)
@@ -84,22 +84,22 @@ ENTRY(name);                    \
 #   define SYSCALL_ERROR_ERRNO errno
 #  endif
 #  define SYSCALL_ERROR_HANDLER                 \
-0:  SETUP_PIC_REG_LEAF(o2,g1)               \
+    0:  SETUP_PIC_REG_LEAF(o2,g1)               \
     sethi   %tie_hi22(SYSCALL_ERROR_ERRNO), %g1;        \
     add %g1, %tie_lo10(SYSCALL_ERROR_ERRNO), %g1;   \
     ld  [%o2 + %g1], %g1, %tie_ld(SYSCALL_ERROR_ERRNO); \
     st  %o0, [%g7 + %g1];               \
     jmp %o7 + 8;                    \
-     mov    -1, %o0;
+    mov    -1, %o0;
 # else
 #  define SYSCALL_ERROR_HANDLER     \
-0:  SETUP_PIC_REG_LEAF(o2,g1)   \
+    0:  SETUP_PIC_REG_LEAF(o2,g1)   \
     sethi   %gdop_hix22(errno), %g1;\
     xor %g1, %gdop_lox10(errno), %g1;\
     ld  [%o2 + %g1], %g1, %gdop(errno);\
     st  %o0, [%g1];     \
     jmp %o7 + 8;        \
-     mov    -1, %o0;
+    mov    -1, %o0;
 # endif /* _LIBC_REENTRANT */
 #endif  /* PIC */
 

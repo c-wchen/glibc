@@ -97,10 +97,10 @@ __END_DECLS
 #   define __ASSERT_LINE __LINE__
 #  endif
 #  define assert(expr)                          \
-     (static_cast <bool> (expr)                     \
-      ? void (0)                            \
-      : __assert_fail (#expr, __ASSERT_FILE, __ASSERT_LINE,             \
-                       __ASSERT_FUNCTION))
+    (static_cast <bool> (expr)                     \
+     ? void (0)                            \
+     : __assert_fail (#expr, __ASSERT_FILE, __ASSERT_LINE,             \
+                      __ASSERT_FUNCTION))
 # elif !defined __GNUC__ || defined __STRICT_ANSI__
 #  define assert(expr)                          \
     ((expr)                             \
@@ -113,19 +113,19 @@ __END_DECLS
    support function pointers and bit fields in this context, and to
    suppress the evaluation of variable length arrays.  */
 #  define assert(expr)                          \
-  ((void) sizeof ((expr) ? 1 : 0), __extension__ ({         \
-      if (expr)                             \
-        ; /* empty */                           \
-      else                              \
-        __assert_fail (#expr, __FILE__, __LINE__, __ASSERT_FUNCTION);   \
+    ((void) sizeof ((expr) ? 1 : 0), __extension__ ({         \
+        if (expr)                             \
+            ; /* empty */                           \
+        else                              \
+            __assert_fail (#expr, __FILE__, __LINE__, __ASSERT_FUNCTION);   \
     }))
 # endif
 
 # ifdef __USE_GNU
 #  define assert_perror(errnum)                     \
-  (!(errnum)                                \
-   ? __ASSERT_VOID_CAST (0)                     \
-   : __assert_perror_fail ((errnum), __FILE__, __LINE__, __ASSERT_FUNCTION))
+    (!(errnum)                                \
+     ? __ASSERT_VOID_CAST (0)                     \
+     : __assert_perror_fail ((errnum), __FILE__, __LINE__, __ASSERT_FUNCTION))
 # endif
 
 /* Version 2.4 and later of GCC define a magical variable `__PRETTY_FUNCTION__'

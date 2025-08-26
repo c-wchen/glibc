@@ -23,17 +23,17 @@
 
 /* Avoid a run-time invocation of strlen.  */
 #define _startup_fatal(message)                                         \
-  do                                                                    \
+    do                                                                    \
     {                                                                   \
-      size_t __message_length = __builtin_strlen (message);             \
-      if (! __builtin_constant_p (__message_length))                    \
+        size_t __message_length = __builtin_strlen (message);             \
+        if (! __builtin_constant_p (__message_length))                    \
         {                                                               \
-          extern void _startup_fatal_not_constant (void);               \
-          _startup_fatal_not_constant ();                               \
+            extern void _startup_fatal_not_constant (void);               \
+            _startup_fatal_not_constant ();                               \
         }                                                               \
-      INTERNAL_SYSCALL_CALL (write, STDERR_FILENO, (message),           \
-                             __message_length);                         \
-      INTERNAL_SYSCALL_CALL (exit_group, 127);                          \
+        INTERNAL_SYSCALL_CALL (write, STDERR_FILENO, (message),           \
+                               __message_length);                         \
+        INTERNAL_SYSCALL_CALL (exit_group, 127);                          \
     }                                                                   \
-  while (0)
+    while (0)
 #endif  /* !SHARED */

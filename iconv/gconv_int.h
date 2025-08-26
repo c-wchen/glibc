@@ -30,30 +30,30 @@ __BEGIN_DECLS
    unaligned memory accesses.  Some of the character encodings have
    representations with a fixed width of 2 or 4 bytes.  */
 #define get16(addr)                         \
-({                                  \
-  const struct { uint16_t r; } __attribute__ ((__packed__)) *__ptr  \
-    = (__typeof(__ptr))(addr);                      \
-  __ptr->r;                             \
-})
+    ({                                  \
+        const struct { uint16_t r; } __attribute__ ((__packed__)) *__ptr  \
+            = (__typeof(__ptr))(addr);                      \
+        __ptr->r;                             \
+    })
 #define get32(addr)                         \
-({                                  \
-  const struct { uint32_t r; } __attribute__ ((__packed__)) *__ptr  \
-    = (__typeof(__ptr))(addr);                      \
-  __ptr->r;                             \
-})
+    ({                                  \
+        const struct { uint32_t r; } __attribute__ ((__packed__)) *__ptr  \
+            = (__typeof(__ptr))(addr);                      \
+        __ptr->r;                             \
+    })
 
 #define put16(addr, val)                        \
-do {                                    \
-   struct { uint16_t r; } __attribute__ ((__packed__)) *__ptr       \
-    = (__typeof(__ptr))(addr);                      \
-   __ptr->r = val;                          \
-} while (0)
+    do {                                    \
+        struct { uint16_t r; } __attribute__ ((__packed__)) *__ptr       \
+            = (__typeof(__ptr))(addr);                      \
+        __ptr->r = val;                          \
+    } while (0)
 #define put32(addr, val)                        \
-do {                                    \
-   struct { uint32_t r; } __attribute__ ((__packed__)) *__ptr       \
-    = (__typeof(__ptr))(addr);                      \
-   __ptr->r = val;                          \
-} while (0)
+    do {                                    \
+        struct { uint32_t r; } __attribute__ ((__packed__)) *__ptr       \
+            = (__typeof(__ptr))(addr);                      \
+        __ptr->r = val;                          \
+    } while (0)
 
 /* Structure for alias definition.  Simply two strings.  */
 struct gconv_alias {
@@ -136,34 +136,34 @@ __libc_lock_define(extern, __gconv_lock attribute_hidden)
 /* The gconv functions expects the name to be in upper case and complete,
    including the trailing slashes if necessary.  */
 #define norm_add_slashes(str,suffix) \
-  ({                                          \
-    const char *cp = (str);                           \
-    char *result;                                 \
-    char *tmp;                                    \
-    size_t cnt = 0;                               \
-    const size_t suffix_len = strlen (suffix);                    \
-                                          \
-    while (*cp != '\0')                               \
-      if (*cp++ == '/')                               \
-    ++cnt;                                    \
-                                          \
-    tmp = result = __alloca (cp - (str) + 3 + suffix_len);            \
-    cp = (str);                                   \
-    while (*cp != '\0')                               \
-      *tmp++ = __toupper_l (*cp++, _nl_C_locobj_ptr);                 \
-    if (cnt < 2)                                  \
-      {                                       \
-    *tmp++ = '/';                                 \
-    if (cnt < 1)                                  \
-      {                                   \
-        *tmp++ = '/';                             \
-        if (suffix_len != 0)                          \
-          tmp = __mempcpy (tmp, suffix, suffix_len);              \
-      }                                   \
-      }                                       \
-    *tmp = '\0';                                  \
-    result;                                   \
-  })
+    ({                                          \
+        const char *cp = (str);                           \
+        char *result;                                 \
+        char *tmp;                                    \
+        size_t cnt = 0;                               \
+        const size_t suffix_len = strlen (suffix);                    \
+        \
+        while (*cp != '\0')                               \
+            if (*cp++ == '/')                               \
+                ++cnt;                                    \
+        \
+        tmp = result = __alloca (cp - (str) + 3 + suffix_len);            \
+        cp = (str);                                   \
+        while (*cp != '\0')                               \
+            *tmp++ = __toupper_l (*cp++, _nl_C_locobj_ptr);                 \
+        if (cnt < 2)                                  \
+        {                                       \
+            *tmp++ = '/';                                 \
+            if (cnt < 1)                                  \
+            {                                   \
+                *tmp++ = '/';                             \
+                if (suffix_len != 0)                          \
+                    tmp = __mempcpy (tmp, suffix, suffix_len);              \
+            }                                   \
+        }                                       \
+        *tmp = '\0';                                  \
+        result;                                   \
+    })
 
 
 /* Return in *HANDLE, a descriptor for the transformation.  The function expects
@@ -294,12 +294,12 @@ attribute_hidden;
 /* Builtin transformations.  */
 #ifdef _LIBC
 # define __BUILTIN_TRANSFORM(Name) \
-  extern int Name (struct __gconv_step *step,                     \
-           struct __gconv_step_data *data,                \
-           const unsigned char **inbuf,                   \
-           const unsigned char *inbufend,                 \
-           unsigned char **outbufstart, size_t *irreversible,         \
-           int do_flush, int consume_incomplete)
+    extern int Name (struct __gconv_step *step,                     \
+                     struct __gconv_step_data *data,                \
+                     const unsigned char **inbuf,                   \
+                     const unsigned char *inbufend,                 \
+                     unsigned char **outbufstart, size_t *irreversible,         \
+                     int do_flush, int consume_incomplete)
 
 __BUILTIN_TRANSFORM(__gconv_transform_ascii_internal);
 __BUILTIN_TRANSFORM(__gconv_transform_internal_ascii);

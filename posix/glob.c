@@ -138,10 +138,10 @@ static dirent_type readdir_result_type(struct readdir_result d)
 /* Construct an initializer for a struct readdir_result object from a
    struct dirent *.  No copy of the name is made.  */
 #define READDIR_RESULT_INITIALIZER(source) \
-  {                                        \
-    source->d_name,                        \
-    D_TYPE_TO_RESULT (source)              \
-  }
+    {                                        \
+        source->d_name,                        \
+        D_TYPE_TO_RESULT (source)              \
+    }
 
 /* Call gl_readdir on STREAM.  This macro can be overridden to reduce
    type safety if an old interface version needs to be supported.  */

@@ -50,8 +50,8 @@
 
 #undef PSEUDO
 #define PSEUDO(name, syscall_name, args)                      \
-  .text;                                      \
-  ENTRY (name)                                    \
+    .text;                                      \
+    ENTRY (name)                                    \
     DO_CALL (syscall_name, args);                         \
     lghi %r4,-4095 ;                                  \
     clgr %r2,%r4 ;                                \
@@ -59,31 +59,31 @@
 
 #undef PSEUDO_END
 #define PSEUDO_END(name)                              \
-  SYSCALL_ERROR_HANDLER;                              \
-  END (name)
+    SYSCALL_ERROR_HANDLER;                              \
+    END (name)
 
 #undef PSEUDO_NOERRNO
 #define PSEUDO_NOERRNO(name, syscall_name, args)                  \
-  .text;                                      \
-  ENTRY (name)                                    \
+    .text;                                      \
+    ENTRY (name)                                    \
     DO_CALL (syscall_name, args)
 
 #undef PSEUDO_END_NOERRNO
 #define PSEUDO_END_NOERRNO(name)                          \
-  SYSCALL_ERROR_HANDLER;                              \
-  END (name)
+    SYSCALL_ERROR_HANDLER;                              \
+    END (name)
 
 #undef PSEUDO_ERRVAL
 #define PSEUDO_ERRVAL(name, syscall_name, args)                   \
-  .text;                                      \
-  ENTRY (name)                                    \
+    .text;                                      \
+    ENTRY (name)                                    \
     DO_CALL (syscall_name, args);                         \
     lcgr %r2,%r2
 
 #undef PSEUDO_END_ERRVAL
 #define PSEUDO_END_ERRVAL(name)                           \
-  SYSCALL_ERROR_HANDLER;                              \
-  END (name)
+    SYSCALL_ERROR_HANDLER;                              \
+    END (name)
 
 #undef SYSCALL_ERROR_LABEL
 #ifndef PIC
@@ -95,7 +95,7 @@
 #  undef SYSCALL_ERROR_LABEL
 #  define SYSCALL_ERROR_LABEL 0f
 #  define SYSCALL_ERROR_HANDLER \
-0:  larl  %r1,rtld_errno;                             \
+    0:  larl  %r1,rtld_errno;                             \
     lcr   %r2,%r2;                                \
     st    %r2,0(%r1);                                 \
     lghi  %r2,-1;                                 \
@@ -109,7 +109,7 @@
 #  undef SYSCALL_ERROR_LABEL
 #  define SYSCALL_ERROR_LABEL 0f
 #  define SYSCALL_ERROR_HANDLER \
-0:  lcr   %r0,%r2;                                \
+    0:  lcr   %r0,%r2;                                \
     larl  %r1,SYSCALL_ERROR_ERRNO@indntpoff;                      \
     lg    %r1,0(%r1);                                 \
     ear   %r2,%a0;                                \
@@ -122,7 +122,7 @@
 #  undef SYSCALL_ERROR_LABEL
 #  define SYSCALL_ERROR_LABEL 0f
 #  define SYSCALL_ERROR_HANDLER \
-0:  larl  %r1,_GLOBAL_OFFSET_TABLE_;                          \
+    0:  larl  %r1,_GLOBAL_OFFSET_TABLE_;                          \
     lg    %r1,errno@GOT(%r1);                             \
     lcr   %r2,%r2;                                \
     st    %r2,0(%r1);                                 \
@@ -149,15 +149,15 @@
  */
 
 #define DO_CALL(syscall, args)                            \
-  .if args > 5;                                   \
+    .if args > 5;                                   \
     lgr %r0,%r7;                                  \
     lg %r7,160(%r15);                                 \
-  .endif;                                     \
+    .endif;                                     \
     lghi %r1,SYS_ify (syscall);                           \
     svc 0;                                    \
-  .if args > 5;                                   \
+    .if args > 5;                                   \
     lgr %r7,%r0;                                  \
-  .endif
+    .endif
 
 #define ret                                   \
     br      14

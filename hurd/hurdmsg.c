@@ -25,8 +25,8 @@
 
 
 #define AUTHCHECK \
-  if (auth != mach_task_self () && ! __USEPORT (AUTH, port == auth)) \
-    return EPERM
+    if (auth != mach_task_self () && ! __USEPORT (AUTH, port == auth)) \
+        return EPERM
 
 
 /* Snarfing and frobbing the init ports.  */

@@ -49,24 +49,24 @@ static inline void lll_mutex_lock_optimized(pthread_mutex_t *mutex)
 }
 
 # define LLL_MUTEX_LOCK(mutex)                      \
-  lll_lock ((mutex)->__data.__lock, PTHREAD_MUTEX_PSHARED (mutex))
+    lll_lock ((mutex)->__data.__lock, PTHREAD_MUTEX_PSHARED (mutex))
 # define LLL_MUTEX_LOCK_OPTIMIZED(mutex) lll_mutex_lock_optimized (mutex)
 # define LLL_MUTEX_TRYLOCK(mutex) \
-  lll_trylock ((mutex)->__data.__lock)
+    lll_trylock ((mutex)->__data.__lock)
 # define LLL_ROBUST_MUTEX_LOCK_MODIFIER 0
 # define LLL_MUTEX_LOCK_ELISION(mutex) \
-  lll_lock_elision ((mutex)->__data.__lock, (mutex)->__data.__elision, \
-           PTHREAD_MUTEX_PSHARED (mutex))
+    lll_lock_elision ((mutex)->__data.__lock, (mutex)->__data.__elision, \
+                      PTHREAD_MUTEX_PSHARED (mutex))
 # define LLL_MUTEX_TRYLOCK_ELISION(mutex) \
-  lll_trylock_elision((mutex)->__data.__lock, (mutex)->__data.__elision, \
-           PTHREAD_MUTEX_PSHARED (mutex))
+    lll_trylock_elision((mutex)->__data.__lock, (mutex)->__data.__elision, \
+                        PTHREAD_MUTEX_PSHARED (mutex))
 # define PTHREAD_MUTEX_LOCK ___pthread_mutex_lock
 # define PTHREAD_MUTEX_VERSIONS 1
 #endif
 
 #ifndef LLL_MUTEX_READ_LOCK
 # define LLL_MUTEX_READ_LOCK(mutex) \
-  atomic_load_relaxed (&(mutex)->__data.__lock)
+    atomic_load_relaxed (&(mutex)->__data.__lock)
 #endif
 
 static int __pthread_mutex_lock_full(pthread_mutex_t *mutex)

@@ -20,7 +20,7 @@
 #include "localeinfo.h"
 
 #define DEFINE_CATEGORY(category, category_name, items, a) \
-extern struct __locale_data _nl_C_##category; weak_extern (_nl_C_##category)
+    extern struct __locale_data _nl_C_##category; weak_extern (_nl_C_##category)
 #include "categories.def"
 #undef  DEFINE_CATEGORY
 
@@ -40,7 +40,7 @@ struct __locale_struct _nl_global_locale attribute_hidden = {
     .__locales =
     {
 #define DEFINE_CATEGORY(category, category_name, items, a) \
-      [category] = &_nl_C_##category,
+    [category] = &_nl_C_##category,
 #include "categories.def"
 #undef  DEFINE_CATEGORY
     },
@@ -48,7 +48,7 @@ struct __locale_struct _nl_global_locale attribute_hidden = {
     {
         [LC_ALL] = _nl_C_name,
 #define DEFINE_CATEGORY(category, category_name, items, a) \
-      [category] = _nl_C_name,
+    [category] = _nl_C_name,
 #include "categories.def"
 #undef  DEFINE_CATEGORY
     },

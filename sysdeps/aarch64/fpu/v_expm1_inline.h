@@ -32,16 +32,16 @@ struct v_expm1_data {
 
 /* Generated using fpminimax, with degree=12 in [log(2)/2, log(2)/2].  */
 #define V_EXPM1_DATA                                                          \
-  {                                                                           \
-    .c1 = 0x1.5555555555559p-3, .c2 = V2 (0x1.555555555554bp-5),              \
-    .c3 = 0x1.111111110f663p-7, .c4 = V2 (0x1.6c16c16c1b5f3p-10),             \
-    .c5 = 0x1.a01a01affa35dp-13, .c6 = V2 (0x1.a01a018b4ecbbp-16),            \
-    .c7 = 0x1.71ddf82db5bb4p-19, .c8 = V2 (0x1.27e517fc0d54bp-22),            \
-    .c9 = 0x1.af5eedae67435p-26, .c10 = 0x1.1f143d060a28ap-29,                \
-    .ln2 = { 0x1.62e42fefa39efp-1, 0x1.abc9e3b39803fp-56 },                   \
-    .invln2 = V2 (0x1.71547652b82fep0),                                       \
-    .exponent_bias = V2 (0x3ff0000000000000),                                 \
-  }
+    {                                                                           \
+        .c1 = 0x1.5555555555559p-3, .c2 = V2 (0x1.555555555554bp-5),              \
+                                          .c3 = 0x1.111111110f663p-7, .c4 = V2 (0x1.6c16c16c1b5f3p-10),             \
+                                                  .c5 = 0x1.a01a01affa35dp-13, .c6 = V2 (0x1.a01a018b4ecbbp-16),            \
+                                                          .c7 = 0x1.71ddf82db5bb4p-19, .c8 = V2 (0x1.27e517fc0d54bp-22),            \
+                                                                  .c9 = 0x1.af5eedae67435p-26, .c10 = 0x1.1f143d060a28ap-29,                \
+                                                                          .ln2 = { 0x1.62e42fefa39efp-1, 0x1.abc9e3b39803fp-56 },                   \
+                                                                                  .invln2 = V2 (0x1.71547652b82fep0),                                       \
+                                                                                          .exponent_bias = V2 (0x3ff0000000000000),                                 \
+    }
 
 static inline float64x2_t expm1_inline(float64x2_t x, const struct v_expm1_data *d)
 {

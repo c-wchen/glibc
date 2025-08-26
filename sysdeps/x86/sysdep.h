@@ -94,24 +94,24 @@
 /* Save SSE, AVX, AVX512, mask, bound and APX registers.  Bound and APX
    registers are mutually exclusive.  */
 # define STATE_SAVE_MASK        \
-  ((1 << X86_XSTATE_SSE_ID)     \
-   | (1 << X86_XSTATE_AVX_ID)       \
-   | (1 << X86_XSTATE_BNDREGS_ID)   \
-   | (1 << X86_XSTATE_K_ID)     \
-   | (1 << X86_XSTATE_ZMM_H_ID)     \
-   | (1 << X86_XSTATE_ZMM_ID)       \
-   | (1 << X86_XSTATE_APX_F_ID))
+    ((1 << X86_XSTATE_SSE_ID)     \
+     | (1 << X86_XSTATE_AVX_ID)       \
+     | (1 << X86_XSTATE_BNDREGS_ID)   \
+     | (1 << X86_XSTATE_K_ID)     \
+     | (1 << X86_XSTATE_ZMM_H_ID)     \
+     | (1 << X86_XSTATE_ZMM_ID)       \
+     | (1 << X86_XSTATE_APX_F_ID))
 
 /* The maximum supported xstate ID.  */
 # define X86_XSTATE_MAX_ID  X86_XSTATE_APX_F_ID
 
 /* AMX state mask.  */
 # define AMX_STATE_SAVE_MASK        \
-  ((1 << X86_XSTATE_TILECFG_ID) | (1 << X86_XSTATE_TILEDATA_ID))
+    ((1 << X86_XSTATE_TILECFG_ID) | (1 << X86_XSTATE_TILEDATA_ID))
 
 /* States to be included in xsave_state_full_size.  */
 # define FULL_STATE_SAVE_MASK       \
-  (STATE_SAVE_MASK | AMX_STATE_SAVE_MASK)
+    (STATE_SAVE_MASK | AMX_STATE_SAVE_MASK)
 #else
 /* Offset for fxsave/xsave area used by _dl_tlsdesc_dynamic.  Since i386
    uses PUSH to save registers onto stack, use 0 here.  */
@@ -120,11 +120,11 @@
 
 /* Save SSE, AVX, AXV512, mask and bound registers.   */
 # define STATE_SAVE_MASK        \
-  ((1 << X86_XSTATE_SSE_ID)     \
-   | (1 << X86_XSTATE_AVX_ID)       \
-   | (1 << X86_XSTATE_BNDREGS_ID)   \
-   | (1 << X86_XSTATE_K_ID)     \
-   | (1 << X86_XSTATE_ZMM_H_ID))
+    ((1 << X86_XSTATE_SSE_ID)     \
+     | (1 << X86_XSTATE_AVX_ID)       \
+     | (1 << X86_XSTATE_BNDREGS_ID)   \
+     | (1 << X86_XSTATE_K_ID)     \
+     | (1 << X86_XSTATE_ZMM_H_ID))
 
 /* The maximum supported xstate ID.  */
 # define X86_XSTATE_MAX_ID  X86_XSTATE_ZMM_H_ID
@@ -138,7 +138,7 @@
    stack registers, are unchanged after CALL, except for EFLAGS and
    RAX/EAX.  */
 #define TLSDESC_CALL_STATE_SAVE_MASK    \
-  (FULL_STATE_SAVE_MASK | (1 << X86_XSTATE_X87_ID))
+    (FULL_STATE_SAVE_MASK | (1 << X86_XSTATE_X87_ID))
 
 /* Constants for bits in __x86_string_control:  */
 
@@ -158,8 +158,8 @@
 
 #undef  END
 #define END(name)                                 \
-  cfi_endproc;                                    \
-  ASM_SIZE_DIRECTIVE(name)
+    cfi_endproc;                                    \
+    ASM_SIZE_DIRECTIVE(name)
 
 #define ENTRY_CHK(name) ENTRY (name)
 #define END_CHK(name) END (name)
@@ -172,7 +172,7 @@
 
 #undef  PSEUDO_END
 #define PSEUDO_END(name)                              \
-  END (name)
+    END (name)
 
 /* Local label name for asm code. */
 #ifndef L
@@ -203,8 +203,8 @@
    STATE_SAVE or align stack to MINIMUM_ALIGNMENT bytes before calling
    _dl_fixup/__tls_get_addr.  */
 #define DL_RUNTIME_RESOLVE_REALIGN_STACK \
-  (STATE_SAVE_ALIGNMENT > DL_STACK_ALIGNMENT \
-   || MINIMUM_ALIGNMENT > DL_STACK_ALIGNMENT)
+    (STATE_SAVE_ALIGNMENT > DL_STACK_ALIGNMENT \
+     || MINIMUM_ALIGNMENT > DL_STACK_ALIGNMENT)
 
 #endif  /* __ASSEMBLER__ */
 

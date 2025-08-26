@@ -23,7 +23,7 @@
 /* These are the members in the public `struct link_map' type.
    Sanity check that the internal type and the public type match.  */
 #define VERIFY_MEMBER(name) \
-  (offsetof (struct link_map_public, name) == offsetof (struct link_map, name))
+    (offsetof (struct link_map_public, name) == offsetof (struct link_map, name))
 extern const int verify_link_map_members[(VERIFY_MEMBER(l_addr)
         &&VERIFY_MEMBER(l_name)
         &&VERIFY_MEMBER(l_ld)

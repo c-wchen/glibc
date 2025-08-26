@@ -48,10 +48,10 @@ struct __pthread_rwlock_arch_t {
 
 #if __WORDSIZE == 64
 # define __PTHREAD_RWLOCK_INITIALIZER(__flags) \
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, __flags
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, __flags
 #else
 # define __PTHREAD_RWLOCK_INITIALIZER(__flags) \
-  0, 0, 0, 0, 0, 0, 0, 0, 0, __flags, 0
+    0, 0, 0, 0, 0, 0, 0, 0, 0, __flags, 0
 #endif
 
 #endif

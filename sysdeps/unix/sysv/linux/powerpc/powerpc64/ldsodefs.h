@@ -71,7 +71,7 @@ static __always_inline bool _dl_ppc64_addr_sym_match(const struct link_map *l, c
    descriptor addresses.  */
 #undef DL_ADDR_SYM_MATCH
 #define DL_ADDR_SYM_MATCH(L, SYM, MATCHSYM, ADDR) \
-  _dl_ppc64_addr_sym_match (L, SYM, MATCHSYM, ADDR)
+    _dl_ppc64_addr_sym_match (L, SYM, MATCHSYM, ADDR)
 
 #endif
 

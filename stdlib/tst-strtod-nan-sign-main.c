@@ -28,17 +28,17 @@
 #define FNX(FN) CONCAT (FNPFX, FN)
 
 #define TEST_STRTOD(FSUF, FTYPE, FTOSTR, LSUF, CSUF)    \
-static int                      \
-test_strto ## FSUF (void)               \
-{                           \
-  FTYPE val_pos = FNX (FSUF) (L_("nan"), NULL);     \
-  FTYPE copy_pos = copysign ## CSUF (1, val_pos);   \
-  TEST_VERIFY (isnan (val_pos) && copy_pos == 1);   \
-  FTYPE val_neg = FNX (FSUF) (L_("-nan"), NULL);    \
-  FTYPE copy_neg = copysign ## CSUF (1, val_neg);   \
-  TEST_VERIFY (isnan (val_neg) && copy_neg == -1);  \
-  return 0;                     \
-}
+    static int                      \
+    test_strto ## FSUF (void)               \
+    {                           \
+        FTYPE val_pos = FNX (FSUF) (L_("nan"), NULL);     \
+        FTYPE copy_pos = copysign ## CSUF (1, val_pos);   \
+        TEST_VERIFY (isnan (val_pos) && copy_pos == 1);   \
+        FTYPE val_neg = FNX (FSUF) (L_("-nan"), NULL);    \
+        FTYPE copy_neg = copysign ## CSUF (1, val_neg);   \
+        TEST_VERIFY (isnan (val_neg) && copy_neg == -1);  \
+        return 0;                     \
+    }
 GEN_TEST_STRTOD_FOREACH(TEST_STRTOD)
 
 static int

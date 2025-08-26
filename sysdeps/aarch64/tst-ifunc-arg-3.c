@@ -21,24 +21,24 @@
 #include <support/check.h>
 
 #define CHECK_VALUES_WITH_ARG(p1, p2, p3, p4) \
-  ({ \
-    TEST_COMPARE (__ifunc_hwcap (0, _IFUNC_ARG_HWCAP, arg), 0); \
-    TEST_COMPARE (__ifunc_hwcap (_IFUNC_ARG_AT_HWCAP, _IFUNC_ARG_HWCAP, arg), p1); \
-    TEST_COMPARE (__ifunc_hwcap (_IFUNC_ARG_AT_HWCAP2, _IFUNC_ARG_HWCAP, arg), p2); \
-    TEST_COMPARE (__ifunc_hwcap (_IFUNC_ARG_AT_HWCAP3, _IFUNC_ARG_HWCAP, arg), p3); \
-    TEST_COMPARE (__ifunc_hwcap (_IFUNC_ARG_AT_HWCAP4, _IFUNC_ARG_HWCAP, arg), p4); \
-    TEST_COMPARE (__ifunc_hwcap (5, _IFUNC_ARG_HWCAP, arg), 0); \
-  })
+    ({ \
+        TEST_COMPARE (__ifunc_hwcap (0, _IFUNC_ARG_HWCAP, arg), 0); \
+        TEST_COMPARE (__ifunc_hwcap (_IFUNC_ARG_AT_HWCAP, _IFUNC_ARG_HWCAP, arg), p1); \
+        TEST_COMPARE (__ifunc_hwcap (_IFUNC_ARG_AT_HWCAP2, _IFUNC_ARG_HWCAP, arg), p2); \
+        TEST_COMPARE (__ifunc_hwcap (_IFUNC_ARG_AT_HWCAP3, _IFUNC_ARG_HWCAP, arg), p3); \
+        TEST_COMPARE (__ifunc_hwcap (_IFUNC_ARG_AT_HWCAP4, _IFUNC_ARG_HWCAP, arg), p4); \
+        TEST_COMPARE (__ifunc_hwcap (5, _IFUNC_ARG_HWCAP, arg), 0); \
+    })
 
 #define CHECK_VALUES_WITHOUT_ARG(p1) \
-  ({ \
-    TEST_COMPARE (__ifunc_hwcap (0, p1, arg), 0); \
-    TEST_COMPARE (__ifunc_hwcap (_IFUNC_ARG_AT_HWCAP, p1, arg), p1); \
-    TEST_COMPARE (__ifunc_hwcap (_IFUNC_ARG_AT_HWCAP2, p1, arg), 0); \
-    TEST_COMPARE (__ifunc_hwcap (_IFUNC_ARG_AT_HWCAP3, p1, arg), 0); \
-    TEST_COMPARE (__ifunc_hwcap (_IFUNC_ARG_AT_HWCAP4, p1, arg), 0); \
-    TEST_COMPARE (__ifunc_hwcap (5, p1, arg), 0); \
-  })
+    ({ \
+        TEST_COMPARE (__ifunc_hwcap (0, p1, arg), 0); \
+        TEST_COMPARE (__ifunc_hwcap (_IFUNC_ARG_AT_HWCAP, p1, arg), p1); \
+        TEST_COMPARE (__ifunc_hwcap (_IFUNC_ARG_AT_HWCAP2, p1, arg), 0); \
+        TEST_COMPARE (__ifunc_hwcap (_IFUNC_ARG_AT_HWCAP3, p1, arg), 0); \
+        TEST_COMPARE (__ifunc_hwcap (_IFUNC_ARG_AT_HWCAP4, p1, arg), 0); \
+        TEST_COMPARE (__ifunc_hwcap (5, p1, arg), 0); \
+    })
 
 static void test_one(const unsigned long *arg)
 {

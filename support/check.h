@@ -27,48 +27,48 @@ __BEGIN_DECLS
 /* Record a test failure, print the failure message to standard output
    and pass the result of 1 through.  */
 #define FAIL(...) \
-  support_print_failure_impl (__FILE__, __LINE__, __VA_ARGS__)
+    support_print_failure_impl (__FILE__, __LINE__, __VA_ARGS__)
 
 /* Record a test failure, print the failure message to standard output
    and return 1.  */
 #define FAIL_RET(...) \
-  return support_print_failure_impl (__FILE__, __LINE__, __VA_ARGS__)
+    return support_print_failure_impl (__FILE__, __LINE__, __VA_ARGS__)
 
 /* Print the failure message and terminate the process with STATUS.
    Record a the process as failed if STATUS is neither EXIT_SUCCESS
    nor EXIT_UNSUPPORTED.  */
 #define FAIL_EXIT(status, ...) \
-  support_exit_failure_impl (status, __FILE__, __LINE__, __VA_ARGS__)
+    support_exit_failure_impl (status, __FILE__, __LINE__, __VA_ARGS__)
 
 /* Record a test failure, print the failure message and terminate with
    exit status 1.  */
 #define FAIL_EXIT1(...) \
-  support_exit_failure_impl (1, __FILE__, __LINE__, __VA_ARGS__)
+    support_exit_failure_impl (1, __FILE__, __LINE__, __VA_ARGS__)
 
 /* Print failure message and terminate with as unsupported test (exit
    status of 77).  */
 #define FAIL_UNSUPPORTED(...) \
-  support_exit_failure_impl (77, __FILE__, __LINE__, __VA_ARGS__)
+    support_exit_failure_impl (77, __FILE__, __LINE__, __VA_ARGS__)
 
 /* Record a test failure (but continue executing) if EXPR evaluates to
    false.  */
 #define TEST_VERIFY(expr)                                       \
-  ({                                                            \
-    if (expr)                                                   \
-      ;                                                         \
-    else                                                        \
-      support_test_verify_impl (__FILE__, __LINE__, #expr);     \
-  })
+    ({                                                            \
+        if (expr)                                                   \
+            ;                                                         \
+        else                                                        \
+            support_test_verify_impl (__FILE__, __LINE__, #expr);     \
+    })
 
 /* Record a test failure and exit if EXPR evaluates to false.  */
 #define TEST_VERIFY_EXIT(expr)                                  \
-  ({                                                            \
-    if (expr)                                                   \
-      ;                                                         \
-    else                                                        \
-      support_test_verify_exit_impl                             \
-        (1, __FILE__, __LINE__, #expr);                         \
-  })
+    ({                                                            \
+        if (expr)                                                   \
+            ;                                                         \
+        else                                                        \
+            support_test_verify_exit_impl                             \
+            (1, __FILE__, __LINE__, #expr);                         \
+    })
 
 
 
@@ -104,33 +104,33 @@ void support_record_failure(void);
 /* Compare the two integers LEFT and RIGHT and report failure if they
    are different.  */
 #define TEST_COMPARE(left, right)                                       \
-  ({                                                                    \
-    /* + applies the integer promotions, for bitfield support.   */     \
-    typedef __typeof__ (+ (left)) __left_type;                          \
-    typedef __typeof__ (+ (right)) __right_type;                        \
-    __left_type __left_value = (left);                                  \
-    __right_type __right_value = (right);                               \
-    int __left_is_positive = __left_value > 0;                          \
-    int __right_is_positive = __right_value > 0;                        \
-    /* Prevent use with floating-point types.  */                       \
-    support_static_assert ((__left_type) 1.0 == (__left_type) 1.5,      \
-                           "left value has floating-point type");       \
-    support_static_assert ((__right_type) 1.0 == (__right_type) 1.5,    \
-                           "right value has floating-point type");      \
-    /* Prevent accidental use with larger-than-long long types.  */     \
-    support_static_assert (sizeof (__left_value) <= sizeof (long long), \
-                           "left value fits into long long");           \
-    support_static_assert (sizeof (__right_value) <= sizeof (long long), \
-                    "right value fits into long long");                 \
-    /* Compare the value.  */                                           \
-    if (__left_value != __right_value                                   \
-        || __left_is_positive != __right_is_positive)                   \
-      /* Pass the sign for printing the correct value.  */              \
-      support_test_compare_failure                                      \
-        (__FILE__, __LINE__,                                            \
-         #left, __left_value, __left_is_positive, sizeof (__left_type), \
-         #right, __right_value, __right_is_positive, sizeof (__right_type)); \
-  })
+    ({                                                                    \
+        /* + applies the integer promotions, for bitfield support.   */     \
+        typedef __typeof__ (+ (left)) __left_type;                          \
+        typedef __typeof__ (+ (right)) __right_type;                        \
+        __left_type __left_value = (left);                                  \
+        __right_type __right_value = (right);                               \
+        int __left_is_positive = __left_value > 0;                          \
+        int __right_is_positive = __right_value > 0;                        \
+        /* Prevent use with floating-point types.  */                       \
+        support_static_assert ((__left_type) 1.0 == (__left_type) 1.5,      \
+                               "left value has floating-point type");       \
+        support_static_assert ((__right_type) 1.0 == (__right_type) 1.5,    \
+                               "right value has floating-point type");      \
+        /* Prevent accidental use with larger-than-long long types.  */     \
+        support_static_assert (sizeof (__left_value) <= sizeof (long long), \
+                               "left value fits into long long");           \
+        support_static_assert (sizeof (__right_value) <= sizeof (long long), \
+                               "right value fits into long long");                 \
+        /* Compare the value.  */                                           \
+        if (__left_value != __right_value                                   \
+            || __left_is_positive != __right_is_positive)                   \
+            /* Pass the sign for printing the correct value.  */              \
+            support_test_compare_failure                                      \
+            (__FILE__, __LINE__,                                            \
+             #left, __left_value, __left_is_positive, sizeof (__left_type), \
+             #right, __right_value, __right_is_positive, sizeof (__right_type)); \
+    })
 
 /* Internal implementation of TEST_COMPARE.  LEFT_POSITIVE and
    RIGHT_POSITIVE are used to store the sign separately, so that both
@@ -156,9 +156,9 @@ void support_test_compare_failure(const char *file, int line,
    can be NULL).  The blobs should be reasonably short because on
    mismatch, both are printed.  */
 #define TEST_COMPARE_BLOB(left, left_length, right, right_length)       \
-  (support_test_compare_blob (left, left_length, right, right_length,   \
-                              __FILE__, __LINE__,                       \
-                              #left, #left_length, #right, #right_length))
+    (support_test_compare_blob (left, left_length, right, right_length,   \
+                                __FILE__, __LINE__,                       \
+                                #left, #left_length, #right, #right_length))
 
 void support_test_compare_blob(const void *left,
                                unsigned long int left_length,
@@ -174,16 +174,16 @@ void support_test_compare_blob(const void *left,
    a null pointer and the other is not.  The strings should be
    reasonably short because on mismatch, both are printed.  */
 #define TEST_COMPARE_STRING(left, right)                         \
-  (support_test_compare_string (left, right, __FILE__, __LINE__, \
-                                #left, #right))
+    (support_test_compare_string (left, right, __FILE__, __LINE__, \
+                                  #left, #right))
 
 /* Compare the wide strings LEFT and RIGHT and report a test failure
    if they are different.  Also report failure if one of the arguments
    is a null pointer and the other is not.  The strings should be
    reasonably short because on mismatch, both are printed.  */
 #define TEST_COMPARE_STRING_WIDE(left, right)                         \
-  (support_test_compare_string_wide (left, right, __FILE__, __LINE__, \
-                     #left, #right))
+    (support_test_compare_string_wide (left, right, __FILE__, __LINE__, \
+                                       #left, #right))
 
 void support_test_compare_string(const char *left, const char *right,
                                  const char *file, int line,

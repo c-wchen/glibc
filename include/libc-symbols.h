@@ -140,7 +140,7 @@
 /* Define ALIASNAME as a strong alias for NAME.  */
 # define strong_alias(name, aliasname) _strong_alias(name, aliasname)
 # define _strong_alias(name, aliasname) \
-  extern __typeof (name) aliasname __attribute__ ((alias (#name))) \
+    extern __typeof (name) aliasname __attribute__ ((alias (#name))) \
     __attribute_copy__ (name);
 
 /* This comes between the return type and function name in
@@ -152,7 +152,7 @@
    If weak aliases are not available, this defines a strong alias.  */
 # define weak_alias(name, aliasname) _weak_alias (name, aliasname)
 # define _weak_alias(name, aliasname) \
-  extern __typeof (name) aliasname __attribute__ ((weak, alias (#name))) \
+    extern __typeof (name) aliasname __attribute__ ((weak, alias (#name))) \
     __attribute_copy__ (name);
 
 /* Declare SYMBOL as weak undefined symbol (resolved to 0 if not defined).  */
@@ -169,44 +169,44 @@
 #  define call_function_static_weak(func, ...) func (__VA_ARGS__)
 # else  /* !SHARED */
 #  define call_function_static_weak(func, ...)      \
-  ({                            \
-    extern __typeof__ (func) func weak_function;    \
-    (func != NULL ? func (__VA_ARGS__) : (void)0);  \
-  })
+    ({                            \
+        extern __typeof__ (func) func weak_function;    \
+        (func != NULL ? func (__VA_ARGS__) : (void)0);  \
+    })
 # endif
 
 #else /* __ASSEMBLER__ */
 
 # ifdef HAVE_ASM_SET_DIRECTIVE
 #  define strong_alias(original, alias)             \
-  .globl C_SYMBOL_NAME (alias) ASM_LINE_SEP     \
-  .set C_SYMBOL_NAME (alias),C_SYMBOL_NAME (original)
+    .globl C_SYMBOL_NAME (alias) ASM_LINE_SEP     \
+    .set C_SYMBOL_NAME (alias),C_SYMBOL_NAME (original)
 #  define strong_data_alias(original, alias) strong_alias(original, alias)
 # else
 #  define strong_alias(original, alias)             \
-  .globl C_SYMBOL_NAME (alias) ASM_LINE_SEP     \
-  C_SYMBOL_NAME (alias) = C_SYMBOL_NAME (original)
+    .globl C_SYMBOL_NAME (alias) ASM_LINE_SEP     \
+    C_SYMBOL_NAME (alias) = C_SYMBOL_NAME (original)
 #  define strong_data_alias(original, alias) strong_alias(original, alias)
 # endif
 
 # define weak_alias(original, alias)                    \
-  .weak C_SYMBOL_NAME (alias) ASM_LINE_SEP              \
-  C_SYMBOL_NAME (alias) = C_SYMBOL_NAME (original)
+    .weak C_SYMBOL_NAME (alias) ASM_LINE_SEP              \
+    C_SYMBOL_NAME (alias) = C_SYMBOL_NAME (original)
 
 # define weak_extern(symbol)                        \
-  .weak C_SYMBOL_NAME (symbol)
+    .weak C_SYMBOL_NAME (symbol)
 
 #endif /* __ASSEMBLER__ */
 
 /* Determine the return address.  */
 #define RETURN_ADDRESS(nr) \
-  __builtin_extract_return_addr (__builtin_return_address (nr))
+    __builtin_extract_return_addr (__builtin_return_address (nr))
 
 /* When a reference to SYMBOL is encountered, the linker will emit a
    warning message MSG.  */
 /* We want the .gnu.warning.SYMBOL section to be unallocated.  */
 #define __make_section_unallocated(section_string)  \
-  asm (".section " section_string "\n\t.previous");
+    asm (".section " section_string "\n\t.previous");
 
 /* Tacking on "\n\t#" to the section name makes gcc put its bogus
    section attributes on what looks like a comment to the assembler.  */
@@ -216,15 +216,15 @@
 # define __sec_comment "\n\t#"
 #endif
 #define link_warning(symbol, msg) \
-  __make_section_unallocated (".gnu.warning." #symbol) \
-  static const char __evoke_link_warning_##symbol[] \
+    __make_section_unallocated (".gnu.warning." #symbol) \
+    static const char __evoke_link_warning_##symbol[] \
     __attribute__ ((used, section (".gnu.warning." #symbol __sec_comment))) \
-    = msg;
+        = msg;
 
 /* A canned warning for sysdeps/stub functions.  */
 #define stub_warning(name) \
-  __make_section_unallocated (".gnu.glibc-stub." #name) \
-  link_warning (name, #name " is not implemented and will always fail")
+    __make_section_unallocated (".gnu.glibc-stub." #name) \
+    link_warning (name, #name " is not implemented and will always fail")
 
 /* Warning for linking functions calling dlopen into static binaries.  */
 #ifdef SHARED
@@ -232,7 +232,7 @@
 #else
 #define static_link_warning(name) static_link_warning1(name)
 #define static_link_warning1(name) \
-  link_warning(name, "Using '" #name "' in statically linked applications \
+    link_warning(name, "Using '" #name "' in statically linked applications \
 requires at runtime the shared libraries from the glibc version used \
 for linking")
 #endif
@@ -244,25 +244,25 @@ for linking")
    funny alias games where the size should be other than what the compiler
    thinks it is.  */
 #define declare_object_symbol_alias(symbol, original, size) \
-  declare_object_symbol_alias_1 (symbol, original, size)
+    declare_object_symbol_alias_1 (symbol, original, size)
 #ifdef __ASSEMBLER__
 # define declare_object_symbol_alias_1(symbol, original, s_size) \
-   strong_alias (original, symbol) ASM_LINE_SEP \
-   .type C_SYMBOL_NAME (symbol), %object ASM_LINE_SEP \
-   .size C_SYMBOL_NAME (symbol), s_size ASM_LINE_SEP
+    strong_alias (original, symbol) ASM_LINE_SEP \
+    .type C_SYMBOL_NAME (symbol), %object ASM_LINE_SEP \
+    .size C_SYMBOL_NAME (symbol), s_size ASM_LINE_SEP
 #else /* Not __ASSEMBLER__.  */
 # ifdef HAVE_ASM_SET_DIRECTIVE
 #  define declare_object_symbol_alias_1(symbol, original, size) \
-     asm (".global " __SYMBOL_PREFIX # symbol "\n" \
-      ".type " __SYMBOL_PREFIX # symbol ", %object\n" \
-      ".set " __SYMBOL_PREFIX #symbol ", " __SYMBOL_PREFIX original "\n" \
-      ".size " __SYMBOL_PREFIX #symbol ", " #size "\n");
+    asm (".global " __SYMBOL_PREFIX # symbol "\n" \
+         ".type " __SYMBOL_PREFIX # symbol ", %object\n" \
+         ".set " __SYMBOL_PREFIX #symbol ", " __SYMBOL_PREFIX original "\n" \
+         ".size " __SYMBOL_PREFIX #symbol ", " #size "\n");
 # else
 #  define declare_object_symbol_alias_1(symbol, original, size) \
-     asm (".global " __SYMBOL_PREFIX # symbol "\n" \
-      ".type " __SYMBOL_PREFIX # symbol ", %object\n" \
-      __SYMBOL_PREFIX #symbol " = " __SYMBOL_PREFIX original "\n" \
-      ".size " __SYMBOL_PREFIX #symbol ", " #size "\n");
+    asm (".global " __SYMBOL_PREFIX # symbol "\n" \
+         ".type " __SYMBOL_PREFIX # symbol ", %object\n" \
+         __SYMBOL_PREFIX #symbol " = " __SYMBOL_PREFIX original "\n" \
+         ".size " __SYMBOL_PREFIX #symbol ", " #size "\n");
 # endif /* HAVE_ASM_SET_DIRECTIVE */
 #endif /* __ASSEMBLER__ */
 
@@ -293,11 +293,11 @@ for linking")
    because it will need to be relocated at run time anyway.  */
 # define _elf_set_element(set, symbol) \
     static const void *__elf_set_##set##_element_##symbol##__ \
-      attribute_used_retain __attribute__ ((section (#set))) = &(symbol)
+    attribute_used_retain __attribute__ ((section (#set))) = &(symbol)
 #else
 # define _elf_set_element(set, symbol) \
     static const void *const __elf_set_##set##_element_##symbol##__ \
-      attribute_used_retain __attribute__ ((section (#set))) = &(symbol)
+    attribute_used_retain __attribute__ ((section (#set))) = &(symbol)
 #endif
 
 /* Define SET as a symbol set.  This may be required (it is in a.out) to
@@ -309,8 +309,8 @@ for linking")
    For static linking, the set might be wholly absent and so we use
    weak references.  */
 #define symbol_set_declare(set) \
-  extern char const __start_##set[] __symbol_set_attribute; \
-  extern char const __stop_##set[] __symbol_set_attribute;
+    extern char const __start_##set[] __symbol_set_attribute; \
+    extern char const __stop_##set[] __symbol_set_attribute;
 #ifdef SHARED
 # define __symbol_set_attribute attribute_hidden
 #else
@@ -326,28 +326,28 @@ for linking")
 
 #ifdef SHARED
 # define symbol_version(real, name, version) \
-  symbol_version_reference(real, name, version)
+    symbol_version_reference(real, name, version)
 # define default_symbol_version(real, name, version) \
-     _default_symbol_version(real, name, version)
+    _default_symbol_version(real, name, version)
 /* See <libc-symver.h>.  */
 # ifdef __ASSEMBLER__
 #  define _default_symbol_version(real, name, version) \
-  _set_symbol_version (real, name@@version)
+    _set_symbol_version (real, name@@version)
 # else
 #  define _default_symbol_version(real, name, version) \
-  _set_symbol_version (real, #name "@@" #version)
+    _set_symbol_version (real, #name "@@" #version)
 # endif
 
 /* Evaluates to a string literal for VERSION in LIB.  */
 # define symbol_version_string(lib, version) \
-  _symbol_version_stringify_1 (VERSION_##lib##_##version)
+    _symbol_version_stringify_1 (VERSION_##lib##_##version)
 # define _symbol_version_stringify_1(arg) _symbol_version_stringify_2 (arg)
 # define _symbol_version_stringify_2(arg) #arg
 
 #else /* !SHARED */
 # define symbol_version(real, name, version)
 # define default_symbol_version(real, name, version) \
-  strong_alias(real, name)
+    strong_alias(real, name)
 #endif
 
 #if defined SHARED || defined LIBC_NONSHARED \
@@ -439,51 +439,51 @@ for linking")
 #if defined SHARED && !defined NO_HIDDEN
 # ifndef __ASSEMBLER__
 #  define __hidden_proto_hiddenattr(attrs...) \
-  __attribute__ ((visibility ("hidden"), ##attrs))
+    __attribute__ ((visibility ("hidden"), ##attrs))
 #  define hidden_proto(name, attrs...) \
-  __hidden_proto (name, , __GI_##name, ##attrs)
+    __hidden_proto (name, , __GI_##name, ##attrs)
 #  define hidden_proto_alias(name, alias, attrs...) \
-  __hidden_proto_alias (name, , alias, ##attrs)
+    __hidden_proto_alias (name, , alias, ##attrs)
 #  define hidden_tls_proto(name, attrs...) \
-  __hidden_proto (name, __thread, __GI_##name, ##attrs)
+    __hidden_proto (name, __thread, __GI_##name, ##attrs)
 #  define __hidden_proto(name, thread, internal, attrs...)       \
-  extern thread __typeof (name) name __asm__ (__hidden_asmname (#internal)) \
-  __hidden_proto_hiddenattr (attrs);
+    extern thread __typeof (name) name __asm__ (__hidden_asmname (#internal)) \
+    __hidden_proto_hiddenattr (attrs);
 #  define __hidden_proto_alias(name, thread, internal, attrs...)         \
-  extern thread __typeof (name) internal __hidden_proto_hiddenattr (attrs);
+    extern thread __typeof (name) internal __hidden_proto_hiddenattr (attrs);
 #  define __hidden_asmname(name) \
-  __hidden_asmname1 (__USER_LABEL_PREFIX__, name)
+    __hidden_asmname1 (__USER_LABEL_PREFIX__, name)
 #  define __hidden_asmname1(prefix, name) __hidden_asmname2(prefix, name)
 #  define __hidden_asmname2(prefix, name) #prefix name
 #  define __hidden_ver1(local, internal, name) \
-  __hidden_ver2 (, local, internal, name)
+    __hidden_ver2 (, local, internal, name)
 #  define __hidden_ver2(thread, local, internal, name)          \
-  extern thread __typeof (name) __EI_##name \
+    extern thread __typeof (name) __EI_##name \
     __asm__(__hidden_asmname (#internal));  \
-  extern thread __typeof (name) __EI_##name \
+    extern thread __typeof (name) __EI_##name \
     __attribute__((alias (__hidden_asmname (#local))))  \
     __attribute_copy__ (name)
 #  define hidden_ver(local, name)   __hidden_ver1(local, __GI_##name, name);
 #  define hidden_def(name)      __hidden_ver1(__GI_##name, name, name);
 #  define hidden_def_alias(name, internal) \
-  strong_alias (name, internal)
+    strong_alias (name, internal)
 #  define hidden_data_def(name)     hidden_def(name)
 #  define hidden_data_def_alias(name, alias) hidden_def_alias(name, alias)
 #  define hidden_tls_def(name)              \
-  __hidden_ver2 (__thread, __GI_##name, name, name);
+    __hidden_ver2 (__thread, __GI_##name, name, name);
 #  define hidden_weak(name) \
     __hidden_ver1(__GI_##name, name, name) __attribute__((weak));
 #  define hidden_data_weak(name)    hidden_weak(name)
 #  define hidden_nolink(name, lib, version) \
-  __hidden_nolink1 (__GI_##name, __EI_##name, name, VERSION_##lib##_##version)
+    __hidden_nolink1 (__GI_##name, __EI_##name, name, VERSION_##lib##_##version)
 #  define __hidden_nolink1(local, internal, name, version) \
-  __hidden_nolink2 (local, internal, name, version)
+    __hidden_nolink2 (local, internal, name, version)
 #  define __hidden_nolink2(local, internal, name, version) \
-  extern __typeof (name) internal __attribute__ ((alias (#local)))  \
+    extern __typeof (name) internal __attribute__ ((alias (#local)))  \
     __attribute_copy__ (name);                      \
-  __hidden_nolink3 (local, internal, #name "@" #version)
+    __hidden_nolink3 (local, internal, #name "@" #version)
 #  define __hidden_nolink3(local, internal, vername) \
-  __asm__ (".symver " #internal ", " vername);
+    __asm__ (".symver " #internal ", " vername);
 # else
 /* For assembly, we need to do the opposite of what we do in C:
    in assembly gcc __REDIRECT stuff is not in place, so functions
@@ -510,17 +510,17 @@ for linking")
       && (!defined PIC || !defined NO_HIDDEN_EXTERN_FUNC_IN_PIE) \
       && !defined NO_HIDDEN
 #   define __hidden_proto_hiddenattr(attrs...) \
-  __attribute__ ((visibility ("hidden"), ##attrs))
+    __attribute__ ((visibility ("hidden"), ##attrs))
 #   define hidden_proto(name, attrs...) \
-  __hidden_proto (name, , name, ##attrs)
+    __hidden_proto (name, , name, ##attrs)
 #  define hidden_proto_alias(name, alias, attrs...) \
-  __hidden_proto_alias (name, , alias, ##attrs)
+    __hidden_proto_alias (name, , alias, ##attrs)
 #   define hidden_tls_proto(name, attrs...) \
-  __hidden_proto (name, __thread, name, ##attrs)
+    __hidden_proto (name, __thread, name, ##attrs)
 #  define __hidden_proto(name, thread, internal, attrs...)       \
-  extern thread __typeof (name) name __hidden_proto_hiddenattr (attrs);
+    extern thread __typeof (name) name __hidden_proto_hiddenattr (attrs);
 #  define __hidden_proto_alias(name, thread, internal, attrs...)     \
-  extern thread __typeof (name) internal __hidden_proto_hiddenattr (attrs);
+    extern thread __typeof (name) internal __hidden_proto_hiddenattr (attrs);
 # else
 #   define hidden_proto(name, attrs...)
 #   define hidden_proto_alias(name, alias, attrs...)
@@ -543,7 +543,7 @@ for linking")
 #if IS_IN (libc)
 # define libc_hidden_proto(name, attrs...) hidden_proto (name, ##attrs)
 # define libc_hidden_proto_alias(name, alias, attrs...) \
-   hidden_proto_alias (name, alias, ##attrs)
+    hidden_proto_alias (name, alias, ##attrs)
 # define libc_hidden_tls_proto(name, attrs...) hidden_tls_proto (name, ##attrs)
 # define libc_hidden_def(name) hidden_def (name)
 # define libc_hidden_weak(name) hidden_weak (name)
@@ -659,22 +659,22 @@ for linking")
 
 /* Helper / base  macros for indirect function symbols.  */
 #define __ifunc_resolver(type_name, name, expr, init, classifier, ...)  \
-  classifier inhibit_stack_protector                    \
-  __typeof (type_name) *name##_ifunc (__VA_ARGS__)          \
-  {                                 \
-    init ();                                \
-    __typeof (type_name) *res = expr;                   \
-    return res;                             \
-  }
+    classifier inhibit_stack_protector                    \
+    __typeof (type_name) *name##_ifunc (__VA_ARGS__)          \
+    {                                 \
+        init ();                                \
+        __typeof (type_name) *res = expr;                   \
+        return res;                             \
+    }
 
 #ifdef HAVE_GCC_IFUNC
 # define __ifunc_args(type_name, name, expr, init, ...)         \
-  extern __typeof (type_name) name __attribute__            \
-                  ((ifunc (#name "_ifunc")));       \
-  __ifunc_resolver (type_name, name, expr, init, static, __VA_ARGS__)
+    extern __typeof (type_name) name __attribute__            \
+    ((ifunc (#name "_ifunc")));       \
+    __ifunc_resolver (type_name, name, expr, init, static, __VA_ARGS__)
 
 # define __ifunc_args_hidden(type_name, name, expr, init, ...)      \
-  __ifunc_args (type_name, name, expr, init, __VA_ARGS__)
+    __ifunc_args (type_name, name, expr, init, __VA_ARGS__)
 #else
 /* Gcc does not support __attribute__ ((ifunc (...))).  Use the old behaviour
    as fallback.  But keep in mind that the debug information for the ifunc
@@ -686,22 +686,22 @@ for linking")
    Ubuntu 14.04 system.)  */
 
 # define __ifunc_args(type_name, name, expr, init, ...)         \
-  extern __typeof (type_name) name;                 \
-  __typeof (type_name) *name##_ifunc (__VA_ARGS__) __asm__ (#name); \
-  __ifunc_resolver (type_name, name, expr, init, , __VA_ARGS__)     \
- __asm__ (".type " #name ", %gnu_indirect_function");
+    extern __typeof (type_name) name;                 \
+    __typeof (type_name) *name##_ifunc (__VA_ARGS__) __asm__ (#name); \
+    __ifunc_resolver (type_name, name, expr, init, , __VA_ARGS__)     \
+    __asm__ (".type " #name ", %gnu_indirect_function");
 
 # define __ifunc_args_hidden(type_name, name, expr, init, ...)      \
-  extern __typeof (type_name) __libc_##name;                \
-  __ifunc (type_name, __libc_##name, expr, __VA_ARGS__, init)       \
-  strong_alias (__libc_##name, name);
+    extern __typeof (type_name) __libc_##name;                \
+    __ifunc (type_name, __libc_##name, expr, __VA_ARGS__, init)       \
+    strong_alias (__libc_##name, name);
 #endif /* !HAVE_GCC_IFUNC  */
 
 #define __ifunc(type_name, name, expr, arg, init)           \
-  __ifunc_args (type_name, name, expr, init, arg)
+    __ifunc_args (type_name, name, expr, init, arg)
 
 #define __ifunc_hidden(type_name, name, expr, arg, init)        \
-  __ifunc_args_hidden (type_name, name, expr, init, arg)
+    __ifunc_args_hidden (type_name, name, expr, init, arg)
 
 /* The following macros are used for indirect function symbols in libc.so.
    First of all, you need to have the function prototyped somewhere,
@@ -785,16 +785,16 @@ for linking")
 #define libc_ifunc(name, expr) __ifunc (name, name, expr, void, INIT_ARCH)
 
 #define libc_ifunc_redirected(redirected_name, name, expr)  \
-  __ifunc (redirected_name, name, expr, void, INIT_ARCH)
+    __ifunc (redirected_name, name, expr, void, INIT_ARCH)
 
 #define libc_ifunc_hidden(redirected_name, name, expr)          \
-  __ifunc_hidden (redirected_name, name, expr, void, INIT_ARCH)
+    __ifunc_hidden (redirected_name, name, expr, void, INIT_ARCH)
 
 /* The body of the function is supposed to use __get_cpu_features
    which will, if necessary, initialize the data first.  */
 #define libm_ifunc_init()
 #define libm_ifunc(name, expr)              \
-  __ifunc (name, name, expr, void, libm_ifunc_init)
+    __ifunc (name, name, expr, void, libm_ifunc_init)
 
 /* These macros facilitate sharing source files with gnulib.
 

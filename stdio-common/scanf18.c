@@ -31,10 +31,10 @@
 
 
 #define FAIL() \
-  do {                          \
-    result = 1;                     \
-    printf ("test at line %d failed\n", __LINE__);  \
-  } while (0)
+    do {                          \
+        result = 1;                     \
+        printf ("test at line %d failed\n", __LINE__);  \
+    } while (0)
 
 int main(void)
 {

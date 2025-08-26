@@ -66,9 +66,9 @@ extern char *_fitoa(unsigned long long value, char *buf, unsigned int base,
 #if !_ITOA_NEEDED
 /* No need for special long long versions.  */
 # define _itoa(value, buf, base, upper_case) \
-  _itoa_word (value, buf, base, upper_case)
+    _itoa_word (value, buf, base, upper_case)
 # define _fitoa(value, buf, base, upper_case) \
-  _fitoa_word (value, buf, base, upper_case)
+    _fitoa_word (value, buf, base, upper_case)
 #endif
 
 #endif  /* itoa.h */

@@ -51,73 +51,73 @@
 #endif
 
 #define ARGCHECK(S, Format) \
-  do                                         \
+    do                                         \
     {                                        \
-      /* Check file argument for consistence.  */                \
-      CHECK_FILE (S, -1);                            \
-      if (S->_flags & _IO_NO_WRITES)                         \
-       {                                     \
-     S->_flags |= _IO_ERR_SEEN;                      \
-     __set_errno (EBADF);                            \
-     return -1;                              \
-       }                                     \
-      if (Format == NULL)                            \
-       {                                     \
-     __set_errno (EINVAL);                           \
-     return -1;                              \
-       }                                     \
+        /* Check file argument for consistence.  */                \
+        CHECK_FILE (S, -1);                            \
+        if (S->_flags & _IO_NO_WRITES)                         \
+        {                                     \
+            S->_flags |= _IO_ERR_SEEN;                      \
+            __set_errno (EBADF);                            \
+            return -1;                              \
+        }                                     \
+        if (Format == NULL)                            \
+        {                                     \
+            __set_errno (EINVAL);                           \
+            return -1;                              \
+        }                                     \
     } while (0)
 #define UNBUFFERED_P(S) ((S)->_flags & _IO_UNBUFFERED)
 
 #if __HAVE_FLOAT128_UNLIKE_LDBL
 # define PARSE_FLOAT_VA_ARG_EXTENDED(INFO)                    \
-  do                                          \
+    do                                          \
     {                                         \
-      if (is_long_double                              \
-      && (mode_flags & PRINTF_LDBL_USES_FLOAT128) != 0)           \
-    {                                     \
-      INFO.is_binary128 = 1;                          \
-      the_arg.pa_float128 = va_arg (ap, _Float128);               \
-    }                                     \
-      else                                    \
-    {                                     \
-      PARSE_FLOAT_VA_ARG (INFO);                          \
-    }                                     \
+        if (is_long_double                              \
+            && (mode_flags & PRINTF_LDBL_USES_FLOAT128) != 0)           \
+        {                                     \
+            INFO.is_binary128 = 1;                          \
+            the_arg.pa_float128 = va_arg (ap, _Float128);               \
+        }                                     \
+        else                                    \
+        {                                     \
+            PARSE_FLOAT_VA_ARG (INFO);                          \
+        }                                     \
     }                                         \
-  while (0)
+    while (0)
 #else
 # define PARSE_FLOAT_VA_ARG_EXTENDED(INFO)                    \
-  PARSE_FLOAT_VA_ARG (INFO);
+    PARSE_FLOAT_VA_ARG (INFO);
 #endif
 
 #define PARSE_FLOAT_VA_ARG(INFO)                          \
-  do                                          \
+    do                                          \
     {                                         \
-      INFO.is_binary128 = 0;                              \
-      if (is_long_double)                             \
-    the_arg.pa_long_double = va_arg (ap, long double);            \
-      else                                    \
-    the_arg.pa_double = va_arg (ap, double);                  \
+        INFO.is_binary128 = 0;                              \
+        if (is_long_double)                             \
+            the_arg.pa_long_double = va_arg (ap, long double);            \
+        else                                    \
+            the_arg.pa_double = va_arg (ap, double);                  \
     }                                         \
-  while (0)
+    while (0)
 
 #if __HAVE_FLOAT128_UNLIKE_LDBL
 # define SETUP_FLOAT128_INFO(INFO)                        \
-  do                                          \
+    do                                          \
     {                                         \
-      if ((mode_flags & PRINTF_LDBL_USES_FLOAT128) != 0)              \
-    INFO.is_binary128 = is_long_double;                   \
-      else                                    \
-    INFO.is_binary128 = 0;                            \
+        if ((mode_flags & PRINTF_LDBL_USES_FLOAT128) != 0)              \
+            INFO.is_binary128 = is_long_double;                   \
+        else                                    \
+            INFO.is_binary128 = 0;                            \
     }                                         \
-  while (0)
+    while (0)
 #else
 # define SETUP_FLOAT128_INFO(INFO)                        \
-  do                                          \
+    do                                          \
     {                                         \
-      INFO.is_binary128 = 0;                              \
+        INFO.is_binary128 = 0;                              \
     }                                         \
-  while (0)
+    while (0)
 #endif
 
 #ifndef COMPILE_WPRINTF
@@ -132,7 +132,7 @@ typedef const char *THOUSANDS_SEP_T;
 # define STR_LEN(Str)   strlen (Str)
 
 # define ORIENT     if (_IO_vtable_offset (s) == 0 && _IO_fwide (s, -1) != -1)\
-              return -1
+        return -1
 # define CONVERT_FROM_OTHER_STRING __wcsrtombs
 #else
 # include "printf_buffer-wchar_t.h"
@@ -328,251 +328,251 @@ static const uint8_t jump_table[] = {
 # define JUMP_TABLE_BASE_LABEL do_form_unknown
 # define REF(Name) &&do_##Name - &&JUMP_TABLE_BASE_LABEL
 # define JUMP(ChExpr, table)                              \
-      do                                      \
+    do                                      \
     {                                     \
-      int offset;                                 \
-      void *ptr;                                  \
-      spec = (ChExpr);                            \
-      offset = NOT_IN_JUMP_RANGE (spec) ? REF (form_unknown)          \
-        : table[CHAR_CLASS (spec)];                       \
-      ptr = &&JUMP_TABLE_BASE_LABEL + offset;                 \
-      goto *ptr;                                  \
+        int offset;                                 \
+        void *ptr;                                  \
+        spec = (ChExpr);                            \
+        offset = NOT_IN_JUMP_RANGE (spec) ? REF (form_unknown)          \
+                 : table[CHAR_CLASS (spec)];                       \
+        ptr = &&JUMP_TABLE_BASE_LABEL + offset;                 \
+        goto *ptr;                                  \
     }                                     \
-      while (0)
+    while (0)
 #else
 # define JUMP_TABLE_TYPE const void *const
 # define REF(Name) &&do_##Name
 # define JUMP(ChExpr, table)                              \
-      do                                      \
+    do                                      \
     {                                     \
-      const void *ptr;                            \
-      spec = (ChExpr);                            \
-      ptr = NOT_IN_JUMP_RANGE (spec) ? REF (form_unknown)             \
-        : table[CHAR_CLASS (spec)];                       \
-      goto *ptr;                                  \
+        const void *ptr;                            \
+        spec = (ChExpr);                            \
+        ptr = NOT_IN_JUMP_RANGE (spec) ? REF (form_unknown)             \
+              : table[CHAR_CLASS (spec)];                       \
+        goto *ptr;                                  \
     }                                     \
-      while (0)
+    while (0)
 #endif
 
 #define STEP0_3_TABLE                                 \
     /* Step 0: at the beginning.  */                          \
     static JUMP_TABLE_TYPE step0_jumps[32] =                      \
-    {                                         \
-      REF (form_unknown),                             \
-      REF (flag_space),     /* for ' ' */                     \
-      REF (flag_plus),      /* for '+' */                     \
-      REF (flag_minus),     /* for '-' */                     \
-      REF (flag_hash),      /* for '<hash>' */                \
-      REF (flag_zero),      /* for '0' */                     \
-      REF (flag_quote),     /* for '\'' */                    \
-      REF (width_asterics), /* for '*' */                     \
-      REF (width),      /* for '1'...'9' */               \
-      REF (precision),      /* for '.' */                     \
-      REF (mod_half),       /* for 'h' */                     \
-      REF (mod_long),       /* for 'l' */                     \
-      REF (mod_longlong),   /* for 'L', 'q' */                \
-      REF (mod_size_t),     /* for 'z', 'Z' */                \
-      REF (form_percent),   /* for '%' */                     \
-      REF (form_integer),   /* for 'd', 'i' */                \
-      REF (form_unsigned),  /* for 'u' */                     \
-      REF (form_octal),     /* for 'o' */                     \
-      REF (form_hexa),      /* for 'X', 'x' */                \
-      REF (form_float),     /* for 'E', 'e', 'F', 'f', 'G', 'g' */        \
-      REF (form_character), /* for 'c' */                     \
-      REF (form_string),    /* for 's', 'S' */                \
-      REF (form_pointer),   /* for 'p' */                     \
-      REF (form_number),    /* for 'n' */                     \
-      REF (form_strerror),  /* for 'm' */                     \
-      REF (form_wcharacter),    /* for 'C' */                     \
-      REF (form_floathex),  /* for 'A', 'a' */                \
-      REF (mod_ptrdiff_t),      /* for 't' */                     \
-      REF (mod_intmax_t),       /* for 'j' */                     \
-      REF (flag_i18n),      /* for 'I' */                     \
-      REF (form_binary),    /* for 'B', 'b' */                \
-      REF (mod_bitwidth),   /* for 'w' */                     \
-    };                                        \
+            {                                         \
+                                                      REF (form_unknown),                             \
+                                                      REF (flag_space),     /* for ' ' */                     \
+                                                      REF (flag_plus),      /* for '+' */                     \
+                                                      REF (flag_minus),     /* for '-' */                     \
+                                                      REF (flag_hash),      /* for '<hash>' */                \
+                                                      REF (flag_zero),      /* for '0' */                     \
+                                                      REF (flag_quote),     /* for '\'' */                    \
+                                                      REF (width_asterics), /* for '*' */                     \
+                                                      REF (width),      /* for '1'...'9' */               \
+                                                      REF (precision),      /* for '.' */                     \
+                                                      REF (mod_half),       /* for 'h' */                     \
+                                                      REF (mod_long),       /* for 'l' */                     \
+                                                      REF (mod_longlong),   /* for 'L', 'q' */                \
+                                                      REF (mod_size_t),     /* for 'z', 'Z' */                \
+                                                      REF (form_percent),   /* for '%' */                     \
+                                                      REF (form_integer),   /* for 'd', 'i' */                \
+                                                      REF (form_unsigned),  /* for 'u' */                     \
+                                                      REF (form_octal),     /* for 'o' */                     \
+                                                      REF (form_hexa),      /* for 'X', 'x' */                \
+                                                      REF (form_float),     /* for 'E', 'e', 'F', 'f', 'G', 'g' */        \
+                                                      REF (form_character), /* for 'c' */                     \
+                                                      REF (form_string),    /* for 's', 'S' */                \
+                                                      REF (form_pointer),   /* for 'p' */                     \
+                                                      REF (form_number),    /* for 'n' */                     \
+                                                      REF (form_strerror),  /* for 'm' */                     \
+                                                      REF (form_wcharacter),    /* for 'C' */                     \
+                                                      REF (form_floathex),  /* for 'A', 'a' */                \
+                                                      REF (mod_ptrdiff_t),      /* for 't' */                     \
+                                                      REF (mod_intmax_t),       /* for 'j' */                     \
+                                                      REF (flag_i18n),      /* for 'I' */                     \
+                                                      REF (form_binary),    /* for 'B', 'b' */                \
+                                                      REF (mod_bitwidth),   /* for 'w' */                     \
+            };                                        \
     /* Step 1: after processing width.  */                    \
     static JUMP_TABLE_TYPE step1_jumps[32] =                      \
-    {                                         \
-      REF (form_unknown),                             \
-      REF (form_unknown),   /* for ' ' */                     \
-      REF (form_unknown),   /* for '+' */                     \
-      REF (form_unknown),   /* for '-' */                     \
-      REF (form_unknown),   /* for '<hash>' */                \
-      REF (form_unknown),   /* for '0' */                     \
-      REF (form_unknown),   /* for '\'' */                    \
-      REF (form_unknown),   /* for '*' */                     \
-      REF (form_unknown),   /* for '1'...'9' */               \
-      REF (precision),      /* for '.' */                     \
-      REF (mod_half),       /* for 'h' */                     \
-      REF (mod_long),       /* for 'l' */                     \
-      REF (mod_longlong),   /* for 'L', 'q' */                \
-      REF (mod_size_t),     /* for 'z', 'Z' */                \
-      REF (form_percent),   /* for '%' */                     \
-      REF (form_integer),   /* for 'd', 'i' */                \
-      REF (form_unsigned),  /* for 'u' */                     \
-      REF (form_octal),     /* for 'o' */                     \
-      REF (form_hexa),      /* for 'X', 'x' */                \
-      REF (form_float),     /* for 'E', 'e', 'F', 'f', 'G', 'g' */        \
-      REF (form_character), /* for 'c' */                     \
-      REF (form_string),    /* for 's', 'S' */                \
-      REF (form_pointer),   /* for 'p' */                     \
-      REF (form_number),    /* for 'n' */                     \
-      REF (form_strerror),  /* for 'm' */                     \
-      REF (form_wcharacter),    /* for 'C' */                     \
-      REF (form_floathex),  /* for 'A', 'a' */                \
-      REF (mod_ptrdiff_t),      /* for 't' */                     \
-      REF (mod_intmax_t),       /* for 'j' */                     \
-      REF (form_unknown),       /* for 'I' */                     \
-      REF (form_binary),    /* for 'B', 'b' */                \
-      REF (mod_bitwidth),   /* for 'w' */                     \
-    };                                        \
+            {                                         \
+                                                      REF (form_unknown),                             \
+                                                      REF (form_unknown),   /* for ' ' */                     \
+                                                      REF (form_unknown),   /* for '+' */                     \
+                                                      REF (form_unknown),   /* for '-' */                     \
+                                                      REF (form_unknown),   /* for '<hash>' */                \
+                                                      REF (form_unknown),   /* for '0' */                     \
+                                                      REF (form_unknown),   /* for '\'' */                    \
+                                                      REF (form_unknown),   /* for '*' */                     \
+                                                      REF (form_unknown),   /* for '1'...'9' */               \
+                                                      REF (precision),      /* for '.' */                     \
+                                                      REF (mod_half),       /* for 'h' */                     \
+                                                      REF (mod_long),       /* for 'l' */                     \
+                                                      REF (mod_longlong),   /* for 'L', 'q' */                \
+                                                      REF (mod_size_t),     /* for 'z', 'Z' */                \
+                                                      REF (form_percent),   /* for '%' */                     \
+                                                      REF (form_integer),   /* for 'd', 'i' */                \
+                                                      REF (form_unsigned),  /* for 'u' */                     \
+                                                      REF (form_octal),     /* for 'o' */                     \
+                                                      REF (form_hexa),      /* for 'X', 'x' */                \
+                                                      REF (form_float),     /* for 'E', 'e', 'F', 'f', 'G', 'g' */        \
+                                                      REF (form_character), /* for 'c' */                     \
+                                                      REF (form_string),    /* for 's', 'S' */                \
+                                                      REF (form_pointer),   /* for 'p' */                     \
+                                                      REF (form_number),    /* for 'n' */                     \
+                                                      REF (form_strerror),  /* for 'm' */                     \
+                                                      REF (form_wcharacter),    /* for 'C' */                     \
+                                                      REF (form_floathex),  /* for 'A', 'a' */                \
+                                                      REF (mod_ptrdiff_t),      /* for 't' */                     \
+                                                      REF (mod_intmax_t),       /* for 'j' */                     \
+                                                      REF (form_unknown),       /* for 'I' */                     \
+                                                      REF (form_binary),    /* for 'B', 'b' */                \
+                                                      REF (mod_bitwidth),   /* for 'w' */                     \
+            };                                        \
     /* Step 2: after processing precision.  */                    \
     static JUMP_TABLE_TYPE step2_jumps[32] =                      \
-    {                                         \
-      REF (form_unknown),                             \
-      REF (form_unknown),   /* for ' ' */                     \
-      REF (form_unknown),   /* for '+' */                     \
-      REF (form_unknown),   /* for '-' */                     \
-      REF (form_unknown),   /* for '<hash>' */                \
-      REF (form_unknown),   /* for '0' */                     \
-      REF (form_unknown),   /* for '\'' */                    \
-      REF (form_unknown),   /* for '*' */                     \
-      REF (form_unknown),   /* for '1'...'9' */               \
-      REF (form_unknown),   /* for '.' */                     \
-      REF (mod_half),       /* for 'h' */                     \
-      REF (mod_long),       /* for 'l' */                     \
-      REF (mod_longlong),   /* for 'L', 'q' */                \
-      REF (mod_size_t),     /* for 'z', 'Z' */                \
-      REF (form_percent),   /* for '%' */                     \
-      REF (form_integer),   /* for 'd', 'i' */                \
-      REF (form_unsigned),  /* for 'u' */                     \
-      REF (form_octal),     /* for 'o' */                     \
-      REF (form_hexa),      /* for 'X', 'x' */                \
-      REF (form_float),     /* for 'E', 'e', 'F', 'f', 'G', 'g' */        \
-      REF (form_character), /* for 'c' */                     \
-      REF (form_string),    /* for 's', 'S' */                \
-      REF (form_pointer),   /* for 'p' */                     \
-      REF (form_number),    /* for 'n' */                     \
-      REF (form_strerror),  /* for 'm' */                     \
-      REF (form_wcharacter),    /* for 'C' */                     \
-      REF (form_floathex),  /* for 'A', 'a' */                \
-      REF (mod_ptrdiff_t),      /* for 't' */                     \
-      REF (mod_intmax_t),       /* for 'j' */                     \
-      REF (form_unknown),       /* for 'I' */                     \
-      REF (form_binary),    /* for 'B', 'b' */                \
-      REF (mod_bitwidth),   /* for 'w' */                     \
-    };                                        \
+            {                                         \
+                                                      REF (form_unknown),                             \
+                                                      REF (form_unknown),   /* for ' ' */                     \
+                                                      REF (form_unknown),   /* for '+' */                     \
+                                                      REF (form_unknown),   /* for '-' */                     \
+                                                      REF (form_unknown),   /* for '<hash>' */                \
+                                                      REF (form_unknown),   /* for '0' */                     \
+                                                      REF (form_unknown),   /* for '\'' */                    \
+                                                      REF (form_unknown),   /* for '*' */                     \
+                                                      REF (form_unknown),   /* for '1'...'9' */               \
+                                                      REF (form_unknown),   /* for '.' */                     \
+                                                      REF (mod_half),       /* for 'h' */                     \
+                                                      REF (mod_long),       /* for 'l' */                     \
+                                                      REF (mod_longlong),   /* for 'L', 'q' */                \
+                                                      REF (mod_size_t),     /* for 'z', 'Z' */                \
+                                                      REF (form_percent),   /* for '%' */                     \
+                                                      REF (form_integer),   /* for 'd', 'i' */                \
+                                                      REF (form_unsigned),  /* for 'u' */                     \
+                                                      REF (form_octal),     /* for 'o' */                     \
+                                                      REF (form_hexa),      /* for 'X', 'x' */                \
+                                                      REF (form_float),     /* for 'E', 'e', 'F', 'f', 'G', 'g' */        \
+                                                      REF (form_character), /* for 'c' */                     \
+                                                      REF (form_string),    /* for 's', 'S' */                \
+                                                      REF (form_pointer),   /* for 'p' */                     \
+                                                      REF (form_number),    /* for 'n' */                     \
+                                                      REF (form_strerror),  /* for 'm' */                     \
+                                                      REF (form_wcharacter),    /* for 'C' */                     \
+                                                      REF (form_floathex),  /* for 'A', 'a' */                \
+                                                      REF (mod_ptrdiff_t),      /* for 't' */                     \
+                                                      REF (mod_intmax_t),       /* for 'j' */                     \
+                                                      REF (form_unknown),       /* for 'I' */                     \
+                                                      REF (form_binary),    /* for 'B', 'b' */                \
+                                                      REF (mod_bitwidth),   /* for 'w' */                     \
+            };                                        \
     /* Step 3a: after processing first 'h' modifier.  */              \
     static JUMP_TABLE_TYPE step3a_jumps[32] =                     \
-    {                                         \
-      REF (form_unknown),                             \
-      REF (form_unknown),   /* for ' ' */                     \
-      REF (form_unknown),   /* for '+' */                     \
-      REF (form_unknown),   /* for '-' */                     \
-      REF (form_unknown),   /* for '<hash>' */                \
-      REF (form_unknown),   /* for '0' */                     \
-      REF (form_unknown),   /* for '\'' */                    \
-      REF (form_unknown),   /* for '*' */                     \
-      REF (form_unknown),   /* for '1'...'9' */               \
-      REF (form_unknown),   /* for '.' */                     \
-      REF (mod_halfhalf),   /* for 'h' */                     \
-      REF (form_unknown),   /* for 'l' */                     \
-      REF (form_unknown),   /* for 'L', 'q' */                \
-      REF (form_unknown),   /* for 'z', 'Z' */                \
-      REF (form_percent),   /* for '%' */                     \
-      REF (form_integer),   /* for 'd', 'i' */                \
-      REF (form_unsigned),  /* for 'u' */                     \
-      REF (form_octal),     /* for 'o' */                     \
-      REF (form_hexa),      /* for 'X', 'x' */                \
-      REF (form_unknown),   /* for 'E', 'e', 'F', 'f', 'G', 'g' */        \
-      REF (form_unknown),   /* for 'c' */                     \
-      REF (form_unknown),   /* for 's', 'S' */                \
-      REF (form_unknown),   /* for 'p' */                     \
-      REF (form_number),    /* for 'n' */                     \
-      REF (form_unknown),   /* for 'm' */                     \
-      REF (form_unknown),   /* for 'C' */                     \
-      REF (form_unknown),   /* for 'A', 'a' */                \
-      REF (form_unknown),       /* for 't' */                     \
-      REF (form_unknown),       /* for 'j' */                     \
-      REF (form_unknown),       /* for 'I' */                     \
-      REF (form_binary),    /* for 'B', 'b' */                \
-      REF (form_unknown),   /* for 'w' */                     \
-    };                                        \
+            {                                         \
+                                                      REF (form_unknown),                             \
+                                                      REF (form_unknown),   /* for ' ' */                     \
+                                                      REF (form_unknown),   /* for '+' */                     \
+                                                      REF (form_unknown),   /* for '-' */                     \
+                                                      REF (form_unknown),   /* for '<hash>' */                \
+                                                      REF (form_unknown),   /* for '0' */                     \
+                                                      REF (form_unknown),   /* for '\'' */                    \
+                                                      REF (form_unknown),   /* for '*' */                     \
+                                                      REF (form_unknown),   /* for '1'...'9' */               \
+                                                      REF (form_unknown),   /* for '.' */                     \
+                                                      REF (mod_halfhalf),   /* for 'h' */                     \
+                                                      REF (form_unknown),   /* for 'l' */                     \
+                                                      REF (form_unknown),   /* for 'L', 'q' */                \
+                                                      REF (form_unknown),   /* for 'z', 'Z' */                \
+                                                      REF (form_percent),   /* for '%' */                     \
+                                                      REF (form_integer),   /* for 'd', 'i' */                \
+                                                      REF (form_unsigned),  /* for 'u' */                     \
+                                                      REF (form_octal),     /* for 'o' */                     \
+                                                      REF (form_hexa),      /* for 'X', 'x' */                \
+                                                      REF (form_unknown),   /* for 'E', 'e', 'F', 'f', 'G', 'g' */        \
+                                                      REF (form_unknown),   /* for 'c' */                     \
+                                                      REF (form_unknown),   /* for 's', 'S' */                \
+                                                      REF (form_unknown),   /* for 'p' */                     \
+                                                      REF (form_number),    /* for 'n' */                     \
+                                                      REF (form_unknown),   /* for 'm' */                     \
+                                                      REF (form_unknown),   /* for 'C' */                     \
+                                                      REF (form_unknown),   /* for 'A', 'a' */                \
+                                                      REF (form_unknown),       /* for 't' */                     \
+                                                      REF (form_unknown),       /* for 'j' */                     \
+                                                      REF (form_unknown),       /* for 'I' */                     \
+                                                      REF (form_binary),    /* for 'B', 'b' */                \
+                                                      REF (form_unknown),   /* for 'w' */                     \
+            };                                        \
     /* Step 3b: after processing first 'l' modifier.  */              \
     static JUMP_TABLE_TYPE step3b_jumps[32] =                     \
-    {                                         \
-      REF (form_unknown),                             \
-      REF (form_unknown),   /* for ' ' */                     \
-      REF (form_unknown),   /* for '+' */                     \
-      REF (form_unknown),   /* for '-' */                     \
-      REF (form_unknown),   /* for '<hash>' */                \
-      REF (form_unknown),   /* for '0' */                     \
-      REF (form_unknown),   /* for '\'' */                    \
-      REF (form_unknown),   /* for '*' */                     \
-      REF (form_unknown),   /* for '1'...'9' */               \
-      REF (form_unknown),   /* for '.' */                     \
-      REF (form_unknown),   /* for 'h' */                     \
-      REF (mod_longlong),   /* for 'l' */                     \
-      REF (form_unknown),   /* for 'L', 'q' */                \
-      REF (form_unknown),   /* for 'z', 'Z' */                \
-      REF (form_percent),   /* for '%' */                     \
-      REF (form_integer),   /* for 'd', 'i' */                \
-      REF (form_unsigned),  /* for 'u' */                     \
-      REF (form_octal),     /* for 'o' */                     \
-      REF (form_hexa),      /* for 'X', 'x' */                \
-      REF (form_float),     /* for 'E', 'e', 'F', 'f', 'G', 'g' */        \
-      REF (form_character), /* for 'c' */                     \
-      REF (form_string),    /* for 's', 'S' */                \
-      REF (form_pointer),   /* for 'p' */                     \
-      REF (form_number),    /* for 'n' */                     \
-      REF (form_strerror),  /* for 'm' */                     \
-      REF (form_wcharacter),    /* for 'C' */                     \
-      REF (form_floathex),  /* for 'A', 'a' */                \
-      REF (form_unknown),       /* for 't' */                     \
-      REF (form_unknown),       /* for 'j' */                     \
-      REF (form_unknown),       /* for 'I' */                     \
-      REF (form_binary),    /* for 'B', 'b' */                \
-      REF (form_unknown),   /* for 'w' */                     \
-    }
+            {                                         \
+                                                      REF (form_unknown),                             \
+                                                      REF (form_unknown),   /* for ' ' */                     \
+                                                      REF (form_unknown),   /* for '+' */                     \
+                                                      REF (form_unknown),   /* for '-' */                     \
+                                                      REF (form_unknown),   /* for '<hash>' */                \
+                                                      REF (form_unknown),   /* for '0' */                     \
+                                                      REF (form_unknown),   /* for '\'' */                    \
+                                                      REF (form_unknown),   /* for '*' */                     \
+                                                      REF (form_unknown),   /* for '1'...'9' */               \
+                                                      REF (form_unknown),   /* for '.' */                     \
+                                                      REF (form_unknown),   /* for 'h' */                     \
+                                                      REF (mod_longlong),   /* for 'l' */                     \
+                                                      REF (form_unknown),   /* for 'L', 'q' */                \
+                                                      REF (form_unknown),   /* for 'z', 'Z' */                \
+                                                      REF (form_percent),   /* for '%' */                     \
+                                                      REF (form_integer),   /* for 'd', 'i' */                \
+                                                      REF (form_unsigned),  /* for 'u' */                     \
+                                                      REF (form_octal),     /* for 'o' */                     \
+                                                      REF (form_hexa),      /* for 'X', 'x' */                \
+                                                      REF (form_float),     /* for 'E', 'e', 'F', 'f', 'G', 'g' */        \
+                                                      REF (form_character), /* for 'c' */                     \
+                                                      REF (form_string),    /* for 's', 'S' */                \
+                                                      REF (form_pointer),   /* for 'p' */                     \
+                                                      REF (form_number),    /* for 'n' */                     \
+                                                      REF (form_strerror),  /* for 'm' */                     \
+                                                      REF (form_wcharacter),    /* for 'C' */                     \
+                                                      REF (form_floathex),  /* for 'A', 'a' */                \
+                                                      REF (form_unknown),       /* for 't' */                     \
+                                                      REF (form_unknown),       /* for 'j' */                     \
+                                                      REF (form_unknown),       /* for 'I' */                     \
+                                                      REF (form_binary),    /* for 'B', 'b' */                \
+                                                      REF (form_unknown),   /* for 'w' */                     \
+            }
 
 #define STEP4_TABLE                               \
     /* Step 4: processing format specifier.  */                   \
     static JUMP_TABLE_TYPE step4_jumps[32] =                      \
-    {                                         \
-      REF (form_unknown),                             \
-      REF (form_unknown),   /* for ' ' */                     \
-      REF (form_unknown),   /* for '+' */                     \
-      REF (form_unknown),   /* for '-' */                     \
-      REF (form_unknown),   /* for '<hash>' */                \
-      REF (form_unknown),   /* for '0' */                     \
-      REF (form_unknown),   /* for '\'' */                    \
-      REF (form_unknown),   /* for '*' */                     \
-      REF (form_unknown),   /* for '1'...'9' */               \
-      REF (form_unknown),   /* for '.' */                     \
-      REF (form_unknown),   /* for 'h' */                     \
-      REF (form_unknown),   /* for 'l' */                     \
-      REF (form_unknown),   /* for 'L', 'q' */                \
-      REF (form_unknown),   /* for 'z', 'Z' */                \
-      REF (form_percent),   /* for '%' */                     \
-      REF (form_integer),   /* for 'd', 'i' */                \
-      REF (form_unsigned),  /* for 'u' */                     \
-      REF (form_octal),     /* for 'o' */                     \
-      REF (form_hexa),      /* for 'X', 'x' */                \
-      REF (form_float),     /* for 'E', 'e', 'F', 'f', 'G', 'g' */        \
-      REF (form_character), /* for 'c' */                     \
-      REF (form_string),    /* for 's', 'S' */                \
-      REF (form_pointer),   /* for 'p' */                     \
-      REF (form_number),    /* for 'n' */                     \
-      REF (form_strerror),  /* for 'm' */                     \
-      REF (form_wcharacter),    /* for 'C' */                     \
-      REF (form_floathex),  /* for 'A', 'a' */                \
-      REF (form_unknown),       /* for 't' */                     \
-      REF (form_unknown),       /* for 'j' */                     \
-      REF (form_unknown),       /* for 'I' */                     \
-      REF (form_binary),    /* for 'B', 'b' */                \
-      REF (form_unknown),   /* for 'w' */                     \
-    }
+            {                                         \
+                                                      REF (form_unknown),                             \
+                                                      REF (form_unknown),   /* for ' ' */                     \
+                                                      REF (form_unknown),   /* for '+' */                     \
+                                                      REF (form_unknown),   /* for '-' */                     \
+                                                      REF (form_unknown),   /* for '<hash>' */                \
+                                                      REF (form_unknown),   /* for '0' */                     \
+                                                      REF (form_unknown),   /* for '\'' */                    \
+                                                      REF (form_unknown),   /* for '*' */                     \
+                                                      REF (form_unknown),   /* for '1'...'9' */               \
+                                                      REF (form_unknown),   /* for '.' */                     \
+                                                      REF (form_unknown),   /* for 'h' */                     \
+                                                      REF (form_unknown),   /* for 'l' */                     \
+                                                      REF (form_unknown),   /* for 'L', 'q' */                \
+                                                      REF (form_unknown),   /* for 'z', 'Z' */                \
+                                                      REF (form_percent),   /* for '%' */                     \
+                                                      REF (form_integer),   /* for 'd', 'i' */                \
+                                                      REF (form_unsigned),  /* for 'u' */                     \
+                                                      REF (form_octal),     /* for 'o' */                     \
+                                                      REF (form_hexa),      /* for 'X', 'x' */                \
+                                                      REF (form_float),     /* for 'E', 'e', 'F', 'f', 'G', 'g' */        \
+                                                      REF (form_character), /* for 'c' */                     \
+                                                      REF (form_string),    /* for 's', 'S' */                \
+                                                      REF (form_pointer),   /* for 'p' */                     \
+                                                      REF (form_number),    /* for 'n' */                     \
+                                                      REF (form_strerror),  /* for 'm' */                     \
+                                                      REF (form_wcharacter),    /* for 'C' */                     \
+                                                      REF (form_floathex),  /* for 'A', 'a' */                \
+                                                      REF (form_unknown),       /* for 't' */                     \
+                                                      REF (form_unknown),       /* for 'j' */                     \
+                                                      REF (form_unknown),       /* for 'I' */                     \
+                                                      REF (form_binary),    /* for 'B', 'b' */                \
+                                                      REF (form_unknown),   /* for 'w' */                     \
+            }
 
 /* Handle positional format specifiers.  */
 static void printf_positional(struct Xprintf_buffer *buf,
@@ -1178,9 +1178,9 @@ static void printf_positional(struct Xprintf_buffer *buf, const CHAR_T *format,
     for (cnt = 0; cnt < nargs; ++cnt)
         switch (args_type[cnt]) {
 #define T(tag, mem, type)               \
-    case tag:                   \
-      args_value[cnt].mem = va_arg (*ap_savep, type); \
-      break
+case tag:                   \
+    args_value[cnt].mem = va_arg (*ap_savep, type); \
+    break
 
                 T(PA_WCHAR, pa_wchar, wint_t);
             case PA_CHAR:             /* Promoted.  */

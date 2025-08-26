@@ -22,31 +22,31 @@
 
 # define INIT_ARCH_EXT
 # define CHECK_ARCH_EXT                                        \
-  do                                                           \
+    do                                                           \
     {                                                          \
-      if (!CPU_FEATURE_ACTIVE (AVX)) return;                   \
+        if (!CPU_FEATURE_ACTIVE (AVX)) return;                   \
     }                                                          \
-  while (0)
+    while (0)
 
 #elif defined REQUIRE_AVX2
 
 # define INIT_ARCH_EXT
 # define CHECK_ARCH_EXT                                        \
-  do                                                           \
+    do                                                           \
     {                                                          \
-      if (!CPU_FEATURE_ACTIVE (AVX2)) return;                  \
+        if (!CPU_FEATURE_ACTIVE (AVX2)) return;                  \
     }                                                          \
-  while (0)
+    while (0)
 
 #elif defined REQUIRE_AVX512F
 
 # define INIT_ARCH_EXT
 # define CHECK_ARCH_EXT                                        \
-  do                                                           \
+    do                                                           \
     {                                                          \
-      if (!CPU_FEATURE_ACTIVE (AVX512F)) return;               \
+        if (!CPU_FEATURE_ACTIVE (AVX512F)) return;               \
     }                                                          \
-  while (0)
+    while (0)
 
 #else
 # include <sysdeps/generic/math-tests-arch.h>

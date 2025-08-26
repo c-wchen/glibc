@@ -33,18 +33,18 @@ typedef uint64_t hp_timing_t;
    vDSO symbol.  */
 #ifdef _ISOMAC
 # define HP_TIMING_NOW(var) \
-({                              \
-  struct timespec tv;                       \
-  clock_gettime (CLOCK_MONOTONIC, &tv);             \
-  (var) = (tv.tv_nsec + UINT64_C(1000000000) * tv.tv_sec);  \
-})
+    ({                              \
+        struct timespec tv;                       \
+        clock_gettime (CLOCK_MONOTONIC, &tv);             \
+        (var) = (tv.tv_nsec + UINT64_C(1000000000) * tv.tv_sec);  \
+    })
 #else
 # define HP_TIMING_NOW(var) \
-({                              \
-  struct __timespec64 tv;                       \
-  __clock_gettime64 (CLOCK_MONOTONIC, &tv);         \
-  (var) = (tv.tv_nsec + UINT64_C(1000000000) * tv.tv_sec);  \
-})
+    ({                              \
+        struct __timespec64 tv;                       \
+        __clock_gettime64 (CLOCK_MONOTONIC, &tv);         \
+        (var) = (tv.tv_nsec + UINT64_C(1000000000) * tv.tv_sec);  \
+    })
 #endif
 
 #endif  /* hp-timing.h */

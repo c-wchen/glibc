@@ -23,17 +23,17 @@
 #include <wchar.h>
 
 #define CHECK_WIDTH(TYPE, MAX, WIDTH)                   \
-  do                                    \
+    do                                    \
     {                                   \
-      if ((MAX >> ((TYPE) -1 < 0 ? (WIDTH - 2) : (WIDTH - 1))) != 1)    \
-    {                               \
-      puts ("bad width of " #TYPE);                 \
-      result = 1;                           \
-    }                               \
-      else                              \
-    puts ("width of " #TYPE " OK");                 \
+        if ((MAX >> ((TYPE) -1 < 0 ? (WIDTH - 2) : (WIDTH - 1))) != 1)    \
+        {                               \
+            puts ("bad width of " #TYPE);                 \
+            result = 1;                           \
+        }                               \
+        else                              \
+            puts ("width of " #TYPE " OK");                 \
     }                                   \
-  while (0)
+    while (0)
 
 static int do_test(void)
 {

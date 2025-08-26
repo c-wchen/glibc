@@ -59,45 +59,45 @@ typedef struct {
 /* Install the dtv pointer.  The pointer passed is to the element with
    index -1 which contain the length.  */
 # define INSTALL_DTV(tcbp, dtvp) \
-  ((tcbhead_t *) (tcbp))->dtv = (dtvp) + 1
+    ((tcbhead_t *) (tcbp))->dtv = (dtvp) + 1
 
 /* Install new dtv for current thread.  */
 # define INSTALL_NEW_DTV(dtv) \
-  ({ tcbhead_t *__tcbp = (tcbhead_t *)__thread_pointer();   \
-    __tcbp->dtv = dtv;              \
-   })
+    ({ tcbhead_t *__tcbp = (tcbhead_t *)__thread_pointer();   \
+        __tcbp->dtv = dtv;              \
+    })
 
 /* Return dtv of given thread descriptor.  */
 # define GET_DTV(tcbp) \
-  (((tcbhead_t *) (tcbp))->dtv)
+    (((tcbhead_t *) (tcbp))->dtv)
 
 /* Code to initially initialize the thread pointer.  This might need
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.  */
 # define TLS_INIT_TP(tcbp) \
-  ({ __set_thread_pointer((void *) tcbp); true; })
+    ({ __set_thread_pointer((void *) tcbp); true; })
 
 /* Value passed to 'clone' for initialization of the thread register.  */
 # define TLS_DEFINE_INIT_TP(tp, pd) void *tp = (pd) + 1
 
 /* Return the address of the dtv for the current thread.  */
 # define THREAD_DTV() \
-  ({ tcbhead_t *__tcbp = (tcbhead_t *)__thread_pointer();   \
-    __tcbp->dtv;                    \
-   })
+    ({ tcbhead_t *__tcbp = (tcbhead_t *)__thread_pointer();   \
+        __tcbp->dtv;                    \
+    })
 
 /* Return the thread descriptor for the current thread.  */
 # define THREAD_SELF \
-  ({ struct pthread *__self;            \
-    __self = (struct pthread *)__thread_pointer();  \
-    __self - 1;             \
-   })
+    ({ struct pthread *__self;            \
+        __self = (struct pthread *)__thread_pointer();  \
+        __self - 1;             \
+    })
 
 /* Magic for libthread_db to know how to do THREAD_SELF.
    Our thread pointer is stored in cr27.  See asm/elf.h for the offset into
    elf_gregset_t.  The thread descriptor is sizeof (struct pthread) away.  */
 # define DB_THREAD_SELF \
-  REGISTER (32, 32, 53 * 4, -sizeof (struct pthread))
+    REGISTER (32, 32, 53 * 4, -sizeof (struct pthread))
 
 # include <tcb-access.h>
 
@@ -106,21 +106,21 @@ typedef struct {
 #define THREAD_GSCOPE_FLAG_USED   1
 #define THREAD_GSCOPE_FLAG_WAIT   2
 #define THREAD_GSCOPE_RESET_FLAG() \
-  do                                         \
+    do                                         \
     { int __res                                  \
-    = atomic_exchange_release (&THREAD_SELF->header.gscope_flag,         \
-                   THREAD_GSCOPE_FLAG_UNUSED);           \
-      if (__res == THREAD_GSCOPE_FLAG_WAIT)                  \
-    lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1, LLL_PRIVATE);   \
+            = atomic_exchange_release (&THREAD_SELF->header.gscope_flag,         \
+                                       THREAD_GSCOPE_FLAG_UNUSED);           \
+        if (__res == THREAD_GSCOPE_FLAG_WAIT)                  \
+            lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1, LLL_PRIVATE);   \
     }                                        \
-  while (0)
+    while (0)
 #define THREAD_GSCOPE_SET_FLAG() \
-  do                                         \
+    do                                         \
     {                                        \
-      THREAD_SELF->header.gscope_flag = THREAD_GSCOPE_FLAG_USED;         \
-      atomic_write_barrier ();                           \
+        THREAD_SELF->header.gscope_flag = THREAD_GSCOPE_FLAG_USED;         \
+        atomic_write_barrier ();                           \
     }                                        \
-  while (0)
+    while (0)
 
 #endif /* !__ASSEMBLER__ */
 

@@ -497,14 +497,14 @@ static struct header {
     const char *subset;
 } headers[] = {
 #define H(n) \
-  { #n ".h", n##_syms, sizeof (n##_syms) / sizeof (n##_syms[0]), \
-    n##_maybe, sizeof (n##_maybe) / sizeof (n##_maybe[0]), NULL }
+    { #n ".h", n##_syms, sizeof (n##_syms) / sizeof (n##_syms[0]), \
+        n##_maybe, sizeof (n##_maybe) / sizeof (n##_maybe[0]), NULL }
 #define Hc(n, s) \
-  { #n ".h", n##_syms, sizeof (n##_syms) / sizeof (n##_syms[0]), \
-    n##_maybe, sizeof (n##_maybe) / sizeof (n##_maybe[0]), s }
+    { #n ".h", n##_syms, sizeof (n##_syms) / sizeof (n##_syms[0]), \
+        n##_maybe, sizeof (n##_maybe) / sizeof (n##_maybe[0]), s }
 #define Hs(n) \
-  { "sys/" #n ".h", n##_syms, sizeof (n##_syms) / sizeof (n##_syms[0]), \
-    n##_maybe, sizeof (n##_maybe) / sizeof (n##_maybe[0]), NULL }
+    { "sys/" #n ".h", n##_syms, sizeof (n##_syms) / sizeof (n##_syms[0]), \
+        n##_maybe, sizeof (n##_maybe) / sizeof (n##_maybe[0]), NULL }
     H(aio),
     H(assert),
     H(ctype),

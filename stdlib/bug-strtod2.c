@@ -12,28 +12,28 @@ static const char *tests[] = {
 #define ntests (sizeof (tests) / sizeof (tests[0]))
 
 #define TEST_STRTOD(FSUF, FTYPE, FTOSTR, LSUF, CSUF)            \
-static int                              \
-test_strto ## FSUF (void)                       \
-{                                   \
-  int res = 0;                              \
-  for (int i = 0; i < ntests; ++i)                  \
+    static int                              \
+    test_strto ## FSUF (void)                       \
     {                                   \
-      char *endp;                           \
-      FTYPE d = strto ## FSUF (tests[i], &endp);            \
-      if (*endp != '\0')                        \
-    {                               \
-      printf ("did not consume all of '%s'\n", tests[i]);       \
-      res = 1;                          \
-    }                               \
-      if (!isinf (d))                           \
-    {                               \
-      printf ("'%s' does not pass isinf\n", tests[i]);      \
-      res = 1;                          \
-    }                               \
-    }                                   \
-                                    \
-  return res;                               \
-}
+        int res = 0;                              \
+        for (int i = 0; i < ntests; ++i)                  \
+        {                                   \
+            char *endp;                           \
+            FTYPE d = strto ## FSUF (tests[i], &endp);            \
+            if (*endp != '\0')                        \
+            {                               \
+                printf ("did not consume all of '%s'\n", tests[i]);       \
+                res = 1;                          \
+            }                               \
+            if (!isinf (d))                           \
+            {                               \
+                printf ("'%s' does not pass isinf\n", tests[i]);      \
+                res = 1;                          \
+            }                               \
+        }                                   \
+        \
+        return res;                               \
+    }
 
 GEN_TEST_STRTOD_FOREACH(TEST_STRTOD)
 

@@ -40,6 +40,6 @@ static int test_utime_helper(const char *file, int fd, const struct utimbuf *ut)
 }
 
 #define TEST_CALL(fname, fd, lname, v1, v2) \
-  test_utime_helper (fname, fd, &(struct utimbuf) { (v1), (v2) })
+    test_utime_helper (fname, fd, &(struct utimbuf) { (v1), (v2) })
 
 #include "tst-utimensat-skeleton.c"

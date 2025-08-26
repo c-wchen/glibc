@@ -35,11 +35,11 @@ wchar_t *__wcscpy(wchar_t *dest, const wchar_t *src)
     wchar_t *wcp = dest;
 
 #define ITERATION(index)        \
-  ({                    \
-     wchar_t c = *src++;        \
-     *wcp++ = c;            \
-     c != L'\0';            \
-  })
+    ({                    \
+        wchar_t c = *src++;        \
+        *wcp++ = c;            \
+        c != L'\0';            \
+    })
 
     while (1) {
         UNROLL_REPEAT(UNROLL_NTIMES, ITERATION);

@@ -35,17 +35,17 @@
 
 /* Define an entry point visible from C.  */
 #define ENTRY(name)                               \
-  .globl C_SYMBOL_NAME(name);                             \
-  .type C_SYMBOL_NAME(name),@function;                        \
-  .align ALIGNARG(5);                                 \
-  C_LABEL(name)                                   \
-  cfi_startproc;                                  \
-  CALL_MCOUNT
+    .globl C_SYMBOL_NAME(name);                             \
+    .type C_SYMBOL_NAME(name),@function;                        \
+    .align ALIGNARG(5);                                 \
+    C_LABEL(name)                                   \
+    cfi_startproc;                                  \
+    CALL_MCOUNT
 
 #undef  END
 #define END(name)                                 \
-  cfi_endproc;                                    \
-  ASM_SIZE_DIRECTIVE(C_SYMBOL_NAME(name))
+    cfi_endproc;                                    \
+    ASM_SIZE_DIRECTIVE(C_SYMBOL_NAME(name))
 
 /* If compiled for profiling, call `mcount' at the start of each function.  */
 #ifdef  PROF
@@ -56,10 +56,10 @@
     cfi_rel_offset (pr, 0);             \
     mova    2f,r0;                  \
     jmp @r1;                    \
-     lds    r0,pr;                  \
+    lds    r0,pr;                  \
     .align  2;                  \
-1:  .long   mcount;                 \
-2:  lds.l   @r15+,pr;               \
+    1:  .long   mcount;                 \
+    2:  lds.l   @r15+,pr;               \
     cfi_adjust_cfa_offset (-4);         \
     cfi_restore (pr)
 

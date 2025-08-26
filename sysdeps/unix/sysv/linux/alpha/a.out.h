@@ -86,17 +86,17 @@ enum machine_type {
 #define N_MACHTYPE(exec) ((enum machine_type)(((exec).a_info >> 16) & 0xff))
 #define N_FLAGS(exec)   (((exec).a_info >> 24) & 0xff)
 #define N_SET_INFO(exec, magic, type, flags) \
-  ((exec).a_info = ((magic) & 0xffff)                   \
-   | (((int)(type) & 0xff) << 16)                   \
-   | (((flags) & 0xff) << 24))
+    ((exec).a_info = ((magic) & 0xffff)                   \
+                     | (((int)(type) & 0xff) << 16)                   \
+                     | (((flags) & 0xff) << 24))
 #define N_SET_MAGIC(exec, magic) \
-  ((exec).a_info = ((exec).a_info & 0xffff0000) | ((magic) & 0xffff))
+    ((exec).a_info = ((exec).a_info & 0xffff0000) | ((magic) & 0xffff))
 #define N_SET_MACHTYPE(exec, machtype) \
-  ((exec).a_info =                          \
-   ((exec).a_info&0xff00ffff) | ((((int)(machtype))&0xff) << 16))
+    ((exec).a_info =                          \
+            ((exec).a_info&0xff00ffff) | ((((int)(machtype))&0xff) << 16))
 #define N_SET_FLAGS(exec, flags) \
-  ((exec).a_info =                          \
-   ((exec).a_info&0x00ffffff) | (((flags) & 0xff) << 24))
+    ((exec).a_info =                          \
+            ((exec).a_info&0x00ffffff) | (((flags) & 0xff) << 24))
 
 /* Code indicating object file or impure executable.  */
 #define OMAGIC 0407
@@ -114,13 +114,13 @@ enum machine_type {
 #define N_DRSIZE(x) 0
 #define N_SYMSIZE(x)    0
 #define N_BADMAG(x) \
-  (N_MAGIC(x) != OMAGIC && N_MAGIC(x) != NMAGIC             \
-   && N_MAGIC(x) != ZMAGIC && N_MAGIC(x) != QMAGIC)
+    (N_MAGIC(x) != OMAGIC && N_MAGIC(x) != NMAGIC             \
+     && N_MAGIC(x) != ZMAGIC && N_MAGIC(x) != QMAGIC)
 #define _N_HDROFF(x)    (1024 - sizeof (struct exec))
 #define N_TXTOFF(x) \
-  ((long) N_MAGIC(x) == ZMAGIC ? 0                  \
-   : ((sizeof (struct exec) + (x).fh.f_nscns * SCNHSZ + SCNROUND - 1)   \
-      & ~(SCNROUND - 1)))
+    ((long) N_MAGIC(x) == ZMAGIC ? 0                  \
+     : ((sizeof (struct exec) + (x).fh.f_nscns * SCNHSZ + SCNROUND - 1)   \
+        & ~(SCNROUND - 1)))
 
 #define N_DATOFF(x) (N_TXTOFF(x) + (x).a_text)
 #define N_TRELOFF(x)    (N_DATOFF(x) + (x).a_data)

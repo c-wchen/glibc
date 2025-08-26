@@ -38,7 +38,7 @@ __BEGIN_DECLS
    argument).  */
 #ifdef __O_TMPFILE
 # define __OPEN_NEEDS_MODE(oflag) \
-  (((oflag) & O_CREAT) != 0 || ((oflag) & __O_TMPFILE) == __O_TMPFILE)
+    (((oflag) & O_CREAT) != 0 || ((oflag) & __O_TMPFILE) == __O_TMPFILE)
 #else
 # define __OPEN_NEEDS_MODE(oflag) (((oflag) & O_CREAT) != 0)
 #endif

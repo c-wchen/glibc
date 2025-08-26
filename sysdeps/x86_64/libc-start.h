@@ -62,13 +62,13 @@ static inline unsigned int get_cet_feature(void)
 /* The function using this macro to enable shadow stack must not return
    to avoid shadow stack underflow.  */
 #  define ARCH_SETUP_TLS()                      \
-  {                                 \
-    __libc_setup_tls ();                        \
-                                    \
-    unsigned int cet_feature = get_cet_feature ();          \
-    ENABLE_X86_CET (cet_feature);                   \
-    _dl_cet_setup_features (cet_feature);               \
-  }
+    {                                 \
+        __libc_setup_tls ();                        \
+        \
+        unsigned int cet_feature = get_cet_feature ();          \
+        ENABLE_X86_CET (cet_feature);                   \
+        _dl_cet_setup_features (cet_feature);               \
+    }
 # else
 #  define ARCH_SETUP_TLS()  __libc_setup_tls ()
 # endif

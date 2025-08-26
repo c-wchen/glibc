@@ -49,11 +49,11 @@ static int do_test(void)
             result = 1;
         }
 #define T(f) \
-      if (p->f != data[seen].f)                           \
+    if (p->f != data[seen].f)                           \
     {                                     \
-      printf ("%s of entry %d wrong: %ld vs %ld\n",               \
-          #f, seen + 1, p->f, data[seen].f);                  \
-      result = 1;                                 \
+        printf ("%s of entry %d wrong: %ld vs %ld\n",               \
+                #f, seen + 1, p->f, data[seen].f);                  \
+        result = 1;                                 \
     }
         T(sp_lstchg);
         T(sp_min);

@@ -31,7 +31,7 @@
 
 #ifndef _dl_cache_check_flags
 # define _dl_cache_check_flags(flags)           \
-  ((flags) == 1 || (flags) == _DL_CACHE_DEFAULT_ID)
+    ((flags) == 1 || (flags) == _DL_CACHE_DEFAULT_ID)
 #endif
 
 #ifndef LD_SO_CACHE
@@ -107,7 +107,7 @@ struct file_entry_new {
 
 /* The mask of the ISA level bits in the hwcap field.  */
 #define DL_CACHE_HWCAP_ISA_LEVEL_MASK \
-  ((1 << DL_CACHE_HWCAP_ISA_LEVEL_COUNT) -1)
+    ((1 << DL_CACHE_HWCAP_ISA_LEVEL_COUNT) -1)
 
 /* Return true if the ENTRY->hwcap value indicates that
    DL_CACHE_HWCAP_EXTENSION is used.  */
@@ -343,8 +343,8 @@ cache_extension_load(const struct cache_file_new *cache,
 
 /* Used to align cache_file_new.  */
 #define ALIGN_CACHE(addr)               \
-(((addr) + __alignof__ (struct cache_file_new) -1)  \
- & (~(__alignof__ (struct cache_file_new) - 1)))
+    (((addr) + __alignof__ (struct cache_file_new) -1)  \
+     & (~(__alignof__ (struct cache_file_new) - 1)))
 
 extern int _dl_cache_libcmp(const char *p1, const char *p2) attribute_hidden;
 

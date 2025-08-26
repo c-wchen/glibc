@@ -204,7 +204,7 @@ compat_symbol(libc, __old_strpbrk_c3, __strpbrk_c3, GLIBC_2_1_1);
 /* These are a few types we need for the optimizations if we cannot
    use unaligned memory accesses.  */
 #  define __STRING2_COPY_TYPE(N) \
-  typedef struct { unsigned char __arr[N]; }                      \
+    typedef struct { unsigned char __arr[N]; }                      \
     __attribute__ ((__packed__)) __STRING2_COPY_ARR##N
 __STRING2_COPY_TYPE(2);
 __STRING2_COPY_TYPE(3);

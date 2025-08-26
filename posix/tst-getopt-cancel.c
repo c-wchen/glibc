@@ -69,80 +69,80 @@ struct test_long {
 };
 
 #define DEFINE_TEST_DRIVER(test_type, getopt_call)          \
-  struct test_type##_tdata                      \
-  {                                 \
-    pthread_mutex_t *sync;                      \
-    const struct test_type *tcase;                  \
-    bool ok;                                \
-  };                                    \
-                                    \
-  static void *                             \
-  test_type##_threadproc (void *data)                   \
-  {                                 \
-    struct test_type##_tdata *tdata = data;             \
-    const struct test_type *tc = tdata->tcase;              \
-                                    \
-    xpthread_mutex_lock (tdata->sync);                  \
-    xpthread_mutex_unlock (tdata->sync);                \
-                                    \
-    /* At this point, this thread has a cancellation pending.       \
-       We should still be able to get all the way through a getopt  \
-       loop without being cancelled.                    \
-       Setting optind to 0 forces getopt to reinitialize itself.  */    \
-    optind = 0;                             \
-    opterr = 1;                             \
-    optopt = 0;                             \
-    while (getopt_call != -1)                       \
-      ;                                 \
-    tdata->ok = true;                           \
-                                    \
-    pthread_testcancel();                       \
-    return 0;                               \
-  }                                 \
-                                    \
-  static bool                               \
-  do_##test_type (const struct test_type *tcase, FILE *stderr_trapped)  \
-  {                                 \
-    pthread_mutex_t sync;                       \
-    struct test_type##_tdata tdata;                 \
-                                    \
-    printf("begin: %s\n", tcase->label);                \
-                                    \
-    xpthread_mutex_init (&sync, 0);                 \
-    xpthread_mutex_lock (&sync);                    \
-                                    \
-    tdata.sync = &sync;                         \
-    tdata.tcase = tcase;                        \
-    tdata.ok = false;                           \
-                                    \
-    pthread_t thr = xpthread_create (0, test_type##_threadproc,     \
-                     (void *)&tdata);           \
-    xpthread_cancel (thr);                      \
-    xpthread_mutex_unlock (&sync);                  \
-    void *rv = xpthread_join (thr);                 \
-                                    \
-    xpthread_mutex_destroy (&sync);                 \
-                                    \
-    bool ok = true;                         \
-    if (!check_stderr (tcase->expect_errmsg, stderr_trapped))       \
-      {                                 \
-    ok = false;                         \
-    printf("FAIL: %s: stderr not as expected\n", tcase->label); \
-      }                                 \
-    if (!tdata.ok)                          \
-      {                                 \
-    ok = false;                         \
-    printf("FAIL: %s: did not complete loop\n", tcase->label);  \
-      }                                 \
-    if (rv != PTHREAD_CANCELED)                     \
-      {                                 \
-    ok = false;                         \
-    printf("FAIL: %s: thread was not cancelled\n", tcase->label);   \
-      }                                 \
-    if (ok)                             \
-      printf ("pass: %s\n", tcase->label);              \
-    return ok;                              \
-  }
+    struct test_type##_tdata                      \
+    {                                 \
+        pthread_mutex_t *sync;                      \
+        const struct test_type *tcase;                  \
+        bool ok;                                \
+    };                                    \
+    \
+    static void *                             \
+    test_type##_threadproc (void *data)                   \
+    {                                 \
+        struct test_type##_tdata *tdata = data;             \
+        const struct test_type *tc = tdata->tcase;              \
+        \
+        xpthread_mutex_lock (tdata->sync);                  \
+        xpthread_mutex_unlock (tdata->sync);                \
+        \
+        /* At this point, this thread has a cancellation pending.       \
+           We should still be able to get all the way through a getopt  \
+           loop without being cancelled.                    \
+           Setting optind to 0 forces getopt to reinitialize itself.  */    \
+        optind = 0;                             \
+        opterr = 1;                             \
+        optopt = 0;                             \
+        while (getopt_call != -1)                       \
+            ;                                 \
+        tdata->ok = true;                           \
+        \
+        pthread_testcancel();                       \
+        return 0;                               \
+    }                                 \
+    \
+    static bool                               \
+    do_##test_type (const struct test_type *tcase, FILE *stderr_trapped)  \
+    {                                 \
+        pthread_mutex_t sync;                       \
+        struct test_type##_tdata tdata;                 \
+        \
+        printf("begin: %s\n", tcase->label);                \
+        \
+        xpthread_mutex_init (&sync, 0);                 \
+        xpthread_mutex_lock (&sync);                    \
+        \
+        tdata.sync = &sync;                         \
+        tdata.tcase = tcase;                        \
+        tdata.ok = false;                           \
+        \
+        pthread_t thr = xpthread_create (0, test_type##_threadproc,     \
+                                         (void *)&tdata);           \
+        xpthread_cancel (thr);                      \
+        xpthread_mutex_unlock (&sync);                  \
+        void *rv = xpthread_join (thr);                 \
+        \
+        xpthread_mutex_destroy (&sync);                 \
+        \
+        bool ok = true;                         \
+        if (!check_stderr (tcase->expect_errmsg, stderr_trapped))       \
+        {                                 \
+            ok = false;                         \
+            printf("FAIL: %s: stderr not as expected\n", tcase->label); \
+        }                                 \
+        if (!tdata.ok)                          \
+        {                                 \
+            ok = false;                         \
+            printf("FAIL: %s: did not complete loop\n", tcase->label);  \
+        }                                 \
+        if (rv != PTHREAD_CANCELED)                     \
+        {                                 \
+            ok = false;                         \
+            printf("FAIL: %s: thread was not cancelled\n", tcase->label);   \
+        }                                 \
+        if (ok)                             \
+            printf ("pass: %s\n", tcase->label);              \
+        return ok;                              \
+    }
 
 DEFINE_TEST_DRIVER(test_short,
                    getopt(tc->argc, (char *const *)tc->argv, tc->opts))

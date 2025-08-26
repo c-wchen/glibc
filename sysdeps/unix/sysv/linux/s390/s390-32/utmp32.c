@@ -28,32 +28,32 @@
    aware that the contents of this buffer will change with subsequent
    calls.  */
 #define ALLOCATE_UTMP32_OUT(OUT)            \
-  static struct utmp32 *OUT = NULL;         \
-                            \
-  if (OUT == NULL)                  \
+    static struct utmp32 *OUT = NULL;         \
+    \
+    if (OUT == NULL)                  \
     {                           \
-      OUT = malloc (sizeof (struct utmp32));        \
-      if (OUT == NULL)                  \
-    return NULL;                    \
+        OUT = malloc (sizeof (struct utmp32));        \
+        if (OUT == NULL)                  \
+            return NULL;                    \
     }
 
 /* Perform a lookup for a utmp entry matching FIELD using function
    FUNC.  FIELD is converted to a 64 bit utmp and the result is
    converted back to 32 bit utmp.  */
 #define ACCESS_UTMP_ENTRY(FUNC, FIELD)          \
-  struct utmp in64;                 \
-  struct utmp *out64;                   \
-  ALLOCATE_UTMP32_OUT (out32);              \
-                            \
-  utmp_convert32to64 (FIELD, &in64);            \
-  out64 = FUNC (&in64);                 \
-                            \
-  if (out64 == NULL)                    \
-    return NULL;                    \
-                            \
-  utmp_convert64to32 (out64, out32);            \
-                            \
-  return out32;
+    struct utmp in64;                 \
+    struct utmp *out64;                   \
+    ALLOCATE_UTMP32_OUT (out32);              \
+    \
+    utmp_convert32to64 (FIELD, &in64);            \
+    out64 = FUNC (&in64);                 \
+    \
+    if (out64 == NULL)                    \
+        return NULL;                    \
+    \
+    utmp_convert64to32 (out64, out32);            \
+    \
+    return out32;
 
 /* Search forward from the current point in the utmp file until the
    next entry with a ut_type matching ID->ut_type.  */

@@ -127,7 +127,7 @@ enum {
 /* Flags that can be altered by MS_REMOUNT  */
 #undef MS_RMT_MASK
 #define MS_RMT_MASK (MS_RDONLY|MS_SYNCHRONOUS|MS_MANDLOCK|MS_I_VERSION \
-             |MS_LAZYTIME)
+                     |MS_LAZYTIME)
 
 
 /* Magic mount flag number. Has to be or-ed to the flag values.  */

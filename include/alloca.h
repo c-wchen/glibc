@@ -25,15 +25,15 @@ libc_hidden_proto(__libc_alloca_cutoff)
 
 #if defined stackinfo_get_sp && defined stackinfo_sub_sp
 # define alloca_account(size, avar) \
-  ({ void *old__ = stackinfo_get_sp ();                       \
-     void *m__ = __alloca (size);                         \
-     avar += stackinfo_sub_sp (old__);                        \
-     m__; })
+    ({ void *old__ = stackinfo_get_sp ();                       \
+        void *m__ = __alloca (size);                         \
+        avar += stackinfo_sub_sp (old__);                        \
+        m__; })
 #else
 # define alloca_account(size, avar) \
-  ({ size_t s__ = (size);                             \
-     avar += s__;                                 \
-     __alloca (s__); })
+    ({ size_t s__ = (size);                             \
+        avar += s__;                                 \
+        __alloca (s__); })
 #endif
 
 # endif /* !_ISOMAC */

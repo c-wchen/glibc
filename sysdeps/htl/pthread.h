@@ -34,10 +34,10 @@
 #   define __extern_inline extern __inline __attribute__ ((__gnu_inline__))
 #   if __GNUC_PREREQ (4,3)
 #    define __extern_always_inline \
-   extern __always_inline __attribute__ ((__gnu_inline__, __artificial__))
+    extern __always_inline __attribute__ ((__gnu_inline__, __artificial__))
 #   else
 #    define __extern_always_inline \
-   extern __always_inline __attribute__ ((__gnu_inline__))
+    extern __always_inline __attribute__ ((__gnu_inline__))
 #   endif
 #  else
 #   define __extern_inline extern __inline
@@ -397,9 +397,9 @@ __THROW __nonnull((1));
 
 #ifdef __USE_GNU
 # define PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP \
-  __PTHREAD_ERRORCHECK_MUTEX_INITIALIZER
+    __PTHREAD_ERRORCHECK_MUTEX_INITIALIZER
 # define PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP \
-  __PTHREAD_RECURSIVE_MUTEX_INITIALIZER
+    __PTHREAD_RECURSIVE_MUTEX_INITIALIZER
 #endif
 
 /* Create a mutex with attributes given by ATTR and store it in

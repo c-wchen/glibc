@@ -36,14 +36,14 @@ int check_supports(int supports, int active, const char *supports_name,
 }
 
 #define CHECK_FEATURE_ACTIVE(str, name) \
-  check_supports (__builtin_cpu_supports (#str), \
-          CPU_FEATURE_ACTIVE (name), \
-          #str, "CPU_FEATURE_ACTIVE (" #name ")");
+    check_supports (__builtin_cpu_supports (#str), \
+                    CPU_FEATURE_ACTIVE (name), \
+                    #str, "CPU_FEATURE_ACTIVE (" #name ")");
 
 #define CHECK_FEATURE_PRESENT(str, name) \
-  check_supports (__builtin_cpu_supports (#str), \
-          CPU_FEATURE_PRESENT (name), \
-          #str, "CPU_FEATURE_PRESENT (" #name ")");
+    check_supports (__builtin_cpu_supports (#str), \
+                    CPU_FEATURE_PRESENT (name), \
+                    #str, "CPU_FEATURE_PRESENT (" #name ")");
 
 static int do_test(int argc, char **argv)
 {

@@ -60,7 +60,7 @@ char *alloca();
 #  ifdef _LIBC
 #   undef dgettext
 #   define dgettext(domain, msgid) \
-  __dcgettext (domain, msgid, LC_MESSAGES)
+    __dcgettext (domain, msgid, LC_MESSAGES)
 #  endif
 # else
 #  define dgettext(domain, msgid) (msgid)

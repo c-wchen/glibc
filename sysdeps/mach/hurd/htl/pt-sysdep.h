@@ -29,8 +29,8 @@
 #define PTHREAD_STACK_DEFAULT   (8 * 1024 * 1024)
 
 #define PTHREAD_SYSDEP_MEMBERS \
-  thread_t kernel_thread;      \
-  mach_msg_header_t wakeupmsg;
+    thread_t kernel_thread;      \
+    mach_msg_header_t wakeupmsg;
 
 extern __thread struct __pthread *___pthread_self;
 libc_hidden_tls_proto(___pthread_self)
@@ -40,18 +40,18 @@ libc_hidden_proto(__pthread_init_thread)
 #ifdef DEBUG
 #define _pthread_self()                                            \
     ({                                                         \
-      struct __pthread *thread;                                \
-                                                               \
-      assert (GL (dl_pthread_threads));                        \
-      thread = ___pthread_self;                                \
-                                                               \
-      assert (thread);                                         \
-      assert (({ mach_port_t ktid = __mach_thread_self ();     \
-                     int ok = thread->kernel_thread == ktid;       \
-                     __mach_port_deallocate (__mach_task_self (), ktid);\
-                     ok; }));                                      \
-          thread;                                                  \
-         })
+        struct __pthread *thread;                                \
+        \
+        assert (GL (dl_pthread_threads));                        \
+        thread = ___pthread_self;                                \
+        \
+        assert (thread);                                         \
+        assert (({ mach_port_t ktid = __mach_thread_self ();     \
+            int ok = thread->kernel_thread == ktid;       \
+            __mach_port_deallocate (__mach_task_self (), ktid);\
+            ok; }));                                      \
+        thread;                                                  \
+    })
 #else
 #define _pthread_self() ___pthread_self
 #endif

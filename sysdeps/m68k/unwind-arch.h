@@ -22,12 +22,12 @@
 #define UNWIND_LINK_GETIP 1
 #define UNWIND_LINK_FRAME_ADJUSTMENT 0
 #define UNWIND_LINK_EXTRA_FIELDS \
-  __typeof (_Unwind_GetGR) *ptr__Unwind_GetGR;
+    __typeof (_Unwind_GetGR) *ptr__Unwind_GetGR;
 #define UNWIND_LINK_EXTRA_INIT                                \
-  local.ptr__Unwind_GetGR                                     \
-    = __libc_dlsym (local_libgcc_handle, "_Unwind_GetGR");    \
-  assert (local.ptr__Unwind_GetGR != NULL);                   \
-  PTR_MANGLE (local.ptr__Unwind_GetGR);
+    local.ptr__Unwind_GetGR                                     \
+        = __libc_dlsym (local_libgcc_handle, "_Unwind_GetGR");    \
+    assert (local.ptr__Unwind_GetGR != NULL);                   \
+    PTR_MANGLE (local.ptr__Unwind_GetGR);
 
 /* This is overridden by the m680x0 variant.  */
 #define UNWIND_LINK_FRAME_STATE_FOR 0

@@ -23,16 +23,16 @@
 
 #if BYTE_ORDER == BIG_ENDIAN
 # define TEST(orig, swapped, fct) \
-  if ((fct (orig)) != (orig)) {                           \
-    printf ("Failed for %s -> %#x\n", #fct "(" #orig ")", fct (orig));        \
-    result = 1;                                   \
-  }
+    if ((fct (orig)) != (orig)) {                           \
+        printf ("Failed for %s -> %#x\n", #fct "(" #orig ")", fct (orig));        \
+        result = 1;                                   \
+    }
 #elif BYTE_ORDER == LITTLE_ENDIAN
 # define TEST(orig, swapped, fct) \
-  if ((fct (orig)) != (swapped)) {                        \
-    printf ("Failed for %s -> %#x\n", #fct "(" #orig ")", fct (orig));        \
-    result = 1;                                   \
-  }
+    if ((fct (orig)) != (swapped)) {                        \
+        printf ("Failed for %s -> %#x\n", #fct "(" #orig ")", fct (orig));        \
+        result = 1;                                   \
+    }
 #else
 # error "Bah, what kind of system do you use?"
 #endif

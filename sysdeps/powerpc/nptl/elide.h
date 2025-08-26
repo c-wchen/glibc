@@ -60,40 +60,40 @@ static inline bool __get_new_count(uint8_t *adapt_count, int attempt)
 /* Returns 0 if the lock defined by is_lock_free was elided.
    ADAPT_COUNT is a per-lock state variable.  */
 # define ELIDE_LOCK(adapt_count, is_lock_free)              \
-  ({                                    \
-    int ret = 0;                            \
-    if (adapt_count > 0)                        \
-      (adapt_count)--;                          \
-    else                                \
-      for (int i = __elision_aconf.try_tbegin; i > 0; i--)      \
-    {                               \
-      if (__libc_tbegin (0))                    \
-        {                               \
-          if (is_lock_free)                     \
-        {                           \
-          ret = 1;                      \
-          break;                        \
-        }                           \
-          __libc_tabort (_ABORT_LOCK_BUSY);             \
-        }                               \
-      else                              \
-        if (!__get_new_count (&adapt_count,i))          \
-          break;                            \
-    }                               \
-    ret;                                \
-  })
+    ({                                    \
+        int ret = 0;                            \
+        if (adapt_count > 0)                        \
+            (adapt_count)--;                          \
+        else                                \
+            for (int i = __elision_aconf.try_tbegin; i > 0; i--)      \
+            {                               \
+                if (__libc_tbegin (0))                    \
+                {                               \
+                    if (is_lock_free)                     \
+                    {                           \
+                        ret = 1;                      \
+                        break;                        \
+                    }                           \
+                    __libc_tabort (_ABORT_LOCK_BUSY);             \
+                }                               \
+                else                              \
+                    if (!__get_new_count (&adapt_count,i))          \
+                        break;                            \
+            }                               \
+        ret;                                \
+    })
 
 # define ELIDE_TRYLOCK(adapt_count, is_lock_free, write)    \
-  ({                                \
-    int ret = 0;                        \
-    if (__elision_aconf.try_tbegin > 0)             \
-      {                             \
-    if (write)                      \
-      __libc_tabort (_ABORT_NESTED_TRYLOCK);        \
-    ret = ELIDE_LOCK (adapt_count, is_lock_free);       \
-      }                             \
-    ret;                            \
-  })
+    ({                                \
+        int ret = 0;                        \
+        if (__elision_aconf.try_tbegin > 0)             \
+        {                             \
+            if (write)                      \
+                __libc_tabort (_ABORT_NESTED_TRYLOCK);        \
+            ret = ELIDE_LOCK (adapt_count, is_lock_free);       \
+        }                             \
+        ret;                            \
+    })
 
 
 static inline bool __elide_unlock(int is_lock_free)
@@ -109,6 +109,6 @@ static inline bool __elide_unlock(int is_lock_free)
 }
 
 # define ELIDE_UNLOCK(is_lock_free) \
-  __elide_unlock (is_lock_free)
+    __elide_unlock (is_lock_free)
 
 #endif

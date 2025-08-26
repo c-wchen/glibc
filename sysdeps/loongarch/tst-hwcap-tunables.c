@@ -31,8 +31,8 @@
 
 /* Nonzero if the program gets called via `exec'.  */
 #define CMDLINE_OPTIONS \
-  { "restart", no_argument, &restart, 1 }, \
-  { "enable", no_argument, &enable, 1 },
+    { "restart", no_argument, &restart, 1 }, \
+    { "enable", no_argument, &enable, 1 },
 static int restart;
 static int enable;
 

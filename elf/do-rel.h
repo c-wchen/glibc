@@ -30,8 +30,8 @@
 
 #ifndef DO_ELF_MACHINE_REL_RELATIVE
 # define DO_ELF_MACHINE_REL_RELATIVE(map, l_addr, relative) \
-  elf_machine_rel_relative (l_addr, relative,                     \
-                (void *) (l_addr + relative->r_offset))
+    elf_machine_rel_relative (l_addr, relative,                     \
+                              (void *) (l_addr + relative->r_offset))
 #endif
 
 /* Perform the relocations in MAP on the running program image as specified

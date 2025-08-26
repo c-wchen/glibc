@@ -22,11 +22,11 @@ static int t2(void)
     long N;
     int retval;
 #define SCAN(INPUT, FORMAT, VAR, EXP_RES, EXP_VAL) \
-  VAR = -1; \
-  retval = sscanf (INPUT, FORMAT, &VAR); \
-  printf ("sscanf (\"%s\", \"%s\", &x) => %d, x = %ld\n", \
-      INPUT, FORMAT, retval, (long int) VAR); \
-  result |= retval != EXP_RES || VAR != EXP_VAL
+    VAR = -1; \
+    retval = sscanf (INPUT, FORMAT, &VAR); \
+    printf ("sscanf (\"%s\", \"%s\", &x) => %d, x = %ld\n", \
+            INPUT, FORMAT, retval, (long int) VAR); \
+    result |= retval != EXP_RES || VAR != EXP_VAL
 
     /* This function is testing corner cases of the scanf format string,
        so they do not all conform to -Wformat's expectations.  */

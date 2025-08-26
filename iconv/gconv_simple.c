@@ -30,10 +30,10 @@
 
 #define BUILTIN_ALIAS(s1, s2) /* nothing */
 #define BUILTIN_TRANSFORMATION(From, To, Cost, Name, Fct, BtowcFct, \
-                   MinF, MaxF, MinT, MaxT) \
-  extern int Fct (struct __gconv_step *, struct __gconv_step_data *,          \
-          const unsigned char **, const unsigned char *,          \
-          unsigned char **, size_t *, int, int);
+                               MinF, MaxF, MinT, MaxT) \
+extern int Fct (struct __gconv_step *, struct __gconv_step_data *,          \
+                const unsigned char **, const unsigned char *,          \
+                unsigned char **, size_t *, int, int);
 #include "gconv_builtin.h"
 
 
@@ -550,22 +550,22 @@ ucs4le_internal_loop_single(struct __gconv_step *step,
 #define MIN_NEEDED_OUTPUT   MIN_NEEDED_TO
 #define LOOPFCT         FROM_LOOP
 #define BODY \
-  {                                       \
-    if (__glibc_unlikely (*inptr > '\x7f'))                   \
-      {                                       \
-    /* The value is too large.  We don't try transliteration here since   \
-       this is not an error because of the lack of possibilities to       \
-       represent the result.  This is a genuine bug in the input since    \
-       ASCII does not allow such values.  */                  \
-    STANDARD_FROM_LOOP_ERR_HANDLER (1);                   \
-      }                                       \
-    else                                      \
-      {                                       \
-    /* It's an one byte sequence.  */                     \
-    *((uint32_t *) outptr) = *inptr++;                    \
-    outptr += sizeof (uint32_t);                          \
-      }                                       \
-  }
+    {                                       \
+        if (__glibc_unlikely (*inptr > '\x7f'))                   \
+        {                                       \
+            /* The value is too large.  We don't try transliteration here since   \
+               this is not an error because of the lack of possibilities to       \
+               represent the result.  This is a genuine bug in the input since    \
+               ASCII does not allow such values.  */                  \
+            STANDARD_FROM_LOOP_ERR_HANDLER (1);                   \
+        }                                       \
+        else                                      \
+        {                                       \
+            /* It's an one byte sequence.  */                     \
+            *((uint32_t *) outptr) = *inptr++;                    \
+            outptr += sizeof (uint32_t);                          \
+        }                                       \
+    }
 #define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 #include <iconv/skeleton.c>
@@ -586,19 +586,19 @@ ucs4le_internal_loop_single(struct __gconv_step *step,
 #define MIN_NEEDED_OUTPUT   MIN_NEEDED_TO
 #define LOOPFCT         FROM_LOOP
 #define BODY \
-  {                                       \
-    if (__glibc_unlikely (*((const uint32_t *) inptr) > 0x7f))            \
-      {                                       \
-    UNICODE_TAG_HANDLER (*((const uint32_t *) inptr), 4);             \
-    STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
-      }                                       \
-    else                                      \
-      {                                       \
-    /* It's an one byte sequence.  */                     \
-    *outptr++ = *((const uint32_t *) inptr);                  \
-    inptr += sizeof (uint32_t);                       \
-      }                                       \
-  }
+    {                                       \
+        if (__glibc_unlikely (*((const uint32_t *) inptr) > 0x7f))            \
+        {                                       \
+            UNICODE_TAG_HANDLER (*((const uint32_t *) inptr), 4);             \
+            STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
+        }                                       \
+        else                                      \
+        {                                       \
+            /* It's an one byte sequence.  */                     \
+            *outptr++ = *((const uint32_t *) inptr);                  \
+            inptr += sizeof (uint32_t);                       \
+        }                                       \
+    }
 #define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 #include <iconv/skeleton.c>
@@ -621,47 +621,47 @@ ucs4le_internal_loop_single(struct __gconv_step *step,
 #define MAX_NEEDED_OUTPUT   MAX_NEEDED_TO
 #define LOOPFCT         FROM_LOOP
 #define BODY \
-  {                                       \
-    uint32_t wc = *((const uint32_t *) inptr);                    \
-                                          \
-    if (__glibc_likely (wc < 0x80))                       \
-      /* It's an one byte sequence.  */                       \
-      *outptr++ = (unsigned char) wc;                         \
-    else if (__glibc_likely (wc <= 0x7fffffff                     \
-                 && (wc < 0xd800 || wc > 0xdfff)))            \
-      {                                       \
-    size_t step;                                  \
-    unsigned char *start;                             \
-                                          \
-    for (step = 2; step < 6; ++step)                      \
-      if ((wc & (~(uint32_t)0 << (5 * step + 1))) == 0)           \
-        break;                                \
-                                          \
-    if (__glibc_unlikely (outptr + step > outend))                \
-      {                                   \
-        /* Too long.  */                              \
-        result = __GCONV_FULL_OUTPUT;                     \
-        break;                                \
-      }                                   \
-                                          \
-    start = outptr;                               \
-    *outptr = (unsigned char) (~0xff >> step);                \
-    outptr += step;                               \
-    do                                    \
-      {                                   \
-        start[--step] = 0x80 | (wc & 0x3f);                   \
-        wc >>= 6;                                 \
-      }                                   \
-    while (step > 1);                             \
-    start[0] |= wc;                               \
-      }                                       \
-    else                                      \
-      {                                       \
-    STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
-      }                                       \
-                                          \
-    inptr += 4;                                   \
-  }
+    {                                       \
+        uint32_t wc = *((const uint32_t *) inptr);                    \
+        \
+        if (__glibc_likely (wc < 0x80))                       \
+            /* It's an one byte sequence.  */                       \
+            *outptr++ = (unsigned char) wc;                         \
+        else if (__glibc_likely (wc <= 0x7fffffff                     \
+                                 && (wc < 0xd800 || wc > 0xdfff)))            \
+        {                                       \
+            size_t step;                                  \
+            unsigned char *start;                             \
+            \
+            for (step = 2; step < 6; ++step)                      \
+                if ((wc & (~(uint32_t)0 << (5 * step + 1))) == 0)           \
+                    break;                                \
+            \
+            if (__glibc_unlikely (outptr + step > outend))                \
+            {                                   \
+                /* Too long.  */                              \
+                result = __GCONV_FULL_OUTPUT;                     \
+                break;                                \
+            }                                   \
+            \
+            start = outptr;                               \
+            *outptr = (unsigned char) (~0xff >> step);                \
+            outptr += step;                               \
+            do                                    \
+            {                                   \
+                start[--step] = 0x80 | (wc & 0x3f);                   \
+                wc >>= 6;                                 \
+            }                                   \
+            while (step > 1);                             \
+            start[0] |= wc;                               \
+        }                                       \
+        else                                      \
+        {                                       \
+            STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
+        }                                       \
+        \
+        inptr += 4;                                   \
+    }
 #define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 #include <iconv/skeleton.c>
@@ -684,204 +684,204 @@ ucs4le_internal_loop_single(struct __gconv_step *step,
 #define MIN_NEEDED_OUTPUT   MIN_NEEDED_TO
 #define LOOPFCT         FROM_LOOP
 #define BODY \
-  {                                       \
-    /* Next input byte.  */                           \
-    uint32_t ch = *inptr;                             \
-                                          \
-    if (__glibc_likely (ch < 0x80))                       \
-      {                                       \
-    /* One byte sequence.  */                         \
-    ++inptr;                                  \
-      }                                       \
-    else                                      \
-      {                                       \
-    unsigned int cnt;                             \
-    unsigned int i;                           \
-                                          \
-    if (ch >= 0xc2 && ch < 0xe0)                          \
-      {                                   \
-        /* We expect two bytes.  The first byte cannot be 0xc0 or 0xc1,   \
-           otherwise the wide character could have been represented       \
-           using a single byte.  */                       \
-        cnt = 2;                                  \
-        ch &= 0x1f;                               \
-      }                                   \
-    else if (__glibc_likely ((ch & 0xf0) == 0xe0))                \
-      {                                   \
-        /* We expect three bytes.  */                     \
-        cnt = 3;                                  \
-        ch &= 0x0f;                               \
-      }                                   \
-    else if (__glibc_likely ((ch & 0xf8) == 0xf0))                \
-      {                                   \
-        /* We expect four bytes.  */                      \
-        cnt = 4;                                  \
-        ch &= 0x07;                               \
-      }                                   \
-    else if (__glibc_likely ((ch & 0xfc) == 0xf8))                \
-      {                                   \
-        /* We expect five bytes.  */                      \
-        cnt = 5;                                  \
-        ch &= 0x03;                               \
-      }                                   \
-    else if (__glibc_likely ((ch & 0xfe) == 0xfc))                \
-      {                                   \
-        /* We expect six bytes.  */                       \
-        cnt = 6;                                  \
-        ch &= 0x01;                               \
-      }                                   \
-    else                                      \
-      {                                   \
-        /* Search the end of this ill-formed UTF-8 character.  This       \
-           is the next byte with (x & 0xc0) != 0x80.  */              \
-        i = 0;                                \
-        do                                    \
-          ++i;                                \
-        while (inptr + i < inend                          \
-           && (*(inptr + i) & 0xc0) == 0x80               \
-           && i < 5);                             \
-                                          \
-      errout:                                 \
-        STANDARD_FROM_LOOP_ERR_HANDLER (i);                   \
-      }                                   \
-                                          \
-    if (__glibc_unlikely (inptr + cnt > inend))               \
-      {                                   \
-        /* We don't have enough input.  But before we report that check   \
-           that all the bytes are correct.  */                \
-        for (i = 1; inptr + i < inend; ++i)                   \
-          if ((inptr[i] & 0xc0) != 0x80)                      \
-        break;                                \
-                                          \
-        if (__glibc_likely (inptr + i == inend))                  \
-          {                                   \
-        result = __GCONV_INCOMPLETE_INPUT;                \
-        break;                                \
-          }                                   \
-                                          \
-        goto errout;                              \
-      }                                   \
-                                          \
-    /* Read the possible remaining bytes.  */                 \
-    for (i = 1; i < cnt; ++i)                         \
-      {                                   \
-        uint32_t byte = inptr[i];                         \
-                                          \
-        if ((byte & 0xc0) != 0x80)                        \
-          /* This is an illegal encoding.  */                 \
-          break;                                  \
-                                          \
-        ch <<= 6;                                 \
-        ch |= byte & 0x3f;                            \
-      }                                   \
-                                          \
-    /* If i < cnt, some trail byte was not >= 0x80, < 0xc0.           \
-       If cnt > 2 and ch < 2^(5*cnt-4), the wide character ch could       \
-       have been represented with fewer than cnt bytes.  */           \
-    if (i < cnt || (cnt > 2 && (ch >> (5 * cnt - 4)) == 0)            \
-        /* Do not accept UTF-16 surrogates.  */               \
-        || (ch >= 0xd800 && ch <= 0xdfff))                    \
-      {                                   \
-        /* This is an illegal encoding.  */                   \
-        goto errout;                              \
-      }                                   \
-                                          \
-    inptr += cnt;                                 \
-      }                                       \
-                                          \
-    /* Now adjust the pointers and store the result.  */              \
-    *((uint32_t *) outptr) = ch;                          \
-    outptr += sizeof (uint32_t);                          \
-  }
+    {                                       \
+        /* Next input byte.  */                           \
+        uint32_t ch = *inptr;                             \
+        \
+        if (__glibc_likely (ch < 0x80))                       \
+        {                                       \
+            /* One byte sequence.  */                         \
+            ++inptr;                                  \
+        }                                       \
+        else                                      \
+        {                                       \
+            unsigned int cnt;                             \
+            unsigned int i;                           \
+            \
+            if (ch >= 0xc2 && ch < 0xe0)                          \
+            {                                   \
+                /* We expect two bytes.  The first byte cannot be 0xc0 or 0xc1,   \
+                   otherwise the wide character could have been represented       \
+                   using a single byte.  */                       \
+                cnt = 2;                                  \
+                ch &= 0x1f;                               \
+            }                                   \
+            else if (__glibc_likely ((ch & 0xf0) == 0xe0))                \
+            {                                   \
+                /* We expect three bytes.  */                     \
+                cnt = 3;                                  \
+                ch &= 0x0f;                               \
+            }                                   \
+            else if (__glibc_likely ((ch & 0xf8) == 0xf0))                \
+            {                                   \
+                /* We expect four bytes.  */                      \
+                cnt = 4;                                  \
+                ch &= 0x07;                               \
+            }                                   \
+            else if (__glibc_likely ((ch & 0xfc) == 0xf8))                \
+            {                                   \
+                /* We expect five bytes.  */                      \
+                cnt = 5;                                  \
+                ch &= 0x03;                               \
+            }                                   \
+            else if (__glibc_likely ((ch & 0xfe) == 0xfc))                \
+            {                                   \
+                /* We expect six bytes.  */                       \
+                cnt = 6;                                  \
+                ch &= 0x01;                               \
+            }                                   \
+            else                                      \
+            {                                   \
+                /* Search the end of this ill-formed UTF-8 character.  This       \
+                   is the next byte with (x & 0xc0) != 0x80.  */              \
+                i = 0;                                \
+                do                                    \
+                    ++i;                                \
+                while (inptr + i < inend                          \
+                       && (*(inptr + i) & 0xc0) == 0x80               \
+                       && i < 5);                             \
+                \
+    errout:                                 \
+                STANDARD_FROM_LOOP_ERR_HANDLER (i);                   \
+            }                                   \
+            \
+            if (__glibc_unlikely (inptr + cnt > inend))               \
+            {                                   \
+                /* We don't have enough input.  But before we report that check   \
+                   that all the bytes are correct.  */                \
+                for (i = 1; inptr + i < inend; ++i)                   \
+                    if ((inptr[i] & 0xc0) != 0x80)                      \
+                        break;                                \
+                \
+                if (__glibc_likely (inptr + i == inend))                  \
+                {                                   \
+                    result = __GCONV_INCOMPLETE_INPUT;                \
+                    break;                                \
+                }                                   \
+                \
+                goto errout;                              \
+            }                                   \
+            \
+            /* Read the possible remaining bytes.  */                 \
+            for (i = 1; i < cnt; ++i)                         \
+            {                                   \
+                uint32_t byte = inptr[i];                         \
+                \
+                if ((byte & 0xc0) != 0x80)                        \
+                    /* This is an illegal encoding.  */                 \
+                    break;                                  \
+                \
+                ch <<= 6;                                 \
+                ch |= byte & 0x3f;                            \
+            }                                   \
+            \
+            /* If i < cnt, some trail byte was not >= 0x80, < 0xc0.           \
+               If cnt > 2 and ch < 2^(5*cnt-4), the wide character ch could       \
+               have been represented with fewer than cnt bytes.  */           \
+            if (i < cnt || (cnt > 2 && (ch >> (5 * cnt - 4)) == 0)            \
+                /* Do not accept UTF-16 surrogates.  */               \
+                || (ch >= 0xd800 && ch <= 0xdfff))                    \
+            {                                   \
+                /* This is an illegal encoding.  */                   \
+                goto errout;                              \
+            }                                   \
+            \
+            inptr += cnt;                                 \
+        }                                       \
+        \
+        /* Now adjust the pointers and store the result.  */              \
+        *((uint32_t *) outptr) = ch;                          \
+        outptr += sizeof (uint32_t);                          \
+    }
 #define LOOP_NEED_FLAGS
 
 #define STORE_REST \
-  {                                       \
-    /* We store the remaining bytes while converting them into the UCS4       \
-       format.  We can assume that the first byte in the buffer is        \
-       correct and that it requires a larger number of bytes than there       \
-       are in the input buffer.  */                       \
-    wint_t ch = **inptrp;                             \
-    size_t cnt, r;                                \
-                                          \
-    state->__count = inend - *inptrp;                         \
-                                          \
-    assert (ch != 0xc0 && ch != 0xc1);                        \
-    if (ch >= 0xc2 && ch < 0xe0)                          \
-      {                                       \
-    /* We expect two bytes.  The first byte cannot be 0xc0 or         \
-       0xc1, otherwise the wide character could have been             \
-       represented using a single byte.  */                   \
-    cnt = 2;                                  \
-    ch &= 0x1f;                               \
-      }                                       \
-    else if (__glibc_likely ((ch & 0xf0) == 0xe0))                \
-      {                                       \
-    /* We expect three bytes.  */                         \
-    cnt = 3;                                  \
-    ch &= 0x0f;                               \
-      }                                       \
-    else if (__glibc_likely ((ch & 0xf8) == 0xf0))                \
-      {                                       \
-    /* We expect four bytes.  */                          \
-    cnt = 4;                                  \
-    ch &= 0x07;                               \
-      }                                       \
-    else if (__glibc_likely ((ch & 0xfc) == 0xf8))                \
-      {                                       \
-    /* We expect five bytes.  */                          \
-    cnt = 5;                                  \
-    ch &= 0x03;                               \
-      }                                       \
-    else                                      \
-      {                                       \
-    /* We expect six bytes.  */                       \
-    cnt = 6;                                  \
-    ch &= 0x01;                               \
-      }                                       \
-                                          \
-    /* The first byte is already consumed.  */                    \
-    r = cnt - 1;                                  \
-    while (++(*inptrp) < inend)                           \
-      {                                       \
-    ch <<= 6;                                 \
-    ch |= **inptrp & 0x3f;                            \
-    --r;                                      \
-      }                                       \
-                                          \
-    /* Shift for the so far missing bytes.  */                    \
-    ch <<= r * 6;                                 \
-                                          \
-    /* Store the number of bytes expected for the entire sequence.  */        \
-    state->__count |= cnt << 8;                           \
-                                          \
-    /* Store the value.  */                           \
-    state->__value.__wch = ch;                            \
-  }
+    {                                       \
+        /* We store the remaining bytes while converting them into the UCS4       \
+           format.  We can assume that the first byte in the buffer is        \
+           correct and that it requires a larger number of bytes than there       \
+           are in the input buffer.  */                       \
+        wint_t ch = **inptrp;                             \
+        size_t cnt, r;                                \
+        \
+        state->__count = inend - *inptrp;                         \
+        \
+        assert (ch != 0xc0 && ch != 0xc1);                        \
+        if (ch >= 0xc2 && ch < 0xe0)                          \
+        {                                       \
+            /* We expect two bytes.  The first byte cannot be 0xc0 or         \
+               0xc1, otherwise the wide character could have been             \
+               represented using a single byte.  */                   \
+            cnt = 2;                                  \
+            ch &= 0x1f;                               \
+        }                                       \
+        else if (__glibc_likely ((ch & 0xf0) == 0xe0))                \
+        {                                       \
+            /* We expect three bytes.  */                         \
+            cnt = 3;                                  \
+            ch &= 0x0f;                               \
+        }                                       \
+        else if (__glibc_likely ((ch & 0xf8) == 0xf0))                \
+        {                                       \
+            /* We expect four bytes.  */                          \
+            cnt = 4;                                  \
+            ch &= 0x07;                               \
+        }                                       \
+        else if (__glibc_likely ((ch & 0xfc) == 0xf8))                \
+        {                                       \
+            /* We expect five bytes.  */                          \
+            cnt = 5;                                  \
+            ch &= 0x03;                               \
+        }                                       \
+        else                                      \
+        {                                       \
+            /* We expect six bytes.  */                       \
+            cnt = 6;                                  \
+            ch &= 0x01;                               \
+        }                                       \
+        \
+        /* The first byte is already consumed.  */                    \
+        r = cnt - 1;                                  \
+        while (++(*inptrp) < inend)                           \
+        {                                       \
+            ch <<= 6;                                 \
+            ch |= **inptrp & 0x3f;                            \
+            --r;                                      \
+        }                                       \
+        \
+        /* Shift for the so far missing bytes.  */                    \
+        ch <<= r * 6;                                 \
+        \
+        /* Store the number of bytes expected for the entire sequence.  */        \
+        state->__count |= cnt << 8;                           \
+        \
+        /* Store the value.  */                           \
+        state->__value.__wch = ch;                            \
+    }
 
 #define UNPACK_BYTES \
-  {                                       \
-    static const unsigned char inmask[5] = { 0xc0, 0xe0, 0xf0, 0xf8, 0xfc };  \
-    wint_t wch = state->__value.__wch;                        \
-    size_t ntotal = state->__count >> 8;                      \
-                                          \
-    inlen = state->__count & 255;                         \
-                                          \
-    bytebuf[0] = inmask[ntotal - 2];                          \
-                                          \
-    do                                        \
-      {                                       \
-    if (--ntotal < inlen)                             \
-      bytebuf[ntotal] = 0x80 | (wch & 0x3f);                  \
-    wch >>= 6;                                \
-      }                                       \
-    while (ntotal > 1);                               \
-                                          \
-    bytebuf[0] |= wch;                                \
-  }
+    {                                       \
+        static const unsigned char inmask[5] = { 0xc0, 0xe0, 0xf0, 0xf8, 0xfc };  \
+        wint_t wch = state->__value.__wch;                        \
+        size_t ntotal = state->__count >> 8;                      \
+        \
+        inlen = state->__count & 255;                         \
+        \
+        bytebuf[0] = inmask[ntotal - 2];                          \
+        \
+        do                                        \
+        {                                       \
+            if (--ntotal < inlen)                             \
+                bytebuf[ntotal] = 0x80 | (wch & 0x3f);                  \
+            wch >>= 6;                                \
+        }                                       \
+        while (ntotal > 1);                               \
+        \
+        bytebuf[0] |= wch;                                \
+    }
 
 #define CLEAR_STATE \
-  state->__count = 0
+    state->__count = 0
 
 
 #include <iconv/loop.c>
@@ -903,20 +903,20 @@ ucs4le_internal_loop_single(struct __gconv_step *step,
 #define MIN_NEEDED_OUTPUT   MIN_NEEDED_TO
 #define LOOPFCT         FROM_LOOP
 #define BODY \
-  {                                       \
-    uint16_t u1 = get16 (inptr);                          \
-                                          \
-    if (__glibc_unlikely (u1 >= 0xd800 && u1 < 0xe000))               \
-      {                                       \
-    /* Surrogate characters in UCS-2 input are not valid.  Reject         \
-       them.  (Catching this here is not security relevant.)  */          \
-    STANDARD_FROM_LOOP_ERR_HANDLER (2);                   \
-      }                                       \
-                                          \
-    *((uint32_t *) outptr) = u1;                          \
-    outptr += sizeof (uint32_t);                          \
-    inptr += 2;                                   \
-  }
+    {                                       \
+        uint16_t u1 = get16 (inptr);                          \
+        \
+        if (__glibc_unlikely (u1 >= 0xd800 && u1 < 0xe000))               \
+        {                                       \
+            /* Surrogate characters in UCS-2 input are not valid.  Reject         \
+               them.  (Catching this here is not security relevant.)  */          \
+            STANDARD_FROM_LOOP_ERR_HANDLER (2);                   \
+        }                                       \
+        \
+        *((uint32_t *) outptr) = u1;                          \
+        outptr += sizeof (uint32_t);                          \
+        inptr += 2;                                   \
+    }
 #define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 #include <iconv/skeleton.c>
@@ -937,36 +937,36 @@ ucs4le_internal_loop_single(struct __gconv_step *step,
 #define MIN_NEEDED_OUTPUT   MIN_NEEDED_TO
 #define LOOPFCT         FROM_LOOP
 #define BODY \
-  {                                       \
-    uint32_t val = *((const uint32_t *) inptr);                   \
-                                          \
-    if (__glibc_unlikely (val >= 0x10000))                    \
-      {                                       \
-    UNICODE_TAG_HANDLER (val, 4);                         \
-    STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
-      }                                       \
-    else if (__glibc_unlikely (val >= 0xd800 && val < 0xe000))            \
-      {                                       \
-    /* Surrogate characters in UCS-4 input are not valid.             \
-       We must catch this, because the UCS-2 output might be          \
-       interpreted as UTF-16 by other programs.  If we let            \
-       surrogates pass through, attackers could make a security       \
-       hole exploit by synthesizing any desired plane 1-16            \
-       character.  */                             \
-    result = __gconv_mark_illegal_input (step_data);              \
-    if (! ignore_errors_p ())                         \
-      break;                                  \
-    inptr += 4;                               \
-    ++*irreversible;                              \
-    continue;                                 \
-      }                                       \
-    else                                      \
-      {                                       \
-    put16 (outptr, val);                              \
-    outptr += sizeof (uint16_t);                          \
-    inptr += 4;                               \
-      }                                       \
-  }
+    {                                       \
+        uint32_t val = *((const uint32_t *) inptr);                   \
+        \
+        if (__glibc_unlikely (val >= 0x10000))                    \
+        {                                       \
+            UNICODE_TAG_HANDLER (val, 4);                         \
+            STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
+        }                                       \
+        else if (__glibc_unlikely (val >= 0xd800 && val < 0xe000))            \
+        {                                       \
+            /* Surrogate characters in UCS-4 input are not valid.             \
+               We must catch this, because the UCS-2 output might be          \
+               interpreted as UTF-16 by other programs.  If we let            \
+               surrogates pass through, attackers could make a security       \
+               hole exploit by synthesizing any desired plane 1-16            \
+               character.  */                             \
+            result = __gconv_mark_illegal_input (step_data);              \
+            if (! ignore_errors_p ())                         \
+                break;                                  \
+            inptr += 4;                               \
+            ++*irreversible;                              \
+            continue;                                 \
+        }                                       \
+        else                                      \
+        {                                       \
+            put16 (outptr, val);                              \
+            outptr += sizeof (uint16_t);                          \
+            inptr += 4;                               \
+        }                                       \
+    }
 #define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 #include <iconv/skeleton.c>
@@ -987,27 +987,27 @@ ucs4le_internal_loop_single(struct __gconv_step *step,
 #define MIN_NEEDED_OUTPUT   MIN_NEEDED_TO
 #define LOOPFCT         FROM_LOOP
 #define BODY \
-  {                                       \
-    uint16_t u1 = bswap_16 (get16 (inptr));                   \
-                                          \
-    if (__glibc_unlikely (u1 >= 0xd800 && u1 < 0xe000))               \
-      {                                       \
-    /* Surrogate characters in UCS-2 input are not valid.  Reject         \
-       them.  (Catching this here is not security relevant.)  */          \
-    if (! ignore_errors_p ())                         \
-      {                                   \
-        result = __gconv_mark_illegal_input (step_data);              \
-        break;                                \
-      }                                   \
-    inptr += 2;                               \
-    ++*irreversible;                              \
-    continue;                                 \
-      }                                       \
-                                          \
-    *((uint32_t *) outptr) = u1;                          \
-    outptr += sizeof (uint32_t);                          \
-    inptr += 2;                                   \
-  }
+    {                                       \
+        uint16_t u1 = bswap_16 (get16 (inptr));                   \
+        \
+        if (__glibc_unlikely (u1 >= 0xd800 && u1 < 0xe000))               \
+        {                                       \
+            /* Surrogate characters in UCS-2 input are not valid.  Reject         \
+               them.  (Catching this here is not security relevant.)  */          \
+            if (! ignore_errors_p ())                         \
+            {                                   \
+                result = __gconv_mark_illegal_input (step_data);              \
+                break;                                \
+            }                                   \
+            inptr += 2;                               \
+            ++*irreversible;                              \
+            continue;                                 \
+        }                                       \
+        \
+        *((uint32_t *) outptr) = u1;                          \
+        outptr += sizeof (uint32_t);                          \
+        inptr += 2;                                   \
+    }
 #define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 #include <iconv/skeleton.c>
@@ -1028,37 +1028,37 @@ ucs4le_internal_loop_single(struct __gconv_step *step,
 #define MIN_NEEDED_OUTPUT   MIN_NEEDED_TO
 #define LOOPFCT         FROM_LOOP
 #define BODY \
-  {                                       \
-    uint32_t val = *((const uint32_t *) inptr);                   \
-    if (__glibc_unlikely (val >= 0x10000))                    \
-      {                                       \
-    UNICODE_TAG_HANDLER (val, 4);                         \
-    STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
-      }                                       \
-    else if (__glibc_unlikely (val >= 0xd800 && val < 0xe000))            \
-      {                                       \
-    /* Surrogate characters in UCS-4 input are not valid.             \
-       We must catch this, because the UCS-2 output might be          \
-       interpreted as UTF-16 by other programs.  If we let            \
-       surrogates pass through, attackers could make a security       \
-       hole exploit by synthesizing any desired plane 1-16            \
-       character.  */                             \
-    if (! ignore_errors_p ())                         \
-      {                                   \
-        result = __gconv_mark_illegal_input (step_data);              \
-        break;                                \
-      }                                   \
-    inptr += 4;                               \
-    ++*irreversible;                              \
-    continue;                                 \
-      }                                       \
-    else                                      \
-      {                                       \
-    put16 (outptr, bswap_16 (val));                       \
-    outptr += sizeof (uint16_t);                          \
-    inptr += 4;                               \
-      }                                       \
-  }
+    {                                       \
+        uint32_t val = *((const uint32_t *) inptr);                   \
+        if (__glibc_unlikely (val >= 0x10000))                    \
+        {                                       \
+            UNICODE_TAG_HANDLER (val, 4);                         \
+            STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
+        }                                       \
+        else if (__glibc_unlikely (val >= 0xd800 && val < 0xe000))            \
+        {                                       \
+            /* Surrogate characters in UCS-4 input are not valid.             \
+               We must catch this, because the UCS-2 output might be          \
+               interpreted as UTF-16 by other programs.  If we let            \
+               surrogates pass through, attackers could make a security       \
+               hole exploit by synthesizing any desired plane 1-16            \
+               character.  */                             \
+            if (! ignore_errors_p ())                         \
+            {                                   \
+                result = __gconv_mark_illegal_input (step_data);              \
+                break;                                \
+            }                                   \
+            inptr += 4;                               \
+            ++*irreversible;                              \
+            continue;                                 \
+        }                                       \
+        else                                      \
+        {                                       \
+            put16 (outptr, bswap_16 (val));                       \
+            outptr += sizeof (uint16_t);                          \
+            inptr += 4;                               \
+        }                                       \
+    }
 #define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 #include <iconv/skeleton.c>

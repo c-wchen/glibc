@@ -3,13 +3,13 @@
 #include <string.h>
 
 #define CHECK(cond) \
-  do                                    \
-    if (! (cond))                           \
-      {                                 \
-    printf ("Condition " #cond " not true on line %d\n", __LINE__); \
-    ret = 1;                            \
-      }                                 \
-  while (0)
+    do                                    \
+        if (! (cond))                           \
+        {                                 \
+            printf ("Condition " #cond " not true on line %d\n", __LINE__); \
+            ret = 1;                            \
+        }                                 \
+    while (0)
 
 static int do_test(void)
 {

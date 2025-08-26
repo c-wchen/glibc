@@ -33,7 +33,7 @@
 
 #if !defined SINGLE_THREAD_BY_GLOBAL || IS_IN (rtld)
 # define SINGLE_THREAD_P \
-  (THREAD_GETMEM (THREAD_SELF, header.multiple_threads) == 0)
+    (THREAD_GETMEM (THREAD_SELF, header.multiple_threads) == 0)
 #else
 # define SINGLE_THREAD_P (__libc_single_threaded_internal != 0)
 #endif

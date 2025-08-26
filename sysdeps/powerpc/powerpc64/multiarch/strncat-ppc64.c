@@ -21,7 +21,7 @@
 #ifdef SHARED
 # undef libc_hidden_builtin_def
 # define libc_hidden_builtin_def(name) \
-  __hidden_ver1 (__strncat_ppc, __GI_strncat, __strncat_ppc);
+    __hidden_ver1 (__strncat_ppc, __GI_strncat, __strncat_ppc);
 #endif
 
 extern __typeof(strncat) __strncat_ppc attribute_hidden;

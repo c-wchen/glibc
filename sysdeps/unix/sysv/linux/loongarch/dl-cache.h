@@ -26,7 +26,7 @@
 #endif
 
 #define _dl_cache_check_flags(flags)                    \
-  ((flags) == _DL_CACHE_DEFAULT_ID)
+    ((flags) == _DL_CACHE_DEFAULT_ID)
 
 /* If given a path to one of our library directories, adds every library
    directory via add_dir (), otherwise just adds the giver directory.  On
@@ -36,46 +36,46 @@
    so this will add all of those paths.  */
 
 #define add_system_dir(dir)                         \
-  do                                        \
+    do                                        \
     {                                   \
-      static const char* lib_dirs[] = {                 \
-    "/lib64",                           \
-    "/lib64/sf",                            \
-    NULL,                               \
-      };                                \
-      const size_t lib_len = sizeof ("/lib") - 1;           \
-      size_t len = strlen (dir);                    \
-      char path[len + 6];                       \
-      const char **ptr;                         \
-                                    \
-      memcpy (path, dir, len + 1);                  \
-                                    \
-      for (ptr = lib_dirs; *ptr != NULL; ptr++)             \
-    {                               \
-      const char *lib_dir = *ptr;                   \
-      size_t dir_len = strlen (lib_dir);                \
-                                    \
-      if (len >= dir_len                        \
-          && !memcmp (path + len - dir_len, lib_dir, dir_len))  \
+        static const char* lib_dirs[] = {                 \
+                                                          "/lib64",                           \
+                                                          "/lib64/sf",                            \
+                                                          NULL,                               \
+                                        };                                \
+        const size_t lib_len = sizeof ("/lib") - 1;           \
+        size_t len = strlen (dir);                    \
+        char path[len + 6];                       \
+        const char **ptr;                         \
+        \
+        memcpy (path, dir, len + 1);                  \
+        \
+        for (ptr = lib_dirs; *ptr != NULL; ptr++)             \
         {                               \
-          len -= dir_len - lib_len;                 \
-          path[len] = '\0';                     \
-          break;                            \
+            const char *lib_dir = *ptr;                   \
+            size_t dir_len = strlen (lib_dir);                \
+            \
+            if (len >= dir_len                        \
+                && !memcmp (path + len - dir_len, lib_dir, dir_len))  \
+            {                               \
+                len -= dir_len - lib_len;                 \
+                path[len] = '\0';                     \
+                break;                            \
+            }                               \
         }                               \
-    }                               \
-      add_dir (path);                           \
-      if (len >= lib_len                        \
-      && !memcmp (path + len - lib_len, "/lib", lib_len))       \
-    for (ptr = lib_dirs; *ptr != NULL; ptr++)           \
-      {                             \
-        const char *lib_dir = *ptr;                 \
-        size_t dir_len = strlen (lib_dir);              \
-                                    \
-        assert (dir_len >= lib_len);                \
-        memcpy (path + len, lib_dir + lib_len,          \
-            dir_len - lib_len + 1);             \
-        add_dir (path);                     \
-      }                             \
+        add_dir (path);                           \
+        if (len >= lib_len                        \
+            && !memcmp (path + len - lib_len, "/lib", lib_len))       \
+            for (ptr = lib_dirs; *ptr != NULL; ptr++)           \
+            {                             \
+                const char *lib_dir = *ptr;                 \
+                size_t dir_len = strlen (lib_dir);              \
+                \
+                assert (dir_len >= lib_len);                \
+                memcpy (path + len, lib_dir + lib_len,          \
+                        dir_len - lib_len + 1);             \
+                add_dir (path);                     \
+            }                             \
     } while (0)
 
 

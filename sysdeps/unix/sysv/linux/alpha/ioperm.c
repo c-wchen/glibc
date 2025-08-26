@@ -354,41 +354,41 @@ static inline unsigned int inline_bwx_inl(unsigned long int port)
 /* these do either SPARSE or JENSEN swizzle */
 
 #define DCL_SETHAE(name, ioswiz)                        \
-static void                                             \
-name##_sethae (unsigned long int addr)                  \
-{                                                       \
-  inline_sethae (addr, IOSWIZZLE_##ioswiz);             \
-}
+    static void                                             \
+    name##_sethae (unsigned long int addr)                  \
+    {                                                       \
+        inline_sethae (addr, IOSWIZZLE_##ioswiz);             \
+    }
 
 #define DCL_OUT(name, func, type, ioswiz)       \
-static void                     \
-name##_##func (unsigned type b, unsigned long int addr) \
-{                           \
-  inline_##func (b, addr, IOSWIZZLE_##ioswiz);      \
-}
+    static void                     \
+    name##_##func (unsigned type b, unsigned long int addr) \
+    {                           \
+        inline_##func (b, addr, IOSWIZZLE_##ioswiz);      \
+    }
 
 #define DCL_IN(name, func, ioswiz)          \
-static unsigned int                 \
-name##_##func (unsigned long int addr)          \
-{                           \
-  return inline_##func (addr, IOSWIZZLE_##ioswiz);  \
-}
+    static unsigned int                 \
+    name##_##func (unsigned long int addr)          \
+    {                           \
+        return inline_##func (addr, IOSWIZZLE_##ioswiz);  \
+    }
 
 /* these do DENSE, so no swizzle is needed */
 
 #define DCL_OUT_BWX(name, func, type)           \
-static void                     \
-name##_##func (unsigned type b, unsigned long int addr) \
-{                           \
-  inline_bwx_##func (b, addr);              \
-}
+    static void                     \
+    name##_##func (unsigned type b, unsigned long int addr) \
+    {                           \
+        inline_bwx_##func (b, addr);              \
+    }
 
 #define DCL_IN_BWX(name, func)              \
-static unsigned int                 \
-name##_##func (unsigned long int addr)          \
-{                           \
-  return inline_bwx_##func (addr);          \
-}
+    static unsigned int                 \
+    name##_##func (unsigned long int addr)          \
+    {                           \
+        return inline_bwx_##func (addr);          \
+    }
 
 /* now declare/define the necessary routines */
 

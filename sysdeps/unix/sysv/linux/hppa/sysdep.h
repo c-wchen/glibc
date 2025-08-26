@@ -130,11 +130,11 @@
     C_LABEL(name)                   ASM_LINE_SEP    \
     .PROC                       ASM_LINE_SEP    \
     .CALLINFO FRAME=64,CALLS,SAVE_RP,ENTRY_GR=3 ASM_LINE_SEP    \
-    .ENTRY                      ASM_LINE_SEP    \
-    /* SAVE_RP says we do */            ASM_LINE_SEP    \
-    stw %rp, -20(%sr0,%sp)              ASM_LINE_SEP    \
-    .cfi_offset 2, -20              ASM_LINE_SEP    \
-    /*FIXME: Call mcount? (careful with stack!) */
+                    .ENTRY                      ASM_LINE_SEP    \
+                    /* SAVE_RP says we do */            ASM_LINE_SEP    \
+                    stw %rp, -20(%sr0,%sp)              ASM_LINE_SEP    \
+                    .cfi_offset 2, -20              ASM_LINE_SEP    \
+                    /*FIXME: Call mcount? (careful with stack!) */
 
 /* Some syscall wrappers do not call other functions, and
    hence are classified as leaf, so add NO_CALLS for gdb */
@@ -147,18 +147,18 @@
     C_LABEL(name)                   ASM_LINE_SEP    \
     .PROC                       ASM_LINE_SEP    \
     .CALLINFO FRAME=64,NO_CALLS,SAVE_RP,ENTRY_GR=3  ASM_LINE_SEP    \
-    .ENTRY                      ASM_LINE_SEP    \
-    /* SAVE_RP says we do */            ASM_LINE_SEP    \
-    stw %rp, -20(%sr0,%sp)              ASM_LINE_SEP    \
-    .cfi_offset 2, -20              ASM_LINE_SEP    \
-    /*FIXME: Call mcount? (careful with stack!) */
+                    .ENTRY                      ASM_LINE_SEP    \
+                    /* SAVE_RP says we do */            ASM_LINE_SEP    \
+                    stw %rp, -20(%sr0,%sp)              ASM_LINE_SEP    \
+                    .cfi_offset 2, -20              ASM_LINE_SEP    \
+                    /*FIXME: Call mcount? (careful with stack!) */
 
 #undef  END
 #define END(name)                           \
     .EXIT                       ASM_LINE_SEP    \
     .PROCEND                    ASM_LINE_SEP    \
     cfi_endproc                 ASM_LINE_SEP    \
-.size   C_SYMBOL_NAME(name), .-C_SYMBOL_NAME(name)  ASM_LINE_SEP
+    .size   C_SYMBOL_NAME(name), .-C_SYMBOL_NAME(name)  ASM_LINE_SEP
 
 /* If compiled for profiling, call `mcount' at the start
    of each function. No, don't bother.  gcc will put the
@@ -179,40 +179,40 @@
 
 #undef PSEUDO
 #define PSEUDO(name, syscall_name, args)            \
-  ENTRY (name)                  ASM_LINE_SEP    \
-  /* If necc. load args from stack */       ASM_LINE_SEP    \
-  DOARGS_##args                 ASM_LINE_SEP    \
-  DO_CALL (syscall_name, args)          ASM_LINE_SEP    \
-  UNDOARGS_##args               ASM_LINE_SEP
+    ENTRY (name)                  ASM_LINE_SEP    \
+    /* If necc. load args from stack */       ASM_LINE_SEP    \
+    DOARGS_##args                 ASM_LINE_SEP    \
+    DO_CALL (syscall_name, args)          ASM_LINE_SEP    \
+    UNDOARGS_##args               ASM_LINE_SEP
 
 #define ret \
-  /* Return value set by ERRNO code */      ASM_LINE_SEP    \
-  bv,n 0(2)                 ASM_LINE_SEP
+    /* Return value set by ERRNO code */      ASM_LINE_SEP    \
+    bv,n 0(2)                 ASM_LINE_SEP
 
 #undef  PSEUDO_END
 #define PSEUDO_END(name)                    \
-  END (name)
+    END (name)
 
 /* We don't set the errno on the return from the syscall */
 #define PSEUDO_NOERRNO(name, syscall_name, args)        \
-  ENTRY_LEAF (name)             ASM_LINE_SEP    \
-  DOARGS_##args                 ASM_LINE_SEP    \
-  DO_CALL_NOERRNO (syscall_name, args)      ASM_LINE_SEP    \
-  UNDOARGS_##args               ASM_LINE_SEP
+    ENTRY_LEAF (name)             ASM_LINE_SEP    \
+    DOARGS_##args                 ASM_LINE_SEP    \
+    DO_CALL_NOERRNO (syscall_name, args)      ASM_LINE_SEP    \
+    UNDOARGS_##args               ASM_LINE_SEP
 
 #define ret_NOERRNO ret
 
 #undef  PSEUDO_END_NOERRNO
 #define PSEUDO_END_NOERRNO(name)                \
-  END (name)
+    END (name)
 
 /* This has to return the error value */
 #undef  PSEUDO_ERRVAL
 #define PSEUDO_ERRVAL(name, syscall_name, args)         \
-  ENTRY_LEAF (name)             ASM_LINE_SEP    \
-  DOARGS_##args                 ASM_LINE_SEP    \
-  DO_CALL_ERRVAL (syscall_name, args)       ASM_LINE_SEP    \
-  UNDOARGS_##args               ASM_LINE_SEP
+    ENTRY_LEAF (name)             ASM_LINE_SEP    \
+    DOARGS_##args                 ASM_LINE_SEP    \
+    DO_CALL_ERRVAL (syscall_name, args)       ASM_LINE_SEP    \
+    UNDOARGS_##args               ASM_LINE_SEP
 
 #define ret_ERRVAL ret
 
@@ -302,23 +302,23 @@
     ldi SYS_ify (syscall_name), %r20    ASM_LINE_SEP    \
     ldi NO_ERROR,%r1            ASM_LINE_SEP    \
     cmpb,>>=,n %r1,%ret0,L(pre_end)     ASM_LINE_SEP    \
-    /* Restore r19 from TREG */     ASM_LINE_SEP    \
-    LOAD_PIC(TREG) /* delay */      ASM_LINE_SEP    \
-    SYSCALL_ERROR_HANDLER           ASM_LINE_SEP    \
-    /* Use TREG for temp storage */     ASM_LINE_SEP    \
-    copy %ret0, TREG /* delay */        ASM_LINE_SEP    \
-    /* OPTIMIZE: Don't reload r19 */    ASM_LINE_SEP    \
-    /* do a -1*syscall_ret0 */      ASM_LINE_SEP    \
-    sub %r0, TREG, TREG         ASM_LINE_SEP    \
-    /* Store into errno location */     ASM_LINE_SEP    \
-    stw TREG, 0(%sr0,%ret0)         ASM_LINE_SEP    \
-    /* return -1 as error */        ASM_LINE_SEP    \
-    ldo -1(%r0), %ret0          ASM_LINE_SEP    \
-L(pre_end):                 ASM_LINE_SEP    \
-    /* Restore our frame, restoring TREG */ ASM_LINE_SEP    \
-    ldwm -64(%sp), TREG         ASM_LINE_SEP    \
-    /* Restore return pointer */        ASM_LINE_SEP    \
-    ldw -20(%sp),%rp            ASM_LINE_SEP
+            /* Restore r19 from TREG */     ASM_LINE_SEP    \
+            LOAD_PIC(TREG) /* delay */      ASM_LINE_SEP    \
+            SYSCALL_ERROR_HANDLER           ASM_LINE_SEP    \
+            /* Use TREG for temp storage */     ASM_LINE_SEP    \
+            copy %ret0, TREG /* delay */        ASM_LINE_SEP    \
+            /* OPTIMIZE: Don't reload r19 */    ASM_LINE_SEP    \
+            /* do a -1*syscall_ret0 */      ASM_LINE_SEP    \
+            sub %r0, TREG, TREG         ASM_LINE_SEP    \
+            /* Store into errno location */     ASM_LINE_SEP    \
+            stw TREG, 0(%sr0,%ret0)         ASM_LINE_SEP    \
+            /* return -1 as error */        ASM_LINE_SEP    \
+            ldo -1(%r0), %ret0          ASM_LINE_SEP    \
+            L(pre_end):                 ASM_LINE_SEP    \
+                /* Restore our frame, restoring TREG */ ASM_LINE_SEP    \
+                ldwm -64(%sp), TREG         ASM_LINE_SEP    \
+                /* Restore return pointer */        ASM_LINE_SEP    \
+                ldw -20(%sp),%rp            ASM_LINE_SEP
 
 /* We do nothing with the return, except hand it back to someone else */
 #undef  DO_CALL_NOERRNO
@@ -340,8 +340,8 @@ L(pre_end):                 ASM_LINE_SEP    \
     /* Caller will restore r19 */       ASM_LINE_SEP    \
     ldi NO_ERROR,%r1            ASM_LINE_SEP    \
     cmpb,>>=,n %r1,%ret0,0f         ASM_LINE_SEP    \
-    sub %r0, %ret0, %ret0           ASM_LINE_SEP    \
-0:                      ASM_LINE_SEP
+            sub %r0, %ret0, %ret0           ASM_LINE_SEP    \
+            0:                      ASM_LINE_SEP
 
 
 #else
@@ -358,97 +358,97 @@ L(pre_end):                 ASM_LINE_SEP    \
    across the syscall. */
 
 #define CALL_CLOB_REGS  "%r1", "%r2", CLOB_TREG \
-            "%r20", "%r29", "%r31"
+    "%r20", "%r29", "%r31"
 
 /* Similar to INLINE_SYSCALL but we don't set errno */
 #undef INTERNAL_SYSCALL
 #define INTERNAL_SYSCALL(name, nr, args...)             \
-({                                  \
-    long __sys_res;                         \
-    {                               \
-        LOAD_ARGS_##nr(args)                    \
-        register unsigned long __res asm("r28");        \
-        PIC_REG_DEF                     \
-        LOAD_REGS_##nr                      \
-        /* FIXME: HACK save/load r19 around syscall */      \
-        asm volatile(                       \
-            SAVE_ASM_PIC                    \
-            "	ble  0x100(%%sr2, %%r0)\n"        \
-            "	ldi %1, %%r20\n"          \
-            LOAD_ASM_PIC                    \
-            : "=r" (__res)                  \
-            : "i" (SYS_ify(name)) PIC_REG_USE ASM_ARGS_##nr \
-            : "memory", CALL_CLOB_REGS CLOB_ARGS_##nr   \
-        );                          \
-        __sys_res = (long)__res;                \
-    }                               \
-    __sys_res;                          \
- })
+    ({                                  \
+        long __sys_res;                         \
+        {                               \
+            LOAD_ARGS_##nr(args)                    \
+            register unsigned long __res asm("r28");        \
+            PIC_REG_DEF                     \
+            LOAD_REGS_##nr                      \
+            /* FIXME: HACK save/load r19 around syscall */      \
+            asm volatile(                       \
+                                                SAVE_ASM_PIC                    \
+                                                "	ble  0x100(%%sr2, %%r0)\n"        \
+                                                "	ldi %1, %%r20\n"          \
+                                                LOAD_ASM_PIC                    \
+                                                : "=r" (__res)                  \
+                                                : "i" (SYS_ify(name)) PIC_REG_USE ASM_ARGS_##nr \
+                                                : "memory", CALL_CLOB_REGS CLOB_ARGS_##nr   \
+                        );                          \
+            __sys_res = (long)__res;                \
+        }                               \
+        __sys_res;                          \
+    })
 
 
 /* The _NCS variant allows non-constant syscall numbers.  */
 #undef INTERNAL_SYSCALL_NCS
 #define INTERNAL_SYSCALL_NCS(name, nr, args...)             \
-({                                  \
-    long __sys_res;                         \
-    {                               \
-        LOAD_ARGS_##nr(args)                    \
-        register unsigned long __res asm("r28");        \
-        PIC_REG_DEF                     \
-        LOAD_REGS_##nr                      \
-        /* FIXME: HACK save/load r19 around syscall */      \
-        asm volatile(                       \
-            SAVE_ASM_PIC                    \
-            "	ble  0x100(%%sr2, %%r0)\n"        \
-            "	copy %1, %%r20\n"         \
-            LOAD_ASM_PIC                    \
-            : "=r" (__res)                  \
-            : "r" (name) PIC_REG_USE ASM_ARGS_##nr      \
-            : "memory", CALL_CLOB_REGS CLOB_ARGS_##nr   \
-        );                          \
-        __sys_res = (long)__res;                \
-    }                               \
-    __sys_res;                          \
- })
+    ({                                  \
+        long __sys_res;                         \
+        {                               \
+            LOAD_ARGS_##nr(args)                    \
+            register unsigned long __res asm("r28");        \
+            PIC_REG_DEF                     \
+            LOAD_REGS_##nr                      \
+            /* FIXME: HACK save/load r19 around syscall */      \
+            asm volatile(                       \
+                                                SAVE_ASM_PIC                    \
+                                                "	ble  0x100(%%sr2, %%r0)\n"        \
+                                                "	copy %1, %%r20\n"         \
+                                                LOAD_ASM_PIC                    \
+                                                : "=r" (__res)                  \
+                                                : "r" (name) PIC_REG_USE ASM_ARGS_##nr      \
+                                                : "memory", CALL_CLOB_REGS CLOB_ARGS_##nr   \
+                        );                          \
+            __sys_res = (long)__res;                \
+        }                               \
+        __sys_res;                          \
+    })
 
 #define LOAD_ARGS_0()
 #define LOAD_REGS_0
 #define LOAD_ARGS_1(a1)                         \
-  register unsigned long __x26 = (unsigned long)(a1);           \
-  LOAD_ARGS_0()
+    register unsigned long __x26 = (unsigned long)(a1);           \
+    LOAD_ARGS_0()
 #define LOAD_REGS_1                         \
-  register unsigned long __r26 __asm__("r26") = __x26;          \
-  LOAD_REGS_0
+    register unsigned long __r26 __asm__("r26") = __x26;          \
+    LOAD_REGS_0
 #define LOAD_ARGS_2(a1,a2)                      \
-  register unsigned long __x25 = (unsigned long)(a2);           \
-  LOAD_ARGS_1(a1)
+    register unsigned long __x25 = (unsigned long)(a2);           \
+    LOAD_ARGS_1(a1)
 #define LOAD_REGS_2                         \
-  register unsigned long __r25 __asm__("r25") = __x25;          \
-  LOAD_REGS_1
+    register unsigned long __r25 __asm__("r25") = __x25;          \
+    LOAD_REGS_1
 #define LOAD_ARGS_3(a1,a2,a3)                       \
-  register unsigned long __x24 = (unsigned long)(a3);           \
-  LOAD_ARGS_2(a1,a2)
+    register unsigned long __x24 = (unsigned long)(a3);           \
+    LOAD_ARGS_2(a1,a2)
 #define LOAD_REGS_3                         \
-  register unsigned long __r24 __asm__("r24") = __x24;          \
-  LOAD_REGS_2
+    register unsigned long __r24 __asm__("r24") = __x24;          \
+    LOAD_REGS_2
 #define LOAD_ARGS_4(a1,a2,a3,a4)                    \
-  register unsigned long __x23 = (unsigned long)(a4);           \
-  LOAD_ARGS_3(a1,a2,a3)
+    register unsigned long __x23 = (unsigned long)(a4);           \
+    LOAD_ARGS_3(a1,a2,a3)
 #define LOAD_REGS_4                         \
-  register unsigned long __r23 __asm__("r23") = __x23;          \
-  LOAD_REGS_3
+    register unsigned long __r23 __asm__("r23") = __x23;          \
+    LOAD_REGS_3
 #define LOAD_ARGS_5(a1,a2,a3,a4,a5)                 \
-  register unsigned long __x22 = (unsigned long)(a5);           \
-  LOAD_ARGS_4(a1,a2,a3,a4)
+    register unsigned long __x22 = (unsigned long)(a5);           \
+    LOAD_ARGS_4(a1,a2,a3,a4)
 #define LOAD_REGS_5                         \
-  register unsigned long __r22 __asm__("r22") = __x22;          \
-  LOAD_REGS_4
+    register unsigned long __r22 __asm__("r22") = __x22;          \
+    LOAD_REGS_4
 #define LOAD_ARGS_6(a1,a2,a3,a4,a5,a6)                  \
-  register unsigned long __x21 = (unsigned long)(a6);           \
-  LOAD_ARGS_5(a1,a2,a3,a4,a5)
+    register unsigned long __x21 = (unsigned long)(a6);           \
+    LOAD_ARGS_5(a1,a2,a3,a4,a5)
 #define LOAD_REGS_6                         \
-  register unsigned long __r21 __asm__("r21") = __x21;          \
-  LOAD_REGS_5
+    register unsigned long __r21 __asm__("r21") = __x21;          \
+    LOAD_REGS_5
 
 /* Even with zero args we use r20 for the syscall number */
 #define ASM_ARGS_0

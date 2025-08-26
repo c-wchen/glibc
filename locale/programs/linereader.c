@@ -462,16 +462,16 @@ static void adds(struct lr_buffer *lrb, const unsigned char *s, size_t l)
 }
 
 #define ADDWC(ch) \
-  do                                          \
+    do                                          \
     {                                         \
-      if (buf2act == buf2max)                             \
-    {                                     \
-      buf2max *= 2;                               \
-      buf2 = xrealloc (buf2, buf2max * 4);                    \
-    }                                     \
-      buf2[buf2act++] = (ch);                             \
+        if (buf2act == buf2max)                             \
+        {                                     \
+            buf2max *= 2;                               \
+            buf2 = xrealloc (buf2, buf2max * 4);                    \
+        }                                     \
+        buf2[buf2act++] = (ch);                             \
     }                                         \
-  while (0)
+    while (0)
 
 
 static struct token *get_symname(struct linereader *lr)

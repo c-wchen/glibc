@@ -109,12 +109,12 @@ elf_machine_runtime_setup(struct link_map *l, struct r_scope_elem *scope[],
 #define RTLD_START asm (".globl _dl_start");
 
 #define elf_machine_type_class(type)                    \
-  ((((type) == R_AARCH64_JUMP_SLOT ||                   \
-     (type) == R_AARCH64_TLS_DTPMOD ||                  \
-     (type) == R_AARCH64_TLS_DTPREL ||                  \
-     (type) == R_AARCH64_TLS_TPREL ||                   \
-     (type) == R_AARCH64_TLSDESC) * ELF_RTYPE_CLASS_PLT)        \
-   | (((type) == R_AARCH64_COPY) * ELF_RTYPE_CLASS_COPY))
+    ((((type) == R_AARCH64_JUMP_SLOT ||                   \
+       (type) == R_AARCH64_TLS_DTPMOD ||                  \
+       (type) == R_AARCH64_TLS_DTPREL ||                  \
+       (type) == R_AARCH64_TLS_TPREL ||                   \
+       (type) == R_AARCH64_TLSDESC) * ELF_RTYPE_CLASS_PLT)        \
+     | (((type) == R_AARCH64_COPY) * ELF_RTYPE_CLASS_COPY))
 
 #define ELF_MACHINE_JMP_SLOT    R_AARCH64_JUMP_SLOT
 

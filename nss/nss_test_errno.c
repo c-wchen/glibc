@@ -35,18 +35,21 @@ init(void)
 
 /* Catch misnamed function definitions.  */
 
-enum nss_status _nss_test_errno_setpwent(int stayopen) {
+enum nss_status _nss_test_errno_setpwent(int stayopen)
+{
     setenv("_nss_test_errno_setpwent", "yes", 1);
     return NSS_STATUS_SUCCESS;
 }
 
 enum nss_status _nss_test_errno_getpwent_r(struct passwd *result,
-        char *buffer, size_t size, int *errnop) {
+        char *buffer, size_t size, int *errnop)
+{
     setenv("_nss_test_errno_getpwent_r", "yes", 1);
     return NSS_STATUS_NOTFOUND;
 }
 
-enum nss_status _nss_test_errno_endpwent(void) {
+enum nss_status _nss_test_errno_endpwent(void)
+{
     setenv("_nss_test_errno_endpwent", "yes", 1);
     return NSS_STATUS_SUCCESS;
 }

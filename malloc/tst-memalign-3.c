@@ -59,8 +59,8 @@ void *p;
 
 /* Sanity checks, ancillary to the actual test.  */
 #define CHECK(p,a) \
-  if (p == NULL || !PTR_IS_ALIGNED (p, a)) \
-    FAIL_EXIT1 ("NULL or misaligned memory detected.\n");
+    if (p == NULL || !PTR_IS_ALIGNED (p, a)) \
+        FAIL_EXIT1 ("NULL or misaligned memory detected.\n");
 
 static void *mem_test(void *closure)
 {

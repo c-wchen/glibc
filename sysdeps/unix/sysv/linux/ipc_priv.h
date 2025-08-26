@@ -45,12 +45,12 @@ struct __old_ipc_perm {
 #define SEMCTL_ARG_ADDRESS(__arg) &__arg.array
 
 #define MSGRCV_ARGS(__msgp, __msgtyp) \
-  ((long int []){ (long int) __msgp, __msgtyp })
+    ((long int []){ (long int) __msgp, __msgtyp })
 
 /* This macro is required to handle the s390 variants, which passes the
    arguments in a different order than default.  */
 #define SEMTIMEDOP_IPC_ARGS(__nsops, __sops, __timeout) \
-  (__nsops), 0, (__sops), (__timeout)
+    (__nsops), 0, (__sops), (__timeout)
 
 /* Linux SysV ipc does not provide new syscalls for 64-bit time support on
    32-bit architectures, but rather split the timestamp into high and low;

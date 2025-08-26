@@ -16,30 +16,30 @@ static int do_test(void)
 
 #if LDBL_MANT_DIG == 106 || LDBL_MANT_DIG == 113
 # define COMPARE_LDBL(u, v) \
-  ((u).l == (v).l && (u).x[0] == (v).x[0] && (u).x[1] == (v).x[1])
+    ((u).l == (v).l && (u).x[0] == (v).x[0] && (u).x[1] == (v).x[1])
 #else
 # define COMPARE_LDBL(u, v) ((u).l == (v).l)
 #endif
 
 #define TEST(val) \
-  do                                       \
+    do                                       \
     {                                      \
-      u.l = (val);                             \
-      snprintf (buf, sizeof buf, "%LaL", u.l);                 \
-      if (strcmp (buf, #val) != 0)                     \
-    {                                  \
-      printf ("Error on line %d: %s != %s\n", __LINE__, buf, #val);    \
-      result = 1;                              \
-    }                                  \
-      if (sscanf (#val, "%La", &v.l) != 1 || !COMPARE_LDBL (u, v))     \
-    {                                  \
-      printf ("Error sscanf on line %d: %La != %La\n", __LINE__,       \
-          u.l, v.l);                           \
-      result = 1;                              \
-    }                                  \
-      /* printf ("%s %La %016Lx %016Lx\n", #val, u.l, u.x[0], u.x[1]); */  \
+        u.l = (val);                             \
+        snprintf (buf, sizeof buf, "%LaL", u.l);                 \
+        if (strcmp (buf, #val) != 0)                     \
+        {                                  \
+            printf ("Error on line %d: %s != %s\n", __LINE__, buf, #val);    \
+            result = 1;                              \
+        }                                  \
+        if (sscanf (#val, "%La", &v.l) != 1 || !COMPARE_LDBL (u, v))     \
+        {                                  \
+            printf ("Error sscanf on line %d: %La != %La\n", __LINE__,       \
+                    u.l, v.l);                           \
+            result = 1;                              \
+        }                                  \
+        /* printf ("%s %La %016Lx %016Lx\n", #val, u.l, u.x[0], u.x[1]); */  \
     }                                      \
-  while (0)
+    while (0)
 
 #if LDBL_MANT_DIG >= 106
 # if LDBL_MANT_DIG == 106

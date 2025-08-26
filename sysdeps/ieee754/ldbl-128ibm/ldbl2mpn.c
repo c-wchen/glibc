@@ -109,7 +109,7 @@ mp_size_t __mpn_extract_long_double(mp_ptr res_ptr, mp_size_t size,
 #endif
     /* The format does not fill the last limb.  There are some zeros.  */
 #define NUM_LEADING_ZEROS (BITS_PER_MP_LIMB \
-               - (LDBL_MANT_DIG - ((N - 1) * BITS_PER_MP_LIMB)))
+                           - (LDBL_MANT_DIG - ((N - 1) * BITS_PER_MP_LIMB)))
 
     if (u.d[0].ieee.exponent == 0) {
         /* A biased exponent of zero is a special case.

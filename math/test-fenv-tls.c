@@ -22,19 +22,19 @@
 #include <stdint.h>
 
 #define TEST_ONE_RM(RM)                     \
-  do                                \
+    do                                \
     {                               \
-      if (fesetround (RM) == 0)                 \
-    {                           \
-      rm = fegetround ();                   \
-      if (rm != RM)                     \
+        if (fesetround (RM) == 0)                 \
         {                           \
-          printf ("expected " #RM ", got %d\n", rm);    \
-          ret = 1;                      \
+            rm = fegetround ();                   \
+            if (rm != RM)                     \
+            {                           \
+                printf ("expected " #RM ", got %d\n", rm);    \
+                ret = 1;                      \
+            }                           \
         }                           \
-    }                           \
     }                               \
-  while (0)
+    while (0)
 
 static void *test_round(void *arg)
 {
@@ -58,22 +58,22 @@ static void *test_round(void *arg)
 }
 
 #define TEST_ONE_RAISE(EX)              \
-  do                            \
+    do                            \
     {                           \
-      if (feraiseexcept (EX) == 0)          \
-    if (fetestexcept (EX) != EX)            \
-      {                     \
-        printf (#EX " not raised\n");       \
-        ret = 1;                    \
-      }                     \
-      if (feclearexcept (FE_ALL_EXCEPT) == 0)       \
-    if (fetestexcept (FE_ALL_EXCEPT) != 0)      \
-      {                     \
-        printf ("exceptions not all cleared\n");    \
-        ret = 1;                    \
-      }                     \
+        if (feraiseexcept (EX) == 0)          \
+            if (fetestexcept (EX) != EX)            \
+            {                     \
+                printf (#EX " not raised\n");       \
+                ret = 1;                    \
+            }                     \
+        if (feclearexcept (FE_ALL_EXCEPT) == 0)       \
+            if (fetestexcept (FE_ALL_EXCEPT) != 0)      \
+            {                     \
+                printf ("exceptions not all cleared\n");    \
+                ret = 1;                    \
+            }                     \
     }                           \
-  while (0)
+    while (0)
 
 static void *test_raise(void *arg)
 {
@@ -99,22 +99,22 @@ static void *test_raise(void *arg)
 }
 
 #define TEST_ONE_ENABLE(EX)             \
-  do                            \
+    do                            \
     {                           \
-      if (feenableexcept (EX) != -1)            \
-    if (fegetexcept () != EX)           \
-      {                     \
-        printf (#EX " not enabled\n");      \
-        ret = 1;                    \
-      }                     \
-      if (fedisableexcept (EX) != -1)           \
-    if (fegetexcept () != 0)            \
-      {                     \
-        printf ("exceptions not all disabled\n");   \
-        ret = 1;                    \
-      }                     \
+        if (feenableexcept (EX) != -1)            \
+            if (fegetexcept () != EX)           \
+            {                     \
+                printf (#EX " not enabled\n");      \
+                ret = 1;                    \
+            }                     \
+        if (fedisableexcept (EX) != -1)           \
+            if (fegetexcept () != 0)            \
+            {                     \
+                printf ("exceptions not all disabled\n");   \
+                ret = 1;                    \
+            }                     \
     }                           \
-  while (0)
+    while (0)
 
 static void *test_enable(void *arg)
 {

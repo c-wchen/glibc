@@ -28,14 +28,14 @@
    format as _Float128.  */
 #if __HAVE_FLOAT64X && !__HAVE_FLOAT64X_LONG_DOUBLE
 # define libm_alias_float128_other_r(from, to, r)   \
-  weak_alias (from ## f128 ## r, to ## f64x ## r)
+    weak_alias (from ## f128 ## r, to ## f64x ## r)
 #else
 # define libm_alias_float128_other_r(from, to, r)
 #endif
 
 /* Likewise, but without the R suffix.  */
 #define libm_alias_float128_other(from, to) \
-  libm_alias_float128_other_r (from, to, )
+    libm_alias_float128_other_r (from, to, )
 
 /* Define aliases for a _Float128 libm function that has internal name
    FROM ## f128 ## R and public names TO ## suffix ## R for each
@@ -46,8 +46,8 @@
    per format, not per type) or for obsolescent functions not provided
    for _FloatN types.  */
 #define libm_alias_float128_r(from, to, r)      \
-  weak_alias (from ## f128 ## r, to ## f128 ## r);  \
-  libm_alias_float128_other_r (from, to, r)
+    weak_alias (from ## f128 ## r, to ## f128 ## r);  \
+    libm_alias_float128_other_r (from, to, r)
 
 /* Likewise, but without the R suffix.  */
 #define libm_alias_float128(from, to) libm_alias_float128_r (from, to, )

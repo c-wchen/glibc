@@ -73,7 +73,7 @@
 
 #ifndef MINIMUM_X86_ISA_LEVEL
 # define MINIMUM_X86_ISA_LEVEL                                                 \
-  (__X86_ISA_V1 + __X86_ISA_V2 + __X86_ISA_V3 + __X86_ISA_V4)
+    (__X86_ISA_V1 + __X86_ISA_V2 + __X86_ISA_V3 + __X86_ISA_V4)
 #endif
 
 /* Depending on the minimum ISA level, a feature check result can be a
@@ -145,15 +145,15 @@
  */
 
 #define X86_ISA_CPU_FEATURE_USABLE_P(ptr, name)                        \
-  (((name##_X86_ISA_LEVEL) <= MINIMUM_X86_ISA_LEVEL)                   \
-   || CPU_FEATURE_USABLE_P (ptr, name))
+    (((name##_X86_ISA_LEVEL) <= MINIMUM_X86_ISA_LEVEL)                   \
+     || CPU_FEATURE_USABLE_P (ptr, name))
 
 #define X86_ISA_CPU_FEATURES_ARCH_P(ptr, name, not)                    \
-  (((name##_X86_ISA_LEVEL) <= MINIMUM_X86_ISA_LEVEL)                   \
-   || not CPU_FEATURES_ARCH_P (ptr, name))
+    (((name##_X86_ISA_LEVEL) <= MINIMUM_X86_ISA_LEVEL)                   \
+     || not CPU_FEATURES_ARCH_P (ptr, name))
 
 #define ISA_SHOULD_BUILD(isa_build_level)                              \
-  (MINIMUM_X86_ISA_LEVEL <= (isa_build_level) && IS_IN (libc))         \
-   || defined ISA_DEFAULT_IMPL
+    (MINIMUM_X86_ISA_LEVEL <= (isa_build_level) && IS_IN (libc))         \
+    || defined ISA_DEFAULT_IMPL
 
 #endif

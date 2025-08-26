@@ -40,37 +40,37 @@
 #define ONE_DIRECTION       0
 #define FROM_DIRECTION      (dir == from_unicode)
 #define PREPARE_LOOP \
-  enum direction dir = ((struct unicode_data *) step->__data)->dir;       \
-  int swap;                                   \
-  if (FROM_DIRECTION)                                 \
+    enum direction dir = ((struct unicode_data *) step->__data)->dir;       \
+    int swap;                                   \
+    if (FROM_DIRECTION)                                 \
     {                                         \
-      if (data->__invocation_counter == 0)                    \
-    {                                     \
-      /* We have to find out which byte order the file is encoded in.  */ \
-      if (inptr + 2 > inend)                          \
-        return (inptr == inend                        \
-            ? __GCONV_EMPTY_INPUT : __GCONV_INCOMPLETE_INPUT);        \
-                                          \
-      if (get16 (inptr) == BOM)                       \
-        /* Simply ignore the BOM character.  */               \
-        *inptrp = inptr += 2;                         \
-      else if (get16 (inptr) == BOM_OE)                   \
+        if (data->__invocation_counter == 0)                    \
         {                                     \
-          data->__flags |= __GCONV_SWAP;                      \
-          *inptrp = inptr += 2;                       \
+            /* We have to find out which byte order the file is encoded in.  */ \
+            if (inptr + 2 > inend)                          \
+                return (inptr == inend                        \
+                        ? __GCONV_EMPTY_INPUT : __GCONV_INCOMPLETE_INPUT);        \
+            \
+            if (get16 (inptr) == BOM)                       \
+                /* Simply ignore the BOM character.  */               \
+                *inptrp = inptr += 2;                         \
+            else if (get16 (inptr) == BOM_OE)                   \
+            {                                     \
+                data->__flags |= __GCONV_SWAP;                      \
+                *inptrp = inptr += 2;                       \
+            }                                     \
         }                                     \
-    }                                     \
     }                                         \
-  else if (!data->__internal_use && data->__invocation_counter == 0)          \
+    else if (!data->__internal_use && data->__invocation_counter == 0)          \
     {                                         \
-      /* Emit the Byte Order Mark.  */                        \
-      if (__glibc_unlikely (outbuf + 2 > outend))                 \
-    return __GCONV_FULL_OUTPUT;                       \
-                                          \
-      put16 (outbuf, BOM);                            \
-      outbuf += 2;                                \
+        /* Emit the Byte Order Mark.  */                        \
+        if (__glibc_unlikely (outbuf + 2 > outend))                 \
+            return __GCONV_FULL_OUTPUT;                       \
+        \
+        put16 (outbuf, BOM);                            \
+        outbuf += 2;                                \
     }                                         \
-  swap = data->__flags & __GCONV_SWAP;
+    swap = data->__flags & __GCONV_SWAP;
 #define EXTRA_LOOP_ARGS     , swap
 
 
@@ -140,37 +140,37 @@ void gconv_end(struct __gconv_step *data)
 #define MIN_NEEDED_OUTPUT   MIN_NEEDED_FROM
 #define LOOPFCT         TO_LOOP
 #define BODY \
-  {                                       \
-    uint32_t c = get32 (inptr);                           \
-                                          \
-    if (__glibc_unlikely (c >= 0x10000))                      \
-      {                                       \
-    UNICODE_TAG_HANDLER (c, 4);                       \
-    STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
-      }                                       \
-    else if (__glibc_unlikely (c >= 0xd800 && c < 0xe000))            \
-      {                                       \
-    /* Surrogate characters in UCS-4 input are not valid.             \
-       We must catch this, because the UCS-2 output might be          \
-       interpreted as UTF-16 by other programs.  If we let            \
-       surrogates pass through, attackers could make a security       \
-       hole exploit by synthesizing any desired plane 1-16            \
-       character.  */                             \
-    result = __gconv_mark_illegal_input (step_data);              \
-    if (! ignore_errors_p ())                         \
-      break;                                  \
-    inptr += 4;                               \
-    ++*irreversible;                              \
-    continue;                                 \
-      }                                       \
-    else                                      \
-      {                                       \
-    put16 (outptr, c);                            \
-    outptr += 2;                                  \
-      }                                       \
-                                          \
-    inptr += 4;                                   \
-  }
+    {                                       \
+        uint32_t c = get32 (inptr);                           \
+        \
+        if (__glibc_unlikely (c >= 0x10000))                      \
+        {                                       \
+            UNICODE_TAG_HANDLER (c, 4);                       \
+            STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
+        }                                       \
+        else if (__glibc_unlikely (c >= 0xd800 && c < 0xe000))            \
+        {                                       \
+            /* Surrogate characters in UCS-4 input are not valid.             \
+               We must catch this, because the UCS-2 output might be          \
+               interpreted as UTF-16 by other programs.  If we let            \
+               surrogates pass through, attackers could make a security       \
+               hole exploit by synthesizing any desired plane 1-16            \
+               character.  */                             \
+            result = __gconv_mark_illegal_input (step_data);              \
+            if (! ignore_errors_p ())                         \
+                break;                                  \
+            inptr += 4;                               \
+            ++*irreversible;                              \
+            continue;                                 \
+        }                                       \
+        else                                      \
+        {                                       \
+            put16 (outptr, c);                            \
+            outptr += 2;                                  \
+        }                                       \
+        \
+        inptr += 4;                                   \
+    }
 #define LOOP_NEED_FLAGS
 #define EXTRA_LOOP_DECLS \
     , int swap
@@ -182,24 +182,24 @@ void gconv_end(struct __gconv_step *data)
 #define MIN_NEEDED_OUTPUT   MIN_NEEDED_TO
 #define LOOPFCT         FROM_LOOP
 #define BODY \
-  {                                       \
-    uint16_t u1 = get16 (inptr);                          \
-                                          \
-    if (swap)                                     \
-      u1 = bswap_16 (u1);                             \
-                                          \
-    if (__glibc_unlikely (u1 >= 0xd800 && u1 < 0xe000))               \
-      {                                       \
-    /* Surrogate characters in UCS-2 input are not valid.  Reject         \
-       them.  (Catching this here is not security relevant.)  */          \
-    STANDARD_FROM_LOOP_ERR_HANDLER (2);                   \
-      }                                       \
-                                          \
-    put32 (outptr, u1);                               \
-                                          \
-    inptr += 2;                                   \
-    outptr += 4;                                  \
-  }
+    {                                       \
+        uint16_t u1 = get16 (inptr);                          \
+        \
+        if (swap)                                     \
+            u1 = bswap_16 (u1);                             \
+        \
+        if (__glibc_unlikely (u1 >= 0xd800 && u1 < 0xe000))               \
+        {                                       \
+            /* Surrogate characters in UCS-2 input are not valid.  Reject         \
+               them.  (Catching this here is not security relevant.)  */          \
+            STANDARD_FROM_LOOP_ERR_HANDLER (2);                   \
+        }                                       \
+        \
+        put32 (outptr, u1);                               \
+        \
+        inptr += 2;                                   \
+        outptr += 4;                                  \
+    }
 #define LOOP_NEED_FLAGS
 #define EXTRA_LOOP_DECLS \
     , int swap

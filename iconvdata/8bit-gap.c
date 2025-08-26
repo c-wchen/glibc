@@ -48,32 +48,32 @@ struct gap {
 #define MIN_NEEDED_OUTPUT   MIN_NEEDED_TO
 #define LOOPFCT         FROM_LOOP
 #define BODY \
-  {                                       \
-    uint32_t ch = to_ucs4[*inptr];                        \
-                                          \
-    if (HAS_HOLES && __builtin_expect (ch == L'\0', 0) && NONNUL (*inptr))    \
-      {                                       \
-    /* This is an illegal character.  */                      \
-    STANDARD_FROM_LOOP_ERR_HANDLER (1);                   \
-      }                                       \
-    else                                      \
-      {                                       \
-    put32 (outptr, ch);                           \
-    outptr += 4;                                  \
-      }                                       \
-                                          \
-    ++inptr;                                      \
-  }
+    {                                       \
+        uint32_t ch = to_ucs4[*inptr];                        \
+        \
+        if (HAS_HOLES && __builtin_expect (ch == L'\0', 0) && NONNUL (*inptr))    \
+        {                                       \
+            /* This is an illegal character.  */                      \
+            STANDARD_FROM_LOOP_ERR_HANDLER (1);                   \
+        }                                       \
+        else                                      \
+        {                                       \
+            put32 (outptr, ch);                           \
+            outptr += 4;                                  \
+        }                                       \
+        \
+        ++inptr;                                      \
+    }
 #define LOOP_NEED_FLAGS
 #define ONEBYTE_BODY \
-  {                                       \
-    uint32_t ch = to_ucs4[c];                             \
-                                          \
-    if (HAS_HOLES && __builtin_expect (ch == L'\0', 0) && NONNUL (c))         \
-      return WEOF;                                \
-    else                                      \
-      return ch;                                  \
-  }
+    {                                       \
+        uint32_t ch = to_ucs4[c];                             \
+        \
+        if (HAS_HOLES && __builtin_expect (ch == L'\0', 0) && NONNUL (c))         \
+            return WEOF;                                \
+        else                                      \
+            return ch;                                  \
+    }
 #include <iconv/loop.c>
 
 
@@ -82,31 +82,31 @@ struct gap {
 #define MIN_NEEDED_OUTPUT   MIN_NEEDED_FROM
 #define LOOPFCT         TO_LOOP
 #define BODY \
-  {                                       \
-    const struct gap *rp = from_idx;                          \
-    uint32_t ch = get32 (inptr);                          \
-    unsigned char res;                                \
-                                          \
-    if (__glibc_unlikely (ch >= 0xffff))                      \
-      {                                       \
-    UNICODE_TAG_HANDLER (ch, 4);                          \
-    rp = NULL;                                \
-      }                                       \
-    else                                      \
-      while (ch > rp->end)                            \
-    ++rp;                                     \
-    if (__builtin_expect (rp == NULL, 0)                      \
-    || __builtin_expect (ch < rp->start, 0)                   \
-    || (res = from_ucs4[ch + rp->idx],                    \
-        __builtin_expect (res, '\1') == '\0' && ch != 0))             \
-      {                                       \
-    /* This is an illegal character.  */                      \
-    STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
-      }                                       \
-                                          \
-    *outptr++ = res;                                  \
-    inptr += 4;                                   \
-  }
+    {                                       \
+        const struct gap *rp = from_idx;                          \
+        uint32_t ch = get32 (inptr);                          \
+        unsigned char res;                                \
+        \
+        if (__glibc_unlikely (ch >= 0xffff))                      \
+        {                                       \
+            UNICODE_TAG_HANDLER (ch, 4);                          \
+            rp = NULL;                                \
+        }                                       \
+        else                                      \
+            while (ch > rp->end)                            \
+                ++rp;                                     \
+        if (__builtin_expect (rp == NULL, 0)                      \
+            || __builtin_expect (ch < rp->start, 0)                   \
+            || (res = from_ucs4[ch + rp->idx],                    \
+                __builtin_expect (res, '\1') == '\0' && ch != 0))             \
+        {                                       \
+            /* This is an illegal character.  */                      \
+            STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
+        }                                       \
+        \
+        *outptr++ = res;                                  \
+        inptr += 4;                                   \
+    }
 #define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 

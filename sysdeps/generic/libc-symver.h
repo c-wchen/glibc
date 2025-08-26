@@ -41,10 +41,10 @@
 
 #ifdef __ASSEMBLER__
 # define symbol_version_reference(real, name, version) \
-     .symver real, name##@##version
+    .symver real, name##@##version
 #else
 # define symbol_version_reference(real, name, version) \
-  __asm__ (".symver " #real "," #name "@" #version)
+    __asm__ (".symver " #real "," #name "@" #version)
 #endif  /* !__ASSEMBLER__ */
 
 #if SYMVER_NEEDS_ALIAS
@@ -53,34 +53,34 @@
    attached.  */
 # define __symbol_version_unique_concat(x, y) __SI ## x ## _ ## y
 # define _symbol_version_unique_concat(x, y) \
-  __symbol_version_unique_concat (x, y)
+    __symbol_version_unique_concat (x, y)
 # define _symbol_version_unique_alias(name) \
-  _symbol_version_unique_concat (name, __COUNTER__)
+    _symbol_version_unique_concat (name, __COUNTER__)
 # ifdef __ASSEMBLER__
 #  define _set_symbol_version_2(real, alias, name_version) \
-  .globl alias ASM_LINE_SEP                                \
-  .equiv alias, real ASM_LINE_SEP                          \
-  .symver alias, name_version
+    .globl alias ASM_LINE_SEP                                \
+    .equiv alias, real ASM_LINE_SEP                          \
+    .symver alias, name_version
 # else
 #  define _set_symbol_version_2(real, alias, name_version) \
-  __asm__ (".globl " #alias "\n\t"                         \
-           ".equiv " #alias ", " #real "\n\t"              \
-           ".symver " #alias "," name_version)
+    __asm__ (".globl " #alias "\n\t"                         \
+             ".equiv " #alias ", " #real "\n\t"              \
+             ".symver " #alias "," name_version)
 # endif
 # define _set_symbol_version_1(real, alias, name_version) \
-  _set_symbol_version_2 (real, alias, name_version)
+    _set_symbol_version_2 (real, alias, name_version)
 /* REAL must be globally unique, so that the counter also produces
    globally unique symbols.  */
 # define _set_symbol_version(real, name_version)                   \
-  _set_symbol_version_1 (real, _symbol_version_unique_alias (real), \
-                               name_version)
+    _set_symbol_version_1 (real, _symbol_version_unique_alias (real), \
+                           name_version)
 # else  /* !SYMVER_NEEDS_ALIAS */
 # ifdef __ASSEMBLER__
 #  define _set_symbol_version(real, name_version) \
-  .symver real, name_version
+    .symver real, name_version
 # else
 #  define _set_symbol_version(real, name_version) \
-  __asm__ (".symver " #real "," name_version)
+    __asm__ (".symver " #real "," name_version)
 # endif
 #endif  /* !SYMVER_NEEDS_ALIAS */
 

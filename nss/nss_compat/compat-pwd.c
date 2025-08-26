@@ -189,7 +189,8 @@ static void copy_pwd_changes(struct passwd *dest, struct passwd *src,
     }
 }
 
-static enum nss_status internal_setpwent(ent_t *ent, int stayopen, int needent) {
+static enum nss_status internal_setpwent(ent_t *ent, int stayopen, int needent)
+{
     enum nss_status status = NSS_STATUS_SUCCESS;
 
     ent->first = ent->netgroup = false;
@@ -197,37 +198,31 @@ static enum nss_status internal_setpwent(ent_t *ent, int stayopen, int needent) 
     ent->setent_status = NSS_STATUS_SUCCESS;
 
     /* If something was left over free it.  */
-    if (ent->netgroup)
-    {
+    if (ent->netgroup) {
         __internal_endnetgrent(&ent->netgrdata);
     }
 
-    if (ent->blacklist.data != NULL)
-    {
+    if (ent->blacklist.data != NULL) {
         ent->blacklist.current = 1;
         ent->blacklist.data[0] = '|';
         ent->blacklist.data[1] = '\0';
-    } else
-    {
+    } else {
         ent->blacklist.current = 0;
     }
 
-    if (ent->stream == NULL)
-    {
+    if (ent->stream == NULL) {
         ent->stream = __nss_files_fopen("/etc/passwd");
 
         if (ent->stream == NULL) {
             status = errno == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
         }
-    } else
-    {
+    } else {
         rewind(ent->stream);
     }
 
     give_pwd_free(&ent->pwd);
 
-    if (needent && status == NSS_STATUS_SUCCESS && setpwent_impl)
-    {
+    if (needent && status == NSS_STATUS_SUCCESS && setpwent_impl) {
         ent->setent_status = setpwent_impl(stayopen);
     }
 
@@ -235,13 +230,13 @@ static enum nss_status internal_setpwent(ent_t *ent, int stayopen, int needent) 
 }
 
 
-enum nss_status _nss_compat_setpwent(int stayopen) {
+enum nss_status _nss_compat_setpwent(int stayopen)
+{
     enum nss_status result;
 
     __libc_lock_lock(lock);
 
-    if (ni == NULL)
-    {
+    if (ni == NULL) {
         init_nss_interface();
     }
 
@@ -253,27 +248,24 @@ enum nss_status _nss_compat_setpwent(int stayopen) {
 }
 
 
-static enum nss_status __attribute_warn_unused_result__ internal_endpwent(ent_t *ent) {
-    if (ent->stream != NULL)
-    {
+static enum nss_status __attribute_warn_unused_result__ internal_endpwent(ent_t *ent)
+{
+    if (ent->stream != NULL) {
         fclose(ent->stream);
         ent->stream = NULL;
     }
 
-    if (ent->netgroup)
-    {
+    if (ent->netgroup) {
         __internal_endnetgrent(&ent->netgrdata);
     }
 
     ent->first = ent->netgroup = false;
 
-    if (ent->blacklist.data != NULL)
-    {
+    if (ent->blacklist.data != NULL) {
         ent->blacklist.current = 1;
         ent->blacklist.data[0] = '|';
         ent->blacklist.data[1] = '\0';
-    } else
-    {
+    } else {
         ent->blacklist.current = 0;
     }
 
@@ -290,13 +282,13 @@ static void internal_endpwent_noerror(ent_t *ent)
     __set_errno(saved_errno);
 }
 
-enum nss_status _nss_compat_endpwent(void) {
+enum nss_status _nss_compat_endpwent(void)
+{
     enum nss_status result;
 
     __libc_lock_lock(lock);
 
-    if (endpwent_impl)
-    {
+    if (endpwent_impl) {
         endpwent_impl();
     }
 
@@ -310,27 +302,25 @@ enum nss_status _nss_compat_endpwent(void) {
 
 static enum nss_status getpwent_next_nss_netgr(const char *name, struct passwd *result, ent_t *ent,
         char *group, char *buffer, size_t buflen,
-        int *errnop) {
+        int *errnop)
+{
     char *curdomain = NULL, *host, *user, *domain, *p2;
     int status;
     size_t p2len;
 
     /* Leave function if NSS module does not support getpwnam_r,
        we need this function here.  */
-    if (!getpwnam_r_impl)
-    {
+    if (!getpwnam_r_impl) {
         return NSS_STATUS_UNAVAIL;
     }
 
-    if (ent->first)
-    {
+    if (ent->first) {
         memset(&ent->netgrdata, 0, sizeof(struct __netgrent));
         __internal_setnetgrent(group, &ent->netgrdata);
         ent->first = false;
     }
 
-    while (1)
-    {
+    while (1) {
         status = __internal_getnetgrent_r(&host, &user, &domain,
                                           &ent->netgrdata, buffer, buflen,
                                           errnop);
@@ -391,39 +381,35 @@ static enum nss_status getpwent_next_nss_netgr(const char *name, struct passwd *
 
 /* get the next user from NSS  (+ entry) */
 static enum nss_status getpwent_next_nss(struct passwd *result, ent_t *ent, char *buffer,
-        size_t buflen, int *errnop) {
+        size_t buflen, int *errnop)
+{
     enum nss_status status;
     char *p2;
     size_t p2len;
 
     /* Return if NSS module does not support getpwent_r.  */
-    if (!getpwent_r_impl)
-    {
+    if (!getpwent_r_impl) {
         return NSS_STATUS_UNAVAIL;
     }
 
     /* If the setpwent call failed, say so.  */
-    if (ent->setent_status != NSS_STATUS_SUCCESS)
-    {
+    if (ent->setent_status != NSS_STATUS_SUCCESS) {
         return ent->setent_status;
     }
 
     p2len = pwd_need_buflen(&ent->pwd);
-    if (p2len > buflen)
-    {
+    if (p2len > buflen) {
         *errnop = ERANGE;
         return NSS_STATUS_TRYAGAIN;
     }
     p2 = buffer + (buflen - p2len);
     buflen -= p2len;
 
-    if (ent->first)
-    {
+    if (ent->first) {
         ent->first = false;
     }
 
-    do
-    {
+    do {
         if ((status = getpwent_r_impl(result, buffer, buflen, errnop))
             != NSS_STATUS_SUCCESS) {
             return status;
@@ -437,9 +423,9 @@ static enum nss_status getpwent_next_nss(struct passwd *result, ent_t *ent, char
 
 /* This function handle the +user entries in /etc/passwd */
 static enum nss_status getpwnam_plususer(const char *name, struct passwd *result, ent_t *ent,
-        char *buffer, size_t buflen, int *errnop) {
-    if (!getpwnam_r_impl)
-    {
+        char *buffer, size_t buflen, int *errnop)
+{
+    if (!getpwnam_r_impl) {
         return NSS_STATUS_UNAVAIL;
     }
 
@@ -449,8 +435,7 @@ static enum nss_status getpwnam_plususer(const char *name, struct passwd *result
     copy_pwd_changes(&pwd, result, NULL, 0);
 
     size_t plen = pwd_need_buflen(&pwd);
-    if (plen > buflen)
-    {
+    if (plen > buflen) {
         *errnop = ERANGE;
         return NSS_STATUS_TRYAGAIN;
     }
@@ -459,13 +444,11 @@ static enum nss_status getpwnam_plususer(const char *name, struct passwd *result
 
     enum nss_status status = getpwnam_r_impl(name, result, buffer, buflen,
                              errnop);
-    if (status != NSS_STATUS_SUCCESS)
-    {
+    if (status != NSS_STATUS_SUCCESS) {
         return status;
     }
 
-    if (in_blacklist(result->pw_name, strlen(result->pw_name), ent))
-    {
+    if (in_blacklist(result->pw_name, strlen(result->pw_name), ent)) {
         return NSS_STATUS_NOTFOUND;
     }
 
@@ -476,10 +459,10 @@ static enum nss_status getpwnam_plususer(const char *name, struct passwd *result
 }
 
 static enum nss_status getpwent_next_file(struct passwd *result, ent_t *ent,
-        char *buffer, size_t buflen, int *errnop) {
+        char *buffer, size_t buflen, int *errnop)
+{
     struct parser_data *data = (void *) buffer;
-    while (1)
-    {
+    while (1) {
         fpos_t pos;
         char *p;
         int parse_res;
@@ -620,9 +603,9 @@ erange_reset:
 
 
 static enum nss_status internal_getpwent_r(struct passwd *pw, ent_t *ent, char *buffer,
-        size_t buflen, int *errnop) {
-    if (ent->netgroup)
-    {
+        size_t buflen, int *errnop)
+{
+    if (ent->netgroup) {
         enum nss_status status;
 
         /* We are searching members in a netgroup */
@@ -634,35 +617,31 @@ static enum nss_status internal_getpwent_r(struct passwd *pw, ent_t *ent, char *
         } else {
             return status;
         }
-    } else if (ent->files)
-    {
+    } else if (ent->files) {
         return getpwent_next_file(pw, ent, buffer, buflen, errnop);
-    } else
-    {
+    } else {
         return getpwent_next_nss(pw, ent, buffer, buflen, errnop);
     }
 
 }
 
 enum nss_status _nss_compat_getpwent_r(struct passwd *pwd, char *buffer, size_t buflen,
-                                       int *errnop) {
+                                       int *errnop)
+{
     enum nss_status result = NSS_STATUS_SUCCESS;
 
     __libc_lock_lock(lock);
 
     /* Be prepared that the setpwent function was not called before.  */
-    if (ni == NULL)
-    {
+    if (ni == NULL) {
         init_nss_interface();
     }
 
-    if (ext_ent.stream == NULL)
-    {
+    if (ext_ent.stream == NULL) {
         result = internal_setpwent(&ext_ent, 1, 1);
     }
 
-    if (result == NSS_STATUS_SUCCESS)
-    {
+    if (result == NSS_STATUS_SUCCESS) {
         result = internal_getpwent_r(pwd, &ext_ent, buffer, buflen, errnop);
     }
 
@@ -673,11 +652,11 @@ enum nss_status _nss_compat_getpwent_r(struct passwd *pwd, char *buffer, size_t 
 
 /* Searches in /etc/passwd and the NIS/NIS+ map for a special user */
 static enum nss_status internal_getpwnam_r(const char *name, struct passwd *result, ent_t *ent,
-        char *buffer, size_t buflen, int *errnop) {
+        char *buffer, size_t buflen, int *errnop)
+{
     struct parser_data *data = (void *) buffer;
 
-    while (1)
-    {
+    while (1) {
         fpos_t pos;
         char *p;
         int parse_res;
@@ -804,22 +783,21 @@ erange_reset:
 }
 
 enum nss_status _nss_compat_getpwnam_r(const char *name, struct passwd *pwd,
-                                       char *buffer, size_t buflen, int *errnop) {
+                                       char *buffer, size_t buflen, int *errnop)
+{
     enum nss_status result;
     ent_t ent = {
         false, false, true, NSS_STATUS_SUCCESS, NULL, { NULL, 0, 0 },
         { NULL, NULL, 0, 0, NULL, NULL, NULL }
     };
 
-    if (name[0] == '-' || name[0] == '+')
-    {
+    if (name[0] == '-' || name[0] == '+') {
         return NSS_STATUS_NOTFOUND;
     }
 
     __libc_lock_lock(lock);
 
-    if (ni == NULL)
-    {
+    if (ni == NULL) {
         init_nss_interface();
     }
 
@@ -827,8 +805,7 @@ enum nss_status _nss_compat_getpwnam_r(const char *name, struct passwd *pwd,
 
     result = internal_setpwent(&ent, 0, 0);
 
-    if (result == NSS_STATUS_SUCCESS)
-    {
+    if (result == NSS_STATUS_SUCCESS) {
         result = internal_getpwnam_r(name, pwd, &ent, buffer, buflen, errnop);
     }
 
@@ -839,13 +816,13 @@ enum nss_status _nss_compat_getpwnam_r(const char *name, struct passwd *pwd,
 
 /* This function handle the + entry in /etc/passwd for getpwuid */
 static enum nss_status getpwuid_plususer(uid_t uid, struct passwd *result, char *buffer,
-        size_t buflen, int *errnop) {
+        size_t buflen, int *errnop)
+{
     struct passwd pwd;
     char *p;
     size_t plen;
 
-    if (!getpwuid_r_impl)
-    {
+    if (!getpwuid_r_impl) {
         return NSS_STATUS_UNAVAIL;
     }
 
@@ -854,8 +831,7 @@ static enum nss_status getpwuid_plususer(uid_t uid, struct passwd *result, char 
     copy_pwd_changes(&pwd, result, NULL, 0);
 
     plen = pwd_need_buflen(&pwd);
-    if (plen > buflen)
-    {
+    if (plen > buflen) {
         *errnop = ERANGE;
         return NSS_STATUS_TRYAGAIN;
     }
@@ -863,14 +839,12 @@ static enum nss_status getpwuid_plususer(uid_t uid, struct passwd *result, char 
     buflen -= plen;
 
     if (getpwuid_r_impl(uid, result, buffer, buflen, errnop) ==
-        NSS_STATUS_SUCCESS)
-    {
+        NSS_STATUS_SUCCESS) {
         copy_pwd_changes(result, &pwd, p, plen);
         give_pwd_free(&pwd);
         /* We found the entry.  */
         return NSS_STATUS_SUCCESS;
-    } else
-    {
+    } else {
         /* Give buffer the old len back */
         buflen += plen;
         give_pwd_free(&pwd);
@@ -880,11 +854,11 @@ static enum nss_status getpwuid_plususer(uid_t uid, struct passwd *result, char 
 
 /* Searches in /etc/passwd and the NSS subsystem for a special user id */
 static enum nss_status internal_getpwuid_r(uid_t uid, struct passwd *result, ent_t *ent,
-        char *buffer, size_t buflen, int *errnop) {
+        char *buffer, size_t buflen, int *errnop)
+{
     struct parser_data *data = (void *) buffer;
 
-    while (1)
-    {
+    while (1) {
         fpos_t pos;
         char *p;
         int parse_res;
@@ -1049,7 +1023,8 @@ erange_reset:
 }
 
 enum nss_status _nss_compat_getpwuid_r(uid_t uid, struct passwd *pwd,
-                                       char *buffer, size_t buflen, int *errnop) {
+                                       char *buffer, size_t buflen, int *errnop)
+{
     enum nss_status result;
     ent_t ent = {
         false, false, true, NSS_STATUS_SUCCESS, NULL, { NULL, 0, 0 },
@@ -1058,8 +1033,7 @@ enum nss_status _nss_compat_getpwuid_r(uid_t uid, struct passwd *pwd,
 
     __libc_lock_lock(lock);
 
-    if (ni == NULL)
-    {
+    if (ni == NULL) {
         init_nss_interface();
     }
 
@@ -1067,8 +1041,7 @@ enum nss_status _nss_compat_getpwuid_r(uid_t uid, struct passwd *pwd,
 
     result = internal_setpwent(&ent, 0, 0);
 
-    if (result == NSS_STATUS_SUCCESS)
-    {
+    if (result == NSS_STATUS_SUCCESS) {
         result = internal_getpwuid_r(uid, pwd, &ent, buffer, buflen, errnop);
     }
 

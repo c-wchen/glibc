@@ -105,15 +105,15 @@ kern_return_t _S_msg_add_auth(mach_port_t me,
     _hurd_check_ids();
 
 #define MAKE(genaux,uidgid) ({                          \
-  new ## genaux ## uidgid ## s = 0;                     \
-  nnew ## genaux ## uidgid ## s = 0;                        \
-  make_list (&new ## genaux ## uidgid ## s,                 \
-         &nnew ## genaux ## uidgid ## s,                    \
-         _hurd_id.genaux.uidgid ## s,                   \
-         _hurd_id.genaux.n ## uidgid ## s,                  \
-         genaux ## uidgid ## s,                     \
-         n ## genaux ## uidgid ## s);                   \
-})
+        new ## genaux ## uidgid ## s = 0;                     \
+        nnew ## genaux ## uidgid ## s = 0;                        \
+        make_list (&new ## genaux ## uidgid ## s,                 \
+                   &nnew ## genaux ## uidgid ## s,                    \
+                   _hurd_id.genaux.uidgid ## s,                   \
+                   _hurd_id.genaux.n ## uidgid ## s,                  \
+                   genaux ## uidgid ## s,                     \
+                   n ## genaux ## uidgid ## s);                   \
+    })
 
     err = MAKE(gen, uid);
     if (!err) {
@@ -144,9 +144,9 @@ kern_return_t _S_msg_add_auth(mach_port_t me,
                                         &newauth));
 
 #define freeup(array, len) \
-  if (array) \
-    __vm_deallocate (mach_task_self (), (vm_address_t) array, \
-             len * sizeof (uid_t));
+    if (array) \
+        __vm_deallocate (mach_task_self (), (vm_address_t) array, \
+                         len * sizeof (uid_t));
 
     freeup(genuids, ngenuids);
     freeup(auxuids, nauxuids);

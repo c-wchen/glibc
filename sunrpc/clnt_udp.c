@@ -266,7 +266,8 @@ static enum clnt_stat clntudp_call( /* client handle */
     /* pointer to results */
     caddr_t resultsp,
     /* seconds to wait before giving up */
-    struct timeval utimeout) {
+    struct timeval utimeout)
+{
     struct cu_data *cu = (struct cu_data *) cl->cl_private;
     XDR *xdrs;
     int outlen = 0;
@@ -297,8 +298,7 @@ static enum clnt_stat clntudp_call( /* client handle */
     /* Choose the timeout value.  For non-sending usage (xargs == NULL),
        the total deadline does not matter, only cu->cu_wait is used
        below.  */
-    if (xargs != NULL)
-    {
+    if (xargs != NULL) {
         struct timeval tv;
         if (cu->cu_total.tv_usec == -1)
             /* Use supplied timeout.  */
@@ -316,15 +316,13 @@ static enum clnt_stat clntudp_call( /* client handle */
     }
 
     /* Guard against bad timeout specification.  */
-    if (!__is_timeval_valid_timeout(cu->cu_wait))
-    {
+    if (!__is_timeval_valid_timeout(cu->cu_wait)) {
         return (cu->cu_error.re_status = RPC_TIMEDOUT);
     }
 
 call_again:
     xdrs = &(cu->cu_outxdrs);
-    if (xargs == NULL)
-    {
+    if (xargs == NULL) {
         goto get_reply;
     }
     xdrs->x_op = XDR_ENCODE;
@@ -335,8 +333,7 @@ call_again:
     (*(uint32_t *)(cu->cu_outbuf))++;
     if ((!XDR_PUTLONG(xdrs, (long *) &proc)) ||
         (!AUTH_MARSHALL(cl->cl_auth, xdrs)) ||
-        (!(*xargs)(xdrs, argsp)))
-    {
+        (!(*xargs)(xdrs, argsp))) {
         return (cu->cu_error.re_status = RPC_CANTENCODEARGS);
     }
     outlen = (int) XDR_GETPOS(xdrs);
@@ -344,8 +341,7 @@ call_again:
 send_again:
     if (__sendto(cu->cu_sock, cu->cu_outbuf, outlen, 0,
                  (struct sockaddr *) & (cu->cu_raddr), cu->cu_rlen)
-        != outlen)
-    {
+        != outlen) {
         cu->cu_error.re_errno = errno;
         return (cu->cu_error.re_status = RPC_CANTSEND);
     }
@@ -364,8 +360,7 @@ get_reply:
 
     /* Per-response retry loop.  current_time must be up-to-date at the
        top of the loop.  */
-    for (;;)
-    {
+    for (;;) {
         int milliseconds;
         if (xargs != NULL) {
             if (__deadline_elapsed(current_time, total_deadline))
@@ -490,8 +485,7 @@ next_response:
     xdrmem_create(&reply_xdrs, cu->cu_inbuf, (u_int) inlen, XDR_DECODE);
     ok = xdr_replymsg(&reply_xdrs, &reply_msg);
     /* XDR_DESTROY(&reply_xdrs);  save a few cycles on noop destroy */
-    if (ok)
-    {
+    if (ok) {
         _seterr_reply(&reply_msg, &(cu->cu_error));
         if (cu->cu_error.re_status == RPC_SUCCESS) {
             if (!AUTH_VALIDATE(cl->cl_auth,
@@ -512,8 +506,7 @@ next_response:
             }
         }           /* end of unsuccessful completion */
     }               /* end of valid reply message */
-    else
-    {
+    else {
         cu->cu_error.re_status = RPC_CANTDECODERES;
     }
     return cu->cu_error.re_status;

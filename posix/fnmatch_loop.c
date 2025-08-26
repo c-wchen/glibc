@@ -699,7 +699,7 @@ normal_bracket:
                                             wextra = (CHAR *) &extra[idx + 4];
 
                                             if (/* Compare the length of the
-                                         sequence.  */
+                                     sequence.  */
                                                 c1 == wextra[0]
                                                 /* Compare the wide char sequence.  */
                                                 && (__wmemcmp(startp + 1,
@@ -711,7 +711,7 @@ normal_bracket:
                                             }
 # else
                                             if (/* Compare the length of the
-                                         sequence.  */
+                                     sequence.  */
                                                 c1 == extra[idx]
                                                 /* Compare the byte sequence.  */
                                                 && memcmp(startp + 1,

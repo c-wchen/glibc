@@ -48,17 +48,17 @@
 
 /* Declare leaf routine.  */
 #define LEAF(symbol)                \
-        .globl  symbol;         \
-        .align  2;          \
-        .type   symbol,@function;   \
-symbol:                     \
-        cfi_startproc;
+    .globl  symbol;         \
+    .align  2;          \
+    .type   symbol,@function;   \
+    symbol:                     \
+    cfi_startproc;
 
 /* Mark end of function.  */
 #undef END
 #define END(function)               \
-        cfi_endproc;            \
-        .size   function,.-function
+    cfi_endproc;            \
+    .size   function,.-function
 
 /* Stack alignment.  */
 #define ALMASK  ~15

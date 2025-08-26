@@ -141,14 +141,14 @@ _dl_start_user:\n\
    of the main executable's symbols, as for a COPY reloc.  */
 #ifndef RTLD_BOOTSTRAP
 # define elf_machine_type_class(type) \
-  ((((type) == R_CKCORE_JUMP_SLOT || (type) == R_CKCORE_TLS_DTPMOD32       \
-     || (type) == R_CKCORE_TLS_DTPOFF32 || (type) == R_CKCORE_TLS_TPOFF32) \
-    * ELF_RTYPE_CLASS_PLT)                         \
-   | (((type) == R_CKCORE_COPY) * ELF_RTYPE_CLASS_COPY))
+    ((((type) == R_CKCORE_JUMP_SLOT || (type) == R_CKCORE_TLS_DTPMOD32       \
+       || (type) == R_CKCORE_TLS_DTPOFF32 || (type) == R_CKCORE_TLS_TPOFF32) \
+      * ELF_RTYPE_CLASS_PLT)                         \
+     | (((type) == R_CKCORE_COPY) * ELF_RTYPE_CLASS_COPY))
 #else
 # define elf_machine_type_class(type) \
-  ((((type) == R_CKCORE_JUMP_SLOT     \
-   | (((type) == R_CKCORE_COPY) * ELF_RTYPE_CLASS_COPY))
+    ((((type) == R_CKCORE_JUMP_SLOT     \
+       | (((type) == R_CKCORE_COPY) * ELF_RTYPE_CLASS_COPY))
 #endif
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */

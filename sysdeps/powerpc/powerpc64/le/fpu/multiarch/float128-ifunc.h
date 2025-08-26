@@ -50,7 +50,7 @@
       the assumption all P9 features are available on such targets.  */
 #define _F128_IFUNC2(func, from, r) \
     libc_ifunc (func ## r, (hwcap2 & PPC_FEATURE2_HAS_IEEE128) \
-                                ? from ## _power9 ## r : from ## _power8 ## r)
+                ? from ## _power9 ## r : from ## _power8 ## r)
 
 /* _F128_IFUNC(func, r)
       Similar to above, except the exported symbol name trivially remaps from
@@ -65,7 +65,7 @@
 #define MAKE_IMPL_IFUNC2(func, pfx1, pfx2, r) \
     extern __typeof (pfx1 ## func ## f128 ## r) pfx2 ## func ## f128_power8 ## r; \
     extern __typeof (pfx1 ## func ## f128 ## r) pfx2 ## func ## f128_power9 ## r; \
-        _F128_IFUNC2 (__ ## func ## f128, pfx2 ## func ## f128, r);
+    _F128_IFUNC2 (__ ## func ## f128, pfx2 ## func ## f128, r);
 
 /* GEN_COMPAT_R_e(f)
      Generate a compatibility symbol for finite alias of ieee function.  */
@@ -101,7 +101,7 @@
 #define MAKE_IEEE_IFUNC_R(func, r) \
     extern __typeof (__ieee754_ ## func ## f128 ## r) __ieee754_ ## func ## f128_power8 ## r; \
     extern __typeof (__ieee754_ ## func ## f128 ## r) __ieee754_ ## func ## f128_power9 ## r; \
-        _F128_IFUNC2 (__ieee754_ ## func ## f128, __ieee754_ ## func ## f128, r);
+    _F128_IFUNC2 (__ieee754_ ## func ## f128, __ieee754_ ## func ## f128, r);
 
 /* MAKE_IFUNCP_WRAP_R(w, func, r)
       Export a function which the implementation wraps with prefix w to
@@ -139,8 +139,8 @@
 /* Ensure the wrapper functions get exposed via IFUNC, not the
    wrappee (e.g __w_log1pf128_power8 instead of __log1pf128_power8.  */
 #define DECL_ALIAS_w_log1p(x)           \
-  MAKE_IFUNCP_WRAP_R (w_, x, )          \
-  MAKE_IFUNCP_WRAP_R (w_, logp1, )
+    MAKE_IFUNCP_WRAP_R (w_, x, )          \
+    MAKE_IFUNCP_WRAP_R (w_, logp1, )
 #define DECL_ALIAS_w_scalbln(x) MAKE_IFUNCP_WRAP_R(w_,x,)
 
 /* These are declared in their respective jX objects.  */

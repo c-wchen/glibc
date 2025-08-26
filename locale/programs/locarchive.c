@@ -60,7 +60,7 @@ extern const char *output_prefix;
 
 static const char *locnames[] = {
 #define DEFINE_CATEGORY(category, category_name, items, a) \
-  [category] = category_name,
+    [category] = category_name,
 #include "categories.def"
 #undef  DEFINE_CATEGORY
 };

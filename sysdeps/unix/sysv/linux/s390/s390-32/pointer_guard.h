@@ -28,16 +28,16 @@
    pointer_guard.  */
 # ifdef __ASSEMBLER__
 #  define PTR_MANGLE(reg, tmpreg) \
-  ear     tmpreg,%a0;                   \
-  x       reg,STACK_GUARD(tmpreg)
+    ear     tmpreg,%a0;                   \
+    x       reg,STACK_GUARD(tmpreg)
 #  define PTR_MANGLE2(reg, tmpreg) \
-  x       reg,STACK_GUARD(tmpreg)
+    x       reg,STACK_GUARD(tmpreg)
 #  define PTR_DEMANGLE(reg, tmpreg) PTR_MANGLE (reg, tmpreg)
 # else
 #  include <stdint.h>
 #  include <tls.h>
 #  define PTR_MANGLE(var) \
-  (var) = (void *) ((uintptr_t) (var) ^ THREAD_GET_POINTER_GUARD ())
+    (var) = (void *) ((uintptr_t) (var) ^ THREAD_GET_POINTER_GUARD ())
 #  define PTR_DEMANGLE(var)     PTR_MANGLE (var)
 # endif
 #endif

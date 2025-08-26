@@ -50,7 +50,7 @@ mp_size_t __mpn_extract_double(mp_ptr res_ptr, mp_size_t size,
 #endif
     /* The format does not fill the last limb.  There are some zeros.  */
 #define NUM_LEADING_ZEROS (BITS_PER_MP_LIMB \
-               - (DBL_MANT_DIG - ((N - 1) * BITS_PER_MP_LIMB)))
+                           - (DBL_MANT_DIG - ((N - 1) * BITS_PER_MP_LIMB)))
 
     if (u.ieee.exponent == 0) {
         /* A biased exponent of zero is a special case.

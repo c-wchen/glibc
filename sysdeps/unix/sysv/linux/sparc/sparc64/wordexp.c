@@ -19,7 +19,7 @@
 
 /* For Linux/Alpha we have to make the wordexp symbols versioned.  */
 #define wordexp(words, pwordexp, flags) \
-  __new_wordexp (words, pwordexp, flags)
+    __new_wordexp (words, pwordexp, flags)
 
 #include <posix/wordexp.c>
 

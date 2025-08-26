@@ -490,28 +490,28 @@ typedef struct {
 #define RET2(T1, T2) 2, { T1, T2 }
 #define CALC(TYPE, FN) { TYPE, { .TYPE = FN } }
 #define FUNC(NAME, ARGS, RET, EXACT, COMPLEX_FN, EXACT_ARGS, CALC)  \
-  {                                 \
-    NAME, ARGS, RET, EXACT, COMPLEX_FN, EXACT_ARGS, CALC, 0, 0, NULL    \
-  }
+    {                                 \
+        NAME, ARGS, RET, EXACT, COMPLEX_FN, EXACT_ARGS, CALC, 0, 0, NULL    \
+    }
 
 #define FUNC_mpfr_f_f(NAME, MPFR_FUNC, EXACT)               \
-  FUNC (NAME, ARGS1 (type_fp), RET1 (type_fp), EXACT, false, false, \
-    CALC (mpfr_f_f, MPFR_FUNC))
+    FUNC (NAME, ARGS1 (type_fp), RET1 (type_fp), EXACT, false, false, \
+          CALC (mpfr_f_f, MPFR_FUNC))
 #define FUNC_mpfr_ff_f(NAME, MPFR_FUNC, EXACT)              \
-  FUNC (NAME, ARGS2 (type_fp, type_fp), RET1 (type_fp), EXACT, false,   \
-    false, CALC (mpfr_ff_f, MPFR_FUNC))
+    FUNC (NAME, ARGS2 (type_fp, type_fp), RET1 (type_fp), EXACT, false,   \
+          false, CALC (mpfr_ff_f, MPFR_FUNC))
 #define FUNC_mpfr_if_f(NAME, MPFR_FUNC, EXACT)              \
-  FUNC (NAME, ARGS2 (type_int, type_fp), RET1 (type_fp), EXACT, false,  \
-    false, CALC (mpfr_if_f, MPFR_FUNC))
+    FUNC (NAME, ARGS2 (type_int, type_fp), RET1 (type_fp), EXACT, false,  \
+          false, CALC (mpfr_if_f, MPFR_FUNC))
 #define FUNC_mpfr_fL_f(NAME, MPFR_FUNC, EXACT)              \
-  FUNC (NAME, ARGS2 (type_fp, type_long_long), RET1 (type_fp), EXACT,   \
-    false, false, CALC (mpfr_fi_f, MPFR_FUNC))
+    FUNC (NAME, ARGS2 (type_fp, type_long_long), RET1 (type_fp), EXACT,   \
+          false, false, CALC (mpfr_fi_f, MPFR_FUNC))
 #define FUNC_mpc_c_f(NAME, MPFR_FUNC, EXACT)                \
-  FUNC (NAME, ARGS2 (type_fp, type_fp), RET1 (type_fp), EXACT, true,    \
-    false, CALC (mpc_c_f, MPFR_FUNC))
+    FUNC (NAME, ARGS2 (type_fp, type_fp), RET1 (type_fp), EXACT, true,    \
+          false, CALC (mpc_c_f, MPFR_FUNC))
 #define FUNC_mpc_c_c(NAME, MPFR_FUNC, EXACT)                \
-  FUNC (NAME, ARGS2 (type_fp, type_fp), RET2 (type_fp, type_fp), EXACT, \
-    true, false, CALC (mpc_c_c, MPFR_FUNC))
+    FUNC (NAME, ARGS2 (type_fp, type_fp), RET2 (type_fp, type_fp), EXACT, \
+          true, false, CALC (mpc_c_c, MPFR_FUNC))
 
 /* List of functions handled by this program.  */
 static test_function test_functions[] = {

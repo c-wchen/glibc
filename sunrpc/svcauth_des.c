@@ -99,7 +99,8 @@ compat_symbol(libc, svcauthdes_stats, svcauthdes_stats, GLIBC_2_0);
 /*
  * Service side authenticator for AUTH_DES
  */
-enum auth_stat _svcauth_des(register struct svc_req *rqst, register struct rpc_msg *msg) {
+enum auth_stat _svcauth_des(register struct svc_req *rqst, register struct rpc_msg *msg)
+{
     register uint32_t *ixdr;
     des_block cryptbuf[2];
     register struct authdes_cred *cred;
@@ -112,19 +113,16 @@ enum auth_stat _svcauth_des(register struct svc_req *rqst, register struct rpc_m
     u_int window;
     struct rpc_timeval timestamp;
     uint32_t namelen;
-    struct area
-    {
+    struct area {
         struct authdes_cred area_cred;
         char area_netname[MAXNETNAMELEN + 1];
     }
     *area;
 
-    if (authdes_cache == NULL)
-    {
+    if (authdes_cache == NULL) {
         cache_init();
     }
-    if (authdes_cache == NULL) /* No free memory */
-    {
+    if (authdes_cache == NULL) { /* No free memory */
         return AUTH_FAILED;
     }
 
@@ -135,15 +133,13 @@ enum auth_stat _svcauth_des(register struct svc_req *rqst, register struct rpc_m
      * Get the credential
      */
     if (msg->rm_call.cb_cred.oa_length <= 0 ||
-        msg->rm_call.cb_cred.oa_length > MAX_AUTH_BYTES)
-    {
+        msg->rm_call.cb_cred.oa_length > MAX_AUTH_BYTES) {
         return AUTH_BADCRED;
     }
 
     ixdr = (uint32_t *) msg->rm_call.cb_cred.oa_base;
     cred->adc_namekind = IXDR_GET_ENUM(ixdr, enum authdes_namekind);
-    switch (cred->adc_namekind)
-    {
+    switch (cred->adc_namekind) {
         case ADN_FULLNAME:
             namelen = IXDR_GET_U_INT32(ixdr);
             if (namelen > MAXNETNAMELEN) {
@@ -168,8 +164,7 @@ enum auth_stat _svcauth_des(register struct svc_req *rqst, register struct rpc_m
      * Get the verifier
      */
     if (msg->rm_call.cb_verf.oa_length <= 0 ||
-        msg->rm_call.cb_verf.oa_length > MAX_AUTH_BYTES)
-    {
+        msg->rm_call.cb_verf.oa_length > MAX_AUTH_BYTES) {
         return AUTH_BADCRED;
     }
 
@@ -181,8 +176,7 @@ enum auth_stat _svcauth_des(register struct svc_req *rqst, register struct rpc_m
     /*
      * Get the conversation key
      */
-    if (cred->adc_namekind == ADN_FULLNAME)
-    {
+    if (cred->adc_namekind == ADN_FULLNAME) {
         netobj pkey;
         char pkey_data[1024];
 
@@ -198,8 +192,7 @@ enum auth_stat _svcauth_des(register struct svc_req *rqst, register struct rpc_m
             debug("decryptsessionkey");
             return AUTH_BADCRED;  /* key not found */
         }
-    } else
-    {
+    } else {
         /* ADN_NICKNAME */
         if (cred->adc_nickname >= AUTHDES_CACHESZ) {
             debug("bad nickname");
@@ -221,8 +214,7 @@ enum auth_stat _svcauth_des(register struct svc_req *rqst, register struct rpc_m
      * Decrypt the timestamp
      */
     cryptbuf[0] = verf.adv_xtimestamp;
-    if (cred->adc_namekind == ADN_FULLNAME)
-    {
+    if (cred->adc_namekind == ADN_FULLNAME) {
         cryptbuf[1].key.high = cred->adc_fullname.window;
         cryptbuf[1].key.low = verf.adv_winverf;
         ivec.key.high = ivec.key.low = 0;
@@ -233,8 +225,7 @@ enum auth_stat _svcauth_des(register struct svc_req *rqst, register struct rpc_m
         status = ecb_crypt((char *) sessionkey, (char *) cryptbuf,
                            sizeof(des_block), DES_DECRYPT | DES_HW);
 
-    if (DES_FAILED(status))
-    {
+    if (DES_FAILED(status)) {
         debug("decryption failure");
         return AUTH_FAILED;   /* system error */
     }
@@ -257,8 +248,7 @@ enum auth_stat _svcauth_des(register struct svc_req *rqst, register struct rpc_m
         int nick;
         u_int winverf;
 
-        if (cred->adc_namekind == ADN_FULLNAME)
-        {
+        if (cred->adc_namekind == ADN_FULLNAME) {
             short tmp_spot;
 
             window = IXDR_GET_U_INT32(ixdr);
@@ -275,21 +265,18 @@ enum auth_stat _svcauth_des(register struct svc_req *rqst, register struct rpc_m
             }
             sid = tmp_spot;
             nick = 0;
-        } else
-        {
+        } else {
             /* ADN_NICKNAME */
             window = authdes_cache[sid].window;
             nick = 1;
         }
 
-        if (timestamp.tv_usec >= USEC_PER_SEC)
-        {
+        if (timestamp.tv_usec >= USEC_PER_SEC) {
             debug("invalid usecs");
             /* cached out (bad key), or garbled verifier */
             return nick ? AUTH_REJECTEDVERF : AUTH_BADVERF;
         }
-        if (nick && BEFORE(&timestamp, &authdes_cache[sid].laststamp))
-        {
+        if (nick && BEFORE(&timestamp, &authdes_cache[sid].laststamp)) {
             debug("timestamp before last seen");
             return AUTH_REJECTEDVERF;   /* replay */
         }
@@ -299,8 +286,7 @@ enum auth_stat _svcauth_des(register struct svc_req *rqst, register struct rpc_m
             TIMESPEC_TO_TIMEVAL(&current, &now);
         }
         current.tv_sec -= window;   /* allow for expiration */
-        if (!BEFORE(&current, &timestamp))
-        {
+        if (!BEFORE(&current, &timestamp)) {
             debug("timestamp expired");
             /* replay, or garbled credential */
             return nick ? AUTH_REJECTEDVERF : AUTH_BADCRED;
@@ -324,8 +310,7 @@ enum auth_stat _svcauth_des(register struct svc_req *rqst, register struct rpc_m
      */
     status = ecb_crypt((char *) sessionkey, (char *) cryptbuf,
                        sizeof(des_block), DES_ENCRYPT | DES_HW);
-    if (DES_FAILED(status))
-    {
+    if (DES_FAILED(status)) {
         debug("encryption failure");
         return AUTH_FAILED;   /* system error */
     }
@@ -342,7 +327,7 @@ enum auth_stat _svcauth_des(register struct svc_req *rqst, register struct rpc_m
     rqst->rq_xprt->xp_verf.oa_flavor = AUTH_DES;
     rqst->rq_xprt->xp_verf.oa_base = msg->rm_call.cb_verf.oa_base;
     rqst->rq_xprt->xp_verf.oa_length =
-    (char *) ixdr - msg->rm_call.cb_verf.oa_base;
+        (char *) ixdr - msg->rm_call.cb_verf.oa_base;
 
     /*
      * We succeeded, commit the data to the cache now and
@@ -351,8 +336,7 @@ enum auth_stat _svcauth_des(register struct svc_req *rqst, register struct rpc_m
     entry = &authdes_cache[sid];
     entry->laststamp = timestamp;
     cache_ref(sid);
-    if (cred->adc_namekind == ADN_FULLNAME)
-    {
+    if (cred->adc_namekind == ADN_FULLNAME) {
         size_t full_len;
 
         cred->adc_fullname.window = window;
@@ -371,8 +355,7 @@ enum auth_stat _svcauth_des(register struct svc_req *rqst, register struct rpc_m
         entry->key = *sessionkey;
         entry->window = window;
         invalidate(entry->localcred);     /* mark any cached cred invalid */
-    } else
-    {
+    } else {
         /* ADN_NICKNAME */
         /*
          * nicknames are cooked into fullnames

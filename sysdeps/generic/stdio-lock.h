@@ -39,21 +39,21 @@ __libc_lock_define_recursive(typedef, _IO_lock_t)
 
 
 #define _IO_cleanup_region_start(_fct, _fp) \
-  __libc_cleanup_region_start (((_fp)->_flags & _IO_USER_LOCK) == 0, _fct, _fp)
+    __libc_cleanup_region_start (((_fp)->_flags & _IO_USER_LOCK) == 0, _fct, _fp)
 #define _IO_cleanup_region_start_noarg(_fct) \
-  __libc_cleanup_region_start (1, _fct, NULL)
+    __libc_cleanup_region_start (1, _fct, NULL)
 #define _IO_cleanup_region_end(_doit) \
-  __libc_cleanup_region_end (_doit)
+    __libc_cleanup_region_end (_doit)
 
 #if defined _LIBC && IS_IN (libc)
 
 # ifdef __EXCEPTIONS
 # define _IO_acquire_lock(_fp) \
-  do {                                        \
-    FILE *_IO_acquire_lock_file                           \
-    __attribute__((cleanup (_IO_acquire_lock_fct)))               \
-    = (_fp);                                  \
-    _IO_flockfile (_IO_acquire_lock_file);
+    do {                                        \
+        FILE *_IO_acquire_lock_file                           \
+        __attribute__((cleanup (_IO_acquire_lock_fct)))               \
+            = (_fp);                                  \
+        _IO_flockfile (_IO_acquire_lock_file);
 # else
 #  define _IO_acquire_lock(_fp) _IO_acquire_lock_needs_exceptions_enabled
 # endif

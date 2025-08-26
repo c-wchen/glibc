@@ -444,7 +444,7 @@ __nscd_get_map_ref(request_type type, const char *name,
    sizeof (hashentry) would overestimate the size.  The following is
    the minimum size of such an entry, good enough for our tests here.  */
 #define MINIMUM_HASHENTRY_SIZE \
-  (offsetof (struct hashentry, dellist) + sizeof (int32_t))
+    (offsetof (struct hashentry, dellist) + sizeof (int32_t))
 
 /* Don't return const struct datahead *, as even though the record
    is normally constant, it can change arbitrarily during nscd

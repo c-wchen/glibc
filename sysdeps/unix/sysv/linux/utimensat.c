@@ -36,7 +36,7 @@ int __utimensat64_helper(int fd, const char *file,
 #else
     /* For UTIME_NOW and UTIME_OMIT the value of tv_sec field is ignored.  */
 # define TS_SPECIAL(ts) \
-  ((ts).tv_nsec == UTIME_NOW || (ts).tv_nsec == UTIME_OMIT)
+    ((ts).tv_nsec == UTIME_NOW || (ts).tv_nsec == UTIME_OMIT)
 
     bool need_time64 = tsp64 != NULL
                        && ((!TS_SPECIAL(tsp64[0])

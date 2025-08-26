@@ -41,7 +41,7 @@ static inline _Unwind_Word unwind_getgr(struct unwind_link *unwind_link,
 /* This macro is identical to the _Unwind_GetIP macro, except that it
    uses "unwind_getgr" instead of "_Unwind_GetGR".  */
 #define unwind_getip(context) \
-  (unwind_getgr (arg->unwind_link, context, 15) & ~(_Unwind_Word)1)
+    (unwind_getgr (arg->unwind_link, context, 15) & ~(_Unwind_Word)1)
 
 #else /* !SHARED */
 # define unwind_getip _Unwind_GetIP

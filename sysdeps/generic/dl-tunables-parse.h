@@ -30,7 +30,7 @@ static __always_inline bool tunable_strcmp(const struct tunable_str_t *strval, c
     return strval->len == len && memcmp(strval->str, str, len) == 0;
 }
 #define tunable_strcmp_cte(__tunable, __str) \
- tunable_strcmp (&__tunable->strval, __str, sizeof (__str) - 1)
+    tunable_strcmp (&__tunable->strval, __str, sizeof (__str) - 1)
 
 /*
    Helper functions to iterate over a tunable string composed by multiple
@@ -123,6 +123,6 @@ static __always_inline bool tunable_str_comma_strcmp(const struct tunable_str_co
     return t->len == len && memcmp(t->str, str, len) == 0;
 }
 #define tunable_str_comma_strcmp_cte(__t, __str) \
-  tunable_str_comma_strcmp (__t, __str, sizeof (__str) - 1)
+    tunable_str_comma_strcmp (__t, __str, sizeof (__str) - 1)
 
 #endif

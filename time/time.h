@@ -237,7 +237,7 @@ extern long int timezone;
 /* Nonzero if YEAR is a leap year (every 4 years,
    except every 100th isn't, and every 400th is).  */
 #define __isleap(year)  \
-  ((year) % 4 == 0 && ((year) % 100 != 0 || (year) % 400 == 0))
+    ((year) % 4 == 0 && ((year) % 100 != 0 || (year) % 400 == 0))
 
 
 #if defined __USE_MISC || __GLIBC_USE (ISOC23)

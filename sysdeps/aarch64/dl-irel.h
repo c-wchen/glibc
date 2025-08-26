@@ -29,7 +29,7 @@
 
 #define sizeof_field(TYPE, MEMBER) sizeof ((((TYPE *)0)->MEMBER))
 #define offsetofend(TYPE, MEMBER) \
-  (offsetof (TYPE, MEMBER) + sizeof_field (TYPE, MEMBER))
+    (offsetof (TYPE, MEMBER) + sizeof_field (TYPE, MEMBER))
 
 _Static_assert(sizeof(__ifunc_arg_t) == _IFUNC_ARG_SIZE_VER1,
                "sizeof (__ifunc_arg_t) != _IFUNC_ARG_SIZE_VER1");

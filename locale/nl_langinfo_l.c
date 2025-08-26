@@ -49,7 +49,7 @@ char *__nl_langinfo_l(nl_item item, locale_t l)
        since we know only at runtime which categories are used.  */
     switch (category) {
 # define DEFINE_CATEGORY(category, category_name, items, a) \
-      case category: data = *_nl_current_##category; break;
+case category: data = *_nl_current_##category; break;
 # include "categories.def"
 # undef DEFINE_CATEGORY
         default:                   /* Should be impossible.  */

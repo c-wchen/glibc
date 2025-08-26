@@ -55,10 +55,10 @@ struct __pthread_rwlock_arch_t {
 
 #ifdef __x86_64__
 # define __PTHREAD_RWLOCK_INITIALIZER(__flags) \
-  0, 0, 0, 0, 0, 0, 0, 0, __PTHREAD_RWLOCK_ELISION_EXTRA, 0, __flags
+    0, 0, 0, 0, 0, 0, 0, 0, __PTHREAD_RWLOCK_ELISION_EXTRA, 0, __flags
 #else
 # define __PTHREAD_RWLOCK_INITIALIZER(__flags) \
-  0, 0, 0, 0, 0, 0, __flags, 0, 0, 0, 0
+    0, 0, 0, 0, 0, 0, __flags, 0, 0, 0, 0
 #endif
 
 #endif

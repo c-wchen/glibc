@@ -29,7 +29,7 @@
 /* Define the internal symbol.  */
 #   undef libc_hidden_builtin_def
 #   define libc_hidden_builtin_def(name)            \
-  __hidden_ver1 (__memmove_c, __GI_memmove, __memmove_c);
+    __hidden_ver1 (__memmove_c, __GI_memmove, __memmove_c);
 #  endif
 # endif
 

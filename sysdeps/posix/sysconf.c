@@ -793,22 +793,22 @@ long int __sysconf(int name)
 #endif
 
 #define START_ENV_GROUP(VERSION)        \
-      /* Empty.  */
+    /* Empty.  */
 
 #define END_ENV_GROUP(VERSION)          \
-      /* Empty.  */
+    /* Empty.  */
 
 #define KNOWN_ABSENT_ENVIRONMENT(SC_PREFIX, ENV_PREFIX, SUFFIX) \
-    case _SC_##SC_PREFIX##_##SUFFIX:                \
-      return _##ENV_PREFIX##_##SUFFIX;
+case _SC_##SC_PREFIX##_##SUFFIX:                \
+    return _##ENV_PREFIX##_##SUFFIX;
 
 #define KNOWN_PRESENT_ENVIRONMENT(SC_PREFIX, ENV_PREFIX, SUFFIX)    \
-    case _SC_##SC_PREFIX##_##SUFFIX:                    \
-      return _##ENV_PREFIX##_##SUFFIX;
+case _SC_##SC_PREFIX##_##SUFFIX:                    \
+    return _##ENV_PREFIX##_##SUFFIX;
 
 #define UNKNOWN_ENVIRONMENT(SC_PREFIX, ENV_PREFIX, SUFFIX)  \
-    case _SC_##SC_PREFIX##_##SUFFIX:                \
-      return __sysconf_check_spec (#SUFFIX);
+case _SC_##SC_PREFIX##_##SUFFIX:                \
+    return __sysconf_check_spec (#SUFFIX);
 
 #include <posix/posix-envs.def>
 

@@ -17,9 +17,9 @@
    <https://www.gnu.org/licenses/>.  */
 
 #define LOCK(lock)                                                            \
-  while (pthread_spin_lock (lock) != 0)                                       \
+    while (pthread_spin_lock (lock) != 0)                                       \
     {                                                                         \
-      non_critical_section (non_crt_len);                                     \
+        non_critical_section (non_crt_len);                                     \
     }
 #define UNLOCK(lock) pthread_spin_unlock (lock)
 #define LOCK_INIT(lock, attr) pthread_spin_init (lock, *(attr))

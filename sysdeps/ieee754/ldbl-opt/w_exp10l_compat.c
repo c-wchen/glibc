@@ -11,7 +11,7 @@
    LONG_DOUBLE_COMPAT_VERSION.  */
 #  undef compat_symbol
 #  define compat_symbol(lib, local, symbol, version)    \
-  compat_symbol_reference (lib, local, symbol, version)
+    compat_symbol_reference (lib, local, symbol, version)
 compat_symbol(libm, __pow10l, pow10l, LONG_DOUBLE_COMPAT_VERSION);
 # endif
 #endif

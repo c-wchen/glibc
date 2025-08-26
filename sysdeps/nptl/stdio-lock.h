@@ -33,78 +33,78 @@ typedef struct {
 #define _IO_lock_initializer { LLL_LOCK_INITIALIZER, 0, NULL }
 
 #define _IO_lock_init(_name) \
-  ((void) ((_name) = (_IO_lock_t) _IO_lock_initializer))
+    ((void) ((_name) = (_IO_lock_t) _IO_lock_initializer))
 
 #define _IO_lock_fini(_name) \
-  ((void) 0)
+    ((void) 0)
 
 #define _IO_lock_lock(_name) \
-  do {                                        \
-    void *__self = THREAD_SELF;                           \
-    if (SINGLE_THREAD_P && (_name).owner == NULL)                 \
-      {                                       \
-    (_name).lock = LLL_LOCK_INITIALIZER_LOCKED;               \
-    (_name).owner = __self;                           \
-      }                                       \
-    else if ((_name).owner != __self)                         \
-      {                                       \
-    lll_lock ((_name).lock, LLL_PRIVATE);                     \
-    (_name).owner = __self;                           \
-      }                                       \
-    else                                      \
-      ++(_name).cnt;                                  \
-  } while (0)
+    do {                                        \
+        void *__self = THREAD_SELF;                           \
+        if (SINGLE_THREAD_P && (_name).owner == NULL)                 \
+        {                                       \
+            (_name).lock = LLL_LOCK_INITIALIZER_LOCKED;               \
+            (_name).owner = __self;                           \
+        }                                       \
+        else if ((_name).owner != __self)                         \
+        {                                       \
+            lll_lock ((_name).lock, LLL_PRIVATE);                     \
+            (_name).owner = __self;                           \
+        }                                       \
+        else                                      \
+            ++(_name).cnt;                                  \
+    } while (0)
 
 #define _IO_lock_trylock(_name) \
-  ({                                          \
-    int __result = 0;                                 \
-    void *__self = THREAD_SELF;                           \
-    if ((_name).owner != __self)                          \
-      {                                       \
-        if (lll_trylock ((_name).lock) == 0)                      \
-      (_name).owner = __self;                         \
+    ({                                          \
+        int __result = 0;                                 \
+        void *__self = THREAD_SELF;                           \
+        if ((_name).owner != __self)                          \
+        {                                       \
+            if (lll_trylock ((_name).lock) == 0)                      \
+                (_name).owner = __self;                         \
+            else                                      \
+                __result = EBUSY;                           \
+        }                                       \
         else                                      \
-          __result = EBUSY;                           \
-      }                                       \
-    else                                      \
-      ++(_name).cnt;                                  \
-    __result;                                     \
-  })
+            ++(_name).cnt;                                  \
+        __result;                                     \
+    })
 
 #define _IO_lock_unlock(_name) \
-  do {                                        \
-    if (SINGLE_THREAD_P && (_name).cnt == 0)                      \
-      {                                       \
-    (_name).owner = NULL;                             \
-    (_name).lock = 0;                             \
-      }                                       \
-    else if ((_name).cnt == 0)                            \
-      {                                       \
-    (_name).owner = NULL;                             \
-    lll_unlock ((_name).lock, LLL_PRIVATE);                   \
-      }                                       \
-    else                                      \
-      --(_name).cnt;                                  \
-  } while (0)
+    do {                                        \
+        if (SINGLE_THREAD_P && (_name).cnt == 0)                      \
+        {                                       \
+            (_name).owner = NULL;                             \
+            (_name).lock = 0;                             \
+        }                                       \
+        else if ((_name).cnt == 0)                            \
+        {                                       \
+            (_name).owner = NULL;                             \
+            lll_unlock ((_name).lock, LLL_PRIVATE);                   \
+        }                                       \
+        else                                      \
+            --(_name).cnt;                                  \
+    } while (0)
 
 
 
 #define _IO_cleanup_region_start(_fct, _fp) \
-  __libc_cleanup_region_start (((_fp)->_flags & _IO_USER_LOCK) == 0, _fct, _fp)
+    __libc_cleanup_region_start (((_fp)->_flags & _IO_USER_LOCK) == 0, _fct, _fp)
 #define _IO_cleanup_region_start_noarg(_fct) \
-  __libc_cleanup_region_start (1, _fct, NULL)
+    __libc_cleanup_region_start (1, _fct, NULL)
 #define _IO_cleanup_region_end(_doit) \
-  __libc_cleanup_region_end (_doit)
+    __libc_cleanup_region_end (_doit)
 
 #if defined _LIBC && IS_IN (libc)
 
 # ifdef __EXCEPTIONS
 #  define _IO_acquire_lock(_fp) \
-  do {                                        \
-    FILE *_IO_acquire_lock_file                           \
-    __attribute__((cleanup (_IO_acquire_lock_fct)))               \
-    = (_fp);                                  \
-    _IO_flockfile (_IO_acquire_lock_file);
+    do {                                        \
+        FILE *_IO_acquire_lock_file                           \
+        __attribute__((cleanup (_IO_acquire_lock_fct)))               \
+            = (_fp);                                  \
+        _IO_flockfile (_IO_acquire_lock_file);
 # else
 #  define _IO_acquire_lock(_fp) _IO_acquire_lock_needs_exceptions_enabled
 # endif

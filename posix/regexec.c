@@ -1501,7 +1501,7 @@ static void update_regs(const re_dfa_t *dfa, regmatch_t *pmatch,
         we throw away the node 'a'.  */
 
 #define STATE_NODE_CONTAINS(state,node) \
-  ((state) != NULL && re_node_set_contains (&(state)->nodes, node))
+    ((state) != NULL && re_node_set_contains (&(state)->nodes, node))
 
 static reg_errcode_t sift_states_backward(const re_match_context_t *mctx, re_sift_context_t *sctx)
 {

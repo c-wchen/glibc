@@ -104,7 +104,7 @@ LINE_PARSER
 /* We only need to consider IPv4 mapped addresses if the input to the
    gethostbyaddr() function is an IPv6 address.  */
 #define EXTRA_ARGS_VALUE \
-  , af, (len == IN6ADDRSZ ? AI_V4MAPPED : 0)
+    , af, (len == IN6ADDRSZ ? AI_V4MAPPED : 0)
 DB_LOOKUP(hostbyaddr,,,, {
     if (result->h_length == (int) len
         && ! memcmp(addr, result->h_addr_list[0], len))
@@ -120,7 +120,8 @@ DB_LOOKUP(hostbyaddr,,,, {
 
 static enum nss_status gethostbyname3_multi(FILE *stream, const char *name, int af,
         struct hostent *result, char *buffer, size_t buflen,
-        int *errnop, int *herrnop) {
+        int *errnop, int *herrnop)
+{
     assert(af == AF_INET || af == AF_INET6);
 
     /* We have to get all host entries from the file.  */
@@ -134,12 +135,10 @@ static enum nss_status gethostbyname3_multi(FILE *stream, const char *name, int 
     enum nss_status status;
 
     /* Preserve the addresses and aliases encountered so far.  */
-    for (size_t i = 0; result->h_addr_list[i] != NULL; ++i)
-    {
+    for (size_t i = 0; result->h_addr_list[i] != NULL; ++i) {
         array_add(&addresses, result->h_addr_list[i]);
     }
-    for (size_t i = 0; result->h_aliases[i] != NULL; ++i)
-    {
+    for (size_t i = 0; result->h_aliases[i] != NULL; ++i) {
         array_add(&aliases, result->h_aliases[i]);
     }
 
@@ -154,8 +153,7 @@ static enum nss_status gethostbyname3_multi(FILE *stream, const char *name, int 
         outbuf = alloc_buffer_create(bufferend, buffer + buflen - bufferend);
     }
 
-    while (true)
-    {
+    while (true) {
         status = internal_getent(stream, &tmp_result_buf, tmp_buffer.data,
                                  tmp_buffer.length, errnop, herrnop, af, 0);
         /* Enlarge the buffer if necessary.  */
@@ -266,13 +264,11 @@ static enum nss_status gethostbyname3_multi(FILE *stream, const char *name, int 
        that we may not have loaded the complete result.
        NSS_STATUS_NOTFOUND, however, means that we reached the end of
        the file successfully.  */
-    if (status != NSS_STATUS_TRYAGAIN)
-    {
+    if (status != NSS_STATUS_TRYAGAIN) {
         status = NSS_STATUS_SUCCESS;
     }
 
-    if (status == NSS_STATUS_SUCCESS)
-    {
+    if (status == NSS_STATUS_SUCCESS) {
         /* Copy the address and alias arrays into the output buffer and
         add NULL terminators.  The pointed-to elements were directly
          written into the output buffer above and do not need to be
@@ -314,7 +310,8 @@ static enum nss_status gethostbyname3_multi(FILE *stream, const char *name, int 
 
 enum nss_status _nss_files_gethostbyname3_r(const char *name, int af, struct hostent *result,
         char *buffer, size_t buflen, int *errnop,
-        int *herrnop, int32_t *ttlp, char **canonp) {
+        int *herrnop, int32_t *ttlp, char **canonp)
+{
     FILE *stream = NULL;
     uintptr_t pad = -(uintptr_t) buffer % __alignof__(struct hostent_data);
     buffer += pad;
@@ -323,8 +320,7 @@ enum nss_status _nss_files_gethostbyname3_r(const char *name, int af, struct hos
     /* Open file.  */
     enum nss_status status = internal_setent(&stream);
 
-    if (status == NSS_STATUS_SUCCESS)
-    {
+    if (status == NSS_STATUS_SUCCESS) {
         while ((status = internal_getent(stream, result, buffer, buflen, errnop,
                                          herrnop, af, 0))
                == NSS_STATUS_SUCCESS) {
@@ -339,8 +335,7 @@ enum nss_status _nss_files_gethostbyname3_r(const char *name, int af, struct hos
         fclose(stream);
     }
 
-    if (canonp && status == NSS_STATUS_SUCCESS)
-    {
+    if (canonp && status == NSS_STATUS_SUCCESS) {
         *canonp = result->h_name;
     }
 

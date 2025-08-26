@@ -60,11 +60,11 @@ libc_hidden_proto(__libc_unwind_link_get)
    cached unwind link OBJ (which was previously returned by
    __libc_unwind_link_get).  */
 # define UNWIND_LINK_PTR(obj, name, ...)                             \
-  ({                                                                \
-    __typeof ((obj)->ptr_##name) __unwind_fptr = (obj)->ptr_##name; \
-    PTR_DEMANGLE (__unwind_fptr);                                   \
-    __unwind_fptr;                                                  \
-  })
+    ({                                                                \
+        __typeof ((obj)->ptr_##name) __unwind_fptr = (obj)->ptr_##name; \
+        PTR_DEMANGLE (__unwind_fptr);                                   \
+        __unwind_fptr;                                                  \
+    })
 
 /* Called from fork, in the new subprocess.  */
 void __libc_unwind_link_after_fork(void);
@@ -86,7 +86,7 @@ static inline struct unwind_link *__libc_unwind_link_get(void)
 
 /* Directly call the static implementation.  */
 # define UNWIND_LINK_PTR(obj, name, ...) \
-  ((void) (obj), &name)
+    ((void) (obj), &name)
 
 static inline void __libc_unwind_link_after_fork(void)
 {

@@ -316,153 +316,153 @@ static inline int elf_machine_runtime_setup(struct link_map *l, struct r_scope_e
 
 /* Adjust DL_STACK_END to get value we want in __libc_stack_end.  */
 #define DL_STACK_END(cookie) \
-  ((void *) (((long) (cookie)) + 0x160))
+    ((void *) (((long) (cookie)) + 0x160))
 
 /* Initial entry point code for the dynamic linker.
    The C function `_dl_start' is the real entry point;
    its return value is the user program's entry point.  */
 
 #define RTLD_START \
-/* Set up dp for any non-PIC lib constructors that may be called.  */   \
-static struct link_map * __attribute__((used))              \
-set_dp (struct link_map *map)                       \
-{                                   \
-  register Elf32_Addr dp asm ("%r27");                  \
-  dp = D_PTR (map, l_info[DT_PLTGOT]);                  \
-  asm volatile ("" : : "r" (dp));                   \
-  return map;                               \
-}                                   \
-                                    \
-asm (                                   \
-"	.text\n"                          \
-"	.globl _start\n"                      \
-"	.type _start,@function\n"                 \
-"_start:\n"                             \
-    /* The kernel does not give us an initial stack frame. */   \
-"	ldo	64(%sp),%sp\n"                        \
-                                    \
-    /* We need the LTP, and we need it now.             \
-       $PIC_pcrel$0 points 8 bytes past the current instruction,    \
-       just like a branch reloc.  This sequence gets us the     \
-       runtime address of _DYNAMIC. */              \
-"	bl	0f,%r19\n"                     \
-"	addil	L'_DYNAMIC - ($PIC_pcrel$0 - 1),%r19\n"         \
-"0:	ldo	R'_DYNAMIC - ($PIC_pcrel$0 - 5)(%r1),%r26\n"        \
-                                    \
-    /* The link time address is stored in the first entry of the    \
-       GOT.  */                         \
-"	addil	L'_GLOBAL_OFFSET_TABLE_ - ($PIC_pcrel$0 - 9),%r19\n"    \
-"	ldw	R'_GLOBAL_OFFSET_TABLE_ - ($PIC_pcrel$0 - 13)(%r1),%r20\n" \
-                                    \
-"	sub	%r26,%r20,%r20\n" /* Calculate load offset */ \
-                                    \
-    /* Rummage through the dynamic entries, looking for     \
-       DT_PLTGOT.  */                       \
-"	ldw,ma	8(%r26),%r19\n"                        \
-"1:	cmpib,=,n 3,%r19,2f\n"  /* tag == DT_PLTGOT? */         \
-"	cmpib,<>,n 0,%r19,1b\n"                       \
-"	ldw,ma	8(%r26),%r19\n"                        \
-                                    \
-    /* Uh oh!  We didn't find one.  Abort. */           \
-"	iitlbp	%r0,(%sr0,%r0)\n"                  \
-                                    \
-"2:	ldw	-4(%r26),%r19\n"    /* Found it, load value. */ \
-"	add	%r19,%r20,%r19\n" /* And add the load offset. */  \
-                                    \
-    /* Our initial stack layout is rather different from everyone   \
-       else's due to the unique PA-RISC ABI.  As far as I know it   \
-       looks like this:                     \
-                                    \
-       -----------------------------------  (this frame created above) \
-       |         32 bytes of magic       |              \
-       |---------------------------------|              \
-       | 32 bytes argument/sp save area  |              \
-       |---------------------------------|  ((current->mm->env_end) \
-       |         N bytes of slack        |   + 63 & ~63)        \
-       |---------------------------------|              \
-       |      envvar and arg strings     |              \
-       |---------------------------------|              \
-       |        ELF auxiliary info       |              \
-       |         (up to 28 words)        |              \
-       |---------------------------------|              \
-       |  Environment variable pointers  |              \
-       |         upwards to NULL         |              \
-       |---------------------------------|              \
-       |        Argument pointers        |              \
-       |         upwards to NULL         |              \
-       |---------------------------------|              \
-       |          argc (1 word)          |              \
-       -----------------------------------              \
-                                    \
-      So, obviously, we can't just pass %sp to _dl_start.  That's   \
-      okay, argv-4 will do just fine.               \
-                                    \
-      This is always within range so we'll be okay. */      \
-"	bl	_dl_start,%rp\n"                   \
-"	ldo	-4(%r24),%r26\n"                  \
-                                    \
-"	.globl _dl_start_user\n"                  \
-"	.type _dl_start_user,@function\n"             \
-"_dl_start_user:\n"                         \
-    /* Save the entry point in %r3. */              \
-"	copy	%ret0,%r3\n"                     \
-                                    \
-    /* The loader adjusts argc, argv, env, and the aux vectors  \
-       directly on the stack to remove any arguments used for   \
-       direct loader invocation.  Thus, argc and argv must be   \
-       reloaded from from _dl_argc and _dl_argv.  */        \
-                                    \
-    /* Load main_map from _rtld_local and setup dp. */      \
-"	addil	LT'_rtld_local,%r19\n"                  \
-"	ldw	RT'_rtld_local(%r1),%r26\n"               \
-"	bl	set_dp, %r2\n"                     \
-"	ldw	0(%r26),%r26\n"                       \
-"	copy	%ret0,%r26\n"                        \
-                                    \
-    /* Load argc from _dl_argc.  */                 \
-"	addil	LT'_dl_argc,%r19\n"                 \
-"	ldw	RT'_dl_argc(%r1),%r20\n"              \
-"	ldw	0(%r20),%r25\n"                       \
-"	stw	%r25,-40(%sp)\n"                  \
-                                    \
-    /* Same for argv with _dl_argv.  */             \
-"	addil	LT'_dl_argv,%r19\n"                 \
-"	ldw	RT'_dl_argv(%r1),%r20\n"              \
-"	ldw	0(%r20),%r24\n"                       \
-"	stw	%r24,-44(%sp)\n"                  \
-                                    \
-    /* envp = argv + argc + 1 */                    \
-"	sh2add	%r25,%r24,%r23\n"                  \
-                                    \
-    /* Call _dl_init(main_map, argc, argv, envp). */        \
-"	bl	_dl_init,%r2\n"                        \
-"	ldo	4(%r23),%r23\n"   /* delay slot */            \
-                                    \
-    /* Reload argc, argv to the registers start.S expects.  */  \
-"	ldw	-40(%sp),%r25\n"                  \
-"	ldw	-44(%sp),%r24\n"                  \
-                                    \
-    /* _dl_fini is a local function in the loader, so we construct  \
-       a false OPD here and pass this to the application.  */   \
-    /* FIXME: Should be able to use P%, and LR RR to have the   \
-       the linker construct a proper OPD.  */           \
-"	.section .data\n"                     \
-"__dl_fini_plabel:\n"                           \
-"	.word	_dl_fini\n"                     \
-"	.word	0xdeadbeef\n"                       \
-"	.previous\n"                          \
-                                    \
-    /* %r3 contains a function pointer, we need to mask out the \
-       lower bits and load the gp and jump address. */      \
-"	depi	0,31,2,%r3\n"                        \
-"	ldw	0(%r3),%r2\n"                     \
-"	addil	LT'__dl_fini_plabel,%r19\n"             \
-"	ldw	RT'__dl_fini_plabel(%r1),%r23\n"          \
-"	stw	%r19,4(%r23)\n"                       \
-"	ldw	4(%r3),%r19\n"    /* load the object's gp */      \
-"	bv	%r0(%r2)\n"                        \
-"	depi	2,31,2,%r23\n"   /* delay slot */            \
-);
+    /* Set up dp for any non-PIC lib constructors that may be called.  */   \
+    static struct link_map * __attribute__((used))              \
+    set_dp (struct link_map *map)                       \
+    {                                   \
+        register Elf32_Addr dp asm ("%r27");                  \
+        dp = D_PTR (map, l_info[DT_PLTGOT]);                  \
+        asm volatile ("" : : "r" (dp));                   \
+        return map;                               \
+    }                                   \
+    \
+    asm (                                   \
+                                            "	.text\n"                          \
+                                            "	.globl _start\n"                      \
+                                            "	.type _start,@function\n"                 \
+                                            "_start:\n"                             \
+                                            /* The kernel does not give us an initial stack frame. */   \
+                                            "	ldo	64(%sp),%sp\n"                        \
+                                            \
+                                            /* We need the LTP, and we need it now.             \
+                                               $PIC_pcrel$0 points 8 bytes past the current instruction,    \
+                                               just like a branch reloc.  This sequence gets us the     \
+                                               runtime address of _DYNAMIC. */              \
+                                            "	bl	0f,%r19\n"                     \
+                                            "	addil	L'_DYNAMIC - ($PIC_pcrel$0 - 1),%r19\n"         \
+                                            "0:	ldo	R'_DYNAMIC - ($PIC_pcrel$0 - 5)(%r1),%r26\n"        \
+                                            \
+                                            /* The link time address is stored in the first entry of the    \
+                                               GOT.  */                         \
+                                            "	addil	L'_GLOBAL_OFFSET_TABLE_ - ($PIC_pcrel$0 - 9),%r19\n"    \
+                                            "	ldw	R'_GLOBAL_OFFSET_TABLE_ - ($PIC_pcrel$0 - 13)(%r1),%r20\n" \
+                                            \
+                                            "	sub	%r26,%r20,%r20\n" /* Calculate load offset */ \
+                                            \
+                                            /* Rummage through the dynamic entries, looking for     \
+                                               DT_PLTGOT.  */                       \
+                                            "	ldw,ma	8(%r26),%r19\n"                        \
+                                            "1:	cmpib,=,n 3,%r19,2f\n"  /* tag == DT_PLTGOT? */         \
+                                            "	cmpib,<>,n 0,%r19,1b\n"                       \
+                                            "	ldw,ma	8(%r26),%r19\n"                        \
+                                            \
+                                            /* Uh oh!  We didn't find one.  Abort. */           \
+                                            "	iitlbp	%r0,(%sr0,%r0)\n"                  \
+                                            \
+                                            "2:	ldw	-4(%r26),%r19\n"    /* Found it, load value. */ \
+                                            "	add	%r19,%r20,%r19\n" /* And add the load offset. */  \
+                                            \
+                                            /* Our initial stack layout is rather different from everyone   \
+                                               else's due to the unique PA-RISC ABI.  As far as I know it   \
+                                               looks like this:                     \
+                                                                            \
+                                               -----------------------------------  (this frame created above) \
+                                               |         32 bytes of magic       |              \
+                                               |---------------------------------|              \
+                                               | 32 bytes argument/sp save area  |              \
+                                               |---------------------------------|  ((current->mm->env_end) \
+                                               |         N bytes of slack        |   + 63 & ~63)        \
+                                               |---------------------------------|              \
+                                               |      envvar and arg strings     |              \
+                                               |---------------------------------|              \
+                                               |        ELF auxiliary info       |              \
+                                               |         (up to 28 words)        |              \
+                                               |---------------------------------|              \
+                                               |  Environment variable pointers  |              \
+                                               |         upwards to NULL         |              \
+                                               |---------------------------------|              \
+                                               |        Argument pointers        |              \
+                                               |         upwards to NULL         |              \
+                                               |---------------------------------|              \
+                                               |          argc (1 word)          |              \
+                                               -----------------------------------              \
+                                                                            \
+                                              So, obviously, we can't just pass %sp to _dl_start.  That's   \
+                                              okay, argv-4 will do just fine.               \
+                                                                            \
+                                              This is always within range so we'll be okay. */      \
+                                            "	bl	_dl_start,%rp\n"                   \
+                                            "	ldo	-4(%r24),%r26\n"                  \
+                                            \
+                                            "	.globl _dl_start_user\n"                  \
+                                            "	.type _dl_start_user,@function\n"             \
+                                            "_dl_start_user:\n"                         \
+                                            /* Save the entry point in %r3. */              \
+                                            "	copy	%ret0,%r3\n"                     \
+                                            \
+                                            /* The loader adjusts argc, argv, env, and the aux vectors  \
+                                               directly on the stack to remove any arguments used for   \
+                                               direct loader invocation.  Thus, argc and argv must be   \
+                                               reloaded from from _dl_argc and _dl_argv.  */        \
+                                            \
+                                            /* Load main_map from _rtld_local and setup dp. */      \
+                                            "	addil	LT'_rtld_local,%r19\n"                  \
+                                            "	ldw	RT'_rtld_local(%r1),%r26\n"               \
+                                            "	bl	set_dp, %r2\n"                     \
+                                            "	ldw	0(%r26),%r26\n"                       \
+                                            "	copy	%ret0,%r26\n"                        \
+                                            \
+                                            /* Load argc from _dl_argc.  */                 \
+                                            "	addil	LT'_dl_argc,%r19\n"                 \
+                                            "	ldw	RT'_dl_argc(%r1),%r20\n"              \
+                                            "	ldw	0(%r20),%r25\n"                       \
+                                            "	stw	%r25,-40(%sp)\n"                  \
+                                            \
+                                            /* Same for argv with _dl_argv.  */             \
+                                            "	addil	LT'_dl_argv,%r19\n"                 \
+                                            "	ldw	RT'_dl_argv(%r1),%r20\n"              \
+                                            "	ldw	0(%r20),%r24\n"                       \
+                                            "	stw	%r24,-44(%sp)\n"                  \
+                                            \
+                                            /* envp = argv + argc + 1 */                    \
+                                            "	sh2add	%r25,%r24,%r23\n"                  \
+                                            \
+                                            /* Call _dl_init(main_map, argc, argv, envp). */        \
+                                            "	bl	_dl_init,%r2\n"                        \
+                                            "	ldo	4(%r23),%r23\n"   /* delay slot */            \
+                                            \
+                                            /* Reload argc, argv to the registers start.S expects.  */  \
+                                            "	ldw	-40(%sp),%r25\n"                  \
+                                            "	ldw	-44(%sp),%r24\n"                  \
+                                            \
+                                            /* _dl_fini is a local function in the loader, so we construct  \
+                                               a false OPD here and pass this to the application.  */   \
+                                            /* FIXME: Should be able to use P%, and LR RR to have the   \
+                                               the linker construct a proper OPD.  */           \
+                                            "	.section .data\n"                     \
+                                            "__dl_fini_plabel:\n"                           \
+                                            "	.word	_dl_fini\n"                     \
+                                            "	.word	0xdeadbeef\n"                       \
+                                            "	.previous\n"                          \
+                                            \
+                                            /* %r3 contains a function pointer, we need to mask out the \
+                                               lower bits and load the gp and jump address. */      \
+                                            "	depi	0,31,2,%r3\n"                        \
+                                            "	ldw	0(%r3),%r2\n"                     \
+                                            "	addil	LT'__dl_fini_plabel,%r19\n"             \
+                                            "	ldw	RT'__dl_fini_plabel(%r1),%r23\n"          \
+                                            "	stw	%r19,4(%r23)\n"                       \
+                                            "	ldw	4(%r3),%r19\n"    /* load the object's gp */      \
+                                            "	bv	%r0(%r2)\n"                        \
+                                            "	depi	2,31,2,%r23\n"   /* delay slot */            \
+        );
 
 /* ELF_RTYPE_CLASS_PLT iff TYPE describes relocation of a PLT entry or
    a TLS variable, so references should not be allowed to define the value.
@@ -470,19 +470,19 @@ asm (                                   \
    of the main executable's symbols, as for a COPY reloc.  */
 #if !defined RTLD_BOOTSTRAP
 # define elf_machine_type_class(type)               \
-  ((((type) == R_PARISC_IPLT                    \
-  || (type) == R_PARISC_EPLT                    \
-  || (type) == R_PARISC_TLS_DTPMOD32                \
-  || (type) == R_PARISC_TLS_DTPOFF32                \
-  || (type) == R_PARISC_TLS_TPREL32)                \
-  * ELF_RTYPE_CLASS_PLT)                    \
-  | (((type) == R_PARISC_COPY) * ELF_RTYPE_CLASS_COPY))
+    ((((type) == R_PARISC_IPLT                    \
+       || (type) == R_PARISC_EPLT                    \
+       || (type) == R_PARISC_TLS_DTPMOD32                \
+       || (type) == R_PARISC_TLS_DTPOFF32                \
+       || (type) == R_PARISC_TLS_TPREL32)                \
+      * ELF_RTYPE_CLASS_PLT)                    \
+     | (((type) == R_PARISC_COPY) * ELF_RTYPE_CLASS_COPY))
 #else
 #define elf_machine_type_class(type)                \
- ((((type) == R_PARISC_IPLT                 \
-   || (type) == R_PARISC_EPLT)                  \
-   * ELF_RTYPE_CLASS_PLT)                   \
-   | (((type) == R_PARISC_COPY) * ELF_RTYPE_CLASS_COPY))
+    ((((type) == R_PARISC_IPLT                 \
+       || (type) == R_PARISC_EPLT)                  \
+      * ELF_RTYPE_CLASS_PLT)                   \
+     | (((type) == R_PARISC_COPY) * ELF_RTYPE_CLASS_COPY))
 #endif
 
 /* Used by the runtime in fixup to figure out if reloc is *really* PLT */
@@ -491,11 +491,11 @@ asm (                                   \
 
 /* Return the address of the entry point. */
 #define ELF_MACHINE_START_ADDRESS(map, start)           \
-({                              \
-    ElfW(Addr) addr;                    \
-    DL_DT_FUNCTION_ADDRESS(map, start, static, addr)    \
-    addr;                           \
-})
+    ({                              \
+        ElfW(Addr) addr;                    \
+        DL_DT_FUNCTION_ADDRESS(map, start, static, addr)    \
+        addr;                           \
+    })
 
 /* We define an initialization functions.  This is called very early in
  *    _dl_sysdep_start.  */
@@ -517,15 +517,15 @@ dl_platform_init(void)
 #ifdef RESOLVE_MAP
 
 #define reassemble_21(as21) \
-  (  (((as21) & 0x100000) >> 20) \
-   | (((as21) & 0x0ffe00) >> 8) \
-   | (((as21) & 0x000180) << 7) \
-   | (((as21) & 0x00007c) << 14) \
-   | (((as21) & 0x000003) << 12))
+    (  (((as21) & 0x100000) >> 20) \
+       | (((as21) & 0x0ffe00) >> 8) \
+       | (((as21) & 0x000180) << 7) \
+       | (((as21) & 0x00007c) << 14) \
+       | (((as21) & 0x000003) << 12))
 
 #define reassemble_14(as14) \
-  (  (((as14) & 0x1fff) << 1) \
-   | (((as14) & 0x2000) >> 13))
+    (  (((as14) & 0x1fff) << 1) \
+       | (((as14) & 0x2000) >> 13))
 
 static void __attribute__((always_inline))
 elf_machine_rela(struct link_map *map, struct r_scope_elem *scope[],

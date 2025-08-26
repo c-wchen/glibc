@@ -45,10 +45,10 @@ struct __pthread_mutex_s {
 
 #if _MIPS_SIM == _ABI64
 # define __PTHREAD_MUTEX_INITIALIZER(__kind) \
-  0, 0, 0, 0, __kind, 0, { 0, 0 }
+    0, 0, 0, 0, __kind, 0, { 0, 0 }
 #else
 # define __PTHREAD_MUTEX_INITIALIZER(__kind) \
-  0, 0, 0, __kind, 0, { 0 }
+    0, 0, 0, __kind, 0, { 0 }
 #endif
 
 #endif

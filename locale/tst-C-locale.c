@@ -41,14 +41,14 @@ static int run_test(const char *locname)
         result = 1;
     } else {
 #define STRTEST(name, exp) \
-      do                                      \
-    if (strcmp (lc->name, exp) != 0)                      \
-      {                                   \
-        printf (#name " in locale %s wrong (is \"%s\", should be \"%s\")\n",\
-            locname, lc->name, exp);                      \
-        result = 1;                               \
-      }                                   \
-      while (0)
+    do                                      \
+        if (strcmp (lc->name, exp) != 0)                      \
+        {                                   \
+            printf (#name " in locale %s wrong (is \"%s\", should be \"%s\")\n",\
+                    locname, lc->name, exp);                      \
+            result = 1;                               \
+        }                                   \
+    while (0)
         STRTEST(decimal_point, ".");
         STRTEST(thousands_sep, "");
         STRTEST(grouping, "");
@@ -61,14 +61,14 @@ static int run_test(const char *locname)
         STRTEST(int_curr_symbol, "");
 
 #define CHARTEST(name, exp) \
-      do                                      \
-    if (lc->name != exp)                              \
-      {                                   \
-        printf (#name " in locale %s wrong (is %d, should be %d)\n",      \
-            locname, lc->name, CHAR_MAX);                 \
-        result = 1;                               \
-      }                                   \
-      while (0)
+    do                                      \
+        if (lc->name != exp)                              \
+        {                                   \
+            printf (#name " in locale %s wrong (is %d, should be %d)\n",      \
+                    locname, lc->name, CHAR_MAX);                 \
+            result = 1;                               \
+        }                                   \
+    while (0)
         CHARTEST(frac_digits, CHAR_MAX);
         CHARTEST(p_cs_precedes, CHAR_MAX);
         CHARTEST(n_cs_precedes, CHAR_MAX);
@@ -87,20 +87,20 @@ static int run_test(const char *locname)
 
 #undef STRTEST
 #define STRTEST(name, exp) \
-  str = nl_langinfo (name);                           \
-  if (strcmp (str, exp) != 0)                             \
+    str = nl_langinfo (name);                           \
+    if (strcmp (str, exp) != 0)                             \
     {                                         \
-      printf ("nl_langinfo(" #name ") in locale %s wrong "            \
-          "(is \"%s\", should be \"%s\")\n", locname, str, exp);          \
-      result = 1;                                 \
+        printf ("nl_langinfo(" #name ") in locale %s wrong "            \
+                "(is \"%s\", should be \"%s\")\n", locname, str, exp);          \
+        result = 1;                                 \
     }
 #define WSTRTEST(name, exp) \
-  wstr = (wchar_t *) nl_langinfo (name);                      \
-  if (wcscmp (wstr, exp) != 0)                            \
+    wstr = (wchar_t *) nl_langinfo (name);                      \
+    if (wcscmp (wstr, exp) != 0)                            \
     {                                         \
-      printf ("nl_langinfo(" #name ") in locale %s wrong "            \
-          "(is \"%S\", should be \"%S\")\n", locname, wstr, exp);         \
-      result = 1;                                 \
+        printf ("nl_langinfo(" #name ") in locale %s wrong "            \
+                "(is \"%S\", should be \"%S\")\n", locname, wstr, exp);         \
+        result = 1;                                 \
     }
 
     /* Unix stuff.  */
@@ -235,21 +235,21 @@ static int run_test(const char *locname)
 
 #undef STRTEST
 #define STRTEST(name, exp) \
-      str = nl_langinfo_l (name, loc);                    \
-      if (strcmp (str, exp) != 0)                         \
+    str = nl_langinfo_l (name, loc);                    \
+    if (strcmp (str, exp) != 0)                         \
     {                                     \
-      printf ("nl_langinfo_l(" #name ") in locale %s wrong "          \
-          "(is \"%s\", should be \"%s\")\n", locname, str, exp);      \
-      result = 1;                                 \
+        printf ("nl_langinfo_l(" #name ") in locale %s wrong "          \
+                "(is \"%s\", should be \"%s\")\n", locname, str, exp);      \
+        result = 1;                                 \
     }
 #undef WSTRTEST
 #define WSTRTEST(name, exp) \
-      wstr = (wchar_t *) nl_langinfo_l (name, loc);               \
-      if (wcscmp (wstr, exp) != 0)                        \
+    wstr = (wchar_t *) nl_langinfo_l (name, loc);               \
+    if (wcscmp (wstr, exp) != 0)                        \
     {                                     \
-      printf ("nl_langinfo_l(" #name ") in locale %s wrong "          \
-          "(is \"%S\", should be \"%S\")\n", locname, wstr, exp);     \
-      result = 1;                                 \
+        printf ("nl_langinfo_l(" #name ") in locale %s wrong "          \
+                "(is \"%S\", should be \"%S\")\n", locname, wstr, exp);     \
+        result = 1;                                 \
     }
 
         /* Unix stuff.  */
@@ -377,12 +377,12 @@ static int run_test(const char *locname)
         /* Character class tests.  */
         for (c = 0; c < 128; ++c) {
 #define CLASSTEST(name) \
-      if (is##name (c) != is##name##_l (c, loc))                  \
-        {                                     \
-          printf ("is%s('\\%o') != is%s_l('\\%o')\n",             \
-              #name, c, #name, c);                    \
-          result = 1;                             \
-        }
+    if (is##name (c) != is##name##_l (c, loc))                  \
+    {                                     \
+        printf ("is%s('\\%o') != is%s_l('\\%o')\n",             \
+                #name, c, #name, c);                    \
+        result = 1;                             \
+    }
             CLASSTEST(alnum);
             CLASSTEST(alpha);
             CLASSTEST(blank);
@@ -398,13 +398,13 @@ static int run_test(const char *locname)
 
             /* Character mapping tests.  */
 #define MAPTEST(name) \
-      if (to##name (c) != to##name##_l (c, loc))                  \
-        {                                     \
-          printf ("to%s('\\%o') != to%s_l('\\%o'): '\\%o' vs '\\%o'\n", \
-              #name, c, #name, c,                     \
-              to##name (c), to##name##_l (c, loc));           \
-          result = 1;                             \
-        }
+    if (to##name (c) != to##name##_l (c, loc))                  \
+    {                                     \
+        printf ("to%s('\\%o') != to%s_l('\\%o'): '\\%o' vs '\\%o'\n", \
+                #name, c, #name, c,                     \
+                to##name (c), to##name##_l (c, loc));           \
+        result = 1;                             \
+    }
             MAPTEST(lower);
             MAPTEST(upper);
         }
@@ -415,12 +415,12 @@ static int run_test(const char *locname)
         for (c = 0; c < 128; ++c) {
 #undef CLASSTEST
 #define CLASSTEST(name) \
-      if (isw##name (c) != isw##name##_l (c, loc))            \
-        {                                     \
-          printf ("isw%s('\\%o') != isw%s_l('\\%o')\n",           \
-              #name, c, #name, c);                    \
-          result = 1;                             \
-        }
+    if (isw##name (c) != isw##name##_l (c, loc))            \
+    {                                     \
+        printf ("isw%s('\\%o') != isw%s_l('\\%o')\n",           \
+                #name, c, #name, c);                    \
+        result = 1;                             \
+    }
             CLASSTEST(alnum);
             CLASSTEST(alpha);
             CLASSTEST(blank);
@@ -439,13 +439,13 @@ static int run_test(const char *locname)
                UCS4.  */
 #undef MAPTEST
 #define MAPTEST(name) \
-      if (tow##name (c) != tow##name##_l (c, loc))            \
-        {                                     \
-          printf ("tow%s('\\%o') != tow%s_l('\\%o'): '\\%o' vs '\\%o'\n",\
-              #name, c, #name, c,                     \
-              tow##name (c), tow##name##_l (c, loc));             \
-          result = 1;                             \
-        }
+    if (tow##name (c) != tow##name##_l (c, loc))            \
+    {                                     \
+        printf ("tow%s('\\%o') != tow%s_l('\\%o'): '\\%o' vs '\\%o'\n",\
+                #name, c, #name, c,                     \
+                tow##name (c), tow##name##_l (c, loc));             \
+        result = 1;                             \
+    }
             MAPTEST(lower);
             MAPTEST(upper);
         }

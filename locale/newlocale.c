@@ -32,10 +32,10 @@ __libc_rwlock_define(extern, __libc_setlocale_lock attribute_hidden)
 
 /* Use this when we come along an error.  */
 #define ERROR_RETURN                                  \
-  do {                                        \
-    __set_errno (EINVAL);                             \
-    return NULL;                                  \
-  } while (0)
+    do {                                        \
+        __set_errno (EINVAL);                             \
+        return NULL;                                  \
+    } while (0)
 
 
 locale_t

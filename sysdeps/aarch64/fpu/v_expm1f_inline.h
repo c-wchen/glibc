@@ -32,12 +32,12 @@ struct v_expm1f_data {
 /* Coefficients generated using fpminimax with degree=5 in [-log(2)/2,
    log(2)/2]. Exponent bias is asuint(1.0f).  */
 #define V_EXPM1F_DATA                                                         \
-  {                                                                           \
-    .c0 = V4 (0x1.fffffep-2), .c1 = 0x1.5554aep-3, .c2 = V4 (0x1.555736p-5),  \
-    .c3 = 0x1.12287cp-7, .c4 = 0x1.6b55a2p-10,                                \
-    .exponent_bias = V4 (0x3f800000), .inv_ln2 = 0x1.715476p+0f,              \
-    .ln2_hi = 0x1.62e4p-1f, .ln2_lo = 0x1.7f7d1cp-20f,                        \
-  }
+    {                                                                           \
+        .c0 = V4 (0x1.fffffep-2), .c1 = 0x1.5554aep-3, .c2 = V4 (0x1.555736p-5),  \
+                                        .c3 = 0x1.12287cp-7, .c4 = 0x1.6b55a2p-10,                                \
+                                                .exponent_bias = V4 (0x3f800000), .inv_ln2 = 0x1.715476p+0f,              \
+                                                        .ln2_hi = 0x1.62e4p-1f, .ln2_lo = 0x1.7f7d1cp-20f,                        \
+    }
 
 static inline float32x4_t expm1f_inline(float32x4_t x, const struct v_expm1f_data *d)
 {

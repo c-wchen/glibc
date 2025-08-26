@@ -40,9 +40,9 @@ static int do_test(void)
 
     /* Check lack of escaping for letters and digits.  */
 #define LETTERS_AND_DIGTS                       \
-  "abcdefghijklmnopqrstuvwxyz"                  \
-  "ABCDEFGHIJKLMNOPQRSTUVWXYZ"                  \
-  "0123456789"
+    "abcdefghijklmnopqrstuvwxyz"                  \
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"                  \
+    "0123456789"
     p = support_quote_blob(LETTERS_AND_DIGTS "@", 2 * 26 + 10);
     TEST_COMPARE(strcmp(p, LETTERS_AND_DIGTS), 0);
     free(p);

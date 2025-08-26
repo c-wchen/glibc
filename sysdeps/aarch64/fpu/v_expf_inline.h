@@ -31,12 +31,12 @@ struct v_expf_data {
 
 /* maxerr: 1.45358 +0.5 ulp.  */
 #define V_EXPF_DATA                                                           \
-  {                                                                           \
-    .c0 = 0x1.0e4020p-7f, .c1 = V4 (0x1.573e2ep-5f), .c2 = 0x1.555e66p-3f,    \
-    .c3 = V4 (0x1.fffdb6p-2f), .c4 = V4 (0x1.ffffecp-1f),                     \
-    .ln2_hi = 0x1.62e4p-1f, .ln2_lo = 0x1.7f7d1cp-20f,                        \
-    .inv_ln2 = V4 (0x1.715476p+0f), .exponent_bias = V4 (0x3f800000),         \
-  }
+    {                                                                           \
+        .c0 = 0x1.0e4020p-7f, .c1 = V4 (0x1.573e2ep-5f), .c2 = 0x1.555e66p-3f,    \
+                                    .c3 = V4 (0x1.fffdb6p-2f), .c4 = V4 (0x1.ffffecp-1f),                     \
+                                            .ln2_hi = 0x1.62e4p-1f, .ln2_lo = 0x1.7f7d1cp-20f,                        \
+                                                    .inv_ln2 = V4 (0x1.715476p+0f), .exponent_bias = V4 (0x3f800000),         \
+    }
 
 static inline float32x4_t v_expf_inline(float32x4_t x, const struct v_expf_data *d)
 {

@@ -139,7 +139,7 @@ _dl_start_user:\n\
 	addik r1,r1,24\n\
 	nop\n\
 	.size _dl_start_user, . - _dl_start_user\n\
-	.previous");
+.previous");
 
 /* ELF_RTYPE_CLASS_PLT iff TYPE describes relocation of a PLT entry or
    TLS variable, so undefined references should not be allowed to
@@ -148,16 +148,16 @@ _dl_start_user:\n\
    of the main executable's symbols, as for a COPY reloc.  */
 #ifndef RTLD_BOOTSTRAP
 # define elf_machine_type_class(type) \
-  (((type) == R_MICROBLAZE_JUMP_SLOT \
-    || (type) == R_MICROBLAZE_TLSDTPREL32 \
-    || (type) == R_MICROBLAZE_TLSDTPMOD32 \
-    || (type) == R_MICROBLAZE_TLSTPREL32) \
-    * ELF_RTYPE_CLASS_PLT \
-   | ((type) == R_MICROBLAZE_COPY) * ELF_RTYPE_CLASS_COPY)
+    (((type) == R_MICROBLAZE_JUMP_SLOT \
+      || (type) == R_MICROBLAZE_TLSDTPREL32 \
+      || (type) == R_MICROBLAZE_TLSDTPMOD32 \
+      || (type) == R_MICROBLAZE_TLSTPREL32) \
+     * ELF_RTYPE_CLASS_PLT \
+     | ((type) == R_MICROBLAZE_COPY) * ELF_RTYPE_CLASS_COPY)
 #else
 # define elf_machine_type_class(type) \
-  (((type) == R_MICROBLAZE_JUMP_SLOT) * ELF_RTYPE_CLASS_PLT \
-   | ((type) == R_MICROBLAZE_COPY) * ELF_RTYPE_CLASS_COPY)
+    (((type) == R_MICROBLAZE_JUMP_SLOT) * ELF_RTYPE_CLASS_PLT \
+     | ((type) == R_MICROBLAZE_COPY) * ELF_RTYPE_CLASS_COPY)
 #endif
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
@@ -191,10 +191,10 @@ static inline Elf32_Addr elf_machine_plt_value(struct link_map *map, const Elf32
 
 /* Macro to put 32-bit relocation value into 2 words.  */
 #define PUT_REL_64(rel_addr,val) \
-  do { \
-    ((unsigned short *)(rel_addr))[1] = (val) >> 16; \
-    ((unsigned short *)(rel_addr))[3] = (val) & 0xffff; \
-  } while (0)
+    do { \
+        ((unsigned short *)(rel_addr))[1] = (val) >> 16; \
+        ((unsigned short *)(rel_addr))[3] = (val) & 0xffff; \
+    } while (0)
 
 static inline void __attribute__((always_inline))
 elf_machine_rela(struct link_map *map, struct r_scope_elem *scope[],

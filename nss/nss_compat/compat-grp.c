@@ -86,35 +86,31 @@ static void init_nss_interface(void)
     }
 }
 
-static enum nss_status internal_setgrent(ent_t *ent, int stayopen, int needent) {
+static enum nss_status internal_setgrent(ent_t *ent, int stayopen, int needent)
+{
     enum nss_status status = NSS_STATUS_SUCCESS;
 
     ent->files = true;
 
-    if (ent->blacklist.data != NULL)
-    {
+    if (ent->blacklist.data != NULL) {
         ent->blacklist.current = 1;
         ent->blacklist.data[0] = '|';
         ent->blacklist.data[1] = '\0';
-    } else
-    {
+    } else {
         ent->blacklist.current = 0;
     }
 
-    if (ent->stream == NULL)
-    {
+    if (ent->stream == NULL) {
         ent->stream = __nss_files_fopen("/etc/group");
 
         if (ent->stream == NULL) {
             status = errno == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
         }
-    } else
-    {
+    } else {
         rewind(ent->stream);
     }
 
-    if (needent && status == NSS_STATUS_SUCCESS && setgrent_impl)
-    {
+    if (needent && status == NSS_STATUS_SUCCESS && setgrent_impl) {
         ent->setent_status = setgrent_impl(stayopen);
     }
 
@@ -122,13 +118,13 @@ static enum nss_status internal_setgrent(ent_t *ent, int stayopen, int needent) 
 }
 
 
-enum nss_status _nss_compat_setgrent(int stayopen) {
+enum nss_status _nss_compat_setgrent(int stayopen)
+{
     enum nss_status result;
 
     __libc_lock_lock(lock);
 
-    if (ni == NULL)
-    {
+    if (ni == NULL) {
         init_nss_interface();
     }
 
@@ -140,20 +136,18 @@ enum nss_status _nss_compat_setgrent(int stayopen) {
 }
 
 
-static enum nss_status __attribute_warn_unused_result__ internal_endgrent(ent_t *ent) {
-    if (ent->stream != NULL)
-    {
+static enum nss_status __attribute_warn_unused_result__ internal_endgrent(ent_t *ent)
+{
+    if (ent->stream != NULL) {
         fclose(ent->stream);
         ent->stream = NULL;
     }
 
-    if (ent->blacklist.data != NULL)
-    {
+    if (ent->blacklist.data != NULL) {
         ent->blacklist.current = 1;
         ent->blacklist.data[0] = '|';
         ent->blacklist.data[1] = '\0';
-    } else
-    {
+    } else {
         ent->blacklist.current = 0;
     }
 
@@ -168,13 +162,13 @@ static void internal_endgrent_noerror(ent_t *ent)
     __set_errno(saved_errno);
 }
 
-enum nss_status _nss_compat_endgrent(void) {
+enum nss_status _nss_compat_endgrent(void)
+{
     enum nss_status result;
 
     __libc_lock_lock(lock);
 
-    if (endgrent_impl)
-    {
+    if (endgrent_impl) {
         endgrent_impl();
     }
 
@@ -187,20 +181,18 @@ enum nss_status _nss_compat_endgrent(void) {
 
 /* get the next group from NSS  (+ entry) */
 static enum nss_status getgrent_next_nss(struct group *result, ent_t *ent, char *buffer,
-        size_t buflen, int *errnop) {
-    if (!getgrent_r_impl)
-    {
+        size_t buflen, int *errnop)
+{
+    if (!getgrent_r_impl) {
         return NSS_STATUS_UNAVAIL;
     }
 
     /* If the setgrent call failed, say so.  */
-    if (ent->setent_status != NSS_STATUS_SUCCESS)
-    {
+    if (ent->setent_status != NSS_STATUS_SUCCESS) {
         return ent->setent_status;
     }
 
-    do
-    {
+    do {
         enum nss_status status;
 
         if ((status = getgrent_r_impl(result, buffer, buflen, errnop))
@@ -214,21 +206,19 @@ static enum nss_status getgrent_next_nss(struct group *result, ent_t *ent, char 
 
 /* This function handle the +group entries in /etc/group */
 static enum nss_status getgrnam_plusgroup(const char *name, struct group *result, ent_t *ent,
-        char *buffer, size_t buflen, int *errnop) {
-    if (!getgrnam_r_impl)
-    {
+        char *buffer, size_t buflen, int *errnop)
+{
+    if (!getgrnam_r_impl) {
         return NSS_STATUS_UNAVAIL;
     }
 
     enum nss_status status = getgrnam_r_impl(name, result, buffer, buflen,
                              errnop);
-    if (status != NSS_STATUS_SUCCESS)
-    {
+    if (status != NSS_STATUS_SUCCESS) {
         return status;
     }
 
-    if (in_blacklist(result->gr_name, strlen(result->gr_name), ent))
-    {
+    if (in_blacklist(result->gr_name, strlen(result->gr_name), ent)) {
         return NSS_STATUS_NOTFOUND;
     }
 
@@ -237,10 +227,10 @@ static enum nss_status getgrnam_plusgroup(const char *name, struct group *result
 }
 
 static enum nss_status getgrent_next_file(struct group *result, ent_t *ent,
-        char *buffer, size_t buflen, int *errnop) {
+        char *buffer, size_t buflen, int *errnop)
+{
     struct parser_data *data = (void *) buffer;
-    while (1)
-    {
+    while (1) {
         fpos_t pos;
         int parse_res = 0;
         char *p;
@@ -340,24 +330,22 @@ erange_reset:
 
 
 enum nss_status _nss_compat_getgrent_r(struct group *grp, char *buffer, size_t buflen,
-                                       int *errnop) {
+                                       int *errnop)
+{
     enum nss_status result = NSS_STATUS_SUCCESS;
 
     __libc_lock_lock(lock);
 
     /* Be prepared that the setgrent function was not called before.  */
-    if (ni == NULL)
-    {
+    if (ni == NULL) {
         init_nss_interface();
     }
 
-    if (ext_ent.stream == NULL)
-    {
+    if (ext_ent.stream == NULL) {
         result = internal_setgrent(&ext_ent, 1, 1);
     }
 
-    if (result == NSS_STATUS_SUCCESS)
-    {
+    if (result == NSS_STATUS_SUCCESS) {
         if (ext_ent.files) {
             result = getgrent_next_file(grp, &ext_ent, buffer, buflen, errnop);
         } else {
@@ -371,10 +359,10 @@ enum nss_status _nss_compat_getgrent_r(struct group *grp, char *buffer, size_t b
 
 /* Searches in /etc/group and the NIS/NIS+ map for a special group */
 static enum nss_status internal_getgrnam_r(const char *name, struct group *result, ent_t *ent,
-        char *buffer, size_t buflen, int *errnop) {
+        char *buffer, size_t buflen, int *errnop)
+{
     struct parser_data *data = (void *) buffer;
-    while (1)
-    {
+    while (1) {
         fpos_t pos;
         int parse_res = 0;
         char *p;
@@ -473,19 +461,18 @@ erange_reset:
 }
 
 enum nss_status _nss_compat_getgrnam_r(const char *name, struct group *grp,
-                                       char *buffer, size_t buflen, int *errnop) {
+                                       char *buffer, size_t buflen, int *errnop)
+{
     ent_t ent = { true, NSS_STATUS_SUCCESS, NULL, { NULL, 0, 0 }};
     enum nss_status result;
 
-    if (name[0] == '-' || name[0] == '+')
-    {
+    if (name[0] == '-' || name[0] == '+') {
         return NSS_STATUS_NOTFOUND;
     }
 
     __libc_lock_lock(lock);
 
-    if (ni == NULL)
-    {
+    if (ni == NULL) {
         init_nss_interface();
     }
 
@@ -493,8 +480,7 @@ enum nss_status _nss_compat_getgrnam_r(const char *name, struct group *grp,
 
     result = internal_setgrent(&ent, 0, 0);
 
-    if (result == NSS_STATUS_SUCCESS)
-    {
+    if (result == NSS_STATUS_SUCCESS) {
         result = internal_getgrnam_r(name, grp, &ent, buffer, buflen, errnop);
     }
 
@@ -505,10 +491,10 @@ enum nss_status _nss_compat_getgrnam_r(const char *name, struct group *grp,
 
 /* Searches in /etc/group and the NIS/NIS+ map for a special group id */
 static enum nss_status internal_getgrgid_r(gid_t gid, struct group *result, ent_t *ent,
-        char *buffer, size_t buflen, int *errnop) {
+        char *buffer, size_t buflen, int *errnop)
+{
     struct parser_data *data = (void *) buffer;
-    while (1)
-    {
+    while (1) {
         fpos_t pos;
         int parse_res = 0;
         char *p;
@@ -607,14 +593,14 @@ erange_reset:
 }
 
 enum nss_status _nss_compat_getgrgid_r(gid_t gid, struct group *grp,
-                                       char *buffer, size_t buflen, int *errnop) {
+                                       char *buffer, size_t buflen, int *errnop)
+{
     ent_t ent = { true, NSS_STATUS_SUCCESS, NULL, { NULL, 0, 0 }};
     enum nss_status result;
 
     __libc_lock_lock(lock);
 
-    if (ni == NULL)
-    {
+    if (ni == NULL) {
         init_nss_interface();
     }
 
@@ -622,8 +608,7 @@ enum nss_status _nss_compat_getgrgid_r(gid_t gid, struct group *grp,
 
     result = internal_setgrent(&ent, 0, 0);
 
-    if (result == NSS_STATUS_SUCCESS)
-    {
+    if (result == NSS_STATUS_SUCCESS) {
         result = internal_getgrgid_r(gid, grp, &ent, buffer, buflen, errnop);
     }
 

@@ -27,8 +27,8 @@
    required, with ELFOSABI_SYSV, and ELFOSABI_GNU.  */
 #undef VALID_ELF_ABIVERSION
 #define VALID_ELF_ABIVERSION(osabi,ver)         \
-  (ver == 0                     \
-   || (osabi == ELFOSABI_SYSV && ver < 6)       \
-   || (osabi == ELFOSABI_GNU && ver < LIBC_ABI_MAX))
+    (ver == 0                     \
+     || (osabi == ELFOSABI_SYSV && ver < 6)       \
+     || (osabi == ELFOSABI_GNU && ver < LIBC_ABI_MAX))
 
 #endif /* ldsodefs.h */

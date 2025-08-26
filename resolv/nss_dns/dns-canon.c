@@ -45,27 +45,25 @@ static const short int qtypes[] = { ns_t_a, ns_t_aaaa };
 
 
 enum nss_status _nss_dns_getcanonname_r(const char *name, char *buffer, size_t buflen,
-                                        char **result, int *errnop, int *h_errnop) {
+                                        char **result, int *errnop, int *h_errnop)
+{
     /* Just an alibi buffer, res_nquery will allocate a real buffer for
        us.  */
     unsigned char buf[20];
-    union
-    {
+    union {
         querybuf *buf;
         unsigned char *ptr;
     } ansp = { .ptr = buf };
     enum nss_status status = NSS_STATUS_UNAVAIL;
 
     struct resolv_context *ctx = __resolv_context_get();
-    if (ctx == NULL)
-    {
+    if (ctx == NULL) {
         *errnop = errno;
         *h_errnop = NETDB_INTERNAL;
         return NSS_STATUS_UNAVAIL;
     }
 
-    for (int i = 0; i < nqtypes; ++i)
-    {
+    for (int i = 0; i < nqtypes; ++i) {
         int r = __res_context_query(ctx, name, ns_c_in, qtypes[i],
                                     buf, sizeof(buf), &ansp.ptr, NULL, NULL,
                                     NULL, NULL);
@@ -174,8 +172,7 @@ unavail:
 out:
     *h_errnop = h_errno;
 
-    if (ansp.ptr != buf)
-    {
+    if (ansp.ptr != buf) {
         free(ansp.ptr);
     }
     __resolv_context_put(ctx);

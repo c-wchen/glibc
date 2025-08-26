@@ -62,18 +62,18 @@ void WORDCOPY_FWD_ALIGNED(long int dstp, long int srcp, size_t len)
    *not* be aligned.  */
 
 #define fwd_align_merge(align)                                         \
-  do                                                                   \
+    do                                                                   \
     {                                                                  \
-      a1 = ((op_t *) srcp)[1];                                         \
-      a2 = ((op_t *) srcp)[2];                                         \
-      ((op_t *) dstp)[0] = MERGE (a0, align*8, a1, (__WORDSIZE-align*8)); \
-      ((op_t *) dstp)[1] = MERGE (a1, align*8, a2, (__WORDSIZE-align*8)); \
-      a0 = a2;                                                         \
-      srcp += 2 * OPSIZ;                                               \
-      dstp += 2 * OPSIZ;                                               \
-      len -= 2;                                                                \
+        a1 = ((op_t *) srcp)[1];                                         \
+        a2 = ((op_t *) srcp)[2];                                         \
+        ((op_t *) dstp)[0] = MERGE (a0, align*8, a1, (__WORDSIZE-align*8)); \
+        ((op_t *) dstp)[1] = MERGE (a1, align*8, a2, (__WORDSIZE-align*8)); \
+        a0 = a2;                                                         \
+        srcp += 2 * OPSIZ;                                               \
+        dstp += 2 * OPSIZ;                                               \
+        len -= 2;                                                                \
     }                                                                  \
-  while (len != 0)
+    while (len != 0)
 
 #ifndef WORDCOPY_FWD_DEST_ALIGNED
 # define WORDCOPY_FWD_DEST_ALIGNED _wordcopy_fwd_dest_aligned
@@ -153,18 +153,18 @@ void WORDCOPY_BWD_ALIGNED(long int dstp, long int srcp, size_t len)
 }
 
 #define bwd_align_merge(align)                                         \
-  do                                                                   \
+    do                                                                   \
     {                                                                  \
-      srcp -= 2 * OPSIZ;                                               \
-      dstp -= 2 * OPSIZ;                                               \
-      a1 = ((op_t *) srcp)[1];                                         \
-      a0 = ((op_t *) srcp)[0];                                         \
-      ((op_t *) dstp)[1] = MERGE (a1, align*8, a2, (__WORDSIZE-align*8)); \
-      ((op_t *) dstp)[0] = MERGE (a0, align*8, a1, (__WORDSIZE-align*8)); \
-      a2 = a0;                                                         \
-      len -= 2;                                                                \
+        srcp -= 2 * OPSIZ;                                               \
+        dstp -= 2 * OPSIZ;                                               \
+        a1 = ((op_t *) srcp)[1];                                         \
+        a0 = ((op_t *) srcp)[0];                                         \
+        ((op_t *) dstp)[1] = MERGE (a1, align*8, a2, (__WORDSIZE-align*8)); \
+        ((op_t *) dstp)[0] = MERGE (a0, align*8, a1, (__WORDSIZE-align*8)); \
+        a2 = a0;                                                         \
+        len -= 2;                                                                \
     }                                                                  \
-  while (len != 0)
+    while (len != 0)
 
 /* _wordcopy_bwd_dest_aligned -- Copy block finishing right
    before SRCP to block finishing right before DSTP with LEN `op_t'

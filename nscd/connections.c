@@ -1979,8 +1979,8 @@ main_loop_poll(void)
 #define MAX_ACCEPT_TIMEOUT 30
 #define MIN_ACCEPT_TIMEOUT 5
 #define MAIN_THREAD_TIMEOUT \
-  (MAX_ACCEPT_TIMEOUT * 1000                              \
-   - ((MAX_ACCEPT_TIMEOUT - MIN_ACCEPT_TIMEOUT) * 1000 * nused) / (2 * nconns))
+    (MAX_ACCEPT_TIMEOUT * 1000                              \
+     - ((MAX_ACCEPT_TIMEOUT - MIN_ACCEPT_TIMEOUT) * 1000 * nused) / (2 * nconns))
 
         int n = poll(conns, nused, MAIN_THREAD_TIMEOUT);
 
@@ -2079,8 +2079,8 @@ main_loop_poll(void)
         /* We make the timeout length depend on the number of file
         descriptors currently used.  */
 #define ACCEPT_TIMEOUT \
-  (MAX_ACCEPT_TIMEOUT                                 \
-   - ((MAX_ACCEPT_TIMEOUT - MIN_ACCEPT_TIMEOUT) * nused) / nconns)
+    (MAX_ACCEPT_TIMEOUT                                 \
+     - ((MAX_ACCEPT_TIMEOUT - MIN_ACCEPT_TIMEOUT) * nused) / nconns)
         time_t laststart = now - ACCEPT_TIMEOUT;
 
         for (size_t cnt = nused - 1; cnt > 0; --cnt) {

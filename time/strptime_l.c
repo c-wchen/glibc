@@ -58,63 +58,63 @@ static struct tm *localtime_r(const time_t *t, struct tm *tp)
 #define match_char(ch1, ch2) if (ch1 != ch2) return NULL
 #if defined __GNUC__ && __GNUC__ >= 2
 # define match_string(cs1, s2) \
-  ({ size_t len = strlen (cs1);                           \
-     int result = __strncasecmp_l ((cs1), (s2), len, locale) == 0;        \
-     if (result) (s2) += len;                             \
-     result; })
+    ({ size_t len = strlen (cs1);                           \
+        int result = __strncasecmp_l ((cs1), (s2), len, locale) == 0;        \
+        if (result) (s2) += len;                             \
+        result; })
 #else
 /* Oh come on.  Get a reasonable compiler.  */
 # define match_string(cs1, s2) \
-  (strncasecmp ((cs1), (s2), strlen (cs1)) ? 0 : ((s2) += strlen (cs1), 1))
+    (strncasecmp ((cs1), (s2), strlen (cs1)) ? 0 : ((s2) += strlen (cs1), 1))
 #endif
 /* We intentionally do not use isdigit() for testing because this will
    lead to problems with the wide character version.  */
 #define get_number(from, to, n) \
-  do {                                        \
-    int __n = n;                                  \
-    val = 0;                                      \
-    while (ISSPACE (*rp))                             \
-      ++rp;                                   \
-    if (*rp < '0' || *rp > '9')                           \
-      return NULL;                                \
-    do {                                      \
-      val *= 10;                                  \
-      val += *rp++ - '0';                             \
-    } while (--__n > 0 && val * 10 <= to && *rp >= '0' && *rp <= '9');        \
-    if (val < from || val > to)                           \
-      return NULL;                                \
-  } while (0)
+    do {                                        \
+        int __n = n;                                  \
+        val = 0;                                      \
+        while (ISSPACE (*rp))                             \
+            ++rp;                                   \
+        if (*rp < '0' || *rp > '9')                           \
+            return NULL;                                \
+        do {                                      \
+            val *= 10;                                  \
+            val += *rp++ - '0';                             \
+        } while (--__n > 0 && val * 10 <= to && *rp >= '0' && *rp <= '9');        \
+        if (val < from || val > to)                           \
+            return NULL;                                \
+    } while (0)
 #ifdef _NL_CURRENT
 # define get_alt_number(from, to, n) \
-  ({                                          \
-     __label__ do_normal;                             \
-                                          \
-     if (s.decided != raw)                            \
-       {                                      \
-     val = _nl_parse_alt_digit (&rp HELPER_LOCALE_ARG);           \
-     if (val == -1 && s.decided != loc)                   \
-       {                                      \
-         s.decided = loc;                             \
-         goto do_normal;                              \
-       }                                      \
-    if (val < from || val > to)                       \
-      return NULL;                                \
-       }                                      \
-     else                                     \
-       {                                      \
-       do_normal:                                 \
-     get_number (from, to, n);                        \
-       }                                      \
-    0;                                        \
-  })
+    ({                                          \
+        __label__ do_normal;                             \
+        \
+        if (s.decided != raw)                            \
+        {                                      \
+            val = _nl_parse_alt_digit (&rp HELPER_LOCALE_ARG);           \
+            if (val == -1 && s.decided != loc)                   \
+            {                                      \
+                s.decided = loc;                             \
+                goto do_normal;                              \
+            }                                      \
+            if (val < from || val > to)                       \
+                return NULL;                                \
+        }                                      \
+        else                                     \
+        {                                      \
+    do_normal:                                 \
+            get_number (from, to, n);                        \
+        }                                      \
+        0;                                        \
+    })
 #else
 # define get_alt_number(from, to, n) \
-  /* We don't have the alternate representation.  */                  \
-  get_number(from, to, n)
+    /* We don't have the alternate representation.  */                  \
+    get_number(from, to, n)
 #endif
 #define recursive(new_fmt) \
-  (*(new_fmt) != '\0'                                 \
-   && (rp = __strptime_internal (rp, (new_fmt), tm, &s LOCALE_ARG)) != NULL)
+    (*(new_fmt) != '\0'                                 \
+     && (rp = __strptime_internal (rp, (new_fmt), tm, &s LOCALE_ARG)) != NULL)
 
 
 #ifdef _LIBC
@@ -123,19 +123,19 @@ extern const struct __locale_data _nl_C_LC_TIME attribute_hidden;
 
 # define weekday_name (&_nl_C_LC_TIME.values[_NL_ITEM_INDEX (DAY_1)].string)
 # define ab_weekday_name \
-  (&_nl_C_LC_TIME.values[_NL_ITEM_INDEX (ABDAY_1)].string)
+    (&_nl_C_LC_TIME.values[_NL_ITEM_INDEX (ABDAY_1)].string)
 # define month_name (&_nl_C_LC_TIME.values[_NL_ITEM_INDEX (MON_1)].string)
 # define ab_month_name (&_nl_C_LC_TIME.values[_NL_ITEM_INDEX (ABMON_1)].string)
 # define alt_month_name \
-  (&_nl_C_LC_TIME.values[_NL_ITEM_INDEX (ALTMON_1)].string)
+    (&_nl_C_LC_TIME.values[_NL_ITEM_INDEX (ALTMON_1)].string)
 # define ab_alt_month_name \
-  (&_nl_C_LC_TIME.values[_NL_ITEM_INDEX (_NL_ABALTMON_1)].string)
+    (&_nl_C_LC_TIME.values[_NL_ITEM_INDEX (_NL_ABALTMON_1)].string)
 # define HERE_D_T_FMT (_nl_C_LC_TIME.values[_NL_ITEM_INDEX (D_T_FMT)].string)
 # define HERE_D_FMT (_nl_C_LC_TIME.values[_NL_ITEM_INDEX (D_FMT)].string)
 # define HERE_AM_STR (_nl_C_LC_TIME.values[_NL_ITEM_INDEX (AM_STR)].string)
 # define HERE_PM_STR (_nl_C_LC_TIME.values[_NL_ITEM_INDEX (PM_STR)].string)
 # define HERE_T_FMT_AMPM \
-  (_nl_C_LC_TIME.values[_NL_ITEM_INDEX (T_FMT_AMPM)].string)
+    (_nl_C_LC_TIME.values[_NL_ITEM_INDEX (T_FMT_AMPM)].string)
 # define HERE_T_FMT (_nl_C_LC_TIME.values[_NL_ITEM_INDEX (T_FMT)].string)
 
 # define strncasecmp(s1, s2, n) __strncasecmp (s1, s2, n)
@@ -178,10 +178,10 @@ static const unsigned short int __mon_yday[2][13] = {
 # define strptime       __strptime_l
 # undef _NL_CURRENT
 # define _NL_CURRENT(category, item) \
-  (current->values[_NL_ITEM_INDEX (item)].string)
+    (current->values[_NL_ITEM_INDEX (item)].string)
 # undef _NL_CURRENT_WORD
 # define _NL_CURRENT_WORD(category, item) \
-  (current->values[_NL_ITEM_INDEX (item)].word)
+    (current->values[_NL_ITEM_INDEX (item)].word)
 # define LOCALE_PARAM , locale_t locale
 # define LOCALE_ARG , locale
 # define HELPER_LOCALE_ARG , current
@@ -200,7 +200,7 @@ static const unsigned short int __mon_yday[2][13] = {
 /* Nonzero if YEAR is a leap year (every 4 years,
    except every 100th isn't, and every 400th is).  */
 # define __isleap(year) \
-  ((year) % 4 == 0 && ((year) % 100 != 0 || (year) % 400 == 0))
+    ((year) % 4 == 0 && ((year) % 100 != 0 || (year) % 400 == 0))
 #endif
 
 /* Compute the day of the week.  */

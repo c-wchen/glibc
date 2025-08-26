@@ -92,7 +92,7 @@ static const char *const valid_int_curr[] = {
 #   include "../iso-4217.def"
 };
 #define NR_VALID_INT_CURR ((sizeof (valid_int_curr) \
-                / sizeof (valid_int_curr[0])))
+                            / sizeof (valid_int_curr[0])))
 #undef DEFINE_INT_CURR
 
 
@@ -276,12 +276,12 @@ No definition for %s category found"), "LC_MONETARY");
        this warning, but we consider it valuable to print a warning for all
        missing fields in the category.  */
 #define TEST_ELEM(cat, initval) \
-  if (monetary->cat == NULL)                              \
+    if (monetary->cat == NULL)                              \
     {                                         \
-      if (! nothing)                                  \
-    record_warning (_("%s: field `%s' not defined"),              \
-            "LC_MONETARY", #cat);                     \
-      monetary->cat = initval;                            \
+        if (! nothing)                                  \
+            record_warning (_("%s: field `%s' not defined"),              \
+                            "LC_MONETARY", #cat);                     \
+        monetary->cat = initval;                            \
     }
 
     /* Keyword: int_curr_symbol.  */
@@ -368,19 +368,19 @@ not correspond to a valid name in ISO 4217 [--no-warnings=intcurrsym]"),
 
 #undef TEST_ELEM
 #define TEST_ELEM(cat, min, max, initval) \
-  if (monetary->cat == -2)                            \
+    if (monetary->cat == -2)                            \
     {                                         \
-       if (! nothing)                                 \
-     record_warning (_("%s: field `%s' not defined"),             \
-             "LC_MONETARY", #cat);                    \
-       monetary->cat = initval;                           \
+        if (! nothing)                                 \
+            record_warning (_("%s: field `%s' not defined"),             \
+                            "LC_MONETARY", #cat);                    \
+        monetary->cat = initval;                           \
     }                                         \
-  else if ((monetary->cat < min || monetary->cat > max)               \
-       && min < max                               \
-       && !be_quiet && !nothing)                          \
-    record_error (0, 0, _("\
+    else if ((monetary->cat < min || monetary->cat > max)               \
+             && min < max                               \
+             && !be_quiet && !nothing)                          \
+        record_error (0, 0, _("\
 %s: value for field `%s' must be in range %d...%d"),			      \
-          "LC_MONETARY", #cat, min, max)
+                      "LC_MONETARY", #cat, min, max)
 
     TEST_ELEM(int_frac_digits, 1, 0, -1);
     TEST_ELEM(frac_digits, 1, 0, -1);
@@ -399,12 +399,12 @@ not correspond to a valid name in ISO 4217 [--no-warnings=intcurrsym]"),
 
 #undef TEST_ELEM
 #define TEST_ELEM(cat, alt, min, max) \
-  if (monetary->cat == -2)                            \
-    monetary->cat = monetary->alt;                        \
-  else if ((monetary->cat < min || monetary->cat > max) && ! nothing)         \
-    record_error (0, 0, _("\
+    if (monetary->cat == -2)                            \
+        monetary->cat = monetary->alt;                        \
+    else if ((monetary->cat < min || monetary->cat > max) && ! nothing)         \
+        record_error (0, 0, _("\
 %s: value for field `%s' must be in range %d...%d"),			      \
-          "LC_MONETARY", #cat, min, max)
+                      "LC_MONETARY", #cat, min, max)
 
     TEST_ELEM(int_p_cs_precedes, p_cs_precedes, -1, 1);
     TEST_ELEM(int_p_sep_by_space, p_sep_by_space, -1, 2);
@@ -579,31 +579,31 @@ void monetary_read(struct linereader *ldfile, struct localedef_t *result,
 
         switch (nowtok) {
 #define STR_ELEM(cat) \
-    case tok_##cat:                               \
-      /* Ignore the rest of the line if we don't need the input of        \
-         this line.  */                           \
-      if (ignore_content)                             \
-        {                                     \
-          lr_ignore_rest (ldfile, 0);                     \
-          break;                                  \
-        }                                     \
-                                          \
-      now = lr_token (ldfile, charmap, result, NULL, verbose);        \
-      if (now->tok != tok_string)                         \
+case tok_##cat:                               \
+    /* Ignore the rest of the line if we don't need the input of        \
+       this line.  */                           \
+    if (ignore_content)                             \
+    {                                     \
+        lr_ignore_rest (ldfile, 0);                     \
+        break;                                  \
+    }                                     \
+    \
+    now = lr_token (ldfile, charmap, result, NULL, verbose);        \
+    if (now->tok != tok_string)                         \
         goto err_label;                           \
-      else if (monetary->cat != NULL)                     \
+    else if (monetary->cat != NULL)                     \
         lr_error (ldfile, _("%s: field `%s' declared more than once"),    \
-              "LC_MONETARY", #cat);                   \
-      else if (!ignore_content && now->val.str.startmb == NULL)       \
-        {                                     \
-          lr_error (ldfile, _("\
+                  "LC_MONETARY", #cat);                   \
+    else if (!ignore_content && now->val.str.startmb == NULL)       \
+    {                                     \
+        lr_error (ldfile, _("\
 %s: unknown character in field `%s'"), "LC_MONETARY", #cat);		      \
-          monetary->cat = "";                         \
-        }                                     \
-      else if (!ignore_content)                       \
+        monetary->cat = "";                         \
+    }                                     \
+    else if (!ignore_content)                       \
         monetary->cat = now->val.str.startmb;                 \
-      lr_ignore_rest (ldfile, 1);                         \
-      break
+    lr_ignore_rest (ldfile, 1);                         \
+    break
 
                 STR_ELEM(int_curr_symbol);
                 STR_ELEM(currency_symbol);
@@ -613,66 +613,66 @@ void monetary_read(struct linereader *ldfile, struct localedef_t *result,
                 STR_ELEM(duo_currency_symbol);
 
 #define STR_ELEM_WC(cat) \
-    case tok_##cat:                               \
-      /* Ignore the rest of the line if we don't need the input of        \
-         this line.  */                           \
-      if (ignore_content)                             \
-        {                                     \
-          lr_ignore_rest (ldfile, 0);                     \
-          break;                                  \
-        }                                     \
-                                          \
-      ldfile->return_widestr = 1;                         \
-      now = lr_token (ldfile, charmap, result, repertoire, verbose);      \
-      if (now->tok != tok_string)                         \
+case tok_##cat:                               \
+    /* Ignore the rest of the line if we don't need the input of        \
+       this line.  */                           \
+    if (ignore_content)                             \
+    {                                     \
+        lr_ignore_rest (ldfile, 0);                     \
+        break;                                  \
+    }                                     \
+    \
+    ldfile->return_widestr = 1;                         \
+    now = lr_token (ldfile, charmap, result, repertoire, verbose);      \
+    if (now->tok != tok_string)                         \
         goto err_label;                           \
-      if (monetary->cat != NULL)                          \
+    if (monetary->cat != NULL)                          \
         lr_error (ldfile, _("\
 %s: field `%s' declared more than once"), "LC_MONETARY", #cat);		      \
-      else if (!ignore_content && now->val.str.startmb == NULL)       \
-        {                                     \
-          lr_error (ldfile, _("\
+    else if (!ignore_content && now->val.str.startmb == NULL)       \
+    {                                     \
+        lr_error (ldfile, _("\
 %s: unknown character in field `%s'"), "LC_MONETARY", #cat);		      \
-          monetary->cat = "";                         \
-          monetary->cat##_wc = L'\0';                     \
-        }                                     \
-      else if (now->val.str.startwc != NULL && now->val.str.lenwc > 2)    \
-        {                                     \
-          lr_error (ldfile, _("\
+        monetary->cat = "";                         \
+        monetary->cat##_wc = L'\0';                     \
+    }                                     \
+    else if (now->val.str.startwc != NULL && now->val.str.lenwc > 2)    \
+    {                                     \
+        lr_error (ldfile, _("\
 %s: value for field `%s' must be a single character"), "LC_MONETARY", #cat);  \
-        }                                     \
-      else if (!ignore_content)                       \
-        {                                     \
-          monetary->cat = now->val.str.startmb;               \
-                                          \
-          if (now->val.str.startwc != NULL)                   \
-        monetary->cat##_wc = *now->val.str.startwc;           \
-        }                                     \
-      ldfile->return_widestr = 0;                         \
-      break
+    }                                     \
+    else if (!ignore_content)                       \
+    {                                     \
+        monetary->cat = now->val.str.startmb;               \
+        \
+        if (now->val.str.startwc != NULL)                   \
+            monetary->cat##_wc = *now->val.str.startwc;           \
+    }                                     \
+    ldfile->return_widestr = 0;                         \
+    break
 
                 STR_ELEM_WC(mon_decimal_point);
                 STR_ELEM_WC(mon_thousands_sep);
 
 #define INT_ELEM(cat) \
-    case tok_##cat:                               \
-      /* Ignore the rest of the line if we don't need the input of        \
-         this line.  */                           \
-      if (ignore_content)                             \
-        {                                     \
-          lr_ignore_rest (ldfile, 0);                     \
-          break;                                  \
-        }                                     \
-                                          \
-      now = lr_token (ldfile, charmap, result, NULL, verbose);        \
-      if (now->tok != tok_minus1 && now->tok != tok_number)           \
+case tok_##cat:                               \
+    /* Ignore the rest of the line if we don't need the input of        \
+       this line.  */                           \
+    if (ignore_content)                             \
+    {                                     \
+        lr_ignore_rest (ldfile, 0);                     \
+        break;                                  \
+    }                                     \
+    \
+    now = lr_token (ldfile, charmap, result, NULL, verbose);        \
+    if (now->tok != tok_minus1 && now->tok != tok_number)           \
         goto err_label;                           \
-      else if (monetary->cat != -2)                       \
+    else if (monetary->cat != -2)                       \
         lr_error (ldfile, _("%s: field `%s' declared more than once"),    \
-              "LC_MONETARY", #cat);                   \
-      else if (!ignore_content)                       \
+                  "LC_MONETARY", #cat);                   \
+    else if (!ignore_content)                       \
         monetary->cat = now->tok == tok_minus1 ? -1 : now->val.num;       \
-      break
+    break
 
                 INT_ELEM(int_frac_digits);
                 INT_ELEM(frac_digits);

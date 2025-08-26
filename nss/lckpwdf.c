@@ -50,33 +50,33 @@ static void noop_handler(int __sig);
 /* We cannot simply return in error cases.  We have to close the file
    and perhaps restore the signal handler.  */
 #define RETURN_CLOSE_FD(code)                             \
-  do {                                        \
-    if ((code) < 0 && lock_fd >= 0)                       \
-      {                                       \
-    __close (lock_fd);                            \
-    lock_fd = -1;                                 \
-      }                                       \
-    __libc_lock_unlock (lock);                            \
-    return (code);                                \
-  } while (0)
+    do {                                        \
+        if ((code) < 0 && lock_fd >= 0)                       \
+        {                                       \
+            __close (lock_fd);                            \
+            lock_fd = -1;                                 \
+        }                                       \
+        __libc_lock_unlock (lock);                            \
+        return (code);                                \
+    } while (0)
 
 #define RETURN_RESTORE_HANDLER(code)                          \
-  do {                                        \
-    /* Restore old action handler for alarm.  We don't need to know       \
-       about the current one.  */                         \
-    __sigaction (SIGALRM, &saved_act, NULL);                      \
-    RETURN_CLOSE_FD (code);                           \
-  } while (0)
+    do {                                        \
+        /* Restore old action handler for alarm.  We don't need to know       \
+           about the current one.  */                         \
+        __sigaction (SIGALRM, &saved_act, NULL);                      \
+        RETURN_CLOSE_FD (code);                           \
+    } while (0)
 
 #define RETURN_CLEAR_ALARM(code)                          \
-  do {                                        \
-    /* Clear alarm.  */                               \
-    alarm (0);                                    \
-    /* Restore old set of handled signals.  We don't need to know         \
-       about the current one.*/                           \
-    __sigprocmask (SIG_SETMASK, &saved_set, NULL);                \
-    RETURN_RESTORE_HANDLER (code);                        \
-  } while (0)
+    do {                                        \
+        /* Clear alarm.  */                               \
+        alarm (0);                                    \
+        /* Restore old set of handled signals.  We don't need to know         \
+           about the current one.*/                           \
+        __sigprocmask (SIG_SETMASK, &saved_set, NULL);                \
+        RETURN_RESTORE_HANDLER (code);                        \
+    } while (0)
 
 
 int __lckpwdf(void)

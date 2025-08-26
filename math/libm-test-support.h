@@ -87,28 +87,28 @@ extern const char doc[];
 
 /* Format specific test macros.  */
 #define TEST_COND_binary32 (MANT_DIG == 24  \
-                && MIN_EXP == -125  \
-                && MAX_EXP == 128)
+                            && MIN_EXP == -125  \
+                            && MAX_EXP == 128)
 
 #define TEST_COND_binary64 (MANT_DIG == 53  \
-                && MIN_EXP == -1021 \
-                && MAX_EXP == 1024)
+                            && MIN_EXP == -1021 \
+                            && MAX_EXP == 1024)
 
 #define TEST_COND_binary128 (MANT_DIG == 113        \
-                 && MIN_EXP == -16381   \
-                 && MAX_EXP == 16384)
+                             && MIN_EXP == -16381   \
+                             && MAX_EXP == 16384)
 
 #define TEST_COND_ibm128 (MANT_DIG == 106)
 
 #define TEST_COND_arg_ibm128 (ARG_MANT_DIG == 106)
 
 #define TEST_COND_intel96 (MANT_DIG == 64   \
-               && MIN_EXP == -16381 \
-               && MAX_EXP == 16384)
+                           && MIN_EXP == -16381 \
+                           && MAX_EXP == 16384)
 
 #define TEST_COND_m68k96 (MANT_DIG == 64    \
-              && MIN_EXP == -16382  \
-              && MAX_EXP == 16384)
+                          && MIN_EXP == -16382  \
+                          && MAX_EXP == 16384)
 
 /* The condition ibm128-libgcc is used instead of ibm128 to mark tests
    where in principle the glibc code is OK but the tests fail because
@@ -145,18 +145,18 @@ extern const char doc[];
 /* For narrowing functions, whether the argument format can represent
    all the given argument values.  */
 #define TEST_COND_arg_fmt(MAX_EXP, NUM_ONES, MIN_EXP, MAX_PREC) \
-  (((MAX_EXP) < ARG_MAX_EXP)                    \
-   && (!TEST_COND_arg_ibm128                    \
-       || (MAX_EXP) < ARG_MAX_EXP - 1               \
-       || (NUM_ONES) <= 53)                 \
-   && (MIN_EXP) >= ARG_MIN_EXP - ARG_MANT_DIG           \
-   && (MAX_PREC) <= ARG_MANT_DIG)
+    (((MAX_EXP) < ARG_MAX_EXP)                    \
+     && (!TEST_COND_arg_ibm128                    \
+         || (MAX_EXP) < ARG_MAX_EXP - 1               \
+         || (NUM_ONES) <= 53)                 \
+     && (MIN_EXP) >= ARG_MIN_EXP - ARG_MANT_DIG           \
+     && (MAX_PREC) <= ARG_MANT_DIG)
 
 /* Values underflowing on architectures detecting tininess before
    rounding, but not on those detecting tininess after rounding.  */
 #define UNDERFLOW_EXCEPTION_BEFORE_ROUNDING (TININESS_AFTER_ROUNDING \
-                         ? 0            \
-                         : UNDERFLOW_EXCEPTION)
+        ? 0            \
+        : UNDERFLOW_EXCEPTION)
 
 #if LONG_MAX == 0x7fffffff
 # define TEST_COND_long32   1

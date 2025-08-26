@@ -2793,7 +2793,7 @@ enum {
 #define STO_PPC64_LOCAL_BIT 5
 #define STO_PPC64_LOCAL_MASK    (7 << STO_PPC64_LOCAL_BIT)
 #define PPC64_LOCAL_ENTRY_OFFSET(other)             \
- (((1 << (((other) & STO_PPC64_LOCAL_MASK) >> STO_PPC64_LOCAL_BIT)) >> 2) << 2)
+    (((1 << (((other) & STO_PPC64_LOCAL_MASK) >> STO_PPC64_LOCAL_BIT)) >> 2) << 2)
 
 
 /* ARM specific declarations */

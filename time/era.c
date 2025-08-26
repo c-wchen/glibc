@@ -30,8 +30,8 @@ __libc_rwlock_define(extern, __libc_setlocale_lock attribute_hidden)
 #define CURRENT_WORD(item)  (current->values[_NL_ITEM_INDEX (item)].word)
 
 #define ERA_DATE_CMP(a, b) \
-  (a[0] < b[0] || (a[0] == b[0] && (a[1] < b[1]                   \
-                    || (a[1] == b[1] && a[2] <= b[2]))))
+    (a[0] < b[0] || (a[0] == b[0] && (a[1] < b[1]                   \
+                                      || (a[1] == b[1] && a[2] <= b[2]))))
 
 /* Look up the era information in CURRENT's locale strings and
    cache it in CURRENT->private.  */

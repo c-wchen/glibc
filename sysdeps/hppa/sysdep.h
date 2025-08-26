@@ -34,17 +34,17 @@
    incomplete stabs information.  Fake some entries here which specify
    the current source file.  */
 #define ENTRY(name)                               \
-  .SPACE $TEXT$                         ASM_LINE_SEP  \
-  .SUBSPA $CODE$,QUAD=0,ALIGN=8,ACCESS=44,CODE_ONLY     ASM_LINE_SEP  \
-  .align ALIGNARG(4)                        ASM_LINE_SEP  \
-  .NSUBSPA $CODE$,QUAD=0,ALIGN=8,ACCESS=44,CODE_ONLY        ASM_LINE_SEP  \
-  .EXPORT C_SYMBOL_NAME(name),ENTRY,PRIV_LEV=3,ARGW0=GR,RTNVAL=GR ASM_LINE_SEP\
-  C_LABEL(name)                                   \
-  CALL_MCOUNT
+    .SPACE $TEXT$                         ASM_LINE_SEP  \
+    .SUBSPA $CODE$,QUAD=0,ALIGN=8,ACCESS=44,CODE_ONLY     ASM_LINE_SEP  \
+                                         .align ALIGNARG(4)                        ASM_LINE_SEP  \
+                                         .NSUBSPA $CODE$,QUAD=0,ALIGN=8,ACCESS=44,CODE_ONLY        ASM_LINE_SEP  \
+                                                 .EXPORT C_SYMBOL_NAME(name),ENTRY,PRIV_LEV=3,ARGW0=GR,RTNVAL=GR ASM_LINE_SEP\
+                                                         C_LABEL(name)                                   \
+                                                         CALL_MCOUNT
 
 #undef  END
 #define END(name)                                 \
-  .PROCEND
+    .PROCEND
 
 /* GCC does everything for us. */
 #ifdef  PROF
@@ -54,12 +54,12 @@
 #endif
 
 #define PSEUDO(name, syscall_name, args)                      \
-  ENTRY (name)                                    \
-  DO_CALL (syscall_name, args)
+    ENTRY (name)                                    \
+    DO_CALL (syscall_name, args)
 
 #undef  PSEUDO_END
 #define PSEUDO_END(name)                              \
-  END (name)
+    END (name)
 
 #undef JUMPTARGET
 #define JUMPTARGET(name)    name

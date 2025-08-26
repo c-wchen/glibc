@@ -63,7 +63,7 @@
 #define _FP_WFRACBITS_DW_Q  (2 * _FP_WFRACBITS_Q)
 #define _FP_WFRACXBITS_DW_Q (_FP_FRACTBITS_DW_Q - _FP_WFRACBITS_DW_Q)
 #define _FP_HIGHBIT_DW_Q    \
-  ((_FP_W_TYPE) 1 << (_FP_WFRACBITS_DW_Q - 1) % _FP_W_TYPE_SIZE)
+    ((_FP_W_TYPE) 1 << (_FP_WFRACBITS_DW_Q - 1) % _FP_W_TYPE_SIZE)
 
 typedef float TFtype __attribute__((mode(TF)));
 
@@ -106,78 +106,78 @@ unsigned exp :
 # define FP_UNPACK_RAW_QP(X, val)   _FP_UNPACK_RAW_4_P (Q, X, (val))
 # define FP_PACK_RAW_Q(val, X)  _FP_PACK_RAW_4 (Q, (val), X)
 # define FP_PACK_RAW_QP(val, X)         \
-  do                        \
+    do                        \
     {                       \
-      if (!FP_INHIBIT_RESULTS)          \
-    _FP_PACK_RAW_4_P (Q, (val), X);     \
+        if (!FP_INHIBIT_RESULTS)          \
+            _FP_PACK_RAW_4_P (Q, (val), X);     \
     }                       \
-  while (0)
+    while (0)
 
 # define FP_UNPACK_Q(X, val)            \
-  do                        \
+    do                        \
     {                       \
-      _FP_UNPACK_RAW_4 (Q, X, (val));       \
-      _FP_UNPACK_CANONICAL (Q, 4, X);       \
+        _FP_UNPACK_RAW_4 (Q, X, (val));       \
+        _FP_UNPACK_CANONICAL (Q, 4, X);       \
     }                       \
-  while (0)
+    while (0)
 
 # define FP_UNPACK_QP(X, val)           \
-  do                        \
+    do                        \
     {                       \
-      _FP_UNPACK_RAW_4_P (Q, X, (val));     \
-      _FP_UNPACK_CANONICAL (Q, 4, X);       \
+        _FP_UNPACK_RAW_4_P (Q, X, (val));     \
+        _FP_UNPACK_CANONICAL (Q, 4, X);       \
     }                       \
-  while (0)
+    while (0)
 
 # define FP_UNPACK_SEMIRAW_Q(X, val)        \
-  do                        \
+    do                        \
     {                       \
-      _FP_UNPACK_RAW_4 (Q, X, (val));       \
-      _FP_UNPACK_SEMIRAW (Q, 4, X);     \
+        _FP_UNPACK_RAW_4 (Q, X, (val));       \
+        _FP_UNPACK_SEMIRAW (Q, 4, X);     \
     }                       \
-  while (0)
+    while (0)
 
 # define FP_UNPACK_SEMIRAW_QP(X, val)       \
-  do                        \
+    do                        \
     {                       \
-      _FP_UNPACK_RAW_4_P (Q, X, (val));     \
-      _FP_UNPACK_SEMIRAW (Q, 4, X);     \
+        _FP_UNPACK_RAW_4_P (Q, X, (val));     \
+        _FP_UNPACK_SEMIRAW (Q, 4, X);     \
     }                       \
-  while (0)
+    while (0)
 
 # define FP_PACK_Q(val, X)          \
-  do                        \
+    do                        \
     {                       \
-      _FP_PACK_CANONICAL (Q, 4, X);     \
-      _FP_PACK_RAW_4 (Q, (val), X);     \
+        _FP_PACK_CANONICAL (Q, 4, X);     \
+        _FP_PACK_RAW_4 (Q, (val), X);     \
     }                       \
-  while (0)
+    while (0)
 
 # define FP_PACK_QP(val, X)         \
-  do                        \
+    do                        \
     {                       \
-      _FP_PACK_CANONICAL (Q, 4, X);     \
-      if (!FP_INHIBIT_RESULTS)          \
-    _FP_PACK_RAW_4_P (Q, (val), X);     \
+        _FP_PACK_CANONICAL (Q, 4, X);     \
+        if (!FP_INHIBIT_RESULTS)          \
+            _FP_PACK_RAW_4_P (Q, (val), X);     \
     }                       \
-  while (0)
+    while (0)
 
 # define FP_PACK_SEMIRAW_Q(val, X)      \
-  do                        \
+    do                        \
     {                       \
-      _FP_PACK_SEMIRAW (Q, 4, X);       \
-      _FP_PACK_RAW_4 (Q, (val), X);     \
+        _FP_PACK_SEMIRAW (Q, 4, X);       \
+        _FP_PACK_RAW_4 (Q, (val), X);     \
     }                       \
-  while (0)
+    while (0)
 
 # define FP_PACK_SEMIRAW_QP(val, X)     \
-  do                        \
+    do                        \
     {                       \
-      _FP_PACK_SEMIRAW (Q, 4, X);       \
-      if (!FP_INHIBIT_RESULTS)          \
-    _FP_PACK_RAW_4_P (Q, (val), X);     \
+        _FP_PACK_SEMIRAW (Q, 4, X);       \
+        if (!FP_INHIBIT_RESULTS)          \
+            _FP_PACK_RAW_4_P (Q, (val), X);     \
     }                       \
-  while (0)
+    while (0)
 
 # define FP_ISSIGNAN_Q(X)       _FP_ISSIGNAN (Q, 4, X)
 # define FP_NEG_Q(R, X)         _FP_NEG (Q, 4, R, X)
@@ -195,7 +195,7 @@ unsigned exp :
 
 # define FP_TO_INT_Q(r, X, rsz, rsg)    _FP_TO_INT (Q, 4, (r), X, (rsz), (rsg))
 # define FP_TO_INT_ROUND_Q(r, X, rsz, rsg)  \
-  _FP_TO_INT_ROUND (Q, 4, (r), X, (rsz), (rsg))
+    _FP_TO_INT_ROUND (Q, 4, (r), X, (rsz), (rsg))
 # define FP_FROM_INT_Q(X, r, rs, rt)    _FP_FROM_INT (Q, 4, X, (r), (rs), rt)
 
 # define _FP_FRAC_HIGH_Q(X) _FP_FRAC_HIGH_4 (X)
@@ -235,78 +235,78 @@ unsigned exp     :
 # define FP_UNPACK_RAW_QP(X, val)   _FP_UNPACK_RAW_2_P (Q, X, (val))
 # define FP_PACK_RAW_Q(val, X)  _FP_PACK_RAW_2 (Q, (val), X)
 # define FP_PACK_RAW_QP(val, X)         \
-  do                        \
+    do                        \
     {                       \
-      if (!FP_INHIBIT_RESULTS)          \
-    _FP_PACK_RAW_2_P (Q, (val), X);     \
+        if (!FP_INHIBIT_RESULTS)          \
+            _FP_PACK_RAW_2_P (Q, (val), X);     \
     }                       \
-  while (0)
+    while (0)
 
 # define FP_UNPACK_Q(X, val)            \
-  do                        \
+    do                        \
     {                       \
-      _FP_UNPACK_RAW_2 (Q, X, (val));       \
-      _FP_UNPACK_CANONICAL (Q, 2, X);       \
+        _FP_UNPACK_RAW_2 (Q, X, (val));       \
+        _FP_UNPACK_CANONICAL (Q, 2, X);       \
     }                       \
-  while (0)
+    while (0)
 
 # define FP_UNPACK_QP(X, val)           \
-  do                        \
+    do                        \
     {                       \
-      _FP_UNPACK_RAW_2_P (Q, X, (val));     \
-      _FP_UNPACK_CANONICAL (Q, 2, X);       \
+        _FP_UNPACK_RAW_2_P (Q, X, (val));     \
+        _FP_UNPACK_CANONICAL (Q, 2, X);       \
     }                       \
-  while (0)
+    while (0)
 
 # define FP_UNPACK_SEMIRAW_Q(X, val)        \
-  do                        \
+    do                        \
     {                       \
-      _FP_UNPACK_RAW_2 (Q, X, (val));       \
-      _FP_UNPACK_SEMIRAW (Q, 2, X);     \
+        _FP_UNPACK_RAW_2 (Q, X, (val));       \
+        _FP_UNPACK_SEMIRAW (Q, 2, X);     \
     }                       \
-  while (0)
+    while (0)
 
 # define FP_UNPACK_SEMIRAW_QP(X, val)       \
-  do                        \
+    do                        \
     {                       \
-      _FP_UNPACK_RAW_2_P (Q, X, (val));     \
-      _FP_UNPACK_SEMIRAW (Q, 2, X);     \
+        _FP_UNPACK_RAW_2_P (Q, X, (val));     \
+        _FP_UNPACK_SEMIRAW (Q, 2, X);     \
     }                       \
-  while (0)
+    while (0)
 
 # define FP_PACK_Q(val, X)          \
-  do                        \
+    do                        \
     {                       \
-      _FP_PACK_CANONICAL (Q, 2, X);     \
-      _FP_PACK_RAW_2 (Q, (val), X);     \
+        _FP_PACK_CANONICAL (Q, 2, X);     \
+        _FP_PACK_RAW_2 (Q, (val), X);     \
     }                       \
-  while (0)
+    while (0)
 
 # define FP_PACK_QP(val, X)         \
-  do                        \
+    do                        \
     {                       \
-      _FP_PACK_CANONICAL (Q, 2, X);     \
-      if (!FP_INHIBIT_RESULTS)          \
-    _FP_PACK_RAW_2_P (Q, (val), X);     \
+        _FP_PACK_CANONICAL (Q, 2, X);     \
+        if (!FP_INHIBIT_RESULTS)          \
+            _FP_PACK_RAW_2_P (Q, (val), X);     \
     }                       \
-  while (0)
+    while (0)
 
 # define FP_PACK_SEMIRAW_Q(val, X)      \
-  do                        \
+    do                        \
     {                       \
-      _FP_PACK_SEMIRAW (Q, 2, X);       \
-      _FP_PACK_RAW_2 (Q, (val), X);     \
+        _FP_PACK_SEMIRAW (Q, 2, X);       \
+        _FP_PACK_RAW_2 (Q, (val), X);     \
     }                       \
-  while (0)
+    while (0)
 
 # define FP_PACK_SEMIRAW_QP(val, X)     \
-  do                        \
+    do                        \
     {                       \
-      _FP_PACK_SEMIRAW (Q, 2, X);       \
-      if (!FP_INHIBIT_RESULTS)          \
-    _FP_PACK_RAW_2_P (Q, (val), X);     \
+        _FP_PACK_SEMIRAW (Q, 2, X);       \
+        if (!FP_INHIBIT_RESULTS)          \
+            _FP_PACK_RAW_2_P (Q, (val), X);     \
     }                       \
-  while (0)
+    while (0)
 
 # define FP_ISSIGNAN_Q(X)       _FP_ISSIGNAN (Q, 2, X)
 # define FP_NEG_Q(R, X)         _FP_NEG (Q, 2, R, X)
@@ -324,7 +324,7 @@ unsigned exp     :
 
 # define FP_TO_INT_Q(r, X, rsz, rsg)    _FP_TO_INT (Q, 2, (r), X, (rsz), (rsg))
 # define FP_TO_INT_ROUND_Q(r, X, rsz, rsg)  \
-  _FP_TO_INT_ROUND (Q, 2, (r), X, (rsz), (rsg))
+    _FP_TO_INT_ROUND (Q, 2, (r), X, (rsz), (rsg))
 # define FP_FROM_INT_Q(X, r, rs, rt)    _FP_FROM_INT (Q, 2, X, (r), (rs), rt)
 
 # define _FP_FRAC_HIGH_Q(X) _FP_FRAC_HIGH_2 (X)

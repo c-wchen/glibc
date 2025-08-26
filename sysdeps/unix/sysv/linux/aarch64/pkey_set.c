@@ -21,7 +21,7 @@
 #include <sys/mman.h>
 
 #define MAX_PKEY_RIGHTS (PKEY_DISABLE_ACCESS | \
-  PKEY_DISABLE_WRITE | PKEY_DISABLE_EXECUTE | PKEY_DISABLE_READ)
+                         PKEY_DISABLE_WRITE | PKEY_DISABLE_EXECUTE | PKEY_DISABLE_READ)
 
 int pkey_set(int key, unsigned int restrictions)
 {

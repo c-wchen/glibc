@@ -48,7 +48,7 @@ extern char **__libc_argv attribute_hidden;
    RTLD_LAZY is not a big difference in performance, but RTLD_NOW has
    better error handling semantics for the library.  */
 #define __libc_dlopen(name) \
-  __libc_dlopen_mode (name, RTLD_NOW | __RTLD_DLOPEN)
+    __libc_dlopen_mode (name, RTLD_NOW | __RTLD_DLOPEN)
 extern void *__libc_dlopen_mode(const char *__name, int __mode)
 attribute_hidden;
 extern void *__libc_dlsym(void *__map, const char *__name)

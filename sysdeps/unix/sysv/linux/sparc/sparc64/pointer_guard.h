@@ -26,17 +26,17 @@
 #else
 # ifdef __ASSEMBLER__
 #  define PTR_MANGLE(dreg, reg, tmpreg) \
-  ldx   [%g7 + POINTER_GUARD], tmpreg; \
-  xor   reg, tmpreg, dreg
+    ldx   [%g7 + POINTER_GUARD], tmpreg; \
+    xor   reg, tmpreg, dreg
 #  define PTR_DEMANGLE(dreg, reg, tmpreg) PTR_MANGLE (dreg, reg, tmpreg)
 #  define PTR_MANGLE2(dreg, reg, tmpreg) \
-  xor   reg, tmpreg, dreg
+    xor   reg, tmpreg, dreg
 #  define PTR_DEMANGLE2(dreg, reg, tmpreg) PTR_MANGLE2 (dreg, reg, tmpreg)
 # else
 #  include <stdint.h>
 #  include <tls.h>
 #  define PTR_MANGLE(var) \
-  (var) = (__typeof (var)) ((uintptr_t) (var) ^ THREAD_GET_POINTER_GUARD ())
+    (var) = (__typeof (var)) ((uintptr_t) (var) ^ THREAD_GET_POINTER_GUARD ())
 #  define PTR_DEMANGLE(var)     PTR_MANGLE (var)
 # endif
 #endif

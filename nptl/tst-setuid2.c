@@ -32,7 +32,7 @@ static void (*func_sent)(void);
 static pthread_cond_t cond_recv;
 
 #define FAIL(fmt, ...) \
-  do { printf ("FAIL: " fmt "\n", __VA_ARGS__); _exit (1); } while (0)
+    do { printf ("FAIL: " fmt "\n", __VA_ARGS__); _exit (1); } while (0)
 
 static void *thread_func(void *ctx __attribute__((unused)))
 {

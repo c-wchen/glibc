@@ -32,20 +32,20 @@ extern const fenv_t *__fe_mask_env(void) attribute_hidden;
    FPU to run faster because it always takes the default action and can not
    generate SIGFPE.  */
 #define __TEST_AND_ENTER_NON_STOP(old, new) \
-  do { \
-    if (((old) & FPSCR_ENABLES_MASK) != 0 && ((new) & FPSCR_ENABLES_MASK) == 0) \
-      (void) __fe_mask_env (); \
-  } while (0)
+    do { \
+        if (((old) & FPSCR_ENABLES_MASK) != 0 && ((new) & FPSCR_ENABLES_MASK) == 0) \
+            (void) __fe_mask_env (); \
+    } while (0)
 
 /* If the old env has no enabled exceptions and the new env has any enabled
    exceptions, then unmask SIGFPE in the MSR FE0/FE1 bits.  This will put the
    hardware into "precise mode" and may cause the FPU to run slower on some
    hardware.  */
 #define __TEST_AND_EXIT_NON_STOP(old, new) \
-  do { \
-    if (((old) & FPSCR_ENABLES_MASK) == 0 && ((new) & FPSCR_ENABLES_MASK) != 0) \
-      (void) __fe_nomask_env_priv (); \
-  } while (0)
+    do { \
+        if (((old) & FPSCR_ENABLES_MASK) == 0 && ((new) & FPSCR_ENABLES_MASK) != 0) \
+            (void) __fe_nomask_env_priv (); \
+    } while (0)
 
 /* The sticky bits in the FPSCR indicating exceptions have occurred.  */
 #define FPSCR_STICKY_BITS ((FE_ALL_EXCEPT | FE_ALL_INVALID) & ~FE_INVALID)
@@ -61,12 +61,12 @@ extern const fenv_t *__fe_mask_env(void) attribute_hidden;
    bits set for 'mffsl' are "don't care" for 'mffs'.  'mffs' is a superset
    of 'mffsl'.  */
 #define fegetenv_control()                  \
-  ({register double __fr;                       \
-    __asm__ __volatile__ (                      \
-      ".machine push; .machine \"power9\"; mffsl %0; .machine pop"  \
-      : "=f" (__fr));                           \
-    __fr;                               \
-  })
+    ({register double __fr;                       \
+        __asm__ __volatile__ (                      \
+                ".machine push; .machine \"power9\"; mffsl %0; .machine pop"  \
+                : "=f" (__fr));                           \
+        __fr;                               \
+    })
 
 /* Starting with GCC 14 __builtin_set_fpscr_rn can be used to return the
    FPSCR fields as a double.  This support is available
@@ -77,20 +77,20 @@ extern const fenv_t *__fe_mask_env(void) attribute_hidden;
 #define __fe_mffscrn(rn)  __builtin_set_fpscr_rn (rn)
 #else
 #define __fe_mffscrn(rn)                        \
-  ({register fenv_union_t __fr;                     \
-    if (__builtin_constant_p (rn))                  \
-      __asm__ __volatile__ (                        \
-        ".machine push; .machine \"power9\"; mffscrni %0,%1; .machine pop" \
-        : "=f" (__fr.fenv) : "n" (rn));                 \
-    else                                \
-    {                                   \
-      __fr.l = (rn);                            \
-      __asm__ __volatile__ (                        \
-        ".machine push; .machine \"power9\"; mffscrn %0,%1; .machine pop" \
-        : "=f" (__fr.fenv) : "f" (__fr.fenv));              \
-    }                                   \
-    __fr.fenv;                              \
-  })
+    ({register fenv_union_t __fr;                     \
+        if (__builtin_constant_p (rn))                  \
+            __asm__ __volatile__ (                        \
+                    ".machine push; .machine \"power9\"; mffscrni %0,%1; .machine pop" \
+                    : "=f" (__fr.fenv) : "n" (rn));                 \
+        else                                \
+        {                                   \
+            __fr.l = (rn);                            \
+            __asm__ __volatile__ (                        \
+                    ".machine push; .machine \"power9\"; mffscrn %0,%1; .machine pop" \
+                    : "=f" (__fr.fenv) : "f" (__fr.fenv));              \
+        }                                   \
+        __fr.fenv;                              \
+    })
 #endif
 
 /* Like fegetenv_control, but also sets the rounding mode.  */
@@ -101,25 +101,25 @@ extern const fenv_t *__fe_mask_env(void) attribute_hidden;
    but not sufficient, because it does not set the rounding mode.
    Explicitly set the rounding mode when 'mffscrn' actually doesn't.  */
 #define fegetenv_and_set_rn(rn)                     \
-  ({register fenv_union_t __fr;                     \
-    __fr.fenv = __fe_mffscrn (rn);                  \
-    if (__glibc_unlikely (!(GLRO(dl_hwcap2) & PPC_FEATURE2_ARCH_3_00))) \
-      __fesetround_inline (rn);                     \
-    __fr.fenv;                              \
-  })
+    ({register fenv_union_t __fr;                     \
+        __fr.fenv = __fe_mffscrn (rn);                  \
+        if (__glibc_unlikely (!(GLRO(dl_hwcap2) & PPC_FEATURE2_ARCH_3_00))) \
+            __fesetround_inline (rn);                     \
+        __fr.fenv;                              \
+    })
 #endif
 
 /* Equivalent to fesetenv, but takes a fenv_t instead of a pointer.  */
 #define fesetenv_register(env) \
     do { \
-      double d = (env); \
-      if(GLRO(dl_hwcap) & PPC_FEATURE_HAS_DFP) \
-        asm volatile (".machine push; " \
-              ".machine \"power6\"; " \
-              "mtfsf 0xff,%0,1,0; " \
-              ".machine pop" : : "f" (d)); \
-      else \
-        __builtin_mtfsf (0xff, d); \
+        double d = (env); \
+        if(GLRO(dl_hwcap) & PPC_FEATURE_HAS_DFP) \
+            asm volatile (".machine push; " \
+                          ".machine \"power6\"; " \
+                          "mtfsf 0xff,%0,1,0; " \
+                          ".machine pop" : : "f" (d)); \
+        else \
+            __builtin_mtfsf (0xff, d); \
     } while(0)
 
 /* Set the last 2 nibbles of the FPSCR, which contain the
@@ -135,10 +135,10 @@ extern const fenv_t *__fe_mask_env(void) attribute_hidden;
    functions.  */
 #define relax_fenv_state() \
     do { \
-       if (GLRO(dl_hwcap) & PPC_FEATURE_HAS_DFP) \
-         asm volatile (".machine push; .machine \"power6\"; " \
-          "mtfsfi 7,0,1; .machine pop"); \
-       asm volatile ("mtfsfi 7,0"); \
+        if (GLRO(dl_hwcap) & PPC_FEATURE_HAS_DFP) \
+            asm volatile (".machine push; .machine \"power6\"; " \
+                          "mtfsfi 7,0,1; .machine pop"); \
+        asm volatile ("mtfsfi 7,0"); \
     } while(0)
 
 /* Set/clear a particular FPSCR bit (for instance,
@@ -264,16 +264,16 @@ enum {
 
 #define FPSCR_RN_MASK (FPSCR_RN_hi_MASK|FPSCR_RN_lo_MASK)
 #define FPSCR_ENABLES_MASK \
-  (FPSCR_VE_MASK|FPSCR_OE_MASK|FPSCR_UE_MASK|FPSCR_ZE_MASK|FPSCR_XE_MASK)
+    (FPSCR_VE_MASK|FPSCR_OE_MASK|FPSCR_UE_MASK|FPSCR_ZE_MASK|FPSCR_XE_MASK)
 #define FPSCR_BASIC_EXCEPTIONS_MASK \
-  (FPSCR_VX_MASK|FPSCR_OX_MASK|FPSCR_UX_MASK|FPSCR_ZX_MASK|FPSCR_XX_MASK)
+    (FPSCR_VX_MASK|FPSCR_OX_MASK|FPSCR_UX_MASK|FPSCR_ZX_MASK|FPSCR_XX_MASK)
 #define FPSCR_EXCEPTIONS_MASK (FPSCR_BASIC_EXCEPTIONS_MASK| \
-  FPSCR_VXSNAN_MASK|FPSCR_VXISI_MASK|FPSCR_VXIDI_MASK|FPSCR_VXZDZ_MASK| \
-  FPSCR_VXIMZ_MASK|FPSCR_VXVC_MASK|FPSCR_VXSOFT_MASK|FPSCR_VXSQRT_MASK| \
-  FPSCR_VXCVI_MASK)
+                               FPSCR_VXSNAN_MASK|FPSCR_VXISI_MASK|FPSCR_VXIDI_MASK|FPSCR_VXZDZ_MASK| \
+                               FPSCR_VXIMZ_MASK|FPSCR_VXVC_MASK|FPSCR_VXSOFT_MASK|FPSCR_VXSQRT_MASK| \
+                               FPSCR_VXCVI_MASK)
 #define FPSCR_FPRF_MASK \
-  (FPSCR_FPRF_C_MASK|FPSCR_FPRF_FL_MASK|FPSCR_FPRF_FG_MASK| \
-   FPSCR_FPRF_FE_MASK|FPSCR_FPRF_FU_MASK)
+    (FPSCR_FPRF_C_MASK|FPSCR_FPRF_FL_MASK|FPSCR_FPRF_FG_MASK| \
+     FPSCR_FPRF_FE_MASK|FPSCR_FPRF_FU_MASK)
 #define FPSCR_CONTROL_MASK (FPSCR_ENABLES_MASK|FPSCR_NI_MASK|FPSCR_RN_MASK)
 #define FPSCR_STATUS_MASK (FPSCR_FR_MASK|FPSCR_FI_MASK|FPSCR_FPRF_MASK)
 
@@ -307,12 +307,12 @@ static inline unsigned long long fenv_exceptions_to_reg(int excepts)
    and +0 stay as they were).  The `obvious' way to do this is optimised
    out by gcc.  */
 #define f_wash(x) \
-   ({ double d; asm volatile ("fmul %0,%1,%2" \
-                  : "=f"(d) \
-                  : "f" (x), "f"((float)1.0)); d; })
+    ({ double d; asm volatile ("fmul %0,%1,%2" \
+                                   : "=f"(d) \
+                                   : "f" (x), "f"((float)1.0)); d; })
 #define f_washf(x) \
-   ({ float f; asm volatile ("fmuls %0,%1,%2" \
-                 : "=f"(f) \
-                 : "f" (x), "f"((float)1.0)); f; })
+    ({ float f; asm volatile ("fmuls %0,%1,%2" \
+                                  : "=f"(f) \
+                                  : "f" (x), "f"((float)1.0)); f; })
 
 #endif /* fenv_libc.h */

@@ -43,7 +43,7 @@
 
 #ifndef declare_mgen_alias_narrow
 # define declare_mgen_alias_narrow(from, to)    \
-  libm_alias_ldouble_narrow (from, to)
+    libm_alias_ldouble_narrow (from, to)
 #endif
 
 /* Supply the generic macros.  */

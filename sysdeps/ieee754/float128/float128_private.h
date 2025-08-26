@@ -58,7 +58,7 @@
 #ifdef libc_feholdexcept_setroundf128
 # undef libc_feholdexcept_setroundl
 # define libc_feholdexcept_setroundl(ENV, RM)   \
-  libc_feholdexcept_setroundf128 (ENV, RM)
+    libc_feholdexcept_setroundf128 (ENV, RM)
 #endif
 
 #ifdef libc_feupdateenv_testf128
@@ -140,7 +140,7 @@
 #define libm_alias_double_ldouble(func) libm_alias_float64_float128 (func)
 #undef libm_alias_ldouble_narrow
 #define libm_alias_ldouble_narrow(from, to) \
-  libm_alias_float128_narrow (from, to)
+    libm_alias_float128_narrow (from, to)
 
 #include <math-use-builtins.h>
 #undef USE_NEARBYINTL_BUILTIN

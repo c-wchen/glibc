@@ -75,7 +75,7 @@ void _dl_diagnostics_cpu(void)
     /* The preferred indicators are not part of the ABI and need to be
        translated.  */
 #define BIT(x) \
-  print_cpu_feature_preferred (#x, CPU_FEATURE_PREFERRED_P (cpu_features, x));
+    print_cpu_feature_preferred (#x, CPU_FEATURE_PREFERRED_P (cpu_features, x));
 #include "cpu-features-preferred_feature_index_1.def"
 #undef BIT
 

@@ -21,19 +21,19 @@ extern void __default_sa_restorer(void);
 extern void __default_rt_sa_restorer(void);
 
 #define SET_SA_RESTORER(kact, act)              \
- ({                             \
-   if ((kact)->sa_flags & SA_RESTORER)              \
-     (kact)->sa_restorer = (act)->sa_restorer;          \
-   else                             \
-     {                              \
-       (kact)->sa_restorer = ((kact)->sa_flags & SA_SIGINFO)    \
-                 ? __default_rt_sa_restorer     \
-                 : __default_sa_restorer;       \
-       (kact)->sa_flags |= SA_RESTORER;             \
-     }                              \
- })
+    ({                             \
+        if ((kact)->sa_flags & SA_RESTORER)              \
+            (kact)->sa_restorer = (act)->sa_restorer;          \
+        else                             \
+        {                              \
+            (kact)->sa_restorer = ((kact)->sa_flags & SA_SIGINFO)    \
+                                  ? __default_rt_sa_restorer     \
+                                  : __default_sa_restorer;       \
+            (kact)->sa_flags |= SA_RESTORER;             \
+        }                              \
+    })
 
 #define RESET_SA_RESTORER(act, kact)                \
-  (act)->sa_restorer = (kact)->sa_restorer;
+    (act)->sa_restorer = (kact)->sa_restorer;
 
 #include <sysdeps/unix/sysv/linux/libc_sigaction.c>

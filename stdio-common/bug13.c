@@ -8,10 +8,10 @@ int main(void)
     char buf[100];
 
 #define TEST(nr, result, format, args...) \
-  if (sprintf (buf, format, ## args) != result)                   \
+    if (sprintf (buf, format, ## args) != result)                   \
     {                                         \
-      printf ("test %d failed (\"%s\",  %d)\n", nr, buf, result);         \
-      res = 1;                                    \
+        printf ("test %d failed (\"%s\",  %d)\n", nr, buf, result);         \
+        res = 1;                                    \
     }
 
     TEST(1, 2, "%d", -1);

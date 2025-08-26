@@ -145,21 +145,21 @@ static inline void __pthread_dequeue(struct __pthread *thread)
 
 /* Iterate over QUEUE storing each element in ELEMENT.  */
 #define __pthread_queue_iterate(queue, element)             \
-  for (struct __pthread *__pdi_next = (queue);              \
-       ((element) = __pdi_next)                     \
-     && ((__pdi_next = __pdi_next->next),               \
-         1);                            \
-       )
+    for (struct __pthread *__pdi_next = (queue);              \
+         ((element) = __pdi_next)                     \
+         && ((__pdi_next = __pdi_next->next),               \
+             1);                            \
+        )
 
 /* Iterate over QUEUE dequeuing each element, storing it in
    ELEMENT.  */
 #define __pthread_dequeuing_iterate(queue, element)         \
-  for (struct __pthread *__pdi_next = (queue);              \
-       ((element) = __pdi_next)                     \
-     && ((__pdi_next = __pdi_next->next),               \
-         ((element)->prevp = 0),                    \
-         1);                            \
-       )
+    for (struct __pthread *__pdi_next = (queue);              \
+         ((element) = __pdi_next)                     \
+         && ((__pdi_next = __pdi_next->next),               \
+             ((element)->prevp = 0),                    \
+             1);                            \
+        )
 
 /* The total number of threads currently active.  */
 extern unsigned int __pthread_total;
@@ -172,17 +172,17 @@ extern int __pthread_concurrency;
 extern int __pthread_max_threads;
 
 #define __pthread_getid(thread) \
-  ({ struct __pthread *__t = NULL;                                           \
-     __libc_rwlock_rdlock (GL (dl_pthread_threads_lock));                    \
-     if (thread <= __pthread_max_threads)                                    \
-       __t = GL (dl_pthread_threads)[thread - 1];                            \
-     __libc_rwlock_unlock (GL (dl_pthread_threads_lock));                    \
-     __t; })
+    ({ struct __pthread *__t = NULL;                                           \
+        __libc_rwlock_rdlock (GL (dl_pthread_threads_lock));                    \
+        if (thread <= __pthread_max_threads)                                    \
+            __t = GL (dl_pthread_threads)[thread - 1];                            \
+        __libc_rwlock_unlock (GL (dl_pthread_threads_lock));                    \
+        __t; })
 
 #define __pthread_setid(thread, pthread) \
-  __libc_rwlock_wrlock (GL (dl_pthread_threads_lock));                       \
-  GL (dl_pthread_threads)[thread - 1] = pthread;                             \
-  __libc_rwlock_unlock (GL (dl_pthread_threads_lock));
+    __libc_rwlock_wrlock (GL (dl_pthread_threads_lock));                       \
+    GL (dl_pthread_threads)[thread - 1] = pthread;                             \
+    __libc_rwlock_unlock (GL (dl_pthread_threads_lock));
 
 /* Similar to pthread_self, but returns the thread descriptor instead
    of the thread ID.  */
@@ -353,7 +353,7 @@ struct new_sem {
     uint64_t data;
     int pshared;
 #define __SEMAPHORE_INITIALIZER(value, pshared) \
-  { (value), (pshared) }
+    { (value), (pshared) }
 #else
 # define SEM_VALUE_SHIFT 1
 # define SEM_NWAITERS_MASK ((unsigned int)1)
@@ -361,7 +361,7 @@ struct new_sem {
     unsigned int nwaiters;
     int pshared;
 #define __SEMAPHORE_INITIALIZER(value, pshared) \
-  { (value) << SEM_VALUE_SHIFT, 0, (pshared) }
+    { (value) << SEM_VALUE_SHIFT, 0, (pshared) }
 #endif
 };
 

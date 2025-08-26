@@ -26,12 +26,12 @@
    the library we build must be compatible with user code built by
    GCC version MAJOR.MINOR.  */
 #define GCC_COMPAT(major, minor)        \
-  (GCC_COMPAT_VERSION <= GCC_VERSION (major, minor))
+    (GCC_COMPAT_VERSION <= GCC_VERSION (major, minor))
 
 /* This is how we compose an integer from major and minor version
    numbers, for comparison.  */
 #define GCC_VERSION(major, minor)       \
-  (((major) << 16) + (minor))
+    (((major) << 16) + (minor))
 
 #ifndef GCC_COMPAT_VERSION
 /* GCC 2.7.2 was current at the time of the glibc-2.0 release.

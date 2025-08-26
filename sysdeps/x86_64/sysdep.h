@@ -60,44 +60,44 @@ enum cf_protection_level
 
 /* Define an entry point visible from C.  */
 #define ENTRY_P2ALIGN(name, alignment)                        \
-  .globl C_SYMBOL_NAME(name);                             \
-  .type C_SYMBOL_NAME(name),@function;                        \
-  .align ALIGNARG(alignment);                             \
-  C_LABEL(name)                                   \
-  cfi_startproc;                                  \
-  _CET_ENDBR;                                     \
-  CALL_MCOUNT
+    .globl C_SYMBOL_NAME(name);                             \
+    .type C_SYMBOL_NAME(name),@function;                        \
+    .align ALIGNARG(alignment);                             \
+    C_LABEL(name)                                   \
+    cfi_startproc;                                  \
+    _CET_ENDBR;                                     \
+    CALL_MCOUNT
 
 /* This macro is for setting proper CFI with DW_CFA_expression describing
    the register as saved relative to %rsp instead of relative to the CFA.
    Expression is DW_OP_drop, DW_OP_breg7 (%rsp is register 7), sleb128 offset
    from %rsp.  */
 #define cfi_offset_rel_rsp(regn, off)   .cfi_escape 0x10, regn, 0x4, 0x13, \
-                    0x77, off & 0x7F | 0x80, off >> 7
+    0x77, off & 0x7F | 0x80, off >> 7
 
 /* If compiled for profiling, call `mcount' at the start of each function.  */
 #ifdef  PROF
 /* The mcount code relies on a normal frame pointer being on the stack
    to locate our caller, so push one just for its benefit.  */
 #define CALL_MCOUNT                                                          \
-  pushq %rbp;                                                                \
-  cfi_adjust_cfa_offset(8);                                                  \
-  movq %rsp, %rbp;                                                           \
-  cfi_def_cfa_register(%rbp);                                                \
-  call JUMPTARGET(mcount);                                                   \
-  popq %rbp;                                                                 \
-  cfi_def_cfa(rsp,8);
+    pushq %rbp;                                                                \
+    cfi_adjust_cfa_offset(8);                                                  \
+    movq %rsp, %rbp;                                                           \
+    cfi_def_cfa_register(%rbp);                                                \
+    call JUMPTARGET(mcount);                                                   \
+    popq %rbp;                                                                 \
+    cfi_def_cfa(rsp,8);
 #else
 #define CALL_MCOUNT     /* Do nothing.  */
 #endif
 
 #define PSEUDO(name, syscall_name, args)                      \
-lose:                                         \
-  jmp JUMPTARGET(syscall_error)                           \
-  .globl syscall_error;                               \
-  ENTRY (name)                                    \
-  DO_CALL (syscall_name, args);                           \
-  jb lose
+    lose:                                         \
+    jmp JUMPTARGET(syscall_error)                           \
+    .globl syscall_error;                               \
+    ENTRY (name)                                    \
+    DO_CALL (syscall_name, args);                           \
+    jb lose
 
 #undef JUMPTARGET
 #ifdef SHARED
@@ -142,7 +142,7 @@ lose:                                         \
     jnz 1f;                     \
     vzeroupper;                     \
     ret;                            \
-1:                              \
+    1:                              \
     vzeroall;                       \
     ret
 
@@ -155,9 +155,9 @@ lose:                                         \
     jz 1f;                          \
     vzeroall;                           \
     jmp 2f;                         \
-1:                          \
+    1:                          \
     vzeroupper;                         \
-2:
+    2:
 
 /* In RTM define this as COND_VZEROUPPER_XTEST.  */
 #ifndef COND_VZEROUPPER

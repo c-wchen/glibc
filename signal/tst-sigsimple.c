@@ -30,18 +30,18 @@ static int do_test(void)
     int e;
 
 #define RUN(test) \
-  errno = 0;                                      \
-  e = test;                                   \
-  if (e != -1)                                    \
+    errno = 0;                                      \
+    e = test;                                   \
+    if (e != -1)                                    \
     {                                         \
-      printf ("%s returned %d\n", #test, e);                      \
-      result = 1;                                 \
+        printf ("%s returned %d\n", #test, e);                      \
+        result = 1;                                 \
     }                                         \
-  else if (errno != EINVAL)                           \
+    else if (errno != EINVAL)                           \
     {                                         \
-      printf ("%s didn't set errno to EINVAL (%s instead)\n",             \
-          #test, strerror (errno));                       \
-      result = 1;                                 \
+        printf ("%s didn't set errno to EINVAL (%s instead)\n",             \
+                #test, strerror (errno));                       \
+        result = 1;                                 \
     }
 
     RUN(sighold(-1));

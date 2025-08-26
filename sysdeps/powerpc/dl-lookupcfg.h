@@ -24,16 +24,16 @@
 #if __WORDSIZE == 64 && _CALL_ELF == 1
 /* We need to correctly set the audit modules value for bind-now.  */
 # define DL_FIXUP_BINDNOW_ADDR_VALUE(addr) \
- (((Elf64_FuncDesc *)(addr))->fd_func)
+    (((Elf64_FuncDesc *)(addr))->fd_func)
 # define DL_FIXUP_BINDNOW_RELOC(l, reloc, value, new_value, st_value, lazy) \
- ({                             \
-    Elf64_FuncDesc *opd = (Elf64_FuncDesc *) (value);       \
-    opd->fd_func = (st_value);                  \
-    if ((new_value) != (uintptr_t) (st_value))          \
-     opd->fd_toc = ((Elf64_FuncDesc *)(new_value))->fd_toc; \
-  })
+    ({                             \
+        Elf64_FuncDesc *opd = (Elf64_FuncDesc *) (value);       \
+        opd->fd_func = (st_value);                  \
+        if ((new_value) != (uintptr_t) (st_value))          \
+            opd->fd_toc = ((Elf64_FuncDesc *)(new_value))->fd_toc; \
+    })
 #else
 # define DL_FIXUP_BINDNOW_ADDR_VALUE(addr) (addr)
 # define DL_FIXUP_BINDNOW_RELOC(l, reloc, value, new_value, st_value, lazy) \
-  (*value) = st_value;
+    (*value) = st_value;
 #endif

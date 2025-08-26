@@ -32,76 +32,76 @@
 
 
 #define __INTERNAL_SYSCALL0(name) \
-  INTERNAL_SYSCALL (name, 0)
+    INTERNAL_SYSCALL (name, 0)
 #define __INTERNAL_SYSCALL1(name, a1) \
-  INTERNAL_SYSCALL (name, 1, a1)
+    INTERNAL_SYSCALL (name, 1, a1)
 #define __INTERNAL_SYSCALL2(name, a1, a2) \
-  INTERNAL_SYSCALL (name, 2, a1, a2)
+    INTERNAL_SYSCALL (name, 2, a1, a2)
 #define __INTERNAL_SYSCALL3(name, a1, a2, a3) \
-  INTERNAL_SYSCALL (name, 3, a1, a2, a3)
+    INTERNAL_SYSCALL (name, 3, a1, a2, a3)
 #define __INTERNAL_SYSCALL4(name, a1, a2, a3, a4) \
-  INTERNAL_SYSCALL (name, 4, a1, a2, a3, a4)
+    INTERNAL_SYSCALL (name, 4, a1, a2, a3, a4)
 #define __INTERNAL_SYSCALL5(name, a1, a2, a3, a4, a5) \
-  INTERNAL_SYSCALL (name, 5, a1, a2, a3, a4, a5)
+    INTERNAL_SYSCALL (name, 5, a1, a2, a3, a4, a5)
 #define __INTERNAL_SYSCALL6(name, a1, a2, a3, a4, a5, a6) \
-  INTERNAL_SYSCALL (name, 6, a1, a2, a3, a4, a5, a6)
+    INTERNAL_SYSCALL (name, 6, a1, a2, a3, a4, a5, a6)
 #define __INTERNAL_SYSCALL7(name, a1, a2, a3, a4, a5, a6, a7) \
-  INTERNAL_SYSCALL (name, 7, a1, a2, a3, a4, a5, a6, a7)
+    INTERNAL_SYSCALL (name, 7, a1, a2, a3, a4, a5, a6, a7)
 
 #define __INTERNAL_SYSCALL_NARGS_X(a,b,c,d,e,f,g,h,n,...) n
 #define __INTERNAL_SYSCALL_NARGS(...) \
-  __INTERNAL_SYSCALL_NARGS_X (__VA_ARGS__,7,6,5,4,3,2,1,0,)
+    __INTERNAL_SYSCALL_NARGS_X (__VA_ARGS__,7,6,5,4,3,2,1,0,)
 #define __INTERNAL_SYSCALL_DISP(b,...) \
-  __SYSCALL_CONCAT (b,__INTERNAL_SYSCALL_NARGS(__VA_ARGS__))(__VA_ARGS__)
+    __SYSCALL_CONCAT (b,__INTERNAL_SYSCALL_NARGS(__VA_ARGS__))(__VA_ARGS__)
 
 /* Issue a syscall defined by syscall number plus any other argument required.
    It is similar to INTERNAL_SYSCALL macro, but without the need to pass the
    expected argument number as second parameter.  */
 #define INTERNAL_SYSCALL_CALL(...) \
-  __INTERNAL_SYSCALL_DISP (__INTERNAL_SYSCALL, __VA_ARGS__)
+    __INTERNAL_SYSCALL_DISP (__INTERNAL_SYSCALL, __VA_ARGS__)
 
 #define __INTERNAL_SYSCALL_NCS0(name) \
-  INTERNAL_SYSCALL_NCS (name, 0)
+    INTERNAL_SYSCALL_NCS (name, 0)
 #define __INTERNAL_SYSCALL_NCS1(name, a1) \
-  INTERNAL_SYSCALL_NCS (name, 1, a1)
+    INTERNAL_SYSCALL_NCS (name, 1, a1)
 #define __INTERNAL_SYSCALL_NCS2(name, a1, a2) \
-  INTERNAL_SYSCALL_NCS (name, 2, a1, a2)
+    INTERNAL_SYSCALL_NCS (name, 2, a1, a2)
 #define __INTERNAL_SYSCALL_NCS3(name, a1, a2, a3) \
-  INTERNAL_SYSCALL_NCS (name, 3, a1, a2, a3)
+    INTERNAL_SYSCALL_NCS (name, 3, a1, a2, a3)
 #define __INTERNAL_SYSCALL_NCS4(name, a1, a2, a3, a4) \
-  INTERNAL_SYSCALL_NCS (name, 4, a1, a2, a3, a4)
+    INTERNAL_SYSCALL_NCS (name, 4, a1, a2, a3, a4)
 #define __INTERNAL_SYSCALL_NCS5(name, a1, a2, a3, a4, a5) \
-  INTERNAL_SYSCALL_NCS (name, 5, a1, a2, a3, a4, a5)
+    INTERNAL_SYSCALL_NCS (name, 5, a1, a2, a3, a4, a5)
 #define __INTERNAL_SYSCALL_NCS6(name, a1, a2, a3, a4, a5, a6) \
-  INTERNAL_SYSCALL_NCS (name, 6, a1, a2, a3, a4, a5, a6)
+    INTERNAL_SYSCALL_NCS (name, 6, a1, a2, a3, a4, a5, a6)
 #define __INTERNAL_SYSCALL_NCS7(name, a1, a2, a3, a4, a5, a6, a7) \
-  INTERNAL_SYSCALL_NCS (name, 7, a1, a2, a3, a4, a5, a6, a7)
+    INTERNAL_SYSCALL_NCS (name, 7, a1, a2, a3, a4, a5, a6, a7)
 
 #define INTERNAL_SYSCALL_NCS_CALL(...) \
-  __INTERNAL_SYSCALL_DISP (__INTERNAL_SYSCALL_NCS, __VA_ARGS__)
+    __INTERNAL_SYSCALL_DISP (__INTERNAL_SYSCALL_NCS, __VA_ARGS__)
 
 #define __INLINE_SYSCALL0(name) \
-  INLINE_SYSCALL (name, 0)
+    INLINE_SYSCALL (name, 0)
 #define __INLINE_SYSCALL1(name, a1) \
-  INLINE_SYSCALL (name, 1, a1)
+    INLINE_SYSCALL (name, 1, a1)
 #define __INLINE_SYSCALL2(name, a1, a2) \
-  INLINE_SYSCALL (name, 2, a1, a2)
+    INLINE_SYSCALL (name, 2, a1, a2)
 #define __INLINE_SYSCALL3(name, a1, a2, a3) \
-  INLINE_SYSCALL (name, 3, a1, a2, a3)
+    INLINE_SYSCALL (name, 3, a1, a2, a3)
 #define __INLINE_SYSCALL4(name, a1, a2, a3, a4) \
-  INLINE_SYSCALL (name, 4, a1, a2, a3, a4)
+    INLINE_SYSCALL (name, 4, a1, a2, a3, a4)
 #define __INLINE_SYSCALL5(name, a1, a2, a3, a4, a5) \
-  INLINE_SYSCALL (name, 5, a1, a2, a3, a4, a5)
+    INLINE_SYSCALL (name, 5, a1, a2, a3, a4, a5)
 #define __INLINE_SYSCALL6(name, a1, a2, a3, a4, a5, a6) \
-  INLINE_SYSCALL (name, 6, a1, a2, a3, a4, a5, a6)
+    INLINE_SYSCALL (name, 6, a1, a2, a3, a4, a5, a6)
 #define __INLINE_SYSCALL7(name, a1, a2, a3, a4, a5, a6, a7) \
-  INLINE_SYSCALL (name, 7, a1, a2, a3, a4, a5, a6, a7)
+    INLINE_SYSCALL (name, 7, a1, a2, a3, a4, a5, a6, a7)
 
 #define __INLINE_SYSCALL_NARGS_X(a,b,c,d,e,f,g,h,n,...) n
 #define __INLINE_SYSCALL_NARGS(...) \
-  __INLINE_SYSCALL_NARGS_X (__VA_ARGS__,7,6,5,4,3,2,1,0,)
+    __INLINE_SYSCALL_NARGS_X (__VA_ARGS__,7,6,5,4,3,2,1,0,)
 #define __INLINE_SYSCALL_DISP(b,...) \
-  __SYSCALL_CONCAT (b,__INLINE_SYSCALL_NARGS(__VA_ARGS__))(__VA_ARGS__)
+    __SYSCALL_CONCAT (b,__INLINE_SYSCALL_NARGS(__VA_ARGS__))(__VA_ARGS__)
 
 /* Issue a syscall defined by syscall number plus any other argument
    required.  Any error will be handled using arch defined macros and errno
@@ -109,30 +109,30 @@
    It is similar to INLINE_SYSCALL macro, but without the need to pass the
    expected argument number as second parameter.  */
 #define INLINE_SYSCALL_CALL(...) \
-  __INLINE_SYSCALL_DISP (__INLINE_SYSCALL, __VA_ARGS__)
+    __INLINE_SYSCALL_DISP (__INLINE_SYSCALL, __VA_ARGS__)
 
 #define __INTERNAL_SYSCALL_NCS0(name) \
-  INTERNAL_SYSCALL_NCS (name, 0)
+    INTERNAL_SYSCALL_NCS (name, 0)
 #define __INTERNAL_SYSCALL_NCS1(name, a1) \
-  INTERNAL_SYSCALL_NCS (name, 1, a1)
+    INTERNAL_SYSCALL_NCS (name, 1, a1)
 #define __INTERNAL_SYSCALL_NCS2(name, a1, a2) \
-  INTERNAL_SYSCALL_NCS (name, 2, a1, a2)
+    INTERNAL_SYSCALL_NCS (name, 2, a1, a2)
 #define __INTERNAL_SYSCALL_NCS3(name, a1, a2, a3) \
-  INTERNAL_SYSCALL_NCS (name, 3, a1, a2, a3)
+    INTERNAL_SYSCALL_NCS (name, 3, a1, a2, a3)
 #define __INTERNAL_SYSCALL_NCS4(name, a1, a2, a3, a4) \
-  INTERNAL_SYSCALL_NCS (name, 4, a1, a2, a3, a4)
+    INTERNAL_SYSCALL_NCS (name, 4, a1, a2, a3, a4)
 #define __INTERNAL_SYSCALL_NCS5(name, a1, a2, a3, a4, a5) \
-  INTERNAL_SYSCALL_NCS (name, 5, a1, a2, a3, a4, a5)
+    INTERNAL_SYSCALL_NCS (name, 5, a1, a2, a3, a4, a5)
 #define __INTERNAL_SYSCALL_NCS6(name, a1, a2, a3, a4, a5, a6) \
-  INTERNAL_SYSCALL_NCS (name, 6, a1, a2, a3, a4, a5, a6)
+    INTERNAL_SYSCALL_NCS (name, 6, a1, a2, a3, a4, a5, a6)
 #define __INTERNAL_SYSCALL_NCS7(name, a1, a2, a3, a4, a5, a6, a7) \
-  INTERNAL_SYSCALL_NCS (name, 7, a1, a2, a3, a4, a5, a6, a7)
+    INTERNAL_SYSCALL_NCS (name, 7, a1, a2, a3, a4, a5, a6, a7)
 
 /* Issue a syscall defined by syscall number plus any other argument required.
    It is similar to INTERNAL_SYSCALL_NCS macro, but without the need to pass
    the expected argument number as third parameter.  */
 #define INTERNAL_SYSCALL_NCS_CALL(...) \
-  __INTERNAL_SYSCALL_DISP (__INTERNAL_SYSCALL_NCS, __VA_ARGS__)
+    __INTERNAL_SYSCALL_DISP (__INTERNAL_SYSCALL_NCS, __VA_ARGS__)
 
 /* Cancellation macros.  */
 #include <syscall_types.h>
@@ -167,78 +167,78 @@ long int __syscall_cancel(__syscall_arg_t arg1, __syscall_arg_t arg2,
                           __syscall_arg_t nr) attribute_hidden;
 
 #define __SYSCALL_CANCEL0(name)                     \
-  __syscall_cancel (0, 0, 0, 0, 0, 0, __SYSCALL_CANCEL7_ARG __NR_##name)
+    __syscall_cancel (0, 0, 0, 0, 0, 0, __SYSCALL_CANCEL7_ARG __NR_##name)
 #define __SYSCALL_CANCEL1(name, a1)                 \
-  __syscall_cancel (__SSC (a1), 0, 0, 0, 0, 0,              \
-            __SYSCALL_CANCEL7_ARG __NR_##name)
+    __syscall_cancel (__SSC (a1), 0, 0, 0, 0, 0,              \
+                      __SYSCALL_CANCEL7_ARG __NR_##name)
 #define __SYSCALL_CANCEL2(name, a1, a2) \
-  __syscall_cancel (__SSC (a1), __SSC (a2), 0, 0, 0, 0,         \
-            __SYSCALL_CANCEL7_ARG __NR_##name)
+    __syscall_cancel (__SSC (a1), __SSC (a2), 0, 0, 0, 0,         \
+                      __SYSCALL_CANCEL7_ARG __NR_##name)
 #define __SYSCALL_CANCEL3(name, a1, a2, a3) \
-  __syscall_cancel (__SSC (a1), __SSC (a2), __SSC (a3), 0, 0, 0,    \
-            __SYSCALL_CANCEL7_ARG __NR_##name)
+    __syscall_cancel (__SSC (a1), __SSC (a2), __SSC (a3), 0, 0, 0,    \
+                      __SYSCALL_CANCEL7_ARG __NR_##name)
 #define __SYSCALL_CANCEL4(name, a1, a2, a3, a4) \
-  __syscall_cancel (__SSC (a1), __SSC (a2), __SSC (a3),         \
-            __SSC(a4), 0, 0, __SYSCALL_CANCEL7_ARG __NR_##name)
+    __syscall_cancel (__SSC (a1), __SSC (a2), __SSC (a3),         \
+                      __SSC(a4), 0, 0, __SYSCALL_CANCEL7_ARG __NR_##name)
 #define __SYSCALL_CANCEL5(name, a1, a2, a3, a4, a5) \
-  __syscall_cancel (__SSC (a1), __SSC (a2), __SSC (a3), __SSC(a4),  \
-            __SSC (a5), 0, __SYSCALL_CANCEL7_ARG __NR_##name)
+    __syscall_cancel (__SSC (a1), __SSC (a2), __SSC (a3), __SSC(a4),  \
+                      __SSC (a5), 0, __SYSCALL_CANCEL7_ARG __NR_##name)
 #define __SYSCALL_CANCEL6(name, a1, a2, a3, a4, a5, a6) \
-  __syscall_cancel (__SSC (a1), __SSC (a2), __SSC (a3), __SSC (a4), \
-            __SSC (a5), __SSC (a6), __SYSCALL_CANCEL7_ARG   \
-            __NR_##name)
+    __syscall_cancel (__SSC (a1), __SSC (a2), __SSC (a3), __SSC (a4), \
+                      __SSC (a5), __SSC (a6), __SYSCALL_CANCEL7_ARG   \
+                      __NR_##name)
 #define __SYSCALL_CANCEL7(name, a1, a2, a3, a4, a5, a6, a7)     \
-  __syscall_cancel (__SSC (a1), __SSC (a2), __SSC (a3), __SSC (a4), \
-            __SSC (a5), __SSC (a6), __SSC (a7), __NR_##name)
+    __syscall_cancel (__SSC (a1), __SSC (a2), __SSC (a3), __SSC (a4), \
+                      __SSC (a5), __SSC (a6), __SSC (a7), __NR_##name)
 
 #define __SYSCALL_CANCEL_NARGS_X(a,b,c,d,e,f,g,h,n,...) n
 #define __SYSCALL_CANCEL_NARGS(...) \
-  __SYSCALL_CANCEL_NARGS_X (__VA_ARGS__,7,6,5,4,3,2,1,0,)
+    __SYSCALL_CANCEL_NARGS_X (__VA_ARGS__,7,6,5,4,3,2,1,0,)
 #define __SYSCALL_CANCEL_CONCAT_X(a,b)     a##b
 #define __SYSCALL_CANCEL_CONCAT(a,b)       __SYSCALL_CANCEL_CONCAT_X (a, b)
 #define __SYSCALL_CANCEL_DISP(b,...) \
-  __SYSCALL_CANCEL_CONCAT (b,__SYSCALL_CANCEL_NARGS(__VA_ARGS__))(__VA_ARGS__)
+    __SYSCALL_CANCEL_CONCAT (b,__SYSCALL_CANCEL_NARGS(__VA_ARGS__))(__VA_ARGS__)
 
 /* Issue a cancellable syscall defined first argument plus any other argument
    required.  If and error occurs its value, the macro returns -1 and sets
    errno accordingly.  */
 #define __SYSCALL_CANCEL_CALL(...) \
-  __SYSCALL_CANCEL_DISP (__SYSCALL_CANCEL, __VA_ARGS__)
+    __SYSCALL_CANCEL_DISP (__SYSCALL_CANCEL, __VA_ARGS__)
 
 #define __INTERNAL_SYSCALL_CANCEL0(name)                \
-  __internal_syscall_cancel (0, 0, 0, 0, 0, 0, __SYSCALL_CANCEL7_ARG    \
-                 __NR_##name)
+    __internal_syscall_cancel (0, 0, 0, 0, 0, 0, __SYSCALL_CANCEL7_ARG    \
+                               __NR_##name)
 #define __INTERNAL_SYSCALL_CANCEL1(name, a1)                \
-  __internal_syscall_cancel (__SSC (a1), 0, 0, 0, 0, 0,         \
-                 __SYSCALL_CANCEL7_ARG __NR_##name)
+    __internal_syscall_cancel (__SSC (a1), 0, 0, 0, 0, 0,         \
+                               __SYSCALL_CANCEL7_ARG __NR_##name)
 #define __INTERNAL_SYSCALL_CANCEL2(name, a1, a2)            \
-  __internal_syscall_cancel (__SSC (a1), __SSC (a2), 0, 0, 0, 0,    \
-                 __SYSCALL_CANCEL7_ARG __NR_##name)
+    __internal_syscall_cancel (__SSC (a1), __SSC (a2), 0, 0, 0, 0,    \
+                               __SYSCALL_CANCEL7_ARG __NR_##name)
 #define __INTERNAL_SYSCALL_CANCEL3(name, a1, a2, a3)            \
-  __internal_syscall_cancel (__SSC (a1), __SSC (a2), __SSC (a3), 0, \
-                 0, 0, __SYSCALL_CANCEL7_ARG __NR_##name)
+    __internal_syscall_cancel (__SSC (a1), __SSC (a2), __SSC (a3), 0, \
+                               0, 0, __SYSCALL_CANCEL7_ARG __NR_##name)
 #define __INTERNAL_SYSCALL_CANCEL4(name, a1, a2, a3, a4)        \
-  __internal_syscall_cancel (__SSC (a1), __SSC (a2), __SSC (a3),    \
-                 __SSC(a4), 0, 0,               \
-                 __SYSCALL_CANCEL7_ARG __NR_##name)
+    __internal_syscall_cancel (__SSC (a1), __SSC (a2), __SSC (a3),    \
+                               __SSC(a4), 0, 0,               \
+                               __SYSCALL_CANCEL7_ARG __NR_##name)
 #define __INTERNAL_SYSCALL_CANCEL5(name, a1, a2, a3, a4, a5)        \
-  __internal_syscall_cancel (__SSC (a1), __SSC (a2), __SSC (a3),    \
-                 __SSC(a4), __SSC (a5), 0,          \
-                 __SYSCALL_CANCEL7_ARG __NR_##name)
+    __internal_syscall_cancel (__SSC (a1), __SSC (a2), __SSC (a3),    \
+                               __SSC(a4), __SSC (a5), 0,          \
+                               __SYSCALL_CANCEL7_ARG __NR_##name)
 #define __INTERNAL_SYSCALL_CANCEL6(name, a1, a2, a3, a4, a5, a6)    \
-  __internal_syscall_cancel (__SSC (a1), __SSC (a2), __SSC (a3),    \
-                 __SSC (a4), __SSC (a5), __SSC (a6),    \
-                 __SYSCALL_CANCEL7_ARG __NR_##name)
+    __internal_syscall_cancel (__SSC (a1), __SSC (a2), __SSC (a3),    \
+                               __SSC (a4), __SSC (a5), __SSC (a6),    \
+                               __SYSCALL_CANCEL7_ARG __NR_##name)
 #define __INTERNAL_SYSCALL_CANCEL7(name, a1, a2, a3, a4, a5, a6, a7) \
-  __internal_syscall_cancel (__SSC (a1), __SSC (a2), __SSC (a3),     \
-                 __SSC (a4), __SSC (a5), __SSC (a6),     \
-                 __SSC (a7), __NR_##name)
+    __internal_syscall_cancel (__SSC (a1), __SSC (a2), __SSC (a3),     \
+                               __SSC (a4), __SSC (a5), __SSC (a6),     \
+                               __SSC (a7), __NR_##name)
 
 /* Issue a cancellable syscall defined by syscall number NAME plus any other
    argument required.  If an error occurs its value is returned as an negative
    number unmodified and errno is not set.  */
 #define __INTERNAL_SYSCALL_CANCEL_CALL(...) \
-  __SYSCALL_CANCEL_DISP (__INTERNAL_SYSCALL_CANCEL, __VA_ARGS__)
+    __SYSCALL_CANCEL_DISP (__INTERNAL_SYSCALL_CANCEL, __VA_ARGS__)
 
 #if IS_IN (rtld)
 /* The loader does not need to handle thread cancellation, use direct
@@ -247,9 +247,9 @@ long int __syscall_cancel(__syscall_arg_t arg1, __syscall_arg_t arg2,
 # define SYSCALL_CANCEL(...)          INLINE_SYSCALL_CALL (__VA_ARGS__)
 #else
 # define INTERNAL_SYSCALL_CANCEL(...) \
-  __INTERNAL_SYSCALL_CANCEL_CALL (__VA_ARGS__)
+    __INTERNAL_SYSCALL_CANCEL_CALL (__VA_ARGS__)
 # define SYSCALL_CANCEL(...) \
-  __SYSCALL_CANCEL_CALL (__VA_ARGS__)
+    __SYSCALL_CANCEL_CALL (__VA_ARGS__)
 #endif
 
 #endif /* __ASSEMBLER__  */

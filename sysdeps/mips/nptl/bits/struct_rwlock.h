@@ -56,14 +56,14 @@ struct __pthread_rwlock_arch_t {
 
 #if _MIPS_SIM == _ABI64
 # define __PTHREAD_RWLOCK_INITIALIZER(__flags) \
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, __flags
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, __flags
 #else
 # if __BYTE_ORDER == __BIG_ENDIAN
 #  define __PTHREAD_RWLOCK_INITIALIZER(__flags) \
-  0, 0, 0, 0, 0, 0, 0, 0, 0, __flags, 0
+    0, 0, 0, 0, 0, 0, 0, 0, 0, __flags, 0
 # else
 #  define __PTHREAD_RWLOCK_INITIALIZER(__flags) \
-  0, 0, 0, 0, 0, 0, __flags, 0, 0, 0, 0
+    0, 0, 0, 0, 0, 0, __flags, 0, 0, 0, 0
 # endif
 #endif
 

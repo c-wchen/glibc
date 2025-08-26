@@ -57,10 +57,10 @@ static const char hex[16] = {
 
 #ifdef _LIBC
 # define hexval(c) \
-  (c >= '0' && c <= '9'                               \
-   ? c - '0'                                      \
-   : ({ int upp = toupper (c);                            \
-    upp >= 'A' && upp <= 'Z' ? upp - 'A' + 10 : -1; }))
+    (c >= '0' && c <= '9'                               \
+     ? c - '0'                                      \
+    : ({ int upp = toupper (c);                            \
+        upp >= 'A' && upp <= 'Z' ? upp - 'A' + 10 : -1; }))
 #else
 static char hexval(char);
 #endif

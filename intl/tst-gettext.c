@@ -50,13 +50,13 @@ static int negative_dcgettext_test(const char *domain, int category);
 
 
 #define check_setlocale(cat, name) do {                       \
-    if (setlocale (cat, name) == NULL)                        \
-      {                                       \
-    printf ("%s:%u: setlocale (%s, \"%s\"): %m\n",                \
-        __FILE__, __LINE__, #cat, name);                  \
-    result = 1;                               \
-      }                                       \
-  } while (0)
+        if (setlocale (cat, name) == NULL)                        \
+        {                                       \
+            printf ("%s:%u: setlocale (%s, \"%s\"): %m\n",                \
+                    __FILE__, __LINE__, #cat, name);                  \
+            result = 1;                               \
+        }                                       \
+    } while (0)
 
 int main(int argc, char *argv[])
 {

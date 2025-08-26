@@ -27,7 +27,7 @@
    offset larger than 1 << (page_shift + off_t bits).  For archictures with
    32 bits off_t and page size of 4096 it would be 1^44.  */
 # define MMAP_OFF_HIGH_MASK \
-  ((-(MMAP2_PAGE_UNIT << 1) << (8 * sizeof (off_t) - 1)))
+    ((-(MMAP2_PAGE_UNIT << 1) << (8 * sizeof (off_t) - 1)))
 #else
 /* Some ABIs might use __NR_mmap while having sizeof (off_t) smaller than
    sizeof (off64_t) (currently only MIPS64n32).  For this case just set

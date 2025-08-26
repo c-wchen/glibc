@@ -22,8 +22,8 @@
 /* Return the current stack pointer.  */
 
 #define __thread_stack_pointer() ({                     \
-  register uintptr_t __sp__ asm("rsp");                     \
-  __sp__;                                   \
-})
+        register uintptr_t __sp__ asm("rsp");                     \
+        __sp__;                                   \
+    })
 
 #endif /* machine-sp.h */

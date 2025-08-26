@@ -114,29 +114,29 @@ struct AUTH {
  * struct opaque_auth verf;
  */
 #define AUTH_NEXTVERF(auth)     \
-        ((*((auth)->ah_ops->ah_nextverf))(auth))
+    ((*((auth)->ah_ops->ah_nextverf))(auth))
 #define auth_nextverf(auth)     \
-        ((*((auth)->ah_ops->ah_nextverf))(auth))
+    ((*((auth)->ah_ops->ah_nextverf))(auth))
 
 #define AUTH_MARSHALL(auth, xdrs)   \
-        ((*((auth)->ah_ops->ah_marshal))(auth, xdrs))
+    ((*((auth)->ah_ops->ah_marshal))(auth, xdrs))
 #define auth_marshall(auth, xdrs)   \
-        ((*((auth)->ah_ops->ah_marshal))(auth, xdrs))
+    ((*((auth)->ah_ops->ah_marshal))(auth, xdrs))
 
 #define AUTH_VALIDATE(auth, verfp)  \
-        ((*((auth)->ah_ops->ah_validate))((auth), verfp))
+    ((*((auth)->ah_ops->ah_validate))((auth), verfp))
 #define auth_validate(auth, verfp)  \
-        ((*((auth)->ah_ops->ah_validate))((auth), verfp))
+    ((*((auth)->ah_ops->ah_validate))((auth), verfp))
 
 #define AUTH_REFRESH(auth)      \
-        ((*((auth)->ah_ops->ah_refresh))(auth))
+    ((*((auth)->ah_ops->ah_refresh))(auth))
 #define auth_refresh(auth)      \
-        ((*((auth)->ah_ops->ah_refresh))(auth))
+    ((*((auth)->ah_ops->ah_refresh))(auth))
 
 #define AUTH_DESTROY(auth)      \
-        ((*((auth)->ah_ops->ah_destroy))(auth))
+    ((*((auth)->ah_ops->ah_destroy))(auth))
 #define auth_destroy(auth)      \
-        ((*((auth)->ah_ops->ah_destroy))(auth))
+    ((*((auth)->ah_ops->ah_destroy))(auth))
 
 
 extern struct opaque_auth _null_auth;

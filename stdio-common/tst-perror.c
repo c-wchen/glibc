@@ -12,15 +12,15 @@
 #include <support/xunistd.h>
 
 #define MB_EXP \
-  "null mode test 1: Invalid or incomplete multibyte or wide character\n" \
-  "multibyte string\n" \
-  "<0 mode test: Invalid argument\n"
+    "null mode test 1: Invalid or incomplete multibyte or wide character\n" \
+    "multibyte string\n" \
+    "<0 mode test: Invalid argument\n"
 #define MB_EXP_LEN (sizeof (MB_EXP) - 1)
 
 #define WC_EXP \
-  "null mode test 2: Invalid or incomplete multibyte or wide character\n" \
-  "wide string\n" \
-  ">0 mode test: Invalid argument\n"
+    "null mode test 2: Invalid or incomplete multibyte or wide character\n" \
+    "wide string\n" \
+    ">0 mode test: Invalid argument\n"
 #define WC_EXP_LEN (sizeof (WC_EXP) - 1)
 
 

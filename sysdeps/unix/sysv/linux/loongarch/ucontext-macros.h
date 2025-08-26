@@ -24,9 +24,9 @@
 #include "ucontext_i.h"
 
 #define SAVE_INT_REG(name, num, base) \
-  REG_S name, base, ((num) *SZREG + MCONTEXT_GREGS)
+    REG_S name, base, ((num) *SZREG + MCONTEXT_GREGS)
 
 #define RESTORE_INT_REG(name, num, base) \
-  REG_L name, base, ((num) *SZREG + MCONTEXT_GREGS)
+    REG_L name, base, ((num) *SZREG + MCONTEXT_GREGS)
 
 #endif /* _LINUX_LOONGARCH_UCONTEXT_MACROS_H */

@@ -31,8 +31,8 @@
 #include <fpu_control.h>
 
 #define _FPU_MASK_ALL \
-  (_FPU_MASK_V | _FPU_MASK_Z | _FPU_MASK_O | _FPU_MASK_U | _FPU_MASK_I \
-   | FE_ALL_EXCEPT)
+    (_FPU_MASK_V | _FPU_MASK_Z | _FPU_MASK_O | _FPU_MASK_U | _FPU_MASK_I \
+     | FE_ALL_EXCEPT)
 
 static __always_inline void libc_feholdexcept_loongarch(fenv_t *envp)
 {
@@ -182,9 +182,9 @@ static __always_inline void libc_feholdexcept_setround_loongarch_ctx(struct rm_c
 }
 #define libc_feholdexcept_setround_ctx libc_feholdexcept_setround_loongarch_ctx
 #define libc_feholdexcept_setroundf_ctx \
-  libc_feholdexcept_setround_loongarch_ctx
+    libc_feholdexcept_setround_loongarch_ctx
 #define libc_feholdexcept_setroundl_ctx \
-  libc_feholdexcept_setround_loongarch_ctx
+    libc_feholdexcept_setround_loongarch_ctx
 
 static __always_inline void libc_fesetenv_loongarch_ctx(struct rm_ctx *ctx)
 {

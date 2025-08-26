@@ -21,7 +21,7 @@ extern int result(FILE *fp, char res, const char *func, const char *loc,
                   int rec_no, int seq_num, int case_no, const char *msg);
 
 #define Result(C, S, E, M) \
-  result (fp, (C), (S), locale, rec+1, seq_num+1, (E), (M))
+    result (fp, (C), (S), locale, rec+1, seq_num+1, (E), (M))
 
 #define CASE_0    0
 #define CASE_1    1
@@ -54,20 +54,20 @@ extern int result(FILE *fp, char res, const char *func, const char *loc,
 #define TST_ABS(x)  (((x) > 0) ? (x) : -(x))
 
 #define TMD_ERRET(_type_)   int   err_val; \
-                int   ret_flg; \
-                _type_ ret_val
+    int   ret_flg; \
+    _type_ ret_val
 
 #define TMD_RECHEAD(_FUNC_)                   \
-                                     \
-                  typedef struct {               \
-                  TIN_##_FUNC_##_REC  input;         \
-                  TEX_##_FUNC_##_REC  expect;        \
-                  int is_last;               \
-                  }   TST_##_FUNC_##_REC;            \
-                  typedef struct {               \
-                  TST_HEAD        hd;        \
-                  TST_##_FUNC_##_REC  rec[ MAX_LOC_TEST ]; \
-                  }   TST_##_FUNC_
+    \
+    typedef struct {               \
+        TIN_##_FUNC_##_REC  input;         \
+        TEX_##_FUNC_##_REC  expect;        \
+        int is_last;               \
+    }   TST_##_FUNC_##_REC;            \
+    typedef struct {               \
+        TST_HEAD        hd;        \
+        TST_##_FUNC_##_REC  rec[ MAX_LOC_TEST ]; \
+    }   TST_##_FUNC_
 
 #define TST_FTYP(func)      tst_##func##_loc
 #define TST_HEAD(func)      tst_##func##_loc[ loc ].hd
@@ -95,14 +95,14 @@ extern int result(FILE *fp, char res, const char *func, const char *loc,
 
 
 #define TST_HEAD_LOCALE(ofunc, s_func) \
-  locale = TST_HEAD (ofunc).locale;                       \
-  if (setlocale (LC_ALL, locale) == NULL)                     \
+    locale = TST_HEAD (ofunc).locale;                       \
+    if (setlocale (LC_ALL, locale) == NULL)                     \
     {                                         \
-      fprintf (stderr, "Warning : can't set locale: %s\nskipping ...\n",      \
-           locale);                               \
-      result (fp, C_LOCALES, s_func, locale, 0, 0, 0, "can't set locale");    \
-      ++err_count;                                \
-      continue;                                   \
+        fprintf (stderr, "Warning : can't set locale: %s\nskipping ...\n",      \
+                 locale);                               \
+        result (fp, C_LOCALES, s_func, locale, 0, 0, 0, "can't set locale");    \
+        ++err_count;                                \
+        continue;                                   \
     }
 
 #define TST_DO_REC(ofunc) \
@@ -129,36 +129,36 @@ extern int result(FILE *fp, char res, const char *func, const char *loc,
 
 /* Test value of ret and of errno if it should have a value.  */
 #define TST_IF_RETURN(_s_func_) \
-  if (err_exp != 0)                               \
+    if (err_exp != 0)                               \
     {                                         \
-      if (errno_save == err_exp)                          \
-    {                                     \
-      result (fp, C_SUCCESS, _s_func_, locale, rec+1, seq_num+1, 1,       \
-          MS_PASSED);                             \
-    }                                     \
-      else                                    \
-    {                                     \
-      err_count++;                                \
-      result (fp, C_FAILURE, _s_func_, locale, rec+1, seq_num+1, 1,       \
-          "the value of errno is different from an expected value");  \
-    }                                     \
+        if (errno_save == err_exp)                          \
+        {                                     \
+            result (fp, C_SUCCESS, _s_func_, locale, rec+1, seq_num+1, 1,       \
+                    MS_PASSED);                             \
+        }                                     \
+        else                                    \
+        {                                     \
+            err_count++;                                \
+            result (fp, C_FAILURE, _s_func_, locale, rec+1, seq_num+1, 1,       \
+                    "the value of errno is different from an expected value");  \
+        }                                     \
     }                                         \
-                                          \
-  if (ret_flg == 1)                               \
+    \
+    if (ret_flg == 1)                               \
     {                                         \
-      if (ret == ret_exp)                             \
-    {                                     \
-      result (fp, C_SUCCESS, _s_func_, locale, rec+1, seq_num+1, 2,       \
-          MS_PASSED);                             \
-    }                                     \
-      else                                    \
-    {                                     \
-      err_count++;                                \
-      result (fp, C_FAILURE, _s_func_, locale, rec+1, seq_num+1, 2,       \
-          "the return value is different from an expected value");    \
-    }                                     \
+        if (ret == ret_exp)                             \
+        {                                     \
+            result (fp, C_SUCCESS, _s_func_, locale, rec+1, seq_num+1, 2,       \
+                    MS_PASSED);                             \
+        }                                     \
+        else                                    \
+        {                                     \
+            err_count++;                                \
+            result (fp, C_FAILURE, _s_func_, locale, rec+1, seq_num+1, 2,       \
+                    "the return value is different from an expected value");    \
+        }                                     \
     }                                         \
-  else
+    else
 
 #define TEX_ERRET_REC(_type_)           \
     struct {                \
@@ -168,7 +168,7 @@ extern int result(FILE *fp, char res, const char *func, const char *loc,
 #define TEX_ERRET_REC_SEQ(_type_, _count_)  \
     struct {                \
         struct {                \
-        TMD_ERRET (_type_);     \
+            TMD_ERRET (_type_);     \
         } seq[ _count_ ];           \
     }
 
@@ -186,45 +186,45 @@ extern int result(FILE *fp, char res, const char *func, const char *loc,
     TMD_RECHEAD (ISW##_FUNC_)
 
 #define TST_FUNC_ISW(_FUNC_, _func_) \
-int                                       \
-tst_isw##_func_ (FILE *fp, int debug_flg)                     \
-{                                         \
-  TST_DECL_VARS(int);                                 \
-  wint_t wc;                                      \
-  TST_DO_TEST (isw##_func_)                           \
+    int                                       \
+    tst_isw##_func_ (FILE *fp, int debug_flg)                     \
     {                                         \
-      TST_HEAD_LOCALE (isw##_func_, S_ISW##_FUNC_);               \
-      TST_DO_REC(isw##_func_)                             \
-    {                                     \
-      TST_GET_ERRET (isw##_func_);                        \
-      wc = TST_INPUT (isw##_func_).wc;                    \
-      ret = isw##_func_ (wc);                         \
-      if (debug_flg)                              \
-        {                                     \
-          fprintf (stdout, "isw*() [ %s : %d ] ret = %d\n", locale,       \
-               rec+1, ret);                       \
-        }                                     \
-                                          \
-      TST_IF_RETURN (S_ISW##_FUNC_)                       \
-        {                                     \
-          if (ret != 0)                           \
-        {                                 \
-          result (fp, C_SUCCESS, S_ISW##_FUNC_, locale, rec+1,        \
-              seq_num+1, 3, MS_PASSED);               \
-        }                                 \
-          else                                \
-        {                                 \
-          err_count++;                            \
-          result (fp, C_FAILURE, S_ISW##_FUNC_, locale, rec+1,        \
-              seq_num+1, 3,                       \
-              "the function returned 0, but should be non-zero"); \
-        }                                 \
-        }                                     \
-    }                                     \
-    }                                         \
-                                          \
-  return err_count;                               \
-}
+        TST_DECL_VARS(int);                                 \
+        wint_t wc;                                      \
+        TST_DO_TEST (isw##_func_)                           \
+        {                                         \
+            TST_HEAD_LOCALE (isw##_func_, S_ISW##_FUNC_);               \
+            TST_DO_REC(isw##_func_)                             \
+            {                                     \
+                TST_GET_ERRET (isw##_func_);                        \
+                wc = TST_INPUT (isw##_func_).wc;                    \
+                ret = isw##_func_ (wc);                         \
+                if (debug_flg)                              \
+                {                                     \
+                    fprintf (stdout, "isw*() [ %s : %d ] ret = %d\n", locale,       \
+                             rec+1, ret);                       \
+                }                                     \
+                \
+                TST_IF_RETURN (S_ISW##_FUNC_)                       \
+                {                                     \
+                    if (ret != 0)                           \
+                    {                                 \
+                        result (fp, C_SUCCESS, S_ISW##_FUNC_, locale, rec+1,        \
+                                seq_num+1, 3, MS_PASSED);               \
+                    }                                 \
+                    else                                \
+                    {                                 \
+                        err_count++;                            \
+                        result (fp, C_FAILURE, S_ISW##_FUNC_, locale, rec+1,        \
+                                seq_num+1, 3,                       \
+                                "the function returned 0, but should be non-zero"); \
+                    }                                 \
+                }                                     \
+            }                                     \
+        }                                         \
+        \
+        return err_count;                               \
+    }
 
 
 
@@ -240,31 +240,31 @@ tst_isw##_func_ (FILE *fp, int debug_flg)                     \
     TMD_RECHEAD (TOW##_FUNC_)
 
 #define TST_FUNC_TOW(_FUNC_, _func_)                    \
-int                                 \
-tst_tow##_func_ (FILE *fp, int debug_flg)               \
-{                                   \
-  TST_DECL_VARS (wint_t);                       \
-  wint_t wc;                                \
-  TST_DO_TEST (tow##_func_)                     \
+    int                                 \
+    tst_tow##_func_ (FILE *fp, int debug_flg)               \
     {                                   \
-      TST_HEAD_LOCALE (tow##_func_, S_TOW##_FUNC_);         \
-      TST_DO_REC (tow##_func_)                      \
-    {                               \
-      TST_GET_ERRET (tow##_func_);                  \
-      wc = TST_INPUT (tow##_func_).wc;              \
-      ret = tow##_func_ (wc);                   \
-      if (debug_flg)                        \
-        {                               \
-          fprintf (stdout, "tow*() [ %s : %d ] ret = 0x%x\n",   \
-               locale, rec+1, ret);             \
-        }                               \
-                                    \
-      TST_IF_RETURN (S_TOW##_FUNC_) { };                \
-    }                               \
-    }                                   \
-                                    \
-  return err_count;                         \
-}
+        TST_DECL_VARS (wint_t);                       \
+        wint_t wc;                                \
+        TST_DO_TEST (tow##_func_)                     \
+        {                                   \
+            TST_HEAD_LOCALE (tow##_func_, S_TOW##_FUNC_);         \
+            TST_DO_REC (tow##_func_)                      \
+            {                               \
+                TST_GET_ERRET (tow##_func_);                  \
+                wc = TST_INPUT (tow##_func_).wc;              \
+                ret = tow##_func_ (wc);                   \
+                if (debug_flg)                        \
+                {                               \
+                    fprintf (stdout, "tow*() [ %s : %d ] ret = 0x%x\n",   \
+                             locale, rec+1, ret);             \
+                }                               \
+                \
+                TST_IF_RETURN (S_TOW##_FUNC_) { };                \
+            }                               \
+        }                                   \
+        \
+        return err_count;                         \
+    }
 
 
 #endif /* TST_FUNCS_H */

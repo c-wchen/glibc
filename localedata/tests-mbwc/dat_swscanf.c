@@ -28,7 +28,7 @@ TST_SWSCANF tst_swscanf_loc [] = {
                     L"%d:%u:%f:%c:%s", 0
                 },
                 { /* The fields are: err_val, ret_flag, ret_val,
-                       val_int, val_uns, val_flt, val_c, val_s, val_S.  */
+                         val_int, val_uns, val_flt, val_c, val_s, val_S.  */
                     0, 1, 5,
                     -1, 2, 3.3, '\xe4', "\xc4\xdc", { 0x0000, },
                 },

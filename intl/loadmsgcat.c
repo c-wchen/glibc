@@ -399,44 +399,44 @@
 #if !defined PRIdPTR || PRI_MACROS_BROKEN
 # undef PRIdPTR
 # define PRIdPTR \
-  (sizeof (void *) == sizeof (long) ? "ld" : \
-   sizeof (void *) == sizeof (int) ? "d" : \
-   "lld")
+    (sizeof (void *) == sizeof (long) ? "ld" : \
+     sizeof (void *) == sizeof (int) ? "d" : \
+     "lld")
 #endif
 #if !defined PRIiPTR || PRI_MACROS_BROKEN
 # undef PRIiPTR
 # define PRIiPTR \
-  (sizeof (void *) == sizeof (long) ? "li" : \
-   sizeof (void *) == sizeof (int) ? "i" : \
-   "lli")
+    (sizeof (void *) == sizeof (long) ? "li" : \
+     sizeof (void *) == sizeof (int) ? "i" : \
+     "lli")
 #endif
 #if !defined PRIoPTR || PRI_MACROS_BROKEN
 # undef PRIoPTR
 # define PRIoPTR \
-  (sizeof (void *) == sizeof (long) ? "lo" : \
-   sizeof (void *) == sizeof (int) ? "o" : \
-   "llo")
+    (sizeof (void *) == sizeof (long) ? "lo" : \
+     sizeof (void *) == sizeof (int) ? "o" : \
+     "llo")
 #endif
 #if !defined PRIuPTR || PRI_MACROS_BROKEN
 # undef PRIuPTR
 # define PRIuPTR \
-  (sizeof (void *) == sizeof (long) ? "lu" : \
-   sizeof (void *) == sizeof (int) ? "u" : \
-   "llu")
+    (sizeof (void *) == sizeof (long) ? "lu" : \
+     sizeof (void *) == sizeof (int) ? "u" : \
+     "llu")
 #endif
 #if !defined PRIxPTR || PRI_MACROS_BROKEN
 # undef PRIxPTR
 # define PRIxPTR \
-  (sizeof (void *) == sizeof (long) ? "lx" : \
-   sizeof (void *) == sizeof (int) ? "x" : \
-   "llx")
+    (sizeof (void *) == sizeof (long) ? "lx" : \
+     sizeof (void *) == sizeof (int) ? "x" : \
+     "llx")
 #endif
 #if !defined PRIXPTR || PRI_MACROS_BROKEN
 # undef PRIXPTR
 # define PRIXPTR \
-  (sizeof (void *) == sizeof (long) ? "lX" : \
-   sizeof (void *) == sizeof (int) ? "X" : \
-   "llX")
+    (sizeof (void *) == sizeof (long) ? "lX" : \
+     sizeof (void *) == sizeof (int) ? "X" : \
+     "llX")
 #endif
 
 /* @@ end of prolog @@ */
@@ -449,7 +449,7 @@
 # define close(fd)      __close_nocancel_nostatus (fd)
 # define read(fd, buf, n)   __read_nocancel (fd, buf, n)
 # define mmap(addr, len, prot, flags, fd, offset) \
-  __mmap (addr, len, prot, flags, fd, offset)
+    __mmap (addr, len, prot, flags, fd, offset)
 # define munmap(addr, len)  __munmap (addr, len)
 #endif
 

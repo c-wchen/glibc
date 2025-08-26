@@ -56,8 +56,8 @@ static void do_prepare(int argc, char *argv[])
    correct parameter passing on kernel.  */
 
 #define CHECK_EQ(v, k) \
-  if ((v) != (k)) \
-    FAIL_EXIT1("%d != %d", v, k)
+    if ((v) != (k)) \
+        FAIL_EXIT1("%d != %d", v, k)
 
 #define SHM_MODE 0666
 

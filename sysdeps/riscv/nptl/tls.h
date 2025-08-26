@@ -55,9 +55,9 @@ typedef struct {
 
 /* This is the size we need before TCB - actually, it includes the TCB.  */
 # define TLS_PRE_TCB_SIZE \
-  (sizeof (struct pthread)                            \
-   + ((sizeof (tcbhead_t) + __alignof (struct pthread) - 1)           \
-      & ~(__alignof (struct pthread) - 1)))
+    (sizeof (struct pthread)                            \
+     + ((sizeof (tcbhead_t) + __alignof (struct pthread) - 1)           \
+     & ~(__alignof (struct pthread) - 1)))
 
 /* The thread pointer tp points to the end of the TCB.
    The pthread_descr structure is immediately in front of the TCB.  */
@@ -66,37 +66,37 @@ typedef struct {
 /* Install the dtv pointer.  The pointer passed is to the element with
    index -1 which contain the length.  */
 # define INSTALL_DTV(tcbp, dtvp) \
-  (((tcbhead_t *) (tcbp))[-1].dtv = (dtvp) + 1)
+    (((tcbhead_t *) (tcbp))[-1].dtv = (dtvp) + 1)
 
 /* Install new dtv for current thread.  */
 # define INSTALL_NEW_DTV(dtv) \
-  (THREAD_DTV() = (dtv))
+    (THREAD_DTV() = (dtv))
 
 /* Return dtv of given thread descriptor.  */
 # define GET_DTV(tcbp) \
-  (((tcbhead_t *) (tcbp))[-1].dtv)
+    (((tcbhead_t *) (tcbp))[-1].dtv)
 
 /* Code to initially initialize the thread pointer.  */
 # define TLS_INIT_TP(tcbp) \
-  ({ __thread_self = (char*)tcbp + TLS_TCB_OFFSET; true; })
+    ({ __thread_self = (char*)tcbp + TLS_TCB_OFFSET; true; })
 
 /* Return the address of the dtv for the current thread.  */
 # define THREAD_DTV() \
-  (((tcbhead_t *) (READ_THREAD_POINTER () - TLS_TCB_OFFSET))[-1].dtv)
+    (((tcbhead_t *) (READ_THREAD_POINTER () - TLS_TCB_OFFSET))[-1].dtv)
 
 /* Return the thread descriptor for the current thread.  */
 # define THREAD_SELF \
- ((struct pthread *) (READ_THREAD_POINTER ()                 \
-              - TLS_TCB_OFFSET - TLS_PRE_TCB_SIZE))
+    ((struct pthread *) (READ_THREAD_POINTER ()                 \
+                         - TLS_TCB_OFFSET - TLS_PRE_TCB_SIZE))
 
 /* Value passed to 'clone' for initialization of the thread register.  */
 # define TLS_DEFINE_INIT_TP(tp, pd) \
-  void *tp = (void *) (pd) + TLS_TCB_OFFSET + TLS_PRE_TCB_SIZE
+    void *tp = (void *) (pd) + TLS_TCB_OFFSET + TLS_PRE_TCB_SIZE
 
 /* Informs libthread_db that the thread pointer is register 4, which is used
  * to know how to do THREAD_SELF.  */
 # define DB_THREAD_SELF \
-  REGISTER (64, 64, 4 * 8, - TLS_TCB_OFFSET - TLS_PRE_TCB_SIZE)
+    REGISTER (64, 64, 4 * 8, - TLS_TCB_OFFSET - TLS_PRE_TCB_SIZE)
 
 /* Access to data in the thread descriptor is easy.  */
 # include <tcb-access.h>
@@ -110,21 +110,21 @@ typedef struct {
 # define THREAD_GSCOPE_FLAG_USED   1
 # define THREAD_GSCOPE_FLAG_WAIT   2
 # define THREAD_GSCOPE_RESET_FLAG() \
-  do                                         \
+    do                                         \
     { int __res                                  \
-    = atomic_exchange_release (&THREAD_SELF->header.gscope_flag,         \
-                   THREAD_GSCOPE_FLAG_UNUSED);           \
-      if (__res == THREAD_GSCOPE_FLAG_WAIT)                  \
-    lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1, LLL_PRIVATE);   \
+            = atomic_exchange_release (&THREAD_SELF->header.gscope_flag,         \
+                                       THREAD_GSCOPE_FLAG_UNUSED);           \
+        if (__res == THREAD_GSCOPE_FLAG_WAIT)                  \
+            lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1, LLL_PRIVATE);   \
     }                                        \
-  while (0)
+    while (0)
 # define THREAD_GSCOPE_SET_FLAG() \
-  do                                         \
+    do                                         \
     {                                        \
-      THREAD_SELF->header.gscope_flag = THREAD_GSCOPE_FLAG_USED;         \
-      atomic_write_barrier ();                           \
+        THREAD_SELF->header.gscope_flag = THREAD_GSCOPE_FLAG_USED;         \
+        atomic_write_barrier ();                           \
     }                                        \
-  while (0)
+    while (0)
 
 #endif /* __ASSEMBLER__ */
 

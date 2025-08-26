@@ -116,7 +116,7 @@ struct in6_rtmsg {
 #define RT_TOS(tos)     ((tos) & IPTOS_TOS_MASK)
 
 #define RT_LOCALADDR(flags) ((flags & RTF_ADDRCLASSMASK) \
-                 == (RTF_LOCAL|RTF_INTERFACE))
+                             == (RTF_LOCAL|RTF_INTERFACE))
 
 #define RT_CLASS_UNSPEC     0
 #define RT_CLASS_DEFAULT    253

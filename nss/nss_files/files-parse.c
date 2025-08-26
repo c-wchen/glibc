@@ -91,52 +91,52 @@ extern int parse_line(char *line, void *result,
 /* Define a line parsing function.  */
 
 # define LINE_PARSER(EOLSET, BODY)                        \
-parser_stclass int                                \
-parse_line (char *line, void *generic_result,                     \
-        struct parser_data *data, size_t datalen, int *errnop         \
-        EXTRA_ARGS_DECL)                              \
-{                                         \
-  struct STRUCTURE *result = generic_result;                      \
-  ENTDATA_DECL (data)                                 \
-  BUFFER_PREPARE                                  \
-  char *p = strpbrk (line, EOLSET "\n");                      \
-  if (p != NULL)                                  \
-    *p = '\0';                                    \
-  BODY;                                       \
-  TRAILING_LIST_PARSER;                               \
-  return 1;                                   \
-}                                         \
-nss_files_parse_hidden_def (parse_line)
+    parser_stclass int                                \
+    parse_line (char *line, void *generic_result,                     \
+                struct parser_data *data, size_t datalen, int *errnop         \
+                EXTRA_ARGS_DECL)                              \
+    {                                         \
+        struct STRUCTURE *result = generic_result;                      \
+        ENTDATA_DECL (data)                                 \
+        BUFFER_PREPARE                                  \
+        char *p = strpbrk (line, EOLSET "\n");                      \
+        if (p != NULL)                                  \
+            *p = '\0';                                    \
+        BODY;                                       \
+        TRAILING_LIST_PARSER;                               \
+        return 1;                                   \
+    }                                         \
+    nss_files_parse_hidden_def (parse_line)
 
 
 # define STRING_FIELD(variable, terminator_p, swallow)                \
-  {                                       \
-    variable = line;                                  \
-    while (*line != '\0' && !terminator_p (*line))                \
-      ++line;                                     \
-    if (*line != '\0')                                \
-      {                                       \
-    *line = '\0';                                 \
-    do                                    \
-      ++line;                                 \
-    while (swallow && terminator_p (*line));                  \
-      }                                       \
-  }
+    {                                       \
+        variable = line;                                  \
+        while (*line != '\0' && !terminator_p (*line))                \
+            ++line;                                     \
+        if (*line != '\0')                                \
+        {                                       \
+            *line = '\0';                                 \
+            do                                    \
+                ++line;                                 \
+            while (swallow && terminator_p (*line));                  \
+        }                                       \
+    }
 
 # define STRING_LIST(variable, terminator_c) \
-  {                                       \
-    char **list = parse_list (&line, buf_start, buf_end, terminator_c,        \
-                  errnop);                        \
-    if (list)                                     \
-      variable = list;                                \
-    else                                      \
-      return -1;        /* -1 indicates we ran out of space.  */      \
-                                          \
-    /* Determine the new end of the buffer.  */                   \
-    while (*list != NULL)                             \
-      ++list;                                     \
-    buf_start = (char *) (list + 1);                          \
-  }
+    {                                       \
+        char **list = parse_list (&line, buf_start, buf_end, terminator_c,        \
+                                  errnop);                        \
+        if (list)                                     \
+            variable = list;                                \
+        else                                      \
+            return -1;        /* -1 indicates we ran out of space.  */      \
+        \
+        /* Determine the new end of the buffer.  */                   \
+        while (*list != NULL)                             \
+            ++list;                                     \
+        buf_start = (char *) (list + 1);                          \
+    }
 
 /* Helper function.  */
 static inline uint32_t __attribute__((always_inline))
@@ -153,37 +153,37 @@ strtou32(const char *nptr, char **endptr, int base)
 }
 
 # define INT_FIELD(variable, terminator_p, swallow, base, convert)        \
-  {                                       \
-    char *endp;                                   \
-    variable = convert (strtou32 (line, &endp, base));                \
-    if (endp == line)                                 \
-      return 0;                                   \
-    else if (terminator_p (*endp))                        \
-      do                                      \
-    ++endp;                                   \
-      while (swallow && terminator_p (*endp));                    \
-    else if (*endp != '\0')                           \
-      return 0;                                   \
-    line = endp;                                  \
-  }
+    {                                       \
+        char *endp;                                   \
+        variable = convert (strtou32 (line, &endp, base));                \
+        if (endp == line)                                 \
+            return 0;                                   \
+        else if (terminator_p (*endp))                        \
+            do                                      \
+                ++endp;                                   \
+            while (swallow && terminator_p (*endp));                    \
+        else if (*endp != '\0')                           \
+            return 0;                                   \
+        line = endp;                                  \
+    }
 
 # define INT_FIELD_MAYBE_NULL(variable, terminator_p, swallow, base, convert, default)        \
-  {                                       \
-    char *endp;                                   \
-    if (*line == '\0')                                \
-      /* We expect some more input, so don't allow the string to end here. */ \
-      return 0;                                   \
-    variable = convert (strtou32 (line, &endp, base));                \
-    if (endp == line)                                 \
-      variable = default;                             \
-    if (terminator_p (*endp))                             \
-      do                                      \
-    ++endp;                                   \
-      while (swallow && terminator_p (*endp));                    \
-    else if (*endp != '\0')                           \
-      return 0;                                   \
-    line = endp;                                  \
-  }
+    {                                       \
+        char *endp;                                   \
+        if (*line == '\0')                                \
+            /* We expect some more input, so don't allow the string to end here. */ \
+            return 0;                                   \
+        variable = convert (strtou32 (line, &endp, base));                \
+        if (endp == line)                                 \
+            variable = default;                             \
+        if (terminator_p (*endp))                             \
+            do                                      \
+                ++endp;                                   \
+            while (swallow && terminator_p (*endp));                    \
+        else if (*endp != '\0')                           \
+            return 0;                                   \
+        line = endp;                                  \
+    }
 
 # define ISCOLON(c) ((c) == ':')
 
@@ -194,39 +194,39 @@ strtou32(const char *nptr, char **endptr, int base)
 # else
 
 # define BUFFER_PREPARE \
-  char *buf_start = NULL;                             \
-  char *buf_end = (char *) data + datalen;                    \
-  if (line >= data->linebuffer && line < buf_end)                 \
-    /* Find the end of the line buffer, we will use the space in          \
-       DATA after it for storing the vector of pointers.  */              \
-    buf_start = strchr (line, '\0') + 1;                      \
-  else                                        \
-    /* LINE does not point within DATA->linebuffer, so that space is          \
-       not being used for scratch space right now.  We can use all of         \
-       it for the pointer vector storage.  */                     \
-    buf_start = data->linebuffer;                         \
+    char *buf_start = NULL;                             \
+    char *buf_end = (char *) data + datalen;                    \
+    if (line >= data->linebuffer && line < buf_end)                 \
+        /* Find the end of the line buffer, we will use the space in          \
+           DATA after it for storing the vector of pointers.  */              \
+        buf_start = strchr (line, '\0') + 1;                      \
+    else                                        \
+        /* LINE does not point within DATA->linebuffer, so that space is          \
+           not being used for scratch space right now.  We can use all of         \
+           it for the pointer vector storage.  */                     \
+        buf_start = data->linebuffer;                         \
 
 #  define TRAILING_LIST_PARSER \
-{                                         \
-  if (buf_start == NULL)                              \
     {                                         \
-      if (line >= data->linebuffer && line < buf_end)                 \
-    /* Find the end of the line buffer, we will use the space in          \
-       DATA after it for storing the vector of pointers.  */          \
-    buf_start = strchr (line, '\0') + 1;                      \
-      else                                    \
-    /* LINE does not point within DATA->linebuffer, so that space is      \
-       not being used for scratch space right now.  We can use all of     \
-       it for the pointer vector storage.  */                 \
-    buf_start = data->linebuffer;                         \
-    }                                         \
-                                          \
-  char **list = parse_list (&line, buf_start, buf_end, '\0', errnop);         \
-  if (list)                                   \
-    result->TRAILING_LIST_MEMBER = list;                      \
-  else                                        \
-    return -1;      /* -1 indicates we ran out of space.  */          \
-}
+        if (buf_start == NULL)                              \
+        {                                         \
+            if (line >= data->linebuffer && line < buf_end)                 \
+                /* Find the end of the line buffer, we will use the space in          \
+                   DATA after it for storing the vector of pointers.  */          \
+                buf_start = strchr (line, '\0') + 1;                      \
+            else                                    \
+                /* LINE does not point within DATA->linebuffer, so that space is      \
+                   not being used for scratch space right now.  We can use all of     \
+                   it for the pointer vector storage.  */                 \
+                buf_start = data->linebuffer;                         \
+        }                                         \
+        \
+        char **list = parse_list (&line, buf_start, buf_end, '\0', errnop);         \
+        if (list)                                   \
+            result->TRAILING_LIST_MEMBER = list;                      \
+        else                                        \
+            return -1;      /* -1 indicates we ran out of space.  */          \
+    }
 
 static inline char **__attribute((always_inline))
 parse_list(char **linep, char *eol, char *buf_end, int terminator_c,
@@ -298,28 +298,28 @@ out:
 
 
 #define LOOKUP_NAME(nameelt, aliaselt)                        \
-{                                         \
-  char **ap;                                      \
-  if (! strcmp (name, result->nameelt))                       \
-    break;                                    \
-  for (ap = result->aliaselt; *ap; ++ap)                      \
-    if (! strcmp (name, *ap))                             \
-      break;                                      \
-  if (*ap)                                    \
-    break;                                    \
-}
+    {                                         \
+        char **ap;                                      \
+        if (! strcmp (name, result->nameelt))                       \
+            break;                                    \
+        for (ap = result->aliaselt; *ap; ++ap)                      \
+            if (! strcmp (name, *ap))                             \
+                break;                                      \
+        if (*ap)                                    \
+            break;                                    \
+    }
 
 #define LOOKUP_NAME_CASE(nameelt, aliaselt)                   \
-{                                         \
-  char **ap;                                      \
-  if (! __strcasecmp (name, result->nameelt))                     \
-    break;                                    \
-  for (ap = result->aliaselt; *ap; ++ap)                      \
-    if (! __strcasecmp (name, *ap))                       \
-      break;                                      \
-  if (*ap)                                    \
-    break;                                    \
-}
+    {                                         \
+        char **ap;                                      \
+        if (! __strcasecmp (name, result->nameelt))                     \
+            break;                                    \
+        for (ap = result->aliaselt; *ap; ++ap)                      \
+            if (! __strcasecmp (name, *ap))                       \
+                break;                                      \
+        if (*ap)                                    \
+            break;                                    \
+    }
 
 
 /* This is defined by db-*.c to include "../nss_db/db-XXX.c" instead.  */

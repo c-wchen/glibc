@@ -44,19 +44,19 @@ int main(int argc, char **argv)
     int lose = 0;
 
 #define TRYEM do {                                \
-      TRY (isascii);                                  \
-      TRY (isalnum);                                  \
-      TRY (isalpha);                                  \
-      TRY (iscntrl);                                  \
-      TRY (isdigit);                                  \
-      TRY (isgraph);                                  \
-      TRY (islower);                                  \
-      TRY (isprint);                                  \
-      TRY (ispunct);                                  \
-      TRY (isspace);                                  \
-      TRY (isupper);                                  \
-      TRY (isxdigit);                                 \
-      TRY (isblank);                                  \
+        TRY (isascii);                                  \
+        TRY (isalnum);                                  \
+        TRY (isalpha);                                  \
+        TRY (iscntrl);                                  \
+        TRY (isdigit);                                  \
+        TRY (isgraph);                                  \
+        TRY (islower);                                  \
+        TRY (isprint);                                  \
+        TRY (ispunct);                                  \
+        TRY (isspace);                                  \
+        TRY (isupper);                                  \
+        TRY (isxdigit);                                 \
+        TRY (isblank);                                  \
     } while (0)
 
     for (c = 0; c <= UCHAR_MAX; ++c) {

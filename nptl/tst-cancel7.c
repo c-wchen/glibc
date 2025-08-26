@@ -185,9 +185,9 @@ static void do_cleanup(void)
 #define OPT_PIDFILE 10001
 #define OPT_SEMFILE 10002
 #define CMDLINE_OPTIONS \
-  { "command", required_argument, NULL, OPT_COMMAND },  \
-  { "pidfile", required_argument, NULL, OPT_PIDFILE },  \
-  { "sem",     required_argument, NULL, OPT_SEMFILE },
+    { "command", required_argument, NULL, OPT_COMMAND },  \
+    { "pidfile", required_argument, NULL, OPT_PIDFILE },  \
+    { "sem",     required_argument, NULL, OPT_SEMFILE },
 static void cmdline_process(int c)
 {
     switch (c) {

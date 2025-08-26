@@ -61,14 +61,14 @@ static const char gconv_module_ext[] = MODULE_EXT;
 /* We have a few builtin transformations.  */
 static struct gconv_module builtin_modules[] = {
 #define BUILTIN_TRANSFORMATION(From, To, Cost, Name, Fct, BtowcFct, \
-                   MinF, MaxF, MinT, MaxT) \
-  {                                       \
+                               MinF, MaxF, MinT, MaxT) \
+{                                       \
     .from_string = From,                              \
     .to_string = To,                                  \
     .cost_hi = Cost,                                  \
     .cost_lo = INT_MAX,                               \
     .module_name = Name                               \
-  },
+},
 #define BUILTIN_ALIAS(From, To)
 
 #include "gconv_builtin.h"
@@ -79,7 +79,7 @@ static struct gconv_module builtin_modules[] = {
 
 static const char builtin_aliases[] = {
 #define BUILTIN_TRANSFORMATION(From, To, Cost, Name, Fct, BtowcFct, \
-                   MinF, MaxF, MinT, MaxT)
+                               MinF, MaxF, MinT, MaxT)
 #define BUILTIN_ALIAS(From, To) From "\0" To "\0"
 
 #include "gconv_builtin.h"

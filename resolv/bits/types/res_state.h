@@ -47,8 +47,7 @@ struct __res_state {
             uint16_t        nsinit;
             struct sockaddr_in6 *nsaddrs[MAXNS];
 #ifdef _LIBC
-            unsigned long long int __glibc_extension_index
-            __attribute__((packed));
+            unsigned long long int __glibc_extension_index __attribute__((packed));
 #else
             unsigned int        __glibc_reserved[2];
 #endif

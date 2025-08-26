@@ -33,7 +33,7 @@
 
 static int restart;
 #define CMDLINE_OPTIONS \
-  { "restart", no_argument, &restart, 1 },
+    { "restart", no_argument, &restart, 1 },
 
 void tst_audit25mod1_func1(void);
 void tst_audit25mod1_func2(void);

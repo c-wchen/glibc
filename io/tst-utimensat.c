@@ -98,7 +98,7 @@ static int test_utimesat_helper(const char *testfile, int fd, const char *testli
 }
 
 #define TEST_CALL(fname, fd, lname, v1, v2) \
-  test_utimesat_helper (fname, fd, lname, (struct timespec[]) { { v1, 0 }, \
-                                                                { v2, 0 } })
+    test_utimesat_helper (fname, fd, lname, (struct timespec[]) { { v1, 0 }, \
+        { v2, 0 } })
 
 #include "tst-utimensat-skeleton.c"

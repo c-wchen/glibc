@@ -14,18 +14,18 @@ extern void _hurd_port_use_cleanup(void *arg);
 
 /* Like HURD_PORT_USE, but cleans fd on cancel.  */
 #define HURD_PORT_USE_CANCEL(portcell, expr)                      \
-  ({ struct _hurd_port_use_data __d;                          \
-     mach_port_t port;                                \
-     __typeof(expr) __result;                             \
-     void *__crit;                                \
-     __d.p = (portcell);                              \
-     __crit = _hurd_critical_section_lock ();                     \
-     __d.port = port = _hurd_port_get (__d.p, &__d.link);             \
-     __libc_cleanup_push (_hurd_port_use_cleanup, &__d);              \
-     _hurd_critical_section_unlock (__crit);                      \
-     __result = (expr);                               \
-     __libc_cleanup_pop (1);                              \
-     __result; })
+    ({ struct _hurd_port_use_data __d;                          \
+        mach_port_t port;                                \
+        __typeof(expr) __result;                             \
+        void *__crit;                                \
+        __d.p = (portcell);                              \
+        __crit = _hurd_critical_section_lock ();                     \
+        __d.port = port = _hurd_port_get (__d.p, &__d.link);             \
+        __libc_cleanup_push (_hurd_port_use_cleanup, &__d);              \
+        _hurd_critical_section_unlock (__crit);                      \
+        __result = (expr);                               \
+        __libc_cleanup_pop (1);                              \
+        __result; })
 
 libc_hidden_proto(_hurd_port_locked_get)
 libc_hidden_proto(_hurd_port_locked_set)

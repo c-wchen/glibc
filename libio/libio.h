@@ -159,23 +159,23 @@ extern wint_t __woverflow(FILE *, wint_t);
 
 #define _IO_getc_unlocked(_fp) __getc_unlocked_body (_fp)
 #define _IO_peekc_unlocked(_fp)                     \
-  (__glibc_unlikely ((_fp)->_IO_read_ptr >= (_fp)->_IO_read_end)    \
-   && __underflow (_fp) == EOF                      \
-   ? EOF                                \
-   : *(unsigned char *) (_fp)->_IO_read_ptr)
+    (__glibc_unlikely ((_fp)->_IO_read_ptr >= (_fp)->_IO_read_end)    \
+     && __underflow (_fp) == EOF                      \
+     ? EOF                                \
+     : *(unsigned char *) (_fp)->_IO_read_ptr)
 #define _IO_putc_unlocked(_ch, _fp) __putc_unlocked_body (_ch, _fp)
 
 # define _IO_getwc_unlocked(_fp)                    \
-  (__glibc_unlikely ((_fp)->_wide_data == NULL              \
-             || ((_fp)->_wide_data->_IO_read_ptr        \
-             >= (_fp)->_wide_data->_IO_read_end))       \
-   ? __wuflow (_fp) : (wint_t) *(_fp)->_wide_data->_IO_read_ptr++)
+    (__glibc_unlikely ((_fp)->_wide_data == NULL              \
+                       || ((_fp)->_wide_data->_IO_read_ptr        \
+                           >= (_fp)->_wide_data->_IO_read_end))       \
+     ? __wuflow (_fp) : (wint_t) *(_fp)->_wide_data->_IO_read_ptr++)
 # define _IO_putwc_unlocked(_wch, _fp)                  \
-  (__glibc_unlikely ((_fp)->_wide_data == NULL              \
-             || ((_fp)->_wide_data->_IO_write_ptr       \
-             >= (_fp)->_wide_data->_IO_write_end))      \
-   ? __woverflow (_fp, _wch)                        \
-   : (wint_t) (*(_fp)->_wide_data->_IO_write_ptr++ = (_wch)))
+    (__glibc_unlikely ((_fp)->_wide_data == NULL              \
+                       || ((_fp)->_wide_data->_IO_write_ptr       \
+                           >= (_fp)->_wide_data->_IO_write_end))      \
+     ? __woverflow (_fp, _wch)                        \
+     : (wint_t) (*(_fp)->_wide_data->_IO_write_ptr++ = (_wch)))
 
 #define _IO_feof_unlocked(_fp) __feof_unlocked_body (_fp)
 #define _IO_ferror_unlocked(_fp) __ferror_unlocked_body (_fp)
@@ -207,7 +207,7 @@ extern int _IO_ftrylockfile(FILE *) __THROW;
 #endif
 
 #define _IO_need_lock(_fp) \
-  (((_fp)->_flags2 & _IO_FLAGS2_NEED_LOCK) != 0)
+    (((_fp)->_flags2 & _IO_FLAGS2_NEED_LOCK) != 0)
 
 extern int _IO_vfscanf(FILE *__restrict, const char *__restrict,
                        __gnuc_va_list, int *__restrict);
@@ -226,7 +226,7 @@ extern int _IO_fwide(FILE *__fp, int __mode) __THROW;
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
 #  define _IO_fwide_maybe_incompatible \
-  (__glibc_unlikely (&_IO_stdin_used == NULL))
+    (__glibc_unlikely (&_IO_stdin_used == NULL))
 extern const int _IO_stdin_used;
 weak_extern(_IO_stdin_used);
 #else
@@ -236,19 +236,19 @@ weak_extern(_IO_stdin_used);
 /* A special optimized version of the function above.  It optimizes the
    case of initializing an unoriented byte stream.  */
 #define _IO_fwide(__fp, __mode) \
-  ({ int __result = (__mode);                             \
-     if (__result < 0 && ! _IO_fwide_maybe_incompatible)              \
-       {                                      \
-     if ((__fp)->_mode == 0)                          \
-       /* We know that all we have to do is to set the flag.  */          \
-       (__fp)->_mode = -1;                            \
-     __result = (__fp)->_mode;                        \
-       }                                      \
-     else if (__builtin_constant_p (__mode) && (__mode) == 0)             \
-       __result = _IO_fwide_maybe_incompatible ? -1 : (__fp)->_mode;          \
-     else                                     \
-       __result = _IO_fwide (__fp, __result);                     \
-     __result; })
+    ({ int __result = (__mode);                             \
+        if (__result < 0 && ! _IO_fwide_maybe_incompatible)              \
+        {                                      \
+            if ((__fp)->_mode == 0)                          \
+                /* We know that all we have to do is to set the flag.  */          \
+                (__fp)->_mode = -1;                            \
+            __result = (__fp)->_mode;                        \
+        }                                      \
+        else if (__builtin_constant_p (__mode) && (__mode) == 0)             \
+            __result = _IO_fwide_maybe_incompatible ? -1 : (__fp)->_mode;          \
+        else                                     \
+            __result = _IO_fwide (__fp, __result);                     \
+        __result; })
 
 extern __ssize_t _IO_wpadn(FILE *, wint_t, __ssize_t);
 extern void _IO_free_wbackup_area(FILE *) __THROW;
@@ -277,9 +277,9 @@ libc_hidden_proto(_IO_sgetn)
 
 # define _IO_peekc(_fp) _IO_peekc_locked (_fp)
 # define _IO_flockfile(_fp) \
-  if (((_fp)->_flags & _IO_USER_LOCK) == 0) _IO_lock_lock (*(_fp)->_lock)
+    if (((_fp)->_flags & _IO_USER_LOCK) == 0) _IO_lock_lock (*(_fp)->_lock)
 # define _IO_funlockfile(_fp) \
-  if (((_fp)->_flags & _IO_USER_LOCK) == 0) _IO_lock_unlock (*(_fp)->_lock)
+    if (((_fp)->_flags & _IO_USER_LOCK) == 0) _IO_lock_unlock (*(_fp)->_lock)
 #endif /* _IO_MTSAFE_IO */
 
 #endif /* _LIBIO_H */

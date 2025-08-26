@@ -40,12 +40,12 @@
    for which they need to act as barriers as well, hence the additional
    (unnecessary) parameters.  */
 #define stackinfo_get_sp() \
-  ({ register void * p__ __asm__(RSP_REG); \
-     asm volatile("" : "=r" (p__)); \
-     p__; })
+    ({ register void * p__ __asm__(RSP_REG); \
+        asm volatile("" : "=r" (p__)); \
+        p__; })
 #define stackinfo_sub_sp(ptr) \
-  ({ ptrdiff_t d__;                     \
-     asm volatile ("sub %%" RSP_REG " , %0" : "=r" (d__) : "0" (ptr));  \
-     d__; })
+    ({ ptrdiff_t d__;                     \
+        asm volatile ("sub %%" RSP_REG " , %0" : "=r" (d__) : "0" (ptr));  \
+        d__; })
 
 #endif  /* stackinfo.h */

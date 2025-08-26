@@ -119,16 +119,16 @@ _Static_assert(offsetof(tcbhead_t, __glibc_unused2) == 0x80,
 /* Install the dtv pointer.  The pointer passed is to the element with
    index -1 which contain the length.  */
 # define INSTALL_DTV(descr, dtvp) \
-  ((tcbhead_t *) (descr))->dtv = (dtvp) + 1
+    ((tcbhead_t *) (descr))->dtv = (dtvp) + 1
 
 /* Install new dtv for current thread.  */
 # define INSTALL_NEW_DTV(dtvp) \
-  ({ struct pthread *__pd;                            \
-     THREAD_SETMEM (__pd, header.dtv, (dtvp)); })
+    ({ struct pthread *__pd;                            \
+        THREAD_SETMEM (__pd, header.dtv, (dtvp)); })
 
 /* Return dtv of given thread descriptor.  */
 # define GET_DTV(descr) \
-  (((tcbhead_t *) (descr))->dtv)
+    (((tcbhead_t *) (descr))->dtv)
 
 
 /* Code to initially initialize the thread pointer.  This might need
@@ -138,32 +138,32 @@ _Static_assert(offsetof(tcbhead_t, __glibc_unused2) == 0x80,
    We have to make the syscall for both uses of the macro since the
    address might be (and probably is) different.  */
 # define TLS_INIT_TP(thrdescr) \
-  ({ void *_thrdescr = (thrdescr);                        \
-     tcbhead_t *_head = _thrdescr;                        \
-     int _result;                                 \
-                                          \
-     _head->tcb = _thrdescr;                              \
-     /* For now the thread descriptor is at the same address.  */         \
-     _head->self = _thrdescr;                             \
-                                          \
-     /* It is a simple syscall to set the %fs value for the thread.  */       \
-     asm volatile ("syscall"                              \
-           : "=a" (_result)                       \
-           : "0" ((unsigned long int) __NR_arch_prctl),           \
-             "D" ((unsigned long int) ARCH_SET_FS),           \
-             "S" (_thrdescr)                          \
-           : "memory", "cc", "r11", "cx");                \
-                                          \
-    _result == 0;                                 \
-  })
+    ({ void *_thrdescr = (thrdescr);                        \
+        tcbhead_t *_head = _thrdescr;                        \
+        int _result;                                 \
+        \
+        _head->tcb = _thrdescr;                              \
+        /* For now the thread descriptor is at the same address.  */         \
+        _head->self = _thrdescr;                             \
+        \
+        /* It is a simple syscall to set the %fs value for the thread.  */       \
+        asm volatile ("syscall"                              \
+                      : "=a" (_result)                       \
+                      : "0" ((unsigned long int) __NR_arch_prctl),           \
+                      "D" ((unsigned long int) ARCH_SET_FS),           \
+                      "S" (_thrdescr)                          \
+                      : "memory", "cc", "r11", "cx");                \
+        \
+        _result == 0;                                 \
+    })
 
 # define TLS_DEFINE_INIT_TP(tp, pd) void *tp = (pd)
 
 
 /* Return the address of the dtv for the current thread.  */
 # define THREAD_DTV() \
-  ({ struct pthread *__pd;                            \
-     THREAD_GETMEM (__pd, header.dtv); })
+    ({ struct pthread *__pd;                            \
+        THREAD_GETMEM (__pd, header.dtv); })
 
 
 /* Return the thread descriptor for the current thread.
@@ -174,13 +174,13 @@ _Static_assert(offsetof(tcbhead_t, __glibc_unused2) == 0x80,
    do not get optimized away.  */
 # if __GNUC_PREREQ (6, 0)
 #  define THREAD_SELF \
-  (*(struct pthread *__seg_fs *) offsetof (struct pthread, header.self))
+    (*(struct pthread *__seg_fs *) offsetof (struct pthread, header.self))
 # else
 #  define THREAD_SELF \
-  ({ struct pthread *__self;                              \
-     asm ("mov %%fs:%c1,%0" : "=r" (__self)                   \
-      : "i" (offsetof (struct pthread, header.self)));            \
-     __self;})
+    ({ struct pthread *__self;                              \
+        asm ("mov %%fs:%c1,%0" : "=r" (__self)                   \
+             : "i" (offsetof (struct pthread, header.self)));            \
+        __self;})
 # endif
 
 /* Magic for libthread_db to know how to do THREAD_SELF.  */
@@ -199,10 +199,10 @@ _Static_assert(offsetof(tcbhead_t, __glibc_unused2) == 0x80,
 
 /* Set the pointer guard field in the TCB head.  */
 # define THREAD_SET_POINTER_GUARD(value) \
-  THREAD_SETMEM (THREAD_SELF, header.pointer_guard, value)
+    THREAD_SETMEM (THREAD_SELF, header.pointer_guard, value)
 # define THREAD_COPY_POINTER_GUARD(descr) \
-  ((descr)->header.pointer_guard                          \
-   = THREAD_GETMEM (THREAD_SELF, header.pointer_guard))
+    ((descr)->header.pointer_guard                          \
+     = THREAD_GETMEM (THREAD_SELF, header.pointer_guard))
 
 
 /* Get and set the global scope generation counter in the TCB head.  */
@@ -210,18 +210,18 @@ _Static_assert(offsetof(tcbhead_t, __glibc_unused2) == 0x80,
 # define THREAD_GSCOPE_FLAG_USED   1
 # define THREAD_GSCOPE_FLAG_WAIT   2
 # define THREAD_GSCOPE_RESET_FLAG() \
-  do                                          \
+    do                                          \
     { int __res;                                  \
-      asm volatile ("xchgl %0, %%fs:%P1"                      \
-            : "=r" (__res)                        \
-            : "i" (offsetof (struct pthread, header.gscope_flag)),    \
-              "0" (THREAD_GSCOPE_FLAG_UNUSED));               \
-      if (__res == THREAD_GSCOPE_FLAG_WAIT)                   \
-    lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1, LLL_PRIVATE);    \
+        asm volatile ("xchgl %0, %%fs:%P1"                      \
+                      : "=r" (__res)                        \
+                      : "i" (offsetof (struct pthread, header.gscope_flag)),    \
+                      "0" (THREAD_GSCOPE_FLAG_UNUSED));               \
+        if (__res == THREAD_GSCOPE_FLAG_WAIT)                   \
+            lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1, LLL_PRIVATE);    \
     }                                         \
-  while (0)
+    while (0)
 # define THREAD_GSCOPE_SET_FLAG() \
-  THREAD_SETMEM (THREAD_SELF, header.gscope_flag, THREAD_GSCOPE_FLAG_USED)
+    THREAD_SETMEM (THREAD_SELF, header.gscope_flag, THREAD_GSCOPE_FLAG_USED)
 
 #endif /* __ASSEMBLER__ */
 

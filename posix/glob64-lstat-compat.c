@@ -23,7 +23,7 @@
 # include <glob.h>
 
 # define glob(pattern, flags, errfunc, pglob) \
-  __glob64_lstat_compat (pattern, flags, errfunc, pglob)
+    __glob64_lstat_compat (pattern, flags, errfunc, pglob)
 
 # define GLOB_ATTRIBUTE attribute_compat_text_section
 

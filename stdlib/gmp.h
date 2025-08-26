@@ -584,15 +584,15 @@ register mp_size_t s2_size;
 /* When using GCC, optimize certain common comparisons.  */
 #if defined (__GNUC__)
 #define mpz_cmp_ui(Z,UI) \
-  (__builtin_constant_p (UI) && (UI) == 0               \
-   ? mpz_sgn (Z) : mpz_cmp_ui (Z,UI))
+    (__builtin_constant_p (UI) && (UI) == 0               \
+     ? mpz_sgn (Z) : mpz_cmp_ui (Z,UI))
 #define mpz_cmp_si(Z,UI) \
-  (__builtin_constant_p (UI) && (UI) == 0 ? mpz_sgn (Z)         \
-   : __builtin_constant_p (UI) && (UI) > 0 ? mpz_cmp_ui (Z,UI)      \
-   : mpz_cmp_si (Z,UI))
+    (__builtin_constant_p (UI) && (UI) == 0 ? mpz_sgn (Z)         \
+     : __builtin_constant_p (UI) && (UI) > 0 ? mpz_cmp_ui (Z,UI)      \
+     : mpz_cmp_si (Z,UI))
 #define mpq_cmp_ui(Q,NUI,DUI) \
-  (__builtin_constant_p (NUI) && (NUI) == 0             \
-   ? mpq_sgn (Q) : mpq_cmp_ui (Q,NUI,DUI))
+    (__builtin_constant_p (NUI) && (NUI) == 0             \
+     ? mpq_sgn (Q) : mpq_cmp_ui (Q,NUI,DUI))
 #endif
 
 #define mpn_divmod(qp,np,nsize,dp,dsize) mpn_divrem (qp,0,np,nsize,dp,dsize)
@@ -606,9 +606,9 @@ register mp_size_t s2_size;
 #define mpz_mmod    mpz_fdiv_r
 #define mpz_mdiv_ui mpz_fdiv_q_ui
 #define mpz_mdivmod_ui(q,r,n,d) \
-  ((r == 0) ? mpz_fdiv_q_ui (q,n,d) : mpz_fdiv_qr_ui (q,r,n,d))
+    ((r == 0) ? mpz_fdiv_q_ui (q,n,d) : mpz_fdiv_qr_ui (q,r,n,d))
 #define mpz_mmod_ui(r,n,d) \
-  ((r == 0) ? mpz_fdiv_ui (n,d) : mpz_fdiv_r_ui (r,n,d))
+    ((r == 0) ? mpz_fdiv_ui (n,d) : mpz_fdiv_r_ui (r,n,d))
 
 /* Useful synonyms, but not quite compatible with GMP 1.  */
 #define mpz_div     mpz_fdiv_q

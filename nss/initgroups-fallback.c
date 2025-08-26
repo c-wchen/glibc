@@ -10,7 +10,8 @@ typedef enum nss_status(*get_function)(struct group *, char *,
 
 
 static enum nss_status compat_call(nss_action_list nip, const char *user, gid_t group, long int *start,
-                                   long int *size, gid_t **groupsp, long int limit, int *errnop) {
+                                   long int *size, gid_t **groupsp, long int limit, int *errnop)
+{
     struct group grpbuf;
     enum nss_status status;
     set_function setgrent_fct;
@@ -19,14 +20,12 @@ static enum nss_status compat_call(nss_action_list nip, const char *user, gid_t 
     gid_t *groups = *groupsp;
 
     getgrent_fct = __nss_lookup_function(nip, "getgrent_r");
-    if (getgrent_fct == NULL)
-    {
+    if (getgrent_fct == NULL) {
         return NSS_STATUS_UNAVAIL;
     }
 
     setgrent_fct = __nss_lookup_function(nip, "setgrent");
-    if (setgrent_fct)
-    {
+    if (setgrent_fct) {
         status = DL_CALL_FCT(setgrent_fct, ());
         if (status != NSS_STATUS_SUCCESS) {
             return status;
@@ -39,8 +38,7 @@ static enum nss_status compat_call(nss_action_list nip, const char *user, gid_t 
     scratch_buffer_init(&tmpbuf);
     enum nss_status result = NSS_STATUS_SUCCESS;
 
-    do
-    {
+    do {
         while ((status = DL_CALL_FCT(getgrent_fct,
                                      (&grpbuf, tmpbuf.data, tmpbuf.length,
                                       errnop)),
@@ -109,8 +107,7 @@ static enum nss_status compat_call(nss_action_list nip, const char *user, gid_t 
 done:
     scratch_buffer_free(&tmpbuf);
 
-    if (endgrent_fct)
-    {
+    if (endgrent_fct) {
         DL_CALL_FCT(endgrent_fct, ());
     }
 

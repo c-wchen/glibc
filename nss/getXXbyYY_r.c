@@ -154,21 +154,21 @@ static inline int __merge_einval(LOOKUP_TYPE *a,
 #endif
 
 #define CHECK_MERGE(err, status)        \
-  ({                        \
-    do                      \
-      {                     \
-    if (err)                \
-      {                 \
-        __set_errno (err);          \
-        if (err == ERANGE)          \
-          status = NSS_STATUS_TRYAGAIN; \
-        else                \
-          status = NSS_STATUS_UNAVAIL;  \
-        break;              \
-      }                 \
-      }                     \
-    while (0);                  \
-  })
+    ({                        \
+        do                      \
+        {                     \
+            if (err)                \
+            {                 \
+                __set_errno (err);          \
+                if (err == ERANGE)          \
+                    status = NSS_STATUS_TRYAGAIN; \
+                else                \
+                    status = NSS_STATUS_UNAVAIL;  \
+                break;              \
+            }                 \
+        }                     \
+        while (0);                  \
+    })
 
 /* Type of the lookup function we need here.  */
 typedef enum nss_status(*lookup_function)(ADD_PARAMS, LOOKUP_TYPE *, char *,
@@ -407,7 +407,7 @@ OLD(REENTRANT_NAME)(ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 }
 
 #  define do_symbol_version(real, name, version) \
-  compat_symbol (libc, real, name, version)
+    compat_symbol (libc, real, name, version)
 do_symbol_version(OLD(REENTRANT_NAME), REENTRANT_NAME, GLIBC_2_0);
 # endif
 
@@ -417,7 +417,7 @@ do_symbol_version(OLD(REENTRANT_NAME), REENTRANT_NAME, GLIBC_2_0);
 strong_alias(INTERNAL(REENTRANT_NAME), NEW(REENTRANT_NAME));
 
 # define do_default_symbol_version(real, name, version) \
-  versioned_symbol (libc, real, name, version)
+    versioned_symbol (libc, real, name, version)
 do_default_symbol_version(NEW(REENTRANT_NAME),
                           REENTRANT_NAME, GLIBC_2_1_2);
 #endif

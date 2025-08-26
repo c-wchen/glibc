@@ -100,8 +100,8 @@ static int      fts_safe_changedir(FTSOBJ *, FTSENTRY *, int, const char *);
 
 #ifndef MAX
 #define MAX(a, b)   ({ __typeof__ (a) _a = (a); \
-               __typeof__ (b) _b = (b); \
-               _a > _b ? _a : _b; })
+        __typeof__ (b) _b = (b); \
+        _a > _b ? _a : _b; })
 #endif
 
 #define ISDOT(a)    (a[0] == '.' && (!a[1] || (a[1] == '.' && !a[2])))
@@ -315,7 +315,7 @@ int FTS_CLOSE(FTSOBJ *sp)
  */
 #define NAPPEND(p)                          \
     (p->fts_path[p->fts_pathlen - 1] == '/'             \
-        ? p->fts_pathlen - 1 : p->fts_pathlen)
+     ? p->fts_pathlen - 1 : p->fts_pathlen)
 
 FTSENTRY *FTS_READ(FTSOBJ *sp)
 {
@@ -1114,12 +1114,12 @@ static void fts_padjust(FTSOBJ *sp, FTSENTRY *head)
     char *addr = sp->fts_path;
 
 #define ADJUST(p) do {                          \
-    if ((p)->fts_accpath != (p)->fts_name) {            \
-        (p)->fts_accpath =                  \
-            (char *)addr + ((p)->fts_accpath - (p)->fts_path);  \
-    }                               \
-    (p)->fts_path = addr;                       \
-} while (0)
+        if ((p)->fts_accpath != (p)->fts_name) {            \
+            (p)->fts_accpath =                  \
+                                                (char *)addr + ((p)->fts_accpath - (p)->fts_path);  \
+        }                               \
+        (p)->fts_path = addr;                       \
+    } while (0)
     /* Adjust the current set of children. */
     for (p = sp->fts_child; p; p = p->fts_link) {
         ADJUST(p);

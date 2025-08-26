@@ -44,24 +44,24 @@ static void our_error(const char *c)
 /* First function where the return type is constant.  */
 
 #define CHECK_RET_CONST_TYPE(func, rettype, arg, name, ...)     \
-  if (sizeof (func (arg, ## __VA_ARGS__)) != sizeof (rettype))      \
-    our_error ("Return size of " #func " is wrong with " #name " argument");
+    if (sizeof (func (arg, ## __VA_ARGS__)) != sizeof (rettype))      \
+        our_error ("Return size of " #func " is wrong with " #name " argument");
 
 #define CHECK_RET_CONST_FLOAT(func, rettype, ...)           \
-  CHECK_RET_CONST_TYPE (func, rettype, fx, float, ## __VA_ARGS__)
+    CHECK_RET_CONST_TYPE (func, rettype, fx, float, ## __VA_ARGS__)
 #define CHECK_RET_CONST_DOUBLE(func, rettype, ...)          \
-  CHECK_RET_CONST_TYPE (func, rettype, dx, double, ## __VA_ARGS__)
+    CHECK_RET_CONST_TYPE (func, rettype, dx, double, ## __VA_ARGS__)
 #define CHECK_RET_CONST_LDOUBLE(func, rettype, ...)         \
-  CHECK_RET_CONST_TYPE (func, rettype, lx, long double, ## __VA_ARGS__)
+    CHECK_RET_CONST_TYPE (func, rettype, lx, long double, ## __VA_ARGS__)
 
 #define CHECK_RET_CONST(func, rettype, ...)         \
-static void                         \
-check_return_ ##func (void)                 \
-{                               \
-  CHECK_RET_CONST_FLOAT (func, rettype, ## __VA_ARGS__)     \
-  CHECK_RET_CONST_DOUBLE (func, rettype, ## __VA_ARGS__)    \
-  CHECK_RET_CONST_LDOUBLE (func, rettype, ## __VA_ARGS__)   \
-}
+    static void                         \
+    check_return_ ##func (void)                 \
+    {                               \
+        CHECK_RET_CONST_FLOAT (func, rettype, ## __VA_ARGS__)     \
+        CHECK_RET_CONST_DOUBLE (func, rettype, ## __VA_ARGS__)    \
+        CHECK_RET_CONST_LDOUBLE (func, rettype, ## __VA_ARGS__)   \
+    }
 
 CHECK_RET_CONST(ilogb, int)
 CHECK_RET_CONST(llogb, long)

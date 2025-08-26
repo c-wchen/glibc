@@ -17,6 +17,6 @@
    <https://www.gnu.org/licenses/>.  */
 
 #define MMAP_CALL(__nr, __addr, __len, __prot, __flags, __fd, __offset) \
-  INLINE_SYSCALL_CALL (__nr, __addr, __len, __prot, __flags, __fd, __offset)
+    INLINE_SYSCALL_CALL (__nr, __addr, __len, __prot, __flags, __fd, __offset)
 #define MMAP_CALL_INTERNAL(__nr, __addr, __len, __prot, __flags, __fd, __offset) \
-  INTERNAL_SYSCALL_CALL (__nr, __addr, __len, __prot, __flags, __fd, __offset)
+    INTERNAL_SYSCALL_CALL (__nr, __addr, __len, __prot, __flags, __fd, __offset)

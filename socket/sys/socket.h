@@ -60,19 +60,19 @@ enum {
 /* Add more `struct sockaddr_AF' types here as necessary.
    These are all the ones I found on NetBSD and Linux.  */
 # define __SOCKADDR_ALLTYPES \
-  __SOCKADDR_ONETYPE (sockaddr) \
-  __SOCKADDR_ONETYPE (sockaddr_at) \
-  __SOCKADDR_ONETYPE (sockaddr_ax25) \
-  __SOCKADDR_ONETYPE (sockaddr_dl) \
-  __SOCKADDR_ONETYPE (sockaddr_eon) \
-  __SOCKADDR_ONETYPE (sockaddr_in) \
-  __SOCKADDR_ONETYPE (sockaddr_in6) \
-  __SOCKADDR_ONETYPE (sockaddr_inarp) \
-  __SOCKADDR_ONETYPE (sockaddr_ipx) \
-  __SOCKADDR_ONETYPE (sockaddr_iso) \
-  __SOCKADDR_ONETYPE (sockaddr_ns) \
-  __SOCKADDR_ONETYPE (sockaddr_un) \
-  __SOCKADDR_ONETYPE (sockaddr_x25)
+    __SOCKADDR_ONETYPE (sockaddr) \
+    __SOCKADDR_ONETYPE (sockaddr_at) \
+    __SOCKADDR_ONETYPE (sockaddr_ax25) \
+    __SOCKADDR_ONETYPE (sockaddr_dl) \
+    __SOCKADDR_ONETYPE (sockaddr_eon) \
+    __SOCKADDR_ONETYPE (sockaddr_in) \
+    __SOCKADDR_ONETYPE (sockaddr_in6) \
+    __SOCKADDR_ONETYPE (sockaddr_inarp) \
+    __SOCKADDR_ONETYPE (sockaddr_ipx) \
+    __SOCKADDR_ONETYPE (sockaddr_iso) \
+    __SOCKADDR_ONETYPE (sockaddr_ns) \
+    __SOCKADDR_ONETYPE (sockaddr_un) \
+    __SOCKADDR_ONETYPE (sockaddr_x25)
 
 # define __SOCKADDR_ONETYPE(type) struct type *__restrict __##type##__;
 typedef union {

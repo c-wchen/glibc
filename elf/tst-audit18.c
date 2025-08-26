@@ -30,7 +30,7 @@
 
 static int restart;
 #define CMDLINE_OPTIONS \
-  { "restart", no_argument, &restart, 1 },
+    { "restart", no_argument, &restart, 1 },
 
 static int handle_restart(void)
 {

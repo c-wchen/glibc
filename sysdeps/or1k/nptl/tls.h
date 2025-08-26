@@ -88,7 +88,7 @@ register tcbhead_t *__thread_self __asm__("r10");
    We can always index with -1, so we store dtvp[1].  */
 
 # define INSTALL_DTV(tcbp, dtvp) \
-  (((tcbhead_t *) (tcbp))->dtv = (dtvp) + 1)
+    (((tcbhead_t *) (tcbp))->dtv = (dtvp) + 1)
 
 /* Install new dtv for current thread
    In a logicial world dtv here would also point to the length of the DTV.
@@ -111,11 +111,11 @@ register tcbhead_t *__thread_self __asm__("r10");
    It's hard to fail this, so return NULL always.  */
 
 # define TLS_INIT_TP(tcbp) \
-  ({__thread_self = ((tcbhead_t *)tcbp + 1); true;})
+    ({__thread_self = ((tcbhead_t *)tcbp + 1); true;})
 
 /* Value passed to 'clone' for initialization of the thread register.  */
 # define TLS_DEFINE_INIT_TP(tp, pd) \
-  void *tp = ((char *) pd + TLS_PRE_TCB_SIZE + TLS_INIT_TCB_SIZE)
+    void *tp = ((char *) pd + TLS_PRE_TCB_SIZE + TLS_INIT_TCB_SIZE)
 
 /* Return the address of the dtv for the current thread.
 
@@ -123,7 +123,7 @@ register tcbhead_t *__thread_self __asm__("r10");
    Remember that we made TP point to after tcb, so we need to reverse that.  */
 
 #  define THREAD_DTV() \
-  ((((tcbhead_t *)__thread_self)-1)->dtv)
+    ((((tcbhead_t *)__thread_self)-1)->dtv)
 
 /* Return the thread descriptor for the current thread.
 
@@ -134,26 +134,26 @@ register tcbhead_t *__thread_self __asm__("r10");
    I regard this is a separate system from the "normal" TLS.  */
 
 # define THREAD_SELF \
-  ((struct pthread *) ((char *) __thread_self - TLS_INIT_TCB_SIZE \
-    - TLS_PRE_TCB_SIZE))
+    ((struct pthread *) ((char *) __thread_self - TLS_INIT_TCB_SIZE \
+                         - TLS_PRE_TCB_SIZE))
 
 /* Magic for libthread_db to know how to do THREAD_SELF.  */
 
 # define DB_THREAD_SELF \
-  REGISTER (32, 32, 10 * 4, - TLS_INIT_TCB_SIZE - TLS_PRE_TCB_SIZE)
+    REGISTER (32, 32, 10 * 4, - TLS_INIT_TCB_SIZE - TLS_PRE_TCB_SIZE)
 
 # include <tcb-access.h>
 
 /* Access to data in the thread descriptor is easy.  */
 
 #define THREAD_GETMEM(descr, member) \
-  descr->member
+    descr->member
 #define THREAD_GETMEM_NC(descr, member, idx) \
-  descr->member[idx]
+    descr->member[idx]
 #define THREAD_SETMEM(descr, member, value) \
-  descr->member = (value)
+    descr->member = (value)
 #define THREAD_SETMEM_NC(descr, member, idx, value) \
-  descr->member[idx] = (value)
+    descr->member[idx] = (value)
 
 /* Get and set the global scope generation counter in struct pthread.  */
 
@@ -161,22 +161,22 @@ register tcbhead_t *__thread_self __asm__("r10");
 #define THREAD_GSCOPE_FLAG_USED   1
 #define THREAD_GSCOPE_FLAG_WAIT   2
 #define THREAD_GSCOPE_RESET_FLAG()                  \
-  do                                    \
+    do                                    \
     {                                   \
-      int __res = atomic_exchange_release (&THREAD_SELF->header.gscope_flag,\
-                       THREAD_GSCOPE_FLAG_UNUSED);  \
-      if (__res == THREAD_GSCOPE_FLAG_WAIT)             \
-      lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1,      \
-              LLL_PRIVATE);                 \
+        int __res = atomic_exchange_release (&THREAD_SELF->header.gscope_flag,\
+                                             THREAD_GSCOPE_FLAG_UNUSED);  \
+        if (__res == THREAD_GSCOPE_FLAG_WAIT)             \
+            lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1,      \
+                            LLL_PRIVATE);                 \
     }                                   \
-  while (0)
+    while (0)
 #define THREAD_GSCOPE_SET_FLAG()                    \
-  do                                    \
+    do                                    \
     {                                   \
-      THREAD_SELF->header.gscope_flag = THREAD_GSCOPE_FLAG_USED;    \
-      atomic_write_barrier ();                      \
+        THREAD_SELF->header.gscope_flag = THREAD_GSCOPE_FLAG_USED;    \
+        atomic_write_barrier ();                      \
     }                                   \
-  while (0)
+    while (0)
 
 #endif /* __ASSEMBLER__ */
 

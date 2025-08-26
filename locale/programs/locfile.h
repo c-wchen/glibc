@@ -37,12 +37,12 @@ struct locale_file {
 
 /* Macros used in the parser.  */
 #define SYNTAX_ERROR(string, args...) \
-  do                                          \
+    do                                          \
     {                                         \
-      lr_error (ldfile, string, ## args);                     \
-      lr_ignore_rest (ldfile, 0);                         \
+        lr_error (ldfile, string, ## args);                     \
+        lr_ignore_rest (ldfile, 0);                         \
     }                                         \
-  while (0)
+    while (0)
 
 
 /* General handling of `copy'.  */

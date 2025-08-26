@@ -23,16 +23,16 @@
 static int result;
 
 #define COMPARE_BODY(A, B, TYPE, COPYSIGN)              \
-  do {                                  \
-    TYPE s1 = COPYSIGN ((TYPE) 1.0, A);                 \
-    TYPE s2 = COPYSIGN ((TYPE) 1.0, B);                 \
-    if (s1 != s2)                           \
-      result |= 1;                          \
-    if ((__builtin_isnan (A) != 0) != (__builtin_isnan (B) != 0))   \
-      result |= 1;                          \
-    if ((A != B) != (__builtin_isnan (A) != 0))             \
-      result |= 1;                          \
-  } while (0)
+    do {                                  \
+        TYPE s1 = COPYSIGN ((TYPE) 1.0, A);                 \
+        TYPE s2 = COPYSIGN ((TYPE) 1.0, B);                 \
+        if (s1 != s2)                           \
+            result |= 1;                          \
+        if ((__builtin_isnan (A) != 0) != (__builtin_isnan (B) != 0))   \
+            result |= 1;                          \
+        if ((A != B) != (__builtin_isnan (A) != 0))             \
+            result |= 1;                          \
+    } while (0)
 
 #ifdef CMPLX
 
@@ -70,34 +70,34 @@ static void comparecl(_Complex long double a, long double r, long double i)
 }
 
 #define VERIFY(A, B, TYPE, COMPARE, CL)         \
-  do {                          \
-    TYPE a = A;                     \
-    TYPE b = B;                     \
-    _Complex TYPE cr = CL (a, b);           \
-    static _Complex TYPE cs = CL (A, B);        \
-    COMPARE (cr, A, B);                 \
-    COMPARE (cs, A, B);                 \
-  } while (0)
+    do {                          \
+        TYPE a = A;                     \
+        TYPE b = B;                     \
+        _Complex TYPE cr = CL (a, b);           \
+        static _Complex TYPE cs = CL (A, B);        \
+        COMPARE (cr, A, B);                 \
+        COMPARE (cs, A, B);                 \
+    } while (0)
 
 #define ALL_CHECKS(PZ, NZ, NAN, INF, TYPE, COMPARE, CL) \
-  do {                          \
-    VERIFY (PZ, PZ, TYPE, COMPARE, CL);         \
-    VERIFY (PZ, NZ, TYPE, COMPARE, CL);         \
-    VERIFY (PZ, NAN, TYPE, COMPARE, CL);        \
-    VERIFY (PZ, INF, TYPE, COMPARE, CL);        \
-    VERIFY (NZ, PZ, TYPE, COMPARE, CL);         \
-    VERIFY (NZ, NZ, TYPE, COMPARE, CL);         \
-    VERIFY (NZ, NAN, TYPE, COMPARE, CL);        \
-    VERIFY (NZ, INF, TYPE, COMPARE, CL);        \
-    VERIFY (NAN, PZ, TYPE, COMPARE, CL);        \
-    VERIFY (NAN, NZ, TYPE, COMPARE, CL);        \
-    VERIFY (NAN, NAN, TYPE, COMPARE, CL);       \
-    VERIFY (NAN, INF, TYPE, COMPARE, CL);       \
-    VERIFY (INF, PZ, TYPE, COMPARE,CL);         \
-    VERIFY (INF, NZ, TYPE, COMPARE, CL);        \
-    VERIFY (INF, NAN, TYPE, COMPARE, CL);       \
-    VERIFY (INF, INF, TYPE, COMPARE, CL);       \
-  } while (0)
+    do {                          \
+        VERIFY (PZ, PZ, TYPE, COMPARE, CL);         \
+        VERIFY (PZ, NZ, TYPE, COMPARE, CL);         \
+        VERIFY (PZ, NAN, TYPE, COMPARE, CL);        \
+        VERIFY (PZ, INF, TYPE, COMPARE, CL);        \
+        VERIFY (NZ, PZ, TYPE, COMPARE, CL);         \
+        VERIFY (NZ, NZ, TYPE, COMPARE, CL);         \
+        VERIFY (NZ, NAN, TYPE, COMPARE, CL);        \
+        VERIFY (NZ, INF, TYPE, COMPARE, CL);        \
+        VERIFY (NAN, PZ, TYPE, COMPARE, CL);        \
+        VERIFY (NAN, NZ, TYPE, COMPARE, CL);        \
+        VERIFY (NAN, NAN, TYPE, COMPARE, CL);       \
+        VERIFY (NAN, INF, TYPE, COMPARE, CL);       \
+        VERIFY (INF, PZ, TYPE, COMPARE,CL);         \
+        VERIFY (INF, NZ, TYPE, COMPARE, CL);        \
+        VERIFY (INF, NAN, TYPE, COMPARE, CL);       \
+        VERIFY (INF, INF, TYPE, COMPARE, CL);       \
+    } while (0)
 
 static void check_float(void)
 {

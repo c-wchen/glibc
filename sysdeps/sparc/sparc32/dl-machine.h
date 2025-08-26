@@ -47,13 +47,13 @@ static inline int elf_machine_matches_host(const Elf32_Ehdr *ehdr)
    invoked from functions that have no GOT references, and thus the compiler
    has no obligation to load the PIC register.  */
 #define LOAD_PIC_REG(PIC_REG)   \
-do {    register Elf32_Addr pc __asm("o7"); \
-    __asm("sethi %%hi(_GLOBAL_OFFSET_TABLE_-4), %1\n\t" \
-          "call 1f\n\t" \
-          "add %1, %%lo(_GLOBAL_OFFSET_TABLE_+4), %1\n" \
-          "1:\tadd %1, %0, %1" \
-          : "=r" (pc), "=r" (PIC_REG)); \
-} while (0)
+    do {    register Elf32_Addr pc __asm("o7"); \
+        __asm("sethi %%hi(_GLOBAL_OFFSET_TABLE_-4), %1\n\t" \
+              "call 1f\n\t" \
+              "add %1, %%lo(_GLOBAL_OFFSET_TABLE_+4), %1\n" \
+              "1:\tadd %1, %0, %1" \
+              : "=r" (pc), "=r" (PIC_REG)); \
+    } while (0)
 
 /* Return the link-time address of _DYNAMIC.  Conveniently, this is the
    first element of the GOT.  This must be inlined in a function which
@@ -142,10 +142,10 @@ static inline int elf_machine_runtime_setup(struct link_map *l, struct r_scope_e
    ELF_RTYPE_CLASS_COPY iff TYPE should not be allowed to resolve to one
    of the main executable's symbols, as for a COPY reloc.  */
 #define elf_machine_type_class(type) \
-  ((((type) == R_SPARC_JMP_SLOT                           \
-     || ((type) >= R_SPARC_TLS_GD_HI22 && (type) <= R_SPARC_TLS_TPOFF64))     \
-    * ELF_RTYPE_CLASS_PLT)                            \
-   | (((type) == R_SPARC_COPY) * ELF_RTYPE_CLASS_COPY))
+    ((((type) == R_SPARC_JMP_SLOT                           \
+       || ((type) >= R_SPARC_TLS_GD_HI22 && (type) <= R_SPARC_TLS_TPOFF64))     \
+      * ELF_RTYPE_CLASS_PLT)                            \
+     | (((type) == R_SPARC_COPY) * ELF_RTYPE_CLASS_COPY))
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT    R_SPARC_JMP_SLOT
@@ -153,7 +153,7 @@ static inline int elf_machine_runtime_setup(struct link_map *l, struct r_scope_e
 /* Undo the sub %sp, 6*4, %sp; add %sp, 22*4, %o0 below to get at the
    value we want in __libc_stack_end.  */
 #define DL_STACK_END(cookie) \
-  ((void *) (((long) (cookie)) - (22 - 6) * 4))
+    ((void *) (((long) (cookie)) - (22 - 6) * 4))
 
 /* Initial entry point code for the dynamic linker.
    The C function `_dl_start' is the real entry point;
@@ -202,7 +202,7 @@ _dl_start_user:\n\
 	jmp	%l0\n\
 	 add	%sp, 6*4, %sp\n\
 	.size   _dl_start_user, . - _dl_start_user\n\
-	.previous");
+.previous");
 
 static inline Elf32_Addr elf_machine_fixup_plt(struct link_map *map, lookup_t t,
         const ElfW(Sym) *refsym, const ElfW(Sym) *sym,

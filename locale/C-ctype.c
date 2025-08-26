@@ -287,13 +287,13 @@ const uint32_t _nl_C_LC_CTYPE_tolower[384] attribute_hidden = {
 };
 
 #define STRUCT_CTYPE_CLASS(p, q) \
-  struct                                                                      \
+    struct                                                                      \
     {                                                                         \
-      uint32_t isctype_data[8];                                               \
-      uint32_t header[5];                                                     \
-      uint32_t level1[1];                                                     \
-      uint32_t level2[1 << q];                                                \
-      uint32_t level3[1 << p];                                                \
+        uint32_t isctype_data[8];                                               \
+        uint32_t header[5];                                                     \
+        uint32_t level1[1];                                                     \
+        uint32_t level2[1 << q];                                                \
+        uint32_t level3[1 << p];                                                \
     }
 
 const STRUCT_CTYPE_CLASS(1, 1) _nl_C_LC_CTYPE_class_upper attribute_hidden = {

@@ -13,10 +13,10 @@
 #include "tgn_locdef.h"
 
 #define TST_TOW_LOC(FUNC, func) \
-        TST_TOW## FUNC    tst_tow## func ##_loc[]
+    TST_TOW## FUNC    tst_tow## func ##_loc[]
 
 #define TST_TOW_REC(locale, func) \
-        {  Ttow## func,    TST_LOC_## locale },
+    {  Ttow## func,    TST_LOC_## locale },
 
 /*
  *  NOTE:

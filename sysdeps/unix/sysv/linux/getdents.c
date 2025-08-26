@@ -46,7 +46,7 @@ ssize_t __getdents(int fd, void *buf0, size_t nbytes)
     ssize_t retval;
 
 # define size_diff (offsetof (struct dirent64, d_name) \
-            - offsetof (struct dirent, d_name))
+                    - offsetof (struct dirent, d_name))
     char kbuftmp[sizeof(struct dirent) + size_diff];
     if (nbytes <= sizeof(struct dirent)) {
         kbuf = (void *) kbuftmp;

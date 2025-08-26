@@ -28,4 +28,4 @@
 #define DL_FIXUP_ADDR_VALUE(addr) (addr)
 #define DL_FIXUP_BINDNOW_ADDR_VALUE(addr) (addr)
 #define DL_FIXUP_BINDNOW_RELOC(l, reloc, value, new_value, st_value, lazy) \
-  (*value) = st_value;
+    (*value) = st_value;

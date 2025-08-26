@@ -20,7 +20,7 @@
 #ifdef SHARED
 #undef libc_hidden_def
 #define libc_hidden_def(name) \
-  __hidden_ver1 (__stpncpy_ppc, __GI___stpncpy, __stpncpy_ppc);
+    __hidden_ver1 (__stpncpy_ppc, __GI___stpncpy, __stpncpy_ppc);
 #endif
 
 #include <string/stpncpy.c>

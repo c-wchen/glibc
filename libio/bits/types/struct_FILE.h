@@ -109,13 +109,13 @@ struct _IO_FILE_complete {
 
 /* These macros are used by bits/stdio.h and internal headers.  */
 #define __getc_unlocked_body(_fp)                   \
-  (__glibc_unlikely ((_fp)->_IO_read_ptr >= (_fp)->_IO_read_end)    \
-   ? __uflow (_fp) : *(unsigned char *) (_fp)->_IO_read_ptr++)
+    (__glibc_unlikely ((_fp)->_IO_read_ptr >= (_fp)->_IO_read_end)    \
+     ? __uflow (_fp) : *(unsigned char *) (_fp)->_IO_read_ptr++)
 
 #define __putc_unlocked_body(_ch, _fp)                  \
-  (__glibc_unlikely ((_fp)->_IO_write_ptr >= (_fp)->_IO_write_end)  \
-   ? __overflow (_fp, (unsigned char) (_ch))                \
-   : (unsigned char) (*(_fp)->_IO_write_ptr++ = (_ch)))
+    (__glibc_unlikely ((_fp)->_IO_write_ptr >= (_fp)->_IO_write_end)  \
+     ? __overflow (_fp, (unsigned char) (_ch))                \
+     : (unsigned char) (*(_fp)->_IO_write_ptr++ = (_ch)))
 
 #define _IO_EOF_SEEN 0x0010
 #define __feof_unlocked_body(_fp) (((_fp)->_flags & _IO_EOF_SEEN) != 0)

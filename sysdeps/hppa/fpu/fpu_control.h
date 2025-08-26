@@ -45,25 +45,25 @@ typedef unsigned int fpu_control_t;
 
 /* Macros for accessing the hardware control word.  */
 #define _FPU_GETCW(cw) \
-({                                      \
-  union { __extension__ unsigned long long __fpreg; unsigned int __halfreg[2]; } __fullfp; \
-  /* Get the current status word. */                        \
-  __asm__ ("fstd %%fr0,0(%1)\n\t"                       \
-           "fldd 0(%1),%%fr0\n\t"                       \
-       : "=m" (__fullfp.__fpreg) : "r" (&__fullfp.__fpreg) : "%r0");    \
-  cw = __fullfp.__halfreg[0];                           \
-})
+    ({                                      \
+        union { __extension__ unsigned long long __fpreg; unsigned int __halfreg[2]; } __fullfp; \
+        /* Get the current status word. */                        \
+        __asm__ ("fstd %%fr0,0(%1)\n\t"                       \
+                 "fldd 0(%1),%%fr0\n\t"                       \
+                 : "=m" (__fullfp.__fpreg) : "r" (&__fullfp.__fpreg) : "%r0");    \
+        cw = __fullfp.__halfreg[0];                           \
+    })
 
 #define _FPU_SETCW(cw) \
-({                                      \
-  union { __extension__ unsigned long long __fpreg; unsigned int __halfreg[2]; } __fullfp;  \
-  /* Get the current status word and set the control word.  */          \
-  __asm__ ("fstd %%fr0,0(%1)\n\t"                       \
-       : "=m" (__fullfp.__fpreg) : "r" (&__fullfp.__fpreg) : "%r0");    \
-  __fullfp.__halfreg[0] = cw;                           \
-  __asm__ ("fldd 0(%1),%%fr0\n\t"                       \
-       : : "m" (__fullfp.__fpreg), "r" (&__fullfp.__fpreg) : "%r0" );   \
-})
+    ({                                      \
+        union { __extension__ unsigned long long __fpreg; unsigned int __halfreg[2]; } __fullfp;  \
+        /* Get the current status word and set the control word.  */          \
+        __asm__ ("fstd %%fr0,0(%1)\n\t"                       \
+                 : "=m" (__fullfp.__fpreg) : "r" (&__fullfp.__fpreg) : "%r0");    \
+        __fullfp.__halfreg[0] = cw;                           \
+        __asm__ ("fldd 0(%1),%%fr0\n\t"                       \
+                 : : "m" (__fullfp.__fpreg), "r" (&__fullfp.__fpreg) : "%r0" );   \
+    })
 
 /* Default control word set at startup.  */
 extern fpu_control_t __fpu_control;

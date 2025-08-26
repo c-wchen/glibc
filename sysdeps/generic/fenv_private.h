@@ -279,8 +279,8 @@ static __always_inline void default_libc_feresetround_noex_ctx(struct rm_ctx *ct
 #endif
 
 #define SET_RESTORE_ROUND_GENERIC(RM,ROUNDFUNC,CLEANUPFUNC) \
-  struct rm_ctx ctx __attribute__((cleanup (CLEANUPFUNC ## _ctx))); \
-  ROUNDFUNC ## _ctx (&ctx, (RM))
+    struct rm_ctx ctx __attribute__((cleanup (CLEANUPFUNC ## _ctx))); \
+    ROUNDFUNC ## _ctx (&ctx, (RM))
 
 /* Set the rounding mode within a lexical block.  Restore the rounding mode to
    the value at the start of the block.  The exception mode must be preserved.
@@ -288,11 +288,11 @@ static __always_inline void default_libc_feresetround_noex_ctx(struct rm_ctx *ct
    Non-stop mode may be enabled inside the block.  */
 
 #define SET_RESTORE_ROUND(RM) \
-  SET_RESTORE_ROUND_GENERIC (RM, libc_feholdsetround, libc_feresetround)
+    SET_RESTORE_ROUND_GENERIC (RM, libc_feholdsetround, libc_feresetround)
 #define SET_RESTORE_ROUNDF(RM) \
-  SET_RESTORE_ROUND_GENERIC (RM, libc_feholdsetroundf, libc_feresetroundf)
+    SET_RESTORE_ROUND_GENERIC (RM, libc_feholdsetroundf, libc_feresetroundf)
 #define SET_RESTORE_ROUNDL(RM) \
-  SET_RESTORE_ROUND_GENERIC (RM, libc_feholdsetroundl, libc_feresetroundl)
+    SET_RESTORE_ROUND_GENERIC (RM, libc_feholdsetroundl, libc_feresetroundl)
 
 /* Set the rounding mode within a lexical block.  Restore the rounding mode to
    the value at the start of the block.  The exception mode must be preserved.
@@ -301,18 +301,18 @@ static __always_inline void default_libc_feresetround_noex_ctx(struct rm_ctx *ct
    Non-stop mode must be enabled inside the block.  */
 
 #define SET_RESTORE_ROUND_NOEX(RM) \
-  SET_RESTORE_ROUND_GENERIC (RM, libc_feholdsetround_noex, \
-                 libc_feresetround_noex)
+    SET_RESTORE_ROUND_GENERIC (RM, libc_feholdsetround_noex, \
+                               libc_feresetround_noex)
 #define SET_RESTORE_ROUND_NOEXF(RM) \
-  SET_RESTORE_ROUND_GENERIC (RM, libc_feholdsetround_noexf, \
-                 libc_feresetround_noexf)
+    SET_RESTORE_ROUND_GENERIC (RM, libc_feholdsetround_noexf, \
+                               libc_feresetround_noexf)
 #define SET_RESTORE_ROUND_NOEXL(RM) \
-  SET_RESTORE_ROUND_GENERIC (RM, libc_feholdsetround_noexl, \
-                 libc_feresetround_noexl)
+    SET_RESTORE_ROUND_GENERIC (RM, libc_feholdsetround_noexl, \
+                               libc_feresetround_noexl)
 
 /* Like SET_RESTORE_ROUND, but also set rounding precision to 53 bits.  */
 #define SET_RESTORE_ROUND_53BIT(RM) \
-  SET_RESTORE_ROUND_GENERIC (RM, libc_feholdsetround_53bit,       \
-                 libc_feresetround_53bit)
+    SET_RESTORE_ROUND_GENERIC (RM, libc_feholdsetround_53bit,       \
+                               libc_feresetround_53bit)
 
 #endif /* fenv_private.h.  */

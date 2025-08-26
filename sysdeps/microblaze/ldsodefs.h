@@ -25,20 +25,20 @@ struct La_microblaze_regs;
 struct La_microblaze_retval;
 
 #define ARCH_PLTENTER_MEMBERS                                                \
-  Elf32_Addr (*microblaze_gnu_pltenter) (Elf32_Sym *, unsigned int,          \
-                                         uintptr_t *,                        \
-                                         uintptr_t *,                        \
-                                         struct La_microblaze_regs *,        \
-                                         unsigned int *, const char *name,   \
-                                         long int *framesizep);
+    Elf32_Addr (*microblaze_gnu_pltenter) (Elf32_Sym *, unsigned int,          \
+                                           uintptr_t *,                        \
+                                           uintptr_t *,                        \
+                                           struct La_microblaze_regs *,        \
+                                           unsigned int *, const char *name,   \
+                                           long int *framesizep);
 
 #define ARCH_PLTEXIT_MEMBERS                                                 \
-  unsigned int (*microblaze_gnu_pltexit) (Elf32_Sym *, unsigned int,         \
-                                          uintptr_t *,                       \
-                                          uintptr_t *,                       \
-                                          const struct La_microblaze_regs *, \
-                                          struct La_microblaze_retval *,     \
-                                          const char *);
+    unsigned int (*microblaze_gnu_pltexit) (Elf32_Sym *, unsigned int,         \
+                                            uintptr_t *,                       \
+                                            uintptr_t *,                       \
+                                            const struct La_microblaze_regs *, \
+                                            struct La_microblaze_retval *,     \
+                                            const char *);
 
 #include_next <ldsodefs.h>
 

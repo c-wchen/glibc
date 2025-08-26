@@ -42,11 +42,11 @@ extern vm_size_t vm_page_size;
 
 /* Round the address X up to a page boundary.  */
 #define round_page(x)   \
-  ((((vm_offset_t) (x) + __vm_page_size - 1) / __vm_page_size) * \
-   __vm_page_size)
+    ((((vm_offset_t) (x) + __vm_page_size - 1) / __vm_page_size) * \
+     __vm_page_size)
 
 /* Truncate the address X down to a page boundary.  */
 #define trunc_page(x)   \
-  ((((vm_offset_t) (x)) / __vm_page_size) * __vm_page_size)
+    ((((vm_offset_t) (x)) / __vm_page_size) * __vm_page_size)
 
 #endif  /* mach_init.h */

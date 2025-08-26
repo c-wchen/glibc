@@ -69,13 +69,13 @@ extern __typeof(strncasecmp_l) __strncasecmp_l;
 #if IS_IN (libc)
 # undef strndupa
 # define strndupa(s, n)                               \
-  (__extension__                                  \
+    (__extension__                                  \
     ({                                        \
-      const char *__old = (s);                            \
-      size_t __len = __strnlen (__old, (n));                      \
-      char *__new = (char *) __builtin_alloca (__len + 1);            \
-      __new[__len] = '\0';                            \
-      (char *) memcpy (__new, __old, __len);                      \
+        const char *__old = (s);                            \
+        size_t __len = __strnlen (__old, (n));                      \
+        char *__new = (char *) __builtin_alloca (__len + 1);            \
+        __new[__len] = '\0';                            \
+        (char *) memcpy (__new, __old, __len);                      \
     }))
 #endif
 
@@ -127,11 +127,11 @@ libc_hidden_proto(__memrchr)
 void __explicit_bzero_chk_internal(void *, size_t, size_t)
 __THROW __nonnull((1)) attribute_hidden;
 # define explicit_bzero(buf, len) \
-  __explicit_bzero_chk_internal (buf, len, __glibc_objsize0 (buf))
+    __explicit_bzero_chk_internal (buf, len, __glibc_objsize0 (buf))
 #elif !IS_IN (nonlib)
 void __explicit_bzero_chk(void *, size_t, size_t) __THROW __nonnull((1));
 # define explicit_bzero(buf, len) __explicit_bzero_chk (buf, len,         \
-                            __glibc_objsize0 (buf))
+        __glibc_objsize0 (buf))
 #endif
 
 libc_hidden_builtin_proto(memchr)

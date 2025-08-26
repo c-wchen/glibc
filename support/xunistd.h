@@ -40,17 +40,17 @@ int xopen(const char *path, int flags, mode_t);
 void support_check_stat_fd(const char *name, int fd, int result);
 void support_check_stat_path(const char *name, const char *path, int result);
 #define xstat(path, st) \
-  (support_check_stat_path ("stat", (path), stat ((path), (st))))
+    (support_check_stat_path ("stat", (path), stat ((path), (st))))
 #define xfstat(fd, st) \
-  (support_check_stat_fd ("fstat", (fd), fstat ((fd), (st))))
+    (support_check_stat_fd ("fstat", (fd), fstat ((fd), (st))))
 #define xlstat(path, st) \
-  (support_check_stat_path ("lstat", (path), lstat ((path), (st))))
+    (support_check_stat_path ("lstat", (path), lstat ((path), (st))))
 #define xstat64(path, st) \
-  (support_check_stat_path ("stat64", (path), stat64 ((path), (st))))
+    (support_check_stat_path ("stat64", (path), stat64 ((path), (st))))
 #define xfstat64(fd, st) \
-  (support_check_stat_fd ("fstat64", (fd), fstat64 ((fd), (st))))
+    (support_check_stat_fd ("fstat64", (fd), fstat64 ((fd), (st))))
 #define xlstat64(path, st) \
-  (support_check_stat_path ("lstat64", (path), lstat64 ((path), (st))))
+    (support_check_stat_path ("lstat64", (path), lstat64 ((path), (st))))
 void xstatx(int, const char *, int, unsigned int, struct statx *);
 void xmkdir(const char *path, mode_t);
 void xchroot(const char *path);

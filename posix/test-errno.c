@@ -67,31 +67,31 @@ DIAG_IGNORE_NEEDS_COMMENT(7, "-Wstringop-overflow");
    directory.  */
 
 #define test_wrp_rv(rtype, prtype, experr, syscall, ...)    \
-  (__extension__ ({                     \
-    errno = 0xdead;                     \
-    rtype ret = syscall (__VA_ARGS__);              \
-    int err = errno;                        \
-    int fail;                           \
-    if (ret == (rtype) -1 && err == experr)         \
-      fail = 0;                         \
-    else                            \
-      {                             \
-        fail = 1;                       \
-        if (ret != (rtype) -1)                  \
-          printf ("FAIL: " #syscall ": didn't fail as expected" \
-               " (return "prtype")\n", ret);            \
-        else if (err == 0xdead)                 \
-          puts("FAIL: " #syscall ": didn't update errno\n");    \
-        else if (err != experr)                 \
-          printf ("FAIL: " #syscall             \
-               ": errno is: %d (%s) expected: %d (%s)\n",   \
-               err, strerror (err), experr, strerror (experr)); \
-      }                             \
-    fail;                           \
-  }))
+    (__extension__ ({                     \
+        errno = 0xdead;                     \
+        rtype ret = syscall (__VA_ARGS__);              \
+        int err = errno;                        \
+        int fail;                           \
+        if (ret == (rtype) -1 && err == experr)         \
+            fail = 0;                         \
+        else                            \
+        {                             \
+            fail = 1;                       \
+            if (ret != (rtype) -1)                  \
+                printf ("FAIL: " #syscall ": didn't fail as expected" \
+                        " (return "prtype")\n", ret);            \
+            else if (err == 0xdead)                 \
+                puts("FAIL: " #syscall ": didn't update errno\n");    \
+            else if (err != experr)                 \
+                printf ("FAIL: " #syscall             \
+                        ": errno is: %d (%s) expected: %d (%s)\n",   \
+                        err, strerror (err), experr, strerror (experr)); \
+        }                             \
+        fail;                           \
+    }))
 
 #define test_wrp(experr, syscall, ...)              \
-  test_wrp_rv(int, "%d", experr, syscall, __VA_ARGS__)
+    test_wrp_rv(int, "%d", experr, syscall, __VA_ARGS__)
 
 static int do_test(void)
 {

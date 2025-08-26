@@ -54,7 +54,7 @@ static void error_printf(int line, const char *fmt, ...)
 }
 
 #define ERROR_RET1(...) \
-  { error_printf(__LINE__, __VA_ARGS__); return 1; }
+    { error_printf(__LINE__, __VA_ARGS__); return 1; }
 
 static int do_test_bz18241(void)
 {

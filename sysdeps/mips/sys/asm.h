@@ -51,45 +51,45 @@
 #if _MIPS_SIM == _ABIO32
 # ifdef __PIC__
 #  define CPRESTORE(register) \
-        .cprestore register
+    .cprestore register
 #  define CPLOAD(register) \
-        .cpload register
+    .cpload register
 # else
 #  define CPRESTORE(register)
 #  define CPLOAD(register)
 # endif
 
 # define CPADD(register) \
-        .cpadd  register
+    .cpadd  register
 
 /*
  * Set gp when at 1st instruction
  */
 # define SETUP_GP                   \
-        .set noreorder;             \
-        .cpload $25;                \
-        .set reorder
+    .set noreorder;             \
+    .cpload $25;                \
+    .set reorder
 /* Set gp when not at 1st instruction */
 # define SETUP_GPX(r)                   \
-        .set noreorder;             \
-        move r, $31;     /* Save old ra.  */    \
-        bal 10f; /* Find addr of cpload.  */    \
-        nop;                    \
-10:                         \
-        .cpload $31;                \
-        move $31, r;                \
-        .set reorder
+    .set noreorder;             \
+    move r, $31;     /* Save old ra.  */    \
+    bal 10f; /* Find addr of cpload.  */    \
+    nop;                    \
+    10:                         \
+    .cpload $31;                \
+    move $31, r;                \
+    .set reorder
 # define SETUP_GPX_L(r, l)              \
-        .set noreorder;             \
-        move r, $31;     /* Save old ra.  */    \
-        bal l;   /* Find addr of cpload.  */    \
-        nop;                    \
-l:                          \
-        .cpload $31;                \
-        move $31, r;                \
-        .set reorder
+    .set noreorder;             \
+    move r, $31;     /* Save old ra.  */    \
+    bal l;   /* Find addr of cpload.  */    \
+    nop;                    \
+    l:                          \
+    .cpload $31;                \
+    move $31, r;                \
+    .set reorder
 # define SAVE_GP(x) \
-        .cprestore x /* Save gp trigger t9/jalr conversion.  */
+    .cprestore x /* Save gp trigger t9/jalr conversion.  */
 # define SETUP_GP64(a, b)
 # define SETUP_GPX64(a, b)
 # define SETUP_GPX64_L(cp_reg, ra_save, l)
@@ -105,30 +105,30 @@ l:                          \
 # define SAVE_GP(x)
 
 # define SETUP_GP64(gpoffset, proc) \
-        .cpsetup $25, gpoffset, proc
+    .cpsetup $25, gpoffset, proc
 # define SETUP_GPX64(cp_reg, ra_save)           \
-        move ra_save, $31; /* Save old ra.  */  \
-        .set noreorder;             \
-        bal 10f; /* Find addr of .cpsetup.  */  \
-        nop;                    \
-10:                         \
-        .set reorder;               \
-        .cpsetup $31, cp_reg, 10b;      \
-        move $31, ra_save
+    move ra_save, $31; /* Save old ra.  */  \
+    .set noreorder;             \
+    bal 10f; /* Find addr of .cpsetup.  */  \
+    nop;                    \
+    10:                         \
+    .set reorder;               \
+    .cpsetup $31, cp_reg, 10b;      \
+    move $31, ra_save
 # define SETUP_GPX64_L(cp_reg, ra_save, l)  \
-        move ra_save, $31; /* Save old ra.  */  \
-        .set noreorder;             \
-        bal l;   /* Find addr of .cpsetup.  */  \
-        nop;                    \
-l:                          \
-        .set reorder;               \
-        .cpsetup $31, cp_reg, l;        \
-        move $31, ra_save
+    move ra_save, $31; /* Save old ra.  */  \
+    .set noreorder;             \
+    bal l;   /* Find addr of .cpsetup.  */  \
+    nop;                    \
+    l:                          \
+    .set reorder;               \
+    .cpsetup $31, cp_reg, l;        \
+    move $31, ra_save
 # define RESTORE_GP64 \
-        .cpreturn
+    .cpreturn
 /* Use alternate register for context pointer.  */
 # define USE_ALT_CP(reg)    \
-        .cplocal reg
+    .cplocal reg
 #endif /* _MIPS_SIM != _ABIO32 */
 
 /*
@@ -146,83 +146,83 @@ l:                          \
  * LEAF - declare leaf routine
  */
 #define LEAF(symbol)                                    \
-        .globl  symbol;                         \
-        .align  2;                              \
-        .type   symbol,@function;               \
-        .ent    symbol,0;                       \
-symbol:     .frame  sp,0,ra;            \
-        __mips_cfi_startproc
+    .globl  symbol;                         \
+    .align  2;                              \
+    .type   symbol,@function;               \
+    .ent    symbol,0;                       \
+    symbol:     .frame  sp,0,ra;            \
+    __mips_cfi_startproc
 
 /*
  * NESTED - declare nested routine entry point
  */
 #define NESTED(symbol, framesize, rpc)                  \
-        .globl  symbol;                         \
-        .align  2;                              \
-        .type   symbol,@function;               \
-        .ent    symbol,0;                       \
-symbol:     .frame  sp, framesize, rpc;     \
-        __mips_cfi_startproc
+    .globl  symbol;                         \
+    .align  2;                              \
+    .type   symbol,@function;               \
+    .ent    symbol,0;                       \
+    symbol:     .frame  sp, framesize, rpc;     \
+    __mips_cfi_startproc
 
 /*
  * END - mark end of function
  */
 #ifndef END
 # define END(function)                                   \
-        __mips_cfi_endproc;         \
-        .end    function;               \
-        .size   function,.-function
+    __mips_cfi_endproc;         \
+    .end    function;               \
+    .size   function,.-function
 #endif
 
 /*
  * EXPORT - export definition of symbol
  */
 #define EXPORT(symbol)                                  \
-        .globl  symbol;                         \
-symbol:     __mips_cfi_startproc
+    .globl  symbol;                         \
+    symbol:     __mips_cfi_startproc
 
 /*
  * ABS - export absolute symbol
  */
 #define ABS(symbol,value)                               \
-        .globl  symbol;                         \
-symbol      =   value
+    .globl  symbol;                         \
+    symbol      =   value
 
 #define PANIC(msg)                                      \
-        .set    push;               \
-        .set    reorder;                        \
-        la  a0,8f;                          \
-        jal panic;                          \
-9:      b   9b;                             \
-        .set    pop;                \
-        TEXT(msg)
+    .set    push;               \
+    .set    reorder;                        \
+    la  a0,8f;                          \
+    jal panic;                          \
+    9:      b   9b;                             \
+    .set    pop;                \
+    TEXT(msg)
 
 /*
  * Print formatted string
  */
 #define PRINT(string)                                   \
-        .set    push;               \
-        .set    reorder;                        \
-        la  a0,8f;                          \
-        jal printk;                         \
-        .set    pop;                \
-        TEXT(string)
+    .set    push;               \
+    .set    reorder;                        \
+    la  a0,8f;                          \
+    jal printk;                         \
+    .set    pop;                \
+    TEXT(string)
 
 #define TEXT(msg)                                       \
-        .data;                                  \
-8:      .asciiz msg;                            \
-        .previous;
+    .data;                                  \
+    8:      .asciiz msg;                            \
+    .previous;
 
 /*
  * Build text tables
  */
 #define TTABLE(string)                                  \
-        .text;                                  \
-        .word   1f;                             \
-        .previous;                              \
-        .data;                                  \
-1:      .asciz  string;                         \
-        .previous
+    .text;                                  \
+    .word   1f;                             \
+    .previous;                              \
+    .data;                                  \
+    1:      .asciz  string;                         \
+    .previous
 
 /*
  * MIPS IV pref instruction.
@@ -234,9 +234,9 @@ symbol      =   value
 #if (_MIPS_ISA == _MIPS_ISA_MIPS4) || (_MIPS_ISA == _MIPS_ISA_MIPS5) \
     || (_MIPS_ISA == _MIPS_ISA_MIPS32) || (_MIPS_ISA == _MIPS_ISA_MIPS64)
 # define PREF(hint,addr)                                 \
-        pref    hint,addr
+    pref    hint,addr
 # define PREFX(hint,addr)                                \
-        prefx   hint,addr
+    prefx   hint,addr
 #else
 # define PREF(hint,addr)
 # define PREFX(hint,addr)
@@ -247,42 +247,42 @@ symbol      =   value
  */
 #if _MIPS_ISA == _MIPS_ISA_MIPS1
 # define MOVN(rd,rs,rt)                 \
-        .set    push;               \
-        .set    reorder;            \
-        beqz    rt,9f;              \
-        move    rd,rs;              \
-        .set    pop;                \
-9:
+    .set    push;               \
+    .set    reorder;            \
+    beqz    rt,9f;              \
+    move    rd,rs;              \
+    .set    pop;                \
+    9:
 # define MOVZ(rd,rs,rt)                 \
-        .set    push;               \
-        .set    reorder;            \
-        bnez    rt,9f;              \
-        move    rd,rt;              \
-        .set    pop;                \
-9:
+    .set    push;               \
+    .set    reorder;            \
+    bnez    rt,9f;              \
+    move    rd,rt;              \
+    .set    pop;                \
+    9:
 #endif /* _MIPS_ISA == _MIPS_ISA_MIPS1 */
 #if (_MIPS_ISA == _MIPS_ISA_MIPS2) || (_MIPS_ISA == _MIPS_ISA_MIPS3)
 # define MOVN(rd,rs,rt)                 \
-        .set    push;               \
-        .set    noreorder;          \
-        bnezl   rt,9f;              \
-        move    rd,rs;              \
-        .set    pop;                \
-9:
+    .set    push;               \
+    .set    noreorder;          \
+    bnezl   rt,9f;              \
+    move    rd,rs;              \
+    .set    pop;                \
+    9:
 # define MOVZ(rd,rs,rt)                 \
-        .set    push;               \
-        .set    noreorder;          \
-        beqzl   rt,9f;              \
-        movz    rd,rs;              \
-        .set    pop;                \
-9:
+    .set    push;               \
+    .set    noreorder;          \
+    beqzl   rt,9f;              \
+    movz    rd,rs;              \
+    .set    pop;                \
+    9:
 #endif /* (_MIPS_ISA == _MIPS_ISA_MIPS2) || (_MIPS_ISA == _MIPS_ISA_MIPS3) */
 #if (_MIPS_ISA == _MIPS_ISA_MIPS4) || (_MIPS_ISA == _MIPS_ISA_MIPS5) \
     || (_MIPS_ISA == _MIPS_ISA_MIPS32) || (_MIPS_ISA == _MIPS_ISA_MIPS64)
 # define MOVN(rd,rs,rt)                 \
-        movn    rd,rs,rt
+    movn    rd,rs,rt
 # define MOVZ(rd,rs,rt)                 \
-        movz    rd,rs,rt
+    movz    rd,rs,rt
 #endif /* (_MIPS_ISA == _MIPS_ISA_MIPS4) || (_MIPS_ISA == _MIPS_ISA_MIPS5) */
 
 /*

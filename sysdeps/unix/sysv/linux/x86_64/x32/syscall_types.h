@@ -26,9 +26,9 @@ typedef long long int __syscall_arg_t;
 /* Syscall arguments for x32 follows x86_64 ABI, however pointers are 32 bits
    should be zero extended.  */
 #define __SSC(__x) \
-  ({                    \
-    TYPEFY (__x, __tmp) = ARGIFY (__x); \
-    (__syscall_arg_t) __tmp;        \
-  })
+    ({                    \
+        TYPEFY (__x, __tmp) = ARGIFY (__x); \
+        (__syscall_arg_t) __tmp;        \
+    })
 
 #endif

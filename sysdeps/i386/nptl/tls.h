@@ -114,34 +114,34 @@ union user_desc_init {
 /* Install the dtv pointer.  The pointer passed is to the element with
    index -1 which contain the length.  */
 # define INSTALL_DTV(descr, dtvp) \
-  ((tcbhead_t *) (descr))->dtv = (dtvp) + 1
+    ((tcbhead_t *) (descr))->dtv = (dtvp) + 1
 
 /* Install new dtv for current thread.  */
 # define INSTALL_NEW_DTV(dtvp) \
-  ({ struct pthread *__pd;                            \
-     THREAD_SETMEM (__pd, header.dtv, (dtvp)); })
+    ({ struct pthread *__pd;                            \
+        THREAD_SETMEM (__pd, header.dtv, (dtvp)); })
 
 /* Return dtv of given thread descriptor.  */
 # define GET_DTV(descr) \
-  (((tcbhead_t *) (descr))->dtv)
+    (((tcbhead_t *) (descr))->dtv)
 
 /* Macros to load from and store into segment registers.  */
 # ifndef TLS_GET_GS
 #  define TLS_GET_GS() \
-  ({ int __seg; __asm ("movw %%gs, %w0" : "=q" (__seg)); __seg & 0xffff; })
+    ({ int __seg; __asm ("movw %%gs, %w0" : "=q" (__seg)); __seg & 0xffff; })
 # endif
 # ifndef TLS_SET_GS
 #  define TLS_SET_GS(val) \
-  __asm ("movw %w0, %%gs" :: "q" (val))
+    __asm ("movw %w0, %%gs" :: "q" (val))
 # endif
 
 #ifdef NEED_DL_SYSINFO
 # define INIT_SYSINFO \
-  _head->sysinfo = GLRO(dl_sysinfo)
+    _head->sysinfo = GLRO(dl_sysinfo)
 # define SETUP_THREAD_SYSINFO(pd) \
-  ((pd)->header.sysinfo = THREAD_GETMEM (THREAD_SELF, header.sysinfo))
+    ((pd)->header.sysinfo = THREAD_GETMEM (THREAD_SELF, header.sysinfo))
 # define CHECK_THREAD_SYSINFO(pd) \
-  assert ((pd)->header.sysinfo == THREAD_GETMEM (THREAD_SELF, header.sysinfo))
+    assert ((pd)->header.sysinfo == THREAD_GETMEM (THREAD_SELF, header.sysinfo))
 #else
 # define INIT_SYSINFO
 #endif
@@ -172,50 +172,50 @@ tls_fill_user_desc(union user_desc_init *desc,
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.  */
 # define TLS_INIT_TP(thrdescr) \
-  ({ void *_thrdescr = (thrdescr);                        \
-     tcbhead_t *_head = _thrdescr;                        \
-     union user_desc_init _segdescr;                          \
-     int _result;                                 \
-                                          \
-     _head->tcb = _thrdescr;                              \
-     /* For now the thread descriptor is at the same address.  */         \
-     _head->self = _thrdescr;                             \
-     /* New syscall handling support.  */                     \
-     INIT_SYSINFO;                                \
-                                          \
-     /* Let the kernel pick a value for the 'entry_number' field.  */         \
-     tls_fill_user_desc (&_segdescr, -1, _thrdescr);                  \
-                                          \
-     /* Install the TLS.  */                              \
-     _result = INTERNAL_SYSCALL_CALL (set_thread_area, &_segdescr.desc);      \
-                                          \
-     if (_result == 0)                                \
-       /* We know the index in the GDT, now load the segment register.        \
-      The use of the GDT is described by the value 3 in the lower         \
-      three bits of the segment descriptor value.                 \
-                                          \
-      Note that we have to do this even if the numeric value of       \
-      the descriptor does not change.  Loading the segment register       \
-      causes the segment information from the GDT to be loaded        \
-      which is necessary since we have changed it.   */           \
-       TLS_SET_GS (_segdescr.desc.entry_number * 8 + 3);              \
-                                          \
-     _result == 0; })
+    ({ void *_thrdescr = (thrdescr);                        \
+        tcbhead_t *_head = _thrdescr;                        \
+        union user_desc_init _segdescr;                          \
+        int _result;                                 \
+        \
+        _head->tcb = _thrdescr;                              \
+        /* For now the thread descriptor is at the same address.  */         \
+        _head->self = _thrdescr;                             \
+        /* New syscall handling support.  */                     \
+        INIT_SYSINFO;                                \
+        \
+        /* Let the kernel pick a value for the 'entry_number' field.  */         \
+        tls_fill_user_desc (&_segdescr, -1, _thrdescr);                  \
+        \
+        /* Install the TLS.  */                              \
+        _result = INTERNAL_SYSCALL_CALL (set_thread_area, &_segdescr.desc);      \
+        \
+        if (_result == 0)                                \
+            /* We know the index in the GDT, now load the segment register.        \
+            The use of the GDT is described by the value 3 in the lower         \
+            three bits of the segment descriptor value.                 \
+                                               \
+            Note that we have to do this even if the numeric value of       \
+            the descriptor does not change.  Loading the segment register       \
+            causes the segment information from the GDT to be loaded        \
+            which is necessary since we have changed it.   */           \
+            TLS_SET_GS (_segdescr.desc.entry_number * 8 + 3);              \
+        \
+        _result == 0; })
 
 # define TLS_DEFINE_INIT_TP(tp, pd)                       \
-  union user_desc_init _segdescr;                         \
-  /* Find the 'entry_number' field that the kernel selected in TLS_INIT_TP.   \
-     The first three bits of the segment register value select the GDT,       \
-     ignore them.  We get the index from the value of the %gs register in     \
-     the current thread.  */                              \
-  tls_fill_user_desc (&_segdescr, TLS_GET_GS () >> 3, pd);            \
-  const struct user_desc *tp = &_segdescr.desc
+    union user_desc_init _segdescr;                         \
+    /* Find the 'entry_number' field that the kernel selected in TLS_INIT_TP.   \
+       The first three bits of the segment register value select the GDT,       \
+       ignore them.  We get the index from the value of the %gs register in     \
+       the current thread.  */                              \
+    tls_fill_user_desc (&_segdescr, TLS_GET_GS () >> 3, pd);            \
+    const struct user_desc *tp = &_segdescr.desc
 
 
 /* Return the address of the dtv for the current thread.  */
 # define THREAD_DTV() \
-  ({ struct pthread *__pd;                            \
-     THREAD_GETMEM (__pd, header.dtv); })
+    ({ struct pthread *__pd;                            \
+        THREAD_GETMEM (__pd, header.dtv); })
 
 
 /* Return the thread descriptor for the current thread.
@@ -226,36 +226,36 @@ tls_fill_user_desc(union user_desc_init *desc,
    do not get optimized away.  */
 # if __GNUC_PREREQ (6, 0)
 #  define THREAD_SELF \
-  (*(struct pthread *__seg_gs *) offsetof (struct pthread, header.self))
+    (*(struct pthread *__seg_gs *) offsetof (struct pthread, header.self))
 # else
 #  define THREAD_SELF \
-  ({ struct pthread *__self;                              \
-     asm ("movl %%gs:%c1,%0" : "=r" (__self)                      \
-      : "i" (offsetof (struct pthread, header.self)));            \
-     __self;})
+    ({ struct pthread *__self;                              \
+        asm ("movl %%gs:%c1,%0" : "=r" (__self)                      \
+             : "i" (offsetof (struct pthread, header.self)));            \
+        __self;})
 # endif
 
 /* Magic for libthread_db to know how to do THREAD_SELF.  */
 # define DB_THREAD_SELF \
-  REGISTER_THREAD_AREA (32, offsetof (struct user_regs_struct, xgs), 3) \
-  REGISTER_THREAD_AREA (64, 26 * 8, 3) /* x86-64's user_regs_struct->gs */
+    REGISTER_THREAD_AREA (32, offsetof (struct user_regs_struct, xgs), 3) \
+    REGISTER_THREAD_AREA (64, 26 * 8, 3) /* x86-64's user_regs_struct->gs */
 
 # include <tcb-access.h>
 
 /* Set the stack guard field in TCB head.  */
 #define THREAD_SET_STACK_GUARD(value) \
-  THREAD_SETMEM (THREAD_SELF, header.stack_guard, value)
+    THREAD_SETMEM (THREAD_SELF, header.stack_guard, value)
 #define THREAD_COPY_STACK_GUARD(descr) \
-  ((descr)->header.stack_guard                            \
-   = THREAD_GETMEM (THREAD_SELF, header.stack_guard))
+    ((descr)->header.stack_guard                            \
+     = THREAD_GETMEM (THREAD_SELF, header.stack_guard))
 
 
 /* Set the pointer guard field in the TCB head.  */
 #define THREAD_SET_POINTER_GUARD(value) \
-  THREAD_SETMEM (THREAD_SELF, header.pointer_guard, value)
+    THREAD_SETMEM (THREAD_SELF, header.pointer_guard, value)
 #define THREAD_COPY_POINTER_GUARD(descr) \
-  ((descr)->header.pointer_guard                          \
-   = THREAD_GETMEM (THREAD_SELF, header.pointer_guard))
+    ((descr)->header.pointer_guard                          \
+     = THREAD_GETMEM (THREAD_SELF, header.pointer_guard))
 
 
 /* Get and set the global scope generation counter in the TCB head.  */
@@ -263,18 +263,18 @@ tls_fill_user_desc(union user_desc_init *desc,
 #define THREAD_GSCOPE_FLAG_USED   1
 #define THREAD_GSCOPE_FLAG_WAIT   2
 #define THREAD_GSCOPE_RESET_FLAG() \
-  do                                          \
+    do                                          \
     { int __res;                                  \
-      asm volatile ("xchgl %0, %%gs:%P1"                      \
-            : "=r" (__res)                        \
-            : "i" (offsetof (struct pthread, header.gscope_flag)),    \
-              "0" (THREAD_GSCOPE_FLAG_UNUSED));               \
-      if (__res == THREAD_GSCOPE_FLAG_WAIT)                   \
-    lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1, LLL_PRIVATE);    \
+        asm volatile ("xchgl %0, %%gs:%P1"                      \
+                      : "=r" (__res)                        \
+                      : "i" (offsetof (struct pthread, header.gscope_flag)),    \
+                      "0" (THREAD_GSCOPE_FLAG_UNUSED));               \
+        if (__res == THREAD_GSCOPE_FLAG_WAIT)                   \
+            lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1, LLL_PRIVATE);    \
     }                                         \
-  while (0)
+    while (0)
 #define THREAD_GSCOPE_SET_FLAG() \
-  THREAD_SETMEM (THREAD_SELF, header.gscope_flag, THREAD_GSCOPE_FLAG_USED)
+    THREAD_SETMEM (THREAD_SELF, header.gscope_flag, THREAD_GSCOPE_FLAG_USED)
 
 #endif /* __ASSEMBLER__ */
 

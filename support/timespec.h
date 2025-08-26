@@ -90,29 +90,29 @@ struct timespec __REDIRECT(dtotimespec, (double sec), dtotimespec_time64);
 /* Check that the timespec on the left represents a time before the
    time on the right. */
 #define TEST_TIMESPEC_BEFORE(left, right)                               \
-  test_timespec_before_impl (__FILE__, __LINE__, (left), (right))
+    test_timespec_before_impl (__FILE__, __LINE__, (left), (right))
 
 #define TEST_TIMESPEC_BEFORE_NOW(left, clockid)                 \
-  ({                                                            \
-    struct timespec now;                                        \
-    const int saved_errno = errno;                              \
-    xclock_gettime ((clockid), &now);                           \
-    TEST_TIMESPEC_BEFORE ((left), now);                         \
-    errno = saved_errno;                                        \
-  })
+    ({                                                            \
+        struct timespec now;                                        \
+        const int saved_errno = errno;                              \
+        xclock_gettime ((clockid), &now);                           \
+        TEST_TIMESPEC_BEFORE ((left), now);                         \
+        errno = saved_errno;                                        \
+    })
 
 /* Check that the timespec on the left represents a time equal to or
    after the time on the right. */
 #define TEST_TIMESPEC_EQUAL_OR_AFTER(left, right)                       \
-  test_timespec_equal_or_after_impl (__FILE__, __LINE__, left, right)
+    test_timespec_equal_or_after_impl (__FILE__, __LINE__, left, right)
 
 #define TEST_TIMESPEC_NOW_OR_AFTER(clockid, right)              \
-  ({                                                            \
-    struct timespec now;                                        \
-    const int saved_errno = errno;                              \
-    xclock_gettime ((clockid), &now);                           \
-    TEST_TIMESPEC_EQUAL_OR_AFTER (now, (right));                \
-    errno = saved_errno;                                        \
-  })
+    ({                                                            \
+        struct timespec now;                                        \
+        const int saved_errno = errno;                              \
+        xclock_gettime ((clockid), &now);                           \
+        TEST_TIMESPEC_EQUAL_OR_AFTER (now, (right));                \
+        errno = saved_errno;                                        \
+    })
 
 #endif /* SUPPORT_TIMESPEC_H */

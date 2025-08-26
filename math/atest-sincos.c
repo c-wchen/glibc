@@ -74,39 +74,39 @@ static void sincosx_mpn(mp1 si, mp1 co, mp1 xx, mp1 ix)
 
     for (i = 0; i < 1 << N; i++) {
 #define add_shift_mulh(d,x,s1,s2,sh,n) \
-      do {                                    \
-     if (s2 != NULL) {                            \
-        if (sh > 0) {                             \
-           assert (sh < mpbpl);                       \
-           mpn_lshift (tmp, s1, SZ, sh);                      \
-           if (n)                                 \
-             mpn_sub_n (tmp,tmp,s2+FRAC/mpbpl,SZ);                \
-           else                               \
-             mpn_add_n (tmp,tmp,s2+FRAC/mpbpl,SZ);                \
-        } else {                                  \
-           if (n)                                 \
-             mpn_sub_n (tmp,s1,s2+FRAC/mpbpl,SZ);                 \
-           else                               \
-             mpn_add_n (tmp,s1,s2+FRAC/mpbpl,SZ);                 \
-        }                                     \
-        mpn_mul_n(d,tmp,x,SZ);                        \
-     } else                                   \
-        mpn_mul_n(d,s1,x,SZ);                         \
-     assert(N+sh < mpbpl);                            \
-     if (N+sh > 0) mpn_rshift(d,d,2*SZ,N+sh);                 \
-      } while(0)
+    do {                                    \
+        if (s2 != NULL) {                            \
+            if (sh > 0) {                             \
+                assert (sh < mpbpl);                       \
+                mpn_lshift (tmp, s1, SZ, sh);                      \
+                if (n)                                 \
+                    mpn_sub_n (tmp,tmp,s2+FRAC/mpbpl,SZ);                \
+                else                               \
+                    mpn_add_n (tmp,tmp,s2+FRAC/mpbpl,SZ);                \
+            } else {                                  \
+                if (n)                                 \
+                    mpn_sub_n (tmp,s1,s2+FRAC/mpbpl,SZ);                 \
+                else                               \
+                    mpn_add_n (tmp,s1,s2+FRAC/mpbpl,SZ);                 \
+            }                                     \
+            mpn_mul_n(d,tmp,x,SZ);                        \
+        } else                                   \
+            mpn_mul_n(d,s1,x,SZ);                         \
+        assert(N+sh < mpbpl);                            \
+        if (N+sh > 0) mpn_rshift(d,d,2*SZ,N+sh);                 \
+    } while(0)
 #define summ(d,ss,s,n) \
-      do {                                    \
-     mpn_add_n(tmp,s[1]+FRAC/mpbpl,s[2]+FRAC/mpbpl,SZ);           \
-     mpn_lshift(tmp,tmp,SZ,1);                        \
-     mpn_add_n(tmp,tmp,s[0]+FRAC/mpbpl,SZ);                   \
-     mpn_add_n(tmp,tmp,s[3]+FRAC/mpbpl,SZ);                   \
-     mpn_divmod_1(tmp,tmp,SZ,6);                          \
-     if (n)                                   \
-           mpn_sub_n (d,ss,tmp,SZ);                       \
-     else                                     \
-           mpn_add_n (d,ss,tmp,SZ);                       \
-      } while (0)
+    do {                                    \
+        mpn_add_n(tmp,s[1]+FRAC/mpbpl,s[2]+FRAC/mpbpl,SZ);           \
+        mpn_lshift(tmp,tmp,SZ,1);                        \
+        mpn_add_n(tmp,tmp,s[0]+FRAC/mpbpl,SZ);                   \
+        mpn_add_n(tmp,tmp,s[3]+FRAC/mpbpl,SZ);                   \
+        mpn_divmod_1(tmp,tmp,SZ,6);                          \
+        if (n)                                   \
+            mpn_sub_n (d,ss,tmp,SZ);                       \
+        else                                     \
+            mpn_add_n (d,ss,tmp,SZ);                       \
+    } while (0)
 
         add_shift_mulh(s[0], x, co, NULL, 0, 0);  /* s0 = h * c; */
         add_shift_mulh(c[0], x, si, NULL, 0, 0);  /* c0 = h * s; */

@@ -26,15 +26,15 @@
 #include <stdbool.h>
 
 #define RETURN_IF_FAIL(f, ...) \
-  ({                                          \
-    int ret = f (__VA_ARGS__);                            \
-    if (ret != 0)                                 \
-      {                                       \
-    printf ("%s:%d: %s returned %d (errno = %d)\n", __FILE__, __LINE__,   \
-        #f, ret, errno);                          \
-    return ret;                               \
-      }                                       \
-  })
+    ({                                          \
+        int ret = f (__VA_ARGS__);                            \
+        if (ret != 0)                                 \
+        {                                       \
+            printf ("%s:%d: %s returned %d (errno = %d)\n", __FILE__, __LINE__,   \
+                    #f, ret, errno);                          \
+            return ret;                               \
+        }                                       \
+    })
 
 static int (*verify_result)(pthread_attr_t *);
 static size_t stacksize = 1024 * 1024;

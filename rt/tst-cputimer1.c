@@ -15,7 +15,7 @@
 
 #define TEST_CLOCK CLOCK_PROCESS_CPUTIME_ID
 #define TEST_CLOCK_MISSING(clock) \
-  (setup_test () ? "process CPU clock timer support" : NULL)
+    (setup_test () ? "process CPU clock timer support" : NULL)
 
 /* This function is intended to rack up both user and system time.  */
 static void *chew_cpu(void *arg)

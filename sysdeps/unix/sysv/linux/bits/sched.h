@@ -50,9 +50,9 @@
 
 /* Combinations of sched_flags fields.  */
 #define SCHED_FLAG_KEEP_ALL \
-  (SCHED_FLAG_KEEP_POLICY | SCHED_FLAG_KEEP_PARAMS)
+    (SCHED_FLAG_KEEP_POLICY | SCHED_FLAG_KEEP_PARAMS)
 #define SCHED_FLAG_UTIL_CLAMP \
-  (SCHED_FLAG_UTIL_CLAMP_MIN | SCHED_FLAG_UTIL_CLAMP_MAX)
+    (SCHED_FLAG_UTIL_CLAMP_MIN | SCHED_FLAG_UTIL_CLAMP_MAX)
 
 /* Use "" to work around incorrect macro expansion of the
    __has_include argument (GCC PR 80005).  */

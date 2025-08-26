@@ -25,17 +25,17 @@ struct La_m68k_retval;
 
 #define ARCH_PLTENTER_MEMBERS                       \
     Elf32_Addr (*m68k_gnu_pltenter) (Elf32_Sym *, unsigned int,     \
-                     uintptr_t *, uintptr_t *,      \
-                     struct La_m68k_regs *,     \
-                     unsigned int *, const char *name,  \
-                     long int *framesizep);
+                                     uintptr_t *, uintptr_t *,      \
+                                     struct La_m68k_regs *,     \
+                                     unsigned int *, const char *name,  \
+                                     long int *framesizep);
 
 #define ARCH_PLTEXIT_MEMBERS                        \
     unsigned int (*m68k_gnu_pltexit) (Elf32_Sym *, unsigned int,    \
-                      uintptr_t *, uintptr_t *,     \
-                      const struct La_m68k_regs *,  \
-                      struct La_m68k_retval *,      \
-                      const char *);
+                                      uintptr_t *, uintptr_t *,     \
+                                      const struct La_m68k_regs *,  \
+                                      struct La_m68k_retval *,      \
+                                      const char *);
 
 #include_next <ldsodefs.h>
 

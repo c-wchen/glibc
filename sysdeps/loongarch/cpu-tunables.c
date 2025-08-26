@@ -28,14 +28,14 @@
 #include <dl-symbol-redir-ifunc.h>
 
 #define CHECK_GLIBC_IFUNC_CPU(f, name, len)         \
-  _Static_assert (sizeof (#name) - 1 == len, #name " != " #len);    \
-  if (tunable_str_comma_strcmp_cte (&f, #name))             \
+    _Static_assert (sizeof (#name) - 1 == len, #name " != " #len);    \
+    if (tunable_str_comma_strcmp_cte (&f, #name))             \
     {                                   \
-      if (f.disable)                            \
-    GLRO(dl_larch_cpu_features).hwcap &= (~HWCAP_LOONGARCH_##name); \
-      else                              \
-    GLRO(dl_larch_cpu_features).hwcap |= HWCAP_LOONGARCH_##name;    \
-      break;                                \
+        if (f.disable)                            \
+            GLRO(dl_larch_cpu_features).hwcap &= (~HWCAP_LOONGARCH_##name); \
+        else                              \
+            GLRO(dl_larch_cpu_features).hwcap |= HWCAP_LOONGARCH_##name;    \
+        break;                                \
     }
 
 attribute_hidden void

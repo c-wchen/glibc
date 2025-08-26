@@ -34,12 +34,12 @@
 #define MIN_NEEDED_OUTPUT   MIN_NEEDED_TO
 #define LOOPFCT         FROM_LOOP
 #define BODY \
-  *((uint32_t *) outptr) = *inptr++;                          \
-  outptr += sizeof (uint32_t);
+    *((uint32_t *) outptr) = *inptr++;                          \
+    outptr += sizeof (uint32_t);
 #define ONEBYTE_BODY \
-  {                                       \
-    return c;                                     \
-  }
+    {                                       \
+        return c;                                     \
+    }
 #include <iconv/loop.c>
 
 
@@ -48,19 +48,19 @@
 #define MIN_NEEDED_OUTPUT   MIN_NEEDED_FROM
 #define LOOPFCT         TO_LOOP
 #define BODY \
-  {                                       \
-    uint32_t ch = *((const uint32_t *) inptr);                    \
-    if (__glibc_unlikely (ch > 0xff))                         \
-      {                                       \
-    UNICODE_TAG_HANDLER (ch, 4);                          \
-                                          \
-    /* We have an illegal character.  */                      \
-    STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
-      }                                       \
-    else                                      \
-      *outptr++ = (unsigned char) ch;                         \
-    inptr += 4;                                   \
-  }
+    {                                       \
+        uint32_t ch = *((const uint32_t *) inptr);                    \
+        if (__glibc_unlikely (ch > 0xff))                         \
+        {                                       \
+            UNICODE_TAG_HANDLER (ch, 4);                          \
+            \
+            /* We have an illegal character.  */                      \
+            STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
+        }                                       \
+        else                                      \
+            *outptr++ = (unsigned char) ch;                         \
+        inptr += 4;                                   \
+    }
 #define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 

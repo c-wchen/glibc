@@ -45,8 +45,8 @@
 #define TO_LOOP_MIN_NEEDED_TO       1
 #define TO_LOOP_MAX_NEEDED_TO       3
 #define PREPARE_LOOP \
-  int save_curcs;                                 \
-  int *curcsp = &data->__statep->__count;
+    int save_curcs;                                 \
+    int *curcsp = &data->__statep->__count;
 #define EXTRA_LOOP_ARGS     , curcsp
 
 /* Definitions of initialization and destructor function.  */
@@ -58,34 +58,34 @@
    the output state to the initial state.  This has to be done during the
    flushing.  */
 #define EMIT_SHIFT_TO_INIT \
-  if ((data->__statep->__count & ~7) != sb)                   \
+    if ((data->__statep->__count & ~7) != sb)                   \
     {                                         \
-      if (FROM_DIRECTION)                             \
-    data->__statep->__count &= 7;                         \
-      else                                    \
-    {                                     \
-      /* We are not in the initial state.  To switch back we have         \
-         to emit `SI'.  */                            \
-      if (__glibc_unlikely (outbuf >= outend))                \
-        /* We don't have enough room in the output buffer.  */        \
-        status = __GCONV_FULL_OUTPUT;                     \
-      else                                    \
+        if (FROM_DIRECTION)                             \
+            data->__statep->__count &= 7;                         \
+        else                                    \
         {                                     \
-          /* Write out the shift sequence.  */                \
-          *outbuf++ = SI;                             \
-          data->__statep->__count &= 7;                   \
+            /* We are not in the initial state.  To switch back we have         \
+               to emit `SI'.  */                            \
+            if (__glibc_unlikely (outbuf >= outend))                \
+                /* We don't have enough room in the output buffer.  */        \
+                status = __GCONV_FULL_OUTPUT;                     \
+            else                                    \
+            {                                     \
+                /* Write out the shift sequence.  */                \
+                *outbuf++ = SI;                             \
+                data->__statep->__count &= 7;                   \
+            }                                     \
         }                                     \
-    }                                     \
     }
 
 
 /* Since we might have to reset input pointer we must be able to save
    and restore the state.  */
 #define SAVE_RESET_STATE(Save) \
-  if (Save)                                   \
-    save_curcs = *curcsp;                             \
-  else                                        \
-    *curcsp = save_curcs
+    if (Save)                                   \
+        save_curcs = *curcsp;                             \
+    else                                        \
+        *curcsp = save_curcs
 
 
 /* Current codeset type.  */
@@ -101,76 +101,76 @@ enum {
 #define MAX_NEEDED_OUTPUT   FROM_LOOP_MAX_NEEDED_TO
 #define LOOPFCT         FROM_LOOP
 #define BODY \
-  {                                       \
-    uint32_t ch = *inptr;                             \
-    uint32_t res;                                 \
-                                          \
-    if (__builtin_expect (ch, 0) == SO)                       \
-      {                                       \
-    /* Shift OUT, change to DBCS converter (redundant escape okay).  */   \
-    curcs = db;                               \
-    ++inptr;                                  \
-    continue;                                 \
-      }                                       \
-    else if (__builtin_expect (ch, 0) == SI)                      \
-      {                                       \
-    /* Shift IN, change to SBCS converter (redundant escape okay).  */    \
-    curcs = sb;                               \
-    ++inptr;                                  \
-    continue;                                 \
-      }                                       \
-                                          \
-    if (curcs == sb)                                  \
-      {                                       \
-    /* Use the IBM937 table for single byte.  */                  \
-    res = __ibm937sb_to_ucs4[ch];                         \
-    if (__builtin_expect (res, L'\1') == L'\0' && ch != '\0')         \
-      {                                   \
-        /* This is an illegal character.  */                  \
-        STANDARD_FROM_LOOP_ERR_HANDLER (1);                   \
-      }                                   \
-    else                                      \
-      {                                   \
-        put32 (outptr, res);                          \
-        outptr += 4;                              \
-      }                                   \
-    ++inptr;                                  \
-      }                                       \
-    else                                      \
-      {                                       \
-    const struct gap *rp2 = __ibm937db_to_ucs4_idx;               \
-                                          \
-    assert (curcs == db);                             \
-                                          \
-    /* Use the IBM937 table for double byte.  */                  \
-    if (__glibc_unlikely (inptr + 1 >= inend))                \
-      {                                   \
-        /* The second character is not available.                 \
-           Store the intermediate result. */                  \
-        result = __GCONV_INCOMPLETE_INPUT;                    \
-        break;                                \
-      }                                   \
-                                          \
-    ch = (ch * 0x100) + inptr[1];                         \
-    while (ch > rp2->end)                             \
-      ++rp2;                                  \
-                                          \
-    if (__builtin_expect (rp2->start == 0xffff, 0)                \
-        || __builtin_expect (ch < rp2->start, 0)                  \
-        || (res = __ibm937db_to_ucs4[ch + rp2->idx],              \
-        __builtin_expect (res, L'\1') == L'\0' && ch != '\0'))        \
-      {                                   \
-        /* This is an illegal character.  */                  \
-        STANDARD_FROM_LOOP_ERR_HANDLER (2);                   \
-      }                                   \
-    else                                      \
-      {                                   \
-        put32 (outptr, res);                          \
-        outptr += 4;                              \
-      }                                   \
-    inptr += 2;                               \
-      }                                       \
-  }
+    {                                       \
+        uint32_t ch = *inptr;                             \
+        uint32_t res;                                 \
+        \
+        if (__builtin_expect (ch, 0) == SO)                       \
+        {                                       \
+            /* Shift OUT, change to DBCS converter (redundant escape okay).  */   \
+            curcs = db;                               \
+            ++inptr;                                  \
+            continue;                                 \
+        }                                       \
+        else if (__builtin_expect (ch, 0) == SI)                      \
+        {                                       \
+            /* Shift IN, change to SBCS converter (redundant escape okay).  */    \
+            curcs = sb;                               \
+            ++inptr;                                  \
+            continue;                                 \
+        }                                       \
+        \
+        if (curcs == sb)                                  \
+        {                                       \
+            /* Use the IBM937 table for single byte.  */                  \
+            res = __ibm937sb_to_ucs4[ch];                         \
+            if (__builtin_expect (res, L'\1') == L'\0' && ch != '\0')         \
+            {                                   \
+                /* This is an illegal character.  */                  \
+                STANDARD_FROM_LOOP_ERR_HANDLER (1);                   \
+            }                                   \
+            else                                      \
+            {                                   \
+                put32 (outptr, res);                          \
+                outptr += 4;                              \
+            }                                   \
+            ++inptr;                                  \
+        }                                       \
+        else                                      \
+        {                                       \
+            const struct gap *rp2 = __ibm937db_to_ucs4_idx;               \
+            \
+            assert (curcs == db);                             \
+            \
+            /* Use the IBM937 table for double byte.  */                  \
+            if (__glibc_unlikely (inptr + 1 >= inend))                \
+            {                                   \
+                /* The second character is not available.                 \
+                   Store the intermediate result. */                  \
+                result = __GCONV_INCOMPLETE_INPUT;                    \
+                break;                                \
+            }                                   \
+            \
+            ch = (ch * 0x100) + inptr[1];                         \
+            while (ch > rp2->end)                             \
+                ++rp2;                                  \
+            \
+            if (__builtin_expect (rp2->start == 0xffff, 0)                \
+                || __builtin_expect (ch < rp2->start, 0)                  \
+                || (res = __ibm937db_to_ucs4[ch + rp2->idx],              \
+                    __builtin_expect (res, L'\1') == L'\0' && ch != '\0'))        \
+            {                                   \
+                /* This is an illegal character.  */                  \
+                STANDARD_FROM_LOOP_ERR_HANDLER (2);                   \
+            }                                   \
+            else                                      \
+            {                                   \
+                put32 (outptr, res);                          \
+                outptr += 4;                              \
+            }                                   \
+            inptr += 2;                               \
+        }                                       \
+    }
 #define LOOP_NEED_FLAGS
 #define EXTRA_LOOP_DECLS    , int *curcsp
 #define INIT_PARAMS     int curcs = *curcsp & ~7
@@ -184,84 +184,84 @@ enum {
 #define MAX_NEEDED_OUTPUT   TO_LOOP_MAX_NEEDED_TO
 #define LOOPFCT         TO_LOOP
 #define BODY \
-  {                                       \
-    uint32_t ch = get32 (inptr);                          \
-    const struct gap *rp1 = __ucs4_to_ibm937sb_idx;               \
-    const struct gap *rp2 = __ucs4_to_ibm937db_idx;               \
-    const char *cp;                               \
-                                          \
-    if (__glibc_unlikely (ch >= 0xffff))                      \
-      {                                       \
-    UNICODE_TAG_HANDLER (ch, 4);                          \
-                                          \
-    STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
-      }                                       \
-                                          \
-    while (ch > rp1->end)                             \
-      ++rp1;                                      \
-                                          \
-    /* Use the UCS4 table for single byte.  */                    \
-    if (__builtin_expect (ch < rp1->start, 0)                     \
-    || (cp = __ucs4_to_ibm937sb[ch + rp1->idx],               \
-        __builtin_expect (cp[0], L'\1') == L'\0' && ch != '\0'))          \
-      {                                       \
-    /* Use the UCS4 table for double byte. */                 \
-    while (ch > rp2->end)                             \
-      ++rp2;                                  \
-                                          \
-    if (__builtin_expect (ch < rp2->start, 0)                 \
-        || (cp = __ucs4_to_ibm937db[ch + rp2->idx],               \
-        __builtin_expect (cp[0], L'\1')==L'\0' && ch != '\0'))        \
-      {                                   \
-        /* This is an illegal character.  */                  \
-        STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
-      }                                   \
-    else                                      \
-      {                                   \
-        if (curcs == sb)                              \
-          {                                   \
-        if (__glibc_unlikely (outptr + 1 > outend))           \
-          {                               \
-            result = __GCONV_FULL_OUTPUT;                 \
-            break;                            \
-          }                               \
-        *outptr++ = SO;                           \
-        curcs = db;                           \
-          }                                   \
-                                          \
-        if (__glibc_unlikely (outptr + 2 > outend))               \
-          {                                   \
-        result = __GCONV_FULL_OUTPUT;                     \
-        break;                                \
-          }                                   \
-        *outptr++ = cp[0];                            \
-        *outptr++ = cp[1];                            \
-      }                                   \
-      }                                       \
-    else                                      \
-      {                                       \
-    if (curcs == db)                              \
-      {                                   \
-        if (__glibc_unlikely (outptr + 1 > outend))               \
-          {                                   \
-        result = __GCONV_FULL_OUTPUT;                     \
-        break;                                \
-          }                                   \
-        *outptr++ = SI;                           \
-        curcs = sb;                               \
-      }                                   \
-                                          \
-    if (__glibc_unlikely (outptr + 1 > outend))               \
-      {                                   \
-        result = __GCONV_FULL_OUTPUT;                     \
-        break;                                \
-      }                                   \
-    *outptr++ = cp[0];                            \
-      }                                       \
-                                          \
-    /* Now that we wrote the output increment the input pointer.  */          \
-    inptr += 4;                                   \
-  }
+    {                                       \
+        uint32_t ch = get32 (inptr);                          \
+        const struct gap *rp1 = __ucs4_to_ibm937sb_idx;               \
+        const struct gap *rp2 = __ucs4_to_ibm937db_idx;               \
+        const char *cp;                               \
+        \
+        if (__glibc_unlikely (ch >= 0xffff))                      \
+        {                                       \
+            UNICODE_TAG_HANDLER (ch, 4);                          \
+            \
+            STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
+        }                                       \
+        \
+        while (ch > rp1->end)                             \
+            ++rp1;                                      \
+        \
+        /* Use the UCS4 table for single byte.  */                    \
+        if (__builtin_expect (ch < rp1->start, 0)                     \
+            || (cp = __ucs4_to_ibm937sb[ch + rp1->idx],               \
+                __builtin_expect (cp[0], L'\1') == L'\0' && ch != '\0'))          \
+        {                                       \
+            /* Use the UCS4 table for double byte. */                 \
+            while (ch > rp2->end)                             \
+                ++rp2;                                  \
+            \
+            if (__builtin_expect (ch < rp2->start, 0)                 \
+                || (cp = __ucs4_to_ibm937db[ch + rp2->idx],               \
+                    __builtin_expect (cp[0], L'\1')==L'\0' && ch != '\0'))        \
+            {                                   \
+                /* This is an illegal character.  */                  \
+                STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
+            }                                   \
+            else                                      \
+            {                                   \
+                if (curcs == sb)                              \
+                {                                   \
+                    if (__glibc_unlikely (outptr + 1 > outend))           \
+                    {                               \
+                        result = __GCONV_FULL_OUTPUT;                 \
+                        break;                            \
+                    }                               \
+                    *outptr++ = SO;                           \
+                    curcs = db;                           \
+                }                                   \
+                \
+                if (__glibc_unlikely (outptr + 2 > outend))               \
+                {                                   \
+                    result = __GCONV_FULL_OUTPUT;                     \
+                    break;                                \
+                }                                   \
+                *outptr++ = cp[0];                            \
+                *outptr++ = cp[1];                            \
+            }                                   \
+        }                                       \
+        else                                      \
+        {                                       \
+            if (curcs == db)                              \
+            {                                   \
+                if (__glibc_unlikely (outptr + 1 > outend))               \
+                {                                   \
+                    result = __GCONV_FULL_OUTPUT;                     \
+                    break;                                \
+                }                                   \
+                *outptr++ = SI;                           \
+                curcs = sb;                               \
+            }                                   \
+            \
+            if (__glibc_unlikely (outptr + 1 > outend))               \
+            {                                   \
+                result = __GCONV_FULL_OUTPUT;                     \
+                break;                                \
+            }                                   \
+            *outptr++ = cp[0];                            \
+        }                                       \
+        \
+        /* Now that we wrote the output increment the input pointer.  */          \
+        inptr += 4;                                   \
+    }
 #define LOOP_NEED_FLAGS
 #define EXTRA_LOOP_DECLS    , int *curcsp
 #define INIT_PARAMS     int curcs = *curcsp & ~7

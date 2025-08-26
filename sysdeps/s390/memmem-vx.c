@@ -37,11 +37,11 @@
 #    define libc_hidden_weak(name)
 #   else
 #    define libc_hidden_def(name)               \
-  strong_alias (__memmem_vx, __memmem_vx_1);            \
-  __hidden_ver1 (__memmem_vx, __GI___memmem, __memmem_vx);
+    strong_alias (__memmem_vx, __memmem_vx_1);            \
+    __hidden_ver1 (__memmem_vx, __GI___memmem, __memmem_vx);
 
 #    define libc_hidden_weak(name)                  \
-  __hidden_ver1 (__memmem_vx_1, __GI_memmem, __memmem_vx_1) __attribute__((weak));
+    __hidden_ver1 (__memmem_vx_1, __GI_memmem, __memmem_vx_1) __attribute__((weak));
 #   endif
 #  endif
 

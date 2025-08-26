@@ -91,8 +91,8 @@ extern "C" {
 
 /* Set of all defined flags in SFrame V2.  */
 #define SFRAME_V2_F_ALL_FLAGS \
-  (SFRAME_F_FDE_SORTED | SFRAME_F_FRAME_POINTER \
-   | SFRAME_F_FDE_FUNC_START_PCREL)
+    (SFRAME_F_FDE_SORTED | SFRAME_F_FRAME_POINTER \
+     | SFRAME_F_FDE_FUNC_START_PCREL)
 
 #define SFRAME_CFA_FIXED_FP_INVALID 0
 #define SFRAME_CFA_FIXED_RA_INVALID 0
@@ -171,7 +171,7 @@ typedef struct sframe_header {
 } __attribute__((packed)) sframe_header;
 
 #define SFRAME_V1_HDR_SIZE(sframe_hdr)  \
-  ((sizeof (sframe_header) + (sframe_hdr).sfh_auxhdr_len))
+    ((sizeof (sframe_header) + (sframe_hdr).sfh_auxhdr_len))
 
 /* Two possible keys for executable (instruction) pointers signing.  */
 #define SFRAME_AARCH64_PAUTH_KEY_A    0 /* Key A.  */
@@ -209,8 +209,8 @@ typedef struct sframe_func_desc_entry {
 
 /* Note: Set PAC auth key to SFRAME_AARCH64_PAUTH_KEY_A by default.  */
 #define SFRAME_V1_FUNC_INFO(fde_type, fre_enc_type) \
-  (((SFRAME_AARCH64_PAUTH_KEY_A & 0x1) << 5) | \
-   (((fde_type) & 0x1) << 4) | ((fre_enc_type) & 0xf))
+    (((SFRAME_AARCH64_PAUTH_KEY_A & 0x1) << 5) | \
+     (((fde_type) & 0x1) << 4) | ((fre_enc_type) & 0xf))
 
 #define SFRAME_V1_FUNC_FRE_TYPE(data)     ((data) & 0xf)
 #define SFRAME_V1_FUNC_FDE_TYPE(data)     (((data) >> 4) & 0x1)
@@ -218,7 +218,7 @@ typedef struct sframe_func_desc_entry {
 
 /* Set the pauth key as indicated.  */
 #define SFRAME_V1_FUNC_INFO_UPDATE_PAUTH_KEY(pauth_key, fde_info) \
-  ((((pauth_key) & 0x1) << 5) | ((fde_info) & 0xdf))
+    ((((pauth_key) & 0x1) << 5) | ((fde_info) & 0xdf))
 
 /* Size of stack frame offsets in an SFrame Frame Row Entry.  A single
    SFrame FRE has all offsets of the same size.  Offset size may vary
@@ -264,12 +264,12 @@ typedef struct sframe_fre_info {
 
 /* Note: Set mangled_ra_p to zero by default.  */
 #define SFRAME_V1_FRE_INFO(base_reg_id, offset_num, offset_size) \
-  (((0 & 0x1) << 7) | (((offset_size) & 0x3) << 5) | \
-   (((offset_num) & 0xf) << 1) | ((base_reg_id) & 0x1))
+    (((0 & 0x1) << 7) | (((offset_size) & 0x3) << 5) | \
+     (((offset_num) & 0xf) << 1) | ((base_reg_id) & 0x1))
 
 /* Set the mangled_ra_p bit as indicated.  */
 #define SFRAME_V1_FRE_INFO_UPDATE_MANGLED_RA_P(mangled_ra_p, fre_info) \
-  ((((mangled_ra_p) & 0x1) << 7) | ((fre_info) & 0x7f))
+    ((((mangled_ra_p) & 0x1) << 7) | ((fre_info) & 0x7f))
 
 #define SFRAME_V1_FRE_CFA_BASE_REG_ID(data)   ((data) & 0x1)
 #define SFRAME_V1_FRE_OFFSET_COUNT(data)      (((data) >> 1) & 0xf)
@@ -315,7 +315,7 @@ typedef struct sframe_frame_row_entry_addr1 {
 /* Upper limit of start address in sframe_frame_row_entry_addr1
    is 0x100 (not inclusive).  */
 #define SFRAME_FRE_TYPE_ADDR1_LIMIT   \
-  (1ULL << ((SFRAME_FRE_TYPE_ADDR1 + 1) * 8))
+    (1ULL << ((SFRAME_FRE_TYPE_ADDR1 + 1) * 8))
 
 /* Used when SFRAME_FRE_TYPE_ADDR2 is specified as FRE type.  */
 typedef struct sframe_frame_row_entry_addr2 {
@@ -328,7 +328,7 @@ typedef struct sframe_frame_row_entry_addr2 {
 /* Upper limit of start address in sframe_frame_row_entry_addr2
    is 0x10000 (not inclusive).  */
 #define SFRAME_FRE_TYPE_ADDR2_LIMIT   \
-  (1ULL << ((SFRAME_FRE_TYPE_ADDR2 * 2) * 8))
+    (1ULL << ((SFRAME_FRE_TYPE_ADDR2 * 2) * 8))
 
 /* Used when SFRAME_FRE_TYPE_ADDR4 is specified as FRE type.  */
 typedef struct sframe_frame_row_entry_addr4 {
@@ -341,7 +341,7 @@ typedef struct sframe_frame_row_entry_addr4 {
 /* Upper limit of start address in sframe_frame_row_entry_addr2
    is 0x100000000 (not inclusive).  */
 #define SFRAME_FRE_TYPE_ADDR4_LIMIT   \
-  (1ULL << ((SFRAME_FRE_TYPE_ADDR4 * 2) * 8))
+    (1ULL << ((SFRAME_FRE_TYPE_ADDR4 * 2) * 8))
 
 /* Used to pass frame information to stack trace routine.  */
 typedef struct cframe {

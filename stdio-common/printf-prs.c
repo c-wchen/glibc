@@ -36,8 +36,8 @@
 
 # define PUT(F, S, N)   _IO_sputn (F, S, N)
 # define PAD(Padchar)                                 \
-  if (width > 0)                                  \
-    done += _IO_padn (s, Padchar, width)
+    if (width > 0)                                  \
+        done += _IO_padn (s, Padchar, width)
 #else
 # define vfprintf   vfwprintf
 # define CHAR_T     wchar_t
@@ -48,8 +48,8 @@
 
 # define PUT(F, S, N)   _IO_sputn (F, S, N)
 # define PAD(Padchar)                                 \
-  if (width > 0)                                  \
-    done += _IO_wpadn (s, Padchar, width)
+    if (width > 0)                                  \
+        done += _IO_wpadn (s, Padchar, width)
 #endif
 
 #define DONT_NEED_READ_INT

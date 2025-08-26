@@ -7,7 +7,7 @@
 
 # define TEST_CLOCK CLOCK_MONOTONIC
 # define TEST_CLOCK_MISSING(clock) \
-  (setup_test () ? "CLOCK_MONOTONIC" : NULL)
+    (setup_test () ? "CLOCK_MONOTONIC" : NULL)
 
 # include <stdio.h>
 

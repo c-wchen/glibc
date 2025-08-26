@@ -22,7 +22,7 @@
 
 #ifndef MAX
 #define MAX(a,b)    ({ typeof(a) _a = (a); typeof(b) _b = (b); \
-               _a > _b ? _a : _b; })
+        _a > _b ? _a : _b; })
 #endif
 
 #ifdef USE_WIDE_CHAR

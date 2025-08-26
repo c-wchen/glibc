@@ -43,15 +43,15 @@
 /* Declare redirects for a function f which has a complex
    analogue.  That is, __ ## f ## f128 and __c ## f ## f128.  */
 #define F128_C_REDIR(f) F128_REDIR (__c ## f ## f128); \
-            F128_REDIR (__ ## f ## f128); \
+    F128_REDIR (__ ## f ## f128); \
 
 /* Similar to F128_C_REDIR, declare the set of implementation
    redirects for the trigonometric family f for {a,}f{,h}
    and {a,}cf{,h} complex variants where f is sin/cos/tan.  */
 #define F128_TRIG_REDIR(f) F128_C_REDIR (a ## f); \
-               F128_C_REDIR (a ## f ## h); \
-               F128_C_REDIR (f); \
-               F128_C_REDIR (f ## h);
+    F128_C_REDIR (a ## f ## h); \
+    F128_C_REDIR (f); \
+    F128_C_REDIR (f ## h);
 
 F128_TRIG_REDIR(cos)
 F128_TRIG_REDIR(sin)

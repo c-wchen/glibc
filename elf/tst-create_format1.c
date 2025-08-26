@@ -24,13 +24,13 @@
 #include <support/capture_subprocess.h>
 
 #define TEST(es, objn, fmt, ...)                    \
-  ({                                    \
-     struct dl_exception exception;                 \
-     _dl_exception_create_format (&exception, objn, fmt, __VA_ARGS__);  \
-     TEST_COMPARE_STRING (exception.objname, objn == NULL ? "" : objn); \
-     TEST_COMPARE_STRING (exception.errstring, es);         \
-     _dl_exception_free (&exception);                   \
-   })
+    ({                                    \
+        struct dl_exception exception;                 \
+        _dl_exception_create_format (&exception, objn, fmt, __VA_ARGS__);  \
+        TEST_COMPARE_STRING (exception.objname, objn == NULL ? "" : objn); \
+        TEST_COMPARE_STRING (exception.errstring, es);         \
+        _dl_exception_free (&exception);                   \
+    })
 
 static void do_test_invalid_conversion(void *closure)
 {
@@ -72,12 +72,12 @@ static int do_test(void)
     TEST("0000007b-test", "test", "%x-test", 123);
 
 #define TEST_LONG(es, objn, fmt, ...)               \
-  ({                                \
-     if (sizeof (int) == sizeof (long int))         \
-       TEST (es, objn, fmt, __VA_ARGS__);           \
-     else                           \
-       TEST ("ffffffff" es, objn, fmt, __VA_ARGS__);        \
-   })
+    ({                                \
+        if (sizeof (int) == sizeof (long int))         \
+            TEST (es, objn, fmt, __VA_ARGS__);           \
+        else                           \
+            TEST ("ffffffff" es, objn, fmt, __VA_ARGS__);        \
+    })
 
     TEST_LONG("fffffffd",      NULL,   "%lx", (long int)~2ul);
     TEST_LONG("fffffffd-test", NULL,   "%lx-test", (long int)~2ul);

@@ -99,30 +99,27 @@ static void init_nss_interface(void)
     __libc_lock_unlock(lock);
 }
 
-static enum nss_status internal_setgrent(ent_t *ent) {
+static enum nss_status internal_setgrent(ent_t *ent)
+{
     enum nss_status status = NSS_STATUS_SUCCESS;
 
     ent->files = true;
 
-    if (ni == NULL)
-    {
+    if (ni == NULL) {
         init_nss_interface();
     }
 
-    if (ent->blacklist.data != NULL)
-    {
+    if (ent->blacklist.data != NULL) {
         ent->blacklist.current = 1;
         ent->blacklist.data[0] = '|';
         ent->blacklist.data[1] = '\0';
-    } else
-    {
+    } else {
         ent->blacklist.current = 0;
     }
 
     ent->stream = __nss_files_fopen("/etc/group");
 
-    if (ent->stream == NULL)
-    {
+    if (ent->stream == NULL) {
         status = errno == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
     }
 
@@ -130,25 +127,22 @@ static enum nss_status internal_setgrent(ent_t *ent) {
 }
 
 
-static enum nss_status __attribute_warn_unused_result__ internal_endgrent(ent_t *ent) {
-    if (ent->stream != NULL)
-    {
+static enum nss_status __attribute_warn_unused_result__ internal_endgrent(ent_t *ent)
+{
+    if (ent->stream != NULL) {
         fclose(ent->stream);
         ent->stream = NULL;
     }
 
-    if (ent->blacklist.data != NULL)
-    {
+    if (ent->blacklist.data != NULL) {
         ent->blacklist.current = 1;
         ent->blacklist.data[0] = '|';
         ent->blacklist.data[1] = '\0';
-    } else
-    {
+    } else {
         ent->blacklist.current = 0;
     }
 
-    if (ent->need_endgrent && endgrent_impl != NULL)
-    {
+    if (ent->need_endgrent && endgrent_impl != NULL) {
         endgrent_impl();
     }
 
@@ -226,15 +220,15 @@ static int check_and_add_group(const char *user, gid_t group, long int *start,
    initgroups_dyn, get all entries at once.  */
 static enum nss_status getgrent_next_nss(ent_t *ent, char *buffer, size_t buflen, const char *user,
         gid_t group, long int *start, long int *size,
-        gid_t **groupsp, long int limit, int *errnop) {
+        gid_t **groupsp, long int limit, int *errnop)
+{
     enum nss_status status;
     struct group grpbuf;
 
     /* Try nss_initgroups_dyn if supported. We also need getgrgid_r.
        If this function is not supported, step through the whole group
        database with getgrent_r.  */
-    if (! ent->skip_initgroups_dyn)
-    {
+    if (! ent->skip_initgroups_dyn) {
         long int mystart = 0;
         long int mysize = limit <= 0 ? *size : limit;
         gid_t *mygroups = malloc(mysize * sizeof(gid_t));
@@ -333,16 +327,14 @@ done:
        or we were confronted with a split group.  In these cases we have
        to step through the whole list ourself.  */
 iter:
-    do
-    {
+    do {
         if ((status = getgrent_r_impl(&grpbuf, buffer, buflen, errnop))
             != NSS_STATUS_SUCCESS) {
             break;
         }
     } while (in_blacklist(grpbuf.gr_name, strlen(grpbuf.gr_name), ent));
 
-    if (status == NSS_STATUS_SUCCESS)
-    {
+    if (status == NSS_STATUS_SUCCESS) {
         check_and_add_group(user, group, start, size, groupsp, limit, &grpbuf);
     }
 
@@ -351,7 +343,8 @@ iter:
 
 static enum nss_status internal_getgrent_r(ent_t *ent, char *buffer, size_t buflen, const char *user,
         gid_t group, long int *start, long int *size,
-        gid_t **groupsp, long int limit, int *errnop) {
+        gid_t **groupsp, long int limit, int *errnop)
+{
     struct parser_data *data = (void *) buffer;
     struct group grpbuf;
 
@@ -359,8 +352,7 @@ static enum nss_status internal_getgrent_r(ent_t *ent, char *buffer, size_t bufl
         return getgrent_next_nss(ent, buffer, buflen, user, group,
                                  start, size, groupsp, limit, errnop);
 
-    while (1)
-    {
+    while (1) {
         fpos_t pos;
         int parse_res = 0;
         char *p;
@@ -473,21 +465,20 @@ erange_reset:
 
 enum nss_status _nss_compat_initgroups_dyn(const char *user, gid_t group, long int *start,
         long int *size, gid_t **groupsp, long int limit,
-        int *errnop) {
+        int *errnop)
+{
     enum nss_status status;
     ent_t intern = { true, false, false, NULL, {NULL, 0, 0} };
 
     status = internal_setgrent(&intern);
-    if (status != NSS_STATUS_SUCCESS)
-    {
+    if (status != NSS_STATUS_SUCCESS) {
         return status;
     }
 
     struct scratch_buffer tmpbuf;
     scratch_buffer_init(&tmpbuf);
 
-    do
-    {
+    do {
         while ((status = internal_getgrent_r(&intern, tmpbuf.data, tmpbuf.length,
                                              user, group, start, size,
                                              groupsp, limit, errnop))

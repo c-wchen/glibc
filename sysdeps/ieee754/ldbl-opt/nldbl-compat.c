@@ -1145,12 +1145,12 @@ void __nldbl_argp_failure(const struct argp_state *state, int status,
 }
 
 #define VA_CALL(call)                           \
-{                                   \
-  va_list ap;                               \
-  va_start (ap, format);                        \
-  call (format, ap, PRINTF_LDBL_IS_DBL);                \
-  va_end (ap);                              \
-}
+    {                                   \
+        va_list ap;                               \
+        va_start (ap, format);                        \
+        call (format, ap, PRINTF_LDBL_IS_DBL);                \
+        va_end (ap);                              \
+    }
 
 void __nldbl_err(int status, const char *format, ...)
 {

@@ -52,11 +52,11 @@ int main(int argc, char *argv[])
         printf("\nName: %s\n", argv[i]);
 
 #define TEST(name) \
-      same = st.name == st64.name;                        \
-      printf (#name ": %jd vs %jd  %s\n",                     \
-          (intmax_t) st.name, (intmax_t) st64.name,               \
-          same ? "OK" : "FAIL");                          \
-      result |= ! same
+    same = st.name == st64.name;                        \
+    printf (#name ": %jd vs %jd  %s\n",                     \
+            (intmax_t) st.name, (intmax_t) st64.name,               \
+            same ? "OK" : "FAIL");                          \
+    result |= ! same
 
         TEST(st_dev);
         TEST(st_ino);

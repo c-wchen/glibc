@@ -26,16 +26,16 @@
    point outside it.  */
 #undef check_ptr
 #define check_ptr(ptr)                      \
-do                              \
-  {                             \
-    if ((void *)(ptr) < file_contents               \
-    || (void *)(ptr) > (file_contents+file_length))     \
-      {                             \
-    error (0, 0, _("file %s is truncated\n"), file_name);   \
-    return 1;                       \
-      }                             \
-  }                             \
- while (0);
+    do                              \
+    {                             \
+        if ((void *)(ptr) < file_contents               \
+            || (void *)(ptr) > (file_contents+file_length))     \
+        {                             \
+            error (0, 0, _("file %s is truncated\n"), file_name);   \
+            return 1;                       \
+        }                             \
+    }                             \
+    while (0);
 
 /* Returns 0 if everything is ok, != 0 in case of error.  */
 int process_elf_file(const char *file_name, const char *lib, int *flag,

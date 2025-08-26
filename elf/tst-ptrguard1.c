@@ -179,8 +179,8 @@ static int do_test(void)
 #define OPT_COMMAND 10000
 #define OPT_CHILD   10001
 #define CMDLINE_OPTIONS \
-  { "command", required_argument, NULL, OPT_COMMAND },  \
-  { "child", no_argument, NULL, OPT_CHILD },
+    { "command", required_argument, NULL, OPT_COMMAND },  \
+    { "child", no_argument, NULL, OPT_CHILD },
 
 static void __attribute((used))
 cmdline_process_function(int c)

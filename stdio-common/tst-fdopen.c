@@ -7,11 +7,11 @@
 
 #undef assert
 #define assert(x) \
-  if (!(x)) \
+    if (!(x)) \
     { \
-      fputs ("test failed: " #x "\n", stderr); \
-      retval = 1; \
-      goto the_end; \
+        fputs ("test failed: " #x "\n", stderr); \
+        retval = 1; \
+        goto the_end; \
     }
 
 char buffer[256];

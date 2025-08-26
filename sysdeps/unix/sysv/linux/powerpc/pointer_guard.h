@@ -33,13 +33,13 @@
 #   define TPREG r2
 #  endif
 #  define PTR_MANGLE(reg, tmpreg) \
-        LOAD    tmpreg,POINTER_GUARD(TPREG); \
-        xor     reg,tmpreg,reg
+    LOAD    tmpreg,POINTER_GUARD(TPREG); \
+    xor     reg,tmpreg,reg
 #  define PTR_MANGLE2(reg, tmpreg) \
-        xor     reg,tmpreg,reg
+    xor     reg,tmpreg,reg
 #  define PTR_MANGLE3(destreg, reg, tmpreg) \
-        LOAD    tmpreg,POINTER_GUARD(TPREG); \
-        xor     destreg,tmpreg,reg
+    LOAD    tmpreg,POINTER_GUARD(TPREG); \
+    xor     destreg,tmpreg,reg
 #  define PTR_DEMANGLE(reg, tmpreg) PTR_MANGLE (reg, tmpreg)
 #  define PTR_DEMANGLE2(reg, tmpreg) PTR_MANGLE2 (reg, tmpreg)
 #  define PTR_DEMANGLE3(destreg, reg, tmpreg) PTR_MANGLE3 (destreg, reg, tmpreg)
@@ -47,7 +47,7 @@
 #  include <stdint.h>
 #  include <tls.h>
 #  define PTR_MANGLE(var) \
-  (var) = (__typeof (var)) ((uintptr_t) (var) ^ THREAD_GET_POINTER_GUARD ())
+    (var) = (__typeof (var)) ((uintptr_t) (var) ^ THREAD_GET_POINTER_GUARD ())
 #  define PTR_DEMANGLE(var)     PTR_MANGLE (var)
 # endif
 #endif

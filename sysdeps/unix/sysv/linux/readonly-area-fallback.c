@@ -23,12 +23,12 @@
 #include <string.h>
 #include "libio/libioP.h"
 
-enum readonly_error_type __readonly_area_fallback(const void *ptr, size_t size) {
+enum readonly_error_type __readonly_area_fallback(const void *ptr, size_t size)
+{
     const void *ptr_end = ptr + size;
 
     FILE *fp = fopen("/proc/self/maps", "rce");
-    if (fp == NULL)
-    {
+    if (fp == NULL) {
         /* It is the system administrator's choice to not have /proc
         available to this process (e.g., because it runs in a chroot
          environment.  Don't fail in this case.  */
@@ -51,8 +51,7 @@ enum readonly_error_type __readonly_area_fallback(const void *ptr, size_t size) 
     char *line = NULL;
     size_t linelen = 0;
 
-    while (! __feof_unlocked(fp))
-    {
+    while (! __feof_unlocked(fp)) {
         if (__getdelim(&line, &linelen, '\n', fp) <= 0) {
             break;
         }

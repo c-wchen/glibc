@@ -113,11 +113,11 @@ static inline void init_traced_file(struct traced_file *file, const char *fname,
 }
 
 #define define_traced_file(id, filename)            \
-static union                            \
-{                               \
-  struct traced_file file;                  \
-  char buf[sizeof (struct traced_file) + sizeof (filename)];    \
-} id##_traced_file;
+    static union                            \
+    {                               \
+        struct traced_file file;                  \
+        char buf[sizeof (struct traced_file) + sizeof (filename)];    \
+    } id##_traced_file;
 
 /* Structure describing dynamic part of one database.  */
 struct database_dyn {
@@ -365,10 +365,10 @@ extern void nscd_print_cache(const char *name);
 /* Special version of TEMP_FAILURE_RETRY for functions returning error
    values.  */
 #define TEMP_FAILURE_RETRY_VAL(expression) \
-  (__extension__                                  \
+    (__extension__                                  \
     ({ long int __result;                             \
-       do __result = (long int) (expression);                     \
-       while (__result == EINTR);                         \
-       __result; }))
+        do __result = (long int) (expression);                     \
+        while (__result == EINTR);                         \
+        __result; }))
 
 #endif /* nscd.h */

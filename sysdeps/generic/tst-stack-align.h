@@ -30,16 +30,16 @@ is_aligned(void *p, int align)
 #endif
 
 #define TEST_STACK_ALIGN() \
-  ({                                     \
-    double _d = 12.0;                            \
-    long double _ld = 15.0;                      \
-    int _ret = TEST_STACK_ALIGN_INIT ();                 \
-                                     \
-    printf ("double:  %g %p %zu\n", _d, &_d, __alignof (double));    \
-    _ret += is_aligned (&_d, __alignof (double));            \
-                                     \
-    printf ("ldouble: %Lg %p %zu\n", _ld, &_ld,              \
-        __alignof (long double));                    \
-    _ret += is_aligned (&_ld, __alignof (long double));          \
-    _ret;                                \
-   })
+    ({                                     \
+        double _d = 12.0;                            \
+        long double _ld = 15.0;                      \
+        int _ret = TEST_STACK_ALIGN_INIT ();                 \
+        \
+        printf ("double:  %g %p %zu\n", _d, &_d, __alignof (double));    \
+        _ret += is_aligned (&_d, __alignof (double));            \
+        \
+        printf ("ldouble: %Lg %p %zu\n", _ld, &_ld,              \
+                __alignof (long double));                    \
+        _ret += is_aligned (&_ld, __alignof (long double));          \
+        _ret;                                \
+    })

@@ -74,7 +74,7 @@ static int handle_restart(const char *argv1, const char *argv2)
 
 static int restart;
 #define CMDLINE_OPTIONS \
-  { "restart", no_argument, &restart, 1 },
+    { "restart", no_argument, &restart, 1 },
 
 static void run_subprogram(int argc, char *argv[], const posix_spawnattr_t *attr,
                            const posix_spawn_file_actions_t *actions, int tcfd,

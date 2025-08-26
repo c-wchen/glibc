@@ -46,8 +46,8 @@ typedef struct {
 } tcbhead_t;
 
 #define READ_THREAD_POINTER() \
-  ({ register void *__microblaze_thread_area asm ("r21"); \
-     __microblaze_thread_area; })
+    ({ register void *__microblaze_thread_area asm ("r21"); \
+        __microblaze_thread_area; })
 
 /* This is the size of the initial TCB.  */
 # define TLS_INIT_TCB_SIZE  sizeof (tcbhead_t)
@@ -61,34 +61,34 @@ typedef struct {
 /* Install the dtv pointer.  The pointer passed is to the element with
    index -1 which contain the length.  */
 # define INSTALL_DTV(tcbp, dtvp) \
-  (((tcbhead_t *) (tcbp))->dtv = (dtvp) + 1)
+    (((tcbhead_t *) (tcbp))->dtv = (dtvp) + 1)
 
 /* Install new dtv for current thread.  */
 # define INSTALL_NEW_DTV(dtv) \
-  (THREAD_DTV() = (dtv))
+    (THREAD_DTV() = (dtv))
 
 /* Return dtv of given thread descriptor.  */
 # define GET_DTV(tcbp) \
-  (((tcbhead_t *) (tcbp))->dtv)
+    (((tcbhead_t *) (tcbp))->dtv)
 
 /* Code to initially initialize the thread pointer.
    r21 is reserved for thread pointer.  */
 # define TLS_INIT_TP(tcbp) \
-  ({ __asm __volatile ("or r21,r0,%0" : : "r" ((void *)tcbp)); true; })
+    ({ __asm __volatile ("or r21,r0,%0" : : "r" ((void *)tcbp)); true; })
 
 # define TLS_DEFINE_INIT_TP(tp, pd) void *tp = (pd) + 1
 
 /* Return the address of the dtv for the current thread.  */
 # define THREAD_DTV() \
-  (((tcbhead_t *) READ_THREAD_POINTER())->dtv)
+    (((tcbhead_t *) READ_THREAD_POINTER())->dtv)
 
 /* Return the thread descriptor for the current thread.  */
 # define THREAD_SELF \
-  (((struct pthread *) READ_THREAD_POINTER()) - 1)
+    (((struct pthread *) READ_THREAD_POINTER()) - 1)
 
 /* Magic for libthread_db to know how to do THREAD_SELF.  */
 # define DB_THREAD_SELF \
-  CONST_THREAD_AREA (32, sizeof (struct pthread))
+    CONST_THREAD_AREA (32, sizeof (struct pthread))
 
 # include <tcb-access.h>
 
@@ -97,21 +97,21 @@ typedef struct {
 # define THREAD_GSCOPE_FLAG_USED   1
 # define THREAD_GSCOPE_FLAG_WAIT   2
 # define THREAD_GSCOPE_RESET_FLAG()                                         \
-  do                                                                        \
+    do                                                                        \
     { int __res                                                             \
-      = atomic_exchange_release (&THREAD_SELF->header.gscope_flag,          \
-                             THREAD_GSCOPE_FLAG_UNUSED);                    \
-      if (__res == THREAD_GSCOPE_FLAG_WAIT)                                 \
-        lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1, LLL_PRIVATE);  \
+            = atomic_exchange_release (&THREAD_SELF->header.gscope_flag,          \
+                                       THREAD_GSCOPE_FLAG_UNUSED);                    \
+        if (__res == THREAD_GSCOPE_FLAG_WAIT)                                 \
+            lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1, LLL_PRIVATE);  \
     }                                                                       \
-  while (0)
+    while (0)
 # define THREAD_GSCOPE_SET_FLAG()                                           \
-  do                                                                        \
+    do                                                                        \
     {                                                                       \
-      THREAD_SELF->header.gscope_flag = THREAD_GSCOPE_FLAG_USED;            \
-      atomic_write_barrier ();                                              \
+        THREAD_SELF->header.gscope_flag = THREAD_GSCOPE_FLAG_USED;            \
+        atomic_write_barrier ();                                              \
     }                                                                       \
-  while (0)
+    while (0)
 
 #endif /* __ASSEMBLER__ */
 

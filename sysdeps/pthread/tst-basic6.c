@@ -26,11 +26,11 @@ static char *p;
 
 static pthread_barrier_t b;
 #define BT \
-  e = pthread_barrier_wait (&b);                          \
-  if (e != 0 && e != PTHREAD_BARRIER_SERIAL_THREAD)               \
+    e = pthread_barrier_wait (&b);                          \
+    if (e != 0 && e != PTHREAD_BARRIER_SERIAL_THREAD)               \
     {                                         \
-      puts ("barrier_wait failed");                       \
-      exit (1);                                   \
+        puts ("barrier_wait failed");                       \
+        exit (1);                                   \
     }
 
 

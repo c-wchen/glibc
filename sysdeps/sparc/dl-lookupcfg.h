@@ -32,18 +32,18 @@
    callbacks and tail cail elf_machine_fixup_plt.  */
 #ifdef __arch64__
 # define DL_SPARC_FIXUP(l, r, value, new_value)                              \
-  sparc64_fixup_plt (l, r, value, new_value, (r)->r_addend, 0)
+    sparc64_fixup_plt (l, r, value, new_value, (r)->r_addend, 0)
 #else
 # define DL_SPARC_FIXUP(l, r, value, new_value)                              \
-  sparc_fixup_plt (r, value, new_value, 0, 1)
+    sparc_fixup_plt (r, value, new_value, 0, 1)
 #endif
 #define DL_FIXUP_BINDNOW_RELOC(l, reloc, value, new_value, st_value, lazy)   \
-  ({                                                                         \
-     if (lazy)                                                               \
-       (*value) = st_value;                                                  \
-     else                                                                    \
-       {                                                                     \
-         const PLTREL *__r = (reloc);                                        \
-         DL_SPARC_FIXUP (l, __r, value, new_value);                          \
-       }                                                                     \
-  })
+    ({                                                                         \
+        if (lazy)                                                               \
+            (*value) = st_value;                                                  \
+        else                                                                    \
+        {                                                                     \
+            const PLTREL *__r = (reloc);                                        \
+            DL_SPARC_FIXUP (l, __r, value, new_value);                          \
+        }                                                                     \
+    })

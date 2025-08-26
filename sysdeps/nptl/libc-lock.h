@@ -50,38 +50,38 @@ typedef struct __libc_lock_recursive_opaque__ __libc_lock_recursive_t;
    begins with a `*'), because its storage size will not be known outside
    of libc.  */
 #define __libc_lock_define_recursive(CLASS,NAME) \
-  CLASS __libc_lock_recursive_t NAME;
+    CLASS __libc_lock_recursive_t NAME;
 
 /* Define an initialized recursive lock variable NAME with storage
    class CLASS.  */
 #if defined _LIBC && (IS_IN (libc) || IS_IN (libpthread))
 # define __libc_lock_define_initialized_recursive(CLASS, NAME) \
-  CLASS __libc_lock_recursive_t NAME = _LIBC_LOCK_RECURSIVE_INITIALIZER;
+    CLASS __libc_lock_recursive_t NAME = _LIBC_LOCK_RECURSIVE_INITIALIZER;
 # define _LIBC_LOCK_RECURSIVE_INITIALIZER \
-  { LLL_LOCK_INITIALIZER, 0, NULL }
+    { LLL_LOCK_INITIALIZER, 0, NULL }
 #else
 # define __libc_lock_define_initialized_recursive(CLASS,NAME) \
-  CLASS __libc_lock_recursive_t NAME = _LIBC_LOCK_RECURSIVE_INITIALIZER;
+    CLASS __libc_lock_recursive_t NAME = _LIBC_LOCK_RECURSIVE_INITIALIZER;
 # define _LIBC_LOCK_RECURSIVE_INITIALIZER \
-  {PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP}
+    {PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP}
 #endif
 
 /* Initialize a recursive mutex.  */
 #if defined _LIBC && (IS_IN (libc) || IS_IN (libpthread))
 # define __libc_lock_init_recursive(NAME) \
-  ((void) ((NAME) = (__libc_lock_recursive_t) _LIBC_LOCK_RECURSIVE_INITIALIZER))
+    ((void) ((NAME) = (__libc_lock_recursive_t) _LIBC_LOCK_RECURSIVE_INITIALIZER))
 #else
 # define __libc_lock_init_recursive(NAME) \
-  do {                                        \
-    if (__pthread_mutex_init != NULL)                         \
-      {                                       \
-    pthread_mutexattr_t __attr;                       \
-    __pthread_mutexattr_init (&__attr);                   \
-    __pthread_mutexattr_settype (&__attr, PTHREAD_MUTEX_RECURSIVE_NP);    \
-    __pthread_mutex_init (&(NAME).mutex, &__attr);                \
-    __pthread_mutexattr_destroy (&__attr);                    \
-      }                                       \
-  } while (0)
+    do {                                        \
+        if (__pthread_mutex_init != NULL)                         \
+        {                                       \
+            pthread_mutexattr_t __attr;                       \
+            __pthread_mutexattr_init (&__attr);                   \
+            __pthread_mutexattr_settype (&__attr, PTHREAD_MUTEX_RECURSIVE_NP);    \
+            __pthread_mutex_init (&(NAME).mutex, &__attr);                \
+            __pthread_mutexattr_destroy (&__attr);                    \
+        }                                       \
+    } while (0)
 #endif
 
 /* Finalize recursive named lock.  */
@@ -89,65 +89,65 @@ typedef struct __libc_lock_recursive_opaque__ __libc_lock_recursive_t;
 # define __libc_lock_fini_recursive(NAME) ((void) 0)
 #else
 # define __libc_lock_fini_recursive(NAME) \
-  __libc_maybe_call (__pthread_mutex_destroy, (&(NAME).mutex), 0)
+    __libc_maybe_call (__pthread_mutex_destroy, (&(NAME).mutex), 0)
 #endif
 
 /* Lock the recursive named lock variable.  */
 #if defined _LIBC && (IS_IN (libc) || IS_IN (libpthread))
 # define __libc_lock_lock_recursive(NAME) \
-  do {                                        \
-    void *self = THREAD_SELF;                             \
-    if ((NAME).owner != self)                             \
-      {                                       \
-    lll_lock ((NAME).lock, LLL_PRIVATE);                      \
-    (NAME).owner = self;                              \
-      }                                       \
-    ++(NAME).cnt;                                 \
-  } while (0)
+    do {                                        \
+        void *self = THREAD_SELF;                             \
+        if ((NAME).owner != self)                             \
+        {                                       \
+            lll_lock ((NAME).lock, LLL_PRIVATE);                      \
+            (NAME).owner = self;                              \
+        }                                       \
+        ++(NAME).cnt;                                 \
+    } while (0)
 #else
 # define __libc_lock_lock_recursive(NAME) \
-  __libc_maybe_call (__pthread_mutex_lock, (&(NAME).mutex), 0)
+    __libc_maybe_call (__pthread_mutex_lock, (&(NAME).mutex), 0)
 #endif
 
 /* Try to lock the recursive named lock variable.  */
 #if defined _LIBC && (IS_IN (libc) || IS_IN (libpthread))
 # define __libc_lock_trylock_recursive(NAME) \
-  ({                                          \
-    int result = 0;                               \
-    void *self = THREAD_SELF;                             \
-    if ((NAME).owner != self)                             \
-      {                                       \
-    if (lll_trylock ((NAME).lock) == 0)                   \
-      {                                   \
-        (NAME).owner = self;                          \
-        (NAME).cnt = 1;                           \
-      }                                   \
-    else                                      \
-      result = EBUSY;                             \
-      }                                       \
-    else                                      \
-      ++(NAME).cnt;                               \
-    result;                                   \
-  })
+    ({                                          \
+        int result = 0;                               \
+        void *self = THREAD_SELF;                             \
+        if ((NAME).owner != self)                             \
+        {                                       \
+            if (lll_trylock ((NAME).lock) == 0)                   \
+            {                                   \
+                (NAME).owner = self;                          \
+                (NAME).cnt = 1;                           \
+            }                                   \
+            else                                      \
+                result = EBUSY;                             \
+        }                                       \
+        else                                      \
+            ++(NAME).cnt;                               \
+        result;                                   \
+    })
 #else
 # define __libc_lock_trylock_recursive(NAME) \
-  __libc_maybe_call (__pthread_mutex_trylock, (&(NAME).mutex), 0)
+    __libc_maybe_call (__pthread_mutex_trylock, (&(NAME).mutex), 0)
 #endif
 
 /* Unlock the recursive named lock variable.  */
 #if defined _LIBC && (IS_IN (libc) || IS_IN (libpthread))
 /* We do no error checking here.  */
 # define __libc_lock_unlock_recursive(NAME) \
-  do {                                        \
-    if (--(NAME).cnt == 0)                            \
-      {                                       \
-    (NAME).owner = NULL;                              \
-    lll_unlock ((NAME).lock, LLL_PRIVATE);                    \
-      }                                       \
-  } while (0)
+    do {                                        \
+        if (--(NAME).cnt == 0)                            \
+        {                                       \
+            (NAME).owner = NULL;                              \
+            lll_unlock ((NAME).lock, LLL_PRIVATE);                    \
+        }                                       \
+    } while (0)
 #else
 # define __libc_lock_unlock_recursive(NAME) \
-  __libc_maybe_call (__pthread_mutex_unlock, (&(NAME).mutex), 0)
+    __libc_maybe_call (__pthread_mutex_unlock, (&(NAME).mutex), 0)
 #endif
 
 /* Put the unwind buffer BUFFER on the per-thread callback stack.  The
@@ -162,28 +162,28 @@ libc_hidden_proto(__libc_cleanup_pop_restore)
 
 /* Start critical region with cleanup.  */
 #define __libc_cleanup_region_start(DOIT, FCT, ARG)         \
-  {   bool _cleanup_start_doit;                     \
-  struct _pthread_cleanup_buffer _buffer;               \
-  /* Non-addressable copy of FCT, so that we avoid indirect calls on    \
-     the non-unwinding path.  */                    \
-  void (*_cleanup_routine) (void *) = (FCT);                \
-  _buffer.__arg = (ARG);                        \
-  if (DOIT)                             \
-    {                                   \
-      _cleanup_start_doit = true;                   \
-      _buffer.__routine = _cleanup_routine;             \
-      __libc_cleanup_push_defer (&_buffer);             \
-    }                                   \
-  else                                  \
-      _cleanup_start_doit = false;
+    {   bool _cleanup_start_doit;                     \
+        struct _pthread_cleanup_buffer _buffer;               \
+        /* Non-addressable copy of FCT, so that we avoid indirect calls on    \
+           the non-unwinding path.  */                    \
+        void (*_cleanup_routine) (void *) = (FCT);                \
+        _buffer.__arg = (ARG);                        \
+        if (DOIT)                             \
+        {                                   \
+            _cleanup_start_doit = true;                   \
+            _buffer.__routine = _cleanup_routine;             \
+            __libc_cleanup_push_defer (&_buffer);             \
+        }                                   \
+        else                                  \
+            _cleanup_start_doit = false;
 
 /* End critical region with cleanup.  */
 #define __libc_cleanup_region_end(DOIT)     \
-  if (_cleanup_start_doit)          \
-    __libc_cleanup_pop_restore (&_buffer);  \
-  if (DOIT)                 \
-    _cleanup_routine (_buffer.__arg);       \
-  } /* matches __libc_cleanup_region_start */
+    if (_cleanup_start_doit)          \
+        __libc_cleanup_pop_restore (&_buffer);  \
+    if (DOIT)                 \
+        _cleanup_routine (_buffer.__arg);       \
+    } /* matches __libc_cleanup_region_start */
 
 
 /* Hide the definitions which are only supposed to be used inside libc in

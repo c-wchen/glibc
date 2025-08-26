@@ -42,7 +42,7 @@
 
 /* Whether to build this version at all.  */
 #define BUILD_LGAMMA \
-  (LIBM_SVID_COMPAT && (HAVE_LGAMMA_COMPAT || !USE_AS_COMPAT))
+    (LIBM_SVID_COMPAT && (HAVE_LGAMMA_COMPAT || !USE_AS_COMPAT))
 
 /* The name to use for this version.  */
 #if USE_AS_COMPAT
@@ -58,18 +58,18 @@
 
 /* How to call the underlying lgamma_r function.  */
 #define CALL_LGAMMA(TYPE, FUNC, ARG)            \
-  ({                            \
-    TYPE lgamma_tmp;                    \
-    int local_signgam;                  \
-    if (USE_AS_COMPAT)                  \
-      {                         \
-    lgamma_tmp = FUNC ((ARG), &local_signgam);  \
-    if (_LIB_VERSION != _ISOC_)         \
-      signgam = __signgam = local_signgam;      \
-      }                         \
-    else                        \
-      lgamma_tmp = FUNC ((ARG), &__signgam);        \
-    lgamma_tmp;                     \
-  })
+    ({                            \
+        TYPE lgamma_tmp;                    \
+        int local_signgam;                  \
+        if (USE_AS_COMPAT)                  \
+        {                         \
+            lgamma_tmp = FUNC ((ARG), &local_signgam);  \
+            if (_LIB_VERSION != _ISOC_)         \
+                signgam = __signgam = local_signgam;      \
+        }                         \
+        else                        \
+            lgamma_tmp = FUNC ((ARG), &__signgam);        \
+        lgamma_tmp;                     \
+    })
 
 #endif /* lgamma-compat.h.  */

@@ -52,11 +52,11 @@ int support_open_and_compare_file_string(const char *file,
    file position indicator is updated to point after the bytes
    compared.  */
 #define TEST_COMPARE_FILE_STRING(FP, CONTENTS)          \
-  TEST_COMPARE (support_compare_file_string (FP, CONTENTS), 0)
+    TEST_COMPARE (support_compare_file_string (FP, CONTENTS), 0)
 
 /* Read a file and compare bytes read from it with the given string.  */
 #define TEST_OPEN_AND_COMPARE_FILE_STRING(FILE, CONTENTS)       \
-  TEST_COMPARE (support_open_and_compare_file_string (FILE, CONTENTS), 0)
+    TEST_COMPARE (support_open_and_compare_file_string (FILE, CONTENTS), 0)
 
 __END_DECLS
 

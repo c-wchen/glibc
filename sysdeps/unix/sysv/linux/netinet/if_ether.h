@@ -89,14 +89,14 @@ struct  ether_arp {
 #define ETHER_MAP_IP_MULTICAST(ipaddr, enaddr) \
     /* struct in_addr *ipaddr; */ \
     /* uint8_t enaddr[ETH_ALEN]; */ \
-{ \
-    (enaddr)[0] = 0x01; \
-    (enaddr)[1] = 0x00; \
-    (enaddr)[2] = 0x5e; \
-    (enaddr)[3] = ((uint8_t *)ipaddr)[1] & 0x7f; \
-    (enaddr)[4] = ((uint8_t *)ipaddr)[2]; \
-    (enaddr)[5] = ((uint8_t *)ipaddr)[3]; \
-}
+    { \
+        (enaddr)[0] = 0x01; \
+        (enaddr)[1] = 0x00; \
+        (enaddr)[2] = 0x5e; \
+        (enaddr)[3] = ((uint8_t *)ipaddr)[1] & 0x7f; \
+        (enaddr)[4] = ((uint8_t *)ipaddr)[2]; \
+        (enaddr)[5] = ((uint8_t *)ipaddr)[3]; \
+    }
 
 __END_DECLS
 #endif /* __USE_MISC */

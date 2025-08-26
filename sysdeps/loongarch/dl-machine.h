@@ -49,8 +49,8 @@
 #define ELF_MACHINE_IRELATIVE R_LARCH_IRELATIVE
 
 #define elf_machine_type_class(type)                \
-  ((ELF_RTYPE_CLASS_PLT *((type) == ELF_MACHINE_JMP_SLOT))  \
-   | (ELF_RTYPE_CLASS_COPY *((type) == R_LARCH_COPY)))
+    ((ELF_RTYPE_CLASS_PLT *((type) == ELF_MACHINE_JMP_SLOT))  \
+     | (ELF_RTYPE_CLASS_COPY *((type) == R_LARCH_COPY)))
 
 #define ELF_MACHINE_NO_REL 1
 #define ELF_MACHINE_NO_RELA 0
@@ -104,7 +104,7 @@ static inline ElfW(Addr) elf_machine_dynamic(void)
    its return value is the user program's entry point.  */
 
 #define RTLD_START asm (\
-    ".text\n\
+                        ".text\n\
 	" _RTLD_PROLOGUE (ENTRY_POINT) "\
 	.cfi_label .Ldummy   \n\
 	" CFI_UNDEFINED (1) "   \n\
@@ -135,7 +135,7 @@ static inline ElfW(Addr) elf_machine_dynamic(void)
 	# Jump to the user entry point.   \n\
 	jirl	$zero, $s0, 0   \n\
 	" _RTLD_EPILOGUE (ENTRY_POINT) "\
-	.previous");
+.previous");
 
 /* Names of the architecture-specific auditing callback functions.  */
 #define ARCH_LA_PLTENTER loongarch_gnu_pltenter

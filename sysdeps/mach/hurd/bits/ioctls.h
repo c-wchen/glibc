@@ -114,7 +114,7 @@ enum __ioctl_datum { IOC_8, IOC_16, IOC_32, IOC_64 };
 
 /* Construct an ioctl from constructed type plus other fields.  */
 #define _IOC(inout, group, num, type) \
-  ((num) | ((((group) - 'f') | ((type) | (inout) << 19) << 4) << 7))
+    ((num) | ((((group) - 'f') | ((type) | (inout) << 19) << 4) << 7))
 
 /* Dissect an ioctl into its component fields.  */
 #define _IOC_INOUT(request) (((unsigned int) (request) >> 30) & IOC_INOUT)
@@ -126,7 +126,7 @@ enum __ioctl_datum { IOC_8, IOC_16, IOC_32, IOC_64 };
 /* Construct a type information field from
    the broken-out type and count fields.  */
 #define _IOT(t0, c0, t1, c1, t2, c2) \
-  ((c2) | (((c1) | ((c0) | ((t2) | ((t1) | (t0) << 2) << 2) << 5) << 5) << 3))
+    ((c2) | (((c1) | ((c0) | ((t2) | ((t1) | (t0) << 2) << 2) << 5) << 5) << 3))
 
 /* Dissect a type information field into the type and count fields.  */
 #define _IOT_TYPE0(type)    (((unsigned int) (type) >> 17) & 3)
@@ -138,11 +138,11 @@ enum __ioctl_datum { IOC_8, IOC_16, IOC_32, IOC_64 };
 
 /* Construct an ioctl from all the broken-out fields.  */
 #define _IOCT(inout, group, num, t0, c0, t1, c1, t2, c2)              \
-  _IOC ((inout), (group), (num), _IOT ((t0), (c0), (t1), (c1), (t2), (c2)))
+    _IOC ((inout), (group), (num), _IOT ((t0), (c0), (t1), (c1), (t2), (c2)))
 
 /* Construct an individual type field for TYPE.  */
 #define _IOTS(type) \
-  (sizeof (type) == 8 ? IOC_64 : (enum __ioctl_datum) (sizeof (type) >> 1))
+    (sizeof (type) == 8 ? IOC_64 : (enum __ioctl_datum) (sizeof (type) >> 1))
 
 /* Construct a type information field for
    a single argument of the scalar TYPE.  */

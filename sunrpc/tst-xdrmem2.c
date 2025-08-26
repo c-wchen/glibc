@@ -43,12 +43,12 @@ static int do_test(void)
     xdrmem_create(&xdrs, (char *) buf, 2 * ps, XDR_ENCODE);
 
 #define T(type, val) \
-  v_##type = val;           \
-  if (! xdr_##type (&xdrs, &v_##type))  \
+    v_##type = val;           \
+    if (! xdr_##type (&xdrs, &v_##type))  \
     {                   \
-      puts ("encoding of " #type    \
-        " " #val " failed");    \
-      return 1;             \
+        puts ("encoding of " #type    \
+              " " #val " failed");    \
+        return 1;             \
     }
 
     T(int, 127)
@@ -71,18 +71,18 @@ static int do_test(void)
     xdrmem_create(&xdrs, (char *) buf, 2 * ps, XDR_DECODE);
 
 #define T(type, val) \
-  v_##type = 0x15;          \
-  if (! xdr_##type (&xdrs, &v_##type))  \
+    v_##type = 0x15;          \
+    if (! xdr_##type (&xdrs, &v_##type))  \
     {                   \
-      puts ("decoding of " #type    \
-        " " #val " failed");    \
-      return 1;             \
+        puts ("decoding of " #type    \
+              " " #val " failed");    \
+        return 1;             \
     }                   \
-  if (v_##type != val)          \
+    if (v_##type != val)          \
     {                   \
-      puts ("decoded value differs, "   \
-        "type " #type " " #val);    \
-      return 1;             \
+        puts ("decoded value differs, "   \
+              "type " #type " " #val);    \
+        return 1;             \
     }
 
     T(int, 127)

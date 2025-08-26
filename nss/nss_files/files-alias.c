@@ -35,18 +35,17 @@
    operations the stream needs to be held open across calls, the other
    getXXbyYY operations all use their own stream.  */
 
-static enum nss_status internal_setent(FILE **stream) {
+static enum nss_status internal_setent(FILE **stream)
+{
     enum nss_status status = NSS_STATUS_SUCCESS;
 
-    if (*stream == NULL)
-    {
+    if (*stream == NULL) {
         *stream = __nss_files_fopen("/etc/aliases");
 
         if (*stream == NULL) {
             status = errno == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
         }
-    } else
-    {
+    } else {
         rewind(*stream);
     }
 
@@ -55,7 +54,8 @@ static enum nss_status internal_setent(FILE **stream) {
 
 
 /* Thread-safe, exported version of that.  */
-enum nss_status _nss_files_setaliasent(void) {
+enum nss_status _nss_files_setaliasent(void)
+{
     return __nss_files_data_setent(nss_file_aliasent, "/etc/aliases");
 }
 libc_hidden_def(_nss_files_setaliasent)
@@ -331,14 +331,14 @@ no_more_room:
 
 
 enum nss_status _nss_files_getaliasent_r(struct aliasent *result, char *buffer, size_t buflen,
-        int *errnop) {
+        int *errnop)
+{
     /* Return next entry in host file.  */
 
     struct nss_files_per_file_data *data;
     enum nss_status status = __nss_files_data_open(&data, nss_file_aliasent,
                              "/etc/aliases", errnop, NULL);
-    if (status != NSS_STATUS_SUCCESS)
-    {
+    if (status != NSS_STATUS_SUCCESS) {
         return status;
     }
 

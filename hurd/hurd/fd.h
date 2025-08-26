@@ -105,42 +105,42 @@ _HURD_FD_H_EXTERN_INLINE struct hurd_fd *_hurd_fd_get(int fd)
    file descriptor structure for FD.   */
 
 #define HURD_FD_USE(fd, expr)                             \
-  ({ struct hurd_fd *descriptor = _hurd_fd_get (fd);                  \
-     __glibc_unlikely (descriptor == NULL) ? EBADF : (expr); })
+    ({ struct hurd_fd *descriptor = _hurd_fd_get (fd);                  \
+        __glibc_unlikely (descriptor == NULL) ? EBADF : (expr); })
 
 /* Evaluate EXPR with the variable `port' bound to the port to FD, and
    `ctty' bound to the ctty port.  */
 
 #define HURD_DPORT_USE(fd, expr) \
-  HURD_FD_USE ((fd), HURD_FD_PORT_USE (descriptor, (expr)))
+    HURD_FD_USE ((fd), HURD_FD_PORT_USE (descriptor, (expr)))
 
 /* Likewise, but FD is a pointer to the file descriptor structure.  */
 /* Also see HURD_FD_PORT_USE_CANCEL.  */
 
 #define HURD_FD_PORT_USE(fd, expr)                        \
-  ({ error_t __result;                                \
-     struct hurd_fd *const __d = (fd);                        \
-     struct hurd_userlink __ulink, __ctty_ulink;                  \
-     io_t port, ctty;                                 \
-     void *crit = _hurd_critical_section_lock ();                 \
-     __spin_lock (&__d->port.lock);                       \
-     if (__glibc_unlikely (__d->port.port == MACH_PORT_NULL))             \
-       {                                      \
-     __spin_unlock (&__d->port.lock);                     \
-     _hurd_critical_section_unlock (crit);                    \
-     __result = EBADF;                            \
-       }                                      \
-     else                                     \
-       {                                      \
-     ctty = _hurd_port_get (&__d->ctty, &__ctty_ulink);           \
-     port = _hurd_port_locked_get (&__d->port, &__ulink);             \
-     _hurd_critical_section_unlock (crit);                    \
-     __result = (expr);                           \
-     _hurd_port_free (&__d->port, &__ulink, port);                \
-     if (ctty != MACH_PORT_NULL)                          \
-       _hurd_port_free (&__d->ctty, &__ctty_ulink, ctty);             \
-       }                                      \
-     __result; })
+    ({ error_t __result;                                \
+        struct hurd_fd *const __d = (fd);                        \
+        struct hurd_userlink __ulink, __ctty_ulink;                  \
+        io_t port, ctty;                                 \
+        void *crit = _hurd_critical_section_lock ();                 \
+        __spin_lock (&__d->port.lock);                       \
+        if (__glibc_unlikely (__d->port.port == MACH_PORT_NULL))             \
+        {                                      \
+            __spin_unlock (&__d->port.lock);                     \
+            _hurd_critical_section_unlock (crit);                    \
+            __result = EBADF;                            \
+        }                                      \
+        else                                     \
+        {                                      \
+            ctty = _hurd_port_get (&__d->ctty, &__ctty_ulink);           \
+            port = _hurd_port_locked_get (&__d->port, &__ulink);             \
+            _hurd_critical_section_unlock (crit);                    \
+            __result = (expr);                           \
+            _hurd_port_free (&__d->port, &__ulink, port);                \
+            if (ctty != MACH_PORT_NULL)                          \
+                _hurd_port_free (&__d->ctty, &__ctty_ulink, ctty);             \
+        }                                      \
+        __result; })
 
 #include <errno.h>
 #include <bits/types/error_t.h>

@@ -70,11 +70,11 @@ static const char *do_funcname;
 
 /* Hack to get the line of the assert.  */
 #define GET_INFO_1(l)         \
-  if (closure != NULL)        \
+    if (closure != NULL)        \
     {                 \
-      do_lineno = l;          \
-      do_funcname = __func__; \
-      return; \
+        do_lineno = l;          \
+        do_funcname = __func__; \
+        return; \
     }
 #define GET_INFO() GET_INFO_1(__LINE__+1)
 

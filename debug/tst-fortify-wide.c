@@ -44,14 +44,14 @@ static const wchar_t *wstr5 = L"World!\n";
 static wchar_t wbuf2[20] = L"%ls";
 
 #define WFAIL \
-  do { wprintf (L"Failure on line %d\n", __LINE__); ret = 1; } while (0)
+    do { wprintf (L"Failure on line %d\n", __LINE__); ret = 1; } while (0)
 #define CHK_FAIL_START \
-  chk_fail_ok = 1;              \
-  if (! sigsetjmp (chk_fail_buf, 1))        \
+    chk_fail_ok = 1;              \
+    if (! sigsetjmp (chk_fail_buf, 1))        \
     {
 #define CHK_FAIL_END \
-      chk_fail_ok = 0;              \
-      WFAIL;                    \
+    chk_fail_ok = 0;              \
+    WFAIL;                    \
     }
 
 static int do_test(void)

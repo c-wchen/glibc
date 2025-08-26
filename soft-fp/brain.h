@@ -54,7 +54,7 @@
 #define _FP_WFRACBITS_DW_B  (2 * _FP_WFRACBITS_B)
 #define _FP_WFRACXBITS_DW_B (_FP_FRACTBITS_DW_B - _FP_WFRACBITS_DW_B)
 #define _FP_HIGHBIT_DW_B    \
-  ((_FP_W_TYPE) 1 << (_FP_WFRACBITS_DW_B - 1) % _FP_W_TYPE_SIZE)
+    ((_FP_W_TYPE) 1 << (_FP_WFRACBITS_DW_B - 1) % _FP_W_TYPE_SIZE)
 
 /* The implementation of _FP_MUL_MEAT_B and _FP_DIV_MEAT_B should be
    chosen by the target machine.  */
@@ -85,82 +85,82 @@ unsigned exp  :
 #define FP_UNPACK_RAW_BP(X, val)    _FP_UNPACK_RAW_1_P (B, X, (val))
 #define FP_PACK_RAW_B(val, X)   _FP_PACK_RAW_1 (B, (val), X)
 #define FP_PACK_RAW_BP(val, X)          \
-  do                        \
+    do                        \
     {                       \
-      if (!FP_INHIBIT_RESULTS)          \
-    _FP_PACK_RAW_1_P (B, (val), X);     \
+        if (!FP_INHIBIT_RESULTS)          \
+            _FP_PACK_RAW_1_P (B, (val), X);     \
     }                       \
-  while (0)
+    while (0)
 
 #define FP_UNPACK_B(X, val)         \
-  do                        \
+    do                        \
     {                       \
-      _FP_UNPACK_RAW_1 (B, X, (val));       \
-      _FP_UNPACK_CANONICAL (B, 1, X);       \
+        _FP_UNPACK_RAW_1 (B, X, (val));       \
+        _FP_UNPACK_CANONICAL (B, 1, X);       \
     }                       \
-  while (0)
+    while (0)
 
 #define FP_UNPACK_BP(X, val)            \
-  do                        \
+    do                        \
     {                       \
-      _FP_UNPACK_RAW_1_P (B, X, (val));     \
-      _FP_UNPACK_CANONICAL (B, 1, X);       \
+        _FP_UNPACK_RAW_1_P (B, X, (val));     \
+        _FP_UNPACK_CANONICAL (B, 1, X);       \
     }                       \
-  while (0)
+    while (0)
 
 #define FP_UNPACK_SEMIRAW_B(X, val)     \
-  do                        \
+    do                        \
     {                       \
-      _FP_UNPACK_RAW_1 (B, X, (val));       \
-      _FP_UNPACK_SEMIRAW (B, 1, X);     \
+        _FP_UNPACK_RAW_1 (B, X, (val));       \
+        _FP_UNPACK_SEMIRAW (B, 1, X);     \
     }                       \
-  while (0)
+    while (0)
 
 #define FP_UNPACK_SEMIRAW_BP(X, val)        \
-  do                        \
+    do                        \
     {                       \
-      _FP_UNPACK_RAW_1_P (B, X, (val));     \
-      _FP_UNPACK_SEMIRAW (B, 1, X);     \
+        _FP_UNPACK_RAW_1_P (B, X, (val));     \
+        _FP_UNPACK_SEMIRAW (B, 1, X);     \
     }                       \
-  while (0)
+    while (0)
 
 #define FP_PACK_B(val, X)           \
-  do                        \
+    do                        \
     {                       \
-      _FP_PACK_CANONICAL (B, 1, X);     \
-      _FP_PACK_RAW_1 (B, (val), X);     \
+        _FP_PACK_CANONICAL (B, 1, X);     \
+        _FP_PACK_RAW_1 (B, (val), X);     \
     }                       \
-  while (0)
+    while (0)
 
 #define FP_PACK_BP(val, X)          \
-  do                        \
+    do                        \
     {                       \
-      _FP_PACK_CANONICAL (B, 1, X);     \
-      if (!FP_INHIBIT_RESULTS)          \
-    _FP_PACK_RAW_1_P (B, (val), X);     \
+        _FP_PACK_CANONICAL (B, 1, X);     \
+        if (!FP_INHIBIT_RESULTS)          \
+            _FP_PACK_RAW_1_P (B, (val), X);     \
     }                       \
-  while (0)
+    while (0)
 
 #define FP_PACK_SEMIRAW_B(val, X)       \
-  do                        \
+    do                        \
     {                       \
-      _FP_PACK_SEMIRAW (B, 1, X);       \
-      _FP_PACK_RAW_1 (B, (val), X);     \
+        _FP_PACK_SEMIRAW (B, 1, X);       \
+        _FP_PACK_RAW_1 (B, (val), X);     \
     }                       \
-  while (0)
+    while (0)
 
 #define FP_PACK_SEMIRAW_BP(val, X)      \
-  do                        \
+    do                        \
     {                       \
-      _FP_PACK_SEMIRAW (B, 1, X);       \
-      if (!FP_INHIBIT_RESULTS)          \
-    _FP_PACK_RAW_1_P (B, (val), X);     \
+        _FP_PACK_SEMIRAW (B, 1, X);       \
+        if (!FP_INHIBIT_RESULTS)          \
+            _FP_PACK_RAW_1_P (B, (val), X);     \
     }                       \
-  while (0)
+    while (0)
 
 #define FP_TO_INT_B(r, X, rsz, rsg) _FP_TO_INT (B, 1, (r), X, (rsz), (rsg))
 #define FP_TO_INT_ROUND_B(r, X, rsz, rsg)   \
-  _FP_TO_INT_ROUND (B, 1, (r), X, (rsz), (rsg))
+    _FP_TO_INT_ROUND (B, 1, (r), X, (rsz), (rsg))
 #define FP_FROM_INT_B(X, r, rs, rt) _FP_FROM_INT (B, 1, X, (r), (rs), rt)
 
 /* BFmode arithmetic is not implemented.  */

@@ -186,13 +186,13 @@ extern void _hurd_critical_section_unlock(void *our_lock);
    These two must be used as a pair at the same C scoping level.  */
 
 #define HURD_CRITICAL_BEGIN \
-  { void *__hurd_critical__ = _hurd_critical_section_lock ()
+    { void *__hurd_critical__ = _hurd_critical_section_lock ()
 #define HURD_CRITICAL_END \
-      _hurd_critical_section_unlock (__hurd_critical__); } while (0)
+    _hurd_critical_section_unlock (__hurd_critical__); } while (0)
 
 /* This one can be used inside the C scoping level, for early exits.  */
 #define HURD_CRITICAL_UNLOCK \
-      _hurd_critical_section_unlock (__hurd_critical__);
+    _hurd_critical_section_unlock (__hurd_critical__);
 
 /* Initialize the signal code, and start the signal thread.
    Arguments give the "init ints" from exec_startup.  */
@@ -310,31 +310,31 @@ extern mach_msg_timeout_t _hurd_interrupted_rpc_timeout;
    message and reference ports and fetch them anew.  */
 
 #define HURD_MSGPORT_RPC(fetch_msgport_expr,                      \
-             fetch_refport_expr, dealloc_refport,             \
-             rpc_expr)                        \
+                         fetch_refport_expr, dealloc_refport,             \
+                         rpc_expr)                        \
 ({                                        \
     error_t __err;                                \
     mach_port_t msgport, refport = MACH_PORT_NULL;                \
     do                                        \
-      {                                       \
-    /* Get the message port.  */                          \
-    __err = (error_t) (fetch_msgport_expr);                   \
-    if (__err)                                \
-      break;                                  \
-    /* Get the reference port.  */                        \
-    __err = (error_t) (fetch_refport_expr);                   \
-    if (__err)                                \
-      {                                   \
-        /* Couldn't get it; deallocate MSGPORT and fail.  */          \
-        __mach_port_deallocate (__mach_task_self (), msgport);        \
-        break;                                \
-      }                                   \
-    __err = (error_t) (rpc_expr);                         \
-    __mach_port_deallocate (__mach_task_self (), msgport);            \
-    if ((dealloc_refport) && refport != MACH_PORT_NULL)           \
-      __mach_port_deallocate (__mach_task_self (), refport);              \
-      } while (__err == MACH_SEND_INVALID_DEST                    \
-           || __err == MIG_SERVER_DIED);                      \
+    {                                       \
+        /* Get the message port.  */                          \
+        __err = (error_t) (fetch_msgport_expr);                   \
+        if (__err)                                \
+            break;                                  \
+        /* Get the reference port.  */                        \
+        __err = (error_t) (fetch_refport_expr);                   \
+        if (__err)                                \
+        {                                   \
+            /* Couldn't get it; deallocate MSGPORT and fail.  */          \
+            __mach_port_deallocate (__mach_task_self (), msgport);        \
+            break;                                \
+        }                                   \
+        __err = (error_t) (rpc_expr);                         \
+        __mach_port_deallocate (__mach_task_self (), msgport);            \
+        if ((dealloc_refport) && refport != MACH_PORT_NULL)           \
+            __mach_port_deallocate (__mach_task_self (), refport);              \
+    } while (__err == MACH_SEND_INVALID_DEST                    \
+             || __err == MIG_SERVER_DIED);                      \
     __err;                                    \
 })
 

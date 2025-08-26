@@ -34,14 +34,14 @@
 typedef uint64_t hp_timing_t;
 
 #define HP_TIMING_NOW(var) \
-  __asm__ __volatile__ ("isb; mrs %0, cntvct_el0" : "=r" (var))
+    __asm__ __volatile__ ("isb; mrs %0, cntvct_el0" : "=r" (var))
 
 /* Compute elapsed time in nanoseconds.  */
 #undef HP_TIMING_DIFF
 #define HP_TIMING_DIFF(Diff, Start, End)            \
-({  hp_timing_t freq;                       \
-    __asm__ __volatile__ ("mrs %0, cntfrq_el0" : "=r" (freq));  \
-   (Diff) = (((End) - (Start)) * UINT64_C(1000000000 >> 6)) / (freq >> 6); \
-})
+    ({  hp_timing_t freq;                       \
+        __asm__ __volatile__ ("mrs %0, cntfrq_el0" : "=r" (freq));  \
+        (Diff) = (((End) - (Start)) * UINT64_C(1000000000 >> 6)) / (freq >> 6); \
+    })
 
 #endif  /* hp-timing.h */

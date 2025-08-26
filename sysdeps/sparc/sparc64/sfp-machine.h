@@ -28,22 +28,22 @@
 
 /* Helper macros for _FP_MUL_MEAT_2_120_240_double.  */
 #define _FP_MUL_MEAT_SET_FE_TZ                  \
-do {                                \
-  static fpu_control_t _fetz = _FPU_RC_DOWN;            \
-  _FPU_SETCW(_fetz);                        \
-} while (0)
+    do {                                \
+        static fpu_control_t _fetz = _FPU_RC_DOWN;            \
+        _FPU_SETCW(_fetz);                        \
+    } while (0)
 #ifndef _FP_MUL_MEAT_RESET_FE
 #define _FP_MUL_MEAT_RESET_FE _FPU_SETCW(_fcw)
 #endif
 
 #define _FP_MUL_MEAT_S(R,X,Y)                   \
-  _FP_MUL_MEAT_1_imm(_FP_WFRACBITS_S,R,X,Y)
+    _FP_MUL_MEAT_1_imm(_FP_WFRACBITS_S,R,X,Y)
 #define _FP_MUL_MEAT_D(R,X,Y)                   \
-  _FP_MUL_MEAT_1_wide(_FP_WFRACBITS_D,R,X,Y,umul_ppmm)
+    _FP_MUL_MEAT_1_wide(_FP_WFRACBITS_D,R,X,Y,umul_ppmm)
 #define _FP_MUL_MEAT_Q(R,X,Y)                   \
-  _FP_MUL_MEAT_2_120_240_double(_FP_WFRACBITS_Q,R,X,Y,      \
-                _FP_MUL_MEAT_SET_FE_TZ,     \
-                _FP_MUL_MEAT_RESET_FE)
+    _FP_MUL_MEAT_2_120_240_double(_FP_WFRACBITS_Q,R,X,Y,      \
+                                  _FP_MUL_MEAT_SET_FE_TZ,     \
+                                  _FP_MUL_MEAT_RESET_FE)
 
 #define _FP_DIV_MEAT_S(R,X,Y)   _FP_DIV_MEAT_1_imm(S,R,X,Y,_FP_DIV_HELP_imm)
 #define _FP_DIV_MEAT_D(R,X,Y)   _FP_DIV_MEAT_1_udiv_norm(D,R,X,Y)
@@ -63,20 +63,20 @@ do {                                \
  * we choose that one, otherwise we choose Y.
  */
 #define _FP_CHOOSENAN(fs, wc, R, X, Y, OP)          \
-  do {                              \
-    if ((_FP_FRAC_HIGH_RAW_##fs(Y) & _FP_QNANBIT_##fs)      \
-    && !(_FP_FRAC_HIGH_RAW_##fs(X) & _FP_QNANBIT_##fs)) \
-      {                             \
-    R##_s = X##_s;                      \
-    _FP_FRAC_COPY_##wc(R,X);                \
-      }                             \
-    else                            \
-      {                             \
-    R##_s = Y##_s;                      \
-    _FP_FRAC_COPY_##wc(R,Y);                \
-      }                             \
-    R##_c = FP_CLS_NAN;                     \
-  } while (0)
+    do {                              \
+        if ((_FP_FRAC_HIGH_RAW_##fs(Y) & _FP_QNANBIT_##fs)      \
+            && !(_FP_FRAC_HIGH_RAW_##fs(X) & _FP_QNANBIT_##fs)) \
+        {                             \
+            R##_s = X##_s;                      \
+            _FP_FRAC_COPY_##wc(R,X);                \
+        }                             \
+        else                            \
+        {                             \
+            R##_s = Y##_s;                      \
+            _FP_FRAC_COPY_##wc(R,Y);                \
+        }                             \
+        R##_c = FP_CLS_NAN;                     \
+    } while (0)
 
 /* Obtain the current rounding mode. */
 #ifndef FP_ROUNDMODE
@@ -93,12 +93,12 @@ do {                                \
 #define _FP_TININESS_AFTER_ROUNDING 0
 
 #define _FP_DECL_EX \
-  fpu_control_t _fcw __attribute__ ((unused)) = (FP_RND_NEAREST << 30)
+    fpu_control_t _fcw __attribute__ ((unused)) = (FP_RND_NEAREST << 30)
 
 #define FP_INIT_ROUNDMODE                   \
-do {                                \
-  _FPU_GETCW(_fcw);                     \
-} while (0)
+    do {                                \
+        _FPU_GETCW(_fcw);                     \
+    } while (0)
 
 #define FP_TRAPPING_EXCEPTIONS ((_fcw >> 23) & 0x1f)
 #define FP_INHIBIT_RESULTS ((_fcw >> 23) & _fex)
@@ -107,38 +107,38 @@ do {                                \
 extern void __Qp_handle_exceptions(int exc);
 
 #define FP_HANDLE_EXCEPTIONS                    \
-do {                                \
-  if (!_fex)                            \
-    {                               \
-      /* This is the common case, so we do it inline.       \
-       * We need to clear cexc bits if any.         \
-       */                           \
-      __asm__ __volatile__("fzero %%f62\n\t"            \
-               "faddd %%f62, %%f62, %%f62"      \
-               : : : "f62");            \
-    }                               \
-  else                              \
-    {                               \
-      __Qp_handle_exceptions (_fex);                \
-    }                               \
-} while (0)
+    do {                                \
+        if (!_fex)                            \
+        {                               \
+            /* This is the common case, so we do it inline.       \
+             * We need to clear cexc bits if any.         \
+             */                           \
+            __asm__ __volatile__("fzero %%f62\n\t"            \
+                                 "faddd %%f62, %%f62, %%f62"      \
+                                 : : : "f62");            \
+        }                               \
+        else                              \
+        {                               \
+            __Qp_handle_exceptions (_fex);                \
+        }                               \
+    } while (0)
 
 #define QP_HANDLE_EXCEPTIONS(_a)                \
-do {                                \
-  if ((_fcw >> 23) & _fex)                  \
-    {                               \
-      _a;                           \
-    }                               \
-  else                              \
-    {                               \
-      _fcw = (_fcw & ~0x1fL) | (_fex << 5) | _fex;      \
-      _FPU_SETCW(_fcw);                     \
-    }                               \
-} while (0)
+    do {                                \
+        if ((_fcw >> 23) & _fex)                  \
+        {                               \
+            _a;                           \
+        }                               \
+        else                              \
+        {                               \
+            _fcw = (_fcw & ~0x1fL) | (_fex << 5) | _fex;      \
+            _FPU_SETCW(_fcw);                     \
+        }                               \
+    } while (0)
 
 #define QP_NO_EXCEPTIONS                    \
-  __asm ("fzero %%f62\n\t"                  \
-     "faddd %%f62, %%f62, %%f62" : : : "f62")
+    __asm ("fzero %%f62\n\t"                  \
+           "faddd %%f62, %%f62, %%f62" : : : "f62")
 
 #define QP_CLOBBER "memory", "f52", "f54", "f56", "f58", "f60", "f62"
 #define QP_CLOBBER_CC QP_CLOBBER , "cc"

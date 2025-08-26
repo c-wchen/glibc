@@ -56,15 +56,15 @@ typedef unsigned int fpu_control_t;
 #ifdef __SOFTFP__
 /* This is fmrx %0, fpscr.  */
 # define _FPU_GETCW(cw) \
-  __asm__ __volatile__ ("mrc p10, 7, %0, cr1, cr0, 0" : "=r" (cw))
+    __asm__ __volatile__ ("mrc p10, 7, %0, cr1, cr0, 0" : "=r" (cw))
 /* This is fmxr fpscr, %0.  */
 # define _FPU_SETCW(cw) \
-  __asm__ __volatile__ ("mcr p10, 7, %0, cr1, cr0, 0" : : "r" (cw))
+    __asm__ __volatile__ ("mcr p10, 7, %0, cr1, cr0, 0" : : "r" (cw))
 #else
 # define _FPU_GETCW(cw) \
-  __asm__ __volatile__ ("vmrs %0, fpscr" : "=r" (cw))
+    __asm__ __volatile__ ("vmrs %0, fpscr" : "=r" (cw))
 # define _FPU_SETCW(cw) \
-  __asm__ __volatile__ ("vmsr fpscr, %0" : : "r" (cw))
+    __asm__ __volatile__ ("vmsr fpscr, %0" : : "r" (cw))
 #endif
 
 /* Default control word set at startup.  */

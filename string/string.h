@@ -198,23 +198,23 @@ __THROW __attribute_malloc__ __nonnull((1));
 #if defined __USE_GNU && defined __GNUC__
 /* Duplicate S, returning an identical alloca'd string.  */
 # define strdupa(s)                               \
-  (__extension__                                  \
+    (__extension__                                  \
     ({                                        \
-      const char *__old = (s);                            \
-      size_t __len = strlen (__old) + 1;                      \
-      char *__new = (char *) __builtin_alloca (__len);                \
-      (char *) memcpy (__new, __old, __len);                      \
+        const char *__old = (s);                            \
+        size_t __len = strlen (__old) + 1;                      \
+        char *__new = (char *) __builtin_alloca (__len);                \
+        (char *) memcpy (__new, __old, __len);                      \
     }))
 
 /* Return an alloca'd copy of at most N bytes of string.  */
 # define strndupa(s, n)                               \
-  (__extension__                                  \
+    (__extension__                                  \
     ({                                        \
-      const char *__old = (s);                            \
-      size_t __len = strnlen (__old, (n));                    \
-      char *__new = (char *) __builtin_alloca (__len + 1);            \
-      __new[__len] = '\0';                            \
-      (char *) memcpy (__new, __old, __len);                      \
+        const char *__old = (s);                            \
+        size_t __len = strnlen (__old, (n));                    \
+        char *__new = (char *) __builtin_alloca (__len + 1);            \
+        __new[__len] = '\0';                            \
+        (char *) memcpy (__new, __old, __len);                      \
     }))
 #endif
 

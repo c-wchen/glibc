@@ -28,26 +28,26 @@
    exchange for stores as the implementation is synthesized.  */
 void __atomic_link_error(void);
 #define __atomic_check_size_ls(mem) \
- if ((sizeof (*mem) != 1) && (sizeof (*mem) != 2) && sizeof (*mem) != 4)    \
-   __atomic_link_error ();
+    if ((sizeof (*mem) != 1) && (sizeof (*mem) != 2) && sizeof (*mem) != 4)    \
+        __atomic_link_error ();
 
 #define atomic_load_relaxed(mem) \
- ({ __atomic_check_size_ls((mem));                                           \
-    __atomic_load_n ((mem), __ATOMIC_RELAXED); })
+    ({ __atomic_check_size_ls((mem));                                           \
+        __atomic_load_n ((mem), __ATOMIC_RELAXED); })
 #define atomic_load_acquire(mem) \
- ({ __atomic_check_size_ls((mem));                                           \
-    __atomic_load_n ((mem), __ATOMIC_ACQUIRE); })
+    ({ __atomic_check_size_ls((mem));                                           \
+        __atomic_load_n ((mem), __ATOMIC_ACQUIRE); })
 
 #define atomic_store_relaxed(mem, val) \
- do {                                                                        \
-   __atomic_check_size_ls((mem));                                            \
-   __atomic_store_n ((mem), (val), __ATOMIC_RELAXED);                        \
- } while (0)
+    do {                                                                        \
+        __atomic_check_size_ls((mem));                                            \
+        __atomic_store_n ((mem), (val), __ATOMIC_RELAXED);                        \
+    } while (0)
 #define atomic_store_release(mem, val) \
- do {                                                                        \
-   __atomic_check_size_ls((mem));                                            \
-   __atomic_store_n ((mem), (val), __ATOMIC_RELEASE);                        \
- } while (0)
+    do {                                                                        \
+        __atomic_check_size_ls((mem));                                            \
+        __atomic_store_n ((mem), (val), __ATOMIC_RELEASE);                        \
+    } while (0)
 
 /* XXX Is this actually correct?  */
 #define ATOMIC_EXCHANGE_USES_CAS 1
@@ -70,35 +70,35 @@ void __atomic_link_error(void);
 /* The only basic operation needed is compare and exchange.  The mem
    pointer must be word aligned.  We no longer loop on deadlock.  */
 #define atomic_compare_and_exchange_val_acq(mem, newval, oldval)    \
-  ({                                    \
-     register long lws_errno asm("r21");                \
-     register unsigned long lws_ret asm("r28");             \
-     register unsigned long lws_mem asm("r26") = (unsigned long)(mem);  \
-     register unsigned long lws_old asm("r25") = (unsigned long)(oldval);\
-     register unsigned long lws_new asm("r24") = (unsigned long)(newval);\
-     __asm__ __volatile__(                      \
-    "0:					\n\t"           \
-    "ble	" _LWS "(%%sr2, %%r0)		\n\t"           \
-    "ldi	" _LWS_CAS ", %%r20		\n\t"         \
-    "cmpiclr,<> " _ASM_EAGAIN ", %%r21, %%r0\n\t"           \
-    "b,n 0b					\n\t"           \
-    "cmpclr,= %%r0, %%r21, %%r0		\n\t"          \
-    "iitlbp %%r0,(%%sr0, %%r0)		\n\t"           \
-    : "=r" (lws_ret), "=r" (lws_errno)              \
-    : "r" (lws_mem), "r" (lws_old), "r" (lws_new)           \
-    : _LWS_CLOBBER                          \
-     );                                 \
-                                    \
-     (__typeof (oldval)) lws_ret;                   \
-   })
+    ({                                    \
+        register long lws_errno asm("r21");                \
+        register unsigned long lws_ret asm("r28");             \
+        register unsigned long lws_mem asm("r26") = (unsigned long)(mem);  \
+        register unsigned long lws_old asm("r25") = (unsigned long)(oldval);\
+        register unsigned long lws_new asm("r24") = (unsigned long)(newval);\
+        __asm__ __volatile__(                      \
+                "0:					\n\t"           \
+                "ble	" _LWS "(%%sr2, %%r0)		\n\t"           \
+                "ldi	" _LWS_CAS ", %%r20		\n\t"         \
+                "cmpiclr,<> " _ASM_EAGAIN ", %%r21, %%r0\n\t"           \
+                "b,n 0b					\n\t"           \
+                "cmpclr,= %%r0, %%r21, %%r0		\n\t"          \
+                "iitlbp %%r0,(%%sr0, %%r0)		\n\t"           \
+                : "=r" (lws_ret), "=r" (lws_errno)              \
+                : "r" (lws_mem), "r" (lws_old), "r" (lws_new)           \
+                : _LWS_CLOBBER                          \
+                            );                                 \
+        \
+        (__typeof (oldval)) lws_ret;                   \
+    })
 
 #define atomic_compare_and_exchange_bool_acq(mem, newval, oldval)   \
-  ({                                    \
-     __typeof__ (*mem) ret;                     \
-     ret = atomic_compare_and_exchange_val_acq(mem, newval, oldval);    \
-     /* Return 1 if it was already acquired.  */            \
-     (ret != oldval);                           \
-   })
+    ({                                    \
+        __typeof__ (*mem) ret;                     \
+        ret = atomic_compare_and_exchange_val_acq(mem, newval, oldval);    \
+        /* Return 1 if it was already acquired.  */            \
+        (ret != oldval);                           \
+    })
 
 #endif
 /* _ATOMIC_MACHINE_H */

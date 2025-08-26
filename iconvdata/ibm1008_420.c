@@ -167,11 +167,11 @@ static const char __from_ibm420_to_ibm1008[256] = {
 #define MIN_NEEDED_OUTPUT   MIN_NEEDED_TO
 #define LOOPFCT         FROM_LOOP
 #define BODY \
-  {                                       \
-    const char ch = __from_ibm1008_to_ibm420[*inptr];                 \
-    *outptr++ = ch;                               \
-    ++inptr;                                      \
-  }
+    {                                       \
+        const char ch = __from_ibm1008_to_ibm420[*inptr];                 \
+        *outptr++ = ch;                               \
+        ++inptr;                                      \
+    }
 #include <iconv/loop.c>
 
 
@@ -180,11 +180,11 @@ static const char __from_ibm420_to_ibm1008[256] = {
 #define MIN_NEEDED_OUTPUT   MIN_NEEDED_FROM
 #define LOOPFCT         TO_LOOP
 #define BODY \
-  {                                       \
-    const char ch = __from_ibm420_to_ibm1008[*inptr];                 \
-    *outptr++ = ch;                               \
-    ++inptr;                                      \
-  }
+    {                                       \
+        const char ch = __from_ibm420_to_ibm1008[*inptr];                 \
+        *outptr++ = ch;                               \
+        ++inptr;                                      \
+    }
 #include <iconv/loop.c>
 
 /* Now define the toplevel functions.  */

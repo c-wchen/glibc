@@ -4,11 +4,11 @@
 #define _FP_I_TYPE      long
 
 #define _FP_MUL_MEAT_S(R,X,Y)               \
-  _FP_MUL_MEAT_1_wide(_FP_WFRACBITS_S,R,X,Y,umul_ppmm)
+    _FP_MUL_MEAT_1_wide(_FP_WFRACBITS_S,R,X,Y,umul_ppmm)
 #define _FP_MUL_MEAT_D(R,X,Y)               \
-  _FP_MUL_MEAT_2_wide(_FP_WFRACBITS_D,R,X,Y,umul_ppmm)
+    _FP_MUL_MEAT_2_wide(_FP_WFRACBITS_D,R,X,Y,umul_ppmm)
 #define _FP_MUL_MEAT_Q(R,X,Y)               \
-  _FP_MUL_MEAT_4_wide(_FP_WFRACBITS_Q,R,X,Y,umul_ppmm)
+    _FP_MUL_MEAT_4_wide(_FP_WFRACBITS_Q,R,X,Y,umul_ppmm)
 
 #define _FP_DIV_MEAT_S(R,X,Y)   _FP_DIV_MEAT_1_loop(S,R,X,Y)
 #define _FP_DIV_MEAT_D(R,X,Y)   _FP_DIV_MEAT_2_udiv(D,R,X,Y)
@@ -26,20 +26,20 @@
 
 /* Someone please check this.  */
 #define _FP_CHOOSENAN(fs, wc, R, X, Y, OP)          \
-  do {                              \
-    if ((_FP_FRAC_HIGH_RAW_##fs(X) & _FP_QNANBIT_##fs)      \
-    && !(_FP_FRAC_HIGH_RAW_##fs(Y) & _FP_QNANBIT_##fs)) \
-      {                             \
-    R##_s = Y##_s;                      \
-    _FP_FRAC_COPY_##wc(R,Y);                \
-      }                             \
-    else                            \
-      {                             \
-    R##_s = X##_s;                      \
-    _FP_FRAC_COPY_##wc(R,X);                \
-      }                             \
-    R##_c = FP_CLS_NAN;                     \
-  } while (0)
+    do {                              \
+        if ((_FP_FRAC_HIGH_RAW_##fs(X) & _FP_QNANBIT_##fs)      \
+            && !(_FP_FRAC_HIGH_RAW_##fs(Y) & _FP_QNANBIT_##fs)) \
+        {                             \
+            R##_s = Y##_s;                      \
+            _FP_FRAC_COPY_##wc(R,Y);                \
+        }                             \
+        else                            \
+        {                             \
+            R##_s = X##_s;                      \
+            _FP_FRAC_COPY_##wc(R,X);                \
+        }                             \
+        R##_c = FP_CLS_NAN;                     \
+    } while (0)
 
 #define _FP_TININESS_AFTER_ROUNDING 0
 
@@ -62,18 +62,18 @@ libc_hidden_proto(__feraiseexcept_soft)
 # define FP_EX_OVERFLOW        SPEFSCR_FOVFS
 
 # define _FP_DECL_EX \
-  int _spefscr __attribute__ ((unused)), _ftrapex __attribute__ ((unused)) = 0
+    int _spefscr __attribute__ ((unused)), _ftrapex __attribute__ ((unused)) = 0
 # define FP_INIT_ROUNDMODE                      \
-  do                                    \
+    do                                    \
     {                                   \
-      int _r;                               \
-                                    \
-      _spefscr = fegetenv_register ();                  \
-      _r = INTERNAL_SYSCALL_CALL (prctl, PR_GET_FPEXC, &_ftrapex);  \
-      if (INTERNAL_SYSCALL_ERROR_P (_r))                \
-    _ftrapex = 0;                           \
+        int _r;                               \
+        \
+        _spefscr = fegetenv_register ();                  \
+        _r = INTERNAL_SYSCALL_CALL (prctl, PR_GET_FPEXC, &_ftrapex);  \
+        if (INTERNAL_SYSCALL_ERROR_P (_r))                \
+            _ftrapex = 0;                           \
     }                                   \
-  while (0)
+    while (0)
 # define FP_INIT_EXCEPTIONS /* Empty.  */
 
 # define FP_HANDLE_EXCEPTIONS  __feraiseexcept_soft (_fex)
@@ -81,8 +81,8 @@ libc_hidden_proto(__feraiseexcept_soft)
 
 /* Not correct in general, but sufficient for the uses in soft-fp.  */
 # define FP_TRAPPING_EXCEPTIONS (_ftrapex & PR_FP_EXC_UND   \
-                 ? FP_EX_UNDERFLOW      \
-                 : 0)
+                                 ? FP_EX_UNDERFLOW      \
+                                 : 0)
 
 #else
 
@@ -98,7 +98,7 @@ libc_hidden_proto(__feraiseexcept_soft)
 # define FP_HANDLE_EXCEPTIONS  __simulate_exceptions (_fex)
 # define FP_ROUNDMODE          __sim_round_mode_thread
 # define FP_TRAPPING_EXCEPTIONS \
-  (~__sim_disabled_exceptions_thread & 0x3e000000)
+    (~__sim_disabled_exceptions_thread & 0x3e000000)
 
 #endif
 

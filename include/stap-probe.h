@@ -42,15 +42,15 @@
    source code.  */
 
 # define LIBC_PROBE(name, n, ...)   \
-  LIBC_PROBE_1 (MODULE_NAME, name, n, ## __VA_ARGS__)
+    LIBC_PROBE_1 (MODULE_NAME, name, n, ## __VA_ARGS__)
 
 # define LIBC_PROBE_1(lib, name, n, ...) \
-  STAP_PROBE##n (lib, name, ## __VA_ARGS__)
+    STAP_PROBE##n (lib, name, ## __VA_ARGS__)
 
 # define STAP_PROBE0        STAP_PROBE
 
 # define LIBC_PROBE_ASM(name, template) \
-  STAP_PROBE_ASM (MODULE_NAME, name, template)
+    STAP_PROBE_ASM (MODULE_NAME, name, template)
 
 # define LIBC_PROBE_ASM_OPERANDS STAP_PROBE_ASM_OPERANDS
 

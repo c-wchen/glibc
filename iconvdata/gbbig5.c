@@ -4791,85 +4791,85 @@ const char __from_big5_to_gb2312 [13973][2] = {
 #define MAX_NEEDED_OUTPUT   MAX_NEEDED_TO
 #define LOOPFCT         FROM_LOOP
 #define BODY \
-  {                                       \
-    uint32_t ch = *inptr;                             \
-                                          \
-    if (ch <= 0x7f)                               \
-      *outptr++ = *inptr++;                           \
-    else if (ch >= 0xa1 && ch <= 0xf7)                        \
-      {                                       \
-    /* Two-byte character.  First test whether the                    \
-       next byte is also available.  */                   \
-    const char *cp;                               \
-    int idx;                                  \
-                                          \
-    if (__glibc_unlikely (inptr + 1 >= inend))                \
-      {                                   \
-        /* The second character is not available.  Store              \
-           the intermediate result.  */                   \
-        result = __GCONV_INCOMPLETE_INPUT;                    \
-        break;                                \
-      }                                   \
-                                          \
-    idx = (ch - 0xa1) * 94;                           \
-    ch = inptr[1];                                    \
-                                          \
-    /* All second bytes of a multibyte character must be >= 0xa1. */      \
-    if (__glibc_unlikely (ch < 0xa1))                     \
-      {                                   \
-        /* This is an illegal character.  */                  \
-        STANDARD_FROM_LOOP_ERR_HANDLER (1);                   \
-      }                                   \
-                                          \
-    idx += ch - 0xa1;                             \
-                                          \
-    /* Get the value from the table.  */                      \
-    cp = __from_gb2312_to_big5[idx];                      \
-    if (__glibc_unlikely (cp[0] == '\0'))                     \
-      {                                   \
-        /* We do not have a mapping for this character.           \
-           If ignore errors, map it to 0xa1bc - big5 box character */     \
-        result = __gconv_mark_illegal_input (step_data);              \
-        if (! ignore_errors_p ())                         \
-          break;                                  \
-                                          \
-        /* See if there is enough room to write the second byte. */       \
-        if (__glibc_unlikely (outptr + 1 >= outend))              \
-          {                                   \
-        result = __GCONV_FULL_OUTPUT;                     \
-            break;                                \
-          }                                   \
-                                          \
-        *outptr++ = '\xa1';                           \
-        *outptr++ = '\xbc';                           \
-        inptr += 2;                               \
-        ++*irreversible;                              \
-        continue;                                 \
-      }                                   \
-    else                                      \
-      {                                   \
-        /* See whether there is enough room to write the second byte. */  \
-        if (__builtin_expect (cp[1], '\1') != '\0'                \
-            && __builtin_expect (outptr + 1 >= outend, 0))            \
-          {                                   \
-            /* We do not have enough room.  */                \
-            result = __GCONV_FULL_OUTPUT;                     \
-            break;                                \
-          }                                   \
-                                          \
-        *outptr++ = cp[0];                            \
-        if (cp[1] != '\0')                            \
-          *outptr++ = cp[1];                          \
-      }                                   \
-                                              \
-    inptr += 2;                               \
-      }                                       \
-    else                                      \
-      {                                       \
-    /* This is illegal.  */                           \
-    STANDARD_FROM_LOOP_ERR_HANDLER (1);                   \
-      }                                       \
-  }
+    {                                       \
+        uint32_t ch = *inptr;                             \
+        \
+        if (ch <= 0x7f)                               \
+            *outptr++ = *inptr++;                           \
+        else if (ch >= 0xa1 && ch <= 0xf7)                        \
+        {                                       \
+            /* Two-byte character.  First test whether the                    \
+               next byte is also available.  */                   \
+            const char *cp;                               \
+            int idx;                                  \
+            \
+            if (__glibc_unlikely (inptr + 1 >= inend))                \
+            {                                   \
+                /* The second character is not available.  Store              \
+                   the intermediate result.  */                   \
+                result = __GCONV_INCOMPLETE_INPUT;                    \
+                break;                                \
+            }                                   \
+            \
+            idx = (ch - 0xa1) * 94;                           \
+            ch = inptr[1];                                    \
+            \
+            /* All second bytes of a multibyte character must be >= 0xa1. */      \
+            if (__glibc_unlikely (ch < 0xa1))                     \
+            {                                   \
+                /* This is an illegal character.  */                  \
+                STANDARD_FROM_LOOP_ERR_HANDLER (1);                   \
+            }                                   \
+            \
+            idx += ch - 0xa1;                             \
+            \
+            /* Get the value from the table.  */                      \
+            cp = __from_gb2312_to_big5[idx];                      \
+            if (__glibc_unlikely (cp[0] == '\0'))                     \
+            {                                   \
+                /* We do not have a mapping for this character.           \
+                   If ignore errors, map it to 0xa1bc - big5 box character */     \
+                result = __gconv_mark_illegal_input (step_data);              \
+                if (! ignore_errors_p ())                         \
+                    break;                                  \
+                \
+                /* See if there is enough room to write the second byte. */       \
+                if (__glibc_unlikely (outptr + 1 >= outend))              \
+                {                                   \
+                    result = __GCONV_FULL_OUTPUT;                     \
+                    break;                                \
+                }                                   \
+                \
+                *outptr++ = '\xa1';                           \
+                *outptr++ = '\xbc';                           \
+                inptr += 2;                               \
+                ++*irreversible;                              \
+                continue;                                 \
+            }                                   \
+            else                                      \
+            {                                   \
+                /* See whether there is enough room to write the second byte. */  \
+                if (__builtin_expect (cp[1], '\1') != '\0'                \
+                    && __builtin_expect (outptr + 1 >= outend, 0))            \
+                {                                   \
+                    /* We do not have enough room.  */                \
+                    result = __GCONV_FULL_OUTPUT;                     \
+                    break;                                \
+                }                                   \
+                \
+                *outptr++ = cp[0];                            \
+                if (cp[1] != '\0')                            \
+                    *outptr++ = cp[1];                          \
+            }                                   \
+            \
+            inptr += 2;                               \
+        }                                       \
+        else                                      \
+        {                                       \
+            /* This is illegal.  */                           \
+            STANDARD_FROM_LOOP_ERR_HANDLER (1);                   \
+        }                                       \
+    }
 #define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 
@@ -4880,87 +4880,87 @@ const char __from_big5_to_gb2312 [13973][2] = {
 #define MAX_NEEDED_OUTPUT   MAX_NEEDED_FROM
 #define LOOPFCT         TO_LOOP
 #define BODY \
-  {                                       \
-    uint32_t ch = *inptr;                             \
-                                          \
-    if (ch <= 0x7f)                               \
-      *outptr++ = *inptr++;                           \
-    else if (ch >= 0xa1 && ch <= 0xf9)                        \
-      {                                       \
-    /* Two byte character.  First test whether the                \
-       next byte is also available.  */                   \
-    const char *cp;                               \
-    int idx;                                  \
-                                          \
-    if (__glibc_unlikely (inptr + 1 >= inend))                \
-      {                                   \
-        /* The second character is not available.  Store              \
-           the intermediate result.  */                   \
-        result = __GCONV_INCOMPLETE_INPUT;                    \
-        break;                                \
-      }                                   \
-                                          \
-    idx = (ch - 0xa1) * 157;                          \
-    ch = inptr[1];                                    \
-    /* See if the second byte is in the correct range. */             \
-    if (ch >= 0x40 && ch <= 0x7e)                         \
-      idx += ch - 0x40;                           \
-    else if (__builtin_expect (ch >= 0xa1, 1)                 \
-         && __builtin_expect (ch <= 0xfe, 1))                 \
-      idx += 0x3f + (ch - 0xa1);                          \
-    else                                      \
-      {                                   \
-        /* This is an illegal character.  */                  \
-        STANDARD_FROM_LOOP_ERR_HANDLER (1);                   \
-      }                                   \
-                                          \
-    /* Get the value from the table.  */                      \
-    cp = __from_big5_to_gb2312 [idx];                     \
-    if (__glibc_unlikely (cp[0] == '\0'))                     \
-      {                                   \
-        /* We do not have a mapping for this character.           \
-           If ignore errors, map it to 0xa1f5 - gb box character */       \
-        result = __gconv_mark_illegal_input (step_data);              \
-        if (! ignore_errors_p ())                         \
-          break;                                  \
-                                          \
-        /* See if there is enough room to write the second byte. */       \
-        if (__glibc_unlikely (outptr + 1 >= outend))              \
-          {                                   \
-        result = __GCONV_FULL_OUTPUT;                     \
-            break;                                \
-          }                                   \
-                                          \
-        *outptr++ = '\xa1';                           \
-        *outptr++ = '\xf5';                           \
-        inptr += 2;                               \
-        ++*irreversible;                              \
-        continue;                                 \
-      }                                   \
-    else                                      \
-      {                                   \
-        /* see if there is enough room to write the second byte. */       \
-        if (__builtin_expect (cp[1], '\1') != '\0'                \
-            && __builtin_expect (outptr + 1 >= outend, 0))            \
-          {                                   \
-            /* We do not have enough room.  */                \
-            result = __GCONV_FULL_OUTPUT;                     \
-            break;                                \
-          }                                   \
-                                          \
-        *outptr++ = cp[0];                            \
-        if (cp[1] != '\0')                            \
-          *outptr++ = cp[1];                          \
-      }                                   \
-                                              \
-    inptr += 2;                               \
-      }                                       \
-    else                                      \
-      {                                       \
-    /* This is illegal.  */                           \
-    STANDARD_FROM_LOOP_ERR_HANDLER (1);                   \
-      }                                       \
-  }
+    {                                       \
+        uint32_t ch = *inptr;                             \
+        \
+        if (ch <= 0x7f)                               \
+            *outptr++ = *inptr++;                           \
+        else if (ch >= 0xa1 && ch <= 0xf9)                        \
+        {                                       \
+            /* Two byte character.  First test whether the                \
+               next byte is also available.  */                   \
+            const char *cp;                               \
+            int idx;                                  \
+            \
+            if (__glibc_unlikely (inptr + 1 >= inend))                \
+            {                                   \
+                /* The second character is not available.  Store              \
+                   the intermediate result.  */                   \
+                result = __GCONV_INCOMPLETE_INPUT;                    \
+                break;                                \
+            }                                   \
+            \
+            idx = (ch - 0xa1) * 157;                          \
+            ch = inptr[1];                                    \
+            /* See if the second byte is in the correct range. */             \
+            if (ch >= 0x40 && ch <= 0x7e)                         \
+                idx += ch - 0x40;                           \
+            else if (__builtin_expect (ch >= 0xa1, 1)                 \
+                     && __builtin_expect (ch <= 0xfe, 1))                 \
+                idx += 0x3f + (ch - 0xa1);                          \
+            else                                      \
+            {                                   \
+                /* This is an illegal character.  */                  \
+                STANDARD_FROM_LOOP_ERR_HANDLER (1);                   \
+            }                                   \
+            \
+            /* Get the value from the table.  */                      \
+            cp = __from_big5_to_gb2312 [idx];                     \
+            if (__glibc_unlikely (cp[0] == '\0'))                     \
+            {                                   \
+                /* We do not have a mapping for this character.           \
+                   If ignore errors, map it to 0xa1f5 - gb box character */       \
+                result = __gconv_mark_illegal_input (step_data);              \
+                if (! ignore_errors_p ())                         \
+                    break;                                  \
+                \
+                /* See if there is enough room to write the second byte. */       \
+                if (__glibc_unlikely (outptr + 1 >= outend))              \
+                {                                   \
+                    result = __GCONV_FULL_OUTPUT;                     \
+                    break;                                \
+                }                                   \
+                \
+                *outptr++ = '\xa1';                           \
+                *outptr++ = '\xf5';                           \
+                inptr += 2;                               \
+                ++*irreversible;                              \
+                continue;                                 \
+            }                                   \
+            else                                      \
+            {                                   \
+                /* see if there is enough room to write the second byte. */       \
+                if (__builtin_expect (cp[1], '\1') != '\0'                \
+                    && __builtin_expect (outptr + 1 >= outend, 0))            \
+                {                                   \
+                    /* We do not have enough room.  */                \
+                    result = __GCONV_FULL_OUTPUT;                     \
+                    break;                                \
+                }                                   \
+                \
+                *outptr++ = cp[0];                            \
+                if (cp[1] != '\0')                            \
+                    *outptr++ = cp[1];                          \
+            }                                   \
+            \
+            inptr += 2;                               \
+        }                                       \
+        else                                      \
+        {                                       \
+            /* This is illegal.  */                           \
+            STANDARD_FROM_LOOP_ERR_HANDLER (1);                   \
+        }                                       \
+    }
 #define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 

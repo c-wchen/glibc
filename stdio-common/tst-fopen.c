@@ -27,8 +27,8 @@
 
 #define APPENDED_TEXT "This is appended text. "
 #define DEFAULT_TEXT "Lorem ipsum dolor sit amet, consectetur " \
-  "adipiscing elit, sed do eiusmod tempor incididunt ut labore et " \
-  "dolore magna aliqua."
+    "adipiscing elit, sed do eiusmod tempor incididunt ut labore et " \
+    "dolore magna aliqua."
 #define MAX_BUFFER_SIZE 300
 
 

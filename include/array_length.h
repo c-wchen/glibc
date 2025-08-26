@@ -22,12 +22,12 @@
 /* array_length (VAR) is the number of elements in the array VAR.  VAR
    must evaluate to an array, not a pointer.  */
 #define array_length(var)                                               \
-  (sizeof (var) / sizeof ((var)[0])                                     \
-   + 0 * sizeof (struct {                                               \
-       _Static_assert (!__builtin_types_compatible_p                    \
-                       (__typeof (var), __typeof (&(var)[0])),          \
-                       "argument must be an array");                    \
-   }))
+    (sizeof (var) / sizeof ((var)[0])                                     \
+    + 0 * sizeof (struct {                                               \
+        _Static_assert (!__builtin_types_compatible_p                    \
+                        (__typeof (var), __typeof (&(var)[0])),          \
+                        "argument must be an array");                    \
+    }))
 
 /* array_end (VAR) is a pointer one past the end of the array VAR.
    VAR must evaluate to an array, not a pointer.  */
@@ -40,11 +40,11 @@
    array_foreach_const (PTR, ARRAY) does the same, but *PTR is declared
    const even if the array is not. */
 #define array_foreach(ptr, array)                                      \
-  for (__typeof ((array)[0]) *ptr = (array) ;                  \
-       ptr < array_end (array) ; ptr++)
+    for (__typeof ((array)[0]) *ptr = (array) ;                  \
+         ptr < array_end (array) ; ptr++)
 
 #define array_foreach_const(ptr, array)                                \
-  for (const __typeof ((array)[0]) *ptr = (array) ;            \
-       ptr < array_end (array) ; ptr++)
+    for (const __typeof ((array)[0]) *ptr = (array) ;            \
+         ptr < array_end (array) ; ptr++)
 
 #endif /* _ARRAY_LENGTH_H */

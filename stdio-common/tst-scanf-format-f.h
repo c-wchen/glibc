@@ -19,11 +19,11 @@
 #include <stdio.h>
 
 #define scanf_under_test(...)                       \
-({                                  \
-  int result = fscanf (stdin, __VA_ARGS__);             \
-  if (ferror (stdin))                           \
-    result = INPUT_ERROR;                       \
-  else if (result == EOF)                       \
-    result = INPUT_EOF;                         \
-  result;                               \
-})
+    ({                                  \
+        int result = fscanf (stdin, __VA_ARGS__);             \
+        if (ferror (stdin))                           \
+            result = INPUT_ERROR;                       \
+        else if (result == EOF)                       \
+            result = INPUT_EOF;                         \
+        result;                               \
+    })

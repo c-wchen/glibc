@@ -24,6 +24,6 @@
    to a struct timespec where the generic variant uses fifth parameter.  */
 #undef SEMTIMEDOP_IPC_ARGS
 #define SEMTIMEDOP_IPC_ARGS(__nsops, __sops, __timeout) \
-  (__nsops), (__timeout), (__sops)
+    (__nsops), (__timeout), (__sops)
 
 #include <ipc_ops.h>

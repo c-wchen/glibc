@@ -182,7 +182,7 @@
    features can be queried via __has_extension/__has_feature.  */
 #if defined __clang_major__ && defined __clang_minor__
 # define __glibc_clang_prereq(maj, min) \
-  ((__clang_major__ << 16) + __clang_minor__ >= ((maj) << 16) + (min))
+    ((__clang_major__ << 16) + __clang_minor__ >= ((maj) << 16) + (min))
 #else
 # define __glibc_clang_prereq(maj, min) 0
 #endif

@@ -36,12 +36,12 @@
 #define MIN_NEEDED_OUTPUT   MIN_NEEDED_TO
 #define LOOPFCT         FROM_LOOP
 #define BODY \
-  *((uint32_t *) outptr) = BRAILLE_UCS_BASE | (*inptr++);             \
-  outptr += sizeof (uint32_t);
+    *((uint32_t *) outptr) = BRAILLE_UCS_BASE | (*inptr++);             \
+    outptr += sizeof (uint32_t);
 #define ONEBYTE_BODY \
-  {                                       \
-    return BRAILLE_UCS_BASE | c;                          \
-  }
+    {                                       \
+        return BRAILLE_UCS_BASE | c;                          \
+    }
 #include <iconv/loop.c>
 
 
@@ -50,19 +50,19 @@
 #define MIN_NEEDED_OUTPUT   MIN_NEEDED_FROM
 #define LOOPFCT         TO_LOOP
 #define BODY \
-  {                                       \
-    uint32_t ch = *((const uint32_t *) inptr);                    \
-    if (__glibc_unlikely ((ch & 0xffffff00u) != BRAILLE_UCS_BASE))        \
-      {                                       \
-    UNICODE_TAG_HANDLER (ch, 4);                          \
-                                          \
-    /* We have an illegal character.  */                      \
-    STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
-      }                                       \
-    else                                      \
-      *outptr++ = (unsigned char) (ch & 0xff);                    \
-    inptr += 4;                                   \
-  }
+    {                                       \
+        uint32_t ch = *((const uint32_t *) inptr);                    \
+        if (__glibc_unlikely ((ch & 0xffffff00u) != BRAILLE_UCS_BASE))        \
+        {                                       \
+            UNICODE_TAG_HANDLER (ch, 4);                          \
+            \
+            /* We have an illegal character.  */                      \
+            STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
+        }                                       \
+        else                                      \
+            *outptr++ = (unsigned char) (ch & 0xff);                    \
+        inptr += 4;                                   \
+    }
 #define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 

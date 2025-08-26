@@ -22,7 +22,7 @@
 #include <shlib-compat.h>
 
 #define globfree(pglob) \
-  __new_globfree (pglob)
+    __new_globfree (pglob)
 
 extern void __new_globfree(glob_t *__pglob);
 

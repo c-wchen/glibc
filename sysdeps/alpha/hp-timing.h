@@ -31,11 +31,11 @@ typedef unsigned int hp_timing_t;
    "virtual cycle counter displacement".  Subtracting the two gives us
    a virtual cycle count.  */
 # define HP_TIMING_NOW(VAR) \
-  do {                                        \
-    unsigned long int x_;                             \
-    asm volatile ("rpcc %0" : "=r"(x_));                      \
-    (VAR) = (int) (x_) - (int) (x_ >> 32);                    \
-  } while (0)
+    do {                                        \
+        unsigned long int x_;                             \
+        asm volatile ("rpcc %0" : "=r"(x_));                      \
+        (VAR) = (int) (x_) - (int) (x_ >> 32);                    \
+    } while (0)
 # include <hp-timing-common.h>
 
 #else

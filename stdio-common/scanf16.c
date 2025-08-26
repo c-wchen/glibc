@@ -26,10 +26,10 @@
 #endif
 
 #define FAIL() \
-  do {                          \
-    result = 1;                     \
-    printf ("test at line %d failed\n", __LINE__);  \
-  } while (0)
+    do {                          \
+        result = 1;                     \
+        printf ("test at line %d failed\n", __LINE__);  \
+    } while (0)
 
 static int __attribute__((format(scanf, 2, 3)))
 xsscanf(const char *str, const char *fmt, ...)

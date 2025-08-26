@@ -24,7 +24,7 @@
 #  if defined SHARED && IS_IN (libc)
 #   undef libc_hidden_builtin_def
 #   define libc_hidden_builtin_def(name)        \
-  __hidden_ver1 (__strstr_c, __GI_strstr, __strstr_c);
+    __hidden_ver1 (__strstr_c, __GI_strstr, __strstr_c);
 #  endif
 # endif
 

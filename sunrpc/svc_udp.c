@@ -388,7 +388,7 @@ static void svcudp_destroy(SVCXPRT *xprt)
     (type *) mem_alloc((unsigned) (sizeof(type) * (size)))
 
 #define CALLOC(type, size)  \
-  (type *) calloc (sizeof (type), size)
+    (type *) calloc (sizeof (type), size)
 
 /*
  * An entry in the cache
@@ -435,7 +435,7 @@ struct udp_cache {
  * the hashing function
  */
 #define CACHE_LOC(transp, xid)  \
- (xid % (SPARSENESS*((struct udp_cache *) su_data(transp)->su_cache)->uc_size))
+    (xid % (SPARSENESS*((struct udp_cache *) su_data(transp)->su_cache)->uc_size))
 
 
 /*

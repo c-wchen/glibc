@@ -126,7 +126,7 @@ extern ElfW(Addr)
 __elf_preferred_address(struct link_map *loader, size_t maplength,
                         ElfW(Addr) mapstartpref);
 #define ELF_PREFERRED_ADDRESS(loader, maplength, mapstartpref) \
-  __elf_preferred_address (loader, maplength, mapstartpref)
+    __elf_preferred_address (loader, maplength, mapstartpref)
 
 /* ELF_RTYPE_CLASS_PLT iff TYPE describes relocation of a PLT entry, so
    PLT entries should not be allowed to define the value.
@@ -136,12 +136,12 @@ __elf_preferred_address(struct link_map *loader, size_t maplength,
    reloc, when what is being relocated is a branch. This is
    partly for efficiency, but mostly so we avoid loops.  */
 #define elf_machine_type_class(type)            \
-  ((((type) == R_PPC_JMP_SLOT               \
-    || (type) == R_PPC_REL24                \
-    || ((type) >= R_PPC_DTPMOD32 /* contiguous TLS */   \
-    && (type) <= R_PPC_DTPREL32)            \
-    || (type) == R_PPC_ADDR24) * ELF_RTYPE_CLASS_PLT)   \
-   | (((type) == R_PPC_COPY) * ELF_RTYPE_CLASS_COPY))
+    ((((type) == R_PPC_JMP_SLOT               \
+       || (type) == R_PPC_REL24                \
+       || ((type) >= R_PPC_DTPMOD32 /* contiguous TLS */   \
+           && (type) <= R_PPC_DTPREL32)            \
+       || (type) == R_PPC_ADDR24) * ELF_RTYPE_CLASS_PLT)   \
+     | (((type) == R_PPC_COPY) * ELF_RTYPE_CLASS_COPY))
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT    R_PPC_JMP_SLOT

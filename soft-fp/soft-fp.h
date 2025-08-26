@@ -60,10 +60,10 @@
       && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)))  \
      || (defined __STDC_VERSION__ && __STDC_VERSION__ >= 201112L))
 # define _FP_STATIC_ASSERT(expr, msg)       \
-  _Static_assert ((expr), msg)
+    _Static_assert ((expr), msg)
 #else
 # define _FP_STATIC_ASSERT(expr, msg)                   \
-  extern int (*__Static_assert_function (void))             \
+    extern int (*__Static_assert_function (void))             \
     [!!sizeof (struct { int __error_if_negative: (expr) ? 2 : -1; })]
 #endif
 
@@ -164,8 +164,8 @@
 
 #ifdef _FP_DECL_EX
 # define FP_DECL_EX                 \
-  int _fex = 0;                     \
-  _FP_DECL_EX
+    int _fex = 0;                     \
+    _FP_DECL_EX
 #else
 # define FP_DECL_EX int _fex = 0
 #endif
@@ -206,10 +206,10 @@
 #endif
 
 #define FP_SET_EXCEPTION(ex)                \
-  _fex |= (ex)
+    _fex |= (ex)
 
 #define FP_CUR_EXCEPTIONS               \
-  (_fex)
+    (_fex)
 
 #ifndef FP_TRAPPING_EXCEPTIONS
 # define FP_TRAPPING_EXCEPTIONS 0
@@ -253,55 +253,55 @@
 #endif
 
 #define _FP_ROUND_NEAREST(wc, X)                \
-  do                                \
+    do                                \
     {                               \
-      if ((_FP_FRAC_LOW_##wc (X) & 15) != _FP_WORK_ROUND)   \
-    _FP_FRAC_ADDI_##wc (X, _FP_WORK_ROUND);         \
+        if ((_FP_FRAC_LOW_##wc (X) & 15) != _FP_WORK_ROUND)   \
+            _FP_FRAC_ADDI_##wc (X, _FP_WORK_ROUND);         \
     }                               \
-  while (0)
+    while (0)
 
 #define _FP_ROUND_ZERO(wc, X)       (void) 0
 
 #define _FP_ROUND_PINF(wc, X)               \
-  do                            \
+    do                            \
     {                           \
-      if (!X##_s && (_FP_FRAC_LOW_##wc (X) & 7))    \
-    _FP_FRAC_ADDI_##wc (X, _FP_WORK_LSB);       \
+        if (!X##_s && (_FP_FRAC_LOW_##wc (X) & 7))    \
+            _FP_FRAC_ADDI_##wc (X, _FP_WORK_LSB);       \
     }                           \
-  while (0)
+    while (0)
 
 #define _FP_ROUND_MINF(wc, X)           \
-  do                        \
+    do                        \
     {                       \
-      if (X##_s && (_FP_FRAC_LOW_##wc (X) & 7)) \
-    _FP_FRAC_ADDI_##wc (X, _FP_WORK_LSB);   \
+        if (X##_s && (_FP_FRAC_LOW_##wc (X) & 7)) \
+            _FP_FRAC_ADDI_##wc (X, _FP_WORK_LSB);   \
     }                       \
-  while (0)
+    while (0)
 
 #define _FP_ROUND(wc, X)            \
-  do                        \
+    do                        \
     {                       \
-      if (_FP_FRAC_LOW_##wc (X) & 7)        \
-    {                   \
-      FP_SET_EXCEPTION (FP_EX_INEXACT); \
-      switch (FP_ROUNDMODE)         \
+        if (_FP_FRAC_LOW_##wc (X) & 7)        \
         {                   \
-        case FP_RND_NEAREST:        \
-          _FP_ROUND_NEAREST (wc, X);    \
-          break;                \
-        case FP_RND_ZERO:           \
-          _FP_ROUND_ZERO (wc, X);       \
-          break;                \
-        case FP_RND_PINF:           \
-          _FP_ROUND_PINF (wc, X);       \
-          break;                \
-        case FP_RND_MINF:           \
-          _FP_ROUND_MINF (wc, X);       \
-          break;                \
+            FP_SET_EXCEPTION (FP_EX_INEXACT); \
+            switch (FP_ROUNDMODE)         \
+            {                   \
+                case FP_RND_NEAREST:        \
+                    _FP_ROUND_NEAREST (wc, X);    \
+                    break;                \
+                case FP_RND_ZERO:           \
+                    _FP_ROUND_ZERO (wc, X);       \
+                    break;                \
+                case FP_RND_PINF:           \
+                    _FP_ROUND_PINF (wc, X);       \
+                    break;                \
+                case FP_RND_MINF:           \
+                    _FP_ROUND_MINF (wc, X);       \
+                    break;                \
+            }                   \
         }                   \
-    }                   \
     }                       \
-  while (0)
+    while (0)
 
 #define FP_CLS_NORMAL       0
 #define FP_CLS_ZERO     1

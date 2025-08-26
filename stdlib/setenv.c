@@ -88,12 +88,12 @@ __libc_lock_define_initialized(static, envlock)
 static void *known_values;
 
 # define KNOWN_VALUE(Str) \
-  ({                                          \
-    void *value = tfind (Str, &known_values, (__compar_fn_t) strcmp);         \
-    value != NULL ? *(char **) value : NULL;                      \
-  })
+    ({                                          \
+        void *value = tfind (Str, &known_values, (__compar_fn_t) strcmp);         \
+        value != NULL ? *(char **) value : NULL;                      \
+    })
 # define STORE_VALUE(Str) \
-  tsearch (Str, &known_values, (__compar_fn_t) strcmp)
+    tsearch (Str, &known_values, (__compar_fn_t) strcmp)
 
 #else
 # undef USE_TSEARCH

@@ -116,7 +116,7 @@
 /* Provide a reasonable default which limits the size of
    DYNARRAY_STRUCT.  */
 # define DYNARRAY_INITIAL_SIZE \
-  (sizeof (DYNARRAY_ELEMENT) > 64 ? 2 : 128 / sizeof (DYNARRAY_ELEMENT))
+    (sizeof (DYNARRAY_ELEMENT) > 64 ? 2 : 128 / sizeof (DYNARRAY_ELEMENT))
 # define DYNARRAY_HAVE_SCRATCH 1
 #endif
 

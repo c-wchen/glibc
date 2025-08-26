@@ -40,11 +40,11 @@
 */
 #ifndef _ARCH_PWR9
 #define F128_REDIR_PFX_R(func, pfx, r) \
-  extern __typeof(func ## r) func ## r __asm( #pfx #func "_power8" #r );
+    extern __typeof(func ## r) func ## r __asm( #pfx #func "_power8" #r );
 #define F128_SFX_APPEND(x) x ## _power8
 #else
 #define F128_REDIR_PFX_R(func, pfx, r) \
-  extern __typeof(func ## r) func ## r __asm( #pfx #func "_power9" #r );
+    extern __typeof(func ## r) func ## r __asm( #pfx #func "_power9" #r );
 #define F128_SFX_APPEND(x) x ## _power9
 #endif
 #define F128_REDIR_R(func, r) F128_REDIR_PFX_R (func, , r)

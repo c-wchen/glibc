@@ -55,9 +55,9 @@ long int __syscall_cancel_arch(volatile int *ch, __syscall_arg_t nr,
                                __SYSCALL_CANCEL7_ARG_DEF)
 {
 #define ADD_LABEL(__label)      \
-  asm volatile (            \
-    ".global " __label "\t\n"       \
-    __label ":\n");
+    asm volatile (            \
+                              ".global " __label "\t\n"       \
+                              __label ":\n");
 
     ADD_LABEL("__syscall_cancel_arch_start");
     if (__glibc_unlikely(*ch & CANCELED_BITMASK)) {

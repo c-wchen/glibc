@@ -38,13 +38,13 @@ void __close_nocancel_nostatus(int fd);
 __typeof(__open) __open_nocancel;
 /* open64 is just the same as open for us.  */
 #define __open64_nocancel(...) \
-  __open_nocancel (__VA_ARGS__)
+    __open_nocancel (__VA_ARGS__)
 
 /* Non cancellable openat syscall.  */
 __typeof(__openat) __openat_nocancel;
 /* open64 is just the same as open for us.  */
 #define __openat64_nocancel(...) \
-  __openat_nocancel (__VA_ARGS__)
+    __openat_nocancel (__VA_ARGS__)
 
 /* Non cancellable read syscall.  */
 __typeof(__read) __read_nocancel;
@@ -68,13 +68,13 @@ void __writev_nocancel_nostatus(int fd, const struct iovec *vector, int count);
 __typeof(__wait4) __wait4_nocancel;
 
 # define __waitpid_nocancel(pid, stat_loc, options) \
-  __wait4_nocancel (pid, stat_loc, options, NULL)
+    __wait4_nocancel (pid, stat_loc, options, NULL)
 
 /* Non cancellable fcntl syscall.  */
 __typeof(__fcntl) __fcntl_nocancel;
 /* fcntl64 is just the same as fcntl for us.  */
 #define __fcntl64_nocancel(...) \
-  __fcntl_nocancel (__VA_ARGS__)
+    __fcntl_nocancel (__VA_ARGS__)
 
 /* Non cancellable getrandom syscall that does not also set errno in case of
    failure.  */
@@ -88,12 +88,12 @@ static inline ssize_t __getrandom_nocancel_nostatus_direct(void *buf, size_t buf
 }
 
 #define __getrandom_nocancel(buf, size, flags) \
-  __getrandom (buf, size, flags)
+    __getrandom (buf, size, flags)
 #define __getrandom_nocancel_direct(buf, size, flags) \
-  __getrandom (buf, size, flags)
+    __getrandom (buf, size, flags)
 
 #define __poll_infinity_nocancel(fds, nfds) \
-  __poll (fds, nfds, -1)
+    __poll (fds, nfds, -1)
 
 #if IS_IN (libc)
 hidden_proto(__close_nocancel)

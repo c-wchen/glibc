@@ -53,14 +53,14 @@ static const struct argp_option options[] = {
 This is a test for threads so we allow the user to select the number of \
 threads which are used at any one time.  Independently the total number of \
 rounds can be selected.  This is the total number of threads which will have \
-run when the process terminates:" 
+run when the process terminates:"
     },
     { "threads", 't', "NUMBER", 0, "Number of threads used at once" },
     { "starts", 's', "NUMBER", 0, "Total number of working threads" },
     {
         "toplevel", OPT_TOPLEVEL, "NUMBER", 0,
         "Number of toplevel threads which start the other threads; this \
-implies --sync-join" 
+implies --sync-join"
     },
 
     {
@@ -71,7 +71,7 @@ from zero to 100 (inclusive) are valid.  How often each thread repeats this \
 can be determined by the number of rounds.  The work cost determines how long \
 each work session (not sleeping) takes.  If it is zero a thread would \
 effectively nothing.  By setting the number of rounds to zero the thread \
-does no work at all and pure thread creation times can be measured." 
+does no work at all and pure thread creation times can be measured."
     },
     { "workload", 'w', "PERCENT", 0, "Percentage of time spent working" },
     {
@@ -84,7 +84,7 @@ does no work at all and pure thread creation times can be measured."
         NULL, 0, NULL, 0, "\
 There are a number of different methods how thread creation can be \
 synchronized.  Synchronization is necessary since the number of concurrently \
-running threads is limited." 
+running threads is limited."
     },
     {
         "sync-signal", OPT_SYNC_SIGNAL, NULL, 0,
@@ -96,7 +96,7 @@ running threads is limited."
         NULL, 0, NULL, 0, "\
 One parameter for each threads execution is the size of the stack.  If this \
 parameter is not used the system's default stack size is used.  If many \
-threads are used the stack size should be chosen quite small." 
+threads are used the stack size should be chosen quite small."
     },
     { "stacksize", 'S', "BYTES", 0, "Size of threads stack" },
     {
@@ -718,9 +718,9 @@ int clock_getcpuclockid(pid_t pid, clockid_t *clock_id)
 #define HP_TIMING_NOW(Var)  __asm__ __volatile__ ("rdtsc" : "=A" (Var))
 #elif defined __x86_64__
 # define HP_TIMING_NOW(Var) \
-  ({ unsigned int _hi, _lo; \
-     asm volatile ("rdtsc" : "=a" (_lo), "=d" (_hi)); \
-     (Var) = ((unsigned long long int) _hi << 32) | _lo; })
+    ({ unsigned int _hi, _lo; \
+        asm volatile ("rdtsc" : "=a" (_lo), "=d" (_hi)); \
+        (Var) = ((unsigned long long int) _hi << 32) | _lo; })
 #else
 #error "HP_TIMING_NOW missing"
 #endif

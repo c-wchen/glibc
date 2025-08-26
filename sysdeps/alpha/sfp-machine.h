@@ -25,11 +25,11 @@
 #define _FP_I_TYPE      long
 
 #define _FP_MUL_MEAT_S(R,X,Y)                   \
-  _FP_MUL_MEAT_1_imm(_FP_WFRACBITS_S,R,X,Y)
+    _FP_MUL_MEAT_1_imm(_FP_WFRACBITS_S,R,X,Y)
 #define _FP_MUL_MEAT_D(R,X,Y)                   \
-  _FP_MUL_MEAT_1_wide(_FP_WFRACBITS_D,R,X,Y,umul_ppmm)
+    _FP_MUL_MEAT_1_wide(_FP_WFRACBITS_D,R,X,Y,umul_ppmm)
 #define _FP_MUL_MEAT_Q(R,X,Y)                   \
-  _FP_MUL_MEAT_2_wide(_FP_WFRACBITS_Q,R,X,Y,umul_ppmm)
+    _FP_MUL_MEAT_2_wide(_FP_WFRACBITS_Q,R,X,Y,umul_ppmm)
 
 #define _FP_DIV_MEAT_S(R,X,Y)   _FP_DIV_MEAT_1_imm(S,R,X,Y,_FP_DIV_HELP_imm)
 #define _FP_DIV_MEAT_D(R,X,Y)   _FP_DIV_MEAT_1_udiv_norm(D,R,X,Y)
@@ -48,11 +48,11 @@
 /* Alpha Architecture Handbook, 4.7.10.4 sez that we should prefer any
    type of NaN in Fb, then Fa.  */
 #define _FP_CHOOSENAN(fs, wc, R, X, Y, OP)                      \
-  do {                                                          \
-    R##_s = Y##_s;                                              \
-    _FP_FRAC_COPY_##wc(R,X);                                    \
-    R##_c = FP_CLS_NAN;                                         \
-  } while (0)
+    do {                                                          \
+        R##_s = Y##_s;                                              \
+        _FP_FRAC_COPY_##wc(R,X);                                    \
+        R##_c = FP_CLS_NAN;                                         \
+    } while (0)
 
 /* Rounding mode settings.  */
 #define FP_RND_NEAREST      FE_TONEAREST
@@ -74,23 +74,23 @@
 #define _FP_TININESS_AFTER_ROUNDING 1
 
 #define FP_INIT_ROUNDMODE                   \
-do {                                \
-  if (__builtin_expect (_round == 4, 0))            \
-    {                               \
-      unsigned long t;                      \
-      __asm__ __volatile__("excb; mf_fpcr %0" : "=f"(t));   \
-      _round = (t >> FPCR_ROUND_SHIFT) & 3;         \
-    }                               \
-} while (0)
+    do {                                \
+        if (__builtin_expect (_round == 4, 0))            \
+        {                               \
+            unsigned long t;                      \
+            __asm__ __volatile__("excb; mf_fpcr %0" : "=f"(t));   \
+            _round = (t >> FPCR_ROUND_SHIFT) & 3;         \
+        }                               \
+    } while (0)
 
 /* We copy the libm function into libc for soft-fp.  */
 extern int __feraiseexcept(int __excepts) attribute_hidden;
 
 #define FP_HANDLE_EXCEPTIONS                    \
-do {                                \
-  if (__builtin_expect (_fex, 0))               \
-    __feraiseexcept (_fex);                 \
-} while (0)
+    do {                                \
+        if (__builtin_expect (_fex, 0))               \
+            __feraiseexcept (_fex);                 \
+    } while (0)
 
 #define FP_TRAPPING_EXCEPTIONS                  \
-  ((__ieee_get_fp_control () & SWCR_ENABLE_MASK) << SWCR_ENABLE_SHIFT)
+    ((__ieee_get_fp_control () & SWCR_ENABLE_MASK) << SWCR_ENABLE_SHIFT)

@@ -17,13 +17,13 @@
    If this is a problem for you, please let us know how to fix it for
    your host.  */
 #define TYPE_MINIMUM(t) \
-  ((t) (! TYPE_SIGNED (t) \
-    ? (t) 0 \
-    : ~ TYPE_MAXIMUM (t)))
+    ((t) (! TYPE_SIGNED (t) \
+          ? (t) 0 \
+          : ~ TYPE_MAXIMUM (t)))
 #define TYPE_MAXIMUM(t) \
-  ((t) (! TYPE_SIGNED (t) \
-    ? (t) -1 \
-    : ((((t) 1 << (sizeof (t) * CHAR_BIT - 2)) - 1) * 2 + 1)))
+    ((t) (! TYPE_SIGNED (t) \
+          ? (t) -1 \
+          : ((((t) 1 << (sizeof (t) * CHAR_BIT - 2)) - 1) * 2 + 1)))
 
 #ifndef TIME_T_MIN
 # define TIME_T_MIN TYPE_MINIMUM (time_t)

@@ -13125,78 +13125,78 @@ static const char __gbk_from_ucs4_tab12[][2] = {
 #define MIN_NEEDED_OUTPUT   MIN_NEEDED_TO
 #define LOOPFCT         FROM_LOOP
 #define BODY \
-  {                                       \
-    uint32_t ch = *inptr;                             \
-                                          \
-    if (ch <= 0x7f)                               \
-      ++inptr;                                    \
-    else                                      \
-      if (__builtin_expect (ch <= 0x80, 0)                    \
-      || __builtin_expect (ch > 0xfe, 0))                     \
-    {                                     \
-      if (__glibc_likely (ch == 0x80))                    \
-        {                                     \
-          /* Exception for the Euro sign (see CP936).  */             \
-          ch = 0x20ac;                            \
-          ++inptr;                                \
-        }                                     \
-      else                                    \
-        {                                     \
-          /* This is illegal.  */                         \
-          STANDARD_FROM_LOOP_ERR_HANDLER (1);                 \
-        }                                     \
-    }                                     \
-      else                                    \
-    {                                     \
-      /* Two or more byte character.  First test whether the          \
-         next byte is also available.  */                     \
-      uint32_t ch2;                               \
-      int idx;                                \
-                                          \
-      if (__glibc_unlikely (inptr + 1 >= inend))                  \
-        {                                     \
-          /* The second character is not available.  Store            \
-         the intermediate result.  */                     \
-          result = __GCONV_INCOMPLETE_INPUT;                  \
-          break;                                  \
-        }                                     \
-                                          \
-      ch2 = inptr[1];                             \
-                                          \
-      /* All second bytes of a multibyte character must be >= 0x40, and   \
-         the __gbk_to_ucs table only covers the range up to 0xfe 0xa0. */ \
-      if (__builtin_expect (ch2 < 0x40, 0)                    \
-          || (__builtin_expect (ch, 0x81) == 0xfe && ch2 > 0xa0))         \
-        {                                     \
-          /* This is an illegal character.  */                \
-          STANDARD_FROM_LOOP_ERR_HANDLER (1);                 \
-        }                                     \
-                                          \
-      /* This is code set 1: GBK.  */                     \
-      idx = (ch - 0x81)*192 + (ch2 - 0x40);                   \
-                                          \
-      ch = __gbk_to_ucs[idx];                         \
-                                          \
-      if (__builtin_expect (ch, 1) == 0 && *inptr != '\0')            \
-        {                                     \
-          /* This is an illegal character.  */                \
-          STANDARD_FROM_LOOP_ERR_HANDLER (2);                 \
-        }                                     \
-                                          \
-      inptr += 2;                                 \
-    }                                     \
-                                          \
-    put32 (outptr, ch);                               \
-    outptr += 4;                                  \
-  }
+    {                                       \
+        uint32_t ch = *inptr;                             \
+        \
+        if (ch <= 0x7f)                               \
+            ++inptr;                                    \
+        else                                      \
+            if (__builtin_expect (ch <= 0x80, 0)                    \
+                || __builtin_expect (ch > 0xfe, 0))                     \
+            {                                     \
+                if (__glibc_likely (ch == 0x80))                    \
+                {                                     \
+                    /* Exception for the Euro sign (see CP936).  */             \
+                    ch = 0x20ac;                            \
+                    ++inptr;                                \
+                }                                     \
+                else                                    \
+                {                                     \
+                    /* This is illegal.  */                         \
+                    STANDARD_FROM_LOOP_ERR_HANDLER (1);                 \
+                }                                     \
+            }                                     \
+            else                                    \
+            {                                     \
+                /* Two or more byte character.  First test whether the          \
+                   next byte is also available.  */                     \
+                uint32_t ch2;                               \
+                int idx;                                \
+                \
+                if (__glibc_unlikely (inptr + 1 >= inend))                  \
+                {                                     \
+                    /* The second character is not available.  Store            \
+                    the intermediate result.  */                     \
+                    result = __GCONV_INCOMPLETE_INPUT;                  \
+                    break;                                  \
+                }                                     \
+                \
+                ch2 = inptr[1];                             \
+                \
+                /* All second bytes of a multibyte character must be >= 0x40, and   \
+                   the __gbk_to_ucs table only covers the range up to 0xfe 0xa0. */ \
+                if (__builtin_expect (ch2 < 0x40, 0)                    \
+                    || (__builtin_expect (ch, 0x81) == 0xfe && ch2 > 0xa0))         \
+                {                                     \
+                    /* This is an illegal character.  */                \
+                    STANDARD_FROM_LOOP_ERR_HANDLER (1);                 \
+                }                                     \
+                \
+                /* This is code set 1: GBK.  */                     \
+                idx = (ch - 0x81)*192 + (ch2 - 0x40);                   \
+                \
+                ch = __gbk_to_ucs[idx];                         \
+                \
+                if (__builtin_expect (ch, 1) == 0 && *inptr != '\0')            \
+                {                                     \
+                    /* This is an illegal character.  */                \
+                    STANDARD_FROM_LOOP_ERR_HANDLER (2);                 \
+                }                                     \
+                \
+                inptr += 2;                                 \
+            }                                     \
+        \
+        put32 (outptr, ch);                               \
+        outptr += 4;                                  \
+    }
 #define LOOP_NEED_FLAGS
 #define ONEBYTE_BODY \
-  {                                       \
-    if (c < 0x80)                                 \
-      return c;                                   \
-    else                                      \
-      return WEOF;                                \
-  }
+    {                                       \
+        if (c < 0x80)                                 \
+            return c;                                   \
+        else                                      \
+            return WEOF;                                \
+    }
 #include <iconv/loop.c>
 
 
@@ -13206,277 +13206,277 @@ static const char __gbk_from_ucs4_tab12[][2] = {
 #define MAX_NEEDED_OUTPUT   MAX_NEEDED_FROM
 #define LOOPFCT         TO_LOOP
 #define BODY \
-  {                                       \
-    uint32_t ch = get32 (inptr);                          \
-    char buf[2];                                  \
-    const char *cp = buf;                             \
-                                          \
-    if (ch <= L'\x7f')                                \
-      /* It's plain ASCII.  */                            \
-      *outptr++ = (unsigned char) ch;                         \
-    else                                      \
-      {                                       \
-      switch (ch)                                 \
-    {                                     \
-    case 0xa4 ... 0x101:                              \
-      cp = __gbk_from_ucs4_tab1[ch - 0xa4];                   \
-      break;                                  \
-    case 0x113:                               \
-      cp = "\xa8\xa5";                            \
-      break;                                  \
-    case 0x11b:                               \
-      cp = "\xa8\xa7";                            \
-      break;                                  \
-    case 0x12b:                               \
-      cp = "\xa8\xa9";                            \
-      break;                                  \
-    case 0x144:                               \
-      cp = "\xa8\xbd";                            \
-      break;                                  \
-    case 0x148:                               \
-      cp = "\xa8\xbe";                            \
-      break;                                  \
-    case 0x14d:                               \
-      cp = "\xa8\xad";                            \
-      break;                                  \
-    case 0x16b:                               \
-      cp = "\xa8\xb1";                            \
-      break;                                  \
-    case 0x1ce:                               \
-      cp = "\xa8\xa3";                            \
-      break;                                  \
-    case 0x1d0:                               \
-      cp = "\xa8\xab";                            \
-      break;                                  \
-    case 0x1d2:                               \
-      cp = "\xa8\xaf";                            \
-      break;                                  \
-    case 0x1d4:                               \
-      cp = "\xa8\xb3";                            \
-      break;                                  \
-    case 0x1d6:                               \
-      cp = "\xa8\xb5";                            \
-      break;                                  \
-    case 0x1d8:                               \
-      cp = "\xa8\xb6";                            \
-      break;                                  \
-    case 0x1da:                               \
-      cp = "\xa8\xb7";                            \
-      break;                                  \
-    case 0x1dc:                               \
-      cp = "\xa8\xb8";                            \
-      break;                                  \
-    case 0x251:                               \
-      cp = "\xa8\xbb";                            \
-      break;                                  \
-    case 0x261:                               \
-      cp = "\xa8\xc0";                            \
-      break;                                  \
-    case 0x2c7 ... 0x2cb:                             \
-      cp = "\xa1\xa6\0\0\0\0\0\0\xa1\xa5\0\0\xa8\x40\0\0\xa8\x41" + ((ch - 0x2c7) * 4); \
-      break;                                  \
-    case 0x2d9:                               \
-      cp = "\xa8\x42";                            \
-      break;                                  \
-    case 0x391 ... 0x3c9:                             \
-      cp = __gbk_from_ucs4_tab2[ch - 0x391];                  \
-      break;                                  \
-    case 0x401 ... 0x451:                             \
-      cp = __gbk_from_ucs4_tab3[ch - 0x401];                  \
-      break;                                  \
-    case 0x2010 ... 0x203b:                           \
-      cp = __gbk_from_ucs4_tab4[ch - 0x2010];                 \
-      break;                                  \
-    case 0x20ac:                                  \
-      /* Exception for the Euro sign (see CP396).  */             \
-      cp = "\x80";                                \
-      break;                                  \
-    case 0x2103 ... 0x22bf:                           \
-      cp = __gbk_from_ucs4_tab5[ch - 0x2103];                 \
-      break;                                  \
-    case 0x2312:                                  \
-      cp = "\xa1\xd0";                            \
-      break;                                  \
-    case 0x2460 ... 0x249b:                           \
-      cp = __gbk_from_ucs4_tab6[ch - 0x2460];                 \
-      break;                                  \
-    case 0x2500 ... 0x254b:                           \
-      buf[0] = '\xa9';                            \
-      buf[1] = '\xa4' + (ch - 0x2500);                    \
-      break;                                  \
-    case 0x2550 ... 0x2573:                           \
-      buf[0] = '\xa8';                            \
-      buf[1] = '\x54' + (ch - 0x2550);                    \
-      break;                                  \
-    case 0x2581 ... 0x2587:                           \
-      buf[0] = '\xa8';                            \
-      buf[1] = '\x78' + (ch - 0x2581);                    \
-      break;                                  \
-    case 0x2588 ... 0x258f:                           \
-      buf[0] = '\xa8';                            \
-      buf[1] = '\x80' + (ch - 0x2588);                    \
-      break;                                  \
-    case 0x2593 ... 0x2595:                           \
-      cp = "\xa8\x88\0\0\xa8\x89\0\0\xa8\x8a" + ((ch - 0x2593) * 4);      \
-      break;                                  \
-    case 0x25a0:                                  \
-      cp = "\xa1\xf6";                            \
-      break;                                  \
-    case 0x25a1:                                  \
-      cp = "\xa1\xf5";                            \
-      break;                                  \
-    case 0x25b2:                                  \
-      cp = "\xa1\xf8";                            \
-      break;                                  \
-    case 0x25b3:                                  \
-      cp = "\xa1\xf7";                            \
-      break;                                  \
-    case 0x25bc:                                  \
-      cp = "\xa8\x8b";                            \
-      break;                                  \
-    case 0x25bd:                                  \
-      cp = "\xa8\x8c";                            \
-      break;                                  \
-    case 0x25c6:                                  \
-      cp = "\xa1\xf4";                            \
-      break;                                  \
-    case 0x25c7:                                  \
-      cp = "\xa1\xf3";                            \
-      break;                                  \
-    case 0x25cb:                                  \
-      cp = "\xa1\xf0";                            \
-      break;                                  \
-    case 0x25ce:                                  \
-      cp = "\xa1\xf2";                            \
-      break;                                  \
-    case 0x25cf:                                  \
-      cp = "\xa1\xf1";                            \
-      break;                                  \
-    case 0x25e2 ... 0x25e5:                           \
-      buf[0] = '\xa8';                            \
-      buf[1] = '\x8d' + (ch - 0x25e2);                    \
-      break;                                  \
-    case 0x2605:                                  \
-      cp = "\xa1\xef";                            \
-      break;                                  \
-    case 0x2606:                                  \
-      cp = "\xa1\xee";                            \
-      break;                                  \
-    case 0x2609:                                  \
-      cp = "\xa8\x91";                            \
-      break;                                  \
-    case 0x2640:                                  \
-      cp = "\xa1\xe2";                            \
-      break;                                  \
-    case 0x2642:                                  \
-      cp = "\xa1\xe1";                            \
-      break;                                  \
-    case 0x3000 ... 0x3129:                           \
-      cp = __gbk_from_ucs4_tab7[ch - 0x3000];                 \
-      break;                                  \
-    case 0x3220 ... 0x3229:                           \
-      buf[0] = '\xa2';                            \
-      buf[1] = '\xe5' + (ch - 0x3220);                    \
-      break;                                  \
-    case 0x3231:                                  \
-      cp = "\xa9\x5a";                            \
-      break;                                  \
-    case 0x32a3:                                  \
-      cp = "\xa9\x49";                            \
-      break;                                  \
-    case 0x338e:                                  \
-      cp = "\xa9\x4a";                            \
-      break;                                  \
-    case 0x338f:                                  \
-      cp = "\xa9\x4b";                            \
-      break;                                  \
-    case 0x339c:                                  \
-      cp = "\xa9\x4c";                            \
-      break;                                  \
-    case 0x339d:                                  \
-      cp = "\xa9\x4d";                            \
-      break;                                  \
-    case 0x339e:                                  \
-      cp = "\xa9\x4e";                            \
-      break;                                  \
-    case 0x33a1:                                  \
-      cp = "\xa9\x4f";                            \
-      break;                                  \
-    case 0x33c4:                                  \
-      cp = "\xa9\x50";                            \
-      break;                                  \
-    case 0x33ce:                                  \
-      cp = "\xa9\x51";                            \
-      break;                                  \
-    case 0x33d1:                                  \
-      cp = "\xa9\x52";                            \
-      break;                                  \
-    case 0x33d2:                                  \
-      cp = "\xa9\x53";                            \
-      break;                                  \
-    case 0x33d5:                                  \
-      cp = "\xa9\x54";                            \
-      break;                                  \
-    case 0x4e00 ... 0x9fa5:                           \
-      cp = __gbk_from_ucs4_tab8[ch - 0x4e00];                 \
-      break;                                  \
-    case 0xe7c7 ... 0xe864:                           \
-      cp = USE_PRIVATE_AREA ? __gbk_from_ucs4_tab9[ch - 0xe7c7] : "\0\0"; \
-      break;                                  \
-    case 0xf92c:                                  \
-      cp = "\xfd\x9c";                            \
-      break;                                  \
-    case 0xf979:                                  \
-      cp = "\xfd\x9d";                            \
-      break;                                  \
-    case 0xf995:                                  \
-      cp = "\xfd\x9e";                            \
-      break;                                  \
-    case 0xf9e7:                                  \
-      cp = "\xfd\x9f";                            \
-      break;                                  \
-    case 0xf9f1:                                  \
-      cp = "\xfd\xa0";                            \
-      break;                                  \
-    case 0xfa0c ... 0xfa29:                           \
-      cp = __gbk_from_ucs4_tab10[ch - 0xfa0c];                \
-      break;                                  \
-    case 0xfe30 ... 0xfe6b:                           \
-      cp = __gbk_from_ucs4_tab11[ch - 0xfe30];                \
-      break;                                  \
-    case 0xff01 ... 0xff5e:                           \
-      cp = __gbk_from_ucs4_tab12[ch - 0xff01];                \
-      break;                                  \
-    case 0xffe0 ... 0xffe5:                           \
-      cp = "\xa1\xe9\0\0\xa1\xea\0\0\xa9\x56\0\0\xa3\xfe\0\0\xa9\x57\0\0\xa3\xa4" + ((ch - 0xffe0) * 4); \
-      break;                                  \
-    default:                                  \
-      UNICODE_TAG_HANDLER (ch, 4);                        \
-      cp = "";                                \
-      break;                                  \
-    }                                     \
-      if (__builtin_expect (cp[0], '\1') == '\0' && ch != 0)              \
-    {                                     \
-      /* Illegal character.  */                       \
-      STANDARD_TO_LOOP_ERR_HANDLER (4);                   \
-    }                                     \
-      /* See whether there is enough room for the second byte we write.  */   \
-      else if (cp[1] != '\0' && __builtin_expect (outptr + 1 >= outend, 0))   \
-    {                                     \
-      /* We have not enough room.  */                     \
-      result = __GCONV_FULL_OUTPUT;                       \
-      break;                                  \
-    }                                     \
-      else                                    \
-    {                                     \
-      *outptr++ = cp[0];                              \
-      if (cp[1] != '\0')                              \
-        *outptr++ = cp[1];                            \
-    }                                     \
-    }                                         \
-                                          \
-    inptr += 4;                                                               \
-  }
+    {                                       \
+        uint32_t ch = get32 (inptr);                          \
+        char buf[2];                                  \
+        const char *cp = buf;                             \
+        \
+        if (ch <= L'\x7f')                                \
+            /* It's plain ASCII.  */                            \
+            *outptr++ = (unsigned char) ch;                         \
+        else                                      \
+        {                                       \
+            switch (ch)                                 \
+            {                                     \
+                case 0xa4 ... 0x101:                              \
+                    cp = __gbk_from_ucs4_tab1[ch - 0xa4];                   \
+                    break;                                  \
+                case 0x113:                               \
+                    cp = "\xa8\xa5";                            \
+                    break;                                  \
+                case 0x11b:                               \
+                    cp = "\xa8\xa7";                            \
+                    break;                                  \
+                case 0x12b:                               \
+                    cp = "\xa8\xa9";                            \
+                    break;                                  \
+                case 0x144:                               \
+                    cp = "\xa8\xbd";                            \
+                    break;                                  \
+                case 0x148:                               \
+                    cp = "\xa8\xbe";                            \
+                    break;                                  \
+                case 0x14d:                               \
+                    cp = "\xa8\xad";                            \
+                    break;                                  \
+                case 0x16b:                               \
+                    cp = "\xa8\xb1";                            \
+                    break;                                  \
+                case 0x1ce:                               \
+                    cp = "\xa8\xa3";                            \
+                    break;                                  \
+                case 0x1d0:                               \
+                    cp = "\xa8\xab";                            \
+                    break;                                  \
+                case 0x1d2:                               \
+                    cp = "\xa8\xaf";                            \
+                    break;                                  \
+                case 0x1d4:                               \
+                    cp = "\xa8\xb3";                            \
+                    break;                                  \
+                case 0x1d6:                               \
+                    cp = "\xa8\xb5";                            \
+                    break;                                  \
+                case 0x1d8:                               \
+                    cp = "\xa8\xb6";                            \
+                    break;                                  \
+                case 0x1da:                               \
+                    cp = "\xa8\xb7";                            \
+                    break;                                  \
+                case 0x1dc:                               \
+                    cp = "\xa8\xb8";                            \
+                    break;                                  \
+                case 0x251:                               \
+                    cp = "\xa8\xbb";                            \
+                    break;                                  \
+                case 0x261:                               \
+                    cp = "\xa8\xc0";                            \
+                    break;                                  \
+                case 0x2c7 ... 0x2cb:                             \
+                    cp = "\xa1\xa6\0\0\0\0\0\0\xa1\xa5\0\0\xa8\x40\0\0\xa8\x41" + ((ch - 0x2c7) * 4); \
+                    break;                                  \
+                case 0x2d9:                               \
+                    cp = "\xa8\x42";                            \
+                    break;                                  \
+                case 0x391 ... 0x3c9:                             \
+                    cp = __gbk_from_ucs4_tab2[ch - 0x391];                  \
+                    break;                                  \
+                case 0x401 ... 0x451:                             \
+                    cp = __gbk_from_ucs4_tab3[ch - 0x401];                  \
+                    break;                                  \
+                case 0x2010 ... 0x203b:                           \
+                    cp = __gbk_from_ucs4_tab4[ch - 0x2010];                 \
+                    break;                                  \
+                case 0x20ac:                                  \
+                    /* Exception for the Euro sign (see CP396).  */             \
+                    cp = "\x80";                                \
+                    break;                                  \
+                case 0x2103 ... 0x22bf:                           \
+                    cp = __gbk_from_ucs4_tab5[ch - 0x2103];                 \
+                    break;                                  \
+                case 0x2312:                                  \
+                    cp = "\xa1\xd0";                            \
+                    break;                                  \
+                case 0x2460 ... 0x249b:                           \
+                    cp = __gbk_from_ucs4_tab6[ch - 0x2460];                 \
+                    break;                                  \
+                case 0x2500 ... 0x254b:                           \
+                    buf[0] = '\xa9';                            \
+                    buf[1] = '\xa4' + (ch - 0x2500);                    \
+                    break;                                  \
+                case 0x2550 ... 0x2573:                           \
+                    buf[0] = '\xa8';                            \
+                    buf[1] = '\x54' + (ch - 0x2550);                    \
+                    break;                                  \
+                case 0x2581 ... 0x2587:                           \
+                    buf[0] = '\xa8';                            \
+                    buf[1] = '\x78' + (ch - 0x2581);                    \
+                    break;                                  \
+                case 0x2588 ... 0x258f:                           \
+                    buf[0] = '\xa8';                            \
+                    buf[1] = '\x80' + (ch - 0x2588);                    \
+                    break;                                  \
+                case 0x2593 ... 0x2595:                           \
+                    cp = "\xa8\x88\0\0\xa8\x89\0\0\xa8\x8a" + ((ch - 0x2593) * 4);      \
+                    break;                                  \
+                case 0x25a0:                                  \
+                    cp = "\xa1\xf6";                            \
+                    break;                                  \
+                case 0x25a1:                                  \
+                    cp = "\xa1\xf5";                            \
+                    break;                                  \
+                case 0x25b2:                                  \
+                    cp = "\xa1\xf8";                            \
+                    break;                                  \
+                case 0x25b3:                                  \
+                    cp = "\xa1\xf7";                            \
+                    break;                                  \
+                case 0x25bc:                                  \
+                    cp = "\xa8\x8b";                            \
+                    break;                                  \
+                case 0x25bd:                                  \
+                    cp = "\xa8\x8c";                            \
+                    break;                                  \
+                case 0x25c6:                                  \
+                    cp = "\xa1\xf4";                            \
+                    break;                                  \
+                case 0x25c7:                                  \
+                    cp = "\xa1\xf3";                            \
+                    break;                                  \
+                case 0x25cb:                                  \
+                    cp = "\xa1\xf0";                            \
+                    break;                                  \
+                case 0x25ce:                                  \
+                    cp = "\xa1\xf2";                            \
+                    break;                                  \
+                case 0x25cf:                                  \
+                    cp = "\xa1\xf1";                            \
+                    break;                                  \
+                case 0x25e2 ... 0x25e5:                           \
+                    buf[0] = '\xa8';                            \
+                    buf[1] = '\x8d' + (ch - 0x25e2);                    \
+                    break;                                  \
+                case 0x2605:                                  \
+                    cp = "\xa1\xef";                            \
+                    break;                                  \
+                case 0x2606:                                  \
+                    cp = "\xa1\xee";                            \
+                    break;                                  \
+                case 0x2609:                                  \
+                    cp = "\xa8\x91";                            \
+                    break;                                  \
+                case 0x2640:                                  \
+                    cp = "\xa1\xe2";                            \
+                    break;                                  \
+                case 0x2642:                                  \
+                    cp = "\xa1\xe1";                            \
+                    break;                                  \
+                case 0x3000 ... 0x3129:                           \
+                    cp = __gbk_from_ucs4_tab7[ch - 0x3000];                 \
+                    break;                                  \
+                case 0x3220 ... 0x3229:                           \
+                    buf[0] = '\xa2';                            \
+                    buf[1] = '\xe5' + (ch - 0x3220);                    \
+                    break;                                  \
+                case 0x3231:                                  \
+                    cp = "\xa9\x5a";                            \
+                    break;                                  \
+                case 0x32a3:                                  \
+                    cp = "\xa9\x49";                            \
+                    break;                                  \
+                case 0x338e:                                  \
+                    cp = "\xa9\x4a";                            \
+                    break;                                  \
+                case 0x338f:                                  \
+                    cp = "\xa9\x4b";                            \
+                    break;                                  \
+                case 0x339c:                                  \
+                    cp = "\xa9\x4c";                            \
+                    break;                                  \
+                case 0x339d:                                  \
+                    cp = "\xa9\x4d";                            \
+                    break;                                  \
+                case 0x339e:                                  \
+                    cp = "\xa9\x4e";                            \
+                    break;                                  \
+                case 0x33a1:                                  \
+                    cp = "\xa9\x4f";                            \
+                    break;                                  \
+                case 0x33c4:                                  \
+                    cp = "\xa9\x50";                            \
+                    break;                                  \
+                case 0x33ce:                                  \
+                    cp = "\xa9\x51";                            \
+                    break;                                  \
+                case 0x33d1:                                  \
+                    cp = "\xa9\x52";                            \
+                    break;                                  \
+                case 0x33d2:                                  \
+                    cp = "\xa9\x53";                            \
+                    break;                                  \
+                case 0x33d5:                                  \
+                    cp = "\xa9\x54";                            \
+                    break;                                  \
+                case 0x4e00 ... 0x9fa5:                           \
+                    cp = __gbk_from_ucs4_tab8[ch - 0x4e00];                 \
+                    break;                                  \
+                case 0xe7c7 ... 0xe864:                           \
+                    cp = USE_PRIVATE_AREA ? __gbk_from_ucs4_tab9[ch - 0xe7c7] : "\0\0"; \
+                    break;                                  \
+                case 0xf92c:                                  \
+                    cp = "\xfd\x9c";                            \
+                    break;                                  \
+                case 0xf979:                                  \
+                    cp = "\xfd\x9d";                            \
+                    break;                                  \
+                case 0xf995:                                  \
+                    cp = "\xfd\x9e";                            \
+                    break;                                  \
+                case 0xf9e7:                                  \
+                    cp = "\xfd\x9f";                            \
+                    break;                                  \
+                case 0xf9f1:                                  \
+                    cp = "\xfd\xa0";                            \
+                    break;                                  \
+                case 0xfa0c ... 0xfa29:                           \
+                    cp = __gbk_from_ucs4_tab10[ch - 0xfa0c];                \
+                    break;                                  \
+                case 0xfe30 ... 0xfe6b:                           \
+                    cp = __gbk_from_ucs4_tab11[ch - 0xfe30];                \
+                    break;                                  \
+                case 0xff01 ... 0xff5e:                           \
+                    cp = __gbk_from_ucs4_tab12[ch - 0xff01];                \
+                    break;                                  \
+                case 0xffe0 ... 0xffe5:                           \
+                    cp = "\xa1\xe9\0\0\xa1\xea\0\0\xa9\x56\0\0\xa3\xfe\0\0\xa9\x57\0\0\xa3\xa4" + ((ch - 0xffe0) * 4); \
+                    break;                                  \
+                default:                                  \
+                    UNICODE_TAG_HANDLER (ch, 4);                        \
+                    cp = "";                                \
+                    break;                                  \
+            }                                     \
+            if (__builtin_expect (cp[0], '\1') == '\0' && ch != 0)              \
+            {                                     \
+                /* Illegal character.  */                       \
+                STANDARD_TO_LOOP_ERR_HANDLER (4);                   \
+            }                                     \
+            /* See whether there is enough room for the second byte we write.  */   \
+            else if (cp[1] != '\0' && __builtin_expect (outptr + 1 >= outend, 0))   \
+            {                                     \
+                /* We have not enough room.  */                     \
+                result = __GCONV_FULL_OUTPUT;                       \
+                break;                                  \
+            }                                     \
+            else                                    \
+            {                                     \
+                *outptr++ = cp[0];                              \
+                if (cp[1] != '\0')                              \
+                    *outptr++ = cp[1];                            \
+            }                                     \
+        }                                         \
+        \
+        inptr += 4;                                                               \
+    }
 #define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 

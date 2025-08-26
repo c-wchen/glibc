@@ -81,23 +81,23 @@
 
 /* Splat n variants of the same test for the various strtod functions.  */
 #define GEN_TEST_STRTOD_FOREACH(mfunc, ...)                   \
-  mfunc (  f,       float, strfromf, f, f, ##__VA_ARGS__)             \
-  mfunc (  d,      double, strfromd,  ,  , ##__VA_ARGS__)             \
-  mfunc ( ld, long double, strfroml, L, l, ##__VA_ARGS__)             \
-  IF_FLOAT16 (MMFUNC                                  \
-   (mfunc, f16, _Float16, strfromf16, F16, f16, ##__VA_ARGS__))           \
-  IF_FLOAT32 (MMFUNC                                  \
-   (mfunc, f32, _Float32, strfromf32, F32, f32, ##__VA_ARGS__))           \
-  IF_FLOAT64 (MMFUNC                                  \
-   (mfunc, f64, _Float64, strfromf64, F64, f64, ##__VA_ARGS__))           \
-  IF_FLOAT128 (MMFUNC                                 \
-   (mfunc, f128, _Float128, strfromf128, F128, f128, ##__VA_ARGS__))          \
-  IF_FLOAT32X (MMFUNC                                 \
-   (mfunc, f32x, _Float32x, strfromf32x, F32X, f32x, ##__VA_ARGS__))          \
-  IF_FLOAT64X (MMFUNC                                 \
-   (mfunc, f64x, _Float64x, strfromf64x, F64X, f64x, ##__VA_ARGS__))          \
-  IF_FLOAT128X (MMFUNC                                \
-   (mfunc, f128x, _Float128x, strfromf128x, F128X, f128x, ##__VA_ARGS__))
+    mfunc (  f,       float, strfromf, f, f, ##__VA_ARGS__)             \
+    mfunc (  d,      double, strfromd,  ,  , ##__VA_ARGS__)             \
+    mfunc ( ld, long double, strfroml, L, l, ##__VA_ARGS__)             \
+    IF_FLOAT16 (MMFUNC                                  \
+                (mfunc, f16, _Float16, strfromf16, F16, f16, ##__VA_ARGS__))           \
+    IF_FLOAT32 (MMFUNC                                  \
+                (mfunc, f32, _Float32, strfromf32, F32, f32, ##__VA_ARGS__))           \
+    IF_FLOAT64 (MMFUNC                                  \
+                (mfunc, f64, _Float64, strfromf64, F64, f64, ##__VA_ARGS__))           \
+    IF_FLOAT128 (MMFUNC                                 \
+                 (mfunc, f128, _Float128, strfromf128, F128, f128, ##__VA_ARGS__))          \
+    IF_FLOAT32X (MMFUNC                                 \
+                 (mfunc, f32x, _Float32x, strfromf32x, F32X, f32x, ##__VA_ARGS__))          \
+    IF_FLOAT64X (MMFUNC                                 \
+                 (mfunc, f64x, _Float64x, strfromf64x, F64X, f64x, ##__VA_ARGS__))          \
+    IF_FLOAT128X (MMFUNC                                \
+                  (mfunc, f128x, _Float128x, strfromf128x, F128X, f128x, ##__VA_ARGS__))
 /* The arguments to the generated macros are:
    FSUF - Function suffix
    FTYPE - float type
@@ -109,20 +109,20 @@
 
 
 #define STRTOD_TEST_FOREACH(mfunc, ...)             \
-({                              \
-   int result = 0;                      \
-   result |= mfunc ## f  (__VA_ARGS__);             \
-   result |= mfunc ## d  (__VA_ARGS__);             \
-   result |= mfunc ## ld (__VA_ARGS__);             \
-   IF_FLOAT16 (result |= mfunc ## f16 (__VA_ARGS__));       \
-   IF_FLOAT32 (result |= mfunc ## f32 (__VA_ARGS__));       \
-   IF_FLOAT64 (result |= mfunc ## f64 (__VA_ARGS__));       \
-   IF_FLOAT128 (result |= mfunc ## f128 (__VA_ARGS__));     \
-   IF_FLOAT32X (result |= mfunc ## f32x (__VA_ARGS__));     \
-   IF_FLOAT64X (result |= mfunc ## f64x (__VA_ARGS__));     \
-   IF_FLOAT128X (result |= mfunc ## f128x (__VA_ARGS__));   \
-   result;                          \
-})
+    ({                              \
+        int result = 0;                      \
+        result |= mfunc ## f  (__VA_ARGS__);             \
+        result |= mfunc ## d  (__VA_ARGS__);             \
+        result |= mfunc ## ld (__VA_ARGS__);             \
+        IF_FLOAT16 (result |= mfunc ## f16 (__VA_ARGS__));       \
+        IF_FLOAT32 (result |= mfunc ## f32 (__VA_ARGS__));       \
+        IF_FLOAT64 (result |= mfunc ## f64 (__VA_ARGS__));       \
+        IF_FLOAT128 (result |= mfunc ## f128 (__VA_ARGS__));     \
+        IF_FLOAT32X (result |= mfunc ## f32x (__VA_ARGS__));     \
+        IF_FLOAT64X (result |= mfunc ## f64x (__VA_ARGS__));     \
+        IF_FLOAT128X (result |= mfunc ## f128x (__VA_ARGS__));   \
+        result;                          \
+    })
 
 
 #endif

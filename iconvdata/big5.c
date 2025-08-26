@@ -8375,68 +8375,68 @@ static const char from_ucs4_tab15[][2] = {
 #define MIN_NEEDED_OUTPUT   MIN_NEEDED_TO
 #define LOOPFCT         FROM_LOOP
 #define BODY \
-  {                                       \
-    uint32_t ch = *inptr;                             \
-                                          \
-    if (ch >= 0xa1 && ch <= 0xf9)                         \
-      {                                       \
-    /* Two-byte character.  First test whether the next byte          \
-       is also available.  */                         \
-    uint32_t ch2;                                 \
-    int idx;                                  \
-                                          \
-    if (__glibc_unlikely (inptr + 1 >= inend))                \
-      {                                   \
-        /* The second character is not available.  */             \
-        result = __GCONV_INCOMPLETE_INPUT;                    \
-        break;                                \
-      }                                   \
-                                          \
-    idx = (ch - 0xa1) * 157;                          \
-    ch2 = inptr[1];                               \
-    /* See whether the second byte is in the correct range.  */       \
-    if (ch2 >= 0x40 && ch2 <= 0x7e)                       \
-      idx += ch2 - 0x40;                              \
-    else if (__builtin_expect (ch2 >= 0xa1, 1)                \
-         && __builtin_expect (ch2 <= 0xfe, 1))                \
-      idx += 0x3f + (ch2 - 0xa1);                         \
-    else                                      \
-      {                                   \
-        /* This is illegal.  */                       \
-        STANDARD_FROM_LOOP_ERR_HANDLER (1);                   \
-      }                                   \
-                                          \
-    /* Get the value from the table.  */                      \
-    ch = big5_to_ucs[idx];                            \
-                                          \
-    /* Is this character defined?  */                     \
-    if (__glibc_unlikely (ch == 0))                       \
-      {                                   \
-        /* This is an illegal character.  */                  \
-        STANDARD_FROM_LOOP_ERR_HANDLER (2);                   \
-      }                                   \
-                                          \
-    inptr += 2;                               \
-      }                                       \
-    else if (ch <= 0x80)                              \
-      ++inptr;                                    \
-    else                                      \
-      {                                       \
-    /* This is illegal.  */                           \
-    STANDARD_FROM_LOOP_ERR_HANDLER (1);                   \
-      }                                       \
-                                          \
-    put32 (outptr, ch);                               \
-    outptr += 4;                                  \
-  }
+    {                                       \
+        uint32_t ch = *inptr;                             \
+        \
+        if (ch >= 0xa1 && ch <= 0xf9)                         \
+        {                                       \
+            /* Two-byte character.  First test whether the next byte          \
+               is also available.  */                         \
+            uint32_t ch2;                                 \
+            int idx;                                  \
+            \
+            if (__glibc_unlikely (inptr + 1 >= inend))                \
+            {                                   \
+                /* The second character is not available.  */             \
+                result = __GCONV_INCOMPLETE_INPUT;                    \
+                break;                                \
+            }                                   \
+            \
+            idx = (ch - 0xa1) * 157;                          \
+            ch2 = inptr[1];                               \
+            /* See whether the second byte is in the correct range.  */       \
+            if (ch2 >= 0x40 && ch2 <= 0x7e)                       \
+                idx += ch2 - 0x40;                              \
+            else if (__builtin_expect (ch2 >= 0xa1, 1)                \
+                     && __builtin_expect (ch2 <= 0xfe, 1))                \
+                idx += 0x3f + (ch2 - 0xa1);                         \
+            else                                      \
+            {                                   \
+                /* This is illegal.  */                       \
+                STANDARD_FROM_LOOP_ERR_HANDLER (1);                   \
+            }                                   \
+            \
+            /* Get the value from the table.  */                      \
+            ch = big5_to_ucs[idx];                            \
+            \
+            /* Is this character defined?  */                     \
+            if (__glibc_unlikely (ch == 0))                       \
+            {                                   \
+                /* This is an illegal character.  */                  \
+                STANDARD_FROM_LOOP_ERR_HANDLER (2);                   \
+            }                                   \
+            \
+            inptr += 2;                               \
+        }                                       \
+        else if (ch <= 0x80)                              \
+            ++inptr;                                    \
+        else                                      \
+        {                                       \
+            /* This is illegal.  */                           \
+            STANDARD_FROM_LOOP_ERR_HANDLER (1);                   \
+        }                                       \
+        \
+        put32 (outptr, ch);                               \
+        outptr += 4;                                  \
+    }
 #define LOOP_NEED_FLAGS
 #define ONEBYTE_BODY \
-  {                                       \
-    if (c <= 0x80)                                \
-      return c;                                   \
-    else                                      \
-      return WEOF;                                \
-  }
+    {                                       \
+        if (c <= 0x80)                                \
+            return c;                                   \
+        else                                      \
+            return WEOF;                                \
+    }
 #include <iconv/loop.c>
 
 
@@ -8446,121 +8446,121 @@ static const char from_ucs4_tab15[][2] = {
 #define MAX_NEEDED_OUTPUT   MAX_NEEDED_FROM
 #define LOOPFCT         TO_LOOP
 #define BODY \
-  {                                       \
-    uint32_t ch = get32 (inptr);                          \
-    const char *cp;                               \
-                                          \
-    if (__builtin_expect (ch >= (sizeof (from_ucs4_tab1)              \
-                 / sizeof (from_ucs4_tab1[0])), 0))       \
-      switch (ch)                                 \
-    {                                     \
-        case 0x2c7 ... 0x2d9:                             \
-      cp = from_ucs4_tab2[ch - 0x2c7];                    \
-      break;                                  \
-    case 0x391 ... 0x3c9:                             \
-      cp = from_ucs4_tab3[ch - 0x391];                    \
-      break;                                  \
-    case 0x2013 ... 0x203b:                           \
-      cp = from_ucs4_tab4[ch - 0x2013];                   \
-      break;                                  \
-    case 0x20ac:                                  \
-      cp = "\xa3\xe1";                            \
-      break;                                  \
-    case 0x2103:                                  \
-      cp = "\xa2\x4a";                            \
-      break;                                  \
-    case 0x2105:                                  \
-      cp = "\xa1\xc1";                            \
-      break;                                  \
-    case 0x2109:                                  \
-      cp = "\xa2\x4b";                            \
-      break;                                  \
-    case 0x2160 ... 0x2169:                           \
-      cp = from_ucs4_tab5[ch - 0x2160];                   \
-      break;                                  \
-    case 0x2190 ... 0x2199:                           \
-      cp = from_ucs4_tab6[ch - 0x2190];                   \
-      break;                                  \
-    case 0x2215 ... 0x2267:                           \
-      cp = from_ucs4_tab7[ch - 0x2215];                   \
-      break;                                  \
-    case 0x2295:                                  \
-      cp = "\xa1\xf2";                            \
-      break;                                  \
-    case 0x2299:                                  \
-      cp = "\xa1\xf3";                            \
-      break;                                  \
-    case 0x22a5:                                  \
-      cp = "\xa1\xe6";                            \
-      break;                                  \
-    case 0x22bf:                                  \
-      cp = "\xa1\xe9";                            \
-      break;                                  \
-    case 0x2500 ... 0x2642:                           \
-      cp = from_ucs4_tab8[ch - 0x2500];                   \
-      break;                                  \
-    case 0x3000 ... 0x3029:                           \
-      cp = from_ucs4_tab9[ch - 0x3000];                   \
-      break;                                  \
-    case 0x3105 ... 0x3129:                           \
-      cp = from_ucs4_tab10[ch - 0x3105];                      \
-      break;                                  \
-    case 0x32a3:                                  \
-      cp = "\xa1\xc0";                            \
-      break;                                  \
-    case 0x338e ... 0x33d5:                           \
-      cp = from_ucs4_tab11[ch - 0x338e];                      \
-      break;                                  \
-    case 0x4e00 ... 0x9fa4:                           \
-      cp = from_ucs4_tab12[ch - 0x4e00];                      \
-      break;                                  \
-    case 0xf6b1 ... 0xf848:                           \
-      cp = from_ucs4_tab13[ch - 0xf6b1];                      \
-      break;                                  \
-    case 0xfa0c:                                  \
-      cp = "\xc9\x4a";                            \
-      break;                                  \
-    case 0xfa0d:                                  \
-      cp = "\xdd\xfc";                            \
-      break;                                  \
-    case 0xfe30 ... 0xfe6b:                           \
-      cp = from_ucs4_tab14[ch - 0xfe30];                      \
-      break;                                  \
-    case 0xff01 ... 0xffe5:                           \
-      cp = from_ucs4_tab15[ch - 0xff01];                      \
-      break;                                  \
-    default:                                  \
-      UNICODE_TAG_HANDLER (ch, 4);                        \
-      /* Illegal character.  */                       \
-      cp = "";                                \
-      break;                                  \
-    }                                     \
-    else                                      \
-      cp = from_ucs4_tab1[ch];                            \
-                                          \
-    if (__builtin_expect (cp[0], '\1') == '\0' && ch != 0)            \
-      {                                       \
-    /* Illegal character.  */                         \
-    STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
-      }                                       \
-    else                                      \
-      {                                       \
-    /* See whether there is enough room for the second byte we write.  */ \
-    if (__builtin_expect (cp[1], '\1') != '\0'                \
-        && __builtin_expect (outptr + 1 >= outend, 0))            \
-      {                                   \
-        /* We have not enough room.  */                   \
-        result = __GCONV_FULL_OUTPUT;                     \
-        break;                                \
-      }                                   \
-                                          \
-    *outptr++ = cp[0];                            \
-    if (cp[1] != '\0')                            \
-      *outptr++ = cp[1];                              \
-      }                                       \
-                                          \
-    inptr += 4;                                   \
-  }
+    {                                       \
+        uint32_t ch = get32 (inptr);                          \
+        const char *cp;                               \
+        \
+        if (__builtin_expect (ch >= (sizeof (from_ucs4_tab1)              \
+                                     / sizeof (from_ucs4_tab1[0])), 0))       \
+            switch (ch)                                 \
+            {                                     \
+                case 0x2c7 ... 0x2d9:                             \
+                    cp = from_ucs4_tab2[ch - 0x2c7];                    \
+                    break;                                  \
+                case 0x391 ... 0x3c9:                             \
+                    cp = from_ucs4_tab3[ch - 0x391];                    \
+                    break;                                  \
+                case 0x2013 ... 0x203b:                           \
+                    cp = from_ucs4_tab4[ch - 0x2013];                   \
+                    break;                                  \
+                case 0x20ac:                                  \
+                    cp = "\xa3\xe1";                            \
+                    break;                                  \
+                case 0x2103:                                  \
+                    cp = "\xa2\x4a";                            \
+                    break;                                  \
+                case 0x2105:                                  \
+                    cp = "\xa1\xc1";                            \
+                    break;                                  \
+                case 0x2109:                                  \
+                    cp = "\xa2\x4b";                            \
+                    break;                                  \
+                case 0x2160 ... 0x2169:                           \
+                    cp = from_ucs4_tab5[ch - 0x2160];                   \
+                    break;                                  \
+                case 0x2190 ... 0x2199:                           \
+                    cp = from_ucs4_tab6[ch - 0x2190];                   \
+                    break;                                  \
+                case 0x2215 ... 0x2267:                           \
+                    cp = from_ucs4_tab7[ch - 0x2215];                   \
+                    break;                                  \
+                case 0x2295:                                  \
+                    cp = "\xa1\xf2";                            \
+                    break;                                  \
+                case 0x2299:                                  \
+                    cp = "\xa1\xf3";                            \
+                    break;                                  \
+                case 0x22a5:                                  \
+                    cp = "\xa1\xe6";                            \
+                    break;                                  \
+                case 0x22bf:                                  \
+                    cp = "\xa1\xe9";                            \
+                    break;                                  \
+                case 0x2500 ... 0x2642:                           \
+                    cp = from_ucs4_tab8[ch - 0x2500];                   \
+                    break;                                  \
+                case 0x3000 ... 0x3029:                           \
+                    cp = from_ucs4_tab9[ch - 0x3000];                   \
+                    break;                                  \
+                case 0x3105 ... 0x3129:                           \
+                    cp = from_ucs4_tab10[ch - 0x3105];                      \
+                    break;                                  \
+                case 0x32a3:                                  \
+                    cp = "\xa1\xc0";                            \
+                    break;                                  \
+                case 0x338e ... 0x33d5:                           \
+                    cp = from_ucs4_tab11[ch - 0x338e];                      \
+                    break;                                  \
+                case 0x4e00 ... 0x9fa4:                           \
+                    cp = from_ucs4_tab12[ch - 0x4e00];                      \
+                    break;                                  \
+                case 0xf6b1 ... 0xf848:                           \
+                    cp = from_ucs4_tab13[ch - 0xf6b1];                      \
+                    break;                                  \
+                case 0xfa0c:                                  \
+                    cp = "\xc9\x4a";                            \
+                    break;                                  \
+                case 0xfa0d:                                  \
+                    cp = "\xdd\xfc";                            \
+                    break;                                  \
+                case 0xfe30 ... 0xfe6b:                           \
+                    cp = from_ucs4_tab14[ch - 0xfe30];                      \
+                    break;                                  \
+                case 0xff01 ... 0xffe5:                           \
+                    cp = from_ucs4_tab15[ch - 0xff01];                      \
+                    break;                                  \
+                default:                                  \
+                    UNICODE_TAG_HANDLER (ch, 4);                        \
+                    /* Illegal character.  */                       \
+                    cp = "";                                \
+                    break;                                  \
+            }                                     \
+        else                                      \
+            cp = from_ucs4_tab1[ch];                            \
+        \
+        if (__builtin_expect (cp[0], '\1') == '\0' && ch != 0)            \
+        {                                       \
+            /* Illegal character.  */                         \
+            STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
+        }                                       \
+        else                                      \
+        {                                       \
+            /* See whether there is enough room for the second byte we write.  */ \
+            if (__builtin_expect (cp[1], '\1') != '\0'                \
+                && __builtin_expect (outptr + 1 >= outend, 0))            \
+            {                                   \
+                /* We have not enough room.  */                   \
+                result = __GCONV_FULL_OUTPUT;                     \
+                break;                                \
+            }                                   \
+            \
+            *outptr++ = cp[0];                            \
+            if (cp[1] != '\0')                            \
+                *outptr++ = cp[1];                              \
+        }                                       \
+        \
+        inptr += 4;                                   \
+    }
 #define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 

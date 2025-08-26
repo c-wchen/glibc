@@ -36,7 +36,7 @@ static inline int pidfd_spawn_check(int *pidfd, const char *path,
 }
 
 #define POSIX_SPAWN(__pidfd, __path, __actions, __attr, __argv, __envp)      \
-  pidfd_spawn_check (__pidfd, __path, __actions, __attr, __argv, __envp)
+    pidfd_spawn_check (__pidfd, __path, __actions, __attr, __argv, __envp)
 
 static inline int pidfd_spawnp_check(int *pidfd, const char *file,
                                      const posix_spawn_file_actions_t *fa,
@@ -51,13 +51,13 @@ static inline int pidfd_spawnp_check(int *pidfd, const char *file,
 }
 
 #define POSIX_SPAWNP(__child, __path, __actions, __attr, __argv, __envp) \
-  pidfd_spawnp_check (__child, __path, __actions, __attr, __argv, __envp)
+    pidfd_spawnp_check (__child, __path, __actions, __attr, __argv, __envp)
 
 #define WAITID(__idtype, __id, __info, __opts)                   \
-  ({                                         \
-     __typeof (__idtype) __new_idtype = __idtype == P_PID            \
-                    ? P_PIDFD : __idtype;            \
-     waitid (__new_idtype, __id, __info, __opts);                \
-  })
+    ({                                         \
+        __typeof (__idtype) __new_idtype = __idtype == P_PID            \
+                                           ? P_PIDFD : __idtype;            \
+        waitid (__new_idtype, __id, __info, __opts);                \
+    })
 
 #define TST_SPAWN_PIDFD 1

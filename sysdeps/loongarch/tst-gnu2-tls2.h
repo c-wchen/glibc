@@ -26,123 +26,123 @@
    and the instruction between _dl_tlsdesc_dynamic and AFTER_TLSDESC_CALL,
    may modified most of the general-purpose register.  */
 #define SAVE_REGISTER(src)                      \
-  asm volatile ("st.d $r3, %0" :"=m"(src) :);
+    asm volatile ("st.d $r3, %0" :"=m"(src) :);
 
 #ifdef __loongarch_soft_float
 
 #define BEFORE_TLSDESC_CALL()                       \
-  uint64_t src;                             \
-  SAVE_REGISTER (src);
+    uint64_t src;                             \
+    SAVE_REGISTER (src);
 
 #define AFTER_TLSDESC_CALL()                        \
-  uint64_t restore;                         \
-  SAVE_REGISTER (restore);                      \
-  if (src != restore)                           \
-    abort ();
+    uint64_t restore;                         \
+    SAVE_REGISTER (restore);                      \
+    if (src != restore)                           \
+        abort ();
 
 #else /* hard float */
 
 #define SAVE_REGISTER_FCC(src)              \
-  asm volatile ("movcf2gr %0, $fcc0" :"=r"(src[0]));    \
-  asm volatile ("movcf2gr %0, $fcc1" :"=r"(src[1]));    \
-  asm volatile ("movcf2gr %0, $fcc2" :"=r"(src[2]));    \
-  asm volatile ("movcf2gr %0, $fcc3" :"=r"(src[3]));    \
-  asm volatile ("movcf2gr %0, $fcc4" :"=r"(src[4]));    \
-  asm volatile ("movcf2gr %0, $fcc5" :"=r"(src[5]));    \
-  asm volatile ("movcf2gr %0, $fcc6" :"=r"(src[6]));    \
-  asm volatile ("movcf2gr %0, $fcc7" :"=r"(src[7]));    \
+    asm volatile ("movcf2gr %0, $fcc0" :"=r"(src[0]));    \
+    asm volatile ("movcf2gr %0, $fcc1" :"=r"(src[1]));    \
+    asm volatile ("movcf2gr %0, $fcc2" :"=r"(src[2]));    \
+    asm volatile ("movcf2gr %0, $fcc3" :"=r"(src[3]));    \
+    asm volatile ("movcf2gr %0, $fcc4" :"=r"(src[4]));    \
+    asm volatile ("movcf2gr %0, $fcc5" :"=r"(src[5]));    \
+    asm volatile ("movcf2gr %0, $fcc6" :"=r"(src[6]));    \
+    asm volatile ("movcf2gr %0, $fcc7" :"=r"(src[7]));    \
 
 #define LOAD_REGISTER_FCSR()                \
-  uint64_t src_fcsr = 0x01010101;           \
-  asm volatile ("li.d $t0, 0x01010101" ::: "$t0");  \
-  asm volatile ("movgr2fcsr $fcsr0, $t0" :::);
+    uint64_t src_fcsr = 0x01010101;           \
+    asm volatile ("li.d $t0, 0x01010101" ::: "$t0");  \
+    asm volatile ("movgr2fcsr $fcsr0, $t0" :::);
 
 #define SAVE_REGISTER_FCSR()                        \
-  uint64_t restore_fcsr;                        \
-  asm volatile ("movfcsr2gr %0, $fcsr0" :"=r"(restore_fcsr));       \
-  if (src_fcsr != restore_fcsr)                     \
+    uint64_t restore_fcsr;                        \
+    asm volatile ("movfcsr2gr %0, $fcsr0" :"=r"(restore_fcsr));       \
+    if (src_fcsr != restore_fcsr)                     \
     {                                   \
-      printf ("FCSR registers compare failed!\n");          \
-      abort ();                             \
+        printf ("FCSR registers compare failed!\n");          \
+        abort ();                             \
     }                                   \
 
 #define INIT_TLSDESC_CALL()                     \
-  unsigned long hwcap = getauxval (AT_HWCAP);
+    unsigned long hwcap = getauxval (AT_HWCAP);
 
 #define LOAD_REGISTER_FLOAT()                       \
-  for (int i = 0; i < 32; i++)                      \
-    src_float[i] = i + 1;                       \
-  asm volatile ("fld.d $f0, %0" ::"m"(src_float[0]) :"$f0");        \
-  asm volatile ("fld.d $f1, %0" ::"m"(src_float[1]) :"$f1");        \
-  asm volatile ("fld.d $f2, %0" ::"m"(src_float[2]) :"$f2");        \
-  asm volatile ("fld.d $f3, %0" ::"m"(src_float[3]) :"$f3");        \
-  asm volatile ("fld.d $f4, %0" ::"m"(src_float[4]) :"$f4");        \
-  asm volatile ("fld.d $f5, %0" ::"m"(src_float[5]) :"$f5");        \
-  asm volatile ("fld.d $f6, %0" ::"m"(src_float[6]) :"$f6");        \
-  asm volatile ("fld.d $f7, %0" ::"m"(src_float[7]) :"$f7");        \
-  asm volatile ("fld.d $f8, %0" ::"m"(src_float[8]) :"$f8");        \
-  asm volatile ("fld.d $f9, %0" ::"m"(src_float[9]) :"$f9");        \
-  asm volatile ("fld.d $f10, %0" ::"m"(src_float[10]) :"$f10");     \
-  asm volatile ("fld.d $f11, %0" ::"m"(src_float[11]) :"$f11");     \
-  asm volatile ("fld.d $f12, %0" ::"m"(src_float[12]) :"$f12");     \
-  asm volatile ("fld.d $f13, %0" ::"m"(src_float[13]) :"$f13");     \
-  asm volatile ("fld.d $f14, %0" ::"m"(src_float[14]) :"$f14");     \
-  asm volatile ("fld.d $f15, %0" ::"m"(src_float[15]) :"$f15");     \
-  asm volatile ("fld.d $f16, %0" ::"m"(src_float[16]) :"$f16");     \
-  asm volatile ("fld.d $f17, %0" ::"m"(src_float[17]) :"$f17");     \
-  asm volatile ("fld.d $f18, %0" ::"m"(src_float[18]) :"$f18");     \
-  asm volatile ("fld.d $f19, %0" ::"m"(src_float[19]) :"$f19");     \
-  asm volatile ("fld.d $f20, %0" ::"m"(src_float[20]) :"$f20");     \
-  asm volatile ("fld.d $f21, %0" ::"m"(src_float[21]) :"$f21");     \
-  asm volatile ("fld.d $f22, %0" ::"m"(src_float[22]) :"$f22");     \
-  asm volatile ("fld.d $f23, %0" ::"m"(src_float[23]) :"$f23");     \
-  asm volatile ("fld.d $f24, %0" ::"m"(src_float[24]) :"$f24");     \
-  asm volatile ("fld.d $f25, %0" ::"m"(src_float[25]) :"$f25");     \
-  asm volatile ("fld.d $f26, %0" ::"m"(src_float[26]) :"$f26");     \
-  asm volatile ("fld.d $f27, %0" ::"m"(src_float[27]) :"$f27");     \
-  asm volatile ("fld.d $f28, %0" ::"m"(src_float[28]) :"$f28");     \
-  asm volatile ("fld.d $f29, %0" ::"m"(src_float[29]) :"$f29");     \
-  asm volatile ("fld.d $f30, %0" ::"m"(src_float[30]) :"$f30");     \
-  asm volatile ("fld.d $f31, %0" ::"m"(src_float[31]) :"$f31");
+    for (int i = 0; i < 32; i++)                      \
+        src_float[i] = i + 1;                       \
+    asm volatile ("fld.d $f0, %0" ::"m"(src_float[0]) :"$f0");        \
+    asm volatile ("fld.d $f1, %0" ::"m"(src_float[1]) :"$f1");        \
+    asm volatile ("fld.d $f2, %0" ::"m"(src_float[2]) :"$f2");        \
+    asm volatile ("fld.d $f3, %0" ::"m"(src_float[3]) :"$f3");        \
+    asm volatile ("fld.d $f4, %0" ::"m"(src_float[4]) :"$f4");        \
+    asm volatile ("fld.d $f5, %0" ::"m"(src_float[5]) :"$f5");        \
+    asm volatile ("fld.d $f6, %0" ::"m"(src_float[6]) :"$f6");        \
+    asm volatile ("fld.d $f7, %0" ::"m"(src_float[7]) :"$f7");        \
+    asm volatile ("fld.d $f8, %0" ::"m"(src_float[8]) :"$f8");        \
+    asm volatile ("fld.d $f9, %0" ::"m"(src_float[9]) :"$f9");        \
+    asm volatile ("fld.d $f10, %0" ::"m"(src_float[10]) :"$f10");     \
+    asm volatile ("fld.d $f11, %0" ::"m"(src_float[11]) :"$f11");     \
+    asm volatile ("fld.d $f12, %0" ::"m"(src_float[12]) :"$f12");     \
+    asm volatile ("fld.d $f13, %0" ::"m"(src_float[13]) :"$f13");     \
+    asm volatile ("fld.d $f14, %0" ::"m"(src_float[14]) :"$f14");     \
+    asm volatile ("fld.d $f15, %0" ::"m"(src_float[15]) :"$f15");     \
+    asm volatile ("fld.d $f16, %0" ::"m"(src_float[16]) :"$f16");     \
+    asm volatile ("fld.d $f17, %0" ::"m"(src_float[17]) :"$f17");     \
+    asm volatile ("fld.d $f18, %0" ::"m"(src_float[18]) :"$f18");     \
+    asm volatile ("fld.d $f19, %0" ::"m"(src_float[19]) :"$f19");     \
+    asm volatile ("fld.d $f20, %0" ::"m"(src_float[20]) :"$f20");     \
+    asm volatile ("fld.d $f21, %0" ::"m"(src_float[21]) :"$f21");     \
+    asm volatile ("fld.d $f22, %0" ::"m"(src_float[22]) :"$f22");     \
+    asm volatile ("fld.d $f23, %0" ::"m"(src_float[23]) :"$f23");     \
+    asm volatile ("fld.d $f24, %0" ::"m"(src_float[24]) :"$f24");     \
+    asm volatile ("fld.d $f25, %0" ::"m"(src_float[25]) :"$f25");     \
+    asm volatile ("fld.d $f26, %0" ::"m"(src_float[26]) :"$f26");     \
+    asm volatile ("fld.d $f27, %0" ::"m"(src_float[27]) :"$f27");     \
+    asm volatile ("fld.d $f28, %0" ::"m"(src_float[28]) :"$f28");     \
+    asm volatile ("fld.d $f29, %0" ::"m"(src_float[29]) :"$f29");     \
+    asm volatile ("fld.d $f30, %0" ::"m"(src_float[30]) :"$f30");     \
+    asm volatile ("fld.d $f31, %0" ::"m"(src_float[31]) :"$f31");
 
 #define SAVE_REGISTER_FLOAT()                       \
-  double restore_float[32];                     \
-  asm volatile ("fst.d $f0, %0" :"=m"(restore_float[0]));       \
-  asm volatile ("fst.d $f1, %0" :"=m"(restore_float[1]));       \
-  asm volatile ("fst.d $f2, %0" :"=m"(restore_float[2]));       \
-  asm volatile ("fst.d $f3, %0" :"=m"(restore_float[3]));       \
-  asm volatile ("fst.d $f4, %0" :"=m"(restore_float[4]));       \
-  asm volatile ("fst.d $f5, %0" :"=m"(restore_float[5]));       \
-  asm volatile ("fst.d $f6, %0" :"=m"(restore_float[6]));       \
-  asm volatile ("fst.d $f7, %0" :"=m"(restore_float[7]));       \
-  asm volatile ("fst.d $f8, %0" :"=m"(restore_float[8]));       \
-  asm volatile ("fst.d $f9, %0" :"=m"(restore_float[9]));       \
-  asm volatile ("fst.d $f10, %0" :"=m"(restore_float[10]));     \
-  asm volatile ("fst.d $f11, %0" :"=m"(restore_float[11]));     \
-  asm volatile ("fst.d $f12, %0" :"=m"(restore_float[12]));     \
-  asm volatile ("fst.d $f13, %0" :"=m"(restore_float[13]));     \
-  asm volatile ("fst.d $f14, %0" :"=m"(restore_float[14]));     \
-  asm volatile ("fst.d $f15, %0" :"=m"(restore_float[15]));     \
-  asm volatile ("fst.d $f16, %0" :"=m"(restore_float[16]));     \
-  asm volatile ("fst.d $f17, %0" :"=m"(restore_float[17]));     \
-  asm volatile ("fst.d $f18, %0" :"=m"(restore_float[18]));     \
-  asm volatile ("fst.d $f19, %0" :"=m"(restore_float[19]));     \
-  asm volatile ("fst.d $f20, %0" :"=m"(restore_float[20]));     \
-  asm volatile ("fst.d $f21, %0" :"=m"(restore_float[21]));     \
-  asm volatile ("fst.d $f22, %0" :"=m"(restore_float[22]));     \
-  asm volatile ("fst.d $f23, %0" :"=m"(restore_float[23]));     \
-  asm volatile ("fst.d $f24, %0" :"=m"(restore_float[24]));     \
-  asm volatile ("fst.d $f25, %0" :"=m"(restore_float[25]));     \
-  asm volatile ("fst.d $f26, %0" :"=m"(restore_float[26]));     \
-  asm volatile ("fst.d $f27, %0" :"=m"(restore_float[27]));     \
-  asm volatile ("fst.d $f28, %0" :"=m"(restore_float[28]));     \
-  asm volatile ("fst.d $f29, %0" :"=m"(restore_float[29]));     \
-  asm volatile ("fst.d $f30, %0" :"=m"(restore_float[30]));     \
-  asm volatile ("fst.d $f31, %0" :"=m"(restore_float[31]));     \
-  if (memcmp (src_float, restore_float, sizeof (src_float)) != 0)   \
+    double restore_float[32];                     \
+    asm volatile ("fst.d $f0, %0" :"=m"(restore_float[0]));       \
+    asm volatile ("fst.d $f1, %0" :"=m"(restore_float[1]));       \
+    asm volatile ("fst.d $f2, %0" :"=m"(restore_float[2]));       \
+    asm volatile ("fst.d $f3, %0" :"=m"(restore_float[3]));       \
+    asm volatile ("fst.d $f4, %0" :"=m"(restore_float[4]));       \
+    asm volatile ("fst.d $f5, %0" :"=m"(restore_float[5]));       \
+    asm volatile ("fst.d $f6, %0" :"=m"(restore_float[6]));       \
+    asm volatile ("fst.d $f7, %0" :"=m"(restore_float[7]));       \
+    asm volatile ("fst.d $f8, %0" :"=m"(restore_float[8]));       \
+    asm volatile ("fst.d $f9, %0" :"=m"(restore_float[9]));       \
+    asm volatile ("fst.d $f10, %0" :"=m"(restore_float[10]));     \
+    asm volatile ("fst.d $f11, %0" :"=m"(restore_float[11]));     \
+    asm volatile ("fst.d $f12, %0" :"=m"(restore_float[12]));     \
+    asm volatile ("fst.d $f13, %0" :"=m"(restore_float[13]));     \
+    asm volatile ("fst.d $f14, %0" :"=m"(restore_float[14]));     \
+    asm volatile ("fst.d $f15, %0" :"=m"(restore_float[15]));     \
+    asm volatile ("fst.d $f16, %0" :"=m"(restore_float[16]));     \
+    asm volatile ("fst.d $f17, %0" :"=m"(restore_float[17]));     \
+    asm volatile ("fst.d $f18, %0" :"=m"(restore_float[18]));     \
+    asm volatile ("fst.d $f19, %0" :"=m"(restore_float[19]));     \
+    asm volatile ("fst.d $f20, %0" :"=m"(restore_float[20]));     \
+    asm volatile ("fst.d $f21, %0" :"=m"(restore_float[21]));     \
+    asm volatile ("fst.d $f22, %0" :"=m"(restore_float[22]));     \
+    asm volatile ("fst.d $f23, %0" :"=m"(restore_float[23]));     \
+    asm volatile ("fst.d $f24, %0" :"=m"(restore_float[24]));     \
+    asm volatile ("fst.d $f25, %0" :"=m"(restore_float[25]));     \
+    asm volatile ("fst.d $f26, %0" :"=m"(restore_float[26]));     \
+    asm volatile ("fst.d $f27, %0" :"=m"(restore_float[27]));     \
+    asm volatile ("fst.d $f28, %0" :"=m"(restore_float[28]));     \
+    asm volatile ("fst.d $f29, %0" :"=m"(restore_float[29]));     \
+    asm volatile ("fst.d $f30, %0" :"=m"(restore_float[30]));     \
+    asm volatile ("fst.d $f31, %0" :"=m"(restore_float[31]));     \
+    if (memcmp (src_float, restore_float, sizeof (src_float)) != 0)   \
     {                                   \
-      printf ("Float registers compare failed!\n");         \
-      abort ();                             \
+        printf ("Float registers compare failed!\n");         \
+        abort ();                             \
     }
 
 #ifdef HAVE_LOONGARCH_VEC_COM
@@ -221,15 +221,15 @@
     asm volatile ("vst $vr30, %0" :"=m"(restore_lsx[30]));      \
     asm volatile ("vst $vr31, %0" :"=m"(restore_lsx[31]));      \
     for (int i = 0; i < 32; i++)                    \
-      for (int j = 0; j < 4; j++)                   \
-    {                               \
-      src_lsx[i][j] = 0x01010101 * (i + 1);             \
-      if (src_lsx[i][j] != restore_lsx[i][j])           \
+        for (int j = 0; j < 4; j++)                   \
         {                               \
-          printf ("LSX registers compare failed!\n");       \
-          abort ();                         \
-        }                               \
-    }
+            src_lsx[i][j] = 0x01010101 * (i + 1);             \
+            if (src_lsx[i][j] != restore_lsx[i][j])           \
+            {                               \
+                printf ("LSX registers compare failed!\n");       \
+                abort ();                         \
+            }                               \
+        }
 #else
 #define   SAVE_REGISTER_LSX()
 #endif
@@ -311,75 +311,75 @@
     asm volatile ("xvst $xr31, %0" :"=m"(restore_lasx[31]));        \
     /* memcmp_lasx/strlen_lasx corrupts LSX/LASX registers, */      \
     for (int i = 0; i < 32; i++)                    \
-      for (int j = 0; j < 8; j++)                   \
-    {                               \
-      src_lasx[i][j] = 0x01010101 * (i + 1);            \
-      if (src_lasx[i][j] != restore_lasx[i][j])         \
+        for (int j = 0; j < 8; j++)                   \
         {                               \
-          printf ("LASX registers compare failed!\n");      \
-          abort ();                         \
-        }                               \
-    }
+            src_lasx[i][j] = 0x01010101 * (i + 1);            \
+            if (src_lasx[i][j] != restore_lasx[i][j])         \
+            {                               \
+                printf ("LASX registers compare failed!\n");      \
+                abort ();                         \
+            }                               \
+        }
 #else
 #define   SAVE_REGISTER_LASX()
 #endif
 
 #define BEFORE_TLSDESC_CALL()                       \
-  uint64_t src;                             \
-  double src_float[32];                         \
-  uint64_t src_fcc[8];                          \
-  SAVE_REGISTER (src);                          \
-                                    \
-  if (hwcap & HWCAP_LOONGARCH_LASX)                 \
+    uint64_t src;                             \
+    double src_float[32];                         \
+    uint64_t src_fcc[8];                          \
+    SAVE_REGISTER (src);                          \
+    \
+    if (hwcap & HWCAP_LOONGARCH_LASX)                 \
     {                                   \
-      LOAD_REGISTER_LASX ();                        \
+        LOAD_REGISTER_LASX ();                        \
     }                                   \
-  else if (hwcap & HWCAP_LOONGARCH_LSX)                 \
+    else if (hwcap & HWCAP_LOONGARCH_LSX)                 \
     {                                   \
-      LOAD_REGISTER_LSX ();                     \
+        LOAD_REGISTER_LSX ();                     \
     }                                   \
-  else                                  \
+    else                                  \
     {                                   \
-      LOAD_REGISTER_FLOAT ();                       \
+        LOAD_REGISTER_FLOAT ();                       \
     }                                   \
-                                    \
-  /* LOAD_REGISTER_FLOAT convert int double may change fcsr.  */    \
-  LOAD_REGISTER_FCSR ();                        \
-  SAVE_REGISTER_FCC (src_fcc)
+    \
+    /* LOAD_REGISTER_FLOAT convert int double may change fcsr.  */    \
+    LOAD_REGISTER_FCSR ();                        \
+    SAVE_REGISTER_FCC (src_fcc)
 
 
 #define AFTER_TLSDESC_CALL()                        \
-  uint64_t restore;                         \
-  uint64_t restore_fcc[8];                      \
-                                    \
-  SAVE_REGISTER (restore);                      \
-  if (src != restore)                           \
+    uint64_t restore;                         \
+    uint64_t restore_fcc[8];                      \
+    \
+    SAVE_REGISTER (restore);                      \
+    if (src != restore)                           \
     {                                   \
-      printf ("General registers compare failed!\n");           \
-      abort ();                             \
+        printf ("General registers compare failed!\n");           \
+        abort ();                             \
     }                                   \
-                                    \
-  SAVE_REGISTER_FCSR ();                        \
-                                    \
-  SAVE_REGISTER_FCC (restore_fcc)                   \
-  for (int i = 0; i < 8; i++)                       \
-    if (src_fcc[i] != restore_fcc[i])                   \
-      {                                 \
-    printf ("FCC registers compare failed!\n");         \
-    abort ();                           \
-      }                                 \
-                                    \
-  if (hwcap & HWCAP_LOONGARCH_LASX)                 \
+    \
+    SAVE_REGISTER_FCSR ();                        \
+    \
+    SAVE_REGISTER_FCC (restore_fcc)                   \
+    for (int i = 0; i < 8; i++)                       \
+        if (src_fcc[i] != restore_fcc[i])                   \
+        {                                 \
+            printf ("FCC registers compare failed!\n");         \
+            abort ();                           \
+        }                                 \
+    \
+    if (hwcap & HWCAP_LOONGARCH_LASX)                 \
     {                                   \
-      SAVE_REGISTER_LASX ();                        \
+        SAVE_REGISTER_LASX ();                        \
     }                                   \
-  else if (hwcap & HWCAP_LOONGARCH_LSX)                 \
+    else if (hwcap & HWCAP_LOONGARCH_LSX)                 \
     {                                   \
-      SAVE_REGISTER_LSX ();                     \
+        SAVE_REGISTER_LSX ();                     \
     }                                   \
-  else                                  \
+    else                                  \
     {                                   \
-      SAVE_REGISTER_FLOAT ();                       \
+        SAVE_REGISTER_FLOAT ();                       \
     }                                   \
 
 #endif /* #ifdef __loongarch_soft_float */

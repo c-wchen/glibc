@@ -48,8 +48,8 @@
 #define BITw(class) (_ISwbit (BITPOS (class)))
 
 #define ELEM(ctype, collection, idx, value)                   \
-  *find_idx (ctype, &ctype->collection idx, &ctype->collection##_max idx,     \
-         &ctype->collection##_act idx, value)
+    *find_idx (ctype, &ctype->collection idx, &ctype->collection##_max idx,     \
+               &ctype->collection##_act idx, value)
 
 
 /* To be compatible with former implementations we for now restrict
@@ -872,9 +872,9 @@ void ctype_output(struct localedef_t *locale, const struct charmap_t *charmap,
         if (elem < _NL_ITEM_INDEX(_NL_CTYPE_EXTRA_MAP_1))
             switch (elem) {
 #define CTYPE_EMPTY(name) \
-      case name:                                  \
-        add_locale_empty (&file);                         \
-        break
+case name:                                  \
+    add_locale_empty (&file);                         \
+    break
 
                     CTYPE_EMPTY(_NL_CTYPE_GAP1);
                     CTYPE_EMPTY(_NL_CTYPE_GAP2);
@@ -884,18 +884,18 @@ void ctype_output(struct localedef_t *locale, const struct charmap_t *charmap,
                     CTYPE_EMPTY(_NL_CTYPE_GAP6);
 
 #define CTYPE_RAW_DATA(name, base, size)                      \
-      case _NL_ITEM_INDEX (name):                         \
-        add_locale_raw_data (&file, base, size);                  \
-        break
+case _NL_ITEM_INDEX (name):                         \
+    add_locale_raw_data (&file, base, size);                  \
+    break
 
                     CTYPE_RAW_DATA(_NL_CTYPE_CLASS,
                                    ctype->ctype_b,
                                    (256 + 128) * sizeof(char_class_t));
 
 #define CTYPE_UINT32_ARRAY(name, base, n_elems)                   \
-      case _NL_ITEM_INDEX (name):                         \
-        add_locale_uint32_array (&file, base, n_elems);           \
-        break
+case _NL_ITEM_INDEX (name):                         \
+    add_locale_uint32_array (&file, base, n_elems);           \
+    break
 
                     CTYPE_UINT32_ARRAY(_NL_CTYPE_TOUPPER, ctype->map_b[0], 256 + 128);
                     CTYPE_UINT32_ARRAY(_NL_CTYPE_TOLOWER, ctype->map_b[1], 256 + 128);
@@ -906,9 +906,9 @@ void ctype_output(struct localedef_t *locale, const struct charmap_t *charmap,
                                    256 * sizeof(char_class32_t));
 
 #define CTYPE_UINT32(name, value)                         \
-      case _NL_ITEM_INDEX (name):                         \
-        add_locale_uint32 (&file, value);                     \
-        break
+case _NL_ITEM_INDEX (name):                         \
+    add_locale_uint32 (&file, value);                     \
+    break
 
                     CTYPE_UINT32(_NL_CTYPE_CLASS_OFFSET, ctype->class_offset);
                     CTYPE_UINT32(_NL_CTYPE_MAP_OFFSET, ctype->map_offset);
@@ -2762,7 +2762,7 @@ static void set_class_defaults(struct locale_ctype_t *ctype,
                                struct repertoire_t *repertoire)
 {
 #define set_default(bitpos, from, to) \
-  set_one_default (ctype, charmap, bitpos, from, to)
+    set_one_default (ctype, charmap, bitpos, from, to)
 
     /* These function defines the default values for the classes and conversions
        according to POSIX.2 2.5.2.1.

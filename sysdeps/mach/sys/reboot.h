@@ -150,8 +150,8 @@
 
 #define MAKEBOOTDEV(type, adaptor, controller, unit, partition) \
     (((type) << B_TYPESHIFT) | ((adaptor) << B_ADAPTORSHIFT) | \
-    ((controller) << B_CONTROLLERSHIFT) | ((unit) << B_UNITSHIFT) | \
-    ((partition) << B_PARTITIONSHIFT) | B_DEVMAGIC)
+     ((controller) << B_CONTROLLERSHIFT) | ((unit) << B_UNITSHIFT) | \
+     ((partition) << B_PARTITIONSHIFT) | B_DEVMAGIC)
 
 
 #ifdef  KERNEL

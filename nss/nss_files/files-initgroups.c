@@ -30,10 +30,10 @@
 
 enum nss_status _nss_files_initgroups_dyn(const char *user, gid_t group, long int *start,
         long int *size, gid_t **groupsp, long int limit,
-        int *errnop) {
+        int *errnop)
+{
     FILE *stream = __nss_files_fopen("/etc/group");
-    if (stream == NULL)
-    {
+    if (stream == NULL) {
         *errnop = errno;
         return *errnop == ENOMEM ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
     }
@@ -49,8 +49,7 @@ enum nss_status _nss_files_initgroups_dyn(const char *user, gid_t group, long in
     gid_t *groups = *groupsp;
 
     /* We have to iterate over the entire file.  */
-    while (1)
-    {
+    while (1) {
         fpos_t pos;
         fgetpos(stream, &pos);
         ssize_t n = __getline(&line, &linelen, stream);

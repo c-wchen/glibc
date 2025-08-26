@@ -31,11 +31,11 @@
 
 /* Magic number at the beginning of a locale data file for CATEGORY.  */
 #define LIMAGIC(category) \
-  (category == LC_COLLATE                       \
-   ? ((unsigned int) (0x20051014 ^ (category)))             \
-   : category == LC_CTYPE                       \
-   ? ((unsigned int) (0x20090720 ^ (category)))             \
-   : ((unsigned int) (0x20031115 ^ (category))))
+    (category == LC_COLLATE                       \
+     ? ((unsigned int) (0x20051014 ^ (category)))             \
+     : category == LC_CTYPE                       \
+     ? ((unsigned int) (0x20090720 ^ (category)))             \
+     : ((unsigned int) (0x20031115 ^ (category))))
 
 /* Two special weight constants for the collation data.  */
 #define IGNORE_CHAR 2
@@ -87,7 +87,7 @@ struct __locale_data {
 #define LOCFILE_ALIGN       sizeof (int32_t)
 #define LOCFILE_ALIGN_MASK  (LOCFILE_ALIGN - 1)
 #define LOCFILE_ALIGN_UP(x) (((x) + LOCFILE_ALIGN - 1)  \
-                 & ~LOCFILE_ALIGN_MASK)
+                             & ~LOCFILE_ALIGN_MASK)
 #define LOCFILE_ALIGNED_P(x)    (((x) & LOCFILE_ALIGN_MASK) == 0)
 
 /* We know three kinds of collation sorting rules.  */
@@ -189,7 +189,7 @@ enum {
    _ISCTYPE (c, desc) = iswctype (btowc (c), desc).
    c must be an `unsigned char'.  desc must be a nonzero wctype_t.  */
 #define _ISCTYPE(c, desc) \
-  (((((const uint32_t *) (desc)) - 8)[(c) >> 5] >> ((c) & 0x1f)) & 1)
+    (((((const uint32_t *) (desc)) - 8)[(c) >> 5] >> ((c) & 0x1f)) & 1)
 
 /* Category name handling variables.  Concatenate all the strings in a
    single object to minimize relocations.  Individual strings can be
@@ -198,7 +198,7 @@ enum {
 #define CATNAMEMF1(line) str##line
 extern const struct catnamestr_t {
 #define DEFINE_CATEGORY(category, category_name, items, a) \
-  char CATNAMEMF (__LINE__)[sizeof (category_name)];
+    char CATNAMEMF (__LINE__)[sizeof (category_name)];
 #include "categories.def"
 #undef DEFINE_CATEGORY
 } _nl_category_names attribute_hidden;
@@ -251,8 +251,8 @@ attribute_hidden attribute_tls_model_ie;
    and we arrange that linking that module is what brings in all the code
    associated with this category.  */
 #define DEFINE_CATEGORY(category, category_name, items, a) \
-extern __thread struct __locale_data *const *_nl_current_##category \
-  attribute_hidden attribute_tls_model_ie;
+    extern __thread struct __locale_data *const *_nl_current_##category \
+        attribute_hidden attribute_tls_model_ie;
 #include "categories.def"
 #undef  DEFINE_CATEGORY
 
@@ -261,25 +261,25 @@ extern __thread struct __locale_data *const *_nl_current_##category \
 
 /* Extract the current CATEGORY locale's string for ITEM.  */
 #define _NL_CURRENT(category, item) \
-  ((*_nl_current_##category)->values[_NL_ITEM_INDEX (item)].string)
+    ((*_nl_current_##category)->values[_NL_ITEM_INDEX (item)].string)
 
 /* Extract the current CATEGORY locale's string for ITEM.  */
 #define _NL_CURRENT_WSTR(category, item) \
-  ((wchar_t *) (*_nl_current_##category)->values[_NL_ITEM_INDEX (item)].wstr)
+    ((wchar_t *) (*_nl_current_##category)->values[_NL_ITEM_INDEX (item)].wstr)
 
 /* Extract the current CATEGORY locale's word for ITEM.  */
 #define _NL_CURRENT_WORD(category, item) \
-  ((uint32_t) (*_nl_current_##category)->values[_NL_ITEM_INDEX (item)].word)
+    ((uint32_t) (*_nl_current_##category)->values[_NL_ITEM_INDEX (item)].word)
 
 /* This is used in lc-CATEGORY.c to define _nl_current_CATEGORY.  The symbol
    _nl_current_CATEGORY_used is set to a value unequal to zero to mark this
    category as used.  On S390 the used relocation to load the symbol address
    can only handle even addresses.  */
 #define _NL_CURRENT_DEFINE(category) \
-  __thread struct __locale_data *const *_nl_current_##category \
-    attribute_hidden = &_nl_global_locale.__locales[category]; \
-  asm (".globl " __SYMBOL_PREFIX "_nl_current_" #category "_used\n" \
-       _NL_CURRENT_DEFINE_ABS (_nl_current_##category##_used, 2));
+    __thread struct __locale_data *const *_nl_current_##category \
+        attribute_hidden = &_nl_global_locale.__locales[category]; \
+    asm (".globl " __SYMBOL_PREFIX "_nl_current_" #category "_used\n" \
+         _NL_CURRENT_DEFINE_ABS (_nl_current_##category##_used, 2));
 #ifdef HAVE_ASM_SET_DIRECTIVE
 # define _NL_CURRENT_DEFINE_ABS(sym, val) ".set " #sym ", " #val
 #else
@@ -293,23 +293,23 @@ extern __thread struct __locale_data *const *_nl_current_##category \
 
 /* Return a pointer to the current `struct __locale_data' for CATEGORY.  */
 # define _NL_CURRENT_DATA(category) \
-  (_NL_CURRENT_LOCALE->__locales[category])
+    (_NL_CURRENT_LOCALE->__locales[category])
 
 /* Extract the current CATEGORY locale's string for ITEM.  */
 # define _NL_CURRENT(category, item) \
-  (_NL_CURRENT_DATA (category)->values[_NL_ITEM_INDEX (item)].string)
+    (_NL_CURRENT_DATA (category)->values[_NL_ITEM_INDEX (item)].string)
 
 /* Extract the current CATEGORY locale's string for ITEM.  */
 # define _NL_CURRENT_WSTR(category, item) \
-  ((wchar_t *) _NL_CURRENT_DATA (category)->values[_NL_ITEM_INDEX (item)].wstr)
+    ((wchar_t *) _NL_CURRENT_DATA (category)->values[_NL_ITEM_INDEX (item)].wstr)
 
 /* Extract the current CATEGORY locale's word for ITEM.  */
 # define _NL_CURRENT_WORD(category, item) \
-  ((uint32_t) _NL_CURRENT_DATA (category)->values[_NL_ITEM_INDEX (item)].word)
+    ((uint32_t) _NL_CURRENT_DATA (category)->values[_NL_ITEM_INDEX (item)].word)
 
 /* This is used in lc-CATEGORY.c to define _nl_current_CATEGORY.  */
 # define _NL_CURRENT_DEFINE(category) \
-  /* No per-category variable here. */
+    /* No per-category variable here. */
 
 #endif
 

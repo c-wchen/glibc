@@ -27,11 +27,11 @@ char *_itoa_word(_ITOA_WORD_TYPE value, char *buflim,
 
     switch (base) {
 #define SPECIAL(Base)                                 \
-    case Base:                                    \
-      do                                      \
-    *--buflim = digits[value % Base];                     \
-      while ((value /= Base) != 0);                       \
-      break
+case Base:                                    \
+    do                                      \
+        *--buflim = digits[value % Base];                     \
+    while ((value /= Base) != 0);                       \
+    break
 
             SPECIAL(10);
             SPECIAL(16);

@@ -50,71 +50,71 @@
 #define SOCKOP_sendmmsg     20
 
 #define __SOCKETCALL1(name, a1) \
-  INLINE_SYSCALL (socketcall, 2, name, \
-     ((long int [1]) { (long int) (a1) }))
+    INLINE_SYSCALL (socketcall, 2, name, \
+    ((long int [1]) { (long int) (a1) }))
 #define __SOCKETCALL2(name, a1, a2) \
-  INLINE_SYSCALL (socketcall, 2, name, \
-     ((long int [2]) { (long int) (a1), (long int) (a2) }))
+    INLINE_SYSCALL (socketcall, 2, name, \
+    ((long int [2]) { (long int) (a1), (long int) (a2) }))
 #define __SOCKETCALL3(name, a1, a2, a3) \
-  INLINE_SYSCALL (socketcall, 2, name, \
-     ((long int [3]) { (long int) (a1), (long int) (a2), (long int) (a3) }))
+    INLINE_SYSCALL (socketcall, 2, name, \
+    ((long int [3]) { (long int) (a1), (long int) (a2), (long int) (a3) }))
 #define __SOCKETCALL4(name, a1, a2, a3, a4) \
-  INLINE_SYSCALL (socketcall, 2, name, \
-     ((long int [4]) { (long int) (a1), (long int) (a2), (long int) (a3), \
-                       (long int) (a4) }))
+    INLINE_SYSCALL (socketcall, 2, name, \
+    ((long int [4]) { (long int) (a1), (long int) (a2), (long int) (a3), \
+        (long int) (a4) }))
 #define __SOCKETCALL5(name, a1, a2, a3, a4, a5) \
-  INLINE_SYSCALL (socketcall, 2, name, \
-     ((long int [5]) { (long int) (a1), (long int) (a2), (long int) (a3), \
-                       (long int) (a4), (long int) (a5) }))
+    INLINE_SYSCALL (socketcall, 2, name, \
+    ((long int [5]) { (long int) (a1), (long int) (a2), (long int) (a3), \
+        (long int) (a4), (long int) (a5) }))
 #define __SOCKETCALL6(name, a1, a2, a3, a4, a5, a6) \
-  INLINE_SYSCALL (socketcall, 2, name, \
-     ((long int [6]) { (long int) (a1), (long int) (a2), (long int) (a3), \
-                       (long int) (a4), (long int) (a5), (long int) (a6) }))
+    INLINE_SYSCALL (socketcall, 2, name, \
+    ((long int [6]) { (long int) (a1), (long int) (a2), (long int) (a3), \
+        (long int) (a4), (long int) (a5), (long int) (a6) }))
 
 #define __SOCKETCALL_NARGS_X(a,b,c,d,e,f,g,h,n,...) n
 #define __SOCKETCALL_NARGS(...) \
-  __SOCKETCALL_NARGS_X (__VA_ARGS__,7,6,5,4,3,2,1,0,)
+    __SOCKETCALL_NARGS_X (__VA_ARGS__,7,6,5,4,3,2,1,0,)
 #define __SOCKETCALL_CONCAT_X(a,b)     a##b
 #define __SOCKETCALL_CONCAT(a,b)       __SOCKETCALL_CONCAT_X (a, b)
 #define __SOCKETCALL_DISP(b,...) \
-  __SOCKETCALL_CONCAT (b,__SOCKETCALL_NARGS(__VA_ARGS__))(__VA_ARGS__)
+    __SOCKETCALL_CONCAT (b,__SOCKETCALL_NARGS(__VA_ARGS__))(__VA_ARGS__)
 
 #define __SOCKETCALL(...) __SOCKETCALL_DISP (__SOCKETCALL, __VA_ARGS__)
 
 
 #define SOCKETCALL(name, args...)                   \
-  ({                                    \
-    long int sc_ret = __SOCKETCALL (SOCKOP_##name, args);       \
-    sc_ret;                             \
-  })
+    ({                                    \
+        long int sc_ret = __SOCKETCALL (SOCKOP_##name, args);       \
+        sc_ret;                             \
+    })
 
 #define __SOCKETCALL_CANCEL1(__name, __a1) \
-  SYSCALL_CANCEL (socketcall, __name, \
-     ((long int [1]) { (long int) __a1 }))
+    SYSCALL_CANCEL (socketcall, __name, \
+    ((long int [1]) { (long int) __a1 }))
 #define __SOCKETCALL_CANCEL2(__name, __a1, __a2) \
-  SYSCALL_CANCEL (socketcall, __name, \
-     ((long int [2]) { (long int) __a1, (long int) __a2 }))
+    SYSCALL_CANCEL (socketcall, __name, \
+    ((long int [2]) { (long int) __a1, (long int) __a2 }))
 #define __SOCKETCALL_CANCEL3(__name, __a1, __a2, __a3) \
-  SYSCALL_CANCEL (socketcall, __name, \
-     ((long int [3]) { (long int) __a1, (long int) __a2, (long int) __a3 }))
+    SYSCALL_CANCEL (socketcall, __name, \
+    ((long int [3]) { (long int) __a1, (long int) __a2, (long int) __a3 }))
 #define __SOCKETCALL_CANCEL4(__name, __a1, __a2, __a3, __a4) \
-  SYSCALL_CANCEL (socketcall, __name, \
-     ((long int [4]) { (long int) __a1, (long int) __a2, (long int) __a3, \
-                       (long int) __a4 }))
+    SYSCALL_CANCEL (socketcall, __name, \
+    ((long int [4]) { (long int) __a1, (long int) __a2, (long int) __a3, \
+        (long int) __a4 }))
 #define __SOCKETCALL_CANCEL5(__name, __a1, __a2, __a3, __a4, __a5) \
-  SYSCALL_CANCEL (socketcall, __name, \
-     ((long int [5]) { (long int) __a1, (long int) __a2, (long int) __a3, \
-                       (long int) __a4, (long int) __a5 }))
+    SYSCALL_CANCEL (socketcall, __name, \
+    ((long int [5]) { (long int) __a1, (long int) __a2, (long int) __a3, \
+        (long int) __a4, (long int) __a5 }))
 #define __SOCKETCALL_CANCEL6(__name, __a1, __a2, __a3, __a4, __a5, __a6) \
-  SYSCALL_CANCEL (socketcall, __name, \
-     ((long int [6]) { (long int) __a1, (long int) __a2, (long int) __a3, \
-                       (long int) __a4, (long int) __a5, (long int) __a6 }))
+    SYSCALL_CANCEL (socketcall, __name, \
+    ((long int [6]) { (long int) __a1, (long int) __a2, (long int) __a3, \
+        (long int) __a4, (long int) __a5, (long int) __a6 }))
 
 #define __SOCKETCALL_CANCEL(...) __SOCKETCALL_DISP (__SOCKETCALL_CANCEL,\
-                            __VA_ARGS__)
+        __VA_ARGS__)
 
 #define SOCKETCALL_CANCEL(name, args...) \
-   __SOCKETCALL_CANCEL (SOCKOP_##name, args)
+    __SOCKETCALL_CANCEL (SOCKOP_##name, args)
 
 
 #endif /* sys/socketcall.h */

@@ -28,17 +28,17 @@
 /* Microblaze does not have byte and halfword forms of load and reserve and
    store conditional. So for microblaze we stub out the 8- and 16-bit forms.  */
 #define __arch_compare_and_exchange_bool_8_acq(mem, newval, oldval)            \
-  (abort (), 0)
+    (abort (), 0)
 
 #define __arch_compare_and_exchange_bool_16_acq(mem, newval, oldval)           \
-  (abort (), 0)
+    (abort (), 0)
 
 #define __arch_compare_and_exchange_val_32_acq(mem, newval, oldval)            \
-  ({                                                                           \
-      __typeof (*(mem)) __tmp;                                                 \
-      __typeof (mem)  __memp = (mem);                                          \
-      int test;                                                                \
-      __asm __volatile (                                                       \
+    ({                                                                           \
+        __typeof (*(mem)) __tmp;                                                 \
+        __typeof (mem)  __memp = (mem);                                          \
+        int test;                                                                \
+        __asm __volatile (                                                       \
                 "   addc    r0, r0, r0;"                                       \
                 "1: lwx     %0, %3, r0;"                                       \
                 "   addic   %1, r0, 0;"                                        \
@@ -49,49 +49,49 @@
                 "   addic   %1, r0, 0;"                                        \
                 "   bnei    %1, 1b;"                                           \
                 "2:"                                                           \
-                    : "=&r" (__tmp),                                           \
-                    "=&r" (test),                                              \
-                    "=m" (*__memp)                                             \
-                    : "r" (__memp),                                            \
-                    "r" (oldval),                                              \
-                    "r" (newval)                                               \
-                    : "cc", "memory");                                         \
-      __tmp;                                                                   \
-  })
+                : "=&r" (__tmp),                                           \
+                "=&r" (test),                                              \
+                "=m" (*__memp)                                             \
+                : "r" (__memp),                                            \
+                "r" (oldval),                                              \
+                "r" (newval)                                               \
+                : "cc", "memory");                                         \
+        __tmp;                                                                   \
+    })
 
 #define __arch_compare_and_exchange_val_64_acq(mem, newval, oldval)            \
-  (abort (), (__typeof (*mem)) 0)
+    (abort (), (__typeof (*mem)) 0)
 
 #define atomic_compare_and_exchange_val_acq(mem, newval, oldval)               \
-  ({                                                                           \
-    __typeof (*(mem)) __result;                                                \
-    if (sizeof (*mem) == 4)                                                    \
-      __result = __arch_compare_and_exchange_val_32_acq (mem, newval, oldval); \
-    else if (sizeof (*mem) == 8)                                               \
-      __result = __arch_compare_and_exchange_val_64_acq (mem, newval, oldval); \
-    else                                                                       \
-       abort ();                                                               \
-    __result;                                                                  \
-  })
+    ({                                                                           \
+        __typeof (*(mem)) __result;                                                \
+        if (sizeof (*mem) == 4)                                                    \
+            __result = __arch_compare_and_exchange_val_32_acq (mem, newval, oldval); \
+        else if (sizeof (*mem) == 8)                                               \
+            __result = __arch_compare_and_exchange_val_64_acq (mem, newval, oldval); \
+        else                                                                       \
+            abort ();                                                               \
+        __result;                                                                  \
+    })
 
 #define atomic_compare_and_exchange_val_rel(mem, newval, oldval)               \
-  ({                                                                           \
-    __typeof (*(mem)) __result;                                                \
-    if (sizeof (*mem) == 4)                                                    \
-      __result = __arch_compare_and_exchange_val_32_acq (mem, newval, oldval); \
-    else if (sizeof (*mem) == 8)                                               \
-      __result = __arch_compare_and_exchange_val_64_acq (mem, newval, oldval); \
-    else                                                                       \
-       abort ();                                                               \
-    __result;                                                                  \
-  })
+    ({                                                                           \
+        __typeof (*(mem)) __result;                                                \
+        if (sizeof (*mem) == 4)                                                    \
+            __result = __arch_compare_and_exchange_val_32_acq (mem, newval, oldval); \
+        else if (sizeof (*mem) == 8)                                               \
+            __result = __arch_compare_and_exchange_val_64_acq (mem, newval, oldval); \
+        else                                                                       \
+            abort ();                                                               \
+        __result;                                                                  \
+    })
 
 #define __arch_atomic_exchange_32_acq(mem, value)                              \
-  ({                                                                           \
-      __typeof (*(mem)) __tmp;                                                 \
-      __typeof (mem)  __memp = (mem);                                          \
-      int test;                                                                \
-      __asm __volatile (                                                       \
+    ({                                                                           \
+        __typeof (*(mem)) __tmp;                                                 \
+        __typeof (mem)  __memp = (mem);                                          \
+        int test;                                                                \
+        __asm __volatile (                                                       \
                 "   addc    r0, r0, r0;"                                       \
                 "1: lwx     %0, %4, r0;"                                       \
                 "   addic   %1, r0, 0;"                                        \
@@ -99,48 +99,48 @@
                 "   swx     %3, %4, r0;"                                       \
                 "   addic   %1, r0, 0;"                                        \
                 "   bnei    %1, 1b;"                                           \
-                    : "=&r" (__tmp),                                           \
-                    "=&r" (test),                                              \
-                    "=m" (*__memp)                                             \
-                    : "r" (value),                                             \
-                    "r" (__memp)                                               \
-                    : "cc", "memory");                                         \
-      __tmp;                                                                   \
-  })
+                : "=&r" (__tmp),                                           \
+                "=&r" (test),                                              \
+                "=m" (*__memp)                                             \
+                : "r" (value),                                             \
+                "r" (__memp)                                               \
+                : "cc", "memory");                                         \
+        __tmp;                                                                   \
+    })
 
 #define __arch_atomic_exchange_64_acq(mem, newval)                             \
-  (abort (), (__typeof (*mem)) 0)
+    (abort (), (__typeof (*mem)) 0)
 
 #define atomic_exchange_acq(mem, value)                                        \
-  ({                                                                           \
-    __typeof (*(mem)) __result;                                                \
-    if (sizeof (*mem) == 4)                                                    \
-      __result = __arch_atomic_exchange_32_acq (mem, value);                   \
-    else if (sizeof (*mem) == 8)                                               \
-      __result = __arch_atomic_exchange_64_acq (mem, value);                   \
-    else                                                                       \
-       abort ();                                                               \
-    __result;                                                                  \
-  })
+    ({                                                                           \
+        __typeof (*(mem)) __result;                                                \
+        if (sizeof (*mem) == 4)                                                    \
+            __result = __arch_atomic_exchange_32_acq (mem, value);                   \
+        else if (sizeof (*mem) == 8)                                               \
+            __result = __arch_atomic_exchange_64_acq (mem, value);                   \
+        else                                                                       \
+            abort ();                                                               \
+        __result;                                                                  \
+    })
 
 #define atomic_exchange_rel(mem, value)                                        \
-  ({                                                                           \
-    __typeof (*(mem)) __result;                                                \
-    if (sizeof (*mem) == 4)                                                    \
-      __result = __arch_atomic_exchange_32_acq (mem, value);                   \
-    else if (sizeof (*mem) == 8)                                               \
-      __result = __arch_atomic_exchange_64_acq (mem, value);                   \
-    else                                                                       \
-       abort ();                                                               \
-    __result;                                                                  \
-  })
+    ({                                                                           \
+        __typeof (*(mem)) __result;                                                \
+        if (sizeof (*mem) == 4)                                                    \
+            __result = __arch_atomic_exchange_32_acq (mem, value);                   \
+        else if (sizeof (*mem) == 8)                                               \
+            __result = __arch_atomic_exchange_64_acq (mem, value);                   \
+        else                                                                       \
+            abort ();                                                               \
+        __result;                                                                  \
+    })
 
 #define __arch_atomic_exchange_and_add_32(mem, value)                          \
-  ({                                                                           \
-    __typeof (*(mem)) __tmp;                                                   \
-      __typeof (mem)  __memp = (mem);                                          \
-    int test;                                                                  \
-    __asm __volatile (                                                         \
+    ({                                                                           \
+        __typeof (*(mem)) __tmp;                                                   \
+        __typeof (mem)  __memp = (mem);                                          \
+        int test;                                                                  \
+        __asm __volatile (                                                         \
                 "   addc    r0, r0, r0;"                                       \
                 "1: lwx     %0, %4, r0;"                                       \
                 "   addic   %1, r0, 0;"                                        \
@@ -149,35 +149,35 @@
                 "   swx     %1, %4, r0;"                                       \
                 "   addic   %1, r0, 0;"                                        \
                 "   bnei    %1, 1b;"                                           \
-                    : "=&r" (__tmp),                                           \
-                    "=&r" (test),                                              \
-                    "=m" (*__memp)                                             \
-                    : "r" (value),                                             \
-                    "r" (__memp)                                               \
-                    : "cc", "memory");                                         \
-    __tmp;                                                                     \
-  })
+                : "=&r" (__tmp),                                           \
+                "=&r" (test),                                              \
+                "=m" (*__memp)                                             \
+                : "r" (value),                                             \
+                "r" (__memp)                                               \
+                : "cc", "memory");                                         \
+        __tmp;                                                                     \
+    })
 
 #define __arch_atomic_exchange_and_add_64(mem, value)                          \
-  (abort (), (__typeof (*mem)) 0)
+    (abort (), (__typeof (*mem)) 0)
 
 #define atomic_exchange_and_add(mem, value)                                    \
-  ({                                                                           \
-    __typeof (*(mem)) __result;                                                \
-    if (sizeof (*mem) == 4)                                                    \
-      __result = __arch_atomic_exchange_and_add_32 (mem, value);               \
-    else if (sizeof (*mem) == 8)                                               \
-      __result = __arch_atomic_exchange_and_add_64 (mem, value);               \
-    else                                                                       \
-       abort ();                                                               \
-    __result;                                                                  \
-  })
+    ({                                                                           \
+        __typeof (*(mem)) __result;                                                \
+        if (sizeof (*mem) == 4)                                                    \
+            __result = __arch_atomic_exchange_and_add_32 (mem, value);               \
+        else if (sizeof (*mem) == 8)                                               \
+            __result = __arch_atomic_exchange_and_add_64 (mem, value);               \
+        else                                                                       \
+            abort ();                                                               \
+        __result;                                                                  \
+    })
 
 #define __arch_atomic_increment_val_32(mem)                                    \
-  ({                                                                           \
-    __typeof (*(mem)) __val;                                                   \
-    int test;                                                                  \
-    __asm __volatile (                                                         \
+    ({                                                                           \
+        __typeof (*(mem)) __val;                                                   \
+        int test;                                                                  \
+        __asm __volatile (                                                         \
                 "   addc    r0, r0, r0;"                                       \
                 "1: lwx     %0, %3, r0;"                                       \
                 "   addic   %1, r0, 0;"                                        \
@@ -186,37 +186,37 @@
                 "   swx     %0, %3, r0;"                                       \
                 "   addic   %1, r0, 0;"                                        \
                 "   bnei    %1, 1b;"                                           \
-                    : "=&r" (__val),                                           \
-                    "=&r" (test),                                              \
-                    "=m" (*mem)                                                \
-                    : "r" (mem),                                               \
-                    "m" (*mem)                                                 \
-                    : "cc", "memory");                                         \
-    __val;                                                                     \
-  })
+                : "=&r" (__val),                                           \
+                "=&r" (test),                                              \
+                "=m" (*mem)                                                \
+                : "r" (mem),                                               \
+                "m" (*mem)                                                 \
+                : "cc", "memory");                                         \
+        __val;                                                                     \
+    })
 
 #define __arch_atomic_increment_val_64(mem)                                    \
-  (abort (), (__typeof (*mem)) 0)
+    (abort (), (__typeof (*mem)) 0)
 
 #define atomic_increment_val(mem)                                              \
-  ({                                                                           \
-    __typeof (*(mem)) __result;                                                \
-    if (sizeof (*(mem)) == 4)                                                  \
-      __result = __arch_atomic_increment_val_32 (mem);                         \
-    else if (sizeof (*(mem)) == 8)                                             \
-      __result = __arch_atomic_increment_val_64 (mem);                         \
-    else                                                                       \
-       abort ();                                                               \
-    __result;                                                                  \
-  })
+    ({                                                                           \
+        __typeof (*(mem)) __result;                                                \
+        if (sizeof (*(mem)) == 4)                                                  \
+            __result = __arch_atomic_increment_val_32 (mem);                         \
+        else if (sizeof (*(mem)) == 8)                                             \
+            __result = __arch_atomic_increment_val_64 (mem);                         \
+        else                                                                       \
+            abort ();                                                               \
+        __result;                                                                  \
+    })
 
 #define atomic_increment(mem) ({ atomic_increment_val (mem); (void) 0; })
 
 #define __arch_atomic_decrement_val_32(mem)                                    \
-  ({                                                                           \
-    __typeof (*(mem)) __val;                                                   \
-    int test;                                                                  \
-    __asm __volatile (                                                         \
+    ({                                                                           \
+        __typeof (*(mem)) __val;                                                   \
+        int test;                                                                  \
+        __asm __volatile (                                                         \
                 "   addc    r0, r0, r0;"                                       \
                 "1: lwx     %0, %3, r0;"                                       \
                 "   addic   %1, r0, 0;"                                        \
@@ -225,28 +225,28 @@
                 "   swx     %0, %3, r0;"                                       \
                 "   addic   %1, r0, 0;"                                        \
                 "   bnei    %1, 1b;"                                           \
-                    : "=&r" (__val),                                           \
-                    "=&r" (test),                                              \
-                    "=m" (*mem)                                                \
-                    : "r" (mem),                                               \
-                    "m" (*mem)                                                 \
-                    : "cc", "memory");                                         \
-    __val;                                                                     \
-  })
+                : "=&r" (__val),                                           \
+                "=&r" (test),                                              \
+                "=m" (*mem)                                                \
+                : "r" (mem),                                               \
+                "m" (*mem)                                                 \
+                : "cc", "memory");                                         \
+        __val;                                                                     \
+    })
 
 #define __arch_atomic_decrement_val_64(mem)                                    \
-  (abort (), (__typeof (*mem)) 0)
+    (abort (), (__typeof (*mem)) 0)
 
 #define atomic_decrement_val(mem)                                              \
-  ({                                                                           \
-    __typeof (*(mem)) __result;                                                \
-    if (sizeof (*(mem)) == 4)                                                  \
-      __result = __arch_atomic_decrement_val_32 (mem);                         \
-    else if (sizeof (*(mem)) == 8)                                             \
-      __result = __arch_atomic_decrement_val_64 (mem);                         \
-    else                                                                       \
-       abort ();                                                               \
-    __result;                                                                  \
-  })
+    ({                                                                           \
+        __typeof (*(mem)) __result;                                                \
+        if (sizeof (*(mem)) == 4)                                                  \
+            __result = __arch_atomic_decrement_val_32 (mem);                         \
+        else if (sizeof (*(mem)) == 8)                                             \
+            __result = __arch_atomic_decrement_val_64 (mem);                         \
+        else                                                                       \
+            abort ();                                                               \
+        __result;                                                                  \
+    })
 
 #define atomic_decrement(mem) ({ atomic_decrement_val (mem); (void) 0; })

@@ -48,12 +48,12 @@ static void do_prepare(int argc, char **argv)
 
 #ifndef PREADV
 # define PREADV(__fd, __iov, __iovcnt, __offset) \
-  preadv (__fd, __iov, __iovcnt, __offset)
+    preadv (__fd, __iov, __iovcnt, __offset)
 #endif
 
 #ifndef PWRITEV
 # define PWRITEV(__fd, __iov, __iovcnt, __offset) \
-  pwritev (__fd, __iov, __iovcnt, __offset)
+    pwritev (__fd, __iov, __iovcnt, __offset)
 #endif
 
 static __attribute__((unused)) void

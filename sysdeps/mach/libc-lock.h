@@ -34,7 +34,7 @@ typedef struct {
 typedef __libc_lock_recursive_t __rtld_lock_recursive_t;
 
 #define __libc_lock_owner_self()   \
-  (__LIBC_NO_TLS () ? (void *) 1 : THREAD_SELF)
+    (__LIBC_NO_TLS () ? (void *) 1 : THREAD_SELF)
 
 #else
 typedef struct __libc_lock_opaque__ __libc_lock_t;
@@ -49,12 +49,12 @@ typedef struct __libc_lock_recursive_opaque__ __libc_lock_recursive_t;
    begins with a `*'), because its storage size will not be known outside
    of libc.  */
 #define __libc_lock_define(CLASS,NAME) \
-  CLASS __libc_lock_t NAME;
+    CLASS __libc_lock_t NAME;
 
 /* Define an initialized lock variable NAME with storage class CLASS.  */
 #define _LIBC_LOCK_INITIALIZER LLL_LOCK_INITIALIZER
 #define __libc_lock_define_initialized(CLASS,NAME) \
-  CLASS __libc_lock_t NAME = LLL_LOCK_INITIALIZER;
+    CLASS __libc_lock_t NAME = LLL_LOCK_INITIALIZER;
 
 /* Initialize the named lock variable, leaving it in a consistent, unlocked
    state.  */
@@ -69,80 +69,80 @@ typedef struct __libc_lock_recursive_opaque__ __libc_lock_recursive_t;
 
 /* Lock the named lock variable.  */
 #define __libc_lock_lock(NAME)   \
-  ({ lll_lock ((NAME), LLL_PRIVATE); 0; })
+    ({ lll_lock ((NAME), LLL_PRIVATE); 0; })
 
 /* Lock the named lock variable.  */
 #define __libc_lock_trylock(NAME) lll_trylock (NAME)
 
 /* Unlock the named lock variable.  */
 #define __libc_lock_unlock(NAME)   \
-  ({ lll_unlock ((NAME), LLL_PRIVATE); 0; })
+    ({ lll_unlock ((NAME), LLL_PRIVATE); 0; })
 
 #define __libc_lock_define_recursive(CLASS,NAME) \
-  CLASS __libc_lock_recursive_t NAME;
+    CLASS __libc_lock_recursive_t NAME;
 
 #define _LIBC_LOCK_RECURSIVE_INITIALIZER { LLL_LOCK_INITIALIZER, 0, 0 }
 
 #define __libc_lock_define_initialized_recursive(CLASS,NAME) \
-  CLASS __libc_lock_recursive_t NAME = _LIBC_LOCK_RECURSIVE_INITIALIZER;
+    CLASS __libc_lock_recursive_t NAME = _LIBC_LOCK_RECURSIVE_INITIALIZER;
 
 #define __rtld_lock_define_recursive(CLASS,NAME) \
-  __libc_lock_define_recursive (CLASS, NAME)
+    __libc_lock_define_recursive (CLASS, NAME)
 #define _RTLD_LOCK_RECURSIVE_INITIALIZER \
-  _LIBC_LOCK_RECURSIVE_INITIALIZER
+    _LIBC_LOCK_RECURSIVE_INITIALIZER
 #define __rtld_lock_define_initialized_recursive(CLASS,NAME) \
-  __libc_lock_define_initialized_recursive (CLASS, NAME)
+    __libc_lock_define_initialized_recursive (CLASS, NAME)
 
 #define __libc_lock_init_recursive(NAME)   \
-  ({   \
-     (NAME) = (__libc_lock_recursive_t)_LIBC_LOCK_RECURSIVE_INITIALIZER;   \
-     0;   \
-  })
+    ({   \
+        (NAME) = (__libc_lock_recursive_t)_LIBC_LOCK_RECURSIVE_INITIALIZER;   \
+        0;   \
+    })
 
 #define __libc_lock_trylock_recursive(NAME)   \
-  ({   \
-     __libc_lock_recursive_t *const __lock = &(NAME);   \
-     void *__self = __libc_lock_owner_self ();   \
-     int __r = 0;   \
-     if (__self == __lock->owner)   \
-       ++__lock->cnt;   \
-     else if ((__r = lll_trylock (__lock->lock)) == 0)   \
-       __lock->owner = __self, __lock->cnt = 1;   \
-     __r;   \
-   })
+    ({   \
+        __libc_lock_recursive_t *const __lock = &(NAME);   \
+        void *__self = __libc_lock_owner_self ();   \
+        int __r = 0;   \
+        if (__self == __lock->owner)   \
+            ++__lock->cnt;   \
+        else if ((__r = lll_trylock (__lock->lock)) == 0)   \
+            __lock->owner = __self, __lock->cnt = 1;   \
+        __r;   \
+    })
 
 #define __libc_lock_lock_recursive(NAME)   \
-  ({   \
-     __libc_lock_recursive_t *const __lock = &(NAME);   \
-     void *__self = __libc_lock_owner_self ();   \
-     if (__self != __lock->owner)   \
-       {   \
-         lll_lock (__lock->lock, 0);   \
-         __lock->owner = __self;   \
-       }   \
-     ++__lock->cnt;   \
-     (void)0;   \
-   })
+    ({   \
+        __libc_lock_recursive_t *const __lock = &(NAME);   \
+        void *__self = __libc_lock_owner_self ();   \
+        if (__self != __lock->owner)   \
+        {   \
+            lll_lock (__lock->lock, 0);   \
+            __lock->owner = __self;   \
+        }   \
+        ++__lock->cnt;   \
+        (void)0;   \
+    })
 
 #define __libc_lock_unlock_recursive(NAME)   \
-  ({   \
-     __libc_lock_recursive_t *const __lock = &(NAME);   \
-     if (--__lock->cnt == 0)   \
-       {   \
-         __lock->owner = 0;   \
-         lll_unlock (__lock->lock, 0);   \
-       }   \
-   })
+    ({   \
+        __libc_lock_recursive_t *const __lock = &(NAME);   \
+        if (--__lock->cnt == 0)   \
+        {   \
+            __lock->owner = 0;   \
+            lll_unlock (__lock->lock, 0);   \
+        }   \
+    })
 
 
 #define __rtld_lock_initialize(NAME) \
-  (void) ((NAME) = (__rtld_lock_recursive_t) _RTLD_LOCK_RECURSIVE_INITIALIZER)
+    (void) ((NAME) = (__rtld_lock_recursive_t) _RTLD_LOCK_RECURSIVE_INITIALIZER)
 #define __rtld_lock_trylock_recursive(NAME) \
-  __libc_lock_trylock_recursive (NAME)
+    __libc_lock_trylock_recursive (NAME)
 #define __rtld_lock_lock_recursive(NAME) \
-  __libc_lock_lock_recursive(NAME)
+    __libc_lock_lock_recursive(NAME)
 #define __rtld_lock_unlock_recursive(NAME) \
-  __libc_lock_unlock_recursive (NAME)
+    __libc_lock_unlock_recursive (NAME)
 
 /* XXX for now */
 #define __libc_rwlock_define        __libc_lock_define
@@ -170,17 +170,17 @@ __extern_inline void __libc_cleanup_fct(struct __libc_cleanup_frame *framep)
 
 /* Start a critical region with a cleanup function */
 #define __libc_cleanup_region_start(DOIT, FCT, ARG)   \
-  do   \
+    do   \
     {   \
-      struct __libc_cleanup_frame __cleanup   \
+        struct __libc_cleanup_frame __cleanup   \
         __attribute__ ((__cleanup__ (__libc_cleanup_fct))) =   \
-        { .__fct = (FCT), .__argp = (ARG), .__doit = (DOIT) };
+                { .__fct = (FCT), .__argp = (ARG), .__doit = (DOIT) };
 
 /* This one closes the brace above.  */
 #define __libc_cleanup_region_end(DOIT)   \
-      __cleanup.__doit = (DOIT);   \
+    __cleanup.__doit = (DOIT);   \
     }   \
-  while (0)
+    while (0)
 
 #define __libc_cleanup_end(DOIT)   __cleanup.__doit = (DOIT);
 
@@ -195,17 +195,17 @@ struct __libc_once {
 };
 
 #define __libc_once_define(CLASS,NAME) \
-  CLASS struct __libc_once NAME = { _LIBC_LOCK_INITIALIZER, 0 }
+    CLASS struct __libc_once NAME = { _LIBC_LOCK_INITIALIZER, 0 }
 
 /* Call handler iff the first call.  */
 #define __libc_once(ONCE_CONTROL, INIT_FUNCTION) \
-  do {                                        \
-    __libc_lock_lock (ONCE_CONTROL.lock);                     \
-    if (!ONCE_CONTROL.done)                           \
-      (INIT_FUNCTION) ();                             \
-    ONCE_CONTROL.done = 1;                            \
-    __libc_lock_unlock (ONCE_CONTROL.lock);                   \
-  } while (0)
+    do {                                        \
+        __libc_lock_lock (ONCE_CONTROL.lock);                     \
+        if (!ONCE_CONTROL.done)                           \
+            (INIT_FUNCTION) ();                             \
+        ONCE_CONTROL.done = 1;                            \
+        __libc_lock_unlock (ONCE_CONTROL.lock);                   \
+    } while (0)
 
 /* Get once control variable.  */
 #define __libc_once_get(ONCE_CONTROL)   ((ONCE_CONTROL).done != 0)

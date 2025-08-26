@@ -94,30 +94,30 @@
 /* Essentially ((TYPE *) THIS)->MEMBER, but avoiding the aliasing
    violation in case THIS has a different pointer type.  */
 #define _IO_CAST_FIELD_ACCESS(THIS, TYPE, MEMBER) \
-  (*(_IO_MEMBER_TYPE (TYPE, MEMBER) *)(((char *) (THIS)) \
-                       + offsetof(TYPE, MEMBER)))
+    (*(_IO_MEMBER_TYPE (TYPE, MEMBER) *)(((char *) (THIS)) \
+                                         + offsetof(TYPE, MEMBER)))
 
 #define _IO_JUMPS(THIS) (THIS)->vtable
 #define _IO_JUMPS_FILE_plus(THIS) \
-  _IO_CAST_FIELD_ACCESS ((THIS), struct _IO_FILE_plus, vtable)
+    _IO_CAST_FIELD_ACCESS ((THIS), struct _IO_FILE_plus, vtable)
 #define _IO_WIDE_JUMPS(THIS) \
-  _IO_CAST_FIELD_ACCESS ((THIS), struct _IO_FILE, _wide_data)->_wide_vtable
+    _IO_CAST_FIELD_ACCESS ((THIS), struct _IO_FILE, _wide_data)->_wide_vtable
 #define _IO_CHECK_WIDE(THIS) \
-  (_IO_CAST_FIELD_ACCESS ((THIS), struct _IO_FILE, _wide_data) != NULL)
+    (_IO_CAST_FIELD_ACCESS ((THIS), struct _IO_FILE, _wide_data) != NULL)
 
 #if _IO_JUMPS_OFFSET
 # define _IO_JUMPS_FUNC(THIS) \
-  (IO_validate_vtable                                                   \
-   (*(struct _IO_jump_t **) ((void *) &_IO_JUMPS_FILE_plus (THIS)   \
-                 + (THIS)->_vtable_offset)))
+    (IO_validate_vtable                                                   \
+     (*(struct _IO_jump_t **) ((void *) &_IO_JUMPS_FILE_plus (THIS)   \
+                               + (THIS)->_vtable_offset)))
 # define _IO_JUMPS_FUNC_UPDATE(THIS, VTABLE)                \
-  (*(const struct _IO_jump_t **) ((void *) &_IO_JUMPS_FILE_plus (THIS)  \
-                  + (THIS)->_vtable_offset) = (VTABLE))
+    (*(const struct _IO_jump_t **) ((void *) &_IO_JUMPS_FILE_plus (THIS)  \
+                                    + (THIS)->_vtable_offset) = (VTABLE))
 # define _IO_vtable_offset(THIS) (THIS)->_vtable_offset
 #else
 # define _IO_JUMPS_FUNC(THIS) (IO_validate_vtable (_IO_JUMPS_FILE_plus (THIS)))
 # define _IO_JUMPS_FUNC_UPDATE(THIS, VTABLE) \
-  (_IO_JUMPS_FILE_plus (THIS) = (VTABLE))
+    (_IO_JUMPS_FILE_plus (THIS) = (VTABLE))
 # define _IO_vtable_offset(THIS) 0
 #endif
 #define _IO_WIDE_JUMPS_FUNC(THIS) _IO_WIDE_JUMPS(THIS)
@@ -555,37 +555,37 @@ extern void _IO_old_init(FILE *fp, int flags) __THROW;
 
 
 #define _IO_do_flush(_f) \
-  ((_f)->_mode <= 0                               \
-   ? _IO_do_write(_f, (_f)->_IO_write_base,                   \
-          (_f)->_IO_write_ptr-(_f)->_IO_write_base)           \
-   : _IO_wdo_write(_f, (_f)->_wide_data->_IO_write_base,              \
-           ((_f)->_wide_data->_IO_write_ptr               \
-            - (_f)->_wide_data->_IO_write_base)))
+    ((_f)->_mode <= 0                               \
+     ? _IO_do_write(_f, (_f)->_IO_write_base,                   \
+                    (_f)->_IO_write_ptr-(_f)->_IO_write_base)           \
+     : _IO_wdo_write(_f, (_f)->_wide_data->_IO_write_base,              \
+                     ((_f)->_wide_data->_IO_write_ptr               \
+                      - (_f)->_wide_data->_IO_write_base)))
 #define _IO_old_do_flush(_f) \
-  _IO_old_do_write(_f, (_f)->_IO_write_base, \
-           (_f)->_IO_write_ptr-(_f)->_IO_write_base)
+    _IO_old_do_write(_f, (_f)->_IO_write_base, \
+                     (_f)->_IO_write_ptr-(_f)->_IO_write_base)
 #define _IO_in_put_mode(_fp) ((_fp)->_flags & _IO_CURRENTLY_PUTTING)
 #define _IO_mask_flags(fp, f, mask) \
-       ((fp)->_flags = ((fp)->_flags & ~(mask)) | ((f) & (mask)))
+    ((fp)->_flags = ((fp)->_flags & ~(mask)) | ((f) & (mask)))
 #define _IO_setg(fp, eb, g, eg)  ((fp)->_IO_read_base = (eb),\
-    (fp)->_IO_read_ptr = (g), (fp)->_IO_read_end = (eg))
+                                  (fp)->_IO_read_ptr = (g), (fp)->_IO_read_end = (eg))
 #define _IO_wsetg(fp, eb, g, eg)  ((fp)->_wide_data->_IO_read_base = (eb),\
-    (fp)->_wide_data->_IO_read_ptr = (g), \
-    (fp)->_wide_data->_IO_read_end = (eg))
+                                   (fp)->_wide_data->_IO_read_ptr = (g), \
+                                   (fp)->_wide_data->_IO_read_end = (eg))
 #define _IO_setp(__fp, __p, __ep) \
-       ((__fp)->_IO_write_base = (__fp)->_IO_write_ptr \
-    = __p, (__fp)->_IO_write_end = (__ep))
+    ((__fp)->_IO_write_base = (__fp)->_IO_write_ptr \
+                              = __p, (__fp)->_IO_write_end = (__ep))
 #define _IO_wsetp(__fp, __p, __ep) \
-       ((__fp)->_wide_data->_IO_write_base \
-    = (__fp)->_wide_data->_IO_write_ptr = __p, \
-    (__fp)->_wide_data->_IO_write_end = (__ep))
+    ((__fp)->_wide_data->_IO_write_base \
+     = (__fp)->_wide_data->_IO_write_ptr = __p, \
+     (__fp)->_wide_data->_IO_write_end = (__ep))
 #define _IO_have_backup(fp) ((fp)->_IO_backup_base != NULL)
 #define _IO_have_wbackup(fp) ((fp)->_wide_data->_IO_backup_base != NULL)
 #define _IO_in_backup(fp) ((fp)->_flags & _IO_IN_BACKUP)
 #define _IO_have_markers(fp) ((fp)->_markers != NULL)
 #define _IO_blen(fp) ((fp)->_IO_buf_end - (fp)->_IO_buf_base)
 #define _IO_wblen(fp) ((fp)->_wide_data->_IO_buf_end \
-               - (fp)->_wide_data->_IO_buf_base)
+                       - (fp)->_wide_data->_IO_buf_base)
 
 /* Jumptable functions for files. */
 
@@ -905,32 +905,32 @@ extern int _IO_vscanf(const char *, va_list) __THROW;
 /* check following! */
 # ifdef _IO_USE_OLD_IO_FILE
 #  define FILEBUF_LITERAL(CHAIN, FLAGS, FD, WDP) \
-       { _IO_MAGIC+_IO_LINKED+_IO_IS_FILEBUF+FLAGS, \
-     NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, \
-     NULL, NULL, (FILE *) CHAIN, FD, 0, { 0 }, \
-     _IO_pos_BAD, 0, 0, { 0 }, &_IO_stdfile_##FD##_lock }
+    { _IO_MAGIC+_IO_LINKED+_IO_IS_FILEBUF+FLAGS, \
+        NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, \
+        NULL, NULL, (FILE *) CHAIN, FD, 0, { 0 }, \
+        _IO_pos_BAD, 0, 0, { 0 }, &_IO_stdfile_##FD##_lock }
 # else
 #  define FILEBUF_LITERAL(CHAIN, FLAGS, FD, WDP) \
-       { _IO_MAGIC+_IO_LINKED+_IO_IS_FILEBUF+FLAGS, \
-     NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, \
-     NULL, NULL, (FILE *) CHAIN, FD, 0, { 0 }, \
-     _IO_pos_BAD, 0, 0, { 0 }, &_IO_stdfile_##FD##_lock, \
-     _IO_pos_BAD, NULL, WDP, NULL }
+    { _IO_MAGIC+_IO_LINKED+_IO_IS_FILEBUF+FLAGS, \
+        NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, \
+        NULL, NULL, (FILE *) CHAIN, FD, 0, { 0 }, \
+        _IO_pos_BAD, 0, 0, { 0 }, &_IO_stdfile_##FD##_lock, \
+        _IO_pos_BAD, NULL, WDP, NULL }
 # endif
 #else
 # ifdef _IO_USE_OLD_IO_FILE
 #  define FILEBUF_LITERAL(CHAIN, FLAGS, FD, WDP) \
-       { _IO_MAGIC+_IO_LINKED+_IO_IS_FILEBUF+FLAGS, \
-     NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, \
-     NULL, NULL, (FILE *) CHAIN, FD, 0, { 0 }, \
-     _IO_pos_BAD }
+    { _IO_MAGIC+_IO_LINKED+_IO_IS_FILEBUF+FLAGS, \
+        NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, \
+        NULL, NULL, (FILE *) CHAIN, FD, 0, { 0 }, \
+        _IO_pos_BAD }
 # else
 #  define FILEBUF_LITERAL(CHAIN, FLAGS, FD, WDP) \
-       { _IO_MAGIC+_IO_LINKED+_IO_IS_FILEBUF+FLAGS, \
-     NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, \
-     NULL, NULL, (FILE *) CHAIN, FD, 0, { 0 }, \
-     _IO_pos_BAD, 0, 0, { 0 }, NULL, \
-     _IO_pos_BAD, NULL, WDP, NULL }
+    { _IO_MAGIC+_IO_LINKED+_IO_IS_FILEBUF+FLAGS, \
+        NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, \
+        NULL, NULL, (FILE *) CHAIN, FD, 0, { 0 }, \
+        _IO_pos_BAD, 0, 0, { 0 }, NULL, \
+        _IO_pos_BAD, NULL, WDP, NULL }
 # endif
 #endif
 
@@ -966,13 +966,13 @@ static inline void _IO_deallocate_file(FILE *fp)
 
 #ifdef IO_DEBUG
 # define CHECK_FILE(FILE, RET) do {             \
-    if ((FILE) == NULL                      \
-    || ((FILE)->_flags & _IO_MAGIC_MASK) != _IO_MAGIC)  \
-      {                             \
-    __set_errno (EINVAL);                   \
-    return RET;                     \
-      }                             \
-  } while (0)
+        if ((FILE) == NULL                      \
+            || ((FILE)->_flags & _IO_MAGIC_MASK) != _IO_MAGIC)  \
+        {                             \
+            __set_errno (EINVAL);                   \
+            return RET;                     \
+        }                             \
+    } while (0)
 #else
 # define CHECK_FILE(FILE, RET) do { } while (0)
 #endif
@@ -988,9 +988,9 @@ _IO_acquire_lock_fct(FILE **p)
 
 #if !defined _IO_MTSAFE_IO && IS_IN (libc)
 # define _IO_acquire_lock(_fp)                            \
-  do {
+    do {
 # define _IO_release_lock(_fp)                            \
-  } while (0)
+    } while (0)
 #endif
 
 #ifdef SHARED

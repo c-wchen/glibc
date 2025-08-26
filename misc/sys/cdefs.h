@@ -174,26 +174,26 @@
 
 #define __glibc_safe_len_cond(__l, __s, __osz) ((__l) <= (__osz) / (__s))
 #define __glibc_unsigned_or_positive(__l) \
-  ((__typeof (__l)) 0 < (__typeof (__l)) -1                   \
-   || (__builtin_constant_p (__l) && (__l) > 0))
+    ((__typeof (__l)) 0 < (__typeof (__l)) -1                   \
+     || (__builtin_constant_p (__l) && (__l) > 0))
 
 /* Length is known to be safe at compile time if the __L * __S <= __OBJSZ
    condition can be folded to a constant and if it is true, or unknown (-1) */
 #define __glibc_safe_or_unknown_len(__l, __s, __osz) \
-  ((__builtin_constant_p (__osz) && (__osz) == (__SIZE_TYPE__) -1)        \
-   || (__glibc_unsigned_or_positive (__l)                     \
-       && __builtin_constant_p (__glibc_safe_len_cond ((__SIZE_TYPE__) (__l), \
-                               (__s), (__osz)))       \
-       && __glibc_safe_len_cond ((__SIZE_TYPE__) (__l), (__s), (__osz))))
+    ((__builtin_constant_p (__osz) && (__osz) == (__SIZE_TYPE__) -1)        \
+     || (__glibc_unsigned_or_positive (__l)                     \
+         && __builtin_constant_p (__glibc_safe_len_cond ((__SIZE_TYPE__) (__l), \
+                                  (__s), (__osz)))       \
+         && __glibc_safe_len_cond ((__SIZE_TYPE__) (__l), (__s), (__osz))))
 
 /* Conversely, we know at compile time that the length is unsafe if the
    __L * __S <= __OBJSZ condition can be folded to a constant and if it is
    false.  */
 #define __glibc_unsafe_len(__l, __s, __osz) \
-  (__glibc_unsigned_or_positive (__l)                         \
-   && __builtin_constant_p (__glibc_safe_len_cond ((__SIZE_TYPE__) (__l),     \
-                           __s, __osz))           \
-   && !__glibc_safe_len_cond ((__SIZE_TYPE__) (__l), __s, __osz))
+    (__glibc_unsigned_or_positive (__l)                         \
+     && __builtin_constant_p (__glibc_safe_len_cond ((__SIZE_TYPE__) (__l),     \
+                              __s, __osz))           \
+     && !__glibc_safe_len_cond ((__SIZE_TYPE__) (__l), __s, __osz))
 
 /* To correctly instrument the fortify wrapper clang requires the
    pass_object_size attribute, and the attribute has the restriction that the
@@ -221,19 +221,19 @@
 # define __fortify_function_error_function static __attribute__((__unused__))
 
 # define __fortify_clang_pass_object_size_n(n) \
-  __attribute__ ((__pass_object_size__ (n)))
+    __attribute__ ((__pass_object_size__ (n)))
 # define __fortify_clang_pass_object_size0 \
-  __fortify_clang_pass_object_size_n (0)
+    __fortify_clang_pass_object_size_n (0)
 # define __fortify_clang_pass_object_size \
-  __fortify_clang_pass_object_size_n (__USE_FORTIFY_LEVEL > 1)
+    __fortify_clang_pass_object_size_n (__USE_FORTIFY_LEVEL > 1)
 
 # if __clang_major__ >= 9
 #  define __fortify_clang_pass_dynamic_object_size_n(n) \
-  __attribute__ ((__pass_dynamic_object_size__ (n)))
+    __attribute__ ((__pass_dynamic_object_size__ (n)))
 #  define __fortify_clang_pass_dynamic_object_size0 \
-  __fortify_clang_pass_dynamic_object_size_n (0)
+    __fortify_clang_pass_dynamic_object_size_n (0)
 #  define __fortify_clang_pass_dynamic_object_size \
-  __fortify_clang_pass_dynamic_object_size_n (1)
+    __fortify_clang_pass_dynamic_object_size_n (1)
 # else
 #  define __fortify_clang_pass_dynamic_object_size_n(n)
 #  define __fortify_clang_pass_dynamic_object_size0
@@ -241,74 +241,74 @@
 # endif
 
 # define __fortify_clang_bos_static_lt_impl(bos_val, n, s) \
-  ((bos_val) != -1ULL && (n) > (bos_val) / (s))
+    ((bos_val) != -1ULL && (n) > (bos_val) / (s))
 # define __fortify_clang_bos_static_lt2(__n, __e, __s) \
-  __fortify_clang_bos_static_lt_impl (__bos (__e), __n, __s)
+    __fortify_clang_bos_static_lt_impl (__bos (__e), __n, __s)
 # define __fortify_clang_bos_static_lt(__n, __e) \
-  __fortify_clang_bos_static_lt2 (__n, __e, 1)
+    __fortify_clang_bos_static_lt2 (__n, __e, 1)
 # define __fortify_clang_bos0_static_lt2(__n, __e, __s) \
-  __fortify_clang_bos_static_lt_impl (__bos0 (__e), __n, __s)
+    __fortify_clang_bos_static_lt_impl (__bos0 (__e), __n, __s)
 # define __fortify_clang_bos0_static_lt(__n, __e) \
-  __fortify_clang_bos0_static_lt2 (__n, __e, 1)
+    __fortify_clang_bos0_static_lt2 (__n, __e, 1)
 
 # define __fortify_clang_bosn_args(bos_fn, n, buf, div, complaint) \
-  (__fortify_clang_bos_static_lt_impl (bos_fn (buf), n, div)), (complaint), \
-  "warning"
+    (__fortify_clang_bos_static_lt_impl (bos_fn (buf), n, div)), (complaint), \
+    "warning"
 
 # define __fortify_clang_warning(__c, __msg) \
-  __attribute__ ((__diagnose_if__ ((__c), (__msg), "warning")))
+    __attribute__ ((__diagnose_if__ ((__c), (__msg), "warning")))
 #  define __fortify_clang_error(__c, __msg) \
-  __attribute__ ((__diagnose_if__ ((__c), (__msg), "error")))
+    __attribute__ ((__diagnose_if__ ((__c), (__msg), "error")))
 #  define __fortify_clang_warning_only_if_bos0_lt(n, buf, complaint) \
-  __attribute__ ((__diagnose_if__ \
-          (__fortify_clang_bosn_args (__bos0, n, buf, 1, complaint))))
+    __attribute__ ((__diagnose_if__ \
+                    (__fortify_clang_bosn_args (__bos0, n, buf, 1, complaint))))
 # define __fortify_clang_warning_only_if_bos0_lt2(n, buf, div, complaint) \
-  __attribute__ ((__diagnose_if__ \
-          (__fortify_clang_bosn_args (__bos0, n, buf, div, complaint))))
+    __attribute__ ((__diagnose_if__ \
+                    (__fortify_clang_bosn_args (__bos0, n, buf, div, complaint))))
 # define __fortify_clang_warning_only_if_bos_lt(n, buf, complaint) \
-  __attribute__ ((__diagnose_if__ \
-          (__fortify_clang_bosn_args (__bos, n, buf, 1, complaint))))
+    __attribute__ ((__diagnose_if__ \
+                    (__fortify_clang_bosn_args (__bos, n, buf, 1, complaint))))
 # define __fortify_clang_warning_only_if_bos_lt2(n, buf, div, complaint) \
-  __attribute__ ((__diagnose_if__ \
-          (__fortify_clang_bosn_args (__bos, n, buf, div, complaint))))
+    __attribute__ ((__diagnose_if__ \
+                    (__fortify_clang_bosn_args (__bos, n, buf, div, complaint))))
 
 #  define __fortify_clang_prefer_this_overload \
-  __attribute__ ((enable_if (1, "")))
+    __attribute__ ((enable_if (1, "")))
 #  define __fortify_clang_unavailable(__msg) \
-  __attribute__ ((unavailable(__msg)))
+    __attribute__ ((unavailable(__msg)))
 
 # if __USE_FORTIFY_LEVEL == 3
 #  define __fortify_clang_overload_arg(__type, __attr, __name) \
-  __type __attr const __fortify_clang_pass_dynamic_object_size __name
+    __type __attr const __fortify_clang_pass_dynamic_object_size __name
 #  define __fortify_clang_overload_arg0(__type, __attr, __name) \
-  __type __attr const __fortify_clang_pass_dynamic_object_size0 __name
+    __type __attr const __fortify_clang_pass_dynamic_object_size0 __name
 # else
 #  define __fortify_clang_overload_arg(__type, __attr, __name) \
-  __type __attr const __fortify_clang_pass_object_size __name
+    __type __attr const __fortify_clang_pass_object_size __name
 #  define __fortify_clang_overload_arg0(__type, __attr, __name) \
-  __type __attr const __fortify_clang_pass_object_size0 __name
+    __type __attr const __fortify_clang_pass_object_size0 __name
 # endif
 
 # define __fortify_clang_mul_may_overflow(size, n) \
-  ((size | n) >= (((size_t)1) << (8 * sizeof (size_t) / 2)))
+    ((size | n) >= (((size_t)1) << (8 * sizeof (size_t) / 2)))
 
 # define __fortify_clang_size_too_small(__bos, __dest, __len) \
-  (__bos (__dest) != (size_t) -1 && __bos (__dest) < __len)
+    (__bos (__dest) != (size_t) -1 && __bos (__dest) < __len)
 # define __fortify_clang_warn_if_src_too_large(__dest, __src) \
-  __fortify_clang_warning (__fortify_clang_size_too_small (__glibc_objsize, \
-                               __dest, \
-                               __builtin_strlen (__src) + 1), \
-               "destination buffer will always be overflown by source")
+    __fortify_clang_warning (__fortify_clang_size_too_small (__glibc_objsize, \
+                             __dest, \
+                             __builtin_strlen (__src) + 1), \
+                             "destination buffer will always be overflown by source")
 # define __fortify_clang_warn_if_dest_too_small(__dest, __len) \
-  __fortify_clang_warning (__fortify_clang_size_too_small (__glibc_objsize, \
-                                                           __dest, \
-                                                           __len), \
-                           "function called with bigger length than the destination buffer")
+    __fortify_clang_warning (__fortify_clang_size_too_small (__glibc_objsize, \
+                             __dest, \
+                             __len), \
+                             "function called with bigger length than the destination buffer")
 # define __fortify_clang_warn_if_dest_too_small0(__dest, __len) \
-  __fortify_clang_warning (__fortify_clang_size_too_small (__glibc_objsize0, \
-                                                           __dest, \
-                                                           __len), \
-                           "function called with bigger length than the destination buffer")
+    __fortify_clang_warning (__fortify_clang_size_too_small (__glibc_objsize0, \
+                             __dest, \
+                             __len), \
+                             "function called with bigger length than the destination buffer")
 #else
 # define __fortify_use_clang 0
 # define __fortify_clang_warning(__c, __msg)
@@ -317,9 +317,9 @@
 # define __fortify_clang_warning_only_if_bos_lt(__n, __buf, __complaint)
 # define __fortify_clang_warning_only_if_bos_lt2(__n, __buf, div, __complaint)
 # define __fortify_clang_overload_arg(__type, __attr, __name) \
- __type __attr __name
+    __type __attr __name
 # define __fortify_clang_overload_arg0(__type, __attr, __name) \
-  __fortify_clang_overload_arg (__type, __attr, __name)
+    __fortify_clang_overload_arg (__type, __attr, __name)
 # define __fortify_clang_warn_if_src_too_large(__dest, __src)
 # define __fortify_clang_warn_if_dest_too_small(__dest, __len)
 # define __fortify_clang_warn_if_dest_too_small0(__dest, __len)
@@ -331,16 +331,16 @@
 
 #if !__fortify_use_clang
 # define __glibc_fortify(f, __l, __s, __osz, ...) \
-  (__glibc_safe_or_unknown_len (__l, __s, __osz)                  \
-   ? __ ## f ## _alias (__VA_ARGS__)                          \
-   : (__glibc_unsafe_len (__l, __s, __osz)                    \
-      ? __ ## f ## _chk_warn (__VA_ARGS__, __osz)                 \
-      : __ ## f ## _chk (__VA_ARGS__, __osz)))
+    (__glibc_safe_or_unknown_len (__l, __s, __osz)                  \
+     ? __ ## f ## _alias (__VA_ARGS__)                          \
+     : (__glibc_unsafe_len (__l, __s, __osz)                    \
+        ? __ ## f ## _chk_warn (__VA_ARGS__, __osz)                 \
+        : __ ## f ## _chk (__VA_ARGS__, __osz)))
 #else
 # define __glibc_fortify(f, __l, __s, __osz, ...) \
-  (__osz == (__SIZE_TYPE__) -1)                           \
-   ? __ ## f ## _alias (__VA_ARGS__)                          \
-   : __ ## f ## _chk (__VA_ARGS__, __osz)
+    (__osz == (__SIZE_TYPE__) -1)                           \
+    ? __ ## f ## _alias (__VA_ARGS__)                          \
+    : __ ## f ## _chk (__VA_ARGS__, __osz)
 #endif
 
 /* Fortify function f, where object size argument passed to f is the number of
@@ -348,16 +348,16 @@
 
 #if !__fortify_use_clang
 # define __glibc_fortify_n(f, __l, __s, __osz, ...) \
-  (__glibc_safe_or_unknown_len (__l, __s, __osz)                  \
-   ? __ ## f ## _alias (__VA_ARGS__)                          \
-   : (__glibc_unsafe_len (__l, __s, __osz)                    \
-      ? __ ## f ## _chk_warn (__VA_ARGS__, (__osz) / (__s))           \
-      : __ ## f ## _chk (__VA_ARGS__, (__osz) / (__s))))
+    (__glibc_safe_or_unknown_len (__l, __s, __osz)                  \
+     ? __ ## f ## _alias (__VA_ARGS__)                          \
+     : (__glibc_unsafe_len (__l, __s, __osz)                    \
+        ? __ ## f ## _chk_warn (__VA_ARGS__, (__osz) / (__s))           \
+        : __ ## f ## _chk (__VA_ARGS__, (__osz) / (__s))))
 # else
 # define __glibc_fortify_n(f, __l, __s, __osz, ...) \
-  (__osz == (__SIZE_TYPE__) -1)                           \
-   ? __ ## f ## _alias (__VA_ARGS__)                          \
-   : __ ## f ## _chk (__VA_ARGS__, (__osz) / (__s))
+    (__osz == (__SIZE_TYPE__) -1)                           \
+    ? __ ## f ## _alias (__VA_ARGS__)                          \
+    : __ ## f ## _chk (__VA_ARGS__, (__osz) / (__s))
 #endif
 
 #endif /* __USE_FORTIFY_LEVEL > 0 */
@@ -365,7 +365,7 @@
 #if __GNUC_PREREQ (4,3)
 # define __warnattr(msg) __attribute__((__warning__ (msg)))
 # define __errordecl(name, msg) \
-  extern void name (void) __attribute__((__error__ (msg)))
+    extern void name (void) __attribute__((__error__ (msg)))
 #else
 # define __warnattr(msg)
 # define __errordecl(name, msg) extern void name (void)
@@ -410,14 +410,14 @@
 # define __REDIRECT(name, proto, alias) name proto __asm__ (__ASMNAME (#alias))
 # ifdef __cplusplus
 #  define __REDIRECT_NTH(name, proto, alias) \
-     name proto __THROW __asm__ (__ASMNAME (#alias))
+    name proto __THROW __asm__ (__ASMNAME (#alias))
 #  define __REDIRECT_NTHNL(name, proto, alias) \
-     name proto __THROWNL __asm__ (__ASMNAME (#alias))
+    name proto __THROWNL __asm__ (__ASMNAME (#alias))
 # else
 #  define __REDIRECT_NTH(name, proto, alias) \
-     name proto __asm__ (__ASMNAME (#alias)) __THROW
+    name proto __asm__ (__ASMNAME (#alias)) __THROW
 #  define __REDIRECT_NTHNL(name, proto, alias) \
-     name proto __asm__ (__ASMNAME (#alias)) __THROWNL
+    name proto __asm__ (__ASMNAME (#alias)) __THROWNL
 # endif
 # define __ASMNAME(cname)  __ASMNAME2 (__USER_LABEL_PREFIX__, cname)
 # define __ASMNAME2(prefix, cname) __STRING (prefix) cname
@@ -458,7 +458,7 @@
    indicate the size of the allocation.  */
 #if __GNUC_PREREQ (4, 3)
 # define __attribute_alloc_size__(params) \
-  __attribute__ ((__alloc_size__ params))
+    __attribute__ ((__alloc_size__ params))
 #else
 # define __attribute_alloc_size__(params) /* Ignore.  */
 #endif
@@ -467,7 +467,7 @@
    indicates the alignment of the allocation.  */
 #if __GNUC_PREREQ (4, 9) || __glibc_has_attribute (__alloc_align__)
 # define __attribute_alloc_align__(param) \
-  __attribute__ ((__alloc_align__ param))
+    __attribute__ ((__alloc_align__ param))
 #else
 # define __attribute_alloc_align__(param) /* Ignore.  */
 #endif
@@ -518,7 +518,7 @@
 #if __GNUC_PREREQ (4,5) \
     || __glibc_has_extension (__attribute_deprecated_with_message__)
 # define __attribute_deprecated_msg__(msg) \
-     __attribute__ ((__deprecated__ (msg)))
+    __attribute__ ((__deprecated__ (msg)))
 #else
 # define __attribute_deprecated_msg__(msg) __attribute_deprecated__
 #endif
@@ -541,7 +541,7 @@
    generates warnings.  */
 #if __GNUC_PREREQ (2,97) || __glibc_has_attribute (__format__)
 # define __attribute_format_strfmon__(a,b) \
-  __attribute__ ((__format__ (__strfmon__, a, b)))
+    __attribute__ ((__format__ (__strfmon__, a, b)))
 #else
 # define __attribute_format_strfmon__(a,b) /* Ignore */
 #endif
@@ -575,7 +575,7 @@
    function calls which can lead to problems.  */
 #if __GNUC_PREREQ (3,4) || __glibc_has_attribute (__warn_unused_result__)
 # define __attribute_warn_unused_result__ \
-   __attribute__ ((__warn_unused_result__))
+    __attribute__ ((__warn_unused_result__))
 # if defined __USE_FORTIFY_LEVEL && __USE_FORTIFY_LEVEL > 0
 #  define __wur __attribute_warn_unused_result__
 # endif
@@ -621,7 +621,7 @@
 # if defined __GNUC_STDC_INLINE__ || defined __cplusplus
 #  define __extern_inline extern __inline __attribute__ ((__gnu_inline__))
 #  define __extern_always_inline \
-  extern __always_inline __attribute__ ((__gnu_inline__))
+    extern __always_inline __attribute__ ((__gnu_inline__))
 # else
 #  define __extern_inline extern __inline
 #  define __extern_always_inline extern __always_inline
@@ -721,7 +721,7 @@
          || defined __STRICT_ANSI__))
 # define _Static_assert(expr, diagnostic) \
     extern int (*__Static_assert_function (void)) \
-      [!!sizeof (struct { int __error_if_negative: (expr) ? 2 : -1; })]
+    [!!sizeof (struct { int __error_if_negative: (expr) ? 2 : -1; })]
 #endif
 
 /* Gnulib avoids including these, as they don't work on non-glibc or
@@ -737,24 +737,24 @@
 /* Alias name defined automatically.  */
 #  define __LDBL_REDIR(name, proto) ... unused__ldbl_redir
 #  define __LDBL_REDIR_DECL(name) \
-  extern __typeof (name) name __asm (__ASMNAME ("__" #name "ieee128"));
+    extern __typeof (name) name __asm (__ASMNAME ("__" #name "ieee128"));
 #  define __REDIRECT_LDBL(name, proto, alias) \
-  name proto __asm (__ASMNAME ("__" #alias "ieee128"))
+    name proto __asm (__ASMNAME ("__" #alias "ieee128"))
 
 /* Alias name defined automatically, with leading underscores.  */
 #  define __LDBL_REDIR2_DECL(name) \
-  extern __typeof (__##name) __##name \
+    extern __typeof (__##name) __##name \
     __asm (__ASMNAME ("__" #name "ieee128"));
 
 /* Alias name defined manually.  */
 #  define __LDBL_REDIR1(name, proto, alias) ... unused__ldbl_redir1
 #  define __LDBL_REDIR1_DECL(name, alias) \
-  extern __typeof (name) name __asm (__ASMNAME (#alias));
+    extern __typeof (name) name __asm (__ASMNAME (#alias));
 
 #  define __LDBL_REDIR1_NTH(name, proto, alias) \
-  __REDIRECT_NTH (name, proto, alias)
+    __REDIRECT_NTH (name, proto, alias)
 #  define __REDIRECT_NTH_LDBL(name, proto, alias) \
-  __LDBL_REDIR1_NTH (name, proto, __##alias##ieee128)
+    __LDBL_REDIR1_NTH (name, proto, __##alias##ieee128)
 
 /* Unused.  */
 #  define __LDBL_REDIR_NTH(name, proto) ... unused__ldbl_redir_nth
@@ -767,20 +767,20 @@ _Static_assert(0, "IEEE 128-bits long double requires redirection on this platfo
 # ifdef __REDIRECT
 #  define __LDBL_REDIR1(name, proto, alias) __REDIRECT (name, proto, alias)
 #  define __LDBL_REDIR(name, proto) \
-  __LDBL_REDIR1 (name, proto, __nldbl_##name)
+    __LDBL_REDIR1 (name, proto, __nldbl_##name)
 #  define __LDBL_REDIR1_NTH(name, proto, alias) __REDIRECT_NTH (name, proto, alias)
 #  define __LDBL_REDIR_NTH(name, proto) \
-  __LDBL_REDIR1_NTH (name, proto, __nldbl_##name)
+    __LDBL_REDIR1_NTH (name, proto, __nldbl_##name)
 #  define __LDBL_REDIR2_DECL(name) \
-  extern __typeof (__##name) __##name __asm (__ASMNAME ("__nldbl___" #name));
+    extern __typeof (__##name) __##name __asm (__ASMNAME ("__nldbl___" #name));
 #  define __LDBL_REDIR1_DECL(name, alias) \
-  extern __typeof (name) name __asm (__ASMNAME (#alias));
+    extern __typeof (name) name __asm (__ASMNAME (#alias));
 #  define __LDBL_REDIR_DECL(name) \
-  extern __typeof (name) name __asm (__ASMNAME ("__nldbl_" #name));
+    extern __typeof (name) name __asm (__ASMNAME ("__nldbl_" #name));
 #  define __REDIRECT_LDBL(name, proto, alias) \
-  __LDBL_REDIR1 (name, proto, __nldbl_##alias)
+    __LDBL_REDIR1 (name, proto, __nldbl_##alias)
 #  define __REDIRECT_NTH_LDBL(name, proto, alias) \
-  __LDBL_REDIR1_NTH (name, proto, __nldbl_##alias)
+    __LDBL_REDIR1_NTH (name, proto, __nldbl_##alias)
 # endif
 #endif
 #if (!defined __LDBL_COMPAT && __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 0) \
@@ -794,7 +794,7 @@ _Static_assert(0, "IEEE 128-bits long double requires redirection on this platfo
 # ifdef __REDIRECT
 #  define __REDIRECT_LDBL(name, proto, alias) __REDIRECT (name, proto, alias)
 #  define __REDIRECT_NTH_LDBL(name, proto, alias) \
-  __REDIRECT_NTH (name, proto, alias)
+    __REDIRECT_NTH (name, proto, alias)
 # endif
 #endif
 
@@ -806,7 +806,7 @@ _Static_assert(0, "IEEE 128-bits long double requires redirection on this platfo
 #if __GNUC_PREREQ (4,8) || __glibc_clang_prereq (3,5)
 # define __glibc_macro_warning1(message) _Pragma (#message)
 # define __glibc_macro_warning(message) \
-  __glibc_macro_warning1 (GCC warning message)
+    __glibc_macro_warning1 (GCC warning message)
 #else
 # define __glibc_macro_warning(msg)
 #endif

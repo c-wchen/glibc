@@ -90,36 +90,36 @@ static bool check_error_in_list(int code, int *codes, size_t count)
 }
 
 #define test_wrp_rv(rtype, prtype, experr_list, syscall, ...)   \
-  (__extension__ ({                     \
-    errno = 0xdead;                     \
-    int experr[] = experr_list;                 \
-    rtype ret = syscall (__VA_ARGS__);              \
-    int err = errno;                        \
-    int fail;                           \
-    if ((ret == (rtype) -1)                 \
-    && check_error_in_list (err, experr, array_length (experr))) \
-      fail = 0;                         \
-    else                            \
-      {                             \
-        fail = 1;                       \
-        if (ret != (rtype) -1)                  \
-          printf ("FAIL: " #syscall ": didn't fail as expected" \
-          " (return "prtype")\n", ret);         \
-        else if (err == 0xdead)                 \
-          puts ("FAIL: " #syscall ": didn't update errno"); \
-    else                            \
-          printf ("FAIL: " #syscall             \
-          ": errno is: %d (%s) expected one of %s\n",   \
-          err, strerror (err), #experr_list);       \
-      }                             \
-    fail;                           \
-  }))
+    (__extension__ ({                     \
+        errno = 0xdead;                     \
+        int experr[] = experr_list;                 \
+        rtype ret = syscall (__VA_ARGS__);              \
+        int err = errno;                        \
+        int fail;                           \
+        if ((ret == (rtype) -1)                 \
+            && check_error_in_list (err, experr, array_length (experr))) \
+            fail = 0;                         \
+        else                            \
+        {                             \
+            fail = 1;                       \
+            if (ret != (rtype) -1)                  \
+                printf ("FAIL: " #syscall ": didn't fail as expected" \
+                        " (return "prtype")\n", ret);         \
+            else if (err == 0xdead)                 \
+                puts ("FAIL: " #syscall ": didn't update errno"); \
+            else                            \
+                printf ("FAIL: " #syscall             \
+                        ": errno is: %d (%s) expected one of %s\n",   \
+                        err, strerror (err), #experr_list);       \
+        }                             \
+        fail;                           \
+    }))
 
 #define test_wrp(experr, syscall, ...)              \
-  test_wrp_rv(int, "%d", LIST (experr), syscall, __VA_ARGS__)
+    test_wrp_rv(int, "%d", LIST (experr), syscall, __VA_ARGS__)
 
 #define test_wrp2(experr, syscall, ...)     \
-  test_wrp_rv(int, "%d", LIST_FORWARD (experr), syscall, __VA_ARGS__)
+    test_wrp_rv(int, "%d", LIST_FORWARD (experr), syscall, __VA_ARGS__)
 
 static int invalid_sigprocmask_how(void)
 {

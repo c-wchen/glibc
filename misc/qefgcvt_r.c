@@ -26,12 +26,12 @@
 
 #if LONG_DOUBLE_COMPAT (libc, GLIBC_2_0)
 # define cvt_symbol(local, symbol) \
-  libc_hidden_def (local) \
-  versioned_symbol (libc, local, symbol, GLIBC_2_4)
+    libc_hidden_def (local) \
+    versioned_symbol (libc, local, symbol, GLIBC_2_4)
 #else
 # define cvt_symbol(local, symbol) \
-  libc_hidden_def (local) \
-  weak_alias (local, symbol)
+    libc_hidden_def (local) \
+    weak_alias (local, symbol)
 #endif
 cvt_symbol(__qfcvt_r, qfcvt_r);
 cvt_symbol(__qecvt_r, qecvt_r);

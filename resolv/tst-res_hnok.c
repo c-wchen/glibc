@@ -121,10 +121,10 @@ static void one_char(const char *prefix, const char *accepted, const char *suffi
 }
 
 #define LETTERSDIGITS \
-  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
 
 #define PRINTABLE \
-  "!\"#$%&'()*+,/:;<=>?@[\\]^`{|}~"
+    "!\"#$%&'()*+,/:;<=>?@[\\]^`{|}~"
 
 static int do_test(void)
 {

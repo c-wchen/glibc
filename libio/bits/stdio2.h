@@ -46,8 +46,8 @@ __fortify_function_error_function __attribute_overloadable__ int __NTH(sprintf(_
 }
 #elif !defined __cplusplus
 # define sprintf(str, ...) \
-  __builtin___sprintf_chk (str, __USE_FORTIFY_LEVEL - 1,              \
-               __glibc_objsize (str), __VA_ARGS__)
+    __builtin___sprintf_chk (str, __USE_FORTIFY_LEVEL - 1,              \
+                             __glibc_objsize (str), __VA_ARGS__)
 #endif
 
 __fortify_function __attribute_overloadable__ int __NTH(vsprintf(__fortify_clang_overload_arg(char *, __restrict, __s),
@@ -82,8 +82,8 @@ __fortify_function_error_function __attribute_overloadable__ int __NTH(snprintf(
 }
 # elif !defined __cplusplus
 #  define snprintf(str, len, ...) \
-  __builtin___snprintf_chk (str, len, __USE_FORTIFY_LEVEL - 1,            \
-                __glibc_objsize (str), __VA_ARGS__)
+    __builtin___snprintf_chk (str, len, __USE_FORTIFY_LEVEL - 1,            \
+                              __glibc_objsize (str), __VA_ARGS__)
 # endif
 
 __fortify_function __attribute_overloadable__ int __NTH(vsnprintf(__fortify_clang_overload_arg(char *, __restrict, __s),
@@ -138,9 +138,9 @@ __fortify_function_error_function __attribute_overloadable__ int printf(__fortif
 }
 # elif !defined __cplusplus
 #  define printf(...) \
-  __printf_chk (__USE_FORTIFY_LEVEL - 1, __VA_ARGS__)
+    __printf_chk (__USE_FORTIFY_LEVEL - 1, __VA_ARGS__)
 #  define fprintf(stream, ...) \
-  __fprintf_chk (stream, __USE_FORTIFY_LEVEL - 1, __VA_ARGS__)
+    __fprintf_chk (stream, __USE_FORTIFY_LEVEL - 1, __VA_ARGS__)
 # endif
 
 __fortify_function __attribute_overloadable__ int vprintf(__fortify_clang_overload_arg(const char *, __restrict, __fmt),
@@ -181,7 +181,7 @@ __fortify_function_error_function __attribute_overloadable__ int dprintf(int __f
 }
 #  elif !defined __cplusplus
 #   define dprintf(fd, ...) \
-  __dprintf_chk (fd, __USE_FORTIFY_LEVEL - 1, __VA_ARGS__)
+    __dprintf_chk (fd, __USE_FORTIFY_LEVEL - 1, __VA_ARGS__)
 #  endif
 
 __fortify_function int vdprintf(int __fd, const char *__restrict __fmt, __gnuc_va_list __ap)
@@ -250,11 +250,11 @@ __fortify_function_error_function __attribute_overloadable__ int __NTH(obstack_p
 }
 #  elif !defined __cplusplus
 #   define asprintf(ptr, ...) \
-  __asprintf_chk (ptr, __USE_FORTIFY_LEVEL - 1, __VA_ARGS__)
+    __asprintf_chk (ptr, __USE_FORTIFY_LEVEL - 1, __VA_ARGS__)
 #   define __asprintf(ptr, ...) \
-  __asprintf_chk (ptr, __USE_FORTIFY_LEVEL - 1, __VA_ARGS__)
+    __asprintf_chk (ptr, __USE_FORTIFY_LEVEL - 1, __VA_ARGS__)
 #   define obstack_printf(obstack, ...) \
-  __obstack_printf_chk (obstack, __USE_FORTIFY_LEVEL - 1, __VA_ARGS__)
+    __obstack_printf_chk (obstack, __USE_FORTIFY_LEVEL - 1, __VA_ARGS__)
 #  endif
 
 __fortify_function int __NTH(vasprintf(char **__restrict __ptr, const char *__restrict __fmt,

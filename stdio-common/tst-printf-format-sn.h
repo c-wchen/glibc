@@ -38,22 +38,22 @@ printf_under_test_fini(void)
 }
 
 #define printf_under_test(...)                      \
-({                                  \
-  __label__ out;                            \
-  char *str = ntf.buffer;                       \
-  int result;                               \
-                                    \
-  result = snprintf (str, ntf.length, __VA_ARGS__);         \
-  if (result < 0)                           \
-    {                                   \
-      perror ("snprintf");                      \
-      goto out;                             \
-    }                                   \
-  if (fwrite (str, sizeof (*str), result, stdout) != result)        \
-    {                                   \
-      perror ("fwrite");                        \
-      result = -1;                          \
-    }                                   \
-out:                                    \
-  result;                               \
-})
+    ({                                  \
+        __label__ out;                            \
+        char *str = ntf.buffer;                       \
+        int result;                               \
+        \
+        result = snprintf (str, ntf.length, __VA_ARGS__);         \
+        if (result < 0)                           \
+        {                                   \
+            perror ("snprintf");                      \
+            goto out;                             \
+        }                                   \
+        if (fwrite (str, sizeof (*str), result, stdout) != result)        \
+        {                                   \
+            perror ("fwrite");                        \
+            result = -1;                          \
+        }                                   \
+    out:                                    \
+        result;                               \
+    })

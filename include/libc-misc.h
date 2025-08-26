@@ -45,7 +45,7 @@
     __attribute__((no_stack_protector))
 #else
 # define cc_inhibit_stack_protector \
-   __attribute__ ((__optimize__ ("-fno-stack-protector")))
+    __attribute__ ((__optimize__ ("-fno-stack-protector")))
 #endif
 
 #if IS_IN (testsuite) || IS_IN (testsuite_internal)

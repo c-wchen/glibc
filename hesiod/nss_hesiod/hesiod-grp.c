@@ -38,12 +38,14 @@ _nss_hesiod_setgrent(int stayopen) {
     return NSS_STATUS_SUCCESS;
 }
 
-enum nss_status _nss_hesiod_endgrent(void) {
+enum nss_status _nss_hesiod_endgrent(void)
+{
     return NSS_STATUS_SUCCESS;
 }
 
 static enum nss_status lookup(const char *name, const char *type, struct group *grp,
-                              char *buffer, size_t buflen, int *errnop) {
+                              char *buffer, size_t buflen, int *errnop)
+{
     struct parser_data *data = (void *) buffer;
     size_t linebuflen;
     void *context;
@@ -52,14 +54,12 @@ static enum nss_status lookup(const char *name, const char *type, struct group *
     size_t len;
     int olderr = errno;
 
-    if (hesiod_init(&context) < 0)
-    {
+    if (hesiod_init(&context) < 0) {
         return NSS_STATUS_UNAVAIL;
     }
 
     list = hesiod_resolve(context, name, type);
-    if (list == NULL)
-    {
+    if (list == NULL) {
         int err = errno;
         hesiod_end(context);
         __set_errno(olderr);
@@ -68,8 +68,7 @@ static enum nss_status lookup(const char *name, const char *type, struct group *
 
     linebuflen = buffer + buflen - data->linebuffer;
     len = strlen(*list) + 1;
-    if (linebuflen < len)
-    {
+    if (linebuflen < len) {
         hesiod_free_list(context, list);
         hesiod_end(context);
         *errnop = ERANGE;
@@ -81,8 +80,7 @@ static enum nss_status lookup(const char *name, const char *type, struct group *
     hesiod_end(context);
 
     parse_res = _nss_files_parse_grent(buffer, grp, data, buflen, errnop);
-    if (parse_res < 1)
-    {
+    if (parse_res < 1) {
         __set_errno(olderr);
         return parse_res == -1 ? NSS_STATUS_TRYAGAIN : NSS_STATUS_NOTFOUND;
     }
@@ -91,12 +89,14 @@ static enum nss_status lookup(const char *name, const char *type, struct group *
 }
 
 enum nss_status _nss_hesiod_getgrnam_r(const char *name, struct group *grp,
-                                       char *buffer, size_t buflen, int *errnop) {
+                                       char *buffer, size_t buflen, int *errnop)
+{
     return lookup(name, "group", grp, buffer, buflen, errnop);
 }
 
 enum nss_status _nss_hesiod_getgrgid_r(gid_t gid, struct group *grp,
-                                       char *buffer, size_t buflen, int *errnop) {
+                                       char *buffer, size_t buflen, int *errnop)
+{
     char gidstr[21];  /* We will probably never have a gid_t with more
                than 64 bits.  */
 
@@ -117,13 +117,13 @@ static int internal_gid_in_list(const gid_t *list, const gid_t g, long int len)
     return 0;
 }
 
-static enum nss_status internal_gid_from_group(void *context, const char *groupname, gid_t *group) {
+static enum nss_status internal_gid_from_group(void *context, const char *groupname, gid_t *group)
+{
     char **grp_res;
     enum nss_status status = NSS_STATUS_NOTFOUND;
 
     grp_res = hesiod_resolve(context, groupname, "group");
-    if (grp_res != NULL && *grp_res != NULL)
-    {
+    if (grp_res != NULL && *grp_res != NULL) {
         char *p = *grp_res;
 
         /* Skip to third field.  */
@@ -160,7 +160,8 @@ static enum nss_status internal_gid_from_group(void *context, const char *groupn
 
 enum nss_status _nss_hesiod_initgroups_dyn(const char *user, gid_t group, long int *start,
         long int *size, gid_t **groupsp, long int limit,
-        int *errnop) {
+        int *errnop)
+{
     enum nss_status status = NSS_STATUS_SUCCESS;
     char **list = NULL;
     char *p;
@@ -168,15 +169,13 @@ enum nss_status _nss_hesiod_initgroups_dyn(const char *user, gid_t group, long i
     gid_t *groups = *groupsp;
     int save_errno;
 
-    if (hesiod_init(&context) < 0)
-    {
+    if (hesiod_init(&context) < 0) {
         return NSS_STATUS_UNAVAIL;
     }
 
     list = hesiod_resolve(context, user, "grplist");
 
-    if (list == NULL)
-    {
+    if (list == NULL) {
         hesiod_end(context);
         return errno == ENOENT ? NSS_STATUS_NOTFOUND : NSS_STATUS_UNAVAIL;
     }
@@ -184,8 +183,7 @@ enum nss_status _nss_hesiod_initgroups_dyn(const char *user, gid_t group, long i
     save_errno = errno;
 
     p = *list;
-    while (*p != '\0')
-    {
+    while (*p != '\0') {
         char *endp;
         char *q;
         long int val;

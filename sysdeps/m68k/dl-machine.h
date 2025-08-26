@@ -154,7 +154,7 @@ _dl_start_user:\n\
 	| Jump to the user's entry point.\n\
 	jmp (%a4)\n\
 	.size _dl_start_user, . - _dl_start_user\n\
-	.previous");
+.previous");
 
 /* ELF_RTYPE_CLASS_PLT iff TYPE describes relocation of a PLT entry or
    TLS variable, so undefined references should not be allowed to
@@ -162,11 +162,11 @@ _dl_start_user:\n\
    ELF_RTYPE_CLASS_COPY iff TYPE should not be allowed to resolve to one
    of the main executable's symbols, as for a COPY reloc.  */
 #define elf_machine_type_class(type) \
-  ((((type) == R_68K_JMP_SLOT        \
-     || (type) == R_68K_TLS_DTPMOD32 \
-     || (type) == R_68K_TLS_DTPREL32 \
-     || (type) == R_68K_TLS_TPREL32) * ELF_RTYPE_CLASS_PLT) \
-   | (((type) == R_68K_COPY) * ELF_RTYPE_CLASS_COPY))
+    ((((type) == R_68K_JMP_SLOT        \
+       || (type) == R_68K_TLS_DTPMOD32 \
+       || (type) == R_68K_TLS_DTPREL32 \
+       || (type) == R_68K_TLS_TPREL32) * ELF_RTYPE_CLASS_PLT) \
+     | (((type) == R_68K_COPY) * ELF_RTYPE_CLASS_COPY))
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT    R_68K_JMP_SLOT

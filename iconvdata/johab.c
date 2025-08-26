@@ -147,130 +147,130 @@ static uint32_t johab_sym_hanja_to_ucs(uint32_t idx, uint32_t c1, uint32_t c2)
 #define MIN_NEEDED_OUTPUT   MIN_NEEDED_TO
 #define LOOPFCT         FROM_LOOP
 #define BODY \
-  {                                       \
-    uint32_t ch = *inptr;                             \
-                                          \
-    if (ch <= 0x7f)                               \
-      {                                       \
-    /* Plain ISO646-KR.  */                           \
-    if (ch == 0x5c)                               \
-      ch = 0x20a9; /* half-width Korean Currency WON sign */          \
-    ++inptr;                                  \
-      }                                       \
-    /* Johab : 1. Hangul                              \
-       1st byte : 0x84-0xd3                           \
-       2nd byte : 0x41-0x7e, 0x81-0xfe                        \
-       2. Hanja & Symbol  :                           \
-       1st byte : 0xd8-0xde, 0xe0-0xf9                        \
-       2nd byte : 0x31-0x7e, 0x91-0xfe                        \
-       0xd831-0xd87e and 0xd891-0xd8fe are user-defined area */           \
-    else                                      \
-      {                                       \
-    if (__builtin_expect (ch > 0xf9, 0)                   \
-        || __builtin_expect (ch == 0xdf, 0)                   \
-        || (__builtin_expect (ch > 0x7e, 0) && ch < 0x84)             \
-        || (__builtin_expect (ch > 0xd3, 0) && ch < 0xd9))            \
-      {                                   \
-        /* These are illegal.  */                         \
-        STANDARD_FROM_LOOP_ERR_HANDLER (1);                   \
-      }                                   \
-    else                                      \
-      {                                   \
-        /* Two-byte character.  First test whether the next           \
-           character is also available.  */                   \
-        uint32_t ch2;                             \
-        uint32_t idx;                             \
-                                          \
-        if (__glibc_unlikely (inptr + 1 >= inend))                \
-          {                                   \
-        /* The second character is not available.  Store the          \
-           intermediate result.  */                   \
-        result = __GCONV_INCOMPLETE_INPUT;                \
-        break;                                \
-          }                                   \
-                                          \
-        ch2 = inptr[1];                           \
-        idx = ch * 256 + ch2;                         \
-        if (__glibc_likely (ch <= 0xd3))                      \
-          {                                   \
-        /* Hangul */                              \
-        int i, m, f;                          \
-                                          \
-        i = init[(idx & 0x7c00) >> 10];                   \
-        m = mid[(idx & 0x03e0) >> 5];                     \
-        f = final[idx & 0x001f];                      \
-                                          \
-        if (__builtin_expect (i == -1, 0)                 \
-            || __builtin_expect (m == -1, 0)                  \
-            || __builtin_expect (f == -1, 0))                 \
-          {                               \
-            /* This is illegal.  */                   \
-            STANDARD_FROM_LOOP_ERR_HANDLER (1);               \
-          }                               \
-        else if (i > 0 && m > 0)                      \
-          ch = ((i - 1) * 21 + (m - 1)) * 28 + f + 0xac00;        \
-        else if (i > 0 && m == 0 && f == 0)               \
-          ch = init_to_ucs[i - 1];                    \
-        else if (i == 0 && m > 0 && f == 0)               \
-          ch = 0x314e + m;  /* 0x314f + m - 1 */              \
-        else if (__builtin_expect ((i | m) == 0, 1)           \
-             && __builtin_expect (f > 0, 1))              \
-          ch = final_to_ucs[f - 1]; /* round trip?? */        \
-        else                                  \
-          {                               \
-            /* This is illegal.  */                   \
-            STANDARD_FROM_LOOP_ERR_HANDLER (1);               \
-          }                               \
-          }                                   \
-        else                                  \
-          {                                   \
-        if (__builtin_expect (ch2 < 0x31, 0)                  \
-            || (__builtin_expect (ch2 > 0x7e, 0) && ch2 < 0x91)       \
-            || __builtin_expect (ch2, 0) == 0xff              \
-            || (__builtin_expect (ch, 0) == 0xd9 && ch2 > 0xe8)       \
-            || (__builtin_expect (ch, 0) == 0xda              \
-            && ch2 > 0xa0 && ch2 < 0xd4)                  \
-            || (__builtin_expect (ch, 0) == 0xde && ch2 > 0xf1))      \
-          {                               \
-            /* This is illegal.  */                   \
-            STANDARD_FROM_LOOP_ERR_HANDLER (1);               \
-          }                               \
-        else                                  \
-          {                               \
-            ch = johab_sym_hanja_to_ucs (idx, ch, ch2);           \
-            /* if (idx <= 0xdefe)                     \
-             ch = __ksc5601_sym_to_ucs[(ch - 0xd9) * 192          \
-                           + ch2 - (ch2 > 0x90        \
-                                ? 0x43 : 0x31)];  \
-               else                           \
-             ch = __ksc5601_hanja_to_ucs[(ch - 0xe0) *192         \
-                             + ch2 -  (ch2 > 0x90     \
-                                   ?0x43 : 0x31)];\
-            */                                \
-          }                               \
-          }                                   \
-      }                                   \
-                                          \
-    if (__glibc_unlikely (ch == 0))                       \
-      {                                   \
-        /* This is an illegal character.  */                  \
-        STANDARD_FROM_LOOP_ERR_HANDLER (2);                   \
-      }                                   \
-                                          \
-    inptr += 2;                               \
-      }                                       \
-                                          \
-    put32 (outptr, ch);                               \
-    outptr += 4;                                  \
-  }
+    {                                       \
+        uint32_t ch = *inptr;                             \
+        \
+        if (ch <= 0x7f)                               \
+        {                                       \
+            /* Plain ISO646-KR.  */                           \
+            if (ch == 0x5c)                               \
+                ch = 0x20a9; /* half-width Korean Currency WON sign */          \
+            ++inptr;                                  \
+        }                                       \
+        /* Johab : 1. Hangul                              \
+           1st byte : 0x84-0xd3                           \
+           2nd byte : 0x41-0x7e, 0x81-0xfe                        \
+           2. Hanja & Symbol  :                           \
+           1st byte : 0xd8-0xde, 0xe0-0xf9                        \
+           2nd byte : 0x31-0x7e, 0x91-0xfe                        \
+           0xd831-0xd87e and 0xd891-0xd8fe are user-defined area */           \
+        else                                      \
+        {                                       \
+            if (__builtin_expect (ch > 0xf9, 0)                   \
+                || __builtin_expect (ch == 0xdf, 0)                   \
+                || (__builtin_expect (ch > 0x7e, 0) && ch < 0x84)             \
+                || (__builtin_expect (ch > 0xd3, 0) && ch < 0xd9))            \
+            {                                   \
+                /* These are illegal.  */                         \
+                STANDARD_FROM_LOOP_ERR_HANDLER (1);                   \
+            }                                   \
+            else                                      \
+            {                                   \
+                /* Two-byte character.  First test whether the next           \
+                   character is also available.  */                   \
+                uint32_t ch2;                             \
+                uint32_t idx;                             \
+                \
+                if (__glibc_unlikely (inptr + 1 >= inend))                \
+                {                                   \
+                    /* The second character is not available.  Store the          \
+                       intermediate result.  */                   \
+                    result = __GCONV_INCOMPLETE_INPUT;                \
+                    break;                                \
+                }                                   \
+                \
+                ch2 = inptr[1];                           \
+                idx = ch * 256 + ch2;                         \
+                if (__glibc_likely (ch <= 0xd3))                      \
+                {                                   \
+                    /* Hangul */                              \
+                    int i, m, f;                          \
+                    \
+                    i = init[(idx & 0x7c00) >> 10];                   \
+                    m = mid[(idx & 0x03e0) >> 5];                     \
+                    f = final[idx & 0x001f];                      \
+                    \
+                    if (__builtin_expect (i == -1, 0)                 \
+                        || __builtin_expect (m == -1, 0)                  \
+                        || __builtin_expect (f == -1, 0))                 \
+                    {                               \
+                        /* This is illegal.  */                   \
+                        STANDARD_FROM_LOOP_ERR_HANDLER (1);               \
+                    }                               \
+                    else if (i > 0 && m > 0)                      \
+                        ch = ((i - 1) * 21 + (m - 1)) * 28 + f + 0xac00;        \
+                    else if (i > 0 && m == 0 && f == 0)               \
+                        ch = init_to_ucs[i - 1];                    \
+                    else if (i == 0 && m > 0 && f == 0)               \
+                        ch = 0x314e + m;  /* 0x314f + m - 1 */              \
+                    else if (__builtin_expect ((i | m) == 0, 1)           \
+                             && __builtin_expect (f > 0, 1))              \
+                        ch = final_to_ucs[f - 1]; /* round trip?? */        \
+                    else                                  \
+                    {                               \
+                        /* This is illegal.  */                   \
+                        STANDARD_FROM_LOOP_ERR_HANDLER (1);               \
+                    }                               \
+                }                                   \
+                else                                  \
+                {                                   \
+                    if (__builtin_expect (ch2 < 0x31, 0)                  \
+                        || (__builtin_expect (ch2 > 0x7e, 0) && ch2 < 0x91)       \
+                        || __builtin_expect (ch2, 0) == 0xff              \
+                        || (__builtin_expect (ch, 0) == 0xd9 && ch2 > 0xe8)       \
+                        || (__builtin_expect (ch, 0) == 0xda              \
+                            && ch2 > 0xa0 && ch2 < 0xd4)                  \
+                        || (__builtin_expect (ch, 0) == 0xde && ch2 > 0xf1))      \
+                    {                               \
+                        /* This is illegal.  */                   \
+                        STANDARD_FROM_LOOP_ERR_HANDLER (1);               \
+                    }                               \
+                    else                                  \
+                    {                               \
+                        ch = johab_sym_hanja_to_ucs (idx, ch, ch2);           \
+                        /* if (idx <= 0xdefe)                     \
+                         ch = __ksc5601_sym_to_ucs[(ch - 0xd9) * 192          \
+                                       + ch2 - (ch2 > 0x90        \
+                                            ? 0x43 : 0x31)];  \
+                           else                           \
+                         ch = __ksc5601_hanja_to_ucs[(ch - 0xe0) *192         \
+                                         + ch2 -  (ch2 > 0x90     \
+                                               ?0x43 : 0x31)];\
+                        */                                \
+                    }                               \
+                }                                   \
+            }                                   \
+            \
+            if (__glibc_unlikely (ch == 0))                       \
+            {                                   \
+                /* This is an illegal character.  */                  \
+                STANDARD_FROM_LOOP_ERR_HANDLER (2);                   \
+            }                                   \
+            \
+            inptr += 2;                               \
+        }                                       \
+        \
+        put32 (outptr, ch);                               \
+        outptr += 4;                                  \
+    }
 #define LOOP_NEED_FLAGS
 #define ONEBYTE_BODY \
-  {                                       \
-    if (c <= 0x7f)                                \
-      return (c == 0x5c ? 0x20a9 : c);                        \
-    else                                      \
-      return WEOF;                                \
-  }
+    {                                       \
+        if (c <= 0x7f)                                \
+            return (c == 0x5c ? 0x20a9 : c);                        \
+        else                                      \
+            return WEOF;                                \
+    }
 #include <iconv/loop.c>
 
 
@@ -280,117 +280,117 @@ static uint32_t johab_sym_hanja_to_ucs(uint32_t idx, uint32_t c1, uint32_t c2)
 #define MAX_NEEDED_OUTPUT   MAX_NEEDED_FROM
 #define LOOPFCT         TO_LOOP
 #define BODY \
-  {                                       \
-    uint32_t ch = get32 (inptr);                          \
-    /*                                        \
-       if (ch >= (sizeof (from_ucs4_lat1) / sizeof (from_ucs4_lat1[0])))      \
-     {                                    \
-       if (ch >= 0x0391 && ch <= 0x0451)                      \
-         cp = from_ucs4_greek[ch - 0x391];                    \
-       else if (ch >= 0x2010 && ch <= 0x9fa0)                 \
-         cp = from_ucs4_cjk[ch - 0x02010];                    \
-       else                                   \
-         break;                               \
-     }                                    \
-       else                                   \
-     cp = from_ucs4_lat1[ch];                         \
-    */                                        \
-                                          \
-    if (ch <= 0x7f && ch != 0x5c)                         \
-      *outptr++ = ch;                                 \
-    else                                      \
-      {                                       \
-    if (ch >= 0xac00 && ch <= 0xd7a3)                     \
-      {                                   \
-        if (__glibc_unlikely (outptr + 2 > outend))               \
-          {                                   \
-        result = __GCONV_FULL_OUTPUT;                     \
-        break;                                \
-          }                                   \
-                                          \
-        ch -= 0xac00;                             \
-                                          \
-        ch = (init_to_bit[ch / 588]   /* 21 * 28 = 588 */             \
-          + mid_to_bit[(ch / 28) % 21]/* (ch % (21 * 28)) / 28 */     \
-          + final_to_bit[ch %  28]);  /* (ch % (21 * 28)) % 28 */     \
-                                          \
-        *outptr++ = ch / 256;                         \
-        *outptr++ = ch % 256;                         \
-      }                                   \
-    /* KS C 5601-1992 Annex 3 regards  0xA4DA(Hangul Filler : U3164)      \
-       as symbol */                               \
-    else if (ch >= 0x3131 && ch <= 0x3163)                    \
-      {                                   \
-        ch = jamo_from_ucs_table[ch - 0x3131];                \
-                                          \
-        if (__glibc_unlikely (outptr + 2 > outend))               \
-          {                                   \
-        result = __GCONV_FULL_OUTPUT;                     \
-        break;                                \
-          }                                   \
-                                          \
-        *outptr++ = ch / 256;                         \
-        *outptr++ = ch % 256;                         \
-      }                                   \
-    else if ((ch >= 0x4e00 && ch <= 0x9fa5)                   \
-         || (ch >= 0xf900 && ch <= 0xfa0b))               \
-      {                                   \
-        size_t written;                           \
-        uint32_t temp;                            \
-                                          \
-        written = ucs4_to_ksc5601_hanja (ch, outptr, outend - outptr);    \
-        if (__builtin_expect (written, 1) == 0)               \
-          {                                   \
-        result = __GCONV_FULL_OUTPUT;                     \
-        break;                                \
-          }                                   \
-        if (__glibc_unlikely (written == __UNKNOWN_10646_CHAR))       \
-          {                                   \
-        STANDARD_TO_LOOP_ERR_HANDLER (4);                 \
-          }                                   \
-                                          \
-        outptr[0] -= 0x4a;                            \
-        outptr[1] -= 0x21;                            \
-                                          \
-        temp = outptr[0] * 94 + outptr[1];                    \
-                                          \
-        outptr[0] = 0xe0 + temp / 188;                    \
-        outptr[1] = temp % 188;                       \
-        outptr[1] += outptr[1] >= 78 ? 0x43 : 0x31;               \
-                                          \
-        outptr += 2;                              \
-      }                                   \
-    else if (ch == 0x20a9)                            \
-      *outptr++ = 0x5c;                           \
-    else                                      \
-      {                                   \
-        size_t written;                           \
-        uint32_t temp;                            \
-                                          \
-        written = ucs4_to_ksc5601_sym (ch, outptr, outend - outptr);      \
-        if (__builtin_expect (written, 1) == 0)               \
-          {                                   \
-        result = __GCONV_FULL_OUTPUT;                     \
-        break;                                \
-          }                                   \
-        if (__builtin_expect (written == __UNKNOWN_10646_CHAR, 0)         \
-        || (outptr[0] == 0x22 && outptr[1] > 0x68))           \
-          {                                   \
-        UNICODE_TAG_HANDLER (ch, 4);                      \
-        STANDARD_TO_LOOP_ERR_HANDLER (4);                 \
-          }                                   \
-                                          \
-        temp = (outptr[0] < 0x4a ? outptr[0] + 0x191 : outptr[0] + 0x176);\
-        outptr[1] += (temp % 2 ? 0x5e : 0);                   \
-        outptr[1] += (outptr[1] < 0x6f ? 0x10 : 0x22);            \
-        outptr[0] = temp / 2;                         \
-                                          \
-        outptr += 2;                              \
-      }                                   \
-      }                                       \
-                                          \
-    inptr += 4;                                   \
-  }
+    {                                       \
+        uint32_t ch = get32 (inptr);                          \
+        /*                                        \
+           if (ch >= (sizeof (from_ucs4_lat1) / sizeof (from_ucs4_lat1[0])))      \
+         {                                    \
+           if (ch >= 0x0391 && ch <= 0x0451)                      \
+             cp = from_ucs4_greek[ch - 0x391];                    \
+           else if (ch >= 0x2010 && ch <= 0x9fa0)                 \
+             cp = from_ucs4_cjk[ch - 0x02010];                    \
+           else                                   \
+             break;                               \
+         }                                    \
+           else                                   \
+         cp = from_ucs4_lat1[ch];                         \
+        */                                        \
+        \
+        if (ch <= 0x7f && ch != 0x5c)                         \
+            *outptr++ = ch;                                 \
+        else                                      \
+        {                                       \
+            if (ch >= 0xac00 && ch <= 0xd7a3)                     \
+            {                                   \
+                if (__glibc_unlikely (outptr + 2 > outend))               \
+                {                                   \
+                    result = __GCONV_FULL_OUTPUT;                     \
+                    break;                                \
+                }                                   \
+                \
+                ch -= 0xac00;                             \
+                \
+                ch = (init_to_bit[ch / 588]   /* 21 * 28 = 588 */             \
+                      + mid_to_bit[(ch / 28) % 21]/* (ch % (21 * 28)) / 28 */     \
+                      + final_to_bit[ch %  28]);  /* (ch % (21 * 28)) % 28 */     \
+                \
+                *outptr++ = ch / 256;                         \
+                *outptr++ = ch % 256;                         \
+            }                                   \
+            /* KS C 5601-1992 Annex 3 regards  0xA4DA(Hangul Filler : U3164)      \
+               as symbol */                               \
+            else if (ch >= 0x3131 && ch <= 0x3163)                    \
+            {                                   \
+                ch = jamo_from_ucs_table[ch - 0x3131];                \
+                \
+                if (__glibc_unlikely (outptr + 2 > outend))               \
+                {                                   \
+                    result = __GCONV_FULL_OUTPUT;                     \
+                    break;                                \
+                }                                   \
+                \
+                *outptr++ = ch / 256;                         \
+                *outptr++ = ch % 256;                         \
+            }                                   \
+            else if ((ch >= 0x4e00 && ch <= 0x9fa5)                   \
+                     || (ch >= 0xf900 && ch <= 0xfa0b))               \
+            {                                   \
+                size_t written;                           \
+                uint32_t temp;                            \
+                \
+                written = ucs4_to_ksc5601_hanja (ch, outptr, outend - outptr);    \
+                if (__builtin_expect (written, 1) == 0)               \
+                {                                   \
+                    result = __GCONV_FULL_OUTPUT;                     \
+                    break;                                \
+                }                                   \
+                if (__glibc_unlikely (written == __UNKNOWN_10646_CHAR))       \
+                {                                   \
+                    STANDARD_TO_LOOP_ERR_HANDLER (4);                 \
+                }                                   \
+                \
+                outptr[0] -= 0x4a;                            \
+                outptr[1] -= 0x21;                            \
+                \
+                temp = outptr[0] * 94 + outptr[1];                    \
+                \
+                outptr[0] = 0xe0 + temp / 188;                    \
+                outptr[1] = temp % 188;                       \
+                outptr[1] += outptr[1] >= 78 ? 0x43 : 0x31;               \
+                \
+                outptr += 2;                              \
+            }                                   \
+            else if (ch == 0x20a9)                            \
+                *outptr++ = 0x5c;                           \
+            else                                      \
+            {                                   \
+                size_t written;                           \
+                uint32_t temp;                            \
+                \
+                written = ucs4_to_ksc5601_sym (ch, outptr, outend - outptr);      \
+                if (__builtin_expect (written, 1) == 0)               \
+                {                                   \
+                    result = __GCONV_FULL_OUTPUT;                     \
+                    break;                                \
+                }                                   \
+                if (__builtin_expect (written == __UNKNOWN_10646_CHAR, 0)         \
+                    || (outptr[0] == 0x22 && outptr[1] > 0x68))           \
+                {                                   \
+                    UNICODE_TAG_HANDLER (ch, 4);                      \
+                    STANDARD_TO_LOOP_ERR_HANDLER (4);                 \
+                }                                   \
+                \
+                temp = (outptr[0] < 0x4a ? outptr[0] + 0x191 : outptr[0] + 0x176);\
+                outptr[1] += (temp % 2 ? 0x5e : 0);                   \
+                outptr[1] += (outptr[1] < 0x6f ? 0x10 : 0x22);            \
+                outptr[0] = temp / 2;                         \
+                \
+                outptr += 2;                              \
+            }                                   \
+        }                                       \
+        \
+        inptr += 4;                                   \
+    }
 #define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 

@@ -41,8 +41,8 @@ __readdir(DIR *dirp)
     assert(offsetof(struct dirent, d_ino) == 0);
     assert(offsetof(struct dirent64, d_ino) == 0);
 # define MATCH(memb)                                  \
-  assert (offsetof (struct dirent64, memb) - sizeof (entry64->d_ino)          \
-      == offsetof (struct dirent, memb) - sizeof (ino_t))
+    assert (offsetof (struct dirent64, memb) - sizeof (entry64->d_ino)          \
+            == offsetof (struct dirent, memb) - sizeof (ino_t))
     MATCH(d_reclen);
     MATCH(d_type);
     MATCH(d_namlen);

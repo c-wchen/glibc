@@ -48,10 +48,10 @@ extern void _dl_fptr_init(void);
 #define ELF_MACHINE_BOOT_FPTR_TABLE_LEN 64
 
 #define ELF_MACHINE_LOAD_ADDRESS(var, symbol) \
-  asm (                             \
-"	b,l	1f,%0\n"                  \
-"	addil	L'" #symbol " - ($PIC_pcrel$0 - 1),%0\n"    \
-"1:	ldo	R'" #symbol " - ($PIC_pcrel$0 - 5)(%%r1),%0\n"  \
-   : "=&r" (var) : : "r1");
+    asm (                             \
+                                      "	b,l	1f,%0\n"                  \
+                                      "	addil	L'" #symbol " - ($PIC_pcrel$0 - 1),%0\n"    \
+                                      "1:	ldo	R'" #symbol " - ($PIC_pcrel$0 - 5)(%%r1),%0\n"  \
+                                      : "=&r" (var) : : "r1");
 
 #endif /* !dl_hppa_fptr_h */

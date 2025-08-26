@@ -159,10 +159,10 @@ static int rrtype_to_rdata_length(int type)
 
 enum nss_status _nss_dns_gethostbyname3_r(const char *name, int af, struct hostent *result,
         char *buffer, size_t buflen, int *errnop,
-        int *h_errnop, int32_t *ttlp, char **canonp) {
+        int *h_errnop, int32_t *ttlp, char **canonp)
+{
     struct resolv_context *ctx = __resolv_context_get();
-    if (ctx == NULL)
-    {
+    if (ctx == NULL) {
         *errnop = errno;
         *h_errnop = NETDB_INTERNAL;
         return NSS_STATUS_UNAVAIL;
@@ -324,9 +324,9 @@ gethostbyname3_context(struct resolv_context *ctx,
 /* Verify that the name looks like a host name.  There is no point in
    sending a query which will not produce a usable name in the
    response.  */
-static enum nss_status check_name(const char *name, int *h_errnop) {
-    if (__libc_res_hnok(name))
-    {
+static enum nss_status check_name(const char *name, int *h_errnop)
+{
+    if (__libc_res_hnok(name)) {
         return NSS_STATUS_SUCCESS;
     }
     *h_errnop = HOST_NOT_FOUND;
@@ -335,10 +335,10 @@ static enum nss_status check_name(const char *name, int *h_errnop) {
 
 enum nss_status _nss_dns_gethostbyname2_r(const char *name, int af, struct hostent *result,
         char *buffer, size_t buflen, int *errnop,
-        int *h_errnop) {
+        int *h_errnop)
+{
     enum nss_status status = check_name(name, h_errnop);
-    if (status != NSS_STATUS_SUCCESS)
-    {
+    if (status != NSS_STATUS_SUCCESS) {
         return status;
     }
     return _nss_dns_gethostbyname3_r(name, af, result, buffer, buflen, errnop,
@@ -805,10 +805,10 @@ getanswer_r(unsigned char *packet, size_t packetlen, uint16_t qtype,
 
 static enum nss_status getanswer_ptr(unsigned char *packet, size_t packetlen,
                                      struct alloc_buffer *abuf, char **hnamep,
-                                     int *errnop, int *h_errnop, int32_t *ttlp) {
+                                     int *errnop, int *h_errnop, int32_t *ttlp)
+{
     struct ns_rr_cursor c;
-    if (!__ns_rr_cursor_init(&c, packet, packetlen))
-    {
+    if (!__ns_rr_cursor_init(&c, packet, packetlen)) {
         /* This should not happen because __res_context_query already
         performs response validation.  */
         *h_errnop = NO_RECOVERY;
@@ -819,8 +819,7 @@ static enum nss_status getanswer_ptr(unsigned char *packet, size_t packetlen,
     /* expected_name may be updated to point into this buffer.  */
     unsigned char name_buffer[NS_MAXCDNAME];
 
-    while (ancount > 0)
-    {
+    while (ancount > 0) {
         struct ns_rr_wire rr;
         if (!__ns_rr_cursor_next(&c, &rr)) {
             *h_errnop = NO_RECOVERY;
@@ -896,10 +895,10 @@ static enum nss_status gaih_getanswer_slice(unsigned char *packet, size_t packet
         struct alloc_buffer *abuf,
         struct gaih_addrtuple ***tailp,
         int *errnop, int *h_errnop, int32_t *ttlp,
-        bool store_canon) {
+        bool store_canon)
+{
     struct ns_rr_cursor c;
-    if (!__ns_rr_cursor_init(&c, packet, packetlen))
-    {
+    if (!__ns_rr_cursor_init(&c, packet, packetlen)) {
         /* This should not happen because __res_context_query already
         performs response validation.  */
         *h_errnop = NO_RECOVERY;
@@ -918,14 +917,12 @@ static enum nss_status gaih_getanswer_slice(unsigned char *packet, size_t packet
        address tuple is encountered.  */
     const unsigned char *compressed_alias_name = expected_name;
 
-    if (ancount == 0 || !__res_binary_hnok(compressed_alias_name))
-    {
+    if (ancount == 0 || !__res_binary_hnok(compressed_alias_name)) {
         *h_errnop = HOST_NOT_FOUND;
         return NSS_STATUS_NOTFOUND;
     }
 
-    for (; ancount > -0; --ancount)
-    {
+    for (; ancount > -0; --ancount) {
         struct ns_rr_wire rr;
         if (!__ns_rr_cursor_next(&c, &rr)) {
             *h_errnop = NO_RECOVERY;
@@ -1006,12 +1003,10 @@ static enum nss_status gaih_getanswer_slice(unsigned char *packet, size_t packet
         }
     }
 
-    if (haveanswer)
-    {
+    if (haveanswer) {
         *h_errnop = NETDB_SUCCESS;
         return NSS_STATUS_SUCCESS;
-    } else
-    {
+    } else {
         /* Special case here: if the resolver sent a result but it only
         contains a CNAME while we are looking for a T_A or T_AAAA
          record, we fail with NOTFOUND.  */
@@ -1024,7 +1019,8 @@ static enum nss_status gaih_getanswer_slice(unsigned char *packet, size_t packet
 static enum nss_status gaih_getanswer(unsigned char *packet1, size_t packet1len,
                                       unsigned char *packet2, size_t packet2len,
                                       struct alloc_buffer *abuf, struct gaih_addrtuple **pat,
-                                      int *errnop, int *h_errnop, int32_t *ttlp) {
+                                      int *errnop, int *h_errnop, int32_t *ttlp)
+{
     enum nss_status status = NSS_STATUS_NOTFOUND;
 
     /* Combining the NSS status of two distinct queries requires some
@@ -1119,8 +1115,7 @@ static enum nss_status gaih_getanswer(unsigned char *packet1, size_t packet1len,
      is a recoverable error we now return TRYAGIN even if the first
      response was SUCCESS.  */
 
-    if (packet1len > 0)
-    {
+    if (packet1len > 0) {
         status = gaih_getanswer_slice(packet1, packet1len,
                                       abuf, &pat, errnop, h_errnop, ttlp, true);
         if (alloc_buffer_has_failed(abuf))
@@ -1133,8 +1128,7 @@ static enum nss_status gaih_getanswer(unsigned char *packet1, size_t packet1len,
     }
 
     if ((status == NSS_STATUS_SUCCESS || status == NSS_STATUS_NOTFOUND)
-        && packet2 != NULL && packet2len > 0)
-    {
+        && packet2 != NULL && packet2len > 0) {
         enum nss_status status2
             = gaih_getanswer_slice(packet2, packet2len,
                                    abuf, &pat, errnop, h_errnop, ttlp,
@@ -1154,7 +1148,8 @@ static enum nss_status gaih_getanswer(unsigned char *packet1, size_t packet1len,
 /* Variant of gaih_getanswer without a second (AAAA) response.  */
 static enum nss_status gaih_getanswer_noaaaa(unsigned char *packet, size_t packetlen,
         struct alloc_buffer *abuf, struct gaih_addrtuple **pat,
-        int *errnop, int *h_errnop, int32_t *ttlp) {
+        int *errnop, int *h_errnop, int32_t *ttlp)
+{
     enum nss_status status = NSS_STATUS_NOTFOUND;
     if (packetlen > 0)
         status = gaih_getanswer_slice(packet, packetlen,

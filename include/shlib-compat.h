@@ -37,11 +37,11 @@
    extra code to support this version set where it has been superseded by a
    newer version.  */
 #define LIB_COMPAT(lib, introduced, obsoleted)                        \
-  _LIB_COMPAT (lib, introduced, obsoleted)
+    _LIB_COMPAT (lib, introduced, obsoleted)
 #define _LIB_COMPAT(lib, introduced, obsoleted)                       \
-  (IS_IN (lib)                                    \
-   && (!(ABI_##lib##_##obsoleted - 0)                         \
-       || ((ABI_##lib##_##introduced - 0) < (ABI_##lib##_##obsoleted - 0))))
+    (IS_IN (lib)                                    \
+     && (!(ABI_##lib##_##obsoleted - 0)                         \
+         || ((ABI_##lib##_##introduced - 0) < (ABI_##lib##_##obsoleted - 0))))
 
 #ifdef SHARED
 
@@ -51,15 +51,15 @@
    in the GLIBC_2.0 version and obsoleted in the GLIBC_2.2 version.  */
 
 # define SHLIB_COMPAT(lib, introduced, obsoleted)                 \
-  _LIB_COMPAT (lib, introduced, obsoleted)
+    _LIB_COMPAT (lib, introduced, obsoleted)
 
 /* Like SHLIB_COMPAT, but it can check versions in other libraries.  It is
    not always false for !IS_IN (LIB).  */
 #define OTHER_SHLIB_COMPAT(lib, introduced, obsoleted)  \
-  _OTHER_SHLIB_COMPAT (lib, introduced, obsoleted)
+    _OTHER_SHLIB_COMPAT (lib, introduced, obsoleted)
 #define _OTHER_SHLIB_COMPAT(lib, introduced, obsoleted)         \
-  (!(ABI_##lib##_##obsoleted - 0)                   \
-   || ((ABI_##lib##_##introduced - 0) < (ABI_##lib##_##obsoleted - 0)))
+    (!(ABI_##lib##_##obsoleted - 0)                   \
+     || ((ABI_##lib##_##introduced - 0) < (ABI_##lib##_##obsoleted - 0)))
 
 /* That header also defines symbols like `VERSION_libm_GLIBC_2_1' to
    the version set name to use for e.g. symbols first introduced into
@@ -81,11 +81,11 @@
    distinct, and LOCAL is also intended for export, its version should
    be specified explicitly with versioned_symbol, too.  */
 # define versioned_symbol(lib, local, symbol, version) \
-  versioned_symbol_1 (lib, local, symbol, version)
+    versioned_symbol_1 (lib, local, symbol, version)
 # define versioned_symbol_1(lib, local, symbol, version) \
-  versioned_symbol_2 (local, symbol, VERSION_##lib##_##version)
+    versioned_symbol_2 (local, symbol, VERSION_##lib##_##version)
 # define versioned_symbol_2(local, symbol, name) \
-  default_symbol_version (local, symbol, name)
+    default_symbol_version (local, symbol, name)
 
 /* compat_symbol is like versioned_symbol, but emits a compatibility
    version (with @ instead of @@).  The same issue related to
@@ -93,18 +93,18 @@
    Versions file, or otherwise it can be exported with an undesired
    default symbol version.  */
 # define compat_symbol(lib, local, symbol, version) \
-  compat_symbol_1 (lib, local, symbol, version)
+    compat_symbol_1 (lib, local, symbol, version)
 # define compat_symbol_1(lib, local, symbol, version) \
-  compat_symbol_2 (local, symbol, VERSION_##lib##_##version)
+    compat_symbol_2 (local, symbol, VERSION_##lib##_##version)
 /* See <libc-symver.h>.  */
 # ifdef __ASSEMBLER__
 #define compat_symbol_2(local, symbol, name) \
-  _set_symbol_version (local, symbol@name)
+    _set_symbol_version (local, symbol@name)
 # else
 #  define compat_symbol_2(local, symbol, name) \
-  compat_symbol_3 (local, symbol, name)
+    compat_symbol_3 (local, symbol, name)
 #  define compat_symbol_3(local, symbol, name) \
-  _set_symbol_version (local, #symbol "@" #name)
+    _set_symbol_version (local, #symbol "@" #name)
 # endif
 #else
 
@@ -114,7 +114,7 @@
 
 /* No versions to worry about, just make this the global definition.  */
 # define versioned_symbol(lib, local, symbol, version) \
-  weak_alias (local, symbol)
+    weak_alias (local, symbol)
 
 /* This should not appear outside `#if SHLIB_COMPAT (...)'.  */
 # define compat_symbol(lib, local, symbol, version) ...
@@ -130,24 +130,24 @@
    define such a symbol within the shared libraries that are built for
    users.  */
 #define compat_symbol_reference(lib, local, symbol, version) \
-  compat_symbol_reference_1 (lib, local, symbol, version)
+    compat_symbol_reference_1 (lib, local, symbol, version)
 #define compat_symbol_reference_1(lib, local, symbol, version) \
-  compat_symbol_reference_2 (local, symbol, VERSION_##lib##_##version)
+    compat_symbol_reference_2 (local, symbol, VERSION_##lib##_##version)
 #define compat_symbol_reference_2(local, symbol, name) \
-  symbol_version_reference (local, symbol, name)
+    symbol_version_reference (local, symbol, name)
 
 /* Export the symbol only for shared-library compatibility.  */
 #define libc_sunrpc_symbol(name, aliasname, version) \
-  compat_symbol (libc, name, aliasname, version);
+    compat_symbol (libc, name, aliasname, version);
 
 /* The TEST_COMPAT macro acts just like the SHLIB_COMPAT macro except
    that it does not check IS_IN.  It is used by tests that are testing
    functionality that is only available in specific GLIBC versions.  */
 
 # define TEST_COMPAT(lib, introduced, obsoleted)                  \
-  _TEST_COMPAT (lib, introduced, obsoleted)
+    _TEST_COMPAT (lib, introduced, obsoleted)
 # define _TEST_COMPAT(lib, introduced, obsoleted)                 \
-   (!(ABI_##lib##_##obsoleted - 0)                        \
-       || ((ABI_##lib##_##introduced - 0) < (ABI_##lib##_##obsoleted - 0)))
+    (!(ABI_##lib##_##obsoleted - 0)                        \
+     || ((ABI_##lib##_##introduced - 0) < (ABI_##lib##_##obsoleted - 0)))
 
 #endif  /* shlib-compat.h */

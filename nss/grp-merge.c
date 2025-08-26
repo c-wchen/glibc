@@ -23,17 +23,17 @@
 #include <grp-merge.h>
 
 #define BUFCHECK(size)          \
-  ({                    \
-    do                  \
-      {                 \
-    if (c + (size) > buflen)    \
-          {             \
-        free (members);     \
-        return ERANGE;      \
-      }             \
-      }                 \
-    while (0);              \
-  })
+    ({                    \
+        do                  \
+        {                 \
+            if (c + (size) > buflen)    \
+            {             \
+                free (members);     \
+                return ERANGE;      \
+            }             \
+        }                 \
+        while (0);              \
+    })
 
 int __copy_grp(const struct group srcgrp, const size_t buflen,
                struct group *destgrp, char *destbuf, char **endptr)

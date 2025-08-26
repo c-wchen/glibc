@@ -48,8 +48,8 @@
 static struct passwd default_pwd_data[] = {
 #define PWD(u) \
     { .pw_name = (char *) "name" #u, .pw_passwd = (char *) "*", .pw_uid = u,  \
-      .pw_gid = 100, .pw_gecos = (char *) "*", .pw_dir = (char *) "*",        \
-      .pw_shell = (char *) "*" }
+        .pw_gid = 100, .pw_gecos = (char *) "*", .pw_dir = (char *) "*",        \
+        .pw_shell = (char *) "*" }
     PWD(30),
     PWD(100),
     PWD(200),
@@ -57,7 +57,7 @@ static struct passwd default_pwd_data[] = {
     PWD(20000)
 };
 #define default_npwd_data \
-  (sizeof (default_pwd_data) / sizeof (default_pwd_data[0]))
+    (sizeof (default_pwd_data) / sizeof (default_pwd_data[0]))
 
 static struct passwd *pwd_data = default_pwd_data;
 static int npwd_data = default_npwd_data;
@@ -140,7 +140,8 @@ NAME(endpwent)(void) {
 }
 
 static enum nss_status copy_passwd(struct passwd *result, struct passwd *local,
-                                   char *buffer, size_t buflen, int *errnop) {
+                                   char *buffer, size_t buflen, int *errnop)
+{
     struct alloc_buffer buf = alloc_buffer_create(buffer, buflen);
 
     result->pw_name = alloc_buffer_maybe_copy_string(&buf, local->pw_name);
@@ -151,8 +152,7 @@ static enum nss_status copy_passwd(struct passwd *result, struct passwd *local,
     result->pw_dir = alloc_buffer_maybe_copy_string(&buf, local->pw_dir);
     result->pw_shell = alloc_buffer_maybe_copy_string(&buf, local->pw_shell);
 
-    if (alloc_buffer_has_failed(&buf))
-    {
+    if (alloc_buffer_has_failed(&buf)) {
         *errnop = ERANGE;
         return NSS_STATUS_TRYAGAIN;
     }
@@ -233,13 +233,13 @@ NAME(endgrent)(void) {
 }
 
 static enum nss_status copy_group(struct group *result, struct group *local,
-                                  char *buffer, size_t buflen, int *errnop) {
+                                  char *buffer, size_t buflen, int *errnop)
+{
     struct alloc_buffer buf = alloc_buffer_create(buffer, buflen);
     char **memlist;
     int i;
 
-    if (local->gr_mem)
-    {
+    if (local->gr_mem) {
         i = 0;
         while (local->gr_mem[i]) {
             ++i;
@@ -255,8 +255,7 @@ static enum nss_status copy_group(struct group *result, struct group *local,
         }
 
         result->gr_mem = memlist;
-    } else
-    {
+    } else {
         result->gr_mem = NULL;
     }
 
@@ -264,8 +263,7 @@ static enum nss_status copy_group(struct group *result, struct group *local,
     result->gr_passwd = alloc_buffer_maybe_copy_string(&buf, local->gr_passwd);
     result->gr_gid = local->gr_gid;
 
-    if (alloc_buffer_has_failed(&buf))
-    {
+    if (alloc_buffer_has_failed(&buf)) {
         *errnop = ERANGE;
         return NSS_STATUS_TRYAGAIN;
     }
@@ -347,7 +345,8 @@ NAME(endspwent)(void) {
 }
 
 static enum nss_status copy_shadow(struct spwd *result, struct spwd *local,
-                                   char *buffer, size_t buflen, int *errnop) {
+                                   char *buffer, size_t buflen, int *errnop)
+{
     struct alloc_buffer buf = alloc_buffer_create(buffer, buflen);
 
     result->sp_namp = alloc_buffer_maybe_copy_string(&buf, local->sp_namp);
@@ -360,8 +359,7 @@ static enum nss_status copy_shadow(struct spwd *result, struct spwd *local,
     result->sp_expire = local->sp_expire;
     result->sp_flag = local->sp_flag;
 
-    if (alloc_buffer_has_failed(&buf))
-    {
+    if (alloc_buffer_has_failed(&buf)) {
         *errnop = ERANGE;
         return NSS_STATUS_TRYAGAIN;
     }
@@ -427,13 +425,13 @@ NAME(endhostent)(void) {
 }
 
 static enum nss_status copy_host(struct hostent *result, struct hostent *local,
-                                 char *buffer, size_t buflen, int *errnop) {
+                                 char *buffer, size_t buflen, int *errnop)
+{
     struct alloc_buffer buf = alloc_buffer_create(buffer, buflen);
     char **memlist;
     int i, j;
 
-    if (local->h_addr_list)
-    {
+    if (local->h_addr_list) {
         i = 0;
         while (local->h_addr_list[i]) {
             ++i;
@@ -449,8 +447,7 @@ static enum nss_status copy_host(struct hostent *result, struct hostent *local,
         }
 
         result->h_addr_list = memlist;
-    } else
-    {
+    } else {
         result->h_addr_list = NULL;
     }
 
@@ -459,8 +456,7 @@ static enum nss_status copy_host(struct hostent *result, struct hostent *local,
     result->h_length = 4;
     result->h_name = alloc_buffer_maybe_copy_string(&buf, local->h_name);
 
-    if (alloc_buffer_has_failed(&buf))
-    {
+    if (alloc_buffer_has_failed(&buf)) {
         *errnop = ERANGE;
         return NSS_STATUS_TRYAGAIN;
     }

@@ -21,8 +21,8 @@
 
 /* Avoid putting floating point values in memory.  */
 # define math_opt_barrier(x)                    \
-  ({ __typeof (x) __x = (x); __asm ("" : "+dwa" (__x)); __x; })
+    ({ __typeof (x) __x = (x); __asm ("" : "+dwa" (__x)); __x; })
 # define math_force_eval(x)                     \
-  ({ __typeof (x) __x = (x); __asm __volatile__ ("" : : "dwa" (__x)); })
+    ({ __typeof (x) __x = (x); __asm __volatile__ ("" : : "dwa" (__x)); })
 
 #endif

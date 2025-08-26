@@ -48,13 +48,13 @@ locale_t __uselocale(locale_t newloc)
          some bogus offset from our thread pointer).  */
 
 # define DEFINE_CATEGORY(category, category_name, items, a) \
-      {                                       \
-    extern char _nl_current_##category##_used;                \
-    weak_extern (_nl_current_##category##_used)               \
-    weak_extern (_nl_current_##category)                      \
-    if (&_nl_current_##category##_used != NULL)               \
-      _nl_current_##category = &locobj->__locales[category];          \
-      }
+    {                                       \
+        extern char _nl_current_##category##_used;                \
+        weak_extern (_nl_current_##category##_used)               \
+        weak_extern (_nl_current_##category)                      \
+        if (&_nl_current_##category##_used != NULL)               \
+            _nl_current_##category = &locobj->__locales[category];          \
+    }
 # include "categories.def"
 # undef DEFINE_CATEGORY
 #endif

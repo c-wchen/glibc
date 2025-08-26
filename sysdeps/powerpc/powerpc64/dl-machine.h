@@ -129,8 +129,8 @@ elf_machine_dynamic(void)
 # define DL_STARTING_UP_DEF
 #else
 # define DL_STARTING_UP_DEF \
-".LC__dl_starting_up:\n"  \
-"	.tc __GI__dl_starting_up[TC],__GI__dl_starting_up\n"
+    ".LC__dl_starting_up:\n"  \
+    "	.tc __GI__dl_starting_up[TC],__GI__dl_starting_up\n"
 #endif
 
 
@@ -138,120 +138,120 @@ elf_machine_dynamic(void)
    `_dl_start' is the real entry point; its return value is the user
    program's entry point.  */
 #define RTLD_START \
-  asm (".pushsection \".text\"\n"                   \
-"	.align	2\n"                           \
-"	" ENTRY_2(_start) "\n"                        \
-BODY_PREFIX "_start:\n"                         \
-"	" LOCALENTRY(_start) "\n"                     \
-/* We start with the following on the stack, from top:          \
-   argc (4 bytes);                          \
-   arguments for program (terminated by NULL);              \
-   environment variables (terminated by NULL);              \
-   arguments for the program loader.  */                \
-"	mr	3,1\n"                         \
-"	li	4,0\n"                         \
-"	stdu	4,-128(1)\n"                     \
-/* Call _dl_start with one parameter pointing at argc.  */      \
-"	bl	" DOT_PREFIX "_dl_start\n"             \
-"	nop\n"                                \
-/* Transfer control to _dl_start_user!  */              \
-"	b	" DOT_PREFIX "_dl_start_user\n"             \
-".LT__start:\n"                             \
-"	.long 0\n"                            \
-"	.byte 0x00,0x0c,0x24,0x40,0x00,0x00,0x00,0x00\n"      \
-"	.long .LT__start-" BODY_PREFIX "_start\n"         \
-"	.short .LT__start_name_end-.LT__start_name_start\n"       \
-".LT__start_name_start:\n"                      \
-"	.ascii \"_start\"\n"                      \
-".LT__start_name_end:\n"                        \
-"	.align 2\n"                           \
-"	" END_2(_start) "\n"                      \
-"	.pushsection	\".toc\",\"aw\"\n"               \
-DL_STARTING_UP_DEF                          \
-".LC__rtld_local:\n"                            \
-"	.tc _rtld_local[TC],_rtld_local\n"                \
-".LC__dl_argc:\n"                           \
-"	.tc _dl_argc[TC],_dl_argc\n"                  \
-".LC__dl_argv:\n"                           \
-"	.tc __GI__dl_argv[TC],__GI__dl_argv\n"                \
-".LC__dl_fini:\n"                           \
-"	.tc _dl_fini[TC],_dl_fini\n"                  \
-"	.popsection\n"                            \
-"	" ENTRY_2(_dl_start_user) "\n"                    \
-/* Now, we do our main work of calling initialisation procedures.   \
-   The ELF ABI doesn't say anything about parameters for these,     \
-   so we just pass argc, argv, and the environment.         \
-   Changing these is strongly discouraged (not least because argc is    \
-   passed by value!).  */                       \
-BODY_PREFIX "_dl_start_user:\n"                     \
-"	" LOCALENTRY(_dl_start_user) "\n"             \
-/* the address of _start in r30.  */                    \
-"	mr	30,3\n"                            \
-/* &_dl_argc in 29, &_dl_argv in 27, and _dl_loaded in 28.  */      \
-"	addis	28,2,.LC__rtld_local@toc@ha\n"              \
-"	ld	28,.LC__rtld_local@toc@l(28)\n"                \
-"	addis	29,2,.LC__dl_argc@toc@ha\n"             \
-"	ld	29,.LC__dl_argc@toc@l(29)\n"               \
-"	addis	27,2,.LC__dl_argv@toc@ha\n"             \
-"	ld	27,.LC__dl_argv@toc@l(27)\n"               \
-/* _dl_init (_dl_loaded, _dl_argc, _dl_argv, _dl_argv+_dl_argc+1).  */  \
-"	ld	3,0(28)\n"                     \
-"	lwa	4,0(29)\n"                        \
-"	ld	5,0(27)\n"                     \
-"	sldi	6,4,3\n"                     \
-"	add	6,5,6\n"                      \
-"	addi	6,6,8\n"                     \
-"	bl	" DOT_PREFIX "_dl_init\n"              \
-"	nop\n"                                \
-/* Now, to conform to the ELF ABI, we have to:              \
-   Pass argc (actually _dl_argc) in r3;  */             \
-"	lwa	3,0(29)\n"                        \
-/* Pass argv (actually _dl_argv) in r4;  */             \
-"	ld	4,0(27)\n"                     \
-/* Pass argv+argc+1 in r5;  */                      \
-"	sldi	5,3,3\n"                     \
-"	add	6,4,5\n"                      \
-"	addi	5,6,8\n"                     \
-/* Pass the auxiliary vector in r6. This is passed to us just after \
-   _envp.  */                               \
-"2:	ldu	0,8(6)\n"                       \
-"	cmpdi	0,0\n"                          \
-"	bne	2b\n"                         \
-"	addi	6,6,8\n"                     \
-/* Pass a termination function pointer (in this case _dl_fini) in   \
-   r7.  */                              \
-"	addis	7,2,.LC__dl_fini@toc@ha\n"              \
-"	ld	7,.LC__dl_fini@toc@l(7)\n"             \
-/* Pass the stack pointer in r1 (so far so good), pointing to a NULL    \
-   value.  This lets our startup code distinguish between a program \
-   linked statically, which linux will call with argc on top of the \
-   stack which will hopefully never be zero, and a dynamically linked   \
-   program which will always have a NULL on the top of the stack.   \
-   Take the opportunity to clear LR, so anyone who accidentally     \
-   returns from _start gets SEGV.  Also clear the next few words of \
-   the stack.  */                           \
-"	li	31,0\n"                            \
-"	std	31,0(1)\n"                        \
-"	mtlr	31\n"                            \
-"	std	31,8(1)\n"                        \
-"	std	31,16(1)\n"                       \
-"	std	31,24(1)\n"                       \
-/* Now, call the start function descriptor at r30...  */        \
-"	.globl	._dl_main_dispatch\n"                  \
-"._dl_main_dispatch:\n"                         \
-"	" PPC64_LOAD_FUNCPTR(30) "\n"                 \
-"	bctr\n"                               \
-".LT__dl_start_user:\n"                         \
-"	.long 0\n"                            \
-"	.byte 0x00,0x0c,0x24,0x40,0x00,0x00,0x00,0x00\n"      \
-"	.long .LT__dl_start_user-" BODY_PREFIX "_dl_start_user\n" \
-"	.short .LT__dl_start_user_name_end-.LT__dl_start_user_name_start\n" \
-".LT__dl_start_user_name_start:\n"                  \
-"	.ascii \"_dl_start_user\"\n"                  \
-".LT__dl_start_user_name_end:\n"                    \
-"	.align 2\n"                           \
-"	" END_2(_dl_start_user) "\n"                  \
-"	.popsection");
+    asm (".pushsection \".text\"\n"                   \
+         "	.align	2\n"                           \
+         "	" ENTRY_2(_start) "\n"                        \
+         BODY_PREFIX "_start:\n"                         \
+         "	" LOCALENTRY(_start) "\n"                     \
+         /* We start with the following on the stack, from top:          \
+            argc (4 bytes);                          \
+            arguments for program (terminated by NULL);              \
+            environment variables (terminated by NULL);              \
+            arguments for the program loader.  */                \
+         "	mr	3,1\n"                         \
+         "	li	4,0\n"                         \
+         "	stdu	4,-128(1)\n"                     \
+         /* Call _dl_start with one parameter pointing at argc.  */      \
+         "	bl	" DOT_PREFIX "_dl_start\n"             \
+         "	nop\n"                                \
+         /* Transfer control to _dl_start_user!  */              \
+         "	b	" DOT_PREFIX "_dl_start_user\n"             \
+         ".LT__start:\n"                             \
+         "	.long 0\n"                            \
+         "	.byte 0x00,0x0c,0x24,0x40,0x00,0x00,0x00,0x00\n"      \
+         "	.long .LT__start-" BODY_PREFIX "_start\n"         \
+         "	.short .LT__start_name_end-.LT__start_name_start\n"       \
+         ".LT__start_name_start:\n"                      \
+         "	.ascii \"_start\"\n"                      \
+         ".LT__start_name_end:\n"                        \
+         "	.align 2\n"                           \
+         "	" END_2(_start) "\n"                      \
+         "	.pushsection	\".toc\",\"aw\"\n"               \
+         DL_STARTING_UP_DEF                          \
+         ".LC__rtld_local:\n"                            \
+         "	.tc _rtld_local[TC],_rtld_local\n"                \
+         ".LC__dl_argc:\n"                           \
+         "	.tc _dl_argc[TC],_dl_argc\n"                  \
+         ".LC__dl_argv:\n"                           \
+         "	.tc __GI__dl_argv[TC],__GI__dl_argv\n"                \
+         ".LC__dl_fini:\n"                           \
+         "	.tc _dl_fini[TC],_dl_fini\n"                  \
+         "	.popsection\n"                            \
+         "	" ENTRY_2(_dl_start_user) "\n"                    \
+         /* Now, we do our main work of calling initialisation procedures.   \
+            The ELF ABI doesn't say anything about parameters for these,     \
+            so we just pass argc, argv, and the environment.         \
+            Changing these is strongly discouraged (not least because argc is    \
+            passed by value!).  */                       \
+         BODY_PREFIX "_dl_start_user:\n"                     \
+         "	" LOCALENTRY(_dl_start_user) "\n"             \
+         /* the address of _start in r30.  */                    \
+         "	mr	30,3\n"                            \
+         /* &_dl_argc in 29, &_dl_argv in 27, and _dl_loaded in 28.  */      \
+         "	addis	28,2,.LC__rtld_local@toc@ha\n"              \
+         "	ld	28,.LC__rtld_local@toc@l(28)\n"                \
+         "	addis	29,2,.LC__dl_argc@toc@ha\n"             \
+         "	ld	29,.LC__dl_argc@toc@l(29)\n"               \
+         "	addis	27,2,.LC__dl_argv@toc@ha\n"             \
+         "	ld	27,.LC__dl_argv@toc@l(27)\n"               \
+         /* _dl_init (_dl_loaded, _dl_argc, _dl_argv, _dl_argv+_dl_argc+1).  */  \
+         "	ld	3,0(28)\n"                     \
+         "	lwa	4,0(29)\n"                        \
+         "	ld	5,0(27)\n"                     \
+         "	sldi	6,4,3\n"                     \
+         "	add	6,5,6\n"                      \
+         "	addi	6,6,8\n"                     \
+         "	bl	" DOT_PREFIX "_dl_init\n"              \
+         "	nop\n"                                \
+         /* Now, to conform to the ELF ABI, we have to:              \
+            Pass argc (actually _dl_argc) in r3;  */             \
+         "	lwa	3,0(29)\n"                        \
+         /* Pass argv (actually _dl_argv) in r4;  */             \
+         "	ld	4,0(27)\n"                     \
+         /* Pass argv+argc+1 in r5;  */                      \
+         "	sldi	5,3,3\n"                     \
+         "	add	6,4,5\n"                      \
+         "	addi	5,6,8\n"                     \
+         /* Pass the auxiliary vector in r6. This is passed to us just after \
+            _envp.  */                               \
+         "2:	ldu	0,8(6)\n"                       \
+         "	cmpdi	0,0\n"                          \
+         "	bne	2b\n"                         \
+         "	addi	6,6,8\n"                     \
+         /* Pass a termination function pointer (in this case _dl_fini) in   \
+            r7.  */                              \
+         "	addis	7,2,.LC__dl_fini@toc@ha\n"              \
+         "	ld	7,.LC__dl_fini@toc@l(7)\n"             \
+         /* Pass the stack pointer in r1 (so far so good), pointing to a NULL    \
+            value.  This lets our startup code distinguish between a program \
+            linked statically, which linux will call with argc on top of the \
+            stack which will hopefully never be zero, and a dynamically linked   \
+            program which will always have a NULL on the top of the stack.   \
+            Take the opportunity to clear LR, so anyone who accidentally     \
+            returns from _start gets SEGV.  Also clear the next few words of \
+            the stack.  */                           \
+         "	li	31,0\n"                            \
+         "	std	31,0(1)\n"                        \
+         "	mtlr	31\n"                            \
+         "	std	31,8(1)\n"                        \
+         "	std	31,16(1)\n"                       \
+         "	std	31,24(1)\n"                       \
+         /* Now, call the start function descriptor at r30...  */        \
+         "	.globl	._dl_main_dispatch\n"                  \
+         "._dl_main_dispatch:\n"                         \
+         "	" PPC64_LOAD_FUNCPTR(30) "\n"                 \
+         "	bctr\n"                               \
+         ".LT__dl_start_user:\n"                         \
+         "	.long 0\n"                            \
+         "	.byte 0x00,0x0c,0x24,0x40,0x00,0x00,0x00,0x00\n"      \
+         "	.long .LT__dl_start_user-" BODY_PREFIX "_dl_start_user\n" \
+         "	.short .LT__dl_start_user_name_end-.LT__dl_start_user_name_start\n" \
+         ".LT__dl_start_user_name_start:\n"                  \
+         "	.ascii \"_dl_start_user\"\n"                  \
+         ".LT__dl_start_user_name_end:\n"                    \
+         "	.align 2\n"                           \
+         "	" END_2(_dl_start_user) "\n"                  \
+         "	.popsection");
 
 /* ELF_RTYPE_CLASS_COPY iff TYPE should not be allowed to resolve to
    one of the main executable's symbols, as for a COPY reloc.
@@ -282,19 +282,19 @@ BODY_PREFIX "_dl_start_user:\n"                     \
 
 #if _CALL_ELF != 2
 #define elf_machine_type_class(type) \
-  (ELF_RTYPE_CLASS_PLT | (((type) == R_PPC64_COPY) * ELF_RTYPE_CLASS_COPY))
+    (ELF_RTYPE_CLASS_PLT | (((type) == R_PPC64_COPY) * ELF_RTYPE_CLASS_COPY))
 #else
 /* And now that you have read that large comment, you can disregard it
    all for ELFv2.  ELFv2 does need the special SHN_UNDEF treatment.  */
 #define IS_PPC64_TLS_RELOC(R)                       \
-  (((R) >= R_PPC64_TLS && (R) <= R_PPC64_DTPREL16_HIGHESTA)     \
-   || ((R) >= R_PPC64_TPREL16_HIGH && (R) <= R_PPC64_DTPREL16_HIGHA))
+    (((R) >= R_PPC64_TLS && (R) <= R_PPC64_DTPREL16_HIGHESTA)     \
+     || ((R) >= R_PPC64_TPREL16_HIGH && (R) <= R_PPC64_DTPREL16_HIGHA))
 
 #define elf_machine_type_class(type) \
-  ((((type) == R_PPC64_JMP_SLOT                 \
-     || (type) == R_PPC64_ADDR24                \
-     || IS_PPC64_TLS_RELOC (type)) * ELF_RTYPE_CLASS_PLT)   \
-   | (((type) == R_PPC64_COPY) * ELF_RTYPE_CLASS_COPY))
+    ((((type) == R_PPC64_JMP_SLOT                 \
+       || (type) == R_PPC64_ADDR24                \
+       || IS_PPC64_TLS_RELOC (type)) * ELF_RTYPE_CLASS_PLT)   \
+     | (((type) == R_PPC64_COPY) * ELF_RTYPE_CLASS_COPY))
 #endif
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
@@ -338,10 +338,10 @@ dl_platform_init(void)
 /* Use this when you've modified some code, but it won't be in the
    instruction fetch queue (or when it doesn't matter if it is). */
 #define MODIFIED_CODE_NOQUEUE(where) \
-     do { PPC_DCBST(where); PPC_SYNC; PPC_ICBI(where); } while (0)
+    do { PPC_DCBST(where); PPC_SYNC; PPC_ICBI(where); } while (0)
 /* Use this when it might be in the instruction queue. */
 #define MODIFIED_CODE(where) \
-     do { PPC_DCBST(where); PPC_SYNC; PPC_ICBI(where); PPC_ISYNC; } while (0)
+    do { PPC_DCBST(where); PPC_SYNC; PPC_ICBI(where); PPC_ISYNC; } while (0)
 
 /* Set up the loaded object described by MAP so its unrelocated PLT
    entries will jump to the on-demand fixup code in dl-runtime.c.  */
@@ -580,7 +580,7 @@ ppc_init_fake_thread_pointer(void)
 }
 
 #define ELF_MACHINE_BEFORE_RTLD_RELOC(map, dynamic_info) \
-  ppc_init_fake_thread_pointer ();
+    ppc_init_fake_thread_pointer ();
 #endif /* ENABLE_STATIC_PIE && !defined SHARED && !IS_IN (rtld) */
 
 #endif /* dl_machine_h */
@@ -595,7 +595,7 @@ ppc_init_fake_thread_pointer(void)
 #define PPC_HIGHEST(v) (((v) >> 48) & 0xffff)
 #define PPC_HIGHESTA(v) PPC_HIGHEST ((v) + 0x8000)
 #define BIT_INSERT(var, val, mask) \
-  ((var) = ((var) & ~(Elf64_Addr) (mask)) | ((val) & (mask)))
+    ((var) = ((var) & ~(Elf64_Addr) (mask)) | ((val) & (mask)))
 
 #define dont_expect(X) __builtin_expect ((X), 0)
 

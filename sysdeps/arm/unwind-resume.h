@@ -20,11 +20,11 @@
    canonical one.  These macros tell sysdeps/gnu/unwind*.c how to
    define __gcc_personality_v0.  */
 #define PERSONALITY_PROTO                       \
-  (_Unwind_State state,                         \
-   struct _Unwind_Exception *ue_header,         \
-   struct _Unwind_Context *context)
+    (_Unwind_State state,                         \
+     struct _Unwind_Exception *ue_header,         \
+     struct _Unwind_Context *context)
 #define PERSONALITY_ARGS                        \
-  (state, ue_header, context)
+    (state, ue_header, context)
 
 /* It's vitally important that _Unwind_Resume not have a stack frame; the
    ARM unwinder relies on register state at entrance.  So we write this in

@@ -14,12 +14,12 @@ typedef int __gcc_CMPtype __attribute__((mode(__libgcc_cmp_return__)));
 #define CMPtype __gcc_CMPtype
 
 #define _FP_MUL_MEAT_S(R,X,Y)               \
-  _FP_MUL_MEAT_1_wide(_FP_WFRACBITS_S,R,X,Y,umul_ppmm)
+    _FP_MUL_MEAT_1_wide(_FP_WFRACBITS_S,R,X,Y,umul_ppmm)
 
 #define _FP_MUL_MEAT_D(R,X,Y)               \
-  _FP_MUL_MEAT_1_wide(_FP_WFRACBITS_D,R,X,Y,umul_ppmm)
+    _FP_MUL_MEAT_1_wide(_FP_WFRACBITS_D,R,X,Y,umul_ppmm)
 #define _FP_MUL_MEAT_Q(R,X,Y)               \
-  _FP_MUL_MEAT_2_wide(_FP_WFRACBITS_Q,R,X,Y,umul_ppmm)
+    _FP_MUL_MEAT_2_wide(_FP_WFRACBITS_Q,R,X,Y,umul_ppmm)
 
 #define _FP_DIV_MEAT_S(R,X,Y)   _FP_DIV_MEAT_1_loop(S,R,X,Y)
 
@@ -40,20 +40,20 @@ typedef int __gcc_CMPtype __attribute__((mode(__libgcc_cmp_return__)));
 
 /* Someone please check this.  */
 #define _FP_CHOOSENAN(fs, wc, R, X, Y, OP)          \
-  do {                              \
-    if ((_FP_FRAC_HIGH_RAW_##fs(X) & _FP_QNANBIT_##fs)      \
-    && !(_FP_FRAC_HIGH_RAW_##fs(Y) & _FP_QNANBIT_##fs)) \
-      {                             \
-    R##_s = Y##_s;                      \
-    _FP_FRAC_COPY_##wc(R,Y);                \
-      }                             \
-    else                            \
-      {                             \
-    R##_s = X##_s;                      \
-    _FP_FRAC_COPY_##wc(R,X);                \
-      }                             \
-    R##_c = FP_CLS_NAN;                     \
-  } while (0)
+    do {                              \
+        if ((_FP_FRAC_HIGH_RAW_##fs(X) & _FP_QNANBIT_##fs)      \
+            && !(_FP_FRAC_HIGH_RAW_##fs(Y) & _FP_QNANBIT_##fs)) \
+        {                             \
+            R##_s = Y##_s;                      \
+            _FP_FRAC_COPY_##wc(R,Y);                \
+        }                             \
+        else                            \
+        {                             \
+            R##_s = X##_s;                      \
+            _FP_FRAC_COPY_##wc(R,X);                \
+        }                             \
+        R##_c = FP_CLS_NAN;                     \
+    } while (0)
 
 #define _FP_TININESS_AFTER_ROUNDING 0
 
@@ -77,16 +77,16 @@ typedef int __gcc_CMPtype __attribute__((mode(__libgcc_cmp_return__)));
 # define FP_EX_DIVZERO      ISA_BIT(37)
 # define FP_EX_INEXACT      ISA_BIT(38)
 # define FP_EX_ALL      (FP_EX_INVALID | FP_EX_OVERFLOW     \
-                 | FP_EX_UNDERFLOW | FP_EX_DIVZERO  \
-                 | FP_EX_INEXACT)
+                         | FP_EX_UNDERFLOW | FP_EX_DIVZERO  \
+                         | FP_EX_INEXACT)
 
 void __sfp_handle_exceptions(int);
 
 # define FP_HANDLE_EXCEPTIONS           \
-  do {                      \
-    if (__builtin_expect (_fex, 0))     \
-      __sfp_handle_exceptions (_fex);       \
-  } while (0);
+    do {                      \
+        if (__builtin_expect (_fex, 0))     \
+            __sfp_handle_exceptions (_fex);       \
+    } while (0);
 
 /* The FP_EX_* bits track whether the exception has occurred.  This macro
    must set the FP_EX_* bits of those exceptions which are configured to
@@ -102,13 +102,13 @@ void __sfp_handle_exceptions(int);
 # define FP_RND_MASK    0x3
 
 # define _FP_DECL_EX \
-  union { unsigned long long i; double d; } _fpscr __attribute__ ((unused)) = \
-    { .i = FP_RND_NEAREST }
+    union { unsigned long long i; double d; } _fpscr __attribute__ ((unused)) = \
+            { .i = FP_RND_NEAREST }
 
 #define FP_INIT_ROUNDMODE           \
-  do {                      \
-    _fpscr.d = __builtin_mffs ();       \
-  } while (0)
+    do {                      \
+        _fpscr.d = __builtin_mffs ();       \
+    } while (0)
 
 # define FP_ROUNDMODE   (_fpscr.i & FP_RND_MASK)
 #endif  /* !__FLOAT128__ */

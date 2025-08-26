@@ -41,12 +41,12 @@
 /* Evaluate an expression and make sure errno did not get set; return
    the value of the expression */
 #define CHECKERR(expr)              \
-  ({                        \
-    errno = 0;                  \
-    const __typeof (expr) _val = (expr);    \
-    TEST_COMPARE(errno, 0);         \
-    _val;                   \
-  })
+    ({                        \
+        errno = 0;                  \
+        const __typeof (expr) _val = (expr);    \
+        TEST_COMPARE(errno, 0);         \
+        _val;                   \
+    })
 
 /* Evaluate an expression and verify that is return a specific value,
    as well as errno not having been set. */

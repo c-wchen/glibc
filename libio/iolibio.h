@@ -54,18 +54,18 @@ extern int _IO_vsscanf(const char *, const char *, __gnuc_va_list) __THROW;
 
 #define _IO_clearerr(FP) ((FP)->_flags &= ~(_IO_ERR_SEEN|_IO_EOF_SEEN))
 #define _IO_fseek(__fp, __offset, __whence) \
-  (_IO_seekoff_unlocked (__fp, __offset, __whence, _IOS_INPUT|_IOS_OUTPUT) \
-   == _IO_pos_BAD ? EOF : 0)
+    (_IO_seekoff_unlocked (__fp, __offset, __whence, _IOS_INPUT|_IOS_OUTPUT) \
+     == _IO_pos_BAD ? EOF : 0)
 #define _IO_rewind(FILE) \
-  (void) _IO_seekoff_unlocked (FILE, 0, 0, _IOS_INPUT|_IOS_OUTPUT)
+    (void) _IO_seekoff_unlocked (FILE, 0, 0, _IOS_INPUT|_IOS_OUTPUT)
 #define _IO_freopen(FILENAME, MODE, FP) \
-  (_IO_file_close_it (FP), \
-   _IO_file_fopen (FP, FILENAME, MODE, 1))
+    (_IO_file_close_it (FP), \
+     _IO_file_fopen (FP, FILENAME, MODE, 1))
 #define _IO_old_freopen(FILENAME, MODE, FP) \
-  (_IO_old_file_close_it (FP), _IO_old_file_fopen(FP, FILENAME, MODE))
+    (_IO_old_file_close_it (FP), _IO_old_file_fopen(FP, FILENAME, MODE))
 #define _IO_freopen64(FILENAME, MODE, FP) \
-  (_IO_file_close_it (FP), \
-   _IO_file_fopen (FP, FILENAME, MODE, 0))
+    (_IO_file_close_it (FP), \
+     _IO_file_fopen (FP, FILENAME, MODE, 0))
 #define _IO_fileno(FP) ((FP)->_fileno)
 extern FILE *_IO_popen(const char *, const char *) __THROW;
 extern FILE *_IO_new_popen(const char *, const char *) __THROW;

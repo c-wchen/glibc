@@ -121,11 +121,11 @@ static const char *_dl_map_segments(struct link_map *l, int fd,
    dl-map-segments.h files all use consistent strings that are
    guaranteed to have translations.  */
 #define DL_MAP_SEGMENTS_ERROR_MAP_SEGMENT \
-  N_("failed to map segment from shared object")
+    N_("failed to map segment from shared object")
 #define DL_MAP_SEGMENTS_ERROR_MPROTECT \
-  N_("cannot change memory protections")
+    N_("cannot change memory protections")
 #define DL_MAP_SEGMENTS_ERROR_MAP_ZERO_FILL \
-  N_("cannot map zero-fill pages")
+    N_("cannot map zero-fill pages")
 
 
 #endif  /* dl-load.h */

@@ -51,13 +51,13 @@
 
 # undef PSEUDO
 # define PSEUDO(name, syscall_name, args)   \
-  .text;                    \
-  ENTRY (name);                 \
-  DO_CALL (syscall_name, args);
+    .text;                    \
+    ENTRY (name);                 \
+    DO_CALL (syscall_name, args);
 
 # define GETGB              \
     grs t0, .Lgetpc;        \
-.Lgetpc:                \
+    .Lgetpc:                \
     lrw gb, .Lgetpc@GOTPC;  \
     addu    gb, t0;
 
@@ -77,14 +77,14 @@
     ld.w    lr, (sp);       \
     ld.w    gb, (sp, 4);        \
     addi    sp, 8;          \
-1:                  \
+    1:                  \
     rts
 #  else
 #   define PSEUDO_RET           \
     btsti   a0, 31;         \
     bf  1f;         \
     jmpi    SYSCALL_ERROR;      \
-1:                  \
+    1:                  \
     rts
 #  endif
 # else
@@ -100,7 +100,7 @@
     ld.w    lr, (sp);       \
     ld.w    gb, (sp, 4);        \
     addi    sp, 8;          \
-1:                  \
+    1:                  \
     rts
 #  else
 #   define PSEUDO_RET           \
@@ -115,15 +115,15 @@
 
 # undef PSEUDO_END
 # define PSEUDO_END(name)       \
-  .align 4;             \
-  SYSCALL_ERROR_HANDLER;        \
-  END (name)
+    .align 4;             \
+    SYSCALL_ERROR_HANDLER;        \
+    END (name)
 
 # undef PSEUDO_NOERRNO
 # define PSEUDO_NOERRNO(name, syscall_name, args)   \
-  .text;                        \
-  ENTRY (name);                     \
-  DO_CALL (syscall_name, args)
+    .text;                        \
+    ENTRY (name);                     \
+    DO_CALL (syscall_name, args)
 
 # define PSEUDO_RET_NOERRNO rts
 
@@ -136,11 +136,11 @@
 /* The function has to return the error code.  */
 # undef PSEUDO_ERRVAL
 # define PSEUDO_ERRVAL(name, syscall_name, args)    \
-  .text;                        \
-  ENTRY (name)                      \
-  DO_CALL (syscall_name, args);             \
-  not   a0;                     \
-  addi  a0, 1
+    .text;                        \
+    ENTRY (name)                      \
+    DO_CALL (syscall_name, args);             \
+    not   a0;                     \
+    addi  a0, 1
 
 # undef PSEUDO_END_ERRVAL
 # define PSEUDO_END_ERRVAL(name) END (name)
@@ -152,7 +152,7 @@
 #  if RTLD_PRIVATE_ERRNO
 #   ifdef __PIC__
 #    define SYSCALL_ERROR_HANDLER   \
-__local_syscall_error:          \
+    __local_syscall_error:          \
     lrw a1, rtld_errno@PLT;     \
     addu    a1, gb;         \
     ldw a1, (a1);       \
@@ -162,7 +162,7 @@ __local_syscall_error:          \
     rts
 #   else /* __PIC__ */
 #    define SYSCALL_ERROR_HANDLER   \
-__local_syscall_error:          \
+    __local_syscall_error:          \
     lrw a1, rtld_errno;     \
     rsubi   a0, 0;          \
     stw a0, (a1);       \
@@ -172,7 +172,7 @@ __local_syscall_error:          \
 #  else /* !RTLD_PRIVATE_ERRNO */
 #   ifdef __PIC__
 #    define SYSCALL_ERROR_HANDLER       \
-__local_syscall_error:              \
+    __local_syscall_error:              \
     subi    sp, 8;              \
     stw a0, (sp, 0);            \
     stw r15, (sp, 4);           \
@@ -190,7 +190,7 @@ __local_syscall_error:              \
     rts
 #    else
 #     define SYSCALL_ERROR_HANDLER      \
-__local_syscall_error:              \
+    __local_syscall_error:              \
     subi    sp, 8;              \
     stw a0, (sp, 0);            \
     stw r15, (sp, 4);           \
@@ -214,10 +214,10 @@ __local_syscall_error:              \
 /* define DO_CALL */
 # undef DO_CALL
 # define DO_CALL(syscall_name, args)    \
-  DOARGS_##args;            \
-  lrw   r7, SYS_ify(syscall_name);  \
-  trap  0;              \
-  UNDOARGS_##args
+    DOARGS_##args;            \
+    lrw   r7, SYS_ify(syscall_name);  \
+    trap  0;              \
+    UNDOARGS_##args
 
 # undef  DOARGS_0
 # define DOARGS_0           \
@@ -258,10 +258,10 @@ __local_syscall_error:              \
 
 # undef  UNDOARGS_0
 # define UNDOARGS_0 \
-  ldw  r7, (sp, 0); \
-  cfi_restore (r7); \
-  addi sp, 8;   \
-  cfi_adjust_cfa_offset (-8);
+    ldw  r7, (sp, 0); \
+    cfi_restore (r7); \
+    addi sp, 8;   \
+    cfi_adjust_cfa_offset (-8);
 
 # undef  UNDOARGS_1
 # define UNDOARGS_1 UNDOARGS_0
@@ -295,171 +295,171 @@ __local_syscall_error:              \
 
 # undef INTERNAL_SYSCALL_RAW
 #  define INTERNAL_SYSCALL_RAW0(name, dummy...)             \
-  ({unsigned int __sys_result;                      \
-     {                                  \
-       register int _a1 __asm__ ("a0"), _nr __asm__ ("r7");     \
-       _nr = name;                          \
-       __asm__ __volatile__ ("trap  0 \n\t"             \
-                 : "=r" (_a1)               \
-                 : "r" (_nr)                \
-                 : "memory");               \
-           __sys_result = _a1;                  \
-     }                                  \
-     (int) __sys_result; })
+    ({unsigned int __sys_result;                      \
+        {                                  \
+            register int _a1 __asm__ ("a0"), _nr __asm__ ("r7");     \
+            _nr = name;                          \
+            __asm__ __volatile__ ("trap  0 \n\t"             \
+                                  : "=r" (_a1)               \
+                                  : "r" (_nr)                \
+                                  : "memory");               \
+            __sys_result = _a1;                  \
+        }                                  \
+        (int) __sys_result; })
 
 #  define INTERNAL_SYSCALL_RAW1(name, arg1)             \
-  ({unsigned int __sys_result;                      \
-    register int _tmp_arg1 = (int)(arg1);               \
-     {                                  \
-       register int _a1 __asm__ ("a0"), _nr __asm__ ("r7");     \
-       _a1 = _tmp_arg1;                         \
-       _nr = name;                          \
-       __asm__ __volatile__ ("trap  0 \n\t"             \
-                 : "=r" (_a1)               \
-                 : "r" (_nr), "r" (_a1)         \
-                 : "memory");               \
-           __sys_result = _a1;                  \
-     }                                  \
-     (int) __sys_result; })
+    ({unsigned int __sys_result;                      \
+        register int _tmp_arg1 = (int)(arg1);               \
+        {                                  \
+            register int _a1 __asm__ ("a0"), _nr __asm__ ("r7");     \
+            _a1 = _tmp_arg1;                         \
+            _nr = name;                          \
+            __asm__ __volatile__ ("trap  0 \n\t"             \
+                                  : "=r" (_a1)               \
+                                  : "r" (_nr), "r" (_a1)         \
+                                  : "memory");               \
+            __sys_result = _a1;                  \
+        }                                  \
+        (int) __sys_result; })
 
 #  define INTERNAL_SYSCALL_RAW2(name, arg1, arg2)           \
-  ({unsigned int __sys_result;                      \
-    register int _tmp_arg1 = (int)(arg1), _tmp_arg2 = (int)(arg2);  \
-     {                                  \
-       register int _nr __asm__ ("r7");                 \
-       register int _a1 __asm__ ("a0"), _a2 __asm__ ("a1");     \
-       _a1 = _tmp_arg1, _a2 = _tmp_arg2;                \
-       _nr = name;                          \
-       __asm__ __volatile__ ("trap  0 \n\t"             \
-                 : "=r" (_a1)               \
-                 : "r" (_nr), "r" (_a1), "r" (_a2)      \
-                 : "memory");               \
-           __sys_result = _a1;                  \
-     }                                  \
-     (int) __sys_result; })
+    ({unsigned int __sys_result;                      \
+        register int _tmp_arg1 = (int)(arg1), _tmp_arg2 = (int)(arg2);  \
+        {                                  \
+            register int _nr __asm__ ("r7");                 \
+            register int _a1 __asm__ ("a0"), _a2 __asm__ ("a1");     \
+            _a1 = _tmp_arg1, _a2 = _tmp_arg2;                \
+            _nr = name;                          \
+            __asm__ __volatile__ ("trap  0 \n\t"             \
+                                  : "=r" (_a1)               \
+                                  : "r" (_nr), "r" (_a1), "r" (_a2)      \
+                                  : "memory");               \
+            __sys_result = _a1;                  \
+        }                                  \
+        (int) __sys_result; })
 
 #  define INTERNAL_SYSCALL_RAW3(name, arg1, arg2, arg3)         \
-  ({unsigned int __sys_result;                      \
-    register int _tmp_arg1 = (int)(arg1), _tmp_arg2 = (int)(arg2);  \
-    register int _tmp_arg3 = (int)(arg3);               \
-     {                                  \
-       register int _nr __asm__ ("r7");                 \
-       register int _a1 __asm__ ("a0"), _a2 __asm__ ("a1");     \
-       register int _a3 __asm__ ("a2");                 \
-       _a1 = _tmp_arg1;                         \
-       _a2 = _tmp_arg2;                         \
-       _a3 = _tmp_arg3;                         \
-       _nr = name;                          \
-       __asm__ __volatile__ ("trap  0 \n\t"             \
-                 : "=r" (_a1)               \
-                 : "r" (_nr), "r" (_a1), "r" (_a2),     \
-                   "r" (_a3)                \
-                 : "memory");               \
-           __sys_result = _a1;                  \
-     }                                  \
-     (int) __sys_result; })
+    ({unsigned int __sys_result;                      \
+        register int _tmp_arg1 = (int)(arg1), _tmp_arg2 = (int)(arg2);  \
+        register int _tmp_arg3 = (int)(arg3);               \
+        {                                  \
+            register int _nr __asm__ ("r7");                 \
+            register int _a1 __asm__ ("a0"), _a2 __asm__ ("a1");     \
+            register int _a3 __asm__ ("a2");                 \
+            _a1 = _tmp_arg1;                         \
+            _a2 = _tmp_arg2;                         \
+            _a3 = _tmp_arg3;                         \
+            _nr = name;                          \
+            __asm__ __volatile__ ("trap  0 \n\t"             \
+                                  : "=r" (_a1)               \
+                                  : "r" (_nr), "r" (_a1), "r" (_a2),     \
+                                  "r" (_a3)                \
+                                  : "memory");               \
+            __sys_result = _a1;                  \
+        }                                  \
+        (int) __sys_result; })
 
 #  define INTERNAL_SYSCALL_RAW4(name, arg1, arg2, arg3, arg4)       \
-  ({unsigned int __sys_result;                      \
-    register int _tmp_arg1 = (int)(arg1), _tmp_arg2 = (int)(arg2);  \
-    register int _tmp_arg3 = (int)(arg3), _tmp_arg4 = (int)(arg4);  \
-     {                                  \
-       register int _nr __asm__ ("r7");                 \
-       register int _a1 __asm__ ("a0"), _a2 __asm__ ("a1");     \
-       register int _a3 __asm__ ("a2"), _a4 __asm__ ("a3");     \
-       _a1 = _tmp_arg1, _a2 = _tmp_arg2, _a3 = _tmp_arg3;       \
-       _a4 = _tmp_arg4;                         \
-       _nr = name;                          \
-       __asm__ __volatile__ ("trap  0 \n\t"             \
-                 : "=r" (_a1)               \
-                 : "r" (_nr), "r" (_a1), "r" (_a2),     \
-                   "r" (_a3), "r" (_a4)         \
-                 : "memory");               \
-           __sys_result = _a1;                  \
-     }                                  \
-     (int) __sys_result; })
+    ({unsigned int __sys_result;                      \
+        register int _tmp_arg1 = (int)(arg1), _tmp_arg2 = (int)(arg2);  \
+        register int _tmp_arg3 = (int)(arg3), _tmp_arg4 = (int)(arg4);  \
+        {                                  \
+            register int _nr __asm__ ("r7");                 \
+            register int _a1 __asm__ ("a0"), _a2 __asm__ ("a1");     \
+            register int _a3 __asm__ ("a2"), _a4 __asm__ ("a3");     \
+            _a1 = _tmp_arg1, _a2 = _tmp_arg2, _a3 = _tmp_arg3;       \
+            _a4 = _tmp_arg4;                         \
+            _nr = name;                          \
+            __asm__ __volatile__ ("trap  0 \n\t"             \
+                                  : "=r" (_a1)               \
+                                  : "r" (_nr), "r" (_a1), "r" (_a2),     \
+                                  "r" (_a3), "r" (_a4)         \
+                                  : "memory");               \
+            __sys_result = _a1;                  \
+        }                                  \
+        (int) __sys_result; })
 
 #  define INTERNAL_SYSCALL_RAW5(name, arg1, arg2, arg3, arg4,       \
-                  arg5)                 \
-  ({unsigned int __sys_result;                      \
+                                arg5)                 \
+({unsigned int __sys_result;                      \
     register int _tmp_arg1 = (int)(arg1), _tmp_arg2 = (int)(arg2);  \
     register int _tmp_arg3 = (int)(arg3), _tmp_arg4 = (int)(arg4);  \
     register int _tmp_arg5 = (int)(arg5);               \
-     {                                  \
-       register int _nr __asm__ ("r7");                 \
-       register int _a1 __asm__ ("a0"), _a2 __asm__ ("a1");     \
-       register int _a3 __asm__ ("a2"), _a4 __asm__ ("a3");     \
-       register int _a5 __asm__ ("r4");                 \
-       _a1 = _tmp_arg1, _a2 = _tmp_arg2, _a3 = _tmp_arg3;       \
-       _a4 = _tmp_arg4, _a5 = _tmp_arg5;                \
-       _nr = name;                          \
-       __asm__ __volatile__ ("trap  0 \n\t"             \
-                 : "=r" (_a1)               \
-                 : "r" (_nr), "r" (_a1), "r" (_a2),     \
-                   "r" (_a3), "r" (_a4), "r" (_a5)      \
-                 : "memory");               \
-           __sys_result = _a1;                  \
-     }                                  \
-     (int) __sys_result; })
+    {                                  \
+        register int _nr __asm__ ("r7");                 \
+        register int _a1 __asm__ ("a0"), _a2 __asm__ ("a1");     \
+        register int _a3 __asm__ ("a2"), _a4 __asm__ ("a3");     \
+        register int _a5 __asm__ ("r4");                 \
+        _a1 = _tmp_arg1, _a2 = _tmp_arg2, _a3 = _tmp_arg3;       \
+        _a4 = _tmp_arg4, _a5 = _tmp_arg5;                \
+        _nr = name;                          \
+        __asm__ __volatile__ ("trap  0 \n\t"             \
+                              : "=r" (_a1)               \
+                              : "r" (_nr), "r" (_a1), "r" (_a2),     \
+                              "r" (_a3), "r" (_a4), "r" (_a5)      \
+                              : "memory");               \
+        __sys_result = _a1;                  \
+    }                                  \
+    (int) __sys_result; })
 
 #  define INTERNAL_SYSCALL_RAW6(name, arg1, arg2, arg3, arg4,       \
-                  arg5, arg6)               \
-  ({unsigned int __sys_result;                      \
+                                arg5, arg6)               \
+({unsigned int __sys_result;                      \
     register int _tmp_arg1 = (int)(arg1), _tmp_arg2 = (int)(arg2);  \
     register int _tmp_arg3 = (int)(arg3), _tmp_arg4 = (int)(arg4);  \
     register int _tmp_arg5 = (int)(arg5), _tmp_arg6 = (int)(arg6);  \
-     {                                  \
-       register int _nr __asm__ ("r7");                 \
-       register int _a1 __asm__ ("a0"), _a2 __asm__ ("a1");     \
-       register int _a3 __asm__ ("a2"), _a4 __asm__ ("a3");     \
-       register int _a5 __asm__ ("r4"), _a6 __asm__ ("r5");     \
-       _a1 = _tmp_arg1, _a2 = _tmp_arg2, _a3 = _tmp_arg3;       \
-       _a4 = _tmp_arg4, _a5 = _tmp_arg5, _a6 = _tmp_arg6;       \
-       _nr = name;                          \
-       __asm__ __volatile__ ("trap  0 \n\t"             \
-                 : "=r" (_a1)               \
-                 : "r" (_nr), "r" (_a1), "r" (_a2),     \
-                   "r" (_a3), "r" (_a4), "r" (_a5),     \
-                   "r" (_a6)                \
-                 : "memory");               \
-           __sys_result = _a1;                  \
-     }                                  \
-     (int) __sys_result; })
+    {                                  \
+        register int _nr __asm__ ("r7");                 \
+        register int _a1 __asm__ ("a0"), _a2 __asm__ ("a1");     \
+        register int _a3 __asm__ ("a2"), _a4 __asm__ ("a3");     \
+        register int _a5 __asm__ ("r4"), _a6 __asm__ ("r5");     \
+        _a1 = _tmp_arg1, _a2 = _tmp_arg2, _a3 = _tmp_arg3;       \
+        _a4 = _tmp_arg4, _a5 = _tmp_arg5, _a6 = _tmp_arg6;       \
+        _nr = name;                          \
+        __asm__ __volatile__ ("trap  0 \n\t"             \
+                              : "=r" (_a1)               \
+                              : "r" (_nr), "r" (_a1), "r" (_a2),     \
+                              "r" (_a3), "r" (_a4), "r" (_a5),     \
+                              "r" (_a6)                \
+                              : "memory");               \
+        __sys_result = _a1;                  \
+    }                                  \
+    (int) __sys_result; })
 
 #  define INTERNAL_SYSCALL_RAW7(name, arg1, arg2, arg3, arg4,       \
-                  arg5, arg6, arg7)             \
-  ({unsigned int __sys_result;                      \
+                                arg5, arg6, arg7)             \
+({unsigned int __sys_result;                      \
     register int _tmp_arg1 = (int)(arg1), _tmp_arg2 = (int)(arg2);  \
     register int _tmp_arg3 = (int)(arg3), _tmp_arg4 = (int)(arg4);  \
     register int _tmp_arg5 = (int)(arg5), _tmp_arg6 = (int)(arg6);  \
     register int _tmp_arg7 = (int)(arg7);               \
-     {                                  \
-       register int _nr __asm__ ("r7");                 \
-       register int _a1 __asm__ ("a0"), _a2 __asm__ ("a1");     \
-       register int _a3 __asm__ ("a2"), _a4 __asm__ ("a3");     \
-       register int _a5 __asm__ ("r4"), _a6 __asm__ ("r5");     \
-       register int _a7 __asm__ ("r6");                 \
-       _a1 = _tmp_arg1, _a2 = _tmp_arg2, _a3 = _tmp_arg3;       \
-       _a4 = _tmp_arg4, _a5 = _tmp_arg5, _a6 = _tmp_arg6;       \
-       _a7 = _tmp_arg7;                         \
-       _nr = name;                          \
-       __asm__ __volatile__ ("trap  0 \n\t"             \
-                 : "=r" (_a1)               \
-                 : "r" (_nr), "r" (_a1), "r" (_a2),     \
-                   "r" (_a3), "r" (_a4), "r" (_a5),     \
-                   "r" (_a6), "r" (_a7)         \
-                 : "memory");               \
-           __sys_result = _a1;                  \
-     }                                  \
-     (int) __sys_result; })
+    {                                  \
+        register int _nr __asm__ ("r7");                 \
+        register int _a1 __asm__ ("a0"), _a2 __asm__ ("a1");     \
+        register int _a3 __asm__ ("a2"), _a4 __asm__ ("a3");     \
+        register int _a5 __asm__ ("r4"), _a6 __asm__ ("r5");     \
+        register int _a7 __asm__ ("r6");                 \
+        _a1 = _tmp_arg1, _a2 = _tmp_arg2, _a3 = _tmp_arg3;       \
+        _a4 = _tmp_arg4, _a5 = _tmp_arg5, _a6 = _tmp_arg6;       \
+        _a7 = _tmp_arg7;                         \
+        _nr = name;                          \
+        __asm__ __volatile__ ("trap  0 \n\t"             \
+                              : "=r" (_a1)               \
+                              : "r" (_nr), "r" (_a1), "r" (_a2),     \
+                              "r" (_a3), "r" (_a4), "r" (_a5),     \
+                              "r" (_a6), "r" (_a7)         \
+                              : "memory");               \
+        __sys_result = _a1;                  \
+    }                                  \
+    (int) __sys_result; })
 
 # undef INTERNAL_SYSCALL
 # define INTERNAL_SYSCALL(name, nr, args...)            \
-  INTERNAL_SYSCALL_RAW##nr(SYS_ify(name), args)
+    INTERNAL_SYSCALL_RAW##nr(SYS_ify(name), args)
 
 # undef INTERNAL_SYSCALL_NCS
 # define INTERNAL_SYSCALL_NCS(number, nr, args...)      \
-  INTERNAL_SYSCALL_RAW##nr (number, args)
+    INTERNAL_SYSCALL_RAW##nr (number, args)
 
 #undef HAVE_INTERNAL_BRK_ADDR_SYMBOL
 #define HAVE_INTERNAL_BRK_ADDR_SYMBOL 1

@@ -44,14 +44,14 @@ static void handler(int sig)
 }
 
 #define FORTIFY_FAIL \
-  do { printf ("Failure on line %d\n", __LINE__); ret = 1; } while (0)
+    do { printf ("Failure on line %d\n", __LINE__); ret = 1; } while (0)
 #define CHK_FAIL_START \
-  chk_fail_ok = true;               \
-  if (! sigsetjmp (chk_fail_buf, 1))        \
+    chk_fail_ok = true;               \
+    if (! sigsetjmp (chk_fail_buf, 1))        \
     {
 #define CHK_FAIL_END \
-      chk_fail_ok = false;          \
-      FORTIFY_FAIL;             \
+    chk_fail_ok = false;          \
+    FORTIFY_FAIL;             \
     }
 
 static const char *str2 = "F";

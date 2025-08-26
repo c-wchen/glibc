@@ -30,14 +30,14 @@ static void our_error(const char *c)
 }
 
 #define CHECK_RET_CONST_TYPE(func, rettype, name)           \
-  if (sizeof (func) != sizeof (rettype))                \
-    our_error ("Return size of " #name " is " #func" wrong");
+    if (sizeof (func) != sizeof (rettype))                \
+        our_error ("Return size of " #name " is " #func" wrong");
 
 #define CHECK_RET_CONST_FLOAT(func, name)       \
-  CHECK_RET_CONST_TYPE (func, float, name)
+    CHECK_RET_CONST_TYPE (func, float, name)
 
 #define CHECK_RET_CONST_DOUBLE(func, name)      \
-  CHECK_RET_CONST_TYPE (func, double, name)
+    CHECK_RET_CONST_TYPE (func, double, name)
 
 static int do_test(void)
 {

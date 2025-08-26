@@ -23,10 +23,10 @@
 
 /* Set TOC area pointed by sp to zero.  */
 #define SET_TOC_TO_ZERO(sp)                  \
-  ({                                 \
-    unsigned int zero = 0;                   \
-    asm volatile ("std %0, 24(%1)\n\t" :: "r" (zero), "r" (sp)); \
-  })
+    ({                                 \
+        unsigned int zero = 0;                   \
+        asm volatile ("std %0, 24(%1)\n\t" :: "r" (zero), "r" (sp)); \
+    })
 
 static void bar(jmp_buf jb, unsigned long sp)
 {

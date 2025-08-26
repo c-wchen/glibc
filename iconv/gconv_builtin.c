@@ -38,17 +38,17 @@ static const struct builtin_map {
 
 } map[] = {
 #define BUILTIN_TRANSFORMATION(From, To, Cost, Name, Fct, BtowcFct, \
-                   MinF, MaxF, MinT, MaxT) \
-  {                                       \
+                               MinF, MaxF, MinT, MaxT) \
+{                                       \
     .name = Name,                                 \
     .fct = Fct,                                   \
     .btowc_fct = BtowcFct,                            \
-                                          \
+    \
     .min_needed_from = MinF,                              \
     .max_needed_from = MaxF,                              \
     .min_needed_to = MinT,                            \
     .max_needed_to = MaxT                             \
-  },
+},
 #define BUILTIN_ALIAS(From, To)
 
 #include <gconv_builtin.h>

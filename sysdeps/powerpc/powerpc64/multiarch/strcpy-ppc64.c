@@ -29,7 +29,7 @@ extern __typeof(strcpy) __strcpy_ppc attribute_hidden;
 
 # undef libc_hidden_builtin_def
 # define libc_hidden_builtin_def(name) \
-  __hidden_ver1 (__strcpy_ppc, __GI_strcpy, __strcpy_ppc);
+    __hidden_ver1 (__strcpy_ppc, __GI_strcpy, __strcpy_ppc);
 #endif
 
 #include <string/strcpy.c>

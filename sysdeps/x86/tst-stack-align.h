@@ -21,10 +21,10 @@ typedef struct {
 } int_al16 __attribute__((aligned(16)));
 
 #define TEST_STACK_ALIGN_INIT() \
-  ({                                \
-    int_al16 _m;                        \
-    printf ("int_al16:  %p %zu\n", &_m, __alignof (int_al16));  \
-    is_aligned (&_m, __alignof (int_al16));         \
-   })
+    ({                                \
+        int_al16 _m;                        \
+        printf ("int_al16:  %p %zu\n", &_m, __alignof (int_al16));  \
+        is_aligned (&_m, __alignof (int_al16));         \
+    })
 
 #include_next <tst-stack-align.h>

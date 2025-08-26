@@ -121,7 +121,7 @@ mov % RAX_LP, % R11_LP    # Save return value
 # Adjust stack(PLT did 2 pushes)
                                         add $(LOCAL_STORAGE_AREA + 16), % RSP_LP
                                         cfi_adjust_cfa_offset(-(LOCAL_STORAGE_AREA + 16))
-                                        jmp * % r11       # Jump to function address.
+                                        jmp* % r11       # Jump to function address.
                                         cfi_endproc
                                         .size _dl_runtime_resolve, . - _dl_runtime_resolve
 #endif
@@ -362,7 +362,7 @@ mov % RAX_LP, % R11_LP    # Save return value
                                                             add $48, % RSP_LP    # Adjust the stack to the return value
 # (eats the reloc index and link_map)
                                                                     cfi_adjust_cfa_offset(-48)
-                                                                    jmp * % r11       # Jump to function address.
+                                                                    jmp* % r11       # Jump to function address.
 
                                                                     3 :
                                                                     cfi_adjust_cfa_offset(48)
@@ -385,7 +385,7 @@ mov % RAX_LP, % R11_LP    # Save return value
                                                                     movq 32( % rdi), % rsi
                                                                     movq 40( % rdi), % rdi
 
-                                                                    call * % r11
+                                                                    call* % r11
 
                                                                     mov 24( % rbx), % RSP_LP   # Drop the copied stack content
 

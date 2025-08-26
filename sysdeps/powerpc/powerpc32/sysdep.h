@@ -27,21 +27,21 @@
    to locate our caller and so it can restore it; so store one just
    for its benefit.  */
 # define CALL_MCOUNT                                  \
-  mflr  r0;                                   \
-  stw   r0,4(r1);                                 \
-  cfi_offset (lr, 4);                                 \
-  bl    JUMPTARGET(_mcount);
+    mflr  r0;                                   \
+    stw   r0,4(r1);                                 \
+    cfi_offset (lr, 4);                                 \
+    bl    JUMPTARGET(_mcount);
 #else  /* PROF */
 # define CALL_MCOUNT        /* Do nothing.  */
 #endif /* PROF */
 
 #define ENTRY(name)                               \
-  .globl C_SYMBOL_NAME(name);                             \
-  .type C_SYMBOL_NAME(name),@function;                        \
-  .align ALIGNARG(2);                                 \
-  C_LABEL(name)                                   \
-  cfi_startproc;                                  \
-  CALL_MCOUNT
+    .globl C_SYMBOL_NAME(name);                             \
+    .type C_SYMBOL_NAME(name),@function;                        \
+    .align ALIGNARG(2);                                 \
+    C_LABEL(name)                                   \
+    cfi_startproc;                                  \
+    CALL_MCOUNT
 
 #define ENTRY_TOCLESS(name) ENTRY(name)
 
@@ -49,7 +49,7 @@
 
 #define SETUP_GOT_ACCESS(regname,GOT_LABEL)                   \
     bcl 20,31,GOT_LABEL ;                         \
-GOT_LABEL:          ;                         \
+    GOT_LABEL:          ;                         \
     mflr    (regname)
 
 #define EALIGN_W_0  /* No words to insert.  */
@@ -65,30 +65,30 @@ GOT_LABEL:          ;                         \
    past a 2^align boundary.  */
 #ifdef PROF
 # define EALIGN(name, alignt, words)                          \
-  .globl C_SYMBOL_NAME(name);                             \
-  .type C_SYMBOL_NAME(name),@function;                        \
-  .align ALIGNARG(2);                                 \
-  C_LABEL(name)                                   \
-  cfi_startproc;                                  \
-  CALL_MCOUNT                                     \
-  b 0f;                                       \
-  .align ALIGNARG(alignt);                            \
-  EALIGN_W_##words;                               \
-  0:
+    .globl C_SYMBOL_NAME(name);                             \
+    .type C_SYMBOL_NAME(name),@function;                        \
+    .align ALIGNARG(2);                                 \
+    C_LABEL(name)                                   \
+    cfi_startproc;                                  \
+    CALL_MCOUNT                                     \
+    b 0f;                                       \
+    .align ALIGNARG(alignt);                            \
+    EALIGN_W_##words;                               \
+    0:
 #else /* PROF */
 # define EALIGN(name, alignt, words)                          \
-  .globl C_SYMBOL_NAME(name);                             \
-  .type C_SYMBOL_NAME(name),@function;                        \
-  .align ALIGNARG(alignt);                            \
-  EALIGN_W_##words;                               \
-  C_LABEL(name)                                   \
-  cfi_startproc;
+    .globl C_SYMBOL_NAME(name);                             \
+    .type C_SYMBOL_NAME(name),@function;                        \
+    .align ALIGNARG(alignt);                            \
+    EALIGN_W_##words;                               \
+    C_LABEL(name)                                   \
+    cfi_startproc;
 #endif
 
 #undef  END
 #define END(name)                                 \
-  cfi_endproc;                                    \
-  ASM_SIZE_DIRECTIVE(name)
+    cfi_endproc;                                    \
+    ASM_SIZE_DIRECTIVE(name)
 
 #define DO_CALL(syscall)                              \
     li 0,syscall;                                 \
@@ -116,8 +116,8 @@ GOT_LABEL:          ;                         \
     b __syscall_error@local
 
 #define PSEUDO(name, syscall_name, args)                      \
-  .section ".text";                               \
-  ENTRY (name)                                    \
+    .section ".text";                               \
+    ENTRY (name)                                    \
     DO_CALL (SYS_ify (syscall_name));
 
 #define RET_SC \
@@ -130,11 +130,11 @@ GOT_LABEL:          ;                         \
 
 #undef  PSEUDO_END
 #define PSEUDO_END(name)                              \
-  END (name)
+    END (name)
 
 #define PSEUDO_NOERRNO(name, syscall_name, args)                  \
-  .section ".text";                               \
-  ENTRY (name)                                    \
+    .section ".text";                               \
+    ENTRY (name)                                    \
     DO_CALL (SYS_ify (syscall_name));
 
 #define PSEUDO_RET_NOERRNO                            \
@@ -143,11 +143,11 @@ GOT_LABEL:          ;                         \
 
 #undef  PSEUDO_END_NOERRNO
 #define PSEUDO_END_NOERRNO(name)                          \
-  END (name)
+    END (name)
 
 #define PSEUDO_ERRVAL(name, syscall_name, args)                   \
-  .section ".text";                               \
-  ENTRY (name)                                    \
+    .section ".text";                               \
+    ENTRY (name)                                    \
     DO_CALL (SYS_ify (syscall_name));
 
 #define PSEUDO_RET_ERRVAL                             \
@@ -156,7 +156,7 @@ GOT_LABEL:          ;                         \
 
 #undef  PSEUDO_END_ERRVAL
 #define PSEUDO_END_ERRVAL(name)                           \
-  END (name)
+    END (name)
 
 /* Local labels stripped out by the linker.  */
 #undef L

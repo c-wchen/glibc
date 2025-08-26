@@ -20,12 +20,12 @@
 #include <sys/auxv.h>
 
 #define INIT_ARCH()                                                           \
-  do                                                                          \
+    do                                                                          \
     {                                                                         \
-      if (!supported ())                                                      \
-    return 77;                                                            \
+        if (!supported ())                                                      \
+            return 77;                                                            \
     }                                                                         \
-  while (0)
+    while (0)
 
 static bool supported(void)
 {

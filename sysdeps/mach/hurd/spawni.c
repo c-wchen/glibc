@@ -504,32 +504,32 @@ retry:
             /* Make sure the dtable can hold NEWFD.  */
 #define EXPAND_DTABLE(newfd)                              \
     ({                                    \
-      if ((unsigned int)newfd >= dtablesize                   \
-          && newfd < _hurd_rlimits[RLIMIT_OFILE].rlim_cur)            \
+        if ((unsigned int)newfd >= dtablesize                   \
+            && newfd < _hurd_rlimits[RLIMIT_OFILE].rlim_cur)            \
         {                                     \
-          /* We need to expand the dtable for the child.  */          \
-          NEW_TABLE (dtable, newfd);                      \
-          NEW_ULINK_TABLE (ulink_dtable, newfd);                  \
-          NEW_TABLE (dtable_cells, newfd);                    \
-          dtablesize = newfd + 1;                         \
+            /* We need to expand the dtable for the child.  */          \
+            NEW_TABLE (dtable, newfd);                      \
+            NEW_ULINK_TABLE (ulink_dtable, newfd);                  \
+            NEW_TABLE (dtable_cells, newfd);                    \
+            dtablesize = newfd + 1;                         \
         }                                     \
-      ((unsigned int)newfd < dtablesize ? 0 : EMFILE);            \
+        ((unsigned int)newfd < dtablesize ? 0 : EMFILE);            \
     })
 #define NEW_TABLE(x, newfd) \
-  do { __typeof (x) new_##x = __alloca ((newfd + 1) * sizeof (x[0]));         \
-  memcpy (new_##x, x, dtablesize * sizeof (x[0]));                \
-  memset (&new_##x[dtablesize], 0, (newfd + 1 - dtablesize) * sizeof (x[0])); \
-  x = new_##x; } while (0)
+    do { __typeof (x) new_##x = __alloca ((newfd + 1) * sizeof (x[0]));         \
+        memcpy (new_##x, x, dtablesize * sizeof (x[0]));                \
+        memset (&new_##x[dtablesize], 0, (newfd + 1 - dtablesize) * sizeof (x[0])); \
+        x = new_##x; } while (0)
 #define NEW_ULINK_TABLE(x, newfd) \
-  do { __typeof (x) new_##x = __alloca ((newfd + 1) * sizeof (x[0]));         \
-  unsigned i;                                     \
-  for (i = 0; i < dtablesize; i++)                        \
-    if (dtable_cells[i] != NULL)                          \
-      _hurd_port_move (dtable_cells[i], &new_##x[i], &x[i]);              \
-    else                                      \
-      memset (&new_##x[i], 0, sizeof (new_##x[i]));               \
-  memset (&new_##x[dtablesize], 0, (newfd + 1 - dtablesize) * sizeof (x[0])); \
-  x = new_##x; } while (0)
+    do { __typeof (x) new_##x = __alloca ((newfd + 1) * sizeof (x[0]));         \
+        unsigned i;                                     \
+        for (i = 0; i < dtablesize; i++)                        \
+            if (dtable_cells[i] != NULL)                          \
+                _hurd_port_move (dtable_cells[i], &new_##x[i], &x[i]);              \
+            else                                      \
+                memset (&new_##x[i], 0, sizeof (new_##x[i]));               \
+        memset (&new_##x[dtablesize], 0, (newfd + 1 - dtablesize) * sizeof (x[0])); \
+        x = new_##x; } while (0)
 
             struct __spawn_action *action = &file_actions->__actions[i];
 

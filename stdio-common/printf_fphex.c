@@ -40,8 +40,8 @@
 # include "ieee754_float128.h"
 # include <ldbl-128/printf_fphex_macros.h>
 # define PRINT_FPHEX_FLOAT128 \
-   PRINT_FPHEX (_Float128, fpnum.flt128, ieee854_float128, \
-        IEEE854_FLOAT128_BIAS)
+    PRINT_FPHEX (_Float128, fpnum.flt128, ieee854_float128, \
+                 IEEE854_FLOAT128_BIAS)
 #endif
 
 static void __printf_fphex_buffer(struct __printf_buffer *buf,
@@ -91,29 +91,29 @@ static void __printf_fphex_buffer(struct __printf_buffer *buf,
     int width = info->width;
 
 #define PRINTF_FPHEX_FETCH(FLOAT, VAR)                  \
-  {                                 \
-    (VAR) = *(const FLOAT *) args[0];                   \
-                                    \
-    /* Check for special values: not a number or infinity.  */      \
-    if (isnan (VAR))                            \
-      {                                 \
-    if (isupper (info->spec))                   \
-      special = "NAN";                      \
-    else                                \
-      special = "nan";                      \
-      }                                 \
-    else                                \
-      {                                 \
-    if (isinf (VAR))                        \
-      {                             \
-        if (isupper (info->spec))                   \
-          special = "INF";                      \
-        else                            \
-          special = "inf";                      \
-      }                             \
-      }                                 \
-    negative = signbit (VAR);                       \
-  }
+    {                                 \
+        (VAR) = *(const FLOAT *) args[0];                   \
+        \
+        /* Check for special values: not a number or infinity.  */      \
+        if (isnan (VAR))                            \
+        {                                 \
+            if (isupper (info->spec))                   \
+                special = "NAN";                      \
+            else                                \
+                special = "nan";                      \
+        }                                 \
+        else                                \
+        {                                 \
+            if (isinf (VAR))                        \
+            {                             \
+                if (isupper (info->spec))                   \
+                    special = "INF";                      \
+                else                            \
+                    special = "inf";                      \
+            }                             \
+        }                                 \
+        negative = signbit (VAR);                       \
+    }
 
     /* Fetch the argument value.  */
 #if __HAVE_DISTINCT_FLOAT128

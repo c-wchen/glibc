@@ -328,7 +328,7 @@ retry:
                 struct r_scope_elem **newp;
 
 #define SCOPE_ELEMS(imap) \
-  (sizeof (imap->l_scope_mem) / sizeof (imap->l_scope_mem[0]))
+    (sizeof (imap->l_scope_mem) / sizeof (imap->l_scope_mem[0]))
 
                 if (imap->l_scope != imap->l_scope_mem
                     && remain < SCOPE_ELEMS(imap)) {

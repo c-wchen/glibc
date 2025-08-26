@@ -20,37 +20,37 @@
 
 /* Guess from the number of DSTs the length of the result string.  */
 #define DL_DST_REQUIRED(l, name, len, cnt) \
-  ({                                          \
-    size_t __len = (len);                             \
-    size_t __cnt = (cnt);                             \
-                                          \
-    if (__cnt > 0)                                \
-      {                                       \
-    size_t dst_len;                               \
-    /* Now we make a guess how many extra characters on top of the        \
-       length of S we need to represent the result.  We know that         \
-       we have CNT replacements.  Each at most can use            \
-         MAX (MAX (strlen (ORIGIN), strlen (_dl_platform)),           \
-          strlen (DL_DST_LIB))                        \
-       minus 4 (which is the length of "$LIB").               \
-                                          \
-       First get the origin string if it is not available yet.        \
-       This can only happen for the map of the executable or, when        \
-       auditing, in ld.so.  */                        \
-    if ((l)->l_origin == NULL)                        \
-      {                                   \
-        assert ((l)->l_name[0] == '\0' || is_rtld_link_map (l));          \
-        (l)->l_origin = _dl_get_origin ();                    \
-        dst_len = ((l)->l_origin && (l)->l_origin != (char *) -1          \
-              ? strlen ((l)->l_origin) : 0);              \
-      }                                   \
-    else                                      \
-      dst_len = (l)->l_origin == (char *) -1                  \
-        ? 0 : strlen ((l)->l_origin);                     \
-    dst_len = MAX (MAX (dst_len, GLRO(dl_platformlen)),           \
-               strlen (DL_DST_LIB));                      \
-    if (dst_len > 4)                              \
-      __len += __cnt * (dst_len - 4);                     \
-      }                                       \
-                                          \
-    __len; })
+    ({                                          \
+        size_t __len = (len);                             \
+        size_t __cnt = (cnt);                             \
+        \
+        if (__cnt > 0)                                \
+        {                                       \
+            size_t dst_len;                               \
+            /* Now we make a guess how many extra characters on top of the        \
+               length of S we need to represent the result.  We know that         \
+               we have CNT replacements.  Each at most can use            \
+                 MAX (MAX (strlen (ORIGIN), strlen (_dl_platform)),           \
+                  strlen (DL_DST_LIB))                        \
+               minus 4 (which is the length of "$LIB").               \
+                                                  \
+               First get the origin string if it is not available yet.        \
+               This can only happen for the map of the executable or, when        \
+               auditing, in ld.so.  */                        \
+            if ((l)->l_origin == NULL)                        \
+            {                                   \
+                assert ((l)->l_name[0] == '\0' || is_rtld_link_map (l));          \
+                (l)->l_origin = _dl_get_origin ();                    \
+                dst_len = ((l)->l_origin && (l)->l_origin != (char *) -1          \
+                           ? strlen ((l)->l_origin) : 0);              \
+            }                                   \
+            else                                      \
+                dst_len = (l)->l_origin == (char *) -1                  \
+                          ? 0 : strlen ((l)->l_origin);                     \
+            dst_len = MAX (MAX (dst_len, GLRO(dl_platformlen)),           \
+                           strlen (DL_DST_LIB));                      \
+            if (dst_len > 4)                              \
+                __len += __cnt * (dst_len - 4);                     \
+        }                                       \
+        \
+        __len; })

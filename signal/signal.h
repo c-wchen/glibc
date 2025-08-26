@@ -166,8 +166,8 @@ extern int __sigpause(int __sig_or_mask, int __is_sig);
 
 /* Compute mask for signal SIG.  */
 # define sigmask(sig) \
-  __glibc_macro_warning ("sigmask is deprecated") \
-  ((int)(1u << ((sig) - 1)))
+    __glibc_macro_warning ("sigmask is deprecated") \
+    ((int)(1u << ((sig) - 1)))
 
 /* Block signals in MASK, returning the old mask.  */
 extern int sigblock(int __mask) __THROW __attribute_deprecated__;

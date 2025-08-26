@@ -1132,11 +1132,11 @@ extern int lockf64(int __fd, int __cmd, __off64_t __len) __wur;
    set to EINTR.  */
 
 # define TEMP_FAILURE_RETRY(expression) \
-  (__extension__                                  \
+    (__extension__                                  \
     ({ long int __result;                             \
-       do __result = (long int) (expression);                     \
-       while (__result == -1L && errno == EINTR);                 \
-       __result; }))
+        do __result = (long int) (expression);                     \
+        while (__result == -1L && errno == EINTR);                 \
+        __result; }))
 
 /* Copy LENGTH bytes from INFD to OUTFD.  */
 ssize_t copy_file_range(int __infd, __off64_t *__pinoff,

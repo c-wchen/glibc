@@ -17742,18 +17742,18 @@ static struct {
 #define TO_LOOP_MIN_NEEDED_TO       1
 #define TO_LOOP_MAX_NEEDED_TO       2
 #define PREPARE_LOOP \
-  int saved_state;                                \
-  int *statep = &data->__statep->__count;
+    int saved_state;                                \
+    int *statep = &data->__statep->__count;
 #define EXTRA_LOOP_ARGS     , statep
 
 
 /* Since we might have to reset input pointer we must be able to save
    and restore the state.  */
 #define SAVE_RESET_STATE(Save) \
-  if (Save)                                   \
-    saved_state = *statep;                            \
-  else                                        \
-    *statep = saved_state
+    if (Save)                                   \
+        saved_state = *statep;                            \
+    else                                        \
+        *statep = saved_state
 
 
 /* During BIG5-HKSCS to UCS-4 conversion, the COUNT element of the state
@@ -17765,35 +17765,35 @@ static struct {
    the output state to the initial state.  This has to be done during the
    flushing.  */
 #define EMIT_SHIFT_TO_INIT \
-  if ((data->__statep->__count >> 3) != 0)                    \
+    if ((data->__statep->__count >> 3) != 0)                    \
     {                                         \
-      if (FROM_DIRECTION)                             \
-    {                                     \
-      if (__glibc_likely (outbuf + 4 <= outend))                  \
+        if (FROM_DIRECTION)                             \
         {                                     \
-          /* Write out the last character.  */                \
-          *((uint32_t *) outbuf) = data->__statep->__count >> 3;          \
-          outbuf += sizeof (uint32_t);                    \
-          data->__statep->__count &= 7;                   \
+            if (__glibc_likely (outbuf + 4 <= outend))                  \
+            {                                     \
+                /* Write out the last character.  */                \
+                *((uint32_t *) outbuf) = data->__statep->__count >> 3;          \
+                outbuf += sizeof (uint32_t);                    \
+                data->__statep->__count &= 7;                   \
+            }                                     \
+            else                                    \
+                /* We don't have enough room in the output buffer.  */        \
+                status = __GCONV_FULL_OUTPUT;                     \
         }                                     \
-      else                                    \
-        /* We don't have enough room in the output buffer.  */        \
-        status = __GCONV_FULL_OUTPUT;                     \
-    }                                     \
-      else                                    \
-    {                                     \
-      if (__glibc_likely (outbuf + 2 <= outend))                  \
+        else                                    \
         {                                     \
-          /* Write out the last character.  */                \
-          uint32_t lasttwo = data->__statep->__count >> 3;            \
-          *outbuf++ = (lasttwo >> 8) & 0xff;                  \
-          *outbuf++ = lasttwo & 0xff;                     \
-          data->__statep->__count &= 7;                   \
+            if (__glibc_likely (outbuf + 2 <= outend))                  \
+            {                                     \
+                /* Write out the last character.  */                \
+                uint32_t lasttwo = data->__statep->__count >> 3;            \
+                *outbuf++ = (lasttwo >> 8) & 0xff;                  \
+                *outbuf++ = lasttwo & 0xff;                     \
+                data->__statep->__count &= 7;                   \
+            }                                     \
+            else                                    \
+                /* We don't have enough room in the output buffer.  */        \
+                status = __GCONV_FULL_OUTPUT;                     \
         }                                     \
-      else                                    \
-        /* We don't have enough room in the output buffer.  */        \
-        status = __GCONV_FULL_OUTPUT;                     \
-    }                                     \
     }
 
 
@@ -17804,107 +17804,107 @@ static struct {
 #define MAX_NEEDED_OUTPUT   FROM_LOOP_MAX_NEEDED_TO
 #define LOOPFCT         FROM_LOOP
 #define BODY \
-  {                                       \
-    uint32_t ch;                                  \
-                                          \
-    /* Determine whether there is a buffered character pending.  */       \
-    ch = *statep >> 3;                                \
-    if (__glibc_likely (ch == 0))                         \
-      {                                       \
-    /* No - so look at the next input byte.  */               \
-    ch = *inptr;                                  \
-                                          \
-    if (ch >= 0x81 && ch <= 0xfe)                         \
-      {                                   \
-        /* Two-byte character.  First test whether the next byte          \
-           is also available.  */                         \
-        uint32_t ch2;                             \
-        int idx;                                  \
-                                          \
-        if (__glibc_unlikely (inptr + 1 >= inend))                \
-          {                                   \
-        /* The second character is not available.  */             \
-        result = __GCONV_INCOMPLETE_INPUT;                \
-        break;                                \
-          }                                   \
-                                          \
-        ch2 = inptr[1];                           \
-        idx = (ch - 0x87) * 195 + ch2 - 0x40;                 \
-        /* See whether the second byte is in the correct range.  */       \
-        if (ch < 0x87 || ch2 < 0x40 || ch2 > 0xfe                 \
-        || (ch = big5hkscs_to_ucs[idx]) == 0)                 \
-          {                                   \
-        /* Check for special cases: combining characters.  */         \
-        if (idx == 195 + 0x22 /* 8862 */)                 \
-          {                               \
-            ch = 0xca;                            \
-            ch2 = 0x304;                          \
-          }                               \
-        else if (idx == 195 + 0x24 /* 8864 */)                \
-          {                               \
-            ch = 0xca;                            \
-            ch2 = 0x30c;                          \
-          }                               \
-        else if (idx == 195 + 0x63 /* 88a3 */)                \
-          {                               \
-            ch = 0xea;                            \
-            ch2 = 0x304;                          \
-          }                               \
-        else if (idx == 195 + 0x65 /* 88a5 */)                \
-          {                               \
-            ch = 0xea;                            \
-            ch2 = 0x30c;                          \
-          }                               \
-        else                                  \
-          /* This is illegal.  */                     \
-          STANDARD_FROM_LOOP_ERR_HANDLER (1);                 \
-                                          \
-        inptr += 2;                           \
-                                          \
-        put32 (outptr, ch);                       \
-        outptr += 4;                              \
-                                          \
-        /* See whether we have room for two characters.  */       \
-        if (outptr + 4 <= outend)                     \
-          {                               \
-            put32 (outptr, ch2);                      \
-            outptr += 4;                          \
-            continue;                             \
-          }                               \
-                                          \
-        /* Otherwise store only the first character now, and          \
-           put the second one into the queue.  */             \
-        *statep = (ch2 << 3) | (*statep & 7);                 \
-        /* Tell the caller why we terminate the loop.  */         \
-        result = __GCONV_FULL_OUTPUT;                     \
-        break;                                \
-          }                                   \
-                                          \
-        inptr += 2;                               \
-      }                                   \
-    else if (__glibc_unlikely (ch == 0xff))                   \
-      {                                   \
-        STANDARD_FROM_LOOP_ERR_HANDLER (1);                   \
-      }                                   \
-    else                                      \
-      ++inptr;                                \
-      }                                       \
-    else                                      \
-      /* Clear the queue and proceed to output the saved character.  */       \
-      *statep &= 7;                               \
-                                          \
-    put32 (outptr, ch);                               \
-    outptr += 4;                                  \
-  }
+    {                                       \
+        uint32_t ch;                                  \
+        \
+        /* Determine whether there is a buffered character pending.  */       \
+        ch = *statep >> 3;                                \
+        if (__glibc_likely (ch == 0))                         \
+        {                                       \
+            /* No - so look at the next input byte.  */               \
+            ch = *inptr;                                  \
+            \
+            if (ch >= 0x81 && ch <= 0xfe)                         \
+            {                                   \
+                /* Two-byte character.  First test whether the next byte          \
+                   is also available.  */                         \
+                uint32_t ch2;                             \
+                int idx;                                  \
+                \
+                if (__glibc_unlikely (inptr + 1 >= inend))                \
+                {                                   \
+                    /* The second character is not available.  */             \
+                    result = __GCONV_INCOMPLETE_INPUT;                \
+                    break;                                \
+                }                                   \
+                \
+                ch2 = inptr[1];                           \
+                idx = (ch - 0x87) * 195 + ch2 - 0x40;                 \
+                /* See whether the second byte is in the correct range.  */       \
+                if (ch < 0x87 || ch2 < 0x40 || ch2 > 0xfe                 \
+                    || (ch = big5hkscs_to_ucs[idx]) == 0)                 \
+                {                                   \
+                    /* Check for special cases: combining characters.  */         \
+                    if (idx == 195 + 0x22 /* 8862 */)                 \
+                    {                               \
+                        ch = 0xca;                            \
+                        ch2 = 0x304;                          \
+                    }                               \
+                    else if (idx == 195 + 0x24 /* 8864 */)                \
+                    {                               \
+                        ch = 0xca;                            \
+                        ch2 = 0x30c;                          \
+                    }                               \
+                    else if (idx == 195 + 0x63 /* 88a3 */)                \
+                    {                               \
+                        ch = 0xea;                            \
+                        ch2 = 0x304;                          \
+                    }                               \
+                    else if (idx == 195 + 0x65 /* 88a5 */)                \
+                    {                               \
+                        ch = 0xea;                            \
+                        ch2 = 0x30c;                          \
+                    }                               \
+                    else                                  \
+                        /* This is illegal.  */                     \
+                        STANDARD_FROM_LOOP_ERR_HANDLER (1);                 \
+                    \
+                    inptr += 2;                           \
+                    \
+                    put32 (outptr, ch);                       \
+                    outptr += 4;                              \
+                    \
+                    /* See whether we have room for two characters.  */       \
+                    if (outptr + 4 <= outend)                     \
+                    {                               \
+                        put32 (outptr, ch2);                      \
+                        outptr += 4;                          \
+                        continue;                             \
+                    }                               \
+                    \
+                    /* Otherwise store only the first character now, and          \
+                       put the second one into the queue.  */             \
+                    *statep = (ch2 << 3) | (*statep & 7);                 \
+                    /* Tell the caller why we terminate the loop.  */         \
+                    result = __GCONV_FULL_OUTPUT;                     \
+                    break;                                \
+                }                                   \
+                \
+                inptr += 2;                               \
+            }                                   \
+            else if (__glibc_unlikely (ch == 0xff))                   \
+            {                                   \
+                STANDARD_FROM_LOOP_ERR_HANDLER (1);                   \
+            }                                   \
+            else                                      \
+                ++inptr;                                \
+        }                                       \
+        else                                      \
+            /* Clear the queue and proceed to output the saved character.  */       \
+            *statep &= 7;                               \
+        \
+        put32 (outptr, ch);                               \
+        outptr += 4;                                  \
+    }
 #define LOOP_NEED_FLAGS
 #define EXTRA_LOOP_DECLS    , int *statep
 #define ONEBYTE_BODY \
-  {                                       \
-    if (c <= 0x80)                                \
-      return c;                                   \
-    else                                      \
-      return WEOF;                                \
-  }
+    {                                       \
+        if (c <= 0x80)                                \
+            return c;                                   \
+        else                                      \
+            return WEOF;                                \
+    }
 #include <iconv/loop.c>
 
 
@@ -17915,105 +17915,105 @@ static struct {
 #define MAX_NEEDED_OUTPUT   TO_LOOP_MAX_NEEDED_TO
 #define LOOPFCT         TO_LOOP
 #define BODY \
-  {                                       \
-    uint32_t ch = get32 (inptr);                          \
-                                          \
-    if ((*statep >> 3) != 0)                              \
-      {                                       \
-    /* Attempt to combine the last character with this one.  */       \
-    uint16_t lasttwo = *statep >> 3;                      \
-                                          \
-    if (ch == 0x304 && lasttwo == 0x8866)                     \
-      ch = 0x8862;                                \
-    else if (ch == 0x30c && lasttwo == 0x8866)                \
-      ch = 0x8864;                                \
-    else if (ch == 0x304 && lasttwo == 0x88a7)                \
-      ch = 0x88a3;                                \
-    else if (ch == 0x30c && lasttwo == 0x88a7)                \
-      ch = 0x88a5;                                \
-    else                                      \
-      goto not_combining;                             \
-                                          \
-    /* Output the combined character.  */                     \
-    if (__glibc_unlikely (outptr + 1 >= outend))                  \
-      {                                   \
-        result = __GCONV_FULL_OUTPUT;                     \
-        break;                                \
-      }                                   \
-    *outptr++ = (ch >> 8) & 0xff;                         \
-    *outptr++ = ch & 0xff;                            \
-    *statep &= 7;                                 \
-    inptr += 4;                               \
-    continue;                                 \
-                                          \
-      not_combining:                                  \
-    /* Output the buffered character.  */                     \
-    if (__glibc_unlikely (outptr + 1 >= outend))                  \
-      {                                   \
-        result = __GCONV_FULL_OUTPUT;                     \
-        break;                                \
-      }                                   \
-    *outptr++ = (lasttwo >> 8) & 0xff;                    \
-    *outptr++ = lasttwo & 0xff;                       \
-    *statep &= 7;                                 \
-    continue;                                 \
-      }                                       \
-                                          \
-    if (ch <= 0x0080)                                 \
-      *outptr++ = ch;                                 \
-    else                                      \
-      {                                       \
-    const unsigned char *cp = (const unsigned char *) "";             \
-    size_t i;                                 \
-                                              \
-    for (i = 0;                               \
-         i < sizeof (from_ucs4_idx) / sizeof (from_ucs4_idx[0]);          \
-         ++i)                                 \
-      {                                   \
-        if (ch < from_ucs4_idx[i].from)                   \
-          break;                                  \
-        if (from_ucs4_idx[i].to >= ch)                    \
-          {                                   \
-        cp = from_ucs4[from_ucs4_idx[i].offset                \
-                   + ch - from_ucs4_idx[i].from];             \
-        break;                                \
-          }                                   \
-      }                                   \
-                                          \
-    if (cp[0] == '\0')                            \
-      {                                   \
-        UNICODE_TAG_HANDLER (ch, 4);                      \
-                                          \
-        /* Illegal character.  */                         \
-        STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
-      }                                   \
-    else                                      \
-      {                                   \
-       /* Check for possible combining character.  */             \
-        if (__glibc_unlikely (ch == 0xca || ch == 0xea))              \
-          {                                   \
-        *statep = (((cp[0] << 8) | cp[1]) << 3) | (*statep & 7);      \
-        inptr += 4;                           \
-        continue;                             \
-          }                                   \
-                                          \
-        /* See whether there is enough room to write the second byte.  */ \
-        if (__builtin_expect (cp[1] != '\0', 1)               \
-        && __builtin_expect (outptr + 1 >= outend, 0))            \
-          {                                   \
-        /* We have not enough room.  */                   \
-        result = __GCONV_FULL_OUTPUT;                     \
-        break;                                \
-          }                                   \
-                                          \
-        *outptr++ = cp[0];                            \
-        if (__glibc_likely (cp[1] != '\0'))                   \
-          *outptr++ = cp[1];                          \
-      }                                   \
-      }                                       \
-                                          \
-    inptr += 4;                                   \
-  }
+    {                                       \
+        uint32_t ch = get32 (inptr);                          \
+        \
+        if ((*statep >> 3) != 0)                              \
+        {                                       \
+            /* Attempt to combine the last character with this one.  */       \
+            uint16_t lasttwo = *statep >> 3;                      \
+            \
+            if (ch == 0x304 && lasttwo == 0x8866)                     \
+                ch = 0x8862;                                \
+            else if (ch == 0x30c && lasttwo == 0x8866)                \
+                ch = 0x8864;                                \
+            else if (ch == 0x304 && lasttwo == 0x88a7)                \
+                ch = 0x88a3;                                \
+            else if (ch == 0x30c && lasttwo == 0x88a7)                \
+                ch = 0x88a5;                                \
+            else                                      \
+                goto not_combining;                             \
+            \
+            /* Output the combined character.  */                     \
+            if (__glibc_unlikely (outptr + 1 >= outend))                  \
+            {                                   \
+                result = __GCONV_FULL_OUTPUT;                     \
+                break;                                \
+            }                                   \
+            *outptr++ = (ch >> 8) & 0xff;                         \
+            *outptr++ = ch & 0xff;                            \
+            *statep &= 7;                                 \
+            inptr += 4;                               \
+            continue;                                 \
+            \
+    not_combining:                                  \
+            /* Output the buffered character.  */                     \
+            if (__glibc_unlikely (outptr + 1 >= outend))                  \
+            {                                   \
+                result = __GCONV_FULL_OUTPUT;                     \
+                break;                                \
+            }                                   \
+            *outptr++ = (lasttwo >> 8) & 0xff;                    \
+            *outptr++ = lasttwo & 0xff;                       \
+            *statep &= 7;                                 \
+            continue;                                 \
+        }                                       \
+        \
+        if (ch <= 0x0080)                                 \
+            *outptr++ = ch;                                 \
+        else                                      \
+        {                                       \
+            const unsigned char *cp = (const unsigned char *) "";             \
+            size_t i;                                 \
+            \
+            for (i = 0;                               \
+                 i < sizeof (from_ucs4_idx) / sizeof (from_ucs4_idx[0]);          \
+                 ++i)                                 \
+            {                                   \
+                if (ch < from_ucs4_idx[i].from)                   \
+                    break;                                  \
+                if (from_ucs4_idx[i].to >= ch)                    \
+                {                                   \
+                    cp = from_ucs4[from_ucs4_idx[i].offset                \
+                                                                          + ch - from_ucs4_idx[i].from];             \
+                    break;                                \
+                }                                   \
+            }                                   \
+            \
+            if (cp[0] == '\0')                            \
+            {                                   \
+                UNICODE_TAG_HANDLER (ch, 4);                      \
+                \
+                /* Illegal character.  */                         \
+                STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
+            }                                   \
+            else                                      \
+            {                                   \
+                /* Check for possible combining character.  */             \
+                if (__glibc_unlikely (ch == 0xca || ch == 0xea))              \
+                {                                   \
+                    *statep = (((cp[0] << 8) | cp[1]) << 3) | (*statep & 7);      \
+                    inptr += 4;                           \
+                    continue;                             \
+                }                                   \
+                \
+                /* See whether there is enough room to write the second byte.  */ \
+                if (__builtin_expect (cp[1] != '\0', 1)               \
+                    && __builtin_expect (outptr + 1 >= outend, 0))            \
+                {                                   \
+                    /* We have not enough room.  */                   \
+                    result = __GCONV_FULL_OUTPUT;                     \
+                    break;                                \
+                }                                   \
+                \
+                *outptr++ = cp[0];                            \
+                if (__glibc_likely (cp[1] != '\0'))                   \
+                    *outptr++ = cp[1];                          \
+            }                                   \
+        }                                       \
+        \
+        inptr += 4;                                   \
+    }
 #define LOOP_NEED_FLAGS
 #define EXTRA_LOOP_DECLS    , int *statep
 #include <iconv/loop.c>

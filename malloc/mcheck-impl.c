@@ -62,7 +62,8 @@ static void flood(void *ptr, int val, size_t size)
 }
 #endif
 
-static enum mcheck_status checkhdr(const struct hdr *hdr) {
+static enum mcheck_status checkhdr(const struct hdr *hdr)
+{
     enum mcheck_status status;
     bool mcheck_used = __is_malloc_debug_enabled(MALLOC_MCHECK_HOOK);
 
@@ -73,8 +74,7 @@ static enum mcheck_status checkhdr(const struct hdr *hdr) {
         return MCHECK_OK;
     }
 
-    switch (hdr->magic ^ ((uintptr_t) hdr->prev + (uintptr_t) hdr->next))
-    {
+    switch (hdr->magic ^ ((uintptr_t) hdr->prev + (uintptr_t) hdr->next)) {
         default:
             status = MCHECK_HEAD;
             break;
@@ -91,8 +91,7 @@ static enum mcheck_status checkhdr(const struct hdr *hdr) {
             }
             break;
     }
-    if (status != MCHECK_OK)
-    {
+    if (status != MCHECK_OK) {
         mcheck_used = 0;
         (*abortfunc)(status);
         mcheck_used = 1;
@@ -100,14 +99,13 @@ static enum mcheck_status checkhdr(const struct hdr *hdr) {
     return status;
 }
 
-static enum mcheck_status __mcheck_checkptr(const void *ptr) {
-    if (!__is_malloc_debug_enabled(MALLOC_MCHECK_HOOK))
-    {
+static enum mcheck_status __mcheck_checkptr(const void *ptr)
+{
+    if (!__is_malloc_debug_enabled(MALLOC_MCHECK_HOOK)) {
         return MCHECK_DISABLED;
     }
 
-    if (ptr != NULL)
-    {
+    if (ptr != NULL) {
         return checkhdr(((struct hdr *) ptr) - 1);
     }
 
@@ -118,8 +116,7 @@ static enum mcheck_status __mcheck_checkptr(const void *ptr) {
     /* Temporarily turn off the checks.  */
     pedantic = false;
 
-    while (runp != NULL)
-    {
+    while (runp != NULL) {
         (void) checkhdr(runp);
 
         runp = runp->next;
@@ -370,7 +367,7 @@ mabort(enum mcheck_status status)
 
 /* Memory barrier so that GCC does not optimize out the argument.  */
 #define malloc_opt_barrier(x) \
-  ({ __typeof (x) __x = x; __asm ("" : "+m" (__x)); __x; })
+    ({ __typeof (x) __x = x; __asm ("" : "+m" (__x)); __x; })
 
 static int __mcheck_initialize(void (*func)(enum mcheck_status), bool in_pedantic)
 {

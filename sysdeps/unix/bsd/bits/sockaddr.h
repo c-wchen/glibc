@@ -32,8 +32,8 @@ typedef unsigned char sa_family_t;
    `struct sockaddr_in', `struct sockaddr_un', etc.  */
 
 #define __SOCKADDR_COMMON(sa_prefix)    \
-  unsigned char sa_prefix##len;     \
-  sa_family_t sa_prefix##family
+    unsigned char sa_prefix##len;     \
+    sa_family_t sa_prefix##family
 
 #define __SOCKADDR_COMMON_SIZE  (2 * sizeof (unsigned char))
 

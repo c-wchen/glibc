@@ -49,11 +49,11 @@ typedef pthread_rwlock_t __libc_rwlock_t;
    begins with a `*'), because its storage size will not be known outside
    of libc.  */
 #define __libc_lock_define(CLASS,NAME) \
-  CLASS __libc_lock_t NAME;
+    CLASS __libc_lock_t NAME;
 #define __libc_rwlock_define(CLASS,NAME) \
-  CLASS __libc_rwlock_t NAME;
+    CLASS __libc_rwlock_t NAME;
 #define __rtld_lock_define_recursive(CLASS,NAME) \
-  CLASS __rtld_lock_recursive_t NAME;
+    CLASS __rtld_lock_recursive_t NAME;
 
 /* Define an initialized lock variable NAME with storage class CLASS.
 
@@ -65,18 +65,18 @@ typedef pthread_rwlock_t __libc_rwlock_t;
 _Static_assert(LLL_LOCK_INITIALIZER == 0, "LLL_LOCK_INITIALIZER != 0");
 #define _LIBC_LOCK_INITIALIZER LLL_LOCK_INITIALIZER
 #define __libc_lock_define_initialized(CLASS,NAME) \
-  CLASS __libc_lock_t NAME;
+    CLASS __libc_lock_t NAME;
 
 #define __libc_rwlock_define_initialized(CLASS,NAME) \
-  CLASS __libc_rwlock_t NAME = PTHREAD_RWLOCK_INITIALIZER;
+    CLASS __libc_rwlock_t NAME = PTHREAD_RWLOCK_INITIALIZER;
 
 #define __rtld_lock_define_initialized_recursive(CLASS,NAME) \
-  CLASS __rtld_lock_recursive_t NAME = _RTLD_LOCK_RECURSIVE_INITIALIZER;
+    CLASS __rtld_lock_recursive_t NAME = _RTLD_LOCK_RECURSIVE_INITIALIZER;
 #define _RTLD_LOCK_RECURSIVE_INITIALIZER \
-  {PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP}
+    {PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP}
 
 #define __rtld_lock_initialize(NAME) \
-  (void) ((NAME) = (__rtld_lock_recursive_t) _RTLD_LOCK_RECURSIVE_INITIALIZER)
+    (void) ((NAME) = (__rtld_lock_recursive_t) _RTLD_LOCK_RECURSIVE_INITIALIZER)
 
 /* If we check for a weakly referenced symbol and then perform a
    normal jump to it te code generated for some platforms in case of
@@ -85,11 +85,11 @@ _Static_assert(LLL_LOCK_INITIALIZER == 0, "LLL_LOCK_INITIALIZER != 0");
    through the PLT.  We can make this a direct jump.  */
 #ifdef __PIC__
 # define __libc_maybe_call(FUNC, ARGS, ELSE) \
-  (__extension__ ({ __typeof (FUNC) *_fn = (FUNC); \
-            _fn != NULL ? (*_fn) ARGS : ELSE; }))
+    (__extension__ ({ __typeof (FUNC) *_fn = (FUNC); \
+        _fn != NULL ? (*_fn) ARGS : ELSE; }))
 #else
 # define __libc_maybe_call(FUNC, ARGS, ELSE) \
-  (FUNC != NULL ? FUNC ARGS : ELSE)
+    (FUNC != NULL ? FUNC ARGS : ELSE)
 #endif
 
 /* All previously forwarded functions are now called directly (either
@@ -124,16 +124,16 @@ _Static_assert(LLL_LOCK_INITIALIZER == 0, "LLL_LOCK_INITIALIZER != 0");
 
 #if IS_IN (rtld)
 # define __rtld_lock_lock_recursive(NAME) \
-  ___rtld_mutex_lock (&(NAME).mutex)
+    ___rtld_mutex_lock (&(NAME).mutex)
 
 # define __rtld_lock_unlock_recursive(NAME) \
-  ___rtld_mutex_unlock (&(NAME).mutex)
+    ___rtld_mutex_unlock (&(NAME).mutex)
 #else /* Not in the dynamic loader.  */
 # define __rtld_lock_lock_recursive(NAME) \
-  __pthread_mutex_lock (&(NAME).mutex)
+    __pthread_mutex_lock (&(NAME).mutex)
 
 # define __rtld_lock_unlock_recursive(NAME) \
-  __pthread_mutex_unlock (&(NAME).mutex)
+    __pthread_mutex_unlock (&(NAME).mutex)
 #endif
 
 /* Define once control variable.  */
@@ -141,20 +141,20 @@ _Static_assert(LLL_LOCK_INITIALIZER == 0, "LLL_LOCK_INITIALIZER != 0");
 /* Special case for static variables where we can avoid the initialization
    if it is zero.  */
 # define __libc_once_define(CLASS, NAME) \
-  CLASS pthread_once_t NAME
+    CLASS pthread_once_t NAME
 #else
 # define __libc_once_define(CLASS, NAME) \
-  CLASS pthread_once_t NAME = PTHREAD_ONCE_INIT
+    CLASS pthread_once_t NAME = PTHREAD_ONCE_INIT
 #endif
 
 /* Call handler iff the first call.  Use a local call in libc, but the
    global pthread_once symbol elsewhere.  */
 #if IS_IN (libc)
 # define __libc_once(ONCE_CONTROL, INIT_FUNCTION) \
-  __pthread_once (&(ONCE_CONTROL), INIT_FUNCTION)
+    __pthread_once (&(ONCE_CONTROL), INIT_FUNCTION)
 #else
 # define __libc_once(ONCE_CONTROL, INIT_FUNCTION) \
-  pthread_once (&(ONCE_CONTROL), INIT_FUNCTION)
+    pthread_once (&(ONCE_CONTROL), INIT_FUNCTION)
 #endif
 
 /* Get once control variable.  */
@@ -173,15 +173,15 @@ static __always_inline void __libc_cleanup_routine(struct __pthread_cleanup_fram
 }
 
 # define __libc_cleanup_push(fct, arg) \
-  do {                                        \
-    struct __pthread_cleanup_frame __clframe                      \
-      __attribute__ ((__cleanup__ (__libc_cleanup_routine)))              \
-      = { .__cancel_routine = (fct), .__cancel_arg = (arg),           \
-      .__do_it = 1 };
+    do {                                        \
+        struct __pthread_cleanup_frame __clframe                      \
+        __attribute__ ((__cleanup__ (__libc_cleanup_routine)))              \
+            = { .__cancel_routine = (fct), .__cancel_arg = (arg),           \
+                .__do_it = 1 };
 
 # define __libc_cleanup_pop(execute) \
     __clframe.__do_it = (execute);                        \
-  } while (0)
+    } while (0)
 #endif /* __EXCEPTIONS */
 
 /* Register handlers to execute before and after `fork'.  Note that the

@@ -536,9 +536,9 @@ enum intel_microarch {
 };
 
 static enum intel_microarch intel_get_fam6_microarch(unsigned int model,
-        __attribute__((unused)) unsigned int stepping) {
-    switch (model)
-    {
+        __attribute__((unused)) unsigned int stepping)
+{
+    switch (model) {
         case 0x1C:
                 case 0x26:
                         return INTEL_ATOM_BONNELL;

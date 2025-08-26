@@ -98,7 +98,7 @@ const uint8_t _nl_category_name_sizes[] attribute_hidden = {
 #undef  NO_POSTLOAD
 #define NO_POSTLOAD _nl_postload_ctype /* Harmless thing known to exist.  */
 #define DEFINE_CATEGORY(category, category_name, items, postload) \
-extern void postload (void); WEAK_POSTLOAD (postload)
+    extern void postload (void); WEAK_POSTLOAD (postload)
 #include "categories.def"
 #undef  DEFINE_CATEGORY
 #undef  NO_POSTLOAD
@@ -122,10 +122,10 @@ extern int _nl_msg_cat_cntr;
 
 /* Use this when we come along an error.  */
 #define ERROR_RETURN                                  \
-  do {                                        \
-    __set_errno (EINVAL);                             \
-    return NULL;                                  \
-  } while (0)
+    do {                                        \
+        __set_errno (EINVAL);                             \
+        return NULL;                                  \
+    } while (0)
 
 
 /* Construct a new composite name.  */
@@ -490,11 +490,11 @@ void _nl_locale_subfreeres(void)
     /* We don't use the loop because we want to have individual weak
        symbol references here.  */
 # define DEFINE_CATEGORY(category, category_name, items, a)           \
-  if (CATEGORY_USED (category))                           \
+    if (CATEGORY_USED (category))                           \
     {                                         \
-      extern struct __locale_data _nl_C_##category;               \
-      weak_extern (_nl_C_##category)                          \
-      free_category (category, *_nl_current_##category, &_nl_C_##category);   \
+        extern struct __locale_data _nl_C_##category;               \
+        weak_extern (_nl_C_##category)                          \
+        free_category (category, *_nl_current_##category, &_nl_C_##category);   \
     }
 # include "categories.def"
 # undef DEFINE_CATEGORY

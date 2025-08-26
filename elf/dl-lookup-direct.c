@@ -44,8 +44,8 @@ check_match(const struct link_map *const map, const char *const undef_name,
        STT_COMMON, STT_TLS, and STT_GNU_IFUNC since these are no
        code/data definitions.  */
 #define ALLOWED_STT \
-  ((1 << STT_NOTYPE) | (1 << STT_OBJECT) | (1 << STT_FUNC) \
-   | (1 << STT_COMMON) | (1 << STT_TLS) | (1 << STT_GNU_IFUNC))
+    ((1 << STT_NOTYPE) | (1 << STT_OBJECT) | (1 << STT_FUNC) \
+     | (1 << STT_COMMON) | (1 << STT_TLS) | (1 << STT_GNU_IFUNC))
     if (__glibc_unlikely(((1 << stt) & ALLOWED_STT) == 0)) {
         return NULL;
     }

@@ -31,9 +31,9 @@
 #   undef libc_hidden_def
 #   if ! defined HAVE_S390_MIN_Z13_ZARCH_ASM_SUPPORT
 #    define libc_hidden_def(name)                   \
-  __hidden_ver1 (__wcschr_c, __GI_wcschr, __wcschr_c)  __attribute__((weak)); \
-  strong_alias (__wcschr_c, __wcschr_c_1);              \
-  __hidden_ver1 (__wcschr_c_1, __GI___wcschr, __wcschr_c_1);
+    __hidden_ver1 (__wcschr_c, __GI_wcschr, __wcschr_c)  __attribute__((weak)); \
+    strong_alias (__wcschr_c, __wcschr_c_1);              \
+    __hidden_ver1 (__wcschr_c_1, __GI___wcschr, __wcschr_c_1);
 #   else
 #    define libc_hidden_def(name)
 #   endif

@@ -29,19 +29,19 @@
 /* If the addr parameter is the IPv6 unspecified address no query must
    be performed.  */
 #define PREPROCESS \
-  if (len == sizeof (struct in6_addr)                         \
-      && __builtin_expect (memcmp (&__in6addr_any, addr,              \
-                   sizeof (struct in6_addr)), 1) == 0)        \
+    if (len == sizeof (struct in6_addr)                         \
+        && __builtin_expect (memcmp (&__in6addr_any, addr,              \
+                                     sizeof (struct in6_addr)), 1) == 0)        \
     {                                         \
-      *h_errnop = HOST_NOT_FOUND;                         \
-      *result = NULL;                                 \
-      return ENOENT;                                  \
+        *h_errnop = HOST_NOT_FOUND;                         \
+        *result = NULL;                                 \
+        return ENOENT;                                  \
     }
 #define POSTPROCESS \
-  if (status == NSS_STATUS_SUCCESS)                       \
+    if (status == NSS_STATUS_SUCCESS)                       \
     {                                         \
-      _res_hconf_reorder_addrs (resbuf);                      \
-      _res_hconf_trim_domains (resbuf);                       \
+        _res_hconf_reorder_addrs (resbuf);                      \
+        _res_hconf_trim_domains (resbuf);                       \
     }
 
 /* Special name for the lookup function.  */

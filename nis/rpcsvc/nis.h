@@ -483,7 +483,7 @@ typedef struct fd_result fd_result;
 #define WORLD_DEFAULT (NIS_READ_ACC)
 #define GROUP_DEFAULT (NIS_READ_ACC << 8)
 #define OWNER_DEFAULT ((NIS_READ_ACC + NIS_MODIFY_ACC + NIS_CREATE_ACC +\
-            NIS_DESTROY_ACC) << 16)
+                        NIS_DESTROY_ACC) << 16)
 #define DEFAULT_RIGHTS (WORLD_DEFAULT | GROUP_DEFAULT | OWNER_DEFAULT)
 
 /* Result manipulation defines ... */

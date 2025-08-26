@@ -24,9 +24,9 @@
 
 #define RETURN_TYPE char *
 #define AVAILABLE(h, h_l, j, n_l)           \
-  (((j) + (n_l) <= (h_l)) \
-   || ((h_l) += __strnlen ((void*)((h) + (h_l)), (n_l) + 512), \
-       (j) + (n_l) <= (h_l)))
+    (((j) + (n_l) <= (h_l)) \
+     || ((h_l) += __strnlen ((void*)((h) + (h_l)), (n_l) + 512), \
+         (j) + (n_l) <= (h_l)))
 #include "str-two-way.h"
 
 #undef strstr

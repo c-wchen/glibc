@@ -66,18 +66,17 @@
    getXXbyYY operations all use their own stream.  */
 
 /* Open database file if not already opened.  */
-static enum nss_status internal_setent(FILE **stream) {
+static enum nss_status internal_setent(FILE **stream)
+{
     enum nss_status status = NSS_STATUS_SUCCESS;
 
-    if (*stream == NULL)
-    {
+    if (*stream == NULL) {
         *stream = __nss_files_fopen(DATAFILE);
 
         if (*stream == NULL) {
             status = errno == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
         }
-    } else
-    {
+    } else {
         rewind(*stream);
     }
 
@@ -194,27 +193,27 @@ libc_hidden_def(CONCAT(_nss_files_get, ENTNAME_r))
    to the lookup key arguments and does `break;' if they match.  */
 
 #define DB_LOOKUP(name, db_char, keysize, keypattern, break_if_match, proto...)\
-enum nss_status                                   \
-_nss_files_get##name##_r (proto,                          \
-              struct STRUCTURE *result, char *buffer,         \
-              size_t buflen, int *errnop H_ERRNO_PROTO)       \
-{                                         \
-  enum nss_status status;                             \
-  FILE *stream = NULL;                                \
-                                          \
-  /* Open file.  */                               \
-  status = internal_setent (&stream);                         \
-                                          \
-  if (status == NSS_STATUS_SUCCESS)                       \
+    enum nss_status                                   \
+    _nss_files_get##name##_r (proto,                          \
+                              struct STRUCTURE *result, char *buffer,         \
+                              size_t buflen, int *errnop H_ERRNO_PROTO)       \
     {                                         \
-      while ((status = internal_getent (stream, result, buffer, buflen, errnop \
-                    H_ERRNO_ARG EXTRA_ARGS_VALUE))        \
-         == NSS_STATUS_SUCCESS)                       \
-    { break_if_match }                            \
-                                          \
-      fclose (stream);                                \
+        enum nss_status status;                             \
+        FILE *stream = NULL;                                \
+        \
+        /* Open file.  */                               \
+        status = internal_setent (&stream);                         \
+        \
+        if (status == NSS_STATUS_SUCCESS)                       \
+        {                                         \
+            while ((status = internal_getent (stream, result, buffer, buflen, errnop \
+                                              H_ERRNO_ARG EXTRA_ARGS_VALUE))        \
+                   == NSS_STATUS_SUCCESS)                       \
+            { break_if_match }                            \
+            \
+            fclose (stream);                                \
+        }                                         \
+        \
+        return status;                                  \
     }                                         \
-                                          \
-  return status;                                  \
-}                                         \
-libc_hidden_def (_nss_files_get##name##_r)
+    libc_hidden_def (_nss_files_get##name##_r)

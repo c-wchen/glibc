@@ -112,11 +112,11 @@
 
 #ifdef SHARED
 # define call_free_static_weak(__ptr)               \
-   free (__ptr)
+    free (__ptr)
 #else
 # define call_free_static_weak(__ptr)               \
-  if (&__ptr != NULL)                       \
-    free (__ptr);
+    if (&__ptr != NULL)                       \
+        free (__ptr);
 #endif
 
 void __libc_freeres(void)

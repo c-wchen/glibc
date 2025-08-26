@@ -23,9 +23,9 @@
 #include <errno.h>
 
 #define MREMAP_KNOWN_BITS \
-  (MREMAP_MAYMOVE \
-   | MREMAP_FIXED \
-   | MREMAP_DONTUNMAP)
+    (MREMAP_MAYMOVE \
+     | MREMAP_FIXED \
+     | MREMAP_DONTUNMAP)
 
 void *__mremap(void *addr, size_t old_len, size_t new_len, int flags, ...)
 {

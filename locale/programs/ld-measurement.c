@@ -162,24 +162,24 @@ void measurement_read(struct linereader *ldfile, struct localedef_t *result,
 
         switch (nowtok) {
 #define INT_ELEM(cat) \
-    case tok_##cat:                               \
-      /* Ignore the rest of the line if we don't need the input of        \
-         this line.  */                           \
-      if (ignore_content)                             \
-        {                                     \
-          lr_ignore_rest (ldfile, 0);                     \
-          break;                                  \
-        }                                     \
-                                          \
-      arg = lr_token (ldfile, charmap, result, NULL, verbose);        \
-      if (arg->tok != tok_number)                         \
+case tok_##cat:                               \
+    /* Ignore the rest of the line if we don't need the input of        \
+       this line.  */                           \
+    if (ignore_content)                             \
+    {                                     \
+        lr_ignore_rest (ldfile, 0);                     \
+        break;                                  \
+    }                                     \
+    \
+    arg = lr_token (ldfile, charmap, result, NULL, verbose);        \
+    if (arg->tok != tok_number)                         \
         goto err_label;                           \
-      else if (measurement->cat != 0)                     \
+    else if (measurement->cat != 0)                     \
         lr_error (ldfile, _("%s: field `%s' declared more than once"),    \
-              "LC_MEASUREMENT", #cat);                    \
-      else if (!ignore_content)                       \
+                  "LC_MEASUREMENT", #cat);                    \
+    else if (!ignore_content)                       \
         measurement->cat = arg->val.num;                      \
-      break
+    break
 
                 INT_ELEM(measurement);
 

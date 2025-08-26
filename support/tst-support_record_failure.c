@@ -36,9 +36,9 @@ enum {
     OPT_TEST_VERIFY_EXIT,
 };
 #define CMDLINE_OPTIONS                                                 \
-  { "status", required_argument, NULL, OPT_STATUS },                    \
-  { "test-verify", no_argument, NULL, OPT_TEST_VERIFY },                \
-  { "test-verify-exit", no_argument, NULL, OPT_TEST_VERIFY_EXIT },
+    { "status", required_argument, NULL, OPT_STATUS },                    \
+    { "test-verify", no_argument, NULL, OPT_TEST_VERIFY },                \
+    { "test-verify-exit", no_argument, NULL, OPT_TEST_VERIFY_EXIT },
 static void cmdline_process(int c)
 {
     switch (c) {

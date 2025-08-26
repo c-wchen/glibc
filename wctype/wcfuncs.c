@@ -24,17 +24,17 @@
 /* Provide real-function versions of all the wctype macros.  */
 
 #define func(name, type)                              \
-  extern int __isw##name (wint_t __wc);                       \
-  int                                         \
-  __isw##name (wint_t wc)                             \
-  {                                       \
-    if (isascii (wc))                                 \
-      return is##name ((int) wc);                         \
-    size_t i = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_CLASS_OFFSET) + type;    \
-    const char *desc = _NL_CURRENT (LC_CTYPE, i);                 \
-    return wctype_table_lookup (desc, wc);                    \
-  }                                       \
-  weak_alias (__isw##name, isw##name)
+    extern int __isw##name (wint_t __wc);                       \
+    int                                         \
+    __isw##name (wint_t wc)                             \
+    {                                       \
+        if (isascii (wc))                                 \
+            return is##name ((int) wc);                         \
+        size_t i = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_CLASS_OFFSET) + type;    \
+        const char *desc = _NL_CURRENT (LC_CTYPE, i);                 \
+        return wctype_table_lookup (desc, wc);                    \
+    }                                       \
+    weak_alias (__isw##name, isw##name)
 
 #undef iswalnum
 func(alnum, __ISwalnum)

@@ -22,20 +22,20 @@
 #include <locale.h>
 
 #define show(expr, nexp, srcexp, bufexp) \
-  {                                 \
-    size_t res = expr;                          \
-    printf (#expr " -> %zu", res);                  \
-    dst += res;                             \
-    printf (", src = srcbuf+%td, dst = buf+%td",            \
-        src - srcbuf, dst - (char *) buf);              \
-    if (res != nexp || src != (srcexp) || dst != (char *) (bufexp)) \
-      {                                 \
-    printf (", expected %zu and srcbuf+%td and buf+%td", (size_t) nexp, \
-        (srcexp) - srcbuf, (bufexp) - (unsigned char *) buf);   \
-    result = 1;                         \
-      }                                 \
-    putc ('\n', stdout);                        \
-  }
+    {                                 \
+        size_t res = expr;                          \
+        printf (#expr " -> %zu", res);                  \
+        dst += res;                             \
+        printf (", src = srcbuf+%td, dst = buf+%td",            \
+                src - srcbuf, dst - (char *) buf);              \
+        if (res != nexp || src != (srcexp) || dst != (char *) (bufexp)) \
+        {                                 \
+            printf (", expected %zu and srcbuf+%td and buf+%td", (size_t) nexp, \
+                    (srcexp) - srcbuf, (bufexp) - (unsigned char *) buf);   \
+            result = 1;                         \
+        }                                 \
+        putc ('\n', stdout);                        \
+    }
 
 static int do_test(void)
 {

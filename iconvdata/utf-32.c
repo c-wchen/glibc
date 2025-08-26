@@ -40,43 +40,43 @@
 #define ONE_DIRECTION       0
 #define FROM_DIRECTION      (dir == from_utf32)
 #define PREPARE_LOOP \
-  enum direction dir = ((struct utf32_data *) step->__data)->dir;         \
-  enum variant var = ((struct utf32_data *) step->__data)->var;           \
-  int swap;                                   \
-  if (FROM_DIRECTION && var == UTF_32)                        \
+    enum direction dir = ((struct utf32_data *) step->__data)->dir;         \
+    enum variant var = ((struct utf32_data *) step->__data)->var;           \
+    int swap;                                   \
+    if (FROM_DIRECTION && var == UTF_32)                        \
     {                                         \
-      if (__glibc_unlikely (data->__invocation_counter == 0))             \
-    {                                     \
-      /* We have to find out which byte order the file is encoded in.  */ \
-      if (inptr + 4 > inend)                          \
-        return (inptr == inend                        \
-            ? __GCONV_EMPTY_INPUT : __GCONV_INCOMPLETE_INPUT);        \
-                                          \
-      if (get32 (inptr) == BOM)                       \
-        /* Simply ignore the BOM character.  */               \
-        *inptrp = inptr += 4;                         \
-      else if (get32 (inptr) == BOM_OE)                   \
+        if (__glibc_unlikely (data->__invocation_counter == 0))             \
         {                                     \
-          data->__flags |= __GCONV_SWAP;                      \
-          *inptrp = inptr += 4;                       \
+            /* We have to find out which byte order the file is encoded in.  */ \
+            if (inptr + 4 > inend)                          \
+                return (inptr == inend                        \
+                        ? __GCONV_EMPTY_INPUT : __GCONV_INCOMPLETE_INPUT);        \
+            \
+            if (get32 (inptr) == BOM)                       \
+                /* Simply ignore the BOM character.  */               \
+                *inptrp = inptr += 4;                         \
+            else if (get32 (inptr) == BOM_OE)                   \
+            {                                     \
+                data->__flags |= __GCONV_SWAP;                      \
+                *inptrp = inptr += 4;                       \
+            }                                     \
         }                                     \
-    }                                     \
     }                                         \
-  else if (!FROM_DIRECTION && var == UTF_32 && !data->__internal_use          \
-       && data->__invocation_counter == 0)                    \
+    else if (!FROM_DIRECTION && var == UTF_32 && !data->__internal_use          \
+             && data->__invocation_counter == 0)                    \
     {                                         \
-      /* Emit the Byte Order Mark.  */                        \
-      if (__glibc_unlikely (outbuf + 4 > outend))                 \
-    return __GCONV_FULL_OUTPUT;                       \
-                                          \
-      put32 (outbuf, BOM);                            \
-      outbuf += 4;                                \
+        /* Emit the Byte Order Mark.  */                        \
+        if (__glibc_unlikely (outbuf + 4 > outend))                 \
+            return __GCONV_FULL_OUTPUT;                       \
+        \
+        put32 (outbuf, BOM);                            \
+        outbuf += 4;                                \
     }                                         \
-  else if (__builtin_expect (data->__invocation_counter == 0, 0)          \
-       && ((var == UTF_32LE && BYTE_ORDER == BIG_ENDIAN)              \
-           || (var == UTF_32BE && BYTE_ORDER == LITTLE_ENDIAN)))          \
-    data->__flags |= __GCONV_SWAP;                        \
-  swap = data->__flags & __GCONV_SWAP;
+    else if (__builtin_expect (data->__invocation_counter == 0, 0)          \
+             && ((var == UTF_32LE && BYTE_ORDER == BIG_ENDIAN)              \
+                 || (var == UTF_32BE && BYTE_ORDER == LITTLE_ENDIAN)))          \
+        data->__flags |= __GCONV_SWAP;                        \
+    swap = data->__flags & __GCONV_SWAP;
 #define EXTRA_LOOP_ARGS     , var, swap
 
 
@@ -173,34 +173,34 @@ void gconv_end(struct __gconv_step *data)
 #define MIN_NEEDED_OUTPUT   MIN_NEEDED_FROM
 #define LOOPFCT         TO_LOOP
 #define BODY \
-  {                                       \
-    uint32_t c = get32 (inptr);                           \
-                                          \
-    if (__glibc_unlikely (c >= 0x110000))                     \
-      {                                       \
-    STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
-      }                                       \
-    else if (__glibc_unlikely (c >= 0xd800 && c < 0xe000))            \
-      {                                       \
-    /* Surrogate characters in UCS-4 input are not valid.             \
-       We must catch this.  If we let surrogates pass through,        \
-       attackers could make a security hole exploit by            \
-       generating "irregular UTF-32" sequences.  */               \
-    result = __gconv_mark_illegal_input (step_data);              \
-    if (! ignore_errors_p ())                         \
-      break;                                  \
-    inptr += 4;                               \
-    ++*irreversible;                              \
-    continue;                                 \
-      }                                       \
-                                          \
-    if (swap)                                     \
-      c = bswap_32 (c);                               \
-    put32 (outptr, c);                                \
-                                          \
-    outptr += 4;                                  \
-    inptr += 4;                                   \
-  }
+    {                                       \
+        uint32_t c = get32 (inptr);                           \
+        \
+        if (__glibc_unlikely (c >= 0x110000))                     \
+        {                                       \
+            STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
+        }                                       \
+        else if (__glibc_unlikely (c >= 0xd800 && c < 0xe000))            \
+        {                                       \
+            /* Surrogate characters in UCS-4 input are not valid.             \
+               We must catch this.  If we let surrogates pass through,        \
+               attackers could make a security hole exploit by            \
+               generating "irregular UTF-32" sequences.  */               \
+            result = __gconv_mark_illegal_input (step_data);              \
+            if (! ignore_errors_p ())                         \
+                break;                                  \
+            inptr += 4;                               \
+            ++*irreversible;                              \
+            continue;                                 \
+        }                                       \
+        \
+        if (swap)                                     \
+            c = bswap_32 (c);                               \
+        put32 (outptr, c);                                \
+        \
+        outptr += 4;                                  \
+        inptr += 4;                                   \
+    }
 #define LOOP_NEED_FLAGS
 #define EXTRA_LOOP_DECLS \
     , enum variant var, int swap
@@ -212,22 +212,22 @@ void gconv_end(struct __gconv_step *data)
 #define MIN_NEEDED_OUTPUT   MIN_NEEDED_TO
 #define LOOPFCT         FROM_LOOP
 #define BODY \
-  {                                       \
-    uint32_t u1 = get32 (inptr);                          \
-                                          \
-    if (swap)                                     \
-      u1 = bswap_32 (u1);                             \
-                                          \
-    if (__glibc_unlikely (u1 >= 0x110000 || (u1 >= 0xd800 && u1 < 0xe000)))   \
-      {                                       \
-    /* This is illegal.  */                           \
-    STANDARD_FROM_LOOP_ERR_HANDLER (4);                   \
-      }                                       \
-                                          \
-    put32 (outptr, u1);                               \
-    inptr += 4;                                   \
-    outptr += 4;                                  \
-  }
+    {                                       \
+        uint32_t u1 = get32 (inptr);                          \
+        \
+        if (swap)                                     \
+            u1 = bswap_32 (u1);                             \
+        \
+        if (__glibc_unlikely (u1 >= 0x110000 || (u1 >= 0xd800 && u1 < 0xe000)))   \
+        {                                       \
+            /* This is illegal.  */                           \
+            STANDARD_FROM_LOOP_ERR_HANDLER (4);                   \
+        }                                       \
+        \
+        put32 (outptr, u1);                               \
+        inptr += 4;                                   \
+        outptr += 4;                                  \
+    }
 #define LOOP_NEED_FLAGS
 #define EXTRA_LOOP_DECLS \
     , enum variant var, int swap

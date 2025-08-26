@@ -1,9 +1,9 @@
 #include "tst-tls10.h"
 
 #define CHECK(N, S)                 \
-  p = f##N##a ();                   \
-  if (p->a != S || p->b != S + 1 || p->c != S + 2)  \
-    abort ()
+    p = f##N##a ();                   \
+    if (p->a != S || p->b != S + 1 || p->c != S + 2)  \
+        abort ()
 
 static int do_test(void)
 {

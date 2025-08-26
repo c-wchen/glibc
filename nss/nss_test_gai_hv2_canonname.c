@@ -32,19 +32,20 @@ extern enum nss_status _nss_files_gethostbyname2_r(const char *, int,
 enum nss_status _nss_test_gai_hv2_canonname_gethostbyname2_r(const char *name, int af,
         struct hostent *result,
         char *buffer, size_t buflen,
-        int *errnop, int *herrnop) {
+        int *errnop, int *herrnop)
+{
     return _nss_files_gethostbyname2_r(name, af, result, buffer, buflen, errnop,
                                        herrnop);
 }
 
 enum nss_status _nss_test_gai_hv2_canonname_getcanonname_r(const char *name, char *buffer,
         size_t buflen, char **result,
-        int *errnop, int *h_errnop) {
+        int *errnop, int *h_errnop)
+{
     /* We expect QUERYNAME, which is a small enough string that it shouldn't fail
        the test.  */
     if (memcmp(QUERYNAME, name, sizeof(QUERYNAME))
-        || buflen < sizeof(QUERYNAME))
-    {
+        || buflen < sizeof(QUERYNAME)) {
         abort();
     }
 

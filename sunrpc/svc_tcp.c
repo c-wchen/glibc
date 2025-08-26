@@ -273,7 +273,8 @@ again:
     return FALSE;     /* there is never an rpc msg to be processed */
 }
 
-static enum xprt_stat rendezvous_stat(SVCXPRT *xprt) {
+static enum xprt_stat rendezvous_stat(SVCXPRT *xprt)
+{
     return XPRT_IDLE;
 }
 
@@ -354,16 +355,15 @@ static int writetcp(char *xprtptr, char *buf, int len)
     return len;
 }
 
-static enum xprt_stat svctcp_stat(SVCXPRT *xprt) {
+static enum xprt_stat svctcp_stat(SVCXPRT *xprt)
+{
     struct tcp_conn *cd =
         (struct tcp_conn *)(xprt->xp_p1);
 
-    if (cd->strm_stat == XPRT_DIED)
-    {
+    if (cd->strm_stat == XPRT_DIED) {
         return XPRT_DIED;
     }
-    if (!xdrrec_eof(&(cd->xdrs)))
-    {
+    if (!xdrrec_eof(&(cd->xdrs))) {
         return XPRT_MOREREQS;
     }
     return XPRT_IDLE;

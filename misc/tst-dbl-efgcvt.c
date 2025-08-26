@@ -27,8 +27,8 @@
 
 #if DBL_MANT_DIG == 53
 # define EXTRA_ECVT_TESTS \
-  { 0x1p-1074, 3, -323, "494" }, \
-  { -0x1p-1074, 3, -323, "494" },
+    { 0x1p-1074, 3, -323, "494" }, \
+    { -0x1p-1074, 3, -323, "494" },
 #else
 # define EXTRA_ECVT_TESTS
 #endif

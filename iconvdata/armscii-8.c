@@ -51,41 +51,41 @@ static const uint16_t map_from_armscii_8[0xfe - 0xa2 + 1] = {
 #define MIN_NEEDED_OUTPUT   MIN_NEEDED_TO
 #define LOOPFCT         FROM_LOOP
 #define BODY \
-  {                                       \
-    uint_fast8_t ch = *inptr;                             \
-                                          \
-    if (ch <= 0xa0)                               \
-      {                                       \
-        /* Upto and including 0xa0 the ARMSCII-8 corresponds to Unicode.  */  \
-        *((uint32_t *) outptr) = ch;                          \
-        outptr += sizeof (uint32_t);                          \
-      }                                       \
-    else if (ch >= 0xa2 && ch <= 0xfe)                        \
-      {                                       \
-        /* Use the table.  */                             \
-        *((uint32_t *) outptr) = map_from_armscii_8[ch - 0xa2];           \
-        outptr += sizeof (uint32_t);                          \
-      }                                       \
-    else                                      \
-      {                                       \
-    /* This is an illegal character.  */                      \
-    STANDARD_FROM_LOOP_ERR_HANDLER (1);                   \
-      }                                       \
-                                          \
-    ++inptr;                                      \
-  }
+    {                                       \
+        uint_fast8_t ch = *inptr;                             \
+        \
+        if (ch <= 0xa0)                               \
+        {                                       \
+            /* Upto and including 0xa0 the ARMSCII-8 corresponds to Unicode.  */  \
+            *((uint32_t *) outptr) = ch;                          \
+            outptr += sizeof (uint32_t);                          \
+        }                                       \
+        else if (ch >= 0xa2 && ch <= 0xfe)                        \
+        {                                       \
+            /* Use the table.  */                             \
+            *((uint32_t *) outptr) = map_from_armscii_8[ch - 0xa2];           \
+            outptr += sizeof (uint32_t);                          \
+        }                                       \
+        else                                      \
+        {                                       \
+            /* This is an illegal character.  */                      \
+            STANDARD_FROM_LOOP_ERR_HANDLER (1);                   \
+        }                                       \
+        \
+        ++inptr;                                      \
+    }
 #define LOOP_NEED_FLAGS
 #define ONEBYTE_BODY \
-  {                                       \
-    if (c <= 0xa0)                                \
-      /* Upto and including 0xa0 the ARMSCII-8 corresponds to Unicode.  */    \
-      return c;                                   \
-    else if (c >= 0xa2 && c <= 0xfe)                          \
-      /* Use the table.  */                           \
-      return map_from_armscii_8[c - 0xa2];                    \
-    else                                      \
-      return WEOF;                                \
-  }
+    {                                       \
+        if (c <= 0xa0)                                \
+            /* Upto and including 0xa0 the ARMSCII-8 corresponds to Unicode.  */    \
+            return c;                                   \
+        else if (c >= 0xa2 && c <= 0xfe)                          \
+            /* Use the table.  */                           \
+            return map_from_armscii_8[c - 0xa2];                    \
+        else                                      \
+            return WEOF;                                \
+    }
 #include <iconv/loop.c>
 
 
@@ -110,41 +110,41 @@ static const unsigned char map_to_armscii_8[0x58a - 0x531 + 1] = {
 #define MIN_NEEDED_OUTPUT   MIN_NEEDED_FROM
 #define LOOPFCT         TO_LOOP
 #define BODY \
-  {                                       \
-    uint32_t ch = *((const uint32_t *) inptr);                    \
-                                          \
-    if (ch <= 0xa0)                               \
-      /* Upto and including 0xa0 the ARMSCII-8 corresponds to Unicode.  */    \
-      *outptr = (unsigned char) ch;                       \
-    else if (ch == 0xab)                              \
-      *outptr = 0xa7;                                 \
-    else if (ch == 0xbb)                              \
-      *outptr = 0xa6;                                 \
-    else if (ch >= 0x531 && ch <= 0x58a)                      \
-      {                                       \
-    unsigned char oc = map_to_armscii_8[ch - 0x531];              \
-                                          \
-    if (oc == 0)                                  \
-      /* No valid mapping.  */                        \
-      goto err;                               \
-                                          \
-    *outptr = oc;                                 \
-      }                                       \
-    else if (ch == 0x2014)                            \
-      *outptr = 0xa8;                                 \
-    else if (ch == 0x2026)                            \
-      *outptr = 0xae;                                 \
-    else                                      \
-      {                                       \
-    UNICODE_TAG_HANDLER (ch, 4);                          \
-                                          \
-    /* We have an illegal character.  */                      \
-      err:                                    \
-    STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
-      }                                       \
-    ++outptr;                                     \
-    inptr += 4;                                   \
-  }
+    {                                       \
+        uint32_t ch = *((const uint32_t *) inptr);                    \
+        \
+        if (ch <= 0xa0)                               \
+            /* Upto and including 0xa0 the ARMSCII-8 corresponds to Unicode.  */    \
+            *outptr = (unsigned char) ch;                       \
+        else if (ch == 0xab)                              \
+            *outptr = 0xa7;                                 \
+        else if (ch == 0xbb)                              \
+            *outptr = 0xa6;                                 \
+        else if (ch >= 0x531 && ch <= 0x58a)                      \
+        {                                       \
+            unsigned char oc = map_to_armscii_8[ch - 0x531];              \
+            \
+            if (oc == 0)                                  \
+                /* No valid mapping.  */                        \
+                goto err;                               \
+            \
+            *outptr = oc;                                 \
+        }                                       \
+        else if (ch == 0x2014)                            \
+            *outptr = 0xa8;                                 \
+        else if (ch == 0x2026)                            \
+            *outptr = 0xae;                                 \
+        else                                      \
+        {                                       \
+            UNICODE_TAG_HANDLER (ch, 4);                          \
+            \
+            /* We have an illegal character.  */                      \
+    err:                                    \
+            STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
+        }                                       \
+        ++outptr;                                     \
+        inptr += 4;                                   \
+    }
 #define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 

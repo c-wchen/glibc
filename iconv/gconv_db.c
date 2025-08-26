@@ -77,15 +77,15 @@ struct derivation_step {
 };
 
 #define NEW_STEP(result, hi, lo, module, last_mod) \
-  ({ struct derivation_step *newp = alloca (sizeof (struct derivation_step)); \
-     newp->result_set = result;                           \
-     newp->result_set_len = strlen (result);                      \
-     newp->cost_hi = hi;                              \
-     newp->cost_lo = lo;                              \
-     newp->code = module;                             \
-     newp->last = last_mod;                           \
-     newp->next = NULL;                               \
-     newp; })
+    ({ struct derivation_step *newp = alloca (sizeof (struct derivation_step)); \
+        newp->result_set = result;                           \
+        newp->result_set_len = strlen (result);                      \
+        newp->cost_hi = hi;                              \
+        newp->cost_lo = lo;                              \
+        newp->code = module;                             \
+        newp->last = last_mod;                           \
+        newp->next = NULL;                               \
+        newp; })
 
 
 /* If a specific transformation is used more than once we should not need

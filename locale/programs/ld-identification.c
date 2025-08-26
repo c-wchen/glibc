@@ -128,12 +128,12 @@ No definition for %s category found"), "LC_IDENTIFICATION");
     }
 
 #define TEST_ELEM(cat) \
-  if (identification->cat == NULL)                        \
+    if (identification->cat == NULL)                        \
     {                                         \
-      if (verbose && ! nothing)                           \
-    record_warning (_("%s: field `%s' not defined"), "LC_IDENTIFICATION", \
-            #cat);                            \
-      identification->cat = "";                           \
+        if (verbose && ! nothing)                           \
+            record_warning (_("%s: field `%s' not defined"), "LC_IDENTIFICATION", \
+                            #cat);                            \
+        identification->cat = "";                           \
     }
 
     TEST_ELEM(title);
@@ -274,30 +274,30 @@ void identification_read(struct linereader *ldfile, struct localedef_t *result,
 
         switch (nowtok) {
 #define STR_ELEM(cat) \
-    case tok_##cat:                               \
-      /* Ignore the rest of the line if we don't need the input of        \
-         this line.  */                           \
-      if (ignore_content)                             \
-        {                                     \
-          lr_ignore_rest (ldfile, 0);                     \
-          break;                                  \
-        }                                     \
-                                          \
-      arg = lr_token (ldfile, charmap, result, NULL, verbose);        \
-      if (arg->tok != tok_string)                         \
+case tok_##cat:                               \
+    /* Ignore the rest of the line if we don't need the input of        \
+       this line.  */                           \
+    if (ignore_content)                             \
+    {                                     \
+        lr_ignore_rest (ldfile, 0);                     \
+        break;                                  \
+    }                                     \
+    \
+    arg = lr_token (ldfile, charmap, result, NULL, verbose);        \
+    if (arg->tok != tok_string)                         \
         goto err_label;                           \
-      if (identification->cat != NULL)                    \
+    if (identification->cat != NULL)                    \
         lr_error (ldfile, _("\
 %s: field `%s' declared more than once"), "LC_IDENTIFICATION", #cat);	      \
-      else if (!ignore_content && arg->val.str.startmb == NULL)       \
-        {                                     \
-          lr_error (ldfile, _("\
+    else if (!ignore_content && arg->val.str.startmb == NULL)       \
+    {                                     \
+        lr_error (ldfile, _("\
 %s: unknown character in field `%s'"), "LC_IDENTIFICATION", #cat);	      \
-          identification->cat = "";                       \
-        }                                     \
-      else if (!ignore_content)                       \
+        identification->cat = "";                       \
+    }                                     \
+    else if (!ignore_content)                       \
         identification->cat = arg->val.str.startmb;               \
-      break
+    break
 
                 STR_ELEM(title);
                 STR_ELEM(source);
@@ -336,9 +336,9 @@ void identification_read(struct linereader *ldfile, struct localedef_t *result,
                 cattok = lr_token(ldfile, charmap, result, NULL, verbose);
                 switch (cattok->tok) {
 #define CATEGORY(lname, uname) \
-        case tok_lc_##lname:                          \
-          category = LC_##uname;                          \
-          break
+case tok_lc_##lname:                          \
+    category = LC_##uname;                          \
+    break
 
                         CATEGORY(identification, IDENTIFICATION);
                         CATEGORY(ctype, CTYPE);

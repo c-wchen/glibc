@@ -86,14 +86,14 @@ int check_proc(const char *proc_name, const char *search_name, int flag,
 }
 
 #define CHECK_PROC(str, name) \
-  check_proc (#str, " "#str" ", HAS_CPU_FEATURE (name), \
-          CPU_FEATURE_USABLE (name), \
-          "HAS_CPU_FEATURE (" #name ")")
+    check_proc (#str, " "#str" ", HAS_CPU_FEATURE (name), \
+                CPU_FEATURE_USABLE (name), \
+                "HAS_CPU_FEATURE (" #name ")")
 
 #define CHECK_PROC_ACTIVE(str, name) \
-  check_proc (#str, " "#str" ", CPU_FEATURE_USABLE (name), \
-          CPU_FEATURE_USABLE (name), \
-          "CPU_FEATURE_USABLE (" #name ")")
+    check_proc (#str, " "#str" ", CPU_FEATURE_USABLE (name), \
+                CPU_FEATURE_USABLE (name), \
+                "CPU_FEATURE_USABLE (" #name ")")
 
 static int do_test(int argc, char **argv)
 {

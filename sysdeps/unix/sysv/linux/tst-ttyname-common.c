@@ -38,14 +38,14 @@
 /* generic utilities */
 
 #define VERIFY(expr)                                                    \
-  do {                                                                  \
-    if (!(expr))                                                        \
-      {                                                                 \
-        printf ("error: %s:%d: %s: %m\n",                               \
-                __FILE__, __LINE__, #expr);                             \
-        exit (1);                                                       \
-      }                                                                 \
-  } while (0)
+    do {                                                                  \
+        if (!(expr))                                                        \
+        {                                                                 \
+            printf ("error: %s:%d: %s: %m\n",                               \
+                    __FILE__, __LINE__, #expr);                             \
+            exit (1);                                                       \
+        }                                                                 \
+    } while (0)
 
 static void touch(const char *path, mode_t mode)
 {

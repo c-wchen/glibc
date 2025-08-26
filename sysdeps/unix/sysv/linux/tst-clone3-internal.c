@@ -43,14 +43,14 @@ static int f(void *a)
 /* Futex wait for TID argument, similar to pthread_join internal
    implementation.  */
 #define wait_tid(ctid_ptr, ctid_val)                    \
-  do {                                  \
-    __typeof (*(ctid_ptr)) __tid;                   \
-    /* We need acquire MO here so that we synchronize with the      \
-       kernel's store to 0 when the clone terminates.  */       \
-    while ((__tid = atomic_load_explicit (ctid_ptr,         \
-                      memory_order_acquire)) != 0)  \
-      futex_wait (ctid_ptr, ctid_val);                  \
-  } while (0)
+    do {                                  \
+        __typeof (*(ctid_ptr)) __tid;                   \
+        /* We need acquire MO here so that we synchronize with the      \
+           kernel's store to 0 when the clone terminates.  */       \
+        while ((__tid = atomic_load_explicit (ctid_ptr,         \
+                                              memory_order_acquire)) != 0)  \
+            futex_wait (ctid_ptr, ctid_val);                  \
+    } while (0)
 
 static inline int futex_wait(_Atomic int *futexp, int val)
 {

@@ -47,7 +47,8 @@ int mcheck_pedantic(void (*func)(enum mcheck_status))
 #endif
 }
 
-enum mcheck_status mprobe(void *ptr) {
+enum mcheck_status mprobe(void *ptr)
+{
 #if IS_IN (libc)
     return MCHECK_DISABLED;
 #else

@@ -43,7 +43,7 @@ static const union sys_errname_t {
 
 static const unsigned short _sys_errnameidx[] = {
 #define _S(n, s) \
-  [ERR_MAP(n)] = offsetof(union sys_errname_t, MSGSTRFIELD(__LINE__)),
+    [ERR_MAP(n)] = offsetof(union sys_errname_t, MSGSTRFIELD(__LINE__)),
 #include <errlist.h>
 #undef _S
 };

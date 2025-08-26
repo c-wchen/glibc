@@ -28,7 +28,7 @@ __libc_rwlock_define(extern, __libc_setlocale_lock attribute_hidden)
 
 #define CURRENT(item) (current->values[_NL_ITEM_INDEX (item)].string)
 #define CURRENT_WSTR(item) \
-  ((wchar_t *) current->values[_NL_ITEM_INDEX (item)].wstr)
+    ((wchar_t *) current->values[_NL_ITEM_INDEX (item)].wstr)
 
 static struct lc_time_data *
 _nl_init_alt_digit(struct __locale_data *current)

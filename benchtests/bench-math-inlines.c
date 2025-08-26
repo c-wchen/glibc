@@ -29,42 +29,42 @@
 #include <stdint.h>
 
 #define BOOLTEST(func)                    \
-static int __attribute__((noinline))              \
-func ## _f (double d, int i)                  \
-{                             \
-  if (func (d))                       \
-    return (int) d + i;                   \
-  else                            \
-    return 5;                         \
-}                             \
-static int                        \
-func ## _t (volatile double *p, size_t n, size_t iters)   \
-{                             \
-  int i, j;                       \
-  int res = 0;                        \
-  for (j = 0; j < iters; j++)                 \
-    for (i = 0; i < n; i++)               \
-      if (func ## _f (p[i] * 2.0, i) != 0)        \
-    res += 5;                     \
-  return res;                         \
-}
+    static int __attribute__((noinline))              \
+    func ## _f (double d, int i)                  \
+    {                             \
+        if (func (d))                       \
+            return (int) d + i;                   \
+        else                            \
+            return 5;                         \
+    }                             \
+    static int                        \
+    func ## _t (volatile double *p, size_t n, size_t iters)   \
+    {                             \
+        int i, j;                       \
+        int res = 0;                        \
+        for (j = 0; j < iters; j++)                 \
+            for (i = 0; i < n; i++)               \
+                if (func ## _f (p[i] * 2.0, i) != 0)        \
+                    res += 5;                     \
+        return res;                         \
+    }
 
 #define VALUETEST(func)                   \
-static int __attribute__((noinline))              \
-func ## _f (double d)                     \
-{                             \
-  return func (d);                    \
-}                             \
-static int                        \
-func ## _t (volatile double *p, size_t n, size_t iters)   \
-{                             \
-  int i, j;                       \
-  int res = 0;                        \
-  for (j = 0; j < iters; j++)                 \
-    for (i = 0; i < n; i++)               \
-      res += func ## _f (p[i] * 2.0);             \
-  return res;                         \
-}
+    static int __attribute__((noinline))              \
+    func ## _f (double d)                     \
+    {                             \
+        return func (d);                    \
+    }                             \
+    static int                        \
+    func ## _t (volatile double *p, size_t n, size_t iters)   \
+    {                             \
+        int i, j;                       \
+        int res = 0;                        \
+        for (j = 0; j < iters; j++)                 \
+            for (i = 0; i < n; i++)               \
+                res += func ## _f (p[i] * 2.0);             \
+        return res;                         \
+    }
 
 typedef union {
     double value;
@@ -72,11 +72,11 @@ typedef union {
 } ieee_double_shape_type;
 
 #define EXTRACT_WORDS64(i,d)                  \
-do {                              \
-  ieee_double_shape_type gh_u;                \
-  gh_u.value = (d);                   \
-  (i) = gh_u.word;                    \
-} while (0)
+    do {                              \
+        ieee_double_shape_type gh_u;                \
+        gh_u.value = (d);                   \
+        (i) = gh_u.word;                    \
+    } while (0)
 
 /* Inlines similar to existing math_private.h versions.  */
 
@@ -111,7 +111,7 @@ static __always_inline int __finite_inl(double d)
 #define __isfinite_builtin(X) __builtin_isfinite (X)
 #define __isnormal_builtin(X) __builtin_isnormal (X)
 #define __fpclassify_builtin(X) __builtin_fpclassify (FP_NAN, FP_INFINITE,  \
-                  FP_NORMAL, FP_SUBNORMAL, FP_ZERO, (X))
+        FP_NORMAL, FP_SUBNORMAL, FP_ZERO, (X))
 
 static double __attribute((noinline))
 kernel_standard(double x, double y, int z)

@@ -114,33 +114,33 @@ typedef struct td_thr_events {
 
 /* Event set manipulation macros. */
 #define __td_eventmask(n) \
-  (UINT32_C (1) << (((n) - 1) & BT_UIMASK))
+    (UINT32_C (1) << (((n) - 1) & BT_UIMASK))
 #define __td_eventword(n) \
-  ((UINT32_C ((n) - 1)) >> BT_UISHIFT)
+    ((UINT32_C ((n) - 1)) >> BT_UISHIFT)
 
 #define td_event_emptyset(setp) \
-  do {                                        \
-    int __i;                                      \
-    for (__i = TD_EVENTSIZE; __i > 0; --__i)                      \
-      (setp)->event_bits[__i - 1] = 0;                        \
-  } while (0)
+    do {                                        \
+        int __i;                                      \
+        for (__i = TD_EVENTSIZE; __i > 0; --__i)                      \
+            (setp)->event_bits[__i - 1] = 0;                        \
+    } while (0)
 
 #define td_event_fillset(setp) \
-  do {                                        \
-    int __i;                                      \
-    for (__i = TD_EVENTSIZE; __i > 0; --__i)                      \
-      (setp)->event_bits[__i - 1] = UINT32_C (0xffffffff);            \
-  } while (0)
+    do {                                        \
+        int __i;                                      \
+        for (__i = TD_EVENTSIZE; __i > 0; --__i)                      \
+            (setp)->event_bits[__i - 1] = UINT32_C (0xffffffff);            \
+    } while (0)
 
 #define td_event_addset(setp, n) \
-  (((setp)->event_bits[__td_eventword (n)]) |= __td_eventmask (n))
+    (((setp)->event_bits[__td_eventword (n)]) |= __td_eventmask (n))
 #define td_event_delset(setp, n) \
-  (((setp)->event_bits[__td_eventword (n)]) &= ~__td_eventmask (n))
+    (((setp)->event_bits[__td_eventword (n)]) &= ~__td_eventmask (n))
 #define td_eventismember(setp, n) \
-  (__td_eventmask (n) & ((setp)->event_bits[__td_eventword (n)]))
+    (__td_eventmask (n) & ((setp)->event_bits[__td_eventword (n)]))
 #if TD_EVENTSIZE == 2
 # define td_eventisempty(setp) \
-  (!((setp)->event_bits[0]) && !((setp)->event_bits[1]))
+    (!((setp)->event_bits[0]) && !((setp)->event_bits[1]))
 #else
 # error "td_eventisempty must be changed to match TD_EVENTSIZE"
 #endif

@@ -76,15 +76,15 @@
 
 #ifdef COMPILE_WSCANF
 # define ungetc(c, s)   ((void) (c == WEOF                    \
-                 || (--read_in,                   \
-                     _IO_sputbackwc (s, c))))
+                                 || (--read_in,                   \
+                                     _IO_sputbackwc (s, c))))
 # define ungetc_not_eof(c, s)   ((void) (--read_in,               \
-                     _IO_sputbackwc (s, c)))
+                                 _IO_sputbackwc (s, c)))
 # define inchar()   (c == WEOF ? ((errno = inchar_errno), WEOF)       \
-             : ((c = _IO_getwc_unlocked (s)),             \
-                (void) (c != WEOF                     \
-                    ? ++read_in                   \
-                    : (size_t) (inchar_errno = errno)), c))
+                     : ((c = _IO_getwc_unlocked (s)),             \
+                        (void) (c != WEOF                     \
+                                ? ++read_in                   \
+                                : (size_t) (inchar_errno = errno)), c))
 
 # define ISSPACE(Ch)      iswspace (Ch)
 # define ISDIGIT(Ch)      iswdigit (Ch)
@@ -110,22 +110,22 @@
 # define EOF        WEOF
 #else
 # define ungetc(c, s)   ((void) ((int) c == EOF                   \
-                 || (--read_in,                   \
-                     _IO_sputbackc (s, (unsigned char) c))))
+                                 || (--read_in,                   \
+                                     _IO_sputbackc (s, (unsigned char) c))))
 # define ungetc_not_eof(c, s)   ((void) (--read_in,               \
-                     _IO_sputbackc (s, (unsigned char) c)))
+                                 _IO_sputbackc (s, (unsigned char) c)))
 # define inchar()   (c == EOF ? ((errno = inchar_errno), EOF)         \
-             : ((c = _IO_getc_unlocked (s)),              \
-                (void) (c != EOF                      \
-                    ? ++read_in                   \
-                    : (size_t) (inchar_errno = errno)), c))
+                     : ((c = _IO_getc_unlocked (s)),              \
+                        (void) (c != EOF                      \
+                                ? ++read_in                   \
+                                : (size_t) (inchar_errno = errno)), c))
 # define ISSPACE(Ch)      __isspace_l (Ch, loc)
 # define ISDIGIT(Ch)      __isdigit_l (Ch, loc)
 # define ISXDIGIT(Ch)     __isxdigit_l (Ch, loc)
 # define TOLOWER(Ch)      __tolower_l ((unsigned char) (Ch), loc)
 # define ORIENT   if (_IO_vtable_offset (s) == 0                  \
-                  && _IO_fwide (s, -1) != -1)             \
-                return EOF
+                      && _IO_fwide (s, -1) != -1)             \
+    return EOF
 
 # define L_(Str)    Str
 # define CHAR_T     char
@@ -136,53 +136,53 @@
 #include "printf-parse.h" /* Use read_int.  */
 
 #define encode_error() do {                           \
-              __set_errno (EILSEQ);                   \
-              goto errout;                        \
-            } while (0)
+        __set_errno (EILSEQ);                   \
+        goto errout;                        \
+    } while (0)
 #define conv_error()    do {                              \
-              goto errout;                        \
-            } while (0)
+        goto errout;                        \
+    } while (0)
 #define input_error()   do {                              \
-              if (done == 0) done = EOF;                  \
-              goto errout;                        \
-            } while (0)
+        if (done == 0) done = EOF;                  \
+        goto errout;                        \
+    } while (0)
 #define add_ptr_to_free(ptr)                              \
-  do                                          \
+    do                                          \
     {                                         \
-      if (ptrs_to_free == NULL                            \
-      || ptrs_to_free->count == (sizeof (ptrs_to_free->ptrs)          \
-                     / sizeof (ptrs_to_free->ptrs[0])))       \
-    {                                     \
-      struct ptrs_to_free *new_ptrs = alloca (sizeof (*ptrs_to_free));    \
-      new_ptrs->count = 0;                            \
-      new_ptrs->next = ptrs_to_free;                      \
-      ptrs_to_free = new_ptrs;                        \
-    }                                     \
-      ptrs_to_free->ptrs[ptrs_to_free->count++] = (ptr);              \
+        if (ptrs_to_free == NULL                            \
+            || ptrs_to_free->count == (sizeof (ptrs_to_free->ptrs)          \
+                                       / sizeof (ptrs_to_free->ptrs[0])))       \
+        {                                     \
+            struct ptrs_to_free *new_ptrs = alloca (sizeof (*ptrs_to_free));    \
+            new_ptrs->count = 0;                            \
+            new_ptrs->next = ptrs_to_free;                      \
+            ptrs_to_free = new_ptrs;                        \
+        }                                     \
+        ptrs_to_free->ptrs[ptrs_to_free->count++] = (ptr);              \
     }                                         \
-  while (0)
+    while (0)
 #define ARGCHECK(s, format)                           \
-  do                                          \
+    do                                          \
     {                                         \
-      /* Check file argument for consistence.  */                 \
-      CHECK_FILE (s, EOF);                            \
-      if (s->_flags & _IO_NO_READS)                       \
-    {                                     \
-      __set_errno (EBADF);                            \
-      return EOF;                                 \
-    }                                     \
-      else if (format == NULL)                            \
-    {                                     \
-      __set_errno (EINVAL);                           \
-      return EOF;                                 \
-    }                                     \
+        /* Check file argument for consistence.  */                 \
+        CHECK_FILE (s, EOF);                            \
+        if (s->_flags & _IO_NO_READS)                       \
+        {                                     \
+            __set_errno (EBADF);                            \
+            return EOF;                                 \
+        }                                     \
+        else if (format == NULL)                            \
+        {                                     \
+            __set_errno (EINVAL);                           \
+            return EOF;                                 \
+        }                                     \
     } while (0)
 #define LOCK_STREAM(S)                                \
-  __libc_cleanup_region_start (1, (void (*) (void *)) &_IO_funlockfile, (S)); \
-  _IO_flockfile (S)
+    __libc_cleanup_region_start (1, (void (*) (void *)) &_IO_funlockfile, (S)); \
+    _IO_flockfile (S)
 #define UNLOCK_STREAM(S)                              \
-  _IO_funlockfile (S);                                \
-  __libc_cleanup_region_end (0)
+    _IO_funlockfile (S);                                \
+    __libc_cleanup_region_end (0)
 
 struct ptrs_to_free {
     size_t count;
@@ -379,31 +379,31 @@ __vfscanf_internal(FILE *s, const char *format, va_list argptr,
          otherwise it is the next argument after the state now in ARG.  */
 #ifdef __va_copy
 # define ARG(type)  (argpos == 0 ? va_arg (arg, type)             \
-             : ({ unsigned int pos = argpos;              \
-                  va_list arg;                    \
-                  __va_copy (arg, argptr);                \
-                  while (--pos > 0)                   \
-                (void) va_arg (arg, void *);              \
-                  va_arg (arg, type);                 \
-                }))
+: ({ unsigned int pos = argpos;              \
+    va_list arg;                    \
+    __va_copy (arg, argptr);                \
+    while (--pos > 0)                   \
+        (void) va_arg (arg, void *);              \
+    va_arg (arg, type);                 \
+}))
 #else
 # if 0
         /* XXX Possible optimization.  */
 #  define ARG(type) (argpos == 0 ? va_arg (arg, type)             \
-             : ({ va_list arg = (va_list) argptr;             \
-                  arg = (va_list) ((char *) arg           \
-                           + (argpos - 1)             \
-                           * __va_rounded_size (void *)); \
-                  va_arg (arg, type);                 \
-               }))
+: ({ va_list arg = (va_list) argptr;             \
+    arg = (va_list) ((char *) arg           \
+                     + (argpos - 1)             \
+                     * __va_rounded_size (void *)); \
+    va_arg (arg, type);                 \
+}))
 # else
 #  define ARG(type) (argpos == 0 ? va_arg (arg, type)             \
-             : ({ unsigned int pos = argpos;              \
-                  va_list arg = (va_list) argptr;             \
-                  while (--pos > 0)                   \
-                (void) va_arg (arg, void *);              \
-                  va_arg (arg, type);                 \
-                }))
+: ({ unsigned int pos = argpos;              \
+    va_list arg = (va_list) argptr;             \
+    while (--pos > 0)                   \
+        (void) va_arg (arg, void *);              \
+    va_arg (arg, type);                 \
+}))
 # endif
 #endif
 
@@ -729,34 +729,34 @@ got_width:
                     }
 
 #define STRING_ARG(Str, Type, Width)                          \
-          do if (!(flags & SUPPRESS))                     \
+    do if (!(flags & SUPPRESS))                     \
         {                                 \
-          if (flags & MALLOC)                         \
+            if (flags & MALLOC)                         \
             {                                 \
-              /* The string is to be stored in a malloc'd buffer.  */ \
-              /* For %mS using char ** is actually wrong, but         \
-             shouldn't make a difference on any arch glibc        \
-             supports and would unnecessarily complicate          \
-             things. */                       \
-              strptr = ARG (char **);                     \
-              if (strptr == NULL)                     \
-            conv_error ();                        \
-              /* Allocate an initial buffer.  */              \
-              strsize = Width;                        \
-              *strptr = (char *) malloc (strsize * sizeof (Type));    \
-              Str = (Type *) *strptr;                     \
-              if (Str != NULL)                        \
-            add_ptr_to_free (strptr);                 \
-              else if (flags & POSIX_MALLOC)                  \
-            {                             \
-              done = EOF;                         \
-              goto errout;                        \
-            }                             \
+                /* The string is to be stored in a malloc'd buffer.  */ \
+                /* For %mS using char ** is actually wrong, but         \
+                shouldn't make a difference on any arch glibc        \
+                supports and would unnecessarily complicate          \
+                things. */                       \
+                strptr = ARG (char **);                     \
+                if (strptr == NULL)                     \
+                    conv_error ();                        \
+                /* Allocate an initial buffer.  */              \
+                strsize = Width;                        \
+                *strptr = (char *) malloc (strsize * sizeof (Type));    \
+                Str = (Type *) *strptr;                     \
+                if (Str != NULL)                        \
+                    add_ptr_to_free (strptr);                 \
+                else if (flags & POSIX_MALLOC)                  \
+                {                             \
+                    done = EOF;                         \
+                    goto errout;                        \
+                }                             \
             }                                 \
-          else                                \
-            Str = ARG (Type *);                       \
-          if (Str == NULL)                        \
-            conv_error ();                        \
+            else                                \
+                Str = ARG (Type *);                       \
+            if (Str == NULL)                        \
+                conv_error ();                        \
         } while (0)
 #ifdef COMPILE_WSCANF
                     STRING_ARG(str, char, 100);

@@ -84,14 +84,14 @@ enum {
 
 
 #define PTHREAD_MUTEX_INITIALIZER \
- { {  __PTHREAD_MUTEX_INITIALIZER (PTHREAD_MUTEX_TIMED_NP) } }
+    { {  __PTHREAD_MUTEX_INITIALIZER (PTHREAD_MUTEX_TIMED_NP) } }
 #ifdef __USE_GNU
 # define PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP \
- { {  __PTHREAD_MUTEX_INITIALIZER (PTHREAD_MUTEX_RECURSIVE_NP) } }
+    { {  __PTHREAD_MUTEX_INITIALIZER (PTHREAD_MUTEX_RECURSIVE_NP) } }
 # define PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP \
- { {  __PTHREAD_MUTEX_INITIALIZER (PTHREAD_MUTEX_ERRORCHECK_NP) } }
+    { {  __PTHREAD_MUTEX_INITIALIZER (PTHREAD_MUTEX_ERRORCHECK_NP) } }
 # define PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP \
- { {  __PTHREAD_MUTEX_INITIALIZER (PTHREAD_MUTEX_ADAPTIVE_NP) } }
+    { {  __PTHREAD_MUTEX_INITIALIZER (PTHREAD_MUTEX_ADAPTIVE_NP) } }
 #endif
 
 
@@ -107,10 +107,10 @@ enum {
 
 /* Read-write lock initializers.  */
 # define PTHREAD_RWLOCK_INITIALIZER \
-  { { __PTHREAD_RWLOCK_INITIALIZER (PTHREAD_RWLOCK_DEFAULT_NP) } }
+    { { __PTHREAD_RWLOCK_INITIALIZER (PTHREAD_RWLOCK_DEFAULT_NP) } }
 # ifdef __USE_GNU
 #  define PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP \
-  { { __PTHREAD_RWLOCK_INITIALIZER (PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP) } }
+    { { __PTHREAD_RWLOCK_INITIALIZER (PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP) } }
 # endif
 #endif  /* Unix98 or XOpen2K */
 
@@ -590,23 +590,23 @@ public:
    pthread_cleanup_push and pthread_cleanup_pop are macros and must always
    be used in matching pairs at the same nesting level of braces.  */
 #  define pthread_cleanup_push(routine, arg) \
-  do {                                        \
-    __pthread_cleanup_class __clframe (routine, arg)
+    do {                                        \
+        __pthread_cleanup_class __clframe (routine, arg)
 
 /* Remove a cleanup handler installed by the matching pthread_cleanup_push.
    If EXECUTE is non-zero, the handler function is called. */
 #  define pthread_cleanup_pop(execute) \
     __clframe.__setdoit (execute);                        \
-  } while (0)
+    } while (0)
 
 #  ifdef __USE_GNU
 /* Install a cleanup handler as pthread_cleanup_push does, but also
    saves the current cancellation type and sets it to deferred
    cancellation.  */
 #   define pthread_cleanup_push_defer_np(routine, arg) \
-  do {                                        \
-    __pthread_cleanup_class __clframe (routine, arg);                 \
-    __clframe.__defer ()
+    do {                                        \
+        __pthread_cleanup_class __clframe (routine, arg);                 \
+        __clframe.__defer ()
 
 /* Remove a cleanup handler as pthread_cleanup_pop does, but also
    restores the cancellation type that was in effect when the matching
@@ -614,7 +614,7 @@ public:
 #   define pthread_cleanup_pop_restore_np(execute) \
     __clframe.__restore ();                           \
     __clframe.__setdoit (execute);                        \
-  } while (0)
+    } while (0)
 #  endif
 # else
 /* Function called to call the cleanup handler.  As an extern inline
@@ -636,30 +636,30 @@ __extern_inline void __pthread_cleanup_routine(struct __pthread_cleanup_frame *_
    pthread_cleanup_push and pthread_cleanup_pop are macros and must always
    be used in matching pairs at the same nesting level of braces.  */
 #  define pthread_cleanup_push(routine, arg) \
-  do {                                        \
-    struct __pthread_cleanup_frame __clframe                      \
-      __attribute__ ((__cleanup__ (__pthread_cleanup_routine)))           \
-      = { .__cancel_routine = (routine), .__cancel_arg = (arg),           \
-      .__do_it = 1 };
+    do {                                        \
+        struct __pthread_cleanup_frame __clframe                      \
+        __attribute__ ((__cleanup__ (__pthread_cleanup_routine)))           \
+            = { .__cancel_routine = (routine), .__cancel_arg = (arg),           \
+                .__do_it = 1 };
 
 /* Remove a cleanup handler installed by the matching pthread_cleanup_push.
    If EXECUTE is non-zero, the handler function is called. */
 #  define pthread_cleanup_pop(execute) \
     __clframe.__do_it = (execute);                        \
-  } while (0)
+    } while (0)
 
 #  ifdef __USE_GNU
 /* Install a cleanup handler as pthread_cleanup_push does, but also
    saves the current cancellation type and sets it to deferred
    cancellation.  */
 #   define pthread_cleanup_push_defer_np(routine, arg) \
-  do {                                        \
-    struct __pthread_cleanup_frame __clframe                      \
-      __attribute__ ((__cleanup__ (__pthread_cleanup_routine)))           \
-      = { .__cancel_routine = (routine), .__cancel_arg = (arg),           \
-      .__do_it = 1 };                             \
-    (void) pthread_setcanceltype (PTHREAD_CANCEL_DEFERRED,            \
-                  &__clframe.__cancel_type)
+    do {                                        \
+        struct __pthread_cleanup_frame __clframe                      \
+        __attribute__ ((__cleanup__ (__pthread_cleanup_routine)))           \
+            = { .__cancel_routine = (routine), .__cancel_arg = (arg),           \
+                .__do_it = 1 };                             \
+        (void) pthread_setcanceltype (PTHREAD_CANCEL_DEFERRED,            \
+                                      &__clframe.__cancel_type)
 
 /* Remove a cleanup handler as pthread_cleanup_pop does, but also
    restores the cancellation type that was in effect when the matching
@@ -667,7 +667,7 @@ __extern_inline void __pthread_cleanup_routine(struct __pthread_cleanup_frame *_
 #   define pthread_cleanup_pop_restore_np(execute) \
     (void) pthread_setcanceltype (__clframe.__cancel_type, NULL);         \
     __clframe.__do_it = (execute);                        \
-  } while (0)
+    } while (0)
 #  endif
 # endif
 #else
@@ -679,33 +679,33 @@ __extern_inline void __pthread_cleanup_routine(struct __pthread_cleanup_frame *_
    pthread_cleanup_push and pthread_cleanup_pop are macros and must always
    be used in matching pairs at the same nesting level of braces.  */
 # define pthread_cleanup_push(routine, arg) \
-  do {                                        \
-    __pthread_unwind_buf_t __cancel_buf;                      \
-    void (*__cancel_routine) (void *) = (routine);                \
-    void *__cancel_arg = (arg);                           \
-    int __not_first_call = __sigsetjmp_cancel (__cancel_buf.__cancel_jmp_buf, \
-                           0);                \
-    if (__glibc_unlikely (__not_first_call))                      \
-      {                                       \
-    __cancel_routine (__cancel_arg);                      \
-    __pthread_unwind_next (&__cancel_buf);                    \
-    /* NOTREACHED */                              \
-      }                                       \
-                                          \
-    __pthread_register_cancel (&__cancel_buf);                    \
-    do {
+    do {                                        \
+        __pthread_unwind_buf_t __cancel_buf;                      \
+        void (*__cancel_routine) (void *) = (routine);                \
+        void *__cancel_arg = (arg);                           \
+        int __not_first_call = __sigsetjmp_cancel (__cancel_buf.__cancel_jmp_buf, \
+                               0);                \
+        if (__glibc_unlikely (__not_first_call))                      \
+        {                                       \
+            __cancel_routine (__cancel_arg);                      \
+            __pthread_unwind_next (&__cancel_buf);                    \
+            /* NOTREACHED */                              \
+        }                                       \
+        \
+        __pthread_register_cancel (&__cancel_buf);                    \
+        do {
 extern void __pthread_register_cancel(__pthread_unwind_buf_t *__buf)
 __cleanup_fct_attribute;
 
 /* Remove a cleanup handler installed by the matching pthread_cleanup_push.
    If EXECUTE is non-zero, the handler function is called. */
 # define pthread_cleanup_pop(execute) \
-      do { } while (0);/* Empty to allow label before pthread_cleanup_pop.  */\
+    do { } while (0);/* Empty to allow label before pthread_cleanup_pop.  */\
     } while (0);                                  \
     __pthread_unregister_cancel (&__cancel_buf);                  \
     if (execute)                                  \
-      __cancel_routine (__cancel_arg);                        \
-  } while (0)
+        __cancel_routine (__cancel_arg);                        \
+    } while (0)
 extern void __pthread_unregister_cancel(__pthread_unwind_buf_t *__buf)
 __cleanup_fct_attribute;
 
@@ -714,21 +714,21 @@ __cleanup_fct_attribute;
    saves the current cancellation type and sets it to deferred
    cancellation.  */
 #  define pthread_cleanup_push_defer_np(routine, arg) \
-  do {                                        \
-    __pthread_unwind_buf_t __cancel_buf;                      \
-    void (*__cancel_routine) (void *) = (routine);                \
-    void *__cancel_arg = (arg);                           \
-    int __not_first_call = __sigsetjmp_cancel (__cancel_buf.__cancel_jmp_buf, \
-                           0);                \
-    if (__glibc_unlikely (__not_first_call))                      \
-      {                                       \
-    __cancel_routine (__cancel_arg);                      \
-    __pthread_unwind_next (&__cancel_buf);                    \
-    /* NOTREACHED */                              \
-      }                                       \
-                                          \
-    __pthread_register_cancel_defer (&__cancel_buf);                  \
-    do {
+    do {                                        \
+        __pthread_unwind_buf_t __cancel_buf;                      \
+        void (*__cancel_routine) (void *) = (routine);                \
+        void *__cancel_arg = (arg);                           \
+        int __not_first_call = __sigsetjmp_cancel (__cancel_buf.__cancel_jmp_buf, \
+                               0);                \
+        if (__glibc_unlikely (__not_first_call))                      \
+        {                                       \
+            __cancel_routine (__cancel_arg);                      \
+            __pthread_unwind_next (&__cancel_buf);                    \
+            /* NOTREACHED */                              \
+        }                                       \
+        \
+        __pthread_register_cancel_defer (&__cancel_buf);                  \
+        do {
 extern void __pthread_register_cancel_defer(__pthread_unwind_buf_t *__buf)
 __cleanup_fct_attribute;
 
@@ -736,12 +736,12 @@ __cleanup_fct_attribute;
    restores the cancellation type that was in effect when the matching
    pthread_cleanup_push_defer was called.  */
 #  define pthread_cleanup_pop_restore_np(execute) \
-      do { } while (0);/* Empty to allow label before pthread_cleanup_pop.  */\
+    do { } while (0);/* Empty to allow label before pthread_cleanup_pop.  */\
     } while (0);                                  \
     __pthread_unregister_cancel_restore (&__cancel_buf);              \
     if (execute)                                  \
-      __cancel_routine (__cancel_arg);                        \
-  } while (0)
+        __cancel_routine (__cancel_arg);                        \
+    } while (0)
 extern void __pthread_unregister_cancel_restore(__pthread_unwind_buf_t *__buf)
 __cleanup_fct_attribute;
 # endif
@@ -769,7 +769,7 @@ extern int __REDIRECT_NTHNL(__sigsetjmp_cancel,
                             __sigsetjmp) __attribute_returns_twice__;
 #else
 # define __sigsetjmp_cancel(env, savemask) \
-  __sigsetjmp ((struct __jmp_buf_tag *) (void *) (env), (savemask))
+    __sigsetjmp ((struct __jmp_buf_tag *) (void *) (env), (savemask))
 extern int __sigsetjmp(struct __jmp_buf_tag __env[1],
                        int __savemask) __THROWNL;
 #endif

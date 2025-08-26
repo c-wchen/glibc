@@ -24,23 +24,23 @@
 /* Wrapper from scalar to SVE function. Cannot just use VECTOR_WRAPPER due to
    predication.  */
 #define SVE_VECTOR_WRAPPER(scalar_func, vector_func)                          \
-  extern VEC_TYPE vector_func (VEC_TYPE, svbool_t);                           \
-  FLOAT scalar_func (FLOAT x)                                                 \
-  {                                                                           \
-    VEC_TYPE mx = svdup_n_f32 (x);                                            \
-    VEC_TYPE mr = vector_func (mx, svptrue_b32 ());                           \
-    return svlastb_f32 (svptrue_b32 (), mr);                                  \
-  }
+    extern VEC_TYPE vector_func (VEC_TYPE, svbool_t);                           \
+    FLOAT scalar_func (FLOAT x)                                                 \
+    {                                                                           \
+        VEC_TYPE mx = svdup_n_f32 (x);                                            \
+        VEC_TYPE mr = vector_func (mx, svptrue_b32 ());                           \
+        return svlastb_f32 (svptrue_b32 (), mr);                                  \
+    }
 
 #define SVE_VECTOR_WRAPPER_ff(scalar_func, vector_func)                       \
-  extern VEC_TYPE vector_func (VEC_TYPE, VEC_TYPE, svbool_t);                 \
-  FLOAT scalar_func (FLOAT x, FLOAT y)                                        \
-  {                                                                           \
-    VEC_TYPE mx = svdup_n_f32 (x);                                            \
-    VEC_TYPE my = svdup_n_f32 (y);                                            \
-    VEC_TYPE mr = vector_func (mx, my, svptrue_b32 ());                       \
-    return svlastb_f32 (svptrue_b32 (), mr);                                  \
-  }
+    extern VEC_TYPE vector_func (VEC_TYPE, VEC_TYPE, svbool_t);                 \
+    FLOAT scalar_func (FLOAT x, FLOAT y)                                        \
+    {                                                                           \
+        VEC_TYPE mx = svdup_n_f32 (x);                                            \
+        VEC_TYPE my = svdup_n_f32 (y);                                            \
+        VEC_TYPE mr = vector_func (mx, my, svptrue_b32 ());                       \
+        return svlastb_f32 (svptrue_b32 (), mr);                                  \
+    }
 
 SVE_VECTOR_WRAPPER(acosf_sve, _ZGVsMxv_acosf)
 SVE_VECTOR_WRAPPER(acoshf_sve, _ZGVsMxv_acoshf)

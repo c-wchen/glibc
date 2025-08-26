@@ -23,23 +23,23 @@
 #define LOCAL_CPU_SETSIZE LOCAL_NUM_CPUS / 8
 
 #define PREPARE_CPU_SET(X) \
-  X = CPU_ALLOC (LOCAL_NUM_CPUS);
+    X = CPU_ALLOC (LOCAL_NUM_CPUS);
 
 /* Create a mapping so that access to the page before the cpuset generates a
    fault. The aim is to check the behavior for negative values since the
    interface accepts signed int. */
 #define PREPARE_CPU_SET_TO_FAULT_BEFORE(X) \
-  size_t local_sz_##X = CPU_ALLOC_SIZE(LOCAL_NUM_CPUS); \
-  struct support_next_to_fault local_##X = support_next_to_fault_allocate_before(local_sz_##X); \
-  X = (cpu_set_t *) local_##X.buffer;
+    size_t local_sz_##X = CPU_ALLOC_SIZE(LOCAL_NUM_CPUS); \
+    struct support_next_to_fault local_##X = support_next_to_fault_allocate_before(local_sz_##X); \
+    X = (cpu_set_t *) local_##X.buffer;
 
 /* Create a mapping so that access to the page after the cpuset generates a
    fault. The aim is to check the behavior for values above CPU count since the
    interface accepts signed int. */
 #define PREPARE_CPU_SET_TO_FAULT(X) \
-  size_t local_sz_##X = CPU_ALLOC_SIZE(LOCAL_NUM_CPUS); \
-  struct support_next_to_fault local_##X = support_next_to_fault_allocate(local_sz_##X); \
-  X = (cpu_set_t *) local_##X.buffer;
+    size_t local_sz_##X = CPU_ALLOC_SIZE(LOCAL_NUM_CPUS); \
+    struct support_next_to_fault local_##X = support_next_to_fault_allocate(local_sz_##X); \
+    X = (cpu_set_t *) local_##X.buffer;
 
 #define GET_SIZE() (size_t) CPU_ALLOC_SIZE(LOCAL_NUM_CPUS)
 
@@ -49,11 +49,11 @@
 #define LOCAL_CPU_ISSET(cpu, sz, cpusetp) CPU_ISSET_S(cpu, sz, cpusetp)
 #define LOCAL_CPU_COUNT(sz, cpusetp) CPU_COUNT_S(sz, cpusetp)
 #define LOCAL_CPU_AND(sz, destsetp, srcsetp1, srcsetp2) \
-  CPU_AND_S(sz, destsetp, srcsetp1, srcsetp2)
+    CPU_AND_S(sz, destsetp, srcsetp1, srcsetp2)
 #define LOCAL_CPU_OR(sz, destsetp, srcsetp1, srcsetp2) \
-  CPU_OR_S(sz, destsetp, srcsetp1, srcsetp2)
+    CPU_OR_S(sz, destsetp, srcsetp1, srcsetp2)
 #define LOCAL_CPU_XOR(sz, destsetp, srcsetp1, srcsetp2) \
-  CPU_XOR_S(sz, destsetp, srcsetp1, srcsetp2)
+    CPU_XOR_S(sz, destsetp, srcsetp1, srcsetp2)
 #define LOCAL_CPU_EQUAL(sz, setp1, setp2) CPU_EQUAL_S(sz, setp1, setp2)
 
 #define CLEAN_CPU_SET(cpusetp) CPU_FREE(cpusetp)

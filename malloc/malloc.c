@@ -329,7 +329,7 @@
    larger pages provide less entropy, although the pointer mangling
    still works.  */
 #define PROTECT_PTR(pos, ptr) \
-  ((__typeof (ptr)) ((((size_t) pos) >> 12) ^ ((size_t) ptr)))
+    ((__typeof (ptr)) ((((size_t) pos) >> 12) ^ ((size_t) ptr)))
 #define REVEAL_PTR(ptr)  PROTECT_PTR (&ptr, ptr)
 
 /*
@@ -1126,7 +1126,7 @@ static size_t musable(void *mem);
 #endif
 
 #define MMAP(addr, size, prot, flags) \
- __mmap((addr), (size), (prot), (flags)|MAP_ANONYMOUS|MAP_PRIVATE, -1, 0)
+    __mmap((addr), (size), (prot), (flags)|MAP_ANONYMOUS|MAP_PRIVATE, -1, 0)
 
 
 /*
@@ -1304,7 +1304,7 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 /* The smallest size we can malloc is an aligned minimal chunk */
 
 #define MINSIZE  \
-  (unsigned long)(((MIN_CHUNK_SIZE+MALLOC_ALIGN_MASK) & ~MALLOC_ALIGN_MASK))
+    (unsigned long)(((MIN_CHUNK_SIZE+MALLOC_ALIGN_MASK) & ~MALLOC_ALIGN_MASK))
 
 /* Check if m has acceptable alignment */
 
@@ -1316,9 +1316,9 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 /* Note: This must be a macro that evaluates to a compile time constant
    if passed a literal constant.  */
 #define request2size(req)                                         \
-  (((req) + SIZE_SZ + MALLOC_ALIGN_MASK < MINSIZE)  ?             \
-   MINSIZE :                                                      \
-   ((req) + SIZE_SZ + MALLOC_ALIGN_MASK) & ~MALLOC_ALIGN_MASK)
+    (((req) + SIZE_SZ + MALLOC_ALIGN_MASK < MINSIZE)  ?             \
+     MINSIZE :                                                      \
+     ((req) + SIZE_SZ + MALLOC_ALIGN_MASK) & ~MALLOC_ALIGN_MASK)
 
 /* Check if REQ overflows when padded and aligned and if the resulting
    value is less than PTRDIFF_T.  Returns the requested size or
@@ -1415,25 +1415,25 @@ static __always_inline size_t checked_request2size(size_t req) __nonnull(1)
 
 /* extract p's inuse bit */
 #define inuse(p)                                  \
-  ((((mchunkptr) (((char *) (p)) + chunksize (p)))->mchunk_size) & PREV_INUSE)
+    ((((mchunkptr) (((char *) (p)) + chunksize (p)))->mchunk_size) & PREV_INUSE)
 
 /* set/clear chunk as being inuse without otherwise disturbing */
 #define set_inuse(p)                                  \
-  ((mchunkptr) (((char *) (p)) + chunksize (p)))->mchunk_size |= PREV_INUSE
+    ((mchunkptr) (((char *) (p)) + chunksize (p)))->mchunk_size |= PREV_INUSE
 
 #define clear_inuse(p)                                \
-  ((mchunkptr) (((char *) (p)) + chunksize (p)))->mchunk_size &= ~(PREV_INUSE)
+    ((mchunkptr) (((char *) (p)) + chunksize (p)))->mchunk_size &= ~(PREV_INUSE)
 
 
 /* check/set/clear inuse bits in known places */
 #define inuse_bit_at_offset(p, s)                         \
-  (((mchunkptr) (((char *) (p)) + (s)))->mchunk_size & PREV_INUSE)
+    (((mchunkptr) (((char *) (p)) + (s)))->mchunk_size & PREV_INUSE)
 
 #define set_inuse_bit_at_offset(p, s)                         \
-  (((mchunkptr) (((char *) (p)) + (s)))->mchunk_size |= PREV_INUSE)
+    (((mchunkptr) (((char *) (p)) + (s)))->mchunk_size |= PREV_INUSE)
 
 #define clear_inuse_bit_at_offset(p, s)                       \
-  (((mchunkptr) (((char *) (p)) + (s)))->mchunk_size &= ~(PREV_INUSE))
+    (((mchunkptr) (((char *) (p)) + (s)))->mchunk_size &= ~(PREV_INUSE))
 
 
 /* Set size at head, without disturbing its use bit */
@@ -1451,9 +1451,9 @@ static __always_inline size_t checked_request2size(size_t req) __nonnull(1)
 /* This is the size of the real usable data in the chunk.  Not valid for
    dumped heap chunks.  */
 #define memsize(p)                                                    \
-  (__MTAG_GRANULE_SIZE > SIZE_SZ && __glibc_unlikely (mtag_enabled) ? \
-    chunksize (p) - CHUNK_HDR_SZ :                                    \
-    chunksize (p) - CHUNK_HDR_SZ + (chunk_is_mmapped (p) ? 0 : SIZE_SZ))
+    (__MTAG_GRANULE_SIZE > SIZE_SZ && __glibc_unlikely (mtag_enabled) ? \
+     chunksize (p) - CHUNK_HDR_SZ :                                    \
+     chunksize (p) - CHUNK_HDR_SZ + (chunk_is_mmapped (p) ? 0 : SIZE_SZ))
 
 /* If memory tagging is enabled the layout changes to accommodate the granule
    size, this is wasteful for small allocations so not done by default.
@@ -1525,8 +1525,8 @@ typedef struct malloc_chunk *mbinptr;
 
 /* addressing -- note that bin_at(0) does not exist */
 #define bin_at(m, i) \
-  (mbinptr) (((char *) &((m)->bins[((i) - 1) * 2]))               \
-             - offsetof (struct malloc_chunk, fd))
+    (mbinptr) (((char *) &((m)->bins[((i) - 1) * 2]))               \
+               - offsetof (struct malloc_chunk, fd))
 
 /* analog of ++bin */
 #define next_bin(b)  ((mbinptr) ((char *) (b) + (sizeof (mchunkptr) << 1)))
@@ -1566,46 +1566,46 @@ typedef struct malloc_chunk *mbinptr;
 #define MIN_LARGE_SIZE    ((NSMALLBINS - SMALLBIN_CORRECTION) * SMALLBIN_WIDTH)
 
 #define in_smallbin_range(sz)  \
-  ((unsigned long) (sz) < (unsigned long) MIN_LARGE_SIZE)
+    ((unsigned long) (sz) < (unsigned long) MIN_LARGE_SIZE)
 
 #define smallbin_index(sz) \
-  ((SMALLBIN_WIDTH == 16 ? (((unsigned) (sz)) >> 4) : (((unsigned) (sz)) >> 3))\
-   + SMALLBIN_CORRECTION)
+    ((SMALLBIN_WIDTH == 16 ? (((unsigned) (sz)) >> 4) : (((unsigned) (sz)) >> 3))\
+     + SMALLBIN_CORRECTION)
 
 #define largebin_index_32(sz)                                                \
-  (((((unsigned long) (sz)) >> 6) <= 38) ?  56 + (((unsigned long) (sz)) >> 6) :\
-   ((((unsigned long) (sz)) >> 9) <= 20) ?  91 + (((unsigned long) (sz)) >> 9) :\
-   ((((unsigned long) (sz)) >> 12) <= 10) ? 110 + (((unsigned long) (sz)) >> 12) :\
-   ((((unsigned long) (sz)) >> 15) <= 4) ? 119 + (((unsigned long) (sz)) >> 15) :\
-   ((((unsigned long) (sz)) >> 18) <= 2) ? 124 + (((unsigned long) (sz)) >> 18) :\
-   126)
+    (((((unsigned long) (sz)) >> 6) <= 38) ?  56 + (((unsigned long) (sz)) >> 6) :\
+     ((((unsigned long) (sz)) >> 9) <= 20) ?  91 + (((unsigned long) (sz)) >> 9) :\
+     ((((unsigned long) (sz)) >> 12) <= 10) ? 110 + (((unsigned long) (sz)) >> 12) :\
+     ((((unsigned long) (sz)) >> 15) <= 4) ? 119 + (((unsigned long) (sz)) >> 15) :\
+     ((((unsigned long) (sz)) >> 18) <= 2) ? 124 + (((unsigned long) (sz)) >> 18) :\
+     126)
 
 #define largebin_index_32_big(sz)                                            \
-  (((((unsigned long) (sz)) >> 6) <= 45) ?  49 + (((unsigned long) (sz)) >> 6) :\
-   ((((unsigned long) (sz)) >> 9) <= 20) ?  91 + (((unsigned long) (sz)) >> 9) :\
-   ((((unsigned long) (sz)) >> 12) <= 10) ? 110 + (((unsigned long) (sz)) >> 12) :\
-   ((((unsigned long) (sz)) >> 15) <= 4) ? 119 + (((unsigned long) (sz)) >> 15) :\
-   ((((unsigned long) (sz)) >> 18) <= 2) ? 124 + (((unsigned long) (sz)) >> 18) :\
-   126)
+    (((((unsigned long) (sz)) >> 6) <= 45) ?  49 + (((unsigned long) (sz)) >> 6) :\
+     ((((unsigned long) (sz)) >> 9) <= 20) ?  91 + (((unsigned long) (sz)) >> 9) :\
+     ((((unsigned long) (sz)) >> 12) <= 10) ? 110 + (((unsigned long) (sz)) >> 12) :\
+     ((((unsigned long) (sz)) >> 15) <= 4) ? 119 + (((unsigned long) (sz)) >> 15) :\
+     ((((unsigned long) (sz)) >> 18) <= 2) ? 124 + (((unsigned long) (sz)) >> 18) :\
+     126)
 
 // XXX It remains to be seen whether it is good to keep the widths of
 // XXX the buckets the same or whether it should be scaled by a factor
 // XXX of two as well.
 #define largebin_index_64(sz)                                                \
-  (((((unsigned long) (sz)) >> 6) <= 48) ?  48 + (((unsigned long) (sz)) >> 6) :\
-   ((((unsigned long) (sz)) >> 9) <= 20) ?  91 + (((unsigned long) (sz)) >> 9) :\
-   ((((unsigned long) (sz)) >> 12) <= 10) ? 110 + (((unsigned long) (sz)) >> 12) :\
-   ((((unsigned long) (sz)) >> 15) <= 4) ? 119 + (((unsigned long) (sz)) >> 15) :\
-   ((((unsigned long) (sz)) >> 18) <= 2) ? 124 + (((unsigned long) (sz)) >> 18) :\
-   126)
+    (((((unsigned long) (sz)) >> 6) <= 48) ?  48 + (((unsigned long) (sz)) >> 6) :\
+     ((((unsigned long) (sz)) >> 9) <= 20) ?  91 + (((unsigned long) (sz)) >> 9) :\
+     ((((unsigned long) (sz)) >> 12) <= 10) ? 110 + (((unsigned long) (sz)) >> 12) :\
+     ((((unsigned long) (sz)) >> 15) <= 4) ? 119 + (((unsigned long) (sz)) >> 15) :\
+     ((((unsigned long) (sz)) >> 18) <= 2) ? 124 + (((unsigned long) (sz)) >> 18) :\
+     126)
 
 #define largebin_index(sz) \
-  (SIZE_SZ == 8 ? largebin_index_64 (sz)                                     \
-   : MALLOC_ALIGNMENT == 16 ? largebin_index_32_big (sz)                     \
-   : largebin_index_32 (sz))
+    (SIZE_SZ == 8 ? largebin_index_64 (sz)                                     \
+     : MALLOC_ALIGNMENT == 16 ? largebin_index_32_big (sz)                     \
+     : largebin_index_32 (sz))
 
 #define bin_index(sz) \
-  ((in_smallbin_range (sz)) ? smallbin_index (sz) : largebin_index (sz))
+    ((in_smallbin_range (sz)) ? smallbin_index (sz) : largebin_index (sz))
 
 /* Take a chunk off a bin list.  */
 static void unlink_chunk(mstate av, mchunkptr p)
@@ -1728,7 +1728,7 @@ typedef struct malloc_chunk *mfastbinptr;
 
 /* offset 2 to use otherwise unindexable first 2 bins */
 #define fastbin_index(sz) \
-  ((((unsigned int) (sz)) >> (SIZE_SZ == 8 ? 4 : 3)) - 2)
+    ((((unsigned int) (sz)) >> (SIZE_SZ == 8 ? 4 : 3)) - 2)
 
 
 /* The maximum fastbin request size we support */
@@ -1778,8 +1778,8 @@ static uint8_t global_max_fast;
  */
 
 #define set_max_fast(s) \
-  global_max_fast = (((size_t) (s) <= MALLOC_ALIGN_MASK - SIZE_SZ)  \
-                     ? MIN_CHUNK_SIZE / 2 : ((s + SIZE_SZ) & ~MALLOC_ALIGN_MASK))
+    global_max_fast = (((size_t) (s) <= MALLOC_ALIGN_MASK - SIZE_SZ)  \
+                       ? MIN_CHUNK_SIZE / 2 : ((s + SIZE_SZ) & ~MALLOC_ALIGN_MASK))
 
 static __always_inline INTERNAL_SIZE_T get_max_fast(void)
 {
@@ -3934,17 +3934,17 @@ static void *_int_malloc(mstate av, size_t bytes)
      */
 
 #define REMOVE_FB(fb, victim, pp)           \
-  do                            \
+    do                            \
     {                           \
-      victim = pp;                  \
-      if (victim == NULL)               \
-    break;                      \
-      pp = REVEAL_PTR (victim->fd);                                     \
-      if (__glibc_unlikely (pp != NULL && misaligned_chunk (pp)))       \
-    malloc_printerr ("malloc(): unaligned fastbin chunk detected"); \
+        victim = pp;                  \
+        if (victim == NULL)               \
+            break;                      \
+        pp = REVEAL_PTR (victim->fd);                                     \
+        if (__glibc_unlikely (pp != NULL && misaligned_chunk (pp)))       \
+            malloc_printerr ("malloc(): unaligned fastbin chunk detected"); \
     }                           \
-  while ((pp = catomic_compare_and_exchange_val_acq (fb, pp, victim)) \
-     != victim);                    \
+    while ((pp = catomic_compare_and_exchange_val_acq (fb, pp, victim)) \
+           != victim);                    \
 
     if ((unsigned long)(nb) <= (unsigned long)(get_max_fast())) {
         idx = fastbin_index(nb);

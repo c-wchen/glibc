@@ -60,45 +60,45 @@ static inline bool elision_adapt(signed char *adapt_count, unsigned int status)
    sufficient.  */
 
 #define ELIDE_LOCK(adapt_count, is_lock_free)           \
-  ({                                \
-    int ret = 0;                        \
-                                \
-    if (atomic_load_relaxed (&(adapt_count)) <= 0)      \
-      {                             \
-        for (int i = __elision_aconf.retry_try_xbegin; i > 0; i--) \
-          {                         \
-            unsigned int status;                \
-        if ((status = _xbegin ()) == _XBEGIN_STARTED)   \
-          {                         \
-            if (is_lock_free)               \
-              {                     \
-            ret = 1;                    \
-            break;                  \
-              }                     \
-            _xabort (_ABORT_LOCK_BUSY);         \
-          }                         \
-        if (!elision_adapt (&(adapt_count), status))    \
-          break;                        \
-          }                         \
-      }                             \
-    else                            \
-      atomic_store_relaxed (&(adapt_count),         \
-      atomic_load_relaxed (&(adapt_count)) - 1);        \
-    ret;                            \
-  })
+    ({                                \
+        int ret = 0;                        \
+        \
+        if (atomic_load_relaxed (&(adapt_count)) <= 0)      \
+        {                             \
+            for (int i = __elision_aconf.retry_try_xbegin; i > 0; i--) \
+            {                         \
+                unsigned int status;                \
+                if ((status = _xbegin ()) == _XBEGIN_STARTED)   \
+                {                         \
+                    if (is_lock_free)               \
+                    {                     \
+                        ret = 1;                    \
+                        break;                  \
+                    }                     \
+                    _xabort (_ABORT_LOCK_BUSY);         \
+                }                         \
+                if (!elision_adapt (&(adapt_count), status))    \
+                    break;                        \
+            }                         \
+        }                             \
+        else                            \
+            atomic_store_relaxed (&(adapt_count),         \
+                                  atomic_load_relaxed (&(adapt_count)) - 1);        \
+        ret;                            \
+    })
 
 /* Returns true if lock defined by IS_LOCK_FREE was try-elided.
    ADAPT_COUNT is a per-lock state variable.  */
 
 #define ELIDE_TRYLOCK(adapt_count, is_lock_free, write) ({  \
-  int ret = 0;                      \
-  if (__elision_aconf.retry_try_xbegin > 0)     \
-    {                           \
-      if (write)                    \
-        _xabort (_ABORT_NESTED_TRYLOCK);        \
-      ret = ELIDE_LOCK (adapt_count, is_lock_free);     \
-    }                           \
-    ret;                        \
+        int ret = 0;                      \
+        if (__elision_aconf.retry_try_xbegin > 0)     \
+        {                           \
+            if (write)                    \
+                _xabort (_ABORT_NESTED_TRYLOCK);        \
+            ret = ELIDE_LOCK (adapt_count, is_lock_free);     \
+        }                           \
+        ret;                        \
     })
 
 /* Returns true if lock defined by IS_LOCK_FREE was elided.  The call
@@ -106,14 +106,14 @@ static inline bool elision_adapt(signed char *adapt_count, unsigned int status)
    lock which has not been locked.  */
 
 #define ELIDE_UNLOCK(is_lock_free)      \
-  ({                        \
-  int ret = 0;                  \
-  if (is_lock_free)             \
-    {                       \
-      _xend ();                 \
-      ret = 1;                  \
-    }                       \
-  ret;                      \
-  })
+    ({                        \
+        int ret = 0;                  \
+        if (is_lock_free)             \
+        {                       \
+            _xend ();                 \
+            ret = 1;                  \
+        }                       \
+        ret;                      \
+    })
 
 #endif

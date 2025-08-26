@@ -94,7 +94,7 @@ extern sigset_t _hurdsig_traced;
 /* Also see __USEPORT_CANCEL.  */
 
 #define __USEPORT(which, expr) \
-  HURD_PORT_USE (&_hurd_ports[INIT_PORT_##which], (expr))
+    HURD_PORT_USE (&_hurd_ports[INIT_PORT_##which], (expr))
 
 /* Function version of __USEPORT: calls OPERATE with a send right.  */
 

@@ -43,19 +43,19 @@
 #define MAX_NEEDED_TO       4
 #define ONE_DIRECTION       0
 #define PREPARE_LOOP \
-  int save_set;                                   \
-  int *setp = &data->__statep->__count;                       \
-  if (!FROM_DIRECTION && !data->__internal_use                    \
-      && data->__invocation_counter == 0)                     \
+    int save_set;                                   \
+    int *setp = &data->__statep->__count;                       \
+    if (!FROM_DIRECTION && !data->__internal_use                    \
+        && data->__invocation_counter == 0)                     \
     {                                         \
-      /* Emit the designator sequence.  */                    \
-      if (outbuf + 4 > outend)                            \
-    return __GCONV_FULL_OUTPUT;                       \
-                                          \
-      *outbuf++ = ESC;                                \
-      *outbuf++ = '$';                                \
-      *outbuf++ = ')';                                \
-      *outbuf++ = 'C';                                \
+        /* Emit the designator sequence.  */                    \
+        if (outbuf + 4 > outend)                            \
+            return __GCONV_FULL_OUTPUT;                       \
+        \
+        *outbuf++ = ESC;                                \
+        *outbuf++ = '$';                                \
+        *outbuf++ = ')';                                \
+        *outbuf++ = 'C';                                \
     }
 #define EXTRA_LOOP_ARGS     , setp
 
@@ -72,39 +72,39 @@ enum {
    the output state to the initial state.  This has to be done during the
    flushing.  */
 #define EMIT_SHIFT_TO_INIT \
-  if (data->__statep->__count != ASCII_set)                   \
+    if (data->__statep->__count != ASCII_set)                   \
     {                                         \
-      if (FROM_DIRECTION)                             \
-    {                                     \
-      /* It's easy, we don't have to emit anything, we just reset the     \
-         state for the input.  */                         \
-      data->__statep->__count &= 7;                       \
-      data->__statep->__count |= ASCII_set;                   \
-    }                                     \
-      else                                    \
-    {                                     \
-      /* We are not in the initial state.  To switch back we have         \
-         to emit `SI'.  */                            \
-      if (__glibc_unlikely (outbuf == outend))                \
-        /* We don't have enough room in the output buffer.  */        \
-        status = __GCONV_FULL_OUTPUT;                     \
-      else                                    \
+        if (FROM_DIRECTION)                             \
         {                                     \
-          /* Write out the shift sequence.  */                \
-          *outbuf++ = SI;                             \
-          data->__statep->__count = ASCII_set;                \
+            /* It's easy, we don't have to emit anything, we just reset the     \
+               state for the input.  */                         \
+            data->__statep->__count &= 7;                       \
+            data->__statep->__count |= ASCII_set;                   \
         }                                     \
-    }                                     \
+        else                                    \
+        {                                     \
+            /* We are not in the initial state.  To switch back we have         \
+               to emit `SI'.  */                            \
+            if (__glibc_unlikely (outbuf == outend))                \
+                /* We don't have enough room in the output buffer.  */        \
+                status = __GCONV_FULL_OUTPUT;                     \
+            else                                    \
+            {                                     \
+                /* Write out the shift sequence.  */                \
+                *outbuf++ = SI;                             \
+                data->__statep->__count = ASCII_set;                \
+            }                                     \
+        }                                     \
     }
 
 
 /* Since we might have to reset input pointer we must be able to save
    and restore the state.  */
 #define SAVE_RESET_STATE(Save) \
-  if (Save)                                   \
-    save_set = *setp;                                 \
-  else                                        \
-    *setp = save_set
+    if (Save)                                   \
+        save_set = *setp;                                 \
+    else                                        \
+        *setp = save_set
 
 
 /* First define the conversion function from ISO-2022-KR to UCS4.  */
@@ -113,77 +113,77 @@ enum {
 #define MIN_NEEDED_OUTPUT   MIN_NEEDED_TO
 #define LOOPFCT         FROM_LOOP
 #define BODY \
-  {                                       \
-    uint32_t ch = *inptr;                             \
-                                          \
-    /* This is a 7bit character set, disallow all 8bit characters.  */        \
-    if (__glibc_unlikely (ch > 0x7f))                         \
-      STANDARD_FROM_LOOP_ERR_HANDLER (1);                     \
-                                          \
-    /* Recognize escape sequences.  */                        \
-    if (__builtin_expect (ch, 0) == ESC)                      \
-      {                                       \
-    /* We don't really have to handle escape sequences since all the      \
-       switching is done using the SI and SO bytes.  But we have to       \
-       recognize `Esc $ ) C' since this is a kind of flag for this        \
-       encoding.  We simply ignore it.  */                    \
-    if (__builtin_expect (inptr + 2 > inend, 0)               \
-        || (inptr[1] == '$'                           \
-        && (__builtin_expect (inptr + 3 > inend, 0)           \
-            || (inptr[2] == ')'                       \
-            && __builtin_expect (inptr + 4 > inend, 0)))))        \
-      {                                   \
-        result = __GCONV_INCOMPLETE_INPUT;                    \
-        break;                                \
-      }                                   \
-    if (inptr[1] == '$' && inptr[2] == ')' && inptr[3] == 'C')        \
-      {                                   \
-        /* Yeah, yeah, we know this is ISO 2022-KR.  */           \
-        inptr += 4;                               \
-        continue;                                 \
-      }                                   \
-      }                                       \
-    else if (__builtin_expect (ch, 0) == SO)                      \
-      {                                       \
-    /* Switch to use KSC.  */                         \
-    ++inptr;                                  \
-    set = KSC5601_set;                            \
-    continue;                                 \
-      }                                       \
-    else if (__builtin_expect (ch, 0) == SI)                      \
-      {                                       \
-    /* Switch to use ASCII.  */                       \
-    ++inptr;                                  \
-    set = ASCII_set;                              \
-    continue;                                 \
-      }                                       \
-                                          \
-    if (set == ASCII_set)                             \
-      {                                       \
-    /* Almost done, just advance the input pointer.  */           \
-    ++inptr;                                  \
-      }                                       \
-    else                                      \
-      {                                       \
-    assert (set == KSC5601_set);                          \
-                                          \
-    /* Use the KSC 5601 table.  */                        \
-    ch = ksc5601_to_ucs4 (&inptr, inend - inptr, 0);              \
-                                          \
-    if (__glibc_unlikely (ch == 0))                       \
-      {                                   \
-        result = __GCONV_INCOMPLETE_INPUT;                    \
-        break;                                \
-      }                                   \
-    else if (__glibc_unlikely (ch == __UNKNOWN_10646_CHAR))           \
-      {                                   \
-        STANDARD_FROM_LOOP_ERR_HANDLER (1);                   \
-      }                                   \
-      }                                       \
-                                          \
-    put32 (outptr, ch);                               \
-    outptr += 4;                                  \
-  }
+    {                                       \
+        uint32_t ch = *inptr;                             \
+        \
+        /* This is a 7bit character set, disallow all 8bit characters.  */        \
+        if (__glibc_unlikely (ch > 0x7f))                         \
+            STANDARD_FROM_LOOP_ERR_HANDLER (1);                     \
+        \
+        /* Recognize escape sequences.  */                        \
+        if (__builtin_expect (ch, 0) == ESC)                      \
+        {                                       \
+            /* We don't really have to handle escape sequences since all the      \
+               switching is done using the SI and SO bytes.  But we have to       \
+               recognize `Esc $ ) C' since this is a kind of flag for this        \
+               encoding.  We simply ignore it.  */                    \
+            if (__builtin_expect (inptr + 2 > inend, 0)               \
+                || (inptr[1] == '$'                           \
+                    && (__builtin_expect (inptr + 3 > inend, 0)           \
+                        || (inptr[2] == ')'                       \
+                            && __builtin_expect (inptr + 4 > inend, 0)))))        \
+            {                                   \
+                result = __GCONV_INCOMPLETE_INPUT;                    \
+                break;                                \
+            }                                   \
+            if (inptr[1] == '$' && inptr[2] == ')' && inptr[3] == 'C')        \
+            {                                   \
+                /* Yeah, yeah, we know this is ISO 2022-KR.  */           \
+                inptr += 4;                               \
+                continue;                                 \
+            }                                   \
+        }                                       \
+        else if (__builtin_expect (ch, 0) == SO)                      \
+        {                                       \
+            /* Switch to use KSC.  */                         \
+            ++inptr;                                  \
+            set = KSC5601_set;                            \
+            continue;                                 \
+        }                                       \
+        else if (__builtin_expect (ch, 0) == SI)                      \
+        {                                       \
+            /* Switch to use ASCII.  */                       \
+            ++inptr;                                  \
+            set = ASCII_set;                              \
+            continue;                                 \
+        }                                       \
+        \
+        if (set == ASCII_set)                             \
+        {                                       \
+            /* Almost done, just advance the input pointer.  */           \
+            ++inptr;                                  \
+        }                                       \
+        else                                      \
+        {                                       \
+            assert (set == KSC5601_set);                          \
+            \
+            /* Use the KSC 5601 table.  */                        \
+            ch = ksc5601_to_ucs4 (&inptr, inend - inptr, 0);              \
+            \
+            if (__glibc_unlikely (ch == 0))                       \
+            {                                   \
+                result = __GCONV_INCOMPLETE_INPUT;                    \
+                break;                                \
+            }                                   \
+            else if (__glibc_unlikely (ch == __UNKNOWN_10646_CHAR))           \
+            {                                   \
+                STANDARD_FROM_LOOP_ERR_HANDLER (1);                   \
+            }                                   \
+        }                                       \
+        \
+        put32 (outptr, ch);                               \
+        outptr += 4;                                  \
+    }
 #define LOOP_NEED_FLAGS
 #define EXTRA_LOOP_DECLS    , int *setp
 #define INIT_PARAMS     int set = *setp
@@ -197,65 +197,65 @@ enum {
 #define MAX_NEEDED_OUTPUT   MAX_NEEDED_FROM
 #define LOOPFCT         TO_LOOP
 #define BODY \
-  {                                       \
-    uint32_t ch = get32 (inptr);                          \
-                                          \
-    /* First see whether we can write the character using the currently       \
-       selected character set.  */                        \
-    if (ch < 0x80)                                \
-      {                                       \
-    if (set != ASCII_set)                             \
-      {                                   \
-        *outptr++ = SI;                           \
-        set = ASCII_set;                              \
-        if (__glibc_unlikely (outptr == outend))                  \
-          {                                   \
-        result = __GCONV_FULL_OUTPUT;                     \
-        break;                                \
-          }                                   \
-      }                                   \
-                                          \
-    *outptr++ = ch;                               \
-      }                                       \
-    else                                      \
-      {                                       \
-    unsigned char buf[2];                             \
-    /* Fake initialization to keep gcc quiet.  */                 \
-    asm ("" : "=m" (buf));                            \
-                                          \
-    size_t written = ucs4_to_ksc5601 (ch, buf, 2);                \
-    if (__builtin_expect (written, 0) == __UNKNOWN_10646_CHAR)        \
-      {                                   \
-        UNICODE_TAG_HANDLER (ch, 4);                      \
-                                          \
-        /* Illegal character.  */                         \
-        STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
-      }                                   \
-    else                                      \
-      {                                   \
-        assert (written == 2);                        \
-                                          \
-        /* We use KSC 5601.  */                       \
-        if (set != KSC5601_set)                       \
-          {                                   \
-        *outptr++ = SO;                           \
-        set = KSC5601_set;                        \
-          }                                   \
-                                          \
-        if (__glibc_unlikely (outptr + 2 > outend))               \
-          {                                   \
-        result = __GCONV_FULL_OUTPUT;                     \
-        break;                                \
-          }                                   \
-                                          \
-        *outptr++ = buf[0];                           \
-        *outptr++ = buf[1];                           \
-      }                                   \
-      }                                       \
-                                          \
-    /* Now that we wrote the output increment the input pointer.  */          \
-    inptr += 4;                                   \
-  }
+    {                                       \
+        uint32_t ch = get32 (inptr);                          \
+        \
+        /* First see whether we can write the character using the currently       \
+           selected character set.  */                        \
+        if (ch < 0x80)                                \
+        {                                       \
+            if (set != ASCII_set)                             \
+            {                                   \
+                *outptr++ = SI;                           \
+                set = ASCII_set;                              \
+                if (__glibc_unlikely (outptr == outend))                  \
+                {                                   \
+                    result = __GCONV_FULL_OUTPUT;                     \
+                    break;                                \
+                }                                   \
+            }                                   \
+            \
+            *outptr++ = ch;                               \
+        }                                       \
+        else                                      \
+        {                                       \
+            unsigned char buf[2];                             \
+            /* Fake initialization to keep gcc quiet.  */                 \
+            asm ("" : "=m" (buf));                            \
+            \
+            size_t written = ucs4_to_ksc5601 (ch, buf, 2);                \
+            if (__builtin_expect (written, 0) == __UNKNOWN_10646_CHAR)        \
+            {                                   \
+                UNICODE_TAG_HANDLER (ch, 4);                      \
+                \
+                /* Illegal character.  */                         \
+                STANDARD_TO_LOOP_ERR_HANDLER (4);                     \
+            }                                   \
+            else                                      \
+            {                                   \
+                assert (written == 2);                        \
+                \
+                /* We use KSC 5601.  */                       \
+                if (set != KSC5601_set)                       \
+                {                                   \
+                    *outptr++ = SO;                           \
+                    set = KSC5601_set;                        \
+                }                                   \
+                \
+                if (__glibc_unlikely (outptr + 2 > outend))               \
+                {                                   \
+                    result = __GCONV_FULL_OUTPUT;                     \
+                    break;                                \
+                }                                   \
+                \
+                *outptr++ = buf[0];                           \
+                *outptr++ = buf[1];                           \
+            }                                   \
+        }                                       \
+        \
+        /* Now that we wrote the output increment the input pointer.  */          \
+        inptr += 4;                                   \
+    }
 #define LOOP_NEED_FLAGS
 #define EXTRA_LOOP_DECLS    , int *setp
 #define INIT_PARAMS     int set = *setp

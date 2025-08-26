@@ -35,13 +35,13 @@
 
 #ifdef _IO_MTSAFE_IO
 #define DEF_STDFILE(NAME, FD, CHAIN, FLAGS) \
-  static _IO_lock_t _IO_stdfile_##FD##_lock = _IO_lock_initializer; \
-  struct _IO_FILE_plus NAME \
-    = {FILEBUF_LITERAL(CHAIN, FLAGS, FD, NULL), &_IO_old_file_jumps};
+    static _IO_lock_t _IO_stdfile_##FD##_lock = _IO_lock_initializer; \
+    struct _IO_FILE_plus NAME \
+            = {FILEBUF_LITERAL(CHAIN, FLAGS, FD, NULL), &_IO_old_file_jumps};
 #else
 #define DEF_STDFILE(NAME, FD, CHAIN, FLAGS) \
-  struct _IO_FILE_plus NAME \
-    = {FILEBUF_LITERAL(CHAIN, FLAGS, FD, NULL), &_IO_old_file_jumps};
+    struct _IO_FILE_plus NAME \
+            = {FILEBUF_LITERAL(CHAIN, FLAGS, FD, NULL), &_IO_old_file_jumps};
 #endif
 
 DEF_STDFILE(_IO_stdin_, 0, 0, _IO_NO_WRITES);

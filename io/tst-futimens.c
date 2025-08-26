@@ -39,7 +39,7 @@ static int test_futimens_helper(const char *file, int fd, const struct timespec 
 }
 
 #define TEST_CALL(fname, fd, lname, v1, v2) \
-  test_futimens_helper (fname, fd, (struct timespec[]) { { v1, 0 }, \
-                             { v2, 0 } })
+    test_futimens_helper (fname, fd, (struct timespec[]) { { v1, 0 }, \
+        { v2, 0 } })
 
 #include "tst-utimensat-skeleton.c"

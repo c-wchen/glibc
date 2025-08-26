@@ -38,7 +38,7 @@ extern __typeof(memmove) __memmove_ppc;
 #if defined SHARED
 # undef libc_hidden_builtin_def
 # define libc_hidden_builtin_def(name)  \
-  __hidden_ver1 (__memmove_ppc, __GI_memmove, __memmove_ppc);
+    __hidden_ver1 (__memmove_ppc, __GI_memmove, __memmove_ppc);
 #endif
 
 #include <string/memmove.c>

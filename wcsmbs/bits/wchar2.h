@@ -199,10 +199,10 @@ __fortify_function_error_function __attribute_overloadable__ int __NTH(swprintf(
 #elif !defined __cplusplus
 /* XXX We might want to have support in gcc for swprintf.  */
 # define swprintf(s, n, ...) \
-  (__glibc_objsize (s) != (size_t) -1 || __USE_FORTIFY_LEVEL > 1              \
-   ? __swprintf_chk (s, n, __USE_FORTIFY_LEVEL - 1,               \
-             __glibc_objsize (s) / sizeof (wchar_t), __VA_ARGS__)         \
-   : swprintf (s, n, __VA_ARGS__))
+    (__glibc_objsize (s) != (size_t) -1 || __USE_FORTIFY_LEVEL > 1              \
+     ? __swprintf_chk (s, n, __USE_FORTIFY_LEVEL - 1,               \
+                       __glibc_objsize (s) / sizeof (wchar_t), __VA_ARGS__)         \
+     : swprintf (s, n, __VA_ARGS__))
 #endif
 
 __fortify_function int __NTH(vswprintf(wchar_t *__restrict __s, size_t __n,
@@ -231,9 +231,9 @@ __fortify_function int fwprintf(__FILE *__restrict __stream, const wchar_t *__re
 }
 # elif !defined __cplusplus
 #  define wprintf(...) \
-  __wprintf_chk (__USE_FORTIFY_LEVEL - 1, __VA_ARGS__)
+    __wprintf_chk (__USE_FORTIFY_LEVEL - 1, __VA_ARGS__)
 #  define fwprintf(stream, ...) \
-  __fwprintf_chk (stream, __USE_FORTIFY_LEVEL - 1, __VA_ARGS__)
+    __fwprintf_chk (stream, __USE_FORTIFY_LEVEL - 1, __VA_ARGS__)
 # endif
 
 __fortify_function int vwprintf(const wchar_t *__restrict __fmt, __gnuc_va_list __ap)

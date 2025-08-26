@@ -190,7 +190,7 @@ typedef uint64_t nscd_time_t;
 
 /* Maximum timestamp.  */
 #define MAX_TIMEOUT_VALUE \
-  (sizeof (time_t) == sizeof (long int) ? LONG_MAX : INT_MAX)
+    (sizeof (time_t) == sizeof (long int) ? LONG_MAX : INT_MAX)
 
 /* Alignment requirement of the beginning of the data region.  */
 #define ALIGN 16

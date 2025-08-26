@@ -26,7 +26,7 @@
 #   undef libc_hidden_def
 #   if ! defined HAVE_S390_MIN_Z13_ZARCH_ASM_SUPPORT
 #    define libc_hidden_def(name)           \
-  __hidden_ver1 (__wcsspn_c, __GI_wcsspn, __wcsspn_c);
+    __hidden_ver1 (__wcsspn_c, __GI_wcsspn, __wcsspn_c);
 #   else
 #    define libc_hidden_def(name)
 #   endif

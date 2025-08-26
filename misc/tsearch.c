@@ -133,11 +133,11 @@ typedef struct node_t {
 #define SETRED(N) (N)->left_node |= ((uintptr_t) 0x1)
 #define SETBLACK(N) (N)->left_node &= ~((uintptr_t) 0x1)
 #define SETNODEPTR(NP,P) (*NP) = (node)((((uintptr_t)(*NP)) \
-                     & (uintptr_t) 0x1) | (uintptr_t)(P))
+                                        & (uintptr_t) 0x1) | (uintptr_t)(P))
 #define LEFT(N) (node)((N)->left_node & ~((uintptr_t) 0x1))
 #define LEFTPTR(N) (node *)(&(N)->left_node)
 #define SETLEFT(N,L) (N)->left_node = (((N)->left_node & (uintptr_t) 0x1) \
-                       | (uintptr_t)(L))
+                                       | (uintptr_t)(L))
 #define RIGHT(N) (node)((N)->right_node)
 #define RIGHTPTR(N) (node *)(&(N)->right_node)
 #define SETRIGHT(N,R) (N)->right_node = (uintptr_t)(R)

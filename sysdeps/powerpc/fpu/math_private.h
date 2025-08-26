@@ -38,11 +38,11 @@
 #define __builtin_ilogbf __builtin_ilogb
 
 #define __builtin_test_dc_ilogb(x, y) \
-        __builtin_vsx_scalar_test_data_class_dp(x, y)
+    __builtin_vsx_scalar_test_data_class_dp(x, y)
 #define __builtin_ilogb(x) __builtin_vsx_scalar_extract_exp(x) - 0x3ff
 
 #define __builtin_test_dc_ilogbf128(x, y) \
-        __builtin_vsx_scalar_test_data_class_qp(x, y)
+    __builtin_vsx_scalar_test_data_class_qp(x, y)
 #define __builtin_ilogbf128(x) __builtin_vsx_scalar_extract_expq(x) - 0x3fff
 
 #if __HAVE_DISTINCT_FLOAT128

@@ -28,20 +28,20 @@
     mova    99f, r0; \
     mov r15, r1; \
     mov _IMM6, r15; \
-98: mov.l   mem, reg; \
+    98: mov.l   mem, reg; \
     add _IMP1, reg; \
     mov.l   reg, mem; \
-99: mov r1, r15
+    99: mov r1, r15
 
 #define DEC(mem, reg) \
     .align  2; \
     mova    99f, r0; \
     mov r15, r1; \
     mov _IMM6, r15; \
-98: mov.l   mem, reg; \
+    98: mov.l   mem, reg; \
     add _IMM1, reg; \
     mov.l   reg, mem; \
-99: mov r1, r15
+    99: mov r1, r15
 
 #define XADD(reg, mem, old, tmp) \
     .align  2; \
@@ -49,11 +49,11 @@
     nop; \
     mov r15, r1; \
     mov _IMM8, r15; \
-98: mov.l   mem, old; \
+    98: mov.l   mem, old; \
     mov reg, tmp; \
     add old, tmp; \
     mov.l   tmp, mem; \
-99: mov r1, r15
+    99: mov r1, r15
 
 #define XCHG(reg, mem, old) \
     .align  2; \
@@ -61,9 +61,9 @@
     nop; \
     mov r15, r1; \
     mov _IMM4, r15; \
-98: mov.l   mem, old; \
+    98: mov.l   mem, old; \
     mov.l   reg, mem; \
-99: mov r1, r15
+    99: mov r1, r15
 
 #define CMPXCHG(reg, mem, new, old) \
     .align  2; \
@@ -71,10 +71,10 @@
     nop; \
     mov r15, r1; \
     mov _IMM8, r15; \
-98: mov.l   mem, old; \
+    98: mov.l   mem, old; \
     cmp/eq  old, reg; \
     bf  99f; \
     mov.l   new, mem; \
-99: mov r1, r15
+    99: mov r1, r15
 
 #endif  /* __ASSEMBLER__ */

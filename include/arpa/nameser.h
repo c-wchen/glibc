@@ -26,7 +26,7 @@ _Bool __ns_samebinaryname(const unsigned char *, const unsigned char *)
 attribute_hidden;
 
 #define ns_msg_getflag(handle, flag) \
-  (((handle)._flags & _ns_flagdata[flag].mask) >> _ns_flagdata[flag].shift)
+    (((handle)._flags & _ns_flagdata[flag].mask) >> _ns_flagdata[flag].shift)
 
 libresolv_hidden_proto(ns_get16)
 libresolv_hidden_proto(ns_get32)

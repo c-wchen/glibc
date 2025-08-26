@@ -26,13 +26,13 @@
 
 # ifndef DEV_TO_KDEV
 #  define DEV_TO_KDEV(__dev)                    \
-  ({                                \
-    unsigned long long int k_dev;               \
-    k_dev = dev & ((1ULL << 32) - 1);               \
-    if (k_dev != dev)                       \
-     return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);     \
-    (unsigned int) k_dev;                   \
-  })
+    ({                                \
+        unsigned long long int k_dev;               \
+        k_dev = dev & ((1ULL << 32) - 1);               \
+        if (k_dev != dev)                       \
+            return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);     \
+        (unsigned int) k_dev;                   \
+    })
 # endif
 
 struct ustat {

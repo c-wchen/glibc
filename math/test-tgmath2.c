@@ -88,39 +88,39 @@ int count;
 int counts[Tlast][C_last];
 
 #define TEST_TYPE_ONLY(expr, rettype) \
-  do                                \
+    do                                \
     {                               \
-      __typeof__ (expr) texpr = 0;              \
-      __typeof__ (rettype) ttype = 0, *ptype;           \
-      if (sizeof (expr) != sizeof (rettype))            \
-    FAIL ("type");                      \
-      if (__alignof__ (expr) != __alignof__ (rettype))      \
-    FAIL ("type");                      \
-      __asm ("" : "=r" (ptype) : "0" (&ttype), "r" (&texpr));   \
-      if (&texpr == ptype)                  \
-    FAIL ("type");                      \
+        __typeof__ (expr) texpr = 0;              \
+        __typeof__ (rettype) ttype = 0, *ptype;           \
+        if (sizeof (expr) != sizeof (rettype))            \
+            FAIL ("type");                      \
+        if (__alignof__ (expr) != __alignof__ (rettype))      \
+            FAIL ("type");                      \
+        __asm ("" : "=r" (ptype) : "0" (&ttype), "r" (&texpr));   \
+        if (&texpr == ptype)                  \
+            FAIL ("type");                      \
     }                               \
-  while (0)
+    while (0)
 #define TEST2(expr, type, rettype, fn) \
-  do                                \
+    do                                \
     {                               \
-      __typeof__ (expr) texpr = 0;              \
-      TEST_TYPE_ONLY (expr, rettype);               \
-      if (count != 0)                       \
-    FAIL ("internal error");                \
-      if (counts[T##type][C_##fn] != 0)             \
-    FAIL ("internal error");                \
-      texpr = expr;                     \
-      __asm __volatile ("" : : "r" (&texpr));           \
-      if (count != 1 || counts[T##type][C_##fn] != 1)       \
-    {                           \
-      FAIL ("wrong function called, "#fn" ("#type")");  \
-      memset (counts, 0, sizeof (counts));          \
-    }                           \
-      count = 0;                        \
-      counts[T##type][C_##fn] = 0;              \
+        __typeof__ (expr) texpr = 0;              \
+        TEST_TYPE_ONLY (expr, rettype);               \
+        if (count != 0)                       \
+            FAIL ("internal error");                \
+        if (counts[T##type][C_##fn] != 0)             \
+            FAIL ("internal error");                \
+        texpr = expr;                     \
+        __asm __volatile ("" : : "r" (&texpr));           \
+        if (count != 1 || counts[T##type][C_##fn] != 1)       \
+        {                           \
+            FAIL ("wrong function called, "#fn" ("#type")");  \
+            memset (counts, 0, sizeof (counts));          \
+        }                           \
+        count = 0;                        \
+        counts[T##type][C_##fn] = 0;              \
     }                               \
-  while (0)
+    while (0)
 #define TEST(expr, type, fn) TEST2(expr, type, type, fn)
 
 int test_cos(const int Vint4, const long long int Vllong4)
@@ -256,79 +256,79 @@ int test_ldexp(const int Vint4, const long long int Vllong4)
 #define FIRST(x, y) (y, x)
 #define SECOND(x, y) (x, y)
 #define NON_LDBL_TEST(fn, argm, arg, type, fnt) \
-  TEST (fn argm (arg, vfloat1), type, fnt); \
-  TEST (fn argm (arg, vdouble1), type, fnt); \
-  TEST (fn argm (arg, vint1), type, fnt); \
-  TEST (fn argm (arg, vllong1), type, fnt); \
-  TEST (fn argm (arg, Vfloat1), type, fnt); \
-  TEST (fn argm (arg, Vdouble1), type, fnt); \
-  TEST (fn argm (arg, Vint1), type, fnt); \
-  TEST (fn argm (arg, Vllong1), type, fnt);
+    TEST (fn argm (arg, vfloat1), type, fnt); \
+    TEST (fn argm (arg, vdouble1), type, fnt); \
+    TEST (fn argm (arg, vint1), type, fnt); \
+    TEST (fn argm (arg, vllong1), type, fnt); \
+    TEST (fn argm (arg, Vfloat1), type, fnt); \
+    TEST (fn argm (arg, Vdouble1), type, fnt); \
+    TEST (fn argm (arg, Vint1), type, fnt); \
+    TEST (fn argm (arg, Vllong1), type, fnt);
 #define NON_LDBL_CTEST(fn, argm, arg, type, fnt) \
-  NON_LDBL_TEST(fn, argm, arg, type, fnt); \
-  TEST (fn argm (arg, vcfloat1), type, fnt); \
-  TEST (fn argm (arg, vcdouble1), type, fnt); \
-  TEST (fn argm (arg, Vcfloat1), type, fnt); \
-  TEST (fn argm (arg, Vcdouble1), type, fnt);
+    NON_LDBL_TEST(fn, argm, arg, type, fnt); \
+    TEST (fn argm (arg, vcfloat1), type, fnt); \
+    TEST (fn argm (arg, vcdouble1), type, fnt); \
+    TEST (fn argm (arg, Vcfloat1), type, fnt); \
+    TEST (fn argm (arg, Vcdouble1), type, fnt);
 #define BINARY_TEST(fn, fnt) \
-  TEST (fn (vfloat1, vfloat2), float, fnt); \
-  TEST (fn (Vfloat1, vfloat2), float, fnt); \
-  TEST (fn (vfloat1, Vfloat2), float, fnt); \
-  TEST (fn (Vfloat1, Vfloat2), float, fnt); \
-  TEST (fn (vldouble1, vldouble2), ldouble, fnt); \
-  TEST (fn (Vldouble1, vldouble2), ldouble, fnt); \
-  TEST (fn (vldouble1, Vldouble2), ldouble, fnt); \
-  TEST (fn (Vldouble1, Vldouble2), ldouble, fnt); \
-  NON_LDBL_TEST (fn, FIRST, vldouble2, ldouble, fnt); \
-  NON_LDBL_TEST (fn, SECOND, vldouble2, ldouble, fnt); \
-  NON_LDBL_TEST (fn, FIRST, Vldouble2, ldouble, fnt); \
-  NON_LDBL_TEST (fn, SECOND, Vldouble2, ldouble, fnt); \
-  NON_LDBL_TEST (fn, FIRST, vdouble2, double, fnt); \
-  NON_LDBL_TEST (fn, SECOND, vdouble2, double, fnt); \
-  NON_LDBL_TEST (fn, FIRST, Vdouble2, double, fnt); \
-  NON_LDBL_TEST (fn, SECOND, Vdouble2, double, fnt); \
-  NON_LDBL_TEST (fn, FIRST, vint2, double, fnt); \
-  NON_LDBL_TEST (fn, SECOND, vint2, double, fnt); \
-  NON_LDBL_TEST (fn, FIRST, Vint2, double, fnt); \
-  NON_LDBL_TEST (fn, SECOND, Vint2, double, fnt); \
-  NON_LDBL_TEST (fn, FIRST, vllong2, double, fnt); \
-  NON_LDBL_TEST (fn, SECOND, vllong2, double, fnt); \
-  NON_LDBL_TEST (fn, FIRST, Vllong2, double, fnt); \
-  NON_LDBL_TEST (fn, SECOND, Vllong2, double, fnt);
+    TEST (fn (vfloat1, vfloat2), float, fnt); \
+    TEST (fn (Vfloat1, vfloat2), float, fnt); \
+    TEST (fn (vfloat1, Vfloat2), float, fnt); \
+    TEST (fn (Vfloat1, Vfloat2), float, fnt); \
+    TEST (fn (vldouble1, vldouble2), ldouble, fnt); \
+    TEST (fn (Vldouble1, vldouble2), ldouble, fnt); \
+    TEST (fn (vldouble1, Vldouble2), ldouble, fnt); \
+    TEST (fn (Vldouble1, Vldouble2), ldouble, fnt); \
+    NON_LDBL_TEST (fn, FIRST, vldouble2, ldouble, fnt); \
+    NON_LDBL_TEST (fn, SECOND, vldouble2, ldouble, fnt); \
+    NON_LDBL_TEST (fn, FIRST, Vldouble2, ldouble, fnt); \
+    NON_LDBL_TEST (fn, SECOND, Vldouble2, ldouble, fnt); \
+    NON_LDBL_TEST (fn, FIRST, vdouble2, double, fnt); \
+    NON_LDBL_TEST (fn, SECOND, vdouble2, double, fnt); \
+    NON_LDBL_TEST (fn, FIRST, Vdouble2, double, fnt); \
+    NON_LDBL_TEST (fn, SECOND, Vdouble2, double, fnt); \
+    NON_LDBL_TEST (fn, FIRST, vint2, double, fnt); \
+    NON_LDBL_TEST (fn, SECOND, vint2, double, fnt); \
+    NON_LDBL_TEST (fn, FIRST, Vint2, double, fnt); \
+    NON_LDBL_TEST (fn, SECOND, Vint2, double, fnt); \
+    NON_LDBL_TEST (fn, FIRST, vllong2, double, fnt); \
+    NON_LDBL_TEST (fn, SECOND, vllong2, double, fnt); \
+    NON_LDBL_TEST (fn, FIRST, Vllong2, double, fnt); \
+    NON_LDBL_TEST (fn, SECOND, Vllong2, double, fnt);
 #define BINARY_CTEST(fn, fnt) \
-  BINARY_TEST (fn, fnt); \
-  TEST (fn (vcfloat1, vfloat2), cfloat, fnt); \
-  TEST (fn (Vcfloat1, vfloat2), cfloat, fnt); \
-  TEST (fn (vcfloat1, Vfloat2), cfloat, fnt); \
-  TEST (fn (Vcfloat1, Vfloat2), cfloat, fnt); \
-  TEST (fn (vcldouble1, vldouble2), cldouble, fnt); \
-  TEST (fn (Vcldouble1, vldouble2), cldouble, fnt); \
-  TEST (fn (vcldouble1, Vldouble2), cldouble, fnt); \
-  TEST (fn (Vcldouble1, Vldouble2), cldouble, fnt); \
-  TEST (fn (vcfloat1, vfloat2), cfloat, fnt); \
-  TEST (fn (Vcfloat1, vfloat2), cfloat, fnt); \
-  TEST (fn (vcfloat1, Vfloat2), cfloat, fnt); \
-  TEST (fn (Vcfloat1, Vfloat2), cfloat, fnt); \
-  TEST (fn (vcldouble1, vldouble2), cldouble, fnt); \
-  TEST (fn (Vcldouble1, vldouble2), cldouble, fnt); \
-  TEST (fn (vcldouble1, Vldouble2), cldouble, fnt); \
-  TEST (fn (Vcldouble1, Vldouble2), cldouble, fnt); \
-  TEST (fn (vcfloat1, vcfloat2), cfloat, fnt); \
-  TEST (fn (Vcfloat1, vcfloat2), cfloat, fnt); \
-  TEST (fn (vcfloat1, Vcfloat2), cfloat, fnt); \
-  TEST (fn (Vcfloat1, Vcfloat2), cfloat, fnt); \
-  TEST (fn (vcldouble1, vcldouble2), cldouble, fnt); \
-  TEST (fn (Vcldouble1, vcldouble2), cldouble, fnt); \
-  TEST (fn (vcldouble1, Vcldouble2), cldouble, fnt); \
-  TEST (fn (Vcldouble1, Vcldouble2), cldouble, fnt); \
-  NON_LDBL_CTEST (fn, FIRST, vcldouble2, cldouble, fnt); \
-  NON_LDBL_CTEST (fn, SECOND, vcldouble2, cldouble, fnt); \
-  NON_LDBL_CTEST (fn, FIRST, Vcldouble2, cldouble, fnt); \
-  NON_LDBL_CTEST (fn, SECOND, Vcldouble2, cldouble, fnt); \
-  NON_LDBL_CTEST (fn, FIRST, vcdouble2, cdouble, fnt); \
-  NON_LDBL_CTEST (fn, SECOND, vcdouble2, cdouble, fnt); \
-  NON_LDBL_CTEST (fn, FIRST, Vcdouble2, cdouble, fnt); \
-  NON_LDBL_CTEST (fn, SECOND, Vcdouble2, cdouble, fnt);
+    BINARY_TEST (fn, fnt); \
+    TEST (fn (vcfloat1, vfloat2), cfloat, fnt); \
+    TEST (fn (Vcfloat1, vfloat2), cfloat, fnt); \
+    TEST (fn (vcfloat1, Vfloat2), cfloat, fnt); \
+    TEST (fn (Vcfloat1, Vfloat2), cfloat, fnt); \
+    TEST (fn (vcldouble1, vldouble2), cldouble, fnt); \
+    TEST (fn (Vcldouble1, vldouble2), cldouble, fnt); \
+    TEST (fn (vcldouble1, Vldouble2), cldouble, fnt); \
+    TEST (fn (Vcldouble1, Vldouble2), cldouble, fnt); \
+    TEST (fn (vcfloat1, vfloat2), cfloat, fnt); \
+    TEST (fn (Vcfloat1, vfloat2), cfloat, fnt); \
+    TEST (fn (vcfloat1, Vfloat2), cfloat, fnt); \
+    TEST (fn (Vcfloat1, Vfloat2), cfloat, fnt); \
+    TEST (fn (vcldouble1, vldouble2), cldouble, fnt); \
+    TEST (fn (Vcldouble1, vldouble2), cldouble, fnt); \
+    TEST (fn (vcldouble1, Vldouble2), cldouble, fnt); \
+    TEST (fn (Vcldouble1, Vldouble2), cldouble, fnt); \
+    TEST (fn (vcfloat1, vcfloat2), cfloat, fnt); \
+    TEST (fn (Vcfloat1, vcfloat2), cfloat, fnt); \
+    TEST (fn (vcfloat1, Vcfloat2), cfloat, fnt); \
+    TEST (fn (Vcfloat1, Vcfloat2), cfloat, fnt); \
+    TEST (fn (vcldouble1, vcldouble2), cldouble, fnt); \
+    TEST (fn (Vcldouble1, vcldouble2), cldouble, fnt); \
+    TEST (fn (vcldouble1, Vcldouble2), cldouble, fnt); \
+    TEST (fn (Vcldouble1, Vcldouble2), cldouble, fnt); \
+    NON_LDBL_CTEST (fn, FIRST, vcldouble2, cldouble, fnt); \
+    NON_LDBL_CTEST (fn, SECOND, vcldouble2, cldouble, fnt); \
+    NON_LDBL_CTEST (fn, FIRST, Vcldouble2, cldouble, fnt); \
+    NON_LDBL_CTEST (fn, SECOND, Vcldouble2, cldouble, fnt); \
+    NON_LDBL_CTEST (fn, FIRST, vcdouble2, cdouble, fnt); \
+    NON_LDBL_CTEST (fn, SECOND, vcdouble2, cdouble, fnt); \
+    NON_LDBL_CTEST (fn, FIRST, Vcdouble2, cdouble, fnt); \
+    NON_LDBL_CTEST (fn, SECOND, Vcdouble2, cdouble, fnt);
 
 int test_atan2(const int Vint4, const long long int Vllong4)
 {

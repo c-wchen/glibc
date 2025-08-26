@@ -64,70 +64,70 @@ rtld_hidden_proto(__tunable_get_default)
    tunables within a module.  */
 #if defined TOP_NAMESPACE && defined TUNABLE_NAMESPACE
 # define TUNABLE_IS_INITIALIZED(__id) \
-  TUNABLE_IS_INITIALIZED_FULL(TOP_NAMESPACE, TUNABLE_NAMESPACE, __id)
+    TUNABLE_IS_INITIALIZED_FULL(TOP_NAMESPACE, TUNABLE_NAMESPACE, __id)
 # define TUNABLE_GET_DEFAULT(__id, __type) \
-  TUNABLE_GET_DEFAULT_FULL(TOP_NAMESPACE, TUNABLE_NAMESPACE,__id, __type)
+    TUNABLE_GET_DEFAULT_FULL(TOP_NAMESPACE, TUNABLE_NAMESPACE,__id, __type)
 # define TUNABLE_GET(__id, __type, __cb) \
-  TUNABLE_GET_FULL (TOP_NAMESPACE, TUNABLE_NAMESPACE, __id, __type, __cb)
+    TUNABLE_GET_FULL (TOP_NAMESPACE, TUNABLE_NAMESPACE, __id, __type, __cb)
 # define TUNABLE_SET(__id, __val) \
-  TUNABLE_SET_FULL (TOP_NAMESPACE, TUNABLE_NAMESPACE, __id, __val)
+    TUNABLE_SET_FULL (TOP_NAMESPACE, TUNABLE_NAMESPACE, __id, __val)
 # define TUNABLE_SET_WITH_BOUNDS(__id, __val, __min, __max) \
-  TUNABLE_SET_WITH_BOUNDS_FULL (TOP_NAMESPACE, TUNABLE_NAMESPACE, __id, \
-                __val, __min, __max)
+    TUNABLE_SET_WITH_BOUNDS_FULL (TOP_NAMESPACE, TUNABLE_NAMESPACE, __id, \
+                                  __val, __min, __max)
 #else
 # define TUNABLE_IS_INITIALIZED(__top, __ns, __id) \
-  TUNABLE_IS_INITIALIZED_FULL(__top, __ns, __id)
+    TUNABLE_IS_INITIALIZED_FULL(__top, __ns, __id)
 # define TUNABLE_GET_DEFAULT(__top, __ns, __type) \
-  TUNABLE_GET_DEFAULT_FULL(__top, __ns, __id, __type)
+    TUNABLE_GET_DEFAULT_FULL(__top, __ns, __id, __type)
 # define TUNABLE_GET(__top, __ns, __id, __type, __cb) \
-  TUNABLE_GET_FULL (__top, __ns, __id, __type, __cb)
+    TUNABLE_GET_FULL (__top, __ns, __id, __type, __cb)
 # define TUNABLE_SET(__top, __ns, __id, __val) \
-  TUNABLE_SET_FULL (__top, __ns, __id, __val)
+    TUNABLE_SET_FULL (__top, __ns, __id, __val)
 # define TUNABLE_SET_WITH_BOUNDS(__top, __ns, __id, __val, __min, __max) \
-  TUNABLE_SET_WITH_BOUNDS_FULL (__top, __ns, __id, __val, __min, __max)
+    TUNABLE_SET_WITH_BOUNDS_FULL (__top, __ns, __id, __val, __min, __max)
 #endif
 
 /* Return whether the tunable was initialized by the environment variable.  */
 #define TUNABLE_IS_INITIALIZED_FULL(__top, __ns, __id) \
-({                                        \
-  tunable_id_t id = TUNABLE_ENUM_NAME (__top, __ns, __id);            \
-  __tunable_is_initialized (id);                          \
-})
+    ({                                        \
+        tunable_id_t id = TUNABLE_ENUM_NAME (__top, __ns, __id);            \
+        __tunable_is_initialized (id);                          \
+    })
 
 /* Return the default value of the tunable.  */
 #define TUNABLE_GET_DEFAULT_FULL(__top, __ns, __id, __type) \
-({                                        \
-  tunable_id_t id = TUNABLE_ENUM_NAME (__top, __ns, __id);            \
-  __type __ret;                                   \
-  __tunable_get_default (id, &__ret);                         \
-  __ret;                                      \
-})
+    ({                                        \
+        tunable_id_t id = TUNABLE_ENUM_NAME (__top, __ns, __id);            \
+        __type __ret;                                   \
+        __tunable_get_default (id, &__ret);                         \
+        __ret;                                      \
+    })
 
 /* Get and return a tunable value.  If the tunable was set externally and __CB
    is defined then call __CB before returning the value.  */
 #define TUNABLE_GET_FULL(__top, __ns, __id, __type, __cb) \
-({                                        \
-  tunable_id_t id = TUNABLE_ENUM_NAME (__top, __ns, __id);            \
-  __type ret;                                     \
-  __tunable_get_val (id, &ret, __cb);                         \
-  ret;                                        \
-})
+    ({                                        \
+        tunable_id_t id = TUNABLE_ENUM_NAME (__top, __ns, __id);            \
+        __type ret;                                     \
+        __tunable_get_val (id, &ret, __cb);                         \
+        ret;                                        \
+    })
 
 /* Set a tunable value.  */
 #define TUNABLE_SET_FULL(__top, __ns, __id, __val) \
-({                                        \
-  __tunable_set_val (TUNABLE_ENUM_NAME (__top, __ns, __id),           \
-             & (tunable_val_t) {.numval = __val}, NULL, NULL);        \
-})
+    ({                                        \
+        __tunable_set_val (TUNABLE_ENUM_NAME (__top, __ns, __id),           \
+        & (tunable_val_t) {.numval = __val}, NULL, NULL);        \
+    })
 
 /* Set a tunable value together with min/max values.  */
 #define TUNABLE_SET_WITH_BOUNDS_FULL(__top, __ns, __id,__val, __min, __max)  \
-({                                        \
-  __tunable_set_val (TUNABLE_ENUM_NAME (__top, __ns, __id),           \
-             & (tunable_val_t) {.numval = __val},             \
-             & (tunable_num_t) {__min},                   \
-             & (tunable_num_t) {__max});                  \
-})
+    ({                                        \
+        __tunable_set_val (TUNABLE_ENUM_NAME (__top, __ns, __id),           \
+        & (tunable_val_t) {.numval = __val},             \
+        & (tunable_num_t) {__min},                   \
+        & (tunable_num_t) {__max});                  \
+    })
 
 /* Namespace sanity for callback functions.  Use this macro to keep the
    namespace of the modules clean.  */

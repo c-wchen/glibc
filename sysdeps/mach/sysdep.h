@@ -37,10 +37,10 @@
 #undef ENTRY
 #undef ENTRY2
 #define ENTRY(name) \
-  .globl name; \
-  .align ALIGN; \
-  .type name,@function; \
-  name:
+    .globl name; \
+    .align ALIGN; \
+    .type name,@function; \
+    name:
 
 #endif
 

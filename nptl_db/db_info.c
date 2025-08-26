@@ -46,14 +46,14 @@ typedef struct dtv_slotinfo dtv_slotinfo;
 #define eventbuf_eventmask_event_bits eventbuf.eventmask.event_bits
 
 #define DESC(name, offset, obj) \
-  DB_DEFINE_DESC (name, 8 * sizeof (obj), 1, offset);
+    DB_DEFINE_DESC (name, 8 * sizeof (obj), 1, offset);
 #define ARRAY_DESC(name, offset, obj) \
-  DB_DEFINE_DESC (name, \
-          8 * sizeof (obj)[0], sizeof (obj) / sizeof (obj)[0], \
-          offset);
+    DB_DEFINE_DESC (name, \
+                    8 * sizeof (obj)[0], sizeof (obj) / sizeof (obj)[0], \
+                    offset);
 /* Flexible arrays do not have a length that can be determined.  */
 #define FLEXIBLE_ARRAY_DESC(name, offset, obj) \
-  DB_DEFINE_DESC (name, 8 * sizeof (obj)[0], 0, offset);
+    DB_DEFINE_DESC (name, 8 * sizeof (obj)[0], 0, offset);
 
 #if TLS_TCB_AT_TP
 # define dtvp header.dtv
@@ -68,16 +68,16 @@ DESC(_thread_db_pthread_dtvp,
 
 
 #define DB_STRUCT(type) \
-  const uint32_t _thread_db_sizeof_##type = sizeof (type);
+    const uint32_t _thread_db_sizeof_##type = sizeof (type);
 #define DB_STRUCT_FIELD(type, field) \
-  DESC (_thread_db_##type##_##field, \
-    offsetof (type, field), ((type *) 0)->field)
-#define DB_STRUCT_ARRAY_FIELD(type, field) \
-  ARRAY_DESC (_thread_db_##type##_##field, \
+    DESC (_thread_db_##type##_##field, \
           offsetof (type, field), ((type *) 0)->field)
+#define DB_STRUCT_ARRAY_FIELD(type, field) \
+    ARRAY_DESC (_thread_db_##type##_##field, \
+                offsetof (type, field), ((type *) 0)->field)
 #define DB_STRUCT_FLEXIBLE_ARRAY(type, field) \
-  FLEXIBLE_ARRAY_DESC (_thread_db_##type##_##field, \
-               offsetof (type, field), ((type *) 0)->field)
+    FLEXIBLE_ARRAY_DESC (_thread_db_##type##_##field, \
+                         offsetof (type, field), ((type *) 0)->field)
 #define DB_VARIABLE(name) DESC (_thread_db_##name, 0, name)
 #define DB_ARRAY_VARIABLE(name) ARRAY_DESC (_thread_db_##name, 0, name)
 #define DB_SYMBOL(name) /* Nothing.  */
@@ -99,12 +99,12 @@ DESC(_thread_db_pthread_dtvp,
 
 /* This macro is defined in the machine's tls.h using the three below.  */
 # define CONST_THREAD_AREA(bits, value) \
-  const uint32_t _thread_db_const_thread_area = (value);
+    const uint32_t _thread_db_const_thread_area = (value);
 # define REGISTER_THREAD_AREA(bits, regofs, scale) \
-  DB_DEFINE_DESC (_thread_db_register##bits##_thread_area, \
-          bits, (scale), (regofs));
+    DB_DEFINE_DESC (_thread_db_register##bits##_thread_area, \
+                    bits, (scale), (regofs));
 # define REGISTER(bits, size, regofs, bias) \
-  DB_DEFINE_DESC (_thread_db_register##bits, size, (uint32_t)(bias), (regofs));
+    DB_DEFINE_DESC (_thread_db_register##bits, size, (uint32_t)(bias), (regofs));
 
 DB_THREAD_SELF
 #endif

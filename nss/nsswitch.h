@@ -181,10 +181,10 @@ libc_hidden_proto(__nss_hostname_digits_dots)
 
 /* Prototypes for __nss_*_lookup2 functions.  */
 #define DEFINE_DATABASE(arg)                              \
-  extern struct nss_action *__nss_##arg##_database attribute_hidden;              \
-  int __nss_##arg##_lookup2 (struct nss_action **, const char *,              \
-                 const char *, void **);                  \
-  libc_hidden_proto (__nss_##arg##_lookup2)
+    extern struct nss_action *__nss_##arg##_database attribute_hidden;              \
+    int __nss_##arg##_lookup2 (struct nss_action **, const char *,              \
+                               const char *, void **);                  \
+    libc_hidden_proto (__nss_##arg##_lookup2)
 #include "databases.def"
 #undef DEFINE_DATABASE
 

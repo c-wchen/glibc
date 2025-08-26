@@ -31,7 +31,7 @@ _NL_CURRENT_DEFINE(LC_CTYPE);
 void _nl_postload_ctype(void)
 {
 #define current(type,x,offset) \
-  ((const type *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_##x) + offset)
+    ((const type *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_##x) + offset)
 
     const union locale_data_value *const ctypes
             = _nl_global_locale.__locales[LC_CTYPE]->values;

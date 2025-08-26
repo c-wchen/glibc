@@ -22,11 +22,11 @@ static void *encode_inet6_opt(socklen_t *elp)
 
     *elp = 0;
 #define CHECK() \
-  if (cl == -1)                     \
+    if (cl == -1)                     \
     {                           \
-      printf ("cl == -1 on line %d\n", __LINE__);   \
-      free (eb);                    \
-      return NULL;                  \
+        printf ("cl == -1 on line %d\n", __LINE__);   \
+        free (eb);                    \
+        return NULL;                  \
     }
 
     /* Estimate the length */

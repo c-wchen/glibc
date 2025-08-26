@@ -73,7 +73,7 @@
    to setup the vDSO pointer before its usage.  */
 #if HP_TIMING_INLINE
 # define RLTD_TIMING_DECLARE(var, classifier,...) \
-  classifier hp_timing_t var __VA_ARGS__
+    classifier hp_timing_t var __VA_ARGS__
 # define RTLD_TIMING_VAR(var)        RLTD_TIMING_DECLARE (var, )
 # define RTLD_TIMING_SET(var, value) (var) = (value)
 # define RTLD_TIMING_REF(var)        &(var)

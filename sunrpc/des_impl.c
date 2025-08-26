@@ -311,14 +311,14 @@ static const uint32_t des_skb[8][64] = {
 };
 
 #define c2l(c,l)    (l =((unsigned long)(*((c)++)))    , \
-             l|=((unsigned long)(*((c)++)))<< 8, \
-             l|=((unsigned long)(*((c)++)))<<16, \
-             l|=((unsigned long)(*((c)++)))<<24)
+                     l|=((unsigned long)(*((c)++)))<< 8, \
+                     l|=((unsigned long)(*((c)++)))<<16, \
+                     l|=((unsigned long)(*((c)++)))<<24)
 
 #define l2c(l,c)    (*((c)++)=(unsigned char)(((l)    )&0xff), \
-             *((c)++)=(unsigned char)(((l)>> 8)&0xff), \
-             *((c)++)=(unsigned char)(((l)>>16)&0xff), \
-             *((c)++)=(unsigned char)(((l)>>24)&0xff))
+                     *((c)++)=(unsigned char)(((l)>> 8)&0xff), \
+                     *((c)++)=(unsigned char)(((l)>>16)&0xff), \
+                     *((c)++)=(unsigned char)(((l)>>24)&0xff))
 
 /*
  * IP and FP
@@ -360,11 +360,11 @@ static const uint32_t des_skb[8][64] = {
  */
 
 #define PERM_OP(a,b,t,n,m) ((t)=((((a)>>(n))^(b))&(m)),\
-    (b)^=(t),\
-    (a)^=((t)<<(n)))
+                            (b)^=(t),\
+                            (a)^=((t)<<(n)))
 
 #define HPERM_OP(a,t,n,m) ((t)=((((a)<<(16-(n)))^(a))&(m)),\
-    (a)=(a)^(t)^(t>>(16-(n))))
+                           (a)=(a)^(t)^(t>>(16-(n))))
 
 
 #define D_ENCRYPT(L,R,S)    \

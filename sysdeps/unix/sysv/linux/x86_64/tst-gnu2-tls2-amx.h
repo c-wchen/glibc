@@ -48,15 +48,15 @@ static inline void init_buffer(int8_t *buf, int8_t value)
 }
 
 #define BEFORE_TLSDESC_CALL()                   \
-  int8_t src[MAX];                      \
-  int8_t res[MAX];                      \
-  /* Initialize src with data  */               \
-  init_buffer (src, 2);                     \
-  /* Load tile rows from memory.  */                \
-  _tile_loadd (2, src, STRIDE);
+    int8_t src[MAX];                      \
+    int8_t res[MAX];                      \
+    /* Initialize src with data  */               \
+    init_buffer (src, 2);                     \
+    /* Load tile rows from memory.  */                \
+    _tile_loadd (2, src, STRIDE);
 
 #define AFTER_TLSDESC_CALL()                    \
-  /* Store the tile data to memory.  */             \
-  _tile_stored (2, res, STRIDE);                \
-  _tile_release ();                     \
-  TEST_VERIFY_EXIT (memcmp (src, res, sizeof (res)) == 0);
+    /* Store the tile data to memory.  */             \
+    _tile_stored (2, res, STRIDE);                \
+    _tile_release ();                     \
+    TEST_VERIFY_EXIT (memcmp (src, res, sizeof (res)) == 0);

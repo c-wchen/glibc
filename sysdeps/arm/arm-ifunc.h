@@ -22,11 +22,11 @@
 #define INIT_ARCH()
 
 #define arm_libc_ifunc_redirected(redirected_name, name, expr)  \
-  __ifunc (redirected_name, name, expr(hwcap), int hwcap, INIT_ARCH)
+    __ifunc (redirected_name, name, expr(hwcap), int hwcap, INIT_ARCH)
 
 #if defined SHARED
 # define arm_libc_ifunc_hidden_def(redirect_name, name) \
-  __hidden_ver1 (name, __GI_##name, redirect_name) \
+    __hidden_ver1 (name, __GI_##name, redirect_name) \
     __attribute__ ((visibility ("hidden"))) \
     __attribute_copy__ (name)
 #else

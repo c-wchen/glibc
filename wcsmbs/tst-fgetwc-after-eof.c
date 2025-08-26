@@ -57,12 +57,12 @@
 #include <wchar.h>
 
 #define XWRITE(fd, s, msg) do {                         \
-    if (write (fd, s, sizeof s - 1) != sizeof s - 1)    \
-      {                                                 \
-        perror ("write " msg);                          \
-        return 1;                                       \
-      }                                                 \
-  } while (0)
+        if (write (fd, s, sizeof s - 1) != sizeof s - 1)    \
+        {                                                 \
+            perror ("write " msg);                          \
+            return 1;                                       \
+        }                                                 \
+    } while (0)
 
 int do_test(void)
 {

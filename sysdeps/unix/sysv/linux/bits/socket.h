@@ -191,7 +191,7 @@ struct __attribute_struct_may_alias__ sockaddr {
    exception of AF_UNIX).  */
 #define __ss_aligntype  unsigned long int
 #define _SS_PADSIZE \
-  (_SS_SIZE - __SOCKADDR_COMMON_SIZE - sizeof (__ss_aligntype))
+    (_SS_SIZE - __SOCKADDR_COMMON_SIZE - sizeof (__ss_aligntype))
 
 struct __attribute_struct_may_alias__ sockaddr_storage {
     __SOCKADDR_COMMON(ss_);     /* Address family, etc.  */
@@ -297,12 +297,12 @@ struct cmsghdr {
 #endif
 #define CMSG_NXTHDR(mhdr, cmsg) __cmsg_nxthdr (mhdr, cmsg)
 #define CMSG_FIRSTHDR(mhdr) \
-  ((size_t) (mhdr)->msg_controllen >= sizeof (struct cmsghdr)             \
-   ? (struct cmsghdr *) (mhdr)->msg_control : (struct cmsghdr *) 0)
+    ((size_t) (mhdr)->msg_controllen >= sizeof (struct cmsghdr)             \
+     ? (struct cmsghdr *) (mhdr)->msg_control : (struct cmsghdr *) 0)
 #define CMSG_ALIGN(len) (((len) + sizeof (size_t) - 1) \
-             & (size_t) ~(sizeof (size_t) - 1))
+                         & (size_t) ~(sizeof (size_t) - 1))
 #define CMSG_SPACE(len) (CMSG_ALIGN (len) \
-             + CMSG_ALIGN (sizeof (struct cmsghdr)))
+                         + CMSG_ALIGN (sizeof (struct cmsghdr)))
 #define CMSG_LEN(len)   (CMSG_ALIGN (sizeof (struct cmsghdr)) + (len))
 
 /* Given a length, return the additional padding necessary such that

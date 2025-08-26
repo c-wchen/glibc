@@ -40,7 +40,7 @@
 #define CONCAT(a, b) _CONCAT (a, b)
 
 #define MEMBER(FSUF, FTYPE, FTOSTR, LSUF, CSUF) \
-  const char *s_ ## FSUF;
+    const char *s_ ## FSUF;
 
 #if LDBL_MANT_DIG == 53 && LDBL_MAX_EXP == 1024
 # define CHOOSE_ld(f,d,...) d
@@ -76,12 +76,12 @@
 #endif
 
 #define _XNTRY(FSUF, FTYPE, FTOSTR, LSUF, CSUF, ...)    \
-  CHOOSE_ ## FSUF (__VA_ARGS__),
+    CHOOSE_ ## FSUF (__VA_ARGS__),
 #define XNTRY(...) \
-  GEN_TEST_STRTOD_FOREACH (_XNTRY, __VA_ARGS__)
+    GEN_TEST_STRTOD_FOREACH (_XNTRY, __VA_ARGS__)
 
 #define TEST(f, d, ld64i, ld64m, ld106, ld113, u) \
-  { XNTRY(f, d, ld64i, ld64m, ld106, ld113) u }
+    { XNTRY(f, d, ld64i, ld64m, ld106, ld113) u }
 
 enum underflow_case {
     /* Result is exact or outside the subnormal range.  */
@@ -353,44 +353,44 @@ static bool test_got_fe_underflow(void)
 }
 
 #define TEST_STRTOD(FSUF, FTYPE, FTOSTR, LSUF, CSUF)            \
-static int                              \
-test_strto ## FSUF (int i, int rm, const char *mode_name)       \
-{                                   \
-  const char *s = tests[i].s_ ## FSUF;                  \
-  enum underflow_case c = tests[i].c;                   \
-  int result = 0;                           \
-  feclearexcept (FE_ALL_EXCEPT);                    \
-  errno = 0;                                \
-  FTYPE d = strto ## FSUF (s, NULL);                    \
-  int got_errno = errno;                        \
-  bool got_fe_underflow = test_got_fe_underflow ();         \
-  char buf[FSTRLENMAX];                         \
-  FTOSTR (buf, sizeof (buf), "%a", d);                  \
-  printf ("strto" #FSUF                         \
-      " (%s) (%s) returned %s, errno = %d, "            \
-      "%sunderflow exception\n",                    \
-      s, mode_name, buf, got_errno,                 \
-      got_fe_underflow ? "" : "no ");               \
-  bool this_expect_underflow = expect_underflow (c, rm);        \
-  if (got_errno != 0 && got_errno != ERANGE)                \
+    static int                              \
+    test_strto ## FSUF (int i, int rm, const char *mode_name)       \
     {                                   \
-      puts ("FAIL: errno neither 0 nor ERANGE");            \
-      result = 1;                           \
-    }                                   \
-  else if (this_expect_underflow != (errno == ERANGE))          \
-    {                                   \
-      puts ("FAIL: underflow from errno differs from expectations");    \
-      result = 1;                           \
-    }                                   \
-  if (support_underflow_exception                   \
-      && got_fe_underflow != this_expect_underflow)         \
-    {                                   \
-      puts ("FAIL: underflow from exceptions "              \
-        "differs from expectations");               \
-      result = 1;                           \
-    }                                   \
-  return result;                            \
-}
+        const char *s = tests[i].s_ ## FSUF;                  \
+        enum underflow_case c = tests[i].c;                   \
+        int result = 0;                           \
+        feclearexcept (FE_ALL_EXCEPT);                    \
+        errno = 0;                                \
+        FTYPE d = strto ## FSUF (s, NULL);                    \
+        int got_errno = errno;                        \
+        bool got_fe_underflow = test_got_fe_underflow ();         \
+        char buf[FSTRLENMAX];                         \
+        FTOSTR (buf, sizeof (buf), "%a", d);                  \
+        printf ("strto" #FSUF                         \
+                " (%s) (%s) returned %s, errno = %d, "            \
+                "%sunderflow exception\n",                    \
+                s, mode_name, buf, got_errno,                 \
+                got_fe_underflow ? "" : "no ");               \
+        bool this_expect_underflow = expect_underflow (c, rm);        \
+        if (got_errno != 0 && got_errno != ERANGE)                \
+        {                                   \
+            puts ("FAIL: errno neither 0 nor ERANGE");            \
+            result = 1;                           \
+        }                                   \
+        else if (this_expect_underflow != (errno == ERANGE))          \
+        {                                   \
+            puts ("FAIL: underflow from errno differs from expectations");    \
+            result = 1;                           \
+        }                                   \
+        if (support_underflow_exception                   \
+            && got_fe_underflow != this_expect_underflow)         \
+        {                                   \
+            puts ("FAIL: underflow from exceptions "              \
+                  "differs from expectations");               \
+            result = 1;                           \
+        }                                   \
+        return result;                            \
+    }
 
 GEN_TEST_STRTOD_FOREACH(TEST_STRTOD)
 

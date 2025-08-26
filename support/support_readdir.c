@@ -47,13 +47,12 @@ init(void)
     readdir64_r_compat = dlvsym(RTLD_DEFAULT, "readdir64_r", "GLIBC_2.1");
 }
 
-enum support_readdir_op support_readdir_op_last(void) {
-    if (readdir64_r_compat != NULL)
-    {
+enum support_readdir_op support_readdir_op_last(void)
+{
+    if (readdir64_r_compat != NULL) {
         TEST_VERIFY(readdir64_compat != NULL);
         return SUPPORT_READDIR64_R_COMPAT;
-    } else
-    {
+    } else {
         return SUPPORT_READDIR64_R;
     }
 }

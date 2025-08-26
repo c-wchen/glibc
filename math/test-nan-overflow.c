@@ -40,19 +40,19 @@ static int do_test(void)
     memset(nanstr, '0', STRING_SIZE - 1);
     nanstr[STRING_SIZE - 1] = 0;
 #define NAN_TEST(TYPE, FUNC)            \
-  do                        \
+    do                        \
     {                       \
-      char *volatile p = nanstr;        \
-      volatile TYPE v = FUNC (p);       \
-      if (isnan (v))                \
-    puts ("PASS: " #FUNC);          \
-      else                  \
-    {                   \
-      puts ("FAIL: " #FUNC);        \
-      result = 1;               \
-    }                   \
+        char *volatile p = nanstr;        \
+        volatile TYPE v = FUNC (p);       \
+        if (isnan (v))                \
+            puts ("PASS: " #FUNC);          \
+        else                  \
+        {                   \
+            puts ("FAIL: " #FUNC);        \
+            result = 1;               \
+        }                   \
     }                       \
-  while (0)
+    while (0)
     NAN_TEST(float, nanf);
     NAN_TEST(double, nan);
     NAN_TEST(long double, nanl);

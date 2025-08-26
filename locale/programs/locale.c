@@ -138,9 +138,9 @@ struct category {
 #define DEFINE_ELEMENT(Item, More...) { Item, ## More },
 #define DEFINE_CATEGORY(category, name, items, postload) \
     static struct cat_item category##_desc[] =                    \
-      {                                       \
-    NO_PAREN items                                \
-      };
+    {                                       \
+        NO_PAREN items                                \
+    };
 
 #include "categories.def"
 #undef DEFINE_CATEGORY
@@ -148,7 +148,7 @@ struct category {
 static struct category category[] = {
 #define DEFINE_CATEGORY(category, name, items, postload) \
     [category] = { _NL_NUM_##category, name, NELEMS (category##_desc),        \
-           category##_desc },
+        category##_desc },
 #include "categories.def"
 #undef DEFINE_CATEGORY
 };
@@ -345,10 +345,10 @@ static void print_LC_IDENTIFICATION(void *mapped, size_t size)
         const char *str;
 
 #define HANDLE(idx, name) \
-  str = ((char *) mapped                              \
-     + filedata->strindex[_NL_ITEM_INDEX (_NL_IDENTIFICATION_##idx)]);    \
-  if (*str != '\0')                               \
-    printf ("%9s | %s\n", name, str)
+    str = ((char *) mapped                              \
+           + filedata->strindex[_NL_ITEM_INDEX (_NL_IDENTIFICATION_##idx)]);    \
+    if (*str != '\0')                               \
+        printf ("%9s | %s\n", name, str)
         HANDLE(TITLE, "title");
         HANDLE(SOURCE, "source");
         HANDLE(ADDRESS, "address");
@@ -409,9 +409,9 @@ static void write_locales(void)
     int first_locale = 1;
 
 #define PUT(name) tsearch (name, &all_data, \
-               (int (*) (const void *, const void *)) strcoll)
+                           (int (*) (const void *, const void *)) strcoll)
 #define GET(name) tfind (name, &all_data, \
-               (int (*) (const void *, const void *)) strcoll)
+                         (int (*) (const void *, const void *)) strcoll)
 
     /* `POSIX' locale is always available (POSIX.2 4.34.3).  */
     PUT("POSIX");

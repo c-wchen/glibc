@@ -34,7 +34,7 @@ extern void *__libc_pvalloc(size_t);
 extern void *__libc_calloc(size_t, size_t);
 
 #define DEBUG_FN(fn) \
-  static __typeof (__libc_ ## fn) __debug_ ## fn
+    static __typeof (__libc_ ## fn) __debug_ ## fn
 
 DEBUG_FN(malloc);
 DEBUG_FN(free);
@@ -156,7 +156,7 @@ static mchunkptr dumped_main_arena_end;   /* Exclusive.  */
 /* True if the pointer falls into the dumped arena.  Use this after
    chunk_is_mmapped indicates a chunk is mmapped.  */
 #define DUMPED_MAIN_ARENA_CHUNK(p) \
-  ((p) >= dumped_main_arena_start && (p) < dumped_main_arena_end)
+    ((p) >= dumped_main_arena_start && (p) < dumped_main_arena_end)
 
 /* The allocator functions.  */
 
@@ -430,11 +430,11 @@ malloc_usable_size(void *mem)
 #define SYMHANDLE(sym) sym ## _handle
 
 #define LOAD_SYM(sym) ({ \
-  static void *SYMHANDLE (sym);                           \
-  if (SYMHANDLE (sym) == NULL)                            \
-    SYMHANDLE (sym) = dlsym (RTLD_NEXT, #sym);                    \
-  SYMHANDLE (sym);                                \
-})
+        static void *SYMHANDLE (sym);                           \
+        if (SYMHANDLE (sym) == NULL)                            \
+            SYMHANDLE (sym) = dlsym (RTLD_NEXT, #sym);                    \
+        SYMHANDLE (sym);                                \
+    })
 
 int malloc_info(int options, FILE *fp)
 {

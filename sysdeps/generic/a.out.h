@@ -99,18 +99,18 @@ enum machine_type {
 #define N_FLAGS(exec) (((exec).a_info >> 24) & 0xff)
 #define N_SET_INFO(exec, magic, type, flags) \
     ((exec).a_info = ((magic) & 0xffff) \
-     | (((int)(type) & 0xff) << 16) \
-     | (((flags) & 0xff) << 24))
+                     | (((int)(type) & 0xff) << 16) \
+                     | (((flags) & 0xff) << 24))
 #define N_SET_MAGIC(exec, magic) \
     ((exec).a_info = (((exec).a_info & 0xffff0000) | ((magic) & 0xffff)))
 
 #define N_SET_MACHTYPE(exec, machtype) \
     ((exec).a_info = \
-     ((exec).a_info&0xff00ffff) | ((((int)(machtype))&0xff) << 16))
+                     ((exec).a_info&0xff00ffff) | ((((int)(machtype))&0xff) << 16))
 
 #define N_SET_FLAGS(exec, flags) \
     ((exec).a_info = \
-     ((exec).a_info&0x00ffffff) | (((flags) & 0xff) << 24))
+                     ((exec).a_info&0x00ffffff) | (((flags) & 0xff) << 24))
 
 #endif  /* sequent && i386 */
 
@@ -125,13 +125,13 @@ enum machine_type {
 
 #if !defined (N_BADMAG)
 #define N_BADMAG(x)                 \
- (N_MAGIC(x) != OMAGIC && N_MAGIC(x) != NMAGIC      \
-  && N_MAGIC(x) != ZMAGIC)
+    (N_MAGIC(x) != OMAGIC && N_MAGIC(x) != NMAGIC      \
+     && N_MAGIC(x) != ZMAGIC)
 #endif
 
 #define _N_BADMAG(x)                    \
- (N_MAGIC(x) != OMAGIC && N_MAGIC(x) != NMAGIC      \
-  && N_MAGIC(x) != ZMAGIC)
+    (N_MAGIC(x) != OMAGIC && N_MAGIC(x) != NMAGIC      \
+     && N_MAGIC(x) != ZMAGIC)
 
 #ifndef sparc
 #define _N_HDROFF(x) (SEGMENT_SIZE - sizeof (struct exec))
@@ -141,7 +141,7 @@ enum machine_type {
 
 #if !defined (N_TXTOFF)
 #define N_TXTOFF(x) \
- (N_MAGIC(x) == ZMAGIC ? _N_HDROFF((x)) + sizeof (struct exec) : sizeof (struct exec))
+    (N_MAGIC(x) == ZMAGIC ? _N_HDROFF((x)) + sizeof (struct exec) : sizeof (struct exec))
 #endif
 
 #if !defined (N_DATOFF)

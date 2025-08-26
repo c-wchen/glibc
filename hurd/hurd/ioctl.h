@@ -53,19 +53,19 @@ extern int hurd_register_ioctl_handler(int first_request, int last_request,
    avoid `defined but not used' warnings.  */
 
 #define _HURD_HANDLE_IOCTLS_1(handler, first, last, moniker)              \
-  static const struct ioctl_handler handler##_ioctl_handler##moniker          \
+    static const struct ioctl_handler handler##_ioctl_handler##moniker          \
     __attribute__ ((__unused__)) =                        \
-    { _IOC_NOTYPE (first), _IOC_NOTYPE (last),                    \
-    (ioctl_handler_t) (handler), NULL };                      \
-  text_set_element (_hurd_ioctl_handler_lists,                    \
-                    handler##_ioctl_handler##moniker)
+            { _IOC_NOTYPE (first), _IOC_NOTYPE (last),                    \
+              (ioctl_handler_t) (handler), NULL };                      \
+    text_set_element (_hurd_ioctl_handler_lists,                    \
+                      handler##_ioctl_handler##moniker)
 #define _HURD_HANDLE_IOCTLS(handler, first, last)                 \
-  _HURD_HANDLE_IOCTLS_1 (handler, first, last, first##_to_##last)
+    _HURD_HANDLE_IOCTLS_1 (handler, first, last, first##_to_##last)
 
 /* Define a library-internal handler for a single ioctl command.  */
 
 #define _HURD_HANDLE_IOCTL(handler, ioctl) \
-  _HURD_HANDLE_IOCTLS_1 (handler, ioctl, ioctl, ioctl##_only)
+    _HURD_HANDLE_IOCTLS_1 (handler, ioctl, ioctl, ioctl##_only)
 
 
 /* Install a new CTTYID port, atomically updating the dtable appropriately.

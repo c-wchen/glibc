@@ -17,10 +17,10 @@
    <https://www.gnu.org/licenses/>.  */
 
 #define PREADV(__fd, __iov, __iovcnt, __offset) \
-  preadv2 (__fd, __iov, __iovcnt, __offset, 0)
+    preadv2 (__fd, __iov, __iovcnt, __offset, 0)
 
 #define PWRITEV(__fd, __iov, __iovcnt, __offset) \
-  pwritev2 (__fd, __iov, __iovcnt, __offset, 0)
+    pwritev2 (__fd, __iov, __iovcnt, __offset, 0)
 
 #include "tst-preadvwritev-common.c"
 #include "tst-preadvwritev2-common.c"

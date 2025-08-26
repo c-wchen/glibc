@@ -40,22 +40,22 @@
 #endif
 
 #define CHECK_RES(ARG, RES, EP, EXPECTED, EXPECTED_EP)          \
-  do                                    \
+    do                                    \
     {                                   \
-      if (TEST_C23)                         \
-    {                               \
-      TEST_COMPARE ((RES), EXPECTED);               \
-      TEST_VERIFY ((EP) == EXPECTED_EP);                \
-    }                               \
-      else                              \
-    {                               \
-      TEST_COMPARE ((RES), 0);                  \
-      TEST_VERIFY ((EP) == ((ARG)[0] == L_('-')         \
-                ? (ARG) + 2             \
-                : (ARG) + 1));              \
-    }                               \
+        if (TEST_C23)                         \
+        {                               \
+            TEST_COMPARE ((RES), EXPECTED);               \
+            TEST_VERIFY ((EP) == EXPECTED_EP);                \
+        }                               \
+        else                              \
+        {                               \
+            TEST_COMPARE ((RES), 0);                  \
+            TEST_VERIFY ((EP) == ((ARG)[0] == L_('-')         \
+                                  ? (ARG) + 2             \
+                                  : (ARG) + 1));              \
+        }                               \
     }                                   \
-  while (0)
+    while (0)
 
 static void one_check(const CHAR *s, const CHAR *expected_p, long int expected_l,
                       unsigned long int expected_ul, long long int expected_ll,

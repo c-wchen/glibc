@@ -125,14 +125,14 @@ static int num1 = 67;
 static int num2 = 987654;
 
 #define FAIL() \
-  do { printf ("Failure on line %d\n", __LINE__); ret = 1; } while (0)
+    do { printf ("Failure on line %d\n", __LINE__); ret = 1; } while (0)
 #define CHK_FAIL_START \
-  chk_fail_ok = 1;              \
-  if (! sigsetjmp (chk_fail_buf, 1))        \
+    chk_fail_ok = 1;              \
+    if (! sigsetjmp (chk_fail_buf, 1))        \
     {
 #define CHK_FAIL_END \
-      chk_fail_ok = 0;              \
-      FAIL ();                  \
+    chk_fail_ok = 0;              \
+    FAIL ();                  \
     }
 #if __USE_FORTIFY_LEVEL >= 2
 # define CHK_FAIL2_START CHK_FAIL_START

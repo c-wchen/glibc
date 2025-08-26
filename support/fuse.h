@@ -96,17 +96,17 @@ __nonnull((1));
 #define support_fuse_payload_type_SETATTR struct fuse_setattr_in
 #define support_fuse_payload_type_WRITE struct fuse_write_in
 #define support_fuse_cast(typ, inh)                     \
-  ((support_fuse_payload_type_##typ *)                  \
-   support_fuse_cast_internal ((inh), FUSE_##typ))
+    ((support_fuse_payload_type_##typ *)                  \
+     support_fuse_cast_internal ((inh), FUSE_##typ))
 
 /* Same as support_fuse_cast, but also writes the passed name to *NAMEP.  */
 #define support_fuse_payload_name_type_CREATE struct fuse_create_in
 #define support_fuse_payload_name_type_MKDIR struct fuse_mkdir_in
 #define support_fuse_cast_name(typ, inh, namep)                         \
-  ((support_fuse_payload_name_type_##typ *)                             \
-   support_fuse_cast_name_internal                                      \
-   ((inh), FUSE_##typ, sizeof (support_fuse_payload_name_type_##typ),   \
-    (namep)))
+    ((support_fuse_payload_name_type_##typ *)                             \
+     support_fuse_cast_name_internal                                      \
+     ((inh), FUSE_##typ, sizeof (support_fuse_payload_name_type_##typ),   \
+      (namep)))
 
 /* This function should be called from the callback function.  It
    returns NULL if the mount point has been unmounted.  The result can

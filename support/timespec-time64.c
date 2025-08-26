@@ -28,11 +28,11 @@ struct __timespec64 timespec_sub_time64(struct __timespec64,
 
 #define test_timespec_before_impl          test_timespec_before_impl_time64
 #define test_timespec_equal_or_after_impl  \
-  test_timespec_equal_or_after_impl_time64
+    test_timespec_equal_or_after_impl_time64
 #define support_timespec_ns                support_timespec_ns_time64
 #define support_timespec_normalize         support_timespec_normalize_time64
 #define support_timespec_check_in_range    \
-  support_timespec_check_in_range_time64
+    support_timespec_check_in_range_time64
 #define timespec                           __timespec64
 #define timespec_sub                       timespec_sub_time64
 

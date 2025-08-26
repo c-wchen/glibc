@@ -42,10 +42,10 @@ typedef unsigned long long int hp_timing_t;
    RDTSC doesn't wait until all previous instructions have been executed
    before reading the counter.  */
 #  define HP_TIMING_NOW(Var) \
-  (__extension__ ({             \
-    unsigned int __aux;             \
-    (Var) = __builtin_ia32_rdtscp (&__aux); \
-  }))
+    (__extension__ ({             \
+        unsigned int __aux;             \
+        (Var) = __builtin_ia32_rdtscp (&__aux); \
+    }))
 # else
 #  define HP_TIMING_NOW(Var) ((Var) = __builtin_ia32_rdtsc ())
 # endif

@@ -155,44 +155,39 @@ static void copy_spwd_changes(struct spwd *dest, struct spwd *src,
     }
 }
 
-static enum nss_status internal_setspent(ent_t *ent, int stayopen, int needent) {
+static enum nss_status internal_setspent(ent_t *ent, int stayopen, int needent)
+{
     enum nss_status status = NSS_STATUS_SUCCESS;
 
     ent->first = ent->netgroup = 0;
     ent->files = true;
 
     /* If something was left over free it.  */
-    if (ent->netgroup)
-    {
+    if (ent->netgroup) {
         __internal_endnetgrent(&ent->netgrdata);
     }
 
-    if (ent->blacklist.data != NULL)
-    {
+    if (ent->blacklist.data != NULL) {
         ent->blacklist.current = 1;
         ent->blacklist.data[0] = '|';
         ent->blacklist.data[1] = '\0';
-    } else
-    {
+    } else {
         ent->blacklist.current = 0;
     }
 
-    if (ent->stream == NULL)
-    {
+    if (ent->stream == NULL) {
         ent->stream = __nss_files_fopen("/etc/shadow");
 
         if (ent->stream == NULL) {
             status = errno == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
         }
-    } else
-    {
+    } else {
         rewind(ent->stream);
     }
 
     give_spwd_free(&ent->pwd);
 
-    if (needent && status == NSS_STATUS_SUCCESS && setspent_impl)
-    {
+    if (needent && status == NSS_STATUS_SUCCESS && setspent_impl) {
         ent->setent_status = setspent_impl(stayopen);
     }
 
@@ -200,13 +195,13 @@ static enum nss_status internal_setspent(ent_t *ent, int stayopen, int needent) 
 }
 
 
-enum nss_status _nss_compat_setspent(int stayopen) {
+enum nss_status _nss_compat_setspent(int stayopen)
+{
     enum nss_status result;
 
     __libc_lock_lock(lock);
 
-    if (ni == NULL)
-    {
+    if (ni == NULL) {
         init_nss_interface();
     }
 
@@ -218,28 +213,25 @@ enum nss_status _nss_compat_setspent(int stayopen) {
 }
 
 
-static enum nss_status __attribute_warn_unused_result__ internal_endspent(ent_t *ent) {
-    if (ent->stream != NULL)
-    {
+static enum nss_status __attribute_warn_unused_result__ internal_endspent(ent_t *ent)
+{
+    if (ent->stream != NULL) {
         fclose(ent->stream);
         ent->stream = NULL;
     }
 
-    if (ent->netgroup)
-    {
+    if (ent->netgroup) {
         __internal_endnetgrent(&ent->netgrdata);
     }
 
     ent->first = ent->netgroup = false;
     ent->files = true;
 
-    if (ent->blacklist.data != NULL)
-    {
+    if (ent->blacklist.data != NULL) {
         ent->blacklist.current = 1;
         ent->blacklist.data[0] = '|';
         ent->blacklist.data[1] = '\0';
-    } else
-    {
+    } else {
         ent->blacklist.current = 0;
     }
 
@@ -256,13 +248,13 @@ static void internal_endspent_noerror(ent_t *ent)
     __set_errno(saved_errno);
 }
 
-enum nss_status _nss_compat_endspent(void) {
+enum nss_status _nss_compat_endspent(void)
+{
     enum nss_status result;
 
     __libc_lock_lock(lock);
 
-    if (endspent_impl)
-    {
+    if (endspent_impl) {
         endspent_impl();
     }
 
@@ -275,30 +267,27 @@ enum nss_status _nss_compat_endspent(void) {
 
 static enum nss_status getspent_next_nss_netgr(const char *name, struct spwd *result, ent_t *ent,
         char *group, char *buffer, size_t buflen,
-        int *errnop) {
+        int *errnop)
+{
     char *curdomain = NULL, *host, *user, *domain, *p2;
     size_t p2len;
 
-    if (!getspnam_r_impl)
-    {
+    if (!getspnam_r_impl) {
         return NSS_STATUS_UNAVAIL;
     }
 
     /* If the setpwent call failed, say so.  */
-    if (ent->setent_status != NSS_STATUS_SUCCESS)
-    {
+    if (ent->setent_status != NSS_STATUS_SUCCESS) {
         return ent->setent_status;
     }
 
-    if (ent->first)
-    {
+    if (ent->first) {
         memset(&ent->netgrdata, 0, sizeof(struct __netgrent));
         __internal_setnetgrent(group, &ent->netgrdata);
         ent->first = false;
     }
 
-    while (1)
-    {
+    while (1) {
         enum nss_status status;
 
         status = __internal_getnetgrent_r(&host, &user, &domain,
@@ -361,26 +350,24 @@ static enum nss_status getspent_next_nss_netgr(const char *name, struct spwd *re
 
 
 static enum nss_status getspent_next_nss(struct spwd *result, ent_t *ent,
-        char *buffer, size_t buflen, int *errnop) {
+        char *buffer, size_t buflen, int *errnop)
+{
     enum nss_status status;
     char *p2;
     size_t p2len;
 
-    if (!getspent_r_impl)
-    {
+    if (!getspent_r_impl) {
         return NSS_STATUS_UNAVAIL;
     }
 
     p2len = spwd_need_buflen(&ent->pwd);
-    if (p2len > buflen)
-    {
+    if (p2len > buflen) {
         *errnop = ERANGE;
         return NSS_STATUS_TRYAGAIN;
     }
     p2 = buffer + (buflen - p2len);
     buflen -= p2len;
-    do
-    {
+    do {
         if ((status = getspent_r_impl(result, buffer, buflen, errnop))
             != NSS_STATUS_SUCCESS) {
             return status;
@@ -395,9 +382,9 @@ static enum nss_status getspent_next_nss(struct spwd *result, ent_t *ent,
 
 /* This function handle the +user entries in /etc/shadow */
 static enum nss_status getspnam_plususer(const char *name, struct spwd *result, ent_t *ent,
-        char *buffer, size_t buflen, int *errnop) {
-    if (!getspnam_r_impl)
-    {
+        char *buffer, size_t buflen, int *errnop)
+{
+    if (!getspnam_r_impl) {
         return NSS_STATUS_UNAVAIL;
     }
 
@@ -411,8 +398,7 @@ static enum nss_status getspnam_plususer(const char *name, struct spwd *result, 
     copy_spwd_changes(&pwd, result, NULL, 0);
 
     size_t plen = spwd_need_buflen(&pwd);
-    if (plen > buflen)
-    {
+    if (plen > buflen) {
         *errnop = ERANGE;
         return NSS_STATUS_TRYAGAIN;
     }
@@ -421,13 +407,11 @@ static enum nss_status getspnam_plususer(const char *name, struct spwd *result, 
 
     enum nss_status status = getspnam_r_impl(name, result, buffer, buflen,
                              errnop);
-    if (status != NSS_STATUS_SUCCESS)
-    {
+    if (status != NSS_STATUS_SUCCESS) {
         return status;
     }
 
-    if (in_blacklist(result->sp_namp, strlen(result->sp_namp), ent))
-    {
+    if (in_blacklist(result->sp_namp, strlen(result->sp_namp), ent)) {
         return NSS_STATUS_NOTFOUND;
     }
 
@@ -439,10 +423,10 @@ static enum nss_status getspnam_plususer(const char *name, struct spwd *result, 
 
 
 static enum nss_status getspent_next_file(struct spwd *result, ent_t *ent,
-        char *buffer, size_t buflen, int *errnop) {
+        char *buffer, size_t buflen, int *errnop)
+{
     struct parser_data *data = (void *) buffer;
-    while (1)
-    {
+    while (1) {
         fpos_t pos;
         int parse_res = 0;
         char *p;
@@ -583,9 +567,9 @@ erange_reset:
 
 
 static enum nss_status internal_getspent_r(struct spwd *pw, ent_t *ent,
-        char *buffer, size_t buflen, int *errnop) {
-    if (ent->netgroup)
-    {
+        char *buffer, size_t buflen, int *errnop)
+{
+    if (ent->netgroup) {
         enum nss_status status;
 
         /* We are searching members in a netgroup */
@@ -598,35 +582,31 @@ static enum nss_status internal_getspent_r(struct spwd *pw, ent_t *ent,
         } else {
             return status;
         }
-    } else if (ent->files)
-    {
+    } else if (ent->files) {
         return getspent_next_file(pw, ent, buffer, buflen, errnop);
-    } else
-    {
+    } else {
         return getspent_next_nss(pw, ent, buffer, buflen, errnop);
     }
 }
 
 
 enum nss_status _nss_compat_getspent_r(struct spwd *pwd, char *buffer, size_t buflen,
-                                       int *errnop) {
+                                       int *errnop)
+{
     enum nss_status result = NSS_STATUS_SUCCESS;
 
     __libc_lock_lock(lock);
 
     /* Be prepared that the setpwent function was not called before.  */
-    if (ni == NULL)
-    {
+    if (ni == NULL) {
         init_nss_interface();
     }
 
-    if (ext_ent.stream == NULL)
-    {
+    if (ext_ent.stream == NULL) {
         result = internal_setspent(&ext_ent, 1, 1);
     }
 
-    if (result == NSS_STATUS_SUCCESS)
-    {
+    if (result == NSS_STATUS_SUCCESS) {
         result = internal_getspent_r(pwd, &ext_ent, buffer, buflen, errnop);
     }
 
@@ -638,11 +618,11 @@ enum nss_status _nss_compat_getspent_r(struct spwd *pwd, char *buffer, size_t bu
 
 /* Searches in /etc/passwd and the NIS/NIS+ map for a special user */
 static enum nss_status internal_getspnam_r(const char *name, struct spwd *result, ent_t *ent,
-        char *buffer, size_t buflen, int *errnop) {
+        char *buffer, size_t buflen, int *errnop)
+{
     struct parser_data *data = (void *) buffer;
 
-    while (1)
-    {
+    while (1) {
         fpos_t pos;
         char *p;
         int parse_res;
@@ -779,22 +759,21 @@ erange_reset:
 
 
 enum nss_status _nss_compat_getspnam_r(const char *name, struct spwd *pwd,
-                                       char *buffer, size_t buflen, int *errnop) {
+                                       char *buffer, size_t buflen, int *errnop)
+{
     enum nss_status result;
     ent_t ent = {
         false, true, false, NSS_STATUS_SUCCESS, NULL, { NULL, 0, 0},
         { NULL, NULL, 0, 0, 0, 0, 0, 0, 0}
     };
 
-    if (name[0] == '-' || name[0] == '+')
-    {
+    if (name[0] == '-' || name[0] == '+') {
         return NSS_STATUS_NOTFOUND;
     }
 
     __libc_lock_lock(lock);
 
-    if (ni == NULL)
-    {
+    if (ni == NULL) {
         init_nss_interface();
     }
 
@@ -802,8 +781,7 @@ enum nss_status _nss_compat_getspnam_r(const char *name, struct spwd *pwd,
 
     result = internal_setspent(&ent, 0, 0);
 
-    if (result == NSS_STATUS_SUCCESS)
-    {
+    if (result == NSS_STATUS_SUCCESS) {
         result = internal_getspnam_r(name, pwd, &ent, buffer, buflen, errnop);
     }
 

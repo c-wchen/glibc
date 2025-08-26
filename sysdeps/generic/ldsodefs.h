@@ -44,9 +44,9 @@ __BEGIN_DECLS
 
 #define VERSYMIDX(sym)  (DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGIDX (sym))
 #define VALIDX(tag) (DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGNUM \
-             + DT_EXTRANUM + DT_VALTAGIDX (tag))
+                     + DT_EXTRANUM + DT_VALTAGIDX (tag))
 #define ADDRIDX(tag)    (DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGNUM \
-             + DT_EXTRANUM + DT_VALNUM + DT_ADDRTAGIDX (tag))
+                         + DT_EXTRANUM + DT_VALNUM + DT_ADDRTAGIDX (tag))
 
 /* Type of GNU hash which the machine uses.  */
 #ifndef ELF_MACHINE_GNU_HASH_ADDRIDX
@@ -56,13 +56,13 @@ __BEGIN_DECLS
 /* Calculate the index of a symbol in GNU hash.  */
 #ifndef ELF_MACHINE_HASH_SYMIDX
 # define ELF_MACHINE_HASH_SYMIDX(map, hasharr) \
-  ((hasharr) - (map)->l_gnu_chain_zero)
+    ((hasharr) - (map)->l_gnu_chain_zero)
 #endif
 
 /* Setup MIPS xhash.  Defined only for MIPS.  */
 #ifndef ELF_MACHINE_XHASH_SETUP
 # define ELF_MACHINE_XHASH_SETUP(hash32, symbias, map) \
-  ((void) (hash32), (void) (symbias), (void) (map))
+    ((void) (hash32), (void) (symbias), (void) (map))
 #endif
 
 /* We use this macro to refer to ELF types independent of the native wordsize.
@@ -86,7 +86,7 @@ dl_relocate_ld(const struct link_map *l)
   most architectures the entry is already relocated - but for some not
   and we need to relocate at access time.  */
 #define D_PTR(map, i) \
-  ((map)->i->d_un.d_ptr + (dl_relocate_ld (map) ? 0 : (map)->l_addr))
+    ((map)->i->d_un.d_ptr + (dl_relocate_ld (map) ? 0 : (map)->l_addr))
 
 /* Returns the soname string if the link map has a DT_SONAME tag, or
    NULL if it does not.  */
@@ -107,9 +107,9 @@ typedef struct link_map *lookup_t;
 /* Calculate the address of symbol REF using the base address from map MAP,
    if non-NULL.  Don't check for NULL map if MAP_SET is TRUE.  */
 #define SYMBOL_ADDRESS(map, ref, map_set)               \
-  ((ref) == NULL ? 0                            \
-   : (__glibc_unlikely ((ref)->st_shndx == SHN_ABS) ? 0         \
-      : LOOKUP_VALUE_ADDRESS (map, map_set)) + (ref)->st_value)
+    ((ref) == NULL ? 0                            \
+     : (__glibc_unlikely ((ref)->st_shndx == SHN_ABS) ? 0         \
+        : LOOKUP_VALUE_ADDRESS (map, map_set)) + (ref)->st_value)
 
 /* Type of a constructor function, in DT_INIT, DT_INIT_ARRAY,
    DT_PREINIT_ARRAY.  */
@@ -123,20 +123,20 @@ typedef void (*fini_t)(void);
    specific descriptor. */
 #ifndef ELF_FUNCTION_PTR_IS_SPECIAL
 # define DL_SYMBOL_ADDRESS(map, ref) \
- (void *) SYMBOL_ADDRESS (map, ref, false)
+    (void *) SYMBOL_ADDRESS (map, ref, false)
 # define DL_LOOKUP_ADDRESS(addr) ((ElfW(Addr)) (addr))
 # define DL_CALL_DT_INIT(map, start, argc, argv, env) \
- ((dl_init_t) (start)) (argc, argv, env)
+    ((dl_init_t) (start)) (argc, argv, env)
 # define DL_CALL_DT_FINI(map, start) ((fini_t) (start)) ()
 #endif
 
 /* On some architectures dladdr can't use st_size of all symbols this way.  */
 #define DL_ADDR_SYM_MATCH(L, SYM, MATCHSYM, ADDR) \
-  ((ADDR) >= (L)->l_addr + (SYM)->st_value              \
-   && ((((SYM)->st_shndx == SHN_UNDEF || (SYM)->st_size == 0)       \
-    && (ADDR) == (L)->l_addr + (SYM)->st_value)         \
-       || (ADDR) < (L)->l_addr + (SYM)->st_value + (SYM)->st_size)  \
-   && ((MATCHSYM) == NULL || (MATCHSYM)->st_value < (SYM)->st_value))
+    ((ADDR) >= (L)->l_addr + (SYM)->st_value              \
+     && ((((SYM)->st_shndx == SHN_UNDEF || (SYM)->st_size == 0)       \
+          && (ADDR) == (L)->l_addr + (SYM)->st_value)         \
+         || (ADDR) < (L)->l_addr + (SYM)->st_value + (SYM)->st_size)  \
+     && ((MATCHSYM) == NULL || (MATCHSYM)->st_value < (SYM)->st_value))
 
 /* According to the ELF gABI no STV_HIDDEN or STV_INTERNAL symbols are
    expected to be present in dynamic symbol tables as they should have
@@ -174,17 +174,17 @@ static __always_inline bool dl_symbol_visibility_binds_local_p(const ElfW(Sym) *
    and 3 but not in a matching order.  The following macros allows
    converting from the PF_x values to PROT_xxx values.  */
 #define PF_TO_PROT \
-  ((PROT_READ << (PF_R * 4))                              \
-   | (PROT_WRITE << (PF_W * 4))                           \
-   | (PROT_EXEC << (PF_X * 4))                            \
-   | ((PROT_READ | PROT_WRITE) << ((PF_R | PF_W) * 4))                \
-   | ((PROT_READ | PROT_EXEC) << ((PF_R | PF_X) * 4))                 \
-   | ((PROT_WRITE | PROT_EXEC) << (PF_W | PF_X) * 4)                  \
-   | ((PROT_READ | PROT_WRITE | PROT_EXEC) << ((PF_R | PF_W | PF_X) * 4)))
+    ((PROT_READ << (PF_R * 4))                              \
+     | (PROT_WRITE << (PF_W * 4))                           \
+     | (PROT_EXEC << (PF_X * 4))                            \
+     | ((PROT_READ | PROT_WRITE) << ((PF_R | PF_W) * 4))                \
+     | ((PROT_READ | PROT_EXEC) << ((PF_R | PF_X) * 4))                 \
+     | ((PROT_WRITE | PROT_EXEC) << (PF_W | PF_X) * 4)                  \
+     | ((PROT_READ | PROT_WRITE | PROT_EXEC) << ((PF_R | PF_W | PF_X) * 4)))
 
 /* The filename itself, or the main program name, if available.  */
 #define DSO_FILENAME(name) ((name)[0] ? (name)                    \
-                : (rtld_progname ?: "<main program>"))
+                            : (rtld_progname ?: "<main program>"))
 
 #define RTLD_PROGNAME (rtld_progname ?: "<program name unknown>")
 
@@ -480,7 +480,7 @@ __libc_rwlock_define(EXTERN, _dl_pthread_threads_lock)
 # if IS_IN (rtld)
 #  ifdef HAVE_SDATA_SECTION
 #   define __rtld_local_attribute__ \
-        __attribute__ ((visibility ("hidden"), section (".sdata")))
+    __attribute__ ((visibility ("hidden"), section (".sdata")))
 #   undef __rtld_global_attribute__
 #   define __rtld_global_attribute__ __attribute__ ((section (".sdata")))
 #  else

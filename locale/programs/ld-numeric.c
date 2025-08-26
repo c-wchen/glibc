@@ -183,43 +183,43 @@ void numeric_read(struct linereader *ldfile, struct localedef_t *result,
 
         switch (nowtok) {
 #define STR_ELEM(cat) \
-    case tok_##cat:                               \
-      /* Ignore the rest of the line if we don't need the input of        \
-         this line.  */                           \
-      if (ignore_content)                             \
-        {                                     \
-          lr_ignore_rest (ldfile, 0);                     \
-          break;                                  \
-        }                                     \
-                                          \
-      ldfile->return_widestr = 1;                         \
-      now = lr_token (ldfile, charmap, result, repertoire, verbose);          \
-      if (now->tok != tok_string)                         \
+case tok_##cat:                               \
+    /* Ignore the rest of the line if we don't need the input of        \
+       this line.  */                           \
+    if (ignore_content)                             \
+    {                                     \
+        lr_ignore_rest (ldfile, 0);                     \
+        break;                                  \
+    }                                     \
+    \
+    ldfile->return_widestr = 1;                         \
+    now = lr_token (ldfile, charmap, result, repertoire, verbose);          \
+    if (now->tok != tok_string)                         \
         goto err_label;                           \
-      if (numeric->cat != NULL)                       \
+    if (numeric->cat != NULL)                       \
         lr_error (ldfile, _("\
 %s: field `%s' declared more than once"), "LC_NUMERIC", #cat);		      \
-      else if (!ignore_content && now->val.str.startmb == NULL)       \
-        {                                     \
-          lr_error (ldfile, _("\
+    else if (!ignore_content && now->val.str.startmb == NULL)       \
+    {                                     \
+        lr_error (ldfile, _("\
 %s: unknown character in field `%s'"), "LC_NUMERIC", #cat);		      \
-          numeric->cat = "";                          \
-          numeric->cat##_wc = L'\0';                      \
-        }                                     \
-      else if (now->val.str.startwc != NULL && now->val.str.lenwc > 2)    \
-        {                                     \
-          lr_error (ldfile, _("\
+        numeric->cat = "";                          \
+        numeric->cat##_wc = L'\0';                      \
+    }                                     \
+    else if (now->val.str.startwc != NULL && now->val.str.lenwc > 2)    \
+    {                                     \
+        lr_error (ldfile, _("\
 %s: value for field `%s' must be a single character"), "LC_NUMERIC", #cat);   \
-        }                                     \
-      else if (!ignore_content)                       \
-        {                                     \
-          numeric->cat = now->val.str.startmb;                \
-                                          \
-          if (now->val.str.startwc != NULL)                   \
-        numeric->cat##_wc = *now->val.str.startwc;            \
-        }                                     \
-      ldfile->return_widestr = 0;                         \
-      break
+    }                                     \
+    else if (!ignore_content)                       \
+    {                                     \
+        numeric->cat = now->val.str.startmb;                \
+        \
+        if (now->val.str.startwc != NULL)                   \
+            numeric->cat##_wc = *now->val.str.startwc;            \
+    }                                     \
+    ldfile->return_widestr = 0;                         \
+    break
 
                 STR_ELEM(decimal_point);
                 STR_ELEM(thousands_sep);

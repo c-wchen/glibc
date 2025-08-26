@@ -110,7 +110,8 @@ int _IO_fwide(FILE *fp, int mode)
 enum __codecvt_result __libio_codecvt_out(struct _IO_codecvt *codecvt, __mbstate_t *statep,
         const wchar_t *from_start, const wchar_t *from_end,
         const wchar_t **from_stop, char *to_start, char *to_end,
-        char **to_stop) {
+        char **to_stop)
+{
     enum __codecvt_result result;
 
     struct __gconv_step *gs = codecvt->__cd_out.step;
@@ -123,8 +124,7 @@ enum __codecvt_result __libio_codecvt_out(struct _IO_codecvt *codecvt, __mbstate
     codecvt->__cd_out.step_data.__statep = statep;
 
     __gconv_fct fct = gs->__fct;
-    if (gs->__shlib_handle != NULL)
-    {
+    if (gs->__shlib_handle != NULL) {
         PTR_DEMANGLE(fct);
     }
 
@@ -136,8 +136,7 @@ enum __codecvt_result __libio_codecvt_out(struct _IO_codecvt *codecvt, __mbstate
     *from_stop = (wchar_t *) from_start_copy;
     *to_stop = (char *) codecvt->__cd_out.step_data.__outbuf;
 
-    switch (status)
-    {
+    switch (status) {
         case __GCONV_OK:
         case __GCONV_EMPTY_INPUT:
             result = __codecvt_ok;
@@ -160,7 +159,8 @@ enum __codecvt_result __libio_codecvt_out(struct _IO_codecvt *codecvt, __mbstate
 enum __codecvt_result __libio_codecvt_in(struct _IO_codecvt *codecvt, __mbstate_t *statep,
         const char *from_start, const char *from_end,
         const char **from_stop,
-        wchar_t *to_start, wchar_t *to_end, wchar_t **to_stop) {
+        wchar_t *to_start, wchar_t *to_end, wchar_t **to_stop)
+{
     enum __codecvt_result result;
 
     struct __gconv_step *gs = codecvt->__cd_in.step;
@@ -173,8 +173,7 @@ enum __codecvt_result __libio_codecvt_in(struct _IO_codecvt *codecvt, __mbstate_
     codecvt->__cd_in.step_data.__statep = statep;
 
     __gconv_fct fct = gs->__fct;
-    if (gs->__shlib_handle != NULL)
-    {
+    if (gs->__shlib_handle != NULL) {
         PTR_DEMANGLE(fct);
     }
 
@@ -186,8 +185,7 @@ enum __codecvt_result __libio_codecvt_in(struct _IO_codecvt *codecvt, __mbstate_
     *from_stop = (const char *) from_start_copy;
     *to_stop = (wchar_t *) codecvt->__cd_in.step_data.__outbuf;
 
-    switch (status)
-    {
+    switch (status) {
         case __GCONV_OK:
         case __GCONV_EMPTY_INPUT:
             result = __codecvt_ok;

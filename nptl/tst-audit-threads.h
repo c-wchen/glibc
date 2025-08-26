@@ -26,49 +26,49 @@
 #define NUM(x, y) CONCAT (x, y)
 
 #define FUNC10(x)   \
-  FUNC (NUM (x, 0));    \
-  FUNC (NUM (x, 1));    \
-  FUNC (NUM (x, 2));    \
-  FUNC (NUM (x, 3));    \
-  FUNC (NUM (x, 4));    \
-  FUNC (NUM (x, 5));    \
-  FUNC (NUM (x, 6));    \
-  FUNC (NUM (x, 7));    \
-  FUNC (NUM (x, 8));    \
-  FUNC (NUM (x, 9))
+    FUNC (NUM (x, 0));    \
+    FUNC (NUM (x, 1));    \
+    FUNC (NUM (x, 2));    \
+    FUNC (NUM (x, 3));    \
+    FUNC (NUM (x, 4));    \
+    FUNC (NUM (x, 5));    \
+    FUNC (NUM (x, 6));    \
+    FUNC (NUM (x, 7));    \
+    FUNC (NUM (x, 8));    \
+    FUNC (NUM (x, 9))
 
 #define FUNC100(x)  \
-  FUNC10 (NUM (x, 0));  \
-  FUNC10 (NUM (x, 1));  \
-  FUNC10 (NUM (x, 2));  \
-  FUNC10 (NUM (x, 3));  \
-  FUNC10 (NUM (x, 4));  \
-  FUNC10 (NUM (x, 5));  \
-  FUNC10 (NUM (x, 6));  \
-  FUNC10 (NUM (x, 7));  \
-  FUNC10 (NUM (x, 8));  \
-  FUNC10 (NUM (x, 9))
+    FUNC10 (NUM (x, 0));  \
+    FUNC10 (NUM (x, 1));  \
+    FUNC10 (NUM (x, 2));  \
+    FUNC10 (NUM (x, 3));  \
+    FUNC10 (NUM (x, 4));  \
+    FUNC10 (NUM (x, 5));  \
+    FUNC10 (NUM (x, 6));  \
+    FUNC10 (NUM (x, 7));  \
+    FUNC10 (NUM (x, 8));  \
+    FUNC10 (NUM (x, 9))
 
 #define FUNC1000(x)     \
-  FUNC100 (NUM (x, 0));     \
-  FUNC100 (NUM (x, 1));     \
-  FUNC100 (NUM (x, 2));     \
-  FUNC100 (NUM (x, 3));     \
-  FUNC100 (NUM (x, 4));     \
-  FUNC100 (NUM (x, 5));     \
-  FUNC100 (NUM (x, 6));     \
-  FUNC100 (NUM (x, 7));     \
-  FUNC100 (NUM (x, 8));     \
-  FUNC100 (NUM (x, 9))
+    FUNC100 (NUM (x, 0));     \
+    FUNC100 (NUM (x, 1));     \
+    FUNC100 (NUM (x, 2));     \
+    FUNC100 (NUM (x, 3));     \
+    FUNC100 (NUM (x, 4));     \
+    FUNC100 (NUM (x, 5));     \
+    FUNC100 (NUM (x, 6));     \
+    FUNC100 (NUM (x, 7));     \
+    FUNC100 (NUM (x, 8));     \
+    FUNC100 (NUM (x, 9))
 
 #define FUNC7000()  \
-  FUNC1000 (1);     \
-  FUNC1000 (2);     \
-  FUNC1000 (3);     \
-  FUNC1000 (4);     \
-  FUNC1000 (5);     \
-  FUNC1000 (6);     \
-  FUNC1000 (7);
+    FUNC1000 (1);     \
+    FUNC1000 (2);     \
+    FUNC1000 (3);     \
+    FUNC1000 (4);     \
+    FUNC1000 (5);     \
+    FUNC1000 (6);     \
+    FUNC1000 (7);
 
 #ifdef FUNC
 # undef FUNC

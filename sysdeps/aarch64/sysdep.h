@@ -45,17 +45,17 @@
 
 /* Add a NT_GNU_PROPERTY_TYPE_0 note.  */
 #define GNU_PROPERTY(type, value)   \
-  .section .note.gnu.property, "a"; \
-  .p2align 3;               \
-  .word 4;              \
-  .word 16;             \
-  .word 5;              \
-  .asciz "GNU";             \
-  .word type;               \
-  .word 4;              \
-  .word value;              \
-  .word 0;              \
-  .text
+    .section .note.gnu.property, "a"; \
+    .p2align 3;               \
+    .word 4;              \
+    .word 16;             \
+    .word 5;              \
+    .asciz "GNU";             \
+    .word type;               \
+    .word 4;              \
+    .word value;              \
+    .word 0;              \
+    .text
 
 /* Add GNU property note with the supported features to all asm code
    where sysdep.h is included.  */
@@ -63,23 +63,23 @@ GNU_PROPERTY(FEATURE_1_AND, FEATURE_1_BTI | FEATURE_1_PAC | FEATURE_1_GCS)
 
 /* Define an entry point visible from C.  */
 #define ENTRY(name)                     \
-  .globl C_SYMBOL_NAME(name);                   \
-  .type C_SYMBOL_NAME(name),%function;              \
-  .p2align 6;                           \
-  C_LABEL(name)                         \
-  cfi_startproc;                        \
-  bti   c;                          \
-  CALL_MCOUNT
+    .globl C_SYMBOL_NAME(name);                   \
+    .type C_SYMBOL_NAME(name),%function;              \
+    .p2align 6;                           \
+    C_LABEL(name)                         \
+    cfi_startproc;                        \
+    bti   c;                          \
+    CALL_MCOUNT
 
 /* Define an entry point visible from C.  */
 #define ENTRY_ALIGN(name, align)                \
-  .globl C_SYMBOL_NAME(name);                   \
-  .type C_SYMBOL_NAME(name),%function;              \
-  .p2align align;                       \
-  C_LABEL(name)                         \
-  cfi_startproc;                        \
-  bti   c;                          \
-  CALL_MCOUNT
+    .globl C_SYMBOL_NAME(name);                   \
+    .type C_SYMBOL_NAME(name),%function;              \
+    .p2align align;                       \
+    C_LABEL(name)                         \
+    cfi_startproc;                        \
+    bti   c;                          \
+    CALL_MCOUNT
 
 /* Define an entry point visible from C with a specified alignment and
    pre-padding with NOPs.  This can be used to ensure that a critical
@@ -87,21 +87,21 @@ GNU_PROPERTY(FEATURE_1_AND, FEATURE_1_BTI | FEATURE_1_PAC | FEATURE_1_GCS)
    does not adjust the padding if CALL_MCOUNT is defined. */
 
 #define ENTRY_ALIGN_AND_PAD(name, align, padding)       \
-  .globl C_SYMBOL_NAME(name);                   \
-  .type C_SYMBOL_NAME(name),%function;              \
-  .p2align align;                       \
-  .rep padding - 1; /* -1 for bti c.  */            \
-  nop;                              \
-  .endr;                            \
-  C_LABEL(name)                         \
-  cfi_startproc;                        \
-  bti   c;                          \
-  CALL_MCOUNT
+    .globl C_SYMBOL_NAME(name);                   \
+    .type C_SYMBOL_NAME(name),%function;              \
+    .p2align align;                       \
+    .rep padding - 1; /* -1 for bti c.  */            \
+    nop;                              \
+    .endr;                            \
+    C_LABEL(name)                         \
+    cfi_startproc;                        \
+    bti   c;                          \
+    CALL_MCOUNT
 
 #undef  END
 #define END(name)                       \
-  cfi_endproc;                          \
-  ASM_SIZE_DIRECTIVE(name)
+    cfi_endproc;                          \
+    ASM_SIZE_DIRECTIVE(name)
 
 /* If compiled for profiling, call `mcount' at the start of each function.  */
 #ifdef  PROF

@@ -5,15 +5,15 @@
 static char *fname;
 
 #define PREPARE(argc, argv) \
-  do {                                  \
-    int fd = create_temp_file ("tst-ext2", &fname);         \
-    if (fd == -1)                           \
-      {                                 \
-    puts ("cannot create temporary file");              \
-    exit (1);                           \
-      }                                 \
-    close (fd);                             \
-  } while (0)
+    do {                                  \
+        int fd = create_temp_file ("tst-ext2", &fname);         \
+        if (fd == -1)                           \
+        {                                 \
+            puts ("cannot create temporary file");              \
+            exit (1);                           \
+        }                                 \
+        close (fd);                             \
+    } while (0)
 
 
 static int do_test(void)

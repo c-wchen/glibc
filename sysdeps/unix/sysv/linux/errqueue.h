@@ -39,6 +39,6 @@ struct sock_extended_err {
 #define SO_EE_ORIGIN_ICMP6 3
 
 #define SO_EE_OFFENDER(see) \
-  ((struct sockaddr *)(((struct sock_extended_err)(see))+1))
+    ((struct sockaddr *)(((struct sock_extended_err)(see))+1))
 
 #endif /* bits/errqueue.h */

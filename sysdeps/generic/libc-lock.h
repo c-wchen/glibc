@@ -90,34 +90,34 @@
 
 /* Call handler iff the first call.  */
 #define __libc_once(ONCE_CONTROL, INIT_FUNCTION) \
-  do {                                        \
-    if ((ONCE_CONTROL) == 0) {                            \
-      INIT_FUNCTION ();                               \
-      (ONCE_CONTROL) = 1;                             \
-    }                                         \
-  } while (0)
+    do {                                        \
+        if ((ONCE_CONTROL) == 0) {                            \
+            INIT_FUNCTION ();                               \
+            (ONCE_CONTROL) = 1;                             \
+        }                                         \
+    } while (0)
 
 /* Get once control variable.  */
 #define __libc_once_get(ONCE_CONTROL) \
-  ((ONCE_CONTROL) == 1)
+    ((ONCE_CONTROL) == 1)
 
 /* Start a critical region with a cleanup function */
 #define __libc_cleanup_region_start(DOIT, FCT, ARG)             \
-{                                       \
-  typeof (***(FCT)) *__save_FCT = (DOIT) ? (FCT) : 0;               \
-  typeof (ARG) __save_ARG = ARG;                        \
-  /* close brace is in __libc_cleanup_region_end below. */
+    {                                       \
+        typeof (***(FCT)) *__save_FCT = (DOIT) ? (FCT) : 0;               \
+        typeof (ARG) __save_ARG = ARG;                        \
+        /* close brace is in __libc_cleanup_region_end below. */
 
 /* End a critical region started with __libc_cleanup_region_start. */
 #define __libc_cleanup_region_end(DOIT)                     \
-  if ((DOIT) && __save_FCT != 0)                        \
-    (*__save_FCT)(__save_ARG);                          \
-}
+    if ((DOIT) && __save_FCT != 0)                        \
+        (*__save_FCT)(__save_ARG);                          \
+    }
 
 /* Sometimes we have to exit the block in the middle.  */
 #define __libc_cleanup_end(DOIT)                        \
-  if ((DOIT) && __save_FCT != 0)                        \
-    (*__save_FCT)(__save_ARG);                          \
+    if ((DOIT) && __save_FCT != 0)                        \
+        (*__save_FCT)(__save_ARG);                          \
 
 #define __libc_cleanup_push(fct, arg) __libc_cleanup_region_start (1, fct, arg)
 #define __libc_cleanup_pop(execute) __libc_cleanup_region_end (execute)

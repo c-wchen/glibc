@@ -42,21 +42,21 @@
     .section .rodata.cst4,"aM",@progbits,4; \
     .p2align 2;             \
     .type flt_min,@object;          \
-flt_min:                    \
+    flt_min:                    \
     .byte 0, 0, 0x80, 0;            \
     .size flt_min, .-flt_min;
 #define DEFINE_DBL_MIN              \
     .section .rodata.cst8,"aM",@progbits,8; \
     .p2align 3;             \
     .type dbl_min,@object;          \
-dbl_min:                    \
+    dbl_min:                    \
     .byte 0, 0, 0, 0, 0, 0, 0x10, 0;    \
     .size dbl_min, .-dbl_min;
 #define DEFINE_LDBL_MIN                 \
     .section .rodata.cst16,"aM",@progbits,16;   \
     .p2align 4;                 \
     .type ldbl_min,@object;             \
-ldbl_min:                       \
+    ldbl_min:                       \
     .byte 0, 0, 0, 0, 0, 0, 0, 0x80, 0x1, 0;    \
     .byte 0, 0, 0, 0, 0, 0;             \
     .size ldbl_min, .-ldbl_min;
@@ -79,7 +79,7 @@ ldbl_min:                       \
     fld %st(0);             \
     fmul    %st(0);             \
     fstps   (%esp);             \
-6424:   fstps   (%esp);             \
+    6424:   fstps   (%esp);             \
     flds    (%esp);             \
     addl    $4, %esp;           \
     cfi_adjust_cfa_offset (-4);
@@ -95,7 +95,7 @@ ldbl_min:                       \
     fld %st(0);             \
     fmul    %st(0);             \
     fstpl   (%esp);             \
-6453:   fstpl   (%esp);             \
+    6453:   fstpl   (%esp);             \
     fldl    (%esp);             \
     addl    $8, %esp;           \
     cfi_adjust_cfa_offset (-8);
@@ -112,7 +112,7 @@ ldbl_min:                       \
     fld %st(0);             \
     fmul    %st(0);             \
     fstps   (%esp);             \
-6424:   fstps   (%esp);             \
+    6424:   fstps   (%esp);             \
     flds    (%esp);             \
     addl    $4, %esp;           \
     cfi_adjust_cfa_offset (-4);
@@ -126,7 +126,7 @@ ldbl_min:                       \
     fld %st(0);             \
     fmul    %st(0);             \
     fstpl   (%esp);             \
-6453:   fstpl   (%esp);             \
+    6453:   fstpl   (%esp);             \
     fldl    (%esp);             \
     addl    $8, %esp;           \
     cfi_adjust_cfa_offset (-8);
@@ -144,7 +144,7 @@ ldbl_min:                       \
     fld %st(0);             \
     fmul    %st(0);             \
     fstps   (%esp);             \
-6424:   fstps   (%esp);             \
+    6424:   fstps   (%esp);             \
     flds    (%esp);             \
     addl    $4, %esp;           \
     cfi_adjust_cfa_offset (-4);
@@ -160,7 +160,7 @@ ldbl_min:                       \
     fld %st(0);             \
     fmul    %st(0);             \
     fstpl   (%esp);             \
-6453:   fstpl   (%esp);             \
+    6453:   fstpl   (%esp);             \
     fldl    (%esp);             \
     addl    $8, %esp;           \
     cfi_adjust_cfa_offset (-8);
@@ -184,7 +184,7 @@ ldbl_min:                       \
     fstps   (%esp);             \
     addl    $4, %esp;           \
     cfi_adjust_cfa_offset (-4);     \
-6424:
+    6424:
 #define DBL_CHECK_FORCE_UFLOW           \
     fldl    MO(dbl_min);            \
     fld %st(1);             \
@@ -200,7 +200,7 @@ ldbl_min:                       \
     fstpl   (%esp);             \
     addl    $8, %esp;           \
     cfi_adjust_cfa_offset (-8);     \
-6453:
+    6453:
 
 /* Likewise, but also remove excess range and precision if the value
    is subnormal.  */
@@ -221,7 +221,7 @@ ldbl_min:                       \
     flds    (%esp);             \
     addl    $4, %esp;           \
     cfi_adjust_cfa_offset (-4);     \
-6424:
+    6424:
 #define DBL_CHECK_FORCE_UFLOW_NARROW        \
     fldl    MO(dbl_min);            \
     fld %st(1);             \
@@ -239,7 +239,7 @@ ldbl_min:                       \
     fldl    (%esp);             \
     addl    $8, %esp;           \
     cfi_adjust_cfa_offset (-8);     \
-6453:
+    6453:
 
 /* Likewise, but the argument is nonnegative or NaN.  */
 #define LDBL_CHECK_FORCE_UFLOW_NONNEG_NAN   \
@@ -252,7 +252,7 @@ ldbl_min:                       \
     fld %st(0);             \
     fmul    %st(0);             \
     fstp    %st(0);             \
-6464:
+    6464:
 
 /* Likewise, but the argument is not a NaN.  */
 #define FLT_CHECK_FORCE_UFLOW_NONNAN        \
@@ -269,7 +269,7 @@ ldbl_min:                       \
     fstps   (%esp);             \
     addl    $4, %esp;           \
     cfi_adjust_cfa_offset (-4);     \
-6424:
+    6424:
 #define DBL_CHECK_FORCE_UFLOW_NONNAN        \
     fld %st(0);             \
     fabs;                   \
@@ -284,7 +284,7 @@ ldbl_min:                       \
     fstpl   (%esp);             \
     addl    $8, %esp;           \
     cfi_adjust_cfa_offset (-8);     \
-6453:
+    6453:
 #define LDBL_CHECK_FORCE_UFLOW_NONNAN       \
     fldt    MO(ldbl_min);           \
     fld %st(1);             \
@@ -296,7 +296,7 @@ ldbl_min:                       \
     fld %st(0);             \
     fmul    %st(0);             \
     fstp    %st(0);             \
-6464:
+    6464:
 
 /* Likewise, but the argument is nonnegative and not a NaN.  */
 #define FLT_CHECK_FORCE_UFLOW_NONNEG        \
@@ -311,7 +311,7 @@ ldbl_min:                       \
     fstps   (%esp);             \
     addl    $4, %esp;           \
     cfi_adjust_cfa_offset (-4);     \
-6424:
+    6424:
 #define DBL_CHECK_FORCE_UFLOW_NONNEG        \
     fcoml   MO(dbl_min);            \
     fnstsw;                 \
@@ -324,7 +324,7 @@ ldbl_min:                       \
     fstpl   (%esp);             \
     addl    $8, %esp;           \
     cfi_adjust_cfa_offset (-8);     \
-6453:
+    6453:
 #define LDBL_CHECK_FORCE_UFLOW_NONNEG       \
     fldt    MO(ldbl_min);           \
     fld %st(1);             \
@@ -335,6 +335,6 @@ ldbl_min:                       \
     fld %st(0);             \
     fmul    %st(0);             \
     fstp    %st(0);             \
-6464:
+    6464:
 
 #endif /* i386-math-asm.h.  */

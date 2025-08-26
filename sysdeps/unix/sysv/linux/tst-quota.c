@@ -40,7 +40,7 @@ void check_size(const char *name1, size_t size1,
 }
 
 #define CHECK_SIZE(type1, type2) \
-  check_size (#type1, sizeof (type1), #type2, sizeof (type2))
+    check_size (#type1, sizeof (type1), #type2, sizeof (type2))
 
 int do_test(void)
 {

@@ -630,15 +630,15 @@ static int allocate_stack(const struct pthread_attr *attr, struct pthread **pdp,
 }
 
 #define SET_STACK_NAME(__prefix, __stack, __stacksize, __tid)       \
-  ({                                    \
-     char __stack_name[sizeof (__prefix) +              \
-               INT_BUFSIZE_BOUND (unsigned int)];       \
-     _Static_assert (sizeof __stack_name <= ANON_VMA_NAME_MAX_LEN,  \
-             "VMA name size larger than maximum supported");    \
-     __snprintf (__stack_name, sizeof (__stack_name), __prefix "%u",    \
-         (unsigned int) __tid);                 \
-     __set_vma_name (__stack, __stacksize, __stack_name);       \
-   })
+    ({                                    \
+        char __stack_name[sizeof (__prefix) +              \
+                                 INT_BUFSIZE_BOUND (unsigned int)];       \
+        _Static_assert (sizeof __stack_name <= ANON_VMA_NAME_MAX_LEN,  \
+                        "VMA name size larger than maximum supported");    \
+        __snprintf (__stack_name, sizeof (__stack_name), __prefix "%u",    \
+                    (unsigned int) __tid);                 \
+        __set_vma_name (__stack, __stacksize, __stack_name);       \
+    })
 
 /* Add or remove an associated name to the PD VMA stack.  */
 static void name_stack_maps(struct pthread *pd, bool set)

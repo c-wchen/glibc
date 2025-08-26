@@ -37,16 +37,16 @@
 #define DBFILE      _PATH_VARDB "netgroup.db"
 
 /* Maintenance of the shared handle open on the database.  */
-enum nss_status _nss_db_setnetgrent(const char *group, struct __netgrent *result) {
+enum nss_status _nss_db_setnetgrent(const char *group, struct __netgrent *result)
+{
     struct nss_db_map state;
     enum nss_status status = internal_setent(DBFILE, &state);
 
-    if (status == NSS_STATUS_SUCCESS)
-    {
+    if (status == NSS_STATUS_SUCCESS) {
         const struct nss_db_header *header = state.header;
         const stridx_t *hashtable
-        = (const stridx_t *)((const char *) header
-                             + header->dbs[0].hashoffset);
+            = (const stridx_t *)((const char *) header
+                                 + header->dbs[0].hashoffset);
         const char *valstrtab = (const char *) header + header->valstroffset;
         uint32_t hashval = __hash_string(group);
         size_t grouplen = strlen(group);
@@ -88,7 +88,8 @@ enum nss_status _nss_db_setnetgrent(const char *group, struct __netgrent *result
 }
 
 
-enum nss_status _nss_db_endnetgrent(struct __netgrent *result) {
+enum nss_status _nss_db_endnetgrent(struct __netgrent *result)
+{
     free(result->data);
     result->data = NULL;
     result->data_size = 0;
@@ -103,7 +104,8 @@ extern enum nss_status _nss_netgroup_parseline(char **cursor,
         int *errnop);
 
 enum nss_status _nss_db_getnetgrent_r(struct __netgrent *result, char *buffer, size_t buflen,
-                                      int *errnop) {
+                                      int *errnop)
+{
     enum nss_status status;
 
     status = _nss_netgroup_parseline(&result->cursor, result, buffer, buflen,

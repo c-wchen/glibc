@@ -34,11 +34,11 @@
 /* Whether an shared object references one or more auxiliary objects
    is signaled by the AUXTAG entry in l_info.  */
 #define AUXTAG  (DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGNUM \
-         + DT_EXTRATAGIDX (DT_AUXILIARY))
+                 + DT_EXTRATAGIDX (DT_AUXILIARY))
 /* Whether an shared object references one or more auxiliary objects
    is signaled by the AUXTAG entry in l_info.  */
 #define FILTERTAG (DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGNUM \
-           + DT_EXTRATAGIDX (DT_FILTER))
+                   + DT_EXTRATAGIDX (DT_FILTER))
 
 
 /* When loading auxiliary objects we must ignore errors.  It's ok if
@@ -79,45 +79,45 @@ struct list {
 
 /* Macro to expand DST.  It is an macro since we use `alloca'.  */
 #define expand_dst(l, str, fatal) \
-  ({                                          \
-    const char *__str = (str);                            \
-    const char *__result = __str;                         \
-    size_t __dst_cnt = _dl_dst_count (__str);                     \
-                                          \
-    if (__dst_cnt != 0)                               \
-      {                                       \
-    char *__newp;                                 \
-                                          \
-    /* DST must not appear in SUID/SGID programs.  */             \
-    if (__libc_enable_secure)                         \
-      _dl_signal_error (0, __str, NULL, N_("\
+    ({                                          \
+        const char *__str = (str);                            \
+        const char *__result = __str;                         \
+        size_t __dst_cnt = _dl_dst_count (__str);                     \
+        \
+        if (__dst_cnt != 0)                               \
+        {                                       \
+            char *__newp;                                 \
+            \
+            /* DST must not appear in SUID/SGID programs.  */             \
+            if (__libc_enable_secure)                         \
+                _dl_signal_error (0, __str, NULL, N_("\
 DST not allowed in SUID/SGID programs"));				      \
-                                          \
-    __newp = (char *) alloca (DL_DST_REQUIRED (l, __str, strlen (__str),  \
-                           __dst_cnt));           \
-                                          \
-    __result = _dl_dst_substitute (l, __str, __newp);             \
-                                          \
-    if (*__result == '\0')                            \
-      {                                   \
-        /* The replacement for the DST is not known.  We can't        \
-           processed.  */                             \
-        if (fatal)                                \
-          _dl_signal_error (0, __str, NULL, N_("\
+            \
+            __newp = (char *) alloca (DL_DST_REQUIRED (l, __str, strlen (__str),  \
+                                      __dst_cnt));           \
+            \
+            __result = _dl_dst_substitute (l, __str, __newp);             \
+            \
+            if (*__result == '\0')                            \
+            {                                   \
+                /* The replacement for the DST is not known.  We can't        \
+                   processed.  */                             \
+                if (fatal)                                \
+                    _dl_signal_error (0, __str, NULL, N_("\
 empty dynamic string token substitution"));				      \
-        else                                  \
-          {                                   \
-        /* This is for DT_AUXILIARY.  */                  \
-        if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_LIBS))   \
-          _dl_debug_printf (N_("\
+                else                                  \
+                {                                   \
+                    /* This is for DT_AUXILIARY.  */                  \
+                    if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_LIBS))   \
+                        _dl_debug_printf (N_("\
 cannot load auxiliary `%s' because of empty dynamic string token "	      \
-                        "substitution\n"), __str);        \
-        continue;                             \
-          }                                   \
-      }                                   \
-      }                                       \
-                                          \
-    __result; })
+                                             "substitution\n"), __str);        \
+                    continue;                             \
+                }                                   \
+            }                                   \
+        }                                       \
+        \
+        __result; })
 
 static void preload(struct list *known, unsigned int *nlist, struct link_map *map)
 {

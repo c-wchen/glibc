@@ -45,7 +45,7 @@
 #define SECSPERNYEAR    (SECSPERDAY * DAYSPERNYEAR)
 #define SECSPERLYEAR    (SECSPERNYEAR + SECSPERDAY)
 #define SECSPER400YEARS (SECSPERNYEAR * (intmax_t) (300 + 3)    \
-             + SECSPERLYEAR * (intmax_t) (100 - 3))
+                         + SECSPERLYEAR * (intmax_t) (100 - 3))
 
 /*
 ** True if SECSPER400YEARS is known to be representable as an

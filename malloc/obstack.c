@@ -116,16 +116,16 @@ compat_symbol(libc, _obstack_compat, _obstack, GLIBC_2_0);
    do not allow (expr) ? void : void.  */
 
 # define CALL_CHUNKFUN(h, size) \
-  (((h)->use_extra_arg)                               \
-   ? (*(h)->chunkfun)((h)->extra_arg, (size))                     \
-   : (*(struct _obstack_chunk *(*)(long))(h)->chunkfun)((size)))
+    (((h)->use_extra_arg)                               \
+     ? (*(h)->chunkfun)((h)->extra_arg, (size))                     \
+     : (*(struct _obstack_chunk *(*)(long))(h)->chunkfun)((size)))
 
 # define CALL_FREEFUN(h, old_chunk) \
-  do { \
-      if ((h)->use_extra_arg)                             \
-    (*(h)->freefun)((h)->extra_arg, (old_chunk));                 \
-      else                                    \
-    (*(void (*)(void *))(h)->freefun)((old_chunk));               \
+    do { \
+        if ((h)->use_extra_arg)                             \
+            (*(h)->freefun)((h)->extra_arg, (old_chunk));                 \
+        else                                    \
+            (*(void (*)(void *))(h)->freefun)((old_chunk));               \
     } while (0)
 
 

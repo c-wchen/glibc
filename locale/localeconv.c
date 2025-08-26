@@ -46,8 +46,8 @@ __localeconv(void)
     result.negative_sign = (char *) _NL_CURRENT(LC_MONETARY, NEGATIVE_SIGN);
 
 #define INT_ELEM(member, element) \
-  result.member = *(char *) _NL_CURRENT (LC_MONETARY, element);           \
-  if (result.member == '\377') result.member = CHAR_MAX
+    result.member = *(char *) _NL_CURRENT (LC_MONETARY, element);           \
+    if (result.member == '\377') result.member = CHAR_MAX
 
     INT_ELEM(int_frac_digits, INT_FRAC_DIGITS);
     INT_ELEM(frac_digits, FRAC_DIGITS);

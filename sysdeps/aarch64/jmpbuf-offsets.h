@@ -118,4 +118,4 @@ _jmpbuf_sp(__jmp_buf jmpbuf)
 
 /* Helper for generic ____longjmp_chk(). */
 #define JB_FRAME_ADDRESS(buf) \
-  ((void *) _jmpbuf_sp (buf))
+    ((void *) _jmpbuf_sp (buf))

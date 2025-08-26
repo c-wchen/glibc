@@ -4,9 +4,9 @@ __thread int dummy __attribute__((visibility("hidden"))) = 12;
 __thread struct A local = { 1, 2, 3 };
 
 #define CHECK(N, S)                 \
-  p = f##N##a ();                   \
-  if (p->a != S || p->b != S + 1 || p->c != S + 2)  \
-    abort ()
+    p = f##N##a ();                   \
+    if (p->a != S || p->b != S + 1 || p->c != S + 2)  \
+        abort ()
 
 static int do_test(void)
 {

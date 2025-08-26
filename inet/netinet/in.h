@@ -350,8 +350,8 @@ struct ip_msfilter {
 };
 
 #define IP_MSFILTER_SIZE(numsrc) (sizeof (struct ip_msfilter) \
-                  - sizeof (struct in_addr)           \
-                  + (numsrc) * sizeof (struct in_addr))
+                                  - sizeof (struct in_addr)           \
+                                  + (numsrc) * sizeof (struct in_addr))
 
 struct group_filter {
     /* Interface index.  */
@@ -370,9 +370,9 @@ struct group_filter {
 };
 
 #define GROUP_FILTER_SIZE(numsrc) (sizeof (struct group_filter) \
-                   - sizeof (struct sockaddr_storage)         \
-                   + ((numsrc)                    \
-                      * sizeof (struct sockaddr_storage)))
+                                   - sizeof (struct sockaddr_storage)         \
+                                   + ((numsrc)                    \
+                                   * sizeof (struct sockaddr_storage)))
 #endif
 
 /* Functions to convert between host and network byte order.
@@ -419,54 +419,54 @@ __THROW __attribute__((__const__));
 
 #ifdef __GNUC__
 # define IN6_IS_ADDR_UNSPECIFIED(a) \
-  (__extension__                                  \
-   ({ const struct in6_addr *__a = (const struct in6_addr *) (a);         \
-      __a->__in6_u.__u6_addr32[0] == 0                        \
-      && __a->__in6_u.__u6_addr32[1] == 0                     \
-      && __a->__in6_u.__u6_addr32[2] == 0                     \
-      && __a->__in6_u.__u6_addr32[3] == 0; }))
+    (__extension__                                  \
+    ({ const struct in6_addr *__a = (const struct in6_addr *) (a);         \
+        __a->__in6_u.__u6_addr32[0] == 0                        \
+        && __a->__in6_u.__u6_addr32[1] == 0                     \
+        && __a->__in6_u.__u6_addr32[2] == 0                     \
+        && __a->__in6_u.__u6_addr32[3] == 0; }))
 
 # define IN6_IS_ADDR_LOOPBACK(a) \
-  (__extension__                                  \
-   ({ const struct in6_addr *__a = (const struct in6_addr *) (a);         \
-      __a->__in6_u.__u6_addr32[0] == 0                        \
-      && __a->__in6_u.__u6_addr32[1] == 0                     \
-      && __a->__in6_u.__u6_addr32[2] == 0                     \
-      && __a->__in6_u.__u6_addr32[3] == htonl (1); }))
+    (__extension__                                  \
+    ({ const struct in6_addr *__a = (const struct in6_addr *) (a);         \
+        __a->__in6_u.__u6_addr32[0] == 0                        \
+        && __a->__in6_u.__u6_addr32[1] == 0                     \
+        && __a->__in6_u.__u6_addr32[2] == 0                     \
+        && __a->__in6_u.__u6_addr32[3] == htonl (1); }))
 
 # define IN6_IS_ADDR_LINKLOCAL(a) \
-  (__extension__                                  \
-   ({ const struct in6_addr *__a = (const struct in6_addr *) (a);         \
-      (__a->__in6_u.__u6_addr32[0] & htonl (0xffc00000)) == htonl (0xfe800000); }))
+    (__extension__                                  \
+    ({ const struct in6_addr *__a = (const struct in6_addr *) (a);         \
+        (__a->__in6_u.__u6_addr32[0] & htonl (0xffc00000)) == htonl (0xfe800000); }))
 
 # define IN6_IS_ADDR_SITELOCAL(a) \
-  (__extension__                                  \
-   ({ const struct in6_addr *__a = (const struct in6_addr *) (a);         \
-      (__a->__in6_u.__u6_addr32[0] & htonl (0xffc00000)) == htonl (0xfec00000); }))
+    (__extension__                                  \
+    ({ const struct in6_addr *__a = (const struct in6_addr *) (a);         \
+        (__a->__in6_u.__u6_addr32[0] & htonl (0xffc00000)) == htonl (0xfec00000); }))
 
 # define IN6_IS_ADDR_V4MAPPED(a) \
-  (__extension__                                  \
-   ({ const struct in6_addr *__a = (const struct in6_addr *) (a);         \
-      __a->__in6_u.__u6_addr32[0] == 0                        \
-      && __a->__in6_u.__u6_addr32[1] == 0                     \
-      && __a->__in6_u.__u6_addr32[2] == htonl (0xffff); }))
+    (__extension__                                  \
+    ({ const struct in6_addr *__a = (const struct in6_addr *) (a);         \
+        __a->__in6_u.__u6_addr32[0] == 0                        \
+        && __a->__in6_u.__u6_addr32[1] == 0                     \
+        && __a->__in6_u.__u6_addr32[2] == htonl (0xffff); }))
 
 # define IN6_IS_ADDR_V4COMPAT(a) \
-  (__extension__                                  \
-   ({ const struct in6_addr *__a = (const struct in6_addr *) (a);         \
-      __a->__in6_u.__u6_addr32[0] == 0                        \
-      && __a->__in6_u.__u6_addr32[1] == 0                     \
-      && __a->__in6_u.__u6_addr32[2] == 0                     \
-      && ntohl (__a->__in6_u.__u6_addr32[3]) > 1; }))
+    (__extension__                                  \
+    ({ const struct in6_addr *__a = (const struct in6_addr *) (a);         \
+        __a->__in6_u.__u6_addr32[0] == 0                        \
+        && __a->__in6_u.__u6_addr32[1] == 0                     \
+        && __a->__in6_u.__u6_addr32[2] == 0                     \
+        && ntohl (__a->__in6_u.__u6_addr32[3]) > 1; }))
 
 # define IN6_ARE_ADDR_EQUAL(a,b) \
-  (__extension__                                  \
-   ({ const struct in6_addr *__a = (const struct in6_addr *) (a);         \
-      const struct in6_addr *__b = (const struct in6_addr *) (b);         \
-      __a->__in6_u.__u6_addr32[0] == __b->__in6_u.__u6_addr32[0]          \
-      && __a->__in6_u.__u6_addr32[1] == __b->__in6_u.__u6_addr32[1]       \
-      && __a->__in6_u.__u6_addr32[2] == __b->__in6_u.__u6_addr32[2]       \
-      && __a->__in6_u.__u6_addr32[3] == __b->__in6_u.__u6_addr32[3]; }))
+    (__extension__                                  \
+    ({ const struct in6_addr *__a = (const struct in6_addr *) (a);         \
+        const struct in6_addr *__b = (const struct in6_addr *) (b);         \
+        __a->__in6_u.__u6_addr32[0] == __b->__in6_u.__u6_addr32[0]          \
+        && __a->__in6_u.__u6_addr32[1] == __b->__in6_u.__u6_addr32[1]       \
+        && __a->__in6_u.__u6_addr32[2] == __b->__in6_u.__u6_addr32[2]       \
+        && __a->__in6_u.__u6_addr32[3] == __b->__in6_u.__u6_addr32[3]; }))
 #else
 # define IN6_IS_ADDR_UNSPECIFIED(a) \
     (((const uint32_t *) (a))[0] == 0                     \

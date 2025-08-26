@@ -61,9 +61,9 @@ static int do_test(void)
 
 #define OPT_COMMAND 10000
 #define CMDLINE_OPTIONS \
-  { "command", required_argument, NULL, OPT_COMMAND },
+    { "command", required_argument, NULL, OPT_COMMAND },
 #define CMDLINE_PROCESS \
-  case OPT_COMMAND: \
+    case OPT_COMMAND: \
     command = optarg;   \
     break;
 #define TEST_FUNCTION do_test ()

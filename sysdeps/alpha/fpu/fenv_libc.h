@@ -29,8 +29,8 @@
 #define SWCR_ENABLE_MASK    (FE_ALL_EXCEPT >> SWCR_ENABLE_SHIFT)
 #define SWCR_STATUS_MASK    (FE_ALL_EXCEPT)
 #define SWCR_ALL_MASK       (SWCR_ENABLE_MASK   \
-                | SWCR_MAP_MASK     \
-                | SWCR_STATUS_MASK)
+                             | SWCR_MAP_MASK     \
+                             | SWCR_STATUS_MASK)
 
 /* These are declared for public consumption in <bits/fenv.h>.  */
 libc_hidden_proto(__ieee_set_fp_control)

@@ -43,36 +43,36 @@ struct str_array {
 
 /* Check that *DYN is equivalent to its initial state.  */
 #define CHECK_INIT_STATE(type, dyn)                             \
-  ({                                                            \
-    TEST_VERIFY_EXIT (!dynarray_##type##_has_failed (dyn));     \
-    TEST_VERIFY_EXIT (dynarray_##type##_size (dyn) == 0);       \
-    TEST_VERIFY_EXIT ((dyn)->u.dynarray_header.array            \
-                      == (dyn)->scratch);                       \
-    TEST_VERIFY_EXIT ((dyn)->u.dynarray_header.allocated > 0);  \
-    (void) 0;                                                   \
-  })
+    ({                                                            \
+        TEST_VERIFY_EXIT (!dynarray_##type##_has_failed (dyn));     \
+        TEST_VERIFY_EXIT (dynarray_##type##_size (dyn) == 0);       \
+        TEST_VERIFY_EXIT ((dyn)->u.dynarray_header.array            \
+                          == (dyn)->scratch);                       \
+        TEST_VERIFY_EXIT ((dyn)->u.dynarray_header.allocated > 0);  \
+        (void) 0;                                                   \
+    })
 
 /* Check that *DYN behaves as if it is in its initial state.  */
 #define CHECK_EMPTY(type, dyn)                                       \
-  ({                                                                 \
-    CHECK_INIT_STATE (type, (dyn));                                  \
-    dynarray_##type##_free (dyn);                                    \
-    CHECK_INIT_STATE (type, (dyn));                                  \
-    dynarray_##type##_clear (dyn);                                   \
-    CHECK_INIT_STATE (type, (dyn));                                  \
-    dynarray_##type##_remove_last (dyn);                             \
-    CHECK_INIT_STATE (type, (dyn));                                  \
-    dynarray_##type##_mark_failed (dyn);                             \
-    TEST_VERIFY_EXIT (dynarray_##type##_has_failed (dyn));           \
-    dynarray_##type##_clear (dyn);                                   \
-    TEST_VERIFY_EXIT (dynarray_##type##_has_failed (dyn));           \
-    dynarray_##type##_remove_last (dyn);                             \
-    TEST_VERIFY_EXIT (dynarray_##type##_has_failed (dyn));           \
-    TEST_VERIFY_EXIT (dynarray_##type##_emplace (dyn) == NULL);      \
-    dynarray_##type##_free (dyn);                                    \
-    CHECK_INIT_STATE (type, (dyn));                                  \
-    /* These functions should not assert.  */                        \
-    dynarray_##type##_begin (dyn);                                   \
-    dynarray_##type##_end (dyn);                                     \
-    (void) 0;                                                        \
-  })
+    ({                                                                 \
+        CHECK_INIT_STATE (type, (dyn));                                  \
+        dynarray_##type##_free (dyn);                                    \
+        CHECK_INIT_STATE (type, (dyn));                                  \
+        dynarray_##type##_clear (dyn);                                   \
+        CHECK_INIT_STATE (type, (dyn));                                  \
+        dynarray_##type##_remove_last (dyn);                             \
+        CHECK_INIT_STATE (type, (dyn));                                  \
+        dynarray_##type##_mark_failed (dyn);                             \
+        TEST_VERIFY_EXIT (dynarray_##type##_has_failed (dyn));           \
+        dynarray_##type##_clear (dyn);                                   \
+        TEST_VERIFY_EXIT (dynarray_##type##_has_failed (dyn));           \
+        dynarray_##type##_remove_last (dyn);                             \
+        TEST_VERIFY_EXIT (dynarray_##type##_has_failed (dyn));           \
+        TEST_VERIFY_EXIT (dynarray_##type##_emplace (dyn) == NULL);      \
+        dynarray_##type##_free (dyn);                                    \
+        CHECK_INIT_STATE (type, (dyn));                                  \
+        /* These functions should not assert.  */                        \
+        dynarray_##type##_begin (dyn);                                   \
+        dynarray_##type##_end (dyn);                                     \
+        (void) 0;                                                        \
+    })

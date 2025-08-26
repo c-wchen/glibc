@@ -72,18 +72,18 @@ TUNABLE_CALLBACK(set_elision_enable)(tunable_val_t *valp)
 }
 
 #define TUNABLE_CALLBACK_FNDECL(__name, __type)         \
-static inline void                      \
-__always_inline                         \
-do_set_elision_ ## __name (__type value)            \
-{                               \
-  __elision_aconf.__name = value;               \
-}                               \
-void                                \
-TUNABLE_CALLBACK (set_elision_ ## __name) (tunable_val_t *valp) \
-{                               \
-  __type value = (__type) (valp)->numval;           \
-  do_set_elision_ ## __name (value);                \
-}
+    static inline void                      \
+    __always_inline                         \
+    do_set_elision_ ## __name (__type value)            \
+    {                               \
+        __elision_aconf.__name = value;               \
+    }                               \
+    void                                \
+    TUNABLE_CALLBACK (set_elision_ ## __name) (tunable_val_t *valp) \
+    {                               \
+        __type value = (__type) (valp)->numval;           \
+        do_set_elision_ ## __name (value);                \
+    }
 
 TUNABLE_CALLBACK_FNDECL(skip_lock_busy, int32_t);
 TUNABLE_CALLBACK_FNDECL(skip_lock_internal_abort, int32_t);

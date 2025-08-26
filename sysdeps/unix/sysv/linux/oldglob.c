@@ -16,13 +16,13 @@ libc_hidden_proto(__old_glob64);
 
 #define dirent __old_dirent64
 #define GL_READDIR(pglob, stream) \
-  ((struct __old_dirent64 *) (pglob)->gl_readdir (stream))
+    ((struct __old_dirent64 *) (pglob)->gl_readdir (stream))
 #undef __readdir
 #define __readdir(dirp) __old_readdir64 (dirp)
 
 #define glob_t glob64_t
 #define __glob(pattern, flags, errfunc, pglob) \
-  __old_glob64 (pattern, flags, errfunc, pglob)
+    __old_glob64 (pattern, flags, errfunc, pglob)
 #define globfree(pglob) globfree64(pglob)
 
 #define convert_dirent __old_convert_dirent

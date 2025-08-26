@@ -45,14 +45,14 @@ void __md5_process_block(const void *buffer, size_t len, struct md5_ctx *ctx)
          we store the swapped words in the array CORRECT_WORDS.  */
 
 #define OP(a, b, c, d, s, T)                        \
-      do                                \
+    do                                \
     {                               \
-      a += FF (b, c, d) + (*cwp++ = SWAP (*words)) + T;     \
-      ++words;                          \
-      CYCLIC (a, s);                        \
-      a += b;                           \
+        a += FF (b, c, d) + (*cwp++ = SWAP (*words)) + T;     \
+        ++words;                          \
+        CYCLIC (a, s);                        \
+        a += b;                           \
     }                               \
-      while (0)
+    while (0)
 
         /* It is unfortunate that C does not provide an operator for
         cyclic rotation.  Hope the C compiler is smart enough.  */
@@ -87,13 +87,13 @@ void __md5_process_block(const void *buffer, size_t len, struct md5_ctx *ctx)
          argument specifying the function to use.  */
 #undef OP
 #define OP(f, a, b, c, d, k, s, T)                  \
-      do                                \
+    do                                \
     {                               \
-      a += f (b, c, d) + correct_words[k] + T;          \
-      CYCLIC (a, s);                        \
-      a += b;                           \
+        a += f (b, c, d) + correct_words[k] + T;          \
+        CYCLIC (a, s);                        \
+        a += b;                           \
     }                               \
-      while (0)
+    while (0)
 
         /* Round 2.  */
         OP(FG, A, B, C, D,  1,  5, 0xf61e2562);

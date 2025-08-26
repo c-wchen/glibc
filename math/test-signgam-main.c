@@ -31,31 +31,31 @@ TYPE signgam;
 #endif
 
 #define RUN_TESTS(FUNC, TYPE)                   \
-  do                                \
+    do                                \
     {                               \
-      volatile TYPE a, b, c __attribute__ ((unused));       \
-      a = 0.5;                          \
-      b = -0.5;                         \
-      signgam = INITVAL;                    \
-      c = FUNC (a);                     \
-      if (signgam == INITVAL)                   \
-    puts ("PASS: " #FUNC " (0.5) setting signgam");     \
-      else                          \
-    {                           \
-      puts ("FAIL: " #FUNC " (0.5) setting signgam");   \
-      result = 1;                       \
-    }                           \
-      signgam = INITVAL;                    \
-      c = FUNC (b);                     \
-      if (signgam == INITVAL)                   \
-    puts ("PASS: " #FUNC " (-0.5) setting signgam");    \
-      else                          \
-    {                           \
-      puts ("FAIL: " #FUNC " (-0.5) setting signgam");  \
-      result = 1;                       \
-    }                           \
+        volatile TYPE a, b, c __attribute__ ((unused));       \
+        a = 0.5;                          \
+        b = -0.5;                         \
+        signgam = INITVAL;                    \
+        c = FUNC (a);                     \
+        if (signgam == INITVAL)                   \
+            puts ("PASS: " #FUNC " (0.5) setting signgam");     \
+        else                          \
+        {                           \
+            puts ("FAIL: " #FUNC " (0.5) setting signgam");   \
+            result = 1;                       \
+        }                           \
+        signgam = INITVAL;                    \
+        c = FUNC (b);                     \
+        if (signgam == INITVAL)                   \
+            puts ("PASS: " #FUNC " (-0.5) setting signgam");    \
+        else                          \
+        {                           \
+            puts ("FAIL: " #FUNC " (-0.5) setting signgam");  \
+            result = 1;                       \
+        }                           \
     }                               \
-  while (0)
+    while (0)
 
 int main(void)
 {

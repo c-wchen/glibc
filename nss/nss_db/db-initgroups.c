@@ -33,11 +33,11 @@
 
 enum nss_status _nss_db_initgroups_dyn(const char *user, gid_t group, long int *start,
                                        long int *size, gid_t **groupsp, long int limit,
-                                       int *errnop) {
+                                       int *errnop)
+{
     struct nss_db_map state = { NULL, 0 };
     enum nss_status status = internal_setent(_PATH_VARDB "group.db", &state);
-    if (status != NSS_STATUS_SUCCESS)
-    {
+    if (status != NSS_STATUS_SUCCESS) {
         *errnop = errno;
         return status;
     }
@@ -45,12 +45,10 @@ enum nss_status _nss_db_initgroups_dyn(const char *user, gid_t group, long int *
     const struct nss_db_header *header = state.header;
     int i;
     for (i = 0; i < header->ndbs; ++i)
-        if (header->dbs[i].id == ':')
-        {
+        if (header->dbs[i].id == ':') {
             break;
         }
-    if (i == header->ndbs)
-    {
+    if (i == header->ndbs) {
         status = NSS_STATUS_UNAVAIL;
         goto out;
     }
@@ -67,8 +65,7 @@ enum nss_status _nss_db_initgroups_dyn(const char *user, gid_t group, long int *
     gid_t *groups = *groupsp;
 
     status = NSS_STATUS_NOTFOUND;
-    while (hashtable[hidx] != ~((stridx_t) 0))
-    {
+    while (hashtable[hidx] != ~((stridx_t) 0)) {
         const char *valstr = valstrtab + hashtable[hidx];
         while (isblank(*valstr)) {
             ++valstr;

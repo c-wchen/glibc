@@ -85,8 +85,8 @@ struct pthread_unwind_buf
 #define _JUMP_BUF_SIGSET_NSIG   96
 /* Number of longs to hold all signals.  */
 #define _JUMP_BUF_SIGSET_NWORDS \
-  (ALIGN_UP (_JUMP_BUF_SIGSET_NSIG, _JUMP_BUF_SIGSET_BITS_PER_WORD) \
-   / _JUMP_BUF_SIGSET_BITS_PER_WORD)
+    (ALIGN_UP (_JUMP_BUF_SIGSET_NSIG, _JUMP_BUF_SIGSET_BITS_PER_WORD) \
+     / _JUMP_BUF_SIGSET_BITS_PER_WORD)
 
 typedef struct {
     unsigned long int __val[_JUMP_BUF_SIGSET_NWORDS];

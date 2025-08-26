@@ -23,39 +23,39 @@
 #include "tst-strtod.h"
 
 #define TEST_STRTOD(FSUF, FTYPE, FTOSTR, LSUF, CSUF)            \
-static int                              \
-test_strto ## FSUF (void)                       \
-{                                   \
-  char buf[300];                            \
-  int cnt;                              \
-  int result = 0;                           \
-                                    \
-  for (cnt = 0; cnt < 200; ++cnt)                   \
+    static int                              \
+    test_strto ## FSUF (void)                       \
     {                                   \
-      ssize_t n;                            \
-      FTYPE f;                              \
-                                    \
-      n = sprintf (buf, "%d", cnt);                 \
-      memset (buf + n, '0', cnt);                   \
-      sprintf (buf + n + cnt, ".000e-%d", cnt);             \
-      f = strto ## FSUF (buf, NULL);                    \
-                                    \
-      if (f != (FTYPE) cnt)                     \
-    {                               \
-      char fstr[FSTRLENMAX];                    \
-      char fcntstr[FSTRLENMAX];                 \
-      FTOSTR (fstr, sizeof (fstr), "%g", f);            \
-      FTOSTR (fcntstr, sizeof (fstr), "%g", (FTYPE) cnt);       \
-      printf ("strto" #FSUF "(\"%s\") "             \
-          "failed for cnt == %d (%s instead of %s)\n",      \
-          buf, cnt, fstr, fcntstr);             \
-      result = 1;                           \
-    }                               \
-      else                              \
-    printf ( "strto" #FSUF "() fine for cnt == %d\n", cnt);     \
-    }                                   \
-  return result;                            \
-}
+        char buf[300];                            \
+        int cnt;                              \
+        int result = 0;                           \
+        \
+        for (cnt = 0; cnt < 200; ++cnt)                   \
+        {                                   \
+            ssize_t n;                            \
+            FTYPE f;                              \
+            \
+            n = sprintf (buf, "%d", cnt);                 \
+            memset (buf + n, '0', cnt);                   \
+            sprintf (buf + n + cnt, ".000e-%d", cnt);             \
+            f = strto ## FSUF (buf, NULL);                    \
+            \
+            if (f != (FTYPE) cnt)                     \
+            {                               \
+                char fstr[FSTRLENMAX];                    \
+                char fcntstr[FSTRLENMAX];                 \
+                FTOSTR (fstr, sizeof (fstr), "%g", f);            \
+                FTOSTR (fcntstr, sizeof (fstr), "%g", (FTYPE) cnt);       \
+                printf ("strto" #FSUF "(\"%s\") "             \
+                        "failed for cnt == %d (%s instead of %s)\n",      \
+                        buf, cnt, fstr, fcntstr);             \
+                result = 1;                           \
+            }                               \
+            else                              \
+                printf ( "strto" #FSUF "() fine for cnt == %d\n", cnt);     \
+        }                                   \
+        return result;                            \
+    }
 
 GEN_TEST_STRTOD_FOREACH(TEST_STRTOD)
 

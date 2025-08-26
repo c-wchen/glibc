@@ -34,50 +34,50 @@ struct La_mips_64_retval;
 
 /* Calculate the index of a symbol in MIPS xhash.  */
 #define ELF_MACHINE_HASH_SYMIDX(map, hasharr) \
-  ((map)->l_mach.mips_xlat_zero[(hasharr) - (map)->l_gnu_chain_zero])
+    ((map)->l_mach.mips_xlat_zero[(hasharr) - (map)->l_gnu_chain_zero])
 
 /* Setup MIPS xhash.  */
 #define ELF_MACHINE_XHASH_SETUP(hash32, symbias, map)               \
-  do                                        \
+    do                                        \
     {                                       \
-      (hash32) += (map)->l_info[DT_MIPS (SYMTABNO)]->d_un.d_val - (symbias); \
-      (map)->l_mach.mips_xlat_zero = (hash32) - (symbias);          \
+        (hash32) += (map)->l_info[DT_MIPS (SYMTABNO)]->d_un.d_val - (symbias); \
+        (map)->l_mach.mips_xlat_zero = (hash32) - (symbias);          \
     }                                       \
-  while (0)
+    while (0)
 
 #define ARCH_PLTENTER_MEMBERS                           \
     Elf32_Addr (*mips_o32_gnu_pltenter) (Elf32_Sym *, unsigned int,     \
-                     uintptr_t *, uintptr_t *,      \
-                     struct La_mips_32_regs *,      \
-                     unsigned int *, const char *name,  \
-                     long int *framesizep);         \
+                                         uintptr_t *, uintptr_t *,      \
+                                         struct La_mips_32_regs *,      \
+                                         unsigned int *, const char *name,  \
+                                         long int *framesizep);         \
     Elf32_Addr (*mips_n32_gnu_pltenter) (Elf32_Sym *, unsigned int,     \
-                     uintptr_t *, uintptr_t *,      \
-                     struct La_mips_64_regs *,      \
-                     unsigned int *, const char *name,  \
-                     long int *framesizep);         \
+                                         uintptr_t *, uintptr_t *,      \
+                                         struct La_mips_64_regs *,      \
+                                         unsigned int *, const char *name,  \
+                                         long int *framesizep);         \
     Elf64_Addr (*mips_n64_gnu_pltenter) (Elf64_Sym *, unsigned int,     \
-                     uintptr_t *, uintptr_t *,      \
-                     struct La_mips_64_regs *,      \
-                     unsigned int *, const char *name,  \
-                     long int *framesizep);
+                                         uintptr_t *, uintptr_t *,      \
+                                         struct La_mips_64_regs *,      \
+                                         unsigned int *, const char *name,  \
+                                         long int *framesizep);
 
 #define ARCH_PLTEXIT_MEMBERS                            \
     unsigned int (*mips_o32_gnu_pltexit) (Elf32_Sym *, unsigned int,        \
-                      uintptr_t *, uintptr_t *,     \
-                      const struct La_mips_32_regs *,   \
-                      struct La_mips_32_retval *,       \
-                      const char *);            \
+                                          uintptr_t *, uintptr_t *,     \
+                                          const struct La_mips_32_regs *,   \
+                                          struct La_mips_32_retval *,       \
+                                          const char *);            \
     unsigned int (*mips_n32_gnu_pltexit) (Elf32_Sym *, unsigned int,        \
-                      uintptr_t *, uintptr_t *,     \
-                      const struct La_mips_64_regs *,   \
-                      struct La_mips_64_retval *,       \
-                      const char *);            \
+                                          uintptr_t *, uintptr_t *,     \
+                                          const struct La_mips_64_regs *,   \
+                                          struct La_mips_64_retval *,       \
+                                          const char *);            \
     unsigned int (*mips_n64_gnu_pltexit) (Elf64_Sym *, unsigned int,        \
-                      uintptr_t *, uintptr_t *,     \
-                      const struct La_mips_64_regs *,   \
-                      struct La_mips_64_retval *,       \
-                      const char *);
+                                          uintptr_t *, uintptr_t *,     \
+                                          const struct La_mips_64_regs *,   \
+                                          struct La_mips_64_retval *,       \
+                                          const char *);
 
 #include_next <ldsodefs.h>
 
@@ -120,23 +120,23 @@ typedef struct {
 } Elf64_Mips_Rela;
 
 #define ELF64_MIPS_R_SYM(i) \
-  ((__extension__ (_Elf64_Mips_R_Info_union)(i)).r_info_fields.r_sym)
+    ((__extension__ (_Elf64_Mips_R_Info_union)(i)).r_info_fields.r_sym)
 #define ELF64_MIPS_R_TYPE(i) \
-  (((_Elf64_Mips_R_Info_union)(i)).r_info_fields.r_type1 \
-   | ((Elf32_Word)(__extension__ (_Elf64_Mips_R_Info_union)(i) \
-           ).r_info_fields.r_type2 << 8) \
-   | ((Elf32_Word)(__extension__ (_Elf64_Mips_R_Info_union)(i) \
-           ).r_info_fields.r_type3 << 16) \
-   | ((Elf32_Word)(__extension__ (_Elf64_Mips_R_Info_union)(i) \
-           ).r_info_fields.r_ssym << 24))
+    (((_Elf64_Mips_R_Info_union)(i)).r_info_fields.r_type1 \
+     | ((Elf32_Word)(__extension__ (_Elf64_Mips_R_Info_union)(i) \
+                    ).r_info_fields.r_type2 << 8) \
+     | ((Elf32_Word)(__extension__ (_Elf64_Mips_R_Info_union)(i) \
+                    ).r_info_fields.r_type3 << 16) \
+     | ((Elf32_Word)(__extension__ (_Elf64_Mips_R_Info_union)(i) \
+                    ).r_info_fields.r_ssym << 24))
 #define ELF64_MIPS_R_INFO(sym, type) \
-  (__extension__ (_Elf64_Mips_R_Info_union) \
-   (__extension__ (_Elf64_Mips_R_Info) \
-   { (sym), ELF64_MIPS_R_SSYM (type), \
-       ELF64_MIPS_R_TYPE3 (type), \
-       ELF64_MIPS_R_TYPE2 (type), \
-       ELF64_MIPS_R_TYPE1 (type) \
-   }).r_info_number)
+    (__extension__ (_Elf64_Mips_R_Info_union) \
+     (__extension__ (_Elf64_Mips_R_Info) \
+    { (sym), ELF64_MIPS_R_SSYM (type), \
+        ELF64_MIPS_R_TYPE3 (type), \
+        ELF64_MIPS_R_TYPE2 (type), \
+        ELF64_MIPS_R_TYPE1 (type) \
+    }).r_info_number)
 /* These macros decompose the value returned by ELF64_MIPS_R_TYPE, and
    compose it back into a value that it can be used as an argument to
    ELF64_MIPS_R_INFO.  */
@@ -145,10 +145,10 @@ typedef struct {
 #define ELF64_MIPS_R_TYPE2(i) (((i) >> 8) & 0xff)
 #define ELF64_MIPS_R_TYPE1(i) ((i) & 0xff)
 #define ELF64_MIPS_R_TYPEENC(type1, type2, type3, ssym) \
-  ((type1) \
-   | ((Elf32_Word)(type2) << 8) \
-   | ((Elf32_Word)(type3) << 16) \
-   | ((Elf32_Word)(ssym) << 24))
+    ((type1) \
+     | ((Elf32_Word)(type2) << 8) \
+     | ((Elf32_Word)(type3) << 16) \
+     | ((Elf32_Word)(ssym) << 24))
 
 #undef ELF64_R_SYM
 #define ELF64_R_SYM(i) ELF64_MIPS_R_SYM (i)

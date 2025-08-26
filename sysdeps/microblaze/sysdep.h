@@ -27,11 +27,11 @@
 
 /* Define an entry point visible from C.  */
 # define ENTRY(name)                          \
-  .globl C_SYMBOL_NAME(name);                 \
-  .type C_SYMBOL_NAME(name),@function;        \
-  .align ALIGNARG(2);                         \
-  C_LABEL(name)                               \
-  CALL_MCOUNT
+    .globl C_SYMBOL_NAME(name);                 \
+    .type C_SYMBOL_NAME(name),@function;        \
+    .align ALIGNARG(2);                         \
+    C_LABEL(name)                               \
+    CALL_MCOUNT
 
 # undef END
 # define END(name) ASM_SIZE_DIRECTIVE(name)
@@ -42,12 +42,12 @@
 /* The mcount code relies on a normal frame pointer being on the stack
    to locate our caller, so push one just for its benefit.  */
 #  define CALL_MCOUNT                         \
-   addik r1,r1,-4;                            \
-   swi r15,r1,0;                              \
-   brlid r15,JUMPTARGET(mcount);              \
-   nop;                                       \
-   lwi r15,r1,0;                              \
-   addik r1,r1,4;
+    addik r1,r1,-4;                            \
+    swi r15,r1,0;                              \
+    brlid r15,JUMPTARGET(mcount);              \
+    nop;                                       \
+    lwi r15,r1,0;                              \
+    addik r1,r1,4;
 # else
 #  define CALL_MCOUNT        /* Do nothing.  */
 # endif
@@ -59,16 +59,16 @@
 # define mcount      _mcount
 
 # define PSEUDO(name, syscall_name, args)     \
-  .globl syscall_error;                       \
-  ENTRY (name)                                \
+    .globl syscall_error;                       \
+    ENTRY (name)                                \
     DO_CALL (syscall_name, args);
 
 # define ret                                  \
-  rtsd r15,8; nop;
+    rtsd r15,8; nop;
 
 # undef PSEUDO_END
 # define PSEUDO_END(name)                     \
-  END (name)
+    END (name)
 
 # undef JUMPTARGET
 # ifdef PIC

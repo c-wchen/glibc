@@ -31,9 +31,9 @@ typedef unsigned long long int hp_timing_t;
 # define HP_TIMING_INLINE   (1)
 
 # define HP_TIMING_NOW(VAR)                     \
-  do {                                  \
-    __asm__ __volatile__ ("stckf %0" : "=Q" (VAR) : : "cc");        \
-  } while (0)
+    do {                                  \
+        __asm__ __volatile__ ("stckf %0" : "=Q" (VAR) : : "cc");        \
+    } while (0)
 
 #else
 # include_next <hp-timing.h>

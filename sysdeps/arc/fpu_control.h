@@ -92,9 +92,9 @@ typedef unsigned int fpu_control_t;
 
 #  define _FPU_SETS(cw)             \
     do {                    \
-      unsigned int __fwe = 0x80000000 | (cw);   \
-      __asm__ volatile ("sr  %0, [0x301] \r\n"  \
-                        : : "r" (__fwe));   \
+        unsigned int __fwe = 0x80000000 | (cw);   \
+        __asm__ volatile ("sr  %0, [0x301] \r\n"  \
+                          : : "r" (__fwe));   \
     } while (0)
 
 /* Default control word set at startup.  */

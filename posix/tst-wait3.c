@@ -17,6 +17,6 @@
    <https://www.gnu.org/licenses/>.  */
 
 #define WAIT_CALL(__pid, __wstatus, __options, __rusage) \
-   wait3 (__wstatus, __options, __rusage)
+    wait3 (__wstatus, __options, __rusage)
 
 #include "tst-wait-skeleton.c"

@@ -25,7 +25,7 @@
 
 /* Return a mask that includes the bit for SIG only.  */
 #define __sigmask(sig) \
-  (1UL << (((sig) - 1) % ULONG_WIDTH))
+    (1UL << (((sig) - 1) % ULONG_WIDTH))
 
 /* Return the word index for SIG.  */
 static inline int __sigword(int sig)

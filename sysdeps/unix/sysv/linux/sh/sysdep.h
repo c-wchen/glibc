@@ -48,8 +48,8 @@
 #define _IMM12 #-12
 #undef  PSEUDO
 #define PSEUDO(name, syscall_name, args) \
- .text; \
- ENTRY (name); \
+    .text; \
+    ENTRY (name); \
     DO_CALL (syscall_name, args); \
     mov r0,r1; \
     mov _IMM12,r2; \
@@ -58,32 +58,32 @@
     tst r1,r1; \
     bf .Lpseudo_end; \
     SYSCALL_ERROR_HANDLER; \
- .Lpseudo_end:
+    .Lpseudo_end:
 
 #undef  PSEUDO_END
 #define PSEUDO_END(name) \
-  END (name)
+    END (name)
 
 #undef  PSEUDO_NOERRNO
 #define PSEUDO_NOERRNO(name, syscall_name, args) \
- .text; \
- ENTRY (name); \
+    .text; \
+    ENTRY (name); \
     DO_CALL (syscall_name, args)
 
 #undef  PSEUDO_END_NOERRNO
 #define PSEUDO_END_NOERRNO(name) \
-  END (name)
+    END (name)
 
 #define ret_NOERRNO ret
 
 #define PSEUDO_ERRVAL(name, syscall_name, args) \
- .text; \
- ENTRY (name); \
+    .text; \
+    ENTRY (name); \
     DO_CALL (syscall_name, args);
 
 #undef  PSEUDO_END_ERRVAL
 #define PSEUDO_END_ERRVAL(name) \
-  END (name)
+    END (name)
 
 #define ret_ERRVAL ret
 
@@ -91,9 +91,9 @@
 # define SYSCALL_ERROR_HANDLER  \
     mov.l 0f,r1; \
     jmp @r1; \
-     mov r0,r4; \
+    mov r0,r4; \
     .align 2; \
-     0: .long __syscall_error
+    0: .long __syscall_error
 #else
 # if RTLD_PRIVATE_ERRNO
 #  define SYSCALL_ERROR_HANDLER \
@@ -108,10 +108,10 @@
     mov r2,r12; \
     cfi_restore (r12); \
     bra .Lpseudo_end; \
-     mov _IMM1,r0; \
+    mov _IMM1,r0; \
     .align 2; \
-     0: .long _GLOBAL_OFFSET_TABLE_; \
-     1: .long rtld_errno@GOTOFF
+    0: .long _GLOBAL_OFFSET_TABLE_; \
+    1: .long rtld_errno@GOTOFF
 
 # elif defined _LIBC_REENTRANT
 
@@ -135,10 +135,10 @@
     add r4,r0; \
     mov.l r1,@r0; \
     bra .Lpseudo_end; \
-     mov _IMM1,r0; \
+    mov _IMM1,r0; \
     .align 2; \
-     0: .long _GLOBAL_OFFSET_TABLE_; \
-     1: .long SYSCALL_ERROR_ERRNO@GOTTPOFF
+    0: .long _GLOBAL_OFFSET_TABLE_; \
+    1: .long SYSCALL_ERROR_ERRNO@GOTTPOFF
 # else
 /* Store (-r0) into errno through the GOT.  */
 #  define SYSCALL_ERROR_HANDLER                           \
@@ -154,10 +154,10 @@
     cfi_restore (r12); \
     mov.l r1,@r0; \
     bra .Lpseudo_end; \
-     mov _IMM1,r0; \
+    mov _IMM1,r0; \
     .align 2; \
-     0: .long _GLOBAL_OFFSET_TABLE_; \
-     1: .long errno@GOT
+    0: .long _GLOBAL_OFFSET_TABLE_; \
+    1: .long errno@GOT
 # endif /* _LIBC_REENTRANT */
 #endif  /* PIC */
 
@@ -182,10 +182,10 @@
     SYSCALL_INST##args;         \
     SYSCALL_INST_PAD;           \
     bra 2f;             \
-     nop;               \
+    nop;               \
     .align 2;               \
- 1: .long SYS_ify (syscall_name);   \
- 2:
+    1: .long SYS_ify (syscall_name);   \
+    2:
 
 #else /* not __ASSEMBLER__ */
 
@@ -199,7 +199,7 @@
 
 # ifdef NEED_SYSCALL_INST_PAD
 #  define SYSCALL_INST_PAD "\
-	or r0,r0; or r0,r0; or r0,r0; or r0,r0; or r0,r0"
+or r0,r0; or r0,r0; or r0,r0; or r0,r0; or r0,r0"
 # else
 #  define SYSCALL_INST_PAD
 # endif
@@ -287,31 +287,31 @@
 
 #undef INTERNAL_SYSCALL
 #define INTERNAL_SYSCALL(name, nr, args...) \
-  ({                                          \
-    unsigned long int resultvar;                          \
-    register long int r3 asm ("%r3") = SYS_ify (name);                \
-    SUBSTITUTE_ARGS_##nr(args);                           \
-                                          \
-    asm volatile (SYSCALL_INST_STR##nr SYSCALL_INST_PAD               \
-          : "=z" (resultvar)                          \
-          : "r" (r3) ASMFMT_##nr                      \
-          : "memory", "t");                       \
-                                          \
-    (int) resultvar; })
+    ({                                          \
+        unsigned long int resultvar;                          \
+        register long int r3 asm ("%r3") = SYS_ify (name);                \
+        SUBSTITUTE_ARGS_##nr(args);                           \
+        \
+        asm volatile (SYSCALL_INST_STR##nr SYSCALL_INST_PAD               \
+                      : "=z" (resultvar)                          \
+                      : "r" (r3) ASMFMT_##nr                      \
+                      : "memory", "t");                       \
+        \
+        (int) resultvar; })
 
 /* The _NCS variant allows non-constant syscall numbers.  */
 #define INTERNAL_SYSCALL_NCS(name, nr, args...) \
-  ({                                          \
-    unsigned long int resultvar;                          \
-    register long int r3 asm ("%r3") = (name);                    \
-    SUBSTITUTE_ARGS_##nr(args);                           \
-                                          \
-    asm volatile (SYSCALL_INST_STR##nr SYSCALL_INST_PAD               \
-          : "=z" (resultvar)                          \
-          : "r" (r3) ASMFMT_##nr                      \
-          : "memory", "t");                       \
-                                          \
-    (int) resultvar; })
+    ({                                          \
+        unsigned long int resultvar;                          \
+        register long int r3 asm ("%r3") = (name);                    \
+        SUBSTITUTE_ARGS_##nr(args);                           \
+        \
+        asm volatile (SYSCALL_INST_STR##nr SYSCALL_INST_PAD               \
+                      : "=z" (resultvar)                          \
+                      : "r" (r3) ASMFMT_##nr                      \
+                      : "memory", "t");                       \
+        \
+        (int) resultvar; })
 
 #endif  /* __ASSEMBLER__ */
 
